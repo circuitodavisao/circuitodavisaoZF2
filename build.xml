@@ -8,7 +8,7 @@
     <property name="application.builddir" value="${project.basedir}/build"/>
 
     <target name="build"
-            depends="prepare,lint,phpdoc,phploc,phpunit"/>
+            depends="prepare,lint,phpdoc,phploc,pdepend,phpunit"/>
 
     <target name="clean" description="Limpa os diretórios de artefatos">
         <delete dir="${application.builddir}/api"/>
