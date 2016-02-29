@@ -8,7 +8,7 @@
     <property name="application.builddir" value="${project.basedir}/build"/>
 
     <target name="build"
-            depends="phpunit"/>
+            depends="prepare,lint,phpdoc,phploc,phpunit"/>
 
     <target name="clean" description="Limpa os diretórios de artefatos">
         <delete dir="${application.builddir}/api"/>
@@ -103,13 +103,6 @@
     </target>
 
     <target name="phpunit" description="Testes Unitários">
-<!--        <phpunit bootstrap="${application.tests}/bootstrap.php">
-            <batchtest>
-                <fileset dir="${application.tests}">
-                    <include name="**/*Test.php"/>
-                </fileset>
-            </batchtest>
-        </phpunit>    -->
         <phpunit bootstrap="${application.tests}/bootstrap.php">
             <formatter type="plain" usefile="false"/>
             <batchtest>
