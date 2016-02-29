@@ -6,8 +6,6 @@
  * and open the template in the editor.
  */
 
-namespace ApplicationTest\Controller;
-
 use Zend\Test\PHPUnit\Controller\AbstractHttpControllerTestCase;
 
 /**
