@@ -103,14 +103,22 @@
     </target>
 
     <target name="phpunit" description="Testes Unitários">
-        <phpunit bootstrap="${application.tests}/bootstrap.php">
+<!--        <phpunit bootstrap="${application.tests}/bootstrap.php">
             <batchtest>
                 <fileset dir="${application.tests}">
                     <include name="**/*Test.php"/>
                 </fileset>
             </batchtest>
-        </phpunit>        
-    </target>
+        </phpunit>    -->
+        <phpunit bootstrap="${application.tests}/bootstrap.php">
+            <formatter type="plain" usefile="false"/>
+            <batchtest>
+                <fileset dir="${application.tests}">
+                    <include name="**/*Test*.php"/>
+                </fileset>
+            </batchtest>
+        </phpunit>    
+    </target>    
 
     <target name="phpcb" description="Cria a navegação de código">
         <exec executable="phpcb">
