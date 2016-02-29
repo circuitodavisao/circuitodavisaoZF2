@@ -4,7 +4,7 @@
 
     <!-- Altere estas propriedades adequando-as ao seu projeto -->
     <property name="application.library" value="${project.basedir}/module"/>
-    <property name="application.tests" value="${project.basedir}/vendor/phpunit/phpunit/test"/>
+    <property name="application.tests" value="${project.basedir}/vendor/phpunit/phpunit/tests"/>
     <property name="application.builddir" value="${project.basedir}/build"/>
 
     <target name="build"
