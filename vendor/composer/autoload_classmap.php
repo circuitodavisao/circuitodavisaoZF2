@@ -468,5 +468,6 @@ return array(
     'TheSeer\\fDOM\\fDOMException' => $vendorDir . '/theseer/fdomdocument/src/fDOMException.php',
     'TheSeer\\fDOM\\fDOMNode' => $vendorDir . '/theseer/fdomdocument/src/fDOMNode.php',
     'TheSeer\\fDOM\\fDOMXPath' => $vendorDir . '/theseer/fdomdocument/src/fDOMXPath.php',
+    'ZendDeveloperTools\\Module' => $vendorDir . '/zendframework/zend-developer-tools/Module.php',
     'Zend\\I18n\\Translator\\Resources' => $vendorDir . '/zendframework/zend-i18n-resources/src/Resources.php',
 );
