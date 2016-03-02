@@ -18,7 +18,9 @@ class LoginController extends AbstractActionController {
      * @return ViewModel
      */
     public function indexAction() {
-
+        $objectManager = $this
+                ->getServiceLocator()
+                ->get('Doctrine\ORM\EntityManager');
         return new ViewModel();
     }
 
