@@ -12,6 +12,7 @@
         "zendframework/zendframework": "~2.5",
         "sebastian/phpcpd": "*",
         "doctrine/doctrine-orm-module": "0.8.*",
-        "zendframework/zend-developer-tools": "0.*"
+        "zendframework/zend-developer-tools": "0.*",
+        "zendframework/zftool": "dev-master"
     }
 }
