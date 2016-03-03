@@ -18,10 +18,20 @@ class LoginController extends AbstractActionController {
      * @return ViewModel
      */
     public function indexAction() {
-        $objectManager = $this
-                ->getServiceLocator()
-                ->get('Doctrine\ORM\EntityManager');
+        $this->flashMessenger()->addInfoMessage("testando a message");
+//        $objectManager = $this->getDoctrineORM();
         return new ViewModel();
+    }
+
+    /**
+     * Metodo privado para obter a instancia do Doctrine\ORM\EntityManager
+     * @return type
+     */
+    private function getDoctrineORM() {
+        //obter instancia Doctrine\ORM\EntityManager 
+        $objectManager = $this->getServiceLocator()->get('DoctrineORMEntityManager');
+        // return model GrupoDao
+        return $objectManager;
     }
 
 }

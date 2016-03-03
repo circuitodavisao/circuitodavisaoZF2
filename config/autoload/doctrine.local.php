@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * Nome: doctrine.local.php
+ * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com>
+ * Descricao: Arquivo com as configurações de acesso ao banco de dados postgre com doctrine
+ */
 return array(
     'doctrine' => array(
         'connection' => array(

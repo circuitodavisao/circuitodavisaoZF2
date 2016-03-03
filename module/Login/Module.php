@@ -8,6 +8,8 @@
 
 namespace Login;
 
+use Login\View\Helper\Message;
+
 class Module {
 
     public function getConfig() {
@@ -21,6 +23,29 @@ class Module {
                     __NAMESPACE__ => __DIR__ . '/src/' . __NAMESPACE__,
                 ),
             ),
+        );
+    }
+
+    public function getServiceConfig() {
+        return array(
+            'factories' => array(
+                'DoctrineORMEntityManager' => function ($sm) {
+                    $objectManager = $sm
+                            ->getServiceLocator()
+                            ->get('Doctrine\ORM\EntityManager');
+                    return $objectManager;
+                },
+            ),
+        );
+    }
+
+    public function getViewHelperConfig() {
+        return array(
+            'factories' => array(
+                'message' => function($sm) {
+                    return new Message($sm->getServiceLocator()->get('ControllerPluginManager')->get('flashmessenger'));
+                }
+            )
         );
     }
 
