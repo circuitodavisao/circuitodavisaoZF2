@@ -30,9 +30,7 @@ class Module {
         return array(
             'factories' => array(
                 'DoctrineORMEntityManager' => function ($sm) {
-                    $objectManager = $sm
-                            ->getServiceLocator()
-                            ->get('Doctrine\ORM\EntityManager');
+                    $objectManager = $sm->get('Doctrine\ORM\EntityManager');
                     return $objectManager;
                 },
             ),

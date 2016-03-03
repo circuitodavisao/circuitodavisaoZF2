@@ -13,8 +13,8 @@ return array(
                 'params' => array(
                     'host' => '158.69.124.139',
                     'port' => '5432',
-                    'user' => 'homologacao',
-                    'password' => 'Z#03SOye(hRN',
+                    'user' => 'postgres',
+                    'password' => 'qwaszx159753',
                     'dbname' => 'homologacao',
                     'encoding' => 'utf8',
                 )

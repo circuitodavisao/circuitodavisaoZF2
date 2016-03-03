@@ -11,8 +11,8 @@ namespace Login;
 return array(
     # definir e gerenciar controllers
     'controllers' => array(
-        'invokables' => array(
-            'LoginController' => 'Login\Controller\LoginController'
+        'factories' => array(
+            'Login\Controller\Login' => 'Login\Controller\Factory\LoginControllerFactory',
         ),
     ),
     # definir e gerenciar rotas
@@ -26,7 +26,7 @@ return array(
                         'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
                     ),
                     'defaults' => array(
-                        'controller' => 'LoginController',
+                        'controller' => 'Login\Controller\Login',
                         'action' => 'index',
                     ),
                 ),
