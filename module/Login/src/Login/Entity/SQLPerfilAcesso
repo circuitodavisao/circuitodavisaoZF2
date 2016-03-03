@@ -1,0 +1,25 @@
+-- Table: perfil_acesso
+
+-- DROP TABLE perfil_acesso;
+
+CREATE TABLE perfil_acesso
+(
+  id serial NOT NULL, -- Identificação
+  nome character varying(45) NOT NULL, -- Nome do perfil
+  data_criacao date NOT NULL, -- Data de criação do perfil
+  data_inativacao date, -- Data de inativação do perfil
+  CONSTRAINT primary_key_perfil_acesso PRIMARY KEY (id) -- Primary Key da tabela perfil de acesso
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE perfil_acesso
+  OWNER TO postgres;
+COMMENT ON TABLE perfil_acesso
+  IS 'Tabela com os perfis de acesso ao sistema';
+COMMENT ON COLUMN perfil_acesso.id IS 'Identificação';
+COMMENT ON COLUMN perfil_acesso.nome IS 'Nome do perfil';
+COMMENT ON COLUMN perfil_acesso.data_criacao IS 'Data de criação do perfil';
+COMMENT ON COLUMN perfil_acesso.data_inativacao IS 'Data de inativação do perfil';
+
+COMMENT ON CONSTRAINT primary_key_perfil_acesso ON perfil_acesso IS 'Primary Key da tabela perfil de acesso';
