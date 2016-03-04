@@ -1,28 +1,25 @@
 <?php
+/** Nome: index.phtml
+ * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com>
+ * Descricao: Página de login
+ */
 $formLogin = $this->formLogin;
 $formLogin->prepare();
 $formLogin->setAttribute('action', $this->url('login', array('action' => 'logar')));
 ?>
-<h1>CIRCUITO DA VISAO ZF2 COM DOCTRINE - <?php echo $this->translate('User') ?></h1>
-<?php echo $this->form()->openTag($formLogin) ?>
-<div class="panel panel-primary text-center" style="width: 500px;">
+<div class="panel panel-primary col-md-offset-2 col-md-8 text-center">
     <div class="panel-heading">
         <div class="panel-title">
             Login          
         </div>
     </div>
+    <?php echo $this->form()->openTag($formLogin); ?>
     <div class="panel-body">
         <div class="form-group">
             <div>
                 <?php
                 // renderiza html input
                 echo $this->formInput($formLogin->get('email'));
-                // renderiza elemento de erro
-                echo $this->formElementErrors()
-                        ->setMessageOpenFormat('<small class="text-danger">')
-                        ->setMessageSeparatorString('</small><br/><small class="text-danger">')
-                        ->setMessageCloseString('</small>')
-                        ->render($formLogin->get('email'));
                 ?>
             </div>
         </div>
@@ -31,18 +28,16 @@ $formLogin->setAttribute('action', $this->url('login', array('action' => 'logar'
                 <?php
                 // renderiza html input
                 echo $this->formInput($formLogin->get('senha'));
-                // renderiza elemento de erro
-                echo $this->formElementErrors()
-                        ->setMessageOpenFormat('<small class="text-danger">')
-                        ->setMessageSeparatorString('</small><br/><small class="text-danger">')
-                        ->setMessageCloseString('</small>')
-                        ->render($formLogin->get('senha'));
                 ?>
             </div>
         </div>
     </div>
     <div class="panel-footer">
+        <?php
+        // renderiza html input hidden 
+        echo $this->formHidden($formLogin->get('csrf'));
+        ?>
         <button type="submit" class="btn btn-primary">Logar</button>
     </div>
+    <?php echo $this->form()->closeTag() ?>
 </div>
-<?php echo $this->form()->closeTag() ?>

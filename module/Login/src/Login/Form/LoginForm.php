@@ -2,6 +2,7 @@
 
 namespace Login\Form;
 
+use Zend\Form\Element\Csrf;
 use Zend\Form\Element\Password;
 use Zend\Form\Element\Text;
 use Zend\Form\Form;
@@ -39,8 +40,11 @@ class LoginForm extends Form {
                             'class' => 'form-control',
                             'id' => 'email',
                             'placeholder' => 'Email do usuario',
+                            'required' => 'required',
                         ])
         );
+
+
 
         /**
          * Senha de acesso
@@ -53,7 +57,13 @@ class LoginForm extends Form {
                             'class' => 'form-control',
                             'id' => 'senha',
                             'placeholder' => 'Senha',
+                            'required' => 'required',
                         ])
+        );
+
+        $this->add(
+                (new Csrf())
+                        ->setName('csrf')
         );
     }
 

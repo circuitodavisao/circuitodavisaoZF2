@@ -19,7 +19,7 @@ class LoginController extends AbstractActionController {
     private $_doctrineAuthenticationservice;
 
     /**
-     * Contrutor
+     * Contrutor sobrecarregado com os serviços de ORM e Autenticador
      */
     public function __construct(
     EntityManager $doctrineORMEntityManager = null, AuthenticationService $doctrineAuthenticationservice = null) {
@@ -39,9 +39,9 @@ class LoginController extends AbstractActionController {
      */
     public function indexAction() {
         $this->flashMessenger()->clearCurrentMessages();
-        $formLogin = new LoginForm("LoginForm");
+        $formLogin = new LoginForm(Constantes::$LOGIN_FORM);
         return [
-            'formLogin' => $formLogin,
+            Constantes::$FORM_LOGIN => $formLogin,
         ];
     }
 
@@ -53,8 +53,8 @@ class LoginController extends AbstractActionController {
         $data = $this->getRequest()->getPost();
 
         $adapter = $this->getDoctrineAuthenticationservicer()->getAdapter();
-        $adapter->setIdentityValue($data['email']);
-        $adapter->setCredentialValue(md5($data['senha']));
+        $adapter->setIdentityValue($data[Constantes::$INPUT_EMAIL]);
+        $adapter->setCredentialValue(md5($data[Constantes::$INPUT_SENHA]));
         $authenticationResult = $this->getDoctrineAuthenticationservicer()->authenticate();
 
         if ($authenticationResult->isValid()) {
@@ -64,16 +64,16 @@ class LoginController extends AbstractActionController {
             $this->getDoctrineAuthenticationservicer()->getStorage()->write($identity);
             /* redirecionar */
             return $this->forward()->dispatch(Constantes::$CONTROLLER_LOGIN, array(
-                        'action' => 'acesso',
+                        Constantes::$ACTION => Constantes::$ACTION_ACESSO,
             ));
         } else {
             /* Autenticacao falhou */
-            $formLogin = new LoginForm("LoginForm");
+            $formLogin = new LoginForm(Constantes::$LOGIN_FORM);
             $formLogin->setData($this->getRequest()->getPost());
             /* Mensagem para teste */
             $this->flashMessenger()->
                     addErrorMessage("Logar falhou truta !");
-            return $this->redirect()->toRoute('login');
+            return $this->redirect()->toRoute(Constantes::$ROUTE_LOGIN);
         }
     }
 
