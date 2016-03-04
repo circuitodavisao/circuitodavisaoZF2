@@ -29,10 +29,9 @@ class Module {
     public function getServiceConfig() {
         return array(
             'factories' => array(
-                'DoctrineORMEntityManager' => function ($sm) {
-                    $objectManager = $sm->get('Doctrine\ORM\EntityManager');
-                    return $objectManager;
-                },
+                'Zend\Authentication\AuthenticationService' => function($serviceManager) {
+                    return $serviceManager->get('doctrine.authenticationservice.orm_default');
+                }
             ),
         );
     }

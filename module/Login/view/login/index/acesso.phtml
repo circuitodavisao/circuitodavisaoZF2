@@ -1,0 +1,8 @@
+<?php
+
+if ($user = $this->identity()) {
+    echo 'Logged in as ' . $this->escapeHtml($user->getNome());
+} else {
+    echo 'Not logged in';
+}
+?>

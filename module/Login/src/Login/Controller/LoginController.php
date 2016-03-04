@@ -3,9 +3,10 @@
 namespace Login\Controller;
 
 use Doctrine\ORM\EntityManager;
+use Login\Controller\Helper\Constantes;
 use Login\Form\LoginForm;
+use Zend\Authentication\AuthenticationService;
 use Zend\Mvc\Controller\AbstractActionController;
-use Zend\View\Model\ViewModel;
 
 /**
  * Nome: LoginController.php
@@ -15,13 +16,20 @@ use Zend\View\Model\ViewModel;
 class LoginController extends AbstractActionController {
 
     private $_doctrineORMEntityManager;
+    private $_doctrineAuthenticationservice;
 
     /**
      * Contrutor
      */
-    public function __construct(EntityManager $doctrineORMEntityManager = null) {
+    public function __construct(
+    EntityManager $doctrineORMEntityManager = null, AuthenticationService $doctrineAuthenticationservice = null) {
+
         if (!is_null($doctrineORMEntityManager)) {
             $this->_doctrineORMEntityManager = $doctrineORMEntityManager;
+        }
+
+        if (!is_null($doctrineAuthenticationservice)) {
+            $this->_doctrineAuthenticationservice = $doctrineAuthenticationservice;
         }
     }
 
@@ -30,7 +38,7 @@ class LoginController extends AbstractActionController {
      * GET /
      */
     public function indexAction() {
-
+        $this->flashMessenger()->clearCurrentMessages();
         $formLogin = new LoginForm("LoginForm");
         return [
             'formLogin' => $formLogin,
@@ -42,11 +50,47 @@ class LoginController extends AbstractActionController {
      * POST /logar
      */
     public function logarAction() {
-        
+        $data = $this->getRequest()->getPost();
+
+        $adapter = $this->getDoctrineAuthenticationservicer()->getAdapter();
+        $adapter->setIdentityValue($data['email']);
+        $adapter->setCredentialValue(md5($data['senha']));
+        $authenticationResult = $this->getDoctrineAuthenticationservicer()->authenticate();
+
+        if ($authenticationResult->isValid()) {
+            /* Autenticacao valida */
+            $identity = $authenticationResult->getIdentity();
+            /* Por Entity na Sessão */
+            $this->getDoctrineAuthenticationservicer()->getStorage()->write($identity);
+            /* redirecionar */
+            return $this->forward()->dispatch(Constantes::$CONTROLLER_LOGIN, array(
+                        'action' => 'acesso',
+            ));
+        } else {
+            /* Autenticacao falhou */
+            $formLogin = new LoginForm("LoginForm");
+            $formLogin->setData($this->getRequest()->getPost());
+            /* Mensagem para teste */
+            $this->flashMessenger()->
+                    addErrorMessage("Logar falhou truta !");
+            return $this->redirect()->toRoute('login');
+        }
+    }
+
+    /**
+     * Função que direciona a tela de acesso
+     * GET /
+     */
+    public function acessoAction() {
+        return [];
     }
 
     public function getDoctrineORMEntityManager() {
         return $this->_doctrineORMEntityManager;
+    }
+
+    public function getDoctrineAuthenticationservicer() {
+        return $this->_doctrineAuthenticationservice;
     }
 
 }

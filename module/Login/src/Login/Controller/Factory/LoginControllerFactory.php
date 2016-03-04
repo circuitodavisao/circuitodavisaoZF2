@@ -24,7 +24,17 @@ class LoginControllerFactory implements FactoryInterface {
         } catch (ExtensionNotLoadedException $e) {
             $doctrineORMEntityManager = null;
         }
-        $controller = new LoginController($doctrineORMEntityManager);
+
+        $sm = $serviceLocator->getServiceLocator();
+        try {
+            $doctrineAuthenticationservice = $sm->get('Zend\Authentication\AuthenticationService');
+        } catch (ServiceNotCreatedException $e) {
+            $doctrineAuthenticationservice = null;
+        } catch (ExtensionNotLoadedException $e) {
+            $doctrineAuthenticationservice = null;
+        }
+
+        $controller = new LoginController($doctrineORMEntityManager, $doctrineAuthenticationservice);
         return $controller;
     }
 

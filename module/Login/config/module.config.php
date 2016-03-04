@@ -64,6 +64,7 @@ return array(
         'template_map' => array(
             'layout/layout' => __DIR__ . '/../view/layout/layout.phtml',
             'login/login/index' => __DIR__ . '/../view/login/index/index.phtml',
+            'login/login/acesso' => __DIR__ . '/../view/login/index/acesso.phtml',
             'error/404' => __DIR__ . '/../view/error/404.phtml',
             'error/index' => __DIR__ . '/../view/error/index.phtml',
         ),
@@ -84,6 +85,14 @@ return array(
                     __NAMESPACE__ . '\Entity' => 'application_entities'
                 )
             )
-        )
+        ),
+        'authentication' => array(
+            'orm_default' => array(
+                'object_manager' => 'Doctrine\ORM\EntityManager',
+                'identity_class' => 'Login\Entity\Pessoa',
+                'identity_property' => 'email',
+                'credential_property' => 'senha',
+            ),
+        ),
     ),
 );

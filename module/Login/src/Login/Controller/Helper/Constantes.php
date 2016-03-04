@@ -12,5 +12,6 @@ class Constantes {
     public static $ENTITY_PESSOA = "Login\Entity\Pessoa";
     public static $ENTITY_PERFIL_ACESSO = "Login\Entity\PerfilAcesso";
     public static $ENTITY_PESSOA_PERFIL_ACESSO = "Login\Entity\PessoaPerfilAcesso";
+    public static $CONTROLLER_LOGIN = "Login\Controller\Login";
 
 }
