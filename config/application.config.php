@@ -7,7 +7,7 @@
  */
 return array(
     'modules' => array(
-        'Application',
+        'Login',
         'ZendDeveloperTools',
         'DoctrineModule',
         'DoctrineORMModule',

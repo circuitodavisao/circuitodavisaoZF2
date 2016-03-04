@@ -1,0 +1,55 @@
+-- Table: pessoa_perfil_acesso
+
+-- DROP TABLE pessoa_perfil_acesso;
+
+CREATE TABLE pessoa_perfil_acesso
+(
+  id serial NOT NULL, -- Identificação
+  id_pessoa bigint NOT NULL, -- Identificação da pessoa
+  id_perfil_acesso integer NOT NULL, -- Identificação do perfil de acesso
+  data_criacao date NOT NULL, -- Data de criação da associação
+  data_inativacao date, -- Data de inativação da associação
+  CONSTRAINT primary_key_pessoa_perfil_acesso PRIMARY KEY (id), -- Primary Key da tabela associativa pessoa com perfil de acesso
+  CONSTRAINT foreign_key_pessoa_perfil_acesso_perfil_acesso FOREIGN KEY (id_perfil_acesso)
+      REFERENCES perfil_acesso (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION, -- Foreign Key da associação com o perfil de acesso
+  CONSTRAINT foreign_key_pessoa_perfil_acesso_pessoa FOREIGN KEY (id_pessoa)
+      REFERENCES pessoa (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION -- Foreign Key da tabela associativa com a pessoa
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE pessoa_perfil_acesso
+  OWNER TO postgres;
+COMMENT ON TABLE pessoa_perfil_acesso
+  IS 'Tabela associativa da pessoa com os perfis de acesso';
+COMMENT ON COLUMN pessoa_perfil_acesso.id IS 'Identificação';
+COMMENT ON COLUMN pessoa_perfil_acesso.id_pessoa IS 'Identificação da pessoa';
+COMMENT ON COLUMN pessoa_perfil_acesso.id_perfil_acesso IS 'Identificação do perfil de acesso';
+COMMENT ON COLUMN pessoa_perfil_acesso.data_criacao IS 'Data de criação da associação';
+COMMENT ON COLUMN pessoa_perfil_acesso.data_inativacao IS 'Data de inativação da associação';
+
+COMMENT ON CONSTRAINT primary_key_pessoa_perfil_acesso ON pessoa_perfil_acesso IS 'Primary Key da tabela associativa pessoa com perfil de acesso';
+COMMENT ON CONSTRAINT foreign_key_pessoa_perfil_acesso_perfil_acesso ON pessoa_perfil_acesso IS 'Foreign Key da associação com o perfil de acesso';
+COMMENT ON CONSTRAINT foreign_key_pessoa_perfil_acesso_pessoa ON pessoa_perfil_acesso IS 'Foreign Key da tabela associativa com a pessoa';
+
+
+-- Index: fki_foreign_key_pessoa_perfil_acesso_perfil_acesso
+
+-- DROP INDEX fki_foreign_key_pessoa_perfil_acesso_perfil_acesso;
+
+CREATE INDEX fki_foreign_key_pessoa_perfil_acesso_perfil_acesso
+  ON pessoa_perfil_acesso
+  USING btree
+  (id_perfil_acesso);
+
+-- Index: fki_foreign_key_pessoa_perfil_acesso_pessoa
+
+-- DROP INDEX fki_foreign_key_pessoa_perfil_acesso_pessoa;
+
+CREATE INDEX fki_foreign_key_pessoa_perfil_acesso_pessoa
+  ON pessoa_perfil_acesso
+  USING btree
+  (id_pessoa);
+

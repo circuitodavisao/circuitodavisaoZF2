@@ -1,0 +1,12 @@
+<?php
+
+/** Nome: acesso.phtml
+ * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com>
+ * Descricao: Página de acesso
+ */
+if ($user = $this->identity()) {
+    echo 'Logged in as ' . $this->escapeHtml($user->getNome());
+} else {
+    echo 'Not logged in';
+}
+?>
