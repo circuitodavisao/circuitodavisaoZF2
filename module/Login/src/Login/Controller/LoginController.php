@@ -3,7 +3,7 @@
 namespace Login\Controller;
 
 use Doctrine\ORM\EntityManager;
-use Login\Controller\Helper\LoginORM;
+use Login\Form\LoginForm;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 
@@ -27,20 +27,22 @@ class LoginController extends AbstractActionController {
 
     /**
      * Função padrão, traz a tela para login
-     * @return ViewModel
+     * GET /
      */
     public function indexAction() {
-        $this->flashMessenger()->addInfoMessage("testando a message");
 
-// Helper LoginORM
-        $loginORM = new LoginORM($this->_doctrineORMEntityManager);
+        $formLogin = new LoginForm("LoginForm");
+        return [
+            'formLogin' => $formLogin,
+        ];
+    }
 
-        $idPessoa = 1;
-        $pessoa = $loginORM->getPessoaORM()->encontrarPorIdPessoa($idPessoa);
-
-        var_dump($pessoa->getNome());
-
-        return new ViewModel();
+    /**
+     * Função que tenta logar
+     * POST /logar
+     */
+    public function logarAction() {
+        
     }
 
     public function getDoctrineORMEntityManager() {
@@ -48,3 +50,15 @@ class LoginController extends AbstractActionController {
     }
 
 }
+
+//        // TESTE DO ORM
+//        $loginORM = new LoginORM($this->getDoctrineORMEntityManager());
+//        $idPessoa = 1;
+//        $pessoa = $loginORM->getPessoaORM()->encontrarPorIdPessoa($idPessoa);
+//        $this->flashMessenger()->addInfoMessage("Pessoa: " . $pessoa->getNome());
+//        $formLoginDaRota = $this->params()->fromRoute('formLogin', 0);
+//        if (!empty($formLoginDaRota)) {
+//            $formLogin = $formLoginDaRota;
+//        } else {
+//            $formLogin = new LoginForm("LoginForm");
+//        }

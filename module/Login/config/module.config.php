@@ -21,7 +21,7 @@ return array(
             'login' => array(
                 'type' => 'Segment',
                 'options' => array(
-                    'route' => '/[/:action]',
+                    'route' => '/[:action]',
                     'constraints' => array(
                         'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
                     ),
