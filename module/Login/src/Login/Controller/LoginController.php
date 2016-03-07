@@ -16,20 +16,20 @@ use Zend\Mvc\Controller\AbstractActionController;
 class LoginController extends AbstractActionController {
 
     private $_doctrineORMEntityManager;
-    private $_doctrineAuthenticationservice;
+    private $_doctrineAuthenticationService;
 
     /**
      * Contrutor sobrecarregado com os serviços de ORM e Autenticador
      */
     public function __construct(
-    EntityManager $doctrineORMEntityManager = null, AuthenticationService $doctrineAuthenticationservice = null) {
+    EntityManager $doctrineORMEntityManager = null, AuthenticationService $doctrineAuthenticationService = null) {
 
         if (!is_null($doctrineORMEntityManager)) {
             $this->_doctrineORMEntityManager = $doctrineORMEntityManager;
         }
 
-        if (!is_null($doctrineAuthenticationservice)) {
-            $this->_doctrineAuthenticationservice = $doctrineAuthenticationservice;
+        if (!is_null($doctrineAuthenticationService)) {
+            $this->_doctrineAuthenticationService = $doctrineAuthenticationService;
         }
     }
 
@@ -51,18 +51,18 @@ class LoginController extends AbstractActionController {
      */
     public function logarAction() {
         $data = $this->getRequest()->getPost();
-
-        $adapter = $this->getDoctrineAuthenticationservicer()->getAdapter();
+        
+        $adapter = $this->getDoctrineAuthenticationServicer()->getAdapter();
         $adapter->setIdentityValue($data[Constantes::$INPUT_EMAIL]);
         $adapter->setCredentialValue(md5($data[Constantes::$INPUT_SENHA]));
-        $authenticationResult = $this->getDoctrineAuthenticationservicer()->authenticate();
-
+        $authenticationResult = $this->getDoctrineAuthenticationServicer()->authenticate();
+        
         if ($authenticationResult->isValid()) {
             /* Autenticacao valida */
             $identity = $authenticationResult->getIdentity();
             /* Por Entity na Sessão */
-            $this->getDoctrineAuthenticationservicer()->getStorage()->write($identity);
-            /* redirecionar */
+            $this->getDoctrineAuthenticationServicer()->getStorage()->write($identity);
+            /* Redirecionamento */
             return $this->forward()->dispatch(Constantes::$CONTROLLER_LOGIN, array(
                         Constantes::$ACTION => Constantes::$ACTION_ACESSO,
             ));
@@ -70,9 +70,14 @@ class LoginController extends AbstractActionController {
             /* Autenticacao falhou */
             $formLogin = new LoginForm(Constantes::$LOGIN_FORM);
             $formLogin->setData($this->getRequest()->getPost());
-            /* Mensagem para teste */
+            /* Mensagem de erro */
+            $mensagens = "";
+            foreach ($authenticationResult->getMessages() as $message) {
+                $mensagens .= "$message\n";
+            }
             $this->flashMessenger()->
-                    addErrorMessage("Logar falhou truta !");
+                    addErrorMessage($mensagens);
+            /* Redirecionamento */
             return $this->redirect()->toRoute(Constantes::$ROUTE_LOGIN);
         }
     }
@@ -89,20 +94,8 @@ class LoginController extends AbstractActionController {
         return $this->_doctrineORMEntityManager;
     }
 
-    public function getDoctrineAuthenticationservicer() {
-        return $this->_doctrineAuthenticationservice;
+    public function getDoctrineAuthenticationServicer() {
+        return $this->_doctrineAuthenticationService;
     }
 
 }
-
-//        // TESTE DO ORM
-//        $loginORM = new LoginORM($this->getDoctrineORMEntityManager());
-//        $idPessoa = 1;
-//        $pessoa = $loginORM->getPessoaORM()->encontrarPorIdPessoa($idPessoa);
-//        $this->flashMessenger()->addInfoMessage("Pessoa: " . $pessoa->getNome());
-//        $formLoginDaRota = $this->params()->fromRoute('formLogin', 0);
-//        if (!empty($formLoginDaRota)) {
-//            $formLogin = $formLoginDaRota;
-//        } else {
-//            $formLogin = new LoginForm("LoginForm");
-//        }

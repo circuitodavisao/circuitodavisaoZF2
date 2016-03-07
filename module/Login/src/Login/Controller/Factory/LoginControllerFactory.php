@@ -17,6 +17,8 @@ class LoginControllerFactory implements FactoryInterface {
 
     public function createService(ServiceLocatorInterface $serviceLocator) {
         $sm = $serviceLocator->getServiceLocator();
+
+        // Serviço de Manipulação de entidade Doctrine    
         try {
             $doctrineORMEntityManager = $sm->get('Doctrine\ORM\EntityManager');
         } catch (ServiceNotCreatedException $e) {
@@ -25,16 +27,16 @@ class LoginControllerFactory implements FactoryInterface {
             $doctrineORMEntityManager = null;
         }
 
-        $sm = $serviceLocator->getServiceLocator();
+        // Serviço de Autenticação 
         try {
-            $doctrineAuthenticationservice = $sm->get('Zend\Authentication\AuthenticationService');
+            $doctrineAuthenticationService = $sm->get('Zend\Authentication\AuthenticationService');
         } catch (ServiceNotCreatedException $e) {
-            $doctrineAuthenticationservice = null;
+            $doctrineAuthenticationService = null;
         } catch (ExtensionNotLoadedException $e) {
-            $doctrineAuthenticationservice = null;
+            $doctrineAuthenticationService = null;
         }
 
-        $controller = new LoginController($doctrineORMEntityManager, $doctrineAuthenticationservice);
+        $controller = new LoginController($doctrineORMEntityManager, $doctrineAuthenticationService);
         return $controller;
     }
 
