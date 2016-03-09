@@ -17,26 +17,20 @@ $formLogin->setAttribute('action', $this->url('login', array('action' => 'logar'
     <div class="panel-body">
         <div class="form-group">
             <div>
-                <?php
-                // renderiza html input
-                echo $this->formInput($formLogin->get('email'));
-                ?>
+                <!-- Input text de email -->
+                <?php echo $this->formInput($formLogin->get('email')); ?>
             </div>
         </div>
         <div class="form-group">
             <div>
-                <?php
-                // renderiza html input
-                echo $this->formInput($formLogin->get('senha'));
-                ?>
+                <!-- Input password de senha -->
+                <?php echo $this->formInput($formLogin->get('senha')); ?>
             </div>
         </div>
     </div>
     <div class="panel-footer">
-        <?php
-        // renderiza html input hidden 
-        echo $this->formHidden($formLogin->get('csrf'));
-        ?>
+        <?php echo $this->formHidden($formLogin->get('csrf')); ?>
+        <!-- Botão de submit -->
         <button type="submit" class="btn btn-primary">Logar</button>
     </div>
     <?php echo $this->form()->closeTag() ?>

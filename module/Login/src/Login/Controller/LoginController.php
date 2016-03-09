@@ -2,11 +2,13 @@
 
 namespace Login\Controller;
 
+use CU_Controller_Plugin_CsrfProtect;
 use Doctrine\ORM\EntityManager;
 use Login\Controller\Helper\Constantes;
 use Login\Form\LoginForm;
 use Zend\Authentication\AuthenticationService;
 use Zend\Mvc\Controller\AbstractActionController;
+use Zend\Session\Container;
 
 /**
  * Nome: LoginController.php
@@ -38,8 +40,11 @@ class LoginController extends AbstractActionController {
      * GET /
      */
     public function indexAction() {
+        /* Limpar mensagens */
         $this->flashMessenger()->clearCurrentMessages();
+
         $formLogin = new LoginForm(Constantes::$LOGIN_FORM);
+
         return [
             Constantes::$FORM_LOGIN => $formLogin,
         ];
@@ -51,17 +56,28 @@ class LoginController extends AbstractActionController {
      */
     public function logarAction() {
         $data = $this->getRequest()->getPost();
-        
+
+        /*
+         * Testando ataques
+         */
+        $this->flashMessenger()->clearCurrentMessages();
+
+        /* Post sem email */
+        if (is_null($data[Constantes::$INPUT_EMAIL])) {
+            $this->flashMessenger()->
+                    addErrorMessage(Constantes::$MENSAGEM_ERRO_CSRF);
+            /* Redirecionamento */
+            return $this->redirect()->toRoute(Constantes::$ROUTE_LOGIN);
+        }
+
         $adapter = $this->getDoctrineAuthenticationServicer()->getAdapter();
         $adapter->setIdentityValue($data[Constantes::$INPUT_EMAIL]);
         $adapter->setCredentialValue(md5($data[Constantes::$INPUT_SENHA]));
         $authenticationResult = $this->getDoctrineAuthenticationServicer()->authenticate();
-        
+
         if ($authenticationResult->isValid()) {
             /* Autenticacao valida */
-            $identity = $authenticationResult->getIdentity();
-            /* Por Entity na Sessão */
-            $this->getDoctrineAuthenticationServicer()->getStorage()->write($identity);
+
             /* Redirecionamento */
             return $this->forward()->dispatch(Constantes::$CONTROLLER_LOGIN, array(
                         Constantes::$ACTION => Constantes::$ACTION_ACESSO,
@@ -84,7 +100,7 @@ class LoginController extends AbstractActionController {
 
     /**
      * Função que direciona a tela de acesso
-     * GET /
+     * GET /acesso
      */
     public function acessoAction() {
         return [];
