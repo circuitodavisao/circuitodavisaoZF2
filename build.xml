@@ -115,9 +115,6 @@
             <formatter type="clover" todir="${application.builddir}/logs" outfile="clover.xml"/>
             <formatter type="xml" todir="${application.builddir}/logs" outfile="junit.xml"/>
         </phpunit>
-            
-        <phpunitreport infile="${application.tests}/phpunit.xml"
-                       todir="${application.builddir}/logs"/>
     </target>
     
     <target name="phpcb" description="Cria a navegação de código">
