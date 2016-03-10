@@ -27,16 +27,17 @@
         <?php
         echo $this
                 ->headLink(array('rel' => 'shortcut icon', 'type' => 'image/vnd.microsoft.icon', 'href' => $this->basePath() . '/img/favicon.ico'))
-                ->prependStylesheet($this->basePath() . '/css/bootstrap-theme.min.css')
-                ->prependStylesheet($this->basePath() . '/css/bootstrap.min.css')
+                ->prependStylesheet($this->basePath() . '/css/bootstrap/bootstrap-theme.min.css')
+                ->prependStylesheet($this->basePath() . '/css/bootstrap/bootstrap.min.css')
+                ->prependStylesheet('http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700')
+                ->prependStylesheet($this->basePath() . '/css/admin-forms.css')
+                ->prependStylesheet($this->basePath() . '/css/default_skin/css/theme.css')
         ;
         ?>
     </head>
-    <body>
-        <div class="container">
-            <?php echo $this->message(); ?>
-            <?php echo $this->content; ?>
-        </div>
+    <body class="external-page external-alt sb-l-c sb-r-c">
+        <?php echo $this->message(); ?>
+        <?php echo $this->content; ?>
         <!-- Scripts -->
         <?php
         echo $this
