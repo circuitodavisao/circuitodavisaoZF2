@@ -6,7 +6,7 @@
 $formLogin = $this->formLogin;
 $formLogin->prepare();
 $formLogin->setAttribute('action', $this->url('login', array('action' => 'logar')));
-?>
+?> 
 <div class="panel panel-primary col-md-offset-2 col-md-8 text-center">
     <div class="panel-heading">
         <div class="panel-title">
@@ -35,3 +35,92 @@ $formLogin->setAttribute('action', $this->url('login', array('action' => 'logar'
     </div>
     <?php echo $this->form()->closeTag() ?>
 </div>
+
+<hr />
+
+<!-- Start: Main -->
+<div id="main" class="animated fadeIn">
+
+    <!-- Start: Content-Wrapper -->
+    <section id="content_wrapper">
+
+        <!-- Begin: Content -->
+        <section id="content">
+
+            <div class="admin-form theme-info mw500" id="login">
+
+                <!-- Login Logo -->
+                <div class="row table-layout">
+                    <a href="dashboard.html" title="Return to Dashboard">
+                        <img src="assets/img/logos/logo_circuito.png" title="Circuito da Visão" class="center-block img-responsive" style="max-width: 275px;">
+                    </a>
+                </div>
+
+                <!-- Login Panel/Form -->
+                <div class="panel mt30 mb25">
+
+                    <form method="post" action="/" id="contact">
+                        <div class="panel-body bg-light p25 pb15">
+
+
+                            <!-- Username Input -->
+                            <div class="section">
+                                <label for="username" class="field-label text-muted fs18 mb10">Usuário</label>
+                                <label for="username" class="field prepend-icon">
+                                    <input type="text" name="username" id="username" class="gui-input" placeholder="Informe seu usuário">
+                                    <label for="username" class="field-icon">
+                                        <i class="fa fa-user"></i>
+                                    </label>
+                                </label>
+                            </div>
+
+                            <!-- Password Input -->
+                            <div class="section">
+                                <label for="username" class="field-label text-muted fs18 mb10">Senha</label>
+                                <label for="password" class="field prepend-icon">
+                                    <input type="password" name="password" id="password" class="gui-input" placeholder="Informe sua senha">
+                                    <label for="password" class="field-icon">
+                                        <i class="fa fa-lock"></i>
+                                    </label>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="panel-footer clearfix">
+                            <button type="submit" class="button btn-primary-circuito mr10 pull-right">Criar conta</button>
+                            <label class="switch ib switch-primary-circuito mt10">
+                                <input type="checkbox" name="remember" id="remember" checked>
+                                <label for="remember" data-on="SIM" data-off="NÃO"></label>
+                                <span>Continuar conectado</span>
+                            </label>
+                        </div>
+
+                    </form>
+                </div>
+
+                <!-- Registration Links -->
+                <div class="login-links">
+                    <p>
+                        <a href="pages_forgotpw(alt).html" class="active" title="Sign In">Perdeus sua senha?</a>
+                    </p>
+                    <p>Já é registrado?
+                        <a href="pages_register(alt).html" title="Sign In">Conecte-se aqui com sua conta</a>
+                    </p>
+                </div>
+
+                <!-- Registration Links(alt) -->
+                <div class="login-links hidden">
+                    <a href="pages_login-alt.html" class="active" title="Sign In">Logar-se</a> |
+                    <a href="pages_register-alt.html" class="" title="Register">Criar conta</a>
+                </div>
+
+            </div>
+
+        </section>
+        <!-- End: Content -->
+
+    </section>
+    <!-- End: Content-Wrapper -->
+
+</div>
+<!-- End: Main -->
