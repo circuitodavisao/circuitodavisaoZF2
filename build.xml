@@ -8,7 +8,7 @@
     <property name="application.builddir" value="${project.basedir}/build"/>
 
     <target name="build"
-            depends="prepare,lint,phpdoc,phploc,pdepend,phpmd,phpcs,phpcpd,phpunit"/>
+            depends="prepare,lint,phploc,pdepend,phpmd,phpcs,phpcpd,phpunit,phpdoc"/>
 
     <target name="clean" description="Limpa os diretórios de artefatos">
         <delete dir="${application.builddir}/api"/>
@@ -105,41 +105,16 @@
     <target name="phpunit" description="Testes Unitários">
         <php expression="ini_set('memory_limit', -1);"/>
         <php expression="extension_loaded('xdebug');" returnProperty="xdebug"/>
-        <if>
-            <istrue value="${xdebug}"/>
-            <then>
-                <coverage-setup database="${application.builddir}/coverage/coverage.db">
-                    <fileset dir="${application.tests}" id="tests">
-                        <include name="**/*Test.php"/>
-                    </fileset>
-                </coverage-setup>
-                <phpunit codecoverage="true" bootstrap="${application.tests}/bootstrap.php">
-                    <batchtest>
-                        <fileset dir="${application.tests}">
-                            <include name="**/*Test.php"/>
-                        </fileset>
-                    </batchtest>
-                    <formatter type="clover" todir="${application.builddir}/logs" outfile="clover.xml"/>
-                    <formatter type="xml" todir="${application.builddir}/logs" outfile="junit.xml"/>
-                </phpunit>
-                <coverage-report outfile="${application.builddir}/coverage/coverage.xml">
-                    <report todir="${application.builddir}/coverage"/>
-                </coverage-report>
-            </then>
-            <else>
-                <phpunit codecoverage="false" bootstrap="${application.tests}/bootstrap.php">
-                    <batchtest>
-                        <fileset dir="${application.tests}">
-                            <include name="**/*Test.php"/>
-                        </fileset>
-                    </batchtest>
-                    <formatter type="clover" todir="${application.builddir}/logs" outfile="clover.xml"/>
-                    <formatter type="xml" todir="${application.builddir}/logs" outfile="junit.xml"/>
-                </phpunit>
-            </else>
-        </if>
-        <phpunitreport infile="${application.tests}/phpunit.xml"
-                       todir="${application.builddir}/logs"/>
+      
+        <phpunit codecoverage="false" bootstrap="${application.tests}/bootstrap.php">
+            <batchtest>
+                <fileset dir="${application.tests}">
+                    <include name="**/*Test.php"/>
+                </fileset>
+            </batchtest>
+            <formatter type="clover" todir="${application.builddir}/logs" outfile="clover.xml"/>
+            <formatter type="xml" todir="${application.builddir}/logs" outfile="junit.xml"/>
+        </phpunit>
     </target>
     
     <target name="phpcb" description="Cria a navegação de código">
