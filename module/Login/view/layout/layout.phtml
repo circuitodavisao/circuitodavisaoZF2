@@ -1,12 +1,16 @@
 <?php echo $this->doctype(); ?>
 
+<?php
+
+use Login\Controller\Helper\Constantes; ?>
+
 <html lang="pt-BR">
     <head>
         <meta charset="utf-8">
 
         <!-- Title Head -->
         <?php
-        $NAME_APPLICATION = $this->translate('View of the Circuit');
+        $NAME_APPLICATION = $this->translate(Constantes::$TRADUCAO_NOME_APLICACAO);
         echo $this
                 ->headTitle($NAME_APPLICATION)
                 ->setSeparator(' - ')
@@ -30,14 +34,13 @@
                 ->prependStylesheet($this->basePath() . '/css/bootstrap/bootstrap-theme.min.css')
                 ->prependStylesheet($this->basePath() . '/css/bootstrap/bootstrap.min.css')
                 ->prependStylesheet('http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700')
-                ->prependStylesheet($this->basePath() . '/css/admin-forms.css')
-                ->prependStylesheet($this->basePath() . '/css/default_skin/css/theme.css')
+                ->prependStylesheet($this->basePath() . '/css/estilos-circuito/admin-forms.css')
+                ->prependStylesheet($this->basePath() . '/css/estilos-circuito/default_skin/css/theme.css')
         ;
         ?>
     </head>
     <body class="external-page external-alt sb-l-c sb-r-c">
 
-        <?php echo $this->message(); ?>
         <?php echo $this->content; ?>
 
         <!-- BEGIN: PAGE SCRIPTS -->

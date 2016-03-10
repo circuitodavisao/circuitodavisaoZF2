@@ -29,11 +29,9 @@ class Message extends AbstractHelper {
         $message = $this->getMessage();
         if ($message) {
             $key = key($message);
-            $html .= '<div id="alert-message">';
-            $html .= '<div class="' . $key . ' alert-block fade in">';
+            $html .= '<div class="' . $key . '">';
             $html .= '<button type="button" class="close" data-dismiss="alert">&times;</button>';
             $html .= $message[$key];
-            $html .= '</div>';
             $html .= '</div>';
         }
         return $html;
@@ -67,7 +65,7 @@ class Message extends AbstractHelper {
         }
         if ($flashMessenger->hasErrorMessages()) {
             $messageError = $flashMessenger->getErrorMessages();
-            $this->message = array('alert alert-danger' => array_shift($messageError));
+            $this->message = array('alert alert-danger alert-dismissable' => array_shift($messageError));
         }
     }
 

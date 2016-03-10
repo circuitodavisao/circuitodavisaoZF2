@@ -8,8 +8,8 @@ namespace Login\Controller\Helper;
  * Descricao: Classe com constantes
  */
 class Constantes {
+    /* Constates Login */
 
-    // Constates Login
     public static $ENTITY_PESSOA = 'Login\Entity\Pessoa';
     public static $ENTITY_PERFIL_ACESSO = 'Login\Entity\PerfilAcesso';
     public static $ENTITY_PESSOA_PERFIL_ACESSO = 'Login\Entity\PessoaPerfilAcesso';
@@ -18,10 +18,19 @@ class Constantes {
     public static $FORM_LOGIN = 'formLogin';
     public static $ROUTE_LOGIN = 'login';
     public static $ACTION_ACESSO = 'acesso';
+    public static $ACTION_INDEX = 'index';
     public static $ACTION = 'action';
     public static $INPUT_EMAIL = 'email';
     public static $INPUT_SENHA = 'senha';
     public static $INPUT_CSRF = 'csrf';
     public static $MENSAGEM_ERRO_CSRF = 'Poss&iacute;vel ataque CSRF';
+    public static $MENSAGEM_FALHA_LOGIN = 'The informed login details do not match an account in our records. Remember that your password is case sensitive.';
+    public static $IMAGEM_LOGO = 'img/logos/logo_circuito.png';
+    /* Traduções */
+    public static $TRADUCAO_NOME_APLICACAO = 'View of the Circuit';
+    public static $TRADUCAO_USUARIO = 'User';
+    public static $TRADUCAO_SENHA = 'Password';
+    public static $TRADUCAO_ENTRAR = 'Sign in';
+    public static $TRADUCAO_ESQUECEU_SENHA = 'Forgot password?';
 
 }

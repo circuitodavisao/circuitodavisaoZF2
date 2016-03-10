@@ -27,6 +27,7 @@ class LoginForm extends Form {
         $this->setAttributes(array(
             'method' => 'POST',
             'class' => 'form-horizontal',
+            'id' => 'contact',
         ));
 
         /**
@@ -37,13 +38,12 @@ class LoginForm extends Form {
                 (new Text())
                         ->setName('email')
                         ->setAttributes([
-                            'class' => 'form-control',
+                            'class' => 'gui-input',
                             'id' => 'email',
-                            'placeholder' => 'Email do usuario',
+                            'placeholder' => 'Enter your user',
                             'required' => 'required',
                         ])
         );
-
 
 
         /**
@@ -54,9 +54,9 @@ class LoginForm extends Form {
                 (new Password())
                         ->setName('senha')
                         ->setAttributes([
-                            'class' => 'form-control',
+                            'class' => 'gui-input',
                             'id' => 'senha',
-                            'placeholder' => 'Senha',
+                            'placeholder' => 'Enter your password',
                             'required' => 'required',
                         ])
         );

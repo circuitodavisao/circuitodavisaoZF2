@@ -2,13 +2,11 @@
 
 namespace Login\Controller;
 
-use CU_Controller_Plugin_CsrfProtect;
 use Doctrine\ORM\EntityManager;
 use Login\Controller\Helper\Constantes;
 use Login\Form\LoginForm;
 use Zend\Authentication\AuthenticationService;
 use Zend\Mvc\Controller\AbstractActionController;
-use Zend\Session\Container;
 
 /**
  * Nome: LoginController.php
@@ -44,6 +42,11 @@ class LoginController extends AbstractActionController {
         $this->flashMessenger()->clearCurrentMessages();
 
         $formLogin = new LoginForm(Constantes::$LOGIN_FORM);
+
+        $inputEmailDaRota = $this->params()->fromRoute(Constantes::$INPUT_EMAIL);
+        if (!empty($inputEmailDaRota)) {
+            $formLogin->get(Constantes::$INPUT_EMAIL)->setValue($inputEmailDaRota);
+        }
 
         return [
             Constantes::$FORM_LOGIN => $formLogin,
@@ -84,17 +87,15 @@ class LoginController extends AbstractActionController {
             ));
         } else {
             /* Autenticacao falhou */
-            $formLogin = new LoginForm(Constantes::$LOGIN_FORM);
-            $formLogin->setData($this->getRequest()->getPost());
+
             /* Mensagem de erro */
-            $mensagens = "";
-            foreach ($authenticationResult->getMessages() as $message) {
-                $mensagens .= "$message\n";
-            }
             $this->flashMessenger()->
-                    addErrorMessage($mensagens);
+                    addErrorMessage(Constantes::$MENSAGEM_FALHA_LOGIN);
             /* Redirecionamento */
-            return $this->redirect()->toRoute(Constantes::$ROUTE_LOGIN);
+            return $this->forward()->dispatch(Constantes::$CONTROLLER_LOGIN, array(
+                        Constantes::$ACTION => Constantes::$ACTION_INDEX,
+                        Constantes::$INPUT_EMAIL => $data[Constantes::$INPUT_EMAIL]
+            ));
         }
     }
 
