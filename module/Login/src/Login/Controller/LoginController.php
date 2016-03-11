@@ -106,14 +106,6 @@ class LoginController extends AbstractActionController {
     public function acessoAction() {
         return [];
     }
-    
-     /**
-     * Função que direciona a tela de esqueceu senha
-     * GET /esqueceuSenha
-     */
-    public function esqueceuSenhaAction() {
-        return [];
-    }
 
     public function getDoctrineORMEntityManager() {
         return $this->_doctrineORMEntityManager;
