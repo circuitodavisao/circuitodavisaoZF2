@@ -36,7 +36,6 @@ use Login\Controller\Helper\Constantes; ?>
                 ->prependStylesheet('http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700')
                 ->prependStylesheet($this->basePath() . '/css/estilos-circuito/admin-forms.css')
                 ->prependStylesheet($this->basePath() . '/css/estilos-circuito/default_skin/css/theme.css')
-                ->prependStylesheet($this->basePath() . '/css/estilos-circuito/circuito-validacao-caps-lock.css')
         ;
         ?>
     </head>
@@ -56,9 +55,6 @@ use Login\Controller\Helper\Constantes; ?>
                 ->prependFile($this->basePath() . '/js/assets/js/utility/utility.js')
                 ->prependFile($this->basePath() . '/js/assets/js/demo/demo.js')
                 ->prependFile($this->basePath() . '/js/assets/js/main.js')
-                ->prependFile($this->basePath() . '/public/js/caps-checker.jquery.json')
-                ->prependFile($this->basePath() . '/public/js/jquery.caps-checker.js')
-                ->prependFile($this->basePath() . '/public/js/jquery.caps-checker.min.js')
         ;
         echo $this->inlineScript();
         ?>
@@ -73,28 +69,17 @@ use Login\Controller\Helper\Constantes; ?>
 
                 // Init Demo JS
                 Demo.init();
-                
-                /*Verificador de Caps Lock*/
-                $(function() {
-
-                        function onCaps(e, on)
-                        {
-                                if(on)
-                                        $('#pnlIndicator').addClass('on')
-                                else
-                                        $('#pnlIndicator').removeClass('on')
-                        }
-
-                        $('#txtTest').capsChecker({ capson: onCaps, capsoff: onCaps });
-
-                        $('#btnRemove').on('click', function() {
-                                $('#txtTest').capsChecker('destroy');
-                        });
-
-                });
-
             });
 
+
+            function capLock(e) {
+                kc = e.keyCode ? e.keyCode : e.which;
+                sk = e.shiftKey ? e.shiftKey : ((kc == 16) ? true : false);
+                if (((kc >= 65 && kc <= 90) && !sk) || ((kc >= 97 && kc <= 122) && sk))
+                    document.getElementById('divMayus').style.visibility = 'visible';
+                else
+                    document.getElementById('divMayus').style.visibility = 'hidden';
+            }
         </script>
         <!-- END: PAGE SCRIPTS -->
     </body>

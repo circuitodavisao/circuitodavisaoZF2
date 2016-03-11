@@ -18,6 +18,7 @@ class Constantes {
     public static $FORM_LOGIN = 'formLogin';
     public static $ROUTE_LOGIN = 'login';
     public static $ACTION_ACESSO = 'acesso';
+    public static $URL_ESQUECEU_SENHA = 'esqueceuSenha';
     public static $ACTION_INDEX = 'index';
     public static $ACTION = 'action';
     public static $INPUT_EMAIL = 'email';
