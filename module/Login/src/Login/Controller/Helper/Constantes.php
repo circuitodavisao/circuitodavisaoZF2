@@ -24,14 +24,13 @@ class Constantes {
     public static $INPUT_SENHA = 'senha';
     public static $INPUT_CSRF = 'csrf';
     public static $MENSAGEM_ERRO_CSRF = 'Poss&iacute;vel ataque CSRF';
+    public static $MENSAGEM_FALHA_LOGIN = 'The informed login details do not match an account in our records. Remember that your password is case sensitive.';
     public static $IMAGEM_LOGO = 'img/logos/logo_circuito.png';
-    public static $CLASS_HIDDEN = 'hidden';
     /* Traduções */
     public static $TRADUCAO_NOME_APLICACAO = 'View of the Circuit';
     public static $TRADUCAO_USUARIO = 'User';
     public static $TRADUCAO_SENHA = 'Password';
     public static $TRADUCAO_ENTRAR = 'Sign in';
     public static $TRADUCAO_ESQUECEU_SENHA = 'Forgot password?';
-    public static $TRADUCAO_FALHA_LOGIN = 'The informed login details do not match an account in our records. Remember that your password is case sensitive.';
 
 }
