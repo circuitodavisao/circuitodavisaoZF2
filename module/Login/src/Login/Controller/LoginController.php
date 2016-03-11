@@ -38,18 +38,21 @@ class LoginController extends AbstractActionController {
      * GET /
      */
     public function indexAction() {
-        /* Limpar mensagens */
-        $this->flashMessenger()->clearCurrentMessages();
+        /* Class hidden para mensagem de erro */
+        $classeMessagem = Constantes::$CLASS_HIDDEN;
 
         $formLogin = new LoginForm(Constantes::$LOGIN_FORM);
 
         $inputEmailDaRota = $this->params()->fromRoute(Constantes::$INPUT_EMAIL);
         if (!empty($inputEmailDaRota)) {
             $formLogin->get(Constantes::$INPUT_EMAIL)->setValue($inputEmailDaRota);
+            /* Caso tenha email de volta mostrar mensagem de erro */
+            $classeMessagem = "";
         }
 
         return [
             Constantes::$FORM_LOGIN => $formLogin,
+            Constantes::$CLASS_HIDDEN => $classeMessagem,
         ];
     }
 
@@ -88,9 +91,6 @@ class LoginController extends AbstractActionController {
         } else {
             /* Autenticacao falhou */
 
-            /* Mensagem de erro */
-            $this->flashMessenger()->
-                    addErrorMessage(Constantes::$MENSAGEM_FALHA_LOGIN);
             /* Redirecionamento */
             return $this->forward()->dispatch(Constantes::$CONTROLLER_LOGIN, array(
                         Constantes::$ACTION => Constantes::$ACTION_INDEX,
