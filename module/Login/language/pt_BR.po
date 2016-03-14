@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: ZendSkeletonApplication\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-07-05 22:17-0700\n"
-"PO-Revision-Date: 2016-03-10 18:02-0300\n"
+"PO-Revision-Date: 2016-03-14 13:03-0300\n"
 "Last-Translator: Diogo Melo <dmelo87@gmail.com>\n"
 "Language-Team: ZF Contibutors <zf-devteam@zend.com>\n"
 "Language: pt\n"
@@ -45,6 +45,10 @@ msgstr "Perdeu sua senha?"
 # Falha de login
 msgid "The informed login details do not match an account in our records. Remember that your password is case sensitive."
 msgstr "Os dados de login informados n&atilde;o correspondem a uma conta em nossos registros. Lembre-se de que sua senha diferencia mai&uacute;sculas de min&uacute;sculas."
+
+#: ../view/login/index/index.phtml:42
+msgid "Caps Lock is on."
+msgstr "Caps Lock est&aacute; ativado."
 
 #: ../view/error/index.phtml:1
 msgid "An error occurred"

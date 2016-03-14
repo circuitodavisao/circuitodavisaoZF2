@@ -42,7 +42,7 @@ class LoginForm extends Form {
                             'id' => 'email',
                             'placeholder' => 'Enter your user',
                             'required' => 'required',
-                            'onkeypress' => 'capLock(event)',
+                            'onkeypress' => 'capsLock(event)',
                         ])
         );
 
@@ -59,7 +59,7 @@ class LoginForm extends Form {
                             'id' => 'senha',
                             'placeholder' => 'Enter your password',
                             'required' => 'required',
-                            'onkeypress' => 'capLock(event)',
+                            'onkeypress' => 'capsLock(event)',
                         ])
         );
 

@@ -34,5 +34,6 @@ class Constantes {
     public static $TRADUCAO_ENTRAR = 'Sign in';
     public static $TRADUCAO_ESQUECEU_SENHA = 'Forgot password?';
     public static $TRADUCAO_FALHA_LOGIN = 'The informed login details do not match an account in our records. Remember that your password is case sensitive.';
+    public static $TRADUCAO_CAPSLOCK = 'Caps Lock is on.';
 
 }

@@ -2,7 +2,8 @@
 
 use Login\Controller\Helper\Constantes;
 
-/** Nome: index.phtml
+/**
+ * Nome: index.phtml
  * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com> e Sergio Bezerra da Silva <sergio.silva.unb@gmail.com>
  * Descricao: Página de login
  */
@@ -38,7 +39,10 @@ $classMensagem = $this->hidden;
 
                     <div class="panel-body bg-light p25 pb15">
 
-                        <div id="divMayus" style="visibility:hidden">Caps Lock is on.</div> 
+                        <!-- Mensagens -->
+                        <div id="divCapslock" class="alert alert-info hidden">
+                            <?php echo $this->translate(Constantes::$TRADUCAO_CAPSLOCK); ?> 
+                        </div>
 
                         <?php echo $this->message(); ?>
 
@@ -46,6 +50,7 @@ $classMensagem = $this->hidden;
                             <button type="button" class="close" data-dismiss="alert">&times;</button>
                             <?php echo $this->translate(Constantes::$TRADUCAO_FALHA_LOGIN); ?>
                         </div>
+
                         <!-- Username Input -->
                         <div class="section">
                             <label for="<?php echo Constantes::$TRADUCAO_USUARIO; ?>" class="field-label text-muted fs18 mb10">
