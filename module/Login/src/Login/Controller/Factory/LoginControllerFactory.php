@@ -36,8 +36,7 @@ class LoginControllerFactory implements FactoryInterface {
             $doctrineAuthenticationService = null;
         }
 
-        $controller = new LoginController($doctrineORMEntityManager, $doctrineAuthenticationService);
-        return $controller;
+        return new LoginController($doctrineORMEntityManager, $doctrineAuthenticationService);
     }
 
 }

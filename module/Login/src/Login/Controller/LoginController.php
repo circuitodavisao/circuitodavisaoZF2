@@ -5,6 +5,7 @@ namespace Login\Controller;
 use Doctrine\ORM\EntityManager;
 use Login\Controller\Helper\Constantes;
 use Login\Form\LoginForm;
+use Login\Form\RecuperarAcessoForm;
 use Zend\Authentication\AuthenticationService;
 use Zend\Mvc\Controller\AbstractActionController;
 
@@ -113,6 +114,17 @@ class LoginController extends AbstractActionController {
      * GET /esqueceuSenha
      */
     public function esqueceuSenhaAction() {
+        $formRecuperarAcesso = new RecuperarAcessoForm(Constantes::$RECUPERAR_ACESSO_FORM);
+        return [
+            Constantes::$FORM_RECUPERAR_ACESSO => $formRecuperarAcesso,
+        ];
+    }
+
+    /**
+     * Função que tenta recuperar o acesso
+     * GET /acesso
+     */
+    public function recuperarAcessoAction() {
         return [];
     }
 

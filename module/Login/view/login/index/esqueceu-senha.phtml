@@ -1,8 +1,64 @@
 <?php
+
+use Login\Controller\Helper\Constantes;
+
 /** Nome: acesso.phtml
  * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com>
  * Descricao: Página de acesso
  */
+$formRecuperarAcesso = $this->formRecuperarAcesso;
+$formRecuperarAcesso->prepare();
+$formRecuperarAcesso->setAttribute('action', $this->url('login', array('action' => 'recuperarAcesso')));
 ?>
-<h1>Esqueceu senha</h1>
-<a href="/">Voltar</a>
+
+<?php echo $this->form()->openTag($formRecuperarAcesso); ?>
+<div class="panel panel-default col-md-offset-4 col-md-4">
+    <div class="panel-heading">
+        <h3 class="panel-title"><?php echo $this->translate(Constantes::$TRADUCAO_ESQUECEU_SENHA); ?></h3>
+    </div>
+    <div class="panel-body">
+        <?php echo $this->formRadio($formRecuperarAcesso->get(Constantes::$INPUT_OPCAO)); ?>
+    </div>
+    <div class="panel-footer">
+        <div class="row">
+            <p>
+                <?php echo $this->formButton($formRecuperarAcesso->get(Constantes::$INPUT_BOTAO_CANCELAR)); ?>
+                <?php echo $this->formButton($formRecuperarAcesso->get(Constantes::$INPUT_BOTAO_CONTINUAR)); ?>
+            </p>
+        </div>
+    </div>
+</div>
+
+<div class="panel panel-default col-md-offset-4 col-md-4">
+    <div class="panel-heading">
+        <h3 class="panel-title"><?php echo $this->translate(Constantes::$TRADUCAO_ESQUECEU_SENHA); ?></h3>
+    </div>
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-lg-12">
+                Podemos ajudá-lo a redefinir sua senha e informações de segurança. Primeiro, insira sua conta da Microsoft e siga as instruções a seguir.
+            </div><!-- /.col-lg-12 -->
+        </div><!-- /.row -->  
+        <div class="row">
+            <div class="col-lg-12">
+                <?php echo $this->formInput($formRecuperarAcesso->get(Constantes::$INPUT_EMAIL)); ?>
+            </div><!-- /.col-lg-12 -->
+        </div><!-- /.row --> 
+
+        <div class="row">
+            <div class="col-lg-12">
+                <?php echo $this->formRow($formRecuperarAcesso->get(Constantes::$INPUT_CAPTCHA)); ?>
+            </div><!-- /.col-lg-12 -->
+        </div><!-- /.row --> 
+    </div>
+    <div class="panel-footer">
+        <div class="row">
+            <p>
+                <a class="btn btn-success" href="/">Cancelar</a>
+                <a class="btn btn-success" href="/">Continuar</a>
+            </p>
+        </div>
+    </div>
+</div>
+<?php
+echo $this->form()->closeTag();

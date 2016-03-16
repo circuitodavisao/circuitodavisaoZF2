@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: ZendSkeletonApplication\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-07-05 22:17-0700\n"
-"PO-Revision-Date: 2016-03-14 13:03-0300\n"
+"PO-Revision-Date: 2016-03-16 15:02-0300\n"
 "Last-Translator: Diogo Melo <dmelo87@gmail.com>\n"
 "Language-Team: ZF Contibutors <zf-devteam@zend.com>\n"
 "Language: pt\n"
@@ -49,6 +49,14 @@ msgstr "Os dados de login informados n&atilde;o correspondem a uma conta em noss
 #: ../view/login/index/index.phtml:42
 msgid "Caps Lock is on."
 msgstr "Caps Lock est&aacute; ativado."
+
+#: ../view/login/index/esqueceu-senha.phtml:42
+msgid "Cancel"
+msgstr "Cancelar"
+
+#: ../view/login/index/esqueceu-senha.phtml:42
+msgid "Continue"
+msgstr "Continuar"
 
 #: ../view/error/index.phtml:1
 msgid "An error occurred"
