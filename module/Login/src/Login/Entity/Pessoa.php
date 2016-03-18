@@ -34,6 +34,9 @@ class Pessoa {
     /** @ORM\Column(type="string") */
     protected $data_inativacao;
 
+    /** @ORM\Column(type="string") */
+    protected $status;
+
     function getId() {
         return $this->id;
     }
@@ -58,6 +61,18 @@ class Pessoa {
         return $this->data_inativacao;
     }
 
+    function getStatus() {
+        return $this->status;
+    }
+
+    public function verificarSeEstaAtivo() {
+        $resposta = false;
+        if ($this->status == 'A') {
+            $resposta = true;
+        }
+        return $resposta;
+    }
+
     function setId($id) {
         $this->id = $id;
     }
@@ -80,6 +95,10 @@ class Pessoa {
 
     function setData_inativacao($data_inativacao) {
         $this->data_inativacao = $data_inativacao;
+    }
+
+    function setStatus($status) {
+        $this->status = $status;
     }
 
 }

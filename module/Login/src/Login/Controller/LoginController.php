@@ -4,6 +4,7 @@ namespace Login\Controller;
 
 use Doctrine\ORM\EntityManager;
 use Login\Controller\Helper\Constantes;
+use Login\Controller\Helper\LoginORM;
 use Login\Form\LoginForm;
 use Login\Form\RecuperarAcessoForm;
 use Zend\Authentication\AuthenticationService;
@@ -125,7 +126,28 @@ class LoginController extends AbstractActionController {
      * GET /acesso
      */
     public function recuperarAcessoAction() {
-        return [];
+        $loginORM = new LoginORM($this->getDoctrineORMEntityManager());
+
+        /* Dados da requisição POST */
+        $data = $this->getRequest()->getPost();
+
+        /* Verificar se existe pessoa por email informado */
+        $email = $data[Constantes::$ENTITY_PESSOA_EMAIL];
+        $pessoa = $loginORM->getPessoaORM()->encontrarPorEmail($email);
+
+        $mensagem = '';
+        /* Pessoa com email informado nao encontrada */
+        if (!$pessoa) {
+            $mensagem = 'Pessoa nao encontrada';
+        } else {
+            if (!$pessoa->verificarSeEstaAtivo()) {
+                $mensagem = 'Pessoa inativada';
+            } else {
+                $mensagem = 'Pessoa ok truta';
+            }
+        }
+
+        return ['mensagem' => $mensagem];
     }
 
     public function getDoctrineORMEntityManager() {

@@ -12,6 +12,7 @@ use Doctrine\ORM\EntityManager;
 class LoginORM {
 
     private $_doctrineORMEntityManager;
+    private $_pessoaORM;
 
     /**
      * Contrutor
@@ -27,9 +28,10 @@ class LoginORM {
      * @return PessoaORM
      */
     public function getPessoaORM() {
-
-        // return Entity PessoaORM
-        return new PessoaORM($this->getDoctrineORMEntityManager());
+        if (is_null($this->_pessoaORM)) {
+            $this->_pessoaORM = new PessoaORM($this->getDoctrineORMEntityManager());
+        }
+        return $this->_pessoaORM;
     }
 
     public function getDoctrineORMEntityManager() {

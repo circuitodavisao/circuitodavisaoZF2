@@ -7,6 +7,7 @@ use Zend\Captcha\Dumb;
 use Zend\Form\Element\Button;
 use Zend\Form\Element\Captcha;
 use Zend\Form\Element\Radio;
+use Zend\Form\Element\Submit;
 use Zend\Form\Element\Text;
 use Zend\Form\Form;
 
@@ -43,8 +44,8 @@ class RecuperarAcessoForm extends Form {
                         ])
                         ->setOptions([
                             'value_options' => array(
-                                1 => ' Esqueci minha senha? ',
-                                2 => ' Sei minha senha mas sou bizonho ',
+                                1 => Constantes::$TRADUCAO_ESQUECI_MINHA_SENHA,
+                                2 => Constantes::$TRADUCAO_ESQUECI_MEU_USUARIO,
                             ),
                         ])
         );
@@ -73,12 +74,10 @@ class RecuperarAcessoForm extends Form {
                         ->setAttributes([
                             'id' => Constantes::$INPUT_BOTAO_CONTINUAR,
                             'onClick' => 'location.href=\'#\'',
-                            'class' => 'btn btn-info',
+                            'class' => 'btn btn-primary',
                         ])
                         ->setValue(Constantes::$TRADUCAO_CONTINUAR)
         );
-
-
         /**
          * Email de acesso
          * Elemento do tipo text
@@ -90,7 +89,6 @@ class RecuperarAcessoForm extends Form {
                             'class' => 'gui-input',
                             'id' => Constantes::$INPUT_EMAIL,
                             'placeholder' => Constantes::$TRADUCAO_USUARIO_PLACEHOLDER,
-                            'required' => 'required',
                             'onkeypress' => 'capsLock(event)',
                         ])
         );
@@ -102,6 +100,60 @@ class RecuperarAcessoForm extends Form {
         $captcha->setCaptcha(new Dumb());
         $captcha->setLabel(Constantes::$TRADUCAO_CAPTCHA_LABEL);
         $this->add($captcha);
+
+        /**
+         * Botao enviar email
+         */
+        $this->add(
+                (new Submit())
+                        ->setName(Constantes::$INPUT_BOTAO_ENVIAR_EMAIL)
+                        ->setValue(Constantes::$TRADUCAO_ENVIAR_EMAIL)
+                        ->setAttributes([
+                            'id' => Constantes::$INPUT_BOTAO_ENVIAR_EMAIL,
+                            'class' => 'btn btn-success',
+                        ])
+        );
+
+        /**
+         * CPF do usuario
+         * Elemento do tipo text
+         */
+        $this->add(
+                (new Text())
+                        ->setName(Constantes::$INPUT_CPF)
+                        ->setAttributes([
+                            'class' => 'gui-input',
+                            'id' => Constantes::$INPUT_CPF,
+                            'placeholder' => '##',
+                        ])
+        );
+
+        /**
+         * Data Nascimento do usuario
+         * Elemento do tipo text
+         */
+        $this->add(
+                (new Text())
+                        ->setName(Constantes::$INPUT_DATA_NASCIMENTO)
+                        ->setAttributes([
+                            'class' => 'gui-input',
+                            'id' => Constantes::$INPUT_DATA_NASCIMENTO,
+                            'placeholder' => '##/##/####',
+                        ])
+        );
+
+        /**
+         * Botao verificar acesso
+         */
+        $this->add(
+                (new Submit())
+                        ->setName(Constantes::$INPUT_BOTAO_VERIFICAR_USUARIO)
+                        ->setValue(Constantes::$TRADUCAO_VERIFICAR_USUARIO)
+                        ->setAttributes([
+                            'id' => Constantes::$INPUT_BOTAO_VERIFICAR_USUARIO,
+                            'class' => 'btn btn-success',
+                        ])
+        );
     }
 
 }

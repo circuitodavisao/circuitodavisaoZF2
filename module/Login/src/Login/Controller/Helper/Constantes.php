@@ -11,6 +11,7 @@ class Constantes {
     /* Constates Login */
 
     public static $ENTITY_PESSOA = 'Login\Entity\Pessoa';
+    public static $ENTITY_PESSOA_EMAIL = 'email';
     public static $ENTITY_PERFIL_ACESSO = 'Login\Entity\PerfilAcesso';
     public static $ENTITY_PESSOA_PERFIL_ACESSO = 'Login\Entity\PessoaPerfilAcesso';
     public static $CONTROLLER_LOGIN = 'Login\Controller\Login';
@@ -45,10 +46,18 @@ class Constantes {
     public static $INPUT_OPCAO = 'opcao';
     public static $INPUT_BOTAO_CANCELAR = 'cancelar';
     public static $INPUT_BOTAO_CONTINUAR = 'continuar';
+    public static $INPUT_BOTAO_ENVIAR_EMAIL = 'enviarEmail';
+    public static $INPUT_BOTAO_VERIFICAR_USUARIO = 'verificarUsuario';
     public static $INPUT_CAPTCHA = 'captcha';
+    public static $INPUT_CPF = 'cpf';
+    public static $INPUT_DATA_NASCIMENTO = 'dataNascimento';
     public static $INDEX = '/';
     public static $TRADUCAO_CANCELAR = 'Cancel';
     public static $TRADUCAO_CONTINUAR = 'Continue';
     public static $TRADUCAO_CAPTCHA_LABEL = 'Please verify you are human';
+    public static $TRADUCAO_ESQUECI_MINHA_SENHA = 'I forgot my password';
+    public static $TRADUCAO_ESQUECI_MEU_USUARIO = 'I forgot my User';
+    public static $TRADUCAO_ENVIAR_EMAIL = 'Send email';
+    public static $TRADUCAO_VERIFICAR_USUARIO = 'Check User';
 
 }
