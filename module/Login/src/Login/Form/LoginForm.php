@@ -2,6 +2,8 @@
 
 namespace Login\Form;
 
+use Login\Controller\Helper\Constantes;
+use Zend\Form\Element;
 use Zend\Form\Element\Csrf;
 use Zend\Form\Element\Password;
 use Zend\Form\Element\Text;
@@ -36,12 +38,13 @@ class LoginForm extends Form {
          */
         $this->add(
                 (new Text())
-                        ->setName('email')
+                        ->setName(Constantes::$INPUT_EMAIL)
                         ->setAttributes([
                             'class' => 'gui-input',
                             'id' => 'email',
-                            'placeholder' => 'Enter your user',
+                            'placeholder' => Constantes::$TRADUCAO_USUARIO_PLACEHOLDER,
                             'required' => 'required',
+                            'onkeypress' => 'capsLock(event)',
                         ])
         );
 
@@ -52,19 +55,29 @@ class LoginForm extends Form {
          */
         $this->add(
                 (new Password())
-                        ->setName('senha')
+                        ->setName(Constantes::$INPUT_SENHA)
                         ->setAttributes([
                             'class' => 'gui-input',
                             'id' => 'senha',
-                            'placeholder' => 'Enter your password',
+                            'placeholder' => Constantes::$TRADUCAO_SENHA_PLACEHOLDER,
                             'required' => 'required',
+                            'onkeypress' => 'capsLock(event)',
                         ])
         );
 
         $this->add(
                 (new Csrf())
-                        ->setName('csrf')
+                        ->setName(Constantes::$INPUT_CSRF)
         );
+
+        $send = new Element(Constantes::$INPUT_ENTRAR);
+        $send->setValue(Constantes::$TRADUCAO_ENTRAR);
+        $send->setName('entrar');
+        $send->setAttributes(array(
+            'type' => 'submit',
+            'class' => 'button btn-primary-circuito mr10 pull-right',
+        ));
+        $this->add($send);
     }
 
 }

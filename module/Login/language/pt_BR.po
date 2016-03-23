@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: ZendSkeletonApplication\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-07-05 22:17-0700\n"
-"PO-Revision-Date: 2016-03-10 18:02-0300\n"
+"PO-Revision-Date: 2016-03-18 17:55-0300\n"
 "Last-Translator: Diogo Melo <dmelo87@gmail.com>\n"
 "Language-Team: ZF Contibutors <zf-devteam@zend.com>\n"
 "Language: pt\n"
@@ -15,11 +15,17 @@ msgstr ""
 "X-Generator: Poedit 1.8.7\n"
 "X-Poedit-SearchPath-0: ..\n"
 
+# ############
+# ## GERAL ###
+# ############
 #: ../view/layout/layout.phtml:9 ../view/login/index/index.phtml:23
 #: ../view/login/index/index.phtml:24
 msgid "View of the Circuit"
 msgstr "Circuito da Vis&atilde;o"
 
+# ############
+# ## LOGIN ###
+# ############
 #: ../view/login/index/index.phtml:36
 msgid "User"
 msgstr "Usu&aacute;rio"
@@ -45,6 +51,41 @@ msgstr "Perdeu sua senha?"
 # Falha de login
 msgid "The informed login details do not match an account in our records. Remember that your password is case sensitive."
 msgstr "Os dados de login informados n&atilde;o correspondem a uma conta em nossos registros. Lembre-se de que sua senha diferencia mai&uacute;sculas de min&uacute;sculas."
+
+#: ../view/login/index/index.phtml:42
+msgid "Caps Lock is on."
+msgstr "Caps Lock est&aacute; ativado."
+
+# ####################
+# ## ESQUECI SENHA ###
+# ####################
+#: ../view/login/index/esqueceu-senha.phtml:42
+msgid "Cancel"
+msgstr "Cancelar"
+
+#: ../view/login/index/esqueceu-senha.phtml:42
+msgid "Continue"
+msgstr "Continuar"
+
+#: ../view/login/index/esqueceu-senha.phtml:42
+msgid "I forgot my password"
+msgstr "Esqueci minha senha"
+
+#: ../view/login/index/esqueceu-senha.phtml:42
+msgid "I forgot my User"
+msgstr "Esqueci meu usuário"
+
+#: ../view/login/index/esqueceu-senha.phtml:42
+msgid "Send email"
+msgstr "Enviar email"
+
+#: ../view/login/index/esqueceu-senha.phtml:42
+msgid "Check User"
+msgstr "Verificar Usuário"
+
+#: ../view/login/index/esqueceu-senha.phtml:42
+msgid "Please verify you are human"
+msgstr "Por favor verificar que você é humano"
 
 #: ../view/error/index.phtml:1
 msgid "An error occurred"

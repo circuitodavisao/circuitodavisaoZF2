@@ -10,6 +10,7 @@ CREATE TABLE pessoa
   senha character varying(40), -- Senha de acesso em MD5
   data_criacao date, -- Data de criação da pessoa
   data_inativacao date, -- Data de inativação da pessoa
+  status status, -- Status do acesso da pessoa: ativo ou inativo
   CONSTRAINT primary_key_pessoa PRIMARY KEY (id) -- Primary Key da tabela pessoa
 )
 WITH (
@@ -25,5 +26,18 @@ COMMENT ON COLUMN pessoa.email IS 'Email de acesso ';
 COMMENT ON COLUMN pessoa.senha IS 'Senha de acesso em MD5';
 COMMENT ON COLUMN pessoa.data_criacao IS 'Data de criação da pessoa';
 COMMENT ON COLUMN pessoa.data_inativacao IS 'Data de inativação da pessoa';
+COMMENT ON COLUMN pessoa.status IS 'Status do acesso da pessoa: ativo ou inativo';
 
 COMMENT ON CONSTRAINT primary_key_pessoa ON pessoa IS 'Primary Key da tabela pessoa';
+
+
+-- Index: index_pessoa_status
+
+-- DROP INDEX index_pessoa_status;
+
+CREATE INDEX index_pessoa_status
+  ON pessoa
+  USING btree
+  (status);
+COMMENT ON INDEX index_pessoa_status
+  IS 'Index para o status da pessoa';

@@ -45,6 +45,20 @@ class PessoaORM {
         return $pessoa;
     }
 
+    /**
+     * Localizar pessoa por email
+     * 
+     * @param String $email
+     * @return Pessoa
+     * @throws Exception
+     */
+    public function encontrarPorEmail($email) {
+        $pessoa = $this->getEntityManager()
+                ->getRepository(Constantes::$ENTITY_PESSOA)
+                ->findOneBy(array(Constantes::$ENTITY_PESSOA_EMAIL => $email));
+        return $pessoa;
+    }
+
     public function getEntityManager() {
         return $this->_entityManager;
     }
