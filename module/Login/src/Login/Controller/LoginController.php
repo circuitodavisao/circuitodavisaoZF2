@@ -8,10 +8,8 @@ use Login\Controller\Helper\Constantes;
 use Login\Controller\Helper\LoginORM;
 use Login\Form\LoginForm;
 use Login\Form\RecuperarAcessoForm;
+use PHPMailer;
 use Zend\Authentication\AuthenticationService;
-use Zend\Mail\Message;
-use Zend\Mail\Transport\Smtp;
-use Zend\Mail\Transport\SmtpOptions;
 use Zend\Mvc\Controller\AbstractActionController;
 
 /**
@@ -161,29 +159,28 @@ class LoginController extends AbstractActionController {
                     $mensagem = 'Pessoa inativada';
                 } else {
                     $mensagem = 'Pessoa ok truta';
-                    try {
-                        $message = new Message();
-                        $message->setBody('This is the body');
-                        $message->setFrom('myemail@mydomain.com');
-                        $message->addTo('falecomleonardopereira@gmail.com');
-                        $message->setSubject('Test subject');
 
-                        $smtpOptions = new SmtpOptions(array(
-                            'name' => 'smtp.circuitodavisao.com.br',
-                            'host' => 'smtp.circuitodavisao.com.br',
-                            'port' => 587,
-                            'connection_class' => 'smtp',
-                            'connection_config' => array(
-                                'username' => 'leonardo@circuitodavisao.com.br',
-                                'password' => 'Leonardo142857',
-                                'ssl' => 'tls',
-                            ),
-                        ));
+                    $mail = new PHPMailer;
+//                    $mail->SMTPDebug = 1;                              // Enable verbose debug output
+                    $mail->isSMTP();                                      // Set mailer to use SMTP
+                    $mail->Host = '200.147.36.31';  // Specify main and backup SMTP servers
+                    $mail->SMTPAuth = true;                               // Enable SMTP authentication
+                    $mail->Username = 'leonardo@circuitodavisao.com.br';                 // SMTP username
+                    $mail->Password = 'Leonardo142857';                           // SMTP password
+//                    $mail->SMTPSecure = 'tls';                            // Enable TLS encryption, `ssl` also accepted
+                    $mail->Port = 587;                                    // TCP port to connect to
+                    $mail->setFrom('leonardo@circuitodavisao.com.br', 'Chispirito TLS sem 3');
+                    $mail->addAddress('falecomleonardopereira@gmail.com', 'Leo Gatao TLS sem 3');
+                    $mail->isHTML(true);                                  // Set email format to HTML
+                    $mail->Subject = 'Here is the subject TLS';
+                    $mail->Body = 'This is the HTML message body <b>in bold!</b> 554';
+                    $mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
 
-                        $transport = new Smtp($smtpOptions);
-                        $transport->send($message);
-                    } catch (Exception $exc) {
-                        echo $exc->getTraceAsString();
+                    if (!$mail->send()) {
+                        echo 'Message could not be sent.';
+                        echo 'Mailer Error: ' . $mail->ErrorInfo;
+                    } else {
+                        echo '#### Message has been sent';
                     }
                 }
             }
