@@ -4,10 +4,7 @@ namespace Login\Form;
 
 use Login\Controller\Helper\Constantes;
 use Zend\Captcha\Dumb;
-<<<<<<< HEAD
 use Zend\Captcha\Image;
-=======
->>>>>>> 6a3c7e5dd366cfa453ea8a8ddf37290657593110
 use Zend\Form\Element\Button;
 use Zend\Form\Element\Captcha;
 use Zend\Form\Element\Radio;
@@ -100,7 +97,6 @@ class RecuperarAcessoForm extends Form {
         /**
          * Captcha de validacao de acesso
          */
-<<<<<<< HEAD
         $captcha = new Image(array(
             'expiration' => '300',
             'wordlen' => '1',
@@ -118,12 +114,6 @@ class RecuperarAcessoForm extends Form {
                                     'captcha' => $captcha,
                         ))
         );
-=======
-        $captcha = new Captcha(Constantes::$INPUT_CAPTCHA);
-        $captcha->setCaptcha(new Dumb());
-        $captcha->setLabel(Constantes::$TRADUCAO_CAPTCHA_LABEL);
-        $this->add($captcha);
->>>>>>> 6a3c7e5dd366cfa453ea8a8ddf37290657593110
 
         /**
          * Botao enviar email

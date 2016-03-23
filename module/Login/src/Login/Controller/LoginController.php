@@ -130,7 +130,7 @@ class LoginController extends AbstractActionController {
      * GET /acesso
      */
     public function recuperarAcessoAction() {
-<<<<<<< HEAD
+
         $request = $this->getRequest();
         if ($request->isPost()) {
             /* Helper Controller */
@@ -188,29 +188,7 @@ class LoginController extends AbstractActionController {
                 }
             }
         }
-=======
-        $loginORM = new LoginORM($this->getDoctrineORMEntityManager());
 
-        /* Dados da requisição POST */
-        $data = $this->getRequest()->getPost();
-
-        /* Verificar se existe pessoa por email informado */
-        $email = $data[Constantes::$ENTITY_PESSOA_EMAIL];
-        $pessoa = $loginORM->getPessoaORM()->encontrarPorEmail($email);
-
-        $mensagem = '';
-        /* Pessoa com email informado nao encontrada */
-        if (!$pessoa) {
-            $mensagem = 'Pessoa nao encontrada';
-        } else {
-            if (!$pessoa->verificarSeEstaAtivo()) {
-                $mensagem = 'Pessoa inativada';
-            } else {
-                $mensagem = 'Pessoa ok truta';
-            }
-        }
-
->>>>>>> 6a3c7e5dd366cfa453ea8a8ddf37290657593110
         return ['mensagem' => $mensagem];
     }
 
