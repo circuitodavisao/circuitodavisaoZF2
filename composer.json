@@ -13,6 +13,7 @@
         "sebastian/phpcpd": "*",
         "doctrine/doctrine-orm-module": "0.8.*",
         "zendframework/zend-developer-tools": "0.*",
-        "zendframework/zftool": "dev-master"
+        "zendframework/zftool": "dev-master",
+        "phpmailer/phpmailer": "^5.2"
     }
 }
