@@ -36,6 +36,7 @@ use Login\Controller\Helper\Constantes; ?>
                 ->prependStylesheet('http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700')
                 ->prependStylesheet($this->basePath() . '/css/estilos-circuito/admin-forms.css')
                 ->prependStylesheet($this->basePath() . '/css/estilos-circuito/default_skin/css/theme.css')
+                ->prependStylesheet($this->basePath() . '/css/estilos-circuito/cv-login/estilos-login.css')
         ;
         ?>
     </head>
@@ -56,6 +57,7 @@ use Login\Controller\Helper\Constantes; ?>
                 ->prependFile($this->basePath() . '/js/assets/js/demo/demo.js')
                 ->prependFile($this->basePath() . '/js/assets/js/main.js')
                 ->prependFile($this->basePath() . '/js/capslock.js')
+                ->prependFile($this->basePath() . '/js/circuito_da_visao/circuito-mascaras_e_validacoes.js')
         ;
         echo $this->inlineScript();
         ?>

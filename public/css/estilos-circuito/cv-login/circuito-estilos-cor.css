@@ -1,0 +1,12 @@
+/*Folha de Estilo de Cores do Circuito da Visão*/
+.texto-preto-cv {
+  color: #000 !important;
+}
+
+.label-preto-cv {
+  background-color: #000;
+}
+.label-preto-cv[href]:hover,
+.label-preto-cv[href]:focus {
+  background-color: #3b3f4f;
+}

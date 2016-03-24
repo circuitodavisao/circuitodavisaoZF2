@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: ZendSkeletonApplication\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-07-05 22:17-0700\n"
-"PO-Revision-Date: 2016-03-18 17:55-0300\n"
+"PO-Revision-Date: 2016-03-24 18:04-0300\n"
 "Last-Translator: Diogo Melo <dmelo87@gmail.com>\n"
 "Language-Team: ZF Contibutors <zf-devteam@zend.com>\n"
 "Language: pt\n"
@@ -59,21 +59,29 @@ msgstr "Caps Lock est&aacute; ativado."
 # ####################
 # ## ESQUECI SENHA ###
 # ####################
-#: ../view/login/index/esqueceu-senha.phtml:42
-msgid "Cancel"
-msgstr "Cancelar"
+#: ../view/login/index/esqueceu-senha.phtml:33
+msgid "Because you can not enter the View of the Circuit?"
+msgstr "Por que você não consegue entrar no CircuitoDaVisao.com.br?"
 
-#: ../view/login/index/esqueceu-senha.phtml:42
+#: ../view/login/index/esqueceu-senha.phtml:57
+msgid "Back"
+msgstr "Voltar"
+
+#: ../view/login/index/esqueceu-senha.phtml:58
 msgid "Continue"
 msgstr "Continuar"
 
-#: ../view/login/index/esqueceu-senha.phtml:42
-msgid "I forgot my password"
-msgstr "Esqueci minha senha"
+#: ../view/login/index/esqueceu-senha.phtml:41
+msgid "Because I forgot my password"
+msgstr "Por que esqueci minha senha"
 
-#: ../view/login/index/esqueceu-senha.phtml:42
-msgid "I forgot my User"
-msgstr "Esqueci meu usuário"
+#: ../view/login/index/esqueceu-senha.phtml:44
+msgid "I know my password, but I do not remember my login"
+msgstr "Eu sei a minha senha, mas não lembro o meu login"
+
+#: ../view/login/index/esqueceu-senha.phtml:44
+msgid "We can help you reset your password. First, enter your email and follow the instructions."
+msgstr "Podemos ajudá-lo a redefinir sua senha. Primeiro, insira seu email e siga as instruções a seguir."
 
 #: ../view/login/index/esqueceu-senha.phtml:42
 msgid "Send email"

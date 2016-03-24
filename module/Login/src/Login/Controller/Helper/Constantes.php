@@ -46,18 +46,30 @@ class Constantes {
     public static $INPUT_OPCAO = 'opcao';
     public static $INPUT_BOTAO_CANCELAR = 'cancelar';
     public static $INPUT_BOTAO_CONTINUAR = 'continuar';
+    public static $INPUT_BOTAO_VOLTAR = 'voltar';
     public static $INPUT_BOTAO_ENVIAR_EMAIL = 'enviarEmail';
     public static $INPUT_BOTAO_VERIFICAR_USUARIO = 'verificarUsuario';
     public static $INPUT_CAPTCHA = 'captcha';
     public static $INPUT_CPF = 'cpf';
     public static $INPUT_DATA_NASCIMENTO = 'dataNascimento';
     public static $INDEX = '/';
-    public static $TRADUCAO_CANCELAR = 'Cancel';
+    public static $TRADUCAO_CANCELAR = 'Back';
     public static $TRADUCAO_CONTINUAR = 'Continue';
     public static $TRADUCAO_CAPTCHA_LABEL = 'Please verify you are human';
-    public static $TRADUCAO_ESQUECI_MINHA_SENHA = 'I forgot my password';
-    public static $TRADUCAO_ESQUECI_MEU_USUARIO = 'I forgot my User';
+    public static $TRADUCAO_ESQUECI_MINHA_SENHA = 'Because I forgot my password';
+    public static $TRADUCAO_ESQUECI_MEU_USUARIO = 'I know my password, but I do not remember my login';
     public static $TRADUCAO_ENVIAR_EMAIL = 'Send email';
     public static $TRADUCAO_VERIFICAR_USUARIO = 'Check User';
+    public static $TRADUCAO_PERGUNTA_ESQUECI_SENHA = 'Because you can not enter the View of the Circuit?';
+    public static $TRADUCAO_TITULO_ESQUECI_MINHA_SENHA = 'We can help you reset your password. First, enter your email and follow the instructions.';
+
+    /* Forms */
+    public static $FORM_STRING_METHOD = 'method';
+    public static $FORM_STRING_ID = 'id';
+    public static $FORM_STRING_CLASS = 'class';
+    public static $FORM_STRING_LABEL = 'label';
+    public static $FORM_STRING_LABEL_ATRIBUTES = 'label_attributes';
+    public static $FORM_STRING_VALUE = 'value';
+    public static $FORM_STRING_VALUE_OPTIONS = 'value_options';
 
 }

@@ -26,7 +26,7 @@ $classMensagem = $this->hidden;
 
                 <!-- Login Logo -->
                 <div class="row table-layout">
-                    <a href="/" title="<?php echo $this->translate(Constantes::$TRADUCAO_NOME_APLICACAO); ?>">
+                    <a href="<?php echo Constantes::$INDEX; ?>" title="<?php echo $this->translate(Constantes::$TRADUCAO_NOME_APLICACAO); ?>">
                         <img src="<?php echo Constantes::$IMAGEM_LOGO; ?>" 
                              title="<?php echo $this->translate(Constantes::$TRADUCAO_NOME_APLICACAO); ?>" 
                              class="center-block img-responsive" style="max-width: 275px;">
@@ -81,20 +81,17 @@ $classMensagem = $this->hidden;
                     <div class="panel-footer clearfix">
                         <?php echo $this->formHidden($formLogin->get(Constantes::$INPUT_CSRF)); ?>
                         <?php echo $this->formInput($formLogin->get(Constantes::$INPUT_ENTRAR)); ?>
+                        <label class="switch ib switch-primary-circuito mt10">
+                            <strong class="active pl15">
+                                <a href="<?php echo $this->url(Constantes::$ROUTE_LOGIN) . Constantes::$URL_ESQUECEU_SENHA; ?>" class="texto-preto-cv" ><?php echo $this->translate(Constantes::$TRADUCAO_ESQUECEU_SENHA); ?></a>
+                            </strong>
+                        </label>
                     </div>
 
                     <?php echo $this->form()->closeTag() ?>
 
                 </div>
-
-                <div class="login-links">
-                    <p>
-                        <a href="<?php echo $this->url(Constantes::$ROUTE_LOGIN) . Constantes::$URL_ESQUECEU_SENHA; ?>" class="active" ><?php echo $this->translate(Constantes::$TRADUCAO_ESQUECEU_SENHA); ?></a>
-                    </p>
-                </div>
-
             </div>
-
         </section>
         <!-- End: Content -->
 

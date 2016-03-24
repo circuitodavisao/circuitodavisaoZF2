@@ -3,14 +3,163 @@
 use Login\Controller\Helper\Constantes;
 
 /** Nome: acesso.phtml
- * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com>
+ * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com> e Sergio Bezerra da Silva <sergio.silva.unb@gmail.com>
  * Descricao: Página de acesso
  */
 $formRecuperarAcesso = $this->formRecuperarAcesso;
 $formRecuperarAcesso->prepare();
+
+$classTituloPerdeuSenha = 'titulo-perdeu-sua-senha';
+?>
+<!-- Start: Main -->
+<div id="main" class="animated fadeIn">
+
+    <!-- Start: Content-Wrapper -->
+    <section id="content_wrapper">
+
+        <!-- begin canvas animation bg -->
+        <div id="canvas-wrapper">
+            <canvas id="demo-canvas"></canvas>
+        </div>
+
+        <!-- Begin: Content -->
+        <section id="content" class="animated fadeIn">
+            <div class="admin-form theme-info mw500" style="margin-top: 10%;" id="login">
+                <div class="row mb15 table-layout">
+
+                    <div class="col-xs-12 pln">
+                        <a href="<?php echo Constantes::$INDEX; ?>" title="<?php echo $this->translate(Constantes::$TRADUCAO_NOME_APLICACAO); ?>">
+                            <img src="<?php echo Constantes::$IMAGEM_LOGO; ?>" 
+                                 title="<?php echo $this->translate(Constantes::$TRADUCAO_NOME_APLICACAO); ?>" 
+                                 class="center-block img-responsive" style="max-width: 275px;">
+                        </a>
+                        <br />
+                        <div id="opcoes_label">
+                            <h2 class="<?php echo $classTituloPerdeuSenha ?>"><?php echo $this->translate(Constantes::$TRADUCAO_PERGUNTA_ESQUECI_SENHA); ?></h2>
+                        </div>
+                        <div id="opcao_1_label" class="hidden">
+                            <h2 class="<?php echo $classTituloPerdeuSenha ?>"><?php echo $this->translate(Constantes::$TRADUCAO_ESQUECI_MINHA_SENHA); ?></h2>
+                        </div>
+                        <div id="opcao_2_label" class="hidden">
+                            <h2 class="<?php echo $classTituloPerdeuSenha ?>"><?php echo $this->translate(Constantes::$TRADUCAO_ESQUECI_MEU_USUARIO); ?></h2>
+                        </div>
+                    </div>
+                </div>
+                <!-- Opções -->
+                <div id="opcoes">
+                    <div class="panel-body bg-light">
+                        <div class="option-group field section">
+                            <?php echo $this->formRadio($formRecuperarAcesso->get(Constantes::$INPUT_OPCAO)); ?>
+                        </div>
+                    </div>
+                    <!-- end .form-body section -->
+                    <div class="panel-footer text-right">
+                        <?php echo $this->formButton($formRecuperarAcesso->get(Constantes::$INPUT_BOTAO_CANCELAR)); ?>
+                        <?php echo $this->formButton($formRecuperarAcesso->get(Constantes::$INPUT_BOTAO_CONTINUAR)); ?>
+                    </div>
+                </div>
+                <!-- Opção 1 -->
+                <div id="opcao_1" class="hidden">
+                    <div class="panel-body bg-light">
+                        <div class="section mn">
+                            <div class="smart-widget">
+                                <p class="text-center"><?php echo $this->translate(Constantes::$TRADUCAO_TITULO_ESQUECI_MINHA_SENHA); ?></p>
+                                <div class="input-group">
+                                    <span class="input-group-addon">
+                                        <i class="fa fa-envelope-o"></i>
+                                    </span>
+                                    <?php echo $this->formInput($formRecuperarAcesso->get(Constantes::$INPUT_EMAIL)); ?>
+                                </div>
+                            </div>
+                            <!-- end .smart-widget section -->
+
+                        </div>
+                        <!-- end section -->
+                    </div>
+                    <div class="panel-footer text-right">
+                        <?php echo $this->formButton($formRecuperarAcesso->get(Constantes::$INPUT_BOTAO_VOLTAR)); ?>
+                        <?php echo $this->formSubmit($formRecuperarAcesso->get(Constantes::$INPUT_BOTAO_ENVIAR_EMAIL)); ?>
+                    </div>
+                </div>
+                <!-- Opção 2 -->
+                <div id="opcao_2" class="hidden">
+                    <div class="panel-body bg-light form-group">
+                        <div class="section mn">
+                            <div class="smart-widget">
+                                <p class="text-center">Nos diga quais são os <b class="text-danger">2 últimos dígitos do seu CPF</b> XXX.XXX.XXX-<b class="text-danger">XX</b>.</p>
+                                <div class="input-group">
+                                    <span class="input-group-addon">XXX.XXX.XXX-</span>
+                                    <input class="form-control" type="text" placeholder="XX">
+                                </div>
+                            </div>
+                            <!-- end .smart-widget section -->
+
+                            <br>
+
+                            <div class="smart-widget">
+                                <div class="input-group">
+                                    <span class="input-group-addon">
+                                        <i class="fa fa-calendar"></i>
+                                    </span>
+                                    <input type="text" id="maskedDate" class="form-control date" maxlength="10" autocomplete="off" placeholder="11/11/1111">
+                                </div>
+                            </div>
+                            <!-- end .smart-widget section -->
+                        </div>
+                        <!-- end section -->
+                    </div>
+                    <div class="panel-footer text-right">
+                        <?php echo $this->formButton($formRecuperarAcesso->get(Constantes::$INPUT_BOTAO_VOLTAR)); ?>
+                        <?php echo $this->formSubmit($formRecuperarAcesso->get(Constantes::$INPUT_BOTAO_VERIFICAR_USUARIO)); ?>
+                    </div>
+                </div>
+            </div>        
+
+        </section>
+        <!-- End: Content -->
+
+    </section>
+    <!-- End: Content-Wrapper -->
+
+</div>
+<!-- End: Main -->
+<script type="text/javascript">
+    /**
+     * Abrir div da opção selecionada
+     * @returns void
+     */
+    function abrirOpcao(valor) {
+        if (valor != 0) {
+            var check_value = $('.opcao:checked').val();
+            if (check_value == 1) {
+                $('#opcoes').addClass('hidden');
+                $('#opcoes_label').addClass('hidden');
+                $('#opcao_1').removeClass('hidden');
+                $('#opcao_1_label').removeClass('hidden');
+                $('#opcao_2').addClass('hidden');
+                $('#opcao_2_label').addClass('hidden');
+            }
+            if (check_value == 2) {
+                $('#opcoes').addClass('hidden');
+                $('#opcoes_label').addClass('hidden');
+                $('#opcao_1').addClass('hidden');
+                $('#opcao_1_label').addClass('hidden');
+                $('#opcao_2').removeClass('hidden');
+                $('#opcao_2_label').removeClass('hidden');
+            }
+        } else {
+            $('#opcoes').removeClass('hidden');
+            $('#opcoes_label').removeClass('hidden');
+            $('#opcao_1').addClass('hidden');
+            $('#opcao_1_label').addClass('hidden');
+            $('#opcao_2').addClass('hidden');
+            $('#opcao_2_label').addClass('hidden');
+        }
+    }
+</script>
+<?php
 $formRecuperarAcesso->setAttribute('action', $this->url('login', array('action' => 'recuperarAcesso')));
 ?>
-
 <?php echo $this->form()->openTag($formRecuperarAcesso); ?>
 <div class="panel panel-default col-md-offset-4 col-md-4">
     <div class="panel-heading">

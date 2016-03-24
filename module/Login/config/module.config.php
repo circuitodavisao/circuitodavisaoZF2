@@ -45,7 +45,7 @@ return array(
     ),
     # definir e gerenciar traduções
     'translator' => array(
-        'locale' => 'pt_BR',
+        'locale' => 'us_US',
         'translation_file_patterns' => array(
             array(
                 'type' => 'gettext',

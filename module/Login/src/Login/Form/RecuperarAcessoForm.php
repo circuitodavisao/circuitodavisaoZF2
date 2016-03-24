@@ -30,26 +30,39 @@ class RecuperarAcessoForm extends Form {
          * Configuração do formulário
          */
         $this->setAttributes(array(
-            'method' => 'POST',
-            'class' => 'form-horizontal',
+            Constantes::$FORM_STRING_METHOD => 'POST',
+            Constantes::$FORM_STRING_CLASS => 'form-horizontal',
         ));
 
         /**
          * Radio para saber o que o usuario quer
          */
+        $spanRadio = '<span class="radio"></span>';
+        $classOption = 'option block mt15';
         $this->add(
                 (new Radio())
                         ->setName(Constantes::$INPUT_OPCAO)
                         ->setAttributes([
-                            'id' => Constantes::$INPUT_OPCAO,
+                            Constantes::$FORM_STRING_ID => Constantes::$INPUT_OPCAO,
+                            Constantes::$FORM_STRING_CLASS => 'opcao',
                         ])
                         ->setOptions([
-                            'value_options' => array(
-                                1 => Constantes::$TRADUCAO_ESQUECI_MINHA_SENHA,
-                                2 => Constantes::$TRADUCAO_ESQUECI_MEU_USUARIO,
+                            Constantes::$FORM_STRING_VALUE_OPTIONS => array(
+                                1 => array(
+                                    Constantes::$FORM_STRING_VALUE => 1,
+                                    Constantes::$FORM_STRING_LABEL => $spanRadio . Constantes::$TRADUCAO_ESQUECI_MINHA_SENHA,
+                                    Constantes::$FORM_STRING_LABEL_ATRIBUTES => array(Constantes::$FORM_STRING_CLASS => $classOption),
+                                ),
+                                2 => array(
+                                    Constantes::$FORM_STRING_VALUE => 2,
+                                    Constantes::$FORM_STRING_LABEL => $spanRadio . Constantes::$TRADUCAO_ESQUECI_MEU_USUARIO,
+                                    Constantes::$FORM_STRING_LABEL_ATRIBUTES => array(Constantes::$FORM_STRING_CLASS => $classOption)
+                                ),
                             ),
                         ])
         );
+        $element = $this->get(Constantes::$INPUT_OPCAO);
+        $element->setLabelOptions(['disable_html_escape' => true]);
 
         /**
          * Botao de cancelar
@@ -59,9 +72,9 @@ class RecuperarAcessoForm extends Form {
                         ->setName(Constantes::$INPUT_BOTAO_CANCELAR)
                         ->setLabel(Constantes::$TRADUCAO_CANCELAR)
                         ->setAttributes([
-                            'id' => Constantes::$INPUT_BOTAO_CANCELAR,
+                            Constantes::$FORM_STRING_ID => Constantes::$INPUT_BOTAO_CANCELAR,
                             'onClick' => 'location.href=\'' . Constantes::$INDEX . '\'',
-                            'class' => 'btn btn-info',
+                            Constantes::$FORM_STRING_CLASS => 'button btn-default',
                         ])
                         ->setValue(Constantes::$TRADUCAO_CANCELAR)
         );
@@ -73,12 +86,29 @@ class RecuperarAcessoForm extends Form {
                         ->setName(Constantes::$INPUT_BOTAO_CONTINUAR)
                         ->setLabel(Constantes::$TRADUCAO_CONTINUAR)
                         ->setAttributes([
-                            'id' => Constantes::$INPUT_BOTAO_CONTINUAR,
-                            'onClick' => 'location.href=\'#\'',
-                            'class' => 'btn btn-primary',
+                            Constantes::$FORM_STRING_ID => Constantes::$INPUT_BOTAO_CONTINUAR,
+                            'onClick' => 'abrirOpcao();',
+                            'class' => 'button btn-primary-circuito',
                         ])
                         ->setValue(Constantes::$TRADUCAO_CONTINUAR)
         );
+
+
+        /**
+         * Botao de voltar
+         */
+        $this->add(
+                (new Button())
+                        ->setName(Constantes::$INPUT_BOTAO_VOLTAR)
+                        ->setLabel(Constantes::$TRADUCAO_CANCELAR)
+                        ->setAttributes([
+                            Constantes::$FORM_STRING_ID => Constantes::$INPUT_BOTAO_VOLTAR,
+                            'onClick' => 'abrirOpcao(0);',
+                            'class' => 'button btn-default',
+                        ])
+                        ->setValue(Constantes::$TRADUCAO_CANCELAR)
+        );
+
         /**
          * Email de acesso
          * Elemento do tipo text
@@ -88,7 +118,7 @@ class RecuperarAcessoForm extends Form {
                         ->setName(Constantes::$INPUT_EMAIL)
                         ->setAttributes([
                             'class' => 'gui-input',
-                            'id' => Constantes::$INPUT_EMAIL,
+                            Constantes::$FORM_STRING_ID => Constantes::$INPUT_EMAIL,
                             'placeholder' => Constantes::$TRADUCAO_USUARIO_PLACEHOLDER,
                             'onkeypress' => 'capsLock(event)',
                         ])
@@ -123,8 +153,8 @@ class RecuperarAcessoForm extends Form {
                         ->setName(Constantes::$INPUT_BOTAO_ENVIAR_EMAIL)
                         ->setValue(Constantes::$TRADUCAO_ENVIAR_EMAIL)
                         ->setAttributes([
-                            'id' => Constantes::$INPUT_BOTAO_ENVIAR_EMAIL,
-                            'class' => 'btn btn-success',
+                            Constantes::$FORM_STRING_ID => Constantes::$INPUT_BOTAO_ENVIAR_EMAIL,
+                            'class' => 'button btn-primary-circuito',
                         ])
         );
 
@@ -137,7 +167,7 @@ class RecuperarAcessoForm extends Form {
                         ->setName(Constantes::$INPUT_CPF)
                         ->setAttributes([
                             'class' => 'gui-input',
-                            'id' => Constantes::$INPUT_CPF,
+                            Constantes::$FORM_STRING_ID => Constantes::$INPUT_CPF,
                             'placeholder' => '##',
                         ])
         );
@@ -151,7 +181,7 @@ class RecuperarAcessoForm extends Form {
                         ->setName(Constantes::$INPUT_DATA_NASCIMENTO)
                         ->setAttributes([
                             'class' => 'gui-input',
-                            'id' => Constantes::$INPUT_DATA_NASCIMENTO,
+                            Constantes::$FORM_STRING_ID => Constantes::$INPUT_DATA_NASCIMENTO,
                             'placeholder' => '##/##/####',
                         ])
         );
@@ -164,8 +194,8 @@ class RecuperarAcessoForm extends Form {
                         ->setName(Constantes::$INPUT_BOTAO_VERIFICAR_USUARIO)
                         ->setValue(Constantes::$TRADUCAO_VERIFICAR_USUARIO)
                         ->setAttributes([
-                            'id' => Constantes::$INPUT_BOTAO_VERIFICAR_USUARIO,
-                            'class' => 'btn btn-success',
+                            Constantes::$FORM_STRING_ID => Constantes::$INPUT_BOTAO_VERIFICAR_USUARIO,
+                            'class' => 'button btn-primary-circuito',
                         ])
         );
     }
