@@ -3,9 +3,9 @@
 namespace Login\Form;
 
 use Login\Controller\Helper\Constantes;
-use Zend\Form\Element;
 use Zend\Form\Element\Csrf;
 use Zend\Form\Element\Password;
+use Zend\Form\Element\Submit;
 use Zend\Form\Element\Text;
 use Zend\Form\Form;
 
@@ -27,9 +27,9 @@ class LoginForm extends Form {
          * Configuração do formulário
          */
         $this->setAttributes(array(
-            'method' => 'POST',
-            'class' => 'form-horizontal',
-            'id' => 'contact',
+            Constantes::$FORM_STRING_METHOD => Constantes::$FORM_STRING_POST,
+            Constantes::$FORM_STRING_CLASS => 'form-horizontal',
+            Constantes::$FORM_STRING_ID => 'contact',
         ));
 
         /**
@@ -40,11 +40,11 @@ class LoginForm extends Form {
                 (new Text())
                         ->setName(Constantes::$INPUT_EMAIL)
                         ->setAttributes([
-                            'class' => 'gui-input',
-                            'id' => 'email',
-                            'placeholder' => Constantes::$TRADUCAO_USUARIO_PLACEHOLDER,
-                            'required' => 'required',
-                            'onkeypress' => 'capsLock(event)',
+                            Constantes::$FORM_STRING_CLASS => Constantes::$FORM_STRING_CLASS_GUI_INPUT,
+                            Constantes::$FORM_STRING_ID => Constantes::$INPUT_EMAIL,
+                            Constantes::$FORM_STRING_PLACEHOLDER => Constantes::$TRADUCAO_USUARIO_PLACEHOLDER,
+                            Constantes::$FORM_STRING_REQUIRED => Constantes::$FORM_STRING_REQUIRED,
+                            Constantes::$FORM_STRING_ONKEYPRESS => Constantes::$FORM_STRING_FUNCAO_CAPSLOCK,
                         ])
         );
 
@@ -57,11 +57,11 @@ class LoginForm extends Form {
                 (new Password())
                         ->setName(Constantes::$INPUT_SENHA)
                         ->setAttributes([
-                            'class' => 'gui-input',
-                            'id' => 'senha',
-                            'placeholder' => Constantes::$TRADUCAO_SENHA_PLACEHOLDER,
-                            'required' => 'required',
-                            'onkeypress' => 'capsLock(event)',
+                            Constantes::$FORM_STRING_CLASS => Constantes::$FORM_STRING_CLASS_GUI_INPUT,
+                            Constantes::$FORM_STRING_ID => Constantes::$INPUT_SENHA,
+                            Constantes::$FORM_STRING_PLACEHOLDER => Constantes::$TRADUCAO_SENHA_PLACEHOLDER,
+                            Constantes::$FORM_STRING_REQUIRED => Constantes::$FORM_STRING_REQUIRED,
+                            Constantes::$FORM_STRING_ONKEYPRESS => Constantes::$FORM_STRING_FUNCAO_CAPSLOCK,
                         ])
         );
 
@@ -70,14 +70,18 @@ class LoginForm extends Form {
                         ->setName(Constantes::$INPUT_CSRF)
         );
 
-        $send = new Element(Constantes::$INPUT_ENTRAR);
-        $send->setValue(Constantes::$TRADUCAO_ENTRAR);
-        $send->setName('entrar');
-        $send->setAttributes(array(
-            'type' => 'submit',
-            'class' => 'button btn-primary-circuito mr10 pull-right',
-        ));
-        $this->add($send);
+        /**
+         * Botao verificar entrar
+         */
+        $this->add(
+                (new Submit())
+                        ->setName(Constantes::$INPUT_ENTRAR)
+                        ->setValue(Constantes::$TRADUCAO_ENTRAR)
+                        ->setAttributes([
+                            Constantes::$FORM_STRING_ID => Constantes::$INPUT_ENTRAR,
+                            Constantes::$FORM_STRING_CLASS => 'button btn-primary-circuito mr10 pull-right',
+                        ])
+        );
     }
 
 }

@@ -3,10 +3,10 @@
 namespace Login\Form;
 
 use Login\Controller\Helper\Constantes;
-use Zend\Captcha\Dumb;
 use Zend\Captcha\Image;
 use Zend\Form\Element\Button;
 use Zend\Form\Element\Captcha;
+use Zend\Form\Element\Hidden;
 use Zend\Form\Element\Radio;
 use Zend\Form\Element\Submit;
 use Zend\Form\Element\Text;
@@ -30,7 +30,7 @@ class RecuperarAcessoForm extends Form {
          * Configuração do formulário
          */
         $this->setAttributes(array(
-            Constantes::$FORM_STRING_METHOD => 'POST',
+            Constantes::$FORM_STRING_METHOD => Constantes::$FORM_STRING_POST,
             Constantes::$FORM_STRING_CLASS => 'form-horizontal',
         ));
 
@@ -73,7 +73,7 @@ class RecuperarAcessoForm extends Form {
                         ->setLabel(Constantes::$TRADUCAO_CANCELAR)
                         ->setAttributes([
                             Constantes::$FORM_STRING_ID => Constantes::$INPUT_BOTAO_CANCELAR,
-                            'onClick' => 'location.href=\'' . Constantes::$INDEX . '\'',
+                            Constantes::$FORM_STRING_ONCLICK => 'location.href=\'' . Constantes::$INDEX . '\'',
                             Constantes::$FORM_STRING_CLASS => 'button btn-default',
                         ])
                         ->setValue(Constantes::$TRADUCAO_CANCELAR)
@@ -87,8 +87,8 @@ class RecuperarAcessoForm extends Form {
                         ->setLabel(Constantes::$TRADUCAO_CONTINUAR)
                         ->setAttributes([
                             Constantes::$FORM_STRING_ID => Constantes::$INPUT_BOTAO_CONTINUAR,
-                            'onClick' => 'abrirOpcao();',
-                            'class' => 'button btn-primary-circuito',
+                            Constantes::$FORM_STRING_ONCLICK => 'abrirOpcao();',
+                            Constantes::$FORM_STRING_CLASS => 'button btn-primary-circuito',
                         ])
                         ->setValue(Constantes::$TRADUCAO_CONTINUAR)
         );
@@ -103,8 +103,8 @@ class RecuperarAcessoForm extends Form {
                         ->setLabel(Constantes::$TRADUCAO_CANCELAR)
                         ->setAttributes([
                             Constantes::$FORM_STRING_ID => Constantes::$INPUT_BOTAO_VOLTAR,
-                            'onClick' => 'abrirOpcao(0);',
-                            'class' => 'button btn-default',
+                            Constantes::$FORM_STRING_ONCLICK => 'abrirOpcao(0);',
+                            Constantes::$FORM_STRING_CLASS => 'button btn-default',
                         ])
                         ->setValue(Constantes::$TRADUCAO_CANCELAR)
         );
@@ -117,10 +117,11 @@ class RecuperarAcessoForm extends Form {
                 (new Text())
                         ->setName(Constantes::$INPUT_EMAIL)
                         ->setAttributes([
-                            'class' => 'gui-input',
+                            Constantes::$FORM_STRING_CLASS => Constantes::$FORM_STRING_CLASS_GUI_INPUT,
                             Constantes::$FORM_STRING_ID => Constantes::$INPUT_EMAIL,
-                            'placeholder' => Constantes::$TRADUCAO_USUARIO_PLACEHOLDER,
-                            'onkeypress' => 'capsLock(event)',
+                            Constantes::$FORM_STRING_PLACEHOLDER => Constantes::$TRADUCAO_USUARIO_PLACEHOLDER,
+                            Constantes::$FORM_STRING_REQUIRED => Constantes::$FORM_STRING_REQUIRED,
+                            Constantes::$FORM_STRING_ONKEYPRESS => Constantes::$FORM_STRING_FUNCAO_CAPSLOCK,
                         ])
         );
 
@@ -140,7 +141,7 @@ class RecuperarAcessoForm extends Form {
                         ->setName(Constantes::$INPUT_CAPTCHA)
                         ->setOptions(
                                 array(
-                                    'label' => 'Verification',
+                                    Constantes::$FORM_STRING_LABEL => 'Verification',
                                     'captcha' => $captcha,
                         ))
         );
@@ -154,7 +155,7 @@ class RecuperarAcessoForm extends Form {
                         ->setValue(Constantes::$TRADUCAO_ENVIAR_EMAIL)
                         ->setAttributes([
                             Constantes::$FORM_STRING_ID => Constantes::$INPUT_BOTAO_ENVIAR_EMAIL,
-                            'class' => 'button btn-primary-circuito',
+                            Constantes::$FORM_STRING_CLASS => 'button btn-primary-circuito',
                         ])
         );
 
@@ -166,9 +167,11 @@ class RecuperarAcessoForm extends Form {
                 (new Text())
                         ->setName(Constantes::$INPUT_CPF)
                         ->setAttributes([
-                            'class' => 'gui-input',
+                            Constantes::$FORM_STRING_CLASS => Constantes::$FORM_STRING_CLASS_GUI_INPUT,
                             Constantes::$FORM_STRING_ID => Constantes::$INPUT_CPF,
-                            'placeholder' => '##',
+                            Constantes::$FORM_STRING_PLACEHOLDER => 'XX',
+                            Constantes::$FORM_STRING_REQUIRED => Constantes::$FORM_STRING_REQUIRED,
+                            Constantes::$FORM_STRING_MAXLENGTH => 2,
                         ])
         );
 
@@ -180,9 +183,11 @@ class RecuperarAcessoForm extends Form {
                 (new Text())
                         ->setName(Constantes::$INPUT_DATA_NASCIMENTO)
                         ->setAttributes([
-                            'class' => 'gui-input',
+                            Constantes::$FORM_STRING_CLASS => 'form-control date',
                             Constantes::$FORM_STRING_ID => Constantes::$INPUT_DATA_NASCIMENTO,
-                            'placeholder' => '##/##/####',
+                            Constantes::$FORM_STRING_PLACEHOLDER => 'XX/XX/XXXX',
+                            Constantes::$FORM_STRING_REQUIRED => Constantes::$FORM_STRING_REQUIRED,
+                            Constantes::$FORM_STRING_MAXLENGTH => 10,
                         ])
         );
 
@@ -195,9 +200,9 @@ class RecuperarAcessoForm extends Form {
                         ->setValue(Constantes::$TRADUCAO_VERIFICAR_USUARIO)
                         ->setAttributes([
                             Constantes::$FORM_STRING_ID => Constantes::$INPUT_BOTAO_VERIFICAR_USUARIO,
-                            'class' => 'button btn-primary-circuito',
+                            Constantes::$FORM_STRING_CLASS => 'button btn-primary-circuito',
                         ])
-        );
+        );       
     }
 
 }

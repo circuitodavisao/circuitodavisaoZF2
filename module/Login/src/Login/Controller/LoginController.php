@@ -75,8 +75,8 @@ class LoginController extends AbstractActionController {
 
         /* Post sem email */
         if (is_null($data[Constantes::$INPUT_EMAIL])) {
-            $this->flashMessenger()->
-                    addErrorMessage(Constantes::$MENSAGEM_ERRO_CSRF);
+//            $this->flashMessenger()->
+//                    addErrorMessage(Constantes::$MENSAGEM_ERRO_CSRF);
             /* Redirecionamento */
             return $this->redirect()->toRoute(Constantes::$ROUTE_LOGIN);
         }
@@ -128,65 +128,71 @@ class LoginController extends AbstractActionController {
      * GET /acesso
      */
     public function recuperarAcessoAction() {
-
+        $mensagem = '';
+        $resposta = '';
         $request = $this->getRequest();
         if ($request->isPost()) {
             /* Helper Controller */
             $loginORM = new LoginORM($this->getDoctrineORMEntityManager());
 
             /* Dados da requisição POST */
-            $data = $request->getPost();
+            $dataPost = $request->getPost();
 
-            $formRecuperarAcesso = new RecuperarAcessoForm(Constantes::$RECUPERAR_ACESSO_FORM);
-            $formRecuperarAcesso->setData($data);
+            /* recupera o id vindo da url */
+            $idTipo = $this->params()->fromRoute('id', 0);
+            if ($idTipo == 1) {
+                /* Verificar se existe pessoa por email informado */
+                $email = $dataPost[Constantes::$ENTITY_PESSOA_EMAIL];
+                $pessoa = $loginORM->getPessoaORM()->encontrarPorEmail($email);
 
-            if ($formRecuperarAcesso->isValid()) {
-                echo "IS VALID <br />";
-            } else {
-                echo "IS NOT VALID <br />";
-            }
 
-            /* Verificar se existe pessoa por email informado */
-            $email = $data[Constantes::$ENTITY_PESSOA_EMAIL];
-            $pessoa = $loginORM->getPessoaORM()->encontrarPorEmail($email);
-
-            $mensagem = '';
-            /* Pessoa com email informado nao encontrada */
-            if (!$pessoa) {
-                $mensagem = 'Pessoa nao encontrada';
-            } else {
-                if (!$pessoa->verificarSeEstaAtivo()) {
-                    $mensagem = 'Pessoa inativada';
+                /* Pessoa com email informado nao encontrada */
+                if (!$pessoa) {
+                    $mensagem = 'Pessoa nao encontrada';
                 } else {
-                    $mensagem = 'Pessoa ok truta';
-
-                    $mail = new PHPMailer;
-//                    $mail->SMTPDebug = 1;                              // Enable verbose debug output
-                    $mail->isSMTP();                                      // Set mailer to use SMTP
-                    $mail->Host = '200.147.36.31';  // Specify main and backup SMTP servers
-                    $mail->SMTPAuth = true;                               // Enable SMTP authentication
-                    $mail->Username = 'leonardo@circuitodavisao.com.br';                 // SMTP username
-                    $mail->Password = 'Leonardo142857';                           // SMTP password
-//                    $mail->SMTPSecure = 'tls';                            // Enable TLS encryption, `ssl` also accepted
-                    $mail->Port = 587;                                    // TCP port to connect to
-                    $mail->setFrom('leonardo@circuitodavisao.com.br', 'Chispirito TLS sem 3');
-                    $mail->addAddress('falecomleonardopereira@gmail.com', 'Leo Gatao TLS sem 3');
-                    $mail->isHTML(true);                                  // Set email format to HTML
-                    $mail->Subject = 'Here is the subject TLS';
-                    $mail->Body = 'This is the HTML message body <b>in bold!</b> 554';
-                    $mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
-
-                    if (!$mail->send()) {
-                        echo 'Message could not be sent.';
-                        echo 'Mailer Error: ' . $mail->ErrorInfo;
+                    if (!$pessoa->verificarSeEstaAtivo()) {
+                        $mensagem = 'Pessoa inativada';
                     } else {
-                        echo '#### Message has been sent';
+                        $mensagem = 'Pessoa ok truta';
+                        $resposta = $email;
+//                    $mail = new PHPMailer;
+////                    $mail->SMTPDebug = 1;                              // Enable verbose debug output
+//                    $mail->isSMTP();                                      // Set mailer to use SMTP
+//                    $mail->Host = '200.147.36.31';  // Specify main and backup SMTP servers
+//                    $mail->SMTPAuth = true;                               // Enable SMTP authentication
+//                    $mail->Username = 'leonardo@circuitodavisao.com.br';                 // SMTP username
+//                    $mail->Password = 'Leonardo142857';                           // SMTP password
+////                    $mail->SMTPSecure = 'tls';                            // Enable TLS encryption, `ssl` also accepted
+//                    $mail->Port = 587;                                    // TCP port to connect to
+//                    $mail->setFrom('leonardo@circuitodavisao.com.br', 'Chispirito TLS sem 3');
+//                    $mail->addAddress('falecomleonardopereira@gmail.com', 'Leo Gatao TLS sem 3');
+//                    $mail->isHTML(true);                                  // Set email format to HTML
+//                    $mail->Subject = 'Here is the subject TLS';
+//                    $mail->Body = 'This is the HTML message body <b>in bold!</b> 554';
+//                    $mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
+//
+//                    if (!$mail->send()) {
+//                        echo 'Message could not be sent.';
+//                        echo 'Mailer Error: ' . $mail->ErrorInfo;
+//                    } else {
+//                        echo '#### Message has been sent';
+//                    }
                     }
                 }
             }
+            if ($idTipo == 2) {
+                $documento = $dataPost[Constantes::$ENTITY_PESSOA_DOCUMENTO];
+                $dataNascimento = $dataPost[Constantes::$ENTITY_PESSOA_DATA_NASCIMENTO];
+            }
+            if (empty($idTipo)) {
+                
+            }
         }
 
-        return ['mensagem' => $mensagem];
+        return [
+            'mensagem' => $mensagem,
+            'resposta' => $resposta,
+        ];
     }
 
     public function getDoctrineORMEntityManager() {

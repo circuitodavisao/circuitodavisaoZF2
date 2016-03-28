@@ -11,6 +11,8 @@ CREATE TABLE pessoa
   data_criacao date, -- Data de criação da pessoa
   data_inativacao date, -- Data de inativação da pessoa
   status status, -- Status do acesso da pessoa: ativo ou inativo
+  documento bigint, -- Documento da pessoa, pode ser CPF ou caso estrangeiro um documento aberto
+  data_nascimento date, -- Data de nascimento da pessoa
   CONSTRAINT primary_key_pessoa PRIMARY KEY (id) -- Primary Key da tabela pessoa
 )
 WITH (
@@ -27,9 +29,33 @@ COMMENT ON COLUMN pessoa.senha IS 'Senha de acesso em MD5';
 COMMENT ON COLUMN pessoa.data_criacao IS 'Data de criação da pessoa';
 COMMENT ON COLUMN pessoa.data_inativacao IS 'Data de inativação da pessoa';
 COMMENT ON COLUMN pessoa.status IS 'Status do acesso da pessoa: ativo ou inativo';
+COMMENT ON COLUMN pessoa.documento IS 'Documento da pessoa, pode ser CPF ou caso estrangeiro um documento aberto';
+COMMENT ON COLUMN pessoa.data_nascimento IS 'Data de nascimento da pessoa';
 
 COMMENT ON CONSTRAINT primary_key_pessoa ON pessoa IS 'Primary Key da tabela pessoa';
 
+
+-- Index: index_pessoa_data_nascimento
+
+-- DROP INDEX index_pessoa_data_nascimento;
+
+CREATE INDEX index_pessoa_data_nascimento
+  ON pessoa
+  USING btree
+  (data_nascimento);
+COMMENT ON INDEX index_pessoa_data_nascimento
+  IS 'Index para recuperar email de acesso atraves da data de nascimento';
+
+-- Index: index_pessoa_documento
+
+-- DROP INDEX index_pessoa_documento;
+
+CREATE INDEX index_pessoa_documento
+  ON pessoa
+  USING btree
+  (documento);
+COMMENT ON INDEX index_pessoa_documento
+  IS 'Index para recuperar email de acesso atravez do documento';
 
 -- Index: index_pessoa_status
 
@@ -41,3 +67,4 @@ CREATE INDEX index_pessoa_status
   (status);
 COMMENT ON INDEX index_pessoa_status
   IS 'Index para o status da pessoa';
+

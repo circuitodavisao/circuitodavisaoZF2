@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: ZendSkeletonApplication\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-07-05 22:17-0700\n"
-"PO-Revision-Date: 2016-03-24 18:04-0300\n"
+"PO-Revision-Date: 2016-03-28 16:47-0300\n"
 "Last-Translator: Diogo Melo <dmelo87@gmail.com>\n"
 "Language-Team: ZF Contibutors <zf-devteam@zend.com>\n"
 "Language: pt\n"
@@ -44,13 +44,13 @@ msgstr "Informe sua senha"
 msgid "Sign in"
 msgstr "Entrar"
 
-#: ../view/login/index/index.phtml:69
-msgid "Forgot password?"
-msgstr "Perdeu sua senha?"
+#: ../view/login/index/index.phtml:88
+msgid "Access problem?"
+msgstr "Problema de acesso?"
 
 # Falha de login
-msgid "The informed login details do not match an account in our records. Remember that your password is case sensitive."
-msgstr "Os dados de login informados n&atilde;o correspondem a uma conta em nossos registros. Lembre-se de que sua senha diferencia mai&uacute;sculas de min&uacute;sculas."
+msgid "The informed login details do not match an account in our records."
+msgstr "Os dados de login informados n&atilde;o correspondem a uma conta em nossos registros."
 
 #: ../view/login/index/index.phtml:42
 msgid "Caps Lock is on."
@@ -95,6 +95,25 @@ msgstr "Verificar Usuário"
 msgid "Please verify you are human"
 msgstr "Por favor verificar que você é humano"
 
+#: ../view/login/index/esqueceu-senha.phtml:96
+msgid "Tell us what the last 2 digits of your CPF"
+msgstr "Nos diga quais são os <b class=\"text-danger\">2 últimos dígitos do seu CPF</b> XXX.XXX.XXX-<b class=\"text-danger\">XX</b>."
+
+#: ../view/login/index/recuperar-acesso.phtml:36
+msgid "request sent at"
+msgstr "solicitação enviada às"
+
+#: ../view/login/index/recuperar-acesso.phtml:49
+msgid "Access"
+msgstr "Acesse o"
+
+#: ../view/login/index/recuperar-acesso.phtml:50
+msgid "The message in your email lasts 24 hours"
+msgstr "A mensagem em seu email tem duração de 24 Horas"
+
+# ############
+# ## GERAL ###
+# ############
 #: ../view/error/index.phtml:1
 msgid "An error occurred"
 msgstr "Ocorreu um erro"

@@ -21,9 +21,10 @@ return array(
             'login' => array(
                 'type' => 'Segment',
                 'options' => array(
-                    'route' => '/[:action]',
+                    'route' => '/[:action][/:id]',
                     'constraints' => array(
                         'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                        'id' => '[0-9]+',
                     ),
                     'defaults' => array(
                         'controller' => 'Login\Controller\Login',
@@ -45,7 +46,8 @@ return array(
     ),
     # definir e gerenciar traduções
     'translator' => array(
-        'locale' => 'us_US',
+//        'locale' => 'us_US',
+        'locale' => 'pt_BR',
         'translation_file_patterns' => array(
             array(
                 'type' => 'gettext',

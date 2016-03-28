@@ -28,20 +28,13 @@ $classTituloPerdeuSenha = 'titulo-perdeu-sua-senha';
                 <div class="row mb15 table-layout">
 
                     <div class="col-xs-12 pln">
-                        <a href="<?php echo Constantes::$INDEX; ?>" title="<?php echo $this->translate(Constantes::$TRADUCAO_NOME_APLICACAO); ?>">
-                            <img src="<?php echo Constantes::$IMAGEM_LOGO; ?>" 
-                                 title="<?php echo $this->translate(Constantes::$TRADUCAO_NOME_APLICACAO); ?>" 
-                                 class="center-block img-responsive" style="max-width: 275px;">
-                        </a>
+                        <?php
+                        /* Logo com link para index */
+                        echo $this->linkLogo();
+                        ?>
                         <br />
                         <div id="opcoes_label">
                             <h2 class="<?php echo $classTituloPerdeuSenha ?>"><?php echo $this->translate(Constantes::$TRADUCAO_PERGUNTA_ESQUECI_SENHA); ?></h2>
-                        </div>
-                        <div id="opcao_1_label" class="hidden">
-                            <h2 class="<?php echo $classTituloPerdeuSenha ?>"><?php echo $this->translate(Constantes::$TRADUCAO_ESQUECI_MINHA_SENHA); ?></h2>
-                        </div>
-                        <div id="opcao_2_label" class="hidden">
-                            <h2 class="<?php echo $classTituloPerdeuSenha ?>"><?php echo $this->translate(Constantes::$TRADUCAO_ESQUECI_MEU_USUARIO); ?></h2>
                         </div>
                     </div>
                 </div>
@@ -58,9 +51,17 @@ $classTituloPerdeuSenha = 'titulo-perdeu-sua-senha';
                         <?php echo $this->formButton($formRecuperarAcesso->get(Constantes::$INPUT_BOTAO_CONTINUAR)); ?>
                     </div>
                 </div>
+                <?php
+                $formRecuperarAcesso->setAttribute('action', $this->url('login', array('action' => 'recuperarAcesso')) . '/1');
+                echo $this->form()->openTag($formRecuperarAcesso);
+                ?>
                 <!-- Opção 1 -->
                 <div id="opcao_1" class="hidden">
                     <div class="panel-body bg-light">
+                        <!-- Capslock -->
+                        <div id="divCapslock" class="alert alert-danger hidden">
+                            <?php echo $this->translate(Constantes::$TRADUCAO_CAPSLOCK); ?> 
+                        </div>
                         <div class="section mn">
                             <div class="smart-widget">
                                 <p class="text-center"><?php echo $this->translate(Constantes::$TRADUCAO_TITULO_ESQUECI_MINHA_SENHA); ?></p>
@@ -81,27 +82,30 @@ $classTituloPerdeuSenha = 'titulo-perdeu-sua-senha';
                         <?php echo $this->formSubmit($formRecuperarAcesso->get(Constantes::$INPUT_BOTAO_ENVIAR_EMAIL)); ?>
                     </div>
                 </div>
+                <?php echo $this->form()->closeTag(); ?>
+                <?php
+                $formRecuperarAcesso->setAttribute('action', $this->url('login', array('action' => 'recuperarAcesso')) . '/2');
+                echo $this->form()->openTag($formRecuperarAcesso);
+                ?>
                 <!-- Opção 2 -->
                 <div id="opcao_2" class="hidden">
                     <div class="panel-body bg-light form-group">
                         <div class="section mn">
                             <div class="smart-widget">
-                                <p class="text-center">Nos diga quais são os <b class="text-danger">2 últimos dígitos do seu CPF</b> XXX.XXX.XXX-<b class="text-danger">XX</b>.</p>
+                                <p class="text-center"><?php echo $this->translate(Constantes::$TRADUCAO_INFORME_2_DIGITO_CPF); ?></p>
                                 <div class="input-group">
                                     <span class="input-group-addon">XXX.XXX.XXX-</span>
-                                    <input class="form-control" type="text" placeholder="XX">
+                                    <?php echo $this->formInput($formRecuperarAcesso->get(Constantes::$INPUT_CPF)); ?>
                                 </div>
                             </div>
                             <!-- end .smart-widget section -->
-
-                            <br>
-
+                            <br />
                             <div class="smart-widget">
                                 <div class="input-group">
                                     <span class="input-group-addon">
                                         <i class="fa fa-calendar"></i>
                                     </span>
-                                    <input type="text" id="maskedDate" class="form-control date" maxlength="10" autocomplete="off" placeholder="11/11/1111">
+                                    <?php echo $this->formInput($formRecuperarAcesso->get(Constantes::$INPUT_DATA_NASCIMENTO)); ?>
                                 </div>
                             </div>
                             <!-- end .smart-widget section -->
@@ -113,6 +117,8 @@ $classTituloPerdeuSenha = 'titulo-perdeu-sua-senha';
                         <?php echo $this->formSubmit($formRecuperarAcesso->get(Constantes::$INPUT_BOTAO_VERIFICAR_USUARIO)); ?>
                     </div>
                 </div>
+
+                <?php echo $this->form()->closeTag(); ?>
             </div>        
 
         </section>
@@ -123,112 +129,3 @@ $classTituloPerdeuSenha = 'titulo-perdeu-sua-senha';
 
 </div>
 <!-- End: Main -->
-<script type="text/javascript">
-    /**
-     * Abrir div da opção selecionada
-     * @returns void
-     */
-    function abrirOpcao(valor) {
-        if (valor != 0) {
-            var check_value = $('.opcao:checked').val();
-            if (check_value == 1) {
-                $('#opcoes').addClass('hidden');
-                $('#opcoes_label').addClass('hidden');
-                $('#opcao_1').removeClass('hidden');
-                $('#opcao_1_label').removeClass('hidden');
-                $('#opcao_2').addClass('hidden');
-                $('#opcao_2_label').addClass('hidden');
-            }
-            if (check_value == 2) {
-                $('#opcoes').addClass('hidden');
-                $('#opcoes_label').addClass('hidden');
-                $('#opcao_1').addClass('hidden');
-                $('#opcao_1_label').addClass('hidden');
-                $('#opcao_2').removeClass('hidden');
-                $('#opcao_2_label').removeClass('hidden');
-            }
-        } else {
-            $('#opcoes').removeClass('hidden');
-            $('#opcoes_label').removeClass('hidden');
-            $('#opcao_1').addClass('hidden');
-            $('#opcao_1_label').addClass('hidden');
-            $('#opcao_2').addClass('hidden');
-            $('#opcao_2_label').addClass('hidden');
-        }
-    }
-</script>
-<?php
-$formRecuperarAcesso->setAttribute('action', $this->url('login', array('action' => 'recuperarAcesso')));
-?>
-<?php echo $this->form()->openTag($formRecuperarAcesso); ?>
-<div class="panel panel-default col-md-offset-4 col-md-4">
-    <div class="panel-heading">
-        <h3 class="panel-title"><?php echo $this->translate(Constantes::$TRADUCAO_ESQUECEU_SENHA); ?></h3>
-    </div>
-    <div class="panel-body">
-        <?php echo $this->formRadio($formRecuperarAcesso->get(Constantes::$INPUT_OPCAO)); ?>
-    </div>
-    <div class="panel-footer">
-        <div class="row">
-            <p>
-                <?php echo $this->formButton($formRecuperarAcesso->get(Constantes::$INPUT_BOTAO_CANCELAR)); ?>
-                <?php echo $this->formButton($formRecuperarAcesso->get(Constantes::$INPUT_BOTAO_CONTINUAR)); ?>
-            </p>
-        </div>
-    </div>
-</div>
-
-<div class="panel panel-default col-md-offset-4 col-md-4">
-    <div class="panel-heading">
-        <h3 class="panel-title"><?php echo $this->translate(Constantes::$TRADUCAO_ESQUECI_MINHA_SENHA); ?></h3>
-    </div>
-    <div class="panel-body">
-        <!-- Mensagens -->
-        <div id="divCapslock" class="alert alert-danger hidden">
-            <?php echo $this->translate(Constantes::$TRADUCAO_CAPSLOCK); ?> 
-        </div>
-        <div class="row">
-            <div class="col-lg-12">
-                <?php echo $this->formInput($formRecuperarAcesso->get(Constantes::$INPUT_EMAIL)); ?>
-            </div><!-- /.col-lg-12 -->
-        </div><!-- /.row --> 
-        <?php echo $this->formRow($formRecuperarAcesso->get(Constantes::$INPUT_CAPTCHA)); ?>
-    </div>
-    <div class="panel-footer">
-        <div class="row">
-            <p>
-                <?php echo $this->formButton($formRecuperarAcesso->get(Constantes::$INPUT_BOTAO_CANCELAR)); ?>
-                <?php echo $this->formSubmit($formRecuperarAcesso->get(Constantes::$INPUT_BOTAO_ENVIAR_EMAIL)); ?>
-            </p>
-        </div>
-    </div>
-</div>
-
-<div class="panel panel-default col-md-offset-4 col-md-4">
-    <div class="panel-heading">
-        <h3 class="panel-title"><?php echo $this->translate(Constantes::$TRADUCAO_ESQUECI_MEU_USUARIO); ?></h3>
-    </div>
-    <div class="panel-body">
-        <div class="row">
-            <div class="col-lg-12">
-                <?php echo $this->formInput($formRecuperarAcesso->get(Constantes::$INPUT_CPF)); ?>
-            </div><!-- /.col-lg-12 -->
-        </div><!-- /.row --> 
-        <div class="row">
-            <div class="col-lg-12">
-                <?php echo $this->formInput($formRecuperarAcesso->get(Constantes::$INPUT_DATA_NASCIMENTO)); ?>
-            </div><!-- /.col-lg-12 -->
-        </div><!-- /.row --> 
-        <?php echo $this->formRow($formRecuperarAcesso->get(Constantes::$INPUT_CAPTCHA)); ?>
-    </div>
-    <div class="panel-footer">
-        <div class="row">
-            <p>
-                <?php echo $this->formButton($formRecuperarAcesso->get(Constantes::$INPUT_BOTAO_CANCELAR)); ?>
-                <?php echo $this->formSubmit($formRecuperarAcesso->get(Constantes::$INPUT_BOTAO_VERIFICAR_USUARIO)); ?>
-            </p>
-        </div>
-    </div>
-</div>
-<?php
-echo $this->form()->closeTag();

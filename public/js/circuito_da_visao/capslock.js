@@ -1,6 +1,6 @@
 /**
- * Nome: index.phtml
- * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com> e Sergio Bezerra da Silva <sergio.silva.unb@gmail.com>
+ * Nome: capslock.js
+ * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com>
  * Descricao: Função para verificar se o capslock está ativado
  */
 

@@ -26,11 +26,10 @@ $classMensagem = $this->hidden;
 
                 <!-- Login Logo -->
                 <div class="row table-layout">
-                    <a href="<?php echo Constantes::$INDEX; ?>" title="<?php echo $this->translate(Constantes::$TRADUCAO_NOME_APLICACAO); ?>">
-                        <img src="<?php echo Constantes::$IMAGEM_LOGO; ?>" 
-                             title="<?php echo $this->translate(Constantes::$TRADUCAO_NOME_APLICACAO); ?>" 
-                             class="center-block img-responsive" style="max-width: 275px;">
-                    </a>
+                    <?php
+                    /* Logo com link para index */
+                    echo $this->linkLogo();
+                    ?>
                 </div>
 
                 <!-- Login Panel/Form -->
@@ -40,6 +39,8 @@ $classMensagem = $this->hidden;
                     <div class="panel-body bg-light p25 pb15">
 
                         <!-- Mensagens -->
+
+                        <!-- Capslock -->
                         <div id="divCapslock" class="alert alert-danger hidden">
                             <?php echo $this->translate(Constantes::$TRADUCAO_CAPSLOCK); ?> 
                         </div>
@@ -80,10 +81,10 @@ $classMensagem = $this->hidden;
 
                     <div class="panel-footer clearfix">
                         <?php echo $this->formHidden($formLogin->get(Constantes::$INPUT_CSRF)); ?>
-                        <?php echo $this->formInput($formLogin->get(Constantes::$INPUT_ENTRAR)); ?>
+                        <?php echo $this->formSubmit($formLogin->get(Constantes::$INPUT_ENTRAR)); ?>
                         <label class="switch ib switch-primary-circuito mt10">
                             <strong class="active pl15">
-                                <a href="<?php echo $this->url(Constantes::$ROUTE_LOGIN) . Constantes::$URL_ESQUECEU_SENHA; ?>" class="texto-preto-cv" ><?php echo $this->translate(Constantes::$TRADUCAO_ESQUECEU_SENHA); ?></a>
+                                <a href="<?php echo $this->url(Constantes::$ROUTE_LOGIN) . Constantes::$URL_ESQUECEU_SENHA; ?>" class="texto-preto-cv" ><?php echo $this->translate(Constantes::$TRADUCAO_PROBLEMA_DE_ACESSO); ?></a>
                             </strong>
                         </label>
                     </div>

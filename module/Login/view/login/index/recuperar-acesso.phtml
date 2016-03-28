@@ -1,5 +1,60 @@
 <?php
-echo $this->mensagem;
+
+use Login\Controller\Helper\Constantes;
 ?>
-<br /><br />
-<a href="/esqueceuSenha" >VOLTAR</a>
+<!-- Start: Main -->
+<div id="main" class="animated fadeIn">
+
+    <!-- Start: Content-Wrapper -->
+    <section id="content_wrapper">
+
+        <!-- begin canvas animation bg -->
+        <div id="canvas-wrapper">
+            <canvas id="demo-canvas"></canvas>
+        </div>
+
+        <!-- Begin: Content -->
+        <section id="content" class="animated fadeIn">
+            <div class="admin-form theme-info mw500" style="margin-top: 10%;" id="login">
+                <div class="row mb15 table-layout">
+
+                    <div class="col-xs-12 pln">
+                        <?php
+                        /* Logo com link para index */
+                        echo $this->linkLogo();
+                        ?>
+                        <br />
+                        <div class="col-xs-12 text-center">
+                            <span class="imoon imoon-checkbox-checked text-circuito-visao big-icone"></span>
+                        </div>
+
+                        <div class="alert alert-default mb30 text-center">
+                            <h3 class="mt5"><?php echo $this->resposta; ?></h3>
+                            <p><?php echo $this->translate(Constantes::$TRADUCAO_SOLICITACAO_ENVIADA_AS); ?>  <small class="text-primary">
+                                    <?php
+                                    echo $this->dateFormat(
+                                            new DateTime(), IntlDateFormatter::MEDIUM, // date
+                                            IntlDateFormatter::MEDIUM, // time
+                                            "pt_BR"
+                                    );
+                                    ?></small></p>
+                        </div>
+
+                    </div>
+
+                </div>
+                <blockquote class="blockquote-thin mv20">
+                    <p><?php echo $this->translate(Constantes::$TRADUCAO_ACESSE_O); ?> <strong class="texto-preto-cv"><a href="<?php echo Constantes::$INDEX ?>">CircuitoDaVisão.com</a></strong></p>
+                    <small><?php echo $this->translate(Constantes::$TRADUCAO_MENSAGEM_TEM_DURACAO_24_HORAS); ?></small>
+                </blockquote>
+
+            </div>
+
+        </section>
+        <!-- End: Content -->
+
+    </section>
+    <!-- End: Content-Wrapper -->
+
+</div>
+<!-- End: Main -->

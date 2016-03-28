@@ -8,6 +8,7 @@
 
 namespace Login;
 
+use Login\View\Helper\LinkLogo;
 use Login\View\Helper\Message;
 
 class Module {
@@ -41,6 +42,9 @@ class Module {
             'factories' => array(
                 'message' => function($sm) {
                     return new Message($sm->getServiceLocator()->get('ControllerPluginManager')->get('flashmessenger'));
+                },
+                'linkLogo' => function($sm) {
+                    return new LinkLogo();
                 }
             )
         );
