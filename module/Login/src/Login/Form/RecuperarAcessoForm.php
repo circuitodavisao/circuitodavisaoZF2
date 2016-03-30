@@ -37,8 +37,8 @@ class RecuperarAcessoForm extends Form {
         /**
          * Radio para saber o que o usuario quer
          */
-        $spanRadio = '<span class="radio"></span>';
-        $classOption = 'option block mt15';
+        $spanRadio = ' ';
+        $classOption = 'block mt15';
         $this->add(
                 (new Radio())
                         ->setName(Constantes::$INPUT_OPCAO)
@@ -50,12 +50,12 @@ class RecuperarAcessoForm extends Form {
                             Constantes::$FORM_STRING_VALUE_OPTIONS => array(
                                 1 => array(
                                     Constantes::$FORM_STRING_VALUE => 1,
-                                    Constantes::$FORM_STRING_LABEL => $spanRadio . Constantes::$TRADUCAO_ESQUECI_MINHA_SENHA,
+                                    Constantes::$FORM_STRING_LABEL => Constantes::$TRADUCAO_ESQUECI_MINHA_SENHA,
                                     Constantes::$FORM_STRING_LABEL_ATRIBUTES => array(Constantes::$FORM_STRING_CLASS => $classOption),
                                 ),
                                 2 => array(
                                     Constantes::$FORM_STRING_VALUE => 2,
-                                    Constantes::$FORM_STRING_LABEL => $spanRadio . Constantes::$TRADUCAO_ESQUECI_MEU_USUARIO,
+                                    Constantes::$FORM_STRING_LABEL => Constantes::$TRADUCAO_ESQUECI_MEU_USUARIO,
                                     Constantes::$FORM_STRING_LABEL_ATRIBUTES => array(Constantes::$FORM_STRING_CLASS => $classOption)
                                 ),
                             ),
@@ -100,13 +100,13 @@ class RecuperarAcessoForm extends Form {
         $this->add(
                 (new Button())
                         ->setName(Constantes::$INPUT_BOTAO_VOLTAR)
-                        ->setLabel(Constantes::$TRADUCAO_CANCELAR)
+                        ->setLabel(Constantes::$TRADUCAO_VOLTAR)
                         ->setAttributes([
                             Constantes::$FORM_STRING_ID => Constantes::$INPUT_BOTAO_VOLTAR,
                             Constantes::$FORM_STRING_ONCLICK => 'abrirOpcao(0);',
                             Constantes::$FORM_STRING_CLASS => 'button btn-default',
                         ])
-                        ->setValue(Constantes::$TRADUCAO_CANCELAR)
+                        ->setValue(Constantes::$TRADUCAO_VOLTAR)
         );
 
         /**
@@ -202,7 +202,7 @@ class RecuperarAcessoForm extends Form {
                             Constantes::$FORM_STRING_ID => Constantes::$INPUT_BOTAO_VERIFICAR_USUARIO,
                             Constantes::$FORM_STRING_CLASS => 'button btn-primary-circuito',
                         ])
-        );       
+        );
     }
 
 }

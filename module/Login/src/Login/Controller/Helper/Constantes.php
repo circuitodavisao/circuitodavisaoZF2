@@ -31,6 +31,7 @@ class Constantes {
     public static $INPUT_ENTRAR = 'entrar';
     public static $MENSAGEM_ERRO_CSRF = 'Poss&iacute;vel ataque CSRF';
     public static $IMAGEM_LOGO = '/img/logos/logo_circuito.png';
+    public static $LOADER_GIF = '/img/loader.gif';
     public static $CLASS_HIDDEN = 'hidden';
     public static $TRADUCAO_NOME_APLICACAO = 'View of the Circuit';
     public static $TRADUCAO_USUARIO = 'User';
@@ -42,6 +43,8 @@ class Constantes {
     public static $TRADUCAO_PROBLEMA_DE_ACESSO = 'Access problem?';
     public static $TRADUCAO_FALHA_LOGIN = 'The informed login details do not match an account in our records.';
     public static $TRADUCAO_CAPSLOCK = 'Caps Lock is on.';
+    public static $MENSAGEM = 'mensagem';
+    public static $TIPO = 'tipo';
 
     /* Constantes recuperar acesso */
     public static $RECUPERAR_ACESSO_FORM = 'RecuperarAcessoForm';
@@ -55,21 +58,28 @@ class Constantes {
     public static $INPUT_CAPTCHA = 'captcha';
     public static $INPUT_CPF = 'cpf';
     public static $INPUT_DATA_NASCIMENTO = 'dataNascimento';
-    public static $INPUT_TIPO = 'tipo'; 
+    public static $INPUT_TIPO = 'tipo';
     public static $INDEX = '/';
+    public static $ACTION_ESQUECEU_SENHA = 'esqueceuSenha';
+    public static $ACTION_EMAIL_ENVIADO = 'emailEnviado';
     public static $TRADUCAO_CANCELAR = 'Back';
+    public static $TRADUCAO_VOLTAR = 'Back';
     public static $TRADUCAO_CONTINUAR = 'Continue';
     public static $TRADUCAO_CAPTCHA_LABEL = 'Please verify you are human';
-    public static $TRADUCAO_ESQUECI_MINHA_SENHA = 'Because I forgot my password';
-    public static $TRADUCAO_ESQUECI_MEU_USUARIO = 'I know my password, but I do not remember my login';
+    public static $TRADUCAO_ESQUECI_MINHA_SENHA = ' Because I forgot my password';
+    public static $TRADUCAO_ESQUECI_MEU_USUARIO = ' I know my password, but I do not remember my login';
     public static $TRADUCAO_ENVIAR_EMAIL = 'Send email';
     public static $TRADUCAO_VERIFICAR_USUARIO = 'Check User';
     public static $TRADUCAO_PERGUNTA_ESQUECI_SENHA = 'Because you can not enter the View of the Circuit?';
     public static $TRADUCAO_TITULO_ESQUECI_MINHA_SENHA = 'We can help you reset your password. First, enter your email and follow the instructions.';
-    public static $TRADUCAO_INFORME_2_DIGITO_CPF = 'Tell us what the last 2 digits of your CPF';
+    public static $TRADUCAO_INFORME_2_DIGITO_CPF_DATA_NASCIMENTO = 'Tell us what the last 2 digits of your Social Security number and date of birth.';
     public static $TRADUCAO_SOLICITACAO_ENVIADA_AS = 'request sent at';
     public static $TRADUCAO_ACESSE_O = 'Access';
     public static $TRADUCAO_MENSAGEM_TEM_DURACAO_24_HORAS = 'The message in your email lasts 24 hours';
+    public static $TRADUCAO_SEU_LOGIN_E = 'Your username is';
+    public static $TRADUCAO_PESSOA_NAO_ENCONTRADA = 'Person not found in our records!';
+    public static $TRADUCAO_PESSOA_INATIVADA = 'Your user is inactive contact your direct leader!';
+    public static $TRADUCAO_EMAIL_ENVIADO = 'Check your email with the recovery of your password link';
     /* Forms */
     public static $FORM_STRING_METHOD = 'method';
     public static $FORM_STRING_POST = 'POST';

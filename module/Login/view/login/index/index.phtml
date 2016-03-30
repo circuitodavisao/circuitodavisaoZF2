@@ -13,91 +13,61 @@ $formLogin->setAttribute(Constantes::$ACTION, $this->url(Constantes::$ROUTE_LOGI
 
 $classMensagem = $this->hidden;
 ?> 
-<!-- Start: Main -->
-<div id="main" class="animated fadeIn">
+<!-- Login Panel/Form -->
+<div class="panel mt30 mb25">
+    <?php echo $this->form()->openTag($formLogin); ?>
 
-    <!-- Start: Content-Wrapper -->
-    <section id="content_wrapper">
+    <div class="panel-body bg-light p25 pb15">
 
-        <!-- Begin: Content -->
-        <section id="content">
+        <!-- Mensagens -->
 
-            <div class="admin-form theme-info mw500" id="login">
+        <!-- Capslock -->
+        <div id="divCapslock" class="alert alert-danger hidden">
+            <?php echo $this->translate(Constantes::$TRADUCAO_CAPSLOCK); ?> 
+        </div>
 
-                <!-- Login Logo -->
-                <div class="row table-layout">
-                    <?php
-                    /* Logo com link para index */
-                    echo $this->linkLogo();
-                    ?>
-                </div>
+        <div id="mensagem" class="alert alert-danger alert-dismissable <?php echo $classMensagem; ?>">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <?php echo $this->translate(Constantes::$TRADUCAO_FALHA_LOGIN); ?>
+        </div>
 
-                <!-- Login Panel/Form -->
-                <div class="panel mt30 mb25">
-                    <?php echo $this->form()->openTag($formLogin); ?>
+        <!-- Username Input -->
+        <div class="section">
+            <label for="<?php echo Constantes::$TRADUCAO_USUARIO; ?>" class="field-label text-muted fs18 mb10">
+                <?php echo $this->translate(Constantes::$TRADUCAO_USUARIO); ?>
+            </label>
+            <label for="<?php echo Constantes::$TRADUCAO_USUARIO; ?>" class="field prepend-icon">
+                <?php echo $this->formInput($formLogin->get(Constantes::$INPUT_EMAIL)); ?>
+                <label for="<?php echo Constantes::$TRADUCAO_USUARIO; ?>" class="field-icon">
+                    <i class="fa fa-user"></i>
+                </label>
+            </label>
+        </div>
 
-                    <div class="panel-body bg-light p25 pb15">
+        <!-- Password Input -->
+        <div class="section">
+            <label for="<?php echo Constantes::$TRADUCAO_SENHA; ?>" class="field-label text-muted fs18 mb10">
+                <?php echo $this->translate(Constantes::$TRADUCAO_SENHA); ?>
+            </label>
+            <label for="<?php echo Constantes::$TRADUCAO_SENHA; ?>" class="field prepend-icon">
+                <?php echo $this->formInput($formLogin->get(Constantes::$INPUT_SENHA)); ?>
+                <label for="<?php echo Constantes::$TRADUCAO_SENHA; ?>" class="field-icon">
+                    <i class="fa fa-lock"></i>
+                </label>
+            </label>
+        </div>
+    </div>
 
-                        <!-- Mensagens -->
+    <div class="panel-footer clearfix">
+        <?php echo $this->formHidden($formLogin->get(Constantes::$INPUT_CSRF)); ?>
+        <?php echo $this->formSubmit($formLogin->get(Constantes::$INPUT_ENTRAR)); ?>
+        <label class="switch ib switch-primary-circuito mt10">
+            <strong class="active pl15">
+                <a href="<?php echo $this->url(Constantes::$ROUTE_LOGIN) . Constantes::$URL_ESQUECEU_SENHA; ?>" class="texto-preto-cv" ><?php echo $this->translate(Constantes::$TRADUCAO_PROBLEMA_DE_ACESSO); ?></a>
+            </strong>
+        </label>
+    </div>
 
-                        <!-- Capslock -->
-                        <div id="divCapslock" class="alert alert-danger hidden">
-                            <?php echo $this->translate(Constantes::$TRADUCAO_CAPSLOCK); ?> 
-                        </div>
-
-                        <?php echo $this->message(); ?>
-
-                        <div id="mensagem" class="alert alert-danger alert-dismissable <?php echo $classMensagem; ?>">
-                            <button type="button" class="close" data-dismiss="alert">&times;</button>
-                            <?php echo $this->translate(Constantes::$TRADUCAO_FALHA_LOGIN); ?>
-                        </div>
-
-                        <!-- Username Input -->
-                        <div class="section">
-                            <label for="<?php echo Constantes::$TRADUCAO_USUARIO; ?>" class="field-label text-muted fs18 mb10">
-                                <?php echo $this->translate(Constantes::$TRADUCAO_USUARIO); ?>
-                            </label>
-                            <label for="<?php echo Constantes::$TRADUCAO_USUARIO; ?>" class="field prepend-icon">
-                                <?php echo $this->formInput($formLogin->get(Constantes::$INPUT_EMAIL)); ?>
-                                <label for="<?php echo Constantes::$TRADUCAO_USUARIO; ?>" class="field-icon">
-                                    <i class="fa fa-user"></i>
-                                </label>
-                            </label>
-                        </div>
-
-                        <!-- Password Input -->
-                        <div class="section">
-                            <label for="<?php echo Constantes::$TRADUCAO_SENHA; ?>" class="field-label text-muted fs18 mb10">
-                                <?php echo $this->translate(Constantes::$TRADUCAO_SENHA); ?>
-                            </label>
-                            <label for="<?php echo Constantes::$TRADUCAO_SENHA; ?>" class="field prepend-icon">
-                                <?php echo $this->formInput($formLogin->get(Constantes::$INPUT_SENHA)); ?>
-                                <label for="<?php echo Constantes::$TRADUCAO_SENHA; ?>" class="field-icon">
-                                    <i class="fa fa-lock"></i>
-                                </label>
-                            </label>
-                        </div>
-                    </div>
-
-                    <div class="panel-footer clearfix">
-                        <?php echo $this->formHidden($formLogin->get(Constantes::$INPUT_CSRF)); ?>
-                        <?php echo $this->formSubmit($formLogin->get(Constantes::$INPUT_ENTRAR)); ?>
-                        <label class="switch ib switch-primary-circuito mt10">
-                            <strong class="active pl15">
-                                <a href="<?php echo $this->url(Constantes::$ROUTE_LOGIN) . Constantes::$URL_ESQUECEU_SENHA; ?>" class="texto-preto-cv" ><?php echo $this->translate(Constantes::$TRADUCAO_PROBLEMA_DE_ACESSO); ?></a>
-                            </strong>
-                        </label>
-                    </div>
-
-                    <?php echo $this->form()->closeTag() ?>
-
-                </div>
-            </div>
-        </section>
-        <!-- End: Content -->
-
-    </section>
-    <!-- End: Content-Wrapper -->
+    <?php echo $this->form()->closeTag() ?>
 
 </div>
-<!-- End: Main -->

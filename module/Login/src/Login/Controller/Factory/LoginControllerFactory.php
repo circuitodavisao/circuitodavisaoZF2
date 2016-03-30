@@ -36,7 +36,16 @@ class LoginControllerFactory implements FactoryInterface {
             $doctrineAuthenticationService = null;
         }
 
-        return new LoginController($doctrineORMEntityManager, $doctrineAuthenticationService);
+        // Serviço de tradução
+        try {
+            $translator = $sm->get('translator');
+        } catch (ServiceNotCreatedException $e) {
+            $translator = null;
+        } catch (ExtensionNotLoadedException $e) {
+            $translator = null;
+        }
+
+        return new LoginController($doctrineORMEntityManager, $doctrineAuthenticationService, $translator);
     }
 
 }

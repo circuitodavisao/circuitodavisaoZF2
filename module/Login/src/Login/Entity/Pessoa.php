@@ -37,6 +37,12 @@ class Pessoa {
     /** @ORM\Column(type="string") */
     protected $status;
 
+    /** @ORM\Column(type="string") */
+    protected $data_nascimento;
+
+    /** @ORM\Column(type="string") */
+    protected $documento;
+
     function getId() {
         return $this->id;
     }
@@ -63,6 +69,14 @@ class Pessoa {
 
     function getStatus() {
         return $this->status;
+    }
+
+    function getData_nascimento() {
+        return $this->data_nascimento;
+    }
+
+    function getDocumento() {
+        return $this->documento;
     }
 
     public function verificarSeEstaAtivo() {
@@ -99,6 +113,14 @@ class Pessoa {
 
     function setStatus($status) {
         $this->status = $status;
+    }
+
+    function setData_nascimento($data_nascimento) {
+        $this->data_nascimento = $data_nascimento;
+    }
+
+    function setDocumento($documento) {
+        $this->documento = $documento;
     }
 
 }

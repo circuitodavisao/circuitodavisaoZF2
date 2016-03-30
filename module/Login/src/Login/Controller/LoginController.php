@@ -3,14 +3,14 @@
 namespace Login\Controller;
 
 use Doctrine\ORM\EntityManager;
-use Exception;
 use Login\Controller\Helper\Constantes;
+use Login\Controller\Helper\Funcoes;
 use Login\Controller\Helper\LoginORM;
 use Login\Form\LoginForm;
 use Login\Form\RecuperarAcessoForm;
-use PHPMailer;
 use Zend\Authentication\AuthenticationService;
 use Zend\Mvc\Controller\AbstractActionController;
+use Zend\Mvc\I18n\Translator;
 
 /**
  * Nome: LoginController.php
@@ -21,12 +21,13 @@ class LoginController extends AbstractActionController {
 
     private $_doctrineORMEntityManager;
     private $_doctrineAuthenticationService;
+    private $_translator;
 
     /**
      * Contrutor sobrecarregado com os serviços de ORM e Autenticador
      */
     public function __construct(
-    EntityManager $doctrineORMEntityManager = null, AuthenticationService $doctrineAuthenticationService = null) {
+    EntityManager $doctrineORMEntityManager = null, AuthenticationService $doctrineAuthenticationService = null, Translator $translator = null) {
 
         if (!is_null($doctrineORMEntityManager)) {
             $this->_doctrineORMEntityManager = $doctrineORMEntityManager;
@@ -34,6 +35,10 @@ class LoginController extends AbstractActionController {
 
         if (!is_null($doctrineAuthenticationService)) {
             $this->_doctrineAuthenticationService = $doctrineAuthenticationService;
+        }
+
+        if (!is_null($translator)) {
+            $this->_translator = $translator;
         }
     }
 
@@ -68,15 +73,10 @@ class LoginController extends AbstractActionController {
     public function logarAction() {
         $data = $this->getRequest()->getPost();
 
-        /*
-         * Testando ataques
-         */
-        $this->flashMessenger()->clearCurrentMessages();
+
 
         /* Post sem email */
         if (is_null($data[Constantes::$INPUT_EMAIL])) {
-//            $this->flashMessenger()->
-//                    addErrorMessage(Constantes::$MENSAGEM_ERRO_CSRF);
             /* Redirecionamento */
             return $this->redirect()->toRoute(Constantes::$ROUTE_LOGIN);
         }
@@ -88,6 +88,26 @@ class LoginController extends AbstractActionController {
 
         if ($authenticationResult->isValid()) {
             /* Autenticacao valida */
+
+            /* Helper Controller */
+            $loginORM = new LoginORM($this->getDoctrineORMEntityManager());
+
+            /* Verificar se existe pessoa por email informado */
+            $pessoa = $loginORM->getPessoaORM()->encontrarPorEmail($data[Constantes::$INPUT_EMAIL]);
+
+            if (!$pessoa->verificarSeEstaAtivo()) {
+                /* Inativada */
+                /* Autenticacao falhou */
+
+                /* Redirecionamento */
+                return $this->forward()->dispatch(Constantes::$CONTROLLER_LOGIN, array(
+                            Constantes::$ACTION => Constantes::$ACTION_INDEX,
+                            Constantes::$INPUT_EMAIL => $data[Constantes::$INPUT_EMAIL],
+                            Constantes::$MENSAGEM => $this->getTranslator()->translate(Constantes::$TRADUCAO_PESSOA_INATIVADA)
+                ));
+            } else {
+                /* Ativada */
+            }
 
             /* Redirecionamento */
             return $this->forward()->dispatch(Constantes::$CONTROLLER_LOGIN, array(
@@ -106,9 +126,17 @@ class LoginController extends AbstractActionController {
 
     /**
      * Função que direciona a tela de acesso
-     * GET /acesso
+     * GET /acessoAction
      */
     public function acessoAction() {
+        return [];
+    }
+
+    /**
+     * Função que direciona a tela de email enviado
+     * GET /emailEnviado
+     */
+    public function emailEnviadoAction() {
         return [];
     }
 
@@ -118,8 +146,14 @@ class LoginController extends AbstractActionController {
      */
     public function esqueceuSenhaAction() {
         $formRecuperarAcesso = new RecuperarAcessoForm(Constantes::$RECUPERAR_ACESSO_FORM);
+
+        /* Mensagem */
+        $tipo = $this->params()->fromRoute(Constantes::$TIPO);
+        $messagem = $this->params()->fromRoute(Constantes::$MENSAGEM);
         return [
             Constantes::$FORM_RECUPERAR_ACESSO => $formRecuperarAcesso,
+            Constantes::$TIPO => $tipo,
+            Constantes::$MENSAGEM => $messagem,
         ];
     }
 
@@ -128,7 +162,6 @@ class LoginController extends AbstractActionController {
      * GET /acesso
      */
     public function recuperarAcessoAction() {
-        $mensagem = '';
         $resposta = '';
         $request = $this->getRequest();
         if ($request->isPost()) {
@@ -144,18 +177,67 @@ class LoginController extends AbstractActionController {
                 /* Verificar se existe pessoa por email informado */
                 $email = $dataPost[Constantes::$ENTITY_PESSOA_EMAIL];
                 $pessoa = $loginORM->getPessoaORM()->encontrarPorEmail($email);
-
-
-                /* Pessoa com email informado nao encontrada */
-                if (!$pessoa) {
-                    $mensagem = 'Pessoa nao encontrada';
+            }
+            if ($idTipo == 2) {
+                /* Verificar se existe pessoa por data de nascimento e digitos do CPF informado */
+                $documento = $dataPost[Constantes::$INPUT_CPF];
+                $dataNascimento = Funcoes::mudarPadraoData($dataPost[Constantes::$INPUT_DATA_NASCIMENTO], 0);
+                $pessoa = $loginORM->getPessoaORM()->encontrarPorCPFEDataNascimento($documento, $dataNascimento);
+            }
+            /* Pessoa não encontrada */
+            if (!$pessoa) {
+                /* Redirecionamento */
+                return $this->forward()->dispatch(Constantes::$CONTROLLER_LOGIN, array(
+                            Constantes::$ACTION => Constantes::$ACTION_ESQUECEU_SENHA,
+                            Constantes::$TIPO => 1,
+                            Constantes::$MENSAGEM => Constantes::$TRADUCAO_PESSOA_NAO_ENCONTRADA,
+                ));
+            } else {
+                if (!$pessoa->verificarSeEstaAtivo()) {
+                    /* Redirecionamento */
+                    return $this->forward()->dispatch(Constantes::$CONTROLLER_LOGIN, array(
+                                Constantes::$ACTION => Constantes::$ACTION_ESQUECEU_SENHA,
+                                Constantes::$TIPO => 1,
+                                Constantes::$MENSAGEM => Constantes::$TRADUCAO_PESSOA_INATIVADA,
+                    ));
                 } else {
-                    if (!$pessoa->verificarSeEstaAtivo()) {
-                        $mensagem = 'Pessoa inativada';
-                    } else {
-                        $mensagem = 'Pessoa ok truta';
+                    /* Email */
+                    if ($idTipo == 1) {
                         $resposta = $email;
-//                    $mail = new PHPMailer;
+                        $this->enviarEmail($email, '$mensagem');
+
+                        /* Redirecionamento */
+                        return $this->forward()->dispatch(Constantes::$CONTROLLER_LOGIN, array(
+                                    Constantes::$ACTION => Constantes::$ACTION_EMAIL_ENVIADO
+                        ));
+                    }
+                    /* CPF e Data de Nascimento */
+                    if ($idTipo == 2) {
+                        $resposta = $this->getTranslator()->translate(Constantes::$TRADUCAO_SEU_LOGIN_E) . ' ' . $pessoa->getEmail();
+                    }
+                }
+            }
+        }
+
+        return [
+            'resposta' => $resposta,
+        ];
+    }
+
+    public function getDoctrineORMEntityManager() {
+        return $this->_doctrineORMEntityManager;
+    }
+
+    public function getDoctrineAuthenticationServicer() {
+        return $this->_doctrineAuthenticationService;
+    }
+
+    public function getTranslator() {
+        return $this->_translator;
+    }
+
+    private function enviarEmail($email, $mensagem) {
+//        $mail = new PHPMailer;
 ////                    $mail->SMTPDebug = 1;                              // Enable verbose debug output
 //                    $mail->isSMTP();                                      // Set mailer to use SMTP
 //                    $mail->Host = '200.147.36.31';  // Specify main and backup SMTP servers
@@ -177,30 +259,6 @@ class LoginController extends AbstractActionController {
 //                    } else {
 //                        echo '#### Message has been sent';
 //                    }
-                    }
-                }
-            }
-            if ($idTipo == 2) {
-                $documento = $dataPost[Constantes::$ENTITY_PESSOA_DOCUMENTO];
-                $dataNascimento = $dataPost[Constantes::$ENTITY_PESSOA_DATA_NASCIMENTO];
-            }
-            if (empty($idTipo)) {
-                
-            }
-        }
-
-        return [
-            'mensagem' => $mensagem,
-            'resposta' => $resposta,
-        ];
-    }
-
-    public function getDoctrineORMEntityManager() {
-        return $this->_doctrineORMEntityManager;
-    }
-
-    public function getDoctrineAuthenticationServicer() {
-        return $this->_doctrineAuthenticationService;
     }
 
 }

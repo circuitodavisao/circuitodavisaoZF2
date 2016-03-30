@@ -1,7 +1,7 @@
 <?php echo $this->doctype(); ?>
 
 <?php
-$versao = '?v=1.6';
+$versao = '?v=1.7';
 
 use Login\Controller\Helper\Constantes;
 ?>
@@ -38,14 +38,41 @@ use Login\Controller\Helper\Constantes;
                 ->prependStylesheet('http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700')
                 ->prependStylesheet($this->basePath() . '/css/estilos-circuito/admin-forms.css')
                 ->prependStylesheet($this->basePath() . '/css/estilos-circuito/default_skin/css/theme.css')
-                ->prependStylesheet($this->basePath() . '/css/estilos-circuito/cv-login/estilos-login.css')
+                ->prependStylesheet($this->basePath() . '/css/estilos-circuito/cv-login/estilos-login.css'. $versao)
         ;
         ?>
     </head>
     <body class="external-page external-alt sb-l-c sb-r-c">
+        <!-- Start: Main -->
+        <div id="main" class="animated fadeIn">
 
-        <?php echo $this->content; ?>
+            <!-- Start: Content-Wrapper -->
+            <section id="content_wrapper">
 
+                <!-- Begin: Content -->
+                <section id="content">
+
+                    <div class="admin-form theme-info mw500" id="login">
+
+                        <!-- Login Logo -->
+                        <div class="row table-layout">
+                            <?php
+                            /* Logo com link para index */
+                            echo $this->linkLogo();
+                            ?>
+                        </div>
+
+                        <?php echo $this->content; ?>
+
+                    </div>
+                </section>
+                <!-- End: Content -->
+
+            </section>
+            <!-- End: Content-Wrapper -->
+
+        </div>
+        <!-- End: Main -->
         <!-- BEGIN: PAGE SCRIPTS -->
         <?php
         echo $this

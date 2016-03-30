@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: ZendSkeletonApplication\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-07-05 22:17-0700\n"
-"PO-Revision-Date: 2016-03-28 16:47-0300\n"
+"PO-Revision-Date: 2016-03-30 17:56-0300\n"
 "Last-Translator: Diogo Melo <dmelo87@gmail.com>\n"
 "Language-Team: ZF Contibutors <zf-devteam@zend.com>\n"
 "Language: pt\n"
@@ -72,12 +72,12 @@ msgid "Continue"
 msgstr "Continuar"
 
 #: ../view/login/index/esqueceu-senha.phtml:41
-msgid "Because I forgot my password"
-msgstr "Por que esqueci minha senha"
+msgid " Because I forgot my password"
+msgstr " Por que esqueci minha senha"
 
 #: ../view/login/index/esqueceu-senha.phtml:44
-msgid "I know my password, but I do not remember my login"
-msgstr "Eu sei a minha senha, mas não lembro o meu login"
+msgid " I know my password, but I do not remember my login"
+msgstr " Eu sei a minha senha, mas não lembro o meu login"
 
 #: ../view/login/index/esqueceu-senha.phtml:44
 msgid "We can help you reset your password. First, enter your email and follow the instructions."
@@ -96,8 +96,8 @@ msgid "Please verify you are human"
 msgstr "Por favor verificar que você é humano"
 
 #: ../view/login/index/esqueceu-senha.phtml:96
-msgid "Tell us what the last 2 digits of your CPF"
-msgstr "Nos diga quais são os <b class=\"text-danger\">2 últimos dígitos do seu CPF</b> XXX.XXX.XXX-<b class=\"text-danger\">XX</b>."
+msgid "Tell us what the last 2 digits of your Social Security number and date of birth."
+msgstr "Nos diga quais são os <b class=\"text-danger\">2 últimos dígitos do seu CPF</b> XXX.XXX.XXX-<b class=\"text-danger\">XX</b> e data de nascimento."
 
 #: ../view/login/index/recuperar-acesso.phtml:36
 msgid "request sent at"
@@ -110,6 +110,22 @@ msgstr "Acesse o"
 #: ../view/login/index/recuperar-acesso.phtml:50
 msgid "The message in your email lasts 24 hours"
 msgstr "A mensagem em seu email tem duração de 24 Horas"
+
+#: ../view/login/index/recuperar-acesso.phtml:32
+msgid "Your username is"
+msgstr "Seu usuário é"
+
+#: ../view/login/index/recuperar-acesso.phtml:32
+msgid "Person not found in our records!"
+msgstr "Pessoa não encontrada em nossos registros!"
+
+#: ../view/login/index/recuperar-acesso.phtml:32
+msgid "Your user is inactive contact your direct leader!"
+msgstr "Seu usuário está inativado entre em contato com seu líder direto!"
+
+#: ../view/login/index/email-enviado.phtml:18
+msgid "Check your email with the recovery of your password link"
+msgstr "Verifique seu email com o link de recuperação de sua senha"
 
 # ############
 # ## GERAL ###
