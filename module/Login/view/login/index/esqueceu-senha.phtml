@@ -43,10 +43,10 @@ $classTituloPerdeuSenha = 'titulo-perdeu-sua-senha';
     <!-- Opção 1 -->
     <div id="opcao_1" class="hidden">
         <div class="panel-body bg-light">
-            <!-- Capslock -->
-            <div id="divCapslock" class="alert alert-danger hidden">
-                <?php echo $this->translate(Constantes::$TRADUCAO_CAPSLOCK); ?> 
-            </div>
+            <?php
+            /* Capslock */
+            echo $this->DivCapslock();
+            ?>
             <div class="section mn">
                 <div class="smart-widget">
                     <p class="text-center"><?php echo $this->translate(Constantes::$TRADUCAO_TITULO_ESQUECI_MINHA_SENHA); ?></p>

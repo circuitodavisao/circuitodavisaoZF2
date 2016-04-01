@@ -14,6 +14,7 @@ class Constantes {
     public static $ENTITY_PESSOA_EMAIL = 'email';
     public static $ENTITY_PESSOA_DOCUMENTO = 'documento';
     public static $ENTITY_PESSOA_DATA_NASCIMENTO = 'data_nascimento';
+    public static $ENTITY_PESSOA_TOKEN = 'token';
     public static $ENTITY_PERFIL_ACESSO = 'Login\Entity\PerfilAcesso';
     public static $ENTITY_PESSOA_PERFIL_ACESSO = 'Login\Entity\PessoaPerfilAcesso';
     public static $CONTROLLER_LOGIN = 'Login\Controller\Login';
@@ -27,6 +28,7 @@ class Constantes {
     public static $ACTION_LOGAR = 'logar';
     public static $INPUT_EMAIL = 'email';
     public static $INPUT_SENHA = 'senha';
+    public static $INPUT_REPETIR_SENHA = 'repetirSenha';
     public static $INPUT_CSRF = 'csrf';
     public static $INPUT_ENTRAR = 'entrar';
     public static $MENSAGEM_ERRO_CSRF = 'Poss&iacute;vel ataque CSRF';
@@ -38,6 +40,8 @@ class Constantes {
     public static $TRADUCAO_USUARIO_PLACEHOLDER = 'Enter your user';
     public static $TRADUCAO_SENHA = 'Password';
     public static $TRADUCAO_SENHA_PLACEHOLDER = 'Enter your password';
+    public static $TRADUCAO_NOVA_SENHA_PLACEHOLDER = 'Enter your new password';
+    public static $TRADUCAO_REPETIR_SENHA_PLACEHOLDER = 'Reenter your password';
     public static $TRADUCAO_ENTRAR = 'Sign in';
     public static $TRADUCAO_ESQUECEU_SENHA = 'Forgot password?';
     public static $TRADUCAO_PROBLEMA_DE_ACESSO = 'Access problem?';
@@ -45,6 +49,7 @@ class Constantes {
     public static $TRADUCAO_CAPSLOCK = 'Caps Lock is on.';
     public static $MENSAGEM = 'mensagem';
     public static $TIPO = 'tipo';
+    public static $ID = 'id';
 
     /* Constantes recuperar acesso */
     public static $RECUPERAR_ACESSO_FORM = 'RecuperarAcessoForm';
@@ -59,9 +64,11 @@ class Constantes {
     public static $INPUT_CPF = 'cpf';
     public static $INPUT_DATA_NASCIMENTO = 'dataNascimento';
     public static $INPUT_TIPO = 'tipo';
+    public static $INPUT_ALTERAR = 'alterar';
     public static $INDEX = '/';
     public static $ACTION_ESQUECEU_SENHA = 'esqueceuSenha';
     public static $ACTION_EMAIL_ENVIADO = 'emailEnviado';
+    public static $ACTION_ALTERAR_SENHA = 'alterarSenha';
     public static $TRADUCAO_CANCELAR = 'Back';
     public static $TRADUCAO_VOLTAR = 'Back';
     public static $TRADUCAO_CONTINUAR = 'Continue';
@@ -80,6 +87,15 @@ class Constantes {
     public static $TRADUCAO_PESSOA_NAO_ENCONTRADA = 'Person not found in our records!';
     public static $TRADUCAO_PESSOA_INATIVADA = 'Your user is inactive contact your direct leader!';
     public static $TRADUCAO_EMAIL_ENVIADO = 'Check your email with the recovery of your password link';
+
+    /* Constantes recuperar senha */
+    public static $TRADUCAO_EMAIL_TITULO_RECUPERAR_SENHA = 'Recover Password';
+    public static $TRADUCAO_EMAIL_MENSAGEM_RECUPERAR_SENHA = '<pre>Hello #email</pre><pre>We received a request to reset the password for your account CircuitoDaVisão.com . To reset your password, use the links below:</pre><pre>Reset your password using a Web browser:</pre><pre><a href="158.69.124.139/recuperarSenha/#id">158.69.124.139/recuperarSenha/#id</a></pre><pre>If you did not request a password reset, you can ignore this message and your password will not change.</pre>';
+    public static $TRADUCAO_ALTERAR = 'Update';
+    public static $RECUPERAR_SENHA_FORM = 'RecuperarSenhaForm';
+    public static $FORM_RECUPERAR_SENHA = 'formRecuperarSenha';
+    public static $FORM_RECUPERAR_SENHA_6_CARACTERES = 'At least 6 characters';
+    public static $FORM_RECUPERAR_SENHA_LETRA_NUMERO = 'Your password must contain at least <strong> a </ strong> letter and <strong> one </ strong> number.';
     /* Forms */
     public static $FORM_STRING_METHOD = 'method';
     public static $FORM_STRING_POST = 'POST';

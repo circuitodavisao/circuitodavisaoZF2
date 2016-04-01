@@ -21,10 +21,10 @@ $classMensagem = $this->hidden;
 
         <!-- Mensagens -->
 
-        <!-- Capslock -->
-        <div id="divCapslock" class="alert alert-danger hidden">
-            <?php echo $this->translate(Constantes::$TRADUCAO_CAPSLOCK); ?> 
-        </div>
+       <?php
+            /* Capslock */
+            echo $this->DivCapslock();
+            ?>
 
         <div id="mensagem" class="alert alert-danger alert-dismissable <?php echo $classMensagem; ?>">
             <button type="button" class="close" data-dismiss="alert">&times;</button>

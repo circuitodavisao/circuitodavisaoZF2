@@ -1,7 +1,7 @@
 <?php echo $this->doctype(); ?>
 
 <?php
-$versao = '?v=1.7';
+$versao = '?v=1.1.6';
 
 use Login\Controller\Helper\Constantes;
 ?>
@@ -77,6 +77,7 @@ use Login\Controller\Helper\Constantes;
         <?php
         echo $this
                 ->headScript()
+                ->prependFile($this->basePath() . '/js/circuito_da_visao/botao-loader.js' . $versao)
                 ->prependFile($this->basePath() . '/js/circuito_da_visao/capslock.js' . $versao)
                 ->prependFile($this->basePath() . '/js/circuito_da_visao/circuito-mascaras_e_validacoes.js' . $versao)
                 ->prependFile($this->basePath() . '/js/circuito_da_visao/opcoes-recuperar-senha.js' . $versao)

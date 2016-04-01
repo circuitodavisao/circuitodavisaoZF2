@@ -4,8 +4,3 @@
     color: #ffffff;
     background-color: #000000;
 }
-
-.btn-circuito-loader:focus{
-    color: transparent;
-    background: url(/img/loader.gif) no-repeat 50% 50%;
-}

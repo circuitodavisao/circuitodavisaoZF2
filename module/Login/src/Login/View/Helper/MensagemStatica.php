@@ -32,26 +32,32 @@ class MensagemStatica extends AbstractHelper {
 
     public function renderHtml() {
         $html = '';
+        $tipo = 'alert ';
         if ($this->getTipo()) {
             switch ($this->getTipo()) {
                 case 1:
-                    $tipo = 'alert alert-warning';
+                    $tipo .= 'alert-warning';
+                    $tipoIcone = 'warning';
                     break;
                 case 2:
-                    $tipo = 'alert alert-info';
+                    $tipo .= 'alert-primary';
+                    $tipoIcone = 'comment';
                     break;
                 case 3:
-                    $tipo = 'alert alert-success';
+                    $tipo .= 'alert-success';
+                    $tipoIcone = 'check';
                     break;
                 case 4:
-                    $tipo = 'alert alert-danger';
+                    $tipo .= 'alert-danger';
+                    $tipoIcone = 'times';
                     break;
             }
 
+            $tipo .= ' pastel';
             $mensagem = $this->getMensagem();
             if ($mensagem) {
                 $html .= '<div class="' . $tipo . '">';
-//                $html .= '<button type="button" class="close" data-dismiss="alert">&times;</button>';
+                $html .= '<i class="fa fa-' . $tipoIcone . ' pr10"></i>';
                 $html .= $mensagem;
                 $html .= '</div>';
             }

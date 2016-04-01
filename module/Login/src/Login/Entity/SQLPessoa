@@ -13,6 +13,9 @@ CREATE TABLE pessoa
   status status, -- Status do acesso da pessoa: ativo ou inativo
   documento bigint, -- Documento da pessoa, pode ser CPF ou caso estrangeiro um documento aberto
   data_nascimento date, -- Data de nascimento da pessoa
+  token character varying(120), -- Token de recuperacao de senha
+  token_data date, -- Data para validação do token
+  token_hora time without time zone, -- Hora para validação do token
   CONSTRAINT primary_key_pessoa PRIMARY KEY (id) -- Primary Key da tabela pessoa
 )
 WITH (
@@ -31,6 +34,9 @@ COMMENT ON COLUMN pessoa.data_inativacao IS 'Data de inativação da pessoa';
 COMMENT ON COLUMN pessoa.status IS 'Status do acesso da pessoa: ativo ou inativo';
 COMMENT ON COLUMN pessoa.documento IS 'Documento da pessoa, pode ser CPF ou caso estrangeiro um documento aberto';
 COMMENT ON COLUMN pessoa.data_nascimento IS 'Data de nascimento da pessoa';
+COMMENT ON COLUMN pessoa.token IS 'Token de recuperacao de senha';
+COMMENT ON COLUMN pessoa.token_data IS 'Data para validação do token';
+COMMENT ON COLUMN pessoa.token_hora IS 'Hora para validação do token';
 
 COMMENT ON CONSTRAINT primary_key_pessoa ON pessoa IS 'Primary Key da tabela pessoa';
 

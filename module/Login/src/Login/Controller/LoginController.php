@@ -2,12 +2,14 @@
 
 namespace Login\Controller;
 
+use DateTime;
 use Doctrine\ORM\EntityManager;
 use Login\Controller\Helper\Constantes;
 use Login\Controller\Helper\Funcoes;
 use Login\Controller\Helper\LoginORM;
 use Login\Form\LoginForm;
 use Login\Form\RecuperarAcessoForm;
+use Login\Form\RecuperarSenhaForm;
 use Zend\Authentication\AuthenticationService;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\Mvc\I18n\Translator;
@@ -47,9 +49,6 @@ class LoginController extends AbstractActionController {
      * GET /
      */
     public function indexAction() {
-        /* Limpar mensagens */
-        $this->flashMessenger()->clearCurrentMessages();
-
         $classeMessagem = Constantes::$CLASS_HIDDEN;
 
         $formLogin = new LoginForm(Constantes::$LOGIN_FORM);
@@ -159,7 +158,7 @@ class LoginController extends AbstractActionController {
 
     /**
      * Função que tenta recuperar o acesso
-     * GET /acesso
+     * GET /recuperarAcesso
      */
     public function recuperarAcessoAction() {
         $resposta = '';
@@ -172,7 +171,7 @@ class LoginController extends AbstractActionController {
             $dataPost = $request->getPost();
 
             /* recupera o id vindo da url */
-            $idTipo = $this->params()->fromRoute('id', 0);
+            $idTipo = $this->params()->fromRoute(Constantes::$ID, 0);
             if ($idTipo == 1) {
                 /* Verificar se existe pessoa por email informado */
                 $email = $dataPost[Constantes::$ENTITY_PESSOA_EMAIL];
@@ -203,8 +202,20 @@ class LoginController extends AbstractActionController {
                 } else {
                     /* Email */
                     if ($idTipo == 1) {
-                        $resposta = $email;
-                        $this->enviarEmail($email, '$mensagem');
+                        $mensagemOriginal = $this->getTranslator()->translate(Constantes::$TRADUCAO_EMAIL_MENSAGEM_RECUPERAR_SENHA);
+                        $mensagemComEmail = str_replace('#email', $email, $mensagemOriginal);
+                        $timeNow = new DateTime();
+
+                        $dataEnvio = $timeNow->format('Ymd');
+                        $hora = $timeNow->format('His');
+                        $token = md5($dataEnvio . $hora);
+
+                        /* Persistir pessoa */
+                        $pessoa->setToken($token);
+                        $loginORM->getPessoaORM()->persistirPessoa($pessoa);
+
+                        $mensagemAjustada = str_replace('#id', $token, $mensagemComEmail);
+                        Funcoes::enviarEmail($email, $this->getTranslator()->translate(Constantes::$TRADUCAO_EMAIL_TITULO_RECUPERAR_SENHA), $mensagemAjustada);
 
                         /* Redirecionamento */
                         return $this->forward()->dispatch(Constantes::$CONTROLLER_LOGIN, array(
@@ -224,6 +235,44 @@ class LoginController extends AbstractActionController {
         ];
     }
 
+    /**
+     * Função qpara recuperar a senha
+     * GET /recuperarSenha
+     */
+    public function recuperarSenhaAction() {
+        unset($dados);
+        /* Helper Controller */
+        $loginORM = new LoginORM($this->getDoctrineORMEntityManager());
+
+        $tokenDaRota = $this->params()->fromRoute(Constantes::$ID);
+        $pessoa = $loginORM->getPessoaORM()->encontrarPorToken($tokenDaRota);
+
+        /* Verificando se se passaram 24 horas desde a solicitacao */
+        /* Data e Hora atual */
+        $timeNow = new DateTime();
+
+        /* Data do token */
+        $tokenData = new DateTime();
+        $tokenData->setDate($pessoa->getToken_data_ano(), $pessoa->getToken_data_mes(), $pessoa->getToken_data_dia());
+        $tokenData->setTime($pessoa->getToken_hora_hora(), $pessoa->getToken_hora_minutos(), $pessoa->getToken_hora_segundos());
+
+        $diferenca = $tokenData->diff($timeNow);
+        $diferencaDias = $diferenca->format('%d');
+        $diferencaHoras = $diferenca->format('%H');
+
+        /* Mesmo dia ou 1 dia */
+        if ($diferencaDias == 0 && $diferencaHoras < 24) {
+            $formRecuperarSenha = new RecuperarSenhaForm(Constantes::$RECUPERAR_SENHA_FORM);
+            $dados[Constantes::$FORM_RECUPERAR_SENHA] = $formRecuperarSenha;
+        }
+        /* Mais de um dia */ else {
+            
+        }
+
+
+        return $dados;
+    }
+
     public function getDoctrineORMEntityManager() {
         return $this->_doctrineORMEntityManager;
     }
@@ -234,31 +283,6 @@ class LoginController extends AbstractActionController {
 
     public function getTranslator() {
         return $this->_translator;
-    }
-
-    private function enviarEmail($email, $mensagem) {
-//        $mail = new PHPMailer;
-////                    $mail->SMTPDebug = 1;                              // Enable verbose debug output
-//                    $mail->isSMTP();                                      // Set mailer to use SMTP
-//                    $mail->Host = '200.147.36.31';  // Specify main and backup SMTP servers
-//                    $mail->SMTPAuth = true;                               // Enable SMTP authentication
-//                    $mail->Username = 'leonardo@circuitodavisao.com.br';                 // SMTP username
-//                    $mail->Password = 'Leonardo142857';                           // SMTP password
-////                    $mail->SMTPSecure = 'tls';                            // Enable TLS encryption, `ssl` also accepted
-//                    $mail->Port = 587;                                    // TCP port to connect to
-//                    $mail->setFrom('leonardo@circuitodavisao.com.br', 'Chispirito TLS sem 3');
-//                    $mail->addAddress('falecomleonardopereira@gmail.com', 'Leo Gatao TLS sem 3');
-//                    $mail->isHTML(true);                                  // Set email format to HTML
-//                    $mail->Subject = 'Here is the subject TLS';
-//                    $mail->Body = 'This is the HTML message body <b>in bold!</b> 554';
-//                    $mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
-//
-//                    if (!$mail->send()) {
-//                        echo 'Message could not be sent.';
-//                        echo 'Mailer Error: ' . $mail->ErrorInfo;
-//                    } else {
-//                        echo '#### Message has been sent';
-//                    }
     }
 
 }

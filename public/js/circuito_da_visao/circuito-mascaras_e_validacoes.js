@@ -9,6 +9,13 @@ function verificaNumero(e) {
     }
 }
 
+function validarDataNascimento(dataNascimento) {
+    var er = RegExp("(0[1-9]|[012][0-9]|3[01])/(0[1-9]|1[012])/[12][0-9]{3}");
+    if (er.test(dataNascimento) == false) {
+        return false;
+    }
+}
+
 $(document).ready(function () {
     $(".campo-dica").hide();
 
@@ -23,4 +30,3 @@ $(document).ready(function () {
     $("#cpf").keypress(verificaNumero);
     $("#dataNascimento").keypress(verificaNumero);
 });
-

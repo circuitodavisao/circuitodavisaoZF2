@@ -56,16 +56,38 @@ class PessoaORM {
      * @throws Exception
      */
     public function encontrarPorEmail($email) {
-        $pessoa = $this->getEntityManager()
-                ->getRepository(Constantes::$ENTITY_PESSOA)
-                ->findOneBy(array(Constantes::$ENTITY_PESSOA_EMAIL => $email));
-        return $pessoa;
+        try {
+            $pessoa = $this->getEntityManager()
+                    ->getRepository(Constantes::$ENTITY_PESSOA)
+                    ->findOneBy(array(Constantes::$ENTITY_PESSOA_EMAIL => $email));
+            return $pessoa;
+        } catch (Exception $exc) {
+            echo $exc->getTraceAsString();
+        }
+    }
+
+    /**
+     * Localizar pessoa por token
+     * 
+     * @param String $token
+     * @return Pessoa
+     * @throws Exception
+     */
+    public function encontrarPorToken($token) {
+        try {
+            $pessoa = $this->getEntityManager()
+                    ->getRepository(Constantes::$ENTITY_PESSOA)
+                    ->findOneBy(array(Constantes::$ENTITY_PESSOA_TOKEN => $token));
+            return $pessoa;
+        } catch (Exception $exc) {
+            echo $exc->getTraceAsString();
+        }
     }
 
     /**
      * Localizar pessoa por cpf e data de nascimento
      * 
-     * @param Integer $cpf
+     * @param int $cpfUltimosDigitos
      * @param String $dataNascimento
      * @return Pessoa
      * @throws Exception
@@ -90,6 +112,20 @@ class PessoaORM {
             }
         }
         return $pessoa;
+    }
+
+    /**
+     * Atualiza a pessoa no banco de ados
+     * 
+     * @param Pessoa $pessoa
+     */
+    public function persistirPessoa($pessoa) {
+
+        try {
+            $this->getEntityManager()->flush($pessoa);
+        } catch (Exception $exc) {
+            echo $exc->getTraceAsString();
+        }
     }
 
     public function getEntityManager() {

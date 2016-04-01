@@ -7,6 +7,7 @@ namespace Login\Entity;
  * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com>
  * Descricao: Entidade anotada da tabela pessoa
  */
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /** @ORM\Entity */
@@ -42,6 +43,15 @@ class Pessoa {
 
     /** @ORM\Column(type="string") */
     protected $documento;
+
+    /** @ORM\Column(type="string") */
+    protected $token;
+
+    /** @ORM\Column(type="string") */
+    protected $token_data;
+
+    /** @ORM\Column(type="string") */
+    protected $token_hora;
 
     function getId() {
         return $this->id;
@@ -121,6 +131,61 @@ class Pessoa {
 
     function setDocumento($documento) {
         $this->documento = $documento;
+    }
+
+    function getToken() {
+        return $this->token;
+    }
+
+    /**
+     * Seta token e data para validacao
+     * @param type $token
+     */
+    function setToken($token) {
+        $this->token = $token;
+        $timeNow = new DateTime();
+        $this->setToken_data($timeNow->format('Y-m-d'));
+        $this->setToken_hora($timeNow->format('H:s:i'));
+    }
+
+    function getToken_data() {
+        return $this->token_data;
+    }
+
+    function getToken_data_ano() {
+        return substr($this->token_data, 0, 4);
+    }
+
+    function getToken_data_mes() {
+        return substr($this->token_data, 5, 2);
+    }
+
+    function getToken_data_dia() {
+        return substr($this->token_data, 8, 2);
+    }
+
+    function setToken_data($token_data) {
+        $this->token_data = $token_data;
+    }
+
+    function getToken_hora() {
+        return $this->token_hora;
+    }
+
+    function getToken_hora_hora() {
+        return substr($this->token_hora, 0, 2);
+    }
+
+    function getToken_hora_minutos() {
+        return substr($this->token_hora, 3, 2);
+    }
+
+    function getToken_hora_segundos() {
+        return substr($this->token_hora, 6, 2);
+    }
+
+    function setToken_hora($token_hora) {
+        $this->token_hora = $token_hora;
     }
 
 }

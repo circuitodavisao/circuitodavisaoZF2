@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: ZendSkeletonApplication\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-07-05 22:17-0700\n"
-"PO-Revision-Date: 2016-03-30 17:56-0300\n"
+"PO-Revision-Date: 2016-04-01 18:29-0300\n"
 "Last-Translator: Diogo Melo <dmelo87@gmail.com>\n"
 "Language-Team: ZF Contibutors <zf-devteam@zend.com>\n"
 "Language: pt\n"
@@ -126,6 +126,34 @@ msgstr "Seu usuário está inativado entre em contato com seu líder direto!"
 #: ../view/login/index/email-enviado.phtml:18
 msgid "Check your email with the recovery of your password link"
 msgstr "Verifique seu email com o link de recuperação de sua senha"
+
+#: Email de recuperacao senha TITULO
+msgid "Recover Password"
+msgstr "Recuperar Senha"
+
+#: Email de recuperacao senha MENSAGEM
+msgid "<pre>Hello #email</pre><pre>We received a request to reset the password for your account CircuitoDaVisão.com . To reset your password, use the links below:</pre><pre>Reset your password using a Web browser:</pre><pre><a href=\"158.69.124.139/recuperarSenha/#id\">158.69.124.139/recuperarSenha/#id</a></pre><pre>If you did not request a password reset, you can ignore this message and your password will not change.</pre>"
+msgstr "<pre>Olá #email</pre><pre>Recebemos uma solicitação de redefinição da senha para sua conta do CircuitoDaVisão.com . Para redefinir sua senha, use os links abaixo:</pre><pre>Redefinir sua senha usando um navegador da Web:</pre><pre><a href=\"158.69.124.139/recuperarSenha/#id\">158.69.124.139/recuperarSenha/#id</a></pre><pre>Se você não solicitou uma redefinição de senha, voce pode ignorar esta mensagem e a sua senha não será alterada.</pre>"
+
+#: ../view/login/index/recuperar-senha.phtml:999
+msgid "Enter your new password"
+msgstr "Entre sua nova senha"
+
+#: ../view/login/index/recuperar-senha.phtml:999
+msgid "Reenter your password"
+msgstr "Repita sua senha"
+
+#: ../view/login/index/recuperar-senha.phtml:999
+msgid "Update"
+msgstr "Alterar"
+
+#: ../view/login/index/recuperar-senha.phtml:23
+msgid "At least 6 characters"
+msgstr "No mínimo 6 caractéres"
+
+#: ../view/login/index/recuperar-senha.phtml:25
+msgid "Your password must contain at least <strong> a </ strong> letter and <strong> one </ strong> number."
+msgstr "Sua senha deve conter no mínimo <strong>uma</strong> letra e <strong>um</strong> número."
 
 # ############
 # ## GERAL ###
