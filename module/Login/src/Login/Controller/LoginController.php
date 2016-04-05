@@ -4,6 +4,7 @@ namespace Login\Controller;
 
 use DateTime;
 use Doctrine\ORM\EntityManager;
+use Exception;
 use Login\Controller\Helper\Constantes;
 use Login\Controller\Helper\Funcoes;
 use Login\Controller\Helper\LoginORM;
@@ -119,10 +120,10 @@ class LoginController extends AbstractActionController {
                 /* Ativada */
             }
 
-            /* Redirecionamento */
+            /* Redirecionamento SELECIONAR PERFIL */
             return $this->forward()->dispatch(Constantes::$CONTROLLER_LOGIN, array(
-                        Constantes::$ACTION => Constantes::$ACTION_ACESSO,
-            ));
+                        Constantes::$ACTION => Constantes::$ACTION_SELECIONAR_PERFIL, 
+            )); 
         } else {
             /* Autenticacao falhou */
             /* Redirecionamento */
@@ -131,14 +132,6 @@ class LoginController extends AbstractActionController {
                         Constantes::$INPUT_EMAIL => $data[Constantes::$INPUT_EMAIL]
             ));
         }
-    }
-
-    /**
-     * Função que direciona a tela de acesso
-     * GET /acessoAction
-     */
-    public function acessoAction() {
-        return [];
     }
 
     /**
@@ -350,6 +343,22 @@ class LoginController extends AbstractActionController {
                 echo $exc->getTraceAsString();
             }
         }
+        return [];
+    }
+
+    /**
+     * Função que direciona a tela de acesso
+     * GET /principal
+     */
+    public function principalAction() {
+        return [];
+    }
+
+    /**
+     * Função que direciona a tela de acesso
+     * GET /selecionarPerfil
+     */
+    public function selecionarPerfilAction() {
         return [];
     }
 

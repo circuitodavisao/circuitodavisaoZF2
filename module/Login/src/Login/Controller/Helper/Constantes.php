@@ -21,7 +21,8 @@ class Constantes {
     public static $LOGIN_FORM = 'LoginForm';
     public static $FORM_LOGIN = 'formLogin';
     public static $ROUTE_LOGIN = 'login';
-    public static $ACTION_ACESSO = 'acesso';
+    public static $ACTION_PRINCIPAL = 'principal';
+    public static $ACTION_SELECIONAR_PERFIL = 'selecionarPerfil'; 
     public static $URL_ESQUECEU_SENHA = 'esqueceuSenha';
     public static $ACTION_INDEX = 'index';
     public static $ACTION = 'action';

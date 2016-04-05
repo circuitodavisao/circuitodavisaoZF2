@@ -1,0 +1,16 @@
+<?php
+/** Nome: selecionar-perfil.phtml
+ * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com>
+ * Descricao: Página para selecionar perfil
+ */
+echo "<div class='well'>";
+if ($user = $this->identity()) {
+    echo 'Logged in as ' . $this->escapeHtml($user->getNome());
+} else {
+    echo 'Not logged in';
+}
+echo "</div>";
+?>
+<div class="well">selecionar-perfil.phtml</div>
+<a class="button btn-primary-circuito" href="/">INDEX</a>
+<a class="button btn-primary-circuito" href="/principal">PRINCIPAL</a>
