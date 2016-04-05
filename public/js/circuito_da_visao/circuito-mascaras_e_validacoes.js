@@ -41,7 +41,6 @@ function validarDigitosDoCPF(digitosCPF, icone, botaoSubmit) {
 function verificarSenhas(valor, tipo) {
     var botaoAlterar = document.getElementById('alterar');
     var er = RegExp("^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9]+)$");
-    var classeBase = 'fa-li fa fa-check-square ';
     var mensagem1 = document.getElementById('mensagem1');
     var mensagem2 = document.getElementById('mensagem2');
 
@@ -49,17 +48,17 @@ function verificarSenhas(valor, tipo) {
     if (tipo == 1) {
         var icone1 = document.getElementById('iconeSenha');
         if (valor.length >= 6) {
-            mensagem1.className = classeBase + 'text-success';
+            mensagem1.className = 'text-success';
         } else {
             icone1.className = 'fa fa-times danger-style';
-            mensagem1.className = classeBase + 'text-danger';
+            mensagem1.className = 'text-danger';
         }
         if (er.test(valor)) {
             icone1.className = 'fa fa-check sucess-style';
-            mensagem2.className = classeBase + 'text-success';
+            mensagem2.className = 'text-success';
         } else {
             icone1.className = 'fa fa-times danger-style';
-            mensagem2.className = classeBase + 'text-danger';
+            mensagem2.className = 'text-danger';
         }
         botaoAlterar.disabled = 'disabled';
     }

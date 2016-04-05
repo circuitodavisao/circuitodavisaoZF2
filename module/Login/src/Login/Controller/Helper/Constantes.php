@@ -75,20 +75,20 @@ class Constantes {
     public static $TRADUCAO_VOLTAR = 'Back';
     public static $TRADUCAO_CONTINUAR = 'Continue';
     public static $TRADUCAO_CAPTCHA_LABEL = 'Please verify you are human';
-    public static $TRADUCAO_ESQUECI_MINHA_SENHA = ' Because I forgot my password';
-    public static $TRADUCAO_ESQUECI_MEU_USUARIO = ' I know my password, but I do not remember my login';
+    public static $TRADUCAO_ESQUECI_MINHA_SENHA = ' Because I forgot my password.';
+    public static $TRADUCAO_ESQUECI_MEU_USUARIO = ' I know my password, but I do not remember my login.';
     public static $TRADUCAO_ENVIAR_EMAIL = 'Send email';
     public static $TRADUCAO_VERIFICAR_USUARIO = 'Check User';
     public static $TRADUCAO_PERGUNTA_ESQUECI_SENHA = 'Because you can not enter the View of the Circuit?';
     public static $TRADUCAO_TITULO_ESQUECI_MINHA_SENHA = 'We can help you reset your password. First, enter your email and follow the instructions.';
-    public static $TRADUCAO_INFORME_2_DIGITO_CPF_DATA_NASCIMENTO = 'Tell us what the last 2 digits of your Social Security number and date of birth.';
+    public static $TRADUCAO_INFORME_2_DIGITO_CPF_DATA_NASCIMENTO = 'Tell us what the last 2 digits of your <b>Social Security number</b> and <b>date of birth</b>.';
     public static $TRADUCAO_SOLICITACAO_ENVIADA_AS = 'request sent at';
     public static $TRADUCAO_ACESSE_O = 'Access';
     public static $TRADUCAO_MENSAGEM_TEM_DURACAO_24_HORAS = 'The message in your email lasts 24 hours';
     public static $TRADUCAO_SEU_LOGIN_E = 'Your username is';
     public static $TRADUCAO_PESSOA_NAO_ENCONTRADA = 'Person not found in our records!';
     public static $TRADUCAO_PESSOA_INATIVADA = 'Your user is inactive!';
-    public static $TRADUCAO_EMAIL_ENVIADO = 'Check your email with the recovery of your password link';
+    public static $TRADUCAO_EMAIL_ENVIADO = 'Check your email with the recovery of your password link.';
 
     /* Constantes recuperar senha */
     public static $TRADUCAO_EMAIL_TITULO_RECUPERAR_SENHA = 'Recover Password';
@@ -98,6 +98,8 @@ class Constantes {
     public static $FORM_RECUPERAR_SENHA = 'formRecuperarSenha';
     public static $FORM_RECUPERAR_SENHA_6_CARACTERES = 'At least 6 characters';
     public static $FORM_RECUPERAR_SENHA_LETRA_NUMERO = 'Your password must contain at least <strong> a </ strong> letter and <strong> one </ strong> number.';
+    public static $TRADUCAO_SENHA_ATUALIZADA_COM_SUCESSO = 'Your password has been changed successfully!';
+    public static $TRADUCAO_ACESSAR = 'To access';
     /* Forms */
     public static $FORM_STRING_METHOD = 'method';
     public static $FORM_STRING_POST = 'POST';

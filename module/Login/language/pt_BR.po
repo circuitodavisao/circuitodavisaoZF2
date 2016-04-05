@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: ZendSkeletonApplication\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-07-05 22:17-0700\n"
-"PO-Revision-Date: 2016-04-05 13:41-0300\n"
+"PO-Revision-Date: 2016-04-05 14:57-0300\n"
 "Last-Translator: Diogo Melo <dmelo87@gmail.com>\n"
 "Language-Team: ZF Contibutors <zf-devteam@zend.com>\n"
 "Language: pt\n"
@@ -72,12 +72,12 @@ msgid "Continue"
 msgstr "Continuar"
 
 #: ../view/login/index/esqueceu-senha.phtml:41
-msgid " Because I forgot my password"
-msgstr " Por que esqueci minha senha"
+msgid " Because I forgot my password."
+msgstr " Por que esqueci minha senha."
 
 #: ../view/login/index/esqueceu-senha.phtml:44
-msgid " I know my password, but I do not remember my login"
-msgstr " Eu sei a minha senha, mas não lembro o meu login"
+msgid " I know my password, but I do not remember my login."
+msgstr " Eu sei a minha senha, mas não lembro o meu login."
 
 #: ../view/login/index/esqueceu-senha.phtml:44
 msgid "We can help you reset your password. First, enter your email and follow the instructions."
@@ -96,8 +96,8 @@ msgid "Please verify you are human"
 msgstr "Por favor verificar que você é humano"
 
 #: ../view/login/index/esqueceu-senha.phtml:96
-msgid "Tell us what the last 2 digits of your Social Security number and date of birth."
-msgstr "Nos diga quais são os <b>2 últimos dígitos do seu CPF</b> XXX.XXX.XXX-<b>XX</b> e data de nascimento."
+msgid "Tell us what the last 2 digits of your <b>Social Security number</b> and <b>date of birth</b>."
+msgstr "Nos diga quais são os <b>2 últimos dígitos do seu CPF</b> XXX.XXX.XXX-<b>XX</b> e <b>data de nascimento</b>."
 
 #: ../view/login/index/recuperar-acesso.phtml:36
 msgid "request sent at"
@@ -124,8 +124,8 @@ msgid "Your user is inactive!"
 msgstr "Seu usuário está inativado!"
 
 #: ../view/login/index/email-enviado.phtml:18
-msgid "Check your email with the recovery of your password link"
-msgstr "Verifique seu email com o link de recuperação de sua senha"
+msgid "Check your email with the recovery of your password link."
+msgstr "Verifique seu email com o link de recuperação de sua senha."
 
 #: Email de recuperacao senha TITULO
 msgid "Recover Password"
@@ -154,6 +154,14 @@ msgstr "No mínimo 6 caractéres"
 #: ../view/login/index/recuperar-senha.phtml:25
 msgid "Your password must contain at least <strong> a </ strong> letter and <strong> one </ strong> number."
 msgstr "Sua senha deve conter no mínimo <strong>uma</strong> letra e <strong>um</strong> número."
+
+#: ../view/login/index/alterar-senha.phtml:18
+msgid "Your password has been changed successfully!"
+msgstr "Sua senha foi alterada com sucesso!"
+
+#: ../view/login/index/alterar-senha.phtml:21
+msgid "To access"
+msgstr "Acessar"
 
 # ############
 # ## GERAL ###

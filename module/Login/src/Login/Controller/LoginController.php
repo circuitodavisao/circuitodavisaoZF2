@@ -264,7 +264,7 @@ class LoginController extends AbstractActionController {
                     }
                     /* CPF e Data de Nascimento */
                     if ($idTipo == 2) {
-                        $resposta = $this->getTranslator()->translate(Constantes::$TRADUCAO_SEU_LOGIN_E) . ' ' . $pessoa->getEmail();
+                        $resposta = $this->getTranslator()->translate(Constantes::$TRADUCAO_SEU_LOGIN_E) . ' <b>' . $pessoa->getEmail() . '</b>';
                     }
                 }
             }
@@ -346,11 +346,6 @@ class LoginController extends AbstractActionController {
                 $pessoa->setToken_hora(null);
                 /* Salvando nova senha */
                 $loginORM->getPessoaORM()->persistirPessoa($pessoa);
-
-                /* Redirecionamento */
-                return $this->forward()->dispatch(Constantes::$CONTROLLER_LOGIN, array(
-                            Constantes::$ACTION => Constantes::$ACTION_EMAIL_ENVIADO
-                ));
             } catch (Exception $exc) {
                 echo $exc->getTraceAsString();
             }

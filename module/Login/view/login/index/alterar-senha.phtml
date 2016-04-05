@@ -1,0 +1,25 @@
+<?php
+
+use Login\Controller\Helper\Constantes;
+
+/** Nome: email-enviado.phtml
+ * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com> e Sergio Bezerra da Silva <sergio.silva.unb@gmail.com>
+ * Descricao: Página confirmando o email enviado
+ */
+?>
+<div class="admin-form theme-info mw500" style="margin-top: 10%;" id="login">
+    <div class="row mb15 table-layout">
+        <div class="col-xs-12 pln">
+            <div class="col-xs-12 text-center">
+                <h2 class="text-dark mbn confirmation-header"><i class="fa fa-check text-success"></i></h2>
+            </div>
+            <div class="col-xs-12 box-separacao"></div>
+
+            <h1 class="titulo-perdeu-sua-senha"><?php echo $this->translate(Constantes::$TRADUCAO_SENHA_ATUALIZADA_COM_SUCESSO); ?></h1>
+
+            <div class="col-xs-12 text-center">
+                <a href="<?php echo Constantes::$INDEX ?>" class="button btn-primary-circuito mr10"><?php echo $this->translate(Constantes::$TRADUCAO_ACESSAR); ?></a>
+            </div>
+        </div>
+    </div>
+</div>

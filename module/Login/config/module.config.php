@@ -46,8 +46,8 @@ return array(
     ),
     # definir e gerenciar traduções
     'translator' => array(
-//        'locale' => 'us_US',
-        'locale' => 'pt_BR',
+        'locale' => 'us_US',
+//        'locale' => 'pt_BR',
         'translation_file_patterns' => array(
             array(
                 'type' => 'gettext',
@@ -71,6 +71,7 @@ return array(
             'login/login/recuperar-acesso' => __DIR__ . '/../view/login/index/recuperar-acesso.phtml',
             'login/login/email-enviado' => __DIR__ . '/../view/login/index/email-enviado.phtml',
             'login/login/recuperar-senha' => __DIR__ . '/../view/login/index/recuperar-senha.phtml',
+            'login/login/alterar-senha' => __DIR__ . '/../view/login/index/alterar-senha.phtml',
             'error/404' => __DIR__ . '/../view/error/404.phtml',
             'error/index' => __DIR__ . '/../view/error/index.phtml',
         ),
