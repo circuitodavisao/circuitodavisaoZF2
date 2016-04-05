@@ -18,19 +18,15 @@ $classMensagem = $this->hidden;
     <?php echo $this->form()->openTag($formLogin); ?>
 
     <div class="panel-body bg-light p25 pb15">
-
         <!-- Mensagens -->
+        <?php
+        /* Capslock */
+        echo $this->DivCapslock();
 
-       <?php
-            /* Capslock */
-            echo $this->DivCapslock();
-            ?>
-
-        <div id="mensagem" class="alert alert-danger alert-dismissable <?php echo $classMensagem; ?>">
-            <button type="button" class="close" data-dismiss="alert">&times;</button>
-            <?php echo $this->translate(Constantes::$TRADUCAO_FALHA_LOGIN); ?>
-        </div>
-
+        /* Mensagem Estatica */
+        echo $this->mensagemStatica($this->translate($this->mensagem), $this->tipo);
+        ?>
+       
         <!-- Username Input -->
         <div class="section">
             <label for="<?php echo Constantes::$TRADUCAO_USUARIO; ?>" class="field-label text-muted fs18 mb10">

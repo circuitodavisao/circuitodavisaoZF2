@@ -4,6 +4,7 @@ namespace Login\Form;
 
 use Login\Controller\Helper\Constantes;
 use Zend\Form\Element\Csrf;
+use Zend\Form\Element\Hidden;
 use Zend\Form\Element\Password;
 use Zend\Form\Element\Submit;
 use Zend\Form\Form;
@@ -19,7 +20,7 @@ class RecuperarSenhaForm extends Form {
      * Contrutor
      * @param String $name
      */
-    public function __construct($name = null) {
+    public function __construct($name = null, $idPessoa) {
         parent::__construct($name);
 
         /**
@@ -43,7 +44,7 @@ class RecuperarSenhaForm extends Form {
                             Constantes::$FORM_STRING_ID => Constantes::$INPUT_SENHA,
                             Constantes::$FORM_STRING_PLACEHOLDER => Constantes::$TRADUCAO_NOVA_SENHA_PLACEHOLDER,
                             Constantes::$FORM_STRING_REQUIRED => Constantes::$FORM_STRING_REQUIRED,
-                            Constantes::$FORM_STRING_ONKEYPRESS => Constantes::$FORM_STRING_FUNCAO_CAPSLOCK,
+                            Constantes::$FORM_STRING_ONKEYUP => str_replace('#tipo', 1, Constantes::$FORM_STRING_FUNCAO_VERIFICAR_SENHAS),
                         ])
         );
 
@@ -59,7 +60,7 @@ class RecuperarSenhaForm extends Form {
                             Constantes::$FORM_STRING_ID => Constantes::$INPUT_REPETIR_SENHA,
                             Constantes::$FORM_STRING_PLACEHOLDER => Constantes::$TRADUCAO_REPETIR_SENHA_PLACEHOLDER,
                             Constantes::$FORM_STRING_REQUIRED => Constantes::$FORM_STRING_REQUIRED,
-                            Constantes::$FORM_STRING_ONKEYPRESS => Constantes::$FORM_STRING_FUNCAO_CAPSLOCK,
+                            Constantes::$FORM_STRING_ONKEYUP => str_replace('#tipo', 2, Constantes::$FORM_STRING_FUNCAO_VERIFICAR_SENHAS),
                         ])
         );
 
@@ -82,7 +83,19 @@ class RecuperarSenhaForm extends Form {
                         ->setAttributes([
                             Constantes::$FORM_STRING_ID => Constantes::$INPUT_ALTERAR,
                             Constantes::$FORM_STRING_CLASS => 'button btn-primary-circuito mr10 pull-right',
+                            Constantes::$FORM_STRING_DISABLED => Constantes::$FORM_STRING_DISABLED,
+                            Constantes::$FORM_STRING_ONCLICK => str_replace('#id', Constantes::$INPUT_ALTERAR, Constantes::$FORM_STRING_FUNCAO_DESABILITAR_ELEMENTO),
                         ])
+        );
+
+
+        /**
+         * Elemento Hidden
+         */
+        $this->add(
+                (new Hidden())
+                        ->setName(Constantes::$INPUT_ID_PESSOA)
+                        ->setValue($idPessoa)
         );
     }
 

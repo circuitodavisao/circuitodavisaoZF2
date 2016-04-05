@@ -10,3 +10,13 @@
 .label-preto-cv[href]:focus {
   background-color: #3b3f4f;
 }
+
+.sucess-style{
+  color: #47a839 !important;
+  left: 405px !important;
+}
+
+.danger-style{
+  color: #b4331e !important;
+  left: 405px !important;
+}

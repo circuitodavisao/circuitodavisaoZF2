@@ -156,6 +156,7 @@ class RecuperarAcessoForm extends Form {
                         ->setAttributes([
                             Constantes::$FORM_STRING_ID => Constantes::$INPUT_BOTAO_ENVIAR_EMAIL,
                             Constantes::$FORM_STRING_CLASS => 'button btn-primary-circuito',
+                            Constantes::$FORM_STRING_ONCLICK => str_replace('#id', Constantes::$INPUT_BOTAO_ENVIAR_EMAIL, Constantes::$FORM_STRING_FUNCAO_DESABILITAR_ELEMENTO),
                         ])
         );
 
@@ -163,6 +164,8 @@ class RecuperarAcessoForm extends Form {
          * CPF do usuario
          * Elemento do tipo text
          */
+        $funcaoOnKeyUpCPF1 = str_replace('#idIcone', 'idIconeDigitoCPFEsqueciEmail', Constantes::$FORM_STRING_FUNCAO_VALIDAR_DIGITOS_CPF);
+        $funcaoOnKeyUpCPF = str_replace('#idBotaoSubmit', Constantes::$INPUT_BOTAO_VERIFICAR_USUARIO, $funcaoOnKeyUpCPF1);
         $this->add(
                 (new Text())
                         ->setName(Constantes::$INPUT_CPF)
@@ -172,6 +175,7 @@ class RecuperarAcessoForm extends Form {
                             Constantes::$FORM_STRING_PLACEHOLDER => 'XX',
                             Constantes::$FORM_STRING_REQUIRED => Constantes::$FORM_STRING_REQUIRED,
                             Constantes::$FORM_STRING_MAXLENGTH => 2,
+                            Constantes::$FORM_STRING_ONKEYUP => $funcaoOnKeyUpCPF,
                         ])
         );
 
@@ -179,6 +183,8 @@ class RecuperarAcessoForm extends Form {
          * Data Nascimento do usuario
          * Elemento do tipo text
          */
+        $funcaoOnKeyUpDataNascimento1 = str_replace('#idIcone', 'idIconeDataNascimentoEsqueciEmail', Constantes::$FORM_STRING_FUNCAO_VALIDAR_DATA_NASCIMENTO);
+        $funcaoOnKeyUpDataNascimento = str_replace('#idBotaoSubmit', Constantes::$INPUT_BOTAO_VERIFICAR_USUARIO, $funcaoOnKeyUpDataNascimento1);
         $this->add(
                 (new Text())
                         ->setName(Constantes::$INPUT_DATA_NASCIMENTO)
@@ -188,6 +194,7 @@ class RecuperarAcessoForm extends Form {
                             Constantes::$FORM_STRING_PLACEHOLDER => 'XX/XX/XXXX',
                             Constantes::$FORM_STRING_REQUIRED => Constantes::$FORM_STRING_REQUIRED,
                             Constantes::$FORM_STRING_MAXLENGTH => 10,
+                            Constantes::$FORM_STRING_ONKEYUP => $funcaoOnKeyUpDataNascimento,
                         ])
         );
 
@@ -201,6 +208,8 @@ class RecuperarAcessoForm extends Form {
                         ->setAttributes([
                             Constantes::$FORM_STRING_ID => Constantes::$INPUT_BOTAO_VERIFICAR_USUARIO,
                             Constantes::$FORM_STRING_CLASS => 'button btn-primary-circuito',
+                            Constantes::$FORM_STRING_DISABLED => Constantes::$FORM_STRING_DISABLED,
+                            Constantes::$FORM_STRING_ONCLICK => str_replace('#id', Constantes::$INPUT_BOTAO_VERIFICAR_USUARIO, Constantes::$FORM_STRING_FUNCAO_DESABILITAR_ELEMENTO),
                         ])
         );
     }

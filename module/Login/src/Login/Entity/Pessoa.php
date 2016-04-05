@@ -110,7 +110,7 @@ class Pessoa {
     }
 
     function setSenha($senha) {
-        $this->senha = $senha;
+        $this->senha = md5($senha);
     }
 
     function setData_criacao($data_criacao) {

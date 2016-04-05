@@ -1,7 +1,7 @@
 <?php echo $this->doctype(); ?>
 
 <?php
-$versao = '?v=1.1.6';
+$versao = '?v=1.5.5';
 
 use Login\Controller\Helper\Constantes;
 ?>
@@ -38,7 +38,7 @@ use Login\Controller\Helper\Constantes;
                 ->prependStylesheet('http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700')
                 ->prependStylesheet($this->basePath() . '/css/estilos-circuito/admin-forms.css')
                 ->prependStylesheet($this->basePath() . '/css/estilos-circuito/default_skin/css/theme.css')
-                ->prependStylesheet($this->basePath() . '/css/estilos-circuito/cv-login/estilos-login.css'. $versao)
+                ->prependStylesheet($this->basePath() . '/css/estilos-circuito/cv-login/estilos-login.css' . $versao)
         ;
         ?>
     </head>

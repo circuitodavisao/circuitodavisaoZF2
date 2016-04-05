@@ -50,6 +50,7 @@ class Constantes {
     public static $MENSAGEM = 'mensagem';
     public static $TIPO = 'tipo';
     public static $ID = 'id';
+    public static $DIV = 'div';
 
     /* Constantes recuperar acesso */
     public static $RECUPERAR_ACESSO_FORM = 'RecuperarAcessoForm';
@@ -62,6 +63,7 @@ class Constantes {
     public static $INPUT_BOTAO_VERIFICAR_USUARIO = 'verificarUsuario';
     public static $INPUT_CAPTCHA = 'captcha';
     public static $INPUT_CPF = 'cpf';
+    public static $INPUT_ID_PESSOA = 'idPessoa';
     public static $INPUT_DATA_NASCIMENTO = 'dataNascimento';
     public static $INPUT_TIPO = 'tipo';
     public static $INPUT_ALTERAR = 'alterar';
@@ -85,7 +87,7 @@ class Constantes {
     public static $TRADUCAO_MENSAGEM_TEM_DURACAO_24_HORAS = 'The message in your email lasts 24 hours';
     public static $TRADUCAO_SEU_LOGIN_E = 'Your username is';
     public static $TRADUCAO_PESSOA_NAO_ENCONTRADA = 'Person not found in our records!';
-    public static $TRADUCAO_PESSOA_INATIVADA = 'Your user is inactive contact your direct leader!';
+    public static $TRADUCAO_PESSOA_INATIVADA = 'Your user is inactive!';
     public static $TRADUCAO_EMAIL_ENVIADO = 'Check your email with the recovery of your password link';
 
     /* Constantes recuperar senha */
@@ -101,6 +103,7 @@ class Constantes {
     public static $FORM_STRING_POST = 'POST';
     public static $FORM_STRING_ID = 'id';
     public static $FORM_STRING_CLASS = 'class';
+    public static $FORM_STRING_DISABLED = 'disabled';
     public static $FORM_STRING_LABEL = 'label';
     public static $FORM_STRING_LABEL_ATRIBUTES = 'label_attributes';
     public static $FORM_STRING_VALUE = 'value';
@@ -108,9 +111,14 @@ class Constantes {
     public static $FORM_STRING_CLASS_GUI_INPUT = 'gui-input';
     public static $FORM_STRING_REQUIRED = 'required';
     public static $FORM_STRING_ONKEYPRESS = 'onkeypress';
+    public static $FORM_STRING_ONKEYUP = 'onkeyup';
     public static $FORM_STRING_ONCLICK = 'onClick';
     public static $FORM_STRING_PLACEHOLDER = 'placeholder';
     public static $FORM_STRING_MAXLENGTH = 'maxlength';
     public static $FORM_STRING_FUNCAO_CAPSLOCK = 'capsLock(event)';
+    public static $FORM_STRING_FUNCAO_VERIFICAR_SENHAS = 'verificarSenhas(this.value, #tipo)';
+    public static $FORM_STRING_FUNCAO_VALIDAR_DATA_NASCIMENTO = 'validarDataNascimento(this.value, \'#idIcone\', \'#idBotaoSubmit\')';
+    public static $FORM_STRING_FUNCAO_VALIDAR_DIGITOS_CPF = 'validarDigitosDoCPF(this.value, \'#idIcone\', \'#idBotaoSubmit\')';
+    public static $FORM_STRING_FUNCAO_DESABILITAR_ELEMENTO = 'desabilitarElemento(\'#id\')';
 
 }

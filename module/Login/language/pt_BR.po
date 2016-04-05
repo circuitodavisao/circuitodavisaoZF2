@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: ZendSkeletonApplication\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-07-05 22:17-0700\n"
-"PO-Revision-Date: 2016-04-01 18:29-0300\n"
+"PO-Revision-Date: 2016-04-05 13:41-0300\n"
 "Last-Translator: Diogo Melo <dmelo87@gmail.com>\n"
 "Language-Team: ZF Contibutors <zf-devteam@zend.com>\n"
 "Language: pt\n"
@@ -31,7 +31,7 @@ msgid "User"
 msgstr "Usu&aacute;rio"
 
 msgid "Enter your user"
-msgstr "Informe sua usuário"
+msgstr "Informe seu usuário"
 
 #: ../view/login/index/index.phtml:47
 msgid "Password"
@@ -97,7 +97,7 @@ msgstr "Por favor verificar que você é humano"
 
 #: ../view/login/index/esqueceu-senha.phtml:96
 msgid "Tell us what the last 2 digits of your Social Security number and date of birth."
-msgstr "Nos diga quais são os <b class=\"text-danger\">2 últimos dígitos do seu CPF</b> XXX.XXX.XXX-<b class=\"text-danger\">XX</b> e data de nascimento."
+msgstr "Nos diga quais são os <b>2 últimos dígitos do seu CPF</b> XXX.XXX.XXX-<b>XX</b> e data de nascimento."
 
 #: ../view/login/index/recuperar-acesso.phtml:36
 msgid "request sent at"
@@ -120,8 +120,8 @@ msgid "Person not found in our records!"
 msgstr "Pessoa não encontrada em nossos registros!"
 
 #: ../view/login/index/recuperar-acesso.phtml:32
-msgid "Your user is inactive contact your direct leader!"
-msgstr "Seu usuário está inativado entre em contato com seu líder direto!"
+msgid "Your user is inactive!"
+msgstr "Seu usuário está inativado!"
 
 #: ../view/login/index/email-enviado.phtml:18
 msgid "Check your email with the recovery of your password link"

@@ -49,19 +49,29 @@ class LoginController extends AbstractActionController {
      * GET /
      */
     public function indexAction() {
-        $classeMessagem = Constantes::$CLASS_HIDDEN;
-
+        $tipoMensagem = 0;
         $formLogin = new LoginForm(Constantes::$LOGIN_FORM);
 
         $inputEmailDaRota = $this->params()->fromRoute(Constantes::$INPUT_EMAIL);
+        $mensagem = $this->params()->fromRoute(Constantes::$MENSAGEM);
+        $tipo = $this->params()->fromRoute(Constantes::$TIPO);
+
         if (!empty($inputEmailDaRota)) {
             $formLogin->get(Constantes::$INPUT_EMAIL)->setValue($inputEmailDaRota);
-            $classeMessagem = '';
+            if ($tipo == 1) {//warning
+                $mensagem = Constantes::$TRADUCAO_PESSOA_INATIVADA;
+                $tipoMensagem = 1; // warning
+            } else {// danger
+                $mensagem = Constantes::$TRADUCAO_FALHA_LOGIN;
+                $tipoMensagem = 4; // danger
+            }
         }
+
 
         return [
             Constantes::$FORM_LOGIN => $formLogin,
-            Constantes::$CLASS_HIDDEN => $classeMessagem,
+            Constantes::$MENSAGEM => $mensagem,
+            Constantes::$TIPO => $tipoMensagem,
         ];
     }
 
@@ -102,7 +112,8 @@ class LoginController extends AbstractActionController {
                 return $this->forward()->dispatch(Constantes::$CONTROLLER_LOGIN, array(
                             Constantes::$ACTION => Constantes::$ACTION_INDEX,
                             Constantes::$INPUT_EMAIL => $data[Constantes::$INPUT_EMAIL],
-                            Constantes::$MENSAGEM => $this->getTranslator()->translate(Constantes::$TRADUCAO_PESSOA_INATIVADA)
+                            Constantes::$MENSAGEM => $this->getTranslator()->translate(Constantes::$TRADUCAO_PESSOA_INATIVADA),
+                            Constantes::$TIPO => 1, // warning
                 ));
             } else {
                 /* Ativada */
@@ -114,7 +125,6 @@ class LoginController extends AbstractActionController {
             ));
         } else {
             /* Autenticacao falhou */
-
             /* Redirecionamento */
             return $this->forward()->dispatch(Constantes::$CONTROLLER_LOGIN, array(
                         Constantes::$ACTION => Constantes::$ACTION_INDEX,
@@ -149,10 +159,29 @@ class LoginController extends AbstractActionController {
         /* Mensagem */
         $tipo = $this->params()->fromRoute(Constantes::$TIPO);
         $messagem = $this->params()->fromRoute(Constantes::$MENSAGEM);
+        $div = $this->params()->fromRoute(Constantes::$DIV);
+
+        $classDiv0 = '';
+        $classDiv1 = 'hidden';
+        $classDiv2 = 'hidden';
+        if ($div == 1) {
+            $classDiv0 = 'hidden';
+            $classDiv1 = '';
+            $classDiv2 = 'hidden';
+        }
+        if ($div == 2) {
+            $classDiv0 = 'hidden';
+            $classDiv1 = 'hidden';
+            $classDiv2 = '';
+        }
+
         return [
             Constantes::$FORM_RECUPERAR_ACESSO => $formRecuperarAcesso,
             Constantes::$TIPO => $tipo,
             Constantes::$MENSAGEM => $messagem,
+            'classDiv0' => $classDiv0,
+            'classDiv1' => $classDiv1,
+            'classDiv2' => $classDiv2,
         ];
     }
 
@@ -183,13 +212,23 @@ class LoginController extends AbstractActionController {
                 $dataNascimento = Funcoes::mudarPadraoData($dataPost[Constantes::$INPUT_DATA_NASCIMENTO], 0);
                 $pessoa = $loginORM->getPessoaORM()->encontrarPorCPFEDataNascimento($documento, $dataNascimento);
             }
+
+            /* Div que precisa esta aberta na volta */
+            $div = 0;
+            if ($idTipo == 1) {
+                $div = 1;
+            } else {
+                $div = 2;
+            }
+
             /* Pessoa não encontrada */
             if (!$pessoa) {
                 /* Redirecionamento */
                 return $this->forward()->dispatch(Constantes::$CONTROLLER_LOGIN, array(
                             Constantes::$ACTION => Constantes::$ACTION_ESQUECEU_SENHA,
-                            Constantes::$TIPO => 1,
+                            Constantes::$TIPO => 4, //danger
                             Constantes::$MENSAGEM => Constantes::$TRADUCAO_PESSOA_NAO_ENCONTRADA,
+                            Constantes::$DIV => $div,
                 ));
             } else {
                 if (!$pessoa->verificarSeEstaAtivo()) {
@@ -198,6 +237,7 @@ class LoginController extends AbstractActionController {
                                 Constantes::$ACTION => Constantes::$ACTION_ESQUECEU_SENHA,
                                 Constantes::$TIPO => 1,
                                 Constantes::$MENSAGEM => Constantes::$TRADUCAO_PESSOA_INATIVADA,
+                                Constantes::$DIV => $div,
                     ));
                 } else {
                     /* Email */
@@ -246,41 +286,98 @@ class LoginController extends AbstractActionController {
 
         $tokenDaRota = $this->params()->fromRoute(Constantes::$ID);
         $pessoa = $loginORM->getPessoaORM()->encontrarPorToken($tokenDaRota);
+        if ($pessoa) {
+            /* Verificando se se passaram 24 horas desde a solicitacao */
+            /* Data e Hora atual */
+            $timeNow = new DateTime();
 
-        /* Verificando se se passaram 24 horas desde a solicitacao */
-        /* Data e Hora atual */
-        $timeNow = new DateTime();
+            /* Data do token */
+            $tokenData = new DateTime();
+            $tokenData->setDate($pessoa->getToken_data_ano(), $pessoa->getToken_data_mes(), $pessoa->getToken_data_dia());
+            $tokenData->setTime($pessoa->getToken_hora_hora(), $pessoa->getToken_hora_minutos(), $pessoa->getToken_hora_segundos());
 
-        /* Data do token */
-        $tokenData = new DateTime();
-        $tokenData->setDate($pessoa->getToken_data_ano(), $pessoa->getToken_data_mes(), $pessoa->getToken_data_dia());
-        $tokenData->setTime($pessoa->getToken_hora_hora(), $pessoa->getToken_hora_minutos(), $pessoa->getToken_hora_segundos());
+            $diferenca = $tokenData->diff($timeNow);
+            $diferencaDias = $diferenca->format('%d');
+            $diferencaHoras = $diferenca->format('%H');
 
-        $diferenca = $tokenData->diff($timeNow);
-        $diferencaDias = $diferenca->format('%d');
-        $diferencaHoras = $diferenca->format('%H');
-
-        /* Mesmo dia ou 1 dia */
-        if ($diferencaDias == 0 && $diferencaHoras < 24) {
-            $formRecuperarSenha = new RecuperarSenhaForm(Constantes::$RECUPERAR_SENHA_FORM);
-            $dados[Constantes::$FORM_RECUPERAR_SENHA] = $formRecuperarSenha;
+            /* Mesmo dia ou 1 dia */
+            if ($diferencaDias == 0 && $diferencaHoras < 24) {
+                $formRecuperarSenha = new RecuperarSenhaForm(Constantes::$RECUPERAR_SENHA_FORM, $pessoa->getId());
+                $dados[Constantes::$FORM_RECUPERAR_SENHA] = $formRecuperarSenha;
+            }
+            /* Mais de um dia */ else {
+                /* Redirecionamento */
+                return $this->forward()->dispatch(Constantes::$CONTROLLER_LOGIN, array(
+                            Constantes::$ACTION => Constantes::$ACTION_ESQUECEU_SENHA,
+                            Constantes::$TIPO => 4,
+                            Constantes::$MENSAGEM => 'Seu link de recuperacao expirou',
+                ));
+            }
+        } else {
+            /* Redirecionamento */
+            return $this->forward()->dispatch(Constantes::$CONTROLLER_LOGIN, array(
+                        Constantes::$ACTION => Constantes::$ACTION_ESQUECEU_SENHA,
+                        Constantes::$TIPO => 4,
+                        Constantes::$MENSAGEM => 'Seu link de recuperacao expirou',
+            ));
         }
-        /* Mais de um dia */ else {
-            
-        }
-
 
         return $dados;
     }
 
+    /**
+     * Função que direciona a tela de email enviado
+     * GET /alterarSenha
+     */
+    public function alterarSenhaAction() {
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+
+            try {
+                /* Helper Controller */
+                $loginORM = new LoginORM($this->getDoctrineORMEntityManager());
+
+                /* Dados da requisição POST */
+                $dataPost = $request->getPost();
+                $pessoa = $loginORM->getPessoaORM()->encontrarPorIdPessoa($dataPost[Constantes::$INPUT_ID_PESSOA]);
+                $pessoa->setSenha($dataPost[Constantes::$INPUT_SENHA]);
+                $pessoa->setToken(null);
+                $pessoa->setToken_data(null);
+                $pessoa->setToken_hora(null);
+                /* Salvando nova senha */
+                $loginORM->getPessoaORM()->persistirPessoa($pessoa);
+
+                /* Redirecionamento */
+                return $this->forward()->dispatch(Constantes::$CONTROLLER_LOGIN, array(
+                            Constantes::$ACTION => Constantes::$ACTION_EMAIL_ENVIADO
+                ));
+            } catch (Exception $exc) {
+                echo $exc->getTraceAsString();
+            }
+        }
+        return [];
+    }
+
+    /**
+     * Recupera ORM
+     * @return EntityManager
+     */
     public function getDoctrineORMEntityManager() {
         return $this->_doctrineORMEntityManager;
     }
 
+    /**
+     * Recupera autenticação doctrine
+     * @return AuthenticationService
+     */
     public function getDoctrineAuthenticationServicer() {
         return $this->_doctrineAuthenticationService;
     }
 
+    /**
+     * Recupera translator
+     * @return translator
+     */
     public function getTranslator() {
         return $this->_translator;
     }

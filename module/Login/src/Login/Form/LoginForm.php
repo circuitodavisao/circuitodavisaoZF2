@@ -80,6 +80,7 @@ class LoginForm extends Form {
                         ->setAttributes([
                             Constantes::$FORM_STRING_ID => Constantes::$INPUT_ENTRAR,
                             Constantes::$FORM_STRING_CLASS => 'button btn-primary-circuito mr10 pull-right',
+                            Constantes::$FORM_STRING_ONCLICK => str_replace('#id', Constantes::$INPUT_ENTRAR, Constantes::$FORM_STRING_FUNCAO_DESABILITAR_ELEMENTO),
                         ])
         );
     }

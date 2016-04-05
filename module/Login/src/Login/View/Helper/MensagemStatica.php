@@ -20,6 +20,10 @@ class MensagemStatica extends AbstractHelper {
 
     /**
      * Div com mensagem alert bootstrap
+     * 1 - warning
+     * 2 - primary
+     * 3 - success
+     * 4 - danger
      * @param String $mensagem
      * @param int $tipo
      * @return html
@@ -56,7 +60,7 @@ class MensagemStatica extends AbstractHelper {
             $tipo .= ' pastel';
             $mensagem = $this->getMensagem();
             if ($mensagem) {
-                $html .= '<div class="' . $tipo . '">';
+                $html .= '<div id="divMensagemEstatica" class="' . $tipo . '">';
                 $html .= '<i class="fa fa-' . $tipoIcone . ' pr10"></i>';
                 $html .= $mensagem;
                 $html .= '</div>';

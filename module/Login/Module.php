@@ -9,6 +9,7 @@
 namespace Login;
 
 use Login\View\Helper\DivCapslock;
+use Login\View\Helper\DivJavaScript;
 use Login\View\Helper\LinkLogo;
 use Login\View\Helper\MensagemStatica;
 
@@ -49,6 +50,9 @@ class Module {
                 },
                 'divCapslock' => function($sm) {
                     return new DivCapslock();
+                },
+                'divJavaScript' => function($sm) {
+                    return new DivJavaScript();
                 },
             )
         );

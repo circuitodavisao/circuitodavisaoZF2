@@ -31,5 +31,6 @@ function abrirOpcao(valor) {
         $('#opcao_1').addClass('hidden');
         $('#opcao_2').addClass('hidden');
         $('#tipo').val(0);
+        $('#divMensagemEstatica').addClass('hidden');
     }
 }
