@@ -7,11 +7,22 @@ namespace Login\Entity;
  * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com>
  * Descricao: Entidade anotada da tabela pessoa
  */
+
 use DateTime;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /** @ORM\Entity */
 class Pessoa {
+
+    /**
+     * @ORM\OneToMany(targetEntity="PessoaPerfilAcesso", mappedBy="pessoa") 
+     */
+    protected $perfisDeAcesso;
+
+    public function __construct() {
+        $this->perfisDeAcesso = new ArrayCollection();
+    }
 
     /**
      * @ORM\Id
@@ -139,7 +150,7 @@ class Pessoa {
 
     /**
      * Seta token e data para validacao
-     * @param type $token
+     * @param String $token
      */
     function setToken($token) {
         $this->token = $token;
@@ -186,6 +197,14 @@ class Pessoa {
 
     function setToken_hora($token_hora) {
         $this->token_hora = $token_hora;
+    }
+
+    function getPerfisDeAcesso() {
+        return $this->perfisDeAcesso;
+    }
+
+    function setPerfisDeAcesso($perfisDeAcesso) {
+        $this->perfisDeAcesso = $perfisDeAcesso;
     }
 
 }

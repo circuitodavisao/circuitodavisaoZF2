@@ -19,6 +19,17 @@ return array(
                     'encoding' => 'utf8',
                 )
             )
-        )
+        ),
+        'configuration' => array(
+            'orm_default' => array(
+                'metadata_cache' => 'array',
+                'query_cache' => 'array',
+                'result_cache' => 'array',
+                'hydration_cache' => 'array',
+                'generate_proxies' => true,
+                'proxy_dir' => 'data/DoctrineORMModule/Proxy',
+                'proxy_namespace' => 'DoctrineORMModule\Proxy',
+            ),
+        ),
     )
 );

@@ -9,8 +9,20 @@ namespace Login\Entity;
  */
 use Doctrine\ORM\Mapping as ORM;
 
-/** @ORM\Entity */
+/**
+ * @ORM\Entity 
+ * @ORM\Table(name="perfil_acesso")
+ */
 class PerfilAcesso {
+
+    /**
+     * @ORM\OneToMany(targetEntity="PessoaPerfilAcesso", mappedBy="perfilAcesso") 
+     */
+    protected $perfisDeAcesso;
+
+    public function __construct() {
+        $this->perfisDeAcesso = new ArrayCollection();
+    }
 
     /**
      * @ORM\Id

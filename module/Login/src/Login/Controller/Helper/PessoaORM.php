@@ -58,7 +58,7 @@ class PessoaORM {
     public function encontrarPorEmail($email) {
         try {
             $pessoa = $this->getEntityManager()
-                    ->getRepository(Constantes::$ENTITY_PESSOA)
+                    ->getRepository($this->getEntity())
                     ->findOneBy(array(Constantes::$ENTITY_PESSOA_EMAIL => $email));
             return $pessoa;
         } catch (Exception $exc) {
@@ -76,7 +76,7 @@ class PessoaORM {
     public function encontrarPorToken($token) {
         try {
             $pessoa = $this->getEntityManager()
-                    ->getRepository(Constantes::$ENTITY_PESSOA)
+                    ->getRepository($this->getEntity())
                     ->findOneBy(array(Constantes::$ENTITY_PESSOA_TOKEN => $token));
             return $pessoa;
         } catch (Exception $exc) {
@@ -101,7 +101,7 @@ class PessoaORM {
                 )
         );
         $pessoas = $this->getEntityManager()
-                ->getRepository(Constantes::$ENTITY_PESSOA)
+                ->getRepository($this->getEntity())
                 ->matching($criteria);
 
         $pessoa = null;

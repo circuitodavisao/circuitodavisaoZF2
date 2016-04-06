@@ -9,8 +9,23 @@ namespace Login\Entity;
  */
 use Doctrine\ORM\Mapping as ORM;
 
-/** @ORM\Entity */
+/**
+ * @ORM\Entity
+ * @ORM\Table(name="pessoa_perfil_acesso")
+ */
 class PessoaPerfilAcesso {
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Pessoa", inversedBy="pessoaPerfilAcesso")
+     * @ORM\JoinColumn(name="id_pessoa", referencedColumnName="id")
+     */
+    private $pessoa;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="PerfilAcesso", inversedBy="pessoaPerfilAcesso")
+     * @ORM\JoinColumn(name="id_perfil_acesso", referencedColumnName="id")
+     */
+    private $perfilAcesso;
 
     /**
      * @ORM\Id
@@ -73,6 +88,22 @@ class PessoaPerfilAcesso {
 
     function setData_inativacao($data_inativacao) {
         $this->data_inativacao = $data_inativacao;
+    }
+
+    function getPessoa() {
+        return $this->pessoa;
+    }
+
+    function setPessoa($pessoa) {
+        $this->pessoa = $pessoa;
+    }
+
+    function getPerfilAcesso() {
+        return $this->perfilAcesso;
+    }
+
+    function setPerfilAcesso($perfilAcesso) {
+        $this->perfilAcesso = $perfilAcesso;
     }
 
 }

@@ -10,19 +10,12 @@ namespace Login\Controller\Helper;
 class Constantes {
     /* Constates Login */
 
-    public static $ENTITY_PESSOA = 'Login\Entity\Pessoa';
-    public static $ENTITY_PESSOA_EMAIL = 'email';
-    public static $ENTITY_PESSOA_DOCUMENTO = 'documento';
-    public static $ENTITY_PESSOA_DATA_NASCIMENTO = 'data_nascimento';
-    public static $ENTITY_PESSOA_TOKEN = 'token';
-    public static $ENTITY_PERFIL_ACESSO = 'Login\Entity\PerfilAcesso';
-    public static $ENTITY_PESSOA_PERFIL_ACESSO = 'Login\Entity\PessoaPerfilAcesso';
     public static $CONTROLLER_LOGIN = 'Login\Controller\Login';
     public static $LOGIN_FORM = 'LoginForm';
     public static $FORM_LOGIN = 'formLogin';
     public static $ROUTE_LOGIN = 'login';
     public static $ACTION_PRINCIPAL = 'principal';
-    public static $ACTION_SELECIONAR_PERFIL = 'selecionarPerfil'; 
+    public static $ACTION_SELECIONAR_PERFIL = 'selecionarPerfil';
     public static $URL_ESQUECEU_SENHA = 'esqueceuSenha';
     public static $ACTION_INDEX = 'index';
     public static $ACTION = 'action';
@@ -123,5 +116,15 @@ class Constantes {
     public static $FORM_STRING_FUNCAO_VALIDAR_DATA_NASCIMENTO = 'validarDataNascimento(this.value, \'#idIcone\', \'#idBotaoSubmit\')';
     public static $FORM_STRING_FUNCAO_VALIDAR_DIGITOS_CPF = 'validarDigitosDoCPF(this.value, \'#idIcone\', \'#idBotaoSubmit\')';
     public static $FORM_STRING_FUNCAO_DESABILITAR_ELEMENTO = 'desabilitarElemento(\'#id\')';
+
+    /* Entidade do banco de dados */
+    public static $ENTITY_PESSOA = 'Login\Entity\Pessoa';
+    public static $ENTITY_PESSOA_EMAIL = 'email';
+    public static $ENTITY_PESSOA_DOCUMENTO = 'documento';
+    public static $ENTITY_PESSOA_DATA_NASCIMENTO = 'data_nascimento';
+    public static $ENTITY_PESSOA_TOKEN = 'token';
+    public static $ENTITY_PERFIL_ACESSO = 'Login\Entity\PerfilAcesso';
+    public static $ENTITY_PESSOA_PERFIL_ACESSO = 'Login\Entity\PessoaPerfilAcesso';
+    public static $ENTITY_PESSOA_PERFIL_ACESSO_ID_PESSOA = 'id_pessoa';
 
 }

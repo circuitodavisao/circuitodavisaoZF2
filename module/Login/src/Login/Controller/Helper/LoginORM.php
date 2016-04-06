@@ -34,6 +34,10 @@ class LoginORM {
         return $this->_pessoaORM;
     }
 
+    /**
+     * Metodo public para obter a instancia EntityManager com acesso ao banco de dados
+     * @return EntityManager
+     */
     public function getDoctrineORMEntityManager() {
         return $this->_doctrineORMEntityManager;
     }

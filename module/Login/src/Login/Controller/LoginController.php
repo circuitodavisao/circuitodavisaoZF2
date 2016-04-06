@@ -122,8 +122,8 @@ class LoginController extends AbstractActionController {
 
             /* Redirecionamento SELECIONAR PERFIL */
             return $this->forward()->dispatch(Constantes::$CONTROLLER_LOGIN, array(
-                        Constantes::$ACTION => Constantes::$ACTION_SELECIONAR_PERFIL, 
-            )); 
+                        Constantes::$ACTION => Constantes::$ACTION_SELECIONAR_PERFIL,
+            ));
         } else {
             /* Autenticacao falhou */
             /* Redirecionamento */
@@ -359,6 +359,20 @@ class LoginController extends AbstractActionController {
      * GET /selecionarPerfil
      */
     public function selecionarPerfilAction() {
+        /* Helper Controller */
+        $loginORM = new LoginORM($this->getDoctrineORMEntityManager());
+
+        $idPessoa = 1; // leonardo pereira
+        $pessoa = $loginORM->getPessoaORM()->encontrarPorIdPessoa($idPessoa);
+
+        if ($pessoa->getPerfisDeAcesso()) {
+            foreach ($pessoa->getPerfisDeAcesso() as $perfilAcesso) {
+                echo "<br />" . $perfilAcesso->getId_perfil_acesso();
+                $perfil = $perfilAcesso->getPerfilAcesso();
+                echo "<br />" . $perfil->getNome();
+            }
+        }
+
         return [];
     }
 
