@@ -1,0 +1,62 @@
+-- Table: entidade
+
+-- DROP TABLE entidade;
+
+CREATE TABLE entidade
+(
+  id serial NOT NULL, -- Identificação da entidade
+  data_criacao date NOT NULL, -- Data de criação da entidade
+  hora_criacao timestamp without time zone NOT NULL, -- Hora de criação da entidade
+  nome character varying(45), -- Nome para as entidades: igreja, equipes
+  numero integer, -- Número para as entidades: região, coordenação e subs
+  data_inativacao date, -- Data de inativação da entidade
+  hora_inativacao timestamp without time zone, -- Hora da inativação da entidade
+  tipo_id integer NOT NULL, -- Indetificação do tipo de entidade
+  grupo_id bigint NOT NULL, -- Identificação do grupo
+  CONSTRAINT pk_entidade PRIMARY KEY (id),
+  CONSTRAINT fk_entidade_grupo_id FOREIGN KEY (grupo_id)
+      REFERENCES grupo (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION, -- Chave estrangeira da entidade com grupo
+  CONSTRAINT fk_entidade_tipo_id FOREIGN KEY (tipo_id)
+      REFERENCES entidade_tipo (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION -- Chave estrangeira de entidade com tipo da entidade
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE entidade
+  OWNER TO postgres;
+COMMENT ON TABLE entidade
+  IS 'Tabela que armazena os dados das diversas entidades com número, nomes, telefone e endereços';
+COMMENT ON COLUMN entidade.id IS 'Identificação da entidade';
+COMMENT ON COLUMN entidade.data_criacao IS 'Data de criação da entidade';
+COMMENT ON COLUMN entidade.hora_criacao IS 'Hora de criação da entidade';
+COMMENT ON COLUMN entidade.nome IS 'Nome para as entidades: igreja, equipes';
+COMMENT ON COLUMN entidade.numero IS 'Número para as entidades: região, coordenação e subs';
+COMMENT ON COLUMN entidade.data_inativacao IS 'Data de inativação da entidade';
+COMMENT ON COLUMN entidade.hora_inativacao IS 'Hora da inativação da entidade';
+COMMENT ON COLUMN entidade.tipo_id IS 'Indetificação do tipo de entidade';
+COMMENT ON COLUMN entidade.grupo_id IS 'Identificação do grupo';
+
+COMMENT ON CONSTRAINT fk_entidade_grupo_id ON entidade IS 'Chave estrangeira da entidade com grupo';
+COMMENT ON CONSTRAINT fk_entidade_tipo_id ON entidade IS 'Chave estrangeira de entidade com tipo da entidade';
+
+
+-- Index: fki_entidade_grupo_id
+
+-- DROP INDEX fki_entidade_grupo_id;
+
+CREATE INDEX fki_entidade_grupo_id
+  ON entidade
+  USING btree
+  (grupo_id);
+
+-- Index: fki_entidade_tipo_id
+
+-- DROP INDEX fki_entidade_tipo_id;
+
+CREATE INDEX fki_entidade_tipo_id
+  ON entidade
+  USING btree
+  (tipo_id);
+

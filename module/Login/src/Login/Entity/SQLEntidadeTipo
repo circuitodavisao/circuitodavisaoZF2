@@ -1,0 +1,20 @@
+-- Table: entidade_tipo
+
+-- DROP TABLE entidade_tipo;
+
+CREATE TABLE entidade_tipo
+(
+  id serial NOT NULL, -- Identificação do tipo de entidade
+  nome character varying(45) NOT NULL, -- Nome da entidade
+  CONSTRAINT pk_entidade_tipo PRIMARY KEY (id)
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE entidade_tipo
+  OWNER TO postgres;
+COMMENT ON TABLE entidade_tipo
+  IS 'Tabela com os tipo de entidades';
+COMMENT ON COLUMN entidade_tipo.id IS 'Identificação do tipo de entidade';
+COMMENT ON COLUMN entidade_tipo.nome IS 'Nome da entidade';
+

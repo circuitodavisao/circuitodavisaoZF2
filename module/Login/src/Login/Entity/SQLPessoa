@@ -16,7 +16,7 @@ CREATE TABLE pessoa
   token character varying(120), -- Token de recuperacao de senha
   token_data date, -- Data para validação do token
   token_hora time without time zone, -- Hora para validação do token
-  CONSTRAINT primary_key_pessoa PRIMARY KEY (id) -- Primary Key da tabela pessoa
+  CONSTRAINT pk_pessoa PRIMARY KEY (id)
 )
 WITH (
   OIDS=FALSE
@@ -24,7 +24,7 @@ WITH (
 ALTER TABLE pessoa
   OWNER TO postgres;
 COMMENT ON TABLE pessoa
-  IS 'Tabela pessoa com dados pessoais e acesso';
+  IS 'Tabela pessoa com dados pessoais';
 COMMENT ON COLUMN pessoa.id IS 'Identificação da pessoa';
 COMMENT ON COLUMN pessoa.nome IS 'Nome Completo da pessoa';
 COMMENT ON COLUMN pessoa.email IS 'Email de acesso ';
@@ -37,8 +37,6 @@ COMMENT ON COLUMN pessoa.data_nascimento IS 'Data de nascimento da pessoa';
 COMMENT ON COLUMN pessoa.token IS 'Token de recuperacao de senha';
 COMMENT ON COLUMN pessoa.token_data IS 'Data para validação do token';
 COMMENT ON COLUMN pessoa.token_hora IS 'Hora para validação do token';
-
-COMMENT ON CONSTRAINT primary_key_pessoa ON pessoa IS 'Primary Key da tabela pessoa';
 
 
 -- Index: index_pessoa_data_nascimento

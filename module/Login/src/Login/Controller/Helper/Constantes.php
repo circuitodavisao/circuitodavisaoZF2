@@ -94,6 +94,10 @@ class Constantes {
     public static $FORM_RECUPERAR_SENHA_LETRA_NUMERO = 'Your password must contain at least <strong> a </ strong> letter and <strong> one </ strong> number.';
     public static $TRADUCAO_SENHA_ATUALIZADA_COM_SUCESSO = 'Your password has been changed successfully!';
     public static $TRADUCAO_ACESSAR = 'To access';
+
+    /* Constantes selecionar perfil */
+    public static $PERFIS_DE_ACESSO = 'perfiDeAcesso';
+
     /* Forms */
     public static $FORM_STRING_METHOD = 'method';
     public static $FORM_STRING_POST = 'POST';
@@ -126,5 +130,8 @@ class Constantes {
     public static $ENTITY_PERFIL_ACESSO = 'Login\Entity\PerfilAcesso';
     public static $ENTITY_PESSOA_PERFIL_ACESSO = 'Login\Entity\PessoaPerfilAcesso';
     public static $ENTITY_PESSOA_PERFIL_ACESSO_ID_PESSOA = 'id_pessoa';
+
+    /* Templates */
+    public static $TEMPLATE_PRE_SAIDA = 'layout/layout-pre-saida';
 
 }

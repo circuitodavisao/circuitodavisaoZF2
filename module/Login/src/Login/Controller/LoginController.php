@@ -83,8 +83,6 @@ class LoginController extends AbstractActionController {
     public function logarAction() {
         $data = $this->getRequest()->getPost();
 
-
-
         /* Post sem email */
         if (is_null($data[Constantes::$INPUT_EMAIL])) {
             /* Redirecionamento */
@@ -359,21 +357,45 @@ class LoginController extends AbstractActionController {
      * GET /selecionarPerfil
      */
     public function selecionarPerfilAction() {
+
         /* Helper Controller */
         $loginORM = new LoginORM($this->getDoctrineORMEntityManager());
 
         $idPessoa = 1; // leonardo pereira
         $pessoa = $loginORM->getPessoaORM()->encontrarPorIdPessoa($idPessoa);
 
-        if ($pessoa->getPerfisDeAcesso()) {
-            foreach ($pessoa->getPerfisDeAcesso() as $perfilAcesso) {
-                echo "<br />" . $perfilAcesso->getId_perfil_acesso();
-                $perfil = $perfilAcesso->getPerfilAcesso();
-                echo "<br />" . $perfil->getNome();
+        /* Array com perfis de acesso */
+        $perfisDeAcesso = $pessoa->getPerfisDeAcesso();
+        if ($perfisDeAcesso) {
+            foreach ($perfisDeAcesso as $perfilDeAcesso) {
+                /* Verificar quantas entidades do tipo do perfil */
             }
         }
 
         return [];
+    }
+
+    /**
+     * Função que direciona a tela de acesso
+     * GET /preSaida
+     */
+    public function preSaidaAction() {
+        $this->layout(Constantes::$TEMPLATE_PRE_SAIDA);
+        return [];
+    }
+
+    /**
+     * Função que direciona a tela de acesso
+     * GET /sair
+     */
+    public function sairAction() {
+
+        /* Fechando a sessão */
+
+
+
+        /* Redirecionamento */
+        return $this->redirect()->toRoute(Constantes::$ROUTE_LOGIN);
     }
 
     /**

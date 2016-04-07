@@ -1,7 +1,8 @@
 <?php
-/** Nome: principal.phtml
+/**
+ * Nome: pre-saida.phtml
  * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com>
- * Descricao: Página principal
+ * Descricao: Página pré saída
  */
 echo "<div class='well'>";
 if ($user = $this->identity()) {
@@ -11,7 +12,7 @@ if ($user = $this->identity()) {
 }
 echo "</div>";
 ?>
-<div class="well">principal</div>
+<div class="well">pre-saida</div>
 
-<a class="button btn-primary-circuito" href="/selecionarPerfil">SELECIONAR PERFIL</a>
-<a class="button btn-primary-circuito" href="/preSaida">PRE SAIDA</a>
+<a class="button btn-primary-circuito" href="/principal">PRINCIPAL</a>
+<a class="button btn-primary-circuito" href="/">INDEX</a>
