@@ -8,7 +8,7 @@ CREATE TABLE pessoa
   nome character varying(150) NOT NULL, -- Nome Completo da pessoa
   email character varying(80), -- Email de acesso
   senha character varying(40), -- Senha de acesso em MD5
-  data_criacao date, -- Data de criação da pessoa
+  data_criacao date NOT NULL DEFAULT ('now'::text)::date, -- Data de criação da pessoa
   data_inativacao date, -- Data de inativação da pessoa
   status status, -- Status do acesso da pessoa: ativo ou inativo
   documento bigint, -- Documento da pessoa, pode ser CPF ou caso estrangeiro um documento aberto

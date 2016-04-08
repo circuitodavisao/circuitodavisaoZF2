@@ -22,15 +22,15 @@ class Grupo {
      */
     protected $grupoResponsavel;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="GrupoPaiFilho", mappedBy="grupoPai") 
-     * @ORM\JoinColumn(name="pai_id", referencedColumnName="id")
-     */
+//    /**
+//     * @ORM\ManyToOne(targetEntity="GrupoPaiFilho", mappedBy="grupoPai") 
+//     * @ORM\JoinColumn(name="pai_id", referencedColumnName="id")
+//     */
     protected $grupoPai;
-
-    /**
-     * @ORM\OneToMany(targetEntity="Grupo", mappedBy="gruposFilho") 
-     */
+    
+//    /**
+//     * @ORM\OneToMany(targetEntity="Grupo", mappedBy="gruposFilho") 
+//     */
     protected $gruposFilho;
 
     public function __construct() {

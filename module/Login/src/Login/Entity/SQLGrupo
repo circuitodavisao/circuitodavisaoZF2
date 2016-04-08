@@ -5,10 +5,10 @@
 CREATE TABLE grupo
 (
   id serial NOT NULL, -- Identificação do grupo
-  data_criacao date NOT NULL, -- Data de criação do grupo
-  hora_criacao timestamp without time zone NOT NULL, -- Hora de criação do grupo
+  data_criacao date NOT NULL DEFAULT ('now'::text)::date, -- Data de criação do grupo
+  hora_criacao time without time zone NOT NULL DEFAULT ('now'::text)::time with time zone, -- Hora de criação do grupo
   data_inativacao date, -- Data de inativação do grupo
-  hora_inativacao timestamp without time zone, -- Hora de inativação do grupo
+  hora_inativacao time without time zone, -- Hora de inativação do grupo
   CONSTRAINT pk_grupo PRIMARY KEY (id)
 )
 WITH (

@@ -5,12 +5,12 @@
 CREATE TABLE grupo_pai_filho
 (
   id serial NOT NULL, -- Identificação da associação entre grupos
-  data_criacao date NOT NULL, -- Data de criação da associação
-  hora_criacao timestamp without time zone NOT NULL, -- Hora da criação da associação
+  data_criacao date NOT NULL DEFAULT ('now'::text)::date, -- Data de criação da associação
+  hora_criacao time without time zone NOT NULL DEFAULT ('now'::text)::time with time zone, -- Hora da criação da associação
   pai_id bigint NOT NULL, -- Identificação do grupo pai
   filho_id bigint NOT NULL, -- Identificação do grupo filho
   data_inativacao date, -- Data de inativação da associação
-  hora_inativacao timestamp without time zone, -- Hora da inativação da associação
+  hora_inativacao time without time zone, -- Hora da inativação da associação
   CONSTRAINT pk_grupo_pai_filho PRIMARY KEY (id),
   CONSTRAINT fk_grupo_pai_filho_filho_id FOREIGN KEY (filho_id)
       REFERENCES grupo (id) MATCH SIMPLE

@@ -21,10 +21,10 @@ class GrupoPaiFilho {
      */
     protected $grupoPai;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Grupo", mappedBy="gruposFilho") 
-     * @ORM\JoinColumn(name="filho_id", referencedColumnName="id")
-     */
+//    /**
+//     * @ORM\ManyToOne(targetEntity="Grupo", mappedBy="gruposFilho") 
+//     * @ORM\JoinColumn(name="filho_id", referencedColumnName="id")
+//     */
     protected $gruposFilho;
 
     public function __construct() {

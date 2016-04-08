@@ -4,21 +4,21 @@
 
 CREATE TABLE entidade
 (
-  id integer NOT NULL DEFAULT nextval('entidade_id_seq'::regclass), -- Identificação da entidade
-  data_criacao date NOT NULL, -- Data de criação da entidade
-  hora_criacao timestamp without time zone NOT NULL, -- Hora de criação da entidade
+  id serial NOT NULL, -- Identificação da entidade
+  data_criacao date NOT NULL DEFAULT ('now'::text)::date, -- Data de criação da entidade
+  hora_criacao time without time zone NOT NULL DEFAULT ('now'::text)::time with time zone, -- Hora de criação da entidade
   nome character varying(45), -- Nome para as entidades: igreja, equipes
   numero integer, -- Número para as entidades: região, coordenação e subs
   data_inativacao date, -- Data de inativação da entidade
-  hora_inativacao timestamp without time zone, -- Hora da inativação da entidade
+  hora_inativacao time without time zone, -- Hora da inativação da entidade
   tipo_id integer NOT NULL, -- Indetificação do tipo de entidade
   grupo_id bigint NOT NULL, -- Identificação do grupo
-  CONSTRAINT pk_entidade PRIMARY KEY (),
-  CONSTRAINT fk_entidade_grupo_id FOREIGN KEY ()
-      REFERENCES grupo () MATCH SIMPLE
+  CONSTRAINT pk_entidade PRIMARY KEY (id),
+  CONSTRAINT fk_entidade_grupo_id FOREIGN KEY (grupo_id)
+      REFERENCES grupo (id) MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE NO ACTION, -- Chave estrangeira da entidade com grupo
-  CONSTRAINT fk_entidade_tipo_id FOREIGN KEY ()
-      REFERENCES entidade_tipo () MATCH SIMPLE
+  CONSTRAINT fk_entidade_tipo_id FOREIGN KEY (tipo_id)
+      REFERENCES entidade_tipo (id) MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE NO ACTION -- Chave estrangeira de entidade com tipo da entidade
 )
 WITH (
@@ -49,7 +49,7 @@ COMMENT ON CONSTRAINT fk_entidade_tipo_id ON entidade IS 'Chave estrangeira de e
 CREATE INDEX fki_entidade_grupo_id
   ON entidade
   USING btree
-  ();
+  (grupo_id);
 
 -- Index: fki_entidade_tipo_id
 
@@ -58,5 +58,5 @@ CREATE INDEX fki_entidade_grupo_id
 CREATE INDEX fki_entidade_tipo_id
   ON entidade
   USING btree
-  ();
+  (tipo_id);
 

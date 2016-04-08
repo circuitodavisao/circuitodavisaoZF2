@@ -364,11 +364,22 @@ class LoginController extends AbstractActionController {
         $idPessoa = 1; // leonardo pereira
         $pessoa = $loginORM->getPessoaORM()->encontrarPorIdPessoa($idPessoa);
 
-        /* Array com perfis de acesso */
-        $perfisDeAcesso = $pessoa->getPerfisDeAcesso();
-        if ($perfisDeAcesso) {
-            foreach ($perfisDeAcesso as $perfilDeAcesso) {
-                /* Verificar quantas entidades do tipo do perfil */
+        /* Responsabilidades */
+        $responsabilidades = $pessoa->getGrupoResponsavel();
+        if ($responsabilidades) {
+            foreach ($responsabilidades as $responsabilidade) {
+                $grupo = $responsabilidade->getGrupo();
+                $entidades = $grupo->getEntidade();
+                
+                echo "<br />Grupo: " . $grupo->getId();
+                
+                foreach ($entidades as $entidade) {
+                    $tipo = $entidade->getEntidadeTipo();
+
+                    echo "<br />Entidade Nome: " . $entidade->getNome();
+                    echo "<br />Entidade Numero: " . $entidade->getNumero();
+                    echo "<br />Tipo: " . $tipo->getNome();
+                }
             }
         }
 

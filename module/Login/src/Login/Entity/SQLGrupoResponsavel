@@ -5,12 +5,12 @@
 CREATE TABLE grupo_responsavel
 (
   id serial NOT NULL, -- Identificação do responsavel pelo grupo
-  data_criacao date NOT NULL, -- Data de criação da responsabilidade
-  hora_criacao time without time zone NOT NULL, -- Hora que foi criada a responsabilidade
+  data_criacao date NOT NULL DEFAULT ('now'::text)::date, -- Data de criação da responsabilidade
+  hora_criacao time without time zone NOT NULL DEFAULT ('now'::text)::time with time zone, -- Hora que foi criada a responsabilidade
   pessoa_id bigint NOT NULL, -- Identificação da pessoa
   grupo_id bigint NOT NULL, -- Identificação do grupo
   data_inativacao date, -- Data de inativação da responsabilidade
-  hora_inativacao timestamp without time zone, -- Hora da inativação da responsabilidade
+  hora_inativacao time without time zone, -- Hora da inativação da responsabilidade
   CONSTRAINT pk_grupo_responsavel PRIMARY KEY (id),
   CONSTRAINT fk_grupo_responsavel_grupo_id FOREIGN KEY (grupo_id)
       REFERENCES grupo (id) MATCH SIMPLE
