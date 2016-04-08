@@ -7,7 +7,6 @@ namespace Login\Entity;
  * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com>
  * Descricao: Entidade anotada da tabela pessoa
  */
-
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -16,12 +15,12 @@ use Doctrine\ORM\Mapping as ORM;
 class Pessoa {
 
     /**
-     * @ORM\OneToMany(targetEntity="PessoaPerfilAcesso", mappedBy="pessoa") 
+     * @ORM\OneToMany(targetEntity="GrupoResponsavel", mappedBy="pessoa") 
      */
-    protected $perfisDeAcesso;
+    protected $grupoResponsavel;
 
     public function __construct() {
-        $this->perfisDeAcesso = new ArrayCollection();
+        $this->grupoResponsavel = new ArrayCollection();
     }
 
     /**
@@ -44,7 +43,13 @@ class Pessoa {
     protected $data_criacao;
 
     /** @ORM\Column(type="string") */
+    protected $hora_criacao;
+
+    /** @ORM\Column(type="string") */
     protected $data_inativacao;
+
+    /** @ORM\Column(type="string") */
+    protected $hora_inativacao;
 
     /** @ORM\Column(type="string") */
     protected $status;
@@ -199,12 +204,28 @@ class Pessoa {
         $this->token_hora = $token_hora;
     }
 
-    function getPerfisDeAcesso() {
-        return $this->perfisDeAcesso;
+    function getHora_criacao() {
+        return $this->hora_criacao;
     }
 
-    function setPerfisDeAcesso($perfisDeAcesso) {
-        $this->perfisDeAcesso = $perfisDeAcesso;
+    function getHora_inativacao() {
+        return $this->hora_inativacao;
+    }
+
+    function setHora_criacao($hora_criacao) {
+        $this->hora_criacao = $hora_criacao;
+    }
+
+    function setHora_inativacao($hora_inativacao) {
+        $this->hora_inativacao = $hora_inativacao;
+    }
+
+    function getGrupoResponsavel() {
+        return $this->grupoResponsavel;
+    }
+
+    function setGrupoResponsavel($grupoResponsavel) {
+        $this->grupoResponsavel = $grupoResponsavel;
     }
 
 }
