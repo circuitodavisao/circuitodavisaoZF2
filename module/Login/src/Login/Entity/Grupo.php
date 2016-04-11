@@ -23,20 +23,20 @@ class Grupo {
     protected $grupoResponsavel;
 
 //    /**
-//     * @ORM\ManyToOne(targetEntity="GrupoPaiFilho", mappedBy="grupoPai") 
-//     * @ORM\JoinColumn(name="pai_id", referencedColumnName="id")
+//     * @ORM\ManyToOne(targetEntity="GrupoPaiFilho", inversedBy="pai") 
+//     * @ORM\JoinColumn(name="id", referencedColumnName="pai_id")
 //     */
-    protected $grupoPai;
-    
+//    protected $pai;
+
 //    /**
-//     * @ORM\OneToMany(targetEntity="Grupo", mappedBy="gruposFilho") 
+//     * @ORM\OneToMany(targetEntity="GrupoPaiFilho", mappedBy="filhos") 
 //     */
-    protected $gruposFilho;
+//    protected $filhos;
 
     public function __construct() {
         $this->entidade = new ArrayCollection();
         $this->grupoResponsavel = new ArrayCollection();
-        $this->gruposFilho = new ArrayCollection();
+        $this->filhos = new ArrayCollection();
     }
 
     /**
@@ -66,13 +66,13 @@ class Grupo {
         return $this->grupoResponsavel;
     }
 
-    function getGrupoPai() {
-        return $this->grupoPai;
-    }
-
-    function getGruposFilho() {
-        return $this->gruposFilho;
-    }
+//    function getPai() {
+//        return $this->pai;
+//    }
+//
+//    function getFilhos() {
+//        return $this->filhos;
+//    }
 
     function getId() {
         return $this->id;
@@ -102,13 +102,13 @@ class Grupo {
         $this->grupoResponsavel = $grupoResponsavel;
     }
 
-    function setGrupoPai($grupoPai) {
-        $this->grupoPai = $grupoPai;
-    }
-
-    function setGruposFilho($gruposFilho) {
-        $this->gruposFilho = $gruposFilho;
-    }
+//    function setPai($pai) {
+//        $this->pai = $pai;
+//    }
+//
+//    function setFilhos($filhos) {
+//        $this->filhos = $filhos;
+//    }
 
     function setId($id) {
         $this->id = $id;

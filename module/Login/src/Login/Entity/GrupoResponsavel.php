@@ -52,6 +52,14 @@ class GrupoResponsavel {
     /** @ORM\Column(type="string") */
     protected $hora_inativacao;
 
+    public function verificarSeEstaAtivo() {
+        $resposta = false;
+        if (is_null($this->getData_inativacao())) {
+            $resposta = true;
+        }
+        return $resposta;
+    }
+
     function getPessoa() {
         return $this->pessoa;
     }

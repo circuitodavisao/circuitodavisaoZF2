@@ -14,6 +14,7 @@ use Login\Form\RecuperarSenhaForm;
 use Zend\Authentication\AuthenticationService;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\Mvc\I18n\Translator;
+use Zend\Session\Container;
 
 /**
  * Nome: LoginController.php
@@ -116,6 +117,10 @@ class LoginController extends AbstractActionController {
                 ));
             } else {
                 /* Ativada */
+
+                /* Registro de sessão */
+                $sessao = new Container(Constantes::$NOME_APLICACAO);
+                $sessao->idPessoa = $pessoa->getId();
             }
 
             /* Redirecionamento SELECIONAR PERFIL */
@@ -357,32 +362,38 @@ class LoginController extends AbstractActionController {
      * GET /selecionarPerfil
      */
     public function selecionarPerfilAction() {
-
+        unset($dados);
         /* Helper Controller */
         $loginORM = new LoginORM($this->getDoctrineORMEntityManager());
-
-        $idPessoa = 1; // leonardo pereira
-        $pessoa = $loginORM->getPessoaORM()->encontrarPorIdPessoa($idPessoa);
-
-        /* Responsabilidades */
-        $responsabilidades = $pessoa->getGrupoResponsavel();
-        if ($responsabilidades) {
-            foreach ($responsabilidades as $responsabilidade) {
-                $grupo = $responsabilidade->getGrupo();
-                $entidades = $grupo->getEntidade();
-                
-                echo "<br />Grupo: " . $grupo->getId();
-                
-                foreach ($entidades as $entidade) {
-                    $tipo = $entidade->getEntidadeTipo();
-
-                    echo "<br />Entidade Nome: " . $entidade->getNome();
-                    echo "<br />Entidade Numero: " . $entidade->getNumero();
-                    echo "<br />Tipo: " . $tipo->getNome();
+        $sessao = new Container(Constantes::$NOME_APLICACAO);
+        $idPessoa = $sessao->idPessoa;
+        if ($idPessoa) {
+            $pessoa = $loginORM->getPessoaORM()->encontrarPorIdPessoa($idPessoa);
+            /* Responsabilidades */
+            $responsabilidadesTodosStatus = $pessoa->getGrupoResponsavel();
+            if ($responsabilidadesTodosStatus) {
+                unset($responsabilidadesAtivas);
+                /* Verificar responsabilidades ativas */
+                foreach ($responsabilidadesTodosStatus as $responsabilidadeTodosStatus) {
+                    if ($responsabilidadeTodosStatus->verificarSeEstaAtivo()) {
+                        $responsabilidadesAtivas[] = $responsabilidadeTodosStatus;
+                    }
                 }
+                $dados[Constantes::$RESPONSABILIDADES] = $responsabilidadesAtivas;
             }
+        } else {
+            /* Redirecionamento */
+            return $this->redirect()->toRoute(Constantes::$ROUTE_LOGIN);
         }
+        return $dados;
+    }
 
+    /**
+     * Função que direciona a tela de acesso
+     * GET /perfilSelecionado
+     */
+    public function perfilSelecionadoAction() {
+        $this->layout(Constantes::$TEMPLATE_PRE_SAIDA);
         return [];
     }
 
@@ -400,10 +411,9 @@ class LoginController extends AbstractActionController {
      * GET /sair
      */
     public function sairAction() {
-
         /* Fechando a sessão */
-
-
+        $sessao = new Container(Constantes::$NOME_APLICACAO);
+        $sessao->getManager()->destroy();
 
         /* Redirecionamento */
         return $this->redirect()->toRoute(Constantes::$ROUTE_LOGIN);

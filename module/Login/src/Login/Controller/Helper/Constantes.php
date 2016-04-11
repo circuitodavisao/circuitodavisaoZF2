@@ -97,6 +97,7 @@ class Constantes {
 
     /* Constantes selecionar perfil */
     public static $PERFIS_DE_ACESSO = 'perfiDeAcesso';
+    public static $RESPONSABILIDADES = 'responsabilidades';
 
     /* Forms */
     public static $FORM_STRING_METHOD = 'method';
@@ -133,5 +134,8 @@ class Constantes {
 
     /* Templates */
     public static $TEMPLATE_PRE_SAIDA = 'layout/layout-pre-saida';
+
+    /* Gera */
+    public static $NOME_APLICACAO = 'CircuitoDaVisao';
 
 }

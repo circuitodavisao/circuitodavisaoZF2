@@ -17,18 +17,18 @@ use Doctrine\ORM\Mapping as ORM;
 class GrupoPaiFilho {
 
     /**
-     * @ORM\OneToMany(targetEntity="Grupo", mappedBy="grupoPai") 
+     * @ORM\OneToMany(targetEntity="Grupo", mappedBy="pai") 
      */
-    protected $grupoPai;
+    protected $pai;
 
-//    /**
-//     * @ORM\ManyToOne(targetEntity="Grupo", mappedBy="gruposFilho") 
-//     * @ORM\JoinColumn(name="filho_id", referencedColumnName="id")
-//     */
-    protected $gruposFilho;
+    /**
+     * @ORM\ManyToOne(targetEntity="Grupo", inversedBy="filhos") 
+     * @ORM\JoinColumn(name="filho_id", referencedColumnName="id")
+     */
+    protected $filhos;
 
     public function __construct() {
-        $this->grupoPai = new ArrayCollection();
+        $this->pai = new ArrayCollection();
     }
 
     /**
@@ -56,12 +56,12 @@ class GrupoPaiFilho {
     /** @ORM\Column(type="string") */
     protected $hora_inativacao;
 
-    function getGrupoPai() {
-        return $this->grupoPai;
+    function getPai() {
+        return $this->pai;
     }
 
-    function getGruposFilho() {
-        return $this->gruposFilho;
+    function getFilhos() {
+        return $this->filhos;
     }
 
     function getId() {
@@ -92,12 +92,12 @@ class GrupoPaiFilho {
         return $this->hora_inativacao;
     }
 
-    function setGrupoPai($grupoPai) {
-        $this->grupoPai = $grupoPai;
+    function setPai($pai) {
+        $this->pai = $pai;
     }
 
-    function setGruposFilho($gruposFilho) {
-        $this->gruposFilho = $gruposFilho;
+    function setFilhos($filhos) {
+        $this->filhos = $filhos;
     }
 
     function setId($id) {
