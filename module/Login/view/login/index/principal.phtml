@@ -1,17 +1,44 @@
 <?php
+
+use Login\Controller\Helper\Constantes;
+use Zend\Session\Container;
+
 /** Nome: principal.phtml
  * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com>
  * Descricao: Página principal
  */
-echo "<div class='well'>";
-if ($user = $this->identity()) {
-    echo 'Logged in as ' . $this->escapeHtml($user->getNome());
-} else {
-    echo 'Not logged in';
-}
-echo "</div>";
+$sessao = new Container(Constantes::$NOME_APLICACAO);
 ?>
-<div class="well">principal</div>
+<!-- Start: Header -->
+<header class="navbar navbar-fixed-top navbar-shadow bg-dark">
+    <div class="navbar-branding">
+        <a class="navbar-brand" href="#" style="padding-top: 22px;">
+            <img src="<?php echo Constantes::$IMAGEM_LOGO_BRANCA; ?>" title="Circuito da Visão" class="img-responsive" style="max-width: 275px;">
+        </a>       
+    </div>
+    <ul class="nav navbar-nav navbar-right">
+        <li class="dropdown menu-merge">
+            <a href="#" class="dropdown-toggle fw600 p15" data-toggle="dropdown">
+                <img src="/img/avatars/diego-kort.jpg" alt="Ivan Tavares" class="mw30 br64">
+                <span class="pl15"> Ivan Tavares </span>
+                <span class="caret caret-tp"></span>
+            </a>
+            <ul class="dropdown-menu list-group dropdown-persist w250" role="menu">
+                <?php
+                /* Verifica se tem responsabilidade caso tenha mostra elas para mudar de perfil */
+                ?>
+                <li class="list-group-item">
+                    <a href="#" class="animated animated-short fadeInUp">
+                        <span class="fa fa-chevron-right"></span> Líder de Equipe
+                    </a>
+                </li>
 
-<a class="button btn-primary-circuito" href="/selecionarPerfil">SELECIONAR PERFIL</a>
-<a class="button btn-primary-circuito" href="/preSaida">PRE SAIDA</a>
+                <li class="dropdown-footer">
+                    <a href="/preSaida" class="">
+                        <span class="fa fa-power-off pr5"></span> Sair </a>
+                </li>
+            </ul>
+        </li>
+    </ul>
+</header>
+<!-- End: Header -->

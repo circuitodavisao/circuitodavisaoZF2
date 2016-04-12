@@ -1,7 +1,6 @@
 <?php echo $this->doctype(); ?>
 
 <?php
-$versao = '?v=1.6.0';
 
 use Login\Controller\Helper\Constantes;
 ?>
@@ -33,53 +32,26 @@ use Login\Controller\Helper\Constantes;
         <?php
         echo $this
                 ->headLink(array('rel' => 'shortcut icon', 'type' => 'image/vnd.microsoft.icon', 'href' => $this->basePath() . '/img/favicon.png'))
-                ->prependStylesheet($this->basePath() . '/css/bootstrap/bootstrap-theme.min.css')
-                ->prependStylesheet($this->basePath() . '/css/bootstrap/bootstrap.min.css')
                 ->prependStylesheet('http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700')
-                ->prependStylesheet($this->basePath() . '/css/estilos-circuito/admin-forms.css')
                 ->prependStylesheet($this->basePath() . '/css/estilos-circuito/default_skin/css/theme.css')
-                ->prependStylesheet($this->basePath() . '/css/estilos-circuito/cv-login/estilos-login.css' . $versao)
-                ->prependStylesheet($this->basePath() . '/js/vendor/plugins/magnific/magnific-popup.css' . $versao)
         ;
         ?>
     </head>
-    <body class="external-page external-alt sb-l-c sb-r-c">
+    <body>
         <!-- Start: Main -->
-        <div id="main-photo" class="animated fadeIn">
-            <!-- Start: Header -->
-            <header class="navbar-fixed-top" style="background:transparent; padding-left:20px; padding-top:25px;">
-                <a href="index.html">
-                    <img src="<?php echo Constantes::$IMAGEM_LOGO_BRANCA; ?>" title="Circuito da Visão" class="img-responsive" style="max-width: 275px;">
-                </a>
-            </header>
-            <!-- End: Header -->
-            <!-- Start: Content-Wrapper -->
-            <section id="content_wrapper">
-                <!-- Begin: Content -->
-                <section id="content">
-                    <?php echo $this->content; ?>
-                </section>
-                <!-- End: Content -->
-            </section>
-            <!-- End: Content-Wrapper -->
+        <div id="main">
+            <?php echo $this->content; ?>
         </div>
         <!-- End: Main -->
         <!-- BEGIN: PAGE SCRIPTS -->
         <?php
         echo $this
                 ->headScript()
-                ->prependFile($this->basePath() . '/js/vendor/plugins/magnific/jquery.magnific-popup.js' . $versao)
-                ->prependFile($this->basePath() . '/js/circuito_da_visao/modal-selecionar-perfil.js' . $versao)
-                ->prependFile($this->basePath() . '/js/circuito_da_visao/botao-loader.js' . $versao)
-                ->prependFile($this->basePath() . '/js/circuito_da_visao/circuito-mascaras_e_validacoes.js' . $versao)
-                ->prependFile($this->basePath() . '/js/circuito_da_visao/opcoes-recuperar-senha.js' . $versao)
                 ->prependFile($this->basePath() . '/js/assets/js/main.js')
                 ->prependFile($this->basePath() . '/js/assets/js/utility/utility.js')
                 ->prependFile($this->basePath() . '/js/respond.min.js', 'text/javascript', array('conditional' => 'lt IE 9',))
                 ->prependFile($this->basePath() . '/js/html5shiv.js', 'text/javascript', array('conditional' => 'lt IE 9',))
                 ->prependFile($this->basePath() . '/js/vendor/jquery/jquery_ui/jquery-ui.min.js')
-                ->prependFile($this->basePath() . '/js/vendor/plugins/jquerymask/jquery.maskedinput.min.js')
-                ->prependFile($this->basePath() . '/js/bootstrap.min.js')
                 ->prependFile($this->basePath() . '/js/jquery.min.js')
         ;
         echo $this->inlineScript();
@@ -91,7 +63,6 @@ use Login\Controller\Helper\Constantes;
 
                 // Init Theme Core
                 Core.init();
-
 
             });
         </script>

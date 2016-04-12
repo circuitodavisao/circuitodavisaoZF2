@@ -4,15 +4,39 @@
  * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com>
  * Descricao: Página pré saída
  */
-echo "<div class='well'>";
-if ($user = $this->identity()) {
-    echo 'Logged in as ' . $this->escapeHtml($user->getNome());
-} else {
-    echo 'Not logged in';
-}
-echo "</div>";
 ?>
-<div class="well">pre-saida</div>
+<div class="center-block mt70" style="max-width: 625px">
 
-<a class="button btn-primary-circuito" href="/principal">PRINCIPAL</a>
-<a class="button btn-primary-circuito" href="/">INDEX</a>
+    <!-- Login Logo + Meta -->
+    <div class="row table-layout">
+
+        <div class="col-xs-7 pln">
+            <h2 class="text-white mbn confirmation-header">Sessão Encerrada</h2>
+        </div>
+
+        <div class="col-xs-5 text-right va-b">
+            <div class="meta-links">
+                <a href="#" class="text-white">CircuitoDaVisao.com.br</a>
+                <span class="ph5 text-white"> | </span>
+                <a href="#" class="active text-white">suporte</a>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Confirmation Panel -->
+    <div class="panel mt15">
+        <div class="panel-body pt30 p25 pb15">
+
+            <p class="lead">Olá Ivan Tavares,</p>
+
+            <hr class="alt short mv25">
+
+            <p class="lh25 text-muted fs15">Use a opção SAIR do CircuitoDaVisão.com.br sempre que utilizar um dispositivo que não seja de uso particular. A página inicial do CircuitoDaVisão.com.br será aberto em 30 segundos. </p>
+
+            <p class="text-right mt20"><button class="btn btn-default ph40" onclick="location.href = '/principal';" type="button">ENTRAR NOVAMENTE</button> <button onclick="location.href = '/';" class="btn btn-primary-circuito ph40" type="button">CONTINUAR</button></p>
+
+        </div>
+    </div>
+
+</div>

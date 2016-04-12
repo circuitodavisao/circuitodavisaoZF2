@@ -66,6 +66,8 @@ return array(
         'template_map' => array(
             'layout/layout' => __DIR__ . '/../view/layout/layout.phtml',
             'layout/layout-pre-saida' => __DIR__ . '/../view/layout/layout-pre-saida.phtml',
+            'layout/layout-principal' => __DIR__ . '/../view/layout/layout-principal.phtml',
+            'layout/layout-selecionar-perfil' => __DIR__ . '/../view/layout/layout-selecionar-perfil.phtml',
             'login/login/index' => __DIR__ . '/../view/login/index/index.phtml',
             'login/login/principal' => __DIR__ . '/../view/login/index/principal.phtml',
             'login/login/esqueceu-senha' => __DIR__ . '/../view/login/index/esqueceu-senha.phtml',

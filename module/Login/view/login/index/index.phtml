@@ -26,7 +26,7 @@ $classMensagem = $this->hidden;
         /* Mensagem Estatica */
         echo $this->mensagemStatica($this->translate($this->mensagem), $this->tipo);
         ?>
-       
+
         <!-- Username Input -->
         <div class="section">
             <label for="<?php echo Constantes::$TRADUCAO_USUARIO; ?>" class="field-label text-muted fs18 mb10">
@@ -67,3 +67,10 @@ $classMensagem = $this->hidden;
     <?php echo $this->form()->closeTag() ?>
 
 </div>
+
+<button type="button" class="btn ladda-button btn-dark" data-style="expand-right">
+    <span class="ladda-label">Load Right</span>
+    <span class="ladda-spinner"></span><div style="width: 0px;" class="ladda-progress"></div>
+</button>
+
+

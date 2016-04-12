@@ -7,6 +7,8 @@ namespace Login\Entity;
  * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com>
  * Descricao: Entidade anotada da tabela grupo
  */
+
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /** @ORM\Entity */
@@ -27,7 +29,6 @@ class Grupo {
 //     * @ORM\JoinColumn(name="id", referencedColumnName="pai_id")
 //     */
 //    protected $pai;
-
 //    /**
 //     * @ORM\OneToMany(targetEntity="GrupoPaiFilho", mappedBy="filhos") 
 //     */
@@ -58,10 +59,18 @@ class Grupo {
     /** @ORM\Column(type="string") */
     protected $hora_inativacao;
 
+    /**
+     * Recupera todas as entidades vinculadas aquele grupo
+     * @return Entidade
+     */
     function getEntidade() {
         return $this->entidade;
     }
 
+    /**
+     * Retorna o grupo responsavel do grupo
+     * @return GrupoResponsavel
+     */
     function getGrupoResponsavel() {
         return $this->grupoResponsavel;
     }

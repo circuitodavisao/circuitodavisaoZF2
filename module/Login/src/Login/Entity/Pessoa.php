@@ -7,6 +7,7 @@ namespace Login\Entity;
  * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com>
  * Descricao: Entidade anotada da tabela pessoa
  */
+
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -220,6 +221,10 @@ class Pessoa {
         $this->hora_inativacao = $hora_inativacao;
     }
 
+    /**
+     * Retorna as responsailidades da pessoa
+     * @return GrupoResponsavel
+     */
     function getGrupoResponsavel() {
         return $this->grupoResponsavel;
     }

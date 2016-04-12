@@ -7,6 +7,7 @@ namespace Login\Entity;
  * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com>
  * Descricao: Entidade anotada da tabela entidade
  */
+
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -58,10 +59,41 @@ class Entidade {
     /** @ORM\Column(type="integer") */
     protected $grupo_id;
 
+    /**
+     * Verificar se a data de inativação está nula
+     * @return boolean
+     */
+    public function verificarSeEstaAtivo() {
+        $resposta = false;
+        if (is_null($this->getData_inativacao())) {
+            $resposta = true;
+        }
+        return $resposta;
+    }
+
+    public function infoEntidade() {
+        $resposta = '';
+        if ($this->getNome()) {
+            $resposta = $this->getNome();
+        }
+        if ($this->getNumero()) {
+            $resposta = $this->getNumero();
+        }
+        return $resposta;
+    }
+
+    /**
+     * Retorna a entidade tipo da entidade
+     * @return EntidadeTipo
+     */
     function getEntidadeTipo() {
         return $this->entidadeTipo;
     }
 
+    /**
+     * Retorna o grupo da Entidade
+     * @return Grupo
+     */
     function getGrupo() {
         return $this->grupo;
     }
@@ -145,7 +177,5 @@ class Entidade {
     function setGrupo_id($grupo_id) {
         $this->grupo_id = $grupo_id;
     }
-
-
 
 }

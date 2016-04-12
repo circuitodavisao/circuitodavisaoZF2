@@ -354,6 +354,7 @@ class LoginController extends AbstractActionController {
      * GET /principal
      */
     public function principalAction() {
+        $this->layout(Constantes::$TEMPLATE_PRINCIPAL);
         return [];
     }
 
@@ -379,12 +380,22 @@ class LoginController extends AbstractActionController {
                         $responsabilidadesAtivas[] = $responsabilidadeTodosStatus;
                     }
                 }
+                if (count($responsabilidadesAtivas) == 1) {
+                    $sessao = new Container(Constantes::$NOME_APLICACAO);
+                    $sessao->idEntidadeAtual = $responsabilidadesAtivas[0]->getId();
+
+                    /* Redirecionamento */
+                    return $this->forward()->dispatch(Constantes::$CONTROLLER_LOGIN, array(
+                                Constantes::$ACTION => Constantes::$ACTION_PRINCIPAL,
+                    ));
+                }
                 $dados[Constantes::$RESPONSABILIDADES] = $responsabilidadesAtivas;
             }
         } else {
             /* Redirecionamento */
             return $this->redirect()->toRoute(Constantes::$ROUTE_LOGIN);
         }
+        $this->layout(Constantes::$TEMPLATE_SELECIONAR_PERFIL);
         return $dados;
     }
 
@@ -394,7 +405,15 @@ class LoginController extends AbstractActionController {
      */
     public function perfilSelecionadoAction() {
         $this->layout(Constantes::$TEMPLATE_PRE_SAIDA);
-        return [];
+
+        $idEntidade = $this->params()->fromRoute(Constantes::$ID);
+        $sessao = new Container(Constantes::$NOME_APLICACAO);
+        $sessao->idEntidadeAtual = $idEntidade;
+
+        /* Redirecionamento */
+        return $this->forward()->dispatch(Constantes::$CONTROLLER_LOGIN, array(
+                    Constantes::$ACTION => Constantes::$ACTION_PRINCIPAL,
+        ));
     }
 
     /**

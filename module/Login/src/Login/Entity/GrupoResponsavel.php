@@ -52,6 +52,10 @@ class GrupoResponsavel {
     /** @ORM\Column(type="string") */
     protected $hora_inativacao;
 
+    /**
+     * Verificar se a data de inativação está nula
+     * @return boolean
+     */
     public function verificarSeEstaAtivo() {
         $resposta = false;
         if (is_null($this->getData_inativacao())) {
@@ -68,6 +72,10 @@ class GrupoResponsavel {
         return $this->grupo;
     }
 
+    /**
+     * Identificação da responsabilidade
+     * @return int
+     */
     function getId() {
         return $this->id;
     }

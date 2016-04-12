@@ -45,11 +45,11 @@ use Login\Controller\Helper\Constantes;
     </head>
     <body class="external-page external-alt sb-l-c sb-r-c">
         <!-- Start: Main -->
-        <div id="main-photo" class="animated fadeIn">
+        <div id="main" class="animated fadeIn">
             <!-- Start: Header -->
             <header class="navbar-fixed-top" style="background:transparent; padding-left:20px; padding-top:25px;">
                 <a href="index.html">
-                    <img src="<?php echo Constantes::$IMAGEM_LOGO_BRANCA; ?>" title="Circuito da Visão" class="img-responsive" style="max-width: 275px;">
+                    <img src="<?php echo Constantes::$IMAGEM_LOGO_PEQUENA; ?>" title="Circuito da Visão" class="img-responsive" style="max-width: 275px;">
                 </a>
             </header>
             <!-- End: Header -->
@@ -70,15 +70,11 @@ use Login\Controller\Helper\Constantes;
                 ->headScript()
                 ->prependFile($this->basePath() . '/js/vendor/plugins/magnific/jquery.magnific-popup.js' . $versao)
                 ->prependFile($this->basePath() . '/js/circuito_da_visao/modal-selecionar-perfil.js' . $versao)
-                ->prependFile($this->basePath() . '/js/circuito_da_visao/botao-loader.js' . $versao)
-                ->prependFile($this->basePath() . '/js/circuito_da_visao/circuito-mascaras_e_validacoes.js' . $versao)
-                ->prependFile($this->basePath() . '/js/circuito_da_visao/opcoes-recuperar-senha.js' . $versao)
                 ->prependFile($this->basePath() . '/js/assets/js/main.js')
                 ->prependFile($this->basePath() . '/js/assets/js/utility/utility.js')
                 ->prependFile($this->basePath() . '/js/respond.min.js', 'text/javascript', array('conditional' => 'lt IE 9',))
                 ->prependFile($this->basePath() . '/js/html5shiv.js', 'text/javascript', array('conditional' => 'lt IE 9',))
                 ->prependFile($this->basePath() . '/js/vendor/jquery/jquery_ui/jquery-ui.min.js')
-                ->prependFile($this->basePath() . '/js/vendor/plugins/jquerymask/jquery.maskedinput.min.js')
                 ->prependFile($this->basePath() . '/js/bootstrap.min.js')
                 ->prependFile($this->basePath() . '/js/jquery.min.js')
         ;

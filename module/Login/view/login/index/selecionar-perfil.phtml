@@ -1,16 +1,27 @@
 <?php
+
+use Login\Controller\Helper\Constantes;
+
 /** Nome: selecionar-perfil.phtml
  * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com>
  * Descricao: Página para selecionar perfil
  */
-echo "<div class='well'>";
-if ($user = $this->identity()) {
-    echo 'Logged in as ' . $this->escapeHtml($user->getNome());
-} else {
-    echo 'Not logged in';
-}
-echo "</div>";
 ?>
-<div class="well">selecionar-perfil.phtml</div>
-<a class="button btn-primary-circuito" href="/principal">PRINCIPAL</a>
-<a class="button btn-primary-circuito" href="/preSaida">PRE SAIDA</a>
+
+<div class="row mb10 mt70 table-layout">
+    <?php
+    /* Laço para mostrar as responsabilidades ativas */
+
+    foreach ($this->responsabilidades as $responsabilidade) {
+        /* Grupo da responsabilidades */
+        $grupo = $responsabilidade->getGrupo();
+        /* Entidades do grupo */
+        $entidades = $grupo->getEntidade();
+        foreach ($entidades as $entidade) {
+            if ($entidade->verificarSeEstaAtivo()) {
+                echo $this->perfilIcone($entidade);
+            }
+        }
+    }
+    ?>
+</div>

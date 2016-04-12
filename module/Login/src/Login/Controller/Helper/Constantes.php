@@ -98,7 +98,10 @@ class Constantes {
     /* Constantes selecionar perfil */
     public static $PERFIS_DE_ACESSO = 'perfiDeAcesso';
     public static $RESPONSABILIDADES = 'responsabilidades';
+    public static $IMAGEM_LOGO_PEQUENA = '/img/logos/new_logo-circuito.png';
 
+    /* Constantes Principal */
+    public static $IMAGEM_LOGO_BRANCA = '/img/logos/logo_white-circuito.png';
     /* Forms */
     public static $FORM_STRING_METHOD = 'method';
     public static $FORM_STRING_POST = 'POST';
@@ -133,7 +136,9 @@ class Constantes {
     public static $ENTITY_PESSOA_PERFIL_ACESSO_ID_PESSOA = 'id_pessoa';
 
     /* Templates */
+    public static $TEMPLATE_SELECIONAR_PERFIL = 'layout/layout-selecionar-perfil';
     public static $TEMPLATE_PRE_SAIDA = 'layout/layout-pre-saida';
+    public static $TEMPLATE_PRINCIPAL = 'layout/layout-principal';
 
     /* Gera */
     public static $NOME_APLICACAO = 'CircuitoDaVisao';

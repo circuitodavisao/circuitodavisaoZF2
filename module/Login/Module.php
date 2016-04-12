@@ -12,6 +12,7 @@ use Login\View\Helper\DivCapslock;
 use Login\View\Helper\DivJavaScript;
 use Login\View\Helper\LinkLogo;
 use Login\View\Helper\MensagemStatica;
+use Login\View\Helper\PerfilIcone;
 use Zend\Mvc\MvcEvent;
 use Zend\Session\Config\SessionConfig;
 use Zend\Session\Container;
@@ -57,6 +58,9 @@ class Module {
                 },
                 'divJavaScript' => function($sm) {
                     return new DivJavaScript();
+                },
+                'perfilIcone' => function($sm) {
+                    return new PerfilIcone();
                 },
             )
         );
