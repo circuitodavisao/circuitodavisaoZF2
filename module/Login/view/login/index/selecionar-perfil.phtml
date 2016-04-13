@@ -1,17 +1,12 @@
 <?php
-
-use Login\Controller\Helper\Constantes;
-
 /** Nome: selecionar-perfil.phtml
  * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com>
  * Descricao: Página para selecionar perfil
  */
 ?>
-
 <div class="row mb10 mt70 table-layout">
     <?php
     /* Laço para mostrar as responsabilidades ativas */
-
     foreach ($this->responsabilidades as $responsabilidade) {
         /* Grupo da responsabilidades */
         $grupo = $responsabilidade->getGrupo();
@@ -20,6 +15,8 @@ use Login\Controller\Helper\Constantes;
         foreach ($entidades as $entidade) {
             if ($entidade->verificarSeEstaAtivo()) {
                 echo $this->perfilIcone($entidade);
+
+                echo $this->perfilDropDown($entidade, 2);
             }
         }
     }

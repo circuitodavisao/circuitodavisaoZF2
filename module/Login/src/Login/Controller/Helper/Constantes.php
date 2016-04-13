@@ -98,10 +98,23 @@ class Constantes {
     /* Constantes selecionar perfil */
     public static $PERFIS_DE_ACESSO = 'perfiDeAcesso';
     public static $RESPONSABILIDADES = 'responsabilidades';
+    public static $PESSOA = 'pessoa';
     public static $IMAGEM_LOGO_PEQUENA = '/img/logos/new_logo-circuito.png';
 
     /* Constantes Principal */
     public static $IMAGEM_LOGO_BRANCA = '/img/logos/logo_white-circuito.png';
+    public static $URL_PRE_SAIDA = 'preSaida';
+    public static $URL_SAIR = 'Sair';
+    public static $URL_PRINCIPAL = 'principal';
+    public static $STRING_LINK_TEXTO = 'CircuitoDaVisao.com.br';
+    public static $TRADUCAO_SAIR = 'Logout';
+
+    /* Pre saida */
+    public static $TRADUCAO_SESSAO_ENCERRADA = 'Closed Session';
+    public static $TRADUCAO_OLA = 'Hello';
+    public static $TRADUCAO_PRE_SAIDA = 'Use the LOGOUT option CircuitoDaVisão.com.br when using a device that is not of particular use. The CircuitoDaVisão.com.br home page will be opened in 30 seconds.';
+    public static $TRADUCAO_ENTRAR_NOVAMENTE = 'Reenter';
+
     /* Forms */
     public static $FORM_STRING_METHOD = 'method';
     public static $FORM_STRING_POST = 'POST';
@@ -131,6 +144,7 @@ class Constantes {
     public static $ENTITY_PESSOA_DOCUMENTO = 'documento';
     public static $ENTITY_PESSOA_DATA_NASCIMENTO = 'data_nascimento';
     public static $ENTITY_PESSOA_TOKEN = 'token';
+    public static $ENTITY_PESSOA_NOME = 'nome';
     public static $ENTITY_PERFIL_ACESSO = 'Login\Entity\PerfilAcesso';
     public static $ENTITY_PESSOA_PERFIL_ACESSO = 'Login\Entity\PessoaPerfilAcesso';
     public static $ENTITY_PESSOA_PERFIL_ACESSO_ID_PESSOA = 'id_pessoa';

@@ -354,16 +354,9 @@ class LoginController extends AbstractActionController {
      * GET /principal
      */
     public function principalAction() {
-        $this->layout(Constantes::$TEMPLATE_PRINCIPAL);
-        return [];
-    }
+        $this->verificarUsuarioLogado();
 
-    /**
-     * Função que direciona a tela de acesso
-     * GET /selecionarPerfil
-     */
-    public function selecionarPerfilAction() {
-        unset($dados);
+        $this->layout(Constantes::$TEMPLATE_PRINCIPAL);
         /* Helper Controller */
         $loginORM = new LoginORM($this->getDoctrineORMEntityManager());
         $sessao = new Container(Constantes::$NOME_APLICACAO);
@@ -371,17 +364,30 @@ class LoginController extends AbstractActionController {
         if ($idPessoa) {
             $pessoa = $loginORM->getPessoaORM()->encontrarPorIdPessoa($idPessoa);
             /* Responsabilidades */
-            $responsabilidadesTodosStatus = $pessoa->getGrupoResponsavel();
-            if ($responsabilidadesTodosStatus) {
-                unset($responsabilidadesAtivas);
-                /* Verificar responsabilidades ativas */
-                foreach ($responsabilidadesTodosStatus as $responsabilidadeTodosStatus) {
-                    if ($responsabilidadeTodosStatus->verificarSeEstaAtivo()) {
-                        $responsabilidadesAtivas[] = $responsabilidadeTodosStatus;
-                    }
-                }
+            $responsabilidadesAtivas = $pessoa->getResponsabilidadesAtivas();
+            return [
+                Constantes::$RESPONSABILIDADES => $responsabilidadesAtivas,
+                Constantes::$PESSOA => $pessoa,
+            ];
+        }
+    }
+
+    /**
+     * Função que direciona a tela de acesso
+     * GET /selecionarPerfil
+     */
+    public function selecionarPerfilAction() {
+        $this->verificarUsuarioLogado();
+        /* Helper Controller */
+        $loginORM = new LoginORM($this->getDoctrineORMEntityManager());
+        $sessao = new Container(Constantes::$NOME_APLICACAO);
+        $idPessoa = $sessao->idPessoa;
+        if ($idPessoa) {
+            $pessoa = $loginORM->getPessoaORM()->encontrarPorIdPessoa($idPessoa);
+            /* Responsabilidades */
+            $responsabilidadesAtivas = $pessoa->getResponsabilidadesAtivas();
+            if ($responsabilidadesAtivas) {
                 if (count($responsabilidadesAtivas) == 1) {
-                    $sessao = new Container(Constantes::$NOME_APLICACAO);
                     $sessao->idEntidadeAtual = $responsabilidadesAtivas[0]->getId();
 
                     /* Redirecionamento */
@@ -389,22 +395,18 @@ class LoginController extends AbstractActionController {
                                 Constantes::$ACTION => Constantes::$ACTION_PRINCIPAL,
                     ));
                 }
-                $dados[Constantes::$RESPONSABILIDADES] = $responsabilidadesAtivas;
+                $this->layout(Constantes::$TEMPLATE_SELECIONAR_PERFIL);
+                return [Constantes::$RESPONSABILIDADES => $responsabilidadesAtivas];
             }
-        } else {
-            /* Redirecionamento */
-            return $this->redirect()->toRoute(Constantes::$ROUTE_LOGIN);
         }
-        $this->layout(Constantes::$TEMPLATE_SELECIONAR_PERFIL);
-        return $dados;
     }
 
     /**
-     * Função que direciona a tela de acesso
+     * Função que direciona a tela de acesso e enviando as responsabilidades da pessoa
      * GET /perfilSelecionado
      */
     public function perfilSelecionadoAction() {
-        $this->layout(Constantes::$TEMPLATE_PRE_SAIDA);
+        $this->verificarUsuarioLogado();
 
         $idEntidade = $this->params()->fromRoute(Constantes::$ID);
         $sessao = new Container(Constantes::$NOME_APLICACAO);
@@ -421,8 +423,17 @@ class LoginController extends AbstractActionController {
      * GET /preSaida
      */
     public function preSaidaAction() {
+        $this->verificarUsuarioLogado();
+
         $this->layout(Constantes::$TEMPLATE_PRE_SAIDA);
-        return [];
+
+        /* Helper Controller */
+        $loginORM = new LoginORM($this->getDoctrineORMEntityManager());
+        $sessao = new Container(Constantes::$NOME_APLICACAO);
+        $idPessoa = $sessao->idPessoa;
+        $pessoa = $loginORM->getPessoaORM()->encontrarPorIdPessoa($idPessoa);
+
+        return [Constantes::$ENTITY_PESSOA_NOME => $pessoa->getNome()];
     }
 
     /**
@@ -436,6 +447,14 @@ class LoginController extends AbstractActionController {
 
         /* Redirecionamento */
         return $this->redirect()->toRoute(Constantes::$ROUTE_LOGIN);
+    }
+
+    public function verificarUsuarioLogado() {
+        $sessao = new Container(Constantes::$NOME_APLICACAO);
+        if (!$sessao->idPessoa) {
+            /* Redirecionamento */
+            return $this->redirect()->toRoute(Constantes::$ROUTE_LOGIN);
+        }
     }
 
     /**

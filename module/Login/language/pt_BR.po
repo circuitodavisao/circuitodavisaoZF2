@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: ZendSkeletonApplication\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-07-05 22:17-0700\n"
-"PO-Revision-Date: 2016-04-05 14:57-0300\n"
+"PO-Revision-Date: 2016-04-13 17:09-0300\n"
 "Last-Translator: Diogo Melo <dmelo87@gmail.com>\n"
 "Language-Team: ZF Contibutors <zf-devteam@zend.com>\n"
 "Language: pt\n"
@@ -163,9 +163,32 @@ msgstr "Sua senha foi alterada com sucesso!"
 msgid "To access"
 msgstr "Acessar"
 
+# ################
+# ## pre saida ###
+# ################
+#: ../view/login/index/pre-saida.phtml:17
+msgid "Closed Session"
+msgstr "Sessão Encerrada"
+
+#: ../view/login/index/pre-saida.phtml:32
+msgid "Hello"
+msgstr "Olá"
+
+#: ../view/login/index/pre-saida.phtml:36
+msgid "Use the LOGOUT option CircuitoDaVisão.com.br when using a device that is not of particular use. The CircuitoDaVisão.com.br home page will be opened in 30 seconds."
+msgstr "Use a opção SAIR do CircuitoDaVisão.com.br sempre que utilizar um dispositivo que não seja de uso particular. A página inicial do CircuitoDaVisão.com.br será aberto em 30 segundos. "
+
+#: ../view/login/index/pre-saida.phtml:38
+msgid "Reenter"
+msgstr "Entrar Novamente"
+
 # ############
 # ## GERAL ###
 # ############
+#: ../view/login/index/principal.phtml:***
+msgid "Logout"
+msgstr "Sair"
+
 #: ../view/error/index.phtml:1
 msgid "An error occurred"
 msgstr "Ocorreu um erro"

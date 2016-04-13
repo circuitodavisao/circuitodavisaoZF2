@@ -12,6 +12,7 @@ use Login\View\Helper\DivCapslock;
 use Login\View\Helper\DivJavaScript;
 use Login\View\Helper\LinkLogo;
 use Login\View\Helper\MensagemStatica;
+use Login\View\Helper\PerfilDropDown;
 use Login\View\Helper\PerfilIcone;
 use Zend\Mvc\MvcEvent;
 use Zend\Session\Config\SessionConfig;
@@ -61,6 +62,9 @@ class Module {
                 },
                 'perfilIcone' => function($sm) {
                     return new PerfilIcone();
+                },
+                'perfilDropDown' => function($sm) {
+                    return new PerfilDropDown();
                 },
             )
         );

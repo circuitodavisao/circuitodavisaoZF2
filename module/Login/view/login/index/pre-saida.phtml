@@ -1,4 +1,7 @@
 <?php
+
+use Login\Controller\Helper\Constantes;
+
 /**
  * Nome: pre-saida.phtml
  * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com>
@@ -11,14 +14,12 @@
     <div class="row table-layout">
 
         <div class="col-xs-7 pln">
-            <h2 class="text-white mbn confirmation-header">Sessão Encerrada</h2>
+            <h2 class="text-white mbn confirmation-header"><?php echo $this->translate(Constantes::$TRADUCAO_SESSAO_ENCERRADA); ?></h2>
         </div>
 
         <div class="col-xs-5 text-right va-b">
             <div class="meta-links">
-                <a href="#" class="text-white">CircuitoDaVisao.com.br</a>
-                <span class="ph5 text-white"> | </span>
-                <a href="#" class="active text-white">suporte</a>
+                <a href="<?php echo $this->url(Constantes::$ROUTE_LOGIN); ?>" class="text-white"><?php echo Constantes::$STRING_LINK_TEXTO; ?></a>          
             </div>
         </div>
 
@@ -28,13 +29,13 @@
     <div class="panel mt15">
         <div class="panel-body pt30 p25 pb15">
 
-            <p class="lead">Olá Ivan Tavares,</p>
+            <p class="lead"><?php echo $this->translate(Constantes::$TRADUCAO_OLA); ?>&nbsp;<?php echo $this->nome ?>,</p>
 
             <hr class="alt short mv25">
 
-            <p class="lh25 text-muted fs15">Use a opção SAIR do CircuitoDaVisão.com.br sempre que utilizar um dispositivo que não seja de uso particular. A página inicial do CircuitoDaVisão.com.br será aberto em 30 segundos. </p>
+            <p class="lh25 text-muted fs15"><?php echo $this->translate(Constantes::$TRADUCAO_PRE_SAIDA); ?></p>
 
-            <p class="text-right mt20"><button class="btn btn-default ph40" onclick="location.href = '/principal';" type="button">ENTRAR NOVAMENTE</button> <button onclick="location.href = '/';" class="btn btn-primary-circuito ph40" type="button">CONTINUAR</button></p>
+            <p class="text-right mt20"><button class="button btn-default ph40" onclick="location.href = '<?php echo $this->url(Constantes::$ROUTE_LOGIN) . Constantes::$URL_PRINCIPAL; ?>';" type="button"><?php echo $this->translate(Constantes::$TRADUCAO_ENTRAR_NOVAMENTE); ?></button> <button onclick="location.href = '<?php echo $this->url(Constantes::$ROUTE_LOGIN) . Constantes::$URL_SAIR; ?>';" class="button btn-primary-circuito ph40" type="button"><?php echo $this->translate(Constantes::$TRADUCAO_CONTINUAR); ?></button></p>
 
         </div>
     </div>

@@ -7,7 +7,6 @@ namespace Login\Entity;
  * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com>
  * Descricao: Entidade anotada da tabela pessoa
  */
-
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -69,6 +68,25 @@ class Pessoa {
 
     /** @ORM\Column(type="string") */
     protected $token_hora;
+
+    /**
+     * Recupera as Responsabilidades ativas
+     * @return Entidade[]
+     */
+    function getResponsabilidadesAtivas() {
+        unset($responsabilidadesAtivas);
+        /* Responsabilidades */
+        $responsabilidadesTodosStatus = $this->getGrupoResponsavel();
+        if ($responsabilidadesTodosStatus) {
+            /* Verificar responsabilidades ativas */
+            foreach ($responsabilidadesTodosStatus as $responsabilidadeTodosStatus) {
+                if ($responsabilidadeTodosStatus->verificarSeEstaAtivo()) {
+                    $responsabilidadesAtivas[] = $responsabilidadeTodosStatus;
+                }
+            }
+        }
+        return $responsabilidadesAtivas;
+    }
 
     function getId() {
         return $this->id;

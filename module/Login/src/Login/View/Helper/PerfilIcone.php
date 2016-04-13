@@ -29,16 +29,20 @@ class PerfilIcone extends AbstractHelper {
     }
 
     public function renderHtml() {
+        $tipoEntidade = $this->getEntidade()->getTipo_id();
+        $nomeEntidade = $this->getEntidade()->getEntidadeTipo()->getNome();
+        $infoEntidade = $this->getEntidade()->infoEntidade();
+
         $html = '';
         if ($this->getEntidade()->getEntidadeTipo()) {
 
             /* Div com tamanho das colunas */
-            $html .= '<div id="" class="col-xs-12 col-md-4 col-sm-4 col-md-2">';
+            $html .= '<div id="" class="col-xs-12 col-md-4 col-sm-4 col-lg-4">';
 
             /* Link com ativacao do modal */
             $html .= '<a onclick=\'abrirModal("modal-' . $this->getEntidade()->getId() . '", ' . $this->getEntidade()->getId() . ',"perfilSelecionado");\' href="#modal-image" data-effect="mfp-fullscale">';
 
-            $html .= $this->htmlPanel(1);
+            $html .= PerfilIcone::htmlPanel(1, $tipoEntidade, $nomeEntidade, $infoEntidade);
 
             /* FIM Link com ativacao do modal */
             $html .= '</a>';
@@ -48,7 +52,7 @@ class PerfilIcone extends AbstractHelper {
             /* Modal */
             $html .= '<div id="modal-' . $this->getEntidade()->getId() . '" class="popup-basic admin-form mfp-with-anim mfp-hide">';
 
-            $html .= $this->htmlPanel(2);
+            $html .= PerfilIcone::htmlPanel(2, $tipoEntidade, $nomeEntidade, $infoEntidade);
 
             /* FIM Modal */
             $html .= '</div>';
@@ -73,7 +77,7 @@ class PerfilIcone extends AbstractHelper {
      * @param int $tipo
      * @return string
      */
-    private function corDoPanel($tipo) {
+    public static function corDoPanel($tipo) {
         $class = '';
         switch ($tipo) {
             case 1:
@@ -109,7 +113,7 @@ class PerfilIcone extends AbstractHelper {
      * @param int $tipo
      * @return string
      */
-    private function corDoFooter($tipo) {
+    public static function corDoFooter($tipo) {
         $classFooter = '';
         switch ($tipo) {
             case 1:
@@ -145,7 +149,7 @@ class PerfilIcone extends AbstractHelper {
      * @param int $tipo
      * @return string
      */
-    private function corDoTexto($tipo) {
+    public static function corDoTexto($tipo) {
         $classTexto = 'text-white';
         if ($tipo == 7 || $tipo == 8) {
             $classTexto = 'text-dark';
@@ -158,18 +162,18 @@ class PerfilIcone extends AbstractHelper {
      * @param type $tipo
      * @return string
      */
-    private function htmlPanel($tipo) {
+    public static function htmlPanel($tipo, $tipoId, $nomeEntidade, $infoEntidade) {
         $html = '';
-        $corDoPanel = $this->corDoPanel($this->getEntidade()->getTipo_id());
-        $corDoFooter = $this->corDoFooter($this->getEntidade()->getTipo_id());
-        $corDoTexto = $this->corDoTexto($this->getEntidade()->getTipo_id());
+        $corDoPanel = PerfilIcone::corDoPanel($tipoId);
+        $corDoFooter = PerfilIcone::corDoFooter($tipoId);
+        $corDoTexto = PerfilIcone::corDoTexto($tipoId);
 
         /* Div Panel */
         $html .= '<div class="panel panel-tile ' . $corDoPanel . ' text-center br-a">';
         /* Div Panel Body */
         $html .= '<div class="panel-body animation-switcher">';
 
-        /* LODAR DO MODAL */
+        /* LOADER DO MODAL */
         if ($tipo == 2) {
             $html .= '<div>Carregando ';
             $html .= '<img src="' . Constantes::$LOADER_GIF . '"></i>';
@@ -179,11 +183,11 @@ class PerfilIcone extends AbstractHelper {
         $html .= '<i class="fa fa-twitter text-muted fs70 mt10"></i>';
 
         /* Info da entidade */
-        $html .= '<h1 class="fs35 mbn ' . $corDoTexto . '">' . $this->getEntidade()->getEntidadeTipo()->getNome() . '</h1>';
+        $html .= '<h1 class="fs35 mbn ' . $corDoTexto . '">' . $nomeEntidade . '</h1>';
         /* FIM Info da entidade */
 
         /* Tipo da entidade */
-        $html .= '<h6 class="' . $corDoTexto . '">' . $this->getEntidade()->infoEntidade() . '</h6>';
+        $html .= '<h6 class="' . $corDoTexto . '">' . $infoEntidade . '</h6>';
         /* FIM Tipo da entidade */
 
         /* FIM Div Panel Body */
