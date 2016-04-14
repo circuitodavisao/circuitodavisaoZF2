@@ -7,7 +7,6 @@ namespace Login\Entity;
  * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com>
  * Descricao: Entidade anotada da tabela grupo
  */
-
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -65,6 +64,34 @@ class Grupo {
      */
     function getEntidade() {
         return $this->entidade;
+    }
+
+    /**
+     * Retorna a entidade ativa
+     * @return Entidade
+     */
+    function getEntidadeAtiva() {
+        $entidadeAtiva = null;
+        foreach ($this->getEntidade() as $e) {
+            if ($e->verificarSeEstaAtivo()) {
+                $entidadeAtiva = $e;
+                break;
+            }
+        }
+
+        return $entidadeAtiva;
+    }
+
+    /**
+     * Verificar se a data de inativação está nula
+     * @return boolean
+     */
+    public function verificarSeEstaAtivo() {
+        $resposta = false;
+        if (is_null($this->getData_inativacao())) {
+            $resposta = true;
+        }
+        return $resposta;
     }
 
     /**

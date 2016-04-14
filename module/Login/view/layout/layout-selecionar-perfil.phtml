@@ -1,7 +1,7 @@
 <?php echo $this->doctype(); ?>
 
 <?php
-$versao = '?v=1.6.0';
+$versao = '?v=1.6.2';
 
 use Login\Controller\Helper\Constantes;
 ?>
@@ -55,9 +55,19 @@ use Login\Controller\Helper\Constantes;
             <!-- End: Header -->
             <!-- Start: Content-Wrapper -->
             <section id="content_wrapper">
+                <h1 class="mtn mt70" style="text-align: center;"><?php echo $this->translate(Constantes::$TRADUCAO_QUAL_PERFIL); ?>
+                    <br>
+                    <small><?php echo $this->translate(Constantes::$TRADUCAO_SELECIONE_PERFIL); ?></small>
+                </h1>
+
                 <!-- Begin: Content -->
-                <section id="content">
-                    <?php echo $this->content; ?>
+                <section id="content" class="table-layout animated fadeIn">
+
+                    <!-- begin: .tray-left -->
+                    <!-- end: .tray-left -->
+                    <div class="tray tray-center">
+                        <?php echo $this->content; ?>
+                    </div>
                 </section>
                 <!-- End: Content -->
             </section>

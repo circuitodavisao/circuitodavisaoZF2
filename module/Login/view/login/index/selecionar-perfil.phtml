@@ -4,7 +4,7 @@
  * Descricao: Página para selecionar perfil
  */
 ?>
-<div class="row mb10 mt70 table-layout">
+<div class="row mb10">
     <?php
     /* Laço para mostrar as responsabilidades ativas */
     foreach ($this->responsabilidades as $responsabilidade) {
@@ -14,9 +14,7 @@
         $entidades = $grupo->getEntidade();
         foreach ($entidades as $entidade) {
             if ($entidade->verificarSeEstaAtivo()) {
-                echo $this->perfilIcone($entidade);
-
-                echo $this->perfilDropDown($entidade, 2);
+                echo $this->perfilIcone($entidade, count($this->responsabilidades));
             }
         }
     }

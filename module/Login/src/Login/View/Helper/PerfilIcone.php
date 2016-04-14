@@ -14,6 +14,7 @@ use Zend\View\Helper\AbstractHelper;
 class PerfilIcone extends AbstractHelper {
 
     protected $entidade;
+    protected $totalEntidades;
 
     public function __construct() {
         
@@ -23,8 +24,9 @@ class PerfilIcone extends AbstractHelper {
      * @param Entidade $entidade
      * @return html
      */
-    public function __invoke($entidade) {
+    public function __invoke($entidade, $totalEntidades) {
         $this->setEntidade($entidade);
+        $this->setTotalEntidades($totalEntidades);
         return $this->renderHtml();
     }
 
@@ -33,11 +35,25 @@ class PerfilIcone extends AbstractHelper {
         $nomeEntidade = $this->getEntidade()->getEntidadeTipo()->getNome();
         $infoEntidade = $this->getEntidade()->infoEntidade();
 
+        /* Tamanho da coluna */
+        $col = 4;
+        switch ($this->getTotalEntidades()) {
+            case 2:
+                $col = 6;
+                break;
+            case 4:
+                $col = 6;
+                break;
+            case 6:
+                $col = 2;
+                break;
+        }
+
         $html = '';
         if ($this->getEntidade()->getEntidadeTipo()) {
 
             /* Div com tamanho das colunas */
-            $html .= '<div id="" class="col-xs-12 col-md-4 col-sm-4 col-lg-4">';
+            $html .= '<div id="" class="col-sm-4 col-md-' . $col . '">';
 
             /* Link com ativacao do modal */
             $html .= '<a onclick=\'abrirModal("modal-' . $this->getEntidade()->getId() . '", ' . $this->getEntidade()->getId() . ',"perfilSelecionado");\' href="#modal-image" data-effect="mfp-fullscale">';
@@ -169,9 +185,9 @@ class PerfilIcone extends AbstractHelper {
         $corDoTexto = PerfilIcone::corDoTexto($tipoId);
 
         /* Div Panel */
-        $html .= '<div class="panel panel-tile ' . $corDoPanel . ' text-center br-a">';
+        $html .= '<div class="panel panel-moldure bg-light-hover panel-tile ' . $corDoPanel . ' text-center br-a br-light">';
         /* Div Panel Body */
-        $html .= '<div class="panel-body animation-switcher">';
+        $html .= '<div class="panel-body">';
 
         /* LOADER DO MODAL */
         if ($tipo == 2) {
@@ -194,7 +210,7 @@ class PerfilIcone extends AbstractHelper {
         $html .= '</div>';
 
         /* Div Footer */
-        $html .= '<div class="panel-footer ' . $corDoFooter . ' p12">';
+        $html .= '<div class="panel-footer ' . $corDoFooter . ' br-t br-light p12">';
         /* Dados Estaticos */
         $html .= '<span class="fs11 text-white">';
         $html .= '<i class="fa fa-clock-o"></i> ÚLTIMO LOGIN';
@@ -206,6 +222,14 @@ class PerfilIcone extends AbstractHelper {
         /* FIM Div Panel */
         $html .= '</div>';
         return $html;
+    }
+
+    function getTotalEntidades() {
+        return $this->totalEntidades;
+    }
+
+    function setTotalEntidades($totalEntidades) {
+        $this->totalEntidades = $totalEntidades;
     }
 
 }

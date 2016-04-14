@@ -85,7 +85,33 @@ class Pessoa {
                 }
             }
         }
+        /* Ordenando */
+        for ($i = 0; $i < count($responsabilidadesAtivas); $i++) {
+            for ($j = 0; $j < count($responsabilidadesAtivas); $j++) {
+                $r[1] = $responsabilidadesAtivas[$i];
+                $tipo[1] = $r[1]->getGrupo()->getEntidadeAtiva()->getEntidadeTipo()->getId();
+
+                $r[2] = $responsabilidadesAtivas[$j];
+                $tipo[2] = $r[2]->getGrupo()->getEntidadeAtiva()->getEntidadeTipo()->getId();
+
+                if ($tipo[1] < $tipo[2]) {
+                    $responsabilidadesAtivas[$j] = $r[1];
+                    $responsabilidadesAtivas[$i] = $r[2];
+                }
+            }
+        }
         return $responsabilidadesAtivas;
+    }
+
+    /**
+     * Retorna o primeiro e ultimo nome da pessoa
+     * @return String
+     */
+    function getNomePrimeiroUltimo() {
+        $explodeNome = explode(" ", $this->getNome());
+        $primeiroNome = $explodeNome[0];
+        $ultimoNome = $explodeNome[(count($explodeNome) - 1)];
+        return $primeiroNome . '&nbsp;' . $ultimoNome;
     }
 
     function getId() {

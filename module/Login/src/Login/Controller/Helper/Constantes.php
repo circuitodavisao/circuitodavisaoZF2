@@ -100,6 +100,8 @@ class Constantes {
     public static $RESPONSABILIDADES = 'responsabilidades';
     public static $PESSOA = 'pessoa';
     public static $IMAGEM_LOGO_PEQUENA = '/img/logos/new_logo-circuito.png';
+    public static $TRADUCAO_QUAL_PERFIL = 'What is the profile you want to use?';
+    public static $TRADUCAO_SELECIONE_PERFIL = 'Select one profile from the list.';
 
     /* Constantes Principal */
     public static $IMAGEM_LOGO_BRANCA = '/img/logos/logo_white-circuito.png';
@@ -112,7 +114,7 @@ class Constantes {
     /* Pre saida */
     public static $TRADUCAO_SESSAO_ENCERRADA = 'Closed Session';
     public static $TRADUCAO_OLA = 'Hello';
-    public static $TRADUCAO_PRE_SAIDA = 'Use the LOGOUT option CircuitoDaVisão.com.br when using a device that is not of particular use. The CircuitoDaVisão.com.br home page will be opened in 30 seconds.';
+    public static $TRADUCAO_PRE_SAIDA = 'Use the LOGOUT option <a href="/">CircuitoDaVisão.com.br</a> when using a device that is not of particular use. The <a href="/">CircuitoDaVisão.com.br</a> home page will be opened in 30 seconds.';
     public static $TRADUCAO_ENTRAR_NOVAMENTE = 'Reenter';
 
     /* Forms */

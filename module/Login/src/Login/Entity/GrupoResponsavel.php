@@ -7,6 +7,7 @@ namespace Login\Entity;
  * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com>
  * Descricao: Entidade anotada da tabela grupo_responsavel
  */
+
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -68,6 +69,10 @@ class GrupoResponsavel {
         return $this->pessoa;
     }
 
+    /**
+     * Retorna o grupo da responsabilidade
+     * @return Grupo
+     */
     function getGrupo() {
         return $this->grupo;
     }

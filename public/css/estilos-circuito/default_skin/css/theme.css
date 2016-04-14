@@ -20986,7 +20986,7 @@ body.external-page.external-alt #main {
 }
 /**/
 body.external-page.external-alt #main-photo {
-  background-image: url("/img/stock/possivel_anuncio.jpg");
+  background-image: url("../../../img/stock/possivel_anuncio.jpg");
   width: 100%;
 }
 body.external-page.external-alt #content .admin-form {

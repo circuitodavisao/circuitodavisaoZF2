@@ -104,7 +104,7 @@ class LoginController extends AbstractActionController {
             /* Verificar se existe pessoa por email informado */
             $pessoa = $loginORM->getPessoaORM()->encontrarPorEmail($data[Constantes::$INPUT_EMAIL]);
 
-            if (!$pessoa->verificarSeEstaAtivo()) {
+            if (!(count($pessoa->getResponsabilidadesAtivas()) > 0)) {
                 /* Inativada */
                 /* Autenticacao falhou */
 
@@ -227,7 +227,7 @@ class LoginController extends AbstractActionController {
                             Constantes::$DIV => $div,
                 ));
             } else {
-                if (!$pessoa->verificarSeEstaAtivo()) {
+                if (!(count($pessoa->getResponsabilidadesAtivas()) > 0)) {
                     /* Redirecionamento */
                     return $this->forward()->dispatch(Constantes::$CONTROLLER_LOGIN, array(
                                 Constantes::$ACTION => Constantes::$ACTION_ESQUECEU_SENHA,
@@ -433,7 +433,7 @@ class LoginController extends AbstractActionController {
         $idPessoa = $sessao->idPessoa;
         $pessoa = $loginORM->getPessoaORM()->encontrarPorIdPessoa($idPessoa);
 
-        return [Constantes::$ENTITY_PESSOA_NOME => $pessoa->getNome()];
+        return [Constantes::$ENTITY_PESSOA_NOME => $pessoa->getNomePrimeiroUltimo()];
     }
 
     /**

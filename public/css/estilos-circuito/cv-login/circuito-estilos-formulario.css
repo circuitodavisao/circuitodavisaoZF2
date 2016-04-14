@@ -1,6 +1,11 @@
 /**/
 
 .btn-primary-circuito {
-    color: #ffffff;
-    background-color: #000000;
+  color: #ffffff;
+  background-color: #000000;
+}
+
+.img_logo_circuito {
+  /*Espaçamento entre a logo principal e os boxes do login*/
+  padding-bottom: 20px;
 }

@@ -1,0 +1,53 @@
+/*Estilos destinados a edição da pagina de browser de perfil*/
+
+/*============================================================
+  A. Efeito houver nos perfis de usuario na pagina de browser
+============================================================*/
+/*  Efeito Hover da classe .panel */
+
+.panel-moldure{
+  opacity: 1;
+  -webkit-transition: opacity .25s ease-in-out;
+  -moz-transition: opacity .25s ease-in-out;
+  cursor: pointer;
+}
+
+.panel-moldure:hover{
+  opacity: 0.6;
+}
+
+.bg-light-hover:hover{
+  background-color: rgba(198, 198, 198, 0.5) !important;
+}
+
+.bg-dark-hover:hover{
+  background-color: rgba(0, 0, 0, 0.5) !important;
+}
+
+.bg-primary-hover:hover{
+  background-color: rgba(52, 152, 219, 0.5) !important;
+}
+
+.bg-success-hover:hover{
+  background-color: rgba(112, 202, 99, 0.5) !important;
+}
+
+.bg-warning-hover:hover{
+  background-color: rgba(246, 187, 66, 0.5) !important;
+}
+
+.bg-danger-hover:hover{
+  background-color: rgba(223, 86, 64, 0.5) !important;
+}
+
+.bg-alert-hover:hover{
+  background-color: rgba(150, 122, 220, 0.5) !important;
+}
+
+.bg-system-hover:hover{
+  background-color: rgba(55, 188, 155, 0.5) !important;
+}
+
+.bg-info-hover:hover{
+  background-color: rgba(59, 175, 218, 0.5) !important;
+}

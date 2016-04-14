@@ -1,7 +1,7 @@
 <?php echo $this->doctype(); ?>
 
 <?php
-$versao = '?v=1.7.1';
+$versao = '?v=1.7.2';
 
 use Login\Controller\Helper\Constantes;
 ?>
@@ -39,7 +39,6 @@ use Login\Controller\Helper\Constantes;
                 ->prependStylesheet($this->basePath() . '/css/estilos-circuito/admin-forms.css')
                 ->prependStylesheet($this->basePath() . '/css/estilos-circuito/default_skin/css/theme.css')
                 ->prependStylesheet($this->basePath() . '/css/estilos-circuito/cv-login/estilos-login.css' . $versao)
-                ->prependStylesheet($this->basePath() . '/js/vendor/plugins/magnific/magnific-popup.css' . $versao)
         ;
         ?>
     </head>
@@ -70,8 +69,6 @@ use Login\Controller\Helper\Constantes;
                 ->headScript()
                 ->prependFile($this->basePath() . '/js/circuito_da_visao/timeout.js' . $versao)
                 ->prependFile($this->basePath() . '/js/circuito_da_visao/botao-loader.js' . $versao)
-                ->prependFile($this->basePath() . '/js/circuito_da_visao/modal-selecionar-perfil.js' . $versao)
-                ->prependFile($this->basePath() . '/js/vendor/plugins/magnific/jquery.magnific-popup.js')
                 ->prependFile($this->basePath() . '/js/assets/js/main.js')
                 ->prependFile($this->basePath() . '/js/assets/js/utility/utility.js')
                 ->prependFile($this->basePath() . '/js/respond.min.js', 'text/javascript', array('conditional' => 'lt IE 9',))

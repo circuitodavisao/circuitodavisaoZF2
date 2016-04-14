@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: ZendSkeletonApplication\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-07-05 22:17-0700\n"
-"PO-Revision-Date: 2016-04-13 17:09-0300\n"
+"PO-Revision-Date: 2016-04-14 15:55-0300\n"
 "Last-Translator: Diogo Melo <dmelo87@gmail.com>\n"
 "Language-Team: ZF Contibutors <zf-devteam@zend.com>\n"
 "Language: pt\n"
@@ -163,8 +163,19 @@ msgstr "Sua senha foi alterada com sucesso!"
 msgid "To access"
 msgstr "Acessar"
 
+# ########################
+# ## SELECIONAR PERFIL ###
+# ########################
+#: ../view/layout/layout-selecionar-perfil.phtml:58
+msgid "What is the profile you want to use?"
+msgstr "Qual o perfil deseja utilizar?"
+
+#: ../view/layout/layout-selecionar-perfil.phtml:60
+msgid "Select one profile from the list."
+msgstr "Selecione um perfil da lista."
+
 # ################
-# ## pre saida ###
+# ## PRE SAIDA ###
 # ################
 #: ../view/login/index/pre-saida.phtml:17
 msgid "Closed Session"
@@ -175,8 +186,8 @@ msgid "Hello"
 msgstr "Olá"
 
 #: ../view/login/index/pre-saida.phtml:36
-msgid "Use the LOGOUT option CircuitoDaVisão.com.br when using a device that is not of particular use. The CircuitoDaVisão.com.br home page will be opened in 30 seconds."
-msgstr "Use a opção SAIR do CircuitoDaVisão.com.br sempre que utilizar um dispositivo que não seja de uso particular. A página inicial do CircuitoDaVisão.com.br será aberto em 30 segundos. "
+msgid "Use the LOGOUT option <a href=\"/\">CircuitoDaVisão.com.br</a> when using a device that is not of particular use. The <a href=\"/\">CircuitoDaVisão.com.br</a> home page will be opened in 30 seconds."
+msgstr "Use a opção SAIR do <a href=\"/\">CircuitoDaVisão.com.br</a> sempre que utilizar um dispositivo que não seja de uso particular. A página inicial do <a href=\"/\">CircuitoDaVisão.com.br</a> será aberta em 30 segundos."
 
 #: ../view/login/index/pre-saida.phtml:38
 msgid "Reenter"
