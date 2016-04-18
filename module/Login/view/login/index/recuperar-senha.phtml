@@ -58,4 +58,7 @@ echo $this->form()->openTag($formRecuperarSenha);
     <?php echo $this->formHidden($formRecuperarSenha->get(Constantes::$INPUT_ID_PESSOA)); ?>
     <?php echo $this->formSubmit($formRecuperarSenha->get(Constantes::$INPUT_ALTERAR)); ?>
 
-</div>
+</div>  
+<?php
+/* Layout com javascript para telas de recuperação de acessos */
+echo $this->layoutJSRecuperarAcesso;

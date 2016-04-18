@@ -13,6 +13,10 @@ $formLogin->setAttribute(Constantes::$ACTION, $this->url(Constantes::$ROUTE_LOGI
 
 $classMensagem = $this->hidden;
 ?> 
+<?php
+/* Layout com botton para telas de acesso */
+echo $this->layoutLoginTop;
+?>
 <!-- Login Panel/Form -->
 <div class="panel mt30 mb25">
     <?php echo $this->form()->openTag($formLogin); ?>
@@ -67,3 +71,10 @@ $classMensagem = $this->hidden;
     <?php echo $this->form()->closeTag() ?>
 
 </div>
+<?php
+/* Layout com botton para telas de acesso */
+echo $this->layoutLoginBotton;
+?>
+<?php
+/* Layout com javascript para tela de index */
+echo $this->layoutJSIndex;

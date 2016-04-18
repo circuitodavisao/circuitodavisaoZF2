@@ -70,11 +70,28 @@ class LoginController extends AbstractActionController {
             }
         }
 
-        return [
+
+        $view = new ViewModel(array(
             Constantes::$FORM_LOGIN => $formLogin,
             Constantes::$MENSAGEM => $mensagem,
-            Constantes::$TIPO => $tipoMensagem,
-        ];
+            Constantes::$TIPO => $tipoMensagem,)
+        );
+
+        $layoutLoginTop = new ViewModel();
+        $layoutLoginTop->setTemplate('layout/layout-login-top');
+
+        $layoutLoginBotton = new ViewModel();
+        $layoutLoginBotton->setTemplate('layout/layout-login-botton');
+
+        $layoutJSIndex = new ViewModel();
+        $layoutJSIndex->setTemplate('layout/layout-js-index');
+
+        $view
+                ->addChild($layoutLoginTop, 'layoutLoginTop')
+                ->addChild($layoutLoginBotton, 'layoutLoginBotton')
+                ->addChild($layoutJSIndex, 'layoutJSIndex');
+
+        return $view;
     }
 
     /**
@@ -479,6 +496,29 @@ class LoginController extends AbstractActionController {
      */
     public function getTranslator() {
         return $this->_translator;
+    }
+
+    /**
+     * Função que direciona a tela de acesso
+     * GET /testeLayout
+     */
+    public function testeLayoutAction() {
+        $this->layout('layout/layout-base');
+
+        $view = new ViewModel(
+                array('pagina' => 'testeLayoutAction',)
+        );
+
+        $layout1View = new ViewModel();
+        $layout1View->setTemplate('layout/layout-1');
+        $layout2View = new ViewModel();
+        $layout2View->setTemplate('layout/layout-2');
+
+        $view
+                ->addChild($layout1View, 'layout1')
+                ->addChild($layout2View, 'layout2');
+
+        return $view;
     }
 
 }
