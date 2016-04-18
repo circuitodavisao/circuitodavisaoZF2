@@ -31,13 +31,11 @@ use Login\Controller\Helper\Constantes;
         <?php
         echo $this
                 ->headLink(array('rel' => 'shortcut icon', 'type' => 'image/vnd.microsoft.icon', 'href' => $this->basePath() . '/img/favicon.png'))
-                ->prependStylesheet($this->basePath() . '/css/bootstrap/bootstrap-theme.min.css')
-                ->prependStylesheet($this->basePath() . '/css/bootstrap/bootstrap.min.css')
-                ->prependStylesheet('http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700')
+                ->prependStylesheet($this->basePath() . '/js/vendor/plugins/magnific/magnific-popup.css')
                 ->prependStylesheet($this->basePath() . '/css/estilos-circuito/admin-forms.css')
-                ->prependStylesheet($this->basePath() . '/css/estilos-circuito/default_skin/css/theme.css')
                 ->prependStylesheet($this->basePath() . '/css/estilos-circuito/cv-login/estilos-login.css' . $versao)
-                ->prependStylesheet($this->basePath() . '/js/vendor/plugins/magnific/magnific-popup.css' . $versao)
+                ->prependStylesheet($this->basePath() . '/css/estilos-circuito/default_skin/css/theme.css')
+                ->prependStylesheet('https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700')
 
         ;
         ?>

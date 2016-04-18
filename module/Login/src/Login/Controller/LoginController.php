@@ -15,6 +15,7 @@ use Zend\Authentication\AuthenticationService;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\Mvc\I18n\Translator;
 use Zend\Session\Container;
+use Zend\View\Model\ViewModel;
 
 /**
  * Nome: LoginController.php
@@ -68,7 +69,6 @@ class LoginController extends AbstractActionController {
                 $tipoMensagem = 4; // danger
             }
         }
-
 
         return [
             Constantes::$FORM_LOGIN => $formLogin,

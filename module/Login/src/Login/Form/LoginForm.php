@@ -72,6 +72,9 @@ class LoginForm extends Form {
 
         /**
          * Botao verificar entrar
+         * <button type="button" class="btn ladda-button btn-dark" data-style="expand-left">
+          <span class="ladda-label">Load Right</span>
+          </button>
          */
         $this->add(
                 (new Submit())
@@ -81,6 +84,7 @@ class LoginForm extends Form {
                             Constantes::$FORM_STRING_ID => Constantes::$INPUT_ENTRAR,
                             Constantes::$FORM_STRING_CLASS => 'button ladda-button btn-primary-circuito mr10 pull-right',
                             Constantes::$FORM_STRING_ONCLICK => str_replace('#id', Constantes::$INPUT_ENTRAR, Constantes::$FORM_STRING_FUNCAO_DESABILITAR_ELEMENTO),
+                            'data-style' => 'expand-top',
                         ])
         );
     }

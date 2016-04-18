@@ -10,8 +10,8 @@ $(document).ready(function () {
     $(".button").focus(function () {
         colorAux = $(this).css('color');
         backgroundColorAux = $(this).css('background-color');
+        $(this).css('background', '50% 50% no-repeat url(/img/loader.gif)');
         $(this).css('color', 'transparent');
-        $(this).css('background', 'url(/img/loader.gif) 50% 50% no-repeat');
     });
     $(".button").blur(function () {
         $(this).css('background-image', 'none');

@@ -54,7 +54,7 @@ $classMensagem = $this->hidden;
         </div>
     </div>
 
-    <div class="panel-footer clearfix">
+    <div class="panel-footer">
         <?php echo $this->formHidden($formLogin->get(Constantes::$INPUT_CSRF)); ?>
         <?php echo $this->formSubmit($formLogin->get(Constantes::$INPUT_ENTRAR)); ?>
         <label class="switch ib switch-primary-circuito mt10">
@@ -67,10 +67,3 @@ $classMensagem = $this->hidden;
     <?php echo $this->form()->closeTag() ?>
 
 </div>
-
-<button type="button" class="btn ladda-button btn-dark" data-style="expand-right">
-    <span class="ladda-label">Load Right</span>
-    <span class="ladda-spinner"></span><div style="width: 0px;" class="ladda-progress"></div>
-</button>
-
-
