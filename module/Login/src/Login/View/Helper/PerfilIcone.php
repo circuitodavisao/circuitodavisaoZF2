@@ -184,8 +184,13 @@ class PerfilIcone extends AbstractHelper {
         $corDoFooter = PerfilIcone::corDoFooter($tipoId);
         $corDoTexto = PerfilIcone::corDoTexto($tipoId);
 
+        $hover = '';
+        if ($tipo == 1) {
+            $hover = 'bg-light-hover';
+        }
+
         /* Div Panel */
-        $html .= '<div class="panel panel-moldure bg-light-hover panel-tile ' . $corDoPanel . ' text-center br-a br-light">';
+        $html .= '<div class="panel panel-moldure ' . $hover . ' panel-tile ' . $corDoPanel . ' text-center br-a br-light">';
         /* Div Panel Body */
         $html .= '<div class="panel-body">';
 

@@ -70,28 +70,36 @@ class LoginController extends AbstractActionController {
             }
         }
 
-
         $view = new ViewModel(array(
             Constantes::$FORM_LOGIN => $formLogin,
             Constantes::$MENSAGEM => $mensagem,
             Constantes::$TIPO => $tipoMensagem,)
         );
 
-        $layoutLoginTop = new ViewModel();
-        $layoutLoginTop->setTemplate('layout/layout-login-top');
-
-        $layoutLoginBotton = new ViewModel();
-        $layoutLoginBotton->setTemplate('layout/layout-login-botton');
-
+        /* Adicionando layout extras */
+        $this->colocaTopEBottonModuloLogin($view);
+        /* Javascript especifico */
         $layoutJSIndex = new ViewModel();
-        $layoutJSIndex->setTemplate('layout/layout-js-index');
-
-        $view
-                ->addChild($layoutLoginTop, 'layoutLoginTop')
-                ->addChild($layoutLoginBotton, 'layoutLoginBotton')
-                ->addChild($layoutJSIndex, 'layoutJSIndex');
+        $layoutJSIndex->setTemplate(Constantes::$TEMPLATE_JS_INDEX);
+        $view->addChild($layoutJSIndex, Constantes::$STRING_JS_INDEX);
 
         return $view;
+    }
+
+    /**
+     * Adiciona os layout do top e do botton nas paginas de login
+     * @param ViewModel $view
+     */
+    private function colocaTopEBottonModuloLogin($view) {
+        $layoutLoginTop = new ViewModel();
+        $layoutLoginTop->setTemplate(Constantes::$TEMPLATE_LOGIN_TOP);
+
+        $layoutLoginBotton = new ViewModel();
+        $layoutLoginBotton->setTemplate(Constantes::$TEMPLATE_LOGIN_BOTTON);
+
+        $view
+                ->addChild($layoutLoginTop, Constantes::$STRING_LOGIN_TOP)
+                ->addChild($layoutLoginBotton, Constantes::$STRING_LOGIN_BOTTON);
     }
 
     /**
@@ -159,7 +167,12 @@ class LoginController extends AbstractActionController {
      * GET /emailEnviado
      */
     public function emailEnviadoAction() {
-        return [];
+        $view = new ViewModel();
+
+        /* Adicionando layout extras */
+        $this->colocaTopEBottonModuloLogin($view);
+
+        return $view;
     }
 
     /**
@@ -175,27 +188,36 @@ class LoginController extends AbstractActionController {
         $div = $this->params()->fromRoute(Constantes::$DIV);
 
         $classDiv0 = '';
-        $classDiv1 = 'hidden';
-        $classDiv2 = 'hidden';
+        $classDiv1 = Constantes::$CLASS_HIDDEN;
+        $classDiv2 = Constantes::$CLASS_HIDDEN;
         if ($div == 1) {
-            $classDiv0 = 'hidden';
+            $classDiv0 = Constantes::$CLASS_HIDDEN;
             $classDiv1 = '';
-            $classDiv2 = 'hidden';
+            $classDiv2 = Constantes::$CLASS_HIDDEN;
         }
         if ($div == 2) {
-            $classDiv0 = 'hidden';
-            $classDiv1 = 'hidden';
+            $classDiv0 = Constantes::$CLASS_HIDDEN;
+            $classDiv1 = Constantes::$CLASS_HIDDEN;
             $classDiv2 = '';
         }
 
-        return [
+        $view = new ViewModel(array(
             Constantes::$FORM_RECUPERAR_ACESSO => $formRecuperarAcesso,
             Constantes::$TIPO => $tipo,
             Constantes::$MENSAGEM => $messagem,
             'classDiv0' => $classDiv0,
             'classDiv1' => $classDiv1,
-            'classDiv2' => $classDiv2,
-        ];
+            'classDiv2' => $classDiv2,)
+        );
+
+        /* Adicionando layout extras */
+        $this->colocaTopEBottonModuloLogin($view);
+        /* Javascript especifico */
+        $layoutJSIndex = new ViewModel();
+        $layoutJSIndex->setTemplate(Constantes::$TEMPLATE_JS_RECUPERAR_ACESSO);
+        $view->addChild($layoutJSIndex, Constantes::$STRING_JS_RECUPERAR_ACESSO);
+
+        return $view;
     }
 
     /**
@@ -283,9 +305,12 @@ class LoginController extends AbstractActionController {
             }
         }
 
-        return [
-            'resposta' => $resposta,
-        ];
+        $view = new ViewModel(array('resposta' => $resposta,));
+
+        /* Adicionando layout extras */
+        $this->colocaTopEBottonModuloLogin($view);
+
+        return $view;
     }
 
     /**
@@ -335,7 +360,17 @@ class LoginController extends AbstractActionController {
             ));
         }
 
-        return $dados;
+        $view = new ViewModel($dados);
+
+        /* Adicionando layout extras */
+        $this->colocaTopEBottonModuloLogin($view);
+
+        /* Javascript especifico */
+        $layoutJSIndex = new ViewModel();
+        $layoutJSIndex->setTemplate(Constantes::$TEMPLATE_JS_RECUPERAR_ACESSO);
+        $view->addChild($layoutJSIndex, Constantes::$STRING_JS_RECUPERAR_ACESSO);
+
+        return $view;
     }
 
     /**
@@ -345,7 +380,6 @@ class LoginController extends AbstractActionController {
     public function alterarSenhaAction() {
         $request = $this->getRequest();
         if ($request->isPost()) {
-
             try {
                 /* Helper Controller */
                 $loginORM = new LoginORM($this->getDoctrineORMEntityManager());
@@ -363,7 +397,13 @@ class LoginController extends AbstractActionController {
                 echo $exc->getTraceAsString();
             }
         }
-        return [];
+
+        $view = new ViewModel();
+
+        /* Adicionando layout extras */
+        $this->colocaTopEBottonModuloLogin($view);
+
+        return $view;
     }
 
     /**
@@ -373,7 +413,7 @@ class LoginController extends AbstractActionController {
     public function principalAction() {
         $this->verificarUsuarioLogado();
 
-        $this->layout(Constantes::$TEMPLATE_PRINCIPAL);
+//        $this->layout(Constantes::$TEMPLATE_PRINCIPAL);
         /* Helper Controller */
         $loginORM = new LoginORM($this->getDoctrineORMEntityManager());
         $sessao = new Container(Constantes::$NOME_APLICACAO);
@@ -382,10 +422,20 @@ class LoginController extends AbstractActionController {
             $pessoa = $loginORM->getPessoaORM()->encontrarPorIdPessoa($idPessoa);
             /* Responsabilidades */
             $responsabilidadesAtivas = $pessoa->getResponsabilidadesAtivas();
-            return [
+
+            $view = new ViewModel(array(
                 Constantes::$RESPONSABILIDADES => $responsabilidadesAtivas,
-                Constantes::$PESSOA => $pessoa,
-            ];
+                Constantes::$PESSOA => $pessoa,)
+            );
+
+            /* Adicionando layout extras */
+            $this->colocaTopEBottonModuloLogin($view);
+            /* Javascript especifico */
+            $layoutJS = new ViewModel();
+            $layoutJS->setTemplate(Constantes::$TEMPLATE_JS_PRINCIPAL);
+            $view->addChild($layoutJS, Constantes::$STRING_JS_PRINCIPAL);
+
+            return $view;
         }
     }
 
@@ -412,8 +462,15 @@ class LoginController extends AbstractActionController {
                                 Constantes::$ACTION => Constantes::$ACTION_PRINCIPAL,
                     ));
                 }
-                $this->layout(Constantes::$TEMPLATE_SELECIONAR_PERFIL);
-                return [Constantes::$RESPONSABILIDADES => $responsabilidadesAtivas];
+
+                $view = new ViewModel(array(Constantes::$RESPONSABILIDADES => $responsabilidadesAtivas));
+
+                /* Javascript especifico */
+                $layoutJS = new ViewModel();
+                $layoutJS->setTemplate(Constantes::$TEMPLATE_JS_MODAL_SELECIONAR_PERFIL);
+                $view->addChild($layoutJS, Constantes::$STRING_JS_MODAL_SELECIONAR_PERFIL);
+
+                return $view;
             }
         }
     }
@@ -442,15 +499,20 @@ class LoginController extends AbstractActionController {
     public function preSaidaAction() {
         $this->verificarUsuarioLogado();
 
-        $this->layout(Constantes::$TEMPLATE_PRE_SAIDA);
-
         /* Helper Controller */
         $loginORM = new LoginORM($this->getDoctrineORMEntityManager());
         $sessao = new Container(Constantes::$NOME_APLICACAO);
         $idPessoa = $sessao->idPessoa;
         $pessoa = $loginORM->getPessoaORM()->encontrarPorIdPessoa($idPessoa);
 
-        return [Constantes::$ENTITY_PESSOA_NOME => $pessoa->getNomePrimeiroUltimo()];
+        $view = new ViewModel(array(Constantes::$ENTITY_PESSOA_NOME => $pessoa->getNomePrimeiroUltimo()));
+
+        /* Javascript especifico */
+        $layoutJS = new ViewModel();
+        $layoutJS->setTemplate(Constantes::$TEMPLATE_JS_PRE_SAIDA);
+        $view->addChild($layoutJS, Constantes::$STRING_JS_PRE_SAIDA);
+
+        return $view;
     }
 
     /**
@@ -466,6 +528,10 @@ class LoginController extends AbstractActionController {
         return $this->redirect()->toRoute(Constantes::$ROUTE_LOGIN);
     }
 
+    /**
+     * Verifica se tem sessão senão volta pra index
+     * @return void
+     */
     public function verificarUsuarioLogado() {
         $sessao = new Container(Constantes::$NOME_APLICACAO);
         if (!$sessao->idPessoa) {
@@ -496,29 +562,6 @@ class LoginController extends AbstractActionController {
      */
     public function getTranslator() {
         return $this->_translator;
-    }
-
-    /**
-     * Função que direciona a tela de acesso
-     * GET /testeLayout
-     */
-    public function testeLayoutAction() {
-        $this->layout('layout/layout-base');
-
-        $view = new ViewModel(
-                array('pagina' => 'testeLayoutAction',)
-        );
-
-        $layout1View = new ViewModel();
-        $layout1View->setTemplate('layout/layout-1');
-        $layout2View = new ViewModel();
-        $layout2View->setTemplate('layout/layout-2');
-
-        $view
-                ->addChild($layout1View, 'layout1')
-                ->addChild($layout2View, 'layout2');
-
-        return $view;
     }
 
 }

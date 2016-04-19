@@ -1,6 +1,5 @@
 <?php
-
-$versao = '?v=0.1';
+$versao = '?v=0.5';
 
 echo $this
         ->headScript()
@@ -10,3 +9,10 @@ echo $this
 ;
 echo $this->inlineScript();
 ?>
+<script type="text/javascript">
+    window.onload = initPage;
+    function initPage() {
+        // Init jQuery Masked inputs
+        $('.date').mask('99/99/9999');
+    }
+</script>

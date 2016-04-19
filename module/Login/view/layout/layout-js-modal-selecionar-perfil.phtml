@@ -1,0 +1,10 @@
+<?php
+
+$versao = '?v=0.2';
+
+echo $this
+        ->headScript()
+        ->prependFile($this->basePath() . '/js/circuito_da_visao/modal-selecionar-perfil.js' . $versao)
+;
+echo $this->inlineScript();
+?>

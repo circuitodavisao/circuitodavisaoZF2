@@ -52,9 +52,6 @@ class Pessoa {
     protected $hora_inativacao;
 
     /** @ORM\Column(type="string") */
-    protected $status;
-
-    /** @ORM\Column(type="string") */
     protected $data_nascimento;
 
     /** @ORM\Column(type="string") */
@@ -140,24 +137,12 @@ class Pessoa {
         return $this->data_inativacao;
     }
 
-    function getStatus() {
-        return $this->status;
-    }
-
     function getData_nascimento() {
         return $this->data_nascimento;
     }
 
     function getDocumento() {
         return $this->documento;
-    }
-
-    public function verificarSeEstaAtivo() {
-        $resposta = false;
-        if ($this->status == 'A') {
-            $resposta = true;
-        }
-        return $resposta;
     }
 
     function setId($id) {
@@ -182,10 +167,6 @@ class Pessoa {
 
     function setData_inativacao($data_inativacao) {
         $this->data_inativacao = $data_inativacao;
-    }
-
-    function setStatus($status) {
-        $this->status = $status;
     }
 
     function setData_nascimento($data_nascimento) {

@@ -76,18 +76,3 @@ function verificarSenhas(valor, tipo) {
         }
     }
 }
-
-$(document).ready(function () {
-    $(".campo-dica").hide();
-
-    $(".mostrar-dica").click(function () {
-        $(".campo-dica").fadeIn("slow");
-    });
-
-    $(".nao-mostrar-dica").click(function () {
-        $(".campo-dica").fadeOut("slow");
-    });
-
-    $("#cpf").keypress(verificaNumero);
-    $("#dataNascimento").keypress(verificaNumero);
-});

@@ -11,6 +11,10 @@ $formRecuperarAcesso->prepare();
 
 $classTituloPerdeuSenha = 'titulo-perdeu-sua-senha';
 ?>
+<?php
+/* Layout com top para telas de acesso */
+echo $this->layoutLoginTop;
+?>
 <div class="admin-form theme-info mw500" style="margin-top: 10%;" id="login">
     <div class="row mb15 table-layout">
         <div class="col-xs-12 pln">
@@ -110,7 +114,11 @@ $classTituloPerdeuSenha = 'titulo-perdeu-sua-senha';
     </div>
 
     <?php echo $this->form()->closeTag(); ?>
-</div>  
+</div> 
+<?php
+/* Layout com botton para telas de acesso */
+echo $this->layoutLoginBotton;
+?>
 <?php
 /* Layout com javascript para telas de recuperação de acessos */
 echo $this->layoutJSRecuperarAcesso;

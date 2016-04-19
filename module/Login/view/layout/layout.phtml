@@ -1,7 +1,7 @@
 <?php echo $this->doctype(); ?>
 
 <?php
-$versao = '?v=1.6.4';
+$versao = '?v=0.1';
 
 use Login\Controller\Helper\Constantes;
 ?>
@@ -33,6 +33,7 @@ use Login\Controller\Helper\Constantes;
         <?php
         echo $this
                 ->headLink(array('rel' => 'shortcut icon', 'type' => 'image/vnd.microsoft.icon', 'href' => $this->basePath() . '/img/favicon.png'))
+                ->prependStylesheet($this->basePath() . '/js/vendor/plugins/magnific/magnific-popup.css')
                 ->prependStylesheet($this->basePath() . '/css/estilos-circuito/admin-forms.css')
                 ->prependStylesheet($this->basePath() . '/css/estilos-circuito/cv-login/estilos-login.css' . $versao)
                 ->prependStylesheet($this->basePath() . '/css/estilos-circuito/default_skin/css/theme.css')
@@ -40,51 +41,21 @@ use Login\Controller\Helper\Constantes;
         ;
         ?>
     </head>
-    <body class="external-page external-alt sb-l-c sb-r-c">
-        <!-- Start: Main -->
-        <div id="main" class="animated fadeIn">
+    <body id="body" class="external-page external-alt sb-l-c sb-r-c">
+        <?php echo $this->content; ?>
 
-            <!-- Start: Content-Wrapper -->
-            <section id="content_wrapper">
-
-                <!-- Begin: Content -->
-                <section id="content">
-
-                    <div class="admin-form theme-info mw500" id="login">
-
-                        <!-- Login Logo -->
-                        <div class="row table-layout">
-                            <?php
-                            /* Logo com link para index */
-                            echo $this->linkLogo();
-                            ?>
-                        </div>
-
-                        <?php echo $this->content; ?>
-
-                    </div>
-                </section>
-                <!-- End: Content -->
-
-            </section>
-            <!-- End: Content-Wrapper -->
-
-        </div>
-        <!-- End: Main -->
         <!-- BEGIN: PAGE SCRIPTS -->
         <?php
         echo $this
                 ->headScript()
                 ->prependFile($this->basePath() . '/js/circuito_da_visao/botao-loader.js' . $versao)
-                ->prependFile($this->basePath() . '/js/circuito_da_visao/capslock.js' . $versao)
-                ->prependFile($this->basePath() . '/js/circuito_da_visao/circuito-mascaras_e_validacoes.js' . $versao)
-                ->prependFile($this->basePath() . '/js/circuito_da_visao/opcoes-recuperar-senha.js' . $versao)
                 ->prependFile($this->basePath() . '/js/assets/js/main.js')
                 ->prependFile($this->basePath() . '/js/assets/js/utility/utility.js')
                 ->prependFile($this->basePath() . '/js/respond.min.js', 'text/javascript', array('conditional' => 'lt IE 9',))
                 ->prependFile($this->basePath() . '/js/html5shiv.js', 'text/javascript', array('conditional' => 'lt IE 9',))
-                ->prependFile($this->basePath() . '/js/vendor/jquery/jquery_ui/jquery-ui.min.js')
+                ->prependFile($this->basePath() . '/js/vendor/plugins/magnific/jquery.magnific-popup.js')
                 ->prependFile($this->basePath() . '/js/vendor/plugins/jquerymask/jquery.maskedinput.min.js')
+                ->prependFile($this->basePath() . '/js/vendor/jquery/jquery_ui/jquery-ui.min.js')
                 ->prependFile($this->basePath() . '/js/jquery.min.js')
         ;
         echo $this->inlineScript();
@@ -96,21 +67,6 @@ use Login\Controller\Helper\Constantes;
 
                 // Init Theme Core
                 Core.init();
-
-                // Init jQuery Masked inputs
-                $('.date').mask('99/99/9999');
-                $('.time').mask('99:99:99');
-                $('.date_time').mask('99/99/9999 99:99:99');
-                $('.zip').mask('99999-999');
-                $('.phone').mask('(999) 999-9999');
-                $('.phoneext').mask("(999) 999-9999 x99999");
-                $(".money").mask("999,999,999.999");
-                $(".product").mask("999.999.999.999");
-                $(".tin").mask("99-9999999");
-                $(".ssn").mask("999-99-9999");
-                $(".ip").mask("9ZZ.9ZZ.9ZZ.9ZZ");
-                $(".eyescript").mask("~9.99 ~9.99 999");
-                $(".custom").mask("9.99.999.9999");
 
             });
         </script>

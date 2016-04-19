@@ -7,6 +7,10 @@ use Login\Controller\Helper\Constantes;
  * Descricao: Página confirmando o email enviado
  */
 ?>
+<?php
+/* Layout com top para telas de acesso */
+echo $this->layoutLoginTop;
+?>
 <div class="admin-form theme-info mw500" style="margin-top: 10%;" id="login">
     <div class="row mb15 table-layout">
         <div class="col-xs-12 pln">
@@ -24,5 +28,6 @@ use Login\Controller\Helper\Constantes;
     </div>
 </div>  
 <?php
-/* Layout com javascript para telas de recuperação de acessos */
-echo $this->layoutJSRecuperarAcesso;
+/* Layout com botton para telas de acesso */
+echo $this->layoutLoginBotton;
+

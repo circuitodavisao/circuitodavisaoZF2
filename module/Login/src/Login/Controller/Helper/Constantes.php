@@ -108,7 +108,7 @@ class Constantes {
     public static $URL_PRE_SAIDA = 'preSaida';
     public static $URL_SAIR = 'Sair';
     public static $URL_PRINCIPAL = 'principal';
-    public static $STRING_LINK_TEXTO = 'CircuitoDaVisao.com.br';
+    public static $STRING_LINK_TEXTO = 'CircuitoDaVis&atilde;o.com.br';
     public static $TRADUCAO_SAIR = 'Logout';
 
     /* Pre saida */
@@ -155,6 +155,20 @@ class Constantes {
     public static $TEMPLATE_SELECIONAR_PERFIL = 'layout/layout-selecionar-perfil';
     public static $TEMPLATE_PRE_SAIDA = 'layout/layout-pre-saida';
     public static $TEMPLATE_PRINCIPAL = 'layout/layout-principal';
+    public static $TEMPLATE_JS_INDEX = 'layout/layout-js-index';
+    public static $STRING_JS_INDEX = 'layoutJSIndex';
+    public static $TEMPLATE_LOGIN_TOP = 'layout/layout-login-top';
+    public static $STRING_LOGIN_TOP = 'layoutLoginTop';
+    public static $TEMPLATE_LOGIN_BOTTON = 'layout/layout-login-botton';
+    public static $STRING_LOGIN_BOTTON = 'layoutLoginBotton';
+    public static $TEMPLATE_JS_RECUPERAR_ACESSO = 'layout/layout-js-recuperar-acesso';
+    public static $STRING_JS_RECUPERAR_ACESSO = 'layoutJSRecuperarAcesso';
+    public static $TEMPLATE_JS_MODAL_SELECIONAR_PERFIL = 'layout/layout-js-modal-selecionar-perfil';
+    public static $STRING_JS_MODAL_SELECIONAR_PERFIL = 'layoutJSModalSelecionarPerfil';
+    public static $TEMPLATE_JS_PRE_SAIDA = 'layout/layout-js-pre-saida';
+    public static $STRING_JS_PRE_SAIDA = 'layoutJSPreSaida';
+    public static $TEMPLATE_JS_PRINCIPAL = 'layout/layout-js-principal';
+    public static $STRING_JS_PRINCIPAL = 'layoutJSPrincipal';
 
     /* Gera */
     public static $NOME_APLICACAO = 'CircuitoDaVisao';

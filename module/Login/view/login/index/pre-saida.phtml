@@ -8,39 +8,63 @@ use Login\Controller\Helper\Constantes;
  * Descricao: Página pré saída
  */
 ?>
-<div class="center-block mt70" style="max-width: 625px">
+<!-- Start: Main -->
+<div id="main-photo" class="animated fadeIn">
+    <!-- Start: Header -->
+    <header class="navbar-fixed-top" style="background:transparent; padding-left:20px; padding-top:25px;">
+        <a href="<?php echo Constantes::$INDEX; ?>">
+            <img src="<?php echo Constantes::$IMAGEM_LOGO_BRANCA; ?>" title="<?php echo $this->translate(Constantes::$TRADUCAO_NOME_APLICACAO) ?>" class="img-responsive" style="max-width: 275px;">
+        </a>
+    </header>
+    <!-- End: Header -->
+    <!-- Start: Content-Wrapper -->
+    <section id="content_wrapper">
+        <!-- Begin: Content -->
+        <section id="content">
+            <div class="center-block mt70" style="max-width: 625px">
 
-    <!-- Login Logo + Meta -->
-    <div class="row table-layout">
+                <!-- Login Logo + Meta -->
+                <div class="row table-layout">
 
-        <div class="col-xs-7 pln">
-            <h2 class="text-white mbn confirmation-header"><?php echo $this->translate(Constantes::$TRADUCAO_SESSAO_ENCERRADA); ?></h2>
-        </div>
+                    <div class="col-xs-7 pln">
+                        <h2 class="text-white mbn confirmation-header"><?php echo $this->translate(Constantes::$TRADUCAO_SESSAO_ENCERRADA); ?></h2>
+                    </div>
 
-        <div class="col-xs-5 text-right va-b">
-            <div class="meta-links">
-                <a href="<?php echo $this->url(Constantes::$ROUTE_LOGIN); ?>" class="text-white"><?php echo Constantes::$STRING_LINK_TEXTO; ?></a>          
+                    <div class="col-xs-5 text-right va-b">
+                        <div class="meta-links">
+                            <a href="<?php echo $this->url(Constantes::$ROUTE_LOGIN); ?>" class="text-white"><?php echo Constantes::$STRING_LINK_TEXTO; ?></a>          
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Confirmation Panel -->
+                <div class="panel mt15">
+                    <div class="panel-body pt30 p25 pb15">
+
+                        <p class="lead"><?php echo $this->translate(Constantes::$TRADUCAO_OLA); ?>&nbsp;<?php echo $this->nome ?>,</p>
+
+                        <hr class="alt short mv25">
+
+                        <p class="lh25 text-muted fs15"><?php echo $this->translate(Constantes::$TRADUCAO_PRE_SAIDA); ?></p>
+
+                        <p class="text-right mt20">
+                            <input class="button btn-default ph40" onclick="location.href = '<?php echo $this->url(Constantes::$ROUTE_LOGIN) . Constantes::$URL_PRINCIPAL; ?>';" value="<?php echo $this->translate(Constantes::$TRADUCAO_ENTRAR_NOVAMENTE); ?>" type="button"/>&nbsp;
+                            <input class="button btn-primary-circuito ph40" onclick="location.href = '<?php echo $this->url(Constantes::$ROUTE_LOGIN) . Constantes::$URL_SAIR; ?>';" type="button" value="<?php echo $this->translate(Constantes::$TRADUCAO_CONTINUAR); ?>" />
+                        </p>
+
+                    </div>
+                </div>
+
             </div>
-        </div>
 
-    </div>
-
-    <!-- Confirmation Panel -->
-    <div class="panel mt15">
-        <div class="panel-body pt30 p25 pb15">
-
-            <p class="lead"><?php echo $this->translate(Constantes::$TRADUCAO_OLA); ?>&nbsp;<?php echo $this->nome ?>,</p>
-
-            <hr class="alt short mv25">
-
-            <p class="lh25 text-muted fs15"><?php echo $this->translate(Constantes::$TRADUCAO_PRE_SAIDA); ?></p>
-
-            <p class="text-right mt20">
-                <input class="button btn-default ph40" onclick="location.href = '<?php echo $this->url(Constantes::$ROUTE_LOGIN) . Constantes::$URL_PRINCIPAL; ?>';" value="<?php echo $this->translate(Constantes::$TRADUCAO_ENTRAR_NOVAMENTE); ?>" type="button"/>&nbsp;
-                <input onclick="location.href = '<?php echo $this->url(Constantes::$ROUTE_LOGIN) . Constantes::$URL_SAIR; ?>';" class="button btn-primary-circuito ph40" type="button" value="<?php echo $this->translate(Constantes::$TRADUCAO_CONTINUAR); ?>" />
-            </p>
-
-        </div>
-    </div>
-
+        </section>
+        <!-- End: Content -->
+    </section>
+    <!-- End: Content-Wrapper -->
 </div>
+
+<!-- End: Main -->
+<?php
+/* Layout com javascript para tela de index */
+echo $this->layoutJSPreSaida;

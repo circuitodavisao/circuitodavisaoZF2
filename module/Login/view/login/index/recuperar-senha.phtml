@@ -12,7 +12,10 @@ $formRecuperarSenha->setAttribute(Constantes::$ACTION, $this->url(Constantes::$R
 
 echo $this->form()->openTag($formRecuperarSenha);
 ?>
-
+<?php
+/* Layout com top para telas de acesso */
+echo $this->layoutLoginTop;
+?>
 <div class="panel-body bg-light p25 pb15">
     <ul class="fa-ul">
         <li id="mensagem1">
@@ -58,7 +61,11 @@ echo $this->form()->openTag($formRecuperarSenha);
     <?php echo $this->formHidden($formRecuperarSenha->get(Constantes::$INPUT_ID_PESSOA)); ?>
     <?php echo $this->formSubmit($formRecuperarSenha->get(Constantes::$INPUT_ALTERAR)); ?>
 
-</div>  
+</div> 
+<?php
+/* Layout com botton para telas de acesso */
+echo $this->layoutLoginBotton;
+?>
 <?php
 /* Layout com javascript para telas de recuperação de acessos */
 echo $this->layoutJSRecuperarAcesso;
