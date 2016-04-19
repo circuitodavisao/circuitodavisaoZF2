@@ -182,8 +182,11 @@ class PerfilIcone extends AbstractHelper {
      */
     public static function corDoTexto($tipo) {
         $classTexto = 'text-white';
-        if ($tipo == 7 || $tipo == 8) {
+        if ($tipo == 7) {
             $classTexto = 'text-dark';
+        }
+        elseif($tipo == 8){
+            $classTexto = 'text-system';
         }
         return $classTexto;
     }
