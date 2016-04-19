@@ -169,7 +169,7 @@ class PerfilIcone extends AbstractHelper {
                 $classFooter = 'bg-dark light br-t br-white';
                 break;
             case 8:
-                $classFooter = 'bg-light dark br-t br-light p12';
+                $classFooter = 'bg-light dark br-t br-light';
                 break;
         }
         return $classFooter;
