@@ -18,4 +18,16 @@ $(document).ready(function () {
         $(this).css('color', colorAux);
         $(this).css('background-color', backgroundColorAux);
     });
+
+    $(".btn").focus(function () {
+        colorAux = $(this).css('color');
+        backgroundColorAux = $(this).css('background-color');
+        $(this).css('background', '50% 50% no-repeat url(/img/loader.gif)');
+        $(this).css('color', 'transparent');
+    });
+    $(".btn").blur(function () {
+        $(this).css('background-image', 'none');
+        $(this).css('color', colorAux);
+        $(this).css('background-color', backgroundColorAux);
+    });
 });
