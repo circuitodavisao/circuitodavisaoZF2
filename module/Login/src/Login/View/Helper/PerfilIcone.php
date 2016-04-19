@@ -100,37 +100,37 @@ class PerfilIcone extends AbstractHelper {
             case 1:
                 $class = 'bg-system light';
                 break;
-            
+
             //Líder Regional
             case 2:
                 $class = 'bg-alert light';
                 break;
-            
+
             //Líder Sub-Regional
             case 3:
                 $class = 'bg-danger light';
                 break;
-            
+
             //Coordenador
             case 4:
                 $class = 'bg-warning light';
                 break;
-            
+
             //Sub-Coordenador
             case 5:
                 $class = 'bg-success light';
                 break;
-            
+
             //Líder de Igreja
             case 6:
                 $class = 'bg-primary light';
                 break;
-            
+
             //Líder de Equipe
             case 7:
                 $class = 'bg-dark';
                 break;
-            
+
             //Líder de Sub-Equipe
             case 8:
                 $class = 'bg-light';
@@ -232,7 +232,7 @@ class PerfilIcone extends AbstractHelper {
         /* Div Footer */
         $html .= '<div class="panel-footer ' . $corDoFooter . ' br-t br-light p12">';
         /* Dados Estaticos */
-        $html .= '<span class="fs11 text-white">';
+        $html .= '<span class="fs11 ' . $corDoTexto . '">';
         $html .= '<i class="fa fa-clock-o"></i> ÚLTIMO LOGIN';
         $html .= '<b>2 DIAS ATRÁS</b>';
         $html .= '</span>';

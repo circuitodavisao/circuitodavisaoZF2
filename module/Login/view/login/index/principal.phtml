@@ -27,14 +27,16 @@ use Login\Controller\Helper\Constantes;
                 <ul class="dropdown-menu list-group dropdown-persist w250" role="menu">
                     <?php
                     /* Laço para mostrar as responsabilidades ativas */
-                    foreach ($this->responsabilidades as $responsabilidade) {
-                        /* Grupo da responsabilidades */
-                        $grupo = $responsabilidade->getGrupo();
-                        /* Entidades do grupo */
-                        $entidades = $grupo->getEntidade();
-                        foreach ($entidades as $entidade) {
-                            if ($entidade->verificarSeEstaAtivo()) {
-                                echo $this->perfilDropDown($entidade, 1);
+                    if (count($this->responsabilidades) > 1) {
+                        foreach ($this->responsabilidades as $responsabilidade) {
+                            /* Grupo da responsabilidades */
+                            $grupo = $responsabilidade->getGrupo();
+                            /* Entidades do grupo */
+                            $entidades = $grupo->getEntidade();
+                            foreach ($entidades as $entidade) {
+                                if ($entidade->verificarSeEstaAtivo()) {
+                                    echo $this->perfilDropDown($entidade, 1);
+                                }
                             }
                         }
                     }
@@ -50,11 +52,12 @@ use Login\Controller\Helper\Constantes;
     <!-- End: Header -->
     <div id="modals">
         <?php
-        /* Laço para mostrar as responsabilidades ativas modal */
+        /* Laço para mostrar a s responsabilidades ativas modal */
         foreach ($this->responsabilidades as $responsabilidade) {
             /* Grupo da responsabilidades */
             $grupo = $responsabilidade->getGrupo();
             /* Entidades do grupo */
+
             $entidades = $grupo->getEntidade();
             foreach ($entidades as $entidade) {
                 if ($entidade->verificarSeEstaAtivo()) {
