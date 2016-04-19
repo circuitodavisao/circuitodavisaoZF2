@@ -96,27 +96,42 @@ class PerfilIcone extends AbstractHelper {
     public static function corDoPanel($tipo) {
         $class = '';
         switch ($tipo) {
+            //Presidencial
             case 1:
                 $class = 'bg-system';
                 break;
+            
+            //Líder Regional
             case 2:
-                $class = 'bg-alert';
+                $class = 'bg-alert light';
                 break;
+            
+            //Líder Sub-Regional
             case 3:
                 $class = 'bg-danger';
                 break;
+            
+            //Coordenador
             case 4:
                 $class = 'bg-warning';
                 break;
+            
+            //Sub-Coordenador
             case 5:
                 $class = 'bg-success';
                 break;
+            
+            //Líder de Igreja
             case 6:
                 $class = 'bg-primary';
                 break;
+            
+            //Líder de Equipe
             case 7:
                 $class = 'bg-dark';
                 break;
+            
+            //Líder de Sub-Equipe
             case 8:
                 $class = 'bg-light';
                 break;
@@ -192,7 +207,7 @@ class PerfilIcone extends AbstractHelper {
         /* Div Panel */
         $html .= '<div class="panel panel-moldure ' . $hover . ' panel-tile ' . $corDoPanel . ' text-center br-a br-light">';
         /* Div Panel Body */
-        $html .= '<div class="panel-body">';
+        $html .= '<div class="panel-body ' . $corDoPanel . '">';
 
         /* LOADER DO MODAL */
         if ($tipo == 2) {
