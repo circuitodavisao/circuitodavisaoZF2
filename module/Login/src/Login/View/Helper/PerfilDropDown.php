@@ -64,8 +64,9 @@ class PerfilDropDown extends AbstractHelper {
 
         $html .= '<a onclick=\'abrirModal("modal-' . $this->getEntidade()->getId() . '", ' . $this->getEntidade()->getId() . ',"perfilSelecionado");\' href="#modal-image" class="animated animated-short fadeInUp">';
 
-        $html .= '<i class="fa fa-twitter text-muted fs30 mt10"></i> ' . $this->getEntidade()->getEntidadeTipo()->getNome();
+        $html .= '<span class="fa fa-twitter"></span> ' . $this->getEntidade()->getEntidadeTipo()->getNome();
         $html .= ' - ' . $this->getEntidade()->infoEntidade();
+        $html .= '<span class="label label-danger">2</span>';
         $html .= '</a>';
 
         $html .= '</li>';
