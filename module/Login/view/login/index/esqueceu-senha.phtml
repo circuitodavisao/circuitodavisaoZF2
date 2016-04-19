@@ -28,7 +28,7 @@ echo $this->layoutLoginTop;
     echo $this->mensagemStatica($this->translate($this->mensagem), $this->tipo);
     ?>
     <!-- Opções -->
-    <div id="opcoes" class="<?php echo $this->classDiv0; ?>">
+    <div id="opcoes" class="panel mt30 mb25 <?php echo $this->classDiv0; ?>">
         <div class="panel-body bg-light">
             <div class="option-group field section">
                 <?php echo $this->formRadio($formRecuperarAcesso->get(Constantes::$INPUT_OPCAO)); ?>
@@ -45,7 +45,7 @@ echo $this->layoutLoginTop;
     echo $this->form()->openTag($formRecuperarAcesso);
     ?>
     <!-- Opção 1 -->
-    <div id="opcao_1" class="<?php echo $this->classDiv1; ?>">
+    <div id="opcao_1" class="panel mt30 mb25 <?php echo $this->classDiv1; ?>">
         <div class="panel-body bg-light">
             <?php
             /* Capslock */
@@ -77,7 +77,7 @@ echo $this->layoutLoginTop;
     echo $this->form()->openTag($formRecuperarAcesso);
     ?>
     <!-- Opção 2 -->
-    <div id="opcao_2" class="<?php echo $this->classDiv2; ?>">
+    <div id="opcao_2" class="panel mt30 mb25 <?php echo $this->classDiv2; ?>">
         <div class="panel-body bg-light form-group">
             <div class="section mn">
                 <div class="smart-widget">
