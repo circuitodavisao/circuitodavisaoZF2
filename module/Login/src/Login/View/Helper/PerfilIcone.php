@@ -98,7 +98,7 @@ class PerfilIcone extends AbstractHelper {
         switch ($tipo) {
             //Presidencial
             case 1:
-                $class = 'bg-system';
+                $class = 'bg-system light';
                 break;
             
             //Líder Regional
@@ -108,22 +108,22 @@ class PerfilIcone extends AbstractHelper {
             
             //Líder Sub-Regional
             case 3:
-                $class = 'bg-danger';
+                $class = 'bg-danger light';
                 break;
             
             //Coordenador
             case 4:
-                $class = 'bg-warning';
+                $class = 'bg-warning light';
                 break;
             
             //Sub-Coordenador
             case 5:
-                $class = 'bg-success';
+                $class = 'bg-success light';
                 break;
             
             //Líder de Igreja
             case 6:
-                $class = 'bg-primary';
+                $class = 'bg-primary light';
                 break;
             
             //Líder de Equipe
@@ -169,7 +169,7 @@ class PerfilIcone extends AbstractHelper {
                 $classFooter = 'bg-dark light br-t br-white';
                 break;
             case 8:
-                $classFooter = 'bg-dark light br-t br-white';
+                $classFooter = 'bg-light dark br-t br-light p12';
                 break;
         }
         return $classFooter;
