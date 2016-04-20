@@ -27,6 +27,11 @@
   font-size: 1em;
 }
 
+.fs35-responsiva{
+  font-size: 1.8em;
+  -webkit-font-size: 1.6em;
+}
+
 .desligar-bold-titulo{
     font-weight: 200;
 }

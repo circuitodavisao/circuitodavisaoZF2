@@ -14,6 +14,9 @@
 
 .panel-moldure:hover{
   opacity: 0.6;
+  text-decoration: none;
+  underline: none;
+  border-bottom: none;
 }
 
 .bg-light-hover:hover{

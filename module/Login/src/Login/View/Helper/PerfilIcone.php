@@ -219,7 +219,7 @@ class PerfilIcone extends AbstractHelper {
         $html .= '<i class="fa fa-twitter text-muted fs70 mt10"></i>';
 
         /* Info da entidade */
-        $html .= '<h1 class="fs35 mbn ' . $corDoTexto . '">' . $nomeEntidade . '</h1>';
+        $html .= '<h1 class="fs35-responsiva mbn">' . $nomeEntidade . '</h1>';
         /* FIM Info da entidade */
 
         /* Tipo da entidade */
