@@ -49,8 +49,8 @@ use Login\Controller\Helper\Constantes;
                         <p class="lh25 text-muted fs15"><?php echo $this->translate(Constantes::$TRADUCAO_PRE_SAIDA); ?></p>
 
                         <p class="text-right mt20 col-md-12">
-                            <input class="btn btn-default" onclick="location.href = '<?php echo $this->url(Constantes::$ROUTE_LOGIN) . Constantes::$URL_PRINCIPAL; ?>';" value="<?php echo $this->translate(Constantes::$TRADUCAO_ENTRAR_NOVAMENTE); ?>" type="button"/>&nbsp;
-                            <input class="btn btn-primary-circuito" onclick="location.href = '<?php echo $this->url(Constantes::$ROUTE_LOGIN) . Constantes::$URL_SAIR; ?>';" type="button" value="<?php echo $this->translate(Constantes::$TRADUCAO_CONTINUAR); ?>" />
+                            <?php echo $this->botaoLink(Constantes::$TRADUCAO_ENTRAR_NOVAMENTE, ($this->url(Constantes::$ROUTE_LOGIN) . Constantes::$URL_PRINCIPAL), 2); ?>
+                            <?php echo $this->botaoLink(Constantes::$TRADUCAO_CONTINUAR, ($this->url(Constantes::$ROUTE_LOGIN) . Constantes::$URL_SAIR)); ?>
                         </p>
 
                     </div>

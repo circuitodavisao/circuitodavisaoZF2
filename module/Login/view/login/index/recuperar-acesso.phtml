@@ -23,7 +23,7 @@ echo $this->layoutLoginTop;
         </div>      
     </div>   
     <div class="col-xs-12 text-center">
-        <a href="<?php echo Constantes::$INDEX ?>" class="button btn-primary-circuito mr10"><?php echo $this->translate(Constantes::$TRADUCAO_VOLTAR); ?></a>
+        <?php echo $this->botaoLink(Constantes::$TRADUCAO_VOLTAR, Constantes::$INDEX); ?>
     </div>
 </div>  
 <?php

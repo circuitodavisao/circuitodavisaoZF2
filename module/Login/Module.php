@@ -8,6 +8,9 @@
 
 namespace Login;
 
+use Login\View\Helper\BotaoLink;
+use Login\View\Helper\BotaoSubmit;
+use Login\View\Helper\BotaoSubmitDesabilitado;
 use Login\View\Helper\DivCapslock;
 use Login\View\Helper\DivJavaScript;
 use Login\View\Helper\LinkLogo;
@@ -65,6 +68,15 @@ class Module {
                 },
                 'perfilDropDown' => function($sm) {
                     return new PerfilDropDown();
+                },
+                'botaoSubmit' => function($sm) {
+                    return new BotaoSubmit();
+                },
+                'botaoSubmitDesabilitado' => function($sm) {
+                    return new BotaoSubmitDesabilitado();
+                },
+                'botaoLink' => function($sm) {
+                    return new BotaoLink();
                 },
             )
         );

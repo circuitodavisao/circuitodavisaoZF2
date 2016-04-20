@@ -3,9 +3,9 @@
 namespace Login\Form;
 
 use Login\Controller\Helper\Constantes;
+use Zend\Form\Element\Button;
 use Zend\Form\Element\Csrf;
 use Zend\Form\Element\Password;
-use Zend\Form\Element\Submit;
 use Zend\Form\Element\Text;
 use Zend\Form\Form;
 
@@ -28,8 +28,6 @@ class LoginForm extends Form {
          */
         $this->setAttributes(array(
             Constantes::$FORM_STRING_METHOD => Constantes::$FORM_STRING_POST,
-            Constantes::$FORM_STRING_CLASS => 'form-horizontal',
-            Constantes::$FORM_STRING_ID => 'contact',
         ));
 
         /**
@@ -68,24 +66,6 @@ class LoginForm extends Form {
         $this->add(
                 (new Csrf())
                         ->setName(Constantes::$INPUT_CSRF)
-        );
-
-        /**
-         * Botao verificar entrar
-         * <button type="button" class="btn ladda-button btn-dark" data-style="expand-left">
-          <span class="ladda-label">Load Right</span>
-          </button>
-         */
-        $this->add(
-                (new Submit())
-                        ->setName(Constantes::$INPUT_ENTRAR)
-                        ->setValue(Constantes::$TRADUCAO_ENTRAR)
-                        ->setAttributes([
-                            Constantes::$FORM_STRING_ID => Constantes::$INPUT_ENTRAR,
-                            Constantes::$FORM_STRING_CLASS => 'button btn-primary-circuito mr10 pull-right',
-                            Constantes::$FORM_STRING_ONCLICK => str_replace('#id', Constantes::$INPUT_ENTRAR, Constantes::$FORM_STRING_FUNCAO_DESABILITAR_ELEMENTO),
-                            'data-style' => 'expand-top',
-                        ])
         );
     }
 

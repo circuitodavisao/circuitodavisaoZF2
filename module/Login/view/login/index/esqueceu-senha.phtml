@@ -16,7 +16,7 @@ $classTituloPerdeuSenha = 'titulo-perdeu-sua-senha';
 echo $this->layoutLoginTop;
 ?>
 <div class="admin-form theme-info mw500" style="margin-top: 10%;" id="login">
-    <div class="row mb15 table-layout">
+    <div class="row mb15 table-layout <?php echo $this->classDiv0; ?>">
         <div class="col-xs-12 pln">
             <div id="opcoes_label">
                 <h2 class="<?php echo $classTituloPerdeuSenha ?>"><?php echo $this->translate(Constantes::$TRADUCAO_PERGUNTA_ESQUECI_SENHA); ?></h2>
@@ -37,7 +37,7 @@ echo $this->layoutLoginTop;
         <!-- end .form-body section -->
         <div class="panel-footer text-right">
             <?php echo $this->formButton($formRecuperarAcesso->get(Constantes::$INPUT_BOTAO_CANCELAR)); ?>
-            <?php echo $this->formButton($formRecuperarAcesso->get(Constantes::$INPUT_BOTAO_CONTINUAR)); ?>
+            <?php echo $this->botaoLink(Constantes::$TRADUCAO_CONTINUAR, '#', 0, 'id="' . Constantes::$INPUT_BOTAO_CONTINUAR . '" disabled ' . Constantes::$FORM_STRING_ONCLICK . '="abrirOpcao();"'); ?>
         </div>
     </div>
     <?php
@@ -68,7 +68,7 @@ echo $this->layoutLoginTop;
         </div>
         <div class="panel-footer text-right">
             <?php echo $this->formButton($formRecuperarAcesso->get(Constantes::$INPUT_BOTAO_VOLTAR)); ?>
-            <?php echo $this->formSubmit($formRecuperarAcesso->get(Constantes::$INPUT_BOTAO_ENVIAR_EMAIL)); ?>
+            <?php echo $this->botaoSubmit(Constantes::$TRADUCAO_ENVIAR_EMAIL); ?>
         </div>
     </div>
     <?php echo $this->form()->closeTag(); ?>
@@ -78,7 +78,7 @@ echo $this->layoutLoginTop;
     ?>
     <!-- Opção 2 -->
     <div id="opcao_2" class="panel mt30 mb25 <?php echo $this->classDiv2; ?>">
-        <div class="panel-body bg-light form-group">
+        <div class="panel-body bg-light">
             <div class="section mn">
                 <div class="smart-widget">
                     <p class="text-center"><?php echo $this->translate(Constantes::$TRADUCAO_INFORME_2_DIGITO_CPF_DATA_NASCIMENTO); ?></p>
@@ -109,7 +109,7 @@ echo $this->layoutLoginTop;
         </div>
         <div class="panel-footer text-right">
             <?php echo $this->formButton($formRecuperarAcesso->get(Constantes::$INPUT_BOTAO_VOLTAR)); ?>
-            <?php echo $this->formSubmit($formRecuperarAcesso->get(Constantes::$INPUT_BOTAO_VERIFICAR_USUARIO)); ?>
+            <?php echo $this->botaoSubmit(Constantes::$TRADUCAO_VERIFICAR_USUARIO); ?>
         </div>
     </div>
 

@@ -59,8 +59,7 @@ echo $this->layoutLoginTop;
 <div class="panel-footer clearfix">
     <?php echo $this->formHidden($formRecuperarSenha->get(Constantes::$INPUT_CSRF)); ?>
     <?php echo $this->formHidden($formRecuperarSenha->get(Constantes::$INPUT_ID_PESSOA)); ?>
-    <?php echo $this->formSubmit($formRecuperarSenha->get(Constantes::$INPUT_ALTERAR)); ?>
-
+    <?php echo $this->botaoSubmitDesabilitado(Constantes::$TRADUCAO_ALTERAR, Constantes::$INPUT_ALTERAR); ?>
 </div> 
 <?php
 /* Layout com botton para telas de acesso */

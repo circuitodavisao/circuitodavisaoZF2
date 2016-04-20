@@ -45,6 +45,7 @@ class RecuperarAcessoForm extends Form {
                         ->setAttributes([
                             Constantes::$FORM_STRING_ID => Constantes::$INPUT_OPCAO,
                             Constantes::$FORM_STRING_CLASS => 'opcao',
+                            Constantes::$FORM_STRING_ONCLICK => 'abrirContinuar();',
                         ])
                         ->setOptions([
                             Constantes::$FORM_STRING_VALUE_OPTIONS => array(
@@ -74,7 +75,8 @@ class RecuperarAcessoForm extends Form {
                         ->setAttributes([
                             Constantes::$FORM_STRING_ID => Constantes::$INPUT_BOTAO_CANCELAR,
                             Constantes::$FORM_STRING_ONCLICK => 'location.href=\'' . Constantes::$INDEX . '\'',
-                            Constantes::$FORM_STRING_CLASS => 'button btn-default',
+                            Constantes::$FORM_STRING_CLASS => Constantes::$FORM_STRING_CLASS_BTN_DEFAULT_ESCURO,
+                            'data-style' => 'zoom-in',
                         ])
                         ->setValue(Constantes::$TRADUCAO_CANCELAR)
         );
@@ -88,7 +90,8 @@ class RecuperarAcessoForm extends Form {
                         ->setAttributes([
                             Constantes::$FORM_STRING_ID => Constantes::$INPUT_BOTAO_CONTINUAR,
                             Constantes::$FORM_STRING_ONCLICK => 'abrirOpcao();',
-                            Constantes::$FORM_STRING_CLASS => 'button btn-primary-circuito',
+                            Constantes::$FORM_STRING_CLASS => Constantes::$FORM_STRING_CLASS_BTN_PRETO,
+                            'data-style' => 'zoom-in',
                         ])
                         ->setValue(Constantes::$TRADUCAO_CONTINUAR)
         );
@@ -104,7 +107,8 @@ class RecuperarAcessoForm extends Form {
                         ->setAttributes([
                             Constantes::$FORM_STRING_ID => Constantes::$INPUT_BOTAO_VOLTAR,
                             Constantes::$FORM_STRING_ONCLICK => 'abrirOpcao(0);',
-                            Constantes::$FORM_STRING_CLASS => 'button btn-default',
+                            Constantes::$FORM_STRING_CLASS => Constantes::$FORM_STRING_CLASS_BTN_DEFAULT_ESCURO,
+                            'data-style' => 'zoom-in',
                         ])
                         ->setValue(Constantes::$TRADUCAO_VOLTAR)
         );

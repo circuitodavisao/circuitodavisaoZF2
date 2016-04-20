@@ -5,10 +5,21 @@
  */
 
 /**
+ * Habilita botão para continuar
+ * @returns {void}
+ */
+function abrirContinuar() {
+    var botaoContinuar = document.getElementById('continuar');
+    botaoContinuar.disabled = false;
+}
+
+/**
  * Abrir div da opção selecionada
- * @returns void
+ * @param {int} valor
+ * @returns {Boolean}
  */
 function abrirOpcao(valor) {
+    var resposta = false;
     if (valor != 0) {
         var check_value = $('.opcao:checked').val();
         if (check_value == 1) {
@@ -33,4 +44,6 @@ function abrirOpcao(valor) {
         $('#tipo').val(0);
         $('#divMensagemEstatica').addClass('hidden');
     }
+
+    return resposta;
 }

@@ -122,6 +122,8 @@ class Constantes {
     public static $FORM_STRING_POST = 'POST';
     public static $FORM_STRING_ID = 'id';
     public static $FORM_STRING_CLASS = 'class';
+    public static $FORM_STRING_CLASS_BTN_PRETO = 'btn ladda-button btn-primary-circuito';
+    public static $FORM_STRING_CLASS_BTN_DEFAULT_ESCURO = 'btn ladda-button btn-default dark';
     public static $FORM_STRING_DISABLED = 'disabled';
     public static $FORM_STRING_LABEL = 'label';
     public static $FORM_STRING_LABEL_ATRIBUTES = 'label_attributes';
