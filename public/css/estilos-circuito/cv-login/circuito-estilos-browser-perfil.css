@@ -14,9 +14,6 @@
 
 .panel-moldure:hover{
   opacity: 0.6;
-  text-decoration: none;
-  underline: none;
-  border-bottom: none;
 }
 
 .bg-light-hover:hover{
@@ -68,4 +65,9 @@
   padding-left: 20px !important;
   padding-top: 25px !important;
   padding-bottom: 20px !important;
+}
+
+div[class^='col-'] a{
+    text-decoration: none;
+    -webkit-text-decoration: none;
 }
