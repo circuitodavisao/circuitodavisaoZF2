@@ -1,29 +1,28 @@
 <?php
 
-namespace Login\Entity;
+namespace Entidade\Entity;
 
 /**
- * Nome: GrupoResponsavel.php
+ * Nome: GrupoEvento.php
  * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com>
- * Descricao: Entidade anotada da tabela grupo_responsavel
+ * Descricao: Entidade anotada da tabela grupo_evento
  */
-
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity 
- * @ORM\Table(name="grupo_responsavel")
+ * @ORM\Table(name="grupo_evento")
  */
-class GrupoResponsavel {
+class GrupoEvento {
 
     /**
-     * @ORM\ManyToOne(targetEntity="Pessoa", inversedBy="grupoResponsavel")
-     * @ORM\JoinColumn(name="pessoa_id", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="Evento", inversedBy="grupoEvento")
+     * @ORM\JoinColumn(name="evento_id", referencedColumnName="id")
      */
-    private $pessoa;
+    private $evento;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Grupo", inversedBy="grupoResponsavel")
+     * @ORM\ManyToOne(targetEntity="Grupo", inversedBy="grupoEvento")
      * @ORM\JoinColumn(name="grupo_id", referencedColumnName="id")
      */
     private $grupo;
@@ -42,7 +41,7 @@ class GrupoResponsavel {
     protected $hora_criacao;
 
     /** @ORM\Column(type="integer") */
-    protected $pessoa_id;
+    protected $evento_id;
 
     /** @ORM\Column(type="integer") */
     protected $grupo_id;
@@ -54,33 +53,21 @@ class GrupoResponsavel {
     protected $hora_inativacao;
 
     /**
-     * Verificar se a data de inativação está nula
-     * @return boolean
+     * Retorna o evento
+     * @return Evento
      */
-    public function verificarSeEstaAtivo() {
-        $resposta = false;
-        if (is_null($this->getData_inativacao())) {
-            $resposta = true;
-        }
-        return $resposta;
-    }
-
-    function getPessoa() {
-        return $this->pessoa;
+    function getEvento() {
+        return $this->evento;
     }
 
     /**
-     * Retorna o grupo da responsabilidade
+     * Retorna o grupo
      * @return Grupo
      */
     function getGrupo() {
         return $this->grupo;
     }
 
-    /**
-     * Identificação da responsabilidade
-     * @return int
-     */
     function getId() {
         return $this->id;
     }
@@ -93,8 +80,8 @@ class GrupoResponsavel {
         return $this->hora_criacao;
     }
 
-    function getPessoa_id() {
-        return $this->pessoa_id;
+    function getEvento_id() {
+        return $this->evento_id;
     }
 
     function getGrupo_id() {
@@ -109,8 +96,8 @@ class GrupoResponsavel {
         return $this->hora_inativacao;
     }
 
-    function setPessoa($pessoa) {
-        $this->pessoa = $pessoa;
+    function setEvento($evento) {
+        $this->evento = $evento;
     }
 
     function setGrupo($grupo) {
@@ -129,8 +116,8 @@ class GrupoResponsavel {
         $this->hora_criacao = $hora_criacao;
     }
 
-    function setPessoa_id($pessoa_id) {
-        $this->pessoa_id = $pessoa_id;
+    function setEvento_id($evento_id) {
+        $this->evento_id = $evento_id;
     }
 
     function setGrupo_id($grupo_id) {

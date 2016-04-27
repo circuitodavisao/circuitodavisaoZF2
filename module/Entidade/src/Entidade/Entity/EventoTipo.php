@@ -1,27 +1,28 @@
 <?php
 
-namespace Login\Entity;
+namespace Entidade\Entity;
 
 /**
- * Nome: EntidadeTipo.php
+ * Nome: EventoTipo.php
  * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com>
- * Descricao: Entidade anotada da tabela entidade_tipo
+ * Descricao: Entidade anotada da tabela evento_tipo
  */
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity 
- * @ORM\Table(name="entidade_tipo")
+ * @ORM\Table(name="evento_tipo")
  */
-class EntidadeTipo {
+class EventoTipo {
 
     /**
-     * @ORM\OneToMany(targetEntity="Entidade", mappedBy="entidadeTipo") 
+     * @ORM\OneToMany(targetEntity="Evento", mappedBy="eventoTipo") 
      */
-    protected $entidade;
+    protected $evento;
 
     public function __construct() {
-        $this->entidade = new ArrayCollection();
+        $this->evento = new ArrayCollection();
     }
 
     /**
@@ -45,10 +46,6 @@ class EntidadeTipo {
 
     /** @ORM\Column(type="string") */
     protected $hora_inativacao;
-
-    function getEntidade() {
-        return $this->entidade;
-    }
 
     function getId() {
         return $this->id;
@@ -74,10 +71,6 @@ class EntidadeTipo {
         return $this->hora_inativacao;
     }
 
-    function setEntidade($entidade) {
-        $this->entidade = $entidade;
-    }
-
     function setId($id) {
         $this->id = $id;
     }
@@ -100,6 +93,14 @@ class EntidadeTipo {
 
     function setHora_inativacao($hora_inativacao) {
         $this->hora_inativacao = $hora_inativacao;
+    }
+
+    function getEvento() {
+        return $this->evento;
+    }
+
+    function setEvento($evento) {
+        $this->evento = $evento;
     }
 
 }

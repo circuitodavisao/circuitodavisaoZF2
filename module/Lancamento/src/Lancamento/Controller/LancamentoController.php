@@ -3,9 +3,9 @@
 namespace Lancamento\Controller;
 
 use Doctrine\ORM\EntityManager;
+use Login\Controller\Helper\LoginORM;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\Mvc\I18n\Translator;
-use Zend\View\Model\ViewModel;
 
 /**
  * Nome: LancamentoController.php
@@ -37,7 +37,34 @@ class LancamentoController extends AbstractActionController {
      * GET /lancamento
      */
     public function indexAction() {
-
+        /* Helper Controller */
+        $loginORM = new LoginORM($this->getDoctrineORMEntityManager());
+        $pessoa = $loginORM->getPessoaORM()->encontrarPorIdPessoa(1);
+        echo "Nome: " . $pessoa->getNome() . "<br />";
+        echo "Grupos { <br />";
+        foreach ($pessoa->getResponsabilidadesAtivas() as $gr) {
+            $grupo = $gr->getGrupo();
+            echo "==== Entidade Nome: " . $grupo->getEntidadeAtiva()->getEntidadeTipo()->getNome() . "<br />";
+            echo "==== Entidade Info: " . $grupo->getEntidadeAtiva()->infoEntidade() . "<br />";
+            echo "==== | ==== Total de Eventos: " . count($grupo->getGrupoEvento()) . " <br />";
+            echo "==== | ==== Eventos { <br />";
+            if (count($grupo->getGrupoEvento()) > 0) {
+                foreach ($grupo->getGrupoEvento() as $ge) {
+                    echo "==== | ==== | ==== Nome Tipo Evento " . $ge->getEvento()->getEventoTipo()->getNome() . "<br />";
+                    echo "==== | ==== | ==== Dia " . $ge->getEvento()->getDia() . "<br />";
+                    echo "==== | ==== | ==== Hora " . $ge->getEvento()->getHora() . "<br />";
+                    if ($ge->getEvento()->getEventoTipo()->getId() == 1) {// celula
+//                        $celula = $ge->getEvento()->getEventoCelula();
+//                        echo "==== | ==== | ==== | ==== " . $celula->getNome_hospedeiro() . "<br />";
+//                        echo "==== | ==== | ==== | ==== " . $celula->getTelefone_hospedeiro() . "<br />";
+//                        echo "==== | ==== | ==== | ==== " . $celula->getLogradouro() . "<br />";
+//                        echo "==== | ==== | ==== | ==== " . $celula->getComplemento() . "<br />";
+                    }
+                }
+            }
+            echo "==== | ==== } <br />";
+        }
+        echo "} <br />";
         return [];
     }
 

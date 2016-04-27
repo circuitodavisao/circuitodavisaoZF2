@@ -1,0 +1,36 @@
+-- Table: grupo_evento
+
+-- DROP TABLE grupo_evento;
+
+CREATE TABLE grupo_evento
+(
+  id serial NOT NULL, -- Identificação dos eventos do grupo
+  grupo_id bigint NOT NULL, -- Identificação do grupo
+  evento_id bigint NOT NULL, -- Identificação do evento
+  data_criacao date NOT NULL DEFAULT ('now'::text)::date, -- Data de criação da associação
+  hora_criacao time without time zone NOT NULL DEFAULT ('now'::text)::time with time zone, -- Hora de criação da associação
+  data_inativacao date, -- Data de inativação da associação
+  hora_inativacao time without time zone, -- Hora da inativação da associação
+  CONSTRAINT pk_grupo_evento PRIMARY KEY (id),
+  CONSTRAINT fk_grupo_evento_evento_id FOREIGN KEY (evento_id)
+      REFERENCES evento (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION,
+  CONSTRAINT fk_grupo_evento_grupo_id FOREIGN KEY (grupo_id)
+      REFERENCES grupo (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE grupo_evento
+  OWNER TO postgres;
+COMMENT ON TABLE grupo_evento
+  IS 'Tabela de eventos que o grupo participa';
+COMMENT ON COLUMN grupo_evento.id IS 'Identificação dos eventos do grupo';
+COMMENT ON COLUMN grupo_evento.grupo_id IS 'Identificação do grupo';
+COMMENT ON COLUMN grupo_evento.evento_id IS 'Identificação do evento';
+COMMENT ON COLUMN grupo_evento.data_criacao IS 'Data de criação da associação';
+COMMENT ON COLUMN grupo_evento.hora_criacao IS 'Hora de criação da associação';
+COMMENT ON COLUMN grupo_evento.data_inativacao IS 'Data de inativação da associação';
+COMMENT ON COLUMN grupo_evento.hora_inativacao IS 'Hora da inativação da associação';
+

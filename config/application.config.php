@@ -9,6 +9,7 @@ return array(
     'modules' => array(
         'Login',
         'Lancamento',
+        'Entidade',
         'ZendDeveloperTools',
         'DoctrineModule',
         'DoctrineORMModule',

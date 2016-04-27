@@ -74,11 +74,11 @@ return array(
             'application_entities' => array(
                 'class' => 'Doctrine\ORM\Mapping\Driver\AnnotationDriver',
                 'cache' => 'array',
-                'paths' => array(__DIR__ . '/../src/' . __NAMESPACE__ . '/Entity')
+                'paths' => array(__DIR__ . '/../../Entidade/src/Entidade/Entity')
             ),
             'orm_default' => array(
                 'drivers' => array(
-                    __NAMESPACE__ . '\Entity' => 'application_entities'
+                    'Entidade\Entity' => 'application_entities'
                 )
             )
         ),

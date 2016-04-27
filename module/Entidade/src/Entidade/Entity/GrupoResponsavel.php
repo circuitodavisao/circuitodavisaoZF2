@@ -1,29 +1,28 @@
 <?php
 
-namespace Login\Entity;
+namespace Entidade\Entity;
 
 /**
- * Nome: Entidade.php
+ * Nome: GrupoResponsavel.php
  * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com>
- * Descricao: Entidade anotada da tabela entidade
+ * Descricao: Entidade anotada da tabela grupo_responsavel
  */
-
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity 
- * @ORM\Table(name="entidade")
+ * @ORM\Table(name="grupo_responsavel")
  */
-class Entidade {
+class GrupoResponsavel {
 
     /**
-     * @ORM\ManyToOne(targetEntity="EntidadeTipo", inversedBy="entidade")
-     * @ORM\JoinColumn(name="tipo_id", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="Pessoa", inversedBy="grupoResponsavel")
+     * @ORM\JoinColumn(name="pessoa_id", referencedColumnName="id")
      */
-    private $entidadeTipo;
+    private $pessoa;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Grupo", inversedBy="entidade")
+     * @ORM\ManyToOne(targetEntity="Grupo", inversedBy="grupoResponsavel")
      * @ORM\JoinColumn(name="grupo_id", referencedColumnName="id")
      */
     private $grupo;
@@ -41,23 +40,17 @@ class Entidade {
     /** @ORM\Column(type="string") */
     protected $hora_criacao;
 
-    /** @ORM\Column(type="string") */
-    protected $nome;
+    /** @ORM\Column(type="integer") */
+    protected $pessoa_id;
 
     /** @ORM\Column(type="integer") */
-    protected $numero;
+    protected $grupo_id;
 
     /** @ORM\Column(type="string") */
     protected $data_inativacao;
 
     /** @ORM\Column(type="string") */
     protected $hora_inativacao;
-
-    /** @ORM\Column(type="integer") */
-    protected $tipo_id;
-
-    /** @ORM\Column(type="integer") */
-    protected $grupo_id;
 
     /**
      * Verificar se a data de inativação está nula
@@ -71,33 +64,22 @@ class Entidade {
         return $resposta;
     }
 
-    public function infoEntidade() {
-        $resposta = '';
-        if ($this->getNome()) {
-            $resposta = $this->getNome();
-        }
-        if ($this->getNumero()) {
-            $resposta = $this->getNumero();
-        }
-        return $resposta;
+    function getPessoa() {
+        return $this->pessoa;
     }
 
     /**
-     * Retorna a entidade tipo da entidade
-     * @return EntidadeTipo
-     */
-    function getEntidadeTipo() {
-        return $this->entidadeTipo;
-    }
-
-    /**
-     * Retorna o grupo da Entidade
+     * Retorna o grupo da responsabilidade
      * @return Grupo
      */
     function getGrupo() {
         return $this->grupo;
     }
 
+    /**
+     * Identificação da responsabilidade
+     * @return int
+     */
     function getId() {
         return $this->id;
     }
@@ -110,12 +92,12 @@ class Entidade {
         return $this->hora_criacao;
     }
 
-    function getNome() {
-        return $this->nome;
+    function getPessoa_id() {
+        return $this->pessoa_id;
     }
 
-    function getNumero() {
-        return $this->numero;
+    function getGrupo_id() {
+        return $this->grupo_id;
     }
 
     function getData_inativacao() {
@@ -126,16 +108,8 @@ class Entidade {
         return $this->hora_inativacao;
     }
 
-    function getTipo_id() {
-        return $this->tipo_id;
-    }
-
-    function getGrupo_id() {
-        return $this->grupo_id;
-    }
-
-    function setEntidadeTipo($entidadeTipo) {
-        $this->entidadeTipo = $entidadeTipo;
+    function setPessoa($pessoa) {
+        $this->pessoa = $pessoa;
     }
 
     function setGrupo($grupo) {
@@ -154,12 +128,12 @@ class Entidade {
         $this->hora_criacao = $hora_criacao;
     }
 
-    function setNome($nome) {
-        $this->nome = $nome;
+    function setPessoa_id($pessoa_id) {
+        $this->pessoa_id = $pessoa_id;
     }
 
-    function setNumero($numero) {
-        $this->numero = $numero;
+    function setGrupo_id($grupo_id) {
+        $this->grupo_id = $grupo_id;
     }
 
     function setData_inativacao($data_inativacao) {
@@ -168,14 +142,6 @@ class Entidade {
 
     function setHora_inativacao($hora_inativacao) {
         $this->hora_inativacao = $hora_inativacao;
-    }
-
-    function setTipo_id($tipo_id) {
-        $this->tipo_id = $tipo_id;
-    }
-
-    function setGrupo_id($grupo_id) {
-        $this->grupo_id = $grupo_id;
     }
 
 }

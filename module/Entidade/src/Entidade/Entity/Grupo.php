@@ -1,6 +1,6 @@
 <?php
 
-namespace Login\Entity;
+namespace Entidade\Entity;
 
 /**
  * Nome: Grupo.php
@@ -19,24 +19,19 @@ class Grupo {
     protected $entidade;
 
     /**
-     * @ORM\OneToMany(targetEntity="Pessoa", mappedBy="grupo") 
+     * @ORM\OneToMany(targetEntity="GrupoResponsavel", mappedBy="grupo") 
      */
     protected $grupoResponsavel;
 
-//    /**
-//     * @ORM\ManyToOne(targetEntity="GrupoPaiFilho", inversedBy="pai") 
-//     * @ORM\JoinColumn(name="id", referencedColumnName="pai_id")
-//     */
-//    protected $pai;
-//    /**
-//     * @ORM\OneToMany(targetEntity="GrupoPaiFilho", mappedBy="filhos") 
-//     */
-//    protected $filhos;
+    /**
+     * @ORM\OneToMany(targetEntity="GrupoEvento", mappedBy="grupo") 
+     */
+    protected $grupoEvento;
 
     public function __construct() {
         $this->entidade = new ArrayCollection();
         $this->grupoResponsavel = new ArrayCollection();
-        $this->filhos = new ArrayCollection();
+        $this->grupoEvento = new ArrayCollection();
     }
 
     /**
@@ -102,14 +97,6 @@ class Grupo {
         return $this->grupoResponsavel;
     }
 
-//    function getPai() {
-//        return $this->pai;
-//    }
-//
-//    function getFilhos() {
-//        return $this->filhos;
-//    }
-
     function getId() {
         return $this->id;
     }
@@ -138,14 +125,6 @@ class Grupo {
         $this->grupoResponsavel = $grupoResponsavel;
     }
 
-//    function setPai($pai) {
-//        $this->pai = $pai;
-//    }
-//
-//    function setFilhos($filhos) {
-//        $this->filhos = $filhos;
-//    }
-
     function setId($id) {
         $this->id = $id;
     }
@@ -164,6 +143,18 @@ class Grupo {
 
     function setHora_inativacao($hora_inativacao) {
         $this->hora_inativacao = $hora_inativacao;
+    }
+
+    /**
+     * Retorna o grupo evento
+     * @return GrupoEvento
+     */
+    function getGrupoEvento() {
+        return $this->grupoEvento;
+    }
+
+    function setGrupoEvento($grupoEvento) {
+        $this->grupoEvento = $grupoEvento;
     }
 
 }

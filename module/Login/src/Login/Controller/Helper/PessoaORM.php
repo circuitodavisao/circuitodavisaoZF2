@@ -3,11 +3,9 @@
 namespace Login\Controller\Helper;
 
 use Doctrine\Common\Collections\Criteria;
-use Doctrine\Common\Collections\Expr\Expression;
 use Doctrine\ORM\EntityManager;
 use Exception;
-use Login\Entity\Pessoa;
-use Zend\XmlRpc\Value\Integer;
+use Entidade\Entity\Pessoa;
 
 /**
  * Nome: PessoaORM.php

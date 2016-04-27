@@ -1,6 +1,6 @@
 <?php
 
-namespace Login\Entity;
+namespace Entidade\Entity;
 
 /**
  * Nome: Pessoa.php

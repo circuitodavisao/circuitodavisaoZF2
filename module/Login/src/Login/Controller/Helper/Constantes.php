@@ -143,14 +143,14 @@ class Constantes {
     public static $FORM_STRING_FUNCAO_DESABILITAR_ELEMENTO = 'desabilitarElemento(\'#id\')';
 
     /* Entidade do banco de dados */
-    public static $ENTITY_PESSOA = 'Login\Entity\Pessoa';
+    public static $ENTITY_PESSOA = 'Entidade\Entity\Pessoa';
     public static $ENTITY_PESSOA_EMAIL = 'email';
     public static $ENTITY_PESSOA_DOCUMENTO = 'documento';
     public static $ENTITY_PESSOA_DATA_NASCIMENTO = 'data_nascimento';
     public static $ENTITY_PESSOA_TOKEN = 'token';
     public static $ENTITY_PESSOA_NOME = 'nome';
-    public static $ENTITY_PERFIL_ACESSO = 'Login\Entity\PerfilAcesso';
-    public static $ENTITY_PESSOA_PERFIL_ACESSO = 'Login\Entity\PessoaPerfilAcesso';
+    public static $ENTITY_PERFIL_ACESSO = 'Entidade\Entity\PerfilAcesso';
+    public static $ENTITY_PESSOA_PERFIL_ACESSO = 'Entidade\Entity\PessoaPerfilAcesso';
     public static $ENTITY_PESSOA_PERFIL_ACESSO_ID_PESSOA = 'id_pessoa';
 
     /* Templates */
