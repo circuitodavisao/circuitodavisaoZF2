@@ -28,10 +28,16 @@ class Grupo {
      */
     protected $grupoEvento;
 
+    /**
+     * @ORM\OneToMany(targetEntity="GrupoPessoa", mappedBy="grupo") 
+     */
+    protected $grupoPessoa;
+
     public function __construct() {
         $this->entidade = new ArrayCollection();
         $this->grupoResponsavel = new ArrayCollection();
         $this->grupoEvento = new ArrayCollection();
+        $this->grupoPessoa = new ArrayCollection();
     }
 
     /**
@@ -155,6 +161,18 @@ class Grupo {
 
     function setGrupoEvento($grupoEvento) {
         $this->grupoEvento = $grupoEvento;
+    }
+
+    /**
+     * Retorna o grupo pessoa
+     * @return GrupoPessoa
+     */
+    function getGrupoPessoa() {
+        return $this->grupoPessoa;
+    }
+
+    function setGrupoPessoa($grupoPessoa) {
+        $this->grupoPessoa = $grupoPessoa;
     }
 
 }

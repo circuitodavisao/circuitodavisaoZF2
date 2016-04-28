@@ -14,6 +14,11 @@ use Doctrine\ORM\Mapping as ORM;
 class Evento {
 
     /**
+     * @ORM\OneToOne(targetEntity="EventoCelula", mappedBy="evento")
+     */
+    private $eventoCelula;
+
+    /**
      * @ORM\OneToMany(targetEntity="GrupoEvento", mappedBy="evento") 
      */
     protected $grupoEvento;
@@ -127,6 +132,18 @@ class Evento {
 
     function setGrupoEvento($grupoEvento) {
         $this->grupoEvento = $grupoEvento;
+    }
+
+    /**
+     * Retorna o evento da célula
+     * @return EventoCelula
+     */
+    function getEventoCelula() {
+        return $this->eventoCelula;
+    }
+
+    function setEventoCelula($eventoCelula) {
+        $this->eventoCelula = $eventoCelula;
     }
 
 }

@@ -1,0 +1,41 @@
+-- Table: grupo_pessoa
+
+-- DROP TABLE grupo_pessoa;
+
+CREATE TABLE grupo_pessoa
+(
+  id serial NOT NULL, -- Identificação da associação grupo pessoa volatél
+  grupo_id bigint NOT NULL, -- Identificação do grupo
+  pessoa_id bigint NOT NULL, -- Identificação da pessoa
+  data_criacao date NOT NULL DEFAULT ('now'::text)::date, -- Data de criação da associação
+  hora_criacao time without time zone NOT NULL DEFAULT ('now'::text)::time with time zone, -- Hora de criação da associativa
+  data_inativacao date, -- Data de inativacao da associação
+  hora_inativacao time without time zone, -- Hora da inativação da associação
+  tipo_id integer NOT NULL, -- Identificação do tipo da pessoa volatél
+  CONSTRAINT pk_grupo_pessoa PRIMARY KEY (id),
+  CONSTRAINT fk_grupo_pessoa_grupo_id FOREIGN KEY (grupo_id)
+      REFERENCES grupo (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION,
+  CONSTRAINT fk_grupo_pessoa_pessoa_id FOREIGN KEY (pessoa_id)
+      REFERENCES pessoa (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION,
+  CONSTRAINT fk_grupo_pessoa_tipo_id FOREIGN KEY (tipo_id)
+      REFERENCES grupo_pessoa_tipo (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE grupo_pessoa
+  OWNER TO postgres;
+COMMENT ON TABLE grupo_pessoa
+  IS 'Tabela associativa do grupo com as pessoas volateis';
+COMMENT ON COLUMN grupo_pessoa.id IS 'Identificação da associação grupo pessoa volatél';
+COMMENT ON COLUMN grupo_pessoa.grupo_id IS 'Identificação do grupo';
+COMMENT ON COLUMN grupo_pessoa.pessoa_id IS 'Identificação da pessoa';
+COMMENT ON COLUMN grupo_pessoa.data_criacao IS 'Data de criação da associação';
+COMMENT ON COLUMN grupo_pessoa.hora_criacao IS 'Hora de criação da associativa';
+COMMENT ON COLUMN grupo_pessoa.data_inativacao IS 'Data de inativacao da associação';
+COMMENT ON COLUMN grupo_pessoa.hora_inativacao IS 'Hora da inativação da associação';
+COMMENT ON COLUMN grupo_pessoa.tipo_id IS 'Identificação do tipo da pessoa volatél';
+
