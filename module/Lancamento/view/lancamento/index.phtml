@@ -1,1 +1,116 @@
-index lancamento
+<?php
+
+use Lancamento\Controller\Helper\FuncoesLancamento;
+
+$pessoa = $this->pessoa;
+$entidade = $this->entidade;
+
+$cicloAtual = FuncoesLancamento::cicloAtual();
+?>
+<div class="row">
+    <div class="col-md-6">
+        <img class="img-rounded" />
+        <img class="img-rounded" width="64px" height="64px" src="/img/avatars/1.jpg" />&nbsp;
+        <img class="img-rounded" width="64px" height="64px" src="/img/avatars/2.jpg" />&nbsp;
+        Diego e Ursula Kort
+    </div> 
+    <div class="col-md-6">
+        <div class="alert alert-danger">
+            Precisa enviar o relatorio
+        </div>
+    </div> 
+</div>
+<div class="row">
+    <div class="tab-block mb25">
+        <ul class="nav nav-tabs tabs-bg">
+            <li class="active">
+                <a href="#tab10_1" data-toggle="tab"><i class="fa fa-wheelchair text-purple"></i> Mês Atual</a>
+            </li>
+            <li>
+                <a href="#tab10_2" data-toggle="tab"><i class="fa fa-bolt text-purple"></i> Mês Anterior</a>
+            </li>
+        </ul>
+        <div class="tab-content">
+            <div id="tab10_1" class="tab-pane active">
+                <div id="cabecalhoCiclo" class="row">
+                    <div class="col-md-6">
+                        Lista de lançamento
+                        <button class=" btn btn-success" >
+                            <i class="fa fa-bolt text-purple"></i>
+                        </button>
+                    </div>
+                    <div class="col-md-6 text-center">
+                        <i class="btn fa fa-angle-double-left text-purple"></i>
+                        Ciclo {<?php echo $cicloAtual; ?>}
+                        <i class="btn fa fa-angle-double-right text-purple"></i>
+                    </div>
+                </div>
+                <div id="cabecalhoEventos" class="row">
+                    <div class="col-md-6">
+                        <input class="form-control" placeholder="Buscar nome" />
+                    </div>
+                    <div class="col-md-6 text-center">
+                        {
+                        <?php
+                        /* Listagem dos eventos */
+                        $grupo = $entidade->getGrupo();
+                        $eventos = $grupo->getGrupoEventoNoCiclo($cicloAtual);
+                        if (count($eventos) > 0) {
+                            foreach ($eventos as $ge) {
+                                /* Verificar se o evento existe nesse ciclo */
+                                echo $ge->getEvento()->getEventoTipo()->getNome() . "|";
+                                echo $ge->getEvento()->getDia() . "|";
+                                echo $ge->getEvento()->getHora() . " - ";
+                            }
+                        }
+                        ?>}
+                    </div>
+                </div>
+            </div>
+            <div id="tab10_2" class="tab-pane">
+                TAB 2
+            </div>
+        </div>
+    </div>
+</div>
+
+<hr />
+<?php
+//echo "Nome: " . $pessoa->getNome() . "<br />";
+//echo "Grupos { <br />";
+//foreach ($pessoa->getResponsabilidadesAtivas() as $gr) {
+//    $grupo = $gr->getGrupo();
+//    echo "==== Entidade Nome: " . $grupo->getEntidadeAtiva()->getEntidadeTipo()->getNome() . "<br />";
+//    echo "==== Entidade Info: " . $grupo->getEntidadeAtiva()->infoEntidade() . "<br />";
+//    echo "==== | ==== Total de Eventos: " . count($grupo->getGrupoEvento()) . " <br />";
+//
+//    if (count($grupo->getGrupoEvento()) > 0) {
+//        echo "LISTAGEM DE EVENTOS #################################<br />";
+//        echo "==== | ==== Eventos { <br />";
+//        foreach ($grupo->getGrupoEvento() as $ge) {
+//            echo "==== | ==== | ==== Nome Tipo Evento " . $ge->getEvento()->getEventoTipo()->getNome() . "<br />";
+//            echo "==== | ==== | ==== Dia " . $ge->getEvento()->getDia() . "<br />";
+//            echo "==== | ==== | ==== Hora " . $ge->getEvento()->getHora() . "<br />";
+//            if ($ge->getEvento()->getEventoTipo()->getId() == 1) {// celula
+//                $celula = $ge->getEvento()->getEventoCelula();
+//                echo "==== | ==== | ==== | ==== " . $celula->getNome_hospedeiro() . "<br />";
+//                echo "==== | ==== | ==== | ==== " . $celula->getTelefone_hospedeiro() . "<br />";
+//                echo "==== | ==== | ==== | ==== " . $celula->getLogradouro() . "<br />";
+//                echo "==== | ==== | ==== | ==== " . $celula->getComplemento() . "<br />";
+//            }
+//        }
+//        echo "==== | ==== } <br />";
+//    }
+//    if (count($grupo->getGrupoPessoa()) > 0) {
+//        echo "LISTAGEM DE PESSOAS #################################<br />";
+//        echo "==== | ==== Pessoas volateis { <br />";
+//        foreach ($grupo->getGrupoPessoa() as $gp) {
+//            $pessoa = $gp->getPessoa();
+//            echo "==== | ==== | ==== Nome " . $pessoa->getNome() . "<br />";
+//            $pessoaTipo = $gp->getGrupoPessoaTipo();
+//            echo "==== | ==== | ==== | ==== Tipo " . $pessoaTipo->getNome() . "<br />";
+//        }
+//        echo "==== | ==== } <br />";
+//    }
+//}
+//echo "} <br />";

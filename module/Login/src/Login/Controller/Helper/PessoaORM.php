@@ -39,7 +39,7 @@ class PessoaORM {
     public function encontrarPorIdPessoa($idPessoa) {
         $id = (int) $idPessoa;
 
-        $pessoa = $this->getEntityManager()->find($this->getEntity(), $idPessoa);
+        $pessoa = $this->getEntityManager()->find($this->getEntity(), $id);
         if (!$pessoa) {
             throw new Exception("Não foi encontrado a pessoa de id = {$id}");
         }

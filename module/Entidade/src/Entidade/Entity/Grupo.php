@@ -9,9 +9,13 @@ namespace Entidade\Entity;
  */
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Lancamento\Controller\Helper\FuncoesLancamento;
 
 /** @ORM\Entity */
 class Grupo {
+
+    protected $ciclo;
+    protected $eventos;
 
     /**
      * @ORM\OneToMany(targetEntity="Entidade", mappedBy="grupo") 
@@ -159,6 +163,36 @@ class Grupo {
         return $this->grupoEvento;
     }
 
+    /**
+     * Retorna o grupo evento no ciclo selecionado
+     * @param int $ciclo
+     * @param int $mes
+     * @param int $ano
+     * @return GrupoEvento
+     */
+    function getGrupoEventoNoCiclo($ciclo = 1, $mes = 5, $ano = 2016) {
+        if (is_null($this->getEventos())) {
+            $eventos = null;
+            foreach ($this->getGrupoEvento() as $ge) {
+                $verificacao = false;
+                if ($ciclo == 2 || $ciclo == 3 || $ciclo == 4) {
+                    $verificacao = true;
+                }
+                if ($ciclo == 1 || $ciclo == 5 || $ciclo == 6) {
+                    $evento = $ge->getEvento();
+                    if (FuncoesLancamento::eventoNoCiclo($evento->getDia(), $ciclo, $mes, $ano)) {
+                        $verificacao = true;
+                    }
+                }
+                if ($verificacao) {
+                    $eventos[] = $ge;
+                }
+            }
+            $this->setEventos($eventos);
+        }
+        return $this->getEventos();
+    }
+
     function setGrupoEvento($grupoEvento) {
         $this->grupoEvento = $grupoEvento;
     }
@@ -173,6 +207,22 @@ class Grupo {
 
     function setGrupoPessoa($grupoPessoa) {
         $this->grupoPessoa = $grupoPessoa;
+    }
+
+    function getCiclo() {
+        return $this->ciclo;
+    }
+
+    function setCiclo($ciclo) {
+        $this->ciclo = $ciclo;
+    }
+
+    function getEventos() {
+        return $this->eventos;
+    }
+
+    function setEventos($eventos) {
+        $this->eventos = $eventos;
     }
 
 }

@@ -33,6 +33,9 @@ class Pessoa {
     /** @ORM\Column(type="string") */
     protected $nome;
 
+    /** @ORM\Column(type="integer") */
+    protected $telefone;
+
     /** @ORM\Column(type="string") */
     protected $email;
 
@@ -258,6 +261,14 @@ class Pessoa {
 
     function setGrupoResponsavel($grupoResponsavel) {
         $this->grupoResponsavel = $grupoResponsavel;
+    }
+
+    function getTelefone() {
+        return $this->telefone;
+    }
+
+    function setTelefone($telefone) {
+        $this->telefone = $telefone;
     }
 
 }

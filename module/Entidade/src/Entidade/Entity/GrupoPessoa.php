@@ -29,7 +29,7 @@ class GrupoPessoa {
 
     /**
      * @ORM\ManyToOne(targetEntity="GrupoPessoaTipo", inversedBy="grupoPessoa")
-     * @ORM\JoinColumn(name="grupo_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="tipo_id", referencedColumnName="id")
      */
     private $grupoPessoaTipo;
 
@@ -154,6 +154,10 @@ class GrupoPessoa {
         $this->hora_inativacao = $hora_inativacao;
     }
 
+    /**
+     * Retorna grupo pessoa tipo
+     * @return GrupoPessoaTipo
+     */
     function getGrupoPessoaTipo() {
         return $this->grupoPessoaTipo;
     }

@@ -3,9 +3,13 @@
 namespace Lancamento\Controller;
 
 use Doctrine\ORM\EntityManager;
-use Login\Controller\Helper\LoginORM;
+use Lancamento\Controller\Helper\ConstantesLancamento;
+use Lancamento\Controller\Helper\FuncoesLancamento;
+use Lancamento\Controller\Helper\LancamentoORM;
+use Login\Controller\Helper\Constantes;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\Mvc\I18n\Translator;
+use Zend\Session\Container;
 
 /**
  * Nome: LancamentoController.php
@@ -38,48 +42,13 @@ class LancamentoController extends AbstractActionController {
      */
     public function indexAction() {
         /* Helper Controller */
-        $loginORM = new LoginORM($this->getDoctrineORMEntityManager());
-        $pessoa = $loginORM->getPessoaORM()->encontrarPorIdPessoa(1);
-        echo "Nome: " . $pessoa->getNome() . "<br />";
-        echo "Grupos { <br />";
-        foreach ($pessoa->getResponsabilidadesAtivas() as $gr) {
-            $grupo = $gr->getGrupo();
-            echo "==== Entidade Nome: " . $grupo->getEntidadeAtiva()->getEntidadeTipo()->getNome() . "<br />";
-            echo "==== Entidade Info: " . $grupo->getEntidadeAtiva()->infoEntidade() . "<br />";
-            echo "==== | ==== Total de Eventos: " . count($grupo->getGrupoEvento()) . " <br />";
+        $lancamentoORM = new LancamentoORM($this->getDoctrineORMEntityManager());
 
-            if (count($grupo->getGrupoEvento()) > 0) {
-                echo "LISTAGEM DE EVENTOS #################################<br />";
-                echo "==== | ==== Eventos { <br />";
-                foreach ($grupo->getGrupoEvento() as $ge) {
-                    echo "==== | ==== | ==== Nome Tipo Evento " . $ge->getEvento()->getEventoTipo()->getNome() . "<br />";
-                    echo "==== | ==== | ==== Dia " . $ge->getEvento()->getDia() . "<br />";
-                    echo "==== | ==== | ==== Hora " . $ge->getEvento()->getHora() . "<br />";
-                    if ($ge->getEvento()->getEventoTipo()->getId() == 1) {// celula
-                        $celula = $ge->getEvento()->getEventoCelula();
-                        echo "==== | ==== | ==== | ==== " . $celula->getNome_hospedeiro() . "<br />";
-                        echo "==== | ==== | ==== | ==== " . $celula->getTelefone_hospedeiro() . "<br />";
-                        echo "==== | ==== | ==== | ==== " . $celula->getLogradouro() . "<br />";
-                        echo "==== | ==== | ==== | ==== " . $celula->getComplemento() . "<br />";
-                    }
-                }
-                echo "==== | ==== } <br />";
-            }
-            if (count($grupo->getGrupoPessoa()) > 0) {
-                echo "LISTAGEM DE PESSOAS #################################<br />";
-                echo "==== | ==== Pessoas volateis { <br />";
-                foreach ($grupo->getGrupoPessoa() as $gp) {
-                    $pessoa = $gp->getPessoa();
-                    echo "==== | ==== | ==== Nome " . $pessoa->getNome() . "<br />";
-                }
-                echo "==== | ==== } <br />";
-            }
-        }
-        echo "} <br />";
+        $sessao = new Container(Constantes::$NOME_APLICACAO);
+        $idEntidadeAtual = $sessao->idEntidadeAtual;
+        $entidade = $lancamentoORM->getEntidadeORM()->encontrarPorIdEntidade($idEntidadeAtual);
 
-
-
-        return [];
+        return [ConstantesLancamento::$ENTIDADE => $entidade];
     }
 
     /**
