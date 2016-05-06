@@ -1,19 +1,19 @@
 <?php
 
 use Lancamento\Controller\Helper\FuncoesLancamento;
- 
+
 $entidade = $this->entidade;
 
-$cicloAtual = FuncoesLancamento::cicloAtual(); 
+$cicloAtual = FuncoesLancamento::cicloAtual();
 ?>
 <div class="row">
     <div class="col-md-6">
-       <?php echo $this->dadosEntidade($entidade); ?>
+        <?php echo $this->dadosEntidade($entidade); ?>
     </div> 
     <div class="col-md-6">
-        <div class="alert alert-danger">
-            Precisa enviar o relatorio
-        </div>
+        <?php echo $this->alertaEnvioRelatorio(1); ?>
+        <?php echo $this->alertaEnvioRelatorio(2); ?>
+        <?php echo $this->alertaEnvioRelatorio(3); ?>
     </div> 
 </div>
 <div class="row">

@@ -7,6 +7,8 @@ namespace Entidade\Entity;
  * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com>
  * Descricao: Entidade anotada da tabela grupo
  */
+
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Lancamento\Controller\Helper\FuncoesLancamento;
@@ -63,6 +65,15 @@ class Grupo {
     /** @ORM\Column(type="string") */
     protected $hora_inativacao;
 
+    /** @ORM\Column(type="string") */
+    protected $envio;
+
+    /** @ORM\Column(type="string") */
+    protected $envio_data;
+
+    /** @ORM\Column(type="string") */
+    protected $envio_hora;
+
     /**
      * Recupera todas as entidades vinculadas aquele grupo
      * @return Entidade
@@ -106,7 +117,7 @@ class Grupo {
     function getGrupoResponsavel() {
         return $this->grupoResponsavel;
     }
-    
+
     /**
      * Recupera as pessoas das responsabilidades ativas
      * @return Pessoa[]
@@ -242,6 +253,59 @@ class Grupo {
 
     function setEventos($eventos) {
         $this->eventos = $eventos;
+    }
+
+    function getEnvio() {
+        return $this->envio;
+    }
+
+    function getEnvio_data() {
+        return $this->envio_data;
+    }
+
+    function getEnvio_hora() {
+        return $this->envio_hora;
+    }
+
+    function setEnvio($envio) {
+        $this->envio = $envio;
+    }
+
+    /**
+     * Seta o status de envio para sim e alterar data e hora de envio
+     */
+    function setRelatorioEnviado() {
+        $this->envio = 'S';
+        $timeNow = new DateTime();
+        $this->setEnvio_data($timeNow->format('Y-m-d'));
+        $this->setEnvio_hora($timeNow->format('H:s:i'));
+    }
+
+    /**
+     * Seta o status de envio para não
+     */
+    function setRelatorioPendente() {
+        $this->envio = 'N';
+    }
+
+    /**
+     * Verificar o status de envio o relatório
+     * @return boolean
+     */
+    public function verificarSeFoiEnviadoORelatorio() {
+        $resposta = false;
+        if ($this->getEnvio() == 'S') {
+            $resposta = true;
+        }
+        return $resposta;
+    }
+
+    function setEnvio_data($envio_data) {
+        $this->envio_data = $envio_data;
+    }
+
+    function setEnvio_hora($envio_hora) {
+        $this->envio_hora = $envio_hora;
     }
 
 }

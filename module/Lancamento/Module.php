@@ -8,6 +8,7 @@
 
 namespace Lancamento;
 
+use Lancamento\View\Helper\AlertaEnvioRelatorio;
 use Lancamento\View\Helper\DadosEntidade;
 use Zend\Mvc\MvcEvent;
 use Zend\Session\Config\SessionConfig;
@@ -35,6 +36,9 @@ class Module {
             'factories' => array(
                 'dadosEntidade' => function($sm) {
                     return new DadosEntidade();
+                },
+                'alertaEnvioRelatorio' => function($sm) {
+                    return new AlertaEnvioRelatorio();
                 },
             )
         );

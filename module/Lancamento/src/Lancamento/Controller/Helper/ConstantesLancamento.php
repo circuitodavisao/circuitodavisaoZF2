@@ -10,6 +10,7 @@ namespace Lancamento\Controller\Helper;
 class ConstantesLancamento {
 
     public static $ENTITY_ENTIDADE = 'Entidade\Entity\Entidade';
+    public static $ENTITY_GRUPO = 'Entidade\Entity\Grupo';
     public static $ENTIDADE = 'entidade';
 
 }

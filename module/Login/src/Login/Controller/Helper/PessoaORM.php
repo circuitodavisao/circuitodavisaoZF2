@@ -113,7 +113,7 @@ class PessoaORM {
     }
 
     /**
-     * Atualiza a pessoa no banco de ados
+     * Atualiza a pessoa no banco de dados
      * 
      * @param Pessoa $pessoa
      */

@@ -47,6 +47,21 @@ class LancamentoController extends AbstractActionController {
         $idEntidadeAtual = $sessao->idEntidadeAtual;
         $entidade = $lancamentoORM->getEntidadeORM()->encontrarPorIdEntidade($idEntidadeAtual);
 
+        /* Teste de alteracao de envio */
+        $grupo = $entidade->getGrupo();
+        $resposta = $grupo->verificarSeFoiEnviadoORelatorio();
+        if ($resposta) {
+            $resposta = 'Enviado';
+        } else {
+            $resposta = 'Nao Enviado';
+        } 
+        echo "<br />Grupo ";
+        echo "<br />Verificar Status: " . $resposta;
+        echo "<br />Data envio: " . $grupo->getEnvio_data();
+        echo "<br />Hora envio: " . $grupo->getEnvio_hora();
+
+//        $grupo->setRelatorioPendente();
+//        $lancamentoORM->getGrupoORM()->persistirGrupo($grupo);
         return [ConstantesLancamento::$ENTIDADE => $entidade];
     }
 
