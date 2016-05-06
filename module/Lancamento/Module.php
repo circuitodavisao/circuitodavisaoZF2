@@ -8,6 +8,7 @@
 
 namespace Lancamento;
 
+use Lancamento\View\Helper\DadosEntidade;
 use Zend\Mvc\MvcEvent;
 use Zend\Session\Config\SessionConfig;
 use Zend\Session\Container;
@@ -26,6 +27,16 @@ class Module {
                     __NAMESPACE__ => __DIR__ . '/src/' . __NAMESPACE__,
                 ),
             ),
+        );
+    }
+
+    public function getViewHelperConfig() {
+        return array(
+            'factories' => array(
+                'dadosEntidade' => function($sm) {
+                    return new DadosEntidade();
+                },
+            )
         );
     }
 

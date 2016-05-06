@@ -1,18 +1,14 @@
 <?php
 
 use Lancamento\Controller\Helper\FuncoesLancamento;
-
-$pessoa = $this->pessoa;
+ 
 $entidade = $this->entidade;
 
-$cicloAtual = FuncoesLancamento::cicloAtual();
+$cicloAtual = FuncoesLancamento::cicloAtual(); 
 ?>
 <div class="row">
     <div class="col-md-6">
-        <img class="img-rounded" />
-        <img class="img-rounded" width="64px" height="64px" src="/img/avatars/1.jpg" />&nbsp;
-        <img class="img-rounded" width="64px" height="64px" src="/img/avatars/2.jpg" />&nbsp;
-        Diego e Ursula Kort
+       <?php echo $this->dadosEntidade($entidade); ?>
     </div> 
     <div class="col-md-6">
         <div class="alert alert-danger">
@@ -65,6 +61,20 @@ $cicloAtual = FuncoesLancamento::cicloAtual();
                         }
                         ?>}
                     </div>
+                </div>
+                <div id="listaEventos" class="row">
+                    <?php
+                    if (count($grupo->getGrupoPessoa()) > 0) {
+                        foreach ($grupo->getGrupoPessoa() as $gp) {
+                            $pessoa = $gp->getPessoa();
+                            $pessoaTipo = $gp->getGrupoPessoaTipo();
+                            echo '<div class="row">';
+                            echo '<div class="col-md-3 btn-success">' . $pessoa->getNome() . '</div>';
+                            echo '<div class="col-md-2 btn-danger">' . $pessoaTipo->getNome() . '</div>';
+                            echo '</div>';
+                        }
+                    }
+                    ?>
                 </div>
             </div>
             <div id="tab10_2" class="tab-pane">

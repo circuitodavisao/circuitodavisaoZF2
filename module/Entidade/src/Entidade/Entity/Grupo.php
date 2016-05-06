@@ -106,6 +106,25 @@ class Grupo {
     function getGrupoResponsavel() {
         return $this->grupoResponsavel;
     }
+    
+    /**
+     * Recupera as pessoas das responsabilidades ativas
+     * @return Pessoa[]
+     */
+    function getResponsabilidadesAtivas() {
+        $responsabilidadesAtivas = array();
+        /* Responsabilidades */
+        $responsabilidadesTodosStatus = $this->getGrupoResponsavel();
+        if ($responsabilidadesTodosStatus) {
+            /* Verificar responsabilidades ativas */
+            foreach ($responsabilidadesTodosStatus as $responsabilidadeTodosStatus) {
+                if ($responsabilidadeTodosStatus->verificarSeEstaAtivo()) {
+                    $responsabilidadesAtivas[] = $responsabilidadeTodosStatus;
+                }
+            }
+        }
+        return $responsabilidadesAtivas;
+    }
 
     function getId() {
         return $this->id;

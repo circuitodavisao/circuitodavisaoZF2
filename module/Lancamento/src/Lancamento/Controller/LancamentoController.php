@@ -4,7 +4,6 @@ namespace Lancamento\Controller;
 
 use Doctrine\ORM\EntityManager;
 use Lancamento\Controller\Helper\ConstantesLancamento;
-use Lancamento\Controller\Helper\FuncoesLancamento;
 use Lancamento\Controller\Helper\LancamentoORM;
 use Login\Controller\Helper\Constantes;
 use Zend\Mvc\Controller\AbstractActionController;
