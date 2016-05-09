@@ -23,7 +23,7 @@ return array(
                 'options' => array(
                     'route' => '/lancamento[/:id]',
                     'constraints' => array(
-                        'id' => '[0-9]+',
+                        'id' => '[1-2]|[1-2]_[1-6]',
                     ),
                     'defaults' => array(
                         'controller' => 'Lancamento\Controller\Lancamento',

@@ -1,9 +1,7 @@
 <?php
 
+use Lancamento\Controller\Helper\ConstantesLancamento;
 use Lancamento\Controller\Helper\FuncoesLancamento;
-
-$entidade = $this->entidade;
-$cicloAtual = FuncoesLancamento::cicloAtual();
 
 $mesSelecionado = FuncoesLancamento::mesPorAbaSelecionada($this->abaSelecionada);
 $anoSelecionado = FuncoesLancamento::anoPorAbaSelecionada($this->abaSelecionada);
@@ -22,12 +20,17 @@ $anoSelecionado = FuncoesLancamento::anoPorAbaSelecionada($this->abaSelecionada)
     <div class="tab-block mb25">
         <!-- ABAS SELECIONADAS -->
         <ul class="nav nav-tabs tabs-bg">
-            <li role="presentation" onclick="abrirModal();" <?php echo $this->abaSelecionada($this->abaSelecionada, 1); ?>><a href="/lancamento"><i class="fa fa-wheelchair text-purple"></i> M&ecirc;s Atual</a></li>
-            <li role="presentation" onclick="abrirModal();" <?php echo $this->abaSelecionada($this->abaSelecionada, 2); ?>><a href="/lancamento/2"><i class="fa fa-bolt text-purple"></i>M&ecirc;s Anterior</a></li>
+            <?php
+            $urlBase = $this->url(ConstantesLancamento::$ROUTE_LANCAMENTO);
+            $urlBase2 = $urlBase . '/2';
+            ?>
+            <li role="presentation" <?php echo ConstantesLancamento::$ONCLICK_ABRIR_MODAL; ?> <?php echo $this->abaSelecionada($this->abaSelecionada, 1); ?>><a href="<?php echo $urlBase; ?>"><i class="fa fa-wheelchair text-purple"></i> M&ecirc;s Atual</a></li>
+            <li role="presentation" <?php echo ConstantesLancamento::$ONCLICK_ABRIR_MODAL; ?> <?php echo $this->abaSelecionada($this->abaSelecionada, 2); ?>><a href="<?php echo $urlBase2; ?>"><i class="fa fa-bolt text-purple"></i>M&ecirc;s Anterior</a></li>
         </ul>
+        <!-- FIM ABAS SELECIONADAS -->
         <!-- MODAL COM LOADER GIGANTE -->
         <?php echo $this->modalAba(); ?>
-
+        <!-- FIM MODAL COM LOADER GIGANTE -->
 
         <div class="tab-content">
             <div id="tab10_1" class="tab-pane active">
@@ -39,9 +42,25 @@ $anoSelecionado = FuncoesLancamento::anoPorAbaSelecionada($this->abaSelecionada)
                         </button>
                     </div>
                     <div class="col-md-6 text-center">
-                        <i class="btn fa fa-angle-double-left text-purple"></i>
-                        Ciclo {<?php echo $cicloAtual; ?>}
-                        <i class="btn fa fa-angle-double-right text-purple"></i>
+                        <?php
+                        $urlBaseCiclo = $urlBase . '/' . $this->abaSelecionada . '_';
+                        if ($this->cicloSelecionado > 1) {
+                            $urlCicloAnterior = $urlBaseCiclo . ($this->cicloSelecionado - 1);
+                            ?>
+                            <a <?php echo ConstantesLancamento::$ONCLICK_ABRIR_MODAL; ?> href="<?php echo $urlCicloAnterior; ?>"><i class="btn fa fa-angle-double-left text-purple"></i></a>
+                            <?php
+                        }
+                        ?>    
+                        Ciclo {<?php echo $this->cicloSelecionado; ?>}
+                        <?php
+                        $totalDeCiclos = FuncoesLancamento::totalCiclosMes($mesSelecionado, $anoSelecionado);
+                        if ($this->cicloSelecionado < $totalDeCiclos) {
+                            $urlCicloPosterior = $urlBaseCiclo . ($this->cicloSelecionado + 1);
+                            ?>
+                            <a <?php echo ConstantesLancamento::$ONCLICK_ABRIR_MODAL; ?> href="<?php echo $urlCicloPosterior; ?>"><i class="btn fa fa-angle-double-right text-purple"></i></a>
+                            <?php
+                        }
+                        ?>
                     </div>
                 </div>
                 <div id="cabecalhoEventos" class="row">
@@ -52,8 +71,8 @@ $anoSelecionado = FuncoesLancamento::anoPorAbaSelecionada($this->abaSelecionada)
                         {
                         <?php
                         /* Listagem dos eventos */
-                        $grupo = $entidade->getGrupo();
-                        $eventos = $grupo->getGrupoEventoNoCiclo($cicloAtual);
+                        $grupo = $this->entidade->getGrupo();
+                        $eventos = $grupo->getGrupoEventoNoCiclo($this->cicloSelecionado);
                         if (count($eventos) > 0) {
                             foreach ($eventos as $ge) {
                                 /* Verificar se o evento existe nesse ciclo */

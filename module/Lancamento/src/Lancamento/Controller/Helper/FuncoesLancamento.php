@@ -38,19 +38,19 @@ class FuncoesLancamento {
 
     /**
      * Retorna o total de ciclos do mês
-     * @param int $mesUsado
-     * @param int $anoUsado
+     * @param int $mesSelecionado
+     * @param int $anoSelecionado
      * @return int
      */
-    static public function totalCiclosMes($mesUsado = 5, $anoUsado = 2016) {
-        $diaDaSemanaDoPrimeiroDia = date('N', mktime(0, 0, 0, $mesUsado, 1, $anoUsado));
+    static public function totalCiclosMes($mesSelecionado = 5, $anoSelecionado = 2016) {
+        $diaDaSemanaDoPrimeiroDia = date('N', mktime(0, 0, 0, $mesSelecionado, 1, $anoSelecionado));
         if ($diaDaSemanaDoPrimeiroDia == 7) {// 7 - domingo
             $resposta = 1;
         } else {
             $resposta = 0;
         }
         for ($z = 1; $z <= 31; $z++) {
-            $diaDaSemana = date('N', mktime(0, 0, 0, $mesUsado, $z, $anoUsado));
+            $diaDaSemana = date('N', mktime(0, 0, 0, $mesSelecionado, $z, $anoSelecionado));
             if ($diaDaSemana == 7) {
                 $resposta++;
             }

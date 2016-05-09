@@ -4,6 +4,7 @@ namespace Lancamento\Controller;
 
 use Doctrine\ORM\EntityManager;
 use Lancamento\Controller\Helper\ConstantesLancamento;
+use Lancamento\Controller\Helper\FuncoesLancamento;
 use Lancamento\Controller\Helper\LancamentoORM;
 use Login\Controller\Helper\Constantes;
 use Zend\Mvc\Controller\AbstractActionController;
@@ -48,11 +49,30 @@ class LancamentoController extends AbstractActionController {
         $idEntidadeAtual = $sessao->idEntidadeAtual;
         $entidade = $lancamentoORM->getEntidadeORM()->encontrarPorIdEntidade($idEntidadeAtual);
 
-        /* Aba selecionada */
-        $abaSelecionada = $this->params()->fromRoute(Constantes::$ID);
-        if (empty($abaSelecionada)) {
+        /* Aba selecionada e ciclo */
+        $parametro = $this->params()->fromRoute(Constantes::$ID);
+        $explodeParamentro = explode('_', $parametro);
+        if (empty($explodeParamentro[0])) {
             $abaSelecionada = 1;
+        } else {
+            if ($explodeParamentro[0] == 1) {
+                $abaSelecionada = 1;
+            } else {
+                $abaSelecionada = 2;
+            }
         }
+        if (empty($explodeParamentro[1])) {
+            $mes1 = FuncoesLancamento::mesPorAbaSelecionada($abaSelecionada);
+            $ano1 = FuncoesLancamento::anoPorAbaSelecionada($abaSelecionada);
+            if ($abaSelecionada == 1) {
+                $cicloSelecionado = FuncoesLancamento::cicloAtual($mes1, $ano1);
+            } else {
+                $cicloSelecionado = FuncoesLancamento::totalCiclosMes($mes1, $ano1);
+            }
+        } else {
+            $cicloSelecionado = $explodeParamentro[1];
+        }
+
 
         /* Teste de alteracao de envio */
         $grupo = $entidade->getGrupo();
@@ -67,9 +87,14 @@ class LancamentoController extends AbstractActionController {
         echo "<br />Data envio: " . $grupo->getEnvio_data();
         echo "<br />Hora envio: " . $grupo->getEnvio_hora();
 
-        $view = new ViewModel(array(
+        /* Teste de aas e ciclo */
+        echo "<br /><br /> abaSelecionada$abaSelecionada-cicloSelecionado$cicloSelecionado";
+        $view = new ViewModel(
+                array(
             ConstantesLancamento::$ENTIDADE => $entidade,
-            ConstantesLancamento::$ABA_SELECIONADA => $abaSelecionada,)
+            ConstantesLancamento::$ABA_SELECIONADA => $abaSelecionada,
+            ConstantesLancamento::$CICLO_SELECIONADO => $cicloSelecionado,
+                )
         );
 
         /* Javascript especifico */
