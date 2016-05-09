@@ -19,9 +19,12 @@ return array(
     'router' => array(
         'routes' => array(
             'lancamento' => array(
-                'type' => 'Literal',
+                'type' => 'Segment',
                 'options' => array(
-                    'route' => '/lancamento',
+                    'route' => '/lancamento[/:id]',
+                    'constraints' => array(
+                        'id' => '[0-9]+',
+                    ),
                     'defaults' => array(
                         'controller' => 'Lancamento\Controller\Lancamento',
                         'action' => 'index',
@@ -61,6 +64,7 @@ return array(
         'template_map' => array(
             'layout/layout' => __DIR__ . '/../../Login/view/layout/layout.phtml',
             'lancamento/lancamento/index' => __DIR__ . '/../view/lancamento/index.phtml',
+            'layout/layout-js-lancamento' => __DIR__ . '/../view/layout/layout-js-lancamento.phtml',
             'error/404' => __DIR__ . '/../../Login/view/error/404.phtml',
             'error/index' => __DIR__ . '/../../Login/view/error/index.phtml',
         ),

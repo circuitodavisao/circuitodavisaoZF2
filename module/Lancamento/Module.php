@@ -8,8 +8,10 @@
 
 namespace Lancamento;
 
+use Lancamento\View\Helper\AbaSelecionada;
 use Lancamento\View\Helper\AlertaEnvioRelatorio;
 use Lancamento\View\Helper\DadosEntidade;
+use Lancamento\View\Helper\ModalAba;
 use Zend\Mvc\MvcEvent;
 use Zend\Session\Config\SessionConfig;
 use Zend\Session\Container;
@@ -39,6 +41,12 @@ class Module {
                 },
                 'alertaEnvioRelatorio' => function($sm) {
                     return new AlertaEnvioRelatorio();
+                },
+                'abaSelecionada' => function($sm) {
+                    return new AbaSelecionada();
+                },
+                'ModalAba' => function($sm) {
+                    return new ModalAba();
                 },
             )
         );

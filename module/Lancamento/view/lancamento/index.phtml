@@ -3,8 +3,10 @@
 use Lancamento\Controller\Helper\FuncoesLancamento;
 
 $entidade = $this->entidade;
-
 $cicloAtual = FuncoesLancamento::cicloAtual();
+
+$mesSelecionado = FuncoesLancamento::mesPorAbaSelecionada($this->abaSelecionada);
+$anoSelecionado = FuncoesLancamento::anoPorAbaSelecionada($this->abaSelecionada);
 ?>
 <div class="row">
     <div class="col-md-6">
@@ -18,14 +20,15 @@ $cicloAtual = FuncoesLancamento::cicloAtual();
 </div>
 <div class="row">
     <div class="tab-block mb25">
+        <!-- ABAS SELECIONADAS -->
         <ul class="nav nav-tabs tabs-bg">
-            <li class="active">
-                <a href="#tab10_1" data-toggle="tab"><i class="fa fa-wheelchair text-purple"></i> Mês Atual</a>
-            </li>
-            <li>
-                <a href="#tab10_2" data-toggle="tab"><i class="fa fa-bolt text-purple"></i> Mês Anterior</a>
-            </li>
+            <li role="presentation" onclick="abrirModal();" <?php echo $this->abaSelecionada($this->abaSelecionada, 1); ?>><a href="/lancamento"><i class="fa fa-wheelchair text-purple"></i> M&ecirc;s Atual</a></li>
+            <li role="presentation" onclick="abrirModal();" <?php echo $this->abaSelecionada($this->abaSelecionada, 2); ?>><a href="/lancamento/2"><i class="fa fa-bolt text-purple"></i>M&ecirc;s Anterior</a></li>
         </ul>
+        <!-- MODAL COM LOADER GIGANTE -->
+        <?php echo $this->modalAba(); ?>
+
+
         <div class="tab-content">
             <div id="tab10_1" class="tab-pane active">
                 <div id="cabecalhoCiclo" class="row">
@@ -84,8 +87,11 @@ $cicloAtual = FuncoesLancamento::cicloAtual();
     </div>
 </div>
 
-<hr />
 <?php
+/* Layout com javascript para tela de index */
+echo $this->layoutJSLancamento;
+
+//<?php
 //echo "Nome: " . $pessoa->getNome() . "<br />";
 //echo "Grupos { <br />";
 //foreach ($pessoa->getResponsabilidadesAtivas() as $gr) {

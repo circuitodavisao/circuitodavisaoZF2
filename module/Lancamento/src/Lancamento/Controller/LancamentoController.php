@@ -9,6 +9,7 @@ use Login\Controller\Helper\Constantes;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\Mvc\I18n\Translator;
 use Zend\Session\Container;
+use Zend\View\Model\ViewModel;
 
 /**
  * Nome: LancamentoController.php
@@ -47,6 +48,12 @@ class LancamentoController extends AbstractActionController {
         $idEntidadeAtual = $sessao->idEntidadeAtual;
         $entidade = $lancamentoORM->getEntidadeORM()->encontrarPorIdEntidade($idEntidadeAtual);
 
+        /* Aba selecionada */
+        $abaSelecionada = $this->params()->fromRoute(Constantes::$ID);
+        if (empty($abaSelecionada)) {
+            $abaSelecionada = 1;
+        }
+
         /* Teste de alteracao de envio */
         $grupo = $entidade->getGrupo();
         $resposta = $grupo->verificarSeFoiEnviadoORelatorio();
@@ -54,15 +61,23 @@ class LancamentoController extends AbstractActionController {
             $resposta = 'Enviado';
         } else {
             $resposta = 'Nao Enviado';
-        } 
+        }
         echo "<br />Grupo ";
         echo "<br />Verificar Status: " . $resposta;
         echo "<br />Data envio: " . $grupo->getEnvio_data();
         echo "<br />Hora envio: " . $grupo->getEnvio_hora();
 
-//        $grupo->setRelatorioPendente();
-//        $lancamentoORM->getGrupoORM()->persistirGrupo($grupo);
-        return [ConstantesLancamento::$ENTIDADE => $entidade];
+        $view = new ViewModel(array(
+            ConstantesLancamento::$ENTIDADE => $entidade,
+            ConstantesLancamento::$ABA_SELECIONADA => $abaSelecionada,)
+        );
+
+        /* Javascript especifico */
+        $layoutJS = new ViewModel();
+        $layoutJS->setTemplate(ConstantesLancamento::$TEMPLATE_JS_LANCAMENTO);
+        $view->addChild($layoutJS, ConstantesLancamento::$STRING_JS_LANCAMENTO);
+
+        return $view;
     }
 
     /**

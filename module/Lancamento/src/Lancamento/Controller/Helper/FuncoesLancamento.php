@@ -113,4 +113,37 @@ class FuncoesLancamento {
         return $resposta;
     }
 
+    public static function mesPorAbaSelecionada($abaSelecionada) {
+        $mesSelecionado = 0;
+        if ($abaSelecionada == 1) { // mes atual
+            $mesSelecionado = date('n');
+        }
+        if ($abaSelecionada == 2) {// mes anterior
+            $mesAtual = date('n');
+            if ($mesAtual == 1) {
+                $mesSelecionado = 12;
+            } else {
+                $mesSelecionado = $mesAtual - 1;
+            }
+        }
+        return $mesSelecionado;
+    }
+
+    public static function anoPorAbaSelecionada($abaSelecionada) {
+        $anoSelecionado = 0;
+        if ($abaSelecionada == 1) { // mes atual
+            $anoSelecionado = date('Y');
+        }
+        if ($abaSelecionada == 2) {// mes anterior
+            $mesAtual = date('n');
+            $anoAtual = date('Y');
+            if ($mesAtual == 1) {
+                $anoSelecionado = $anoAtual - 1;
+            } else {
+                $anoSelecionado = $anoAtual;
+            }
+        }
+        return $anoSelecionado;
+    }
+
 }
