@@ -18,5 +18,8 @@ class ConstantesLancamento {
     public static $STRING_JS_LANCAMENTO = 'layoutJSPrincipal';
     public static $ROUTE_LANCAMENTO = 'lancamento';
     public static $ONCLICK_ABRIR_MODAL = 'onclick="abrirModal();"';
+    public static $PAGINA = 'pagina';
+    public static $PAGINA_CADASTRAR_PESSOA = 'CadastrarPessoa';
+    public static $CONTROLLER_LANCAMENTO = 'Lancamento\Controller\Lancamento';
 
 }

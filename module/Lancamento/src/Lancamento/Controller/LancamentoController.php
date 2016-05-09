@@ -39,9 +39,16 @@ class LancamentoController extends AbstractActionController {
 
     /**
      * Função padrão, traz a tela para lancamento
-     * GET /lancamento
+     * GET /lancamento[:pagina[/:id]]
      */
     public function indexAction() {
+        /* Verificando rota */
+        $pagina = $this->getEvent()->getRouteMatch()->getParam(ConstantesLancamento::$PAGINA, 1);
+        if ($pagina == ConstantesLancamento::$PAGINA_CADASTRAR_PESSOA) {
+            return $this->forward()->dispatch(ConstantesLancamento::$CONTROLLER_LANCAMENTO, array(
+                        Constantes::$ACTION => ConstantesLancamento::$PAGINA_CADASTRAR_PESSOA,
+            ));
+        }
         /* Helper Controller */
         $lancamentoORM = new LancamentoORM($this->getDoctrineORMEntityManager());
 
@@ -103,6 +110,10 @@ class LancamentoController extends AbstractActionController {
         $view->addChild($layoutJS, ConstantesLancamento::$STRING_JS_LANCAMENTO);
 
         return $view;
+    }
+
+    public function cadastrarPessoaAction() {
+        return new ViewModel();
     }
 
     /**

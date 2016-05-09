@@ -21,8 +21,9 @@ return array(
             'lancamento' => array(
                 'type' => 'Segment',
                 'options' => array(
-                    'route' => '/lancamento[/:id]',
+                    'route' => '/lancamento[:pagina[/:id]]',
                     'constraints' => array(
+                        'pagina' => '[a-zA-z]*',
                         'id' => '[1-2]|[1-2]_[1-6]',
                     ),
                     'defaults' => array(
@@ -64,6 +65,7 @@ return array(
         'template_map' => array(
             'layout/layout' => __DIR__ . '/../../Login/view/layout/layout.phtml',
             'lancamento/lancamento/index' => __DIR__ . '/../view/lancamento/index.phtml',
+            'lancamento/lancamento/cadastrar-pessoa' => __DIR__ . '/../view/lancamento/cadastrar-pessoa.phtml',
             'layout/layout-js-lancamento' => __DIR__ . '/../view/layout/layout-js-lancamento.phtml',
             'error/404' => __DIR__ . '/../../Login/view/error/404.phtml',
             'error/index' => __DIR__ . '/../../Login/view/error/index.phtml',
