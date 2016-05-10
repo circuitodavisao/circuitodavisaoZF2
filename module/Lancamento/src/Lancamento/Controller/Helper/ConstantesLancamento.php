@@ -10,6 +10,8 @@ namespace Lancamento\Controller\Helper;
 class ConstantesLancamento {
 
     public static $ENTITY_ENTIDADE = 'Entidade\Entity\Entidade';
+    public static $ENTITY_EVENTO = 'Entidade\Entity\Evento';
+    public static $ENTITY_EVENTO_FREQUENCIA = 'Entidade\Entity\EventoFrequencia';
     public static $ENTITY_GRUPO = 'Entidade\Entity\Grupo';
     public static $ENTIDADE = 'entidade';
     public static $ABA_SELECIONADA = 'abaSelecionada';
@@ -20,6 +22,7 @@ class ConstantesLancamento {
     public static $ONCLICK_ABRIR_MODAL = 'onclick="abrirModal();"';
     public static $PAGINA = 'pagina';
     public static $PAGINA_CADASTRAR_PESSOA = 'CadastrarPessoa';
+    public static $PAGINA_MUDAR_FREQUENCIA = 'MudarFrequencia';
     public static $CONTROLLER_LANCAMENTO = 'Lancamento\Controller\Lancamento';
 
 }

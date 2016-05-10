@@ -23,8 +23,14 @@ class Evento {
      */
     protected $grupoEvento;
 
+    /**
+     * @ORM\OneToMany(targetEntity="EventoFrequencia", mappedBy="evento") 
+     */
+    protected $eventoFrequencia;
+
     public function __construct() {
         $this->grupoEvento = new ArrayCollection();
+        $this->eventoFrequencia = new ArrayCollection();
     }
 
     /**
@@ -144,6 +150,14 @@ class Evento {
 
     function setEventoCelula($eventoCelula) {
         $this->eventoCelula = $eventoCelula;
+    }
+
+    function getEventoFrequencia() {
+        return $this->eventoFrequencia;
+    }
+
+    function setEventoFrequencia($eventoFrequencia) {
+        $this->eventoFrequencia = $eventoFrequencia;
     }
 
 }

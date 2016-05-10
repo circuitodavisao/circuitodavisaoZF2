@@ -3,20 +3,20 @@
 namespace Lancamento\Controller\Helper;
 
 use Doctrine\ORM\EntityManager;
-use Entidade\Entity\Entidade;
+use Entidade\Entity\Evento;
 use Exception;
 
 /**
- * Nome: PessoaORM.php
+ * Nome: EventoORM.php
  * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com>
- * Descricao: Classe com acesso doctrine a entity pessoa
+ * Descricao: Classe com acesso doctrine a entity Evento
  */
-class EntidadeORM {
+class EventoORM {
 
     private $_entityManager;
     private $_entity;
 
-    /** 
+    /**
      * Construtor
      * 
      * @param EntityManager $entityManager
@@ -25,24 +25,24 @@ class EntidadeORM {
         if (!is_null($entityManager)) {
             $this->_entityManager = $entityManager;
         }
-        $this->_entity = ConstantesLancamento::$ENTITY_ENTIDADE;
+        $this->_entity = ConstantesLancamento::$ENTITY_EVENTO;
     }
 
     /**
-     * Localizar entidade por idEntidade
+     * Localizar pessoa por idEvento
      * 
-     * @param integer $idEntidade
-     * @return Entidade
+     * @param integer $idEvento
+     * @return Evento
      * @throws Exception
      */
-    public function encontrarPorIdEntidade($idEntidade) {
-        $id = (int) $idEntidade;
+    public function encontrarPorIdEvento($idEvento) {
+        $id = (int) $idEvento;
 
-        $entidade = $this->getEntityManager()->find($this->getEntity(), $id);
-        if (!$entidade) {
-            throw new Exception("Não foi encontrado a pessoa de id = {$id}");
+        $evento = $this->getEntityManager()->find($this->getEntity(), $id);
+        if (!$evento) {
+            throw new Exception("Não foi encontrado ao evento de id = {$id}");
         }
-        return $entidade;
+        return $evento;
     }
 
     public function getEntityManager() {

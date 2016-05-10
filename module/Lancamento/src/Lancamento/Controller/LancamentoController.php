@@ -3,10 +3,13 @@
 namespace Lancamento\Controller;
 
 use Doctrine\ORM\EntityManager;
+use Entidade\Entity\EventoFrequencia;
 use Lancamento\Controller\Helper\ConstantesLancamento;
 use Lancamento\Controller\Helper\FuncoesLancamento;
 use Lancamento\Controller\Helper\LancamentoORM;
 use Login\Controller\Helper\Constantes;
+use Login\Controller\Helper\LoginORM;
+use Zend\Json\Json;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\Mvc\I18n\Translator;
 use Zend\Session\Container;
@@ -47,6 +50,11 @@ class LancamentoController extends AbstractActionController {
         if ($pagina == ConstantesLancamento::$PAGINA_CADASTRAR_PESSOA) {
             return $this->forward()->dispatch(ConstantesLancamento::$CONTROLLER_LANCAMENTO, array(
                         Constantes::$ACTION => ConstantesLancamento::$PAGINA_CADASTRAR_PESSOA,
+            ));
+        }
+        if ($pagina == ConstantesLancamento::$PAGINA_MUDAR_FREQUENCIA) {
+            return $this->forward()->dispatch(ConstantesLancamento::$CONTROLLER_LANCAMENTO, array(
+                        Constantes::$ACTION => ConstantesLancamento::$PAGINA_MUDAR_FREQUENCIA,
             ));
         }
         /* Helper Controller */
@@ -112,8 +120,45 @@ class LancamentoController extends AbstractActionController {
         return $view;
     }
 
+    /**
+     * Abri tela para cadastro de pessoa para lançamento
+     * @return ViewModel
+     */
     public function cadastrarPessoaAction() {
         return new ViewModel();
+    }
+
+    /**
+     * Muda a frequência de um evento
+     * @return Json
+     */
+    public function mudarFrequenciaAction() {
+        $request = $this->getRequest();
+        $response = $this->getResponse();
+        if ($request->isPost()) {
+            $post_data = $request->getPost();
+            $valor = $post_data['valor'];
+            $checkbox = $post_data['checkbox'];
+            $explodeCheckbox = explode('_', $checkbox);
+
+            /* Helper Controller */
+            $lancamentoORM = new LancamentoORM($this->getDoctrineORMEntityManager());
+            $loginORM = new LoginORM($this->getDoctrineORMEntityManager());
+
+            $pessoa = $loginORM->getPessoaORM()->encontrarPorIdPessoa($explodeCheckbox[1]);
+            $evento = $lancamentoORM->getEventoORM()->encontrarPorIdEvento($explodeCheckbox[2]);
+
+            /* Persitir frequencia */
+            $eventoFrequencia = new EventoFrequencia();
+            $eventoFrequencia->setPessoa($pessoa);
+            $eventoFrequencia->setEvento($evento);
+            $eventoFrequencia->setFrequencia($valor);
+
+            $lancamentoORM->getEventoFrequenciaORM()->persistirSemDispacharEventoFrequencia($eventoFrequencia);
+
+            $response->setContent(Json::encode(array('response' => 'true')));
+        }
+        return $response;
     }
 
     /**

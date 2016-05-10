@@ -93,6 +93,19 @@ $anoSelecionado = FuncoesLancamento::anoPorAbaSelecionada($this->abaSelecionada)
                             echo '<div class="row">';
                             echo '<div class="col-md-3 btn-success">' . $pessoa->getNome() . '</div>';
                             echo '<div class="col-md-2 btn-danger">' . $pessoaTipo->getNome() . '</div>';
+                            /* Listagem dos eventos */
+                            $grupo = $this->entidade->getGrupo();
+                            $eventos = $grupo->getGrupoEventoNoCiclo($this->cicloSelecionado);
+                            if (count($eventos) > 0) {
+                                echo '<div class="col-md-7 btn-default">';
+                                foreach ($eventos as $ge) {
+                                    $idEventoFrequencia = 'checkbox_' . $pessoa->getId() . '_' . $ge->getEvento()->getId();
+                                    echo '<div class="col-md-2 btn-info text-center">';
+                                    echo "<input onclick='mudarFrequencia(this);' type='checkbox' id='$idEventoFrequencia' />";
+                                    echo '</div>';
+                                }
+                                echo '</div>';
+                            }
                             echo '</div>';
                         }
                     }

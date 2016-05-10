@@ -14,6 +14,8 @@ class LancamentoORM {
     private $_doctrineORMEntityManager;
     private $_entidadeORM;
     private $_grupoORM;
+    private $_eventoORM;
+    private $_eventoFrequenciaORM;
 
     /**
      * Contrutor
@@ -33,6 +35,28 @@ class LancamentoORM {
             $this->_entidadeORM = new EntidadeORM($this->getDoctrineORMEntityManager());
         }
         return $this->_entidadeORM;
+    }
+
+    /**
+     * Metodo public para obter a instancia do Helper EventoORM
+     * @return EventoORM
+     */
+    public function getEventoORM() {
+        if (is_null($this->_eventoORM)) {
+            $this->_eventoORM = new EventoORM($this->getDoctrineORMEntityManager());
+        }
+        return $this->_eventoORM;
+    }
+
+    /**
+     * Metodo public para obter a instancia do Helper EventoFrequenciaORM
+     * @return EventoFrequenciaORM
+     */
+    public function getEventoFrequenciaORM() {
+        if (is_null($this->_eventoFrequenciaORM)) {
+            $this->_eventoFrequenciaORM = new EventoFrequenciaORM($this->getDoctrineORMEntityManager());
+        }
+        return $this->_eventoFrequenciaORM;
     }
 
     /**
