@@ -37,6 +37,45 @@ class FuncoesLancamento {
     }
 
     /**
+     * Retorna o perido do ciclo selecionado
+     * @param type $ciclo
+     * @param type $mesUsado
+     * @param type $anoUsado
+     * @return string
+     */
+    static public function periodoCicloMesAno($ciclo = 1, $mesUsado = 5, $anoUsado = 2016) {
+        $resposta = '';
+
+        $mesFormatado = str_pad($mesUsado, 2, 0, STR_PAD_LEFT);
+
+        $diaDaSemanaDoPrimeiroDia = date('N', mktime(0, 0, 0, $mesUsado, 1, $anoUsado));
+        if ($diaDaSemanaDoPrimeiroDia == 7) {// 7 - domingo
+            $cicloAux = 1;
+        } else {
+            $cicloAux = 0;
+        }
+        $umaVez = 0;
+        for ($z = 1; $z <= 31; $z++) {
+            /* Periodo */
+            if ($cicloAux == $ciclo && $umaVez == 0) {
+                $diaFormatado = str_pad($z, 2, 0, STR_PAD_LEFT);
+                $resposta .= $diaFormatado . '/' . $mesFormatado . ' a ';
+                $umaVez++;
+            }
+
+            $diaDaSemana = date('N', mktime(0, 0, 0, $mesUsado, $z, $anoUsado));
+            if ($diaDaSemana == 7) {
+                if ($cicloAux == $ciclo) {
+                    $diaFormatado = str_pad($z, 2, 0, STR_PAD_LEFT);
+                    $resposta .= $diaFormatado . '/' . $mesFormatado;
+                }
+                $cicloAux++;
+            }
+        }
+        return $resposta;
+    }
+
+    /**
      * Retorna o total de ciclos do mês
      * @param int $mesSelecionado
      * @param int $anoSelecionado
@@ -71,7 +110,6 @@ class FuncoesLancamento {
         if ($ciclo == 1) {
             /* 1 para segunda e 7 para domingo */
             $diaDaSemana = date('N', mktime(0, 0, 0, $mes, 1, $ano));
-            $diaDaSemana = 4;
             if ($diaDaSemana == 7) {
                 if ($diaDoEvento == 1) {
                     $resposta = true;

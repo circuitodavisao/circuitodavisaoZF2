@@ -5,7 +5,7 @@
  */
 
 
-function mudarFrequencia(checkbox) {
+function mudarFrequencia(checkbox, ciclo) {
     var valor = 'N';
     if (checkbox.checked) {
         valor = "S";
@@ -15,12 +15,13 @@ function mudarFrequencia(checkbox) {
             {
                 valor: valor,
                 checkbox: checkbox.id,
+                ciclo: ciclo,
             },
             function (data) {
                 if (data.response) {
-                    alert(4);
+                    $('#div_' + checkbox.id).addClass('btn-success');
                 } else {
-                    alert(5);
+//                    alert(5);
                 }
             }, 'json');
 }

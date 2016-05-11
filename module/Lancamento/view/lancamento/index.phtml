@@ -51,7 +51,7 @@ $anoSelecionado = FuncoesLancamento::anoPorAbaSelecionada($this->abaSelecionada)
                             <?php
                         }
                         ?>    
-                        Ciclo {<?php echo $this->cicloSelecionado; ?>}
+                        Ciclo {<?php echo $this->cicloSelecionado; ?>} <?php echo 'Periodo ' . FuncoesLancamento::periodoCicloMesAno($this->cicloSelecionado, $mesSelecionado, $anoSelecionado); ?>
                         <?php
                         $totalDeCiclos = FuncoesLancamento::totalCiclosMes($mesSelecionado, $anoSelecionado);
                         if ($this->cicloSelecionado < $totalDeCiclos) {
@@ -99,9 +99,16 @@ $anoSelecionado = FuncoesLancamento::anoPorAbaSelecionada($this->abaSelecionada)
                             if (count($eventos) > 0) {
                                 echo '<div class="col-md-7 btn-default">';
                                 foreach ($eventos as $ge) {
+                                    $evento = $ge->getEvento();
+                                    $eventoFrequencia = $evento->getEventoFrequencia();
                                     $idEventoFrequencia = 'checkbox_' . $pessoa->getId() . '_' . $ge->getEvento()->getId();
-                                    echo '<div class="col-md-2 btn-info text-center">';
-                                    echo "<input onclick='mudarFrequencia(this);' type='checkbox' id='$idEventoFrequencia' />";
+                                    echo '<div id="div_' . $idEventoFrequencia . '" class="col-md-2 text-center">';
+                                    if ($eventoFrequencia) {
+                                        foreach ($eventoFrequencia as $ef) {
+                                            $pessoa = $ef->getPessoa();
+                                        }
+                                    }
+                                    echo "<input onclick='mudarFrequencia(this, $this->cicloSelecionado);' type='checkbox' id='$idEventoFrequencia' />";
                                     echo '</div>';
                                 }
                                 echo '</div>';

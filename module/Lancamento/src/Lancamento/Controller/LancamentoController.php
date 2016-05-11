@@ -88,22 +88,21 @@ class LancamentoController extends AbstractActionController {
             $cicloSelecionado = $explodeParamentro[1];
         }
 
-
-        /* Teste de alteracao de envio */
-        $grupo = $entidade->getGrupo();
-        $resposta = $grupo->verificarSeFoiEnviadoORelatorio();
-        if ($resposta) {
-            $resposta = 'Enviado';
-        } else {
-            $resposta = 'Nao Enviado';
-        }
-        echo "<br />Grupo ";
-        echo "<br />Verificar Status: " . $resposta;
-        echo "<br />Data envio: " . $grupo->getEnvio_data();
-        echo "<br />Hora envio: " . $grupo->getEnvio_hora();
-
-        /* Teste de aas e ciclo */
-        echo "<br /><br /> abaSelecionada$abaSelecionada-cicloSelecionado$cicloSelecionado";
+//        /* Teste de alteracao de envio */
+//        $grupo = $entidade->getGrupo();
+//        $resposta = $grupo->verificarSeFoiEnviadoORelatorio();
+//        if ($resposta) {
+//            $resposta = 'Enviado';
+//        } else {
+//            $resposta = 'Nao Enviado';
+//        }
+//        echo "<br />Grupo ";
+//        echo "<br />Verificar Status: " . $resposta;
+//        echo "<br />Data envio: " . $grupo->getEnvio_data();
+//        echo "<br />Hora envio: " . $grupo->getEnvio_hora();
+//
+//        /* Teste de aas e ciclo */
+//        echo "<br /><br /> abaSelecionada$abaSelecionada-cicloSelecionado$cicloSelecionado";
         $view = new ViewModel(
                 array(
             ConstantesLancamento::$ENTIDADE => $entidade,
@@ -139,6 +138,7 @@ class LancamentoController extends AbstractActionController {
             $post_data = $request->getPost();
             $valor = $post_data['valor'];
             $checkbox = $post_data['checkbox'];
+            $ciclo = $post_data['ciclo'];
             $explodeCheckbox = explode('_', $checkbox);
 
             /* Helper Controller */
@@ -153,6 +153,7 @@ class LancamentoController extends AbstractActionController {
             $eventoFrequencia->setPessoa($pessoa);
             $eventoFrequencia->setEvento($evento);
             $eventoFrequencia->setFrequencia($valor);
+            $eventoFrequencia->setCiclo($ciclo);
 
             $lancamentoORM->getEventoFrequenciaORM()->persistirSemDispacharEventoFrequencia($eventoFrequencia);
 

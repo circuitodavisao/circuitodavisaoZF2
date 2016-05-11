@@ -7,7 +7,6 @@ namespace Entidade\Entity;
  * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com>
  * Descricao: Entidade anotada da tabela evento_frequencia
  */
-
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -56,6 +55,9 @@ class EventoFrequencia {
 
     /** @ORM\Column(type="string") */
     protected $frequencia;
+
+    /** @ORM\Column(type="integer") */
+    protected $ciclo;
 
     /**
      * Seta data e hora de criação
@@ -144,6 +146,14 @@ class EventoFrequencia {
 
     function setFrequencia($frequencia) {
         $this->frequencia = $frequencia;
+    }
+
+    function getCiclo() {
+        return $this->ciclo;
+    }
+
+    function setCiclo($ciclo) {
+        $this->ciclo = $ciclo;
     }
 
 }
