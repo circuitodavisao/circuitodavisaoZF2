@@ -59,6 +59,12 @@ class EventoFrequencia {
     /** @ORM\Column(type="integer") */
     protected $ciclo;
 
+    /** @ORM\Column(type="integer") */
+    protected $mes;
+
+    /** @ORM\Column(type="integer") */
+    protected $ano;
+
     /**
      * Seta data e hora de criação
      */
@@ -154,6 +160,22 @@ class EventoFrequencia {
 
     function setCiclo($ciclo) {
         $this->ciclo = $ciclo;
+    }
+
+    function getMes() {
+        return $this->mes;
+    }
+
+    function getAno() {
+        return $this->ano;
+    }
+
+    function setMes($mes) {
+        $this->mes = $mes;
+    }
+
+    function setAno($ano) {
+        $this->ano = $ano;
     }
 
 }

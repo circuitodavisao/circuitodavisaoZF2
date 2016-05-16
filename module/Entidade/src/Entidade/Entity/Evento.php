@@ -152,6 +152,10 @@ class Evento {
         $this->eventoCelula = $eventoCelula;
     }
 
+    /**
+     * Retorna as frequnências do evento
+     * @return EventoFrequencia
+     */
     function getEventoFrequencia() {
         return $this->eventoFrequencia;
     }

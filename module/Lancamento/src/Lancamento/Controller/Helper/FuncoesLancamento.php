@@ -164,7 +164,7 @@ class FuncoesLancamento {
                 $mesSelecionado = $mesAtual - 1;
             }
         }
-        return $mesSelecionado;
+        return (int) $mesSelecionado;
     }
 
     public static function anoPorAbaSelecionada($abaSelecionada) {
@@ -181,7 +181,7 @@ class FuncoesLancamento {
                 $anoSelecionado = $anoAtual;
             }
         }
-        return $anoSelecionado;
+        return (int) $anoSelecionado;
     }
 
 }

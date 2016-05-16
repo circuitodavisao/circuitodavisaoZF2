@@ -1,5 +1,6 @@
 <?php
 
+use Doctrine\Common\Collections\Criteria;
 use Lancamento\Controller\Helper\ConstantesLancamento;
 use Lancamento\Controller\Helper\FuncoesLancamento;
 
@@ -99,16 +100,35 @@ $anoSelecionado = FuncoesLancamento::anoPorAbaSelecionada($this->abaSelecionada)
                             if (count($eventos) > 0) {
                                 echo '<div class="col-md-7 btn-default">';
                                 foreach ($eventos as $ge) {
+                                    $valor = '';
+                                    $class = 'btn-warning';
+                                    $checked = '';
                                     $evento = $ge->getEvento();
                                     $eventoFrequencia = $evento->getEventoFrequencia();
-                                    $idEventoFrequencia = 'checkbox_' . $pessoa->getId() . '_' . $ge->getEvento()->getId();
-                                    echo '<div id="div_' . $idEventoFrequencia . '" class="col-md-2 text-center">';
-                                    if ($eventoFrequencia) {
-                                        foreach ($eventoFrequencia as $ef) {
-                                            $pessoa = $ef->getPessoa();
+                                    $idEventoFrequencia = 'checkbox_' . $pessoa->getId() . '_' . $evento->getId();
+                                    if (count($eventoFrequencia) > 0) {
+                                        $criteria = Criteria::create()
+                                                ->andWhere(Criteria::expr()->eq("pessoa_id", $pessoa->getId()))
+                                                ->andWhere(Criteria::expr()->eq("ano", $anoSelecionado))
+                                                ->andWhere(Criteria::expr()->eq("mes", $mesSelecionado))
+                                                ->andWhere(Criteria::expr()->eq("ciclo", $this->cicloSelecionado))
+                                        ;
+                                        $eventosFiltrados = $eventoFrequencia->matching($criteria);
+                                        if ($eventosFiltrados->count() == 1) {
+                                            $valor = $eventosFiltrados->first()->getFrequencia();
+                                            if ($valor == 'S') {
+                                                $checked = 'checked';
+                                                $class = 'btn-success';
+                                            } else {
+                                                $checked = '';
+                                                $class = 'btn-warning';
+                                            }
+                                            $idEventoFrequencia = 'checkbox_' . $eventosFiltrados->first()->getId();
                                         }
                                     }
-                                    echo "<input onclick='mudarFrequencia(this, $this->cicloSelecionado);' type='checkbox' id='$idEventoFrequencia' />";
+
+                                    echo '<div id="div_' . $idEventoFrequencia . '" class="col-md-2 text-center ' . $class . '">';
+                                    echo "<input id='$idEventoFrequencia' $checked onclick='mudarFrequencia(this, $this->cicloSelecionado, $this->abaSelecionada);' type='checkbox' />";
                                     echo '</div>';
                                 }
                                 echo '</div>';
@@ -169,3 +189,502 @@ echo $this->layoutJSLancamento;
 //    }
 //}
 //echo "} <br />";
+?>
+<!-- Begin: Content -->
+<section id="content" class="table-layout animated fadeIn">
+    <div class="panel">
+        <div class="panel-heading">
+            <ul class="nav panel-tabs-border panel-tabs panel-tabs-left">
+                <li class="active">
+                    <a href="#tab2_1" data-toggle="tab">Mês Atual (Maio)</a>
+                </li>
+                <li>
+                    <a href="#tab2_2" data-toggle="tab">Mês Anterior (Junho)</a>
+                </li>
+            </ul>
+        </div>
+        <div class="panel-body">
+            <div class="tab-content pn br-n">
+                <div id="tab2_1" class="tab-pane active">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="alert alert-success pastel alert-dismissable">
+                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                                <i class="fa fa-check pr10"></i>
+                                As suas informações estão<strong> atualizadas!</strong>
+                            </div>
+                            <div class="panel panel-visible" id="spy2">
+                                <div class="panel-heading">
+                                    <div class="panel-title hidden-xs">
+                                        <span class="glyphicon glyphicon-align-left"></span>Listagem de Pessoas
+                                        <div class="pull-right">
+                                            <div class="btn-group">
+                                                <button type="button" class="btn ladda-button btn-success" data-style="expand-right">
+                                                    <span class="ladda-label">Enviar Alterações</span>
+                                                    <span class="ladda-spinner"></span><div style="width: 0px;" class="ladda-progress"></div></button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="panel-body pn">
+                                    <table class="table table-striped table-hover" id="datatable2" cellspacing="0" width="100%">
+                                        <thead>
+                                            <tr>
+                                                <td colspan=˜11˜ class=˜panel-heading˜>Ciclo</td>
+                                            </tr>
+                                            <tr>
+                                                <th> </th>
+                                                <th>Nome</th>
+                                                <th>Telefone</th>
+                                                <th>Tipo</th>
+                                                <th class="primary">Evento A</th>
+                                                <th class="success">Evento B</th>
+                                                <th class="info">Evento C</th>
+                                                <th class="danger">Evento D</th>
+                                                <th class="warning">Evento E</th>
+                                                <th class="alert">Evento F</th>
+                                                <th class="system">Evento G</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td><a data-type="text" href="#" title="Líder Principal" class="label label-dark editable editable-click"><span>LP</span></a></td>
+                                                <td>Sérgio Silva</td>
+                                                <td>(61) 0000-0000</td>
+                                                <td>Líder Principal</td>
+                                                <td class="primary">
+                                                    <div class="checkbox-custom checkbox-info mb5">
+                                                        <input type="checkbox" id="checkbox1">
+                                                        <label for="checkbox1"></label>
+                                                    </div>
+                                                </td>
+                                                <td class="success">
+                                                    <div class="checkbox-custom checkbox-success mb5">
+                                                        <input type="checkbox" id="checkbox2">
+                                                        <label for="checkbox2"></label>
+                                                    </div>
+                                                </td>
+                                                <td class="info">
+                                                    <div class="checkbox-custom checkbox-info mb5">
+                                                        <input type="checkbox" id="checkbox3">
+                                                        <label for="checkbox3"></label>
+                                                    </div>
+                                                </td>
+                                                <td class="danger">
+                                                    <div class="checkbox-custom checkbox-danger mb5">
+                                                        <input type="checkbox" id="checkbox4">
+                                                        <label for="checkbox4"></label>
+                                                    </div>
+                                                </td>
+                                                <td class="warning"></td>
+                                                <td class="alert"></td>
+                                                <td class="system"></td>
+                                            </tr>
+                                            <tr>
+                                                <td><a data-type="text" href="#" title="Líder em Treinamento" class="label label-danger editable editable-click"><span>LT</span></a></td>
+                                                <td>Leonardo Magalhães</td>
+                                                <td>(61) 0000-0000</td>
+                                                <td>Líder em Treinamento</td>
+                                                <td class="primary">
+                                                    <div class="checkbox-custom checkbox-info mb5">
+                                                        <input type="checkbox" id="checkbox1">
+                                                        <label for="checkbox1"></label>
+                                                    </div>
+                                                </td>
+                                                <td class="success">
+                                                    <div class="checkbox-custom checkbox-success mb5">
+                                                        <input type="checkbox" id="checkbox2">
+                                                        <label for="checkbox2"></label>
+                                                    </div>
+                                                </td>
+                                                <td class="info">
+                                                    <div class="checkbox-custom checkbox-info mb5">
+                                                        <input type="checkbox" id="checkbox3">
+                                                        <label for="checkbox3"></label>
+                                                    </div>
+                                                </td>
+                                                <td class="danger">
+                                                    <div class="checkbox-custom checkbox-danger mb5">
+                                                        <input type="checkbox" id="checkbox4">
+                                                        <label for="checkbox4"></label>
+                                                    </div>
+                                                </td>
+                                                <td class="warning"></td>
+                                                <td class="alert"></td>
+                                                <td class="system"></td>
+                                            </tr>
+                                            <tr>
+                                                <td><a data-type="text" href="#" title="Líder em Treinamento" class="label label-danger editable editable-click"><span>LT</span></a></td>
+                                                <td>Ivan Tavares</td>
+                                                <td>(61) 0000-0000</td>
+                                                <td>Líder em Treinamento</td>
+                                                <td class="primary">
+                                                    <div class="checkbox-custom checkbox-info mb5">
+                                                        <input type="checkbox" id="checkbox1">
+                                                        <label for="checkbox1"></label>
+                                                    </div>
+                                                </td>
+                                                <td class="success">
+                                                    <div class="checkbox-custom checkbox-success mb5">
+                                                        <input type="checkbox" id="checkbox2">
+                                                        <label for="checkbox2"></label>
+                                                    </div>
+                                                </td>
+                                                <td class="info">
+                                                    <div class="checkbox-custom checkbox-info mb5">
+                                                        <input type="checkbox" id="checkbox3">
+                                                        <label for="checkbox3"></label>
+                                                    </div>
+                                                </td>
+                                                <td class="danger">
+                                                    <div class="checkbox-custom checkbox-danger mb5">
+                                                        <input type="checkbox" id="checkbox4">
+                                                        <label for="checkbox4"></label>
+                                                    </div>
+                                                </td>
+                                                <td class="warning"></td>
+                                                <td class="alert"></td>
+                                                <td class="system"></td>
+                                            </tr>
+                                            <tr>
+                                                <td><a data-type="text" href="#" title="Aluno do IV" class="label label-primary editable editable-click"><span>AL</span></a></td>
+                                                <td>Lucas Carvalho</td>
+                                                <td>(61) 0000-0000</td>
+                                                <td>Aluno</td>
+                                                <td class="primary">
+                                                    <div class="checkbox-custom checkbox-info mb5">
+                                                        <input type="checkbox" id="checkbox1">
+                                                        <label for="checkbox1"></label>
+                                                    </div>
+                                                </td>
+                                                <td class="success">
+                                                    <div class="checkbox-custom checkbox-success mb5">
+                                                        <input type="checkbox" id="checkbox2">
+                                                        <label for="checkbox2"></label>
+                                                    </div>
+                                                </td>
+                                                <td class="info">
+                                                    <div class="checkbox-custom checkbox-info mb5">
+                                                        <input type="checkbox" id="checkbox3">
+                                                        <label for="checkbox3"></label>
+                                                    </div>
+                                                </td>
+                                                <td class="danger">
+                                                    <div class="checkbox-custom checkbox-danger mb5">
+                                                        <input type="checkbox" id="checkbox4">
+                                                        <label for="checkbox4"></label>
+                                                    </div>
+                                                </td>
+                                                <td class="warning"></td>
+                                                <td class="alert"></td>
+                                                <td class="system"></td>
+                                            </tr>
+                                            <tr>
+                                                <td><a data-type="text" href="#" title="Visitante" class="label label-success editable editable-click"><span>VS</span></a></td>
+                                                <td>Diego Alan Kort</td>
+                                                <td>(61) 0000-0000</td>
+                                                <td>Visitante</td>
+                                                <td class="primary">
+                                                    <div class="checkbox-custom checkbox-info mb5">
+                                                        <input type="checkbox" id="checkbox1">
+                                                        <label for="checkbox1"></label>
+                                                    </div>
+                                                </td>
+                                                <td class="success">
+                                                    <div class="checkbox-custom checkbox-success mb5">
+                                                        <input type="checkbox" id="checkbox2">
+                                                        <label for="checkbox2"></label>
+                                                    </div>
+                                                </td>
+                                                <td class="info">
+                                                    <div class="checkbox-custom checkbox-info mb5">
+                                                        <input type="checkbox" id="checkbox3">
+                                                        <label for="checkbox3"></label>
+                                                    </div>
+                                                </td>
+                                                <td class="danger">
+                                                    <div class="checkbox-custom checkbox-danger mb5">
+                                                        <input type="checkbox" id="checkbox4">
+                                                        <label for="checkbox4"></label>
+                                                    </div>
+                                                </td>
+                                                <td class="warning"></td>
+                                                <td class="alert"></td>
+                                                <td class="system"></td>
+                                            </tr>
+                                            <tr>
+                                                <td><a data-type="text" href="#" title="Visitante" class="label label-success editable editable-click"><span>VS</span></a></td>
+                                                <td>Ursula Kort</td>
+                                                <td>(61) 0000-0000</td>
+                                                <td>Visitante</td>
+                                                <td class="primary">
+                                                    <div class="checkbox-custom checkbox-info mb5">
+                                                        <input type="checkbox" id="checkbox1">
+                                                        <label for="checkbox1"></label>
+                                                    </div>
+                                                </td>
+                                                <td class="success">
+                                                    <div class="checkbox-custom checkbox-success mb5">
+                                                        <input type="checkbox" id="checkbox2">
+                                                        <label for="checkbox2"></label>
+                                                    </div>
+                                                </td>
+                                                <td class="info">
+                                                    <div class="checkbox-custom checkbox-info mb5">
+                                                        <input type="checkbox" id="checkbox3">
+                                                        <label for="checkbox3"></label>
+                                                    </div>
+                                                </td>
+                                                <td class="danger">
+                                                    <div class="checkbox-custom checkbox-danger mb5">
+                                                        <input type="checkbox" id="checkbox4">
+                                                        <label for="checkbox4"></label>
+                                                    </div>
+                                                </td>
+                                                <td class="warning"></td>
+                                                <td class="alert"></td>
+                                                <td class="system"></td>
+                                            </tr>
+                                            <tr>
+                                                <td><a data-type="text" href="#" title="Visitante" class="label label-success editable editable-click"><span>VS</span></a></td>
+                                                <td>Maria da Silva</td>
+                                                <td>(61) 0000-0000</td>
+                                                <td>Visitante</td>
+                                                <td class="primary">
+                                                    <div class="checkbox-custom checkbox-info mb5">
+                                                        <input type="checkbox" id="checkbox1">
+                                                        <label for="checkbox1"></label>
+                                                    </div>
+                                                </td>
+                                                <td class="success">
+                                                    <div class="checkbox-custom checkbox-success mb5">
+                                                        <input type="checkbox" id="checkbox2">
+                                                        <label for="checkbox2"></label>
+                                                    </div>
+                                                </td>
+                                                <td class="info">
+                                                    <div class="checkbox-custom checkbox-info mb5">
+                                                        <input type="checkbox" id="checkbox3">
+                                                        <label for="checkbox3"></label>
+                                                    </div>
+                                                </td>
+                                                <td class="danger">
+                                                    <div class="checkbox-custom checkbox-danger mb5">
+                                                        <input type="checkbox" id="checkbox4">
+                                                        <label for="checkbox4"></label>
+                                                    </div>
+                                                </td>
+                                                <td class="warning"></td>
+                                                <td class="alert"></td>
+                                                <td class="system"></td>
+                                            </tr>
+                                            <tr>
+                                                <td><a data-type="text" href="#" title="Líder em Treinamento" class="label label-danger editable editable-click"><span>LT</span></a></td>
+                                                <td>José Pangaré</td>
+                                                <td>(61) 0000-0000</td>
+                                                <td>Líder em Treinamento</td>
+                                                <td class="primary">
+                                                    <div class="checkbox-custom checkbox-info mb5">
+                                                        <input type="checkbox" id="checkbox1">
+                                                        <label for="checkbox1"></label>
+                                                    </div>
+                                                </td>
+                                                <td class="success">
+                                                    <div class="checkbox-custom checkbox-success mb5">
+                                                        <input type="checkbox" id="checkbox2">
+                                                        <label for="checkbox2"></label>
+                                                    </div>
+                                                </td>
+                                                <td class="info">
+                                                    <div class="checkbox-custom checkbox-info mb5">
+                                                        <input type="checkbox" id="checkbox3">
+                                                        <label for="checkbox3"></label>
+                                                    </div>
+                                                </td>
+                                                <td class="danger">
+                                                    <div class="checkbox-custom checkbox-danger mb5">
+                                                        <input type="checkbox" id="checkbox4">
+                                                        <label for="checkbox4"></label>
+                                                    </div>
+                                                </td>
+                                                <td class="warning"></td>
+                                                <td class="alert"></td>
+                                                <td class="system"></td>
+                                            </tr>
+                                            <tr>
+                                                <td><a data-type="text" href="#" title="Visitante" class="label label-success editable editable-click"><span>VS</span></a></td>
+                                                <td>Francisco Gomes</td>
+                                                <td>(61) 0000-0000</td>
+                                                <td>Visitante</td>
+                                                <td class="primary">
+                                                    <div class="checkbox-custom checkbox-info mb5">
+                                                        <input type="checkbox" id="checkbox1">
+                                                        <label for="checkbox1"></label>
+                                                    </div>
+                                                </td>
+                                                <td class="success">
+                                                    <div class="checkbox-custom checkbox-success mb5">
+                                                        <input type="checkbox" id="checkbox2">
+                                                        <label for="checkbox2"></label>
+                                                    </div>
+                                                </td>
+                                                <td class="info">
+                                                    <div class="checkbox-custom checkbox-info mb5">
+                                                        <input type="checkbox" id="checkbox3">
+                                                        <label for="checkbox3"></label>
+                                                    </div>
+                                                </td>
+                                                <td class="danger">
+                                                    <div class="checkbox-custom checkbox-danger mb5">
+                                                        <input type="checkbox" id="checkbox4">
+                                                        <label for="checkbox4"></label>
+                                                    </div>
+                                                </td>
+                                                <td class="warning"></td>
+                                                <td class="alert"></td>
+                                                <td class="system"></td>
+                                            </tr>
+                                            <tr>
+                                                <td><a data-type="text" href="#" title="Visitante" class="label label-success editable editable-click"><span>VS</span></a></td>
+                                                <td>Jeane Patrícia</td>
+                                                <td>(61) 0000-0000</td>
+                                                <td>Visitante</td>
+                                                <td class="primary">
+                                                    <div class="checkbox-custom checkbox-info mb5">
+                                                        <input type="checkbox" id="checkbox1">
+                                                        <label for="checkbox1"></label>
+                                                    </div>
+                                                </td>
+                                                <td class="success">
+                                                    <div class="checkbox-custom checkbox-success mb5">
+                                                        <input type="checkbox" id="checkbox2">
+                                                        <label for="checkbox2"></label>
+                                                    </div>
+                                                </td>
+                                                <td class="info">
+                                                    <div class="checkbox-custom checkbox-info mb5">
+                                                        <input type="checkbox" id="checkbox3">
+                                                        <label for="checkbox3"></label>
+                                                    </div>
+                                                </td>
+                                                <td class="danger">
+                                                    <div class="checkbox-custom checkbox-danger mb5">
+                                                        <input type="checkbox" id="checkbox4">
+                                                        <label for="checkbox4"></label>
+                                                    </div>
+                                                </td>
+                                                <td class="warning"></td>
+                                                <td class="alert"></td>
+                                                <td class="system"></td>
+                                            </tr>
+                                            <tr>
+                                                <td><a data-type="text" href="#" title="Líder em Treinamento" class="label label-danger editable editable-click"><span>LT</span></a></td>
+                                                <td>Vivian Xavier</td>
+                                                <td>(61) 0000-0000</td>
+                                                <td>Líder em Treinamento</td>
+                                                <td class="primary">
+                                                    <div class="checkbox-custom checkbox-info mb5">
+                                                        <input type="checkbox" id="checkbox1">
+                                                        <label for="checkbox1"></label>
+                                                    </div>
+                                                </td>
+                                                <td class="success">
+                                                    <div class="checkbox-custom checkbox-success mb5">
+                                                        <input type="checkbox" id="checkbox2">
+                                                        <label for="checkbox2"></label>
+                                                    </div>
+                                                </td>
+                                                <td class="info">
+                                                    <div class="checkbox-custom checkbox-info mb5">
+                                                        <input type="checkbox" id="checkbox3">
+                                                        <label for="checkbox3"></label>
+                                                    </div>
+                                                </td>
+                                                <td class="danger">
+                                                    <div class="checkbox-custom checkbox-danger mb5">
+                                                        <input type="checkbox" id="checkbox4">
+                                                        <label for="checkbox4"></label>
+                                                    </div>
+                                                </td>
+                                                <td class="warning"></td>
+                                                <td class="alert"></td>
+                                                <td class="system"></td>
+                                            </tr>
+                                            <tr>
+                                                <td><a data-type="text" href="#" title="Visitante" class="label label-success editable editable-click"><span>VS</span></a></td>
+                                                <td>Alex Silva</td>
+                                                <td>(61) 0000-0000</td>
+                                                <td>Visitante</td>
+                                                <td class="primary">
+                                                    <div class="checkbox-custom checkbox-info mb5">
+                                                        <input type="checkbox" id="checkbox1">
+                                                        <label for="checkbox1"></label>
+                                                    </div>
+                                                </td>
+                                                <td class="success">
+                                                    <div class="checkbox-custom checkbox-success mb5">
+                                                        <input type="checkbox" id="checkbox2">
+                                                        <label for="checkbox2"></label>
+                                                    </div>
+                                                </td>
+                                                <td class="info">
+                                                    <div class="checkbox-custom checkbox-info mb5">
+                                                        <input type="checkbox" id="checkbox3">
+                                                        <label for="checkbox3"></label>
+                                                    </div>
+                                                </td>
+                                                <td class="danger">
+                                                    <div class="checkbox-custom checkbox-danger mb5">
+                                                        <input type="checkbox" id="checkbox4">
+                                                        <label for="checkbox4"></label>
+                                                    </div>
+                                                </td>
+                                                <td class="warning"></td>
+                                                <td class="alert"></td>
+                                                <td class="system"></td>
+                                            </tr>
+                                            <tr>
+                                                <td><a data-type="text" href="#" title="Visitante" class="label label-success editable editable-click"><span>VS</span></a></td>
+                                                <td>Romulo dos Santos</td>
+                                                <td>(61) 0000-0000</td>
+                                                <td>Visitante</td>
+                                                <td class="primary">
+                                                    <div class="checkbox-custom checkbox-info mb5">
+                                                        <input type="checkbox" id="checkbox1">
+                                                        <label for="checkbox1"></label>
+                                                    </div>
+                                                </td>
+                                                <td class="success">
+                                                    <div class="checkbox-custom checkbox-success mb5">
+                                                        <input type="checkbox" id="checkbox2">
+                                                        <label for="checkbox2"></label>
+                                                    </div>
+                                                </td>
+                                                <td class="info">
+                                                    <div class="checkbox-custom checkbox-info mb5">
+                                                        <input type="checkbox" id="checkbox3">
+                                                        <label for="checkbox3"></label>
+                                                    </div>
+                                                </td>
+                                                <td class="danger">
+                                                    <div class="checkbox-custom checkbox-danger mb5">
+                                                        <input type="checkbox" id="checkbox4">
+                                                        <label for="checkbox4"></label>
+                                                    </div>
+                                                </td>
+                                                <td class="warning"></td>
+                                                <td class="alert"></td>
+                                                <td class="system"></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- End: Content -->

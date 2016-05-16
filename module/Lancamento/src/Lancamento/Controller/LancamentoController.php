@@ -107,7 +107,7 @@ class LancamentoController extends AbstractActionController {
                 array(
             ConstantesLancamento::$ENTIDADE => $entidade,
             ConstantesLancamento::$ABA_SELECIONADA => $abaSelecionada,
-            ConstantesLancamento::$CICLO_SELECIONADO => $cicloSelecionado,
+            ConstantesLancamento::$CICLO_SELECIONADO => (int) $cicloSelecionado,
                 )
         );
 
@@ -135,29 +135,46 @@ class LancamentoController extends AbstractActionController {
         $request = $this->getRequest();
         $response = $this->getResponse();
         if ($request->isPost()) {
-            $post_data = $request->getPost();
-            $valor = $post_data['valor'];
-            $checkbox = $post_data['checkbox'];
-            $ciclo = $post_data['ciclo'];
-            $explodeCheckbox = explode('_', $checkbox);
+            try {
+                $post_data = $request->getPost();
+                $valor = $post_data['valor'];
+                $checkbox = $post_data['checkbox'];
+                $ciclo = $post_data['ciclo'];
+                $aba = $post_data['aba'];
+                $explodeCheckbox = explode('_', $checkbox);
 
-            /* Helper Controller */
-            $lancamentoORM = new LancamentoORM($this->getDoctrineORMEntityManager());
-            $loginORM = new LoginORM($this->getDoctrineORMEntityManager());
+                /* Helper Controller */
+                $lancamentoORM = new LancamentoORM($this->getDoctrineORMEntityManager());
+                if (count($explodeCheckbox) == 3) {
+                    $loginORM = new LoginORM($this->getDoctrineORMEntityManager());
 
-            $pessoa = $loginORM->getPessoaORM()->encontrarPorIdPessoa($explodeCheckbox[1]);
-            $evento = $lancamentoORM->getEventoORM()->encontrarPorIdEvento($explodeCheckbox[2]);
+                    $pessoa = $loginORM->getPessoaORM()->encontrarPorIdPessoa($explodeCheckbox[1]);
+                    $evento = $lancamentoORM->getEventoORM()->encontrarPorIdEvento($explodeCheckbox[2]);
 
-            /* Persitir frequencia */
-            $eventoFrequencia = new EventoFrequencia();
-            $eventoFrequencia->setPessoa($pessoa);
-            $eventoFrequencia->setEvento($evento);
-            $eventoFrequencia->setFrequencia($valor);
-            $eventoFrequencia->setCiclo($ciclo);
+                    $mes = FuncoesLancamento::mesPorAbaSelecionada($aba);
+                    $ano = FuncoesLancamento::anoPorAbaSelecionada($aba);
 
-            $lancamentoORM->getEventoFrequenciaORM()->persistirSemDispacharEventoFrequencia($eventoFrequencia);
+                    /* Persitir frequencia */
+                    $eventoFrequencia = new EventoFrequencia();
+                    $eventoFrequencia->setPessoa($pessoa);
+                    $eventoFrequencia->setEvento($evento);
+                    $eventoFrequencia->setFrequencia($valor);
+                    $eventoFrequencia->setCiclo($ciclo);
+                    $eventoFrequencia->setMes($mes);
+                    $eventoFrequencia->setAno($ano);
 
-            $response->setContent(Json::encode(array('response' => 'true')));
+                    $lancamentoORM->getEventoFrequenciaORM()->persistirSemDispacharEventoFrequencia($eventoFrequencia);
+                }
+                if (count($explodeCheckbox) == 2) {
+                    $idEventoFrequencia = $explodeCheckbox[1];
+                    $eventoFrequencia = $lancamentoORM->getEventoFrequenciaORM()->encontrarPorIdEventoFrequencia($idEventoFrequencia);
+                    $eventoFrequencia->setFrequencia($valor);
+                    $lancamentoORM->getEventoFrequenciaORM()->persistirSemDispacharEventoFrequencia($eventoFrequencia);
+                }
+                $response->setContent(Json::encode(array('response' => 'true')));
+            } catch (Exception $exc) {
+                echo $exc->getTraceAsString();
+            }
         }
         return $response;
     }

@@ -13,6 +13,8 @@ CREATE TABLE evento_frequencia
   hora_inativacao time without time zone, -- Hora da inativação da associação
   frequencia enumsn NOT NULL DEFAULT 'N'::enumsn, -- Frequência da pessoa no evento
   ciclo smallint NOT NULL DEFAULT 1, -- Ciclo da frequência do evento
+  mes smallint NOT NULL, -- Mês que ocorre a frequência do evento
+  ano smallint NOT NULL, -- Ano que ocorre a frequência do evento
   CONSTRAINT pk_evento_frequencia PRIMARY KEY (id),
   CONSTRAINT fk_evento_frequencia_evento_id FOREIGN KEY (evento_id)
       REFERENCES evento (id) MATCH SIMPLE
@@ -37,4 +39,6 @@ COMMENT ON COLUMN evento_frequencia.data_inativacao IS 'Data da inativação da 
 COMMENT ON COLUMN evento_frequencia.hora_inativacao IS 'Hora da inativação da associação';
 COMMENT ON COLUMN evento_frequencia.frequencia IS 'Frequência da pessoa no evento';
 COMMENT ON COLUMN evento_frequencia.ciclo IS 'Ciclo da frequência do evento';
+COMMENT ON COLUMN evento_frequencia.mes IS 'Mês que ocorre a frequência do evento';
+COMMENT ON COLUMN evento_frequencia.ano IS 'Ano que ocorre a frequência do evento';
 

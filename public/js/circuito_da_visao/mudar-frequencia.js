@@ -5,7 +5,7 @@
  */
 
 
-function mudarFrequencia(checkbox, ciclo) {
+function mudarFrequencia(checkbox, ciclo, aba) {
     var valor = 'N';
     if (checkbox.checked) {
         valor = "S";
@@ -16,10 +16,17 @@ function mudarFrequencia(checkbox, ciclo) {
                 valor: valor,
                 checkbox: checkbox.id,
                 ciclo: ciclo,
+                aba: aba,
             },
             function (data) {
                 if (data.response) {
-                    $('#div_' + checkbox.id).addClass('btn-success');
+                    if (valor == "S") {
+                        $('#div_' + checkbox.id).removeClass('btn-warning');
+                        $('#div_' + checkbox.id).addClass('btn-success');
+                    } else {
+                        $('#div_' + checkbox.id).removeClass('btn-success');
+                        $('#div_' + checkbox.id).addClass('btn-warning');
+                    }
                 } else {
 //                    alert(5);
                 }

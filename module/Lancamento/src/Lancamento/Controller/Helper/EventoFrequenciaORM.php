@@ -29,6 +29,23 @@ class EventoFrequenciaORM {
     }
 
     /**
+     * Localizar pessoa por idEventoFrequencia
+     * 
+     * @param integer $idEventoFrequencia
+     * @return EventoFrequencia
+     * @throws Exception
+     */
+    public function encontrarPorIdEventoFrequencia($idEventoFrequencia) {
+        $id = (int) $idEventoFrequencia;
+
+        $eventoFrequencia = $this->getEntityManager()->find($this->getEntity(), $id);
+        if (!$eventoFrequencia) {
+            throw new Exception("Não foi encontrado ao eventoFrequencia de id = {$id}");
+        }
+        return $eventoFrequencia;
+    }
+
+    /**
      * Atualiza a evento_frequencia no banco de dados
      * 
      * @param EventoFrequencia $eventoFrequencia
