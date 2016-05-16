@@ -101,8 +101,8 @@ $anoSelecionado = FuncoesLancamento::anoPorAbaSelecionada($this->abaSelecionada)
                                 echo '<div class="col-md-7 btn-default">';
                                 foreach ($eventos as $ge) {
                                     $valor = '';
-                                    $class = 'btn-warning';
-                                    $checked = '';
+                                    $class = 'btn-danger';
+                                    $classIco = 'fa-user';
                                     $evento = $ge->getEvento();
                                     $eventoFrequencia = $evento->getEventoFrequencia();
                                     $idEventoFrequencia = 'checkbox_' . $pessoa->getId() . '_' . $evento->getId();
@@ -117,18 +117,20 @@ $anoSelecionado = FuncoesLancamento::anoPorAbaSelecionada($this->abaSelecionada)
                                         if ($eventosFiltrados->count() == 1) {
                                             $valor = $eventosFiltrados->first()->getFrequencia();
                                             if ($valor == 'S') {
-                                                $checked = 'checked';
                                                 $class = 'btn-success';
+                                                $classIco = 'fa-bolt';
                                             } else {
-                                                $checked = '';
-                                                $class = 'btn-warning';
+                                                $class = 'btn-danger';
+                                                $classIco = 'fa-user';
                                             }
-                                            $idEventoFrequencia = 'checkbox_' . $eventosFiltrados->first()->getId();
+                                            $idEventoFrequencia = 'ico_' . $eventosFiltrados->first()->getId();
                                         }
                                     }
 
-                                    echo '<div id="div_' . $idEventoFrequencia . '" class="col-md-2 text-center ' . $class . '">';
-                                    echo "<input id='$idEventoFrequencia' $checked onclick='mudarFrequencia(this, $this->cicloSelecionado, $this->abaSelecionada);' type='checkbox' />";
+                                    echo '<div class="col-md-2 text-center ">';
+                                    echo "<a id='a_" . $idEventoFrequencia . "' class='btn $class' href='#' onclick='mudarFrequencia(\"$idEventoFrequencia\", $this->cicloSelecionado, $this->abaSelecionada);'>";
+                                    echo "<i id='i_" . $idEventoFrequencia . "' class='fa $classIco' ></i>";
+                                    echo '</a>';
                                     echo '</div>';
                                 }
                                 echo '</div>';

@@ -138,18 +138,18 @@ class LancamentoController extends AbstractActionController {
             try {
                 $post_data = $request->getPost();
                 $valor = $post_data['valor'];
-                $checkbox = $post_data['checkbox'];
+                $idEventoFrequencia = $post_data['idEventoFrequencia'];
                 $ciclo = $post_data['ciclo'];
                 $aba = $post_data['aba'];
-                $explodeCheckbox = explode('_', $checkbox);
+                $explodeIdEventoFrequencia = explode('_', $idEventoFrequencia);
 
                 /* Helper Controller */
                 $lancamentoORM = new LancamentoORM($this->getDoctrineORMEntityManager());
-                if (count($explodeCheckbox) == 3) {
+                if (count($explodeIdEventoFrequencia) == 3) {
                     $loginORM = new LoginORM($this->getDoctrineORMEntityManager());
 
-                    $pessoa = $loginORM->getPessoaORM()->encontrarPorIdPessoa($explodeCheckbox[1]);
-                    $evento = $lancamentoORM->getEventoORM()->encontrarPorIdEvento($explodeCheckbox[2]);
+                    $pessoa = $loginORM->getPessoaORM()->encontrarPorIdPessoa($explodeIdEventoFrequencia[1]);
+                    $evento = $lancamentoORM->getEventoORM()->encontrarPorIdEvento($explodeIdEventoFrequencia[2]);
 
                     $mes = FuncoesLancamento::mesPorAbaSelecionada($aba);
                     $ano = FuncoesLancamento::anoPorAbaSelecionada($aba);
@@ -165,8 +165,8 @@ class LancamentoController extends AbstractActionController {
 
                     $lancamentoORM->getEventoFrequenciaORM()->persistirSemDispacharEventoFrequencia($eventoFrequencia);
                 }
-                if (count($explodeCheckbox) == 2) {
-                    $idEventoFrequencia = $explodeCheckbox[1];
+                if (count($explodeIdEventoFrequencia) == 2) {
+                    $idEventoFrequencia = $explodeIdEventoFrequencia[1];
                     $eventoFrequencia = $lancamentoORM->getEventoFrequenciaORM()->encontrarPorIdEventoFrequencia($idEventoFrequencia);
                     $eventoFrequencia->setFrequencia($valor);
                     $lancamentoORM->getEventoFrequenciaORM()->persistirSemDispacharEventoFrequencia($eventoFrequencia);

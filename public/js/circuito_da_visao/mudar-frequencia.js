@@ -5,30 +5,40 @@
  */
 
 
-function mudarFrequencia(checkbox, ciclo, aba) {
+function mudarFrequencia(idEventoFrequencia, ciclo, aba) {
+    var link = $('#a_' + idEventoFrequencia);
+    var icone = $('#i_' + idEventoFrequencia);
+
     var valor = 'N';
-    if (checkbox.checked) {
+    if (icone.hasClass('fa-user')) {
         valor = "S";
     }
+    icone.removeClass('fa-user');
+    icone.removeClass('fa-bolt');
+    icone.addClass('fa-wheelchair');
+
+    link.removeClass('btn-danger');
+    link.removeClass('btn-success');
+    link.addClass('btn-warning');
     $.post(
             "/lancamentoMudarFrequencia",
             {
                 valor: valor,
-                checkbox: checkbox.id,
+                idEventoFrequencia: idEventoFrequencia,
                 ciclo: ciclo,
                 aba: aba,
             },
             function (data) {
                 if (data.response) {
+                    link.removeClass('btn-warning');
+                    icone.removeClass('fa-wheelchair');
                     if (valor == "S") {
-                        $('#div_' + checkbox.id).removeClass('btn-warning');
-                        $('#div_' + checkbox.id).addClass('btn-success');
+                        link.addClass('btn-success');
+                        icone.addClass('fa-bolt');
                     } else {
-                        $('#div_' + checkbox.id).removeClass('btn-success');
-                        $('#div_' + checkbox.id).addClass('btn-warning');
+                        link.addClass('btn-danger');
+                        icone.addClass('fa-user');
                     }
-                } else {
-//                    alert(5);
                 }
             }, 'json');
 }
