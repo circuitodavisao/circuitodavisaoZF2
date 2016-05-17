@@ -87,12 +87,61 @@ $anoSelecionado = FuncoesLancamento::anoPorAbaSelecionada($this->abaSelecionada)
                 </div>
                 <div id="listaEventos" class="row">
                     <?php
+                    $responsabilidades = $grupo->getResponsabilidadesAtivas();
+                    foreach ($responsabilidades as $gr) {
+                        $pessoa = $gr->getPessoa();
+                        echo '<div class="row">';
+                        echo '<div class="col-md-3 btn-success">' . $pessoa->getNomeListaDeLancamento() . '</div>';
+                        echo '<div class="col-md-2 btn-danger">Lider</div>';
+                        /* Listagem dos eventos */
+                        $grupo = $this->entidade->getGrupo();
+                        $eventos = $grupo->getGrupoEventoNoCiclo($this->cicloSelecionado);
+                        if (count($eventos) > 0) {
+                            echo '<div class="col-md-7 btn-default">';
+                            foreach ($eventos as $ge) {
+                                $valor = '';
+                                $class = 'btn-danger';
+                                $classIco = 'fa-user';
+                                $evento = $ge->getEvento();
+                                $eventoFrequencia = $evento->getEventoFrequencia();
+                                $idEventoFrequencia = 'checkbox_' . $pessoa->getId() . '_' . $evento->getId();
+                                if (count($eventoFrequencia) > 0) {
+                                    $criteria = Criteria::create()
+                                            ->andWhere(Criteria::expr()->eq("pessoa_id", $pessoa->getId()))
+                                            ->andWhere(Criteria::expr()->eq("ano", $anoSelecionado))
+                                            ->andWhere(Criteria::expr()->eq("mes", $mesSelecionado))
+                                            ->andWhere(Criteria::expr()->eq("ciclo", $this->cicloSelecionado))
+                                    ;
+                                    $eventosFiltrados = $eventoFrequencia->matching($criteria);
+                                    if ($eventosFiltrados->count() == 1) {
+                                        $valor = $eventosFiltrados->first()->getFrequencia();
+                                        if ($valor == 'S') {
+                                            $class = 'btn-success';
+                                            $classIco = 'fa-bolt';
+                                        } else {
+                                            $class = 'btn-danger';
+                                            $classIco = 'fa-user';
+                                        }
+                                        $idEventoFrequencia = 'ico_' . $eventosFiltrados->first()->getId();
+                                    }
+                                }
+
+                                echo '<div class="col-md-2 text-center ">';
+                                echo "<a id='a_" . $idEventoFrequencia . "' class='btn $class' href='#' onclick='mudarFrequencia(\"$idEventoFrequencia\", $this->cicloSelecionado, $this->abaSelecionada);'>";
+                                echo "<i id='i_" . $idEventoFrequencia . "' class='fa $classIco' ></i>";
+                                echo '</a>';
+                                echo '</div>';
+                            }
+                            echo '</div>';
+                        }
+                        echo '</div>';
+                    }
                     if (count($grupo->getGrupoPessoa()) > 0) {
                         foreach ($grupo->getGrupoPessoa() as $gp) {
                             $pessoa = $gp->getPessoa();
                             $pessoaTipo = $gp->getGrupoPessoaTipo();
                             echo '<div class="row">';
-                            echo '<div class="col-md-3 btn-success">' . $pessoa->getNome() . '</div>';
+                            echo '<div class="col-md-3 btn-success">' . $pessoa->getNomeListaDeLancamento() . '</div>';
                             echo '<div class="col-md-2 btn-danger">' . $pessoaTipo->getNome() . '</div>';
                             /* Listagem dos eventos */
                             $grupo = $this->entidade->getGrupo();

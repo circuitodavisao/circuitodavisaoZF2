@@ -122,6 +122,15 @@ class Pessoa {
         return $primeiroNome . '&nbsp;' . $ultimoNome;
     }
 
+    /**
+     * Retorna o nome formatado
+     * @return String
+     */
+    function getNomeListaDeLancamento() {
+        $nome = substr($this->getNome(), 0, 8);
+        return $nome . '..';
+    }
+
     function getId() {
         return $this->id;
     }
