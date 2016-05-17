@@ -66,6 +66,7 @@ return array(
             'layout/layout' => __DIR__ . '/../../Login/view/layout/layout.phtml',
             'lancamento/lancamento/index' => __DIR__ . '/../view/lancamento/index.phtml',
             'lancamento/lancamento/cadastrar-pessoa' => __DIR__ . '/../view/lancamento/cadastrar-pessoa.phtml',
+            'lancamento/lancamento/enviar-relatorio' => __DIR__ . '/../view/lancamento/enviar-relatorio.phtml',
             'layout/layout-js-lancamento' => __DIR__ . '/../view/layout/layout-js-lancamento.phtml',
             'error/404' => __DIR__ . '/../../Login/view/error/404.phtml',
             'error/index' => __DIR__ . '/../../Login/view/error/index.phtml',

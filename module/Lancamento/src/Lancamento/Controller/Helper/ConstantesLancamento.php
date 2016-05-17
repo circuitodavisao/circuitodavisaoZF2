@@ -23,6 +23,7 @@ class ConstantesLancamento {
     public static $PAGINA = 'pagina';
     public static $PAGINA_CADASTRAR_PESSOA = 'CadastrarPessoa';
     public static $PAGINA_MUDAR_FREQUENCIA = 'MudarFrequencia';
+    public static $PAGINA_ENVIAR_RELATORIO = 'EnviarRelatorio';
     public static $CONTROLLER_LANCAMENTO = 'Lancamento\Controller\Lancamento';
 
 }

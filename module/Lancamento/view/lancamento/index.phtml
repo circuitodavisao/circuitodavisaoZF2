@@ -33,6 +33,7 @@ $anoSelecionado = FuncoesLancamento::anoPorAbaSelecionada($this->abaSelecionada)
         <?php echo $this->modalAba(); ?>
         <!-- FIM MODAL COM LOADER GIGANTE -->
         <button class="btn btn-danger btn-lg" onclick="location.href = '/lancamentoCadastrarPessoa';" >NOVO CADSTRO</button>
+        <button class="btn btn-danger btn-lg" onclick="location.href = '/lancamentoEnviarRelatorio';" >ENVIAR RELATORIO</button>
         <div class="tab-content">
             <div id="tab10_1" class="tab-pane active">
                 <div id="cabecalhoCiclo" class="row">
@@ -75,12 +76,43 @@ $anoSelecionado = FuncoesLancamento::anoPorAbaSelecionada($this->abaSelecionada)
                         $grupo = $this->entidade->getGrupo();
                         $eventos = $grupo->getGrupoEventoNoCiclo($this->cicloSelecionado);
                         if (count($eventos) > 0) {
+                            echo "<div class='row btn-success'>";
                             foreach ($eventos as $ge) {
+
                                 /* Verificar se o evento existe nesse ciclo */
                                 echo $ge->getEvento()->getEventoTipo()->getNome() . "|";
                                 echo $ge->getEvento()->getDia() . "|";
                                 echo $ge->getEvento()->getHora() . " - ";
                             }
+                            echo "</div>";
+                            echo "<div class='row'>";
+                            $cont = 1;
+                            foreach ($eventos as $ge) {
+                                /* Totais */
+                                $evento = $ge->getEvento();
+                                $cont++;
+                                if ($cont % 2 == 0) {
+                                    $class = 'btn-info';
+                                } else {
+                                    $class = 'btn-danger';
+                                }
+                                echo "<span id='total_{$evento->getId()}' class='$class'>";
+                                $eventoFrequencia = $evento->getEventoFrequencia();
+                                $total = 0;
+                                if (count($eventoFrequencia) > 0) {
+                                    $criteria = Criteria::create()
+                                            ->andWhere(Criteria::expr()->eq("ano", $anoSelecionado))
+                                            ->andWhere(Criteria::expr()->eq("mes", $mesSelecionado))
+                                            ->andWhere(Criteria::expr()->eq("ciclo", $this->cicloSelecionado))
+                                            ->andWhere(Criteria::expr()->eq("frequencia", "S"))
+                                    ;
+                                    $eventosFiltrados = $eventoFrequencia->matching($criteria);
+                                    $total = count($eventosFiltrados);
+                                }
+                                echo "$total";
+                                echo "</span>";
+                            }
+                            echo "</div>";
                         }
                         ?>}
                     </div>

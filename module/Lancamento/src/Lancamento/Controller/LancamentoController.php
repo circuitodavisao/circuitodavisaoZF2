@@ -57,6 +57,11 @@ class LancamentoController extends AbstractActionController {
                         Constantes::$ACTION => ConstantesLancamento::$PAGINA_MUDAR_FREQUENCIA,
             ));
         }
+        if ($pagina == ConstantesLancamento::$PAGINA_ENVIAR_RELATORIO) {
+            return $this->forward()->dispatch(ConstantesLancamento::$CONTROLLER_LANCAMENTO, array(
+                        Constantes::$ACTION => ConstantesLancamento::$PAGINA_ENVIAR_RELATORIO,
+            ));
+        }
         /* Helper Controller */
         $lancamentoORM = new LancamentoORM($this->getDoctrineORMEntityManager());
 
@@ -128,6 +133,14 @@ class LancamentoController extends AbstractActionController {
     }
 
     /**
+     * Abri tela para enviar relatorio
+     * @return ViewModel
+     */
+    public function enviarRelatorioAction() {
+        return new ViewModel();
+    }
+
+    /**
      * Muda a frequência de um evento
      * @return Json
      */
@@ -145,12 +158,13 @@ class LancamentoController extends AbstractActionController {
 
                 /* Helper Controller */
                 $lancamentoORM = new LancamentoORM($this->getDoctrineORMEntityManager());
+                $idEvento = 0;
                 if (count($explodeIdEventoFrequencia) == 3) {
                     $loginORM = new LoginORM($this->getDoctrineORMEntityManager());
 
                     $pessoa = $loginORM->getPessoaORM()->encontrarPorIdPessoa($explodeIdEventoFrequencia[1]);
                     $evento = $lancamentoORM->getEventoORM()->encontrarPorIdEvento($explodeIdEventoFrequencia[2]);
-
+                    $idEvento = $evento->getId();
                     $mes = FuncoesLancamento::mesPorAbaSelecionada($aba);
                     $ano = FuncoesLancamento::anoPorAbaSelecionada($aba);
 
@@ -168,10 +182,13 @@ class LancamentoController extends AbstractActionController {
                 if (count($explodeIdEventoFrequencia) == 2) {
                     $idEventoFrequencia = $explodeIdEventoFrequencia[1];
                     $eventoFrequencia = $lancamentoORM->getEventoFrequenciaORM()->encontrarPorIdEventoFrequencia($idEventoFrequencia);
+                    $idEvento = $eventoFrequencia->getEvento()->getId();
                     $eventoFrequencia->setFrequencia($valor);
                     $lancamentoORM->getEventoFrequenciaORM()->persistirSemDispacharEventoFrequencia($eventoFrequencia);
                 }
-                $response->setContent(Json::encode(array('response' => 'true')));
+                $response->setContent(Json::encode(
+                                array('response' => 'true',
+                                    'idEvento' => $idEvento)));
             } catch (Exception $exc) {
                 echo $exc->getTraceAsString();
             }

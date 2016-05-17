@@ -30,15 +30,22 @@ function mudarFrequencia(idEventoFrequencia, ciclo, aba) {
             },
             function (data) {
                 if (data.response) {
+                    var total = $('#total_' + data.idEvento);
+
                     link.removeClass('btn-warning');
                     icone.removeClass('fa-wheelchair');
+                    var totalSoma = parseInt(total.html());
                     if (valor == "S") {
                         link.addClass('btn-success');
                         icone.addClass('fa-bolt');
+                        totalSoma++;
                     } else {
                         link.addClass('btn-danger');
                         icone.addClass('fa-user');
+                        totalSoma--;
                     }
+
+                    total.html(totalSoma);
                 }
             }, 'json');
 }
