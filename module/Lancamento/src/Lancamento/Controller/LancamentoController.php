@@ -2,8 +2,10 @@
 
 namespace Lancamento\Controller;
 
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManager;
 use Entidade\Entity\EventoFrequencia;
+use Exception;
 use Lancamento\Controller\Helper\ConstantesLancamento;
 use Lancamento\Controller\Helper\FuncoesLancamento;
 use Lancamento\Controller\Helper\LancamentoORM;
@@ -158,16 +160,26 @@ class LancamentoController extends AbstractActionController {
 
                 /* Helper Controller */
                 $lancamentoORM = new LancamentoORM($this->getDoctrineORMEntityManager());
-                $idEvento = 0;
-                if (count($explodeIdEventoFrequencia) == 3) {
-                    $loginORM = new LoginORM($this->getDoctrineORMEntityManager());
+                $loginORM = new LoginORM($this->getDoctrineORMEntityManager());
 
-                    $pessoa = $loginORM->getPessoaORM()->encontrarPorIdPessoa($explodeIdEventoFrequencia[1]);
-                    $evento = $lancamentoORM->getEventoORM()->encontrarPorIdEvento($explodeIdEventoFrequencia[2]);
-                    $idEvento = $evento->getId();
-                    $mes = FuncoesLancamento::mesPorAbaSelecionada($aba);
-                    $ano = FuncoesLancamento::anoPorAbaSelecionada($aba);
+                $pessoa = $loginORM->getPessoaORM()->encontrarPorIdPessoa($explodeIdEventoFrequencia[1]);
+                $evento = $lancamentoORM->getEventoORM()->encontrarPorIdEvento($explodeIdEventoFrequencia[2]);
+                /* Verificar se a frequencia ja existe */
+                $mes = FuncoesLancamento::mesPorAbaSelecionada($aba);
+                $ano = FuncoesLancamento::anoPorAbaSelecionada($aba);
+                $criteria = Criteria::create()
+                        ->andWhere(Criteria::expr()->eq("evento_id", (int) $explodeIdEventoFrequencia[2]))
+                        ->andWhere(Criteria::expr()->eq("ano", $ano))
+                        ->andWhere(Criteria::expr()->eq("mes", $mes))
+                        ->andWhere(Criteria::expr()->eq("ciclo", $ciclo));
 
+                $eventosFiltrados = $pessoa->getEventoFrequencia()->matching($criteria);
+                if ($eventosFiltrados->count() == 1) {
+                    /* Frequencia existe */
+                    $frequencia = $eventosFiltrados->first();
+                    $frequencia->setFrequencia($valor);
+                    $lancamentoORM->getEventoFrequenciaORM()->persistirSemDispacharEventoFrequencia($frequencia);
+                } else {
                     /* Persitir frequencia */
                     $eventoFrequencia = new EventoFrequencia();
                     $eventoFrequencia->setPessoa($pessoa);
@@ -176,19 +188,11 @@ class LancamentoController extends AbstractActionController {
                     $eventoFrequencia->setCiclo($ciclo);
                     $eventoFrequencia->setMes($mes);
                     $eventoFrequencia->setAno($ano);
-
-                    $lancamentoORM->getEventoFrequenciaORM()->persistirSemDispacharEventoFrequencia($eventoFrequencia);
-                }
-                if (count($explodeIdEventoFrequencia) == 2) {
-                    $idEventoFrequencia = $explodeIdEventoFrequencia[1];
-                    $eventoFrequencia = $lancamentoORM->getEventoFrequenciaORM()->encontrarPorIdEventoFrequencia($idEventoFrequencia);
-                    $idEvento = $eventoFrequencia->getEvento()->getId();
-                    $eventoFrequencia->setFrequencia($valor);
                     $lancamentoORM->getEventoFrequenciaORM()->persistirSemDispacharEventoFrequencia($eventoFrequencia);
                 }
                 $response->setContent(Json::encode(
                                 array('response' => 'true',
-                                    'idEvento' => $idEvento)));
+                                    'idEvento' => $evento->getId())));
             } catch (Exception $exc) {
                 echo $exc->getTraceAsString();
             }

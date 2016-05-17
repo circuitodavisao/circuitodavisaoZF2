@@ -120,6 +120,10 @@ class Evento {
         return $this->hora;
     }
 
+    function getHoraFormatoHoraMinuto() {
+        return substr($this->hora, 0, 5);
+    }
+
     function setEventoTipo($eventoTipo) {
         $this->eventoTipo = $eventoTipo;
     }

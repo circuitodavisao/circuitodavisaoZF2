@@ -74,6 +74,7 @@ class Pessoa {
 
     /** @ORM\Column(type="string") */
     protected $token_hora;
+    protected $tipo;
 
     /**
      * Recupera as Responsabilidades ativas
@@ -296,6 +297,14 @@ class Pessoa {
 
     function setEventoFrequencia($eventoFrequencia) {
         $this->eventoFrequencia = $eventoFrequencia;
+    }
+
+    function getTipo() {
+        return $this->tipo;
+    }
+
+    function setTipo($tipo) {
+        $this->tipo = $tipo;
     }
 
 }

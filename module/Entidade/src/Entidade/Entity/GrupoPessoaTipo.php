@@ -58,6 +58,10 @@ class GrupoPessoaTipo {
         return $this->nome;
     }
 
+    function getNomeSimplificado() {
+        return substr($this->nome, 0, 2);
+    }
+
     function getData_criacao() {
         return $this->data_criacao;
     }

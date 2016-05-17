@@ -63,6 +63,14 @@ class EventoTipo {
         return $this->nome;
     }
 
+    /**
+     * Retorna o tipo do evento apenas com 3 digitos
+     * @return string
+     */
+    function getNomeAjustado() {
+        return substr($this->nome, 0, 3);
+    }
+
     function getData_inativacao() {
         return $this->data_inativacao;
     }

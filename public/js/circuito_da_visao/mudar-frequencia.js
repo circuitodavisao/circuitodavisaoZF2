@@ -6,20 +6,25 @@
 
 
 function mudarFrequencia(idEventoFrequencia, ciclo, aba) {
-    var link = $('#a_' + idEventoFrequencia);
+    var faThumbsDown = 'fa-thumbs-down';
+    var faThumbsUp = 'fa-thumbs-up';
+    var iconefaThumbsDown = '<i class="fa ' + faThumbsDown + '"></i>';
+    var iconefaThumbsUp = '<i class="fa ' + faThumbsUp + '"></i>';
+    var loader = '<img src="/img/loader.gif"></i>';
+    var btnDefault = 'btn-default';
+    var btnSuccess = 'btn-success';
+    var btnWarning = 'btn-warning';
+    var botao = $('#b_' + idEventoFrequencia);
     var icone = $('#i_' + idEventoFrequencia);
 
     var valor = 'N';
-    if (icone.hasClass('fa-user')) {
+    if (botao.hasClass(btnDefault)) {
         valor = "S";
     }
-    icone.removeClass('fa-user');
-    icone.removeClass('fa-bolt');
-    icone.addClass('fa-wheelchair');
-
-    link.removeClass('btn-danger');
-    link.removeClass('btn-success');
-    link.addClass('btn-warning');
+    botao.html(loader);
+    botao.removeClass(btnDefault);
+    botao.removeClass(btnSuccess);
+    botao.addClass(btnWarning);
     $.post(
             "/lancamentoMudarFrequencia",
             {
@@ -32,16 +37,16 @@ function mudarFrequencia(idEventoFrequencia, ciclo, aba) {
                 if (data.response) {
                     var total = $('#total_' + data.idEvento);
 
-                    link.removeClass('btn-warning');
-                    icone.removeClass('fa-wheelchair');
+                    botao.removeClass(btnWarning);
+                    botao.html('');
                     var totalSoma = parseInt(total.html());
                     if (valor == "S") {
-                        link.addClass('btn-success');
-                        icone.addClass('fa-bolt');
+                        botao.addClass(btnSuccess);
+                        botao.html(iconefaThumbsUp);
                         totalSoma++;
                     } else {
-                        link.addClass('btn-danger');
-                        icone.addClass('fa-user');
+                        botao.addClass(btnDefault);
+                        botao.html(iconefaThumbsDown);
                         totalSoma--;
                     }
 

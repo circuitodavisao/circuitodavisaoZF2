@@ -184,4 +184,30 @@ class FuncoesLancamento {
         return (int) $anoSelecionado;
     }
 
+    /**
+     * Retorna o dia da semana por extenso para o dia informado cm 3 digitos
+     * @param int $dia
+     * @return string
+     */
+    public static function diaDaSemanaPorDia($dia) {
+        $resposta = '';
+        switch ($dia) {
+            case 1:$resposta = 'DOM';
+                break;
+            case 2:$resposta = 'SEG';
+                break;
+            case 3:$resposta = 'TER';
+                break;
+            case 4:$resposta = 'QUA';
+                break;
+            case 5:$resposta = 'QUI';
+                break;
+            case 6:$resposta = 'SEX';
+                break;
+            case 7:$resposta = 'SAB';
+                break;
+        }
+        return $resposta;
+    }
+
 }
