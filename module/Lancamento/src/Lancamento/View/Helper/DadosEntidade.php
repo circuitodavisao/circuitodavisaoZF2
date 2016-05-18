@@ -12,19 +12,16 @@ use Zend\View\Helper\AbstractHelper;
  */
 class DadosEntidade extends AbstractHelper {
 
-    protected $entidade;
-
     public function __construct() {
         
     }
 
-    public function __invoke($entidade) {
-        $this->setEntidade($entidade);
+    public function __invoke() {
         return $this->renderHtml();
     }
 
     public function renderHtml() {
-        $grupo = $this->getEntidade()->getGrupo();
+        $grupo = $this->view->entidade->getGrupo();
         $grupoResponsavel = $grupo->getResponsabilidadesAtivas();
         if ($grupoResponsavel) {
             $pessoas = array();
@@ -56,26 +53,14 @@ class DadosEntidade extends AbstractHelper {
             }
             $html .= '</p>';
             /* Entidade */
-            $entidadeTipo = $this->getEntidade()->getEntidadeTipo();
+            $entidadeTipo = $this->view->entidade->getEntidadeTipo();
             $html .= '<p>';
-            $html .= $this->getEntidade()->infoEntidade();
+            $html .= $this->view->entidade->infoEntidade();
             $html .= '&nbsp;-&nbsp;';
             $html .= $entidadeTipo->getNome();
             $html .= '</p>';
         }
         return $html;
-    }
-
-    /**
-     * Retorna a entidade
-     * @return Entidade
-     */
-    function getEntidade() {
-        return $this->entidade;
-    }
-
-    function setEntidade($entidade) {
-        $this->entidade = $entidade;
     }
 
 }

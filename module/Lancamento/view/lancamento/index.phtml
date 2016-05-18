@@ -16,87 +16,11 @@ $anoSelecionado = FuncoesLancamento::anoPorAbaSelecionada($this->abaSelecionada)
                         <thead>
                             <tr>
                                 <th colspan="2"></th>
-                                <?php
-                                /* Listagem dos eventos */
-                                $grupo = $this->entidade->getGrupo();
-                                $eventos = $grupo->getGrupoEventoNoCiclo($this->cicloSelecionado);
-                                if (count($eventos) > 0) {
-                                    foreach ($eventos as $ge) {
-                                        $diaDaSemanaAjustado = FuncoesLancamento::diaDaSemanaPorDia($ge->getEvento()->getDia());
-                                        echo "<th class='text-center'>";
-                                        echo '<span>' . $ge->getEvento()->getEventoTipo()->getNomeAjustado() . '</span><br />';
-                                        echo '<span>' . $diaDaSemanaAjustado . '</span><br />';
-                                        echo '<span>' . $ge->getEvento()->getHoraFormatoHoraMinuto() . '</span>';
-                                        echo "</th>";
-                                    }
-                                }
-                                ?>
+                                <?php echo $this->cabecalhoDeEventos(); ?>
                             </tr>
                         </thead>
                         <tbody>
-                            <?php
-                            $pessoas;
-                            foreach ($grupo->getResponsabilidadesAtivas() as $gr) {
-                                $p = $gr->getPessoa();
-                                $p->setTipo('LP');
-                                $pessoas[] = $p;
-                            }
-                            if (count($grupo->getGrupoPessoa()) > 0) {
-                                foreach ($grupo->getGrupoPessoa() as $gp) {
-                                    $p = $gp->getPessoa();
-                                    $p->setTipo($gp->getGrupoPessoaTipo()->getNomeSimplificado());
-                                    $pessoas[] = $p;
-                                }
-                            }
-                            foreach ($pessoas as $pessoa) {
-                                echo '<tr>';
-                                echo '<td><a data-type="text" href="#" title="" class="label label-dark editable editable-click"><span>' . $pessoa->getTipo() . '</span></a></td>';
-                                echo '<td class="text-left">' . $pessoa->getNomeListaDeLancamento() . '</td>';
-                                /* Listagem dos eventos */
-                                $grupo = $this->entidade->getGrupo();
-                                $eventos = $grupo->getGrupoEventoNoCiclo($this->cicloSelecionado);
-                                if (count($eventos) > 0) {
-                                    foreach ($eventos as $ge) {
-                                        $valor = '';
-                                        $class = 'btn-default';
-                                        $classIco = 'fa-thumbs-down';
-                                        $evento = $ge->getEvento();
-                                        $eventoFrequencia = $evento->getEventoFrequencia();
-                                        $idEventoFrequencia = 'ico_' . $pessoa->getId() . '_' . $evento->getId();
-                                        if (count($eventoFrequencia) > 0) {
-                                            $criteria = Criteria::create()
-                                                    ->andWhere(Criteria::expr()->eq("pessoa_id", $pessoa->getId()))
-                                                    ->andWhere(Criteria::expr()->eq("ano", $anoSelecionado))
-                                                    ->andWhere(Criteria::expr()->eq("mes", $mesSelecionado))
-                                                    ->andWhere(Criteria::expr()->eq("ciclo", $this->cicloSelecionado))
-                                            ;
-                                            $eventosFiltrados = $eventoFrequencia->matching($criteria);
-                                            if ($eventosFiltrados->count() == 1) {
-                                                $valor = $eventosFiltrados->first()->getFrequencia();
-                                                if ($valor == 'S') {
-                                                    $class = 'btn-success';
-                                                    $classIco = 'fa-thumbs-up';
-                                                } else {
-                                                    $class = 'btn-default';
-                                                    $classIco = 'fa-thumbs-down';
-                                                }
-                                            }
-                                        }
-                                        echo '<td>';
-                                        echo '<div class="btn-group">';
-                                        echo '<button id="b_' . $idEventoFrequencia . '" type="button" class="btn ' . $class . ' btn-sm"'
-                                        . ' onclick=\'mudarFrequencia(';
-                                        echo "\"$idEventoFrequencia\", $this->cicloSelecionado, $this->abaSelecionada";
-                                        echo ');\'>';
-                                        echo '<i id="i_' . $idEventoFrequencia . '" class="fa ' . $classIco . '"></i>';
-                                        echo '</button>';
-                                        echo '</div>';
-                                        echo '</td>';
-                                    }
-                                }
-                                echo '</tr>';
-                            }
-                            ?>
+                            <?php echo $this->ListagemDePessoasComEventos(); ?>
                         </tbody>
                     </table>
                 </div>
@@ -109,7 +33,7 @@ $anoSelecionado = FuncoesLancamento::anoPorAbaSelecionada($this->abaSelecionada)
 
 <div class="row">
     <div class="col-md-6">
-        <?php echo $this->dadosEntidade($entidade); ?>
+        <?php echo $this->dadosEntidade(); ?>
     </div> 
     <div class="col-md-6">
         <?php echo $this->alertaEnvioRelatorio(1); ?>
@@ -119,7 +43,7 @@ $anoSelecionado = FuncoesLancamento::anoPorAbaSelecionada($this->abaSelecionada)
 </div>
 <div class="row">
     <div class="tab-block mb25">
-        ABAS SELECIONADAS 
+        <!--ABAS SELECIONADAS--> 
         <ul class="nav nav-tabs tabs-bg">
             <?php
             $urlBase = $this->url(ConstantesLancamento::$ROUTE_LANCAMENTO);
@@ -128,17 +52,17 @@ $anoSelecionado = FuncoesLancamento::anoPorAbaSelecionada($this->abaSelecionada)
             <li role="presentation" <?php echo ConstantesLancamento::$ONCLICK_ABRIR_MODAL; ?> <?php echo $this->abaSelecionada($this->abaSelecionada, 1); ?>><a href="<?php echo $urlBase; ?>"><i class="fa fa-wheelchair text-purple"></i> M&ecirc;s Atual</a></li>
             <li role="presentation" <?php echo ConstantesLancamento::$ONCLICK_ABRIR_MODAL; ?> <?php echo $this->abaSelecionada($this->abaSelecionada, 2); ?>><a href="<?php echo $urlBase2; ?>"><i class="fa fa-bolt text-purple"></i>M&ecirc;s Anterior</a></li>
         </ul>
-        FIM ABAS SELECIONADAS 
-        MODAL COM LOADER GIGANTE 
+<!--        FIM ABAS SELECIONADAS 
+        MODAL COM LOADER GIGANTE -->
         <?php echo $this->modalAba(); ?>
-        FIM MODAL COM LOADER GIGANTE 
+        <!--FIM MODAL COM LOADER GIGANTE--> 
         <button class="btn btn-danger btn-lg" onclick="location.href = '/lancamentoCadastrarPessoa';" >NOVO CADSTRO</button>
         <button class="btn btn-danger btn-lg" onclick="location.href = '/lancamentoEnviarRelatorio';" >ENVIAR RELATORIO</button>
         <div class="tab-content">
             <div id="tab10_1" class="tab-pane active">
                 <div id="cabecalhoCiclo" class="row">
                     <div class="col-md-6">
-                        Lista de lançamento
+                        <!--Lista de lançamento-->
                         <button class=" btn btn-success" >
                             <i class="fa fa-bolt text-purple"></i>
                         </button>

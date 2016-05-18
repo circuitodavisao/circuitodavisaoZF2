@@ -10,7 +10,9 @@ namespace Lancamento;
 
 use Lancamento\View\Helper\AbaSelecionada;
 use Lancamento\View\Helper\AlertaEnvioRelatorio;
+use Lancamento\View\Helper\CabecalhoDeEventos;
 use Lancamento\View\Helper\DadosEntidade;
+use Lancamento\View\Helper\ListagemDePessoasComEventos;
 use Lancamento\View\Helper\ModalAba;
 use Zend\Mvc\MvcEvent;
 use Zend\Session\Config\SessionConfig;
@@ -47,6 +49,12 @@ class Module {
                 },
                 'ModalAba' => function($sm) {
                     return new ModalAba();
+                },
+                'cabecalhoDeEventos' => function($sm) {
+                    return new CabecalhoDeEventos();
+                },
+                'listagemDePessoasComEventos' => function($sm) {
+                    return new ListagemDePessoasComEventos();
                 },
             )
         );
