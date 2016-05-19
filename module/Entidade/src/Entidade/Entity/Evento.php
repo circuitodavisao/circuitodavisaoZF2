@@ -121,7 +121,16 @@ class Evento {
     }
 
     function getHoraFormatoHoraMinuto() {
-        return substr($this->hora, 0, 5);
+        $resposta = '';
+        /* Se for hora em ponto hora mais 'H' */
+        $hora = substr($this->hora, 0, 2);
+        $minutos = substr($this->hora, 3, 2);
+        if ((int) $minutos == 0) {
+            $resposta = $hora . 'H';
+        } else {
+            $resposta = $hora . '.';
+        }
+        return $resposta;
     }
 
     function setEventoTipo($eventoTipo) {
