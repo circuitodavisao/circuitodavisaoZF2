@@ -1,0 +1,29 @@
+/*! circuito-estilos-lancamento.css - v0.1
+ * http://circuitodavisao.com.br
+ * Copyright (c) 2016 Circuito da Visão
+ * Estilos para formatação de página de lançamento */
+
+table.scroll {
+    width: 100%;
+}
+
+table.scroll tbody,
+table.scroll thead { display: block; }
+
+table.scroll tbody {
+    height: 300px;
+    overflow-y: auto;
+    overflow-x: hidden;
+} 
+
+tbody td, thead th {
+    width: 15%;   
+    white-space: nowrap; 
+}
+
+table.scroll .tdTipo{
+    width: 35px;
+} 
+table.scroll .tdNome{
+    width: 90px;
+} 

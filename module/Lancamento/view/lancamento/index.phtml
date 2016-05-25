@@ -7,29 +7,8 @@ use Lancamento\Controller\Helper\FuncoesLancamento;
 $mesSelecionado = FuncoesLancamento::mesPorAbaSelecionada($this->abaSelecionada);
 $anoSelecionado = FuncoesLancamento::anoPorAbaSelecionada($this->abaSelecionada);
 ?>
-<div class="panel-body">
-    <div class="row">
-        <div class="col-md-12">
-            <div class="panel panel-visible" id="spy2">
-                <div class="panel-body pn">
-                    <table class="table table-striped table-hover text-center" id="datatable2" cellspacing="0" width="100%">
-                        <thead>
-                            <tr>
-                                <th colspan="2"></th>
-                                <?php echo $this->cabecalhoDeEventos(); ?>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php echo $this->ListagemDePessoasComEventos(); ?>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<hr />
+<!-- Tabela de lançamento de dados --> 
+<?php echo $this->tabelaLancamento(); ?>    
 
 <div class="row">
     <div class="col-md-6">

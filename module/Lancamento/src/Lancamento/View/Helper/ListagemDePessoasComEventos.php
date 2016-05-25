@@ -41,8 +41,10 @@ class ListagemDePessoasComEventos extends AbstractHelper {
         }
         foreach ($pessoas as $pessoa) {
             $html .= '<tr>';
-            $html .= '<td><a data-type="text" href="#" title="" class="label label-dark editable editable-click"><span>' . $pessoa->getTipo() . '</span></a></td>';
-            $html .= '<td class="text-left">' . $pessoa->getNomeListaDeLancamento() . '</td>';
+            $html .= '<td class="tdTipo">' .
+                    '<button style="width: 100%;" class="btn btn-dark btn-xs">' . $pessoa->getTipo() . '</button>' .
+                    '</td>';
+            $html .= '<td class="tdNome text-left" class="text-left">&nbsp;' . $pessoa->getNomeListaDeLancamento() . '</td>';
             /* Listagem dos eventos */
             $grupo = $this->view->entidade->getGrupo();
             $eventos = $grupo->getGrupoEventoNoCiclo($this->view->cicloSelecionado);

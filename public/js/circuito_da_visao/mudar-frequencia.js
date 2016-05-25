@@ -10,10 +10,10 @@ function mudarFrequencia(idEventoFrequencia, ciclo, aba) {
     var faThumbsUp = 'fa-thumbs-up';
     var iconefaThumbsDown = '<i class="fa ' + faThumbsDown + '"></i>';
     var iconefaThumbsUp = '<i class="fa ' + faThumbsUp + '"></i>';
-    var loader = '<img src="/img/loader.gif"></i>';
+    var loader = '<img width="11" hegth="11" src="/img/loader.gif"></i>';
     var btnDefault = 'btn-default';
     var btnSuccess = 'btn-success';
-    var btnWarning = 'btn-warning';
+    var btnTransicao = 'btn-default';
     var botao = $('#b_' + idEventoFrequencia);
     var icone = $('#i_' + idEventoFrequencia);
 
@@ -24,7 +24,7 @@ function mudarFrequencia(idEventoFrequencia, ciclo, aba) {
     botao.html(loader);
     botao.removeClass(btnDefault);
     botao.removeClass(btnSuccess);
-    botao.addClass(btnWarning);
+    botao.addClass(btnTransicao);
     $.post(
             "/lancamentoMudarFrequencia",
             {
@@ -37,7 +37,7 @@ function mudarFrequencia(idEventoFrequencia, ciclo, aba) {
                 if (data.response) {
                     var total = $('#total_' + data.idEvento);
 
-                    botao.removeClass(btnWarning);
+                    botao.removeClass(btnTransicao);
                     botao.html('');
                     var totalSoma = parseInt(total.html());
                     if (valor == "S") {
