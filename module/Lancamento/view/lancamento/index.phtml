@@ -7,36 +7,85 @@ use Lancamento\Controller\Helper\FuncoesLancamento;
 $mesSelecionado = FuncoesLancamento::mesPorAbaSelecionada($this->abaSelecionada);
 $anoSelecionado = FuncoesLancamento::anoPorAbaSelecionada($this->abaSelecionada);
 ?>
-<!-- Tabela de lançamento de dados --> 
-<?php echo $this->tabelaLancamento(); ?>    
 
+<!-- Abertura de Abas -->
+<div class="panel">
+    <div class="panel-heading">
+        <ul class="nav panel-tabs-border panel-tabs panel-tabs-left">
+            <?php
+            $urlBase = $this->url(ConstantesLancamento::$ROUTE_LANCAMENTO);
+            $urlBase2 = $urlBase . '/2';
+            ?>
+            <li role="presentation" <?php echo ConstantesLancamento::$ONCLICK_ABRIR_MODAL; ?> <?php echo $this->abaSelecionada($this->abaSelecionada, 1); ?>><a href="<?php echo $urlBase; ?>">M&ecirc;s Atual</a></li>
+            <li role="presentation" <?php echo ConstantesLancamento::$ONCLICK_ABRIR_MODAL; ?> <?php echo $this->abaSelecionada($this->abaSelecionada, 2); ?>><a href="<?php echo $urlBase2; ?>">M&ecirc;s Anterior</a></li>
+        </ul>
+    </div>
+    <div class="panel-body">
+        <!-- Cabeçalho do ciclo -->
+        <div class="panel-heading row text-center">
+            <div class="pull-left">
+                <div class="btn-group">
+                    <button class="btn btn-primary btn-sm" onclick="location.href = '/lancamentoCadastrarPessoa';" title="Adicionar Pessoa"><i class="fa fa-plus"></i></button>
+                </div>
+              </div>
+              <span class="panel-title">
+                <?php
+                    $urlBaseCiclo = $urlBase . '/' . $this->abaSelecionada . '_';
+                    if ($this->cicloSelecionado > 1) {
+                        $urlCicloAnterior = $urlBaseCiclo . ($this->cicloSelecionado - 1);
+                        ?>
+                <a <?php echo ConstantesLancamento::$ONCLICK_ABRIR_MODAL; ?> href="<?php echo $urlCicloAnterior; ?>"><button class="btn btn-default btn-sm"><i class="fa fa-angle-double-left"></i></button></a>
+                        <?php
+                    }
+                    ?>    
+                    Ciclo <?php echo $this->cicloSelecionado; ?> <?php echo FuncoesLancamento::periodoCicloMesAno($this->cicloSelecionado, $mesSelecionado, $anoSelecionado); ?>
+                    <?php
+                    $totalDeCiclos = FuncoesLancamento::totalCiclosMes($mesSelecionado, $anoSelecionado);
+                    if ($this->cicloSelecionado < $totalDeCiclos) {
+                        $urlCicloPosterior = $urlBaseCiclo . ($this->cicloSelecionado + 1);
+                        ?>
+                        <a <?php echo ConstantesLancamento::$ONCLICK_ABRIR_MODAL; ?> href="<?php echo $urlCicloPosterior; ?>"><button class="btn btn-default btn-sm"><i class="fa fa-angle-double-right"></i></button></a>
+                        <?php
+                    }
+                ?>
+              </span>
+              <div class="pull-right">
+                <div class="btn-group">
+                    <button class="btn btn-success btn-sm" onclick="location.href = '/lancamentoEnviarRelatorio';" title="Enviar Relatório"><i class="fa fa-file-text-o"></i></button>
+                </div>
+              </div>
+        </div>
+           
+        <!-- Tabela de lançamento de dados --> 
+        <?php echo $this->tabelaLancamento(); ?>
+    </div>
+</div>
+
+<!-- Dados do Menu [Entidade] -->
 <div class="row">
     <div class="col-md-6">
         <?php echo $this->dadosEntidade(); ?>
     </div> 
+
+    <!-- Tipos de alertas possíveis -->
     <div class="col-md-6">
         <?php echo $this->alertaEnvioRelatorio(1); ?>
         <?php echo $this->alertaEnvioRelatorio(2); ?>
         <?php echo $this->alertaEnvioRelatorio(3); ?>
     </div> 
 </div>
+
+<!-- Montagem das abas -->
 <div class="row">
     <div class="tab-block mb25">
-        <!--ABAS SELECIONADAS--> 
-        <ul class="nav nav-tabs tabs-bg">
-            <?php
-            $urlBase = $this->url(ConstantesLancamento::$ROUTE_LANCAMENTO);
-            $urlBase2 = $urlBase . '/2';
-            ?>
-            <li role="presentation" <?php echo ConstantesLancamento::$ONCLICK_ABRIR_MODAL; ?> <?php echo $this->abaSelecionada($this->abaSelecionada, 1); ?>><a href="<?php echo $urlBase; ?>"><i class="fa fa-wheelchair text-purple"></i> M&ecirc;s Atual</a></li>
-            <li role="presentation" <?php echo ConstantesLancamento::$ONCLICK_ABRIR_MODAL; ?> <?php echo $this->abaSelecionada($this->abaSelecionada, 2); ?>><a href="<?php echo $urlBase2; ?>"><i class="fa fa-bolt text-purple"></i>M&ecirc;s Anterior</a></li>
-        </ul>
-        <!--        FIM ABAS SELECIONADAS 
-                MODAL COM LOADER GIGANTE -->
+        
+        <!-- FIM ABAS SELECIONADAS MODAL COM LOADER GIGANTE -->
         <?php echo $this->modalAba(); ?>
-        <!--FIM MODAL COM LOADER GIGANTE--> 
-        <button class="btn btn-danger btn-lg" onclick="location.href = '/lancamentoCadastrarPessoa';" >NOVO CADSTRO</button>
-        <button class="btn btn-danger btn-lg" onclick="location.href = '/lancamentoEnviarRelatorio';" >ENVIAR RELATORIO</button>
+        <!--FIM MODAL COM LOADER GIGANTE-->
+
+        <button class="btn btn-danger btn-lg" onclick="location.href = '/lancamentoCadastrarPessoa';">Novo Cadastro</button>
+        <button class="btn btn-danger btn-lg" onclick="location.href = '/lancamentoEnviarRelatorio';">Enviar Relat&oacute;rio</button>
+
         <div class="tab-content">
             <div id="tab10_1" class="tab-pane active">
                 <div id="cabecalhoCiclo" class="row">
@@ -56,7 +105,7 @@ $anoSelecionado = FuncoesLancamento::anoPorAbaSelecionada($this->abaSelecionada)
                             <?php
                         }
                         ?>    
-                        Ciclo {<?php echo $this->cicloSelecionado; ?>} <?php echo 'Periodo ' . FuncoesLancamento::periodoCicloMesAno($this->cicloSelecionado, $mesSelecionado, $anoSelecionado); ?>
+                        Ciclo {<?php echo $this->cicloSelecionado; ?>} <?php echo FuncoesLancamento::periodoCicloMesAno($this->cicloSelecionado, $mesSelecionado, $anoSelecionado); ?>
                         <?php
                         $totalDeCiclos = FuncoesLancamento::totalCiclosMes($mesSelecionado, $anoSelecionado);
                         if ($this->cicloSelecionado < $totalDeCiclos) {
