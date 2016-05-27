@@ -19,15 +19,18 @@ $anoSelecionado = FuncoesLancamento::anoPorAbaSelecionada($this->abaSelecionada)
             <li role="presentation" <?php echo ConstantesLancamento::$ONCLICK_ABRIR_MODAL; ?> <?php echo $this->abaSelecionada($this->abaSelecionada, 1); ?>><a href="<?php echo $urlBase; ?>">M&ecirc;s Atual</a></li>
             <li role="presentation" <?php echo ConstantesLancamento::$ONCLICK_ABRIR_MODAL; ?> <?php echo $this->abaSelecionada($this->abaSelecionada, 2); ?>><a href="<?php echo $urlBase2; ?>">M&ecirc;s Anterior</a></li>
         </ul>
+        <div class="pull-right">
+            <div class="btn-group">
+                <button class="btn btn-primary btn-sm" onclick="location.href = '/lancamentoCadastrarPessoa';" title="Adicionar Pessoa"><i class="fa fa-plus"></i></button>
+            </div>
+            <div class="btn-group">
+                <button class="btn btn-success btn-sm" onclick="location.href = '/lancamentoEnviarRelatorio';" title="Enviar Relatório"><i class="fa fa-file-text-o"></i></button>
+            </div>
+        </div>
     </div>
     <div class="panel-body">
         <!-- Cabeçalho do ciclo -->
-        <div class="panel-heading row text-center">
-            <div class="pull-left">
-                <div class="btn-group">
-                    <button class="btn btn-primary btn-sm" onclick="location.href = '/lancamentoCadastrarPessoa';" title="Adicionar Pessoa"><i class="fa fa-plus"></i></button>
-                </div>
-              </div>
+        <div class="panel-heading row text-center">      
               <span class="panel-title">
                 <?php
                     $urlBaseCiclo = $urlBase . '/' . $this->abaSelecionada . '_';
@@ -49,11 +52,6 @@ $anoSelecionado = FuncoesLancamento::anoPorAbaSelecionada($this->abaSelecionada)
                     }
                 ?>
               </span>
-              <div class="pull-right">
-                <div class="btn-group">
-                    <button class="btn btn-success btn-sm" onclick="location.href = '/lancamentoEnviarRelatorio';" title="Enviar Relatório"><i class="fa fa-file-text-o"></i></button>
-                </div>
-              </div>
         </div>
            
         <!-- Tabela de lançamento de dados --> 
