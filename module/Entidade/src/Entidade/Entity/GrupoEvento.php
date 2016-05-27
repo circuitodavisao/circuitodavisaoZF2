@@ -53,6 +53,18 @@ class GrupoEvento {
     protected $hora_inativacao;
 
     /**
+     * Verificar se a data de inativação está nula
+     * @return boolean
+     */
+    public function verificarSeEstaAtivo() {
+        $resposta = false;
+        if (is_null($this->getData_inativacao())) {
+            $resposta = true;
+        }
+        return $resposta;
+    }
+
+    /**
      * Retorna o evento
      * @return Evento
      */

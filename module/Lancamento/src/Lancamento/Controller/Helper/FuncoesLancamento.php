@@ -45,7 +45,11 @@ class FuncoesLancamento {
      */
     static public function periodoCicloMesAno($ciclo = 1, $mesUsado = 5, $anoUsado = 2016) {
         $resposta = '';
-
+        if ($ciclo != 1 && $ciclo != 6) {
+            $resposta .= ' Per&iacute;odo ';
+        } else {
+            $resposta .= ' - ';
+        }
         $mesFormatado = str_pad($mesUsado, 2, 0, STR_PAD_LEFT);
 
         $diaDaSemanaDoPrimeiroDia = date('N', mktime(0, 0, 0, $mesUsado, 1, $anoUsado));
@@ -59,7 +63,7 @@ class FuncoesLancamento {
             /* Periodo */
             if ($cicloAux == $ciclo && $umaVez == 0) {
                 $diaFormatado = str_pad($z, 2, 0, STR_PAD_LEFT);
-                $resposta .= $diaFormatado . '/' . $mesFormatado . ' a ';
+                $resposta .= $diaFormatado . '/' . $mesFormatado;
                 $umaVez++;
             }
 
@@ -67,7 +71,9 @@ class FuncoesLancamento {
             if ($diaDaSemana == 7) {
                 if ($cicloAux == $ciclo) {
                     $diaFormatado = str_pad($z, 2, 0, STR_PAD_LEFT);
-                    $resposta .= $diaFormatado . '/' . $mesFormatado;
+                    if ($ciclo != 1) {
+                        $resposta .= ' &aacute; ' . $diaFormatado . '/' . $mesFormatado;
+                    }
                 }
                 $cicloAux++;
             }

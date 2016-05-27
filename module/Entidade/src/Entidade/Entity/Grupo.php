@@ -7,7 +7,6 @@ namespace Entidade\Entity;
  * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com>
  * Descricao: Entidade anotada da tabela grupo
  */
-
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -194,6 +193,20 @@ class Grupo {
     }
 
     /**
+     * Retorna o grupo evento
+     * @return GrupoEvento
+     */
+    function getGrupoEventoAtivos() {
+        $grupoEventos = null;
+        foreach ($this->getGrupoEvento() as $ge) {
+            if ($ge->verificarSeEstaAtivo()) {
+                $grupoEventos[] = $ge;
+            }
+        }
+        Return $grupoEventos;
+    }
+
+    /**
      * Retorna o grupo evento no ciclo selecionado
      * @param int $ciclo
      * @param int $mes
@@ -203,7 +216,10 @@ class Grupo {
     function getGrupoEventoNoCiclo($ciclo = 1, $mes = 5, $ano = 2016) {
         if (is_null($this->getEventos())) {
             $eventos = null;
-            foreach ($this->getGrupoEvento() as $ge) {
+            foreach ($this->getGrupoEventoAtivos() as $ge) {
+                /* Verificando data de cadastro */
+                $dataCadastro = $ge->getData_criacao();
+
                 $verificacao = false;
                 if ($ciclo == 2 || $ciclo == 3 || $ciclo == 4) {
                     $verificacao = true;
