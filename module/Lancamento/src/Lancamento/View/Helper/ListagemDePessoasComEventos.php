@@ -41,9 +41,25 @@ class ListagemDePessoasComEventos extends AbstractHelper {
         }
         foreach ($pessoas as $pessoa) {
             $html .= '<tr>';
-            $html .= '<td class="tdTipo">' .
-                    '<button style="width: 100%;" class="btn btn-dark btn-xs">' . $pessoa->getTipo() . '</button>' .
-                    '</td>';
+            $html .= '<td class="tdTipo">';
+//                    '<button style="width: 100%;" class="btn btn-dark btn-xs">' . $pessoa->getTipo() . '</button>' .
+            $html .= '<div class="btn-group dropup">';
+            $html .= '<button style="width: 100%;" class="btn btn-dark btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">';
+            $html .= $pessoa->getTipo();
+            $html .= '<span class="sr-only">Toggle Dropdown</span>';
+            $html .= '</button>';
+            
+            $html .= '<ul class="dropdown-menu">';
+            $html .= '<form class="form-control">';
+            $html .= '<input class="gui-input" type="text" value="' . $pessoa->getNome() . '" />';
+            $html .= '<a class="btn btn-success btn-xs">treta</a>';
+            $html .= '<a class="btn btn-dark btn-xs">treta</a>';
+            $html .= '</form>';
+            
+            $html .= '</ul>';
+            $html .= '</div>';
+
+            $html .= '</td>';
             $html .= '<td class="tdNome text-left" class="text-left">&nbsp;' . $pessoa->getNomeListaDeLancamento() . '</td>';
             /* Listagem dos eventos */
             $grupo = $this->view->entidade->getGrupo();
@@ -76,8 +92,8 @@ class ListagemDePessoasComEventos extends AbstractHelper {
                         }
                     }
                     $html .= '<td>';
-                    
-                    
+
+
                     $html .= '<div class="btn-group">';
                     $html .= '<button id="b_' . $idEventoFrequencia . '" type="button" class="btn ' . $class . ' btn-sm"'
                             . ' onclick=\'mudarFrequencia(';
@@ -86,8 +102,8 @@ class ListagemDePessoasComEventos extends AbstractHelper {
                     $html .= '<i id="i_' . $idEventoFrequencia . '" class="fa ' . $classIco . '"></i>';
                     $html .= '</button>';
                     $html .= '</div>';
-                    
-                    
+
+
                     $html .= '</td>';
                 }
             }
