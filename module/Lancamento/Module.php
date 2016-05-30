@@ -10,8 +10,8 @@ namespace Lancamento;
 
 use Lancamento\View\Helper\AbaSelecionada;
 use Lancamento\View\Helper\AlertaEnvioRelatorio;
+use Lancamento\View\Helper\CabecalhoDeCiclos;
 use Lancamento\View\Helper\CabecalhoDeEventos;
-use Lancamento\View\Helper\CabecalhoDeTotaisDosEventos;
 use Lancamento\View\Helper\DadosEntidade;
 use Lancamento\View\Helper\ListagemDePessoasComEventos;
 use Lancamento\View\Helper\ModalAba;
@@ -60,6 +60,9 @@ class Module {
                 },
                 'tabelaLancamento' => function($sm) {
                     return new TabelaLancamento();
+                },
+                'cabecalhoDeCiclos' => function($sm) {
+                    return new CabecalhoDeCiclos();
                 },
             )
         );

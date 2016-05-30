@@ -36,30 +36,8 @@ $anoSelecionado = FuncoesLancamento::anoPorAbaSelecionada($this->abaSelecionada)
         </div>
     </div>
     <div class="panel-body">
-        <!-- Cabeçalho do ciclo -->
-        <div class="panel-heading row text-center">      
-            <span class="panel-title">
-                <?php
-                $urlBaseCiclo = $urlBase . '/' . $this->abaSelecionada . '_';
-                if ($this->cicloSelecionado > 1) {
-                    $urlCicloAnterior = $urlBaseCiclo . ($this->cicloSelecionado - 1);
-                    ?>
-                    <a <?php echo ConstantesLancamento::$ONCLICK_ABRIR_MODAL; ?> href="<?php echo $urlCicloAnterior; ?>"><button class="btn btn-default btn-sm"><i class="fa fa-angle-double-left"></i></button></a>
-                    <?php
-                }
-                ?>    
-                Ciclo <?php echo $this->cicloSelecionado; ?> <?php echo FuncoesLancamento::periodoCicloMesAno($this->cicloSelecionado, $mesSelecionado, $anoSelecionado); ?>
-                <?php
-                $totalDeCiclos = FuncoesLancamento::totalCiclosMes($mesSelecionado, $anoSelecionado);
-                if ($this->cicloSelecionado < $totalDeCiclos) {
-                    $urlCicloPosterior = $urlBaseCiclo . ($this->cicloSelecionado + 1);
-                    ?>
-                    <a <?php echo ConstantesLancamento::$ONCLICK_ABRIR_MODAL; ?> href="<?php echo $urlCicloPosterior; ?>"><button class="btn btn-default btn-sm"><i class="fa fa-angle-double-right"></i></button></a>
-                            <?php
-                        }
-                        ?>
-            </span>
-        </div>
+        <!-- Tabela de lançamento de dados --> 
+        <?php echo $this->cabecalhoDeCiclos(); ?>
 
         <!-- Tabela de lançamento de dados --> 
         <?php echo $this->tabelaLancamento(); ?>

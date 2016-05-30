@@ -64,6 +64,11 @@ class LancamentoController extends AbstractActionController {
                         Constantes::$ACTION => ConstantesLancamento::$PAGINA_ENVIAR_RELATORIO,
             ));
         }
+        if ($pagina == ConstantesLancamento::$PAGINA_ALTERAR_NOME) {
+            return $this->forward()->dispatch(ConstantesLancamento::$CONTROLLER_LANCAMENTO, array(
+                        Constantes::$ACTION => ConstantesLancamento::$PAGINA_ALTERAR_NOME,
+            ));
+        }
         /* Helper Controller */
         $lancamentoORM = new LancamentoORM($this->getDoctrineORMEntityManager());
 
@@ -193,6 +198,34 @@ class LancamentoController extends AbstractActionController {
                 $response->setContent(Json::encode(
                                 array('response' => 'true',
                                     'idEvento' => $evento->getId())));
+            } catch (Exception $exc) {
+                echo $exc->getTraceAsString();
+            }
+        }
+        return $response;
+    }
+
+    /**
+     * Alterar nome de uma pessoa
+     * @return Json
+     */
+    public function alterarNomeAction() {
+        $request = $this->getRequest();
+        $response = $this->getResponse();
+        if ($request->isPost()) {
+            try {
+                $post_data = $request->getPost();
+                $idPessoa = $post_data['idPessoa'];
+                $nome = $post_data['nome'];
+
+                /* Helper Controller */
+                $loginORM = new LoginORM($this->getDoctrineORMEntityManager());
+
+                $pessoa = $loginORM->getPessoaORM()->encontrarPorIdPessoa($idPessoa);
+                $pessoa->setNome($nome);
+                $loginORM->getPessoaORM()->persistirPessoa($pessoa);
+
+                $response->setContent(Json::encode(array('response' => 'true',)));
             } catch (Exception $exc) {
                 echo $exc->getTraceAsString();
             }
