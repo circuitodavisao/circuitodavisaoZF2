@@ -41,26 +41,48 @@ class ListagemDePessoasComEventos extends AbstractHelper {
         }
         foreach ($pessoas as $pessoa) {
             $html .= '<tr>';
+
+            /* TIPO */
             $html .= '<td class="tdTipo">';
-//                    '<button style="width: 100%;" class="btn btn-dark btn-xs">' . $pessoa->getTipo() . '</button>' .
+
+            /* Menu dropup Tipo */
             $html .= '<div class="btn-group dropup">';
             $html .= '<button style="width: 100%;" class="btn btn-dark btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">';
             $html .= $pessoa->getTipo();
-            $html .= '<span class="sr-only">Toggle Dropdown</span>';
+            $html .= '<span class="sr-only"></span>';
             $html .= '</button>';
-            
+
             $html .= '<ul class="dropdown-menu">';
-            $html .= '<form class="form-control">';
-            $html .= '<input class="gui-input" type="text" value="' . $pessoa->getNome() . '" />';
-            $html .= '<a class="btn btn-success btn-xs">treta</a>';
-            $html .= '<a class="btn btn-dark btn-xs">treta</a>';
-            $html .= '</form>';
-            
+
             $html .= '</ul>';
             $html .= '</div>';
+            /* Fim Menu dropup */
 
             $html .= '</td>';
-            $html .= '<td class="tdNome text-left" class="text-left">&nbsp;' . $pessoa->getNomeListaDeLancamento() . '</td>';
+
+            /* NOME */
+            $html .= '<td class="tdNome text-left">&nbsp;';
+            /* Menu dropup Nome */
+            $html .= '<div class="btn-group dropup">';
+
+            $html .= '<a class="tdNome text-left dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">';
+            $html .= '<span id="span_nome_' . $pessoa->getId() . '">' . $pessoa->getNomeListaDeLancamento() . '</span>';
+            $html .= '<span class="sr-only"></span>';
+            $html .= '</a>';
+
+            $html .= '<ul class="dropdown-menu">';
+            $html .= '<form class="form-control">';
+            $html .= '<input id="nome_' . $pessoa->getId() . '" class="gui-input" type="text" value="' . $pessoa->getNome() . '" />';
+            $html .= '<a href="#" onclick="alterarNome(' . $pessoa->getId() . ')" class="btn btn-success btn-xs">teste</a>';
+            $html .= '</form>';
+            $html .= '</ul>';
+
+            $html .= '</div>';
+            /* Fim Menu dropup */
+            $html .= '</td>';
+
+
+
             /* Listagem dos eventos */
             $grupo = $this->view->entidade->getGrupo();
             $eventos = $grupo->getGrupoEventoNoCiclo($this->view->cicloSelecionado);
