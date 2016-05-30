@@ -22,26 +22,19 @@ class TabelaLancamento extends AbstractHelper {
     public function renderHtml() {
         $html = '';
         $html .= '<table class="table table-condensed scroll text-center">';
+
         $html .= '<thead>';
-
-
         $html .= '<tr>';
         $html .= '<th class="tdTipo"></th>';
         $html .= '<th class="tdNome"></th>';
         $html .= $this->view->cabecalhoDeEventos();
         $html .= '</tr>';
-
         $html .= '</thead>';
+
         $html .= '<tbody>';
-
-        $html .= '<tr>';
-        $html .= '<td class="tdTipo"></td>';
-        $html .= '<td class="tdNome"></td>';
-        $html .= $this->view->cabecalhoDeTotaisDosEventos();
-        $html .= '</tr>';
-
         $html .= $this->view->ListagemDePessoasComEventos();
         $html .= '</tbody>';
+
         $html .= '</table>';
         return $html;
     }

@@ -55,9 +55,6 @@ class Module {
                 'cabecalhoDeEventos' => function($sm) {
                     return new CabecalhoDeEventos();
                 },
-                'cabecalhoDeTotaisDosEventos' => function($sm) {
-                    return new CabecalhoDeTotaisDosEventos();
-                },
                 'listagemDePessoasComEventos' => function($sm) {
                     return new ListagemDePessoasComEventos();
                 },

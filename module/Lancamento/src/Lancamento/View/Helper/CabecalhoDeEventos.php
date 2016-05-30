@@ -2,6 +2,7 @@
 
 namespace Lancamento\View\Helper;
 
+use Doctrine\Common\Collections\Criteria;
 use Lancamento\Controller\Helper\FuncoesLancamento;
 use Zend\View\Helper\AbstractHelper;
 
@@ -32,7 +33,27 @@ class CabecalhoDeEventos extends AbstractHelper {
                 $html .= "<th class='text-center'>";
                 $html .= '<span>' . $ge->getEvento()->getEventoTipo()->getNomeAjustado() . '</span><br />';
                 $html .= '<span>' . $diaDaSemanaAjustado . '</span><br />';
-                $html .= '<span>' . $ge->getEvento()->getHoraFormatoHoraMinuto() . '</span>';
+                $html .= '<span>' . $ge->getEvento()->getHoraFormatoHoraMinuto() . '</span><br />';
+
+                /* Totais */
+                $evento = $ge->getEvento();
+
+                $html .= "<span id='total_{$evento->getId()}'>";
+                $eventoFrequencia = $evento->getEventoFrequencia();
+                $total = 0;
+                if (count($eventoFrequencia) > 0) {
+                    $criteria = Criteria::create()
+                            ->andWhere(Criteria::expr()->eq("ano", $anoSelecionado))
+                            ->andWhere(Criteria::expr()->eq("mes", $mesSelecionado))
+                            ->andWhere(Criteria::expr()->eq("ciclo", $this->view->cicloSelecionado))
+                            ->andWhere(Criteria::expr()->eq("frequencia", "S"))
+                    ;
+                    $eventosFiltrados = $eventoFrequencia->matching($criteria);
+                    $total = count($eventosFiltrados);
+                }
+                $html .= $total;
+                $html .= "</span>";
+
                 $html .= "</th>";
             }
         }
