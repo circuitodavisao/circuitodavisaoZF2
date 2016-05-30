@@ -31,7 +31,7 @@ class DadosEntidade extends AbstractHelper {
             }
         }
         $html = '';
-        $html .= '<div class="media">';
+        $html .= '<div class="media visible-xs-block" style="padding: 15px 0px 15px 10px;">';
         if ($pessoas) {
             /* Fotos */
             $contagemFotos = 1;
