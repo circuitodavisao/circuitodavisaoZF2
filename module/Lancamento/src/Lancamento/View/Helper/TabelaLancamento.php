@@ -25,33 +25,27 @@ class TabelaLancamento extends AbstractHelper {
         $html = '';
         $html .= '<table class="table table-condensed scroll text-center">';
         $html .= '<thead>';
-                
-        
+
+
         $html .= '<tr>';
         $html .= '<th class="tdTipo"></th>';
         $html .= '<th class="tdNome"></th>';
         $html .= $this->view->cabecalhoDeEventos();
         $html .= '</tr>';
-        
-        $html .= '<tr>';
-        $html .= '<th class="tdTipo text-center" style="width: 40px;"></th>';
-        $html .= '<th class="tdNome" style="width: 91px;">Total</th>';
-        $html .= '<th class="tdTipo text-center">15</th>';
-        $html .= '<th class="tdNome text-center">15</th>';
-        $html .= '<th class="tdTipo text-center">15</th>';
-        $html .= '<th class="tdNome text-center">15</th>';
-        $html .= '<th class="tdTipo text-center">15</th>';
-        $html .= '<th class="tdNome text-center">15</th>';
-        $html .= '<th class="tdTipo text-center">15</th>';
-        $html .= '</tr>';
-        
-        
+
         $html .= '</thead>';
         $html .= '<tbody>';
+
+        $html .= '<tr>';
+        $html .= '<td class="tdTipo"></td>';
+        $html .= '<td class="tdNome"></td>';
+        $html .= $this->view->cabecalhoDeTotaisDosEventos();
+        $html .= '</tr>';
+
         $html .= $this->view->ListagemDePessoasComEventos();
         $html .= '</tbody>';
         $html .= '</table>';
-        return $html;   
+        return $html;
     }
 
 }

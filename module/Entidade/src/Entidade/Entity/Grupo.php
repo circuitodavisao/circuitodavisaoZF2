@@ -219,6 +219,24 @@ class Grupo {
             foreach ($this->getGrupoEventoAtivos() as $ge) {
                 /* Verificando data de cadastro */
                 $dataCadastro = $ge->getData_criacao();
+                $explodeData = explode('-', $dataCadastro); 
+                $verificacaoData = false;
+                /* cadastrado no ano anterior */
+                if ($explodeData[0] < date('Y')) {
+                    $verificacaoData = true;
+                } else {
+                    if ($explodeData[0] == date('Y')) {
+                        if ($explodeData[1] < date('n')) {
+                            $verificacaoData = true;
+                        } else {
+                            if ($explodeData[1] == date('n')) {
+                                if ($explodeData[2] <= date('d')) {
+                                    $verificacaoData = true;
+                                }
+                            }
+                        }
+                    }
+                }
 
                 $verificacao = false;
                 if ($ciclo == 2 || $ciclo == 3 || $ciclo == 4) {
@@ -230,7 +248,7 @@ class Grupo {
                         $verificacao = true;
                     }
                 }
-                if ($verificacao) {
+                if ($verificacao && $verificacaoData) {
                     $eventos[] = $ge;
                 }
             }

@@ -76,6 +76,8 @@ class ListagemDePessoasComEventos extends AbstractHelper {
                         }
                     }
                     $html .= '<td>';
+                    
+                    
                     $html .= '<div class="btn-group">';
                     $html .= '<button id="b_' . $idEventoFrequencia . '" type="button" class="btn ' . $class . ' btn-sm"'
                             . ' onclick=\'mudarFrequencia(';
@@ -84,6 +86,8 @@ class ListagemDePessoasComEventos extends AbstractHelper {
                     $html .= '<i id="i_' . $idEventoFrequencia . '" class="fa ' . $classIco . '"></i>';
                     $html .= '</button>';
                     $html .= '</div>';
+                    
+                    
                     $html .= '</td>';
                 }
             }
