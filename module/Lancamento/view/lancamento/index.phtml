@@ -1,6 +1,5 @@
 <?php
 
-use Doctrine\Common\Collections\Criteria;
 use Lancamento\Controller\Helper\ConstantesLancamento;
 use Lancamento\Controller\Helper\FuncoesLancamento;
 
@@ -10,15 +9,15 @@ $anoSelecionado = FuncoesLancamento::anoPorAbaSelecionada($this->abaSelecionada)
 
 <!-- Abertura de Abas -->
 <div class="row">
-    <div class="col-md-6">
+    <div class="col-md-12">
         <?php echo $this->dadosEntidade(); ?>
     </div>
-    <!-- Tipos de alertas possíveis -->
-    <div class="col-md-6">
-        <?php echo $this->alertaEnvioRelatorio(1); ?>
-        <?php echo $this->alertaEnvioRelatorio(2); ?>
-        <?php echo $this->alertaEnvioRelatorio(3); ?>
-    </div> 
+    <!--     Tipos de alertas possíveis 
+        <div class="col-md-6">
+    <?php echo $this->alertaEnvioRelatorio(1); ?>
+    <?php echo $this->alertaEnvioRelatorio(2); ?>
+    <?php echo $this->alertaEnvioRelatorio(3); ?>
+        </div> -->
 </div>
 <div class="panel">
     <div class="panel-heading">
@@ -42,138 +41,30 @@ $anoSelecionado = FuncoesLancamento::anoPorAbaSelecionada($this->abaSelecionada)
     <div class="panel-body">
         <!-- Cabeçalho do ciclo -->
         <div class="panel-heading row text-center">      
-              <span class="panel-title">
+            <span class="panel-title">
                 <?php
-                    $urlBaseCiclo = $urlBase . '/' . $this->abaSelecionada . '_';
-                    if ($this->cicloSelecionado > 1) {
-                        $urlCicloAnterior = $urlBaseCiclo . ($this->cicloSelecionado - 1);
-                        ?>
-                <a <?php echo ConstantesLancamento::$ONCLICK_ABRIR_MODAL; ?> href="<?php echo $urlCicloAnterior; ?>"><button class="btn btn-default btn-sm"><i class="fa fa-angle-double-left"></i></button></a>
-                        <?php
-                    }
-                    ?>    
-                    Ciclo <?php echo $this->cicloSelecionado; ?> <?php echo FuncoesLancamento::periodoCicloMesAno($this->cicloSelecionado, $mesSelecionado, $anoSelecionado); ?>
+                $urlBaseCiclo = $urlBase . '/' . $this->abaSelecionada . '_';
+                if ($this->cicloSelecionado > 1) {
+                    $urlCicloAnterior = $urlBaseCiclo . ($this->cicloSelecionado - 1);
+                    ?>
+                    <a <?php echo ConstantesLancamento::$ONCLICK_ABRIR_MODAL; ?> href="<?php echo $urlCicloAnterior; ?>"><button class="btn btn-default btn-sm"><i class="fa fa-angle-double-left"></i></button></a>
                     <?php
-                    $totalDeCiclos = FuncoesLancamento::totalCiclosMes($mesSelecionado, $anoSelecionado);
-                    if ($this->cicloSelecionado < $totalDeCiclos) {
-                        $urlCicloPosterior = $urlBaseCiclo . ($this->cicloSelecionado + 1);
+                }
+                ?>    
+                Ciclo <?php echo $this->cicloSelecionado; ?> <?php echo FuncoesLancamento::periodoCicloMesAno($this->cicloSelecionado, $mesSelecionado, $anoSelecionado); ?>
+                <?php
+                $totalDeCiclos = FuncoesLancamento::totalCiclosMes($mesSelecionado, $anoSelecionado);
+                if ($this->cicloSelecionado < $totalDeCiclos) {
+                    $urlCicloPosterior = $urlBaseCiclo . ($this->cicloSelecionado + 1);
+                    ?>
+                    <a <?php echo ConstantesLancamento::$ONCLICK_ABRIR_MODAL; ?> href="<?php echo $urlCicloPosterior; ?>"><button class="btn btn-default btn-sm"><i class="fa fa-angle-double-right"></i></button></a>
+                            <?php
+                        }
                         ?>
-                        <a <?php echo ConstantesLancamento::$ONCLICK_ABRIR_MODAL; ?> href="<?php echo $urlCicloPosterior; ?>"><button class="btn btn-default btn-sm"><i class="fa fa-angle-double-right"></i></button></a>
-                        <?php
-                    }
-                ?>
-              </span>
+            </span>
         </div>
-           
         <!-- Tabela de lançamento de dados --> 
         <?php echo $this->tabelaLancamento(); ?>
-    </div>
-</div>
-
-<!-- Dados do Menu [Entidade] -->
-<div class="row">
-    
-</div>
-
-<!-- Montagem das abas -->
-<div class="row">
-    <div class="tab-block mb25">
-        
-        <!-- FIM ABAS SELECIONADAS MODAL COM LOADER GIGANTE -->
-        <?php echo $this->modalAba(); ?>
-        <!--FIM MODAL COM LOADER GIGANTE-->
-
-        <button class="btn btn-danger btn-lg" onclick="location.href = '/lancamentoCadastrarPessoa';">Novo Cadastro</button>
-        <button class="btn btn-danger btn-lg" onclick="location.href = '/lancamentoEnviarRelatorio';">Enviar Relat&oacute;rio</button>
-
-        <div class="tab-content">
-            <div id="tab10_1" class="tab-pane active">
-                <div id="cabecalhoCiclo" class="row">
-                    <div class="col-md-6">
-                        <!--Lista de lançamento-->
-                        <button class=" btn btn-success" >
-                            <i class="fa fa-bolt text-purple"></i>
-                        </button>
-                    </div>
-                    <div class="col-md-6 text-center">
-                        <?php
-                        $urlBaseCiclo = $urlBase . '/' . $this->abaSelecionada . '_';
-                        if ($this->cicloSelecionado > 1) {
-                            $urlCicloAnterior = $urlBaseCiclo . ($this->cicloSelecionado - 1);
-                            ?>
-                            <a <?php echo ConstantesLancamento::$ONCLICK_ABRIR_MODAL; ?> href="<?php echo $urlCicloAnterior; ?>"><i class="btn fa fa-angle-double-left text-purple"></i></a>
-                            <?php
-                        }
-                        ?>    
-                        Ciclo {<?php echo $this->cicloSelecionado; ?>} <?php echo FuncoesLancamento::periodoCicloMesAno($this->cicloSelecionado, $mesSelecionado, $anoSelecionado); ?>
-                        <?php
-                        $totalDeCiclos = FuncoesLancamento::totalCiclosMes($mesSelecionado, $anoSelecionado);
-                        if ($this->cicloSelecionado < $totalDeCiclos) {
-                            $urlCicloPosterior = $urlBaseCiclo . ($this->cicloSelecionado + 1);
-                            ?>
-                            <a <?php echo ConstantesLancamento::$ONCLICK_ABRIR_MODAL; ?> href="<?php echo $urlCicloPosterior; ?>"><i class="btn fa fa-angle-double-right text-purple"></i></a>
-                            <?php
-                        }
-                        ?>
-                    </div>
-                </div>
-                <div id="cabecalhoEventos" class="row">
-                    <div class="col-md-6">
-                        <input class="form-control" placeholder="Buscar nome" />
-                    </div>
-                    <div class="col-md-6 text-center">
-                        {
-                        <?php
-                        /* Listagem dos eventos */
-                        $grupo = $this->entidade->getGrupo();
-                        $eventos = $grupo->getGrupoEventoNoCiclo($this->cicloSelecionado);
-                        if (count($eventos) > 0) {
-                            echo "<div class='row btn-success'>";
-                            foreach ($eventos as $ge) {
-
-                                /* Verificar se o evento existe nesse ciclo */
-                                echo $ge->getEvento()->getEventoTipo()->getNome() . "|";
-                                echo $ge->getEvento()->getDia() . "|";
-                                echo $ge->getEvento()->getHora() . " - ";
-                            }
-                            echo "</div>";
-                            echo "<div class='row'>";
-                            $cont = 1;
-                            foreach ($eventos as $ge) {
-                                /* Totais */
-                                $evento = $ge->getEvento();
-                                $cont++;
-                                if ($cont % 2 == 0) {
-                                    $class = 'btn-info';
-                                } else {
-                                    $class = 'btn-danger';
-                                }
-                                echo "<span id='total_{$evento->getId()}' class='$class'>";
-                                $eventoFrequencia = $evento->getEventoFrequencia();
-                                $total = 0;
-                                if (count($eventoFrequencia) > 0) {
-                                    $criteria = Criteria::create()
-                                            ->andWhere(Criteria::expr()->eq("ano", $anoSelecionado))
-                                            ->andWhere(Criteria::expr()->eq("mes", $mesSelecionado))
-                                            ->andWhere(Criteria::expr()->eq("ciclo", $this->cicloSelecionado))
-                                            ->andWhere(Criteria::expr()->eq("frequencia", "S"))
-                                    ;
-                                    $eventosFiltrados = $eventoFrequencia->matching($criteria);
-                                    $total = count($eventosFiltrados);
-                                }
-                                echo "$total";
-                                echo "</span>";
-                            }
-                            echo "</div>";
-                        }
-                        ?>}
-                    </div>
-                </div>
-            </div>
-            <div id="tab10_2" class="tab-pane">
-                TAB 2
-            </div>
-        </div>
     </div>
 </div>
 <?php
