@@ -17,7 +17,6 @@ function alterarNome(idPessoa) {
             },
             function (data) {
                 if (data.response) {
-                    alert(1);
                     spanNome.html(botao.val());
                 }
             }, 'json');
