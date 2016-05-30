@@ -36,7 +36,9 @@ $anoSelecionado = FuncoesLancamento::anoPorAbaSelecionada($this->abaSelecionada)
             <div class="btn-group">
                 <button class="btn btn-success btn-sm" onclick="location.href = '/lancamentoEnviarRelatorio';" title="Enviar Relatório"><i class="fa fa-file-text-o"></i></button>
             </div>
-        </div>
+        </div> 
+        <!-- MODAL COM LOADER -->
+        <?php echo $this->modalAba(); ?>
     </div>
     <div class="panel-body">
         <!-- Cabeçalho do ciclo -->
