@@ -2,8 +2,6 @@
 
 namespace Lancamento\View\Helper;
 
-use Doctrine\Common\Collections\Criteria;
-use Lancamento\Controller\Helper\FuncoesLancamento;
 use Zend\View\Helper\AbstractHelper;
 
 /**
