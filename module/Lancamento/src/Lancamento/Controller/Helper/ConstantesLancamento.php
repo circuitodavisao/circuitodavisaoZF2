@@ -16,6 +16,7 @@ class ConstantesLancamento {
     public static $ENTIDADE = 'entidade';
     public static $ABA_SELECIONADA = 'abaSelecionada';
     public static $CICLO_SELECIONADO = 'cicloSelecionado';
+    public static $QUANTIDADE_EVENTOS_CICLOS = 'quantidadeDeEventosNoCiclo';
     public static $TEMPLATE_JS_LANCAMENTO = 'layout/layout-js-lancamento';
     public static $STRING_JS_LANCAMENTO = 'layoutJSPrincipal';
     public static $ROUTE_LANCAMENTO = 'lancamento';

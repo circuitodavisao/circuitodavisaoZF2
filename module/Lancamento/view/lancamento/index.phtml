@@ -1,12 +1,14 @@
 <?php
 
-use Doctrine\Common\Collections\Criteria;
 use Lancamento\Controller\Helper\ConstantesLancamento;
 use Lancamento\Controller\Helper\FuncoesLancamento;
 
 $mesSelecionado = FuncoesLancamento::mesPorAbaSelecionada($this->abaSelecionada);
 $anoSelecionado = FuncoesLancamento::anoPorAbaSelecionada($this->abaSelecionada);
 ?>
+
+<!-- MODAL PARA MUITOS ELEMENTOS -->
+<?php echo $this->modalMuitosEventos(); ?>
 
 <!-- Abertura de Abas -->
 <div class="row">
