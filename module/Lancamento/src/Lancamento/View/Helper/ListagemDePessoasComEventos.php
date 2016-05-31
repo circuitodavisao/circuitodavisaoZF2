@@ -70,11 +70,22 @@ class ListagemDePessoasComEventos extends AbstractHelper {
             $html .= '<span class="sr-only"></span>';
             $html .= '</a>';
 
-            $html .= '<ul class="dropdown-menu">';
-            $html .= '<form class="form-control">';
-            $html .= '<input id="nome_' . $pessoa->getId() . '" class="gui-input" type="text" value="' . $pessoa->getNome() . '" />';
-            $html .= '<a href="#" onclick="alterarNome(' . $pessoa->getId() . ')" class="btn btn-success btn-xs">teste</a>';
+            $html .= '<ul class="dropdown-menu" style="position:absolute;">';
+            $html .= '<span class="editable-container editable-inline">';
+            $html .= '<div style="width:235px; height:40px; margin-left:10px;">';
+            $html .= '<form class="form-inline editableform">';
+            $html .= '<div class="control-group form-group">';
+            $html .= '<div>';
+            $html .= '<div class="editable-input">';       
+            $html .= '<input type="text" class="form-control" id="nome_' . $pessoa->getId() . '" value="' . $pessoa->getNome() . '" />';
+            $html .= '<span class="editable-clear-x"></span>';
+            $html .= '<button type="submit" onclick="alterarNome(' . $pessoa->getId() . ')" class="btn btn-primary" style="margin-left:5px;"><i class="fa fa-check"></i></button>';
+            $html .= '</div>';
+            $html .= '</div>';
+            $html .= '</div>';
             $html .= '</form>';
+            $html .= '</div>';
+            $html .= '</span>';
             $html .= '</ul>';
 
             $html .= '</div>';
