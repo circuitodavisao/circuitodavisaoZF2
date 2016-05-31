@@ -112,9 +112,9 @@ class LancamentoController extends AbstractActionController {
 //        echo "<br />Verificar Status: " . $resposta;
 //        echo "<br />Data envio: " . $grupo->getEnvio_data();
 //        echo "<br />Hora envio: " . $grupo->getEnvio_hora();
-//
-//        /* Teste de aas e ciclo */
-//        echo "<br /><br /> abaSelecionada$abaSelecionada-cicloSelecionado$cicloSelecionado";
+//        $quantidadeDeEventosNoCiclo = FuncoesLancamento::quantidadeDeEventosNoCiclo($entidade->getGrupo(), $abaSelecionada, $abaSelecionada);
+
+
         $view = new ViewModel(
                 array(
             ConstantesLancamento::$ENTIDADE => $entidade,
@@ -123,8 +123,13 @@ class LancamentoController extends AbstractActionController {
                 )
         );
 
+        $mesSelecionado = FuncoesLancamento::mesPorAbaSelecionada($abaSelecionada);
+        $anoSelecionado = FuncoesLancamento::anoPorAbaSelecionada($abaSelecionada);
+        $grupo = $entidade->getGrupo();
+        $eventos = $grupo->getGrupoEventoNoCiclo($cicloSelecionado, $mesSelecionado, $anoSelecionado);
+
         /* Javascript especifico */
-        $layoutJS = new ViewModel();
+        $layoutJS = new ViewModel(array(ConstantesLancamento::$QUANTIDADE_EVENTOS_CICLOS => count($eventos),));
         $layoutJS->setTemplate(ConstantesLancamento::$TEMPLATE_JS_LANCAMENTO);
         $view->addChild($layoutJS, ConstantesLancamento::$STRING_JS_LANCAMENTO);
 

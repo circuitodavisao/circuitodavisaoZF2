@@ -15,6 +15,7 @@ use Lancamento\View\Helper\CabecalhoDeEventos;
 use Lancamento\View\Helper\DadosEntidade;
 use Lancamento\View\Helper\ListagemDePessoasComEventos;
 use Lancamento\View\Helper\ModalAba;
+use Lancamento\View\Helper\ModalMuitosEventos;
 use Lancamento\View\Helper\TabelaLancamento;
 use Zend\Mvc\MvcEvent;
 use Zend\Session\Config\SessionConfig;
@@ -63,6 +64,9 @@ class Module {
                 },
                 'cabecalhoDeCiclos' => function($sm) {
                     return new CabecalhoDeCiclos();
+                },
+                'modalMuitosEventos' => function($sm) {
+                    return new ModalMuitosEventos();
                 },
             )
         );

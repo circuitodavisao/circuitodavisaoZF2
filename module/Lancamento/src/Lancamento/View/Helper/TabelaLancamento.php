@@ -36,7 +36,7 @@ class TabelaLancamento extends AbstractHelper {
         $html .= '</tbody>';
 
         $html .= '</table>';
-        return $html;
+        return $html; 
     }
 
 }
