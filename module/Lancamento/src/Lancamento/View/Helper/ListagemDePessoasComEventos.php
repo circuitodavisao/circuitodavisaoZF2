@@ -97,19 +97,11 @@ class ListagemDePessoasComEventos extends AbstractHelper {
             $html .= '<div class="input-group">';       
             $html .= '<input type="text" class="form-control" id="nome_' . $pessoa->getId() . '" value="' . $pessoa->getNome() . '" />';
             $html .= '<span class="input-group-btn">';
-            $html .= '<button type="submit" onclick="alterarNome(' . $pessoa->getId() . ')" class="btn btn-primary"><i class="fa fa-check"></i></button>';
+            $html .= '<a href="#" onclick="alterarNome(' . $pessoa->getId() . ')" class="btn btn-primary"><i class="fa fa-check"></i></button>';
             $html .= '</span>';
             $html .= '</div>';
             $html .= '</div>';
             $html .= '</div>';
-            $html .= '<ul class="dropdown-menu">'; 
-            $html .= '<form class="form-control">';
-            $html .= '<input id="nome_' . $pessoa->getId() . '" class="gui-input" type="text" value="' . $pessoa->getNome() . '" />';
-            $html .= '<a href="#" onclick="alterarNome(' . $pessoa->getId() . ')" class="btn btn-success btn-xs">teste</a>';
-            $html .= '</form>';
-            $html .= '</div>';
-            $html .= '</span>';
-            $html .= '</ul>';
 
             $html .= '</div>';
             /* Fim Menu dropup */
