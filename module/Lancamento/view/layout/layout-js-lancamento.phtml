@@ -4,6 +4,7 @@ $versao = '?v=0.1.5';
 
 echo $this
         ->headScript()
+        ->prependFile($this->basePath() . '/js/circuito_da_visao/alterar-nome.js' . $versao)
         ->prependFile($this->basePath() . '/js/circuito_da_visao/mudar-frequencia.js' . $versao)
         ->prependFile($this->basePath() . '/js/circuito_da_visao/modal-selecionar-aba.js' . $versao)
         ->prependFile($this->basePath() . '/js/circuito_da_visao/ajustar-tabela-lancamento.js' . $versao)

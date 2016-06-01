@@ -70,7 +70,7 @@ class ListagemDePessoasComEventos extends AbstractHelper {
             $html .= '<span class="sr-only"></span>';
             $html .= '</a>';
 
-            $html .= '<ul class="dropdown-menu">';
+            $html .= '<ul class="dropdown-menu">'; 
             $html .= '<form class="form-control">';
             $html .= '<input id="nome_' . $pessoa->getId() . '" class="gui-input" type="text" value="' . $pessoa->getNome() . '" />';
             $html .= '<a href="#" onclick="alterarNome(' . $pessoa->getId() . ')" class="btn btn-success btn-xs">teste</a>';
