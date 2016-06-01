@@ -46,16 +46,34 @@ class ListagemDePessoasComEventos extends AbstractHelper {
             $html .= '<td class="tdTipo">';
 
             /* Menu dropup Tipo */
-            $html .= '<div class="btn-group dropup">';
-            $html .= '<button style="width: 100%;" class="btn btn-dark btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">';
+            $html .= '<div class="btn-group dropdown">';
+            $html .= '<a class="tdNome text-left dropdown-toggle label label-dark btn-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">';
             $html .= $pessoa->getTipo();
             $html .= '<span class="sr-only"></span>';
-            $html .= '</button>';
+            $html .= '</a>';
 
-            $html .= '<ul class="dropdown-menu">';
-
-            $html .= '</ul>';
+            $html .= '<ul class="dropdown-menu" style="position:absolute;">';
+            $html .= '<span class="editable-container editable-inline">';
+            $html .= '<div class="ml5" style="height:30px;">';
+            $html .= '<form class="form-inline editableform">';
+            $html .= '<div class="control-group form-group">';
+            $html .= '<div>';
+            $html .= '<div class="editable-input">';
+            $html .= '<button type="submit" class="btn btn-primary btn-sm" style="margin-left:5px;"><i class="fa fa-location-arrow"></i></button>';
+            $html .= '<span class="editable-clear-x"></span>';
+            $html .= '<button type="submit" class="btn btn-primary btn-sm" style="margin-left:5px;"><i class="fa fa-terminal"></i></button>';
+            $html .= '<span class="editable-clear-x"></span>';
+            $html .= '<button type="submit" class="btn btn-primary btn-sm" style="margin-left:5px;"><i class="fa fa-unlock-alt"></i></button>';
+            $html .= '<span class="editable-clear-x"></span>';
+            $html .= '<button type="submit" class="btn btn-danger btn-sm" style="margin-left:5px;"><i class="fa fa-trash-o"></i></button>';
+            $html .= '<span class="editable-clear-x"></span>';
             $html .= '</div>';
+            $html .= '</div>';
+            $html .= '</div>';
+            $html .= '</form>';
+            $html .= '</div>';
+            $html .= '</span>';
+            $html .= '</ul>';
             /* Fim Menu dropup */
 
             $html .= '</td>';
@@ -63,7 +81,7 @@ class ListagemDePessoasComEventos extends AbstractHelper {
             /* NOME */
             $html .= '<td class="tdNome text-left">&nbsp;';
             /* Menu dropup Nome */
-            $html .= '<div class="btn-group dropup">';
+            $html .= '<div class="btn-group dropdown">';
 
             $html .= '<a class="tdNome text-left dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">';
             $html .= '<span id="span_nome_' . $pessoa->getId() . '">' . $pessoa->getNomeListaDeLancamento() . '</span>';
@@ -72,14 +90,15 @@ class ListagemDePessoasComEventos extends AbstractHelper {
 
             $html .= '<ul class="dropdown-menu" style="position:absolute;">';
             $html .= '<span class="editable-container editable-inline">';
-            $html .= '<div style="width:235px; height:40px; margin-left:10px;">';
+            $html .= '<div class="ml10 campo-edicao-nome" style="width:240px;">';
             $html .= '<form class="form-inline editableform">';
             $html .= '<div class="control-group form-group">';
             $html .= '<div>';
-            $html .= '<div class="editable-input">';       
+            $html .= '<div class="input-group">';       
             $html .= '<input type="text" class="form-control" id="nome_' . $pessoa->getId() . '" value="' . $pessoa->getNome() . '" />';
-            $html .= '<span class="editable-clear-x"></span>';
-            $html .= '<button type="submit" onclick="alterarNome(' . $pessoa->getId() . ')" class="btn btn-primary" style="margin-left:5px;"><i class="fa fa-check"></i></button>';
+            $html .= '<span class="input-group-btn">';
+            $html .= '<button type="submit" onclick="alterarNome(' . $pessoa->getId() . ')" class="btn btn-primary"><i class="fa fa-check"></i></button>';
+            $html .= '</span>';
             $html .= '</div>';
             $html .= '</div>';
             $html .= '</div>';
