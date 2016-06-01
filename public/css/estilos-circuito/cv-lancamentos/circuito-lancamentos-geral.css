@@ -11,3 +11,11 @@ and open the template in the editor.
 .boxing-mode{
     border-color:#000;
 }
+
+.campo-edicao-nome{
+    width: 250px;
+    -webkit-width: 250px;
+    -moz-width: 255px;
+    height: 40px;
+    margin-left: 10px;
+}

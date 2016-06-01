@@ -18,9 +18,8 @@ class ModalMuitosEventos extends AbstractHelper {
     public function __invoke() {
         $html = '';
         /* Modal */
-        $html .= '<div id="modalMuitosEventos" class="popup-basic admin-form mfp-with-anim mfp-hide">';
-
-        $html .= '<div class="well"><h1>VIRE O CELULAR DOIDO</h1></div>';
+        $html .= '<div id="modalMuitosEventos" class="popup-basic admin-form mfp-with-anim mfp-hide p25" data-effect="mfp-with-fade">';
+        $html .= '<div class=""><h3>GIRE O CELULAR</h3><span>Vire seu celular para horizontal para visualizar todos os seus eventos.</span></div>';
         /* FIM Modal */
         $html .= '</div>';
         return $html;
