@@ -8,7 +8,7 @@ table.scroll {
 }
 
 table.scroll tbody,
-table.scroll thead { display: block; }
+table.scroll thead { display: inline-block; }
 
 table.scroll tbody {
     height: 300px;

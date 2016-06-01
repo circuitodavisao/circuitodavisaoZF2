@@ -20,8 +20,28 @@ class TabelaLancamento extends AbstractHelper {
     }
 
     public function renderHtml() {
+        /* Validacao para poucos eventos 1 a 3 */
+        switch ($this->view->quantidadeDeEventosNoCiclo) {
+            case 1:
+                $centerBlock = 'center-block';
+                $style = 'style="width:174px;"';
+                break;
+            case 2:
+                $centerBlock = 'center-block';
+                $style = 'style="width:217px;"';
+                break;
+            case 3:
+                $centerBlock = 'center-block';
+                $style = 'style="width:260px;"';
+                break;
+            default:
+                $centerBlock = '';
+                $style = '';
+                break;
+        }
+
         $html = '';
-        $html .= '<table class="table table-condensed scroll text-center">';
+        $html .= '<table ' . $style . ' class="' . $centerBlock . ' table table-condensed scroll text-center">';
 
         $html .= '<thead>';
         $html .= '<tr>';
@@ -36,7 +56,7 @@ class TabelaLancamento extends AbstractHelper {
         $html .= '</tbody>';
 
         $html .= '</table>';
-        return $html; 
+        return $html;
     }
 
 }

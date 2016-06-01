@@ -12,9 +12,7 @@ $anoSelecionado = FuncoesLancamento::anoPorAbaSelecionada($this->abaSelecionada)
 
 <!-- Abertura de Abas -->
 <div class="row">
-    <div class="col-md-12">
-        <?php echo $this->dadosEntidade(); ?>
-    </div>
+    <?php echo $this->dadosEntidade(); ?>
 </div>
 <!-- MODAL COM LOADER -->
 <?php echo $this->modalAba(); ?>
@@ -37,18 +35,13 @@ $anoSelecionado = FuncoesLancamento::anoPorAbaSelecionada($this->abaSelecionada)
             </div>
         </div>
     </div>
-    <div class="panel-body">
+    <div class="panel-body center-block">
         <!-- Tabela de lançamento de dados --> 
         <?php echo $this->cabecalhoDeCiclos(); ?>
-
-        <div class="jumbotron center-block">
-            <div class="container">
-                <!-- Tabela de lançamento de dados --> 
-                <?php echo $this->tabelaLancamento(); ?>
-            </div>
-        </div>
+        <!-- Tabela de lançamento de dados --> 
+        <?php echo $this->tabelaLancamento(); ?>
     </div>
 </div>
 <?php
 /* Layout com javascript para tela de index */
-echo $this->layoutJSLancamento;
+echo $this->layoutJSLancamento; 

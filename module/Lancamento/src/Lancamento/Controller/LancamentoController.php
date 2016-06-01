@@ -114,19 +114,19 @@ class LancamentoController extends AbstractActionController {
 //        echo "<br />Hora envio: " . $grupo->getEnvio_hora();
 //        $quantidadeDeEventosNoCiclo = FuncoesLancamento::quantidadeDeEventosNoCiclo($entidade->getGrupo(), $abaSelecionada, $abaSelecionada);
 
+        $mesSelecionado = FuncoesLancamento::mesPorAbaSelecionada($abaSelecionada);
+        $anoSelecionado = FuncoesLancamento::anoPorAbaSelecionada($abaSelecionada);
+        $grupo = $entidade->getGrupo();
+        $eventos = $grupo->getGrupoEventoNoCiclo($cicloSelecionado, $mesSelecionado, $anoSelecionado);
 
         $view = new ViewModel(
                 array(
             ConstantesLancamento::$ENTIDADE => $entidade,
             ConstantesLancamento::$ABA_SELECIONADA => $abaSelecionada,
             ConstantesLancamento::$CICLO_SELECIONADO => (int) $cicloSelecionado,
+            ConstantesLancamento::$QUANTIDADE_EVENTOS_CICLOS => count($eventos),
                 )
         );
-
-        $mesSelecionado = FuncoesLancamento::mesPorAbaSelecionada($abaSelecionada);
-        $anoSelecionado = FuncoesLancamento::anoPorAbaSelecionada($abaSelecionada);
-        $grupo = $entidade->getGrupo();
-        $eventos = $grupo->getGrupoEventoNoCiclo($cicloSelecionado, $mesSelecionado, $anoSelecionado);
 
         /* Javascript especifico */
         $layoutJS = new ViewModel(array(ConstantesLancamento::$QUANTIDADE_EVENTOS_CICLOS => count($eventos),));
