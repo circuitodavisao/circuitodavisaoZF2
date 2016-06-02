@@ -94,7 +94,7 @@ class ListagemDePessoasComEventos extends AbstractHelper {
             $html .= '<form class="form-inline editableform">';
             $html .= '<div class="control-group form-group">';
             $html .= '<div>';
-            $html .= '<div class="input-group">';       
+            $html .= '<div class="input-group">';
             $html .= '<input type="text" class="form-control" id="nome_' . $pessoa->getId() . '" value="' . $pessoa->getNome() . '" />';
             $html .= '<span class="input-group-btn">';
             $html .= '<a href="#" onclick="alterarNome(' . $pessoa->getId() . ')" class="btn btn-primary"><i class="fa fa-check"></i></button>';
@@ -139,8 +139,23 @@ class ListagemDePessoasComEventos extends AbstractHelper {
                             }
                         }
                     }
-                    $html .= '<td>';
+                    /* Validacao para poucos eventos 5 a 7 ou mais */
+                    switch ($this->view->quantidadeDeEventosNoCiclo) {
+                        case 5:
+                            $style = 'style="width:20%;"';
+                            break;
+                        case 6:
+                            $style = 'style="width:18%;"';
+                            break;
+                        case 7:
+                            $style = 'style="width:15%;"';
+                            break;
+                        default:
+                            $style = '';
+                            break;
+                    }
 
+                    $html .= '<td ' . $style . ' class="text-center">';
 
                     $html .= '<div class="btn-group">';
                     $html .= '<button id="b_' . $idEventoFrequencia . '" type="button" class="btn ' . $class . ' btn-sm"'

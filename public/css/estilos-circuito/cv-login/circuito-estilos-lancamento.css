@@ -8,16 +8,15 @@ table.scroll {
 }
 
 table.scroll tbody,
-table.scroll thead { display: inline-block; }
+table.scroll thead { display: block; }
 
 table.scroll tbody {
-    height: 300px;
+    height: 250px;
     overflow-y: auto;
     overflow-x: hidden;
 } 
 
 tbody td, thead th {
-    width: 15%;   
     white-space: nowrap; 
 }
 

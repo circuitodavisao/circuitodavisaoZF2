@@ -10,7 +10,6 @@ $anoSelecionado = FuncoesLancamento::anoPorAbaSelecionada($this->abaSelecionada)
 <!-- MODAL PARA MUITOS ELEMENTOS -->
 <?php echo $this->modalMuitosEventos(); ?>
 
-<!-- Abertura de Abas -->
 <div class="row">
     <?php echo $this->dadosEntidade(); ?>
 </div>
@@ -18,22 +17,8 @@ $anoSelecionado = FuncoesLancamento::anoPorAbaSelecionada($this->abaSelecionada)
 <?php echo $this->modalAba(); ?>
 <div class="panel">
     <div class="panel-heading">
-        <ul class="nav panel-tabs-border panel-tabs panel-tabs-left">
-            <?php
-            $urlBase = $this->url(ConstantesLancamento::$ROUTE_LANCAMENTO);
-            $urlBase2 = $urlBase . '/2';
-            ?>
-            <li role="presentation" <?php echo ConstantesLancamento::$ONCLICK_ABRIR_MODAL; ?> <?php echo $this->abaSelecionada($this->abaSelecionada, 1); ?>><a href="<?php echo $urlBase; ?>">M&ecirc;s Atual</a></li>
-            <li role="presentation" <?php echo ConstantesLancamento::$ONCLICK_ABRIR_MODAL; ?> <?php echo $this->abaSelecionada($this->abaSelecionada, 2); ?>><a href="<?php echo $urlBase2; ?>">M&ecirc;s Anterior</a></li>
-        </ul>
-        <div class="pull-right">
-            <div class="btn-group">
-                <button class="btn btn-primary btn-sm" onclick="location.href = '/lancamentoCadastrarPessoa';" title="Adicionar Pessoa"><i class="fa fa-plus"></i></button>
-            </div>
-            <div class="btn-group">
-                <button class="btn btn-success btn-sm" onclick="location.href = '/lancamentoEnviarRelatorio';" title="Enviar Relatório"><i class="fa fa-file-text-o"></i></button>
-            </div>
-        </div>
+        <!-- Abertura de Abas -->
+        <?php echo $this->abas(); ?>
     </div>
     <div class="panel-body center-block">
         <!-- Tabela de lançamento de dados --> 
@@ -44,4 +29,4 @@ $anoSelecionado = FuncoesLancamento::anoPorAbaSelecionada($this->abaSelecionada)
 </div>
 <?php
 /* Layout com javascript para tela de index */
-echo $this->layoutJSLancamento; 
+echo $this->layoutJSLancamento;

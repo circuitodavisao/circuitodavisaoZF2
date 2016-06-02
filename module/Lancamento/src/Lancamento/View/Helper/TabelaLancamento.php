@@ -2,6 +2,7 @@
 
 namespace Lancamento\View\Helper;
 
+use Lancamento\Controller\Helper\ConstantesLancamento;
 use Zend\View\Helper\AbstractHelper;
 
 /**
@@ -20,19 +21,23 @@ class TabelaLancamento extends AbstractHelper {
     }
 
     public function renderHtml() {
-        /* Validacao para poucos eventos 1 a 3 */
+        /* Validacao para poucos eventos 1 a 4 */
         switch ($this->view->quantidadeDeEventosNoCiclo) {
             case 1:
-                $centerBlock = 'center-block';
+                $centerBlock = ConstantesLancamento::$CLASS_CENTER_BLOCk;
                 $style = 'style="width:174px;"';
                 break;
             case 2:
-                $centerBlock = 'center-block';
+                $centerBlock = ConstantesLancamento::$CLASS_CENTER_BLOCk;
                 $style = 'style="width:217px;"';
                 break;
             case 3:
-                $centerBlock = 'center-block';
+                $centerBlock = ConstantesLancamento::$CLASS_CENTER_BLOCk;
                 $style = 'style="width:260px;"';
+                break;
+            case 4:
+                $centerBlock = ConstantesLancamento::$CLASS_CENTER_BLOCk;
+                $style = 'style="width:303px;"';
                 break;
             default:
                 $centerBlock = '';
@@ -44,11 +49,7 @@ class TabelaLancamento extends AbstractHelper {
         $html .= '<table ' . $style . ' class="' . $centerBlock . ' table table-condensed scroll text-center">';
 
         $html .= '<thead>';
-        $html .= '<tr>';
-        $html .= '<th class="tdTipo"></th>';
-        $html .= '<th class="tdNome"></th>';
         $html .= $this->view->cabecalhoDeEventos();
-        $html .= '</tr>';
         $html .= '</thead>';
 
         $html .= '<tbody>';

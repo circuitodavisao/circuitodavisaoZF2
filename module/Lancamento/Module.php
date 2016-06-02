@@ -8,6 +8,7 @@
 
 namespace Lancamento;
 
+use Lancamento\View\Helper\Abas;
 use Lancamento\View\Helper\AbaSelecionada;
 use Lancamento\View\Helper\AlertaEnvioRelatorio;
 use Lancamento\View\Helper\CabecalhoDeCiclos;
@@ -67,6 +68,9 @@ class Module {
                 },
                 'modalMuitosEventos' => function($sm) {
                     return new ModalMuitosEventos();
+                },
+                'abas' => function($sm) {
+                    return new Abas();
                 },
             )
         );

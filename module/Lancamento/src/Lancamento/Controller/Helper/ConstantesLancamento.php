@@ -27,5 +27,6 @@ class ConstantesLancamento {
     public static $PAGINA_ENVIAR_RELATORIO = 'EnviarRelatorio';
     public static $PAGINA_ALTERAR_NOME = 'AlterarNome';
     public static $CONTROLLER_LANCAMENTO = 'Lancamento\Controller\Lancamento';
+    public static $CLASS_CENTER_BLOCk = 'center-block';
 
 }
