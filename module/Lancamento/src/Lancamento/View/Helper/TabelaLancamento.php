@@ -46,7 +46,7 @@ class TabelaLancamento extends AbstractHelper {
         }
 
         $html = '';
-        $html .= '<table ' . $style . ' class="' . $centerBlock . ' table table-condensed scroll text-center">';
+        $html .= '<table ' . $style . ' class="' . $centerBlock . ' table table-condensed scroll text-center" style="border:1px #eee solid;">';
 
         $html .= '<thead>';
         $html .= $this->view->cabecalhoDeEventos();

@@ -29,7 +29,7 @@ class CabecalhoDeCiclos extends AbstractHelper {
         $urlBase = $this->view->url(ConstantesLancamento::$ROUTE_LANCAMENTO);
         $urlBaseCiclo = $urlBase . '/' . $this->view->abaSelecionada . '_';
 
-        $html .= '<div class="panel-heading row text-center"> ';
+        $html .= '<div class="panel-heading row text-center" style="margin:0px;"> ';
         $html .= '<span class="panel-title">';
         if ($this->view->cicloSelecionado > 1) {
             $urlCicloAnterior = $urlBaseCiclo . ($this->view->cicloSelecionado - 1);

@@ -28,10 +28,8 @@ class Abas extends AbstractHelper {
         $html .= '</ul>';
         $html .= '<div class="pull-right">';
         $html .= '<div class="btn-group">';
-        $html .= '<button class="btn btn-primary btn-sm" onclick="location.href=\'/lancamentoCadastrarPessoa\';" title="Adicionar Pessoa"><i class="fa fa-plus"></i></button>';
-        $html .= '</div>';
-        $html .= '<div class="btn-group">';
-        $html .= '<button class="btn btn-success btn-sm" onclick="location.href=\'/lancamentoEnviarRelatorio\';" title="Enviar Relatório"><i class="fa fa-file-text-o"></i></button>';
+        $html .= '<button class="btn btn-primary btn-sm" onclick="location.href=\'/lancamentoCadastrarPessoa\';" title="Adicionar Pessoa" style="margin-right:5px;"><i class="fa fa-plus"></i></button>';
+        $html .= '<button class="btn btn-success btn-sm" onclick="location.href=\'/lancamentoEnviarRelatorio\';" title="Enviar Relatório" style="margin-right:10px;"><i class="fa fa-file-text-o"></i></button>';
         $html .= '</div>';
         $html .= '</div>';
 
