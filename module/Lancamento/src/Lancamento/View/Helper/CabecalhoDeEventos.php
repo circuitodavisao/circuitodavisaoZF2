@@ -25,7 +25,7 @@ class CabecalhoDeEventos extends AbstractHelper {
         $html = '';
         $html .= '<tr>';
         $html .= '<th class="tdTipo"></th>';
-        $html .= '<th class="tdNome"></th>';
+        $html .= '<th class="tdNome text-right">Totais</th>';
         $mesSelecionado = FuncoesLancamento::mesPorAbaSelecionada($this->view->abaSelecionada);
         $anoSelecionado = FuncoesLancamento::anoPorAbaSelecionada($this->view->abaSelecionada);
         $grupo = $this->view->entidade->getGrupo();
@@ -34,9 +34,13 @@ class CabecalhoDeEventos extends AbstractHelper {
             foreach ($eventos as $ge) {
                 $diaDaSemanaAjustado = FuncoesLancamento::diaDaSemanaPorDia($ge->getEvento()->getDia());
                 $html .= "<th class='text-center'>";
-                $html .= '<span>' . $ge->getEvento()->getEventoTipo()->getNomeAjustado() . '</span><br />';
-                $html .= '<span>' . $diaDaSemanaAjustado . '</span><br />';
-                $html .= '<span>' . $ge->getEvento()->getHoraFormatoHoraMinuto() . '</span><br />';
+//                $html .= '<span>' . $ge->getEvento()->getEventoTipo()->getNomeAjustado() . '</span><br />';
+                $celulaStatus = '';
+                if ($ge->getEvento()->getEventoTipo()->getId() == 1) {
+                    $celulaStatus = '(C) ';
+                }
+                $html .= '<span>' . $celulaStatus . $diaDaSemanaAjustado . '</span><br />';
+//                $html .= '<span>' . $ge->getEvento()->getHoraFormatoHoraMinuto() . '</span><br />';
 
                 /* Totais */
                 $evento = $ge->getEvento();

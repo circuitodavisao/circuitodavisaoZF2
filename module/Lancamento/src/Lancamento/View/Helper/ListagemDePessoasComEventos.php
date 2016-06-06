@@ -82,8 +82,8 @@ class ListagemDePessoasComEventos extends AbstractHelper {
             $html .= '<td class="tdNome text-left">&nbsp;';
             /* Menu dropup Nome */
             $html .= '<div class="btn-group dropdown">';
-
-            $html .= '<a class="tdNome text-left dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">';
+                        
+            $html .= '<a id="menudrop_' . $pessoa->getId() . '" class="tdNome text-left dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">';
             $html .= '<span id="span_nome_' . $pessoa->getId() . '">' . $pessoa->getNomeListaDeLancamento() . '</span>';
             $html .= '<span class="sr-only"></span>';
             $html .= '</a>';
@@ -97,7 +97,7 @@ class ListagemDePessoasComEventos extends AbstractHelper {
             $html .= '<div class="input-group">';
             $html .= '<input type="text" class="form-control" id="nome_' . $pessoa->getId() . '" value="' . $pessoa->getNome() . '" />';
             $html .= '<span class="input-group-btn">';
-            $html .= '<a href="#" onclick="alterarNome(' . $pessoa->getId() . ')" class="btn btn-primary"><i class="fa fa-check"></i></button>';
+            $html .= '<span onclick="alterarNome(' . $pessoa->getId() . ')" class="btn ladda-button btn-primary" data-style="zoom-in"><span class="ladda-label"><i class="fa fa-check"></i></span></span>';
             $html .= '</span>';
             $html .= '</div>';
             $html .= '</div>';

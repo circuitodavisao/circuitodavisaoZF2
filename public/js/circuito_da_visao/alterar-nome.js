@@ -9,6 +9,7 @@ function alterarNome(idPessoa) {
 
     var botao = $('#nome_' + idPessoa);
     var spanNome = $('#span_nome_' + idPessoa);
+    var dropDown = $('#menudrop_' + idPessoa);
     $.post(
             "/lancamentoAlterarNome",
             {
@@ -18,6 +19,7 @@ function alterarNome(idPessoa) {
             function (data) {
                 if (data.response) {
                     spanNome.html(botao.val());
+                    dropDown.dropdown('toggle');
                 }
             }, 'json');
 }
