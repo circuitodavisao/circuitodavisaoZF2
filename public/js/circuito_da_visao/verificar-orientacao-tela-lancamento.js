@@ -5,6 +5,7 @@
  */
 $(window).bind("resize", function () {
     if (window.orientation === 0) {
+        $('#panelLancamento').addClass('hidden');
         $.magnificPopup.open({
             removalDelay: 500, //delay removal by X to allow out-animation,
             items: {
@@ -21,6 +22,7 @@ $(window).bind("resize", function () {
         });
     } else {
         $.magnificPopup.close();
+        $('#panelLancamento').removeClass('hidden');
     }
 });
 
