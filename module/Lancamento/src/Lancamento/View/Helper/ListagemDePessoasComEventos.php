@@ -88,9 +88,9 @@ class ListagemDePessoasComEventos extends AbstractHelper {
             $html .= '<span class="sr-only"></span>';
             $html .= '</a>';
 
-            $html .= '<ul class="dropdown-menu" style="position:absolute;">';
+            $html .= '<ul class="dropdown-menu" style="position:absolute; width:275px;">';
             $html .= '<span class="editable-container editable-inline">';
-            $html .= '<div class="ml10 campo-edicao-nome" style="width:240px;">';
+            $html .= '<div class="ml10 campo-edicao-nome">';
             $html .= '<form class="form-inline editableform">';
             $html .= '<div class="control-group form-group">';
             $html .= '<div>';
