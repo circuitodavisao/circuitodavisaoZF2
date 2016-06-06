@@ -3,9 +3,8 @@
  * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com>
  * Descricao: Função para fechar modal caso a tela seja virada
  */
-
-$(window).bind('resize', function () {
-    if (screen.height > screen.width) {
+$(window).bind("resize", function () {
+    if (window.orientation === 0) {
         $.magnificPopup.open({
             removalDelay: 500, //delay removal by X to allow out-animation,
             items: {
