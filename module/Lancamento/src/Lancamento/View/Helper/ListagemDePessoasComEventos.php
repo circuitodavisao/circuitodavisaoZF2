@@ -52,9 +52,9 @@ class ListagemDePessoasComEventos extends AbstractHelper {
             $html .= '<span class="sr-only"></span>';
             $html .= '</span>';
 
-            $html .= '<ul class="dropdown-menu" style="position:absolute;">';
+            $html .= '<ul class="dropdown-menu sobrepor-elementos">';
             $html .= '<span class="editable-container editable-inline">';
-            $html .= '<div class="ml5" style="height:30px;">';
+            $html .= '<div class="ml5 definicao-altura-30">';
             $html .= '<form class="form-inline editableform">';
             $html .= '<div class="control-group form-group">';
             $html .= '<div>';
@@ -88,7 +88,7 @@ class ListagemDePessoasComEventos extends AbstractHelper {
             $html .= '<span class="sr-only"></span>';
             $html .= '</a>';
 
-            $html .= '<ul class="dropdown-menu" style="position:absolute; width:275px;">';
+            $html .= '<ul class="dropdown-menu sobrepor-elementos modal-edicao-nome">';
             $html .= '<span class="editable-container editable-inline">';
             $html .= '<div class="ml10 campo-edicao-nome">';
             $html .= '<form class="form-inline editableform">';
