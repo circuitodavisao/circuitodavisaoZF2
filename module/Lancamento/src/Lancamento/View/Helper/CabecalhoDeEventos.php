@@ -33,19 +33,14 @@ class CabecalhoDeEventos extends AbstractHelper {
         if (count($eventos) > 0) {
             foreach ($eventos as $ge) {
                 $diaDaSemanaAjustado = FuncoesLancamento::diaDaSemanaPorDia($ge->getEvento()->getDia());
-                $html .= "<th class='text-center'>";
-//                $html .= '<span>' . $ge->getEvento()->getEventoTipo()->getNomeAjustado() . '</span><br />';
-                $celulaStatus = '';
-                if ($ge->getEvento()->getEventoTipo()->getId() == 1) {
-                    $celulaStatus = '(C) ';
-                }
-                $html .= '<span>' . $celulaStatus . $diaDaSemanaAjustado . '</span><br />';
-//                $html .= '<span>' . $ge->getEvento()->getHoraFormatoHoraMinuto() . '</span><br />';
+                $html .= '<th class="text-center">';
+                $html .= '<div style="font-size:9px; width:100%">' . $ge->getEvento()->getEventoTipo()->getNome() . '</div>';
+                $html .= '<div style="font-size:8px; width:100%">' . $diaDaSemanaAjustado . $ge->getEvento()->getHoraFormatoHoraMinuto() . '</div>';
 
                 /* Totais */
                 $evento = $ge->getEvento();
 
-                $html .= "<span id='total_{$evento->getId()}'>";
+                $html .= "<div style='width:100%' id='total_{$evento->getId()}'>";
                 $eventoFrequencia = $evento->getEventoFrequencia();
                 $total = 0;
                 if (count($eventoFrequencia) > 0) {
@@ -59,7 +54,7 @@ class CabecalhoDeEventos extends AbstractHelper {
                     $total = count($eventosFiltrados);
                 }
                 $html .= $total;
-                $html .= "</span>";
+                $html .= "</div>";
 
                 $html .= "</th>";
             }
