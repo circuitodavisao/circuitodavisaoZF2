@@ -25,6 +25,9 @@ function mudarFrequencia(idEventoFrequencia, ciclo, aba) {
     botao.removeClass(btnDefault);
     botao.removeClass(btnSuccess);
     botao.addClass(btnTransicao);
+
+    /* Desabilitar botão ate terminar o processamento */
+    botao.addClass('disabled');
     $.post(
             "/lancamentoMudarFrequencia",
             {
@@ -49,7 +52,7 @@ function mudarFrequencia(idEventoFrequencia, ciclo, aba) {
                         botao.html(iconefaThumbsDown);
                         totalSoma--;
                     }
-
+                    botao.removeClass('disabled');
                     total.html(totalSoma);
                 }
             }, 'json');

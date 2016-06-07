@@ -2,6 +2,7 @@
 
 namespace Lancamento\View\Helper;
 
+use Login\Controller\Helper\Constantes;
 use Zend\View\Helper\AbstractHelper;
 
 /**
@@ -19,8 +20,9 @@ class ModalAba extends AbstractHelper {
         $html = '';
         /* Modal */
         $html .= '<div id="modalAba" class="popup-basic admin-form mfp-with-anim mfp-hide">';
-
-        $html .= '<div class="well"><h1>CARREGANDO TRUTA</h1></div>';
+        $html .= '<h1>CARREGANDO';
+        $html .= '<img width="48" heigth="48" src="' . Constantes::$LOADER_GIF . '"></i>';
+        $html .= '</h1>';
         /* FIM Modal */
         $html .= '</div>';
         return $html;

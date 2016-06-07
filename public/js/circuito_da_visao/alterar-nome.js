@@ -18,7 +18,7 @@ function alterarNome(idPessoa) {
             },
             function (data) {
                 if (data.response) {
-                    spanNome.html(botao.val());
+                    spanNome.html(data.nomeAjustado);
                     dropDown.dropdown('toggle');
                 }
             }, 'json');

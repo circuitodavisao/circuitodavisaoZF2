@@ -112,7 +112,6 @@ class LancamentoController extends AbstractActionController {
 //        echo "<br />Verificar Status: " . $resposta;
 //        echo "<br />Data envio: " . $grupo->getEnvio_data();
 //        echo "<br />Hora envio: " . $grupo->getEnvio_hora();
-//        $quantidadeDeEventosNoCiclo = FuncoesLancamento::quantidadeDeEventosNoCiclo($entidade->getGrupo(), $abaSelecionada, $abaSelecionada);
 
         $mesSelecionado = FuncoesLancamento::mesPorAbaSelecionada($abaSelecionada);
         $anoSelecionado = FuncoesLancamento::anoPorAbaSelecionada($abaSelecionada);
@@ -227,10 +226,14 @@ class LancamentoController extends AbstractActionController {
                 $loginORM = new LoginORM($this->getDoctrineORMEntityManager());
 
                 $pessoa = $loginORM->getPessoaORM()->encontrarPorIdPessoa($idPessoa);
-                $pessoa->setNome($nome);
+                $pessoa->setNome(strtoupper($nome));
                 $loginORM->getPessoaORM()->persistirPessoa($pessoa);
 
-                $response->setContent(Json::encode(array('response' => 'true',)));
+                $response->setContent(Json::encode(
+                                array(
+                                    'response' => 'true',
+                                    'nomeAjustado' => $pessoa->getNomeListaDeLancamento(),
+                )));
             } catch (Exception $exc) {
                 echo $exc->getTraceAsString();
             }
