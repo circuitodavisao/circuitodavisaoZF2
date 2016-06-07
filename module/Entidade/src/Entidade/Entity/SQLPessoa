@@ -18,6 +18,7 @@ CREATE TABLE pessoa
   hora_criacao time without time zone NOT NULL DEFAULT ('now'::text)::time with time zone, -- Hora de criação da pessoa
   hora_inativacao time without time zone, -- Hora de inativação da pessoa
   telefone bigint, -- Telefone com 9 digitos e DDD
+  foto character varying(40), -- Nome do arquivo com a foto da pessoa
   CONSTRAINT pk_pessoa PRIMARY KEY (id)
 )
 WITH (
@@ -41,6 +42,7 @@ COMMENT ON COLUMN pessoa.token_hora IS 'Hora para validação do token';
 COMMENT ON COLUMN pessoa.hora_criacao IS 'Hora de criação da pessoa';
 COMMENT ON COLUMN pessoa.hora_inativacao IS 'Hora de inativação da pessoa';
 COMMENT ON COLUMN pessoa.telefone IS 'Telefone com 9 digitos e DDD';
+COMMENT ON COLUMN pessoa.foto IS 'Nome do arquivo com a foto da pessoa';
 
 
 -- Index: index_pessoa_data_nascimento

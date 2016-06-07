@@ -76,6 +76,9 @@ class Pessoa {
     protected $token_hora;
     protected $tipo;
 
+    /** @ORM\Column(type="string") */
+    protected $foto;
+
     /**
      * Recupera as Responsabilidades ativas
      * @return Entidade[]
@@ -121,6 +124,17 @@ class Pessoa {
         $primeiroNome = $explodeNome[0];
         $ultimoNome = $explodeNome[(count($explodeNome) - 1)];
         return $primeiroNome . '&nbsp;' . $ultimoNome;
+    }
+
+    /**
+     * Retorna o primeiro e a sigla do ultimo nome da pessoa
+     * @return String
+     */
+    function getNomePrimeiroPrimeiraSiglaUltimo() {
+        $explodeNome = explode(" ", $this->getNome());
+        $primeiroNome = $explodeNome[0];
+        $ultimoNome = substr($explodeNome[(count($explodeNome) - 1)], 0, 1);
+        return $primeiroNome . '&nbsp;' . $ultimoNome . '.';
     }
 
     /**
@@ -305,6 +319,14 @@ class Pessoa {
 
     function setTipo($tipo) {
         $this->tipo = $tipo;
+    }
+
+    function getFoto() {
+        return $this->foto;
+    }
+
+    function setFoto($foto) {
+        $this->foto = $foto;
     }
 
 }

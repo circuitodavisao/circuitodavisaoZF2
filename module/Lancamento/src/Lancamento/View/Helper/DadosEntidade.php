@@ -2,7 +2,7 @@
 
 namespace Lancamento\View\Helper;
 
-use Entidade\Entity\Entidade;
+use Entidade\Entity\FuncoesEntidade;
 use Zend\View\Helper\AbstractHelper;
 
 /**
@@ -40,31 +40,33 @@ class DadosEntidade extends AbstractHelper {
                     $html .= '&nbsp;';
                 }
                 $html .= '<a class="media-left" href="#">';
-                $html .= '<img src="/img/avatars/1.jpg" data-holder-rendered="true" style="width:50px; height:50px;"/>&nbsp;';
+                $html .= FuncoesEntidade::tagImgComFotoDaPessoa($p);
                 $html .= '</a>';
                 $contagemFotos++;
             }
             $html .= '<div class="media-body">';
             /* Nomes */
             $contagem = 1;
+            $totalPessoas = count($pessoas);
             foreach ($pessoas as $p) {
                 if ($contagem == 2) {
                     $html .= '&nbsp;&&nbsp;';
                 }
                 $html .= '<h4 class="media-heading">';
-                $html .= $p->getNomePrimeiroUltimo();
-                $html .= '<small class="text-muted">&nbsp;@blackbelt</small>';
+                if ($totalPessoas == 1) {
+                    $html .= $p->getNomePrimeiroUltimo();
+                } else {
+                    $html .= $p->getNomePrimeiroPrimeiraSiglaUltimo();
+                }
                 $contagem++;
             }
-            
+
             /* Entidade */
             $entidadeTipo = $this->view->entidade->getEntidadeTipo();
             $html .= '</h4>';
             $html .= $this->view->entidade->infoEntidade();
-            $html .= '<br />';
-            $html .= '<a class="text-system" href="#">';
+            $html .= '&nbsp;-&nbsp;';
             $html .= $entidadeTipo->getNome();
-            $html .= '</a>';
             $html .= '</div>';
         }
         return $html;
