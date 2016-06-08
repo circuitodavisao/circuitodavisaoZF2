@@ -19,3 +19,7 @@ body.sb-l-c.sb-l-m #content_wrapper {
 .table tr td{
     height: 24px;
 }
+
+.bordas-tabela-principal{
+    border:1px #eee solid !important;
+}

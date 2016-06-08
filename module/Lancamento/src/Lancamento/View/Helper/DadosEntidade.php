@@ -31,7 +31,7 @@ class DadosEntidade extends AbstractHelper {
             }
         }
         $html = '';
-        $html .= '<div class="media visible-xs-block" style="padding: 15px 0px 15px 10px;">';
+        $html .= '<div class="media visible-xs-block media-dados-entidade">';
         if ($pessoas) {
             /* Fotos */
             $contagemFotos = 1;
@@ -39,12 +39,12 @@ class DadosEntidade extends AbstractHelper {
                 if ($contagemFotos == 2) {
                     $html .= '&nbsp;';
                 }
-                $html .= '<a class="media-left" href="#">';
+                $html .= '<a class="media-left" href="#" style="padding-right:2px;">';
                 $html .= FuncoesEntidade::tagImgComFotoDaPessoa($p);
                 $html .= '</a>';
                 $contagemFotos++;
             }
-            $html .= '<div class="media-body">';
+            $html .= '<div class="media-body" style="line-height:1px; padding-top:11px;">';
             /* Nomes */
             $contagem = 1;
             $totalPessoas = count($pessoas);
@@ -52,7 +52,7 @@ class DadosEntidade extends AbstractHelper {
                 if ($contagem == 2) {
                     $html .= '&nbsp;&&nbsp;';
                 }
-                $html .= '<h4 class="media-heading">';
+                $html .= '<h5 class="media-heading">';
                 if ($totalPessoas == 1) {
                     $html .= $p->getNomePrimeiroUltimo();
                 } else {
@@ -63,10 +63,14 @@ class DadosEntidade extends AbstractHelper {
 
             /* Entidade */
             $entidadeTipo = $this->view->entidade->getEntidadeTipo();
-            $html .= '</h4>';
+            $html .= '</h5>';
+            $html .= '<small style="font-size:10px;">';
             $html .= $this->view->entidade->infoEntidade();
+            $html .= '</small>';
             $html .= '&nbsp;-&nbsp;';
+            $html .= '<small style="font-size:10px; font-style:italic;">';
             $html .= $entidadeTipo->getNome();
+            $html .= '</small>';
             $html .= '</div>';
         }
         return $html;
