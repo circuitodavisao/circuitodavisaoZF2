@@ -11,6 +11,8 @@ use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Lancamento\Controller\Helper\FuncoesLancamento;
+use Lancamento\Controller\Helper\LancamentoORM;
+use Login\Controller\Helper\LoginORM;
 
 /** @ORM\Entity */
 class Grupo {
@@ -219,7 +221,7 @@ class Grupo {
             foreach ($this->getGrupoEventoAtivos() as $ge) {
                 /* Verificando data de cadastro */
                 $dataCadastro = $ge->getData_criacao();
-                $explodeData = explode('-', $dataCadastro); 
+                $explodeData = explode('-', $dataCadastro);
                 $verificacaoData = false;
                 /* cadastrado no ano anterior */
                 if ($explodeData[0] < date('Y')) {
@@ -317,9 +319,11 @@ class Grupo {
 
     /**
      * Seta o status de envio para não
+     * @param LancamentoORM $lancamentoORM
      */
-    function setRelatorioPendente() {
+    function setRelatorioPendente(LancamentoORM $lancamentoORM) {
         $this->envio = 'N';
+        $lancamentoORM->getGrupoORM()->persistirGrupo($this);
     }
 
     /**

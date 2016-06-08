@@ -35,35 +35,40 @@ class DadosEntidade extends AbstractHelper {
         if ($pessoas) {
             /* Fotos */
             $contagemFotos = 1;
+            $html .= '<span class="media-left" href="#" style="padding-right:2px;">';
             foreach ($pessoas as $p) {
                 if ($contagemFotos == 2) {
                     $html .= '&nbsp;';
                 }
-                $html .= '<a class="media-left" href="#" style="padding-right:2px;">';
+
                 $html .= FuncoesEntidade::tagImgComFotoDaPessoa($p);
-                $html .= '</a>';
+
                 $contagemFotos++;
             }
-            $html .= '<div class="media-body" style="line-height:1px; padding-top:11px;">';
+            $html .= '</span>';
+
             /* Nomes */
+            $html .= '<div class="media-body" style="line-height:1px; padding-top:11px;">';
             $contagem = 1;
             $totalPessoas = count($pessoas);
+            $html .= '<h5 class="media-heading">';
             foreach ($pessoas as $p) {
                 if ($contagem == 2) {
                     $html .= '&nbsp;&&nbsp;';
                 }
-                $html .= '<h5 class="media-heading">';
+
                 if ($totalPessoas == 1) {
                     $html .= $p->getNomePrimeiroUltimo();
-                } else {
+                } else {// duas pessoas
                     $html .= $p->getNomePrimeiroPrimeiraSiglaUltimo();
                 }
                 $contagem++;
             }
+            $html .= '</h5>';
 
             /* Entidade */
             $entidadeTipo = $this->view->entidade->getEntidadeTipo();
-            $html .= '</h5>';
+
             $html .= '<small style="font-size:10px;">';
             $html .= $this->view->entidade->infoEntidade();
             $html .= '</small>';

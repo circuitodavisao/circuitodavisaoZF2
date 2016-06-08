@@ -18,6 +18,7 @@ use Lancamento\View\Helper\ListagemDePessoasComEventos;
 use Lancamento\View\Helper\ModalAba;
 use Lancamento\View\Helper\ModalMuitosEventos;
 use Lancamento\View\Helper\TabelaLancamento;
+use Login\View\Helper\MensagemStatica;
 use Zend\Mvc\MvcEvent;
 use Zend\Session\Config\SessionConfig;
 use Zend\Session\Container;
@@ -71,6 +72,9 @@ class Module {
                 },
                 'abas' => function($sm) {
                     return new Abas();
+                },
+                'mensagemStatica' => function($sm) {
+                    return new MensagemStatica();
                 },
             )
         );

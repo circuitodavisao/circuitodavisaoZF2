@@ -13,6 +13,9 @@ class MensagemStatica extends AbstractHelper {
 
     protected $mensagem;
     protected $tipo;
+    protected $pastel;
+    protected $hidden;
+    protected $identificacao;
 
     public function __construct() {
         
@@ -26,11 +29,15 @@ class MensagemStatica extends AbstractHelper {
      * 4 - danger
      * @param String $mensagem
      * @param int $tipo
+     * @param int $pastel
      * @return html
      */
-    public function __invoke($mensagem, $tipo) {
+    public function __invoke($mensagem, $tipo, $pastel = 1, $hidden = 0, $identificacao = '') {
         $this->setMensagem($mensagem);
         $this->setTipo($tipo);
+        $this->setPastel($pastel);
+        $this->setHidden($hidden);
+        $this->setIdentificacao($identificacao);
         return $this->renderHtml();
     }
 
@@ -39,7 +46,7 @@ class MensagemStatica extends AbstractHelper {
         $tipo = 'alert ';
         if ($this->getTipo()) {
             switch ($this->getTipo()) {
-                case 1:
+                case 1:/* Relatorio desatualizado */
                     $tipo .= 'alert-warning';
                     $tipoIcone = 'warning';
                     break;
@@ -47,7 +54,7 @@ class MensagemStatica extends AbstractHelper {
                     $tipo .= 'alert-primary';
                     $tipoIcone = 'comment';
                     break;
-                case 3:
+                case 3:/* Relatorio atualizado */
                     $tipo .= 'alert-success';
                     $tipoIcone = 'check';
                     break;
@@ -56,11 +63,19 @@ class MensagemStatica extends AbstractHelper {
                     $tipoIcone = 'times';
                     break;
             }
+            if ($this->getPastel() == 1) {
+                $tipo .= ' pastel';
+            } else {
+                $tipo .= ' text-center';
+            }
 
-            $tipo .= ' pastel';
+            $hidden = '';
+            if ($this->getHidden() == 1) {
+                $hidden = ' hidden';
+            }
             $mensagem = $this->getMensagem();
             if ($mensagem) {
-                $html .= '<div id="divMensagemEstatica" class="' . $tipo . '">';
+                $html .= '<div id="' . $this->getIdentificacao() . '" class="' . $tipo . $hidden . '">';
                 $html .= '<i class="fa fa-' . $tipoIcone . ' pr10"></i>';
                 $html .= $mensagem;
                 $html .= '</div>';
@@ -83,6 +98,33 @@ class MensagemStatica extends AbstractHelper {
 
     function setTipo($tipo) {
         $this->tipo = $tipo;
+    }
+
+    function getPastel() {
+        return $this->pastel;
+    }
+
+    function setPastel($pastel) {
+        $this->pastel = $pastel;
+    }
+
+    function getHidden() {
+        return $this->hidden;
+    }
+
+    function setHidden($hidden) {
+        $this->hidden = $hidden;
+    }
+
+    function getIdentificacao() {
+        if (empty($this->identificacao)) {
+            $this->identificacao = 'divMensagemEstatica';
+        }
+        return $this->identificacao;
+    }
+
+    function setIdentificacao($identificacao) {
+        $this->identificacao = $identificacao;
     }
 
 }

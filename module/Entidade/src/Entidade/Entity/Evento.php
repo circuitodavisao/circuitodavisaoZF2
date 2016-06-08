@@ -145,6 +145,10 @@ class Evento {
         $this->hora = $hora;
     }
 
+    /**
+     * Retorna grupo evento
+     * @return GrupoEvento
+     */
     function getGrupoEvento() {
         return $this->grupoEvento;
     }

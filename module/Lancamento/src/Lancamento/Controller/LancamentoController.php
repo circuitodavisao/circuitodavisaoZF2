@@ -47,6 +47,13 @@ class LancamentoController extends AbstractActionController {
      * GET /lancamento[:pagina[/:id]]
      */
     public function indexAction() {
+        /* Helper Controller */
+        $lancamentoORM = new LancamentoORM($this->getDoctrineORMEntityManager());
+
+        $sessao = new Container(Constantes::$NOME_APLICACAO);
+        $idEntidadeAtual = $sessao->idEntidadeAtual;
+        $entidade = $lancamentoORM->getEntidadeORM()->encontrarPorIdEntidade($idEntidadeAtual);
+
         /* Verificando rota */
         $pagina = $this->getEvent()->getRouteMatch()->getParam(ConstantesLancamento::$PAGINA, 1);
         if ($pagina == ConstantesLancamento::$PAGINA_CADASTRAR_PESSOA) {
@@ -55,6 +62,9 @@ class LancamentoController extends AbstractActionController {
             ));
         }
         if ($pagina == ConstantesLancamento::$PAGINA_MUDAR_FREQUENCIA) {
+            $grupo = $entidade->getGrupo();
+            $grupo->setRelatorioPendente($lancamentoORM);
+
             return $this->forward()->dispatch(ConstantesLancamento::$CONTROLLER_LANCAMENTO, array(
                         Constantes::$ACTION => ConstantesLancamento::$PAGINA_MUDAR_FREQUENCIA,
             ));
@@ -69,12 +79,6 @@ class LancamentoController extends AbstractActionController {
                         Constantes::$ACTION => ConstantesLancamento::$PAGINA_ALTERAR_NOME,
             ));
         }
-        /* Helper Controller */
-        $lancamentoORM = new LancamentoORM($this->getDoctrineORMEntityManager());
-
-        $sessao = new Container(Constantes::$NOME_APLICACAO);
-        $idEntidadeAtual = $sessao->idEntidadeAtual;
-        $entidade = $lancamentoORM->getEntidadeORM()->encontrarPorIdEntidade($idEntidadeAtual);
 
         /* Aba selecionada e ciclo */
         $parametro = $this->params()->fromRoute(Constantes::$ID);
@@ -100,18 +104,16 @@ class LancamentoController extends AbstractActionController {
             $cicloSelecionado = $explodeParamentro[1];
         }
 
-//        /* Teste de alteracao de envio */
-//        $grupo = $entidade->getGrupo();
-//        $resposta = $grupo->verificarSeFoiEnviadoORelatorio();
-//        if ($resposta) {
-//            $resposta = 'Enviado';
-//        } else {
-//            $resposta = 'Nao Enviado';
-//        }
-//        echo "<br />Grupo ";
-//        echo "<br />Verificar Status: " . $resposta;
-//        echo "<br />Data envio: " . $grupo->getEnvio_data();
-//        echo "<br />Hora envio: " . $grupo->getEnvio_hora();
+        /* Envio de relatorio */
+        $resposta = $entidade->getGrupo()->verificarSeFoiEnviadoORelatorio();
+        $statusEnvio = 0; /* Sem relatorio */
+        if (!empty($entidade->getGrupo()->getEnvio())) {
+            if ($resposta) {
+                $statusEnvio = 1; /* Relatorio Atualizado */
+            } else {
+                $statusEnvio = 2; /* Relatorio Dezatualizado */
+            }
+        }
 
         $mesSelecionado = FuncoesLancamento::mesPorAbaSelecionada($abaSelecionada);
         $anoSelecionado = FuncoesLancamento::anoPorAbaSelecionada($abaSelecionada);
@@ -124,6 +126,7 @@ class LancamentoController extends AbstractActionController {
             ConstantesLancamento::$ABA_SELECIONADA => $abaSelecionada,
             ConstantesLancamento::$CICLO_SELECIONADO => (int) $cicloSelecionado,
             ConstantesLancamento::$QUANTIDADE_EVENTOS_CICLOS => count($eventos),
+            ConstantesLancamento::$STATUS_ENVIO => $statusEnvio,
                 )
         );
 

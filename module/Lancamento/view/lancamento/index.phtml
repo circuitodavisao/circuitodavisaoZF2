@@ -1,18 +1,20 @@
-<?php
-
-use Lancamento\Controller\Helper\ConstantesLancamento;
-use Lancamento\Controller\Helper\FuncoesLancamento;
-
-$mesSelecionado = FuncoesLancamento::mesPorAbaSelecionada($this->abaSelecionada);
-$anoSelecionado = FuncoesLancamento::anoPorAbaSelecionada($this->abaSelecionada);
-?>
-
 <!-- MODAL PARA MUITOS ELEMENTOS -->
 <?php echo $this->modalMuitosEventos(); ?>
-
 <div class="row">
     <?php echo $this->dadosEntidade(); ?>
 </div>
+<?php
+$hiddenMensagemRelatorioAtualizado = 1;
+$hiddenMensagemRelatorioDesatualizado = 1;
+if ($this->statusEnvio == 1) {
+    $hiddenMensagemRelatorioAtualizado = 0;
+}
+if ($this->statusEnvio == 2) {
+    $hiddenMensagemRelatorioDesatualizado = 0;
+}
+echo $this->mensagemStatica("Relatório <strong>atualizado!</strong>", 3, 0, $hiddenMensagemRelatorioAtualizado, 'statusEnvio1');
+echo $this->mensagemStatica("Relatório desatualizado! <strong>Envie seu relatório!</strong>", 1, 0, $hiddenMensagemRelatorioDesatualizado, 'statusEnvio2');
+?>
 <!-- MODAL COM LOADER -->
 <?php echo $this->modalAba(); ?>
 <div id='panelLancamento' class="panel">
@@ -21,19 +23,6 @@ $anoSelecionado = FuncoesLancamento::anoPorAbaSelecionada($this->abaSelecionada)
         <?php echo $this->abas(); ?>
     </div>
     <div class="panel-body center-block" style="margin-left:10px; margin-right:10px;">
-        <div class="alert alert-success alert-dismissable">
-            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-            <i class="fa fa-check pr10"></i>
-            Relatório <strong>atualizado!</strong>
-        </div>
-        
-        <div class="alert alert-warning alert-dismissable">
-            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-            <i class="fa fa-warning pr10"></i>
-            Relatório desatualizado! <strong>Envie seu relatório!</strong>
-        </div>
-        
-        
         <!-- Tabela de lançamento de dados --> 
         <?php echo $this->cabecalhoDeCiclos(); ?>
         <!-- Tabela de lançamento de dados --> 

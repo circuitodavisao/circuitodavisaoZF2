@@ -17,7 +17,7 @@ class FuncoesEntidade {
     static public function tagImgComFotoDaPessoa(Pessoa $p, $tamanho = 50) {
         $resposta = '';
 
-        $imagem = 'profile_avatar.jpg';
+        $imagem = 'placeholder.png';
         if (!empty($p->getFoto())) {
             $imagem = $p->getFoto();
         }

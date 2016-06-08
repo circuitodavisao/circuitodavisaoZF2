@@ -17,6 +17,7 @@ class ConstantesLancamento {
     public static $ABA_SELECIONADA = 'abaSelecionada';
     public static $CICLO_SELECIONADO = 'cicloSelecionado';
     public static $QUANTIDADE_EVENTOS_CICLOS = 'quantidadeDeEventosNoCiclo';
+    public static $STATUS_ENVIO = 'statusEnvio';
     public static $TEMPLATE_JS_LANCAMENTO = 'layout/layout-js-lancamento';
     public static $STRING_JS_LANCAMENTO = 'layoutJSPrincipal';
     public static $ROUTE_LANCAMENTO = 'lancamento';
@@ -28,5 +29,6 @@ class ConstantesLancamento {
     public static $PAGINA_ALTERAR_NOME = 'AlterarNome';
     public static $CONTROLLER_LANCAMENTO = 'Lancamento\Controller\Lancamento';
     public static $CLASS_CENTER_BLOCk = 'center-block';
+    public static $NBSP = '&nbsp;';
 
 }
