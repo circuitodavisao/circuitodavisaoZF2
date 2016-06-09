@@ -4,7 +4,7 @@ use Lancamento\Controller\Helper\ConstantesLancamento;
 ?>
 <!-- MODAL PARA MUITOS ELEMENTOS -->
 <?php echo $this->modalMuitosEventos(); ?>
-<div class="row">
+<div class="row background-mobile">
     <?php echo $this->dadosEntidade(); ?>
 </div>
 <!--MENSAGENS DE RELATORIO ENVIADO-->
@@ -16,7 +16,7 @@ use Lancamento\Controller\Helper\ConstantesLancamento;
         <!-- Abertura de Abas -->
         <?php echo $this->abas(); ?>
     </div> 
-    <div class="panel-body center-block" style="margin-left:10px; margin-right:10px;">
+    <div class="panel-body center-block mg-left-cv">
         <!-- Tabela de lançamento de dados --> 
         <?php echo $this->cabecalhoDeCiclos(); ?>
         <!-- Tabela de lançamento de dados --> 
