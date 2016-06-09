@@ -1,32 +1,30 @@
+<?php
+
+use Lancamento\Controller\Helper\ConstantesLancamento;
+?>
 <!-- MODAL PARA MUITOS ELEMENTOS -->
 <?php echo $this->modalMuitosEventos(); ?>
 <div class="row">
     <?php echo $this->dadosEntidade(); ?>
 </div>
-<?php
-$hiddenMensagemRelatorioAtualizado = 1;
-$hiddenMensagemRelatorioDesatualizado = 1;
-if ($this->statusEnvio == 1) {
-    $hiddenMensagemRelatorioAtualizado = 0;
-}
-if ($this->statusEnvio == 2) {
-    $hiddenMensagemRelatorioDesatualizado = 0;
-}
-echo $this->mensagemStatica("Relatório <strong>atualizado!</strong>", 3, 0, $hiddenMensagemRelatorioAtualizado, 'statusEnvio1');
-echo $this->mensagemStatica("Relatório desatualizado! <strong>Envie seu relatório!</strong>", 1, 0, $hiddenMensagemRelatorioDesatualizado, 'statusEnvio2');
-?>
+<!--MENSAGENS DE RELATORIO ENVIADO-->
+<?php echo $this->mensagemRelatorioEnviado(); ?>
 <!-- MODAL COM LOADER -->
 <?php echo $this->modalAba(); ?>
 <div id='panelLancamento' class="panel">
     <div class="panel-heading">
         <!-- Abertura de Abas -->
         <?php echo $this->abas(); ?>
-    </div>
+    </div> 
     <div class="panel-body center-block" style="margin-left:10px; margin-right:10px;">
         <!-- Tabela de lançamento de dados --> 
         <?php echo $this->cabecalhoDeCiclos(); ?>
         <!-- Tabela de lançamento de dados --> 
         <?php echo $this->tabelaLancamento(); ?>
+    </div>
+    <div class="panel-footer text-center">
+        <!--BOTAO DE ENVIO DE RELATORIO-->
+        <a class="btn btn-success btn-sm" href="/lancamentoEnviarRelatorio" title="Enviar Relatório"><?php echo $this->translate(ConstantesLancamento::$TRADUCAO_ENVIAR_RELATORIO); ?>&nbsp;<i class="fa fa-file-text-o"></i></a>
     </div>
 </div>
 <?php

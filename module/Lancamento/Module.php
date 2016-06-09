@@ -15,6 +15,7 @@ use Lancamento\View\Helper\CabecalhoDeCiclos;
 use Lancamento\View\Helper\CabecalhoDeEventos;
 use Lancamento\View\Helper\DadosEntidade;
 use Lancamento\View\Helper\ListagemDePessoasComEventos;
+use Lancamento\View\Helper\MensagemRelatorioEnviado;
 use Lancamento\View\Helper\ModalAba;
 use Lancamento\View\Helper\ModalMuitosEventos;
 use Lancamento\View\Helper\TabelaLancamento;
@@ -75,6 +76,9 @@ class Module {
                 },
                 'mensagemStatica' => function($sm) {
                     return new MensagemStatica();
+                },
+                'mensagemRelatorioEnviado' => function($sm) {
+                    return new MensagemRelatorioEnviado();
                 },
             )
         );

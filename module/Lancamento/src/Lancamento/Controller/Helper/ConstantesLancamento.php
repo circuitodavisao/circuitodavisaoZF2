@@ -30,5 +30,15 @@ class ConstantesLancamento {
     public static $CONTROLLER_LANCAMENTO = 'Lancamento\Controller\Lancamento';
     public static $CLASS_CENTER_BLOCk = 'center-block';
     public static $NBSP = '&nbsp;';
+    /* Tradução */
+    public static $TRADUCAO_ENVIAR_RELATORIO = 'Send Report';
+    public static $TRADUCAO_GIRE_O_CELULAR = '<h3>ROTATE THE CELLULAR</h3><span>Turn your phone to landscape to view all your events.</span>';
+    public static $TRADUCAO_RELATORIO_ATUALIZADO = 'Report <strong>Updated!</strong>';
+    public static $TRADUCAO_RELATORIO_DEZATUALIZADO = 'Report outdated! <strong>Send your report</strong>';
+    public static $TRADUCAO_MES_ATUAL = 'Current Month';
+    public static $TRADUCAO_MES_ANTERIOR = 'Last Month';
+    public static $TRADUCAO_CARREGANDO = 'Loading';
+    public static $TRADUCAO_CICLO = 'Cycle';
+    public static $TRADUCAO_PERIODO = 'Period';
 
 }

@@ -151,6 +151,13 @@ class LancamentoController extends AbstractActionController {
      * @return ViewModel
      */
     public function enviarRelatorioAction() {
+         /* Helper Controller */
+        $lancamentoORM = new LancamentoORM($this->getDoctrineORMEntityManager());
+
+        $sessao = new Container(Constantes::$NOME_APLICACAO);
+        $idEntidadeAtual = $sessao->idEntidadeAtual;
+        $entidade = $lancamentoORM->getEntidadeORM()->encontrarPorIdEntidade($idEntidadeAtual);
+        $entidade->getGrupo()->setRelatorioEnviado($lancamentoORM);
         return new ViewModel();
     }
 

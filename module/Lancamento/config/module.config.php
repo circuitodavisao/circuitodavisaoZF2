@@ -40,20 +40,6 @@ return array(
             'Zend\Cache\Service\StorageCacheAbstractServiceFactory',
             'Zend\Log\LoggerAbstractServiceFactory',
         ),
-        'factories' => array(
-            'translator' => 'Zend\Mvc\Service\TranslatorServiceFactory',
-        ),
-    ),
-    # definir e gerenciar traduções
-    'translator' => array(
-        'locale' => 'pt_BR',
-        'translation_file_patterns' => array(
-            array(
-                'type' => 'gettext',
-                'base_dir' => __DIR__ . '/../language',
-                'pattern' => '%s.mo',
-            ),
-        ),
     ),
     # definir e gerenciar layouts, erros, exceptions, doctype base
     'view_manager' => array(

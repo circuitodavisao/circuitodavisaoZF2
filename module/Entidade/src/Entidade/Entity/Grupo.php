@@ -7,12 +7,12 @@ namespace Entidade\Entity;
  * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com>
  * Descricao: Entidade anotada da tabela grupo
  */
+
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Lancamento\Controller\Helper\FuncoesLancamento;
 use Lancamento\Controller\Helper\LancamentoORM;
-use Login\Controller\Helper\LoginORM;
 
 /** @ORM\Entity */
 class Grupo {
@@ -309,12 +309,14 @@ class Grupo {
 
     /**
      * Seta o status de envio para sim e alterar data e hora de envio
+     * @param LancamentoORM $lancamentoORM
      */
-    function setRelatorioEnviado() {
+    function setRelatorioEnviado(LancamentoORM $lancamentoORM) {
         $this->envio = 'S';
         $timeNow = new DateTime();
         $this->setEnvio_data($timeNow->format('Y-m-d'));
         $this->setEnvio_hora($timeNow->format('H:s:i'));
+        $lancamentoORM->getGrupoORM()->persistirGrupo($this);
     }
 
     /**

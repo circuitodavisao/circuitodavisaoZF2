@@ -15,7 +15,8 @@ function mudarFrequencia(idEventoFrequencia, ciclo, aba) {
     var btnSuccess = 'btn-success';
     var btnTransicao = 'btn-default';
     var botao = $('#b_' + idEventoFrequencia);
-    var mensagem = $('#statusEnvio2');
+    var mensagem1 = $('#statusEnvio1');
+    var mensagem2 = $('#statusEnvio2');
 
     var valor = 'N';
     if (botao.hasClass(btnDefault)) {
@@ -54,7 +55,8 @@ function mudarFrequencia(idEventoFrequencia, ciclo, aba) {
                     }
                     botao.removeClass('disabled');
                     total.html(totalSoma);
-                    mensagem.removeClass('hidden')
+                    mensagem1.addClass('hidden');
+                    mensagem2.removeClass('hidden');
                 }
             }, 'json');
 }

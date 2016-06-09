@@ -2,6 +2,7 @@
 
 namespace Lancamento\View\Helper;
 
+use Lancamento\Controller\Helper\ConstantesLancamento;
 use Zend\View\Helper\AbstractHelper;
 
 /**
@@ -19,7 +20,7 @@ class ModalMuitosEventos extends AbstractHelper {
         $html = '';
         /* Modal */
         $html .= '<div id="modalMuitosEventos" class="popup-basic admin-form mfp-with-anim mfp-hide p25" data-effect="mfp-with-fade">';
-        $html .= '<div class=""><h3>GIRE O CELULAR</h3><span>Vire seu celular para horizontal para visualizar todos os seus eventos.</span></div>';
+        $html .= '<div class="">' . ConstantesLancamento::$TRADUCAO_GIRE_O_CELULAR . '</div>';
         /* FIM Modal */
         $html .= '</div>';
         return $html;

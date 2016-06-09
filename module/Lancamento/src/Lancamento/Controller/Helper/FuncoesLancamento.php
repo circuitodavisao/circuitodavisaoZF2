@@ -46,7 +46,7 @@ class FuncoesLancamento {
     static public function periodoCicloMesAno($ciclo = 1, $mesUsado = 5, $anoUsado = 2016) {
         $resposta = '';
         if ($ciclo != 1 && $ciclo != 6) {
-            $resposta .= ConstantesLancamento::$NBSP . 'Per&iacute;odo' . ConstantesLancamento::$NBSP;
+            $resposta .= ConstantesLancamento::$NBSP . ConstantesLancamento::$TRADUCAO_PERIODO . ConstantesLancamento::$NBSP;
         } else {
             $resposta .= ConstantesLancamento::$NBSP . '-' . ConstantesLancamento::$NBSP;
         }
@@ -72,7 +72,7 @@ class FuncoesLancamento {
                 if ($cicloAux == $ciclo) {
                     $diaFormatado = str_pad($z, 2, 0, STR_PAD_LEFT);
                     if ($ciclo != 1) {
-                        $resposta .= ConstantesLancamento::$NBSP . '&aacute;' . ConstantesLancamento::$NBSP . $diaFormatado . '/' . $mesFormatado;
+                        $resposta .= ConstantesLancamento::$NBSP . '-' . ConstantesLancamento::$NBSP . $diaFormatado . '/' . $mesFormatado;
                     }
                 }
                 $cicloAux++;
