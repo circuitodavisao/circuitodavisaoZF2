@@ -7,7 +7,6 @@ namespace Entidade\Entity;
  * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com>
  * Descricao: Entidade anotada da tabela grupo
  */
-
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -195,6 +194,35 @@ class Grupo {
     }
 
     /**
+     * Retorna o grupo evento ordenados por dia da semana
+     * @return GrupoEvento
+     */
+    function getGrupoEventoOrdenadosPorDiaDaSemana() {
+        $grupoEventos = $this->getGrupoEvento();
+        for ($i = 0; $i < count($grupoEventos); $i++) {
+            for ($j = 0; $j < count($grupoEventos); $j++) {
+                $evento1 = $grupoEventos[$i];
+                $evento2 = $grupoEventos[$j];
+                $trocar = 0;
+                if ($evento1->getEvento()->getDia() <= $evento2->getEvento()->getDia()) {
+                    if ($evento1->getEvento()->getDia() == $evento2->getEvento()->getDia()) {
+                        if ($evento1->getEvento()->getHora() < $evento2->getEvento()->getHora()) {
+                            $trocar = 1;
+                        }
+                    } else {
+                        $trocar = 1;
+                    }
+                    if ($trocar == 1) {
+                        $grupoEventos[$i] = $evento2;
+                        $grupoEventos[$j] = $evento1;
+                    }
+                }
+            }
+        }
+        return $grupoEventos;
+    }
+
+    /**
      * Retorna o grupo evento
      * @return GrupoEvento
      */
@@ -205,7 +233,7 @@ class Grupo {
                 $grupoEventos[] = $ge;
             }
         }
-        Return $grupoEventos;
+        return $grupoEventos;
     }
 
     /**
@@ -218,40 +246,41 @@ class Grupo {
     function getGrupoEventoNoCiclo($ciclo = 1, $mes = 5, $ano = 2016) {
         if (is_null($this->getEventos())) {
             $eventos = null;
-            foreach ($this->getGrupoEventoAtivos() as $ge) {
-                /* Verificando data de cadastro */
-                $dataCadastro = $ge->getData_criacao();
-                $explodeData = explode('-', $dataCadastro);
-                $verificacaoData = false;
-                /* cadastrado no ano anterior */
-                if ($explodeData[0] < date('Y')) {
-                    $verificacaoData = true;
-                } else {
-                    if ($explodeData[0] == date('Y')) {
-                        if ($explodeData[1] < date('n')) {
-                            $verificacaoData = true;
-                        } else {
-                            if ($explodeData[1] == date('n')) {
-                                if ($explodeData[2] <= date('d')) {
-                                    $verificacaoData = true;
+            if (!empty($this->getGrupoEventoOrdenadosPorDiaDaSemana())) {
+                foreach ($this->getGrupoEventoOrdenadosPorDiaDaSemana() as $ge) {
+                    /* Verificando data de cadastro */
+                    $dataCadastro = $ge->getData_criacao();
+                    $explodeData = explode('-', $dataCadastro);
+                    $verificacaoData = false;
+                    /* cadastrado no ano anterior */
+                    if ($explodeData[0] < date('Y')) {
+                        $verificacaoData = true;
+                    } else {
+                        if ($explodeData[0] == date('Y')) {
+                            if ($explodeData[1] < date('n')) {
+                                $verificacaoData = true;
+                            } else {
+                                if ($explodeData[1] == date('n')) {
+                                    if ($explodeData[2] <= date('d')) {
+                                        $verificacaoData = true;
+                                    }
                                 }
                             }
                         }
                     }
-                }
-
-                $verificacao = false;
-                if ($ciclo == 2 || $ciclo == 3 || $ciclo == 4) {
-                    $verificacao = true;
-                }
-                if ($ciclo == 1 || $ciclo == 5 || $ciclo == 6) {
-                    $evento = $ge->getEvento();
-                    if (FuncoesLancamento::eventoNoCiclo($evento->getDia(), $ciclo, $mes, $ano)) {
+                    $verificacao = false;
+                    if ($ciclo == 2 || $ciclo == 3 || $ciclo == 4) {
                         $verificacao = true;
                     }
-                }
-                if ($verificacao && $verificacaoData) {
-                    $eventos[] = $ge;
+                    if ($ciclo == 1 || $ciclo == 5 || $ciclo == 6) {
+                        $evento = $ge->getEvento();
+                        if (FuncoesLancamento::eventoNoCiclo($evento->getDia(), $ciclo, $mes, $ano)) {
+                            $verificacao = true;
+                        }
+                    }
+                    if ($verificacao && $verificacaoData) {
+                        $eventos[] = $ge;
+                    }
                 }
             }
             $this->setEventos($eventos);
