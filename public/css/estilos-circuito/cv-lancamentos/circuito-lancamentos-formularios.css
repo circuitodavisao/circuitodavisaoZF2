@@ -1,0 +1,36 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 21/06/2016, 13:46:18
+    Author     : Sergio Bezerra da Silva
+*/
+
+/*==================================================================
+  Input Icons
+===================================================================*/
+.admin-form .prepend-icon-right {
+  top: 0;
+  right: 0;
+  display: inline-block;
+  vertical-align: top;
+  position: relative;
+  width: 100%;
+}
+.admin-form .prepend-icon-right .field-icon i {
+  position: relative;
+  font-size: 14px;
+}
+.admin-form .prepend-icon-right .field-icon {
+  right: 0;
+}
+.admin-form .append-icon .field-icon {
+  right: 0;
+}
+.admin-form .prepend-icon-right > input,
+.admin-form .prepend-icon-right > textarea {
+  padding-right: 36px;
+}
+
