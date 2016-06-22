@@ -39,80 +39,82 @@ class ListagemDePessoasComEventos extends AbstractHelper {
                 $pessoas[] = $p;
             }
         }
-        foreach ($pessoas as $pessoa) {
-            $html .= '<tr>';
 
-            /* TIPO */
-            $html .= '<td class="tdTipo">';
+        /* Listagem dos eventos */
+        $eventos = $grupo->getGrupoEventoNoCiclo($this->view->cicloSelecionado);
 
-            /* Menu dropup Tipo */
-            $html .= '<div class="btn-group btn-block dropdown">';
-            $html .= '<span class="btn btn-dark btn-xs btn-block dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">';
-            $html .= $pessoa->getTipo();
-            $html .= '<span class="sr-only"></span>';
-            $html .= '</span>';
+        /* Sem eventos cadastrados */
+        if (count($eventos) == 0) {
+            $html .= '<div class="alert alert-warning"><i class="fa fa-warning pr10" aria-hidden="true"></i>&nbsp;Sem eventos cadastrados!</div>';
+        } else {
+            foreach ($pessoas as $pessoa) {
+                $html .= '<tr>';
 
-            $html .= '<ul class="dropdown-menu sobrepor-elementos">';
-            $html .= '<span class="editable-container editable-inline">';
-            $html .= '<div class="ml5 definicao-altura-30">';
-            $html .= '<form class="form-inline editableform">';
-            $html .= '<div class="control-group form-group">';
-            $html .= '<div>';
-            $html .= '<div class="editable-input">';
-            $html .= '<button type="submit" class="btn btn-primary btn-sm" style="margin-left:5px;"><i class="fa fa-location-arrow"></i></button>';
-            $html .= '<span class="editable-clear-x"></span>';
-            $html .= '<button type="submit" class="btn btn-primary btn-sm" style="margin-left:5px;"><i class="fa fa-terminal"></i></button>';
-            $html .= '<span class="editable-clear-x"></span>';
-            $html .= '<button type="submit" class="btn btn-primary btn-sm" style="margin-left:5px;"><i class="fa fa-unlock-alt"></i></button>';
-            $html .= '<span class="editable-clear-x"></span>';
-            $html .= '<button type="submit" class="btn btn-danger btn-sm" style="margin-left:5px;"><i class="fa fa-trash-o"></i></button>';
-            $html .= '<span class="editable-clear-x"></span>';
-            $html .= '</div>';
-            $html .= '</div>';
-            $html .= '</div>';
-            $html .= '</form>';
-            $html .= '</div>';
-            $html .= '</span>';
-            $html .= '</ul>';
-            /* Fim Menu dropup */
+                /* TIPO */
+                $html .= '<td class="tdTipo">';
 
-            $html .= '</td>';
+                /* Menu dropup Tipo */
+                $html .= '<div class="btn-group btn-block dropdown">';
+                $html .= '<span class="btn btn-dark btn-xs btn-block dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">';
+                $html .= $pessoa->getTipo();
+                $html .= '<span class="sr-only"></span>';
+                $html .= '</span>';
 
-            /* NOME */
-            $html .= '<td class="tdNome text-left">&nbsp;';
-            /* Menu dropup Nome */
-            $html .= '<div class="btn-group dropdown">';
-                        
-            $html .= '<a id="menudrop_' . $pessoa->getId() . '" class="tdNome text-left dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">';
-            $html .= '<span id="span_nome_' . $pessoa->getId() . '">' . $pessoa->getNomeListaDeLancamento() . '</span>';
-            $html .= '<span class="sr-only"></span>';
-            $html .= '</a>';
+                $html .= '<ul class="dropdown-menu sobrepor-elementos">';
+                $html .= '<span class="editable-container editable-inline">';
+                $html .= '<div class="ml5 definicao-altura-30">';
+                $html .= '<form class="form-inline editableform">';
+                $html .= '<div class="control-group form-group">';
+                $html .= '<div>';
+                $html .= '<div class="editable-input">';
+                $html .= '<button type="submit" class="btn btn-primary btn-sm" style="margin-left:5px;"><i class="fa fa-location-arrow"></i></button>';
+                $html .= '<span class="editable-clear-x"></span>';
+                $html .= '<button type="submit" class="btn btn-primary btn-sm" style="margin-left:5px;"><i class="fa fa-terminal"></i></button>';
+                $html .= '<span class="editable-clear-x"></span>';
+                $html .= '<button type="submit" class="btn btn-primary btn-sm" style="margin-left:5px;"><i class="fa fa-unlock-alt"></i></button>';
+                $html .= '<span class="editable-clear-x"></span>';
+                $html .= '<button type="submit" class="btn btn-danger btn-sm" style="margin-left:5px;"><i class="fa fa-trash-o"></i></button>';
+                $html .= '<span class="editable-clear-x"></span>';
+                $html .= '</div>';
+                $html .= '</div>';
+                $html .= '</div>';
+                $html .= '</form>';
+                $html .= '</div>';
+                $html .= '</span>';
+                $html .= '</ul>';
+                /* Fim Menu dropup */
 
-            $html .= '<ul class="dropdown-menu sobrepor-elementos modal-edicao-nome">';
-            $html .= '<span class="editable-container editable-inline">';
-            $html .= '<div class="ml10 campo-edicao-nome">';
-            $html .= '<form class="form-inline editableform">';
-            $html .= '<div class="control-group form-group">';
-            $html .= '<div>';
-            $html .= '<div class="input-group">';
-            $html .= '<input type="text" class="form-control" id="nome_' . $pessoa->getId() . '" value="' . $pessoa->getNome() . '" />';
-            $html .= '<span class="input-group-btn">';
-            $html .= '<span onclick="alterarNome(' . $pessoa->getId() . ')" class="btn ladda-button btn-primary" data-style="zoom-in"><span class="ladda-label"><i class="fa fa-check"></i></span></span>';
-            $html .= '</span>';
-            $html .= '</div>';
-            $html .= '</div>';
-            $html .= '</div>';
+                $html .= '</td>';
 
-            $html .= '</div>';
-            /* Fim Menu dropup */
-            $html .= '</td>';
+                /* NOME */
+                $html .= '<td class="tdNome text-left">&nbsp;';
+                /* Menu dropup Nome */
+                $html .= '<div class="btn-group dropdown">';
 
+                $html .= '<a id="menudrop_' . $pessoa->getId() . '" class="tdNome text-left dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">';
+                $html .= '<span id="span_nome_' . $pessoa->getId() . '">' . $pessoa->getNomeListaDeLancamento() . '</span>';
+                $html .= '<span class="sr-only"></span>';
+                $html .= '</a>';
 
+                $html .= '<ul class="dropdown-menu sobrepor-elementos modal-edicao-nome">';
+                $html .= '<span class="editable-container editable-inline">';
+                $html .= '<div class="ml10 campo-edicao-nome">';
+                $html .= '<form class="form-inline editableform">';
+                $html .= '<div class="control-group form-group">';
+                $html .= '<div>';
+                $html .= '<div class="input-group">';
+                $html .= '<input type="text" class="form-control" id="nome_' . $pessoa->getId() . '" value="' . $pessoa->getNome() . '" />';
+                $html .= '<span class="input-group-btn">';
+                $html .= '<span onclick="alterarNome(' . $pessoa->getId() . ')" class="btn ladda-button btn-primary" data-style="zoom-in"><span class="ladda-label"><i class="fa fa-check"></i></span></span>';
+                $html .= '</span>';
+                $html .= '</div>';
+                $html .= '</div>';
+                $html .= '</div>';
 
-            /* Listagem dos eventos */
-            $grupo = $this->view->entidade->getGrupo();
-            $eventos = $grupo->getGrupoEventoNoCiclo($this->view->cicloSelecionado);
-            if (count($eventos) > 0) {
+                $html .= '</div>';
+                /* Fim Menu dropup */
+                $html .= '</td>';
+
                 foreach ($eventos as $ge) {
                     $valor = '';
                     $class = 'btn-default';
@@ -158,19 +160,66 @@ class ListagemDePessoasComEventos extends AbstractHelper {
                     $html .= '<td ' . $style . ' class="text-center">';
 
                     $html .= '<div class="btn-group">';
-                    $html .= '<button id="b_' . $idEventoFrequencia . '" type="button" class="btn ' . $class . ' btn-sm"'
-                            . ' onclick=\'mudarFrequencia(';
-                    $html .= "\"$idEventoFrequencia\", {$this->view->cicloSelecionado}, {$this->view->abaSelecionada}";
-                    $html .= ');\'>';
-                    $html .= '<i id="i_' . $idEventoFrequencia . '" class="fa ' . $classIco . '"></i>';
-                    $html .= '</button>';
+
+//                    if ($p->tipo != 6) {
+//                        // verificando se aluno foi recebido e tem data de transferencia
+//                        if ($z >= $diaCriacaoTransferencia) {// data de cadastro
+//                            if ($p->dataTransferencia == "" || $z > $diaTransferencia) {// aluno transferido
+//                                if (!($z > $diaInativacao && $transferido == 1)) {// lider transferido
+//                                    if ((date('d') >= $z && date('m') == $mesUsado) || (date('m') > $mesUsado && date("Y") == $anoUsado) || date("Y") > $anoUsado) {
+//                                        echo "<input $checked type='checkbox' onclick='mudarFrequencia(this, $p->id, $z, $idTipoA, $idGrupoMensal, $contCiclo, $idCelula);' />";
+//                                        echo "&nbsp;<img id='loader$idCheck' src='../imagens/17.gif' width='16px' heigth='16px' style='display: none;'/></span>";
+//                                    } else
+//                                        echo "<span class='glyphicon glyphicon-time' aria-hidden='true'></span>";
+//                                }
+//                            }
+//                        }
+//                    } else {
+//                        if ($z <= $diaTransferencia) {
+//                            echo "<input $checked type='checkbox' onclick='mudarFrequencia(this, $p->id, $z, $idTipoA, $idGrupoMensal, $contCiclo, $idCelula);' />";
+//                        }
+//                    }                                      
+//                    
+//                    $diaCriacaoTransferencia = substr($grupoMensal->dataCriacao, 8, 2);
+//                    $condicaoDataDeCadastro = ($diaCriacaoTransferencia);
+
+                    /* Condições mes anteiror, mes atual e ciclos */
+                    $condicaoMesAnterior = ($this->view->abaSelecionada == 2);
+                    $condicaoCicloAfrente = ($this->view->abaSelecionada == 1 && $this->view->cicloSelecionado <= FuncoesLancamento::cicloAtual($mesSelecionado, $anoSelecionado));
+                    $condicaoCicloAnteriores = ($this->view->abaSelecionada == 1 && $this->view->cicloSelecionado < FuncoesLancamento::cicloAtual($mesSelecionado, $anoSelecionado));
+                    $diaDaSemana = date('N');
+                    $condicaoDiaSemana = ($this->view->abaSelecionada == 1 && $evento->getDia() <= $diaDaSemana);
+
+                    $mostrar = false;
+                    if ($condicaoMesAnterior) {
+                        $mostrar = true;
+                    }
+                    if ($condicaoCicloAnteriores) {
+                        $mostrar = true;
+                    } else {
+                        if ($condicaoCicloAfrente) {
+                            if ($condicaoDiaSemana) {
+                                $mostrar = true;
+                            }
+                        }
+                    }
+
+
+                    if ($mostrar) {
+                        $html .= '<button id="b_' . $idEventoFrequencia . '" type="button" class="btn ' . $class . ' btn-sm"'
+                                . ' onclick=\'mudarFrequencia(';
+                        $html .= "\"$idEventoFrequencia\", {$this->view->cicloSelecionado}, {$this->view->abaSelecionada}";
+                        $html .= ');\'>';
+                        $html .= '<i id="i_' . $idEventoFrequencia . '" class="fa ' . $classIco . '"></i>';
+                        $html .= '</button>';
+                    } else {/* Eventos futuro */
+                        $html .= '<i class="fa fa-clock-o"></i>';
+                    }
                     $html .= '</div>';
-
-
                     $html .= '</td>';
                 }
+                $html .= '</tr>';
             }
-            $html .= '</tr>';
         }
         return $html;
     }

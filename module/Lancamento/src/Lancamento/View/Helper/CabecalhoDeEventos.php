@@ -23,14 +23,14 @@ class CabecalhoDeEventos extends AbstractHelper {
 
     public function renderHtml() {
         $html = '';
-        $html .= '<tr>';
-        $html .= '<th class="tdTipo"></th>';
-        $html .= '<th class="tdNome text-right">Totais</th>';
         $mesSelecionado = FuncoesLancamento::mesPorAbaSelecionada($this->view->abaSelecionada);
         $anoSelecionado = FuncoesLancamento::anoPorAbaSelecionada($this->view->abaSelecionada);
         $grupo = $this->view->entidade->getGrupo();
         $eventos = $grupo->getGrupoEventoNoCiclo($this->view->cicloSelecionado, $mesSelecionado, $anoSelecionado);
         if (count($eventos) > 0) {
+            $html .= '<tr>';
+            $html .= '<th class="tdTipo"></th>';
+            $html .= '<th class="tdNome text-right">Totais</th>';
             foreach ($eventos as $ge) {
                 $diaDaSemanaAjustado = FuncoesLancamento::diaDaSemanaPorDia($ge->getEvento()->getDia());
                 $html .= '<th class="text-center">';
@@ -58,8 +58,8 @@ class CabecalhoDeEventos extends AbstractHelper {
 
                 $html .= "</th>";
             }
+            $html .= '</tr>';
         }
-        $html .= '</tr>';
         return $html;
     }
 
