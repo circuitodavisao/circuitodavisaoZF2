@@ -131,9 +131,13 @@ class LancamentoController extends AbstractActionController {
         );
 
         /* Javascript especifico */
-        $layoutJS = new ViewModel(array(ConstantesLancamento::$QUANTIDADE_EVENTOS_CICLOS => count($eventos),));
+        $layoutJS = new ViewModel();
         $layoutJS->setTemplate(ConstantesLancamento::$TEMPLATE_JS_LANCAMENTO);
         $view->addChild($layoutJS, ConstantesLancamento::$STRING_JS_LANCAMENTO);
+ 
+        $layoutJS2 = new ViewModel(array(ConstantesLancamento::$QUANTIDADE_EVENTOS_CICLOS => count($eventos),));
+        $layoutJS2->setTemplate(ConstantesLancamento::$TEMPLATE_JS_LANCAMENTO_MODAL_EVENTOS);
+        $view->addChild($layoutJS2, ConstantesLancamento::$STRING_JS_LANCAMENTO_MODAL_EVENTOS);
 
         return $view;
     }

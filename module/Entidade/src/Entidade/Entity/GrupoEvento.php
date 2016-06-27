@@ -144,4 +144,16 @@ class GrupoEvento {
         $this->hora_inativacao = $hora_inativacao;
     }
 
+    function getData_criacaoAno() {
+        return explode('-', $this->getData_criacao())[0];
+    }
+
+    function getData_criacaoMes() {
+        return explode('-', $this->getData_criacao())[1];
+    }
+
+    function getData_criacaoDia() {
+        return explode('-', $this->getData_criacao())[2];
+    }
+
 }

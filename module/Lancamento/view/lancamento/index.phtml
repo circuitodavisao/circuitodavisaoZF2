@@ -3,9 +3,13 @@
 use Lancamento\Controller\Helper\ConstantesLancamento;
 ?>
 <!-- MODAL PARA MUITOS ELEMENTOS -->
-<?php echo $this->modalMuitosEventos(); ?>
+<?php
+echo $this->modalMuitosEventos();
+/* Layout com javascript para tela de index */
+echo $this->layoutJSLancamentoModalEventos;
+?>
 <div class="row background-mobile">
-    <?php echo $this->dadosEntidade(); ?>
+<?php echo $this->dadosEntidade(); ?>
 </div>
 <!--MENSAGENS DE RELATORIO ENVIADO-->
 <?php echo $this->mensagemRelatorioEnviado(); ?>
@@ -14,17 +18,17 @@ use Lancamento\Controller\Helper\ConstantesLancamento;
 <div id='panelLancamento' class="panel">
     <div class="panel-heading">
         <!-- Abertura de Abas -->
-        <?php echo $this->abas(); ?>
+<?php echo $this->abas(); ?>
     </div> 
     <div class="panel-body center-block mg-left-cv">
         <!-- Tabela de lançamento de dados --> 
         <?php echo $this->cabecalhoDeCiclos(); ?>
         <!-- Tabela de lançamento de dados --> 
-        <?php echo $this->tabelaLancamento(); ?>
+<?php echo $this->tabelaLancamento(); ?>
     </div>
     <div class="panel-footer text-center">
         <!--BOTAO DE ENVIO DE RELATORIO-->
-        <a class="btn btn-success btn-sm" href="/lancamentoEnviarRelatorio" title="Enviar Relatório"><?php echo $this->translate(ConstantesLancamento::$TRADUCAO_ENVIAR_RELATORIO); ?>&nbsp;<i class="fa fa-file-text-o"></i></a>
+        <a target="_blanck" class="btn btn-success btn-sm" href="/lancamentoEnviarRelatorio" title="Enviar Relatório"><?php echo $this->translate(ConstantesLancamento::$TRADUCAO_ENVIAR_RELATORIO); ?></a>
     </div>
 </div>
 <?php

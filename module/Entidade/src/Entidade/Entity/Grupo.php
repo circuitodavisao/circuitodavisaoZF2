@@ -204,8 +204,8 @@ class Grupo {
                 $evento1 = $grupoEventos[$i];
                 $evento2 = $grupoEventos[$j];
                 $trocar = 0;
-                if ($evento1->getEvento()->getDia() <= $evento2->getEvento()->getDia()) {
-                    if ($evento1->getEvento()->getDia() == $evento2->getEvento()->getDia()) {
+                if ($evento1->getEvento()->getDiaAjustado() <= $evento2->getEvento()->getDiaAjustado()) {
+                    if ($evento1->getEvento()->getDiaAjustado() == $evento2->getEvento()->getDiaAjustado()) {
                         if ($evento1->getEvento()->getHora() < $evento2->getEvento()->getHora()) {
                             $trocar = 1;
                         }
@@ -247,38 +247,64 @@ class Grupo {
         if (is_null($this->getEventos())) {
             $eventos = null;
             if (!empty($this->getGrupoEventoOrdenadosPorDiaDaSemana())) {
-                foreach ($this->getGrupoEventoOrdenadosPorDiaDaSemana() as $ge) {
-                    /* Verificando data de cadastro */
-                    $dataCadastro = $ge->getData_criacao();
-                    $explodeData = explode('-', $dataCadastro);
-                    $verificacaoData = false;
-                    /* cadastrado no ano anterior */
-                    if ($explodeData[0] < date('Y')) {
-                        $verificacaoData = true;
+                if ($ciclo == 1) {
+                    $primeiroDiaDaSemana = date('N', mktime(0, 0, 0, $mes, 1, $ano));
+                    if ($primeiroDiaDaSemana == 1) {
+                        $primeiroDiaDaSemana = 8;
                     } else {
-                        if ($explodeData[0] == date('Y')) {
-                            if ($explodeData[1] < date('n')) {
-                                $verificacaoData = true;
-                            } else {
-                                if ($explodeData[1] == date('n')) {
-                                    if ($explodeData[2] <= date('d')) {
-                                        $verificacaoData = true;
+                        $primeiroDiaDaSemana++;
+                    }
+                }
+                $ultimoDiaDaSemana = date('N', mktime(0, 0, 0, $mes, cal_days_in_month(CAL_GREGORIAN, $mes, $ano), $ano));
+                if ($ultimoDiaDaSemana == 1) {
+                    $ultimoDiaDaSemana = 8;
+                } else {
+                    $ultimoDiaDaSemana++;
+                }
+                foreach ($this->getGrupoEventoOrdenadosPorDiaDaSemana() as $ge) {
+                    /* Condição para data de cadastro */
+                    $verificacaoData = false;
+                    $diaAtual = date('d');
+                    $mesAtual = date('m'); /* Mes com zero */
+                    $anoAtual = date('Y');
+                    $cicloAtual = FuncoesLancamento::cicloAtual($mes, $ano);
+
+                    if ($ge->getData_criacaoAno() <= $anoAtual) {
+                        if ($ge->getData_criacaoAno() == $anoAtual) {
+                            if ($ge->getData_criacaoMes() <= $mesAtual) {
+                                if ($ge->getData_criacaoMes() == $mesAtual) {
+                                    if ($ciclo == $cicloAtual) {
+                                        if ($ge->getData_criacaoDia() <= $diaAtual) {
+                                            $verificacaoData = true;
+                                        }
                                     }
+                                } else {
+                                    $verificacaoData = true;
                                 }
                             }
+                        } else {
+                            $verificacaoData = true;
                         }
                     }
-                    $verificacao = false;
-                    if ($ciclo == 2 || $ciclo == 3 || $ciclo == 4) {
-                        $verificacao = true;
-                    }
-                    if ($ciclo == 1 || $ciclo == 5 || $ciclo == 6) {
-                        $evento = $ge->getEvento();
-                        if (FuncoesLancamento::eventoNoCiclo($evento->getDia(), $ciclo, $mes, $ano)) {
-                            $verificacao = true;
+                    /* Validacao de ciclos inicial e final */
+                    $verificacaoDiaSemana = false;
+                    $cicloTotal = FuncoesLancamento::totalCiclosMes($mes, $ano);
+                    if ($verificacaoData && ($ciclo == 1 || $ciclo == $cicloTotal)) {
+                        if ($ciclo == 1) {
+                            if ($ge->getEvento()->getDiaAjustado() >= $primeiroDiaDaSemana) {
+                                $verificacaoDiaSemana = true;
+                            }
                         }
+                        if ($ciclo == $cicloTotal) {
+                            if ($ge->getEvento()->getDiaAjustado() <= $ultimoDiaDaSemana) {
+                                $verificacaoDiaSemana = true;
+                            }
+                        }
+                    } else {
+                        $verificacaoDiaSemana = true;
                     }
-                    if ($verificacao && $verificacaoData) {
+
+                    if ($verificacaoData && $verificacaoDiaSemana) {
                         $eventos[] = $ge;
                     }
                 }
@@ -298,6 +324,32 @@ class Grupo {
      */
     function getGrupoPessoa() {
         return $this->grupoPessoa;
+    }
+
+    /**
+     * Retorna o grupo pessoa ativas no mes infomado
+     * @return GrupoPessoa
+     */
+    function getGrupoPessoaAtivasEDoMes($mes, $ano) {
+        $pessoas = null;
+        foreach ($this->getGrupoPessoa() as $gp) {
+            /* Condição para data de cadastro */
+            $verificacaoData = false;
+            if ($gp->getData_criacaoAno() <= $ano) {
+                if ($gp->getData_criacaoAno() == $ano) {
+                    if ($gp->getData_criacaoMes() <= $mes) {
+                        $verificacaoData = true;
+                    }
+                } else {
+                    $verificacaoData = true;
+                }
+            }
+            if ($verificacaoData) {
+                $pessoas[] = $gp;
+            }
+        }
+        $this->setGrupoPessoa($pessoas);
+        return $this->getGrupoPessoa();
     }
 
     function setGrupoPessoa($grupoPessoa) {

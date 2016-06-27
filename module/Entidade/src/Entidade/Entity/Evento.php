@@ -84,6 +84,18 @@ class Evento {
         $this->data_criacao = $data_criacao;
     }
 
+    function getData_criacaoAno() {
+        return explode('-', $this->getData_criacao())[0];
+    }
+
+    function getData_criacaoMes() {
+        return explode('-', $this->getData_criacao())[1];
+    }
+
+    function getData_criacaoDia() {
+        return explode('-', $this->getData_criacao())[2];
+    }
+
     function setData_inativacao($data_inativacao) {
         $this->data_inativacao = $data_inativacao;
     }
@@ -114,6 +126,18 @@ class Evento {
 
     function getDia() {
         return $this->dia;
+    }
+
+    /**
+     * Retorna o dia sendo domingo dia 8 para ordenação correta
+     * @return int
+     */
+    function getDiaAjustado() {
+        $aux = $this->dia;
+        if ($this->dia == 1) {
+            $aux = 8;
+        }
+        return $aux;
     }
 
     function getHora() {

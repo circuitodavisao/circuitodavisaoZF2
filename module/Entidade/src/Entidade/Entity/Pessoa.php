@@ -74,10 +74,11 @@ class Pessoa {
 
     /** @ORM\Column(type="string") */
     protected $token_hora;
-    protected $tipo;
 
     /** @ORM\Column(type="string") */
     protected $foto;
+    protected $tipo;
+    protected $transferido;
 
     /**
      * Recupera as Responsabilidades ativas
@@ -144,6 +145,18 @@ class Pessoa {
     function getNomeListaDeLancamento() {
         $nome = substr($this->getNome(), 0, 8);
         return $nome . '..';
+    }
+
+    /**
+     * Verificar se esta transferido ou nao
+     * @return boolean
+     */
+    public function verificarSeFoiTransferido() {
+        $resposta = false;
+        if ($this->getTransferido() == 'S') {
+            $resposta = true;
+        }
+        return $resposta;
     }
 
     function getId() {
@@ -327,6 +340,14 @@ class Pessoa {
 
     function setFoto($foto) {
         $this->foto = $foto;
+    }
+
+    function getTransferido() {
+        return $this->transferido;
+    }
+
+    function setTransferido($transferido) {
+        $this->transferido = $transferido;
     }
 
 }

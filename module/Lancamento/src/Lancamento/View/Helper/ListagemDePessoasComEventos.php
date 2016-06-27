@@ -32,16 +32,17 @@ class ListagemDePessoasComEventos extends AbstractHelper {
             $p->setTipo('LP');
             $pessoas[] = $p;
         }
-        if (count($grupo->getGrupoPessoa()) > 0) {
-            foreach ($grupo->getGrupoPessoa() as $gp) {
+        if (count($grupo->getGrupoPessoaAtivasEDoMes($mesSelecionado, $anoSelecionado)) > 0) {
+            foreach ($grupo->getGrupoPessoaAtivasEDoMes($mesSelecionado, $anoSelecionado) as $gp) {
                 $p = $gp->getPessoa();
                 $p->setTipo($gp->getGrupoPessoaTipo()->getNomeSimplificado());
+                $p->setTransferido($gp->getTransferido());
                 $pessoas[] = $p;
             }
         }
 
         /* Listagem dos eventos */
-        $eventos = $grupo->getGrupoEventoNoCiclo($this->view->cicloSelecionado);
+        $eventos = $grupo->getGrupoEventoNoCiclo($this->view->cicloSelecionado, $mesSelecionado, $anoSelecionado);
 
         /* Sem eventos cadastrados */
         if (count($eventos) == 0) {
@@ -92,7 +93,13 @@ class ListagemDePessoasComEventos extends AbstractHelper {
                 $html .= '<div class="btn-group dropdown">';
 
                 $html .= '<a id="menudrop_' . $pessoa->getId() . '" class="tdNome text-left dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">';
-                $html .= '<span id="span_nome_' . $pessoa->getId() . '">' . $pessoa->getNomeListaDeLancamento() . '</span>';
+                $html .= '<span id="span_nome_' . $pessoa->getId() . '">';
+                /* Verificação se é transferencia */
+                if ($pessoa->verificarSeFoiTransferido()) {
+                    $html .= '<i class="fa fa-download"></i>';
+                }
+                $html .= $pessoa->getNomeListaDeLancamento();
+                $html .= '</span>';
                 $html .= '<span class="sr-only"></span>';
                 $html .= '</a>';
 
@@ -114,7 +121,6 @@ class ListagemDePessoasComEventos extends AbstractHelper {
                 $html .= '</div>';
                 /* Fim Menu dropup */
                 $html .= '</td>';
-
                 foreach ($eventos as $ge) {
                     $valor = '';
                     $class = 'btn-default';
@@ -152,59 +158,42 @@ class ListagemDePessoasComEventos extends AbstractHelper {
                         case 7:
                             $style = 'style="width:15%;"';
                             break;
+                        case 8:
+                            $style = 'style="width:12%;"';
+                            break;
                         default:
-                            $style = '';
+                            $style = 'style="width:20%;"';
                             break;
                     }
 
-                    $html .= '<td ' . $style . ' class="text-center">';
-
-                    $html .= '<div class="btn-group">';
-
-//                    if ($p->tipo != 6) {
-//                        // verificando se aluno foi recebido e tem data de transferencia
-//                        if ($z >= $diaCriacaoTransferencia) {// data de cadastro
-//                            if ($p->dataTransferencia == "" || $z > $diaTransferencia) {// aluno transferido
-//                                if (!($z > $diaInativacao && $transferido == 1)) {// lider transferido
-//                                    if ((date('d') >= $z && date('m') == $mesUsado) || (date('m') > $mesUsado && date("Y") == $anoUsado) || date("Y") > $anoUsado) {
-//                                        echo "<input $checked type='checkbox' onclick='mudarFrequencia(this, $p->id, $z, $idTipoA, $idGrupoMensal, $contCiclo, $idCelula);' />";
-//                                        echo "&nbsp;<img id='loader$idCheck' src='../imagens/17.gif' width='16px' heigth='16px' style='display: none;'/></span>";
-//                                    } else
-//                                        echo "<span class='glyphicon glyphicon-time' aria-hidden='true'></span>";
-//                                }
-//                            }
-//                        }
-//                    } else {
-//                        if ($z <= $diaTransferencia) {
-//                            echo "<input $checked type='checkbox' onclick='mudarFrequencia(this, $p->id, $z, $idTipoA, $idGrupoMensal, $contCiclo, $idCelula);' />";
-//                        }
-//                    }                                      
-//                    
-//                    $diaCriacaoTransferencia = substr($grupoMensal->dataCriacao, 8, 2);
-//                    $condicaoDataDeCadastro = ($diaCriacaoTransferencia);
-
                     /* Condições mes anteiror, mes atual e ciclos */
                     $condicaoMesAnterior = ($this->view->abaSelecionada == 2);
-                    $condicaoCicloAfrente = ($this->view->abaSelecionada == 1 && $this->view->cicloSelecionado <= FuncoesLancamento::cicloAtual($mesSelecionado, $anoSelecionado));
+                    $condicaoCicloAtual = ($this->view->abaSelecionada == 1 && $this->view->cicloSelecionado == FuncoesLancamento::cicloAtual($mesSelecionado, $anoSelecionado));
                     $condicaoCicloAnteriores = ($this->view->abaSelecionada == 1 && $this->view->cicloSelecionado < FuncoesLancamento::cicloAtual($mesSelecionado, $anoSelecionado));
                     $diaDaSemana = date('N');
-                    $condicaoDiaSemana = ($this->view->abaSelecionada == 1 && $evento->getDia() <= $diaDaSemana);
+                    if ($diaDaSemana == 7) {
+                        $diaDaSemana = 8;
+                    } else {
+                        $diaDaSemana++;
+                    }
+                    $condicaoDiaSemana = ($condicaoCicloAtual && $evento->getDiaAjustado() <= $diaDaSemana);
 
+                    /* Validação */
                     $mostrar = false;
+                    /* Validando abas */
                     if ($condicaoMesAnterior) {
                         $mostrar = true;
                     }
                     if ($condicaoCicloAnteriores) {
                         $mostrar = true;
                     } else {
-                        if ($condicaoCicloAfrente) {
-                            if ($condicaoDiaSemana) {
-                                $mostrar = true;
-                            }
+                        if ($condicaoDiaSemana) {
+                            $mostrar = true;
                         }
                     }
 
-
+                    $html .= '<td ' . $style . ' class="text-center">';
+                    $html .= '<div class="btn-group">';
                     if ($mostrar) {
                         $html .= '<button id="b_' . $idEventoFrequencia . '" type="button" class="btn ' . $class . ' btn-sm"'
                                 . ' onclick=\'mudarFrequencia(';

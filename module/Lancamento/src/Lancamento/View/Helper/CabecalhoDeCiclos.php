@@ -35,7 +35,8 @@ class CabecalhoDeCiclos extends AbstractHelper {
             $urlCicloAnterior = $urlBaseCiclo . ($this->view->cicloSelecionado - 1);
             $html .= '<a ' . ConstantesLancamento::$ONCLICK_ABRIR_MODAL . ' href="' . $urlCicloAnterior . '"><button class="btn btn-default btn-sm"><i class="fa fa-angle-double-left"></i></button></a>&nbsp;';
         }
-        $html .= ConstantesLancamento::$TRADUCAO_CICLO . ConstantesLancamento::$NBSP . $this->view->cicloSelecionado . '&nbsp;-&nbsp;' . FuncoesLancamento::periodoCicloMesAno($this->view->cicloSelecionado, $mesSelecionado, $anoSelecionado);
+        $traducaoPeriodo = $this->view->translate(ConstantesLancamento::$TRADUCAO_PERIODO);
+        $html .= $this->view->translate(ConstantesLancamento::$TRADUCAO_CICLO) . ConstantesLancamento::$NBSP . $this->view->cicloSelecionado . '&nbsp;-&nbsp;' . FuncoesLancamento::periodoCicloMesAno($this->view->cicloSelecionado, $mesSelecionado, $anoSelecionado, $traducaoPeriodo);
         $totalDeCiclos = FuncoesLancamento::totalCiclosMes($mesSelecionado, $anoSelecionado);
         if ($this->view->cicloSelecionado < $totalDeCiclos) {
             $urlCicloPosterior = $urlBaseCiclo . ($this->view->cicloSelecionado + 1);

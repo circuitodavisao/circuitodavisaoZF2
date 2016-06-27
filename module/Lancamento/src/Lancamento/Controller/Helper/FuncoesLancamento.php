@@ -43,23 +43,14 @@ class FuncoesLancamento {
      * @param type $anoUsado
      * @return string
      */
-    static public function periodoCicloMesAno($ciclo = 1, $mesUsado = 5, $anoUsado = 2016) {
+    static public function periodoCicloMesAno($ciclo = 1, $mesUsado = 5, $anoUsado = 2016, $traducaoPeriodo) {
         $resposta = '';
-        if ($ciclo != 1 && $ciclo != 6) {
-            $resposta .= ConstantesLancamento::$NBSP . ConstantesLancamento::$TRADUCAO_PERIODO . ConstantesLancamento::$NBSP;
-        } else {
-            $resposta .= ConstantesLancamento::$NBSP . '-' . ConstantesLancamento::$NBSP;
-        }
+        $resposta .= ConstantesLancamento::$NBSP . $traducaoPeriodo . ConstantesLancamento::$NBSP;
         $mesFormatado = str_pad($mesUsado, 2, 0, STR_PAD_LEFT);
 
-        $diaDaSemanaDoPrimeiroDia = date('N', mktime(0, 0, 0, $mesUsado, 1, $anoUsado));
-        if ($diaDaSemanaDoPrimeiroDia == 7) {// 7 - domingo
-            $cicloAux = 1;
-        } else {
-            $cicloAux = 0;
-        }
+        $cicloAux = 1;
         $umaVez = 0;
-        for ($z = 1; $z <= 31; $z++) {
+        for ($z = 1; $z <= cal_days_in_month(CAL_GREGORIAN, $mesUsado, $anoUsado); $z++) {
             /* Periodo */
             if ($cicloAux == $ciclo && $umaVez == 0) {
                 $diaFormatado = str_pad($z, 2, 0, STR_PAD_LEFT);
@@ -71,12 +62,16 @@ class FuncoesLancamento {
             if ($diaDaSemana == 7) {
                 if ($cicloAux == $ciclo) {
                     $diaFormatado = str_pad($z, 2, 0, STR_PAD_LEFT);
-                    if ($ciclo != 1) {
-                        $resposta .= ConstantesLancamento::$NBSP . '-' . ConstantesLancamento::$NBSP . $diaFormatado . '/' . $mesFormatado;
-                    }
+                    $resposta .= ConstantesLancamento::$NBSP . '-' . ConstantesLancamento::$NBSP . $diaFormatado . '/' . $mesFormatado;
+                    break;
                 }
                 $cicloAux++;
             }
+        }
+        /* Ultimo dia do mes */
+        if ($ciclo == FuncoesLancamento::totalCiclosMes($mesUsado, $anoUsado)) {
+            $diaFormatado = str_pad(cal_days_in_month(CAL_GREGORIAN, $mesUsado, $anoUsado), 2, 0, STR_PAD_LEFT);
+            $resposta .= ConstantesLancamento::$NBSP . '-' . ConstantesLancamento::$NBSP . $diaFormatado . '/' . $mesFormatado;
         }
         return $resposta;
     }
@@ -99,6 +94,10 @@ class FuncoesLancamento {
             if ($diaDaSemana == 7) {
                 $resposta++;
             }
+        }
+        $diaDaSemanaDoUltimoDia = date('N', mktime(0, 0, 0, $mesSelecionado, cal_days_in_month(CAL_GREGORIAN, $mesSelecionado, $anoSelecionado), $anoSelecionado));
+        if ($diaDaSemanaDoUltimoDia != 7 && $diaDaSemanaDoPrimeiroDia != 7) {// 7 - domingo
+            $resposta++;
         }
         return $resposta;
     }

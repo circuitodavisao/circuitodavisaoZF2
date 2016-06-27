@@ -58,6 +58,9 @@ class GrupoPessoa {
     /** @ORM\Column(type="string") */
     protected $hora_inativacao;
 
+    /** @ORM\Column(type="string") */
+    protected $transferido;
+
     /**
      * Verificar se a data de inativação está nula
      * @return boolean
@@ -164,6 +167,22 @@ class GrupoPessoa {
 
     function setGrupoPessoaTipo($grupoPessoaTipo) {
         $this->grupoPessoaTipo = $grupoPessoaTipo;
+    }
+
+    function getData_criacaoAno() {
+        return explode('-', $this->getData_criacao())[0];
+    }
+
+    function getData_criacaoMes() {
+        return explode('-', $this->getData_criacao())[1];
+    }
+
+    function getTransferido() {
+        return $this->transferido;
+    }
+
+    function setTransferido($transferido) {
+        $this->transferido = $transferido;
     }
 
 }

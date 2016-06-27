@@ -19,7 +19,9 @@ class ConstantesLancamento {
     public static $QUANTIDADE_EVENTOS_CICLOS = 'quantidadeDeEventosNoCiclo';
     public static $STATUS_ENVIO = 'statusEnvio';
     public static $TEMPLATE_JS_LANCAMENTO = 'layout/layout-js-lancamento';
-    public static $STRING_JS_LANCAMENTO = 'layoutJSPrincipal';
+    public static $TEMPLATE_JS_LANCAMENTO_MODAL_EVENTOS = 'layout/layout-js-lancamento-modal-eventos';
+    public static $STRING_JS_LANCAMENTO = 'layoutJSLancamento';
+    public static $STRING_JS_LANCAMENTO_MODAL_EVENTOS = 'layoutJSLancamentoModalEventos';
     public static $ROUTE_LANCAMENTO = 'lancamento';
     public static $ONCLICK_ABRIR_MODAL = 'onclick="abrirModal();"';
     public static $PAGINA = 'pagina';
