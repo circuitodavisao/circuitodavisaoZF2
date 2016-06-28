@@ -330,7 +330,7 @@ class Grupo {
      * Retorna o grupo pessoa ativas no mes infomado
      * @return GrupoPessoa
      */
-    function getGrupoPessoaAtivasEDoMes($mes, $ano) {
+    function getGrupoPessoaAtivasEDoMes($mes, $ano, $ciclo = 1) {
         $pessoas = null;
         foreach ($this->getGrupoPessoa() as $gp) {
             /* Condição para data de cadastro */
@@ -344,7 +344,7 @@ class Grupo {
                     $verificacaoData = true;
                 }
             }
-            if ($verificacaoData) {
+            if ($verificacaoData && $gp->verificarSeEstaAtivo()) {
                 $pessoas[] = $gp;
             }
         }

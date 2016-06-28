@@ -79,6 +79,7 @@ class Pessoa {
     protected $foto;
     protected $tipo;
     protected $transferido;
+    protected $dataTransferido;
 
     /**
      * Recupera as Responsabilidades ativas
@@ -346,8 +347,29 @@ class Pessoa {
         return $this->transferido;
     }
 
-    function setTransferido($transferido) {
+    function setTransferido($transferido, $dataTransferencia) {
         $this->transferido = $transferido;
+        $this->setDataTransferido($dataTransferencia);
+    }
+
+    function getDataTransferido() {
+        return $this->dataTransferido;
+    }
+
+    function setDataTransferido($dataTransferido) {
+        $this->dataTransferido = $dataTransferido;
+    }
+
+    function getDataTransferidoAno() {
+        return explode('-', $this->getDataTransferido())[0];
+    }
+
+    function getDataTransferidoMes() {
+        return explode('-', $this->getDataTransferido())[1];
+    }
+
+    function getDataTransferidoDia() {
+        return explode('-', $this->getDataTransferido())[2];
     }
 
 }

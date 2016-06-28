@@ -43,8 +43,10 @@ class FuncoesLancamento {
      * @param type $anoUsado
      * @return string
      */
-    static public function periodoCicloMesAno($ciclo = 1, $mesUsado = 5, $anoUsado = 2016, $traducaoPeriodo) {
+    static public function periodoCicloMesAno($ciclo = 1, $mesUsado = 5, $anoUsado = 2016, $traducaoPeriodo, $retorno = 0) {
         $resposta = '';
+        $primeiroDiaCiclo = '';
+        $ultimoDiaCiclo = '';
         $resposta .= ConstantesLancamento::$NBSP . $traducaoPeriodo . ConstantesLancamento::$NBSP;
         $mesFormatado = str_pad($mesUsado, 2, 0, STR_PAD_LEFT);
 
@@ -55,6 +57,7 @@ class FuncoesLancamento {
             if ($cicloAux == $ciclo && $umaVez == 0) {
                 $diaFormatado = str_pad($z, 2, 0, STR_PAD_LEFT);
                 $resposta .= $diaFormatado . '/' . $mesFormatado;
+                $primeiroDiaCiclo = $z;
                 $umaVez++;
             }
 
@@ -63,6 +66,7 @@ class FuncoesLancamento {
                 if ($cicloAux == $ciclo) {
                     $diaFormatado = str_pad($z, 2, 0, STR_PAD_LEFT);
                     $resposta .= ConstantesLancamento::$NBSP . '-' . ConstantesLancamento::$NBSP . $diaFormatado . '/' . $mesFormatado;
+                    $ultimoDiaCiclo = $z;
                     break;
                 }
                 $cicloAux++;
@@ -72,6 +76,15 @@ class FuncoesLancamento {
         if ($ciclo == FuncoesLancamento::totalCiclosMes($mesUsado, $anoUsado)) {
             $diaFormatado = str_pad(cal_days_in_month(CAL_GREGORIAN, $mesUsado, $anoUsado), 2, 0, STR_PAD_LEFT);
             $resposta .= ConstantesLancamento::$NBSP . '-' . ConstantesLancamento::$NBSP . $diaFormatado . '/' . $mesFormatado;
+            $ultimoDiaCiclo = cal_days_in_month(CAL_GREGORIAN, $mesUsado, $anoUsado);
+        }
+        if ($retorno != 0) {
+            if ($retorno == 1) {
+                $resposta = $primeiroDiaCiclo;
+            }
+            if ($retorno == 2) {
+                $resposta = $ultimoDiaCiclo;
+            }
         }
         return $resposta;
     }

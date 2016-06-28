@@ -36,8 +36,42 @@ class ListagemDePessoasComEventos extends AbstractHelper {
             foreach ($grupo->getGrupoPessoaAtivasEDoMes($mesSelecionado, $anoSelecionado) as $gp) {
                 $p = $gp->getPessoa();
                 $p->setTipo($gp->getGrupoPessoaTipo()->getNomeSimplificado());
-                $p->setTransferido($gp->getTransferido());
-                $pessoas[] = $p;
+                $p->setTransferido($gp->getTransferido(), $gp->getData_criacao());
+
+                $adicionar = true;
+                /* Validacao de tranferencia */
+                if ($p->verificarSeFoiTransferido()) {
+                    $adicionar = false;
+
+                    /* Condição para data de cadastro */
+                    $primeiroDiaCiclo = FuncoesLancamento::periodoCicloMesAno($this->view->cicloSelecionado, $mesSelecionado, $anoSelecionado, '', 1);
+                    $ultimoDiaCiclo = FuncoesLancamento::periodoCicloMesAno($this->view->cicloSelecionado, $mesSelecionado, $anoSelecionado, '', 2);
+                    $mesAtual = date('m'); /* Mes com zero */
+                    $anoAtual = date('Y');
+
+                    if ($p->getDataTransferidoAno() <= $anoAtual) {
+                        if ($p->getDataTransferidoAno() == $anoAtual) {
+                            if ($p->getDataTransferidoMes() <= $mesAtual) {
+                                if ($p->getDataTransferidoMes() == $mesAtual) {
+                                    if ($p->getDataTransferidoDia() >= $primeiroDiaCiclo && $p->getDataTransferidoDia() <= $ultimoDiaCiclo) {
+                                        $adicionar = true;
+                                    } else {
+                                        if ($p->getDataTransferidoDia() <= $primeiroDiaCiclo) {
+                                            $adicionar = true;
+                                        }
+                                    }
+                                } else {
+                                    $adicionar = true;
+                                }
+                            }
+                        } else {
+                            $adicionar = true;
+                        }
+                    }
+                }
+                if ($adicionar == true) {
+                    $pessoas[] = $p;
+                }
             }
         }
 
@@ -192,6 +226,38 @@ class ListagemDePessoasComEventos extends AbstractHelper {
                         }
                     }
 
+                    /* Validação de transferencias */
+                    $icone = 1;
+                    $primeiroDiaCiclo = FuncoesLancamento::periodoCicloMesAno($this->view->cicloSelecionado, $mesSelecionado, $anoSelecionado, '', 1);
+                    if ($pessoa->verificarSeFoiTransferido()) {
+                        $mostrar = false;
+                        $icone = 2;
+                        /* Condição para data de cadastro */
+
+                        $ultimoDiaCiclo = FuncoesLancamento::periodoCicloMesAno($this->view->cicloSelecionado, $mesSelecionado, $anoSelecionado, '', 2);
+
+                        /* cadastrado nesse mes com dia anteiror o ciclo */
+                        if ($condicaoDiaSemana || $condicaoCicloAnteriores || $condicaoMesAnterior) {
+                            if ($pessoa->getDataTransferidoDia() <= $primeiroDiaCiclo) {
+                                $mostrar = true;
+                            } else {
+                                /* Verificar dia da semana da transferencia */
+                                $diaDaSemana = date('N', mktime(0, 0, 0, $pessoa->getDataTransferidoMes(), $pessoa->getDataTransferidoDia(), $pessoa->getDataTransferidoAno()));
+                                if ($diaDaSemana == 1) {
+                                    $diaDaSemana = 8;
+                                } else {
+                                    $diaDaSemana++;
+                                }
+                                if ($diaDaSemana <= $evento->getDiaAjustado()) {
+                                    $mostrar = true;
+                                }
+                            }
+                        }
+                    }
+                    if (!$condicaoDiaSemana) {
+                        $icone = 1;
+                    }
+
                     $html .= '<td ' . $style . ' class="text-center">';
                     $html .= '<div class="btn-group">';
                     if ($mostrar) {
@@ -202,7 +268,12 @@ class ListagemDePessoasComEventos extends AbstractHelper {
                         $html .= '<i id="i_' . $idEventoFrequencia . '" class="fa ' . $classIco . '"></i>';
                         $html .= '</button>';
                     } else {/* Eventos futuro */
-                        $html .= '<i class="fa fa-clock-o"></i>';
+                        if ($icone == 1) {
+                            $html .= '<i class="fa fa-clock-o"></i>';
+                        }
+                        if ($icone == 2) {
+                            $html .= '<i class="fa fa-calendar-o"></i>';
+                        }
                     }
                     $html .= '</div>';
                     $html .= '</td>';
