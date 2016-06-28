@@ -1,0 +1,119 @@
+.container {
+	display: none;
+}
+
+.container.show {
+	display: block;
+}
+
+.pageload-overlay {
+	position: fixed;
+	width: 100%;
+	height: 100%;
+	top: 0;
+	left: 0;
+	visibility: hidden;
+}
+
+.pageload-overlay.show {
+	visibility: visible;
+}
+
+.pageload-overlay svg {
+	position: absolute;
+	top: 0;
+	left: 0;
+	pointer-events: none;
+}
+
+.pageload-overlay svg path {
+	fill: #fff;
+}
+/* -- NEW LOADER ANIMATION -- */
+
+/* AJUSTE DA IMAGEM */
+.loading{
+	width: 100%;
+	position: fixed;
+	visibility: hidden;
+	z-index: 1000;
+	top: 40%;
+	text-align: center;
+}
+
+/* AJUSTE DO LOADER */
+.preloader-preview-area {
+  top:50%;
+  width: 100%;
+  text-align: center;
+  position: fixed;
+	visibility: hidden;
+}
+
+.line-scale>div {
+    -webkit-animation-fill-mode: both;
+    animation-fill-mode: both;
+    width: 5px;
+    height: 35px;
+    border-radius: 2px;
+    border-top-left-radius: 2px;
+    border-top-right-radius: 2px;
+    border-bottom-right-radius: 2px;
+    border-bottom-left-radius: 2px;
+}
+
+.ball-pulse>div, .ball-scale>div, .line-scale>div {
+    margin: 2px;
+    margin-top: 2px;
+    margin-right: 2px;
+    margin-bottom: 2px;
+    margin-left: 2px;
+    display: inline-block;
+}
+
+/* AMINACAO DO LOADER */
+.line-scale>div:nth-child(1) {
+    -webkit-animation: line-scale 1s -.5s infinite cubic-bezier(.2,.68,.18,1.08);
+    animation: line-scale 1s -.5s infinite cubic-bezier(.2,.68,.18,1.08);
+}
+
+.line-scale>div:nth-child(2) {
+    -webkit-animation: line-scale 1s -.4s infinite cubic-bezier(.2,.68,.18,1.08);
+    animation: line-scale 1s -.4s infinite cubic-bezier(.2,.68,.18,1.08);
+}
+
+.line-scale>div:nth-child(3) {
+    -webkit-animation: line-scale 1s -.3s infinite cubic-bezier(.2,.68,.18,1.08);
+    animation: line-scale 1s -.3s infinite cubic-bezier(.2,.68,.18,1.08);
+}
+
+.line-scale>div:nth-child(4) {
+    -webkit-animation: line-scale 1s -.2s infinite cubic-bezier(.2,.68,.18,1.08);
+    animation: line-scale 1s -.2s infinite cubic-bezier(.2,.68,.18,1.08);
+}
+
+.line-scale>div:nth-child(5) {
+    -webkit-animation: line-scale 1s -.1s infinite cubic-bezier(.2,.68,.18,1.08);
+    animation: line-scale 1s -.1s infinite cubic-bezier(.2,.68,.18,1.08);
+}
+
+@-webkit-keyframes line-scale
+{
+	0%, 100% {
+	    -webkit-transform: scaley(1);
+	    transform: scaley(1);
+	}
+	50% {
+	    -webkit-transform: scaley(.4);
+	    transform: scaley(.4);
+	}
+}
+
+/* TRABALHA COM O JS PARA DEIXAR O LOADER E A IMAGEM VISIVEL */
+.pageload-loading.loading,
+.pageload-loading.preloader-preview-area {
+	opacity: 1;
+	visibility: visible;
+	-webkit-transition: opacity 0.3s;
+	transition: opacity 0.3s;
+}
