@@ -3,13 +3,11 @@
         <div class="row">
             <!-- Cadastro de Pessoa -->
             <div class="admin-form theme-danger tab-pane mw700 pl20 pr20" id="register1" role="tabpanel">
+                <blockquote class="blockquote-danger">
+                    <p>Novo Cadastro</p>
+                    <small>Pessoa na linha de lançamento</small>
+                </blockquote>
                 <div class="panel panel-danger heading-border">
-                    <div class="panel-heading">
-                        <span class="panel-title">
-                            <i class="fa fa-pencil-square"></i>Novo Cadastro
-                        </span>
-                    </div>
-                    <!-- end .form-header section -->
 
                     <form method="post" action="/" id="form-register1">
                         <div class="panel-body p25">
@@ -66,13 +64,11 @@
         <div class="row">
             <!-- Cadastro de Sub-Equipe / Alterno -->
             <div class="admin-form theme-danger tab-pane mw800 pl20 pr20" id="survey1" role="tabpanel">
+                <blockquote class="blockquote-danger">
+                    <p>Cadastro Sub-Equipe/Alterno</p>
+                    <small>Registro Convencional</small>
+                </blockquote>
                 <div class="panel panel-danger heading-border">
-                    <div class="panel-heading">
-                        <span class="panel-title">
-                            <i class="fa fa-comments"></i> Sub-Equipe / Alterno</span>
-                    </div>
-                    <!-- end .form-header section -->
-
                     <form method="post" action="/" id="form-survey1">
                         <div class="panel-body p25">
                             <div class="section-divider mv40">
@@ -296,13 +292,11 @@
         <div class="row">
             <!-- Cadastro de Responsável -->
             <div class="admin-form theme-success tab-pane mw800 pl20 pr20" id="survey1" role="tabpanel">
+                <blockquote class="blockquote-success">
+                    <p>Cadastro Responsável</p>
+                    <small>Registro Convencional</small>
+                </blockquote>
                 <div class="panel panel-success heading-border">
-                    <div class="panel-heading">
-                        <span class="panel-title">
-                            <i class="fa fa-leaf"></i> Responsável</span>
-                    </div>
-                    <!-- end .form-header section -->
-
                     <form method="post" action="/" id="form-survey1">
                         <div class="panel-body p25">
                             <div class="section-divider mv40">
@@ -513,13 +507,11 @@
         <div class="row">
             <!-- Cadastro de Responsável -->
             <div class="admin-form theme-primary tab-pane mw800 pl20 pr20" id="survey1" role="tabpanel">
+                <blockquote class="blockquote-primary">
+                    <p>Cadastro Responsável</p>
+                    <small>Masculino</small>
+                </blockquote>
                 <div class="panel panel-primary heading-border">
-                    <div class="panel-heading">
-                        <span class="panel-title">
-                            <i class="fa fa-male"></i> Masculino</span>
-                    </div>
-                    <!-- end .form-header section -->
-
                     <form method="post" action="/" id="form-survey1">
                         <div class="panel-body p25">
                             <div class="section-divider mv40">
@@ -729,9 +721,228 @@
             </div>
             <!-- end: .admin-form -->
         </div>
+        
+        <div class="row">
+            <!-- Cadastro de Responsável -->
+            <div class="admin-form theme-warning tab-pane mw800 pl20 pr20" id="survey1" role="tabpanel">
+                <blockquote class="blockquote-warning">
+                    <p>Cadastro Responsável</p>
+                    <small>Feminino</small>
+                </blockquote>
+                <div class="panel panel-warning heading-border">
+                    <form method="post" action="/" id="form-survey1">
+                        <div class="panel-body p25">
+                            <div class="section-divider mv40">
+                                <span>Dados Pessoais</span>
+                            </div>
+                            <!-- .section-divider -->
+
+                            <div class="section row">
+                                <div class="col-md-6">
+                                    <div class="section">
+                                        <label for="cep" class="field-label">CPF</label>
+                                        <div class="smart-widget sm-right smr-50">
+                                            <label class="field">
+                                                <input type="text" name="cep" id="cep" class="gui-input" placeholder="Informe seu CPF">
+                                            </label>
+                                            <button type="submit" class="button btn-primary">
+                                                <i class="fa fa-search"></i>
+                                            </button>
+                                        </div>
+                                        <!-- end .smart-widget section -->
+                                    </div>
+
+                                </div>
+                                <!-- end .colm section -->
+
+                                <div class="col-md-6">
+                                    <div class="section">
+                                        <label for="mobile" class="field-label">Sexo</label>
+                                        <div style="width:100%; padding-bottom:5px;"></div>
+                                        <div class="section">
+                                            <div class="option-group field">
+                                                <label for="tv" class="option">
+                                                    <input type="radio" name="reach" id="tv" value="tv" disabled>
+                                                    <span class="radio"></span>Masculino</label>
+                                                <label for="int" class="option">
+                                                    <input type="radio" name="reach" id="int" value="int" checked="checked" disabled>
+                                                    <span class="radio"></span>Feminino</label>
+                                            </div>
+                                        </div>
+                                        <!-- end .section section -->
+                                    </div>
+                                    <!-- end section -->
+
+                                </div>
+                                <!-- end .colm section -->
+                                
+                                <div class="col-md-12">
+                                    <div class="section">
+                                        <label for="firstaddr" class="field-label">Nome Completo</label>
+                                        <label for="firstaddr" class="field prepend-icon">
+                                            <input type="text" name="firstaddr" id="firstaddr" class="gui-input" placeholder="Nome Completo">
+                                            <label for="firstaddr" class="field-icon">
+                                                <i class="fa fa-terminal"></i>
+                                            </label>
+                                        </label>
+                                    </div>
+                                    <!-- end section -->
+                                </div>
+                                
+                                <div class="col-md-6">
+                                    <div class="section">
+                                        <label for="firstaddr" class="field-label">Data de Nascimento</label>
+                                        <label for="datepicker1" class="field prepend-icon">
+                                            <input type="text" id="datepicker1" name="datepicker1" class="gui-input" placeholder="Data de Nascimento">
+                                            <label class="field-icon">
+                                                <i class="fa fa-calendar-o"></i>
+                                            </label>
+                                        </label>
+                                    </div>
+                                    <!-- end section -->
+                                    
+                                    <div class="section">
+                                        <label for="mobile" class="field-label">Telefone Celular</label>
+                                        <label for="mobile" class="field prepend-icon">
+                                            <input type="tel" name="mobile" id="mobile" class="gui-input phone" placeholder="Telefone Celular" required="required">
+                                            <label for="mobile" class="field-icon">
+                                                <i class="fa fa-phone-square"></i>
+                                            </label>
+                                        </label>
+                                    </div>
+                                    <!-- end section -->
+                                    
+                                    <div class="section">
+                                        <label for="mobile" class="field-label">Repita o Email</label>
+                                        <label for="useremail" class="field prepend-icon">
+                                            <input type="email" name="useremail" id="useremail" class="gui-input" placeholder="Repita o Email">
+                                            <label for="useremail" class="field-icon">
+                                                <i class="fa fa-envelope"></i>
+                                            </label>
+                                        </label>
+                                    </div>
+                                    <!-- end section -->
+                                    
+                                    <div class="section">
+                                        <label for="city" class="field-label">Profissão</label>
+                                        <label for="city" class="field">
+                                            <label class="field select">
+                                            <select id="country" name="profissao">
+                                                <option value="0">Selecione</option>
+                                                <option value="1">Líder em Treinamento</option>
+                                                <option value="2">Alterno</option>
+                                                <option value="3">Co-Líder</option>
+                                                <option value="4">Outro</option>
+                                            </select>
+                                            <i class="arrow"></i>
+                                        </label>
+                                        </label>
+                                    </div>
+                                    <!-- end section -->
+                                </div>
+                                
+                                <div class="col-md-6">
+                                    <div class="section">
+                                        <label for="mobile" class="field-label">Telefone Residencial</label>
+                                        <label for="mobile" class="field prepend-icon">
+                                            <input type="tel" name="mobile" id="mobile" class="gui-input phone" placeholder="Telefone Residencial" required="required">
+                                            <label for="mobile" class="field-icon">
+                                                <i class="fa fa-phone-square"></i>
+                                            </label>
+                                        </label>
+                                    </div>
+                                    <!-- end section -->
+                                    
+                                    <div class="section">
+                                        <label for="mobile" class="field-label">Email</label>
+                                        <label for="useremail" class="field append-icon">
+                                            <input type="email" name="useremail" id="useremail" class="gui-input" placeholder="Email" style="background:#ddd;">
+                                            <b class="tooltip tip-right-top"><em> I am a top right aligned tooltip! Pretty useful huh.</em></b>
+                                            <label for="useremail" class="field-icon">
+                                                <i class="fa">
+                                                    <img src="/img/bars.svg" style="width:16px; fill:#bbb;" />
+                                                </i>
+                                            </label>
+                                        </label>
+                                    </div>
+                                    <!-- end section -->
+                                    
+                                    <div class="section">
+                                        <label for="city" class="field-label">Hierarquia</label>
+                                        <label for="city" class="field">
+                                            <label class="field select">
+                                            <select id="country" name="country">
+                                                <option value="0">Selecione</option>
+                                                <option value="1">Líder em Treinamento</option>
+                                                <option value="2">Alterno</option>
+                                                <option value="3">Co-Líder</option>
+                                                <option value="4">Outro</option>
+                                            </select>
+                                            <i class="arrow"></i>
+                                        </label>
+                                        </label>
+                                    </div>
+                                    <!-- end section -->
+                                    
+                                    <div class="section">
+                                        <label for="mobile" class="field-label">Endereço Local de Trabalho</label>
+                                        <label for="useremail" class="field prepend-icon">
+                                            <input type="email" name="useremail" id="useremail" class="gui-input" placeholder="Endereço Local de Trabalho">
+                                            <label for="useremail" class="field-icon">
+                                                <i class="fa fa-map-marker"></i>
+                                            </label>
+                                        </label>
+                                    </div>
+                                    <!-- end section -->
+                                </div>
+
+                            </div>
+                            <!-- end .section row section -->
+                            
+                            <div class="section-divider mv40">
+                                <span>Selecione um aluno para cadastro</span>
+                            </div>
+                            <!-- .section-divider -->
+                            
+                            <div class="col-md-12">
+                                <div class="section row text-center">
+                                    <button type="button" class="btn disabled btn-default btn-block">Não existem alunos registrados.</button>
+                                </div>
+                                <div class="section row">
+                                    <label for="city" class="field-label">Aluno do IV</label>
+                                    <label for="city" class="field">
+                                        <label class="field select">
+                                            <select id="country" name="country">
+                                                <option value="0">Selecione</option>
+                                                <option value="1">Sérgio Bezerra da Silva</option>
+                                                <option value="2">Francisco da Silva</option>
+                                                <option value="3">Rômulo Sem Rumo</option>
+                                                <option value="4">Vivian Xavier</option>
+                                            </select>
+                                            <i class="arrow"></i>
+                                        </label>
+                                    </label>
+                                </div>
+                                <!-- end section -->
+                            </div>
+
+                        </div>
+                        <!-- end .form-body section -->
+                        <div class="panel-footer text-right">
+                            <button type="button" name="cancelar" id="cancelar" class="btn ladda-button btn-default dark" data-style="zoom-in" value="Back" onclick="location.href='/'"><span class="ladda-label">Cancelar</span><span class="ladda-spinner"></span></button>
+                            <button type="submit" class="btn btn-warning">Cadastrar</button>
+                        </div>
+                        <!-- end .form-footer section -->
+                    </form>
+                </div>
+                <!-- end .admin-form section -->
+            </div>
+            <!-- end: .admin-form -->
+        </div>
     </div>
 </div>
 
+<svg fill="#bbb" width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"></svg>
 <script type="text/javascript" src="/js/vendor/plugins/jquerymask/jquery.maskedinput.min.js"></script>
 <script src="assets/admin-tools/admin-forms/js/jquery-ui-datepicker.min.js"></script>
 <script type="text/javascript">
