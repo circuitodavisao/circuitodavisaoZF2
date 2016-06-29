@@ -79,6 +79,11 @@ class LancamentoController extends AbstractActionController {
                         Constantes::$ACTION => ConstantesLancamento::$PAGINA_ALTERAR_NOME,
             ));
         }
+        if ($pagina == ConstantesLancamento::$PAGINA_REMOVER_PESSOA) {
+            return $this->forward()->dispatch(ConstantesLancamento::$CONTROLLER_LANCAMENTO, array(
+                        Constantes::$ACTION => ConstantesLancamento::$PAGINA_REMOVER_PESSOA,
+            ));
+        }
 
         /* Aba selecionada e ciclo */
         $parametro = $this->params()->fromRoute(Constantes::$ID);
@@ -134,7 +139,7 @@ class LancamentoController extends AbstractActionController {
         $layoutJS = new ViewModel();
         $layoutJS->setTemplate(ConstantesLancamento::$TEMPLATE_JS_LANCAMENTO);
         $view->addChild($layoutJS, ConstantesLancamento::$STRING_JS_LANCAMENTO);
- 
+
         $layoutJS2 = new ViewModel(array(ConstantesLancamento::$QUANTIDADE_EVENTOS_CICLOS => count($eventos),));
         $layoutJS2->setTemplate(ConstantesLancamento::$TEMPLATE_JS_LANCAMENTO_MODAL_EVENTOS);
         $view->addChild($layoutJS2, ConstantesLancamento::$STRING_JS_LANCAMENTO_MODAL_EVENTOS);
@@ -247,6 +252,38 @@ class LancamentoController extends AbstractActionController {
                                 array(
                                     'response' => 'true',
                                     'nomeAjustado' => $pessoa->getNomeListaDeLancamento(),
+                )));
+            } catch (Exception $exc) {
+                echo $exc->getTraceAsString();
+            }
+        }
+        return $response;
+    }
+
+    /**
+     * Remover pessoa da listagem
+     * @return Json
+     */
+    public function removerPessoaAction() {
+        $request = $this->getRequest();
+        $response = $this->getResponse();
+        if ($request->isPost()) {
+            try {
+//                $post_data = $request->getPost();
+//                $idPessoa = $post_data['idPessoa'];
+//                $nome = $post_data['nome'];
+//
+//                /* Helper Controller */
+//                $loginORM = new LoginORM($this->getDoctrineORMEntityManager());
+//
+//                $pessoa = $loginORM->getPessoaORM()->encontrarPorIdPessoa($idPessoa);
+//                $pessoa->setNome(strtoupper($nome));
+//                $loginORM->getPessoaORM()->persistirPessoa($pessoa);
+
+                $response->setContent(Json::encode(
+                                array(
+                                    'response' => 'true',
+//                                    'nomeAjustado' => $pessoa->getNomeListaDeLancamento(),
                 )));
             } catch (Exception $exc) {
                 echo $exc->getTraceAsString();

@@ -80,6 +80,7 @@ class Pessoa {
     protected $tipo;
     protected $transferido;
     protected $dataTransferido;
+    protected $idGrupoPessoa;
 
     /**
      * Recupera as Responsabilidades ativas
@@ -370,6 +371,14 @@ class Pessoa {
 
     function getDataTransferidoDia() {
         return explode('-', $this->getDataTransferido())[2];
+    }
+
+    function getIdGrupoPessoa() {
+        return $this->idGrupoPessoa;
+    }
+
+    function setIdGrupoPessoa($idGrupoPessoa) {
+        $this->idGrupoPessoa = $idGrupoPessoa;
     }
 
 }

@@ -37,7 +37,7 @@ class ListagemDePessoasComEventos extends AbstractHelper {
                 $p = $gp->getPessoa();
                 $p->setTipo($gp->getGrupoPessoaTipo()->getNomeSimplificado());
                 $p->setTransferido($gp->getTransferido(), $gp->getData_criacao());
-
+                $p->setIdGrupoPessoa($gp->getId());
                 $adicionar = true;
                 /* Validacao de tranferencia */
                 if ($p->verificarSeFoiTransferido()) {
@@ -83,7 +83,7 @@ class ListagemDePessoasComEventos extends AbstractHelper {
             $html .= '<div class="alert alert-warning"><i class="fa fa-warning pr10" aria-hidden="true"></i>&nbsp;Sem eventos cadastrados!</div>';
         } else {
             foreach ($pessoas as $pessoa) {
-                $html .= '<tr>';
+                $html .= '<tr id="tr_' . $pessoa->getIdGrupoPessoa() . '">';
 
                 /* TIPO */
                 $html .= '<td class="tdTipo">';
@@ -94,29 +94,24 @@ class ListagemDePessoasComEventos extends AbstractHelper {
                 $html .= $pessoa->getTipo();
                 $html .= '<span class="sr-only"></span>';
                 $html .= '</span>';
+                if ($pessoa->getTipo() != 'LP') {
+                    $html .= '<ul class="dropdown-menu sobrepor-elementos">';
+                    $html .= '<span class="editable-container editable-inline">';
+                    $html .= '<div class="ml5 definicao-altura-30">';
+                    $html .= '<form class="form-inline editableform">';
+                    $html .= '<div class="control-group form-group">';
+                    $html .= '<div>';
+                    $html .= '<a href="#" onclick="removerPessoa(' . $pessoa->getIdGrupoPessoa() . ')" class="btn btn-danger btn-sm" style="margin-left:5px;"><i class="fa fa-trash-o"></i></button>';
+                    $html .= '<span class="editable-clear-x"></span>';
+                    $html .= '</div>';
+                    $html .= '</div>';
+                    $html .= '</div>';
+                    $html .= '</form>';
+                    $html .= '</div>';
+                    $html .= '</span>';
+                    $html .= '</ul>';
+                }
 
-                $html .= '<ul class="dropdown-menu sobrepor-elementos">';
-                $html .= '<span class="editable-container editable-inline">';
-                $html .= '<div class="ml5 definicao-altura-30">';
-                $html .= '<form class="form-inline editableform">';
-                $html .= '<div class="control-group form-group">';
-                $html .= '<div>';
-                $html .= '<div class="editable-input">';
-                $html .= '<button type="submit" class="btn btn-primary btn-sm" style="margin-left:5px;"><i class="fa fa-location-arrow"></i></button>';
-                $html .= '<span class="editable-clear-x"></span>';
-                $html .= '<button type="submit" class="btn btn-primary btn-sm" style="margin-left:5px;"><i class="fa fa-terminal"></i></button>';
-                $html .= '<span class="editable-clear-x"></span>';
-                $html .= '<button type="submit" class="btn btn-primary btn-sm" style="margin-left:5px;"><i class="fa fa-unlock-alt"></i></button>';
-                $html .= '<span class="editable-clear-x"></span>';
-                $html .= '<button type="submit" class="btn btn-danger btn-sm" style="margin-left:5px;"><i class="fa fa-trash-o"></i></button>';
-                $html .= '<span class="editable-clear-x"></span>';
-                $html .= '</div>';
-                $html .= '</div>';
-                $html .= '</div>';
-                $html .= '</form>';
-                $html .= '</div>';
-                $html .= '</span>';
-                $html .= '</ul>';
                 /* Fim Menu dropup */
 
                 $html .= '</td>';
