@@ -81,6 +81,7 @@ class Pessoa {
     protected $transferido;
     protected $dataTransferido;
     protected $idGrupoPessoa;
+    protected $ativo;
 
     /**
      * Recupera as Responsabilidades ativas
@@ -151,11 +152,14 @@ class Pessoa {
 
     /**
      * Verificar se esta transferido ou nao
+     * @param type $mes
+     * @param type $ano
      * @return boolean
      */
-    public function verificarSeFoiTransferido() {
+    public function verificarSeFoiTransferido($mes, $ano) {
         $resposta = false;
-        if ($this->getTransferido() == 'S') {
+        if ($this->getTransferido() == 'S' && $this->getDataTransferidoMes() == $mes && $this->getDataTransferidoAno() && $ano) {
+
             $resposta = true;
         }
         return $resposta;
@@ -379,6 +383,14 @@ class Pessoa {
 
     function setIdGrupoPessoa($idGrupoPessoa) {
         $this->idGrupoPessoa = $idGrupoPessoa;
+    }
+
+    function getAtivo() {
+        return $this->ativo;
+    }
+
+    function setAtivo($ativo) {
+        $this->ativo = $ativo;
     }
 
 }

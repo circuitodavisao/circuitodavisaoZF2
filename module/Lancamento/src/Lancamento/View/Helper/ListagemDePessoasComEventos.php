@@ -38,9 +38,10 @@ class ListagemDePessoasComEventos extends AbstractHelper {
                 $p->setTipo($gp->getGrupoPessoaTipo()->getNomeSimplificado());
                 $p->setTransferido($gp->getTransferido(), $gp->getData_criacao());
                 $p->setIdGrupoPessoa($gp->getId());
+                $p->setAtivo($gp->verificarSeEstaAtivo());
                 $adicionar = true;
                 /* Validacao de tranferencia */
-                if ($p->verificarSeFoiTransferido()) {
+                if ($p->verificarSeFoiTransferido($mesSelecionado, $anoSelecionado)) {
                     $adicionar = false;
 
                     /* Condição para data de cadastro */
@@ -83,7 +84,11 @@ class ListagemDePessoasComEventos extends AbstractHelper {
             $html .= '<div class="alert alert-warning"><i class="fa fa-warning pr10" aria-hidden="true"></i>&nbsp;Sem eventos cadastrados!</div>';
         } else {
             foreach ($pessoas as $pessoa) {
-                $html .= '<tr id="tr_' . $pessoa->getIdGrupoPessoa() . '">';
+                $classLinha = '';
+                if ($pessoa->getTipo() != 'LP' && !$pessoa->getAtivo()) {
+                    $classLinha = 'style="background-color: #DDDDDD"';
+                }
+                $html .= '<tr id="tr_' . $pessoa->getIdGrupoPessoa() . '" ' . $classLinha . '>';
 
                 /* TIPO */
                 $html .= '<td class="tdTipo">';
@@ -94,16 +99,20 @@ class ListagemDePessoasComEventos extends AbstractHelper {
                 $html .= $pessoa->getTipo();
                 $html .= '<span class="sr-only"></span>';
                 $html .= '</span>';
-                if ($pessoa->getTipo() != 'LP') {
+                if ($pessoa->getTipo() != 'LP' && $this->view->abaSelecionada == 1) {
                     $html .= '<ul class="dropdown-menu sobrepor-elementos">';
                     $html .= '<span class="editable-container editable-inline">';
                     $html .= '<div class="ml5 definicao-altura-30">';
                     $html .= '<form class="form-inline editableform">';
                     $html .= '<div class="control-group form-group">';
-                    $html .= '<div>';
-                    $html .= '<a href="#" onclick="removerPessoa(' . $pessoa->getIdGrupoPessoa() . ')" class="btn btn-danger btn-sm" style="margin-left:5px;"><i class="fa fa-trash-o"></i></button>';
-                    $html .= '<span class="editable-clear-x"></span>';
-                    $html .= '</div>';
+                    if ($pessoa->getTipo() != 'AL') {
+                        $html .= '<div>';
+                        $html .= '<span class="input-group-btn">';
+                        $html .= '<span onclick="removerPessoa(' . $pessoa->getIdGrupoPessoa() . ')" class="btn ladda-button btn-sm" style="margin-left:5px;"><i class="fa fa-trash-o"></i></span>';
+                        $html .= '<span class="editable-clear-x"></span>';
+                        $html .= '</span>';
+                        $html .= '</div>';
+                    }
                     $html .= '</div>';
                     $html .= '</div>';
                     $html .= '</form>';
@@ -124,7 +133,7 @@ class ListagemDePessoasComEventos extends AbstractHelper {
                 $html .= '<a id="menudrop_' . $pessoa->getId() . '" class="tdNome text-left dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">';
                 $html .= '<span id="span_nome_' . $pessoa->getId() . '">';
                 /* Verificação se é transferencia */
-                if ($pessoa->verificarSeFoiTransferido()) {
+                if ($pessoa->verificarSeFoiTransferido($mesSelecionado, $anoSelecionado)) {
                     $html .= '<i class="fa fa-download"></i>';
                 }
                 $html .= $pessoa->getNomeListaDeLancamento();
@@ -155,27 +164,7 @@ class ListagemDePessoasComEventos extends AbstractHelper {
                     $class = 'btn-default';
                     $classIco = 'fa-thumbs-down';
                     $evento = $ge->getEvento();
-                    $eventoFrequencia = $evento->getEventoFrequencia();
-                    $idEventoFrequencia = 'ico_' . $pessoa->getId() . '_' . $evento->getId();
-                    if (count($eventoFrequencia) > 0) {
-                        $criteria = Criteria::create()
-                                ->andWhere(Criteria::expr()->eq("pessoa_id", $pessoa->getId()))
-                                ->andWhere(Criteria::expr()->eq("ano", $anoSelecionado))
-                                ->andWhere(Criteria::expr()->eq("mes", $mesSelecionado))
-                                ->andWhere(Criteria::expr()->eq("ciclo", $this->view->cicloSelecionado))
-                        ;
-                        $eventosFiltrados = $eventoFrequencia->matching($criteria);
-                        if ($eventosFiltrados->count() == 1) {
-                            $valor = $eventosFiltrados->first()->getFrequencia();
-                            if ($valor == 'S') {
-                                $class = 'btn-success';
-                                $classIco = 'fa-thumbs-up';
-                            } else {
-                                $class = 'btn-default';
-                                $classIco = 'fa-thumbs-down';
-                            }
-                        }
-                    }
+
                     /* Validacao para poucos eventos 5 a 7 ou mais */
                     switch ($this->view->quantidadeDeEventosNoCiclo) {
                         case 5:
@@ -224,7 +213,7 @@ class ListagemDePessoasComEventos extends AbstractHelper {
                     /* Validação de transferencias */
                     $icone = 1;
                     $primeiroDiaCiclo = FuncoesLancamento::periodoCicloMesAno($this->view->cicloSelecionado, $mesSelecionado, $anoSelecionado, '', 1);
-                    if ($pessoa->verificarSeFoiTransferido()) {
+                    if ($pessoa->verificarSeFoiTransferido($mesSelecionado, $anoSelecionado)) {
                         $mostrar = false;
                         $icone = 2;
                         /* Condição para data de cadastro */
@@ -236,26 +225,52 @@ class ListagemDePessoasComEventos extends AbstractHelper {
                             if ($pessoa->getDataTransferidoDia() <= $primeiroDiaCiclo) {
                                 $mostrar = true;
                             } else {
-                                /* Verificar dia da semana da transferencia */
-                                $diaDaSemana = date('N', mktime(0, 0, 0, $pessoa->getDataTransferidoMes(), $pessoa->getDataTransferidoDia(), $pessoa->getDataTransferidoAno()));
-                                if ($diaDaSemana == 1) {
-                                    $diaDaSemana = 8;
-                                } else {
-                                    $diaDaSemana++;
+                                if ($pessoa->getDataTransferidoDia() <= $ultimoDiaCiclo) {
+                                    /* Verificar dia da semana da transferencia */
+                                    $diaDaSemana = date('N', mktime(0, 0, 0, $pessoa->getDataTransferidoMes(), $pessoa->getDataTransferidoDia(), $pessoa->getDataTransferidoAno()));
+                                    if ($diaDaSemana == 1) {
+                                        $diaDaSemana = 8;
+                                    } else {
+                                        $diaDaSemana++;
+                                    }
+                                    if ($diaDaSemana >= $evento->getDiaAjustado()) {
+                                        $mostrar = true;
+                                    }
                                 }
-                                if ($diaDaSemana <= $evento->getDiaAjustado()) {
+                                if ($pessoa->getDataTransferidoDia() > $ultimoDiaCiclo) {
                                     $mostrar = true;
                                 }
                             }
                         }
                     }
-                    if (!$condicaoDiaSemana) {
+                    if (!$condicaoDiaSemana && !$condicaoMesAnterior) {
                         $icone = 1;
                     }
 
                     $html .= '<td ' . $style . ' class="text-center">';
                     $html .= '<div class="btn-group">';
                     if ($mostrar) {
+                        $eventoFrequencia = $evento->getEventoFrequencia();
+                        $idEventoFrequencia = 'ico_' . $pessoa->getId() . '_' . $evento->getId();
+                        if (count($eventoFrequencia) > 0) {
+                            $criteria = Criteria::create()
+                                    ->andWhere(Criteria::expr()->eq("pessoa_id", $pessoa->getId()))
+                                    ->andWhere(Criteria::expr()->eq("ano", $anoSelecionado))
+                                    ->andWhere(Criteria::expr()->eq("mes", $mesSelecionado))
+                                    ->andWhere(Criteria::expr()->eq("ciclo", $this->view->cicloSelecionado))
+                            ;
+                            $eventosFiltrados = $eventoFrequencia->matching($criteria);
+                            if ($eventosFiltrados->count() == 1) {
+                                $valor = $eventosFiltrados->first()->getFrequencia();
+                                if ($valor == 'S') {
+                                    $class = 'btn-success';
+                                    $classIco = 'fa-thumbs-up';
+                                } else {
+                                    $class = 'btn-default';
+                                    $classIco = 'fa-thumbs-down';
+                                }
+                            }
+                        }
                         $html .= '<button id="b_' . $idEventoFrequencia . '" type="button" class="btn ' . $class . ' btn-sm"'
                                 . ' onclick=\'mudarFrequencia(';
                         $html .= "\"$idEventoFrequencia\", {$this->view->cicloSelecionado}, {$this->view->abaSelecionada}";

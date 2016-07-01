@@ -5,13 +5,13 @@
  */
 
 
-function removerPessoa(idPessoaGrupo) {
+function removerPessoa(idGrupoPessoa) {
 
-    var tr = $('#tr_' + idPessoaGrupo);
+    var tr = $('#tr_' + idGrupoPessoa);
     $.post(
             "/lancamentoRemoverPessoa",
             {
-                idPessoaGrupo: idPessoaGrupo,
+                idGrupoPessoa: idGrupoPessoa,
             },
             function (data) {
                 if (data.response) {

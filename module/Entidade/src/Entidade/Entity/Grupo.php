@@ -344,7 +344,7 @@ class Grupo {
                     $verificacaoData = true;
                 }
             }
-            if ($verificacaoData && $gp->verificarSeEstaAtivo()) {
+            if ($verificacaoData && ($gp->verificarSeEstaAtivo() || (!$gp->verificarSeEstaAtivo() && $gp->verificarSeInativacaoFoiNoMesInformado($mes, $ano)))) {
                 $pessoas[] = $gp;
             }
         }

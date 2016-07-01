@@ -7,6 +7,7 @@ namespace Entidade\Entity;
  * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com>
  * Descricao: Entidade anotada da tabela grupo_pessoa
  */
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -68,6 +69,18 @@ class GrupoPessoa {
     public function verificarSeEstaAtivo() {
         $resposta = false;
         if (is_null($this->getData_inativacao())) {
+            $resposta = true;
+        }
+        return $resposta;
+    }
+
+    /**
+     * Verificar se a data de inativação foi no mes informado
+     * @return boolean
+     */
+    public function verificarSeInativacaoFoiNoMesInformado($mes, $ano) {
+        $resposta = false;
+        if ($this->getData_inativacaoMes() == $mes && $this->getData_inativacaoAno() == $ano) {
             $resposta = true;
         }
         return $resposta;
@@ -158,6 +171,15 @@ class GrupoPessoa {
     }
 
     /**
+     * Seta data e hora de inativação
+     */
+    function inativar() {
+        $timeNow = new DateTime();
+        $this->setData_inativacao($timeNow->format('Y-m-d'));
+        $this->setHora_inativacao($timeNow->format('H:s:i'));
+    }
+
+    /**
      * Retorna grupo pessoa tipo
      * @return GrupoPessoaTipo
      */
@@ -175,6 +197,14 @@ class GrupoPessoa {
 
     function getData_criacaoMes() {
         return explode('-', $this->getData_criacao())[1];
+    }
+
+    function getData_inativacaoAno() {
+        return explode('-', $this->getData_inativacao())[0];
+    }
+
+    function getData_inativacaoMes() {
+        return explode('-', $this->getData_inativacao())[1];
     }
 
     function getTransferido() {

@@ -269,21 +269,19 @@ class LancamentoController extends AbstractActionController {
         $response = $this->getResponse();
         if ($request->isPost()) {
             try {
-//                $post_data = $request->getPost();
-//                $idPessoa = $post_data['idPessoa'];
-//                $nome = $post_data['nome'];
-//
-//                /* Helper Controller */
-//                $loginORM = new LoginORM($this->getDoctrineORMEntityManager());
-//
-//                $pessoa = $loginORM->getPessoaORM()->encontrarPorIdPessoa($idPessoa);
-//                $pessoa->setNome(strtoupper($nome));
-//                $loginORM->getPessoaORM()->persistirPessoa($pessoa);
+                $post_data = $request->getPost();
+                $idGrupoPessoa = $post_data['idGrupoPessoa'];
+
+                /* Helper Controller */
+                $lancamentoORM = new LancamentoORM($this->getDoctrineORMEntityManager());
+
+                $grupoPessoa = $lancamentoORM->getGrupoPessoaORM()->encontrarPorIdGrupoPessoa($idGrupoPessoa);
+                $grupoPessoa->inativar();
+                $lancamentoORM->getGrupoPessoaORM()->persistirGrupoPessoa($grupoPessoa);
 
                 $response->setContent(Json::encode(
                                 array(
                                     'response' => 'true',
-//                                    'nomeAjustado' => $pessoa->getNomeListaDeLancamento(),
                 )));
             } catch (Exception $exc) {
                 echo $exc->getTraceAsString();

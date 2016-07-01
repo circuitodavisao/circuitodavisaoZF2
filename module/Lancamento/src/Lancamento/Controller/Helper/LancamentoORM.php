@@ -16,6 +16,7 @@ class LancamentoORM {
     private $_grupoORM;
     private $_eventoORM;
     private $_eventoFrequenciaORM;
+    private $_grupoPessoaORM;
 
     /**
      * Contrutor
@@ -68,6 +69,17 @@ class LancamentoORM {
             $this->_grupoORM = new GrupoORM($this->getDoctrineORMEntityManager());
         }
         return $this->_grupoORM;
+    }
+
+    /**
+     * Metodo public para obter a instancia do Helper GrupoPessoaORM
+     * @return GrupoPessoaORM
+     */
+    public function getGrupoPessoaORM() {
+        if (is_null($this->_grupoPessoaORM)) {
+            $this->_grupoPessoaORM = new GrupoPessoaORM($this->getDoctrineORMEntityManager());
+        }
+        return $this->_grupoPessoaORM;
     }
 
     /**
