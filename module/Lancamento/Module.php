@@ -17,6 +17,7 @@ use Lancamento\View\Helper\DadosEntidade;
 use Lancamento\View\Helper\ListagemDePessoasComEventos;
 use Lancamento\View\Helper\MensagemRelatorioEnviado;
 use Lancamento\View\Helper\ModalAba;
+use Lancamento\View\Helper\ModalMuitosCadastros;
 use Lancamento\View\Helper\ModalMuitosEventos;
 use Lancamento\View\Helper\TabelaLancamento;
 use Login\View\Helper\MensagemStatica;
@@ -79,6 +80,9 @@ class Module {
                 },
                 'mensagemRelatorioEnviado' => function($sm) {
                     return new MensagemRelatorioEnviado();
+                },
+                'modalMuitosCadastros' => function($sm) {
+                    return new ModalMuitosCadastros();
                 },
             )
         );

@@ -47,7 +47,7 @@ class FuncoesLancamento {
         $resposta = '';
         $primeiroDiaCiclo = '';
         $ultimoDiaCiclo = '';
-        $resposta .= ConstantesLancamento::$NBSP . $traducaoPeriodo . ConstantesLancamento::$NBSP;
+//        $resposta .= ConstantesLancamento::$NBSP . $traducaoPeriodo . ConstantesLancamento::$NBSP;
         $mesFormatado = str_pad($mesUsado, 2, 0, STR_PAD_LEFT);
 
         $cicloAux = 1;

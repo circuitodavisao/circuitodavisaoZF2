@@ -1,0 +1,12 @@
+<?php
+
+use Lancamento\Controller\Helper\ConstantesLancamento;
+
+$versao = '?v=0.1';
+
+//if ($this->quantidadeDePessoasCadastradas > ConstantesLancamento::$QUANTIDADE_MAXIMA_PESSOAS_NO_LANÇAMENTO) {
+    echo $this
+            ->headScript()
+            ->prependFile($this->basePath() . '/js/circuito_da_visao/mostrar-modal-muitos-cadastros.js' . $versao);
+    echo $this->inlineScript();
+//}

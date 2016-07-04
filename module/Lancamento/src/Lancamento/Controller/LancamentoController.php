@@ -56,11 +56,6 @@ class LancamentoController extends AbstractActionController {
 
         /* Verificando rota */
         $pagina = $this->getEvent()->getRouteMatch()->getParam(ConstantesLancamento::$PAGINA, 1);
-        if ($pagina == ConstantesLancamento::$PAGINA_CADASTRAR_PESSOA) {
-            return $this->forward()->dispatch(ConstantesLancamento::$CONTROLLER_LANCAMENTO, array(
-                        Constantes::$ACTION => ConstantesLancamento::$PAGINA_CADASTRAR_PESSOA,
-            ));
-        }
         if ($pagina == ConstantesLancamento::$PAGINA_MUDAR_FREQUENCIA) {
             $grupo = $entidade->getGrupo();
             $grupo->setRelatorioPendente($lancamentoORM);
@@ -97,6 +92,16 @@ class LancamentoController extends AbstractActionController {
                 $abaSelecionada = 2;
             }
         }
+
+        if ($pagina == ConstantesLancamento::$PAGINA_CADASTRAR_PESSOA) {
+            $grupo = $entidade->getGrupo();
+            return $this->forward()->dispatch(ConstantesLancamento::$CONTROLLER_LANCAMENTO, array(
+                        Constantes::$ACTION => ConstantesLancamento::$PAGINA_CADASTRAR_PESSOA,
+                        ConstantesLancamento::$GRUPO => $grupo,
+                        ConstantesLancamento::$ABA_SELECIONADA => $abaSelecionada,
+            ));
+        }
+
         if (empty($explodeParamentro[1])) {
             $mes1 = FuncoesLancamento::mesPorAbaSelecionada($abaSelecionada);
             $ano1 = FuncoesLancamento::anoPorAbaSelecionada($abaSelecionada);
@@ -152,7 +157,21 @@ class LancamentoController extends AbstractActionController {
      * @return ViewModel
      */
     public function cadastrarPessoaAction() {
-        return new ViewModel();
+        /* Verificar quantidade de pessoas já cadastradas */
+        $grupo = $this->params()->fromRoute(ConstantesLancamento::$GRUPO);
+        $abaSelecionada = $this->params()->fromRoute(ConstantesLancamento::$ABA_SELECIONADA);
+
+        $mesSelecionado = FuncoesLancamento::mesPorAbaSelecionada($abaSelecionada);
+        $anoSelecionado = FuncoesLancamento::anoPorAbaSelecionada($abaSelecionada);
+        $contagemDePessoasCadastradas = count($grupo->getGrupoPessoaAtivasEDoMes($mesSelecionado, $anoSelecionado));
+
+        $view = new ViewModel();
+
+        $layoutJS = new ViewModel(array(ConstantesLancamento::$QUANTIDADE_PESSOAS_CADASTRADAS => $contagemDePessoasCadastradas,));
+        $layoutJS->setTemplate(ConstantesLancamento::$TEMPLATE_JS_LANCAMENTO_MODAL_MUITOS_CADASTROS);
+        $view->addChild($layoutJS, ConstantesLancamento::$STRING_JS_LANCAMENTO_MODAL_MUITOS_CADASTROS);
+
+        return $view;
     }
 
     /**

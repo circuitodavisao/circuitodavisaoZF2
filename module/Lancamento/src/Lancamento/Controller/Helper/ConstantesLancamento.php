@@ -15,14 +15,19 @@ class ConstantesLancamento {
     public static $ENTITY_EVENTO_FREQUENCIA = 'Entidade\Entity\EventoFrequencia';
     public static $ENTITY_GRUPO = 'Entidade\Entity\Grupo';
     public static $ENTIDADE = 'entidade';
+    public static $GRUPO = 'grupo';
+    public static $QUANTIDADE_MAXIMA_PESSOAS_NO_LANÇAMENTO = 60;
     public static $ABA_SELECIONADA = 'abaSelecionada';
     public static $CICLO_SELECIONADO = 'cicloSelecionado';
     public static $QUANTIDADE_EVENTOS_CICLOS = 'quantidadeDeEventosNoCiclo';
+    public static $QUANTIDADE_PESSOAS_CADASTRADAS = 'quantidadeDePessoasCadastradas';
     public static $STATUS_ENVIO = 'statusEnvio';
     public static $TEMPLATE_JS_LANCAMENTO = 'layout/layout-js-lancamento';
     public static $TEMPLATE_JS_LANCAMENTO_MODAL_EVENTOS = 'layout/layout-js-lancamento-modal-eventos';
+    public static $TEMPLATE_JS_LANCAMENTO_MODAL_MUITOS_CADASTROS = 'layout/layout-js-lancamento-modal-muitos-cadastros';
     public static $STRING_JS_LANCAMENTO = 'layoutJSLancamento';
     public static $STRING_JS_LANCAMENTO_MODAL_EVENTOS = 'layoutJSLancamentoModalEventos';
+    public static $STRING_JS_LANCAMENTO_MODAL_MUITOS_CADASTROS = 'layoutJSLancamentoModalMuitosCadastros';
     public static $ROUTE_LANCAMENTO = 'lancamento';
     public static $ONCLICK_ABRIR_MODAL = 'onclick="abrirModal();"';
     public static $PAGINA = 'pagina';
@@ -44,5 +49,6 @@ class ConstantesLancamento {
     public static $TRADUCAO_CARREGANDO = 'Loading';
     public static $TRADUCAO_CICLO = 'Cycle';
     public static $TRADUCAO_PERIODO = 'Period';
+    public static $TRADUCAO_LIMITE_CADASTROS = 'Maximum limit of entries achieved!';
 
 }

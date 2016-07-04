@@ -21,7 +21,7 @@ class ModalAba extends AbstractHelper {
         $html = '';
         /* Modal */
         $html .= '<div id="modalAba" class="well text-center popup-basic admin-form mfp-with-anim mfp-hide">';
-        $html .= '<h1>' . ConstantesLancamento::$TRADUCAO_CARREGANDO;
+        $html .= '<h1>' . $this->view->translate(ConstantesLancamento::$TRADUCAO_CARREGANDO);
         $html .= ConstantesLancamento::$NBSP . '<img width="24" heigth="24" src="' . Constantes::$LOADER_GIF . '"></i>';
         $html .= '</h1>';
         /* FIM Modal */

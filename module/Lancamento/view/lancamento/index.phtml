@@ -9,7 +9,7 @@ echo $this->modalMuitosEventos();
 echo $this->layoutJSLancamentoModalEventos;
 ?>
 <div class="row background-mobile">
-<?php echo $this->dadosEntidade(); ?>
+    <?php echo $this->dadosEntidade(); ?>
 </div>
 <!--MENSAGENS DE RELATORIO ENVIADO-->
 <?php echo $this->mensagemRelatorioEnviado(); ?>
@@ -18,17 +18,19 @@ echo $this->layoutJSLancamentoModalEventos;
 <div id='panelLancamento' class="panel">
     <div class="panel-heading">
         <!-- Abertura de Abas -->
-<?php echo $this->abas(); ?>
+        <?php echo $this->abas(); ?>
     </div> 
     <div class="panel-body center-block mg-left-cv">
         <!-- Tabela de lançamento de dados --> 
         <?php echo $this->cabecalhoDeCiclos(); ?>
         <!-- Tabela de lançamento de dados --> 
-<?php echo $this->tabelaLancamento(); ?>
+        <?php echo $this->tabelaLancamento(); ?>
     </div>
     <div class="panel-footer text-center">
         <!--BOTAO DE ENVIO DE RELATORIO-->
-        <a class="btn btn-success" href="/lancamentoEnviarRelatorio" title="Enviar Relatório"><?php echo $this->translate(ConstantesLancamento::$TRADUCAO_ENVIAR_RELATORIO); ?></a>
+        <a class="btn btn-success" href="/lancamentoEnviarRelatorio" title="<?php echo $this->translate(ConstantesLancamento::$TRADUCAO_ENVIAR_RELATORIO); ?>"><?php echo $this->translate(ConstantesLancamento::$TRADUCAO_ENVIAR_RELATORIO); ?></a>
+
+        <a class="btn btn-dark" href="/lancamentoCadastrarPessoa/<?php echo $this->abaSelecionada; ?>">Cadastrar</a>
     </div>
 </div>
 <?php
