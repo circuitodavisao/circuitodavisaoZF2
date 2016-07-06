@@ -55,7 +55,6 @@ return array(
             'lancamento/lancamento/enviar-relatorio' => __DIR__ . '/../view/lancamento/enviar-relatorio.phtml',
             'layout/layout-js-lancamento' => __DIR__ . '/../view/layout/layout-js-lancamento.phtml',
             'layout/layout-js-lancamento-modal-eventos' => __DIR__ . '/../view/layout/layout-js-lancamento-modal-eventos.phtml',
-            'layout/layout-js-lancamento-modal-muitos-cadastros' => __DIR__ . '/../view/layout/layout-js-lancamento-modal-muitos-cadastros.phtml',
             'error/404' => __DIR__ . '/../../Login/view/error/404.phtml',
             'error/index' => __DIR__ . '/../../Login/view/error/index.phtml',
         ),

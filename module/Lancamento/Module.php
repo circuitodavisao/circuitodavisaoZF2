@@ -19,6 +19,7 @@ use Lancamento\View\Helper\MensagemRelatorioEnviado;
 use Lancamento\View\Helper\ModalAba;
 use Lancamento\View\Helper\ModalMuitosCadastros;
 use Lancamento\View\Helper\ModalMuitosEventos;
+use Lancamento\View\Helper\ModalRemoverPessoa;
 use Lancamento\View\Helper\TabelaLancamento;
 use Login\View\Helper\MensagemStatica;
 use Zend\Mvc\MvcEvent;

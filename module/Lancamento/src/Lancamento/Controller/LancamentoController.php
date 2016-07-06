@@ -79,6 +79,11 @@ class LancamentoController extends AbstractActionController {
                         Constantes::$ACTION => ConstantesLancamento::$PAGINA_REMOVER_PESSOA,
             ));
         }
+        if ($pagina == ConstantesLancamento::$PAGINA_CADASTRAR_PESSOA) {
+            return $this->forward()->dispatch(ConstantesLancamento::$CONTROLLER_LANCAMENTO, array(
+                        Constantes::$ACTION => ConstantesLancamento::$PAGINA_CADASTRAR_PESSOA,
+            ));
+        }
 
         /* Aba selecionada e ciclo */
         $parametro = $this->params()->fromRoute(Constantes::$ID);
@@ -91,15 +96,6 @@ class LancamentoController extends AbstractActionController {
             } else {
                 $abaSelecionada = 2;
             }
-        }
-
-        if ($pagina == ConstantesLancamento::$PAGINA_CADASTRAR_PESSOA) {
-            $grupo = $entidade->getGrupo();
-            return $this->forward()->dispatch(ConstantesLancamento::$CONTROLLER_LANCAMENTO, array(
-                        Constantes::$ACTION => ConstantesLancamento::$PAGINA_CADASTRAR_PESSOA,
-                        ConstantesLancamento::$GRUPO => $grupo,
-                        ConstantesLancamento::$ABA_SELECIONADA => $abaSelecionada,
-            ));
         }
 
         if (empty($explodeParamentro[1])) {
@@ -130,6 +126,12 @@ class LancamentoController extends AbstractActionController {
         $grupo = $entidade->getGrupo();
         $eventos = $grupo->getGrupoEventoNoCiclo($cicloSelecionado, $mesSelecionado, $anoSelecionado);
 
+        /* Verificar quantidade de pessoas já cadastradas */
+        $contagemDePessoasCadastradas = count($grupo->getGrupoPessoaAtivasEDoMes($mesSelecionado, $anoSelecionado));
+        $validacaoPessoasCadastradas = 0;
+        if ($contagemDePessoasCadastradas > ConstantesLancamento::$QUANTIDADE_MAXIMA_PESSOAS_NO_LANÇAMENTO) {
+            $validacaoPessoasCadastradas = 1;
+        }
         $view = new ViewModel(
                 array(
             ConstantesLancamento::$ENTIDADE => $entidade,
@@ -137,6 +139,7 @@ class LancamentoController extends AbstractActionController {
             ConstantesLancamento::$CICLO_SELECIONADO => (int) $cicloSelecionado,
             ConstantesLancamento::$QUANTIDADE_EVENTOS_CICLOS => count($eventos),
             ConstantesLancamento::$STATUS_ENVIO => $statusEnvio,
+            ConstantesLancamento::$VALIDACAO => $validacaoPessoasCadastradas,
                 )
         );
 
@@ -157,21 +160,7 @@ class LancamentoController extends AbstractActionController {
      * @return ViewModel
      */
     public function cadastrarPessoaAction() {
-        /* Verificar quantidade de pessoas já cadastradas */
-        $grupo = $this->params()->fromRoute(ConstantesLancamento::$GRUPO);
-        $abaSelecionada = $this->params()->fromRoute(ConstantesLancamento::$ABA_SELECIONADA);
-
-        $mesSelecionado = FuncoesLancamento::mesPorAbaSelecionada($abaSelecionada);
-        $anoSelecionado = FuncoesLancamento::anoPorAbaSelecionada($abaSelecionada);
-        $contagemDePessoasCadastradas = count($grupo->getGrupoPessoaAtivasEDoMes($mesSelecionado, $anoSelecionado));
-
-        $view = new ViewModel();
-
-        $layoutJS = new ViewModel(array(ConstantesLancamento::$QUANTIDADE_PESSOAS_CADASTRADAS => $contagemDePessoasCadastradas,));
-        $layoutJS->setTemplate(ConstantesLancamento::$TEMPLATE_JS_LANCAMENTO_MODAL_MUITOS_CADASTROS);
-        $view->addChild($layoutJS, ConstantesLancamento::$STRING_JS_LANCAMENTO_MODAL_MUITOS_CADASTROS);
-
-        return $view;
+        return new ViewModel();
     }
 
     /**

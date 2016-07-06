@@ -21,6 +21,7 @@ class ConstantesLancamento {
     public static $CICLO_SELECIONADO = 'cicloSelecionado';
     public static $QUANTIDADE_EVENTOS_CICLOS = 'quantidadeDeEventosNoCiclo';
     public static $QUANTIDADE_PESSOAS_CADASTRADAS = 'quantidadeDePessoasCadastradas';
+    public static $VALIDACAO = 'validacao';
     public static $STATUS_ENVIO = 'statusEnvio';
     public static $TEMPLATE_JS_LANCAMENTO = 'layout/layout-js-lancamento';
     public static $TEMPLATE_JS_LANCAMENTO_MODAL_EVENTOS = 'layout/layout-js-lancamento-modal-eventos';
@@ -50,5 +51,6 @@ class ConstantesLancamento {
     public static $TRADUCAO_CICLO = 'Cycle';
     public static $TRADUCAO_PERIODO = 'Period';
     public static $TRADUCAO_LIMITE_CADASTROS = 'Maximum limit of entries achieved!';
+    public static $TRADUCAO_NOVO = 'New';
 
 }

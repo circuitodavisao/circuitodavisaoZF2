@@ -268,13 +268,18 @@ class Grupo {
                     $mesAtual = date('m'); /* Mes com zero */
                     $anoAtual = date('Y');
                     $cicloAtual = FuncoesLancamento::cicloAtual($mes, $ano);
-
-                    if ($ge->getData_criacaoAno() <= $anoAtual) {
-                        if ($ge->getData_criacaoAno() == $anoAtual) {
-                            if ($ge->getData_criacaoMes() <= $mesAtual) {
-                                if ($ge->getData_criacaoMes() == $mesAtual) {
+                    if ($ge->getData_criacaoAno() <= $ano) {
+                        if ($ge->getData_criacaoAno() == $ano) {
+                            if ($ge->getData_criacaoMes() <= $mes) {
+                                if ($ge->getData_criacaoMes() == $mes) {
+                                    $ge->setNovo(true);
                                     if ($ciclo == $cicloAtual) {
                                         if ($ge->getData_criacaoDia() <= $diaAtual) {
+                                            $verificacaoData = true;
+                                        }
+                                    } else {
+                                        $primeiroDiaCiclo = FuncoesLancamento::periodoCicloMesAno($ciclo, $mes, $ano, '', 1);
+                                        if ($ge->getData_criacaoDia() < $primeiroDiaCiclo) {
                                             $verificacaoData = true;
                                         }
                                     }
@@ -332,20 +337,25 @@ class Grupo {
      */
     function getGrupoPessoaAtivasEDoMes($mes, $ano, $ciclo = 1) {
         $pessoas = null;
-        foreach ($this->getGrupoPessoa() as $gp) {
-            /* Condição para data de cadastro */
-            $verificacaoData = false;
-            if ($gp->getData_criacaoAno() <= $ano) {
-                if ($gp->getData_criacaoAno() == $ano) {
-                    if ($gp->getData_criacaoMes() <= $mes) {
+        if (!empty($this->getGrupoPessoa())) {
+            foreach ($this->getGrupoPessoa() as $gp) {
+                /* Condição para data de cadastro */
+                $verificacaoData = false;
+                if ($gp->getData_criacaoAno() <= $ano) {
+                    if ($gp->getData_criacaoAno() == $ano) {
+                        if ($gp->getData_criacaoMes() <= $mes) {
+                            $verificacaoData = true;
+                        }
+                    } else {
                         $verificacaoData = true;
                     }
-                } else {
-                    $verificacaoData = true;
                 }
-            }
-            if ($verificacaoData && ($gp->verificarSeEstaAtivo() || (!$gp->verificarSeEstaAtivo() && $gp->verificarSeInativacaoFoiNoMesInformado($mes, $ano)))) {
-                $pessoas[] = $gp;
+                $condicao[1] = ($gp->verificarSeEstaAtivo() && $verificacaoData);
+                $condicao[2] = (!$gp->verificarSeEstaAtivo() && $gp->verificarSeInativacaoFoiNoMesInformado($mes, $ano));
+                $condicao[3] = (!$gp->verificarSeEstaAtivo() && $verificacaoData);
+                if ($condicao[1] || $condicao[2] || $condicao[3]) {
+                    $pessoas[] = $gp;
+                }
             }
         }
         $this->setGrupoPessoa($pessoas);

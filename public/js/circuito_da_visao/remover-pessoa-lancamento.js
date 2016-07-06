@@ -6,16 +6,18 @@
 
 
 function removerPessoa(idGrupoPessoa) {
-
-    var tr = $('#tr_' + idGrupoPessoa);
-    $.post(
-            "/lancamentoRemoverPessoa",
-            {
-                idGrupoPessoa: idGrupoPessoa,
-            },
-            function (data) {
-                if (data.response) {
-                    tr.css('background-color', '#DDDDDD')
-                }
-            }, 'json');
+    var resposta = confirm('Realmente deseja excluir essa pessoa?');
+    if (resposta) {
+        var tr = $('#tr_' + idGrupoPessoa);
+        $.post(
+                "/lancamentoRemoverPessoa",
+                {
+                    idGrupoPessoa: idGrupoPessoa,
+                },
+                function (data) {
+                    if (data.response) {
+                        tr.css('background-color', '#DDDDDD')
+                    }
+                }, 'json');
+    }
 }

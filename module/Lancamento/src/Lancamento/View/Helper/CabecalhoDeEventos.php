@@ -3,6 +3,7 @@
 namespace Lancamento\View\Helper;
 
 use Doctrine\Common\Collections\Criteria;
+use Lancamento\Controller\Helper\ConstantesLancamento;
 use Lancamento\Controller\Helper\FuncoesLancamento;
 use Zend\View\Helper\AbstractHelper;
 
@@ -34,6 +35,9 @@ class CabecalhoDeEventos extends AbstractHelper {
             foreach ($eventos as $ge) {
                 $diaDaSemanaAjustado = FuncoesLancamento::diaDaSemanaPorDia($ge->getEvento()->getDia());
                 $html .= '<th class="text-center">';
+                if ($ge->getNovo()) {
+                    $html .= '<div style="font-size:9px; width:100%"><span class="badge badge-warning">' . $this->view->translate(ConstantesLancamento::$TRADUCAO_NOVO) . '</span></div>';
+                }
                 $html .= '<div style="font-size:9px; width:100%">' . $ge->getEvento()->getEventoTipo()->getNome() . '</div>';
                 $html .= '<div style="font-size:8px; width:100%">' . $diaDaSemanaAjustado . $ge->getEvento()->getHoraFormatoHoraMinuto() . '</div>';
 

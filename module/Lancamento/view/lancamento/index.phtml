@@ -5,6 +5,7 @@ use Lancamento\Controller\Helper\ConstantesLancamento;
 <!-- MODAL PARA MUITOS ELEMENTOS -->
 <?php
 echo $this->modalMuitosEventos();
+echo $this->modalMuitosCadastros();
 /* Layout com javascript para tela de index */
 echo $this->layoutJSLancamentoModalEventos;
 ?>
@@ -30,7 +31,7 @@ echo $this->layoutJSLancamentoModalEventos;
         <!--BOTAO DE ENVIO DE RELATORIO-->
         <a class="btn btn-success" href="/lancamentoEnviarRelatorio" title="<?php echo $this->translate(ConstantesLancamento::$TRADUCAO_ENVIAR_RELATORIO); ?>"><?php echo $this->translate(ConstantesLancamento::$TRADUCAO_ENVIAR_RELATORIO); ?></a>
 
-        <a class="btn btn-dark" href="/lancamentoCadastrarPessoa/<?php echo $this->abaSelecionada; ?>">Cadastrar</a>
+        <a class="btn btn-dark" href='#' onclick="verificarMuitosCadastros(<?php echo "{$this->validacao}, {$this->abaSelecionada}"; ?>);">Cadastrar</a>
     </div>
 </div>
 <?php

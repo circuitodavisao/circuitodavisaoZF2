@@ -36,9 +36,12 @@ class ListagemDePessoasComEventos extends AbstractHelper {
             foreach ($grupo->getGrupoPessoaAtivasEDoMes($mesSelecionado, $anoSelecionado) as $gp) {
                 $p = $gp->getPessoa();
                 $p->setTipo($gp->getGrupoPessoaTipo()->getNomeSimplificado());
-                $p->setTransferido($gp->getTransferido(), $gp->getData_criacao());
+                $p->setTransferido($gp->getTransferido(), $gp->getData_criacao(), $gp->getData_inativacao());
                 $p->setIdGrupoPessoa($gp->getId());
                 $p->setAtivo($gp->verificarSeEstaAtivo());
+                if (!$p->getAtivo()) {
+                    $p->setDataInativacao($gp->getData_inativacao());
+                }
                 $adicionar = true;
                 /* Validacao de tranferencia */
                 if ($p->verificarSeFoiTransferido($mesSelecionado, $anoSelecionado)) {
@@ -85,21 +88,37 @@ class ListagemDePessoasComEventos extends AbstractHelper {
         } else {
             foreach ($pessoas as $pessoa) {
                 $classLinha = '';
+                $corBotao = 'btn-dark';
+                $corTextoTagsExtras = '';
+                $classLinha2 = '';
                 if ($pessoa->getTipo() != 'LP' && !$pessoa->getAtivo()) {
-                    $classLinha = 'style="background-color: #DDDDDD"';
+                    $classLinha = 'class="row-warning warning"';
+                    $classLinha2 = 'footable-visible footable-first-column';
+                    $corBotao = 'btn-warning disabled';
+                    $corTextoTagsExtras = 'class="text-warning" data-toggle="tooltip" data-placement="center" title data-original-title="Inativo"';
+                }
+                if ($pessoa->verificarSeFoiTransferido($mesSelecionado, $anoSelecionado)) {
+                    $classLinha = 'class="row-dark default"';
+                    $corBotao = 'btn-default';
+                    $corTextoTagsExtras = 'class="text-muted" data-toggle="tooltip" data-placement="center" title data-original-title="Transferido"';
+                }
+                if ($pessoa->getTipo() == 'RE') {
+                    $classLinha = 'class="row-success"';
+                    $classLinha2 = 'footable-visible footable-first-column';
+                    $corBotao = 'btn-success';
+                    $corTextoTagsExtras = 'class="text-success" data-toggle="tooltip" data-placement="center" title data-original-title="Revisão de vidas"';
                 }
                 $html .= '<tr id="tr_' . $pessoa->getIdGrupoPessoa() . '" ' . $classLinha . '>';
 
                 /* TIPO */
-                $html .= '<td class="tdTipo">';
-
+                $html .= '<td class="tdTipo ' . $classLinha2 . '">';
                 /* Menu dropup Tipo */
                 $html .= '<div class="btn-group btn-block dropdown">';
-                $html .= '<span class="btn btn-dark btn-xs btn-block dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">';
+                $html .= '<span class="btn ' . $corBotao . ' btn-xs btn-block dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">';
                 $html .= $pessoa->getTipo();
                 $html .= '<span class="sr-only"></span>';
                 $html .= '</span>';
-                if ($pessoa->getTipo() != 'LP' && $this->view->abaSelecionada == 1) {
+                if ($pessoa->getTipo() != 'LP' && $this->view->abaSelecionada == 1 && $pessoa->getAtivo()) {
                     $html .= '<ul class="dropdown-menu sobrepor-elementos">';
                     $html .= '<span class="editable-container editable-inline">';
                     $html .= '<div class="ml5 definicao-altura-30">';
@@ -129,34 +148,38 @@ class ListagemDePessoasComEventos extends AbstractHelper {
                 $html .= '<td class="tdNome text-left">&nbsp;';
                 /* Menu dropup Nome */
                 $html .= '<div class="btn-group dropdown">';
-
-                $html .= '<a id="menudrop_' . $pessoa->getId() . '" class="tdNome text-left dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">';
-                $html .= '<span id="span_nome_' . $pessoa->getId() . '">';
-                /* Verificação se é transferencia */
-                if ($pessoa->verificarSeFoiTransferido($mesSelecionado, $anoSelecionado)) {
-                    $html .= '<i class="fa fa-download"></i>';
+                if ($pessoa->verificarSeFoiTransferido($mesSelecionado, $anoSelecionado, 1)) {
+                    $html .= '<i class="fa fa-random"></i>&nbsp;';
                 }
+                if (!($pessoa->getTipo() != 'LP' && !$pessoa->getAtivo())) {
+                    $html .= '<a id="menudrop_' . $pessoa->getId() . '" class="tdNome text-left dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">';
+                }
+                $html .= '<span id="span_nome_' . $pessoa->getId() . '" ' . $corTextoTagsExtras . '>';
+                /* Verificação se é transferencia */
                 $html .= $pessoa->getNomeListaDeLancamento();
                 $html .= '</span>';
-                $html .= '<span class="sr-only"></span>';
                 $html .= '</a>';
+                if ($pessoa->verificarSeFoiTransferido($mesSelecionado, $anoSelecionado, 2)) {
+                    $html .= '<i class="fa fa-random"></i>&nbsp;';
+                }
+                if (!($pessoa->getTipo() != 'LP' && !$pessoa->getAtivo())) {
+                    $html .= '<ul class="dropdown-menu sobrepor-elementos modal-edicao-nome">';
+                    $html .= '<span class="editable-container editable-inline">';
+                    $html .= '<div class="ml10 campo-edicao-nome">';
+                    $html .= '<form class="form-inline editableform">';
+                    $html .= '<div class="control-group form-group">';
+                    $html .= '<div>';
+                    $html .= '<div class="input-group">';
+                    $html .= '<input type="text" class="form-control" id="nome_' . $pessoa->getId() . '" value="' . $pessoa->getNome() . '" />';
+                    $html .= '<span class="input-group-btn">';
+                    $html .= '<span onclick="alterarNome(' . $pessoa->getId() . ')" class="btn ladda-button btn-primary" data-style="zoom-in"><span class="ladda-label"><i class="fa fa-check"></i></span></span>';
+                    $html .= '</span>';
+                    $html .= '</div>';
+                    $html .= '</div>';
+                    $html .= '</div>';
 
-                $html .= '<ul class="dropdown-menu sobrepor-elementos modal-edicao-nome">';
-                $html .= '<span class="editable-container editable-inline">';
-                $html .= '<div class="ml10 campo-edicao-nome">';
-                $html .= '<form class="form-inline editableform">';
-                $html .= '<div class="control-group form-group">';
-                $html .= '<div>';
-                $html .= '<div class="input-group">';
-                $html .= '<input type="text" class="form-control" id="nome_' . $pessoa->getId() . '" value="' . $pessoa->getNome() . '" />';
-                $html .= '<span class="input-group-btn">';
-                $html .= '<span onclick="alterarNome(' . $pessoa->getId() . ')" class="btn ladda-button btn-primary" data-style="zoom-in"><span class="ladda-label"><i class="fa fa-check"></i></span></span>';
-                $html .= '</span>';
-                $html .= '</div>';
-                $html .= '</div>';
-                $html .= '</div>';
-
-                $html .= '</div>';
+                    $html .= '</div>';
+                }
                 /* Fim Menu dropup */
                 $html .= '</td>';
                 foreach ($eventos as $ge) {
@@ -246,6 +269,23 @@ class ListagemDePessoasComEventos extends AbstractHelper {
                     if (!$condicaoDiaSemana && !$condicaoMesAnterior) {
                         $icone = 1;
                     }
+                    if ($pessoa->verificarSeFoiTransferido($mesSelecionado, $anoSelecionado, 2)) {
+                        $icone = 2;
+                    } else {
+                        /* Verificando inativado */
+                        if (!empty($pessoa->getDataInativacao())) {
+                            /* Data Inativacao */
+                            $primeiroDiaCiclo = FuncoesLancamento::periodoCicloMesAno($this->view->cicloSelecionado, $mesSelecionado, $anoSelecionado, '', 1);
+                            $ultimoDiaCiclo = FuncoesLancamento::periodoCicloMesAno($this->view->cicloSelecionado, $mesSelecionado, $anoSelecionado, '', 2);
+                            if ($pessoa->getDataInativacaoDia() > $ultimoDiaCiclo) {
+                                $mostrar = true;
+                            }
+                            if ($pessoa->getDataInativacaoDia() < $primeiroDiaCiclo) {
+                                $icone = 3;
+                                $mostrar = false;
+                            }
+                        }
+                    }
 
                     $html .= '<td ' . $style . ' class="text-center">';
                     $html .= '<div class="btn-group">';
@@ -282,7 +322,10 @@ class ListagemDePessoasComEventos extends AbstractHelper {
                             $html .= '<i class="fa fa-clock-o"></i>';
                         }
                         if ($icone == 2) {
-                            $html .= '<i class="fa fa-calendar-o"></i>';
+                            $html .= '<i class="fa fa-random"></i>';
+                        }
+                        if ($icone == 3) {
+                            $html .= '<i class="fa fa-times"></i>';
                         }
                     }
                     $html .= '</div>';

@@ -80,6 +80,7 @@ class Pessoa {
     protected $tipo;
     protected $transferido;
     protected $dataTransferido;
+    protected $dataInativacao;
     protected $idGrupoPessoa;
     protected $ativo;
 
@@ -156,11 +157,28 @@ class Pessoa {
      * @param type $ano
      * @return boolean
      */
-    public function verificarSeFoiTransferido($mes, $ano) {
+    public function verificarSeFoiTransferido($mes, $ano, $tipo = 0) {
         $resposta = false;
-        if ($this->getTransferido() == 'S' && $this->getDataTransferidoMes() == $mes && $this->getDataTransferidoAno() && $ano) {
-
-            $resposta = true;
+        if ($tipo == 0) {
+            if ($this->getTransferido() == 'S' && $this->getDataTransferidoMes() == $mes && $this->getDataTransferidoAno() && $ano) {
+                $resposta = true;
+            } else {
+                if (!$this->getAtivo()) {
+                    if ($this->getTransferido() == 'S' && $this->getDataInativacaoMes() == $mes && $this->getDataInativacaoAno() && $ano) {
+                        $resposta = true;
+                    }
+                }
+            }
+        }
+        if ($tipo == 1) {
+            if ($this->getTransferido() == 'S' && $this->getDataTransferidoMes() == $mes && $this->getDataTransferidoAno() && $ano) {
+                $resposta = true;
+            }
+        }
+        if ($tipo == 2) {
+            if ($this->getTransferido() == 'S' && $this->getDataInativacaoMes() == $mes && $this->getDataInativacaoAno() && $ano) {
+                $resposta = true;
+            }
         }
         return $resposta;
     }
@@ -352,9 +370,10 @@ class Pessoa {
         return $this->transferido;
     }
 
-    function setTransferido($transferido, $dataTransferencia) {
+    function setTransferido($transferido, $dataTransferencia, $dataInativacao) {
         $this->transferido = $transferido;
         $this->setDataTransferido($dataTransferencia);
+        $this->setDataInativacao($dataInativacao);
     }
 
     function getDataTransferido() {
@@ -391,6 +410,38 @@ class Pessoa {
 
     function setAtivo($ativo) {
         $this->ativo = $ativo;
+    }
+
+    function getDataInativacao() {
+        return $this->dataInativacao;
+    }
+
+    function setDataInativacao($dataInativacao) {
+        $this->dataInativacao = $dataInativacao;
+    }
+
+    function getDataInativacaoAno() {
+        $resposta = '';
+        if (!empty($this->getDataInativacao())) {
+            $resposta = explode('-', $this->getDataInativacao())[0];
+        }
+        return $resposta;
+    }
+
+    function getDataInativacaoMes() {
+        $resposta = '';
+        if (!empty($this->getDataInativacao())) {
+            $resposta = explode('-', $this->getDataInativacao())[1];
+        }
+        return $resposta;
+    }
+
+    function getDataInativacaoDia() {
+        $resposta = '';
+        if (!empty($this->getDataInativacao())) {
+            $resposta = explode('-', $this->getDataInativacao())[2];
+        }
+        return $resposta;
     }
 
 }

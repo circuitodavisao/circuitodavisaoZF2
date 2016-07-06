@@ -75,7 +75,10 @@ class FuncoesLancamento {
         /* Ultimo dia do mes */
         if ($ciclo == FuncoesLancamento::totalCiclosMes($mesUsado, $anoUsado)) {
             $diaFormatado = str_pad(cal_days_in_month(CAL_GREGORIAN, $mesUsado, $anoUsado), 2, 0, STR_PAD_LEFT);
-            $resposta .= ConstantesLancamento::$NBSP . '-' . ConstantesLancamento::$NBSP . $diaFormatado . '/' . $mesFormatado;
+            $diaDaSemana = date('N', mktime(0, 0, 0, $mesUsado, $z, $anoUsado));
+            if ($diaDaSemana != 7) {
+                $resposta .= ConstantesLancamento::$NBSP . '-' . ConstantesLancamento::$NBSP . $diaFormatado . '/' . $mesFormatado;
+            }
             $ultimoDiaCiclo = cal_days_in_month(CAL_GREGORIAN, $mesUsado, $anoUsado);
         }
         if ($retorno != 0) {

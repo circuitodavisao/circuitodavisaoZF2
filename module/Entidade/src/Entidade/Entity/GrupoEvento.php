@@ -51,6 +51,7 @@ class GrupoEvento {
 
     /** @ORM\Column(type="string") */
     protected $hora_inativacao;
+    protected $novo;
 
     /**
      * Verificar se a data de inativação está nula
@@ -154,6 +155,14 @@ class GrupoEvento {
 
     function getData_criacaoDia() {
         return explode('-', $this->getData_criacao())[2];
+    }
+
+    function getNovo() {
+        return $this->novo;
+    }
+
+    function setNovo($novo) {
+        $this->novo = $novo;
     }
 
 }
