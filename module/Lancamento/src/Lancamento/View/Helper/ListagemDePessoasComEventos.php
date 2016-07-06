@@ -56,17 +56,7 @@ class ListagemDePessoasComEventos extends AbstractHelper {
                     if ($p->getDataTransferidoAno() <= $anoAtual) {
                         if ($p->getDataTransferidoAno() == $anoAtual) {
                             if ($p->getDataTransferidoMes() <= $mesAtual) {
-                                if ($p->getDataTransferidoMes() == $mesAtual) {
-                                    if ($p->getDataTransferidoDia() >= $primeiroDiaCiclo && $p->getDataTransferidoDia() <= $ultimoDiaCiclo) {
-                                        $adicionar = true;
-                                    } else {
-                                        if ($p->getDataTransferidoDia() <= $primeiroDiaCiclo) {
-                                            $adicionar = true;
-                                        }
-                                    }
-                                } else {
-                                    $adicionar = true;
-                                }
+                                $adicionar = true;
                             }
                         } else {
                             $adicionar = true;
@@ -148,9 +138,6 @@ class ListagemDePessoasComEventos extends AbstractHelper {
                 $html .= '<td class="tdNome text-left">&nbsp;';
                 /* Menu dropup Nome */
                 $html .= '<div class="btn-group dropdown">';
-                if ($pessoa->verificarSeFoiTransferido($mesSelecionado, $anoSelecionado, 1)) {
-                    $html .= '<i class="fa fa-random"></i>&nbsp;';
-                }
                 if (!($pessoa->getTipo() != 'LP' && !$pessoa->getAtivo())) {
                     $html .= '<a id="menudrop_' . $pessoa->getId() . '" class="tdNome text-left dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">';
                 }
@@ -159,9 +146,6 @@ class ListagemDePessoasComEventos extends AbstractHelper {
                 $html .= $pessoa->getNomeListaDeLancamento();
                 $html .= '</span>';
                 $html .= '</a>';
-                if ($pessoa->verificarSeFoiTransferido($mesSelecionado, $anoSelecionado, 2)) {
-                    $html .= '<i class="fa fa-random"></i>&nbsp;';
-                }
                 if (!($pessoa->getTipo() != 'LP' && !$pessoa->getAtivo())) {
                     $html .= '<ul class="dropdown-menu sobrepor-elementos modal-edicao-nome">';
                     $html .= '<span class="editable-container editable-inline">';
@@ -325,7 +309,7 @@ class ListagemDePessoasComEventos extends AbstractHelper {
                             $html .= '<i class="fa fa-random"></i>';
                         }
                         if ($icone == 3) {
-                            $html .= '<i class="fa fa-times"></i>';
+                            $html .= '<i class="fa fa-ban"></i>';
                         }
                     }
                     $html .= '</div>';

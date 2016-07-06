@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: ZendSkeletonApplication\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-07-05 22:17-0700\n"
-"PO-Revision-Date: 2016-07-04 15:46-0300\n"
+"PO-Revision-Date: 2016-07-06 17:38-0300\n"
 "Last-Translator: Diogo Melo <dmelo87@gmail.com>\n"
 "Language-Team: ZF Contibutors <zf-devteam@zend.com>\n"
 "Language: pt\n"
@@ -303,7 +303,7 @@ msgstr "Período"
 
 #: Lancamento/view/lancamento/cadastrar-pessoa.phtml:4
 msgid "Maximum limit of entries achieved!"
-msgstr "Limite máximo de cadastros alcançados!"
+msgstr "Limite máximo de cadastros alcançado!"
 
 #: Lancamento/view/lancamento/index.phtml:25
 msgid "New"

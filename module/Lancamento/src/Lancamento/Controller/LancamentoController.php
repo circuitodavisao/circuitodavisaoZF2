@@ -129,9 +129,9 @@ class LancamentoController extends AbstractActionController {
         /* Verificar quantidade de pessoas já cadastradas */
         $contagemDePessoasCadastradas = count($grupo->getGrupoPessoaAtivasEDoMes($mesSelecionado, $anoSelecionado));
         $validacaoPessoasCadastradas = 0;
-        if ($contagemDePessoasCadastradas > ConstantesLancamento::$QUANTIDADE_MAXIMA_PESSOAS_NO_LANÇAMENTO) {
+//        if ($contagemDePessoasCadastradas > ConstantesLancamento::$QUANTIDADE_MAXIMA_PESSOAS_NO_LANÇAMENTO) {
             $validacaoPessoasCadastradas = 1;
-        }
+//        }
         $view = new ViewModel(
                 array(
             ConstantesLancamento::$ENTIDADE => $entidade,
