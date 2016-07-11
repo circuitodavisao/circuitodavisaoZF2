@@ -229,23 +229,32 @@ class ListagemDePessoasComEventos extends AbstractHelper {
 
                         /* cadastrado nesse mes com dia anteiror o ciclo */
                         if ($condicaoDiaSemana || $condicaoCicloAnteriores || $condicaoMesAnterior) {
-                            if ($pessoa->getDataTransferidoDia() <= $primeiroDiaCiclo) {
+                            if ($pessoa->verificarSeFoiTransferido($mesSelecionado, $anoSelecionado, 1)) {
                                 $mostrar = true;
-                            } else {
-                                if ($pessoa->getDataTransferidoDia() <= $ultimoDiaCiclo) {
-                                    /* Verificar dia da semana da transferencia */
-                                    $diaDaSemana = date('N', mktime(0, 0, 0, $pessoa->getDataTransferidoMes(), $pessoa->getDataTransferidoDia(), $pessoa->getDataTransferidoAno()));
-                                    if ($diaDaSemana == 1) {
-                                        $diaDaSemana = 8;
-                                    } else {
-                                        $diaDaSemana++;
-                                    }
-                                    if ($diaDaSemana >= $evento->getDiaAjustado()) {
+                                if ($condicaoMesAnterior) {
+                                    if (!$pessoa->verificarSeFoiTransferido($mesSelecionado, $anoSelecionado, 2)) {
                                         $mostrar = true;
                                     }
                                 }
-                                if ($pessoa->getDataTransferidoDia() > $ultimoDiaCiclo) {
+                            } else {
+                                if ($pessoa->getDataTransferidoDia() <= $primeiroDiaCiclo) {
                                     $mostrar = true;
+                                } else {
+                                    if ($pessoa->getDataTransferidoDia() <= $ultimoDiaCiclo) {
+                                        /* Verificar dia da semana da transferencia */
+                                        $diaDaSemana = date('N', mktime(0, 0, 0, $pessoa->getDataTransferidoMes(), $pessoa->getDataTransferidoDia(), $pessoa->getDataTransferidoAno()));
+                                        if ($diaDaSemana == 1) {
+                                            $diaDaSemana = 8;
+                                        } else {
+                                            $diaDaSemana++;
+                                        }
+                                        if ($diaDaSemana >= $evento->getDiaAjustado()) {
+                                            $mostrar = true;
+                                        }
+                                    }
+                                    if ($pessoa->getDataTransferidoDia() > $ultimoDiaCiclo) {
+                                        $mostrar = true;
+                                    }
                                 }
                             }
                         }
@@ -264,7 +273,7 @@ class ListagemDePessoasComEventos extends AbstractHelper {
                             if ($pessoa->getDataInativacaoDia() > $ultimoDiaCiclo) {
                                 $mostrar = true;
                             }
-                            if ($pessoa->getDataInativacaoDia() < $primeiroDiaCiclo) {
+                            if ($pessoa->getDataInativacaoDia() < $primeiroDiaCiclo && $pessoa->getDataInativacaoMes() == $mesSelecionado && $pessoa->getDataInativacaoAno() == $anoSelecionado) {
                                 $icone = 3;
                                 $mostrar = false;
                             }
