@@ -20,11 +20,17 @@ class Pessoa {
     protected $grupoResponsavel;
 
     /**
+     * @ORM\OneToMany(targetEntity="TurmaPessoa", mappedBy="pessoa") 
+     */
+    protected $turmaPessoa;
+
+    /**
      * @ORM\OneToMany(targetEntity="EventoFrequencia", mappedBy="pessoa") 
      */
     protected $eventoFrequencia;
 
     public function __construct() {
+        $this->turmaPessoa = new ArrayCollection();
         $this->grupoResponsavel = new ArrayCollection();
         $this->eventoFrequencia = new ArrayCollection();
     }
@@ -76,6 +82,7 @@ class Pessoa {
     protected $token_hora;
 
     /** @ORM\Column(type="string") */
+    protected $data_revisao;
     protected $foto;
     protected $tipo;
     protected $transferido;
@@ -442,6 +449,46 @@ class Pessoa {
             $resposta = explode('-', $this->getDataInativacao())[2];
         }
         return $resposta;
+    }
+
+    function getData_revisao() {
+        return $this->data_revisao;
+    }
+
+    function setData_revisao($data_revisao) {
+        $this->data_revisao = $data_revisao;
+    }
+
+    function getData_revisaoAno() {
+        $resposta = '';
+        if (!empty($this->getData_revisao())) {
+            $resposta = explode('-', $this->getData_revisao())[0];
+        }
+        return $resposta;
+    }
+
+    function getData_revisaoMes() {
+        $resposta = '';
+        if (!empty($this->getData_revisao())) {
+            $resposta = explode('-', $this->getData_revisao())[1];
+        }
+        return $resposta;
+    }
+
+    function verificaSeRevisaoFoiCadastraddoNoMesEAno($mes, $ano) {
+        $resposta = false;
+        if ($mes == $this->getData_revisaoMes() && $ano == $this->getData_revisaoAno()) {
+            $resposta = true;
+        }
+        return $resposta;
+    }
+
+    function getTurmaPessoa() {
+        return $this->turmaPessoa;
+    }
+
+    function setTurmaPessoa($turmaPessoa) {
+        $this->turmaPessoa = $turmaPessoa;
     }
 
 }

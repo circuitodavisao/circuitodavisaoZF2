@@ -26,6 +26,7 @@ class ListagemDePessoasComEventos extends AbstractHelper {
         $mesSelecionado = FuncoesLancamento::mesPorAbaSelecionada($this->view->abaSelecionada);
         $anoSelecionado = FuncoesLancamento::anoPorAbaSelecionada($this->view->abaSelecionada);
         $pessoas = array();
+        $pessoasGrupo = array();
         $grupo = $this->view->entidade->getGrupo();
         foreach ($grupo->getResponsabilidadesAtivas() as $gr) {
             $p = $gr->getPessoa();
@@ -35,7 +36,15 @@ class ListagemDePessoasComEventos extends AbstractHelper {
         if (count($grupo->getGrupoPessoaAtivasEDoMes($mesSelecionado, $anoSelecionado)) > 0) {
             foreach ($grupo->getGrupoPessoaAtivasEDoMes($mesSelecionado, $anoSelecionado) as $gp) {
                 $p = $gp->getPessoa();
-                $p->setTipo($gp->getGrupoPessoaTipo()->getNomeSimplificado());
+                if (empty($gp->getNucleo_perfeito())) {
+                    $p->setTipo($gp->getGrupoPessoaTipo()->getNomeSimplificado());
+                } else {
+                    if ($gp->getNucleo_perfeito() === "C") {
+                        $p->setTipo('CO');
+                    } else {
+                        $p->setTipo('LT');
+                    }
+                }
                 $p->setTransferido($gp->getTransferido(), $gp->getData_criacao(), $gp->getData_inativacao());
                 $p->setIdGrupoPessoa($gp->getId());
                 $p->setAtivo($gp->verificarSeEstaAtivo());
@@ -64,10 +73,55 @@ class ListagemDePessoasComEventos extends AbstractHelper {
                     }
                 }
                 if ($adicionar == true) {
-                    $pessoas[] = $p;
+                    $pessoasGrupo[] = $p;
                 }
             }
         }
+
+        /* Ordenacao de pessoas */
+        $valores = array();
+        foreach ($pessoasGrupo as $pg) {
+            $valor = 0;
+            switch ($pg->getTipo()) {
+                case 'CO':
+                    $valor = 4;
+                    break;
+                case 'LT':
+                    $valor = 3;
+                    break;
+                case 'AL':
+                    $valor = 2;
+                    break;
+                case 'VI':
+                    $valor = 1;
+                    break;
+            }
+            if (!$pg->getAtivo()) {
+                $valor = -2;
+                if (!$pg->verificarSeFoiTransferido($mesSelecionado, $anoSelecionado)) {
+                    $valor = -1;
+                }
+            }
+            $valores[$pg->getId()] = $valor;
+        }
+        $pA = array();
+        $res = array();
+        for ($i = 0; $i < count($pessoasGrupo); $i++) {
+            for ($j = 0; $j < count($pessoasGrupo); $j++) {
+                $pA[1] = $pessoasGrupo[$i];
+                $pA[2] = $pessoasGrupo[$j];
+                $res[1] = $valores[$pA[1]->getId()];
+                $res[2] = $valores[$pA[2]->getId()];
+                if ($res[1] > $res[2]) {
+                    $pessoasGrupo[$i] = $pA[2];
+                    $pessoasGrupo[$j] = $pA[1];
+                }
+            }
+        }
+        foreach ($pessoasGrupo as $pgA) {
+            $pessoas[] = $pgA;
+        }
+        /* FIM Ordenacao de pessoas */
 
         /* Listagem dos eventos */
         $eventos = $grupo->getGrupoEventoNoCiclo($this->view->cicloSelecionado, $mesSelecionado, $anoSelecionado);
@@ -92,8 +146,9 @@ class ListagemDePessoasComEventos extends AbstractHelper {
                     $corBotao = 'btn-default';
                     $corTextoTagsExtras = 'class="text-muted" data-toggle="tooltip" data-placement="center" title data-original-title="Transferido"';
                 }
-                if ($pessoa->getTipo() == 'RE') {
-                    $classLinha = 'class="row-success"';
+                /* Reserva do revisão de vidas */
+                if (!empty($pessoa->verificaSeRevisaoFoiCadastraddoNoMesEAno($mesSelecionado, $anoSelecionado))) {
+                    $classLinha = 'class="row-success success"';
                     $classLinha2 = 'footable-visible footable-first-column';
                     $corBotao = 'btn-success';
                     $corTextoTagsExtras = 'class="text-success" data-toggle="tooltip" data-placement="center" title data-original-title="Revisão de vidas"';
@@ -113,17 +168,28 @@ class ListagemDePessoasComEventos extends AbstractHelper {
                     $html .= '<span class="editable-container editable-inline">';
                     $html .= '<div class="ml5 definicao-altura-30">';
                     $html .= '<form class="form-inline editableform">';
-                    $html .= '<div class="control-group form-group">';
+
                     if ($pessoa->getTipo() != 'AL') {
-                        $html .= '<div>';
+                        $html .= '<div class="control-group form-group">';
+
                         $html .= '<span class="input-group-btn">';
                         $html .= '<span onclick="removerPessoa(' . $pessoa->getIdGrupoPessoa() . ')" class="btn ladda-button btn-sm" style="margin-left:5px;"><i class="fa fa-trash-o"></i></span>';
-                        $html .= '<span class="editable-clear-x"></span>';
                         $html .= '</span>';
+
+                        /* Reserva do revisão de vidas */
+                        if (empty($pessoa->verificaSeRevisaoFoiCadastraddoNoMesEAno($mesSelecionado, $anoSelecionado))) {
+                            $html .= '<span class="input-group-btn">';
+                            $html .= '<span onclick="location.href=\'/lancamentoCadastrarPessoaRevisao/' . $pessoa->getIdGrupoPessoa() . '\'" class="btn ladda-button btn-sm" style="margin-left:5px;"><i class="fa fa-send"></i></span>';
+                            $html .= '</span>';
+                        } else {
+                            $html .= '<span class="input-group-btn">';
+                            $html .= '<span onclick="location.href=\'/lancamentoFichaRevisao/' . $pessoa->getIdGrupoPessoa() . '\'" class="btn ladda-button btn-sm" style="margin-left:5px;"><i class="fa fa-bug"></i></span>';
+                            $html .= '</span>';
+                        }
+
                         $html .= '</div>';
                     }
-                    $html .= '</div>';
-                    $html .= '</div>';
+
                     $html .= '</form>';
                     $html .= '</div>';
                     $html .= '</span>';
@@ -151,7 +217,7 @@ class ListagemDePessoasComEventos extends AbstractHelper {
                     $html .= '<span class="editable-container editable-inline">';
                     $html .= '<div class="ml10 campo-edicao-nome">';
                     $html .= '<form class="form-inline editableform">';
-                    $html .= '<div class="control-group form-group">';
+                    $html .= '<div class="control-group form-group" style="width:140px;">';
                     $html .= '<div>';
                     $html .= '<div class="input-group">';
                     $html .= '<input type="text" class="form-control" id="nome_' . $pessoa->getId() . '" value="' . $pessoa->getNome() . '" />';

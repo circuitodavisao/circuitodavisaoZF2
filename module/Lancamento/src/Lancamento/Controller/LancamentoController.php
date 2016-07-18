@@ -84,6 +84,20 @@ class LancamentoController extends AbstractActionController {
                         Constantes::$ACTION => ConstantesLancamento::$PAGINA_CADASTRAR_PESSOA,
             ));
         }
+        if ($pagina == ConstantesLancamento::$PAGINA_CADASTRAR_PESSOA_REVISAO) {
+            $parametro = $this->params()->fromRoute(Constantes::$ID);
+            return $this->forward()->dispatch(ConstantesLancamento::$CONTROLLER_LANCAMENTO, array(
+                        Constantes::$ACTION => ConstantesLancamento::$PAGINA_CADASTRAR_PESSOA_REVISAO,
+                        Constantes::$ID => $parametro,
+            ));
+        }
+        if ($pagina == ConstantesLancamento::$PAGINA_FICHA_REVISAO) {
+            $parametro = $this->params()->fromRoute(Constantes::$ID);
+            return $this->forward()->dispatch(ConstantesLancamento::$CONTROLLER_LANCAMENTO, array(
+                        Constantes::$ACTION => ConstantesLancamento::$PAGINA_FICHA_REVISAO,
+                        Constantes::$ID => $parametro,
+            ));
+        }
 
         /* Aba selecionada e ciclo */
         $parametro = $this->params()->fromRoute(Constantes::$ID);
@@ -129,9 +143,9 @@ class LancamentoController extends AbstractActionController {
         /* Verificar quantidade de pessoas já cadastradas */
         $contagemDePessoasCadastradas = count($grupo->getGrupoPessoaAtivasEDoMes($mesSelecionado, $anoSelecionado));
         $validacaoPessoasCadastradas = 0;
-//        if ($contagemDePessoasCadastradas > ConstantesLancamento::$QUANTIDADE_MAXIMA_PESSOAS_NO_LANÇAMENTO) {
+        if ($contagemDePessoasCadastradas > ConstantesLancamento::$QUANTIDADE_MAXIMA_PESSOAS_NO_LANÇAMENTO) {
             $validacaoPessoasCadastradas = 1;
-//        }
+        }
         $view = new ViewModel(
                 array(
             ConstantesLancamento::$ENTIDADE => $entidade,
@@ -160,6 +174,30 @@ class LancamentoController extends AbstractActionController {
      * @return ViewModel
      */
     public function cadastrarPessoaAction() {
+        return new ViewModel();
+    }
+
+    /**
+     * Abri tela para cadastro de pessoa o revisão de vidas
+     * @return ViewModel
+     */
+    public function cadastrarPessoaRevisaoAction() {
+        $parametro = (int) $this->params()->fromRoute(Constantes::$ID);
+        $lancamentoORM = new LancamentoORM($this->getDoctrineORMEntityManager());
+        $loginORM = new LoginORM($this->getDoctrineORMEntityManager());
+        $grupoPessoa = $lancamentoORM->getGrupoPessoaORM()->encontrarPorIdGrupoPessoa($parametro);
+        $pessoa = $grupoPessoa->getPessoa();
+        $pessoa->setData_revisao(date('Y-m-d'));
+        $loginORM->getPessoaORM()->persistirPessoa($pessoa);
+        return new ViewModel();
+    }
+
+    /**
+     * Abri tela com a ficha do revisão de vidas
+     * @return ViewModel
+     */
+    public function fichaRevisaoAction() {
+        $parametro = (int) $this->params()->fromRoute(Constantes::$ID);
         return new ViewModel();
     }
 

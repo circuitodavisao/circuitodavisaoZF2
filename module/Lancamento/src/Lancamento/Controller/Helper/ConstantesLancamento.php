@@ -33,6 +33,8 @@ class ConstantesLancamento {
     public static $ONCLICK_ABRIR_MODAL = 'onclick="abrirModal();"';
     public static $PAGINA = 'pagina';
     public static $PAGINA_CADASTRAR_PESSOA = 'CadastrarPessoa';
+    public static $PAGINA_CADASTRAR_PESSOA_REVISAO = 'CadastrarPessoaRevisao';
+    public static $PAGINA_FICHA_REVISAO = 'FichaRevisao';
     public static $PAGINA_MUDAR_FREQUENCIA = 'MudarFrequencia';
     public static $PAGINA_ENVIAR_RELATORIO = 'EnviarRelatorio';
     public static $PAGINA_ALTERAR_NOME = 'AlterarNome';

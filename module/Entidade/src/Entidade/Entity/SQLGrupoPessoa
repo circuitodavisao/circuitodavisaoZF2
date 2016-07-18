@@ -13,6 +13,7 @@ CREATE TABLE grupo_pessoa
   hora_inativacao time without time zone, -- Hora da inativação da associação
   tipo_id integer NOT NULL, -- Identificação do tipo da pessoa volatél
   transferido enumsn, -- Identificação para saber se foi transferido ou não
+  nucleo_perfeito enumcl, -- Enumeração para co líder ou líder em treinamento
   CONSTRAINT pk_grupo_pessoa PRIMARY KEY (id),
   CONSTRAINT fk_grupo_pessoa_grupo_id FOREIGN KEY (grupo_id)
       REFERENCES grupo (id) MATCH SIMPLE
@@ -40,4 +41,5 @@ COMMENT ON COLUMN grupo_pessoa.data_inativacao IS 'Data de inativacao da associa
 COMMENT ON COLUMN grupo_pessoa.hora_inativacao IS 'Hora da inativação da associação';
 COMMENT ON COLUMN grupo_pessoa.tipo_id IS 'Identificação do tipo da pessoa volatél';
 COMMENT ON COLUMN grupo_pessoa.transferido IS 'Identificação para saber se foi transferido ou não';
+COMMENT ON COLUMN grupo_pessoa.nucleo_perfeito IS 'Enumeração para co líder ou líder em treinamento';
 
