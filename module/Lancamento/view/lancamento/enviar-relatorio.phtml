@@ -1,5 +1,4 @@
 <link class="main-stylesheet" href="/css/estilos-circuito/cv-impressos/pages.css" rel="stylesheet" type="text/css" />
-<link class="main-stylesheet" href="/css/estilos-circuito/cv-impressos/style.css" rel="stylesheet" type="text/css" />
 
 <!-- START PAGE CONTENT WRAPPER -->
 <div class="page-content-wrapper">
@@ -22,7 +21,7 @@
                         <div class="col-sm-4">
                             <ul class="nav navbar-nav">
                                 <li class="dropdown">
-                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-file-text m-r-10"></i> Squarespace <span class="caret"></span></a>
+                                    <a href="#" class="dropdown-toggle text-black" data-toggle="dropdown"><i class="fa fa-file-text m-r-10 text-black"></i> Ficha do Revisão <span class="caret"></span></a>
                                     <ul class="dropdown-menu" role="menu">
                                         <li><a href="#">Action</a>
                                         </li>
@@ -42,29 +41,25 @@
                         </div>
                         <div class="col-sm-4">
                             <ul class="nav navbar-nav navbar-center">
-                                <li><a href="#">Open</a>
+                                <li><a href="#" data-toggle="tooltip" data-placement="bottom" title="Imprimir"><i class="fa fa-print text-black"></i></a>
                                 </li>
-                                <li><a href="#" data-toggle="tooltip" data-placement="bottom" title="Print"><i class="fa fa-print"></i></a>
-                                </li>
-                                <li><a href="#" data-toggle="tooltip" data-placement="bottom" title="Download"><i class="fa fa-download"></i></a>
+                                <li><a href="#" data-toggle="tooltip" data-placement="bottom" title="Baixar"><i class="fa fa-download text-black"></i></a>
                                 </li>
                             </ul>
                         </div>
                         <div class="col-sm-4">
                             <ul class="nav navbar-nav navbar-right">
                                 <li>
-                                    <a href="#" class="p-r-10"><img width="25" height="25" alt="" class="icon-pdf" data-src-retina="assets/img/invoice/pdf2x.png" data-src="assets/img/invoice/pdf.png" src="assets/img/invoice/pdf2x.png">
+                                    <a href="#" class="p-r-10"><img width="25" height="25" alt="" class="icon-pdf" data-src-retina="/img/invoice/pdf2x.png" data-src="/img/invoice/pdf.png" src="img/invoice/pdf2x.png">
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="#" class="p-r-10"><img width="25" height="25" alt="" class="icon-image" data-src-retina="assets/img/invoice/image2x.png" data-src="assets/img/invoice/image.png" src="assets/img/invoice/image2x.png">
+                                    <a href="#" class="p-r-10"><img width="25" height="25" alt="" class="icon-image" data-src-retina="/img/invoice/image2x.png" data-src="/img/invoice/image.png" src="/img/invoice/image2x.png">
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="#" class="p-r-10"><img width="25" height="25" alt="" class="icon-doc" data-src-retina="assets/img/invoice/doc2x.png" data-src="assets/img/invoice/doc.png" src="assets/img/invoice/doc2x.png">
+                                    <a href="#" class="p-r-10"><img width="25" height="25" alt="" class="icon-doc" data-src-retina="/img/invoice/doc2x.png" data-src="/img/invoice/doc.png" src="/img/invoice/doc2x.png">
                                     </a>
-                                </li>
-                                <li><a href="#" class="p-r-10" onclick="$.Pages.setFullScreen(document.querySelector('html'));"><i class="fa fa-expand"></i></a>
                                 </li>
                             </ul>
                         </div>
@@ -82,7 +77,7 @@
                     <div class="invoice padding-50 sm-padding-10">
                         <div>
                             <div class="pull-left">
-                                <img width="235" height="23" alt="" class="invoice-logo" data-src-retina="assets/img/circuito_visao-color.png" data-src="assets/img/circuito_visao-color.png" src="assets/img/circuito_visao-color.png">
+                                <img width="235" height="23" alt="" class="invoice-logo" data-src-retina="/img/logos/circuito_visao-color.png" data-src="/img/logos/circuito_visao-color.png" src="/img/logos/circuito_visao-color.png">
                                 <address class="m-t-10">
                                     Ficha de Inscrição
                                     <br>Revisão de Vidas
@@ -91,10 +86,11 @@
                             </div>
                             <div class="pull-right sm-m-t-20">
                                 <h4 class="font-montserrat all-caps hint-text">Comprovante</h4>
-                                <img width="150" height="75" alt="" class="pull-right" data-src-retina="assets/img/barcode.png" data-src="assets/img/barcode.png" src="assets/img/barcode.png">
+                                <img width="150" height="75" alt="" class="pull-right" data-src-retina="/img/invoice/barcode.png" data-src="/img/invoice/barcode.png" src="/img/invoice/barcode.png">
                             </div>
                             <div class="clearfix"></div>
                         </div>
+                        <br>
                         <br>
                         <div class="container-sm-height">
                             <div class="row-sm-height">
@@ -153,7 +149,6 @@
                                 </tbody>
                             </table>
                         </div>
-                        <br>
                         <div class="pull-right">
                             <i class="fa fa-cut"></i>
                         </div>
@@ -161,7 +156,6 @@
                         <div class="pull-right sm-m-t-20">
                             <h4 class="font-montserrat all-caps hint-text">Recibo</h4>
                         </div>
-                        <div class="clearfix"></div>
                         <div class="table-responsive">
                             <table class="table m-t-50">
                                 <thead>
@@ -188,8 +182,54 @@
                             </table>
                         </div>
                         <br>
+                        <div class="footer-print">
+                            <img src="/img/logos/circuito_visao-preto.png" alt="logo" data-src="/img/logos/circuito_visao-preto.png" data-src-retina="/img/logos/circuito_visao-preto.png" width="228" height="22">
+                            <span class="m-l-40 text-black sm-pull-right">supporte@circuitodavisao.com</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- END PANEL -->
+        </div>
+        <!-- END CONTAINER FLUID -->
+    </div>
+    <!-- END PAGE CONTENT -->
+</div>
+<!-- END PAGE CONTENT WRAPPER -->
+
+<div class="page-break"></div>
+
+<!-- START PAGE CONTENT WRAPPER -->
+<div class="page-content-wrapper">
+    <!-- START PAGE CONTENT -->
+    <div class="content">
+        <!-- START CONTAINER FLUID -->
+        <div class="container-fluid container-fixed-lg">
+            <!-- START PANEL -->
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="invoice padding-50 sm-padding-10">
                         <div>
-                            <img src="assets/img/circuito_visao-preto.png" alt="logo" data-src="assets/img/circuito_visao-preto.png" data-src-retina="assets/img/circuito_visao-preto.png" width="228" height="22">
+                            <div class="pull-left">
+                                <img width="235" height="23" alt="" class="invoice-logo" data-src-retina="/img/logos/circuito_visao-color.png" data-src="/img/logos/circuito_visao-color.png" src="/img/logos/circuito_visao-color.png">
+                            </div>
+                            <div class="pull-right sm-m-t-20">
+                                <h4 class="font-montserrat all-caps hint-text">Autorização</h4>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                        <br>
+                        <div class="container-sm-height">
+                            <div class="row-sm-height">
+                                <p class="hint-text">Eu, ____________________________________________________ autorizo meu(inha) filho(a) _____________________________________________________ a participar do Revisão de Vida, no periódo de ______ a ______ de _____________________ de 20______.</p>
+                                <p class="hint-text">Estou ciente de que ele(a) estará em um ônibus fretado pela igreja Sara Nossa Terra e saindo na sexta-feira, às 19 horas, aonde o(a) pegarei no domingo à noite. Nestes dias meus telefones de contato são: ______________________/_________________________, para falar comigo caso precisem. </p>
+                            </div>
+                        </div>
+                        
+                        <br>
+                        <hr>
+                        <div class="footer-print">
+                            <img src="/img/logos/circuito_visao-preto.png" alt="logo" data-src="/img/logos/circuito_visao-preto.png" data-src-retina="/img/logos/circuito_visao-preto.png" width="228" height="22">
                             <span class="m-l-40 text-black sm-pull-right">supporte@circuitodavisao.com</span>
                         </div>
                     </div>
