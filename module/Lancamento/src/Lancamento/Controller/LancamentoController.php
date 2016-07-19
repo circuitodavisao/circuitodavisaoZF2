@@ -198,7 +198,19 @@ class LancamentoController extends AbstractActionController {
      */
     public function fichaRevisaoAction() {
         $parametro = (int) $this->params()->fromRoute(Constantes::$ID);
-        return new ViewModel();
+        $lancamentoORM = new LancamentoORM($this->getDoctrineORMEntityManager());
+        $grupoPessoa = $lancamentoORM->getGrupoPessoaORM()->encontrarPorIdGrupoPessoa($parametro);
+        $pessoa = $grupoPessoa->getPessoa();
+        try {
+            if (!empty($pessoa->getTurmaPessoaAtiva())) {
+                $turmaPessoa = $pessoa->getTurmaPessoaAtiva();
+            }
+            return new ViewModel(
+                    array(ConstantesLancamento::$TURMA => $turmaPessoa->getTurma())
+                    );
+        } catch (Exception $exc) {
+            echo $exc->getTraceAsString();
+        }
     }
 
     /**
@@ -213,6 +225,7 @@ class LancamentoController extends AbstractActionController {
         $idEntidadeAtual = $sessao->idEntidadeAtual;
         $entidade = $lancamentoORM->getEntidadeORM()->encontrarPorIdEntidade($idEntidadeAtual);
         $entidade->getGrupo()->setRelatorioEnviado($lancamentoORM);
+
         return new ViewModel();
     }
 

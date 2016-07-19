@@ -7,7 +7,6 @@ namespace Entidade\Entity;
  * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com>
  * Descricao: Entidade anotada da tabela turma_pessoa
  */
-use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -23,7 +22,7 @@ class TurmaPessoa {
     private $pessoa;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Grupo", inversedBy="turmaPessoa")
+     * @ORM\ManyToOne(targetEntity="Turma", inversedBy="turmaPessoa")
      * @ORM\JoinColumn(name="turma_id", referencedColumnName="id")
      */
     private $turma;
@@ -101,10 +100,6 @@ class TurmaPessoa {
         $this->pessoa = $pessoa;
     }
 
-    function setTurma($turma) {
-        $this->turma = $turma;
-    }
-
     function setId($id) {
         $this->id = $id;
     }
@@ -131,6 +126,22 @@ class TurmaPessoa {
 
     function setHora_inativacao($hora_inativacao) {
         $this->hora_inativacao = $hora_inativacao;
+    }
+
+    function setTurma($turma) {
+        $this->turma = $turma;
+    }
+
+    /**
+     * Verificar se a data de inativação está nula
+     * @return boolean
+     */
+    public function verificarSeEstaAtivo() {
+        $resposta = false;
+        if (is_null($this->getData_inativacao())) {
+            $resposta = true;
+        }
+        return $resposta;
     }
 
 }

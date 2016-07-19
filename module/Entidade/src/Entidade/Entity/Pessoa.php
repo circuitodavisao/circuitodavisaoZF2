@@ -7,6 +7,7 @@ namespace Entidade\Entity;
  * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com>
  * Descricao: Entidade anotada da tabela pessoa
  */
+
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -485,6 +486,22 @@ class Pessoa {
 
     function getTurmaPessoa() {
         return $this->turmaPessoa;
+    }
+
+    /**
+     * Retorna a turma pessoa ativa
+     * @return TurmaPessoa
+     */
+    function getTurmaPessoaAtiva() {
+        $turmaPessoaAtiva = null;
+        foreach ($this->getTurmaPessoa() as $tp) {
+            if ($tp->verificarSeEstaAtivo()) {
+                $turmaPessoaAtiva = $tp;
+                break;
+            }
+        }
+
+        return $turmaPessoaAtiva;
     }
 
     function setTurmaPessoa($turmaPessoa) {

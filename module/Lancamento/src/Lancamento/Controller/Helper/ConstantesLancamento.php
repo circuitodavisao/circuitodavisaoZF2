@@ -15,6 +15,7 @@ class ConstantesLancamento {
     public static $ENTITY_EVENTO_FREQUENCIA = 'Entidade\Entity\EventoFrequencia';
     public static $ENTITY_GRUPO = 'Entidade\Entity\Grupo';
     public static $ENTIDADE = 'entidade';
+    public static $TURMA = 'turma';
     public static $GRUPO = 'grupo';
     public static $QUANTIDADE_MAXIMA_PESSOAS_NO_LANÇAMENTO = 60;
     public static $ABA_SELECIONADA = 'abaSelecionada';

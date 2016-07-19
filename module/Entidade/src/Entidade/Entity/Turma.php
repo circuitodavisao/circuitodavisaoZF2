@@ -7,6 +7,7 @@ namespace Entidade\Entity;
  * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com>
  * Descricao: Entidade anotada da tabela turma
  */
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -16,10 +17,13 @@ use Doctrine\ORM\Mapping as ORM;
 class Turma {
 
     /**
-     * @ORM\ManyToOne(targetEntity="TurmaPessoa", inversedBy="turma")
-     * @ORM\JoinColumn(name="turma_id", referencedColumnName="id")
+     * @ORM\OneToMany(targetEntity="TurmaPessoa", mappedBy="pessoa") 
      */
-    private $turmaPessoa;
+    protected $turmaPessoa;
+
+    public function __construct() {
+        $this->turmaPessoa = new ArrayCollection();
+    }
 
     /**
      * @ORM\Id
@@ -29,7 +33,7 @@ class Turma {
     protected $id;
 
     /** @ORM\Column(type="string") */
-    protected $data;
+    protected $data_revisao;
 
     /** @ORM\Column(type="string") */
     protected $data_criacao;
@@ -47,8 +51,8 @@ class Turma {
         return $this->id;
     }
 
-    function getData() {
-        return $this->data;
+    function getData_revisao() {
+        return $this->data_revisao;
     }
 
     function getData_criacao() {
@@ -71,8 +75,8 @@ class Turma {
         $this->id = $id;
     }
 
-    function setData($data) {
-        $this->data = $data;
+    function setData_revisao($data_revisao) {
+        $this->data_revisao = $data_revisao;
     }
 
     function setData_criacao($data_criacao) {

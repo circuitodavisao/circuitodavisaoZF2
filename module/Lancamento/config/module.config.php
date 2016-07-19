@@ -24,7 +24,7 @@ return array(
                     'route' => '/lancamento[:pagina[/:id]]',
                     'constraints' => array(
                         'pagina' => '[a-zA-z]*',
-                        'id' => '[1-2]|[1-2]_[1-6]',
+                        'id' => '[1-2]|[1-2]_[1-6]|[1-9]*',
                     ),
                     'defaults' => array(
                         'controller' => 'Lancamento\Controller\Lancamento',
