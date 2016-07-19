@@ -93,7 +93,7 @@ class ListagemDePessoasComEventos extends AbstractHelper {
                     $corTextoTagsExtras = 'class="text-muted" data-toggle="tooltip" data-placement="center" title data-original-title="Transferido"';
                 }
                 if ($pessoa->getTipo() == 'RE') {
-                    $classLinha = 'class="row-success"';
+                    $classLinha = 'class="row-success success"';
                     $classLinha2 = 'footable-visible footable-first-column';
                     $corBotao = 'btn-success';
                     $corTextoTagsExtras = 'class="text-success" data-toggle="tooltip" data-placement="center" title data-original-title="Revisão de vidas"';
