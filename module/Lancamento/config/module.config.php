@@ -52,6 +52,8 @@ return array(
             'layout/layout' => __DIR__ . '/../../Login/view/layout/layout.phtml',
             'lancamento/lancamento/index' => __DIR__ . '/../view/lancamento/index.phtml',
             'lancamento/lancamento/cadastrar-pessoa' => __DIR__ . '/../view/lancamento/cadastrar-pessoa.phtml',
+            'lancamento/lancamento/cadastrar-pessoa-revisao' => __DIR__ . '/../view/lancamento/cadastrar-pessoa-revisao.phtml',
+            'lancamento/lancamento/ficha-revisao' => __DIR__ . '/../view/lancamento/ficha-revisao.phtml',
             'lancamento/lancamento/enviar-relatorio' => __DIR__ . '/../view/lancamento/enviar-relatorio.phtml',
             'layout/layout-js-lancamento' => __DIR__ . '/../view/layout/layout-js-lancamento.phtml',
             'layout/layout-js-lancamento-modal-eventos' => __DIR__ . '/../view/layout/layout-js-lancamento-modal-eventos.phtml',

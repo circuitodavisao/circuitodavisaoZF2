@@ -62,6 +62,9 @@ class GrupoPessoa {
     /** @ORM\Column(type="string") */
     protected $transferido;
 
+    /** @ORM\Column(type="string") */
+    protected $nucleo_perfeito;
+
     /**
      * Verificar se a data de inativação está nula
      * @return boolean
@@ -213,6 +216,14 @@ class GrupoPessoa {
 
     function setTransferido($transferido) {
         $this->transferido = $transferido;
+    }
+
+    function getNucleo_perfeito() {
+        return $this->nucleo_perfeito;
+    }
+
+    function setNucleo_perfeito($nucleo_perfeito) {
+        $this->nucleo_perfeito = $nucleo_perfeito;
     }
 
 }
