@@ -119,6 +119,22 @@ class Grupo {
     }
 
     /**
+     * Retorna o grupo responsavel ativo
+     * @return GrupoResponsavel
+     */
+    function getGrupoResponsavelAtivo() {
+        $grupoResponsavel = null;
+        foreach ($this->getGrupoResponsavel() as $gr) {
+            if ($gr->verificarSeEstaAtivo()) {
+                $grupoResponsavel = $gr;
+                break;
+            }
+        }
+
+        return $grupoResponsavel;
+    }
+
+    /**
      * Recupera as pessoas das responsabilidades ativas
      * @return Pessoa[]
      */

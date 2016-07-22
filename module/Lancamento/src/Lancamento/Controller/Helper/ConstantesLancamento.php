@@ -15,6 +15,7 @@ class ConstantesLancamento {
     public static $ENTITY_EVENTO_FREQUENCIA = 'Entidade\Entity\EventoFrequencia';
     public static $ENTITY_GRUPO = 'Entidade\Entity\Grupo';
     public static $ENTIDADE = 'entidade';
+    public static $ENTIDADE_INATIVA = 'entidadeInativa';
     public static $TURMA = 'turma';
     public static $GRUPO = 'grupo';
     public static $QUANTIDADE_MAXIMA_PESSOAS_NO_LANÇAMENTO = 60;
@@ -23,6 +24,8 @@ class ConstantesLancamento {
     public static $QUANTIDADE_EVENTOS_CICLOS = 'quantidadeDeEventosNoCiclo';
     public static $QUANTIDADE_PESSOAS_CADASTRADAS = 'quantidadeDePessoasCadastradas';
     public static $VALIDACAO = 'validacao';
+    public static $VALIDACAO_NESSE_MES = 'validacaoNesseMes';
+    public static $VALIDACAO_ENTIDADE_INATIVA = 'validacaoEntidadeInativa';
     public static $STATUS_ENVIO = 'statusEnvio';
     public static $TEMPLATE_JS_LANCAMENTO = 'layout/layout-js-lancamento';
     public static $TEMPLATE_JS_LANCAMENTO_MODAL_EVENTOS = 'layout/layout-js-lancamento-modal-eventos';

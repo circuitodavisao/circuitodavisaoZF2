@@ -64,6 +64,18 @@ class GrupoResponsavel {
         return $resposta;
     }
 
+    /**
+     * Verificar se a responsabilidade foi cadastrada nesse mês
+     * @return boolean
+     */
+    public function verificarSeFoiCadastradoNesseMes() {
+        $resposta = false;
+        if ($this->getData_criacaoMes() == date('n') && $this->getData_criacaoAno() == date('Y')) {
+            $resposta = true;
+        }
+        return $resposta;
+    }
+
     function getPessoa() {
         return $this->pessoa;
     }
@@ -86,6 +98,14 @@ class GrupoResponsavel {
 
     function getData_criacao() {
         return $this->data_criacao;
+    }
+
+    function getData_criacaoMes() {
+        return explode('-', $this->data_criacao)[1];
+    }
+
+    function getData_criacaoAno() {
+        return explode('-', $this->data_criacao)[0];
     }
 
     function getHora_criacao() {
