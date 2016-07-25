@@ -191,6 +191,23 @@ class Pessoa {
         return $resposta;
     }
 
+    /**
+     * Verificar se te alguma responsabilidade que foi inativada no mes informado
+     * @param String $data
+     * @return GrupoResponsavel
+     */
+    public function verificarSeTemAlgumaResponsabilidadeInativadoNoMesInformado($data) {
+        $grupoResponsavel = null;
+        foreach ($this->getGrupoResponsavel() as $gr) {
+            if (!$gr->verificarSeEstaAtivo() && $gr->getData_inativacao() == $data) {
+                $grupoResponsavel = $gr;
+                break;
+            }
+        }
+
+        return $grupoResponsavel;
+    }
+
     function getId() {
         return $this->id;
     }

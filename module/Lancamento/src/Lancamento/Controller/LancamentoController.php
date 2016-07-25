@@ -108,7 +108,11 @@ class LancamentoController extends AbstractActionController {
             if ($explodeParamentro[0] == 1) {
                 $abaSelecionada = 1;
             } else {
-                $abaSelecionada = 2;
+                if ($explodeParamentro[0] == 1) {
+                    $abaSelecionada = 2;
+                } else {
+                    $abaSelecionada = 3;
+                }
             }
         }
 
@@ -117,7 +121,8 @@ class LancamentoController extends AbstractActionController {
             $ano1 = FuncoesLancamento::anoPorAbaSelecionada($abaSelecionada);
             if ($abaSelecionada == 1) {
                 $cicloSelecionado = FuncoesLancamento::cicloAtual($mes1, $ano1);
-            } else {
+            }
+            if ($abaSelecionada == 2) {
                 $cicloSelecionado = FuncoesLancamento::totalCiclosMes($mes1, $ano1);
             }
         } else {
@@ -146,6 +151,27 @@ class LancamentoController extends AbstractActionController {
         if ($contagemDePessoasCadastradas > ConstantesLancamento::$QUANTIDADE_MAXIMA_PESSOAS_NO_LANÇAMENTO) {
             $validacaoPessoasCadastradas = 1;
         }
+
+        /* Verificar data de cadastro da responsabilidade */
+        $validacaoNesseMes = 0;
+        $grupoResponsavel = $grupo->getGrupoResponsavelAtivo();
+        if ($grupoResponsavel->verificarSeFoiCadastradoNesseMes()) {
+            $validacaoNesseMes = 1;
+        }
+        /* Verficar se tem grupo inativado caso seja cadastrado nesse mes */
+        if ($validacaoNesseMes == 1) {
+            /* Preciso encontrar a pessoa logada e verificar as responsabilidade dele */
+            $pessoa = $grupoResponsavel->getPessoa();
+            $validacaoEntidadeInativa = 0;
+            if ($pessoa->verificarSeTemAlgumaResponsabilidadeInativadoNoMesInformado($grupoResponsavel->getData_criacao())) {
+                $grupoResponsavelInativadoNessaData = $pessoa->verificarSeTemAlgumaResponsabilidadeInativadoNoMesInformado($grupoResponsavel->getData_criacao());
+                /* Verificar o tipo da entidade é 6, 7 e 8 */
+                $grupoInativo = $grupoResponsavelInativadoNessaData->getGrupo();
+                $entidadeInativa = $grupoInativo->getEntidadeAtiva();
+                $validacaoEntidadeInativa = 1;
+            }
+        }
+
         $view = new ViewModel(
                 array(
             ConstantesLancamento::$ENTIDADE => $entidade,
@@ -154,6 +180,9 @@ class LancamentoController extends AbstractActionController {
             ConstantesLancamento::$QUANTIDADE_EVENTOS_CICLOS => count($eventos),
             ConstantesLancamento::$STATUS_ENVIO => $statusEnvio,
             ConstantesLancamento::$VALIDACAO => $validacaoPessoasCadastradas,
+            ConstantesLancamento::$VALIDACAO_NESSE_MES => $validacaoNesseMes,
+            ConstantesLancamento::$VALIDACAO_ENTIDADE_INATIVA => $validacaoEntidadeInativa,
+            ConstantesLancamento::$ENTIDADE_INATIVA => $entidadeInativa,
                 )
         );
 
@@ -207,7 +236,7 @@ class LancamentoController extends AbstractActionController {
             }
             return new ViewModel(
                     array(ConstantesLancamento::$TURMA => $turmaPessoa->getTurma())
-                    );
+            );
         } catch (Exception $exc) {
             echo $exc->getTraceAsString();
         }

@@ -31,7 +31,16 @@ class CabecalhoDeCiclos extends AbstractHelper {
 
         $html .= '<div class="panel-heading row text-center" style="margin:0px;"> ';
         $html .= '<span class="panel-title">';
+
+        $mostrarAnterior = false;
         if ($this->view->cicloSelecionado > 1) {
+            $mostrarAnterior = true;
+        }
+        if ($this->view->validacaoNesseMes == 1) {
+            $mostrarAnterior = false;
+        }
+
+        if ($mostrarAnterior) {
             $urlCicloAnterior = $urlBaseCiclo . ($this->view->cicloSelecionado - 1);
             $html .= '<a ' . ConstantesLancamento::$ONCLICK_ABRIR_MODAL . ' href="' . $urlCicloAnterior . '"><button class="btn btn-default btn-sm"><i class="fa fa-angle-double-left"></i></button></a>&nbsp;';
         }
