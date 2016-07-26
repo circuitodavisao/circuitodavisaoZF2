@@ -28,13 +28,12 @@ class Abas extends AbstractHelper {
         if ($this->view->validacaoNesseMes == 0) {
             $html .= '<li role="presentation" ' . ConstantesLancamento::$ONCLICK_ABRIR_MODAL . ' ' . $this->view->abaSelecionada($this->view->abaSelecionada, 2) . '><a href="' . $urlBase2 . '">' . $this->view->translate(ConstantesLancamento::$TRADUCAO_MES_ANTERIOR) . '</a></li>';
         }
-        if ($this->view->validacaoEntidadeInativa == 1) {
-            $entidadeInativa = $this->view->entidadeInativa;
-            $entidadeTipo = $entidadeInativa->getEntidadeTipo();
-            $entidadeInfo = $entidadeTipo->getNome() . '&nbsp;' . $entidadeInativa->infoEntidade();
-            $html .= '<li role="presentation" ' . ConstantesLancamento::$ONCLICK_ABRIR_MODAL . ' ' . $this->view->abaSelecionada($this->view->abaSelecionada, 2) . '><a href="' . $urlBase3 . '">(INATIVADA)&nbsp;' . $entidadeInfo . '</a></li>';
-        }
-
+//        if ($this->view->validacaoEntidadeInativa == 1) {
+//            $entidadeInativa = $this->view->entidadeInativa;
+//            $entidadeTipo = $entidadeInativa->getEntidadeTipo();
+//            $entidadeInfo = $entidadeTipo->getNome() . '&nbsp;' . $entidadeInativa->infoEntidade();
+//            $html .= '<li role="presentation" ' . ConstantesLancamento::$ONCLICK_ABRIR_MODAL . ' ' . $this->view->abaSelecionada($this->view->abaSelecionada, 2) . '><a href="' . $urlBase3 . '">(INATIVADA)&nbsp;' . $entidadeInfo . '</a></li>';
+//        }
         $html .= '</ul>';
         return $html;
     }

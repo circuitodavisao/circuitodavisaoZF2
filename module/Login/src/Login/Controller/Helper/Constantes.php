@@ -147,6 +147,7 @@ class Constantes {
     public static $ENTITY_PESSOA_EMAIL = 'email';
     public static $ENTITY_PESSOA_DOCUMENTO = 'documento';
     public static $ENTITY_PESSOA_DATA_NASCIMENTO = 'data_nascimento';
+    public static $ENTITY_PESSOA_DATA_CRIACAO = 'data_criacao';
     public static $ENTITY_PESSOA_TOKEN = 'token';
     public static $ENTITY_PESSOA_NOME = 'nome';
     public static $ENTITY_PERFIL_ACESSO = 'Entidade\Entity\PerfilAcesso';
