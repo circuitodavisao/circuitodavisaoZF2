@@ -76,13 +76,13 @@
                             </div>
                             <!-- .section-divider -->
 
-                            <div id="estado-civil-padrao" class="section text-center">
+                            <div class="section text-center">
                                 <div class="option-group field">
                                     <label for="tv" class="option">
-                                        <input type="radio" name="reach" id="tv" value="tv">
+                                        <input type="radio" name="reach" id="campos_casado" value="tv">
                                         <span class="radio" title="Com apenas 1 na igreja"></span>Solteiro / Casado</label>
                                     <label for="int" class="option">
-                                        <input type="radio" name="reach" id="int" value="int">
+                                        <input type="radio" name="reach" id="campos_solteiro" value="int">
                                         <span class="radio" title="Com ambos na igreja"></span>Casado</label>
                                 </div>
                             </div>
@@ -93,7 +93,7 @@
                             </div>
                             <!-- .section-divider -->
 
-                            <div id="endereco-campos-padrao" class="section row">
+                            <div class="section row disabled-section">
                                 <div class="col-md-6">
                                     <div class="section">
                                         <label for="cep" class="field-label">CEP</label>
@@ -258,46 +258,207 @@
 
                             </div>
                             <!-- end .section row section -->
+                            <div id="hidedados">
 
                             <div class="section-divider mv40">
-                                <span>Sexo do Novo Membro</span>
+                                <span>Dados Pessoais</span>
                             </div>
                             <!-- .section-divider -->
 
-                            <div id="sexo-membro-solteiro" class="section text-center disabled-section-solteiro">
-                                <div class="option-group field">
-                                    <label for="masculino" class="option">
-                                        <input type="radio" name="reach" id="tv" value="masculino">
-                                        <span class="radio"></span>Masculino</label>
-                                    <label for="feminino" class="option">
-                                        <input type="radio" name="reach" id="int" value="feminino">
-                                        <span class="radio"></span>Feminino</label>
+                            <div class="section row">
+                                <div class="col-md-6">
+                                    <div class="section">
+                                        <label for="cep" class="field-label">CPF</label>
+                                        <div class="smart-widget sm-right smr-50">
+                                            <label class="field">
+                                                <input type="text" name="cep" id="cep" class="gui-input" placeholder="Informe seu CPF">
+                                            </label>
+                                            <button type="submit" class="button btn-danger">
+                                                <i class="fa fa-search"></i>
+                                            </button>
+                                        </div>
+                                        <!-- end .smart-widget section -->
+                                    </div>
+
                                 </div>
+                                <!-- end .colm section -->
+
+                                <div class="col-md-6">
+                                    <div class="section">
+                                        <label for="mobile" class="field-label">Sexo</label>
+                                        <div style="width:100%; padding-bottom:5px;"></div>
+                                        <div class="section">
+                                            <div class="option-group field">
+                                                <label for="tv" class="option">
+                                                    <input type="radio" name="reach" id="tv" value="tv">
+                                                    <span class="radio"></span>Masculino</label>
+                                                <label for="int" class="option">
+                                                    <input type="radio" name="reach" id="int" value="int">
+                                                    <span class="radio"></span>Feminino</label>
+                                            </div>
+                                        </div>
+                                        <!-- end .section section -->
+                                    </div>
+                                    <!-- end section -->
+
+                                </div>
+                                <!-- end .colm section -->
+
+                                <div class="col-md-12">
+                                    <div class="section">
+                                        <label for="firstaddr" class="field-label">Nome Completo</label>
+                                        <label for="firstaddr" class="field prepend-icon">
+                                            <input type="text" name="firstaddr" id="firstaddr" class="gui-input" placeholder="Nome Completo">
+                                            <label for="firstaddr" class="field-icon">
+                                                <i class="fa fa-terminal"></i>
+                                            </label>
+                                        </label>
+                                    </div>
+                                    <!-- end section -->
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="section">
+                                        <label for="firstaddr" class="field-label">Data de Nascimento</label>
+                                        <label for="datepicker1" class="field prepend-icon">
+                                            <input type="text" id="datepicker1" name="datepicker1" class="gui-input" placeholder="Data de Nascimento">
+                                            <label class="field-icon">
+                                                <i class="fa fa-calendar-o"></i>
+                                            </label>
+                                        </label>
+                                    </div>
+                                    <!-- end section -->
+
+                                    <div class="section">
+                                        <label for="mobile" class="field-label">Telefone Celular</label>
+                                        <label for="mobile" class="field prepend-icon">
+                                            <input type="tel" name="mobile" id="mobile" class="gui-input phone" placeholder="Telefone Celular" required="required">
+                                            <label for="mobile" class="field-icon">
+                                                <i class="fa fa-phone-square"></i>
+                                            </label>
+                                        </label>
+                                    </div>
+                                    <!-- end section -->
+
+                                    <div class="section">
+                                        <label for="mobile" class="field-label">Repita o Email</label>
+                                        <label for="useremail" class="field prepend-icon">
+                                            <input type="email" name="useremail" id="useremail" class="gui-input" placeholder="Repita o Email">
+                                            <label for="useremail" class="field-icon">
+                                                <i class="fa fa-envelope"></i>
+                                            </label>
+                                        </label>
+                                    </div>
+                                    <!-- end section -->
+
+                                    <div class="section">
+                                        <label for="city" class="field-label">Profissão</label>
+                                        <label for="city" class="field">
+                                            <label class="field select">
+                                                <select id="country" name="profissao">
+                                                    <option value="0">Selecione</option>
+                                                    <option value="1">Líder em Treinamento</option>
+                                                    <option value="2">Alterno</option>
+                                                    <option value="3">Co-Líder</option>
+                                                    <option value="4">Outro</option>
+                                                </select>
+                                                <i class="arrow"></i>
+                                            </label>
+                                        </label>
+                                    </div>
+                                    <!-- end section -->
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="section">
+                                        <label for="mobile" class="field-label">Telefone Residencial</label>
+                                        <label for="mobile" class="field prepend-icon">
+                                            <input type="tel" name="mobile" id="mobile" class="gui-input phone" placeholder="Telefone Residencial" required="required">
+                                            <label for="mobile" class="field-icon">
+                                                <i class="fa fa-phone-square"></i>
+                                            </label>
+                                        </label>
+                                    </div>
+                                    <!-- end section -->
+
+                                    <div class="section">
+                                        <label for="mobile" class="field-label">Email</label>
+                                        <label for="useremail" class="field prepend-icon">
+                                            <input type="email" name="useremail" id="useremail" class="gui-input" placeholder="Email">
+                                            <label for="useremail" class="field-icon">
+                                                <i class="fa fa-envelope"></i>
+                                            </label>
+                                        </label>
+                                    </div>
+                                    <!-- end section -->
+
+                                    <div class="section">
+                                        <label for="city" class="field-label">Hierarquia</label>
+                                        <label for="city" class="field">
+                                            <label class="field select">
+                                                <select id="country" name="country">
+                                                    <option value="0">Selecione</option>
+                                                    <option value="1">Líder em Treinamento</option>
+                                                    <option value="2">Alterno</option>
+                                                    <option value="3">Co-Líder</option>
+                                                    <option value="4">Outro</option>
+                                                </select>
+                                                <i class="arrow"></i>
+                                            </label>
+                                        </label>
+                                    </div>
+                                    <!-- end section -->
+
+                                    <div class="section">
+                                        <label for="mobile" class="field-label">Endereço Local de Trabalho</label>
+                                        <label for="useremail" class="field prepend-icon">
+                                            <input type="email" name="useremail" id="useremail" class="gui-input" placeholder="Endereço Local de Trabalho">
+                                            <label for="useremail" class="field-icon">
+                                                <i class="fa fa-map-marker"></i>
+                                            </label>
+                                        </label>
+                                    </div>
+                                    <!-- end section -->
+                                </div>
+
+                            </div>
+                            </div>
+
+                            <!-- end .section row section -->
+                            <div id="hidealuno">
+                              <div class="section-divider mv40">
+                                  <span>Selecione um aluno para cadastro</span>
+                              </div>
+                              <!-- .section-divider -->
+
+                              <div class="col-md-12">
+                                  <div class="section row text-center">
+                                      <button type="button" class="btn disabled btn-default btn-block">Não existem alunos registrados.</button>
+                                  </div>
+                                  <div class="section row">
+                                      <label for="city" class="field-label">Aluno do IV</label>
+                                      <label for="city" class="field">
+                                          <label class="field select">
+                                              <select id="country" name="country">
+                                                  <option value="0">Selecione</option>
+                                                  <option value="1">Sérgio Bezerra da Silva</option>
+                                                  <option value="2">Francisco da Silva</option>
+                                                  <option value="3">Rômulo Sem Rumo</option>
+                                                  <option value="4">Vivian Xavier</option>
+                                              </select>
+                                              <i class="arrow"></i>
+                                          </label>
+                                      </label>
+                                  </div>
+                                  <!-- end section -->
+                              </div>
                             </div>
                             <!-- end .section section -->
-                            
-                            <!-- filtrar o sexo escolhido vindo do banco -->
-                            <div id="alunos-iv-cadastrados" class="section row">
-                                <label for="city" class="field-label">Aluno do IV</label>
-                                <label for="city" class="field">
-                                    <label class="field select">
-                                        <select id="country" name="country">
-                                            <option value="0">Selecione</option>
-                                            <option value="1">Sérgio Bezerra da Silva</option>
-                                            <option value="2">Francisco da Silva</option>
-                                            <option value="3">Rômulo Sem Rumo</option>
-                                            <option value="4">Vivian Xavier</option>
-                                        </select>
-                                        <i class="arrow"></i>
-                                    </label>
-                                </label>
-                            </div>
-                            <!-- end section -->
 
                         </div>
                         <!-- end .form-body section -->
                         <div class="panel-footer text-right">
-                            <button type="submit" class="btn btn-danger">Cadastrar</button>
+                            <button type="submit" class="btn btn-danger">Avançar</button>
                         </div>
                         <!-- end .form-footer section -->
                     </form>
@@ -960,6 +1121,7 @@
 <svg fill="#bbb" width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"></svg>
 <script type="text/javascript" src="/js/vendor/plugins/jquerymask/jquery.maskedinput.min.js"></script>
 <script src="assets/admin-tools/admin-forms/js/jquery-ui-datepicker.min.js"></script>
+<script type="text/javascript" src="/js/circuito_da_visao/ocultar-campos-formularios.js"></script>
 <script type="text/javascript">
                                 window.onload = initPage;
                                 function initPage() {
