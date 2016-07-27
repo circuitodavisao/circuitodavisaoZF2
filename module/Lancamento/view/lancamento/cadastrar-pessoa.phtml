@@ -76,7 +76,7 @@
                             </div>
                             <!-- .section-divider -->
 
-                            <div class="section text-center">
+                            <div id="estado-civil-padrao" class="section text-center">
                                 <div class="option-group field">
                                     <label for="tv" class="option">
                                         <input type="radio" name="reach" id="tv" value="tv">
@@ -88,12 +88,12 @@
                             </div>
                             <!-- end .section section -->
 
-                            <div class="section-divider mv40">
+                            <div class="section-divider mv40 disabled-section">
                                 <span>Endereço</span>
                             </div>
                             <!-- .section-divider -->
 
-                            <div class="section row">
+                            <div id="endereco-campos-padrao" class="section row">
                                 <div class="col-md-6">
                                     <div class="section">
                                         <label for="cep" class="field-label">CEP</label>
@@ -264,7 +264,7 @@
                             </div>
                             <!-- .section-divider -->
 
-                            <div class="section text-center">
+                            <div id="sexo-membro-solteiro" class="section text-center disabled-section-solteiro">
                                 <div class="option-group field">
                                     <label for="masculino" class="option">
                                         <input type="radio" name="reach" id="tv" value="masculino">
@@ -275,11 +275,29 @@
                                 </div>
                             </div>
                             <!-- end .section section -->
+                            
+                            <!-- filtrar o sexo escolhido vindo do banco -->
+                            <div id="alunos-iv-cadastrados" class="section row">
+                                <label for="city" class="field-label">Aluno do IV</label>
+                                <label for="city" class="field">
+                                    <label class="field select">
+                                        <select id="country" name="country">
+                                            <option value="0">Selecione</option>
+                                            <option value="1">Sérgio Bezerra da Silva</option>
+                                            <option value="2">Francisco da Silva</option>
+                                            <option value="3">Rômulo Sem Rumo</option>
+                                            <option value="4">Vivian Xavier</option>
+                                        </select>
+                                        <i class="arrow"></i>
+                                    </label>
+                                </label>
+                            </div>
+                            <!-- end section -->
 
                         </div>
                         <!-- end .form-body section -->
                         <div class="panel-footer text-right">
-                            <button type="submit" class="btn btn-danger">Avançar</button>
+                            <button type="submit" class="btn btn-danger">Cadastrar</button>
                         </div>
                         <!-- end .form-footer section -->
                     </form>
@@ -687,9 +705,6 @@
                             <!-- .section-divider -->
 
                             <div class="col-md-12">
-                                <div class="section row text-center">
-                                    <button type="button" class="btn disabled btn-default btn-block">Não existem alunos registrados.</button>
-                                </div>
                                 <div class="section row">
                                     <label for="city" class="field-label">Aluno do IV</label>
                                     <label for="city" class="field">
