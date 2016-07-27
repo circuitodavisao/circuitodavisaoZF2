@@ -7,7 +7,6 @@ namespace Entidade\Entity;
  * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com>
  * Descricao: Entidade anotada da tabela pessoa
  */
-
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -557,6 +556,23 @@ class Pessoa {
 
     function setGrupoPessoa($grupoPessoa) {
         $this->grupoPessoa = $grupoPessoa;
+    }
+
+    public function getIdade() {
+        $idade = 0;
+        if ($this->getData_nascimento()) {
+            // Separa em dia, mês e ano
+            list($ano, $mes, $dia) = explode('-', $this->getData_nascimento());
+
+            // Descobre que dia é hoje e retorna a unix timestamp
+            $hoje = mktime(0, 0, 0, date('m'), date('d'), date('Y'));
+            // Descobre a unix timestamp da data de nascimento do fulano
+            $nascimento = mktime(0, 0, 0, $mes, $dia, $ano);
+
+            // Depois apenas fazemos o cálculo já citado :)
+            $idade = floor((((($hoje - $nascimento) / 60) / 60) / 24) / 365.25);
+        }
+        return $idade;
     }
 
 }

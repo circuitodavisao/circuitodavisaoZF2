@@ -248,7 +248,10 @@ class LancamentoController extends AbstractActionController {
                 $turmaPessoa = $pessoa->getTurmaPessoaAtiva();
             }
             return new ViewModel(
-                    array(ConstantesLancamento::$TURMA => $turmaPessoa->getTurma())
+                    array(
+                ConstantesLancamento::$TURMA => $turmaPessoa->getTurma(),
+                Constantes::$PESSOA => $pessoa,
+                    )
             );
         } catch (Exception $exc) {
             echo $exc->getTraceAsString();

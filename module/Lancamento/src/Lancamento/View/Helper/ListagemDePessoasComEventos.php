@@ -198,7 +198,7 @@ class ListagemDePessoasComEventos extends AbstractHelper {
                             $html .= '</span>';
                         } else {
                             $html .= '<span class="input-group-btn">';
-                            $html .= '<span onclick="location.href=\'/lancamentoFichaRevisao/' . $pessoa->getIdGrupoPessoa() . '\'" class="btn ladda-button btn-sm" style="margin-left:5px;"><i class="fa fa-bug"></i></span>';
+                            $html .= '<span onclick="location.href=\'/lancamentoFichaRevisao/' . $pessoa->getIdGrupoPessoa() . '\'" class="btn ladda-button btn-sm" style="margin-left:5px;"><i class="fa fa-file-text-o"></i></span>';
                             $html .= '</span>';
                         }
 
