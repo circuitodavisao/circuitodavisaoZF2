@@ -4,6 +4,7 @@ namespace Lancamento\View\Helper;
 
 use Doctrine\Common\Collections\Criteria;
 use Lancamento\Controller\Helper\FuncoesLancamento;
+use Lancamento\Controller\Helper\LancamentoORM;
 use Zend\View\Helper\AbstractHelper;
 
 /**
@@ -35,13 +36,28 @@ class ListagemDePessoasComEventos extends AbstractHelper {
         }
         if (count($grupo->getGrupoPessoaAtivasEDoMes($mesSelecionado, $anoSelecionado)) > 0) {
             foreach ($grupo->getGrupoPessoaAtivasEDoMes($mesSelecionado, $anoSelecionado) as $gp) {
+
+                /* Validação para visitantes inativados nesse mes transformados em consolidacoes */
+                $adicionarVisitante = true;
+                $grupoPessoaTipo = $gp->getGrupoPessoaTipo();
+                if (!$gp->verificarSeEstaAtivo() && $grupoPessoaTipo->getId() == 1) {
+                    $lancamentoORM = new LancamentoORM($this->view->doctrineORMEntityManager);
+                    $resposta = $lancamentoORM->getGrupoPessoaORM()->encontrarPorIdPessoaAtivoETipo($gp->getPessoa_id(), null, 2); /* Consolidacao */
+                    if (!empty($resposta)) {
+                        echo "Visitante inativado que virou consolidação <br />";
+                        $adicionarVisitante = false;
+                    }
+                }
+                /* Fim validacao */
+
                 $p = $gp->getPessoa();
                 if (empty($gp->getNucleo_perfeito())) {
                     $p->setTipo($gp->getGrupoPessoaTipo()->getNomeSimplificado());
                 } else {
-                    if ($gp->getNucleo_perfeito() === "C") {
+                    if ($gp->getNucleo_perfeito() == "C") {
                         $p->setTipo('CO');
-                    } else {
+                    }
+                    if ($gp->getNucleo_perfeito() == "L") {
                         $p->setTipo('LT');
                     }
                 }
@@ -72,7 +88,7 @@ class ListagemDePessoasComEventos extends AbstractHelper {
                         }
                     }
                 }
-                if ($adicionar == true) {
+                if ($adicionar && $adicionarVisitante) {
                     $pessoasGrupo[] = $p;
                 }
             }

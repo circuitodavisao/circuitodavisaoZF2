@@ -4,8 +4,9 @@ namespace Login\Controller\Helper;
 
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManager;
-use Exception;
+use Entidade\Entity\GrupoPessoa;
 use Entidade\Entity\Pessoa;
+use Exception;
 
 /**
  * Nome: PessoaORM.php
@@ -110,34 +111,6 @@ class PessoaORM {
             }
         }
         return $pessoa;
-    }
-
-    /**
-     * A cada dia verifica quem foi cadastrado a uma semana e atualiza para consolidação
-     */
-    public function alterarVisitanteParaConsolidacao() {
-        $ultimaSemana = strtotime("last Week");
-        $dataUltimaSemana = date('Y-m-d', $ultimaSemana);
-        $criteria = new Criteria();
-        $criteria->andWhere(
-                $criteria->expr()->eq(
-                        Constantes::$ENTITY_PESSOA_DATA_CRIACAO, $dataUltimaSemana
-                )
-        );
-        $pessoas = $this->getEntityManager()
-                ->getRepository($this->getEntity())
-                ->matching($criteria);
-
-        foreach ($pessoas as $p) {
-            /* Recuperar o grupo pessoa ativo para saber o tipo */
-            $p->getGrupoPessoa();
-            $grupoPessoa = $p->getGrupoPessoaAtivo();
-            $grupoPessoaTipo = $grupoPessoa->getGrupoPessoaTipo();
-            if ($grupoPessoaTipo->getId() == 1) {/* Visitante */
-            
-                
-            }
-        }
     }
 
     /**

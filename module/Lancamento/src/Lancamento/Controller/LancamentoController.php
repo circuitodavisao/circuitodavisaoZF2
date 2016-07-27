@@ -50,9 +50,6 @@ class LancamentoController extends AbstractActionController {
         /* Helper Controller */
         $lancamentoORM = new LancamentoORM($this->getDoctrineORMEntityManager());
 
-        $loginORM = new LoginORM($this->getDoctrineORMEntityManager());
-        $loginORM->getPessoaORM()->alterarVisitanteParaConsolidacao();
-
         $sessao = new Container(Constantes::$NOME_APLICACAO);
         $idEntidadeAtual = $sessao->idEntidadeAtual;
         $entidade = $lancamentoORM->getEntidadeORM()->encontrarPorIdEntidade($idEntidadeAtual);
@@ -101,6 +98,11 @@ class LancamentoController extends AbstractActionController {
                         Constantes::$ID => $parametro,
             ));
         }
+
+
+        /* Teste de funcao */
+//        echo "testando funcao de alterarVisitanteParaConsolidacao <br />";
+//        $lancamentoORM->getGrupoPessoaORM()->alterarVisitanteParaConsolidacao($lancamentoORM);
 
         /* Aba selecionada e ciclo */
         $parametro = $this->params()->fromRoute(Constantes::$ID);
@@ -193,6 +195,7 @@ class LancamentoController extends AbstractActionController {
             ConstantesLancamento::$VALIDACAO_NESSE_MES => $validacaoNesseMes,
             ConstantesLancamento::$VALIDACAO_ENTIDADE_INATIVA => $validacaoEntidadeInativa,
             ConstantesLancamento::$ENTIDADE_INATIVA => $entidadeInativa,
+            ConstantesLancamento::$DOCTRINE_ORM_ENTITY_MANAGER => $this->getDoctrineORMEntityManager(),
                 )
         );
 

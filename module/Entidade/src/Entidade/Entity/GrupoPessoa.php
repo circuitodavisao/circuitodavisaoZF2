@@ -61,6 +61,9 @@ class GrupoPessoa {
     /** @ORM\Column(type="integer") */
     protected $grupo_id;
 
+    /** @ORM\Column(type="integer") */
+    protected $tipo_id;
+
     /** @ORM\Column(type="string") */
     protected $data_inativacao;
 
@@ -232,6 +235,14 @@ class GrupoPessoa {
 
     function setNucleo_perfeito($nucleo_perfeito) {
         $this->nucleo_perfeito = $nucleo_perfeito;
+    }
+
+    function getTipo_id() {
+        return $this->tipo_id;
+    }
+
+    function setTipo_id($tipo_id) {
+        $this->tipo_id = $tipo_id;
     }
 
 }

@@ -11,11 +11,16 @@ class ConstantesLancamento {
 
     public static $ENTITY_ENTIDADE = 'Entidade\Entity\Entidade';
     public static $ENTITY_GRUPO_PESSOA = 'Entidade\Entity\GrupoPessoa';
+    public static $ENTITY_GRUPO_PESSOA_TIPO = 'Entidade\Entity\GrupoPessoaTipo';
     public static $ENTITY_EVENTO = 'Entidade\Entity\Evento';
     public static $ENTITY_EVENTO_FREQUENCIA = 'Entidade\Entity\EventoFrequencia';
     public static $ENTITY_GRUPO = 'Entidade\Entity\Grupo';
+    public static $ENTITY_PESSOA_ID = 'pessoa_id';
+    public static $ENTITY_DATA_INATIVACAO = 'data_inativacao';
+    public static $ENTITY_TIPO_ID = 'tipo_id';
     public static $ENTIDADE = 'entidade';
     public static $ENTIDADE_INATIVA = 'entidadeInativa';
+    public static $DOCTRINE_ORM_ENTITY_MANAGER = 'doctrineORMEntityManager';
     public static $TURMA = 'turma';
     public static $GRUPO = 'grupo';
     public static $QUANTIDADE_MAXIMA_PESSOAS_NO_LANÇAMENTO = 60;
