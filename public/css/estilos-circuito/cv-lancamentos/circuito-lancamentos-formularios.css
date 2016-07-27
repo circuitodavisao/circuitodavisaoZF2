@@ -33,4 +33,16 @@ and open the template in the editor.
 .admin-form .prepend-icon-right > textarea {
   padding-right: 36px;
 }
+.disabled-section{
+  display: none;
+}
+
+ocultar-campos{
+  display: none;
+}
+
+mostrar-campos{
+  display: block;
+}
+
 
