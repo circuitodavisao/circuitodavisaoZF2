@@ -6,6 +6,14 @@ namespace Entidade\Entity;
  * Nome: GrupoPessoa.php
  * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com>
  * Descricao: Entidade anotada da tabela grupo_pessoa
+ * 1 - VISITANTE
+ * 2 - CONSOLIDACAO
+ * 3 - MEMBRO
+ * 4 - ALUNO ATIVO
+ * 5 - ALUNO REPROVADO
+ * 6 - ALUNO DESISTENTE
+ * 7 - ALUNO NAO ENTROU
+ * 8 - ALUNO FORMADO
  */
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;

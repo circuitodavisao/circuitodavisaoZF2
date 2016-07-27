@@ -113,6 +113,34 @@ class PessoaORM {
     }
 
     /**
+     * A cada dia verifica quem foi cadastrado a uma semana e atualiza para consolidação
+     */
+    public function alterarVisitanteParaConsolidacao() {
+        $ultimaSemana = strtotime("last Week");
+        $dataUltimaSemana = date('Y-m-d', $ultimaSemana);
+        $criteria = new Criteria();
+        $criteria->andWhere(
+                $criteria->expr()->eq(
+                        Constantes::$ENTITY_PESSOA_DATA_CRIACAO, $dataUltimaSemana
+                )
+        );
+        $pessoas = $this->getEntityManager()
+                ->getRepository($this->getEntity())
+                ->matching($criteria);
+
+        foreach ($pessoas as $p) {
+            /* Recuperar o grupo pessoa ativo para saber o tipo */
+            $p->getGrupoPessoa();
+            $grupoPessoa = $p->getGrupoPessoaAtivo();
+            $grupoPessoaTipo = $grupoPessoa->getGrupoPessoaTipo();
+            if ($grupoPessoaTipo->getId() == 1) {/* Visitante */
+            
+                
+            }
+        }
+    }
+
+    /**
      * Atualiza a pessoa no banco de dados
      * 
      * @param Pessoa $pessoa

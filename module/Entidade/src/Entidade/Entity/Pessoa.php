@@ -30,10 +30,16 @@ class Pessoa {
      */
     protected $eventoFrequencia;
 
+    /**
+     * @ORM\OneToMany(targetEntity="GrupoPessoa", mappedBy="pessoa") 
+     */
+    protected $grupoPessoa;
+
     public function __construct() {
         $this->turmaPessoa = new ArrayCollection();
         $this->grupoResponsavel = new ArrayCollection();
         $this->eventoFrequencia = new ArrayCollection();
+        $this->grupoPessoa = new ArrayCollection();
     }
 
     /**
@@ -196,7 +202,7 @@ class Pessoa {
      * @param String $data
      * @return GrupoResponsavel
      */
-    public function verificarSeTemAlgumaResponsabilidadeInativadoNoMesInformado($data) {
+    public function verificarSeTemAlgumaResponsabilidadeInativadoNaDataInformado($data) {
         $grupoResponsavel = null;
         foreach ($this->getGrupoResponsavel() as $gr) {
             if (!$gr->verificarSeEstaAtivo() && $gr->getData_inativacao() == $data) {
@@ -521,8 +527,36 @@ class Pessoa {
         return $turmaPessoaAtiva;
     }
 
+    /**
+     * Retorna o grupo pessoa ativo
+     * @return GrupoPessoa
+     */
+    function getGrupoPessoaAtivo() {
+        $grupoPessoaAtiva = null;
+        foreach ($this->getGrupoPessoa() as $gp) {
+            if ($gp->verificarSeEstaAtivo()) {
+                $grupoPessoaAtiva = $gp;
+                break;
+            }
+        }
+
+        return $grupoPessoaAtiva;
+    }
+
     function setTurmaPessoa($turmaPessoa) {
         $this->turmaPessoa = $turmaPessoa;
+    }
+
+    /**
+     * Retorna o GrupoPessoa
+     * @return GrupoPessoa
+     */
+    function getGrupoPessoa() {
+        return $this->grupoPessoa;
+    }
+
+    function setGrupoPessoa($grupoPessoa) {
+        $this->grupoPessoa = $grupoPessoa;
     }
 
 }

@@ -50,6 +50,9 @@ class LancamentoController extends AbstractActionController {
         /* Helper Controller */
         $lancamentoORM = new LancamentoORM($this->getDoctrineORMEntityManager());
 
+        $loginORM = new LoginORM($this->getDoctrineORMEntityManager());
+        $loginORM->getPessoaORM()->alterarVisitanteParaConsolidacao();
+
         $sessao = new Container(Constantes::$NOME_APLICACAO);
         $idEntidadeAtual = $sessao->idEntidadeAtual;
         $entidade = $lancamentoORM->getEntidadeORM()->encontrarPorIdEntidade($idEntidadeAtual);
@@ -108,7 +111,7 @@ class LancamentoController extends AbstractActionController {
             if ($explodeParamentro[0] == 1) {
                 $abaSelecionada = 1;
             } else {
-                if ($explodeParamentro[0] == 1) {
+                if ($explodeParamentro[0] == 2) {
                     $abaSelecionada = 2;
                 } else {
                     $abaSelecionada = 3;
@@ -159,16 +162,23 @@ class LancamentoController extends AbstractActionController {
             $validacaoNesseMes = 1;
         }
         /* Verficar se tem grupo inativado caso seja cadastrado nesse mes */
+        $validacaoEntidadeInativa = 0;
+        $entidadeInativa = 0;
         if ($validacaoNesseMes == 1) {
             /* Preciso encontrar a pessoa logada e verificar as responsabilidade dele */
             $pessoa = $grupoResponsavel->getPessoa();
-            $validacaoEntidadeInativa = 0;
-            if ($pessoa->verificarSeTemAlgumaResponsabilidadeInativadoNoMesInformado($grupoResponsavel->getData_criacao())) {
-                $grupoResponsavelInativadoNessaData = $pessoa->verificarSeTemAlgumaResponsabilidadeInativadoNoMesInformado($grupoResponsavel->getData_criacao());
-                /* Verificar o tipo da entidade é 6, 7 e 8 */
+            if ($pessoa->verificarSeTemAlgumaResponsabilidadeInativadoNaDataInformado($grupoResponsavel->getData_criacao())) {
+                $grupoResponsavelInativadoNessaData = $pessoa->verificarSeTemAlgumaResponsabilidadeInativadoNaDataInformado($grupoResponsavel->getData_criacao());
+                /* Verificar o tipo da entidade
+                 * 6 - IGREJA
+                 * 7 - EQUIPE
+                 * 8 - SUB EQUIPE
+                 */
                 $grupoInativo = $grupoResponsavelInativadoNessaData->getGrupo();
                 $entidadeInativa = $grupoInativo->getEntidadeAtiva();
-                $validacaoEntidadeInativa = 1;
+                if ($entidadeInativa->getTipo_id() == 6 || $entidadeInativa->getTipo_id() == 7 || $entidadeInativa->getTipo_id() == 8) {
+                    $validacaoEntidadeInativa = 1;
+                }
             }
         }
 

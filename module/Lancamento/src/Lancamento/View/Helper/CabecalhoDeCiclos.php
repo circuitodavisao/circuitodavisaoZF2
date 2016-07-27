@@ -36,9 +36,9 @@ class CabecalhoDeCiclos extends AbstractHelper {
         if ($this->view->cicloSelecionado > 1) {
             $mostrarAnterior = true;
         }
-        if ($this->view->validacaoNesseMes == 1) {
-            $mostrarAnterior = false;
-        }
+//        if ($this->view->validacaoNesseMes == 1) {
+//            $mostrarAnterior = false;
+//        }
 
         if ($mostrarAnterior) {
             $urlCicloAnterior = $urlBaseCiclo . ($this->view->cicloSelecionado - 1);

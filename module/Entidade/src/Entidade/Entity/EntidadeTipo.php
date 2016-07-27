@@ -5,7 +5,15 @@ namespace Entidade\Entity;
 /**
  * Nome: EntidadeTipo.php
  * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com>
- * Descricao: Entidade anotada da tabela entidade_tipo
+ * Descricao: Entidade anotada da tabela entidade_tipo 
+ * 1 - PRESIDENCIAL
+ * 2 - REGIÃO
+ * 3 - SUB REGIÃO
+ * 4 - COORDENAÇÃO
+ * 5 - SUB COORDENAÇÃO
+ * 6 - IGREJA
+ * 7 - EQUIPE
+ * 8 - SUB EQUIPE
  */
 use Doctrine\ORM\Mapping as ORM;
 
