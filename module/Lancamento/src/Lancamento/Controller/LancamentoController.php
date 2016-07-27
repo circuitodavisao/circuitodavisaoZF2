@@ -195,7 +195,7 @@ class LancamentoController extends AbstractActionController {
             ConstantesLancamento::$VALIDACAO_NESSE_MES => $validacaoNesseMes,
             ConstantesLancamento::$VALIDACAO_ENTIDADE_INATIVA => $validacaoEntidadeInativa,
             ConstantesLancamento::$ENTIDADE_INATIVA => $entidadeInativa,
-            ConstantesLancamento::$DOCTRINE_ORM_ENTITY_MANAGER => $this->getDoctrineORMEntityManager(),
+            ConstantesLancamento::$LANCAMENTO_ORM => $lancamentoORM,
                 )
         );
 

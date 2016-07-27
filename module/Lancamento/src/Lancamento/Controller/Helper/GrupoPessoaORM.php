@@ -66,12 +66,18 @@ class GrupoPessoaORM {
                 ->andWhere(Criteria::expr()->eq(ConstantesLancamento::$ENTITY_DATA_INATIVACAO, $ativo))
                 ->andWhere(Criteria::expr()->eq(ConstantesLancamento::$ENTITY_TIPO_ID, $tipoLimpo))
         ;
-        $grupoPessoas = $this->getEntityManager()
-                ->getRepository($this->getEntity())
-                ->matching($criteria);
-        if (!empty($grupoPessoas)) {
-            $entidade = $grupoPessoas[0];
+        try {
+            $grupoPessoas = $this->getEntityManager()
+                    ->getRepository($this->getEntity())
+                    ->matching($criteria);
+
+            if (!empty($grupoPessoas)) {
+                $entidade = $grupoPessoas[0];
+            }
+        } catch (Exception $ex) {
+            echo $ex->getMessage();
         }
+
         return $entidade;
     }
 

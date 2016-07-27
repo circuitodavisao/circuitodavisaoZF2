@@ -41,8 +41,7 @@ class ListagemDePessoasComEventos extends AbstractHelper {
                 $adicionarVisitante = true;
                 $grupoPessoaTipo = $gp->getGrupoPessoaTipo();
                 if (!$gp->verificarSeEstaAtivo() && $grupoPessoaTipo->getId() == 1) {
-                    $lancamentoORM = new LancamentoORM($this->view->doctrineORMEntityManager);
-                    $resposta = $lancamentoORM->getGrupoPessoaORM()->encontrarPorIdPessoaAtivoETipo($gp->getPessoa_id(), null, 2); /* Consolidacao */
+                    $resposta = $this->view->lancamentoORM->getGrupoPessoaORM()->encontrarPorIdPessoaAtivoETipo($gp->getPessoa_id(), null, 2); /* Consolidacao */
                     if (!empty($resposta)) {
                         echo "Visitante inativado que virou consolidação <br />";
                         $adicionarVisitante = false;

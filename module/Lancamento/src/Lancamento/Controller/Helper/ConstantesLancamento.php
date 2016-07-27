@@ -21,6 +21,7 @@ class ConstantesLancamento {
     public static $ENTIDADE = 'entidade';
     public static $ENTIDADE_INATIVA = 'entidadeInativa';
     public static $DOCTRINE_ORM_ENTITY_MANAGER = 'doctrineORMEntityManager';
+    public static $LANCAMENTO_ORM = 'lancamentoORM';
     public static $TURMA = 'turma';
     public static $GRUPO = 'grupo';
     public static $QUANTIDADE_MAXIMA_PESSOAS_NO_LANÇAMENTO = 60;

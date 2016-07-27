@@ -62,7 +62,7 @@ class GrupoPessoa {
     protected $grupo_id;
 
     /** @ORM\Column(type="integer") */
-    protected $tipo_id;
+    protected $tipo_id; 
 
     /** @ORM\Column(type="string") */
     protected $data_inativacao;
