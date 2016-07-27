@@ -1,0 +1,9 @@
+<?php
+
+$versao = '?v=0.1.2';
+
+echo $this
+        ->headScript()
+        ->prependFile($this->basePath() . '/js/circuito_da_visao/ocultar-campos-formularios.js' . $versao)
+;
+echo $this->inlineScript();

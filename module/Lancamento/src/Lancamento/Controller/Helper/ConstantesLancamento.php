@@ -34,9 +34,11 @@ class ConstantesLancamento {
     public static $VALIDACAO_ENTIDADE_INATIVA = 'validacaoEntidadeInativa';
     public static $STATUS_ENVIO = 'statusEnvio';
     public static $TEMPLATE_JS_LANCAMENTO = 'layout/layout-js-lancamento';
+    public static $TEMPLATE_JS_CADASTRAR_PESSOA = 'layout/layout-js-cadastrar-pessoa';
     public static $TEMPLATE_JS_LANCAMENTO_MODAL_EVENTOS = 'layout/layout-js-lancamento-modal-eventos';
     public static $TEMPLATE_JS_LANCAMENTO_MODAL_MUITOS_CADASTROS = 'layout/layout-js-lancamento-modal-muitos-cadastros';
     public static $STRING_JS_LANCAMENTO = 'layoutJSLancamento';
+    public static $STRING_JS_CADASTRAR_PESSOA = 'layoutJSCadastrarPessoa';
     public static $STRING_JS_LANCAMENTO_MODAL_EVENTOS = 'layoutJSLancamentoModalEventos';
     public static $STRING_JS_LANCAMENTO_MODAL_MUITOS_CADASTROS = 'layoutJSLancamentoModalMuitosCadastros';
     public static $ROUTE_LANCAMENTO = 'lancamento';

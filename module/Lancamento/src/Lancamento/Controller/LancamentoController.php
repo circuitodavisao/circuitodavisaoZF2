@@ -216,7 +216,14 @@ class LancamentoController extends AbstractActionController {
      * @return ViewModel
      */
     public function cadastrarPessoaAction() {
-        return new ViewModel();
+        $view = new ViewModel();
+
+        /* Javascript especifico */
+        $layoutJS = new ViewModel();
+        $layoutJS->setTemplate(ConstantesLancamento::$TEMPLATE_JS_CADASTRAR_PESSOA);
+        $view->addChild($layoutJS, ConstantesLancamento::$STRING_JS_CADASTRAR_PESSOA);
+
+        return $view;
     }
 
     /**
