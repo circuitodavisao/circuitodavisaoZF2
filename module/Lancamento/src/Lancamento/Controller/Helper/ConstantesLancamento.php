@@ -27,7 +27,7 @@ class ConstantesLancamento {
     public static $QUANTIDADE_MAXIMA_PESSOAS_NO_LANÇAMENTO = 60;
     public static $ABA_SELECIONADA = 'abaSelecionada';
     public static $CICLO_SELECIONADO = 'cicloSelecionado';
-    public static $QUANTIDADE_EVENTOS_CICLOS = 'quantidadeDeEventosNoCiclo';
+    public static $QUANTIDADE_EVENTOS_CICLOS = 'quantidadeDeEventosNoCiclo'; 
     public static $QUANTIDADE_PESSOAS_CADASTRADAS = 'quantidadeDePessoasCadastradas';
     public static $VALIDACAO = 'validacao';
     public static $VALIDACAO_NESSE_MES = 'validacaoNesseMes';
@@ -42,6 +42,7 @@ class ConstantesLancamento {
     public static $STRING_JS_LANCAMENTO_MODAL_EVENTOS = 'layoutJSLancamentoModalEventos';
     public static $STRING_JS_LANCAMENTO_MODAL_MUITOS_CADASTROS = 'layoutJSLancamentoModalMuitosCadastros';
     public static $ROUTE_LANCAMENTO = 'lancamento';
+    public static $ACTION_SALVAR_PESSOA = 'SalvarPessoa';
     public static $ONCLICK_ABRIR_MODAL = 'onclick="abrirModal();"';
     public static $PAGINA = 'pagina';
     public static $PAGINA_CADASTRAR_PESSOA = 'CadastrarPessoa';
@@ -54,6 +55,8 @@ class ConstantesLancamento {
     public static $CONTROLLER_LANCAMENTO = 'Lancamento\Controller\Lancamento';
     public static $CLASS_CENTER_BLOCk = 'center-block';
     public static $NBSP = '&nbsp;';
+    public static $CLASS_PHONE = 'phone';
+    public static $FORM_CADASTRAR_PESSOA = 'CadastrarPessoaForm';
     /* Tradução */
     public static $TRADUCAO_ENVIAR_RELATORIO = 'Send Report';
     public static $TRADUCAO_GIRE_O_CELULAR = '<h3>ROTATE THE CELLULAR</h3><span>Turn your phone to landscape to view all your events.</span>';
@@ -66,5 +69,19 @@ class ConstantesLancamento {
     public static $TRADUCAO_PERIODO = 'Period';
     public static $TRADUCAO_LIMITE_CADASTROS = 'Maximum limit of entries achieved!';
     public static $TRADUCAO_NOVO = 'New';
+    public static $TRADUCAO_NOVO_CADASTRO = 'New Register';
+    public static $TRADUCAO_NOVO_CADASTRO_LABEL = 'Person at the launch line';
+    public static $TRADUCAO_NOME = 'Name';
+    public static $TRADUCAO_TELEFONE = 'Phone';
+    public static $TRADUCAO_TIPO = 'Type';
+    public static $TRADUCAO_NUCLEO_CELULA = 'Perfect Core';
+    public static $TRADUCAO_SELECIONE = 'SELECT';
+    /* Fomulário */
+    public static $INPUT_NOME = 'nome';
+    public static $INPUT_TELEFONE = 'telefone';
+    public static $INPUT_TIPO = 'tipo';
+    public static $INPUT_NUCLEO_PERFEITO = 'nucleoPerfeito';
+    public static $INPUT_VOLTAR = 'voltar';
+    public static $INPUT_CADASTRAR = 'cadastrar';
 
 }

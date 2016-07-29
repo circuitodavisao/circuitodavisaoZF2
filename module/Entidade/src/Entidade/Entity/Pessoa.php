@@ -7,6 +7,7 @@ namespace Entidade\Entity;
  * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com>
  * Descricao: Entidade anotada da tabela pessoa
  */
+
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -156,12 +157,40 @@ class Pessoa {
     }
 
     /**
-     * Retorna o nome formatado
+     * Retorna o nome formatado em relação a quantidade de eventos no ciclo
+     * @param int $tipo
      * @return String
      */
-    function getNomeListaDeLancamento() {
-        $nome = substr($this->getNome(), 0, 8);
-        return $nome . '..';
+    function getNomeListaDeLancamento($tipo = 0) {
+        $nome = '';
+        switch ($tipo) {
+            case 1:
+                if (strlen($this->getNome()) > 28) {
+                    $nome = substr($this->getNome(), 0, 26) . '..';
+                } else {
+                    $nome = $this->getNome();
+                }
+                break;
+            case 2:
+                if (strlen($this->getNome()) > 20) {
+                    $nome = substr($this->getNome(), 0, 18) . '..';
+                } else {
+                    $nome = $this->getNome();
+                }
+                break;
+            case 3:
+                if (strlen($this->getNome()) > 15) {
+                    $nome = substr($this->getNome(), 0, 13) . '..';
+                } else {
+                    $nome = $this->getNome();
+                }
+                break;
+            default:
+                $nome = substr($this->getNome(), 0, 8) . '..';
+                break;
+        }
+
+        return $nome;
     }
 
     /**
@@ -566,10 +595,10 @@ class Pessoa {
 
             // Descobre que dia é hoje e retorna a unix timestamp
             $hoje = mktime(0, 0, 0, date('m'), date('d'), date('Y'));
-            // Descobre a unix timestamp da data de nascimento do fulano
+            // Descobre a unix timestamp da data de nascimento
             $nascimento = mktime(0, 0, 0, $mes, $dia, $ano);
 
-            // Depois apenas fazemos o cálculo já citado :)
+            // Depois apenas fazemos o cálculo
             $idade = floor((((($hoje - $nascimento) / 60) / 60) / 24) / 365.25);
         }
         return $idade;

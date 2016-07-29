@@ -21,7 +21,7 @@ $(document).ready(function(){
 
     var opSelected = $("#tipo option:selected").val();
 
-    if(opSelected == 0){
+    if(opSelected == 0 || opSelected == 1){
         $("#hidecheckbox").hide();
     }else{
         $("#hidecheckbox").show();

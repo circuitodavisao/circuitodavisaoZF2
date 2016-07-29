@@ -9,6 +9,7 @@ use Exception;
 use Lancamento\Controller\Helper\ConstantesLancamento;
 use Lancamento\Controller\Helper\FuncoesLancamento;
 use Lancamento\Controller\Helper\LancamentoORM;
+use Lancamento\Form\CadastrarPessoaForm;
 use Login\Controller\Helper\Constantes;
 use Login\Controller\Helper\LoginORM;
 use Zend\Json\Json;
@@ -183,7 +184,6 @@ class LancamentoController extends AbstractActionController {
                 }
             }
         }
-
         $view = new ViewModel(
                 array(
             ConstantesLancamento::$ENTIDADE => $entidade,
@@ -216,7 +216,15 @@ class LancamentoController extends AbstractActionController {
      * @return ViewModel
      */
     public function cadastrarPessoaAction() {
-        $view = new ViewModel();
+        /* Helper Controller */
+        $lancamentoORM = new LancamentoORM($this->getDoctrineORMEntityManager());
+        $tipos = $lancamentoORM->getGrupoPessoaTipoORM()->tipoDePessoaLancamento();
+        /* Formulario */
+        $formCadastrarPessoa = new CadastrarPessoaForm(ConstantesLancamento::$FORM_CADASTRAR_PESSOA, $tipos);
+
+        $view = new ViewModel(array(
+            ConstantesLancamento::$FORM_CADASTRAR_PESSOA => $formCadastrarPessoa,
+        ));
 
         /* Javascript especifico */
         $layoutJS = new ViewModel();

@@ -110,6 +110,7 @@ class GrupoPessoaORM {
     public function alterarVisitanteParaConsolidacao(LancamentoORM $lancamentoORM) {
         $ultimaSemana = strtotime('-7 days');
         $dataUltimaSemana = date('Y-m-d', $ultimaSemana);
+        echo "dataUltimaSemana$dataUltimaSemana <br />";
         $criteria = Criteria::create()
                 ->andWhere(Criteria::expr()->eq(Constantes::$ENTITY_PESSOA_DATA_CRIACAO, $dataUltimaSemana))
                 ->andWhere(Criteria::expr()->eq(Constantes::$ENTITY_PESSOA_DATA_INATIVACAO, null))

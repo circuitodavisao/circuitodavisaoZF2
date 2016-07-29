@@ -128,7 +128,10 @@ class Constantes {
     public static $FORM_STRING_LABEL = 'label';
     public static $FORM_STRING_LABEL_ATRIBUTES = 'label_attributes';
     public static $FORM_STRING_VALUE = 'value';
+    public static $FORM_STRING_ATTRIBUTES = 'attributes';
+    public static $FORM_STRING_OPTIONS = 'options';
     public static $FORM_STRING_VALUE_OPTIONS = 'value_options';
+    public static $FORM_STRING_NAME = 'name'; 
     public static $FORM_STRING_CLASS_GUI_INPUT = 'gui-input';
     public static $FORM_STRING_REQUIRED = 'required';
     public static $FORM_STRING_ONKEYPRESS = 'onkeypress';

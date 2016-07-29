@@ -4,7 +4,6 @@ namespace Lancamento\View\Helper;
 
 use Doctrine\Common\Collections\Criteria;
 use Lancamento\Controller\Helper\FuncoesLancamento;
-use Lancamento\Controller\Helper\LancamentoORM;
 use Zend\View\Helper\AbstractHelper;
 
 /**
@@ -43,7 +42,7 @@ class ListagemDePessoasComEventos extends AbstractHelper {
                 if (!$gp->verificarSeEstaAtivo() && $grupoPessoaTipo->getId() == 1) {
                     $resposta = $this->view->lancamentoORM->getGrupoPessoaORM()->encontrarPorIdPessoaAtivoETipo($gp->getPessoa_id(), null, 2); /* Consolidacao */
                     if (!empty($resposta)) {
-                        echo "Visitante inativado que virou consolidação <br />";
+//                        echo "Visitante inativado que virou consolidação <br />";
                         $adicionarVisitante = false;
                     }
                 }
@@ -215,16 +214,25 @@ class ListagemDePessoasComEventos extends AbstractHelper {
 
                 $html .= '</td>';
 
+                // AJUSTE 
+                // 29/07/2016
+                // Empura as colunas de eventos quando tem menos de 4 eventos
+                $empuraColunas = '';
+                if ($this->view->quantidadeDeEventosNoCiclo < 4) {
+                    $empuraColunas = 'col-xs-10 col-sm-10 col-md-10';
+                }
+                // FIM AJUSTE
+
                 /* NOME */
-                $html .= '<td class="tdNome text-left">&nbsp;';
+                $html .= '<td class="text-left ' . $empuraColunas . '">&nbsp;';
                 /* Menu dropup Nome */
                 $html .= '<div class="btn-group dropdown">';
                 if (!($pessoa->getTipo() != 'LP' && !$pessoa->getAtivo())) {
                     $html .= '<a id="menudrop_' . $pessoa->getId() . '" class="tdNome text-left dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">';
                 }
                 $html .= '<span id="span_nome_' . $pessoa->getId() . '" ' . $corTextoTagsExtras . '>';
-                /* Verificação se é transferencia */
-                $html .= $pessoa->getNomeListaDeLancamento();
+                /* Validação de quantos eventos */
+                $html .= $pessoa->getNomeListaDeLancamento($this->view->quantidadeDeEventosNoCiclo);
                 $html .= '</span>';
                 $html .= '</a>';
                 if (!($pessoa->getTipo() != 'LP' && !$pessoa->getAtivo())) {
@@ -392,6 +400,7 @@ class ListagemDePessoasComEventos extends AbstractHelper {
                         $html .= '<i id="i_' . $idEventoFrequencia . '" class="fa ' . $classIco . '"></i>';
                         $html .= '</button>';
                     } else {/* Eventos futuro */
+                        $html .= '<button id="b_' . $idEventoFrequencia . '" type="button" class="btn btn-sm disabled">';
                         if ($icone == 1) {
                             $html .= '<i class="fa fa-clock-o"></i>';
                         }
@@ -401,6 +410,7 @@ class ListagemDePessoasComEventos extends AbstractHelper {
                         if ($icone == 3) {
                             $html .= '<i class="fa fa-ban"></i>';
                         }
+                        $html .= '</button>';
                     }
                     $html .= '</div>';
                     $html .= '</td>';

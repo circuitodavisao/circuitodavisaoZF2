@@ -2,9 +2,11 @@
 
 namespace Lancamento\Controller\Helper;
 
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManager;
 use Entidade\Entity\GrupoPessoaTipo;
 use Exception;
+use Login\Controller\Helper\Constantes;
 
 /**
  * Nome: GrupoPessoaTipoORM.php
@@ -43,6 +45,37 @@ class GrupoPessoaTipoORM {
             throw new Exception("Não foi encontrado a grupo_pessoa_tipo de id = {$id}");
         }
         return $entidade;
+    }
+
+    /**
+     * Localizar todos os tipos
+     * @return GrupoPessoaTipo[]
+     * @throws Exception
+     */
+    public function encontrarTodos() {
+        $entidades = $this->getEntityManager()->getRepository($this->getEntity())->findAll();
+        if (!$entidades) {
+            throw new Exception("Não foi encontrado nenhum grupo_pessoa_tipo");
+        }
+        return $entidades;
+    }
+
+    /**
+     * Localizar os tipos de pessoa para lançamento de dados
+     * @return GrupoPessoaTipo[]
+     * @throws Exception
+     */
+    public function tipoDePessoaLancamento() {
+        $criteria = Criteria::create()
+                ->andWhere(Criteria::expr()->in(Constantes::$ID, [1, 2, 3]));
+        try {
+            $entidades = $this->getEntityManager()
+                    ->getRepository($this->getEntity())
+                    ->matching($criteria);
+            return $entidades;
+        } catch (Exception $ex) {
+            echo $ex->getMessage();
+        }
     }
 
     public function getEntityManager() {

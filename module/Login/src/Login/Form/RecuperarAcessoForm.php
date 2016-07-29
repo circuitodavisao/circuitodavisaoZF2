@@ -62,8 +62,6 @@ class RecuperarAcessoForm extends Form {
                             ),
                         ])
         );
-        $element = $this->get(Constantes::$INPUT_OPCAO);
-        $element->setLabelOptions(['disable_html_escape' => true]);
 
         /**
          * Botao de cancelar
