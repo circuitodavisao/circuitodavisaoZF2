@@ -12,6 +12,7 @@ use Login\Form\LoginForm;
 use Login\Form\RecuperarAcessoForm;
 use Login\Form\RecuperarSenhaForm;
 use Zend\Authentication\AuthenticationService;
+use Zend\Json\Json;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\Mvc\I18n\Translator;
 use Zend\Session\Container;
@@ -407,7 +408,7 @@ class LoginController extends AbstractActionController {
     }
 
     /**
-     * Função que direciona a tela de acesso
+     * Função que direciona a tela de selecao de perfil
      * GET /principal
      */
     public function principalAction() {
@@ -477,19 +478,28 @@ class LoginController extends AbstractActionController {
 
     /**
      * Função que direciona a tela de acesso e enviando as responsabilidades da pessoa
-     * GET /perfilSelecionado
+     * POST /perfilSelecionado
      */
     public function perfilSelecionadoAction() {
-        $this->verificarUsuarioLogado();
+        $request = $this->getRequest();
+        $response = $this->getResponse();
+        if ($request->isPost()) {
+            try {
+                $this->verificarUsuarioLogado();
 
-        $idEntidade = $this->params()->fromRoute(Constantes::$ID);
-        $sessao = new Container(Constantes::$NOME_APLICACAO);
-        $sessao->idEntidadeAtual = $idEntidade;
+                $post_data = $request->getPost();
+                $idEntidade = $post_data[Constantes::$ID];
+                $sessao = new Container(Constantes::$NOME_APLICACAO);
+                $sessao->idEntidadeAtual = $idEntidade;
 
-        /* Redirecionamento */
-        return $this->forward()->dispatch(Constantes::$CONTROLLER_LOGIN, array(
-                    Constantes::$ACTION => Constantes::$ACTION_PRINCIPAL,
-        ));
+                $response->setContent(Json::encode(
+                                array('response' => 'true')));
+                /* Redirecionamento */
+            } catch (Exception $exc) {
+                echo $exc->getTraceAsString();
+            }
+        }
+        return $response;
     }
 
     /**
