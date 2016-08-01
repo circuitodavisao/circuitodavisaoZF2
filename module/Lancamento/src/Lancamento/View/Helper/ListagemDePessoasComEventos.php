@@ -12,7 +12,7 @@ use Zend\View\Helper\AbstractHelper;
  * Descricao: Classe helper view para mostrar a listagem de eventos com frequencia
  */
 class ListagemDePessoasComEventos extends AbstractHelper {
-                
+
     public function __construct() {
         
     }
@@ -181,30 +181,31 @@ class ListagemDePessoasComEventos extends AbstractHelper {
                     $html .= '<ul class="dropdown-menu sobrepor-elementos">';
                     $html .= '<span class="editable-container editable-inline">';
                     $html .= '<div class="ml5 definicao-altura-30">';
-                    $html .= '<form class="form-inline editableform">';
 
                     if ($pessoa->getTipo() != 'AL') {
                         $html .= '<div class="control-group form-group">';
 
                         $html .= '<span class="input-group-btn">';
-                        $html .= '<span onclick="removerPessoa(' . $pessoa->getIdGrupoPessoa() . ')" class="btn ladda-button btn-sm" style="margin-left:5px;"><i class="fa fa-trash-o"></i></span>';
+                        $html .= '<span onclick="removerPessoa(' . $pessoa->getIdGrupoPessoa() . ')" '
+                                . 'class="btn ladda-button btn-sm" style="margin-left:5px;"><i class="fa fa-trash-o"></i></span>';
                         $html .= '</span>';
 
                         /* Reserva do revisão de vidas */
                         if (empty($pessoa->verificaSeRevisaoFoiCadastraddoNoMesEAno($mesSelecionado, $anoSelecionado))) {
                             $html .= '<span class="input-group-btn">';
-                            $html .= '<span onclick="location.href=\'/lancamentoCadastrarPessoaRevisao/' . $pessoa->getIdGrupoPessoa() . '\'" class="btn ladda-button btn-sm" style="margin-left:5px;"><i class="fa fa-send"></i></span>';
+                            $html .= '<span onclick="funcaoPessoa(\'CadastrarPessoaRevisao\', ' . $pessoa->getIdGrupoPessoa() . ');" '
+                                    . 'class="btn ladda-button btn-sm" style="margin-left:5px;"><i class="fa fa-send"></i></span>';
                             $html .= '</span>';
                         } else {
                             $html .= '<span class="input-group-btn">';
-                            $html .= '<span onclick="location.href=\'/lancamentoFichaRevisao/' . $pessoa->getIdGrupoPessoa() . '\'" class="btn ladda-button btn-sm" style="margin-left:5px;"><i class="fa fa-file-text-o"></i></span>';
+                            $html .= '<span onclick="funcaoPessoa(\'FichaRevisao\', ' . $pessoa->getIdGrupoPessoa() . ');" '
+                                    . 'class="btn ladda-button btn-sm" style="margin-left:5px;"><i class="fa fa-file-text-o"></i></span>';
                             $html .= '</span>';
                         }
 
                         $html .= '</div>';
                     }
 
-                    $html .= '</form>';
                     $html .= '</div>';
                     $html .= '</span>';
                     $html .= '</ul>';

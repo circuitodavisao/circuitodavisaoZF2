@@ -17,8 +17,8 @@ use Zend\Mvc\Controller\AbstractActionController;
 use Zend\Mvc\I18n\Translator;
 use Zend\Session\Container;
 use Zend\View\Model\ViewModel;
- 
-/** 
+
+/**
  * Nome: LancamentoController.php
  * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com>
  * Descricao: Controle de todas ações de lancamento
@@ -93,13 +93,21 @@ class LancamentoController extends AbstractActionController {
             ));
         }
         if ($pagina == ConstantesLancamento::$PAGINA_FICHA_REVISAO) {
-            $parametro = $this->params()->fromRoute(Constantes::$ID);
             return $this->forward()->dispatch(ConstantesLancamento::$CONTROLLER_LANCAMENTO, array(
                         Constantes::$ACTION => ConstantesLancamento::$PAGINA_FICHA_REVISAO,
-                        Constantes::$ID => $parametro,
             ));
         }
-
+        /* Funcoes */
+        if ($pagina == ConstantesLancamento::$PAGINA_FUNCOES) {
+            /* Registro de sessão com o id passado na função */
+            $request = $this->getRequest();
+            $post_data = $request->getPost();
+            $sessao = new Container(Constantes::$NOME_APLICACAO);
+            $sessao->idFuncaoLancamento = $post_data[Constantes::$ID];
+            return $this->forward()->dispatch(ConstantesLancamento::$CONTROLLER_LANCAMENTO, array(
+                        Constantes::$ACTION => ConstantesLancamento::$PAGINA_FUNCOES,
+            ));
+        }
 
         /* Teste de funcao */
 //        echo "testando funcao de alterarVisitanteParaConsolidacao <br />";
@@ -254,9 +262,9 @@ class LancamentoController extends AbstractActionController {
      * @return ViewModel
      */
     public function fichaRevisaoAction() {
-        $parametro = (int) $this->params()->fromRoute(Constantes::$ID);
+        $sessao = new Container(Constantes::$NOME_APLICACAO);
         $lancamentoORM = new LancamentoORM($this->getDoctrineORMEntityManager());
-        $grupoPessoa = $lancamentoORM->getGrupoPessoaORM()->encontrarPorIdGrupoPessoa($parametro);
+        $grupoPessoa = $lancamentoORM->getGrupoPessoaORM()->encontrarPorIdGrupoPessoa($sessao->idFuncaoLancamento);
         $pessoa = $grupoPessoa->getPessoa();
         try {
             if (!empty($pessoa->getTurmaPessoaAtiva())) {
@@ -401,6 +409,32 @@ class LancamentoController extends AbstractActionController {
                 $response->setContent(Json::encode(
                                 array(
                                     'response' => 'true',
+                )));
+            } catch (Exception $exc) {
+                echo $exc->getTraceAsString();
+            }
+        }
+        return $response;
+    }
+
+    /**
+     * Controle de funçoes da tela de lançamento
+     * @return Json
+     */
+    public function funcoesAction() {
+        $request = $this->getRequest();
+        $response = $this->getResponse();
+        if ($request->isPost()) {
+            try {
+                $post_data = $request->getPost();
+                $id = $post_data[Constantes::$ID];
+                $funcao = $post_data[Constantes::$FUNCAO];
+
+                $response->setContent(Json::encode(
+                                array(
+                                    'response' => 'true',
+                                    'tipoDeRetorno' => 1,
+                                    'url' => '/lancamento' . $funcao,
                 )));
             } catch (Exception $exc) {
                 echo $exc->getTraceAsString();
