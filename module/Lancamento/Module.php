@@ -19,8 +19,8 @@ use Lancamento\View\Helper\MensagemRelatorioEnviado;
 use Lancamento\View\Helper\ModalAba;
 use Lancamento\View\Helper\ModalMuitosCadastros;
 use Lancamento\View\Helper\ModalMuitosEventos;
-use Lancamento\View\Helper\ModalRemoverPessoa;
 use Lancamento\View\Helper\TabelaLancamento;
+use Login\View\Helper\BotaoSubmit;
 use Login\View\Helper\MensagemStatica;
 use Zend\Mvc\MvcEvent;
 use Zend\Session\Config\SessionConfig;
@@ -84,6 +84,9 @@ class Module {
                 },
                 'modalMuitosCadastros' => function($sm) {
                     return new ModalMuitosCadastros();
+                },
+                'botaoSubmit' => function($sm) {
+                    return new BotaoSubmit();
                 },
             )
         );

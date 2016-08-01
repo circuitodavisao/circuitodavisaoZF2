@@ -17,8 +17,8 @@ use Zend\Mvc\Controller\AbstractActionController;
 use Zend\Mvc\I18n\Translator;
 use Zend\Session\Container;
 use Zend\View\Model\ViewModel;
-
-/**
+ 
+/** 
  * Nome: LancamentoController.php
  * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com>
  * Descricao: Controle de todas ações de lancamento
