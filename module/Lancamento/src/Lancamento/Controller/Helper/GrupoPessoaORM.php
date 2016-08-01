@@ -14,7 +14,7 @@ use Login\Controller\Helper\Constantes;
  * Descricao: Classe com acesso doctrine a entity grupo_pessoa
  */
 class GrupoPessoaORM {
-
+ 
     private $_entityManager;
     private $_entity;
 

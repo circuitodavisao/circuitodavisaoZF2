@@ -12,7 +12,7 @@ use Zend\View\Helper\AbstractHelper;
  * Descricao: Classe helper view para mostrar a listagem de eventos com frequencia
  */
 class ListagemDePessoasComEventos extends AbstractHelper {
-
+                
     public function __construct() {
         
     }
@@ -400,7 +400,7 @@ class ListagemDePessoasComEventos extends AbstractHelper {
                         $html .= '<i id="i_' . $idEventoFrequencia . '" class="fa ' . $classIco . '"></i>';
                         $html .= '</button>';
                     } else {/* Eventos futuro */
-                        $html .= '<button id="b_' . $idEventoFrequencia . '" type="button" class="btn btn-sm disabled">';
+                        $html .= '<button type="button" class="btn btn-sm disabled">';
                         if ($icone == 1) {
                             $html .= '<i class="fa fa-clock-o"></i>';
                         }
