@@ -61,7 +61,7 @@ $form->setAttribute(Constantes::$ACTION, $this->url(ConstantesLancamento::$ROUTE
                             ?>
                         </div> 
                         <!-- Tipo Input Radio --> 
-                        <div id="hidecheckbox" class="mb15" style="display: none;">
+                        <div id="ocultar_checkbox" class="mb15" style="display: none;">
                             <label for="<?php echo ConstantesLancamento::$TRADUCAO_NUCLEO_CELULA; ?>" class="field-label">
                                 <?php echo $this->translate(ConstantesLancamento::$TRADUCAO_NUCLEO_CELULA); ?>
                             </label>
@@ -72,8 +72,9 @@ $form->setAttribute(Constantes::$ACTION, $this->url(ConstantesLancamento::$ROUTE
                     </div>
                     <!-- end .form-body section -->
                     <div class="panel-footer text-right">
-                        <button type="button" name="cancelar" id="cancelar" class="btn ladda-button btn-default dark" data-style="zoom-in" value="Back" onclick="location.href = '/'"><span class="ladda-label">Voltar</span><span class="ladda-spinner"></span></button>
-                        <button type="submit" class="btn btn-danger ladda-button dark" data-style="zoom-out">Nova Pessoa</button>
+                        <button name="cancelar" id="cancelar" class="btn ladda-button btn-default dark" data-style="zoom-in" value="Back" onclick="location.href = '/'"><span class="ladda-label">Voltar</span><span class="ladda-spinner"></span></button>
+                        <span>&nbsp;</span>
+                        <?php echo $this->botaoSubmit('Nova Pessoa','btn-danger dark'); ?>
                     </div>
                     <!-- end .form-footer section -->
                     <?php echo $this->form()->closeTag() ?>
@@ -281,7 +282,7 @@ $form->setAttribute(Constantes::$ACTION, $this->url(ConstantesLancamento::$ROUTE
         
                                     </div>
                                      end .section row section 
-                                    <div id="hidedados">
+                                    <div id="ocultar_dados">
         
                                         <div class="section-divider mv40">
                                             <span>Dados Pessoais</span>
@@ -448,7 +449,7 @@ $form->setAttribute(Constantes::$ACTION, $this->url(ConstantesLancamento::$ROUTE
                                     </div>
         
                                      end .section row section 
-                                    <div id="hidealuno">
+                                    <div id="ocultar_aluno">
                                         <div class="section-divider mv40">
                                             <span>Selecione um aluno para cadastro</span>
                                         </div>
