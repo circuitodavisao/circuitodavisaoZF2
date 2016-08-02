@@ -86,10 +86,8 @@ class LancamentoController extends AbstractActionController {
             ));
         }
         if ($pagina == ConstantesLancamento::$PAGINA_CADASTRAR_PESSOA_REVISAO) {
-            $parametro = $this->params()->fromRoute(Constantes::$ID);
             return $this->forward()->dispatch(ConstantesLancamento::$CONTROLLER_LANCAMENTO, array(
                         Constantes::$ACTION => ConstantesLancamento::$PAGINA_CADASTRAR_PESSOA_REVISAO,
-                        Constantes::$ID => $parametro,
             ));
         }
         if ($pagina == ConstantesLancamento::$PAGINA_FICHA_REVISAO) {
@@ -247,10 +245,10 @@ class LancamentoController extends AbstractActionController {
      * @return ViewModel
      */
     public function cadastrarPessoaRevisaoAction() {
-        $parametro = (int) $this->params()->fromRoute(Constantes::$ID);
+        $sessao = new Container(Constantes::$NOME_APLICACAO);
         $lancamentoORM = new LancamentoORM($this->getDoctrineORMEntityManager());
         $loginORM = new LoginORM($this->getDoctrineORMEntityManager());
-        $grupoPessoa = $lancamentoORM->getGrupoPessoaORM()->encontrarPorIdGrupoPessoa($parametro);
+        $grupoPessoa = $lancamentoORM->getGrupoPessoaORM()->encontrarPorIdGrupoPessoa($sessao->idFuncaoLancamento);
         $pessoa = $grupoPessoa->getPessoa();
         $pessoa->setData_revisao(date('Y-m-d'));
         $loginORM->getPessoaORM()->persistirPessoa($pessoa);
@@ -392,29 +390,22 @@ class LancamentoController extends AbstractActionController {
      * @return Json
      */
     public function removerPessoaAction() {
-        $request = $this->getRequest();
-        $response = $this->getResponse();
-        if ($request->isPost()) {
-            try {
-                $post_data = $request->getPost();
-                $idGrupoPessoa = $post_data['idGrupoPessoa'];
+        try {
+            $sessao = new Container(Constantes::$NOME_APLICACAO);
 
-                /* Helper Controller */
-                $lancamentoORM = new LancamentoORM($this->getDoctrineORMEntityManager());
+            /* Helper Controller */
+            $lancamentoORM = new LancamentoORM($this->getDoctrineORMEntityManager());
 
-                $grupoPessoa = $lancamentoORM->getGrupoPessoaORM()->encontrarPorIdGrupoPessoa($idGrupoPessoa);
-                $grupoPessoa->inativar();
-                $lancamentoORM->getGrupoPessoaORM()->persistirGrupoPessoa($grupoPessoa);
+            $grupoPessoa = $lancamentoORM->getGrupoPessoaORM()->encontrarPorIdGrupoPessoa($sessao->idFuncaoLancamento);
+            $grupoPessoa->inativar();
+            $lancamentoORM->getGrupoPessoaORM()->persistirGrupoPessoa($grupoPessoa);
 
-                $response->setContent(Json::encode(
-                                array(
-                                    'response' => 'true',
-                )));
-            } catch (Exception $exc) {
-                echo $exc->getTraceAsString();
-            }
+            return $this->forward()->dispatch(ConstantesLancamento::$CONTROLLER_LANCAMENTO, array(
+                        Constantes::$ACTION => ConstantesLancamento::$ROUTE_INDEX,
+            ));
+        } catch (Exception $exc) {
+            echo $exc->getTraceAsString();
         }
-        return $response;
     }
 
     /**

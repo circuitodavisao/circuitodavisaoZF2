@@ -84,5 +84,10 @@ class ConstantesLancamento {
     public static $INPUT_NUCLEO_PERFEITO = 'nucleoPerfeito';
     public static $INPUT_VOLTAR = 'voltar';
     public static $INPUT_CADASTRAR = 'cadastrar';
+    /* Rotas */
+    public static $ROUTE_REMOVER_PESSOA = 'RemoverPessoa';
+    public static $ROUTE_CADASTRAR_PESSOA_REVISAO = 'CadastrarPessoaRevisao';
+    public static $ROUTE_INDEX = 'Index';
+    public static $ROUTE_FICHA_REVISAO = 'FichaRevisao';
 
 }
