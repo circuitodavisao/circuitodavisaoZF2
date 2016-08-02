@@ -21,5 +21,16 @@ function abrirModal(idIcone, idResponsabilidade, acao) {
         midClick: true // allow opening popup on middle mouse click. Always set it to true if you don't provide alternative source.
     });
 
-    location.href = '/' + acao + '/' + idResponsabilidade;
+    var url = '/' + acao;
+    $.post(
+            url,
+            {
+                id: idResponsabilidade,
+            },
+            function (data) {
+                if (data.response) {
+                    location.href = '/principal';
+                }
+            }, 'json');
+
 }

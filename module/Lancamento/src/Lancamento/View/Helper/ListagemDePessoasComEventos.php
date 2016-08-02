@@ -3,6 +3,7 @@
 namespace Lancamento\View\Helper;
 
 use Doctrine\Common\Collections\Criteria;
+use Lancamento\Controller\Helper\ConstantesLancamento;
 use Lancamento\Controller\Helper\FuncoesLancamento;
 use Zend\View\Helper\AbstractHelper;
 
@@ -12,7 +13,7 @@ use Zend\View\Helper\AbstractHelper;
  * Descricao: Classe helper view para mostrar a listagem de eventos com frequencia
  */
 class ListagemDePessoasComEventos extends AbstractHelper {
-                
+
     public function __construct() {
         
     }
@@ -42,7 +43,6 @@ class ListagemDePessoasComEventos extends AbstractHelper {
                 if (!$gp->verificarSeEstaAtivo() && $grupoPessoaTipo->getId() == 1) {
                     $resposta = $this->view->lancamentoORM->getGrupoPessoaORM()->encontrarPorIdPessoaAtivoETipo($gp->getPessoa_id(), null, 2); /* Consolidacao */
                     if (!empty($resposta)) {
-//                        echo "Visitante inativado que virou consolidação <br />";
                         $adicionarVisitante = false;
                     }
                 }
@@ -181,30 +181,31 @@ class ListagemDePessoasComEventos extends AbstractHelper {
                     $html .= '<ul class="dropdown-menu sobrepor-elementos">';
                     $html .= '<span class="editable-container editable-inline">';
                     $html .= '<div class="ml5 definicao-altura-30">';
-                    $html .= '<form class="form-inline editableform">';
 
                     if ($pessoa->getTipo() != 'AL') {
                         $html .= '<div class="control-group form-group">';
 
                         $html .= '<span class="input-group-btn">';
-                        $html .= '<span onclick="removerPessoa(' . $pessoa->getIdGrupoPessoa() . ')" class="btn ladda-button btn-sm" style="margin-left:5px;"><i class="fa fa-trash-o"></i></span>';
+                        $html .= '<span onclick="funcaoPessoa(\'' . ConstantesLancamento::$ROUTE_REMOVER_PESSOA . '\', ' . $pessoa->getIdGrupoPessoa() . ');" '
+                                . 'class="btn ladda-button btn-sm" style="margin-left:5px;"><i class="fa fa-trash-o"></i></span>';
                         $html .= '</span>';
 
                         /* Reserva do revisão de vidas */
                         if (empty($pessoa->verificaSeRevisaoFoiCadastraddoNoMesEAno($mesSelecionado, $anoSelecionado))) {
                             $html .= '<span class="input-group-btn">';
-                            $html .= '<span onclick="location.href=\'/lancamentoCadastrarPessoaRevisao/' . $pessoa->getIdGrupoPessoa() . '\'" class="btn ladda-button btn-sm" style="margin-left:5px;"><i class="fa fa-send"></i></span>';
+                            $html .= '<span onclick="funcaoPessoa(\'' . ConstantesLancamento::$ROUTE_CADASTRAR_PESSOA_REVISAO . '\', ' . $pessoa->getIdGrupoPessoa() . ');" '
+                                    . 'class="btn ladda-button btn-sm" style="margin-left:5px;"><i class="fa fa-send"></i></span>';
                             $html .= '</span>';
                         } else {
                             $html .= '<span class="input-group-btn">';
-                            $html .= '<span onclick="location.href=\'/lancamentoFichaRevisao/' . $pessoa->getIdGrupoPessoa() . '\'" class="btn ladda-button btn-sm" style="margin-left:5px;"><i class="fa fa-file-text-o"></i></span>';
+                            $html .= '<span onclick="funcaoPessoa(\'' . ConstantesLancamento::$ROUTE_FICHA_REVISAO . '\', ' . $pessoa->getIdGrupoPessoa() . ');" '
+                                    . 'class="btn ladda-button btn-sm" style="margin-left:5px;"><i class="fa fa-file-text-o"></i></span>';
                             $html .= '</span>';
                         }
 
                         $html .= '</div>';
                     }
 
-                    $html .= '</form>';
                     $html .= '</div>';
                     $html .= '</span>';
                     $html .= '</ul>';

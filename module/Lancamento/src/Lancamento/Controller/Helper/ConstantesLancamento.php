@@ -27,7 +27,7 @@ class ConstantesLancamento {
     public static $QUANTIDADE_MAXIMA_PESSOAS_NO_LANÇAMENTO = 60;
     public static $ABA_SELECIONADA = 'abaSelecionada';
     public static $CICLO_SELECIONADO = 'cicloSelecionado';
-    public static $QUANTIDADE_EVENTOS_CICLOS = 'quantidadeDeEventosNoCiclo'; 
+    public static $QUANTIDADE_EVENTOS_CICLOS = 'quantidadeDeEventosNoCiclo';
     public static $QUANTIDADE_PESSOAS_CADASTRADAS = 'quantidadeDePessoasCadastradas';
     public static $VALIDACAO = 'validacao';
     public static $VALIDACAO_NESSE_MES = 'validacaoNesseMes';
@@ -48,6 +48,7 @@ class ConstantesLancamento {
     public static $PAGINA_CADASTRAR_PESSOA = 'CadastrarPessoa';
     public static $PAGINA_CADASTRAR_PESSOA_REVISAO = 'CadastrarPessoaRevisao';
     public static $PAGINA_FICHA_REVISAO = 'FichaRevisao';
+    public static $PAGINA_FUNCOES = 'Funcoes';
     public static $PAGINA_MUDAR_FREQUENCIA = 'MudarFrequencia';
     public static $PAGINA_ENVIAR_RELATORIO = 'EnviarRelatorio';
     public static $PAGINA_ALTERAR_NOME = 'AlterarNome';
@@ -83,5 +84,10 @@ class ConstantesLancamento {
     public static $INPUT_NUCLEO_PERFEITO = 'nucleoPerfeito';
     public static $INPUT_VOLTAR = 'voltar';
     public static $INPUT_CADASTRAR = 'cadastrar';
+    /* Rotas */
+    public static $ROUTE_REMOVER_PESSOA = 'RemoverPessoa';
+    public static $ROUTE_CADASTRAR_PESSOA_REVISAO = 'CadastrarPessoaRevisao';
+    public static $ROUTE_INDEX = 'Index';
+    public static $ROUTE_FICHA_REVISAO = 'FichaRevisao';
 
 }

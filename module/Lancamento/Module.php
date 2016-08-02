@@ -21,6 +21,7 @@ use Lancamento\View\Helper\ModalMuitosCadastros;
 use Lancamento\View\Helper\ModalMuitosEventos;
 use Lancamento\View\Helper\TabelaLancamento;
 use Login\View\Helper\BotaoSubmit;
+use Login\View\Helper\BotaoSubmitDesabilitado;
 use Login\View\Helper\MensagemStatica;
 use Zend\Mvc\MvcEvent;
 use Zend\Session\Config\SessionConfig;
@@ -87,6 +88,9 @@ class Module {
                 },
                 'botaoSubmit' => function($sm) {
                     return new BotaoSubmit();
+                },
+                'botaoSubmitDesabilitado' => function($sm) {
+                    return new BotaoSubmitDesabilitado();
                 },
             )
         );

@@ -44,6 +44,7 @@ class Constantes {
     public static $MENSAGEM = 'mensagem';
     public static $TIPO = 'tipo';
     public static $ID = 'id';
+    public static $FUNCAO = 'funcao';
     public static $DIV = 'div';
 
     /* Constantes recuperar acesso */
