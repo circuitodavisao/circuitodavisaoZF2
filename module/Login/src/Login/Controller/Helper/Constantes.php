@@ -135,6 +135,8 @@ class Constantes {
     public static $FORM_STRING_NAME = 'name'; 
     public static $FORM_STRING_CLASS_GUI_INPUT = 'gui-input';
     public static $FORM_STRING_REQUIRED = 'required';
+    public static $FORM_STRING_TRUE = 'true';
+    public static $FORM_STRING_ARIA_REQUIRED = 'aria-required';
     public static $FORM_STRING_ONKEYPRESS = 'onkeypress';
     public static $FORM_STRING_ONKEYUP = 'onkeyup';
     public static $FORM_STRING_ONCLICK = 'onClick';

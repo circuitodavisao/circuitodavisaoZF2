@@ -2,7 +2,7 @@
 
 use Lancamento\Controller\Helper\ConstantesLancamento;
 use Login\Controller\Helper\Constantes;
- 
+
 /**
  * Nome: cadastrar-pessoa.phtml
  * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com> e Sergio Bezerra da Silva <sergio.silva.unb@gmail.com>
@@ -39,26 +39,41 @@ $form->setAttribute(Constantes::$ACTION, $this->url(ConstantesLancamento::$ROUTE
                             </label>
                         </div>
                         <!-- Telefone Input -->
-                        <div class="section">
-                            <label for="<?php echo ConstantesLancamento::$TRADUCAO_TELEFONE; ?>" class="field-label">
-                                <?php echo $this->translate(ConstantesLancamento::$TRADUCAO_TELEFONE); ?>
-                            </label>
-                            <label for="<?php echo ConstantesLancamento::$TRADUCAO_TELEFONE; ?>" class="field prepend-icon">
-                                <?php echo $this->formInput($form->get(ConstantesLancamento::$INPUT_TELEFONE)); ?>
-                                <label for="<?php echo ConstantesLancamento::$TRADUCAO_TELEFONE; ?>" class="field-icon">
-                                    <i class="fa fa-phone-square"></i>
+                        <div class="row section">
+                            <div class="col-xs-5 col-sm-5 col-md-2">
+                                <label for="<?php echo ConstantesLancamento::$TRADUCAO_DDD; ?>" class="field-label">
+                                    <?php echo $this->translate(ConstantesLancamento::$TRADUCAO_DDD); ?>
                                 </label>
-                            </label>
+                                <label for="<?php echo ConstantesLancamento::$TRADUCAO_DDD; ?>" class="field prepend-icon">
+                                    <?php echo $this->formInput($form->get(ConstantesLancamento::$INPUT_DDD)); ?>
+                                    <label for="<?php echo ConstantesLancamento::$TRADUCAO_DDD; ?>" class="field-icon">
+                                        <i class="fa fa-phone-square"></i>
+                                    </label>
+                                </label>
+                            </div>
+                            <div class="col-xs-7 col-sm-7 col-md-10">
+                                <label for="<?php echo ConstantesLancamento::$TRADUCAO_TELEFONE; ?>" class="field-label">
+                                    <?php echo $this->translate(ConstantesLancamento::$TRADUCAO_TELEFONE); ?>
+                                </label>
+                                <label for="<?php echo ConstantesLancamento::$TRADUCAO_TELEFONE; ?>" class="field prepend-icon">
+                                    <?php echo $this->formInput($form->get(ConstantesLancamento::$INPUT_TELEFONE)); ?>
+                                    <label for="<?php echo ConstantesLancamento::$TRADUCAO_TELEFONE; ?>" class="field-icon">
+                                        <i class="fa fa-phone-square"></i>
+                                    </label>
+                                </label>
+                            </div>
                         </div>
                         <!-- Tipo Input Select --> 
                         <div class="section">
                             <label for="<?php echo ConstantesLancamento::$TRADUCAO_TIPO; ?>" class="field-label">
                                 <?php echo $this->translate(ConstantesLancamento::$TRADUCAO_TIPO); ?>
                             </label>
-                            <?php
-                            // renderiza html input
-                            echo $this->formSelect($form->get(ConstantesLancamento::$INPUT_TIPO));
-                            ?>
+                            <label for="<?php echo ConstantesLancamento::$TRADUCAO_TIPO; ?>" class="field prepend-icon">
+                                <?php
+                                // renderiza html input
+                                echo $this->formSelect($form->get(ConstantesLancamento::$INPUT_TIPO));
+                                ?>
+                            </label>    
                         </div> 
                         <!-- Tipo Input Radio --> 
                         <div id="ocultar_checkbox" class="mb15" style="display: none;">
@@ -74,7 +89,7 @@ $form->setAttribute(Constantes::$ACTION, $this->url(ConstantesLancamento::$ROUTE
                     <div class="panel-footer text-right">
                         <button name="cancelar" id="cancelar" class="btn ladda-button btn-default dark" data-style="zoom-in" value="Back" onclick="location.href = '/'"><span class="ladda-label">Voltar</span><span class="ladda-spinner"></span></button>
                         <span>&nbsp;</span>
-                        <?php echo $this->botaoSubmitDesabilitado('Nova Pessoa', 'nova_pessoa', '', 'btn-danger dark'); ?>
+                        <?php echo $this->botaoSubmit('Nova Pessoa', 'btn-danger dark'); ?>
                     </div>
                     <!-- end .form-footer section -->
                     <?php echo $this->form()->closeTag() ?>
@@ -1141,230 +1156,3 @@ $form->setAttribute(Constantes::$ACTION, $this->url(ConstantesLancamento::$ROUTE
                 </div>-->
     </div>
 </div>
-
-<svg fill="#bbb" width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"></svg>
-<script type="text/javascript" src="/js/vendor/plugins/jquerymask/jquery.maskedinput.min.js"></script>
-<script src="assets/admin-tools/admin-forms/js/jquery-ui-datepicker.min.js"></script>
-<script type="text/javascript" src="/js/circuito_da_visao/ocultar-campos-formularios.js?v=1.0"></script>
-<script type="text/javascript">
-                            window.onload = initPage;
-                            function initPage() {
-                                // Init jQuery Masked inputs
-                                $('.phone').mask('(99)99999-9999');
-                            }
-
-                            /* @custom validation method (smartCaptcha) 
-                             ------------------------------------------------------------------ */
-
-                            $.validator.methods.smartCaptcha = function (value, element, param) {
-                                return value == param;
-                            };
-
-                            $("#admin-form").validate({
-                                /* @validation states + elements 
-                                 ------------------------------------------- */
-
-                                errorClass: "state-error",
-                                validClass: "state-success",
-                                errorElement: "em",
-                                /* @validation rules 
-                                 ------------------------------------------ */
-
-                                rules: {
-                                    firstname: {
-                                        required: true
-                                    },
-                                    lastname: {
-                                        required: true
-                                    },
-                                    useremail: {
-                                        required: true,
-                                        email: true
-                                    },
-                                    website: {
-                                        required: true,
-                                        url: true
-                                    },
-                                    language: {
-                                        required: true
-                                    },
-                                    upload1: {
-                                        required: true,
-                                        extension: "jpg|png|gif|jpeg|doc|docx|pdf|xls|rar|zip"
-                                    },
-                                    mobileos: {
-                                        required: true
-                                    }, comment: {
-                                        required: true,
-                                        minlength: 30
-                                    },
-                                    mobile_phone: {
-                                        require_from_group: [1, ".phone-group"]
-                                    },
-                                    home_phone: {
-                                        require_from_group: [1, ".phone-group"]
-                                    },
-                                    password: {
-                                        required: true,
-                                        minlength: 6,
-                                        maxlength: 16
-                                    },
-                                    repeatPassword: {
-                                        required: true,
-                                        minlength: 6,
-                                        maxlength: 16, equalTo: '#password'
-                                    },
-                                    gender: {
-                                        required: true
-                                    },
-                                    languages: {
-                                        required: true
-                                    },
-                                    verification: {
-                                        required: true,
-                                        smartCaptcha: 19
-                                    },
-                                    applicant_age: {
-                                        required: true,
-                                        min: 16
-                                    },
-                                    licence_no: {
-                                        required: function (element) {
-                                            return $("#applicant_age").val() > 19;
-                                        }
-                                    },
-                                    child_name: {required: "#parents:checked"
-                                    }
-
-                                },
-                                /* @validation error messages 
-                                 ---------------------------------------------- */
-
-                                messages: {
-                                    firstname: {
-                                        required: 'Enter first name'
-                                    },
-                                    lastname: {
-                                        required: 'Enter last name'
-                                    },
-                                    useremail: {
-                                        required: 'Enter email address',
-                                        email: 'Enter a VALID email address'
-                                    },
-                                    website: {
-                                        required: 'Enter your website URL',
-                                        url: 'URL should start with - http://www'
-                                    },
-                                    language: {
-                                        required: 'Choose a language'
-                                    },
-                                    upload1: {
-                                        required: 'Please browse a file',
-                                        extension: 'File format not supported'
-                                    },
-                                    mobileos: {
-                                        required: 'Please select a mobile platform'
-                                    },
-                                    comment: {
-                                        required: 'Oops you forgot to comment',
-                                        minlength: 'Enter at least 30 characters or more'
-                                    },
-                                    mobile_phone: {
-                                        require_from_group: 'Fill at least a mobile contact'
-                                    },
-                                    home_phone: {
-                                        require_from_group: 'Fill at least a home contact'
-                                    },
-                                    password: {
-                                        required: 'Please enter a password'
-                                    },
-                                    repeatPassword: {
-                                        required: 'Please repeat the above password',
-                                        equalTo: 'Password mismatch detected'
-                                    },
-                                    gender: {
-                                        required: 'Please choose specie'
-                                    },
-                                    languages: {
-                                        required: 'Select laguages spoken'
-                                    },
-                                    verification: {
-                                        required: 'Please enter verification code',
-                                        smartCaptcha: 'Oops - enter a correct verification code'
-                                    },
-                                    applicant_age: {
-                                        required: 'Enter applicant age',
-                                        min: 'Must be 16 years and above'
-                                    },
-                                    licence_no: {
-                                        required: 'Enter licence number'
-                                    },
-                                    child_name: {
-                                        required: 'Please enter your childs name'
-                                    }
-
-                                },
-                                /* @validation highlighting + error placement  
-                                 ---------------------------------------------------- */
-
-                                highlight: function (element, errorClass, validClass) {
-                                    $(element).closest('.field').addClass(errorClass).removeClass(validClass);
-                                },
-                                unhighlight: function (element, errorClass, validClass) {
-                                    $(element).closest('.field').removeClass(errorClass).addClass(validClass);
-                                },
-                                errorPlacement: function (error, element) {
-                                    if (element.is(":radio") || element.is(":checkbox")) {
-                                        element.closest('.option-group').after(error);
-                                    } else {
-                                        error.insertAfter(element.parent());
-                                    }
-                                }
-
-                            });
-
-                            /* @date picker
-                             ------------------------------------------------------------------ */
-                            $("#datepicker1").datepicker({
-                                prevText: '<i class="fa fa-chevron-left"></i>',
-                                nextText: '<i class="fa fa-chevron-right"></i>',
-                                showButtonPanel: false,
-                                beforeShow: function (input, inst) {
-                                    var newclass = 'admin-form';
-                                    var themeClass = $(this).parents('.admin-form').attr('class');
-                                    var smartpikr = inst.dpDiv.parent();
-                                    if (!smartpikr.hasClass(themeClass)) {
-                                        inst.dpDiv.wrap('<div class="' + themeClass + '"></div>');
-                                    }
-                                }
-                            });
-
-                            $('.inline-dp').datepicker({
-                                numberOfMonths: 1,
-                                prevText: '<i class="fa fa-chevron-left"></i>',
-                                nextText: '<i class="fa fa-chevron-right"></i>',
-                                showButtonPanel: false
-                            });
-
-                            /* @date picker
-                             ------------------------------------------------------------------ */
-                            $("#datepicker1").datepicker({
-                                prevText: '<i class="fa fa-chevron-left"></i>',
-                                nextText: '<i class="fa fa-chevron-right"></i>',
-                                showButtonPanel: false,
-                                beforeShow: function (input, inst) {
-                                    var newclass = 'admin-form';
-                                    var themeClass = $(this).parents('.admin-form').attr('class');
-                                    var smartpikr = inst.dpDiv.parent();
-                                    if (!smartpikr.hasClass(themeClass)) {
-                                        inst.dpDiv.wrap('<div class="' + themeClass + '"></div>');
-                                    }
-                                }
-                            });
-
-
-</script>
-
-<?php
-/* Layout com javascript para tela de CadastrarPessoa */
-echo $this->layoutJSCadastrarPessoa;

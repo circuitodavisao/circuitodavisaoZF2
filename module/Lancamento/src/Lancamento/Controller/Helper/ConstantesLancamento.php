@@ -73,12 +73,14 @@ class ConstantesLancamento {
     public static $TRADUCAO_NOVO_CADASTRO = 'New Register';
     public static $TRADUCAO_NOVO_CADASTRO_LABEL = 'Person at the launch line';
     public static $TRADUCAO_NOME = 'Name';
+    public static $TRADUCAO_DDD = 'DDD';
     public static $TRADUCAO_TELEFONE = 'Phone';
     public static $TRADUCAO_TIPO = 'Type';
     public static $TRADUCAO_NUCLEO_CELULA = 'Perfect Core';
     public static $TRADUCAO_SELECIONE = 'SELECT';
     /* Fomulário */
     public static $INPUT_NOME = 'nome';
+    public static $INPUT_DDD = 'ddd';
     public static $INPUT_TELEFONE = 'telefone';
     public static $INPUT_TIPO = 'tipo';
     public static $INPUT_NUCLEO_PERFEITO = 'nucleoPerfeito';

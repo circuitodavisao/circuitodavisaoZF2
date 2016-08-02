@@ -34,10 +34,10 @@ use Login\Controller\Helper\Constantes;
         echo $this
                 ->headLink(array('rel' => 'shortcut icon', 'type' => 'image/vnd.microsoft.icon', 'href' => $this->basePath() . '/img/favicon.png'))
                 ->headLink(array('rel' => 'apple-touch-icon', 'href' => $this->basePath() . '/img/icons/touch-icon-ipad.png'))
-		->headLink(array('rel' => 'apple-touch-icon', 'sizes' => '76x76', 'href' => $this->basePath() . '/img/icons/touch-icon-ipad.png'))
-		->headLink(array('rel' => 'apple-touch-icon', 'sizes' => '120x120', 'href' => $this->basePath() . '/img/icons/touch-icon-iphone-retina.png'))
-		->headLink(array('rel' => 'apple-touch-icon', 'sizes' => '152x152', 'href' => $this->basePath() . '/img/icons/touch-icon-ipad-retina.png'))
-		->headLink(array('rel' => 'apple-touch-icon', 'sizes' => '256x256', 'href' => $this->basePath() . '/img/icons/touch-icon-iphone.png'))   
+                ->headLink(array('rel' => 'apple-touch-icon', 'sizes' => '76x76', 'href' => $this->basePath() . '/img/icons/touch-icon-ipad.png'))
+                ->headLink(array('rel' => 'apple-touch-icon', 'sizes' => '120x120', 'href' => $this->basePath() . '/img/icons/touch-icon-iphone-retina.png'))
+                ->headLink(array('rel' => 'apple-touch-icon', 'sizes' => '152x152', 'href' => $this->basePath() . '/img/icons/touch-icon-ipad-retina.png'))
+                ->headLink(array('rel' => 'apple-touch-icon', 'sizes' => '256x256', 'href' => $this->basePath() . '/img/icons/touch-icon-iphone.png'))
                 ->prependStylesheet($this->basePath() . '/css/estilos-circuito/cv-lancamentos/estilos-lancamentos.css' . $versao)
                 ->prependStylesheet($this->basePath() . '/js/vendor/plugins/ladda/ladda.min.css')
                 ->prependStylesheet($this->basePath() . '/js/vendor/plugins/magnific/magnific-popup.css')
@@ -65,9 +65,9 @@ use Login\Controller\Helper\Constantes;
                 ->prependFile($this->basePath() . '/js/vendor/plugins/ladda/ladda.min.js')
                 ->prependFile($this->basePath() . '/js/vendor/plugins/magnific/jquery.magnific-popup.js')
                 ->prependFile($this->basePath() . '/js/vendor/plugins/jquerymask/jquery.maskedinput.min.js')
-                ->prependFile($this->basePath() . '/js/page-loading/snap.svg-min.js')
-                ->prependFile($this->basePath() . '/js/page-loading/classie.js')
-                ->prependFile($this->basePath() . '/js/page-loading/svgLoader.js')
+//                ->prependFile($this->basePath() . '/js/page-loading/snap.svg-min.js')
+//                ->prependFile($this->basePath() . '/js/page-loading/classie.js')
+//                ->prependFile($this->basePath() . '/js/page-loading/svgLoader.js')
                 ->prependFile($this->basePath() . '/js/vendor/jquery/jquery_ui/jquery-ui.min.js')
                 ->prependFile($this->basePath() . '/js/jquery.min.js')
         ;
@@ -88,39 +88,39 @@ use Login\Controller\Helper\Constantes;
 
             });
         </script>
+
+        <!--         BEGIN: PAGE-LOADING 
+                <script>
+                    (function() {
+                      var pageWrap = document.getElementById( 'pagewrap' ),
+                        pages = [].slice.call( pageWrap.querySelectorAll( 'div.container' ) ),
+                        currentPage = 0,
+                        triggerLoading = [].slice.call( pageWrap.querySelectorAll( 'div.pageload-link' ) ),
+                        loader = new SVGLoader( document.getElementById( 'loader' ), { speedIn : 300, easingIn : mina.easeinout } );
         
-        <!-- BEGIN: PAGE-LOADING -->
-        <script>
-            (function() {
-              var pageWrap = document.getElementById( 'pagewrap' ),
-                pages = [].slice.call( pageWrap.querySelectorAll( 'div.container' ) ),
-                currentPage = 0,
-                triggerLoading = [].slice.call( pageWrap.querySelectorAll( 'div.pageload-link' ) ),
-                loader = new SVGLoader( document.getElementById( 'loader' ), { speedIn : 300, easingIn : mina.easeinout } );
-
-              function init() {
-                triggerLoading.forEach( function( trigger ) {
-                  trigger.addEventListener( 'click', function( ev ) {
-                    ev.preventDefault();
-                    loader.show();
-                    // after some time hide loader
-                    setTimeout( function() {
-                      loader.hide();
-
-                      classie.removeClass( pages[ currentPage ], 'show' );
-                      // update..
-                      currentPage = currentPage ? 0 : 1;
-                      classie.addClass( pages[ currentPage ], 'show' );
-
-                    }, 2000 );
-                  } );
-                } );
-              }
-
-              init();
-            })();
-        </script>
-        <!-- END: PAGE-LOADING -->
+                      function init() {
+                        triggerLoading.forEach( function( trigger ) {
+                          trigger.addEventListener( 'click', function( ev ) {
+                            ev.preventDefault();
+                            loader.show();
+                            // after some time hide loader
+                            setTimeout( function() {
+                              loader.hide();
+        
+                              classie.removeClass( pages[ currentPage ], 'show' );
+                              // update..
+                              currentPage = currentPage ? 0 : 1;
+                              classie.addClass( pages[ currentPage ], 'show' );
+        
+                            }, 2000 );
+                          } );
+                        } );
+                      }
+        
+                      init();
+                    })();
+                </script>
+                 END: PAGE-LOADING -->
         <!-- END: PAGE SCRIPTS -->
     </body>
 </html>

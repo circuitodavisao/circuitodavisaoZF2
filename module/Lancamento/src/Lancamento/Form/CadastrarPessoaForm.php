@@ -10,7 +10,7 @@ use Zend\Form\Element\Radio;
 use Zend\Form\Element\Select;
 use Zend\Form\Element\Text;
 use Zend\Form\Form;
- 
+
 /**
  * Nome: CadastrarPessoaForm.php
  * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com>
@@ -56,10 +56,22 @@ class CadastrarPessoaForm extends Form {
                             Constantes::$FORM_STRING_CLASS => Constantes::$FORM_STRING_CLASS_GUI_INPUT,
                             Constantes::$FORM_STRING_ID => ConstantesLancamento::$INPUT_NOME,
                             Constantes::$FORM_STRING_PLACEHOLDER => ConstantesLancamento::$TRADUCAO_NOME,
-                            Constantes::$FORM_STRING_REQUIRED => Constantes::$FORM_STRING_REQUIRED,
                         ])
         );
 
+        /**
+         * DDD
+         * Elemento do tipo text
+         */
+        $this->add(
+                (new Text())
+                        ->setName(ConstantesLancamento::$INPUT_DDD)
+                        ->setAttributes([
+                            Constantes::$FORM_STRING_CLASS => Constantes::$FORM_STRING_CLASS_GUI_INPUT,
+                            Constantes::$FORM_STRING_ID => ConstantesLancamento::$INPUT_DDD,
+                            Constantes::$FORM_STRING_PLACEHOLDER => ConstantesLancamento::$TRADUCAO_DDD,
+                        ])
+        );
         /**
          * Telefone
          * Elemento do tipo text
@@ -68,17 +80,16 @@ class CadastrarPessoaForm extends Form {
                 (new Text())
                         ->setName(ConstantesLancamento::$INPUT_TELEFONE)
                         ->setAttributes([
-                            Constantes::$FORM_STRING_CLASS => Constantes::$FORM_STRING_CLASS_GUI_INPUT . ' ' . ConstantesLancamento::$CLASS_PHONE,
+                            Constantes::$FORM_STRING_CLASS => Constantes::$FORM_STRING_CLASS_GUI_INPUT,
                             Constantes::$FORM_STRING_ID => ConstantesLancamento::$INPUT_TELEFONE,
                             Constantes::$FORM_STRING_PLACEHOLDER => ConstantesLancamento::$TRADUCAO_TELEFONE,
-                            Constantes::$FORM_STRING_REQUIRED => Constantes::$FORM_STRING_REQUIRED,
                         ])
         );
 
         /**
          * Select de tipos
          */
-        $arrayGPT[0] = ConstantesLancamento::$TRADUCAO_SELECIONE;
+        $arrayGPT[''] = ConstantesLancamento::$TRADUCAO_SELECIONE;
         foreach ($grupoPessoaTipos as $gpt) {
             $arrayGPT[$gpt->getId()] = $gpt->getNome();
         }

@@ -1,9 +1,11 @@
 <?php
 
-$versao = '?v=0.1.3';
+$versao = '?v=0.4';
 
 echo $this
         ->headScript()
+        ->prependFile($this->basePath() . '/js/circuito_da_visao/validar-formulario-cadastrar-pessoa-lancamento.js' . $versao)
         ->prependFile($this->basePath() . '/js/circuito_da_visao/ocultar-campos-formularios.js' . $versao)
+        ->prependFile($this->basePath() . '/js/vendor/plugins/validate/jquery.validate.min.js')
 ;
 echo $this->inlineScript();
