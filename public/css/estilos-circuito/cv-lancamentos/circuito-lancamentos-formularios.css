@@ -33,3 +33,8 @@ and open the template in the editor.
 .admin-form .prepend-icon-right > textarea {
   padding-right: 36px;
 }
+
+.icon-validacao-form-pessoa {
+    position: absolute;
+    left: 160px;
+}

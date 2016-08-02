@@ -74,7 +74,7 @@ $form->setAttribute(Constantes::$ACTION, $this->url(ConstantesLancamento::$ROUTE
                     <div class="panel-footer text-right">
                         <button name="cancelar" id="cancelar" class="btn ladda-button btn-default dark" data-style="zoom-in" value="Back" onclick="location.href = '/'"><span class="ladda-label">Voltar</span><span class="ladda-spinner"></span></button>
                         <span>&nbsp;</span>
-                        <?php echo $this->botaoSubmit('Nova Pessoa','btn-danger dark'); ?>
+                        <?php echo $this->botaoSubmitDesabilitado('Nova Pessoa', 'nova_pessoa', '', 'btn-danger dark'); ?>
                     </div>
                     <!-- end .form-footer section -->
                     <?php echo $this->form()->closeTag() ?>
