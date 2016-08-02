@@ -23,7 +23,7 @@ class CadastrarPessoaForm extends Form {
      * @param String $name
      * @param array $grupoPessoaTipos
      */
-    public function __construct($name = null, $grupoPessoaTipos) {
+    public function __construct($name = null, $grupoPessoaTipos = null) {
         parent::__construct($name);
 
         /**
@@ -86,23 +86,24 @@ class CadastrarPessoaForm extends Form {
                         ])
         );
 
-        /**
-         * Select de tipos
-         */
-        $arrayGPT[''] = ConstantesLancamento::$TRADUCAO_SELECIONE;
-        foreach ($grupoPessoaTipos as $gpt) {
-            $arrayGPT[$gpt->getId()] = $gpt->getNome();
+        if (!empty($grupoPessoaTipos)) {
+            /**
+             * Select de tipos
+             */
+            $arrayGPT[''] = ConstantesLancamento::$TRADUCAO_SELECIONE;
+            foreach ($grupoPessoaTipos as $gpt) {
+                $arrayGPT[$gpt->getId()] = $gpt->getNome();
+            }
+            // elemento do tipo Select
+            $select = new Select();
+            $select->setName(ConstantesLancamento::$INPUT_TIPO);
+            $select->setAttributes(array(
+                Constantes::$FORM_STRING_CLASS => Constantes::$FORM_STRING_CLASS_GUI_INPUT,
+                Constantes::$FORM_STRING_ID => ConstantesLancamento::$INPUT_TIPO,
+            ));
+            $select->setValueOptions($arrayGPT);
+            $this->add($select);
         }
-        // elemento do tipo Select
-        $select = new Select();
-        $select->setName(ConstantesLancamento::$INPUT_TIPO);
-        $select->setAttributes(array(
-            Constantes::$FORM_STRING_CLASS => Constantes::$FORM_STRING_CLASS_GUI_INPUT,
-            Constantes::$FORM_STRING_ID => ConstantesLancamento::$INPUT_TIPO,
-        ));
-        $select->setValueOptions($arrayGPT);
-        $this->add($select);
-
         $classOption = 'block mt15';
         $this->add(
                 (new Radio())
