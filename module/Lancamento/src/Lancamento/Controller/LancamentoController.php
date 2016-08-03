@@ -95,6 +95,11 @@ class LancamentoController extends AbstractActionController {
                         Constantes::$ACTION => ConstantesLancamento::$PAGINA_FICHA_REVISAO,
             ));
         }
+        if ($pagina == ConstantesLancamento::$PAGINA_SALVAR_PESSOA) {
+            return $this->forward()->dispatch(ConstantesLancamento::$CONTROLLER_LANCAMENTO, array(
+                        Constantes::$ACTION => ConstantesLancamento::$PAGINA_SALVAR_PESSOA,
+            ));
+        }
         /* Funcoes */
         if ($pagina == ConstantesLancamento::$PAGINA_FUNCOES) {
             /* Registro de sessão com o id passado na função */
@@ -432,6 +437,43 @@ class LancamentoController extends AbstractActionController {
             }
         }
         return $response;
+    }
+
+    /**
+     * Salva uma nova pessoa na linha de lançamento
+     */
+    public function salvarPessoaAction() {
+        $request = $this->getRequest();
+        $response = $this->getResponse();
+        if ($request->isPost()) {
+            try {
+                $post_data = $request->getPost();
+
+                $formCadastrarPessoa = new CadastrarPessoaForm(ConstantesLancamento::$FORM_CADASTRAR_PESSOA);
+
+//                $formCadastrarPessoa->setInputFilter(new Contact\ContactFilter());
+
+                $formCadastrarPessoa->setData($post_data);
+                if ($formCadastrarPessoa->isValid()) {
+                    $validatedData = $formCadastrarPessoa->getData();
+                    foreach ($validatedData as $value) {
+                        echo $value . "<br />";
+                    }
+                } else {
+                    $messages = $formCadastrarPessoa->getMessages();
+                    foreach ($messages as $m) {
+                        foreach ($m as $value) {
+                            echo $value . "<br />";
+                        }
+                    }
+                }
+                return $this->forward()->dispatch(ConstantesLancamento::$CONTROLLER_LANCAMENTO, array(
+                            Constantes::$ACTION => ConstantesLancamento::$ROUTE_INDEX,
+                ));
+            } catch (Exception $exc) {
+                echo $exc->getTraceAsString();
+            }
+        }
     }
 
     /**

@@ -42,7 +42,7 @@ class ConstantesLancamento {
     public static $STRING_JS_LANCAMENTO_MODAL_EVENTOS = 'layoutJSLancamentoModalEventos';
     public static $STRING_JS_LANCAMENTO_MODAL_MUITOS_CADASTROS = 'layoutJSLancamentoModalMuitosCadastros';
     public static $ROUTE_LANCAMENTO = 'lancamento';
-    public static $ACTION_SALVAR_PESSOA = 'SalvarPessoa';
+    public static $PAGINA_SALVAR_PESSOA = 'SalvarPessoa';
     public static $ONCLICK_ABRIR_MODAL = 'onclick="abrirModal();"';
     public static $PAGINA = 'pagina';
     public static $PAGINA_CADASTRAR_PESSOA = 'CadastrarPessoa';
