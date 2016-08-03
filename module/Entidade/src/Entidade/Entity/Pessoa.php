@@ -7,13 +7,19 @@ namespace Entidade\Entity;
  * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com>
  * Descricao: Entidade anotada da tabela pessoa
  */
-
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use SebastianBergmann\RecursionContext\Exception;
+use Zend\InputFilter\InputFilter;
+use Zend\InputFilter\InputFilterAwareInterface;
+use Zend\InputFilter\InputFilterInterface;
 
 /** @ORM\Entity */
-class Pessoa {
+class Pessoa implements InputFilterAwareInterface {
+
+    protected $inputFilter;
+    protected $inputFilterPessoaFrequencia;
 
     /**
      * @ORM\OneToMany(targetEntity="GrupoResponsavel", mappedBy="pessoa") 
@@ -90,6 +96,13 @@ class Pessoa {
 
     /** @ORM\Column(type="string") */
     protected $data_revisao;
+
+    public function exchangeArray($data) {
+        $this->id = (!empty($data['id']) ? $data['id'] : null);
+        $this->id = (!empty($data['nome']) ? $data['nome'] : null);
+        $this->id = (!empty($data['telefone']) ? $data['telefone'] : null);
+    }
+
     protected $foto;
     protected $tipo;
     protected $transferido;
@@ -602,6 +615,92 @@ class Pessoa {
             $idade = floor((((($hoje - $nascimento) / 60) / 60) / 24) / 365.25);
         }
         return $idade;
+    }
+
+    public function getInputFilter() {
+        
+    }
+
+    public function getInputFilterPessoaFrequencia() {
+        if (!$this->inputFilterPessoaFrequencia) {
+            $inputFilter = new InputFilter();
+            $inputFilter->add(array(
+                'name' => 'nome',
+                'required' => true,
+                'filter' => array(
+                    array('name' => 'StripTags'), // removel xml e html string
+                    array('name' => 'StringTrim'), // removel espaco do inicio e do final da string
+                    array('name' => 'StringToUpper'), // transforma em maiusculo
+                ),
+                'validators' => array(
+                    array(
+                        'name' => 'NotEmpty',
+                    ),
+                    array(
+                        'name' => 'StringLength',
+                        'options' => array(
+                            'encoding' => 'UTF-8',
+                            'min' => 3,
+                            'max' => 80,
+                        ),
+                    ),
+                ),
+            ));
+            $inputFilter->add(array(
+                'name' => 'ddd',
+                'required' => true,
+                'filter' => array(
+                    array('name' => 'StripTags'), // removel xml e html string
+                    array('name' => 'StringTrim'), // removel espaco do inicio e do final da string
+                    array('name' => 'Int'), // transforma string para inteiro
+                ),
+                'validators' => array(
+                    array(
+                        'name' => 'NotEmpty',
+                    ),
+                    array(
+                        'name' => 'StringLength',
+                        'options' => array(
+                            'encoding' => 'UTF-8',
+                            'min' => 2,
+                            'max' => 2,
+                        ),
+                    ),
+                ),
+            ));
+            $inputFilter->add(array(
+                'name' => 'telefone',
+                'required' => true,
+                'filter' => array(
+                    array('name' => 'StripTags'), // removel xml e html string
+                    array('name' => 'StringTrim'), // removel espaco do inicio e do final da string
+                    array('name' => 'Int'), // transforma string para inteiro
+                ),
+                'validators' => array(
+                    array(
+                        'name' => 'NotEmpty',
+                    ),
+                    array(
+                        'name' => 'StringLength',
+                        'options' => array(
+                            'encoding' => 'UTF-8',
+                            'min' => 8, # xx xxxx-xxxx
+                            'max' => 9, # xx xxxx-xxxxx
+                        ),
+                    ),
+                ),
+            ));
+            $this->inputFilterPessoaFrequencia = $inputFilter;
+        }
+        return $this->inputFilterPessoaFrequencia;
+    }
+
+    /**
+     * @param InputFilterInterface $inputFilter
+     * @throws Exception
+     */
+    public function setInputFilter(InputFilterInterface $inputFilter) {
+        throw new Exception("Nao utilizado");
     }
 
 }

@@ -26,12 +26,14 @@ jQuery(document).ready(function () {
             ddd: {
                 required: true,
                 minlength: 2,
-                maxlength: 2
+                maxlength: 2,
+                number: true
             },
             telefone: {
                 required: true,
                 minlength: 8,
-                maxlength: 9
+                maxlength: 9,
+                number: true
             },
             tipo: {
                 required: true
@@ -48,11 +50,13 @@ jQuery(document).ready(function () {
             },
             ddd: {
                 required: 'Enter DDD',
+                number: 'Enter only numbers',
                 minlength: 'Enter at 2 numbers',
                 maxlength: 'Enter at 2 numbers'
             },
             telefone: {
                 required: 'Enter Phone',
+                number: 'Enter only numbers',
                 minlength: 'Enter at least 8 numbers',
                 maxlength: 'Enter at 9 numbers'
             },

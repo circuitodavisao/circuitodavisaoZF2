@@ -115,6 +115,7 @@ class CadastrarPessoaForm extends Form {
                             Constantes::$FORM_STRING_VALUE_OPTIONS => array(
                                 1 => array(
                                     Constantes::$FORM_STRING_VALUE => 0,
+                                    ConstantesLancamento::$INPUT_SELECTED => ConstantesLancamento::$INPUT_SELECTED,
                                     Constantes::$FORM_STRING_LABEL => ' NENHUM ',
                                     Constantes::$FORM_STRING_LABEL_ATRIBUTES => array(Constantes::$FORM_STRING_CLASS => $classOption),
                                 ),
