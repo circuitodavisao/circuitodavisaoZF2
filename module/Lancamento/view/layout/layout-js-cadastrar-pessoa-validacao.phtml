@@ -1,3 +1,7 @@
+<?php
+
+use Lancamento\Controller\Helper\ConstantesLancamento;
+?>
 <script type="text/javascript">
     window.onload = initPage;
     /**
@@ -6,8 +10,6 @@
      * Descricao: Função para validar os campos do formulário de cadastro de pessoas na linha de lançamento
      */
     function initPage() {
-
-
 
         $("#CadastrarPessoaForm").validate({
             /* @validation states + elements 
@@ -46,24 +48,24 @@
 
             messages: {
                 nome: {
-                    required: 'Enter Full Name',
-                    minlength: 'Enter at least 3 characters or more',
-                    maxlength: 'Enter at 80 characters'
+                    required: '<?php echo $this->translate(ConstantesLancamento::$TRADUCAO_VALIDACAO_NOME_VAZIO); ?>',
+                    minlength: '<?php echo $this->translate(ConstantesLancamento::$TRADUCAO_VALIDACAO_NOME_MIN); ?>',
+                    maxlength: '<?php echo $this->translate(ConstantesLancamento::$TRADUCAO_VALIDACAO_NOME_MAX); ?>'
                 },
                 ddd: {
-                    required: 'Enter DDD',
-                    number: 'Enter only numbers',
-                    minlength: 'Enter at 2 numbers',
-                    maxlength: 'Enter at 2 numbers'
+                    required: '<?php echo $this->translate(ConstantesLancamento::$TRADUCAO_VALIDACAO_DDD_VAZIO); ?>',
+                    number: '<?php echo $this->translate(ConstantesLancamento::$TRADUCAO_VALIDACAO_DDD_NUMERO); ?>',
+                    minlength: '<?php echo $this->translate(ConstantesLancamento::$TRADUCAO_VALIDACAO_DDD_MIN); ?>',
+                    maxlength: '<?php echo $this->translate(ConstantesLancamento::$TRADUCAO_VALIDACAO_DDD_MAX); ?>'
                 },
                 telefone: {
-                    required: 'Enter Phone',
-                    number: 'Enter only numbers',
-                    minlength: 'Enter at least 8 numbers',
-                    maxlength: 'Enter at 9 numbers'
+                    required: '<?php echo $this->translate(ConstantesLancamento::$TRADUCAO_VALIDACAO_TELEFONE_VAZIO); ?>',
+                    number: '<?php echo $this->translate(ConstantesLancamento::$TRADUCAO_VALIDACAO_TELEFONE_NUMERO); ?>',
+                    minlength: '<?php echo $this->translate(ConstantesLancamento::$TRADUCAO_VALIDACAO_TELEFONE_MIN); ?>',
+                    maxlength: '<?php echo $this->translate(ConstantesLancamento::$TRADUCAO_VALIDACAO_TELEFONE_MAX); ?>'
                 },
                 tipo: {
-                    required: 'Choose a Type'
+                    required: '<?php echo $this->translate(ConstantesLancamento::$TRADUCAO_VALIDACAO_TIPO_VAZIO); ?>'
                 }
             },
             /* @validation highlighting + error placement  

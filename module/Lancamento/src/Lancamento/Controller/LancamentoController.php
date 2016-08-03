@@ -5,6 +5,7 @@ namespace Lancamento\Controller;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManager;
 use Entidade\Entity\EventoFrequencia;
+use Entidade\Entity\Grupo;
 use Entidade\Entity\Pessoa;
 use Exception;
 use Lancamento\Controller\Helper\ConstantesLancamento;
@@ -106,7 +107,7 @@ class LancamentoController extends AbstractActionController {
             /* Registro de sessão com o id passado na função */
             $request = $this->getRequest();
             $post_data = $request->getPost();
-            $sessao = new Container(Constantes::$NOME_APLICACAO);
+
             $sessao->idFuncaoLancamento = $post_data[Constantes::$ID];
             return $this->forward()->dispatch(ConstantesLancamento::$CONTROLLER_LANCAMENTO, array(
                         Constantes::$ACTION => ConstantesLancamento::$PAGINA_FUNCOES,
@@ -196,6 +197,7 @@ class LancamentoController extends AbstractActionController {
                 }
             }
         }
+
         $view = new ViewModel(
                 array(
             ConstantesLancamento::$ENTIDADE => $entidade,
@@ -211,8 +213,14 @@ class LancamentoController extends AbstractActionController {
                 )
         );
 
+        /* Verificando se alguem foi cadastrado */
+        $nomePessoaCadastrada = '';
+        if (!empty($sessao->nomePessoaCadastrada)) {
+            $nomePessoaCadastrada = $sessao->nomePessoaCadastrada;
+            unset($sessao->nomePessoaCadastrada);
+        }
         /* Javascript especifico */
-        $layoutJS = new ViewModel();
+        $layoutJS = new ViewModel(array(ConstantesLancamento::$NOME_PESSOA_CADASTRADA => $nomePessoaCadastrada,));
         $layoutJS->setTemplate(ConstantesLancamento::$TEMPLATE_JS_LANCAMENTO);
         $view->addChild($layoutJS, ConstantesLancamento::$STRING_JS_LANCAMENTO);
 
@@ -466,28 +474,39 @@ class LancamentoController extends AbstractActionController {
                 $formCadastrarPessoa->setInputFilter($pessoa->getInputFilterPessoaFrequencia());
                 $formCadastrarPessoa->setData($post_data);
 
-                foreach ($formCadastrarPessoa->getInputFilter()->getMessages() as $value) {
-                    echo $value . "<br />";
-                }
                 /* validação */
                 if ($formCadastrarPessoa->isValid()) {
-                    // popular modelo
-                    $pessoa->exchangeArray($formCadastrarPessoa->getData());
                     $validatedData = $formCadastrarPessoa->getData();
-                    foreach ($validatedData as $value) {
-                        echo $value . "<br />";
-                    }
+
+                    $pessoa->exchangeArray($formCadastrarPessoa->getData());
+                    $pessoa->setData_criacao(date('Y-m-d'));
+                    $pessoa->setHora_criacao(date('H:s:i'));
+                    $pessoa->setTelefone($validatedData[ConstantesLancamento::$INPUT_DDD] . $validatedData[ConstantesLancamento::$INPUT_TELEFONE]);
+
+                    /* Helper Controller */
+                    $lancamentoORM = new LancamentoORM($this->getDoctrineORMEntityManager());
+                    $loginORM = new LoginORM($this->getDoctrineORMEntityManager());
+
+                    /* Grupo selecionado */
+                    $grupo = $this->getGrupoSelecionado($lancamentoORM);
+
+                    /* Salvar a pessoa e o grupo pessoa correspondente */
+                    $loginORM->getPessoaORM()->persistirPessoaNova($pessoa);
+                    $lancamentoORM->getGrupoPessoaORM()->cadastrar($lancamentoORM, $pessoa, $grupo, $post_data[ConstantesLancamento::$INPUT_TIPO], $validatedData[ConstantesLancamento::$INPUT_NUCLEO_PERFEITO]);
+
+                    /* Pondo valores na sessao */
+                    $sessao = new Container(Constantes::$NOME_APLICACAO);
+                    $sessao->nomePessoaCadastrada = $pessoa->getNome();
+
+                    return $this->forward()->dispatch(ConstantesLancamento::$CONTROLLER_LANCAMENTO, array(
+                                Constantes::$ACTION => ConstantesLancamento::$ROUTE_INDEX,
+                    ));
                 } else {
-                    $messages = $formCadastrarPessoa->getMessages();
-                    foreach ($messages as $m) {
-                        foreach ($m as $value) {
-                            echo $value . "<br />";
-                        }
-                    }
+                    return $this->forward()->dispatch(Constantes::$CONTROLLER_LOGIN, array(
+                                Constantes::$ACTION => ConstantesLancamento::$ROUTE_INDEX,
+                    ));
+                    echo "ERRO DE CADASTRO";
                 }
-                return $this->forward()->dispatch(ConstantesLancamento::$CONTROLLER_LANCAMENTO, array(
-                            Constantes::$ACTION => ConstantesLancamento::$ROUTE_INDEX,
-                ));
             } catch (Exception $exc) {
                 echo $exc->getTraceAsString();
             }
@@ -508,6 +527,18 @@ class LancamentoController extends AbstractActionController {
      */
     public function getTranslator() {
         return $this->_translator;
+    }
+
+    /**
+     * Recupera o grupo do perfil selecionado
+     * @param LancamentoORM $lancamentoORM
+     * @return Grupo
+     */
+    private function getGrupoSelecionado($lancamentoORM) {
+        $sessao = new Container(Constantes::$NOME_APLICACAO);
+        $idEntidadeAtual = $sessao->idEntidadeAtual;
+        $entidade = $lancamentoORM->getEntidadeORM()->encontrarPorIdEntidade($idEntidadeAtual);
+        return $entidade->getGrupo();
     }
 
 }

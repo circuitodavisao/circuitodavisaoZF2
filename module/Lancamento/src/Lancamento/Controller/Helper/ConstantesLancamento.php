@@ -74,14 +74,26 @@ class ConstantesLancamento {
     public static $TRADUCAO_NOVO = 'New';
     public static $TRADUCAO_NOVO_CADASTRO = 'New Register';
     public static $TRADUCAO_NOVO_CADASTRO_LABEL = 'Person at the launch line';
-    public static $TRADUCAO_NOME = 'Name';
+    public static $TRADUCAO_NOME = 'Full Name';
     public static $TRADUCAO_DDD = 'DDD';
     public static $TRADUCAO_TELEFONE = 'Phone';
     public static $TRADUCAO_TIPO = 'Type';
     public static $TRADUCAO_NUCLEO_CELULA = 'Perfect Core';
     public static $TRADUCAO_SELECIONE = 'SELECT';
     public static $TRADUCAO_CADASTRAR = 'Register';
-    
+    public static $TRADUCAO_VALIDACAO_NOME_VAZIO = 'Enter Full Name';
+    public static $TRADUCAO_VALIDACAO_NOME_MIN = 'Enter at least 3 characters or more';
+    public static $TRADUCAO_VALIDACAO_NOME_MAX = 'Enter at 80 characters';
+    public static $TRADUCAO_VALIDACAO_DDD_VAZIO = 'Enter DDD';
+    public static $TRADUCAO_VALIDACAO_DDD_NUMERO = 'Enter only numbers';
+    public static $TRADUCAO_VALIDACAO_DDD_MIN = 'Enter at 2 numbers';
+    public static $TRADUCAO_VALIDACAO_DDD_MAX = 'Enter at 2 numbers';
+    public static $TRADUCAO_VALIDACAO_TELEFONE_VAZIO = 'Enter Phone';
+    public static $TRADUCAO_VALIDACAO_TELEFONE_NUMERO = 'Enter only numbers';
+    public static $TRADUCAO_VALIDACAO_TELEFONE_MIN = 'Enter at least 8 numbers';
+    public static $TRADUCAO_VALIDACAO_TELEFONE_MAX = 'Enter at 9 numbers';
+    public static $TRADUCAO_VALIDACAO_TIPO_VAZIO = 'Choose a Type';
+    public static $TRADUCAO_PESSOA_CADASTRADA = 'Person Registered';
     /* Fomulário */
     public static $INPUT_NOME = 'nome';
     public static $INPUT_DDD = 'ddd';
@@ -94,6 +106,7 @@ class ConstantesLancamento {
     public static $ICONE_USER = 'fa-user';
     public static $ICONE_PHONE = 'fa-phone-square';
     public static $INPUT_SELECTED = 'selected';
+    public static $NOME_PESSOA_CADASTRADA = 'nomePessoaCadastrada'; 
     /* Rotas */
     public static $ROUTE_REMOVER_PESSOA = 'RemoverPessoa';
     public static $ROUTE_CADASTRAR_PESSOA_REVISAO = 'CadastrarPessoaRevisao';

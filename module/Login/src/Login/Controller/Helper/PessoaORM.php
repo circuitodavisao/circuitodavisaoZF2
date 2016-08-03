@@ -127,6 +127,21 @@ class PessoaORM {
         }
     }
 
+    /**
+     * Criar a pessoa no banco de dados
+     * 
+     * @param Pessoa $pessoa
+     */
+    public function persistirPessoaNova($pessoa) {
+
+        try {
+            $this->getEntityManager()->persist($pessoa);
+            $this->getEntityManager()->flush($pessoa);
+        } catch (Exception $exc) {
+            echo $exc->getMessage();
+        }
+    }
+
     public function getEntityManager() {
         return $this->_entityManager;
     }

@@ -98,9 +98,7 @@ class Pessoa implements InputFilterAwareInterface {
     protected $data_revisao;
 
     public function exchangeArray($data) {
-        $this->id = (!empty($data['id']) ? $data['id'] : null);
-        $this->id = (!empty($data['nome']) ? $data['nome'] : null);
-        $this->id = (!empty($data['telefone']) ? $data['telefone'] : null);
+        $this->nome = (!empty($data['nome']) ? strtoupper($data['nome']) : null);
     }
 
     protected $foto;
