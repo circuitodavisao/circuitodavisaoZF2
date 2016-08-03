@@ -35,10 +35,12 @@ class ConstantesLancamento {
     public static $STATUS_ENVIO = 'statusEnvio';
     public static $TEMPLATE_JS_LANCAMENTO = 'layout/layout-js-lancamento';
     public static $TEMPLATE_JS_CADASTRAR_PESSOA = 'layout/layout-js-cadastrar-pessoa';
+    public static $TEMPLATE_JS_CADASTRAR_PESSOA_VALIDACAO = 'layout/layout-js-cadastrar-pessoa-validacao';
     public static $TEMPLATE_JS_LANCAMENTO_MODAL_EVENTOS = 'layout/layout-js-lancamento-modal-eventos';
     public static $TEMPLATE_JS_LANCAMENTO_MODAL_MUITOS_CADASTROS = 'layout/layout-js-lancamento-modal-muitos-cadastros';
     public static $STRING_JS_LANCAMENTO = 'layoutJSLancamento';
     public static $STRING_JS_CADASTRAR_PESSOA = 'layoutJSCadastrarPessoa';
+    public static $STRING_JS_CADASTRAR_PESSOA_VALIDACAO = 'layoutJSCadastrarPessoaValidacao';
     public static $STRING_JS_LANCAMENTO_MODAL_EVENTOS = 'layoutJSLancamentoModalEventos';
     public static $STRING_JS_LANCAMENTO_MODAL_MUITOS_CADASTROS = 'layoutJSLancamentoModalMuitosCadastros';
     public static $ROUTE_LANCAMENTO = 'lancamento';
@@ -78,6 +80,8 @@ class ConstantesLancamento {
     public static $TRADUCAO_TIPO = 'Type';
     public static $TRADUCAO_NUCLEO_CELULA = 'Perfect Core';
     public static $TRADUCAO_SELECIONE = 'SELECT';
+    public static $TRADUCAO_CADASTRAR = 'Register';
+    
     /* Fomulário */
     public static $INPUT_NOME = 'nome';
     public static $INPUT_DDD = 'ddd';
@@ -86,6 +90,10 @@ class ConstantesLancamento {
     public static $INPUT_NUCLEO_PERFEITO = 'nucleoPerfeito';
     public static $INPUT_VOLTAR = 'voltar';
     public static $INPUT_CADASTRAR = 'cadastrar';
+    public static $CLASS_BTN_DANGER_DARK = 'btn-danger dark';
+    public static $ICONE_USER = 'fa-user';
+    public static $ICONE_PHONE = 'fa-phone-square';
+    public static $INPUT_SELECTED = 'selected';
     /* Rotas */
     public static $ROUTE_REMOVER_PESSOA = 'RemoverPessoa';
     public static $ROUTE_CADASTRAR_PESSOA_REVISAO = 'CadastrarPessoaRevisao';

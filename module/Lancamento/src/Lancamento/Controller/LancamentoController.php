@@ -5,6 +5,7 @@ namespace Lancamento\Controller;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManager;
 use Entidade\Entity\EventoFrequencia;
+use Entidade\Entity\Pessoa;
 use Exception;
 use Lancamento\Controller\Helper\ConstantesLancamento;
 use Lancamento\Controller\Helper\FuncoesLancamento;
@@ -242,6 +243,11 @@ class LancamentoController extends AbstractActionController {
         $layoutJS->setTemplate(ConstantesLancamento::$TEMPLATE_JS_CADASTRAR_PESSOA);
         $view->addChild($layoutJS, ConstantesLancamento::$STRING_JS_CADASTRAR_PESSOA);
 
+        /* Javascript especifico de validação */
+        $layoutJS2 = new ViewModel();
+        $layoutJS2->setTemplate(ConstantesLancamento::$TEMPLATE_JS_CADASTRAR_PESSOA_VALIDACAO);
+        $view->addChild($layoutJS2, ConstantesLancamento::$STRING_JS_CADASTRAR_PESSOA_VALIDACAO);
+
         return $view;
     }
 
@@ -297,7 +303,13 @@ class LancamentoController extends AbstractActionController {
         $entidade = $lancamentoORM->getEntidadeORM()->encontrarPorIdEntidade($idEntidadeAtual);
         $entidade->getGrupo()->setRelatorioEnviado($lancamentoORM);
 
-        return new ViewModel();
+        $view = new ViewModel();
+        /* Javascript especifico */
+        $layoutJS = new ViewModel();
+        $layoutJS->setTemplate(ConstantesLancamento::$TEMPLATE_JS_CADASTRAR_PESSOA);
+        $view->addChild($layoutJS, ConstantesLancamento::$STRING_JS_CADASTRAR_PESSOA);
+
+        return $view;
     }
 
     /**
@@ -449,12 +461,18 @@ class LancamentoController extends AbstractActionController {
             try {
                 $post_data = $request->getPost();
 
+                $pessoa = new Pessoa();
                 $formCadastrarPessoa = new CadastrarPessoaForm(ConstantesLancamento::$FORM_CADASTRAR_PESSOA);
-
-//                $formCadastrarPessoa->setInputFilter(new Contact\ContactFilter());
-
+                $formCadastrarPessoa->setInputFilter($pessoa->getInputFilterPessoaFrequencia());
                 $formCadastrarPessoa->setData($post_data);
+
+                foreach ($formCadastrarPessoa->getInputFilter()->getMessages() as $value) {
+                    echo $value . "<br />";
+                }
+                /* validação */
                 if ($formCadastrarPessoa->isValid()) {
+                    // popular modelo
+                    $pessoa->exchangeArray($formCadastrarPessoa->getData());
                     $validatedData = $formCadastrarPessoa->getData();
                     foreach ($validatedData as $value) {
                         echo $value . "<br />";

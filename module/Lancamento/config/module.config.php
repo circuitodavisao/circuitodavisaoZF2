@@ -58,6 +58,7 @@ return array(
             'layout/layout-js-lancamento' => __DIR__ . '/../view/layout/layout-js-lancamento.phtml',
             'layout/layout-js-lancamento-modal-eventos' => __DIR__ . '/../view/layout/layout-js-lancamento-modal-eventos.phtml',
             'layout/layout-js-cadastrar-pessoa' => __DIR__ . '/../view/layout/layout-js-cadastrar-pessoa.phtml',
+            'layout/layout-js-cadastrar-pessoa-validacao' => __DIR__ . '/../view/layout/layout-js-cadastrar-pessoa-validacao.phtml',
             'error/404' => __DIR__ . '/../../Login/view/error/404.phtml',
             'error/index' => __DIR__ . '/../../Login/view/error/index.phtml',
         ),

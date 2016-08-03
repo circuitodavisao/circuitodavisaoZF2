@@ -11,7 +11,7 @@ use Login\Controller\Helper\Constantes;
 $form = $this->CadastrarPessoaForm;
 $form->prepare();
 $form->setAttribute(Constantes::$ACTION, $this->url(ConstantesLancamento::$ROUTE_LANCAMENTO, array(ConstantesLancamento::$PAGINA => ConstantesLancamento::$PAGINA_SALVAR_PESSOA)));
-?> 
+?>  
 <div class="row background-mobile">
     <div id="content" class="animated fadeIn">
         <div class="row">
@@ -27,39 +27,15 @@ $form->setAttribute(Constantes::$ACTION, $this->url(ConstantesLancamento::$ROUTE
 
                         <!-- Nome Input -->
                         <div class="section">
-                            <label for="<?php echo ConstantesLancamento::$TRADUCAO_NOME; ?>" class="field-label">
-                                <?php echo $this->translate(ConstantesLancamento::$TRADUCAO_NOME); ?>
-                            </label>
-                            <label for="<?php echo ConstantesLancamento::$TRADUCAO_NOME; ?>" class="field prepend-icon">
-                                <?php echo $this->formInput($form->get(ConstantesLancamento::$INPUT_NOME)); ?>
-                                <label for="<?php echo ConstantesLancamento::$TRADUCAO_NOME; ?>" class="field-icon">
-                                    <i class="fa fa-user"></i>
-                                </label>
-                            </label>
+                            <?php echo $this->inputFormulario(ConstantesLancamento::$TRADUCAO_NOME, $form, ConstantesLancamento::$INPUT_NOME, ConstantesLancamento::$ICONE_USER); ?>
                         </div>
                         <!-- Telefone Input -->
                         <div class="row section">
                             <div class="col-xs-5 col-sm-5 col-md-2">
-                                <label for="<?php echo ConstantesLancamento::$TRADUCAO_DDD; ?>" class="field-label">
-                                    <?php echo $this->translate(ConstantesLancamento::$TRADUCAO_DDD); ?>
-                                </label>
-                                <label for="<?php echo ConstantesLancamento::$TRADUCAO_DDD; ?>" class="field prepend-icon">
-                                    <?php echo $this->formInput($form->get(ConstantesLancamento::$INPUT_DDD)); ?>
-                                    <label for="<?php echo ConstantesLancamento::$TRADUCAO_DDD; ?>" class="field-icon">
-                                        <i class="fa fa-phone-square"></i>
-                                    </label>
-                                </label>
+                                <?php echo $this->inputFormulario(ConstantesLancamento::$TRADUCAO_DDD, $form, ConstantesLancamento::$INPUT_DDD, ConstantesLancamento::$ICONE_PHONE); ?>
                             </div>
                             <div class="col-xs-7 col-sm-7 col-md-10">
-                                <label for="<?php echo ConstantesLancamento::$TRADUCAO_TELEFONE; ?>" class="field-label">
-                                    <?php echo $this->translate(ConstantesLancamento::$TRADUCAO_TELEFONE); ?>
-                                </label>
-                                <label for="<?php echo ConstantesLancamento::$TRADUCAO_TELEFONE; ?>" class="field prepend-icon">
-                                    <?php echo $this->formInput($form->get(ConstantesLancamento::$INPUT_TELEFONE)); ?>
-                                    <label for="<?php echo ConstantesLancamento::$TRADUCAO_TELEFONE; ?>" class="field-icon">
-                                        <i class="fa fa-phone-square"></i>
-                                    </label>
-                                </label>
+                                <?php echo $this->inputFormulario(ConstantesLancamento::$TRADUCAO_TELEFONE, $form, ConstantesLancamento::$INPUT_TELEFONE, ConstantesLancamento::$ICONE_PHONE); ?>
                             </div>
                         </div>
                         <!-- Tipo Input Select --> 
@@ -87,9 +63,8 @@ $form->setAttribute(Constantes::$ACTION, $this->url(ConstantesLancamento::$ROUTE
                     <!-- end .form-body section -->
                     <div class="panel-footer text-right">
                         <?php echo $this->formHidden($form->get(Constantes::$INPUT_CSRF)); ?>
-                        <button name="cancelar" id="cancelar" class="btn ladda-button btn-default dark" data-style="zoom-in" value="Back" onclick="location.href = '/'"><span class="ladda-label">Voltar</span><span class="ladda-spinner"></span></button>
-                        <span>&nbsp;</span>
-                        <?php echo $this->botaoSubmit('Nova Pessoa', 'btn-danger dark'); ?>
+                        <?php echo $this->botaoLink(Constantes::$TRADUCAO_VOLTAR, ConstantesLancamento::$ROUTE_LANCAMENTO); ?>
+                        <?php echo $this->botaoSubmit(ConstantesLancamento::$TRADUCAO_CADASTRAR, ConstantesLancamento::$CLASS_BTN_DANGER_DARK); ?>
                     </div>
                     <!-- end .form-footer section -->
                     <?php echo $this->form()->closeTag() ?>
@@ -100,3 +75,6 @@ $form->setAttribute(Constantes::$ACTION, $this->url(ConstantesLancamento::$ROUTE
         </div>
     </div>
 </div>
+<?php
+/* Layout com javascript para tela de index */
+echo $this->layoutJSCadastrarPessoaValidacao;

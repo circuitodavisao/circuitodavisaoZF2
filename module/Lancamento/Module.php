@@ -14,12 +14,14 @@ use Lancamento\View\Helper\AlertaEnvioRelatorio;
 use Lancamento\View\Helper\CabecalhoDeCiclos;
 use Lancamento\View\Helper\CabecalhoDeEventos;
 use Lancamento\View\Helper\DadosEntidade;
+use Lancamento\View\Helper\InputFormulario;
 use Lancamento\View\Helper\ListagemDePessoasComEventos;
 use Lancamento\View\Helper\MensagemRelatorioEnviado;
 use Lancamento\View\Helper\ModalAba;
 use Lancamento\View\Helper\ModalMuitosCadastros;
 use Lancamento\View\Helper\ModalMuitosEventos;
 use Lancamento\View\Helper\TabelaLancamento;
+use Login\View\Helper\BotaoLink;
 use Login\View\Helper\BotaoSubmit;
 use Login\View\Helper\BotaoSubmitDesabilitado;
 use Login\View\Helper\MensagemStatica;
@@ -91,6 +93,12 @@ class Module {
                 },
                 'botaoSubmitDesabilitado' => function($sm) {
                     return new BotaoSubmitDesabilitado();
+                },
+                'botaoLink' => function($sm) {
+                    return new BotaoLink();
+                },
+                'inputFormulario' => function($sm) {
+                    return new InputFormulario();
                 },
             )
         );
