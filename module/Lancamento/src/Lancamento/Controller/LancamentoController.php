@@ -505,7 +505,6 @@ class LancamentoController extends AbstractActionController {
                     return $this->forward()->dispatch(Constantes::$CONTROLLER_LOGIN, array(
                                 Constantes::$ACTION => ConstantesLancamento::$ROUTE_INDEX,
                     ));
-                    echo "ERRO DE CADASTRO";
                 }
             } catch (Exception $exc) {
                 echo $exc->getTraceAsString();

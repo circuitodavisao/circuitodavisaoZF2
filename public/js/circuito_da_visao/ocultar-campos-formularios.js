@@ -23,7 +23,7 @@ $(document).ready(function () {
 
         var opSelected = $("#tipo option:selected").val();
 
-        if (opSelected == 0 || opSelected == 1) {
+        if (opSelected == 0 || opSelected == 1 || opSelected == 2) {
             $("#ocultar_checkbox").hide();
         } else {
             $("#ocultar_checkbox").show();

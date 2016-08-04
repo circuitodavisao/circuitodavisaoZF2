@@ -34,7 +34,7 @@ class BotaoLink extends AbstractHelper {
             $classCor = 'primary-default dark';
         }
         $html = '';
-        $html .= '<button ' . $this->getExtra() . ' onclick=\'location.href="' . $this->getLink() . '";\' class="btn ladda-button btn-' . $classCor . ' mr10" data-style="zoom-in">'
+        $html .= '<button type="button" ' . $this->getExtra() . ' onclick=\'location.href="' . $this->getLink() . '";\' class="btn ladda-button btn-' . $classCor . ' mr10" data-style="zoom-in">'
                 . '<span class="ladda-label">' . $this->view->translate($this->getLabel()) . '</span>'
                 . '</button>';
         return $html;

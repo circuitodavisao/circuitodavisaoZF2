@@ -116,17 +116,17 @@ class CadastrarPessoaForm extends Form {
                                 1 => array(
                                     Constantes::$FORM_STRING_VALUE => 0,
                                     ConstantesLancamento::$INPUT_SELECTED => ConstantesLancamento::$INPUT_SELECTED,
-                                    Constantes::$FORM_STRING_LABEL => ' NENHUM ',
+                                    Constantes::$FORM_STRING_LABEL => ' NONE',
                                     Constantes::$FORM_STRING_LABEL_ATRIBUTES => array(Constantes::$FORM_STRING_CLASS => $classOption),
                                 ),
                                 2 => array(
                                     Constantes::$FORM_STRING_VALUE => 'C',
-                                    Constantes::$FORM_STRING_LABEL => ' CO LIDER <br />',
+                                    Constantes::$FORM_STRING_LABEL => ' CO-LEADER',
                                     Constantes::$FORM_STRING_LABEL_ATRIBUTES => array(Constantes::$FORM_STRING_CLASS => $classOption),
                                 ),
                                 3 => array(
                                     Constantes::$FORM_STRING_VALUE => 'L',
-                                    Constantes::$FORM_STRING_LABEL => ' LIDER EM TREINAMENTO',
+                                    Constantes::$FORM_STRING_LABEL => ' LEADER IN TRAINING',
                                     Constantes::$FORM_STRING_LABEL_ATRIBUTES => array(Constantes::$FORM_STRING_CLASS => $classOption),
                                 ),
                             ),

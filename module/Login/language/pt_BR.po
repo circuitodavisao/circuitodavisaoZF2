@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: ZendSkeletonApplication\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-07-05 22:17-0700\n"
-"PO-Revision-Date: 2016-07-06 17:38-0300\n"
+"PO-Revision-Date: 2016-08-04 12:25-0300\n"
 "Last-Translator: Diogo Melo <dmelo87@gmail.com>\n"
 "Language-Team: ZF Contibutors <zf-devteam@zend.com>\n"
 "Language: pt\n"
@@ -308,3 +308,66 @@ msgstr "Limite máximo de cadastros alcançado!"
 #: Lancamento/view/lancamento/index.phtml:25
 msgid "New"
 msgstr "Novo"
+
+# ###########
+# LANÇAMENTO#
+# ###########
+#: Lancamento/view/lancamento/cadastrar-pessoa.phtml:21
+msgid "New Register"
+msgstr "Novo Registro"
+
+#: Lancamento/view/lancamento/cadastrar-pessoa.phtml:22
+msgid "Person at the launch line"
+msgstr "Pessoa na linha de lançamento"
+
+#: Lancamento/view/lancamento/cadastrar-pessoa.phtml:30
+msgid "Full Name"
+msgstr "Nome Completo"
+
+#: Lancamento/view/lancamento/cadastrar-pessoa.phtml:38
+msgid "Phone"
+msgstr "Telefone"
+
+#: Lancamento/view/lancamento/cadastrar-pessoa.phtml:44
+msgid "Type"
+msgstr "Tipo"
+
+#: Lancamento/view/lancamento/cadastrar-pessoa.phtml:55
+msgid "Perfect Core"
+msgstr "Núcleo Perfeito"
+
+#: Lancamento/view/lancamento/cadastrar-pessoa.phtml:67
+msgid "Register"
+msgstr "Cadastrar"
+
+#: Lancamento/view/lancamento/cadastrar-pessoa.phtml:48
+msgid "SELECT"
+msgstr "SELECIONE"
+
+#: Lancamento/view/lancamento/cadastrar-pessoa.phtml:48
+msgid "VISITOR"
+msgstr "VISITANTE"
+
+#: Lancamento/view/lancamento/cadastrar-pessoa.phtml:48
+msgid "CONSOLIDATION"
+msgstr "CONSOLIDAÇÃO"
+
+#: Lancamento/view/lancamento/cadastrar-pessoa.phtml:58
+msgid "MEMBER"
+msgstr "MEMBRO"
+
+#: Lancamento/view/lancamento/cadastrar-pessoa.phtml:58
+msgid " LEADER IN TRAINING"
+msgstr " LÍDER EM TREINAMENTO"
+
+#: Lancamento/view/lancamento/cadastrar-pessoa.phtml:58
+msgid " NONE"
+msgstr " NENHUM"
+
+#: Lancamento/view/lancamento/cadastrar-pessoa.phtml:58
+msgid " CO-LEADER"
+msgstr " CO-LÍDER"
+
+#: Lancamento/view/lancamento/index.phtml:37
+msgid "Person Registered"
+msgstr "Pessoa Cadastrada"

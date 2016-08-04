@@ -325,7 +325,7 @@ class Grupo {
                         $verificacaoDiaSemana = true;
                     }
 
-                    if ($verificacaoData && $verificacaoDiaSemana) {
+                    if ($verificacaoData || $verificacaoDiaSemana) {
                         $eventos[] = $ge;
                     }
                 }
