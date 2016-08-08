@@ -40,6 +40,15 @@ class EventoCelula {
     /** @ORM\Column(type="string") */
     protected $complemento;
 
+    /** @ORM\Column(type="string") */
+    protected $cidade;
+
+    /** @ORM\Column(type="string") */
+    protected $bairro;
+
+    /** @ORM\Column(type="integer") */
+    protected $cep;
+
     /** @ORM\Column(type="integer") */
     protected $evento_id;
 
@@ -97,6 +106,30 @@ class EventoCelula {
 
     function setEvento_id($evento_id) {
         $this->evento_id = $evento_id;
+    }
+
+    function getCidade() {
+        return $this->cidade;
+    }
+
+    function getBairro() {
+        return $this->bairro;
+    }
+
+    function getCep() {
+        return $this->cep;
+    }
+
+    function setCidade($cidade) {
+        $this->cidade = $cidade;
+    }
+
+    function setBairro($bairro) {
+        $this->bairro = $bairro;
+    }
+
+    function setCep($cep) {
+        $this->cep = $cep;
     }
 
 }

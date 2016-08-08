@@ -1,7 +1,7 @@
 <?php
 
 namespace Login\Controller;
-
+ 
 use DateTime;
 use Doctrine\ORM\EntityManager;
 use Exception;
@@ -18,7 +18,7 @@ use Zend\Mvc\I18n\Translator;
 use Zend\Session\Container;
 use Zend\View\Model\ViewModel;
 
-/**
+/** 
  * Nome: LoginController.php
  * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com>
  * Descricao: Controle de todas ações do login
