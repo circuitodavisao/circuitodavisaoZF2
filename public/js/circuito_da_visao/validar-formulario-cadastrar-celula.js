@@ -7,7 +7,7 @@ jQuery(document).ready(function () {
 
 
 
-    $("#CadastrarGrupoPessoaForm").validate({
+    $("#CadastroCelula").validate({
         /* @validation states + elements 
          ------------------------------------------- */
 
@@ -18,63 +18,52 @@ jQuery(document).ready(function () {
          ------------------------------------------ */
 
         rules: {
-            estado_civil: {
+            dia: {
+                required: true
+            },
+            hora: {
                 required: true
             },
             cep: {
+                required: true
+            },
+            nome_hospedeiro: {
+                required: true
+            },
+            ddd: {
+                required: true
+            },
+            telefone: {
                 required: true,
                 minlength: 8,
+                maxlength: 9,
                 number: true
-            },
-            bairro: {
-                required: true
-            },
-            uf: {
-                required: true
-            },
-            cidade: {
-                required: true
-            },
-            logradouro: {
-                required: true
-            },
-            complemento: {
-                required: true
-            },
-            cpf: {
-                required: true,
-                minlength: 11
-            },
-            sexo: {
-                required: true
-            },
-            nome_completo: {
-                required: true,
-                minlength: 3,
-            },
-            data_nascimento: {
-                required: true,
-                number: true
-            },
-             
+            }
         },
         /* @validation error messages 
          ---------------------------------------------- */
 
         messages: {
-            estado_civil: {
-                required: 'Escolha pelo 1 estado civil',
+            dia: {
+                required: 'Infome o dia de sua célula'
+            },
+            hora: {
+                required: 'Infome o horário de sua célula'
             },
             cep: {
-                required: 'Informe o CEP',
-                minlength: 'No mínimo 8 dígitos',
-                number: 'Somente numeros',      
+                required: 'Informe o CEP ou parte do seu logradouro'
             },
-            bairro: {
-                required: 'Informe um Bairro',
+            nome_hospedeiro: {
+                required: 'Diga o nome do hospedeiro onde será sua célula'
             },
-            uf: {
-                required: 'Selecione uma UF'
+            ddd: {
+                required: 'Informe o DDD da sua cidade, é obrigatório'
+            },
+            telefone: {
+                required: 'O telefone também é obrigatório!',
+                minlength: 'No mínimo 8 caracteres no telefone por favor!',
+                maxlength: 'Pronto, já temos 9 caracteres!',
+                number: 'Neste campo somente números!'
             }
         },
         /* @validation highlighting + error placement  
