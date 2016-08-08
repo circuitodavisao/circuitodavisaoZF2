@@ -10,6 +10,7 @@ return array(
         'Login',
         'Lancamento',
         'Entidade',
+        'Cadastro',
         'ZendDeveloperTools',
         'DoctrineModule',
         'DoctrineORMModule',

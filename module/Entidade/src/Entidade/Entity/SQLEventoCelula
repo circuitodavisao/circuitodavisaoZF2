@@ -10,6 +10,9 @@ CREATE TABLE evento_celula
   logradouro character varying(80) NOT NULL, -- Logradouro da célula
   complemento character varying(30), -- Complemento do endereço da célula
   evento_id integer NOT NULL, -- Identificação do evento
+  bairro character varying(30), -- Bairro do local da célula
+  cidade character varying(30) NOT NULL, -- Cidade do local da célula
+  cep bigint NOT NULL, -- CEP do local da célula
   CONSTRAINT pk_evento_celula PRIMARY KEY (id),
   CONSTRAINT fk_evento_celula_evento_id FOREIGN KEY (evento_id)
       REFERENCES evento (id) MATCH SIMPLE
@@ -28,4 +31,7 @@ COMMENT ON COLUMN evento_celula.telefone_hospedeiro IS 'Telefone do hospedeiro c
 COMMENT ON COLUMN evento_celula.logradouro IS 'Logradouro da célula';
 COMMENT ON COLUMN evento_celula.complemento IS 'Complemento do endereço da célula';
 COMMENT ON COLUMN evento_celula.evento_id IS 'Identificação do evento';
+COMMENT ON COLUMN evento_celula.bairro IS 'Bairro do local da célula';
+COMMENT ON COLUMN evento_celula.cidade IS 'Cidade do local da célula';
+COMMENT ON COLUMN evento_celula.cep IS 'CEP do local da célula';
 
