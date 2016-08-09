@@ -11,6 +11,7 @@ class ConstantesCadastro {
     /* Rotas */
 
     public static $PAGINA_CELULAS = 'Celulas';
+    public static $PAGINA_CELULA = 'Celula';
     public static $CONTROLLER_CADASTRO = 'Cadastro\Controller\Cadastro';
 
 }
