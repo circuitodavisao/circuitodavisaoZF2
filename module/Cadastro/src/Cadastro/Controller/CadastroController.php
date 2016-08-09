@@ -1,13 +1,20 @@
 <?php
 
+namespace Cadastro\Controller;
+
 use Cadastro\Controller\Helper\ConstantesCadastro;
-use DoctrineORMModule\Options\EntityManager;
-use Lancamento\Controller\Helper\ConstantesLancamento;
+use Cadastro\Form\CelulaForm;
+use Cadastro\Form\ConstantesForm;
+use Doctrine\ORM\EntityManager;
+use Entidade\Controller\Helper\EntidadesORM;
+use Entidade\Entity\Evento;
+use Entidade\Entity\EventoCelula;
+use Entidade\Entity\Grupo;
+use Exception;
 use Login\Controller\Helper\Constantes;
 use Zend\Mvc\Controller\AbstractActionController;
+use Zend\Session\Container;
 use Zend\View\Model\ViewModel;
-
-namespace Cadastro\Controller;
 
 /**
  * Nome: CadastroController.php
@@ -21,8 +28,7 @@ class CadastroController extends AbstractActionController {
     /**
      * Contrutor sobrecarregado com os serviços de ORM e Autenticador
      */
-    public function __construct(
-    EntityManager $doctrineORMEntityManager = null) {
+    public function __construct(EntityManager $doctrineORMEntityManager = null) {
 
         if (!is_null($doctrineORMEntityManager)) {
             $this->_doctrineORMEntityManager = $doctrineORMEntityManager;
@@ -36,7 +42,7 @@ class CadastroController extends AbstractActionController {
     public function indexAction() {
 
         /* Verificando rota */
-        $pagina = $this->getEvent()->getRouteMatch()->getParam(ConstantesLancamento::$PAGINA, 1);
+        $pagina = $this->getEvent()->getRouteMatch()->getParam(ConstantesCadastro::$PAGINA, 1);
         if ($pagina == ConstantesCadastro::$PAGINA_CELULAS) {
             return $this->forward()->dispatch(ConstantesCadastro::$CONTROLLER_CADASTRO, array(
                         Constantes::$ACTION => ConstantesCadastro::$PAGINA_CELULAS,
@@ -65,12 +71,79 @@ class CadastroController extends AbstractActionController {
      * GET /cadastroCelula
      */
     public function celulaAction() {
-//        $celulaForm = new CelulaForm(ConstantesCadastro::$FORM_CELULA);
+        $celulaForm = new CelulaForm(ConstantesForm::$FORM_CELULA);
 
         $view = new ViewModel(array(
-//            ConstantesCadastro::$FORM_CELULA => $celulaForm,
+            ConstantesForm::$FORM_CELULA => $celulaForm,
         ));
         return $view;
+    }
+
+    /**
+     * Função para salvar a células
+     * POST /cadastroSalvarCelula
+     */
+    public function salvarCelulaAction() {
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            try {
+                $post_data = $request->getPost();
+
+                $eventoCelula = new EventoCelula();
+                $evento = new Evento();
+                $celulaForm = new CelulaForm(ConstantesForm::$FORM_CELULA);
+                $celulaForm->setInputFilter($eventoCelula->getInputFilter());
+                $celulaForm->setData($post_data);
+
+                /* validação */
+                if ($celulaForm->isValid()) {
+                    $validatedData = $celulaForm->getData();
+
+                    $eventoCelula->exchangeArray($celulaForm->getData());
+                    $evento->setData_criacao(date('Y-m-d'));
+                    $evento->setHora_criacao(date('H:s:i'));
+                    $eventoCelula->setTelefone_hospedeiroe($validatedData[ConstantesForm::$FORM_DDD_HOSPEDEIRO] . $validatedData[ConstantesForm::$FORM_TELEFONE_HOSPEDEIRO]);
+
+                    $entidadesORM = new EntidadesORM($this->getDoctrineORMEntityManager());
+
+                    /* Grupo selecionado */
+                    $grupo = $this->getGrupoSelecionado($entidadesORM);
+//
+//                    /* Salvar a pessoa e o grupo pessoa correspondente */
+//                    $loginORM->getPessoaORM()->persistirPessoaNova($pessoa);
+//                    $lancamentoORM->getGrupoPessoaORM()->cadastrar($lancamentoORM, $pessoa, $grupo, $post_data[ConstantesLancamento::$INPUT_TIPO], $validatedData[ConstantesLancamento::$INPUT_NUCLEO_PERFEITO]);
+//
+//                    /* Pondo valores na sessao */
+//                    $sessao = new Container(Constantes::$NOME_APLICACAO);
+//                    $sessao->nomePessoaCadastrada = $pessoa->getNome();
+                }
+                return $this->forward()->dispatch(ConstantesCadastro::$CONTROLLER_CADASTRO, array(
+                            Constantes::$ACTION => ConstantesCadastro::$PAGINA_CELULAS,
+                ));
+            } catch (Exception $exc) {
+                echo $exc->getMessage();
+            }
+        }
+    }
+
+    /**
+     * Recupera ORM
+     * @return EntityManager
+     */
+    public function getDoctrineORMEntityManager() {
+        return $this->_doctrineORMEntityManager;
+    }
+
+    /**
+     * Recupera o grupo do perfil selecionado
+     * @param EntidadesORM $entidadesORM
+     * @return Grupo
+     */
+    private function getGrupoSelecionado($entidadesORM) {
+        $sessao = new Container(Constantes::$NOME_APLICACAO);
+        $idEntidadeAtual = $sessao->idEntidadeAtual;
+        $entidade = $entidadesORM->getEntidadeORM()->encontrarPorIdEntidade($idEntidadeAtual);
+        return $entidade->getGrupo();
     }
 
 }

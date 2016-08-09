@@ -7,13 +7,26 @@ namespace Entidade\Entity;
  * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com>
  * Descricao: Entidade anotada da tabela evento_celula
  */
+use Cadastro\Form\ConstantesForm;
 use Doctrine\ORM\Mapping as ORM;
+use SebastianBergmann\RecursionContext\Exception;
+use Zend\InputFilter\InputFilter;
+use Zend\InputFilter\InputFilterAwareInterface;
+use Zend\InputFilter\InputFilterInterface;
 
 /**
  * @ORM\Entity 
  * @ORM\Table(name="evento_celula")
  */
-class EventoCelula {
+class EventoCelula implements InputFilterAwareInterface {
+
+    public function exchangeArray($data) {
+        $this->nome_hospedeiro = (!empty($data[ConstantesForm::$FORM_NOME_HOSPEDEIRO]) ? strtoupper($data[ConstantesForm::$FORM_NOME_HOSPEDEIRO]) : null);
+        $this->complemento = (!empty($data[ConstantesForm::$FORM_COMPLEMENTO]) ? strtoupper($data[ConstantesForm::$FORM_COMPLEMENTO]) : null);
+        $this->cep = (!empty($data[ConstantesForm::$FORM_CEP_LOGRADOURO]) ? $data[ConstantesForm::$FORM_CEP_LOGRADOURO] : null);
+    }
+
+    protected $inputFilter;
 
     /**
      * @ORM\OneToOne(targetEntity="Evento")
@@ -130,6 +143,162 @@ class EventoCelula {
 
     function setCep($cep) {
         $this->cep = $cep;
+    }
+
+    public function getInputFilter() {
+        if (!$this->inputFilter) {
+            $inputFilter = new InputFilter();
+            /* Hora */
+            $inputFilter->add(array(
+                ConstantesForm::$VALIDACAO_NAME => ConstantesForm::$FORM_HORA,
+                ConstantesForm::$VALIDACAO_REQUIRED => true,
+                ConstantesForm::$VALIDACAO_FILTER => array(
+                    array(ConstantesForm::$VALIDACAO_NAME => ConstantesForm::$VALIDACAO_STRING_TAGS), // removel xml e html string
+                    array(ConstantesForm::$VALIDACAO_NAME => ConstantesForm::$VALIDACAO_STRING_TRIM), // removel espaco do inicio e do final da string
+                    array(ConstantesForm::$VALIDACAO_NAME => ConstantesForm::$VALIDACAO_STRING_TO_UPPER), // transforma em maiusculo
+                ),
+                ConstantesForm::$VALIDACAO_VALIDATORS => array(
+                    array(
+                        ConstantesForm::$VALIDACAO_NAME => ConstantesForm::$VALIDACAO_NOT_EMPTY,
+                    ),
+                    array(
+                        ConstantesForm::$VALIDACAO_NAME => ConstantesForm::$VALIDACAO_STRING_LENGTH,
+                        ConstantesForm::$VALIDACAO_OPTIONS => array(
+                            ConstantesForm::$VALIDACAO_ENCODING => ConstantesForm::$VALIDACAO_UTF_8,
+                            ConstantesForm::$VALIDACAO_MIN => 3,
+                            ConstantesForm::$VALIDACAO_MAX => 80,
+                        ),
+                    ),
+                ),
+            ));
+            /* CEP ou Logradouro */
+            $inputFilter->add(array(
+                ConstantesForm::$VALIDACAO_NAME => ConstantesForm::$FORM_CEP_LOGRADOURO,
+                ConstantesForm::$VALIDACAO_REQUIRED => true,
+                ConstantesForm::$VALIDACAO_FILTER => array(
+                    array(ConstantesForm::$VALIDACAO_NAME => ConstantesForm::$VALIDACAO_STRING_TAGS), // removel xml e html string
+                    array(ConstantesForm::$VALIDACAO_NAME => ConstantesForm::$VALIDACAO_STRING_TRIM), // removel espaco do inicio e do final da string
+                    array(ConstantesForm::$VALIDACAO_NAME => ConstantesForm::$VALIDACAO_INT), //transforma string para inteiro
+                ),
+                ConstantesForm::$VALIDACAO_VALIDATORS => array(
+                    array(
+                        ConstantesForm::$VALIDACAO_NAME => ConstantesForm::$VALIDACAO_NOT_EMPTY,
+                    ),
+                    array(
+                        ConstantesForm::$VALIDACAO_NAME => ConstantesForm::$VALIDACAO_STRING_LENGTH,
+                        ConstantesForm::$VALIDACAO_OPTIONS => array(
+                            ConstantesForm::$VALIDACAO_MIN => 8,
+                            ConstantesForm::$VALIDACAO_MAX => 8,
+                        ),
+                    ),
+                ),
+            ));
+
+            /* Complemento */
+            $inputFilter->add(array(
+                ConstantesForm::$VALIDACAO_NAME => ConstantesForm::$FORM_COMPLEMENTO,
+                ConstantesForm::$VALIDACAO_REQUIRED => true,
+                ConstantesForm::$VALIDACAO_FILTER => array(
+                    array(ConstantesForm::$VALIDACAO_NAME => ConstantesForm::$VALIDACAO_STRING_TAGS), // removel xml e html string
+                    array(ConstantesForm::$VALIDACAO_NAME => ConstantesForm::$VALIDACAO_STRING_TRIM), // removel espaco do inicio e do final da string
+                    array(ConstantesForm::$VALIDACAO_NAME => ConstantesForm::$VALIDACAO_STRING_TO_UPPER), // transforma em maiusculo
+                ),
+                ConstantesForm::$VALIDACAO_VALIDATORS => array(
+                    array(
+                        ConstantesForm::$VALIDACAO_NAME => ConstantesForm::$VALIDACAO_NOT_EMPTY,
+                    ),
+                    array(
+                        ConstantesForm::$VALIDACAO_NAME => ConstantesForm::$VALIDACAO_STRING_LENGTH,
+                        ConstantesForm::$VALIDACAO_OPTIONS => array(
+                            ConstantesForm::$VALIDACAO_ENCODING => ConstantesForm::$VALIDACAO_UTF_8,
+                            ConstantesForm::$VALIDACAO_MIN => 3,
+                            ConstantesForm::$VALIDACAO_MAX => 80,
+                        ),
+                    ),
+                ),
+            ));
+
+            /* Nome Hospedeiro */
+            $inputFilter->add(array(
+                ConstantesForm::$VALIDACAO_NAME => ConstantesForm::$FORM_NOME_HOSPEDEIRO,
+                ConstantesForm::$VALIDACAO_REQUIRED => true,
+                ConstantesForm::$VALIDACAO_FILTER => array(
+                    array(ConstantesForm::$VALIDACAO_NAME => ConstantesForm::$VALIDACAO_STRING_TAGS), // removel xml e html string
+                    array(ConstantesForm::$VALIDACAO_NAME => ConstantesForm::$VALIDACAO_STRING_TRIM), // removel espaco do inicio e do final da string
+                    array(ConstantesForm::$VALIDACAO_NAME => ConstantesForm::$VALIDACAO_STRING_TO_UPPER), // transforma em maiusculo
+                ),
+                ConstantesForm::$VALIDACAO_VALIDATORS => array(
+                    array(
+                        ConstantesForm::$VALIDACAO_NAME => ConstantesForm::$VALIDACAO_NOT_EMPTY,
+                    ),
+                    array(
+                        ConstantesForm::$VALIDACAO_NAME => ConstantesForm::$VALIDACAO_STRING_LENGTH,
+                        ConstantesForm::$VALIDACAO_OPTIONS => array(
+                            ConstantesForm::$VALIDACAO_ENCODING => ConstantesForm::$VALIDACAO_UTF_8,
+                            ConstantesForm::$VALIDACAO_MIN => 3,
+                            ConstantesForm::$VALIDACAO_MAX => 80,
+                        ),
+                    ),
+                ),
+            ));
+
+            /* DDD */
+            $inputFilter->add(array(
+                ConstantesForm::$VALIDACAO_NAME => ConstantesForm::$FORM_DDD_HOSPEDEIRO,
+                ConstantesForm::$VALIDACAO_REQUIRED => true,
+                ConstantesForm::$VALIDACAO_FILTER => array(
+                    array(ConstantesForm::$VALIDACAO_NAME => ConstantesForm::$VALIDACAO_STRING_TAGS), // removel xml e html string
+                    array(ConstantesForm::$VALIDACAO_NAME => ConstantesForm::$VALIDACAO_STRING_TRIM), // removel espaco do inicio e do final da string
+                    array(ConstantesForm::$VALIDACAO_NAME => ConstantesForm::$VALIDACAO_INT), //transforma string para inteiro
+                ),
+                ConstantesForm::$VALIDACAO_VALIDATORS => array(
+                    array(
+                        ConstantesForm::$VALIDACAO_NAME => ConstantesForm::$VALIDACAO_NOT_EMPTY,
+                    ),
+                    array(
+                        ConstantesForm::$VALIDACAO_NAME => ConstantesForm::$VALIDACAO_STRING_LENGTH,
+                        ConstantesForm::$VALIDACAO_OPTIONS => array(
+                            ConstantesForm::$VALIDACAO_MIN => 2,
+                            ConstantesForm::$VALIDACAO_MAX => 2,
+                        ),
+                    ),
+                ),
+            ));
+
+            /* Telefone */
+            $inputFilter->add(array(
+                ConstantesForm::$VALIDACAO_NAME => ConstantesForm::$FORM_TELEFONE_HOSPEDEIRO,
+                ConstantesForm::$VALIDACAO_REQUIRED => true,
+                ConstantesForm::$VALIDACAO_FILTER => array(
+                    array(ConstantesForm::$VALIDACAO_NAME => ConstantesForm::$VALIDACAO_STRING_TAGS), // removel xml e html string
+                    array(ConstantesForm::$VALIDACAO_NAME => ConstantesForm::$VALIDACAO_STRING_TRIM), // removel espaco do inicio e do final da string
+                    array(ConstantesForm::$VALIDACAO_NAME => ConstantesForm::$VALIDACAO_INT), //transforma string para inteiro
+                ),
+                ConstantesForm::$VALIDACAO_VALIDATORS => array(
+                    array(
+                        ConstantesForm::$VALIDACAO_NAME => ConstantesForm::$VALIDACAO_NOT_EMPTY,
+                    ),
+                    array(
+                        ConstantesForm::$VALIDACAO_NAME => ConstantesForm::$VALIDACAO_STRING_LENGTH,
+                        ConstantesForm::$VALIDACAO_OPTIONS => array(
+                            ConstantesForm::$VALIDACAO_MIN => 8,
+                            ConstantesForm::$VALIDACAO_MAX => 9,
+                        ),
+                    ),
+                ),
+            ));
+
+            $this->inputFilter = $inputFilter;
+        }
+        return $this->inputFilter;
+    }
+
+    /**
+     * @param InputFilterInterface $inputFilter
+     * @throws Exception
+     */
+    public function setInputFilter(InputFilterInterface $inputFilter) {
+        throw new Exception("Nao utilizado");
     }
 
 }

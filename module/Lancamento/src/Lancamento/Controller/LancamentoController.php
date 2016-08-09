@@ -464,7 +464,6 @@ class LancamentoController extends AbstractActionController {
      */
     public function salvarPessoaAction() {
         $request = $this->getRequest();
-        $response = $this->getResponse();
         if ($request->isPost()) {
             try {
                 $post_data = $request->getPost();

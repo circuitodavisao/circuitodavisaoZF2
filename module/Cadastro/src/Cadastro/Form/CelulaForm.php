@@ -25,7 +25,7 @@ class CelulaForm extends Form {
         parent::__construct($name);
 
         $this->setAttributes(array(
-            ConstantesForm::$FORM_METHOD => ConstantesForm::$FORM_STRING_POST,
+            ConstantesForm::$FORM_METHOD => ConstantesForm::$FORM_POST,
         ));
 
         /* Id */
