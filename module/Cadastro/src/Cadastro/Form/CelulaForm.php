@@ -3,7 +3,6 @@
 namespace Cadastro\Form;
 
 use Lancamento\Controller\Helper\FuncoesLancamento;
-use Login\Controller\Helper\Constantes;
 use Zend\Form\Element\Button;
 use Zend\Form\Element\Csrf;
 use Zend\Form\Element\Hidden;
@@ -14,7 +13,7 @@ use Zend\Form\Form;
 /**
  * Nome: CelulaForm.php
  * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com>
- * Descricao: Formulario para cadastrar pessoa na tela de lançamento
+ * Descricao: Formulario para cadastrar célula
  */
 class CelulaForm extends Form {
 
@@ -41,7 +40,7 @@ class CelulaForm extends Form {
         /* Dia da semana */
         $arrayDiaDaSemana = array();
         for ($indiceDiaDaSemana = 1; $indiceDiaDaSemana <= 7; $indiceDiaDaSemana++) {
-            $diaDaSemanaPorExtenso = FuncoesLancamento::diaDaSemanaPorDia($indiceDiaDaSemana);
+            $diaDaSemanaPorExtenso = FuncoesLancamento::diaDaSemanaPorDia($indiceDiaDaSemana, 1);
             $arrayDiaDaSemana[$indiceDiaDaSemana] = $diaDaSemanaPorExtenso;
         }
         $inputSelectDiaDaSemana = new Select();
@@ -125,15 +124,15 @@ class CelulaForm extends Form {
                         ->setName(ConstantesForm::$FORM_BUSCAR_CEP_LOGRADOURO)
                         ->setLabel(ConstantesForm::$TRADUCAO_BUSCAR_CEP_LOGRADOURO)
                         ->setAttributes([
-                            Constantes::$FORM_STRING_ID => ConstantesForm::$FORM_BUSCAR_CEP_LOGRADOURO,
-                            Constantes::$FORM_STRING_CLASS => ConstantesForm::$FORM_BTN_DEFAULT_DARK,
+                            ConstantesForm::$FORM_ID => ConstantesForm::$FORM_BUSCAR_CEP_LOGRADOURO,
+                            ConstantesForm::$FORM_CLASS => ConstantesForm::$FORM_BTN_DEFAULT_DARK,
                         ])
                         ->setValue(ConstantesForm::$TRADUCAO_BUSCAR_CEP_LOGRADOURO)
         );
 
         $this->add(
                 (new Csrf())
-                        ->setName(Constantes::$INPUT_CSRF)
+                        ->setName(ConstantesForm::$FORM_CSRF)
         );
     }
 

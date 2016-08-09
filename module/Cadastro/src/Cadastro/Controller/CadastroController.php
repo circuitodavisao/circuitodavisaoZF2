@@ -1,13 +1,13 @@
 <?php
 
-namespace Cadastro\Controller;
-
 use Cadastro\Controller\Helper\ConstantesCadastro;
-use Doctrine\ORM\EntityManager;
+use DoctrineORMModule\Options\EntityManager;
 use Lancamento\Controller\Helper\ConstantesLancamento;
 use Login\Controller\Helper\Constantes;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
+
+namespace Cadastro\Controller;
 
 /**
  * Nome: CadastroController.php
@@ -65,8 +65,12 @@ class CadastroController extends AbstractActionController {
      * GET /cadastroCelula
      */
     public function celulaAction() {
+//        $celulaForm = new CelulaForm(ConstantesCadastro::$FORM_CELULA);
 
-        return new ViewModel();
+        $view = new ViewModel(array(
+//            ConstantesCadastro::$FORM_CELULA => $celulaForm,
+        ));
+        return $view;
     }
 
 }

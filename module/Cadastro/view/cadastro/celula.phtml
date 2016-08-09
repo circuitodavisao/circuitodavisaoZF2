@@ -1,1 +1,115 @@
-uma celula
+<div class="row background-mobile">
+    <div id="content">
+        <!-- Cadastro de Sub-Equipe / Alterno -->
+        <div class="admin-form theme-danger tab-pane mw800 pl20 pr20" id="CadastroCelula" role="tabpanel">
+            <blockquote class="blockquote-danger">
+                <p>Cadastro de Célula</p>
+                <small>Multiplicação</small>
+            </blockquote>
+            <div class="panel panel-danger heading-border">
+                <form method="post" action="/" id="form-survey1">
+                    <div class="panel-body p25">
+                        <div class="section-divider mv40">
+                            <span>Dia / Hora</span>
+                        </div>
+                        <!-- .section-divider -->
+                        <div class="row">
+                            <div class="col-xs-6 col-sm-6 col-xd-6 col-md-6">
+                                <div class="section">
+                                    <label for="dia" class="field-label">Dia</label>
+                                    <label for="dia" class="field">
+                                        <label class="field select prepend-icon">
+                                            <select id="dia" name="dia">
+                                                <option value="0">Selecione</option>
+                                                <option value="dom">Domingo</option>
+                                                <option value="seg">Segunda-Feira</option>
+                                                <option value="ter">Terça-Feira</option>
+                                                <option value="qua">Quarta-Feira</option>
+                                                <option value="qui">Quinta-Feira</option>
+                                                <option value="sex">Sexta-Feira</option>
+                                                <option value="sab">Sábado</option>
+                                            </select>
+                                            <i class="arrow double"></i>
+                                        </label>
+                                    </label>
+                                </div>
+                                <!-- end section -->     
+                            </div>
+
+                            <div class="col-xs-6 col-sm-6 col-xd-6 col-md-6">
+                                <div class="section">
+                                    <label for="hora" class="field-label">Hora</label>
+                                    <label for="hora" class="field prepend-icon">
+                                        <input type="time" name="hora" id="hora" class="gui-input" placeholder="Hora">
+                                        <label for="hora" class="field-icon">
+                                            <i class="fa fa-clock-o"></i>
+                                        </label>
+                                    </label>
+                                </div>
+                                <!-- end section -->
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-sm-12 col-xd-12 col-md-12">
+                            <div class="section">
+                                <label for="cep" class="field-label">Logradouro ou CEP</label>
+                                <div class="smart-widget sm-right smr-50">
+                                    <label class="field">
+                                        <input type="text" name="cep" id="cep" class="gui-input" placeholder="Logradouro ou CEP">
+                                    </label>
+                                    <button type="submit" class="button btn-danger">
+                                        <i class="fa fa-search"></i>
+                                    </button>
+                                    <!-- end .smart-widget section -->
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="col-xs-12 col-sm-12 col-xd-12 col-md-12">
+                            <div class="section">
+                                <label for="firstaddr" class="field-label">Complemento</label>
+                                <label for="firstaddr" class="field prepend-icon">
+                                    <input type="text" name="complemento" id="complemento" class="gui-input" placeholder="Complemento">
+                                    <label for="firstaddr" class="field-icon">
+                                        <i class="fa fa-location-arrow"></i>
+                                    </label>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="panel-body">
+                        <div class="section-divider mv40">
+                            <span>Hospedeiro</span>
+                        </div>
+                        <!-- .section-divider -->
+
+                        <div class="col-xs-12 col-sm-12 col-xd-12 col-md-12">
+                            <div class="section">
+                                <label for="nome_hospedeiro" class="field-label">Nome do Hospedeiro</label>
+                                <label for="nome_hospedeiro" class="field prepend-icon">
+                                    <input type="text" name="nome_hospedeiro" id="nome_hospedeiro" class="gui-input" placeholder="Nome do Hospedeiro">
+                                    <label for="nome_hospedeiro" class="field-icon">
+                                        <i class="fa fa-terminal"></i>
+                                    </label>
+                                </label>
+                            </div>
+
+                            <div class="row section">
+                                <div class="col-xs-5 col-sm-5 col-md-2">
+                                    <label for="DDD" class="field-label">DDD</label><label for="DDD" class="field prepend-icon"><input type="text" name="ddd" class="gui-input" id="ddd" placeholder="DDD" value=""><label for="DDD" class="field-icon"><i class="fa fa-phone-square"></i></label></label>                            </div>
+                                <div class="col-xs-7 col-sm-7 col-md-10">
+                                    <label for="Phone" class="field-label">Telefone</label><label for="Phone" class="field prepend-icon"><input type="text" name="telefone" class="gui-input" id="telefone" placeholder="Telefone" value=""><label for="Phone" class="field-icon"><i class="fa fa-phone-square"></i></label></label>                            </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- end .section row section -->
+                    <div class="panel-footer text-right">
+                        <button type="submit" class="btn btn-danger">Cadastrar Célula</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
