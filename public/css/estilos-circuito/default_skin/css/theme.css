@@ -10713,7 +10713,9 @@ tbody.collapse.in {
   z-index: 1000;
   display: none;
   float: left;
-  min-width: 160px;
+  /*Ajuste Dinâmico de acordo com a quantidade de operações*/
+  min-width: 90px;
+  max-width: 180px;
   padding: 5px 0;
   margin: 2px 0 0;
   list-style: none;
