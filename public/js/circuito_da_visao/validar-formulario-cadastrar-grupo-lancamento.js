@@ -7,7 +7,7 @@ jQuery(document).ready(function () {
 
 
 
-    $("#CadastrarGrupoPessoaForm").validate({
+    $("#CadastrarPessoaForm").validate({
         /* @validation states + elements 
          ------------------------------------------- */
 
@@ -18,63 +18,50 @@ jQuery(document).ready(function () {
          ------------------------------------------ */
 
         rules: {
-            estado_civil: {
-                required: true
-            },
-            cep: {
-                required: true,
-                minlength: 8,
-                number: true
-            },
-            bairro: {
-                required: true
-            },
-            uf: {
-                required: true
-            },
-            cidade: {
-                required: true
-            },
-            logradouro: {
-                required: true
-            },
-            complemento: {
-                required: true
-            },
-            cpf: {
-                required: true,
-                minlength: 11
-            },
-            sexo: {
-                required: true
-            },
-            nome_completo: {
+            nome: {
                 required: true,
                 minlength: 3,
+                maxlength: 80
             },
-            data_nascimento: {
+            ddd: {
                 required: true,
+                minlength: 2,
+                maxlength: 2,
                 number: true
             },
-             
+            telefone: {
+                required: true,
+                minlength: 8,
+                maxlength: 9,
+                number: true
+            },
+            tipo: {
+                required: true
+            }
         },
         /* @validation error messages 
          ---------------------------------------------- */
 
         messages: {
-            estado_civil: {
-                required: 'Escolha pelo 1 estado civil',
+            nome: {
+                required: 'Enter Full Name',
+                minlength: 'Enter at least 3 characters or more',
+                maxlength: 'Enter at 80 characters'
             },
-            cep: {
-                required: 'Informe o CEP',
-                minlength: 'No mínimo 8 dígitos',
-                number: 'Somente numeros',      
+            ddd: {
+                required: 'Enter DDD',
+                number: 'Enter only numbers',
+                minlength: 'Enter at 2 numbers',
+                maxlength: 'Enter at 2 numbers'
             },
-            bairro: {
-                required: 'Informe um Bairro',
+            telefone: {
+                required: 'Enter Phone',
+                number: 'Enter only numbers',
+                minlength: 'Enter at least 8 numbers',
+                maxlength: 'Enter at 9 numbers'
             },
-            uf: {
-                required: 'Selecione uma UF'
+            tipo: {
+                required: 'Choose a Type'
             }
         },
         /* @validation highlighting + error placement  
