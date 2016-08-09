@@ -11,6 +11,7 @@ use Entidade\Entity\Evento;
 use Entidade\Entity\EventoCelula;
 use Entidade\Entity\Grupo;
 use Exception;
+use Lancamento\Controller\Helper\ConstantesLancamento;
 use Login\Controller\Helper\Constantes;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\Session\Container;
@@ -76,6 +77,14 @@ class CadastroController extends AbstractActionController {
         $view = new ViewModel(array(
             ConstantesForm::$FORM_CELULA => $celulaForm,
         ));
+        /* Javascript */
+        $layoutJS = new ViewModel();
+        $layoutJS->setTemplate(ConstantesForm::$LAYOUT_JS_CELULA);
+        $view->addChild($layoutJS, ConstantesForm::$LAYOUT_STRING_JS_CELULA);
+        $layoutJSValidacao = new ViewModel();
+        $layoutJSValidacao->setTemplate(ConstantesForm::$LAYOUT_JS_CELULA_VALIDACAO);
+        $view->addChild($layoutJSValidacao, ConstantesForm::$LAYOUT_STRING_JS_CELULA_VALIDACAO);
+
         return $view;
     }
 

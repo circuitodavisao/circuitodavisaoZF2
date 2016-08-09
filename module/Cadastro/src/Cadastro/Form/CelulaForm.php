@@ -39,6 +39,7 @@ class CelulaForm extends Form {
 
         /* Dia da semana */
         $arrayDiaDaSemana = array();
+        $arrayDiaDaSemana[''] = ConstantesForm::$FORM_SELECT;
         for ($indiceDiaDaSemana = 1; $indiceDiaDaSemana <= 7; $indiceDiaDaSemana++) {
             $diaDaSemanaPorExtenso = FuncoesLancamento::diaDaSemanaPorDia($indiceDiaDaSemana, 1);
             $arrayDiaDaSemana[$indiceDiaDaSemana] = $diaDaSemanaPorExtenso;

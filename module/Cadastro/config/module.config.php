@@ -51,8 +51,10 @@ return array(
         'template_map' => array(
             'layout/layout' => __DIR__ . '/../../Login/view/layout/layout.phtml',
             'cadastro/cadastro/index' => __DIR__ . '/../view/cadastro/index.phtml',
-            'cadastro/cadastro/celula' => __DIR__ . '/../view/cadastro/celula.phtml', 
-            'cadastro/cadastro/celulas' => __DIR__ . '/../view/cadastro/celulas.phtml', 
+            'cadastro/cadastro/celula' => __DIR__ . '/../view/cadastro/celula.phtml',
+            'cadastro/cadastro/celulas' => __DIR__ . '/../view/cadastro/celulas.phtml',
+            'layout/layout-js-celula' => __DIR__ . '/../view/layout/layout-js-celula.phtml',
+            'layout/layout-js-celula-validacao' => __DIR__ . '/../view/layout/layout-js-celula-validacao.phtml',
             'error/404' => __DIR__ . '/../../Login/view/error/404.phtml',
             'error/index' => __DIR__ . '/../../Login/view/error/index.phtml',
         ),

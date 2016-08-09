@@ -44,9 +44,7 @@ $form->setAttribute(Constantes::$ACTION, $this->url(ConstantesLancamento::$ROUTE
                                 <?php echo $this->translate(ConstantesLancamento::$TRADUCAO_TIPO); ?>
                             </label>
                             <label for="<?php echo ConstantesLancamento::$TRADUCAO_TIPO; ?>" class="field prepend-icon">
-                                <?php
-                                echo $this->formSelect($form->get(ConstantesLancamento::$INPUT_TIPO));
-                                ?>
+                                <?php echo $this->formSelect($form->get(ConstantesLancamento::$INPUT_TIPO)); ?>
                             </label>    
                         </div> 
                         <!-- Tipo Input Radio --> 

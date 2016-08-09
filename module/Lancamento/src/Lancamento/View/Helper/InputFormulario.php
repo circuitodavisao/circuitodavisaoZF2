@@ -16,16 +16,18 @@ class InputFormulario extends AbstractHelper {
     protected $form;
     protected $idInput;
     protected $icone;
+    protected $tipo;
 
     public function __construct() {
         
     }
 
-    public function __invoke($traducao, $form, $idInput, $icone) {
+    public function __invoke($traducao, $form, $idInput, $icone, $tipo = 0) {
         $this->setTraducao($traducao);
         $this->setForm($form);
         $this->setIdInput($idInput);
         $this->setIcone($icone);
+        $this->setTipo($tipo);
         return $this->renderHtml();
     }
 
@@ -34,12 +36,29 @@ class InputFormulario extends AbstractHelper {
         $html .= '<label for=' . $this->getTraducao() . ' class="field-label">';
         $html .= $this->view->translate($this->getTraducao());
         $html .= '</label>';
-        $html .= '<label for="' . $this->getTraducao() . '" class="field prepend-icon">';
+        if ($this->getTipo() == 0) {
+            $html .= '<label for="' . $this->getTraducao() . '" class="field prepend-icon">';
+        }
+        if ($this->getTipo() == 1) {
+            $html .= '<div class="smart-widget sm-right smr-50">';
+            $html .= '<label class="field">';
+        }
+
         $html .= $this->view->formInput($this->getForm()->get($this->getIdInput()));
-        $html .= '<label for="' . $this->getTraducao() . '" class="field-icon">';
-        $html .= '<i class="fa ' . $this->getIcone() . '"></i>';
-        $html .= '</label>';
-        $html .= '</label>';
+
+        if ($this->getTipo() == 0) {
+            $html .= '<label for="' . $this->getTraducao() . '" class="field-icon">';
+            $html .= '<i class="fa ' . $this->getIcone() . '"></i>';
+            $html .= '</label>';
+        }
+        if ($this->getTipo() == 1) {
+
+            $html .= '</label>';
+            $html .= '<button type="button" class="button btn-danger">';
+            $html .= '<i class="fa fa-search"></i>';
+            $html .= '</button>';
+            $html .= '</div>';
+        }
         return $html;
     }
 
@@ -73,6 +92,14 @@ class InputFormulario extends AbstractHelper {
 
     function setIcone($icone) {
         $this->icone = $icone;
+    }
+
+    function getTipo() {
+        return $this->tipo;
+    }
+
+    function setTipo($tipo) {
+        $this->tipo = $tipo;
     }
 
 }

@@ -13,6 +13,7 @@ class ConstantesForm {
     public static $FORM_METHOD = 'method';
     public static $FORM_POST = 'POST';
     public static $FORM_ID = 'id';
+    public static $FORM_SELECT = 'SELECT';
     public static $FORM_DIA_DA_SEMANA = 'dia_da_semana';
     public static $FORM_HORA = 'hora';
     public static $FORM_ICONE_HORA = 'fa-clock-o';
@@ -59,5 +60,28 @@ class ConstantesForm {
     public static $TRADUCAO_DDD_HOSPEDEIRO = 'DDD';
     public static $TRADUCAO_TELEFONE_HOSPEDEIRO = 'Phone Host';
     public static $TRADUCAO_BUSCAR_CEP_LOGRADOURO = 'Search';
+    public static $TRADUCAO_DIA_DA_SEMANA = 'Day of Week';
+    public static $TRADUCAO_CADASTRO_CELULA = 'Registration Celula';
+    public static $TRADUCAO_MULTIPLICACAO = 'Multiplication';
+    public static $TRADUCAO_DIA_HORA = 'Day / Hour';
+    public static $TRADUCAO_DADOS_DO_HOSPEDEIRO = 'Data from Host';
+    public static $TRADUCAO_VALIDACAO_DIA_DA_SEMANA_REQUERIDO = 'Select one day of week';
+    public static $TRADUCAO_VALIDACAO_HORA_REQUERIDO = 'Enter Hour ';
+    public static $TRADUCAO_VALIDACAO_HORA_INVALIDA = 'Invalid Hour ';
+    public static $TRADUCAO_VALIDACAO_CEP_LOGRADOURO_REQUERIDO = 'Enter CEP or Public Place ';
+    public static $TRADUCAO_VALIDACAO_CEP_LOGRADOURO_INVALIDO = 'Invalid CEP';
+    public static $TRADUCAO_VALIDACAO_NOME_HOSPEDEIRO_REQUERIDO = 'Enter host name';
+    public static $TRADUCAO_VALIDACAO_NOME_HOSPEDEIRO_MINIMO = 'Enter at least 3 characters or more';
+    public static $TRADUCAO_VALIDACAO_NOME_HOSPEDEIRO_MAXIMO = 'Enter at 80 characters';
+    public static $TRADUCAO_VALIDACAO_DDD_HOSPEDEIRO_REQUERIDO = 'Enter DDD';
+    public static $TRADUCAO_VALIDACAO_DDD_HOSPEDEIRO_INVALIDO = 'Invalid DDD';
+    public static $TRADUCAO_VALIDACAO_TELEFONE_HOSPEDEIRO_REQUERIDO = 'Enter Phone';
+    public static $TRADUCAO_VALIDACAO_TELEFONE_HOSPEDEIRO_INVALIDO = 'Invalid Phone';
+
+    /* Layout */
+    public static $LAYOUT_JS_CELULA = 'layout/layout-js-celula';
+    public static $LAYOUT_STRING_JS_CELULA = 'layoutJSCelula';
+    public static $LAYOUT_JS_CELULA_VALIDACAO = 'layout/layout-js-celula-validacao';
+    public static $LAYOUT_STRING_JS_CELULA_VALIDACAO = 'layoutJSCelulaValidacao';
 
 }

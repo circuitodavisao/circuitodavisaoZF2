@@ -1,0 +1,113 @@
+<?php
+
+use Cadastro\Form\ConstantesForm;
+use Lancamento\Controller\Helper\ConstantesLancamento;
+?>
+<script type="text/javascript">
+    window.onload = initPage;
+    /**
+     * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com> & Sergio Bezerra da Silva <sergio.silva.unb@gmail.com>
+     * Descricao: Função para validar os campos do formulário de cadastro de célula
+     */
+    function initPage() {
+
+        $('#<?php echo $this->translate(ConstantesForm::$FORM_CELULA); ?>').validate({
+            /* @validation states + elements 
+             ------------------------------------------- */
+
+            errorClass: "state-error",
+            validClass: "state-success",
+            errorElement: "em",
+            /* @validation rules 
+             ------------------------------------------ */
+
+            rules: {
+<?php echo $this->translate(ConstantesForm::$FORM_DIA_DA_SEMANA); ?>: {
+                    required: true
+                },
+<?php echo $this->translate(ConstantesForm::$FORM_HORA); ?>: {
+                    required: true,
+                    minlength: 5,
+                    maxlength: 5
+                },
+<?php echo $this->translate(ConstantesForm::$FORM_CEP_LOGRADOURO); ?>: {
+                    required: true,
+                    minlength: 8,
+                    maxlength: 8,
+                    number: true
+                },
+<?php echo $this->translate(ConstantesForm::$FORM_NOME_HOSPEDEIRO); ?>: {
+                    required: true,
+                    minlength: 3,
+                    maxlength: 80
+                },
+<?php echo $this->translate(ConstantesForm::$FORM_DDD_HOSPEDEIRO); ?>: {
+                    required: true,
+                    minlength: 2,
+                    maxlength: 2,
+                    number: true
+                },
+<?php echo $this->translate(ConstantesForm::$FORM_TELEFONE_HOSPEDEIRO); ?>: {
+                    required: true,
+                    minlength: 8,
+                    maxlength: 9,
+                    number: true
+                }
+            },
+            /* @validation error messages 
+             ---------------------------------------------- */
+
+            messages: {
+<?php echo $this->translate(ConstantesForm::$FORM_DIA_DA_SEMANA); ?>: {
+                    required: '<?php echo $this->translate(ConstantesForm::$TRADUCAO_VALIDACAO_DIA_DA_SEMANA_REQUERIDO); ?>'
+                },
+<?php echo $this->translate(ConstantesForm::$FORM_HORA); ?>: {
+                    required: '<?php echo $this->translate(ConstantesForm::$TRADUCAO_VALIDACAO_HORA_REQUERIDO); ?>',
+                    minlength: '<?php echo $this->translate(ConstantesForm::$TRADUCAO_VALIDACAO_HORA_INVALIDA); ?>',
+                    maxlength: '<?php echo $this->translate(ConstantesForm::$TRADUCAO_VALIDACAO_HORA_INVALIDA); ?>'
+                },
+<?php echo $this->translate(ConstantesForm::$FORM_CEP_LOGRADOURO); ?>: {
+                    required: '<?php echo $this->translate(ConstantesForm::$TRADUCAO_VALIDACAO_CEP_LOGRADOURO_REQUERIDO); ?>',
+                    minlength: '<?php echo $this->translate(ConstantesForm::$TRADUCAO_VALIDACAO_CEP_LOGRADOURO_INVALIDO); ?>',
+                    maxlength: '<?php echo $this->translate(ConstantesForm::$TRADUCAO_VALIDACAO_CEP_LOGRADOURO_INVALIDO); ?>',
+                    number: '<?php echo $this->translate(ConstantesForm::$TRADUCAO_VALIDACAO_CEP_LOGRADOURO_REQUERIDO); ?>'
+                },
+<?php echo $this->translate(ConstantesForm::$FORM_NOME_HOSPEDEIRO); ?>: {
+                    required: '<?php echo $this->translate(ConstantesForm::$TRADUCAO_VALIDACAO_NOME_HOSPEDEIRO_REQUERIDO); ?>',
+                    minlength: '<?php echo $this->translate(ConstantesForm::$TRADUCAO_VALIDACAO_NOME_HOSPEDEIRO_MINIMO); ?>',
+                    maxlength: '<?php echo $this->translate(ConstantesForm::$TRADUCAO_VALIDACAO_NOME_HOSPEDEIRO_MAXIMO); ?>'
+                },
+<?php echo $this->translate(ConstantesForm::$FORM_DDD_HOSPEDEIRO); ?>: {
+                    required: '<?php echo $this->translate(ConstantesForm::$TRADUCAO_VALIDACAO_DDD_HOSPEDEIRO_REQUERIDO); ?>',
+                    minlength: '<?php echo $this->translate(ConstantesForm::$TRADUCAO_VALIDACAO_DDD_HOSPEDEIRO_INVALIDO); ?>',
+                    maxlength: '<?php echo $this->translate(ConstantesForm::$TRADUCAO_VALIDACAO_DDD_HOSPEDEIRO_INVALIDO); ?>',
+                    number: '<?php echo $this->translate(ConstantesForm::$TRADUCAO_VALIDACAO_DDD_HOSPEDEIRO_INVALIDO); ?>'
+                },
+<?php echo $this->translate(ConstantesForm::$FORM_TELEFONE_HOSPEDEIRO); ?>: {
+                    required: '<?php echo $this->translate(ConstantesForm::$TRADUCAO_VALIDACAO_TELEFONE_HOSPEDEIRO_REQUERIDO); ?>',
+                    minlength: '<?php echo $this->translate(ConstantesForm::$TRADUCAO_VALIDACAO_TELEFONE_HOSPEDEIRO_INVALIDO); ?>',
+                    maxlength: '<?php echo $this->translate(ConstantesForm::$TRADUCAO_VALIDACAO_TELEFONE_HOSPEDEIRO_INVALIDO); ?>',
+                    number: '<?php echo $this->translate(ConstantesForm::$TRADUCAO_VALIDACAO_TELEFONE_HOSPEDEIRO_INVALIDO); ?>'
+                }
+            },
+            /* @validation highlighting + error placement  
+             ---------------------------------------------------- */
+
+            highlight: function (element, errorClass, validClass) {
+                $(element).closest('.field').addClass(errorClass).removeClass(validClass);
+            },
+            unhighlight: function (element, errorClass, validClass) {
+                $(element).closest('.field').removeClass(errorClass).addClass(validClass);
+            },
+            errorPlacement: function (error, element) {
+                if (element.is(":radio") || element.is(":checkbox")) {
+                    element.closest('.option-group').after(error);
+                } else {
+                    error.insertAfter(element.parent());
+                }
+            }
+
+        });
+    }
+    ;
+</script>

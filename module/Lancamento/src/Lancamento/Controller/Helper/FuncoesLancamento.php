@@ -214,39 +214,39 @@ class FuncoesLancamento {
     public static function diaDaSemanaPorDia($dia, $tipo = 0) {
         $resposta = '';
         switch ($dia) {
-            case 1:$resposta = 'DOM';
+            case 1:$resposta = 'SUN';
                 if ($tipo == 1) {
-                    $resposta = 'DOMINGO';
+                    $resposta = 'SUNDAY';
                 }
                 break;
-            case 2:$resposta = 'SEG';
+            case 2:$resposta = 'MON';
                 if ($tipo == 1) {
-                    $resposta = 'SEGUNDA-FEIRA';
+                    $resposta = 'MONDAY';
                 }
                 break;
-            case 3:$resposta = 'TER';
+            case 3:$resposta = 'TUE';
                 if ($tipo == 1) {
-                    $resposta = 'TERÇA-FEIRA';
+                    $resposta = 'TUESDAY';
                 }
                 break;
-            case 4:$resposta = 'QUA';
+            case 4:$resposta = 'WED';
                 if ($tipo == 1) {
-                    $resposta = 'QUARTA-FEIRA';
+                    $resposta = 'WEDNESDAY';
                 }
                 break;
-            case 5:$resposta = 'QUI';
+            case 5:$resposta = 'THU';
                 if ($tipo == 1) {
-                    $resposta = 'QUINTA-FEIRA';
+                    $resposta = 'THURSDAY';
                 }
                 break;
-            case 6:$resposta = 'SEX';
+            case 6:$resposta = 'FRI';
                 if ($tipo == 1) {
-                    $resposta = 'SEXTA-FEIRA';
+                    $resposta = 'FRIDAY';
                 }
                 break;
-            case 7:$resposta = 'SAB';
+            case 7:$resposta = 'SAT';
                 if ($tipo == 1) {
-                    $resposta = 'SÁBADO';
+                    $resposta = 'SATURDAY';
                 }
                 break;
         }

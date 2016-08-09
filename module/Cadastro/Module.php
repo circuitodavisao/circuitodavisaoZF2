@@ -9,6 +9,7 @@
 namespace Cadastro;
 
 use Lancamento\View\Helper\InputFormulario;
+use Login\View\Helper\BotaoSubmit;
 use Zend\Mvc\MvcEvent;
 use Zend\Session\Config\SessionConfig;
 use Zend\Session\Container;
@@ -35,6 +36,9 @@ class Module {
             'factories' => array(
                 'inputFormulario' => function($sm) {
                     return new InputFormulario();
+                },
+                'botaoSubmit' => function($sm) {
+                    return new BotaoSubmit();
                 },
             )
         );
