@@ -38,9 +38,13 @@ class CadastroController extends AbstractActionController {
         /* Verificando rota */
         $pagina = $this->getEvent()->getRouteMatch()->getParam(ConstantesLancamento::$PAGINA, 1);
         if ($pagina == ConstantesCadastro::$PAGINA_CELULAS) {
-
             return $this->forward()->dispatch(ConstantesCadastro::$CONTROLLER_CADASTRO, array(
                         Constantes::$ACTION => ConstantesCadastro::$PAGINA_CELULAS,
+            ));
+        }
+        if ($pagina == ConstantesCadastro::$PAGINA_CELULA) {
+            return $this->forward()->dispatch(ConstantesCadastro::$CONTROLLER_CADASTRO, array(
+                        Constantes::$ACTION => ConstantesCadastro::$PAGINA_CELULA,
             ));
         }
 
@@ -52,6 +56,15 @@ class CadastroController extends AbstractActionController {
      * GET /cadastroCelulas
      */
     public function celulasAction() {
+
+        return new ViewModel();
+    }
+
+    /**
+     * Função para ver listagem de células
+     * GET /cadastroCelula
+     */
+    public function celulaAction() {
 
         return new ViewModel();
     }

@@ -206,26 +206,48 @@ class FuncoesLancamento {
     }
 
     /**
-     * Retorna o dia da semana por extenso para o dia informado cm 3 digitos
+     * Retorna o dia da semana por extenso para o dia informado com 3 digitos ou por extenso dependendo do tipo
      * @param int $dia
+     * @param int $tipo
      * @return string
      */
-    public static function diaDaSemanaPorDia($dia) {
+    public static function diaDaSemanaPorDia($dia, $tipo = 0) {
         $resposta = '';
         switch ($dia) {
             case 1:$resposta = 'DOM';
+                if ($tipo == 1) {
+                    $resposta = 'DOMINGO';
+                }
                 break;
             case 2:$resposta = 'SEG';
+                if ($tipo == 1) {
+                    $resposta = 'SEGUNDA-FEIRA';
+                }
                 break;
             case 3:$resposta = 'TER';
+                if ($tipo == 1) {
+                    $resposta = 'TERÇA-FEIRA';
+                }
                 break;
             case 4:$resposta = 'QUA';
+                if ($tipo == 1) {
+                    $resposta = 'QUARTA-FEIRA';
+                }
                 break;
             case 5:$resposta = 'QUI';
+                if ($tipo == 1) {
+                    $resposta = 'QUINTA-FEIRA';
+                }
                 break;
             case 6:$resposta = 'SEX';
+                if ($tipo == 1) {
+                    $resposta = 'SEXTA-FEIRA';
+                }
                 break;
             case 7:$resposta = 'SAB';
+                if ($tipo == 1) {
+                    $resposta = 'SÁBADO';
+                }
                 break;
         }
         return $resposta;
