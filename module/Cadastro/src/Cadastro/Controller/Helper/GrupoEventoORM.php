@@ -1,44 +1,39 @@
 <?php
 
-namespace Entidade\Controller\Helper;
+namespace Cadastro\Controller\Helper;
 
+use Cadastro\Controller\Helper\ConstantesCadastro;
 use Doctrine\ORM\EntityManager;
-use Entidade\Entity\Grupo;
+use Entidade\Entity\GrupoEvento;
 use Exception;
-use Lancamento\Controller\Helper\ConstantesLancamento;
 
 /**
- * Nome: GrupoORM.php
+ * Nome: GrupoEventoORM.php
  * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com>
- * Descricao: Classe com acesso doctrine a entity grupo
+ * Descricao: Classe com acesso doctrine a entity grupo_evento
  */
-class GrupoORM {
+class GrupoEventoORM {
 
     private $_entityManager;
     private $_entity;
 
-    /**
-     * Construtor
-     * 
-     * @param EntityManager $entityManager
-     */
     public function __construct(EntityManager $entityManager = null) {
         if (!is_null($entityManager)) {
             $this->_entityManager = $entityManager;
         }
-        $this->_entity = ConstantesLancamento::$ENTITY_GRUPO;
+        $this->_entity = ConstantesCadastro::$ENTIDADE_GRUPO_EVENTO;
     }
 
     /**
-     * Atualiza o grupo no banco de dados
-     * 
-     * @param Grupo $grupo
+     * Atualiza a grupo_evento no banco de dados
+     * @param GrupoEvento $grupoEvento
      */
-    public function persistirGrupo($grupo) {
+    public function persistirGrupoEvento($grupoEvento) {
         try {
-            $this->getEntityManager()->flush($grupo);
+            $this->getEntityManager()->persist($grupoEvento);
+            $this->getEntityManager()->flush($grupoEvento);
         } catch (Exception $exc) {
-            echo $exc->getTraceAsString();
+            echo $exc->getMessage();
         }
     }
 

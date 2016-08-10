@@ -8,6 +8,11 @@
 
 namespace Entidade;
 
+use Zend\Mvc\MvcEvent;
+use Zend\Session\Config\SessionConfig;
+use Zend\Session\Container;
+use Zend\Session\SessionManager;
+
 class Module {
 
     public function getConfig() {
@@ -22,6 +27,22 @@ class Module {
                 ),
             ),
         );
+    }
+
+    public function initSession($config) {
+        $sessionConfig = new SessionConfig();
+        $sessionConfig->setOptions($config);
+        $sessionManager = new SessionManager($sessionConfig);
+        $sessionManager->start();
+        Container::setDefaultManager($sessionManager);
+    }
+
+    public function onBootstrap(MvcEvent $e) {
+        $this->initSession(array(
+            'remember_me_seconds' => 180,
+            'use_cookies' => true,
+            'cookie_httponly' => true,
+        ));
     }
 
 }

@@ -83,5 +83,8 @@ class ConstantesForm {
     public static $LAYOUT_STRING_JS_CELULA = 'layoutJSCelula';
     public static $LAYOUT_JS_CELULA_VALIDACAO = 'layout/layout-js-celula-validacao';
     public static $LAYOUT_STRING_JS_CELULA_VALIDACAO = 'layoutJSCelulaValidacao';
+    public static $LAYOUT_JS_CELULAS = 'layout/layout-js-celulas';
+    public static $LAYOUT_STRING_JS_CELULAS = 'layoutJSCelulas';
+    public static $LAYOUT_NOME_HOSPEDEIRO_CELULA_CADASTRADO = 'nomeHospedeiroCelulaCadastrado';
 
 }

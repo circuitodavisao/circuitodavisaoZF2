@@ -53,6 +53,7 @@ return array(
             'cadastro/cadastro/index' => __DIR__ . '/../view/cadastro/index.phtml',
             'cadastro/cadastro/celula' => __DIR__ . '/../view/cadastro/celula.phtml',
             'cadastro/cadastro/celulas' => __DIR__ . '/../view/cadastro/celulas.phtml',
+            'layout/layout-js-celulas' => __DIR__ . '/../view/layout/layout-js-celulas.phtml',
             'layout/layout-js-celula' => __DIR__ . '/../view/layout/layout-js-celula.phtml',
             'layout/layout-js-celula-validacao' => __DIR__ . '/../view/layout/layout-js-celula-validacao.phtml',
             'error/404' => __DIR__ . '/../../Login/view/error/404.phtml',

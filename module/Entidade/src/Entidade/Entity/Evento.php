@@ -7,6 +7,7 @@ namespace Entidade\Entity;
  * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com>
  * Descricao: Entidade anotada da tabela Evento
  */
+
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -63,6 +64,9 @@ class Evento {
 
     /** @ORM\Column(type="string") */
     protected $hora_inativacao;
+
+    /** @ORM\Column(type="integer") */
+    protected $tipo_id;
 
     function getId() {
         return $this->id;
@@ -203,6 +207,14 @@ class Evento {
 
     function setEventoFrequencia($eventoFrequencia) {
         $this->eventoFrequencia = $eventoFrequencia;
+    }
+
+    function getTipo_id() {
+        return $this->tipo_id;
+    }
+
+    function setTipo_id($tipo_id) {
+        $this->tipo_id = $tipo_id;
     }
 
 }

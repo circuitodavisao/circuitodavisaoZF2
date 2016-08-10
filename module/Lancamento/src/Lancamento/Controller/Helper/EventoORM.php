@@ -45,6 +45,19 @@ class EventoORM {
         return $evento;
     }
 
+    /**
+     * Atualiza a evento no banco de dados
+     * @param Evento $evento
+     */
+    public function persistirEvento($evento) {
+        try {
+            $this->getEntityManager()->persist($evento);
+            $this->getEntityManager()->flush($evento);
+        } catch (Exception $exc) {
+            echo $exc->getMessage();
+        }
+    }
+
     public function getEntityManager() {
         return $this->_entityManager;
     }

@@ -1,0 +1,41 @@
+<?php
+
+use Cadastro\Controller\Helper\ConstantesCadastro;
+
+echo $this
+        ->headScript()
+        ->prependFile($this->basePath() . '/js/vendor/plugins/pnotify/pnotify.js')
+;
+echo $this->inlineScript();
+?>
+<script type = "text/javascript">
+<?php if (!empty($this->nomeHospedeiroCelulaCadastrado)) { ?>
+        window.onload = initPage;
+<?php } ?>
+
+    function initPage() {
+        var stack_bar_bottom = {
+            "dir1": "up",
+            "dir2": "right",
+            "spacing1": 0,
+            "spacing2": 0
+        }
+
+        var noteStyle = 'success';
+        var noteShadow = true;
+        var noteOpacity = 1;
+
+        new PNotify({
+            title: '<?php echo $this->translate(ConstantesCadastro::$TRADUCAO_CELULA_CADASTRADA); ?>!',
+            text: '<?php echo $this->translate(ConstantesCadastro::$TRADUCAO_CELULA_CADASTRADA_NOME_HOSPEDEIRO) . $this->nomeHospedeiroCelulaCadastrado; ?>',
+            shadow: noteShadow,
+            opacity: noteOpacity,
+            addclass: 'stack_bar_bottom',
+            type: noteStyle,
+            stack: stack_bar_bottom,
+            width: '70%',
+            delay: 10000
+        });
+
+    }
+</script>

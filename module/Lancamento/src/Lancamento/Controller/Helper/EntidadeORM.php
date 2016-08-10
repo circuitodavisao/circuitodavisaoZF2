@@ -16,7 +16,7 @@ class EntidadeORM {
     private $_entityManager;
     private $_entity;
 
-    /** 
+    /**
      * Construtor
      * 
      * @param EntityManager $entityManager
@@ -40,7 +40,7 @@ class EntidadeORM {
 
         $entidade = $this->getEntityManager()->find($this->getEntity(), $id);
         if (!$entidade) {
-            throw new Exception("Não foi encontrado a pessoa de id = {$id}");
+            throw new Exception("Não foi encontrado a entidade de id = {$id}");
         }
         return $entidade;
     }

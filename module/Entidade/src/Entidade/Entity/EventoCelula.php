@@ -165,8 +165,8 @@ class EventoCelula implements InputFilterAwareInterface {
                         ConstantesForm::$VALIDACAO_NAME => ConstantesForm::$VALIDACAO_STRING_LENGTH,
                         ConstantesForm::$VALIDACAO_OPTIONS => array(
                             ConstantesForm::$VALIDACAO_ENCODING => ConstantesForm::$VALIDACAO_UTF_8,
-                            ConstantesForm::$VALIDACAO_MIN => 3,
-                            ConstantesForm::$VALIDACAO_MAX => 80,
+                            ConstantesForm::$VALIDACAO_MIN => 5,
+                            ConstantesForm::$VALIDACAO_MAX => 5,
                         ),
                     ),
                 ),
@@ -193,31 +193,6 @@ class EventoCelula implements InputFilterAwareInterface {
                     ),
                 ),
             ));
-
-            /* Complemento */
-            $inputFilter->add(array(
-                ConstantesForm::$VALIDACAO_NAME => ConstantesForm::$FORM_COMPLEMENTO,
-                ConstantesForm::$VALIDACAO_REQUIRED => true,
-                ConstantesForm::$VALIDACAO_FILTER => array(
-                    array(ConstantesForm::$VALIDACAO_NAME => ConstantesForm::$VALIDACAO_STRING_TAGS), // removel xml e html string
-                    array(ConstantesForm::$VALIDACAO_NAME => ConstantesForm::$VALIDACAO_STRING_TRIM), // removel espaco do inicio e do final da string
-                    array(ConstantesForm::$VALIDACAO_NAME => ConstantesForm::$VALIDACAO_STRING_TO_UPPER), // transforma em maiusculo
-                ),
-                ConstantesForm::$VALIDACAO_VALIDATORS => array(
-                    array(
-                        ConstantesForm::$VALIDACAO_NAME => ConstantesForm::$VALIDACAO_NOT_EMPTY,
-                    ),
-                    array(
-                        ConstantesForm::$VALIDACAO_NAME => ConstantesForm::$VALIDACAO_STRING_LENGTH,
-                        ConstantesForm::$VALIDACAO_OPTIONS => array(
-                            ConstantesForm::$VALIDACAO_ENCODING => ConstantesForm::$VALIDACAO_UTF_8,
-                            ConstantesForm::$VALIDACAO_MIN => 3,
-                            ConstantesForm::$VALIDACAO_MAX => 80,
-                        ),
-                    ),
-                ),
-            ));
-
             /* Nome Hospedeiro */
             $inputFilter->add(array(
                 ConstantesForm::$VALIDACAO_NAME => ConstantesForm::$FORM_NOME_HOSPEDEIRO,

@@ -1,47 +1,41 @@
 <?php
 
-namespace Entidade\Controller\Helper;
+namespace Cadastro\Controller\Helper;
 
+use Cadastro\Controller\Helper\ConstantesCadastro;
 use Doctrine\ORM\EntityManager;
-use Entidade\Entity\Evento;
-use Exception;
-use Lancamento\Controller\Helper\ConstantesLancamento;
 
 /**
- * Nome: EventoORM.php
+ * Nome: EventoTipoORM.php
  * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com>
- * Descricao: Classe com acesso doctrine a entity Evento
+ * Descricao: Classe com acesso doctrine a entity evento_tipo
  */
-class EventoORM {
+class EventoTipoORM {
 
     private $_entityManager;
     private $_entity;
 
-    /**
-     * Construtor
-     * 
-     * @param EntityManager $entityManager
-     */
     public function __construct(EntityManager $entityManager = null) {
         if (!is_null($entityManager)) {
             $this->_entityManager = $entityManager;
         }
-        $this->_entity = ConstantesLancamento::$ENTITY_EVENTO;
+        $this->_entity = ConstantesCadastro::$ENTIDADE_EVENTO_TIPO;
     }
 
     /**
-     * Localizar pessoa por idEvento
-     * 
-     * @param integer $idEvento
+     * Localizar evento tipo por idEventoTipo
+     * 1 - Culto
+     * 2 - Célula
+     * @param integer $idEventoTipo
      * @return Evento
      * @throws Exception
      */
-    public function encontrarPorIdEvento($idEvento) {
-        $id = (int) $idEvento;
+    public function encontrarPorIdEventoTipo($idEventoTipo) {
+        $id = (int) $idEventoTipo;
 
         $evento = $this->getEntityManager()->find($this->getEntity(), $id);
         if (!$evento) {
-            throw new Exception("Não foi encontrado ao evento de id = {$id}");
+            throw new Exception("Não foi encontrado ao evento tipo de id = {$id}");
         }
         return $evento;
     }
