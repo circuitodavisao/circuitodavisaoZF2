@@ -68,6 +68,9 @@ class CadastroController extends AbstractActionController {
      * GET /cadastroCelulas
      */
     public function celulasAction() {
+        /* TESTE */
+        $url = 'http://www.buscacep.correios.com.br/sistemas/buscacep/resultadoBuscaCepEndereco.cfm?relaxation=qr314&tipoCEP=LOG&semelhante=S';
+
         /* Verificando se a célula foi cadastrada */
         $sessao = new Container(Constantes::$NOME_APLICACAO);
         $nomeHospedeiroCelulaCadastrado = '';
