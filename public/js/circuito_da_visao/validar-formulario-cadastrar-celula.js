@@ -28,7 +28,9 @@ jQuery(document).ready(function () {
                 required: true
             },
             nome_hospedeiro: {
-                required: true
+                required: true,
+                minlength: 3,
+                maxlength: 80
             },
             ddd: {
                 required: true
@@ -38,6 +40,9 @@ jQuery(document).ready(function () {
                 minlength: 8,
                 maxlength: 9,
                 number: true
+            },
+            complemento: {
+                maxlength: 80
             }
         },
         /* @validation error messages 
@@ -54,7 +59,9 @@ jQuery(document).ready(function () {
                 required: 'Informe o CEP ou parte do seu logradouro'
             },
             nome_hospedeiro: {
-                required: 'Diga o nome do hospedeiro onde será sua célula'
+                required: 'Diga o nome do hospedeiro onde será sua célula',
+                minlength: 'Pelo menos 3 letras para nome!',
+                maxlength: 'No máximo 80 caracteres para o nome.'
             },
             ddd: {
                 required: 'Informe o DDD da sua cidade, é obrigatório'
@@ -64,6 +71,9 @@ jQuery(document).ready(function () {
                 minlength: 'No mínimo 8 caracteres no telefone por favor!',
                 maxlength: 'Pronto, já temos 9 caracteres!',
                 number: 'Neste campo somente números!'
+            },
+            complemento: {
+                maxlength: 'Permitidos apenas 80 caracteres!',
             }
         },
         /* @validation highlighting + error placement  

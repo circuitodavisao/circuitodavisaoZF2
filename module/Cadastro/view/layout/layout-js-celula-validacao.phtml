@@ -10,6 +10,48 @@ use Lancamento\Controller\Helper\ConstantesLancamento;
      * Descricao: Função para validar os campos do formulário de cadastro de célula
      */
     function initPage() {
+        
+        /* @time picker
+     ------------------------------------------------------------------ */
+    $('.inline-tp').timepicker(); 
+
+                $('#hora').timepicker({
+                    beforeShow: function (input, inst) {
+                        var newclass = 'admin-form';
+                        var themeClass = $(this).parents('.admin-form').attr('class');
+                        var smartpikr = inst.dpDiv.parent();
+                        if (!smartpikr.hasClass(themeClass)) {
+                            inst.dpDiv.wrap('<div class="' + themeClass + '"></div>');
+                        }
+                    }
+                });
+
+                $('#timepicker2').timepicker({
+                    showOn: 'both',
+                    buttonText: '<i class="fa fa-clock-o"></i>',
+                    beforeShow: function (input, inst) {
+                        var newclass = 'admin-form';
+                        var themeClass = $(this).parents('.admin-form').attr('class');
+                        var smartpikr = inst.dpDiv.parent();
+                        if (!smartpikr.hasClass(themeClass)) {
+                            inst.dpDiv.wrap('<div class="' + themeClass + '"></div>');
+                        }
+                    }
+                });
+
+                $('#timepicker3').timepicker({
+                    showOn: 'both',
+                    disabled: true,
+                    buttonText: '<i class="fa fa-clock-o"></i>',
+                    beforeShow: function (input, inst) {
+                        var newclass = 'admin-form';
+                        var themeClass = $(this).parents('.admin-form').attr('class');
+                        var smartpikr = inst.dpDiv.parent();
+                        if (!smartpikr.hasClass(themeClass)) {
+                            inst.dpDiv.wrap('<div class="' + themeClass + '"></div>');
+                        }
+                    }
+                });
 
         $('#<?php echo $this->translate(ConstantesForm::$FORM_CELULA); ?>').validate({
             /* @validation states + elements 
