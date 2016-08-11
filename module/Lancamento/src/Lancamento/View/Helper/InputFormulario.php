@@ -17,17 +17,19 @@ class InputFormulario extends AbstractHelper {
     protected $idInput;
     protected $icone;
     protected $tipo;
+    protected $funcao;
 
     public function __construct() {
         
     }
 
-    public function __invoke($traducao, $form, $idInput, $icone, $tipo = 0) {
+    public function __invoke($traducao, $form, $idInput, $icone, $tipo = 0, $funcao = '') {
         $this->setTraducao($traducao);
         $this->setForm($form);
         $this->setIdInput($idInput);
         $this->setIcone($icone);
         $this->setTipo($tipo);
+        $this->setFuncao($funcao);
         return $this->renderHtml();
     }
 
@@ -54,7 +56,7 @@ class InputFormulario extends AbstractHelper {
         if ($this->getTipo() == 1) {
 
             $html .= '</label>';
-            $html .= '<button type="button" class="button btn-danger">';
+            $html .= '<button ' . $this->getFuncao() . ' type="button" class="button btn-danger">';
             $html .= '<i class="fa fa-search"></i>';
             $html .= '</button>';
             $html .= '</div>';
@@ -100,6 +102,14 @@ class InputFormulario extends AbstractHelper {
 
     function setTipo($tipo) {
         $this->tipo = $tipo;
+    }
+
+    function getFuncao() {
+        return $this->funcao;
+    }
+
+    function setFuncao($funcao) {
+        $this->funcao = $funcao;
     }
 
 }

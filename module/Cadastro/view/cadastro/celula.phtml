@@ -54,10 +54,10 @@ $form->setAttribute(ConstantesForm::$FORM_ACTION, $this->url(ConstantesCadastro:
 
                                     <div class="col-md-12">
                                         <div class="section">
-                                            <?php echo $this->inputFormulario(ConstantesForm::$TRADUCAO_CEP_LOGRADOURO, $form, ConstantesForm::$FORM_CEP_LOGRADOURO, '', 1); ?>
+                                            <?php echo $this->inputFormulario(ConstantesForm::$TRADUCAO_CEP_LOGRADOURO, $form, ConstantesForm::$FORM_CEP_LOGRADOURO, '', 1, ConstantesForm::$FORM_ONCLICK . '=\'buscarEndereco(document.getElementById("cep_logradouro").value);\''); ?>
                                         </div>
                                     </div>
-
+                                    <div id="resultadoBusca"></div>
                                     <div class="col-md-12">
                                         <div class="section">
                                             <?php echo $this->inputFormulario(ConstantesForm::$TRADUCAO_COMPLEMENTO, $form, ConstantesForm::$FORM_COMPLEMENTO, ConstantesForm::$FORM_ICONE_COMPLEMENTO); ?>

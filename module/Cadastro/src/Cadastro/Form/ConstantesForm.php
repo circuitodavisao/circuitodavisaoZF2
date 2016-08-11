@@ -30,6 +30,7 @@ class ConstantesForm {
     public static $FORM_CLASS = 'class';
     public static $FORM_CLASS_GUI_INPUT = 'gui-input';
     public static $FORM_PLACEHOLDER = 'placeholder';
+    public static $FORM_ONCLICK = 'onClick';
     public static $FORM_BTN_DEFAULT_DARK = 'btn ladda-button btn-default dark';
     public static $FORM_CSRF = 'csrf';
     public static $FORM_CELULA = 'CelulaForm';

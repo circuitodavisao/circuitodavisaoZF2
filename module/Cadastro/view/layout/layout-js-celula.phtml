@@ -1,7 +1,11 @@
 <?php
 
+$versao = '?v=0.6';
+
+
 echo $this
         ->headScript()
+        ->prependFile($this->basePath() . '/js/circuito_da_visao/buscar-endereco.js' . $versao)
         ->prependFile($this->basePath() . '/js/vendor/plugins/validate/jquery.validate.min.js')
         ->prependFile($this->basePath() . '/js/jquery-ui-datepicker.min.js')
         ->prependFile($this->basePath() . '/js/jquery-ui-monthpicker.min.js')

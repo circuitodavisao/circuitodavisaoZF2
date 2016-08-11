@@ -3,6 +3,7 @@
 namespace Cadastro\Controller;
 
 use Cadastro\Controller\Helper\ConstantesCadastro;
+use Cadastro\Controller\Helper\Correios;
 use Cadastro\Controller\Helper\RepositorioORM;
 use Cadastro\Form\CelulaForm;
 use Cadastro\Form\ConstantesForm;
@@ -13,6 +14,7 @@ use Entidade\Entity\GrupoEvento;
 use Exception;
 use Lancamento\Controller\Helper\LancamentoORM;
 use Login\Controller\Helper\Constantes;
+use Zend\Json\Json;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\Session\Container;
 use Zend\View\Model\ViewModel;
@@ -59,6 +61,11 @@ class CadastroController extends AbstractActionController {
                         Constantes::$ACTION => ConstantesCadastro::$PAGINA_SALVAR_CELULA,
             ));
         }
+        if ($pagina == ConstantesCadastro::$PAGINA_BUSCAR_ENDERECO) {
+            return $this->forward()->dispatch(ConstantesCadastro::$CONTROLLER_CADASTRO, array(
+                        Constantes::$ACTION => ConstantesCadastro::$PAGINA_BUSCAR_ENDERECO,
+            ));
+        }
 
         return new ViewModel();
     }
@@ -68,9 +75,6 @@ class CadastroController extends AbstractActionController {
      * GET /cadastroCelulas
      */
     public function celulasAction() {
-        /* TESTE */
-        $url = 'http://www.buscacep.correios.com.br/sistemas/buscacep/resultadoBuscaCepEndereco.cfm?relaxation=qr314&tipoCEP=LOG&semelhante=S';
-
         /* Verificando se a célula foi cadastrada */
         $sessao = new Container(Constantes::$NOME_APLICACAO);
         $nomeHospedeiroCelulaCadastrado = '';
@@ -180,6 +184,43 @@ class CadastroController extends AbstractActionController {
                 echo $exc->getMessage();
             }
         }
+    }
+
+    /**
+     * Busca de endereço por cep ou logradouro
+     * @return Json
+     */
+    public function buscarEnderecoAction() {
+        $request = $this->getRequest();
+        $response = $this->getResponse();
+        if ($request->isPost()) {
+            try {
+                $post_data = $request->getPost();
+                $cep_logradouro = $post_data[ConstantesForm::$FORM_CEP_LOGRADOURO];
+
+                $pesquisa = Correios::cep($cep_logradouro);
+
+//                foreach ($pesquisa as $key => $dados) {
+//                    echo "$key <br />";
+//                    foreach ($dados as $key => $value) {
+//                        echo "$key => $value<br />";
+//                    }
+//                }
+                $resultado = 'true';
+                if (empty($pesquisa)) {
+                    $resultado = 'false';
+                }
+
+                $dadosDeResposta = array(
+                    'response' => $resultado,
+                    'teste' => $pesquisa[0]['logradouro'] . $pesquisa[0]['bairro'] . $pesquisa[0]['uf']
+                );
+                $response->setContent(Json::encode($dadosDeResposta));
+            } catch (Exception $exc) {
+                echo $exc->getTraceAsString();
+            }
+        }
+        return $response;
     }
 
     /**
