@@ -3,5 +3,7 @@
 echo $this
         ->headScript()
         ->prependFile($this->basePath() . '/js/vendor/plugins/validate/jquery.validate.min.js')
+        ->prependFile($this->basePath() . '/js/jquery-ui-datepicker.min.js')
+        ->prependFile($this->basePath() . '/js/jquery-ui-monthpicker.min.js')
 ;
 echo $this->inlineScript();
