@@ -62,6 +62,9 @@ class EventoCelula implements InputFilterAwareInterface {
     /** @ORM\Column(type="integer") */
     protected $cep;
 
+    /** @ORM\Column(type="string") */
+    protected $uf;
+
     /** @ORM\Column(type="integer") */
     protected $evento_id;
 
@@ -143,6 +146,14 @@ class EventoCelula implements InputFilterAwareInterface {
 
     function setCep($cep) {
         $this->cep = $cep;
+    }
+
+    function getUf() {
+        return $this->uf;
+    }
+
+    function setUf($uf) {
+        $this->uf = $uf;
     }
 
     public function getInputFilter() {

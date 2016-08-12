@@ -10,6 +10,7 @@ namespace Cadastro;
 
 use Lancamento\View\Helper\InputFormulario;
 use Login\View\Helper\BotaoSubmit;
+use Login\View\Helper\BotaoSubmitDesabilitado;
 use Zend\Mvc\MvcEvent;
 use Zend\Session\Config\SessionConfig;
 use Zend\Session\Container;
@@ -39,6 +40,9 @@ class Module {
                 },
                 'botaoSubmit' => function($sm) {
                     return new BotaoSubmit();
+                },
+                'botaoSubmitDesabilitado' => function($sm) {
+                    return new BotaoSubmitDesabilitado();
                 },
             )
         );

@@ -35,11 +35,15 @@ class ConstantesForm {
     public static $FORM_CLASS_GUI_INPUT = 'gui-input';
     public static $FORM_PLACEHOLDER = 'placeholder';
     public static $FORM_ONCLICK = 'onClick';
+    public static $FORM_FUNCAO_BUSCAR_CEP = 'buscarEndereco(document.getElementById("cep_logradouro").value);';
+    public static $FORM_ONBLUR = 'onblur';
     public static $FORM_BTN_DEFAULT_DARK = 'btn ladda-button btn-default dark';
     public static $FORM_CSRF = 'csrf';
     public static $FORM_CELULA = 'CelulaForm';
     public static $FORM_ACTION = 'action';
+    public static $FORM_READONLY = 'readonly';
     public static $FORM_DISABLED = 'disabled';
+    public static $FORM_SUBMIT = 'submit';
 
     /* Validações */
     public static $VALIDACAO_NAME = 'name';

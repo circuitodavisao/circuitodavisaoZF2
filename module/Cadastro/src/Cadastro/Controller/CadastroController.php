@@ -155,10 +155,11 @@ class CadastroController extends AbstractActionController {
 
                     $eventoCelula->exchangeArray($celulaForm->getData());
                     $eventoCelula->setTelefone_hospedeiro($validatedData[ConstantesForm::$FORM_DDD_HOSPEDEIRO] . $validatedData[ConstantesForm::$FORM_TELEFONE_HOSPEDEIRO]);
-                    $eventoCelula->setCidade('');
-                    $eventoCelula->setLogradouro('');
-                    $eventoCelula->setBairro('');
-                    $eventoCelula->setComplemento('');
+                    $eventoCelula->setUf($post_data[ConstantesForm::$FORM_UF]);
+                    $eventoCelula->setCidade($post_data[ConstantesForm::$FORM_CIDADE]);
+                    $eventoCelula->setLogradouro($post_data[ConstantesForm::$FORM_LOGRADOURO]);
+                    $eventoCelula->setBairro($post_data[ConstantesForm::$FORM_BAIRRO]);
+                    $eventoCelula->setComplemento($post_data[ConstantesForm::$FORM_COMPLEMENTO]);
                     $eventoCelula->setCep($validatedData[ConstantesForm::$FORM_CEP_LOGRADOURO]);
                     $eventoCelula->setEvento($evento);
 

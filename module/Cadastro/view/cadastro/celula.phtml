@@ -54,7 +54,7 @@ $form->setAttribute(ConstantesForm::$FORM_ACTION, $this->url(ConstantesCadastro:
 
                                     <div class="col-md-12">
                                         <div class="section">
-                                            <?php echo $this->inputFormulario(ConstantesForm::$TRADUCAO_CEP_LOGRADOURO, $form, ConstantesForm::$FORM_CEP_LOGRADOURO, '', 1, ConstantesForm::$FORM_ONCLICK . '=\'buscarEndereco(document.getElementById("cep_logradouro").value);\''); ?>
+                                            <?php echo $this->inputFormulario(ConstantesForm::$TRADUCAO_CEP_LOGRADOURO, $form, ConstantesForm::$FORM_CEP_LOGRADOURO, '', 1, ConstantesForm::$FORM_ONCLICK . '=\'' . ConstantesForm::$FORM_FUNCAO_BUSCAR_CEP . '\''); ?>
                                         </div>
                                     </div>
                                     <div id="resultadoBusca"></div>
@@ -62,7 +62,7 @@ $form->setAttribute(ConstantesForm::$FORM_ACTION, $this->url(ConstantesCadastro:
                                         <div class="section">
                                             <?php echo $this->inputFormulario(ConstantesForm::$TRADUCAO_UF, $form, ConstantesForm::$FORM_UF, ConstantesForm::$FORM_ICONE_COMPLEMENTO, 2); ?>
                                         </div>
-                                        
+
                                         <div class="section">
                                             <?php echo $this->inputFormulario(ConstantesForm::$TRADUCAO_BAIRRO, $form, ConstantesForm::$FORM_BAIRRO, ConstantesForm::$FORM_ICONE_COMPLEMENTO, 2); ?>
                                         </div>
@@ -71,7 +71,7 @@ $form->setAttribute(ConstantesForm::$FORM_ACTION, $this->url(ConstantesCadastro:
                                         <div class="section">
                                             <?php echo $this->inputFormulario(ConstantesForm::$TRADUCAO_CIDADE, $form, ConstantesForm::$FORM_CIDADE, ConstantesForm::$FORM_ICONE_COMPLEMENTO, 2); ?>
                                         </div>
-                                        
+
                                         <div class="section">
                                             <?php echo $this->inputFormulario(ConstantesForm::$TRADUCAO_LOGRADOURO, $form, ConstantesForm::$FORM_LOGRADOURO, ConstantesForm::$FORM_ICONE_COMPLEMENTO, 2); ?>
                                         </div>
@@ -106,14 +106,14 @@ $form->setAttribute(ConstantesForm::$FORM_ACTION, $this->url(ConstantesCadastro:
                                             <?php echo $this->inputFormulario(ConstantesForm::$TRADUCAO_TELEFONE_HOSPEDEIRO, $form, ConstantesForm::$FORM_TELEFONE_HOSPEDEIRO, ConstantesForm::$FORM_ICONE_TELEFONE_HOSPEDEIRO); ?>
                                         </div>
                                     </div>
-                                </div>
+                                </div> 
 
                                 <!--end .section row section -->
                             </div>
                             <!--end .form-body section -->
                             <div class="panel-footer text-right" style="height:65px;">
                                 <?php echo $this->formHidden($form->get(ConstantesForm::$FORM_CSRF)); ?>
-                                <?php echo $this->botaoSubmit(ConstantesLancamento::$TRADUCAO_CADASTRAR, ConstantesLancamento::$CLASS_BTN_DANGER_DARK); ?>
+                                <?php echo $this->botaoSubmitDesabilitado(ConstantesLancamento::$TRADUCAO_CADASTRAR, ConstantesForm::$FORM_SUBMIT, '', ConstantesLancamento::$CLASS_BTN_DANGER_DARK); ?>
                             </div>
                             <!--end .form-footer section -->
                             <?php echo $this->form()->closeTag() ?>

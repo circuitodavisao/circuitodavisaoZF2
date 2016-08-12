@@ -49,7 +49,8 @@ class InputFormulario extends AbstractHelper {
         $input = $this->getForm()->get($this->getIdInput());
         /* Desabilitar */
         if ($this->getTipo() == 2) {
-            $input->setAttribute(ConstantesForm::$FORM_DISABLED, ConstantesForm::$FORM_DISABLED);
+            $input->setAttribute(ConstantesForm::$FORM_READONLY, 'true');
+            $input->setAttribute(ConstantesForm::$FORM_CLASS, ConstantesForm::$FORM_CLASS_GUI_INPUT . ' form-control');
         }
         $html .= $this->view->formInput($input);
 
@@ -61,7 +62,7 @@ class InputFormulario extends AbstractHelper {
         if ($this->getTipo() == 1) {
 
             $html .= '</label>';
-            $html .= '<button ' . $this->getFuncao() . ' type="button" class="button btn-danger">';
+            $html .= '<button ' . $this->getFuncao() . ' type="button" class="button ladda-button btn-danger">';
             $html .= '<i class="fa fa-search"></i>';
             $html .= '</button>';
             $html .= '</div>';

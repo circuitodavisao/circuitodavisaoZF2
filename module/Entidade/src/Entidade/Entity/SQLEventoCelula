@@ -5,14 +5,15 @@
 CREATE TABLE evento_celula
 (
   id serial NOT NULL, -- Identificação do dados do evento tipo célula
-  nome_hospedeiro character varying(45) NOT NULL, -- Nome do hospedeiro da célula
+  nome_hospedeiro character varying(80) NOT NULL, -- Nome do hospedeiro da célula
   telefone_hospedeiro bigint NOT NULL, -- Telefone do hospedeiro com 9 digitos com DDD
   logradouro character varying(80) NOT NULL, -- Logradouro da célula
-  complemento character varying(30), -- Complemento do endereço da célula
+  complemento character varying(80), -- Complemento do endereço da célula
   evento_id integer NOT NULL, -- Identificação do evento
   bairro character varying(30), -- Bairro do local da célula
   cidade character varying(30) NOT NULL, -- Cidade do local da célula
   cep bigint NOT NULL, -- CEP do local da célula
+  uf character varying(30) NOT NULL, -- Unidade Federativa da célula
   CONSTRAINT pk_evento_celula PRIMARY KEY (id),
   CONSTRAINT fk_evento_celula_evento_id FOREIGN KEY (evento_id)
       REFERENCES evento (id) MATCH SIMPLE
@@ -34,4 +35,5 @@ COMMENT ON COLUMN evento_celula.evento_id IS 'Identificação do evento';
 COMMENT ON COLUMN evento_celula.bairro IS 'Bairro do local da célula';
 COMMENT ON COLUMN evento_celula.cidade IS 'Cidade do local da célula';
 COMMENT ON COLUMN evento_celula.cep IS 'CEP do local da célula';
+COMMENT ON COLUMN evento_celula.uf IS 'Unidade Federativa da célula';
 
