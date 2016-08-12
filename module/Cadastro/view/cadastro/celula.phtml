@@ -58,6 +58,24 @@ $form->setAttribute(ConstantesForm::$FORM_ACTION, $this->url(ConstantesCadastro:
                                         </div>
                                     </div>
                                     <div id="resultadoBusca"></div>
+                                    <div class="col-md-6">
+                                        <div class="section">
+                                            <?php echo $this->inputFormulario(ConstantesForm::$TRADUCAO_UF, $form, ConstantesForm::$FORM_UF, ConstantesForm::$FORM_ICONE_COMPLEMENTO, 2); ?>
+                                        </div>
+                                        
+                                        <div class="section">
+                                            <?php echo $this->inputFormulario(ConstantesForm::$TRADUCAO_BAIRRO, $form, ConstantesForm::$FORM_BAIRRO, ConstantesForm::$FORM_ICONE_COMPLEMENTO, 2); ?>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="section">
+                                            <?php echo $this->inputFormulario(ConstantesForm::$TRADUCAO_CIDADE, $form, ConstantesForm::$FORM_CIDADE, ConstantesForm::$FORM_ICONE_COMPLEMENTO, 2); ?>
+                                        </div>
+                                        
+                                        <div class="section">
+                                            <?php echo $this->inputFormulario(ConstantesForm::$TRADUCAO_LOGRADOURO, $form, ConstantesForm::$FORM_LOGRADOURO, ConstantesForm::$FORM_ICONE_COMPLEMENTO, 2); ?>
+                                        </div>
+                                    </div>
                                     <div class="col-md-12">
                                         <div class="section">
                                             <?php echo $this->inputFormulario(ConstantesForm::$TRADUCAO_COMPLEMENTO, $form, ConstantesForm::$FORM_COMPLEMENTO, ConstantesForm::$FORM_ICONE_COMPLEMENTO); ?>
