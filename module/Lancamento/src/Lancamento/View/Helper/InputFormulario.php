@@ -2,7 +2,7 @@
 
 namespace Lancamento\View\Helper;
 
-use Lancamento\Controller\Helper\ConstantesLancamento;
+use Cadastro\Form\ConstantesForm;
 use Zend\View\Helper\AbstractHelper;
 
 /**
@@ -38,7 +38,7 @@ class InputFormulario extends AbstractHelper {
         $html .= '<label for=' . $this->getTraducao() . ' class="field-label">';
         $html .= $this->view->translate($this->getTraducao());
         $html .= '</label>';
-        if ($this->getTipo() == 0) {
+        if ($this->getTipo() == 0 || $this->getTipo() == 2) {
             $html .= '<label for="' . $this->getTraducao() . '" class="field prepend-icon">';
         }
         if ($this->getTipo() == 1) {
@@ -46,9 +46,14 @@ class InputFormulario extends AbstractHelper {
             $html .= '<label class="field">';
         }
 
-        $html .= $this->view->formInput($this->getForm()->get($this->getIdInput()));
+        $input = $this->getForm()->get($this->getIdInput());
+        /* Desabilitar */
+        if ($this->getTipo() == 2) {
+            $input->setAttribute(ConstantesForm::$FORM_DISABLED, ConstantesForm::$FORM_DISABLED);
+        }
+        $html .= $this->view->formInput($input);
 
-        if ($this->getTipo() == 0) {
+        if ($this->getTipo() == 0 || $this->getTipo() == 2) {
             $html .= '<label for="' . $this->getTraducao() . '" class="field-icon">';
             $html .= '<i class="fa ' . $this->getIcone() . '"></i>';
             $html .= '</label>';

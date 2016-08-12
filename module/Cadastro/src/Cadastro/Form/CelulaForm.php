@@ -74,6 +74,54 @@ class CelulaForm extends Form {
                         ])
         );
 
+
+        /* UF */
+        $this->add(
+                (new Text())
+                        ->setName(ConstantesForm::$FORM_UF)
+                        ->setAttributes([
+                            ConstantesForm::$FORM_CLASS => ConstantesForm::$FORM_CLASS_GUI_INPUT,
+                            ConstantesForm::$FORM_ID => ConstantesForm::$FORM_UF,
+                            ConstantesForm::$FORM_PLACEHOLDER => ConstantesForm::$TRADUCAO_UF,
+                        ])
+        );
+
+
+        /* Cidade */
+        $this->add(
+                (new Text())
+                        ->setName(ConstantesForm::$FORM_CIDADE)
+                        ->setAttributes([
+                            ConstantesForm::$FORM_CLASS => ConstantesForm::$FORM_CLASS_GUI_INPUT,
+                            ConstantesForm::$FORM_ID => ConstantesForm::$FORM_CIDADE,
+                            ConstantesForm::$FORM_PLACEHOLDER => ConstantesForm::$TRADUCAO_CIDADE,
+                        ])
+        );
+
+
+        /* Bairro */
+        $this->add(
+                (new Text())
+                        ->setName(ConstantesForm::$FORM_BAIRRO)
+                        ->setAttributes([
+                            ConstantesForm::$FORM_CLASS => ConstantesForm::$FORM_CLASS_GUI_INPUT,
+                            ConstantesForm::$FORM_ID => ConstantesForm::$FORM_BAIRRO,
+                            ConstantesForm::$FORM_PLACEHOLDER => ConstantesForm::$TRADUCAO_BAIRRO,
+                        ])
+        );
+
+
+        /* Logradouro */
+        $this->add(
+                (new Text())
+                        ->setName(ConstantesForm::$FORM_LOGRADOURO)
+                        ->setAttributes([
+                            ConstantesForm::$FORM_CLASS => ConstantesForm::$FORM_CLASS_GUI_INPUT,
+                            ConstantesForm::$FORM_ID => ConstantesForm::$FORM_LOGRADOURO,
+                            ConstantesForm::$FORM_PLACEHOLDER => ConstantesForm::$TRADUCAO_LOGRADOURO,
+                        ])
+        );
+
         /* Complemento */
         $this->add(
                 (new Text())

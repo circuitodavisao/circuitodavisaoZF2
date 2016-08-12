@@ -199,21 +199,11 @@ class CadastroController extends AbstractActionController {
                 $cep_logradouro = $post_data[ConstantesForm::$FORM_CEP_LOGRADOURO];
 
                 $pesquisa = Correios::cep($cep_logradouro);
-
-//                foreach ($pesquisa as $key => $dados) {
-//                    echo "$key <br />";
-//                    foreach ($dados as $key => $value) {
-//                        echo "$key => $value<br />";
-//                    }
-//                }
-                $resultado = 'true';
-                if (empty($pesquisa)) {
-                    $resultado = 'false';
-                }
+                $quantidadeDeResultados = count($pesquisa);
 
                 $dadosDeResposta = array(
-                    'response' => $resultado,
-                    'teste' => $pesquisa[0]['logradouro'] . $pesquisa[0]['bairro'] . $pesquisa[0]['uf']
+                    'quantidadeDeResultados' => $quantidadeDeResultados,
+                    'pesquisa' => $pesquisa
                 );
                 $response->setContent(Json::encode($dadosDeResposta));
             } catch (Exception $exc) {

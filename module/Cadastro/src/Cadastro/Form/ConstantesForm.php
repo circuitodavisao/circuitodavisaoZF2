@@ -19,6 +19,10 @@ class ConstantesForm {
     public static $FORM_ICONE_HORA = 'fa-clock-o';
     public static $FORM_CEP_LOGRADOURO = 'cep_logradouro';
     public static $FORM_COMPLEMENTO = 'complemento';
+    public static $FORM_UF = 'uf';
+    public static $FORM_CIDADE = 'cidade';
+    public static $FORM_BAIRRO = 'bairro';
+    public static $FORM_LOGRADOURO = 'logradouro';
     public static $FORM_ICONE_COMPLEMENTO = 'fa-location-arrow';
     public static $FORM_NOME_HOSPEDEIRO = 'nome_hospedeiro';
     public static $FORM_ICONE_NOME_HOSPEDEIRO = 'fa-terminal';
@@ -35,6 +39,7 @@ class ConstantesForm {
     public static $FORM_CSRF = 'csrf';
     public static $FORM_CELULA = 'CelulaForm';
     public static $FORM_ACTION = 'action';
+    public static $FORM_DISABLED = 'disabled';
 
     /* Validações */
     public static $VALIDACAO_NAME = 'name';
@@ -57,6 +62,10 @@ class ConstantesForm {
     public static $TRADUCAO_HORA = 'Hour';
     public static $TRADUCAO_CEP_LOGRADOURO = 'CEP or Public Place';
     public static $TRADUCAO_COMPLEMENTO = 'Complement';
+    public static $TRADUCAO_UF = 'UF';
+    public static $TRADUCAO_CIDADE = 'City';
+    public static $TRADUCAO_BAIRRO = 'Neighborhood';
+    public static $TRADUCAO_LOGRADOURO = 'Public Place';
     public static $TRADUCAO_NOME_HOSPEDEIRO = 'Name Host';
     public static $TRADUCAO_DDD_HOSPEDEIRO = 'DDD';
     public static $TRADUCAO_TELEFONE_HOSPEDEIRO = 'Phone Host';
