@@ -12,6 +12,7 @@ use Entidade\Entity\Evento;
 use Entidade\Entity\EventoCelula;
 use Entidade\Entity\GrupoEvento;
 use Exception;
+use Lancamento\Controller\Helper\ConstantesLancamento;
 use Lancamento\Controller\Helper\LancamentoORM;
 use Login\Controller\Helper\Constantes;
 use Zend\Json\Json;
@@ -43,7 +44,7 @@ class CadastroController extends AbstractActionController {
      * GET /cadastro[:pagina[/:id]]
      */
     public function indexAction() {
-
+        $sessao = new Container(Constantes::$NOME_APLICACAO);
         /* Verificando rota */
         $pagina = $this->getEvent()->getRouteMatch()->getParam(ConstantesCadastro::$PAGINA, 1);
         if ($pagina == ConstantesCadastro::$PAGINA_CELULAS) {
@@ -66,6 +67,17 @@ class CadastroController extends AbstractActionController {
                         Constantes::$ACTION => ConstantesCadastro::$PAGINA_BUSCAR_ENDERECO,
             ));
         }
+        /* Funcoes */
+        if ($pagina == ConstantesLancamento::$PAGINA_FUNCOES) {
+            /* Registro de sessão com o id passado na função */
+            $request = $this->getRequest();
+            $post_data = $request->getPost();
+
+            $sessao->idFuncaoLancamento = $post_data[Constantes::$ID];
+            return $this->forward()->dispatch(ConstantesCadastro::$CONTROLLER_CADASTRO, array(
+                        Constantes::$ACTION => ConstantesLancamento::$PAGINA_FUNCOES,
+            ));
+        }
 
         return new ViewModel();
     }
@@ -75,14 +87,22 @@ class CadastroController extends AbstractActionController {
      * GET /cadastroCelulas
      */
     public function celulasAction() {
-        /* Verificando se a célula foi cadastrada */
+        /* Verificando se alguma célula foi cadastrada */
         $sessao = new Container(Constantes::$NOME_APLICACAO);
         $nomeHospedeiroCelulaCadastrado = '';
         if (!empty($sessao->nomeHospedeiroCelulaCadastrado)) {
             $nomeHospedeiroCelulaCadastrado = $sessao->nomeHospedeiroCelulaCadastrado;
             unset($sessao->nomeHospedeiroCelulaCadastrado);
         }
-        $view = new ViewModel();
+
+        /* Listagem de celulas */
+        $lancamentoORM = new LancamentoORM($this->getDoctrineORMEntityManager());
+        $idEntidadeAtual = $sessao->idEntidadeAtual;
+        $entidade = $lancamentoORM->getEntidadeORM()->encontrarPorIdEntidade($idEntidadeAtual);
+        $grupo = $entidade->getGrupo();
+        $grupoEventosDoTipoCelula = $grupo->getGrupoEventoCelula();
+
+        $view = new ViewModel(array(ConstantesForm::$LISTAGEM_CELULAS => $grupoEventosDoTipoCelula));
         /* Javascript */
         $layoutJS = new ViewModel(array(
             ConstantesForm::$LAYOUT_NOME_HOSPEDEIRO_CELULA_CADASTRADO => $nomeHospedeiroCelulaCadastrado
@@ -97,7 +117,15 @@ class CadastroController extends AbstractActionController {
      * GET /cadastroCelula
      */
     public function celulaAction() {
-        $celulaForm = new CelulaForm(ConstantesForm::$FORM_CELULA);
+        /* Verificando a se tem algum id na sessão */
+        $sessao = new Container(Constantes::$NOME_APLICACAO);
+        $eventoCelulaNaSessao = new EventoCelula();
+        if (!empty($sessao->idSessao)) {
+            $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
+            $eventoCelulaNaSessao = $repositorioORM->getEventoCelulaORM()->encontrarPorIdEventoCelula($sessao->idSessao);
+        }
+
+        $celulaForm = new CelulaForm(ConstantesForm::$FORM_CELULA, $eventoCelulaNaSessao);
 
         $view = new ViewModel(array(
             ConstantesForm::$FORM_CELULA => $celulaForm,
@@ -207,6 +235,33 @@ class CadastroController extends AbstractActionController {
                     'pesquisa' => $pesquisa
                 );
                 $response->setContent(Json::encode($dadosDeResposta));
+            } catch (Exception $exc) {
+                echo $exc->getTraceAsString();
+            }
+        }
+        return $response;
+    }
+
+    /**
+     * Controle de funçoes da tela de cadastro
+     * @return Json
+     */
+    public function funcoesAction() {
+        $request = $this->getRequest();
+        $response = $this->getResponse();
+        if ($request->isPost()) {
+            try {
+                $post_data = $request->getPost();
+                $funcao = $post_data[Constantes::$FUNCAO];
+                $id = $post_data[Constantes::$ID];
+                $sessao = new Container(Constantes::$NOME_APLICACAO);
+                $sessao->idSessao = $id;
+                $response->setContent(Json::encode(
+                                array(
+                                    'response' => 'true',
+                                    'tipoDeRetorno' => 1,
+                                    'url' => '/cadastro' . $funcao,
+                )));
             } catch (Exception $exc) {
                 echo $exc->getTraceAsString();
             }

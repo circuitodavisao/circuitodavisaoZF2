@@ -21,10 +21,9 @@ return array(
             'cadastro' => array(
                 'type' => 'Segment',
                 'options' => array(
-                    'route' => '/cadastro[:pagina[/:id]]',
+                    'route' => '/cadastro[:pagina]',
                     'constraints' => array(
                         'pagina' => '[a-zA-z]*',
-                        'id' => '[1-2]|[1-2]_[1-6]',
                     ),
                     'defaults' => array(
                         'controller' => 'Cadastro\Controller\Cadastro',

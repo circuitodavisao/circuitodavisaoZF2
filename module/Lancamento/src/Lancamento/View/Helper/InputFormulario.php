@@ -35,17 +35,12 @@ class InputFormulario extends AbstractHelper {
 
     public function renderHtml() {
         $html = '';
-        $html .= '<label for=' . $this->getTraducao() . ' class="field-label">';
-        $html .= $this->view->translate($this->getTraducao());
-        $html .= '</label>';
-        if ($this->getTipo() == 0 || $this->getTipo() == 2) {
-            $html .= '<label for="' . $this->getTraducao() . '" class="field prepend-icon">';
+        if ($this->getTipo() != 3) {
+            $html .= '<label for=' . $this->getTraducao() . ' class="field-label">';
+            $html .= $this->view->translate($this->getTraducao());
+            $html .= '</label>';
         }
-        if ($this->getTipo() == 1) {
-            $html .= '<div class="smart-widget sm-right smr-50">';
-            $html .= '<label class="field">';
-        }
-
+        $html .= '<label for="' . $this->getTraducao() . '" class="field prepend-icon">';
         $input = $this->getForm()->get($this->getIdInput());
         /* Desabilitar */
         if ($this->getTipo() == 2) {
@@ -53,20 +48,10 @@ class InputFormulario extends AbstractHelper {
             $input->setAttribute(ConstantesForm::$FORM_CLASS, ConstantesForm::$FORM_CLASS_GUI_INPUT . ' form-control');
         }
         $html .= $this->view->formInput($input);
+        $html .= '<label for="' . $this->getTraducao() . '" class="field-icon">';
+        $html .= '<i class="fa ' . $this->getIcone() . '"></i>';
+        $html .= '</label>';
 
-        if ($this->getTipo() == 0 || $this->getTipo() == 2) {
-            $html .= '<label for="' . $this->getTraducao() . '" class="field-icon">';
-            $html .= '<i class="fa ' . $this->getIcone() . '"></i>';
-            $html .= '</label>';
-        }
-        if ($this->getTipo() == 1) {
-
-            $html .= '</label>';
-            $html .= '<button ' . $this->getFuncao() . ' type="button" class="button ladda-button btn-danger">';
-            $html .= '<i class="fa fa-search"></i>';
-            $html .= '</button>';
-            $html .= '</div>';
-        }
         return $html;
     }
 

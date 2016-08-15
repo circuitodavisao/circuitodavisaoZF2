@@ -64,7 +64,7 @@ class ConstantesForm {
 
     /* Traduções */
     public static $TRADUCAO_HORA = 'Hour';
-    public static $TRADUCAO_CEP_LOGRADOURO = 'CEP or Public Place';
+    public static $TRADUCAO_CEP_LOGRADOURO = 'CEP';
     public static $TRADUCAO_COMPLEMENTO = 'Complement';
     public static $TRADUCAO_UF = 'UF';
     public static $TRADUCAO_CIDADE = 'City';
@@ -100,5 +100,8 @@ class ConstantesForm {
     public static $LAYOUT_JS_CELULAS = 'layout/layout-js-celulas';
     public static $LAYOUT_STRING_JS_CELULAS = 'layoutJSCelulas';
     public static $LAYOUT_NOME_HOSPEDEIRO_CELULA_CADASTRADO = 'nomeHospedeiroCelulaCadastrado';
+
+    /* Listagem */
+    public static $LISTAGEM_CELULAS = 'celulas';
 
 }

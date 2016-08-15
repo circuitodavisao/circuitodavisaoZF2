@@ -2,8 +2,11 @@
 
 use Cadastro\Controller\Helper\ConstantesCadastro;
 
+$versao = '?v=0.2';
+
 echo $this
         ->headScript()
+        ->prependFile($this->basePath() . '/js/circuito_da_visao/funcao-cadastro.js' . $versao)
         ->prependFile($this->basePath() . '/js/vendor/plugins/pnotify/pnotify.js')
 ;
 echo $this->inlineScript();

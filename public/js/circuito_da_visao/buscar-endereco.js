@@ -4,8 +4,20 @@
  * Descricao: Função para buscar endereço por cep ou logradouro
  */
 
+function isNumber(n) {
+    return !isNaN(parseFloat(n)) && isFinite(n);
+}
 
 function buscarEndereco(cep_logradouro) {
+
+    if (cep_logradouro.length === 0) {
+        return false;
+    }
+    if (!isNumber(cep_logradouro) || cep_logradouro.length !== 8) {
+        alert('Cep é invalido!');
+        return false;
+    }
+
     $('#resultadoBusca').html('');
     $('#uf').val('');
     $('#cidade').val('');

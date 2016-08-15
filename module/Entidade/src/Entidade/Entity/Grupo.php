@@ -335,6 +335,21 @@ class Grupo {
         return $this->getEventos();
     }
 
+    function getGrupoEventoCelula() {
+        if (is_null($this->getEventos())) {
+            $eventos = null;
+            if (!empty($this->getGrupoEventoOrdenadosPorDiaDaSemana())) {
+                foreach ($this->getGrupoEventoOrdenadosPorDiaDaSemana() as $ge) {
+                    if ($ge->verificarSeEstaAtivo() && $ge->getEvento()->verificaSeECelula()) {
+                        $eventos[] = $ge;
+                    }
+                }
+            }
+            $this->setEventos($eventos);
+        }
+        return $this->getEventos();
+    }
+
     function setGrupoEvento($grupoEvento) {
         $this->grupoEvento = $grupoEvento;
     }

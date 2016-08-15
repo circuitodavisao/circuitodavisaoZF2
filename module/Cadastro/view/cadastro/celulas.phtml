@@ -1,7 +1,23 @@
-listagem de celulas
+<?php
 
+use Cadastro\Controller\Helper\ConstantesCadastro;
+?>
 <a href="/cadastroCelula" class="btn btn-default">CADASTRO DE CELULA</a>
 <a href="/lancamento" class="btn btn-default">LANCAMENTO</a>
 <?php
+foreach ($this->celulas as $ge) {
+    echo "<br /><br /><br />Celulas " . $ge->getId();
+    echo "<br />DataCriacao " . $ge->getData_criacao();
+    echo "<br />HoraCriacao " . $ge->getHora_criacao();
+    $evento = $ge->getEvento();
+    $celula = $evento->getEventoCelula();
+    echo "<br />Evento: " . $evento->getId();
+    if (!is_null($celula)) {
+        echo "<br />Celula: " . $celula->getId();
+        echo "<br />Hospedeiro: " . $celula->getNome_Hospedeiro();
+        echo '<button type="button" class="btn btn-dark btn-xs" onclick="funcaoCadastro(\'' . ConstantesCadastro::$PAGINA_CELULA . '\', ' . $celula->getId() . ');">VER</button>';
+    }
+}
+
 /* Layout com javascript para tela de cadastro de celula */
 echo $this->layoutJSCelulas;

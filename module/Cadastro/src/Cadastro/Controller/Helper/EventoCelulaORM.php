@@ -23,6 +23,23 @@ class EventoCelulaORM {
     }
 
     /**
+     * Localizar entidade por idEventoCelula
+     * 
+     * @param integer $idEventoCelula
+     * @return EventoCelula
+     * @throws Exception
+     */
+    public function encontrarPorIdEventoCelula($idEventoCelula) {
+        $id = (int) $idEventoCelula;
+
+        $eventoCelula = $this->getEntityManager()->find($this->getEntity(), $id);
+        if (!$eventoCelula) {
+            throw new Exception("Não foi encontrado a celula de id = {$id}");
+        }
+        return $eventoCelula;
+    }
+
+    /**
      * Atualiza a evento_celula no banco de dados
      * @param EventoCelula $eventoCelula
      */

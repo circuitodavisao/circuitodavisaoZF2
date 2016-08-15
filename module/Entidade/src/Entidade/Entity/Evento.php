@@ -7,7 +7,6 @@ namespace Entidade\Entity;
  * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com>
  * Descricao: Entidade anotada da tabela Evento
  */
-
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -207,6 +206,18 @@ class Evento {
 
     function setEventoFrequencia($eventoFrequencia) {
         $this->eventoFrequencia = $eventoFrequencia;
+    }
+
+    /**
+     * Verifica se o evento é do tipo célula
+     * @return boolean
+     */
+    function verificaSeECelula() {
+        $resposta = false;
+        if ($this->getTipo_id() == 2) {
+            $resposta = true;
+        }
+        return $resposta;
     }
 
     function getTipo_id() {

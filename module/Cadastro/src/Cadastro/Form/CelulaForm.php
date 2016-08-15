@@ -2,6 +2,7 @@
 
 namespace Cadastro\Form;
 
+use Entidade\Entity\EventoCelula;
 use Lancamento\Controller\Helper\FuncoesLancamento;
 use Zend\Form\Element\Button;
 use Zend\Form\Element\Csrf;
@@ -21,7 +22,7 @@ class CelulaForm extends Form {
      * Contrutor
      * @param String $name
      */
-    public function __construct($name = null) {
+    public function __construct($name = null, EventoCelula $eventoCelula) {
         parent::__construct($name);
 
         $this->setAttributes(array(
