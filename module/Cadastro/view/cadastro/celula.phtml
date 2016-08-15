@@ -57,21 +57,54 @@ $form->setAttribute(ConstantesForm::$FORM_ACTION, $this->url(ConstantesCadastro:
                                             <?php echo $this->inputFormulario(ConstantesForm::$TRADUCAO_CEP_LOGRADOURO, $form, ConstantesForm::$FORM_CEP_LOGRADOURO, '', 1, ConstantesForm::$FORM_ONCLICK . '=\'' . ConstantesForm::$FORM_FUNCAO_BUSCAR_CEP . '\''); ?>
                                         </div>
                                     </div>
+                                    
                                     <div id="resultadoBusca"></div>
-                                    <div class="col-md-6">
-                                        <div class="section">
-                                            <?php echo $this->inputFormulario(ConstantesForm::$TRADUCAO_UF, $form, ConstantesForm::$FORM_UF, ConstantesForm::$FORM_ICONE_COMPLEMENTO, 2); ?>
+                                    
+                                    
+                                        <div class="col-md-6 col-sm-9">
+                                            <div class="section">
+                                                <?php echo $this->inputFormulario(ConstantesForm::$TRADUCAO_CEP_LOGRADOURO, $form, ConstantesForm::$FORM_CEP_LOGRADOURO, '', 1, ConstantesForm::$FORM_ONCLICK . '=\'' . ConstantesForm::$FORM_FUNCAO_BUSCAR_CEP . '\''); ?>
+                                            </div>
+                                            <div class="section">
+                                                <?php echo $this->inputFormulario(ConstantesForm::$TRADUCAO_UF, $form, ConstantesForm::$FORM_UF, ConstantesForm::$FORM_ICONE_COMPLEMENTO, 2); ?>
+                                            </div>
                                         </div>
 
+                                    <div class="col-md-2 col-sm-3">
+                                        <div class="section">
+                                            <label for="Hour" class="field-label">PPK</label>
+                                            <label for="Hour" class="field">
+                                                <button type="submit" class="button btn-danger">
+                                                    <i class="fa fa-search"></i>
+                                                </button>
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-4 col-sm-12">
+                                        <div class="section">
+                                            <label for="Hour" class="field-label">Correios</label>
+                                            <label for="Hour" class="field">
+                                                <button type="submit" class="button btn-danger" style="width:100%;">
+                                                    <span>Website Correios</span>
+                                                </button>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-md-6 col-sm-12">
                                         <div class="section">
                                             <?php echo $this->inputFormulario(ConstantesForm::$TRADUCAO_BAIRRO, $form, ConstantesForm::$FORM_BAIRRO, ConstantesForm::$FORM_ICONE_COMPLEMENTO, 2); ?>
                                         </div>
                                     </div>
+                                    
+                                    
                                     <div class="col-md-6">
                                         <div class="section">
                                             <?php echo $this->inputFormulario(ConstantesForm::$TRADUCAO_CIDADE, $form, ConstantesForm::$FORM_CIDADE, ConstantesForm::$FORM_ICONE_COMPLEMENTO, 2); ?>
                                         </div>
-
+                                    </div>
+                                    <div class="col-md-6">
                                         <div class="section">
                                             <?php echo $this->inputFormulario(ConstantesForm::$TRADUCAO_LOGRADOURO, $form, ConstantesForm::$FORM_LOGRADOURO, ConstantesForm::$FORM_ICONE_COMPLEMENTO, 2); ?>
                                         </div>
