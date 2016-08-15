@@ -65,6 +65,30 @@ class CelulaForm extends Form {
                         ])
         );
 
+        /* Hora */
+        $arrayHoras[''] = ConstantesForm::$TRADUCAO_SELECIONE;
+        for ($indexHoras = 1; $indexHoras <= 24; $indexHoras++) {
+            $arrayHoras[$indexHoras] = $indexHoras;
+        }
+        $selectHora = new Select();
+        $selectHora->setName(ConstantesForm::$FORM_HORA);
+        $selectHora->setAttributes(array(
+            ConstantesForm::$FORM_CLASS => ConstantesForm::$FORM_CLASS_GUI_INPUT,
+            ConstantesForm::$FORM_ID => ConstantesForm::$FORM_HORA,
+        ));
+        $selectHora->setValueOptions($arrayHoras);
+        $this->add($selectHora);
+
+        /* Minutos */
+        $selectMinutos = new Select();
+        $selectMinutos->setName(ConstantesForm::$FORM_MINUTOS);
+        $selectMinutos->setAttributes(array(
+            ConstantesForm::$FORM_CLASS => ConstantesForm::$FORM_CLASS_GUI_INPUT,
+            ConstantesForm::$FORM_ID => ConstantesForm::$FORM_MINUTOS,
+        ));
+        $selectMinutos->setValueOptions($arrayHoras);
+        $this->add($selectMinutos);
+
         /* CEP ou Logradouro */
         $this->add(
                 (new Text())
@@ -73,6 +97,7 @@ class CelulaForm extends Form {
                             ConstantesForm::$FORM_CLASS => ConstantesForm::$FORM_CLASS_GUI_INPUT,
                             ConstantesForm::$FORM_ID => ConstantesForm::$FORM_CEP_LOGRADOURO,
                             ConstantesForm::$FORM_ONBLUR => ConstantesForm::$FORM_FUNCAO_BUSCAR_CEP,
+                            ConstantesForm::$FORM_ONKEYPRESS => ConstantesForm::$FORM_FUNCAO_BUSCAR_CEP_POR_ENTER
                         ])
         );
 

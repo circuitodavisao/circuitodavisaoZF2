@@ -8,6 +8,7 @@
 
 namespace Cadastro;
 
+use Cadastro\View\Helper\BotaoLink;
 use Lancamento\View\Helper\InputFormulario;
 use Login\View\Helper\BotaoSubmit;
 use Login\View\Helper\BotaoSubmitDesabilitado;
@@ -43,6 +44,9 @@ class Module {
                 },
                 'botaoSubmitDesabilitado' => function($sm) {
                     return new BotaoSubmitDesabilitado();
+                },
+                'botaoLink' => function($sm) {
+                    return new BotaoLink();
                 },
             )
         );

@@ -22,6 +22,8 @@ use Cadastro\Form\ConstantesForm;
                 if (!smartpikr.hasClass(themeClass)) {
                     inst.dpDiv.wrap('<div class="' + themeClass + '"></div>');
                 }
+
+                inst.dpDiv.css({marginTop: '110px', marginLeft: '25px'});
             }
         });
 
@@ -40,9 +42,10 @@ use Cadastro\Form\ConstantesForm;
                     required: true
                 },
 <?php echo $this->translate(ConstantesForm::$FORM_HORA); ?>: {
-                    required: true,
-                    minlength: 5,
-                    maxlength: 5
+                    required: true
+                },
+<?php echo $this->translate(ConstantesForm::$FORM_MINUTOS); ?>: {
+                    required: true
                 },
 <?php echo $this->translate(ConstantesForm::$FORM_CEP_LOGRADOURO); ?>: {
                     required: true,
@@ -76,9 +79,10 @@ use Cadastro\Form\ConstantesForm;
                     required: '<?php echo $this->translate(ConstantesForm::$TRADUCAO_VALIDACAO_DIA_DA_SEMANA_REQUERIDO); ?>'
                 },
 <?php echo $this->translate(ConstantesForm::$FORM_HORA); ?>: {
-                    required: '<?php echo $this->translate(ConstantesForm::$TRADUCAO_VALIDACAO_HORA_REQUERIDO); ?>',
-                    minlength: '<?php echo $this->translate(ConstantesForm::$TRADUCAO_VALIDACAO_HORA_INVALIDA); ?>',
-                    maxlength: '<?php echo $this->translate(ConstantesForm::$TRADUCAO_VALIDACAO_HORA_INVALIDA); ?>'
+                    required: '<?php echo $this->translate(ConstantesForm::$TRADUCAO_VALIDACAO_HORA_REQUERIDO); ?>'
+                },
+<?php echo $this->translate(ConstantesForm::$FORM_MINUTOS); ?>: {
+                    required: '<?php echo $this->translate(ConstantesForm::$TRADUCAO_VALIDACAO_MINUTOS_REQUERIDO); ?>'
                 },
 <?php echo $this->translate(ConstantesForm::$FORM_CEP_LOGRADOURO); ?>: {
                     required: '<?php echo $this->translate(ConstantesForm::$TRADUCAO_VALIDACAO_CEP_LOGRADOURO_REQUERIDO); ?>',

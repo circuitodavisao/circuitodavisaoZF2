@@ -32,90 +32,87 @@ $form->setAttribute(ConstantesForm::$FORM_ACTION, $this->url(ConstantesCadastro:
                                 <!--.section-divider -->
 
                                 <div class="section row">
-                                    <div class="col-md-8">
-                                        <div class="section">
-                                            <label for="<?php echo ConstantesForm::$TRADUCAO_DIA_DA_SEMANA; ?>" class="field-label">
-                                                <?php echo $this->translate(ConstantesForm::$TRADUCAO_DIA_DA_SEMANA); ?>
-                                            </label>
-                                            <label for="<?php echo ConstantesForm::$TRADUCAO_DIA_DA_SEMANA; ?>" class="field prepend-icon">
-                                                <?php echo $this->formSelect($form->get(ConstantesForm::$FORM_DIA_DA_SEMANA)); ?>
-                                            </label>   
+                                    <div class="row">
+                                        <div class="col-sm-12 col-xs-12">
+                                            <div class="section">
+                                                <label for="<?php echo ConstantesForm::$TRADUCAO_DIA_DA_SEMANA; ?>" class="field-label">
+                                                    <?php echo $this->translate(ConstantesForm::$TRADUCAO_DIA_DA_SEMANA); ?>
+                                                </label>
+                                                <label for="<?php echo ConstantesForm::$TRADUCAO_DIA_DA_SEMANA; ?>" class="field prepend-icon">
+                                                    <?php echo $this->formSelect($form->get(ConstantesForm::$FORM_DIA_DA_SEMANA)); ?>
+                                                </label>   
+                                            </div>
                                         </div>
-                                        <!--end section -->
                                     </div>
-                                    <!--end .colm section -->
 
-                                    <div class="col-md-4">
-                                        <div class="section">
-                                            <?php echo $this->inputFormulario(ConstantesForm::$TRADUCAO_HORA, $form, ConstantesForm::$FORM_HORA, ConstantesForm::$FORM_ICONE_HORA); ?>
+                                    <div class="row">
+                                        <div class="col-sm-6 col-xs-6">
+                                            <div class="section">
+                                                <label for="<?php echo ConstantesForm::$TRADUCAO_HORA; ?>" class="field-label">
+                                                    <?php echo $this->translate(ConstantesForm::$TRADUCAO_HORA); ?>
+                                                </label>
+                                                <label for="<?php echo ConstantesForm::$TRADUCAO_HORA; ?>" class="field prepend-icon">
+                                                    <?php echo $this->formSelect($form->get(ConstantesForm::$FORM_HORA)); ?>
+                                                </label>  
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6 col-xs-6">
+                                            <div class="section">
+                                                <label for="<?php echo ConstantesForm::$TRADUCAO_MINUTOS; ?>" class="field-label">
+                                                    <?php echo $this->translate(ConstantesForm::$TRADUCAO_MINUTOS); ?>
+                                                </label>
+                                                <label for="<?php echo ConstantesForm::$TRADUCAO_MINUTOS; ?>" class="field prepend-icon">
+                                                    <?php echo $this->formSelect($form->get(ConstantesForm::$FORM_MINUTOS)); ?>
+                                                </label>                                                  
+                                            </div>
                                         </div>
                                     </div>
-                                    <!--end .colm section -->
 
-                                    <div class="col-md-12">
-                                        <div class="section">
-                                            <?php echo $this->inputFormulario(ConstantesForm::$TRADUCAO_CEP_LOGRADOURO, $form, ConstantesForm::$FORM_CEP_LOGRADOURO, '', 1, ConstantesForm::$FORM_ONCLICK . '=\'' . ConstantesForm::$FORM_FUNCAO_BUSCAR_CEP . '\''); ?>
+                                    <div class="row">
+                                        <div class="col-md-12 col-sm-12 col-xs-12">
+                                            <div class="section">
+                                                <?php echo $this->inputFormulario(ConstantesForm::$TRADUCAO_CEP_LOGRADOURO, $form, ConstantesForm::$FORM_CEP_LOGRADOURO, ConstantesForm::$FORM_ICONE_COMPLEMENTO); ?>
+
+                                            </div> 
                                         </div>
                                     </div>
-                                    
+
                                     <div id="resultadoBusca"></div>
-                                    
-                                    
-                                        <div class="col-md-6 col-sm-9">
-                                            <div class="section">
-                                                <?php echo $this->inputFormulario(ConstantesForm::$TRADUCAO_CEP_LOGRADOURO, $form, ConstantesForm::$FORM_CEP_LOGRADOURO, '', 1, ConstantesForm::$FORM_ONCLICK . '=\'' . ConstantesForm::$FORM_FUNCAO_BUSCAR_CEP . '\''); ?>
+                                    <div id="endereco" class="hidden">
+                                        <div class="row">
+                                            <div class="col-md-6 col-sm-12">
+                                                <div class="section">
+                                                    <?php echo $this->inputFormulario(ConstantesForm::$TRADUCAO_UF, $form, ConstantesForm::$FORM_UF, ConstantesForm::$FORM_ICONE_COMPLEMENTO, 2); ?>
+                                                </div>
                                             </div>
-                                            <div class="section">
-                                                <?php echo $this->inputFormulario(ConstantesForm::$TRADUCAO_UF, $form, ConstantesForm::$FORM_UF, ConstantesForm::$FORM_ICONE_COMPLEMENTO, 2); ?>
+                                            <div class="col-md-6 col-sm-12">
+                                                <div class="section">
+                                                    <?php echo $this->inputFormulario(ConstantesForm::$TRADUCAO_BAIRRO, $form, ConstantesForm::$FORM_BAIRRO, ConstantesForm::$FORM_ICONE_COMPLEMENTO, 2); ?>
+                                                </div>
                                             </div>
                                         </div>
 
-                                    <div class="col-md-2 col-sm-3">
-                                        <div class="section">
-                                            <label for="Hour" class="field-label">PPK</label>
-                                            <label for="Hour" class="field">
-                                                <button type="submit" class="button btn-danger">
-                                                    <i class="fa fa-search"></i>
-                                                </button>
-                                            </label>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="section">
+                                                    <?php echo $this->inputFormulario(ConstantesForm::$TRADUCAO_CIDADE, $form, ConstantesForm::$FORM_CIDADE, ConstantesForm::$FORM_ICONE_COMPLEMENTO, 2); ?>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="section">
+                                                    <?php echo $this->inputFormulario(ConstantesForm::$TRADUCAO_LOGRADOURO, $form, ConstantesForm::$FORM_LOGRADOURO, ConstantesForm::$FORM_ICONE_COMPLEMENTO, 2); ?>
+                                                </div>
+                                            </div>
                                         </div>
-                                    </div>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="section">
+                                                    <?php echo $this->inputFormulario(ConstantesForm::$TRADUCAO_COMPLEMENTO, $form, ConstantesForm::$FORM_COMPLEMENTO, ConstantesForm::$FORM_ICONE_COMPLEMENTO); ?>
+                                                </div>
+                                            </div>
+                                        </div>
 
-                                    <div class="col-md-4 col-sm-12">
-                                        <div class="section">
-                                            <label for="Hour" class="field-label">Correios</label>
-                                            <label for="Hour" class="field">
-                                                <button type="submit" class="button btn-danger" style="width:100%;">
-                                                    <span>Website Correios</span>
-                                                </button>
-                                            </label>
-                                        </div>
                                     </div>
-                                    
-                                    <div class="col-md-6 col-sm-12">
-                                        <div class="section">
-                                            <?php echo $this->inputFormulario(ConstantesForm::$TRADUCAO_BAIRRO, $form, ConstantesForm::$FORM_BAIRRO, ConstantesForm::$FORM_ICONE_COMPLEMENTO, 2); ?>
-                                        </div>
-                                    </div>
-                                    
-                                    
-                                    <div class="col-md-6">
-                                        <div class="section">
-                                            <?php echo $this->inputFormulario(ConstantesForm::$TRADUCAO_CIDADE, $form, ConstantesForm::$FORM_CIDADE, ConstantesForm::$FORM_ICONE_COMPLEMENTO, 2); ?>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="section">
-                                            <?php echo $this->inputFormulario(ConstantesForm::$TRADUCAO_LOGRADOURO, $form, ConstantesForm::$FORM_LOGRADOURO, ConstantesForm::$FORM_ICONE_COMPLEMENTO, 2); ?>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-12">
-                                        <div class="section">
-                                            <?php echo $this->inputFormulario(ConstantesForm::$TRADUCAO_COMPLEMENTO, $form, ConstantesForm::$FORM_COMPLEMENTO, ConstantesForm::$FORM_ICONE_COMPLEMENTO); ?>
-                                        </div>
-                                        <!--end section -->
-                                    </div>
-
                                 </div>
                                 <!--end .section row section -->
 
@@ -125,18 +122,22 @@ $form->setAttribute(ConstantesForm::$FORM_ACTION, $this->url(ConstantesCadastro:
                                 <!--.section-divider -->
 
                                 <div class="section row">
-                                    <div class="col-md-12">
-                                        <div class="section">
-                                            <?php echo $this->inputFormulario(ConstantesForm::$TRADUCAO_NOME_HOSPEDEIRO, $form, ConstantesForm::$FORM_NOME_HOSPEDEIRO, ConstantesForm::$FORM_ICONE_NOME_HOSPEDEIRO); ?>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="section">
+                                                <?php echo $this->inputFormulario(ConstantesForm::$TRADUCAO_NOME_HOSPEDEIRO, $form, ConstantesForm::$FORM_NOME_HOSPEDEIRO, ConstantesForm::$FORM_ICONE_NOME_HOSPEDEIRO); ?>
+                                            </div>
                                         </div>
                                     </div>
                                     <!--end .colm section -->
                                     <div class="section">
-                                        <div class="col-xs-5 col-sm-5 col-md-2">
-                                            <?php echo $this->inputFormulario(ConstantesForm::$TRADUCAO_DDD_HOSPEDEIRO, $form, ConstantesForm::$FORM_DDD_HOSPEDEIRO, ConstantesForm::$FORM_ICONE_DDD_HOSPEDEIRO); ?>
-                                        </div>
-                                        <div class="col-xs-7 col-sm-7 col-md-10">
-                                            <?php echo $this->inputFormulario(ConstantesForm::$TRADUCAO_TELEFONE_HOSPEDEIRO, $form, ConstantesForm::$FORM_TELEFONE_HOSPEDEIRO, ConstantesForm::$FORM_ICONE_TELEFONE_HOSPEDEIRO); ?>
+                                        <div class="row">
+                                            <div class="col-xs-5 col-sm-5 col-md-2">
+                                                <?php echo $this->inputFormulario(ConstantesForm::$TRADUCAO_DDD_HOSPEDEIRO, $form, ConstantesForm::$FORM_DDD_HOSPEDEIRO, ConstantesForm::$FORM_ICONE_DDD_HOSPEDEIRO); ?>
+                                            </div>
+                                            <div class="col-xs-7 col-sm-7 col-md-10">
+                                                <?php echo $this->inputFormulario(ConstantesForm::$TRADUCAO_TELEFONE_HOSPEDEIRO, $form, ConstantesForm::$FORM_TELEFONE_HOSPEDEIRO, ConstantesForm::$FORM_ICONE_TELEFONE_HOSPEDEIRO); ?>
+                                            </div>
                                         </div>
                                     </div>
                                 </div> 

@@ -3,6 +3,7 @@
 namespace Lancamento\View\Helper;
 
 use Cadastro\Form\ConstantesForm;
+use Login\Controller\Helper\Constantes;
 use Zend\View\Helper\AbstractHelper;
 
 /**
@@ -35,21 +36,19 @@ class InputFormulario extends AbstractHelper {
 
     public function renderHtml() {
         $html = '';
-        if ($this->getTipo() != 3) {
-            $html .= '<label for=' . $this->getTraducao() . ' class="field-label">';
-            $html .= $this->view->translate($this->getTraducao());
-            $html .= '</label>';
-        }
+        $html .= '<label for=' . $this->getTraducao() . ' class="field-label">';
+        $html .= $this->view->translate($this->getTraducao());
+        $html .= '</label>';
         $html .= '<label for="' . $this->getTraducao() . '" class="field prepend-icon">';
         $input = $this->getForm()->get($this->getIdInput());
         /* Desabilitar */
         if ($this->getTipo() == 2) {
-            $input->setAttribute(ConstantesForm::$FORM_READONLY, 'true');
-            $input->setAttribute(ConstantesForm::$FORM_CLASS, ConstantesForm::$FORM_CLASS_GUI_INPUT . ' form-control');
+            $input->setAttribute(ConstantesForm::$FORM_DISABLED, ConstantesForm::$FORM_DISABLED);
         }
         $html .= $this->view->formInput($input);
         $html .= '<label for="' . $this->getTraducao() . '" class="field-icon">';
         $html .= '<i class="fa ' . $this->getIcone() . '"></i>';
+        $html .= '&nbsp;<img id="loader' . $this->getIdInput() . '" class="hidden" src="' . Constantes::$LOADER_GIF . '" />';
         $html .= '</label>';
 
         return $html;
