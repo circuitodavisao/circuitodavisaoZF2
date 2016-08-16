@@ -1,23 +1,62 @@
 <?php
 
 use Cadastro\Controller\Helper\ConstantesCadastro;
-?>
-<a href="/cadastroCelula" class="btn btn-default">CADASTRO DE CELULA</a>
-<a href="/lancamento" class="btn btn-default">LANCAMENTO</a>
-<?php
-foreach ($this->celulas as $ge) {
-    echo "<br /><br /><br />Celulas " . $ge->getId();
-    echo "<br />DataCriacao " . $ge->getData_criacao();
-    echo "<br />HoraCriacao " . $ge->getHora_criacao();
-    $evento = $ge->getEvento();
-    $celula = $evento->getEventoCelula();
-    echo "<br />Evento: " . $evento->getId();
-    if (!is_null($celula)) {
-        echo "<br />Celula: " . $celula->getId();
-        echo "<br />Hospedeiro: " . $celula->getNome_Hospedeiro();
-        echo '<button type="button" class="btn btn-dark btn-xs" onclick="funcaoCadastro(\'' . ConstantesCadastro::$PAGINA_CELULA . '\', ' . $celula->getId() . ');">VER</button>';
-    }
-}
+use Cadastro\Form\ConstantesForm;
+use Lancamento\Controller\Helper\FuncoesLancamento;
 
-/* Layout com javascript para tela de cadastro de celula */
+/**
+ * Nome: celulas.phtml
+ * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com> e Sergio Bezerra da Silva <sergio.silva.unb@gmail.com>
+ * Descricao: Página de listagem de célula
+ */
+?>
+<div class="mw1000 center-block p10">
+    <div class="admin-form theme-danger">
+        <blockquote class="blockquote-danger">
+            <small>Listagem de  Células de <b class="text-danger"><?php echo $this->translate(ConstantesForm::$TRADUCAO_MULTIPLICACAO); ?></b></small>
+        </blockquote>
+        <div class="panel heading-border panel-danger">
+            <div class="panel-body bg-light">
+                <table class="table">
+                    <thead>
+                        <tr class="">
+                            <th class="text-center"><?php echo $this->translate(ConstantesForm::$TRADUCAO_DIA_DA_SEMANA_SIMPLIFICADO) . '/' . $this->translate(ConstantesForm::$TRADUCAO_HORA); ?></th>
+                            <th class="text-center"><?php echo $this->translate(ConstantesForm::$TRADUCAO_NOME_HOSPEDEIRO); ?></th>
+                            <th class="text-center visible-lg visible-md visible-sm"><?php echo $this->translate(ConstantesForm::$TRADUCAO_TELEFONE_HOSPEDEIRO); ?></th>
+                            <th class="text-center visible-lg visible-md visible-sm"><?php echo $this->translate(ConstantesForm::$TRADUCAO_LOGRADOURO); ?></th>
+                            <th class="text-center"></th>
+                        </tr>
+                    </thead>
+                    <tbody>  
+                        <?php
+                        foreach ($this->celulas as $ge) {
+                            $evento = $ge->getEvento();
+                            $celula = $evento->getEventoCelula();
+                            if (!is_null($celula)) {
+                                $diaDaSemanaAjustado = FuncoesLancamento::diaDaSemanaPorDia($evento->getDia());
+                                echo '<tr>';
+                                echo '<td class="text-center">' . $diaDaSemanaAjustado . '/' . $evento->getHoraFormatoHoraMinuto() . '</td>';
+                                echo '<td class="text-center">' . $celula->getNome_hospedeiroPrimeiroNome() . '</td>';
+                                echo '<td class="text-center visible-lg visible-md visible-sm">' . $celula->getTelefone_hospedeiro() . '</td>';
+                                echo '<td class="text-center visible-lg visible-md visible-sm">' . $celula->getLogradouro() . '</td>';
+                                echo '<td class="text-center">';
+                                echo '<button data-style="zoom-in" type="button" class="btn ladda-button btn-default btn-xs" onclick="funcaoCadastro(\'' . ConstantesCadastro::$PAGINA_CELULA . '\', ' . $celula->getId() . ');">';
+                                echo '<i class="fa fa-eye" aria-hidden="true"></i></button>';
+                                echo '&nbsp;<button data-style="zoom-in" type="button" class="btn ladda-button btn-danger btn-xs">';
+                                echo '<i class="fa fa-times" aria-hidden="true"></i></button>';
+                                echo '</td>';
+                                echo '</tr>';
+                            }
+                        }
+                        ?>
+                    </tbody>
+                </table>
+            </div>
+            <div class="panel-footer text-right">
+                <button onclick="funcaoCadastro('Celula', 0);" data-style="zoom-in" type="button" class="btn ladda-button btn-dark btn-xs"><i class="fa fa-plus" aria-hidden="true"></i> <?php echo $this->translate(ConstantesForm::$TRADUCAO_NOVA); ?></button>
+            </div>
+        </div>
+    </div>
+</div>
+<?php
 echo $this->layoutJSCelulas;

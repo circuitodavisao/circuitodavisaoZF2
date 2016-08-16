@@ -154,12 +154,14 @@ class CadastroController extends AbstractActionController {
 
                 /* Entidades */
                 $eventoCelula = new EventoCelula();
-                $celulaForm = new CelulaForm(ConstantesForm::$FORM_CELULA);
+                $celulaForm = new CelulaForm(ConstantesForm::$FORM_CELULA, $eventoCelula);
                 $celulaForm->setInputFilter($eventoCelula->getInputFilter());
                 $celulaForm->setData($post_data);
 
                 /* validação */
                 if ($celulaForm->isValid()) {
+                    $validatedData = $celulaForm->getData();
+
                     /* Entidades */
                     $evento = new Evento();
                     $grupoEvento = new GrupoEvento();
@@ -168,42 +170,50 @@ class CadastroController extends AbstractActionController {
                     $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
                     $lancamentoORM = new LancamentoORM($this->getDoctrineORMEntityManager());
 
-                    /* Entidade selecionada */
-                    $sessao = new Container(Constantes::$NOME_APLICACAO);
-                    $idEntidadeAtual = $sessao->idEntidadeAtual;
-                    $entidade = $lancamentoORM->getEntidadeORM()->encontrarPorIdEntidade($idEntidadeAtual);
-
-                    $validatedData = $celulaForm->getData();
-
-                    $evento->setData_criacao(date('Y-m-d'));
-                    $evento->setHora_criacao(date('H:s:i'));
-                    $evento->setHora($validatedData[ConstantesForm::$FORM_HORA]);
-                    $evento->setDia($validatedData[ConstantesForm::$FORM_DIA_DA_SEMANA]);
-                    $evento->setEventoTipo($repositorioORM->getEventoTipoORM()->encontrarPorIdEventoTipo(2));
-
                     $eventoCelula->exchangeArray($celulaForm->getData());
                     $eventoCelula->setTelefone_hospedeiro($validatedData[ConstantesForm::$FORM_DDD_HOSPEDEIRO] . $validatedData[ConstantesForm::$FORM_TELEFONE_HOSPEDEIRO]);
-                    $eventoCelula->setUf($post_data[ConstantesForm::$FORM_UF]);
-                    $eventoCelula->setCidade($post_data[ConstantesForm::$FORM_CIDADE]);
-                    $eventoCelula->setLogradouro($post_data[ConstantesForm::$FORM_LOGRADOURO]);
-                    $eventoCelula->setBairro($post_data[ConstantesForm::$FORM_BAIRRO]);
-                    $eventoCelula->setComplemento($post_data[ConstantesForm::$FORM_COMPLEMENTO]);
+                    $eventoCelula->setUf($post_data[(ConstantesForm::$FORM_HIDDEN . ConstantesForm::$FORM_UF)]);
+                    $eventoCelula->setCidade($post_data[(ConstantesForm::$FORM_HIDDEN . ConstantesForm::$FORM_CIDADE)]);
+                    $eventoCelula->setLogradouro($post_data[(ConstantesForm::$FORM_HIDDEN . ConstantesForm::$FORM_LOGRADOURO)]);
+                    $eventoCelula->setBairro($post_data[(ConstantesForm::$FORM_HIDDEN . ConstantesForm::$FORM_BAIRRO)]);
+                    $eventoCelula->setComplemento(strtoupper($post_data[ConstantesForm::$FORM_COMPLEMENTO]));
                     $eventoCelula->setCep($validatedData[ConstantesForm::$FORM_CEP_LOGRADOURO]);
                     $eventoCelula->setEvento($evento);
 
-                    $grupoEvento->setData_criacao(date('Y-m-d'));
-                    $grupoEvento->setHora_criacao(date('H:s:i'));
-                    $grupoEvento->setGrupo($entidade->getGrupo());
-                    $grupoEvento->setEvento($evento);
+                    if (empty($post_data[ConstantesForm::$FORM_ID])) {
+                        /* Entidade selecionada */
+                        $sessao = new Container(Constantes::$NOME_APLICACAO);
+                        $idEntidadeAtual = $sessao->idEntidadeAtual;
+                        $entidade = $lancamentoORM->getEntidadeORM()->encontrarPorIdEntidade($idEntidadeAtual);
 
-                    /* Persistindo */
-                    $lancamentoORM->getEventoORM()->persistirEvento($evento);
-                    $repositorioORM->getEventoCelulaORM()->persistirEventoCelula($eventoCelula);
-                    $repositorioORM->getGrupoEventoORM()->persistirGrupoEvento($grupoEvento);
-                    /* Sessão */
-                    $sessao->nomeHospedeiroCelulaCadastrado = $eventoCelula->getNome_hospedeiro();
+                        $evento->setData_criacao(date('Y-m-d'));
+                        $evento->setHora_criacao(date('H:s:i'));
+                        $evento->setHora($validatedData[ConstantesForm::$FORM_HORA] . ':' . $validatedData[ConstantesForm::$FORM_MINUTOS]);
+                        $evento->setDia($validatedData[ConstantesForm::$FORM_DIA_DA_SEMANA]);
+                        $evento->setEventoTipo($repositorioORM->getEventoTipoORM()->encontrarPorIdEventoTipo(2));
+
+                        $grupoEvento->setData_criacao(date('Y-m-d'));
+                        $grupoEvento->setHora_criacao(date('H:s:i'));
+                        $grupoEvento->setGrupo($entidade->getGrupo());
+                        $grupoEvento->setEvento($evento);
+
+                        /* Persistindo */
+                        $lancamentoORM->getEventoORM()->persistirEvento($evento);
+                        $repositorioORM->getEventoCelulaORM()->persistirEventoCelula($eventoCelula);
+                        $repositorioORM->getGrupoEventoORM()->persistirGrupoEvento($grupoEvento);
+                        /* Sessão */
+                        $sessao->nomeHospedeiroCelulaCadastrado = $eventoCelula->getNome_hospedeiro();
+                    } else {
+                        echo "ALTERARNDO TRUTA!!";
+                        $eventoCelula = $repositorioORM->getEventoCelulaORM()->encontrarPorIdEventoCelula($post_data[ConstantesForm::$FORM_ID]);
+                    }
                 } else {
-                    echo "ERRO: Cadastro invalido!";
+                    echo "ERRO: Cadastro invalido!<br />";
+//                    foreach ($celulaForm->getMessages() as $value) {
+//                        foreach ($value as $key => $value) {
+//                            echo "$key => $value <br />";
+//                        }
+//                    }
                 }
 
                 return $this->forward()->dispatch(ConstantesCadastro::$CONTROLLER_CADASTRO, array(

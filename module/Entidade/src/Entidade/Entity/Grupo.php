@@ -336,17 +336,15 @@ class Grupo {
     }
 
     function getGrupoEventoCelula() {
-        if (is_null($this->getEventos())) {
-            $eventos = null;
-            if (!empty($this->getGrupoEventoOrdenadosPorDiaDaSemana())) {
-                foreach ($this->getGrupoEventoOrdenadosPorDiaDaSemana() as $ge) {
-                    if ($ge->verificarSeEstaAtivo() && $ge->getEvento()->verificaSeECelula()) {
-                        $eventos[] = $ge;
-                    }
+        $eventos = null;
+        if (!empty($this->getGrupoEvento())) {
+            foreach ($this->getGrupoEvento() as $ge) {
+                if ($ge->verificarSeEstaAtivo() && $ge->getEvento()->verificaSeECelula()) {
+                    $eventos[] = $ge;
                 }
             }
-            $this->setEventos($eventos);
         }
+        $this->setEventos($eventos);
         return $this->getEventos();
     }
 

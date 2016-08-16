@@ -36,8 +36,14 @@ class InputFormulario extends AbstractHelper {
 
     public function renderHtml() {
         $html = '';
+        if ($this->getTipo() == 2) {
+            $html .= '<input type="hidden" id="hidden' . $this->getIdInput() . '" name="hidden' . $this->getIdInput() . '" value=""/>';
+        }
         $html .= '<label for=' . $this->getTraducao() . ' class="field-label">';
         $html .= $this->view->translate($this->getTraducao());
+        if ($this->getIdInput() == ConstantesForm::$FORM_CEP_LOGRADOURO) {
+            $html .= ConstantesForm::$TRADUCAO_CEP_LOGRADOURO_SITE_CORREIOS;
+        }
         $html .= '</label>';
         $html .= '<label for="' . $this->getTraducao() . '" class="field prepend-icon">';
         $input = $this->getForm()->get($this->getIdInput());

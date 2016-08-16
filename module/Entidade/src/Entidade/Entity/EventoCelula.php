@@ -68,6 +68,10 @@ class EventoCelula implements InputFilterAwareInterface {
     /** @ORM\Column(type="integer") */
     protected $evento_id;
 
+    /**
+     * Retorna o evento da célula
+     * @return Evento
+     */
     function getEvento() {
         return $this->evento;
     }
@@ -78,6 +82,10 @@ class EventoCelula implements InputFilterAwareInterface {
 
     function getNome_hospedeiro() {
         return $this->nome_hospedeiro;
+    }
+
+    function getNome_hospedeiroPrimeiroNome() {
+        return explode(' ', $this->nome_hospedeiro)[0];
     }
 
     function getTelefone_hospedeiro() {
@@ -163,26 +171,23 @@ class EventoCelula implements InputFilterAwareInterface {
             $inputFilter->add(array(
                 ConstantesForm::$VALIDACAO_NAME => ConstantesForm::$FORM_HORA,
                 ConstantesForm::$VALIDACAO_REQUIRED => true,
-                ConstantesForm::$VALIDACAO_FILTER => array(
-                    array(ConstantesForm::$VALIDACAO_NAME => ConstantesForm::$VALIDACAO_STRING_TAGS), // removel xml e html string
-                    array(ConstantesForm::$VALIDACAO_NAME => ConstantesForm::$VALIDACAO_STRING_TRIM), // removel espaco do inicio e do final da string
-                    array(ConstantesForm::$VALIDACAO_NAME => ConstantesForm::$VALIDACAO_STRING_TO_UPPER), // transforma em maiusculo
-                ),
                 ConstantesForm::$VALIDACAO_VALIDATORS => array(
                     array(
                         ConstantesForm::$VALIDACAO_NAME => ConstantesForm::$VALIDACAO_NOT_EMPTY,
                     ),
+                ),
+            ));
+            /* Minutos */
+            $inputFilter->add(array(
+                ConstantesForm::$VALIDACAO_NAME => ConstantesForm::$FORM_MINUTOS,
+                ConstantesForm::$VALIDACAO_REQUIRED => true,
+                ConstantesForm::$VALIDACAO_VALIDATORS => array(
                     array(
-                        ConstantesForm::$VALIDACAO_NAME => ConstantesForm::$VALIDACAO_STRING_LENGTH,
-                        ConstantesForm::$VALIDACAO_OPTIONS => array(
-                            ConstantesForm::$VALIDACAO_ENCODING => ConstantesForm::$VALIDACAO_UTF_8,
-                            ConstantesForm::$VALIDACAO_MIN => 5,
-                            ConstantesForm::$VALIDACAO_MAX => 5,
-                        ),
+                        ConstantesForm::$VALIDACAO_NAME => ConstantesForm::$VALIDACAO_NOT_EMPTY,
                     ),
                 ),
             ));
-            /* CEP ou Logradouro */
+            /* CEP */
             $inputFilter->add(array(
                 ConstantesForm::$VALIDACAO_NAME => ConstantesForm::$FORM_CEP_LOGRADOURO,
                 ConstantesForm::$VALIDACAO_REQUIRED => true,

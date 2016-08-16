@@ -21,6 +21,7 @@ class ConstantesForm {
     public static $FORM_CEP_LOGRADOURO = 'cep_logradouro';
     public static $FORM_COMPLEMENTO = 'complemento';
     public static $FORM_UF = 'uf';
+    public static $FORM_HIDDEN = 'hidden';
     public static $FORM_CIDADE = 'cidade';
     public static $FORM_BAIRRO = 'bairro';
     public static $FORM_LOGRADOURO = 'logradouro';
@@ -70,6 +71,7 @@ class ConstantesForm {
     public static $TRADUCAO_MINUTOS = 'Minutes';
     public static $TRADUCAO_SELECIONE = 'SELECT';
     public static $TRADUCAO_CEP_LOGRADOURO = 'CEP';
+    public static $TRADUCAO_CEP_LOGRADOURO_SITE_CORREIOS = ' - Do not know your ZIP code <u><a target="_blank" href="http://www.buscacep.correios.com.br/sistemas/buscacep/">Click Here</a><u>';
     public static $TRADUCAO_COMPLEMENTO = 'Complement';
     public static $TRADUCAO_UF = 'UF';
     public static $TRADUCAO_CIDADE = 'City';
@@ -80,10 +82,13 @@ class ConstantesForm {
     public static $TRADUCAO_TELEFONE_HOSPEDEIRO = 'Phone Host';
     public static $TRADUCAO_BUSCAR_CEP_LOGRADOURO = 'Search';
     public static $TRADUCAO_DIA_DA_SEMANA = 'Day of Week';
+    public static $TRADUCAO_DIA_DA_SEMANA_SIMPLIFICADO = 'Day';
     public static $TRADUCAO_CADASTRO_CELULA = 'Registration Celula';
+    public static $TRADUCAO_NOVA = 'New';
     public static $TRADUCAO_MULTIPLICACAO = 'Multiplication';
     public static $TRADUCAO_DIA_HORA = 'Day / Hour';
     public static $TRADUCAO_DADOS_DO_HOSPEDEIRO = 'Data from Host';
+    public static $TRADUCAO_ALTERAR = 'Change';
     public static $TRADUCAO_VALIDACAO_DIA_DA_SEMANA_REQUERIDO = 'Select one day of week';
     public static $TRADUCAO_VALIDACAO_HORA_REQUERIDO = 'Select Hour';
     public static $TRADUCAO_VALIDACAO_MINUTOS_REQUERIDO = 'Select Minutes';
