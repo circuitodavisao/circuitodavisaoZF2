@@ -57,6 +57,11 @@ class CadastroController extends AbstractActionController {
                         Constantes::$ACTION => ConstantesCadastro::$PAGINA_CELULA,
             ));
         }
+        if ($pagina == ConstantesCadastro::$PAGINA_CELULA_CONFIRMACAO) {
+            return $this->forward()->dispatch(ConstantesCadastro::$CONTROLLER_CADASTRO, array(
+                        Constantes::$ACTION => ConstantesCadastro::$PAGINA_CELULA_CONFIRMACAO,
+            ));
+        }
         if ($pagina == ConstantesCadastro::$PAGINA_SALVAR_CELULA) {
             return $this->forward()->dispatch(ConstantesCadastro::$CONTROLLER_CADASTRO, array(
                         Constantes::$ACTION => ConstantesCadastro::$PAGINA_SALVAR_CELULA,
@@ -140,6 +145,14 @@ class CadastroController extends AbstractActionController {
         $view->addChild($layoutJSValidacao, ConstantesForm::$LAYOUT_STRING_JS_CELULA_VALIDACAO);
 
         return $view;
+    }
+
+    /**
+     * Função para ver listagem de células
+     * GET /cadastroCelulaConfirmacao
+     */
+    public function celulaConfirmacaoAction() {
+        return new ViewModel();
     }
 
     /**
