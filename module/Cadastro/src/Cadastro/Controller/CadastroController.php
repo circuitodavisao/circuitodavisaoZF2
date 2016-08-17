@@ -4,6 +4,7 @@ namespace Cadastro\Controller;
 
 use Cadastro\Controller\Helper\ConstantesCadastro;
 use Cadastro\Controller\Helper\Correios;
+use Cadastro\Controller\Helper\FuncoesCadastro;
 use Cadastro\Controller\Helper\RepositorioORM;
 use Cadastro\Form\CelulaForm;
 use Cadastro\Form\ConstantesForm;
@@ -30,7 +31,7 @@ class CadastroController extends AbstractActionController {
     private $_doctrineORMEntityManager;
 
     /**
-     * Contrutor sobrecarregado com os serviços de ORM e Autenticador
+     * Contrutor sobrecarregado com os serviços de ORM
      */
     public function __construct(EntityManager $doctrineORMEntityManager = null) {
 
@@ -41,7 +42,7 @@ class CadastroController extends AbstractActionController {
 
     /**
      * Função padrão, traz a tela para lancamento
-     * GET /cadastro[:pagina[/:id]]
+     * GET /cadastro[:pagina]
      */
     public function indexAction() {
         $sessao = new Container(Constantes::$NOME_APLICACAO);
@@ -99,6 +100,11 @@ class CadastroController extends AbstractActionController {
             $nomeHospedeiroCelulaCadastrado = $sessao->nomeHospedeiroCelulaCadastrado;
             unset($sessao->nomeHospedeiroCelulaCadastrado);
         }
+        $nomeHospedeiroCelulaAlterada = '';
+        if (!empty($sessao->nomeHospedeiroCelulaAlterada)) {
+            $nomeHospedeiroCelulaAlterada = $sessao->nomeHospedeiroCelulaAlterada;
+            unset($sessao->nomeHospedeiroCelulaAlterada);
+        }
 
         /* Listagem de celulas */
         $lancamentoORM = new LancamentoORM($this->getDoctrineORMEntityManager());
@@ -109,11 +115,17 @@ class CadastroController extends AbstractActionController {
 
         $view = new ViewModel(array(ConstantesForm::$LISTAGEM_CELULAS => $grupoEventosDoTipoCelula));
         /* Javascript */
-        $layoutJS = new ViewModel(array(
-            ConstantesForm::$LAYOUT_NOME_HOSPEDEIRO_CELULA_CADASTRADO => $nomeHospedeiroCelulaCadastrado
-        ));
+        $layoutJS = new ViewModel();
         $layoutJS->setTemplate(ConstantesForm::$LAYOUT_JS_CELULAS);
         $view->addChild($layoutJS, ConstantesForm::$LAYOUT_STRING_JS_CELULAS);
+
+        $layoutJSValidacao = new ViewModel(array(
+            ConstantesForm::$LAYOUT_NOME_HOSPEDEIRO_CELULA_CADASTRADO => $nomeHospedeiroCelulaCadastrado,
+            ConstantesForm::$LAYOUT_NOME_HOSPEDEIRO_CELULA_ALTERADA => $nomeHospedeiroCelulaAlterada
+        ));
+        $layoutJSValidacao->setTemplate(ConstantesForm::$LAYOUT_JS_CELULAS_VALIDACAO);
+        $view->addChild($layoutJSValidacao, ConstantesForm::$LAYOUT_STRING_JS_CELULAS_VALIDACAO);
+
         return $view;
     }
 
@@ -122,18 +134,23 @@ class CadastroController extends AbstractActionController {
      * GET /cadastroCelula
      */
     public function celulaAction() {
+        $enderecoHidden = '';
+
         /* Verificando a se tem algum id na sessão */
         $sessao = new Container(Constantes::$NOME_APLICACAO);
         $eventoCelulaNaSessao = new EventoCelula();
         if (!empty($sessao->idSessao)) {
             $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
             $eventoCelulaNaSessao = $repositorioORM->getEventoCelulaORM()->encontrarPorIdEventoCelula($sessao->idSessao);
+        } else {
+            $enderecoHidden = ConstantesForm::$FORM_HIDDEN;
         }
 
         $celulaForm = new CelulaForm(ConstantesForm::$FORM_CELULA, $eventoCelulaNaSessao);
 
         $view = new ViewModel(array(
             ConstantesForm::$FORM_CELULA => $celulaForm,
+            ConstantesForm::$FORM_ENDERECO_HIDDEN => $enderecoHidden
         ));
         /* Javascript */
         $layoutJS = new ViewModel();
@@ -173,6 +190,8 @@ class CadastroController extends AbstractActionController {
 
                 /* validação */
                 if ($celulaForm->isValid()) {
+                    $sessao = new Container(Constantes::$NOME_APLICACAO);
+                    $criarNovaCelula = true;
                     $validatedData = $celulaForm->getData();
 
                     /* Entidades */
@@ -183,30 +202,93 @@ class CadastroController extends AbstractActionController {
                     $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
                     $lancamentoORM = new LancamentoORM($this->getDoctrineORMEntityManager());
 
-                    $eventoCelula->exchangeArray($celulaForm->getData());
-                    $eventoCelula->setTelefone_hospedeiro($validatedData[ConstantesForm::$FORM_DDD_HOSPEDEIRO] . $validatedData[ConstantesForm::$FORM_TELEFONE_HOSPEDEIRO]);
-                    $eventoCelula->setUf($post_data[(ConstantesForm::$FORM_HIDDEN . ConstantesForm::$FORM_UF)]);
-                    $eventoCelula->setCidade($post_data[(ConstantesForm::$FORM_HIDDEN . ConstantesForm::$FORM_CIDADE)]);
-                    $eventoCelula->setLogradouro($post_data[(ConstantesForm::$FORM_HIDDEN . ConstantesForm::$FORM_LOGRADOURO)]);
-                    $eventoCelula->setBairro($post_data[(ConstantesForm::$FORM_HIDDEN . ConstantesForm::$FORM_BAIRRO)]);
-                    $eventoCelula->setComplemento(strtoupper($post_data[ConstantesForm::$FORM_COMPLEMENTO]));
-                    $eventoCelula->setCep($validatedData[ConstantesForm::$FORM_CEP_LOGRADOURO]);
-                    $eventoCelula->setEvento($evento);
+                    /* ALTERANDO */
+                    if (!empty($post_data[ConstantesForm::$FORM_ID])) {
+                        $criarNovaCelula = false;
+                        $eventoCelulaAtual = $repositorioORM->getEventoCelulaORM()->encontrarPorIdEventoCelula($post_data[ConstantesForm::$FORM_ID]);
 
-                    if (empty($post_data[ConstantesForm::$FORM_ID])) {
+                        /* Dia foi alterado */
+                        if ($post_data[ConstantesForm::$FORM_DIA_DA_SEMANA] != $eventoCelulaAtual->getEvento()->getDia()) {
+                            /* Persistindo */
+                            /* Inativando o Evento */
+                            $eventoParaInativar = $eventoCelulaAtual->getEvento();
+                            $eventoParaInativar->setData_inativacao(FuncoesCadastro::dataAtual());
+                            $eventoParaInativar->setHora_inativacao(FuncoesCadastro::horaAtual());
+                            $lancamentoORM->getEventoORM()->persistirEvento($eventoParaInativar);
+                            /* Inativando o Grupo Evento */
+                            $grupoEventoAtivos = $eventoParaInativar->getGrupoEventoAtivos();
+                            $grupoEventoAtivos[0]->setData_inativacao(FuncoesCadastro::dataAtual());
+                            $grupoEventoAtivos[0]->setHora_inativacao(FuncoesCadastro::horaAtual());
+                            $repositorioORM->getGrupoEventoORM()->persistirGrupoEvento($grupoEventoAtivos[0]);
+                            $criarNovaCelula = true;
+                        } else {
+                            /* Dia não foi alterado */
+
+                            /* Dados exclusivo da célula */
+                            if ($validatedData[ConstantesForm::$FORM_NOME_HOSPEDEIRO] != $eventoCelulaAtual->getNome_hospedeiro()) {
+                                $eventoCelulaAtual->setNome_hospedeiro($validatedData[ConstantesForm::$FORM_NOME_HOSPEDEIRO]);
+                            }
+                            if ($validatedData[ConstantesForm::$FORM_DDD_HOSPEDEIRO] != $eventoCelulaAtual->getTelefone_hospedeiroDDDSemTelefone()) {
+                                $eventoCelulaAtual->setTelefone_hospedeiro($validatedData[ConstantesForm::$FORM_DDD_HOSPEDEIRO] . $validatedData[ConstantesForm::$FORM_TELEFONE_HOSPEDEIRO]);
+                            }
+                            if ($validatedData[ConstantesForm::$FORM_TELEFONE_HOSPEDEIRO] != $eventoCelulaAtual->getTelefone_hospedeiroTelefoneSemDDD()) {
+                                $eventoCelulaAtual->setTelefone_hospedeiro($validatedData[ConstantesForm::$FORM_DDD_HOSPEDEIRO] . $validatedData[ConstantesForm::$FORM_TELEFONE_HOSPEDEIRO]);
+                            }
+                            if ($validatedData[ConstantesForm::$FORM_CEP_LOGRADOURO] != $eventoCelulaAtual->getCep()) {
+                                $eventoCelulaAtual->setCep($validatedData[ConstantesForm::$FORM_CEP_LOGRADOURO]);
+                            }
+                            if ($post_data[(ConstantesForm::$FORM_HIDDEN . ConstantesForm::$FORM_UF)] != $eventoCelulaAtual->getUf()) {
+                                $eventoCelulaAtual->setUf($post_data[(ConstantesForm::$FORM_HIDDEN . ConstantesForm::$FORM_UF)]);
+                            }
+                            if ($post_data[(ConstantesForm::$FORM_HIDDEN . ConstantesForm::$FORM_CIDADE)] != $eventoCelulaAtual->getCidade()) {
+                                $eventoCelulaAtual->setCidade($post_data[(ConstantesForm::$FORM_HIDDEN . ConstantesForm::$FORM_CIDADE)]);
+                            }
+                            if ($post_data[(ConstantesForm::$FORM_HIDDEN . ConstantesForm::$FORM_BAIRRO)] != $eventoCelulaAtual->getBairro()) {
+                                $eventoCelulaAtual->setBairro($post_data[(ConstantesForm::$FORM_HIDDEN . ConstantesForm::$FORM_BAIRRO)]);
+                            }
+                            if ($post_data[(ConstantesForm::$FORM_HIDDEN . ConstantesForm::$FORM_LOGRADOURO)] != $eventoCelulaAtual->getLogradouro()) {
+                                $eventoCelulaAtual->setLogradouro($post_data[(ConstantesForm::$FORM_HIDDEN . ConstantesForm::$FORM_LOGRADOURO)]);
+                            }
+                            if ($post_data[(ConstantesForm::$FORM_COMPLEMENTO)] != $eventoCelulaAtual->getComplemento()) {
+                                $eventoCelulaAtual->setComplemento(strtoupper($post_data[(ConstantesForm::$FORM_COMPLEMENTO)]));
+                            }
+                            $repositorioORM->getEventoCelulaORM()->persistirEventoCelula($eventoCelulaAtual);
+                            /* Dados do Evento - Hora */
+                            $eventoAtual = $eventoCelulaAtual->getEvento();
+                            if ($validatedData[ConstantesForm::$FORM_HORA] != $eventoAtual->getHoraSemMinutosESegundos()) {
+                                $eventoAtual->setHora($validatedData[ConstantesForm::$FORM_HORA] . ':' . $validatedData[ConstantesForm::$FORM_MINUTOS]);
+                            }
+                            if ($validatedData[ConstantesForm::$FORM_MINUTOS] != $eventoAtual->getMinutosSemHorasESegundos()) {
+                                $eventoAtual->setHora($validatedData[ConstantesForm::$FORM_HORA] . ':' . $validatedData[ConstantesForm::$FORM_MINUTOS]);
+                            }
+                            $lancamentoORM->getEventoORM()->persistirEvento($eventoAtual);
+                            /* Sessão */
+                            $sessao->nomeHospedeiroCelulaAlterada = $eventoCelulaAtual->getNome_hospedeiro();
+                        }
+                    }
+                    if ($criarNovaCelula) {
                         /* Entidade selecionada */
-                        $sessao = new Container(Constantes::$NOME_APLICACAO);
                         $idEntidadeAtual = $sessao->idEntidadeAtual;
                         $entidade = $lancamentoORM->getEntidadeORM()->encontrarPorIdEntidade($idEntidadeAtual);
 
-                        $evento->setData_criacao(date('Y-m-d'));
-                        $evento->setHora_criacao(date('H:s:i'));
+                        $eventoCelula->exchangeArray($celulaForm->getData());
+                        $eventoCelula->setTelefone_hospedeiro($validatedData[ConstantesForm::$FORM_DDD_HOSPEDEIRO] . $validatedData[ConstantesForm::$FORM_TELEFONE_HOSPEDEIRO]);
+                        $eventoCelula->setUf($post_data[(ConstantesForm::$FORM_HIDDEN . ConstantesForm::$FORM_UF)]);
+                        $eventoCelula->setCidade($post_data[(ConstantesForm::$FORM_HIDDEN . ConstantesForm::$FORM_CIDADE)]);
+                        $eventoCelula->setLogradouro($post_data[(ConstantesForm::$FORM_HIDDEN . ConstantesForm::$FORM_LOGRADOURO)]);
+                        $eventoCelula->setBairro($post_data[(ConstantesForm::$FORM_HIDDEN . ConstantesForm::$FORM_BAIRRO)]);
+                        $eventoCelula->setComplemento(strtoupper($post_data[ConstantesForm::$FORM_COMPLEMENTO]));
+                        $eventoCelula->setCep($validatedData[ConstantesForm::$FORM_CEP_LOGRADOURO]);
+                        $eventoCelula->setEvento($evento);
+
+                        $evento->setData_criacao(FuncoesCadastro::dataAtual());
+                        $evento->setHora_criacao(FuncoesCadastro::horaAtual());
                         $evento->setHora($validatedData[ConstantesForm::$FORM_HORA] . ':' . $validatedData[ConstantesForm::$FORM_MINUTOS]);
                         $evento->setDia($validatedData[ConstantesForm::$FORM_DIA_DA_SEMANA]);
                         $evento->setEventoTipo($repositorioORM->getEventoTipoORM()->encontrarPorIdEventoTipo(2));
 
-                        $grupoEvento->setData_criacao(date('Y-m-d'));
-                        $grupoEvento->setHora_criacao(date('H:s:i'));
+                        $grupoEvento->setData_criacao(FuncoesCadastro::dataAtual());
+                        $grupoEvento->setHora_criacao(FuncoesCadastro::horaAtual());
                         $grupoEvento->setGrupo($entidade->getGrupo());
                         $grupoEvento->setEvento($evento);
 
@@ -216,22 +298,22 @@ class CadastroController extends AbstractActionController {
                         $repositorioORM->getGrupoEventoORM()->persistirGrupoEvento($grupoEvento);
                         /* Sessão */
                         $sessao->nomeHospedeiroCelulaCadastrado = $eventoCelula->getNome_hospedeiro();
-                    } else {
-                        echo "ALTERARNDO TRUTA!!";
-                        $eventoCelula = $repositorioORM->getEventoCelulaORM()->encontrarPorIdEventoCelula($post_data[ConstantesForm::$FORM_ID]);
                     }
                 } else {
                     echo "ERRO: Cadastro invalido!<br />";
-//                    foreach ($celulaForm->getMessages() as $value) {
-//                        foreach ($value as $key => $value) {
-//                            echo "$key => $value <br />";
-//                        }
-//                    }
+                    foreach ($celulaForm->getMessages() as $value) {
+                        foreach ($value as $key => $value) {
+                            echo "$key => $value <br />";
+                        }
+                    }
                 }
 
-                return $this->forward()->dispatch(ConstantesCadastro::$CONTROLLER_CADASTRO, array(
-                            Constantes::$ACTION => ConstantesCadastro::$PAGINA_CELULAS,
+                return $this->redirect()->toRoute(ConstantesCadastro::$ROUTE_CADASTRO, array(
+                            ConstantesCadastro::$PAGINA => ConstantesCadastro::$PAGINA_CELULAS,
                 ));
+//                return $this->forward()->dispatch(ConstantesCadastro::$CONTROLLER_CADASTRO, array(
+//                            Constantes::$ACTION => ConstantesCadastro::$PAGINA_CELULAS,
+//                ));
             } catch (Exception $exc) {
                 echo $exc->getMessage();
             }

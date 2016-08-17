@@ -23,7 +23,6 @@ class EventoCelula implements InputFilterAwareInterface {
     public function exchangeArray($data) {
         $this->nome_hospedeiro = (!empty($data[ConstantesForm::$FORM_NOME_HOSPEDEIRO]) ? strtoupper($data[ConstantesForm::$FORM_NOME_HOSPEDEIRO]) : null);
         $this->complemento = (!empty($data[ConstantesForm::$FORM_COMPLEMENTO]) ? strtoupper($data[ConstantesForm::$FORM_COMPLEMENTO]) : null);
-        $this->cep = (!empty($data[ConstantesForm::$FORM_CEP_LOGRADOURO]) ? $data[ConstantesForm::$FORM_CEP_LOGRADOURO] : null);
     }
 
     protected $inputFilter;
@@ -90,6 +89,24 @@ class EventoCelula implements InputFilterAwareInterface {
 
     function getTelefone_hospedeiro() {
         return $this->telefone_hospedeiro;
+    }
+
+    function getTelefone_hospedeiroDDDSemTelefone() {
+        return substr($this->telefone_hospedeiro, 0, 2);
+    }
+
+    function getTelefone_hospedeiroTelefoneSemDDD() {
+        return substr($this->telefone_hospedeiro, 2);
+    }
+
+    function getTelefone_hospedeiroFormatado() {
+        $telefoneFormatado = '(' .
+                substr($this->getTelefone_hospedeiro(), 0, 2) .
+                ')&nbsp;' .
+                substr($this->getTelefone_hospedeiro(), 2, 4) .
+                '-' .
+                substr($this->getTelefone_hospedeiro(), 6);
+        return $telefoneFormatado;
     }
 
     function getLogradouro() {

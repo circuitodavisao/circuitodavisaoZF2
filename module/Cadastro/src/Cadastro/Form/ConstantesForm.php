@@ -44,6 +44,7 @@ class ConstantesForm {
     public static $FORM_BTN_DEFAULT_DARK = 'btn ladda-button btn-default dark';
     public static $FORM_CSRF = 'csrf';
     public static $FORM_CELULA = 'CelulaForm';
+    public static $FORM_ENDERECO_HIDDEN = 'enderecoHidden';
     public static $FORM_ACTION = 'action';
     public static $FORM_READONLY = 'readonly';
     public static $FORM_DISABLED = 'disabled';
@@ -109,8 +110,11 @@ class ConstantesForm {
     public static $LAYOUT_JS_CELULA_VALIDACAO = 'layout/layout-js-celula-validacao';
     public static $LAYOUT_STRING_JS_CELULA_VALIDACAO = 'layoutJSCelulaValidacao';
     public static $LAYOUT_JS_CELULAS = 'layout/layout-js-celulas';
+    public static $LAYOUT_JS_CELULAS_VALIDACAO = 'layout/layout-js-celulas-validacao';
     public static $LAYOUT_STRING_JS_CELULAS = 'layoutJSCelulas';
+    public static $LAYOUT_STRING_JS_CELULAS_VALIDACAO = 'layoutJSCelulasValidacao';
     public static $LAYOUT_NOME_HOSPEDEIRO_CELULA_CADASTRADO = 'nomeHospedeiroCelulaCadastrado';
+    public static $LAYOUT_NOME_HOSPEDEIRO_CELULA_ALTERADA = 'nomeHospedeiroCelulaAlterada';
 
     /* Listagem */
     public static $LISTAGEM_CELULAS = 'celulas';

@@ -36,8 +36,13 @@ class InputFormulario extends AbstractHelper {
 
     public function renderHtml() {
         $html = '';
+        $input = $this->getForm()->get($this->getIdInput());
         if ($this->getTipo() == 2) {
-            $html .= '<input type="hidden" id="hidden' . $this->getIdInput() . '" name="hidden' . $this->getIdInput() . '" value=""/>';
+            $valor = '';
+            if (!empty($input->getValue())) {
+                $valor = $input->getValue();
+            }
+            $html .= '<input type="hidden" id="hidden' . $this->getIdInput() . '" name="hidden' . $this->getIdInput() . '" value="' . $valor . '"/>';
         }
         $html .= '<label for=' . $this->getTraducao() . ' class="field-label">';
         $html .= $this->view->translate($this->getTraducao());
@@ -46,7 +51,7 @@ class InputFormulario extends AbstractHelper {
         }
         $html .= '</label>';
         $html .= '<label for="' . $this->getTraducao() . '" class="field prepend-icon">';
-        $input = $this->getForm()->get($this->getIdInput());
+
         /* Desabilitar */
         if ($this->getTipo() == 2) {
             $input->setAttribute(ConstantesForm::$FORM_DISABLED, ConstantesForm::$FORM_DISABLED);

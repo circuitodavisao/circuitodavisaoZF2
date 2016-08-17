@@ -24,6 +24,7 @@ class ConstantesCadastro {
     public static $ENTIDADE_GRUPO_EVENTO = 'Entidade\Entity\GrupoEvento';
     /* Traduções */
     public static $TRADUCAO_CELULA_CADASTRADA = 'Cell Registered';
+    public static $TRADUCAO_CELULA_ALTERADA = 'Cell Changed';
     public static $TRADUCAO_CELULA_CADASTRADA_NOME_HOSPEDEIRO = 'Host: ';
 
 }

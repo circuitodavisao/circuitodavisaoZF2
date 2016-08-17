@@ -1,0 +1,56 @@
+<?php
+
+use Cadastro\Controller\Helper\ConstantesCadastro;
+
+$titulo = '';
+$texto = '';
+$mostrar = false;
+if (!empty($this->nomeHospedeiroCelulaCadastrado)) {
+    $mostrar = true;
+    $titulo = $this->translate(ConstantesCadastro::$TRADUCAO_CELULA_CADASTRADA);
+    $texto = $this->translate(ConstantesCadastro::$TRADUCAO_CELULA_CADASTRADA_NOME_HOSPEDEIRO) . $this->nomeHospedeiroCelulaCadastrado;
+}
+if (!empty($this->nomeHospedeiroCelulaAlterada)) {
+    $mostrar = true;
+    $titulo = $this->translate(ConstantesCadastro::$TRADUCAO_CELULA_ALTERADA);
+    $texto = $this->translate(ConstantesCadastro::$TRADUCAO_CELULA_CADASTRADA_NOME_HOSPEDEIRO) . $this->nomeHospedeiroCelulaAlterada;
+}
+?>
+<script type="text/javascript">
+    var stack_bar_bottom = {
+        "dir1": "up",
+        "dir2": "right",
+        "spacing1": 0,
+        "spacing2": 0
+    };
+
+    var noteStyle = 'success';
+    var noteShadow = true;
+    var noteOpacity = 1;
+    var addClass = 'stack_bar_bottom';
+    var width = '70%';
+    var titulo = '<?php echo $titulo; ?>';
+    var texto = '<?php echo $texto; ?>';
+
+<?php
+if ($mostrar) {
+    echo 'window.onload = initPage;';
+}
+?>
+
+    function initPage() {
+
+        new PNotify({
+            title: titulo,
+            text: texto,
+            shadow: noteShadow,
+            opacity: noteOpacity,
+            addclass: addClass,
+            type: noteStyle,
+            stack: stack_bar_bottom,
+            width: width,
+            delay: 10000
+        });
+
+    }
+</script>

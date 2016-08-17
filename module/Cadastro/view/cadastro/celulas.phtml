@@ -17,46 +17,54 @@ use Lancamento\Controller\Helper\FuncoesLancamento;
         </blockquote>
         <div class="panel heading-border panel-danger">
             <div class="panel-body bg-light">
-                <table class="table">
-                    <thead>
-                        <tr class="">
-                            <th class="text-center"><?php echo $this->translate(ConstantesForm::$TRADUCAO_DIA_DA_SEMANA_SIMPLIFICADO) . '/' . $this->translate(ConstantesForm::$TRADUCAO_HORA); ?></th>
-                            <th class="text-center"><?php echo $this->translate(ConstantesForm::$TRADUCAO_NOME_HOSPEDEIRO); ?></th>
-                            <th class="text-center visible-lg visible-md visible-sm"><?php echo $this->translate(ConstantesForm::$TRADUCAO_TELEFONE_HOSPEDEIRO); ?></th>
-                            <th class="text-center visible-lg visible-md visible-sm"><?php echo $this->translate(ConstantesForm::$TRADUCAO_LOGRADOURO); ?></th>
-                            <th class="text-center"></th>
-                        </tr>
-                    </thead>
-                    <tbody>  
-                        <?php
-                        foreach ($this->celulas as $ge) {
-                            $evento = $ge->getEvento();
-                            $celula = $evento->getEventoCelula();
-                            if (!is_null($celula)) {
-                                $diaDaSemanaAjustado = FuncoesLancamento::diaDaSemanaPorDia($evento->getDia());
-                                echo '<tr>';
-                                echo '<td class="text-center">' . $diaDaSemanaAjustado . '/' . $evento->getHoraFormatoHoraMinuto() . '</td>';
-                                echo '<td class="text-center">' . $celula->getNome_hospedeiroPrimeiroNome() . '</td>';
-                                echo '<td class="text-center visible-lg visible-md visible-sm">' . $celula->getTelefone_hospedeiro() . '</td>';
-                                echo '<td class="text-center visible-lg visible-md visible-sm">' . $celula->getLogradouro() . '</td>';
-                                echo '<td class="text-center">';
-                                echo '<button data-style="zoom-in" type="button" class="btn ladda-button btn-default btn-xs" onclick="funcaoCadastro(\'' . ConstantesCadastro::$PAGINA_CELULA . '\', ' . $celula->getId() . ');">';
-                                echo '<i class="fa fa-eye" aria-hidden="true"></i></button>';
-                                echo '&nbsp;<button data-style="zoom-in" type="button" class="btn ladda-button btn-danger btn-xs">';
-                                echo '<i class="fa fa-times" aria-hidden="true"></i></button>';
-                                echo '</td>';
-                                echo '</tr>';
+                <?php if (!empty($this->celulas)) { ?>
+                    <table class="table">
+                        <thead>
+                            <tr class="">
+                                <th class="text-center"><?php echo $this->translate(ConstantesForm::$TRADUCAO_DIA_DA_SEMANA_SIMPLIFICADO) . '/' . $this->translate(ConstantesForm::$TRADUCAO_HORA); ?></th>
+                                <th class="text-center"><?php echo $this->translate(ConstantesForm::$TRADUCAO_NOME_HOSPEDEIRO); ?></th>
+                                <th class="text-center visible-lg visible-md visible-sm"><?php echo $this->translate(ConstantesForm::$TRADUCAO_TELEFONE_HOSPEDEIRO); ?></th>
+                                <th class="text-center visible-lg visible-md visible-sm"><?php echo $this->translate(ConstantesForm::$TRADUCAO_LOGRADOURO); ?></th>
+                                <th class="text-center"></th>
+                            </tr>
+                        </thead>
+                        <tbody>  
+                            <?php
+                            foreach ($this->celulas as $ge) {
+                                $evento = $ge->getEvento();
+                                $celula = $evento->getEventoCelula();
+                                if (!is_null($celula)) {
+                                    $diaDaSemanaAjustado = FuncoesLancamento::diaDaSemanaPorDia($evento->getDia());
+                                    echo '<tr>';
+                                    echo '<td class="text-center">' . $diaDaSemanaAjustado . '/' . $evento->getHoraFormatoHoraMinutoParaListagem() . '</td>';
+                                    echo '<td class="text-center">' . $celula->getNome_hospedeiroPrimeiroNome() . '</td>';
+                                    echo '<td class="text-center visible-lg visible-md visible-sm">' . $celula->getTelefone_hospedeiroFormatado() . '</td>';
+                                    echo '<td class="text-center visible-lg visible-md visible-sm">' . $celula->getLogradouro() . '&nbsp;' . $celula->getComplemento() . '</td>';
+                                    echo '<td class="text-center">';
+                                    echo '<button data-style="zoom-in" type="button" class="btn ladda-button btn-default btn-xs" onclick="funcaoCadastro(\'' . ConstantesCadastro::$PAGINA_CELULA . '\', ' . $celula->getId() . ');">';
+                                    echo '<i class="fa fa-eye" aria-hidden="true"></i></button>';
+                                    echo '&nbsp;<button data-style="zoom-in" type="button" class="btn ladda-button btn-danger btn-xs">';
+                                    echo '<i class="fa fa-times" aria-hidden="true"></i></button>';
+                                    echo '</td>';
+                                    echo '</tr>';
+                                }
                             }
-                        }
-                        ?>
-                    </tbody>
-                </table>
+                            ?>
+                        </tbody>
+                    </table>
+                <?php } else { ?>
+                    <div class="alert alert-warning"><i class="fa fa-warning pr10" aria-hidden="true"></i>&nbsp;Sem Células cadastradas!</div>
+                <?php } ?>
             </div>
             <div class="panel-footer text-right">
+                <?php // if (count($this->celulas) < 2) { ?>
                 <button onclick="funcaoCadastro('Celula', 0);" data-style="zoom-in" type="button" class="btn ladda-button btn-dark btn-xs"><i class="fa fa-plus" aria-hidden="true"></i> <?php echo $this->translate(ConstantesForm::$TRADUCAO_NOVA); ?></button>
+                <?php // } else { ?>
+                <!--<div class="alert alert-warning"><i class="fa fa-warning pr10" aria-hidden="true"></i>&nbsp;Número máximo de células alcançado!</div>-->
+                <?php // } ?>                    
             </div>
         </div>
     </div>
 </div>
 <?php
-echo $this->layoutJSCelulas;
+echo $this->layoutJSCelulasValidacao;

@@ -4,6 +4,8 @@ namespace Cadastro\Controller\Helper;
 
 use Cadastro\Controller\Helper\ConstantesCadastro;
 use Doctrine\ORM\EntityManager;
+use Entidade\Entity\EventoCelula;
+use Exception;
 
 /**
  * Nome: EventoCelulaORM.php

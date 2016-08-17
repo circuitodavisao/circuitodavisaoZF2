@@ -10,23 +10,6 @@ use Cadastro\Form\ConstantesForm;
      */
     function initPage() {
 
-        /* @time picker
-         ------------------------------------------------------------------ */
-        $('.inline-tp').timepicker();
-
-        $('#hora').timepicker({
-            beforeShow: function (input, inst) {
-                var newclass = 'admin-form';
-                var themeClass = $(this).parents('.admin-form').attr('class');
-                var smartpikr = inst.dpDiv.parent();
-                if (!smartpikr.hasClass(themeClass)) {
-                    inst.dpDiv.wrap('<div class="' + themeClass + '"></div>');
-                }
-
-                inst.dpDiv.css({marginTop: '110px', marginLeft: '25px'});
-            }
-        });
-
         $('#<?php echo $this->translate(ConstantesForm::$FORM_CELULA); ?>').validate({
             /* @validation states + elements 
              ------------------------------------------- */

@@ -147,6 +147,14 @@ class Evento {
         return $this->hora;
     }
 
+    function getHoraSemMinutosESegundos() {
+        return substr($this->getHora(), 0, 2);
+    }
+
+    function getMinutosSemHorasESegundos() {
+        return substr($this->getHora(), 3, 2);
+    }
+
     function getHoraFormatoHoraMinuto() {
         $resposta = '';
         /* Se for hora em ponto hora mais 'H' */
@@ -158,6 +166,14 @@ class Evento {
             $resposta = $hora . '.';
         }
         return $resposta;
+    }
+
+    /**
+     * Retorna as horas com os minutos apenas
+     * @return String
+     */
+    function getHoraFormatoHoraMinutoParaListagem() {
+        return substr($this->hora, 0, 5);
     }
 
     function setEventoTipo($eventoTipo) {
@@ -178,6 +194,20 @@ class Evento {
      */
     function getGrupoEvento() {
         return $this->grupoEvento;
+    }
+
+    /**
+     * Retorna o grupo evento
+     * @return GrupoEvento
+     */
+    function getGrupoEventoAtivos() {
+        $grupoEventos = null;
+        foreach ($this->getGrupoEvento() as $ge) {
+            if ($ge->verificarSeEstaAtivo()) {
+                $grupoEventos[] = $ge;
+            }
+        }
+        return $grupoEventos;
     }
 
     function setGrupoEvento($grupoEvento) {
