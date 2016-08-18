@@ -73,14 +73,14 @@ class CadastroController extends AbstractActionController {
                         Constantes::$ACTION => ConstantesCadastro::$PAGINA_BUSCAR_ENDERECO,
             ));
         }
-        if ($pagina == ConstantesCadastro::$PAGINA_PRE_EXCLUSAO) {
+        if ($pagina == ConstantesCadastro::$PAGINA_CELULA_PRE_EXCLUSAO) {
             return $this->forward()->dispatch(ConstantesCadastro::$CONTROLLER_CADASTRO, array(
-                        Constantes::$ACTION => ConstantesCadastro::$PAGINA_PRE_EXCLUSAO,
+                        Constantes::$ACTION => ConstantesCadastro::$PAGINA_CELULA_PRE_EXCLUSAO,
             ));
         }
-        if ($pagina == ConstantesCadastro::$PAGINA_EXCLUSAO) {
+        if ($pagina == ConstantesCadastro::$PAGINA_CELULA_EXCLUSAO) {
             return $this->forward()->dispatch(ConstantesCadastro::$CONTROLLER_CADASTRO, array(
-                        Constantes::$ACTION => ConstantesCadastro::$PAGINA_EXCLUSAO,
+                        Constantes::$ACTION => ConstantesCadastro::$PAGINA_CELULA_EXCLUSAO,
             ));
         }
         /* Funcoes */
@@ -89,7 +89,6 @@ class CadastroController extends AbstractActionController {
             $request = $this->getRequest();
             $post_data = $request->getPost();
 
-            $sessao->idFuncaoLancamento = $post_data[Constantes::$ID];
             return $this->forward()->dispatch(ConstantesCadastro::$CONTROLLER_CADASTRO, array(
                         Constantes::$ACTION => ConstantesLancamento::$PAGINA_FUNCOES,
             ));
@@ -186,6 +185,28 @@ class CadastroController extends AbstractActionController {
      */
     public function celulaConfirmacaoAction() {
         return new ViewModel();
+    }
+
+    /**
+     * Tela com formulário de confirmação de cadastro de celula
+     * GET /cadastroCelulaPreCadastro
+     */
+    public function celulaPreCadastroAction() {
+        /* Verificando a se tem algum id na sessão */
+        $sessao = new Container(Constantes::$NOME_APLICACAO);
+        $eventoCelulaNaSessao = new EventoCelula();
+        if (!empty($sessao->idSessao)) {
+            $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
+            $eventoCelulaNaSessao = $repositorioORM->getEventoCelulaORM()->encontrarPorIdEventoCelula($sessao->idSessao);
+        }
+        /* Helper Controller */
+        $lancamentoORM = new LancamentoORM($this->getDoctrineORMEntityManager());
+        $entidade = $lancamentoORM->getEntidadeORM()->encontrarPorIdEntidade($sessao->idEntidadeAtual);
+
+        return new ViewModel(array(
+            ConstantesForm::$CELULA => $eventoCelulaNaSessao,
+            ConstantesLancamento::$ENTIDADE => $entidade
+        ));
     }
 
     /**
@@ -376,6 +397,7 @@ class CadastroController extends AbstractActionController {
                         $repositorioORM->getGrupoEventoORM()->persistirGrupoEvento($grupoEvento);
                         /* Sessão */
                         $sessao->nomeHospedeiroCelulaCadastrado = $eventoCelula->getNome_hospedeiro();
+                        $sessao->idSessao = $eventoCelula->getId();
                     }
                 } else {
                     echo "ERRO: Cadastro invalido!<br />";
@@ -386,12 +408,12 @@ class CadastroController extends AbstractActionController {
                     }
                 }
 
-                return $this->redirect()->toRoute(ConstantesCadastro::$ROUTE_CADASTRO, array(
-                            ConstantesCadastro::$PAGINA => ConstantesCadastro::$PAGINA_CELULAS,
-                ));
-//                return $this->forward()->dispatch(ConstantesCadastro::$CONTROLLER_CADASTRO, array(
-//                            Constantes::$ACTION => ConstantesCadastro::$PAGINA_CELULAS,
+//                return $this->redirect()->toRoute(ConstantesCadastro::$ROUTE_CADASTRO, array(
+//                            ConstantesCadastro::$PAGINA => ConstantesCadastro::$PAGINA_CELULA_PRE_CADASTRO,
 //                ));
+                return $this->forward()->dispatch(ConstantesCadastro::$CONTROLLER_CADASTRO, array(
+                            Constantes::$ACTION => ConstantesCadastro::$PAGINA_CELULA_PRE_CADASTRO,
+                ));
             } catch (Exception $exc) {
                 echo $exc->getMessage();
             }

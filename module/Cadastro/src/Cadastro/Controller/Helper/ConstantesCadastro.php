@@ -13,8 +13,9 @@ class ConstantesCadastro {
     public static $PAGINA = 'pagina';
     public static $PAGINA_CELULAS = 'Celulas';
     public static $PAGINA_CELULA = 'Celula';
-    public static $PAGINA_PRE_EXCLUSAO = 'CelulaPreExclusao';
-    public static $PAGINA_EXCLUSAO = 'CelulaExclusao';
+    public static $PAGINA_CELULA_PRE_CADASTRO = 'CelulaPreCadastro';
+    public static $PAGINA_CELULA_PRE_EXCLUSAO = 'CelulaPreExclusao';
+    public static $PAGINA_CELULA_EXCLUSAO = 'CelulaExclusao';
     public static $PAGINA_CELULA_CONFIRMACAO = 'CelulaConfirmacao';
     public static $PAGINA_SALVAR_CELULA = 'SalvarCelula';
     public static $PAGINA_BUSCAR_ENDERECO = 'BuscarEndereco';

@@ -105,8 +105,11 @@ class ConstantesForm {
     public static $TRADUCAO_VALIDACAO_DDD_HOSPEDEIRO_INVALIDO = 'Invalid DDD';
     public static $TRADUCAO_VALIDACAO_TELEFONE_HOSPEDEIRO_REQUERIDO = 'Enter Phone';
     public static $TRADUCAO_VALIDACAO_TELEFONE_HOSPEDEIRO_INVALIDO = 'Invalid Phone';
+    public static $TRADUCAO_CONFIRMACAO_CADASTRO_CELULA = 'Confirmation <strong><span class="text-danger">Cell Creation</span></strong>';
     public static $TRADUCAO_CONFIRMACAO_EXCLUSAO_CELULA = 'Confirmation <strong><span class="text-danger">Cell Exclusion</span></strong>';
+    public static $TRADUCAO_PERGUNTA_CADASTRO_CELULA = 'The data are correct?';
     public static $TRADUCAO_PERGUNTA_EXCLUSAO_CELULA = 'Really want to delete this cell?';
+    public static $TRADUCAO_CIENCIA_CADASTRO_CELULA = 'I confirm that the data is correct';
     public static $TRADUCAO_CIENCIA_EXCLUSAO_CELULA = 'I am <span class="text-danger">aware</span> that by <span class="text-danger">excluding cell</span> is the same no longer appear in the <span class="text-danger">launch line</span>!';
     public static $TRADUCAO_MOTIVO_EXCLUSAO_CELULA = 'What reason for exclusion?';
     public static $TRADUCAO_DESCREVA_MOTIVO_EXCLUSAO_CELULA = 'Please specify the reason';
