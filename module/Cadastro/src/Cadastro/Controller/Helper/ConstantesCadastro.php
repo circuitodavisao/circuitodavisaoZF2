@@ -13,6 +13,8 @@ class ConstantesCadastro {
     public static $PAGINA = 'pagina';
     public static $PAGINA_CELULAS = 'Celulas';
     public static $PAGINA_CELULA = 'Celula';
+    public static $PAGINA_PRE_EXCLUSAO = 'CelulaPreExclusao';
+    public static $PAGINA_EXCLUSAO = 'CelulaExclusao';
     public static $PAGINA_CELULA_CONFIRMACAO = 'CelulaConfirmacao';
     public static $PAGINA_SALVAR_CELULA = 'SalvarCelula';
     public static $PAGINA_BUSCAR_ENDERECO = 'BuscarEndereco';
@@ -25,6 +27,7 @@ class ConstantesCadastro {
     /* Traduções */
     public static $TRADUCAO_CELULA_CADASTRADA = 'Cell Registered';
     public static $TRADUCAO_CELULA_ALTERADA = 'Cell Changed';
+    public static $TRADUCAO_CELULA_EXCLUIDA = 'Cell Exploded Suddenly';
     public static $TRADUCAO_CELULA_CADASTRADA_NOME_HOSPEDEIRO = 'Host: ';
 
 }

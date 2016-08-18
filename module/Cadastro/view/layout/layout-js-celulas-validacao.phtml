@@ -15,6 +15,11 @@ if (!empty($this->nomeHospedeiroCelulaAlterada)) {
     $titulo = $this->translate(ConstantesCadastro::$TRADUCAO_CELULA_ALTERADA);
     $texto = $this->translate(ConstantesCadastro::$TRADUCAO_CELULA_CADASTRADA_NOME_HOSPEDEIRO) . $this->nomeHospedeiroCelulaAlterada;
 }
+if (!empty($this->nomeHospedeiroCelulaExcluida)) {
+    $mostrar = true;
+    $titulo = $this->translate(ConstantesCadastro::$TRADUCAO_CELULA_EXCLUIDA);
+    $texto = $this->translate(ConstantesCadastro::$TRADUCAO_CELULA_CADASTRADA_NOME_HOSPEDEIRO) . $this->nomeHospedeiroCelulaExcluida;
+}
 ?>
 <script type="text/javascript">
     var stack_bar_bottom = {

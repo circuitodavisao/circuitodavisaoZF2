@@ -79,6 +79,8 @@ class ConstantesForm {
     public static $TRADUCAO_BAIRRO = 'Neighborhood';
     public static $TRADUCAO_LOGRADOURO = 'Public Place';
     public static $TRADUCAO_NOME_HOSPEDEIRO = 'Name Host';
+    public static $TRADUCAO_HOSPEDEIRO = 'Host';
+    public static $TRADUCAO_ENDERECO = 'Address';
     public static $TRADUCAO_DDD_HOSPEDEIRO = 'DDD';
     public static $TRADUCAO_TELEFONE_HOSPEDEIRO = 'Phone Host';
     public static $TRADUCAO_BUSCAR_CEP_LOGRADOURO = 'Search';
@@ -103,6 +105,14 @@ class ConstantesForm {
     public static $TRADUCAO_VALIDACAO_DDD_HOSPEDEIRO_INVALIDO = 'Invalid DDD';
     public static $TRADUCAO_VALIDACAO_TELEFONE_HOSPEDEIRO_REQUERIDO = 'Enter Phone';
     public static $TRADUCAO_VALIDACAO_TELEFONE_HOSPEDEIRO_INVALIDO = 'Invalid Phone';
+    public static $TRADUCAO_CONFIRMACAO_EXCLUSAO_CELULA = 'Confirmation <strong><span class="text-danger">Cell Exclusion</span></strong>';
+    public static $TRADUCAO_PERGUNTA_EXCLUSAO_CELULA = 'Really want to delete this cell?';
+    public static $TRADUCAO_CIENCIA_EXCLUSAO_CELULA = 'I am <span class="text-danger">aware</span> that by <span class="text-danger">excluding cell</span> is the same no longer appear in the <span class="text-danger">launch line</span>!';
+    public static $TRADUCAO_MOTIVO_EXCLUSAO_CELULA = 'What reason for exclusion?';
+    public static $TRADUCAO_DESCREVA_MOTIVO_EXCLUSAO_CELULA = 'Please specify the reason';
+    public static $TRADUCAO_CONTINUAR = 'Continue';
+    public static $TRADUCAO_DIGITE_SENHA_EXCUSAO_SENHA = 'Enter your password to confirm the deletion';
+    public static $TRADUCAO_CONFIRMACAO = 'Confirm';
 
     /* Layout */
     public static $LAYOUT_JS_CELULA = 'layout/layout-js-celula';
@@ -115,8 +125,10 @@ class ConstantesForm {
     public static $LAYOUT_STRING_JS_CELULAS_VALIDACAO = 'layoutJSCelulasValidacao';
     public static $LAYOUT_NOME_HOSPEDEIRO_CELULA_CADASTRADO = 'nomeHospedeiroCelulaCadastrado';
     public static $LAYOUT_NOME_HOSPEDEIRO_CELULA_ALTERADA = 'nomeHospedeiroCelulaAlterada';
+    public static $LAYOUT_NOME_HOSPEDEIRO_CELULA_EXCLUIDA = 'nomeHospedeiroCelulaExcluida';
 
     /* Listagem */
     public static $LISTAGEM_CELULAS = 'celulas';
+    public static $CELULA = 'celula';
 
 }

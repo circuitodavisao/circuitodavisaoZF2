@@ -31,9 +31,11 @@ class DadosEntidade extends AbstractHelper {
             }
         }
         $html = '';
-        $html .= '<div class="media visible-xs-block media-dados-entidade" style="margin-right:0px;">';
+
+        $html .= '<div class="media media-dados-entidade" style="margin-right:0px;">';
         if ($pessoas) {
             /* Fotos */
+            $html .= '<div class="row">';
             $contagemFotos = 1;
             $html .= '<span class="media-left" href="#" style="padding-right:2px;">';
             foreach ($pessoas as $p) {
@@ -46,8 +48,10 @@ class DadosEntidade extends AbstractHelper {
                 $contagemFotos++;
             }
             $html .= '</span>';
+            $html .= '</div>';
 
             /* Nomes */
+            $html .= '<div class="row">';
             $html .= '<div class="media-body" style="line-height:1px; padding-top:11px;">';
             $contagem = 1;
             $totalPessoas = count($pessoas);
@@ -65,6 +69,7 @@ class DadosEntidade extends AbstractHelper {
                 $contagem++;
             }
             $html .= '</h5>';
+            $html .= '</div>';
 
             /* Entidade */
             $entidadeTipo = $this->view->entidade->getEntidadeTipo();
