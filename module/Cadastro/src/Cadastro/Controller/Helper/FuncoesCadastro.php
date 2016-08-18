@@ -31,4 +31,13 @@ class FuncoesCadastro {
         return date('H:i:s');
     }
 
+    /**
+     * Retorna a data do proximo domingo
+     * @return String
+     */
+    public static function proximoDomingo() {
+        $proximoDomingo = strtotime("next Sunday");
+        return date('Y-m-d', $proximoDomingo);
+    }
+
 }

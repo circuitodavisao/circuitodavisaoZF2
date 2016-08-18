@@ -192,6 +192,7 @@ class CadastroController extends AbstractActionController {
                 if ($celulaForm->isValid()) {
                     $sessao = new Container(Constantes::$NOME_APLICACAO);
                     $criarNovaCelula = true;
+                    $mudarDataDeCadstroParaProximoDomingo = false;
                     $validatedData = $celulaForm->getData();
 
                     /* Entidades */
@@ -221,6 +222,7 @@ class CadastroController extends AbstractActionController {
                             $grupoEventoAtivos[0]->setHora_inativacao(FuncoesCadastro::horaAtual());
                             $repositorioORM->getGrupoEventoORM()->persistirGrupoEvento($grupoEventoAtivos[0]);
                             $criarNovaCelula = true;
+                            $mudarDataDeCadstroParaProximoDomingo = true;
                         } else {
                             /* Dia não foi alterado */
 
@@ -281,7 +283,11 @@ class CadastroController extends AbstractActionController {
                         $eventoCelula->setCep($validatedData[ConstantesForm::$FORM_CEP_LOGRADOURO]);
                         $eventoCelula->setEvento($evento);
 
-                        $evento->setData_criacao(FuncoesCadastro::dataAtual());
+                        $dataParaCadastro = FuncoesCadastro::dataAtual();
+                        if ($mudarDataDeCadstroParaProximoDomingo) {
+                            $dataParaCadastro = FuncoesCadastro::proximoDomingo();
+                        }
+                        $evento->setData_criacao($dataParaCadastro);
                         $evento->setHora_criacao(FuncoesCadastro::horaAtual());
                         $evento->setHora($validatedData[ConstantesForm::$FORM_HORA] . ':' . $validatedData[ConstantesForm::$FORM_MINUTOS]);
                         $evento->setDia($validatedData[ConstantesForm::$FORM_DIA_DA_SEMANA]);
