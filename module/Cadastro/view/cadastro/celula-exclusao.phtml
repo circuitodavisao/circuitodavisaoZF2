@@ -117,7 +117,7 @@ $diaDaSemanaAjustado = FuncoesLancamento::diaDaSemanaPorDia($evento->getDia(), 1
                     <i class="fa fa-arrow-left" aria-hidden="true"></i> <?php echo $this->translate(Constantes::$TRADUCAO_VOLTAR); ?>
                 </button>
                 &nbsp;
-                <button onclick="funcaoCadastro('<?php echo ConstantesCadastro::$PAGINA_EXCLUSAO . '\', ' . $celula->getId(); ?>);" data-style="zoom-in" type="submit" class="btn ladda-button btn-danger">
+                <button onclick="funcaoCadastro('<?php echo ConstantesCadastro::$PAGINA_CELULA_EXCLUSAO_CONFIRMACAO . '\', ' . $celula->getId(); ?>);" data-style="zoom-in" type="submit" class="btn ladda-button btn-danger">
                     <?php echo $this->translate(ConstantesForm::$TRADUCAO_CONFIRMACAO); ?>
                 </button>
             </div>
