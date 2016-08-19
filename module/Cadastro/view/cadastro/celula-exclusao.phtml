@@ -35,7 +35,7 @@ $diaDaSemanaAjustado = FuncoesLancamento::diaDaSemanaPorDia($evento->getDia(), 1
                         </address>                     
                         <address>
                             <div><strong><?php echo $this->translate(ConstantesForm::$TRADUCAO_ENDERECO); ?></strong></div>
-                            <div><?php echo $celula->getLogradouro() . '&nbsp;' . $celula->getComplemento(); ?></div>
+                            <div><?php echo $celula->getLogradouro() . ',&nbsp;' . $celula->getComplemento(); ?></div>
                             <div><?php echo $celula->getCidade() . '&nbsp;-&nbsp;' . $celula->getBairro() . ',&nbsp;' . $celula->getUf() . '&nbsp; CEP:' . $celula->getCep(); ?></div>                  
                         </address>
                     </div>                 
@@ -46,8 +46,7 @@ $diaDaSemanaAjustado = FuncoesLancamento::diaDaSemanaPorDia($evento->getDia(), 1
                         <div class="section text-center">
                             <label class="option block mt15">
                                 <input type="checkbox" name="checked" value="checked" onclick="
-                                        $('#divMotivo').toggleClass('hidden');
-                                        $('#divBotaoVoltar').toggleClass('hidden');
+                                        $('#divMotivo').toggleClass('<?php echo ConstantesForm::$FORM_HIDDEN; ?>');
                                        ">
                                 <span class="checkbox"></span><?php echo $this->translate(ConstantesForm::$TRADUCAO_CIENCIA_EXCLUSAO_CELULA); ?></label> 
                         </div>
@@ -86,18 +85,11 @@ $diaDaSemanaAjustado = FuncoesLancamento::diaDaSemanaPorDia($evento->getDia(), 1
                         <button onclick="location.href = '/cadastroCelulas';" data-style="zoom-in" type="button" class="btn ladda-button btn-dark"><i class="fa fa-arrow-left" aria-hidden="true"></i> <?php echo $this->translate(Constantes::$TRADUCAO_VOLTAR); ?></button>
                         &nbsp;
                         <button onclick="
-                                $('#divConfirmacao').toggleClass('hidden');
-                                $('#divSenha').toggleClass('hidden');
+                                $('#divConfirmacao').toggleClass('<?php echo ConstantesForm::$FORM_HIDDEN; ?>');
+                                $('#divSenha').toggleClass('<?php echo ConstantesForm::$FORM_HIDDEN; ?>');
                                 " data-style="zoom-in" type="button" class="btn ladda-button btn-danger"><?php echo $this->translate(ConstantesForm::$TRADUCAO_CONTINUAR); ?> <i class="fa fa-arrow-right" aria-hidden="true"></i></button>
                     </div>
                 </div>
-            </div>
-            <div id="divBotaoVoltar" class="panel-footer text-right" style="height:65px;">
-                <button onclick="location.href = '/cadastroCelulas';" data-style="zoom-in" type="button" class="btn ladda-button btn-dark"><i class="fa fa-arrow-left" aria-hidden="true"></i> <?php echo $this->translate(Constantes::$TRADUCAO_VOLTAR); ?></button>
-                &nbsp;
-                <button disabled="disabled" type="submit" class="btn ladda-button btn-danger">
-                    <?php echo $this->translate(ConstantesForm::$TRADUCAO_CONFIRMACAO); ?>
-                </button>
             </div>
         </div>
         <div id="divSenha" class="panel heading-border panel-danger hidden">
@@ -115,8 +107,8 @@ $diaDaSemanaAjustado = FuncoesLancamento::diaDaSemanaPorDia($evento->getDia(), 1
             </div>
             <div class="panel-footer text-right" style="height:65px;">
                 <button onclick="
-                        $('#divConfirmacao').toggleClass('hidden');
-                        $('#divSenha').toggleClass('hidden');
+                        $('#divConfirmacao').toggleClass('<?php echo ConstantesForm::$FORM_HIDDEN; ?>');
+                        $('#divSenha').toggleClass('<?php echo ConstantesForm::$FORM_HIDDEN; ?>');
                         " data-style="zoom-in" type="button" class="btn ladda-button btn-dark">
                     <i class="fa fa-arrow-left" aria-hidden="true"></i> <?php echo $this->translate(Constantes::$TRADUCAO_VOLTAR); ?>
                 </button>

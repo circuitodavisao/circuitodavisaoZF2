@@ -12,153 +12,251 @@ use Login\Controller\Helper\Constantes;
  */
 $form = $this->CelulaForm;
 $form->prepare();
-$form->setAttribute(ConstantesForm::$FORM_ACTION, $this->url(ConstantesCadastro::$ROUTE_CADASTRO, array(ConstantesCadastro::$PAGINA => ConstantesCadastro::$PAGINA_SALVAR_CELULA)));
+$form->setAttribute(ConstantesForm::$FORM_ACTION, $this->url(ConstantesCadastro::$ROUTE_CADASTRO, array(ConstantesCadastro::$PAGINA => ConstantesCadastro::$PAGINA_CELULA_PERSISTIR)));
 ?>
 <div class="mw1000 center-block p10">
     <div class="admin-form theme-danger">
-        <blockquote class="blockquote-danger">
-            <small><?php echo $this->translate(ConstantesForm::$TRADUCAO_CADASTRO_CELULA); ?> <b class="text-danger"><?php echo $this->translate(ConstantesForm::$TRADUCAO_MULTIPLICACAO); ?></b></small>
-        </blockquote>
-        <div class="panel heading-border panel-danger">
-            <?php echo $this->form()->openTag($form); ?>
-            <div class="panel-body bg-light">
-                <div class="section-divider mv40">
-                    <span><?php echo $this->translate(ConstantesForm::$TRADUCAO_DIA_HORA); ?></span>
-                </div>
-                <!--.section-divider -->
+        <?php echo $this->form()->openTag($form); ?>
+        <div id="divFormulario">
+            <blockquote class="blockquote-danger">
+                <small><?php echo $this->translate(ConstantesForm::$TRADUCAO_CADASTRO_CELULA); ?> <b class="text-danger"><?php echo $this->translate(ConstantesForm::$TRADUCAO_MULTIPLICACAO); ?></b></small>
+            </blockquote>
+            <div class="panel heading-border panel-danger">
 
-                <div class="section row">
-                    <div class="row">
-                        <div class="col-sm-12 col-xs-12">
-                            <div class="section">
-                                <label for="<?php echo ConstantesForm::$TRADUCAO_DIA_DA_SEMANA; ?>" class="field-label">
-                                    <?php echo $this->translate(ConstantesForm::$TRADUCAO_DIA_DA_SEMANA); ?>
-                                </label>
-                                <label for="<?php echo ConstantesForm::$TRADUCAO_DIA_DA_SEMANA; ?>" class="field prepend-icon">
-                                    <?php echo $this->formSelect($form->get(ConstantesForm::$FORM_DIA_DA_SEMANA)); ?>
-                                </label>   
-                            </div>
-                        </div>
+                <div class="panel-body bg-light">
+                    <div class="section-divider mv40">
+                        <span><?php echo $this->translate(ConstantesForm::$TRADUCAO_DIA_HORA); ?></span>
                     </div>
+                    <!--.section-divider -->
 
-                    <div class="row">
-                        <div class="col-sm-6 col-xs-6">
-                            <div class="section">
-                                <label for="<?php echo ConstantesForm::$TRADUCAO_HORA; ?>" class="field-label">
-                                    <?php echo $this->translate(ConstantesForm::$TRADUCAO_HORA); ?>
-                                </label>
-                                <label for="<?php echo ConstantesForm::$TRADUCAO_HORA; ?>" class="field prepend-icon">
-                                    <?php echo $this->formSelect($form->get(ConstantesForm::$FORM_HORA)); ?>
-                                </label>  
-                            </div>
-                        </div>
-                        <div class="col-sm-6 col-xs-6">
-                            <div class="section">
-                                <label for="<?php echo ConstantesForm::$TRADUCAO_MINUTOS; ?>" class="field-label">
-                                    <?php echo $this->translate(ConstantesForm::$TRADUCAO_MINUTOS); ?>
-                                </label>
-                                <label for="<?php echo ConstantesForm::$TRADUCAO_MINUTOS; ?>" class="field prepend-icon">
-                                    <?php echo $this->formSelect($form->get(ConstantesForm::$FORM_MINUTOS)); ?>
-                                </label>                                                  
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-md-12 col-sm-12 col-xs-12">
-                            <div class="section">
-                                <?php echo $this->inputFormulario(ConstantesForm::$TRADUCAO_CEP_LOGRADOURO, $form, ConstantesForm::$FORM_CEP_LOGRADOURO, ConstantesForm::$FORM_ICONE_COMPLEMENTO); ?>
-
-                            </div> 
-                        </div>
-                    </div>
-
-                    <div id="resultadoBusca"></div>
-                    <div id="endereco" class="<?php echo $this->enderecoHidden; ?>">
+                    <div class="section row">
                         <div class="row">
-                            <div class="col-md-6 col-sm-12">
+                            <div class="col-sm-12 col-xs-12">
                                 <div class="section">
-                                    <?php echo $this->inputFormulario(ConstantesForm::$TRADUCAO_UF, $form, ConstantesForm::$FORM_UF, ConstantesForm::$FORM_ICONE_COMPLEMENTO, 2); ?>
-                                </div>
-                            </div>
-                            <div class="col-md-6 col-sm-12">
-                                <div class="section">
-                                    <?php echo $this->inputFormulario(ConstantesForm::$TRADUCAO_BAIRRO, $form, ConstantesForm::$FORM_BAIRRO, ConstantesForm::$FORM_ICONE_COMPLEMENTO, 2); ?>
+                                    <label for="<?php echo ConstantesForm::$TRADUCAO_DIA_DA_SEMANA; ?>" class="field-label">
+                                        <?php echo $this->translate(ConstantesForm::$TRADUCAO_DIA_DA_SEMANA); ?>
+                                    </label>
+                                    <label for="<?php echo ConstantesForm::$TRADUCAO_DIA_DA_SEMANA; ?>" class="field prepend-icon">
+                                        <?php echo $this->formSelect($form->get(ConstantesForm::$FORM_DIA_DA_SEMANA)); ?>
+                                    </label>   
                                 </div>
                             </div>
                         </div>
 
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-sm-6 col-xs-6">
                                 <div class="section">
-                                    <?php echo $this->inputFormulario(ConstantesForm::$TRADUCAO_CIDADE, $form, ConstantesForm::$FORM_CIDADE, ConstantesForm::$FORM_ICONE_COMPLEMENTO, 2); ?>
+                                    <label for="<?php echo ConstantesForm::$TRADUCAO_HORA; ?>" class="field-label">
+                                        <?php echo $this->translate(ConstantesForm::$TRADUCAO_HORA); ?>
+                                    </label>
+                                    <label for="<?php echo ConstantesForm::$TRADUCAO_HORA; ?>" class="field prepend-icon">
+                                        <?php echo $this->formSelect($form->get(ConstantesForm::$FORM_HORA)); ?>
+                                    </label>  
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-sm-6 col-xs-6">
                                 <div class="section">
-                                    <?php echo $this->inputFormulario(ConstantesForm::$TRADUCAO_LOGRADOURO, $form, ConstantesForm::$FORM_LOGRADOURO, ConstantesForm::$FORM_ICONE_COMPLEMENTO, 2); ?>
+                                    <label for="<?php echo ConstantesForm::$TRADUCAO_MINUTOS; ?>" class="field-label">
+                                        <?php echo $this->translate(ConstantesForm::$TRADUCAO_MINUTOS); ?>
+                                    </label>
+                                    <label for="<?php echo ConstantesForm::$TRADUCAO_MINUTOS; ?>" class="field prepend-icon">
+                                        <?php echo $this->formSelect($form->get(ConstantesForm::$FORM_MINUTOS)); ?>
+                                    </label>                                                  
                                 </div>
                             </div>
                         </div>
+
+                        <div class="row">
+                            <div class="col-md-12 col-sm-12 col-xs-12">
+                                <div class="section">
+                                    <?php echo $this->inputFormulario(ConstantesForm::$TRADUCAO_CEP_LOGRADOURO, $form, ConstantesForm::$FORM_CEP_LOGRADOURO, ConstantesForm::$FORM_ICONE_COMPLEMENTO); ?>
+
+                                </div> 
+                            </div>
+                        </div>
+                        <div id="endereco" class="<?php echo $this->enderecoHidden; ?>">
+                            <div class="row">
+                                <div class="col-md-6 col-sm-12">
+                                    <div class="section">
+                                        <?php echo $this->inputFormulario(ConstantesForm::$TRADUCAO_UF, $form, ConstantesForm::$FORM_UF, ConstantesForm::$FORM_ICONE_COMPLEMENTO, 2); ?>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-sm-12">
+                                    <div class="section">
+                                        <?php echo $this->inputFormulario(ConstantesForm::$TRADUCAO_BAIRRO, $form, ConstantesForm::$FORM_BAIRRO, ConstantesForm::$FORM_ICONE_COMPLEMENTO, 2); ?>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="section">
+                                        <?php echo $this->inputFormulario(ConstantesForm::$TRADUCAO_CIDADE, $form, ConstantesForm::$FORM_CIDADE, ConstantesForm::$FORM_ICONE_COMPLEMENTO, 2); ?>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="section">
+                                        <?php echo $this->inputFormulario(ConstantesForm::$TRADUCAO_LOGRADOURO, $form, ConstantesForm::$FORM_LOGRADOURO, ConstantesForm::$FORM_ICONE_COMPLEMENTO, 2); ?>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="section">
+                                        <?php echo $this->inputFormulario(ConstantesForm::$TRADUCAO_COMPLEMENTO, $form, ConstantesForm::$FORM_COMPLEMENTO, ConstantesForm::$FORM_ICONE_COMPLEMENTO); ?>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <!--end .section row section -->
+
+                    <div class="section-divider mv40">
+                        <span><?php echo $this->translate(ConstantesForm::$TRADUCAO_DADOS_DO_HOSPEDEIRO); ?></span>
+                    </div>
+                    <!--.section-divider -->
+
+                    <div class="section row">
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="section">
-                                    <?php echo $this->inputFormulario(ConstantesForm::$TRADUCAO_COMPLEMENTO, $form, ConstantesForm::$FORM_COMPLEMENTO, ConstantesForm::$FORM_ICONE_COMPLEMENTO); ?>
+                                    <?php echo $this->inputFormulario(ConstantesForm::$TRADUCAO_NOME_HOSPEDEIRO, $form, ConstantesForm::$FORM_NOME_HOSPEDEIRO, ConstantesForm::$FORM_ICONE_NOME_HOSPEDEIRO); ?>
                                 </div>
                             </div>
                         </div>
-
-                    </div>
-                </div>
-                <!--end .section row section -->
-
-                <div class="section-divider mv40">
-                    <span><?php echo $this->translate(ConstantesForm::$TRADUCAO_DADOS_DO_HOSPEDEIRO); ?></span>
-                </div>
-                <!--.section-divider -->
-
-                <div class="section row">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="section">
-                                <?php echo $this->inputFormulario(ConstantesForm::$TRADUCAO_NOME_HOSPEDEIRO, $form, ConstantesForm::$FORM_NOME_HOSPEDEIRO, ConstantesForm::$FORM_ICONE_NOME_HOSPEDEIRO); ?>
+                        <!--end .colm section -->
+                        <div class="section">
+                            <div class="row">
+                                <div class="col-xs-5 col-sm-5 col-md-2">
+                                    <?php echo $this->inputFormulario(ConstantesForm::$TRADUCAO_DDD_HOSPEDEIRO, $form, ConstantesForm::$FORM_DDD_HOSPEDEIRO, ConstantesForm::$FORM_ICONE_DDD_HOSPEDEIRO); ?>
+                                </div>
+                                <div class="col-xs-7 col-sm-7 col-md-10">
+                                    <?php echo $this->inputFormulario(ConstantesForm::$TRADUCAO_TELEFONE_HOSPEDEIRO, $form, ConstantesForm::$FORM_TELEFONE_HOSPEDEIRO, ConstantesForm::$FORM_ICONE_TELEFONE_HOSPEDEIRO); ?>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <!--end .colm section -->
-                    <div class="section">
-                        <div class="row">
-                            <div class="col-xs-5 col-sm-5 col-md-2">
-                                <?php echo $this->inputFormulario(ConstantesForm::$TRADUCAO_DDD_HOSPEDEIRO, $form, ConstantesForm::$FORM_DDD_HOSPEDEIRO, ConstantesForm::$FORM_ICONE_DDD_HOSPEDEIRO); ?>
-                            </div>
-                            <div class="col-xs-7 col-sm-7 col-md-10">
-                                <?php echo $this->inputFormulario(ConstantesForm::$TRADUCAO_TELEFONE_HOSPEDEIRO, $form, ConstantesForm::$FORM_TELEFONE_HOSPEDEIRO, ConstantesForm::$FORM_ICONE_TELEFONE_HOSPEDEIRO); ?>
-                            </div>
-                        </div>
-                    </div>
-                </div> 
+                    </div> 
 
-                <!--end .section row section -->
+                    <!--end .section row section -->
+                </div>
+                <!--end .form-body section -->
+                <div class="panel-footer text-right" style="height:65px;">
+                    <?php
+                    echo $this->formHidden($form->get(ConstantesForm::$FORM_CSRF));
+                    echo $this->formHidden($form->get(ConstantesForm::$FORM_ID));
+                    ?>
+                    <button onclick="location.href = '/cadastroCelulas';" data-style="zoom-in" type="button" class="btn ladda-button btn-dark">
+                        <i class="fa fa-arrow-left" aria-hidden="true"></i> 
+                        <?php echo $this->translate(Constantes::$TRADUCAO_VOLTAR); ?>
+                    </button>
+                    &nbsp;
+                    <button  id="botaoContinuar" disabled="disabled" onclick="
+                            var validator = $('#<?php echo $this->translate(ConstantesForm::$FORM_CELULA); ?>').validate();
+                            if (validator.form()) {
+                                // Preenchendo os campos
+                                var valorDiaDaSemana = $('#<?php echo ConstantesForm::$FORM_DIA_DA_SEMANA; ?>').val();
+//                                switch (valorDiaDaSemana) {
+//                                    case 1:
+//                                        resposta = 'SUNDAY';
+//                                        break;
+//                                    case 2:
+//                                        resposta = 'MONDAY';
+//                                        break;
+//                                    case 3:
+//                                        resposta = 'TUESDAY';
+//                                        break;
+//                                    case 4:
+//                                        resposta = 'WEDNESDAY';
+//                                        break;
+//                                    case 5:
+//                                        resposta = 'THURSDAY';
+//                                        break;
+//                                    case 6:
+//                                        resposta = 'FRIDAY';
+//                                        break;
+//                                    case 7:
+//                                        resposta = 'SATURDAY';
+//                                        break;
+//                                }
+                                var spanDiaHora = valorDiaDaSemana + '/' + $('#<?php echo ConstantesForm::$FORM_HORA; ?>').val() + ':' + $('#<?php echo ConstantesForm::$FORM_MINUTOS; ?>').val();
+                                var spanNome = $('#<?php echo ConstantesForm::$FORM_NOME_HOSPEDEIRO; ?>').val();
+                                spanNome = spanNome.toUpperCase();
+                                var spanTelefone =
+                                        '(' + $('#<?php echo ConstantesForm::$FORM_DDD_HOSPEDEIRO; ?>').val() + ') '
+                                        + $('#<?php echo ConstantesForm::$FORM_TELEFONE_HOSPEDEIRO; ?>').val();
+                                var spanLogradouroComplemento = $('#<?php echo ConstantesForm::$FORM_LOGRADOURO; ?>').val() + ', ' +
+                                        $('#<?php echo ConstantesForm::$FORM_COMPLEMENTO; ?>').val();
+                                var spanEndereco = $('#<?php echo ConstantesForm::$FORM_CIDADE; ?>').val() + '&nbsp;-&nbsp;' +
+                                        $('#<?php echo ConstantesForm::$FORM_BAIRRO; ?>').val() + ',&nbsp;' +
+                                        $('#<?php echo ConstantesForm::$FORM_UF; ?>').val() + '&nbsp; CEP:' +
+                                        $('#<?php echo ConstantesForm::$FORM_CEP_LOGRADOURO; ?>').val();
+                                $('#spanDiaHora').html(spanDiaHora);
+                                $('#spanNome').html(spanNome);
+                                $('#spanTelefone').html(spanTelefone);
+                                $('#spanLogradouroComplemento').html(spanLogradouroComplemento);
+                                $('#spanEndereco').html(spanEndereco);
+
+                                $('#divDados').toggleClass('<?php echo ConstantesForm::$FORM_HIDDEN; ?>');
+                                $('#divFormulario').toggleClass('<?php echo ConstantesForm::$FORM_HIDDEN; ?>');
+                            }
+                             " data-style="zoom-in" type="button" class="btn ladda-button btn-danger">
+                                 <?php echo $this->translate(ConstantesForm::$TRADUCAO_CONTINUAR); ?>
+                        <i class="fa fa-arrow-right" aria-hidden="true"></i> 
+                    </button>
+                </div>
+                <!--end .form-footer section -->
+
             </div>
-            <!--end .form-body section -->
-            <div class="panel-footer text-right" style="height:65px;">
-                <?php
-                echo $this->formHidden($form->get(ConstantesForm::$FORM_CSRF));
-                echo $this->formHidden($form->get(ConstantesForm::$FORM_ID));
-                ?>
-                <button onclick="location.href = '/cadastroCelulas';" data-style="zoom-in" type="button" class="btn ladda-button btn-dark"><i class="fa fa-arrow-left" aria-hidden="true"></i> <?php echo $this->translate(Constantes::$TRADUCAO_VOLTAR); ?></button>
-                &nbsp;
-                <?php
-                if (empty($form->get(ConstantesForm::$FORM_ID)->getValue())) {
-                    echo $this->botaoSubmitDesabilitado(ConstantesLancamento::$TRADUCAO_CADASTRAR, ConstantesForm::$FORM_SUBMIT, '', ConstantesLancamento::$CLASS_BTN_DANGER_DARK);
-                } else {
-                    echo $this->botaoSubmit(ConstantesForm::$TRADUCAO_ALTERAR, ConstantesLancamento::$CLASS_BTN_DANGER_DARK);
-                }
-                ?>
-            </div>
-            <!--end .form-footer section -->
-            <?php echo $this->form()->closeTag() ?>
         </div>
+        <div id="divDados" class="hidden">
+            <blockquote class="blockquote-danger">
+                <small><?php echo $this->translate(ConstantesForm::$TRADUCAO_CADASTRO_CELULA); ?></small>
+            </blockquote>
+            <div id="divConfirmacao" class="panel heading-border panel-danger">
+                <div class="panel-body bg-light">
+                    <div class="section-divider">
+                        <span><?php echo $this->translate(ConstantesForm::$TRADUCAO_PERGUNTA_CADASTRO_CELULA); ?></span>
+                    </div>
+                    <div class="panel heading-border panel-danger">
+                        <div class="panel-body">
+                            <address>
+                                <div><strong><?php echo $this->translate(ConstantesForm::$TRADUCAO_DIA_DA_SEMANA_SIMPLIFICADO) . '/' . $this->translate(ConstantesForm::$TRADUCAO_HORA); ?></strong></div>
+                                <div><span id="spanDiaHora"></span></div>
+                            </address>
+                            <address>
+                                <div><strong><?php echo $this->translate(ConstantesForm::$TRADUCAO_HOSPEDEIRO); ?></strong></div>
+                                <div><span id="spanNome"></span></div>
+                                <div><span id="spanTelefone"></span></div>
+                            </address>                     
+                            <address>
+                                <div><strong><?php echo $this->translate(ConstantesForm::$TRADUCAO_ENDERECO); ?></strong></div>
+                                <div><span id="spanLogradouroComplemento"></span></div>
+                                <div><span id="spanEndereco"></span></div>                  
+                            </address>
+                        </div>                 
+                    </div>
+                </div>
+                <div id="divBotaoVoltar" class="panel-footer text-right" style="height:65px;">
+                    <button onclick="
+                            $('#divDados').toggleClass('<?php echo ConstantesForm::$FORM_HIDDEN; ?>');
+                            $('#divFormulario').toggleClass('<?php echo ConstantesForm::$FORM_HIDDEN; ?>');
+                            " data-style="zoom-in" type="button" class="btn ladda-button btn-dark">
+                        <i class="fa fa-arrow-left" aria-hidden="true"></i> 
+                        <?php echo $this->translate(Constantes::$TRADUCAO_VOLTAR); ?>
+                    </button>
+                    &nbsp;
+                    <?php
+                    $traducaoDoBotao = ConstantesLancamento::$TRADUCAO_CADASTRAR;
+                    if (!empty($form->get(ConstantesForm::$FORM_ID)->getValue())) {
+                        $traducaoDoBotao = ConstantesForm::$TRADUCAO_ALTERAR;
+                    }
+                    echo $this->botaoSubmit($traducaoDoBotao, ConstantesLancamento::$CLASS_BTN_DANGER_DARK);
+                    ?>                  
+                </div>
+            </div>
+        </div>
+        <?php echo $this->form()->closeTag() ?>
     </div>
 </div>           
 <?php

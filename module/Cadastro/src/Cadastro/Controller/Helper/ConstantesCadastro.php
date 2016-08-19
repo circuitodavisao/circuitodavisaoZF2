@@ -13,10 +13,10 @@ class ConstantesCadastro {
     public static $PAGINA = 'pagina';
     public static $PAGINA_CELULAS = 'Celulas';
     public static $PAGINA_CELULA = 'Celula';
+    public static $PAGINA_CELULA_PERSISTIR = 'CelulaPersistir';
     public static $PAGINA_CELULA_EXCLUSAO = 'CelulaExclusao';
     public static $PAGINA_CELULA_EXCLUSAO_CONFIRMACAO = 'CelulaExclusaoConfirmacao';
     public static $PAGINA_CELULA_CONFIRMACAO = 'CelulaConfirmacao';
-    public static $PAGINA_SALVAR_CELULA = 'SalvarCelula';
     public static $PAGINA_BUSCAR_ENDERECO = 'BuscarEndereco';
     public static $CONTROLLER_CADASTRO = 'Cadastro\Controller\Cadastro';
     public static $ROUTE_CADASTRO = 'cadastro';

@@ -27,14 +27,13 @@ function buscarEndereco(cep_logradouro) {
     $('#loadercep_logradouro').removeClass('hidden');
     if (cep_logradouro.length === 0) {
         $('#loadercep_logradouro').addClass('hidden');
-        $('#submit').attr({disabled: "disabled"});
+        $('#botaoContinuar').attr({disabled: "disabled"});
         return false;
     }
     if (!isNumber(cep_logradouro) || cep_logradouro.length !== 8) {
         $('#loadercep_logradouro').addClass('hidden');
-        $('#submit').attr({disabled: "disabled"});
-        alert('Cep é inhtmlido!');
-
+        $('#botaoContinuar').attr({disabled: "disabled"});
+        alert('Cep é invalido!');
         return false;
     }
 
@@ -60,7 +59,7 @@ function buscarEndereco(cep_logradouro) {
                     html += '<div class="col-md-12 alert alert-danger">';
                     html += 'No results found';
                     html += '</div>';
-                    $('#submit').attr({disabled: "disabled"});
+                    $('#botaoContinuar').attr({disabled: "disabled"});
                     $('#resultadoBusca').html(html);
                 }
                 if (data.quantidadeDeResultados === 1) {
@@ -74,7 +73,7 @@ function buscarEndereco(cep_logradouro) {
                     $('#hiddencidade').val(data.pesquisa[0]['cidade']);
                     $('#hiddenbairro').val(data.pesquisa[0]['bairro']);
                     $('#hiddenlogradouro').val(data.pesquisa[0]['logradouro']);
-                    $('#submit').removeAttr("disabled");
+                    $('#botaoContinuar').removeAttr("disabled");
                     var validator = $("#CelulaForm").validate();
                     validator.element("#cep_logradouro");
                     $('#complemento').focus();

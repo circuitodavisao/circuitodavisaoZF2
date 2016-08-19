@@ -63,9 +63,9 @@ class CadastroController extends AbstractActionController {
                         Constantes::$ACTION => ConstantesCadastro::$PAGINA_CELULA_CONFIRMACAO,
             ));
         }
-        if ($pagina == ConstantesCadastro::$PAGINA_SALVAR_CELULA) {
+        if ($pagina == ConstantesCadastro::$PAGINA_CELULA_PERSISTIR) {
             return $this->forward()->dispatch(ConstantesCadastro::$CONTROLLER_CADASTRO, array(
-                        Constantes::$ACTION => ConstantesCadastro::$PAGINA_SALVAR_CELULA,
+                        Constantes::$ACTION => ConstantesCadastro::$PAGINA_CELULA_PERSISTIR,
             ));
         }
         if ($pagina == ConstantesCadastro::$PAGINA_BUSCAR_ENDERECO) {
@@ -240,10 +240,10 @@ class CadastroController extends AbstractActionController {
     }
 
     /**
-     * Função para salvar a células
-     * POST /cadastroSalvarCelula
+     * Função para persistir a célula
+     * POST /cadastroCelulaPersistir
      */
-    public function salvarCelulaAction() {
+    public function celulaPersistirAction() {
         $request = $this->getRequest();
         if ($request->isPost()) {
             try {

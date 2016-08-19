@@ -61,7 +61,8 @@ class CelulaForm extends Form {
         /* Hora */
         $arrayHoras[''] = ConstantesForm::$TRADUCAO_SELECIONE;
         for ($indexHoras = 0; $indexHoras <= 23; $indexHoras++) {
-            $arrayHoras[$indexHoras] = str_pad($indexHoras, 2, 0, STR_PAD_LEFT);
+            $valorFormatado = str_pad($indexHoras, 2, 0, STR_PAD_LEFT);
+            $arrayHoras[$valorFormatado] = $valorFormatado;
         }
         $selectHora = new Select();
         $selectHora->setName(ConstantesForm::$FORM_HORA);
@@ -75,7 +76,8 @@ class CelulaForm extends Form {
         /* Minutos */
         $arrayMinutos[''] = ConstantesForm::$TRADUCAO_SELECIONE;
         for ($indexMinutos = 0; $indexMinutos <= 59; $indexMinutos++) {
-            $arrayMinutos[$indexMinutos] = str_pad($indexMinutos, 2, 0, STR_PAD_LEFT);
+            $valorFormatado = str_pad($indexMinutos, 2, 0, STR_PAD_LEFT);
+            $arrayMinutos[$valorFormatado] = $valorFormatado;
         }
         $selectMinutos = new Select();
         $selectMinutos->setName(ConstantesForm::$FORM_MINUTOS);
