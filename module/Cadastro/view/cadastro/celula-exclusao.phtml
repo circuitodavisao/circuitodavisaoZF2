@@ -94,6 +94,10 @@ $diaDaSemanaAjustado = FuncoesLancamento::diaDaSemanaPorDia($evento->getDia(), 1
             </div>
             <div id="divBotaoVoltar" class="panel-footer text-right" style="height:65px;">
                 <button onclick="location.href = '/cadastroCelulas';" data-style="zoom-in" type="button" class="btn ladda-button btn-dark"><i class="fa fa-arrow-left" aria-hidden="true"></i> <?php echo $this->translate(Constantes::$TRADUCAO_VOLTAR); ?></button>
+                &nbsp;
+                <button disabled="disabled" type="submit" class="btn ladda-button btn-danger">
+                    <?php echo $this->translate(ConstantesForm::$TRADUCAO_CONFIRMACAO); ?>
+                </button>
             </div>
         </div>
         <div id="divSenha" class="panel heading-border panel-danger hidden">
