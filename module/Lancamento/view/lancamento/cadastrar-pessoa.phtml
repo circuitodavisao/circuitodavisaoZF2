@@ -60,7 +60,7 @@ $form->setAttribute(Constantes::$ACTION, $this->url(ConstantesLancamento::$ROUTE
                     <!-- end .form-body section -->
                     <div class="panel-footer text-right">
                         <?php echo $this->formHidden($form->get(Constantes::$INPUT_CSRF)); ?>
-                        <?php echo $this->botaoLink(Constantes::$TRADUCAO_VOLTAR, ConstantesLancamento::$ROUTE_LANCAMENTO); ?>
+                        <?php echo $this->botaoLink(Constantes::$TRADUCAO_VOLTAR, ConstantesLancamento::$ROUTE_LANCAMENTO, 2); ?>
                         <?php echo $this->botaoSubmit(ConstantesLancamento::$TRADUCAO_CADASTRAR, ConstantesLancamento::$CLASS_BTN_DANGER_DARK); ?>
                     </div>
                     <!-- end .form-footer section -->

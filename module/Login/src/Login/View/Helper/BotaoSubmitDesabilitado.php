@@ -30,7 +30,7 @@ class BotaoSubmitDesabilitado extends AbstractHelper {
 
     public function renderHtml() {
         $html = '';
-        $corBotao = 'btn-primary-circuito';
+        $corBotao = 'btn-danger';
         if ($this->getCorBotao() != '') {
             $corBotao = $this->getCorBotao();
         }

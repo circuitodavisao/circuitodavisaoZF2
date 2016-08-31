@@ -72,7 +72,7 @@ class ConstantesForm {
     public static $TRADUCAO_MINUTOS = 'Minutes';
     public static $TRADUCAO_SELECIONE = 'SELECT';
     public static $TRADUCAO_CEP_LOGRADOURO = 'CEP';
-    public static $TRADUCAO_CEP_LOGRADOURO_SITE_CORREIOS = ' - Do not know your ZIP code <u><a target="_blank" href="http://www.buscacep.correios.com.br/sistemas/buscacep/">Click Here</a><u>';
+    public static $TRADUCAO_CEP_LOGRADOURO_SITE_CORREIOS = ' - Do not know your ZIP code <u><a target="_blank" href="http://www.buscacep.correios.com.br/sistemas/buscacep/">Click Here</a></u>';
     public static $TRADUCAO_COMPLEMENTO = 'Complement';
     public static $TRADUCAO_UF = 'UF';
     public static $TRADUCAO_CIDADE = 'City';

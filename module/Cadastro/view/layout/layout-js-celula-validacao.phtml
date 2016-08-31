@@ -110,5 +110,56 @@ use Cadastro\Form\ConstantesForm;
 
         });
     }
-    ;
+
+    function preValidacao() {
+        var validator = $('#<?php echo $this->translate(ConstantesForm::$FORM_CELULA); ?>').validate();
+        if (validator.form()) {
+            // Preenchendo os campos
+            var valorDiaDaSemana = $('#<?php echo ConstantesForm::$FORM_DIA_DA_SEMANA; ?>').val();
+            var diaDaSemanaPorExtenso = '';
+            switch (valorDiaDaSemana) {
+                case 1:
+                    diaDaSemanaPorExtenso = 'SUNDAY';
+                    break;
+                case 2:
+                    diaDaSemanaPorExtenso = 'MONDAY';
+                    break;
+                case 3:
+                    diaDaSemanaPorExtenso = 'TUESDAY';
+                    break;
+                case 4:
+                    diaDaSemanaPorExtenso = 'WEDNESDAY';
+                    break;
+                case 5:
+                    diaDaSemanaPorExtenso = 'THURSDAY';
+                    break;
+                case 6:
+                    diaDaSemanaPorExtenso = 'FRIDAY';
+                    break;
+                case 7:
+                    diaDaSemanaPorExtenso = 'SATURDAY';
+                    break;
+            }
+            var spanDiaHora = diaDaSemanaPorExtenso + '/' + $('#<?php echo ConstantesForm::$FORM_HORA; ?>').val() + ':' + $('#<?php echo ConstantesForm::$FORM_MINUTOS; ?>').val();
+            var spanNome = $('#<?php echo ConstantesForm::$FORM_NOME_HOSPEDEIRO; ?>').val();
+            spanNome = spanNome.toUpperCase();
+            var spanTelefone =
+                    '(' + $('#<?php echo ConstantesForm::$FORM_DDD_HOSPEDEIRO; ?>').val() + ') '
+                    + $('#<?php echo ConstantesForm::$FORM_TELEFONE_HOSPEDEIRO; ?>').val();
+            var spanLogradouroComplemento = $('#<?php echo ConstantesForm::$FORM_LOGRADOURO; ?>').val() + ', ' +
+                    $('#<?php echo ConstantesForm::$FORM_COMPLEMENTO; ?>').val();
+            var spanEndereco = $('#<?php echo ConstantesForm::$FORM_CIDADE; ?>').val() + '&nbsp;-&nbsp;' +
+                    $('#<?php echo ConstantesForm::$FORM_BAIRRO; ?>').val() + ',&nbsp;' +
+                    $('#<?php echo ConstantesForm::$FORM_UF; ?>').val() + '&nbsp; CEP:' +
+                    $('#<?php echo ConstantesForm::$FORM_CEP_LOGRADOURO; ?>').val();
+            $('#spanDiaHora').html(spanDiaHora);
+            $('#spanNome').html(spanNome);
+            $('#spanTelefone').html(spanTelefone);
+            $('#spanLogradouroComplemento').html(spanLogradouroComplemento);
+            $('#spanEndereco').html(spanEndereco);
+
+            $('#divDados').toggleClass('<?php echo ConstantesForm::$FORM_HIDDEN; ?>');
+            $('#divFormulario').toggleClass('<?php echo ConstantesForm::$FORM_HIDDEN; ?>');
+        }
+    }
 </script>

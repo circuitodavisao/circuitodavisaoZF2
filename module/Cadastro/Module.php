@@ -8,7 +8,7 @@
 
 namespace Cadastro;
 
-use Cadastro\View\Helper\BotaoLink;
+use Cadastro\View\Helper\BotaoLinkFormulario;
 use Lancamento\View\Helper\DadosEntidade;
 use Lancamento\View\Helper\InputFormulario;
 use Login\View\Helper\BotaoSubmit;
@@ -47,7 +47,7 @@ class Module {
                     return new BotaoSubmitDesabilitado();
                 },
                 'botaoLink' => function($sm) {
-                    return new BotaoLink();
+                    return new BotaoLinkFormulario();
                 },
                 'dadosEntidade' => function($sm) {
                     return new DadosEntidade();

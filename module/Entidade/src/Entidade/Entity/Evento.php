@@ -7,11 +7,18 @@ namespace Entidade\Entity;
  * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com>
  * Descricao: Entidade anotada da tabela Evento
  */
+use Cadastro\Form\ConstantesForm;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use SebastianBergmann\RecursionContext\Exception;
+use Zend\InputFilter\InputFilter;
+use Zend\InputFilter\InputFilterAwareInterface;
+use Zend\InputFilter\InputFilterInterface;
 
 /** @ORM\Entity */
-class Evento {
+class Evento implements InputFilterAwareInterface {
+
+    protected $inputFilter;
 
     /**
      * @ORM\OneToOne(targetEntity="EventoCelula", mappedBy="evento")
@@ -256,6 +263,54 @@ class Evento {
 
     function setTipo_id($tipo_id) {
         $this->tipo_id = $tipo_id;
+    }
+
+    public function getInputFilter() {
+        
+    }
+
+    public static function getInputFilterEvento() {
+        $inputFilter = new InputFilter();
+        /* Dia da Semana */
+        $inputFilter->add(array(
+            ConstantesForm::$VALIDACAO_NAME => ConstantesForm::$FORM_DIA_DA_SEMANA,
+            ConstantesForm::$VALIDACAO_REQUIRED => true,
+            ConstantesForm::$VALIDACAO_VALIDATORS => array(
+                array(
+                    ConstantesForm::$VALIDACAO_NAME => ConstantesForm::$VALIDACAO_NOT_EMPTY,
+                ),
+            ),
+        ));
+        /* Hora */
+        $inputFilter->add(array(
+            ConstantesForm::$VALIDACAO_NAME => ConstantesForm::$FORM_HORA,
+            ConstantesForm::$VALIDACAO_REQUIRED => true,
+            ConstantesForm::$VALIDACAO_VALIDATORS => array(
+                array(
+                    ConstantesForm::$VALIDACAO_NAME => ConstantesForm::$VALIDACAO_NOT_EMPTY,
+                ),
+            ),
+        ));
+        /* Minutos */
+        $inputFilter->add(array(
+            ConstantesForm::$VALIDACAO_NAME => ConstantesForm::$FORM_MINUTOS,
+            ConstantesForm::$VALIDACAO_REQUIRED => true,
+            ConstantesForm::$VALIDACAO_VALIDATORS => array(
+                array(
+                    ConstantesForm::$VALIDACAO_NAME => ConstantesForm::$VALIDACAO_NOT_EMPTY,
+                ),
+            ),
+        ));
+
+        return $inputFilter;
+    }
+
+    /**
+     * @param InputFilterInterface $inputFilter
+     * @throws Exception
+     */
+    public function setInputFilter(InputFilterInterface $inputFilter) {
+        throw new Exception("Nao utilizado");
     }
 
 }

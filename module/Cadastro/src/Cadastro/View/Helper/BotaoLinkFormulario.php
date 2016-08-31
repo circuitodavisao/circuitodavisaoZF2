@@ -5,11 +5,11 @@ namespace Cadastro\View\Helper;
 use Zend\View\Helper\AbstractHelper;
 
 /**
- * Nome: BotaoLink.php
+ * Nome: BotaoLinkFormulario.php
  * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com>
  * Descricao: Classe helper view para mostrar um botao com link
  */
-class BotaoLink extends AbstractHelper {
+class BotaoLinkFormulario extends AbstractHelper {
 
     protected $link;
     protected $label;
@@ -21,12 +21,11 @@ class BotaoLink extends AbstractHelper {
         
     }
 
-    public function __invoke($label, $link, $icone = '', $extra = '', $tipo = 0) {
+    public function __invoke($label, $link, $icone = 0, $extra = '') {
         $this->setLabel($label);
         $this->setLink($link);
         $this->setExtra($extra);
         $this->setIcone($icone);
-        $this->setTipo($tipo);
         return $this->renderHtml();
     }
 
@@ -36,16 +35,12 @@ class BotaoLink extends AbstractHelper {
         $html .= '<label for="" class="field-label">&nbsp;</label>';
         $html .= '<label for="" class="field">';
         $html .= '<a href="' . $this->getLink() . '" ' . $this->getExtra() . '>';
-        $html .= '<button type="button" class="btn ladda-button ' . $classCor . '" data-style="zoom-in" style="width:100%;">';
+        $html .= '<button type="button" class="btn ladda-button ' . $classCor . '" data-style="zoom-in">';
         $html .= '<span class="ladda-label">';
-        if ($this->getTipo() != 1) {
-            $html .= '<span class=" hidden-md hidden-lg">';
-        }
         $html .= $this->view->translate($this->getLabel());
-        if ($this->getTipo() != 1) {
-            $html .= '</span>';
+        if ($this->getIcone()) {
+            $html .= '&nbsp;<i class="' . $this->getIcone() . '"></i>';
         }
-        $html .= '&nbsp;<i class="' . $this->getIcone() . '"></i>';
         $html .= '</span>';
         $html .= '</button>';
         $html .= '</a>';
@@ -82,14 +77,6 @@ class BotaoLink extends AbstractHelper {
 
     function setIcone($icone) {
         $this->icone = $icone;
-    }
-
-    function getTipo() {
-        return $this->tipo;
-    }
-
-    function setTipo($tipo) {
-        $this->tipo = $tipo;
     }
 
 }

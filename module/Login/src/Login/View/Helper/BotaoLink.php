@@ -29,11 +29,11 @@ class BotaoLink extends AbstractHelper {
     }
 
     public function renderHtml() {
-        $classCor = 'primary-circuito';
-        if ($this->getTipo() == 2) {// tipo de menor importancia
-            $classCor = 'primary-default dark';
-        }
         $html = '';
+        $classCor = 'danger';
+        if ($this->getTipo() == 2) {// tipo de menor importancia
+            $classCor = 'default dark';
+        }
         $html .= '<button type="button" ' . $this->getExtra() . ' onclick=\'location.href="' . $this->getLink() . '";\' class="btn ladda-button btn-' . $classCor . ' mr10" data-style="zoom-in">'
                 . '<span class="ladda-label">' . $this->view->translate($this->getLabel()) . '</span>'
                 . '</button>';

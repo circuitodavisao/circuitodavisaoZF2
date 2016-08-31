@@ -36,8 +36,8 @@ echo $this->layoutLoginTop;
         </div>
         <!-- end .form-body section -->
         <div class="panel-footer text-right">
-            <?php echo $this->formButton($formRecuperarAcesso->get(Constantes::$INPUT_BOTAO_CANCELAR)); ?>
-            <?php echo $this->botaoLink(Constantes::$TRADUCAO_CONTINUAR, '#', 0, 'id="' . Constantes::$INPUT_BOTAO_CONTINUAR . '" disabled ' . Constantes::$FORM_STRING_ONCLICK . '="abrirOpcao();"'); ?>
+            <?php echo $this->botaoLink(Constantes::$TRADUCAO_CANCELAR, Constantes::$INDEX, 2, ''); ?>
+            <?php echo $this->botaoLink(Constantes::$TRADUCAO_CONTINUAR, '#', '', 'id="' . Constantes::$INPUT_BOTAO_CONTINUAR . '" disabled ' . Constantes::$FORM_STRING_ONCLICK . '="abrirOpcao();"'); ?>
         </div>
     </div>
     <?php
@@ -67,7 +67,7 @@ echo $this->layoutLoginTop;
             <!-- end section -->
         </div>
         <div class="panel-footer text-right">
-            <?php echo $this->formButton($formRecuperarAcesso->get(Constantes::$INPUT_BOTAO_VOLTAR)); ?>
+            <?php echo $this->botaoLink(Constantes::$TRADUCAO_CANCELAR, Constantes::$INDEX, 2, Constantes::$FORM_STRING_ONCLICK . '="abrirOpcao(0);"'); ?>
             <?php echo $this->botaoSubmit(Constantes::$TRADUCAO_ENVIAR_EMAIL); ?>
         </div>
     </div>
@@ -108,7 +108,7 @@ echo $this->layoutLoginTop;
             <!-- end section -->
         </div>
         <div class="panel-footer text-right">
-            <?php echo $this->formButton($formRecuperarAcesso->get(Constantes::$INPUT_BOTAO_VOLTAR)); ?>
+            <?php echo $this->botaoLink(Constantes::$TRADUCAO_CANCELAR, Constantes::$INDEX, 2, Constantes::$FORM_STRING_ONCLICK . '="abrirOpcao(0);"'); ?>
             <?php echo $this->botaoSubmit(Constantes::$TRADUCAO_VERIFICAR_USUARIO); ?>
         </div>
     </div>

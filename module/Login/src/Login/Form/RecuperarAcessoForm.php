@@ -64,54 +64,6 @@ class RecuperarAcessoForm extends Form {
         );
 
         /**
-         * Botao de cancelar
-         */
-        $this->add(
-                (new Button())
-                        ->setName(Constantes::$INPUT_BOTAO_CANCELAR)
-                        ->setLabel(Constantes::$TRADUCAO_CANCELAR)
-                        ->setAttributes([
-                            Constantes::$FORM_STRING_ID => Constantes::$INPUT_BOTAO_CANCELAR,
-                            Constantes::$FORM_STRING_ONCLICK => 'location.href=\'' . Constantes::$INDEX . '\'',
-                            Constantes::$FORM_STRING_CLASS => Constantes::$FORM_STRING_CLASS_BTN_DEFAULT_ESCURO,
-                            'data-style' => 'zoom-in',
-                        ])
-                        ->setValue(Constantes::$TRADUCAO_CANCELAR)
-        );
-        /**
-         * Botao de continuar
-         */
-        $this->add(
-                (new Button())
-                        ->setName(Constantes::$INPUT_BOTAO_CONTINUAR)
-                        ->setLabel(Constantes::$TRADUCAO_CONTINUAR)
-                        ->setAttributes([
-                            Constantes::$FORM_STRING_ID => Constantes::$INPUT_BOTAO_CONTINUAR,
-                            Constantes::$FORM_STRING_ONCLICK => 'abrirOpcao();',
-                            Constantes::$FORM_STRING_CLASS => Constantes::$FORM_STRING_CLASS_BTN_PRETO,
-                            'data-style' => 'zoom-in',
-                        ])
-                        ->setValue(Constantes::$TRADUCAO_CONTINUAR)
-        );
-
-
-        /**
-         * Botao de voltar
-         */
-        $this->add(
-                (new Button())
-                        ->setName(Constantes::$INPUT_BOTAO_VOLTAR)
-                        ->setLabel(Constantes::$TRADUCAO_VOLTAR)
-                        ->setAttributes([
-                            Constantes::$FORM_STRING_ID => Constantes::$INPUT_BOTAO_VOLTAR,
-                            Constantes::$FORM_STRING_ONCLICK => 'abrirOpcao(0);',
-                            Constantes::$FORM_STRING_CLASS => Constantes::$FORM_STRING_CLASS_BTN_DEFAULT_ESCURO,
-                            'data-style' => 'zoom-in',
-                        ])
-                        ->setValue(Constantes::$TRADUCAO_VOLTAR)
-        );
-
-        /**
          * Email de acesso
          * Elemento do tipo text
          */
@@ -125,27 +77,6 @@ class RecuperarAcessoForm extends Form {
                             Constantes::$FORM_STRING_REQUIRED => Constantes::$FORM_STRING_REQUIRED,
                             Constantes::$FORM_STRING_ONKEYPRESS => Constantes::$FORM_STRING_FUNCAO_CAPSLOCK,
                         ])
-        );
-
-        /**
-         * Captcha de validacao de acesso
-         */
-        $captcha = new Image(array(
-            'expiration' => '300',
-            'wordlen' => '1',
-            'font' => 'public/fonts/arial.ttf',
-            'fontSize' => '20',
-            'imgDir' => 'public/captcha',
-            'imgUrl' => '/captcha'
-        ));
-        $this->add(
-                (new Captcha())
-                        ->setName(Constantes::$INPUT_CAPTCHA)
-                        ->setOptions(
-                                array(
-                                    Constantes::$FORM_STRING_LABEL => 'Verification',
-                                    'captcha' => $captcha,
-                        ))
         );
 
         /**

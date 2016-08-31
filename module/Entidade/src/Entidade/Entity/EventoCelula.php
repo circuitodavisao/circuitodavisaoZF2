@@ -10,7 +10,6 @@ namespace Entidade\Entity;
 use Cadastro\Form\ConstantesForm;
 use Doctrine\ORM\Mapping as ORM;
 use SebastianBergmann\RecursionContext\Exception;
-use Zend\InputFilter\InputFilter;
 use Zend\InputFilter\InputFilterAwareInterface;
 use Zend\InputFilter\InputFilterInterface;
 
@@ -183,27 +182,8 @@ class EventoCelula implements InputFilterAwareInterface {
 
     public function getInputFilter() {
         if (!$this->inputFilter) {
-            $inputFilter = new InputFilter();
-            /* Hora */
-            $inputFilter->add(array(
-                ConstantesForm::$VALIDACAO_NAME => ConstantesForm::$FORM_HORA,
-                ConstantesForm::$VALIDACAO_REQUIRED => true,
-                ConstantesForm::$VALIDACAO_VALIDATORS => array(
-                    array(
-                        ConstantesForm::$VALIDACAO_NAME => ConstantesForm::$VALIDACAO_NOT_EMPTY,
-                    ),
-                ),
-            ));
-            /* Minutos */
-            $inputFilter->add(array(
-                ConstantesForm::$VALIDACAO_NAME => ConstantesForm::$FORM_MINUTOS,
-                ConstantesForm::$VALIDACAO_REQUIRED => true,
-                ConstantesForm::$VALIDACAO_VALIDATORS => array(
-                    array(
-                        ConstantesForm::$VALIDACAO_NAME => ConstantesForm::$VALIDACAO_NOT_EMPTY,
-                    ),
-                ),
-            ));
+            $inputFilter = Evento::getInputFilterEvento();
+
             /* CEP */
             $inputFilter->add(array(
                 ConstantesForm::$VALIDACAO_NAME => ConstantesForm::$FORM_CEP_LOGRADOURO,
