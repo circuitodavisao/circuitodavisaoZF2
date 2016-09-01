@@ -1,8 +1,6 @@
 <?php
 
-use Cadastro\Controller\Helper\ConstantesCadastro;
 use Cadastro\Form\ConstantesForm;
-use Lancamento\Controller\Helper\FuncoesLancamento;
 
 /**
  * Nome: celulas.phtml
@@ -10,62 +8,7 @@ use Lancamento\Controller\Helper\FuncoesLancamento;
  * Descricao: Página de listagem de célula
  */
 $tituloDaPagina = 'Listagem de  Células de <b class="text-danger">' . $this->translate(ConstantesForm::$TRADUCAO_MULTIPLICACAO) . '</b>';
-?>
-<?php echo $this->templateFormularioTopo($tituloDaPagina); ?>
-<div class="panel-body bg-light">
-    <?php if (!empty($this->celulas)) { ?>
-        <table class="table">
-            <thead>
-                <tr class="">
-                    <th class="text-center"><?php echo $this->translate(ConstantesForm::$TRADUCAO_DIA_DA_SEMANA_SIMPLIFICADO) . '/' . $this->translate(ConstantesForm::$TRADUCAO_HORA); ?></th>
-                    <th class="text-center"><?php echo $this->translate(ConstantesForm::$TRADUCAO_NOME_HOSPEDEIRO); ?></th>
-                    <th class="text-center visible-lg visible-md visible-sm"><?php echo $this->translate(ConstantesForm::$TRADUCAO_TELEFONE_HOSPEDEIRO); ?></th>
-                    <th class="text-center visible-lg visible-md visible-sm"><?php echo $this->translate(ConstantesForm::$TRADUCAO_LOGRADOURO); ?></th>
-                    <th class="text-center"></th>
-                </tr>
-            </thead>
-            <tbody>  
-                <?php
-                foreach ($this->celulas as $ge) {
-                    $evento = $ge->getEvento();
-                    $celula = $evento->getEventoCelula();
-                    if (!is_null($celula)) {
-                        $diaDaSemanaAjustado = FuncoesLancamento::diaDaSemanaPorDia($evento->getDia());
-                        $stringNomeDaFuncaoOnClick = 'funcaoCadastro("' . ConstantesCadastro::$PAGINA_CELULA . '", ' . $celula->getId() . ')';
-                        $stringNomeDaFuncaoOnClickExclusao = 'funcaoCadastro("' . ConstantesCadastro::$PAGINA_CELULA_EXCLUSAO . '", ' . $celula->getId() . ')';
-                        echo '<tr>';
-                        echo '<td class="text-center">' . $diaDaSemanaAjustado . '/' . $evento->getHoraFormatoHoraMinutoParaListagem() . '</td>';
-                        echo '<td class="text-center">' . $celula->getNome_hospedeiroPrimeiroNome() . '</td>';
-                        echo '<td class="text-center visible-lg visible-md visible-sm">' . $celula->getTelefone_hospedeiroFormatado() . '</td>';
-                        echo '<td class="text-center visible-lg visible-md visible-sm">' . $celula->getLogradouro() . '&nbsp;' . $celula->getComplemento() . '</td>';
-                        echo '<td class="text-center">';
-                        echo $this->botaoLink(ConstantesForm::$STRING_ICONE_PENCIL, ConstantesForm::$STRING_HASHTAG, 3, $this->funcaoOnClick($stringNomeDaFuncaoOnClick));
-                        echo $this->botaoLink(ConstantesForm::$STRING_ICONE_TIMES, ConstantesForm::$STRING_HASHTAG, 4, $this->funcaoOnClick($stringNomeDaFuncaoOnClickExclusao));
-                        echo '</td>';
-                        echo '</tr>';
-                    }
-                }
-                ?>
-            </tbody>
-        </table>
-    <?php } else { ?>
-        <div class="alert alert-warning"><i class="fa fa-warning pr10" aria-hidden="true"></i>&nbsp;Sem Células cadastradas!</div>
-    <?php } ?>
-</div>
-<div class="panel-footer text-right">
-    <?php
-    /* Botões */
-    if (count($this->celulas) < 2) {
-        $stringNomeDaFuncaoOnClickCadastro = 'funcaoCadastro("' . ConstantesCadastro::$PAGINA_CELULA . '", 0)';
-        echo $this->botaoLink(ConstantesForm::$STRING_ICONE_PLUS . ' ' . $this->translate(ConstantesForm::$TRADUCAO_NOVA_CELULA), ConstantesForm::$STRING_HASHTAG, 0, $this->funcaoOnClick($stringNomeDaFuncaoOnClickCadastro));
-    } else {
-        ?>
-        <div class="alert alert-micro alert-warning">
-            <i class="fa fa-warning pr10" aria-hidden="true"></i>
-            <?php echo $this->translate(ConstantesForm::$TRADUCAO_NUMERO_MAXIMO_CELULAS); ?>
-        </div>
-    <?php } ?>                    
-</div>
-<?php
-echo $this->templateFormularioRodape();
+
+/* Monta a listagem de eventos baseada no tipo do Evento passado */
+echo $this->listagemDeEventos($tituloDaPagina, $this->celulas);
 echo $this->layoutJSCelulasValidacao;

@@ -57,6 +57,9 @@ class Evento implements InputFilterAwareInterface {
     protected $dia;
 
     /** @ORM\Column(type="string") */
+    protected $nome;
+
+    /** @ORM\Column(type="string") */
     protected $hora;
 
     /** @ORM\Column(type="string") */
@@ -311,6 +314,14 @@ class Evento implements InputFilterAwareInterface {
      */
     public function setInputFilter(InputFilterInterface $inputFilter) {
         throw new Exception("Nao utilizado");
+    }
+
+    function getNome() {
+        return $this->nome;
+    }
+
+    function setNome($nome) {
+        $this->nome = $nome;
     }
 
 }

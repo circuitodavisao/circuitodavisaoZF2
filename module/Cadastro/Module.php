@@ -10,6 +10,7 @@ namespace Cadastro;
 
 use Cadastro\View\Helper\FuncaoOnClick;
 use Cadastro\View\Helper\InputDiaDaSemanaHoraMinuto;
+use Cadastro\View\Helper\ListagemDeEventos;
 use Cadastro\View\Helper\TemplateFormularioRodape;
 use Cadastro\View\Helper\TemplateFormularioTopo;
 use Cadastro\View\Helper\TituloDaPagina;
@@ -71,6 +72,9 @@ class Module {
                 },
                 'inputDiaDaSemanaHoraMinuto' => function($sm) {
                     return new InputDiaDaSemanaHoraMinuto();
+                },
+                'listagemDeEventos' => function($sm) {
+                    return new ListagemDeEventos();
                 },
             )
         );

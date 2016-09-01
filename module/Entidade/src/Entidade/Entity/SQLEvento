@@ -5,13 +5,14 @@
 CREATE TABLE evento
 (
   id serial NOT NULL, -- Identificação do evento
-  dia integer NOT NULL, -- Dia da semana que ocorre o evento
-  hora timestamp without time zone NOT NULL, -- Hora que ocore o evento
+  dia integer NOT NULL, -- Dia da semana que ocorre o evento....
+  hora time without time zone NOT NULL, -- Hora que ocore o evento
   data_criacao date NOT NULL DEFAULT ('now'::text)::date, -- Data de criação do evento
   hora_criacao time without time zone NOT NULL DEFAULT ('now'::text)::time with time zone, -- Hora de criação do evento
   data_inativacao date, -- Data de inativação do evento
   hora_inativacao time without time zone, -- Hora de inativação do evento
   tipo_id integer NOT NULL, -- Identificação do tipo do evento
+  nome character varying(30), -- Nome do evento
   CONSTRAINT pk_evento PRIMARY KEY (id),
   CONSTRAINT fk_evento_evento_tipo_id FOREIGN KEY (tipo_id)
       REFERENCES evento_tipo (id) MATCH SIMPLE
@@ -25,11 +26,14 @@ ALTER TABLE evento
 COMMENT ON TABLE evento
   IS 'Tabela que armazena dados dos eventos em geral';
 COMMENT ON COLUMN evento.id IS 'Identificação do evento';
-COMMENT ON COLUMN evento.dia IS 'Dia da semana que ocorre o evento';
+COMMENT ON COLUMN evento.dia IS 'Dia da semana que ocorre o evento.
+1 - domingo
+7 - sabado';
 COMMENT ON COLUMN evento.hora IS 'Hora que ocore o evento';
 COMMENT ON COLUMN evento.data_criacao IS 'Data de criação do evento';
 COMMENT ON COLUMN evento.hora_criacao IS 'Hora de criação do evento';
 COMMENT ON COLUMN evento.data_inativacao IS 'Data de inativação do evento';
 COMMENT ON COLUMN evento.hora_inativacao IS 'Hora de inativação do evento';
 COMMENT ON COLUMN evento.tipo_id IS 'Identificação do tipo do evento';
+COMMENT ON COLUMN evento.nome IS 'Nome do evento';
 
