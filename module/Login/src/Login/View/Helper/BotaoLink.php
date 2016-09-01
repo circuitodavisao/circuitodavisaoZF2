@@ -31,10 +31,16 @@ class BotaoLink extends AbstractHelper {
     public function renderHtml() {
         $html = '';
         $classCor = 'danger';
-        if ($this->getTipo() == 2) {// tipo de menor importancia
+        $margenRight = 'mr10';
+        if ($this->getTipo() == 2 || $this->getTipo() == 3) {// tipo de menor importancia
             $classCor = 'default dark';
         }
-        $html .= '<button type="button" ' . $this->getExtra() . ' onclick=\'location.href="' . $this->getLink() . '";\' class="btn ladda-button btn-' . $classCor . ' mr10" data-style="zoom-in">'
+        $tamanho = '';
+        if ($this->getTipo() == 3 || $this->getTipo() == 4) {// tamanho extra pequeno
+            $tamanho = 'btn-xs';
+            $margenRight = 'mr5';
+        }
+        $html .= '<button type="button" ' . $this->getExtra() . ' onclick=\'location.href="' . $this->getLink() . '";\' class="btn ladda-button btn-' . $classCor . ' ' . $tamanho . ' ' . $margenRight . '" data-style="zoom-in">'
                 . '<span class="ladda-label">' . $this->view->translate($this->getLabel()) . '</span>'
                 . '</button>';
         return $html;

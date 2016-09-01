@@ -50,6 +50,16 @@ class ConstantesForm {
     public static $FORM_DISABLED = 'disabled';
     public static $FORM_SUBMIT = 'submit';
 
+    /* Formulario de Celulas */
+    public static $STRING_DIV_CONFIRMACAO = 'divConfirmacao';
+    public static $STRING_ICONE_PENCIL = '<i class="fa fa-pencil" aria-hidden="true"></i>';
+    public static $STRING_ICONE_TIMES = '<i class="fa fa-times" aria-hidden="true"></i>';
+    public static $STRING_ICONE_PLUS = '<i class="fa fa-plus" aria-hidden="true"></i>';
+    public static $STRING_ICONE_ARROW_LEFT = '<i class="fa fa-arrow-left" aria-hidden="true"></i>';
+    public static $STRING_ICONE_ARROW_RIGHT = '<i class="fa fa-arrow-right" aria-hidden="true"></i>';
+    public static $STRING_HASHTAG = '#';
+    public static $STRING_FUNCAO_PRE_VALIDACAO = 'preValidacao();';
+
     /* Validações */
     public static $VALIDACAO_NAME = 'name';
     public static $VALIDACAO_REQUIRED = 'required';
@@ -88,6 +98,7 @@ class ConstantesForm {
     public static $TRADUCAO_DIA_DA_SEMANA_SIMPLIFICADO = 'Day';
     public static $TRADUCAO_CADASTRO_CELULA = 'Registration Celula';
     public static $TRADUCAO_NOVA = 'New';
+    public static $TRADUCAO_NOVA_CELULA = 'New Cell';
     public static $TRADUCAO_MULTIPLICACAO = 'Multiplication';
     public static $TRADUCAO_DIA_HORA = 'Day / Hour';
     public static $TRADUCAO_DADOS_DO_HOSPEDEIRO = 'Data from Host';
@@ -116,6 +127,7 @@ class ConstantesForm {
     public static $TRADUCAO_CONTINUAR = 'Continue';
     public static $TRADUCAO_DIGITE_SENHA_EXCUSAO_SENHA = 'Enter your password to confirm the deletion';
     public static $TRADUCAO_CONFIRMACAO = 'Confirm';
+    public static $TRADUCAO_NUMERO_MAXIMO_CELULAS = 'Maximum number of cells reached!';
 
     /* Layout */
     public static $LAYOUT_JS_CELULA = 'layout/layout-js-celula';

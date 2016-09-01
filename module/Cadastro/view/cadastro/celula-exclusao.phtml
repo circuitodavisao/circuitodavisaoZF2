@@ -8,115 +8,111 @@ use Login\Controller\Helper\Constantes;
 $eventoCelula = $this->celula;
 $evento = $eventoCelula->getEvento();
 $diaDaSemanaAjustado = FuncoesLancamento::diaDaSemanaPorDia($evento->getDia(), 1);
-?>
-<div class="mw1000 center-block p10">
-    <div class="admin-form theme-danger">
-        <blockquote class="blockquote-danger">
-            <small><?php echo $this->translate(ConstantesForm::$TRADUCAO_CONFIRMACAO_EXCLUSAO_CELULA); ?></small>
-        </blockquote>
-        <div id="divConfirmacao" class="panel heading-border panel-danger">
-            <div class="panel-body bg-light">
-                <div class="section-divider">
-                    <span><?php echo $this->translate(ConstantesForm::$TRADUCAO_PERGUNTA_EXCLUSAO_CELULA); ?></span>
-                </div>
-                <div class="panel heading-border panel-danger">
-                    <div class="panel-body">
-                        <address>
-                            <?php echo $this->dadosEntidade(); ?>
-                        </address>
-                        <address>
-                            <div><strong><?php echo $this->translate(ConstantesForm::$TRADUCAO_DIA_DA_SEMANA_SIMPLIFICADO) . '/' . $this->translate(ConstantesForm::$TRADUCAO_HORA); ?></strong></div>
-                            <div><?php echo $diaDaSemanaAjustado . '/' . $evento->getHoraFormatoHoraMinutoParaListagem(); ?></div>
-                        </address>
-                        <address>
-                            <div><strong><?php echo $this->translate(ConstantesForm::$TRADUCAO_HOSPEDEIRO); ?></strong></div>
-                            <div><?php echo $celula->getNome_hospedeiro(); ?></div>
-                            <div>Phone: <?php echo $celula->getTelefone_hospedeiroFormatado(); ?></div>
-                        </address>                     
-                        <address>
-                            <div><strong><?php echo $this->translate(ConstantesForm::$TRADUCAO_ENDERECO); ?></strong></div>
-                            <div><?php echo $celula->getLogradouro() . ',&nbsp;' . $celula->getComplemento(); ?></div>
-                            <div><?php echo $celula->getCidade() . '&nbsp;-&nbsp;' . $celula->getBairro() . ',&nbsp;' . $celula->getUf() . '&nbsp; CEP:' . $celula->getCep(); ?></div>                  
-                        </address>
-                    </div>                 
-                </div>
+$tituloDaPagina = $this->translate(ConstantesForm::$TRADUCAO_CONFIRMACAO_EXCLUSAO_CELULA);
 
-                <div class="row">
-                    <div class="col-sm-12 col-xs-12">
-                        <div class="section text-center">
-                            <label class="option block mt15">
-                                <input type="checkbox" name="checked" value="checked" onclick="
-                                        $('#divMotivo').toggleClass('<?php echo ConstantesForm::$FORM_HIDDEN; ?>');
-                                       ">
-                                <span class="checkbox"></span><?php echo $this->translate(ConstantesForm::$TRADUCAO_CIENCIA_EXCLUSAO_CELULA); ?></label> 
-                        </div>
-                    </div>
-                </div>
-                <div id="divMotivo" class="panel heading-border panel-danger hidden">
-                    <div class="panel-body bg-light">
-                        <div class="section-divider">
-                            <span><?php echo $this->translate(ConstantesForm::$TRADUCAO_MOTIVO_EXCLUSAO_CELULA); ?></span>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-12 col-xs-12">
-                                <div class="section text-center">
-                                    <select class="gui-input">
-                                        <option>SELECT</option>
-                                        <option>SAIU DA IGREJA</option>
-                                        <option>OUTRO</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-12 col-xs-12">
-                                <div class="section">
-                                    <label class="field prepend-icon">
-                                        <textarea class="gui-textarea" id="comment" name="comment" placeholder="<?php echo $this->translate(ConstantesForm::$TRADUCAO_DESCREVA_MOTIVO_EXCLUSAO_CELULA); ?>"></textarea>
-                                        <label for="comment" class="field-icon">
-                                            <i class="fa fa-comments"></i>
-                                        </label>
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="panel-footer text-right" style="height:65px;">
-                        <button onclick="location.href = '/cadastroCelulas';" data-style="zoom-in" type="button" class="btn ladda-button btn-dark"><i class="fa fa-arrow-left" aria-hidden="true"></i> <?php echo $this->translate(Constantes::$TRADUCAO_VOLTAR); ?></button>
-                        &nbsp;
-                        <button onclick="
-                                $('#divConfirmacao').toggleClass('<?php echo ConstantesForm::$FORM_HIDDEN; ?>');
-                                $('#divSenha').toggleClass('<?php echo ConstantesForm::$FORM_HIDDEN; ?>');
-                                " data-style="zoom-in" type="button" class="btn ladda-button btn-danger"><?php echo $this->translate(ConstantesForm::$TRADUCAO_CONTINUAR); ?> <i class="fa fa-arrow-right" aria-hidden="true"></i></button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div id="divSenha" class="panel heading-border panel-danger hidden">
-            <div class="panel-body bg-light">
-                <div class="section-divider">
-                    <span><?php echo $this->translate(ConstantesForm::$TRADUCAO_DIGITE_SENHA_EXCUSAO_SENHA); ?></span>
-                </div>
-                <div class="row">
-                    <div class="col-sm-12 col-xs-12">
-                        <div class="section text-center">
-                            <input type="password" class="gui-input" placeholder="<?php echo $this->translate(Constantes::$TRADUCAO_SENHA); ?>" />
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="panel-footer text-right" style="height:65px;">
-                <button onclick="
-                        $('#divConfirmacao').toggleClass('<?php echo ConstantesForm::$FORM_HIDDEN; ?>');
-                        $('#divSenha').toggleClass('<?php echo ConstantesForm::$FORM_HIDDEN; ?>');
-                        " data-style="zoom-in" type="button" class="btn ladda-button btn-dark">
-                    <i class="fa fa-arrow-left" aria-hidden="true"></i> <?php echo $this->translate(Constantes::$TRADUCAO_VOLTAR); ?>
-                </button>
-                &nbsp;
-                <button onclick="funcaoCadastro('<?php echo ConstantesCadastro::$PAGINA_CELULA_EXCLUSAO_CONFIRMACAO . '\', ' . $celula->getId(); ?>);" data-style="zoom-in" type="submit" class="btn ladda-button btn-danger">
-                    <?php echo $this->translate(ConstantesForm::$TRADUCAO_CONFIRMACAO); ?>
-                </button>
+echo $this->templateFormularioTopo($tituloDaPagina, ConstantesForm::$STRING_DIV_CONFIRMACAO);
+?>
+<div class="panel-body bg-light">
+    <div class="section-divider">
+        <span><?php echo $this->translate(ConstantesForm::$TRADUCAO_PERGUNTA_EXCLUSAO_CELULA); ?></span>
+    </div>
+    <div class="panel heading-border panel-danger">
+        <div class="panel-body">
+            <address>
+                <?php echo $this->dadosEntidade(); ?>
+            </address>
+            <address>
+                <div><strong><?php echo $this->translate(ConstantesForm::$TRADUCAO_DIA_DA_SEMANA_SIMPLIFICADO) . '/' . $this->translate(ConstantesForm::$TRADUCAO_HORA); ?></strong></div>
+                <div><?php echo $diaDaSemanaAjustado . '/' . $evento->getHoraFormatoHoraMinutoParaListagem(); ?></div>
+            </address>
+            <address>
+                <div><strong><?php echo $this->translate(ConstantesForm::$TRADUCAO_HOSPEDEIRO); ?></strong></div>
+                <div><?php echo $celula->getNome_hospedeiro(); ?></div>
+                <div>Phone: <?php echo $celula->getTelefone_hospedeiroFormatado(); ?></div>
+            </address>                     
+            <address>
+                <div><strong><?php echo $this->translate(ConstantesForm::$TRADUCAO_ENDERECO); ?></strong></div>
+                <div><?php echo $celula->getLogradouro() . ',&nbsp;' . $celula->getComplemento(); ?></div>
+                <div><?php echo $celula->getCidade() . '&nbsp;-&nbsp;' . $celula->getBairro() . ',&nbsp;' . $celula->getUf() . '&nbsp; CEP:' . $celula->getCep(); ?></div>                  
+            </address>
+        </div>                 
+    </div>
+    <div class="row">
+        <div class="col-sm-12 col-xs-12">
+            <div class="section text-center">
+                <label class="option block mt15">
+                    <input type="checkbox" name="checked" value="checked" onclick="
+                            $('#divMotivo').toggleClass('<?php echo ConstantesForm::$FORM_HIDDEN; ?>');
+                           ">
+                    <span class="checkbox"></span><?php echo $this->translate(ConstantesForm::$TRADUCAO_CIENCIA_EXCLUSAO_CELULA); ?></label> 
             </div>
         </div>
     </div>
+    <div id="divMotivo" class="panel heading-border panel-danger hidden">
+        <div class="panel-body bg-light">
+            <div class="section-divider">
+                <span><?php echo $this->translate(ConstantesForm::$TRADUCAO_MOTIVO_EXCLUSAO_CELULA); ?></span>
+            </div>
+            <div class="row">
+                <div class="col-sm-12 col-xs-12">
+                    <div class="section text-center">
+                        <select class="gui-input">
+                            <option>SELECT</option>
+                            <option>SAIU DA IGREJA</option>
+                            <option>OUTRO</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12 col-xs-12">
+                    <div class="section">
+                        <label class="field prepend-icon">
+                            <textarea class="gui-textarea" id="comment" name="comment" placeholder="<?php echo $this->translate(ConstantesForm::$TRADUCAO_DESCREVA_MOTIVO_EXCLUSAO_CELULA); ?>"></textarea>
+                            <label for="comment" class="field-icon">
+                                <i class="fa fa-comments"></i>
+                            </label>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="panel-footer text-right" style="height:65px;">
+            <?php
+            $labelVoltar = ConstantesForm::$STRING_ICONE_ARROW_LEFT . ' ' . $this->translate(Constantes::$TRADUCAO_VOLTAR);
+            $labelContinuar = $this->translate(ConstantesForm::$TRADUCAO_CONTINUAR) . ' ' . ConstantesForm::$STRING_ICONE_ARROW_RIGHT;
+            $stringNomeDaFuncaoOnClickContinuarExclusao = '$("#divConfirmacao").toggleClass("' . ConstantesForm::$FORM_HIDDEN . '");' .
+                    '$("#divSenha").toggleClass("' . ConstantesForm::$FORM_HIDDEN . '")';
+            /* Botões */
+            echo $this->botaoLink($labelVoltar, ConstantesCadastro::$ROUTE_CADASTRO . ConstantesCadastro::$PAGINA_CELULAS, 2, '');
+            echo $this->botaoLink($labelContinuar, ConstantesForm::$STRING_HASHTAG, 0, $this->funcaoOnClick($stringNomeDaFuncaoOnClickContinuarExclusao));
+            ?>
+        </div>
+    </div>
 </div>
+</div>
+<div id="divSenha" class="panel heading-border panel-danger hidden">
+    <div class="panel-body bg-light">
+        <div class="section-divider">
+            <span><?php echo $this->translate(ConstantesForm::$TRADUCAO_DIGITE_SENHA_EXCUSAO_SENHA); ?></span>
+        </div>
+        <div class="row">
+            <div class="col-sm-12 col-xs-12">
+                <div class="section text-center">
+                    <input type="password" class="gui-input" placeholder="<?php echo $this->translate(Constantes::$TRADUCAO_SENHA); ?>" />
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="panel-footer text-right" style="height:65px;">
+        <?php
+        $labelConfirmar = $this->translate(ConstantesForm::$TRADUCAO_CONFIRMACAO);
+        $stringNomeDaFuncaoOnClickConfimarExclusao = 'funcaoCadastro("' . ConstantesCadastro::$PAGINA_CELULA_EXCLUSAO_CONFIRMACAO . '", ' . $celula->getId() . ')';
+        /* Botões */
+        echo $this->botaoLink($labelVoltar, ConstantesCadastro::$ROUTE_CADASTRO . ConstantesCadastro::$PAGINA_CELULAS, 2, $this->funcaoOnClick($stringNomeDaFuncaoOnClickContinuarExclusao));
+        echo $this->botaoLink($labelConfirmar, ConstantesForm::$STRING_HASHTAG, 0, $this->funcaoOnClick($stringNomeDaFuncaoOnClickConfimarExclusao));
+        ?>      
+    </div>
+    <?php
+    echo $this->templateFormularioRodape();
+    
