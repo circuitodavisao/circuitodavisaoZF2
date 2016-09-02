@@ -8,6 +8,7 @@ use Cadastro\Controller\Helper\FuncoesCadastro;
 use Cadastro\Controller\Helper\RepositorioORM;
 use Cadastro\Form\CelulaForm;
 use Cadastro\Form\ConstantesForm;
+use Cadastro\Form\EventoForm;
 use Doctrine\ORM\EntityManager;
 use Entidade\Entity\Evento;
 use Entidade\Entity\EventoCelula;
@@ -48,41 +49,42 @@ class CadastroController extends AbstractActionController {
         $sessao = new Container(Constantes::$NOME_APLICACAO);
         /* Verificando rota */
         $pagina = $this->getEvent()->getRouteMatch()->getParam(ConstantesCadastro::$PAGINA, 1);
-        if ($pagina == ConstantesCadastro::$PAGINA_CELULAS) {
+        if ($pagina == ConstantesCadastro::$PAGINA_EVENTO_CULTO) {
+            $sessao->pagina = ConstantesCadastro::$PAGINA_EVENTO_CULTO;
             return $this->forward()->dispatch(ConstantesCadastro::$CONTROLLER_CADASTRO, array(
-                        Constantes::$ACTION => ConstantesCadastro::$PAGINA_CELULAS,
+                        Constantes::$ACTION => ConstantesCadastro::$PAGINA_EVENTO,
             ));
         }
-        if ($pagina == ConstantesCadastro::$PAGINA_CELULA) {
-            return $this->forward()->dispatch(ConstantesCadastro::$CONTROLLER_CADASTRO, array(
-                        Constantes::$ACTION => ConstantesCadastro::$PAGINA_CELULA,
-            ));
-        }
-        if ($pagina == ConstantesCadastro::$PAGINA_CELULA_CONFIRMACAO) {
-            return $this->forward()->dispatch(ConstantesCadastro::$CONTROLLER_CADASTRO, array(
-                        Constantes::$ACTION => ConstantesCadastro::$PAGINA_CELULA_CONFIRMACAO,
-            ));
-        }
-        if ($pagina == ConstantesCadastro::$PAGINA_CELULA_PERSISTIR) {
-            return $this->forward()->dispatch(ConstantesCadastro::$CONTROLLER_CADASTRO, array(
-                        Constantes::$ACTION => ConstantesCadastro::$PAGINA_CELULA_PERSISTIR,
-            ));
-        }
-        if ($pagina == ConstantesCadastro::$PAGINA_BUSCAR_ENDERECO) {
-            return $this->forward()->dispatch(ConstantesCadastro::$CONTROLLER_CADASTRO, array(
-                        Constantes::$ACTION => ConstantesCadastro::$PAGINA_BUSCAR_ENDERECO,
-            ));
-        }
-        if ($pagina == ConstantesCadastro::$PAGINA_CELULA_EXCLUSAO) {
-            return $this->forward()->dispatch(ConstantesCadastro::$CONTROLLER_CADASTRO, array(
-                        Constantes::$ACTION => ConstantesCadastro::$PAGINA_CELULA_EXCLUSAO,
-            ));
-        }
-        if ($pagina == ConstantesCadastro::$PAGINA_CELULA_EXCLUSAO_CONFIRMACAO) {
-            return $this->forward()->dispatch(ConstantesCadastro::$CONTROLLER_CADASTRO, array(
-                        Constantes::$ACTION => ConstantesCadastro::$PAGINA_CELULA_EXCLUSAO_CONFIRMACAO,
-            ));
-        }
+//        if ($pagina == ConstantesCadastro::$PAGINA_CELULA) {
+//            return $this->forward()->dispatch(ConstantesCadastro::$CONTROLLER_CADASTRO, array(
+//                        Constantes::$ACTION => ConstantesCadastro::$PAGINA_CELULA,
+//            ));
+//        }
+//        if ($pagina == ConstantesCadastro::$PAGINA_CELULA_CONFIRMACAO) {
+//            return $this->forward()->dispatch(ConstantesCadastro::$CONTROLLER_CADASTRO, array(
+//                        Constantes::$ACTION => ConstantesCadastro::$PAGINA_CELULA_CONFIRMACAO,
+//            ));
+//        }
+//        if ($pagina == ConstantesCadastro::$PAGINA_CELULA_PERSISTIR) {
+//            return $this->forward()->dispatch(ConstantesCadastro::$CONTROLLER_CADASTRO, array(
+//                        Constantes::$ACTION => ConstantesCadastro::$PAGINA_CELULA_PERSISTIR,
+//            ));
+//        }
+//        if ($pagina == ConstantesCadastro::$PAGINA_BUSCAR_ENDERECO) {
+//            return $this->forward()->dispatch(ConstantesCadastro::$CONTROLLER_CADASTRO, array(
+//                        Constantes::$ACTION => ConstantesCadastro::$PAGINA_BUSCAR_ENDERECO,
+//            ));
+//        }
+//        if ($pagina == ConstantesCadastro::$PAGINA_CELULA_EXCLUSAO) {
+//            return $this->forward()->dispatch(ConstantesCadastro::$CONTROLLER_CADASTRO, array(
+//                        Constantes::$ACTION => ConstantesCadastro::$PAGINA_CELULA_EXCLUSAO,
+//            ));
+//        }
+//        if ($pagina == ConstantesCadastro::$PAGINA_CELULA_EXCLUSAO_CONFIRMACAO) {
+//            return $this->forward()->dispatch(ConstantesCadastro::$CONTROLLER_CADASTRO, array(
+//                        Constantes::$ACTION => ConstantesCadastro::$PAGINA_CELULA_EXCLUSAO_CONFIRMACAO,
+//            ));
+//        }
         /* Funcoes */
         if ($pagina == ConstantesLancamento::$PAGINA_FUNCOES) {
             return $this->forward()->dispatch(ConstantesCadastro::$CONTROLLER_CADASTRO, array(
@@ -90,7 +92,76 @@ class CadastroController extends AbstractActionController {
             ));
         }
 
-        return new ViewModel();
+        /* Por titulo e eventos na sessão para passar a tela */
+        $listagemDeEventos = null;
+        $tituloDaPagina = '';
+        /* Listagem de celulas */
+        $lancamentoORM = new LancamentoORM($this->getDoctrineORMEntityManager());
+        $idEntidadeAtual = $sessao->idEntidadeAtual;
+        $entidade = $lancamentoORM->getEntidadeORM()->encontrarPorIdEntidade($idEntidadeAtual);
+        $grupo = $entidade->getGrupo();
+        if ($pagina == ConstantesCadastro::$PAGINA_CELULAS) {
+            $listagemDeEventos = $grupo->getGrupoEventoCelula();
+            $tituloDaPagina = ConstantesForm::$TRADUCAO_LISTAGEM_CELULAS . ' <b class="text-danger">' . ConstantesForm::$TRADUCAO_MULTIPLICACAO . '</b>';
+        }
+        if ($pagina == ConstantesCadastro::$PAGINA_CULTOS) {
+            $listagemDeEventos = $grupo->getGrupoEventoCulto();
+            $tituloDaPagina = ConstantesForm::$TRADUCAO_LISTAGEM_CULTOS;
+        }
+        return new ViewModel(
+                array(
+            ConstantesForm::$LISTAGEM_EVENTOS => $listagemDeEventos,
+            ConstantesForm::$TITULO_DA_PAGINA => $tituloDaPagina,
+                )
+        );
+    }
+
+    /**
+     * Função para o formulário de eventos
+     * GET /cadastroEvento
+     */
+    public function eventoAction() {
+        $form = null;
+        $enderecoHidden = '';
+        $sessao = new Container(Constantes::$NOME_APLICACAO);
+
+        if ($sessao->pagina == ConstantesCadastro::$PAGINA_EVENTO_CULTO) {
+            /* Verificando a se tem algum id na sessão */
+            $eventoNaSessao = new Evento();
+            if (!empty($sessao->idSessao)) {
+                $lancamentoORM = new LancamentoORM($this->getDoctrineORMEntityManager());
+                $eventoNaSessao = $lancamentoORM->getEventoORM()->encontrarPorIdEvento($sessao->idSessao);
+            }
+            $form = new EventoForm(ConstantesForm::$FORM, $eventoNaSessao);
+        }
+        if ($sessao->pagina == ConstantesCadastro::$PAGINA_EVENTO_CELULA) {
+            /* Verificando a se tem algum id na sessão */
+            $eventoCelulaNaSessao = new EventoCelula();
+            if (!empty($sessao->idSessao)) {
+                $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
+                $eventoCelulaNaSessao = $repositorioORM->getEventoCelulaORM()->encontrarPorIdEventoCelula($sessao->idSessao);
+            } else {
+                $enderecoHidden = ConstantesForm::$FORM_HIDDEN;
+            }
+
+            $form = new CelulaForm(ConstantesForm::$FORM_CELULA, $eventoCelulaNaSessao);
+        }
+
+        $view = new ViewModel(array(
+            ConstantesForm::$FORM => $form,
+            ConstantesForm::$FORM_ENDERECO_HIDDEN => $enderecoHidden
+        ));
+
+        /* Javascript */
+        $layoutJS = new ViewModel();
+        $layoutJS->setTemplate(ConstantesForm::$LAYOUT_JS_CELULA);
+        $view->addChild($layoutJS, ConstantesForm::$LAYOUT_STRING_JS_CELULA);
+
+        $layoutJSValidacao = new ViewModel();
+        $layoutJSValidacao->setTemplate(ConstantesForm::$LAYOUT_JS_CELULA_VALIDACAO);
+        $view->addChild($layoutJSValidacao, ConstantesForm::$LAYOUT_STRING_JS_CELULA_VALIDACAO);
+
+        return $view;
     }
 
     /**

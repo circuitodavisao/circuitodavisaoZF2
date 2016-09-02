@@ -348,6 +348,19 @@ class Grupo {
         return $this->getEventos();
     }
 
+    function getGrupoEventoCulto() {
+        $eventos = null;
+        if (!empty($this->getGrupoEvento())) {
+            foreach ($this->getGrupoEvento() as $ge) {
+                if ($ge->verificarSeEstaAtivo() && $ge->getEvento()->verificaSeECulto()) {
+                    $eventos[] = $ge;
+                }
+            }
+        }
+        $this->setEventos($eventos);
+        return $this->getEventos();
+    }
+
     function setGrupoEvento($grupoEvento) {
         $this->grupoEvento = $grupoEvento;
     }

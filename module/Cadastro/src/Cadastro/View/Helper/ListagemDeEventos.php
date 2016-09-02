@@ -37,7 +37,8 @@ class ListagemDeEventos extends AbstractHelper {
             $html .= '<tr>';
 
             /* Caso seja evento do tipo Célula */
-            $tipoCelula = !empty($this->getEventos()[0]->getEvento()->getEventoCelula());
+            $tipoCelula = !empty($this->getEventos()[0]->getEvento()->verificaSeECelula());
+            $tipoCulto = !empty($this->getEventos()[0]->getEvento()->verificaSeECulto());
             if ($tipoCelula) {
                 $html .= '<th class="text-center">';
                 $html .=$this->view->translate(ConstantesForm::$TRADUCAO_DIA_DA_SEMANA_SIMPLIFICADO) . ' / ' . $this->view->translate(ConstantesForm::$TRADUCAO_HORA);
@@ -50,6 +51,15 @@ class ListagemDeEventos extends AbstractHelper {
                 $html .= '</th>';
                 $html .= '<th class="text-center visible-lg visible-md visible-sm">';
                 $html .=$this->view->translate(ConstantesForm::$TRADUCAO_LOGRADOURO);
+                $html .= '</th>';
+                $html .= '<th class="text-center"></th>';
+            }
+            if ($tipoCulto) {
+                $html .= '<th class="text-center">';
+                $html .=$this->view->translate(ConstantesForm::$TRADUCAO_DIA_DA_SEMANA_SIMPLIFICADO) . ' / ' . $this->view->translate(ConstantesForm::$TRADUCAO_HORA);
+                $html .= '</th>';
+                $html .= '<th class="text-center">';
+                $html .=$this->view->translate(ConstantesForm::$TRADUCAO_NOME);
                 $html .= '</th>';
                 $html .= '<th class="text-center"></th>';
             }
@@ -77,6 +87,22 @@ class ListagemDeEventos extends AbstractHelper {
                     $html .= '</tr>';
                 }
             }
+            if ($tipoCulto) {
+                foreach ($this->getEventos() as $ge) {
+                    $evento = $ge->getEvento();
+                    $diaDaSemanaAjustado = FuncoesLancamento::diaDaSemanaPorDia($evento->getDia());
+                    $stringNomeDaFuncaoOnClick = 'funcaoCadastro("' . ConstantesCadastro::$PAGINA_CELULA . '", ' . $evento->getId() . ')';
+                    $stringNomeDaFuncaoOnClickExclusao = 'funcaoCadastro("' . ConstantesCadastro::$PAGINA_CELULA_EXCLUSAO . '", ' . $evento->getId() . ')';
+                    $html .= '<tr>';
+                    $html .= '<td class="text-center">' . $diaDaSemanaAjustado . '/' . $evento->getHoraFormatoHoraMinutoParaListagem() . '</td>';
+                    $html .= '<td class="text-center">' . $evento->getNome() . '</td>';
+                    $html .= '<td class="text-center">';
+                    $html .= $this->view->botaoLink(ConstantesForm::$STRING_ICONE_PENCIL, ConstantesForm::$STRING_HASHTAG, 3, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClick));
+                    $html .= $this->view->botaoLink(ConstantesForm::$STRING_ICONE_TIMES, ConstantesForm::$STRING_HASHTAG, 4, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClickExclusao));
+                    $html .= '</td>';
+                    $html .= '</tr>';
+                }
+            }
             $html .= '</tbody>';
             $html .= '</table>';
         } else {
@@ -86,14 +112,20 @@ class ListagemDeEventos extends AbstractHelper {
         /* Fim panel-body */
         $html .= '<div class="panel-footer text-right">';
         /* Botões */
-        if (count($this->getEventos()) < 2) {
-            $stringNomeDaFuncaoOnClickCadastro = 'funcaoCadastro("' . ConstantesCadastro::$PAGINA_CELULA . '", 0)';
-            $html .= $this->view->botaoLink(ConstantesForm::$STRING_ICONE_PLUS . ' ' . $this->view->translate(ConstantesForm::$TRADUCAO_NOVA_CELULA), ConstantesForm::$STRING_HASHTAG, 0, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClickCadastro));
-        } else {
-            $html .= '<div class="alert alert-micro alert-warning">';
-            $html .= '<i class="fa fa-warning pr10" aria-hidden="true"></i>';
-            $html .= $this->view->translate(ConstantesForm::$TRADUCAO_NUMERO_MAXIMO_CELULAS);
-            $html .= '</div>';
+        if ($tipoCelula) {
+            if (count($this->getEventos()) < 2) {
+                $stringNomeDaFuncaoOnClickCadastro = 'funcaoCadastro("' . ConstantesCadastro::$PAGINA_CELULA . '", 0)';
+                $html .= $this->view->botaoLink(ConstantesForm::$STRING_ICONE_PLUS . ' ' . $this->view->translate(ConstantesForm::$TRADUCAO_NOVA_CELULA), ConstantesForm::$STRING_HASHTAG, 0, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClickCadastro));
+            } else {
+                $html .= '<div class="alert alert-micro alert-warning">';
+                $html .= '<i class="fa fa-warning pr10" aria-hidden="true"></i>';
+                $html .= $this->view->translate(ConstantesForm::$TRADUCAO_NUMERO_MAXIMO_CELULAS);
+                $html .= '</div>';
+            }
+        }
+        if ($tipoCulto) {
+            $stringNomeDaFuncaoOnClickCadastro = 'funcaoCadastro("' . ConstantesCadastro::$PAGINA_EVENTO_CULTO . '", 0)';
+            $html .= $this->view->botaoLink(ConstantesForm::$STRING_ICONE_PLUS . ' ' . $this->view->translate(ConstantesForm::$TRADUCAO_NOVO_CULTO), ConstantesForm::$STRING_HASHTAG, 0, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClickCadastro));
         }
         /* Fim Botões */
         $html .= '</div>';

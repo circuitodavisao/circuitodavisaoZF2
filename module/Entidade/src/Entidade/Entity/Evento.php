@@ -260,6 +260,18 @@ class Evento implements InputFilterAwareInterface {
         return $resposta;
     }
 
+    /**
+     * Verifica se o evento é do tipo culto
+     * @return boolean
+     */
+    function verificaSeECulto() {
+        $resposta = false;
+        if ($this->getTipo_id() == 1) {
+            $resposta = true;
+        }
+        return $resposta;
+    }
+
     function getTipo_id() {
         return $this->tipo_id;
     }

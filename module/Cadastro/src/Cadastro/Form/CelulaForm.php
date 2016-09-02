@@ -3,11 +3,7 @@
 namespace Cadastro\Form;
 
 use Entidade\Entity\EventoCelula;
-use Lancamento\Controller\Helper\FuncoesLancamento;
 use Zend\Form\Element\Button;
-use Zend\Form\Element\Csrf;
-use Zend\Form\Element\Hidden;
-use Zend\Form\Element\Select;
 use Zend\Form\Element\Text;
 
 /**
@@ -136,11 +132,6 @@ class CelulaForm extends EventoForm {
                             ConstantesForm::$FORM_CLASS => ConstantesForm::$FORM_BTN_DEFAULT_DARK,
                         ])
                         ->setValue(ConstantesForm::$TRADUCAO_BUSCAR_CEP_LOGRADOURO)
-        );
-
-        $this->add(
-                (new Csrf())
-                        ->setName(ConstantesForm::$FORM_CSRF)
         );
 
         if (!is_null($eventoCelula->getId())) {

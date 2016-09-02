@@ -27,6 +27,7 @@ class ConstantesForm {
     public static $FORM_LOGRADOURO = 'logradouro';
     public static $FORM_ICONE_COMPLEMENTO = 'fa-location-arrow';
     public static $FORM_NOME_HOSPEDEIRO = 'nome_hospedeiro';
+    public static $FORM_NOME = 'nome';
     public static $FORM_ICONE_NOME_HOSPEDEIRO = 'fa-terminal';
     public static $FORM_DDD_HOSPEDEIRO = 'ddd_hospedeiro';
     public static $FORM_ICONE_DDD_HOSPEDEIRO = 'fa-phone-square';
@@ -44,6 +45,7 @@ class ConstantesForm {
     public static $FORM_BTN_DEFAULT_DARK = 'btn ladda-button btn-default dark';
     public static $FORM_CSRF = 'csrf';
     public static $FORM_CELULA = 'CelulaForm';
+    public static $FORM = 'Form';
     public static $FORM_ENDERECO_HIDDEN = 'enderecoHidden';
     public static $FORM_ACTION = 'action';
     public static $FORM_READONLY = 'readonly';
@@ -89,6 +91,7 @@ class ConstantesForm {
     public static $TRADUCAO_BAIRRO = 'Neighborhood';
     public static $TRADUCAO_LOGRADOURO = 'Public Place';
     public static $TRADUCAO_NOME_HOSPEDEIRO = 'Name Host';
+    public static $TRADUCAO_NOME = 'Name';
     public static $TRADUCAO_HOSPEDEIRO = 'Host';
     public static $TRADUCAO_ENDERECO = 'Address';
     public static $TRADUCAO_DDD_HOSPEDEIRO = 'DDD';
@@ -99,7 +102,10 @@ class ConstantesForm {
     public static $TRADUCAO_CADASTRO_CELULA = 'Registration Celula';
     public static $TRADUCAO_NOVA = 'New';
     public static $TRADUCAO_NOVA_CELULA = 'New Cell';
+    public static $TRADUCAO_NOVO_CULTO = 'New Cult';
     public static $TRADUCAO_MULTIPLICACAO = 'Multiplication';
+    public static $TRADUCAO_LISTAGEM_CULTOS = 'Listing <b class="text-danger">Cults</b>';
+    public static $TRADUCAO_LISTAGEM_CELULAS = 'Listing Cells of';
     public static $TRADUCAO_DIA_HORA = 'Day / Hour';
     public static $TRADUCAO_DADOS_DO_HOSPEDEIRO = 'Data from Host';
     public static $TRADUCAO_ALTERAR = 'Change';
@@ -143,6 +149,8 @@ class ConstantesForm {
     public static $LAYOUT_NOME_HOSPEDEIRO_CELULA_EXCLUIDA = 'nomeHospedeiroCelulaExcluida';
 
     /* Listagem */
+    public static $LISTAGEM_EVENTOS = 'eventos';
+    public static $TITULO_DA_PAGINA = 'tituloDaPagina';
     public static $LISTAGEM_CELULAS = 'celulas';
     public static $CELULA = 'celula';
 

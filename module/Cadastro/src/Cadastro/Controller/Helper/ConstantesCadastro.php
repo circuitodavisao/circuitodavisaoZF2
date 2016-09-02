@@ -12,7 +12,11 @@ class ConstantesCadastro {
 
     public static $PAGINA = 'pagina';
     public static $PAGINA_CELULAS = 'Celulas';
+    public static $PAGINA_CULTOS = 'Cultos';
     public static $PAGINA_CELULA = 'Celula';
+    public static $PAGINA_EVENTO_CULTO = 'EventoCulto';
+    public static $PAGINA_EVENTO_CELULA = 'EventoCelula';
+    public static $PAGINA_EVENTO = 'Evento';
     public static $PAGINA_CELULA_PERSISTIR = 'CelulaPersistir';
     public static $PAGINA_CELULA_EXCLUSAO = 'CelulaExclusao';
     public static $PAGINA_CELULA_EXCLUSAO_CONFIRMACAO = 'CelulaExclusaoConfirmacao';

@@ -2,9 +2,7 @@
 
 namespace Cadastro\Form;
 
-use Entidade\Entity\EventoCelula;
 use Lancamento\Controller\Helper\FuncoesLancamento;
-use Zend\Form\Element\Button;
 use Zend\Form\Element\Csrf;
 use Zend\Form\Element\Hidden;
 use Zend\Form\Element\Select;
@@ -83,6 +81,22 @@ class EventoForm extends Form {
         ));
         $selectMinutos->setValueOptions($arrayMinutos);
         $this->add($selectMinutos);
+
+        /* Nome do Evento */
+        $this->add(
+                (new Text())
+                        ->setName(ConstantesForm::$FORM_NOME)
+                        ->setAttributes([
+                            ConstantesForm::$FORM_CLASS => ConstantesForm::$FORM_CLASS_GUI_INPUT,
+                            ConstantesForm::$FORM_ID => ConstantesForm::$FORM_NOME,
+                            ConstantesForm::$FORM_PLACEHOLDER => ConstantesForm::$TRADUCAO_NOME,
+                        ])
+        );
+
+        $this->add(
+                (new Csrf())
+                        ->setName(ConstantesForm::$FORM_CSRF)
+        );
     }
 
 }
