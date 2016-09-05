@@ -320,6 +320,22 @@ class Evento implements InputFilterAwareInterface {
         return $inputFilter;
     }
 
+    public static function getInputFilterEventoCulto() {
+        $inputFilter = Evento::getInputFilterEvento();
+        /* Nome */
+        $inputFilter->add(array(
+            ConstantesForm::$VALIDACAO_NAME => ConstantesForm::$FORM_NOME,
+            ConstantesForm::$VALIDACAO_REQUIRED => true,
+            ConstantesForm::$VALIDACAO_VALIDATORS => array(
+                array(
+                    ConstantesForm::$VALIDACAO_NAME => ConstantesForm::$VALIDACAO_NOT_EMPTY,
+                ),
+            ),
+        ));
+
+        return $inputFilter;
+    }
+
     /**
      * @param InputFilterInterface $inputFilter
      * @throws Exception
@@ -334,6 +350,10 @@ class Evento implements InputFilterAwareInterface {
 
     function setNome($nome) {
         $this->nome = $nome;
+    }
+
+    public function exchangeArray($data) {
+        $this->nome = (!empty($data[ConstantesForm::$FORM_NOME]) ? strtoupper($data[ConstantesForm::$FORM_NOME]) : null);
     }
 
 }

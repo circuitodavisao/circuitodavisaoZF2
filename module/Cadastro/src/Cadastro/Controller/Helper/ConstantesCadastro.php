@@ -17,9 +17,12 @@ class ConstantesCadastro {
     public static $PAGINA_EVENTO_CULTO = 'EventoCulto';
     public static $PAGINA_EVENTO_CELULA = 'EventoCelula';
     public static $PAGINA_EVENTO = 'Evento';
-    public static $PAGINA_CELULA_PERSISTIR = 'CelulaPersistir';
+    public static $PAGINA_EVENTO_CELULA_PERSISTIR = 'EventoCelulaPersistir';
+    public static $PAGINA_EVENTO_CULTO_PERSISTIR = 'EventoCultoPersistir';
     public static $PAGINA_CELULA_EXCLUSAO = 'CelulaExclusao';
+    public static $PAGINA_EVENTO_CULTO_EXCLUSAO = 'EventoCultoExclusao';
     public static $PAGINA_CELULA_EXCLUSAO_CONFIRMACAO = 'CelulaExclusaoConfirmacao';
+    public static $PAGINA_EVENTO_CULTO_EXCLUSAO_CONFIRMACAO = 'EventoCultoExclusaoConfirmacao';
     public static $PAGINA_CELULA_CONFIRMACAO = 'CelulaConfirmacao';
     public static $PAGINA_BUSCAR_ENDERECO = 'BuscarEndereco';
     public static $CONTROLLER_CADASTRO = 'Cadastro\Controller\Cadastro';

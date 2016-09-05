@@ -55,6 +55,21 @@ class CadastroController extends AbstractActionController {
                         Constantes::$ACTION => ConstantesCadastro::$PAGINA_EVENTO,
             ));
         }
+        if ($pagina == ConstantesCadastro::$PAGINA_EVENTO_CULTO_PERSISTIR) {
+            return $this->forward()->dispatch(ConstantesCadastro::$CONTROLLER_CADASTRO, array(
+                        Constantes::$ACTION => ConstantesCadastro::$PAGINA_EVENTO_CULTO_PERSISTIR,
+            ));
+        }
+        if ($pagina == ConstantesCadastro::$PAGINA_EVENTO_CULTO_EXCLUSAO) {
+            return $this->forward()->dispatch(ConstantesCadastro::$CONTROLLER_CADASTRO, array(
+                        Constantes::$ACTION => ConstantesCadastro::$PAGINA_EVENTO_CULTO_EXCLUSAO,
+            ));
+        }
+        if ($pagina == ConstantesCadastro::$PAGINA_EVENTO_CULTO_EXCLUSAO_CONFIRMACAO) {
+            return $this->forward()->dispatch(ConstantesCadastro::$CONTROLLER_CADASTRO, array(
+                        Constantes::$ACTION => ConstantesCadastro::$PAGINA_EVENTO_CULTO_EXCLUSAO_CONFIRMACAO,
+            ));
+        }
 //        if ($pagina == ConstantesCadastro::$PAGINA_CELULA) {
 //            return $this->forward()->dispatch(ConstantesCadastro::$CONTROLLER_CADASTRO, array(
 //                        Constantes::$ACTION => ConstantesCadastro::$PAGINA_CELULA,
@@ -165,6 +180,177 @@ class CadastroController extends AbstractActionController {
     }
 
     /**
+     * Função para persistir o evento culto
+     * POST /eventoCultoPersistir
+     */
+    public function eventoCultoPersistirAction() {
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            try {
+                $post_data = $request->getPost();
+
+                /* Entidades */
+                $evento = new Evento();
+                $eventoForm = new EventoForm(ConstantesForm::$FORM, $evento);
+                $eventoForm->setInputFilter($evento->getInputFilterEventoCulto());
+                $eventoForm->setData($post_data);
+
+                /* validação */
+                if ($eventoForm->isValid()) {
+                    $sessao = new Container(Constantes::$NOME_APLICACAO);
+                    $criarNovoEvento = true;
+                    $mudarDataDeCadastroParaProximoDomingo = false;
+                    $validatedData = $eventoForm->getData();
+
+                    /* Entidades */
+                    $evento = new Evento();
+                    $grupoEvento = new GrupoEvento();
+
+                    /* Repositorios */
+                    $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
+                    $lancamentoORM = new LancamentoORM($this->getDoctrineORMEntityManager());
+
+                    /* ALTERANDO */
+                    if (!empty($post_data[ConstantesForm::$FORM_ID])) {
+                        $criarNovoEvento = false;
+                        $eventoAtual = $lancamentoORM->getEventoORM()->encontrarPorIdEvento($post_data[ConstantesForm::$FORM_ID]);
+
+                        /* Dia foi alterado */
+                        if ($post_data[ConstantesForm::$FORM_DIA_DA_SEMANA] != $eventoAtual->getDia()) {
+                            /* Persistindo */
+                            /* Inativando o Evento */
+                            $eventoParaInativar = $eventoAtual;
+                            $eventoParaInativar->setData_inativacao(FuncoesCadastro::dataAtual());
+                            $eventoParaInativar->setHora_inativacao(FuncoesCadastro::horaAtual());
+                            $lancamentoORM->getEventoORM()->persistirEvento($eventoParaInativar);
+                            /* Inativando o Grupo Evento */
+                            $grupoEventoAtivos = $eventoParaInativar->getGrupoEventoAtivos();
+                            $grupoEventoAtivos[0]->setData_inativacao(FuncoesCadastro::dataAtual());
+                            $grupoEventoAtivos[0]->setHora_inativacao(FuncoesCadastro::horaAtual());
+                            $repositorioORM->getGrupoEventoORM()->persistirGrupoEvento($grupoEventoAtivos[0]);
+                            $criarNovoEvento = true;
+                            $mudarDataDeCadastroParaProximoDomingo = true;
+                        } else {
+                            /* Dia não foi alterado */
+
+                            /* Dados exclusivo do Culto */
+                            if ($post_data[(ConstantesForm::$FORM_NOME)] != $eventoAtual->getNome()) {
+                                $eventoAtual->setNome(strtoupper($post_data[(ConstantesForm::$FORM_NOME)]));
+                            }
+                            $lancamentoORM->getEventoORM()->persistirEvento($eventoAtual);
+                            /* Sessão */
+                            $sessao->nomeEventoAlterado = $eventoAtual->getNome();
+                        }
+                    }
+                    if ($criarNovoEvento) {
+                        /* Entidade selecionada */
+                        $idEntidadeAtual = $sessao->idEntidadeAtual;
+                        $entidade = $lancamentoORM->getEntidadeORM()->encontrarPorIdEntidade($idEntidadeAtual);
+
+                        $evento->exchangeArray($eventoForm->getData());
+                        $dataParaCadastro = FuncoesCadastro::dataAtual();
+                        if ($mudarDataDeCadastroParaProximoDomingo) {
+                            $dataParaCadastro = FuncoesCadastro::proximoDomingo();
+                        }
+                        $evento->setData_criacao($dataParaCadastro);
+                        $evento->setHora_criacao(FuncoesCadastro::horaAtual());
+                        $evento->setHora($validatedData[ConstantesForm::$FORM_HORA] . ':' . $validatedData[ConstantesForm::$FORM_MINUTOS]);
+                        $evento->setDia($validatedData[ConstantesForm::$FORM_DIA_DA_SEMANA]);
+                        $evento->setEventoTipo($repositorioORM->getEventoTipoORM()->encontrarPorIdEventoTipo(1));
+
+                        $grupoEvento->setData_criacao(FuncoesCadastro::dataAtual());
+                        $grupoEvento->setHora_criacao(FuncoesCadastro::horaAtual());
+                        $grupoEvento->setGrupo($entidade->getGrupo());
+                        $grupoEvento->setEvento($evento);
+
+                        /* Persistindo */
+                        $lancamentoORM->getEventoORM()->persistirEvento($evento);
+                        $repositorioORM->getGrupoEventoORM()->persistirGrupoEvento($grupoEvento);
+                        /* Sessão */
+                        $sessao->nomeEventoCadastrado = $evento->getNome();
+                        $sessao->idSessao = $evento->getId();
+                    }
+                } else {
+                    $this->direcionaErroDeCadastro($eventoForm->getMessages());
+                }
+
+                return $this->redirect()->toRoute(ConstantesCadastro::$ROUTE_CADASTRO, array(
+                            ConstantesCadastro::$PAGINA => ConstantesCadastro::$PAGINA_CULTOS,
+                ));
+            } catch (Exception $exc) {
+                echo $exc->getMessage();
+            }
+        }
+    }
+
+    /**
+     * Tela com formulário de exclusão de culto
+     * GET /cadastroEventoCultoExclusao
+     */
+    public function eventoCultoExclusaoAction() {
+        /* Verificando a se tem algum id na sessão */
+        $sessao = new Container(Constantes::$NOME_APLICACAO);
+        $eventoNaSessao = new Evento();
+        if (!empty($sessao->idSessao)) {
+            $lancamentoORM = new LancamentoORM($this->getDoctrineORMEntityManager());
+            $eventoNaSessao = $lancamentoORM->getEventoORM()->encontrarPorIdEvento($sessao->idSessao);
+        }
+        $entidade = $lancamentoORM->getEntidadeORM()->encontrarPorIdEntidade($sessao->idEntidadeAtual);
+
+        return new ViewModel(array(
+            ConstantesForm::$EVENTO => $eventoNaSessao,
+            ConstantesLancamento::$ENTIDADE => $entidade
+        ));
+    }
+
+    /**
+     * Tela com formulário de exclusão de celula
+     * GET /cadastroeVENTOExclusaoConfirmacao
+     */
+    public function eventoCultoExclusaoConfirmacaoAction() {
+        /* Verificando a se tem algum id na sessão */
+        $sessao = new Container(Constantes::$NOME_APLICACAO);
+        $eventoNaSessao = new Evento();
+        if (!empty($sessao->idSessao)) {
+            $lancamentoORM = new LancamentoORM($this->getDoctrineORMEntityManager());
+            $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
+            $eventoNaSessao = $lancamentoORM->getEventoORM()->encontrarPorIdEvento($sessao->idSessao);
+
+            /* Persistindo */
+            /* Inativando o Evento */
+            $eventoParaInativar = $eventoNaSessao;
+            $eventoParaInativar->setData_inativacao(FuncoesCadastro::dataAtual());
+            $eventoParaInativar->setHora_inativacao(FuncoesCadastro::horaAtual());
+            $lancamentoORM->getEventoORM()->persistirEvento($eventoParaInativar);
+
+            /* Inativando o Grupo Evento */
+            $grupoEventoAtivos = $eventoParaInativar->getGrupoEventoAtivos();
+            $grupoEventoAtivos[0]->setData_inativacao(FuncoesCadastro::dataAtual());
+            $grupoEventoAtivos[0]->setHora_inativacao(FuncoesCadastro::horaAtual());
+            $repositorioORM->getGrupoEventoORM()->persistirGrupoEvento($grupoEventoAtivos[0]);
+        }
+
+        /* Sessão */
+        $sessao->nomeEventoExcluido = $eventoNaSessao->getNome();
+        return $this->redirect()->toRoute(ConstantesCadastro::$ROUTE_CADASTRO, array(
+                    ConstantesCadastro::$PAGINA => ConstantesCadastro::$PAGINA_CULTOS,
+        ));
+    }
+
+    /**
+     * Mostrar as mensagens de erro
+     * @param type $mensagens
+     */
+    public function direcionaErroDeCadastro($mensagens) {
+        echo "ERRO: Cadastro invalido!<br />";
+        foreach ($mensagens as $value) {
+            foreach ($value as $key => $value) {
+                echo "$key => $value <br />";
+            }
+        }
+    }
+
+    /**
      * Função para ver listagem de células
      * GET /cadastroCelulas
      */
@@ -244,14 +430,6 @@ class CadastroController extends AbstractActionController {
         $view->addChild($layoutJSValidacao, ConstantesForm::$LAYOUT_STRING_JS_CELULA_VALIDACAO);
 
         return $view;
-    }
-
-    /**
-     * Função para ver listagem de células
-     * GET /cadastroCelulaConfirmacao
-     */
-    public function celulaConfirmacaoAction() {
-        return new ViewModel();
     }
 
     /**

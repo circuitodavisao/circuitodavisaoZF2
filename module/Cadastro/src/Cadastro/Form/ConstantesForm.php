@@ -60,7 +60,8 @@ class ConstantesForm {
     public static $STRING_ICONE_ARROW_LEFT = '<i class="fa fa-arrow-left" aria-hidden="true"></i>';
     public static $STRING_ICONE_ARROW_RIGHT = '<i class="fa fa-arrow-right" aria-hidden="true"></i>';
     public static $STRING_HASHTAG = '#';
-    public static $STRING_FUNCAO_PRE_VALIDACAO = 'preValidacao();';
+    public static $STRING_FUNCAO_PRE_VALIDACAO_CELULA = 'preValidacao(1)';
+    public static $STRING_FUNCAO_PRE_VALIDACAO_CULTO = 'preValidacao(2)';
 
     /* Validações */
     public static $VALIDACAO_NAME = 'name';
@@ -118,18 +119,22 @@ class ConstantesForm {
     public static $TRADUCAO_VALIDACAO_NOME_HOSPEDEIRO_REQUERIDO = 'Enter host name';
     public static $TRADUCAO_VALIDACAO_NOME_HOSPEDEIRO_MINIMO = 'Enter at least 3 characters or more';
     public static $TRADUCAO_VALIDACAO_NOME_HOSPEDEIRO_MAXIMO = 'Enter at 80 characters';
+    public static $TRADUCAO_VALIDACAO_NOME_REQUERIDO = 'Enter Name';
+    public static $TRADUCAO_VALIDACAO_NOME_MINIMO = 'Enter at least 3 characters or more';
+    public static $TRADUCAO_VALIDACAO_NOME_MAXIMO = 'Enter at 30 characters';
     public static $TRADUCAO_VALIDACAO_DDD_HOSPEDEIRO_REQUERIDO = 'Enter DDD';
     public static $TRADUCAO_VALIDACAO_DDD_HOSPEDEIRO_INVALIDO = 'Invalid DDD';
     public static $TRADUCAO_VALIDACAO_TELEFONE_HOSPEDEIRO_REQUERIDO = 'Enter Phone';
     public static $TRADUCAO_VALIDACAO_TELEFONE_HOSPEDEIRO_INVALIDO = 'Invalid Phone';
     public static $TRADUCAO_CONFIRMACAO_CADASTRO_CELULA = 'Confirmation <strong><span class="text-danger">Cell Creation</span></strong>';
     public static $TRADUCAO_CONFIRMACAO_EXCLUSAO_CELULA = 'Confirmation <strong><span class="text-danger">Cell Exclusion</span></strong>';
+    public static $TRADUCAO_CONFIRMACAO_EXCLUSAO = 'Confirmation <strong><span class="text-danger">Exclusion</span></strong>';
     public static $TRADUCAO_PERGUNTA_CADASTRO_CELULA = 'The data are correct?';
     public static $TRADUCAO_PERGUNTA_EXCLUSAO_CELULA = 'Really want to delete this cell?';
     public static $TRADUCAO_CIENCIA_CADASTRO_CELULA = 'I confirm that the data is correct';
     public static $TRADUCAO_CIENCIA_EXCLUSAO_CELULA = 'I am <span class="text-danger">aware</span> that by <span class="text-danger">excluding cell</span> is the same no longer appear in the <span class="text-danger">launch line</span>!';
-    public static $TRADUCAO_MOTIVO_EXCLUSAO_CELULA = 'What reason for exclusion?';
-    public static $TRADUCAO_DESCREVA_MOTIVO_EXCLUSAO_CELULA = 'Please specify the reason';
+    public static $TRADUCAO_MOTIVO_EXCLUSAO = 'What reason for exclusion?';
+    public static $TRADUCAO_DESCREVA_MOTIVO_EXCLUSAO = 'Please specify the reason';
     public static $TRADUCAO_CONTINUAR = 'Continue';
     public static $TRADUCAO_DIGITE_SENHA_EXCUSAO_SENHA = 'Enter your password to confirm the deletion';
     public static $TRADUCAO_CONFIRMACAO = 'Confirm';
@@ -153,5 +158,6 @@ class ConstantesForm {
     public static $TITULO_DA_PAGINA = 'tituloDaPagina';
     public static $LISTAGEM_CELULAS = 'celulas';
     public static $CELULA = 'celula';
+    public static $EVENTO = 'evento';
 
 }

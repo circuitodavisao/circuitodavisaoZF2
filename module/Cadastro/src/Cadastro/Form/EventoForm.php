@@ -2,6 +2,7 @@
 
 namespace Cadastro\Form;
 
+use Entidade\Entity\Evento;
 use Lancamento\Controller\Helper\FuncoesLancamento;
 use Zend\Form\Element\Csrf;
 use Zend\Form\Element\Hidden;
@@ -20,7 +21,7 @@ class EventoForm extends Form {
      * Contrutor
      * @param String $name
      */
-    public function __construct($name = null) {
+    public function __construct($name = null, Evento $evento = null) {
         parent::__construct($name);
 
         $this->setAttributes(array(
@@ -97,6 +98,14 @@ class EventoForm extends Form {
                 (new Csrf())
                         ->setName(ConstantesForm::$FORM_CSRF)
         );
+
+        if (!is_null($evento->getId())) {
+            $this->get(ConstantesForm::$FORM_ID)->setValue($evento->getId());
+            $this->get(ConstantesForm::$FORM_DIA_DA_SEMANA)->setValue($evento->getDia());
+            $this->get(ConstantesForm::$FORM_HORA)->setValue(substr($evento->getHora(), 0, 2));
+            $this->get(ConstantesForm::$FORM_MINUTOS)->setValue(substr($evento->getHora(), 3, 2));
+            $this->get(ConstantesForm::$FORM_NOME)->setValue($evento->getNome());
+        }
     }
 
 }

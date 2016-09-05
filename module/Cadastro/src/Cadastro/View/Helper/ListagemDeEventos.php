@@ -67,16 +67,16 @@ class ListagemDeEventos extends AbstractHelper {
             $html .= '</thead>';
             $html .= '<tbody>';
 
-            /* Caso seja evento do tipo Célula */
-            if ($tipoCelula) {
-                foreach ($this->getEventos() as $ge) {
-                    $evento = $ge->getEvento();
+            foreach ($this->getEventos() as $ge) {
+                $evento = $ge->getEvento();
+                $diaDaSemanaAjustado = FuncoesLancamento::diaDaSemanaPorDia($evento->getDia());
+
+                $html .= '<tr>';
+                $html .= '<td class="text-center">' . $diaDaSemanaAjustado . '/' . $evento->getHoraFormatoHoraMinutoParaListagem() . '</td>';
+                if ($tipoCelula) {
                     $celula = $evento->getEventoCelula();
-                    $diaDaSemanaAjustado = FuncoesLancamento::diaDaSemanaPorDia($evento->getDia());
                     $stringNomeDaFuncaoOnClick = 'funcaoCadastro("' . ConstantesCadastro::$PAGINA_CELULA . '", ' . $celula->getId() . ')';
                     $stringNomeDaFuncaoOnClickExclusao = 'funcaoCadastro("' . ConstantesCadastro::$PAGINA_CELULA_EXCLUSAO . '", ' . $celula->getId() . ')';
-                    $html .= '<tr>';
-                    $html .= '<td class="text-center">' . $diaDaSemanaAjustado . '/' . $evento->getHoraFormatoHoraMinutoParaListagem() . '</td>';
                     $html .= '<td class="text-center">' . $celula->getNome_hospedeiroPrimeiroNome() . '</td>';
                     $html .= '<td class="text-center visible-lg visible-md visible-sm">' . $celula->getTelefone_hospedeiroFormatado() . '</td>';
                     $html .= '<td class="text-center visible-lg visible-md visible-sm">' . $celula->getLogradouro() . '&nbsp;' . $celula->getComplemento() . '</td>';
@@ -84,24 +84,17 @@ class ListagemDeEventos extends AbstractHelper {
                     $html .= $this->view->botaoLink(ConstantesForm::$STRING_ICONE_PENCIL, ConstantesForm::$STRING_HASHTAG, 3, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClick));
                     $html .= $this->view->botaoLink(ConstantesForm::$STRING_ICONE_TIMES, ConstantesForm::$STRING_HASHTAG, 4, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClickExclusao));
                     $html .= '</td>';
-                    $html .= '</tr>';
                 }
-            }
-            if ($tipoCulto) {
-                foreach ($this->getEventos() as $ge) {
-                    $evento = $ge->getEvento();
-                    $diaDaSemanaAjustado = FuncoesLancamento::diaDaSemanaPorDia($evento->getDia());
-                    $stringNomeDaFuncaoOnClick = 'funcaoCadastro("' . ConstantesCadastro::$PAGINA_CELULA . '", ' . $evento->getId() . ')';
-                    $stringNomeDaFuncaoOnClickExclusao = 'funcaoCadastro("' . ConstantesCadastro::$PAGINA_CELULA_EXCLUSAO . '", ' . $evento->getId() . ')';
-                    $html .= '<tr>';
-                    $html .= '<td class="text-center">' . $diaDaSemanaAjustado . '/' . $evento->getHoraFormatoHoraMinutoParaListagem() . '</td>';
+                if ($tipoCulto) {
+                    $stringNomeDaFuncaoOnClick = 'funcaoCadastro("' . ConstantesCadastro::$PAGINA_EVENTO_CULTO . '", ' . $evento->getId() . ')';
+                    $stringNomeDaFuncaoOnClickExclusao = 'funcaoCadastro("' . ConstantesCadastro::$PAGINA_EVENTO_CULTO_EXCLUSAO . '", ' . $evento->getId() . ')';
                     $html .= '<td class="text-center">' . $evento->getNome() . '</td>';
                     $html .= '<td class="text-center">';
                     $html .= $this->view->botaoLink(ConstantesForm::$STRING_ICONE_PENCIL, ConstantesForm::$STRING_HASHTAG, 3, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClick));
                     $html .= $this->view->botaoLink(ConstantesForm::$STRING_ICONE_TIMES, ConstantesForm::$STRING_HASHTAG, 4, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClickExclusao));
                     $html .= '</td>';
-                    $html .= '</tr>';
                 }
+                $html .= '</tr>';
             }
             $html .= '</tbody>';
             $html .= '</table>';

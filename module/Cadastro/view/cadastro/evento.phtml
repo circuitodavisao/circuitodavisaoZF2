@@ -1,7 +1,9 @@
 <?php
 
 use Cadastro\Controller\Helper\ConstantesCadastro;
+use Cadastro\Form\CelulaForm;
 use Cadastro\Form\ConstantesForm;
+use Cadastro\Form\EventoForm;
 use Lancamento\Controller\Helper\ConstantesLancamento;
 use Login\Controller\Helper\Constantes;
 
@@ -14,7 +16,15 @@ $tituloDaPagina = $this->translate(ConstantesForm::$TRADUCAO_CADASTRO_CELULA) . 
 
 $form = $this->Form;
 $form->prepare();
-$form->setAttribute(ConstantesForm::$FORM_ACTION, $this->url(ConstantesCadastro::$ROUTE_CADASTRO, array(ConstantesCadastro::$PAGINA => ConstantesCadastro::$PAGINA_CELULA_PERSISTIR)));
+$pagina = '';
+if ($form instanceof CelulaForm) {
+    $pagina = ConstantesCadastro::$PAGINA_EVENTO_CELULA_PERSISTIR;
+}
+if ($form instanceof EventoForm) {
+    $pagina = ConstantesCadastro::$PAGINA_EVENTO_CULTO_PERSISTIR;
+}
+$actionUrl = $this->url(ConstantesCadastro::$ROUTE_CADASTRO, array(ConstantesCadastro::$PAGINA => $pagina));
+$form->setAttribute(ConstantesForm::$FORM_ACTION, $actionUrl);
 
 echo $this->form()->openTag($form);
 echo $this->formHidden($form->get(ConstantesForm::$FORM_CSRF));
@@ -39,11 +49,19 @@ echo $this->templateFormularioTopo($tituloDaPagina);
     <!-- Inicio panel-footer -->
     <div class="panel-footer text-right" style="height:65px;">
         <?php
+        /* Botões */
         $labelVoltar = ConstantesForm::$STRING_ICONE_ARROW_LEFT . ' ' . $this->translate(Constantes::$TRADUCAO_VOLTAR);
         $labelContinuar = $this->translate(ConstantesForm::$TRADUCAO_CONTINUAR) . ' ' . ConstantesForm::$STRING_ICONE_ARROW_RIGHT;
-        /* Botões */
         echo $this->botaoLink($labelVoltar, ConstantesCadastro::$ROUTE_CADASTRO . ConstantesCadastro::$PAGINA_CELULAS, 2, '');
-        echo $this->botaoLink($labelContinuar, ConstantesForm::$STRING_HASHTAG, 0, $this->funcaoOnClick(ConstantesForm::$STRING_FUNCAO_PRE_VALIDACAO) . ' disabled id="botaoContinuar"');
+
+        $funcaoPreValidacao = '';
+        if ($form instanceof CelulaForm) {
+            $funcaoPreValidacao = $this->funcaoOnClick(ConstantesForm::$STRING_FUNCAO_PRE_VALIDACAO_CELULA) . ' disabled id="botaoContinuar"';
+        }
+        if ($form instanceof EventoForm) {
+            $funcaoPreValidacao = $this->funcaoOnClick(ConstantesForm::$STRING_FUNCAO_PRE_VALIDACAO_CULTO);
+        }
+        echo $this->botaoLink($labelContinuar, ConstantesForm::$STRING_HASHTAG, 0, $funcaoPreValidacao);
         ?>
     </div>
     <!-- Fim panel-footer -->
@@ -60,16 +78,24 @@ echo $this->templateFormularioTopo($tituloDaPagina);
                     <div><strong><?php echo $this->translate(ConstantesForm::$TRADUCAO_DIA_DA_SEMANA_SIMPLIFICADO) . ' / ' . $this->translate(ConstantesForm::$TRADUCAO_HORA); ?></strong></div>
                     <div><span id="spanDiaHora"></span></div>
                 </address>
-                <address>
-                    <div><strong><?php echo $this->translate(ConstantesForm::$TRADUCAO_HOSPEDEIRO); ?></strong></div>
-                    <div><span id="spanNome"></span></div>
-                    <div><span id="spanTelefone"></span></div>
-                </address>                     
-                <address>
-                    <div><strong><?php echo $this->translate(ConstantesForm::$TRADUCAO_ENDERECO); ?></strong></div>
-                    <div><span id="spanLogradouroComplemento"></span></div>
-                    <div><span id="spanEndereco"></span></div>                  
-                </address>
+                <?php if ($form instanceof CelulaForm) { ?>
+                    <address>
+                        <div><strong><?php echo $this->translate(ConstantesForm::$TRADUCAO_HOSPEDEIRO); ?></strong></div>
+                        <div><span id="spanNome"></span></div>
+                        <div><span id="spanTelefone"></span></div>
+                    </address>                     
+                    <address>
+                        <div><strong><?php echo $this->translate(ConstantesForm::$TRADUCAO_ENDERECO); ?></strong></div>
+                        <div><span id="spanLogradouroComplemento"></span></div>
+                        <div><span id="spanEndereco"></span></div>                  
+                    </address>
+                <?php } ?>
+                <?php if ($form instanceof EventoForm) { ?>
+                    <address>
+                        <div><strong>Nome</strong></div>
+                        <div><span id="spanNome"></span></div>
+                    </address>                     
+                <?php } ?>
             </div>                 
         </div>
     </div>
