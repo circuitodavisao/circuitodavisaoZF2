@@ -39,11 +39,22 @@ class Grupo {
      */
     protected $grupoPessoa;
 
+    /**
+     * @ORM\OneToMany(targetEntity="GrupoPaiFilho", mappedBy="grupoPaiFilhoPai") 
+     */
+    protected $grupoPaiFilhoFilhos;
+
+    /**
+     * @ORM\OneToOne(targetEntity="GrupoPaiFilho", mappedBy="grupoPaiFilhoFilho") 
+     */
+    protected $grupoPaiFilhoPai;
+
     public function __construct() {
         $this->entidade = new ArrayCollection();
         $this->grupoResponsavel = new ArrayCollection();
         $this->grupoEvento = new ArrayCollection();
         $this->grupoPessoa = new ArrayCollection();
+        $this->grupoPaiFilhoFilhos = new ArrayCollection();
     }
 
     /**
@@ -479,6 +490,30 @@ class Grupo {
 
     function setEnvio_hora($envio_hora) {
         $this->envio_hora = $envio_hora;
+    }
+
+    /**
+     * Pega os grupos filhos 
+     * @return GrupoPaiFilho
+     */
+    function getGrupoPaiFilhoFilhos() {
+        return $this->grupoPaiFilhoFilhos;
+    }
+
+    function setGrupoPaiFilhoFilhos($grupoPaiFilhoFilhos) {
+        $this->grupoPaiFilhoFilhos = $grupoPaiFilhoFilhos;
+    }
+
+    /**
+     * Pega o grupo Pai
+     * @return GrupoPaiFilho
+     */
+    function getGrupoPaiFilhoPai() {
+        return $this->grupoPaiFilhoPai;
+    }
+
+    function setGrupoPaiFilhoPai($grupoPaiFilhoPai) {
+        $this->grupoPaiFilhoPai = $grupoPaiFilhoPai;
     }
 
 }

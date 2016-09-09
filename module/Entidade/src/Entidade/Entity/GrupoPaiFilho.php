@@ -7,7 +7,6 @@ namespace Entidade\Entity;
  * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com>
  * Descricao: Entidade anotada da tabela grupo_responsavel
  */
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -17,19 +16,16 @@ use Doctrine\ORM\Mapping as ORM;
 class GrupoPaiFilho {
 
     /**
-     * @ORM\OneToMany(targetEntity="Grupo", mappedBy="pai") 
+     * @ORM\ManyToOne(targetEntity="Grupo", inversedBy="grupoPaiFilhoFilhos")
+     * @ORM\JoinColumn(name="pai_id", referencedColumnName="id")
      */
-    protected $pai;
+    private $grupoPaiFilhoPai;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Grupo", inversedBy="filhos") 
+     * @ORM\OneToOne(targetEntity="Grupo", inversedBy="grupoPaiFilhoPai")
      * @ORM\JoinColumn(name="filho_id", referencedColumnName="id")
      */
-    protected $filhos;
-
-    public function __construct() {
-        $this->pai = new ArrayCollection();
-    }
+    private $grupoPaiFilhoFilho;
 
     /**
      * @ORM\Id
@@ -55,14 +51,6 @@ class GrupoPaiFilho {
 
     /** @ORM\Column(type="string") */
     protected $hora_inativacao;
-
-    function getPai() {
-        return $this->pai;
-    }
-
-    function getFilhos() {
-        return $this->filhos;
-    }
 
     function getId() {
         return $this->id;
@@ -92,14 +80,6 @@ class GrupoPaiFilho {
         return $this->hora_inativacao;
     }
 
-    function setPai($pai) {
-        $this->pai = $pai;
-    }
-
-    function setFilhos($filhos) {
-        $this->filhos = $filhos;
-    }
-
     function setId($id) {
         $this->id = $id;
     }
@@ -126,6 +106,30 @@ class GrupoPaiFilho {
 
     function setHora_inativacao($hora_inativacao) {
         $this->hora_inativacao = $hora_inativacao;
+    }
+
+    /**
+     * Retorna o grupo pai
+     * @return Grupo
+     */
+    function getGrupoPaiFilhoPai() {
+        return $this->grupoPaiFilhoPai;
+    }
+
+    function setGrupoPaiFilhoPai($grupoPaiFilhoPai) {
+        $this->grupoPaiFilhoPai = $grupoPaiFilhoPai;
+    }
+
+    /**
+     * Retorna o grupo filho
+     * @return Grupo
+     */
+    function getGrupoPaiFilhoFilho() {
+        return $this->grupoPaiFilhoFilho;
+    }
+
+    function setGrupoPaiFilhoFilho($grupoPaiFilhoFilho) {
+        $this->grupoPaiFilhoFilho = $grupoPaiFilhoFilho;
     }
 
 }

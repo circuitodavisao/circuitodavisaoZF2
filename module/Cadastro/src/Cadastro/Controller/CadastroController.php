@@ -115,6 +115,20 @@ class CadastroController extends AbstractActionController {
         $idEntidadeAtual = $sessao->idEntidadeAtual;
         $entidade = $lancamentoORM->getEntidadeORM()->encontrarPorIdEntidade($idEntidadeAtual);
         $grupo = $entidade->getGrupo();
+        /* Teste */
+        $filhos = $grupo->getGrupoPaiFilhoFilhos();
+        if ($filhos) {
+            echo "TENHO FILHO(S)";
+            foreach ($filhos as $gpFilho) {
+                echo "<br />#### ####";
+                echo "Eu " . $gpFilho->getPai_id() . " <br />";
+                echo "Meu Filho " . $gpFilho->getFilho_id() . " <br />";
+                $grupoFilho = $gpFilho->getGrupoPaiFilhoFilho();
+                echo "Grupo id " . $grupoFilho->getId() . " <br />";
+                $entidadeFilho = $grupoFilho->getEntidade();
+            }
+        }
+
         if ($pagina == ConstantesCadastro::$PAGINA_CELULAS) {
             $listagemDeEventos = $grupo->getGrupoEventoCelula();
             $tituloDaPagina = ConstantesForm::$TRADUCAO_LISTAGEM_CELULAS . ' <b class="text-danger">' . ConstantesForm::$TRADUCAO_MULTIPLICACAO . '</b>';
