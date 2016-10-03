@@ -100,7 +100,8 @@ class ConstantesForm {
     public static $TRADUCAO_BUSCAR_CEP_LOGRADOURO = 'Search';
     public static $TRADUCAO_DIA_DA_SEMANA = 'Day of Week';
     public static $TRADUCAO_DIA_DA_SEMANA_SIMPLIFICADO = 'Day';
-    public static $TRADUCAO_CADASTRO_CELULA = 'Registration Celula';
+    public static $TRADUCAO_CADASTRO_CELULA = 'Registration Cell';
+    public static $TRADUCAO_CADASTRO_CULTO = 'Registration Cult';
     public static $TRADUCAO_NOVA = 'New';
     public static $TRADUCAO_NOVA_CELULA = 'New Cell';
     public static $TRADUCAO_NOVO_CULTO = 'New Cult';
@@ -131,7 +132,9 @@ class ConstantesForm {
     public static $TRADUCAO_CONFIRMACAO_EXCLUSAO = 'Confirmation <strong><span class="text-danger">Exclusion</span></strong>';
     public static $TRADUCAO_PERGUNTA_CADASTRO_CELULA = 'The data are correct?';
     public static $TRADUCAO_PERGUNTA_EXCLUSAO_CELULA = 'Really want to delete this cell?';
+    public static $TRADUCAO_PERGUNTA_EXCLUSAO_CULTO = 'Really want to delete this cult?';
     public static $TRADUCAO_CIENCIA_CADASTRO_CELULA = 'I confirm that the data is correct';
+    public static $TRADUCAO_CIENCIA_EXCLUSAO_CULTO = 'I am <span class="text-danger">aware</span> that by <span class="text-danger">excluding cult</span> is the same no longer appear in the <span class="text-danger">launch line</span>!';
     public static $TRADUCAO_CIENCIA_EXCLUSAO_CELULA = 'I am <span class="text-danger">aware</span> that by <span class="text-danger">excluding cell</span> is the same no longer appear in the <span class="text-danger">launch line</span>!';
     public static $TRADUCAO_MOTIVO_EXCLUSAO = 'What reason for exclusion?';
     public static $TRADUCAO_DESCREVA_MOTIVO_EXCLUSAO = 'Please specify the reason';
@@ -141,14 +144,14 @@ class ConstantesForm {
     public static $TRADUCAO_NUMERO_MAXIMO_CELULAS = 'Maximum number of cells reached!';
 
     /* Layout */
-    public static $LAYOUT_JS_CELULA = 'layout/layout-js-celula';
-    public static $LAYOUT_STRING_JS_CELULA = 'layoutJSCelula';
-    public static $LAYOUT_JS_CELULA_VALIDACAO = 'layout/layout-js-celula-validacao';
-    public static $LAYOUT_STRING_JS_CELULA_VALIDACAO = 'layoutJSCelulaValidacao';
-    public static $LAYOUT_JS_CELULAS = 'layout/layout-js-celulas';
-    public static $LAYOUT_JS_CELULAS_VALIDACAO = 'layout/layout-js-celulas-validacao';
-    public static $LAYOUT_STRING_JS_CELULAS = 'layoutJSCelulas';
-    public static $LAYOUT_STRING_JS_CELULAS_VALIDACAO = 'layoutJSCelulasValidacao';
+    public static $LAYOUT_JS_EVENTO = 'layout/layout-js-evento';
+    public static $LAYOUT_STRING_JS_EVENTO = 'layoutJSEvento';
+    public static $LAYOUT_JS_EVENTO_VALIDACAO = 'layout/layout-js-evento-validacao';
+    public static $LAYOUT_STRING_JS_EVENTO_VALIDACAO = 'layoutJSEventoValidacao';
+    public static $LAYOUT_JS_EVENTOS = 'layout/layout-js-eventos';
+    public static $LAYOUT_JS_EVENTOS_VALIDACAO = 'layout/layout-js-eventos-validacao';
+    public static $LAYOUT_STRING_JS_EVENTOS = 'layoutJSEventos';
+    public static $LAYOUT_STRING_JS_EVENTOS_VALIDACAO = 'layoutJSEventosValidacao';
     public static $LAYOUT_NOME_HOSPEDEIRO_CELULA_CADASTRADO = 'nomeHospedeiroCelulaCadastrado';
     public static $LAYOUT_NOME_HOSPEDEIRO_CELULA_ALTERADA = 'nomeHospedeiroCelulaAlterada';
     public static $LAYOUT_NOME_HOSPEDEIRO_CELULA_EXCLUIDA = 'nomeHospedeiroCelulaExcluida';
@@ -156,6 +159,7 @@ class ConstantesForm {
     /* Listagem */
     public static $LISTAGEM_EVENTOS = 'eventos';
     public static $TITULO_DA_PAGINA = 'tituloDaPagina';
+    public static $TIPO_EVENTO = 'tipoEvento';
     public static $LISTAGEM_CELULAS = 'celulas';
     public static $CELULA = 'celula';
     public static $EVENTO = 'evento';

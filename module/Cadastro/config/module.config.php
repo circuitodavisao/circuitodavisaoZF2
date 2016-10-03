@@ -51,7 +51,7 @@ return array(
             'layout/layout' => __DIR__ . '/../../Login/view/layout/layout.phtml',
             'cadastro/cadastro/index' => __DIR__ . '/../view/cadastro/index.phtml',
             'cadastro/cadastro/evento' => __DIR__ . '/../view/cadastro/evento.phtml',
-            'cadastro/cadastro/evento-culto-exclusao' => __DIR__ . '/../view/cadastro/evento-exclusao.phtml',
+            'cadastro/cadastro/evento-exclusao' => __DIR__ . '/../view/cadastro/evento-exclusao.phtml',
             'cadastro/cadastro/celula' => __DIR__ . '/../view/cadastro/celula.phtml',
             'cadastro/cadastro/celula-confirmacao' => __DIR__ . '/../view/cadastro/celula-confirmacao.phtml',
             'cadastro/cadastro/celula-exclusao' => __DIR__ . '/../view/cadastro/celula-exclusao.phtml',

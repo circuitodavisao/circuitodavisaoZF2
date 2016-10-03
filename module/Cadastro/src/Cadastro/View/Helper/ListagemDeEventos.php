@@ -29,6 +29,10 @@ class ListagemDeEventos extends AbstractHelper {
 
     public function renderHtml() {
         $html = '';
+
+        $tipoCelula = ($this->view->tipoEvento == 2);
+        $tipoCulto = ($this->view->tipoEvento == 1);
+
         $html .= $this->view->templateFormularioTopo($this->getTitulo());
         $html .= '<div class="panel-body bg-light">';
         if (!empty($this->getEventos())) {
@@ -37,8 +41,7 @@ class ListagemDeEventos extends AbstractHelper {
             $html .= '<tr>';
 
             /* Caso seja evento do tipo Célula */
-            $tipoCelula = !empty($this->getEventos()[0]->getEvento()->verificaSeECelula());
-            $tipoCulto = !empty($this->getEventos()[0]->getEvento()->verificaSeECulto());
+
             if ($tipoCelula) {
                 $html .= '<th class="text-center">';
                 $html .=$this->view->translate(ConstantesForm::$TRADUCAO_DIA_DA_SEMANA_SIMPLIFICADO) . ' / ' . $this->view->translate(ConstantesForm::$TRADUCAO_HORA);
@@ -75,8 +78,8 @@ class ListagemDeEventos extends AbstractHelper {
                 $html .= '<td class="text-center">' . $diaDaSemanaAjustado . '/' . $evento->getHoraFormatoHoraMinutoParaListagem() . '</td>';
                 if ($tipoCelula) {
                     $celula = $evento->getEventoCelula();
-                    $stringNomeDaFuncaoOnClick = 'funcaoCadastro("' . ConstantesCadastro::$PAGINA_CELULA . '", ' . $celula->getId() . ')';
-                    $stringNomeDaFuncaoOnClickExclusao = 'funcaoCadastro("' . ConstantesCadastro::$PAGINA_CELULA_EXCLUSAO . '", ' . $celula->getId() . ')';
+                    $stringNomeDaFuncaoOnClick = 'funcaoCadastro("' . ConstantesCadastro::$PAGINA_EVENTO_CELULA . '", ' . $celula->getId() . ')';
+                    $stringNomeDaFuncaoOnClickExclusao = 'funcaoCadastro("' . ConstantesCadastro::$PAGINA_EVENTO_EXCLUSAO . '", ' . $evento->getId() . ')';
                     $html .= '<td class="text-center">' . $celula->getNome_hospedeiroPrimeiroNome() . '</td>';
                     $html .= '<td class="text-center visible-lg visible-md visible-sm">' . $celula->getTelefone_hospedeiroFormatado() . '</td>';
                     $html .= '<td class="text-center visible-lg visible-md visible-sm">' . $celula->getLogradouro() . '&nbsp;' . $celula->getComplemento() . '</td>';
@@ -87,7 +90,7 @@ class ListagemDeEventos extends AbstractHelper {
                 }
                 if ($tipoCulto) {
                     $stringNomeDaFuncaoOnClick = 'funcaoCadastro("' . ConstantesCadastro::$PAGINA_EVENTO_CULTO . '", ' . $evento->getId() . ')';
-                    $stringNomeDaFuncaoOnClickExclusao = 'funcaoCadastro("' . ConstantesCadastro::$PAGINA_EVENTO_CULTO_EXCLUSAO . '", ' . $evento->getId() . ')';
+                    $stringNomeDaFuncaoOnClickExclusao = 'funcaoCadastro("' . ConstantesCadastro::$PAGINA_EVENTO_EXCLUSAO . '", ' . $evento->getId() . ')';
                     $html .= '<td class="text-center">' . $evento->getNome() . '</td>';
                     $html .= '<td class="text-center">';
                     $html .= $this->view->botaoLink(ConstantesForm::$STRING_ICONE_PENCIL, ConstantesForm::$STRING_HASHTAG, 3, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClick));
@@ -107,7 +110,7 @@ class ListagemDeEventos extends AbstractHelper {
         /* Botões */
         if ($tipoCelula) {
             if (count($this->getEventos()) < 2) {
-                $stringNomeDaFuncaoOnClickCadastro = 'funcaoCadastro("' . ConstantesCadastro::$PAGINA_CELULA . '", 0)';
+                $stringNomeDaFuncaoOnClickCadastro = 'funcaoCadastro("' . ConstantesCadastro::$PAGINA_EVENTO_CELULA . '", 0)';
                 $html .= $this->view->botaoLink(ConstantesForm::$STRING_ICONE_PLUS . ' ' . $this->view->translate(ConstantesForm::$TRADUCAO_NOVA_CELULA), ConstantesForm::$STRING_HASHTAG, 0, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClickCadastro));
             } else {
                 $html .= '<div class="alert alert-micro alert-warning">';

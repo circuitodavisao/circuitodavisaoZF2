@@ -12,17 +12,20 @@ use Login\Controller\Helper\Constantes;
  * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com> e Sergio Bezerra da Silva <sergio.silva.unb@gmail.com>
  * Descricao: Página de cadastro de célula
  */
-$tituloDaPagina = $this->translate(ConstantesForm::$TRADUCAO_CADASTRO_CELULA) . ' <b class="text-danger">' . $this->translate(ConstantesForm::$TRADUCAO_MULTIPLICACAO) . '</b>';
-
 $form = $this->Form;
 $form->prepare();
 $pagina = '';
+$tituloDaPagina = '';
 if ($form instanceof CelulaForm) {
+    $tituloDaPagina = $this->translate(ConstantesForm::$TRADUCAO_CADASTRO_CELULA) . ' <b class="text-danger">' . $this->translate(ConstantesForm::$TRADUCAO_MULTIPLICACAO) . '</b>';
     $pagina = ConstantesCadastro::$PAGINA_EVENTO_CELULA_PERSISTIR;
+} else {
+    if ($form instanceof EventoForm) {
+        $tituloDaPagina = $this->translate(ConstantesForm::$TRADUCAO_CADASTRO_CULTO);
+        $pagina = ConstantesCadastro::$PAGINA_EVENTO_CULTO_PERSISTIR;
+    }
 }
-if ($form instanceof EventoForm) {
-    $pagina = ConstantesCadastro::$PAGINA_EVENTO_CULTO_PERSISTIR;
-}
+
 $actionUrl = $this->url(ConstantesCadastro::$ROUTE_CADASTRO, array(ConstantesCadastro::$PAGINA => $pagina));
 $form->setAttribute(ConstantesForm::$FORM_ACTION, $actionUrl);
 
@@ -52,15 +55,25 @@ echo $this->templateFormularioTopo($tituloDaPagina);
         /* Botões */
         $labelVoltar = ConstantesForm::$STRING_ICONE_ARROW_LEFT . ' ' . $this->translate(Constantes::$TRADUCAO_VOLTAR);
         $labelContinuar = $this->translate(ConstantesForm::$TRADUCAO_CONTINUAR) . ' ' . ConstantesForm::$STRING_ICONE_ARROW_RIGHT;
-        echo $this->botaoLink($labelVoltar, ConstantesCadastro::$ROUTE_CADASTRO . ConstantesCadastro::$PAGINA_CELULAS, 2, '');
-
         $funcaoPreValidacao = '';
+        $urlVoltar = '';
         if ($form instanceof CelulaForm) {
-            $funcaoPreValidacao = $this->funcaoOnClick(ConstantesForm::$STRING_FUNCAO_PRE_VALIDACAO_CELULA) . ' disabled id="botaoContinuar"';
+            $disabled = 'disabled';
+            if (!empty($form->get(ConstantesForm::$FORM_ID)->getValue())) {
+                $disabled = '';
+            }
+            $funcaoPreValidacao = $this->funcaoOnClick(ConstantesForm::$STRING_FUNCAO_PRE_VALIDACAO_CELULA) . ' ' . $disabled . ' id="botaoContinuar"';
+            $urlVoltar = ConstantesCadastro::$ROUTE_CADASTRO . ConstantesCadastro::$PAGINA_CELULAS;
+        } else {
+            if ($form instanceof EventoForm) {
+                $funcaoPreValidacao = $this->funcaoOnClick(ConstantesForm::$STRING_FUNCAO_PRE_VALIDACAO_CULTO);
+                $urlVoltar = ConstantesCadastro::$ROUTE_CADASTRO . ConstantesCadastro::$PAGINA_CULTOS;
+            }
         }
-        if ($form instanceof EventoForm) {
-            $funcaoPreValidacao = $this->funcaoOnClick(ConstantesForm::$STRING_FUNCAO_PRE_VALIDACAO_CULTO);
-        }
+
+        /* Voltar */
+        echo $this->botaoLink($labelVoltar, $urlVoltar, 2, '');
+        /* Continuar */
         echo $this->botaoLink($labelContinuar, ConstantesForm::$STRING_HASHTAG, 0, $funcaoPreValidacao);
         ?>
     </div>
@@ -89,13 +102,18 @@ echo $this->templateFormularioTopo($tituloDaPagina);
                         <div><span id="spanLogradouroComplemento"></span></div>
                         <div><span id="spanEndereco"></span></div>                  
                     </address>
-                <?php } ?>
-                <?php if ($form instanceof EventoForm) { ?>
-                    <address>
-                        <div><strong>Nome</strong></div>
-                        <div><span id="spanNome"></span></div>
-                    </address>                     
-                <?php } ?>
+                    <?php
+                } else {
+                    if ($form instanceof EventoForm) {
+                        ?>
+                        <address>
+                            <div><strong>Nome</strong></div>
+                            <div><span id="spanNome"></span></div>
+                        </address>                     
+                        <?php
+                    }
+                }
+                ?>
             </div>                 
         </div>
     </div>
@@ -119,4 +137,4 @@ echo $this->templateFormularioRodape();
 echo $this->form()->closeTag();
 
 /* Layout com javascript para tela de cadastro de celula */
-echo $this->layoutJSCelulaValidacao;
+echo $this->layoutJSEventoValidacao;

@@ -47,10 +47,16 @@ class CadastroController extends AbstractActionController {
      */
     public function indexAction() {
         $sessao = new Container(Constantes::$NOME_APLICACAO);
+        $sessao->pagina = '';
         /* Verificando rota */
         $pagina = $this->getEvent()->getRouteMatch()->getParam(ConstantesCadastro::$PAGINA, 1);
-        if ($pagina == ConstantesCadastro::$PAGINA_EVENTO_CULTO) {
-            $sessao->pagina = ConstantesCadastro::$PAGINA_EVENTO_CULTO;
+        if ($pagina == ConstantesCadastro::$PAGINA_EVENTO_CULTO || $pagina == ConstantesCadastro::$PAGINA_EVENTO_CELULA) {
+            if ($pagina == ConstantesCadastro::$PAGINA_EVENTO_CULTO) {
+                $sessao->pagina = ConstantesCadastro::$PAGINA_EVENTO_CULTO;
+            }
+            if ($pagina == ConstantesCadastro::$PAGINA_EVENTO_CELULA) {
+                $sessao->pagina = ConstantesCadastro::$PAGINA_EVENTO_CELULA;
+            }
             return $this->forward()->dispatch(ConstantesCadastro::$CONTROLLER_CADASTRO, array(
                         Constantes::$ACTION => ConstantesCadastro::$PAGINA_EVENTO,
             ));
@@ -60,46 +66,27 @@ class CadastroController extends AbstractActionController {
                         Constantes::$ACTION => ConstantesCadastro::$PAGINA_EVENTO_CULTO_PERSISTIR,
             ));
         }
-        if ($pagina == ConstantesCadastro::$PAGINA_EVENTO_CULTO_EXCLUSAO) {
+        if ($pagina == ConstantesCadastro::$PAGINA_EVENTO_CELULA_PERSISTIR) {
             return $this->forward()->dispatch(ConstantesCadastro::$CONTROLLER_CADASTRO, array(
-                        Constantes::$ACTION => ConstantesCadastro::$PAGINA_EVENTO_CULTO_EXCLUSAO,
+                        Constantes::$ACTION => ConstantesCadastro::$PAGINA_EVENTO_CELULA_PERSISTIR,
             ));
         }
-        if ($pagina == ConstantesCadastro::$PAGINA_EVENTO_CULTO_EXCLUSAO_CONFIRMACAO) {
+        if ($pagina == ConstantesCadastro::$PAGINA_EVENTO_EXCLUSAO) {
             return $this->forward()->dispatch(ConstantesCadastro::$CONTROLLER_CADASTRO, array(
-                        Constantes::$ACTION => ConstantesCadastro::$PAGINA_EVENTO_CULTO_EXCLUSAO_CONFIRMACAO,
+                        Constantes::$ACTION => ConstantesCadastro::$PAGINA_EVENTO_EXCLUSAO,
             ));
         }
-//        if ($pagina == ConstantesCadastro::$PAGINA_CELULA) {
-//            return $this->forward()->dispatch(ConstantesCadastro::$CONTROLLER_CADASTRO, array(
-//                        Constantes::$ACTION => ConstantesCadastro::$PAGINA_CELULA,
-//            ));
-//        }
-//        if ($pagina == ConstantesCadastro::$PAGINA_CELULA_CONFIRMACAO) {
-//            return $this->forward()->dispatch(ConstantesCadastro::$CONTROLLER_CADASTRO, array(
-//                        Constantes::$ACTION => ConstantesCadastro::$PAGINA_CELULA_CONFIRMACAO,
-//            ));
-//        }
-//        if ($pagina == ConstantesCadastro::$PAGINA_CELULA_PERSISTIR) {
-//            return $this->forward()->dispatch(ConstantesCadastro::$CONTROLLER_CADASTRO, array(
-//                        Constantes::$ACTION => ConstantesCadastro::$PAGINA_CELULA_PERSISTIR,
-//            ));
-//        }
-//        if ($pagina == ConstantesCadastro::$PAGINA_BUSCAR_ENDERECO) {
-//            return $this->forward()->dispatch(ConstantesCadastro::$CONTROLLER_CADASTRO, array(
-//                        Constantes::$ACTION => ConstantesCadastro::$PAGINA_BUSCAR_ENDERECO,
-//            ));
-//        }
-//        if ($pagina == ConstantesCadastro::$PAGINA_CELULA_EXCLUSAO) {
-//            return $this->forward()->dispatch(ConstantesCadastro::$CONTROLLER_CADASTRO, array(
-//                        Constantes::$ACTION => ConstantesCadastro::$PAGINA_CELULA_EXCLUSAO,
-//            ));
-//        }
-//        if ($pagina == ConstantesCadastro::$PAGINA_CELULA_EXCLUSAO_CONFIRMACAO) {
-//            return $this->forward()->dispatch(ConstantesCadastro::$CONTROLLER_CADASTRO, array(
-//                        Constantes::$ACTION => ConstantesCadastro::$PAGINA_CELULA_EXCLUSAO_CONFIRMACAO,
-//            ));
-//        }
+        if ($pagina == ConstantesCadastro::$PAGINA_EVENTO_EXCLUSAO_CONFIRMACAO) {
+            return $this->forward()->dispatch(ConstantesCadastro::$CONTROLLER_CADASTRO, array(
+                        Constantes::$ACTION => ConstantesCadastro::$PAGINA_EVENTO_EXCLUSAO_CONFIRMACAO,
+            ));
+        }
+        /* Busca de endereço por CEP */
+        if ($pagina == ConstantesCadastro::$PAGINA_BUSCAR_ENDERECO) {
+            return $this->forward()->dispatch(ConstantesCadastro::$CONTROLLER_CADASTRO, array(
+                        Constantes::$ACTION => ConstantesCadastro::$PAGINA_BUSCAR_ENDERECO,
+            ));
+        }
         /* Funcoes */
         if ($pagina == ConstantesLancamento::$PAGINA_FUNCOES) {
             return $this->forward()->dispatch(ConstantesCadastro::$CONTROLLER_CADASTRO, array(
@@ -115,34 +102,48 @@ class CadastroController extends AbstractActionController {
         $idEntidadeAtual = $sessao->idEntidadeAtual;
         $entidade = $lancamentoORM->getEntidadeORM()->encontrarPorIdEntidade($idEntidadeAtual);
         $grupo = $entidade->getGrupo();
+
         /* Teste */
-        $filhos = $grupo->getGrupoPaiFilhoFilhos();
-        if ($filhos) {
-            echo "TENHO FILHO(S)";
-            foreach ($filhos as $gpFilho) {
-                echo "<br />#### ####";
-                echo "Eu " . $gpFilho->getPai_id() . " <br />";
-                echo "Meu Filho " . $gpFilho->getFilho_id() . " <br />";
-                $grupoFilho = $gpFilho->getGrupoPaiFilhoFilho();
-                echo "Grupo id " . $grupoFilho->getId() . " <br />";
-                $entidadeFilho = $grupoFilho->getEntidade();
-            }
-        }
+//        $filhos = $grupo->getGrupoPaiFilhoFilhos();
+//        if ($filhos) {
+//            echo "TENHO FILHO(S)";
+//            foreach ($filhos as $gpFilho) {
+//                echo "<br />#### ####";
+//                echo "Eu " . $gpFilho->getPai_id() . " <br />";
+//                echo "Meu Filho " . $gpFilho->getFilho_id() . " <br />";
+//                $grupoFilho = $gpFilho->getGrupoPaiFilhoFilho();
+//                echo "Grupo id " . $grupoFilho->getId() . " <br />";
+//                $entidadeFilho = $grupoFilho->getEntidade();
+//            }
+//        }
 
         if ($pagina == ConstantesCadastro::$PAGINA_CELULAS) {
             $listagemDeEventos = $grupo->getGrupoEventoCelula();
             $tituloDaPagina = ConstantesForm::$TRADUCAO_LISTAGEM_CELULAS . ' <b class="text-danger">' . ConstantesForm::$TRADUCAO_MULTIPLICACAO . '</b>';
+            $tipoEvento = 2;
         }
         if ($pagina == ConstantesCadastro::$PAGINA_CULTOS) {
             $listagemDeEventos = $grupo->getGrupoEventoCulto();
             $tituloDaPagina = ConstantesForm::$TRADUCAO_LISTAGEM_CULTOS;
+            $tipoEvento = 1;
         }
-        return new ViewModel(
-                array(
+
+        $view = new ViewModel(array(
             ConstantesForm::$LISTAGEM_EVENTOS => $listagemDeEventos,
             ConstantesForm::$TITULO_DA_PAGINA => $tituloDaPagina,
-                )
-        );
+            ConstantesForm::$TIPO_EVENTO => $tipoEvento,
+        ));
+
+        /* Javascript */
+        $layoutJS = new ViewModel();
+        $layoutJS->setTemplate(ConstantesForm::$LAYOUT_JS_EVENTOS);
+        $view->addChild($layoutJS, ConstantesForm::$LAYOUT_STRING_JS_EVENTOS);
+
+        $layoutJSValidacao = new ViewModel();
+        $layoutJSValidacao->setTemplate(ConstantesForm::$LAYOUT_JS_EVENTOS_VALIDACAO);
+        $view->addChild($layoutJSValidacao, ConstantesForm::$LAYOUT_STRING_JS_EVENTOS_VALIDACAO);
+
+        return $view;
     }
 
     /**
@@ -153,7 +154,6 @@ class CadastroController extends AbstractActionController {
         $form = null;
         $enderecoHidden = '';
         $sessao = new Container(Constantes::$NOME_APLICACAO);
-
         if ($sessao->pagina == ConstantesCadastro::$PAGINA_EVENTO_CULTO) {
             /* Verificando a se tem algum id na sessão */
             $eventoNaSessao = new Evento();
@@ -172,7 +172,6 @@ class CadastroController extends AbstractActionController {
             } else {
                 $enderecoHidden = ConstantesForm::$FORM_HIDDEN;
             }
-
             $form = new CelulaForm(ConstantesForm::$FORM_CELULA, $eventoCelulaNaSessao);
         }
 
@@ -183,12 +182,12 @@ class CadastroController extends AbstractActionController {
 
         /* Javascript */
         $layoutJS = new ViewModel();
-        $layoutJS->setTemplate(ConstantesForm::$LAYOUT_JS_CELULA);
-        $view->addChild($layoutJS, ConstantesForm::$LAYOUT_STRING_JS_CELULA);
+        $layoutJS->setTemplate(ConstantesForm::$LAYOUT_JS_EVENTO);
+        $view->addChild($layoutJS, ConstantesForm::$LAYOUT_STRING_JS_EVENTO);
 
         $layoutJSValidacao = new ViewModel();
-        $layoutJSValidacao->setTemplate(ConstantesForm::$LAYOUT_JS_CELULA_VALIDACAO);
-        $view->addChild($layoutJSValidacao, ConstantesForm::$LAYOUT_STRING_JS_CELULA_VALIDACAO);
+        $layoutJSValidacao->setTemplate(ConstantesForm::$LAYOUT_JS_EVENTO_VALIDACAO);
+        $view->addChild($layoutJSValidacao, ConstantesForm::$LAYOUT_STRING_JS_EVENTO_VALIDACAO);
 
         return $view;
     }
@@ -253,7 +252,8 @@ class CadastroController extends AbstractActionController {
                             }
                             $lancamentoORM->getEventoORM()->persistirEvento($eventoAtual);
                             /* Sessão */
-                            $sessao->nomeEventoAlterado = $eventoAtual->getNome();
+                            $sessao->tipoMensagem = ConstantesCadastro::$TIPO_MENSAGEM_ALTERAR_CULTO;
+                            $sessao->textoMensagem = $eventoAtual->getNome();
                         }
                     }
                     if ($criarNovoEvento) {
@@ -281,7 +281,8 @@ class CadastroController extends AbstractActionController {
                         $lancamentoORM->getEventoORM()->persistirEvento($evento);
                         $repositorioORM->getGrupoEventoORM()->persistirGrupoEvento($grupoEvento);
                         /* Sessão */
-                        $sessao->nomeEventoCadastrado = $evento->getNome();
+                        $sessao->tipoMensagem = ConstantesCadastro::$TIPO_MENSAGEM_CADASTRAR_CULTO;
+                        $sessao->textoMensagem = $evento->getNome();
                         $sessao->idSessao = $evento->getId();
                     }
                 } else {
@@ -298,215 +299,10 @@ class CadastroController extends AbstractActionController {
     }
 
     /**
-     * Tela com formulário de exclusão de culto
-     * GET /cadastroEventoCultoExclusao
+     * Função para persistir o evento célula
+     * POST /eventoCelulaPersistir
      */
-    public function eventoCultoExclusaoAction() {
-        /* Verificando a se tem algum id na sessão */
-        $sessao = new Container(Constantes::$NOME_APLICACAO);
-        $eventoNaSessao = new Evento();
-        if (!empty($sessao->idSessao)) {
-            $lancamentoORM = new LancamentoORM($this->getDoctrineORMEntityManager());
-            $eventoNaSessao = $lancamentoORM->getEventoORM()->encontrarPorIdEvento($sessao->idSessao);
-        }
-        $entidade = $lancamentoORM->getEntidadeORM()->encontrarPorIdEntidade($sessao->idEntidadeAtual);
-
-        return new ViewModel(array(
-            ConstantesForm::$EVENTO => $eventoNaSessao,
-            ConstantesLancamento::$ENTIDADE => $entidade
-        ));
-    }
-
-    /**
-     * Tela com formulário de exclusão de celula
-     * GET /cadastroeVENTOExclusaoConfirmacao
-     */
-    public function eventoCultoExclusaoConfirmacaoAction() {
-        /* Verificando a se tem algum id na sessão */
-        $sessao = new Container(Constantes::$NOME_APLICACAO);
-        $eventoNaSessao = new Evento();
-        if (!empty($sessao->idSessao)) {
-            $lancamentoORM = new LancamentoORM($this->getDoctrineORMEntityManager());
-            $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
-            $eventoNaSessao = $lancamentoORM->getEventoORM()->encontrarPorIdEvento($sessao->idSessao);
-
-            /* Persistindo */
-            /* Inativando o Evento */
-            $eventoParaInativar = $eventoNaSessao;
-            $eventoParaInativar->setData_inativacao(FuncoesCadastro::dataAtual());
-            $eventoParaInativar->setHora_inativacao(FuncoesCadastro::horaAtual());
-            $lancamentoORM->getEventoORM()->persistirEvento($eventoParaInativar);
-
-            /* Inativando o Grupo Evento */
-            $grupoEventoAtivos = $eventoParaInativar->getGrupoEventoAtivos();
-            $grupoEventoAtivos[0]->setData_inativacao(FuncoesCadastro::dataAtual());
-            $grupoEventoAtivos[0]->setHora_inativacao(FuncoesCadastro::horaAtual());
-            $repositorioORM->getGrupoEventoORM()->persistirGrupoEvento($grupoEventoAtivos[0]);
-        }
-
-        /* Sessão */
-        $sessao->nomeEventoExcluido = $eventoNaSessao->getNome();
-        return $this->redirect()->toRoute(ConstantesCadastro::$ROUTE_CADASTRO, array(
-                    ConstantesCadastro::$PAGINA => ConstantesCadastro::$PAGINA_CULTOS,
-        ));
-    }
-
-    /**
-     * Mostrar as mensagens de erro
-     * @param type $mensagens
-     */
-    public function direcionaErroDeCadastro($mensagens) {
-        echo "ERRO: Cadastro invalido!<br />";
-        foreach ($mensagens as $value) {
-            foreach ($value as $key => $value) {
-                echo "$key => $value <br />";
-            }
-        }
-    }
-
-    /**
-     * Função para ver listagem de células
-     * GET /cadastroCelulas
-     */
-    public function celulasAction() {
-        /* Verificando se alguma célula foi cadastrada */
-        $sessao = new Container(Constantes::$NOME_APLICACAO);
-        $nomeHospedeiroCelulaCadastrado = '';
-        if (!empty($sessao->nomeHospedeiroCelulaCadastrado)) {
-            $nomeHospedeiroCelulaCadastrado = $sessao->nomeHospedeiroCelulaCadastrado;
-            unset($sessao->nomeHospedeiroCelulaCadastrado);
-        }
-        $nomeHospedeiroCelulaAlterada = '';
-        if (!empty($sessao->nomeHospedeiroCelulaAlterada)) {
-            $nomeHospedeiroCelulaAlterada = $sessao->nomeHospedeiroCelulaAlterada;
-            unset($sessao->nomeHospedeiroCelulaAlterada);
-        }
-        $nomeHospedeiroCelulaExcluida = '';
-        if (!empty($sessao->nomeHospedeiroCelulaExcluida)) {
-            $nomeHospedeiroCelulaExcluida = $sessao->nomeHospedeiroCelulaExcluida;
-            unset($sessao->nomeHospedeiroCelulaExcluida);
-        }
-
-        /* Listagem de celulas */
-        $lancamentoORM = new LancamentoORM($this->getDoctrineORMEntityManager());
-        $idEntidadeAtual = $sessao->idEntidadeAtual;
-        $entidade = $lancamentoORM->getEntidadeORM()->encontrarPorIdEntidade($idEntidadeAtual);
-        $grupo = $entidade->getGrupo();
-        $grupoEventosDoTipoCelula = $grupo->getGrupoEventoCelula();
-
-        $view = new ViewModel(array(ConstantesForm::$LISTAGEM_CELULAS => $grupoEventosDoTipoCelula));
-        /* Javascript */
-        $layoutJS = new ViewModel();
-        $layoutJS->setTemplate(ConstantesForm::$LAYOUT_JS_CELULAS);
-        $view->addChild($layoutJS, ConstantesForm::$LAYOUT_STRING_JS_CELULAS);
-
-        $layoutJSValidacao = new ViewModel(array(
-            ConstantesForm::$LAYOUT_NOME_HOSPEDEIRO_CELULA_CADASTRADO => $nomeHospedeiroCelulaCadastrado,
-            ConstantesForm::$LAYOUT_NOME_HOSPEDEIRO_CELULA_ALTERADA => $nomeHospedeiroCelulaAlterada,
-            ConstantesForm::$LAYOUT_NOME_HOSPEDEIRO_CELULA_EXCLUIDA => $nomeHospedeiroCelulaExcluida
-        ));
-        $layoutJSValidacao->setTemplate(ConstantesForm::$LAYOUT_JS_CELULAS_VALIDACAO);
-        $view->addChild($layoutJSValidacao, ConstantesForm::$LAYOUT_STRING_JS_CELULAS_VALIDACAO);
-
-        return $view;
-    }
-
-    /**
-     * Função para ver listagem de células
-     * GET /cadastroCelula
-     */
-    public function celulaAction() {
-        $enderecoHidden = '';
-
-        /* Verificando a se tem algum id na sessão */
-        $sessao = new Container(Constantes::$NOME_APLICACAO);
-        $eventoCelulaNaSessao = new EventoCelula();
-        if (!empty($sessao->idSessao)) {
-            $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
-            $eventoCelulaNaSessao = $repositorioORM->getEventoCelulaORM()->encontrarPorIdEventoCelula($sessao->idSessao);
-        } else {
-            $enderecoHidden = ConstantesForm::$FORM_HIDDEN;
-        }
-
-        $celulaForm = new CelulaForm(ConstantesForm::$FORM_CELULA, $eventoCelulaNaSessao);
-
-        $view = new ViewModel(array(
-            ConstantesForm::$FORM_CELULA => $celulaForm,
-            ConstantesForm::$FORM_ENDERECO_HIDDEN => $enderecoHidden
-        ));
-        /* Javascript */
-        $layoutJS = new ViewModel();
-        $layoutJS->setTemplate(ConstantesForm::$LAYOUT_JS_CELULA);
-        $view->addChild($layoutJS, ConstantesForm::$LAYOUT_STRING_JS_CELULA);
-
-        $layoutJSValidacao = new ViewModel();
-        $layoutJSValidacao->setTemplate(ConstantesForm::$LAYOUT_JS_CELULA_VALIDACAO);
-        $view->addChild($layoutJSValidacao, ConstantesForm::$LAYOUT_STRING_JS_CELULA_VALIDACAO);
-
-        return $view;
-    }
-
-    /**
-     * Tela com formulário de exclusão de celula
-     * GET /cadastroCelulaExclusao
-     */
-    public function celulaExclusaoAction() {
-        /* Verificando a se tem algum id na sessão */
-        $sessao = new Container(Constantes::$NOME_APLICACAO);
-        $eventoCelulaNaSessao = new EventoCelula();
-        if (!empty($sessao->idSessao)) {
-            $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
-            $eventoCelulaNaSessao = $repositorioORM->getEventoCelulaORM()->encontrarPorIdEventoCelula($sessao->idSessao);
-        }
-        /* Helper Controller */
-        $lancamentoORM = new LancamentoORM($this->getDoctrineORMEntityManager());
-        $entidade = $lancamentoORM->getEntidadeORM()->encontrarPorIdEntidade($sessao->idEntidadeAtual);
-
-        return new ViewModel(array(
-            ConstantesForm::$CELULA => $eventoCelulaNaSessao,
-            ConstantesLancamento::$ENTIDADE => $entidade
-        ));
-    }
-
-    /**
-     * Tela com formulário de exclusão de celula
-     * GET /cadastroCelulaExclusaoConfirmacao
-     */
-    public function celulaExclusaoConfirmacaoAction() {
-        /* Verificando a se tem algum id na sessão */
-        $sessao = new Container(Constantes::$NOME_APLICACAO);
-        $eventoCelulaNaSessao = new EventoCelula();
-        if (!empty($sessao->idSessao)) {
-            $lancamentoORM = new LancamentoORM($this->getDoctrineORMEntityManager());
-            $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
-            $eventoCelulaNaSessao = $repositorioORM->getEventoCelulaORM()->encontrarPorIdEventoCelula($sessao->idSessao);
-
-            /* Persistindo */
-            /* Inativando o Evento */
-            $eventoParaInativar = $eventoCelulaNaSessao->getEvento();
-            $eventoParaInativar->setData_inativacao(FuncoesCadastro::dataAtual());
-            $eventoParaInativar->setHora_inativacao(FuncoesCadastro::horaAtual());
-            $lancamentoORM->getEventoORM()->persistirEvento($eventoParaInativar);
-
-            /* Inativando o Grupo Evento */
-            $grupoEventoAtivos = $eventoParaInativar->getGrupoEventoAtivos();
-            $grupoEventoAtivos[0]->setData_inativacao(FuncoesCadastro::dataAtual());
-            $grupoEventoAtivos[0]->setHora_inativacao(FuncoesCadastro::horaAtual());
-            $repositorioORM->getGrupoEventoORM()->persistirGrupoEvento($grupoEventoAtivos[0]);
-        }
-
-        /* Sessão */
-        $sessao->nomeHospedeiroCelulaExcluida = $eventoCelulaNaSessao->getNome_hospedeiro();
-        return $this->redirect()->toRoute(ConstantesCadastro::$ROUTE_CADASTRO, array(
-                    ConstantesCadastro::$PAGINA => ConstantesCadastro::$PAGINA_CELULAS,
-        ));
-    }
-
-    /**
-     * Função para persistir a célula
-     * POST /cadastroCelulaPersistir
-     */
-    public function celulaPersistirAction() {
+    public function eventoCelulaPersistirAction() {
         $request = $this->getRequest();
         if ($request->isPost()) {
             try {
@@ -595,7 +391,8 @@ class CadastroController extends AbstractActionController {
                             }
                             $lancamentoORM->getEventoORM()->persistirEvento($eventoAtual);
                             /* Sessão */
-                            $sessao->nomeHospedeiroCelulaAlterada = $eventoCelulaAtual->getNome_hospedeiro();
+                            $sessao->tipoMensagem = ConstantesCadastro::$TIPO_MENSAGEM_ALTERAR_CELULA;
+                            $sessao->textoMensagem = $eventoCelulaAtual->getNome_hospedeiro();
                         }
                     }
                     if ($criarNovaCelula) {
@@ -633,26 +430,100 @@ class CadastroController extends AbstractActionController {
                         $repositorioORM->getEventoCelulaORM()->persistirEventoCelula($eventoCelula);
                         $repositorioORM->getGrupoEventoORM()->persistirGrupoEvento($grupoEvento);
                         /* Sessão */
-                        $sessao->nomeHospedeiroCelulaCadastrado = $eventoCelula->getNome_hospedeiro();
+                        $sessao->tipoMensagem = ConstantesCadastro::$TIPO_MENSAGEM_CADASTRAR_CELULA;
+                        $sessao->textoMensagem = $eventoCelula->getNome_hospedeiro();
                         $sessao->idSessao = $eventoCelula->getId();
                     }
                 } else {
-                    echo "ERRO: Cadastro invalido!<br />";
-                    foreach ($celulaForm->getMessages() as $value) {
-                        foreach ($value as $key => $value) {
-                            echo "$key => $value <br />";
-                        }
-                    }
+                    $this->direcionaErroDeCadastro($celulaForm->getMessages());
                 }
-
                 return $this->redirect()->toRoute(ConstantesCadastro::$ROUTE_CADASTRO, array(
                             ConstantesCadastro::$PAGINA => ConstantesCadastro::$PAGINA_CELULAS,
                 ));
-//                return $this->forward()->dispatch(ConstantesCadastro::$CONTROLLER_CADASTRO, array(
-//                            Constantes::$ACTION => ConstantesCadastro::$PAGINA_CELULA_PRE_CADASTRO,
-//                ));
             } catch (Exception $exc) {
                 echo $exc->getMessage();
+            }
+        }
+    }
+
+    /**
+     * Tela com formulário de exclusão de evento
+     * GET /cadastroEventoExclusao
+     */
+    public function eventoExclusaoAction() {
+        /* Verificando a se tem algum id na sessão */
+        $sessao = new Container(Constantes::$NOME_APLICACAO);
+        $eventoNaSessao = new Evento();
+        if (!empty($sessao->idSessao)) {
+            $lancamentoORM = new LancamentoORM($this->getDoctrineORMEntityManager());
+            $eventoNaSessao = $lancamentoORM->getEventoORM()->encontrarPorIdEvento($sessao->idSessao);
+        }
+        $entidade = $lancamentoORM->getEntidadeORM()->encontrarPorIdEntidade($sessao->idEntidadeAtual);
+
+        return new ViewModel(array(
+            ConstantesForm::$EVENTO => $eventoNaSessao,
+            ConstantesLancamento::$ENTIDADE => $entidade
+        ));
+    }
+
+    /**
+     * Tela com formulário de exclusão de celula
+     * GET /cadastroEventoConfirmacao
+     */
+    public function eventoExclusaoConfirmacaoAction() {
+        /* Verificando a se tem algum id na sessão */
+        $sessao = new Container(Constantes::$NOME_APLICACAO);
+        $eventoNaSessao = new Evento();
+        if (!empty($sessao->idSessao)) {
+            $lancamentoORM = new LancamentoORM($this->getDoctrineORMEntityManager());
+            $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
+            $eventoNaSessao = $lancamentoORM->getEventoORM()->encontrarPorIdEvento($sessao->idSessao);
+
+            $sessao->tipoMensagem = ConstantesCadastro::$TIPO_MENSAGEM_EXCLUIR_CULTO;
+            $sessao->textoMensagem = $eventoNaSessao->getNome();
+            if ($eventoNaSessao->verificaSeECelula()) {
+                $celula = $eventoNaSessao->getEventoCelula();
+                $sessao->tipoMensagem = ConstantesCadastro::$TIPO_MENSAGEM_EXCLUIR_CELULA;
+                $sessao->textoMensagem = $celula->getNome_hospedeiro();
+            }
+
+            /* Persistindo */
+            /* Inativando o Evento */
+            $eventoParaInativar = $eventoNaSessao;
+            $eventoParaInativar->setData_inativacao(FuncoesCadastro::dataAtual());
+            $eventoParaInativar->setHora_inativacao(FuncoesCadastro::horaAtual());
+            $lancamentoORM->getEventoORM()->persistirEvento($eventoParaInativar);
+
+            /* Inativando o Grupo Evento */
+            $grupoEventoAtivos = $eventoParaInativar->getGrupoEventoAtivos();
+            $grupoEventoAtivos[0]->setData_inativacao(FuncoesCadastro::dataAtual());
+            $grupoEventoAtivos[0]->setHora_inativacao(FuncoesCadastro::horaAtual());
+            $repositorioORM->getGrupoEventoORM()->persistirGrupoEvento($grupoEventoAtivos[0]);
+        }
+
+        /* Sessão */
+        $sessao->nomeEventoExcluido = $eventoNaSessao->getNome();
+
+        $tipoCelula = !empty($eventoNaSessao->verificaSeECelula());
+        $pagina = ConstantesCadastro::$PAGINA_CULTOS;
+        if ($tipoCelula) {
+            $pagina = ConstantesCadastro::$PAGINA_CELULAS;
+        }
+
+        return $this->redirect()->toRoute(ConstantesCadastro::$ROUTE_CADASTRO, array(
+                    ConstantesCadastro::$PAGINA => $pagina,
+        ));
+    }
+
+    /**
+     * Mostrar as mensagens de erro
+     * @param type $mensagens
+     */
+    public function direcionaErroDeCadastro($mensagens) {
+        echo "ERRO: Cadastro invalido!<br />";
+        foreach ($mensagens as $value) {
+            foreach ($value as $key => $value) {
+                echo "$key => $value <br />";
             }
         }
     }

@@ -3,11 +3,14 @@
 use Cadastro\Controller\Helper\ConstantesCadastro;
 use Cadastro\Form\ConstantesForm;
 use Entidade\Entity\Evento;
-use Entidade\Entity\EventoCelula;
 use Lancamento\Controller\Helper\FuncoesLancamento;
 use Login\Controller\Helper\Constantes;
 
 $eventoRecebido = $this->evento;
+$tipoCelula = !empty($eventoRecebido->verificaSeECelula());
+if ($tipoCelula) {
+    $celula = $eventoRecebido->getEventoCelula();
+}
 $diaDaSemanaAjustado = FuncoesLancamento::diaDaSemanaPorDia($eventoRecebido->getDia(), 1);
 $tituloDaPagina = $this->translate(ConstantesForm::$TRADUCAO_CONFIRMACAO_EXCLUSAO);
 
@@ -15,7 +18,17 @@ echo $this->templateFormularioTopo($tituloDaPagina, ConstantesForm::$STRING_DIV_
 ?>
 <div class="panel-body bg-light">
     <div class="section-divider">
-        <span><?php echo $this->translate(ConstantesForm::$TRADUCAO_PERGUNTA_EXCLUSAO_CELULA); ?></span>
+        <span>
+            <?php
+            if ($tipoCelula) {
+                echo $this->translate(ConstantesForm::$TRADUCAO_PERGUNTA_EXCLUSAO_CELULA);
+            } else {
+                if ($eventoRecebido instanceof Evento) {
+                    echo $this->translate(ConstantesForm::$TRADUCAO_PERGUNTA_EXCLUSAO_CULTO);
+                }
+            }
+            ?>
+        </span>
     </div>
     <div class="panel heading-border panel-danger">
         <div class="panel-body">
@@ -26,7 +39,7 @@ echo $this->templateFormularioTopo($tituloDaPagina, ConstantesForm::$STRING_DIV_
                 <div><strong><?php echo $this->translate(ConstantesForm::$TRADUCAO_DIA_DA_SEMANA_SIMPLIFICADO) . '/' . $this->translate(ConstantesForm::$TRADUCAO_HORA); ?></strong></div>
                 <div><?php echo $diaDaSemanaAjustado . '/' . $eventoRecebido->getHoraFormatoHoraMinutoParaListagem(); ?></div>
             </address>
-            <?php if ($eventoRecebido instanceof EventoCelula) { ?>
+            <?php if ($tipoCelula) { ?>
                 <address>
                     <div><strong><?php echo $this->translate(ConstantesForm::$TRADUCAO_HOSPEDEIRO); ?></strong></div>
                     <div><?php echo $celula->getNome_hospedeiro(); ?></div>
@@ -37,13 +50,18 @@ echo $this->templateFormularioTopo($tituloDaPagina, ConstantesForm::$STRING_DIV_
                     <div><?php echo $celula->getLogradouro() . ',&nbsp;' . $celula->getComplemento(); ?></div>
                     <div><?php echo $celula->getCidade() . '&nbsp;-&nbsp;' . $celula->getBairro() . ',&nbsp;' . $celula->getUf() . '&nbsp; CEP:' . $celula->getCep(); ?></div>                  
                 </address>
-            <?php } ?>
-            <?php if ($eventoRecebido instanceof Evento) { ?>
-                <address>
-                    <div><strong>Nome</strong></div>
-                    <div><?php echo $eventoRecebido->getNome(); ?></div>
-                </address>                     
-            <?php } ?>
+                <?php
+            } else {
+                if ($eventoRecebido instanceof Evento) {
+                    ?>
+                    <address>
+                        <div><strong>Nome</strong></div>
+                        <div><?php echo $eventoRecebido->getNome(); ?></div>
+                    </address>                     
+                    <?php
+                }
+            }
+            ?>
         </div>                 
     </div>
     <div class="row">
@@ -53,7 +71,17 @@ echo $this->templateFormularioTopo($tituloDaPagina, ConstantesForm::$STRING_DIV_
                     <input type="checkbox" name="checked" value="checked" onclick="
                             $('#divMotivo').toggleClass('<?php echo ConstantesForm::$FORM_HIDDEN; ?>');
                            ">
-                    <span class="checkbox"></span><?php echo $this->translate(ConstantesForm::$TRADUCAO_CIENCIA_EXCLUSAO_CELULA); ?></label> 
+                    <span class="checkbox"></span>
+                    <?php
+                    if ($tipoCelula) {
+                        echo $this->translate(ConstantesForm::$TRADUCAO_CIENCIA_EXCLUSAO_CELULA);
+                    } else {
+                        if ($eventoRecebido instanceof Evento) {
+                            echo $this->translate(ConstantesForm::$TRADUCAO_CIENCIA_EXCLUSAO_CULTO);
+                        }
+                    }
+                    ?>
+                </label> 
             </div>
         </div>
     </div>
@@ -94,11 +122,12 @@ echo $this->templateFormularioTopo($tituloDaPagina, ConstantesForm::$STRING_DIV_
                     '$("#divSenha").toggleClass("' . ConstantesForm::$FORM_HIDDEN . '")';
             /* Botões */
             $urlVoltar = ConstantesCadastro::$ROUTE_CADASTRO;
-            if ($eventoRecebido instanceof EventoCelula) {
+            if ($tipoCelula) {
                 $urlVoltar .= ConstantesCadastro::$PAGINA_CELULAS;
-            }
-            if ($eventoRecebido instanceof Evento) {
-                $urlVoltar .= ConstantesCadastro::$PAGINA_CULTOS;
+            } else {
+                if ($eventoRecebido instanceof Evento) {
+                    $urlVoltar .= ConstantesCadastro::$PAGINA_CULTOS;
+                }
             }
             echo $this->botaoLink($labelVoltar, $urlVoltar, 2, '');
             echo $this->botaoLink($labelContinuar, ConstantesForm::$STRING_HASHTAG, 0, $this->funcaoOnClick($stringNomeDaFuncaoOnClickContinuarExclusao));
@@ -123,14 +152,9 @@ echo $this->templateFormularioTopo($tituloDaPagina, ConstantesForm::$STRING_DIV_
     <div class="panel-footer text-right" style="height:65px;">
         <?php
         /* Botões */
-        $stringNomeDaFuncaoOnClickConfimarExclusao = '';
         $labelConfirmar = $this->translate(ConstantesForm::$TRADUCAO_CONFIRMACAO);
-        if ($eventoRecebido instanceof EventoCelula) {
-            $stringNomeDaFuncaoOnClickConfimarExclusao = 'funcaoCadastro("' . ConstantesCadastro::$PAGINA_CELULA_EXCLUSAO_CONFIRMACAO . '", ' . $eventoRecebido->getId() . ')';
-        }
-        if ($eventoRecebido instanceof Evento) {
-            $stringNomeDaFuncaoOnClickConfimarExclusao = 'funcaoCadastro("' . ConstantesCadastro::$PAGINA_EVENTO_CULTO_EXCLUSAO_CONFIRMACAO . '", ' . $eventoRecebido->getId() . ')';
-        }
+        $stringNomeDaFuncaoOnClickConfimarExclusao = 'funcaoCadastro("' . ConstantesCadastro::$PAGINA_EVENTO_EXCLUSAO_CONFIRMACAO . '", ' . $eventoRecebido->getId() . ')';
+
         echo $this->botaoLink($labelVoltar, ConstantesForm::$STRING_HASHTAG, 2, $this->funcaoOnClick($stringNomeDaFuncaoOnClickContinuarExclusao));
         echo $this->botaoLink($labelConfirmar, ConstantesForm::$STRING_HASHTAG, 0, $this->funcaoOnClick($stringNomeDaFuncaoOnClickConfimarExclusao));
         ?>      
