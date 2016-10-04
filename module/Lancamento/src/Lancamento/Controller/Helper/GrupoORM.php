@@ -41,6 +41,23 @@ class GrupoORM {
         }
     }
 
+    /**
+     * Localizar entidade por $idGrupo
+     * 
+     * @param integer $idGrupo
+     * @return Grupo
+     * @throws Exception
+     */
+    public function encontrarPorIdGrupoPessoa($idGrupo) {
+        $id = (int) $idGrupo;
+
+        $entidade = $this->getEntityManager()->find($this->getEntity(), $id);
+        if (!$entidade) {
+            throw new Exception("Não foi encontrado a grupo de id = {$id}");
+        }
+        return $entidade;
+    }
+
     public function getEntityManager() {
         return $this->_entityManager;
     }

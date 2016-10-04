@@ -5,6 +5,9 @@ namespace Cadastro\View\Helper;
 use Cadastro\Form\CelulaForm;
 use Cadastro\Form\ConstantesForm;
 use Cadastro\Form\EventoForm;
+use Lancamento\Controller\Helper\LancamentoORM;
+use Login\Controller\Helper\Constantes;
+use Zend\Session\Container;
 use Zend\View\Helper\AbstractHelper;
 
 /**
@@ -15,13 +18,17 @@ use Zend\View\Helper\AbstractHelper;
 class InputExtras extends AbstractHelper {
 
     protected $form;
+    protected $extra;
 
     public function __construct() {
         
     }
 
-    public function __invoke($form) {
+    public function __invoke($form, $extra = null) {
         $this->setForm($form);
+        if ($extra) {
+            $this->setExtra($extra);
+        }
         return $this->renderHtml();
     }
 
@@ -100,6 +107,44 @@ class InputExtras extends AbstractHelper {
                 $html .= '</div>';
                 $html .= '</div>';
                 $html .= '</div>';
+
+                if ($this->getExtra()) {
+                    $html .= '<div class="section-divider mv40">';
+                    $html .= '<span>' . $this->view->translate('Selecione as equipes que participaram desse culto') . '</span>';
+                    $html .= '</div>';
+
+                    $html .= '<div class="row">';
+                    foreach ($this->getExtra() as $gpFilho) {
+                        $grupoFilho = $gpFilho->getGrupoPaiFilhoFilho();
+                        $entidadeFilho = $grupoFilho->getEntidadeAtiva();
+
+                        $checked = '';
+                        if ($this->getForm()->get(ConstantesForm::$FORM_ID)->getValue()) {
+                            if ($grupoFilho->verificaSeParticipaDoEvento($this->getForm()->get(ConstantesForm::$FORM_ID)->getValue())) {
+                                $checked = 'checked';
+                            }
+                        }
+
+                        $html .= '<div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">';
+                        $html .= '<div class="section">';
+
+                        $html .= '<label class="option">';
+                        $html .= '<input type="checkbox" name="checkEquipe' . $grupoFilho->getId() . '" value="' . $grupoFilho->getId() . '" ' . $checked . '>';
+                        $html .= '<span class="checkbox"></span>';
+                        $html .= $entidadeFilho->infoEntidade();
+                        $html .= '</label>';
+
+                        $html .= '</div>';
+                        $html .= '</div>';
+                    }
+                    $html .= '</div>
+
+                        
+
+                        
+
+                        ';
+                }
             }
         }
         return $html;
@@ -111,6 +156,14 @@ class InputExtras extends AbstractHelper {
 
     function setForm($form) {
         $this->form = $form;
+    }
+
+    function getExtra() {
+        return $this->extra;
+    }
+
+    function setExtra($extra) {
+        $this->extra = $extra;
     }
 
 }

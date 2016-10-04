@@ -46,6 +46,7 @@ class ConstantesForm {
     public static $FORM_CSRF = 'csrf';
     public static $FORM_CELULA = 'CelulaForm';
     public static $FORM = 'Form';
+    public static $EXTRA = 'extra';
     public static $FORM_ENDERECO_HIDDEN = 'enderecoHidden';
     public static $FORM_ACTION = 'action';
     public static $FORM_READONLY = 'readonly';

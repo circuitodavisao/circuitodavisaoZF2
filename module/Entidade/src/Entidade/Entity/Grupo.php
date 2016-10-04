@@ -264,6 +264,23 @@ class Grupo {
     }
 
     /**
+     * Verifica se o grupo participa do evento informado
+     * @param int $idEvento
+     * @return boolean
+     */
+    function verificaSeParticipaDoEvento($idEvento) {
+        $resposta = false;
+        $id = (int) $idEvento;
+
+        foreach ($this->getGrupoEventoAtivos() as $ge) {
+            if ($ge->getEvento_id() == $id) {
+                $resposta = true;
+            }
+        }
+        return $resposta;
+    }
+
+    /**
      * Retorna o grupo evento no ciclo selecionado
      * @param int $ciclo
      * @param int $mes

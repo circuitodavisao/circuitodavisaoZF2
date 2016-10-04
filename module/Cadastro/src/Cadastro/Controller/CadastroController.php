@@ -103,20 +103,6 @@ class CadastroController extends AbstractActionController {
         $entidade = $lancamentoORM->getEntidadeORM()->encontrarPorIdEntidade($idEntidadeAtual);
         $grupo = $entidade->getGrupo();
 
-        /* Teste */
-//        $filhos = $grupo->getGrupoPaiFilhoFilhos();
-//        if ($filhos) {
-//            echo "TENHO FILHO(S)";
-//            foreach ($filhos as $gpFilho) {
-//                echo "<br />#### ####";
-//                echo "Eu " . $gpFilho->getPai_id() . " <br />";
-//                echo "Meu Filho " . $gpFilho->getFilho_id() . " <br />";
-//                $grupoFilho = $gpFilho->getGrupoPaiFilhoFilho();
-//                echo "Grupo id " . $grupoFilho->getId() . " <br />";
-//                $entidadeFilho = $grupoFilho->getEntidade();
-//            }
-//        }
-
         if ($pagina == ConstantesCadastro::$PAGINA_CELULAS) {
             $listagemDeEventos = $grupo->getGrupoEventoCelula();
             $tituloDaPagina = ConstantesForm::$TRADUCAO_LISTAGEM_CELULAS . ' <b class="text-danger">' . ConstantesForm::$TRADUCAO_MULTIPLICACAO . '</b>';
@@ -153,15 +139,21 @@ class CadastroController extends AbstractActionController {
     public function eventoAction() {
         $form = null;
         $enderecoHidden = '';
+        $extra = null;
         $sessao = new Container(Constantes::$NOME_APLICACAO);
         if ($sessao->pagina == ConstantesCadastro::$PAGINA_EVENTO_CULTO) {
             /* Verificando a se tem algum id na sessão */
             $eventoNaSessao = new Evento();
+            $lancamentoORM = new LancamentoORM($this->getDoctrineORMEntityManager());
             if (!empty($sessao->idSessao)) {
-                $lancamentoORM = new LancamentoORM($this->getDoctrineORMEntityManager());
                 $eventoNaSessao = $lancamentoORM->getEventoORM()->encontrarPorIdEvento($sessao->idSessao);
             }
             $form = new EventoForm(ConstantesForm::$FORM, $eventoNaSessao);
+
+            $idEntidadeAtual = $sessao->idEntidadeAtual;
+            $entidade = $lancamentoORM->getEntidadeORM()->encontrarPorIdEntidade($idEntidadeAtual);
+            $grupo = $entidade->getGrupo();
+            $extra = $grupo->getGrupoPaiFilhoFilhos();
         }
         if ($sessao->pagina == ConstantesCadastro::$PAGINA_EVENTO_CELULA) {
             /* Verificando a se tem algum id na sessão */
@@ -177,7 +169,8 @@ class CadastroController extends AbstractActionController {
 
         $view = new ViewModel(array(
             ConstantesForm::$FORM => $form,
-            ConstantesForm::$FORM_ENDERECO_HIDDEN => $enderecoHidden
+            ConstantesForm::$FORM_ENDERECO_HIDDEN => $enderecoHidden,
+            ConstantesForm::$EXTRA => $extra,
         ));
 
         /* Javascript */
@@ -284,6 +277,21 @@ class CadastroController extends AbstractActionController {
                         $sessao->tipoMensagem = ConstantesCadastro::$TIPO_MENSAGEM_CADASTRAR_CULTO;
                         $sessao->textoMensagem = $evento->getNome();
                         $sessao->idSessao = $evento->getId();
+
+                        /* Grupos Abaixos ou Equipes */
+                        $stringCheckEquipe = 'checkEquipe';
+                        foreach ($post_data as $key => $value) {
+                            $stringParaVerificar = substr($key, 0, strlen($stringCheckEquipe));
+                            if (!\strcmp($stringParaVerificar, $stringCheckEquipe)) {
+                                $grupoEquipe = $lancamentoORM->getGrupoORM()->encontrarPorIdGrupoPessoa($value);
+                                $grupoEventoEquipe = new GrupoEvento();
+                                $grupoEventoEquipe->setData_criacao(FuncoesCadastro::dataAtual());
+                                $grupoEventoEquipe->setHora_criacao(FuncoesCadastro::horaAtual());
+                                $grupoEventoEquipe->setGrupo($grupoEquipe);
+                                $grupoEventoEquipe->setEvento($evento);
+                                $repositorioORM->getGrupoEventoORM()->persistirGrupoEvento($grupoEventoEquipe);
+                            }
+                        }
                     }
                 } else {
                     $this->direcionaErroDeCadastro($eventoForm->getMessages());
