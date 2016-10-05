@@ -272,9 +272,11 @@ class Grupo {
         $resposta = false;
         $id = (int) $idEvento;
 
-        foreach ($this->getGrupoEventoAtivos() as $ge) {
-            if ($ge->getEvento_id() == $id) {
-                $resposta = true;
+        if ($this->getGrupoEventoAtivos()) {
+            foreach ($this->getGrupoEventoAtivos() as $ge) {
+                if ($ge->getEvento_id() == $id) {
+                    $resposta = true;
+                }
             }
         }
         return $resposta;

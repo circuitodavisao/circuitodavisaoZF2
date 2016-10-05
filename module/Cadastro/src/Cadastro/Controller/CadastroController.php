@@ -190,6 +190,7 @@ class CadastroController extends AbstractActionController {
      * POST /eventoCultoPersistir
      */
     public function eventoCultoPersistirAction() {
+        $stringCheckEquipe = 'checkEquipe';
         $request = $this->getRequest();
         if ($request->isPost()) {
             try {
@@ -220,7 +221,7 @@ class CadastroController extends AbstractActionController {
                     if (!empty($post_data[ConstantesForm::$FORM_ID])) {
                         $criarNovoEvento = false;
                         $eventoAtual = $lancamentoORM->getEventoORM()->encontrarPorIdEvento($post_data[ConstantesForm::$FORM_ID]);
-
+                        $grupoEventoAtivos = $eventoAtual->getGrupoEventoAtivos();
                         /* Dia foi alterado */
                         if ($post_data[ConstantesForm::$FORM_DIA_DA_SEMANA] != $eventoAtual->getDia()) {
                             /* Persistindo */
@@ -229,11 +230,12 @@ class CadastroController extends AbstractActionController {
                             $eventoParaInativar->setData_inativacao(FuncoesCadastro::dataAtual());
                             $eventoParaInativar->setHora_inativacao(FuncoesCadastro::horaAtual());
                             $lancamentoORM->getEventoORM()->persistirEvento($eventoParaInativar);
-                            /* Inativando o Grupo Evento */
-                            $grupoEventoAtivos = $eventoParaInativar->getGrupoEventoAtivos();
-                            $grupoEventoAtivos[0]->setData_inativacao(FuncoesCadastro::dataAtual());
-                            $grupoEventoAtivos[0]->setHora_inativacao(FuncoesCadastro::horaAtual());
-                            $repositorioORM->getGrupoEventoORM()->persistirGrupoEvento($grupoEventoAtivos[0]);
+                            /* Inativando todos Grupo Evento */
+                            foreach ($grupoEventoAtivos as $gea) {
+                                $gea->setData_inativacao(FuncoesCadastro::dataAtual());
+                                $gea->setHora_inativacao(FuncoesCadastro::horaAtual());
+                                $repositorioORM->getGrupoEventoORM()->persistirGrupoEvento($gea);
+                            }
                             $criarNovoEvento = true;
                             $mudarDataDeCadastroParaProximoDomingo = true;
                         } else {
@@ -247,6 +249,53 @@ class CadastroController extends AbstractActionController {
                             /* Sessão */
                             $sessao->tipoMensagem = ConstantesCadastro::$TIPO_MENSAGEM_ALTERAR_CULTO;
                             $sessao->textoMensagem = $eventoAtual->getNome();
+                        }
+                        /* Verificando Grupos abaixo ou equipes */
+                        /* Marcação */
+                        foreach ($post_data as $key => $value) {
+                            $stringParaVerificar = substr($key, 0, strlen($stringCheckEquipe));
+                            if (!\strcmp($stringParaVerificar, $stringCheckEquipe)) {
+                                /* Verificando marcações */
+                                $validacaoMarcado = false;
+                                foreach ($grupoEventoAtivos as $gea) {
+                                    if ($gea->getGrupo()->getId() == $value) {
+                                        $validacaoMarcado = true;
+                                    }
+                                }
+                                /* Equipe esta marcada mas não foi gerada ainda */
+                                if (!$validacaoMarcado) {
+                                    $grupoEquipe = $lancamentoORM->getGrupoORM()->encontrarPorIdGrupoPessoa($value);
+                                    $grupoEventoEquipe = new GrupoEvento();
+                                    $grupoEventoEquipe->setData_criacao(FuncoesCadastro::dataAtual());
+                                    $grupoEventoEquipe->setHora_criacao(FuncoesCadastro::horaAtual());
+                                    $grupoEventoEquipe->setGrupo($grupoEquipe);
+                                    $grupoEventoEquipe->setEvento($eventoAtual);
+                                    $repositorioORM->getGrupoEventoORM()->persistirGrupoEvento($grupoEventoEquipe);
+                                }
+                            }
+                        }
+                        /* Desmarcação */
+                        foreach ($grupoEventoAtivos as $gea) {
+                            $idEntidadeAtual = $sessao->idEntidadeAtual;
+                            $entidade = $lancamentoORM->getEntidadeORM()->encontrarPorIdEntidade($idEntidadeAtual);
+                            $grupo = $entidade->getGrupo();
+                            if ($gea->getGrupo()->getId() != $grupo->getId()) {
+                                $validacaoMarcado = false;
+                                foreach ($post_data as $key => $value) {
+                                    $stringParaVerificar = substr($key, 0, strlen($stringCheckEquipe));
+                                    if (!\strcmp($stringParaVerificar, $stringCheckEquipe)) {
+                                        if ($gea->getGrupo()->getId() == $value) {
+                                            $validacaoMarcado = true;
+                                        }
+                                    }
+                                }
+                                /* Equipe esta marcada mas não foi gerada ainda */
+                                if (!$validacaoMarcado) {
+                                    $gea->setData_inativacao(FuncoesCadastro::dataAtual());
+                                    $gea->setHora_inativacao(FuncoesCadastro::horaAtual());
+                                    $repositorioORM->getGrupoEventoORM()->persistirGrupoEvento($gea);
+                                }
+                            }
                         }
                     }
                     if ($criarNovoEvento) {
@@ -279,7 +328,6 @@ class CadastroController extends AbstractActionController {
                         $sessao->idSessao = $evento->getId();
 
                         /* Grupos Abaixos ou Equipes */
-                        $stringCheckEquipe = 'checkEquipe';
                         foreach ($post_data as $key => $value) {
                             $stringParaVerificar = substr($key, 0, strlen($stringCheckEquipe));
                             if (!\strcmp($stringParaVerificar, $stringCheckEquipe)) {
