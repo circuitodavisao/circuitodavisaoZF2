@@ -205,6 +205,22 @@ class FuncoesLancamento {
         return (int) $anoSelecionado;
     }
 
+    public static function nomeDoEvento($idEvento) {
+        $resposta = '';
+        $id = (int) $idEvento;
+        switch ($id) {
+            case 1:
+                $resposta = 'Cult';
+                break;
+            case 2:
+                $resposta = 'Cell';
+                break;
+            default:
+                break;
+        }
+        return $resposta;
+    }
+
     /**
      * Retorna o dia da semana por extenso para o dia informado com 3 digitos ou por extenso dependendo do tipo
      * @param int $dia

@@ -21,29 +21,6 @@ class TabelaLancamento extends AbstractHelper {
     }
 
     public function renderHtml() {
-        /* Validacao para poucos eventos 1 a 4 */
-//        switch ($this->view->quantidadeDeEventosNoCiclo) {
-//            case 1:
-//                $centerBlock = ConstantesLancamento::$CLASS_CENTER_BLOCk;
-//                $style = 'style="width:100%;"';
-//                break;
-//            case 2:
-//                $centerBlock = ConstantesLancamento::$CLASS_CENTER_BLOCk;
-//                $style = 'style="width:100%;"';
-//                break;
-//            case 3:
-//                $centerBlock = ConstantesLancamento::$CLASS_CENTER_BLOCk;
-//                $style = 'style="width:260px;"';
-//                break;
-//            case 4:
-//                $centerBlock = ConstantesLancamento::$CLASS_CENTER_BLOCk;
-//                $style = 'style="width:100%;"';
-//                break;
-//            default:
-//                $centerBlock = '';
-//                $style = '';
-//                break;
-//        }
         $centerBlock = ConstantesLancamento::$CLASS_CENTER_BLOCk;
         $style = 'style="width:100%;"';
 

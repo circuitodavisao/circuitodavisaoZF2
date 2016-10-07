@@ -337,6 +337,7 @@ class Grupo {
                             $verificacaoData = true;
                         }
                     }
+
                     /* Validacao de ciclos inicial e final */
                     $verificacaoDiaSemana = false;
                     $cicloTotal = FuncoesLancamento::totalCiclosMes($mes, $ano);
@@ -355,7 +356,7 @@ class Grupo {
                         $verificacaoDiaSemana = true;
                     }
 
-                    if ($verificacaoData || $verificacaoDiaSemana) {
+                    if ($verificacaoData && $verificacaoDiaSemana) {
                         $eventos[] = $ge;
                     }
                 }
