@@ -32,9 +32,11 @@ echo $this->templateFormularioTopo($tituloDaPagina, ConstantesForm::$STRING_DIV_
     </div>
     <div class="panel heading-border panel-danger">
         <div class="panel-body">
-            <address>
-                <?php echo $this->dadosEntidade(); ?>
-            </address>
+            <?php if ($tipoCelula) { ?>
+                <address>
+                    <?php echo $this->dadosEntidade(); ?>
+                </address>
+            <?php } ?>
             <address>
                 <div><strong><?php echo $this->translate(ConstantesForm::$TRADUCAO_DIA_DA_SEMANA_SIMPLIFICADO) . '/' . $this->translate(ConstantesForm::$TRADUCAO_HORA); ?></strong></div>
                 <div><?php echo $diaDaSemanaAjustado . '/' . $eventoRecebido->getHoraFormatoHoraMinutoParaListagem(); ?></div>
@@ -57,7 +59,11 @@ echo $this->templateFormularioTopo($tituloDaPagina, ConstantesForm::$STRING_DIV_
                     <address>
                         <div><strong>Nome</strong></div>
                         <div><?php echo $eventoRecebido->getNome(); ?></div>
-                    </address>                     
+                    </address>   
+                    <address>
+                        <div><strong>Equipe(s)</strong></div>
+                        <div><?php echo $this->extra; ?></div>
+                    </address>   
                     <?php
                 }
             }

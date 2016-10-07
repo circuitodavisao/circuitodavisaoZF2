@@ -219,6 +219,18 @@ use Cadastro\Form\ConstantesForm;
                 $('#spanDiaHora').html(spanDiaHora);
                 $('#spanNome').html(spanNome);
 
+                var nomeEquipesSelecionadas = '';
+                var todosElementos = document.Form.elements;
+                for (i = 0; i < todosElementos.length; i++) {
+                    if (todosElementos[i].type == "checkbox" && todosElementos[i].checked) {
+                        nomeEquipesSelecionadas += '<br />' + todosElementos[i].value;
+                    }
+                }
+                if (nomeEquipesSelecionadas === '') {
+                    nomeEquipesSelecionadas = 'Nenhuma equipe selecionada';
+                }
+                $('#spanEquipes').html(nomeEquipesSelecionadas);
+
                 $('#divDados').toggleClass('<?php echo ConstantesForm::$FORM_HIDDEN; ?>');
                 $('#divFormulario').toggleClass('<?php echo ConstantesForm::$FORM_HIDDEN; ?>');
             }

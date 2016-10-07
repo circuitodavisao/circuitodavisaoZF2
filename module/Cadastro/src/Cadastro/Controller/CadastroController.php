@@ -48,6 +48,7 @@ class CadastroController extends AbstractActionController {
     public function indexAction() {
         $sessao = new Container(Constantes::$NOME_APLICACAO);
         $sessao->pagina = '';
+        $extra = '';
         /* Verificando rota */
         $pagina = $this->getEvent()->getRouteMatch()->getParam(ConstantesCadastro::$PAGINA, 1);
         if ($pagina == ConstantesCadastro::$PAGINA_EVENTO_CULTO || $pagina == ConstantesCadastro::$PAGINA_EVENTO_CELULA) {
@@ -103,6 +104,7 @@ class CadastroController extends AbstractActionController {
         $entidade = $lancamentoORM->getEntidadeORM()->encontrarPorIdEntidade($idEntidadeAtual);
         $grupo = $entidade->getGrupo();
 
+        $extra = '';
         if ($pagina == ConstantesCadastro::$PAGINA_CELULAS) {
             $listagemDeEventos = $grupo->getGrupoEventoCelula();
             $tituloDaPagina = ConstantesForm::$TRADUCAO_LISTAGEM_CELULAS . ' <b class="text-danger">' . ConstantesForm::$TRADUCAO_MULTIPLICACAO . '</b>';
@@ -112,12 +114,14 @@ class CadastroController extends AbstractActionController {
             $listagemDeEventos = $grupo->getGrupoEventoCulto();
             $tituloDaPagina = ConstantesForm::$TRADUCAO_LISTAGEM_CULTOS;
             $tipoEvento = 1;
+            $extra = $grupo->getId();
         }
 
         $view = new ViewModel(array(
             ConstantesForm::$LISTAGEM_EVENTOS => $listagemDeEventos,
             ConstantesForm::$TITULO_DA_PAGINA => $tituloDaPagina,
             ConstantesForm::$TIPO_EVENTO => $tipoEvento,
+            ConstantesForm::$EXTRA => $extra,
         ));
 
         /* Javascript */
@@ -149,7 +153,6 @@ class CadastroController extends AbstractActionController {
                 $eventoNaSessao = $lancamentoORM->getEventoORM()->encontrarPorIdEvento($sessao->idSessao);
             }
             $form = new EventoForm(ConstantesForm::$FORM, $eventoNaSessao);
-
             $idEntidadeAtual = $sessao->idEntidadeAtual;
             $entidade = $lancamentoORM->getEntidadeORM()->encontrarPorIdEntidade($idEntidadeAtual);
             $grupo = $entidade->getGrupo();
@@ -245,26 +248,28 @@ class CadastroController extends AbstractActionController {
                             if ($post_data[(ConstantesForm::$FORM_NOME)] != $eventoAtual->getNome()) {
                                 $eventoAtual->setNome(strtoupper($post_data[(ConstantesForm::$FORM_NOME)]));
                             }
+                            $eventoAtual->setHora($post_data[(ConstantesForm::$FORM_HORA)] . ':' . $post_data[(ConstantesForm::$FORM_MINUTOS)] . ':00');
                             $lancamentoORM->getEventoORM()->persistirEvento($eventoAtual);
                             /* Sessão */
                             $sessao->tipoMensagem = ConstantesCadastro::$TIPO_MENSAGEM_ALTERAR_CULTO;
-                            $sessao->textoMensagem = $eventoAtual->getNome();
+                            $sessao->textoMensagem = $eventoAtual->getNome() . ' ' . $eventoAtual->getHoraFormatoHoraMinutoParaListagem();
                         }
                         /* Verificando Grupos abaixo ou equipes */
                         /* Marcação */
                         foreach ($post_data as $key => $value) {
                             $stringParaVerificar = substr($key, 0, strlen($stringCheckEquipe));
                             if (!\strcmp($stringParaVerificar, $stringCheckEquipe)) {
+                                $stringValor = substr($key, strlen($stringParaVerificar));
                                 /* Verificando marcações */
                                 $validacaoMarcado = false;
                                 foreach ($grupoEventoAtivos as $gea) {
-                                    if ($gea->getGrupo()->getId() == $value) {
+                                    if ($gea->getGrupo()->getId() == $stringValor) {
                                         $validacaoMarcado = true;
                                     }
                                 }
                                 /* Equipe esta marcada mas não foi gerada ainda */
                                 if (!$validacaoMarcado) {
-                                    $grupoEquipe = $lancamentoORM->getGrupoORM()->encontrarPorIdGrupoPessoa($value);
+                                    $grupoEquipe = $lancamentoORM->getGrupoORM()->encontrarPorIdGrupoPessoa($stringValor);
                                     $grupoEventoEquipe = new GrupoEvento();
                                     $grupoEventoEquipe->setData_criacao(FuncoesCadastro::dataAtual());
                                     $grupoEventoEquipe->setHora_criacao(FuncoesCadastro::horaAtual());
@@ -284,7 +289,8 @@ class CadastroController extends AbstractActionController {
                                 foreach ($post_data as $key => $value) {
                                     $stringParaVerificar = substr($key, 0, strlen($stringCheckEquipe));
                                     if (!\strcmp($stringParaVerificar, $stringCheckEquipe)) {
-                                        if ($gea->getGrupo()->getId() == $value) {
+                                        $stringValor = substr($key, strlen($stringParaVerificar));
+                                        if ($gea->getGrupo()->getId() == $stringValor) {
                                             $validacaoMarcado = true;
                                         }
                                     }
@@ -331,7 +337,8 @@ class CadastroController extends AbstractActionController {
                         foreach ($post_data as $key => $value) {
                             $stringParaVerificar = substr($key, 0, strlen($stringCheckEquipe));
                             if (!\strcmp($stringParaVerificar, $stringCheckEquipe)) {
-                                $grupoEquipe = $lancamentoORM->getGrupoORM()->encontrarPorIdGrupoPessoa($value);
+                                $stringValor = substr($key, strlen($stringParaVerificar));
+                                $grupoEquipe = $lancamentoORM->getGrupoORM()->encontrarPorIdGrupoPessoa($stringValor);
                                 $grupoEventoEquipe = new GrupoEvento();
                                 $grupoEventoEquipe->setData_criacao(FuncoesCadastro::dataAtual());
                                 $grupoEventoEquipe->setHora_criacao(FuncoesCadastro::horaAtual());
@@ -344,7 +351,6 @@ class CadastroController extends AbstractActionController {
                 } else {
                     $this->direcionaErroDeCadastro($eventoForm->getMessages());
                 }
-
                 return $this->redirect()->toRoute(ConstantesCadastro::$ROUTE_CADASTRO, array(
                             ConstantesCadastro::$PAGINA => ConstantesCadastro::$PAGINA_CULTOS,
                 ));
@@ -509,16 +515,27 @@ class CadastroController extends AbstractActionController {
     public function eventoExclusaoAction() {
         /* Verificando a se tem algum id na sessão */
         $sessao = new Container(Constantes::$NOME_APLICACAO);
+        $extra = null;
         $eventoNaSessao = new Evento();
-        if (!empty($sessao->idSessao)) {
-            $lancamentoORM = new LancamentoORM($this->getDoctrineORMEntityManager());
-            $eventoNaSessao = $lancamentoORM->getEventoORM()->encontrarPorIdEvento($sessao->idSessao);
-        }
+        $lancamentoORM = new LancamentoORM($this->getDoctrineORMEntityManager());
         $entidade = $lancamentoORM->getEntidadeORM()->encontrarPorIdEntidade($sessao->idEntidadeAtual);
-
+        if (!empty($sessao->idSessao)) {
+            $eventoNaSessao = $lancamentoORM->getEventoORM()->encontrarPorIdEvento($sessao->idSessao);
+            if ($eventoNaSessao->getGrupoEventoAtivos() > 1) {
+                $grupo = $entidade->getGrupo();
+                foreach ($eventoNaSessao->getGrupoEventoAtivos() as $eg) {
+                    if ($eg->getGrupo()->getId() != $grupo->getId()) {
+                        $grupo = $eg->getGrupo();
+                        $entidadeMarcada = $grupo->getEntidadeAtiva();
+                        $extra .= $entidadeMarcada->infoEntidade() . "<br />";
+                    }
+                }
+            }
+        }
         return new ViewModel(array(
             ConstantesForm::$EVENTO => $eventoNaSessao,
-            ConstantesLancamento::$ENTIDADE => $entidade
+            ConstantesLancamento::$ENTIDADE => $entidade,
+            ConstantesForm::$EXTRA => $extra,
         ));
     }
 
@@ -576,7 +593,7 @@ class CadastroController extends AbstractActionController {
      * @param type $mensagens
      */
     public function direcionaErroDeCadastro($mensagens) {
-        echo "ERRO: Cadastro invalido!<br />";
+        echo "ERRO: Cadastro invalido!<br /><br />########################<br />";
         foreach ($mensagens as $value) {
             foreach ($value as $key => $value) {
                 echo "$key => $value <br />";

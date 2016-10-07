@@ -348,6 +348,14 @@ class Evento implements InputFilterAwareInterface {
         return $this->nome;
     }
 
+    function getNomeAjustado() {
+        $nomeAjustado = substr($this->nome, 0, 8);
+        if (strlen($this->nome) > 8) {
+            $nomeAjustado .= '...';
+        }
+        return $nomeAjustado;
+    }
+
     function setNome($nome) {
         $this->nome = $nome;
     }

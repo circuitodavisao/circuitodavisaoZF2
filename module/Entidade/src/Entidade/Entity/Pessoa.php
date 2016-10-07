@@ -578,7 +578,6 @@ class Pessoa implements InputFilterAwareInterface {
                 break;
             }
         }
-
         return $grupoPessoaAtiva;
     }
 

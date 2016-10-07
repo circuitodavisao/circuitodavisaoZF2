@@ -94,6 +94,7 @@ class ConstantesForm {
     public static $TRADUCAO_LOGRADOURO = 'Public Place';
     public static $TRADUCAO_NOME_HOSPEDEIRO = 'Name Host';
     public static $TRADUCAO_NOME = 'Name';
+    public static $TRADUCAO_EQUIPES = 'Teams';
     public static $TRADUCAO_HOSPEDEIRO = 'Host';
     public static $TRADUCAO_ENDERECO = 'Address';
     public static $TRADUCAO_DDD_HOSPEDEIRO = 'DDD';
