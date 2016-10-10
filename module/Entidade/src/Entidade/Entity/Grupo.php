@@ -308,56 +308,68 @@ class Grupo {
                     $ultimoDiaDaSemana++;
                 }
                 foreach ($this->getGrupoEventoOrdenadosPorDiaDaSemana() as $ge) {
-                    /* Condição para data de cadastro */
-                    $verificacaoData = false;
-                    $diaAtual = date('d');
-                    $mesAtual = date('m'); /* Mes com zero */
-                    $anoAtual = date('Y');
-                    $cicloAtual = FuncoesLancamento::cicloAtual($mes, $ano);
-                    if ($ge->getData_criacaoAno() <= $ano) {
-                        if ($ge->getData_criacaoAno() == $ano) {
-                            if ($ge->getData_criacaoMes() <= $mes) {
-                                if ($ge->getData_criacaoMes() == $mes) {
-                                    $ge->setNovo(true);
-                                    if ($ciclo == $cicloAtual) {
-                                        if ($ge->getData_criacaoDia() <= $diaAtual) {
-                                            $verificacaoData = true;
+                    $validacaoCelulaExcluidaMesmoDia = false;
+                    /* Validação de célula , quando excluida no dia sem lançamento não aparecer */
+                    if ($ge->getEvento()->getEventoTipo()->getId() == 2) {
+                        if ($ge->getData_criacao() == $ge->getData_inativacao()) {
+                            if (!count($ge->getEvento()->getEventoFrequencia())) {
+                                $validacaoCelulaExcluidaMesmoDia = true;
+                            }
+                        }
+                    }
+
+                    if (!$validacaoCelulaExcluidaMesmoDia) {
+                        /* Condição para data de cadastro */
+                        $verificacaoData = false;
+                        $diaAtual = date('d');
+                        $mesAtual = date('m'); /* Mes com zero */
+                        $anoAtual = date('Y');
+                        $cicloAtual = FuncoesLancamento::cicloAtual($mes, $ano);
+                        if ($ge->getData_criacaoAno() <= $ano) {
+                            if ($ge->getData_criacaoAno() == $ano) {
+                                if ($ge->getData_criacaoMes() <= $mes) {
+                                    if ($ge->getData_criacaoMes() == $mes) {
+                                        $ge->setNovo(true);
+                                        if ($ciclo == $cicloAtual) {
+                                            if ($ge->getData_criacaoDia() <= $diaAtual) {
+                                                $verificacaoData = true;
+                                            }
+                                        } else {
+                                            $primeiroDiaCiclo = FuncoesLancamento::periodoCicloMesAno($ciclo, $mes, $ano, '', 1);
+                                            if ($ge->getData_criacaoDia() < $primeiroDiaCiclo) {
+                                                $verificacaoData = true;
+                                            }
                                         }
                                     } else {
-                                        $primeiroDiaCiclo = FuncoesLancamento::periodoCicloMesAno($ciclo, $mes, $ano, '', 1);
-                                        if ($ge->getData_criacaoDia() < $primeiroDiaCiclo) {
-                                            $verificacaoData = true;
-                                        }
+                                        $verificacaoData = true;
                                     }
-                                } else {
-                                    $verificacaoData = true;
+                                }
+                            } else {
+                                $verificacaoData = true;
+                            }
+                        }
+
+                        /* Validacao de ciclos inicial e final */
+                        $verificacaoDiaSemana = false;
+                        $cicloTotal = FuncoesLancamento::totalCiclosMes($mes, $ano);
+                        if ($verificacaoData && ($ciclo == 1 || $ciclo == $cicloTotal)) {
+                            if ($ciclo == 1) {
+                                if ($ge->getEvento()->getDiaAjustado() >= $primeiroDiaDaSemana) {
+                                    $verificacaoDiaSemana = true;
+                                }
+                            }
+                            if ($ciclo == $cicloTotal) {
+                                if ($ge->getEvento()->getDiaAjustado() <= $ultimoDiaDaSemana) {
+                                    $verificacaoDiaSemana = true;
                                 }
                             }
                         } else {
-                            $verificacaoData = true;
+                            $verificacaoDiaSemana = true;
                         }
-                    }
 
-                    /* Validacao de ciclos inicial e final */
-                    $verificacaoDiaSemana = false;
-                    $cicloTotal = FuncoesLancamento::totalCiclosMes($mes, $ano);
-                    if ($verificacaoData && ($ciclo == 1 || $ciclo == $cicloTotal)) {
-                        if ($ciclo == 1) {
-                            if ($ge->getEvento()->getDiaAjustado() >= $primeiroDiaDaSemana) {
-                                $verificacaoDiaSemana = true;
-                            }
+                        if ($verificacaoData && $verificacaoDiaSemana) {
+                            $eventos[] = $ge;
                         }
-                        if ($ciclo == $cicloTotal) {
-                            if ($ge->getEvento()->getDiaAjustado() <= $ultimoDiaDaSemana) {
-                                $verificacaoDiaSemana = true;
-                            }
-                        }
-                    } else {
-                        $verificacaoDiaSemana = true;
-                    }
-
-                    if ($verificacaoData && $verificacaoDiaSemana) {
-                        $eventos[] = $ge;
                     }
                 }
             }

@@ -569,9 +569,11 @@ class CadastroController extends AbstractActionController {
 
             /* Inativando o Grupo Evento */
             $grupoEventoAtivos = $eventoParaInativar->getGrupoEventoAtivos();
-            $grupoEventoAtivos[0]->setData_inativacao(FuncoesCadastro::dataAtual());
-            $grupoEventoAtivos[0]->setHora_inativacao(FuncoesCadastro::horaAtual());
-            $repositorioORM->getGrupoEventoORM()->persistirGrupoEvento($grupoEventoAtivos[0]);
+            foreach ($grupoEventoAtivos as $gea) {
+                $gea->setData_inativacao(FuncoesCadastro::dataAtual());
+                $gea->setHora_inativacao(FuncoesCadastro::horaAtual());
+                $repositorioORM->getGrupoEventoORM()->persistirGrupoEvento($gea);
+            }
         }
 
         /* Sessão */

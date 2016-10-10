@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: ZendSkeletonApplication\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-07-05 22:17-0700\n"
-"PO-Revision-Date: 2016-08-04 12:25-0300\n"
+"PO-Revision-Date: 2016-10-10 19:07-0300\n"
 "Last-Translator: Diogo Melo <dmelo87@gmail.com>\n"
 "Language-Team: ZF Contibutors <zf-devteam@zend.com>\n"
 "Language: pt\n"
@@ -371,3 +371,42 @@ msgstr " CO-LÍDER"
 #: Lancamento/view/lancamento/index.phtml:37
 msgid "Person Registered"
 msgstr "Pessoa Cadastrada"
+
+# ##########
+# CADASTRO #
+# ##########
+#: Cadastro/view/cadastro/index.phtml:9
+msgid "Day"
+msgstr "Dia"
+
+#: Cadastro/view/cadastro/index.phtml:9
+msgid "Hour"
+msgstr "Hora"
+
+#: Cadastro/view/cadastro/index.phtml:9
+msgid "Name Host"
+msgstr "Nome do Hospedeiro"
+
+#: Cadastro/view/cadastro/index.phtml:9
+msgid "Phone Host"
+msgstr "Telefone"
+
+#: Cadastro/view/cadastro/index.phtml:9
+msgid "Public Place"
+msgstr "Endereço"
+
+#: Cadastro/view/cadastro/index.phtml:9
+msgid "Name"
+msgstr "Nome"
+
+#: Cadastro/view/cadastro/index.phtml:9
+msgid "Teams"
+msgstr "Equipes"
+
+#: Cadastro/view/cadastro/index.phtml:9
+msgid "Listing <b class=\"text-danger\">Cults</b>"
+msgstr "Lista de <b class=\"text-danger\">Cultos</b>"
+
+#: Cadastro/view/cadastro/index.phtml:9
+msgid "Listing Cells of <b class=\"text-danger\">Multiplication</b>"
+msgstr "Lista de Células de <b class=\"text-danger\">Multiplicação</b>"
