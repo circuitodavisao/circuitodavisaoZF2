@@ -103,7 +103,7 @@ class ConstantesForm {
     public static $TRADUCAO_DIA_DA_SEMANA = 'Day of Week';
     public static $TRADUCAO_DIA_DA_SEMANA_SIMPLIFICADO = 'Day';
     public static $TRADUCAO_CADASTRO_CELULA = 'Registration Cell';
-    public static $TRADUCAO_CADASTRO_CULTO = 'Registration Cult';
+    public static $TRADUCAO_CADASTRO_CULTO = 'Registration <b class="text-danger">Cult</b>';
     public static $TRADUCAO_NOVA = 'New';
     public static $TRADUCAO_NOVA_CELULA = 'New Cell';
     public static $TRADUCAO_NOVO_CULTO = 'New Cult';

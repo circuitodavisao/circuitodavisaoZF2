@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: ZendSkeletonApplication\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-07-05 22:17-0700\n"
-"PO-Revision-Date: 2016-10-10 19:07-0300\n"
+"PO-Revision-Date: 2016-10-11 16:35-0300\n"
 "Last-Translator: Diogo Melo <dmelo87@gmail.com>\n"
 "Language-Team: ZF Contibutors <zf-devteam@zend.com>\n"
 "Language: pt\n"
@@ -410,3 +410,134 @@ msgstr "Lista de <b class=\"text-danger\">Cultos</b>"
 #: Cadastro/view/cadastro/index.phtml:9
 msgid "Listing Cells of <b class=\"text-danger\">Multiplication</b>"
 msgstr "Lista de Células de <b class=\"text-danger\">Multiplicação</b>"
+
+#: Cadastro/view/cadastro/index.phtml:9
+msgid "New Cell"
+msgstr "Nova Célula"
+
+#: Cadastro/view/cadastro/index.phtml:9
+msgid "New Cult"
+msgstr "Novo Culto"
+
+#: Cadastro/view/cadastro/evento.phtml:35
+msgid "Registration <b class=\"text-danger\">Cult</b>"
+msgstr "Cadastro de <b class=\"text-danger\">Culto</b>"
+
+#: Cadastro/view/cadastro/evento.phtml:35
+msgid "Registration Cell <b class=\"text-danger\">Multiplication</b>"
+msgstr "Cadastro de Célula de <b class=\"text-danger\">Multiplicação</b>"
+
+#: Cadastro/view/cadastro/evento.phtml:46
+msgid "Day / Hour"
+msgstr "Dia / Hora"
+
+#: Cadastro/view/cadastro/evento.phtml:46
+msgid "Day of Week"
+msgstr "Dia da Semana"
+
+#: Cadastro/view/cadastro/evento.phtml:46
+msgid "Minutes"
+msgstr "Minutos"
+
+#: Cadastro/view/cadastro/evento.phtml:47
+msgid " - Do not know your ZIP code <u><a target=\"_blank\" href=\"http://www.buscacep.correios.com.br/sistemas/buscacep/\">Click Here</a></u>"
+msgstr " - Não sabe seu CEP <u><a target=\"_blank\" href=\"http://www.buscacep.correios.com.br/sistemas/buscacep/\">Click Aqui</a></u>"
+
+#: Cadastro/view/cadastro/evento.phtml:47
+msgid "Data from Host"
+msgstr "Dados do Hospedeiro"
+
+#: Cadastro/view/cadastro/evento.phtml:47
+msgid "Neighborhood"
+msgstr "Bairro"
+
+#: Cadastro/view/cadastro/evento.phtml:47
+msgid "City"
+msgstr "Cidade"
+
+#: Cadastro/view/cadastro/evento.phtml:47
+msgid "Complement"
+msgstr "Complemento"
+
+#: Cadastro/view/cadastro/evento.phtml:47
+msgid "Host"
+msgstr "Hospedeiro"
+
+#: Cadastro/view/cadastro/evento.phtml:47
+msgid "Address"
+msgstr "Endereço"
+
+#: Cadastro/view/cadastro/evento.phtml:47
+msgid "The data are correct?"
+msgstr "Os dados estão corretos?"
+
+#: Cadastro/view/cadastro/index.phtml:9
+msgid "Maximum number of cells reached!"
+msgstr "Número máximo de células alcançado!"
+
+#: Cadastro/view/cadastro/index.phtml:9
+msgid "SUNDAY"
+msgstr "DOMINGO"
+
+msgid "SUN"
+msgstr "DOM"
+
+msgid "MONDAY"
+msgstr "SEGUNDA-FEIRA"
+
+msgid "MON"
+msgstr "SEG"
+
+msgid "TUESDAY"
+msgstr "TERÇA-FEIRA"
+
+msgid "TUE"
+msgstr "TER"
+
+msgid "WEDNESDAY"
+msgstr "QUARTA-FEIRA"
+
+msgid "WED"
+msgstr "QUA"
+
+msgid "THURSDAY"
+msgstr "QUINTA-FEIRA"
+
+msgid "THU"
+msgstr "QUI"
+
+msgid "FRIDAY"
+msgstr "SEXTA-FEIRA"
+
+msgid "FRI"
+msgstr "SEXA"
+
+msgid "SATURDAY"
+msgstr "SÁBADO"
+
+msgid "SAT"
+msgstr "SÁB"
+
+#: Cadastro/view/cadastro/index.phtml:9
+msgid "Change"
+msgstr "Alterar"
+
+#: Cadastro/view/cadastro/evento-exclusao.phtml:15
+msgid "Confirmation <strong><span class=\"text-danger\">Exclusion</span></strong>"
+msgstr "Confirmação de <strong><span class=\"text-danger\">Exclusão</span></strong>"
+
+#: Cadastro/view/cadastro/evento-exclusao.phtml:15
+msgid "Really want to delete this cell?"
+msgstr "Realmente deseja excluir essa célula?"
+
+#: Cadastro/view/cadastro/evento-exclusao.phtml:15
+msgid "Really want to delete this cult?"
+msgstr "Realmente deseja excluir essa culto?"
+
+#: Cadastro/view/cadastro/evento-exclusao.phtml:15
+msgid "I am <span class=\"text-danger\">aware</span> that by <span class=\"text-danger\">excluding cult</span> is the same no longer appear in the <span class=\"text-danger\">launch line</span>!"
+msgstr "Eu <span class=\"text-danger\">concordo</span> que <span class=\"text-danger\">excluindo o culto</span> o mesmo não aparecerá mais na minha <span class=\"text-danger\">linha de lançamento</span> e equipes!"
+
+#: Cadastro/view/cadastro/evento-exclusao.phtml:15
+msgid "I am <span class=\"text-danger\">aware</span> that by <span class=\"text-danger\">excluding cell</span> is the same no longer appear in the <span class=\"text-danger\">launch line</span>!"
+msgstr "Eu <span class=\"text-danger\">concordo</span> que <span class=\"text-danger\">excluindo a célula</span> a mesma não aparecerá mais na minha <span class=\"text-danger\">linha de lançamento</span> e equipes!"

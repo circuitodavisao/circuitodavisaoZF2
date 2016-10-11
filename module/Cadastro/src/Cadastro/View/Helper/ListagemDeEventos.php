@@ -76,7 +76,7 @@ class ListagemDeEventos extends AbstractHelper {
                 $diaDaSemanaAjustado = FuncoesLancamento::diaDaSemanaPorDia($evento->getDia());
 
                 $html .= '<tr>';
-                $html .= '<td class="text-center">' . $diaDaSemanaAjustado . '/' . $evento->getHoraFormatoHoraMinutoParaListagem() . '</td>';
+                $html .= '<td class="text-center">' . $this->view->translate($diaDaSemanaAjustado) . '/' . $evento->getHoraFormatoHoraMinutoParaListagem() . '</td>';
                 if ($tipoCelula) {
                     $celula = $evento->getEventoCelula();
                     $stringNomeDaFuncaoOnClick = 'funcaoCadastro("' . ConstantesCadastro::$PAGINA_EVENTO_CELULA . '", ' . $celula->getId() . ')';

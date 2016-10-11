@@ -36,7 +36,7 @@ class InputDiaDaSemanaHoraMinuto extends AbstractHelper {
         $html .= '<label class="field prepend-icon">';
         $elemento = $this->getForm()->get(ConstantesForm::$FORM_DIA_DA_SEMANA);
         if ($validacaoNaoCelula && $validacaoSemId) {
-            $html .= $elemento->getValueOptions()[$elemento->getValue()];
+            $html .= $this->view->translate($elemento->getValueOptions()[$elemento->getValue()]);
             $elemento->setAttribute(ConstantesForm::$FORM_CLASS, ConstantesForm::$FORM_CLASS_GUI_INPUT . ' ' . ConstantesForm::$FORM_HIDDEN);
         }
         $html .= $this->view->formSelect($elemento);
