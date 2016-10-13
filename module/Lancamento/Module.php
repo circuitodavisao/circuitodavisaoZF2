@@ -25,6 +25,7 @@ use Login\View\Helper\BotaoLink;
 use Login\View\Helper\BotaoSubmit;
 use Login\View\Helper\BotaoSubmitDesabilitado;
 use Login\View\Helper\MensagemStatica;
+use Login\View\Helper\Menu;
 use Zend\Mvc\MvcEvent;
 use Zend\Session\Config\SessionConfig;
 use Zend\Session\Container;
@@ -99,6 +100,9 @@ class Module {
                 },
                 'inputFormulario' => function($sm) {
                     return new InputFormulario();
+                },
+                'menu' => function($sm) {
+                    return new Menu();
                 },
             )
         );

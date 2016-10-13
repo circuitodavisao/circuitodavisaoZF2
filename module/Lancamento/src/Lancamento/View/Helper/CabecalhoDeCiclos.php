@@ -29,8 +29,7 @@ class CabecalhoDeCiclos extends AbstractHelper {
         $urlBase = $this->view->url(ConstantesLancamento::$ROUTE_LANCAMENTO);
         $urlBaseCiclo = $urlBase . '/' . $this->view->abaSelecionada . '_';
 
-        $html .= '<div class="panel-heading row text-center" style="margin:0px;"> ';
-        $html .= '<span class="panel-title">';
+        $html .= '<div class="center-block text-center" style="padding:10px;"> ';
 
         $mostrarAnterior = false;
         if ($this->view->cicloSelecionado > 1) {
@@ -52,7 +51,6 @@ class CabecalhoDeCiclos extends AbstractHelper {
             $html .= '&nbsp;<a ' . ConstantesLancamento::$ONCLICK_ABRIR_MODAL . ' href="' . $urlCicloPosterior . '"><button class="btn btn-default btn-sm"><i class="fa fa-angle-double-right"></i></button></a>';
         }
 
-        $html .= '</span>';
         $html .= '</div>';
         return $html;
     }

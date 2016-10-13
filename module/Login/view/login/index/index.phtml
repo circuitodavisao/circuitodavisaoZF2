@@ -10,7 +10,7 @@ use Login\Controller\Helper\Constantes;
 $formLogin = $this->formLogin;
 $formLogin->prepare();
 $formLogin->setAttribute(Constantes::$ACTION, $this->url(Constantes::$ROUTE_LOGIN, array(Constantes::$ACTION => Constantes::$ACTION_LOGAR)));
- 
+
 $classMensagem = $this->hidden;
 ?> 
 <?php
@@ -19,10 +19,8 @@ echo $this->layoutLoginTop;
 ?>
 <!-- Login Panel/Form -->
 <?php echo $this->form()->openTag($formLogin); ?>
-<div class="panel mt30 mb25">
-
-
-    <div class="panel-body bg-light p25 pb15">
+<div class="panel mt30">
+    <div class="panel-body bg-light p25">
         <!-- Mensagens -->
         <?php
         /* Capslock */
@@ -72,7 +70,5 @@ echo $this->layoutLoginTop;
 <?php
 /* Layout com botton para telas de acesso */
 echo $this->layoutLoginBotton;
-?>
-<?php
 /* Layout com javascript para tela de index */
 echo $this->layoutJSIndex;

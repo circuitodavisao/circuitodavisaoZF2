@@ -9,69 +9,8 @@ use Login\Controller\Helper\Constantes;
 ?>
 
 <!-- Start: Main -->
-<div id="main">   
-    <!-- Start: Header -->
-    <header class="navbar navbar-fixed-top navbar-shadow bg-dark">
-        <div class="navbar-branding">
-            <a class="navbar-brand" href="#" style="padding-top: 22px;">
-                <img src="<?php echo Constantes::$IMAGEM_LOGO_BRANCA; ?>" title="<?php echo $this->translate(Constantes::$TRADUCAO_NOME_APLICACAO); ?>" class="img-responsive" style="max-width:100%;">
-            </a>
-            <span id="toggle_sidemenu_l" class="ad ad-lines"></span>
-        </div>
-        <a href="/lancamento" class="btn btn-default">LANCAMENTO DE DADOS</a>
-        <a href="/cadastroCelulas" class="btn btn-default">LISTAGEM DAS CELULAS</a>
-        <a href="/cadastroCultos" class="btn btn-default">LISTAGEM DAS CULTOS</a>
-        <ul class="nav navbar-nav navbar-right">
-            <li class="dropdown menu-merge">
-                <a href="#" class="dropdown-toggle fw600 p15" data-toggle="dropdown">
-                    <img src="/img/avatars/diego-kort.jpg" alt="<?php echo $this->pessoa->getNomePrimeiroUltimo(); ?>" class="mw30 br64">
-                    <span class="hidden-xs pl15"> <?php echo $this->pessoa->getNomePrimeiroUltimo(); ?> </span>
-                    <span class="caret caret-tp"></span>
-                </a>
-
-                <ul class="dropdown-menu list-group dropdown-persist w250" role="menu">
-                    <?php
-                    /* Laço para mostrar as responsabilidades ativas */
-                    if (count($this->responsabilidades) > 1) {
-                        foreach ($this->responsabilidades as $responsabilidade) {
-                            /* Grupo da responsabilidades */
-                            $grupo = $responsabilidade->getGrupo();
-                            /* Entidades do grupo */
-                            $entidades = $grupo->getEntidade();
-                            foreach ($entidades as $entidade) {
-                                if ($entidade->verificarSeEstaAtivo()) {
-                                    echo $this->perfilDropDown($entidade, 1);
-                                }
-                            }
-                        }
-                    }
-                    ?>
-                    <li class="dropdown-footer">
-                        <a href="<?php echo $this->url(Constantes::$ROUTE_LOGIN) . Constantes::$URL_PRE_SAIDA; ?>" class="">
-                            <span class="fa fa-power-off pr5"></span> <?php echo $this->translate(Constantes::$TRADUCAO_SAIR); ?> </a>
-                    </li>
-                </ul>
-            </li>
-        </ul>
-    </header>
-    <!-- End: Header -->
-    <div id="modals">
-        <?php
-        /* Laço para mostrar a s responsabilidades ativas modal */
-        foreach ($this->responsabilidades as $responsabilidade) {
-            /* Grupo da responsabilidades */
-            $grupo = $responsabilidade->getGrupo();
-            /* Entidades do grupo */
-
-            $entidades = $grupo->getEntidade();
-            foreach ($entidades as $entidade) {
-                if ($entidade->verificarSeEstaAtivo()) {
-                    echo $this->perfilDropDown($entidade, 2);
-                }
-            }
-        }
-        ?>   
-    </div> 
+<div id="main"> 
+    <?php echo $this->menu(); ?>
 </div>
 <!-- End: Main -->
 <?php

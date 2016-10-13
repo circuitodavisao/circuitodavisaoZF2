@@ -15,6 +15,7 @@ use Login\View\Helper\DivCapslock;
 use Login\View\Helper\DivJavaScript;
 use Login\View\Helper\LinkLogo;
 use Login\View\Helper\MensagemStatica;
+use Login\View\Helper\Menu;
 use Login\View\Helper\PerfilDropDown;
 use Login\View\Helper\PerfilIcone;
 use Zend\Mvc\MvcEvent;
@@ -77,6 +78,9 @@ class Module {
                 },
                 'botaoLink' => function($sm) {
                     return new BotaoLink();
+                },
+                'menu' => function($sm) {
+                    return new Menu();
                 },
             )
         );
