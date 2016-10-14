@@ -28,10 +28,10 @@ class Menu extends AbstractHelper {
     public function renderHtml() {
         $html = '';
         // Start: Header 
-        $html .= '<header class="navbar navbar-fixed-top navbar-shadow bg-dark">';
+        $html .= '<header class="navbar navbar-fixed-top">';
         $html .= '<div class="navbar-branding">';
         $html .= '<a class="navbar-brand" href="#" style="padding-top: 22px;">';
-        $html .= '<img src="' . Constantes::$IMAGEM_LOGO_BRANCA . '" title="' . $this->view->translate(Constantes::$TRADUCAO_NOME_APLICACAO) . '" class="img-responsive" style="max-width:100%;">';
+        $html .= '<img src="' . Constantes::$IMAGEM_LOGO_PEQUENA . '" title="' . $this->view->translate(Constantes::$TRADUCAO_NOME_APLICACAO) . '" class="img-responsive" style="max-width:100%;">';
         $html .= '</a>';
         $html .= '<span id="toggle_sidemenu_l" class="ad ad-lines"></span>';
         $html .= '</div>';
@@ -73,6 +73,27 @@ class Menu extends AbstractHelper {
 
         // Start: Sidebar Left Content
         $html .= '<div class="sidebar-left-content nano-content">';
+
+        // Start: Sidebar Header
+        $html .= '<header class="sidebar-header">';
+
+        // Sidebar Widget - Author 
+        $html .= '<div class="sidebar-widget author-widget">';
+        $html .= '<div class="media">';
+        $html .= '<a class="media-left" href="#">';
+        $html .= '<img src="/img/avatars/diego-kort.jpg" class="img-responsive">';
+        $html .= '</a>';
+        $html .= '<div class="media-body">';
+        $html .= '<div class="media-links">';
+        $html .= '<a href="#" class="sidebar-menu-toggle">User Menu -</a> <a href="pages_login(alt).html">Logout</a>';
+        $html .= '</div>';
+        $html .= '<div class="media-author">Michael Richards</div>';
+        $html .= '</div>';
+        $html .= '</div>';
+        $html .= '</div>';
+
+        $html .= '</header>';
+
         // Start: Sidebar Menu
         $html .= '<ul class="nav sidebar-menu">';
         $html .= '<li class="sidebar-label pt20">Menu</li>';

@@ -50,7 +50,7 @@ use Login\Controller\Helper\Constantes;
         ;
         ?>
     </head>
-    <body>
+    <body class="sb-l-c sb-r-c">
         <!-- Start: Main -->
         <div id="main"> 
             <?php
@@ -59,7 +59,9 @@ use Login\Controller\Helper\Constantes;
             }
             ?> 
             <section id="content_wrapper" style="margin-top: 50px;">
-                <?php echo $this->content; ?>
+                <div id="content">
+                    <?php echo $this->content; ?>
+                </div>
             </section>
         </div>
         <!-- End: Main -->
