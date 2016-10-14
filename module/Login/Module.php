@@ -8,6 +8,8 @@
 
 namespace Login;
 
+use Login\Controller\Helper\Constantes;
+use Login\Controller\Helper\LoginORM;
 use Login\View\Helper\BotaoLink;
 use Login\View\Helper\BotaoSubmit;
 use Login\View\Helper\BotaoSubmitDesabilitado;
@@ -100,6 +102,15 @@ class Module {
             'use_cookies' => true,
             'cookie_httponly' => true,
         ));
+        $sessao = new Container(Constantes::$NOME_APLICACAO);
+        if ($sessao->idPessoa) {
+            $serviceManager = $e->getApplication()->getServiceManager();
+            $viewModel = $e->getApplication()->getMvcEvent()->getViewModel();
+            $loginORM = new LoginORM($serviceManager->get('Doctrine\ORM\EntityManager'));
+            $pessoa = $loginORM->getPessoaORM()->encontrarPorIdPessoa($sessao->idPessoa);
+            $viewModel->pessoa = $pessoa;
+            $viewModel->responsabilidades = $pessoa->getResponsabilidadesAtivas();
+        }
     }
 
 }

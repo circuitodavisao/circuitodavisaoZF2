@@ -152,8 +152,10 @@ class Pessoa implements InputFilterAwareInterface {
     function getNomePrimeiroUltimo() {
         $explodeNome = explode(" ", $this->getNome());
         $primeiroNome = $explodeNome[0];
-        $ultimoNome = $explodeNome[(count($explodeNome) - 1)];
-        return $primeiroNome . '&nbsp;' . $ultimoNome;
+        if (count($explodeNome) > 1) {
+            $primeiroNome .= '&nbsp;' . $explodeNome[(count($explodeNome) - 1)];
+        }
+        return $primeiroNome;
     }
 
     /**

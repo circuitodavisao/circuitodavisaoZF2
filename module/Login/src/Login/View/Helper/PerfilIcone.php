@@ -67,26 +67,7 @@ class PerfilIcone extends AbstractHelper {
 
             /* Modal */
             $html .= '<div id="modal-' . $this->getEntidade()->getId() . '" class="popup-basic admin-form mfp-with-anim mfp-hide">';
-            
-            /*Modal Page-Loading Teste*/
-            $html .= '<div id ="loader" class = "pageload-overlay" data-opening = "M 40 -21.875 C 11.356078 -21.875 -11.875 1.3560784 -11.875 30 C -11.875 58.643922 11.356078 81.875 40 81.875 C 68.643922 81.875 91.875 58.643922 91.875 30 C 91.875 1.3560784 68.643922 -21.875 40 -21.875 Z">';
-            $html .= '<svg xmlns = "http://www.w3.org/2000/svg" width = "100%" height = "100%" viewBox = "0 0 80 60" preserveAspectRatio = "xMidYMid slice">'; 
-            $html .= '<path d = "M40,30 c 0,0 0,0 0,0 0,0 0,0 0,0 0,0 0,0 0,0 0,0 0,0 0,0 Z" />';
-            $html .= '<div class = "loading"><img src = "assets/img/logos/logo_circuito_loading.png" /></div>';        
-            $html .= '<!--NEW LOADER ANIMATION -->';         
-            $html .= '<div class = "preloader-preview-area">'; 
-            $html .= '<div class = "line-scale">';
-            $html .= '<div style = "background-color:#c7c7c7"></div>'; 
-            $html .= '<div style = "background-color:#c7c7c7"></div>'; 
-            $html .= '<div style = "background-color:#c7c7c7"></div>'; 
-            $html .= '<div style = "background-color:#c7c7c7"></div>';         
-            $html .= '<div style = "background-color:#c7c7c7"></div>';         
-            $html .= '</div>'; 
-            $html .= '</div>';
-            $html .= '<!--/NEW LOADER ANIMATION -->';
-            $html .= '</svg>';
-            $html .= '</div><!--/pageload-overlay -->';
-            
+
             $html .= PerfilIcone::htmlPanel(2, $tipoEntidade, $nomeEntidade, $infoEntidade);
 
             /* FIM Modal */

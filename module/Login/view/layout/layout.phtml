@@ -51,7 +51,18 @@ use Login\Controller\Helper\Constantes;
         ?>
     </head>
     <body>
-        <?php echo $this->content; ?>
+        <!-- Start: Main -->
+        <div id="main"> 
+            <?php
+            if ($this->pessoa) {
+                echo $this->menu();
+            }
+            ?> 
+            <section id="content_wrapper" style="margin-top: 50px;">
+                <?php echo $this->content; ?>
+            </section>
+        </div>
+        <!-- End: Main -->
 
         <!-- BEGIN: PAGE SCRIPTS -->
         <?php

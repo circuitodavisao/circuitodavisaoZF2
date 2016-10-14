@@ -60,13 +60,11 @@ class PerfilDropDown extends AbstractHelper {
     private function htmlLi() {
         $html = '';
         $html .= '<li class="list-group-item">';
-        $corDoPanel = PerfilIcone::corDoPanel($this->getEntidade()->getTipo_id());
 
         $html .= '<a onclick=\'abrirModal("modal-' . $this->getEntidade()->getId() . '", ' . $this->getEntidade()->getId() . ',"perfilSelecionado");\' href="#modal-image" class="animated animated-short fadeInUp">';
 
         $html .= '<span class="fa fa-twitter"></span> ' . $this->getEntidade()->getEntidadeTipo()->getNome();
         $html .= ' - ' . $this->getEntidade()->infoEntidade();
-        $html .= '<span class="label label-danger">2</span>';
         $html .= '</a>';
 
         $html .= '</li>';

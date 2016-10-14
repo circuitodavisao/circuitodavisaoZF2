@@ -22,8 +22,6 @@ class Menu extends AbstractHelper {
     }
 
     public function __invoke() {
-        $sessao = new Container(Constantes::$NOME_APLICACAO);
-        $idEntidadeAtual = $sessao->idEntidadeAtual;
         return $this->renderHtml();
     }
 
@@ -40,26 +38,26 @@ class Menu extends AbstractHelper {
         $html .= '<ul class="nav navbar-nav navbar-right">';
         $html .= '<li class="dropdown menu-merge">';
         $html .= '<a href="#" class="dropdown-toggle fw600 p15" data-toggle="dropdown">';
-//        $html .= '<img src="/img/avatars/diego-kort.jpg" alt="' . $this->getPessoa()->getNomePrimeiroUltimo() . '" class="mw30 br64">';
-//        $html .= '<span class="hidden-xs pl15">' . $this->getPessoa()->getNomePrimeiroUltimo() . '</span>';
+        $html .= '<img src="/img/avatars/diego-kort.jpg" alt="' . $this->view->pessoa->getNomePrimeiroUltimo() . '" class="mw30 br64">';
+        $html .= '<span class="pl15">' . $this->view->pessoa->getNomePrimeiroUltimo() . '</span>';
         $html .= '<span class="caret caret-tp"></span>';
         $html .= '</a>';
 
         $html .= '<ul class="dropdown-menu list-group dropdown-persist w250" role="menu">';
         /* Laço para mostrar as responsabilidades ativas */
-//        if (count($this->view->responsabilidades) > 1) {
-//            foreach ($this->view->responsabilidades as $responsabilidade) {
-//                /* Grupo da responsabilidades */
-//                $grupo = $responsabilidade->getGrupo();
-//                /* Entidades do grupo */
-//                $entidades = $grupo->getEntidade();
-//                foreach ($entidades as $entidade) {
-//                    if ($entidade->verificarSeEstaAtivo()) {
-//                        $html .= $this->view->perfilDropDown($entidade, 1);
-//                    }
-//                }
-//            }
-//        }
+        if (count($this->view->responsabilidades) > 1) {
+            foreach ($this->view->responsabilidades as $responsabilidade) {
+                /* Grupo da responsabilidades */
+                $grupo = $responsabilidade->getGrupo();
+                /* Entidades do grupo */
+                $entidades = $grupo->getEntidade();
+                foreach ($entidades as $entidade) {
+                    if ($entidade->verificarSeEstaAtivo()) {
+                        $html .= $this->view->perfilDropDown($entidade, 1);
+                    }
+                }
+            }
+        }
         $html .= '<li class="dropdown-footer">';
         $html .= '<a href="' . $this->view->url(Constantes::$ROUTE_LOGIN) . Constantes::$URL_PRE_SAIDA . '" class="">';
         $html .= '<span class="fa fa-power-off pr5"></span>' . $this->view->translate(Constantes::$TRADUCAO_SAIR) . '</a>';
@@ -131,18 +129,18 @@ class Menu extends AbstractHelper {
 
         $html .= '<div id="modals">';
         /* Laço para mostrar a s responsabilidades ativas modal */
-//        foreach ($this->view->responsabilidades as $responsabilidade) {
-//            /* Grupo da responsabilidades */
-//            $grupo = $responsabilidade->getGrupo();
-//            /* Entidades do grupo */
-//
-//            $entidades = $grupo->getEntidade();
-//            foreach ($entidades as $entidade) {
-//                if ($entidade->verificarSeEstaAtivo()) {
-//                    echo $this->view->perfilDropDown($entidade, 2);
-//                }
-//            }
-//        }
+        foreach ($this->view->responsabilidades as $responsabilidade) {
+            /* Grupo da responsabilidades */
+            $grupo = $responsabilidade->getGrupo();
+            /* Entidades do grupo */
+
+            $entidades = $grupo->getEntidade();
+            foreach ($entidades as $entidade) {
+                if ($entidade->verificarSeEstaAtivo()) {
+                    echo $this->view->perfilDropDown($entidade, 2);
+                }
+            }
+        }
         $html .= '</div>';
         return $html;
     }

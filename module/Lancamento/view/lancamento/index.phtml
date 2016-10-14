@@ -2,38 +2,32 @@
 
 use Lancamento\Controller\Helper\ConstantesLancamento;
 ?>
-<div id="main">
-    <?php echo $this->menu(); ?>
-    <!-- Start: Content-Wrapper -->
-    <section id="content_wrapper" style="margin-top: 50px;">
-        <div id="content">
-            <div class="row background-mobile">
-                <?php echo $this->dadosEntidade(); ?>
-            </div>
-            <!--MENSAGENS DE RELATORIO ENVIADO-->
-            <?php echo $this->mensagemRelatorioEnviado(); ?>
-            <!-- MODAL COM LOADER -->
-            <?php echo $this->modalAba(); ?>
-            <div id='panelLancamento' class="panel">
-                <div class="panel-heading">
-                    <!-- Abertura de Abas -->
-                    <?php echo $this->abas(); ?>
-                </div> 
-                <div class="panel-body center-block mg-left-cv">
-                    <!-- Tabela de lançamento de dados --> 
-                    <?php echo $this->cabecalhoDeCiclos(); ?>
-                    <!-- Tabela de lançamento de dados --> 
-                    <?php echo $this->tabelaLancamento(); ?>
-                </div>
-                <div class="panel-footer text-center">
-                    <!--BOTAO DE ENVIO DE RELATORIO-->
-                    <a class="btn btn-success" href="/lancamentoEnviarRelatorio" title="<?php echo $this->translate(ConstantesLancamento::$TRADUCAO_ENVIAR_RELATORIO); ?>"><?php echo $this->translate(ConstantesLancamento::$TRADUCAO_ENVIAR_RELATORIO); ?></a>
-
-                    <a class="btn btn-dark" href='#' onclick="verificarMuitosCadastros(<?php echo $this->validacao; ?>);">Cadastrar</a>
-                </div>
-            </div>
+<div id="content">
+    <div class="row background-mobile">
+        <?php echo $this->dadosEntidade(); ?>
+    </div>
+    <!--MENSAGENS DE RELATORIO ENVIADO-->
+    <?php echo $this->mensagemRelatorioEnviado(); ?>
+    <!-- MODAL COM LOADER -->
+    <?php echo $this->modalAba(); ?>
+    <div id='panelLancamento' class="panel">
+        <div class="panel-heading">
+            <!-- Abertura de Abas -->
+            <?php echo $this->abas(); ?>
+        </div> 
+        <div class="panel-body center-block mg-left-cv">
+            <!-- Tabela de lançamento de dados --> 
+            <?php echo $this->cabecalhoDeCiclos(); ?>
+            <!-- Tabela de lançamento de dados --> 
+            <?php echo $this->tabelaLancamento(); ?>
         </div>
-    </section>
+        <div class="panel-footer text-center">
+            <!--BOTAO DE ENVIO DE RELATORIO-->
+            <a class="btn btn-success" href="/lancamentoEnviarRelatorio" title="<?php echo $this->translate(ConstantesLancamento::$TRADUCAO_ENVIAR_RELATORIO); ?>"><?php echo $this->translate(ConstantesLancamento::$TRADUCAO_ENVIAR_RELATORIO); ?></a>
+
+            <a class="btn btn-dark" href='#' onclick="verificarMuitosCadastros(<?php echo $this->validacao; ?>);">Cadastrar</a>
+        </div>
+    </div>
 </div>
 <!-- MODAL PARA MUITOS ELEMENTOS -->
 <?php
