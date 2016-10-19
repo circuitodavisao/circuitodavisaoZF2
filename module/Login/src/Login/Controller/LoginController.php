@@ -1,7 +1,7 @@
 <?php
 
 namespace Login\Controller;
- 
+
 use DateTime;
 use Doctrine\ORM\EntityManager;
 use Exception;
@@ -18,7 +18,7 @@ use Zend\Mvc\I18n\Translator;
 use Zend\Session\Container;
 use Zend\View\Model\ViewModel;
 
-/** 
+/**
  * Nome: LoginController.php
  * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com>
  * Descricao: Controle de todas ações do login
@@ -408,44 +408,10 @@ class LoginController extends AbstractActionController {
     }
 
     /**
-     * Função que direciona a tela de selecao de perfil
-     * GET /principal
-     */
-    public function principalAction() {
-        $this->verificarUsuarioLogado();
-
-//        $this->layout(Constantes::$TEMPLATE_PRINCIPAL);
-        /* Helper Controller */
-        $loginORM = new LoginORM($this->getDoctrineORMEntityManager());
-        $sessao = new Container(Constantes::$NOME_APLICACAO);
-        $idPessoa = $sessao->idPessoa;
-        if ($idPessoa) {
-            $pessoa = $loginORM->getPessoaORM()->encontrarPorIdPessoa($idPessoa);
-            /* Responsabilidades */
-            $responsabilidadesAtivas = $pessoa->getResponsabilidadesAtivas();
-
-            $view = new ViewModel(array(
-                Constantes::$RESPONSABILIDADES => $responsabilidadesAtivas,
-                Constantes::$PESSOA => $pessoa,)
-            );
-
-            /* Adicionando layout extras */
-            $this->colocaTopEBottonModuloLogin($view);
-            /* Javascript especifico */
-            $layoutJS = new ViewModel();
-            $layoutJS->setTemplate(Constantes::$TEMPLATE_JS_PRINCIPAL);
-            $view->addChild($layoutJS, Constantes::$STRING_JS_PRINCIPAL);
-
-            return $view;
-        }
-    }
-
-    /**
      * Função que direciona a tela de acesso
      * GET /selecionarPerfil
      */
     public function selecionarPerfilAction() {
-        $this->verificarUsuarioLogado();
         /* Helper Controller */
         $loginORM = new LoginORM($this->getDoctrineORMEntityManager());
         $sessao = new Container(Constantes::$NOME_APLICACAO);
@@ -459,7 +425,7 @@ class LoginController extends AbstractActionController {
                     $sessao->idEntidadeAtual = $responsabilidadesAtivas[0]->getId();
 
                     /* Redirecionamento */
-                    return $this->forward()->dispatch(Constantes::$CONTROLLER_LOGIN, array(
+                    return $this->forward()->dispatch(Constantes::$CONTROLLER_PRINCIPAL, array(
                                 Constantes::$ACTION => Constantes::$ACTION_PRINCIPAL,
                     ));
                 }
@@ -485,8 +451,6 @@ class LoginController extends AbstractActionController {
         $response = $this->getResponse();
         if ($request->isPost()) {
             try {
-                $this->verificarUsuarioLogado();
-
                 $post_data = $request->getPost();
                 $idEntidade = $post_data[Constantes::$ID];
                 $sessao = new Container(Constantes::$NOME_APLICACAO);
@@ -507,7 +471,6 @@ class LoginController extends AbstractActionController {
      * GET /preSaida
      */
     public function preSaidaAction() {
-        $this->verificarUsuarioLogado();
 
         /* Helper Controller */
         $loginORM = new LoginORM($this->getDoctrineORMEntityManager());
@@ -536,18 +499,6 @@ class LoginController extends AbstractActionController {
 
         /* Redirecionamento */
         return $this->redirect()->toRoute(Constantes::$ROUTE_LOGIN);
-    }
-
-    /**
-     * Verifica se tem sessão senão volta pra index
-     * @return void
-     */
-    public function verificarUsuarioLogado() {
-        $sessao = new Container(Constantes::$NOME_APLICACAO);
-        if (!$sessao->idPessoa) {
-            /* Redirecionamento */
-            return $this->redirect()->toRoute(Constantes::$ROUTE_LOGIN);
-        }
     }
 
     /**

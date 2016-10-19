@@ -5,8 +5,8 @@
  */
 
 // Change the selector if needed
-var $table = $('table.scroll'),
-        $bodyCells = $table.find('tbody tr:first').children(),
+var table = $('table.scroll'),
+        $bodyCells = table.find('tbody tr:first').children(),
         colWidth;
 
 // Adjust the width of thead cells when window resizes
@@ -17,7 +17,7 @@ $(window).resize(function () {
     }).get();
 
     // Set the width of thead columns
-    $table.find('thead tr').children().each(function (i, v) {
+    table.find('thead tr').children().each(function (i, v) {
         $(v).width(colWidth[i]);
     });
 }).resize(); // Trigger resize handler

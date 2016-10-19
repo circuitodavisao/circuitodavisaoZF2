@@ -6,27 +6,24 @@
  * Descricao: Arquivo com as configurações globais da aplicação, como modulos ativos, caminhos para eles e arquivos gerais
  */
 
-namespace Cadastro;
+namespace Principal;
 
 return array(
     # definir e gerenciar controllers
     'controllers' => array(
         'factories' => array(
-            'Cadastro\Controller\Cadastro' => 'Cadastro\Controller\Factory\CadastroControllerFactory',
+            'Principal\Controller\Principal' => 'Principal\Controller\Factory\PrincipalControllerFactory',
         ),
     ),
     # definir e gerenciar rotas
     'router' => array(
         'routes' => array(
-            'cadastro' => array(
-                'type' => 'Segment',
+            'principal' => array(
+                'type' => 'Literal',
                 'options' => array(
-                    'route' => '/cadastro[:pagina]',
-                    'constraints' => array(
-                        'pagina' => '[a-zA-Z]+',
-                    ),
+                    'route' => '/principal',
                     'defaults' => array(
-                        'controller' => 'Cadastro\Controller\Cadastro',
+                        'controller' => 'Principal\Controller\Principal',
                         'action' => 'index',
                     ),
                 ),
@@ -49,18 +46,7 @@ return array(
         'exception_template' => 'error/index',
         'template_map' => array(
             'layout/layout' => __DIR__ . '/../../Login/view/layout/layout.phtml',
-            'cadastro/cadastro/index' => __DIR__ . '/../view/cadastro/index.phtml',
-            'cadastro/cadastro/evento' => __DIR__ . '/../view/cadastro/evento.phtml',
-            'cadastro/cadastro/evento-exclusao' => __DIR__ . '/../view/cadastro/evento-exclusao.phtml',
-            'cadastro/cadastro/grupo' => __DIR__ . '/../view/cadastro/grupo.phtml',
-            'cadastro/cadastro/celula' => __DIR__ . '/../view/cadastro/celula.phtml',
-            'cadastro/cadastro/celula-confirmacao' => __DIR__ . '/../view/cadastro/celula-confirmacao.phtml',
-            'cadastro/cadastro/celula-exclusao' => __DIR__ . '/../view/cadastro/celula-exclusao.phtml',
-            'cadastro/cadastro/celulas' => __DIR__ . '/../view/cadastro/celulas.phtml',
-            'layout/layout-js-celulas' => __DIR__ . '/../view/layout/layout-js-celulas.phtml',
-            'layout/layout-js-celula' => __DIR__ . '/../view/layout/layout-js-celula.phtml',
-            'layout/layout-js-celula-validacao' => __DIR__ . '/../view/layout/layout-js-celula-validacao.phtml',
-            'layout/layout-js-celulas-validacao' => __DIR__ . '/../view/layout/layout-js-celulas-validacao.phtml',
+            'principal/principal/index' => __DIR__ . '/../view/principal/index.phtml',
             'error/404' => __DIR__ . '/../../Login/view/error/404.phtml',
             'error/index' => __DIR__ . '/../../Login/view/error/index.phtml',
         ),

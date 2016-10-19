@@ -4,7 +4,6 @@ namespace Login\View\Helper;
 
 use Entidade\Entity\Pessoa;
 use Login\Controller\Helper\Constantes;
-use Zend\Session\Container;
 use Zend\View\Helper\AbstractHelper;
 
 /**
@@ -103,21 +102,34 @@ class Menu extends AbstractHelper {
         $html .= '<span class="sidebar-title">Cadastrar</span>';
         $html .= '<span class="caret"></span>';
         $html .= '</a>';
+        
         $html .= '<ul class="nav sub-nav">';
+        
         $html .= '<li>';
         $html .= '<a href="/cadastroCelulas">';
         $html .= '<span class="fa fa-users"></span>';
         $html .= 'Células';
         $html .= '</a>';
         $html .= '</li>';
+        
         $html .= '<li>';
         $html .= '<a href="/cadastroCultos">';
         $html .= '<span class="fa fa-users"></span>';
         $html .= 'Cultos';
         $html .= '</a>';
         $html .= '</li>';
-        $html .= '</ul>';
+        
+        $html .= '<li>';
+        $html .= '<a href="/cadastroGrupo">';
+        $html .= '<span class="fa fa-users"></span>';
+        $html .= 'Grupo';
+        $html .= '</a>';
         $html .= '</li>';
+        
+        $html .= '</ul>';
+        
+        $html .= '</li>';
+        
         $html .= '<li>';
         $html .= '<a class="accordion-toggle" href="#">';
         $html .= '<span class="fa fa-pencil"></span>';

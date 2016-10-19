@@ -2,11 +2,11 @@
 
 use Lancamento\Controller\Helper\ConstantesLancamento;
 
-$versao = '?v=1.4';
+$versao = '?v=1.5';
 
 echo $this
         ->headScript()
-        ->prependFile($this->basePath() . '/js/vendor/plugins/pnotify/pnotify.js')
+        ->prependFile($this->basePath() . '/vendor/plugins/pnotify/pnotify.js')
         ->prependFile($this->basePath() . '/js/circuito_da_visao/funcao-pessoa-lancamento.js' . $versao)
         ->prependFile($this->basePath() . '/js/circuito_da_visao/alterar-nome.js' . $versao)
         ->prependFile($this->basePath() . '/js/circuito_da_visao/mudar-frequencia.js' . $versao)

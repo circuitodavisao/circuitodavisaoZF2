@@ -8,6 +8,7 @@
 return array(
     'modules' => array(
         'Login',
+        'Principal',
         'Lancamento',
         'Entidade',
         'Cadastro',

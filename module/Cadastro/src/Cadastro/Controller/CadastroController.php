@@ -62,6 +62,11 @@ class CadastroController extends AbstractActionController {
                         Constantes::$ACTION => ConstantesCadastro::$PAGINA_EVENTO,
             ));
         }
+        if ($pagina == ConstantesCadastro::$PAGINA_GRUPO) {
+            return $this->forward()->dispatch(ConstantesCadastro::$CONTROLLER_CADASTRO, array(
+                        Constantes::$ACTION => ConstantesCadastro::$PAGINA_GRUPO,
+            ));
+        }
         if ($pagina == ConstantesCadastro::$PAGINA_EVENTO_CULTO_PERSISTIR) {
             return $this->forward()->dispatch(ConstantesCadastro::$CONTROLLER_CADASTRO, array(
                         Constantes::$ACTION => ConstantesCadastro::$PAGINA_EVENTO_CULTO_PERSISTIR,
@@ -588,6 +593,14 @@ class CadastroController extends AbstractActionController {
         return $this->redirect()->toRoute(ConstantesCadastro::$ROUTE_CADASTRO, array(
                     ConstantesCadastro::$PAGINA => $pagina,
         ));
+    }
+
+    /**
+     * Tela com formulário de cadastro de grupo
+     * GET /cadastroGrupo
+     */
+    public function grupoAction() {
+        return new ViewModel();
     }
 
     /**

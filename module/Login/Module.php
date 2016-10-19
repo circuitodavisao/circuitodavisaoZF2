@@ -8,6 +8,8 @@
 
 namespace Login;
 
+use Cadastro\Controller\Helper\ConstantesCadastro;
+use Lancamento\Controller\Helper\ConstantesLancamento;
 use Login\Controller\Helper\Constantes;
 use Login\Controller\Helper\LoginORM;
 use Login\View\Helper\BotaoLink;
@@ -20,6 +22,7 @@ use Login\View\Helper\MensagemStatica;
 use Login\View\Helper\Menu;
 use Login\View\Helper\PerfilDropDown;
 use Login\View\Helper\PerfilIcone;
+use Zend\Mvc\ModuleRouteListener;
 use Zend\Mvc\MvcEvent;
 use Zend\Session\Config\SessionConfig;
 use Zend\Session\Container;
@@ -102,6 +105,12 @@ class Module {
             'use_cookies' => true,
             'cookie_httponly' => true,
         ));
+        $eventManager = $e->getApplication()->getEventManager();
+        $moduleRouteListener = new ModuleRouteListener();
+        $moduleRouteListener->attach($eventManager);
+        //attach event here
+        $eventManager->attach('route', array($this, 'checkUserAuth'), 2);
+
         $sessao = new Container(Constantes::$NOME_APLICACAO);
         if ($sessao->idPessoa) {
             $serviceManager = $e->getApplication()->getServiceManager();
@@ -110,6 +119,36 @@ class Module {
             $pessoa = $loginORM->getPessoaORM()->encontrarPorIdPessoa($sessao->idPessoa);
             $viewModel->pessoa = $pessoa;
             $viewModel->responsabilidades = $pessoa->getResponsabilidadesAtivas();
+        }
+    }
+
+    public function checkUserAuth(MvcEvent $e) {
+        $router = $e->getRouter();
+        $matchedRoute = $router->match($e->getRequest());
+
+        //this is a whitelist for routes that are allowed without authentication
+        //!!! Your authentication route must be whitelisted
+        $allowedRoutesConfig = array(
+            Constantes::$ROUTE_LOGIN
+        );
+        if (!isset($matchedRoute) || in_array($matchedRoute->getMatchedRouteName(), $allowedRoutesConfig)) {
+            // no auth check required
+            return;
+        }
+        $seviceManager = $e->getApplication()->getServiceManager();
+        $authenticationService = $seviceManager->get('Zend\Authentication\AuthenticationService');
+        $identity = $authenticationService->getIdentity();
+        if (!$identity) {
+            //redirect to login route...
+            $response = $e->getResponse();
+            $response->setStatusCode(302);
+            //this is the login screen redirection url
+            $url = $e->getRequest()->getBaseUrl() . '/';
+            $response->getHeaders()->addHeaderLine('Location', $url);
+            $app = $e->getTarget();
+            //dont do anything other - just finish here
+            $app->getEventManager()->trigger(MvcEvent::EVENT_FINISH, $e);
+            $e->stopPropagation();
         }
     }
 

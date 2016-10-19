@@ -17,6 +17,7 @@ class ConstantesCadastro {
     public static $PAGINA_EVENTO_CULTO = 'EventoCulto';
     public static $PAGINA_EVENTO_CELULA = 'EventoCelula';
     public static $PAGINA_EVENTO = 'Evento';
+    public static $PAGINA_GRUPO = 'Grupo';
     public static $PAGINA_EVENTO_CELULA_PERSISTIR = 'EventoCelulaPersistir';
     public static $PAGINA_EVENTO_CULTO_PERSISTIR = 'EventoCultoPersistir';
     public static $PAGINA_EVENTO_EXCLUSAO = 'EventoExclusao';

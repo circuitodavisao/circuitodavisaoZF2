@@ -1,0 +1,144 @@
+<?php
+/**
+ * Nome: grupo.phtml
+ * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com>
+ * Descricao: Página de cadastro de grupos
+ */
+$tituloDaPagina = 'Cadastro <span class="text-danger">Grupo</span>';
+
+echo $this->templateFormularioTopo($tituloDaPagina);
+?>
+<!-- Inicio panel-body -->
+<!-- Estado Civil -->
+<div class="panel-body bg-light hidden">
+    <div class="text-center">
+        <div class="section-divider mt40">
+            <span>Cadastro</span>
+        </div> 
+        <div class="option-group field">
+            <label for="campos_solteiro" class="option">
+                <input type="radio" name="estado_civil" id="campos_solteiro" value="tv">
+                <span class="radio" title="Com apenas 1 na igreja"></span>Solteiro / Casado</label>
+            <label for="campos_casado" class="option">
+                <input type="radio" name="estado_civil" id="campos_casado" value="int">
+                <span class="radio" title="Com ambos na igreja"></span>Casado</label>
+        </div>
+    </div>  
+</div>
+
+<!-- Responsavel -->
+<div class="panel-body bg-light hidden">
+    <div class="section-divider mt40">
+        <span>Selecione o Responsavel</span>
+    </div> 
+    <div class="panel">
+        <div class="panel-menu">
+            <input id="fooFilter" type="text" class="form-control" placeholder="Filtro">
+        </div>
+        <table class="table" data-filter="#fooFilter">
+            <thead>
+                <tr>
+                    <th class="hidden-xs">Matricula</th>
+                    <th>Name</th>
+                    <th class="hidden-xs">Data Nascimento</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="hidden-xs">1</td>
+                    <td>Mark Plo Klon</td>
+                    <td class="hidden-xs">07/03/1990</td>
+                    <td><button class="btn btn-danger btn-xs">Selecionar</button></td>
+                </tr>
+                <tr>
+                    <td class="hidden-xs">2</td>
+                    <td>Mark Plo</td>
+                    <td class="hidden-xs">07/03/1990</td>
+                    <td><button class="btn btn-danger btn-xs">fgdh</button></td>
+                </tr>
+                <tr>
+                    <td class="hidden-xs">3</td>
+                    <td>Mark Klon</td>
+                    <td class="hidden-xs">07/03/1990</td>
+                    <td><button class="btn btn-danger btn-xs">hh</button></td>
+                </tr>
+                <tr>
+                    <td class="hidden-xs">4</td>
+                    <td>Mark Pllon</td>
+                    <td class="hidden-xs">07/03/1990</td>
+                    <td><button class="btn btn-danger btn-xs">jj</button></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>   
+</div>
+
+<!-- Busca de CPF -->
+<div class="panel-body bg-light hidden">
+    <div class="section-divider mt40">
+        <span>Informe o CPF</span>
+    </div> 
+    <label for="cep" class="field-label"></label>
+    <div class="smart-widget sm-right smr-50">
+        <label class="field">
+            <input type="text" name="cpf" id="cpf" class="gui-input" placeholder="Informe seu CPF">
+        </label>
+        <button type="submit" class="button btn-danger">
+            <i class="fa fa-search"></i>
+        </button>
+    </div>
+</div>
+
+<!-- Dados Pessoais -->
+<div class="panel-body bg-light hidden">
+    <div class="section-divider mt40">
+        <span>Dados Pessoais</span>
+    </div> 
+    <div class="well">
+        <address>
+            <strong>Twitter, Inc.</strong>
+            <br>795 Folsom Ave, Suite 600
+            <br>San Francisco, CA 94107
+            <br>
+            <abbr title="Phone">P:</abbr>(123) 456-7890
+        </address>
+        <address>
+            <strong>Full Name</strong>
+            <br>
+            <a href="mailto:#">first.last@example.com</a>
+        </address>
+    </div>
+    <form class="form-horizontal" role="form">
+        <div class="form-group">
+            <label for="inputSelect" class="col-lg-3 control-label">Selecione a Hierarquia</label>
+            <div class="col-lg-8">
+                <div class="bs-component">
+                    <select class="form-control">
+                        <option>Option 1</option>
+                        <option>Option 2</option>
+                        <option>Option 3</option>
+                    </select>
+                </div>
+            </div>
+        </div>  
+        <div class="form-group">
+            <label for="inputSelect" class="col-lg-3 control-label">Informe o Email</label>
+            <div class="col-lg-8">
+                <div class="bs-component">
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <i class="fa fa-envelope-o"></i>
+                        </span>
+                        <input class="form-control" placeholder="Email address" type="text">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button type="submit" class="button btn-danger">
+            Corfirmar
+        </button>
+    </form>
+</div>
+
+<?php echo $this->templateFormularioRodape(); ?>
