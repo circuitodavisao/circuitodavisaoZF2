@@ -10,135 +10,245 @@ echo $this->templateFormularioTopo($tituloDaPagina);
 ?>
 <!-- Inicio panel-body -->
 <!-- Estado Civil -->
-<div class="panel-body bg-light hidden">
+<div id="divEstadoCivil" class="panel-body bg-light">
     <div class="text-center">
         <div class="section-divider mt40">
-            <span>Cadastro</span>
+            <span>Selecione uma das opções abaixo</span>
         </div> 
         <div class="option-group field">
             <label for="campos_solteiro" class="option">
                 <input type="radio" name="estado_civil" id="campos_solteiro" value="tv">
-                <span class="radio" title="Com apenas 1 na igreja"></span>Solteiro / Casado</label>
+                <span class="radio" title="Com apenas 1 na igreja"></span>Liderará sozinho</label>
             <label for="campos_casado" class="option">
                 <input type="radio" name="estado_civil" id="campos_casado" value="int">
-                <span class="radio" title="Com ambos na igreja"></span>Casado</label>
+                <span class="radio" title="Com ambos na igreja"></span>Liderará com o conjungê</label>
         </div>
+        <br />
+        <button onclick="
+                $('#divConfirmacao').removeClass('hidden');
+                $('#divEstadoCivil').addClass('hidden');
+                " class="btn btn-danger btn-xs" style="float:right;" >Próximo</button>
     </div>  
 </div>
 
+<!-- Confirmacao -->
+<div id="divConfirmacao" class="panel-body bg-light hidden">
+    <div class="section-divider mt40">
+        <span>Insira os Responsáveis e os dados complementares desta Sub</span>
+    </div> 
+    <!-- Primary Progress Bar -->
+    <div class="progress mt10">
+        <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="33" aria-valuemin="0" aria-valuemax="33" style="width: 33%;">33%</div>
+    </div>
+    <div class="well col-xs-12">
+        <address>
+            <strong>Leonardo Pereira Magalhães</strong>
+            <br>Obreiro
+            <br>falecomleonardopereira@gmai.com
+        </address>
+        <button onclick="
+                $('#divConfirmacao').addClass('hidden');
+                $('#divResponsavel').removeClass('hidden');
+                " class="btn btn-danger btn-xs" style="float:right;" >Alterar</button>
+        <button class="btn btn-danger btn-xs mr10" style="float:right;" >Limpar</button>
+    </div>
+    <div class="well col-xs-12">
+        <address>
+            <a onclick="
+                    $('#divConfirmacao').addClass('hidden');
+                    $('#divResponsavel').removeClass('hidden');
+               "  href="#" onclick="">Insira os dados do Mulher</a>
+        </address>
+        <button onclick="
+                $('#divConfirmacao').addClass('hidden');
+                $('#divResponsavel').removeClass('hidden');
+                "  class="btn btn-danger btn-xs" style="float:right;" >Inserir</button>
+    </div>
+    <div class="well col-xs-12">
+        <address>
+            <a onclick="
+                    $('#divConfirmacao').addClass('hidden');
+                    $('#divDadosComplementares').removeClass('hidden');
+               "  href="#" onclick="">Insira Dados Complementares</a>
+        </address>
+        <button onclick="
+                $('#divConfirmacao').addClass('hidden');
+                $('#divDadosComplementares').removeClass('hidden');
+                "  class="btn btn-danger btn-xs" style="float:right;" value="Inserir" >Inserir</button>
+    </div>
+    <br />
+    <button onclick="
+            $('#divEmailEnviado').removeClass('hidden');
+            $('#divConfirmacao').addClass('hidden');
+            " class="btn btn-danger btn-xs" style="float:right;" >Finalizar</button>
+</div>
+
 <!-- Responsavel -->
-<div class="panel-body bg-light hidden">
+<div id="divResponsavel" class="panel-body bg-light hidden">
     <div class="section-divider mt40">
-        <span>Selecione o Responsavel</span>
+        <span>Selecione o Aluno que será utilizado para cadastro</span>
     </div> 
-    <div class="panel">
-        <div class="panel-menu">
-            <input id="fooFilter" type="text" class="form-control" placeholder="Filtro">
-        </div>
-        <table class="table" data-filter="#fooFilter">
-            <thead>
-                <tr>
-                    <th class="hidden-xs">Matricula</th>
-                    <th>Name</th>
-                    <th class="hidden-xs">Data Nascimento</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td class="hidden-xs">1</td>
-                    <td>Mark Plo Klon</td>
-                    <td class="hidden-xs">07/03/1990</td>
-                    <td><button class="btn btn-danger btn-xs">Selecionar</button></td>
-                </tr>
-                <tr>
-                    <td class="hidden-xs">2</td>
-                    <td>Mark Plo</td>
-                    <td class="hidden-xs">07/03/1990</td>
-                    <td><button class="btn btn-danger btn-xs">fgdh</button></td>
-                </tr>
-                <tr>
-                    <td class="hidden-xs">3</td>
-                    <td>Mark Klon</td>
-                    <td class="hidden-xs">07/03/1990</td>
-                    <td><button class="btn btn-danger btn-xs">hh</button></td>
-                </tr>
-                <tr>
-                    <td class="hidden-xs">4</td>
-                    <td>Mark Pllon</td>
-                    <td class="hidden-xs">07/03/1990</td>
-                    <td><button class="btn btn-danger btn-xs">jj</button></td>
-                </tr>
-            </tbody>
-        </table>
-    </div>   
-</div>
-
-<!-- Busca de CPF -->
-<div class="panel-body bg-light hidden">
-    <div class="section-divider mt40">
-        <span>Informe o CPF</span>
-    </div> 
-    <label for="cep" class="field-label"></label>
-    <div class="smart-widget sm-right smr-50">
-        <label class="field">
-            <input type="text" name="cpf" id="cpf" class="gui-input" placeholder="Informe seu CPF">
-        </label>
-        <button type="submit" class="button btn-danger">
-            <i class="fa fa-search"></i>
-        </button>
-    </div>
-</div>
-
-<!-- Dados Pessoais -->
-<div class="panel-body bg-light hidden">
-    <div class="section-divider mt40">
-        <span>Dados Pessoais</span>
-    </div> 
-    <div class="well">
-        <address>
-            <strong>Twitter, Inc.</strong>
-            <br>795 Folsom Ave, Suite 600
-            <br>San Francisco, CA 94107
-            <br>
-            <abbr title="Phone">P:</abbr>(123) 456-7890
-        </address>
-        <address>
-            <strong>Full Name</strong>
-            <br>
-            <a href="mailto:#">first.last@example.com</a>
-        </address>
-    </div>
-    <form class="form-horizontal" role="form">
-        <div class="form-group">
-            <label for="inputSelect" class="col-lg-3 control-label">Selecione a Hierarquia</label>
-            <div class="col-lg-8">
-                <div class="bs-component">
+    <div class="tab-block mb25">
+        <ul class="nav nav-tabs">
+            <li id="tabSelecionarAluno" class="active">
+                <a href="#tab15_1" data-toggle="tab">Selecione o Aluno</a>
+            </li>
+            <li id="tabDadosAluno">
+                <a href="#tab15_2" data-toggle="tab">Dados</a>
+            </li>
+        </ul>
+        <div class="tab-content">
+            <div id="tab15_1" class="tab-pane active">
+                <div class="panel-menu">
+                    <input id="fooFilter" type="text" class="form-control" placeholder="Filtro">
+                </div>
+                <table class="table footable" data-filter="#fooFilter">
+                    <thead>
+                        <tr>
+                            <th class="hidden-xs">Matricula</th>
+                            <th>Name</th>
+                            <th class="hidden-xs">Data Nascimento</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="hidden-xs">0001</td>
+                            <td>Juno Lopes</td>
+                            <td class="hidden-xs">07/03/1990</td>
+                            <td><a href="#tab15_2" onclick="
+                                    $('#tabSelecionarAluno').removeClass('active');
+                                    $('#tabDadosAluno').addClass('active');
+                                   " data-toggle="tab"><button class="btn btn-danger btn-xs">Selecionar</button></a></td>
+                        </tr>
+                        <tr>
+                            <td class="hidden-xs">0002</td>
+                            <td>Pitoca de Arroz</td>
+                            <td class="hidden-xs">07/03/1990</td>
+                            <td><a href="#tab15_2" onclick="
+                                    $('#tabSelecionarAluno').removeClass('active');
+                                    $('#tabDadosAluno').addClass('active');
+                                   " data-toggle="tab"><button class="btn btn-danger btn-xs">Selecionar</button></a></td>
+                        </tr>
+                        <tr>
+                            <td class="hidden-xs">0003</td>
+                            <td>Ivan Hard Carry</td>
+                            <td class="hidden-xs">07/03/1990</td>
+                            <td><a href="#tab15_2" onclick="
+                                    $('#tabSelecionarAluno').removeClass('active');
+                                    $('#tabDadosAluno').addClass('active');
+                                   " data-toggle="tab"><button class="btn btn-danger btn-xs">Selecionar</button></a></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <br />
+                <button onclick="
+                        $('#divConfirmacao').removeClass('hidden');
+                        $('#divResponsavel').addClass('hidden');
+                        "  type="button" style="float:right;" class="btn btn-danger btn-xs">Voltar</button>
+            </div>
+            <div id="tab15_2" class="tab-pane">
+                <div class="well col-xs-12">
+                    <address>
+                        <br />0001
+                        <br /><strong>Juno Lopes</strong>
+                        <br />07/03/1990
+                    </address>
+                </div>
+                <br />
+                <label for="cpf" class="field-label">Digite o CPF do Aluno acima</label>
+                <div class="smart-widget sm-right smr-50">
+                    <label class="field">
+                        <input type="number" name="cpf" id="cpf" class="gui-input" placeholder="Informe o CPF">
+                    </label>
+                    <button type="submit" class="button btn-danger">
+                        <i class="fa fa-search"></i>
+                    </button>
+                </div>
+                <br />
+                <div class="well col-xs-12">
+                    <address>
+                        <br />02829942116
+                        <br /><strong>LEONARDO PEREIRA MAGALHAES</strong>
+                        <br />07/03/1990
+                    </address>
+                </div>
+                <br />
+                <label for="email" class="field-label">Digite o email</label>
+                <div class="smart-widget sm-right smr-50">
+                    <label class="field">
+                        <input type="email" name="email" id="email" class="gui-input" placeholder="Informe o Email">
+                    </label>
+                    <button type="submit" class="button btn-danger">
+                        <i class="fa fa-search"></i>
+                    </button>
+                </div>
+                <br />
+                <label for="repetirEmail" class="field-label">Repita o email</label>
+                <div class="sm-right">
+                    <label class="field">
+                        <input type="email" name="repetirEmail" id="repetirEmail" class="gui-input" placeholder="Repetir Email">
+                    </label>
+                </div>
+                <br />
+                <label for="repetirEmail" class="field-label">Selecione a Hierarquia</label>
+                <div class="sm-right">
                     <select class="form-control">
-                        <option>Option 1</option>
-                        <option>Option 2</option>
-                        <option>Option 3</option>
+                        <option value="0">Selecione</option>
+                        <option value="1">Obreiro</option>
                     </select>
                 </div>
-            </div>
-        </div>  
-        <div class="form-group">
-            <label for="inputSelect" class="col-lg-3 control-label">Informe o Email</label>
-            <div class="col-lg-8">
-                <div class="bs-component">
-                    <div class="input-group">
-                        <span class="input-group-addon">
-                            <i class="fa fa-envelope-o"></i>
-                        </span>
-                        <input class="form-control" placeholder="Email address" type="text">
-                    </div>
-                </div>
+                <br />
+                <a href="#tab15_1" onclick="
+                        $('#tabSelecionarAluno').addClass('active');
+                        $('#tabDadosAluno').removeClass('active');
+                   " data-toggle="tab"><button class="btn btn-danger btn-xs"  style="float:right;">Voltar</button></a>
             </div>
         </div>
-        <button type="submit" class="button btn-danger">
-            Corfirmar
-        </button>
-    </form>
+    </div>
 </div>
 
+<!-- Dados Complementares -->
+<div id="divDadosComplementares" class="panel-body bg-light hidden">
+    <label for="numeroSubEquipe" class="field-label">Selecione a SubEquipe</label>
+    <div class="sm-right">
+        <select class="form-control">
+            <option value="0">Selecione</option>
+            <option value="1">01</option>
+            <option value="5">05</option>
+            <option value="9">09</option>
+        </select>
+    </div>
+    <br />
+    <button onclick="
+            $('#divConfirmacao').removeClass('hidden');
+            $('#divDadosComplementares').addClass('hidden');
+            "  type="button" style="float:right;" class="btn btn-danger btn-xs">Voltar</button>
+</div>
+
+<!-- Email Enviado -->
+<div id="divEmailEnviado" class="panel-body bg-light hidden">
+    <div id="divConfirmacaoCadastroConcluido">
+        <div class="col-xs-12 box-separacao">
+            <label class="option block mt15 text-center">
+                <input onclick="
+                        $('#divConfirmacaoCadastroConcluido').addClass('hidden');
+                        $('#divTextoCadastroConcluido').removeClass('hidden');
+                       " type="checkbox" name="checked" value="checked">
+                <span class="checkbox"></span>
+                Estou ciente que o cadastro foi realizado mas ainda é necessario ativa-lo
+            </label> 
+        </div>
+    </div>
+    <div id="divTextoCadastroConcluido" class="hidden">
+        <h1 class="text-center"><span class="text-success">Cadastro concluido com Sucesso!</span>
+            <br />porém ainda <span class="text-danger">não está ativado</span>
+            <br />em poucos minutos o usuários receberão
+            <br />um email com instruções para ativação
+        </h1>
+        <div class="col-xs-12 text-center">
+            <h2 class="text-dark mbn confirmation-header"><i class="fa fa-check text-success"></i></h2>
+        </div>
+    </div>
+</div>
 <?php echo $this->templateFormularioRodape(); ?>
