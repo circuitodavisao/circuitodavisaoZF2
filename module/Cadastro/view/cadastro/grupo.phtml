@@ -4,206 +4,198 @@
  * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com>
  * Descricao: Página de cadastro de grupos
  */
-$tituloDaPagina = 'Cadastro <span class="text-danger">Grupo</span>';
+$tituloDaPagina = 'Cadastro de <span class="text-danger">SubEquipe</span>';
 
 echo $this->templateFormularioTopo($tituloDaPagina);
 ?>
 <!-- Inicio panel-body -->
 <!-- Estado Civil -->
 <div id="divEstadoCivil" class="panel-body bg-light">
-    <div class="text-center">
-        <div class="section-divider mt40">
-            <span>Selecione uma das opções abaixo</span>
-        </div> 
-        <div class="option-group field">
-            <label for="campos_solteiro" class="option">
-                <input type="radio" name="estado_civil" id="campos_solteiro" value="tv">
-                <span class="radio" title="Com apenas 1 na igreja"></span>Liderará sozinho</label>
-            <label for="campos_casado" class="option">
-                <input type="radio" name="estado_civil" id="campos_casado" value="int">
-                <span class="radio" title="Com ambos na igreja"></span>Liderará com o conjungê</label>
-        </div>
-        <br />
-        <button onclick="
-                $('#divConfirmacao').removeClass('hidden');
-                $('#divEstadoCivil').addClass('hidden');
-                " class="btn btn-danger btn-xs" style="float:right;" >Próximo</button>
-    </div>  
+    <div class="section-divider mt40">
+        <span>Selecione uma das opções abaixo</span>
+    </div> 
+    <div class="option-group field">
+        <label class="block mt15">
+            <input type="radio" name="estadoCivil"> Liderará sozinho</label>
+        <label class="block mt15">
+            <input type="radio" name="estadoCivil"> Liderará com o conjungê</label>
+    </div>
+    <br />
+    <button data-style="zoom-in" type="button" onclick="
+            $('#divConfirmacao').removeClass('hidden');
+            $('#divEstadoCivil').addClass('hidden');
+            " class="btn ladda-button btn-danger" style="float:right;" >
+        <span class="ladda-label">Próximo</span>        
+    </button>
 </div>
 
 <!-- Confirmacao -->
 <div id="divConfirmacao" class="panel-body bg-light hidden">
-    <div class="section-divider mt40">
-        <span>Insira os Responsáveis e os dados complementares desta Sub</span>
+    <div class="section-divider mt40 mb50">
+        <span>Insira os Responsáveis e os dados complementares desta SubEquipe</span>
     </div> 
     <!-- Primary Progress Bar -->
-    <div class="progress mt10">
-        <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="33" aria-valuemin="0" aria-valuemax="33" style="width: 33%;">33%</div>
+    <div class="col-xs-12">
+        <div class="progress">
+            <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="33" aria-valuemin="0" aria-valuemax="33" style="width: 33%;">33%</div>
+        </div>
     </div>
+
     <div class="well col-xs-12">
+
         <address>
-            <strong>Leonardo Pereira Magalhães</strong>
-            <br>Obreiro
-            <br>falecomleonardopereira@gmai.com
+            <i class="fa fa-user" aria-hidden="true"></i>&nbsp;<strong>Leonardo Pereira Magalhães</strong>
+            <br><i class="fa fa-sitemap" aria-hidden="true"></i>&nbsp;Obreiro
+            <br><i class="fa fa-envelope" aria-hidden="true"></i>&nbsp;falecomleonardopereira@g...
         </address>
-        <button onclick="
+        <button data-style="zoom-in" onclick="
                 $('#divConfirmacao').addClass('hidden');
                 $('#divResponsavel').removeClass('hidden');
-                " class="btn btn-danger btn-xs" style="float:right;" >Alterar</button>
-        <button class="btn btn-danger btn-xs mr10" style="float:right;" >Limpar</button>
+                " class="btn btn-danger btn-xs" style="float:right;" ><span class="ladda-label">Alterar</span></button>
+        <button data-style="zoom-in" class="btn ladda-button btn-danger btn-xs mr10" style="float:right;" ><span class="ladda-label">Limpar</span></button>
     </div>
     <div class="well col-xs-12">
         <address>
             <a onclick="
                     $('#divConfirmacao').addClass('hidden');
                     $('#divResponsavel').removeClass('hidden');
-               "  href="#" onclick="">Insira os dados do Mulher</a>
+               "  href="#">Insira os dados do Mulher</a>
         </address>
-        <button onclick="
+        <button data-style="zoom-in" onclick="
                 $('#divConfirmacao').addClass('hidden');
                 $('#divResponsavel').removeClass('hidden');
-                "  class="btn btn-danger btn-xs" style="float:right;" >Inserir</button>
+                "  class="btn ladda-button btn-danger btn-xs" style="float:right;" ><span class="ladda-label">Inserir</span></button>
     </div>
     <div class="well col-xs-12">
         <address>
             <a onclick="
                     $('#divConfirmacao').addClass('hidden');
                     $('#divDadosComplementares').removeClass('hidden');
-               "  href="#" onclick="">Insira Dados Complementares</a>
+               "  href="#" >Insira Dados Complementares</a>
         </address>
-        <button onclick="
+        <button data-style="zoom-in" onclick="
                 $('#divConfirmacao').addClass('hidden');
                 $('#divDadosComplementares').removeClass('hidden');
-                "  class="btn btn-danger btn-xs" style="float:right;" value="Inserir" >Inserir</button>
+                "  class="btn ladda-button btn-danger btn-xs" style="float:right;" ><span class="ladda-label">Inserir</span></button>
     </div>
     <br />
-    <button onclick="
+    <button data-style="zoom-in" onclick="
             $('#divEmailEnviado').removeClass('hidden');
             $('#divConfirmacao').addClass('hidden');
-            " class="btn btn-danger btn-xs" style="float:right;" >Finalizar</button>
+            " class="btn ladda-button btn-danger" style="float:right;" ><span class="ladda-label">Finalizar</span></button>
 </div>
 
 <!-- Responsavel -->
 <div id="divResponsavel" class="panel-body bg-light hidden">
     <div class="section-divider mt40">
         <span>Selecione o Aluno que será utilizado para cadastro</span>
-    </div> 
-    <div class="tab-block mb25">
-        <ul class="nav nav-tabs">
-            <li id="tabSelecionarAluno" class="active">
-                <a href="#tab15_1" data-toggle="tab">Selecione o Aluno</a>
-            </li>
-            <li id="tabDadosAluno">
-                <a href="#tab15_2" data-toggle="tab">Dados</a>
-            </li>
-        </ul>
-        <div class="tab-content">
-            <div id="tab15_1" class="tab-pane active">
-                <div class="panel-menu">
-                    <input id="fooFilter" type="text" class="form-control" placeholder="Filtro">
-                </div>
-                <table class="table footable" data-filter="#fooFilter">
-                    <thead>
-                        <tr>
-                            <th class="hidden-xs">Matricula</th>
-                            <th>Name</th>
-                            <th class="hidden-xs">Data Nascimento</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td class="hidden-xs">0001</td>
-                            <td>Juno Lopes</td>
-                            <td class="hidden-xs">07/03/1990</td>
-                            <td><a href="#tab15_2" onclick="
-                                    $('#tabSelecionarAluno').removeClass('active');
-                                    $('#tabDadosAluno').addClass('active');
-                                   " data-toggle="tab"><button class="btn btn-danger btn-xs">Selecionar</button></a></td>
-                        </tr>
-                        <tr>
-                            <td class="hidden-xs">0002</td>
-                            <td>Pitoca de Arroz</td>
-                            <td class="hidden-xs">07/03/1990</td>
-                            <td><a href="#tab15_2" onclick="
-                                    $('#tabSelecionarAluno').removeClass('active');
-                                    $('#tabDadosAluno').addClass('active');
-                                   " data-toggle="tab"><button class="btn btn-danger btn-xs">Selecionar</button></a></td>
-                        </tr>
-                        <tr>
-                            <td class="hidden-xs">0003</td>
-                            <td>Ivan Hard Carry</td>
-                            <td class="hidden-xs">07/03/1990</td>
-                            <td><a href="#tab15_2" onclick="
-                                    $('#tabSelecionarAluno').removeClass('active');
-                                    $('#tabDadosAluno').addClass('active');
-                                   " data-toggle="tab"><button class="btn btn-danger btn-xs">Selecionar</button></a></td>
-                        </tr>
-                    </tbody>
-                </table>
-                <br />
-                <button onclick="
-                        $('#divConfirmacao').removeClass('hidden');
-                        $('#divResponsavel').addClass('hidden');
-                        "  type="button" style="float:right;" class="btn btn-danger btn-xs">Voltar</button>
+    </div>     
+    <div class="tab-content">
+        <div id="tab15_1" class="tab-pane active">
+            <div class="panel-menu">
+                <input id="fooFilter" type="text" class="form-control" placeholder="Filtro">
             </div>
-            <div id="tab15_2" class="tab-pane">
-                <div class="well col-xs-12">
-                    <address>
-                        <br />0001
-                        <br /><strong>Juno Lopes</strong>
-                        <br />07/03/1990
-                    </address>
-                </div>
-                <br />
-                <label for="cpf" class="field-label">Digite o CPF do Aluno acima</label>
-                <div class="smart-widget sm-right smr-50">
-                    <label class="field">
-                        <input type="number" name="cpf" id="cpf" class="gui-input" placeholder="Informe o CPF">
-                    </label>
-                    <button type="submit" class="button btn-danger">
-                        <i class="fa fa-search"></i>
-                    </button>
-                </div>
-                <br />
-                <div class="well col-xs-12">
-                    <address>
-                        <br />02829942116
-                        <br /><strong>LEONARDO PEREIRA MAGALHAES</strong>
-                        <br />07/03/1990
-                    </address>
-                </div>
-                <br />
-                <label for="email" class="field-label">Digite o email</label>
-                <div class="smart-widget sm-right smr-50">
-                    <label class="field">
-                        <input type="email" name="email" id="email" class="gui-input" placeholder="Informe o Email">
-                    </label>
-                    <button type="submit" class="button btn-danger">
-                        <i class="fa fa-search"></i>
-                    </button>
-                </div>
-                <br />
-                <label for="repetirEmail" class="field-label">Repita o email</label>
-                <div class="sm-right">
-                    <label class="field">
-                        <input type="email" name="repetirEmail" id="repetirEmail" class="gui-input" placeholder="Repetir Email">
-                    </label>
-                </div>
-                <br />
-                <label for="repetirEmail" class="field-label">Selecione a Hierarquia</label>
-                <div class="sm-right">
-                    <select class="form-control">
-                        <option value="0">Selecione</option>
-                        <option value="1">Obreiro</option>
-                    </select>
-                </div>
-                <br />
-                <a href="#tab15_1" onclick="
-                        $('#tabSelecionarAluno').addClass('active');
-                        $('#tabDadosAluno').removeClass('active');
-                   " data-toggle="tab"><button class="btn btn-danger btn-xs"  style="float:right;">Voltar</button></a>
+            <table class="table footable" data-filter="#fooFilter">
+                <thead>
+                    <tr>
+                        <th class="hidden-xs">Matricula</th>
+                        <th>Name</th>
+                        <th class="hidden-xs">Data Nascimento</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="hidden-xs">0001</td>
+                        <td>Juno Lopes</td>
+                        <td class="hidden-xs">07/03/1990</td>
+                        <td><a href="#tab15_2" onclick="
+                                $('#tabSelecionarAluno').removeClass('active');
+                                $('#tabDadosAluno').addClass('active');
+                               " data-toggle="tab"><button data-style="zoom-in" class="btn ladda-button btn-danger btn-xs"><span class="ladda-label">Selecionar</span></button></a></td>
+                    </tr>
+                    <tr>
+                        <td class="hidden-xs">0002</td>
+                        <td>Pitoca de Arroz</td>
+                        <td class="hidden-xs">07/03/1990</td>
+                        <td><a href="#tab15_2" onclick="
+                                $('#tabSelecionarAluno').removeClass('active');
+                                $('#tabDadosAluno').addClass('active');
+                               " data-toggle="tab"><button data-style="zoom-in" class="btn ladda-button btn-danger btn-xs"><span class="ladda-label">Selecionar</span></button></a></td>
+                    </tr>
+                    <tr>
+                        <td class="hidden-xs">0003</td>
+                        <td>Ivan Hard Carry</td>
+                        <td class="hidden-xs">07/03/1990</td>
+                        <td><a href="#tab15_2" onclick="
+                                $('#tabSelecionarAluno').removeClass('active');
+                                $('#tabDadosAluno').addClass('active');
+                               " data-toggle="tab"><button data-style="zoom-in" class="btn ladda-button btn-danger btn-xs"><span class="ladda-label">Selecionar</span></button></a></td>
+                    </tr>
+                </tbody>
+            </table>
+            <br />
+            <button data-style="zoom-in" onclick="
+                    $('#divConfirmacao').removeClass('hidden');
+                    $('#divResponsavel').addClass('hidden');
+                    "  type="button" style="float:right;" class="btn ladda-button btn-danger"><span class="ladda-label">Voltar</span></button>
+        </div>
+        <div id="tab15_2" class="tab-pane">
+            <div class="well well-sm">
+                <i class="fa fa-folder" aria-hidden="true">&nbsp;</i>0001
+                <br /><i class="fa fa-user" aria-hidden="true"></i>&nbsp;<strong>Juno Lopes</strong>
+                <br /><i class="fa fa-birthday-cake" aria-hidden="true"></i>&nbsp;07/03/1990
             </div>
+            <br />
+            <label for="cpf" class="field-label">Digite o CPF do Aluno acima</label>
+            <div class="smart-widget sm-right smr-50">
+                <label class="field">
+                    <input type="text" name="cpf" id="cpf" class="gui-input" placeholder="Informe o CPF">
+                </label>
+                <button type="button" class="button ladda-button btn-danger">
+                    <span class="ladda-label"><i class="fa fa-search"></i></span>
+                </button>
+            </div>
+            <br />
+            <div class="well well-sm">
+                <i class="fa fa-info-circle" aria-hidden="true"></i>&nbsp;02829942116
+                <br /><i class="fa fa-user" aria-hidden="true"></i>&nbsp;<strong>LEONARDO PEREIRA MAGALHAES</strong>
+                <br /><i class="fa fa-birthday-cake" aria-hidden="true"></i>&nbsp;07/03/1990
+            </div>
+            <br />
+            <label for="email" class="field-label">Digite o email</label>
+            <div class="smart-widget sm-right smr-50">
+                <label class="field">
+                    <input type="email" name="email" id="email" class="gui-input" placeholder="Informe o Email">
+                </label>
+                <button type="button" class="button ladda-button btn-danger">
+                    <span class="ladda-label"><i class="fa fa-search"></i></span>
+                </button>
+            </div>
+            <br />
+            <label for="repetirEmail" class="field-label">Repita o email</label>
+            <div class="sm-right">
+                <label class="field">
+                    <input type="email" name="repetirEmail" id="repetirEmail" class="gui-input" placeholder="Repetir Email">
+                </label>
+            </div>
+            <br />
+            <label for="repetirEmail" class="field-label">Selecione a Hierarquia</label>
+            <div class="sm-right">
+                <select class="form-control">
+                    <option value="0">Selecione</option>
+                    <option value="1">Obreiro</option>
+                </select>
+            </div>
+            <br />
+            <button data-style="zoom-in" onclick="
+                    $('#divConfirmacao').removeClass('hidden');
+                    $('#divResponsavel').addClass('hidden');
+                    " class="btn btn-danger" style="float:right;" ><span class="ladda-label">Inserir</span></button>
+            <a href="#tab15_1" onclick="
+                    $('#tabSelecionarAluno').addClass('active');
+                    $('#tabDadosAluno').removeClass('active');
+               " data-toggle="tab"><button data-style="zoom-in" class="btn ladda-button btn-danger mr10" style="float:right;"><span class="ladda-label">Voltar</span></button></a>
         </div>
     </div>
 </div>
@@ -220,10 +212,14 @@ echo $this->templateFormularioTopo($tituloDaPagina);
         </select>
     </div>
     <br />
-    <button onclick="
+    <button data-style="zoom-in" onclick="
             $('#divConfirmacao').removeClass('hidden');
             $('#divDadosComplementares').addClass('hidden');
-            "  type="button" style="float:right;" class="btn btn-danger btn-xs">Voltar</button>
+            " class="btn btn-danger" style="float:right;" ><span class="ladda-label">Inserir</span></button>
+    <button data-style="zoom-in" onclick="
+            $('#divConfirmacao').removeClass('hidden');
+            $('#divDadosComplementares').addClass('hidden');
+            "  type="button" style="float:right;" class="btn ladda-button btn-danger mr10"><span class="ladda-label">Voltar</span></button>
 </div>
 
 <!-- Email Enviado -->
@@ -236,19 +232,24 @@ echo $this->templateFormularioTopo($tituloDaPagina);
                         $('#divTextoCadastroConcluido').removeClass('hidden');
                        " type="checkbox" name="checked" value="checked">
                 <span class="checkbox"></span>
-                Estou ciente que o cadastro foi realizado mas ainda é necessario ativa-lo
+                Estou ciente que o cadastro foi realizado mas ainda é necessario ativa-lo.
             </label> 
         </div>
     </div>
-    <div id="divTextoCadastroConcluido" class="hidden">
-        <h1 class="text-center"><span class="text-success">Cadastro concluido com Sucesso!</span>
-            <br />porém ainda <span class="text-danger">não está ativado</span>
-            <br />em poucos minutos o usuários receberão
-            <br />um email com instruções para ativação
-        </h1>
-        <div class="col-xs-12 text-center">
+    <div id="divTextoCadastroConcluido" class="hidden text-center">
+        <h1><span class="text-success">Cadastro concluido com Sucesso!</span></h1>
+        <small>Porém ainda <span class="text-danger">não está ativado</span>
+            em poucos minutos o usuários receberão
+            um email com instruções para ativação.
+        </small>
+
+        <div class="col-xs-12">
             <h2 class="text-dark mbn confirmation-header"><i class="fa fa-check text-success"></i></h2>
+        </div>
+        <div class="col-xs-12 mt10">
+            <button data-style="zoom-in" onclick="location.href = '/principal';"  type="button" class="btn ladda-button btn-danger"><span class="ladda-label">Pronto!</span></button>
         </div>
     </div>
 </div>
-<?php echo $this->templateFormularioRodape(); ?>
+<?php
+echo $this->templateFormularioRodape();
