@@ -32,15 +32,20 @@ class BotaoLink extends AbstractHelper {
         $html = '';
         $classCor = 'danger';
         $margenRight = 'mr10';
-        if ($this->getTipo() == 2 || $this->getTipo() == 3) {// tipo de menor importancia
+        $float = '';
+        if ($this->getTipo() == 2 || $this->getTipo() == 3 || $this->getTipo() == 6 || $this->getTipo() == 8) {// tipo de menor importancia
             $classCor = 'default dark';
         }
         $tamanho = '';
-        if ($this->getTipo() == 3 || $this->getTipo() == 4) {// tamanho extra pequeno
+        if ($this->getTipo() == 3 || $this->getTipo() == 4 || $this->getTipo() == 5 || $this->getTipo() == 6) {// tamanho extra pequeno
             $tamanho = 'btn-xs';
             $margenRight = 'mr5';
         }
-        $html .= '<button type="button" ' . $this->getExtra() . ' onclick=\'location.href="' . $this->getLink() . '";\' class="btn ladda-button btn-' . $classCor . ' ' . $tamanho . ' ' . $margenRight . '" data-style="zoom-in">'
+
+        if ($this->getTipo() == 5 || $this->getTipo() == 6 || $this->getTipo() == 7 || $this->getTipo() == 8) {// floar direita
+            $float = 'style="float: right;"';
+        }
+        $html .= '<button type="button" ' . $this->getExtra() . ' ' . $float . ' onclick=\'location.href="' . $this->getLink() . '";\' class="btn ladda-button btn-' . $classCor . ' ' . $tamanho . ' ' . $margenRight . '" data-style="zoom-in">'
                 . '<span class="ladda-label">' . $this->view->translate($this->getLabel()) . '</span>'
                 . '</button>';
         return $html;

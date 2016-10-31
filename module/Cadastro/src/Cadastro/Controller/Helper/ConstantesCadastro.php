@@ -25,6 +25,8 @@ class ConstantesCadastro {
     public static $PAGINA_EVENTO_EXCLUSAO_CONFIRMACAO = 'EventoExclusaoConfirmacao';
     public static $PAGINA_CELULA_CONFIRMACAO = 'CelulaConfirmacao';
     public static $PAGINA_BUSCAR_ENDERECO = 'BuscarEndereco';
+    public static $PAGINA_BUSCAR_CPF = 'BuscarCPF';
+    public static $PAGINA_BUSCAR_EMAIL = 'BuscarEmail';
     public static $CONTROLLER_CADASTRO = 'Cadastro\Controller\Cadastro';
     public static $ROUTE_CADASTRO = 'cadastro';
     /* Entidades */
@@ -39,7 +41,10 @@ class ConstantesCadastro {
     public static $TRADUCAO_CULTO_TEXTO = 'Name: ';
     public static $TRADUCAO_CELULA_ = 'Cell ';
     public static $TRADUCAO_CULTO_ = 'Cult ';
-
+    public static $TRADUCAO_FINALIZAR = 'Finish';
+    public static $TRADUCAO_INSERIR = 'Insert';
+    public static $TRADUCAO_ALTERAR = 'Change';
+    public static $TRADUCAO_LIMPAR = 'Clean';
     /* Tipo de Mensagens */
     public static $TIPO_MENSAGEM_CADASTRAR_CELULA = 1;
     public static $TIPO_MENSAGEM_ALTERAR_CELULA = 2;
@@ -47,5 +52,7 @@ class ConstantesCadastro {
     public static $TIPO_MENSAGEM_CADASTRAR_CULTO = 4;
     public static $TIPO_MENSAGEM_ALTERAR_CULTO = 5;
     public static $TIPO_MENSAGEM_EXCLUIR_CULTO = 6;
+    /* Inputs */
+    public static $INPUT_ESTADO_CIVIL = 'inputEstadoCivil';
 
 }

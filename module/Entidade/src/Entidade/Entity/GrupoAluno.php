@@ -3,27 +3,29 @@
 namespace Entidade\Entity;
 
 /**
- * Nome: Turma.php
+ * Nome: GrupoFilho.php
  * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com>
- * Descricao: Entidade anotada da tabela turma
+ * Descricao: Entidade anotada da tabela grupo_filho
  */
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity 
- * @ORM\Table(name="turma")
+ * @ORM\Table(name="grupo_aluno")
  */
-class Turma {
+class GrupoAluno {
 
     /**
-     * @ORM\OneToMany(targetEntity="TurmaAluno", mappedBy="pessoa") 
+     * @ORM\ManyToOne(targetEntity="TurmaAluno", inversedBy="grupoAluno")
+     * @ORM\JoinColumn(name="turma_aluno_id", referencedColumnName="id")
      */
-    protected $turmaAluno;
+    private $turmaAluno;
 
-    public function __construct() {
-        $this->turmaAluno = new ArrayCollection();
-    }
+    /**
+     * @ORM\ManyToOne(targetEntity="Grupo", inversedBy="grupoAluno")
+     * @ORM\JoinColumn(name="grupo_id", referencedColumnName="id")
+     */
+    private $grupo;
 
     /**
      * @ORM\Id
@@ -33,13 +35,16 @@ class Turma {
     protected $id;
 
     /** @ORM\Column(type="string") */
-    protected $data_revisao;
-
-    /** @ORM\Column(type="string") */
     protected $data_criacao;
 
     /** @ORM\Column(type="string") */
     protected $hora_criacao;
+
+    /** @ORM\Column(type="integer") */
+    protected $turma_aluno_id;
+
+    /** @ORM\Column(type="integer") */
+    protected $grupo_id;
 
     /** @ORM\Column(type="string") */
     protected $data_inativacao;
@@ -47,16 +52,28 @@ class Turma {
     /** @ORM\Column(type="string") */
     protected $hora_inativacao;
 
+    /**
+     * Verificar se a data de inativação está nula
+     * @return boolean
+     */
+    public function verificarSeEstaAtivo() {
+        $resposta = false;
+        if (is_null($this->getData_inativacao())) {
+            $resposta = true;
+        }
+        return $resposta;
+    }
+
     function getTurmaAluno() {
         return $this->turmaAluno;
     }
 
-    function getId() {
-        return $this->id;
+    function getGrupo() {
+        return $this->grupo;
     }
 
-    function getData_revisao() {
-        return $this->data_revisao;
+    function getId() {
+        return $this->id;
     }
 
     function getData_criacao() {
@@ -65,6 +82,14 @@ class Turma {
 
     function getHora_criacao() {
         return $this->hora_criacao;
+    }
+
+    function getTurma_aluno_id() {
+        return $this->turma_aluno_id;
+    }
+
+    function getGrupo_id() {
+        return $this->grupo_id;
     }
 
     function getData_inativacao() {
@@ -79,12 +104,12 @@ class Turma {
         $this->turmaAluno = $turmaAluno;
     }
 
-    function setId($id) {
-        $this->id = $id;
+    function setGrupo($grupo) {
+        $this->grupo = $grupo;
     }
 
-    function setData_revisao($data_revisao) {
-        $this->data_revisao = $data_revisao;
+    function setId($id) {
+        $this->id = $id;
     }
 
     function setData_criacao($data_criacao) {
@@ -93,6 +118,14 @@ class Turma {
 
     function setHora_criacao($hora_criacao) {
         $this->hora_criacao = $hora_criacao;
+    }
+
+    function setTurma_aluno_id($turma_aluno_id) {
+        $this->turma_aluno_id = $turma_aluno_id;
+    }
+
+    function setGrupo_id($grupo_id) {
+        $this->grupo_id = $grupo_id;
     }
 
     function setData_inativacao($data_inativacao) {

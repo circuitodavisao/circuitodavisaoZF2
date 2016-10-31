@@ -30,6 +30,11 @@ class Grupo {
     protected $grupoResponsavel;
 
     /**
+     * @ORM\OneToMany(targetEntity="GrupoAluno", mappedBy="grupo") 
+     */
+    protected $grupoAluno;
+
+    /**
      * @ORM\OneToMany(targetEntity="GrupoEvento", mappedBy="grupo") 
      */
     protected $grupoEvento;
@@ -55,6 +60,7 @@ class Grupo {
         $this->grupoEvento = new ArrayCollection();
         $this->grupoPessoa = new ArrayCollection();
         $this->grupoPaiFilhoFilhos = new ArrayCollection();
+        $this->grupoAluno = new ArrayCollection();
     }
 
     /**
@@ -261,6 +267,20 @@ class Grupo {
             }
         }
         return $grupoEventos;
+    }
+
+    /**
+     * Retorna o grupo aluno
+     * @return GrupoAluno
+     */
+    function getGrupoAlunoAtivos() {
+        $grupoAlunos = null;
+        foreach ($this->getGrupoAluno() as $ga) {
+            if ($ga->verificarSeEstaAtivo()) {
+                $grupoAlunos[] = $ga;
+            }
+        }
+        return $grupoAlunos;
     }
 
     /**
@@ -546,6 +566,14 @@ class Grupo {
 
     function setGrupoPaiFilhoPai($grupoPaiFilhoPai) {
         $this->grupoPaiFilhoPai = $grupoPaiFilhoPai;
+    }
+
+    function getGrupoAluno() {
+        return $this->grupoAluno;
+    }
+
+    function setGrupoAluno($grupoAluno) {
+        $this->grupoAluno = $grupoAluno;
     }
 
 }

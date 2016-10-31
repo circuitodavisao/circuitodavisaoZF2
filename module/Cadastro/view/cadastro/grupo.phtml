@@ -1,89 +1,349 @@
 <?php
+
+use Cadastro\Controller\Helper\ConstantesCadastro;
+use Cadastro\Form\ConstantesForm;
+use Login\Controller\Helper\Constantes;
+
 /**
  * Nome: grupo.phtml
  * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com>
  * Descricao: Página de cadastro de grupos
  */
-$tituloDaPagina = 'Cadastro de <span class="text-danger">SubEquipe</span>';
+$form = $this->Form;
+$form->prepare();
+$form->setAttribute(ConstantesForm::$FORM_ACTION, 'todo');
+echo $this->form()->openTag($form);
 
+$tituloDaPagina = 'Cadastro de <span class="text-danger">SubEquipe</span>';
 echo $this->templateFormularioTopo($tituloDaPagina);
 ?>
+<script type="text/javascript">
+    /* Dados */
+    var estadoCivil = 0;
+    var responsavel0 = 0;
+    function validarEstadoCivil() {
+        var valorSelecionado = $('input[name=inputEstadoCivil]:checked').val();
+        if (valorSelecionado !== undefined) {
+            estadoCivil = parseInt(valorSelecionado);
+            switch (estadoCivil) {
+                case 1:
+                    $('#blocoHomem').addClass('hidden');
+                    $('#blocoMulher').addClass('hidden');
+                    break;
+                case 2:
+                    $('#blocoResponsavel').addClass('hidden');
+                    break;
+                default:
+                    break;
+            }
+            $('#divEstadoCivil').addClass('hidden');
+            $('#divConfirmacao').removeClass('hidden');
+        } else {
+            alert('Selecione uma das opções!');
+        }
+    }
+
+    function selecionarAluno(matricula, nome, dataNascimento, tipo) {
+
+        var spanResponsavelMatricula, spanResponsavelNome, spanResponsavelDataNascimento;
+        spanResponsavelMatricula = $('#spanResponsavelMatricula');
+        spanResponsavelNome = $('#spanResponsavelNome');
+        spanResponsavelDataNascimento = $('#spanResponsavelDataNascimento');
+        spanResponsavelMatricula.html(matricula);
+        spanResponsavelNome.html(nome);
+        spanResponsavelDataNascimento.html(dataNascimento);
+        $('#divResponsavel').removeClass('hidden');
+        $('#divSelecionarAluno').addClass('hidden');
+    }
+
+    function isNumber(n) {
+        return !isNaN(parseFloat(n)) && isFinite(n);
+    }
+    function submitEnter(myfield, e) {
+        var keycode;
+        if (window.event)
+            keycode = window.event.keyCode;
+        else if (e)
+            keycode = e.which;
+        else
+            return true;
+        if (keycode == 13) {
+            buscarCPF($('#cpf').val());
+            return false;
+        } else
+            return true;
+    }
+
+    function buscarCPF(cpf) {
+        var loader = $('#loadercpf');
+        var divResultadoBuscaCPF = $('#divResultadoBuscaCPF');
+        var divDadosExtras = $('#divDadosExtras');
+        var spanBuscaCPF = $('#spanBuscaCPF');
+        var spanBuscaNome = $('#spanBuscaNome');
+        var spanBuscaDataNascimento = $('#spanBuscaDataNascimento');
+        var hidden = 'hidden';
+        divResultadoBuscaCPF.addClass(hidden);
+        spanBuscaCPF.html('');
+        spanBuscaNome.html('');
+        spanBuscaDataNascimento.html('');
+        loader.removeClass(hidden);
+        if (cpf.length === 0) {
+            loader.addClass(hidden);
+            return false;
+        }
+        if (!isNumber(cpf) || cpf.length !== 11) {
+            loader.addClass(hidden);
+            alert('CPF é invalido!');
+            return false;
+        }
+        $.post(
+                "/cadastroBuscarCPF",
+                {
+                    cpf: cpf
+                },
+        function (data) {
+            divResultadoBuscaCPF.removeClass(hidden);
+            divDadosExtras.removeClass(hidden);
+            spanBuscaCPF.html(data.cpf);
+            spanBuscaNome.html(data.nome);
+            spanBuscaDataNascimento.html(data.dataNascimento);
+            loader.addClass(hidden);
+        },
+                'json');
+    }
+
+    function buscarEmail(email) {
+        var loader = $('#loaderemail');
+        var span = $('#spanemail');
+        var hidden = 'hidden';
+        var iconeTime = '<i class="fa fa-times" aria-hidden="true"></i>';
+        var iconeCheck = '<i class="fa fa-check" aria-hidden="true"></i>';
+        var textDanger = 'text-danger';
+        var textSuccess = 'text-success';
+        loader.removeClass(hidden);
+        if (email.length === 0) {
+            loader.addClass(hidden);
+            return false;
+        }
+        if (!validaEmail(email)) {
+            loader.addClass(hidden);
+            span.html(iconeTime);
+            span.removeClass(textSuccess);
+            span.addClass(textDanger);
+            return false;
+        } else {
+            $.post(
+                    "/cadastroBuscarEmail",
+                    {email: email},
+            function (data) {
+                span.addClass(textSuccess);
+                span.removeClass(textDanger);
+                span.html(iconeCheck);
+                loader.addClass(hidden);
+            }, 'json');
+        }
+
+    }
+
+    function repetirEmail(email) {
+        var loader = $('#loaderemail');
+        var span = $('#spanemail');
+        var hidden = 'hidden';
+        var iconeTime = '<i class="fa fa-times" aria-hidden="true"></i>';
+        var iconeCheck = '<i class="fa fa-check" aria-hidden="true"></i>';
+        var textDanger = 'text-danger';
+        var textSuccess = 'text-success';
+        loader.removeClass(hidden);
+        if (email.length === 0) {
+            loader.addClass(hidden);
+            return false;
+        }
+        if (!validaEmail(email)) {
+            loader.addClass(hidden);
+            span.html(iconeTime);
+            span.removeClass(textSuccess);
+            span.addClass(textDanger);
+            return false;
+        } else {
+            $.post(
+                    "/cadastroBuscarEmail",
+                    {email: email},
+            function (data) {
+                span.addClass(textSuccess);
+                span.removeClass(textDanger);
+                span.html(iconeCheck);
+                loader.addClass(hidden);
+            }, 'json');
+        }
+
+    }
+
+    function validaEmail(email) {
+        var er = RegExp(/^[A-Za-z0-9_\-\.]+@[A-Za-z0-9_\-\.]{2,}\.[A-Za-z0-9]{2,}(\.[A-Za-z0-9])?/);
+                if (er.test(email) == false) {
+            return false;
+        }
+        return true;
+    }
+</script>
 <!-- Inicio panel-body -->
 <!-- Estado Civil -->
 <div id="divEstadoCivil" class="panel-body bg-light">
     <div class="section-divider mt40">
         <span>Selecione uma das opções abaixo</span>
-    </div> 
-    Liderará:
-    <div class="option-group field">
-        <label class="block mt15">
-            <input type="radio" name="estadoCivil"> Sozinho</label>
-        <label class="block mt15">
-            <input type="radio" name="estadoCivil"> Com o conjungê</label>
     </div>
-    <br />
-    <button data-style="zoom-in" type="button" onclick="
-            $('#divConfirmacao').removeClass('hidden');
-            $('#divEstadoCivil').addClass('hidden');
-            " class="btn ladda-button btn-danger" style="float:right;" >
-        <span class="ladda-label">Próximo</span>        
-    </button>
+    Liderará:
+    <div class="option-group field mb10">
+        <?php
+        echo $this->formRadio($form->get(ConstantesCadastro::$INPUT_ESTADO_CIVIL));
+        ?>
+    </div>
+    <div class="text-right">
+        <?php
+        $labelContinuar = ConstantesForm::$TRADUCAO_CONTINUAR . ' ' . ConstantesForm::$STRING_ICONE_ARROW_RIGHT;
+        $extraContinuar = 'onclick="validarEstadoCivil()"';
+        echo $this->botaoLink($labelContinuar, ConstantesForm::$STRING_HASHTAG, 0, $extraContinuar);
+        ?>
+    </div>
 </div>
 
 <!-- Confirmacao -->
 <div id="divConfirmacao" class="panel-body bg-light hidden">
     <div class="section-divider mt40 mb50">
-        <span>Insira os Responsáveis e os dados complementares</span>
+        <span>Insira o(s) Responsável(is) e os dados complementares</span>
     </div> 
     <!-- Primary Progress Bar -->
     <div class="col-xs-12">
         <div class="progress">
-            <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="33" aria-valuemin="0" aria-valuemax="33" style="width: 33%;">33%</div>
+            <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="0" style="width: 0%;">0%</div>
         </div>
     </div>
 
-    <div class="well col-xs-12">
+    <!-- Bloco responsavel -->
+    <div id="blocoResponsavel" class="well col-xs-12">
         <address>
-            <i class="fa fa-user" aria-hidden="true"></i>&nbsp;<strong>Leonardo Pereira Maga...</strong>
+            Insira os dados do Responsavel
+<!--            <i class="fa fa-user" aria-hidden="true"></i>&nbsp;<strong>Leonardo Pereira Maga...</strong>
             <br><i class="fa fa-sitemap" aria-hidden="true"></i>&nbsp;Obreiro
-            <br><i class="fa fa-envelope" aria-hidden="true"></i>&nbsp;falecomleonardope...
+            <br><i class="fa fa-envelope" aria-hidden="true"></i>&nbsp;falecomleonardope...-->
         </address>
-        <button data-style="zoom-in" onclick="
-                $('#divConfirmacao').addClass('hidden');
-                $('#divResponsavel').removeClass('hidden');
-                " class="btn btn-default btn-xs" style="float:right;" ><span class="ladda-label">Alterar</span></button>
-        <button data-style="zoom-in" class="btn ladda-button btn-default btn-xs mr10" style="float:right;" ><span class="ladda-label">Limpar</span></button>
+        <?php
+        $labelInserirHomem = ConstantesCadastro::$TRADUCAO_INSERIR;
+        $extraInserirHomem = 'onclick="
+            $(\'#divConfirmacao\').addClass(\'hidden\');
+            $(\'#divSelecionarAluno\').removeClass(\'hidden\');
+        "';
+        echo $this->botaoLink($labelInserirHomem, ConstantesForm::$STRING_HASHTAG, 5, $extraInserirHomem);
+
+//        $labelAlterarHomem = ConstantesCadastro::$TRADUCAO_ALTERAR;
+//        $extraAlterarHomem = 'onclick="
+//            $(\'#divConfirmacao\').addClass(\'hidden\');
+//            $(\'#divResponsavel\').removeClass(\'hidden\');
+//        "';
+//        echo $this->botaoLink($labelAlterarHomem, ConstantesForm::$STRING_HASHTAG, 6, $extraAlterarHomem);
+//
+//        $labelLimparHomem = ConstantesCadastro::$TRADUCAO_LIMPAR;
+//        $extraLimparHomem = 'onclick="
+//            $(\'#divConfirmacao\').addClass(\'hidden\');
+//            $(\'#divResponsavel\').removeClass(\'hidden\');
+//        "';
+//        echo $this->botaoLink($labelLimparHomem, ConstantesForm::$STRING_HASHTAG, 6, $extraLimparHomem);
+        ?>
+        <!--        <div style="
+                     float: right;
+                     position: absolute;
+                     top: 22px;
+                     right: 22px;
+                     ">
+                    <span class="glyphicon glyphicon-ok text-success"></span>
+                </div>-->
+    </div>
+    <!-- Bloco homem -->
+    <div id="blocoHomem" class="well col-xs-12">
+        <address>
+            Insira os dados do Homem
+        </address>
+        <?php
+        $labelInserirHomem = ConstantesCadastro::$TRADUCAO_INSERIR;
+        $extraInserirHomem = 'onclick="
+            $(\'#divConfirmacao\').addClass(\'hidden\');
+            $(\'#divSelecionarAluno\').removeClass(\'hidden\');
+        "';
+        echo $this->botaoLink($labelInserirHomem, ConstantesForm::$STRING_HASHTAG, 5, $extraInserirHomem);
+
+        $labelAlterarHomem = ConstantesCadastro::$TRADUCAO_ALTERAR;
+        $extraAlterarHomem = 'onclick="
+            $(\'#divConfirmacao\').addClass(\'hidden\');
+            $(\'#divResponsavel\').removeClass(\'hidden\');
+        "';
+        echo $this->botaoLink($labelAlterarHomem, ConstantesForm::$STRING_HASHTAG, 6, $extraAlterarHomem);
+
+        $labelLimparHomem = ConstantesCadastro::$TRADUCAO_LIMPAR;
+        $extraLimparHomem = 'onclick="
+            $(\'#divConfirmacao\').addClass(\'hidden\');
+            $(\'#divResponsavel\').removeClass(\'hidden\');
+        "';
+        echo $this->botaoLink($labelLimparHomem, ConstantesForm::$STRING_HASHTAG, 6, $extraLimparHomem);
+        ?>
         <div style="
              float: right;
              position: absolute;
              top: 22px;
-             right: 22px;">
+             right: 22px;
+             ">
             <span class="glyphicon glyphicon-ok text-success"></span>
         </div>
     </div>
-    <div class="well col-xs-12">
+    <!-- Bloco Mulher -->
+    <div id="blocoMulher" class="well col-xs-12">
         <address>
             Insira os dados do Mulher
         </address>
-        <button data-style="zoom-in" onclick="
-                $('#divConfirmacao').addClass('hidden');
-                $('#divSelecionarAluno').removeClass('hidden');
-                "  class="btn ladda-button btn-danger btn-xs" style="float:right;" ><span class="ladda-label">Inserir</span></button>
+        <?php
+        $labelInserirMulher = ConstantesCadastro::$TRADUCAO_INSERIR;
+        $extraInserirMulher = 'onclick="
+            $(\'#divConfirmacao\').addClass(\'hidden\');
+            $(\'#divSelecionarAluno\').removeClass(\'hidden\');
+        "';
+        echo $this->botaoLink($labelInserirMulher, ConstantesForm::$STRING_HASHTAG, 5, $extraInserirMulher);
+
+        $labelAlterarMulher = ConstantesCadastro::$TRADUCAO_ALTERAR;
+        $extraAlterarMulher = 'onclick="
+            $(\'#divConfirmacao\').addClass(\'hidden\');
+            $(\'#divResponsavel\').removeClass(\'hidden\');
+        "';
+        echo $this->botaoLink($labelAlterarMulher, ConstantesForm::$STRING_HASHTAG, 6, $extraAlterarMulher);
+
+        $labelLimparMulher = ConstantesCadastro::$TRADUCAO_LIMPAR;
+        $extraLimparMulher = 'onclick="
+            $(\'#divConfirmacao\').addClass(\'hidden\');
+            $(\'#divResponsavel\').removeClass(\'hidden\');
+        "';
+        echo $this->botaoLink($labelLimparMulher, ConstantesForm::$STRING_HASHTAG, 6, $extraLimparMulher);
+        ?>       
     </div>
-    <div class="well col-xs-12">
+    <!-- Bloco Dados Complementares -->
+    <div class="well col-xs-12 mb10">
         <address>
-            Insira Dados Complementares
+            Insira os Dados Complementares
         </address>
-        <button data-style="zoom-in" onclick="
-                $('#divConfirmacao').addClass('hidden');
-                $('#divDadosComplementares').removeClass('hidden');
-                "  class="btn ladda-button btn-danger btn-xs" style="float:right;" ><span class="ladda-label">Inserir</span></button>
+        <?php
+        $labelInserirDadosComplementares = ConstantesCadastro::$TRADUCAO_INSERIR;
+        $extraInserirDadosComplementares = 'onclick="
+            $(\'#divConfirmacao\').addClass(\'hidden\');
+            $(\'#divDadosComplementares\').removeClass(\'hidden\');
+        "';
+        echo $this->botaoLink($labelInserirDadosComplementares, ConstantesForm::$STRING_HASHTAG, 5, $extraInserirDadosComplementares);
+        ?>
     </div>
-    <br />
-    <button data-style="zoom-in" onclick="
-            $('#divEmailEnviado').removeClass('hidden');
-            $('#divConfirmacao').addClass('hidden');
-            " class="btn ladda-button btn-danger" style="float:right;" ><span class="ladda-label">Finalizar</span></button>
+    <?php
+    $labelFinalizar = ConstantesCadastro::$TRADUCAO_FINALIZAR;
+    $extraFinalizar = 'onclick="
+            $(\'#divConfirmacao\').addClass(\'hidden\');
+            $(\'#divEmailEnviado\').removeClass(\'hidden\');
+        "';
+    echo $this->botaoLink($labelFinalizar, ConstantesForm::$STRING_HASHTAG, 7, $extraFinalizar);
+    ?>
 </div>
 
 <!-- Selecionar Aluno -->
@@ -97,147 +357,150 @@ echo $this->templateFormularioTopo($tituloDaPagina);
     <table class="table footable mb10" data-filter="#fooFilter">
         <thead>
             <tr>
-                <th class="hidden-xs">Matricula</th>
+                <th class = "hidden-xs">Matricula</th>
                 <th>Name</th>
-                <th class="hidden-xs">Data Nascimento</th>
+                <th class = "hidden-xs">Data Nascimento</th>
                 <th></th>
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <td class="hidden-xs">0001</td>
-                <td>Juno Lopes</td>
-                <td class="hidden-xs">07/03/1990</td>
-                <td><a href="#tab15_2" onclick="
-                        $('#divResponsavel').removeClass('hidden');
-                        $('#divSelecionarAluno').addClass('hidden');
-                       " data-toggle="tab"><button data-style="zoom-in" class="btn ladda-button btn-danger btn-xs"><span class="ladda-label">Selecionar</span></button></a></td>
-            </tr>
-            <tr>
-                <td class="hidden-xs">0002</td>
-                <td>Pitoca de Arroz</td>
-                <td class="hidden-xs">07/03/1990</td>
-                <td><a onclick="
-                        $('#divResponsavel').removeClass('hidden');
-                        $('#divSelecionarAluno').addClass('hidden');
-                       "><button data-style="zoom-in" class="btn ladda-button btn-danger btn-xs"><span class="ladda-label">Selecionar</span></button></a></td>
-            </tr>
-            <tr>
-                <td class="hidden-xs">0003</td>
-                <td>Ivan Hard Carry</td>
-                <td class="hidden-xs">07/03/1990</td>
-                <td><a onclick="
-                        $('#divResponsavel').removeClass('hidden');
-                        $('#divSelecionarAluno').addClass('hidden');
-                       "><button data-style="zoom-in" class="btn ladda-button btn-danger btn-xs"><span class="ladda-label">Selecionar</span></button></a></td>
-            </tr>
+            <?php
+            if ($form->getAlunos()) {
+                foreach ($form->getAlunos() as $ga) {
+                    $turmaAluno = $ga->getTurmaAluno();
+                    $aluno = $turmaAluno->getPessoa();
+                    $funcaoOnClick = 'onclick=\'selecionarAluno("' .
+                            $turmaAluno->getMatricula() . '", "' .
+                            $aluno->getNome() . '", "' .
+                            $aluno->getDataNascimentoFormatada() . '", 0);\'';
+                    echo '<tr>';
+                    echo '<td class="hidden-xs">' . $turmaAluno->getMatricula() . '</td>';
+                    echo '<td><span class="hidden-xs">' . $aluno->getNome() . '</span><span class="visible-xs">' . $aluno->getNomePrimeiroPrimeiraSiglaUltimo() . '</span></td>';
+                    echo '<td class="hidden-xs">' . $aluno->getDataNascimentoFormatada() . '</td>';
+                    echo '<td><button type="button" class="btn btn-danger btn-xs" ' . $funcaoOnClick . '>Selecionar</button></td>';
+                    echo '</tr>';
+                }
+            } else {
+                echo '<tr><td>Sem alunos incircuciso</td></tr>';
+            }
+            ?>           
         </tbody>
     </table>
-
-    <button data-style="zoom-in" onclick="
-            $('#divConfirmacao').removeClass('hidden');
-            $('#divSelecionarAluno').addClass('hidden');
-            "  type="button" style="float:right;" class="btn ladda-button btn-default"><i class="fa fa-arrow-left" aria-hidden="true"></i> <span class="ladda-label">Voltar</span></button>
+    <?php
+    $labelVoltar = ConstantesForm::$STRING_ICONE_ARROW_LEFT . ' ' . Constantes::$TRADUCAO_VOLTAR;
+    $extraVoltar = 'onclick="
+                    $(\'#divConfirmacao\').removeClass(\'hidden\');
+            $(\'#divSelecionarAluno\').addClass(\'hidden\');
+            "';
+    echo $this->botaoLink($labelVoltar, ConstantesForm::$STRING_HASHTAG, 8, $extraVoltar);
+    ?>
 </div>
 
-<!-- Responsavel -->
-<div id="divResponsavel" class="panel-body bg-light hidden">
-    <div class="section-divider mt40">
+<!--Responsavel -->
+<div id = "divResponsavel" class = "panel-body bg-light hidden">
+    <div class = "section-divider mt40">
         <span>Digite o CPF do Aluno selecionado</span>
-    </div>     
-    <div class="well well-sm">
-        <i class="fa fa-folder" aria-hidden="true">&nbsp;</i>0001
-        <br /><i class="fa fa-user" aria-hidden="true"></i>&nbsp;<strong>Juno Lopes</strong>
-        <br /><i class="fa fa-birthday-cake" aria-hidden="true"></i>&nbsp;07/03/1990
     </div>
-    <br />
-    <label for="cpf" class="field-label">Digite o CPF do Aluno selecionado</label>
-    <div class="smart-widget sm-right smr-50">
-        <label class="field">
-            <input type="text" name="cpf" id="cpf" class="gui-input" placeholder="Informe o CPF">
-        </label>
-        <button type="button" class="button ladda-button btn-danger">
-            <span class="ladda-label"><i class="fa fa-search"></i></span>
-        </button>
+    <!-- HelperView aluno selecionado -->
+    <div class = "well well-sm">
+        <i class = "fa fa-folder" aria-hidden = "true"></i>&nbsp;
+        <span id="spanResponsavelMatricula"></span>
+        <br />
+        <i class = "fa fa-user" aria-hidden = "true"></i>&nbsp;
+        <strong><span id="spanResponsavelNome"></span></strong>
+        <br />
+        <i class = "fa fa-birthday-cake" aria-hidden = "true"></i>&nbsp;
+        <span id="spanResponsavelDataNascimento"></span>
     </div>
-    <div class="">
-        <br />
-        <div class="well well-sm">
-            <i class="fa fa-info-circle" aria-hidden="true"></i>&nbsp;02829942116
-            <br /><i class="fa fa-user" aria-hidden="true"></i>&nbsp;<strong>LEONARDO PEREIRA MAGALHAES</strong>
-            <br /><i class="fa fa-birthday-cake" aria-hidden="true"></i>&nbsp;07/03/1990
-        </div>
-        <br />
-        <label for="email" class="field-label">Digite o email</label>
-        <div class="smart-widget sm-right smr-50">
-            <label class="field">
-                <input type="email" name="email" id="email" class="gui-input" placeholder="Informe o Email">
-            </label>
-            <button type="button" class="button ladda-button btn-danger">
-                <span class="ladda-label"><i class="fa fa-search"></i></span>
-            </button>
-        </div>
-        <br />
-        <label for="repetirEmail" class="field-label">Repita o email</label>
-        <div class="sm-right">
-            <label class="field">
-                <input type="email" name="repetirEmail" id="repetirEmail" class="gui-input" placeholder="Repetir Email">
-            </label>
-        </div>
-        <br />
-        <label for="repetirEmail" class="field-label">Selecione a Hierarquia</label>
-        <div class="sm-right">
-            <select class="form-control">
-                <option value="0">Selecione</option>
-                <option value="1">Obreiro</option>
-            </select>
-        </div>
+    <!-- Fim HelperView -->
+    <!-- Buscar CPF -->
+    <?php echo $this->inputAddon($form, ConstantesForm::$FORM_CPF); ?>
+    <!-- FIM Buscar CPF -->    
+    <!-- HelperView Resultado Busca -->
+    <div id="divResultadoBuscaCPF" class="well well-sm hidden">
+        <i class = "fa fa-info-circle" aria-hidden = "true"></i>&nbsp;
+        <span id="spanBuscaCPF"></span>
+        <br /><i class = "fa fa-user" aria-hidden = "true"></i>&nbsp;
+        <strong><span id="spanBuscaNome"></span></strong>
+        <br /><i class = "fa fa-birthday-cake" aria-hidden = "true"></i>&nbsp;
+        <span id="spanBuscaDataNascimento"></span>
     </div>
-    <br />
-    <button data-style="zoom-in" onclick="
-            $('#divConfirmacao').removeClass('hidden');
-            $('#divResponsavel').addClass('hidden');
-            " class="btn btn-danger" style="float:right;" ><span class="ladda-label">Inserir</span></button>
+    <!-- Fim HelperView -->
+    <div id="divDadosExtras" class="hidden">
+
+        <label for = "email" class = "field-label">Digite o email</label>
+        <!-- Buscar Email -->
+        <?php echo $this->inputAddon($form, ConstantesForm::$FORM_EMAIL, 2); ?>
+        <!-- FIM Buscar Email -->    
+        <label for = "repetirEmail" class = "field-label">Repita o email</label>
+        <!-- Buscar Repetir Email -->
+        <?php echo $this->inputAddon($form, ConstantesForm::$FORM_EMAIL, 3); ?>
+        <!-- FIM Buscar Repetir Email -->
+
+        <!--        <label for = "" class = "field-label">Selecione a Hierarquia</label>
+                <div class = "sm-right">
+                    <select class = "form-control">
+                        <option value = "0">Selecione</option>
+                        <option value = "1">Obreiro</option>
+                    </select>
+                </div>-->
+    </div>
+    <?php
+    $labelInserirResponsavel = ConstantesCadastro::$TRADUCAO_INSERIR;
+    $extraInserirResponsavel = 'onclick="
+            $(\'#divResponsavel\').addClass(\'hidden\');
+            $(\'#divConfirmacao\').removeClass(\'hidden\');
+        "';
+//    echo $this->botaoLink($labelInserirResponsavel, ConstantesForm::$STRING_HASHTAG, 7, $extraInserirResponsavel);
+    ?>
 </div>
 
-<!-- Dados Complementares -->
-<div id="divDadosComplementares" class="panel-body bg-light hidden">
-    <label for="numeroSubEquipe" class="field-label">Selecione a SubEquipe</label>
-    <div class="sm-right">
-        <select class="form-control">
-            <option value="0">Selecione</option>
-            <option value="1">01</option>
-            <option value="5">05</option>
-            <option value="9">09</option>
+<!--Dados Complementares -->
+<div id = "divDadosComplementares" class = "panel-body bg-light hidden">
+    <label for = "numeroSubEquipe" class = "field-label">Selecione a SubEquipe</label>
+    <div class = "sm-right mb10">
+        <select class = "form-control">
+            <option value = "0">Selecione</option>
+            <option value = "1">01</option>
+            <option value = "5">05</option>
+            <option value = "9">09</option>
         </select>
     </div>
-    <br />
-    <button data-style="zoom-in" onclick="
-            $('#divConfirmacao').removeClass('hidden');
-            $('#divDadosComplementares').addClass('hidden');
-            " class="btn btn-danger" style="float:right;" ><span class="ladda-label">Inserir</span></button>
-    <button data-style="zoom-in" onclick="
-            $('#divConfirmacao').removeClass('hidden');
-            $('#divDadosComplementares').addClass('hidden');
-            "  type="button" style="float:right;" class="btn ladda-button btn-default mr10"><i class="fa fa-arrow-left" aria-hidden="true"></i> <span class="ladda-label">Voltar</span></button>
+    <?php
+    $labelInserirDadosComplementares = ConstantesCadastro::$TRADUCAO_INSERIR;
+    $extraInserirDadosComplementares = 'onclick="
+            $(\'#divDadosComplementares\').addClass(\'hidden\');
+            $(\'#divConfirmacao\').removeClass(\'hidden\');
+        "';
+    echo $this->botaoLink($labelInserirDadosComplementares, ConstantesForm::$STRING_HASHTAG, 7, $extraInserirDadosComplementares);
+
+    $extraVoltarDadosComplementares = 'onclick="
+            $(\'#divConfirmacao\').removeClass(\'hidden\');
+            $(\'#divDadosComplementares\').addClass(\'hidden\');
+            "';
+    echo $this->botaoLink($labelVoltar, ConstantesForm::$STRING_HASHTAG, 8, $extraVoltarDadosComplementares);
+    ?>
 </div>
 
-<!-- Email Enviado -->
-<div id="divEmailEnviado" class="panel-body bg-light hidden">
-    <div id="divTextoCadastroConcluido" class="text-center">
-        <h1><span class="text-success">Cadastro concluido com Sucesso!</span></h1>
+<!--Email Enviado -->
+<div id = "divEmailEnviado" class = "panel-body bg-light hidden">
+    <div id = "divTextoCadastroConcluido" class = "text-center">
+        <h1><span class = "text-success">Cadastro concluido com Sucesso!</span></h1>
         <small>Porém ainda <strong>NÃO ESTÁ ATIVADO</strong>
             em poucos minutos os usuários receberão
             um email com as instruções para ativação.
         </small>
 
-        <div class="col-xs-12">
-            <h2 class="text-default mbn confirmation-header"><i class="fa fa-check text-success"></i></h2>
+        <div class = "col-xs-12">
+            <h2 class = "text-default mbn confirmation-header"><i class = "fa fa-check text-success"></i></h2>
         </div>
-        <div class="col-xs-12 mt10">
-            <button data-style="zoom-in" onclick="location.href = '/principal';"  type="button" class="btn ladda-button btn-danger"><span class="ladda-label">Pronto!</span></button>
+        <div class = "col-xs-12 mt10">
+            <button data-style = "zoom-in" onclick = "location.href = '/pri
+                        ncipal
+                        ';" type = "button" class = "btn ladda-button btn-danger"><span class = "ladda-label">Pronto!</span></button>
         </div>
     </div>
 </div>
 <?php
 echo $this->templateFormularioRodape();
+echo $this->form()->closeTag();

@@ -19,6 +19,9 @@ class ConstantesForm {
     public static $FORM_MINUTOS = 'minutos';
     public static $FORM_ICONE_HORA = 'fa-clock-o';
     public static $FORM_CEP_LOGRADOURO = 'cep_logradouro';
+    public static $FORM_CPF = 'cpf';
+    public static $FORM_EMAIL = 'email';
+    public static $FORM_REPETIR_EMAIL = 'repetirEmail';
     public static $FORM_COMPLEMENTO = 'complemento';
     public static $FORM_UF = 'uf';
     public static $FORM_HIDDEN = 'hidden';
@@ -26,6 +29,7 @@ class ConstantesForm {
     public static $FORM_BAIRRO = 'bairro';
     public static $FORM_LOGRADOURO = 'logradouro';
     public static $FORM_ICONE_COMPLEMENTO = 'fa-location-arrow';
+    public static $FORM_ICONE_DATABASE = 'fa-database';
     public static $FORM_NOME_HOSPEDEIRO = 'nome_hospedeiro';
     public static $FORM_NOME = 'nome';
     public static $FORM_ICONE_NOME_HOSPEDEIRO = 'fa-terminal';
@@ -36,10 +40,14 @@ class ConstantesForm {
     public static $FORM_BUSCAR_CEP_LOGRADOURO = 'buscar_cep_logradouro';
     public static $FORM_CLASS = 'class';
     public static $FORM_CLASS_GUI_INPUT = 'gui-input';
+    public static $FORM_CLASS_FORM_CONTROL = 'form-control';
     public static $FORM_PLACEHOLDER = 'placeholder';
     public static $FORM_ONCLICK = 'onClick';
     public static $FORM_FUNCAO_BUSCAR_CEP = 'buscarEndereco(document.getElementById(\'cep_logradouro\').value);';
-    public static $FORM_FUNCAO_BUSCAR_CEP_POR_ENTER = 'return submitEnter(this, event)';
+    public static $FORM_FUNCAO_BUSCAR_CPF = 'buscarCPF(this.value);';
+    public static $FORM_FUNCAO_BUSCAR_EMAIL = 'buscarEmail(this.value);';
+    public static $FORM_FUNCAO_REPETIR_EMAIL = 'repetirEmail(this.value);';
+    public static $FORM_FUNCAO_BUSCAR_POR_ENTER = 'return submitEnter(this, event)';
     public static $FORM_ONBLUR = 'onblur';
     public static $FORM_ONKEYPRESS = 'onkeypress';
     public static $FORM_BTN_DEFAULT_DARK = 'btn ladda-button btn-default dark';
@@ -86,6 +94,8 @@ class ConstantesForm {
     public static $TRADUCAO_MINUTOS = 'Minutes';
     public static $TRADUCAO_SELECIONE = 'SELECT';
     public static $TRADUCAO_CEP_LOGRADOURO = 'CEP';
+    public static $TRADUCAO_CPF = 'CPF';
+    public static $TRADUCAO_EMAIL = 'Email';
     public static $TRADUCAO_CEP_LOGRADOURO_SITE_CORREIOS = ' - Do not know your ZIP code <u><a target="_blank" href="http://www.buscacep.correios.com.br/sistemas/buscacep/">Click Here</a></u>';
     public static $TRADUCAO_COMPLEMENTO = 'Complement';
     public static $TRADUCAO_UF = 'UF';

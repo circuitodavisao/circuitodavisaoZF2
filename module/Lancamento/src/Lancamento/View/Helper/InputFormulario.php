@@ -44,12 +44,14 @@ class InputFormulario extends AbstractHelper {
             }
             $html .= '<input type="hidden" id="hidden' . $this->getIdInput() . '" name="hidden' . $this->getIdInput() . '" value="' . $valor . '"/>';
         }
-        $html .= '<label for=' . $this->getTraducao() . ' class="field-label">';
-        $html .= $this->view->translate($this->getTraducao());
-        if ($this->getIdInput() == ConstantesForm::$FORM_CEP_LOGRADOURO) {
-            $html .= $this->view->translate(ConstantesForm::$TRADUCAO_CEP_LOGRADOURO_SITE_CORREIOS);
+        if ($this->getIdInput() != ConstantesForm::$FORM_CPF) {
+            $html .= '<label for=' . $this->getTraducao() . ' class="field-label">';
+            $html .= $this->view->translate($this->getTraducao());
+            if ($this->getIdInput() == ConstantesForm::$FORM_CEP_LOGRADOURO) {
+                $html .= $this->view->translate(ConstantesForm::$TRADUCAO_CEP_LOGRADOURO_SITE_CORREIOS);
+            }
+            $html .= '</label>';
         }
-        $html .= '</label>';
         $html .= '<label for="' . $this->getTraducao() . '" class="field prepend-icon">';
 
         /* Desabilitar */

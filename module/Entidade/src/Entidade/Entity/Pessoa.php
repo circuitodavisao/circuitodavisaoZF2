@@ -10,6 +10,7 @@ namespace Entidade\Entity;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Login\Controller\Helper\Funcoes;
 use SebastianBergmann\RecursionContext\Exception;
 use Zend\InputFilter\InputFilter;
 use Zend\InputFilter\InputFilterAwareInterface;
@@ -27,9 +28,9 @@ class Pessoa implements InputFilterAwareInterface {
     protected $grupoResponsavel;
 
     /**
-     * @ORM\OneToMany(targetEntity="TurmaPessoa", mappedBy="pessoa") 
+     * @ORM\OneToMany(targetEntity="TurmaAluno", mappedBy="pessoa") 
      */
-    protected $turmaPessoa;
+    protected $turmaAluno;
 
     /**
      * @ORM\OneToMany(targetEntity="EventoFrequencia", mappedBy="pessoa") 
@@ -42,7 +43,7 @@ class Pessoa implements InputFilterAwareInterface {
     protected $grupoPessoa;
 
     public function __construct() {
-        $this->turmaPessoa = new ArrayCollection();
+        $this->turmaAluno = new ArrayCollection();
         $this->grupoResponsavel = new ArrayCollection();
         $this->eventoFrequencia = new ArrayCollection();
         $this->grupoPessoa = new ArrayCollection();
@@ -548,24 +549,24 @@ class Pessoa implements InputFilterAwareInterface {
         return $resposta;
     }
 
-    function getTurmaPessoa() {
-        return $this->turmaPessoa;
+    function getTurmaAluno() {
+        return $this->turmaAluno;
     }
 
     /**
-     * Retorna a turma pessoa ativa
-     * @return TurmaPessoa
+     * Retorna a turma aluno ativo
+     * @return TurmaAluno
      */
-    function getTurmaPessoaAtiva() {
-        $turmaPessoaAtiva = null;
-        foreach ($this->getTurmaPessoa() as $tp) {
-            if ($tp->verificarSeEstaAtivo()) {
-                $turmaPessoaAtiva = $tp;
+    function getTurmaAlunoAtivo() {
+        $turmaAlunoAtiva = null;
+        foreach ($this->getTurmaAluno() as $ta) {
+            if ($ta->verificarSeEstaAtivo()) {
+                $turmaAlunoAtiva = $ta;
                 break;
             }
         }
 
-        return $turmaPessoaAtiva;
+        return $turmaAlunoAtiva;
     }
 
     /**
@@ -583,8 +584,8 @@ class Pessoa implements InputFilterAwareInterface {
         return $grupoPessoaAtiva;
     }
 
-    function setTurmaPessoa($turmaPessoa) {
-        $this->turmaPessoa = $turmaPessoa;
+    function setTurmaAluno($turmaAluno) {
+        $this->turmaAluno = $turmaAluno;
     }
 
     /**
@@ -614,6 +615,14 @@ class Pessoa implements InputFilterAwareInterface {
             $idade = floor((((($hoje - $nascimento) / 60) / 60) / 24) / 365.25);
         }
         return $idade;
+    }
+
+    public function getDataNascimentoFormatada() {
+        $resposta = '';
+        if ($this->getData_nascimento()) {
+            $resposta = Funcoes::mudarPadraoData($this->getData_nascimento(), 1);
+        }
+        return $resposta;
     }
 
     public function getInputFilter() {

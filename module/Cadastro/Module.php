@@ -10,6 +10,7 @@ namespace Cadastro;
 
 use Cadastro\View\Helper\BotaoPopover;
 use Cadastro\View\Helper\FuncaoOnClick;
+use Cadastro\View\Helper\InputAddon;
 use Cadastro\View\Helper\InputDiaDaSemanaHoraMinuto;
 use Cadastro\View\Helper\InputExtras;
 use Cadastro\View\Helper\ListagemDeEventos;
@@ -83,6 +84,9 @@ class Module {
                 },
                 'botaoPopover' => function($sm) {
                     return new BotaoPopover();
+                },
+                'inputAddon' => function($sm) {
+                    return new InputAddon();
                 },
             )
         );

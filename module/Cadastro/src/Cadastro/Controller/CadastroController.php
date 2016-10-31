@@ -9,6 +9,7 @@ use Cadastro\Controller\Helper\RepositorioORM;
 use Cadastro\Form\CelulaForm;
 use Cadastro\Form\ConstantesForm;
 use Cadastro\Form\EventoForm;
+use Cadastro\Form\GrupoForm;
 use Doctrine\ORM\EntityManager;
 use Entidade\Entity\Evento;
 use Entidade\Entity\EventoCelula;
@@ -93,6 +94,18 @@ class CadastroController extends AbstractActionController {
                         Constantes::$ACTION => ConstantesCadastro::$PAGINA_BUSCAR_ENDERECO,
             ));
         }
+        /* Busca de CPF */
+        if ($pagina == ConstantesCadastro::$PAGINA_BUSCAR_CPF) {
+            return $this->forward()->dispatch(ConstantesCadastro::$CONTROLLER_CADASTRO, array(
+                        Constantes::$ACTION => ConstantesCadastro::$PAGINA_BUSCAR_CPF,
+            ));
+        }
+        /* Busca de Email */
+        if ($pagina == ConstantesCadastro::$PAGINA_BUSCAR_EMAIL) {
+            return $this->forward()->dispatch(ConstantesCadastro::$CONTROLLER_CADASTRO, array(
+                        Constantes::$ACTION => ConstantesCadastro::$PAGINA_BUSCAR_EMAIL,
+            ));
+        }
         /* Funcoes */
         if ($pagina == ConstantesLancamento::$PAGINA_FUNCOES) {
             return $this->forward()->dispatch(ConstantesCadastro::$CONTROLLER_CADASTRO, array(
@@ -110,6 +123,7 @@ class CadastroController extends AbstractActionController {
         $grupo = $entidade->getGrupo();
 
         $extra = '';
+        $tipoEvento = 0;
         if ($pagina == ConstantesCadastro::$PAGINA_CELULAS) {
             $listagemDeEventos = $grupo->getGrupoEventoCelula();
             $tituloDaPagina = ConstantesForm::$TRADUCAO_LISTAGEM_CELULAS . ' <b class="text-danger">' . ConstantesForm::$TRADUCAO_MULTIPLICACAO . '</b>';
@@ -600,7 +614,31 @@ class CadastroController extends AbstractActionController {
      * GET /cadastroGrupo
      */
     public function grupoAction() {
-        return new ViewModel();
+        /* Teste de alunos */
+        $sessao = new Container(Constantes::$NOME_APLICACAO);
+        $lancamentoORM = new LancamentoORM($this->getDoctrineORMEntityManager());
+        $idEntidadeAtual = $sessao->idEntidadeAtual;
+        $entidade = $lancamentoORM->getEntidadeORM()->encontrarPorIdEntidade($idEntidadeAtual);
+        $grupo = $entidade->getGrupo();
+        $arrayGrupoAlunos = $grupo->getGrupoAlunoAtivos();
+//        if ($arrayGrupoAlunos) {
+//            $htmlTagBr = '<br />';
+//            echo $htmlTagBr . "Meus Alunos: ";
+//            foreach ($arrayGrupoAlunos as $ga) {
+//                $turmaAluno = $ga->getTurmaAluno();
+//                echo $htmlTagBr . "Matricula: " . $turmaAluno->getId();
+//                $aluno = $turmaAluno->getPessoa();
+//                echo $htmlTagBr . "Nome: " . $aluno->getNome();
+//            }
+//        } else {
+//            echo "sem alunos";
+//        }
+
+        $form = new GrupoForm(ConstantesForm::$FORM, $arrayGrupoAlunos);
+        $view = new ViewModel(array(
+            ConstantesForm::$FORM => $form
+        ));
+        return $view;
     }
 
     /**
@@ -635,6 +673,56 @@ class CadastroController extends AbstractActionController {
                     'quantidadeDeResultados' => $quantidadeDeResultados,
                     'pesquisa' => $pesquisa
                 );
+                $response->setContent(Json::encode($dadosDeResposta));
+            } catch (Exception $exc) {
+                echo $exc->getTraceAsString();
+            }
+        }
+        return $response;
+    }
+
+    /**
+     * Busca de email
+     * @return Json
+     */
+    public function buscarEmailAction() {
+        $request = $this->getRequest();
+        $response = $this->getResponse();
+        if ($request->isPost()) {
+            try {
+                $post_data = $request->getPost();
+                $email = $post_data[ConstantesForm::$FORM_EMAIL];
+
+                $dadosDeResposta = array(
+                    'resposta' => '1',
+                );
+
+                $response->setContent(Json::encode($dadosDeResposta));
+            } catch (Exception $exc) {
+                echo $exc->getTraceAsString();
+            }
+        }
+        return $response;
+    }
+
+    /**
+     * Busca de cpf
+     * @return Json
+     */
+    public function buscarCPFAction() {
+        $request = $this->getRequest();
+        $response = $this->getResponse();
+        if ($request->isPost()) {
+            try {
+                $post_data = $request->getPost();
+                $cpf = $post_data[ConstantesForm::$FORM_CPF];
+
+                $dadosDeResposta = array(
+                    'cpf' => '02829942116',
+                    'nome' => 'LEONARDO PEREIRA MAGALHAES',
+                    'dataNascimento' => '07/03/1990',
+                );
+
                 $response->setContent(Json::encode($dadosDeResposta));
             } catch (Exception $exc) {
                 echo $exc->getTraceAsString();

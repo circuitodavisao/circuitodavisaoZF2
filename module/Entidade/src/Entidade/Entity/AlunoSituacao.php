@@ -3,29 +3,30 @@
 namespace Entidade\Entity;
 
 /**
- * Nome: TurmaPessoa.php
+ * Nome: AlunoSituacao.php
  * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com>
- * Descricao: Entidade anotada da tabela turma_pessoa
+ * Descricao: Entidade anotada da tabela aluno_situacao
  */
+
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity 
- * @ORM\Table(name="turma_pessoa")
+ * @ORM\Table(name="aluno_situacao")
  */
-class TurmaPessoa {
+class AlunoSituacao {
 
     /**
-     * @ORM\ManyToOne(targetEntity="Pessoa", inversedBy="turmaPessoa")
-     * @ORM\JoinColumn(name="pessoa_id", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="TurmaAluno", inversedBy="alunoSituacao")
+     * @ORM\JoinColumn(name="turma_aluno_id", referencedColumnName="id")
      */
-    private $pessoa;
+    private $turmaAluno;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Turma", inversedBy="turmaPessoa")
-     * @ORM\JoinColumn(name="turma_id", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="Situacao", inversedBy="alunoSituacao")
+     * @ORM\JoinColumn(name="situacao_id", referencedColumnName="id")
      */
-    private $turma;
+    private $situacao;
 
     /**
      * @ORM\Id
@@ -41,10 +42,10 @@ class TurmaPessoa {
     protected $hora_criacao;
 
     /** @ORM\Column(type="integer") */
-    protected $pessoa_id;
+    protected $situacao_id;
 
     /** @ORM\Column(type="integer") */
-    protected $turma_id;
+    protected $turma_aluno_id;
 
     /** @ORM\Column(type="string") */
     protected $data_inativacao;
@@ -52,20 +53,12 @@ class TurmaPessoa {
     /** @ORM\Column(type="string") */
     protected $hora_inativacao;
 
-    /**
-     * Retorna a pessoa da associação
-     * @return Pessoa
-     */
-    function getPessoa() {
-        return $this->pessoa;
+    function getTurmaAluno() {
+        return $this->turmaAluno;
     }
 
-    /**
-     * Retorna a turma da associação
-     * @return Turma
-     */
-    function getTurma() {
-        return $this->turma;
+    function getSituacao() {
+        return $this->situacao;
     }
 
     function getId() {
@@ -80,12 +73,12 @@ class TurmaPessoa {
         return $this->hora_criacao;
     }
 
-    function getPessoa_id() {
-        return $this->pessoa_id;
+    function getSituacao_id() {
+        return $this->situacao_id;
     }
 
-    function getTurma_id() {
-        return $this->turma_id;
+    function getTurma_aluno_id() {
+        return $this->turma_aluno_id;
     }
 
     function getData_inativacao() {
@@ -96,8 +89,12 @@ class TurmaPessoa {
         return $this->hora_inativacao;
     }
 
-    function setPessoa($pessoa) {
-        $this->pessoa = $pessoa;
+    function setTurmaAluno($turmaAluno) {
+        $this->turmaAluno = $turmaAluno;
+    }
+
+    function setSituacao($situacao) {
+        $this->situacao = $situacao;
     }
 
     function setId($id) {
@@ -112,12 +109,12 @@ class TurmaPessoa {
         $this->hora_criacao = $hora_criacao;
     }
 
-    function setPessoa_id($pessoa_id) {
-        $this->pessoa_id = $pessoa_id;
+    function setSituacao_id($situacao_id) {
+        $this->situacao_id = $situacao_id;
     }
 
-    function setTurma_id($turma_id) {
-        $this->turma_id = $turma_id;
+    function setTurma_aluno_id($turma_aluno_id) {
+        $this->turma_aluno_id = $turma_aluno_id;
     }
 
     function setData_inativacao($data_inativacao) {
@@ -126,22 +123,6 @@ class TurmaPessoa {
 
     function setHora_inativacao($hora_inativacao) {
         $this->hora_inativacao = $hora_inativacao;
-    }
-
-    function setTurma($turma) {
-        $this->turma = $turma;
-    }
-
-    /**
-     * Verificar se a data de inativação está nula
-     * @return boolean
-     */
-    public function verificarSeEstaAtivo() {
-        $resposta = false;
-        if (is_null($this->getData_inativacao())) {
-            $resposta = true;
-        }
-        return $resposta;
     }
 
 }
