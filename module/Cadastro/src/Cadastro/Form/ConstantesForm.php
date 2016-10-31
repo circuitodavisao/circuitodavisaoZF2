@@ -96,6 +96,7 @@ class ConstantesForm {
     public static $TRADUCAO_CEP_LOGRADOURO = 'CEP';
     public static $TRADUCAO_CPF = 'CPF';
     public static $TRADUCAO_EMAIL = 'Email';
+    public static $TRADUCAO_REPETIR_EMAIL = 'Repeat Email';
     public static $TRADUCAO_CEP_LOGRADOURO_SITE_CORREIOS = ' - Do not know your ZIP code <u><a target="_blank" href="http://www.buscacep.correios.com.br/sistemas/buscacep/">Click Here</a></u>';
     public static $TRADUCAO_COMPLEMENTO = 'Complement';
     public static $TRADUCAO_UF = 'UF';

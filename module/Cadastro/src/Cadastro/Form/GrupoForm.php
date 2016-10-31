@@ -96,8 +96,9 @@ class GrupoForm extends Form {
                         ->setAttributes([
                             ConstantesForm::$FORM_CLASS => ConstantesForm::$FORM_CLASS_FORM_CONTROL,
                             ConstantesForm::$FORM_ID => ConstantesForm::$FORM_REPETIR_EMAIL,
-                            ConstantesForm::$FORM_ONBLUR => ConstantesForm::$FORM_FUNCAO_BUSCAR_EMAIL,
-                            ConstantesForm::$FORM_PLACEHOLDER => ConstantesForm::$TRADUCAO_EMAIL,
+                            ConstantesForm::$FORM_ONBLUR => ConstantesForm::$FORM_FUNCAO_REPETIR_EMAIL,
+                            ConstantesForm::$FORM_PLACEHOLDER => ConstantesForm::$TRADUCAO_REPETIR_EMAIL,
+                            ConstantesForm::$FORM_DISABLED => ConstantesForm::$FORM_DISABLED,
                         ])
         );
 

@@ -21,6 +21,9 @@ echo $this->templateFormularioTopo($tituloDaPagina);
     /* Dados */
     var estadoCivil = 0;
     var responsavel0 = 0;
+    var iconeTime = '<i class="fa fa-times" aria-hidden="true"></i>';
+    var iconeCheck = '<i class="fa fa-check" aria-hidden="true"></i>';
+
     function validarEstadoCivil() {
         var valorSelecionado = $('input[name=inputEstadoCivil]:checked').val();
         if (valorSelecionado !== undefined) {
@@ -114,10 +117,10 @@ echo $this->templateFormularioTopo($tituloDaPagina);
 
     function buscarEmail(email) {
         var loader = $('#loaderemail');
-        var span = $('#spanemail');
+        var spanEmail = $('#spanemail');
+        var spanRepetirEmail = $('#spanrepetirEmail');
         var hidden = 'hidden';
-        var iconeTime = '<i class="fa fa-times" aria-hidden="true"></i>';
-        var iconeCheck = '<i class="fa fa-check" aria-hidden="true"></i>';
+
         var textDanger = 'text-danger';
         var textSuccess = 'text-success';
         loader.removeClass(hidden);
@@ -127,55 +130,33 @@ echo $this->templateFormularioTopo($tituloDaPagina);
         }
         if (!validaEmail(email)) {
             loader.addClass(hidden);
-            span.html(iconeTime);
-            span.removeClass(textSuccess);
-            span.addClass(textDanger);
+            spanEmail.html(iconeTime);
+            spanEmail.removeClass(textSuccess);
+            spanEmail.addClass(textDanger);
             return false;
         } else {
             $.post(
                     "/cadastroBuscarEmail",
                     {email: email},
             function (data) {
-                span.addClass(textSuccess);
-                span.removeClass(textDanger);
-                span.html(iconeCheck);
+                spanRepetirEmail.removeAttr('disabled')
+                spanEmail.addClass(textSuccess);
+                spanEmail.removeClass(textDanger);
+                spanEmail.html(iconeCheck);
                 loader.addClass(hidden);
             }, 'json');
         }
 
     }
 
-    function repetirEmail(email) {
-        var loader = $('#loaderemail');
-        var span = $('#spanemail');
-        var hidden = 'hidden';
-        var iconeTime = '<i class="fa fa-times" aria-hidden="true"></i>';
-        var iconeCheck = '<i class="fa fa-check" aria-hidden="true"></i>';
-        var textDanger = 'text-danger';
-        var textSuccess = 'text-success';
-        loader.removeClass(hidden);
-        if (email.length === 0) {
-            loader.addClass(hidden);
-            return false;
-        }
-        if (!validaEmail(email)) {
-            loader.addClass(hidden);
+    function repetirEmail(repetirEmail) {
+        var email = $('#email').val();
+        var span = $('#spanrepetirEmail');
+        if (repetirEmail != email) {
             span.html(iconeTime);
-            span.removeClass(textSuccess);
-            span.addClass(textDanger);
-            return false;
         } else {
-            $.post(
-                    "/cadastroBuscarEmail",
-                    {email: email},
-            function (data) {
-                span.addClass(textSuccess);
-                span.removeClass(textDanger);
-                span.html(iconeCheck);
-                loader.addClass(hidden);
-            }, 'json');
+            span.html(iconeCheck);
         }
-
     }
 
     function validaEmail(email) {
@@ -434,7 +415,7 @@ echo $this->templateFormularioTopo($tituloDaPagina);
         <!-- FIM Buscar Email -->    
         <label for = "repetirEmail" class = "field-label">Repita o email</label>
         <!-- Buscar Repetir Email -->
-        <?php echo $this->inputAddon($form, ConstantesForm::$FORM_EMAIL, 3); ?>
+        <?php echo $this->inputAddon($form, ConstantesForm::$FORM_REPETIR_EMAIL, 3); ?>
         <!-- FIM Buscar Repetir Email -->
 
         <!--        <label for = "" class = "field-label">Selecione a Hierarquia</label>
