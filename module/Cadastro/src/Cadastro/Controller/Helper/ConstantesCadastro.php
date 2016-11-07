@@ -33,6 +33,7 @@ class ConstantesCadastro {
     public static $ENTIDADE_EVENTO_CELULA = 'Entidade\Entity\EventoCelula';
     public static $ENTIDADE_EVENTO_TIPO = 'Entidade\Entity\EventoTipo';
     public static $ENTIDADE_GRUPO_EVENTO = 'Entidade\Entity\GrupoEvento';
+    public static $ENTIDADE_HIERARQUIA = 'Entidade\Entity\Hierarquia';
     /* Traduções */
     public static $TRADUCAO_CADASTRADO = 'Registered';
     public static $TRADUCAO_ALTERADO = 'Changed';

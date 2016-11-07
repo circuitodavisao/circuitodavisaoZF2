@@ -617,24 +617,15 @@ class CadastroController extends AbstractActionController {
         /* Teste de alunos */
         $sessao = new Container(Constantes::$NOME_APLICACAO);
         $lancamentoORM = new LancamentoORM($this->getDoctrineORMEntityManager());
+        $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
+
         $idEntidadeAtual = $sessao->idEntidadeAtual;
         $entidade = $lancamentoORM->getEntidadeORM()->encontrarPorIdEntidade($idEntidadeAtual);
         $grupo = $entidade->getGrupo();
         $arrayGrupoAlunos = $grupo->getGrupoAlunoAtivos();
-//        if ($arrayGrupoAlunos) {
-//            $htmlTagBr = '<br />';
-//            echo $htmlTagBr . "Meus Alunos: ";
-//            foreach ($arrayGrupoAlunos as $ga) {
-//                $turmaAluno = $ga->getTurmaAluno();
-//                echo $htmlTagBr . "Matricula: " . $turmaAluno->getId();
-//                $aluno = $turmaAluno->getPessoa();
-//                echo $htmlTagBr . "Nome: " . $aluno->getNome();
-//            }
-//        } else {
-//            echo "sem alunos";
-//        }
+        $arrayHierarquia = $repositorioORM->getHierarquiaORM()->encontrarTodos();
 
-        $form = new GrupoForm(ConstantesForm::$FORM, $arrayGrupoAlunos);
+        $form = new GrupoForm(ConstantesForm::$FORM, $arrayGrupoAlunos, $arrayHierarquia);
         $view = new ViewModel(array(
             ConstantesForm::$FORM => $form
         ));

@@ -15,6 +15,8 @@ class ConstantesForm {
     public static $FORM_ID = 'id';
     public static $FORM_SELECT = 'SELECT';
     public static $FORM_DIA_DA_SEMANA = 'dia_da_semana';
+    public static $FORM_HIERARQUIA = 'hierarquia';
+    public static $FORM_NUMERACAO = 'numeracao';
     public static $FORM_HORA = 'hora';
     public static $FORM_MINUTOS = 'minutos';
     public static $FORM_ICONE_HORA = 'fa-clock-o';
@@ -46,7 +48,7 @@ class ConstantesForm {
     public static $FORM_FUNCAO_BUSCAR_CEP = 'buscarEndereco(document.getElementById(\'cep_logradouro\').value);';
     public static $FORM_FUNCAO_BUSCAR_CPF = 'buscarCPF(this.value);';
     public static $FORM_FUNCAO_BUSCAR_EMAIL = 'buscarEmail(this.value);';
-    public static $FORM_FUNCAO_REPETIR_EMAIL = 'repetirEmail(this.value);';
+    public static $FORM_FUNCAO_VERIFICAR_EMAIL_IGUAL = 'verificarEmailIgual(this.value);';
     public static $FORM_FUNCAO_BUSCAR_POR_ENTER = 'return submitEnter(this, event)';
     public static $FORM_ONBLUR = 'onblur';
     public static $FORM_ONKEYPRESS = 'onkeypress';

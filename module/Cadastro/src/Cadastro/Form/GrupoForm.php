@@ -7,8 +7,10 @@ use Entidade\Entity\GrupoAluno;
 use Login\Controller\Helper\Constantes;
 use Zend\Form\Element\Csrf;
 use Zend\Form\Element\Email;
+use Zend\Form\Element\Hidden;
 use Zend\Form\Element\Number;
 use Zend\Form\Element\Radio;
+use Zend\Form\Element\Select;
 use Zend\Form\Form;
 
 /**
@@ -19,16 +21,18 @@ use Zend\Form\Form;
 class GrupoForm extends Form {
 
     private $alunos;
+    private $hierarquia;
 
     /**
      * Contrutor
      * @param String $name
      * @param GrupoAluno $alunos
      */
-    public function __construct($name = null, $alunos = null) {
+    public function __construct($name = null, $alunos = null, $hierarquia = null) {
         parent::__construct($name);
 
         $this->setAlunos($alunos);
+        $this->setHierarquia($hierarquia);
 
         /**
          * Configuração do formulário
@@ -36,6 +40,15 @@ class GrupoForm extends Form {
         $this->setAttributes(array(
             Constantes::$FORM_STRING_METHOD => Constantes::$FORM_STRING_POST,
         ));
+
+        /* Id */
+        $this->add(
+                (new Hidden())
+                        ->setName(ConstantesForm::$FORM_ID)
+                        ->setAttributes([
+                            ConstantesForm::$FORM_ID => ConstantesForm::$FORM_ID,
+                        ])
+        );
 
         /**
          * Radio Estado Civil
@@ -96,9 +109,8 @@ class GrupoForm extends Form {
                         ->setAttributes([
                             ConstantesForm::$FORM_CLASS => ConstantesForm::$FORM_CLASS_FORM_CONTROL,
                             ConstantesForm::$FORM_ID => ConstantesForm::$FORM_REPETIR_EMAIL,
-                            ConstantesForm::$FORM_ONBLUR => ConstantesForm::$FORM_FUNCAO_REPETIR_EMAIL,
+                            ConstantesForm::$FORM_ONBLUR => ConstantesForm::$FORM_FUNCAO_VERIFICAR_EMAIL_IGUAL,
                             ConstantesForm::$FORM_PLACEHOLDER => ConstantesForm::$TRADUCAO_REPETIR_EMAIL,
-                            ConstantesForm::$FORM_DISABLED => ConstantesForm::$FORM_DISABLED,
                         ])
         );
 
@@ -106,6 +118,38 @@ class GrupoForm extends Form {
                 (new Csrf())
                         ->setName(Constantes::$INPUT_CSRF)
         );
+
+        /* Hierarquia */
+        $arrayHierarquia = array();
+        $arrayHierarquia[''] = ConstantesForm::$FORM_SELECT;
+        foreach ($this->getHierarquia() as $hierarquia) {
+            $arrayHierarquia[] = $hierarquia->getNome();
+        }
+
+        $inputSelectHierarquia = new Select();
+        $inputSelectHierarquia->setName(ConstantesForm::$FORM_HIERARQUIA);
+        $inputSelectHierarquia->setAttributes(array(
+            ConstantesForm::$FORM_CLASS => ConstantesForm::$FORM_CLASS_GUI_INPUT,
+            ConstantesForm::$FORM_ID => ConstantesForm::$FORM_HIERARQUIA,
+        ));
+        $inputSelectHierarquia->setValueOptions($arrayHierarquia);
+        $this->add($inputSelectHierarquia);
+
+        /* Numeracao */
+        $arrayNumeracao = array();
+        $arrayNumeracao[''] = ConstantesForm::$FORM_SELECT;
+        for ($indiceNumeroSubEquipe = 1; $indiceNumeroSubEquipe <= 24; $indiceNumeroSubEquipe++) {
+            $numeroAjustado = str_pad($indiceNumeroSubEquipe, 2, 0, STR_PAD_LEFT);
+            $arrayNumeracao[$indiceNumeroSubEquipe] = $numeroAjustado;
+        }
+        $inputSelectNumeracao = new Select();
+        $inputSelectNumeracao->setName(ConstantesForm::$FORM_NUMERACAO);
+        $inputSelectNumeracao->setAttributes(array(
+            ConstantesForm::$FORM_CLASS => ConstantesForm::$FORM_CLASS_GUI_INPUT,
+            ConstantesForm::$FORM_ID => ConstantesForm::$FORM_NUMERACAO,
+        ));
+        $inputSelectNumeracao->setValueOptions($arrayNumeracao);
+        $this->add($inputSelectNumeracao);
     }
 
     function getAlunos() {
@@ -114,6 +158,14 @@ class GrupoForm extends Form {
 
     function setAlunos($alunos) {
         $this->alunos = $alunos;
+    }
+
+    function getHierarquia() {
+        return $this->hierarquia;
+    }
+
+    function setHierarquia($hierarquia) {
+        $this->hierarquia = $hierarquia;
     }
 
 }

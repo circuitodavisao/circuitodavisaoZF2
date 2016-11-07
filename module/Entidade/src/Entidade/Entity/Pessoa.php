@@ -42,11 +42,17 @@ class Pessoa implements InputFilterAwareInterface {
      */
     protected $grupoPessoa;
 
+    /**
+     * @ORM\OneToMany(targetEntity="PessoaHierarquia", mappedBy="pessoa") 
+     */
+    protected $pessoaHierarquia;
+
     public function __construct() {
         $this->turmaAluno = new ArrayCollection();
         $this->grupoResponsavel = new ArrayCollection();
         $this->eventoFrequencia = new ArrayCollection();
         $this->grupoPessoa = new ArrayCollection();
+        $this->pessoaHierarquia = new ArrayCollection();
     }
 
     /**
@@ -709,6 +715,14 @@ class Pessoa implements InputFilterAwareInterface {
      */
     public function setInputFilter(InputFilterInterface $inputFilter) {
         throw new Exception("Nao utilizado");
+    }
+
+    function getPessoaHierarquia() {
+        return $this->pessoaHierarquia;
+    }
+
+    function setPessoaHierarquia($pessoaHierarquia) {
+        $this->pessoaHierarquia = $pessoaHierarquia;
     }
 
 }

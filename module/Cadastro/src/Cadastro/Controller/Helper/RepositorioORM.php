@@ -15,6 +15,7 @@ class RepositorioORM {
     private $_eventoCelulaORM;
     private $_eventoTipoORM;
     private $_grupoEventoORM;
+    private $_hierarquiaORM;
 
     /**
      * Contrutor
@@ -56,6 +57,17 @@ class RepositorioORM {
             $this->_grupoEventoORM = new GrupoEventoORM($this->getDoctrineORMEntityManager());
         }
         return $this->_grupoEventoORM;
+    }
+
+    /**
+     * Metodo public para obter a instancia do Helper HierarquiaORM
+     * @return HierarquiaORM
+     */
+    public function getHierarquiaORM() {
+        if (is_null($this->_hierarquiaORM)) {
+            $this->_hierarquiaORM = new HierarquiaORM($this->getDoctrineORMEntityManager());
+        }
+        return $this->_hierarquiaORM;
     }
 
     /**
