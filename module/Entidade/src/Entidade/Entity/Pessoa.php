@@ -290,6 +290,10 @@ class Pessoa implements InputFilterAwareInterface {
         return $this->data_nascimento;
     }
 
+    function getData_nascimentoFormatada() {
+        return Funcoes::mudarPadraoData($this->getData_nascimento(), 1);
+    }
+
     function getDocumento() {
         return $this->documento;
     }

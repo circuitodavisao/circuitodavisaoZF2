@@ -56,4 +56,9 @@ class ConstantesCadastro {
     /* Inputs */
     public static $INPUT_ESTADO_CIVIL = 'inputEstadoCivil';
 
+    /* Dados PROCOB */
+    public static $PROCOB_URL = 'https://api.procob.com/consultas/v1/L0014/';
+    public static $PROCOB_USUARIO = 'comunidadeevangelica@sara.com';
+    public static $PROCOB_SENHA = 'HK8C';
+
 }

@@ -66,6 +66,28 @@ class PessoaORM {
     }
 
     /**
+     * Localizar pessoa por CPF
+     * 
+     * @param String $CPF
+     * @return Pessoa
+     * @throws Exception
+     */
+    public function encontrarPorCPF($CPF) {
+        $resposta = null;
+        try {
+            $pessoa = $this->getEntityManager()
+                    ->getRepository($this->getEntity())
+                    ->findOneBy(array(Constantes::$ENTITY_PESSOA_DOCUMENTO => $CPF));
+            if ($pessoa) {
+                $resposta = $pessoa;
+            }
+            return $resposta;
+        } catch (Exception $exc) {
+            echo $exc->getTraceAsString();
+        }
+    }
+
+    /**
      * Localizar pessoa por token
      * 
      * @param String $token
