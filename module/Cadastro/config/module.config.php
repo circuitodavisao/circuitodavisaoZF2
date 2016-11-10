@@ -53,6 +53,7 @@ return array(
             'cadastro/cadastro/evento' => __DIR__ . '/../view/cadastro/evento.phtml',
             'cadastro/cadastro/evento-exclusao' => __DIR__ . '/../view/cadastro/evento-exclusao.phtml',
             'cadastro/cadastro/grupo' => __DIR__ . '/../view/cadastro/grupo.phtml',
+            'cadastro/cadastro/grupo-email-enviado' => __DIR__ . '/../view/cadastro/grupo-email-enviado.phtml',
             'cadastro/cadastro/celula' => __DIR__ . '/../view/cadastro/celula.phtml',
             'cadastro/cadastro/celula-confirmacao' => __DIR__ . '/../view/cadastro/celula-confirmacao.phtml',
             'cadastro/cadastro/celula-exclusao' => __DIR__ . '/../view/cadastro/celula-exclusao.phtml',

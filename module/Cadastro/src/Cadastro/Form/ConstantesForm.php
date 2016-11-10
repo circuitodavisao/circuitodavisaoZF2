@@ -45,6 +45,7 @@ class ConstantesForm {
     public static $FORM_CLASS_FORM_CONTROL = 'form-control';
     public static $FORM_PLACEHOLDER = 'placeholder';
     public static $FORM_ONCLICK = 'onClick';
+    public static $FORM_ONCHANGE = 'onChange';
     public static $FORM_FUNCAO_BUSCAR_CEP = 'buscarEndereco(document.getElementById(\'cep_logradouro\').value);';
     public static $FORM_FUNCAO_BUSCAR_CPF = 'buscarCPF(this.value);';
     public static $FORM_FUNCAO_BUSCAR_EMAIL = 'buscarEmail(this.value);';

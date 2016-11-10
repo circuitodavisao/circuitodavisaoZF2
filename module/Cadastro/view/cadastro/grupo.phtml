@@ -114,8 +114,20 @@ echo $this->templateFormularioTopo($tituloDaPagina);
             spanBuscaNome.html(data.nome);
             spanBuscaDataNascimento.html(data.dataNascimento);
             loader.addClass(hidden);
-        },
-                'json');
+
+            var nomeDoAlunoSelecionado = $('#spanResponsavelNome').text();
+            var splitNomeDoAluno = nomeDoAlunoSelecionado.split(" ");
+            var splitNomeEncontradoNaBusca = data.nome.split(" ");
+
+//            if (splitNomeDoAluno[0] !== splitNomeEncontradoNaBusca[0]) {
+//                $('#spanMensagemDeErro')
+//                        .text('Nome do CPF não confere com o do aluno')
+//                        .addClass('alert alert-danger text-center');
+//            }
+//            if (splitNomeDoAluno[0] === splitNomeEncontradoNaBusca[0]) {
+            $('#divEmailResponsavel').removeClass(hidden);
+//            }
+        }, 'json');
     }
 
     function buscarEmail(email) {
@@ -165,14 +177,35 @@ echo $this->templateFormularioTopo($tituloDaPagina);
             spanRepetirEmail.removeClass(textSuccess);
             spanRepetirEmail.addClass(textDanger);
         } else {
-            $('#botaoInserirResponsavel').removeClass(hidden);
             spanRepetirEmail.html(iconeCheck);
             spanRepetirEmail.addClass(textSuccess);
             spanRepetirEmail.removeClass(textDanger);
         }
     }
 
-    function insereResponsavelNaTelaDeConfimacao(tipoResponsavel) {
+    function mostrarBotaoDeInserirResponsavel(valorDoSelectHierarquia) {
+        valorDoSelectHierarquia = parseInt(valorDoSelectHierarquia);
+        var botaoInserirResponsavel = $('#botaoInserirResponsavel');
+        if (valorDoSelectHierarquia !== 0) {
+            botaoInserirResponsavel.removeClass(hidden);
+        }
+        if (valorDoSelectHierarquia === 0) {
+            botaoInserirResponsavel.addClass(hidden);
+        }
+    }
+
+    function mostrarBotaoDeInserirDadosComplementares(valorDoSelectNumeracao) {
+        valorDoSelectNumeracao = parseInt(valorDoSelectNumeracao);
+        var divInserirAlterarDadosComplementares = $('#divInserirAlterarDadosComplementares');
+        if (valorDoSelectNumeracao !== 0) {
+            divInserirAlterarDadosComplementares.removeClass(hidden);
+        }
+        if (valorDoSelectNumeracao === 0) {
+            divInserirAlterarDadosComplementares.addClass(hidden);
+        }
+    }
+
+    function insereResponsavelNaTelaDeConfimacao(tipoResponsavel, mudarBarraDeProgresso) {
         var spanMatricula = '';
         var spanNome = '';
         var spanNomexs = '';
@@ -210,18 +243,69 @@ echo $this->templateFormularioTopo($tituloDaPagina);
         $('#divCheckDadosResponsavelInseridos').removeClass(hidden);
         $('#dibBotaoInserirResponsavel').addClass(hidden);
         $('#dibBotaoAlterarResponsavel').removeClass(hidden);
-        atualizarBarraDeProgresso(50);
+        if (mudarBarraDeProgresso === 0) {
+            atualizarBarraDeProgresso(50);
+        }
     }
 
-    function insereNumeracaoNaTelaDeConfimacao() {
+    function limparDadosPessoaSelecionada(tipoResponsavel) {
+        var spanMatricula = '';
+        var spanNome = '';
+        var spanNomexs = '';
+        var spanEmail = '';
+        var spanEmailxs = '';
+        var spanHierarquia = '';
+        var spanCPF = '';
+        switch (tipoResponsavel) {
+            case 0:
+                spanMatricula = $('#spanMatricula0');
+                spanNome = $('#spanNome0');
+                spanNomexs = $('#spanNome0xs');
+                spanEmail = $('#spanEmail0');
+                spanEmailxs = $('#spanEmail0xs');
+                spanHierarquia = $('#spanHierarquia0');
+                spanCPF = $('#spanCPF0');
+                break;
+            default:
+                return false;
+        }
+        spanMatricula.html('');
+        spanCPF.html('');
+        spanNomexs.html('');
+        spanEmailxs.html('');
+        spanNome.html('');
+        spanEmail.html('');
+        spanHierarquia.html('');
+        $('#spanInsiraOsDadosDoResponsavel').html('Insira os dados do Responsavel');
+        $('#cpf').val('');
+        $('#email').val('');
+        $('#repetirEmail').val('');
+        $('#hierarquia').val(0);
+        $('#spanBuscaCPF').html('');
+        $('#spanBuscaNome').html('');
+        $('#spanBuscaDataNascimento').html('');
+        $('#divCheckDadosResponsavelInseridos').addClass(hidden);
+        $('#dibBotaoInserirResponsavel').removeClass(hidden);
+        $('#dibBotaoAlterarResponsavel').addClass(hidden);
+        $('#divResultadoBuscaCPF').addClass(hidden);
+        $('#divDadosExtras').addClass(hidden);
+        $('#divEmailResponsavel').addClass(hidden);
+        $('#divRepetirEmailEHierarquia').addClass(hidden);
+        $('#botaoInserirResponsavel').addClass(hidden);
+        atualizarBarraDeProgresso(-50);
+    }
+
+    function insereNumeracaoNaTelaDeConfimacao(mudarBarraDeProgresso) {
         var spanDadosComplementares = $('#spanDadosComplementares');
         var iconeNumeracao = '<i class="fa fa-info-circle" aria-hidden="true"></i>' + stringNBSP;
         spanDadosComplementares.html(iconeNumeracao + stringNBSP + $('#numeracao option:selected').text());
         $('#spanInsiraOsDadosComplementares').html('Dados Complementares');
         $('#divCheckDadosComplementaresInseridos').removeClass(hidden);
-        $('#dibBotaoInserirDadosComplementares').addClass(hidden);
-        $('#dibBotaoAlterarDadosComplementares').removeClass(hidden);
-        atualizarBarraDeProgresso(50);
+        $('#divBotaoInserirDadosComplementares').addClass(hidden);
+        $('#divBotaoAlterarDadosComplementares').removeClass(hidden);
+        if (mudarBarraDeProgresso === 0) {
+            atualizarBarraDeProgresso(50);
+        }
     }
 
     function pegaValorBarraDeProgresso() {
@@ -270,7 +354,7 @@ echo $this->templateFormularioTopo($tituloDaPagina);
     </div>
     <div class="text-right">
         <?php
-        $labelContinuar = ConstantesForm::$TRADUCAO_CONTINUAR . ' ' . ConstantesForm::$STRING_ICONE_ARROW_RIGHT;
+        $labelContinuar = ConstantesForm::$TRADUCAO_CONTINUAR;
         $extraContinuar = 'onclick="validarEstadoCivil()"';
         echo $this->botaoLink($labelContinuar, ConstantesForm::$STRING_HASHTAG, 0, $extraContinuar);
         ?>
@@ -312,6 +396,8 @@ echo $this->templateFormularioTopo($tituloDaPagina);
         echo "<div id='dibBotaoAlterarResponsavel' class='hidden'>";
         $labelAlterarHomem = ConstantesCadastro::$TRADUCAO_ALTERAR;
         $extraAlterarHomem = 'onclick="
+            $(\'#botaoInserirResponsavel\').addClass(\'hidden\');
+            $(\'#botaoAlterarResponsavel\').removeClass(\'hidden\');
             $(\'#divConfirmacao\').addClass(\'hidden\');
             $(\'#divResponsavel\').removeClass(\'hidden\');
         "';
@@ -319,8 +405,9 @@ echo $this->templateFormularioTopo($tituloDaPagina);
 
         $labelLimparHomem = ConstantesCadastro::$TRADUCAO_LIMPAR;
         $extraLimparHomem = 'onclick="
-            $(\'#divConfirmacao\').addClass(\'hidden\');
-            $(\'#divResponsavel\').removeClass(\'hidden\');
+            limparDadosPessoaSelecionada(0);
+            $(\'#dibBotaoAlterarResponsavel\').addClass(\'hidden\');
+            $(\'#dibBotaoInserirResponsavel\').removeClass(\'hidden\');
         "';
         echo $this->botaoLink($labelLimparHomem, ConstantesForm::$STRING_HASHTAG, 6, $extraLimparHomem);
         echo "</div>";
@@ -400,7 +487,7 @@ echo $this->templateFormularioTopo($tituloDaPagina);
             <span class="quebraDeLinhaDeSpan" id="spanDadosComplementares"></span>
         </address>
         <?php
-        echo "<div id='dibBotaoInserirDadosComplementares'>";
+        echo "<div id='divBotaoInserirDadosComplementares'>";
         $labelInserirDadosComplementares = ConstantesCadastro::$TRADUCAO_INSERIR;
         $extraInserirDadosComplementares = 'onclick="
             $(\'#divConfirmacao\').addClass(\'hidden\');
@@ -408,9 +495,15 @@ echo $this->templateFormularioTopo($tituloDaPagina);
         "';
         echo $this->botaoLink($labelInserirDadosComplementares, ConstantesForm::$STRING_HASHTAG, 5, $extraInserirDadosComplementares);
         echo "</div>";
-        echo "<div id='dibBotaoAlterarDadosComplementares' class='hidden'>";
+        echo "<div id='divBotaoAlterarDadosComplementares' class='hidden'>";
         $labelAlterarDadosComplementares = ConstantesCadastro::$TRADUCAO_ALTERAR;
-        echo $this->botaoLink($labelAlterarDadosComplementares, ConstantesForm::$STRING_HASHTAG, 6, $extraInserirDadosComplementares);
+        $extraAlterarDadosComplementares = 'onclick="
+            $(\'#divBotaoInserirSelectDadosComplementares\').addClass(\'hidden\');
+            $(\'#divBotaoAlterarSelectDadosComplementares\').removeClass(\'hidden\');
+            $(\'#divConfirmacao\').addClass(\'hidden\');
+            $(\'#divDadosComplementares\').removeClass(\'hidden\');
+        "';
+        echo $this->botaoLink($labelAlterarDadosComplementares, ConstantesForm::$STRING_HASHTAG, 6, $extraAlterarDadosComplementares);
         echo "</div>";
         ?>
         <div id="divCheckDadosComplementaresInseridos" class="checkDadosInseridos hidden">
@@ -419,10 +512,7 @@ echo $this->templateFormularioTopo($tituloDaPagina);
     </div>
     <?php
     $labelFinalizar = ConstantesCadastro::$TRADUCAO_FINALIZAR;
-    $extraFinalizar = 'onclick="
-            $(\'#divConfirmacao\').addClass(\'hidden\');
-            $(\'#divEmailEnviado\').removeClass(\'hidden\');
-        "';
+    $extraFinalizar = 'onclick="location.href=\'/cadastroGrupoEmailEnviado\'"';
     echo $this->botaoLink($labelFinalizar, ConstantesForm::$STRING_HASHTAG, 7, $extraFinalizar);
     ?>
 </div>
@@ -499,6 +589,7 @@ echo $this->templateFormularioTopo($tituloDaPagina);
     <!-- FIM Buscar CPF -->    
     <!-- HelperView Resultado Busca -->
     <div id="divResultadoBuscaCPF" class="well well-sm hidden">
+        <span id="spanMensagemDeErro" class="quebraDeLinhaDeSpan"></span>
         <i class = "fa fa-info-circle" aria-hidden = "true"></i>&nbsp;
         <span id="spanBuscaCPF"></span>
         <br /><i class = "fa fa-user" aria-hidden = "true"></i>&nbsp;
@@ -508,10 +599,12 @@ echo $this->templateFormularioTopo($tituloDaPagina);
     </div>
     <!-- Fim HelperView -->
     <div id="divDadosExtras" class="hidden">
-        <label for = "email" class = "field-label">Digite o email</label>
-        <!-- Buscar Email -->
-        <?php echo $this->inputAddon($form, ConstantesForm::$FORM_EMAIL, 2); ?>
-        <!-- FIM Buscar Email --> 
+        <div id="divEmailResponsavel" class="hidden">
+            <label for = "email" class = "field-label">Digite o email</label>
+            <!-- Buscar Email -->
+            <?php echo $this->inputAddon($form, ConstantesForm::$FORM_EMAIL, 2); ?>
+            <!-- FIM Buscar Email --> 
+        </div>
         <div id="divRepetirEmailEHierarquia" class="hidden">
             <label for = "repetirEmail" class = "field-label">Repita o email</label>
             <!-- Buscar Repetir Email -->
@@ -524,11 +617,31 @@ echo $this->templateFormularioTopo($tituloDaPagina);
             <!-- Fim Selecionar Hierarquia -->
         </div>
     </div>
+    <div class="mt10">
+        <?php
+        $extraVoltarDadosComplementares = 'onclick="
+            $(\'#divSelecionarAluno\').removeClass(\'hidden\');
+            $(\'#divResponsavel\').addClass(\'hidden\');
+            "';
+        echo $this->botaoLink($labelVoltar, ConstantesForm::$STRING_HASHTAG, 8, $extraVoltarDadosComplementares);
+        ?>
+    </div>
     <div id="botaoInserirResponsavel" class="mt10 hidden">
         <?php
         $labelInserirResponsavel = ConstantesCadastro::$TRADUCAO_INSERIR;
         $extraInserirResponsavel = 'onclick="
-            insereResponsavelNaTelaDeConfimacao(0); 
+            insereResponsavelNaTelaDeConfimacao(0, 0); 
+            $(\'#divConfirmacao\').removeClass(\'hidden\');            
+            $(\'#divResponsavel\').addClass(\'hidden\');
+        "';
+        echo $this->botaoLink($labelInserirResponsavel, ConstantesForm::$STRING_HASHTAG, 7, $extraInserirResponsavel);
+        ?>
+    </div>
+    <div id="botaoAlterarResponsavel" class="mt10 hidden">
+        <?php
+        $labelInserirResponsavel = ConstantesCadastro::$TRADUCAO_ALTERAR;
+        $extraInserirResponsavel = 'onclick="
+            insereResponsavelNaTelaDeConfimacao(0, 1); 
             $(\'#divConfirmacao\').removeClass(\'hidden\');            
             $(\'#divResponsavel\').addClass(\'hidden\');
         "';
@@ -549,38 +662,33 @@ echo $this->templateFormularioTopo($tituloDaPagina);
     <!-- Fim HelperView dados complementares -->
     <div class="mt10">
         <?php
+        echo "<div id='divInserirAlterarDadosComplementares' class='hidden'>";
+        echo "<div id='divBotaoInserirSelectDadosComplementares'>";
         $labelInserirDadosComplementares = ConstantesCadastro::$TRADUCAO_INSERIR;
         $extraInserirDadosComplementares = 'onclick="
-            insereNumeracaoNaTelaDeConfimacao();
+            insereNumeracaoNaTelaDeConfimacao(0);
             $(\'#divDadosComplementares\').addClass(\'hidden\');
             $(\'#divConfirmacao\').removeClass(\'hidden\');
         "';
         echo $this->botaoLink($labelInserirDadosComplementares, ConstantesForm::$STRING_HASHTAG, 7, $extraInserirDadosComplementares);
+        echo "</div>";
 
+        echo "<div id='divBotaoAlterarSelectDadosComplementares' class='hidden'>";
+        $labelInserirDadosComplementares = ConstantesCadastro::$TRADUCAO_ALTERAR;
+        $extraInserirDadosComplementares = 'onclick="
+            insereNumeracaoNaTelaDeConfimacao(1);
+            $(\'#divDadosComplementares\').addClass(\'hidden\');
+            $(\'#divConfirmacao\').removeClass(\'hidden\');
+        "';
+        echo $this->botaoLink($labelInserirDadosComplementares, ConstantesForm::$STRING_HASHTAG, 7, $extraInserirDadosComplementares);
+        echo "</div>";
+        echo "</div>";
         $extraVoltarDadosComplementares = 'onclick="
             $(\'#divConfirmacao\').removeClass(\'hidden\');
             $(\'#divDadosComplementares\').addClass(\'hidden\');
             "';
         echo $this->botaoLink($labelVoltar, ConstantesForm::$STRING_HASHTAG, 8, $extraVoltarDadosComplementares);
         ?>
-    </div>
-</div>
-
-<!--Email Enviado -->
-<div id = "divEmailEnviado" class = "panel-body bg-light hidden">
-    <div id = "divTextoCadastroConcluido" class = "text-center">
-        <h1><span class = "text-success">Cadastro concluido com Sucesso!</span></h1>
-        <small>Porém ainda <strong>NÃO ESTÁ ATIVADO</strong>
-            em poucos minutos os usuários receberão
-            um email com as instruções para ativação.
-        </small>
-
-        <div class = "col-xs-12">
-            <h2 class = "text-default mbn confirmation-header"><i class = "fa fa-check text-success"></i></h2>
-        </div>
-        <div class = "col-xs-12 mt10">
-            <button data-style = "zoom-in" onclick="location.href = '/principal';" type = "button" class = "btn ladda-button btn-danger"><span class = "ladda-label">Pronto!</span></button>
-        </div>
     </div>
 </div>
 <?php

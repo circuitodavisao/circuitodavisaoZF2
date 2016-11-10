@@ -70,6 +70,11 @@ class CadastroController extends AbstractActionController {
                         Constantes::$ACTION => ConstantesCadastro::$PAGINA_GRUPO,
             ));
         }
+        if ($pagina == ConstantesCadastro::$PAGINA_GRUPO_EMAIL_ENVIADO) {
+            return $this->forward()->dispatch(ConstantesCadastro::$CONTROLLER_CADASTRO, array(
+                        Constantes::$ACTION => ConstantesCadastro::$PAGINA_GRUPO_EMAIL_ENVIADO,
+            ));
+        }
         if ($pagina == ConstantesCadastro::$PAGINA_EVENTO_CULTO_PERSISTIR) {
             return $this->forward()->dispatch(ConstantesCadastro::$CONTROLLER_CADASTRO, array(
                         Constantes::$ACTION => ConstantesCadastro::$PAGINA_EVENTO_CULTO_PERSISTIR,
@@ -635,6 +640,22 @@ class CadastroController extends AbstractActionController {
     }
 
     /**
+     * Tela com confrmação de cadastro de grupo
+     * GET /cadastroGrupoEmailEnviado
+     */
+    public function grupoEmailEnviadoAction() {
+
+        // Alterar dados do aluno
+        // Criar Grupo
+        // Criar Grupo_Responsavel
+        // Criar Grupo_Pai_Filho
+        // Enviar Email
+
+        $view = new ViewModel();
+        return $view;
+    }
+
+    /**
      * Mostrar as mensagens de erro
      * @param type $mensagens
      */
@@ -711,25 +732,26 @@ class CadastroController extends AbstractActionController {
                 $cpf = $post_data[ConstantesForm::$FORM_CPF];
 
                 $nomeDaPesquisa = 'INCIRCUCISO';
-                $dataDeNascimentoDaPesquisa = '01/01/0001';
+                $dataDeNascimentoDaPesquisa = '01/01/1666';
 
                 /* Consultar primeiro no banco de dados se tem cadastro */
-                $loginORM = new LoginORM($this->getDoctrineORMEntityManager());
-                $pessoaPesquisada = $loginORM->getPessoaORM()->encontrarPorCPF($cpf);
-                if ($pessoaPesquisada) {
-                    $nomeDaPesquisa = $pessoaPesquisada->getNome();
-                    $dataDeNascimentoDaPesquisa = $pessoaPesquisada->getData_nascimentoFormatada();
-                } else {
-                    /* Senão tem cadastro pesquisa no procob */
-                    $curl = curl_init();
-                    curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-                    curl_setopt($curl, CURLOPT_USERPWD, ConstantesCadastro::$PROCOB_USUARIO . ':' . ConstantesCadastro::$PROCOB_SENHA);
-                    curl_setopt($curl, CURLOPT_URL, ConstantesCadastro::$PROCOB_URL . $cpf);
-                    $result = curl_exec($curl);
 
-                    curl_close($curl);
-
-                    echo $result;
+//                $loginORM = new LoginORM($this->getDoctrineORMEntityManager());
+//                $pessoaPesquisada = $loginORM->getPessoaORM()->encontrarPorCPF($cpf);
+//                if ($pessoaPesquisada) {
+//                    $nomeDaPesquisa = $pessoaPesquisada->getNome();
+//                    $dataDeNascimentoDaPesquisa = $pessoaPesquisada->getData_nascimentoFormatada();
+//                } else {
+                /* Senão tem cadastro pesquisa no procob */
+//                    $curl = curl_init();
+//                    curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+//                    curl_setopt($curl, CURLOPT_USERPWD, ConstantesCadastro::$PROCOB_USUARIO . ':' . ConstantesCadastro::$PROCOB_SENHA);
+//                    curl_setopt($curl, CURLOPT_URL, ConstantesCadastro::$PROCOB_URL . $cpf);
+//                    $result = curl_exec($curl);
+//
+//                    curl_close($curl);
+//
+//                    echo $result;
 //                    $variaveisDaURL = '?usuario=' . ConstantesCadastro::$PROCOB_USUARIO
 //                            . '&senha=' . ConstantesCadastro::$PROCOB_SENHA
 //                            . '&tipocons=' . ConstantesCadastro::$PROCOB_TIPO_CONSULTA
@@ -748,7 +770,7 @@ class CadastroController extends AbstractActionController {
 //                            $dataDeNascimentoDaPesquisa = Funcoes::mudarPadraoData($explode[4], 1);
 //                        }
 //                    }
-                }
+//                }
 
                 $dadosDeResposta = array(
                     'cpf' => $cpf,

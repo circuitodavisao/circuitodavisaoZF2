@@ -121,9 +121,9 @@ class GrupoForm extends Form {
 
         /* Hierarquia */
         $arrayHierarquia = array();
-        $arrayHierarquia[''] = ConstantesForm::$FORM_SELECT;
+        $arrayHierarquia[0] = ConstantesForm::$FORM_SELECT;
         foreach ($this->getHierarquia() as $hierarquia) {
-            $arrayHierarquia[] = $hierarquia->getNome();
+            $arrayHierarquia[$hierarquia->getId()] = $hierarquia->getNome();
         }
 
         $inputSelectHierarquia = new Select();
@@ -131,13 +131,14 @@ class GrupoForm extends Form {
         $inputSelectHierarquia->setAttributes(array(
             ConstantesForm::$FORM_CLASS => ConstantesForm::$FORM_CLASS_GUI_INPUT,
             ConstantesForm::$FORM_ID => ConstantesForm::$FORM_HIERARQUIA,
+            ConstantesForm::$FORM_ONCHANGE => 'mostrarBotaoDeInserirResponsavel(this.value);',
         ));
         $inputSelectHierarquia->setValueOptions($arrayHierarquia);
         $this->add($inputSelectHierarquia);
 
         /* Numeracao */
         $arrayNumeracao = array();
-        $arrayNumeracao[''] = ConstantesForm::$FORM_SELECT;
+        $arrayNumeracao[0] = ConstantesForm::$FORM_SELECT;
         for ($indiceNumeroSubEquipe = 1; $indiceNumeroSubEquipe <= 24; $indiceNumeroSubEquipe++) {
             $numeroAjustado = str_pad($indiceNumeroSubEquipe, 2, 0, STR_PAD_LEFT);
             $arrayNumeracao[$indiceNumeroSubEquipe] = $numeroAjustado;
@@ -147,6 +148,7 @@ class GrupoForm extends Form {
         $inputSelectNumeracao->setAttributes(array(
             ConstantesForm::$FORM_CLASS => ConstantesForm::$FORM_CLASS_GUI_INPUT,
             ConstantesForm::$FORM_ID => ConstantesForm::$FORM_NUMERACAO,
+            ConstantesForm::$FORM_ONCHANGE => 'mostrarBotaoDeInserirDadosComplementares(this.value);',
         ));
         $inputSelectNumeracao->setValueOptions($arrayNumeracao);
         $this->add($inputSelectNumeracao);
