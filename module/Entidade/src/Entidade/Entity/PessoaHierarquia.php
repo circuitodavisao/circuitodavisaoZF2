@@ -7,6 +7,7 @@ namespace Entidade\Entity;
  * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com>
  * Descricao: Entidade anotada da tabela pessoa_hierarquia
  */
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -62,6 +63,15 @@ class PessoaHierarquia {
             $resposta = true;
         }
         return $resposta;
+    }
+
+    /**
+     * Seta data e hora de criação
+     */
+    function setDataEHoraDeCriacao() {
+        $timeNow = new DateTime();
+        $this->setData_criacao($timeNow->format('Y-m-d'));
+        $this->setHora_criacao($timeNow->format('H:s:i'));
     }
 
     function getHierarquia() {

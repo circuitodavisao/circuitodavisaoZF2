@@ -16,6 +16,8 @@ class RepositorioORM {
     private $_eventoTipoORM;
     private $_grupoEventoORM;
     private $_hierarquiaORM;
+    private $_turmaAlunoORM;
+    private $_pessoaHieraquiaORM;
 
     /**
      * Contrutor
@@ -68,6 +70,28 @@ class RepositorioORM {
             $this->_hierarquiaORM = new HierarquiaORM($this->getDoctrineORMEntityManager());
         }
         return $this->_hierarquiaORM;
+    }
+
+    /**
+     * Metodo public para obter a instancia do Helper TurmaAlunoORM
+     * @return TurmaAlunoORM
+     */
+    public function getTurmaAlunoORM() {
+        if (is_null($this->_turmaAlunoORM)) {
+            $this->_turmaAlunoORM = new TurmaAlunoORM($this->getDoctrineORMEntityManager());
+        }
+        return $this->_turmaAlunoORM;
+    }
+
+    /**
+     * Metodo public para obter a instancia do Helper PessoaHierarquiaORM
+     * @return PessoaHierarquiaORM
+     */
+    public function getPessoaHierarquiaORM() {
+        if (is_null($this->_pessoaHieraquiaORM)) {
+            $this->_pessoaHieraquiaORM = new PessoaHierarquiaORM($this->getDoctrineORMEntityManager());
+        }
+        return $this->_pessoaHieraquiaORM;
     }
 
     /**

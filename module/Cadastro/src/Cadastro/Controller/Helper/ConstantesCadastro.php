@@ -18,6 +18,7 @@ class ConstantesCadastro {
     public static $PAGINA_EVENTO_CELULA = 'EventoCelula';
     public static $PAGINA_EVENTO = 'Evento';
     public static $PAGINA_GRUPO = 'Grupo';
+    public static $PAGINA_GRUPO_FINALIZAR = 'GrupoFinalizar';
     public static $PAGINA_GRUPO_EMAIL_ENVIADO = 'GrupoEmailEnviado';
     public static $PAGINA_EVENTO_CELULA_PERSISTIR = 'EventoCelulaPersistir';
     public static $PAGINA_EVENTO_CULTO_PERSISTIR = 'EventoCultoPersistir';
@@ -34,6 +35,8 @@ class ConstantesCadastro {
     public static $ENTIDADE_EVENTO_CELULA = 'Entidade\Entity\EventoCelula';
     public static $ENTIDADE_EVENTO_TIPO = 'Entidade\Entity\EventoTipo';
     public static $ENTIDADE_GRUPO_EVENTO = 'Entidade\Entity\GrupoEvento';
+    public static $ENTIDADE_PESSOA_HIERARQUIA = 'Entidade\Entity\PessoaHierarquia';
+    public static $ENTIDADE_TURMA_ALUNO = 'Entidade\Entity\TurmaAluno';
     public static $ENTIDADE_HIERARQUIA = 'Entidade\Entity\Hierarquia';
     /* Traduções */
     public static $TRADUCAO_CADASTRADO = 'Registered';

@@ -14,11 +14,11 @@ use Doctrine\ORM\EntityManager;
 use Entidade\Entity\Evento;
 use Entidade\Entity\EventoCelula;
 use Entidade\Entity\GrupoEvento;
+use Entidade\Entity\PessoaHierarquia;
 use Exception;
 use Lancamento\Controller\Helper\ConstantesLancamento;
 use Lancamento\Controller\Helper\LancamentoORM;
 use Login\Controller\Helper\Constantes;
-use Login\Controller\Helper\Funcoes;
 use Login\Controller\Helper\LoginORM;
 use Zend\Json\Json;
 use Zend\Mvc\Controller\AbstractActionController;
@@ -70,9 +70,9 @@ class CadastroController extends AbstractActionController {
                         Constantes::$ACTION => ConstantesCadastro::$PAGINA_GRUPO,
             ));
         }
-        if ($pagina == ConstantesCadastro::$PAGINA_GRUPO_EMAIL_ENVIADO) {
+        if ($pagina == ConstantesCadastro::$PAGINA_GRUPO_FINALIZAR) {
             return $this->forward()->dispatch(ConstantesCadastro::$CONTROLLER_CADASTRO, array(
-                        Constantes::$ACTION => ConstantesCadastro::$PAGINA_GRUPO_EMAIL_ENVIADO,
+                        Constantes::$ACTION => ConstantesCadastro::$PAGINA_GRUPO_FINALIZAR,
             ));
         }
         if ($pagina == ConstantesCadastro::$PAGINA_EVENTO_CULTO_PERSISTIR) {
@@ -529,7 +529,7 @@ class CadastroController extends AbstractActionController {
                             ConstantesCadastro::$PAGINA => ConstantesCadastro::$PAGINA_CELULAS,
                 ));
             } catch (Exception $exc) {
-                echo $exc->getMessage();
+                $this->direcionaErroDeCadastro($celulaForm->getMessages());
             }
         }
     }
@@ -641,18 +641,47 @@ class CadastroController extends AbstractActionController {
 
     /**
      * Tela com confrmação de cadastro de grupo
-     * GET /cadastroGrupoEmailEnviado
+     * GET /cadastroGrupoFinalizar
      */
-    public function grupoEmailEnviadoAction() {
+    public function grupoFinalizarAction() {
+        $request = $this->getRequest();
+        $stringZero = '0';
+        if ($request->isPost()) {
+            try {
+                $post_data = $request->getPost();
+                $loginORM = new LoginORM($this->getDoctrineORMEntityManager());
+                $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
+                /* Alterar dados do aluno */
+                /* Solteiro */
+//                if ($post_data[ConstantesCadastro::$INPUT_ESTADO_CIVIL] === 1) {
+                $matricula = $post_data[ConstantesForm::$FORM_ID_ALUNO_SELECIONADO . $stringZero];
+                $turmaAluno = $repositorioORM->getTurmaAlunoORM()->encontrarPorIdTurmaAluno($matricula);
+                $pessoaSelecionada = $turmaAluno->getPessoa();
+                $loginORM->getPessoaORM()->atualizarAlunoComDadosDaBuscaPorCPF($pessoaSelecionada, $post_data);
 
-        // Alterar dados do aluno
-        // Criar Grupo
-        // Criar Grupo_Responsavel
-        // Criar Grupo_Pai_Filho
-        // Enviar Email
+                /* Criar hierarquia */
+                $idHierarquia = $matricula = $post_data[ConstantesForm::$FORM_HIERARQUIA . $stringZero];
+                $hierarquia = $repositorioORM->getHierarquiaORM()->encontrarPorIdHierarquia($idHierarquia);
+                $pessoaHierarquia = new PessoaHierarquia();
+                $pessoaHierarquia->setPessoa($pessoaSelecionada);
+                $pessoaHierarquia->setHierarquia($hierarquia);
+                $repositorioORM->getPessoaHierarquiaORM()->persistirPessoaHierarquia($pessoaHierarquia);
 
-        $view = new ViewModel();
-        return $view;
+//                }
+//                /* Casado */
+//                if ($post_data[ConstantesCadastro::$INPUT_ESTADO_CIVIL] == 2) {
+//                    
+//                }
+                // Criar Grupo
+                // Criar Grupo_Responsavel
+                // Criar Grupo_Pai_Filho
+                // Enviar Email
+                $view = new ViewModel();
+                return $view;
+            } catch (Exception $exc) {
+                $this->direcionaErroDeCadastro($exc->getMessage());
+            }
+        }
     }
 
     /**

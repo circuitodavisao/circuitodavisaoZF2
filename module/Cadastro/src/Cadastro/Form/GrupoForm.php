@@ -41,12 +41,153 @@ class GrupoForm extends Form {
             Constantes::$FORM_STRING_METHOD => Constantes::$FORM_STRING_POST,
         ));
 
-        /* Id */
+        /* IdAlunoSelecionado0 */
         $this->add(
                 (new Hidden())
-                        ->setName(ConstantesForm::$FORM_ID)
+                        ->setName(ConstantesForm::$FORM_ID_ALUNO_SELECIONADO . '0')
                         ->setAttributes([
-                            ConstantesForm::$FORM_ID => ConstantesForm::$FORM_ID,
+                            ConstantesForm::$FORM_ID => ConstantesForm::$FORM_ID_ALUNO_SELECIONADO . '0',
+                        ])
+        );
+
+        /* IdAlunoSelecionado1 */
+        $this->add(
+                (new Hidden())
+                        ->setName(ConstantesForm::$FORM_ID_ALUNO_SELECIONADO . '1')
+                        ->setAttributes([
+                            ConstantesForm::$FORM_ID => ConstantesForm::$FORM_ID_ALUNO_SELECIONADO . '1',
+                        ])
+        );
+
+        /* IdAlunoSelecionado2 */
+        $this->add(
+                (new Hidden())
+                        ->setName(ConstantesForm::$FORM_ID_ALUNO_SELECIONADO . '2')
+                        ->setAttributes([
+                            ConstantesForm::$FORM_ID => ConstantesForm::$FORM_ID_ALUNO_SELECIONADO . '2',
+                        ])
+        );
+
+
+        /* Nome0 */
+        $this->add(
+                (new Hidden())
+                        ->setName(ConstantesForm::$FORM_NOME . '0')
+                        ->setAttributes([
+                            ConstantesForm::$FORM_ID => ConstantesForm::$FORM_NOME . '0',
+                        ])
+        );
+        /* Nome1 */
+        $this->add(
+                (new Hidden())
+                        ->setName(ConstantesForm::$FORM_NOME . '1')
+                        ->setAttributes([
+                            ConstantesForm::$FORM_ID => ConstantesForm::$FORM_NOME . '1',
+                        ])
+        );
+        /* Nome2 */
+        $this->add(
+                (new Hidden())
+                        ->setName(ConstantesForm::$FORM_NOME . '2')
+                        ->setAttributes([
+                            ConstantesForm::$FORM_ID => ConstantesForm::$FORM_NOME . '2',
+                        ])
+        );
+        /* email0 */
+        $this->add(
+                (new Hidden())
+                        ->setName(ConstantesForm::$FORM_EMAIL . '0')
+                        ->setAttributes([
+                            ConstantesForm::$FORM_ID => ConstantesForm::$FORM_EMAIL . '0',
+                        ])
+        );
+        /* email1 */
+        $this->add(
+                (new Hidden())
+                        ->setName(ConstantesForm::$FORM_EMAIL . '1')
+                        ->setAttributes([
+                            ConstantesForm::$FORM_ID => ConstantesForm::$FORM_EMAIL . '1',
+                        ])
+        );
+        /* email2 */
+        $this->add(
+                (new Hidden())
+                        ->setName(ConstantesForm::$FORM_EMAIL . '2')
+                        ->setAttributes([
+                            ConstantesForm::$FORM_ID => ConstantesForm::$FORM_EMAIL . '2',
+                        ])
+        );
+
+        /* cpf0 */
+        $this->add(
+                (new Hidden())
+                        ->setName(ConstantesForm::$FORM_CPF . '0')
+                        ->setAttributes([
+                            ConstantesForm::$FORM_ID => ConstantesForm::$FORM_CPF . '0',
+                        ])
+        );
+        /* cpf1 */
+        $this->add(
+                (new Hidden())
+                        ->setName(ConstantesForm::$FORM_CPF . '1')
+                        ->setAttributes([
+                            ConstantesForm::$FORM_ID => ConstantesForm::$FORM_CPF . '1',
+                        ])
+        );
+        /* cpf2 */
+        $this->add(
+                (new Hidden())
+                        ->setName(ConstantesForm::$FORM_CPF . '2')
+                        ->setAttributes([
+                            ConstantesForm::$FORM_ID => ConstantesForm::$FORM_CPF . '2',
+                        ])
+        );
+        /* hierarquia0 */
+        $this->add(
+                (new Hidden())
+                        ->setName(ConstantesForm::$FORM_HIERARQUIA . '0')
+                        ->setAttributes([
+                            ConstantesForm::$FORM_ID => ConstantesForm::$FORM_HIERARQUIA . '0',
+                        ])
+        );
+        /* hierarquia1 */
+        $this->add(
+                (new Hidden())
+                        ->setName(ConstantesForm::$FORM_HIERARQUIA . '1')
+                        ->setAttributes([
+                            ConstantesForm::$FORM_ID => ConstantesForm::$FORM_HIERARQUIA . '1',
+                        ])
+        );
+        /* hierarquiaf2 */
+        $this->add(
+                (new Hidden())
+                        ->setName(ConstantesForm::$FORM_HIERARQUIA . '2')
+                        ->setAttributes([
+                            ConstantesForm::$FORM_ID => ConstantesForm::$FORM_HIERARQUIA . '2',
+                        ])
+        );
+        /* dataDeNascimento0 */
+        $this->add(
+                (new Hidden())
+                        ->setName(ConstantesForm::$FORM_DATA_NASCIMENTO . '0')
+                        ->setAttributes([
+                            ConstantesForm::$FORM_ID => ConstantesForm::$FORM_DATA_NASCIMENTO . '0',
+                        ])
+        );
+        /* dataDeNascimento1 */
+        $this->add(
+                (new Hidden())
+                        ->setName(ConstantesForm::$FORM_DATA_NASCIMENTO . '1')
+                        ->setAttributes([
+                            ConstantesForm::$FORM_ID => ConstantesForm::$FORM_DATA_NASCIMENTO . '1',
+                        ])
+        );
+        /* dataDeNascimentof2 */
+        $this->add(
+                (new Hidden())
+                        ->setName(ConstantesForm::$FORM_DATA_NASCIMENTO . '2')
+                        ->setAttributes([
+                            ConstantesForm::$FORM_ID => ConstantesForm::$FORM_DATA_NASCIMENTO . '2',
                         ])
         );
 

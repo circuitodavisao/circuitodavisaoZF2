@@ -11,7 +11,7 @@ use Login\Controller\Helper\Constantes;
  */
 $form = $this->Form;
 $form->prepare();
-$form->setAttribute(ConstantesForm::$FORM_ACTION, 'todo');
+$form->setAttribute(ConstantesForm::$FORM_ACTION, 'cadastroGrupoFinalizar');
 echo $this->form()->openTag($form);
 
 $tituloDaPagina = 'Cadastro de <span class="text-danger">SubEquipe</span>';
@@ -50,7 +50,6 @@ echo $this->templateFormularioTopo($tituloDaPagina);
     }
 
     function selecionarAluno(matricula, nome, dataNascimento, tipo) {
-
         var spanResponsavelMatricula, spanResponsavelNome, spanResponsavelDataNascimento;
         spanResponsavelMatricula = $('#spanResponsavelMatricula');
         spanResponsavelNome = $('#spanResponsavelNome');
@@ -60,6 +59,21 @@ echo $this->templateFormularioTopo($tituloDaPagina);
         spanResponsavelDataNascimento.html(dataNascimento);
         $('#divResponsavel').removeClass('hidden');
         $('#divSelecionarAluno').addClass('hidden');
+        var inputIdAlunoSelecionado;
+        switch (tipo) {
+            case 0:
+                inputIdAlunoSelecionado = $('#idAlunoSelecionado0');
+                break;
+            case 1:
+                inputIdAlunoSelecionado = $('#idAlunoSelecionado1');
+                break;
+            case 2:
+                inputIdAlunoSelecionado = $('#idAlunoSelecionado2');
+                break;
+            default:
+                break;
+        }
+        inputIdAlunoSelecionado.val(matricula);
     }
 
     function isNumber(n) {
@@ -80,7 +94,7 @@ echo $this->templateFormularioTopo($tituloDaPagina);
             return true;
     }
 
-    function buscarCPF(cpf) {
+    function buscarCPF(cpf, tipo) {
         var loader = $('#loadercpf');
         var divResultadoBuscaCPF = $('#divResultadoBuscaCPF');
         var divDadosExtras = $('#divDadosExtras');
@@ -88,6 +102,9 @@ echo $this->templateFormularioTopo($tituloDaPagina);
         var spanBuscaNome = $('#spanBuscaNome');
         var spanBuscaDataNascimento = $('#spanBuscaDataNascimento');
         var hidden = 'hidden';
+        var inputHiddenNome;
+        var inputHiddenCPF;
+        var inputHiddenDataNascimento;
         divResultadoBuscaCPF.addClass(hidden);
         spanBuscaCPF.html('');
         spanBuscaNome.html('');
@@ -104,17 +121,36 @@ echo $this->templateFormularioTopo($tituloDaPagina);
         }
         $.post(
                 "/cadastroBuscarCPF",
-                {
-                    cpf: cpf
-                },
+                {cpf: cpf},
         function (data) {
             divResultadoBuscaCPF.removeClass(hidden);
             divDadosExtras.removeClass(hidden);
             spanBuscaCPF.html(data.cpf);
             spanBuscaNome.html(data.nome);
             spanBuscaDataNascimento.html(data.dataNascimento);
+            switch (tipo) {
+                case 0:
+                    inputHiddenNome = $('#nome0');
+                    inputHiddenCPF = $('#cpf0');
+                    inputHiddenDataNascimento = $('#dataNascimento0');
+                    break;
+                case 1:
+                    inputHiddenNome = $('#nome1');
+                    inputHiddenCPF = $('#cpf1');
+                    inputHiddenDataNascimento = $('#dataNascimento1');
+                    break;
+                case 2:
+                    inputHiddenNome = $('#nome2');
+                    inputHiddenCPF = $('#cpf2');
+                    inputHiddenDataNascimento = $('#dataNascimento1');
+                    break;
+                default:
+                    break;
+            }
+            inputHiddenNome.val(data.nome);
+            inputHiddenCPF.val(data.cpf);
+            inputHiddenDataNascimento.val(data.dataNascimento);
             loader.addClass(hidden);
-
             var nomeDoAlunoSelecionado = $('#spanResponsavelNome').text();
             var splitNomeDoAluno = nomeDoAlunoSelecionado.split(" ");
             var splitNomeEncontradoNaBusca = data.nome.split(" ");
@@ -219,6 +255,9 @@ echo $this->templateFormularioTopo($tituloDaPagina);
         var iconeResponavelCPF = '<i class="fa fa-info-circle" aria-hidden="true"></i>' + stringNBSP;
         var iconeResponavelEmail = '<i class="fa fa-envelope" aria-hidden="true"></i>' + stringNBSP;
         var iconeResponavelHierarquia = '<i class="fa fa-sitemap" aria-hidden="true"></i>' + stringNBSP;
+        var inputHiddenEmail;
+        var inputHiddenHierarquia;
+
         switch (tipoResponsavel) {
             case 0:
                 spanMatricula = $('#spanMatricula0');
@@ -228,6 +267,8 @@ echo $this->templateFormularioTopo($tituloDaPagina);
                 spanEmailxs = $('#spanEmail0xs');
                 spanHierarquia = $('#spanHierarquia0');
                 spanCPF = $('#spanCPF0');
+                inputHiddenEmail = $('#email0');
+                inputHiddenHierarquia = $('#hierarquia0');
                 break;
             default:
                 return false;
@@ -243,6 +284,8 @@ echo $this->templateFormularioTopo($tituloDaPagina);
         $('#divCheckDadosResponsavelInseridos').removeClass(hidden);
         $('#dibBotaoInserirResponsavel').addClass(hidden);
         $('#dibBotaoAlterarResponsavel').removeClass(hidden);
+        inputHiddenEmail.val($('#email').val());
+        inputHiddenHierarquia.val($('#hierarquia option:selected').val());
         if (mudarBarraDeProgresso === 0) {
             atualizarBarraDeProgresso(50);
         }
@@ -321,6 +364,13 @@ echo $this->templateFormularioTopo($tituloDaPagina);
                 .attr("aria-valuenow", valorAtualizadoDaBarraDeProgresso)
                 .html(valorAtualizadoDaBarraDeProgresso + stringPercentual)
                 .css('width', valorAtualizadoDaBarraDeProgresso + stringPercentual);
+
+        var divBotaoSubmit = $('#divBotaoSubmit');
+        if (valorAtualizadoDaBarraDeProgresso == 100) {
+            divBotaoSubmit.removeClass(hidden);
+        } else {
+            divBotaoSubmit.addClass(hidden);
+        }
     }
 
     function ajustaStringTelaPequena(string) {
@@ -510,11 +560,9 @@ echo $this->templateFormularioTopo($tituloDaPagina);
             <span class="glyphicon glyphicon-ok text-success"></span>
         </div>
     </div>
-    <?php
-    $labelFinalizar = ConstantesCadastro::$TRADUCAO_FINALIZAR;
-    $extraFinalizar = 'onclick="location.href=\'/cadastroGrupoEmailEnviado\'"';
-    echo $this->botaoLink($labelFinalizar, ConstantesForm::$STRING_HASHTAG, 7, $extraFinalizar);
-    ?>
+    <div id="divBotaoSubmit" class="hidden">
+        <?php echo $this->botaoSubmit(ConstantesCadastro::$TRADUCAO_FINALIZAR); ?>
+    </div>
 </div>
 
 <!-- Selecionar Aluno -->
@@ -691,6 +739,27 @@ echo $this->templateFormularioTopo($tituloDaPagina);
         ?>
     </div>
 </div>
+
 <?php
+echo $this->formHidden($form->get(Constantes::$INPUT_CSRF));
+echo $this->formHidden($form->get(ConstantesForm::$FORM_ID_ALUNO_SELECIONADO . '0'));
+echo $this->formHidden($form->get(ConstantesForm::$FORM_ID_ALUNO_SELECIONADO . '1'));
+echo $this->formHidden($form->get(ConstantesForm::$FORM_ID_ALUNO_SELECIONADO . '2'));
+echo $this->formHidden($form->get(ConstantesForm::$FORM_NOME . '0'));
+echo $this->formHidden($form->get(ConstantesForm::$FORM_NOME . '1'));
+echo $this->formHidden($form->get(ConstantesForm::$FORM_NOME . '2'));
+echo $this->formHidden($form->get(ConstantesForm::$FORM_EMAIL . '0'));
+echo $this->formHidden($form->get(ConstantesForm::$FORM_EMAIL . '1'));
+echo $this->formHidden($form->get(ConstantesForm::$FORM_EMAIL . '2'));
+echo $this->formHidden($form->get(ConstantesForm::$FORM_CPF . '0'));
+echo $this->formHidden($form->get(ConstantesForm::$FORM_CPF . '1'));
+echo $this->formHidden($form->get(ConstantesForm::$FORM_CPF . '2'));
+echo $this->formHidden($form->get(ConstantesForm::$FORM_HIERARQUIA . '0'));
+echo $this->formHidden($form->get(ConstantesForm::$FORM_HIERARQUIA . '1'));
+echo $this->formHidden($form->get(ConstantesForm::$FORM_HIERARQUIA . '2'));
+echo $this->formHidden($form->get(ConstantesForm::$FORM_DATA_NASCIMENTO . '0'));
+echo $this->formHidden($form->get(ConstantesForm::$FORM_DATA_NASCIMENTO . '1'));
+echo $this->formHidden($form->get(ConstantesForm::$FORM_DATA_NASCIMENTO . '2'));
+
 echo $this->templateFormularioRodape();
 echo $this->form()->closeTag();

@@ -2,9 +2,9 @@
 
 namespace Login\Controller\Helper;
 
+use Cadastro\Form\ConstantesForm;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManager;
-use Entidade\Entity\GrupoPessoa;
 use Entidade\Entity\Pessoa;
 use Exception;
 
@@ -161,6 +161,25 @@ class PessoaORM {
             $this->getEntityManager()->flush($pessoa);
         } catch (Exception $exc) {
             echo $exc->getMessage();
+        }
+    }
+
+    /**
+     * Atualiza a aluno com dados da busca do cpf
+     * 
+     * @param Pessoa $pessoa
+     * @param array $post_data
+     */
+    public function atualizarAlunoComDadosDaBuscaPorCPF($pessoa, $post_data) {
+        $stringZero = '0';
+        try {
+            $pessoa->setDocumento(intval($post_data[ConstantesForm::$FORM_CPF . $stringZero]));
+            $pessoa->setNome($post_data[ConstantesForm::$FORM_NOME . $stringZero]);
+            $pessoa->setEmail($post_data[ConstantesForm::$FORM_EMAIL . $stringZero]);
+            $pessoa->setData_nascimento(Funcoes::mudarPadraoData($post_data[ConstantesForm::$FORM_DATA_NASCIMENTO . $stringZero], 0));
+            $this->persistirPessoaNova($pessoa);
+        } catch (Exception $exc) {
+            echo $exc->getTraceAsString();
         }
     }
 
