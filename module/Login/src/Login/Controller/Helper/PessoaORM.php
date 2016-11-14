@@ -169,6 +169,7 @@ class PessoaORM {
      * 
      * @param Pessoa $pessoa
      * @param array $post_data
+     * @return Pessoa $pessoa
      */
     public function atualizarAlunoComDadosDaBuscaPorCPF($pessoa, $post_data) {
         $stringZero = '0';
@@ -178,6 +179,8 @@ class PessoaORM {
             $pessoa->setEmail($post_data[ConstantesForm::$FORM_EMAIL . $stringZero]);
             $pessoa->setData_nascimento(Funcoes::mudarPadraoData($post_data[ConstantesForm::$FORM_DATA_NASCIMENTO . $stringZero], 0));
             $this->persistirPessoaNova($pessoa);
+
+            return $pessoa;
         } catch (Exception $exc) {
             echo $exc->getTraceAsString();
         }

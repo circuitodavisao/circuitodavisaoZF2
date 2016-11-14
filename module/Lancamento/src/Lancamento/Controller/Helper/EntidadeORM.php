@@ -45,6 +45,20 @@ class EntidadeORM {
         return $entidade;
     }
 
+    /**
+     * Atualiza a entidade no banco de dados
+     * @param Entidade $entidade
+     */
+    public function persistirEntidade($entidade) {
+        try {
+            $entidade->setDataEHoraDeCriacao();
+            $this->getEntityManager()->persist($entidade);
+            $this->getEntityManager()->flush($entidade);
+        } catch (Exception $exc) {
+            echo $exc->getMessage();
+        }
+    }
+
     public function getEntityManager() {
         return $this->_entityManager;
     }

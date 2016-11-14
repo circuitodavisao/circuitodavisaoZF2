@@ -18,6 +18,9 @@ class RepositorioORM {
     private $_hierarquiaORM;
     private $_turmaAlunoORM;
     private $_pessoaHieraquiaORM;
+    private $_entidadeTipoORM;
+    private $_grupoResponsavelORM;
+    private $_grupoPaiFilhoORM;
 
     /**
      * Contrutor
@@ -92,6 +95,39 @@ class RepositorioORM {
             $this->_pessoaHieraquiaORM = new PessoaHierarquiaORM($this->getDoctrineORMEntityManager());
         }
         return $this->_pessoaHieraquiaORM;
+    }
+
+    /**
+     * Metodo public para obter a instancia do Helper GrupoResponsavelORM
+     * @return GrupoResponsavelORM
+     */
+    public function getGrupoResponsavelORM() {
+        if (is_null($this->_grupoResponsavelORM)) {
+            $this->_grupoResponsavelORM = new GrupoResponsavelORM($this->getDoctrineORMEntityManager());
+        }
+        return $this->_grupoResponsavelORM;
+    }
+
+    /**
+     * Metodo public para obter a instancia do Helper EntidadeTipoORM
+     * @return EntidadeTipoORM
+     */
+    public function getEntidadeTipoORM() {
+        if (is_null($this->_entidadeTipoORM)) {
+            $this->_entidadeTipoORM = new EntidadeTipoORM($this->getDoctrineORMEntityManager());
+        }
+        return $this->_entidadeTipoORM;
+    }
+
+    /**
+     * Metodo public para obter a instancia do Helper GrupoPaiFilhoORM
+     * @return GrupoPaiFilhoORM
+     */
+    public function getGrupoPaiFilhoORM() {
+        if (is_null($this->_grupoPaiFilhoORM)) {
+            $this->_grupoPaiFilhoORM = new GrupoPaiFilhoORM($this->getDoctrineORMEntityManager());
+        }
+        return $this->_grupoPaiFilhoORM;
     }
 
     /**

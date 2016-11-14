@@ -92,6 +92,15 @@ class Grupo {
     protected $envio_hora;
 
     /**
+     * Seta data e hora de criação
+     */
+    function setDataEHoraDeCriacao() {
+        $timeNow = new DateTime();
+        $this->setData_criacao($timeNow->format('Y-m-d'));
+        $this->setHora_criacao($timeNow->format('H:s:i'));
+    }
+
+    /**
      * Recupera todas as entidades vinculadas aquele grupo
      * @return Entidade
      */

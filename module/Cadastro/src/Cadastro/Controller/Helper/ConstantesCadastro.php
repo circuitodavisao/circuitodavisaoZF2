@@ -38,6 +38,9 @@ class ConstantesCadastro {
     public static $ENTIDADE_PESSOA_HIERARQUIA = 'Entidade\Entity\PessoaHierarquia';
     public static $ENTIDADE_TURMA_ALUNO = 'Entidade\Entity\TurmaAluno';
     public static $ENTIDADE_HIERARQUIA = 'Entidade\Entity\Hierarquia';
+    public static $ENTIDADE_ENTIDADE_TIPO = 'Entidade\Entity\EntidadeTipo';
+    public static $ENTIDADE_GRUPO_RESPONSAVEL = 'Entidade\Entity\GrupoResponsavel';
+    public static $ENTIDADE_GRUPO_PAI_FILHO = 'Entidade\Entity\GrupoPaiFilho';
     /* Traduções */
     public static $TRADUCAO_CADASTRADO = 'Registered';
     public static $TRADUCAO_ALTERADO = 'Changed';

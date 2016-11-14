@@ -721,6 +721,10 @@ class Pessoa implements InputFilterAwareInterface {
         throw new Exception("Nao utilizado");
     }
 
+    /**
+     * Retorna array das hierarquias
+     * @return PessoaHierarquia
+     */
     function getPessoaHierarquia() {
         return $this->pessoaHierarquia;
     }

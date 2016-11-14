@@ -16,6 +16,7 @@ namespace Entidade\Entity;
  * 8 - SUB EQUIPE
  */
 
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -77,6 +78,15 @@ class Entidade {
             $resposta = true;
         }
         return $resposta;
+    }
+
+    /**
+     * Seta data e hora de criação
+     */
+    function setDataEHoraDeCriacao() {
+        $timeNow = new DateTime();
+        $this->setData_criacao($timeNow->format('Y-m-d'));
+        $this->setHora_criacao($timeNow->format('H:s:i'));
     }
 
     public function infoEntidade() {

@@ -35,9 +35,11 @@ class GrupoORM {
      */
     public function persistirGrupo($grupo) {
         try {
+            $grupo->setDataEHoraDeCriacao();
+            $this->getEntityManager()->persist($grupo);
             $this->getEntityManager()->flush($grupo);
         } catch (Exception $exc) {
-            echo $exc->getTraceAsString();
+            echo $exc->getMessage();
         }
     }
 

@@ -27,6 +27,8 @@ echo $this->templateFormularioTopo($tituloDaPagina);
     var textDanger = 'text-danger';
     var textSuccess = 'text-success';
     var stringNBSP = '&nbsp;';
+    var alertDanger = 'alert alert-danger text-center';
+
     function validarEstadoCivil() {
         var valorSelecionado = $('input[name=inputEstadoCivil]:checked').val();
         if (valorSelecionado !== undefined) {
@@ -154,15 +156,16 @@ echo $this->templateFormularioTopo($tituloDaPagina);
             var nomeDoAlunoSelecionado = $('#spanResponsavelNome').text();
             var splitNomeDoAluno = nomeDoAlunoSelecionado.split(" ");
             var splitNomeEncontradoNaBusca = data.nome.split(" ");
-
-//            if (splitNomeDoAluno[0] !== splitNomeEncontradoNaBusca[0]) {
-//                $('#spanMensagemDeErro')
-//                        .text('Nome do CPF não confere com o do aluno')
-//                        .addClass('alert alert-danger text-center');
-//            }
-//            if (splitNomeDoAluno[0] === splitNomeEncontradoNaBusca[0]) {
-            $('#divEmailResponsavel').removeClass(hidden);
-//            }
+            var spanMensagemDeErro = $('#spanMensagemDeErro');
+            if (splitNomeDoAluno[0] !== splitNomeEncontradoNaBusca[0]) {
+                spanMensagemDeErro
+                        .text('Nome do CPF não confere com o do aluno')
+                        .addClass(alertDanger);
+            }
+            if (splitNomeDoAluno[0] === splitNomeEncontradoNaBusca[0]) {
+                spanMensagemDeErro.addClass(hidden);
+                $('#divEmailResponsavel').removeClass(hidden);
+            }
         }, 'json');
     }
 
@@ -187,46 +190,76 @@ echo $this->templateFormularioTopo($tituloDaPagina);
                     "/cadastroBuscarEmail",
                     {email: email},
             function (data) {
-                divRepetirEmailEHierarquia.removeClass(hidden);
-                spanEmail.addClass(textSuccess);
-                spanEmail.removeClass(textDanger);
-                spanEmail.html(iconeCheck);
+                var spanEmailJaUtilizado = $('#spanEmailJaUtilizado');
+                // liberado
+                if (!data.resposta) {
+                    spanEmailJaUtilizado.addClass(hidden);
+                    divRepetirEmailEHierarquia.removeClass(hidden);
+                    spanEmail.addClass(textSuccess);
+                    spanEmail.removeClass(textDanger);
+                    spanEmail.html(iconeCheck);
+                }
+                // não liberado
+                if (data.resposta) {
+                    spanEmailJaUtilizado.html('Email já utilizado por outra pessoa!');
+                    spanEmailJaUtilizado.addClass(alertDanger);
+                    divRepetirEmailEHierarquia.addClass(hidden);
+                    spanEmail.addClass(textDanger);
+                    spanEmail.removeClass(textSuccess);
+                    spanEmail.html(iconeTime);
+                }
                 loader.addClass(hidden);
             }, 'json');
         }
 
     }
 
+    function elementoBotaoInseririResponsavel() {
+        return $('#botaoInserirResponsavel');
+    }
+
     function validaEmail(email) {
+
         var er = RegExp(/^[A-Za-z0-9_\-\.]+@[A-Za-z0-9_\-\.]{2,}\.[A-Za-z0-9]{2,}(\.[A-Za-z0-9])?/);
         if (er.test(email) == false) {
             return false;
+            var elemento = elementoBotaoInseririResponsavel();
+            elemento.addClass(hidden);
         }
         return true;
     }
 
     function verificarEmailIgual(emailRepetido) {
+        var elemento = elementoBotaoInseririResponsavel();
         var valorEmail = $('#email').val();
         var spanRepetirEmail = $('#spanrepetirEmail');
+        var spanEmailNaoIgual = $('#spanEmailNaoIgual');
         if (emailRepetido != valorEmail) {
             spanRepetirEmail.html(iconeTime);
             spanRepetirEmail.removeClass(textSuccess);
             spanRepetirEmail.addClass(textDanger);
+            elemento.addClass(hidden);
+            spanEmailNaoIgual.removeClass(hidden);
+            spanEmailNaoIgual.html('Emails não coferem!');
+            spanEmailNaoIgual.addClass(alertDanger);
         } else {
             spanRepetirEmail.html(iconeCheck);
             spanRepetirEmail.addClass(textSuccess);
             spanRepetirEmail.removeClass(textDanger);
+            spanEmailNaoIgual.addClass(hidden);
         }
     }
 
     function mostrarBotaoDeInserirResponsavel(valorDoSelectHierarquia) {
+        var elemento = elementoBotaoInseririResponsavel();
         valorDoSelectHierarquia = parseInt(valorDoSelectHierarquia);
-        var botaoInserirResponsavel = $('#botaoInserirResponsavel');
         if (valorDoSelectHierarquia !== 0) {
-            botaoInserirResponsavel.removeClass(hidden);
+            if ($('#spanrepetirEmail').hasClass(textSuccess)) {
+                elemento.removeClass(hidden);
+            }
         }
         if (valorDoSelectHierarquia === 0) {
-            botaoInserirResponsavel.addClass(hidden);
+            elemento.addClass(hidden);
         }
     }
 
@@ -561,7 +594,7 @@ echo $this->templateFormularioTopo($tituloDaPagina);
         </div>
     </div>
     <div id="divBotaoSubmit" class="hidden">
-        <?php echo $this->botaoSubmit(ConstantesCadastro::$TRADUCAO_FINALIZAR); ?>
+        <?php echo $this->botaoLink(ConstantesCadastro::$TRADUCAO_FINALIZAR, '#', 7, 'onclick="this.form.submit();"'); ?>
     </div>
 </div>
 
@@ -647,14 +680,16 @@ echo $this->templateFormularioTopo($tituloDaPagina);
     </div>
     <!-- Fim HelperView -->
     <div id="divDadosExtras" class="hidden">
-        <div id="divEmailResponsavel" class="hidden">
-            <label for = "email" class = "field-label">Digite o email</label>
+        <span id="spanEmailJaUtilizado" class="quebraDeLinhaDeSpan"></span>
+        <div id="divEmailResponsavel" class="hidden">            
+            <label for="email" class="field-label">Digite o email</label>
             <!-- Buscar Email -->
             <?php echo $this->inputAddon($form, ConstantesForm::$FORM_EMAIL, 2); ?>
             <!-- FIM Buscar Email --> 
         </div>
         <div id="divRepetirEmailEHierarquia" class="hidden">
-            <label for = "repetirEmail" class = "field-label">Repita o email</label>
+            <span id="spanEmailNaoIgual" class="quebraDeLinhaDeSpan"></span>
+            <label for="repetirEmail" class="field-label">Repita o email</label>
             <!-- Buscar Repetir Email -->
             <?php echo $this->inputAddon($form, ConstantesForm::$FORM_REPETIR_EMAIL, 3); ?>
             <!-- FIM Buscar Repetir Email -->
@@ -664,15 +699,6 @@ echo $this->templateFormularioTopo($tituloDaPagina);
             <?php echo $this->formSelect($form->get(ConstantesForm::$FORM_HIERARQUIA)); ?>
             <!-- Fim Selecionar Hierarquia -->
         </div>
-    </div>
-    <div class="mt10">
-        <?php
-        $extraVoltarDadosComplementares = 'onclick="
-            $(\'#divSelecionarAluno\').removeClass(\'hidden\');
-            $(\'#divResponsavel\').addClass(\'hidden\');
-            "';
-        echo $this->botaoLink($labelVoltar, ConstantesForm::$STRING_HASHTAG, 8, $extraVoltarDadosComplementares);
-        ?>
     </div>
     <div id="botaoInserirResponsavel" class="mt10 hidden">
         <?php
@@ -694,6 +720,15 @@ echo $this->templateFormularioTopo($tituloDaPagina);
             $(\'#divResponsavel\').addClass(\'hidden\');
         "';
         echo $this->botaoLink($labelInserirResponsavel, ConstantesForm::$STRING_HASHTAG, 7, $extraInserirResponsavel);
+        ?>
+    </div>
+    <div class="mt10">
+        <?php
+        $extraVoltarDadosComplementares = 'onclick="
+            $(\'#divSelecionarAluno\').removeClass(\'hidden\');
+            $(\'#divResponsavel\').addClass(\'hidden\');
+            "';
+        echo $this->botaoLink($labelVoltar, ConstantesForm::$STRING_HASHTAG, 8, $extraVoltarDadosComplementares);
         ?>
     </div>
 </div>

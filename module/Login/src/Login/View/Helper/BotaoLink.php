@@ -42,7 +42,7 @@ class BotaoLink extends AbstractHelper {
             $margenRight = 'mr5';
         }
 
-        if ($this->getTipo() == 5 || $this->getTipo() == 6 || $this->getTipo() == 7 || $this->getTipo() == 8) {// floar direita
+        if ($this->getTipo() == 5 || $this->getTipo() == 6 || $this->getTipo() == 7 || $this->getTipo() == 8) {// float direita
             $float = 'style="float: right;"';
         }
         $html .= '<button type="button" ' . $this->getExtra() . ' ' . $float . ' onclick=\'location.href="' . $this->getLink() . '";\' class="btn ladda-button btn-' . $classCor . ' ' . $tamanho . ' ' . $margenRight . '" data-style="zoom-in">'
