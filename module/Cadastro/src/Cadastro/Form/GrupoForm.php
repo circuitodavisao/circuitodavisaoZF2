@@ -200,6 +200,7 @@ class GrupoForm extends Form {
                         ->setName(ConstantesCadastro::$INPUT_ESTADO_CIVIL)
                         ->setAttributes([
                             Constantes::$FORM_STRING_ID => ConstantesCadastro::$INPUT_ESTADO_CIVIL,
+                            ConstantesForm::$FORM_ONCLICK => 'mostrarBotaoDeProsseguirDoEstadoCivil();',
                         ])
                         ->setOptions([
                             Constantes::$FORM_STRING_VALUE_OPTIONS => array(

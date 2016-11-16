@@ -691,7 +691,7 @@ class CadastroController extends AbstractActionController {
                 $grupoResponsavelNovo->setGrupo($grupoNovo);
                 $repositorioORM->getGrupoResponsavelORM()->persistirGrupoResponsavel($grupoResponsavelNovo);
 
-                // Criar Grupo_Pai_Filho
+                /* Criar Grupo_Pai_Filho */
                 $sessao = new Container(Constantes::$NOME_APLICACAO);
                 $idEntidadeAtual = $sessao->idEntidadeAtual;
                 $entidade = $lancamentoORM->getEntidadeORM()->encontrarPorIdEntidade($idEntidadeAtual);
@@ -790,6 +790,7 @@ class CadastroController extends AbstractActionController {
      * @return Json
      */
     public function buscarCPFAction() {
+        $resposta = 0;
         $request = $this->getRequest();
         $response = $this->getResponse();
         if ($request->isPost()) {
@@ -797,46 +798,41 @@ class CadastroController extends AbstractActionController {
                 $post_data = $request->getPost();
                 $cpf = $post_data[ConstantesForm::$FORM_CPF];
 
-                $nomeDaPesquisa = 'JOTA';
+                $nomeDaPesquisa = 'ALUNO_JOB';
                 $dataDeNascimentoDaPesquisa = '01/01/2000';
 
                 /* Consultar primeiro no banco de dados se tem cadastro */
-
                 $loginORM = new LoginORM($this->getDoctrineORMEntityManager());
                 $pessoaPesquisada = $loginORM->getPessoaORM()->encontrarPorCPF($cpf);
                 if ($pessoaPesquisada) {
                     $nomeDaPesquisa = $pessoaPesquisada->getNome();
                     $dataDeNascimentoDaPesquisa = $pessoaPesquisada->getData_nascimentoFormatada();
                 } else {
-//                /* Senão tem cadastro pesquisa no procob */
-//                $curl = curl_init();
-//                curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-//                curl_setopt($curl, CURLOPT_USERPWD, ConstantesCadastro::$PROCOB_USUARIO . ':' . ConstantesCadastro::$PROCOB_SENHA);
-//                curl_setopt($curl, CURLOPT_URL, ConstantesCadastro::$PROCOB_URL . $cpf);
-//                $result = curl_exec($curl);
-//                curl_close($curl);
-//                echo $result;
-//                $variaveisDaURL = '?usuario=' . ConstantesCadastro::$PROCOB_USUARIO
-//                        . '&senha=' . ConstantesCadastro::$PROCOB_SENHA
-//                        . '&tipocons=' . ConstantesCadastro::$PROCOB_TIPO_CONSULTA
-//                        . '&cpfcnpj=' . $cpf . '&saida=STRING';
-//                $variaveisDaURL = 'https://' . ConstantesCadastro::$PROCOB_USUARIO . ':' . ConstantesCadastro::$PROCOB_SENHA . '@';
-//                $url = $variaveisDaURL . ConstantesCadastro::$PROCOB_URL . $cpf;
-//                echo "$url";
-//                $contents = file_get_contents($url);
-//                if (!empty($contents)) {
-//                    $explode = explode(";", $contents);
-//
-//                    if (!empty($explode[3])) {
-//                        $nomeDaPesquisa = $explode[3];
-//                    }
-//                    if (!empty($explode[4])) {
-//                        $dataDeNascimentoDaPesquisa = Funcoes::mudarPadraoData($explode[4], 1);
-//                    }
-//                }
+                    /* Senão tem cadastro pesquisa no procob */
+                    $curl = curl_init();
+                    curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+                    curl_setopt($curl, CURLOPT_USERPWD, ConstantesCadastro::$PROCOB_USUARIO . ':' . ConstantesCadastro::$PROCOB_SENHA);
+                    curl_setopt($curl, CURLOPT_URL, ConstantesCadastro::$PROCOB_URL . ConstantesCadastro::$PROCOB_URL_DADOS_PESSOAIS . $cpf);
+                    curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
+                    $result = curl_exec($curl);
+                    curl_close($curl);
+
+                    $result = str_replace('":"', '#', $result);
+                    $result = str_replace('","', '#', $result);
+                    $result = str_replace('"{"', '#', $result);
+                    $result = str_replace('"}"', '#', $result);
+                    $explodeResultado = explode('#', $result);
+
+                    /* Sucesso */
+                    if ($explodeResultado[1] === '000') {
+                        $nomeDaPesquisa = $explodeResultado[13];
+                        $dataDeNascimentoDaPesquisa = str_replace('\/', '/', $explodeResultado[15]);
+                        $resposta = 1;
+                    }
                 }
 
                 $dadosDeResposta = array(
+                    'resposta' => $resposta,
                     'cpf' => $cpf,
                     'nome' => $nomeDaPesquisa,
                     'dataNascimento' => $dataDeNascimentoDaPesquisa,

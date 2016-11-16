@@ -76,6 +76,21 @@ echo $this->templateFormularioTopo($tituloDaPagina);
                 break;
         }
         inputIdAlunoSelecionado.val(matricula);
+        /* Limpar campos */
+        $('#cpf').val('');
+        $('#email').val('');
+        $('#repetirEmail').val('');
+        $('#hierarquia').val(0);
+        $('#spanBuscaCPF').html('');
+        $('#spanBuscaNome').html('');
+        $('#spanBuscaDataNascimento').html('');
+        $('#divResultadoBuscaCPF').addClass(hidden);
+        $('#divDadosExtras').addClass(hidden);
+        $('#spanEmailJaUtilizado').html('');
+        $('#spanEmailJaUtilizado').removeClass('alert');
+        $('#spanEmailNaoIgual').html('');
+        $('#spanEmailNaoIgual').removeClass('alert');
+        $('#divRepetirEmailEHierarquia').addClass(hidden);
     }
 
     function isNumber(n) {
@@ -108,6 +123,7 @@ echo $this->templateFormularioTopo($tituloDaPagina);
         var inputHiddenCPF;
         var inputHiddenDataNascimento;
         divResultadoBuscaCPF.addClass(hidden);
+        divDadosExtras.addClass(hidden);
         spanBuscaCPF.html('');
         spanBuscaNome.html('');
         spanBuscaDataNascimento.html('');
@@ -125,50 +141,55 @@ echo $this->templateFormularioTopo($tituloDaPagina);
                 "/cadastroBuscarCPF",
                 {cpf: cpf},
         function (data) {
-            divResultadoBuscaCPF.removeClass(hidden);
-            divDadosExtras.removeClass(hidden);
-            spanBuscaCPF.html(data.cpf);
-            spanBuscaNome.html(data.nome);
-            spanBuscaDataNascimento.html(data.dataNascimento);
-            switch (tipo) {
-                case 0:
-                    inputHiddenNome = $('#nome0');
-                    inputHiddenCPF = $('#cpf0');
-                    inputHiddenDataNascimento = $('#dataNascimento0');
-                    break;
-                case 1:
-                    inputHiddenNome = $('#nome1');
-                    inputHiddenCPF = $('#cpf1');
-                    inputHiddenDataNascimento = $('#dataNascimento1');
-                    break;
-                case 2:
-                    inputHiddenNome = $('#nome2');
-                    inputHiddenCPF = $('#cpf2');
-                    inputHiddenDataNascimento = $('#dataNascimento1');
-                    break;
-                default:
-                    break;
+            if (data.resposta) {
+                divResultadoBuscaCPF.removeClass(hidden);
+                divDadosExtras.removeClass(hidden);
+                spanBuscaCPF.html(data.cpf);
+                spanBuscaNome.html(data.nome);
+                spanBuscaDataNascimento.html(data.dataNascimento);
+                switch (tipo) {
+                    case 0:
+                        inputHiddenNome = $('#nome0');
+                        inputHiddenCPF = $('#cpf0');
+                        inputHiddenDataNascimento = $('#dataNascimento0');
+                        break;
+                    case 1:
+                        inputHiddenNome = $('#nome1');
+                        inputHiddenCPF = $('#cpf1');
+                        inputHiddenDataNascimento = $('#dataNascimento1');
+                        break;
+                    case 2:
+                        inputHiddenNome = $('#nome2');
+                        inputHiddenCPF = $('#cpf2');
+                        inputHiddenDataNascimento = $('#dataNascimento1');
+                        break;
+                    default:
+                        break;
+                }
+                inputHiddenNome.val(data.nome);
+                inputHiddenCPF.val(data.cpf);
+                inputHiddenDataNascimento.val(data.dataNascimento);
+                loader.addClass(hidden);
+                var nomeDoAlunoSelecionado = $('#spanResponsavelNome').text();
+                var splitNomeDoAluno = nomeDoAlunoSelecionado.split(" ");
+                var splitNomeEncontradoNaBusca = data.nome.split(" ");
+                var spanMensagemDeErro = $('#spanMensagemDeErro');
+                if (splitNomeDoAluno[0] !== splitNomeEncontradoNaBusca[0]) {
+                    spanMensagemDeErro
+                            .text('Nome do CPF não confere com o do aluno')
+                            .addClass(alertDanger)
+                            .removeClass(hidden);
+                }
+                if (splitNomeDoAluno[0] === splitNomeEncontradoNaBusca[0]) {
+                    spanMensagemDeErro.addClass(hidden);
+                    $('#divEmailResponsavel').removeClass(hidden);
+                }
             }
-            inputHiddenNome.val(data.nome);
-            inputHiddenCPF.val(data.cpf);
-            inputHiddenDataNascimento.val(data.dataNascimento);
-            loader.addClass(hidden);
-            var nomeDoAlunoSelecionado = $('#spanResponsavelNome').text();
-            var splitNomeDoAluno = nomeDoAlunoSelecionado.split(" ");
-            var splitNomeEncontradoNaBusca = data.nome.split(" ");
-            var spanMensagemDeErro = $('#spanMensagemDeErro');
-            if (splitNomeDoAluno[0] !== splitNomeEncontradoNaBusca[0]) {
-                spanMensagemDeErro
-                        .text('Nome do CPF não confere com o do aluno')
-                        .addClass(alertDanger);
-            }
-            if (splitNomeDoAluno[0] === splitNomeEncontradoNaBusca[0]) {
-                spanMensagemDeErro.addClass(hidden);
-                $('#divEmailResponsavel').removeClass(hidden);
-            }
-        }, 'json');
+        }else{
+            /* Não encontrou no PROCOB */
+        }
+        , 'json');
     }
-
     function buscarEmail(email) {
         var loader = $('#loaderemail');
         var spanEmail = $('#spanemail');
@@ -263,6 +284,10 @@ echo $this->templateFormularioTopo($tituloDaPagina);
         }
     }
 
+    function mostrarBotaoDeProsseguirDoEstadoCivil() {
+        $('#divBotaoDeProsseguirDoEstadoCivil').removeClass(hidden);
+    }
+
     function mostrarBotaoDeInserirDadosComplementares(valorDoSelectNumeracao) {
         valorDoSelectNumeracao = parseInt(valorDoSelectNumeracao);
         var divInserirAlterarDadosComplementares = $('#divInserirAlterarDadosComplementares');
@@ -352,6 +377,7 @@ echo $this->templateFormularioTopo($tituloDaPagina);
         spanNome.html('');
         spanEmail.html('');
         spanHierarquia.html('');
+
         $('#spanInsiraOsDadosDoResponsavel').html('Insira os dados do Responsavel');
         $('#cpf').val('');
         $('#email').val('');
@@ -405,7 +431,6 @@ echo $this->templateFormularioTopo($tituloDaPagina);
             divBotaoSubmit.addClass(hidden);
         }
     }
-
     function ajustaStringTelaPequena(string) {
         var stringAjustada = '';
         stringAjustada = string.substr(0, 20) + '...';
@@ -435,7 +460,7 @@ echo $this->templateFormularioTopo($tituloDaPagina);
         echo $this->formRadio($form->get(ConstantesCadastro::$INPUT_ESTADO_CIVIL));
         ?>
     </div>
-    <div class="text-right">
+    <div id="divBotaoDeProsseguirDoEstadoCivil" class="text-right hidden">
         <?php
         $labelContinuar = ConstantesForm::$TRADUCAO_CONTINUAR;
         $extraContinuar = 'onclick="validarEstadoCivil()"';
@@ -575,6 +600,7 @@ echo $this->templateFormularioTopo($tituloDaPagina);
         $extraInserirDadosComplementares = 'onclick="
             $(\'#divConfirmacao\').addClass(\'hidden\');
             $(\'#divDadosComplementares\').removeClass(\'hidden\');
+            $(\'#numeracao\').val(0);
         "';
         echo $this->botaoLink($labelInserirDadosComplementares, ConstantesForm::$STRING_HASHTAG, 5, $extraInserirDadosComplementares);
         echo "</div>";
