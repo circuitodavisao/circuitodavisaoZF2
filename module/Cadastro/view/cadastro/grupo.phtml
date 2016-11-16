@@ -184,9 +184,9 @@ echo $this->templateFormularioTopo($tituloDaPagina);
                     spanMensagemDeErro.addClass(hidden);
                     $('#divEmailResponsavel').removeClass(hidden);
                 }
+            } else {
+                /* Não encontrou no PROCOB */
             }
-        }else{
-            /* Não encontrou no PROCOB */
         }
         , 'json');
     }
