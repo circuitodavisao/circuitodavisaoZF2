@@ -102,6 +102,11 @@ class LancamentoController extends AbstractActionController {
                         Constantes::$ACTION => ConstantesLancamento::$PAGINA_SALVAR_PESSOA,
             ));
         }
+        if ($pagina == ConstantesLancamento::$PAGINA_ATENDIMENTO) {
+            return $this->forward()->dispatch(ConstantesLancamento::$CONTROLLER_LANCAMENTO, array(
+                        Constantes::$ACTION => ConstantesLancamento::$PAGINA_ATENDIMENTO,
+            ));
+        }
         /* Funcoes */
         if ($pagina == ConstantesLancamento::$PAGINA_FUNCOES) {
             /* Registro de sessão com o id passado na função */
@@ -537,6 +542,15 @@ class LancamentoController extends AbstractActionController {
         $idEntidadeAtual = $sessao->idEntidadeAtual;
         $entidade = $lancamentoORM->getEntidadeORM()->encontrarPorIdEntidade($idEntidadeAtual);
         return $entidade->getGrupo();
+    }
+    
+    /**
+     * Abri tela para lancamento de atendimento 
+     * @return ViewModel
+     */
+    public function atendimentoAction() {
+
+        return new ViewModel();
     }
 
 }

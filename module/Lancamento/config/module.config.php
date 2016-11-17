@@ -55,6 +55,7 @@ return array(
             'lancamento/lancamento/cadastrar-pessoa-revisao' => __DIR__ . '/../view/lancamento/cadastrar-pessoa-revisao.phtml',
             'lancamento/lancamento/ficha-revisao' => __DIR__ . '/../view/lancamento/ficha-revisao.phtml',
             'lancamento/lancamento/enviar-relatorio' => __DIR__ . '/../view/lancamento/enviar-relatorio.phtml',
+            'lancamento/lancamento/atendimento' => __DIR__ . '/../view/lancamento/atendimento.phtml',
             'layout/layout-js-lancamento' => __DIR__ . '/../view/layout/layout-js-lancamento.phtml',
             'layout/layout-js-lancamento-modal-eventos' => __DIR__ . '/../view/layout/layout-js-lancamento-modal-eventos.phtml',
             'layout/layout-js-cadastrar-pessoa' => __DIR__ . '/../view/layout/layout-js-cadastrar-pessoa.phtml',
