@@ -6,6 +6,7 @@ use Cadastro\Controller\Helper\ConstantesCadastro;
 use Entidade\Entity\GrupoAluno;
 use Login\Controller\Helper\Constantes;
 use Zend\Form\Element\Csrf;
+use Zend\Form\Element\Date;
 use Zend\Form\Element\Email;
 use Zend\Form\Element\Hidden;
 use Zend\Form\Element\Number;
@@ -220,6 +221,9 @@ class GrupoForm extends Form {
         $element = $this->get(ConstantesCadastro::$INPUT_ESTADO_CIVIL);
         $element->setLabelOptions(['disable_html_escape' => true]);
 
+        $funcaoBuscarCPF = str_replace('#cpf', 'this.value', ConstantesForm::$FORM_FUNCAO_BUSCAR_CPF);
+        $funcaoBuscarCPF = str_replace('#tipoCPF', 0, $funcaoBuscarCPF);
+        $funcaoBuscarCPF = str_replace('#dataNascimento', 0, $funcaoBuscarCPF);
         /* CPF */
         $this->add(
                 (new Number())
@@ -227,8 +231,24 @@ class GrupoForm extends Form {
                         ->setAttributes([
                             ConstantesForm::$FORM_CLASS => ConstantesForm::$FORM_CLASS_FORM_CONTROL,
                             ConstantesForm::$FORM_ID => ConstantesForm::$FORM_CPF,
-                            ConstantesForm::$FORM_ONBLUR => ConstantesForm::$FORM_FUNCAO_BUSCAR_CPF,
                             ConstantesForm::$FORM_PLACEHOLDER => ConstantesForm::$TRADUCAO_CPF,
+                            ConstantesForm::$FORM_ONBLUR => $funcaoBuscarCPF,
+                        ])
+        );
+
+
+        $funcaoBuscarCPFEDataNascimento = str_replace('#cpf', '$(\'#cpf\').val()', ConstantesForm::$FORM_FUNCAO_BUSCAR_CPF);
+        $funcaoBuscarCPFEDataNascimento = str_replace('#tipoCPF', 3, $funcaoBuscarCPFEDataNascimento);
+        $funcaoBuscarCPFEDataNascimento = str_replace('#dataNascimento', 'this.value', $funcaoBuscarCPFEDataNascimento);
+        /* Data de Nascimento */
+        $this->add(
+                (new Date())
+                        ->setName(ConstantesForm::$FORM_DATA_NASCIMENTO)
+                        ->setAttributes([
+                            ConstantesForm::$FORM_CLASS => ConstantesForm::$FORM_CLASS_FORM_CONTROL . ' ' . ConstantesForm::$FORM_CLASS_DATE,
+                            ConstantesForm::$FORM_ID => ConstantesForm::$FORM_DATA_NASCIMENTO,
+                            ConstantesForm::$FORM_PLACEHOLDER => '__/__/____',
+                            ConstantesForm::$FORM_ONBLUR => $funcaoBuscarCPFEDataNascimento,
                         ])
         );
 

@@ -45,11 +45,12 @@ class ConstantesForm {
     public static $FORM_CLASS = 'class';
     public static $FORM_CLASS_GUI_INPUT = 'gui-input';
     public static $FORM_CLASS_FORM_CONTROL = 'form-control';
+    public static $FORM_CLASS_DATE = 'date';
     public static $FORM_PLACEHOLDER = 'placeholder';
     public static $FORM_ONCLICK = 'onClick';
     public static $FORM_ONCHANGE = 'onChange';
     public static $FORM_FUNCAO_BUSCAR_CEP = 'buscarEndereco(document.getElementById(\'cep_logradouro\').value);';
-    public static $FORM_FUNCAO_BUSCAR_CPF = 'buscarCPF(this.value, 0);';
+    public static $FORM_FUNCAO_BUSCAR_CPF = 'buscarCPF(#cpf, #tipoCPF, #dataNascimento);';
     public static $FORM_FUNCAO_BUSCAR_EMAIL = 'buscarEmail(this.value);';
     public static $FORM_FUNCAO_VERIFICAR_EMAIL_IGUAL = 'verificarEmailIgual(this.value);';
     public static $FORM_FUNCAO_BUSCAR_POR_ENTER = 'return submitEnter(this, event)';
@@ -65,6 +66,7 @@ class ConstantesForm {
     public static $FORM_READONLY = 'readonly';
     public static $FORM_DISABLED = 'disabled';
     public static $FORM_SUBMIT = 'submit';
+    public static $FORM_TIPO = 'tipo';
 
     /* Formulario de Celulas */
     public static $STRING_DIV_CONFIRMACAO = 'divConfirmacao';
@@ -110,6 +112,7 @@ class ConstantesForm {
     public static $TRADUCAO_LOGRADOURO = 'Public Place';
     public static $TRADUCAO_NOME_HOSPEDEIRO = 'Name Host';
     public static $TRADUCAO_NOME = 'Name';
+    public static $TRADUCAO_DATA_NASCIMENTO = 'Date of Birth';
     public static $TRADUCAO_EQUIPES = 'Teams';
     public static $TRADUCAO_HOSPEDEIRO = 'Host';
     public static $TRADUCAO_ENDERECO = 'Address';
@@ -162,6 +165,8 @@ class ConstantesForm {
     public static $TRADUCAO_NUMERO_MAXIMO_CELULAS = 'Maximum number of cells reached!';
 
     /* Layout */
+    public static $LAYOUT_JS_GRUPO = 'layout/layout-js-grupo';
+    public static $LAYOUT_STRING_JS_GRUPO = 'layoutJSGrupo';
     public static $LAYOUT_JS_EVENTO = 'layout/layout-js-evento';
     public static $LAYOUT_STRING_JS_EVENTO = 'layoutJSEvento';
     public static $LAYOUT_JS_EVENTO_VALIDACAO = 'layout/layout-js-evento-validacao';

@@ -23,6 +23,7 @@ use Exception;
 use Lancamento\Controller\Helper\ConstantesLancamento;
 use Lancamento\Controller\Helper\LancamentoORM;
 use Login\Controller\Helper\Constantes;
+use Login\Controller\Helper\Funcoes;
 use Login\Controller\Helper\LoginORM;
 use Zend\Json\Json;
 use Zend\Mvc\Controller\AbstractActionController;
@@ -636,9 +637,13 @@ class CadastroController extends AbstractActionController {
         $arrayHierarquia = $repositorioORM->getHierarquiaORM()->encontrarTodos();
 
         $form = new GrupoForm(ConstantesForm::$FORM, $arrayGrupoAlunos, $arrayHierarquia);
+
         $view = new ViewModel(array(
             ConstantesForm::$FORM => $form
         ));
+        $layoutJS = new ViewModel();
+        $layoutJS->setTemplate(ConstantesForm::$LAYOUT_JS_GRUPO);
+        $view->addChild($layoutJS, ConstantesForm::$LAYOUT_STRING_JS_GRUPO);
         return $view;
     }
 
@@ -808,25 +813,38 @@ class CadastroController extends AbstractActionController {
                     $nomeDaPesquisa = $pessoaPesquisada->getNome();
                     $dataDeNascimentoDaPesquisa = $pessoaPesquisada->getData_nascimentoFormatada();
                 } else {
+                    $urlUsada = '';
+                    $tipoBusca = intval($post_data[ConstantesForm::$FORM_TIPO]);
                     /* Senão tem cadastro pesquisa no procob */
+                    if ($tipoBusca === 0 || $tipoBusca === 1 || $tipoBusca === 2) {
+                        $urlUsada = ConstantesCadastro::$PROCOB_URL . ConstantesCadastro::$PROCOB_URL_DADOS_PESSOAIS . $cpf;
+                    }
+                    if ($tipoBusca === 3) {
+                        $dataNascimento = str_replace('/', '', $post_data[ConstantesForm::$FORM_DATA_NASCIMENTO]);
+                        $urlUsada = ConstantesCadastro::$PROCOB_URL . ConstantesCadastro::$PROCOB_URL_RECEITA_FEDERAL . $cpf . '?dataNascimento=' . $dataNascimento;
+                    }
                     $curl = curl_init();
                     curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
                     curl_setopt($curl, CURLOPT_USERPWD, ConstantesCadastro::$PROCOB_USUARIO . ':' . ConstantesCadastro::$PROCOB_SENHA);
-                    curl_setopt($curl, CURLOPT_URL, ConstantesCadastro::$PROCOB_URL . ConstantesCadastro::$PROCOB_URL_DADOS_PESSOAIS . $cpf);
+                    curl_setopt($curl, CURLOPT_URL, $urlUsada);
                     curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
                     $result = curl_exec($curl);
                     curl_close($curl);
-
                     $result = str_replace('":"', '#', $result);
                     $result = str_replace('","', '#', $result);
                     $result = str_replace('"{"', '#', $result);
                     $result = str_replace('"}"', '#', $result);
                     $explodeResultado = explode('#', $result);
-
                     /* Sucesso */
                     if ($explodeResultado[1] === '000') {
-                        $nomeDaPesquisa = $explodeResultado[13];
-                        $dataDeNascimentoDaPesquisa = str_replace('\/', '/', $explodeResultado[15]);
+                        if ($tipoBusca === 0 || $tipoBusca === 1 || $tipoBusca === 2) {
+                            $nomeDaPesquisa = $explodeResultado[13];
+                            $dataDeNascimentoDaPesquisa = str_replace('\/', '/', $explodeResultado[15]);
+                        }
+                        if ($tipoBusca === 3) {
+                            $nomeDaPesquisa = $explodeResultado[9];
+                            $dataDeNascimentoDaPesquisa = str_replace('\/', '/', $explodeResultado[15]);
+                        }
                         $resposta = 1;
                     }
                 }
@@ -835,7 +853,7 @@ class CadastroController extends AbstractActionController {
                     'resposta' => $resposta,
                     'cpf' => $cpf,
                     'nome' => $nomeDaPesquisa,
-                    'dataNascimento' => $dataDeNascimentoDaPesquisa,
+                    'dataNascimento' => Funcoes::mudarPadraoData($dataDeNascimentoDaPesquisa, 1),
                 );
 
                 $response->setContent(Json::encode($dadosDeResposta));
