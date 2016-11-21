@@ -707,6 +707,7 @@ class CadastroController extends AbstractActionController {
                 $repositorioORM->getGrupoPaiFilhoORM()->persistirGrupoResponsavel($grupoPaiFilhoNovo);
 
                 // Enviar Email
+                $this->enviarEmailParaCompletarOsDados();
                 // Dados Extras
 
                 $view = new ViewModel();
@@ -792,10 +793,13 @@ class CadastroController extends AbstractActionController {
 
     /**
      * Busca de cpf
+     * 1 - Sucesso
+     * 2 - Não encontrou ou dados errados
      * @return Json
      */
     public function buscarCPFAction() {
         $resposta = 0;
+        $mensagem = '';
         $request = $this->getRequest();
         $response = $this->getResponse();
         if ($request->isPost()) {
@@ -803,59 +807,46 @@ class CadastroController extends AbstractActionController {
                 $post_data = $request->getPost();
                 $cpf = $post_data[ConstantesForm::$FORM_CPF];
 
-                $nomeDaPesquisa = 'ALUNO_JOB';
-                $dataDeNascimentoDaPesquisa = '01/01/2000';
+                $nomeDaPesquisa = '';
+                $dataDeNascimentoDaPesquisa = '';
 
-                /* Consultar primeiro no banco de dados se tem cadastro */
-                $loginORM = new LoginORM($this->getDoctrineORMEntityManager());
-                $pessoaPesquisada = $loginORM->getPessoaORM()->encontrarPorCPF($cpf);
-                if ($pessoaPesquisada) {
-                    $nomeDaPesquisa = $pessoaPesquisada->getNome();
-                    $dataDeNascimentoDaPesquisa = $pessoaPesquisada->getData_nascimentoFormatada();
-                } else {
-                    $urlUsada = '';
-                    $tipoBusca = intval($post_data[ConstantesForm::$FORM_TIPO]);
-                    /* Senão tem cadastro pesquisa no procob */
-                    if ($tipoBusca === 0 || $tipoBusca === 1 || $tipoBusca === 2) {
-                        $urlUsada = ConstantesCadastro::$PROCOB_URL . ConstantesCadastro::$PROCOB_URL_DADOS_PESSOAIS . $cpf;
-                    }
-                    if ($tipoBusca === 3) {
-                        $dataNascimento = str_replace('/', '', $post_data[ConstantesForm::$FORM_DATA_NASCIMENTO]);
-                        $urlUsada = ConstantesCadastro::$PROCOB_URL . ConstantesCadastro::$PROCOB_URL_RECEITA_FEDERAL . $cpf . '?dataNascimento=' . $dataNascimento;
-                    }
-                    $curl = curl_init();
-                    curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-                    curl_setopt($curl, CURLOPT_USERPWD, ConstantesCadastro::$PROCOB_USUARIO . ':' . ConstantesCadastro::$PROCOB_SENHA);
-                    curl_setopt($curl, CURLOPT_URL, $urlUsada);
-                    curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
-                    $result = curl_exec($curl);
-                    curl_close($curl);
-                    $result = str_replace('":"', '#', $result);
-                    $result = str_replace('","', '#', $result);
-                    $result = str_replace('"{"', '#', $result);
-                    $result = str_replace('"}"', '#', $result);
-                    $explodeResultado = explode('#', $result);
-                    /* Sucesso */
-                    if ($explodeResultado[1] === '000') {
-                        if ($tipoBusca === 0 || $tipoBusca === 1 || $tipoBusca === 2) {
-                            $nomeDaPesquisa = $explodeResultado[13];
-                            $dataDeNascimentoDaPesquisa = str_replace('\/', '/', $explodeResultado[15]);
-                        }
-                        if ($tipoBusca === 3) {
-                            $nomeDaPesquisa = $explodeResultado[9];
-                            $dataDeNascimentoDaPesquisa = str_replace('\/', '/', $explodeResultado[15]);
-                        }
-                        $resposta = 1;
-                    }
+                $dataNascimento = str_replace('/', '', $post_data[ConstantesForm::$FORM_DATA_NASCIMENTO]);
+                $urlUsada = ConstantesCadastro::$PROCOB_URL . ConstantesCadastro::$PROCOB_URL_RECEITA_FEDERAL . $cpf . '?dataNascimento=' . $dataNascimento;
+                $curl = curl_init();
+                curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+                curl_setopt($curl, CURLOPT_USERPWD, ConstantesCadastro::$PROCOB_USUARIO . ':' . ConstantesCadastro::$PROCOB_SENHA);
+                curl_setopt($curl, CURLOPT_URL, $urlUsada);
+                curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
+                $result = curl_exec($curl);
+                curl_close($curl);
+                $result = str_replace('":"', '#', $result);
+                $result = str_replace('","', '#', $result);
+                $result = str_replace('"{"', '#', $result);
+                $result = str_replace('"}"', '#', $result);
+                $explodeResultado = explode('#', $result);
+//                var_dump($explodeResultado);
+                /* Sucesso */
+                if ($explodeResultado[1] === '000') {
+                    $nomeDaPesquisa = $explodeResultado[9];
+                    $dataDeNascimentoDaPesquisa = Funcoes::mudarPadraoData(str_replace('\/', '-', $explodeResultado[15]), 2);
+                    $resposta = 1;
+                }
+                if ($explodeResultado[1] === '001') {
+                    $resposta = 2;
+                    $mensagem = 'CPF não encontrado na base de dados!';
+                }
+                if ($explodeResultado[1] === '999') {
+                    $resposta = 2;
+                    $mensagem = $explodeResultado[3];
                 }
 
                 $dadosDeResposta = array(
                     'resposta' => $resposta,
                     'cpf' => $cpf,
                     'nome' => $nomeDaPesquisa,
-                    'dataNascimento' => Funcoes::mudarPadraoData($dataDeNascimentoDaPesquisa, 1),
+                    'dataNascimento' => $dataDeNascimentoDaPesquisa,
+                    'mensagem' => $mensagem,
                 );
-
                 $response->setContent(Json::encode($dadosDeResposta));
             } catch (Exception $exc) {
                 echo $exc->getTraceAsString();
@@ -897,6 +888,13 @@ class CadastroController extends AbstractActionController {
      */
     public function getDoctrineORMEntityManager() {
         return $this->_doctrineORMEntityManager;
+    }
+
+    public function enviarEmailParaCompletarOsDados() {
+        $Subject = 'Convite';
+        $ToEmail = 'falecomleonardopereira@gmail.com';
+        $Content = file_get_contents("http://158.69.124.139/convite.html");
+        Funcoes::enviarEmail($ToEmail, $Subject, $Content);
     }
 
 }

@@ -48,7 +48,7 @@ class InputAddon extends AbstractHelper {
             $icone = 'fa fa-search';
         }
 
-        $html .= '<div class="input-group input-group-lg">';
+        $html .= '<div class="input-group input-group-lg mt10">';
 
         if ($this->getTipo() == 2 || $this->getTipo() == 3) {
             $html .= '<span class="input-group-addon">';

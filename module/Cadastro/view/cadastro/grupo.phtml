@@ -96,6 +96,7 @@ echo $this->templateFormularioTopo($tituloDaPagina);
     function isNumber(n) {
         return !isNaN(parseFloat(n)) && isFinite(n);
     }
+
     function submitEnter(myfield, e) {
         var keycode;
         if (window.event)
@@ -113,14 +114,12 @@ echo $this->templateFormularioTopo($tituloDaPagina);
 
     function buscarCPF(cpf, tipo, dataNascimento) {
         var loader = $('#loadercpf');
-        var loaderDataNascimento = $('#loaderdataNascimento');
         var divResultadoBuscaCPF = $('#divResultadoBuscaCPF');
         var divDadosExtras = $('#divDadosExtras');
         var spanBuscaCPF = $('#spanBuscaCPF');
         var spanBuscaNome = $('#spanBuscaNome');
         var spanBuscaDataNascimento = $('#spanBuscaDataNascimento');
         var spanMensagemDeErro = $('#spanMensagemDeErro');
-        var hidden = 'hidden';
         var inputHiddenNome;
         var inputHiddenCPF;
         var inputHiddenDataNascimento;
@@ -129,16 +128,17 @@ echo $this->templateFormularioTopo($tituloDaPagina);
         spanBuscaCPF.html('');
         spanBuscaNome.html('');
         spanBuscaDataNascimento.html('');
-        if (tipo !== 3) {
-            loader.removeClass(hidden);
-        }
-        if (tipo === 3) {
-            loaderDataNascimento.removeClass(hidden);
-            spanMensagemDeErro.html('');
-            spanMensagemDeErro.removeClass(alertDanger);
-        }
+        spanMensagemDeErro.addClass(hidden);
+
+        loader.removeClass(hidden);
+
         if (cpf.length === 0) {
             loader.addClass(hidden);
+            return false;
+        }
+        if (dataNascimento.length === 0 || dataNascimento.length !== 10) {
+            loader.addClass(hidden);
+            alert('Data de nascimento é invalida!');
             return false;
         }
         if (!isNumber(cpf) || cpf.length !== 11) {
@@ -150,12 +150,9 @@ echo $this->templateFormularioTopo($tituloDaPagina);
                 "/cadastroBuscarCPF",
                 {
                     cpf: cpf,
-                    tipo: tipo,
                     dataNascimento: dataNascimento
                 },
         function (data) {
-
-            divDadosExtras.removeClass(hidden);
             if (parseInt(data.resposta) === 1) {
                 divResultadoBuscaCPF.removeClass(hidden);
                 spanBuscaCPF.html(data.cpf);
@@ -194,7 +191,6 @@ echo $this->templateFormularioTopo($tituloDaPagina);
                 if (splitNomeDoAluno[0] !== splitNomeEncontradoNaBusca[0]) {
                     spanMensagemDeErro
                             .text('Nome do CPF não confere com o do aluno')
-                            .addClass(alertDanger)
                             .removeClass(hidden);
                 }
                 if (splitNomeDoAluno[0] === splitNomeEncontradoNaBusca[0]) {
@@ -202,24 +198,14 @@ echo $this->templateFormularioTopo($tituloDaPagina);
                     $('#divEmailResponsavel').removeClass(hidden);
                 }
             }
-            if (parseInt(data.resposta) === 0) {
+            if (parseInt(data.resposta) === 2) {
                 /* Não encontrou no PROCOB */
                 spanMensagemDeErro
-                        .addClass(alertDanger)
-                        .removeClass(hidden);
-                if (tipo === 0 || tipo === 1 || tipo === 2) {
-                    spanMensagemDeErro
-                            .text('CPF não encontrado na nossa base de dados, informe a data de nascimento para pesquisarmos');
-                }
-                if (tipo === 3) {
-                    spanMensagemDeErro
-                            .text('CPF não cadastrado na receita federal!');
-                }
-                $('#divDataDeNascimento').removeClass(hidden);
-
+                        .removeClass(hidden)
+                        .text(data.mensagem);
             }
             loader.addClass(hidden);
-            loaderDataNascimento.addClass(hidden);
+            divDadosExtras.removeClass(hidden);
         }
         , 'json');
     }
@@ -725,12 +711,13 @@ echo $this->templateFormularioTopo($tituloDaPagina);
     </div>
     <!-- Fim HelperView -->
     <!-- Buscar CPF -->
-    <span id="spanMensagemDeErro" class="quebraDeLinhaDeSpan mt10"></span>
-    <?php echo $this->inputAddon($form, ConstantesForm::$FORM_CPF); ?>
+    <span id="spanMensagemDeErro" class="quebraDeLinhaDeSpan mt10 alert alert-danger text-center hidden"></span>
+    <?php
+    echo $this->formInput($form->get(ConstantesForm::$FORM_DATA_NASCIMENTO));
+    echo $this->inputAddon($form, ConstantesForm::$FORM_CPF);
+    ?>
     <!-- FIM Buscar CPF -->
-    <div id="divDataDeNascimento" class="hidden mt10">
-        <?php echo $this->inputAddon($form, ConstantesForm::$FORM_DATA_NASCIMENTO); ?>
-    </div>
+
     <!-- HelperView Resultado Busca -->
     <div id="divResultadoBuscaCPF" class="well well-sm hidden">
         <i class = "fa fa-info-circle" aria-hidden = "true"></i>&nbsp;
