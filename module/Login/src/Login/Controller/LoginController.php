@@ -280,17 +280,12 @@ class LoginController extends AbstractActionController {
                     if ($idTipo == 1) {
                         $mensagemOriginal = $this->getTranslator()->translate(Constantes::$TRADUCAO_EMAIL_MENSAGEM_RECUPERAR_SENHA);
                         $mensagemComEmail = str_replace('#email', $email, $mensagemOriginal);
-                        $timeNow = new DateTime();
-
-                        $dataEnvio = $timeNow->format('Ymd');
-                        $hora = $timeNow->format('His');
-                        $token = md5($dataEnvio . $hora);
-
+                        $tokenDeAgora = $pessoa->gerarToken();
                         /* Persistir pessoa */
-                        $pessoa->setToken($token);
+                        $pessoa->setToken($tokenDeAgora);
                         $loginORM->getPessoaORM()->persistirPessoa($pessoa);
 
-                        $mensagemAjustada = str_replace('#id', $token, $mensagemComEmail);
+                        $mensagemAjustada = str_replace('#id', $tokenDeAgora, $mensagemComEmail);
                         Funcoes::enviarEmail($email, $this->getTranslator()->translate(Constantes::$TRADUCAO_EMAIL_TITULO_RECUPERAR_SENHA), $mensagemAjustada);
 
                         /* Redirecionamento */
@@ -421,13 +416,10 @@ class LoginController extends AbstractActionController {
             /* Responsabilidades */
             $responsabilidadesAtivas = $pessoa->getResponsabilidadesAtivas();
             if ($responsabilidadesAtivas) {
-                if (count($responsabilidadesAtivas) == 1) {
+                if (count($responsabilidadesAtivas) === 1) {
                     $sessao->idEntidadeAtual = $responsabilidadesAtivas[0]->getId();
-
                     /* Redirecionamento */
-                    return $this->forward()->dispatch(Constantes::$CONTROLLER_PRINCIPAL, array(
-                                Constantes::$ACTION => Constantes::$ACTION_PRINCIPAL,
-                    ));
+                    return $this->redirect()->toRoute(Constantes::$ACTION_PRINCIPAL);
                 }
 
                 $view = new ViewModel(array(Constantes::$RESPONSABILIDADES => $responsabilidadesAtivas));

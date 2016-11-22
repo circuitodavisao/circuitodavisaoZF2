@@ -10,6 +10,7 @@ use Cadastro\Form\CelulaForm;
 use Cadastro\Form\ConstantesForm;
 use Cadastro\Form\EventoForm;
 use Cadastro\Form\GrupoForm;
+use DateTime;
 use Doctrine\ORM\EntityManager;
 use Entidade\Entity\Entidade;
 use Entidade\Entity\Evento;
@@ -78,6 +79,11 @@ class CadastroController extends AbstractActionController {
         if ($pagina == ConstantesCadastro::$PAGINA_GRUPO_FINALIZAR) {
             return $this->forward()->dispatch(ConstantesCadastro::$CONTROLLER_CADASTRO, array(
                         Constantes::$ACTION => ConstantesCadastro::$PAGINA_GRUPO_FINALIZAR,
+            ));
+        }
+        if ($pagina == ConstantesCadastro::$PAGINA_GRUPO_ATIVAR) {
+            return $this->forward()->dispatch(ConstantesCadastro::$CONTROLLER_CADASTRO, array(
+                        Constantes::$ACTION => ConstantesCadastro::$PAGINA_GRUPO_ATIVAR,
             ));
         }
         if ($pagina == ConstantesCadastro::$PAGINA_EVENTO_CULTO_PERSISTIR) {
@@ -666,6 +672,8 @@ class CadastroController extends AbstractActionController {
                 $matricula = $post_data[ConstantesForm::$FORM_ID_ALUNO_SELECIONADO . $stringZero];
                 $turmaAluno = $repositorioORM->getTurmaAlunoORM()->encontrarPorIdTurmaAluno($matricula);
                 $pessoaSelecionada = $turmaAluno->getPessoa();
+                $tokenDeAgora = $pessoaSelecionada->gerarToken();
+                $pessoaSelecionada->setToken($tokenDeAgora);
                 $pessoaAtualizada = $loginORM->getPessoaORM()->
                         atualizarAlunoComDadosDaBuscaPorCPF($pessoaSelecionada, $post_data);
 
@@ -707,7 +715,7 @@ class CadastroController extends AbstractActionController {
                 $repositorioORM->getGrupoPaiFilhoORM()->persistirGrupoResponsavel($grupoPaiFilhoNovo);
 
                 // Enviar Email
-                $this->enviarEmailParaCompletarOsDados();
+                $this->enviarEmailParaCompletarOsDados($tokenDeAgora);
                 // Dados Extras
 
                 $view = new ViewModel();
@@ -890,10 +898,12 @@ class CadastroController extends AbstractActionController {
         return $this->_doctrineORMEntityManager;
     }
 
-    public function enviarEmailParaCompletarOsDados() {
+    public function enviarEmailParaCompletarOsDados($tokenDeAgora) {
         $Subject = 'Convite';
         $ToEmail = 'falecomleonardopereira@gmail.com';
-        $Content = file_get_contents("http://158.69.124.139/convite.html");
+        $avatar = 'placeholder.png';
+        $nomeLider = 'LeonardoPereiraMagalhães';
+        $Content = file_get_contents("http://158.69.124.139/convite.php?nomeLider=$nomeLider&avatar=$avatar&token=$tokenDeAgora");
         Funcoes::enviarEmail($ToEmail, $Subject, $Content);
     }
 

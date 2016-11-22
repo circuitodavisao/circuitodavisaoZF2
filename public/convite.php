@@ -1,3 +1,11 @@
+<?php
+$stringNomeLider = 'nomeLider';
+$stringAvatar = 'avatar';
+$stringToken = 'token';
+$nomeLider = (string) \filter_input(\INPUT_GET, $stringNomeLider);
+$avatar = (string) \filter_input(\INPUT_GET, $stringAvatar);
+$token = (string) \filter_input(\INPUT_GET, $stringToken);
+?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
@@ -216,9 +224,8 @@
                     height: 0 !important;
                 }
 
-                td[class*="mobile-header-padding-left"] {
+                td[class*="mobile-header"] {
                     width: 160px !important;
-                    padding-left: 0 !important;
                 }
 
                 td[class*="mobile-header-padding-right"] {
@@ -307,20 +314,15 @@
                                 <td width="100%" height="80" valign="top" style="text-align: center; vertical-align:middle;">
                                     <!--[if gte mso 9]>
                                     <v:rect xmlns:v="urn:schemas-microsoft-com:vml" fill="true" stroke="false" style="mso-width-percent:1000;height:80px; v-text-anchor:middle;">
-                                      <v:fill type="tile" src="http://s3.amazonaws.com/swu-filepicker/4E687TRe69Ld95IDWyEg_bg_top_02.jpg" color="#ffffff" />
+                                      <v:fill type="tile" src="158.69.124.139/img/logos/new_logo-circuito.png" color="#ffffff" />
                                       <v:textbox inset="0,0,0,0">
                                     <![endif]-->
                                     <center>
                                         <table cellpadding="0" cellspacing="0" width="600" class="w320">
                                             <tr>
-                                                <td class="pull-left mobile-header-padding-left" style="vertical-align: middle;">
-                                                    <a href=""><img src="https://www.circuitodavisao.com.br/visao/imagens/logo_circuito_hd.png" alt="logo" /></a>
-                                                </td>
-                                                <td class="pull-right mobile-header-padding-right" style="color: #4d4d4d;">
-                                                    <a href=""><img width="40" height="47" src="img/social-twitter.png" alt="twitter" /></a>
-                                                    <a href=""><img width="40" height="47" src="img/social-fb.png" alt="facebook" /></a>
-                                                    <a href=""><img width="40" height="47" src="img/social-feed.png" alt="rss" /></a>
-                                                </td>
+                                                <td class="mobile-header" style="vertical-align: middle;">
+                                                    <a href=""><img src="158.69.124.139/img/logos/new_logo-circuito.png" alt="logo" /></a>
+                                                </td>                                              
                                             </tr>
                                         </table>
                                     </center>
@@ -345,7 +347,7 @@
                             </tr>
                             <tr>
                                 <td class="free-text">
-                                    <span><a href="">@LeonardoPereira</a></span> convidou você para participar do Circuito da Visão!
+                                    <span><a href="">@<?php echo $nomeLider; ?></a></span> convidou você para participar do Circuito da Visão!
                                 </td>
                             </tr>
                             <tr>
@@ -359,8 +361,8 @@
                                                             <table cellspacing="0" cellpadding="0" width="100%">
                                                                 <tr>
                                                                     <td class="user-img">
-                                                                        <a href=""><img class="user-img" src="https://www.circuitodavisao.com.br/visao/fotoPerfil/phpPebYL4.jpeg" alt="user img" /></a>
-                                                                        <br /><a href="">@LeonardoPereira</a>
+                                                                        <a href=""><img class="user-img" src="158.69.124.139/img/avatars/<?php echo $avatar; ?>" alt="user img" /></a>
+                                                                        <br /><a href="">@<?php echo $nomeLider; ?></a>
                                                                     </td>
                                                                 </tr>
                                                                 <tr>
@@ -378,7 +380,7 @@
                                                                     <w:anchorlock/>
                                                                     <center style="color:#ffffff;font-family:Helvetica, Arial, sans-serif;font-size:14px;font-weight:regular;">Sign Up</center>
                                                                   </v:roundrect>
-                                                                <![endif]--><a href="http://"
+                                                                <![endif]--><a href="158.69.124.139/recuperarSenha/<?php echo $token; ?>"
                                                                                    style="background-color:#e9573f;border-radius:5px;color:#ffffff;display:inline-block;font-family:'Cabin', Helvetica, Arial, sans-serif;font-size:14px;font-weight:regular;line-height:45px;text-align:center;text-decoration:none;width:155px;-webkit-text-size-adjust:none;mso-hide:all;">Ativar Cadastro</a></div>
                                                             </td>
                                                         </tr>

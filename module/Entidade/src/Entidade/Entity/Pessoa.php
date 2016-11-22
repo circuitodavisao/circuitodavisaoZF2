@@ -104,11 +104,13 @@ class Pessoa implements InputFilterAwareInterface {
     /** @ORM\Column(type="string") */
     protected $data_revisao;
 
+    /** @ORM\Column(type="string") */
+    protected $foto;
+
     public function exchangeArray($data) {
         $this->nome = (!empty($data['nome']) ? strtoupper($data['nome']) : null);
     }
 
-    protected $foto;
     protected $tipo;
     protected $transferido;
     protected $dataTransferido;
@@ -307,7 +309,7 @@ class Pessoa implements InputFilterAwareInterface {
     }
 
     function setEmail($email) {
-        $this->email = $email;
+        $this->email = strtolower($email);
     }
 
     function setSenha($senha) {
@@ -343,6 +345,18 @@ class Pessoa implements InputFilterAwareInterface {
         $timeNow = new DateTime();
         $this->setToken_data($timeNow->format('Y-m-d'));
         $this->setToken_hora($timeNow->format('H:s:i'));
+    }
+
+    /**
+     * Gera um token com data e hora atual em md5
+     * @return String
+     */
+    function gerarToken() {
+        $timeNow = new DateTime();
+        $dataEnvio = $timeNow->format('Ymd');
+        $hora = $timeNow->format('His');
+        $token = md5($dataEnvio . $hora);
+        return $token;
     }
 
     function getToken_data() {
@@ -441,6 +455,10 @@ class Pessoa implements InputFilterAwareInterface {
         $this->tipo = $tipo;
     }
 
+    /**
+     * Retorna a string com o nome do arquivo da foto.
+     * @return String
+     */
     function getFoto() {
         return $this->foto;
     }

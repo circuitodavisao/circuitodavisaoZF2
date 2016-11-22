@@ -26,6 +26,10 @@ class Menu extends AbstractHelper {
 
     public function renderHtml() {
         $html = '';
+        $stringFoto = $this->view->pessoa->getFoto();
+        if (empty($stringFoto)) {
+            $stringFoto = 'placeholder.png';
+        }
         // Start: Header 
         $html .= '<header class="navbar navbar-fixed-top">';
         $html .= '<div class="navbar-branding">';
@@ -37,7 +41,7 @@ class Menu extends AbstractHelper {
         $html .= '<ul class="nav navbar-nav navbar-right">';
         $html .= '<li class="dropdown menu-merge">';
         $html .= '<a href="#" class="dropdown-toggle fw600 p15" data-toggle="dropdown">';
-        $html .= '<img src="/img/avatars/diego-kort.jpg" alt="' . $this->view->pessoa->getNomePrimeiroUltimo() . '" class="mw30 br64">';
+        $html .= '<img src="/img/avatars/' . $stringFoto . '" alt="' . $this->view->pessoa->getNomePrimeiroUltimo() . '" class="mw30 br64">';
         $html .= '<span class="pl15">' . $this->view->pessoa->getNomePrimeiroUltimo() . '</span>';
         $html .= '<span class="caret caret-tp"></span>';
         $html .= '</a>';
@@ -80,13 +84,13 @@ class Menu extends AbstractHelper {
         $html .= '<div class="sidebar-widget author-widget">';
         $html .= '<div class="media">';
         $html .= '<a class="media-left" href="#">';
-        $html .= '<img src="/img/avatars/diego-kort.jpg" class="img-responsive">';
+        $html .= '<img src="/img/avatars/' . $stringFoto . '" class="img-responsive">';
         $html .= '</a>';
         $html .= '<div class="media-body">';
         $html .= '<div class="media-links">';
-        $html .= '<a href="#" class="sidebar-menu-toggle">User Menu -</a> <a href="pages_login(alt).html">Logout</a>';
+        $html .= '<a href="#" class="sidebar-menu-toggle">Menu do Usuário</a> - <a href="/preSaida">Sair</a>';
         $html .= '</div>';
-        $html .= '<div class="media-author">Michael Richards</div>';
+        $html .= '<div class="media-author">' . $this->view->pessoa->getNome() . '</div>';
         $html .= '</div>';
         $html .= '</div>';
         $html .= '</div>';
@@ -102,34 +106,34 @@ class Menu extends AbstractHelper {
         $html .= '<span class="sidebar-title">Cadastrar</span>';
         $html .= '<span class="caret"></span>';
         $html .= '</a>';
-        
+
         $html .= '<ul class="nav sub-nav">';
-        
+
         $html .= '<li>';
         $html .= '<a href="/cadastroCelulas">';
         $html .= '<span class="fa fa-users"></span>';
         $html .= 'Células';
         $html .= '</a>';
         $html .= '</li>';
-        
+
         $html .= '<li>';
         $html .= '<a href="/cadastroCultos">';
         $html .= '<span class="fa fa-users"></span>';
         $html .= 'Cultos';
         $html .= '</a>';
         $html .= '</li>';
-        
+
         $html .= '<li>';
         $html .= '<a href="/cadastroGrupo">';
         $html .= '<span class="fa fa-users"></span>';
         $html .= 'Grupo';
         $html .= '</a>';
         $html .= '</li>';
-        
+
         $html .= '</ul>';
-        
+
         $html .= '</li>';
-        
+
         $html .= '<li>';
         $html .= '<a class="accordion-toggle" href="#">';
         $html .= '<span class="fa fa-pencil"></span>';
@@ -141,6 +145,12 @@ class Menu extends AbstractHelper {
         $html .= '<a href="/lancamento">';
         $html .= '<span class="fa fa-terminal"></span>';
         $html .= 'Arregimentação';
+        $html .= '</a>';
+        $html .= '</li>';
+        $html .= '<li>';
+        $html .= '<a href="/lancamentoAtendimento">';
+        $html .= '<span class="fa fa-terminal"></span>';
+        $html .= 'Atendimento';
         $html .= '</a>';
         $html .= '</li>';
         $html .= '</ul>';
