@@ -2,6 +2,7 @@
 
 namespace Login\Controller;
 
+use Cadastro\Controller\Helper\ConstantesCadastro;
 use DateTime;
 use Doctrine\ORM\EntityManager;
 use Exception;
@@ -419,7 +420,8 @@ class LoginController extends AbstractActionController {
                 if (count($responsabilidadesAtivas) === 1) {
                     $sessao->idEntidadeAtual = $responsabilidadesAtivas[0]->getId();
                     /* Redirecionamento */
-                    return $this->redirect()->toRoute(Constantes::$ACTION_PRINCIPAL);
+
+                    return $this->redirect()->toRoute(ConstantesCadastro::$ROUTE_CADASTRO, array(ConstantesCadastro::$PAGINA => ConstantesCadastro::$PAGINA_GRUPO_ATUALIZAR,));
                 }
 
                 $view = new ViewModel(array(Constantes::$RESPONSABILIDADES => $responsabilidadesAtivas));

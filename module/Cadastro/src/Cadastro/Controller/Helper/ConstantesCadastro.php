@@ -19,7 +19,7 @@ class ConstantesCadastro {
     public static $PAGINA_EVENTO = 'Evento';
     public static $PAGINA_GRUPO = 'Grupo';
     public static $PAGINA_GRUPO_FINALIZAR = 'GrupoFinalizar';
-    public static $PAGINA_GRUPO_ATIVAR = 'GrupoAtivar';
+    public static $PAGINA_GRUPO_ATUALIZAR = 'GrupoAtualizar';
     public static $PAGINA_GRUPO_EMAIL_ENVIADO = 'GrupoEmailEnviado';
     public static $PAGINA_EVENTO_CELULA_PERSISTIR = 'EventoCelulaPersistir';
     public static $PAGINA_EVENTO_CULTO_PERSISTIR = 'EventoCultoPersistir';

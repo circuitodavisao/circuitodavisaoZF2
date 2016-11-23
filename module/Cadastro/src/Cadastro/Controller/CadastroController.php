@@ -81,9 +81,9 @@ class CadastroController extends AbstractActionController {
                         Constantes::$ACTION => ConstantesCadastro::$PAGINA_GRUPO_FINALIZAR,
             ));
         }
-        if ($pagina == ConstantesCadastro::$PAGINA_GRUPO_ATIVAR) {
+        if ($pagina == ConstantesCadastro::$PAGINA_GRUPO_ATUALIZAR) {
             return $this->forward()->dispatch(ConstantesCadastro::$CONTROLLER_CADASTRO, array(
-                        Constantes::$ACTION => ConstantesCadastro::$PAGINA_GRUPO_ATIVAR,
+                        Constantes::$ACTION => ConstantesCadastro::$PAGINA_GRUPO_ATUALIZAR,
             ));
         }
         if ($pagina == ConstantesCadastro::$PAGINA_EVENTO_CULTO_PERSISTIR) {
@@ -724,6 +724,14 @@ class CadastroController extends AbstractActionController {
                 $this->direcionaErroDeCadastro($exc->getMessage());
             }
         }
+    }
+
+    /**
+     * Tela com atualização de cadastro de grupo
+     * GET /cadastroGrupoAtualizar
+     */
+    public function grupoAtualizarAction() {
+        return new ViewModel();
     }
 
     /**
