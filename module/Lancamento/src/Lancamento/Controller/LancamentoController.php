@@ -107,6 +107,11 @@ class LancamentoController extends AbstractActionController {
                         Constantes::$ACTION => ConstantesLancamento::$PAGINA_ATENDIMENTO,
             ));
         }
+        if ($pagina == ConstantesLancamento::$PAGINA_LANCAR_ATENDIMENTO) {
+            return $this->forward()->dispatch(ConstantesLancamento::$CONTROLLER_LANCAMENTO, array(
+                        Constantes::$ACTION => ConstantesLancamento::$PAGINA_LANCAR_ATENDIMENTO,
+            ));
+        }
         /* Funcoes */
         if ($pagina == ConstantesLancamento::$PAGINA_FUNCOES) {
             /* Registro de sessão com o id passado na função */
@@ -545,10 +550,18 @@ class LancamentoController extends AbstractActionController {
     }
     
     /**
-     * Abri tela para lancamento de atendimento 
+     * Abri tela para relatorio de atendimento 
      * @return ViewModel
      */
     public function atendimentoAction() {
+
+        return new ViewModel();
+    }
+    /**
+     * Abri tela para lancamento de atendimento 
+     * @return ViewModel
+     */
+    public function lancarAtendimentoAction() {
 
         return new ViewModel();
     }

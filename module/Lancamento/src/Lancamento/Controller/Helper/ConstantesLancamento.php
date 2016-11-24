@@ -46,6 +46,7 @@ class ConstantesLancamento {
     public static $ROUTE_LANCAMENTO = 'lancamento';
     public static $PAGINA_SALVAR_PESSOA = 'SalvarPessoa';
     public static $PAGINA_ATENDIMENTO = 'Atendimento'; 
+    public static $PAGINA_LANCAR_ATENDIMENTO = 'LancarAtendimento'; 
     public static $ONCLICK_ABRIR_MODAL = 'onclick="abrirModal();"';
     public static $PAGINA = 'pagina';
     public static $PAGINA_CADASTRAR_PESSOA = 'CadastrarPessoa';
