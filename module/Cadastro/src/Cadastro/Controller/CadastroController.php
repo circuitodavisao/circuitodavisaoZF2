@@ -662,61 +662,61 @@ class CadastroController extends AbstractActionController {
         $stringZero = '0';
         if ($request->isPost()) {
             try {
-                $post_data = $request->getPost();
-                $loginORM = new LoginORM($this->getDoctrineORMEntityManager());
-                $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
-                $lancamentoORM = new LancamentoORM($this->getDoctrineORMEntityManager());
-
-                /* Solteiro */
-                /* Alterar dados do aluno */
-                $matricula = $post_data[ConstantesForm::$FORM_ID_ALUNO_SELECIONADO . $stringZero];
-                $turmaAluno = $repositorioORM->getTurmaAlunoORM()->encontrarPorIdTurmaAluno($matricula);
-                $pessoaSelecionada = $turmaAluno->getPessoa();
-                $tokenDeAgora = $pessoaSelecionada->gerarToken();
-                $pessoaSelecionada->setToken($tokenDeAgora);
-                $pessoaAtualizada = $loginORM->getPessoaORM()->
-                        atualizarAlunoComDadosDaBuscaPorCPF($pessoaSelecionada, $post_data);
-
-                /* Criar hierarquia */
-                $idHierarquia = $post_data[ConstantesForm::$FORM_HIERARQUIA . $stringZero];
-                $hierarquia = $repositorioORM->getHierarquiaORM()->encontrarPorIdHierarquia($idHierarquia);
-                $pessoaHierarquia = new PessoaHierarquia();
-                $pessoaHierarquia->setPessoa($pessoaAtualizada);
-                $pessoaHierarquia->setHierarquia($hierarquia);
-                $repositorioORM->getPessoaHierarquiaORM()->persistirPessoaHierarquia($pessoaHierarquia);
-
-                /* Criar Grupo */
-                $grupoNovo = new Grupo();
-                $lancamentoORM->getGrupoORM()->persistirGrupo($grupoNovo);
-
-                /* Entidade abaixo do perfil selecionado/logado */
-                $entidadeNova = new Entidade();
-                $entidadeNova->setEntidadeTipo(
-                        $repositorioORM->getEntidadeTipoORM()->encontrarPorIdEntidade(8)
-                );
-                $entidadeNova->setGrupo($grupoNovo);
-                $entidadeNova->setNumero($post_data[ConstantesForm::$FORM_NUMERACAO]);
-                $lancamentoORM->getEntidadeORM()->persistirEntidade($entidadeNova);
-
-                /* Criar Grupo_Responsavel */
-                $grupoResponsavelNovo = new GrupoResponsavel();
-                $grupoResponsavelNovo->setPessoa($pessoaAtualizada);
-                $grupoResponsavelNovo->setGrupo($grupoNovo);
-                $repositorioORM->getGrupoResponsavelORM()->persistirGrupoResponsavel($grupoResponsavelNovo);
-
-                /* Criar Grupo_Pai_Filho */
-                $sessao = new Container(Constantes::$NOME_APLICACAO);
-                $idEntidadeAtual = $sessao->idEntidadeAtual;
-                $entidade = $lancamentoORM->getEntidadeORM()->encontrarPorIdEntidade($idEntidadeAtual);
-                $grupoAtualSelecionado = $entidade->getGrupo();
-                $grupoPaiFilhoNovo = new GrupoPaiFilho();
-                $grupoPaiFilhoNovo->setGrupoPaiFilhoPai($grupoAtualSelecionado);
-                $grupoPaiFilhoNovo->setGrupoPaiFilhoFilho($grupoNovo);
-                $repositorioORM->getGrupoPaiFilhoORM()->persistirGrupoResponsavel($grupoPaiFilhoNovo);
-
-                // Enviar Email
-                $this->enviarEmailParaCompletarOsDados($tokenDeAgora);
-                // Dados Extras
+//                $post_data = $request->getPost();
+//                $loginORM = new LoginORM($this->getDoctrineORMEntityManager());
+//                $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
+//                $lancamentoORM = new LancamentoORM($this->getDoctrineORMEntityManager());
+//
+//                /* Solteiro */
+//                /* Alterar dados do aluno */
+//                $matricula = $post_data[ConstantesForm::$FORM_ID_ALUNO_SELECIONADO . $stringZero];
+//                $turmaAluno = $repositorioORM->getTurmaAlunoORM()->encontrarPorIdTurmaAluno($matricula);
+//                $pessoaSelecionada = $turmaAluno->getPessoa();
+//                $tokenDeAgora = $pessoaSelecionada->gerarToken();
+//                $pessoaSelecionada->setToken($tokenDeAgora);
+//                $pessoaAtualizada = $loginORM->getPessoaORM()->
+//                        atualizarAlunoComDadosDaBuscaPorCPF($pessoaSelecionada, $post_data);
+//
+//                /* Criar hierarquia */
+//                $idHierarquia = $post_data[ConstantesForm::$FORM_HIERARQUIA . $stringZero];
+//                $hierarquia = $repositorioORM->getHierarquiaORM()->encontrarPorIdHierarquia($idHierarquia);
+//                $pessoaHierarquia = new PessoaHierarquia();
+//                $pessoaHierarquia->setPessoa($pessoaAtualizada);
+//                $pessoaHierarquia->setHierarquia($hierarquia);
+//                $repositorioORM->getPessoaHierarquiaORM()->persistirPessoaHierarquia($pessoaHierarquia);
+//
+//                /* Criar Grupo */
+//                $grupoNovo = new Grupo();
+//                $lancamentoORM->getGrupoORM()->persistirGrupo($grupoNovo);
+//
+//                /* Entidade abaixo do perfil selecionado/logado */
+//                $entidadeNova = new Entidade();
+//                $entidadeNova->setEntidadeTipo(
+//                        $repositorioORM->getEntidadeTipoORM()->encontrarPorIdEntidade(8)
+//                );
+//                $entidadeNova->setGrupo($grupoNovo);
+//                $entidadeNova->setNumero($post_data[ConstantesForm::$FORM_NUMERACAO]);
+//                $lancamentoORM->getEntidadeORM()->persistirEntidade($entidadeNova);
+//
+//                /* Criar Grupo_Responsavel */
+//                $grupoResponsavelNovo = new GrupoResponsavel();
+//                $grupoResponsavelNovo->setPessoa($pessoaAtualizada);
+//                $grupoResponsavelNovo->setGrupo($grupoNovo);
+//                $repositorioORM->getGrupoResponsavelORM()->persistirGrupoResponsavel($grupoResponsavelNovo);
+//
+//                /* Criar Grupo_Pai_Filho */
+//                $sessao = new Container(Constantes::$NOME_APLICACAO);
+//                $idEntidadeAtual = $sessao->idEntidadeAtual;
+//                $entidade = $lancamentoORM->getEntidadeORM()->encontrarPorIdEntidade($idEntidadeAtual);
+//                $grupoAtualSelecionado = $entidade->getGrupo();
+//                $grupoPaiFilhoNovo = new GrupoPaiFilho();
+//                $grupoPaiFilhoNovo->setGrupoPaiFilhoPai($grupoAtualSelecionado);
+//                $grupoPaiFilhoNovo->setGrupoPaiFilhoFilho($grupoNovo);
+//                $repositorioORM->getGrupoPaiFilhoORM()->persistirGrupoResponsavel($grupoPaiFilhoNovo);
+//
+//                // Enviar Email
+//                $this->enviarEmailParaCompletarOsDados($tokenDeAgora);
+//                // Dados Extras
 
                 $view = new ViewModel();
                 return $view;

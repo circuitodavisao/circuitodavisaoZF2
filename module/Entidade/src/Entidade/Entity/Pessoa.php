@@ -107,6 +107,9 @@ class Pessoa implements InputFilterAwareInterface {
     /** @ORM\Column(type="string") */
     protected $foto;
 
+    /** @ORM\Column(type="string") */
+    protected $sexo;
+
     public function exchangeArray($data) {
         $this->nome = (!empty($data['nome']) ? strtoupper($data['nome']) : null);
     }
@@ -117,6 +120,7 @@ class Pessoa implements InputFilterAwareInterface {
     protected $dataInativacao;
     protected $idGrupoPessoa;
     protected $ativo;
+    protected $matriculaAtual;
 
     /**
      * Recupera as Responsabilidades ativas
@@ -749,6 +753,22 @@ class Pessoa implements InputFilterAwareInterface {
 
     function setPessoaHierarquia($pessoaHierarquia) {
         $this->pessoaHierarquia = $pessoaHierarquia;
+    }
+
+    function getSexo() {
+        return $this->sexo;
+    }
+
+    function setSexo($sexo) {
+        $this->sexo = $sexo;
+    }
+
+    function getMatriculaAtual() {
+        return $this->matriculaAtual;
+    }
+
+    function setMatriculaAtual($matriculaAtual) {
+        $this->matriculaAtual = $matriculaAtual;
     }
 
 }

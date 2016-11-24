@@ -20,6 +20,7 @@ CREATE TABLE pessoa
   telefone bigint, -- Telefone com 9 digitos e DDD
   foto character varying(40), -- Nome do arquivo com a foto da pessoa
   data_revisao date, -- Data que a pessoa foi ao revisão de vidas
+  sexo enummf, -- Sexo da pessoa
   CONSTRAINT pk_pessoa PRIMARY KEY (id)
 )
 WITH (
@@ -45,6 +46,7 @@ COMMENT ON COLUMN pessoa.hora_inativacao IS 'Hora de inativação da pessoa';
 COMMENT ON COLUMN pessoa.telefone IS 'Telefone com 9 digitos e DDD';
 COMMENT ON COLUMN pessoa.foto IS 'Nome do arquivo com a foto da pessoa';
 COMMENT ON COLUMN pessoa.data_revisao IS 'Data que a pessoa foi ao revisão de vidas';
+COMMENT ON COLUMN pessoa.sexo IS 'Sexo da pessoa';
 
 
 -- Index: index_pessoa_data_nascimento
