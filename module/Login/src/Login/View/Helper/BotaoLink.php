@@ -2,6 +2,7 @@
 
 namespace Login\View\Helper;
 
+use Login\Controller\Helper\Constantes;
 use Zend\View\Helper\AbstractHelper;
 
 /**
@@ -30,7 +31,7 @@ class BotaoLink extends AbstractHelper {
 
     public function renderHtml() {
         $html = '';
-        $classCor = 'danger';
+        $classCor = Constantes::$COR_BOTAO;
         $margenRight = 'mr10';
         $float = '';
         if ($this->getTipo() == 2 || $this->getTipo() == 3 || $this->getTipo() == 6 || $this->getTipo() == 8) {// tipo de menor importancia

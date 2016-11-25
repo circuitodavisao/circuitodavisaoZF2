@@ -14,7 +14,7 @@ $form->prepare();
 $form->setAttribute(ConstantesForm::$FORM_ACTION, 'cadastroGrupoFinalizar');
 echo $this->form()->openTag($form);
 
-$tituloDaPagina = 'Cadastro de <span class="text-danger">SubEquipe</span>';
+$tituloDaPagina = 'Cadastro de <span class="text-primary">SubEquipe</span>';
 echo $this->templateFormularioTopo($tituloDaPagina);
 ?>
 <script type="text/javascript">
@@ -63,9 +63,6 @@ echo $this->templateFormularioTopo($tituloDaPagina);
         $('#divSelecionarAluno').addClass('hidden');
         var inputIdAlunoSelecionado;
         switch (tipo) {
-            case 0:
-                inputIdAlunoSelecionado = $('#idAlunoSelecionado0');
-                break;
             case 1:
                 inputIdAlunoSelecionado = $('#idAlunoSelecionado1');
                 break;
@@ -75,6 +72,7 @@ echo $this->templateFormularioTopo($tituloDaPagina);
             default:
                 break;
         }
+        $('#idAlunoSelecionado0').val(matricula);
         inputIdAlunoSelecionado.val(matricula);
         /* Limpar campos */
         $('#cpf').val('');
@@ -456,7 +454,7 @@ echo $this->templateFormularioTopo($tituloDaPagina);
     function insereNumeracaoNaTelaDeConfimacao(mudarBarraDeProgresso) {
         var spanDadosComplementares = $('#spanDadosComplementares');
         var iconeNumeracao = '<i class="fa fa-info-circle" aria-hidden="true"></i>' + stringNBSP;
-        spanDadosComplementares.html(iconeNumeracao + stringNBSP + $('#numeracao option:selected').text());
+        spanDadosComplementares.html(iconeNumeracao + stringNBSP + 'Numeração:' + stringNBSP + $('#numeracao option:selected').text());
         $('#spanInsiraOsDadosComplementares').html('Dados Complementares');
         $('#divCheckDadosComplementaresInseridos').removeClass(hidden);
         $('#divBotaoInserirDadosComplementares').addClass(hidden);
@@ -736,24 +734,28 @@ echo $this->templateFormularioTopo($tituloDaPagina);
             <?php
             if ($form->getAlunos()) {
                 foreach ($form->getAlunos() as $ga) {
+                    $tipoResponsavel = 0;
                     $turmaAluno = $ga->getTurmaAluno();
                     $aluno = $turmaAluno->getPessoa();
                     $aluno->setMatriculaAtual($turmaAluno->getMatricula());
-                    $funcaoOnClick = 'onclick=\'selecionarAluno("' .
-                            $aluno->getMatriculaAtual() . '", "' .
-                            $aluno->getNome() . '", "' .
-                            $aluno->getDataNascimentoFormatada() . '", 0);\'';
                     if ($aluno->getSexo() === 'M') {
                         $classeAluno = 'alunoM';
+                        $tipoResponsavel = 1;
                     }
                     if ($aluno->getSexo() === 'F') {
                         $classeAluno = 'alunoF';
+                        $tipoResponsavel = 2;
                     }
+                    $funcaoOnClick = 'onclick=\'selecionarAluno("' .
+                            $aluno->getMatriculaAtual() . '", "' .
+                            $aluno->getNome() . '", "' .
+                            $aluno->getDataNascimentoFormatada() . '", ' .
+                            $tipoResponsavel . ');\'';
                     echo '<tr class="' . $classeAluno . '">';
                     echo '<td class="hidden-xs">' . $aluno->getMatriculaAtual() . '</td>';
                     echo '<td><span class="hidden-xs">' . $aluno->getNome() . '</span><span class="visible-xs">' . $aluno->getNomePrimeiroPrimeiraSiglaUltimo() . '</span></td>';
                     echo '<td class="hidden-xs">' . $aluno->getDataNascimentoFormatada() . '</td>';
-                    echo '<td><button type="button" class="btn btn-danger btn-xs" ' . $funcaoOnClick . '>Selecionar</button></td>';
+                    echo '<td><button type="button" class="btn btn-' . Constantes::$COR_BOTAO . ' btn-xs" ' . $funcaoOnClick . '>Selecionar</button></td>';
                     echo '</tr>';
                 }
             } else {

@@ -181,7 +181,8 @@ class Constantes {
     public static $TEMPLATE_JS_PRINCIPAL = 'layout/layout-js-principal';
     public static $STRING_JS_PRINCIPAL = 'layoutJSPrincipal';
 
-    /* Gera */
+    /* Geral */
     public static $NOME_APLICACAO = 'CircuitoDaVisao';
+    public static $COR_BOTAO = 'primary';
 
 }

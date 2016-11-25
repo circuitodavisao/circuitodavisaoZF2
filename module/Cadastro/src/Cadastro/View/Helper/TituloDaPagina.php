@@ -24,7 +24,7 @@ class TituloDaPagina extends AbstractHelper {
 
     public function renderHtml() {
         $html = '';
-        $html .= '<blockquote class = "blockquote-danger">';
+        $html .= '<blockquote class = "blockquote-primary">';
         $html .= '<small>';
         $html .= $this->view->translate($this->getLabel());
         $html .= '</small>';

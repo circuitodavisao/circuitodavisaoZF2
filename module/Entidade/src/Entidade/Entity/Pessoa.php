@@ -355,11 +355,11 @@ class Pessoa implements InputFilterAwareInterface {
      * Gera um token com data e hora atual em md5
      * @return String
      */
-    function gerarToken() {
+    function gerarToken($tipo = 0) {
         $timeNow = new DateTime();
         $dataEnvio = $timeNow->format('Ymd');
         $hora = $timeNow->format('His');
-        $token = md5($dataEnvio . $hora);
+        $token = md5($dataEnvio . $hora . $tipo);
         return $token;
     }
 

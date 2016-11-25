@@ -59,7 +59,7 @@ class InputAddon extends AbstractHelper {
         $html .= $this->view->formInput($input);
         $html .= '<span class="input-group-btn">';
         if ($this->getTipo() == 1 || $this->getTipo() == 2) {
-            $html .= '<button class="btn btn-danger" type="button">';
+            $html .= '<button class="btn btn-' . Constantes::$COR_BOTAO . '" type="button">';
             $html .= '<img id="loader' . $this->getIdInput() . '" class="hidden" src="' . Constantes::$LOADER_GIF . '" />';
             $html .= '&nbsp;<i class="' . $icone . '" aria-hidden="true"></i>';
             $html .= '</button>';

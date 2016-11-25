@@ -2,6 +2,7 @@
 
 namespace Login\View\Helper;
 
+use Login\Controller\Helper\Constantes;
 use Zend\View\Helper\AbstractHelper;
 
 /**
@@ -30,7 +31,7 @@ class BotaoSubmitDesabilitado extends AbstractHelper {
 
     public function renderHtml() {
         $html = '';
-        $corBotao = 'btn-danger';
+        $corBotao = 'btn-' . Constantes::$COR_BOTAO;
         if ($this->getCorBotao() != '') {
             $corBotao = $this->getCorBotao();
         }
