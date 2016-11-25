@@ -50,7 +50,7 @@ class ConstantesForm {
     public static $FORM_ONCLICK = 'onClick';
     public static $FORM_ONCHANGE = 'onChange';
     public static $FORM_FUNCAO_BUSCAR_CEP = 'buscarEndereco(document.getElementById(\'cep_logradouro\').value);';
-    public static $FORM_FUNCAO_BUSCAR_CPF = 'buscarCPF(this.value, 0, $("#dataNascimento").val());';
+    public static $FORM_FUNCAO_BUSCAR_CPF = 'buscarCPF();';
     public static $FORM_FUNCAO_CORRIGE_DATA_NASCIMENTO = 'corrigeDataDeNascimento(this.value);';
     public static $FORM_FUNCAO_BUSCAR_EMAIL = 'buscarEmail(this.value);';
     public static $FORM_FUNCAO_VERIFICAR_EMAIL_IGUAL = 'verificarEmailIgual(this.value);';

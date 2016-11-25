@@ -229,7 +229,6 @@ class GrupoForm extends Form {
                             ConstantesForm::$FORM_CLASS => ConstantesForm::$FORM_CLASS_FORM_CONTROL,
                             ConstantesForm::$FORM_ID => ConstantesForm::$FORM_CPF,
                             ConstantesForm::$FORM_PLACEHOLDER => ConstantesForm::$TRADUCAO_CPF,
-                            ConstantesForm::$FORM_ONBLUR => ConstantesForm::$FORM_FUNCAO_BUSCAR_CPF,
                         ])
         );
 
@@ -241,7 +240,7 @@ class GrupoForm extends Form {
                             ConstantesForm::$FORM_CLASS => ConstantesForm::$FORM_CLASS_FORM_CONTROL . ' ' . ConstantesForm::$FORM_CLASS_DATE,
                             ConstantesForm::$FORM_ID => ConstantesForm::$FORM_DATA_NASCIMENTO,
                             ConstantesForm::$FORM_PLACEHOLDER => ConstantesForm::$TRADUCAO_DATA_NASCIMENTO . ' dd/mm/YYYY',
-                       ])
+                        ])
         );
 
         /* Email */
