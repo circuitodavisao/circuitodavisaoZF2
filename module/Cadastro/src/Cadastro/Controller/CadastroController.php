@@ -646,9 +646,6 @@ class CadastroController extends AbstractActionController {
         $view = new ViewModel(array(
             ConstantesForm::$FORM => $form
         ));
-        $layoutJS = new ViewModel();
-        $layoutJS->setTemplate(ConstantesForm::$LAYOUT_JS_GRUPO);
-        $view->addChild($layoutJS, ConstantesForm::$LAYOUT_STRING_JS_GRUPO);
         return $view;
     }
 
@@ -850,8 +847,8 @@ class CadastroController extends AbstractActionController {
 //                var_dump($explodeResultado);
                 /* Sucesso */
                 if ($explodeResultado[1] === '000') {
-                    $nomeDaPesquisa = $explodeResultado[9];
-                    $dataDeNascimentoDaPesquisa = Funcoes::mudarPadraoData(str_replace('\/', '-', $explodeResultado[15]), 2);
+                    $nomeDaPesquisa = $explodeResultado[11];
+                    $dataDeNascimentoDaPesquisa = Funcoes::mudarPadraoData(str_replace('\/', '-', $explodeResultado[17]), 2);
                     $resposta = 1;
                 }
                 if ($explodeResultado[1] === '001') {

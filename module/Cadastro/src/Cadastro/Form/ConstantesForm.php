@@ -52,8 +52,9 @@ class ConstantesForm {
     public static $FORM_FUNCAO_BUSCAR_CEP = 'buscarEndereco(document.getElementById(\'cep_logradouro\').value);';
     public static $FORM_FUNCAO_BUSCAR_CPF = 'buscarCPF();';
     public static $FORM_FUNCAO_CORRIGE_DATA_NASCIMENTO = 'corrigeDataDeNascimento(this.value);';
-    public static $FORM_FUNCAO_BUSCAR_EMAIL = 'buscarEmail(this.value);';
+    public static $FORM_FUNCAO_BUSCAR_EMAIL = 'buscarEmail()';
     public static $FORM_FUNCAO_VERIFICAR_EMAIL_IGUAL = 'verificarEmailIgual(this.value);';
+    public static $FORM_FUNCAO_VALIDAR_FORMULARIO = 'validarFormulario();';
     public static $FORM_FUNCAO_BUSCAR_POR_ENTER = 'return submitEnter(this, event)';
     public static $FORM_ONBLUR = 'onblur';
     public static $FORM_ONKEYPRESS = 'onkeypress';
@@ -166,8 +167,6 @@ class ConstantesForm {
     public static $TRADUCAO_NUMERO_MAXIMO_CELULAS = 'Maximum number of cells reached!';
 
     /* Layout */
-    public static $LAYOUT_JS_GRUPO = 'layout/layout-js-grupo';
-    public static $LAYOUT_STRING_JS_GRUPO = 'layoutJSGrupo';
     public static $LAYOUT_JS_EVENTO = 'layout/layout-js-evento';
     public static $LAYOUT_STRING_JS_EVENTO = 'layoutJSEvento';
     public static $LAYOUT_JS_EVENTO_VALIDACAO = 'layout/layout-js-evento-validacao';

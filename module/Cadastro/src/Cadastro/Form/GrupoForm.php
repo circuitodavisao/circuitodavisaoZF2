@@ -40,6 +40,7 @@ class GrupoForm extends Form {
          */
         $this->setAttributes(array(
             Constantes::$FORM_STRING_METHOD => Constantes::$FORM_STRING_POST,
+            ConstantesForm::$FORM_ACTION => 'cadastroGrupoFinalizar',
         ));
 
         /* IdAlunoSelecionado0 */
@@ -250,7 +251,6 @@ class GrupoForm extends Form {
                         ->setAttributes([
                             ConstantesForm::$FORM_CLASS => ConstantesForm::$FORM_CLASS_FORM_CONTROL,
                             ConstantesForm::$FORM_ID => ConstantesForm::$FORM_EMAIL,
-                            ConstantesForm::$FORM_ONBLUR => ConstantesForm::$FORM_FUNCAO_BUSCAR_EMAIL,
                             ConstantesForm::$FORM_PLACEHOLDER => ConstantesForm::$TRADUCAO_EMAIL,
                         ])
         );
@@ -262,7 +262,6 @@ class GrupoForm extends Form {
                         ->setAttributes([
                             ConstantesForm::$FORM_CLASS => ConstantesForm::$FORM_CLASS_FORM_CONTROL,
                             ConstantesForm::$FORM_ID => ConstantesForm::$FORM_REPETIR_EMAIL,
-                            ConstantesForm::$FORM_ONBLUR => ConstantesForm::$FORM_FUNCAO_VERIFICAR_EMAIL_IGUAL,
                             ConstantesForm::$FORM_PLACEHOLDER => ConstantesForm::$TRADUCAO_REPETIR_EMAIL,
                         ])
         );
@@ -274,7 +273,7 @@ class GrupoForm extends Form {
 
         /* Hierarquia */
         $arrayHierarquia = array();
-        $arrayHierarquia[0] = ConstantesForm::$FORM_SELECT;
+        $arrayHierarquia[0] = ConstantesForm::$FORM_SELECT . ' A HIERARQUIA';
         foreach ($this->getHierarquia() as $hierarquia) {
             $arrayHierarquia[$hierarquia->getId()] = $hierarquia->getNome();
         }

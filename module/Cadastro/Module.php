@@ -10,6 +10,7 @@ namespace Cadastro;
 
 use Cadastro\View\Helper\BotaoPopover;
 use Cadastro\View\Helper\FuncaoOnClick;
+use Cadastro\View\Helper\GrupoEstadoCivil;
 use Cadastro\View\Helper\InputAddon;
 use Cadastro\View\Helper\InputDiaDaSemanaHoraMinuto;
 use Cadastro\View\Helper\InputExtras;
@@ -87,6 +88,9 @@ class Module {
                 },
                 'inputAddon' => function($sm) {
                     return new InputAddon();
+                },
+                'grupoEstadoCivil' => function($sm) {
+                    return new GrupoEstadoCivil();
                 },
             )
         );
