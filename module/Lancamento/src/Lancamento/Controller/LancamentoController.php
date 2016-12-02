@@ -577,31 +577,5 @@ class LancamentoController extends AbstractActionController {
         return new ViewModel();
     }
     
-    /**
-     * Controle de funçoes da tela de lancamento
-     * @return Json
-     */
-    public function funcoesAction() {
-        $request = $this->getRequest();
-        $response = $this->getResponse();
-        if ($request->isPost()) {
-            try {
-                $post_data = $request->getPost();
-                $funcao = $post_data[Constantes::$FUNCAO];
-                $id = $post_data[Constantes::$ID];
-                $sessao = new Container(Constantes::$NOME_APLICACAO);
-                $sessao->idSessao = $id;
-                $response->setContent(Json::encode(
-                                array(
-                                    'response' => 'true',
-                                    'tipoDeRetorno' => 1,
-                                    'url' => '/lancamento' . $funcao,
-                )));
-            } catch (Exception $exc) {
-                echo $exc->getTraceAsString();
-            }
-        }
-        return $response;
-    }
 
 }
