@@ -108,27 +108,14 @@ echo $this->templateFormularioTopo($tituloDaPagina);
                 <span class="quebraDeLinhaDeSpan" id="spanHierarquia0"></span>
             </address>
             <?php
-            echo "<div id='dibBotaoInserirResponsavel'>";
+            echo "<div id='divBotaoInserirResponsavel'>";
             $labelInserirHomem = ConstantesCadastro::$TRADUCAO_INSERIR;
             $extraInserirHomem = 'onclick="abrirTelaDeAlunos(0);"';
             echo $this->botaoLink($labelInserirHomem, ConstantesForm::$STRING_HASHTAG, 5, $extraInserirHomem);
             echo "</div>";
-            echo "<div id='dibBotaoAlterarResponsavel' class='hidden'>";
-            $labelAlterarHomem = ConstantesCadastro::$TRADUCAO_ALTERAR;
-            $extraAlterarHomem = 'onclick="
-            $(\'#botaoInserirResponsavel\').addClass(\'hidden\');
-            $(\'#botaoAlterarResponsavel\').removeClass(\'hidden\');
-            $(\'#divConfirmacao\').addClass(\'hidden\');
-        "';
-            echo $this->botaoLink($labelAlterarHomem, ConstantesForm::$STRING_HASHTAG, 6, $extraAlterarHomem);
-
+            echo "<div id='divBotaoLimparResponsavel' class='hidden'>";
             $labelLimparHomem = ConstantesCadastro::$TRADUCAO_LIMPAR;
-            $extraLimparHomem = 'onclick="
-            limparDadosPessoaSelecionada(0);
-            $(\'#dibBotaoAlterarResponsavel\').addClass(\'hidden\');
-            $(\'#dibBotaoInserirResponsavel\').removeClass(\'hidden\');
-        "';
-            echo $this->botaoLink($labelLimparHomem, ConstantesForm::$STRING_HASHTAG, 6, $extraLimparHomem);
+            echo $this->botaoLink($labelLimparHomem, ConstantesForm::$STRING_HASHTAG, 6, '');
             echo "</div>";
             ?>
             <div id="divCheckDadosResponsavelInseridos" class="checkDadosInseridos hidden">
@@ -148,25 +135,15 @@ echo $this->templateFormularioTopo($tituloDaPagina);
                 <span class="quebraDeLinhaDeSpan" id="spanHierarquia1"></span>
             </address>
             <?php
-            echo "<div id='dibBotaoInserirResponsavel1'>";
+            echo "<div id='divBotaoInserirResponsavel1'>";
             $labelInserirHomem = ConstantesCadastro::$TRADUCAO_INSERIR;
             $extraInserirHomem = 'onclick="abrirTelaDeAlunos(1);"';
             echo $this->botaoLink($labelInserirHomem, ConstantesForm::$STRING_HASHTAG, 5, $extraInserirHomem);
             echo "</div>";
-            echo "<div id='dibBotaoAlterarResponsavel1' class='hidden'>";
-            $labelAlterarHomem = ConstantesCadastro::$TRADUCAO_ALTERAR;
-            $extraAlterarHomem = 'onclick="
-            $(\'#divConfirmacao\').addClass(\'hidden\');
-            $(\'#divResponsavel\').removeClass(\'hidden\');
-        "';
-            echo $this->botaoLink($labelAlterarHomem, ConstantesForm::$STRING_HASHTAG, 6, $extraAlterarHomem);
 
+            echo "<div id='divBotaoLimparResponsavel1' class='hidden'>";
             $labelLimparHomem = ConstantesCadastro::$TRADUCAO_LIMPAR;
-            $extraLimparHomem = 'onclick="
-            $(\'#divConfirmacao\').addClass(\'hidden\');
-            $(\'#divResponsavel\').removeClass(\'hidden\');
-        "';
-            echo $this->botaoLink($labelLimparHomem, ConstantesForm::$STRING_HASHTAG, 6, $extraLimparHomem);
+            echo $this->botaoLink($labelLimparHomem, ConstantesForm::$STRING_HASHTAG, 6, '');
             echo "</div>";
             ?>      
             <div id="divCheckDadosResponsavelInseridos1" class="checkDadosInseridos hidden">
@@ -186,25 +163,15 @@ echo $this->templateFormularioTopo($tituloDaPagina);
                 <span class="quebraDeLinhaDeSpan" id="spanHierarquia2"></span>
             </address>
             <?php
-            echo "<div id='dibBotaoInserirResponsavel2'>";
+            echo "<div id='divBotaoInserirResponsavel2'>";
             $labelInserirMulher = ConstantesCadastro::$TRADUCAO_INSERIR;
             $extraInserirMulher = 'onclick="abrirTelaDeAlunos(2);"';
             echo $this->botaoLink($labelInserirMulher, ConstantesForm::$STRING_HASHTAG, 5, $extraInserirMulher);
             echo "</div>";
-            echo "<div id='dibBotaoAlterarResponsavel2' class='hidden'>";
-            $labelAlterarMulher = ConstantesCadastro::$TRADUCAO_ALTERAR;
-            $extraAlterarMulher = 'onclick="
-            $(\'#divConfirmacao\').addClass(\'hidden\');
-            $(\'#divResponsavel\').removeClass(\'hidden\');
-        "';
-            echo $this->botaoLink($labelAlterarMulher, ConstantesForm::$STRING_HASHTAG, 6, $extraAlterarMulher);
 
+            echo "<div id='divBotaoLimparResponsavel2' class='hidden'>";
             $labelLimparMulher = ConstantesCadastro::$TRADUCAO_LIMPAR;
-            $extraLimparMulher = 'onclick="
-            $(\'#divConfirmacao\').addClass(\'hidden\');
-            $(\'#divResponsavel\').removeClass(\'hidden\');
-        "';
-            echo $this->botaoLink($labelLimparMulher, ConstantesForm::$STRING_HASHTAG, 6, $extraLimparMulher);
+            echo $this->botaoLink($labelLimparMulher, ConstantesForm::$STRING_HASHTAG, 6, '');
             echo "</div>";
             ?>       
             <div id="divCheckDadosResponsavelInseridos2" class="checkDadosInseridos hidden">
@@ -249,7 +216,7 @@ echo $this->templateFormularioTopo($tituloDaPagina);
 
     <!-- Incluir Responsavel -->
     <div id="divIncluirResponsavel" class="hidden">
-        
+        <!-- Passo a Passo -->
         <div id="divPassoAPasso">           
             <div class="stepwizard">
                 <div class="stepwizard-row">
@@ -271,18 +238,46 @@ echo $this->templateFormularioTopo($tituloDaPagina);
                     </div> 
                 </div>
             </div>
+            <!-- HelperView Dados -->
+            <div id="divDadosSelecionados" class="alert alert-info hidden">
+                <div class="quebraDeLinhaDeSpan">
+                    <i class="fa fa-user" aria-hidden="true"></i>&nbsp;
+                    <span id="spanResponsavelMatricula"></span>
+                </div>
+
+                <div class="quebraDeLinhaDeSpan">
+                    <i class="fa fa-user" aria-hidden="true"></i>&nbsp;
+                    <span id="spanResponsavelNome"></span>
+                </div>
+
+                <div class="quebraDeLinhaDeSpan">
+                    <i class="fa fa-birthday-cake" aria-hidden="true"></i>&nbsp;
+                    <span id="spanResponsavelDataNascimento"></span>
+                </div>
+
+                <div id="divSpanResponsavelCPF" class="quebraDeLinhaDeSpan hidden">
+                    <i class="fa fa-info-circle" aria-hidden="true"></i>&nbsp;
+                    <span id="spanResponsavelCPF"></span>
+                </div>
+
+                <div id="divSpanResponsavelEmail" class="quebraDeLinhaDeSpan hidden">
+                    <i class="fa fa-envelope-o" aria-hidden="true"></i>&nbsp;
+                    <span id="spanResponsavelEmail"></span>
+                </div>
+            </div>
+            <!-- Fim HelperView -->
+            <span id="spanMensagens" class="quebraDeLinhaDeSpan mt10 alert text-center hidden"></span>
         </div>
 
         <!-- Selecionar Aluno -->
-        <div id="divSelecionarAluno" class="hidden">
-
+        <div id="divSelecionarAluno" class="">
             <div class="section-divider mt40">
                 <span>Selecione o Aluno que será utilizado para o cadastro</span>
             </div> 
             <div class="panel-menu">
                 <input id="fooFilter" type="text" class="form-control" placeholder="Filtro">
             </div>
-            <table class="table footable mb10" data-filter="#fooFilter">
+            <table class="table footable" data-filter="#fooFilter">
                 <thead>
                     <tr>
                         <th class = "hidden-xs">Matricula</th>
@@ -327,75 +322,56 @@ echo $this->templateFormularioTopo($tituloDaPagina);
                     ?>           
                 </tbody>
             </table>
-            <?php
-            echo '<div id="divBotaoDeSelecionarAluno" class="hidden">';
-            $labelBotaoContinuar = Constantes::$TRADUCAO_CONTINUAR;
-            $extraBotaoContinuar = $this->funcaoOnClick('selecionarAluno()');
-            echo $this->botaoLink($labelBotaoContinuar, ConstantesForm::$STRING_HASHTAG, 7, $extraBotaoContinuar);
-            echo '</div>';
+            <div class="mt10">
+                <?php
+                echo '<div id="divBotaoDeSelecionarAluno" class="hidden">';
+                $labelBotaoContinuar = Constantes::$TRADUCAO_CONTINUAR;
+                $extraBotaoContinuar = $this->funcaoOnClick('selecionarAluno()');
+                echo $this->botaoLink($labelBotaoContinuar, ConstantesForm::$STRING_HASHTAG, 7, $extraBotaoContinuar);
+                echo '</div>';
 
-            $labelVoltar = Constantes::$TRADUCAO_VOLTAR;
-            echo $this->botaoLink($labelVoltar, ConstantesForm::$STRING_HASHTAG, 8, $this->FuncaoOnClick('botaoVoltarSelecionarAluno()'));
-            ?>
+                /* Botao Voltar Confirmação */
+                $labelVoltar = Constantes::$TRADUCAO_VOLTAR;
+                echo $this->botaoLink($labelVoltar, ConstantesForm::$STRING_HASHTAG, 8, $this->FuncaoOnClick('botaoVoltarSelecionarAluno()'));
+                ?>
+            </div>
         </div>
 
-        <!--Responsavel -->
-        <div id="divResponsavel" class="hidden">
-            <!-- HelperView aluno selecionado -->
-            <div class="well well-sm">
-                <i class="fa fa-user" aria-hidden="true"></i>&nbsp;
-                <strong><span id="spanResponsavelNome"></span></strong>
-                <br /><i class="fa fa-birthday-cake" aria-hidden="true"></i>&nbsp;
-                <span id="spanResponsavelDataNascimento"></span>                
-            </div>
-            <!-- Fim HelperView -->
+        <!-- Div Dados Pessoais -->
+        <div id="divCPFDataNascimento" class="hidden">            
             <div class="section-divider mt40">
-                <span>Digite o CPF do Aluno selecionado</span>
+                <span>Informe Data de Nascimento e CPF</span>
             </div>
             <!-- Buscar CPF -->
-            <span id="spanMensagemDeErroCPF" class="quebraDeLinhaDeSpan mt10 alert alert-danger text-center hidden"></span>
             <?php
-            echo $this->formInput($form->get(ConstantesForm::$FORM_DATA_NASCIMENTO));
+            echo '<div class="row">';
+            echo '<div class="col-xs-4">';
+            echo $this->formSelect($form->get('Dia'));
+            echo '</div>';
+            echo '<div class="col-xs-4">';
+            echo $this->formSelect($form->get('Mes'));
+            echo '</div>';
+            echo '<div class="col-xs-4">';
+            echo $this->formSelect($form->get('Ano'));
+            echo '</div>';
+            echo '</div>';
             echo $this->inputAddon($form, ConstantesForm::$FORM_CPF, 1, ConstantesForm::$FORM_FUNCAO_BUSCAR_CPF);
             ?>
             <!-- FIM Buscar CPF --> 
-
-        </div>
-        <div id="divResultadoBuscaCPF" class="hidden">
-            <div class="well well-sm mt10">
-                <span id="spanBuscaMensagem"></span>
-                <i class = "fa fa-info-circle" aria-hidden = "true"></i>&nbsp;
-                <span id="spanBuscaCPF"></span>
-                <br /><i class = "fa fa-user" aria-hidden = "true"></i>&nbsp;
-                <strong><span id="spanBuscaNome"></span></strong>
-                <br /><i class = "fa fa-birthday-cake" aria-hidden = "true"></i>&nbsp;
-                <span id="spanBuscaDataNascimento"></span>
-                <div id="divSpanResponsavelEmail" class="hidden">
-                    <i class="fa fa-envelope-o" aria-hidden="true"></i>&nbsp;
-                    <span id="spanResponsavelEmail"></span>
-                </div>
+            <div id="divBotoesBuscaCPF" class="mt10">
+                <?php
+                echo '<div id="botaoCPFLiberado" class="quebraDeLinhaDeSpan hidden">';
+                $extraBotaoContinuar = $this->funcaoOnClick('mostrarDivEmail()');
+                echo $this->botaoLink($labelBotaoContinuar, ConstantesForm::$STRING_HASHTAG, 7, $extraBotaoContinuar);
+                echo '</div>';
+                ?>      
+                <!-- Botao Voltar Selecionar Aluno -->
+                <?php echo $this->botaoLink($labelVoltar, ConstantesForm::$STRING_HASHTAG, 8, $this->funcaoOnClick('botaoVoltarDataNascimentoCPF()')); ?>
             </div>
         </div>
-        <div id="divBotoesBuscaCPF" class="mt10 hidden">
-            <?php
-            echo '<div id="botaoCPFLiberado" class="quebraDeLinhaDeSpan hidden">';
-            $extraBotaoContinuar = $this->funcaoOnClick('mostrarDivEmail()');
-            echo $this->botaoLink($labelBotaoContinuar, ConstantesForm::$STRING_HASHTAG, 7, $extraBotaoContinuar);
-            echo '</div>';
-            ?>      
-            <!-- HelperView Resultado Busca -->
-            <?php
-            $extraVoltarDadosComplementares = 'onclick="
-            $(\'#divSelecionarAluno\').removeClass(\'hidden\');
-            $(\'#divResponsavel\').addClass(\'hidden\');
-            $(\'#divResultadoBuscaCPF\').addClass(\'hidden\');
-            "';
-            echo $this->botaoLink($labelVoltar, ConstantesForm::$STRING_HASHTAG, 8, $extraVoltarDadosComplementares);
-            ?>
-        </div>
-        <!-- Fim HelperView -->
+
+        <!-- Div Email -->
         <div id="divEmail" class="hidden">
-            <span id="spanEmailErros" class="quebraDeLinhaDeSpan mt10 alert alert-danger text-center hidden"></span>
             <!-- Email -->
             <?php echo $this->formInput($form->get(ConstantesForm::$FORM_EMAIL)); ?>
             <!-- FIM Email --> 
@@ -408,57 +384,60 @@ echo $this->templateFormularioTopo($tituloDaPagina);
                 $extraBotaoContinuar = $this->funcaoOnClick('mostrarDivHierarquia()');
                 echo $this->botaoLink($labelBotaoContinuar, ConstantesForm::$STRING_HASHTAG, 7, $extraBotaoContinuar);
                 echo '</div>';
-                ?>      
-                <!-- HelperView Resultado Busca -->
-                <?php
-                $extraVoltarDadosComplementares = 'onclick="
-            $(\'#divEmail\').removeClass(\'hidden\');
-            $(\'#divResponsavel\').removeClass(\'hidden\');
-            $(\'#divResultadoBuscaCPF\').removeClass(\'hidden\');
-            "';
-                echo $this->botaoLink($labelVoltar, ConstantesForm::$STRING_HASHTAG, 8, $extraVoltarDadosComplementares);
+
+                /* Botao Voltar Data de Nascimento e CPF */
+                echo $this->botaoLink($labelVoltar, ConstantesForm::$STRING_HASHTAG, 8, $this->funcaoOnClick('botaoVoltarEmail()'));
                 ?>
             </div>
         </div>
 
-        <div id="divHierarquia" class="mt10 hidden">
+        <!-- Div Hierarquia -->
+        <div id="divHierarquia" class="hidden">
             <!-- Selecionar Hierarquia -->
             <?php echo $this->formSelect($form->get(ConstantesForm::$FORM_HIERARQUIA)); ?>
             <!-- Fim Selecionar Hierarquia -->
-        </div>
-        <div id="botaoInserirResponsavel" class="mt10 hidden">        
-            <?php
-            $labelInserirResponsavel = ConstantesCadastro::$TRADUCAO_INSERIR;
-            $extraInserirResponsavel = ' id="botaoInserirResponsavel#numero" onclick="
-            insereResponsavelNaTelaDeConfimacao(#numero, 0); 
-            $(\'#divConfirmacao\').removeClass(\'hidden\');            
-            $(\'#divResponsavel\').addClass(\'hidden\');
-        "';
-            $extraResponsavel0 = str_replace('#numero', 0, $extraInserirResponsavel);
-            echo $this->botaoLink($labelInserirResponsavel, ConstantesForm::$STRING_HASHTAG, 7, $extraResponsavel0);
+            <div class="mt10">
+                <?php
+                echo '<div id="botaoHierarquiaSelecionada" class="quebraDeLinhaDeSpan hidden">';
 
-            $extraResponsavel1 = str_replace('#numero', 1, $extraInserirResponsavel);
-            echo $this->botaoLink($labelInserirResponsavel, ConstantesForm::$STRING_HASHTAG, 7, $extraResponsavel1);
+                echo '<div id="botaoInserirResponsavel" class="">';
+                $labelInserirResponsavel = ConstantesCadastro::$TRADUCAO_INSERIR;
+                $extraInserirResponsavel = ' id="botaoInserirResponsavel#numero" onclick="
+                insereResponsavelNaTelaDeConfimacao(#numero, 0); 
+                    $(\'#divConfirmacao\').removeClass(\'hidden\');            
+                    $(\'#divResponsavel\').addClass(\'hidden\');
+                "';
+                $extraResponsavel0 = str_replace('#numero', 0, $extraInserirResponsavel);
+                echo $this->botaoLink($labelInserirResponsavel, ConstantesForm::$STRING_HASHTAG, 7, $extraResponsavel0);
 
-            $extraResponsavel2 = str_replace('#numero', 2, $extraInserirResponsavel);
-            echo $this->botaoLink($labelInserirResponsavel, ConstantesForm::$STRING_HASHTAG, 7, $extraResponsavel2);
-            ?>
-        </div>
-        <div id="botaoAlterarResponsavel" class="mt10 hidden">
-            <?php
-            $labelAlterarResponsavel = ConstantesCadastro::$TRADUCAO_ALTERAR;
-            $extraAlterarResponsavel = 'onclick="
-            insereResponsavelNaTelaDeConfimacao(0, 1); 
-            $(\'#divConfirmacao\').removeClass(\'hidden\');            
-            $(\'#divResponsavel\').addClass(\'hidden\');
-        "';
-            echo $this->botaoLink($labelAlterarResponsavel, ConstantesForm::$STRING_HASHTAG, 7, $extraAlterarResponsavel);
-            ?>
-        </div>        
+                $extraResponsavel1 = str_replace('#numero', 1, $extraInserirResponsavel);
+                echo $this->botaoLink($labelInserirResponsavel, ConstantesForm::$STRING_HASHTAG, 7, $extraResponsavel1);
+
+                $extraResponsavel2 = str_replace('#numero', 2, $extraInserirResponsavel);
+                echo $this->botaoLink($labelInserirResponsavel, ConstantesForm::$STRING_HASHTAG, 7, $extraResponsavel2);
+                echo '</div>';
+
+                echo '<div id="botaoAlterarResponsavel" class="hidden">';
+                $labelAlterarResponsavel = ConstantesCadastro::$TRADUCAO_ALTERAR;
+                $extraAlterarResponsavel = 'onclick="
+                insereResponsavelNaTelaDeConfimacao(0, 1); 
+                    $(\'#divConfirmacao\').removeClass(\'hidden\');            
+                    $(\'#divResponsavel\').addClass(\'hidden\');
+                "';
+                echo $this->botaoLink($labelAlterarResponsavel, ConstantesForm::$STRING_HASHTAG, 7, $extraAlterarResponsavel);
+                echo '</div>';
+
+                echo '</div>';
+
+                /* Botao Voltar Email */
+                echo $this->botaoLink($labelVoltar, ConstantesForm::$STRING_HASHTAG, 8, $this->funcaoOnClick('botaoVoltarHierarquia()'));
+                ?>
+            </div>
+        </div>          
     </div>
 
     <!--Dados Complementares -->
-    <div id = "divDadosComplementares" class = "hidden">
+    <div id = "divDadosComplementares" class="hidden">
         <!-- HelperView dados complementares -->
 
         <!-- Selecionar Numeracao -->
@@ -537,7 +516,10 @@ echo $this->layoutJSGrupo;
     var textDanger = 'text-danger';
     var textSuccess = 'text-success';
     var stringNBSP = '&nbsp;';
-    var alertDanger = 'alert alert-danger text-center';
+    var alertDanger = 'alert-danger';
+    var alertSuccess = 'alert-success';
+    var btnDefault = 'btn-default';
+    var btnPrimary = 'btn-primary';
 
     function validarEstadoCivil() {
         var valorSelecionado = $('input[name=inputEstadoCivil]:checked').val();
@@ -561,20 +543,17 @@ echo $this->layoutJSGrupo;
 
     function selecionarAluno() {
         var alunoSelecionado = $('input[name=radioAlunoSelecionado]:checked').val();
-
+        /* Dados do aluno selecionado */
         var splitAlunoSelecionado = alunoSelecionado.split("#");
         var matricula = splitAlunoSelecionado[0];
         var nome = splitAlunoSelecionado[1];
         var dataNascimento = splitAlunoSelecionado[2];
         var tipo = splitAlunoSelecionado[3];
-        var spanResponsavelMatricula = $('#spanResponsavelMatricula');
-        var spanResponsavelNome = $('#spanResponsavelNome');
-        var spanResponsavelDataNascimento = $('#spanResponsavelDataNascimento');
-        spanResponsavelMatricula.html(matricula);
-        spanResponsavelNome.html(nome);
-        spanResponsavelDataNascimento.html(dataNascimento);
-        $('#divResponsavel').removeClass(hidden);
-        $('#divSelecionarAluno').addClass(hidden);
+        /* Coloca dados do aluno selecionado na tela */
+        $('#spanResponsavelMatricula').html(matricula);
+        $('#spanResponsavelNome').html(nome);
+        $('#spanResponsavelDataNascimento').html(dataNascimento);
+        /* Por matricula do aluno no campo */
         var inputIdAlunoSelecionado;
         switch (tipo) {
             case 1:
@@ -587,23 +566,19 @@ echo $this->layoutJSGrupo;
                 inputIdAlunoSelecionado = $('#idAlunoSelecionado0');
                 break;
         }
-        $('#idAlunoSelecionado0').val(matricula);
         inputIdAlunoSelecionado.val(matricula);
-        $('#botaoPasso2')
-                .removeClass('btn-default')
-                .addClass('btn-primary');
+
         /* Limpar campos */
         $('#cpf').val('');
-        $('#email').val('');
-        $('#repetirEmail').val('');
-        $('#hierarquia').val(0);
-        $('#spanBuscaCPF').html('');
-        $('#spanBuscaNome').html('');
-        $('#spanBuscaDataNascimento').html('');
-        $('#divResultadoBuscaCPF').addClass(hidden);
-        $('#divDadosExtras').addClass(hidden);
-        $('#spanEmailErros').html('');
-        $('#divBotoesBuscaCPF').removeClass(hidden);
+        $('#dataNascimento').val('');
+
+        /* Abrir div para cpf e data de nascimento */
+        $('#botaoPasso2')
+                .removeClass(btnDefault)
+                .addClass(btnPrimary);
+        $('#divSelecionarAluno').addClass(hidden);
+        $('#divCPFDataNascimento').removeClass(hidden);
+        $('#divDadosSelecionados').removeClass(hidden);
     }
 
     function isNumber(n) {
@@ -612,56 +587,50 @@ echo $this->layoutJSGrupo;
 
     function buscarCPF() {
         var cpf = $("#cpf").val();
-        var dataNascimento = $("#dataNascimento").val();
+        var stringBarra = '/';
+        var DiaDataNascimento = $("#Dia").val();
+        var MesDataNascimento = $("#Mes").val();
+        var AnoDataNascimento = $("#Ano").val();
+
+        DiaDataNascimento = parseInt(DiaDataNascimento);
+        MesDataNascimento = parseInt(MesDataNascimento);
+        AnoDataNascimento = parseInt(AnoDataNascimento);
+
         var loader = $('#loadercpf');
+        var spanMensagens = $('#spanMensagens');
+        spanMensagens
+                .removeClass(alertDanger)
+                .removeClass(alertSuccess)
+                .addClass(hidden);
         loader.removeClass(hidden);
-        var divResultadoBuscaCPF = $('#divResultadoBuscaCPF');
-        var divEmail = $('#divEmail');
-        var spanBuscaCPF = $('#spanBuscaCPF');
-        var spanBuscaNome = $('#spanBuscaNome');
-        var spanBuscaDataNascimento = $('#spanBuscaDataNascimento');
-        var spanMensagemDeErroCPF = $('#spanMensagemDeErroCPF');
-        divResultadoBuscaCPF.addClass(hidden);
-        divEmail.addClass(hidden);
-        spanBuscaCPF.html('');
-        spanBuscaNome.html('');
-        spanBuscaDataNascimento.html('');
-        spanMensagemDeErroCPF.addClass(hidden);
 
         var temErro = false;
-        if (cpf.length === 0 && dataNascimento.length === 0) {
-            spanMensagemDeErroCPF
+        if (cpf.length === 0 && DiaDataNascimento === 0 && MesDataNascimento === 0 && AnoDataNascimento === 0) {
+            spanMensagens
                     .text('Preenchar a Data de Nascimento e o CPF!');
             temErro = true;
         } else {
-            if (cpf.length === 0 || dataNascimento.length === 0) {
-                if (cpf.length === 0) {
-                    spanMensagemDeErroCPF
-                            .text('Preenchar o CPF!');
-                    temErro = true;
-                }
-                if (dataNascimento.length === 0) {
-                    spanMensagemDeErroCPF
-                            .text('Preenchar a data de nascimento!');
-                    temErro = true;
-                }
+            if (DiaDataNascimento.length === 1) {
+                DiaDataNascimento = '0' + DiaDataNascimento;
+            }
+            if (MesDataNascimento.length === 1) {
+                MesDataNascimento = '0' + MesDataNascimento;
+            }
+            var dataNascimento = DiaDataNascimento + stringBarra
+                    + MesDataNascimento + stringBarra
+                    + AnoDataNascimento;
+            if (cpf.length === 0) {
+                spanMensagens
+                        .text('Preenchar o CPF!');
+                temErro = true;
             } else {
-                if (dataNascimento.length !== 10) {
-                    spanMensagemDeErroCPF
-                            .text('Data de nascimento é invalida!');
+                if (!isNumber(cpf) || cpf.length !== 11) {
+                    spanMensagens
+                            .text('CPF é invalido!');
                     temErro = true;
-
-                } else {
-                    if (!isNumber(cpf) || cpf.length !== 11) {
-                        spanMensagemDeErroCPF
-                                .text('CPF é invalido!');
-                        temErro = true;
-                    }
                 }
             }
-
         }
-
         if (!temErro) {
             $.post(
                     "/cadastroBuscarCPF",
@@ -671,31 +640,33 @@ echo $this->layoutJSGrupo;
                     },
             function (data) {
                 if (parseInt(data.resposta) === 1) {
-                    $('#spanBuscaMensagem').html('<p class="text-success">CPF liberado</p>');
-                    divResultadoBuscaCPF.removeClass(hidden);
-                    spanBuscaCPF.html(data.cpf);
-                    spanBuscaNome.html(data.nome);
-                    spanBuscaDataNascimento.html(data.dataNascimento);
+                    /* Pondo valores encontrados na tela */
+                    $('#spanResponsavelNome').html(data.nome);
+                    $('#spanResponsavelCPF').html(data.cpf);
+                    $('#divSpanResponsavelCPF').removeClass(hidden);
+                    $('#spanResponsavelDataNascimento').html(data.dataNascimento);
+
+                    /* Mensagem de sucesso */
+                    spanMensagens
+                            .text('Dados Liberados!')
+                            .addClass(alertSuccess)
+                            .removeClass(hidden);
+
                     var nomeDoAlunoSelecionado = $('#spanResponsavelNome').text();
                     var splitNomeDoAluno = nomeDoAlunoSelecionado.split(" ");
                     var splitNomeEncontradoNaBusca = data.nome.split(" ");
 
                     if (splitNomeDoAluno[0] !== splitNomeEncontradoNaBusca[0]) {
-                        spanMensagemDeErroCPF
+                        spanMensagens
                                 .text('Nome do CPF não confere com o do aluno')
                                 .removeClass(hidden);
-                    } else {
-                        if (splitNomeDoAluno[0] === splitNomeEncontradoNaBusca[0]) {
-                            spanMensagemDeErroCPF.addClass(hidden);
-
-                        }
                     }
                     $('#botaoCPFLiberado').removeClass(hidden);
 
                 }
                 if (parseInt(data.resposta) === 2) {
                     /* Não encontrou no PROCOB */
-                    spanMensagemDeErroCPF
+                    spanMensagens
                             .removeClass(hidden)
                             .text(data.mensagem);
                 }
@@ -703,18 +674,21 @@ echo $this->layoutJSGrupo;
             }
             , 'json');
         } else {
-            spanMensagemDeErroCPF.removeClass(hidden);
+            spanMensagens.
+                    addClass(alertDanger)
+                    .removeClass(hidden);
             loader.addClass(hidden);
         }
     }
 
     function mostrarDivEmail() {
-        $('#divResponsavel').addClass(hidden);
+        $('#divCPFDataNascimento').addClass(hidden);
+        $('#botaoCPFLiberado').addClass(hidden);
+        $('#divEmail').removeClass(hidden);
         $('#botaoPasso3')
                 .removeClass('btn-default')
                 .addClass('btn-primary');
-        $('#divEmail').removeClass(hidden);
-        $('#divBotoesBuscaCPF').addClass(hidden);
+        escondeMensagem();
     }
 
     function buscarEmail() {
@@ -722,30 +696,32 @@ echo $this->layoutJSGrupo;
         var email = $('#email').val();
         var repetirEmail = $('#repetirEmail').val();
         var loader = $('#loaderrepetirEmail');
-        var spanEmailErros = $('#spanEmailErros');
-        var divHierarquia = $('#divHierarquia');
-        spanEmailErros.addClass(hidden);
+        var spanMensagens = $('#spanMensagens');
+        spanMensagens
+                .addClass(hidden)
+                .removeClass(alertDanger)
+                .removeClass(alertSuccess);
         loader.removeClass(hidden);
         if (repetirEmail != email) {
             temErro = true;
-            spanEmailErros.html('Emails não conferem');
+            spanMensagens.html('Emails não conferem');
         }
         if (email.length === 0) {
             temErro = true;
-            spanEmailErros.html('Preeencha o email');
+            spanMensagens.html('Preeencha o email');
         } else {
             if (!validaEmail(email)) {
                 temErro = true;
-                spanEmailErros.html('Email invalido!');
+                spanMensagens.html('Email invalido!');
             }
         }
         if (repetirEmail.length === 0) {
             temErro = true;
-            spanEmailErros.html('Repetir o email');
+            spanMensagens.html('Repetir o email');
         }
         if (email.length === 0 && repetirEmail.length === 0) {
             temErro = true;
-            spanEmailErros.html('Preeencha o email e repita');
+            spanMensagens.html('Preeencha o email e repita');
         }
         if (!temErro) {
             $.post(
@@ -754,20 +730,27 @@ echo $this->layoutJSGrupo;
             function (data) {
 // liberado
                 if (!data.resposta) {
+                    spanMensagens
+                            .html('Email liberado!')
+                            .removeClass(hidden)
+                            .addClass(alertSuccess);
                     $('#divSpanResponsavelEmail').removeClass(hidden);
                     $('#spanResponsavelEmail').html(email);
                     $('#botaoEmailLiberado').removeClass(hidden);
                 }
 // não liberado
                 if (data.resposta) {
-                    spanEmailErros
+                    spanMensagens
                             .html('Email já utilizado por outra pessoa!')
+                            .addClass(alertDanger)
                             .removeClass(hidden);
                 }
                 loader.addClass(hidden);
             }, 'json');
         } else {
-            spanEmailErros.removeClass(hidden);
+            spanMensagens
+                    .removeClass(hidden)
+                    .addClass(alertDanger);
             loader.addClass(hidden);
         }
     }
@@ -778,6 +761,11 @@ echo $this->layoutJSGrupo;
                 .removeClass('btn-default')
                 .addClass('btn-primary');
         $('#divHierarquia').removeClass(hidden);
+        escondeMensagem();
+    }
+
+    function escondeMensagem() {
+        $('#spanMensagens').addClass(hidden);
     }
 
     function validaEmail(email) {
@@ -799,12 +787,12 @@ echo $this->layoutJSGrupo;
 
     function mostrarBotaoDeInserirResponsavel(valorDoSelectHierarquia) {
         valorDoSelectHierarquia = parseInt(valorDoSelectHierarquia);
-        var botaoInserirResponsavel = $('#botaoInserirResponsavel');
+        var botaoHierarquiaSelecionada = $('#botaoHierarquiaSelecionada');
         if (valorDoSelectHierarquia !== 0) {
-            botaoInserirResponsavel.removeClass(hidden);
+            botaoHierarquiaSelecionada.removeClass(hidden);
         }
         if (valorDoSelectHierarquia === 0) {
-            botaoInserirResponsavel.addClass(hidden);
+            botaoHierarquiaSelecionada.addClass(hidden);
         }
     }
 
@@ -837,8 +825,8 @@ echo $this->layoutJSGrupo;
         var inputHiddenHierarquia;
         var valorBarraDeProgresso;
         var divCheckDadosResponsavelInseridos;
-        var dibBotaoInserirResponsavel;
-        var dibBotaoAlterarResponsavel;
+        var divBotaoInserirResponsavel;
+        var divBotaoLimparResponsavel;
         var inputHiddenNome;
         var inputHiddenCPF;
         var inputHiddenDataNascimento;
@@ -857,8 +845,8 @@ echo $this->layoutJSGrupo;
                 $('#spanInsiraOsDadosDoResponsavel').html('Dados do Respons&aacute;vel');
                 valorBarraDeProgresso = 50;
                 divCheckDadosResponsavelInseridos = $('#divCheckDadosResponsavelInseridos');
-                dibBotaoInserirResponsavel = $('#dibBotaoInserirResponsavel');
-                dibBotaoAlterarResponsavel = $('#dibBotaoAlterarResponsavel');
+                divBotaoInserirResponsavel = $('#divBotaoInserirResponsavel');
+                divBotaoLimparResponsavel = $('#divBotaoLimparResponsavel');
                 inputHiddenNome = $('#nome0');
                 inputHiddenCPF = $('#cpf0');
                 inputHiddenDataNascimento = $('#dataNascimento0');
@@ -876,8 +864,8 @@ echo $this->layoutJSGrupo;
                 $('#spanInsiraOsDadosDoResponsavel1').html('Dados do Homem');
                 valorBarraDeProgresso = 25;
                 divCheckDadosResponsavelInseridos = $('#divCheckDadosResponsavelInseridos1');
-                dibBotaoInserirResponsavel = $('#dibBotaoInserirResponsavel1');
-                dibBotaoAlterarResponsavel = $('#dibBotaoAlterarResponsavel1');
+                divBotaoInserirResponsavel = $('#divBotaoInserirResponsavel1');
+                divBotaoLimparResponsavel = $('#divBotaoLimparResponsavel1');
                 inputHiddenNome = $('#nome1');
                 inputHiddenCPF = $('#cpf1');
                 inputHiddenDataNascimento = $('#dataNascimento1');
@@ -895,8 +883,8 @@ echo $this->layoutJSGrupo;
                 $('#spanInsiraOsDadosDoResponsavel2').html('Dados da Mulher');
                 valorBarraDeProgresso = 25;
                 divCheckDadosResponsavelInseridos = $('#divCheckDadosResponsavelInseridos2');
-                dibBotaoInserirResponsavel = $('#dibBotaoInserirResponsavel2');
-                dibBotaoAlterarResponsavel = $('#dibBotaoAlterarResponsavel2');
+                divBotaoInserirResponsavel = $('#divBotaoInserirResponsavel2');
+                divBotaoLimparResponsavel = $('#dibBotaoLimparResponsavel2');
                 inputHiddenNome = $('#nome2');
                 inputHiddenCPF = $('#cpf2');
                 inputHiddenDataNascimento = $('#dataNascimento2');
@@ -904,24 +892,30 @@ echo $this->layoutJSGrupo;
             default:
                 return false;
         }
-        inputHiddenNome.val($('#spanBuscaNome').html());
-        inputHiddenCPF.val($('#spanBuscaCPF').html());
-        inputHiddenDataNascimento.val($('#spanBuscaDataNascimento').html());
-        spanMatricula.html(iconeResponavelMatricula + $('#spanResponsavelMatricula').html());
-        spanCPF.html(iconeResponavelCPF + $('#spanBuscaCPF').html());
-        spanNomexs.html(iconeResponavelNomeInicial + ajustaStringTelaPequena($('#spanBuscaNome').html()) + iconeResponavelNomeFinal);
-        spanEmailxs.html(iconeResponavelEmail + ajustaStringTelaPequena($('#email').val()));
-        spanNome.html(iconeResponavelNomeInicial + $('#spanBuscaNome').html() + iconeResponavelNomeFinal);
-        spanEmail.html(iconeResponavelEmail + $('#email').val());
-        spanHierarquia.html(iconeResponavelHierarquia + $('#hierarquia option:selected').text());
+
+        var spanResponsavelMatricula = $('#spanResponsavelMatricula');
+        var spanResponsavelNome = $('#spanResponsavelNome');
+        var spanResponsavelDataNascimento = $('#spanResponsavelDataNascimento');
+        var spanResponsavelCPF = $('#spanResponsavelCPF');
+        var spanResponsavelEmail = $('#spanResponsavelEmail');
+        var hierarquiaSelecioanada = $('#hierarquia option:selected');
+
+        inputHiddenNome.val(spanResponsavelNome.html());
+        inputHiddenCPF.val(spanResponsavelCPF.html());
+        inputHiddenDataNascimento.val(spanResponsavelDataNascimento.html());
+        spanMatricula.html(iconeResponavelMatricula + spanResponsavelMatricula.html());
+        spanCPF.html(iconeResponavelCPF + spanResponsavelCPF.html());
+        spanNomexs.html(iconeResponavelNomeInicial + ajustaStringTelaPequena(spanResponsavelNome.html()) + iconeResponavelNomeFinal);
+        spanEmailxs.html(iconeResponavelEmail + ajustaStringTelaPequena(spanResponsavelEmail.html()));
+        spanNome.html(iconeResponavelNomeInicial + spanResponsavelNome.html() + iconeResponavelNomeFinal);
+        spanEmail.html(iconeResponavelEmail + spanResponsavelEmail.html());
+        spanHierarquia.html(iconeResponavelHierarquia + hierarquiaSelecioanada.text());
         divCheckDadosResponsavelInseridos.removeClass(hidden);
-        dibBotaoInserirResponsavel.addClass(hidden);
-        dibBotaoAlterarResponsavel.removeClass(hidden);
-        inputHiddenEmail.val($('#email').val());
-        inputHiddenHierarquia.val($('#hierarquia option:selected').val());
-        $('#email').val('');
-        $('#hierarquia').val(0);
-        $('#dataNascimento').val('');
+        divBotaoInserirResponsavel.addClass(hidden);
+        divBotaoLimparResponsavel.removeClass(hidden);
+        inputHiddenEmail.val(spanResponsavelEmail.html());
+        inputHiddenHierarquia.val(hierarquiaSelecioanada.val());
+
         if (mudarBarraDeProgresso === 0) {
             atualizarBarraDeProgresso(valorBarraDeProgresso);
         }
@@ -937,7 +931,25 @@ echo $this->layoutJSGrupo;
         var spanHierarquia = '';
         var spanCPF = '';
         switch (tipoResponsavel) {
-            case 0:
+            case 1:
+                spanMatricula = $('#spanMatricula1');
+                spanNome = $('#spanNome1');
+                spanNomexs = $('#spanNome1xs');
+                spanEmail = $('#spanEmail1');
+                spanEmailxs = $('#spanEmail1xs');
+                spanHierarquia = $('#spanHierarquia1');
+                spanCPF = $('#spanCPF1');
+                break;
+            case 2:
+                spanMatricula = $('#spanMatricula2');
+                spanNome = $('#spanNome2');
+                spanNomexs = $('#spanNome2xs');
+                spanEmail = $('#spanEmail2');
+                spanEmailxs = $('#spanEmail2xs');
+                spanHierarquia = $('#spanHierarquia2');
+                spanCPF = $('#spanCPF2');
+                break;
+            default:
                 spanMatricula = $('#spanMatricula0');
                 spanNome = $('#spanNome0');
                 spanNomexs = $('#spanNome0xs');
@@ -946,8 +958,6 @@ echo $this->layoutJSGrupo;
                 spanHierarquia = $('#spanHierarquia0');
                 spanCPF = $('#spanCPF0');
                 break;
-            default:
-                return false;
         }
         spanMatricula.html('');
         spanCPF.html('');
@@ -1045,7 +1055,47 @@ echo $this->layoutJSGrupo;
     }
 
     function botaoVoltarSelecionarAluno() {
+        $('#divIncluirResponsavel').addClass(hidden);
+        $('#divPassoAPasso').addClass(hidden);
         $('#divConfirmacao').removeClass(hidden);
-        $('#divSelecionarAluno').addClass(hidden);
+    }
+
+    function botaoVoltarDataNascimentoCPF() {
+        $('#divCPFDataNascimento').addClass(hidden);
+        $('#divSelecionarAluno').removeClass(hidden);
+        $('#divDadosSelecionados').addClass(hidden);
+    }
+    function botaoVoltarDataNascimentoCPF() {
+        $('#divCPFDataNascimento').addClass(hidden);
+        $('#divSelecionarAluno').removeClass(hidden);
+        $('#divDadosSelecionados').addClass(hidden);
+        $('#spanMensagens').addClass(hidden);
+        $('#divSpanResponsavelCPF').addClass(hidden);
+        $('#Dia').val(0);
+        $('#Mes').val(0);
+        $('#Ano').val(0);
+        $('#botaoCPFLiberado').addClass(hidden);
+    }
+
+    function botaoVoltarEmail() {
+        $('#divCPFDataNascimento').removeClass(hidden);
+        $('#divEmail').addClass(hidden);
+        $('#botaoCPFLiberado').addClass(hidden);
+        $('#spanMensagens').addClass(hidden);
+        $('#divSpanResponsavelEmail').addClass(hidden);
+        $('#email').val('');
+        $('#repetirEmail').val('');
+        $('#botaoEmailLiberado').addClass(hidden);
+        $('#divSpanResponsavelCPF').addClass(hidden);
+    }
+
+    function botaoVoltarHierarquia() {
+        $('#divEmail').removeClass(hidden);
+        $('#divHierarquia').addClass(hidden);
+        $('#botaoEmailLiberado').addClass(hidden);
+        $('#spanMensagens').addClass(hidden);
+        $('#hierarquia').val(0);
+        $('#botaoHierarquiaSelecionada').addClass(hidden);
+        $('#divSpanResponsavelEmail').addClass(hidden);
     }
 </script>

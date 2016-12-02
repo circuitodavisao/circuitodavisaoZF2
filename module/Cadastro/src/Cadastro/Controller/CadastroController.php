@@ -830,7 +830,11 @@ class CadastroController extends AbstractActionController {
                 $nomeDaPesquisa = '';
                 $dataDeNascimentoDaPesquisa = '';
 
-                $dataNascimento = str_replace('/', '', $post_data[ConstantesForm::$FORM_DATA_NASCIMENTO]);
+                $explodeDataNascimento = explode('/', $post_data[ConstantesForm::$FORM_DATA_NASCIMENTO]);
+                $dia = str_pad($explodeDataNascimento[0], 2, 0, STR_PAD_LEFT);
+                $mes = str_pad($explodeDataNascimento[1], 2, 0, STR_PAD_LEFT);
+                $ano = $explodeDataNascimento[2];
+                $dataNascimento = $dia . $mes . $ano;
                 $urlUsada = ConstantesCadastro::$PROCOB_URL . ConstantesCadastro::$PROCOB_URL_RECEITA_FEDERAL . $cpf . '?dataNascimento=' . $dataNascimento;
                 $curl = curl_init();
                 curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);

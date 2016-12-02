@@ -233,16 +233,53 @@ class GrupoForm extends Form {
                         ])
         );
 
-        /* Data de Nascimento */
-        $this->add(
-                (new Date())
-                        ->setName(ConstantesForm::$FORM_DATA_NASCIMENTO)
-                        ->setAttributes([
-                            ConstantesForm::$FORM_CLASS => ConstantesForm::$FORM_CLASS_FORM_CONTROL . ' ' . ConstantesForm::$FORM_CLASS_DATE,
-                            ConstantesForm::$FORM_ID => ConstantesForm::$FORM_DATA_NASCIMENTO,
-                            ConstantesForm::$FORM_PLACEHOLDER => ConstantesForm::$TRADUCAO_DATA_NASCIMENTO . ' dd/mm/YYYY',
-                        ])
-        );
+        /* Dia da data de nascimento */
+        $arrayDiaDataNascimento = array();
+        $arrayDiaDataNascimento[0] = 'Dia';
+        for ($indiceDiaDoMes = 1; $indiceDiaDoMes <= 31; $indiceDiaDoMes++) {
+            $numeroAjustado = str_pad($indiceDiaDoMes, 2, 0, STR_PAD_LEFT);
+            $arrayDiaDataNascimento[$indiceDiaDoMes] = $numeroAjustado;
+        }
+        $inputSelectDiaDataNascimento = new Select();
+        $inputSelectDiaDataNascimento->setName('Dia');
+        $inputSelectDiaDataNascimento->setAttributes(array(
+            ConstantesForm::$FORM_CLASS => ConstantesForm::$FORM_CLASS_GUI_INPUT,
+            ConstantesForm::$FORM_ID => 'Dia',
+        ));
+        $inputSelectDiaDataNascimento->setValueOptions($arrayDiaDataNascimento);
+        $this->add($inputSelectDiaDataNascimento);
+
+        /* Mês da data de nascimento */
+        $arrayMesDataNascimento = array();
+        $arrayMesDataNascimento[0] = 'Mês';
+        for ($indiceMesNoAno = 1; $indiceMesNoAno <= 12; $indiceMesNoAno++) {
+            $numeroAjustado = str_pad($indiceMesNoAno, 2, 0, STR_PAD_LEFT);
+            $arrayMesDataNascimento[$indiceMesNoAno] = $numeroAjustado;
+        }
+        $inputSelectMesDataNascimento = new Select();
+        $inputSelectMesDataNascimento->setName('Mes');
+        $inputSelectMesDataNascimento->setAttributes(array(
+            ConstantesForm::$FORM_CLASS => ConstantesForm::$FORM_CLASS_GUI_INPUT,
+            ConstantesForm::$FORM_ID => 'Mes',
+        ));
+        $inputSelectMesDataNascimento->setValueOptions($arrayMesDataNascimento);
+        $this->add($inputSelectMesDataNascimento);
+
+        /* Ano da data de nascimento */
+        $arrayAnoDataNascimento = array();
+        $arrayAnoDataNascimento[0] = 'Ano';
+        $anoAtual = date('Y');
+        for ($indiceAno = $anoAtual; $indiceAno >= ($anoAtual - 100); $indiceAno--) {
+            $arrayAnoDataNascimento[$indiceAno] = $indiceAno;
+        }
+        $inputSelectAnoDataNascimento = new Select();
+        $inputSelectAnoDataNascimento->setName('Ano');
+        $inputSelectAnoDataNascimento->setAttributes(array(
+            ConstantesForm::$FORM_CLASS => ConstantesForm::$FORM_CLASS_GUI_INPUT,
+            ConstantesForm::$FORM_ID => 'Ano',
+        ));
+        $inputSelectAnoDataNascimento->setValueOptions($arrayAnoDataNascimento);
+        $this->add($inputSelectAnoDataNascimento);
 
         /* Email */
         $this->add(
