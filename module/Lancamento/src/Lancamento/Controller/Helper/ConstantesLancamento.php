@@ -62,6 +62,7 @@ class ConstantesLancamento {
     public static $NBSP = '&nbsp;';
     public static $CLASS_PHONE = 'phone';
     public static $FORM_CADASTRAR_PESSOA = 'CadastrarPessoaForm';
+    public static $GRUPOS_ABAIXO = 'gruposAbaixo';
     /* Tradução */
     public static $TRADUCAO_ENVIAR_RELATORIO = 'Send Report';
     public static $TRADUCAO_GIRE_O_CELULAR = '<h3>ROTATE THE CELLULAR</h3><span>Turn your phone to landscape to view all your events.</span>';

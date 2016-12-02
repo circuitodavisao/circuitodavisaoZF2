@@ -548,15 +548,26 @@ class LancamentoController extends AbstractActionController {
         $entidade = $lancamentoORM->getEntidadeORM()->encontrarPorIdEntidade($idEntidadeAtual);
         return $entidade->getGrupo();
     }
-    
+
     /**
      * Abri tela para relatorio de atendimento 
      * @return ViewModel
      */
     public function atendimentoAction() {
+        $sessao = new Container(Constantes::$NOME_APLICACAO);
+        $lancamentoORM = new LancamentoORM($this->getDoctrineORMEntityManager());
+        $idEntidadeAtual = $sessao->idEntidadeAtual;
+        $entidade = $lancamentoORM->getEntidadeORM()->encontrarPorIdEntidade($idEntidadeAtual);
+        $grupo = $entidade->getGrupo();
+        $gruposAbaixo = $grupo->getGrupoPaiFilhoFilhos();
 
-        return new ViewModel();
+        $view = new ViewModel(array(
+            ConstantesLancamento::$GRUPOS_ABAIXO => $gruposAbaixo,
+        ));
+        
+        return $view;
     }
+
     /**
      * Abri tela para lancamento de atendimento 
      * @return ViewModel
@@ -564,6 +575,33 @@ class LancamentoController extends AbstractActionController {
     public function lancarAtendimentoAction() {
 
         return new ViewModel();
+    }
+    
+    /**
+     * Controle de funçoes da tela de lancamento
+     * @return Json
+     */
+    public function funcoesAction() {
+        $request = $this->getRequest();
+        $response = $this->getResponse();
+        if ($request->isPost()) {
+            try {
+                $post_data = $request->getPost();
+                $funcao = $post_data[Constantes::$FUNCAO];
+                $id = $post_data[Constantes::$ID];
+                $sessao = new Container(Constantes::$NOME_APLICACAO);
+                $sessao->idSessao = $id;
+                $response->setContent(Json::encode(
+                                array(
+                                    'response' => 'true',
+                                    'tipoDeRetorno' => 1,
+                                    'url' => '/lancamento' . $funcao,
+                )));
+            } catch (Exception $exc) {
+                echo $exc->getTraceAsString();
+            }
+        }
+        return $response;
     }
 
 }
