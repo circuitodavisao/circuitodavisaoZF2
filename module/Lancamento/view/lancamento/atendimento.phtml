@@ -1,11 +1,24 @@
-<?php 
-$versao = 0.1;
-echo $this
-        ->headScript()
-        ->prependFile($this->basePath() . '/js/circuito_da_visao/funcao-lancamento.js' . $versao)
-;
-echo $this->inlineScript();
-?>
+<script>
+function funcaoLancamento(funcao, id) {
+    var resposta = true;
+
+    if (resposta) {
+        $.post(
+                '/lancamentoFuncoes',
+                {
+                    id: id,
+                    funcao: funcao
+                },
+        function (data) {
+            if (data.response) {
+                if (data.tipoDeRetorno === 1) {
+                    location.href = data.url;
+                }
+            }
+        }, 'json');
+    }
+}
+</script>
 <div class="mw1000 center-block p10">
     <div class="admin-form theme-danger">
         <blockquote class = "blockquote-danger">
@@ -83,9 +96,9 @@ echo $this->inlineScript();
                                     </div>
                                     <span style="padding-top: 0px;"><?php echo $html; ?></span>
                                 </div>
-                                <?php $onClick = 'onclick="funcaoLancamento(lancarAtendimento,'. $gpFilho->getId() . ')"'; ?>
+                                
                                 <div class="col-md-1 col-xs-2" style="padding-left: 0px; padding-top: 3px; vertical-align: middle;">
-                                    <button type="button" <?php echo $onClick;?> class="btn btn-xs btn-primary" style="padding-top: 0px; padding-bottom: 0px;">
+                                    <button type="button" onclick="funcaoLancamento(<?php echo "'LancarAtendimento',".$gpFilho->getId(); ?>);" class="btn btn-xs btn-primary" style="padding-top: 0px; padding-bottom: 0px;">
                                         <i class="fa fa-plus" aria-hidden="true"></i>
                                     </button>
                                 </div>                           

@@ -564,7 +564,7 @@ class LancamentoController extends AbstractActionController {
         $view = new ViewModel(array(
             ConstantesLancamento::$GRUPOS_ABAIXO => $gruposAbaixo,
         ));
-        
+
         return $view;
     }
 
@@ -573,9 +573,22 @@ class LancamentoController extends AbstractActionController {
      * @return ViewModel
      */
     public function lancarAtendimentoAction() {
+        $sessao = new Container(Constantes::$NOME_APLICACAO);
 
-        return new ViewModel();
+        /* Verificando a se tem algum id na sessão */
+        $grupoNaSessao = new Grupo();
+        $lancamentoORM = new LancamentoORM($this->getDoctrineORMEntityManager());
+        if (!empty($sessao->idSessao)) {
+            $grupoNaSessao = $lancamentoORM->getEntidadeORM()->encontrarPorIdEntidade($sessao->idSessao);
+        }
+
+
+
+        $view = new ViewModel(array(
+            ConstantesLancamento::$GRUPO => $grupoNaSessao,
+        ));
+
+        return $view;
     }
-    
 
 }
