@@ -110,12 +110,11 @@ echo $this->templateFormularioTopo($tituloDaPagina);
             <?php
             echo "<div id='divBotaoInserirResponsavel'>";
             $labelInserirHomem = ConstantesCadastro::$TRADUCAO_INSERIR;
-            $extraInserirHomem = 'onclick="abrirTelaDeAlunos(0);"';
-            echo $this->botaoLink($labelInserirHomem, ConstantesForm::$STRING_HASHTAG, 5, $extraInserirHomem);
+            echo $this->botaoLink($labelInserirHomem, ConstantesForm::$STRING_HASHTAG, 5, $this->funcaoOnClick('abrirTelaDeAlunos(0)'));
             echo "</div>";
             echo "<div id='divBotaoLimparResponsavel' class='hidden'>";
             $labelLimparHomem = ConstantesCadastro::$TRADUCAO_LIMPAR;
-            echo $this->botaoLink($labelLimparHomem, ConstantesForm::$STRING_HASHTAG, 6, '');
+            echo $this->botaoLink($labelLimparHomem, ConstantesForm::$STRING_HASHTAG, 6, $this->funcaoOnClick('limparDadosPessoaSelecionada(0)'));
             echo "</div>";
             ?>
             <div id="divCheckDadosResponsavelInseridos" class="checkDadosInseridos hidden">
@@ -137,13 +136,12 @@ echo $this->templateFormularioTopo($tituloDaPagina);
             <?php
             echo "<div id='divBotaoInserirResponsavel1'>";
             $labelInserirHomem = ConstantesCadastro::$TRADUCAO_INSERIR;
-            $extraInserirHomem = 'onclick="abrirTelaDeAlunos(1);"';
-            echo $this->botaoLink($labelInserirHomem, ConstantesForm::$STRING_HASHTAG, 5, $extraInserirHomem);
+            echo $this->botaoLink($labelInserirHomem, ConstantesForm::$STRING_HASHTAG, 5, $this->funcaoOnClick('abrirTelaDeAlunos(1)'));
             echo "</div>";
 
             echo "<div id='divBotaoLimparResponsavel1' class='hidden'>";
             $labelLimparHomem = ConstantesCadastro::$TRADUCAO_LIMPAR;
-            echo $this->botaoLink($labelLimparHomem, ConstantesForm::$STRING_HASHTAG, 6, '');
+            echo $this->botaoLink($labelLimparHomem, ConstantesForm::$STRING_HASHTAG, 6, $this->funcaoOnClick('limparDadosPessoaSelecionada(1)'));
             echo "</div>";
             ?>      
             <div id="divCheckDadosResponsavelInseridos1" class="checkDadosInseridos hidden">
@@ -165,13 +163,12 @@ echo $this->templateFormularioTopo($tituloDaPagina);
             <?php
             echo "<div id='divBotaoInserirResponsavel2'>";
             $labelInserirMulher = ConstantesCadastro::$TRADUCAO_INSERIR;
-            $extraInserirMulher = 'onclick="abrirTelaDeAlunos(2);"';
-            echo $this->botaoLink($labelInserirMulher, ConstantesForm::$STRING_HASHTAG, 5, $extraInserirMulher);
+            echo $this->botaoLink($labelInserirMulher, ConstantesForm::$STRING_HASHTAG, 5, $this->funcaoOnClick('abrirTelaDeAlunos(2)'));
             echo "</div>";
 
             echo "<div id='divBotaoLimparResponsavel2' class='hidden'>";
             $labelLimparMulher = ConstantesCadastro::$TRADUCAO_LIMPAR;
-            echo $this->botaoLink($labelLimparMulher, ConstantesForm::$STRING_HASHTAG, 6, '');
+            echo $this->botaoLink($labelLimparMulher, ConstantesForm::$STRING_HASHTAG, 6, $this->funcaoOnClick('limparDadosPessoaSelecionada(2)'));
             echo "</div>";
             ?>       
             <div id="divCheckDadosResponsavelInseridos2" class="checkDadosInseridos hidden">
@@ -217,7 +214,7 @@ echo $this->templateFormularioTopo($tituloDaPagina);
     <!-- Incluir Responsavel -->
     <div id="divIncluirResponsavel" class="hidden">
         <!-- Passo a Passo -->
-        <div id="divPassoAPasso">           
+        <div id="divPassoAPasso" class="hidden">           
             <div class="stepwizard">
                 <div class="stepwizard-row">
                     <div class="stepwizard-step">
@@ -417,16 +414,6 @@ echo $this->templateFormularioTopo($tituloDaPagina);
                 echo $this->botaoLink($labelInserirResponsavel, ConstantesForm::$STRING_HASHTAG, 7, $extraResponsavel2);
                 echo '</div>';
 
-                echo '<div id="botaoAlterarResponsavel" class="hidden">';
-                $labelAlterarResponsavel = ConstantesCadastro::$TRADUCAO_ALTERAR;
-                $extraAlterarResponsavel = 'onclick="
-                insereResponsavelNaTelaDeConfimacao(0, 1); 
-                    $(\'#divConfirmacao\').removeClass(\'hidden\');            
-                    $(\'#divResponsavel\').addClass(\'hidden\');
-                "';
-                echo $this->botaoLink($labelAlterarResponsavel, ConstantesForm::$STRING_HASHTAG, 7, $extraAlterarResponsavel);
-                echo '</div>';
-
                 echo '</div>';
 
                 /* Botao Voltar Email */
@@ -499,6 +486,7 @@ echo $this->formHidden($form->get(ConstantesForm::$FORM_HIERARQUIA . '2'));
 echo $this->formHidden($form->get(ConstantesForm::$FORM_DATA_NASCIMENTO . '0'));
 echo $this->formHidden($form->get(ConstantesForm::$FORM_DATA_NASCIMENTO . '1'));
 echo $this->formHidden($form->get(ConstantesForm::$FORM_DATA_NASCIMENTO . '2'));
+echo $this->formHidden($form->get(ConstantesForm::$FORM_NOME_ALUNO));
 
 echo $this->templateFormularioRodape();
 echo $this->form()->closeTag();
@@ -509,7 +497,6 @@ echo $this->layoutJSGrupo;
 <script type="text/javascript">
     /* Dados */
     var estadoCivil = 0;
-    var responsavel0 = 0;
     var iconeTime = '<i class="fa fa-times" aria-hidden="true"></i>';
     var iconeCheck = '<i class="fa fa-check" aria-hidden="true"></i>';
     var hidden = 'hidden';
@@ -539,6 +526,40 @@ echo $this->layoutJSGrupo;
         $('#divEstadoCivil').addClass('hidden');
         $('#divConfirmacao').removeClass('hidden');
 
+    }
+
+    function abrirTelaDeAlunos(tipo) {
+        $('#botaoInserirResponsavel0').addClass(hidden);
+        $('#botaoInserirResponsavel1').addClass(hidden);
+        $('#botaoInserirResponsavel2').addClass(hidden);
+        $('.alunoM').addClass(hidden);
+        $('.alunoF').addClass(hidden);
+        switch (tipo) {
+            case 0:
+                $('.alunoM').removeClass(hidden);
+                $('.alunoF').removeClass(hidden);
+                $('#botaoInserirResponsavel0').removeClass(hidden);
+                break;
+            case 1:
+                $('.alunoM').removeClass(hidden);
+                $('#botaoInserirResponsavel1').removeClass(hidden);
+                break;
+            case 2:
+                $('.alunoF').removeClass(hidden);
+                $('#botaoInserirResponsavel2').removeClass(hidden);
+                break;
+        }
+        $('#divConfirmacao').addClass(hidden);
+        $('#divSelecionarAluno').removeClass(hidden);
+        $('#divIncluirResponsavel').removeClass(hidden);
+        $('#divPassoAPasso').removeClass(hidden);
+        $('#divDadosSelecionados').addClass(hidden);
+        $('#divBotaoDeSelecionarAluno').addClass(hidden);
+        $('#divSpanResponsavelCPF').addClass(hidden);
+        $('#divSpanResponsavelEmail').addClass(hidden);
+        $('#botaoHierarquiaSelecionada').addClass(hidden);
+        $('#divHierarquia').addClass(hidden);
+        limparPassoAPasso();
     }
 
     function selecionarAluno() {
@@ -579,6 +600,7 @@ echo $this->layoutJSGrupo;
         $('#divSelecionarAluno').addClass(hidden);
         $('#divCPFDataNascimento').removeClass(hidden);
         $('#divDadosSelecionados').removeClass(hidden);
+        $('#nomeAluno').val(nome);
     }
 
     function isNumber(n) {
@@ -586,6 +608,7 @@ echo $this->layoutJSGrupo;
     }
 
     function buscarCPF() {
+        $('#botaoCPFLiberado').addClass(hidden);
         var cpf = $("#cpf").val();
         var stringBarra = '/';
         var DiaDataNascimento = $("#Dia").val();
@@ -598,17 +621,15 @@ echo $this->layoutJSGrupo;
 
         var loader = $('#loadercpf');
         var spanMensagens = $('#spanMensagens');
-        spanMensagens
-                .removeClass(alertDanger)
+        spanMensagens.removeClass(alertDanger)
                 .removeClass(alertSuccess)
                 .addClass(hidden);
         loader.removeClass(hidden);
 
         var temErro = false;
-        if (cpf.length === 0 && DiaDataNascimento === 0 && MesDataNascimento === 0 && AnoDataNascimento === 0) {
-            spanMensagens
-                    .text('Preenchar a Data de Nascimento e o CPF!');
+        if (cpf.length === 0 || DiaDataNascimento === 0 || MesDataNascimento === 0 || AnoDataNascimento === 0) {
             temErro = true;
+            spanMensagens.text('Preenchar a Data de Nascimento e o CPF corretamente!');
         } else {
             if (DiaDataNascimento.length === 1) {
                 DiaDataNascimento = '0' + DiaDataNascimento;
@@ -619,18 +640,12 @@ echo $this->layoutJSGrupo;
             var dataNascimento = DiaDataNascimento + stringBarra
                     + MesDataNascimento + stringBarra
                     + AnoDataNascimento;
-            if (cpf.length === 0) {
-                spanMensagens
-                        .text('Preenchar o CPF!');
+            if (!isNumber(cpf) || cpf.length !== 11) {
+                spanMensagens.text('CPF é invalido!');
                 temErro = true;
-            } else {
-                if (!isNumber(cpf) || cpf.length !== 11) {
-                    spanMensagens
-                            .text('CPF é invalido!');
-                    temErro = true;
-                }
             }
         }
+
         if (!temErro) {
             $.post(
                     "/cadastroBuscarCPF",
@@ -646,36 +661,38 @@ echo $this->layoutJSGrupo;
                     $('#divSpanResponsavelCPF').removeClass(hidden);
                     $('#spanResponsavelDataNascimento').html(data.dataNascimento);
 
-                    /* Mensagem de sucesso */
-                    spanMensagens
-                            .text('Dados Liberados!')
-                            .addClass(alertSuccess)
-                            .removeClass(hidden);
-
-                    var nomeDoAlunoSelecionado = $('#spanResponsavelNome').text();
+                    var nomeDoAlunoSelecionado = $('#nomeAluno').val();
                     var splitNomeDoAluno = nomeDoAlunoSelecionado.split(" ");
                     var splitNomeEncontradoNaBusca = data.nome.split(" ");
 
                     if (splitNomeDoAluno[0] !== splitNomeEncontradoNaBusca[0]) {
                         spanMensagens
+                                .addClass(alertDanger)
                                 .text('Nome do CPF não confere com o do aluno')
                                 .removeClass(hidden);
+                    } else {
+                        /* Mensagem de sucesso */
+                        spanMensagens
+                                .text('Dados Liberados!')
+                                .addClass(alertSuccess)
+                                .removeClass(hidden);
+                        $('#botaoCPFLiberado').removeClass(hidden);
                     }
-                    $('#botaoCPFLiberado').removeClass(hidden);
 
                 }
                 if (parseInt(data.resposta) === 2) {
                     /* Não encontrou no PROCOB */
                     spanMensagens
+                            .addClass(alertDanger)
                             .removeClass(hidden)
-                            .text(data.mensagem);
+                            .text('CPF e Data de Nascimento não encontrado na base de dados');
                 }
                 loader.addClass(hidden);
             }
             , 'json');
         } else {
-            spanMensagens.
-                    addClass(alertDanger)
+            spanMensagens
+                    .addClass(alertDanger)
                     .removeClass(hidden);
             loader.addClass(hidden);
         }
@@ -722,6 +739,15 @@ echo $this->layoutJSGrupo;
         if (email.length === 0 && repetirEmail.length === 0) {
             temErro = true;
             spanMensagens.html('Preeencha o email e repita');
+        }
+        /* Não deixar repetir email */
+
+        var email0 = $('#email0').val();
+        var email1 = $('#email1').val();
+        var email2 = $('#email2').val();
+        if (email === email0 || email === email1 || email === email2) {
+            temErro = true;
+            spanMensagens.html('Email já usado pelo conjungê');
         }
         if (!temErro) {
             $.post(
@@ -783,7 +809,6 @@ echo $this->layoutJSGrupo;
     function mostrarBotaoDeSelecionarAluno() {
         $('#divBotaoDeSelecionarAluno').removeClass(hidden);
     }
-
 
     function mostrarBotaoDeInserirResponsavel(valorDoSelectHierarquia) {
         valorDoSelectHierarquia = parseInt(valorDoSelectHierarquia);
@@ -884,7 +909,7 @@ echo $this->layoutJSGrupo;
                 valorBarraDeProgresso = 25;
                 divCheckDadosResponsavelInseridos = $('#divCheckDadosResponsavelInseridos2');
                 divBotaoInserirResponsavel = $('#divBotaoInserirResponsavel2');
-                divBotaoLimparResponsavel = $('#dibBotaoLimparResponsavel2');
+                divBotaoLimparResponsavel = $('#divBotaoLimparResponsavel2');
                 inputHiddenNome = $('#nome2');
                 inputHiddenCPF = $('#cpf2');
                 inputHiddenDataNascimento = $('#dataNascimento2');
@@ -930,6 +955,9 @@ echo $this->layoutJSGrupo;
         var spanEmailxs = '';
         var spanHierarquia = '';
         var spanCPF = '';
+        var divBotaoLimpar = '';
+        var divBotaoInserir = '';
+        var divCheckDadosResponsavelInseridos = '';
         switch (tipoResponsavel) {
             case 1:
                 spanMatricula = $('#spanMatricula1');
@@ -939,6 +967,9 @@ echo $this->layoutJSGrupo;
                 spanEmailxs = $('#spanEmail1xs');
                 spanHierarquia = $('#spanHierarquia1');
                 spanCPF = $('#spanCPF1');
+                divBotaoLimpar = $('#divBotaoLimparResponsavel1');
+                divBotaoInserir = $('#divBotaoInserirResponsavel1');
+                divCheckDadosResponsavelInseridos = $('#divCheckDadosResponsavelInseridos1');
                 break;
             case 2:
                 spanMatricula = $('#spanMatricula2');
@@ -948,6 +979,9 @@ echo $this->layoutJSGrupo;
                 spanEmailxs = $('#spanEmail2xs');
                 spanHierarquia = $('#spanHierarquia2');
                 spanCPF = $('#spanCPF2');
+                divBotaoLimpar = $('#divBotaoLimparResponsavel2');
+                divBotaoInserir = $('#divBotaoInserirResponsavel2');
+                divCheckDadosResponsavelInseridos = $('#divCheckDadosResponsavelInseridos2');
                 break;
             default:
                 spanMatricula = $('#spanMatricula0');
@@ -957,6 +991,9 @@ echo $this->layoutJSGrupo;
                 spanEmailxs = $('#spanEmail0xs');
                 spanHierarquia = $('#spanHierarquia0');
                 spanCPF = $('#spanCPF0');
+                divBotaoLimpar = $('#divBotaoLimparResponsavel');
+                divBotaoInserir = $('#divBotaoInserirResponsavel');
+                divCheckDadosResponsavelInseridos = $('#divCheckDadosResponsavelInseridos');
                 break;
         }
         spanMatricula.html('');
@@ -970,21 +1007,34 @@ echo $this->layoutJSGrupo;
         $('#spanInsiraOsDadosDoResponsavel').html('Insira os dados do Responsavel');
         $('#spanInsiraOsDadosDoResponsavel1').html('Insira os dados do Homem');
         $('#spanInsiraOsDadosDoResponsavel2').html('Insira os dados do Mulher');
-        $('#cpf').val('');
+
+        divBotaoLimpar.addClass(hidden);
+        divBotaoInserir.removeClass(hidden);
+        divCheckDadosResponsavelInseridos.addClass(hidden);
+        limparPassoAPasso();
+        atualizarBarraDeProgresso(-50);
+    }
+
+    function limparPassoAPasso() {
+        $('#botaoPasso2').removeClass(btnPrimary).addClass(btnDefault);
+        $('#botaoPasso3').removeClass(btnPrimary).addClass(btnDefault);
+        $('#botaoPasso4').removeClass(btnPrimary).addClass(btnDefault);
+        $('#divHierarquia').addClass(hidden);
+        $('#Dia').val(0);
+        $('#Mes').val(0);
+        $('#Ano').val(0);
         $('#email').val('');
         $('#repetirEmail').val('');
         $('#hierarquia').val(0);
-        $('#spanBuscaCPF').html('');
-        $('#spanBuscaNome').html('');
-        $('#spanBuscaDataNascimento').html('');
-        $('#divCheckDadosResponsavelInseridos').addClass(hidden);
-        $('#dibBotaoInserirResponsavel').removeClass(hidden);
-        $('#dibBotaoAlterarResponsavel').addClass(hidden);
-        $('#divResultadoBuscaCPF').addClass(hidden);
-        $('#divDadosExtras').addClass(hidden);
-        $('#divEmailResponsavel').addClass(hidden);
-        $('#botaoInserirResponsavel').addClass(hidden);
-        atualizarBarraDeProgresso(-50);
+        $("input:radio[name='radioAlunoSelecionado']").each(function (i) {
+            this.checked = false;
+        });
+        $('#divSpanResponsavelEmail').addClass(hidden);
+        $('#divSpanResponsavelCPF').addClass(hidden);
+        $('#divDadosSelecionados').addClass(hidden);
+        $('#botaoHierarquiaSelecionada').addClass(hidden);
+        $('#botaoEmailLiberado').addClass(hidden);
+        $('#divBotaoDeSelecionarAluno').addClass(hidden);
     }
 
     function insereNumeracaoNaTelaDeConfimacao(mudarBarraDeProgresso) {
@@ -1028,32 +1078,6 @@ echo $this->layoutJSGrupo;
         return stringAjustada;
     }
 
-    function abrirTelaDeAlunos(tipo) {
-        $('#botaoInserirResponsavel0').addClass(hidden);
-        $('#botaoInserirResponsavel1').addClass(hidden);
-        $('#botaoInserirResponsavel2').addClass(hidden);
-        $('.alunoM').addClass(hidden);
-        $('.alunoF').addClass(hidden);
-        switch (tipo) {
-            case 0:
-                $('.alunoM').removeClass(hidden);
-                $('.alunoF').removeClass(hidden);
-                $('#botaoInserirResponsavel0').removeClass(hidden);
-                break;
-            case 1:
-                $('.alunoM').removeClass(hidden);
-                $('#botaoInserirResponsavel1').removeClass(hidden);
-                break;
-            case 2:
-                $('.alunoF').removeClass(hidden);
-                $('#botaoInserirResponsavel2').removeClass(hidden);
-                break;
-        }
-        $('#divConfirmacao').addClass(hidden);
-        $('#divSelecionarAluno').removeClass(hidden);
-        $('#divIncluirResponsavel').removeClass(hidden);
-    }
-
     function botaoVoltarSelecionarAluno() {
         $('#divIncluirResponsavel').addClass(hidden);
         $('#divPassoAPasso').addClass(hidden);
@@ -1064,17 +1088,13 @@ echo $this->layoutJSGrupo;
         $('#divCPFDataNascimento').addClass(hidden);
         $('#divSelecionarAluno').removeClass(hidden);
         $('#divDadosSelecionados').addClass(hidden);
-    }
-    function botaoVoltarDataNascimentoCPF() {
-        $('#divCPFDataNascimento').addClass(hidden);
-        $('#divSelecionarAluno').removeClass(hidden);
-        $('#divDadosSelecionados').addClass(hidden);
         $('#spanMensagens').addClass(hidden);
         $('#divSpanResponsavelCPF').addClass(hidden);
         $('#Dia').val(0);
         $('#Mes').val(0);
         $('#Ano').val(0);
         $('#botaoCPFLiberado').addClass(hidden);
+        $('#botaoPasso2').removeClass(btnPrimary).addClass(btnDefault);
     }
 
     function botaoVoltarEmail() {
@@ -1087,6 +1107,7 @@ echo $this->layoutJSGrupo;
         $('#repetirEmail').val('');
         $('#botaoEmailLiberado').addClass(hidden);
         $('#divSpanResponsavelCPF').addClass(hidden);
+        $('#botaoPasso3').removeClass(btnPrimary).addClass(btnDefault);
     }
 
     function botaoVoltarHierarquia() {
@@ -1097,5 +1118,6 @@ echo $this->layoutJSGrupo;
         $('#hierarquia').val(0);
         $('#botaoHierarquiaSelecionada').addClass(hidden);
         $('#divSpanResponsavelEmail').addClass(hidden);
+        $('#botaoPasso4').removeClass(btnPrimary).addClass(btnDefault);
     }
 </script>

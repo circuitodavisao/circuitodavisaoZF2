@@ -193,6 +193,15 @@ class GrupoForm extends Form {
                         ])
         );
 
+        /* nome aluno */
+        $this->add(
+                (new Hidden())
+                        ->setName(ConstantesForm::$FORM_NOME_ALUNO)
+                        ->setAttributes([
+                            ConstantesForm::$FORM_ID => ConstantesForm::$FORM_NOME_ALUNO,
+                        ])
+        );
+
         /**
          * Radio Estado Civil
          */

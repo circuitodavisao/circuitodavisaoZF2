@@ -18,6 +18,7 @@ class ConstantesForm {
     public static $FORM_DIA_DA_SEMANA = 'dia_da_semana';
     public static $FORM_HIERARQUIA = 'hierarquia';
     public static $FORM_DATA_NASCIMENTO = 'dataNascimento';
+    public static $FORM_NOME_ALUNO = 'nomeAluno';
     public static $FORM_NUMERACAO = 'numeracao';
     public static $FORM_HORA = 'hora';
     public static $FORM_MINUTOS = 'minutos';
