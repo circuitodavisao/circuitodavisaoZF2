@@ -651,7 +651,7 @@ class CadastroController extends AbstractActionController {
         $layoutJS = new ViewModel();
         $layoutJS->setTemplate(ConstantesForm::$LAYOUT_JS_GRUPO);
         $view->addChild($layoutJS, ConstantesForm::$LAYOUT_STRING_JS_GRUPO);
-        
+
         return $view;
     }
 
@@ -825,7 +825,6 @@ class CadastroController extends AbstractActionController {
      */
     public function buscarCPFAction() {
         $resposta = 0;
-        $mensagem = '';
         $request = $this->getRequest();
         $response = $this->getResponse();
         if ($request->isPost()) {
@@ -860,14 +859,15 @@ class CadastroController extends AbstractActionController {
                     $nomeDaPesquisa = $explodeResultado[11];
                     $dataDeNascimentoDaPesquisa = Funcoes::mudarPadraoData(str_replace('\/', '-', $explodeResultado[17]), 2);
                     $resposta = 1;
+
+                    /* CPF encontrado na receita verificando se tem cadastro no sistema */
+                    $loginORM = new LoginORM($this->getDoctrineORMEntityManager());
+                    if ($loginORM->getPessoaORM()->encontrarPorCPF($cpf)) {
+                        $resposta = 3;
+                    }
                 }
-                if ($explodeResultado[1] === '001') {
+                if ($explodeResultado[1] === '001' || $explodeResultado[1] === '999') {
                     $resposta = 2;
-                    $mensagem = 'CPF não encontrado na base de dados!';
-                }
-                if ($explodeResultado[1] === '999') {
-                    $resposta = 2;
-                    $mensagem = $explodeResultado[3];
                 }
 
                 $dadosDeResposta = array(
@@ -875,7 +875,6 @@ class CadastroController extends AbstractActionController {
                     'cpf' => $cpf,
                     'nome' => $nomeDaPesquisa,
                     'dataNascimento' => $dataDeNascimentoDaPesquisa,
-                    'mensagem' => $mensagem,
                 );
                 $response->setContent(Json::encode($dadosDeResposta));
             } catch (Exception $exc) {

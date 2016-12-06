@@ -163,7 +163,8 @@ function buscarCPF() {
                     dataNascimento: dataNascimento
                 },
         function (data) {
-            if (parseInt(data.resposta) === 1) {
+            var resposta = parseInt(data.resposta);
+            if (resposta === 1) {
                 var nomeDoAlunoSelecionado = $('#nomeAluno').val();
                 var splitNomeDoAluno = nomeDoAlunoSelecionado.split(" ");
                 var splitNomeEncontradoNaBusca = data.nome.split(" ");
@@ -200,12 +201,20 @@ function buscarCPF() {
                     $('#spanResponsavelDataNascimento').html(data.dataNascimento);
                 }
             }
-            if (parseInt(data.resposta) === 2) {
+            if (resposta === 2) {
                 /* Não encontrou no PROCOB */
+                spanMensagens.text('CPF e Data de Nascimento não encontrado na base de dados');
+            }
+
+            if (resposta === 3) {
+                /* Já cadastrado */
+                spanMensagens.text('CPF já cadastrado!');
+            }
+
+            if (resposta === 2 || resposta === 3) {
                 spanMensagens
                         .addClass(alertDanger)
-                        .removeClass(hidden)
-                        .text('CPF e Data de Nascimento não encontrado na base de dados');
+                        .removeClass(hidden);
             }
             loader.addClass(hidden);
         }
