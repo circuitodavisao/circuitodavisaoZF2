@@ -559,7 +559,7 @@ echo $this->layoutJSGrupo;
         $('#divSpanResponsavelEmail').addClass(hidden);
         $('#botaoHierarquiaSelecionada').addClass(hidden);
         $('#divHierarquia').addClass(hidden);
-        limparPassoAPasso();
+        limparPassoAPasso(tipo);
     }
 
     function selecionarAluno() {
@@ -731,6 +731,10 @@ echo $this->layoutJSGrupo;
                 temErro = true;
                 spanMensagens.html('Email invalido!');
             }
+            if (email === email0 || email === email1 || email === email2) {
+                temErro = true;
+                spanMensagens.html('Email já usado pelo conjungê');
+            }
         }
         if (repetirEmail.length === 0) {
             temErro = true;
@@ -745,10 +749,8 @@ echo $this->layoutJSGrupo;
         var email0 = $('#email0').val();
         var email1 = $('#email1').val();
         var email2 = $('#email2').val();
-        if (email === email0 || email === email1 || email === email2) {
-            temErro = true;
-            spanMensagens.html('Email já usado pelo conjungê');
-        }
+
+
         if (!temErro) {
             $.post(
                     "/cadastroBuscarEmail",
@@ -1011,11 +1013,18 @@ echo $this->layoutJSGrupo;
         divBotaoLimpar.addClass(hidden);
         divBotaoInserir.removeClass(hidden);
         divCheckDadosResponsavelInseridos.addClass(hidden);
-        limparPassoAPasso();
-        atualizarBarraDeProgresso(-50);
+        limparPassoAPasso(tipoResponsavel);
+        var valorDeReducaoBarraDeProgresso = 0;
+        if (tipoResponsavel === 0) {
+            valorDeReducaoBarraDeProgresso = -50;
+        }
+        if (tipoResponsavel === 1 || tipoResponsavel === 1) {
+            valorDeReducaoBarraDeProgresso = -25;
+        }
+        atualizarBarraDeProgresso(valorDeReducaoBarraDeProgresso);
     }
 
-    function limparPassoAPasso() {
+    function limparPassoAPasso(tipo) {
         $('#botaoPasso2').removeClass(btnPrimary).addClass(btnDefault);
         $('#botaoPasso3').removeClass(btnPrimary).addClass(btnDefault);
         $('#botaoPasso4').removeClass(btnPrimary).addClass(btnDefault);
@@ -1035,6 +1044,32 @@ echo $this->layoutJSGrupo;
         $('#botaoHierarquiaSelecionada').addClass(hidden);
         $('#botaoEmailLiberado').addClass(hidden);
         $('#divBotaoDeSelecionarAluno').addClass(hidden);
+
+        if (tipo === 0) {
+            $('#idAlunoSelecionado0').val('');
+            $('#nome0').val('');
+            $('#email0').val('');
+            $('#cpf0').val('');
+            $('#hierarquia0').val('');
+            $('#dataNascimento0').val('');
+        }
+        if (tipo === 1) {
+            $('#idAlunoSelecionado1').val('');
+            $('#nome1').val('');
+            $('#email1').val('');
+            $('#cpf1').val('');
+            $('#hierarquia1').val('');
+            $('#dataNascimento1').val('');
+        }
+        if (tipo === 2) {
+            $('#idAlunoSelecionado2').val('');
+            $('#nome2').val('');
+            $('#email2').val('');
+            $('#cpf2').val('');
+            $('#hierarquia2').val('');
+            $('#dataNascimento2').val('');
+        }
+        $('#nomeAluno').val('');
     }
 
     function insereNumeracaoNaTelaDeConfimacao(mudarBarraDeProgresso) {
