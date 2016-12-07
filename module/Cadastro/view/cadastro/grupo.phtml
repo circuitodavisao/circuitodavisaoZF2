@@ -77,6 +77,98 @@ echo $this->templateFormularioTopo($tituloDaPagina);
         line-height: 1.428571429;
         border-radius: 15px;
     }
+
+    .cs-loader {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 100%;
+    }
+
+    .cs-loader-inner {
+        transform: translateY(-50%);
+        top: 50%;
+        position: absolute;
+        width: calc(100% - 200px);
+        color: #FFF;
+        padding: 0 100px;
+        text-align: center;
+    }
+
+    .cs-loader-inner label {
+        font-size: 20px;
+        opacity: 0;
+        display:inline-block;
+    }
+
+    @keyframes lol {
+        0% {
+            opacity: 0;
+            transform: translateX(-300px);
+        }
+        33% {
+            opacity: 1;
+            transform: translateX(0px);
+        }
+        66% {
+            opacity: 1;
+            transform: translateX(0px);
+        }
+        100% {
+            opacity: 0;
+            transform: translateX(300px);
+        }
+    }
+
+    @-webkit-keyframes lol {
+        0% {
+            opacity: 0;
+            -webkit-transform: translateX(-300px);
+        }
+        33% {
+            opacity: 1;
+            -webkit-transform: translateX(0px);
+        }
+        66% {
+            opacity: 1;
+            -webkit-transform: translateX(0px);
+        }
+        100% {
+            opacity: 0;
+            -webkit-transform: translateX(300px);
+        }
+    }
+
+    .cs-loader-inner label:nth-child(6) {
+        -webkit-animation: lol 3s infinite ease-in-out;
+        animation: lol 3s infinite ease-in-out;
+    }
+
+    .cs-loader-inner label:nth-child(5) {
+        -webkit-animation: lol 3s 100ms infinite ease-in-out;
+        animation: lol 3s 100ms infinite ease-in-out;
+    }
+
+    .cs-loader-inner label:nth-child(4) {
+        -webkit-animation: lol 3s 200ms infinite ease-in-out;
+        animation: lol 3s 200ms infinite ease-in-out;
+    }
+
+    .cs-loader-inner label:nth-child(3) {
+        -webkit-animation: lol 3s 300ms infinite ease-in-out;
+        animation: lol 3s 300ms infinite ease-in-out;
+    }
+
+    .cs-loader-inner label:nth-child(2) {
+        -webkit-animation: lol 3s 400ms infinite ease-in-out;
+        animation: lol 3s 400ms infinite ease-in-out;
+    }
+
+    .cs-loader-inner label:nth-child(1) {
+        -webkit-animation: lol 3s 500ms infinite ease-in-out;
+        animation: lol 3s 500ms infinite ease-in-out;
+    }
 </style>
 <!-- Inicio panel-body -->
 <div class="panel-body bg-light">
@@ -96,7 +188,7 @@ echo $this->templateFormularioTopo($tituloDaPagina);
             </div>
         </div>
         <!-- Bloco responsavel -->
-        <div id="blocoResponsavel" class="well col-xs-12">
+        <div id="blocoResponsavel" class="well col-xs-12 btn btn-default text-left" <?php echo $this->funcaoOnClick('abrirTelaDeAlunos(0)'); ?>>
             <address>
                 <span id="spanInsiraOsDadosDoResponsavel">Insira os dados do Responsavel</span>
                 <span class="quebraDeLinhaDeSpan" id="spanMatricula0"></span>
@@ -122,7 +214,7 @@ echo $this->templateFormularioTopo($tituloDaPagina);
             </div>
         </div>
         <!-- Bloco homem -->
-        <div id="blocoHomem" class="well col-xs-12">
+        <div id="blocoHomem" class="well col-xs-12 btn btn-default" <?php echo $this->funcaoOnClick('abrirTelaDeAlunos(1)'); ?>>
             <address>
                 <span id="spanInsiraOsDadosDoResponsavel1">Insira os dados do Homem</span>
                 <span class="quebraDeLinhaDeSpan" id="spanMatricula1"></span>
@@ -149,7 +241,7 @@ echo $this->templateFormularioTopo($tituloDaPagina);
             </div>
         </div>
         <!-- Bloco Mulher -->
-        <div id="blocoMulher" class="well col-xs-12">
+        <div id="blocoMulher" class="well col-xs-12 btn btn-default" <?php echo $this->funcaoOnClick('abrirTelaDeAlunos(2)'); ?>>
             <address>
                 <span id="spanInsiraOsDadosDoResponsavel2">Insira os dados da Mulher</span>
                 <span class="quebraDeLinhaDeSpan" id="spanMatricula2"></span>
@@ -306,10 +398,10 @@ echo $this->templateFormularioTopo($tituloDaPagina);
                                     $tipoResponsavel;
                             echo '<tr class="' . $classeAluno . '">';
                             echo '<td class="hidden-xs">' . $aluno->getMatriculaAtual() . '</td>';
-                            echo '<td><span class="hidden-xs">' . $aluno->getNome() . '</span><span class="visible-xs">' . $aluno->getNomePrimeiroPrimeiraSiglaUltimo() . '</span></td>';
+                            echo '<td><a href="#"  ' . $this->funcaoOnClick('selecionarAlunoPeloNome(' . $aluno->getId() . ')') . '><span class="hidden-xs">' . $aluno->getNome() . '</span><span class="visible-xs">' . $aluno->getNomePrimeiroPrimeiraSiglaUltimo() . '</span></a></td>';
                             echo '<td class="hidden-xs">' . $aluno->getDataNascimentoFormatada() . '</td>';
                             echo '<td>';
-                            echo '<input type="radio" name="radioAlunoSelecionado" value="' . $valorRadio . '" onclick="mostrarBotaoDeSelecionarAluno();"  />';
+                            echo '<input id="radio' . $aluno->getId() . '" type="radio" name="radioAlunoSelecionado" value="' . $valorRadio . '"  ' . $this->funcaoOnClick('mostrarBotaoDeSelecionarAluno()') . '/>';
                             echo '</td>';
                             echo '</tr>';
                         }
@@ -351,41 +443,45 @@ echo $this->templateFormularioTopo($tituloDaPagina);
             echo '<div class="col-xs-4">';
             echo $this->formSelect($form->get('Ano'));
             echo '</div>';
+            echo '<div class="col-xs-12 mt10">';
+            echo $this->formInput($form->get(ConstantesForm::$FORM_CPF));
             echo '</div>';
-            echo $this->inputAddon($form, ConstantesForm::$FORM_CPF, 1, ConstantesForm::$FORM_FUNCAO_BUSCAR_CPF);
+            echo '</div>';
             ?>
             <!-- FIM Buscar CPF --> 
             <div id="divBotoesBuscaCPF" class="mt10">
+
                 <?php
-                echo '<div id="botaoCPFLiberado" class="quebraDeLinhaDeSpan hidden">';
-                $extraBotaoContinuar = $this->funcaoOnClick('mostrarDivEmail()');
-                echo $this->botaoLink($labelBotaoContinuar, ConstantesForm::$STRING_HASHTAG, 7, $extraBotaoContinuar);
+                echo '<div id="botaoBuscarCPF" class="quebraDeLinhaDeSpan">';
+                echo $this->botaoLink(ConstantesForm::$TRADUCAO_BUSCAR, ConstantesForm::$STRING_HASHTAG, 7, $this->funcaoOnClick(ConstantesForm::$FORM_FUNCAO_BUSCAR_CPF));
                 echo '</div>';
-                ?>      
-                <!-- Botao Voltar Selecionar Aluno -->
-                <?php echo $this->botaoLink($labelVoltar, ConstantesForm::$STRING_HASHTAG, 8, $this->funcaoOnClick('botaoVoltarDataNascimentoCPF()')); ?>
+                echo '<div id="botaoCPFLiberado" class="quebraDeLinhaDeSpan hidden">';
+                echo $this->botaoLink($labelBotaoContinuar, ConstantesForm::$STRING_HASHTAG, 7, $this->funcaoOnClick('mostrarDivEmail()'));
+                echo '</div>';
+                echo $this->botaoLink($labelVoltar, ConstantesForm::$STRING_HASHTAG, 8, $this->funcaoOnClick('botaoVoltarDataNascimentoCPF()'));
+                ?>
             </div>
         </div>
 
         <!-- Div Email -->
         <div id="divEmail" class="hidden">
-            <!-- Email -->
-            <?php echo $this->formInput($form->get(ConstantesForm::$FORM_EMAIL)); ?>
-            <!-- FIM Email --> 
-            <!-- Repetir Email -->
-            <?php echo $this->inputAddon($form, ConstantesForm::$FORM_REPETIR_EMAIL, 1, ConstantesForm::$FORM_FUNCAO_BUSCAR_EMAIL); ?>
-            <!-- FIM Repetir Email -->
-            <div class="mt10">
-                <?php
-                echo '<div id="botaoEmailLiberado" class="quebraDeLinhaDeSpan hidden">';
-                $extraBotaoContinuar = $this->funcaoOnClick('mostrarDivHierarquia()');
-                echo $this->botaoLink($labelBotaoContinuar, ConstantesForm::$STRING_HASHTAG, 7, $extraBotaoContinuar);
-                echo '</div>';
-
-                /* Botao Voltar Data de Nascimento e CPF */
-                echo $this->botaoLink($labelVoltar, ConstantesForm::$STRING_HASHTAG, 8, $this->funcaoOnClick('botaoVoltarEmail()'));
-                ?>
-            </div>
+            <?php
+            echo '<div class="col-xs-12">';
+            echo $this->formInput($form->get(ConstantesForm::$FORM_EMAIL));
+            echo '</div>';
+            echo '<div class="col-xs-12 mt10 mb10">';
+            echo $this->formInput($form->get(ConstantesForm::$FORM_REPETIR_EMAIL));
+            echo '</div>';
+            /* Botões */
+            echo '<div id="botaoBuscarEmail" class="quebraDeLinhaDeSpan">';
+            echo $this->botaoLink(ConstantesForm::$TRADUCAO_BUSCAR, ConstantesForm::$STRING_HASHTAG, 7, $this->funcaoOnClick(ConstantesForm::$FORM_FUNCAO_BUSCAR_EMAIL));
+            echo '</div>';
+            echo '<div id="botaoEmailLiberado" class="quebraDeLinhaDeSpan hidden">';
+            echo $this->botaoLink($labelBotaoContinuar, ConstantesForm::$STRING_HASHTAG, 7, $this->funcaoOnClick('mostrarDivHierarquia()'));
+            echo '</div>';
+            /* Botao Voltar Data de Nascimento e CPF */
+            echo $this->botaoLink($labelVoltar, ConstantesForm::$STRING_HASHTAG, 8, $this->funcaoOnClick('botaoVoltarEmail()'));
+            ?>
         </div>
 
         <!-- Div Hierarquia -->
@@ -490,3 +586,11 @@ echo $this->formHidden($form->get(ConstantesForm::$FORM_NOME_ALUNO));
 
 echo $this->templateFormularioRodape();
 echo $this->form()->closeTag();
+
+/* Modal */
+$htmlModal = '<div id="modalBuscando" class="admin-form mfp-with-anim mfp-hide">';
+$htmlModal .= '<div align="center">';
+$htmlModal .= '<img src="' . Constantes::$LOADER_GIF_GRANDE . '"></i>';
+$htmlModal .= '</div>';
+$htmlModal .= '</div>';
+echo $htmlModal;

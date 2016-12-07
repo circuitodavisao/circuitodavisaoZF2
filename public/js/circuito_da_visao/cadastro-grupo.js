@@ -71,6 +71,11 @@ function abrirTelaDeAlunos(tipo) {
     limparPassoAPasso(tipo);
 }
 
+function selecionarAlunoPeloNome(idAluno) {
+    $('#radio' + idAluno).prop('checked', true);
+    mostrarBotaoDeSelecionarAluno();
+}
+
 function selecionarAluno() {
     var alunoSelecionado = $('input[name=radioAlunoSelecionado]:checked').val();
     /* Dados do aluno selecionado */
@@ -116,6 +121,28 @@ function isNumber(n) {
     return !isNaN(parseFloat(n)) && isFinite(n);
 }
 
+function abrirModalCarregando() {
+    $.magnificPopup.open({
+        removalDelay: 500, //delay removal by X to allow out-animation,
+        items: {
+            src: "#modalBuscando"
+        },
+        modal: true,
+        // overflowY: 'hidden', //
+        callbacks: {
+            beforeOpen: function (e) {
+                var Animation = "mfp-zoomIn";
+                this.st.mainClass = Animation;
+            }
+        },
+        midClick: true // allow opening popup on middle mouse click. Always set it to true if you don't provide alternative source.
+    });
+}
+
+function fecharModalCarregando() {
+    $.magnificPopup.close();
+}
+
 function buscarCPF() {
     $('#botaoCPFLiberado').addClass(hidden);
     var cpf = $("#cpf").val();
@@ -128,12 +155,10 @@ function buscarCPF() {
     MesDataNascimento = parseInt(MesDataNascimento);
     AnoDataNascimento = parseInt(AnoDataNascimento);
 
-    var loader = $('#loadercpf');
     var spanMensagens = $('#spanMensagens');
     spanMensagens.removeClass(alertDanger)
             .removeClass(alertSuccess)
             .addClass(hidden);
-    loader.removeClass(hidden);
 
     var temErro = false;
     if (cpf.length === 0 || DiaDataNascimento === 0 || MesDataNascimento === 0 || AnoDataNascimento === 0) {
@@ -156,6 +181,7 @@ function buscarCPF() {
     }
 
     if (!temErro) {
+        abrirModalCarregando();
         $.post(
                 "/cadastroBuscarCPF",
                 {
@@ -199,6 +225,7 @@ function buscarCPF() {
                     $('#spanResponsavelCPF').html(data.cpf);
                     $('#divSpanResponsavelCPF').removeClass(hidden);
                     $('#spanResponsavelDataNascimento').html(data.dataNascimento);
+                    $('#botaoBuscarCPF').addClass(hidden);
                 }
             }
             if (resposta === 2) {
@@ -216,14 +243,13 @@ function buscarCPF() {
                         .addClass(alertDanger)
                         .removeClass(hidden);
             }
-            loader.addClass(hidden);
+            fecharModalCarregando();
         }
         , 'json');
     } else {
         spanMensagens
                 .addClass(alertDanger)
                 .removeClass(hidden);
-        loader.addClass(hidden);
     }
 }
 
@@ -241,13 +267,11 @@ function buscarEmail() {
     var temErro = false;
     var email = $('#email').val();
     var repetirEmail = $('#repetirEmail').val();
-    var loader = $('#loaderrepetirEmail');
     var spanMensagens = $('#spanMensagens');
     spanMensagens
             .addClass(hidden)
             .removeClass(alertDanger)
             .removeClass(alertSuccess);
-    loader.removeClass(hidden);
     if (repetirEmail != email) {
         temErro = true;
         spanMensagens.html('Emails não conferem');
@@ -281,6 +305,7 @@ function buscarEmail() {
 
 
     if (!temErro) {
+        abrirModalCarregando();
         $.post(
                 "/cadastroBuscarEmail",
                 {email: email},
@@ -294,6 +319,7 @@ function buscarEmail() {
                 $('#divSpanResponsavelEmail').removeClass(hidden);
                 $('#spanResponsavelEmail').html(email);
                 $('#botaoEmailLiberado').removeClass(hidden);
+                $('#botaoBuscarEmail').addClass(hidden);
             }
 // não liberado
             if (data.resposta) {
@@ -302,14 +328,15 @@ function buscarEmail() {
                         .addClass(alertDanger)
                         .removeClass(hidden);
             }
-            loader.addClass(hidden);
+            fecharModalCarregando();
         }, 'json');
     } else {
         spanMensagens
                 .removeClass(hidden)
                 .addClass(alertDanger);
-        loader.addClass(hidden);
     }
+
+
 }
 
 function mostrarDivHierarquia() {
@@ -386,6 +413,7 @@ function insereResponsavelNaTelaDeConfimacao(tipoResponsavel, mudarBarraDeProgre
     var inputHiddenNome;
     var inputHiddenCPF;
     var inputHiddenDataNascimento;
+    var blocoResponsavel;
 
     switch (tipoResponsavel) {
         case 0:
@@ -406,6 +434,7 @@ function insereResponsavelNaTelaDeConfimacao(tipoResponsavel, mudarBarraDeProgre
             inputHiddenNome = $('#nome0');
             inputHiddenCPF = $('#cpf0');
             inputHiddenDataNascimento = $('#dataNascimento0');
+            blocoResponsavel = $('#blocoResponsavel');
             break;
         case 1:
             spanMatricula = $('#spanMatricula1');
@@ -425,6 +454,7 @@ function insereResponsavelNaTelaDeConfimacao(tipoResponsavel, mudarBarraDeProgre
             inputHiddenNome = $('#nome1');
             inputHiddenCPF = $('#cpf1');
             inputHiddenDataNascimento = $('#dataNascimento1');
+            blocoResponsavel = $('#blocoResponsavel1');
             break;
         case 2:
             spanMatricula = $('#spanMatricula2');
@@ -444,6 +474,7 @@ function insereResponsavelNaTelaDeConfimacao(tipoResponsavel, mudarBarraDeProgre
             inputHiddenNome = $('#nome2');
             inputHiddenCPF = $('#cpf2');
             inputHiddenDataNascimento = $('#dataNascimento2');
+            blocoResponsavel = $('#blocoResponsavel2');
             break;
         default:
             return false;
@@ -476,6 +507,7 @@ function insereResponsavelNaTelaDeConfimacao(tipoResponsavel, mudarBarraDeProgre
         atualizarBarraDeProgresso(valorBarraDeProgresso);
     }
     $('#divIncluirResponsavel').addClass(hidden);
+    blocoResponsavel.removeClass('btn').removeClass('btn-default').prop('onclick', null).off('click');
 }
 
 function limparDadosPessoaSelecionada(tipoResponsavel) {

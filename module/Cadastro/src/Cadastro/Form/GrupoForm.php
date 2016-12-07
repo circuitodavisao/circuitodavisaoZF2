@@ -252,7 +252,7 @@ class GrupoForm extends Form {
         $inputSelectDiaDataNascimento = new Select();
         $inputSelectDiaDataNascimento->setName('Dia');
         $inputSelectDiaDataNascimento->setAttributes(array(
-            ConstantesForm::$FORM_CLASS => ConstantesForm::$FORM_CLASS_GUI_INPUT,
+            ConstantesForm::$FORM_CLASS => ConstantesForm::$FORM_CLASS_FORM_CONTROL,
             ConstantesForm::$FORM_ID => 'Dia',
         ));
         $inputSelectDiaDataNascimento->setValueOptions($arrayDiaDataNascimento);
@@ -268,7 +268,7 @@ class GrupoForm extends Form {
         $inputSelectMesDataNascimento = new Select();
         $inputSelectMesDataNascimento->setName('Mes');
         $inputSelectMesDataNascimento->setAttributes(array(
-            ConstantesForm::$FORM_CLASS => ConstantesForm::$FORM_CLASS_GUI_INPUT,
+            ConstantesForm::$FORM_CLASS => ConstantesForm::$FORM_CLASS_FORM_CONTROL,
             ConstantesForm::$FORM_ID => 'Mes',
         ));
         $inputSelectMesDataNascimento->setValueOptions($arrayMesDataNascimento);
@@ -284,7 +284,7 @@ class GrupoForm extends Form {
         $inputSelectAnoDataNascimento = new Select();
         $inputSelectAnoDataNascimento->setName('Ano');
         $inputSelectAnoDataNascimento->setAttributes(array(
-            ConstantesForm::$FORM_CLASS => ConstantesForm::$FORM_CLASS_GUI_INPUT,
+            ConstantesForm::$FORM_CLASS => ConstantesForm::$FORM_CLASS_FORM_CONTROL,
             ConstantesForm::$FORM_ID => 'Ano',
         ));
         $inputSelectAnoDataNascimento->setValueOptions($arrayAnoDataNascimento);
@@ -327,7 +327,7 @@ class GrupoForm extends Form {
         $inputSelectHierarquia = new Select();
         $inputSelectHierarquia->setName(ConstantesForm::$FORM_HIERARQUIA);
         $inputSelectHierarquia->setAttributes(array(
-            ConstantesForm::$FORM_CLASS => ConstantesForm::$FORM_CLASS_GUI_INPUT,
+            ConstantesForm::$FORM_CLASS => ConstantesForm::$FORM_CLASS_FORM_CONTROL,
             ConstantesForm::$FORM_ID => ConstantesForm::$FORM_HIERARQUIA,
             ConstantesForm::$FORM_ONCHANGE => 'mostrarBotaoDeInserirResponsavel(this.value);',
         ));
@@ -344,7 +344,7 @@ class GrupoForm extends Form {
         $inputSelectNumeracao = new Select();
         $inputSelectNumeracao->setName(ConstantesForm::$FORM_NUMERACAO);
         $inputSelectNumeracao->setAttributes(array(
-            ConstantesForm::$FORM_CLASS => ConstantesForm::$FORM_CLASS_GUI_INPUT,
+            ConstantesForm::$FORM_CLASS => ConstantesForm::$FORM_CLASS_FORM_CONTROL,
             ConstantesForm::$FORM_ID => ConstantesForm::$FORM_NUMERACAO,
             ConstantesForm::$FORM_ONCHANGE => 'mostrarBotaoDeInserirDadosComplementares(this.value);',
         ));

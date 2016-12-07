@@ -47,7 +47,7 @@ class EventoForm extends Form {
         $inputSelectDiaDaSemana = new Select();
         $inputSelectDiaDaSemana->setName(ConstantesForm::$FORM_DIA_DA_SEMANA);
         $inputSelectDiaDaSemana->setAttributes(array(
-            ConstantesForm::$FORM_CLASS => ConstantesForm::$FORM_CLASS_GUI_INPUT,
+            ConstantesForm::$FORM_CLASS => ConstantesForm::$FORM_CLASS_FORM_CONTROL,
             ConstantesForm::$FORM_ID => ConstantesForm::$FORM_DIA_DA_SEMANA,
         ));
         $inputSelectDiaDaSemana->setValueOptions($arrayDiaDaSemana);
@@ -62,7 +62,7 @@ class EventoForm extends Form {
         $selectHora = new Select();
         $selectHora->setName(ConstantesForm::$FORM_HORA);
         $selectHora->setAttributes(array(
-            ConstantesForm::$FORM_CLASS => ConstantesForm::$FORM_CLASS_GUI_INPUT,
+            ConstantesForm::$FORM_CLASS => ConstantesForm::$FORM_CLASS_FORM_CONTROL,
             ConstantesForm::$FORM_ID => ConstantesForm::$FORM_HORA,
         ));
         $selectHora->setValueOptions($arrayHoras);
@@ -77,7 +77,7 @@ class EventoForm extends Form {
         $selectMinutos = new Select();
         $selectMinutos->setName(ConstantesForm::$FORM_MINUTOS);
         $selectMinutos->setAttributes(array(
-            ConstantesForm::$FORM_CLASS => ConstantesForm::$FORM_CLASS_GUI_INPUT,
+            ConstantesForm::$FORM_CLASS => ConstantesForm::$FORM_CLASS_FORM_CONTROL,
             ConstantesForm::$FORM_ID => ConstantesForm::$FORM_MINUTOS,
         ));
         $selectMinutos->setValueOptions($arrayMinutos);
