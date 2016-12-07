@@ -455,7 +455,8 @@ class LancamentoController extends AbstractActionController {
                 $post_data = $request->getPost();
                 $id = $post_data[Constantes::$ID];
                 $funcao = $post_data[Constantes::$FUNCAO];
-
+                $sessao = new Container(Constantes::$NOME_APLICACAO);
+                $sessao->idSessao = $id;
                 $response->setContent(Json::encode(
                                 array(
                                     'response' => 'true',
@@ -574,18 +575,15 @@ class LancamentoController extends AbstractActionController {
      */
     public function lancarAtendimentoAction() {
         $sessao = new Container(Constantes::$NOME_APLICACAO);
-
-        /* Verificando a se tem algum id na sessão */
-        $grupoNaSessao = new Grupo();
         $lancamentoORM = new LancamentoORM($this->getDoctrineORMEntityManager());
-        if (!empty($sessao->idSessao)) {
-            $grupoNaSessao = $lancamentoORM->getEntidadeORM()->encontrarPorIdEntidade($sessao->idSessao);
-        }
+        $idGrupo = $sessao->idSessao;
+        $grupo = $lancamentoORM->getGrupoORM()->encontrarPorIdGrupoPessoa($idGrupo);
+
 
 
 
         $view = new ViewModel(array(
-            ConstantesLancamento::$GRUPO => $grupoNaSessao,
+            ConstantesLancamento::$GRUPO => $grupo,
         ));
 
         return $view;
