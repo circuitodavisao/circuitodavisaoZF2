@@ -299,7 +299,7 @@ echo $this->templateFormularioTopo($tituloDaPagina);
             </div>
         </div>
         <div id="divBotaoSubmit" class="hidden">
-            <?php echo $this->botaoLink(ConstantesCadastro::$TRADUCAO_FINALIZAR, '#', 7, 'onclick="this.form.submit();"'); ?>
+            <?php echo $this->botaoLink(ConstantesCadastro::$TRADUCAO_FINALIZAR, '#', 7, $this->funcaoOnClick('botaoSubmeterFormulario(this.form)')); ?>
         </div>
     </div>
 
@@ -364,7 +364,7 @@ echo $this->templateFormularioTopo($tituloDaPagina);
                 <span>Selecione o Aluno que será utilizado para o cadastro</span>
             </div> 
             <div class="panel-menu">
-                <input id="fooFilter" type="text" class="form-control" placeholder="Filtro">
+                <input id="fooFilter" type="text" class="form-control" placeholder="Busque o Aluno">
             </div>
             <table class="table footable" data-filter="#fooFilter">
                 <thead>

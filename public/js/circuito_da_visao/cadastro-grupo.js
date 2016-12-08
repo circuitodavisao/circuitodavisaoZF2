@@ -716,3 +716,8 @@ function botaoVoltarHierarquia() {
     $('#divSpanResponsavelEmail').addClass(hidden);
     $('#botaoPasso4').removeClass(btnPrimary).addClass(btnDefault);
 }
+
+function botaoSubmeterFormulario(form) {
+    abrirModalCarregando();
+    form.submit();
+}

@@ -715,7 +715,7 @@ class CadastroController extends AbstractActionController {
                     $repositorioORM->getGrupoResponsavelORM()->persistirGrupoResponsavel($grupoResponsavelNovo);
 
                     // Enviar Email
-                    $this->enviarEmailParaCompletarOsDados($tokenDeAgora, $indicePessoas);
+                    $this->enviarEmailParaCompletarOsDados($tokenDeAgora, $pessoaSelecionada);
                 }
 
                 /* Criar Grupo_Pai_Filho */
@@ -847,17 +847,18 @@ class CadastroController extends AbstractActionController {
                 curl_setopt($curl, CURLOPT_URL, $urlUsada);
                 curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
                 $result = curl_exec($curl);
+                $json = Json::decode($result, TRUE);
+//                var_dump($json);
+                $stringCode = 'code';
+                $stringContent = 'content';
+                $stringNome = 'nome';
+                $stringDataNascimento = 'data_nascimento';
+
                 curl_close($curl);
-                $result = str_replace('":"', '#', $result);
-                $result = str_replace('","', '#', $result);
-                $result = str_replace('"{"', '#', $result);
-                $result = str_replace('"}"', '#', $result);
-                $explodeResultado = explode('#', $result);
-//                var_dump($explodeResultado);
                 /* Sucesso */
-                if ($explodeResultado[1] === '000') {
-                    $nomeDaPesquisa = $explodeResultado[11];
-                    $dataDeNascimentoDaPesquisa = Funcoes::mudarPadraoData(str_replace('\/', '-', $explodeResultado[17]), 2);
+                if ($json[$stringCode] === '000') {
+                    $nomeDaPesquisa = $json[$stringContent][$stringNome];
+                    $dataDeNascimentoDaPesquisa = $json[$stringContent][$stringDataNascimento];
                     $resposta = 1;
 
                     /* CPF encontrado na receita verificando se tem cadastro no sistema */
@@ -866,7 +867,7 @@ class CadastroController extends AbstractActionController {
                         $resposta = 3;
                     }
                 }
-                if ($explodeResultado[1] === '001' || $explodeResultado[1] === '999') {
+                if ($json[$stringCode] === '001' || $json[$stringCode] === '999') {
                     $resposta = 2;
                 }
 
@@ -919,12 +920,27 @@ class CadastroController extends AbstractActionController {
         return $this->_doctrineORMEntityManager;
     }
 
-    public function enviarEmailParaCompletarOsDados($tokenDeAgora, $tipo = 0) {
+    /**
+     * Envia email de convte para o novo grupo
+     * @param string $tokenDeAgora
+     * @param Pessoa $pessoa
+     */
+    public function enviarEmailParaCompletarOsDados($tokenDeAgora, $pessoa) {
+        $sessao = new Container(Constantes::$NOME_APLICACAO);
+        $loginORM = new LoginORM($this->getDoctrineORMEntityManager());
+        $pessoaLogada = $loginORM->getPessoaORM()->encontrarPorIdPessoa($sessao->idPessoa);
+
         $Subject = 'Convite';
         $ToEmail = 'falecomleonardopereira@gmail.com';
+
         $avatar = 'placeholder.png';
-        $nomeLider = 'LeonardoPereiraMagalhães';
-        $Content = file_get_contents("http://158.69.124.139/convite.php?nomeLider=$nomeLider&avatar=$avatar&token=$tokenDeAgora&tipo=$tipo");
+        if ($pessoaLogada->getFoto()) {
+            $avatar = $pessoaLogada->getFoto();
+        }
+        $nomeLider = str_replace(' ', '', $pessoaLogada->getNomePrimeiroUltimo());
+        $nomePessoaEmail = str_replace(' ', '', $pessoa->getNomePrimeiroUltimo());
+        $url = "http://158.69.124.139/convite.php?nomeLider=$nomeLider&avatar=$avatar&token=$tokenDeAgora&nomePessoaEmail=$nomePessoaEmail";
+        $Content = file_get_contents($url);
         Funcoes::enviarEmail($ToEmail, $Subject, $Content);
     }
 

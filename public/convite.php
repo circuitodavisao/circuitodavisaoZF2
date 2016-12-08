@@ -3,10 +3,12 @@ $stringNomeLider = 'nomeLider';
 $stringAvatar = 'avatar';
 $stringToken = 'token';
 $stringTipo = 'tipo';
+$stringNomePessoaEmail = 'nomePessoaEmail';
 $nomeLider = (string) \filter_input(\INPUT_GET, $stringNomeLider);
 $avatar = (string) \filter_input(\INPUT_GET, $stringAvatar);
 $token = (string) \filter_input(\INPUT_GET, $stringToken);
 $tipo = (string) \filter_input(\INPUT_GET, $stringTipo);
+$nomePessoaEmail = (string) \filter_input(\INPUT_GET, $stringNomePessoaEmail);
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -344,7 +346,7 @@ $tipo = (string) \filter_input(\INPUT_GET, $stringTipo);
                         <table cellspacing="0" cellpadding="0" width="600" class="w320">
                             <tr>
                                 <td class="header-lg">
-                                    Você recebeu um convite! Tipo:<?php echo $tipo; ?>
+                                    Você recebeu um convite!
                                 </td>
                             </tr>
                             <tr>
@@ -369,7 +371,7 @@ $tipo = (string) \filter_input(\INPUT_GET, $stringTipo);
                                                                 </tr>
                                                                 <tr>
                                                                     <td class="user-msg">
-                                                                        "Olá Jhobert,
+                                                                        "Olá <?php echo $nomePessoaEmail; ?>,
                                                                         clique no botão abaixo para ativar seu cadastro!"
                                                                     </td>
                                                                 </tr>
