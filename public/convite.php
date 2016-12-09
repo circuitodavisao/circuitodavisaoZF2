@@ -350,11 +350,6 @@ $nomePessoaEmail = (string) \filter_input(\INPUT_GET, $stringNomePessoaEmail);
                                 </td>
                             </tr>
                             <tr>
-                                <td class="free-text">
-                                    <span><a href="">@<?php echo $nomeLider; ?></a></span> convidou você para participar do Circuito da Visão!
-                                </td>
-                            </tr>
-                            <tr>
                                 <td class="mini-block-container">
                                     <table cellspacing="0" cellpadding="0" width="100%"  style="border-collapse:separate !important;">
                                         <tr>
@@ -366,7 +361,9 @@ $nomePessoaEmail = (string) \filter_input(\INPUT_GET, $stringNomePessoaEmail);
                                                                 <tr>
                                                                     <td class="user-img">
                                                                         <a href=""><img class="user-img" src="158.69.124.139/img/avatars/<?php echo $avatar; ?>" alt="user img" /></a>
-                                                                        <br /><a href="">@<?php echo $nomeLider; ?></a>
+                                                                        <br />
+                                                                        @<?php echo $nomeLider; ?></a></span> convidou você para participar do 
+                                                                        <br />Circuito da Visão!
                                                                     </td>
                                                                 </tr>
                                                                 <tr>

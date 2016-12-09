@@ -8,6 +8,9 @@
 
 namespace Cadastro;
 
+use Cadastro\View\Helper\BarraDeProgresso;
+use Cadastro\View\Helper\BlocoDiv;
+use Cadastro\View\Helper\BlocoResponsavel;
 use Cadastro\View\Helper\BotaoPopover;
 use Cadastro\View\Helper\FuncaoOnClick;
 use Cadastro\View\Helper\GrupoEstadoCivil;
@@ -15,6 +18,8 @@ use Cadastro\View\Helper\InputAddon;
 use Cadastro\View\Helper\InputDiaDaSemanaHoraMinuto;
 use Cadastro\View\Helper\InputExtras;
 use Cadastro\View\Helper\ListagemDeEventos;
+use Cadastro\View\Helper\PassoAPasso;
+use Cadastro\View\Helper\SpanDadosValidados;
 use Cadastro\View\Helper\TemplateFormularioRodape;
 use Cadastro\View\Helper\TemplateFormularioTopo;
 use Cadastro\View\Helper\TituloDaPagina;
@@ -91,6 +96,21 @@ class Module {
                 },
                 'grupoEstadoCivil' => function($sm) {
                     return new GrupoEstadoCivil();
+                },
+                'blocoResponsavel' => function($sm) {
+                    return new BlocoResponsavel();
+                },
+                'blocoDiv' => function($sm) {
+                    return new BlocoDiv();
+                },
+                'barraDeProgresso' => function($sm) {
+                    return new BarraDeProgresso();
+                },
+                'passoAPasso' => function($sm) {
+                    return new PassoAPasso();
+                },
+                'spanDadosValidados' => function($sm) {
+                    return new SpanDadosValidados();
                 },
             )
         );

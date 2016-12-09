@@ -11,287 +11,41 @@ use Login\Controller\Helper\Constantes;
  */
 $form = $this->Form;
 $form->prepare();
-$form->setAttribute(ConstantesForm::$FORM_ACTION, 'cadastroGrupoFinalizar');
+$form->setAttribute(ConstantesForm::$FORM_ACTION, ConstantesCadastro::$ROUTE_CADASTRO . ConstantesCadastro::$PAGINA_GRUPO_FINALIZAR);
 echo $this->form()->openTag($form);
-
-$tituloDaPagina = 'Cadastro de <span class="text-primary">SubEquipe</span>';
-echo $this->templateFormularioTopo($tituloDaPagina);
+echo $this->templateFormularioTopo(ConstantesCadastro::$TRADUCAO_TITULO_PAGINA_CADASTR_GRUPO_SUB_EQUIPE);
 ?>
-<style>
-    .quebraDeLinhaDeSpan{
-        display: block;
-    }
-
-    .checkDadosInseridos{
-        float: right;
-        position: absolute;
-        top: 22px;
-        right: 22px;
-    }
-
-    /* Passo a passo */
-    .stepwizard-step p {
-        margin-top: 10px;    
-        font-size: smaller;
-    }
-
-    .stepwizard-row {
-        display: table-row;
-    }
-
-    .stepwizard {
-        display: table;     
-        width: 100%;
-        position: relative;
-        text-align: center;
-    }
-
-    .stepwizard-step button[disabled] {
-        opacity: 1 !important;
-        filter: alpha(opacity=100) !important;
-    }
-
-    .stepwizard-row:before {
-        top: 14px;
-        bottom: 0;
-        position: absolute;
-        content: " ";
-        width: 100%;
-        height: 1px;
-        background-color: #ccc;
-    }
-
-    .stepwizard-step {   
-        width: 25%;
-        display: table-cell;
-        text-align: center;
-        position: relative;
-    }
-
-    .btn-circle {
-        width: 30px;
-        height: 30px;
-        text-align: center;
-        padding: 6px 0;
-        font-size: 12px;
-        line-height: 1.428571429;
-        border-radius: 15px;
-    }
-
-    .cs-loader {
-        position: absolute;
-        top: 0;
-        left: 0;
-        height: 100%;
-        width: 100%;
-    }
-
-    .cs-loader-inner {
-        transform: translateY(-50%);
-        top: 50%;
-        position: absolute;
-        width: calc(100% - 200px);
-        color: #FFF;
-        padding: 0 100px;
-        text-align: center;
-    }
-
-    .cs-loader-inner label {
-        font-size: 20px;
-        opacity: 0;
-        display:inline-block;
-    }
-
-    @keyframes lol {
-        0% {
-            opacity: 0;
-            transform: translateX(-300px);
-        }
-        33% {
-            opacity: 1;
-            transform: translateX(0px);
-        }
-        66% {
-            opacity: 1;
-            transform: translateX(0px);
-        }
-        100% {
-            opacity: 0;
-            transform: translateX(300px);
-        }
-    }
-
-    @-webkit-keyframes lol {
-        0% {
-            opacity: 0;
-            -webkit-transform: translateX(-300px);
-        }
-        33% {
-            opacity: 1;
-            -webkit-transform: translateX(0px);
-        }
-        66% {
-            opacity: 1;
-            -webkit-transform: translateX(0px);
-        }
-        100% {
-            opacity: 0;
-            -webkit-transform: translateX(300px);
-        }
-    }
-
-    .cs-loader-inner label:nth-child(6) {
-        -webkit-animation: lol 3s infinite ease-in-out;
-        animation: lol 3s infinite ease-in-out;
-    }
-
-    .cs-loader-inner label:nth-child(5) {
-        -webkit-animation: lol 3s 100ms infinite ease-in-out;
-        animation: lol 3s 100ms infinite ease-in-out;
-    }
-
-    .cs-loader-inner label:nth-child(4) {
-        -webkit-animation: lol 3s 200ms infinite ease-in-out;
-        animation: lol 3s 200ms infinite ease-in-out;
-    }
-
-    .cs-loader-inner label:nth-child(3) {
-        -webkit-animation: lol 3s 300ms infinite ease-in-out;
-        animation: lol 3s 300ms infinite ease-in-out;
-    }
-
-    .cs-loader-inner label:nth-child(2) {
-        -webkit-animation: lol 3s 400ms infinite ease-in-out;
-        animation: lol 3s 400ms infinite ease-in-out;
-    }
-
-    .cs-loader-inner label:nth-child(1) {
-        -webkit-animation: lol 3s 500ms infinite ease-in-out;
-        animation: lol 3s 500ms infinite ease-in-out;
-    }
-</style>
 <!-- Inicio panel-body -->
 <div class="panel-body bg-light">
-
     <!-- Estado Civil -->
     <?php echo $this->grupoEstadoCivil($form); ?>
-
     <!-- Confirmacao -->
     <div id="divConfirmacao" class="hidden">
         <div class="section-divider mt40 mb50">
-            <span>Insira o(s) Responsável(is) e os dados complementares</span>
+            <span><?php echo $this->translate(ConstantesCadastro::$TRADUCAO_INSIRA_OS_DADOS_DOS_RESPONSAVEIS_E_DADOS_COMPLEMENTARES); ?></span>
         </div> 
-        <!-- Primary Progress Bar -->
-        <div class="col-xs-12">
-            <div class="progress">
-                <div id="divProgressBar" class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;">0%</div>
-            </div>
-        </div>
+        <!-- Progress Bar -->
+        <?php echo $this->barraDeProgresso(); ?>
         <!-- Bloco responsavel -->
-        <div id="blocoResponsavel" class="well col-xs-12 btn btn-default text-left" <?php echo $this->funcaoOnClick('abrirTelaDeAlunos(0)'); ?>>
-            <address>
-                <span id="spanInsiraOsDadosDoResponsavel">Insira os dados do Responsavel</span>
-                <span class="quebraDeLinhaDeSpan" id="spanMatricula0"></span>
-                <span class="quebraDeLinhaDeSpan" id="spanCPF0"></span>
-                <span class="quebraDeLinhaDeSpan hidden-xs" id="spanNome0"></span>
-                <span class="quebraDeLinhaDeSpan quebraDeLinhaDeSpan hidden-xs" id="spanEmail0"></span>
-                <span class="quebraDeLinhaDeSpan visible-xs" id="spanNome0xs"></span>
-                <span class="quebraDeLinhaDeSpan visible-xs" id="spanEmail0xs"></span>
-                <span class="quebraDeLinhaDeSpan" id="spanHierarquia0"></span>
-            </address>
-            <?php
-            echo "<div id='divBotaoInserirResponsavel'>";
-            $labelInserirHomem = ConstantesCadastro::$TRADUCAO_INSERIR;
-            echo $this->botaoLink($labelInserirHomem, ConstantesForm::$STRING_HASHTAG, 5, $this->funcaoOnClick('abrirTelaDeAlunos(0)'));
-            echo "</div>";
-            echo "<div id='divBotaoLimparResponsavel' class='hidden'>";
-            $labelLimparHomem = ConstantesCadastro::$TRADUCAO_LIMPAR;
-            echo $this->botaoLink($labelLimparHomem, ConstantesForm::$STRING_HASHTAG, 6, $this->funcaoOnClick('limparDadosPessoaSelecionada(0)'));
-            echo "</div>";
-            ?>
-            <div id="divCheckDadosResponsavelInseridos" class="checkDadosInseridos hidden">
-                <span class="glyphicon glyphicon-ok text-success"></span>
-            </div>
-        </div>
+        <?php echo $this->blocoResponsavel(0); ?>
         <!-- Bloco homem -->
-        <div id="blocoHomem" class="well col-xs-12 btn btn-default" <?php echo $this->funcaoOnClick('abrirTelaDeAlunos(1)'); ?>>
-            <address>
-                <span id="spanInsiraOsDadosDoResponsavel1">Insira os dados do Homem</span>
-                <span class="quebraDeLinhaDeSpan" id="spanMatricula1"></span>
-                <span class="quebraDeLinhaDeSpan" id="spanCPF1"></span>
-                <span class="quebraDeLinhaDeSpan hidden-xs" id="spanNome1"></span>
-                <span class="quebraDeLinhaDeSpan quebraDeLinhaDeSpan hidden-xs" id="spanEmail1"></span>
-                <span class="quebraDeLinhaDeSpan visible-xs" id="spanNome1xs"></span>
-                <span class="quebraDeLinhaDeSpan visible-xs" id="spanEmail1xs"></span>
-                <span class="quebraDeLinhaDeSpan" id="spanHierarquia1"></span>
-            </address>
-            <?php
-            echo "<div id='divBotaoInserirResponsavel1'>";
-            $labelInserirHomem = ConstantesCadastro::$TRADUCAO_INSERIR;
-            echo $this->botaoLink($labelInserirHomem, ConstantesForm::$STRING_HASHTAG, 5, $this->funcaoOnClick('abrirTelaDeAlunos(1)'));
-            echo "</div>";
-
-            echo "<div id='divBotaoLimparResponsavel1' class='hidden'>";
-            $labelLimparHomem = ConstantesCadastro::$TRADUCAO_LIMPAR;
-            echo $this->botaoLink($labelLimparHomem, ConstantesForm::$STRING_HASHTAG, 6, $this->funcaoOnClick('limparDadosPessoaSelecionada(1)'));
-            echo "</div>";
-            ?>      
-            <div id="divCheckDadosResponsavelInseridos1" class="checkDadosInseridos hidden">
-                <span class="glyphicon glyphicon-ok text-success"></span>
-            </div>
-        </div>
+        <?php echo $this->blocoResponsavel(1); ?>
         <!-- Bloco Mulher -->
-        <div id="blocoMulher" class="well col-xs-12 btn btn-default" <?php echo $this->funcaoOnClick('abrirTelaDeAlunos(2)'); ?>>
-            <address>
-                <span id="spanInsiraOsDadosDoResponsavel2">Insira os dados da Mulher</span>
-                <span class="quebraDeLinhaDeSpan" id="spanMatricula2"></span>
-                <span class="quebraDeLinhaDeSpan" id="spanCPF2"></span>
-                <span class="quebraDeLinhaDeSpan hidden-xs" id="spanNome2"></span>
-                <span class="quebraDeLinhaDeSpan quebraDeLinhaDeSpan hidden-xs" id="spanEmail2"></span>
-                <span class="quebraDeLinhaDeSpan visible-xs" id="spanNome2xs"></span>
-                <span class="quebraDeLinhaDeSpan visible-xs" id="spanEmail2xs"></span>
-                <span class="quebraDeLinhaDeSpan" id="spanHierarquia2"></span>
-            </address>
-            <?php
-            echo "<div id='divBotaoInserirResponsavel2'>";
-            $labelInserirMulher = ConstantesCadastro::$TRADUCAO_INSERIR;
-            echo $this->botaoLink($labelInserirMulher, ConstantesForm::$STRING_HASHTAG, 5, $this->funcaoOnClick('abrirTelaDeAlunos(2)'));
-            echo "</div>";
-
-            echo "<div id='divBotaoLimparResponsavel2' class='hidden'>";
-            $labelLimparMulher = ConstantesCadastro::$TRADUCAO_LIMPAR;
-            echo $this->botaoLink($labelLimparMulher, ConstantesForm::$STRING_HASHTAG, 6, $this->funcaoOnClick('limparDadosPessoaSelecionada(2)'));
-            echo "</div>";
-            ?>       
-            <div id="divCheckDadosResponsavelInseridos2" class="checkDadosInseridos hidden">
-                <span class="glyphicon glyphicon-ok text-success"></span>
-            </div>
-        </div>
+        <?php echo $this->blocoResponsavel(2); ?>
         <!-- Bloco Dados Complementares -->
         <div class="well col-xs-12 mb10">
             <address>
-                <span id="spanInsiraOsDadosComplementares">Insira os Dados Complementares</span>
+                <span id="spanInsiraOsDadosComplementares"><?php echo $this->translate(ConstantesCadastro::$TRADUCAO_INSIRA_OS_DADOS_COMPLEMENTARES); ?></span>
                 <span class="quebraDeLinhaDeSpan" id="spanDadosComplementares"></span>
             </address>
             <?php
             echo "<div id='divBotaoInserirDadosComplementares'>";
-            $labelInserirDadosComplementares = ConstantesCadastro::$TRADUCAO_INSERIR;
-            $extraInserirDadosComplementares = 'onclick="
-            $(\'#divConfirmacao\').addClass(\'hidden\');
-            $(\'#divDadosComplementares\').removeClass(\'hidden\');
-            $(\'#numeracao\').val(0);
-        "';
-            echo $this->botaoLink($labelInserirDadosComplementares, ConstantesForm::$STRING_HASHTAG, 5, $extraInserirDadosComplementares);
+            echo $this->botaoLink(
+                    ConstantesCadastro::$TRADUCAO_INSERIR, ConstantesForm::$STRING_HASHTAG, 5, $this->funcaoOnClick('botaoInserirDadosComplementares()'));
             echo "</div>";
             echo "<div id='divBotaoAlterarDadosComplementares' class='hidden'>";
-            $labelAlterarDadosComplementares = ConstantesCadastro::$TRADUCAO_ALTERAR;
-            $extraAlterarDadosComplementares = 'onclick="
-            $(\'#divBotaoInserirSelectDadosComplementares\').addClass(\'hidden\');
-            $(\'#divBotaoAlterarSelectDadosComplementares\').removeClass(\'hidden\');
-            $(\'#divConfirmacao\').addClass(\'hidden\');
-            $(\'#divDadosComplementares\').removeClass(\'hidden\');
-        "';
-            echo $this->botaoLink($labelAlterarDadosComplementares, ConstantesForm::$STRING_HASHTAG, 6, $extraAlterarDadosComplementares);
+            echo $this->botaoLink(
+                    ConstantesCadastro::$TRADUCAO_ALTERAR, ConstantesForm::$STRING_HASHTAG, 6, $this->funcaoOnClick('botaoAlterarDadosComplementares()'));
             echo "</div>";
             ?>
             <div id="divCheckDadosComplementaresInseridos" class="checkDadosInseridos hidden">
@@ -306,53 +60,17 @@ echo $this->templateFormularioTopo($tituloDaPagina);
     <!-- Incluir Responsavel -->
     <div id="divIncluirResponsavel" class="hidden">
         <!-- Passo a Passo -->
-        <div id="divPassoAPasso" class="hidden">           
-            <div class="stepwizard">
-                <div class="stepwizard-row">
-                    <div class="stepwizard-step">
-                        <button type="button" class="btn btn-primary btn-circle" disabled="disabled">1</button>
-                        <p>Selecione o Aluno</p>
-                    </div>
-                    <div class="stepwizard-step">
-                        <button id="botaoPasso2" type="button" class="btn btn-default btn-circle" disabled="disabled">2</button>
-                        <p>Dados Pessoais</p>
-                    </div>
-                    <div class="stepwizard-step">
-                        <button id="botaoPasso3" type="button" class="btn btn-default btn-circle" disabled="disabled">3</button>
-                        <p>Email</p>
-                    </div> 
-                    <div class="stepwizard-step">
-                        <button id="botaoPasso4" type="button" class="btn btn-default btn-circle" disabled="disabled">4</button>
-                        <p>Hierarquia</p>
-                    </div> 
-                </div>
-            </div>
+        <div id="divPassoAPasso" class="hidden"> 
+            <?php echo $this->passoAPasso(); ?>
             <!-- HelperView Dados -->
             <div id="divDadosSelecionados" class="alert alert-info hidden">
-                <div class="quebraDeLinhaDeSpan">
-                    <i class="fa fa-user" aria-hidden="true"></i>&nbsp;
-                    <span id="spanResponsavelMatricula"></span>
-                </div>
-
-                <div class="quebraDeLinhaDeSpan">
-                    <i class="fa fa-user" aria-hidden="true"></i>&nbsp;
-                    <span id="spanResponsavelNome"></span>
-                </div>
-
-                <div class="quebraDeLinhaDeSpan">
-                    <i class="fa fa-birthday-cake" aria-hidden="true"></i>&nbsp;
-                    <span id="spanResponsavelDataNascimento"></span>
-                </div>
-
-                <div id="divSpanResponsavelCPF" class="quebraDeLinhaDeSpan hidden">
-                    <i class="fa fa-info-circle" aria-hidden="true"></i>&nbsp;
-                    <span id="spanResponsavelCPF"></span>
-                </div>
-
-                <div id="divSpanResponsavelEmail" class="quebraDeLinhaDeSpan hidden">
-                    <i class="fa fa-envelope-o" aria-hidden="true"></i>&nbsp;
-                    <span id="spanResponsavelEmail"></span>
-                </div>
+                <?php
+                echo $this->SpanDadosValidados('Matricula', 'info-circle');
+                echo $this->SpanDadosValidados('Nome', 'user');
+                echo $this->SpanDadosValidados('DataNascimento', 'birthday-cake');
+                echo $this->SpanDadosValidados('CPF', 'info-circle');
+                echo $this->SpanDadosValidados('Email', 'envelope-o');
+                ?>
             </div>
             <!-- Fim HelperView -->
             <span id="spanMensagens" class="quebraDeLinhaDeSpan mt10 alert text-center hidden"></span>
@@ -361,17 +79,17 @@ echo $this->templateFormularioTopo($tituloDaPagina);
         <!-- Selecionar Aluno -->
         <div id="divSelecionarAluno" class="">
             <div class="section-divider mt40">
-                <span>Selecione o Aluno que será utilizado para o cadastro</span>
+                <span><?php echo $this->translate(ConstantesCadastro::$TRADUCAO_SELECIONE_O_ALUNO); ?></span>
             </div> 
             <div class="panel-menu">
-                <input id="fooFilter" type="text" class="form-control" placeholder="Busque o Aluno">
+                <input id="fooFilter" type="text" class="form-control" placeholder="<?php echo $this->translate(ConstantesCadastro::$TRADUCAO_BUSQUE_O_ALUNO); ?>">
             </div>
             <table class="table footable" data-filter="#fooFilter">
                 <thead>
                     <tr>
-                        <th class = "hidden-xs">Matricula</th>
-                        <th>Name</th>
-                        <th class = "hidden-xs">Data Nascimento</th>
+                        <th class = "hidden-xs"><?php echo $this->translate(ConstantesCadastro::$TRADUCAO_MATRICULA); ?></th>
+                        <th><?php echo $this->translate(ConstantesCadastro::$TRADUCAO_NOME); ?></th>
+                        <th class = "hidden-xs"><?php echo $this->translate(ConstantesCadastro::$TRADUCAO_DATA_NASCIMENTO); ?>/th>
                         <th></th>
                     </tr>
                 </thead>
@@ -406,7 +124,7 @@ echo $this->templateFormularioTopo($tituloDaPagina);
                             echo '</tr>';
                         }
                     } else {
-                        echo '<tr><td>Sem alunos cadastrados!</td></tr>';
+                        echo '<tr><td>' . $this->translate(ConstantesCadastro::$TRADUCAO_SEM_ALUNOS_CADASTRADOS) . '</td></tr>';
                     }
                     ?>           
                 </tbody>
@@ -429,7 +147,7 @@ echo $this->templateFormularioTopo($tituloDaPagina);
         <!-- Div Dados Pessoais -->
         <div id="divCPFDataNascimento" class="hidden">            
             <div class="section-divider mt40">
-                <span>Informe Data de Nascimento e CPF</span>
+                <span><?php echo $this->translate(ConstantesCadastro::$TRADUCAO_INFORME_DATA_NASCIMENTO_E_CPF); ?></span>
             </div>
             <!-- Buscar CPF -->
             <?php
@@ -533,30 +251,15 @@ echo $this->templateFormularioTopo($tituloDaPagina);
             <?php
             echo "<div id='divInserirAlterarDadosComplementares' class='hidden'>";
             echo "<div id='divBotaoInserirSelectDadosComplementares'>";
-            $labelInserirDadosComplementares = ConstantesCadastro::$TRADUCAO_INSERIR;
-            $extraInserirDadosComplementares = 'onclick="
-            insereNumeracaoNaTelaDeConfimacao(0);
-            $(\'#divDadosComplementares\').addClass(\'hidden\');
-            $(\'#divConfirmacao\').removeClass(\'hidden\');
-        "';
-            echo $this->botaoLink($labelInserirDadosComplementares, ConstantesForm::$STRING_HASHTAG, 7, $extraInserirDadosComplementares);
+            echo $this->botaoLink(ConstantesCadastro::$TRADUCAO_INSERIR, ConstantesForm::$STRING_HASHTAG, 7, $this->funcaoOnClick('botaoAbreDadosComplementares(0)'));
             echo "</div>";
 
             echo "<div id='divBotaoAlterarSelectDadosComplementares' class='hidden'>";
-            $labelInserirDadosComplementares = ConstantesCadastro::$TRADUCAO_ALTERAR;
-            $extraInserirDadosComplementares = 'onclick="
-            insereNumeracaoNaTelaDeConfimacao(1);
-            $(\'#divDadosComplementares\').addClass(\'hidden\');
-            $(\'#divConfirmacao\').removeClass(\'hidden\');
-        "';
-            echo $this->botaoLink($labelInserirDadosComplementares, ConstantesForm::$STRING_HASHTAG, 7, $extraInserirDadosComplementares);
+            echo $this->botaoLink(ConstantesCadastro::$TRADUCAO_ALTERAR, ConstantesForm::$STRING_HASHTAG, 7, $this->funcaoOnClick('botaoAbreDadosComplementares(1)'));
             echo "</div>";
             echo "</div>";
-            $extraVoltarDadosComplementares = 'onclick="
-            $(\'#divConfirmacao\').removeClass(\'hidden\');
-            $(\'#divDadosComplementares\').addClass(\'hidden\');
-            "';
-            echo $this->botaoLink($labelVoltar, ConstantesForm::$STRING_HASHTAG, 8, $extraVoltarDadosComplementares);
+
+            echo $this->botaoLink($labelVoltar, ConstantesForm::$STRING_HASHTAG, 8, $this->funcaoOnClick('botaoVoltarDadosComplementares'));
             ?>
         </div>
     </div>

@@ -172,6 +172,16 @@ class Pessoa implements InputFilterAwareInterface {
     }
 
     /**
+     * Retorna o primeiro nome da pessoa
+     * @return String
+     */
+    function getNomePrimeiro() {
+        $explodeNome = explode(" ", $this->getNome());
+        $primeiroNome = $explodeNome[0];
+        return $primeiroNome;
+    }
+
+    /**
      * Retorna o primeiro e a sigla do ultimo nome da pessoa
      * @return String
      */

@@ -134,7 +134,7 @@ class ConstantesForm {
     public static $TRADUCAO_DIA_HORA = 'Day / Hour';
     public static $TRADUCAO_DADOS_DO_HOSPEDEIRO = 'Data from Host';
     public static $TRADUCAO_ALTERAR = 'Change';
-    public static $TRADUCAO_BUSCAR = 'To Seek';
+    public static $TRADUCAO_BUSCAR = 'Search';
     public static $TRADUCAO_VALIDACAO_DIA_DA_SEMANA_REQUERIDO = 'Select one day of week';
     public static $TRADUCAO_VALIDACAO_HORA_REQUERIDO = 'Select Hour';
     public static $TRADUCAO_VALIDACAO_MINUTOS_REQUERIDO = 'Select Minutes';

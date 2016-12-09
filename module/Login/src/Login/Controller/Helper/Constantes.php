@@ -29,7 +29,7 @@ class Constantes {
     public static $MENSAGEM_ERRO_CSRF = 'Poss&iacute;vel ataque CSRF';
     public static $IMAGEM_LOGO = '/img/logos/logo_circuito.png';
     public static $LOADER_GIF = '/img/loader.gif';
-    public static $LOADER_GIF_GRANDE = '/img/loading.gif';
+    public static $LOADER_GIF_GRANDE = '/img/loader-grande.gif';
     public static $CLASS_HIDDEN = 'hidden';
     public static $TRADUCAO_NOME_APLICACAO = 'View of the Circuit';
     public static $TRADUCAO_USUARIO = 'User';

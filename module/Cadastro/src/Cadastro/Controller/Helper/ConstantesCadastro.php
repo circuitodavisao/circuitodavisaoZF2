@@ -54,6 +54,22 @@ class ConstantesCadastro {
     public static $TRADUCAO_INSERIR = 'Insert';
     public static $TRADUCAO_ALTERAR = 'Change';
     public static $TRADUCAO_LIMPAR = 'Clean';
+    public static $TRADUCAO_TITULO_PAGINA_CADASTR_GRUPO_SUB_EQUIPE = 'Registration of <span class="text-primary">SubEquipe</span>';
+    public static $TRADUCAO_INSIRA_OS_DADOS_DOS_RESPONSAVEIS_E_DADOS_COMPLEMENTARES = 'Enter the Responsible(s) and the complementary data';
+    public static $TRADUCAO_INSIRA_OS_DADOS_COMPLEMENTARES = 'Enter the Complementary Data';
+    public static $TRADUCAO_SELECIONE_O_ALUNO = 'Select the Student that will be used for the registration';
+    public static $TRADUCAO_MATRICULA = 'Registration';
+    public static $TRADUCAO_NOME = 'Name';
+    public static $TRADUCAO_DATA_NASCIMENTO = 'Birth Date';
+    public static $TRADUCAO_SEM_ALUNOS_CADASTRADOS = 'No Students Registered';
+    public static $TRADUCAO_BUSQUE_O_ALUNO = 'Find the Student';
+    public static $TRADUCAO_INFORME_DATA_NASCIMENTO_E_CPF = 'Report Date of Birth and CPF';
+    public static $TRADUCAO_INSIRA_OS_DADOS = 'Enter the data of the ';
+    public static $TRADUCAO_RESPONSAVEL = 'Responsible';
+    public static $TRADUCAO_HOMEM = 'Man';
+    public static $TRADUCAO_MULHER = 'Woman';
+    public static $TRADUCAO_LIDERARA = 'Will Lead';
+    public static $TRADUCAO_SELECIONE_ESTADO_CIVIL = 'Select one of the options below';
     /* Tipo de Mensagens */
     public static $TIPO_MENSAGEM_CADASTRAR_CELULA = 1;
     public static $TIPO_MENSAGEM_ALTERAR_CELULA = 2;
@@ -70,5 +86,8 @@ class ConstantesCadastro {
     public static $PROCOB_URL_RECEITA_FEDERAL = 'L0014/';
     public static $PROCOB_USUARIO = 'comunidadeevangelica@sara.com';
     public static $PROCOB_SENHA = 'HK8C';
+
+    /* Funcões JS */
+    public static $FUNCAO_JS_ABRIR_TELAS_DE_ALUNO = 'abrirTelaDeAlunos(#tipo)';
 
 }

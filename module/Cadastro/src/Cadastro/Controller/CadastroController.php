@@ -931,14 +931,13 @@ class CadastroController extends AbstractActionController {
         $pessoaLogada = $loginORM->getPessoaORM()->encontrarPorIdPessoa($sessao->idPessoa);
 
         $Subject = 'Convite';
-        $ToEmail = 'falecomleonardopereira@gmail.com';
-
+        $ToEmail = 'diegokort@gmail.com';
         $avatar = 'placeholder.png';
         if ($pessoaLogada->getFoto()) {
             $avatar = $pessoaLogada->getFoto();
         }
-        $nomeLider = str_replace(' ', '', $pessoaLogada->getNomePrimeiroUltimo());
-        $nomePessoaEmail = str_replace(' ', '', $pessoa->getNomePrimeiroUltimo());
+        $nomeLider = str_replace(' ', '', $pessoaLogada->getNomePrimeiro());
+        $nomePessoaEmail = str_replace(' ', '', $pessoa->getNomePrimeiro());
         $url = "http://158.69.124.139/convite.php?nomeLider=$nomeLider&avatar=$avatar&token=$tokenDeAgora&nomePessoaEmail=$nomePessoaEmail";
         $Content = file_get_contents($url);
         Funcoes::enviarEmail($ToEmail, $Subject, $Content);

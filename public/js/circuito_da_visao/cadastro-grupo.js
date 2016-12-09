@@ -16,25 +16,22 @@ var alertDanger = 'alert-danger';
 var alertSuccess = 'alert-success';
 var btnDefault = 'btn-default';
 var btnPrimary = 'btn-primary';
-
 function validarEstadoCivil() {
     var valorSelecionado = $('input[name=inputEstadoCivil]:checked').val();
-
     estadoCivil = parseInt(valorSelecionado);
     switch (estadoCivil) {
         case 1:
-            $('#blocoHomem').addClass('hidden');
-            $('#blocoMulher').addClass('hidden');
+            $('#blocoResponsavel1').addClass('hidden');
+            $('#blocoResponsavel2').addClass('hidden');
             break;
         case 2:
-            $('#blocoResponsavel').addClass('hidden');
+            $('#blocoResponsavel0').addClass('hidden');
             break;
         default:
             break;
     }
     $('#divEstadoCivil').addClass('hidden');
     $('#divConfirmacao').removeClass('hidden');
-
 }
 
 function abrirTelaDeAlunos(tipo) {
@@ -65,6 +62,7 @@ function abrirTelaDeAlunos(tipo) {
     $('#divDadosSelecionados').addClass(hidden);
     $('#divBotaoDeSelecionarAluno').addClass(hidden);
     $('#divSpanResponsavelCPF').addClass(hidden);
+    $('#divSpanResponsavelDataNascimento').addClass(hidden);
     $('#divSpanResponsavelEmail').addClass(hidden);
     $('#botaoHierarquiaSelecionada').addClass(hidden);
     $('#divHierarquia').addClass(hidden);
@@ -102,11 +100,9 @@ function selecionarAluno() {
             break;
     }
     inputIdAlunoSelecionado.val(matricula);
-
     /* Limpar campos */
     $('#cpf').val('');
     $('#dataNascimento').val('');
-
     /* Abrir div para cpf e data de nascimento */
     $('#botaoPasso2')
             .removeClass(btnDefault)
@@ -115,6 +111,7 @@ function selecionarAluno() {
     $('#divCPFDataNascimento').removeClass(hidden);
     $('#divDadosSelecionados').removeClass(hidden);
     $('#nomeAluno').val(nome);
+    $('#botaoBuscarCPF').removeClass(hidden);
 }
 
 function isNumber(n) {
@@ -150,16 +147,13 @@ function buscarCPF() {
     var DiaDataNascimento = $("#Dia").val();
     var MesDataNascimento = $("#Mes").val();
     var AnoDataNascimento = $("#Ano").val();
-
     DiaDataNascimento = parseInt(DiaDataNascimento);
     MesDataNascimento = parseInt(MesDataNascimento);
     AnoDataNascimento = parseInt(AnoDataNascimento);
-
     var spanMensagens = $('#spanMensagens');
     spanMensagens.removeClass(alertDanger)
             .removeClass(alertSuccess)
             .addClass(hidden);
-
     var temErro = false;
     if (cpf.length === 0 || DiaDataNascimento === 0 || MesDataNascimento === 0 || AnoDataNascimento === 0) {
         temErro = true;
@@ -194,9 +188,7 @@ function buscarCPF() {
                 var nomeDoAlunoSelecionado = $('#nomeAluno').val();
                 var splitNomeDoAluno = nomeDoAlunoSelecionado.split(" ");
                 var splitNomeEncontradoNaBusca = data.nome.split(" ");
-
                 var dadosValidados = true;
-
                 if (splitNomeDoAluno[0] !== splitNomeEncontradoNaBusca[0]) {
                     dadosValidados = false;
                     spanMensagens
@@ -219,12 +211,12 @@ function buscarCPF() {
                             .addClass(alertSuccess)
                             .removeClass(hidden);
                     $('#botaoCPFLiberado').removeClass(hidden);
-
                     /* Pondo valores encontrados na tela */
                     $('#spanResponsavelNome').html(data.nome);
                     $('#spanResponsavelCPF').html(data.cpf);
                     $('#divSpanResponsavelCPF').removeClass(hidden);
                     $('#spanResponsavelDataNascimento').html(data.dataNascimento);
+                    $('#divSpanResponsavelDataNascimento').removeClass(hidden);
                     $('#botaoBuscarCPF').addClass(hidden);
                 }
             }
@@ -261,6 +253,7 @@ function mostrarDivEmail() {
             .removeClass('btn-default')
             .addClass('btn-primary');
     escondeMensagem();
+    $('#botaoBuscarEmail').removeClass(hidden);
 }
 
 function buscarEmail() {
@@ -302,8 +295,6 @@ function buscarEmail() {
     var email0 = $('#email0').val();
     var email1 = $('#email1').val();
     var email2 = $('#email2').val();
-
-
     if (!temErro) {
         abrirModalCarregando();
         $.post(
@@ -414,7 +405,6 @@ function insereResponsavelNaTelaDeConfimacao(tipoResponsavel, mudarBarraDeProgre
     var inputHiddenCPF;
     var inputHiddenDataNascimento;
     var blocoResponsavel;
-
     switch (tipoResponsavel) {
         case 0:
             spanMatricula = $('#spanMatricula0');
@@ -434,7 +424,7 @@ function insereResponsavelNaTelaDeConfimacao(tipoResponsavel, mudarBarraDeProgre
             inputHiddenNome = $('#nome0');
             inputHiddenCPF = $('#cpf0');
             inputHiddenDataNascimento = $('#dataNascimento0');
-            blocoResponsavel = $('#blocoResponsavel');
+            blocoResponsavel = $('#blocoResponsavel0');
             break;
         case 1:
             spanMatricula = $('#spanMatricula1');
@@ -486,7 +476,6 @@ function insereResponsavelNaTelaDeConfimacao(tipoResponsavel, mudarBarraDeProgre
     var spanResponsavelCPF = $('#spanResponsavelCPF');
     var spanResponsavelEmail = $('#spanResponsavelEmail');
     var hierarquiaSelecioanada = $('#hierarquia option:selected');
-
     inputHiddenNome.val(spanResponsavelNome.html());
     inputHiddenCPF.val(spanResponsavelCPF.html());
     inputHiddenDataNascimento.val(spanResponsavelDataNascimento.html());
@@ -502,7 +491,6 @@ function insereResponsavelNaTelaDeConfimacao(tipoResponsavel, mudarBarraDeProgre
     divBotaoLimparResponsavel.removeClass(hidden);
     inputHiddenEmail.val(spanResponsavelEmail.html());
     inputHiddenHierarquia.val(hierarquiaSelecioanada.val());
-
     if (mudarBarraDeProgresso === 0) {
         atualizarBarraDeProgresso(valorBarraDeProgresso);
     }
@@ -566,11 +554,9 @@ function limparDadosPessoaSelecionada(tipoResponsavel) {
     spanNome.html('');
     spanEmail.html('');
     spanHierarquia.html('');
-
     $('#spanInsiraOsDadosDoResponsavel').html('Insira os dados do Responsavel');
     $('#spanInsiraOsDadosDoResponsavel1').html('Insira os dados do Homem');
     $('#spanInsiraOsDadosDoResponsavel2').html('Insira os dados do Mulher');
-
     divBotaoLimpar.addClass(hidden);
     divBotaoInserir.removeClass(hidden);
     divCheckDadosResponsavelInseridos.addClass(hidden);
@@ -601,11 +587,11 @@ function limparPassoAPasso(tipo) {
     });
     $('#divSpanResponsavelEmail').addClass(hidden);
     $('#divSpanResponsavelCPF').addClass(hidden);
+    $('#divSpanResponsavelDataNascimento').addClass(hidden);
     $('#divDadosSelecionados').addClass(hidden);
     $('#botaoHierarquiaSelecionada').addClass(hidden);
     $('#botaoEmailLiberado').addClass(hidden);
     $('#divBotaoDeSelecionarAluno').addClass(hidden);
-
     if (tipo === 0) {
         $('#idAlunoSelecionado0').val('');
         $('#nome0').val('');
@@ -659,7 +645,6 @@ function atualizarBarraDeProgresso(valorParaSomar) {
             .attr("aria-valuenow", valorAtualizadoDaBarraDeProgresso)
             .html(valorAtualizadoDaBarraDeProgresso + stringPercentual)
             .css('width', valorAtualizadoDaBarraDeProgresso + stringPercentual);
-
     var divBotaoSubmit = $('#divBotaoSubmit');
     if (valorAtualizadoDaBarraDeProgresso == 100) {
         divBotaoSubmit.removeClass(hidden);
@@ -686,6 +671,7 @@ function botaoVoltarDataNascimentoCPF() {
     $('#divDadosSelecionados').addClass(hidden);
     $('#spanMensagens').addClass(hidden);
     $('#divSpanResponsavelCPF').addClass(hidden);
+    $('#divSpanResponsavelDataNascimento').addClass(hidden);
     $('#Dia').val(0);
     $('#Mes').val(0);
     $('#Ano').val(0);
@@ -703,6 +689,7 @@ function botaoVoltarEmail() {
     $('#repetirEmail').val('');
     $('#botaoEmailLiberado').addClass(hidden);
     $('#divSpanResponsavelCPF').addClass(hidden);
+    $('#divSpanResponsavelDataNascimento').addClass(hidden);
     $('#botaoPasso3').removeClass(btnPrimary).addClass(btnDefault);
 }
 
@@ -721,3 +708,28 @@ function botaoSubmeterFormulario(form) {
     abrirModalCarregando();
     form.submit();
 }
+
+function botaoInserirDadosComplementares() {
+    $('#divConfirmacao').addClass(hidden);
+    $('#divDadosComplementares').removeClass(hidden);
+    $('#numeracao').val(0);
+}
+
+function botaoAlterarDadosComplementares() {
+    $('#divBotaoInserirSelectDadosComplementares').addClass(hidden);
+    $('#divBotaoAlterarSelectDadosComplementares').removeClass(hidden);
+    $('#divConfirmacao').addClass(hidden);
+    $('#divDadosComplementares').removeClass(hidden);
+}
+
+function botaoAbreDadosComplementares(tipo) {
+    insereNumeracaoNaTelaDeConfimacao(tipo);
+    $('#divDadosComplementares').addClass(hidden);
+    $('#divConfirmacao').removeClass(hidden);
+}
+
+function botaoVoltarDadosComplementares() {
+    $('#divConfirmacao').removeClass(hidden);
+    $('#divDadosComplementares').addClass(hidden);
+}
+

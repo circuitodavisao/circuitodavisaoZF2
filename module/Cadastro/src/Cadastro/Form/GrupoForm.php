@@ -217,12 +217,12 @@ class GrupoForm extends Form {
                             Constantes::$FORM_STRING_VALUE_OPTIONS => array(
                                 1 => array(
                                     Constantes::$FORM_STRING_VALUE => 1,
-                                    Constantes::$FORM_STRING_LABEL => ' Sozinho',
+                                    Constantes::$FORM_STRING_LABEL => ' Alone',
                                     Constantes::$FORM_STRING_LABEL_ATRIBUTES => array(Constantes::$FORM_STRING_CLASS => $classOption),
                                 ),
                                 2 => array(
                                     Constantes::$FORM_STRING_VALUE => 2,
-                                    Constantes::$FORM_STRING_LABEL => ' Com o conjungê',
+                                    Constantes::$FORM_STRING_LABEL => ' With the Spouse',
                                     Constantes::$FORM_STRING_LABEL_ATRIBUTES => array(Constantes::$FORM_STRING_CLASS => $classOption),
                                 ),
                             ),

@@ -33,10 +33,10 @@ class GrupoEstadoCivil extends AbstractHelper {
         $html .= '<div id="divEstadoCivil">';
 
         $html .= '<div class="section-divider mt20">';
-        $html .= '<span>Selecione uma das opções abaixo</span>';
+        $html .= '<span>' . ConstantesCadastro::$TRADUCAO_SELECIONE_ESTADO_CIVIL . '</span>';
         $html .= '</div>';
 
-        $html .= 'Liderará:';
+        $html .= ConstantesCadastro::$TRADUCAO_LIDERARA . ':';
 
         $html .= '<div class="option-group field mb10">';
         $html .= $this->view->formRadio($this->getForm()->get(ConstantesCadastro::$INPUT_ESTADO_CIVIL));
