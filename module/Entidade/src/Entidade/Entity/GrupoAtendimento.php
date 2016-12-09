@@ -167,14 +167,14 @@ class GrupoAtendimento {
             $inputFilter->add(array(
                 'name' => 'dataAtendimento',
                 'required' => true,
-                'filter' => array(
-                    array('name' => 'StripTags'), // removel xml e html string
-                    array('name' => 'StringTrim'), // removel espaco do inicio e do final da string
-                ),
                 'validators' => array(
                     array(
-                        'name' => 'NotEmpty',
-                    ),
+                        'name' => 'date',
+                        'options' => array (
+                                            'format' => "d/m/Y" 
+                                            ) 
+			)
+                                        
                 ),
             ));
             

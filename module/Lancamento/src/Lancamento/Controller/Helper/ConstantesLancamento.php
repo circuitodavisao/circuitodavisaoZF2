@@ -39,11 +39,13 @@ class ConstantesLancamento {
     public static $TEMPLATE_JS_LANCAMENTO = 'layout/layout-js-lancamento';
     public static $TEMPLATE_JS_CADASTRAR_PESSOA = 'layout/layout-js-cadastrar-pessoa';
     public static $TEMPLATE_JS_CADASTRAR_PESSOA_VALIDACAO = 'layout/layout-js-cadastrar-pessoa-validacao';
+    public static $TEMPLATE_JS_CADASTRAR_ATENDIMENTO = 'layout/layout-js-cadastrar-atendimento';
     public static $TEMPLATE_JS_LANCAMENTO_MODAL_EVENTOS = 'layout/layout-js-lancamento-modal-eventos';
     public static $TEMPLATE_JS_LANCAMENTO_MODAL_MUITOS_CADASTROS = 'layout/layout-js-lancamento-modal-muitos-cadastros';
     public static $STRING_JS_LANCAMENTO = 'layoutJSLancamento';
     public static $STRING_JS_CADASTRAR_PESSOA = 'layoutJSCadastrarPessoa';
     public static $STRING_JS_CADASTRAR_PESSOA_VALIDACAO = 'layoutJSCadastrarPessoaValidacao';
+    public static $STRING_JS_CADASTRAR_ATENDIMENTO = 'layoutJSCadastrarAtendimento';
     public static $STRING_JS_LANCAMENTO_MODAL_EVENTOS = 'layoutJSLancamentoModalEventos';
     public static $STRING_JS_LANCAMENTO_MODAL_MUITOS_CADASTROS = 'layoutJSLancamentoModalMuitosCadastros';
     public static $ROUTE_LANCAMENTO = 'lancamento';
@@ -103,6 +105,7 @@ class ConstantesLancamento {
     public static $TRADUCAO_VALIDACAO_TELEFONE_MAX = 'Enter at 9 numbers';
     public static $TRADUCAO_VALIDACAO_TIPO_VAZIO = 'Choose a Type';
     public static $TRADUCAO_PESSOA_CADASTRADA = 'Person Registered';
+    public static $STRING_FUNCAO_VALIDACAO_ATENDIMENTO = 'preValidacao()';
     /* Fomulário */
     public static $INPUT_NOME = 'nome';
     public static $INPUT_DATA_ATENDIMENTO = 'dataAtendimento';

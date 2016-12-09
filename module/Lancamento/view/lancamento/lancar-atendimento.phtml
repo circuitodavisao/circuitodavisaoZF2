@@ -1,7 +1,9 @@
 <?php
 
+use Cadastro\Form\ConstantesForm;
 use Lancamento\Controller\Helper\ConstantesLancamento;
 use Login\Controller\Helper\Constantes;
+
 $grupoResponsavel = $grupo->getResponsabilidadesAtivas();
 if ($grupoResponsavel) {
     $pessoas = array();
@@ -132,7 +134,10 @@ $form->setAttribute(Constantes::$ACTION, $this->url(ConstantesLancamento::$ROUTE
                         Voltar
                     </span>
                 </button>
-                <?php echo $this->botaoSubmit(ConstantesLancamento::$TRADUCAO_LANCAR_ATENDIMENTO, ConstantesLancamento::$CLASS_BTN_DANGER_DARK); ?>                
+                <?php 
+                $funcaoPreValidacao = $this->funcaoOnClick(ConstantesLancamento::$STRING_FUNCAO_VALIDACAO_ATENDIMENTO);
+                echo $this->botaoLink(ConstantesLancamento::$PAGINA_LANCAR_ATENDIMENTO, ConstantesForm::$STRING_HASHTAG, 0,$funcaoPreValidacao); 
+                ?>                
 
             </div>
             <?php echo $this->form()->closeTag() ?>
@@ -142,3 +147,72 @@ $form->setAttribute(Constantes::$ACTION, $this->url(ConstantesLancamento::$ROUTE
         </div>
     </div>
 </div>    
+<script>
+window.onload = initPage;
+    
+    function initPage() {
+
+        $('#<?php echo ConstantesLancamento::$FORM_CADASTRAR_ATENDIMENTO; ?>').validate({
+            /* @validation states + elements 
+             ------------------------------------------- */
+
+            errorClass: "state-error",
+            validClass: "state-success",
+            errorElement: "em",
+            /* @validation rules 
+             ------------------------------------------ */
+
+            rules: {
+                dataAtendimento: {
+                    required: true,
+                    date: true,
+                    maxlength: 10,
+                    minlength: 10
+                    
+                },
+                quem: {
+                    required: true
+                }
+            },
+            /* @validation error messages 
+             ---------------------------------------------- */
+
+            messages: {
+                dataAtendimento: {
+                    required: 'Insert date',
+                    maxlength: 'Please enter a valid date. Max: 10 characters',
+                    minlength: 'Please enter a valid date. Min: 10 characters'
+                },
+                quem: {
+                    required: 'Select Leader'
+                }
+            },
+            /* @validation highlighting + error placement  
+             ---------------------------------------------------- */
+
+            highlight: function (element, errorClass, validClass) {
+                $(element).closest('.field').addClass(errorClass).removeClass(validClass);
+            },
+            unhighlight: function (element, errorClass, validClass) {
+                $(element).closest('.field').removeClass(errorClass).addClass(validClass);
+            },
+            errorPlacement: function (error, element) {
+                if (element.is(":radio") || element.is(":checkbox")) {
+                    element.closest('.option-group').after(error);
+                } else {
+                    error.insertAfter(element.parent());
+                }
+            }
+
+        });
+    }
+        
+
+    function preValidacao() {
+        var validator;
+            validator = $('#<?php echo ConstantesLancamento::$FORM_CADASTRAR_ATENDIMENTO; ?>').validate();
+            if (validator.form()) {
+                $(<?php echo ConstantesLancamento::$FORM_CADASTRAR_ATENDIMENTO; ?>).submit();
+            }
+    }
+</script>

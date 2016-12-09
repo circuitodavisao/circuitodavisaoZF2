@@ -602,6 +602,10 @@ class LancamentoController extends AbstractActionController {
             ConstantesLancamento::$NOME_LIDER_ATENDIMENTO => $nomePessoaPai,
             ConstantesLancamento::$FORM_CADASTRAR_ATENDIMENTO => $formCadastrarAtendimento,
         ));
+        
+        $layoutJS2 = new ViewModel();
+        $layoutJS2->setTemplate(ConstantesLancamento::$TEMPLATE_JS_CADASTRAR_ATENDIMENTO);
+        $view->addChild($layoutJS2, ConstantesLancamento::$STRING_JS_CADASTRAR_ATENDIMENTO);
 
         return $view;
     }
@@ -616,13 +620,11 @@ class LancamentoController extends AbstractActionController {
                 $post_data = $request->getPost();
 
                 $grupoAtendimento = new GrupoAtendimento();
-                $formCadastrarAtendimento = new CadastrarAtendimentoForm(ConstantesLancamento::$FORM_CADASTRAR_PESSOA);
-                $formCadastrarAtendimento->setInputFilter($grupoAtendimento->getInputFilterCadastrarAtendimento());
-                $formCadastrarAtendimento->setData($post_data);
+                
 
                 /* validação */
-                if ($formCadastrarAtendimento->isValid()) {
-                    $validatedData = $formCadastrarAtendimento->getData();
+                
+                    $validatedData = $post_data;
 
 
                     $grupoAtendimento->setGrupo_id($validatedData['idGrupo']);
@@ -639,9 +641,7 @@ class LancamentoController extends AbstractActionController {
                     return $this->forward()->dispatch(ConstantesLancamento::$CONTROLLER_LANCAMENTO, array(
                                 Constantes::$ACTION => ConstantesLancamento::$PAGINA_ATENDIMENTO,
                     ));
-                } else {
-                    print_r($formCadastrarAtendimento->getMessages()); //error messages//error codes
-                }
+                
             } catch (Exception $exc) {
                 echo $exc->getMessage();
             }

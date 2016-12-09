@@ -10,12 +10,13 @@ use Zend\Form\Element\Hidden;
 use Zend\Form\Element\Select;
 use Zend\Form\Element\Text;
 use Zend\Form\Form;
-use Zend\Validator\Date;
+use Zend\Form\Element\Date;
 
 /**
  * Nome: CadastrarAtendimentoForm.php
  * @author Lucas Carvalho  <lucascarvalho.esw@gmail.com>
- * Descricao: Formulario para cadastrar atendimento.
+ * Descricao: Formulario para cadastrar atendimento.            
+ *              
  */
 class CadastrarAtendimentoForm extends Form {
 
@@ -66,16 +67,16 @@ class CadastrarAtendimentoForm extends Form {
          * Elemento do tipo Text
          */
         $this->add(
-                (new Text())
+                (new Date())
                         ->setName(ConstantesLancamento::$INPUT_DATA_ATENDIMENTO)
                         ->setAttributes([
-                            Constantes::$FORM_STRING_CLASS => Constantes::$FORM_STRING_CLASS_GUI_INPUT,
+                            Constantes::$FORM_STRING_CLASS => ConstantesForm::$FORM_CLASS_FORM_CONTROL,
                             Constantes::$FORM_STRING_ID => ConstantesLancamento::$INPUT_DATA_ATENDIMENTO,
                         ])
         );
         
         $arrayLider[''] = ConstantesForm::$TRADUCAO_SELECIONE;
-        $arrayLider["$idPessoaPai"] = $nomePessoaPai;
+        $arrayLider["$idPessoaPai"] = str_replace("&nbsp;", " ", $nomePessoaPai);
         $arrayLider[0] = "AMBOS";
         
         /**
@@ -85,7 +86,7 @@ class CadastrarAtendimentoForm extends Form {
         $inputSelectLider = new Select();
         $inputSelectLider->setName(ConstantesLancamento::$INPUT_QUEM_ATENDEU);
         $inputSelectLider->setAttributes(array(
-            Constantes::$FORM_STRING_CLASS => Constantes::$FORM_STRING_CLASS_GUI_INPUT,
+            Constantes::$FORM_STRING_CLASS => ConstantesForm::$FORM_CLASS_FORM_CONTROL,
             Constantes::$FORM_STRING_ID => ConstantesLancamento::$INPUT_QUEM_ATENDEU,
         ));
         $inputSelectLider->setValueOptions($arrayLider);
