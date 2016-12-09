@@ -18,12 +18,15 @@ class ConstantesLancamento {
     public static $ENTITY_PESSOA_ID = 'pessoa_id';
     public static $ENTITY_DATA_INATIVACAO = 'data_inativacao';
     public static $ENTITY_TIPO_ID = 'tipo_id';
+    public static $ENTITY_GRUPO_ATENDIMENTO = 'Entidade\Entity\GrupoAtendimento';
     public static $ENTIDADE = 'entidade';
-    public static $ENTIDADE_INATIVA = 'entidadeInativa';
+    public static $ENTIDADE_INATIVA = 'entidadeInativa'; 
     public static $DOCTRINE_ORM_ENTITY_MANAGER = 'doctrineORMEntityManager';
     public static $LANCAMENTO_ORM = 'lancamentoORM';
     public static $TURMA = 'turma';
     public static $GRUPO = 'grupo';
+    public static $NUMERO_ATENDIMENTOS = 'numeroAtendimentos';
+    public static $NOME_LIDER_ATENDIMENTO = 'nomePessoaPai';
     public static $QUANTIDADE_MAXIMA_PESSOAS_NO_LANÇAMENTO = 60;
     public static $ABA_SELECIONADA = 'abaSelecionada';
     public static $CICLO_SELECIONADO = 'cicloSelecionado';
@@ -47,6 +50,7 @@ class ConstantesLancamento {
     public static $PAGINA_SALVAR_PESSOA = 'SalvarPessoa';
     public static $PAGINA_ATENDIMENTO = 'Atendimento'; 
     public static $PAGINA_LANCAR_ATENDIMENTO = 'LancarAtendimento'; 
+    public static $PAGINA_SALVAR_ATENDIMENTO = 'SalvarAtendimento';
     public static $ONCLICK_ABRIR_MODAL = 'onclick="abrirModal();"';
     public static $PAGINA = 'pagina';
     public static $PAGINA_CADASTRAR_PESSOA = 'CadastrarPessoa';
@@ -62,6 +66,7 @@ class ConstantesLancamento {
     public static $NBSP = '&nbsp;';
     public static $CLASS_PHONE = 'phone';
     public static $FORM_CADASTRAR_PESSOA = 'CadastrarPessoaForm';
+    public static $FORM_CADASTRAR_ATENDIMENTO = 'CadastrarAtendimentoForm';
     public static $GRUPOS_ABAIXO = 'gruposAbaixo';
     /* Tradução */
     public static $TRADUCAO_ENVIAR_RELATORIO = 'Send Report';
@@ -80,6 +85,7 @@ class ConstantesLancamento {
     public static $TRADUCAO_NOME = 'Full Name';
     public static $TRADUCAO_DDD = 'DDD';
     public static $TRADUCAO_TELEFONE = 'Phone';
+    public static $TRADUCAO_LANCAR_ATENDIMENTO = 'Lan&ccedil;ar';
     public static $TRADUCAO_TIPO = 'Type';
     public static $TRADUCAO_NUCLEO_CELULA = 'Perfect Core';
     public static $TRADUCAO_SELECIONE = 'SELECT';
@@ -99,6 +105,9 @@ class ConstantesLancamento {
     public static $TRADUCAO_PESSOA_CADASTRADA = 'Person Registered';
     /* Fomulário */
     public static $INPUT_NOME = 'nome';
+    public static $INPUT_DATA_ATENDIMENTO = 'dataAtendimento';
+    public static $INPUT_QUEM_ATENDEU = 'quem';
+    public static $INPUT_ID_GRUPO_ATENDIDO = 'idGrupo';
     public static $INPUT_DDD = 'ddd';
     public static $INPUT_TELEFONE = 'telefone';
     public static $INPUT_TIPO = 'tipo';

@@ -1,42 +1,66 @@
 <script>
-function funcaoLancamento(funcao, id) {
-    var resposta = true;
+    function funcaoLancamento(funcao, id) {
+        var resposta = true;
 
-    if (resposta) {
-        $.post(
-                '/lancamentoFuncoes',
-                {
-                    id: id,
-                    funcao: funcao
-                },
-        function (data) {
-            if (data.response) {
-                if (data.tipoDeRetorno === 1) {
-                    location.href = data.url;
+        if (resposta) {
+            $.post(
+                    '/lancamentoFuncoes',
+                    {
+                        id: id,
+                        funcao: funcao
+                    },
+            function (data) {
+                if (data.response) {
+                    if (data.tipoDeRetorno === 1) {
+                        location.href = data.url;
+                    }
                 }
-            }
-        }, 'json');
+            }, 'json');
+        }
+    }
+</script>
+<?php
+$totalAtendimentos = 0;
+$totalGruposFilhos = 0;
+foreach ($gruposAbaixo as $gpFilho) {
+    $grupoFilho = $gpFilho->getGrupoPaiFilhoFilho();
+    $entidadeFilho = $grupoFilho->getEntidadeAtiva();
+    $grupoResponsavel = $grupoFilho->getResponsabilidadesAtivas();
+    if ($grupoResponsavel) {
+        $totalAtendimentos += count($grupoFilho->getGrupoAtendimento());
+        $totalGruposFilhos++;
     }
 }
-</script>
+
+$meta = $totalGruposFilhos * 2;
+$progresso = ($totalAtendimentos / $meta) * 100;
+/* percentagem da meta, sendo que a meta é 2 atendimentos por mes */
+if ($progresso > 50 && $progresso  < 80) {
+    $colorBarTotal = "progress-bar-warning";
+} else if ($progresso >= 80) {
+    $colorBarTotal = "progress-bar-success";
+} else {
+    $colorBarTotal = "progress-bar-danger";
+}
+?>
 <div class="mw1000 center-block p10">
-    <div class="admin-form theme-danger">
-        <blockquote class = "blockquote-danger">
+    <div class="admin-form theme-primary">
+        <blockquote class = "blockquote-primary">
             <small>
-                Relat&oacute;rio de <span class="text-danger">Atendimento</span>
+                Relat&oacute;rio de <span class="text-primary">Atendimento</span>
             </small>
         </blockquote>
-        <div id="atendimento" class="panel heading-border panel-danger">
+        <div id="atendimento" class="panel heading-border panel-primary">
             <div class="panel-body bg-light">
                 <div class="row">
                     <div class="section-divider mt30">
-                        <span>13 de 23 discipulos foram atendidos</span>
+                        <span><?php echo $totalAtendimentos; ?> de <?php echo $meta; ?> atendimentos foram realizados.</span>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-12 col-xs-12">
                         <div class="progress progress-bar-xl">
-                            <div id="divProgressBar" class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: 50%;">50%</div>
+                            <div id="divProgressBar" class="progress-bar <?php echo $colorBarTotal; ?>" role="progressbar" aria-valuenow="<?php echo number_format($progresso, 2, '.', ''); ?>" aria-valuemin="0" aria-valuemax="100" style="width: <?php echo number_format($progresso, 2, '.', ''); ?>%;"><?php echo number_format($progresso, 2, '.', ''); ?>%</div>
                         </div>
                     </div>
                 </div>
@@ -79,36 +103,52 @@ function funcaoLancamento(funcao, id) {
                             }
                             $contagem++;
                         }
-                    }
-                    ?>
-                    <div class="row mt10">
-                        <div class="col-md-3 col-xs-5" style="padding-right: 0px;">
-                            <span class="" href="#" >
-                                <?php echo $htmlFoto; ?>
-                            </span>
-                        </div>    
-                        <div class="col-md-9 col-xs-7" style="padding-left: 2px; padding-right: 0px;">
-                            <div class="row">
-                                <div class="col-md-11 col-xs-10" style="padding-top: 3px; padding-right: 4px;">
 
-                                    <div class="progress progress-bar-xl" style="margin-bottom: 0px;">
-                                        <div id="divProgressBar" class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="10" aria-valuemin="0" aria-valuemax="5" style="width: 10%;">0%</div>
+                        $numeroAtendimentos = count($grupoFilho->getGrupoAtendimento());
+                        /* percentagem da meta, sendo que a meta é 2 atendimentos por mes */
+                        if ($numeroAtendimentos == 1) {
+                            $valueNow = 50;
+                            $labelProgressBar = 50;
+                            $colorBar = "progress-bar-warning";
+                        } else if ($numeroAtendimentos >= 2) {
+                            $valueNow = 100;
+                            $labelProgressBar = 100;
+                            $colorBar = "progress-bar-success";
+                        } else {
+                            $valueNow = 10;
+                            $labelProgressBar = 0;
+                            $colorBar = "progress-bar-danger";
+                        }
+                        ?>
+                        <div class="row mt10">
+                            <div class="col-md-3 col-xs-5" style="padding-right: 0px;">
+                                <span class="" href="#" >
+                                    <?php echo $htmlFoto; ?>
+                                </span>
+                            </div>    
+                            <div class="col-md-9 col-xs-7" style="padding-left: 2px; padding-right: 0px;">
+                                <div class="row">
+                                    <div class="col-md-11 col-xs-10" style="padding-top: 3px; padding-right: 4px;">
+
+                                        <div class="progress progress-bar-xl" style="margin-bottom: 0px;">
+                                            <div id="divProgressBar" class="progress-bar <?php echo $colorBar; ?>" role="progressbar" aria-valuenow="<?php echo $valueNow; ?>" aria-valuemin="0" aria-valuemax="5" style="width: <?php echo $valueNow; ?>%;"><?php echo $labelProgressBar; ?>%</div>
+                                        </div>
+                                        <span style="padding-top: 0px;"><?php echo $html; ?></span>
                                     </div>
-                                    <span style="padding-top: 0px;"><?php echo $html; ?></span>
-                                </div>
-                                
-                                <div class="col-md-1 col-xs-2" style="padding-left: 0px; padding-top: 3px; vertical-align: middle;">
-                                    <button type="button" onclick="funcaoLancamento(<?php echo "'LancarAtendimento',".$grupoFilho->getId(); ?>);" class="btn btn-xs btn-primary" style="padding-top: 0px; padding-bottom: 0px;">
-                                        <i class="fa fa-plus" aria-hidden="true"></i>
-                                    </button>
-                                </div>                           
-                            </div>  
-                        </div>
-                    </div> 
 
-    <?php
-}
-?>
+                                    <div class="col-md-1 col-xs-2" style="padding-left: 0px; padding-top: 3px; vertical-align: middle;">
+                                        <button type="button" onclick="funcaoLancamento(<?php echo "'LancarAtendimento'," . $grupoFilho->getId(); ?>);" class="btn btn-xs btn-primary" style="padding-top: 0px; padding-bottom: 0px;">
+                                            <i class="fa fa-plus" aria-hidden="true"></i>
+                                        </button>
+                                    </div>                           
+                                </div>  
+                            </div>
+                        </div> 
+
+                        <?php
+                    }
+                }
+                ?>
                 <!--                <div class="row mt10">
                                     <div class="col-md-3 col-xs-5" style="padding-right: 0px;">
                                         <span class="" href="#" >

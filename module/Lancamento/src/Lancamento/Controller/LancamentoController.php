@@ -6,13 +6,16 @@ use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManager;
 use Entidade\Entity\EventoFrequencia;
 use Entidade\Entity\Grupo;
+use Entidade\Entity\GrupoAtendimento;
 use Entidade\Entity\Pessoa;
 use Exception;
 use Lancamento\Controller\Helper\ConstantesLancamento;
 use Lancamento\Controller\Helper\FuncoesLancamento;
 use Lancamento\Controller\Helper\LancamentoORM;
+use Lancamento\Form\CadastrarAtendimentoForm;
 use Lancamento\Form\CadastrarPessoaForm;
 use Login\Controller\Helper\Constantes;
+use Login\Controller\Helper\Funcoes;
 use Login\Controller\Helper\LoginORM;
 use Zend\Json\Json;
 use Zend\Mvc\Controller\AbstractActionController;
@@ -110,6 +113,11 @@ class LancamentoController extends AbstractActionController {
         if ($pagina == ConstantesLancamento::$PAGINA_LANCAR_ATENDIMENTO) {
             return $this->forward()->dispatch(ConstantesLancamento::$CONTROLLER_LANCAMENTO, array(
                         Constantes::$ACTION => ConstantesLancamento::$PAGINA_LANCAR_ATENDIMENTO,
+            ));
+        }
+        if ($pagina == ConstantesLancamento::$PAGINA_SALVAR_ATENDIMENTO) {
+            return $this->forward()->dispatch(ConstantesLancamento::$CONTROLLER_LANCAMENTO, array(
+                        Constantes::$ACTION => ConstantesLancamento::$PAGINA_SALVAR_ATENDIMENTO,
             ));
         }
         /* Funcoes */
@@ -576,17 +584,68 @@ class LancamentoController extends AbstractActionController {
     public function lancarAtendimentoAction() {
         $sessao = new Container(Constantes::$NOME_APLICACAO);
         $lancamentoORM = new LancamentoORM($this->getDoctrineORMEntityManager());
+        $loginORM = new LoginORM($this->getDoctrineORMEntityManager());
         $idGrupo = $sessao->idSessao;
+        $idPessoaPai = $sessao->idPessoa;
+        $pessoaPai = $loginORM->getPessoaORM()->encontrarPorIdPessoa($idPessoaPai);
+        $nomePessoaPai = $pessoaPai->getNomePrimeiroPrimeiraSiglaUltimo();
         $grupo = $lancamentoORM->getGrupoORM()->encontrarPorIdGrupoPessoa($idGrupo);
-
-
+        /* Traz um array  */
+        $atendimentos = $grupo->getGrupoAtendimento();
+        $numeroAtendimentos = count($atendimentos);
+        $formCadastrarAtendimento = new CadastrarAtendimentoForm(ConstantesLancamento::$FORM_CADASTRAR_ATENDIMENTO, $idGrupo, $nomePessoaPai, $idPessoaPai);
 
 
         $view = new ViewModel(array(
             ConstantesLancamento::$GRUPO => $grupo,
+            ConstantesLancamento::$NUMERO_ATENDIMENTOS => $numeroAtendimentos,
+            ConstantesLancamento::$NOME_LIDER_ATENDIMENTO => $nomePessoaPai,
+            ConstantesLancamento::$FORM_CADASTRAR_ATENDIMENTO => $formCadastrarAtendimento,
         ));
 
         return $view;
+    }
+
+    /**
+     * Salva um novo atendimento
+     */
+    public function salvarAtendimentoAction() {
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            try {
+                $post_data = $request->getPost();
+
+                $grupoAtendimento = new GrupoAtendimento();
+                $formCadastrarAtendimento = new CadastrarAtendimentoForm(ConstantesLancamento::$FORM_CADASTRAR_PESSOA);
+                $formCadastrarAtendimento->setInputFilter($grupoAtendimento->getInputFilterCadastrarAtendimento());
+                $formCadastrarAtendimento->setData($post_data);
+
+                /* validação */
+                if ($formCadastrarAtendimento->isValid()) {
+                    $validatedData = $formCadastrarAtendimento->getData();
+
+
+                    $grupoAtendimento->setGrupo_id($validatedData['idGrupo']);
+                    $grupoAtendimento->setQuem($validatedData['quem']);
+                    $grupoAtendimento->setDia(Funcoes::mudarPadraoData($validatedData['dataAtendimento'], 0));
+
+                    /* Helper Controller */
+                    $lancamentoORM = new LancamentoORM($this->getDoctrineORMEntityManager());
+                    $grupoLancado = $lancamentoORM->getGrupoORM()->encontrarPorIdGrupoPessoa($grupoAtendimento->getGrupo_id());
+                    $grupoAtendimento->setGrupo($grupoLancado);
+                    $lancamentoORM->getGrupoAtendimentoORM()->persistirGrupoAtendimento($grupoAtendimento);
+
+
+                    return $this->forward()->dispatch(ConstantesLancamento::$CONTROLLER_LANCAMENTO, array(
+                                Constantes::$ACTION => ConstantesLancamento::$PAGINA_ATENDIMENTO,
+                    ));
+                } else {
+                    print_r($formCadastrarAtendimento->getMessages()); //error messages//error codes
+                }
+            } catch (Exception $exc) {
+                echo $exc->getMessage();
+            }
+        }
     }
 
 }
