@@ -649,8 +649,8 @@ class CadastroController extends AbstractActionController {
 
         /* Javascript */
         $layoutJS = new ViewModel();
-        $layoutJS->setTemplate(ConstantesForm::$LAYOUT_JS_GRUPO);
-        $view->addChild($layoutJS, ConstantesForm::$LAYOUT_STRING_JS_GRUPO);
+        $layoutJS->setTemplate(ConstantesForm::$LAYOUT_JS_GRUPO_VALIDACAO);
+        $view->addChild($layoutJS, ConstantesForm::$LAYOUT_STRING_JS_GRUPO_VALIDACAO);
 
         return $view;
     }

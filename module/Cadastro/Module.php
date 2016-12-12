@@ -20,6 +20,7 @@ use Cadastro\View\Helper\InputExtras;
 use Cadastro\View\Helper\ListagemDeEventos;
 use Cadastro\View\Helper\PassoAPasso;
 use Cadastro\View\Helper\SpanDadosValidados;
+use Cadastro\View\Helper\TabelaDeAlunos;
 use Cadastro\View\Helper\TemplateFormularioRodape;
 use Cadastro\View\Helper\TemplateFormularioTopo;
 use Cadastro\View\Helper\TituloDaPagina;
@@ -111,6 +112,9 @@ class Module {
                 },
                 'spanDadosValidados' => function($sm) {
                     return new SpanDadosValidados();
+                },
+                'tabelaDeAlunos' => function($sm) {
+                    return new TabelaDeAlunos();
                 },
             )
         );

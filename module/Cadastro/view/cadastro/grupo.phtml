@@ -13,7 +13,7 @@ $form = $this->Form;
 $form->prepare();
 $form->setAttribute(ConstantesForm::$FORM_ACTION, ConstantesCadastro::$ROUTE_CADASTRO . ConstantesCadastro::$PAGINA_GRUPO_FINALIZAR);
 echo $this->form()->openTag($form);
-echo $this->templateFormularioTopo(ConstantesCadastro::$TRADUCAO_TITULO_PAGINA_CADASTR_GRUPO_SUB_EQUIPE);
+echo $this->templateFormularioTopo(ConstantesCadastro::$TRADUCAO_TITULO_PAGINA_CADASTRO_GRUPO_SUB_EQUIPE);
 ?>
 <!-- Inicio panel-body -->
 <div class="panel-body bg-light">
@@ -84,51 +84,8 @@ echo $this->templateFormularioTopo(ConstantesCadastro::$TRADUCAO_TITULO_PAGINA_C
             <div class="panel-menu">
                 <input id="fooFilter" type="text" class="form-control" placeholder="<?php echo $this->translate(ConstantesCadastro::$TRADUCAO_BUSQUE_O_ALUNO); ?>">
             </div>
-            <table class="table footable" data-filter="#fooFilter">
-                <thead>
-                    <tr>
-                        <th class = "hidden-xs"><?php echo $this->translate(ConstantesCadastro::$TRADUCAO_MATRICULA); ?></th>
-                        <th><?php echo $this->translate(ConstantesCadastro::$TRADUCAO_NOME); ?></th>
-                        <th class = "hidden-xs"><?php echo $this->translate(ConstantesCadastro::$TRADUCAO_DATA_NASCIMENTO); ?>/th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php
-                    if ($form->getAlunos()) {
-                        foreach ($form->getAlunos() as $ga) {
-                            $tipoResponsavel = 0;
-                            $turmaAluno = $ga->getTurmaAluno();
-                            $aluno = $turmaAluno->getPessoa();
-                            $aluno->setMatriculaAtual($turmaAluno->getMatricula());
-                            if ($aluno->getSexo() === 'M') {
-                                $classeAluno = 'alunoM';
-                                $tipoResponsavel = 1;
-                            }
-                            if ($aluno->getSexo() === 'F') {
-                                $classeAluno = 'alunoF';
-                                $tipoResponsavel = 2;
-                            }
-
-                            $valorRadio = $aluno->getMatriculaAtual() . '#' .
-                                    $aluno->getNome() . '#' .
-                                    $aluno->getDataNascimentoFormatada() . '#' .
-                                    $tipoResponsavel;
-                            echo '<tr class="' . $classeAluno . '">';
-                            echo '<td class="hidden-xs">' . $aluno->getMatriculaAtual() . '</td>';
-                            echo '<td><a href="#"  ' . $this->funcaoOnClick('selecionarAlunoPeloNome(' . $aluno->getId() . ')') . '><span class="hidden-xs">' . $aluno->getNome() . '</span><span class="visible-xs">' . $aluno->getNomePrimeiroPrimeiraSiglaUltimo() . '</span></a></td>';
-                            echo '<td class="hidden-xs">' . $aluno->getDataNascimentoFormatada() . '</td>';
-                            echo '<td>';
-                            echo '<input id="radio' . $aluno->getId() . '" type="radio" name="radioAlunoSelecionado" value="' . $valorRadio . '"  ' . $this->funcaoOnClick('mostrarBotaoDeSelecionarAluno()') . '/>';
-                            echo '</td>';
-                            echo '</tr>';
-                        }
-                    } else {
-                        echo '<tr><td>' . $this->translate(ConstantesCadastro::$TRADUCAO_SEM_ALUNOS_CADASTRADOS) . '</td></tr>';
-                    }
-                    ?>           
-                </tbody>
-            </table>
+            <!-- Tabela de Alunos -->
+            <?php echo $this->tabelaDeAlunos($form); ?>
             <div class="mt10">
                 <?php
                 echo '<div id="divBotaoDeSelecionarAluno" class="hidden">';
@@ -242,7 +199,7 @@ echo $this->templateFormularioTopo(ConstantesCadastro::$TRADUCAO_TITULO_PAGINA_C
         <!-- HelperView dados complementares -->
 
         <!-- Selecionar Numeracao -->
-        <label class="field-label"><?php $this->translate(''); ?>Selecione a Numeracao da Sub Equipe</label>
+        <label class="field-label"><?php $this->translate(ConstantesCadastro::$TRADUCAO_SELECIONE_O_NUMERO_DA_SUB_EQUIPE); ?></label>
         <?php echo $this->formSelect($form->get(ConstantesForm::$FORM_NUMERACAO)); ?>
         <!-- Fim Selecionar Numeracao -->
 
@@ -263,7 +220,6 @@ echo $this->templateFormularioTopo(ConstantesCadastro::$TRADUCAO_TITULO_PAGINA_C
             ?>
         </div>
     </div>
-
 </div>
 <?php
 echo $this->formHidden($form->get(Constantes::$INPUT_CSRF));
@@ -297,3 +253,7 @@ $htmlModal .= '<img src="' . Constantes::$LOADER_GIF_GRANDE . '"></i>';
 $htmlModal .= '</div>';
 $htmlModal .= '</div>';
 echo $htmlModal;
+
+/* Layout com javascript para tela de cadastro de grupo */
+echo $this->layoutJSGrupoValidacao;
+

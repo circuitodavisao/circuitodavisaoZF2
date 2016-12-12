@@ -170,8 +170,8 @@ class ConstantesForm {
     /* Layout */
     public static $LAYOUT_JS_EVENTO = 'layout/layout-js-evento';
     public static $LAYOUT_STRING_JS_EVENTO = 'layoutJSEvento';
-    public static $LAYOUT_JS_GRUPO = 'layout/layout-js-grupo';
-    public static $LAYOUT_STRING_JS_GRUPO = 'layoutJSGrupo';
+    public static $LAYOUT_JS_GRUPO_VALIDACAO = 'layout/layout-js-grupo-validacao';
+    public static $LAYOUT_STRING_JS_GRUPO_VALIDACAO = 'layoutJSGrupoValidacao';
     public static $LAYOUT_JS_EVENTO_VALIDACAO = 'layout/layout-js-evento-validacao';
     public static $LAYOUT_STRING_JS_EVENTO_VALIDACAO = 'layoutJSEventoValidacao';
     public static $LAYOUT_JS_EVENTOS = 'layout/layout-js-eventos';

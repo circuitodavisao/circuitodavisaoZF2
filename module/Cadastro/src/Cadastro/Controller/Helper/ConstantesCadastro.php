@@ -54,7 +54,7 @@ class ConstantesCadastro {
     public static $TRADUCAO_INSERIR = 'Insert';
     public static $TRADUCAO_ALTERAR = 'Change';
     public static $TRADUCAO_LIMPAR = 'Clean';
-    public static $TRADUCAO_TITULO_PAGINA_CADASTR_GRUPO_SUB_EQUIPE = 'Registration of <span class="text-primary">SubEquipe</span>';
+    public static $TRADUCAO_TITULO_PAGINA_CADASTRO_GRUPO_SUB_EQUIPE = 'Registration of <span class="text-primary">Sub Team</span>';
     public static $TRADUCAO_INSIRA_OS_DADOS_DOS_RESPONSAVEIS_E_DADOS_COMPLEMENTARES = 'Enter the Responsible(s) and the complementary data';
     public static $TRADUCAO_INSIRA_OS_DADOS_COMPLEMENTARES = 'Enter the Complementary Data';
     public static $TRADUCAO_SELECIONE_O_ALUNO = 'Select the Student that will be used for the registration';
@@ -70,6 +70,34 @@ class ConstantesCadastro {
     public static $TRADUCAO_MULHER = 'Woman';
     public static $TRADUCAO_LIDERARA = 'Will Lead';
     public static $TRADUCAO_SELECIONE_ESTADO_CIVIL = 'Select one of the options below';
+    public static $TRADUCAO_DIA = 'Date';
+    public static $TRADUCAO_MES = 'Month';
+    public static $TRADUCAO_ANO = 'Year';
+    public static $TRADUCAO_SELECIONE_O_NUMERO_DA_SUB_EQUIPE = 'Select Sub Team Numbering';
+    public static $TRADUCAO_PREENCHA_DATA_NASCIMENTO_E_CPF = 'Fill in the Birthdate and CPF correctly';
+    public static $TRADUCAO_CPF_INVALIDO = 'CPF is invalid';
+    public static $TRADUCAO_NOME_NAO_CONFERE = 'Name of the CPF does not match with the student';
+    public static $TRADUCAO_DATA_NASCIMENTO_NAO_CONFERE = 'Date of Birth does not match with found';
+    public static $TRADUCAO_DADOS_LIBERADOS = 'Data Released';
+    public static $TRADUCAO_DADOS_NAO_CADASTRADOS = 'Data not found in the database';
+    public static $TRADUCAO_CPF_JA_UTILIZADO = 'CPF already used';
+    public static $TRADUCAO_EMAILS_NAO_CONFEREM = 'Emails do not match';
+    public static $TRADUCAO_PREENCHA_O_EMAIL = 'Fill in the email';
+    public static $TRADUCAO_EMAIL_INVALIDO = 'Email is invalid';
+    public static $TRADUCAO_EMAIL_USADO_PELO_CONJUGE = 'Email already used by the spouse';
+    public static $TRADUCAO_REPETIR_EMAIL = 'Repeat Email';
+    public static $TRADUCAO_PREENCHA_E_REPETA_O_EMAIL = 'Fill in and repeat Email';
+    public static $TRADUCAO_EMAIL_LIBERADO = 'Email Released';
+    public static $TRADUCAO_EMAIL_JA_UTILIZADO = 'Email already used';
+    public static $TRADUCAO_DADOS_DO_RESPONSAVEL = 'Responsible Details';
+    public static $TRADUCAO_DADOS_DO_HOMEM = 'Man Details';
+    public static $TRADUCAO_DADOS_DA_MULHER = 'Woman Details';
+    public static $TRADUCAO_INSIRA_DADOS_DO_RESPONSAVEL = 'Insert Responsible Details';
+    public static $TRADUCAO_INSIRA_DADOS_DO_HOMEM = 'Insert Man Details';
+    public static $TRADUCAO_INSIRA_DADOS_DA_MULHER = 'Insert Woman Details';
+    public static $TRADUCAO_NUMERACAO = 'Numberation: ';
+    public static $TRADUCAO_DADOS_COMPLEMENTARES = 'Complemetary data';
+
     /* Tipo de Mensagens */
     public static $TIPO_MENSAGEM_CADASTRAR_CELULA = 1;
     public static $TIPO_MENSAGEM_ALTERAR_CELULA = 2;
@@ -89,5 +117,11 @@ class ConstantesCadastro {
 
     /* Funcões JS */
     public static $FUNCAO_JS_ABRIR_TELAS_DE_ALUNO = 'abrirTelaDeAlunos(#tipo)';
+
+    /* Forms */
+    public static $FORM_ACTION_CADASTRO_GRUPO_FINALIZAR = 'cadastroGrupoFinalizar';
+    public static $FORM_INPUT_DIA = 'Dia';
+    public static $FORM_INPUT_MES = 'Mes';
+    public static $FORM_INPUT_ANO = 'Ano';
 
 }
