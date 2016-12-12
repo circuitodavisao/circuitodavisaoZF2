@@ -33,7 +33,8 @@ echo $this->templateFormularioTopo(ConstantesCadastro::$TRADUCAO_TITULO_PAGINA_C
         <!-- Bloco Mulher -->
         <?php echo $this->blocoResponsavel(2); ?>
         <!-- Bloco Dados Complementares -->
-        <div class="well col-xs-12 mb10">
+        <?php $funcaoInserirDadosComplementares = $this->funcaoOnClick('botaoInserirDadosComplementares()'); ?>
+        <div id="divBlocoDadosComplementares" class="well col-xs-12 mb10 btn btn-default text-left" <?php echo $funcaoInserirDadosComplementares; ?>>
             <address>
                 <span id="spanInsiraOsDadosComplementares"><?php echo $this->translate(ConstantesCadastro::$TRADUCAO_INSIRA_OS_DADOS_COMPLEMENTARES); ?></span>
                 <span class="quebraDeLinhaDeSpan" id="spanDadosComplementares"></span>
@@ -41,7 +42,7 @@ echo $this->templateFormularioTopo(ConstantesCadastro::$TRADUCAO_TITULO_PAGINA_C
             <?php
             echo "<div id='divBotaoInserirDadosComplementares'>";
             echo $this->botaoLink(
-                    ConstantesCadastro::$TRADUCAO_INSERIR, ConstantesForm::$STRING_HASHTAG, 5, $this->funcaoOnClick('botaoInserirDadosComplementares()'));
+                    ConstantesCadastro::$TRADUCAO_INSERIR, ConstantesForm::$STRING_HASHTAG, 5, $funcaoInserirDadosComplementares);
             echo "</div>";
             echo "<div id='divBotaoAlterarDadosComplementares' class='hidden'>";
             echo $this->botaoLink(
@@ -110,13 +111,13 @@ echo $this->templateFormularioTopo(ConstantesCadastro::$TRADUCAO_TITULO_PAGINA_C
             <?php
             echo '<div class="row">';
             echo '<div class="col-xs-4">';
-            echo $this->formSelect($form->get('Dia'));
+            echo $this->formSelect($form->get(ConstantesCadastro::$FORM_INPUT_DIA));
             echo '</div>';
             echo '<div class="col-xs-4">';
-            echo $this->formSelect($form->get('Mes'));
+            echo $this->formSelect($form->get(ConstantesCadastro::$FORM_INPUT_MES));
             echo '</div>';
             echo '<div class="col-xs-4">';
-            echo $this->formSelect($form->get('Ano'));
+            echo $this->formSelect($form->get(ConstantesCadastro::$FORM_INPUT_ANO));
             echo '</div>';
             echo '<div class="col-xs-12 mt10">';
             echo $this->formInput($form->get(ConstantesForm::$FORM_CPF));
@@ -216,7 +217,7 @@ echo $this->templateFormularioTopo(ConstantesCadastro::$TRADUCAO_TITULO_PAGINA_C
             echo "</div>";
             echo "</div>";
 
-            echo $this->botaoLink($labelVoltar, ConstantesForm::$STRING_HASHTAG, 8, $this->funcaoOnClick('botaoVoltarDadosComplementares'));
+            echo $this->botaoLink($labelVoltar, ConstantesForm::$STRING_HASHTAG, 8, $this->funcaoOnClick('botaoVoltarDadosComplementares()'));
             ?>
         </div>
     </div>

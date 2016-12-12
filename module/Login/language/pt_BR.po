@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: ZendSkeletonApplication\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-07-05 22:17-0700\n"
-"PO-Revision-Date: 2016-10-17 16:51-0200\n"
+"PO-Revision-Date: 2016-12-12 17:14-0200\n"
 "Last-Translator: Diogo Melo <dmelo87@gmail.com>\n"
 "Language-Team: ZF Contibutors <zf-devteam@zend.com>\n"
 "Language: pt\n"
@@ -12,7 +12,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Poedit-KeywordsList: translate\n"
 "X-Poedit-Basepath: .\n"
-"X-Generator: Poedit 1.8.7\n"
+"X-Generator: Poedit 1.8.11\n"
 "X-Poedit-SearchPath-0: ..\n"
 
 # ############
@@ -541,3 +541,194 @@ msgstr "Eu <span class=\"text-danger\">concordo</span> que <span class=\"text-da
 #: Cadastro/view/cadastro/evento-exclusao.phtml:15
 msgid "I am <span class=\"text-danger\">aware</span> that by <span class=\"text-danger\">excluding cell</span> is the same no longer appear in the <span class=\"text-danger\">launch line</span>!"
 msgstr "Eu <span class=\"text-danger\">concordo</span> que <span class=\"text-danger\">excluindo a célula</span> a mesma não aparecerá mais na minha <span class=\"text-danger\">linha de lançamento</span> e equipes!"
+
+# #####################
+# CADASTRO DE GRUPOS #
+# #####################
+#: Cadastro/view/cadastro/grupo.phtml:16
+msgid "Registration of <span class=\"text-primary\">Sub Team</span>"
+msgstr "Cadastro de <span class=\"text-primary\">Sub Equipe</span>"
+
+#: Cadastro/view/cadastro/grupo.phtml:21
+msgid "Select one of the options below"
+msgstr "Selecione uma das opções abaixo"
+
+#: Cadastro/view/cadastro/grupo.phtml:21
+msgid "Will Lead"
+msgstr "Quem liderará"
+
+#: Cadastro/view/cadastro/grupo.phtml:21
+msgid " Alone"
+msgstr " Sozinho"
+
+#: Cadastro/view/cadastro/grupo.phtml:21
+msgid " With the Spouse"
+msgstr " Com conjugê"
+
+#: Cadastro/view/cadastro/grupo.phtml:25
+msgid "Enter the Responsible(s) and the complementary data"
+msgstr "Entre com o(s) responsavel(eis) e dados complemtares"
+
+#: Cadastro/view/cadastro/grupo.phtml:30
+msgid "Enter the data of the Responsible"
+msgstr "Entre com os dados do responsável"
+
+#: Cadastro/view/cadastro/grupo.phtml:30
+msgid "Enter the data of the Man"
+msgstr "Entre com os dados do Homem"
+
+#: Cadastro/view/cadastro/grupo.phtml:30
+msgid "Enter the data of the Woman"
+msgstr "Entre com os dados da Mulher"
+
+#: Cadastro/view/cadastro/grupo.phtml:38
+msgid "Enter the Complementary Data"
+msgstr "Entre com os dados complementares"
+
+#: Cadastro/view/cadastro/grupo.phtml:30
+msgid "Insert"
+msgstr "Inserir"
+
+#: Cadastro/view/cadastro/grupo.phtml:64
+msgid "Select the Student"
+msgstr "Selecione o Estudande"
+
+#: Cadastro/view/cadastro/grupo.phtml:64
+msgid "Personal Data"
+msgstr "Dados Pessoais"
+
+#: Cadastro/view/cadastro/grupo.phtml:64
+msgid "Email"
+msgstr "Email"
+
+#: Cadastro/view/cadastro/grupo.phtml:64
+msgid "Hierarchy"
+msgstr "Hieraquia"
+
+#: Cadastro/view/cadastro/grupo.phtml:82
+msgid "Select the Student that will be used for the registration"
+msgstr "Selecione o Estudante que será usado para o cadastro"
+
+#: Cadastro/view/cadastro/grupo.phtml:85
+msgid "Find the Student"
+msgstr "Encontre o estudante"
+
+#: Cadastro/view/cadastro/grupo.phtml:88
+msgid "Registration"
+msgstr "Matrícula"
+
+#: Cadastro/view/cadastro/grupo.phtml:88
+msgid "Birth Date"
+msgstr "Data de nascimento"
+
+#: Cadastro/view/cadastro/grupo.phtml:107
+msgid "Report Date of Birth and CPF"
+msgstr "Informe a Data de Nascimento e CPF"
+
+#: Cadastro/view/cadastro/grupo.phtml:113
+msgid "Date"
+msgstr "Dia"
+
+#: Cadastro/view/cadastro/grupo.phtml:116
+msgid "Month"
+msgstr "Mês"
+
+#: Cadastro/view/cadastro/grupo.phtml:119
+msgid "Year"
+msgstr "Ano"
+
+#: Cadastro/view/cadastro/grupo.phtml:131
+msgid "Search"
+msgstr "Procurar"
+
+#: Cadastro/view/cadastro/grupo.phtml:131
+msgid "Fill in the Birthdate and CPF correctly"
+msgstr "Preenchar a Data de nascimento e CPF corretamente"
+
+#: Cadastro/view/cadastro/grupo.phtml:131
+msgid "CPF is invalid"
+msgstr "CPF invalido"
+
+#: Cadastro/view/cadastro/grupo.phtml:131
+msgid "Name of the CPF does not match with the student"
+msgstr "Nome do CPF não confere com o do estudante"
+
+#: Cadastro/view/cadastro/grupo.phtml:131
+msgid "Date of Birth does not match with found"
+msgstr "Data de nascimento não confere com o encontrado"
+
+#: Cadastro/view/cadastro/grupo.phtml:131
+msgid "Data Released"
+msgstr "Dados liberados"
+
+#: Cadastro/view/cadastro/grupo.phtml:131
+msgid "Data not found in the database"
+msgstr "Dados não encontrado na base de dados"
+
+#: Cadastro/view/cadastro/grupo.phtml:131
+msgid "CPF already used"
+msgstr "CPF já utilizado"
+
+#: Cadastro/view/cadastro/grupo.phtml:148
+msgid "Repeat Email"
+msgstr "Repita o Email"
+
+#: Cadastro/view/cadastro/grupo.phtml:152
+msgid "Emails do not match"
+msgstr "Emails não conferem"
+
+#: Cadastro/view/cadastro/grupo.phtml:152
+msgid "Fill in the email"
+msgstr "Preencha o email"
+
+#: Cadastro/view/cadastro/grupo.phtml:152
+msgid "Email is invalid"
+msgstr "email é inválido"
+
+#: Cadastro/view/cadastro/grupo.phtml:152
+msgid "Email already used by the spouse"
+msgstr "Email já está sendo utilizado pelo seu conjugê"
+
+#: Cadastro/view/cadastro/grupo.phtml:152
+msgid "Fill in and repeat Email"
+msgstr "Preencha e repita o Email"
+
+#: Cadastro/view/cadastro/grupo.phtml:152
+msgid "Email Released"
+msgstr "Email Liberado"
+
+#: Cadastro/view/cadastro/grupo.phtml:152
+msgid "Email already used"
+msgstr "Email já utilizado"
+
+#: Cadastro/view/cadastro/grupo.phtml:165
+msgid "Select the Hierarchy"
+msgstr "Selecione a Hierarquia"
+
+#: Cadastro/view/cadastro/grupo.phtml:165
+msgid "Clean"
+msgstr "Limpar"
+
+#: Cadastro/view/cadastro/grupo.phtml:165
+msgid "Finish"
+msgstr "Finalizar"
+
+#: Cadastro/view/cadastro/grupo.phtml:165
+msgid "Responsible Details"
+msgstr "Dados do Responsável"
+
+#: Cadastro/view/cadastro/grupo.phtml:165
+msgid "Man Details"
+msgstr "Dados do Homem"
+
+#: Cadastro/view/cadastro/grupo.phtml:165
+msgid "Woman Details"
+msgstr "Dados da Mulher"
+
+#: Cadastro/view/cadastro/grupo.phtml:165
+msgid "Complemetary Data"
+msgstr "Dados Complementares"
+
+#: Cadastro/view/cadastro/grupo.phtml:165
+msgid "Numberation: "
+msgstr "Numeração: "

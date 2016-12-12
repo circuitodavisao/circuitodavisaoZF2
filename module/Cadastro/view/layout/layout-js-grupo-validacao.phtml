@@ -296,7 +296,7 @@ use Cadastro\Controller\Helper\ConstantesCadastro;
         var email1 = $('#email1').val();
         var email2 = $('#email2').val();
 
-        if (email === email1 || email === email2) {
+        if (email.length !== 0 && (email === email1 || email === email2)) {
             temErro = true;
             spanMensagens.html('<?php echo $this->translate(ConstantesCadastro::$TRADUCAO_EMAIL_USADO_PELO_CONJUGE); ?>');
         }
@@ -632,6 +632,7 @@ use Cadastro\Controller\Helper\ConstantesCadastro;
         $('#divCheckDadosComplementaresInseridos').removeClass(hidden);
         $('#divBotaoInserirDadosComplementares').addClass(hidden);
         $('#divBotaoAlterarDadosComplementares').removeClass(hidden);
+        $('#divBlocoDadosComplementares').removeClass('btn').removeClass('btn-default').prop('onclick', null).off('click');
         if (mudarBarraDeProgresso === 0) {
             atualizarBarraDeProgresso(50);
         }
@@ -697,7 +698,6 @@ use Cadastro\Controller\Helper\ConstantesCadastro;
         $('#divSpanResponsavelDataNascimento').addClass(hidden);
         $('#botaoPasso3').removeClass(btnPrimary).addClass(btnDefault);
     }
-
     function botaoVoltarHierarquia() {
         $('#divEmail').removeClass(hidden);
         $('#divHierarquia').addClass(hidden);

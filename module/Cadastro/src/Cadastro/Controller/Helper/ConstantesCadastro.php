@@ -96,7 +96,12 @@ class ConstantesCadastro {
     public static $TRADUCAO_INSIRA_DADOS_DO_HOMEM = 'Insert Man Details';
     public static $TRADUCAO_INSIRA_DADOS_DA_MULHER = 'Insert Woman Details';
     public static $TRADUCAO_NUMERACAO = 'Numberation: ';
-    public static $TRADUCAO_DADOS_COMPLEMENTARES = 'Complemetary data';
+    public static $TRADUCAO_DADOS_COMPLEMENTARES = 'Complemetary Data';
+    public static $TRADUCAO_PASSO_A_PASSO_SELECIONE_O_ALUNO = 'Select the Student';
+    public static $TRADUCAO_PASSO_A_PASSO_DADOS_PESSOAIS = 'Personal Data';
+    public static $TRADUCAO_PASSO_A_PASSO_EMAIL = 'Email';
+    public static $TRADUCAO_PASSO_A_PASSO_HIERARQUIA = 'Hierarchy';
+    public static $TRADUCAO_SELECIONE_A_HIERARQUIA = 'Select the Hierarchy';
 
     /* Tipo de Mensagens */
     public static $TIPO_MENSAGEM_CADASTRAR_CELULA = 1;

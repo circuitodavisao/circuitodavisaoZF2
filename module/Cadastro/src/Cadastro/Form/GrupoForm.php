@@ -239,6 +239,7 @@ class GrupoForm extends Form {
                             ConstantesForm::$FORM_CLASS => ConstantesForm::$FORM_CLASS_FORM_CONTROL,
                             ConstantesForm::$FORM_ID => ConstantesForm::$FORM_CPF,
                             ConstantesForm::$FORM_PLACEHOLDER => ConstantesForm::$TRADUCAO_CPF,
+                            'pattern' => '\d*'
                         ])
         );
 
@@ -319,7 +320,7 @@ class GrupoForm extends Form {
 
         /* Hierarquia */
         $arrayHierarquia = array();
-        $arrayHierarquia[0] = ConstantesForm::$FORM_SELECT . ' A HIERARQUIA';
+        $arrayHierarquia[0] = ConstantesCadastro::$TRADUCAO_SELECIONE_A_HIERARQUIA;
         foreach ($this->getHierarquia() as $hierarquia) {
             $arrayHierarquia[$hierarquia->getId()] = $hierarquia->getNome();
         }

@@ -2,6 +2,7 @@
 
 namespace Cadastro\View\Helper;
 
+use Cadastro\Controller\Helper\ConstantesCadastro;
 use Zend\View\Helper\AbstractHelper;
 
 /**
@@ -29,16 +30,16 @@ class PassoAPasso extends AbstractHelper {
             $nomePonto = '';
             switch ($indiceDePonto) {
                 case 1:
-                    $nomePonto = 'Select the Student';
+                    $nomePonto = $this->view->translate(ConstantesCadastro::$TRADUCAO_PASSO_A_PASSO_SELECIONE_O_ALUNO);
                     break;
                 case 2:
-                    $nomePonto = 'Personal Data';
+                    $nomePonto = $this->view->translate(ConstantesCadastro::$TRADUCAO_PASSO_A_PASSO_DADOS_PESSOAIS);
                     break;
                 case 3:
-                    $nomePonto = 'Email';
+                    $nomePonto = $this->view->translate(ConstantesCadastro::$TRADUCAO_PASSO_A_PASSO_EMAIL);
                     break;
                 case 4:
-                    $nomePonto = 'Hierarchy';
+                    $nomePonto = $this->view->translate(ConstantesCadastro::$TRADUCAO_PASSO_A_PASSO_HIERARQUIA);
                     break;
                 default:
                     break;
