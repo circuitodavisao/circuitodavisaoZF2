@@ -10,6 +10,7 @@ namespace Entidade\Entity;
 
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
+use Login\Controller\Helper\Funcoes;
 use Zend\InputFilter\InputFilter;
 
 /**
@@ -92,7 +93,8 @@ class GrupoAtendimento {
     }
 
     function getDia() {
-        return $this->dia;
+        $diaFormatado = Funcoes::mudarPadraoData($this->dia, 1);
+        return $diaFormatado;
     }
 
     function getQuem() {

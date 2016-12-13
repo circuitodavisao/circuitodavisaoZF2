@@ -26,6 +26,7 @@ class ConstantesLancamento {
     public static $TURMA = 'turma';
     public static $GRUPO = 'grupo';
     public static $NUMERO_ATENDIMENTOS = 'numeroAtendimentos';
+    public static $ARRAY_ATENDIMENTOS_GRUPO = 'atendimentosGrupo';
     public static $NOME_LIDER_ATENDIMENTO = 'nomePessoaPai';
     public static $QUANTIDADE_MAXIMA_PESSOAS_NO_LANÇAMENTO = 60;
     public static $ABA_SELECIONADA = 'abaSelecionada';

@@ -601,6 +601,8 @@ class LancamentoController extends AbstractActionController {
             ConstantesLancamento::$NUMERO_ATENDIMENTOS => $numeroAtendimentos,
             ConstantesLancamento::$NOME_LIDER_ATENDIMENTO => $nomePessoaPai,
             ConstantesLancamento::$FORM_CADASTRAR_ATENDIMENTO => $formCadastrarAtendimento,
+            ConstantesLancamento::$ARRAY_ATENDIMENTOS_GRUPO => $atendimentos,
+            
         ));
         
         $layoutJS2 = new ViewModel();

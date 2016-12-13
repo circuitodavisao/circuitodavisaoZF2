@@ -20,20 +20,23 @@
     }
 </script>
 <?php
-$totalAtendimentos = 0;
 $totalGruposFilhos = 0;
+$totalGruposAtendidos = 0;
 foreach ($gruposAbaixo as $gpFilho) {
     $grupoFilho = $gpFilho->getGrupoPaiFilhoFilho();
     $entidadeFilho = $grupoFilho->getEntidadeAtiva();
     $grupoResponsavel = $grupoFilho->getResponsabilidadesAtivas();
     if ($grupoResponsavel) {
-        $totalAtendimentos += count($grupoFilho->getGrupoAtendimento());
+        if(count($grupoFilho->getGrupoAtendimento()) >= 1){
+            $totalGruposAtendidos++;
+        }
+        
         $totalGruposFilhos++;
     }
 }
 
-$meta = $totalGruposFilhos * 2;
-$progresso = ($totalAtendimentos / $meta) * 100;
+;
+$progresso = ($totalGruposAtendidos / $totalGruposFilhos) * 100;
 /* percentagem da meta, sendo que a meta é 2 atendimentos por mes */
 if ($progresso > 50 && $progresso  < 80) {
     $colorBarTotal = "progress-bar-warning";
@@ -54,7 +57,7 @@ if ($progresso > 50 && $progresso  < 80) {
             <div class="panel-body bg-light">
                 <div class="row">
                     <div class="section-divider mt30">
-                        <span><?php echo $totalAtendimentos; ?> de <?php echo $meta; ?> atendimentos foram realizados.</span>
+                        <span><?php echo $totalGruposAtendidos; ?> de <?php echo $totalGruposFilhos; ?> discipulos foram atendidos.</span>
                     </div>
                 </div>
                 <div class="row">
@@ -108,15 +111,15 @@ if ($progresso > 50 && $progresso  < 80) {
                         /* percentagem da meta, sendo que a meta é 2 atendimentos por mes */
                         if ($numeroAtendimentos == 1) {
                             $valueNow = 50;
-                            $labelProgressBar = 50;
+                            $labelProgressBar = "$numeroAtendimentos Atendimento";
                             $colorBar = "progress-bar-warning";
                         } else if ($numeroAtendimentos >= 2) {
                             $valueNow = 100;
-                            $labelProgressBar = 100;
+                            $labelProgressBar = "$numeroAtendimentos Atendimentos";
                             $colorBar = "progress-bar-success";
                         } else {
                             $valueNow = 10;
-                            $labelProgressBar = 0;
+                            $labelProgressBar = " 0 Atd.";
                             $colorBar = "progress-bar-danger";
                         }
                         ?>
@@ -131,7 +134,7 @@ if ($progresso > 50 && $progresso  < 80) {
                                     <div class="col-md-11 col-xs-10" style="padding-top: 3px; padding-right: 4px;">
 
                                         <div class="progress progress-bar-xl" style="margin-bottom: 0px;">
-                                            <div id="divProgressBar" class="progress-bar <?php echo $colorBar; ?>" role="progressbar" aria-valuenow="<?php echo $valueNow; ?>" aria-valuemin="0" aria-valuemax="5" style="width: <?php echo $valueNow; ?>%;"><?php echo $labelProgressBar; ?>%</div>
+                                            <div id="divProgressBar" class="progress-bar <?php echo $colorBar; ?>" role="progressbar" aria-valuenow="<?php echo $valueNow; ?>" aria-valuemin="0" aria-valuemax="5" style="width: <?php echo $valueNow; ?>%;"><?php echo $labelProgressBar; ?></div>
                                         </div>
                                         <span style="padding-top: 0px;"><?php echo $html; ?></span>
                                     </div>

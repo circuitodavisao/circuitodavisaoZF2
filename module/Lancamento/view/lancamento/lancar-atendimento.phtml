@@ -18,7 +18,7 @@ if ($grupoResponsavel) {
 
     $html = '';
     $htmlFoto = '';
-    $contagem = 1; 
+    $contagem = 1;
     $totalPessoas = count($pessoas);
 
     foreach ($pessoas as $p) {
@@ -33,7 +33,7 @@ if ($grupoResponsavel) {
         }
         $htmlFoto .= '<img src="/img/avatars/' . $imagem . '" class="img-thumbnail" width="' . $tamanho . '%"  height="' . $tamanho . '%" />&nbsp;';
         if ($totalPessoas == 1) {
-            $html .= $p->getNomePrimeiroUltimo(); 
+            $html .= $p->getNomePrimeiroUltimo();
         } else {// duas pessoas
             $html .= $p->getNomePrimeiroPrimeiraSiglaUltimo();
         }
@@ -42,15 +42,15 @@ if ($grupoResponsavel) {
 }
 
 /* percentagem da meta, sendo que a meta é 2 atendimentos por mes */
-if($numeroAtendimentos == 0){
+if ($numeroAtendimentos == 0) {
     $valueNow = 10;
     $labelProgressBar = 0;
-    $colorBar =  "progress-bar-danger";
-}else if($numeroAtendimentos == 1){
+    $colorBar = "progress-bar-danger";
+} else if ($numeroAtendimentos == 1) {
     $valueNow = 50;
     $labelProgressBar = 50;
     $colorBar = "progress-bar-warning";
-}else if($numeroAtendimentos >= 2){
+} else if ($numeroAtendimentos >= 2) {
     $valueNow = 100;
     $labelProgressBar = 100;
     $colorBar = "progress-bar-success";
@@ -91,71 +91,147 @@ $form->setAttribute(Constantes::$ACTION, $this->url(ConstantesLancamento::$ROUTE
                     </div>
                 </div>
                 <?php echo $this->form()->openTag($form); ?>
-                    <div class="row mt10">
+                <div class="row mt10">
 
-                        <div class="row">
-                            <div class="col-sm-12 col-xs-12" >
-                                <div class="section" style="margin-bottom: 5px; ">
-                                    <label class="field-label">Que dia foi o Atendimento?</label>
-                                    <label class="field prepend-icon">
-                                        <?php echo $this->formInput($form->get(ConstantesLancamento::$INPUT_DATA_ATENDIMENTO)); ?>
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-
-
-                    </div>
-                    <div class="row mt10">
-
-
-                        <div class="row">
-                            <div class="col-sm-12 col-xs-12" >
-                                <div class="section">
-                                    <label class="field-label">Quem realizou o atendimento?</label>
-                                    <label class="field prepend-icon">
-                                        <?php echo $this->formSelect($form->get(ConstantesLancamento::$INPUT_QUEM_ATENDEU)); ?>
-                                    </label>
-                                </div>
+                    <div class="row">
+                        <div class="col-sm-12 col-xs-12" >
+                            <div class="section" style="margin-bottom: 5px; ">
+                                <label class="field-label">Que dia foi o Atendimento?</label>
+                                <label class="field prepend-icon">
+                                    <?php echo $this->formInput($form->get(ConstantesLancamento::$INPUT_DATA_ATENDIMENTO)); ?>
+                                </label>
                             </div>
                         </div>
                     </div>
+
+
+                </div>
+                <div class="row mt10">
+
+
+                    <div class="row">
+                        <div class="col-sm-12 col-xs-12" >
+                            <div class="section">
+                                <label class="field-label">Quem realizou o atendimento?</label>
+                                <label class="field prepend-icon">
+                                    <?php echo $this->formSelect($form->get(ConstantesLancamento::$INPUT_QUEM_ATENDEU)); ?>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            
+
             <div id="divBotaoVoltar" class="panel-footer text-right" style="height:65px;">
 
                 <?php echo $this->formHidden($form->get(ConstantesLancamento::$INPUT_ID_GRUPO_ATENDIDO)); ?>
-                  
+
                 <?php echo $this->formHidden($form->get(Constantes::$INPUT_CSRF)); ?>
-                 
+
                 <button type="button" onclick="location.href = '/lancamentoAtendimento';" class="btn ladda-button btn-default dark  mr10" data-style="zoom-in">
                     <span class="ladda-label">
                         <i class="fa fa-arrow-left" aria-hidden="true"></i> 
                         Voltar
                     </span>
                 </button>
-                <?php 
+                <?php
                 $funcaoPreValidacao = $this->funcaoOnClick(ConstantesLancamento::$STRING_FUNCAO_VALIDACAO_ATENDIMENTO);
-                echo $this->botaoLink(ConstantesLancamento::$PAGINA_LANCAR_ATENDIMENTO, ConstantesForm::$STRING_HASHTAG, 0,$funcaoPreValidacao); 
+                echo $this->botaoLink(ConstantesLancamento::$PAGINA_LANCAR_ATENDIMENTO, ConstantesForm::$STRING_HASHTAG, 0, $funcaoPreValidacao);
                 ?>                
 
             </div>
-            <?php echo $this->form()->closeTag() ?>
+
+
+
 
 
 
         </div>
+        <?php if ($numeroAtendimentos > 0) { ?>
+            <div class="panel-body bg-light">
+                <table class="table">
+                    <thead>
+                    <th class='text-center'>Dia do Atendimento</th>
+                    <th></th>
+                    </thead>
+                    <tbody>
+
+                        <?php
+                        echo $this->form()->closeTag();
+                        foreach ($this->atendimentosGrupo as $ag) {
+                            echo "<tr>";
+                            echo "<td class='text-center'>" . $ag->getDia() . "</td>";
+                            echo "<td class='text-center'>";
+                            $stringNomeDaFuncaoOnClickEdicao = 'funcaoLancamento("' . ConstantesLancamento::$PAGINA_LANCAR_ATENDIMENTO . '", ' . $ag->getId() . ')';
+                            $stringNomeDaFuncaoOnClickExclusao = 'funcaoLancamento("' . ConstantesLancamento::$PAGINA_LANCAR_ATENDIMENTO . '", ' . $ag->getId() . ')';
+                            echo $this->botaoLink(ConstantesForm::$STRING_ICONE_PENCIL, ConstantesForm::$STRING_HASHTAG, 3, $this->funcaoOnClick($stringNomeDaFuncaoOnClickEdicao));
+                            echo $this->botaoLink(ConstantesForm::$STRING_ICONE_TIMES, ConstantesForm::$STRING_HASHTAG, 4, $this->funcaoOnClick($stringNomeDaFuncaoOnClickExclusao));
+                            echo "</td>";
+                            echo "</tr>";
+                        }
+                        ?>
+                    </tbody>
+                </table>
+            </div>
+        <?php } ?>
     </div>
 </div>    
 <script>
-window.onload = initPage;
-    
+    window.onload = initPage;
+
     function initPage() {
+
+        if ($('#dataAtendimento').prop('type') != 'date') {
+            $('#dataAtendimento').datepicker({
+                dateFormat: 'dd/mm/yy'
+            });
+        }
+
+        
+        $.validator.addMethod(
+                "date",
+                function (value, element) {
+                    var check = false;
+
+                    if (/iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream) {
+                        var re = /^\d{4}-\d{1,2}-\d{1,2}$/;
+                        if (re.test(value)) {
+                            var adata1 = value.split('-');
+                            var gg1 = parseInt(adata1[2], 10);
+                            var mm1 = parseInt(adata1[1], 10);
+                            var aaaa1 = parseInt(adata1[0], 10);
+                            var xdata1 = new Date(aaaa1, mm1 - 1, gg1);
+                            if ((xdata1.getFullYear() == aaaa1) && (xdata1.getMonth() == mm1 - 1) && (xdata1.getDate() == gg1))
+                                check = true;
+                            else
+                                check = false;
+                        } else
+                            check = false;
+                    } else {
+                        var re = /^\d{1,2}\/\d{1,2}\/\d{4}$/;
+                        if (re.test(value)) {
+                            var adata = value.split('/');
+                            var gg = parseInt(adata[0], 10);
+                            var mm = parseInt(adata[1], 10);
+                            var aaaa = parseInt(adata[2], 10);
+                            var xdata = new Date(aaaa, mm - 1, gg);
+                            if ((xdata.getFullYear() == aaaa) && (xdata.getMonth() == mm - 1) && (xdata.getDate() == gg))
+                                check = true;
+                            else
+                                check = false;
+                        } else
+                            check = false;
+                    }
+
+                    return this.optional(element) || check;
+                },
+                "Insira uma data válida"
+                );
 
         $('#<?php echo ConstantesLancamento::$FORM_CADASTRAR_ATENDIMENTO; ?>').validate({
             /* @validation states + elements 
              ------------------------------------------- */
-
+            focusInvalid: false,
             errorClass: "state-error",
             validClass: "state-success",
             errorElement: "em",
@@ -167,8 +243,7 @@ window.onload = initPage;
                     required: true,
                     date: true,
                     maxlength: 10,
-                    minlength: 10
-                    
+                    minlength: 10,
                 },
                 quem: {
                     required: true
@@ -204,15 +279,16 @@ window.onload = initPage;
                 }
             }
 
+
         });
     }
-        
+
 
     function preValidacao() {
         var validator;
-            validator = $('#<?php echo ConstantesLancamento::$FORM_CADASTRAR_ATENDIMENTO; ?>').validate();
-            if (validator.form()) {
-                $(<?php echo ConstantesLancamento::$FORM_CADASTRAR_ATENDIMENTO; ?>).submit();
-            }
+        validator = $('#<?php echo ConstantesLancamento::$FORM_CADASTRAR_ATENDIMENTO; ?>').validate();
+        if (validator.form()) {  
+            $(<?php echo ConstantesLancamento::$FORM_CADASTRAR_ATENDIMENTO; ?>).submit();
+        }
     }
 </script>
