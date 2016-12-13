@@ -102,6 +102,10 @@ class ConstantesCadastro {
     public static $TRADUCAO_PASSO_A_PASSO_EMAIL = 'Email';
     public static $TRADUCAO_PASSO_A_PASSO_HIERARQUIA = 'Hierarchy';
     public static $TRADUCAO_SELECIONE_A_HIERARQUIA = 'Select the Hierarchy';
+    public static $TRADUCAO_CADASTRO_CONCLUIDO_COM_SUCESSO = 'Registration completed successfully';
+    public static $TRADUCAO_NAO_ESTA_ATIVADO = '<small>But <strong>IS NOT ON</strong> in a few minutes users will receive an email with the activation instructions.</small>';
+    public static $TRADUCAO_BOTAO_PRONTO = 'Ready';
+
 
     /* Tipo de Mensagens */
     public static $TIPO_MENSAGEM_CADASTRAR_CELULA = 1;

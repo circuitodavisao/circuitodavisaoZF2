@@ -737,6 +737,14 @@ class CadastroController extends AbstractActionController {
     }
 
     /**
+     * Tela para cadastrar a senha do usuário
+     * GET /cadastroGrupoSenha
+     */
+    public function grupoSenhaAction() {
+        return new ViewModel();
+    }
+
+    /**
      * Tela com atualização de cadastro de grupo
      * GET /cadastroGrupoAtualizar
      */

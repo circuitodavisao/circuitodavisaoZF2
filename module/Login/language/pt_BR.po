@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: ZendSkeletonApplication\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-07-05 22:17-0700\n"
-"PO-Revision-Date: 2016-12-12 17:14-0200\n"
+"PO-Revision-Date: 2016-12-13 15:50-0200\n"
 "Last-Translator: Diogo Melo <dmelo87@gmail.com>\n"
 "Language-Team: ZF Contibutors <zf-devteam@zend.com>\n"
 "Language: pt\n"
@@ -732,3 +732,15 @@ msgstr "Dados Complementares"
 #: Cadastro/view/cadastro/grupo.phtml:165
 msgid "Numberation: "
 msgstr "Numeração: "
+
+#: Cadastro/view/cadastro/grupo-finalizar.phtml:8
+msgid "Registration completed successfully"
+msgstr "Cadastro concluído com sucesso"
+
+#: Cadastro/view/cadastro/grupo-finalizar.phtml:9
+msgid "<small>But <strong>IS NOT ON</strong> in a few minutes users will receive an email with the activation instructions.</small>"
+msgstr "<small>Mas <strong>NÃO ESTÁ TERMINADO</strong> em pouco minutos o(s) usuário(s) vão receber um email com a instruções de ativação.</small>"
+
+#: Cadastro/view/cadastro/grupo-finalizar.phtml:15
+msgid "Ready"
+msgstr "Pronto"
