@@ -21,6 +21,7 @@ CREATE TABLE pessoa
   foto character varying(40), -- Nome do arquivo com a foto da pessoa
   data_revisao date, -- Data que a pessoa foi ao revisão de vidas
   sexo enummf, -- Sexo da pessoa
+  atualizar_dados enumsn NOT NULL DEFAULT 'S'::enumsn, -- Variável para verificar se precisa de atualização de dados
   CONSTRAINT pk_pessoa PRIMARY KEY (id)
 )
 WITH (
@@ -47,6 +48,7 @@ COMMENT ON COLUMN pessoa.telefone IS 'Telefone com 9 digitos e DDD';
 COMMENT ON COLUMN pessoa.foto IS 'Nome do arquivo com a foto da pessoa';
 COMMENT ON COLUMN pessoa.data_revisao IS 'Data que a pessoa foi ao revisão de vidas';
 COMMENT ON COLUMN pessoa.sexo IS 'Sexo da pessoa';
+COMMENT ON COLUMN pessoa.atualizar_dados IS 'Variável para verificar se precisa de atualização de dados';
 
 
 -- Index: index_pessoa_data_nascimento

@@ -110,6 +110,9 @@ class Pessoa implements InputFilterAwareInterface {
     /** @ORM\Column(type="string") */
     protected $sexo;
 
+    /** @ORM\Column(type="string") */
+    protected $atualizar_dados;
+
     public function exchangeArray($data) {
         $this->nome = (!empty($data['nome']) ? strtoupper($data['nome']) : null);
     }
@@ -779,6 +782,15 @@ class Pessoa implements InputFilterAwareInterface {
 
     function setMatriculaAtual($matriculaAtual) {
         $this->matriculaAtual = $matriculaAtual;
+    }
+
+    function getAtualizar_dados() {
+        return $this->atualizar_dados;
+    }
+
+    function setAtualizar_dados($atualizar_dados) {
+        $this->atualizar_dados = $atualizar_dados;
+        return $this;
     }
 
 }

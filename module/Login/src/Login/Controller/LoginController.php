@@ -10,6 +10,7 @@ use Login\Controller\Helper\Constantes;
 use Login\Controller\Helper\Funcoes;
 use Login\Controller\Helper\LoginORM;
 use Login\Form\LoginForm;
+use Login\Form\NovaSenhaForm;
 use Login\Form\RecuperarAcessoForm;
 use Login\Form\RecuperarSenhaForm;
 use Zend\Authentication\AuthenticationService;
@@ -121,7 +122,6 @@ class LoginController extends AbstractActionController {
         $adapter->setIdentityValue($data[Constantes::$INPUT_EMAIL]);
         $adapter->setCredentialValue(md5($data[Constantes::$INPUT_SENHA]));
         $authenticationResult = $this->getDoctrineAuthenticationServicer()->authenticate();
-
         if ($authenticationResult->isValid()) {
             /* Autenticacao valida */
 
@@ -130,7 +130,6 @@ class LoginController extends AbstractActionController {
 
             /* Verificar se existe pessoa por email informado */
             $pessoa = $loginORM->getPessoaORM()->encontrarPorEmail($data[Constantes::$INPUT_EMAIL]);
-
             if (!(count($pessoa->getResponsabilidadesAtivas()) > 0)) {
                 /* Inativada */
                 /* Autenticacao falhou */
@@ -419,9 +418,12 @@ class LoginController extends AbstractActionController {
             if ($responsabilidadesAtivas) {
                 if (count($responsabilidadesAtivas) === 1) {
                     $sessao->idEntidadeAtual = $responsabilidadesAtivas[0]->getId();
-                    /* Redirecionamento */
-
-                    return $this->redirect()->toRoute(ConstantesCadastro::$ROUTE_CADASTRO, array(ConstantesCadastro::$PAGINA => ConstantesCadastro::$PAGINA_GRUPO_ATUALIZAR,));
+                    if (empty($pessoa->getTelefone())) {
+                        /* Redirecionamento */
+                        return $this->redirect()->toRoute(
+                                        ConstantesCadastro::$ROUTE_CADASTRO, array(ConstantesCadastro::$PAGINA => ConstantesCadastro::$PAGINA_GRUPO_ATUALIZAR,)
+                        );
+                    }
                 }
 
                 $view = new ViewModel(array(Constantes::$RESPONSABILIDADES => $responsabilidadesAtivas));
@@ -493,6 +495,41 @@ class LoginController extends AbstractActionController {
 
         /* Redirecionamento */
         return $this->redirect()->toRoute(Constantes::$ROUTE_LOGIN);
+    }
+
+    /**
+     * Função que direciona a tela de acesso
+     * GET /novaSenha
+     */
+    public function novaSenhaAction() {
+        unset($dados);
+        /* Helper Controller */
+        $loginORM = new LoginORM($this->getDoctrineORMEntityManager());
+
+        $tokenDaRota = $this->params()->fromRoute(Constantes::$ID);
+        $pessoa = $loginORM->getPessoaORM()->encontrarPorToken($tokenDaRota);
+        if ($pessoa) {
+            $formNovaSenha = new NovaSenhaForm(Constantes::$NOVA_SENHA_FORM, $pessoa->getId());
+            $dados[Constantes::$FORM_NOVA_SENHA] = $formNovaSenha;
+        } else {
+            /* Redirecionamento */
+            return $this->forward()->dispatch(Constantes::$CONTROLLER_LOGIN, array(
+                        Constantes::$ACTION => Constantes::$ACTION_ESQUECEU_SENHA,
+                        Constantes::$TIPO => 4,
+                        Constantes::$MENSAGEM => 'Seu link de recuperacao expirou',
+            ));
+        }
+        $view = new ViewModel($dados);
+
+        /* Adicionando layout extras */
+        $this->colocaTopEBottonModuloLogin($view);
+
+        /* Javascript especifico */
+        $layoutJSIndex = new ViewModel();
+        $layoutJSIndex->setTemplate(Constantes::$TEMPLATE_JS_NOVA_SENHA_VALIDACAO);
+        $view->addChild($layoutJSIndex, Constantes::$STRING_JS_NOVA_SENHA_VALIDACAO);
+
+        return $view;
     }
 
     /**

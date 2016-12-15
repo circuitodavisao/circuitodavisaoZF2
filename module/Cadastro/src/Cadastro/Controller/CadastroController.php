@@ -939,7 +939,7 @@ class CadastroController extends AbstractActionController {
         $pessoaLogada = $loginORM->getPessoaORM()->encontrarPorIdPessoa($sessao->idPessoa);
 
         $Subject = 'Convite';
-        $ToEmail = 'diegokort@gmail.com';
+        $ToEmail = 'falecomleonardopereira@gmail.com';
         $avatar = 'placeholder.png';
         if ($pessoaLogada->getFoto()) {
             $avatar = $pessoaLogada->getFoto();

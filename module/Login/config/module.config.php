@@ -75,6 +75,7 @@ return array(
             'login/login/recuperar-acesso' => __DIR__ . '/../view/login/index/recuperar-acesso.phtml',
             'login/login/email-enviado' => __DIR__ . '/../view/login/index/email-enviado.phtml',
             'login/login/recuperar-senha' => __DIR__ . '/../view/login/index/recuperar-senha.phtml',
+            'login/login/nova-senha' => __DIR__ . '/../view/login/index/nova-senha.phtml',
             'login/login/alterar-senha' => __DIR__ . '/../view/login/index/alterar-senha.phtml',
             'login/login/selecionar-perfil' => __DIR__ . '/../view/login/index/selecionar-perfil.phtml',
             'login/login/pre-saida' => __DIR__ . '/../view/login/index/pre-saida.phtml',

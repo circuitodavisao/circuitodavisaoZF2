@@ -23,6 +23,8 @@ class Constantes {
     public static $ACTION_LOGAR = 'logar';
     public static $INPUT_EMAIL = 'email';
     public static $INPUT_SENHA = 'senha';
+    public static $INPUT_NOVA_SENHA = 'novaSenha';
+    public static $CLASS_FORM_CONTROL = 'form-control';
     public static $INPUT_REPETIR_SENHA = 'repetirSenha';
     public static $INPUT_CSRF = 'csrf';
     public static $INPUT_ENTRAR = 'entrar';
@@ -92,7 +94,9 @@ class Constantes {
     public static $TRADUCAO_EMAIL_MENSAGEM_RECUPERAR_SENHA = '<pre>Hello #email</pre><pre>We received a request to reset the password for your account CircuitoDaVisão.com . To reset your password, use the links below:</pre><pre>Reset your password using a Web browser:</pre><pre><a href="158.69.124.139/recuperarSenha/#id">158.69.124.139/recuperarSenha/#id</a></pre><pre>If you did not request a password reset, you can ignore this message and your password will not change.</pre>';
     public static $TRADUCAO_ALTERAR = 'Update';
     public static $RECUPERAR_SENHA_FORM = 'RecuperarSenhaForm';
+    public static $NOVA_SENHA_FORM = 'NovaSenhaForm';
     public static $FORM_RECUPERAR_SENHA = 'formRecuperarSenha';
+    public static $FORM_NOVA_SENHA = 'formNovaSenha';
     public static $FORM_RECUPERAR_SENHA_6_CARACTERES = 'At least 6 characters';
     public static $FORM_RECUPERAR_SENHA_LETRA_NUMERO = 'Your password must contain at least <strong> a </ strong> letter and <strong> one </ strong> number.';
     public static $TRADUCAO_SENHA_ATUALIZADA_COM_SUCESSO = 'Your password has been changed successfully!';
@@ -175,6 +179,8 @@ class Constantes {
     public static $STRING_LOGIN_BOTTON = 'layoutLoginBotton';
     public static $TEMPLATE_JS_RECUPERAR_ACESSO = 'layout/layout-js-recuperar-acesso';
     public static $STRING_JS_RECUPERAR_ACESSO = 'layoutJSRecuperarAcesso';
+    public static $TEMPLATE_JS_NOVA_SENHA_VALIDACAO = 'layout/layout-js-nova-senha-validacao';
+    public static $STRING_JS_NOVA_SENHA_VALIDACAO = 'layoutJSNovaSenhaValidacao';
     public static $TEMPLATE_JS_MODAL_SELECIONAR_PERFIL = 'layout/layout-js-modal-selecionar-perfil';
     public static $STRING_JS_MODAL_SELECIONAR_PERFIL = 'layoutJSModalSelecionarPerfil';
     public static $TEMPLATE_JS_PRE_SAIDA = 'layout/layout-js-pre-saida';

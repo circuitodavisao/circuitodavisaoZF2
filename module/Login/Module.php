@@ -119,6 +119,9 @@ class Module {
             $pessoa = $loginORM->getPessoaORM()->encontrarPorIdPessoa($sessao->idPessoa);
             $viewModel->pessoa = $pessoa;
             $viewModel->responsabilidades = $pessoa->getResponsabilidadesAtivas();
+            if ($pessoa->getAtualizar_dados() === 'S') {
+                $viewModel->mostrarMenu = 0;
+            }
         }
     }
 

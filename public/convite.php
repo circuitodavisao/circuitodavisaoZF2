@@ -381,7 +381,7 @@ $nomePessoaEmail = (string) \filter_input(\INPUT_GET, $stringNomePessoaEmail);
                                                                     <w:anchorlock/>
                                                                     <center style="color:#ffffff;font-family:Helvetica, Arial, sans-serif;font-size:14px;font-weight:regular;">Sign Up</center>
                                                                   </v:roundrect>
-                                                                <![endif]--><a href="158.69.124.139/recuperarSenha/<?php echo $token; ?>"
+                                                                <![endif]--><a href="158.69.124.139/novaSenha/<?php echo $token; ?>"
                                                                                    style="background-color:#e9573f;border-radius:5px;color:#ffffff;display:inline-block;font-family:'Cabin', Helvetica, Arial, sans-serif;font-size:14px;font-weight:regular;line-height:45px;text-align:center;text-decoration:none;width:155px;-webkit-text-size-adjust:none;mso-hide:all;">Ativar Cadastro</a></div>
                                                             </td>
                                                         </tr>

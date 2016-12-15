@@ -56,7 +56,9 @@ use Login\Controller\Helper\Constantes;
         <div id="main">
             <?php
             if ($this->pessoa) {
-                echo $this->menu();
+                if ($this->mostrarMenu !== 0) {
+                    echo $this->menu();
+                }
             }
             ?> 
             <section id="content_wrapper" style="margin-top: 50px;">

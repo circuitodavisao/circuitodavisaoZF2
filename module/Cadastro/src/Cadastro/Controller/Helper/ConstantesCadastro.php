@@ -105,6 +105,9 @@ class ConstantesCadastro {
     public static $TRADUCAO_CADASTRO_CONCLUIDO_COM_SUCESSO = 'Registration completed successfully';
     public static $TRADUCAO_NAO_ESTA_ATIVADO = '<small>But <strong>IS NOT ON</strong> in a few minutes users will receive an email with the activation instructions.</small>';
     public static $TRADUCAO_BOTAO_PRONTO = 'Ready';
+    public static $TRADUCAO_CADASTRAR = 'Register';
+    public static $TRADUCAO_ENTRE_COM_A_SENHA = 'Enter the Password';
+    public static $TRADUCAO_REPITA_A_SENHA = 'Repeat the Password';
 
 
     /* Tipo de Mensagens */
@@ -132,5 +135,6 @@ class ConstantesCadastro {
     public static $FORM_INPUT_DIA = 'Dia';
     public static $FORM_INPUT_MES = 'Mes';
     public static $FORM_INPUT_ANO = 'Ano';
+    public static $FORM_CLASS_FORM_CONTROL = 'form-control';
 
 }
