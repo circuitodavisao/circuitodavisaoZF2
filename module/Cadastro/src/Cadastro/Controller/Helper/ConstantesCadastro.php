@@ -108,6 +108,8 @@ class ConstantesCadastro {
     public static $TRADUCAO_CADASTRAR = 'Register';
     public static $TRADUCAO_ENTRE_COM_A_SENHA = 'Enter the Password';
     public static $TRADUCAO_REPITA_A_SENHA = 'Repeat the Password';
+    public static $TRADUCAO_DDD = 'DDD';
+    public static $TRADUCAO_CELULAR = 'Phone';
 
 
     /* Tipo de Mensagens */
@@ -135,6 +137,8 @@ class ConstantesCadastro {
     public static $FORM_INPUT_DIA = 'Dia';
     public static $FORM_INPUT_MES = 'Mes';
     public static $FORM_INPUT_ANO = 'Ano';
+    public static $FORM_INPUT_DDD = 'inputDDD';
+    public static $FORM_INPUT_CELULAR = 'inputCelular';
     public static $FORM_CLASS_FORM_CONTROL = 'form-control';
 
 }

@@ -7,6 +7,7 @@ use Cadastro\Controller\Helper\Correios;
 use Cadastro\Controller\Helper\FuncoesCadastro;
 use Cadastro\Controller\Helper\RepositorioORM;
 use Cadastro\Form\CelulaForm;
+use Cadastro\Form\CelularForm;
 use Cadastro\Form\ConstantesForm;
 use Cadastro\Form\EventoForm;
 use Cadastro\Form\GrupoForm;
@@ -18,6 +19,7 @@ use Entidade\Entity\Grupo;
 use Entidade\Entity\GrupoEvento;
 use Entidade\Entity\GrupoPaiFilho;
 use Entidade\Entity\GrupoResponsavel;
+use Entidade\Entity\Pessoa;
 use Entidade\Entity\PessoaHierarquia;
 use Exception;
 use Lancamento\Controller\Helper\ConstantesLancamento;
@@ -737,19 +739,24 @@ class CadastroController extends AbstractActionController {
     }
 
     /**
-     * Tela para cadastrar a senha do usuário
-     * GET /cadastroGrupoSenha
-     */
-    public function grupoSenhaAction() {
-        return new ViewModel();
-    }
-
-    /**
      * Tela com atualização de cadastro de grupo
      * GET /cadastroGrupoAtualizar
      */
     public function grupoAtualizarAction() {
-        return new ViewModel();
+        $sessao = new Container(Constantes::$NOME_APLICACAO);
+
+        $form = new CelularForm(ConstantesForm::$FORM, $sessao->idPessoa);
+
+        $view = new ViewModel(array(
+            ConstantesForm::$FORM => $form
+        ));
+
+        /* Javascript */
+//        $layoutJS = new ViewModel();
+//        $layoutJS->setTemplate(ConstantesForm::$LAYOUT_JS_GRUPO_VALIDACAO);
+//        $view->addChild($layoutJS, ConstantesForm::$LAYOUT_STRING_JS_GRUPO_VALIDACAO);
+
+        return $view;
     }
 
     /**

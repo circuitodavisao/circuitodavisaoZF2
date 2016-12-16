@@ -130,29 +130,33 @@ class LoginController extends AbstractActionController {
 
             /* Verificar se existe pessoa por email informado */
             $pessoa = $loginORM->getPessoaORM()->encontrarPorEmail($data[Constantes::$INPUT_EMAIL]);
-            if (!(count($pessoa->getResponsabilidadesAtivas()) > 0)) {
-                /* Inativada */
-                /* Autenticacao falhou */
 
-                /* Redirecionamento */
+            /* Tem responsabilidade(s) */
+            if (count($pessoa->getResponsabilidadesAtivas()) > 0) {
+                /* Registro de sessão */
+                $sessao = new Container(Constantes::$NOME_APLICACAO);
+                $sessao->idPessoa = $pessoa->getId();
+                /* Não precisa atualizar dados */
+                if ($pessoa->getAtualizar_dados() === 'N') {
+                    /* Redirecionamento SELECIONAR PERFIL */
+                    return $this->forward()->dispatch(Constantes::$CONTROLLER_LOGIN, array(
+                                Constantes::$ACTION => Constantes::$ACTION_SELECIONAR_PERFIL,
+                    ));
+                } else {/* Precisa atualizar dados */
+                    /* Redirecionamento CadastroGrupoAtualizar */
+                    return $this->redirect()->toRoute(ConstantesCadastro::$ROUTE_CADASTRO, array(
+                                ConstantesCadastro::$PAGINA => ConstantesCadastro::$PAGINA_GRUPO_ATUALIZAR,
+                    ));
+                }
+            } else {
+                /* Login sem responsabilidade(s) */
                 return $this->forward()->dispatch(Constantes::$CONTROLLER_LOGIN, array(
                             Constantes::$ACTION => Constantes::$ACTION_INDEX,
                             Constantes::$INPUT_EMAIL => $data[Constantes::$INPUT_EMAIL],
                             Constantes::$MENSAGEM => $this->getTranslator()->translate(Constantes::$TRADUCAO_PESSOA_INATIVADA),
                             Constantes::$TIPO => 1, // warning
                 ));
-            } else {
-                /* Ativada */
-
-                /* Registro de sessão */
-                $sessao = new Container(Constantes::$NOME_APLICACAO);
-                $sessao->idPessoa = $pessoa->getId();
             }
-
-            /* Redirecionamento SELECIONAR PERFIL */
-            return $this->forward()->dispatch(Constantes::$CONTROLLER_LOGIN, array(
-                        Constantes::$ACTION => Constantes::$ACTION_SELECIONAR_PERFIL,
-            ));
         } else {
             /* Autenticacao falhou */
             /* Redirecionamento */
