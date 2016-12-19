@@ -145,7 +145,7 @@ class LoginController extends AbstractActionController {
                 } else {/* Precisa atualizar dados */
                     /* Redirecionamento CadastroGrupoAtualizar */
                     return $this->redirect()->toRoute(ConstantesCadastro::$ROUTE_CADASTRO, array(
-                                ConstantesCadastro::$PAGINA => ConstantesCadastro::$PAGINA_GRUPO_ATUALIZAR,
+                                ConstantesCadastro::$PAGINA => ConstantesCadastro::$PAGINA_GRUPO_ATUALIZACAO,
                     ));
                 }
             } else {
@@ -425,7 +425,7 @@ class LoginController extends AbstractActionController {
                     if (empty($pessoa->getTelefone())) {
                         /* Redirecionamento */
                         return $this->redirect()->toRoute(
-                                        ConstantesCadastro::$ROUTE_CADASTRO, array(ConstantesCadastro::$PAGINA => ConstantesCadastro::$PAGINA_GRUPO_ATUALIZAR,)
+                                        ConstantesCadastro::$ROUTE_CADASTRO, array(ConstantesCadastro::$PAGINA => ConstantesCadastro::$PAGINA_GRUPO_ATUALIZACAO,)
                         );
                     }
                 }

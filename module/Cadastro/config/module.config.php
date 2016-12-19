@@ -54,7 +54,7 @@ return array(
             'cadastro/cadastro/evento-exclusao' => __DIR__ . '/../view/cadastro/evento-exclusao.phtml',
             'cadastro/cadastro/grupo' => __DIR__ . '/../view/cadastro/grupo.phtml',
             'cadastro/cadastro/grupo-finalizar' => __DIR__ . '/../view/cadastro/grupo-finalizar.phtml',
-            'cadastro/cadastro/grupo-atualizar' => __DIR__ . '/../view/cadastro/grupo-atualizar.phtml',
+            'cadastro/cadastro/grupo-atualizacao' => __DIR__ . '/../view/cadastro/grupo-atualizacao.phtml',
             'cadastro/cadastro/celula' => __DIR__ . '/../view/cadastro/celula.phtml',
             'cadastro/cadastro/celula-confirmacao' => __DIR__ . '/../view/cadastro/celula-confirmacao.phtml',
             'cadastro/cadastro/celula-exclusao' => __DIR__ . '/../view/cadastro/celula-exclusao.phtml',

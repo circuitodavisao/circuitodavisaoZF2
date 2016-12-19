@@ -61,7 +61,6 @@ class InputFormulario extends AbstractHelper {
         $html .= $this->view->formInput($input);
         $html .= '<label for="' . $this->getTraducao() . '" class="field-icon">';
         $html .= '<i class="fa ' . $this->getIcone() . '"></i>';
-        $html .= '&nbsp;<img id="loader' . $this->getIdInput() . '" class="hidden" src="' . Constantes::$LOADER_GIF . '" />';
         $html .= '</label>';
 
         return $html;

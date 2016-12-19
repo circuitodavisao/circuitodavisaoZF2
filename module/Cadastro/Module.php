@@ -18,6 +18,7 @@ use Cadastro\View\Helper\InputAddon;
 use Cadastro\View\Helper\InputDiaDaSemanaHoraMinuto;
 use Cadastro\View\Helper\InputExtras;
 use Cadastro\View\Helper\ListagemDeEventos;
+use Cadastro\View\Helper\MontarEndereco;
 use Cadastro\View\Helper\PassoAPasso;
 use Cadastro\View\Helper\SpanDadosValidados;
 use Cadastro\View\Helper\TabelaDeAlunos;
@@ -115,6 +116,9 @@ class Module {
                 },
                 'tabelaDeAlunos' => function($sm) {
                     return new TabelaDeAlunos();
+                },
+                'montarEndereco' => function($sm) {
+                    return new MontarEndereco();
                 },
             )
         );

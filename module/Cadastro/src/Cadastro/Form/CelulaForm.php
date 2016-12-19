@@ -22,79 +22,14 @@ class CelulaForm extends EventoForm {
     public function __construct($name = null, EventoCelula $eventoCelula = null) {
         parent::__construct($name);
 
-        /* CEP ou Logradouro */
-        $this->add(
-                (new Text())
-                        ->setName(ConstantesForm::$FORM_CEP_LOGRADOURO)
-                        ->setAttributes([
-                            ConstantesForm::$FORM_CLASS => ConstantesForm::$FORM_CLASS_GUI_INPUT,
-                            ConstantesForm::$FORM_ID => ConstantesForm::$FORM_CEP_LOGRADOURO,
-                            ConstantesForm::$FORM_ONBLUR => ConstantesForm::$FORM_FUNCAO_BUSCAR_CEP,
-                            ConstantesForm::$FORM_ONKEYPRESS => ConstantesForm::$FORM_FUNCAO_BUSCAR_POR_ENTER
-                        ])
-        );
-
-        /* UF */
-        $this->add(
-                (new Text())
-                        ->setName(ConstantesForm::$FORM_UF)
-                        ->setAttributes([
-                            ConstantesForm::$FORM_CLASS => ConstantesForm::$FORM_CLASS_GUI_INPUT,
-                            ConstantesForm::$FORM_ID => ConstantesForm::$FORM_UF,
-                            ConstantesForm::$FORM_PLACEHOLDER => ConstantesForm::$TRADUCAO_UF,
-                        ])
-        );
-
-        /* Cidade */
-        $this->add(
-                (new Text())
-                        ->setName(ConstantesForm::$FORM_CIDADE)
-                        ->setAttributes([
-                            ConstantesForm::$FORM_CLASS => ConstantesForm::$FORM_CLASS_GUI_INPUT,
-                            ConstantesForm::$FORM_ID => ConstantesForm::$FORM_CIDADE,
-                            ConstantesForm::$FORM_PLACEHOLDER => ConstantesForm::$TRADUCAO_CIDADE,
-                        ])
-        );
-
-        /* Bairro */
-        $this->add(
-                (new Text())
-                        ->setName(ConstantesForm::$FORM_BAIRRO)
-                        ->setAttributes([
-                            ConstantesForm::$FORM_CLASS => ConstantesForm::$FORM_CLASS_GUI_INPUT,
-                            ConstantesForm::$FORM_ID => ConstantesForm::$FORM_BAIRRO,
-                            ConstantesForm::$FORM_PLACEHOLDER => ConstantesForm::$TRADUCAO_BAIRRO,
-                        ])
-        );
-
-        /* Logradouro */
-        $this->add(
-                (new Text())
-                        ->setName(ConstantesForm::$FORM_LOGRADOURO)
-                        ->setAttributes([
-                            ConstantesForm::$FORM_CLASS => ConstantesForm::$FORM_CLASS_GUI_INPUT,
-                            ConstantesForm::$FORM_ID => ConstantesForm::$FORM_LOGRADOURO,
-                            ConstantesForm::$FORM_PLACEHOLDER => ConstantesForm::$TRADUCAO_LOGRADOURO,
-                        ])
-        );
-
-        /* Complemento */
-        $this->add(
-                (new Text())
-                        ->setName(ConstantesForm::$FORM_COMPLEMENTO)
-                        ->setAttributes([
-                            ConstantesForm::$FORM_CLASS => ConstantesForm::$FORM_CLASS_GUI_INPUT,
-                            ConstantesForm::$FORM_ID => ConstantesForm::$FORM_COMPLEMENTO,
-                            ConstantesForm::$FORM_PLACEHOLDER => ConstantesForm::$TRADUCAO_COMPLEMENTO,
-                        ])
-        );
+        Endereco::MontaEnderecoFormulario($this);
 
         /* Nome Hospedeiro */
         $this->add(
                 (new Text())
                         ->setName(ConstantesForm::$FORM_NOME_HOSPEDEIRO)
                         ->setAttributes([
-                            ConstantesForm::$FORM_CLASS => ConstantesForm::$FORM_CLASS_GUI_INPUT,
+                            ConstantesForm::$FORM_CLASS => ConstantesForm::$FORM_CLASS_FORM_CONTROL,
                             ConstantesForm::$FORM_ID => ConstantesForm::$FORM_NOME_HOSPEDEIRO,
                             ConstantesForm::$FORM_PLACEHOLDER => ConstantesForm::$TRADUCAO_NOME_HOSPEDEIRO,
                         ])
@@ -105,7 +40,7 @@ class CelulaForm extends EventoForm {
                 (new Text())
                         ->setName(ConstantesForm::$FORM_DDD_HOSPEDEIRO)
                         ->setAttributes([
-                            ConstantesForm::$FORM_CLASS => ConstantesForm::$FORM_CLASS_GUI_INPUT,
+                            ConstantesForm::$FORM_CLASS => ConstantesForm::$FORM_CLASS_FORM_CONTROL,
                             ConstantesForm::$FORM_ID => ConstantesForm::$FORM_DDD_HOSPEDEIRO,
                             ConstantesForm::$FORM_PLACEHOLDER => ConstantesForm::$TRADUCAO_DDD_HOSPEDEIRO,
                         ])
@@ -116,7 +51,7 @@ class CelulaForm extends EventoForm {
                 (new Text())
                         ->setName(ConstantesForm::$FORM_TELEFONE_HOSPEDEIRO)
                         ->setAttributes([
-                            ConstantesForm::$FORM_CLASS => ConstantesForm::$FORM_CLASS_GUI_INPUT,
+                            ConstantesForm::$FORM_CLASS => ConstantesForm::$FORM_CLASS_FORM_CONTROL,
                             ConstantesForm::$FORM_ID => ConstantesForm::$FORM_TELEFONE_HOSPEDEIRO,
                             ConstantesForm::$FORM_PLACEHOLDER => ConstantesForm::$TRADUCAO_TELEFONE_HOSPEDEIRO,
                         ])

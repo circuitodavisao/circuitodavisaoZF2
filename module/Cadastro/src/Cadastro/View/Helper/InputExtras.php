@@ -35,46 +35,8 @@ class InputExtras extends AbstractHelper {
     public function renderHtml() {
         $html = '';
         if ($this->getForm() instanceof CelulaForm) {
-            $html .= '<div class="row">';
-            $html .= '<div class="col-md-12 col-sm-12 col-xs-12">';
-            $html .= '<div class="section">';
-            $html .= $this->view->inputFormulario(ConstantesForm::$TRADUCAO_CEP_LOGRADOURO, $this->getForm(), ConstantesForm::$FORM_CEP_LOGRADOURO, ConstantesForm::$FORM_ICONE_COMPLEMENTO);
-            $html .= '</div>';
-            $html .= '</div>';
-            $html .= '</div>';
-            $html .= '<div id="endereco" class="' . $this->view->enderecoHidden . '">';
-            $html .= '<div class="row">';
-            $html .= '<div class="col-md-6 col-sm-12">';
-            $html .= '<div class="section">';
-            $html .= $this->view->inputFormulario(ConstantesForm::$TRADUCAO_UF, $this->getForm(), ConstantesForm::$FORM_UF, ConstantesForm::$FORM_ICONE_COMPLEMENTO, 2);
-            $html .= '</div>';
-            $html .= '</div>';
-            $html .= '<div class="col-md-6 col-sm-12">';
-            $html .= '<div class="section">';
-            $html .= $this->view->inputFormulario(ConstantesForm::$TRADUCAO_BAIRRO, $this->getForm(), ConstantesForm::$FORM_BAIRRO, ConstantesForm::$FORM_ICONE_COMPLEMENTO, 2);
-            $html .= '</div>';
-            $html .= '</div>';
-            $html .= '</div>';
-            $html .= '<div class="row">';
-            $html .= '<div class="col-md-6">';
-            $html .= '<div class="section">';
-            $html .= $this->view->inputFormulario(ConstantesForm::$TRADUCAO_CIDADE, $this->getForm(), ConstantesForm::$FORM_CIDADE, ConstantesForm::$FORM_ICONE_COMPLEMENTO, 2);
-            $html .= '</div>';
-            $html .= '</div>';
-            $html .= '<div class="col-md-6">';
-            $html .= '<div class="section">';
-            $html .= $this->view->inputFormulario(ConstantesForm::$TRADUCAO_LOGRADOURO, $this->getForm(), ConstantesForm::$FORM_LOGRADOURO, ConstantesForm::$FORM_ICONE_COMPLEMENTO, 2);
-            $html .= '</div>';
-            $html .= '</div>';
-            $html .= '</div>';
-            $html .= '<div class="row">';
-            $html .= '<div class="col-md-12">';
-            $html .= '<div class="section">';
-            $html .= $this->view->inputFormulario(ConstantesForm::$TRADUCAO_COMPLEMENTO, $this->getForm(), ConstantesForm::$FORM_COMPLEMENTO, ConstantesForm::$FORM_ICONE_COMPLEMENTO);
-            $html .= '</div>';
-            $html .= '</div>';
-            $html .= '</div>';
-            $html .= '</div>';
+            /* Montar endereço */
+            $html .= $this->view->montarEndereco($this->getForm());
             $html .= '</div>';
             /* Dados do Hospedeiro */
             $html .= '<div class="section-divider mv40">';

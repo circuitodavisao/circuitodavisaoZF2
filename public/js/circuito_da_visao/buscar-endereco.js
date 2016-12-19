@@ -3,7 +3,7 @@
  * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com>
  * Descricao: Função para buscar endereço por cep ou logradouro
  */
-
+var hidden = 'hidden';
 function isNumber(n) {
     return !isNaN(parseFloat(n)) && isFinite(n);
 }
@@ -23,20 +23,21 @@ function submitEnter(myfield, e) {
 }
 
 function buscarEndereco(cep_logradouro) {
-    $('#endereco').addClass('hidden');
-    $('#loadercep_logradouro').removeClass('hidden');
+    $('#endereco').addClass(hidden);
+    var spanMensagemDeErro = $('#spanMensagemDeErro');
+
     if (cep_logradouro.length === 0) {
-        $('#loadercep_logradouro').addClass('hidden');
         $('#botaoContinuar').attr({disabled: "disabled"});
         return false;
     }
     if (!isNumber(cep_logradouro) || cep_logradouro.length !== 8) {
-        $('#loadercep_logradouro').addClass('hidden');
         $('#botaoContinuar').attr({disabled: "disabled"});
-        alert('Cep é invalido!');
+        spanMensagemDeErro
+                .removeClass('alert-success')
+                .addClass('alert-danger')
+                .html('Cep é invalido!');
         return false;
     }
-
     $('#resultadoBusca').html('');
     $('#uf').val('');
     $('#cidade').val('');
@@ -52,7 +53,7 @@ function buscarEndereco(cep_logradouro) {
                 cep_logradouro: cep_logradouro,
             },
             function (data) {
-                $('#endereco').addClass('hidden');
+                $('#endereco').addClass(hidden);
                 $('#resultadoBusca').html('');
                 if (data.quantidadeDeResultados === 0) {
                     var html = '';
@@ -61,9 +62,13 @@ function buscarEndereco(cep_logradouro) {
                     html += '</div>';
                     $('#botaoContinuar').attr({disabled: "disabled"});
                     $('#resultadoBusca').html(html);
+                    spanMensagemDeErro
+                            .removeClass('alert-success')
+                            .addClass('alert-danger')
+                            .html('CEP não encontrado');
                 }
                 if (data.quantidadeDeResultados === 1) {
-                    $('#endereco').removeClass('hidden');
+                    $('#endereco').removeClass(hidden);
                     $('#cep_logradouro').html(data.pesquisa[0]['cep']);
                     $('#uf').val(data.pesquisa[0]['uf']);
                     $('#cidade').val(data.pesquisa[0]['cidade']);
@@ -77,7 +82,7 @@ function buscarEndereco(cep_logradouro) {
                     var validator = $("#CelulaForm").validate();
                     validator.element("#cep_logradouro");
                     $('#complemento').focus();
+                    spanMensagemDeErro.addClass(hidden);
                 }
-                $('#loadercep_logradouro').addClass('hidden');
             }, 'json');
 }

@@ -6,8 +6,8 @@ use Cadastro\Controller\Helper\ConstantesCadastro;
 use Cadastro\Controller\Helper\Correios;
 use Cadastro\Controller\Helper\FuncoesCadastro;
 use Cadastro\Controller\Helper\RepositorioORM;
+use Cadastro\Form\AtualizarCadastroForm;
 use Cadastro\Form\CelulaForm;
-use Cadastro\Form\CelularForm;
 use Cadastro\Form\ConstantesForm;
 use Cadastro\Form\EventoForm;
 use Cadastro\Form\GrupoForm;
@@ -82,9 +82,9 @@ class CadastroController extends AbstractActionController {
                         Constantes::$ACTION => ConstantesCadastro::$PAGINA_GRUPO_FINALIZAR,
             ));
         }
-        if ($pagina == ConstantesCadastro::$PAGINA_GRUPO_ATUALIZAR) {
+        if ($pagina == ConstantesCadastro::$PAGINA_GRUPO_ATUALIZACAO) {
             return $this->forward()->dispatch(ConstantesCadastro::$CONTROLLER_CADASTRO, array(
-                        Constantes::$ACTION => ConstantesCadastro::$PAGINA_GRUPO_ATUALIZAR,
+                        Constantes::$ACTION => ConstantesCadastro::$PAGINA_GRUPO_ATUALIZACAO,
             ));
         }
         if ($pagina == ConstantesCadastro::$PAGINA_EVENTO_CULTO_PERSISTIR) {
@@ -742,13 +742,14 @@ class CadastroController extends AbstractActionController {
      * Tela com atualização de cadastro de grupo
      * GET /cadastroGrupoAtualizar
      */
-    public function grupoAtualizarAction() {
+    public function grupoAtualizacaoAction() {
         $sessao = new Container(Constantes::$NOME_APLICACAO);
 
-        $form = new CelularForm(ConstantesForm::$FORM, $sessao->idPessoa);
+        $form = new AtualizarCadastroForm(ConstantesForm::$FORM, $sessao->idPessoa);
 
         $view = new ViewModel(array(
-            ConstantesForm::$FORM => $form
+            ConstantesForm::$FORM => $form,
+            ConstantesForm::$FORM_ENDERECO_HIDDEN => ConstantesForm::$FORM_HIDDEN
         ));
 
         /* Javascript */
@@ -757,6 +758,24 @@ class CadastroController extends AbstractActionController {
 //        $view->addChild($layoutJS, ConstantesForm::$LAYOUT_STRING_JS_GRUPO_VALIDACAO);
 
         return $view;
+    }
+
+    /**
+     * Atualização dos dados depois de cadastrar o grupo
+     * GET /cadastroGrupoAtualizar
+     */
+    public function grupoAtualizarAction() {
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            try {
+                $post_data = $request->getPost();
+                $loginORM = new LoginORM($this->getDoctrineORMEntityManager());
+
+                return $this->redirect()->toRoute('Principal');
+            } catch (Exception $exc) {
+                $this->direcionaErroDeCadastro($exc->getMessage());
+            }
+        }
     }
 
     /**

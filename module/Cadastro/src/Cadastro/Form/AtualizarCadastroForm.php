@@ -3,19 +3,20 @@
 namespace Cadastro\Form;
 
 use Cadastro\Controller\Helper\ConstantesCadastro;
-use Entidade\Entity\GrupoAluno;
+use Lancamento\Controller\Helper\FuncoesLancamento;
 use Login\Controller\Helper\Constantes;
 use Zend\Form\Element\Csrf;
 use Zend\Form\Element\Hidden;
 use Zend\Form\Element\Number;
+use Zend\Form\Element\Select;
 use Zend\Form\Form;
 
 /**
- * Nome: CelularForm.php
+ * Nome: AtualizarCadastroForm.php
  * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com>
- * Descricao: Formulario para atualizar o ddd + celular
+ * Descricao: Formulario para finalizar o cadastro
  */
-class CelularForm extends Form {
+class AtualizarCadastroForm extends Form {
 
     /**
      * Contrutor
@@ -33,6 +34,21 @@ class CelularForm extends Form {
             ConstantesForm::$FORM_ACTION => ConstantesCadastro::$FORM_ACTION_CADASTRO_GRUPO_FINALIZAR,
         ));
 
+        Endereco::MontaEnderecoFormulario($this);
+
+        /* Profissão */
+        $arrayProfissoes = array();
+        $arrayProfissoes[''] = ConstantesForm::$FORM_SELECT;
+
+        $inputSelectProfissoes = new Select();
+        $inputSelectProfissoes->setName(ConstantesCadastro::$FORM_INPUT_PROFISSAO);
+        $inputSelectProfissoes->setAttributes(array(
+            ConstantesForm::$FORM_CLASS => ConstantesForm::$FORM_CLASS_FORM_CONTROL,
+            ConstantesForm::$FORM_ID => ConstantesCadastro::$FORM_INPUT_PROFISSAO,
+        ));
+        $inputSelectProfissoes->setValueOptions($arrayProfissoes);
+        $this->add($inputSelectProfissoes);
+
         /* DDD */
         $this->add(
                 (new Number())
@@ -40,7 +56,6 @@ class CelularForm extends Form {
                         ->setAttributes([
                             ConstantesForm::$FORM_CLASS => ConstantesForm::$FORM_CLASS_FORM_CONTROL,
                             ConstantesForm::$FORM_ID => ConstantesCadastro::$FORM_INPUT_DDD,
-                            ConstantesForm::$FORM_PLACEHOLDER => ConstantesCadastro::$TRADUCAO_DDD,
                         ])
         );
 
@@ -51,10 +66,10 @@ class CelularForm extends Form {
                         ->setAttributes([
                             ConstantesForm::$FORM_CLASS => ConstantesForm::$FORM_CLASS_FORM_CONTROL,
                             ConstantesForm::$FORM_ID => ConstantesCadastro::$FORM_INPUT_CELULAR,
-                            ConstantesForm::$FORM_PLACEHOLDER => ConstantesCadastro::$TRADUCAO_CELULAR,
                         ])
         );
 
+        /* CSRF */
         $this->add(
                 (new Csrf())
                         ->setName(Constantes::$INPUT_CSRF)

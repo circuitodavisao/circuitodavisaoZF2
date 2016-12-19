@@ -19,6 +19,7 @@ class ConstantesCadastro {
     public static $PAGINA_EVENTO = 'Evento';
     public static $PAGINA_GRUPO = 'Grupo';
     public static $PAGINA_GRUPO_FINALIZAR = 'GrupoFinalizar';
+    public static $PAGINA_GRUPO_ATUALIZACAO = 'GrupoAtualizacao';
     public static $PAGINA_GRUPO_ATUALIZAR = 'GrupoAtualizar';
     public static $PAGINA_GRUPO_EMAIL_ENVIADO = 'GrupoEmailEnviado';
     public static $PAGINA_EVENTO_CELULA_PERSISTIR = 'EventoCelulaPersistir';
@@ -139,6 +140,7 @@ class ConstantesCadastro {
     public static $FORM_INPUT_ANO = 'Ano';
     public static $FORM_INPUT_DDD = 'inputDDD';
     public static $FORM_INPUT_CELULAR = 'inputCelular';
+    public static $FORM_INPUT_PROFISSAO = 'inputProfissao';
     public static $FORM_CLASS_FORM_CONTROL = 'form-control';
 
 }
