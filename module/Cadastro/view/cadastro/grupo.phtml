@@ -62,7 +62,7 @@ echo $this->templateFormularioTopo(ConstantesCadastro::$TRADUCAO_TITULO_PAGINA_C
     <div id="divIncluirResponsavel" class="hidden">
         <!-- Passo a Passo -->
         <div id="divPassoAPasso" class="hidden"> 
-            <?php echo $this->passoAPasso(); ?>
+            <?php echo $this->passoAPasso($form); ?>
             <!-- HelperView Dados -->
             <div id="divDadosSelecionados" class="alert alert-info hidden">
                 <?php
@@ -247,13 +247,7 @@ echo $this->formHidden($form->get(ConstantesForm::$FORM_NOME_ALUNO));
 echo $this->templateFormularioRodape();
 echo $this->form()->closeTag();
 
-/* Modal */
-$htmlModal = '<div id="modalBuscando" class="admin-form mfp-with-anim mfp-hide">';
-$htmlModal .= '<div align="center">';
-$htmlModal .= '<img src="' . Constantes::$LOADER_GIF_GRANDE . '"></i>';
-$htmlModal .= '</div>';
-$htmlModal .= '</div>';
-echo $htmlModal;
+echo $this->modalLoader();
 
 /* Layout com javascript para tela de cadastro de grupo */
 echo $this->layoutJSGrupoValidacao;

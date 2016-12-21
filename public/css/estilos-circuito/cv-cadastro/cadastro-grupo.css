@@ -48,10 +48,16 @@
 }
 
 .stepwizard-step {   
-    width: 25%;
     display: table-cell;
     text-align: center;
     position: relative;
+}
+
+.stepwizard-step-cadastro-grupo {   
+    width: 25%;
+}
+.stepwizard-step-atualizacao-grupo {   
+    width: 33%;
 }
 
 .btn-circle {

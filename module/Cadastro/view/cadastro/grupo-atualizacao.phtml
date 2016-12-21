@@ -1,6 +1,7 @@
 <?php
 
 use Cadastro\Controller\Helper\ConstantesCadastro;
+use Cadastro\Form\ConstantesForm;
 use Login\Controller\Helper\Constantes;
 
 /** Nome: grupo-atualizar.phtml
@@ -13,11 +14,6 @@ $form->setAttribute(Constantes::$ACTION, $this->url(ConstantesCadastro::$ROUTE_C
 
 echo $this->form()->openTag($form);
 ?>
-<style>
-    .quebraDeLinhaDeSpan{
-        display: block;
-    }
-</style>
 <div class="admin-form mw800">
     <!-- Login Logo -->
     <div class="row">
@@ -31,74 +27,118 @@ echo $this->form()->openTag($form);
             Bem Vindo ao Circuito da Visão.
         </h1>
         <h2>Para terminar atualize os dados abaixo.</h2>
-        <div class="quebraDeLinhaDeSpan">
-            <small>O número de célular deve ser válido e não pode pertencer ao seu líder, familiares ou terceiros.</small>
-        </div>
     </div>
     <div class="panel mt10">
         <div class="panel-body bg-light p25 pb15">
-            <div class="row">
-                <div class="col-md-12 col-sm-12 col-xs-12">
-                    <div class="section">
-                        <span id="spanMensagemDeErro" class="alert text-center quebraDeLinhaDeSpan hidden"></span>
-                    </div>
-                </div>
-            </div>
-            <?php
-            /* Montar endereço */
-            echo $this->montarEndereco($form);
-            ?>
+            <?php echo $this->passoAPasso($form); ?>
+            <!-- Mensagem de Erro -->
             <div class="row">
                 <div class="section">
-                    <div class="col-xs-12 col-sm-6 col-md-6">
-                        <label class="field-label">Profissao</label>
-                        <label class="field">
-                            <?php echo $this->formSelect($form->get(ConstantesCadastro::$FORM_INPUT_PROFISSAO)); ?>
-                        </label>
-                    </div>                    
-                    <div class="col-xs-12 col-sm-6 col-md-6">
-                        <div class="col-xs-5 col-sm-5 col-md-3">
+                    <span id="spanMensagemDeErro" class="alert text-center quebraDeLinhaDeSpan hidden"></span>
+                </div>
+            </div>
+            <!-- Endereço -->
+            <div id="divEndereco" class="row">
+                <?php
+                /* Montar endereço */
+                echo $this->montarEndereco($form);
+                ?> 
+                <div class="mt10">
+                    <?php
+                    echo '<div id="divBotaoCepContinuar" class="hidden">';
+                    $funcaoOnClickContinuarEndereco = $this->funcaoOnClick('abrirDivCelular()');
+                    echo $this->botaoLink(Constantes::$TRADUCAO_CONTINUAR, ConstantesForm::$STRING_HASHTAG, 7, $funcaoOnClickContinuarEndereco);
+                    echo '</div>';
+                    ?>
+                </div>
+            </div>
+            <!-- Celular -->
+            <div id="divCelular" class="row hidden">
+                <div class="row">
+                    <div class="section">
+                        <div class="col-xs-5 col-sm-4 col-md-4">
                             <label class="field-label">DDD</label>
                             <label class="field">
-                                <input id="ddd" type="tel" maxlength="2" class="form-control" placeholder="DDD"/>
+                                <?php echo $this->formInput($form->get(ConstantesCadastro::$FORM_INPUT_DDD)); ?>
                             </label>
                         </div>
-                        <div class="col-xs-7 col-sm-7 col-md-9">
+                        <div class="col-xs-7 col-sm-8 col-md-8">
                             <label class="field-label">Celular</label>
                             <label class="field">
-                                <input id="celular" type="tel" maxlength="9" class="form-control" placeholder="Celular"/>
+                                <?php echo $this->formInput($form->get(ConstantesCadastro::$FORM_INPUT_CELULAR)); ?>
                             </label>
                         </div>
                     </div>
+                </div>
+                <div class="mt10">
+                    <?php
+                    echo '<div id="divBotaoVerificarTelefone" class="">';
+                    echo $this->botaoLink('Verificar', '#', 7, 'id="botaoVerificarCelular" onclick="validarTelefone();"');
+                    echo '</div>';
+                    ?>  
+                    <?php
+                    echo '<div id="divBotaoTelefoneContinuar" class="hidden">';
+                    $funcaoOnClickContinuarCelular = $this->funcaoOnClick('abrirDivCodigoVerificador()');
+                    echo $this->botaoLink(Constantes::$TRADUCAO_CONTINUAR, '#', 7, $funcaoOnClickContinuarCelular);
+                    echo '</div>';
+                    ?>  
+                </div>
+            </div>
+            <!-- Codigo Verificador -->
+            <div id="divCodigoVerificador" class="row hidden">
+                <div class="row">
+                    <div class="section">
+                        <div class="col-xs-12">
+                            <label class="field-label">Codigo Verificador</label>
+                            <label class="field">
+                                <?php echo $this->formInput($form->get(ConstantesCadastro::$FORM_INPUT_CODIGO_VERIFICADOR)); ?>
+                            </label>
+                        </div>                        
+                    </div>
+                </div>
+                <div class="mt10">
+                    <?php
+                    $funcaoOnClickVerificarCodigo = $this->funcaoOnClick('verificarCodigoVerificador()');
+                    echo '<div id="divBotaoValidarCodigoVerificador" class="">';
+                    echo $this->botaoLink('Verificar', '#', 7, $funcaoOnClickVerificarCodigo);
+                    echo '</div>';
+
+                    $funcaoOnClickFinalizar = $this->funcaoOnClick('finalizarAtualizacao(this.form)');
+                    echo '<div id="divBotaoContinuarCodigoVerificador" class="hidden">';
+                    echo $this->botaoLink('Finalizar', '#', 7, $funcaoOnClickFinalizar);
+                    echo '</div>';
+                    ?>     
                 </div>
             </div>
         </div>
-        <div class="panel-footer clearfix">
-            <div id="divVerificarDados">
-                <?php echo $this->botaoLink('Verificar', '#', 7, 'onclick="validarFormulario();"'); ?>     
-            </div>
-            <div id="divAtualizarDados" class="hidden">
-                <?php echo $this->botaoLink('Atualizar', '#', 7); ?>     
-            </div>
-        </div>   
     </div>
 </div>
 <?php
 echo $this->formHidden($form->get(Constantes::$ID));
 echo $this->form()->closeTag();
+echo $this->modalLoader();
 ?>
 <script type="text/javascript">
     var hidden = 'hidden';
     var classAlertDanger = 'alert-danger';
     var classAlertSuccess = 'alert-success';
 
-    function validarFormulario() {
-        var valorDDD = $('#ddd').val();
-        var valorCelular = $('#celular').val();
-        var valorCep = $('#cep_logradouro').val();
+    function pegaSpanMensagemDeErro() {
+        return $('#spanMensagemDeErro');
+    }
+
+    function abrirDivCelular() {
+        $('#divEndereco').addClass(hidden);
+        $('#divCelular').removeClass(hidden);
+    }
+
+    function validarTelefone() {
+        abrirModalCarregando();
+        var valorDDD = $('#inputDDD').val();
+        var valorCelular = $('#inputCelular').val();
         var temErro = false;
         var mensagemDeErro;
-        var spanMensagemDeErro = $('#spanMensagemDeErro');
+        var spanMensagemDeErro = pegaSpanMensagemDeErro();
         spanMensagemDeErro.html('').addClass(hidden);
 
         if (valorCelular.length === 0) {
@@ -109,10 +149,6 @@ echo $this->form()->closeTag();
             temErro = true;
             mensagemDeErro = 'Preencha o DDD';
         }
-        if (valorCep.length === 0) {
-            temErro = true;
-            mensagemDeErro = 'Preencha o CEP';
-        }
         if (valorCelular.length !== 0 && (valorCelular.length < 8 || valorCelular.length > 9)) {
             temErro = true;
             mensagemDeErro = 'Celular é invalido';
@@ -120,10 +156,6 @@ echo $this->form()->closeTag();
         if (valorDDD.length !== 0 && valorDDD.length !== 2) {
             temErro = true;
             mensagemDeErro = 'DDD é invalido';
-        }
-        if (valorCep.length !== 0 && valorCep.length !== 8) {
-            temErro = true;
-            mensagemDeErro = 'CEP é invalido';
         }
 
         if (temErro) {
@@ -136,18 +168,68 @@ echo $this->form()->closeTag();
                     .removeClass(classAlertDanger)
                     .addClass(classAlertSuccess)
                     .html('<?php echo $this->translate(ConstantesCadastro::$TRADUCAO_DADOS_LIBERADOS); ?>');
-            $('#divVerificarDados').addClass(hidden);
-            $('#divAtualizarDados').removeClass(hidden);
+            $('#divBotaoVerificarTelefone').addClass(hidden);
+            $('#divBotaoTelefoneContinuar').removeClass(hidden);
         }
         spanMensagemDeErro
                 .removeClass(hidden);
+
+        fecharModalCarregando();
+    }
+
+    function abrirDivCodigoVerificador() {
+        $('#divCelular').addClass(hidden);
+        $('#divCodigoVerificador').removeClass(hidden);
+        spanMensagemDeErro = pegaSpanMensagemDeErro();
+        spanMensagemDeErro.html('').addClass(hidden);
+    }
+
+    function verificarCodigoVerificador() {
+        abrirModalCarregando();
+        var valorCodigoVerificador = $('#inputCodigoVerificador').val();
+        var temErro = false;
+        var mensagemDeErro;
+        var spanMensagemDeErro = pegaSpanMensagemDeErro();
+        spanMensagemDeErro.html('').addClass(hidden);
+
+        if (valorCodigoVerificador != "1") {
+            temErro = true;
+            mensagemDeErro = 'Codigo verificador inválido';
+        }
+        if (valorCodigoVerificador.length === 0) {
+            temErro = true;
+            mensagemDeErro = 'Preencha o Codigo verificador';
+        }
+        if (temErro) {
+            spanMensagemDeErro
+                    .removeClass(classAlertSuccess)
+                    .addClass(classAlertDanger)
+                    .html(mensagemDeErro);
+        } else {
+            spanMensagemDeErro
+                    .html('Codigo Liberado')
+                    .removeClass(classAlertDanger)
+                    .addClass(classAlertSuccess)
+                    .removeClass(hidden);
+            $('#divBotaoValidarCodigoVerificador').addClass(hidden);
+            $('#divBotaoContinuarCodigoVerificador').removeClass(hidden);
+        }
+        spanMensagemDeErro
+                .removeClass(hidden);
+        fecharModalCarregando();
+    }
+
+    function finalizarAtualizacao(f) {
+        abrirModalCarregando();
+        f.submit();
     }
 </script>
 <?php
-$versao = '?v=6.8';
+$versao = '?v=8.0';
 
 echo $this
         ->headScript()
         ->prependFile($this->basePath() . '/js/circuito_da_visao/buscar-endereco.js' . $versao)
+        ->prependFile($this->basePath() . '/js/circuito_da_visao/modal-loader.js' . $versao)
 ;
 echo $this->inlineScript();

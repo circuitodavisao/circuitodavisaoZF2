@@ -15,9 +15,11 @@ use Cadastro\View\Helper\BotaoPopover;
 use Cadastro\View\Helper\FuncaoOnClick;
 use Cadastro\View\Helper\GrupoEstadoCivil;
 use Cadastro\View\Helper\InputAddon;
+use Cadastro\View\Helper\InputCampoEndereco;
 use Cadastro\View\Helper\InputDiaDaSemanaHoraMinuto;
 use Cadastro\View\Helper\InputExtras;
 use Cadastro\View\Helper\ListagemDeEventos;
+use Cadastro\View\Helper\ModalLoader;
 use Cadastro\View\Helper\MontarEndereco;
 use Cadastro\View\Helper\PassoAPasso;
 use Cadastro\View\Helper\SpanDadosValidados;
@@ -119,6 +121,12 @@ class Module {
                 },
                 'montarEndereco' => function($sm) {
                     return new MontarEndereco();
+                },
+                'inputCampoEndereco' => function($sm) {
+                    return new InputCampoEndereco();
+                },
+                'modalLoader' => function($sm) {
+                    return new ModalLoader();
                 },
             )
         );

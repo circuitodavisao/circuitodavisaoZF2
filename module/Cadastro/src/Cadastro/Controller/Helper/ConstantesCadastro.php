@@ -139,6 +139,7 @@ class ConstantesCadastro {
     public static $FORM_INPUT_MES = 'Mes';
     public static $FORM_INPUT_ANO = 'Ano';
     public static $FORM_INPUT_DDD = 'inputDDD';
+    public static $FORM_INPUT_CODIGO_VERIFICADOR = 'inputCodigoVerificador';
     public static $FORM_INPUT_CELULAR = 'inputCelular';
     public static $FORM_INPUT_PROFISSAO = 'inputProfissao';
     public static $FORM_CLASS_FORM_CONTROL = 'form-control';

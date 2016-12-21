@@ -36,19 +36,6 @@ class AtualizarCadastroForm extends Form {
 
         Endereco::MontaEnderecoFormulario($this);
 
-        /* Profissão */
-        $arrayProfissoes = array();
-        $arrayProfissoes[''] = ConstantesForm::$FORM_SELECT;
-
-        $inputSelectProfissoes = new Select();
-        $inputSelectProfissoes->setName(ConstantesCadastro::$FORM_INPUT_PROFISSAO);
-        $inputSelectProfissoes->setAttributes(array(
-            ConstantesForm::$FORM_CLASS => ConstantesForm::$FORM_CLASS_FORM_CONTROL,
-            ConstantesForm::$FORM_ID => ConstantesCadastro::$FORM_INPUT_PROFISSAO,
-        ));
-        $inputSelectProfissoes->setValueOptions($arrayProfissoes);
-        $this->add($inputSelectProfissoes);
-
         /* DDD */
         $this->add(
                 (new Number())
@@ -66,6 +53,16 @@ class AtualizarCadastroForm extends Form {
                         ->setAttributes([
                             ConstantesForm::$FORM_CLASS => ConstantesForm::$FORM_CLASS_FORM_CONTROL,
                             ConstantesForm::$FORM_ID => ConstantesCadastro::$FORM_INPUT_CELULAR,
+                        ])
+        );
+
+        /* Codigo Verificador */
+        $this->add(
+                (new Number())
+                        ->setName(ConstantesCadastro::$FORM_INPUT_CODIGO_VERIFICADOR)
+                        ->setAttributes([
+                            ConstantesForm::$FORM_CLASS => ConstantesForm::$FORM_CLASS_FORM_CONTROL,
+                            ConstantesForm::$FORM_ID => ConstantesCadastro::$FORM_INPUT_CODIGO_VERIFICADOR,
                         ])
         );
 

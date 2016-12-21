@@ -87,6 +87,11 @@ class CadastroController extends AbstractActionController {
                         Constantes::$ACTION => ConstantesCadastro::$PAGINA_GRUPO_ATUALIZACAO,
             ));
         }
+        if ($pagina == ConstantesCadastro::$PAGINA_GRUPO_ATUALIZAR) {
+            return $this->forward()->dispatch(ConstantesCadastro::$CONTROLLER_CADASTRO, array(
+                        Constantes::$ACTION => ConstantesCadastro::$PAGINA_GRUPO_ATUALIZAR,
+            ));
+        }
         if ($pagina == ConstantesCadastro::$PAGINA_EVENTO_CULTO_PERSISTIR) {
             return $this->forward()->dispatch(ConstantesCadastro::$CONTROLLER_CADASTRO, array(
                         Constantes::$ACTION => ConstantesCadastro::$PAGINA_EVENTO_CULTO_PERSISTIR,
@@ -659,7 +664,7 @@ class CadastroController extends AbstractActionController {
 
     /**
      * Tela com confrmação de cadastro de grupo
-     * GET /cadastroGrupoFinalizar
+     * POST /cadastroGrupoFinalizar
      */
     public function grupoFinalizarAction() {
         $request = $this->getRequest();
@@ -762,7 +767,7 @@ class CadastroController extends AbstractActionController {
 
     /**
      * Atualização dos dados depois de cadastrar o grupo
-     * GET /cadastroGrupoAtualizar
+     * POST /cadastroGrupoAtualizar
      */
     public function grupoAtualizarAction() {
         $request = $this->getRequest();
@@ -770,11 +775,13 @@ class CadastroController extends AbstractActionController {
             try {
                 $post_data = $request->getPost();
                 $loginORM = new LoginORM($this->getDoctrineORMEntityManager());
-
-                return $this->redirect()->toRoute('Principal');
+                $pessoa = $loginORM->getPessoaORM()->encontrarPorIdPessoa($post_data[Constantes::$ID]);
+                $pessoa->setTelefone($post_data[ConstantesCadastro::$FORM_INPUT_DDD] + $post_data[ConstantesCadastro::$FORM_INPUT_CELULAR]);
+                $loginORM->getPessoaORM()->persistirPessoa($pessoa);
             } catch (Exception $exc) {
                 $this->direcionaErroDeCadastro($exc->getMessage());
             }
+            return $this->redirect()->toRoute('principal', array());
         }
     }
 

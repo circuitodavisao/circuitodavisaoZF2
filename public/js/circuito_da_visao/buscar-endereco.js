@@ -22,20 +22,25 @@ function submitEnter(myfield, e) {
         return true;
 }
 
-function buscarEndereco(cep_logradouro) {
+function buscarEndereco() {
+    var cep_logradouro = $('#cep_logradouro').val();
     $('#endereco').addClass(hidden);
     var spanMensagemDeErro = $('#spanMensagemDeErro');
 
     if (cep_logradouro.length === 0) {
-        $('#botaoContinuar').attr({disabled: "disabled"});
-        return false;
-    }
-    if (!isNumber(cep_logradouro) || cep_logradouro.length !== 8) {
-        $('#botaoContinuar').attr({disabled: "disabled"});
         spanMensagemDeErro
                 .removeClass('alert-success')
                 .addClass('alert-danger')
-                .html('Cep é invalido!');
+                .html('Preencha o CEP')
+                .removeClass(hidden);
+        return false;
+    }
+    if (!isNumber(cep_logradouro) || cep_logradouro.length !== 8) {
+        spanMensagemDeErro
+                .removeClass('alert-success')
+                .addClass('alert-danger')
+                .html('Cep é invalido!')
+                .removeClass(hidden);
         return false;
     }
     $('#resultadoBusca').html('');
@@ -47,12 +52,15 @@ function buscarEndereco(cep_logradouro) {
     $('#hiddencidade').val('');
     $('#hiddenbairro').val('');
     $('#hiddenlogradouro').val('');
+
+    abrirModalCarregando();
     $.post(
             "/cadastroBuscarEndereco",
             {
                 cep_logradouro: cep_logradouro,
             },
             function (data) {
+
                 $('#endereco').addClass(hidden);
                 $('#resultadoBusca').html('');
                 if (data.quantidadeDeResultados === 0) {
@@ -79,10 +87,12 @@ function buscarEndereco(cep_logradouro) {
                     $('#hiddenbairro').val(data.pesquisa[0]['bairro']);
                     $('#hiddenlogradouro').val(data.pesquisa[0]['logradouro']);
                     $('#botaoContinuar').removeAttr("disabled");
-                    var validator = $("#CelulaForm").validate();
-                    validator.element("#cep_logradouro");
                     $('#complemento').focus();
                     spanMensagemDeErro.addClass(hidden);
+                    $('#divBotaoBuscarCep').addClass(hidden);
+                    $('#divBotaoCepContinuar').removeClass(hidden);
                 }
-            }, 'json');
+                fecharModalCarregando();
+            }
+    , 'json');
 }
