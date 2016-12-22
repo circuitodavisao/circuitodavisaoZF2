@@ -72,15 +72,18 @@ echo $this->form()->openTag($form);
                 </div>
                 <div class="mt10">
                     <?php
+                    $funcaoOnClickValidarCelular = $this->funcaoOnClick('validarTelefone()');
                     echo '<div id="divBotaoVerificarTelefone" class="">';
-                    echo $this->botaoLink('Verificar', '#', 7, 'id="botaoVerificarCelular" onclick="validarTelefone();"');
+                    echo $this->botaoLink('Verificar', '#', 7, $funcaoOnClickValidarCelular);
                     echo '</div>';
-                    ?>  
-                    <?php
-                    echo '<div id="divBotaoTelefoneContinuar" class="hidden">';
+
                     $funcaoOnClickContinuarCelular = $this->funcaoOnClick('abrirDivCodigoVerificador()');
+                    echo '<div id="divBotaoTelefoneContinuar" class="hidden">';
                     echo $this->botaoLink(Constantes::$TRADUCAO_CONTINUAR, '#', 7, $funcaoOnClickContinuarCelular);
                     echo '</div>';
+
+                    $funcaoOnClickVoltarEndereco = $this->funcaoOnClick('botaoVoltarEndereco()');
+                    echo $this->botaoLink(Constantes::$TRADUCAO_VOLTAR, '#', 8, $funcaoOnClickVoltarEndereco);
                     ?>  
                 </div>
             </div>
@@ -107,6 +110,9 @@ echo $this->form()->openTag($form);
                     echo '<div id="divBotaoContinuarCodigoVerificador" class="hidden">';
                     echo $this->botaoLink('Finalizar', '#', 7, $funcaoOnClickFinalizar);
                     echo '</div>';
+
+                    $funcaoOnClickVoltarCelular = $this->funcaoOnClick('botaoVoltarCelular()');
+                    echo $this->botaoLink(Constantes::$TRADUCAO_VOLTAR, '#', 8, $funcaoOnClickVoltarCelular);
                     ?>     
                 </div>
             </div>
@@ -122,6 +128,8 @@ echo $this->modalLoader();
     var hidden = 'hidden';
     var classAlertDanger = 'alert-danger';
     var classAlertSuccess = 'alert-success';
+    var btnDefault = 'btn-default';
+    var btnPrimary = 'btn-primary';
 
     function pegaSpanMensagemDeErro() {
         return $('#spanMensagemDeErro');
@@ -130,6 +138,17 @@ echo $this->modalLoader();
     function abrirDivCelular() {
         $('#divEndereco').addClass(hidden);
         $('#divCelular').removeClass(hidden);
+        $('#botaoPasso2')
+                .removeClass(btnDefault)
+                .addClass(btnPrimary);
+    }
+
+    function botaoVoltarEndereco() {
+        $('#divEndereco').removeClass(hidden);
+        $('#divCelular').addClass(hidden);
+        $('#botaoPasso2')
+                .addClass(btnDefault)
+                .removeClass(btnPrimary);
     }
 
     function validarTelefone() {
@@ -182,6 +201,17 @@ echo $this->modalLoader();
         $('#divCodigoVerificador').removeClass(hidden);
         spanMensagemDeErro = pegaSpanMensagemDeErro();
         spanMensagemDeErro.html('').addClass(hidden);
+        $('#botaoPasso3')
+                .removeClass(btnDefault)
+                .addClass(btnPrimary);
+    }
+
+    function botaoVoltarCelular() {
+        $('#divCodigoVerificador').addClass(hidden);
+        $('#divCelular').removeClass(hidden);
+        $('#botaoPasso3')
+                .addClass(btnDefault)
+                .removeClass(btnPrimary);
     }
 
     function verificarCodigoVerificador() {
