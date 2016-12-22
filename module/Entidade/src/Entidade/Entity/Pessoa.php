@@ -790,7 +790,10 @@ class Pessoa implements InputFilterAwareInterface {
 
     function setAtualizar_dados($atualizar_dados) {
         $this->atualizar_dados = $atualizar_dados;
-        return $this;
+    }
+
+    function dadosAtualizados() {
+        $this->setAtualizar_dados('N');
     }
 
 }

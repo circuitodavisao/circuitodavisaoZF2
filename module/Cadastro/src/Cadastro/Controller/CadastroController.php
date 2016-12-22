@@ -777,11 +777,15 @@ class CadastroController extends AbstractActionController {
                 $loginORM = new LoginORM($this->getDoctrineORMEntityManager());
                 $pessoa = $loginORM->getPessoaORM()->encontrarPorIdPessoa($post_data[Constantes::$ID]);
                 $pessoa->setTelefone($post_data[ConstantesCadastro::$FORM_INPUT_DDD] + $post_data[ConstantesCadastro::$FORM_INPUT_CELULAR]);
+                $pessoa->setAtualizar_dados($atualizar_dados);
+                $pessoa->dadosAtualizados();
                 $loginORM->getPessoaORM()->persistirPessoa($pessoa);
             } catch (Exception $exc) {
                 $this->direcionaErroDeCadastro($exc->getMessage());
             }
-            return $this->redirect()->toRoute('principal', array());
+            return $this->redirect()->toRoute('principal', array(
+                        'mostrarMenu' => 1
+            ));
         }
     }
 
