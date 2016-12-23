@@ -1,9 +1,44 @@
 <?php
 
-$versao = '?v=0.9';
+$versao = '?v=11.0';
 
 echo $this
         ->headScript()
         ->prependFile($this->basePath() . '/vendor/plugins/validate/jquery.validate.min.js')
+        ->prependFile($this->basePath() . '/js/circuito_da_visao/modal-selecionar-aba.js' . $versao)
+        ->prependFile($this->basePath() . '/vendor/plugins/pnotify/pnotify.js')
 ;
 echo $this->inlineScript();
+
+?>
+<script type = "text/javascript">
+<?php if (!empty($this->nomeAtendimento)) { ?>
+        window.onload = initPage;
+<?php } ?>
+
+    function initPage() {
+        var stack_bar_bottom = {
+            "dir1": "up",
+            "dir2": "right",
+            "spacing1": 0,
+            "spacing2": 0
+        }
+
+        var noteStyle = 'success';
+        var noteShadow = true;
+        var noteOpacity = 1;
+
+        new PNotify({
+            title: 'Atendimento Lançado com Sucesso!',
+            text: '<?php echo $this->nomeAtendimento; ?>',
+            shadow: noteShadow,
+            opacity: noteOpacity,
+            addclass: 'stack_bar_bottom',
+            type: noteStyle,
+            stack: stack_bar_bottom,
+            width: '70%',
+            delay: 10000
+        });
+
+    }
+</script>

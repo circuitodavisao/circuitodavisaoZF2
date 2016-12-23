@@ -41,26 +41,50 @@ if ($grupoResponsavel) {
     }
 }
 
-/* percentagem da meta, sendo que a meta é 2 atendimentos por mes */
-if ($numeroAtendimentos == 0) {
-    $valueNow = 10;
-    $labelProgressBar = 0;
-    $colorBar = "progress-bar-danger";
-} else if ($numeroAtendimentos == 1) {
+
+if ($numeroAtendimentos == 1) {
     $valueNow = 50;
-    $labelProgressBar = 50;
+    $labelProgressBar = "$numeroAtendimentos Atendimento";
     $colorBar = "progress-bar-warning";
 } else if ($numeroAtendimentos >= 2) {
     $valueNow = 100;
-    $labelProgressBar = 100;
+    $labelProgressBar = "$numeroAtendimentos Atendimentos";
     $colorBar = "progress-bar-success";
+} else {
+    $valueNow = 10;
+    $labelProgressBar = " 0 Atd.";
+    $colorBar = "progress-bar-danger";
 }
 
 $form = $this->CadastrarAtendimentoForm;
 $form->prepare();
 $form->setAttribute(Constantes::$ACTION, $this->url(ConstantesLancamento::$ROUTE_LANCAMENTO, array(ConstantesLancamento::$PAGINA => ConstantesLancamento::$PAGINA_SALVAR_ATENDIMENTO)));
 ?> 
+<script>
+
+
+    function funcaoLancamento(funcao, id) {
+        var resposta = true;
+
+        if (resposta) {
+            $.post(
+                    '/lancamentoFuncoes',
+                    {
+                        id: id,
+                        funcao: funcao
+                    },
+            function (data) {
+                if (data.response) {
+                    if (data.tipoDeRetorno === 1) {
+                        location.href = data.url;
+                    }
+                }
+            }, 'json');
+        }
+    }
+</script>
 <div class="mw1000 center-block p10">
+    
     <div class="admin-form theme-primary">
         <blockquote class = "blockquote-primary">
             <small>
@@ -68,6 +92,7 @@ $form->setAttribute(Constantes::$ACTION, $this->url(ConstantesLancamento::$ROUTE
             </small>
         </blockquote>
         <div id="atendimento" class="panel heading-border panel-primary">
+             
             <div class="panel-body bg-light">
 
 
@@ -82,7 +107,7 @@ $form->setAttribute(Constantes::$ACTION, $this->url(ConstantesLancamento::$ROUTE
                             <div class="col-md-12 col-xs-12" style="padding-top: 3px;">
 
                                 <div class="progress progress-bar-xl" style="margin-bottom: 0px;">
-                                    <div id="divProgressBar" class="progress-bar <?php echo $colorBar; ?>" role="progressbar" aria-valuenow="<?php echo $valueNow; ?>" aria-valuemin="0" aria-valuemax="5" style="width: <?php echo $valueNow; ?>%;"><?php echo $labelProgressBar; ?>%</div>
+                                    <div id="divProgressBar" class="progress-bar <?php echo $colorBar; ?>" role="progressbar" aria-valuenow="<?php echo $valueNow; ?>" aria-valuemin="0" aria-valuemax="5" style="width: <?php echo $valueNow; ?>%;"><?php echo $labelProgressBar; ?></div>
                                 </div>
                                 <span style="padding-top: 0px;"><?php echo $html; ?></span>
                             </div>
@@ -97,7 +122,7 @@ $form->setAttribute(Constantes::$ACTION, $this->url(ConstantesLancamento::$ROUTE
                         <div class="col-sm-12 col-xs-12" >
                             <div class="section" style="margin-bottom: 5px; ">
                                 <label class="field-label">Que dia foi o Atendimento?</label>
-                                <label class="field prepend-icon">
+                                <label class="field">
                                     <?php echo $this->formInput($form->get(ConstantesLancamento::$INPUT_DATA_ATENDIMENTO)); ?>
                                 </label>
                             </div>
@@ -136,7 +161,7 @@ $form->setAttribute(Constantes::$ACTION, $this->url(ConstantesLancamento::$ROUTE
                 </button>
                 <?php
                 $funcaoPreValidacao = $this->funcaoOnClick(ConstantesLancamento::$STRING_FUNCAO_VALIDACAO_ATENDIMENTO);
-                echo $this->botaoLink(ConstantesLancamento::$PAGINA_LANCAR_ATENDIMENTO, ConstantesForm::$STRING_HASHTAG, 0, $funcaoPreValidacao);
+                echo $this->botaoLink(ConstantesLancamento::$PAGINA_LABEL_LANCAR_ATENDIMENTO, ConstantesForm::$STRING_HASHTAG, 0, $funcaoPreValidacao);
                 ?>                
 
             </div>
@@ -152,18 +177,26 @@ $form->setAttribute(Constantes::$ACTION, $this->url(ConstantesLancamento::$ROUTE
                 <table class="table">
                     <thead>
                     <th class='text-center'>Dia do Atendimento</th>
+                    <th class='text-center hidden-xs'>Quem</th>
                     <th></th>
                     </thead>
                     <tbody>
 
                         <?php
                         echo $this->form()->closeTag();
+                        
                         foreach ($this->atendimentosGrupo as $ag) {
                             echo "<tr>";
                             echo "<td class='text-center'>" . $ag->getDia() . "</td>";
+                            if($ag->getQuem() == 0){
+                                $labelQuem = 'AMBOS';
+                            }else{
+                                $labelQuem = 'LEONARDO';
+                            }
+                            echo "<td class='text-center hidden-xs'>" . $labelQuem . "</td>";
                             echo "<td class='text-center'>";
                             $stringNomeDaFuncaoOnClickEdicao = 'funcaoLancamento("' . ConstantesLancamento::$PAGINA_LANCAR_ATENDIMENTO . '", ' . $ag->getId() . ')';
-                            $stringNomeDaFuncaoOnClickExclusao = 'funcaoLancamento("' . ConstantesLancamento::$PAGINA_LANCAR_ATENDIMENTO . '", ' . $ag->getId() . ')';
+                            $stringNomeDaFuncaoOnClickExclusao = 'funcaoLancamento("' . ConstantesLancamento::$PAGINA_ATENDIMENTO_EXCLUSAO . '", ' . $ag->getId() . ')';
                             echo $this->botaoLink(ConstantesForm::$STRING_ICONE_PENCIL, ConstantesForm::$STRING_HASHTAG, 3, $this->funcaoOnClick($stringNomeDaFuncaoOnClickEdicao));
                             echo $this->botaoLink(ConstantesForm::$STRING_ICONE_TIMES, ConstantesForm::$STRING_HASHTAG, 4, $this->funcaoOnClick($stringNomeDaFuncaoOnClickExclusao));
                             echo "</td>";
@@ -180,14 +213,33 @@ $form->setAttribute(Constantes::$ACTION, $this->url(ConstantesLancamento::$ROUTE
     window.onload = initPage;
 
     function initPage() {
-
+        var today = new Date();
+        var dd = today.getDate();
+        var mm = today.getMonth() + 1; //January is 0!
+        var yyyy = today.getFullYear();
+        var labelDays = dd - 1;
         if ($('#dataAtendimento').prop('type') != 'date') {
             $('#dataAtendimento').datepicker({
-                dateFormat: 'dd/mm/yy'
+                dateFormat: 'dd/mm/yy',
+                maxDate: 0,
+                minDate: '-'+labelDays
             });
+        } else {
+
+            if (dd < 10) {
+                dd = '0' + dd
+            }
+            if (mm < 10) {
+                mm = '0' + mm
+            }
+
+            today = yyyy + '-' + mm + '-' + dd;
+            oneDay = yyyy + '-' + mm + '-01';
+            $('#dataAtendimento').attr('max', today);
+            $('#dataAtendimento').attr('min', oneDay);
         }
 
-        
+
         $.validator.addMethod(
                 "date",
                 function (value, element) {
@@ -287,7 +339,7 @@ $form->setAttribute(Constantes::$ACTION, $this->url(ConstantesLancamento::$ROUTE
     function preValidacao() {
         var validator;
         validator = $('#<?php echo ConstantesLancamento::$FORM_CADASTRAR_ATENDIMENTO; ?>').validate();
-        if (validator.form()) {  
+        if (validator.form()) {
             $(<?php echo ConstantesLancamento::$FORM_CADASTRAR_ATENDIMENTO; ?>).submit();
         }
     }

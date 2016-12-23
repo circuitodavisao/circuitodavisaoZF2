@@ -1,4 +1,6 @@
 <script>
+
+
     function funcaoLancamento(funcao, id) {
         var resposta = true;
 
@@ -20,6 +22,8 @@
     }
 </script>
 <?php
+
+use Lancamento\Controller\Helper\ConstantesLancamento;
 $totalGruposFilhos = 0;
 $totalGruposAtendidos = 0;
 foreach ($gruposAbaixo as $gpFilho) {
@@ -47,13 +51,30 @@ if ($progresso > 50 && $progresso  < 80) {
 }
 ?>
 <div class="mw1000 center-block p10">
+
+    <?php echo $this->modalAba(); ?>
+     
     <div class="admin-form theme-primary">
         <blockquote class = "blockquote-primary">
             <small>
                 Relat&oacute;rio de <span class="text-primary">Atendimento</span>
             </small>
         </blockquote>
-        <div id="atendimento" class="panel heading-border panel-primary">
+        <div class="panel-heading">
+            <?php
+        $urlBase = '/lancamentoAtendimento';
+        $urlBase2 = $urlBase . '/2';
+
+        echo  '<ul class="nav panel-tabs-border panel-tabs panel-tabs-left">';
+        echo  '<li role="presentation" ' . ConstantesLancamento::$ONCLICK_ABRIR_MODAL . ' ' . $this->abaSelecionada($this->abaSelecionada, 1) . '><a href="' . $urlBase . '">' . $this->translate(ConstantesLancamento::$TRADUCAO_MES_ATUAL) . '</a></li>';
+        if ($this->validacaoNesseMes == 0) {
+            echo '<li role="presentation" ' . ConstantesLancamento::$ONCLICK_ABRIR_MODAL . ' ' . $this->abaSelecionada($this->abaSelecionada, 2) . '><a href="' . $urlBase2 . '">' . $this->translate(ConstantesLancamento::$TRADUCAO_MES_ANTERIOR) . '</a></li>';
+        }
+        echo  '</ul>';
+        ?>
+            </div> 
+        <div id="atendimento" class="panel  panel-primary">
+              
             <div class="panel-body bg-light">
                 <div class="row">
                     <div class="section-divider mt30">
@@ -151,6 +172,8 @@ if ($progresso > 50 && $progresso  < 80) {
                         <?php
                     }
                 }
+                /* Layout com javascript para tela de index */
+
                 ?>
                 <!--                <div class="row mt10">
                                     <div class="col-md-3 col-xs-5" style="padding-right: 0px;">
@@ -177,3 +200,6 @@ if ($progresso > 50 && $progresso  < 80) {
                                     </div>
                                 </div>     
                             </div>-->
+                <?php
+/* Layout com javascript para tela de index */
+echo $this->layoutJSCadastrarAtendimento;

@@ -50,10 +50,15 @@ class ConstantesLancamento {
     public static $STRING_JS_LANCAMENTO_MODAL_EVENTOS = 'layoutJSLancamentoModalEventos';
     public static $STRING_JS_LANCAMENTO_MODAL_MUITOS_CADASTROS = 'layoutJSLancamentoModalMuitosCadastros';
     public static $ROUTE_LANCAMENTO = 'lancamento';
+    public static $ROUTE_LANCAMENTO_ATENDIMENTO = 'lancamentoAtendimento';
     public static $PAGINA_SALVAR_PESSOA = 'SalvarPessoa';
     public static $PAGINA_ATENDIMENTO = 'Atendimento'; 
-    public static $PAGINA_LANCAR_ATENDIMENTO = 'LancarAtendimento'; 
+    public static $PAGINA_LANCAR_ATENDIMENTO = 'LancarAtendimento';
+    public static $PAGINA_ATENDIMENTO_EXCLUSAO = 'AtendimentoExclusao';
+    public static $PAGINA_ATENDIMENTO_EXCLUSAO_CONFIRMACAO = 'AtendimentoExclusaoConfirmacao';
+    public static $PAGINA_LABEL_LANCAR_ATENDIMENTO = 'Lançar'; 
     public static $PAGINA_SALVAR_ATENDIMENTO = 'SalvarAtendimento';
+    public static $PAGINA_EXCLUIR_ATENDIMENTO = 'AtendimentoExclusao';
     public static $ONCLICK_ABRIR_MODAL = 'onclick="abrirModal();"';
     public static $PAGINA = 'pagina';
     public static $PAGINA_CADASTRAR_PESSOA = 'CadastrarPessoa';

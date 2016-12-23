@@ -43,6 +43,23 @@ class GrupoAtendimentoORM {
             echo $exc->getMessage();
         }
     }
+    
+    /**
+     * Localizar entidade por $idAtendimento
+     * 
+     * @param integer $idAtendimento
+     * @return GrupoAtendimento
+     * @throws Exception
+     */
+    public function encontrarPorIdAtendimento($idAtendimento) {
+        $id = (int) $idAtendimento;
+
+        $entidade = $this->getEntityManager()->find($this->getEntity(), $id);
+        if (!$entidade) {
+            throw new Exception("Não foi encontrado atendimento de id = {$id}");
+        }
+        return $entidade;
+    }
 
     
 
