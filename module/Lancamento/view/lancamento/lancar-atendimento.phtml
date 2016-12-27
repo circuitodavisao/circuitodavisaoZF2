@@ -148,7 +148,9 @@ $form->setAttribute(Constantes::$ACTION, $this->url(ConstantesLancamento::$ROUTE
             </div>
 
             <div id="divBotaoVoltar" class="panel-footer text-right" style="height:65px;">
-
+                
+                
+                <?php echo $this->formHidden($form->get(Constantes::$FORM_STRING_ID)); ?>
                 <?php echo $this->formHidden($form->get(ConstantesLancamento::$INPUT_ID_GRUPO_ATENDIDO)); ?>
 
                 <?php echo $this->formHidden($form->get(Constantes::$INPUT_CSRF)); ?>
@@ -195,7 +197,7 @@ $form->setAttribute(Constantes::$ACTION, $this->url(ConstantesLancamento::$ROUTE
                             }
                             echo "<td class='text-center hidden-xs'>" . $labelQuem . "</td>";
                             echo "<td class='text-center'>";
-                            $stringNomeDaFuncaoOnClickEdicao = 'funcaoLancamento("' . ConstantesLancamento::$PAGINA_LANCAR_ATENDIMENTO . '", ' . $ag->getId() . ')';
+                            $stringNomeDaFuncaoOnClickEdicao = 'funcaoLancamento("' . ConstantesLancamento::$PAGINA_LANCAR_ATENDIMENTO_EDIT . '", ' . $ag->getId() . ')';
                             $stringNomeDaFuncaoOnClickExclusao = 'funcaoLancamento("' . ConstantesLancamento::$PAGINA_ATENDIMENTO_EXCLUSAO . '", ' . $ag->getId() . ')';
                             echo $this->botaoLink(ConstantesForm::$STRING_ICONE_PENCIL, ConstantesForm::$STRING_HASHTAG, 3, $this->funcaoOnClick($stringNomeDaFuncaoOnClickEdicao));
                             echo $this->botaoLink(ConstantesForm::$STRING_ICONE_TIMES, ConstantesForm::$STRING_HASHTAG, 4, $this->funcaoOnClick($stringNomeDaFuncaoOnClickExclusao));

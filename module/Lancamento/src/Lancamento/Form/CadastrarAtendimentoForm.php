@@ -3,14 +3,14 @@
 namespace Lancamento\Form;
 
 use Cadastro\Form\ConstantesForm;
+use Entidade\Entity\GrupoAtendimento;
 use Lancamento\Controller\Helper\ConstantesLancamento;
 use Login\Controller\Helper\Constantes;
 use Zend\Form\Element\Csrf;
+use Zend\Form\Element\Date;
 use Zend\Form\Element\Hidden;
 use Zend\Form\Element\Select;
-use Zend\Form\Element\Text;
 use Zend\Form\Form;
-use Zend\Form\Element\Date;
 
 /**
  * Nome: CadastrarAtendimentoForm.php
@@ -27,7 +27,7 @@ class CadastrarAtendimentoForm extends Form {
      * @param String $nomePessoaPai
      * @param integer $idPessoaPai
      */
-    public function __construct($name = null, $idGrupo = null ,$nomePessoaPai = null, $idPessoaPai = null) {
+    public function __construct($name = null, $idGrupo = null ,$nomePessoaPai = null, $idPessoaPai = null, GrupoAtendimento $atendimento = null) {
         parent::__construct($name);
 
         /**
@@ -97,6 +97,17 @@ class CadastrarAtendimentoForm extends Form {
                 (new Csrf())
                         ->setName(Constantes::$INPUT_CSRF)
         );
+    
+        if (!is_null($atendimento)) {
+            if (!is_null($atendimento->getId())) {
+                $this->get(ConstantesForm::$FORM_ID)->setValue($atendimento->getId());
+                $this->get(ConstantesLancamento::$INPUT_ID_GRUPO_ATENDIDO)->setValue($atendimento->getGrupo_id());
+                $this->get(ConstantesLancamento::$INPUT_DATA_ATENDIMENTO)->setValue($atendimento->getDia());
+                $this->get(ConstantesLancamento::$INPUT_QUEM_ATENDEU)->setValue($atendimento->getQuem());
+                
+            }
+        }
+        
     }
 
 }

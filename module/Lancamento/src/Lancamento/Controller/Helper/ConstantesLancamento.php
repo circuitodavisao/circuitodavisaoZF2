@@ -54,6 +54,7 @@ class ConstantesLancamento {
     public static $PAGINA_SALVAR_PESSOA = 'SalvarPessoa';
     public static $PAGINA_ATENDIMENTO = 'Atendimento'; 
     public static $PAGINA_LANCAR_ATENDIMENTO = 'LancarAtendimento';
+    public static $PAGINA_LANCAR_ATENDIMENTO_EDIT = 'LancarAtendimentoEdit';
     public static $PAGINA_ATENDIMENTO_EXCLUSAO = 'AtendimentoExclusao';
     public static $PAGINA_ATENDIMENTO_EXCLUSAO_CONFIRMACAO = 'AtendimentoExclusaoConfirmacao';
     public static $PAGINA_LABEL_LANCAR_ATENDIMENTO = 'Lançar'; 

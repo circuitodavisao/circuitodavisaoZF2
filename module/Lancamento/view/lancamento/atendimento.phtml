@@ -24,17 +24,25 @@
 <?php
 
 use Lancamento\Controller\Helper\ConstantesLancamento;
+
 $totalGruposFilhos = 0;
 $totalGruposAtendidos = 0;
+$totalGruposAtendido = 0;
 foreach ($gruposAbaixo as $gpFilho) {
     $grupoFilho = $gpFilho->getGrupoPaiFilhoFilho();
     $entidadeFilho = $grupoFilho->getEntidadeAtiva();
     $grupoResponsavel = $grupoFilho->getResponsabilidadesAtivas();
     if ($grupoResponsavel) {
-        if(count($grupoFilho->getGrupoAtendimento()) >= 1){
+        $atendimentosDoGrupo = $grupoFilho->getGrupoAtendimento();
+        foreach ($atendimentosDoGrupo as $ga) {
+            if ($ga->verificarSeEstaAtivo()) {
+                $totalGruposAtendido++;
+            }
+        }
+        if (count($totalGruposAtendido) >= 1) {
             $totalGruposAtendidos++;
         }
-        
+
         $totalGruposFilhos++;
     }
 }
@@ -42,7 +50,7 @@ foreach ($gruposAbaixo as $gpFilho) {
 ;
 $progresso = ($totalGruposAtendidos / $totalGruposFilhos) * 100;
 /* percentagem da meta, sendo que a meta é 2 atendimentos por mes */
-if ($progresso > 50 && $progresso  < 80) {
+if ($progresso > 50 && $progresso < 80) {
     $colorBarTotal = "progress-bar-warning";
 } else if ($progresso >= 80) {
     $colorBarTotal = "progress-bar-success";
@@ -52,8 +60,8 @@ if ($progresso > 50 && $progresso  < 80) {
 ?>
 <div class="mw1000 center-block p10">
 
-    <?php echo $this->modalAba(); ?>
-     
+<?php echo $this->modalAba(); ?>
+
     <div class="admin-form theme-primary">
         <blockquote class = "blockquote-primary">
             <small>
@@ -62,19 +70,19 @@ if ($progresso > 50 && $progresso  < 80) {
         </blockquote>
         <div class="panel-heading">
             <?php
-        $urlBase = '/lancamentoAtendimento';
-        $urlBase2 = $urlBase . '/2';
+            $urlBase = '/lancamentoAtendimento';
+            $urlBase2 = $urlBase . '/2';
 
-        echo  '<ul class="nav panel-tabs-border panel-tabs panel-tabs-left">';
-        echo  '<li role="presentation" ' . ConstantesLancamento::$ONCLICK_ABRIR_MODAL . ' ' . $this->abaSelecionada($this->abaSelecionada, 1) . '><a href="' . $urlBase . '">' . $this->translate(ConstantesLancamento::$TRADUCAO_MES_ATUAL) . '</a></li>';
-        if ($this->validacaoNesseMes == 0) {
-            echo '<li role="presentation" ' . ConstantesLancamento::$ONCLICK_ABRIR_MODAL . ' ' . $this->abaSelecionada($this->abaSelecionada, 2) . '><a href="' . $urlBase2 . '">' . $this->translate(ConstantesLancamento::$TRADUCAO_MES_ANTERIOR) . '</a></li>';
-        }
-        echo  '</ul>';
-        ?>
-            </div> 
+            echo '<ul class="nav panel-tabs-border panel-tabs panel-tabs-left">';
+            echo '<li role="presentation" ' . ConstantesLancamento::$ONCLICK_ABRIR_MODAL . ' ' . $this->abaSelecionada($this->abaSelecionada, 1) . '><a href="' . $urlBase . '">' . $this->translate(ConstantesLancamento::$TRADUCAO_MES_ATUAL) . '</a></li>';
+            if ($this->validacaoNesseMes == 0) {
+                echo '<li role="presentation" ' . ConstantesLancamento::$ONCLICK_ABRIR_MODAL . ' ' . $this->abaSelecionada($this->abaSelecionada, 2) . '><a href="' . $urlBase2 . '">' . $this->translate(ConstantesLancamento::$TRADUCAO_MES_ANTERIOR) . '</a></li>';
+            }
+            echo '</ul>';
+            ?>
+        </div> 
         <div id="atendimento" class="panel  panel-primary">
-              
+
             <div class="panel-body bg-light">
                 <div class="row">
                     <div class="section-divider mt30">
@@ -127,8 +135,15 @@ if ($progresso > 50 && $progresso  < 80) {
                             }
                             $contagem++;
                         }
+                        $totalGruposAtendidoIndividual = 0;
+                        $atendimentosDoGrupoIndividual = $grupoFilho->getGrupoAtendimento();
+                        foreach ($atendimentosDoGrupoIndividual as $ga) {
+                            if ($ga->verificarSeEstaAtivo()) {
+                                $totalGruposAtendidoIndividual++;
+                            }
+                        }
 
-                        $numeroAtendimentos = count($grupoFilho->getGrupoAtendimento());
+                        $numeroAtendimentos = $totalGruposAtendidoIndividual;
                         /* percentagem da meta, sendo que a meta é 2 atendimentos por mes */
                         if ($numeroAtendimentos == 1) {
                             $valueNow = 50;
@@ -147,7 +162,7 @@ if ($progresso > 50 && $progresso  < 80) {
                         <div class="row mt10">
                             <div class="col-md-3 col-xs-5" style="padding-right: 0px;">
                                 <span class="" href="#" >
-                                    <?php echo $htmlFoto; ?>
+        <?php echo $htmlFoto; ?>
                                 </span>
                             </div>    
                             <div class="col-md-9 col-xs-7" style="padding-left: 2px; padding-right: 0px;">
@@ -173,7 +188,6 @@ if ($progresso > 50 && $progresso  < 80) {
                     }
                 }
                 /* Layout com javascript para tela de index */
-
                 ?>
                 <!--                <div class="row mt10">
                                     <div class="col-md-3 col-xs-5" style="padding-right: 0px;">
@@ -201,5 +215,6 @@ if ($progresso > 50 && $progresso  < 80) {
                                 </div>     
                             </div>-->
                 <?php
-/* Layout com javascript para tela de index */
-echo $this->layoutJSCadastrarAtendimento;
+                /* Layout com javascript para tela de index */
+                echo $this->layoutJSCadastrarAtendimento;
+                

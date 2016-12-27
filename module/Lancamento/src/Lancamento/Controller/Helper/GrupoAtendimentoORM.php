@@ -22,7 +22,7 @@ class GrupoAtendimentoORM {
      * @param EntityManager $entityManager
      */
     public function __construct(EntityManager $entityManager = null) {
-        if (!is_null($entityManager)) { 
+        if (!is_null($entityManager)) {
             $this->_entityManager = $entityManager;
         }
         $this->_entity = ConstantesLancamento::$ENTITY_GRUPO_ATENDIMENTO;
@@ -36,14 +36,18 @@ class GrupoAtendimentoORM {
      */
     public function persistirGrupoAtendimento($grupoAtendimento) {
         try {
-            $grupoAtendimento->setDataEHoraDeCriacao();
-            $this->getEntityManager()->persist($grupoAtendimento);
-            $this->getEntityManager()->flush($grupoAtendimento);
+            if (empty($grupoAtendimento->getId())) {
+                $this->getEntityManager()->persist($grupoAtendimento);
+                $this->getEntityManager()->flush($grupoAtendimento);
+            }else{
+                $this->getEntityManager()->merge($grupoAtendimento);
+                $this->getEntityManager()->flush();
+            }
         } catch (Exception $exc) {
             echo $exc->getMessage();
         }
     }
-    
+
     /**
      * Localizar entidade por $idAtendimento
      * 
@@ -60,8 +64,6 @@ class GrupoAtendimentoORM {
         }
         return $entidade;
     }
-
-    
 
     public function getEntityManager() {
         return $this->_entityManager;
