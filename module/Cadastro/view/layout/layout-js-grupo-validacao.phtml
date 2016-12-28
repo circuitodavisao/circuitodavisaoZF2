@@ -614,13 +614,23 @@ echo $this->inlineScript();
         var spanDadosComplementares = $('#spanDadosComplementares');
         var iconeNumeracao = '<i class="fa fa-info-circle" aria-hidden="true"></i>' + stringNBSP;
         spanDadosComplementares.html(iconeNumeracao + stringNBSP + '<?php echo $this->translate(ConstantesCadastro::$TRADUCAO_NUMERACAO); ?>' + stringNBSP + $('#numeracao option:selected').text());
+        insereDadosComplementares(mudarBarraDeProgresso);
+    }
+
+    function insereNomeNaTelaDeConfimacao(mudarBarraDeProgresso) {
+        var spanDadosComplementares = $('#spanDadosComplementares');
+        spanDadosComplementares.html('Nome: ' + stringNBSP + $('#nomeEntidade').val());
+        insereDadosComplementares(mudarBarraDeProgresso);
+    }
+
+    function insereDadosComplementares(adicaoDaBarraDeProgresso) {
         $('#spanInsiraOsDadosComplementares').html('<?php echo $this->translate(ConstantesCadastro::$TRADUCAO_DADOS_COMPLEMENTARES); ?>');
         $('#divCheckDadosComplementaresInseridos').removeClass(hidden);
         $('#divBotaoInserirDadosComplementares').addClass(hidden);
         $('#divBotaoAlterarDadosComplementares').removeClass(hidden);
         $('#divBlocoDadosComplementares').removeClass('btn').removeClass('btn-default').prop('onclick', null).off('click');
-        if (mudarBarraDeProgresso === 0) {
-            atualizarBarraDeProgresso(50);
+        if (adicaoDaBarraDeProgresso) {
+            atualizarBarraDeProgresso(adicaoDaBarraDeProgresso);
         }
     }
 
@@ -704,25 +714,61 @@ echo $this->inlineScript();
         $('#divConfirmacao').addClass(hidden);
         $('#divDadosComplementares').removeClass(hidden);
         $('#numeracao').val(0);
+        $('#nomeEntidade').val('');
     }
 
     function botaoAlterarDadosComplementares() {
         $('#divBotaoInserirSelectDadosComplementares').addClass(hidden);
         $('#divBotaoAlterarSelectDadosComplementares').removeClass(hidden);
         $('#divConfirmacao').addClass(hidden);
+        $('#spanMensagensDadosComplementares').addClass(hidden);
         $('#divDadosComplementares').removeClass(hidden);
     }
 
-    function botaoAbreDadosComplementares(tipo) {
-        insereNumeracaoNaTelaDeConfimacao(tipo);
-        $('#divDadosComplementares').addClass(hidden);
-        $('#divConfirmacao').removeClass(hidden);
+    function botaoAbreDadosComplementares(tipoDeDadoComplementar) {
+        var tipoNumeracao = 1;
+        var tipoNome = 2;
+        var temErro = false;
+        var spanMensagens = $('#spanMensagensDadosComplementares');
+        var mensagemDeErro = '';
+        if (tipoDeDadoComplementar === tipoNumeracao) {
+            if ($('#numeracao').val()) {
+
+            }
+        }
+        if (tipoDeDadoComplementar === tipoNome) {
+            var nomeEntidade = $('#nomeEntidade').val();
+            if (nomeEntidade.length < 3) {
+                temErro = true;
+                mensagemDeErro = 'O nome tem que sem maior que 3 caracteres';
+            }
+            if (nomeEntidade.length === 0) {
+                temErro = true;
+                mensagemDeErro = 'Preencha o nome';
+            }
+        }
+
+        /* Não tem erro */
+        if (!temErro) {
+            if (tipoDeDadoComplementar === tipoNumeracao) {
+                insereNumeracaoNaTelaDeConfimacao(50);
+            }
+            if (tipoDeDadoComplementar === tipoNome) {
+                insereNomeNaTelaDeConfimacao(50);
+            }
+            $('#divDadosComplementares').addClass(hidden);
+            $('#divConfirmacao').removeClass(hidden);
+        } else {
+            /* Tem erro */
+            spanMensagens
+                    .html(mensagemDeErro)
+                    .removeClass(hidden)
+                    .addClass(alertDanger);
+        }
     }
 
     function botaoVoltarDadosComplementares() {
         $('#divConfirmacao').removeClass(hidden);
         $('#divDadosComplementares').addClass(hidden);
     }
-
-
 </script>

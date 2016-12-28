@@ -37,6 +37,7 @@ class ConstantesForm {
     public static $FORM_ICONE_DATABASE = 'fa-database';
     public static $FORM_NOME_HOSPEDEIRO = 'nome_hospedeiro';
     public static $FORM_NOME = 'nome';
+    public static $FORM_NOME_ENTIDADE = 'nomeEntidade';
     public static $FORM_ICONE_NOME_HOSPEDEIRO = 'fa-terminal';
     public static $FORM_DDD_HOSPEDEIRO = 'ddd_hospedeiro';
     public static $FORM_ICONE_DDD_HOSPEDEIRO = 'fa-phone-square';
@@ -99,6 +100,8 @@ class ConstantesForm {
     public static $VALIDACAO_MAX = 'max';
 
     /* Traduções */
+    public static $TRADUCAO_PERGUNTA_EXCLUSAO_ATENDIMENTO = 'Really want to delete this individual discipleship ?';
+    public static $TRADUCAO_CIENCIA_EXCLUSAO_ATENDIMENTO = 'I am <span class="text-danger">aware</span> that by <span class="text-danger">excluding individual discipleship </span> is the same no longer appear in the <span class="text-danger">launch line</span>!';
     public static $TRADUCAO_HORA = 'Hour';
     public static $TRADUCAO_MINUTOS = 'Minutes';
     public static $TRADUCAO_SELECIONE = 'SELECT';

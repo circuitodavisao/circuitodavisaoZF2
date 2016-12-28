@@ -13,6 +13,7 @@ use Cadastro\View\Helper\BlocoDiv;
 use Cadastro\View\Helper\BlocoResponsavel;
 use Cadastro\View\Helper\BotaoPopover;
 use Cadastro\View\Helper\FuncaoOnClick;
+use Cadastro\View\Helper\GrupoDadosComplementares;
 use Cadastro\View\Helper\GrupoEstadoCivil;
 use Cadastro\View\Helper\InputAddon;
 use Cadastro\View\Helper\InputCampoEndereco;
@@ -127,6 +128,9 @@ class Module {
                 },
                 'modalLoader' => function($sm) {
                     return new ModalLoader();
+                },
+                'grupoDadosComplementares' => function($sm) {
+                    return new GrupoDadosComplementares();
                 },
             )
         );

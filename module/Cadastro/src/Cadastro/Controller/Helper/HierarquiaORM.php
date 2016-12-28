@@ -40,15 +40,73 @@ class HierarquiaORM {
     }
 
     /**
-     * Localizar todos os tipos
-     * @return GrupoPessoaTipo[]
+     * Localizar todos as hierarquias
+     * @return Hieraquia[]
      * @throws Exception
      */
-    public function encontrarTodos() {
+    public function encontrarTodas() {
         $entidades = $this->getEntityManager()->getRepository($this->getEntity())->findAll();
         if (!$entidades) {
             throw new Exception("Não foi encontrado nenhum grupo_pessoa_tipo");
         }
+        return $entidades;
+    }
+
+    /**
+     * Localizar todas as hierarquias
+     * 
+     * @param integer $idTipoEntidade
+     * @return Hieraquia[]
+     * @throws Exception
+     */
+    public function encontrarPorEntidadeTipo($idTipoEntidade) {
+        $entidades = null;
+//        switch ($idTipoEntidade) {
+//            case 1:// Presidente cadastrado nacional
+//                // Bispo
+//                $entidades[] = $this->getEntityManager()->find($this->getEntity(), 1);
+//                break;
+//            case 2:// Nacional cadastrado regiao
+//                // Bispo
+//                $entidades[] = $this->getEntityManager()->find($this->getEntity(), 1);
+//                break;
+//            case 3:// Regiao cadastrado sub regiao
+//                // Bispo
+//                $entidades[] = $this->getEntityManager()->find($this->getEntity(), 1);
+//                // Pastor
+//                $entidades[] = $this->getEntityManager()->find($this->getEntity(), 2);
+//                break;
+//            case 4:// Sub Regiao cadastrado Coordenacao
+//                // Bispo
+//                $entidades[] = $this->getEntityManager()->find($this->getEntity(), 1);
+//                // Pastor
+//                $entidades[] = $this->getEntityManager()->find($this->getEntity(), 2);
+//                // Missionario
+//                $entidades[] = $this->getEntityManager()->find($this->getEntity(), 3);
+//                break;
+//            case 5:// Coordenacao cadastrado Sub Coordenacao
+//                // Bispo
+//                $entidades[] = $this->getEntityManager()->find($this->getEntity(), 1);
+//                // Pastor
+//                $entidades[] = $this->getEntityManager()->find($this->getEntity(), 2);
+//                // Missionario
+//                $entidades[] = $this->getEntityManager()->find($this->getEntity(), 3);
+//                // Diacono
+//                $entidades[] = $this->getEntityManager()->find($this->getEntity(), 4);
+//                // Obreiro
+//                $entidades[] = $this->getEntityManager()->find($this->getEntity(), 5);
+//                break;
+//            case 8:// Sub Equipe cadastrado Sub Equipe
+//                // Obreiro
+//                $entidades[] = $this->getEntityManager()->find($this->getEntity(), 6);
+//                break;
+//            default:
+//                break;
+//        }
+//
+//        if (!$entidades) {
+//            throw new Exception("Não foi encontrado nenhuma hierarquia");
+//        }
         return $entidades;
     }
 

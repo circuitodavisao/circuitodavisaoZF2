@@ -6,12 +6,12 @@ use Cadastro\Controller\Helper\ConstantesCadastro;
 use Entidade\Entity\GrupoAluno;
 use Login\Controller\Helper\Constantes;
 use Zend\Form\Element\Csrf;
-use Zend\Form\Element\Date;
 use Zend\Form\Element\Email;
 use Zend\Form\Element\Hidden;
 use Zend\Form\Element\Number;
 use Zend\Form\Element\Radio;
 use Zend\Form\Element\Select;
+use Zend\Form\Element\Text;
 use Zend\Form\Form;
 
 /**
@@ -351,6 +351,16 @@ class GrupoForm extends Form {
         ));
         $inputSelectNumeracao->setValueOptions($arrayNumeracao);
         $this->add($inputSelectNumeracao);
+
+        /* Nome Entidade */
+        $this->add(
+                (new Text())
+                        ->setName(ConstantesForm::$FORM_NOME_ENTIDADE)
+                        ->setAttributes([
+                            ConstantesForm::$FORM_CLASS => ConstantesForm::$FORM_CLASS_FORM_CONTROL,
+                            ConstantesForm::$FORM_ID => ConstantesForm::$FORM_NOME_ENTIDADE,
+                        ])
+        );
     }
 
     function getAlunos() {

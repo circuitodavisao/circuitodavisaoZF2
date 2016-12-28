@@ -11,6 +11,7 @@ use Cadastro\Form\CelulaForm;
 use Cadastro\Form\ConstantesForm;
 use Cadastro\Form\EventoForm;
 use Cadastro\Form\GrupoForm;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManager;
 use Entidade\Entity\Entidade;
 use Entidade\Entity\Evento;
@@ -646,12 +647,13 @@ class CadastroController extends AbstractActionController {
         $entidade = $lancamentoORM->getEntidadeORM()->encontrarPorIdEntidade($idEntidadeAtual);
         $grupo = $entidade->getGrupo();
         $arrayGrupoAlunos = $grupo->getGrupoAlunoAtivos();
-        $arrayHierarquia = $repositorioORM->getHierarquiaORM()->encontrarTodos();
+        $arrayHierarquia = $repositorioORM->getHierarquiaORM()->encontrarTodas();
 
         $form = new GrupoForm(ConstantesForm::$FORM, $arrayGrupoAlunos, $arrayHierarquia);
 
         $view = new ViewModel(array(
-            ConstantesForm::$FORM => $form
+            ConstantesForm::$FORM => $form,
+            'tipoEntidade' => $entidade->getTipo_id(),
         ));
 
         /* Javascript */
@@ -675,17 +677,30 @@ class CadastroController extends AbstractActionController {
                 $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
                 $lancamentoORM = new LancamentoORM($this->getDoctrineORMEntityManager());
 
+                $sessao = new Container(Constantes::$NOME_APLICACAO);
+                $idEntidadeAtual = $sessao->idEntidadeAtual;
+                $entidadeLogada = $lancamentoORM->getEntidadeORM()->encontrarPorIdEntidade($idEntidadeAtual);
+
                 /* Criar Grupo */
                 $grupoNovo = new Grupo();
                 $lancamentoORM->getGrupoORM()->persistirGrupo($grupoNovo);
 
                 /* Entidade abaixo do perfil selecionado/logado */
+                $tipoEntidadeAbaixo = 8; // sub equipe por padrao
+                if ($entidadeLogada->getTipo_id() != 8) {
+                    $tipoEntidadeAbaixo = $entidadeLogada->getTipo_id() + 1;
+                }
                 $entidadeNova = new Entidade();
                 $entidadeNova->setEntidadeTipo(
-                        $repositorioORM->getEntidadeTipoORM()->encontrarPorIdEntidade(8)
+                        $repositorioORM->getEntidadeTipoORM()->encontrarPorIdEntidade($tipoEntidadeAbaixo)
                 );
                 $entidadeNova->setGrupo($grupoNovo);
-                $entidadeNova->setNumero($post_data[ConstantesForm::$FORM_NUMERACAO]);
+                if ($post_data[ConstantesForm::$FORM_NUMERACAO]) {
+                    $entidadeNova->setNumero($post_data[ConstantesForm::$FORM_NUMERACAO]);
+                }
+                if ($post_data['nomeEntidade']) {
+                    $entidadeNova->setNome($post_data['nomeEntidade']);
+                }
                 $lancamentoORM->getEntidadeORM()->persistirEntidade($entidadeNova);
 
                 $inputEstadoCivil = intval($post_data[ConstantesCadastro::$INPUT_ESTADO_CIVIL]);
@@ -726,10 +741,7 @@ class CadastroController extends AbstractActionController {
                 }
 
                 /* Criar Grupo_Pai_Filho */
-                $sessao = new Container(Constantes::$NOME_APLICACAO);
-                $idEntidadeAtual = $sessao->idEntidadeAtual;
-                $entidade = $lancamentoORM->getEntidadeORM()->encontrarPorIdEntidade($idEntidadeAtual);
-                $grupoAtualSelecionado = $entidade->getGrupo();
+                $grupoAtualSelecionado = $entidadeLogada->getGrupo();
                 $grupoPaiFilhoNovo = new GrupoPaiFilho();
                 $grupoPaiFilhoNovo->setGrupoPaiFilhoPai($grupoAtualSelecionado);
                 $grupoPaiFilhoNovo->setGrupoPaiFilhoFilho($grupoNovo);

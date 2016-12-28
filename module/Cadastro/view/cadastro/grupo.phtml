@@ -196,29 +196,9 @@ echo $this->templateFormularioTopo(ConstantesCadastro::$TRADUCAO_TITULO_PAGINA_C
 
     <!--Dados Complementares -->
     <div id = "divDadosComplementares" class="hidden">
+        <span id="spanMensagensDadosComplementares" class="quebraDeLinhaDeSpan mt10 alert text-center hidden"></span>
         <!-- HelperView dados complementares -->
-
-        <!-- Selecionar Numeracao -->
-        <label class="field-label"><?php $this->translate(ConstantesCadastro::$TRADUCAO_SELECIONE_O_NUMERO_DA_SUB_EQUIPE); ?></label>
-        <?php echo $this->formSelect($form->get(ConstantesForm::$FORM_NUMERACAO)); ?>
-        <!-- Fim Selecionar Numeracao -->
-
-        <!-- Fim HelperView dados complementares -->
-        <div class="mt10">
-            <?php
-            echo "<div id='divInserirAlterarDadosComplementares' class='hidden'>";
-            echo "<div id='divBotaoInserirSelectDadosComplementares'>";
-            echo $this->botaoLink(ConstantesCadastro::$TRADUCAO_INSERIR, ConstantesForm::$STRING_HASHTAG, 7, $this->funcaoOnClick('botaoAbreDadosComplementares(0)'));
-            echo "</div>";
-
-            echo "<div id='divBotaoAlterarSelectDadosComplementares' class='hidden'>";
-            echo $this->botaoLink(ConstantesCadastro::$TRADUCAO_ALTERAR, ConstantesForm::$STRING_HASHTAG, 7, $this->funcaoOnClick('botaoAbreDadosComplementares(1)'));
-            echo "</div>";
-            echo "</div>";
-
-            echo $this->botaoLink($labelVoltar, ConstantesForm::$STRING_HASHTAG, 8, $this->funcaoOnClick('botaoVoltarDadosComplementares()'));
-            ?>
-        </div>
+        <?php echo $this->grupoDadosComplementares($form); ?>       
     </div>
 </div>
 <?php

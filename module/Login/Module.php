@@ -8,8 +8,6 @@
 
 namespace Login;
 
-use Cadastro\Controller\Helper\ConstantesCadastro;
-use Lancamento\Controller\Helper\ConstantesLancamento;
 use Login\Controller\Helper\Constantes;
 use Login\Controller\Helper\LoginORM;
 use Login\View\Helper\BotaoLink;
