@@ -107,6 +107,19 @@ class LancamentoController extends AbstractActionController {
             ));
         }
         if ($pagina == ConstantesLancamento::$PAGINA_ATENDIMENTO) {
+            $parametro = $this->params()->fromRoute(Constantes::$ID);
+            if (empty($parametro)) {
+                $abaSelecionada = 1;
+            } else {
+                if ($parametro == 1) {
+                    $abaSelecionada = 1;
+                } else {
+
+                    $abaSelecionada = 2;
+                }
+            }
+            $mes = FuncoesLancamento::mesPorAbaSelecionada($abaSelecionada);
+            $sessao->mesAtendimento = $mes;
             return $this->forward()->dispatch(ConstantesLancamento::$CONTROLLER_LANCAMENTO, array(
                         Constantes::$ACTION => ConstantesLancamento::$PAGINA_ATENDIMENTO,
             ));
@@ -581,32 +594,41 @@ class LancamentoController extends AbstractActionController {
      * @return ViewModel
      */
     public function atendimentoAction() {
+        
         $sessao = new Container(Constantes::$NOME_APLICACAO);
         $lancamentoORM = new LancamentoORM($this->getDoctrineORMEntityManager());
         $idEntidadeAtual = $sessao->idEntidadeAtual;
         $entidade = $lancamentoORM->getEntidadeORM()->encontrarPorIdEntidade($idEntidadeAtual);
         $grupo = $entidade->getGrupo();
         $gruposAbaixo = $grupo->getGrupoPaiFilhoFilhos();
+        $mes = $sessao->mesAtendimento;
+
 
         $view = new ViewModel(array(
             ConstantesLancamento::$GRUPOS_ABAIXO => $gruposAbaixo,
+            'mes' => $mes,
         ));
-        
+
+
+
+
+
         $titulo = '';
         $texto = '';
         $mostrar = false;
-         
+
         if ($sessao->tipoMensagem) {
             $mostrar = true;
 
             $titulo = $sessao->titulo;
             $texto = $sessao->mensagem;
-            
+            $sessao->tipoMensagem = null;
         }
 
         $layoutJS2 = new ViewModel(array("titulo" => $titulo,
-                "texto" => $texto,
-                "mostrar" => $mostrar,));
+            "texto" => $texto,
+            "mostrar" => $mostrar,
+        ));
         $layoutJS2->setTemplate(ConstantesLancamento::$TEMPLATE_JS_CADASTRAR_ATENDIMENTO);
         $view->addChild($layoutJS2, ConstantesLancamento::$STRING_JS_CADASTRAR_ATENDIMENTO);
 
@@ -623,6 +645,8 @@ class LancamentoController extends AbstractActionController {
         $sessao = new Container(Constantes::$NOME_APLICACAO);
         $lancamentoORM = new LancamentoORM($this->getDoctrineORMEntityManager());
         $loginORM = new LoginORM($this->getDoctrineORMEntityManager());
+        $mes = $sessao->mesAtendimento;
+
         if ($sessao->editAtendimento) {
             $sessao->editAtendimento = false;
             $idAtendimento = $sessao->idSessao;
@@ -634,10 +658,16 @@ class LancamentoController extends AbstractActionController {
             $atendimentos = $grupo->getGrupoAtendimento();
             foreach ($atendimentos as $a) {
                 if ($a->verificarSeEstaAtivo()) {
-                    $atendimentosFiltrados[] = $a;
+                    $partes = explode("/", $a->getDia());
+                    if ($partes[1] == $mes) {
+                        $atendimentosFiltrados[] = $a;
+                    }
                 }
             }
             $numeroAtendimentos = count($atendimentosFiltrados);
+            if($numeroAtendimentos == 0){
+                $atendimentosFiltrados = null;
+            }
             $formCadastrarAtendimento = new CadastrarAtendimentoForm(ConstantesLancamento::$FORM_CADASTRAR_ATENDIMENTO, $grupo->getId(), $nomePessoaPai, $idPessoaPai, $atendimento);
         } else {
             $idGrupo = $sessao->idSessao;
@@ -649,8 +679,14 @@ class LancamentoController extends AbstractActionController {
             $atendimentos = $grupo->getGrupoAtendimento();
             foreach ($atendimentos as $a) {
                 if ($a->verificarSeEstaAtivo()) {
-                    $atendimentosFiltrados[] = $a;
+                    $partes = explode("/", $a->getDia());
+                    if ($partes[1] == $mes) {
+                        $atendimentosFiltrados[] = $a;
+                    }
                 }
+            }
+            if($numeroAtendimentos == 0){
+                $atendimentosFiltrados = null;
             }
             $numeroAtendimentos = count($atendimentosFiltrados);
             $formCadastrarAtendimento = new CadastrarAtendimentoForm(ConstantesLancamento::$FORM_CADASTRAR_ATENDIMENTO, $idGrupo, $nomePessoaPai, $idPessoaPai);

@@ -27,8 +27,8 @@ use Lancamento\Controller\Helper\ConstantesLancamento;
 
 $totalGruposFilhos = 0;
 $totalGruposAtendidos = 0;
-$totalGruposAtendido = 0;
 foreach ($gruposAbaixo as $gpFilho) {
+    $totalGruposAtendido = 0;
     $grupoFilho = $gpFilho->getGrupoPaiFilhoFilho();
     $entidadeFilho = $grupoFilho->getEntidadeAtiva();
     $grupoResponsavel = $grupoFilho->getResponsabilidadesAtivas();
@@ -36,10 +36,13 @@ foreach ($gruposAbaixo as $gpFilho) {
         $atendimentosDoGrupo = $grupoFilho->getGrupoAtendimento();
         foreach ($atendimentosDoGrupo as $ga) {
             if ($ga->verificarSeEstaAtivo()) {
-                $totalGruposAtendido++;
+                $partes = explode("/", $ga->getDia());
+                if($partes[1] == $mes){
+                    $totalGruposAtendido++;
+                }
             }
         }
-        if (count($totalGruposAtendido) >= 1) {
+        if ($totalGruposAtendido >= 1) {
             $totalGruposAtendidos++;
         }
 
@@ -47,8 +50,8 @@ foreach ($gruposAbaixo as $gpFilho) {
     }
 }
 
-;
 $progresso = ($totalGruposAtendidos / $totalGruposFilhos) * 100;
+
 /* percentagem da meta, sendo que a meta é 2 atendimentos por mes */
 if ($progresso > 50 && $progresso < 80) {
     $colorBarTotal = "progress-bar-warning";
@@ -139,7 +142,10 @@ if ($progresso > 50 && $progresso < 80) {
                         $atendimentosDoGrupoIndividual = $grupoFilho->getGrupoAtendimento();
                         foreach ($atendimentosDoGrupoIndividual as $ga) {
                             if ($ga->verificarSeEstaAtivo()) {
-                                $totalGruposAtendidoIndividual++;
+                                $partes = explode("/", $ga->getDia());
+                                if($partes[1] == $mes){
+                                    $totalGruposAtendidoIndividual++;
+                                }
                             }
                         }
 
