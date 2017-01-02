@@ -602,11 +602,17 @@ class LancamentoController extends AbstractActionController {
         $grupo = $entidade->getGrupo();
         $gruposAbaixo = $grupo->getGrupoPaiFilhoFilhos();
         $mes = $sessao->mesAtendimento;
+        if($mes == date('n')){
+            $aba = 1;
+        }else{
+            $aba = 2;
+        }
 
 
         $view = new ViewModel(array(
             ConstantesLancamento::$GRUPOS_ABAIXO => $gruposAbaixo,
             'mes' => $mes,
+            'abaSelecionada' => $aba,
         ));
 
 
@@ -685,10 +691,11 @@ class LancamentoController extends AbstractActionController {
                     }
                 }
             }
+            $numeroAtendimentos = count($atendimentosFiltrados);
             if($numeroAtendimentos == 0){
                 $atendimentosFiltrados = null;
             }
-            $numeroAtendimentos = count($atendimentosFiltrados);
+            
             $formCadastrarAtendimento = new CadastrarAtendimentoForm(ConstantesLancamento::$FORM_CADASTRAR_ATENDIMENTO, $idGrupo, $nomePessoaPai, $idPessoaPai);
         }
 
@@ -698,6 +705,7 @@ class LancamentoController extends AbstractActionController {
             ConstantesLancamento::$NOME_LIDER_ATENDIMENTO => $nomePessoaPai,
             ConstantesLancamento::$FORM_CADASTRAR_ATENDIMENTO => $formCadastrarAtendimento,
             ConstantesLancamento::$ARRAY_ATENDIMENTOS_GRUPO => $atendimentosFiltrados,
+            'mes' => $mes,
         ));
 
 
@@ -724,7 +732,6 @@ class LancamentoController extends AbstractActionController {
                 /* validação */
                 $lancamentoORM = new LancamentoORM($this->getDoctrineORMEntityManager());
                 $validatedData = $post_data;
-                print_r($validatedData);
                 if (!empty($validatedData['id'])) {
 
                     $grupoAtendimento->setId($validatedData['id']);

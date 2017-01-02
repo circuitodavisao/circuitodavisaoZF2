@@ -65,12 +65,12 @@ if ($progresso > 50 && $progresso < 80) {
 
 <?php echo $this->modalAba(); ?>
 
-    <div class="admin-form theme-primary">
         <blockquote class = "blockquote-primary">
             <small>
                 Relat&oacute;rio de <span class="text-primary">Atendimento</span>
             </small>
         </blockquote>
+        <div id="atendimento" class="panel">
         <div class="panel-heading">
             <?php
             $urlBase = '/lancamentoAtendimento';
@@ -84,10 +84,10 @@ if ($progresso > 50 && $progresso < 80) {
             echo '</ul>';
             ?>
         </div> 
-        <div id="atendimento" class="panel  panel-primary">
+        
 
-            <div class="panel-body bg-light">
-                <div class="row">
+            <div class="panel-body center-block">
+                <div class="row center-block text-center">
                     <div class="section-divider mt30">
                         <span><?php echo $totalGruposAtendidos; ?> de <?php echo $totalGruposFilhos; ?> discipulos foram atendidos.</span>
                     </div>
@@ -122,7 +122,7 @@ if ($progresso > 50 && $progresso < 80) {
 
                         foreach ($pessoas as $p) {
                             if ($contagem == 2) {
-                                $html .= '&nbsp;&&nbsp;';
+                                $html .= '&nbsp;&nbsp;';
                                 $htmlFoto .= '';
                             }
                             $imagem = 'placeholder.png';
@@ -168,12 +168,12 @@ if ($progresso > 50 && $progresso < 80) {
                         <div class="row mt10">
                             <div class="col-md-3 col-xs-5" style="padding-right: 0px;">
                                 <span class="" href="#" >
-        <?php echo $htmlFoto; ?>
+                                <?php echo $htmlFoto; ?>
                                 </span>
                             </div>    
-                            <div class="col-md-9 col-xs-7" style="padding-left: 2px; padding-right: 0px;">
+                            <div class="col-md-9 col-xs-7" style="padding-left: 2px; padding-right: 2px;">
                                 <div class="row">
-                                    <div class="col-md-11 col-xs-10" style="padding-top: 3px; padding-right: 4px;">
+                                    <div class="col-md-11 col-xs-9" style="padding-top: 3px; padding-right: 4px;">
 
                                         <div class="progress progress-bar-xl" style="margin-bottom: 0px;">
                                             <div id="divProgressBar" class="progress-bar <?php echo $colorBar; ?>" role="progressbar" aria-valuenow="<?php echo $valueNow; ?>" aria-valuemin="0" aria-valuemax="5" style="width: <?php echo $valueNow; ?>%;"><?php echo $labelProgressBar; ?></div>
@@ -181,7 +181,7 @@ if ($progresso > 50 && $progresso < 80) {
                                         <span style="padding-top: 0px;"><?php echo $html; ?></span>
                                     </div>
 
-                                    <div class="col-md-1 col-xs-2" style="padding-left: 0px; padding-top: 3px; vertical-align: middle;">
+                                    <div class="col-md-1 col-xs-3" style="padding-left: 0px; padding-top: 3px; vertical-align: middle;">
                                         <button type="button" onclick="funcaoLancamento(<?php echo "'LancarAtendimento'," . $grupoFilho->getId(); ?>);" class="btn btn-xs btn-primary" style="padding-top: 0px; padding-bottom: 0px;">
                                             <i class="fa fa-plus" aria-hidden="true"></i>
                                         </button>
@@ -193,8 +193,11 @@ if ($progresso > 50 && $progresso < 80) {
                         <?php
                     }
                 }
+                
                 /* Layout com javascript para tela de index */
                 ?>
+            </div>
+        </div>
                 <!--                <div class="row mt10">
                                     <div class="col-md-3 col-xs-5" style="padding-right: 0px;">
                                         <span class="" href="#" >
