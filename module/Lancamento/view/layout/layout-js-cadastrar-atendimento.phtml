@@ -45,6 +45,8 @@ if ($this->mostrar) {
         });
 
     }
+    
+    
 </script>
 <?php
 $versao = '?v=11.0';
@@ -54,5 +56,6 @@ echo $this
         ->prependFile($this->basePath() . '/vendor/plugins/validate/jquery.validate.min.js')
         ->prependFile($this->basePath() . '/js/circuito_da_visao/modal-selecionar-aba.js' . $versao)
         ->prependFile($this->basePath() . '/vendor/plugins/pnotify/pnotify.js')
+        ->prependFile($this->basePath() . '/js/circuito_da_visao/funcao-lancamento.js')
 ;
 echo $this->inlineScript();

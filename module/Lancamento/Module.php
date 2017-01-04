@@ -9,11 +9,16 @@
 namespace Lancamento;
 
 use Lancamento\View\Helper\Abas;
+use Lancamento\View\Helper\AbasAtendimento;
 use Lancamento\View\Helper\AbaSelecionada;
 use Lancamento\View\Helper\AlertaEnvioRelatorio;
+use Lancamento\View\Helper\AtendimentoGruposAbaixo;
+use Lancamento\View\Helper\AtendimentosDoGrupo;
+use Lancamento\View\Helper\CabecalhoDeAtendimentos;
 use Lancamento\View\Helper\CabecalhoDeCiclos;
 use Lancamento\View\Helper\CabecalhoDeEventos;
 use Lancamento\View\Helper\DadosEntidade;
+use Lancamento\View\Helper\InformacoesGrupoAtendido;
 use Lancamento\View\Helper\InputFormulario;
 use Lancamento\View\Helper\ListagemDePessoasComEventos;
 use Lancamento\View\Helper\MensagemRelatorioEnviado;
@@ -104,6 +109,21 @@ class Module {
                 'menu' => function($sm) {
                     return new Menu();
                 },
+                'atendimentoGruposAbaixo' => function($sm){
+                    return new AtendimentoGruposAbaixo();
+                },
+                'cabecalhoDeAtendimentos' => function($sm){
+                    return new CabecalhoDeAtendimentos();
+                },
+                'abasAtendimento' => function($sm){
+                    return new AbasAtendimento();
+                },
+                'informacoesGrupoAtendido' => function ($sm){
+                    return new InformacoesGrupoAtendido();
+                },
+                'atendimentosDoGrupo' => function ($sm){
+                    return new AtendimentosDoGrupo();
+                }       
             )
         );
     }

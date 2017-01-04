@@ -1,230 +1,32 @@
-<script>
 
-
-    function funcaoLancamento(funcao, id) {
-        var resposta = true;
-
-        if (resposta) {
-            $.post(
-                    '/lancamentoFuncoes',
-                    {
-                        id: id,
-                        funcao: funcao
-                    },
-            function (data) {
-                if (data.response) {
-                    if (data.tipoDeRetorno === 1) {
-                        location.href = data.url;
-                    }
-                }
-            }, 'json');
-        }
-    }
-</script>
-<?php
-
-
-use Lancamento\Controller\Helper\ConstantesLancamento;
-
-$totalGruposFilhos = 0;
-$totalGruposAtendidos = 0;
-foreach ($gruposAbaixo as $gpFilho) {
-    $totalGruposAtendido = 0;
-    $grupoFilho = $gpFilho->getGrupoPaiFilhoFilho();
-    $entidadeFilho = $grupoFilho->getEntidadeAtiva();
-    $grupoResponsavel = $grupoFilho->getResponsabilidadesAtivas();
-    if ($grupoResponsavel) {
-        $atendimentosDoGrupo = $grupoFilho->getGrupoAtendimento();
-        foreach ($atendimentosDoGrupo as $ga) {
-            if ($ga->verificarSeEstaAtivo()) {
-                $partes = explode("/", $ga->getDia());
-                if($partes[1] == $mes){
-                    $totalGruposAtendido++;
-                }
-            }
-        }
-        if ($totalGruposAtendido >= 1) {
-            $totalGruposAtendidos++;
-        }
-
-        $totalGruposFilhos++;
-    }
-}
-
-$progresso = ($totalGruposAtendidos / $totalGruposFilhos) * 100;
-
-/* percentagem da meta, sendo que a meta é 2 atendimentos por mes */
-if ($progresso > 50 && $progresso < 80) {
-    $colorBarTotal = "progress-bar-warning";
-} else if ($progresso >= 80) {
-    $colorBarTotal = "progress-bar-success";
-} else {
-    $colorBarTotal = "progress-bar-danger";
-}
-?>
+<!-- Nome: atendimento.phtml
+     @author Lucas Filipe de Carvalho Cunha <lucascarvalho.esw@gmail.com>
+     Descricao: Página para mostrar eficiência em atendimentos e a quantidade que cada disicpulo foi atendido.
+  -->
 <div class="mw1000 center-block p10">
 
-<?php echo $this->modalAba(); ?>
+    <?php echo $this->modalAba(); ?>
 
-        <blockquote class = "blockquote-primary">
-            <small>
-                Relat&oacute;rio de <span class="text-primary">Atendimento</span>
-            </small>
-        </blockquote>
-        <div id="atendimento" class="panel">
+    <blockquote class = "blockquote-primary">
+        <small>
+            Relat&oacute;rio de <span class="text-primary">Atendimento</span>
+        </small>
+    </blockquote>
+    <div id="atendimento" class="panel">
         <div class="panel-heading">
-            <?php
-            $urlBase = '/lancamentoAtendimento';
-            $urlBase2 = $urlBase . '/2';
+            <?php echo $this->abasAtendimento(); ?>
 
-            echo '<ul class="nav panel-tabs-border panel-tabs panel-tabs-left">';
-            echo '<li role="presentation" ' . ConstantesLancamento::$ONCLICK_ABRIR_MODAL . ' ' . $this->abaSelecionada($this->abaSelecionada, 1) . '><a href="' . $urlBase . '">' . $this->translate(ConstantesLancamento::$TRADUCAO_MES_ATUAL) . '</a></li>';
-            if ($this->validacaoNesseMes == 0) {
-                echo '<li role="presentation" ' . ConstantesLancamento::$ONCLICK_ABRIR_MODAL . ' ' . $this->abaSelecionada($this->abaSelecionada, 2) . '><a href="' . $urlBase2 . '">' . $this->translate(ConstantesLancamento::$TRADUCAO_MES_ANTERIOR) . '</a></li>';
-            }
-            echo '</ul>';
-            ?>
         </div> 
-        
+        <div class="panel-body center-block">
 
-            <div class="panel-body center-block">
-                <div class="row center-block text-center">
-                    <div class="section-divider mt30">
-                        <span><?php echo $totalGruposAtendidos; ?> de <?php echo $totalGruposFilhos; ?> discipulos foram atendidos.</span>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12 col-xs-12">
-                        <div class="progress progress-bar-xl">
-                            <div id="divProgressBar" class="progress-bar <?php echo $colorBarTotal; ?>" role="progressbar" aria-valuenow="<?php echo number_format($progresso, 2, '.', ''); ?>" aria-valuemin="0" aria-valuemax="100" style="width: <?php echo number_format($progresso, 2, '.', ''); ?>%;"><?php echo number_format($progresso, 2, '.', ''); ?>%</div>
-                        </div>
-                    </div>
-                </div>
-                <?php
-                foreach ($gruposAbaixo as $gpFilho) {
-                    $grupoFilho = $gpFilho->getGrupoPaiFilhoFilho();
-                    $entidadeFilho = $grupoFilho->getEntidadeAtiva();
-                    $grupoResponsavel = $grupoFilho->getResponsabilidadesAtivas();
-                    if ($grupoResponsavel) {
-                        $pessoas = array();
-                        foreach ($grupoResponsavel as $gr) {
-                            $p = $gr->getPessoa();
-                            $imagem = 'placeholder.png';
-                            if (!empty($p->getFoto())) {
-                                $imagem = $p->getFoto();
-                            }
-                            $pessoas[] = $p;
-                        }
-
-                        $html = '';
-                        $htmlFoto = '';
-                        $contagem = 1;
-                        $totalPessoas = count($pessoas);
-
-                        foreach ($pessoas as $p) {
-                            if ($contagem == 2) {
-                                $html .= '&nbsp;&nbsp;';
-                                $htmlFoto .= '';
-                            }
-                            $imagem = 'placeholder.png';
-                            $tamanho = 45;
-                            if (!empty($p->getFoto())) {
-                                $imagem = $p->getFoto();
-                            }
-                            $htmlFoto .= '<img src="/img/avatars/' . $imagem . '" class="img-thumbnail" width="' . $tamanho . '%"  height="' . $tamanho . '%" />&nbsp;';
-                            if ($totalPessoas == 1) {
-                                $html .= $p->getNomePrimeiroUltimo();
-                            } else {// duas pessoas
-                                $html .= $p->getNomePrimeiroPrimeiraSiglaUltimo();
-                            }
-                            $contagem++;
-                        }
-                        $totalGruposAtendidoIndividual = 0;
-                        $atendimentosDoGrupoIndividual = $grupoFilho->getGrupoAtendimento();
-                        foreach ($atendimentosDoGrupoIndividual as $ga) {
-                            if ($ga->verificarSeEstaAtivo()) {
-                                $partes = explode("/", $ga->getDia());
-                                if($partes[1] == $mes){
-                                    $totalGruposAtendidoIndividual++;
-                                }
-                            }
-                        }
-
-                        $numeroAtendimentos = $totalGruposAtendidoIndividual;
-                        /* percentagem da meta, sendo que a meta é 2 atendimentos por mes */
-                        if ($numeroAtendimentos == 1) {
-                            $valueNow = 50;
-                            $labelProgressBar = "$numeroAtendimentos Atendimento";
-                            $colorBar = "progress-bar-warning";
-                        } else if ($numeroAtendimentos >= 2) {
-                            $valueNow = 100;
-                            $labelProgressBar = "$numeroAtendimentos Atendimentos";
-                            $colorBar = "progress-bar-success";
-                        } else {
-                            $valueNow = 10;
-                            $labelProgressBar = " 0 Atd.";
-                            $colorBar = "progress-bar-danger";
-                        }
-                        ?>
-                        <div class="row mt10">
-                            <div class="col-md-3 col-xs-5" style="padding-right: 0px;">
-                                <span class="" href="#" >
-                                <?php echo $htmlFoto; ?>
-                                </span>
-                            </div>    
-                            <div class="col-md-9 col-xs-7" style="padding-left: 2px; padding-right: 2px;">
-                                <div class="row">
-                                    <div class="col-md-11 col-xs-9" style="padding-top: 3px; padding-right: 4px;">
-
-                                        <div class="progress progress-bar-xl" style="margin-bottom: 0px;">
-                                            <div id="divProgressBar" class="progress-bar <?php echo $colorBar; ?>" role="progressbar" aria-valuenow="<?php echo $valueNow; ?>" aria-valuemin="0" aria-valuemax="5" style="width: <?php echo $valueNow; ?>%;"><?php echo $labelProgressBar; ?></div>
-                                        </div>
-                                        <span style="padding-top: 0px;"><?php echo $html; ?></span>
-                                    </div>
-
-                                    <div class="col-md-1 col-xs-3" style="padding-left: 0px; padding-top: 3px; vertical-align: middle;">
-                                        <button type="button" onclick="funcaoLancamento(<?php echo "'LancarAtendimento'," . $grupoFilho->getId(); ?>);" class="btn btn-xs btn-primary" style="padding-top: 0px; padding-bottom: 0px;">
-                                            <i class="fa fa-plus" aria-hidden="true"></i>
-                                        </button>
-                                    </div>                           
-                                </div>  
-                            </div>
-                        </div> 
-
-                        <?php
-                    }
-                }
-                
-                /* Layout com javascript para tela de index */
-                ?>
-            </div>
+            <?php
+            echo $this->cabecalhoDeAtendimentos();
+            echo $this->atendimentoGruposAbaixo();
+            ?>        
         </div>
-                <!--                <div class="row mt10">
-                                    <div class="col-md-3 col-xs-5" style="padding-right: 0px;">
-                                        <span class="" href="#" >
-                                            <img src="/img/avatars/1.jpg" class="img-thumbnail" width="45%"  height="auto" />
-                                            <img src="/img/avatars/2.jpg" class="img-thumbnail" width="45%"  height="auto" />
-                                        </span>
-                                    </div>    
-                                    <div class="col-md-9 col-xs-7" style="padding-left: 2px; padding-right: 0px;">
-                                        <div class="row">
-                                            <div class="col-md-11 col-xs-10" style="padding-top: 3px; padding-right: 4px;">
-                
-                                                <div class="progress progress-bar-xl" style="margin-bottom: 0px;">
-                                                    <div id="divProgressBar" class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="10" aria-valuemin="0" aria-valuemax="5" style="width: 10%;">0%</div>
-                                                </div>
-                                                <span style="padding-top: 0px;">João e Maria</span>
-                                            </div>
-                                            <div class="col-md-1 col-xs-2" style="padding-left: 0px; padding-top: 3px; vertical-align: middle;">
-                                                <button type="button" onclick="location.href = '/lancamentoLancarAtendimento';" class="btn btn-xs btn-primary" style="padding-top: 0px; padding-bottom: 0px;">
-                                                    <i class="fa fa-plus" aria-hidden="true"></i>
-                                                </button>
-                                            </div>                           
-                                        </div>  
-                                    </div>
-                                </div>     
-                            </div>-->
-                <?php
-                /* Layout com javascript para tela de index */
-                echo $this->layoutJSCadastrarAtendimento;
-                
+    </div>
+
+    <?php
+    /* Layout com javascript para tela de index */
+    echo $this->layoutJSCadastrarAtendimento;
+    

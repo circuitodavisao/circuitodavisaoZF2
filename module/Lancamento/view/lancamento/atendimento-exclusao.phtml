@@ -9,29 +9,6 @@ $atendimento = $this->atendimento;
 $pessoaLider = $this->pessoaLider;
 echo $this->templateFormularioTopo($tituloDaPagina, ConstantesForm::$STRING_DIV_CONFIRMACAO);
 ?>
-<script>
-
-
-    function funcaoLancamento(funcao, id) {
-        var resposta = true;
-
-        if (resposta) {
-            $.post(
-                    '/lancamentoFuncoes',
-                    {
-                        id: id,
-                        funcao: funcao
-                    },
-            function (data) {
-                if (data.response) {
-                    if (data.tipoDeRetorno === 1) {
-                        location.href = data.url;
-                    }
-                }
-            }, 'json');
-        }
-    }
-</script>
 <div class="panel-body bg-light">
     <div class="section-divider">
         <span>

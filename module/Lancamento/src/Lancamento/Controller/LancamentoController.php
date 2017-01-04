@@ -593,8 +593,7 @@ class LancamentoController extends AbstractActionController {
      * Abri tela para relatorio de atendimento 
      * @return ViewModel
      */
-    public function atendimentoAction() {
-        
+    public function atendimentoAction() {        
         $sessao = new Container(Constantes::$NOME_APLICACAO);
         $lancamentoORM = new LancamentoORM($this->getDoctrineORMEntityManager());
         $idEntidadeAtual = $sessao->idEntidadeAtual;
@@ -609,16 +608,7 @@ class LancamentoController extends AbstractActionController {
         }
 
 
-        $view = new ViewModel(array(
-            ConstantesLancamento::$GRUPOS_ABAIXO => $gruposAbaixo,
-            'mes' => $mes,
-            'abaSelecionada' => $aba,
-        ));
-
-
-
-
-
+        
         $titulo = '';
         $texto = '';
         $mostrar = false;
@@ -630,10 +620,15 @@ class LancamentoController extends AbstractActionController {
             $texto = $sessao->mensagem;
             $sessao->tipoMensagem = null;
         }
-
-        $layoutJS2 = new ViewModel(array("titulo" => $titulo,
-            "texto" => $texto,
-            "mostrar" => $mostrar,
+        
+        $view = new ViewModel(array(
+            ConstantesLancamento::$GRUPOS_ABAIXO => $gruposAbaixo,
+            ConstantesLancamento::$MES_ATENDIMENTO => $mes,
+            ConstantesLancamento::$ABA_SELECIONADA => $aba,
+        ));
+        $layoutJS2 = new ViewModel(array(ConstantesLancamento::$TITULO_MENSAGEM => $titulo,
+            ConstantesLancamento::$TEXTO_MENSAGEM => $texto,
+            ConstantesLancamento::$MOSTRAR_MENSAGEM => $mostrar,
         ));
         $layoutJS2->setTemplate(ConstantesLancamento::$TEMPLATE_JS_CADASTRAR_ATENDIMENTO);
         $view->addChild($layoutJS2, ConstantesLancamento::$STRING_JS_CADASTRAR_ATENDIMENTO);
@@ -705,14 +700,16 @@ class LancamentoController extends AbstractActionController {
             ConstantesLancamento::$NOME_LIDER_ATENDIMENTO => $nomePessoaPai,
             ConstantesLancamento::$FORM_CADASTRAR_ATENDIMENTO => $formCadastrarAtendimento,
             ConstantesLancamento::$ARRAY_ATENDIMENTOS_GRUPO => $atendimentosFiltrados,
-            'mes' => $mes,
+            ConstantesLancamento::$MES_ATENDIMENTO => $mes,
         ));
 
-
-
-        $layoutJS2 = new ViewModel();
-        $layoutJS2->setTemplate(ConstantesLancamento::$TEMPLATE_JS_CADASTRAR_ATENDIMENTO);
-        $view->addChild($layoutJS2, ConstantesLancamento::$STRING_JS_CADASTRAR_ATENDIMENTO);
+        $layoutJS = new ViewModel();
+        $layoutJS->setTemplate(ConstantesLancamento::$TEMPLATE_JS_CADASTRAR_ATENDIMENTO);
+        $view->addChild($layoutJS, ConstantesLancamento::$STRING_JS_CADASTRAR_ATENDIMENTO);
+        
+        $layoutJS2 = new ViewModel(array(ConstantesLancamento::$MES_ATENDIMENTO => $mes,));
+        $layoutJS2->setTemplate(ConstantesLancamento::$TEMPLATE_JS_VALIDACAO_ATENDIMENTO);
+        $view->addChild($layoutJS2, ConstantesLancamento::$STRING_JS_VALIDACAO_ATENDIMENTO);
 
         return $view;
     }
@@ -787,7 +784,7 @@ class LancamentoController extends AbstractActionController {
                 }
                 /* Sessão */
                 $sessao->tipoMensagem = 1;
-                $sessao->titulo = 'Atendimento Lançado com sucesso';
+                $sessao->titulo = ConstantesLancamento::$TRADUCAO_MENSAGEM_TITULO_LANCAMENTO_ATENDIMENTO;
                 $sessao->mensagem = "$nomeAtendimento";
 
                 return $this->forward()->dispatch(ConstantesLancamento::$CONTROLLER_LANCAMENTO, array(
@@ -818,10 +815,15 @@ class LancamentoController extends AbstractActionController {
                 $nomeLider = $pessoaLider->getNomePrimeiroUltimo();
             }
         }
-        return new ViewModel(array(
-            'atendimento' => $atendimento,
-            'pessoaLider' => $nomeLider,
+        $view = new ViewModel(array(
+            ConstantesLancamento::$ENTIDADE_ATENDIMENTO => $atendimento,
+            ConstantesLancamento::$PESSOA_LIDER => $nomeLider,
         ));
+        $layoutJS2 = new ViewModel();
+        $layoutJS2->setTemplate(ConstantesLancamento::$TEMPLATE_JS_CADASTRAR_ATENDIMENTO);
+        $view->addChild($layoutJS2, ConstantesLancamento::$STRING_JS_CADASTRAR_ATENDIMENTO);
+        
+        return $view;
     }
 
     /**
@@ -849,7 +851,7 @@ class LancamentoController extends AbstractActionController {
 
         /* Sessão */
         $sessao->tipoMensagem = 2;
-        $sessao->titulo = 'Atendimento Excluido com sucesso';
+        $sessao->titulo = ConstantesLancamento::$TRADUCAO_MENSAGEM_TITULO_EXCLUSAO_ATENDIMENTO;
         $sessao->mensagem = "ID: " . $atendimentoNaSessao->getId();
 
 
@@ -857,5 +859,5 @@ class LancamentoController extends AbstractActionController {
                     Constantes::$ACTION => ConstantesLancamento::$PAGINA_ATENDIMENTO,
         ));
     }
-
+    
 }
