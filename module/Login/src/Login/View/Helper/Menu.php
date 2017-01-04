@@ -88,7 +88,7 @@ class Menu extends AbstractHelper {
         $html .= '</a>';
         $html .= '<div class="media-body">';
         $html .= '<div class="media-links">';
-        $html .= '<a href="#" class="sidebar-menu-toggle">Menu do Usuário</a> - <a href="/preSaida">Sair</a>';
+        $html .= '<a href="/preSaida">Sair</a>';
         $html .= '</div>';
         $html .= '<div class="media-author">' . $this->view->pessoa->getNome() . '</div>';
         $html .= '</div>';
@@ -97,9 +97,54 @@ class Menu extends AbstractHelper {
 
         $html .= '</header>';
 
-        // Start: Sidebar Menu
+        /* Pegar pessoas abaixo */
+
+        /* Arvore */
+        $html .= '<ul class="nav sidebar-menu">';
+        $html .= '<li class="sidebar-label pt20">Hierarquia</li>';
+
+        $html .= '<li>';
+        $html .= '<a class="accordion-toggle" href="#">';
+        $html .= '<span class="fa fa-sitemap"></span>';
+        $html .= '<span class="sidebar-title">Meu Time</span>';
+        $html .= '<span class="caret"></span>';
+        $html .= '</a>';
+        $html .= '<ul class="nav sub-nav">';
+
+        /* Discipulos 12 */
+        $html .= $this->view->menuHierarquia('Lucas e Paloma', 'Salt');
+        $html .= $this->view->menuHierarquia('Léo e Vivian', 'Galapagos', 2);
+
+        $html .= $this->view->menuHierarquia('', 'Galapagos', 3);
+        /* Discipulos 144 */
+        $html .= $this->view->menuHierarquia('Juno', 'Galapagos&nbsp;' . 1, 5);
+        $html .= $this->view->menuHierarquia('Denise', 'Galapagos&nbsp;' . 2, 5);
+        $html .= $this->view->menuHierarquia('Bluuh', 'Galapagos&nbsp;' . 3, 5);
+
+        $html .= $this->view->menuHierarquia('Jaspio', 'Galapagos&nbsp;' . 55, 6);
+        $html .= $this->view->menuHierarquia('', 'Galapagos&nbsp;' . 55, 7);
+        /* Discipulos 1728 */
+        $html .= $this->view->menuHierarquia('Paloma', 'Galapagos&nbsp;55.77', 8);
+        /* Fim Discipulos 1728 */
+        $html .= $this->view->menuHierarquia('', '', 4);
+
+        $html .= $this->view->menuHierarquia('', '', 4);
+        /* Fim Discipulos 144 */
+
+        $html .= $this->view->menuHierarquia('Ivan e Nubia', 'Bodão');
+        /* Fim Discipulos 12 */
+
+        $html .= '</ul>';
+
+        $html .= '</li>';
+
+        $html .= '</ul>';
+
+        /* Start: Sidebar Menu */
         $html .= '<ul class="nav sidebar-menu">';
         $html .= '<li class="sidebar-label pt20">Menu</li>';
+
+        /* Menu Cadastro */
         $html .= '<li>';
         $html .= '<a class="accordion-toggle" href="#">';
         $html .= '<span class="fa fa-terminal"></span>';
@@ -133,7 +178,9 @@ class Menu extends AbstractHelper {
         $html .= '</ul>';
 
         $html .= '</li>';
+        /* Fim Menu Cadastro */
 
+        /* Menu Lançamento */
         $html .= '<li>';
         $html .= '<a class="accordion-toggle" href="#">';
         $html .= '<span class="fa fa-pencil"></span>';
@@ -155,6 +202,31 @@ class Menu extends AbstractHelper {
         $html .= '</li>';
         $html .= '</ul>';
         $html .= '</li>';
+
+        $html .= '<li>';
+        $html .= '<a class="accordion-toggle" href="#">';
+        $html .= '<span class="fa fa-bar-chart"></span>';
+        $html .= '<span class="sidebar-title">Relatórios</span>';
+        $html .= '<span class="caret"></span>';
+        $html .= '</a>';
+        $html .= '</li>';
+
+        $html .= '<li>';
+        $html .= '<a class="accordion-toggle" href="#">';
+        $html .= '<span class="fa fa-print"></span>';
+        $html .= '<span class="sidebar-title">Imprimir</span>';
+        $html .= '<span class="caret"></span>';
+        $html .= '</a>';
+        $html .= '</li>';
+
+        $html .= '<li>';
+        $html .= '<a class="accordion-toggle" href="#">';
+        $html .= '<span class="fa fa-cogs"></span>';
+        $html .= '<span class="sidebar-title">Administração</span>';
+        $html .= '<span class="caret"></span>';
+        $html .= '</a>';
+        $html .= '</li>';
+
         $html .= '</ul>';
         // End: Sidebar Menu
         // Start: Sidebar Collapse Button

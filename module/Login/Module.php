@@ -18,6 +18,7 @@ use Login\View\Helper\DivJavaScript;
 use Login\View\Helper\LinkLogo;
 use Login\View\Helper\MensagemStatica;
 use Login\View\Helper\Menu;
+use Login\View\Helper\MenuHierarquia;
 use Login\View\Helper\PerfilDropDown;
 use Login\View\Helper\PerfilIcone;
 use Zend\Mvc\ModuleRouteListener;
@@ -84,6 +85,9 @@ class Module {
                 },
                 'menu' => function($sm) {
                     return new Menu();
+                },
+                'menuHierarquia' => function($sm) {
+                    return new MenuHierarquia();
                 },
             )
         );

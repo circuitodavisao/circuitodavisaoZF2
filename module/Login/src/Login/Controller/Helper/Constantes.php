@@ -180,7 +180,7 @@ class Constantes {
     public static $TEMPLATE_JS_RECUPERAR_ACESSO = 'layout/layout-js-recuperar-acesso';
     public static $STRING_JS_RECUPERAR_ACESSO = 'layoutJSRecuperarAcesso';
     public static $TEMPLATE_JS_NOVA_SENHA_VALIDACAO = 'layout/layout-js-nova-senha-validacao';
-    public static $STRING_JS_NOVA_SENHA_VALIDACAO = 'layoutJSNovaSenhaValidacao';
+    public static $STRING_JS_NOVA_SENHA_VALIDACAO = 'validarSenhas';
     public static $TEMPLATE_JS_MODAL_SELECIONAR_PERFIL = 'layout/layout-js-modal-selecionar-perfil';
     public static $STRING_JS_MODAL_SELECIONAR_PERFIL = 'layoutJSModalSelecionarPerfil';
     public static $TEMPLATE_JS_PRE_SAIDA = 'layout/layout-js-pre-saida';

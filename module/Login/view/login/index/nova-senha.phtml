@@ -12,11 +12,6 @@ $formNovaSenha->setAttribute(Constantes::$ACTION, $this->url(Constantes::$ROUTE_
 
 echo $this->form()->openTag($formNovaSenha);
 ?>
-<style>
-    .quebraDeLinhaDeSpan{
-        display: block;
-    }
-</style>
 <div class="admin-form mw500">
     <!-- Login Logo -->
     <div class="row">
@@ -52,7 +47,7 @@ echo $this->form()->openTag($formNovaSenha);
         <div class="panel-footer clearfix">
             <?php echo $this->formHidden($formNovaSenha->get(Constantes::$INPUT_CSRF)); ?>
             <?php echo $this->formHidden($formNovaSenha->get(Constantes::$INPUT_ID_PESSOA)); ?>
-            <?php echo $this->botaoLink('Cadastrar', '#', 5, 'onclick="validarSenhas();"'); ?>
+            <?php echo $this->botaoLink('Cadastrar', '#', 7, 'onclick="validarSenhas();"'); ?>
         </div> 
     </div>
 </div>
@@ -60,3 +55,5 @@ echo $this->form()->openTag($formNovaSenha);
 /* Layout com botton para telas de acesso */
 echo $this->layoutLoginBotton;
 echo $this->form()->closeTag();
+
+echo $this->validarSenhas;
