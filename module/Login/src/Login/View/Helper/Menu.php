@@ -97,48 +97,89 @@ class Menu extends AbstractHelper {
 
         $html .= '</header>';
 
-        /* Pegar pessoas abaixo */
-
         /* Arvore */
         $html .= '<ul class="nav sidebar-menu">';
         $html .= '<li class="sidebar-label pt20">Hierarquia</li>';
 
-        $html .= '<li>';
-        $html .= '<a class="accordion-toggle" href="#">';
-        $html .= '<span class="fa fa-sitemap"></span>';
-        $html .= '<span class="sidebar-title">Meu Time</span>';
-        $html .= '<span class="caret"></span>';
-        $html .= '</a>';
-        $html .= '<ul class="nav sub-nav">';
+        /* Pegar pessoas abaixo */
+        if ($this->view->discipulos) {
 
-        /* Discipulos 12 */
-        $html .= $this->view->menuHierarquia('Lucas e Paloma', 'Salt');
-        $html .= $this->view->menuHierarquia('Léo e Vivian', 'Galapagos', 2);
+            $html .= '<li>';
+            $html .= '<a class="accordion-toggle" href="#">';
+            $html .= '<span class="fa fa-sitemap"></span>';
+            $html .= '<span class="sidebar-title">Meu Time</span>';
+            $html .= '<span class="caret"></span>';
+            $html .= '</a>';
+            $html .= '<ul class="nav sub-nav">';
 
-        $html .= $this->view->menuHierarquia('', 'Galapagos', 3);
-        /* Discipulos 144 */
-        $html .= $this->view->menuHierarquia('Juno', 'Galapagos&nbsp;' . 1, 5);
-        $html .= $this->view->menuHierarquia('Denise', 'Galapagos&nbsp;' . 2, 5);
-        $html .= $this->view->menuHierarquia('Bluuh', 'Galapagos&nbsp;' . 3, 5);
+            foreach ($this->view->discipulos as $gpFilho) {
+                $grupoFilho = $gpFilho->getGrupoPaiFilhoFilho();
+                $entidadeFilho = $grupoFilho->getEntidadeAtiva();
 
-        $html .= $this->view->menuHierarquia('Jaspio', 'Galapagos&nbsp;' . 55, 6);
-        $html .= $this->view->menuHierarquia('', 'Galapagos&nbsp;' . 55, 7);
-        /* Discipulos 1728 */
-        $html .= $this->view->menuHierarquia('Paloma', 'Galapagos&nbsp;55.77', 8);
-        /* Fim Discipulos 1728 */
-        $html .= $this->view->menuHierarquia('', '', 4);
+                $grupoResponsavel = $grupoFilho->getResponsabilidadesAtivas();
+                $nomeLideres = '';
+                if ($grupoResponsavel) {
+                    $pessoas = [];
+                    foreach ($grupoResponsavel as $gr) {
+                        $p = $gr->getPessoa();
+                        $pessoas[] = $p;
+                    }
+                    $contagem = 1;
+                    $totalPessoas = count($pessoas);
+                    foreach ($pessoas as $p) {
+                        if ($contagem == 2) {
+                            $nomeLideres .= '&nbsp;&&nbsp;';
+                        }
+                        if ($totalPessoas == 1) {
+                            $nomeLideres .= $p->getNomePrimeiroUltimo();
+                        } else {// duas pessoas
+                            $nomeLideres .= $p->getNomePrimeiroPrimeiraSiglaUltimo();
+                        }
+                        $contagem++;
+                    }
+                }
 
-        $html .= $this->view->menuHierarquia('', '', 4);
-        /* Fim Discipulos 144 */
+                $html .= $this->view->menuHierarquia($nomeLideres, $entidadeFilho->infoEntidade());
+            }
 
-        $html .= $this->view->menuHierarquia('Ivan e Nubia', 'Bodão');
-        /* Fim Discipulos 12 */
+            /* Discipulos 12 */
+//            $html .= $this->view->menuHierarquia('Lucas e Paloma', 'Salt');
+//            $html .= $this->view->menuHierarquia('Léo e Vivian', 'Galapagos', 2);
+//
+//            $html .= $this->view->menuHierarquia('', 'Galapagos', 3);
+//            /* Discipulos 144 */
+//            $html .= $this->view->menuHierarquia('Juno', 'Galapagos&nbsp;' . 1, 5);
+//            $html .= $this->view->menuHierarquia('Denise', 'Galapagos&nbsp;' . 2, 5);
+//            $html .= $this->view->menuHierarquia('Bluuh', 'Galapagos&nbsp;' . 3, 5);
+//
+//            $html .= $this->view->menuHierarquia('Jaspio', 'Galapagos&nbsp;' . 55, 6);
+//            $html .= $this->view->menuHierarquia('', 'Galapagos&nbsp;' . 55, 7);
+//            /* Discipulos 1728 */
+//            $html .= $this->view->menuHierarquia('Paloma', 'Galapagos&nbsp;55.77', 8);
+//            /* Fim Discipulos 1728 */
+//            $html .= $this->view->menuHierarquia('', '', 4);
+//
+//            $html .= $this->view->menuHierarquia('', '', 4);
+//            /* Fim Discipulos 144 */
+//
+//            $html .= $this->view->menuHierarquia('Ivan e Nubia', 'Bodão');
+            /* Fim Discipulos 12 */
 
-        $html .= '</ul>';
+            $html .= '</ul>';
+
+            $html .= '</li>';
+
+            $html .= '</ul>';
+        } else {
+            $html .= '<li>';
+            $html .= '<a href="#">';
+            $html .= '<span class="fa fa-wheelchair"></span>';
+            $html .= '<span class="sidebar-title">Sem Time</span>';
+            $html .= '</a>';
+            $html .= '</li>';
+        }
 
         $html .= '</li>';
-
-        $html .= '</ul>';
 
         /* Start: Sidebar Menu */
         $html .= '<ul class="nav sidebar-menu">';

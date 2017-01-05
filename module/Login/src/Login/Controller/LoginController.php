@@ -422,12 +422,6 @@ class LoginController extends AbstractActionController {
             if ($responsabilidadesAtivas) {
                 if (count($responsabilidadesAtivas) === 1) {
                     $sessao->idEntidadeAtual = $responsabilidadesAtivas[0]->getId();
-                    if (empty($pessoa->getTelefone())) {
-                        /* Redirecionamento */
-                        return $this->redirect()->toRoute(
-                                        ConstantesCadastro::$ROUTE_CADASTRO, array(ConstantesCadastro::$PAGINA => ConstantesCadastro::$PAGINA_GRUPO_ATUALIZACAO,)
-                        );
-                    }
                 }
 
                 $view = new ViewModel(array(Constantes::$RESPONSABILIDADES => $responsabilidadesAtivas));
