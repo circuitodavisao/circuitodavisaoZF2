@@ -13,6 +13,7 @@ return array(
     'controllers' => array(
         'factories' => array(
             'Application\Controller\Login' => 'Application\Controller\Factory\LoginControllerFactory',
+            'Application\Controller\Principal' => 'Application\Controller\Factory\PrincipalControllerFactory',
         ),
     ),
     # definir e gerenciar rotas
@@ -32,36 +33,16 @@ return array(
                     ),
                 ),
             ),
-            // The following is a route to simplify getting started creating
-            // new controllers and actions without needing to create a new
-            // module. Simply drop new controllers in, and you can access them
-            // using the path /application/:controller/:action
-//            'application' => array(
-//                'type' => 'Literal',
-//                'options' => array(
-//                    'route' => '/application',
-//                    'defaults' => array(
-//                        '__NAMESPACE__' => 'Application\Controller',
-//                        'controller' => 'Index',
-//                        'action' => 'index',
-//                    ),
-//                ),
-//                'may_terminate' => true,
-//                'child_routes' => array(
-//                    'default' => array(
-//                        'type' => 'Segment',
-//                        'options' => array(
-//                            'route' => '/[:controller[/:action]]',
-//                            'constraints' => array(
-//                                'controller' => '[a-zA-Z][a-zA-Z0-9_-]*',
-//                                'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
-//                            ),
-//                            'defaults' => array(
-//                            ),
-//                        ),
-//                    ),
-//                ),
-//            ),
+            'principal' => array(
+                'type' => 'Literal',
+                'options' => array(
+                    'route' => '/principal',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\Principal',
+                        'action' => 'index',
+                    ),
+                ),
+            ),
         ),
     ),
     # definir e gerenciar serviços
@@ -109,6 +90,7 @@ return array(
             'login/login/alterar-senha' => __DIR__ . '/../view/login/index/alterar-senha.phtml',
             'login/login/selecionar-perfil' => __DIR__ . '/../view/login/index/selecionar-perfil.phtml',
             'login/login/pre-saida' => __DIR__ . '/../view/login/index/pre-saida.phtml',
+            'principal/principal/index' => __DIR__ . '/../view/principal/index.phtml',
             'error/404' => __DIR__ . '/../view/error/404.phtml',
             'error/index' => __DIR__ . '/../view/error/index.phtml',
         ),

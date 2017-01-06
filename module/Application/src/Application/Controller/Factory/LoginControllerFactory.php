@@ -13,19 +13,11 @@ use Zend\Validator\Exception\ExtensionNotLoadedException;
  * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com>
  * Descricao: Classe para inicializar o controle
  */
-class LoginControllerFactory implements FactoryInterface {
+class LoginControllerFactory extends CircuitoControllerFactory implements FactoryInterface {
 
     public function createService(ServiceLocatorInterface $serviceLocator) {
         $sm = $serviceLocator->getServiceLocator();
-
-        // Serviço de Manipulação de entidade Doctrine    
-        try {
-            $doctrineORMEntityManager = $sm->get('Doctrine\ORM\EntityManager');
-        } catch (ServiceNotCreatedException $e) {
-            $doctrineORMEntityManager = null;
-        } catch (ExtensionNotLoadedException $e) {
-            $doctrineORMEntityManager = null;
-        }
+        $doctrineORMEntityManager = parent::createServiceORM($sm);
 
         // Serviço de Autenticação 
         try {
