@@ -124,11 +124,10 @@ class Module {
             $viewModel->pessoa = $pessoa;
             $viewModel->responsabilidades = $pessoa->getResponsabilidadesAtivas();
             if ($sessao->idEntidadeAtual) {
-//                $lancamentoORM = new LancamentoORM($serviceManager->get('Doctrine\ORM\EntityManager'));
-//                $entidade = $lancamentoORM->getEntidadeORM()->encontrarPorIdEntidade($sessao->idEntidadeAtual);
-//                $grupo = $entidade->getGrupo();
-//                $viewModel->discipulos = $grupo->getGrupoPaiFilhoFilhos();
-                $viewModel->discipulos = 0;
+                $entidade = $repositorioORM->getEntidadeORM()->encontrarPorId($sessao->idEntidadeAtual);
+                $grupo = $entidade->getGrupo();
+                $viewModel->discipulos = $grupo->getGrupoPaiFilhoFilhos();
+//                $viewModel->discipulos = 0;
             }
             if ($pessoa->getAtualizar_dados() === 'S') {
                 $viewModel->mostrarMenu = 0;
