@@ -17,23 +17,6 @@ use Exception;
 class PessoaORM extends CircuitoORM {
 
     /**
-     * Localizar pessoa por idPessoa
-     * 
-     * @param integer $idPessoa
-     * @return Pessoa
-     * @throws Exception
-     */
-    public function encontrarPorIdPessoa($idPessoa) {
-        $id = (int) $idPessoa;
-
-        $pessoa = $this->getEntityManager()->find($this->getEntity(), $id);
-        if (!$pessoa) {
-            throw new Exception("Não foi encontrado a pessoa de id = {$id}");
-        }
-        return $pessoa;
-    }
-
-    /**
      * Localizar pessoa por email
      * 
      * @param String $email

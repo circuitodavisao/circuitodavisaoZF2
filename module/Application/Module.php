@@ -120,7 +120,7 @@ class Module {
             $serviceManager = $e->getApplication()->getServiceManager();
             $viewModel = $e->getApplication()->getMvcEvent()->getViewModel();
             $repositorioORM = new RepositorioORM($serviceManager->get('Doctrine\ORM\EntityManager'));
-            $pessoa = $repositorioORM->getPessoaORM()->encontrarPorIdPessoa($sessao->idPessoa);
+            $pessoa = $repositorioORM->getPessoaORM()->encontrarPorId($sessao->idPessoa);
             $viewModel->pessoa = $pessoa;
             $viewModel->responsabilidades = $pessoa->getResponsabilidadesAtivas();
             if ($sessao->idEntidadeAtual) {

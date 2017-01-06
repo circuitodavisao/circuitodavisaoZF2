@@ -28,6 +28,36 @@ class CircuitoORM {
         }
     }
 
+    /**
+     * Localizar entidade por id
+     * @param integer $id
+     * @return Entidade
+     * @throws Exception
+     */
+    public function encontrarPorId($id) {
+        $idInteiro = (int) $id;
+
+        $entidade = $this->getEntityManager()->find($this->getEntity(), $idInteiro);
+        if (!$entidade) {
+            throw new Exception("Não foi encontrado a entidade de id = {$idInteiro}");
+        }
+        return $entidade;
+    }
+
+    /**
+     * Atualiza a entidade no banco de dados
+     * @param $entidade
+     */
+    public function persistir($entidade) {
+        try {
+            $entidade->setDataEHoraDeCriacao();
+            $this->getEntityManager()->persist($entidade);
+            $this->getEntityManager()->flush($entidade);
+        } catch (Exception $exc) {
+            echo $exc->getMessage();
+        }
+    }
+
     public function getEntityManager() {
         return $this->_entityManager;
     }

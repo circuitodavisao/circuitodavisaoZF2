@@ -15,7 +15,6 @@ use Doctrine\ORM\EntityManager;
 use Exception;
 use Zend\Authentication\AuthenticationService;
 use Zend\Json\Json;
-use Zend\Mvc\Controller\AbstractActionController;
 use Zend\Mvc\I18n\Translator;
 use Zend\Session\Container;
 use Zend\View\Model\ViewModel;
@@ -25,9 +24,8 @@ use Zend\View\Model\ViewModel;
  * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com>
  * Descricao: Controle de todas ações do login
  */
-class LoginController extends AbstractActionController {
+class LoginController extends CircuitoController {
 
-    private $_doctrineORMEntityManager;
     private $_doctrineAuthenticationService;
     private $_translator;
 
@@ -38,7 +36,7 @@ class LoginController extends AbstractActionController {
     EntityManager $doctrineORMEntityManager = null, AuthenticationService $doctrineAuthenticationService = null, Translator $translator = null) {
 
         if (!is_null($doctrineORMEntityManager)) {
-            $this->_doctrineORMEntityManager = $doctrineORMEntityManager;
+            parent::__construct($doctrineORMEntityManager);
         }
 
         if (!is_null($doctrineAuthenticationService)) {
@@ -386,7 +384,7 @@ class LoginController extends AbstractActionController {
 
                 /* Dados da requisição POST */
                 $dataPost = $request->getPost();
-                $pessoa = $repositorioORM->getPessoaORM()->encontrarPorIdPessoa($dataPost[Constantes::$INPUT_ID_PESSOA]);
+                $pessoa = $repositorioORM->getPessoaORM()->encontrarPorId($dataPost[Constantes::$INPUT_ID_PESSOA]);
                 $pessoa->setSenha($dataPost[Constantes::$INPUT_SENHA]);
                 $pessoa->setToken(null);
                 $pessoa->setToken_data(null);
@@ -416,7 +414,7 @@ class LoginController extends AbstractActionController {
         $sessao = new Container(Constantes::$NOME_APLICACAO);
         $idPessoa = $sessao->idPessoa;
         if ($idPessoa) {
-            $pessoa = $repositorioORM->getPessoaORM()->encontrarPorIdPessoa($idPessoa);
+            $pessoa = $repositorioORM->getPessoaORM()->encontrarPorId($idPessoa);
             /* Responsabilidades */
             $responsabilidadesAtivas = $pessoa->getResponsabilidadesAtivas();
             if ($responsabilidadesAtivas) {
@@ -470,7 +468,7 @@ class LoginController extends AbstractActionController {
         $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
         $sessao = new Container(Constantes::$NOME_APLICACAO);
         $idPessoa = $sessao->idPessoa;
-        $pessoa = $repositorioORM->getPessoaORM()->encontrarPorIdPessoa($idPessoa);
+        $pessoa = $repositorioORM->getPessoaORM()->encontrarPorId($idPessoa);
 
         $view = new ViewModel(array(Constantes::$ENTITY_PESSOA_NOME => $pessoa->getNomePrimeiroUltimo()));
 
@@ -528,14 +526,6 @@ class LoginController extends AbstractActionController {
         $view->addChild($layoutJSIndex, Constantes::$STRING_JS_NOVA_SENHA_VALIDACAO);
 
         return $view;
-    }
-
-    /**
-     * Recupera ORM
-     * @return EntityManager
-     */
-    public function getDoctrineORMEntityManager() {
-        return $this->_doctrineORMEntityManager;
     }
 
     /**

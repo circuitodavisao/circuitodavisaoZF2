@@ -14,6 +14,7 @@ return array(
         'factories' => array(
             'Application\Controller\Login' => 'Application\Controller\Factory\LoginControllerFactory',
             'Application\Controller\Principal' => 'Application\Controller\Factory\PrincipalControllerFactory',
+            'Application\Controller\Lancamento' => 'Application\Controller\Factory\LancamentoControllerFactory',
         ),
     ),
     # definir e gerenciar rotas
@@ -39,6 +40,20 @@ return array(
                     'route' => '/principal',
                     'defaults' => array(
                         'controller' => 'Application\Controller\Principal',
+                        'action' => 'index',
+                    ),
+                ),
+            ),
+            'lancamento' => array(
+                'type' => 'Segment',
+                'options' => array(
+                    'route' => '/lancamento[:pagina[/:id]]',
+                    'constraints' => array(
+                        'pagina' => '[a-zA-z]*',
+                        'id' => '[1-2]|[1-2]_[1-6]',
+                    ),
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\Lancamento',
                         'action' => 'index',
                     ),
                 ),
