@@ -11,6 +11,7 @@ use Cadastro\Form\CelulaForm;
 use Cadastro\Form\ConstantesForm;
 use Cadastro\Form\EventoForm;
 use Cadastro\Form\GrupoForm;
+use Cadastro\Form\RevisaoForm;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManager;
 use Entidade\Entity\Entidade;
@@ -111,6 +112,16 @@ class CadastroController extends AbstractActionController {
         if ($pagina == ConstantesCadastro::$PAGINA_EVENTO_EXCLUSAO_CONFIRMACAO) {
             return $this->forward()->dispatch(ConstantesCadastro::$CONTROLLER_CADASTRO, array(
                         Constantes::$ACTION => ConstantesCadastro::$PAGINA_EVENTO_EXCLUSAO_CONFIRMACAO,
+            ));
+        }
+        if ($pagina == ConstantesCadastro::$PAGINA_CADASTRO_REVISAO) {
+            return $this->forward()->dispatch(ConstantesCadastro::$CONTROLLER_CADASTRO, array(
+                        Constantes::$ACTION => ConstantesCadastro::$PAGINA_CADASTRO_REVISAO,
+            ));
+        }
+        if ($pagina == ConstantesCadastro::$PAGINA_SALVAR_REVISAO) {
+            return $this->forward()->dispatch(ConstantesCadastro::$CONTROLLER_CADASTRO, array(
+                        Constantes::$ACTION => ConstantesCadastro::$PAGINA_SALVAR_REVISAO,
             ));
         }
         /* Busca de endereço por CEP */
@@ -998,6 +1009,109 @@ class CadastroController extends AbstractActionController {
         $url = "http://158.69.124.139/convite.php?nomeLider=$nomeLider&avatar=$avatar&token=$tokenDeAgora&nomePessoaEmail=$nomePessoaEmail";
         $Content = file_get_contents($url);
         Funcoes::enviarEmail($ToEmail, $Subject, $Content);
+    }
+
+    public function revisaoAction() {
+        $sessao = new Container(Constantes::$NOME_APLICACAO);
+        $lancamentoORM = new LancamentoORM($this->getDoctrineORMEntityManager());
+        $idEntidadeAtual = $sessao->idEntidadeAtual;
+        $entidade = $lancamentoORM->getEntidadeORM()->encontrarPorIdEntidade($idEntidadeAtual);
+        $grupo = $entidade->getGrupo();
+        $gruposAbaixo = $grupo->getGrupoPaiFilhoFilhos();
+
+        foreach ($gruposAbaixo as $gpFilho) {
+            $grupoFilho = $gpFilho->getGrupoPaiFilhoFilho();
+            $entidadeFilho = $grupoFilho->getEntidadeAtiva();
+            if ($entidadeFilho->getTipo_id() == 6) {
+                $gruposIgrejas[] = $entidadeFilho;
+            }
+        }
+        $form = new RevisaoForm('revisaoForm', $gruposIgrejas);
+        $view = new ViewModel(array(
+            'revisaoForm' => $form,
+            'igrejas' => $gruposIgrejas,
+        ));
+
+        return $view;
+    }
+
+    public function salvarRevisaoAction() {
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            try {
+                $post_data = $request->getPost();
+ 
+                
+                /* Entidades **/
+                $evento = new Evento();
+                
+
+                /* validação **/
+
+                $sessao = new Container(Constantes::$NOME_APLICACAO);
+                $criarNovoEvento = true;
+                
+  
+
+                /* Entidades **/
+                $evento = new Evento();
+                $grupoEvento = new GrupoEvento();
+
+                /* Repositorios **/
+                $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
+                $lancamentoORM = new LancamentoORM($this->getDoctrineORMEntityManager());
+                $validatedData = $post_data;
+
+
+                if ($criarNovoEvento) {
+                    /* Entidade selecionada **/
+                    $idEntidadeAtual = $sessao->idEntidadeAtual;
+                    $entidade = $lancamentoORM->getEntidadeORM()->encontrarPorIdEntidade($idEntidadeAtual);
+
+                    $evento->setDia(6);
+                    $evento->setHora('21:00:00');
+                    $dataParaCadastro = FuncoesCadastro::dataAtual();
+                    $evento->setData_criacao(Funcoes::mudarPadraoData($validatedData['dataRevisao'], 0));
+                    $evento->setHora_criacao(FuncoesCadastro::horaAtual());
+
+                    $evento->setEventoTipo($repositorioORM->getEventoTipoORM()->encontrarPorIdEventoTipo(3));
+
+                    $grupoEvento->setData_criacao(FuncoesCadastro::dataAtual());
+                    $grupoEvento->setHora_criacao(FuncoesCadastro::horaAtual());
+                    $grupoEvento->setGrupo($entidade->getGrupo());
+                    $grupoEvento->setEvento($evento);
+
+                    /* Persistindo **/
+                    $lancamentoORM->getEventoORM()->persistirEvento($evento);
+                    $repositorioORM->getGrupoEventoORM()->persistirGrupoEvento($grupoEvento);
+                    /* Sessão **/
+                    $sessao->tipoMensagem = ConstantesCadastro::$TIPO_MENSAGEM_CADASTRAR_CULTO;
+                    $sessao->textoMensagem = $evento->getNome();
+                    $sessao->idSessao = $evento->getId();
+
+                    /* Grupos Abaixos ou Equipes **/
+                    foreach ($post_data['igrejas'] as $value) {
+                        
+                            $stringValor = explode('#', $value);
+                            $entidadeIgreja = $lancamentoORM->getEntidadeORM()->encontrarPorIdEntidade($stringValor[1]);
+                            $grupoIgreja = $lancamentoORM->getGrupoORM()->encontrarPorIdGrupoPessoa($entidadeIgreja->getGrupo_id());
+                            $grupoEventoIgreja = new GrupoEvento();
+                            $grupoEventoIgreja->setData_criacao(FuncoesCadastro::dataAtual());
+                            $grupoEventoIgreja->setHora_criacao(FuncoesCadastro::horaAtual());
+                            $grupoEventoIgreja->setGrupo($grupoIgreja);
+                            $grupoEventoIgreja->setEvento($evento);
+                            $repositorioORM->getGrupoEventoORM()->persistirGrupoEvento($grupoEventoIgreja);
+                        
+                    }
+                }
+                
+                return $this->redirect()->toRoute(ConstantesCadastro::$ROUTE_CADASTRO, array(
+                            ConstantesCadastro::$PAGINA => ConstantesCadastro::$PAGINA_CADASTRO_REVISAO,
+                ));
+            } catch (Exception $exc) {
+                echo $exc->getMessage();
+            }
+        }
     }
 
 }

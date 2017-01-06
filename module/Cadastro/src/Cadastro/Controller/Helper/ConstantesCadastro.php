@@ -27,6 +27,8 @@ class ConstantesCadastro {
     public static $PAGINA_EVENTO_EXCLUSAO = 'EventoExclusao';
     public static $PAGINA_CELULA_EXCLUSAO_CONFIRMACAO = 'CelulaExclusaoConfirmacao';
     public static $PAGINA_EVENTO_EXCLUSAO_CONFIRMACAO = 'EventoExclusaoConfirmacao';
+    public static $PAGINA_CADASTRO_REVISAO = 'Revisao';
+    public static $PAGINA_SALVAR_REVISAO = 'SalvarRevisao';
     public static $PAGINA_CELULA_CONFIRMACAO = 'CelulaConfirmacao';
     public static $PAGINA_BUSCAR_ENDERECO = 'BuscarEndereco';
     public static $PAGINA_BUSCAR_CPF = 'BuscarCPF';
@@ -139,6 +141,7 @@ class ConstantesCadastro {
     public static $FORM_INPUT_MES = 'Mes';
     public static $FORM_INPUT_ANO = 'Ano';
     public static $FORM_INPUT_DDD = 'inputDDD';
+    public static $FORM_INPUT_DATA_REVISAO = 'dataRevisao';
     public static $FORM_INPUT_CODIGO_VERIFICADOR = 'inputCodigoVerificador';
     public static $FORM_INPUT_CELULAR = 'inputCelular';
     public static $FORM_INPUT_PROFISSAO = 'inputProfissao';
