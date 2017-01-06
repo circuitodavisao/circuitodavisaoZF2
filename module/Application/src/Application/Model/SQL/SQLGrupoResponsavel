@@ -1,0 +1,36 @@
+-- Table: grupo_responsavel
+
+-- DROP TABLE grupo_responsavel;
+
+CREATE TABLE grupo_responsavel
+(
+  id serial NOT NULL, -- Identificação do responsavel pelo grupo
+  data_criacao date NOT NULL DEFAULT ('now'::text)::date, -- Data de criação da responsabilidade
+  hora_criacao time without time zone NOT NULL DEFAULT ('now'::text)::time with time zone, -- Hora que foi criada a responsabilidade
+  pessoa_id bigint NOT NULL, -- Identificação da pessoa
+  grupo_id bigint NOT NULL, -- Identificação do grupo
+  data_inativacao date, -- Data de inativação da responsabilidade
+  hora_inativacao time without time zone, -- Hora da inativação da responsabilidade
+  CONSTRAINT pk_grupo_responsavel PRIMARY KEY (id),
+  CONSTRAINT fk_grupo_responsavel_grupo_id FOREIGN KEY (grupo_id)
+      REFERENCES grupo (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION,
+  CONSTRAINT fk_grupo_responsavel_pessoa_id FOREIGN KEY (pessoa_id)
+      REFERENCES pessoa (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE grupo_responsavel
+  OWNER TO postgres;
+COMMENT ON TABLE grupo_responsavel
+  IS 'Tabela associativa do grupo com as pessoas';
+COMMENT ON COLUMN grupo_responsavel.id IS 'Identificação do responsavel pelo grupo';
+COMMENT ON COLUMN grupo_responsavel.data_criacao IS 'Data de criação da responsabilidade';
+COMMENT ON COLUMN grupo_responsavel.hora_criacao IS 'Hora que foi criada a responsabilidade';
+COMMENT ON COLUMN grupo_responsavel.pessoa_id IS 'Identificação da pessoa';
+COMMENT ON COLUMN grupo_responsavel.grupo_id IS 'Identificação do grupo';
+COMMENT ON COLUMN grupo_responsavel.data_inativacao IS 'Data de inativação da responsabilidade';
+COMMENT ON COLUMN grupo_responsavel.hora_inativacao IS 'Hora da inativação da responsabilidade';
+

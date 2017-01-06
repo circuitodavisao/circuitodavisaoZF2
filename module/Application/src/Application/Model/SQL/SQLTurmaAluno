@@ -1,0 +1,36 @@
+-- Table: turma_aluno
+
+-- DROP TABLE turma_aluno;
+
+CREATE TABLE turma_aluno
+(
+  id integer NOT NULL DEFAULT nextval('turma_pessoa_id_seq'::regclass), -- Identificação da associação turma com o aluno
+  turma_id integer NOT NULL, -- Identificação da turma
+  pessoa_id integer NOT NULL, -- Identificação da pessoa
+  data_criacao date NOT NULL DEFAULT ('now'::text)::date, -- Data de criação da associação
+  hora_criacao time without time zone NOT NULL DEFAULT ('now'::text)::time with time zone, -- Hora da criação da associação
+  data_inativacao date, -- Data de inativação da associação
+  hora_inativacao time without time zone, -- Hora da inativação da associação
+  CONSTRAINT pk_turma_pessoa PRIMARY KEY (id),
+  CONSTRAINT fk_turma_pessoa_pessoa_id FOREIGN KEY (pessoa_id)
+      REFERENCES pessoa (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION,
+  CONSTRAINT fk_turma_pessoa_turma_id FOREIGN KEY (turma_id)
+      REFERENCES turma (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE turma_aluno
+  OWNER TO postgres;
+COMMENT ON TABLE turma_aluno
+  IS 'Associação entre a turma e os alunos';
+COMMENT ON COLUMN turma_aluno.id IS 'Identificação da associação turma com o aluno';
+COMMENT ON COLUMN turma_aluno.turma_id IS 'Identificação da turma';
+COMMENT ON COLUMN turma_aluno.pessoa_id IS 'Identificação da pessoa';
+COMMENT ON COLUMN turma_aluno.data_criacao IS 'Data de criação da associação';
+COMMENT ON COLUMN turma_aluno.hora_criacao IS 'Hora da criação da associação';
+COMMENT ON COLUMN turma_aluno.data_inativacao IS 'Data de inativação da associação';
+COMMENT ON COLUMN turma_aluno.hora_inativacao IS 'Hora da inativação da associação';
+

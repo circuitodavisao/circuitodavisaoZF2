@@ -1,0 +1,20 @@
+-- Table: situacao
+
+-- DROP TABLE situacao;
+
+CREATE TABLE situacao
+(
+  id serial NOT NULL, -- Identificação da situação
+  nome character varying(30), -- Nome da situação do aluno
+  CONSTRAINT pk_situacao PRIMARY KEY (id)
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE situacao
+  OWNER TO postgres;
+COMMENT ON TABLE situacao
+  IS 'Tabela com as situações do aluno';
+COMMENT ON COLUMN situacao.id IS 'Identificação da situação';
+COMMENT ON COLUMN situacao.nome IS 'Nome da situação do aluno';
+

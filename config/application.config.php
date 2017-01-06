@@ -7,13 +7,13 @@
  */
 return array(
     'modules' => array(
-        'Application',
+//        'Application',
         'Login',
         'Principal',
         'Lancamento',
         'Entidade',
         'Cadastro',
-        'ZendDeveloperTools',
+//        'ZendDeveloperTools',
         'DoctrineModule',
         'DoctrineORMModule',
     ),

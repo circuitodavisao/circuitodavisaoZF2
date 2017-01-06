@@ -1,0 +1,40 @@
+<?php ?>
+<script type="text/javascript">
+    /**
+     * Nome: layout-js-nova-senha-validacao.js
+     * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com>
+     * Descricao: Funções para cadastro de um novo grupo
+     */
+    function validarSenhas() {
+        var novaSenha = $('#novaSenha').val();
+        var repetirSenha = $('#repetirSenha').val();
+
+        var temErro = false;
+        var mensagemDeErro;
+
+        if (novaSenha.length === 0) {
+            temErro = true;
+            mensagemDeErro = 'Preencha a senha';
+        }
+        if (repetirSenha.length === 0) {
+            temErro = true;
+            mensagemDeErro = 'Repita a senha';
+        }
+        if (novaSenha.length === 0 && repetirSenha.length === 0) {
+            temErro = true;
+            mensagemDeErro = 'Preencha e repita a senha';
+        }
+        if (novaSenha.length !== repetirSenha.length &&
+                novaSenha.length !== 0 &&
+                repetirSenha.length !== 0) {
+            temErro = true;
+            mensagemDeErro = 'Senhas não conferem';
+        }
+        if (temErro) {
+            $('#spanMensagemDeErro').html(mensagemDeErro).removeClass('hidden');
+        } else {
+            $('#NovaSenhaForm').submit();
+        }
+    }
+
+</script>

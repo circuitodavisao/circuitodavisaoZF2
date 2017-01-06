@@ -1,0 +1,59 @@
+<?php
+
+use Application\Controller\Helper\Constantes;
+
+/** Nome: nova-senha.phtml
+ * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com>
+ * Descricao: Página para definir a senha
+ */
+$formNovaSenha = $this->formNovaSenha;
+$formNovaSenha->prepare();
+$formNovaSenha->setAttribute(Constantes::$ACTION, $this->url(Constantes::$ROUTE_LOGIN, array(Constantes::$ACTION => Constantes::$ACTION_ALTERAR_SENHA)));
+
+echo $this->form()->openTag($formNovaSenha);
+?>
+<div class="admin-form mw500">
+    <!-- Login Logo -->
+    <div class="row">
+        <?php
+        /* Logo com link para index */
+        echo $this->linkLogo();
+        ?>
+    </div>
+    <div class="row text-center">
+        <h2>Informe sua nova senha e repita</h2>
+    </div>
+
+    <div class="panel">
+        <div class="panel-body bg-light p25 pb15">
+            <div class="section">
+                <span id="spanMensagemDeErro" class="alert alert-danger hidden quebraDeLinhaDeSpan text-center"></span>
+            </div>
+            <!-- Username Input -->
+            <div class="section">
+                <label for="novaSenha" class="field-label text-muted fs18 mb10">Nova Senha</label>
+                <label for="novaSenha" class="field">
+                    <?php echo $this->formInput($formNovaSenha->get(Constantes::$INPUT_NOVA_SENHA)); ?>
+                </label>
+            </div>
+            <!-- Password Input -->
+            <div class="section">
+                <label for="novaSenha" class="field-label text-muted fs18 mb10">Repita a Senha</label>
+                <label for="novaSenha" class="field">          
+                    <?php echo $this->formInput($formNovaSenha->get(Constantes::$INPUT_REPETIR_SENHA)); ?>
+                </label>
+            </div>
+        </div>
+        <div class="panel-footer clearfix">
+            <?php echo $this->formHidden($formNovaSenha->get(Constantes::$INPUT_CSRF)); ?>
+            <?php echo $this->formHidden($formNovaSenha->get(Constantes::$INPUT_ID_PESSOA)); ?>
+            <?php echo $this->botaoLink('Cadastrar', '#', 7, 'onclick="validarSenhas();"'); ?>
+        </div> 
+    </div>
+</div>
+<?php
+/* Layout com botton para telas de acesso */
+echo $this->layoutLoginBotton;
+echo $this->form()->closeTag();
+
+echo $this->validarSenhas;

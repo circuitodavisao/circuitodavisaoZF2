@@ -1,0 +1,31 @@
+<?php
+
+use Application\Controller\Helper\Constantes;
+
+/** Nome: recuperar-acesso.phtml
+ * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com> e Sergio Bezerra da Silva <sergio.silva.unb@gmail.com>
+ * Descricao: Página com email do usuário
+ */
+?>
+<?php
+/* Layout com top para telas de acesso */
+echo $this->layoutLoginTop;
+?>
+<div class="admin-form theme-info mw500" style="margin-top: 10%;" id="login">
+    <div class="row mb15 table-layout">
+        <div class="col-xs-12 pln">
+            <div class="col-xs-12 text-center">
+                <span class="imoon imoon-checkbox-checked text-circuito-visao big-icone"></span>
+            </div>
+            <div class="alert alert-default mb30 text-center">
+                <h3 class="mt5 desligar-bold-titulo"><?php echo $this->resposta; ?></h3>
+            </div>
+        </div>      
+    </div>   
+    <div class="col-xs-12 text-center">
+        <?php echo $this->botaoLink(Constantes::$TRADUCAO_VOLTAR, Constantes::$INDEX); ?>
+    </div>
+</div>  
+<?php
+/* Layout com botton para telas de acesso */
+echo $this->layoutLoginBotton;

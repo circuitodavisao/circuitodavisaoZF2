@@ -1,0 +1,36 @@
+-- Table: pessoa_hierarquia
+
+-- DROP TABLE pessoa_hierarquia;
+
+CREATE TABLE pessoa_hierarquia
+(
+  id serial NOT NULL, -- Identificação da associação da pessoa com a hierarquia
+  pessoa_id integer NOT NULL, -- Identificação da pessoa
+  hierarquia_id integer NOT NULL, -- Identificação da hierarquia
+  data_criacao date NOT NULL DEFAULT ('now'::text)::date, -- Data de criação da associação pessoa com a hierarquia
+  hora_criacao time without time zone NOT NULL DEFAULT ('now'::text)::time with time zone, -- Hora de criação da associação pessoa com a hierarquia
+  data_inativacao date, -- Data da inativação da associação pessoa com a hierarquia
+  hora_inativacao time without time zone, -- Hora da inativação da associativa pessoa com a hierarquia
+  CONSTRAINT pk_pessoa_hierarquia PRIMARY KEY (id),
+  CONSTRAINT fk_pessoa_hierarquia_hierarquia FOREIGN KEY (hierarquia_id)
+      REFERENCES hierarquia (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION,
+  CONSTRAINT fk_pessoa_hierarquia_pessoa FOREIGN KEY (pessoa_id)
+      REFERENCES pessoa (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE pessoa_hierarquia
+  OWNER TO postgres;
+COMMENT ON TABLE pessoa_hierarquia
+  IS 'Tabela associativa da pessoa com a hierarquia';
+COMMENT ON COLUMN pessoa_hierarquia.id IS 'Identificação da associação da pessoa com a hierarquia';
+COMMENT ON COLUMN pessoa_hierarquia.pessoa_id IS 'Identificação da pessoa';
+COMMENT ON COLUMN pessoa_hierarquia.hierarquia_id IS 'Identificação da hierarquia';
+COMMENT ON COLUMN pessoa_hierarquia.data_criacao IS 'Data de criação da associação pessoa com a hierarquia';
+COMMENT ON COLUMN pessoa_hierarquia.hora_criacao IS 'Hora de criação da associação pessoa com a hierarquia';
+COMMENT ON COLUMN pessoa_hierarquia.data_inativacao IS 'Data da inativação da associação pessoa com a hierarquia';
+COMMENT ON COLUMN pessoa_hierarquia.hora_inativacao IS 'Hora da inativação da associativa pessoa com a hierarquia';
+

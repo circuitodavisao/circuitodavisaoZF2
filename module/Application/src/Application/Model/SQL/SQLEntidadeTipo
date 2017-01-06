@@ -1,0 +1,28 @@
+-- Table: entidade_tipo
+
+-- DROP TABLE entidade_tipo;
+
+CREATE TABLE entidade_tipo
+(
+  id serial NOT NULL, -- Identificação do tipo de entidade
+  nome character varying(45) NOT NULL, -- Nome da entidade
+  data_criacao date NOT NULL DEFAULT ('now'::text)::date, -- Data de criação do tipo da entidade
+  hora_criacao time without time zone NOT NULL DEFAULT ('now'::text)::time with time zone, -- Hora de criação do tipo da entidade
+  data_inativacao date, -- Data de inativação do tipo da entidade
+  hora_inativacao time without time zone, -- Hora inativação do tipo da entidade
+  CONSTRAINT pk_entidade_tipo PRIMARY KEY (id)
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE entidade_tipo
+  OWNER TO postgres;
+COMMENT ON TABLE entidade_tipo
+  IS 'Tabela com os tipo de entidades';
+COMMENT ON COLUMN entidade_tipo.id IS 'Identificação do tipo de entidade';
+COMMENT ON COLUMN entidade_tipo.nome IS 'Nome da entidade';
+COMMENT ON COLUMN entidade_tipo.data_criacao IS 'Data de criação do tipo da entidade';
+COMMENT ON COLUMN entidade_tipo.hora_criacao IS 'Hora de criação do tipo da entidade';
+COMMENT ON COLUMN entidade_tipo.data_inativacao IS 'Data de inativação do tipo da entidade';
+COMMENT ON COLUMN entidade_tipo.hora_inativacao IS 'Hora inativação do tipo da entidade';
+

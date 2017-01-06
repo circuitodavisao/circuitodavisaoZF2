@@ -1,0 +1,124 @@
+<?php
+
+use Application\Controller\Helper\Constantes;
+
+/** Nome: esqueceu-senha.phtml
+ * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com> e Sergio Bezerra da Silva <sergio.silva.unb@gmail.com>
+ * Descricao: Página para recuperação de acesso
+ */
+$formRecuperarAcesso = $this->formRecuperarAcesso;
+$formRecuperarAcesso->prepare();
+
+$classTituloPerdeuSenha = 'titulo-perdeu-sua-senha';
+?>
+<?php
+/* Layout com top para telas de acesso */
+echo $this->layoutLoginTop;
+?>
+<div class="admin-form theme-info mw500" style="margin-top: 10%;" id="login">
+    <div class="row mb15 table-layout <?php echo $this->classDiv0; ?>">
+        <div class="col-xs-12 pln">
+            <div id="opcoes_label">
+                <h2 class="<?php echo $classTituloPerdeuSenha ?>"><?php echo $this->translate(Constantes::$TRADUCAO_PERGUNTA_ESQUECI_SENHA); ?></h2>
+            </div>
+        </div>
+    </div>
+    <?php
+    /* Mensagem Estatica */
+    echo $this->mensagemStatica($this->translate($this->mensagem), $this->tipo);
+    ?>
+    <!-- Opções -->
+    <div id="opcoes" class="panel mt30 mb25 <?php echo $this->classDiv0; ?>">
+        <div class="panel-body bg-light">
+            <div class="option-group field section">
+                <?php echo $this->formRadio($formRecuperarAcesso->get(Constantes::$INPUT_OPCAO)); ?>
+            </div>
+        </div>
+        <!-- end .form-body section -->
+        <div class="panel-footer text-right">
+            <?php echo $this->botaoLink(Constantes::$TRADUCAO_CANCELAR, Constantes::$INDEX, 2, ''); ?>
+            <?php echo $this->botaoLink(Constantes::$TRADUCAO_CONTINUAR, '#', '', 'id="' . Constantes::$INPUT_BOTAO_CONTINUAR . '" disabled ' . Constantes::$FORM_STRING_ONCLICK . '="abrirOpcao();"'); ?>
+        </div>
+    </div>
+    <?php
+    $formRecuperarAcesso->setAttribute('action', $this->url('login', array('action' => 'recuperarAcesso')) . '/1');
+    echo $this->form()->openTag($formRecuperarAcesso);
+    ?>
+    <!-- Opção 1 -->
+    <div id="opcao_1" class="panel mt30 mb25 <?php echo $this->classDiv1; ?>">
+        <div class="panel-body bg-light">
+            <?php
+            /* Capslock */
+            echo $this->DivCapslock();
+            ?>
+            <div class="section mn">
+                <div class="smart-widget">
+                    <p class="text-center"><?php echo $this->translate(Constantes::$TRADUCAO_TITULO_ESQUECI_MINHA_SENHA); ?></p>
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <i class="fa fa-envelope-o"></i>
+                        </span>
+                        <?php echo $this->formInput($formRecuperarAcesso->get(Constantes::$INPUT_EMAIL)); ?>
+                    </div>
+                </div>
+                <!-- end .smart-widget section -->
+
+            </div>
+            <!-- end section -->
+        </div>
+        <div class="panel-footer text-right">
+            <?php echo $this->botaoLink(Constantes::$TRADUCAO_CANCELAR, Constantes::$INDEX, 2, Constantes::$FORM_STRING_ONCLICK . '="abrirOpcao(0);"'); ?>
+            <?php echo $this->botaoSubmit(Constantes::$TRADUCAO_ENVIAR_EMAIL); ?>
+        </div>
+    </div>
+    <?php echo $this->form()->closeTag(); ?>
+    <?php
+    $formRecuperarAcesso->setAttribute('action', $this->url('login', array('action' => 'recuperarAcesso')) . '/2');
+    echo $this->form()->openTag($formRecuperarAcesso);
+    ?>
+    <!-- Opção 2 -->
+    <div id="opcao_2" class="panel mt30 mb25 <?php echo $this->classDiv2; ?>">
+        <div class="panel-body bg-light">
+            <div class="section mn">
+                <div class="smart-widget">
+                    <p class="text-center"><?php echo $this->translate(Constantes::$TRADUCAO_INFORME_2_DIGITO_CPF_DATA_NASCIMENTO); ?></p>
+                    <div class="input-group">
+                        <span class="input-group-addon">XXX.XXX.XXX-</span>
+                        <?php echo $this->formInput($formRecuperarAcesso->get(Constantes::$INPUT_CPF)); ?>
+                        <span class="input-group-addon" id="basic-addon2">
+                            <i id="idIconeDigitoCPFEsqueciEmail" class="hidden"></i>
+                        </span>  
+                    </div>
+                </div>
+                <!-- end .smart-widget section -->
+                <br />
+                <div class="smart-widget">
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <i class="fa fa-calendar"></i>
+                        </span>
+                        <?php echo $this->formInput($formRecuperarAcesso->get(Constantes::$INPUT_DATA_NASCIMENTO)); ?>
+                        <span class="input-group-addon" id="basic-addon2">
+                            <i id="idIconeDataNascimentoEsqueciEmail" class="hidden"></i>
+                        </span>                      
+                    </div>
+                </div>
+                <!-- end .smart-widget section -->
+            </div>
+            <!-- end section -->
+        </div>
+        <div class="panel-footer text-right">
+            <?php echo $this->botaoLink(Constantes::$TRADUCAO_CANCELAR, Constantes::$INDEX, 2, Constantes::$FORM_STRING_ONCLICK . '="abrirOpcao(0);"'); ?>
+            <?php echo $this->botaoSubmit(Constantes::$TRADUCAO_VERIFICAR_USUARIO); ?>
+        </div>
+    </div>
+
+    <?php echo $this->form()->closeTag(); ?>
+</div> 
+<?php
+/* Layout com botton para telas de acesso */
+echo $this->layoutLoginBotton;
+?>
+<?php
+/* Layout com javascript para telas de recuperação de acessos */
+echo $this->layoutJSRecuperarAcesso;

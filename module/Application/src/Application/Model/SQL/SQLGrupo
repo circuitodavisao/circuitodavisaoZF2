@@ -1,0 +1,32 @@
+-- Table: grupo
+
+-- DROP TABLE grupo;
+
+CREATE TABLE grupo
+(
+  id serial NOT NULL, -- Identificação do grupo
+  data_criacao date NOT NULL DEFAULT ('now'::text)::date, -- Data de criação do grupo
+  hora_criacao time without time zone NOT NULL DEFAULT ('now'::text)::time with time zone, -- Hora de criação do grupo
+  data_inativacao date, -- Data de inativação do grupo
+  hora_inativacao time without time zone, -- Hora de inativação do grupo
+  envio enumsn, -- Status de envio do relatório
+  envio_data date, -- Data de envio do relatório
+  envio_hora time without time zone, -- Hora de envio do relatório
+  CONSTRAINT pk_grupo PRIMARY KEY (id)
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE grupo
+  OWNER TO postgres;
+COMMENT ON TABLE grupo
+  IS 'Tabela com os grupos ';
+COMMENT ON COLUMN grupo.id IS 'Identificação do grupo';
+COMMENT ON COLUMN grupo.data_criacao IS 'Data de criação do grupo';
+COMMENT ON COLUMN grupo.hora_criacao IS 'Hora de criação do grupo';
+COMMENT ON COLUMN grupo.data_inativacao IS 'Data de inativação do grupo';
+COMMENT ON COLUMN grupo.hora_inativacao IS 'Hora de inativação do grupo';
+COMMENT ON COLUMN grupo.envio IS 'Status de envio do relatório';
+COMMENT ON COLUMN grupo.envio_data IS 'Data de envio do relatório';
+COMMENT ON COLUMN grupo.envio_hora IS 'Hora de envio do relatório';
+

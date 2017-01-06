@@ -1,0 +1,324 @@
+<?php
+
+namespace Application\View\Helper;
+
+use Application\Controller\Helper\Constantes;
+use Entidade\Entity\Pessoa;
+use Zend\View\Helper\AbstractHelper;
+
+/**
+ * Nome: Menu.php
+ * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com>
+ * Descricao: Classe helper view para mostrar menu
+ */
+class Menu extends AbstractHelper {
+
+    private $responsabilidades;
+    private $pessoa;
+
+    public function __construct() {
+        
+    }
+
+    public function __invoke() {
+        return $this->renderHtml();
+    }
+
+    public function renderHtml() {
+        $html = '';
+        $stringFoto = $this->view->pessoa->getFoto();
+        if (empty($stringFoto)) {
+            $stringFoto = 'placeholder.png';
+        }
+        // Start: Header 
+        $html .= '<header class="navbar navbar-fixed-top">';
+        $html .= '<div class="navbar-branding">';
+        $html .= '<a class="navbar-brand" href="#" style="padding-top: 22px;">';
+        $html .= '<img src="' . Constantes::$IMAGEM_LOGO_PEQUENA . '" title="' . $this->view->translate(Constantes::$TRADUCAO_NOME_APLICACAO) . '" class="img-responsive" style="max-width:100%;">';
+        $html .= '</a>';
+        $html .= '<span id="toggle_sidemenu_l" class="ad ad-lines"></span>';
+        $html .= '</div>';
+        $html .= '<ul class="nav navbar-nav navbar-right">';
+        $html .= '<li class="dropdown menu-merge">';
+        $html .= '<a href="#" class="dropdown-toggle fw600 p15" data-toggle="dropdown">';
+        $html .= '<img src="/img/avatars/' . $stringFoto . '" alt="' . $this->view->pessoa->getNomePrimeiroUltimo() . '" class="mw30 br64">';
+        $html .= '<span class="pl15">' . $this->view->pessoa->getNomePrimeiroUltimo() . '</span>';
+        $html .= '<span class="caret caret-tp"></span>';
+        $html .= '</a>';
+
+        $html .= '<ul class="dropdown-menu list-group dropdown-persist w250" role="menu">';
+        /* Laço para mostrar as responsabilidades ativas */
+        if (count($this->view->responsabilidades) > 1) {
+            foreach ($this->view->responsabilidades as $responsabilidade) {
+                /* Grupo da responsabilidades */
+                $grupo = $responsabilidade->getGrupo();
+                /* Entidades do grupo */
+                $entidades = $grupo->getEntidade();
+                foreach ($entidades as $entidade) {
+                    if ($entidade->verificarSeEstaAtivo()) {
+                        $html .= $this->view->perfilDropDown($entidade, 1);
+                    }
+                }
+            }
+        }
+        $html .= '<li class="dropdown-footer">';
+        $html .= '<a href="' . $this->view->url(Constantes::$ROUTE_LOGIN) . Constantes::$URL_PRE_SAIDA . '" class="">';
+        $html .= '<span class="fa fa-power-off pr5"></span>' . $this->view->translate(Constantes::$TRADUCAO_SAIR) . '</a>';
+        $html .= '</li>';
+        $html .= '</ul>';
+        $html .= '</li>';
+        $html .= '</ul>';
+        $html .= '</header>';
+        // End: Header 
+        // 
+        // Start: Sidebar
+        $html .= '<aside id="sidebar_left" class="nano nano-light affix">';
+
+        // Start: Sidebar Left Content
+        $html .= '<div class="sidebar-left-content nano-content">';
+
+        // Start: Sidebar Header
+        $html .= '<header class="sidebar-header">';
+
+        // Sidebar Widget - Author 
+        $html .= '<div class="sidebar-widget author-widget">';
+        $html .= '<div class="media">';
+        $html .= '<a class="media-left" href="#">';
+        $html .= '<img src="/img/avatars/' . $stringFoto . '" class="img-responsive">';
+        $html .= '</a>';
+        $html .= '<div class="media-body">';
+        $html .= '<div class="media-links">';
+        $html .= '<a href="/preSaida">Sair</a>';
+        $html .= '</div>';
+        $html .= '<div class="media-author">' . $this->view->pessoa->getNome() . '</div>';
+        $html .= '</div>';
+        $html .= '</div>';
+        $html .= '</div>';
+
+        $html .= '</header>';
+
+        /* Arvore */
+        $html .= '<ul class="nav sidebar-menu">';
+        $html .= '<li class="sidebar-label pt20">Hierarquia</li>';
+
+        /* Pegar pessoas abaixo */
+        if ($this->view->discipulos) {
+
+            $html .= '<li>';
+            $html .= '<a class="accordion-toggle" href="#">';
+            $html .= '<span class="fa fa-sitemap"></span>';
+            $html .= '<span class="sidebar-title">Meu Time</span>';
+            $html .= '<span class="caret"></span>';
+            $html .= '</a>';
+            $html .= '<ul class="nav sub-nav">';
+
+            foreach ($this->view->discipulos as $gpFilho) {
+                $grupoFilho = $gpFilho->getGrupoPaiFilhoFilho();
+                $entidadeFilho = $grupoFilho->getEntidadeAtiva();
+
+                $grupoResponsavel = $grupoFilho->getResponsabilidadesAtivas();
+                $nomeLideres = '';
+                if ($grupoResponsavel) {
+                    $pessoas = [];
+                    foreach ($grupoResponsavel as $gr) {
+                        $p = $gr->getPessoa();
+                        $pessoas[] = $p;
+                    }
+                    $contagem = 1;
+                    $totalPessoas = count($pessoas);
+                    foreach ($pessoas as $p) {
+                        if ($contagem == 2) {
+                            $nomeLideres .= '&nbsp;&&nbsp;';
+                        }
+                        if ($totalPessoas == 1) {
+                            $nomeLideres .= $p->getNomePrimeiroUltimo();
+                        } else {// duas pessoas
+                            $nomeLideres .= $p->getNomePrimeiroPrimeiraSiglaUltimo();
+                        }
+                        $contagem++;
+                    }
+                }
+
+                $html .= $this->view->menuHierarquia($nomeLideres, $entidadeFilho->infoEntidade());
+            }
+
+            /* Discipulos 12 */
+//            $html .= $this->view->menuHierarquia('Lucas e Paloma', 'Salt');
+//            $html .= $this->view->menuHierarquia('Léo e Vivian', 'Galapagos', 2);
+//
+//            $html .= $this->view->menuHierarquia('', 'Galapagos', 3);
+//            /* Discipulos 144 */
+//            $html .= $this->view->menuHierarquia('Juno', 'Galapagos&nbsp;' . 1, 5);
+//            $html .= $this->view->menuHierarquia('Denise', 'Galapagos&nbsp;' . 2, 5);
+//            $html .= $this->view->menuHierarquia('Bluuh', 'Galapagos&nbsp;' . 3, 5);
+//
+//            $html .= $this->view->menuHierarquia('Jaspio', 'Galapagos&nbsp;' . 55, 6);
+//            $html .= $this->view->menuHierarquia('', 'Galapagos&nbsp;' . 55, 7);
+//            /* Discipulos 1728 */
+//            $html .= $this->view->menuHierarquia('Paloma', 'Galapagos&nbsp;55.77', 8);
+//            /* Fim Discipulos 1728 */
+//            $html .= $this->view->menuHierarquia('', '', 4);
+//
+//            $html .= $this->view->menuHierarquia('', '', 4);
+//            /* Fim Discipulos 144 */
+//
+//            $html .= $this->view->menuHierarquia('Ivan e Nubia', 'Bodão');
+            /* Fim Discipulos 12 */
+
+            $html .= '</ul>';
+
+            $html .= '</li>';
+
+            $html .= '</ul>';
+        } else {
+            $html .= '<li>';
+            $html .= '<a href="#">';
+            $html .= '<span class="fa fa-wheelchair"></span>';
+            $html .= '<span class="sidebar-title">Sem Time</span>';
+            $html .= '</a>';
+            $html .= '</li>';
+        }
+
+        $html .= '</li>';
+
+        /* Start: Sidebar Menu */
+        $html .= '<ul class="nav sidebar-menu">';
+        $html .= '<li class="sidebar-label pt20">Menu</li>';
+
+        /* Menu Cadastro */
+        $html .= '<li>';
+        $html .= '<a class="accordion-toggle" href="#">';
+        $html .= '<span class="fa fa-terminal"></span>';
+        $html .= '<span class="sidebar-title">Cadastrar</span>';
+        $html .= '<span class="caret"></span>';
+        $html .= '</a>';
+
+        $html .= '<ul class="nav sub-nav">';
+
+        $html .= '<li>';
+        $html .= '<a href="/cadastroCelulas">';
+        $html .= '<span class="fa fa-users"></span>';
+        $html .= 'Células';
+        $html .= '</a>';
+        $html .= '</li>';
+
+        $html .= '<li>';
+        $html .= '<a href="/cadastroCultos">';
+        $html .= '<span class="fa fa-users"></span>';
+        $html .= 'Cultos';
+        $html .= '</a>';
+        $html .= '</li>';
+
+        $html .= '<li>';
+        $html .= '<a href="/cadastroGrupo">';
+        $html .= '<span class="fa fa-users"></span>';
+        $html .= 'Grupo';
+        $html .= '</a>';
+        $html .= '</li>';
+
+        $html .= '</ul>';
+
+        $html .= '</li>';
+        /* Fim Menu Cadastro */
+
+        /* Menu Lançamento */
+        $html .= '<li>';
+        $html .= '<a class="accordion-toggle" href="#">';
+        $html .= '<span class="fa fa-pencil"></span>';
+        $html .= '<span class="sidebar-title">Lançar</span>';
+        $html .= '<span class="caret"></span>';
+        $html .= '</a>';
+        $html .= '<ul class="nav sub-nav">';
+        $html .= '<li>';
+        $html .= '<a href="/lancamento">';
+        $html .= '<span class="fa fa-terminal"></span>';
+        $html .= 'Arregimentação';
+        $html .= '</a>';
+        $html .= '</li>';
+        $html .= '<li>';
+        $html .= '<a href="/lancamentoAtendimento">';
+        $html .= '<span class="fa fa-terminal"></span>';
+        $html .= 'Atendimento';
+        $html .= '</a>';
+        $html .= '</li>';
+        $html .= '</ul>';
+        $html .= '</li>';
+
+        $html .= '<li>';
+        $html .= '<a class="accordion-toggle" href="#">';
+        $html .= '<span class="fa fa-bar-chart"></span>';
+        $html .= '<span class="sidebar-title">Relatórios</span>';
+        $html .= '<span class="caret"></span>';
+        $html .= '</a>';
+        $html .= '</li>';
+
+        $html .= '<li>';
+        $html .= '<a class="accordion-toggle" href="#">';
+        $html .= '<span class="fa fa-print"></span>';
+        $html .= '<span class="sidebar-title">Imprimir</span>';
+        $html .= '<span class="caret"></span>';
+        $html .= '</a>';
+        $html .= '</li>';
+
+        $html .= '<li>';
+        $html .= '<a class="accordion-toggle" href="#">';
+        $html .= '<span class="fa fa-cogs"></span>';
+        $html .= '<span class="sidebar-title">Administração</span>';
+        $html .= '<span class="caret"></span>';
+        $html .= '</a>';
+        $html .= '</li>';
+
+        $html .= '</ul>';
+        // End: Sidebar Menu
+        // Start: Sidebar Collapse Button
+        $html .= '<div class="sidebar-toggle-mini">';
+        $html .= '<a href="#">';
+        $html .= '<span class="fa fa-sign-out"></span>';
+        $html .= '</a>';
+        $html .= '</div>';
+        // End: Sidebar Collapse Button
+
+        $html .= '</div>';
+        // End: Sidebar Left Content
+
+        $html .= '</aside>';
+
+        $html .= '<div id="modals">';
+        /* Laço para mostrar a s responsabilidades ativas modal */
+        foreach ($this->view->responsabilidades as $responsabilidade) {
+            /* Grupo da responsabilidades */
+            $grupo = $responsabilidade->getGrupo();
+            /* Entidades do grupo */
+
+            $entidades = $grupo->getEntidade();
+            foreach ($entidades as $entidade) {
+                if ($entidade->verificarSeEstaAtivo()) {
+                    echo $this->view->perfilDropDown($entidade, 2);
+                }
+            }
+        }
+        $html .= '</div>';
+        return $html;
+    }
+
+    function getResponsabilidades() {
+        return $this->responsabilidades;
+    }
+
+    /**
+     * Retorna a pessoa logada
+     * @return Pessoa
+     */
+    function getPessoa() {
+        return $this->pessoa;
+    }
+
+    function setResponsabilidades($responsabilidades) {
+        $this->responsabilidades = $responsabilidades;
+    }
+
+    function setPessoa($pessoa) {
+        $this->pessoa = $pessoa;
+    }
+
+}

@@ -1,0 +1,74 @@
+<?php
+
+use Application\Controller\Helper\Constantes;
+
+/**
+ * Nome: index.phtml
+ * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com> e Sergio Bezerra da Silva <sergio.silva.unb@gmail.com>
+ * Descricao: Página de login
+ */
+$formLogin = $this->formLogin;
+$formLogin->prepare();
+$formLogin->setAttribute(Constantes::$ACTION, $this->url(Constantes::$ROUTE_LOGIN, array(Constantes::$ACTION => Constantes::$ACTION_LOGAR)));
+
+$classMensagem = $this->hidden;
+?> 
+<?php
+/* Layout com botton para telas de acesso */
+echo $this->layoutLoginTop;
+?>
+<!-- Login Panel/Form -->
+<?php echo $this->form()->openTag($formLogin); ?>
+<div class="panel mt30">
+    <div class="panel-body bg-light p25">
+        <!-- Mensagens -->
+        <?php
+        /* Capslock */
+        echo $this->DivCapslock();
+
+        /* Mensagem Estatica */
+        echo $this->mensagemStatica($this->translate($this->mensagem), $this->tipo);
+        ?>
+
+        <!-- Username Input -->
+        <div class="section">
+            <label for="<?php echo Constantes::$TRADUCAO_USUARIO; ?>" class="field-label text-muted fs18 mb10">
+                <?php echo $this->translate(Constantes::$TRADUCAO_USUARIO); ?>
+            </label>
+            <label for="<?php echo Constantes::$TRADUCAO_USUARIO; ?>" class="field prepend-icon">
+                <?php echo $this->formInput($formLogin->get(Constantes::$INPUT_EMAIL)); ?>
+                <label for="<?php echo Constantes::$TRADUCAO_USUARIO; ?>" class="field-icon">
+                    <i class="fa fa-user"></i>
+                </label>
+            </label>
+        </div>
+
+        <!-- Password Input -->
+        <div class="section">
+            <label for="<?php echo Constantes::$TRADUCAO_SENHA; ?>" class="field-label text-muted fs18 mb10">
+                <?php echo $this->translate(Constantes::$TRADUCAO_SENHA); ?>
+            </label>
+            <label for="<?php echo Constantes::$TRADUCAO_SENHA; ?>" class="field prepend-icon">
+                <?php echo $this->formInput($formLogin->get(Constantes::$INPUT_SENHA)); ?>
+                <label for="<?php echo Constantes::$TRADUCAO_SENHA; ?>" class="field-icon">
+                    <i class="fa fa-lock"></i>
+                </label>
+            </label>
+        </div>
+    </div>
+    <div class="panel-footer">
+        <?php echo $this->formHidden($formLogin->get(Constantes::$INPUT_CSRF)); ?>
+        <?php echo $this->botaoSubmit(Constantes::$TRADUCAO_ENTRAR); ?>
+        <label class="switch ib switch-primary-circuito mt10">
+            <strong class="active pl15">
+                <a href="<?php echo $this->url(Constantes::$ROUTE_LOGIN) . Constantes::$URL_ESQUECEU_SENHA; ?>" class="texto-preto-cv" ><?php echo $this->translate(Constantes::$TRADUCAO_PROBLEMA_DE_ACESSO); ?></a>
+            </strong>
+        </label>     
+    </div>
+</div>
+<?php echo $this->form()->closeTag() ?>
+<?php
+/* Layout com botton para telas de acesso */
+echo $this->layoutLoginBotton;
+/* Layout com javascript para tela de index */
+echo $this->layoutJSIndex;
