@@ -1,0 +1,265 @@
+<?php
+
+use Cadastro\Controller\Helper\ConstantesCadastro;
+use Cadastro\Form\ConstantesForm;
+use Login\Controller\Helper\Constantes;
+
+/** Nome: grupo-atualizar.phtml
+ * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com>
+ * Descricao: Página para atualizar dados
+ */
+$form = $this->Form;
+$form->prepare();
+$form->setAttribute(Constantes::$ACTION, $this->url(ConstantesCadastro::$ROUTE_CADASTRO, array(ConstantesCadastro::$PAGINA => ConstantesCadastro::$PAGINA_GRUPO_ATUALIZAR)));
+
+echo $this->form()->openTag($form);
+?>
+<div class="admin-form mw800">
+    <!-- Login Logo -->
+    <div class="row">
+        <?php
+        /* Logo com link para index */
+        echo $this->linkLogo();
+        ?>
+    </div>
+    <div class="row text-center">
+        <h1 class="text-primary">
+            Bem Vindo ao Circuito da Visão.
+        </h1>
+        <h2>Para terminar atualize os dados abaixo.</h2>
+    </div>
+    <div class="panel mt10">
+        <div class="panel-body bg-light p25 pb15">
+            <?php echo $this->passoAPasso($form); ?>
+            <!-- Mensagem de Erro -->
+            <div class="row">
+                <div class="section">
+                    <span id="spanMensagemDeErro" class="alert text-center quebraDeLinhaDeSpan hidden"></span>
+                </div>
+            </div>
+            <!-- Endereço -->
+            <div id="divEndereco" class="row">
+                <?php
+                /* Montar endereço */
+                echo $this->montarEndereco($form);
+                ?> 
+                <div class="mt10">
+                    <?php
+                    echo '<div id="divBotaoCepContinuar" class="hidden">';
+                    $funcaoOnClickContinuarEndereco = $this->funcaoOnClick('abrirDivCelular()');
+                    echo $this->botaoLink(Constantes::$TRADUCAO_CONTINUAR, ConstantesForm::$STRING_HASHTAG, 7, $funcaoOnClickContinuarEndereco);
+                    echo '</div>';
+                    ?>
+                </div>
+            </div>
+            <!-- Celular -->
+            <div id="divCelular" class="row hidden">
+                <div class="row">
+                    <div class="section">
+                        <div class="col-xs-5 col-sm-4 col-md-4">
+                            <label class="field-label">DDD</label>
+                            <label class="field">
+                                <?php echo $this->formInput($form->get(ConstantesCadastro::$FORM_INPUT_DDD)); ?>
+                            </label>
+                        </div>
+                        <div class="col-xs-7 col-sm-8 col-md-8">
+                            <label class="field-label">Celular</label>
+                            <label class="field">
+                                <?php echo $this->formInput($form->get(ConstantesCadastro::$FORM_INPUT_CELULAR)); ?>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt10">
+                    <?php
+                    $funcaoOnClickValidarCelular = $this->funcaoOnClick('validarTelefone()');
+                    echo '<div id="divBotaoVerificarTelefone" class="">';
+                    echo $this->botaoLink('Verificar', '#', 7, $funcaoOnClickValidarCelular);
+                    echo '</div>';
+
+                    $funcaoOnClickContinuarCelular = $this->funcaoOnClick('abrirDivCodigoVerificador()');
+                    echo '<div id="divBotaoTelefoneContinuar" class="hidden">';
+                    echo $this->botaoLink(Constantes::$TRADUCAO_CONTINUAR, '#', 7, $funcaoOnClickContinuarCelular);
+                    echo '</div>';
+
+                    $funcaoOnClickVoltarEndereco = $this->funcaoOnClick('botaoVoltarEndereco()');
+                    echo $this->botaoLink(Constantes::$TRADUCAO_VOLTAR, '#', 8, $funcaoOnClickVoltarEndereco);
+                    ?>  
+                </div>
+            </div>
+            <!-- Codigo Verificador -->
+            <div id="divCodigoVerificador" class="row hidden">
+                <div class="row">
+                    <div class="section">
+                        <div class="col-xs-12">
+                            <label class="field-label">Codigo Verificador</label>
+                            <label class="field">
+                                <?php echo $this->formInput($form->get(ConstantesCadastro::$FORM_INPUT_CODIGO_VERIFICADOR)); ?>
+                            </label>
+                        </div>                        
+                    </div>
+                </div>
+                <div class="mt10">
+                    <?php
+                    $funcaoOnClickVerificarCodigo = $this->funcaoOnClick('verificarCodigoVerificador()');
+                    echo '<div id="divBotaoValidarCodigoVerificador" class="">';
+                    echo $this->botaoLink('Verificar', '#', 7, $funcaoOnClickVerificarCodigo);
+                    echo '</div>';
+
+                    $funcaoOnClickFinalizar = $this->funcaoOnClick('finalizarAtualizacao(this.form)');
+                    echo '<div id="divBotaoContinuarCodigoVerificador" class="hidden">';
+                    echo $this->botaoLink('Finalizar', '#', 7, $funcaoOnClickFinalizar);
+                    echo '</div>';
+
+                    $funcaoOnClickVoltarCelular = $this->funcaoOnClick('botaoVoltarCelular()');
+                    echo $this->botaoLink(Constantes::$TRADUCAO_VOLTAR, '#', 8, $funcaoOnClickVoltarCelular);
+                    ?>     
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<?php
+echo $this->formHidden($form->get(Constantes::$ID));
+echo $this->form()->closeTag();
+echo $this->modalLoader();
+?>
+<script type="text/javascript">
+    var hidden = 'hidden';
+    var classAlertDanger = 'alert-danger';
+    var classAlertSuccess = 'alert-success';
+    var btnDefault = 'btn-default';
+    var btnPrimary = 'btn-primary';
+
+    function pegaSpanMensagemDeErro() {
+        return $('#spanMensagemDeErro');
+    }
+
+    function abrirDivCelular() {
+        $('#divEndereco').addClass(hidden);
+        $('#divCelular').removeClass(hidden);
+        $('#botaoPasso2')
+                .removeClass(btnDefault)
+                .addClass(btnPrimary);
+    }
+
+    function botaoVoltarEndereco() {
+        $('#divEndereco').removeClass(hidden);
+        $('#divCelular').addClass(hidden);
+        $('#botaoPasso2')
+                .addClass(btnDefault)
+                .removeClass(btnPrimary);
+    }
+
+    function validarTelefone() {
+        abrirModalCarregando();
+        var valorDDD = $('#inputDDD').val();
+        var valorCelular = $('#inputCelular').val();
+        var temErro = false;
+        var mensagemDeErro;
+        var spanMensagemDeErro = pegaSpanMensagemDeErro();
+        spanMensagemDeErro.html('').addClass(hidden);
+
+        if (valorCelular.length === 0) {
+            temErro = true;
+            mensagemDeErro = 'Preencha o Celular';
+        }
+        if (valorDDD.length === 0) {
+            temErro = true;
+            mensagemDeErro = 'Preencha o DDD';
+        }
+        if (valorCelular.length !== 0 && (valorCelular.length < 8 || valorCelular.length > 9)) {
+            temErro = true;
+            mensagemDeErro = 'Celular é invalido';
+        }
+        if (valorDDD.length !== 0 && valorDDD.length !== 2) {
+            temErro = true;
+            mensagemDeErro = 'DDD é invalido';
+        }
+
+        if (temErro) {
+            spanMensagemDeErro
+                    .removeClass(classAlertSuccess)
+                    .addClass(classAlertDanger)
+                    .html(mensagemDeErro);
+        } else {
+            spanMensagemDeErro
+                    .removeClass(classAlertDanger)
+                    .addClass(classAlertSuccess)
+                    .html('<?php echo $this->translate(ConstantesCadastro::$TRADUCAO_DADOS_LIBERADOS); ?>');
+            $('#divBotaoVerificarTelefone').addClass(hidden);
+            $('#divBotaoTelefoneContinuar').removeClass(hidden);
+        }
+        spanMensagemDeErro
+                .removeClass(hidden);
+
+        fecharModalCarregando();
+    }
+
+    function abrirDivCodigoVerificador() {
+        $('#divCelular').addClass(hidden);
+        $('#divCodigoVerificador').removeClass(hidden);
+        spanMensagemDeErro = pegaSpanMensagemDeErro();
+        spanMensagemDeErro.html('').addClass(hidden);
+        $('#botaoPasso3')
+                .removeClass(btnDefault)
+                .addClass(btnPrimary);
+    }
+
+    function botaoVoltarCelular() {
+        $('#divCodigoVerificador').addClass(hidden);
+        $('#divCelular').removeClass(hidden);
+        $('#botaoPasso3')
+                .addClass(btnDefault)
+                .removeClass(btnPrimary);
+    }
+
+    function verificarCodigoVerificador() {
+        abrirModalCarregando();
+        var valorCodigoVerificador = $('#inputCodigoVerificador').val();
+        var temErro = false;
+        var mensagemDeErro;
+        var spanMensagemDeErro = pegaSpanMensagemDeErro();
+        spanMensagemDeErro.html('').addClass(hidden);
+
+        if (valorCodigoVerificador != "1") {
+            temErro = true;
+            mensagemDeErro = 'Codigo verificador inválido';
+        }
+        if (valorCodigoVerificador.length === 0) {
+            temErro = true;
+            mensagemDeErro = 'Preencha o Codigo verificador';
+        }
+        if (temErro) {
+            spanMensagemDeErro
+                    .removeClass(classAlertSuccess)
+                    .addClass(classAlertDanger)
+                    .html(mensagemDeErro);
+        } else {
+            spanMensagemDeErro
+                    .html('Codigo Liberado')
+                    .removeClass(classAlertDanger)
+                    .addClass(classAlertSuccess)
+                    .removeClass(hidden);
+            $('#divBotaoValidarCodigoVerificador').addClass(hidden);
+            $('#divBotaoContinuarCodigoVerificador').removeClass(hidden);
+        }
+        spanMensagemDeErro
+                .removeClass(hidden);
+        fecharModalCarregando();
+    }
+
+    function finalizarAtualizacao(f) {
+        abrirModalCarregando();
+        f.submit();
+    }
+</script>
+<?php
+$versao = '?v=8.0';
+
+echo $this
+        ->headScript()
+        ->prependFile($this->basePath() . '/js/circuito_da_visao/buscar-endereco.js' . $versao)
+        ->prependFile($this->basePath() . '/js/circuito_da_visao/modal-loader.js' . $versao)
+;
+echo $this->inlineScript();

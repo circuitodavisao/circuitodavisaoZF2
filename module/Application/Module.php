@@ -15,7 +15,11 @@ use Application\Model\ORM\RepositorioORM;
 use Application\View\Helper\Abas;
 use Application\View\Helper\AbaSelecionada;
 use Application\View\Helper\AlertaEnvioRelatorio;
+use Application\View\Helper\BarraDeProgresso;
+use Application\View\Helper\BlocoDiv;
+use Application\View\Helper\BlocoResponsavel;
 use Application\View\Helper\BotaoLink;
+use Application\View\Helper\BotaoPopover;
 use Application\View\Helper\BotaoSubmit;
 use Application\View\Helper\BotaoSubmitDesabilitado;
 use Application\View\Helper\CabecalhoDeCiclos;
@@ -23,19 +27,35 @@ use Application\View\Helper\CabecalhoDeEventos;
 use Application\View\Helper\DadosEntidade;
 use Application\View\Helper\DivCapslock;
 use Application\View\Helper\DivJavaScript;
+use Application\View\Helper\FuncaoOnClick;
+use Application\View\Helper\GrupoDadosComplementares;
+use Application\View\Helper\InputAddon;
+use Application\View\Helper\InputCampoEndereco;
+use Application\View\Helper\InputDiaDaSemanaHoraMinuto;
+use Application\View\Helper\InputExtras;
 use Application\View\Helper\InputFormulario;
 use Application\View\Helper\LinkLogo;
+use Application\View\Helper\ListagemDeEventos;
 use Application\View\Helper\ListagemDePessoasComEventos;
 use Application\View\Helper\MensagemRelatorioEnviado;
 use Application\View\Helper\MensagemStatica;
 use Application\View\Helper\Menu;
 use Application\View\Helper\MenuHierarquia;
 use Application\View\Helper\ModalAba;
+use Application\View\Helper\ModalLoader;
 use Application\View\Helper\ModalMuitosCadastros;
 use Application\View\Helper\ModalMuitosEventos;
+use Application\View\Helper\MontarEndereco;
+use Application\View\Helper\PassoAPasso;
 use Application\View\Helper\PerfilDropDown;
 use Application\View\Helper\PerfilIcone;
+use Application\View\Helper\SpanDadosValidados;
+use Application\View\Helper\TabelaDeAlunos;
 use Application\View\Helper\TabelaLancamento;
+use Application\View\Helper\TemplateFormularioRodape;
+use Application\View\Helper\TemplateFormularioTopo;
+use Application\View\Helper\TituloDaPagina;
+use Cadastro\View\Helper\GrupoEstadoCivil;
 use Zend\Mvc\ModuleRouteListener;
 use Zend\Mvc\MvcEvent;
 use Zend\Session\Config\SessionConfig;
@@ -144,6 +164,81 @@ class Module {
                 },
                 'inputFormulario' => function($sm) {
                     return new InputFormulario();
+                },
+                'inputFormulario' => function($sm) {
+                    return new InputFormulario();
+                },
+                'botaoSubmit' => function($sm) {
+                    return new BotaoSubmit();
+                },
+                'botaoSubmitDesabilitado' => function($sm) {
+                    return new BotaoSubmitDesabilitado();
+                },
+                'botaoLink' => function($sm) {
+                    return new BotaoLink();
+                },
+                'funcaoOnClick' => function($sm) {
+                    return new FuncaoOnClick();
+                },
+                'dadosEntidade' => function($sm) {
+                    return new DadosEntidade();
+                },
+                'tituloDaPagina' => function($sm) {
+                    return new TituloDaPagina();
+                },
+                'templateFormularioTopo' => function($sm) {
+                    return new TemplateFormularioTopo();
+                },
+                'templateFormularioRodape' => function($sm) {
+                    return new TemplateFormularioRodape();
+                },
+                'inputDiaDaSemanaHoraMinuto' => function($sm) {
+                    return new InputDiaDaSemanaHoraMinuto();
+                },
+                'listagemDeEventos' => function($sm) {
+                    return new ListagemDeEventos();
+                },
+                'inputExtras' => function($sm) {
+                    return new InputExtras();
+                },
+                'botaoPopover' => function($sm) {
+                    return new BotaoPopover();
+                },
+                'inputAddon' => function($sm) {
+                    return new InputAddon();
+                },
+                'grupoEstadoCivil' => function($sm) {
+                    return new GrupoEstadoCivil();
+                },
+                'blocoResponsavel' => function($sm) {
+                    return new BlocoResponsavel();
+                },
+                'blocoDiv' => function($sm) {
+                    return new BlocoDiv();
+                },
+                'barraDeProgresso' => function($sm) {
+                    return new BarraDeProgresso();
+                },
+                'passoAPasso' => function($sm) {
+                    return new PassoAPasso();
+                },
+                'spanDadosValidados' => function($sm) {
+                    return new SpanDadosValidados();
+                },
+                'tabelaDeAlunos' => function($sm) {
+                    return new TabelaDeAlunos();
+                },
+                'montarEndereco' => function($sm) {
+                    return new MontarEndereco();
+                },
+                'inputCampoEndereco' => function($sm) {
+                    return new InputCampoEndereco();
+                },
+                'modalLoader' => function($sm) {
+                    return new ModalLoader();
+                },
+                'grupoDadosComplementares' => function($sm) {
+                    return new GrupoDadosComplementares();
                 },
             )
         );

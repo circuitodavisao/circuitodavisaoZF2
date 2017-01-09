@@ -7,7 +7,7 @@ namespace Application\Model\Entity;
  * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com>
  * Descricao: Entidade anotada da tabela evento_celula
  */
-use Cadastro\Form\ConstantesForm;
+use Application\Controller\Helper\Constantes;
 use Doctrine\ORM\Mapping as ORM;
 use SebastianBergmann\RecursionContext\Exception;
 use Zend\InputFilter\InputFilterAwareInterface;
@@ -20,8 +20,8 @@ use Zend\InputFilter\InputFilterInterface;
 class EventoCelula implements InputFilterAwareInterface {
 
     public function exchangeArray($data) {
-        $this->nome_hospedeiro = (!empty($data[ConstantesForm::$FORM_NOME_HOSPEDEIRO]) ? strtoupper($data[ConstantesForm::$FORM_NOME_HOSPEDEIRO]) : null);
-        $this->complemento = (!empty($data[ConstantesForm::$FORM_COMPLEMENTO]) ? strtoupper($data[ConstantesForm::$FORM_COMPLEMENTO]) : null);
+        $this->nome_hospedeiro = (!empty($data[Constantes::$FORM_NOME_HOSPEDEIRO]) ? strtoupper($data[Constantes::$FORM_NOME_HOSPEDEIRO]) : null);
+        $this->complemento = (!empty($data[Constantes::$FORM_COMPLEMENTO]) ? strtoupper($data[Constantes::$FORM_COMPLEMENTO]) : null);
     }
 
     protected $inputFilter;
@@ -186,45 +186,45 @@ class EventoCelula implements InputFilterAwareInterface {
 
             /* CEP */
             $inputFilter->add(array(
-                ConstantesForm::$VALIDACAO_NAME => ConstantesForm::$FORM_CEP_LOGRADOURO,
-                ConstantesForm::$VALIDACAO_REQUIRED => true,
-                ConstantesForm::$VALIDACAO_FILTER => array(
-                    array(ConstantesForm::$VALIDACAO_NAME => ConstantesForm::$VALIDACAO_STRING_TAGS), // removel xml e html string
-                    array(ConstantesForm::$VALIDACAO_NAME => ConstantesForm::$VALIDACAO_STRING_TRIM), // removel espaco do inicio e do final da string
-                    array(ConstantesForm::$VALIDACAO_NAME => ConstantesForm::$VALIDACAO_INT), //transforma string para inteiro
+                Constantes::$VALIDACAO_NAME => Constantes::$FORM_CEP_LOGRADOURO,
+                Constantes::$VALIDACAO_REQUIRED => true,
+                Constantes::$VALIDACAO_FILTER => array(
+                    array(Constantes::$VALIDACAO_NAME => Constantes::$VALIDACAO_STRING_TAGS), // removel xml e html string
+                    array(Constantes::$VALIDACAO_NAME => Constantes::$VALIDACAO_STRING_TRIM), // removel espaco do inicio e do final da string
+                    array(Constantes::$VALIDACAO_NAME => Constantes::$VALIDACAO_INT), //transforma string para inteiro
                 ),
-                ConstantesForm::$VALIDACAO_VALIDATORS => array(
+                Constantes::$VALIDACAO_VALIDATORS => array(
                     array(
-                        ConstantesForm::$VALIDACAO_NAME => ConstantesForm::$VALIDACAO_NOT_EMPTY,
+                        Constantes::$VALIDACAO_NAME => Constantes::$VALIDACAO_NOT_EMPTY,
                     ),
                     array(
-                        ConstantesForm::$VALIDACAO_NAME => ConstantesForm::$VALIDACAO_STRING_LENGTH,
-                        ConstantesForm::$VALIDACAO_OPTIONS => array(
-                            ConstantesForm::$VALIDACAO_MIN => 8,
-                            ConstantesForm::$VALIDACAO_MAX => 8,
+                        Constantes::$VALIDACAO_NAME => Constantes::$VALIDACAO_STRING_LENGTH,
+                        Constantes::$VALIDACAO_OPTIONS => array(
+                            Constantes::$VALIDACAO_MIN => 8,
+                            Constantes::$VALIDACAO_MAX => 8,
                         ),
                     ),
                 ),
             ));
             /* Nome Hospedeiro */
             $inputFilter->add(array(
-                ConstantesForm::$VALIDACAO_NAME => ConstantesForm::$FORM_NOME_HOSPEDEIRO,
-                ConstantesForm::$VALIDACAO_REQUIRED => true,
-                ConstantesForm::$VALIDACAO_FILTER => array(
-                    array(ConstantesForm::$VALIDACAO_NAME => ConstantesForm::$VALIDACAO_STRING_TAGS), // removel xml e html string
-                    array(ConstantesForm::$VALIDACAO_NAME => ConstantesForm::$VALIDACAO_STRING_TRIM), // removel espaco do inicio e do final da string
-                    array(ConstantesForm::$VALIDACAO_NAME => ConstantesForm::$VALIDACAO_STRING_TO_UPPER), // transforma em maiusculo
+                Constantes::$VALIDACAO_NAME => Constantes::$FORM_NOME_HOSPEDEIRO,
+                Constantes::$VALIDACAO_REQUIRED => true,
+                Constantes::$VALIDACAO_FILTER => array(
+                    array(Constantes::$VALIDACAO_NAME => Constantes::$VALIDACAO_STRING_TAGS), // removel xml e html string
+                    array(Constantes::$VALIDACAO_NAME => Constantes::$VALIDACAO_STRING_TRIM), // removel espaco do inicio e do final da string
+                    array(Constantes::$VALIDACAO_NAME => Constantes::$VALIDACAO_STRING_TO_UPPER), // transforma em maiusculo
                 ),
-                ConstantesForm::$VALIDACAO_VALIDATORS => array(
+                Constantes::$VALIDACAO_VALIDATORS => array(
                     array(
-                        ConstantesForm::$VALIDACAO_NAME => ConstantesForm::$VALIDACAO_NOT_EMPTY,
+                        Constantes::$VALIDACAO_NAME => Constantes::$VALIDACAO_NOT_EMPTY,
                     ),
                     array(
-                        ConstantesForm::$VALIDACAO_NAME => ConstantesForm::$VALIDACAO_STRING_LENGTH,
-                        ConstantesForm::$VALIDACAO_OPTIONS => array(
-                            ConstantesForm::$VALIDACAO_ENCODING => ConstantesForm::$VALIDACAO_UTF_8,
-                            ConstantesForm::$VALIDACAO_MIN => 3,
-                            ConstantesForm::$VALIDACAO_MAX => 80,
+                        Constantes::$VALIDACAO_NAME => Constantes::$VALIDACAO_STRING_LENGTH,
+                        Constantes::$VALIDACAO_OPTIONS => array(
+                            Constantes::$VALIDACAO_ENCODING => Constantes::$VALIDACAO_UTF_8,
+                            Constantes::$VALIDACAO_MIN => 3,
+                            Constantes::$VALIDACAO_MAX => 80,
                         ),
                     ),
                 ),
@@ -232,22 +232,22 @@ class EventoCelula implements InputFilterAwareInterface {
 
             /* DDD */
             $inputFilter->add(array(
-                ConstantesForm::$VALIDACAO_NAME => ConstantesForm::$FORM_DDD_HOSPEDEIRO,
-                ConstantesForm::$VALIDACAO_REQUIRED => true,
-                ConstantesForm::$VALIDACAO_FILTER => array(
-                    array(ConstantesForm::$VALIDACAO_NAME => ConstantesForm::$VALIDACAO_STRING_TAGS), // removel xml e html string
-                    array(ConstantesForm::$VALIDACAO_NAME => ConstantesForm::$VALIDACAO_STRING_TRIM), // removel espaco do inicio e do final da string
-                    array(ConstantesForm::$VALIDACAO_NAME => ConstantesForm::$VALIDACAO_INT), //transforma string para inteiro
+                Constantes::$VALIDACAO_NAME => Constantes::$FORM_DDD_HOSPEDEIRO,
+                Constantes::$VALIDACAO_REQUIRED => true,
+                Constantes::$VALIDACAO_FILTER => array(
+                    array(Constantes::$VALIDACAO_NAME => Constantes::$VALIDACAO_STRING_TAGS), // removel xml e html string
+                    array(Constantes::$VALIDACAO_NAME => Constantes::$VALIDACAO_STRING_TRIM), // removel espaco do inicio e do final da string
+                    array(Constantes::$VALIDACAO_NAME => Constantes::$VALIDACAO_INT), //transforma string para inteiro
                 ),
-                ConstantesForm::$VALIDACAO_VALIDATORS => array(
+                Constantes::$VALIDACAO_VALIDATORS => array(
                     array(
-                        ConstantesForm::$VALIDACAO_NAME => ConstantesForm::$VALIDACAO_NOT_EMPTY,
+                        Constantes::$VALIDACAO_NAME => Constantes::$VALIDACAO_NOT_EMPTY,
                     ),
                     array(
-                        ConstantesForm::$VALIDACAO_NAME => ConstantesForm::$VALIDACAO_STRING_LENGTH,
-                        ConstantesForm::$VALIDACAO_OPTIONS => array(
-                            ConstantesForm::$VALIDACAO_MIN => 2,
-                            ConstantesForm::$VALIDACAO_MAX => 2,
+                        Constantes::$VALIDACAO_NAME => Constantes::$VALIDACAO_STRING_LENGTH,
+                        Constantes::$VALIDACAO_OPTIONS => array(
+                            Constantes::$VALIDACAO_MIN => 2,
+                            Constantes::$VALIDACAO_MAX => 2,
                         ),
                     ),
                 ),
@@ -255,22 +255,22 @@ class EventoCelula implements InputFilterAwareInterface {
 
             /* Telefone */
             $inputFilter->add(array(
-                ConstantesForm::$VALIDACAO_NAME => ConstantesForm::$FORM_TELEFONE_HOSPEDEIRO,
-                ConstantesForm::$VALIDACAO_REQUIRED => true,
-                ConstantesForm::$VALIDACAO_FILTER => array(
-                    array(ConstantesForm::$VALIDACAO_NAME => ConstantesForm::$VALIDACAO_STRING_TAGS), // removel xml e html string
-                    array(ConstantesForm::$VALIDACAO_NAME => ConstantesForm::$VALIDACAO_STRING_TRIM), // removel espaco do inicio e do final da string
-                    array(ConstantesForm::$VALIDACAO_NAME => ConstantesForm::$VALIDACAO_INT), //transforma string para inteiro
+                Constantes::$VALIDACAO_NAME => Constantes::$FORM_TELEFONE_HOSPEDEIRO,
+                Constantes::$VALIDACAO_REQUIRED => true,
+                Constantes::$VALIDACAO_FILTER => array(
+                    array(Constantes::$VALIDACAO_NAME => Constantes::$VALIDACAO_STRING_TAGS), // removel xml e html string
+                    array(Constantes::$VALIDACAO_NAME => Constantes::$VALIDACAO_STRING_TRIM), // removel espaco do inicio e do final da string
+                    array(Constantes::$VALIDACAO_NAME => Constantes::$VALIDACAO_INT), //transforma string para inteiro
                 ),
-                ConstantesForm::$VALIDACAO_VALIDATORS => array(
+                Constantes::$VALIDACAO_VALIDATORS => array(
                     array(
-                        ConstantesForm::$VALIDACAO_NAME => ConstantesForm::$VALIDACAO_NOT_EMPTY,
+                        Constantes::$VALIDACAO_NAME => Constantes::$VALIDACAO_NOT_EMPTY,
                     ),
                     array(
-                        ConstantesForm::$VALIDACAO_NAME => ConstantesForm::$VALIDACAO_STRING_LENGTH,
-                        ConstantesForm::$VALIDACAO_OPTIONS => array(
-                            ConstantesForm::$VALIDACAO_MIN => 8,
-                            ConstantesForm::$VALIDACAO_MAX => 9,
+                        Constantes::$VALIDACAO_NAME => Constantes::$VALIDACAO_STRING_LENGTH,
+                        Constantes::$VALIDACAO_OPTIONS => array(
+                            Constantes::$VALIDACAO_MIN => 8,
+                            Constantes::$VALIDACAO_MAX => 9,
                         ),
                     ),
                 ),

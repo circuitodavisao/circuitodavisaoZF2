@@ -18,6 +18,10 @@ class RepositorioORM {
     private $_grupoORM;
     private $_grupoPessoaORM;
     private $_grupoPessoaTipoORM;
+    private $_eventoORM;
+    private $_eventoCelulaORM;
+    private $_grupoEventoORM;
+    private $_eventoTipoORM;
 
     /**
      * Contrutor
@@ -51,7 +55,7 @@ class RepositorioORM {
     }
 
     /**
-     * Metodo public para obter a instancia do EntidadeORM
+     * Metodo public para obter a instancia do GrupoPessoaTipoORM
      * @return GrupoPessoaTipoORM
      */
     public function getGrupoPessoaTipoORM() {
@@ -62,7 +66,7 @@ class RepositorioORM {
     }
 
     /**
-     * Metodo public para obter a instancia do EntidadeORM
+     * Metodo public para obter a instancia do GrupoPessoaORM
      * @return GrupoPessoaORM
      */
     public function getGrupoPessoaORM() {
@@ -71,10 +75,9 @@ class RepositorioORM {
         }
         return $this->_grupoPessoaORM;
     }
-    
-    
+
     /**
-     * Metodo public para obter a instancia do EntidadeORM
+     * Metodo public para obter a instancia do GrupoORM
      * @return GrupoORM
      */
     public function getGrupoORM() {
@@ -82,6 +85,50 @@ class RepositorioORM {
             $this->_grupoORM = new GrupoORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_GRUPO);
         }
         return $this->_grupoORM;
+    }
+
+    /**
+     * Metodo public para obter a instancia do EventoORM
+     * @return CircuitoORM
+     */
+    public function getEventoORM() {
+        if (is_null($this->_eventoORM)) {
+            $this->_eventoORM = new CircuitoORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_EVENTO);
+        }
+        return $this->_eventoORM;
+    }
+
+    /**
+     * Metodo public para obter a instancia do EventoCelulaORM
+     * @return CircuitoORM
+     */
+    public function getEventoCelulaORM() {
+        if (is_null($this->_eventoCelulaORM)) {
+            $this->_eventoCelulaORM = new CircuitoORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_EVENTO_CELULA);
+        }
+        return $this->_eventoCelulaORM;
+    }
+
+    /**
+     * Metodo public para obter a instancia do GrupoEventoORM
+     * @return CircuitoORM
+     */
+    public function getGrupoEventoORM() {
+        if (is_null($this->_grupoEventoORM)) {
+            $this->_grupoEventoORM = new CircuitoORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_GRUPO_EVENTO);
+        }
+        return $this->_grupoEventoORM;
+    }
+
+    /**
+     * Metodo public para obter a instancia do EventoTipoORM
+     * @return CircuitoORM
+     */
+    public function getEventoTipoORM() {
+        if (is_null($this->_eventoTipoORM)) {
+            $this->_eventoTipoORM = new CircuitoORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_EVENTO_TIPO);
+        }
+        return $this->_eventoTipoORM;
     }
 
     /**

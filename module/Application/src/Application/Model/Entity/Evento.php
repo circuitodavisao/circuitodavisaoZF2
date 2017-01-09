@@ -7,10 +7,10 @@ namespace Application\Model\Entity;
  * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com>
  * Descricao: Entidade anotada da tabela Evento
  */
-use Cadastro\Form\ConstantesForm;
+use Application\Controller\Helper\Constantes;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use SebastianBergmann\RecursionContext\Exception;
+use Exception;
 use Zend\InputFilter\InputFilter;
 use Zend\InputFilter\InputFilterAwareInterface;
 use Zend\InputFilter\InputFilterInterface;
@@ -229,31 +229,31 @@ class Evento extends CircuitoEntity implements InputFilterAwareInterface {
         $inputFilter = new InputFilter();
         /* Dia da Semana */
         $inputFilter->add(array(
-            ConstantesForm::$VALIDACAO_NAME => ConstantesForm::$FORM_DIA_DA_SEMANA,
-            ConstantesForm::$VALIDACAO_REQUIRED => true,
-            ConstantesForm::$VALIDACAO_VALIDATORS => array(
+            Constantes::$VALIDACAO_NAME => Constantes::$FORM_DIA_DA_SEMANA,
+            Constantes::$VALIDACAO_REQUIRED => true,
+            Constantes::$VALIDACAO_VALIDATORS => array(
                 array(
-                    ConstantesForm::$VALIDACAO_NAME => ConstantesForm::$VALIDACAO_NOT_EMPTY,
+                    Constantes::$VALIDACAO_NAME => Constantes::$VALIDACAO_NOT_EMPTY,
                 ),
             ),
         ));
         /* Hora */
         $inputFilter->add(array(
-            ConstantesForm::$VALIDACAO_NAME => ConstantesForm::$FORM_HORA,
-            ConstantesForm::$VALIDACAO_REQUIRED => true,
-            ConstantesForm::$VALIDACAO_VALIDATORS => array(
+            Constantes::$VALIDACAO_NAME => Constantes::$FORM_HORA,
+            Constantes::$VALIDACAO_REQUIRED => true,
+            Constantes::$VALIDACAO_VALIDATORS => array(
                 array(
-                    ConstantesForm::$VALIDACAO_NAME => ConstantesForm::$VALIDACAO_NOT_EMPTY,
+                    Constantes::$VALIDACAO_NAME => Constantes::$VALIDACAO_NOT_EMPTY,
                 ),
             ),
         ));
         /* Minutos */
         $inputFilter->add(array(
-            ConstantesForm::$VALIDACAO_NAME => ConstantesForm::$FORM_MINUTOS,
-            ConstantesForm::$VALIDACAO_REQUIRED => true,
-            ConstantesForm::$VALIDACAO_VALIDATORS => array(
+            Constantes::$VALIDACAO_NAME => Constantes::$FORM_MINUTOS,
+            Constantes::$VALIDACAO_REQUIRED => true,
+            Constantes::$VALIDACAO_VALIDATORS => array(
                 array(
-                    ConstantesForm::$VALIDACAO_NAME => ConstantesForm::$VALIDACAO_NOT_EMPTY,
+                    Constantes::$VALIDACAO_NAME => Constantes::$VALIDACAO_NOT_EMPTY,
                 ),
             ),
         ));
@@ -265,11 +265,11 @@ class Evento extends CircuitoEntity implements InputFilterAwareInterface {
         $inputFilter = Evento::getInputFilterEvento();
         /* Nome */
         $inputFilter->add(array(
-            ConstantesForm::$VALIDACAO_NAME => ConstantesForm::$FORM_NOME,
-            ConstantesForm::$VALIDACAO_REQUIRED => true,
-            ConstantesForm::$VALIDACAO_VALIDATORS => array(
+            Constantes::$VALIDACAO_NAME => Constantes::$FORM_NOME,
+            Constantes::$VALIDACAO_REQUIRED => true,
+            Constantes::$VALIDACAO_VALIDATORS => array(
                 array(
-                    ConstantesForm::$VALIDACAO_NAME => ConstantesForm::$VALIDACAO_NOT_EMPTY,
+                    Constantes::$VALIDACAO_NAME => Constantes::$VALIDACAO_NOT_EMPTY,
                 ),
             ),
         ));
@@ -302,7 +302,7 @@ class Evento extends CircuitoEntity implements InputFilterAwareInterface {
     }
 
     public function exchangeArray($data) {
-        $this->nome = (!empty($data[ConstantesForm::$FORM_NOME]) ? strtoupper($data[ConstantesForm::$FORM_NOME]) : null);
+        $this->nome = (!empty($data[Constantes::$FORM_NOME]) ? strtoupper($data[Constantes::$FORM_NOME]) : null);
     }
 
 }

@@ -1,0 +1,143 @@
+<?php
+
+use Application\Controller\Helper\Constantes;
+use Application\Form\CelulaForm;
+use Application\Form\EventoForm;
+
+/**
+ * Nome: celula.phtml
+ * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com> e Sergio Bezerra da Silva <sergio.silva.unb@gmail.com>
+ * Descricao: Página de cadastro de célula
+ */
+$form = $this->Form;
+$form->prepare();
+$pagina = '';
+$tituloDaPagina = '';
+if ($form instanceof CelulaForm) {
+    $tituloDaPagina = $this->translate(Constantes::$TRADUCAO_CADASTRO_CELULA) . ' <b class="text-danger">' . $this->translate(Constantes::$TRADUCAO_MULTIPLICACAO) . '</b>';
+    $pagina = Constantes::$PAGINA_EVENTO_CELULA_PERSISTIR;
+} else {
+    if ($form instanceof EventoForm) {
+        $tituloDaPagina = $this->translate(Constantes::$TRADUCAO_CADASTRO_CULTO);
+        $pagina = Constantes::$PAGINA_EVENTO_CULTO_PERSISTIR;
+    }
+}
+
+$actionUrl = $this->url(Constantes::$ROUTE_CADASTRO, array(Constantes::$PAGINA => $pagina));
+$form->setAttribute(Constantes::$FORM_ACTION, $actionUrl);
+
+echo $this->form()->openTag($form);
+echo $this->formHidden($form->get(Constantes::$FORM_CSRF));
+echo $this->formHidden($form->get(Constantes::$FORM_ID));
+echo $this->templateFormularioTopo($tituloDaPagina);
+?>
+<div id="divFormulario">
+    <!-- Inicio panel-body -->
+    <div class="panel-body bg-light">
+        <div class="section-divider mv40">
+            <span><?php echo $this->translate(Constantes::$TRADUCAO_DIA_HORA); ?></span>
+        </div>
+        <div class="section row">
+            <!-- Input Dia da Semana Hora e Minuto -->
+            <?php
+            echo $this->inputDiaDaSemanaHoraMinuto($form);
+            echo $this->inputExtras($form, $this->extra);
+            ?>          
+        </div>
+    </div>
+    <!-- Fim panel-body -->
+    <!-- Inicio panel-footer -->
+    <div class="panel-footer text-right" style="height:65px;">
+        <?php
+        /* Botões */
+        $labelVoltar = Constantes::$STRING_ICONE_ARROW_LEFT . ' ' . $this->translate(Constantes::$TRADUCAO_VOLTAR);
+        $labelContinuar = $this->translate(Constantes::$TRADUCAO_CONTINUAR) . ' ' . Constantes::$STRING_ICONE_ARROW_RIGHT;
+        $funcaoPreValidacao = '';
+        $urlVoltar = '';
+        if ($form instanceof CelulaForm) {
+            $disabled = 'disabled';
+            if (!empty($form->get(Constantes::$FORM_ID)->getValue())) {
+                $disabled = '';
+            }
+            $funcaoPreValidacao = $this->funcaoOnClick(Constantes::$STRING_FUNCAO_PRE_VALIDACAO_CELULA) . ' ' . $disabled . ' id="botaoContinuar"';
+            $urlVoltar = Constantes::$ROUTE_CADASTRO . Constantes::$PAGINA_CELULAS;
+        } else {
+            if ($form instanceof EventoForm) {
+                $funcaoPreValidacao = $this->funcaoOnClick(Constantes::$STRING_FUNCAO_PRE_VALIDACAO_CULTO);
+                $urlVoltar = Constantes::$ROUTE_CADASTRO . Constantes::$PAGINA_CULTOS;
+            }
+        }
+
+        /* Voltar */
+        echo $this->botaoLink($labelVoltar, $urlVoltar, 2, '');
+        /* Continuar */
+        echo $this->botaoLink($labelContinuar, Constantes::$STRING_HASHTAG, 0, $funcaoPreValidacao);
+        ?>
+    </div>
+    <!-- Fim panel-footer -->
+</div>
+</div>
+<div id="divDados" class="hidden">
+    <div class="panel-body bg-light">
+        <div class="section-divider">
+            <span><?php echo $this->translate(Constantes::$TRADUCAO_PERGUNTA_CADASTRO_CELULA); ?></span>
+        </div>
+        <div class="panel heading-border panel-danger">
+            <div class="panel-body">
+                <address>
+                    <div><strong><?php echo $this->translate(Constantes::$TRADUCAO_DIA_DA_SEMANA_SIMPLIFICADO) . ' / ' . $this->translate(Constantes::$TRADUCAO_HORA); ?></strong></div>
+                    <div><span id="spanDiaHora"></span></div>
+                </address>
+                <?php if ($form instanceof CelulaForm) { ?>
+                    <address>
+                        <div><strong><?php echo $this->translate(Constantes::$TRADUCAO_HOSPEDEIRO); ?></strong></div>
+                        <div><span id="spanNome"></span></div>
+                        <div><span id="spanTelefone"></span></div>
+                    </address>                     
+                    <address>
+                        <div><strong><?php echo $this->translate(Constantes::$TRADUCAO_ENDERECO); ?></strong></div>
+                        <div><span id="spanLogradouroComplemento"></span></div>
+                        <div><span id="spanEndereco"></span></div>                  
+                    </address>
+                    <?php
+                } else {
+                    if ($form instanceof EventoForm) {
+                        ?>
+                        <address>
+                            <div><strong>Nome</strong></div>
+                            <div><span id="spanNome"></span></div>
+                        </address>   
+                        <address>
+                            <div><strong>Equipe(s)</strong></div>
+                            <div><span id="spanEquipes"></span></div>
+                        </address>   
+                        <?php
+                    }
+                }
+                ?>
+            </div>                 
+        </div>
+    </div>
+    <div id="divBotaoVoltar" class="panel-footer text-right" style="height:65px;">
+        <?php
+        $labelVoltar = Constantes::$STRING_ICONE_ARROW_LEFT . ' ' . $this->translate(Constantes::$TRADUCAO_VOLTAR);
+        $stringNomeDaFuncaoOnClickVoltarParaOCadastro = '$("#divDados").toggleClass("' . Constantes::$FORM_HIDDEN . '");' .
+                '$("#divFormulario").toggleClass("' . Constantes::$FORM_HIDDEN . '")';
+        $traducaoDoBotao = Constantes::$TRADUCAO_CADASTRAR;
+        if (!empty($form->get(Constantes::$FORM_ID)->getValue())) {
+            $traducaoDoBotao = Constantes::$TRADUCAO_ALTERAR;
+        }
+        /* Botões */
+        echo $this->botaoLink($labelVoltar, Constantes::$STRING_HASHTAG, 2, $this->funcaoOnClick($stringNomeDaFuncaoOnClickVoltarParaOCadastro));
+        echo $this->botaoSubmit($traducaoDoBotao, Constantes::$CLASS_BTN_DANGER_DARK);
+        ?>                  
+    </div>
+</div>
+<?php
+echo $this->templateFormularioRodape();
+echo $this->form()->closeTag();
+
+echo $this->modalLoader();
+
+/* Layout com javascript para tela de cadastro de celula */
+echo $this->layoutJSEventoValidacao;

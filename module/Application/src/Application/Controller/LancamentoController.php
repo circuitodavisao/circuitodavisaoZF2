@@ -3,7 +3,7 @@
 namespace Application\Controller;
 
 use Application\Controller\Helper\Constantes;
-use Application\Controller\Helper\FuncoesLancamento;
+use Application\Controller\Helper\Funcoes;
 use Application\Form\CadastrarPessoaForm;
 use Application\Model\Entity\EventoFrequencia;
 use Application\Model\Entity\Grupo;
@@ -133,13 +133,13 @@ class LancamentoController extends CircuitoController {
         }
 
         if (empty($explodeParamentro[1])) {
-            $mes1 = FuncoesLancamento::mesPorAbaSelecionada($abaSelecionada);
-            $ano1 = FuncoesLancamento::anoPorAbaSelecionada($abaSelecionada);
+            $mes1 = Funcoes::mesPorAbaSelecionada($abaSelecionada);
+            $ano1 = Funcoes::anoPorAbaSelecionada($abaSelecionada);
             if ($abaSelecionada == 1) {
-                $cicloSelecionado = FuncoesLancamento::cicloAtual($mes1, $ano1);
+                $cicloSelecionado = Funcoes::cicloAtual($mes1, $ano1);
             }
             if ($abaSelecionada == 2) {
-                $cicloSelecionado = FuncoesLancamento::totalCiclosMes($mes1, $ano1);
+                $cicloSelecionado = Funcoes::totalCiclosMes($mes1, $ano1);
             }
         } else {
             $cicloSelecionado = $explodeParamentro[1];
@@ -156,8 +156,8 @@ class LancamentoController extends CircuitoController {
             }
         }
 
-        $mesSelecionado = FuncoesLancamento::mesPorAbaSelecionada($abaSelecionada);
-        $anoSelecionado = FuncoesLancamento::anoPorAbaSelecionada($abaSelecionada);
+        $mesSelecionado = Funcoes::mesPorAbaSelecionada($abaSelecionada);
+        $anoSelecionado = Funcoes::anoPorAbaSelecionada($abaSelecionada);
         $grupo = $entidade->getGrupo();
         $eventos = $grupo->getGrupoEventoNoCiclo($cicloSelecionado, $mesSelecionado, $anoSelecionado);
 
@@ -340,8 +340,8 @@ class LancamentoController extends CircuitoController {
                 $pessoa = $loginORM->getPessoaORM()->encontrarPorIdPessoa($explodeIdEventoFrequencia[1]);
                 $evento = $repositorioORM->getEventoORM()->encontrarPorIdEvento($explodeIdEventoFrequencia[2]);
                 /* Verificar se a frequencia ja existe */
-                $mes = FuncoesLancamento::mesPorAbaSelecionada($aba);
-                $ano = FuncoesLancamento::anoPorAbaSelecionada($aba);
+                $mes = Funcoes::mesPorAbaSelecionada($aba);
+                $ano = Funcoes::anoPorAbaSelecionada($aba);
                 $criteria = Criteria::create()
                         ->andWhere(Criteria::expr()->eq("evento_id", (int) $explodeIdEventoFrequencia[2]))
                         ->andWhere(Criteria::expr()->eq("ano", $ano))

@@ -2,10 +2,7 @@
 
 namespace Application\Controller\Factory;
 
-use Application\Controller\LoginController;
 use Zend\ServiceManager\Exception\ServiceNotCreatedException;
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\Validator\Exception\ExtensionNotLoadedException;
 
 /**

@@ -198,8 +198,11 @@ class Constantes {
     public static $ENTITY_GRUPO_PESSOA = 'Application\Model\Entity\GrupoPessoa';
     public static $ENTITY_GRUPO_PESSOA_TIPO = 'Application\Model\Entity\GrupoPessoaTipo';
     public static $ENTITY_EVENTO = 'Application\Model\Entity\Evento';
+    public static $ENTITY_EVENTO_CELULA = 'Application\Model\Entity\EventoCelula';
+    public static $ENTITY_EVENTO_TIPO = 'Application\Model\Entity\EventoTipo';
     public static $ENTITY_EVENTO_FREQUENCIA = 'Application\Model\Entity\EventoFrequencia';
     public static $ENTITY_GRUPO = 'Application\Model\Entity\Grupo';
+    public static $ENTITY_GRUPO_EVENTO = 'Application\Model\Entity\GrupoEvento';
     public static $ENTITY_PESSOA_ID = 'pessoa_id';
     public static $ENTITY_DATA_INATIVACAO = 'data_inativacao';
     public static $ENTITY_TIPO_ID = 'tipo_id';
@@ -259,7 +262,6 @@ class Constantes {
     public static $TRADUCAO_NOVO = 'New';
     public static $TRADUCAO_NOVO_CADASTRO = 'New Register';
     public static $TRADUCAO_NOVO_CADASTRO_LABEL = 'Person at the launch line';
-    public static $TRADUCAO_NOME = 'Full Name';
     public static $TRADUCAO_DDD = 'DDD';
     public static $TRADUCAO_TELEFONE = 'Phone';
     public static $TRADUCAO_TIPO = 'Type';
@@ -298,4 +300,314 @@ class Constantes {
     public static $ROUTE_FICHA_REVISAO = 'FichaRevisao';
 
     /* Fim lançamento */
+
+    /* Cadastro */
+    /* Rotas */
+    public static $PAGINA_CELULAS = 'Celulas';
+    public static $PAGINA_CULTOS = 'Cultos';
+    public static $PAGINA_CELULA = 'Celula';
+    public static $PAGINA_EVENTO_CULTO = 'EventoCulto';
+    public static $PAGINA_EVENTO_CELULA = 'EventoCelula';
+    public static $PAGINA_EVENTO = 'Evento';
+    public static $PAGINA_GRUPO = 'Grupo';
+    public static $PAGINA_GRUPO_FINALIZAR = 'GrupoFinalizar';
+    public static $PAGINA_GRUPO_ATUALIZACAO = 'GrupoAtualizacao';
+    public static $PAGINA_GRUPO_ATUALIZAR = 'GrupoAtualizar';
+    public static $PAGINA_GRUPO_EMAIL_ENVIADO = 'GrupoEmailEnviado';
+    public static $PAGINA_EVENTO_CELULA_PERSISTIR = 'EventoCelulaPersistir';
+    public static $PAGINA_EVENTO_CULTO_PERSISTIR = 'EventoCultoPersistir';
+    public static $PAGINA_EVENTO_EXCLUSAO = 'EventoExclusao';
+    public static $PAGINA_CELULA_EXCLUSAO_CONFIRMACAO = 'CelulaExclusaoConfirmacao';
+    public static $PAGINA_EVENTO_EXCLUSAO_CONFIRMACAO = 'EventoExclusaoConfirmacao';
+    public static $PAGINA_CELULA_CONFIRMACAO = 'CelulaConfirmacao';
+    public static $PAGINA_BUSCAR_ENDERECO = 'BuscarEndereco';
+    public static $PAGINA_BUSCAR_CPF = 'BuscarCPF';
+    public static $PAGINA_BUSCAR_EMAIL = 'BuscarEmail';
+    public static $CONTROLLER_CADASTRO = 'Application\Controller\Cadastro';
+    public static $ROUTE_CADASTRO = 'cadastro';
+    /* Entidades */
+    public static $ENTIDADE_EVENTO_CELULA = 'Entidade\Entity\EventoCelula';
+    public static $ENTIDADE_EVENTO_TIPO = 'Entidade\Entity\EventoTipo';
+    public static $ENTIDADE_GRUPO_EVENTO = 'Entidade\Entity\GrupoEvento';
+    public static $ENTIDADE_PESSOA_HIERARQUIA = 'Entidade\Entity\PessoaHierarquia';
+    public static $ENTIDADE_TURMA_ALUNO = 'Entidade\Entity\TurmaAluno';
+    public static $ENTIDADE_HIERARQUIA = 'Entidade\Entity\Hierarquia';
+    public static $ENTIDADE_ENTIDADE_TIPO = 'Entidade\Entity\EntidadeTipo';
+    public static $ENTIDADE_GRUPO_RESPONSAVEL = 'Entidade\Entity\GrupoResponsavel';
+    public static $ENTIDADE_GRUPO_PAI_FILHO = 'Entidade\Entity\GrupoPaiFilho';
+    /* Traduções */
+    public static $TRADUCAO_CADASTRADO = 'Registered';
+    public static $TRADUCAO_ALTERADO = 'Changed';
+    public static $TRADUCAO_EXCLUIDO = 'Deleted';
+    public static $TRADUCAO_CELULA_TEXTO = 'Host: ';
+    public static $TRADUCAO_CULTO_TEXTO = 'Name: ';
+    public static $TRADUCAO_CELULA_ = 'Cell ';
+    public static $TRADUCAO_CULTO_ = 'Cult ';
+    public static $TRADUCAO_FINALIZAR = 'Finish';
+    public static $TRADUCAO_INSERIR = 'Insert';
+    public static $TRADUCAO_LIMPAR = 'Clean';
+    public static $TRADUCAO_TITULO_PAGINA_CADASTRO_GRUPO_SUB_EQUIPE = 'Registration of <span class="text-primary">Sub Team</span>';
+    public static $TRADUCAO_INSIRA_OS_DADOS_DOS_RESPONSAVEIS_E_DADOS_COMPLEMENTARES = 'Enter the Responsible(s) and the complementary data';
+    public static $TRADUCAO_INSIRA_OS_DADOS_COMPLEMENTARES = 'Enter the Complementary Data';
+    public static $TRADUCAO_SELECIONE_O_ALUNO = 'Select the Student that will be used for the registration';
+    public static $TRADUCAO_MATRICULA = 'Registration';
+    public static $TRADUCAO_NOME = 'Name';
+    public static $TRADUCAO_DATA_NASCIMENTO = 'Birth Date';
+    public static $TRADUCAO_SEM_ALUNOS_CADASTRADOS = 'No Students Registered';
+    public static $TRADUCAO_BUSQUE_O_ALUNO = 'Find the Student';
+    public static $TRADUCAO_INFORME_DATA_NASCIMENTO_E_CPF = 'Report Date of Birth and CPF';
+    public static $TRADUCAO_INSIRA_OS_DADOS = 'Enter the data of the ';
+    public static $TRADUCAO_RESPONSAVEL = 'Responsible';
+    public static $TRADUCAO_HOMEM = 'Man';
+    public static $TRADUCAO_MULHER = 'Woman';
+    public static $TRADUCAO_LIDERARA = 'Will Lead';
+    public static $TRADUCAO_SELECIONE_ESTADO_CIVIL = 'Select one of the options below';
+    public static $TRADUCAO_DIA = 'Date';
+    public static $TRADUCAO_MES = 'Month';
+    public static $TRADUCAO_ANO = 'Year';
+    public static $TRADUCAO_SELECIONE_O_NUMERO_DA_SUB_EQUIPE = 'Select Sub Team Numbering';
+    public static $TRADUCAO_PREENCHA_DATA_NASCIMENTO_E_CPF = 'Fill in the Birthdate and CPF correctly';
+    public static $TRADUCAO_CPF_INVALIDO = 'CPF is invalid';
+    public static $TRADUCAO_NOME_NAO_CONFERE = 'Name of the CPF does not match with the student';
+    public static $TRADUCAO_DATA_NASCIMENTO_NAO_CONFERE = 'Date of Birth does not match with found';
+    public static $TRADUCAO_DADOS_LIBERADOS = 'Data Released';
+    public static $TRADUCAO_DADOS_NAO_CADASTRADOS = 'Data not found in the database';
+    public static $TRADUCAO_CPF_JA_UTILIZADO = 'CPF already used';
+    public static $TRADUCAO_EMAILS_NAO_CONFEREM = 'Emails do not match';
+    public static $TRADUCAO_PREENCHA_O_EMAIL = 'Fill in the email';
+    public static $TRADUCAO_EMAIL_INVALIDO = 'Email is invalid';
+    public static $TRADUCAO_EMAIL_USADO_PELO_CONJUGE = 'Email already used by the spouse';
+    public static $TRADUCAO_REPETIR_EMAIL = 'Repeat Email';
+    public static $TRADUCAO_PREENCHA_E_REPETA_O_EMAIL = 'Fill in and repeat Email';
+    public static $TRADUCAO_EMAIL_LIBERADO = 'Email Released';
+    public static $TRADUCAO_EMAIL_JA_UTILIZADO = 'Email already used';
+    public static $TRADUCAO_DADOS_DO_RESPONSAVEL = 'Responsible Details';
+    public static $TRADUCAO_DADOS_DO_HOMEM = 'Man Details';
+    public static $TRADUCAO_DADOS_DA_MULHER = 'Woman Details';
+    public static $TRADUCAO_INSIRA_DADOS_DO_RESPONSAVEL = 'Insert Responsible Details';
+    public static $TRADUCAO_INSIRA_DADOS_DO_HOMEM = 'Insert Man Details';
+    public static $TRADUCAO_INSIRA_DADOS_DA_MULHER = 'Insert Woman Details';
+    public static $TRADUCAO_NUMERACAO = 'Numberation: ';
+    public static $TRADUCAO_DADOS_COMPLEMENTARES = 'Complemetary Data';
+    public static $TRADUCAO_PASSO_A_PASSO_SELECIONE_O_ALUNO = 'Select the Student';
+    public static $TRADUCAO_PASSO_A_PASSO_DADOS_PESSOAIS = 'Personal Data';
+    public static $TRADUCAO_PASSO_A_PASSO_EMAIL = 'Email';
+    public static $TRADUCAO_PASSO_A_PASSO_HIERARQUIA = 'Hierarchy';
+    public static $TRADUCAO_SELECIONE_A_HIERARQUIA = 'Select the Hierarchy';
+    public static $TRADUCAO_CADASTRO_CONCLUIDO_COM_SUCESSO = 'Registration completed successfully';
+    public static $TRADUCAO_NAO_ESTA_ATIVADO = '<small>But <strong>IS NOT ON</strong> in a few minutes users will receive an email with the activation instructions.</small>';
+    public static $TRADUCAO_BOTAO_PRONTO = 'Ready';
+    public static $TRADUCAO_ENTRE_COM_A_SENHA = 'Enter the Password';
+    public static $TRADUCAO_REPITA_A_SENHA = 'Repeat the Password';
+
+
+    /* Tipo de Mensagens */
+    public static $TIPO_MENSAGEM_CADASTRAR_CELULA = 1;
+    public static $TIPO_MENSAGEM_ALTERAR_CELULA = 2;
+    public static $TIPO_MENSAGEM_EXCLUIR_CELULA = 3;
+    public static $TIPO_MENSAGEM_CADASTRAR_CULTO = 4;
+    public static $TIPO_MENSAGEM_ALTERAR_CULTO = 5;
+    public static $TIPO_MENSAGEM_EXCLUIR_CULTO = 6;
+    /* Inputs */
+    public static $INPUT_ESTADO_CIVIL = 'inputEstadoCivil';
+
+    /* Dados PROCOB */
+    public static $PROCOB_URL = 'https://api.procob.com/consultas/v1/';
+    public static $PROCOB_URL_DADOS_PESSOAIS = 'L0032/';
+    public static $PROCOB_URL_RECEITA_FEDERAL = 'L0014/';
+    public static $PROCOB_USUARIO = 'comunidadeevangelica@sara.com';
+    public static $PROCOB_SENHA = 'HK8C';
+
+    /* Funcões JS */
+    public static $FUNCAO_JS_ABRIR_TELAS_DE_ALUNO = 'abrirTelaDeAlunos(#tipo)';
+
+    /* Forms */
+    public static $FORM_ACTION_CADASTRO_GRUPO_FINALIZAR = 'cadastroGrupoFinalizar';
+    public static $FORM_INPUT_DIA = 'Dia';
+    public static $FORM_INPUT_MES = 'Mes';
+    public static $FORM_INPUT_ANO = 'Ano';
+    public static $FORM_INPUT_DDD = 'inputDDD';
+    public static $FORM_INPUT_CODIGO_VERIFICADOR = 'inputCodigoVerificador';
+    public static $FORM_INPUT_CELULAR = 'inputCelular';
+    public static $FORM_INPUT_PROFISSAO = 'inputProfissao';
+    public static $FORM_CLASS_FORM_CONTROL = 'form-control';
+
+    /* Formulários */
+    public static $FORM_METHOD = 'method';
+    public static $FORM_POST = 'POST';
+    public static $FORM_ID = 'id';
+    public static $FORM_ID_ALUNO_SELECIONADO = 'idAlunoSelecionado';
+    public static $FORM_SELECT = 'SELECT';
+    public static $FORM_DIA_DA_SEMANA = 'dia_da_semana';
+    public static $FORM_HIERARQUIA = 'hierarquia';
+    public static $FORM_DATA_NASCIMENTO = 'dataNascimento';
+    public static $FORM_NOME_ALUNO = 'nomeAluno';
+    public static $FORM_NUMERACAO = 'numeracao';
+    public static $FORM_HORA = 'hora';
+    public static $FORM_MINUTOS = 'minutos';
+    public static $FORM_ICONE_HORA = 'fa-clock-o';
+    public static $FORM_CEP_LOGRADOURO = 'cep_logradouro';
+    public static $FORM_CPF = 'cpf';
+    public static $FORM_EMAIL = 'email';
+    public static $FORM_REPETIR_EMAIL = 'repetirEmail';
+    public static $FORM_COMPLEMENTO = 'complemento';
+    public static $FORM_UF = 'uf';
+    public static $FORM_HIDDEN = 'hidden';
+    public static $FORM_CIDADE = 'cidade';
+    public static $FORM_BAIRRO = 'bairro';
+    public static $FORM_LOGRADOURO = 'logradouro';
+    public static $FORM_ICONE_COMPLEMENTO = 'fa-location-arrow';
+    public static $FORM_ICONE_DATABASE = 'fa-database';
+    public static $FORM_NOME_HOSPEDEIRO = 'nome_hospedeiro';
+    public static $FORM_NOME = 'nome';
+    public static $FORM_NOME_ENTIDADE = 'nomeEntidade';
+    public static $FORM_ICONE_NOME_HOSPEDEIRO = 'fa-terminal';
+    public static $FORM_DDD_HOSPEDEIRO = 'ddd_hospedeiro';
+    public static $FORM_ICONE_DDD_HOSPEDEIRO = 'fa-phone-square';
+    public static $FORM_TELEFONE_HOSPEDEIRO = 'telefone_hospedeiro';
+    public static $FORM_ICONE_TELEFONE_HOSPEDEIRO = 'fa-phone-square';
+    public static $FORM_BUSCAR_CEP_LOGRADOURO = 'buscar_cep_logradouro';
+    public static $FORM_CLASS = 'class';
+    public static $FORM_CLASS_GUI_INPUT = 'gui-input';
+    public static $FORM_CLASS_DATE = 'date';
+    public static $FORM_PLACEHOLDER = 'placeholder';
+    public static $FORM_ONCLICK = 'onClick';
+    public static $FORM_ONCHANGE = 'onChange';
+    public static $FORM_FUNCAO_BUSCAR_CEP = 'buscarEndereco()';
+    public static $FORM_FUNCAO_BUSCAR_CPF = 'buscarCPF()';
+    public static $FORM_FUNCAO_BUSCAR_EMAIL = 'buscarEmail()';
+    public static $FORM_FUNCAO_VERIFICAR_EMAIL_IGUAL = 'verificarEmailIgual(this.value);';
+    public static $FORM_FUNCAO_VALIDAR_FORMULARIO = 'validarFormulario();';
+    public static $FORM_FUNCAO_BUSCAR_POR_ENTER = 'return submitEnter(this, event)';
+    public static $FORM_ONBLUR = 'onblur';
+    public static $FORM_ONKEYPRESS = 'onkeypress';
+    public static $FORM_BTN_DEFAULT_DARK = 'btn ladda-button btn-default dark';
+    public static $FORM_CSRF = 'csrf';
+    public static $FORM_CELULA = 'CelulaForm';
+    public static $FORM = 'Form';
+    public static $EXTRA = 'extra';
+    public static $FORM_ENDERECO_HIDDEN = 'enderecoHidden';
+    public static $FORM_ACTION = 'action';
+    public static $FORM_READONLY = 'readonly';
+    public static $FORM_DISABLED = 'disabled';
+    public static $FORM_SUBMIT = 'submit';
+    public static $FORM_TIPO = 'tipo';
+
+    /* Formulario de Celulas */
+    public static $STRING_DIV_CONFIRMACAO = 'divConfirmacao';
+    public static $STRING_ICONE_PENCIL = '<i class="fa fa-pencil" aria-hidden="true"></i>';
+    public static $STRING_ICONE_TIMES = '<i class="fa fa-times" aria-hidden="true"></i>';
+    public static $STRING_ICONE_PLUS = '<i class="fa fa-plus" aria-hidden="true"></i>';
+    public static $STRING_ICONE_ARROW_LEFT = '<i class="fa fa-arrow-left" aria-hidden="true"></i>';
+    public static $STRING_ICONE_ARROW_RIGHT = '<i class="fa fa-arrow-right" aria-hidden="true"></i>';
+    public static $STRING_HASHTAG = '#';
+    public static $STRING_FUNCAO_PRE_VALIDACAO_CELULA = 'preValidacao(1)';
+    public static $STRING_FUNCAO_PRE_VALIDACAO_CULTO = 'preValidacao(2)';
+
+    /* Validações */
+    public static $VALIDACAO_NAME = 'name';
+    public static $VALIDACAO_REQUIRED = 'required';
+    public static $VALIDACAO_FILTER = 'filter';
+    public static $VALIDACAO_STRING_TAGS = 'StripTags';
+    public static $VALIDACAO_STRING_TRIM = 'StringTrim';
+    public static $VALIDACAO_INT = 'Int';
+    public static $VALIDACAO_STRING_TO_UPPER = 'StringToUpper';
+    public static $VALIDACAO_VALIDATORS = 'validators';
+    public static $VALIDACAO_NOT_EMPTY = 'NotEmpty';
+    public static $VALIDACAO_STRING_LENGTH = 'StringLength';
+    public static $VALIDACAO_OPTIONS = 'options';
+    public static $VALIDACAO_ENCODING = 'encoding';
+    public static $VALIDACAO_UTF_8 = 'UTF-8';
+    public static $VALIDACAO_MIN = 'min';
+    public static $VALIDACAO_MAX = 'max';
+
+    /* Traduções */
+    public static $TRADUCAO_PERGUNTA_EXCLUSAO_ATENDIMENTO = 'Really want to delete this individual discipleship ?';
+    public static $TRADUCAO_CIENCIA_EXCLUSAO_ATENDIMENTO = 'I am <span class="text-danger">aware</span> that by <span class="text-danger">excluding individual discipleship </span> is the same no longer appear in the <span class="text-danger">launch line</span>!';
+    public static $TRADUCAO_HORA = 'Hour';
+    public static $TRADUCAO_MINUTOS = 'Minutes';
+    public static $TRADUCAO_CEP_LOGRADOURO = 'CEP';
+    public static $TRADUCAO_CPF = 'CPF';
+    public static $TRADUCAO_EMAIL = 'Email';
+    public static $TRADUCAO_CEP_LOGRADOURO_SITE_CORREIOS = ' - Do not know your ZIP code <u><a target="_blank" href="http://www.buscacep.correios.com.br/sistemas/buscacep/">Click Here</a></u>';
+    public static $TRADUCAO_COMPLEMENTO = 'Complement';
+    public static $TRADUCAO_UF = 'UF';
+    public static $TRADUCAO_CIDADE = 'City';
+    public static $TRADUCAO_BAIRRO = 'Neighborhood';
+    public static $TRADUCAO_LOGRADOURO = 'Public Place';
+    public static $TRADUCAO_NOME_HOSPEDEIRO = 'Name Host';
+    public static $TRADUCAO_EQUIPES = 'Teams';
+    public static $TRADUCAO_HOSPEDEIRO = 'Host';
+    public static $TRADUCAO_ENDERECO = 'Address';
+    public static $TRADUCAO_DDD_HOSPEDEIRO = 'DDD';
+    public static $TRADUCAO_TELEFONE_HOSPEDEIRO = 'Phone Host';
+    public static $TRADUCAO_BUSCAR_CEP_LOGRADOURO = 'Search';
+    public static $TRADUCAO_DIA_DA_SEMANA = 'Day of Week';
+    public static $TRADUCAO_DIA_DA_SEMANA_SIMPLIFICADO = 'Day';
+    public static $TRADUCAO_CADASTRO_CELULA = 'Registration Cell';
+    public static $TRADUCAO_CADASTRO_CULTO = 'Registration <b class="text-danger">Cult</b>';
+    public static $TRADUCAO_NOVA = 'New';
+    public static $TRADUCAO_NOVA_CELULA = 'New Cell';
+    public static $TRADUCAO_NOVO_CULTO = 'New Cult';
+    public static $TRADUCAO_MULTIPLICACAO = 'Multiplication';
+    public static $TRADUCAO_LISTAGEM_CULTOS = 'Listing <b class="text-danger">Cults</b>';
+    public static $TRADUCAO_LISTAGEM_CELULAS = 'Listing Cells of';
+    public static $TRADUCAO_DIA_HORA = 'Day / Hour';
+    public static $TRADUCAO_DADOS_DO_HOSPEDEIRO = 'Data from Host';
+    public static $TRADUCAO_BUSCAR = 'Search';
+    public static $TRADUCAO_VALIDACAO_DIA_DA_SEMANA_REQUERIDO = 'Select one day of week';
+    public static $TRADUCAO_VALIDACAO_HORA_REQUERIDO = 'Select Hour';
+    public static $TRADUCAO_VALIDACAO_MINUTOS_REQUERIDO = 'Select Minutes';
+    public static $TRADUCAO_VALIDACAO_HORA_INVALIDA = 'Invalid Hour ';
+    public static $TRADUCAO_VALIDACAO_CEP_LOGRADOURO_REQUERIDO = 'Enter CEP';
+    public static $TRADUCAO_VALIDACAO_CEP_LOGRADOURO_INVALIDO = 'Invalid CEP';
+    public static $TRADUCAO_VALIDACAO_NOME_HOSPEDEIRO_REQUERIDO = 'Enter host name';
+    public static $TRADUCAO_VALIDACAO_NOME_HOSPEDEIRO_MINIMO = 'Enter at least 3 characters or more';
+    public static $TRADUCAO_VALIDACAO_NOME_HOSPEDEIRO_MAXIMO = 'Enter at 80 characters';
+    public static $TRADUCAO_VALIDACAO_NOME_REQUERIDO = 'Enter Name';
+    public static $TRADUCAO_VALIDACAO_NOME_MINIMO = 'Enter at least 3 characters or more';
+    public static $TRADUCAO_VALIDACAO_NOME_MAXIMO = 'Enter at 30 characters';
+    public static $TRADUCAO_VALIDACAO_DDD_HOSPEDEIRO_REQUERIDO = 'Enter DDD';
+    public static $TRADUCAO_VALIDACAO_DDD_HOSPEDEIRO_INVALIDO = 'Invalid DDD';
+    public static $TRADUCAO_VALIDACAO_TELEFONE_HOSPEDEIRO_REQUERIDO = 'Enter Phone';
+    public static $TRADUCAO_VALIDACAO_TELEFONE_HOSPEDEIRO_INVALIDO = 'Invalid Phone';
+    public static $TRADUCAO_CONFIRMACAO_CADASTRO_CELULA = 'Confirmation <strong><span class="text-danger">Cell Creation</span></strong>';
+    public static $TRADUCAO_CONFIRMACAO_EXCLUSAO_CELULA = 'Confirmation <strong><span class="text-danger">Cell Exclusion</span></strong>';
+    public static $TRADUCAO_CONFIRMACAO_EXCLUSAO = 'Confirmation <strong><span class="text-danger">Exclusion</span></strong>';
+    public static $TRADUCAO_PERGUNTA_CADASTRO_CELULA = 'The data are correct?';
+    public static $TRADUCAO_PERGUNTA_EXCLUSAO_CELULA = 'Really want to delete this cell?';
+    public static $TRADUCAO_PERGUNTA_EXCLUSAO_CULTO = 'Really want to delete this cult?';
+    public static $TRADUCAO_CIENCIA_CADASTRO_CELULA = 'I confirm that the data is correct';
+    public static $TRADUCAO_CIENCIA_EXCLUSAO_CULTO = 'I am <span class="text-danger">aware</span> that by <span class="text-danger">excluding cult</span> is the same no longer appear in the <span class="text-danger">launch line</span>!';
+    public static $TRADUCAO_CIENCIA_EXCLUSAO_CELULA = 'I am <span class="text-danger">aware</span> that by <span class="text-danger">excluding cell</span> is the same no longer appear in the <span class="text-danger">launch line</span>!';
+    public static $TRADUCAO_MOTIVO_EXCLUSAO = 'What reason for exclusion?';
+    public static $TRADUCAO_DESCREVA_MOTIVO_EXCLUSAO = 'Please specify the reason';
+    public static $TRADUCAO_DIGITE_SENHA_EXCUSAO_SENHA = 'Enter your password to confirm the deletion';
+    public static $TRADUCAO_CONFIRMACAO = 'Confirm';
+    public static $TRADUCAO_NUMERO_MAXIMO_CELULAS = 'Maximum number of cells reached!';
+
+    /* Layout */
+    public static $LAYOUT_JS_EVENTO = 'layout/layout-js-evento';
+    public static $LAYOUT_STRING_JS_EVENTO = 'layoutJSEvento';
+    public static $LAYOUT_JS_GRUPO_VALIDACAO = 'layout/layout-js-grupo-validacao';
+    public static $LAYOUT_STRING_JS_GRUPO_VALIDACAO = 'layoutJSGrupoValidacao';
+    public static $LAYOUT_JS_EVENTO_VALIDACAO = 'layout/layout-js-evento-validacao';
+    public static $LAYOUT_STRING_JS_EVENTO_VALIDACAO = 'layoutJSEventoValidacao';
+    public static $LAYOUT_JS_EVENTOS = 'layout/layout-js-eventos';
+    public static $LAYOUT_JS_EVENTOS_VALIDACAO = 'layout/layout-js-eventos-validacao';
+    public static $LAYOUT_STRING_JS_EVENTOS = 'layoutJSEventos';
+    public static $LAYOUT_STRING_JS_EVENTOS_VALIDACAO = 'layoutJSEventosValidacao';
+    public static $LAYOUT_NOME_HOSPEDEIRO_CELULA_CADASTRADO = 'nomeHospedeiroCelulaCadastrado';
+    public static $LAYOUT_NOME_HOSPEDEIRO_CELULA_ALTERADA = 'nomeHospedeiroCelulaAlterada';
+    public static $LAYOUT_NOME_HOSPEDEIRO_CELULA_EXCLUIDA = 'nomeHospedeiroCelulaExcluida';
+
+    /* Listagem */
+    public static $LISTAGEM_EVENTOS = 'eventos';
+    public static $TITULO_DA_PAGINA = 'tituloDaPagina';
+    public static $TIPO_EVENTO = 'tipoEvento';
+    public static $LISTAGEM_CELULAS = 'celulas';
+    public static $CELULA = 'celula';
+    public static $EVENTO = 'evento';
+
+    /* Fim Cadastro */
 }

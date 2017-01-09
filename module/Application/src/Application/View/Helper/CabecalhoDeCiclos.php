@@ -3,7 +3,7 @@
 namespace Application\View\Helper;
 
 use Application\Controller\Helper\Constantes;
-use Application\Controller\Helper\FuncoesLancamento;
+use Application\Controller\Helper\Funcoes;
 use Zend\View\Helper\AbstractHelper;
 
 /**
@@ -24,8 +24,8 @@ class CabecalhoDeCiclos extends AbstractHelper {
     public function renderHtml() {
         $html = '';
 
-        $mesSelecionado = FuncoesLancamento::mesPorAbaSelecionada($this->view->abaSelecionada);
-        $anoSelecionado = FuncoesLancamento::anoPorAbaSelecionada($this->view->abaSelecionada);
+        $mesSelecionado = Funcoes::mesPorAbaSelecionada($this->view->abaSelecionada);
+        $anoSelecionado = Funcoes::anoPorAbaSelecionada($this->view->abaSelecionada);
         $urlBase = $this->view->url(Constantes::$ROUTE_LANCAMENTO);
         $urlBaseCiclo = $urlBase . '/' . $this->view->abaSelecionada . '_';
 
@@ -44,8 +44,8 @@ class CabecalhoDeCiclos extends AbstractHelper {
             $html .= '<a ' . Constantes::$ONCLICK_ABRIR_MODAL . ' href="' . $urlCicloAnterior . '"><button class="btn btn-default btn-sm"><i class="fa fa-angle-double-left"></i></button></a>&nbsp;';
         }
         $traducaoPeriodo = $this->view->translate(Constantes::$TRADUCAO_PERIODO);
-        $html .= $this->view->translate(Constantes::$TRADUCAO_CICLO) . Constantes::$NBSP . $this->view->cicloSelecionado . '&nbsp;-&nbsp;' . FuncoesLancamento::periodoCicloMesAno($this->view->cicloSelecionado, $mesSelecionado, $anoSelecionado, $traducaoPeriodo);
-        $totalDeCiclos = FuncoesLancamento::totalCiclosMes($mesSelecionado, $anoSelecionado);
+        $html .= $this->view->translate(Constantes::$TRADUCAO_CICLO) . Constantes::$NBSP . $this->view->cicloSelecionado . '&nbsp;-&nbsp;' . Funcoes::periodoCicloMesAno($this->view->cicloSelecionado, $mesSelecionado, $anoSelecionado, $traducaoPeriodo);
+        $totalDeCiclos = Funcoes::totalCiclosMes($mesSelecionado, $anoSelecionado);
         if ($this->view->cicloSelecionado < $totalDeCiclos) {
             $urlCicloPosterior = $urlBaseCiclo . ($this->view->cicloSelecionado + 1);
             $html .= '&nbsp;<a ' . Constantes::$ONCLICK_ABRIR_MODAL . ' href="' . $urlCicloPosterior . '"><button class="btn btn-default btn-sm"><i class="fa fa-angle-double-right"></i></button></a>';

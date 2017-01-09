@@ -3,7 +3,7 @@
 namespace Application\View\Helper;
 
 use Doctrine\Common\Collections\Criteria;
-use Application\Controller\Helper\FuncoesLancamento;
+use Application\Controller\Helper\Funcoes;
 use Zend\View\Helper\AbstractHelper;
 
 /**
@@ -23,8 +23,8 @@ class CabecalhoDeEventos extends AbstractHelper {
 
     public function renderHtml() {
         $html = '';
-        $mesSelecionado = FuncoesLancamento::mesPorAbaSelecionada($this->view->abaSelecionada);
-        $anoSelecionado = FuncoesLancamento::anoPorAbaSelecionada($this->view->abaSelecionada);
+        $mesSelecionado = Funcoes::mesPorAbaSelecionada($this->view->abaSelecionada);
+        $anoSelecionado = Funcoes::anoPorAbaSelecionada($this->view->abaSelecionada);
         $grupo = $this->view->entidade->getGrupo();
         $eventos = $grupo->getGrupoEventoNoCiclo($this->view->cicloSelecionado, $mesSelecionado, $anoSelecionado);
         if (count($eventos) > 0) {
@@ -32,8 +32,8 @@ class CabecalhoDeEventos extends AbstractHelper {
             $html .= '<th class="tdTipo"></th>';
             $html .= '<th class="tdNome text-right">Totais</th>';
             foreach ($eventos as $ge) {
-                $diaDaSemanaAjustado = FuncoesLancamento::diaDaSemanaPorDia($ge->getEvento()->getDia());
-                $eventoNome = FuncoesLancamento::nomeDoEvento($ge->getEvento()->getTipo_id());
+                $diaDaSemanaAjustado = Funcoes::diaDaSemanaPorDia($ge->getEvento()->getDia());
+                $eventoNome = Funcoes::nomeDoEvento($ge->getEvento()->getTipo_id());
 
                 $html .= '<th class="text-center">';
                 $html .= '<div style="font-size:9px; width:100%">' . $this->view->translate($eventoNome) . '</div>';

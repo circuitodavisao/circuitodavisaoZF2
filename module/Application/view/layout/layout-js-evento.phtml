@@ -1,0 +1,11 @@
+<?php
+
+$versao = '?v=6.6';
+
+echo $this
+        ->headScript()
+        ->prependFile($this->basePath() . '/js/circuito_da_visao/buscar-endereco.js' . $versao)
+        ->prependFile($this->basePath() . '/js/circuito_da_visao/modal-loader.js' . $versao)
+        ->prependFile($this->basePath() . '/vendor/plugins/validate/jquery.validate.min.js')
+;
+echo $this->inlineScript();

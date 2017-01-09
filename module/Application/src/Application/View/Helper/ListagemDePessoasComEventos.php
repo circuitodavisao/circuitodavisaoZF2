@@ -4,7 +4,7 @@ namespace Application\View\Helper;
 
 use Doctrine\Common\Collections\Criteria;
 use Application\Controller\Helper\Constantes;
-use Application\Controller\Helper\FuncoesLancamento;
+use Application\Controller\Helper\Funcoes;
 use Zend\View\Helper\AbstractHelper;
 
 /**
@@ -24,8 +24,8 @@ class ListagemDePessoasComEventos extends AbstractHelper {
 
     public function renderHtml() {
         $html = '';
-        $mesSelecionado = FuncoesLancamento::mesPorAbaSelecionada($this->view->abaSelecionada);
-        $anoSelecionado = FuncoesLancamento::anoPorAbaSelecionada($this->view->abaSelecionada);
+        $mesSelecionado = Funcoes::mesPorAbaSelecionada($this->view->abaSelecionada);
+        $anoSelecionado = Funcoes::anoPorAbaSelecionada($this->view->abaSelecionada);
         $pessoas = array();
         $pessoasGrupo = array();
         $grupo = $this->view->entidade->getGrupo();
@@ -71,8 +71,8 @@ class ListagemDePessoasComEventos extends AbstractHelper {
                     $adicionar = false;
 
                     /* Condição para data de cadastro */
-                    $primeiroDiaCiclo = FuncoesLancamento::periodoCicloMesAno($this->view->cicloSelecionado, $mesSelecionado, $anoSelecionado, '', 1);
-                    $ultimoDiaCiclo = FuncoesLancamento::periodoCicloMesAno($this->view->cicloSelecionado, $mesSelecionado, $anoSelecionado, '', 2);
+                    $primeiroDiaCiclo = Funcoes::periodoCicloMesAno($this->view->cicloSelecionado, $mesSelecionado, $anoSelecionado, '', 1);
+                    $ultimoDiaCiclo = Funcoes::periodoCicloMesAno($this->view->cicloSelecionado, $mesSelecionado, $anoSelecionado, '', 2);
                     $mesAtual = date('m'); /* Mes com zero */
                     $anoAtual = date('Y');
 
@@ -283,8 +283,8 @@ class ListagemDePessoasComEventos extends AbstractHelper {
 
                     /* Condições mes anteiror, mes atual e ciclos */
                     $condicaoMesAnterior = ($this->view->abaSelecionada == 2);
-                    $condicaoCicloAtual = ($this->view->abaSelecionada == 1 && $this->view->cicloSelecionado == FuncoesLancamento::cicloAtual($mesSelecionado, $anoSelecionado));
-                    $condicaoCicloAnteriores = ($this->view->abaSelecionada == 1 && $this->view->cicloSelecionado < FuncoesLancamento::cicloAtual($mesSelecionado, $anoSelecionado));
+                    $condicaoCicloAtual = ($this->view->abaSelecionada == 1 && $this->view->cicloSelecionado == Funcoes::cicloAtual($mesSelecionado, $anoSelecionado));
+                    $condicaoCicloAnteriores = ($this->view->abaSelecionada == 1 && $this->view->cicloSelecionado < Funcoes::cicloAtual($mesSelecionado, $anoSelecionado));
                     $diaDaSemana = date('N');
                     if ($diaDaSemana == 7) {
                         $diaDaSemana = 8;
@@ -309,13 +309,13 @@ class ListagemDePessoasComEventos extends AbstractHelper {
 
                     /* Validação de transferencias */
                     $icone = 1;
-                    $primeiroDiaCiclo = FuncoesLancamento::periodoCicloMesAno($this->view->cicloSelecionado, $mesSelecionado, $anoSelecionado, '', 1);
+                    $primeiroDiaCiclo = Funcoes::periodoCicloMesAno($this->view->cicloSelecionado, $mesSelecionado, $anoSelecionado, '', 1);
                     if ($pessoa->verificarSeFoiTransferido($mesSelecionado, $anoSelecionado)) {
                         $mostrar = false;
                         $icone = 2;
                         /* Condição para data de cadastro */
 
-                        $ultimoDiaCiclo = FuncoesLancamento::periodoCicloMesAno($this->view->cicloSelecionado, $mesSelecionado, $anoSelecionado, '', 2);
+                        $ultimoDiaCiclo = Funcoes::periodoCicloMesAno($this->view->cicloSelecionado, $mesSelecionado, $anoSelecionado, '', 2);
 
                         /* cadastrado nesse mes com dia anteiror o ciclo */
                         if ($condicaoDiaSemana || $condicaoCicloAnteriores || $condicaoMesAnterior) {
@@ -358,8 +358,8 @@ class ListagemDePessoasComEventos extends AbstractHelper {
                         /* Verificando inativado */
                         if (!empty($pessoa->getDataInativacao())) {
                             /* Data Inativacao */
-                            $primeiroDiaCiclo = FuncoesLancamento::periodoCicloMesAno($this->view->cicloSelecionado, $mesSelecionado, $anoSelecionado, '', 1);
-                            $ultimoDiaCiclo = FuncoesLancamento::periodoCicloMesAno($this->view->cicloSelecionado, $mesSelecionado, $anoSelecionado, '', 2);
+                            $primeiroDiaCiclo = Funcoes::periodoCicloMesAno($this->view->cicloSelecionado, $mesSelecionado, $anoSelecionado, '', 1);
+                            $ultimoDiaCiclo = Funcoes::periodoCicloMesAno($this->view->cicloSelecionado, $mesSelecionado, $anoSelecionado, '', 2);
                             if ($pessoa->getDataInativacaoDia() > $ultimoDiaCiclo) {
                                 $mostrar = true;
                             }
