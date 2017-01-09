@@ -7,10 +7,11 @@ namespace Application\Model\Entity;
  * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com>
  * Descricao: Entidade anotada da tabela grupo
  */
+use Application\Controller\Helper\FuncoesLancamento;
+use Application\Model\ORM\CircuitoORM;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Lancamento\Controller\Helper\FuncoesLancamento;
 
 /** @ORM\Entity */
 class Grupo {

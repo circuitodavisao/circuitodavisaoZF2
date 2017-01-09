@@ -1,7 +1,6 @@
 <?php
 
-use Lancamento\Controller\Helper\ConstantesLancamento;
-use Login\Controller\Helper\Constantes;
+use Application\Controller\Helper\Constantes;
 
 /**
  * Nome: cadastrar-pessoa.phtml
@@ -10,7 +9,7 @@ use Login\Controller\Helper\Constantes;
  */
 $form = $this->CadastrarPessoaForm;
 $form->prepare();
-$form->setAttribute(Constantes::$ACTION, $this->url(ConstantesLancamento::$ROUTE_LANCAMENTO, array(ConstantesLancamento::$PAGINA => ConstantesLancamento::$PAGINA_SALVAR_PESSOA)));
+$form->setAttribute(Constantes::$ACTION, $this->url(Constantes::$ROUTE_LANCAMENTO, array(Constantes::$PAGINA => Constantes::$PAGINA_SALVAR_PESSOA)));
 ?>  
 <div class="row background-mobile">
     <div id="content" class="animated fadeIn">
@@ -18,8 +17,8 @@ $form->setAttribute(Constantes::$ACTION, $this->url(ConstantesLancamento::$ROUTE
             <!-- Cadastro de Pessoa -->
             <div class="admin-form theme-danger tab-pane mw700 pl20 pr20" id="register1" role="tabpanel">
                 <blockquote class="blockquote-danger">
-                    <p><?php echo $this->translate(ConstantesLancamento::$TRADUCAO_NOVO_CADASTRO); ?></p>
-                    <small><?php echo $this->translate(ConstantesLancamento::$TRADUCAO_NOVO_CADASTRO_LABEL); ?></small>
+                    <p><?php echo $this->translate(Constantes::$TRADUCAO_NOVO_CADASTRO); ?></p>
+                    <small><?php echo $this->translate(Constantes::$TRADUCAO_NOVO_CADASTRO_LABEL); ?></small>
                 </blockquote>
                 <div class="panel panel-danger heading-border">
                     <?php echo $this->form()->openTag($form); ?>
@@ -27,41 +26,41 @@ $form->setAttribute(Constantes::$ACTION, $this->url(ConstantesLancamento::$ROUTE
 
                         <!-- Nome Input -->
                         <div class="section">
-                            <?php echo $this->inputFormulario(ConstantesLancamento::$TRADUCAO_NOME, $form, ConstantesLancamento::$INPUT_NOME, ConstantesLancamento::$ICONE_USER); ?>
+                            <?php echo $this->inputFormulario(Constantes::$TRADUCAO_NOME, $form, Constantes::$INPUT_NOME, Constantes::$ICONE_USER); ?>
                         </div>
                         <!-- Telefone Input -->
                         <div class="row section">
                             <div class="col-xs-5 col-sm-5 col-md-2">
-                                <?php echo $this->inputFormulario(ConstantesLancamento::$TRADUCAO_DDD, $form, ConstantesLancamento::$INPUT_DDD, ConstantesLancamento::$ICONE_PHONE); ?>
+                                <?php echo $this->inputFormulario(Constantes::$TRADUCAO_DDD, $form, Constantes::$INPUT_DDD, Constantes::$ICONE_PHONE); ?>
                             </div>
                             <div class="col-xs-7 col-sm-7 col-md-10">
-                                <?php echo $this->inputFormulario(ConstantesLancamento::$TRADUCAO_TELEFONE, $form, ConstantesLancamento::$INPUT_TELEFONE, ConstantesLancamento::$ICONE_PHONE); ?>
+                                <?php echo $this->inputFormulario(Constantes::$TRADUCAO_TELEFONE, $form, Constantes::$INPUT_TELEFONE, Constantes::$ICONE_PHONE); ?>
                             </div>
                         </div>
                         <!-- Tipo Input Select --> 
                         <div class="section">
-                            <label for="<?php echo ConstantesLancamento::$TRADUCAO_TIPO; ?>" class="field-label">
-                                <?php echo $this->translate(ConstantesLancamento::$TRADUCAO_TIPO); ?>
+                            <label for="<?php echo Constantes::$TRADUCAO_TIPO; ?>" class="field-label">
+                                <?php echo $this->translate(Constantes::$TRADUCAO_TIPO); ?>
                             </label>
-                            <label for="<?php echo ConstantesLancamento::$TRADUCAO_TIPO; ?>" class="field prepend-icon">
-                                <?php echo $this->formSelect($form->get(ConstantesLancamento::$INPUT_TIPO)); ?>
+                            <label for="<?php echo Constantes::$TRADUCAO_TIPO; ?>" class="field prepend-icon">
+                                <?php echo $this->formSelect($form->get(Constantes::$INPUT_TIPO)); ?>
                             </label>    
                         </div> 
                         <!-- Tipo Input Radio --> 
                         <div id="ocultar_checkbox" class="mb15" style="display: none;">
-                            <label for="<?php echo ConstantesLancamento::$TRADUCAO_NUCLEO_CELULA; ?>" class="field-label">
-                                <?php echo $this->translate(ConstantesLancamento::$TRADUCAO_NUCLEO_CELULA); ?>
+                            <label for="<?php echo Constantes::$TRADUCAO_NUCLEO_CELULA; ?>" class="field-label">
+                                <?php echo $this->translate(Constantes::$TRADUCAO_NUCLEO_CELULA); ?>
                             </label>
                             <div class="option-group field">
-                                <?php echo $this->formRadio($form->get(ConstantesLancamento::$INPUT_NUCLEO_PERFEITO)); ?>
+                                <?php echo $this->formRadio($form->get(Constantes::$INPUT_NUCLEO_PERFEITO)); ?>
                             </div>
                         </div>
                     </div>
                     <!-- end .form-body section -->
                     <div class="panel-footer text-right">
                         <?php echo $this->formHidden($form->get(Constantes::$INPUT_CSRF)); ?>
-                        <?php echo $this->botaoLink(Constantes::$TRADUCAO_VOLTAR, ConstantesLancamento::$ROUTE_LANCAMENTO, 2); ?>
-                        <?php echo $this->botaoSubmit(ConstantesLancamento::$TRADUCAO_CADASTRAR, ConstantesLancamento::$CLASS_BTN_DANGER_DARK); ?>
+                        <?php echo $this->botaoLink(Constantes::$TRADUCAO_VOLTAR, Constantes::$ROUTE_LANCAMENTO, 2); ?>
+                        <?php echo $this->botaoSubmit(Constantes::$TRADUCAO_CADASTRAR, Constantes::$CLASS_BTN_DANGER_DARK); ?>
                     </div>
                     <!-- end .form-footer section -->
                     <?php echo $this->form()->closeTag() ?>

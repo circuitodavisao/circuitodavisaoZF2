@@ -9,11 +9,6 @@ namespace Application\Model\Entity;
  * 1 - VISITANTE
  * 2 - CONSOLIDACAO
  * 3 - MEMBRO
- * 4 - ALUNO ATIVO
- * 5 - ALUNO REPROVADO
- * 6 - ALUNO DESISTENTE
- * 7 - ALUNO NAO ENTROU
- * 8 - ALUNO FORMADO
  */
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
@@ -22,7 +17,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity 
  * @ORM\Table(name="grupo_pessoa")
  */
-class GrupoPessoa {
+class GrupoPessoa extends CircuitoEntity {
 
     /**
      * @ORM\ManyToOne(targetEntity="Pessoa", inversedBy="grupoPessoa")
@@ -42,19 +37,6 @@ class GrupoPessoa {
      */
     private $grupoPessoaTipo;
 
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     * @ORM\Column(type="integer")
-     */
-    protected $id;
-
-    /** @ORM\Column(type="string") */
-    protected $data_criacao;
-
-    /** @ORM\Column(type="string") */
-    protected $hora_criacao;
-
     /** @ORM\Column(type="integer") */
     protected $pessoa_id;
 
@@ -62,13 +44,7 @@ class GrupoPessoa {
     protected $grupo_id;
 
     /** @ORM\Column(type="integer") */
-    protected $tipo_id; 
-
-    /** @ORM\Column(type="string") */
-    protected $data_inativacao;
-
-    /** @ORM\Column(type="string") */
-    protected $hora_inativacao;
+    protected $tipo_id;
 
     /** @ORM\Column(type="string") */
     protected $transferido;
@@ -116,36 +92,12 @@ class GrupoPessoa {
         return $this->grupo;
     }
 
-    /**
-     * Identificação da responsabilidade
-     * @return int
-     */
-    function getId() {
-        return $this->id;
-    }
-
-    function getData_criacao() {
-        return $this->data_criacao;
-    }
-
-    function getHora_criacao() {
-        return $this->hora_criacao;
-    }
-
     function getPessoa_id() {
         return $this->pessoa_id;
     }
 
     function getGrupo_id() {
         return $this->grupo_id;
-    }
-
-    function getData_inativacao() {
-        return $this->data_inativacao;
-    }
-
-    function getHora_inativacao() {
-        return $this->hora_inativacao;
     }
 
     function setPessoa($pessoa) {
@@ -160,28 +112,12 @@ class GrupoPessoa {
         $this->id = $id;
     }
 
-    function setData_criacao($data_criacao) {
-        $this->data_criacao = $data_criacao;
-    }
-
-    function setHora_criacao($hora_criacao) {
-        $this->hora_criacao = $hora_criacao;
-    }
-
     function setPessoa_id($pessoa_id) {
         $this->pessoa_id = $pessoa_id;
     }
 
     function setGrupo_id($grupo_id) {
         $this->grupo_id = $grupo_id;
-    }
-
-    function setData_inativacao($data_inativacao) {
-        $this->data_inativacao = $data_inativacao;
-    }
-
-    function setHora_inativacao($hora_inativacao) {
-        $this->hora_inativacao = $hora_inativacao;
     }
 
     /**

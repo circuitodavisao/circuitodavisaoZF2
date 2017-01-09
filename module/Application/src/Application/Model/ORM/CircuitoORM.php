@@ -2,7 +2,9 @@
 
 namespace Application\Model\ORM;
 
+use Application\Model\Entity\CircuitoEntity;
 use Doctrine\ORM\EntityManager;
+use Exception;
 
 /**
  * Nome: CircuitoORM.php
@@ -31,7 +33,7 @@ class CircuitoORM {
     /**
      * Localizar entidade por id
      * @param integer $id
-     * @return Entidade
+     * @return CircuitoEntity
      * @throws Exception
      */
     public function encontrarPorId($id) {
@@ -46,7 +48,7 @@ class CircuitoORM {
 
     /**
      * Atualiza a entidade no banco de dados
-     * @param $entidade
+     * @param CircuitoEntity $entidade
      */
     public function persistir($entidade) {
         try {

@@ -7,7 +7,6 @@ namespace Application\Model\Entity;
  * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com>
  * Descricao: Entidade anotada da tabela pessoa
  */
-
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -24,7 +23,7 @@ use Zend\InputFilter\InputFilterAwareInterface;
 use Zend\InputFilter\InputFilterInterface;
 
 /** @ORM\Entity */
-class Pessoa implements InputFilterAwareInterface {
+class Pessoa extends CircuitoEntity implements InputFilterAwareInterface {
 
     protected $inputFilter;
     protected $inputFilterPessoaFrequencia;
@@ -60,14 +59,8 @@ class Pessoa implements InputFilterAwareInterface {
         $this->eventoFrequencia = new ArrayCollection();
         $this->grupoPessoa = new ArrayCollection();
         $this->pessoaHierarquia = new ArrayCollection();
+        $this->setAtualizar_dados('S');
     }
-
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     * @ORM\Column(type="integer")
-     */
-    protected $id;
 
     /** @ORM\Column(type="string") */
     protected $nome;
@@ -80,18 +73,6 @@ class Pessoa implements InputFilterAwareInterface {
 
     /** @ORM\Column(type="string") */
     protected $senha;
-
-    /** @ORM\Column(type="string") */
-    protected $data_criacao;
-
-    /** @ORM\Column(type="string") */
-    protected $hora_criacao;
-
-    /** @ORM\Column(type="string") */
-    protected $data_inativacao;
-
-    /** @ORM\Column(type="string") */
-    protected $hora_inativacao;
 
     /** @ORM\Column(type="string") */
     protected $data_nascimento;
@@ -288,10 +269,6 @@ class Pessoa implements InputFilterAwareInterface {
         return $grupoResponsavel;
     }
 
-    function getId() {
-        return $this->id;
-    }
-
     function getNome() {
         return $this->nome;
     }
@@ -302,14 +279,6 @@ class Pessoa implements InputFilterAwareInterface {
 
     function getSenha() {
         return $this->senha;
-    }
-
-    function getData_criacao() {
-        return $this->data_criacao;
-    }
-
-    function getData_inativacao() {
-        return $this->data_inativacao;
     }
 
     function getData_nascimento() {
@@ -324,10 +293,6 @@ class Pessoa implements InputFilterAwareInterface {
         return $this->documento;
     }
 
-    function setId($id) {
-        $this->id = $id;
-    }
-
     function setNome($nome) {
         $this->nome = $nome;
     }
@@ -338,14 +303,6 @@ class Pessoa implements InputFilterAwareInterface {
 
     function setSenha($senha) {
         $this->senha = md5($senha);
-    }
-
-    function setData_criacao($data_criacao) {
-        $this->data_criacao = $data_criacao;
-    }
-
-    function setData_inativacao($data_inativacao) {
-        $this->data_inativacao = $data_inativacao;
     }
 
     function setData_nascimento($data_nascimento) {
@@ -421,22 +378,6 @@ class Pessoa implements InputFilterAwareInterface {
 
     function setToken_hora($token_hora) {
         $this->token_hora = $token_hora;
-    }
-
-    function getHora_criacao() {
-        return $this->hora_criacao;
-    }
-
-    function getHora_inativacao() {
-        return $this->hora_inativacao;
-    }
-
-    function setHora_criacao($hora_criacao) {
-        $this->hora_criacao = $hora_criacao;
-    }
-
-    function setHora_inativacao($hora_inativacao) {
-        $this->hora_inativacao = $hora_inativacao;
     }
 
     /**

@@ -7,23 +7,22 @@ namespace Application\Model\Entity;
  * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com>
  * Descricao: Entidade anotada da tabela entidade
  * 1 - PRESIDENCIAL
- * 2 - REGIÃO
- * 3 - SUB REGIÃO
- * 4 - COORDENAÇÃO
- * 5 - SUB COORDENAÇÃO
- * 6 - IGREJA
- * 7 - EQUIPE
- * 8 - SUB EQUIPE
+ * 2 - NACIONAL
+ * 3 - REGIÃO
+ * 4 - SUB REGIÃO
+ * 5 - COORDENAÇÃO
+ * 6 - SUB COORDENAÇÃO
+ * 7 - IGREJA
+ * 8 - EQUIPE
+ * 9 - SUB EQUIPE
  */
-
-use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity 
  * @ORM\Table(name="entidade")
  */
-class Entidade {
+class Entidade extends CircuitoEntity {
 
     /**
      * @ORM\ManyToOne(targetEntity="EntidadeTipo", inversedBy="entidade")
@@ -37,57 +36,17 @@ class Entidade {
      */
     private $grupo;
 
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     * @ORM\Column(type="integer")
-     */
-    protected $id;
-
-    /** @ORM\Column(type="string") */
-    protected $data_criacao;
-
-    /** @ORM\Column(type="string") */
-    protected $hora_criacao;
-
     /** @ORM\Column(type="string") */
     protected $nome;
 
     /** @ORM\Column(type="integer") */
     protected $numero;
 
-    /** @ORM\Column(type="string") */
-    protected $data_inativacao;
-
-    /** @ORM\Column(type="string") */
-    protected $hora_inativacao;
-
     /** @ORM\Column(type="integer") */
     protected $tipo_id;
 
     /** @ORM\Column(type="integer") */
     protected $grupo_id;
-
-    /**
-     * Verificar se a data de inativação está nula
-     * @return boolean
-     */
-    public function verificarSeEstaAtivo() {
-        $resposta = false;
-        if (is_null($this->getData_inativacao())) {
-            $resposta = true;
-        }
-        return $resposta;
-    }
-
-    /**
-     * Seta data e hora de criação
-     */
-    function setDataEHoraDeCriacao() {
-        $timeNow = new DateTime();
-        $this->setData_criacao($timeNow->format('Y-m-d'));
-        $this->setHora_criacao($timeNow->format('H:s:i'));
-    }
 
     public function infoEntidade() {
         $resposta = '';
@@ -116,32 +75,12 @@ class Entidade {
         return $this->grupo;
     }
 
-    function getId() {
-        return $this->id;
-    }
-
-    function getData_criacao() {
-        return $this->data_criacao;
-    }
-
-    function getHora_criacao() {
-        return $this->hora_criacao;
-    }
-
     function getNome() {
         return $this->nome;
     }
 
     function getNumero() {
         return $this->numero;
-    }
-
-    function getData_inativacao() {
-        return $this->data_inativacao;
-    }
-
-    function getHora_inativacao() {
-        return $this->hora_inativacao;
     }
 
     function getTipo_id() {
@@ -160,32 +99,12 @@ class Entidade {
         $this->grupo = $grupo;
     }
 
-    function setId($id) {
-        $this->id = $id;
-    }
-
-    function setData_criacao($data_criacao) {
-        $this->data_criacao = $data_criacao;
-    }
-
-    function setHora_criacao($hora_criacao) {
-        $this->hora_criacao = $hora_criacao;
-    }
-
     function setNome($nome) {
         $this->nome = $nome;
     }
 
     function setNumero($numero) {
         $this->numero = $numero;
-    }
-
-    function setData_inativacao($data_inativacao) {
-        $this->data_inativacao = $data_inativacao;
-    }
-
-    function setHora_inativacao($hora_inativacao) {
-        $this->hora_inativacao = $hora_inativacao;
     }
 
     function setTipo_id($tipo_id) {

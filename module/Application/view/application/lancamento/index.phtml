@@ -1,6 +1,6 @@
 <?php
 
-use Lancamento\Controller\Helper\ConstantesLancamento;
+use Application\Controller\Helper\Constantes;
 ?>
 <div id="content">
     <div class="row background-mobile">
@@ -23,7 +23,7 @@ use Lancamento\Controller\Helper\ConstantesLancamento;
         </div>
         <div class="panel-footer text-center">
             <!--BOTAO DE ENVIO DE RELATORIO-->
-            <a class="btn btn-success" href="/lancamentoEnviarRelatorio" title="<?php echo $this->translate(ConstantesLancamento::$TRADUCAO_ENVIAR_RELATORIO); ?>"><?php echo $this->translate(ConstantesLancamento::$TRADUCAO_ENVIAR_RELATORIO); ?></a>
+            <a class="btn btn-success" href="/lancamentoEnviarRelatorio" title="<?php echo $this->translate(Constantes::$TRADUCAO_ENVIAR_RELATORIO); ?>"><?php echo $this->translate(Constantes::$TRADUCAO_ENVIAR_RELATORIO); ?></a>
 
             <a class="btn btn-dark" href='#' onclick="verificarMuitosCadastros(<?php echo $this->validacao; ?>);">Cadastrar</a>
         </div>

@@ -14,7 +14,7 @@ function alterarNome(idPessoa) {
             "/lancamentoAlterarNome",
             {
                 idPessoa: idPessoa,
-                nome: botao.val(),
+                nome: botao.val()
             },
             function (data) {
                 if (data.response) {

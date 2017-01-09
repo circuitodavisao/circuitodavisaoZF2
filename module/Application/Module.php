@@ -12,17 +12,30 @@ namespace Application;
 
 use Application\Controller\Helper\Constantes;
 use Application\Model\ORM\RepositorioORM;
+use Application\View\Helper\Abas;
+use Application\View\Helper\AbaSelecionada;
+use Application\View\Helper\AlertaEnvioRelatorio;
 use Application\View\Helper\BotaoLink;
 use Application\View\Helper\BotaoSubmit;
 use Application\View\Helper\BotaoSubmitDesabilitado;
+use Application\View\Helper\CabecalhoDeCiclos;
+use Application\View\Helper\CabecalhoDeEventos;
+use Application\View\Helper\DadosEntidade;
 use Application\View\Helper\DivCapslock;
 use Application\View\Helper\DivJavaScript;
+use Application\View\Helper\InputFormulario;
 use Application\View\Helper\LinkLogo;
+use Application\View\Helper\ListagemDePessoasComEventos;
+use Application\View\Helper\MensagemRelatorioEnviado;
 use Application\View\Helper\MensagemStatica;
 use Application\View\Helper\Menu;
 use Application\View\Helper\MenuHierarquia;
+use Application\View\Helper\ModalAba;
+use Application\View\Helper\ModalMuitosCadastros;
+use Application\View\Helper\ModalMuitosEventos;
 use Application\View\Helper\PerfilDropDown;
 use Application\View\Helper\PerfilIcone;
+use Application\View\Helper\TabelaLancamento;
 use Zend\Mvc\ModuleRouteListener;
 use Zend\Mvc\MvcEvent;
 use Zend\Session\Config\SessionConfig;
@@ -80,6 +93,57 @@ class Module {
                 },
                 'menuHierarquia' => function($sm) {
                     return new MenuHierarquia();
+                },
+                'dadosEntidade' => function($sm) {
+                    return new DadosEntidade();
+                },
+                'alertaEnvioRelatorio' => function($sm) {
+                    return new AlertaEnvioRelatorio();
+                },
+                'abaSelecionada' => function($sm) {
+                    return new AbaSelecionada();
+                },
+                'ModalAba' => function($sm) {
+                    return new ModalAba();
+                },
+                'cabecalhoDeEventos' => function($sm) {
+                    return new CabecalhoDeEventos();
+                },
+                'listagemDePessoasComEventos' => function($sm) {
+                    return new ListagemDePessoasComEventos();
+                },
+                'tabelaLancamento' => function($sm) {
+                    return new TabelaLancamento();
+                },
+                'cabecalhoDeCiclos' => function($sm) {
+                    return new CabecalhoDeCiclos();
+                },
+                'modalMuitosEventos' => function($sm) {
+                    return new ModalMuitosEventos();
+                },
+                'abas' => function($sm) {
+                    return new Abas();
+                },
+                'mensagemStatica' => function($sm) {
+                    return new MensagemStatica();
+                },
+                'mensagemRelatorioEnviado' => function($sm) {
+                    return new MensagemRelatorioEnviado();
+                },
+                'modalMuitosCadastros' => function($sm) {
+                    return new ModalMuitosCadastros();
+                },
+                'botaoSubmit' => function($sm) {
+                    return new BotaoSubmit();
+                },
+                'botaoSubmitDesabilitado' => function($sm) {
+                    return new BotaoSubmitDesabilitado();
+                },
+                'botaoLink' => function($sm) {
+                    return new BotaoLink();
+                },
+                'inputFormulario' => function($sm) {
+                    return new InputFormulario();
                 },
             )
         );

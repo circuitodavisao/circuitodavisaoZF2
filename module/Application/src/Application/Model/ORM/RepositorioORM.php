@@ -15,6 +15,9 @@ class RepositorioORM {
     private $_doctrineORMEntityManager;
     private $_pessoaORM;
     private $_entidadeORM;
+    private $_grupoORM;
+    private $_grupoPessoaORM;
+    private $_grupoPessoaTipoORM;
 
     /**
      * Contrutor
@@ -45,6 +48,40 @@ class RepositorioORM {
             $this->_entidadeORM = new CircuitoORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_ENTIDADE);
         }
         return $this->_entidadeORM;
+    }
+
+    /**
+     * Metodo public para obter a instancia do EntidadeORM
+     * @return GrupoPessoaTipoORM
+     */
+    public function getGrupoPessoaTipoORM() {
+        if (is_null($this->_grupoPessoaTipoORM)) {
+            $this->_grupoPessoaTipoORM = new GrupoPessoaTipoORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_GRUPO_PESSOA_TIPO);
+        }
+        return $this->_grupoPessoaTipoORM;
+    }
+
+    /**
+     * Metodo public para obter a instancia do EntidadeORM
+     * @return GrupoPessoaORM
+     */
+    public function getGrupoPessoaORM() {
+        if (is_null($this->_grupoPessoaORM)) {
+            $this->_grupoPessoaORM = new GrupoPessoaORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_GRUPO_PESSOA);
+        }
+        return $this->_grupoPessoaORM;
+    }
+    
+    
+    /**
+     * Metodo public para obter a instancia do EntidadeORM
+     * @return GrupoORM
+     */
+    public function getGrupoORM() {
+        if (is_null($this->_grupoORM)) {
+            $this->_grupoORM = new GrupoORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_GRUPO);
+        }
+        return $this->_grupoORM;
     }
 
     /**

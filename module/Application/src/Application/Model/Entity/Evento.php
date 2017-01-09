@@ -16,7 +16,7 @@ use Zend\InputFilter\InputFilterAwareInterface;
 use Zend\InputFilter\InputFilterInterface;
 
 /** @ORM\Entity */
-class Evento implements InputFilterAwareInterface {
+class Evento extends CircuitoEntity implements InputFilterAwareInterface {
 
     protected $inputFilter;
 
@@ -46,13 +46,6 @@ class Evento implements InputFilterAwareInterface {
      */
     private $eventoTipo;
 
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     * @ORM\Column(type="integer")
-     */
-    protected $id;
-
     /** @ORM\Column(type="integer") */
     protected $dia;
 
@@ -62,40 +55,8 @@ class Evento implements InputFilterAwareInterface {
     /** @ORM\Column(type="string") */
     protected $hora;
 
-    /** @ORM\Column(type="string") */
-    protected $data_criacao;
-
-    /** @ORM\Column(type="string") */
-    protected $hora_criacao;
-
-    /** @ORM\Column(type="string") */
-    protected $data_inativacao;
-
-    /** @ORM\Column(type="string") */
-    protected $hora_inativacao;
-
     /** @ORM\Column(type="integer") */
     protected $tipo_id;
-
-    function getId() {
-        return $this->id;
-    }
-
-    function getData_criacao() {
-        return $this->data_criacao;
-    }
-
-    function getData_inativacao() {
-        return $this->data_inativacao;
-    }
-
-    function setId($id) {
-        $this->id = $id;
-    }
-
-    function setData_criacao($data_criacao) {
-        $this->data_criacao = $data_criacao;
-    }
 
     function getData_criacaoAno() {
         return explode('-', $this->getData_criacao())[0];
@@ -107,26 +68,6 @@ class Evento implements InputFilterAwareInterface {
 
     function getData_criacaoDia() {
         return explode('-', $this->getData_criacao())[2];
-    }
-
-    function setData_inativacao($data_inativacao) {
-        $this->data_inativacao = $data_inativacao;
-    }
-
-    function getHora_criacao() {
-        return $this->hora_criacao;
-    }
-
-    function getHora_inativacao() {
-        return $this->hora_inativacao;
-    }
-
-    function setHora_criacao($hora_criacao) {
-        $this->hora_criacao = $hora_criacao;
-    }
-
-    function setHora_inativacao($hora_inativacao) {
-        $this->hora_inativacao = $hora_inativacao;
     }
 
     /**

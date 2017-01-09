@@ -105,35 +105,6 @@ class PessoaORM extends CircuitoORM {
     }
 
     /**
-     * Atualiza a pessoa no banco de dados
-     * 
-     * @param Pessoa $pessoa
-     */
-    public function persistirPessoa($pessoa) {
-
-        try {
-            $this->getEntityManager()->flush($pessoa);
-        } catch (Exception $exc) {
-            echo $exc->getTraceAsString();
-        }
-    }
-
-    /**
-     * Criar a pessoa no banco de dados
-     * 
-     * @param Pessoa $pessoa
-     */
-    public function persistirPessoaNova($pessoa) {
-
-        try {
-            $this->getEntityManager()->persist($pessoa);
-            $this->getEntityManager()->flush($pessoa);
-        } catch (Exception $exc) {
-            echo $exc->getMessage();
-        }
-    }
-
-    /**
      * Atualiza a aluno com dados da busca do cpf
      * 
      * @param Pessoa $pessoa
