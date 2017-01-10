@@ -25,7 +25,7 @@ WITH (
 ALTER TABLE grupo_aluno
   OWNER TO postgres;
 COMMENT ON TABLE grupo_aluno
-  IS 'Tabela associativa do aluno com grupo';
+  IS 'Tabela associativa do aluno com grupo'; 
 COMMENT ON COLUMN grupo_aluno.id IS 'Identificação da associativa aluno com o grupo';
 COMMENT ON COLUMN grupo_aluno.grupo_id IS 'Identificação do grupo';
 COMMENT ON COLUMN grupo_aluno.turma_aluno_id IS 'Identificação (matricula) da turma aluno';

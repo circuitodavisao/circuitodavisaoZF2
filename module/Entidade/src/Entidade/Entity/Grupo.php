@@ -14,7 +14,7 @@ use Lancamento\Controller\Helper\FuncoesLancamento;
 use Lancamento\Controller\Helper\LancamentoORM;
 
 /** @ORM\Entity */
-class Grupo {
+class Grupo { 
 
     protected $ciclo;
     protected $eventos;
@@ -33,6 +33,11 @@ class Grupo {
      * @ORM\OneToMany(targetEntity="GrupoAluno", mappedBy="grupo") 
      */
     protected $grupoAluno;
+    
+    /**
+     * @ORM\OneToMany(targetEntity="GrupoAtendimento", mappedBy="grupo") 
+     */
+    protected $grupoAtendimento;
 
     /**
      * @ORM\OneToMany(targetEntity="GrupoEvento", mappedBy="grupo") 
@@ -61,6 +66,7 @@ class Grupo {
         $this->grupoPessoa = new ArrayCollection();
         $this->grupoPaiFilhoFilhos = new ArrayCollection();
         $this->grupoAluno = new ArrayCollection();
+        $this->grupoAtendimento = new ArrayCollection();
     }
 
     /**
@@ -584,5 +590,12 @@ class Grupo {
     function setGrupoAluno($grupoAluno) {
         $this->grupoAluno = $grupoAluno;
     }
+    
+    function getGrupoAtendimento() {
+        return $this->grupoAtendimento;
+    }
 
+    function setGrupoAtendimento($grupoAtendimento) {
+        $this->grupoAtendimento = $grupoAtendimento;
+    }
 }

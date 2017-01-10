@@ -140,6 +140,7 @@ class Constantes {
     public static $FORM_STRING_VALUE_OPTIONS = 'value_options';
     public static $FORM_STRING_NAME = 'name';
     public static $FORM_STRING_CLASS_GUI_INPUT = 'gui-input';
+    public static $FORM_STRING_CLASS_FORM_CONTROL = 'form-control';
     public static $FORM_STRING_REQUIRED = 'required';
     public static $FORM_STRING_TRUE = 'true';
     public static $FORM_STRING_ARIA_REQUIRED = 'aria-required';

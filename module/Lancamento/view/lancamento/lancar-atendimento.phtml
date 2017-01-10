@@ -1,0 +1,93 @@
+<!-- Nome: lancar-atendimento.phtml
+     @author Lucas Filipe de Carvalho Cunha <lucascarvalho.esw@gmail.com>
+     Descricao: Página para cadastro de atendimentos.
+  -->
+<?php
+
+use Cadastro\Form\ConstantesForm;
+use Lancamento\Controller\Helper\ConstantesLancamento;
+use Login\Controller\Helper\Constantes;
+
+$form = $this->CadastrarAtendimentoForm;
+$form->prepare();
+$form->setAttribute(Constantes::$ACTION, $this->url(ConstantesLancamento::$ROUTE_LANCAMENTO, array(ConstantesLancamento::$PAGINA => ConstantesLancamento::$PAGINA_SALVAR_ATENDIMENTO)));
+?> 
+<div class="mw1000 center-block p10">
+
+    <div class="admin-form theme-primary">
+        <blockquote class = "blockquote-primary">
+            <small>
+                Lan&ccedil;ar <span class="text-primary">Atendimento</span>
+            </small>
+        </blockquote>
+        <div id="atendimento" class="panel heading-border panel-primary">
+
+            <div class="panel-body bg-light">
+
+
+                <?php echo $this->informacoesGrupoAtendido(); ?>
+                <?php echo $this->form()->openTag($form); ?>
+                <div class="row mt10">
+
+                    <div class="row">
+                        <div class="col-sm-12 col-xs-12" >
+                            <div class="section" style="margin-bottom: 5px; ">
+                                <label class="field-label">Que dia foi o Atendimento?</label>
+                                <label class="field">
+                                    <?php echo $this->formInput($form->get(ConstantesLancamento::$INPUT_DATA_ATENDIMENTO)); ?>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+                <div class="row mt10">
+
+
+                    <div class="row">
+                        <div class="col-sm-12 col-xs-12" >
+                            <div class="section">
+                                <label class="field-label">Quem realizou o atendimento?</label>
+                                <label class="field prepend-icon">
+                                    <?php echo $this->formSelect($form->get(ConstantesLancamento::$INPUT_QUEM_ATENDEU)); ?>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="divBotaoVoltar" class="panel-footer text-right" style="height:65px;">
+
+
+                <?php echo $this->formHidden($form->get(Constantes::$FORM_STRING_ID)); ?>
+                <?php echo $this->formHidden($form->get(ConstantesLancamento::$INPUT_ID_GRUPO_ATENDIDO)); ?>
+
+                <?php echo $this->formHidden($form->get(Constantes::$INPUT_CSRF)); ?>
+
+                <button type="button" onclick="location.href = '/lancamentoAtendimento';" class="btn ladda-button btn-default dark  mr10" data-style="zoom-in">
+                    <span class="ladda-label">
+                        <i class="fa fa-arrow-left" aria-hidden="true"></i> 
+                        Voltar
+                    </span>
+                </button>
+                <?php
+                $funcaoPreValidacao = $this->funcaoOnClick(ConstantesLancamento::$STRING_FUNCAO_VALIDACAO_ATENDIMENTO);
+                echo $this->botaoLink(ConstantesLancamento::$PAGINA_LABEL_LANCAR_ATENDIMENTO, ConstantesForm::$STRING_HASHTAG, 0, $funcaoPreValidacao);
+                ?>                
+
+            </div>
+        </div>
+        <?php
+        echo $this->form()->closeTag();
+        if ($numeroAtendimentos > 0) {
+            echo $this->atendimentosDoGrupo();
+        }
+        ?>
+    </div>
+</div>   
+  
+<?php
+/* Layout com javascript para tela de index */
+echo $this->layoutJSValidacaoAtendimento;

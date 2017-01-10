@@ -2,17 +2,21 @@
 
 namespace Lancamento\Controller;
 
+use Cadastro\Controller\Helper\FuncoesCadastro;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManager;
 use Entidade\Entity\EventoFrequencia;
 use Entidade\Entity\Grupo;
+use Entidade\Entity\GrupoAtendimento;
 use Entidade\Entity\Pessoa;
 use Exception;
 use Lancamento\Controller\Helper\ConstantesLancamento;
 use Lancamento\Controller\Helper\FuncoesLancamento;
 use Lancamento\Controller\Helper\LancamentoORM;
+use Lancamento\Form\CadastrarAtendimentoForm;
 use Lancamento\Form\CadastrarPessoaForm;
 use Login\Controller\Helper\Constantes;
+use Login\Controller\Helper\Funcoes;
 use Login\Controller\Helper\LoginORM;
 use Zend\Json\Json;
 use Zend\Mvc\Controller\AbstractActionController;
@@ -100,6 +104,51 @@ class LancamentoController extends AbstractActionController {
         if ($pagina == ConstantesLancamento::$PAGINA_SALVAR_PESSOA) {
             return $this->forward()->dispatch(ConstantesLancamento::$CONTROLLER_LANCAMENTO, array(
                         Constantes::$ACTION => ConstantesLancamento::$PAGINA_SALVAR_PESSOA,
+            ));
+        }
+        if ($pagina == ConstantesLancamento::$PAGINA_ATENDIMENTO) {
+            $parametro = $this->params()->fromRoute(Constantes::$ID);
+            if (empty($parametro)) {
+                $abaSelecionada = 1;
+            } else {
+                if ($parametro == 1) {
+                    $abaSelecionada = 1;
+                } else {
+
+                    $abaSelecionada = 2;
+                }
+            }
+            $mes = FuncoesLancamento::mesPorAbaSelecionada($abaSelecionada);
+            $sessao->mesAtendimento = $mes;
+            return $this->forward()->dispatch(ConstantesLancamento::$CONTROLLER_LANCAMENTO, array(
+                        Constantes::$ACTION => ConstantesLancamento::$PAGINA_ATENDIMENTO,
+            ));
+        }
+        if ($pagina == ConstantesLancamento::$PAGINA_LANCAR_ATENDIMENTO) {
+            return $this->forward()->dispatch(ConstantesLancamento::$CONTROLLER_LANCAMENTO, array(
+                        Constantes::$ACTION => ConstantesLancamento::$PAGINA_LANCAR_ATENDIMENTO,
+            ));
+        }
+        if ($pagina == ConstantesLancamento::$PAGINA_LANCAR_ATENDIMENTO_EDIT) {
+            $sessao->editAtendimento = true;
+            ;
+            return $this->forward()->dispatch(ConstantesLancamento::$CONTROLLER_LANCAMENTO, array(
+                        Constantes::$ACTION => ConstantesLancamento::$PAGINA_LANCAR_ATENDIMENTO,
+            ));
+        }
+        if ($pagina == ConstantesLancamento::$PAGINA_SALVAR_ATENDIMENTO) {
+            return $this->forward()->dispatch(ConstantesLancamento::$CONTROLLER_LANCAMENTO, array(
+                        Constantes::$ACTION => ConstantesLancamento::$PAGINA_SALVAR_ATENDIMENTO,
+            ));
+        }
+        if ($pagina == ConstantesLancamento::$PAGINA_EXCLUIR_ATENDIMENTO) {
+            return $this->forward()->dispatch(ConstantesLancamento::$CONTROLLER_LANCAMENTO, array(
+                        Constantes::$ACTION => ConstantesLancamento::$PAGINA_EXCLUIR_ATENDIMENTO,
+            ));
+        }
+        if ($pagina == ConstantesLancamento::$PAGINA_ATENDIMENTO_EXCLUSAO_CONFIRMACAO) {
+            return $this->forward()->dispatch(ConstantesLancamento::$CONTROLLER_LANCAMENTO, array(
+                        Constantes::$ACTION => ConstantesLancamento::$PAGINA_ATENDIMENTO_EXCLUSAO_CONFIRMACAO,
             ));
         }
         /* Funcoes */
@@ -445,7 +494,8 @@ class LancamentoController extends AbstractActionController {
                 $post_data = $request->getPost();
                 $id = $post_data[Constantes::$ID];
                 $funcao = $post_data[Constantes::$FUNCAO];
-
+                $sessao = new Container(Constantes::$NOME_APLICACAO);
+                $sessao->idSessao = $id;
                 $response->setContent(Json::encode(
                                 array(
                                     'response' => 'true',
@@ -539,4 +589,275 @@ class LancamentoController extends AbstractActionController {
         return $entidade->getGrupo();
     }
 
+    /**
+     * Abri tela para relatorio de atendimento 
+     * @return ViewModel
+     */
+    public function atendimentoAction() {        
+        $sessao = new Container(Constantes::$NOME_APLICACAO);
+        $lancamentoORM = new LancamentoORM($this->getDoctrineORMEntityManager());
+        $idEntidadeAtual = $sessao->idEntidadeAtual;
+        $entidade = $lancamentoORM->getEntidadeORM()->encontrarPorIdEntidade($idEntidadeAtual);
+        $grupo = $entidade->getGrupo();
+        $gruposAbaixo = $grupo->getGrupoPaiFilhoFilhos();
+        $mes = $sessao->mesAtendimento;
+        if($mes == date('n')){
+            $aba = 1;
+        }else{
+            $aba = 2;
+        }
+
+
+        
+        $titulo = '';
+        $texto = '';
+        $mostrar = false;
+
+        if ($sessao->tipoMensagem) {
+            $mostrar = true;
+
+            $titulo = $sessao->titulo;
+            $texto = $sessao->mensagem;
+            $sessao->tipoMensagem = null;
+        }
+        
+        $view = new ViewModel(array(
+            ConstantesLancamento::$GRUPOS_ABAIXO => $gruposAbaixo,
+            ConstantesLancamento::$MES_ATENDIMENTO => $mes,
+            ConstantesLancamento::$ABA_SELECIONADA => $aba,
+        ));
+        $layoutJS2 = new ViewModel(array(ConstantesLancamento::$TITULO_MENSAGEM => $titulo,
+            ConstantesLancamento::$TEXTO_MENSAGEM => $texto,
+            ConstantesLancamento::$MOSTRAR_MENSAGEM => $mostrar,
+        ));
+        $layoutJS2->setTemplate(ConstantesLancamento::$TEMPLATE_JS_CADASTRAR_ATENDIMENTO);
+        $view->addChild($layoutJS2, ConstantesLancamento::$STRING_JS_CADASTRAR_ATENDIMENTO);
+
+
+
+        return $view;
+    }
+
+    /**
+     * Abri tela para lancamento de atendimento 
+     * @return ViewModel
+     */
+    public function lancarAtendimentoAction() {
+        $sessao = new Container(Constantes::$NOME_APLICACAO);
+        $lancamentoORM = new LancamentoORM($this->getDoctrineORMEntityManager());
+        $loginORM = new LoginORM($this->getDoctrineORMEntityManager());
+        $mes = $sessao->mesAtendimento;
+
+        if ($sessao->editAtendimento) {
+            $sessao->editAtendimento = false;
+            $idAtendimento = $sessao->idSessao;
+            $atendimento = $lancamentoORM->getGrupoAtendimentoORM()->encontrarPorIdAtendimento($idAtendimento);
+            $grupo = $lancamentoORM->getGrupoORM()->encontrarPorIdGrupoPessoa($atendimento->getGrupo_id());
+            $idPessoaPai = $sessao->idPessoa;
+            $pessoaPai = $loginORM->getPessoaORM()->encontrarPorIdPessoa($idPessoaPai);
+            $nomePessoaPai = $pessoaPai->getNomePrimeiroPrimeiraSiglaUltimo();
+            $atendimentos = $grupo->getGrupoAtendimento();
+            foreach ($atendimentos as $a) {
+                if ($a->verificarSeEstaAtivo()) {
+                    $partes = explode("/", $a->getDia());
+                    if ($partes[1] == $mes) {
+                        $atendimentosFiltrados[] = $a;
+                    }
+                }
+            }
+            $numeroAtendimentos = count($atendimentosFiltrados);
+            if($numeroAtendimentos == 0){
+                $atendimentosFiltrados = null;
+            }
+            $formCadastrarAtendimento = new CadastrarAtendimentoForm(ConstantesLancamento::$FORM_CADASTRAR_ATENDIMENTO, $grupo->getId(), $nomePessoaPai, $idPessoaPai, $atendimento);
+        } else {
+            $idGrupo = $sessao->idSessao;
+            $idPessoaPai = $sessao->idPessoa;
+            $pessoaPai = $loginORM->getPessoaORM()->encontrarPorIdPessoa($idPessoaPai);
+            $nomePessoaPai = $pessoaPai->getNomePrimeiroPrimeiraSiglaUltimo();
+            $grupo = $lancamentoORM->getGrupoORM()->encontrarPorIdGrupoPessoa($idGrupo);
+            /* Traz um array  */
+            $atendimentos = $grupo->getGrupoAtendimento();
+            foreach ($atendimentos as $a) {
+                if ($a->verificarSeEstaAtivo()) {
+                    $partes = explode("/", $a->getDia());
+                    if ($partes[1] == $mes) {
+                        $atendimentosFiltrados[] = $a;
+                    }
+                }
+            }
+            $numeroAtendimentos = count($atendimentosFiltrados);
+            if($numeroAtendimentos == 0){
+                $atendimentosFiltrados = null;
+            }
+            
+            $formCadastrarAtendimento = new CadastrarAtendimentoForm(ConstantesLancamento::$FORM_CADASTRAR_ATENDIMENTO, $idGrupo, $nomePessoaPai, $idPessoaPai);
+        }
+
+        $view = new ViewModel(array(
+            ConstantesLancamento::$GRUPO => $grupo,
+            ConstantesLancamento::$NUMERO_ATENDIMENTOS => $numeroAtendimentos,
+            ConstantesLancamento::$NOME_LIDER_ATENDIMENTO => $nomePessoaPai,
+            ConstantesLancamento::$FORM_CADASTRAR_ATENDIMENTO => $formCadastrarAtendimento,
+            ConstantesLancamento::$ARRAY_ATENDIMENTOS_GRUPO => $atendimentosFiltrados,
+            ConstantesLancamento::$MES_ATENDIMENTO => $mes,
+        ));
+
+        $layoutJS = new ViewModel();
+        $layoutJS->setTemplate(ConstantesLancamento::$TEMPLATE_JS_CADASTRAR_ATENDIMENTO);
+        $view->addChild($layoutJS, ConstantesLancamento::$STRING_JS_CADASTRAR_ATENDIMENTO);
+        
+        $layoutJS2 = new ViewModel(array(ConstantesLancamento::$MES_ATENDIMENTO => $mes,));
+        $layoutJS2->setTemplate(ConstantesLancamento::$TEMPLATE_JS_VALIDACAO_ATENDIMENTO);
+        $view->addChild($layoutJS2, ConstantesLancamento::$STRING_JS_VALIDACAO_ATENDIMENTO);
+
+        return $view;
+    }
+
+    /**
+     * Salva um novo atendimento
+     */
+    public function salvarAtendimentoAction() {
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            try {
+                $post_data = $request->getPost();
+
+                $grupoAtendimento = new GrupoAtendimento();
+
+
+                /* validação */
+                $lancamentoORM = new LancamentoORM($this->getDoctrineORMEntityManager());
+                $validatedData = $post_data;
+                if (!empty($validatedData['id'])) {
+
+                    $grupoAtendimento->setId($validatedData['id']);
+                    $grupoAtendimento->setGrupo_id($validatedData['idGrupo']);
+                    $grupoAtendimento->setQuem($validatedData['quem']);
+                    $grupoAtendimento->setDia(Funcoes::mudarPadraoData($validatedData['dataAtendimento'], 0));
+                    $atendimentoAtual = $lancamentoORM->getGrupoAtendimentoORM()->encontrarPorIdAtendimento($grupoAtendimento->getId());
+                    $grupoAtendimento->setData_criacao($atendimentoAtual->getData_criacao());
+                    $grupoAtendimento->setHora_criacao($atendimentoAtual->getHora_criacao());
+                    /* Helper Controller */
+
+                    $grupoLancado = $lancamentoORM->getGrupoORM()->encontrarPorIdGrupoPessoa($grupoAtendimento->getGrupo_id());
+                    $grupoAtendimento->setGrupo($grupoLancado);
+                    $lancamentoORM->getGrupoAtendimentoORM()->persistirGrupoAtendimento($grupoAtendimento);
+                } else {
+
+
+                    $grupoAtendimento->setGrupo_id($validatedData['idGrupo']);
+                    $grupoAtendimento->setQuem($validatedData['quem']);
+                    $grupoAtendimento->setDia(Funcoes::mudarPadraoData($validatedData['dataAtendimento'], 0));
+                    $grupoAtendimento->setDataEHoraDeCriacao();
+                    /* Helper Controller */
+
+                    $grupoLancado = $lancamentoORM->getGrupoORM()->encontrarPorIdGrupoPessoa($grupoAtendimento->getGrupo_id());
+                    $grupoAtendimento->setGrupo($grupoLancado);
+                    $lancamentoORM->getGrupoAtendimentoORM()->persistirGrupoAtendimento($grupoAtendimento);
+                }
+
+                $sessao = new Container(Constantes::$NOME_APLICACAO);
+                $grupoResponsavel = $grupoLancado->getResponsabilidadesAtivas();
+                $pessoas = array();
+                foreach ($grupoResponsavel as $gr) {
+                    $p = $gr->getPessoa();
+                    $imagem = 'placeholder.png';
+                    if (!empty($p->getFoto())) {
+                        $imagem = $p->getFoto();
+                    }
+                    $pessoas[] = $p;
+                }
+                $totalPessoas = count($pessoas);
+                $nomeAtendimento = '';
+                $contagem = 1;
+                foreach ($pessoas as $p) {
+                    if ($contagem == 2) {
+                        $nomeAtendimento .= '&nbsp;&&nbsp;';
+                    }
+                    if ($totalPessoas == 1) {
+                        $nomeAtendimento .= $p->getNomePrimeiroUltimo();
+                    } else {// duas pessoas
+                        $nomeAtendimento .= $p->getNomePrimeiroPrimeiraSiglaUltimo();
+                    }
+                    $contagem++;
+                }
+                /* Sessão */
+                $sessao->tipoMensagem = 1;
+                $sessao->titulo = ConstantesLancamento::$TRADUCAO_MENSAGEM_TITULO_LANCAMENTO_ATENDIMENTO;
+                $sessao->mensagem = "$nomeAtendimento";
+
+                return $this->forward()->dispatch(ConstantesLancamento::$CONTROLLER_LANCAMENTO, array(
+                            Constantes::$ACTION => ConstantesLancamento::$PAGINA_ATENDIMENTO,
+                ));
+            } catch (Exception $exc) {
+                echo $exc->getMessage();
+            }
+        }
+    }
+
+    /**
+     * Tela com formulário de exclusão de evento
+     * GET /cadastroEventoExclusao
+     */
+    public function atendimentoExclusaoAction() {
+        /* Verificando a se tem algum id na sessão */
+        $sessao = new Container(Constantes::$NOME_APLICACAO);
+        $lancamentoORM = new LancamentoORM($this->getDoctrineORMEntityManager());
+        $loginORM = new LoginORM($this->getDoctrineORMEntityManager());
+        if (!empty($sessao->idSessao)) {
+            $atendimento = $lancamentoORM->getGrupoAtendimentoORM()->encontrarPorIdAtendimento($sessao->idSessao);
+            if ($atendimento->getQuem() == 0) {
+                $nomeLider = "AMBOS";
+            } else {
+                $idPessoaLider = $atendimento->getQuem();
+                $pessoaLider = $loginORM->getPessoaORM()->encontrarPorIdPessoa($idPessoaLider);
+                $nomeLider = $pessoaLider->getNomePrimeiroUltimo();
+            }
+        }
+        $view = new ViewModel(array(
+            ConstantesLancamento::$ENTIDADE_ATENDIMENTO => $atendimento,
+            ConstantesLancamento::$PESSOA_LIDER => $nomeLider,
+        ));
+        $layoutJS2 = new ViewModel();
+        $layoutJS2->setTemplate(ConstantesLancamento::$TEMPLATE_JS_CADASTRAR_ATENDIMENTO);
+        $view->addChild($layoutJS2, ConstantesLancamento::$STRING_JS_CADASTRAR_ATENDIMENTO);
+        
+        return $view;
+    }
+
+    /**
+     * Tela com formulário de exclusão de atendimento
+     * GET /cadastroEventoConfirmacao
+     */
+    public function atendimentoExclusaoConfirmacaoAction() {
+        /* Verificando a se tem algum id na sessão */
+        $sessao = new Container(Constantes::$NOME_APLICACAO);
+        $atendimentoNaSessao = new GrupoAtendimento();
+        if (!empty($sessao->idSessao)) {
+            $lancamentoORM = new LancamentoORM($this->getDoctrineORMEntityManager());
+            $atendimentoNaSessao = $lancamentoORM->getGrupoAtendimentoORM()->encontrarPorIdAtendimento($sessao->idSessao);
+
+            /* Persistindo */
+            /* Inativando o Atendimento */
+            $atendimentoParaInativar = $atendimentoNaSessao;
+            print_r($atendimentoParaInativar->getDia());
+            $atendimentoParaInativar->setData_inativacao(FuncoesCadastro::dataAtual());
+            $atendimentoParaInativar->setHora_inativacao(FuncoesCadastro::horaAtual());
+            $lancamentoORM->getGrupoAtendimentoORM()->persistirGrupoAtendimento($atendimentoParaInativar);
+
+            /* Inativando o Grupo Evento */
+        }
+
+        /* Sessão */
+        $sessao->tipoMensagem = 2;
+        $sessao->titulo = ConstantesLancamento::$TRADUCAO_MENSAGEM_TITULO_EXCLUSAO_ATENDIMENTO;
+        $sessao->mensagem = "ID: " . $atendimentoNaSessao->getId();
+
+
+        return $this->forward()->dispatch(ConstantesLancamento::$CONTROLLER_LANCAMENTO, array(
+                    Constantes::$ACTION => ConstantesLancamento::$PAGINA_ATENDIMENTO,
+        ));
+    }
+    
 }

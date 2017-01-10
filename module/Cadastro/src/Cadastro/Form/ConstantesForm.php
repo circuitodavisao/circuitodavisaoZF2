@@ -159,9 +159,11 @@ class ConstantesForm {
     public static $TRADUCAO_CONFIRMACAO_EXCLUSAO = 'Confirmation <strong><span class="text-danger">Exclusion</span></strong>';
     public static $TRADUCAO_PERGUNTA_CADASTRO_CELULA = 'The data are correct?';
     public static $TRADUCAO_PERGUNTA_EXCLUSAO_CELULA = 'Really want to delete this cell?';
+    public static $TRADUCAO_PERGUNTA_EXCLUSAO_ATENDIMENTO = 'Really want to delete this individual discipleship ?';
     public static $TRADUCAO_PERGUNTA_EXCLUSAO_CULTO = 'Really want to delete this cult?';
     public static $TRADUCAO_CIENCIA_CADASTRO_CELULA = 'I confirm that the data is correct';
     public static $TRADUCAO_CIENCIA_EXCLUSAO_CULTO = 'I am <span class="text-danger">aware</span> that by <span class="text-danger">excluding cult</span> is the same no longer appear in the <span class="text-danger">launch line</span>!';
+    public static $TRADUCAO_CIENCIA_EXCLUSAO_ATENDIMENTO = 'I am <span class="text-danger">aware</span> that by <span class="text-danger">excluding individual discipleship </span> is the same no longer appear in the <span class="text-danger">launch line</span>!';
     public static $TRADUCAO_CIENCIA_EXCLUSAO_CELULA = 'I am <span class="text-danger">aware</span> that by <span class="text-danger">excluding cell</span> is the same no longer appear in the <span class="text-danger">launch line</span>!';
     public static $TRADUCAO_MOTIVO_EXCLUSAO = 'What reason for exclusion?';
     public static $TRADUCAO_DESCREVA_MOTIVO_EXCLUSAO = 'Please specify the reason';

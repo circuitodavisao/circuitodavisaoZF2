@@ -1,0 +1,61 @@
+<?php
+
+use Login\Controller\Helper\Constantes;
+use Zend\View\Helper\Placeholder\Container;
+
+$sessao = new Container(Constantes::$NOME_APLICACAO);
+
+
+?>
+<script type="text/javascript">
+    var stack_bar_bottom = {
+        "dir1": "up",
+        "dir2": "right",
+        "spacing1": 0,
+        "spacing2": 0
+    };
+
+    var noteStyle = 'success';
+    var noteShadow = true;
+    var noteOpacity = 1;
+    var addClass = 'stack_bar_bottom';
+    var width = '70%';
+    var titulo = '<?php echo $this->titulo; ?>';
+    var texto = '<?php echo $this->texto; ?>';
+
+<?php
+if ($this->mostrar) {
+    echo 'window.onload = initPage;';
+    $sessao->tipoMensagem = null;
+}
+?>
+
+    function initPage() {
+
+        new PNotify({
+            title: titulo,
+            text: texto,
+            shadow: noteShadow,
+            opacity: noteOpacity,
+            addclass: addClass,
+            type: noteStyle,
+            stack: stack_bar_bottom,
+            width: width,
+            delay: 10000
+        });
+
+    }
+    
+    
+</script>
+<?php
+$versao = '?v=11.0';
+
+echo $this
+        ->headScript()
+        ->prependFile($this->basePath() . '/vendor/plugins/validate/jquery.validate.min.js')
+        ->prependFile($this->basePath() . '/js/circuito_da_visao/modal-selecionar-aba.js' . $versao)
+        ->prependFile($this->basePath() . '/vendor/plugins/pnotify/pnotify.js')
+        ->prependFile($this->basePath() . '/js/circuito_da_visao/funcao-lancamento.js')
+;
+echo $this->inlineScript();
