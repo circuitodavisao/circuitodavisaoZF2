@@ -19,17 +19,21 @@ $form->setAttribute(Constantes::$ACTION, $this->url(Constantes::$ROUTE_CADASTRO,
                 <div id="divPassoAPasso" class=""> 
                     <div id="passos"  class="stepwizard">
                         <div class="stepwizard-row">
-                            <div id="1"  class="stepwizard-step stepwizard-step-atualizacao-grupo">
+                            <div id="1"  class="stepwizard-step stepwizard-step-cadastro-grupo">
                                 <button id="botaoPasso1" type="button" class="btn btn-primary btn-circle" disabled="disabled">1</button>
                                 <p>Data</p> 
                             </div>
 
 
-                            <div id="2"  class="stepwizard-step stepwizard-step-atualizacao-grupo">
+                            <div id="2"  class="stepwizard-step stepwizard-step-cadastro-grupo">
                                 <button id="botaoPasso2" type="button" class="btn btn-default btn-circle" disabled="disabled">2</button>
                                 <p>Igrejas</p>
                             </div>
-                            <div id="3"  class="stepwizard-step stepwizard-step-atualizacao-grupo">
+                            <div id="3"  class="stepwizard-step stepwizard-step-cadastro-grupo">
+                                <button id="botaoPasso2" type="button" class="btn btn-default btn-circle" disabled="disabled">2</button>
+                                <p>Observação</p>
+                            </div>
+                            <div id="4"  class="stepwizard-step stepwizard-step-cadastro-grupo">
                                 <button id="botaoPasso3" type="button" class="btn btn-default btn-circle" disabled="disabled">3</button>
                                 <p>Confirme</p>
                             </div>
@@ -76,12 +80,31 @@ $form->setAttribute(Constantes::$ACTION, $this->url(Constantes::$ROUTE_CADASTRO,
                     </div>
                     <!-- Tabela de Alunos -->
                     <div id="divBotaoIgrejas" class="">
-                        <button type="button" onClick='botaoProsseguirConfirmacao();' style="float: right;" onclick='location.href = "#";'
+                        <button type="button" onClick='botaoProsseguirObservacao();' style="float: right;" onclick='location.href = "#";'
                                 class="btn ladda-button btn-primary  mr10" data-style="zoom-in">
                             <span class="ladda-label">Continuar</span>
                         </button>
                     </div>
                     <button type="button" onClick='botaoVoltarData();' style="float: right;" onclick='location.href = "#";'
+                            class="btn ladda-button btn-default dark  mr10" data-style="zoom-in">
+                        <span class="ladda-label">Voltar</span>
+                    </button>            
+                </div>
+                <div id="divObservacao" class="hidden">
+                    <div class="section-divider mt40">
+                        <span id="spanInserirObservacao"> Qual observação do Revisao? </span>
+                    </div> 
+                    <div class="panel-menu">
+                        <?php echo $this->formInput($form->get('nome')); ?>
+                    </div>
+                    <!-- Tabela de Alunos -->
+                    <div id="divBotaoIgrejas" class="">
+                        <button type="button" onClick='botaoProsseguirConfirmacao();' style="float: right;" onclick='location.href = "#";'
+                                class="btn ladda-button btn-primary  mr10" data-style="zoom-in">
+                            <span class="ladda-label">Continuar</span>
+                        </button>
+                    </div>
+                    <button type="button" onClick='botaoVoltarIgrejas();' style="float: right;" onclick='location.href = "#";'
                             class="btn ladda-button btn-default dark  mr10" data-style="zoom-in">
                         <span class="ladda-label">Voltar</span>
                     </button>            
@@ -98,7 +121,7 @@ $form->setAttribute(Constantes::$ACTION, $this->url(Constantes::$ROUTE_CADASTRO,
                             <span class="ladda-label">Cadastrar</span>
                         </button>
                     </div>
-                    <button type="button" onClick='botaoVoltarIgrejas();' style="float: right;" onclick='location.href = "#";'
+                    <button type="button" onClick='botaoVoltarObservacao();' style="float: right;" onclick='location.href = "#";'
                             class="btn ladda-button btn-default dark  mr10" data-style="zoom-in">
                         <span class="ladda-label">Voltar</span>
                     </button>            
@@ -174,6 +197,28 @@ $form->setAttribute(Constantes::$ACTION, $this->url(Constantes::$ROUTE_CADASTRO,
                                 $('#spanInserirIgrejas').html(data);
                             }
                         }
+                        function botaoProsseguirObservacao() {
+                            if ($("input:checked").length == 0) {
+
+                                var spanMensagens = $('#spanMensagens');
+                                spanMensagens.text('Please Select One Church');
+                                spanMensagens
+                                        .addClass(alertDanger)
+                                        .removeClass(hidden);
+
+                            } else {
+                                $('#spanMensagens').addClass(hidden);
+                                $('#botaoPasso1').removeClass(btnPrimary);
+                                $('#botaoPasso1').addClass(btnDefault);
+                                $('#botaoPasso2').removeClass(btnDefault);
+                                $('#botaoPasso2').addClass(btnPrimary);
+                                $('#divIgrejas').addClass(hidden);
+                                $('#divObservacao').removeClass(hidden);
+                                data = 'Quais Igrejas Participaram do Evento na sexta dia ' + $('#dataRevisao').val();
+                                $('#spanInserirIgrejas').html(data);
+                            }
+                        }
+                        
                         function botaoProsseguirConfirmacao() {
 
                             if ($("input:checked").length == 0) {
@@ -198,7 +243,7 @@ $form->setAttribute(Constantes::$ACTION, $this->url(Constantes::$ROUTE_CADASTRO,
                                 $('#botaoPasso2').addClass(btnDefault);
                                 $('#botaoPasso3').removeClass(btnDefault);
                                 $('#botaoPasso3').addClass(btnPrimary);
-                                $('#divIgrejas').addClass(hidden);
+                                $('#divObservacao').addClass(hidden);
                                 $('#divConfirmacao').removeClass(hidden);
                                 dataRevisao = 'Data do Revisão ' + $('#dataRevisao').val();
 

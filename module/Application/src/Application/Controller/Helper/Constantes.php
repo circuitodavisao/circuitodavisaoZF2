@@ -349,6 +349,7 @@ class Constantes {
     /* Rotas */
     public static $PAGINA_CELULAS = 'Celulas';
     public static $PAGINA_CULTOS = 'Cultos';
+    public static $PAGINA_REVISAO = 'Revisao';
     public static $PAGINA_CELULA = 'Celula';
     public static $PAGINA_EVENTO_CULTO = 'EventoCulto';
     public static $PAGINA_EVENTO_CELULA = 'EventoCelula';
@@ -367,7 +368,7 @@ class Constantes {
     public static $PAGINA_BUSCAR_ENDERECO = 'BuscarEndereco';
     public static $PAGINA_BUSCAR_CPF = 'BuscarCPF';
     public static $PAGINA_BUSCAR_EMAIL = 'BuscarEmail';
-    public static $PAGINA_CADASTRO_REVISAO = 'Revisao';
+    public static $PAGINA_CADASTRO_REVISAO = 'CadastrarRevisao';
     public static $PAGINA_SALVAR_REVISAO = 'SalvarRevisao';
     public static $CONTROLLER_CADASTRO = 'Application\Controller\Cadastro';
     public static $ROUTE_CADASTRO = 'cadastro';
@@ -398,6 +399,8 @@ class Constantes {
     public static $TRADUCAO_SELECIONE_O_ALUNO = 'Select the Student that will be used for the registration';
     public static $TRADUCAO_MATRICULA = 'Registration';
     public static $TRADUCAO_NOME = 'Name';
+    public static $TRADUCAO_OBSERVACAO = 'Observation';
+    public static $TRADUCAO_IGREJAS = 'Churches';
     public static $TRADUCAO_DATA_NASCIMENTO = 'Birth Date';
     public static $TRADUCAO_SEM_ALUNOS_CADASTRADOS = 'No Students Registered';
     public static $TRADUCAO_BUSQUE_O_ALUNO = 'Find the Student';
@@ -591,13 +594,16 @@ class Constantes {
     public static $TRADUCAO_BUSCAR_CEP_LOGRADOURO = 'Search';
     public static $TRADUCAO_DIA_DA_SEMANA = 'Day of Week';
     public static $TRADUCAO_DIA_DA_SEMANA_SIMPLIFICADO = 'Day';
+    public static $TRADUCAO_DATA_SIMPLIFICADO = 'Date';
     public static $TRADUCAO_CADASTRO_CELULA = 'Registration Cell';
     public static $TRADUCAO_CADASTRO_CULTO = 'Registration <b class="text-danger">Cult</b>';
     public static $TRADUCAO_NOVA = 'New';
     public static $TRADUCAO_NOVA_CELULA = 'New Cell';
     public static $TRADUCAO_NOVO_CULTO = 'New Cult';
+    public static $TRADUCAO_NOVO_REVISAO = 'New Revision'; 
     public static $TRADUCAO_MULTIPLICACAO = 'Multiplication';
     public static $TRADUCAO_LISTAGEM_CULTOS = 'Listing <b class="text-danger">Cults</b>';
+    public static $TRADUCAO_LISTAGEM_REVISAO = 'Listing <b class="text-danger">Revision of lives</b>';
     public static $TRADUCAO_LISTAGEM_CELULAS = 'Listing Cells of';
     public static $TRADUCAO_DIA_HORA = 'Day / Hour';
     public static $TRADUCAO_DADOS_DO_HOSPEDEIRO = 'Data from Host';

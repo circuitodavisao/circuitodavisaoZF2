@@ -151,7 +151,14 @@ class CadastroController extends CircuitoController {
             $tipoEvento = 1;
             $extra = $grupo->getId();
         }
-
+        if ($pagina == Constantes::$PAGINA_REVISAO) {
+            $listagemDeEventos = $grupo->getGrupoEventoRevisao();
+            $tituloDaPagina = Constantes::$TRADUCAO_LISTAGEM_REVISAO;
+            $tipoEvento = 3;
+            $extra = $grupo->getId();
+        }
+        
+ 
         $view = new ViewModel(array(
             Constantes::$LISTAGEM_EVENTOS => $listagemDeEventos,
             Constantes::$TITULO_DA_PAGINA => $tituloDaPagina,
@@ -978,7 +985,7 @@ class CadastroController extends CircuitoController {
         Funcoes::enviarEmail($ToEmail, $Subject, $Content);
     }
 
-    public function revisaoAction() {
+    public function cadastrarRevisaoAction() {
         $sessao = new Container(Constantes::$NOME_APLICACAO);
         $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
         $idEntidadeAtual = $sessao->idEntidadeAtual;
@@ -1071,6 +1078,17 @@ class CadastroController extends CircuitoController {
                 echo $exc->getMessage();
             }
         }
+    }
+
+    public function listRevisao() {
+        $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
+        $idEntidadeAtual = $sessao->idEntidadeAtual;
+        $entidade = $repositorioORM->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+        $grupo = $entidade->getGrupo();
+
+        $listagemDeEventos = $grupo->getGrupoEventoRevisao();
+        $tituloDaPagina = Constantes::$TRADUCAO_LISTAGEM_CELULAS . ' <b class="text-danger">' . Constantes::$TRADUCAO_MULTIPLICACAO . '</b>';
+        $tipoEvento = 2;
     }
 
 }

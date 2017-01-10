@@ -31,6 +31,7 @@ class ListagemDeEventos extends AbstractHelper {
 
         $tipoCelula = ($this->view->tipoEvento == 2);
         $tipoCulto = ($this->view->tipoEvento == 1);
+        $tipoRevisao = ($this->view->tipoEvento == 3);
 
         $html .= $this->view->templateFormularioTopo($this->getTitulo());
         $html .= '<div class="panel-body bg-light">';
@@ -65,6 +66,17 @@ class ListagemDeEventos extends AbstractHelper {
                 $html .= $this->view->translate(Constantes::$TRADUCAO_EQUIPES);
                 $html .= '</th>';
             }
+            if ($tipoRevisao) {
+                $html .= '<th class="text-center">';
+                $html .= $this->view->translate(Constantes::$TRADUCAO_DATA_SIMPLIFICADO);
+                $html .= '</th>';
+                $html .= '<th class="text-center">';
+                $html .= $this->view->translate(Constantes::$TRADUCAO_OBSERVACAO);
+                $html .= '</th>';
+                $html .= '<th class="text-center">';
+                $html .= $this->view->translate(Constantes::$TRADUCAO_IGREJAS);
+                $html .= '</th>';
+            }
             $html .= '<th class="text-center"></th>';
             $html .= '</tr>';
             $html .= '</thead>';
@@ -75,8 +87,9 @@ class ListagemDeEventos extends AbstractHelper {
                 $diaDaSemanaAjustado = Funcoes::diaDaSemanaPorDia($evento->getDia());
 
                 $html .= '<tr>';
-                $html .= '<td class="text-center">' . $this->view->translate($diaDaSemanaAjustado) . '/' . $evento->getHoraFormatoHoraMinutoParaListagem() . '</td>';
                 if ($tipoCelula) {
+                    
+                    $html .= '<td class="text-center">' . $this->view->translate($diaDaSemanaAjustado) . '/' . $evento->getHoraFormatoHoraMinutoParaListagem() . '</td>';
                     $celula = $evento->getEventoCelula();
                     $stringNomeDaFuncaoOnClick = 'funcaoCadastro("' . Constantes::$PAGINA_EVENTO_CELULA . '", ' . $celula->getId() . ')';
                     $stringNomeDaFuncaoOnClickExclusao = 'funcaoCadastro("' . Constantes::$PAGINA_EVENTO_EXCLUSAO . '", ' . $evento->getId() . ')';
@@ -90,8 +103,29 @@ class ListagemDeEventos extends AbstractHelper {
                     $html .= '</td>';
                 }
                 if ($tipoCulto) {
+                    
+                    $html .= '<td class="text-center">' . $this->view->translate($diaDaSemanaAjustado) . '/' . $evento->getHoraFormatoHoraMinutoParaListagem() . '</td>';
                     $stringNomeDaFuncaoOnClick = 'funcaoCadastro("' . Constantes::$PAGINA_EVENTO_CULTO . '", ' . $evento->getId() . ')';
                     $stringNomeDaFuncaoOnClickExclusao = 'funcaoCadastro("' . Constantes::$PAGINA_EVENTO_EXCLUSAO . '", ' . $evento->getId() . ')';
+                    $grupoEventoAtivos = $evento->getGrupoEventoAtivos();
+                    $texto = '';
+                    foreach ($grupoEventoAtivos as $gea) {
+                        if ($this->view->extra != $gea->getGrupo()->getId()) {
+                            $texto .= $gea->getGrupo()->getEntidadeAtiva()->infoEntidade() . '<br />';
+                        }
+                    }
+                    $html .= '<td class="text-center"><span class="visible-lg visible-md">' . $evento->getNome() . '</span><span class="visible-sm visible-xs">' . $evento->getNomeAjustado() . '</span></td>';
+                    $html .= '<td class="text-center">' . $this->view->BotaoPopover(count($grupoEventoAtivos) - 1, $texto) . '</td>';
+                    $html .= '<td class="text-center">';
+                    $html .= $this->view->botaoLink(Constantes::$STRING_ICONE_PENCIL, Constantes::$STRING_HASHTAG, 3, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClick));
+                    $html .= $this->view->botaoLink(Constantes::$STRING_ICONE_TIMES, Constantes::$STRING_HASHTAG, 4, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClickExclusao));
+                    $html .= '</td>';
+                }
+                if ($tipoRevisao) {
+                    
+                    $html .= '<td class="text-center">' . Funcoes::mudarPadraoData($evento->getData_criacao(), 1) .  '</td>';
+                    $stringNomeDaFuncaoOnClick = 'funcaoCadastro("' . Constantes::$PAGINA_CADASTRO_REVISAO . '", ' . $evento->getId() . ')';
+                    $stringNomeDaFuncaoOnClickExclusao = 'funcaoCadastro("' . Constantes::$PAGINA_CADASTRO_REVISAO . '", ' . $evento->getId() . ')';
                     $grupoEventoAtivos = $evento->getGrupoEventoAtivos();
                     $texto = '';
                     foreach ($grupoEventoAtivos as $gea) {
@@ -132,6 +166,12 @@ class ListagemDeEventos extends AbstractHelper {
             $stringNomeDaFuncaoOnClickCadastro = 'funcaoCadastro("' . Constantes::$PAGINA_EVENTO_CULTO . '", 0)';
             $html .= $this->view->botaoLink(Constantes::$STRING_ICONE_PLUS . ' ' . $this->view->translate(Constantes::$TRADUCAO_NOVO_CULTO), Constantes::$STRING_HASHTAG, 0, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClickCadastro));
         }
+        
+        if ($tipoRevisao) {
+            $stringNomeDaFuncaoOnClickCadastro = 'funcaoCadastro("' . Constantes::$PAGINA_CADASTRO_REVISAO . '", 0)';
+            $html .= $this->view->botaoLink(Constantes::$STRING_ICONE_PLUS . ' ' . $this->view->translate(Constantes::$TRADUCAO_NOVO_REVISAO), Constantes::$STRING_HASHTAG, 0, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClickCadastro));
+        }
+        
         /* Fim Botões */
         $html .= '</div>';
         /* Fim panel-footer */

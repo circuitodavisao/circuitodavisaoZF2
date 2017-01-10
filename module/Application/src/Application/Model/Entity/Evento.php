@@ -212,7 +212,20 @@ class Evento extends CircuitoEntity implements InputFilterAwareInterface {
         }
         return $resposta;
     }
-
+    
+    /**
+     * Verifica se o evento é do tipo culto
+     * @return boolean
+     */
+    function verificaSeERevisao() {
+        $resposta = false;
+        if ($this->getTipo_id() == 3) {
+            $resposta = true;
+        }
+        return $resposta;
+    }
+    
+    
     function getTipo_id() {
         return $this->tipo_id;
     }

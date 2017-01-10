@@ -798,7 +798,7 @@ class LancamentoController extends CircuitoController {
             /* Persistindo */
             /* Inativando o Atendimento */
             $atendimentoParaInativar = $atendimentoNaSessao;
-            print_r($atendimentoParaInativar->getDia());
+
             $atendimentoParaInativar->setData_inativacao(Funcoes::dataAtual());
             $atendimentoParaInativar->setHora_inativacao(Funcoes::horaAtual());
             $repositorioORM->getGrupoAtendimentoORM()->persistir($atendimentoParaInativar);

@@ -6,6 +6,7 @@ use Application\Controller\Helper\Constantes;
 use Zend\Form\Element\Date;
 use Zend\Form\Element\Hidden;
 use Zend\Form\Element\MultiCheckbox;
+use Zend\Form\Element\Text;
 use Zend\Form\Form;
 
 /**
@@ -55,7 +56,16 @@ class RevisaoForm extends Form {
         );
 
 
-        
+        /* Observacao */
+        $this->add(
+                (new Text())
+                        ->setName(Constantes::$FORM_NOME)
+                        ->setAttributes([
+                            Constantes::$FORM_CLASS => Constantes::$FORM_CLASS_GUI_INPUT,
+                            Constantes::$FORM_ID => Constantes::$FORM_NOME,
+                            Constantes::$FORM_PLACEHOLDER => Constantes::$TRADUCAO_NOME,
+                        ])
+        );
         
         foreach($igrejas as $i){
             $arrayIgrejas[$i->getNome().'#'.$i->getId()] = $i->getNome();

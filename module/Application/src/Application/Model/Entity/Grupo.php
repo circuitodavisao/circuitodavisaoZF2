@@ -358,6 +358,20 @@ class Grupo extends CircuitoEntity {
         $this->setEventos($eventos);
         return $this->getEventos();
     }
+    
+    function getGrupoEventoRevisao() {
+        $eventos = null;
+        if (!empty($this->getGrupoEvento())) {
+            foreach ($this->getGrupoEvento() as $ge) {
+                if ($ge->verificarSeEstaAtivo() && $ge->getEvento()->verificaSeERevisao()) {
+                    $eventos[] = $ge;
+                }
+            }
+        }
+        $this->setEventos($eventos);
+        return $this->getEventos();
+    }
+    
 
     function setGrupoEvento($grupoEvento) {
         $this->grupoEvento = $grupoEvento;
