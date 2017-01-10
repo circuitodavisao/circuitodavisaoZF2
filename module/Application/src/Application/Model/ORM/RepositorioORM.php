@@ -28,6 +28,7 @@ class RepositorioORM {
     private $_pessoaHierarquiaORM;
     private $_grupoResponsavelORM;
     private $_grupoPaiFilhoORM;
+    private $_grupoAtendimentoORM;
 
     /**
      * Contrutor
@@ -157,6 +158,17 @@ class RepositorioORM {
             $this->_grupoEventoORM = new CircuitoORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_GRUPO_EVENTO);
         }
         return $this->_grupoEventoORM;
+    }
+
+    /**
+     * Metodo public para obter a instancia do GrupoAtendimentoORM
+     * @return CircuitoORM
+     */
+    public function getGrupoAtendimentoORM() {
+        if (is_null($this->_grupoAtendimentoORM)) {
+            $this->_grupoAtendimentoORM = new CircuitoORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_GRUPO_ATENDIMENTO);
+        }
+        return $this->_grupoAtendimentoORM;
     }
 
     /**

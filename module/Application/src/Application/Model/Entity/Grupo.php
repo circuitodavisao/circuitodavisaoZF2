@@ -45,6 +45,11 @@ class Grupo extends CircuitoEntity {
     protected $grupoPessoa;
 
     /**
+     * @ORM\OneToMany(targetEntity="GrupoAtendimento", mappedBy="grupo") 
+     */
+    protected $grupoAtendimento;
+
+    /**
      * @ORM\OneToMany(targetEntity="GrupoPaiFilho", mappedBy="grupoPaiFilhoPai") 
      */
     protected $grupoPaiFilhoFilhos;
@@ -59,6 +64,7 @@ class Grupo extends CircuitoEntity {
         $this->grupoResponsavel = new ArrayCollection();
         $this->grupoEvento = new ArrayCollection();
         $this->grupoPessoa = new ArrayCollection();
+        $this->grupoAtendimento = new ArrayCollection();
         $this->grupoPaiFilhoFilhos = new ArrayCollection();
         $this->grupoAluno = new ArrayCollection();
     }
@@ -503,6 +509,15 @@ class Grupo extends CircuitoEntity {
 
     function setGrupoAluno($grupoAluno) {
         $this->grupoAluno = $grupoAluno;
+    }
+
+    function getGrupoAtendimento() {
+        return $this->grupoAtendimento;
+    }
+
+    function setGrupoAtendimento($grupoAtendimento) {
+        $this->grupoAtendimento = $grupoAtendimento;
+        return $this;
     }
 
 }

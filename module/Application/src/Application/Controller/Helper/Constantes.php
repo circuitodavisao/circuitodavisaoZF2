@@ -208,6 +208,7 @@ class Constantes {
     public static $ENTITY_EVENTO_FREQUENCIA = 'Application\Model\Entity\EventoFrequencia';
     public static $ENTITY_GRUPO = 'Application\Model\Entity\Grupo';
     public static $ENTITY_GRUPO_EVENTO = 'Application\Model\Entity\GrupoEvento';
+    public static $ENTITY_GRUPO_ATENDIMENTO = 'Application\Model\Entity\GrupoAtendimento';
     public static $ENTITY_TURMA_ALUNO = 'Application\Model\Entity\TurmaAluno';
     public static $ENTITY_PESSOA_ID = 'pessoa_id';
     public static $ENTITY_DATA_INATIVACAO = 'data_inativacao';
@@ -218,6 +219,9 @@ class Constantes {
     public static $LANCAMENTO_ORM = 'lancamentoORM';
     public static $TURMA = 'turma';
     public static $GRUPO = 'grupo';
+    public static $NUMERO_ATENDIMENTOS = 'numeroAtendimentos';
+    public static $ARRAY_ATENDIMENTOS_GRUPO = 'atendimentosGrupo';
+    public static $NOME_LIDER_ATENDIMENTO = 'nomePessoaPai';
     public static $QUANTIDADE_MAXIMA_PESSOAS_NO_LANÇAMENTO = 60;
     public static $ABA_SELECIONADA = 'abaSelecionada';
     public static $CICLO_SELECIONADO = 'cicloSelecionado';
@@ -230,15 +234,29 @@ class Constantes {
     public static $TEMPLATE_JS_LANCAMENTO = 'layout/layout-js-lancamento';
     public static $TEMPLATE_JS_CADASTRAR_PESSOA = 'layout/layout-js-cadastrar-pessoa';
     public static $TEMPLATE_JS_CADASTRAR_PESSOA_VALIDACAO = 'layout/layout-js-cadastrar-pessoa-validacao';
+    public static $TEMPLATE_JS_CADASTRAR_ATENDIMENTO = 'layout/layout-js-cadastrar-atendimento';
+    public static $TEMPLATE_JS_VALIDACAO_ATENDIMENTO = 'layout/layout-js-validacao-atendimento';
     public static $TEMPLATE_JS_LANCAMENTO_MODAL_EVENTOS = 'layout/layout-js-lancamento-modal-eventos';
     public static $TEMPLATE_JS_LANCAMENTO_MODAL_MUITOS_CADASTROS = 'layout/layout-js-lancamento-modal-muitos-cadastros';
     public static $STRING_JS_LANCAMENTO = 'layoutJSLancamento';
     public static $STRING_JS_CADASTRAR_PESSOA = 'layoutJSCadastrarPessoa';
     public static $STRING_JS_CADASTRAR_PESSOA_VALIDACAO = 'layoutJSCadastrarPessoaValidacao';
+    public static $STRING_JS_CADASTRAR_ATENDIMENTO = 'layoutJSCadastrarAtendimento';
+    public static $STRING_JS_VALIDACAO_ATENDIMENTO = 'layoutJSValidacaoAtendimento';
     public static $STRING_JS_LANCAMENTO_MODAL_EVENTOS = 'layoutJSLancamentoModalEventos';
     public static $STRING_JS_LANCAMENTO_MODAL_MUITOS_CADASTROS = 'layoutJSLancamentoModalMuitosCadastros';
+    public static $STRING_FUNCAO_VALIDACAO_ATENDIMENTO = 'preValidacao()';
     public static $ROUTE_LANCAMENTO = 'lancamento';
     public static $PAGINA_SALVAR_PESSOA = 'SalvarPessoa';
+    public static $ROUTE_LANCAMENTO_ATENDIMENTO = 'lancamentoAtendimento';
+    public static $PAGINA_ATENDIMENTO = 'Atendimento';
+    public static $PAGINA_LANCAR_ATENDIMENTO = 'LancarAtendimento';
+    public static $PAGINA_LANCAR_ATENDIMENTO_EDIT = 'LancarAtendimentoEdit';
+    public static $PAGINA_ATENDIMENTO_EXCLUSAO = 'AtendimentoExclusao';
+    public static $PAGINA_ATENDIMENTO_EXCLUSAO_CONFIRMACAO = 'AtendimentoExclusaoConfirmacao';
+    public static $PAGINA_LABEL_LANCAR_ATENDIMENTO = 'Lançar';
+    public static $PAGINA_SALVAR_ATENDIMENTO = 'SalvarAtendimento';
+    public static $PAGINA_EXCLUIR_ATENDIMENTO = 'AtendimentoExclusao';
     public static $ONCLICK_ABRIR_MODAL = 'onclick="abrirModal();"';
     public static $PAGINA = 'pagina';
     public static $PAGINA_CADASTRAR_PESSOA = 'CadastrarPessoa';
@@ -254,6 +272,22 @@ class Constantes {
     public static $NBSP = '&nbsp;';
     public static $CLASS_PHONE = 'phone';
     public static $FORM_CADASTRAR_PESSOA = 'CadastrarPessoaForm';
+    public static $FORM_CADASTRAR_ATENDIMENTO = 'CadastrarAtendimentoForm';
+    public static $GRUPOS_ABAIXO = 'gruposAbaixo';
+    public static $MES_ATENDIMENTO = 'mes';
+    public static $TITULO_MENSAGEM = 'titulo';
+    public static $TEXTO_MENSAGEM = 'texto';
+    public static $MOSTRAR_MENSAGEM = 'mostrar';
+    public static $ENTIDADE_ATENDIMENTO = 'atendimento';
+    public static $PESSOA_LIDER = 'pessoaLider';
+    public static $CAMPO_DATA_ATENDIMENTO = 'dataAtendimento';
+    public static $TRADUCAO_MENSAGEM_TITULO_LANCAMENTO_ATENDIMENTO = 'Atendimento Lançado com sucesso';
+    public static $TRADUCAO_MENSAGEM_TITULO_EXCLUSAO_ATENDIMENTO = 'Atendimento Excluido com sucesso';
+    public static $TRADUCAO_VALIDACAO_DATA = 'Insert Date';
+    public static $TRADUCAO_VALIDACAO_DATA_VALIDA = 'Insert Valid Date';
+    public static $TRADUCAO_VALIDACAO_MAX_DATE = 'Please enter a valid date. Max: 10 characters';
+    public static $TRADUCAO_VALIDACAO_MIN_DATE = 'Please enter a valid date. Min: 10 characters';
+    public static $TRADUCAO_VALIDACAO_LIDER = 'Select Leader';
     /* Tradução */
     public static $TRADUCAO_ENVIAR_RELATORIO = 'Send Report';
     public static $TRADUCAO_GIRE_O_CELULAR = '<h3>ROTATE THE CELLULAR</h3><span>Turn your phone to landscape to view all your events.</span>';
@@ -289,6 +323,9 @@ class Constantes {
     public static $TRADUCAO_PESSOA_CADASTRADA = 'Person Registered';
     /* Fomulário */
     public static $INPUT_NOME = 'nome';
+    public static $INPUT_DATA_ATENDIMENTO = 'dataAtendimento';
+    public static $INPUT_QUEM_ATENDEU = 'quem';
+    public static $INPUT_ID_GRUPO_ATENDIDO = 'idGrupo';
     public static $INPUT_DDD = 'ddd';
     public static $INPUT_TELEFONE = 'telefone';
     public static $INPUT_NUCLEO_PERFEITO = 'nucleoPerfeito';
@@ -299,6 +336,7 @@ class Constantes {
     public static $ICONE_PHONE = 'fa-phone-square';
     public static $INPUT_SELECTED = 'selected';
     public static $NOME_PESSOA_CADASTRADA = 'nomePessoaCadastrada';
+
     /* Rotas */
     public static $ROUTE_REMOVER_PESSOA = 'RemoverPessoa';
     public static $ROUTE_CADASTRAR_PESSOA_REVISAO = 'CadastrarPessoaRevisao';

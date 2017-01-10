@@ -13,8 +13,11 @@ namespace Application;
 use Application\Controller\Helper\Constantes;
 use Application\Model\ORM\RepositorioORM;
 use Application\View\Helper\Abas;
+use Application\View\Helper\AbasAtendimento;
 use Application\View\Helper\AbaSelecionada;
 use Application\View\Helper\AlertaEnvioRelatorio;
+use Application\View\Helper\AtendimentoGruposAbaixo;
+use Application\View\Helper\AtendimentosDoGrupo;
 use Application\View\Helper\BarraDeProgresso;
 use Application\View\Helper\BlocoDiv;
 use Application\View\Helper\BlocoResponsavel;
@@ -22,6 +25,7 @@ use Application\View\Helper\BotaoLink;
 use Application\View\Helper\BotaoPopover;
 use Application\View\Helper\BotaoSubmit;
 use Application\View\Helper\BotaoSubmitDesabilitado;
+use Application\View\Helper\CabecalhoDeAtendimentos;
 use Application\View\Helper\CabecalhoDeCiclos;
 use Application\View\Helper\CabecalhoDeEventos;
 use Application\View\Helper\DadosEntidade;
@@ -30,6 +34,7 @@ use Application\View\Helper\DivJavaScript;
 use Application\View\Helper\FuncaoOnClick;
 use Application\View\Helper\GrupoDadosComplementares;
 use Application\View\Helper\GrupoEstadoCivil;
+use Application\View\Helper\InformacoesGrupoAtendido;
 use Application\View\Helper\InputAddon;
 use Application\View\Helper\InputCampoEndereco;
 use Application\View\Helper\InputDiaDaSemanaHoraMinuto;
@@ -240,6 +245,21 @@ class Module {
                 'grupoDadosComplementares' => function($sm) {
                     return new GrupoDadosComplementares();
                 },
+                'atendimentoGruposAbaixo' => function($sm) {
+                    return new AtendimentoGruposAbaixo();
+                },
+                'cabecalhoDeAtendimentos' => function($sm) {
+                    return new CabecalhoDeAtendimentos();
+                },
+                'abasAtendimento' => function($sm) {
+                    return new AbasAtendimento();
+                },
+                'informacoesGrupoAtendido' => function ($sm) {
+                    return new InformacoesGrupoAtendido();
+                },
+                'atendimentosDoGrupo' => function ($sm) {
+                    return new AtendimentosDoGrupo();
+                }
             )
         );
     }
