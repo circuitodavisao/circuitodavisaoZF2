@@ -1,8 +1,6 @@
 <?php
 
-use Cadastro\Controller\Helper\ConstantesCadastro;
-use Cadastro\Form\ConstantesForm;
-use Login\Controller\Helper\Constantes;
+use Application\Controller\Helper\Constantes;
 
 /**
  * Nome: grupo.phtml
@@ -11,9 +9,9 @@ use Login\Controller\Helper\Constantes;
  */
 $form = $this->Form;
 $form->prepare();
-$form->setAttribute(ConstantesForm::$FORM_ACTION, ConstantesCadastro::$ROUTE_CADASTRO . ConstantesCadastro::$PAGINA_GRUPO_FINALIZAR);
+$form->setAttribute(Constantes::$FORM_ACTION, Constantes::$ROUTE_CADASTRO . Constantes::$PAGINA_GRUPO_FINALIZAR);
 echo $this->form()->openTag($form);
-echo $this->templateFormularioTopo(ConstantesCadastro::$TRADUCAO_TITULO_PAGINA_CADASTRO_GRUPO_SUB_EQUIPE);
+echo $this->templateFormularioTopo(Constantes::$TRADUCAO_TITULO_PAGINA_CADASTRO_GRUPO_SUB_EQUIPE);
 ?>
 <!-- Inicio panel-body -->
 <div class="panel-body bg-light">
@@ -22,7 +20,7 @@ echo $this->templateFormularioTopo(ConstantesCadastro::$TRADUCAO_TITULO_PAGINA_C
     <!-- Confirmacao -->
     <div id="divConfirmacao" class="hidden">
         <div class="section-divider mt40 mb50">
-            <span><?php echo $this->translate(ConstantesCadastro::$TRADUCAO_INSIRA_OS_DADOS_DOS_RESPONSAVEIS_E_DADOS_COMPLEMENTARES); ?></span>
+            <span><?php echo $this->translate(Constantes::$TRADUCAO_INSIRA_OS_DADOS_DOS_RESPONSAVEIS_E_DADOS_COMPLEMENTARES); ?></span>
         </div> 
         <!-- Progress Bar -->
         <?php echo $this->barraDeProgresso(); ?>
@@ -36,17 +34,17 @@ echo $this->templateFormularioTopo(ConstantesCadastro::$TRADUCAO_TITULO_PAGINA_C
         <?php $funcaoInserirDadosComplementares = $this->funcaoOnClick('botaoInserirDadosComplementares()'); ?>
         <div id="divBlocoDadosComplementares" class="well col-xs-12 mb10 btn btn-default text-left" <?php echo $funcaoInserirDadosComplementares; ?>>
             <address>
-                <span id="spanInsiraOsDadosComplementares"><?php echo $this->translate(ConstantesCadastro::$TRADUCAO_INSIRA_OS_DADOS_COMPLEMENTARES); ?></span>
+                <span id="spanInsiraOsDadosComplementares"><?php echo $this->translate(Constantes::$TRADUCAO_INSIRA_OS_DADOS_COMPLEMENTARES); ?></span>
                 <span class="quebraDeLinhaDeSpan" id="spanDadosComplementares"></span>
             </address>
             <?php
             echo "<div id='divBotaoInserirDadosComplementares'>";
             echo $this->botaoLink(
-                    ConstantesCadastro::$TRADUCAO_INSERIR, ConstantesForm::$STRING_HASHTAG, 5, $funcaoInserirDadosComplementares);
+                    Constantes::$TRADUCAO_INSERIR, Constantes::$STRING_HASHTAG, 5, $funcaoInserirDadosComplementares);
             echo "</div>";
             echo "<div id='divBotaoAlterarDadosComplementares' class='hidden'>";
             echo $this->botaoLink(
-                    ConstantesCadastro::$TRADUCAO_ALTERAR, ConstantesForm::$STRING_HASHTAG, 6, $this->funcaoOnClick('botaoAlterarDadosComplementares()'));
+                    Constantes::$TRADUCAO_ALTERAR, Constantes::$STRING_HASHTAG, 6, $this->funcaoOnClick('botaoAlterarDadosComplementares()'));
             echo "</div>";
             ?>
             <div id="divCheckDadosComplementaresInseridos" class="checkDadosInseridos hidden">
@@ -54,7 +52,7 @@ echo $this->templateFormularioTopo(ConstantesCadastro::$TRADUCAO_TITULO_PAGINA_C
             </div>
         </div>
         <div id="divBotaoSubmit" class="hidden">
-            <?php echo $this->botaoLink(ConstantesCadastro::$TRADUCAO_FINALIZAR, '#', 7, $this->funcaoOnClick('botaoSubmeterFormulario(this.form)')); ?>
+            <?php echo $this->botaoLink(Constantes::$TRADUCAO_FINALIZAR, '#', 7, $this->funcaoOnClick('botaoSubmeterFormulario(this.form)')); ?>
         </div>
     </div>
 
@@ -80,10 +78,10 @@ echo $this->templateFormularioTopo(ConstantesCadastro::$TRADUCAO_TITULO_PAGINA_C
         <!-- Selecionar Aluno -->
         <div id="divSelecionarAluno" class="">
             <div class="section-divider mt40">
-                <span><?php echo $this->translate(ConstantesCadastro::$TRADUCAO_SELECIONE_O_ALUNO); ?></span>
+                <span><?php echo $this->translate(Constantes::$TRADUCAO_SELECIONE_O_ALUNO); ?></span>
             </div> 
             <div class="panel-menu">
-                <input id="fooFilter" type="text" class="form-control" placeholder="<?php echo $this->translate(ConstantesCadastro::$TRADUCAO_BUSQUE_O_ALUNO); ?>">
+                <input id="fooFilter" type="text" class="form-control" placeholder="<?php echo $this->translate(Constantes::$TRADUCAO_BUSQUE_O_ALUNO); ?>">
             </div>
             <!-- Tabela de Alunos -->
             <?php echo $this->tabelaDeAlunos($form); ?>
@@ -92,12 +90,12 @@ echo $this->templateFormularioTopo(ConstantesCadastro::$TRADUCAO_TITULO_PAGINA_C
                 echo '<div id="divBotaoDeSelecionarAluno" class="hidden">';
                 $labelBotaoContinuar = Constantes::$TRADUCAO_CONTINUAR;
                 $extraBotaoContinuar = $this->funcaoOnClick('selecionarAluno()');
-                echo $this->botaoLink($labelBotaoContinuar, ConstantesForm::$STRING_HASHTAG, 7, $extraBotaoContinuar);
+                echo $this->botaoLink($labelBotaoContinuar, Constantes::$STRING_HASHTAG, 7, $extraBotaoContinuar);
                 echo '</div>';
 
                 /* Botao Voltar Confirmação */
                 $labelVoltar = Constantes::$TRADUCAO_VOLTAR;
-                echo $this->botaoLink($labelVoltar, ConstantesForm::$STRING_HASHTAG, 8, $this->FuncaoOnClick('botaoVoltarSelecionarAluno()'));
+                echo $this->botaoLink($labelVoltar, Constantes::$STRING_HASHTAG, 8, $this->FuncaoOnClick('botaoVoltarSelecionarAluno()'));
                 ?>
             </div>
         </div>
@@ -105,22 +103,22 @@ echo $this->templateFormularioTopo(ConstantesCadastro::$TRADUCAO_TITULO_PAGINA_C
         <!-- Div Dados Pessoais -->
         <div id="divCPFDataNascimento" class="hidden">            
             <div class="section-divider mt40">
-                <span><?php echo $this->translate(ConstantesCadastro::$TRADUCAO_INFORME_DATA_NASCIMENTO_E_CPF); ?></span>
+                <span><?php echo $this->translate(Constantes::$TRADUCAO_INFORME_DATA_NASCIMENTO_E_CPF); ?></span>
             </div>
             <!-- Buscar CPF -->
             <?php
             echo '<div class="row">';
             echo '<div class="col-xs-4">';
-            echo $this->formSelect($form->get(ConstantesCadastro::$FORM_INPUT_DIA));
+            echo $this->formSelect($form->get(Constantes::$FORM_INPUT_DIA));
             echo '</div>';
             echo '<div class="col-xs-4">';
-            echo $this->formSelect($form->get(ConstantesCadastro::$FORM_INPUT_MES));
+            echo $this->formSelect($form->get(Constantes::$FORM_INPUT_MES));
             echo '</div>';
             echo '<div class="col-xs-4">';
-            echo $this->formSelect($form->get(ConstantesCadastro::$FORM_INPUT_ANO));
+            echo $this->formSelect($form->get(Constantes::$FORM_INPUT_ANO));
             echo '</div>';
             echo '<div class="col-xs-12 mt10">';
-            echo $this->formInput($form->get(ConstantesForm::$FORM_CPF));
+            echo $this->formInput($form->get(Constantes::$FORM_CPF));
             echo '</div>';
             echo '</div>';
             ?>
@@ -128,12 +126,12 @@ echo $this->templateFormularioTopo(ConstantesCadastro::$TRADUCAO_TITULO_PAGINA_C
             <div id="divBotoesBuscaCPF" class="mt10">
                 <?php
                 echo '<div id="botaoBuscarCPF" class="quebraDeLinhaDeSpan">';
-                echo $this->botaoLink(ConstantesForm::$TRADUCAO_BUSCAR, ConstantesForm::$STRING_HASHTAG, 7, $this->funcaoOnClick(ConstantesForm::$FORM_FUNCAO_BUSCAR_CPF));
+                echo $this->botaoLink(Constantes::$TRADUCAO_BUSCAR, Constantes::$STRING_HASHTAG, 7, $this->funcaoOnClick(Constantes::$FORM_FUNCAO_BUSCAR_CPF));
                 echo '</div>';
                 echo '<div id="botaoCPFLiberado" class="quebraDeLinhaDeSpan hidden">';
-                echo $this->botaoLink($labelBotaoContinuar, ConstantesForm::$STRING_HASHTAG, 7, $this->funcaoOnClick('mostrarDivEmail()'));
+                echo $this->botaoLink($labelBotaoContinuar, Constantes::$STRING_HASHTAG, 7, $this->funcaoOnClick('mostrarDivEmail()'));
                 echo '</div>';
-                echo $this->botaoLink($labelVoltar, ConstantesForm::$STRING_HASHTAG, 8, $this->funcaoOnClick('botaoVoltarDataNascimentoCPF()'));
+                echo $this->botaoLink($labelVoltar, Constantes::$STRING_HASHTAG, 8, $this->funcaoOnClick('botaoVoltarDataNascimentoCPF()'));
                 ?>
             </div>
         </div>
@@ -142,53 +140,53 @@ echo $this->templateFormularioTopo(ConstantesCadastro::$TRADUCAO_TITULO_PAGINA_C
         <div id="divEmail" class="hidden">
             <?php
             echo '<div class="col-xs-12">';
-            echo $this->formInput($form->get(ConstantesForm::$FORM_EMAIL));
+            echo $this->formInput($form->get(Constantes::$FORM_EMAIL));
             echo '</div>';
             echo '<div class="col-xs-12 mt10 mb10">';
-            echo $this->formInput($form->get(ConstantesForm::$FORM_REPETIR_EMAIL));
+            echo $this->formInput($form->get(Constantes::$FORM_REPETIR_EMAIL));
             echo '</div>';
             /* Botões */
             echo '<div id="botaoBuscarEmail" class="quebraDeLinhaDeSpan">';
-            echo $this->botaoLink(ConstantesForm::$TRADUCAO_BUSCAR, ConstantesForm::$STRING_HASHTAG, 7, $this->funcaoOnClick(ConstantesForm::$FORM_FUNCAO_BUSCAR_EMAIL));
+            echo $this->botaoLink(Constantes::$TRADUCAO_BUSCAR, Constantes::$STRING_HASHTAG, 7, $this->funcaoOnClick(Constantes::$FORM_FUNCAO_BUSCAR_EMAIL));
             echo '</div>';
             echo '<div id="botaoEmailLiberado" class="quebraDeLinhaDeSpan hidden">';
-            echo $this->botaoLink($labelBotaoContinuar, ConstantesForm::$STRING_HASHTAG, 7, $this->funcaoOnClick('mostrarDivHierarquia()'));
+            echo $this->botaoLink($labelBotaoContinuar, Constantes::$STRING_HASHTAG, 7, $this->funcaoOnClick('mostrarDivHierarquia()'));
             echo '</div>';
             /* Botao Voltar Data de Nascimento e CPF */
-            echo $this->botaoLink($labelVoltar, ConstantesForm::$STRING_HASHTAG, 8, $this->funcaoOnClick('botaoVoltarEmail()'));
+            echo $this->botaoLink($labelVoltar, Constantes::$STRING_HASHTAG, 8, $this->funcaoOnClick('botaoVoltarEmail()'));
             ?>
         </div>
 
         <!-- Div Hierarquia -->
         <div id="divHierarquia" class="hidden">
             <!-- Selecionar Hierarquia -->
-            <?php echo $this->formSelect($form->get(ConstantesForm::$FORM_HIERARQUIA)); ?>
+            <?php echo $this->formSelect($form->get(Constantes::$FORM_HIERARQUIA)); ?>
             <!-- Fim Selecionar Hierarquia -->
             <div class="mt10">
                 <?php
                 echo '<div id="botaoHierarquiaSelecionada" class="quebraDeLinhaDeSpan hidden">';
 
                 echo '<div id="botaoInserirResponsavel" class="">';
-                $labelInserirResponsavel = ConstantesCadastro::$TRADUCAO_INSERIR;
+                $labelInserirResponsavel = Constantes::$TRADUCAO_INSERIR;
                 $extraInserirResponsavel = ' id="botaoInserirResponsavel#numero" onclick="
                 insereResponsavelNaTelaDeConfimacao(#numero, 0); 
                     $(\'#divConfirmacao\').removeClass(\'hidden\');            
                     $(\'#divResponsavel\').addClass(\'hidden\');
                 "';
                 $extraResponsavel0 = str_replace('#numero', 0, $extraInserirResponsavel);
-                echo $this->botaoLink($labelInserirResponsavel, ConstantesForm::$STRING_HASHTAG, 7, $extraResponsavel0);
+                echo $this->botaoLink($labelInserirResponsavel, Constantes::$STRING_HASHTAG, 7, $extraResponsavel0);
 
                 $extraResponsavel1 = str_replace('#numero', 1, $extraInserirResponsavel);
-                echo $this->botaoLink($labelInserirResponsavel, ConstantesForm::$STRING_HASHTAG, 7, $extraResponsavel1);
+                echo $this->botaoLink($labelInserirResponsavel, Constantes::$STRING_HASHTAG, 7, $extraResponsavel1);
 
                 $extraResponsavel2 = str_replace('#numero', 2, $extraInserirResponsavel);
-                echo $this->botaoLink($labelInserirResponsavel, ConstantesForm::$STRING_HASHTAG, 7, $extraResponsavel2);
+                echo $this->botaoLink($labelInserirResponsavel, Constantes::$STRING_HASHTAG, 7, $extraResponsavel2);
                 echo '</div>';
 
                 echo '</div>';
 
                 /* Botao Voltar Email */
-                echo $this->botaoLink($labelVoltar, ConstantesForm::$STRING_HASHTAG, 8, $this->funcaoOnClick('botaoVoltarHierarquia()'));
+                echo $this->botaoLink($labelVoltar, Constantes::$STRING_HASHTAG, 8, $this->funcaoOnClick('botaoVoltarHierarquia()'));
                 ?>
             </div>
         </div>          
@@ -203,25 +201,25 @@ echo $this->templateFormularioTopo(ConstantesCadastro::$TRADUCAO_TITULO_PAGINA_C
 </div>
 <?php
 echo $this->formHidden($form->get(Constantes::$INPUT_CSRF));
-echo $this->formHidden($form->get(ConstantesForm::$FORM_ID_ALUNO_SELECIONADO . '0'));
-echo $this->formHidden($form->get(ConstantesForm::$FORM_ID_ALUNO_SELECIONADO . '1'));
-echo $this->formHidden($form->get(ConstantesForm::$FORM_ID_ALUNO_SELECIONADO . '2'));
-echo $this->formHidden($form->get(ConstantesForm::$FORM_NOME . '0'));
-echo $this->formHidden($form->get(ConstantesForm::$FORM_NOME . '1'));
-echo $this->formHidden($form->get(ConstantesForm::$FORM_NOME . '2'));
-echo $this->formHidden($form->get(ConstantesForm::$FORM_EMAIL . '0'));
-echo $this->formHidden($form->get(ConstantesForm::$FORM_EMAIL . '1'));
-echo $this->formHidden($form->get(ConstantesForm::$FORM_EMAIL . '2'));
-echo $this->formHidden($form->get(ConstantesForm::$FORM_CPF . '0'));
-echo $this->formHidden($form->get(ConstantesForm::$FORM_CPF . '1'));
-echo $this->formHidden($form->get(ConstantesForm::$FORM_CPF . '2'));
-echo $this->formHidden($form->get(ConstantesForm::$FORM_HIERARQUIA . '0'));
-echo $this->formHidden($form->get(ConstantesForm::$FORM_HIERARQUIA . '1'));
-echo $this->formHidden($form->get(ConstantesForm::$FORM_HIERARQUIA . '2'));
-echo $this->formHidden($form->get(ConstantesForm::$FORM_DATA_NASCIMENTO . '0'));
-echo $this->formHidden($form->get(ConstantesForm::$FORM_DATA_NASCIMENTO . '1'));
-echo $this->formHidden($form->get(ConstantesForm::$FORM_DATA_NASCIMENTO . '2'));
-echo $this->formHidden($form->get(ConstantesForm::$FORM_NOME_ALUNO));
+echo $this->formHidden($form->get(Constantes::$FORM_ID_ALUNO_SELECIONADO . '0'));
+echo $this->formHidden($form->get(Constantes::$FORM_ID_ALUNO_SELECIONADO . '1'));
+echo $this->formHidden($form->get(Constantes::$FORM_ID_ALUNO_SELECIONADO . '2'));
+echo $this->formHidden($form->get(Constantes::$FORM_NOME . '0'));
+echo $this->formHidden($form->get(Constantes::$FORM_NOME . '1'));
+echo $this->formHidden($form->get(Constantes::$FORM_NOME . '2'));
+echo $this->formHidden($form->get(Constantes::$FORM_EMAIL . '0'));
+echo $this->formHidden($form->get(Constantes::$FORM_EMAIL . '1'));
+echo $this->formHidden($form->get(Constantes::$FORM_EMAIL . '2'));
+echo $this->formHidden($form->get(Constantes::$FORM_CPF . '0'));
+echo $this->formHidden($form->get(Constantes::$FORM_CPF . '1'));
+echo $this->formHidden($form->get(Constantes::$FORM_CPF . '2'));
+echo $this->formHidden($form->get(Constantes::$FORM_HIERARQUIA . '0'));
+echo $this->formHidden($form->get(Constantes::$FORM_HIERARQUIA . '1'));
+echo $this->formHidden($form->get(Constantes::$FORM_HIERARQUIA . '2'));
+echo $this->formHidden($form->get(Constantes::$FORM_DATA_NASCIMENTO . '0'));
+echo $this->formHidden($form->get(Constantes::$FORM_DATA_NASCIMENTO . '1'));
+echo $this->formHidden($form->get(Constantes::$FORM_DATA_NASCIMENTO . '2'));
+echo $this->formHidden($form->get(Constantes::$FORM_NOME_ALUNO));
 
 echo $this->templateFormularioRodape();
 echo $this->form()->closeTag();

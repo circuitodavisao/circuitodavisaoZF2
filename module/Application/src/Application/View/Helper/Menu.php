@@ -139,7 +139,11 @@ class Menu extends AbstractHelper {
                     }
                 }
 
-                $html .= $this->view->menuHierarquia($nomeLideres, $entidadeFilho->infoEntidade());
+                $informacaoEntidade = '';
+                if (!empty($entidadeFilho)) {
+                    $informacaoEntidade = $entidadeFilho->infoEntidade();
+                }
+                $html .= $this->view->menuHierarquia($nomeLideres, $informacaoEntidade);
             }
 
             /* Discipulos 12 */

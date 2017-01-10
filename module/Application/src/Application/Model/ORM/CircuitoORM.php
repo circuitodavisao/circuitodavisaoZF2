@@ -51,12 +51,11 @@ class CircuitoORM {
      * Atualiza a entidade no banco de dados
      * @param CircuitoEntity $entidade
      */
-    public function persistir($entidade) {
+    public function persistir($entidade, $setarDataEHora = true) {
         try {
-            if (!($entidade instanceof EventoCelula)) {
+            if ($setarDataEHora) {
                 $entidade->setDataEHoraDeCriacao();
             }
-
             $this->getEntityManager()->persist($entidade);
             $this->getEntityManager()->flush($entidade);
         } catch (Exception $exc) {

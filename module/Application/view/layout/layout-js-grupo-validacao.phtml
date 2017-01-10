@@ -1,6 +1,6 @@
 <?php
 
-use Cadastro\Controller\Helper\ConstantesCadastro;
+use Application\Controller\Helper\Constantes;
 
 $versao = '?v=7.0';
 
@@ -149,7 +149,7 @@ echo $this->inlineScript();
         var temErro = false;
         if (cpf.length === 0 || DiaDataNascimento === 0 || MesDataNascimento === 0 || AnoDataNascimento === 0) {
             temErro = true;
-            spanMensagens.text('<?php echo $this->translate(ConstantesCadastro::$TRADUCAO_PREENCHA_DATA_NASCIMENTO_E_CPF); ?>');
+            spanMensagens.text('<?php echo $this->translate(Constantes::$TRADUCAO_PREENCHA_DATA_NASCIMENTO_E_CPF); ?>');
         } else {
             if (DiaDataNascimento < 10) {
                 DiaDataNascimento = '0' + DiaDataNascimento;
@@ -161,7 +161,7 @@ echo $this->inlineScript();
                     + MesDataNascimento + stringBarra
                     + AnoDataNascimento;
             if (!isNumber(cpf) || cpf.length !== 11) {
-                spanMensagens.text('<?php echo $this->translate(ConstantesCadastro::$TRADUCAO_CPF_INVALIDO); ?>');
+                spanMensagens.text('<?php echo $this->translate(Constantes::$TRADUCAO_CPF_INVALIDO); ?>');
                 temErro = true;
             }
         }
@@ -184,7 +184,7 @@ echo $this->inlineScript();
                         dadosValidados = false;
                         spanMensagens
                                 .addClass(alertDanger)
-                                .text('<?php echo $this->translate(ConstantesCadastro::$TRADUCAO_NOME_NAO_CONFERE); ?>')
+                                .text('<?php echo $this->translate(Constantes::$TRADUCAO_NOME_NAO_CONFERE); ?>')
                                 .removeClass(hidden);
                     }
 
@@ -192,13 +192,13 @@ echo $this->inlineScript();
                         dadosValidados = false;
                         spanMensagens
                                 .addClass(alertDanger)
-                                .text('<?php echo $this->translate(ConstantesCadastro::$TRADUCAO_DATA_NASCIMENTO_NAO_CONFERE); ?>')
+                                .text('<?php echo $this->translate(Constantes::$TRADUCAO_DATA_NASCIMENTO_NAO_CONFERE); ?>')
                                 .removeClass(hidden);
                     }
                     if (dadosValidados) {
                         /* Mensagem de sucesso */
                         spanMensagens
-                                .text('<?php echo $this->translate(ConstantesCadastro::$TRADUCAO_DADOS_LIBERADOS); ?>')
+                                .text('<?php echo $this->translate(Constantes::$TRADUCAO_DADOS_LIBERADOS); ?>')
                                 .addClass(alertSuccess)
                                 .removeClass(hidden);
                         $('#botaoCPFLiberado').removeClass(hidden);
@@ -213,12 +213,12 @@ echo $this->inlineScript();
                 }
                 if (resposta === 2) {
                     /* Não encontrou no PROCOB */
-                    spanMensagens.text('<?php echo $this->translate(ConstantesCadastro::$TRADUCAO_DADOS_NAO_CADASTRADOS); ?>');
+                    spanMensagens.text('<?php echo $this->translate(Constantes::$TRADUCAO_DADOS_NAO_CADASTRADOS); ?>');
                 }
 
                 if (resposta === 3) {
                     /* Já cadastrado */
-                    spanMensagens.text('<?php echo $this->translate(ConstantesCadastro::$TRADUCAO_CPF_JA_UTILIZADO); ?>');
+                    spanMensagens.text('<?php echo $this->translate(Constantes::$TRADUCAO_CPF_JA_UTILIZADO); ?>');
                 }
 
                 if (resposta === 2 || resposta === 3) {
@@ -258,24 +258,24 @@ echo $this->inlineScript();
                 .removeClass(alertSuccess);
         if (repetirEmail != email) {
             temErro = true;
-            spanMensagens.html('<?php echo $this->translate(ConstantesCadastro::$TRADUCAO_EMAILS_NAO_CONFEREM); ?>');
+            spanMensagens.html('<?php echo $this->translate(Constantes::$TRADUCAO_EMAILS_NAO_CONFEREM); ?>');
         }
         if (email.length === 0) {
             temErro = true;
-            spanMensagens.html('<?php echo $this->translate(ConstantesCadastro::$TRADUCAO_PREENCHA_O_EMAIL); ?>');
+            spanMensagens.html('<?php echo $this->translate(Constantes::$TRADUCAO_PREENCHA_O_EMAIL); ?>');
         } else {
             if (!validaEmail(email)) {
                 temErro = true;
-                spanMensagens.html('<?php echo $this->translate(ConstantesCadastro::$TRADUCAO_EMAIL_INVALIDO); ?>');
+                spanMensagens.html('<?php echo $this->translate(Constantes::$TRADUCAO_EMAIL_INVALIDO); ?>');
             }
         }
         if (repetirEmail.length === 0) {
             temErro = true;
-            spanMensagens.html('<?php echo $this->translate(ConstantesCadastro::$TRADUCAO_REPETIR_EMAIL); ?>');
+            spanMensagens.html('<?php echo $this->translate(Constantes::$TRADUCAO_REPETIR_EMAIL); ?>');
         }
         if (email.length === 0 && repetirEmail.length === 0) {
             temErro = true;
-            spanMensagens.html('<?php echo $this->translate(ConstantesCadastro::$TRADUCAO_PREENCHA_E_REPETA_O_EMAIL); ?>');
+            spanMensagens.html('<?php echo $this->translate(Constantes::$TRADUCAO_PREENCHA_E_REPETA_O_EMAIL); ?>');
         }
 
         /* Não deixar repetir email */
@@ -284,7 +284,7 @@ echo $this->inlineScript();
 
         if (email.length !== 0 && (email === email1 || email === email2)) {
             temErro = true;
-            spanMensagens.html('<?php echo $this->translate(ConstantesCadastro::$TRADUCAO_EMAIL_USADO_PELO_CONJUGE); ?>');
+            spanMensagens.html('<?php echo $this->translate(Constantes::$TRADUCAO_EMAIL_USADO_PELO_CONJUGE); ?>');
         }
         if (!temErro) {
             abrirModalCarregando();
@@ -295,7 +295,7 @@ echo $this->inlineScript();
 // liberado
                 if (!data.resposta) {
                     spanMensagens
-                            .html('<?php echo $this->translate(ConstantesCadastro::$TRADUCAO_EMAIL_LIBERADO); ?>')
+                            .html('<?php echo $this->translate(Constantes::$TRADUCAO_EMAIL_LIBERADO); ?>')
                             .removeClass(hidden)
                             .addClass(alertSuccess);
                     $('#divSpanResponsavelEmail').removeClass(hidden);
@@ -306,7 +306,7 @@ echo $this->inlineScript();
 // não liberado
                 if (data.resposta) {
                     spanMensagens
-                            .html('<?php echo $this->translate(ConstantesCadastro::$TRADUCAO_EMAIL_JA_UTILIZADO); ?>')
+                            .html('<?php echo $this->translate(Constantes::$TRADUCAO_EMAIL_JA_UTILIZADO); ?>')
                             .addClass(alertDanger)
                             .removeClass(hidden);
                 }
@@ -407,7 +407,7 @@ echo $this->inlineScript();
                 spanCPF = $('#spanCPF0');
                 inputHiddenEmail = $('#email0');
                 inputHiddenHierarquia = $('#hierarquia0');
-                $('#spanInsiraOsDadosDoResponsavel').html('<?php echo $this->translate(ConstantesCadastro::$TRADUCAO_DADOS_DO_RESPONSAVEL); ?>');
+                $('#spanInsiraOsDadosDoResponsavel').html('<?php echo $this->translate(Constantes::$TRADUCAO_DADOS_DO_RESPONSAVEL); ?>');
                 valorBarraDeProgresso = 50;
                 divCheckDadosResponsavelInseridos = $('#divCheckDadosResponsavelInseridos0');
                 divBotaoInserirResponsavel = $('#divBotaoInserirResponsavel0');
@@ -427,7 +427,7 @@ echo $this->inlineScript();
                 spanCPF = $('#spanCPF1');
                 inputHiddenEmail = $('#email1');
                 inputHiddenHierarquia = $('#hierarquia1');
-                $('#spanInsiraOsDadosDoResponsavel1').html('<?php echo $this->translate(ConstantesCadastro::$TRADUCAO_DADOS_DO_HOMEM); ?>');
+                $('#spanInsiraOsDadosDoResponsavel1').html('<?php echo $this->translate(Constantes::$TRADUCAO_DADOS_DO_HOMEM); ?>');
                 valorBarraDeProgresso = 25;
                 divCheckDadosResponsavelInseridos = $('#divCheckDadosResponsavelInseridos1');
                 divBotaoInserirResponsavel = $('#divBotaoInserirResponsavel1');
@@ -447,7 +447,7 @@ echo $this->inlineScript();
                 spanCPF = $('#spanCPF2');
                 inputHiddenEmail = $('#email2');
                 inputHiddenHierarquia = $('#hierarquia2');
-                $('#spanInsiraOsDadosDoResponsavel2').html('<?php echo $this->translate(ConstantesCadastro::$TRADUCAO_DADOS_DA_MULHER); ?>');
+                $('#spanInsiraOsDadosDoResponsavel2').html('<?php echo $this->translate(Constantes::$TRADUCAO_DADOS_DA_MULHER); ?>');
                 valorBarraDeProgresso = 25;
                 divCheckDadosResponsavelInseridos = $('#divCheckDadosResponsavelInseridos2');
                 divBotaoInserirResponsavel = $('#divBotaoInserirResponsavel2');
@@ -545,9 +545,9 @@ echo $this->inlineScript();
         spanNome.html('');
         spanEmail.html('');
         spanHierarquia.html('');
-        $('#spanInsiraOsDadosDoResponsavel').html('<?php echo $this->translate(ConstantesCadastro::$TRADUCAO_INSIRA_DADOS_DO_RESPONSAVEL); ?>');
-        $('#spanInsiraOsDadosDoResponsavel1').html('<?php echo $this->translate(ConstantesCadastro::$TRADUCAO_INSIRA_DADOS_DO_HOMEM); ?>');
-        $('#spanInsiraOsDadosDoResponsavel2').html('<?php echo $this->translate(ConstantesCadastro::$TRADUCAO_INSIRA_DADOS_DA_MULHER); ?>');
+        $('#spanInsiraOsDadosDoResponsavel').html('<?php echo $this->translate(Constantes::$TRADUCAO_INSIRA_DADOS_DO_RESPONSAVEL); ?>');
+        $('#spanInsiraOsDadosDoResponsavel1').html('<?php echo $this->translate(Constantes::$TRADUCAO_INSIRA_DADOS_DO_HOMEM); ?>');
+        $('#spanInsiraOsDadosDoResponsavel2').html('<?php echo $this->translate(Constantes::$TRADUCAO_INSIRA_DADOS_DA_MULHER); ?>');
         divBotaoLimpar.addClass(hidden);
         divBotaoInserir.removeClass(hidden);
         divCheckDadosResponsavelInseridos.addClass(hidden);
@@ -613,7 +613,7 @@ echo $this->inlineScript();
     function insereNumeracaoNaTelaDeConfimacao(mudarBarraDeProgresso) {
         var spanDadosComplementares = $('#spanDadosComplementares');
         var iconeNumeracao = '<i class="fa fa-info-circle" aria-hidden="true"></i>' + stringNBSP;
-        spanDadosComplementares.html(iconeNumeracao + stringNBSP + '<?php echo $this->translate(ConstantesCadastro::$TRADUCAO_NUMERACAO); ?>' + stringNBSP + $('#numeracao option:selected').text());
+        spanDadosComplementares.html(iconeNumeracao + stringNBSP + '<?php echo $this->translate(Constantes::$TRADUCAO_NUMERACAO); ?>' + stringNBSP + $('#numeracao option:selected').text());
         insereDadosComplementares(mudarBarraDeProgresso);
     }
 
@@ -624,7 +624,7 @@ echo $this->inlineScript();
     }
 
     function insereDadosComplementares(adicaoDaBarraDeProgresso) {
-        $('#spanInsiraOsDadosComplementares').html('<?php echo $this->translate(ConstantesCadastro::$TRADUCAO_DADOS_COMPLEMENTARES); ?>');
+        $('#spanInsiraOsDadosComplementares').html('<?php echo $this->translate(Constantes::$TRADUCAO_DADOS_COMPLEMENTARES); ?>');
         $('#divCheckDadosComplementaresInseridos').removeClass(hidden);
         $('#divBotaoInserirDadosComplementares').addClass(hidden);
         $('#divBotaoAlterarDadosComplementares').removeClass(hidden);

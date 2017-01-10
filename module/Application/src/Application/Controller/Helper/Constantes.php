@@ -157,6 +157,7 @@ class Constantes {
     /* Entidade do banco de dados */
     public static $ENTITY_PESSOA = 'Application\Model\Entity\Pessoa';
     public static $ENTITY_ENTIDADE = 'Application\Model\Entity\Entidade';
+    public static $ENTITY_ENTIDADE_TIPO = 'Application\Model\Entity\EntidadeTipo';
     public static $ENTITY_PESSOA_EMAIL = 'email';
     public static $ENTITY_PESSOA_DOCUMENTO = 'documento';
     public static $ENTITY_PESSOA_DATA_NASCIMENTO = 'data_nascimento';
@@ -196,13 +197,18 @@ class Constantes {
 
     /* Lançamento */
     public static $ENTITY_GRUPO_PESSOA = 'Application\Model\Entity\GrupoPessoa';
+    public static $ENTITY_GRUPO_RESPONSAVEL = 'Application\Model\Entity\GrupoResponsavel';
+    public static $ENTITY_GRUPO_PAI_FILHO = 'Application\Model\Entity\GrupoPaiFilho';
     public static $ENTITY_GRUPO_PESSOA_TIPO = 'Application\Model\Entity\GrupoPessoaTipo';
     public static $ENTITY_EVENTO = 'Application\Model\Entity\Evento';
     public static $ENTITY_EVENTO_CELULA = 'Application\Model\Entity\EventoCelula';
     public static $ENTITY_EVENTO_TIPO = 'Application\Model\Entity\EventoTipo';
+    public static $ENTITY_HIERAQUIA = 'Application\Model\Entity\Hierarquia';
+    public static $ENTITY_PESSOA_HIERAQUIA = 'Application\Model\Entity\PessoaHierarquia';
     public static $ENTITY_EVENTO_FREQUENCIA = 'Application\Model\Entity\EventoFrequencia';
     public static $ENTITY_GRUPO = 'Application\Model\Entity\Grupo';
     public static $ENTITY_GRUPO_EVENTO = 'Application\Model\Entity\GrupoEvento';
+    public static $ENTITY_TURMA_ALUNO = 'Application\Model\Entity\TurmaAluno';
     public static $ENTITY_PESSOA_ID = 'pessoa_id';
     public static $ENTITY_DATA_INATIVACAO = 'data_inativacao';
     public static $ENTITY_TIPO_ID = 'tipo_id';

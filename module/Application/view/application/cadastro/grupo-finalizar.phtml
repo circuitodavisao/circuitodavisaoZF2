@@ -1,16 +1,15 @@
 <?php
 
-use Login\Controller\Helper\Constantes;
-use Cadastro\Controller\Helper\ConstantesCadastro;
+use Application\Controller\Helper\Constantes;
 ?>
 <div class="panel-body bg-light text-center">
-    <h1><span class = "text-success"><?php echo $this->translate(ConstantesCadastro::$TRADUCAO_CADASTRO_CONCLUIDO_COM_SUCESSO); ?></span></h1>
-    <?php echo $this->translate(ConstantesCadastro::$TRADUCAO_NAO_ESTA_ATIVADO); ?>
+    <h1><span class = "text-success"><?php echo $this->translate(Constantes::$TRADUCAO_CADASTRO_CONCLUIDO_COM_SUCESSO); ?></span></h1>
+    <?php echo $this->translate(Constantes::$TRADUCAO_NAO_ESTA_ATIVADO); ?>
 
     <div class = "col-xs-12">
         <h2 class = "text-default mbn confirmation-header"><i class = "fa fa-check text-success"></i></h2>
     </div>
     <div class = "col-xs-12 mt10">
-        <?php echo $this->botaoLink(ConstantesCadastro::$TRADUCAO_BOTAO_PRONTO, Constantes::$ACTION_PRINCIPAL, 0, ''); ?>
+        <?php echo $this->botaoLink(Constantes::$TRADUCAO_BOTAO_PRONTO, Constantes::$ACTION_PRINCIPAL, 0, ''); ?>
     </div>
 </div>

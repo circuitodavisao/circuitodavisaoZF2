@@ -5,7 +5,6 @@ namespace Application\Model\ORM;
 use Application\Controller\Helper\Constantes;
 use Application\Controller\Helper\Funcoes;
 use Application\Model\Entity\Pessoa;
-use Cadastro\Form\ConstantesForm;
 use Doctrine\Common\Collections\Criteria;
 use Exception;
 
@@ -114,11 +113,11 @@ class PessoaORM extends CircuitoORM {
      */
     public function atualizarAlunoComDadosDaBuscaPorCPF($pessoa, $post_data, $tipo = 0) {
         try {
-            $pessoa->setDocumento(intval($post_data[ConstantesForm::$FORM_CPF . $tipo]));
-            $pessoa->setNome($post_data[ConstantesForm::$FORM_NOME . $tipo]);
-            $pessoa->setEmail($post_data[ConstantesForm::$FORM_EMAIL . $tipo]);
-            $pessoa->setData_nascimento(Funcoes::mudarPadraoData($post_data[ConstantesForm::$FORM_DATA_NASCIMENTO . $tipo], 0));
-            $this->persistirPessoaNova($pessoa);
+            $pessoa->setDocumento(intval($post_data[Constantes::$FORM_CPF . $tipo]));
+            $pessoa->setNome($post_data[Constantes::$FORM_NOME . $tipo]);
+            $pessoa->setEmail($post_data[Constantes::$FORM_EMAIL . $tipo]);
+            $pessoa->setData_nascimento(Funcoes::mudarPadraoData($post_data[Constantes::$FORM_DATA_NASCIMENTO . $tipo], 0));
+            $this->persistir($pessoa, false);
 
             return $pessoa;
         } catch (Exception $exc) {

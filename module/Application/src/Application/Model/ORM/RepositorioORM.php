@@ -15,6 +15,7 @@ class RepositorioORM {
     private $_doctrineORMEntityManager;
     private $_pessoaORM;
     private $_entidadeORM;
+    private $_entidadeTipoORM;
     private $_grupoORM;
     private $_grupoPessoaORM;
     private $_grupoPessoaTipoORM;
@@ -22,6 +23,11 @@ class RepositorioORM {
     private $_eventoCelulaORM;
     private $_grupoEventoORM;
     private $_eventoTipoORM;
+    private $_hierarquiaORM;
+    private $_turmaAlunoORM;
+    private $_pessoaHierarquiaORM;
+    private $_grupoResponsavelORM;
+    private $_grupoPaiFilhoORM;
 
     /**
      * Contrutor
@@ -55,6 +61,17 @@ class RepositorioORM {
     }
 
     /**
+     * Metodo public para obter a instancia do EntidadeTipoORM
+     * @return CircuitoORM
+     */
+    public function getEntidadeTipoORM() {
+        if (is_null($this->_entidadeTipoORM)) {
+            $this->_entidadeTipoORM = new CircuitoORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_ENTIDADE_TIPO);
+        }
+        return $this->_entidadeTipoORM;
+    }
+
+    /**
      * Metodo public para obter a instancia do GrupoPessoaTipoORM
      * @return GrupoPessoaTipoORM
      */
@@ -74,6 +91,28 @@ class RepositorioORM {
             $this->_grupoPessoaORM = new GrupoPessoaORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_GRUPO_PESSOA);
         }
         return $this->_grupoPessoaORM;
+    }
+
+    /**
+     * Metodo public para obter a instancia do GrupoPessoaORM
+     * @return CircuitoORM
+     */
+    public function getGrupoResponsavelORM() {
+        if (is_null($this->_grupoResponsavelORM)) {
+            $this->_grupoResponsavelORM = new CircuitoORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_GRUPO_RESPONSAVEL);
+        }
+        return $this->_grupoResponsavelORM;
+    }
+
+    /**
+     * Metodo public para obter a instancia do GrupoPessoaORM
+     * @return CircuitoORM
+     */
+    public function getGrupoPaiFilhoORM() {
+        if (is_null($this->_grupoPaiFilhoORM)) {
+            $this->_grupoPaiFilhoORM = new CircuitoORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_GRUPO_PAI_FILHO);
+        }
+        return $this->_grupoPaiFilhoORM;
     }
 
     /**
@@ -129,6 +168,39 @@ class RepositorioORM {
             $this->_eventoTipoORM = new CircuitoORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_EVENTO_TIPO);
         }
         return $this->_eventoTipoORM;
+    }
+
+    /**
+     * Metodo public para obter a instancia do HierarquiaORM
+     * @return HierarquiaORM
+     */
+    public function getHierarquiaORM() {
+        if (is_null($this->_hierarquiaORM)) {
+            $this->_hierarquiaORM = new HierarquiaORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_HIERAQUIA);
+        }
+        return $this->_hierarquiaORM;
+    }
+
+    /**
+     * Metodo public para obter a instancia do PessoaHierarquiaORM
+     * @return CircuitoORM
+     */
+    public function getPessoaHierarquiaORM() {
+        if (is_null($this->_pessoaHierarquiaORM)) {
+            $this->_pessoaHierarquiaORM = new CircuitoORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_PESSOA_HIERAQUIA);
+        }
+        return $this->_pessoaHierarquiaORM;
+    }
+
+    /**
+     * Metodo public para obter a instancia do EventoTipoORM
+     * @return CircuitoORM
+     */
+    public function getTurmaAlunoORM() {
+        if (is_null($this->_turmaAlunoORM)) {
+            $this->_turmaAlunoORM = new CircuitoORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_TURMA_ALUNO);
+        }
+        return $this->_turmaAlunoORM;
     }
 
     /**

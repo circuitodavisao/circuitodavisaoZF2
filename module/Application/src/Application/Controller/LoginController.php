@@ -9,7 +9,6 @@ use Application\Form\NovaSenhaForm;
 use Application\Form\RecuperarAcessoForm;
 use Application\Form\RecuperarSenhaForm;
 use Application\Model\ORM\RepositorioORM;
-use Cadastro\Controller\Helper\ConstantesCadastro;
 use DateTime;
 use Doctrine\ORM\EntityManager;
 use Exception;
@@ -142,8 +141,8 @@ class LoginController extends CircuitoController {
                     ));
                 } else {/* Precisa atualizar dados */
                     /* Redirecionamento CadastroGrupoAtualizar */
-                    return $this->redirect()->toRoute(ConstantesCadastro::$ROUTE_CADASTRO, array(
-                                ConstantesCadastro::$PAGINA => ConstantesCadastro::$PAGINA_GRUPO_ATUALIZACAO,
+                    return $this->redirect()->toRoute(Constantes::$ROUTE_CADASTRO, array(
+                                Constantes::$PAGINA => Constantes::$PAGINA_GRUPO_ATUALIZACAO,
                     ));
                 }
             } else {
@@ -285,7 +284,7 @@ class LoginController extends CircuitoController {
                         $tokenDeAgora = $pessoa->gerarToken();
                         /* Persistir pessoa */
                         $pessoa->setToken($tokenDeAgora);
-                        $repositorioORM->getPessoaORM()->persistirPessoa($pessoa);
+                        $repositorioORM->getPessoaORM()->persistir($pessoa, false);
 
                         $mensagemAjustada = str_replace('#id', $tokenDeAgora, $mensagemComEmail);
                         Funcoes::enviarEmail($email, $this->getTranslator()->translate(Constantes::$TRADUCAO_EMAIL_TITULO_RECUPERAR_SENHA), $mensagemAjustada);
@@ -390,9 +389,9 @@ class LoginController extends CircuitoController {
                 $pessoa->setToken_data(null);
                 $pessoa->setToken_hora(null);
                 /* Salvando nova senha */
-                $repositorioORM->getPessoaORM()->persistirPessoa($pessoa);
+                $repositorioORM->getPessoaORM()->persistir($pessoa, false);
             } catch (Exception $exc) {
-                echo $exc->getTraceAsString();
+                echo $exc->getMessage();
             }
         }
 

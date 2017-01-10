@@ -1,6 +1,6 @@
 <?php
 
-namespace Cadastro\View\Helper;
+namespace Application\View\Helper;
 
 use Application\Controller\Helper\Constantes;
 use Zend\View\Helper\AbstractHelper;
