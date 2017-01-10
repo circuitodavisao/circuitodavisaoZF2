@@ -329,6 +329,8 @@ class Constantes {
     public static $PAGINA_BUSCAR_ENDERECO = 'BuscarEndereco';
     public static $PAGINA_BUSCAR_CPF = 'BuscarCPF';
     public static $PAGINA_BUSCAR_EMAIL = 'BuscarEmail';
+    public static $PAGINA_CADASTRO_REVISAO = 'Revisao';
+    public static $PAGINA_SALVAR_REVISAO = 'SalvarRevisao';
     public static $CONTROLLER_CADASTRO = 'Application\Controller\Cadastro';
     public static $ROUTE_CADASTRO = 'cadastro';
     /* Entidades */
@@ -433,6 +435,7 @@ class Constantes {
     public static $FORM_INPUT_MES = 'Mes';
     public static $FORM_INPUT_ANO = 'Ano';
     public static $FORM_INPUT_DDD = 'inputDDD';
+    public static $FORM_INPUT_DATA_REVISAO = 'dataRevisao';
     public static $FORM_INPUT_CODIGO_VERIFICADOR = 'inputCodigoVerificador';
     public static $FORM_INPUT_CELULAR = 'inputCelular';
     public static $FORM_INPUT_PROFISSAO = 'inputProfissao';

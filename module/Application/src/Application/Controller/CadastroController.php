@@ -9,6 +9,7 @@ use Application\Form\AtualizarCadastroForm;
 use Application\Form\CelulaForm;
 use Application\Form\EventoForm;
 use Application\Form\GrupoForm;
+use Application\Form\RevisaoForm;
 use Application\Model\Entity\Entidade;
 use Application\Model\Entity\Evento;
 use Application\Model\Entity\EventoCelula;
@@ -92,24 +93,35 @@ class CadastroController extends CircuitoController {
                         Constantes::$ACTION => Constantes::$PAGINA_EVENTO_EXCLUSAO_CONFIRMACAO,
             ));
         }
-        /* Busca de endereço por CEP */
+        /* Busca de endereço por CEP JSON */
         if ($pagina == Constantes::$PAGINA_BUSCAR_ENDERECO) {
             return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
                         Constantes::$ACTION => Constantes::$PAGINA_BUSCAR_ENDERECO,
             ));
         }
-        /* Busca de CPF */
+        /* Busca de CPF JSON */
         if ($pagina == Constantes::$PAGINA_BUSCAR_CPF) {
             return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
                         Constantes::$ACTION => Constantes::$PAGINA_BUSCAR_CPF,
             ));
         }
-        /* Busca de Email */
+        /* Busca de Email JSON */
         if ($pagina == Constantes::$PAGINA_BUSCAR_EMAIL) {
             return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
                         Constantes::$ACTION => Constantes::$PAGINA_BUSCAR_EMAIL,
             ));
         }
+        if ($pagina == Constantes::$PAGINA_CADASTRO_REVISAO) {
+            return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
+                        Constantes::$ACTION => Constantes::$PAGINA_CADASTRO_REVISAO,
+            ));
+        }
+        if ($pagina == Constantes::$PAGINA_SALVAR_REVISAO) {
+            return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
+                        Constantes::$ACTION => Constantes::$PAGINA_SALVAR_REVISAO,
+            ));
+        }
+
         /* Funcoes */
         if ($pagina == Constantes::$PAGINA_FUNCOES) {
             return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
@@ -964,6 +976,101 @@ class CadastroController extends CircuitoController {
         $url = "http://158.69.124.139/convite.php?nomeLider=$nomeLider&avatar=$avatar&token=$tokenDeAgora&nomePessoaEmail=$nomePessoaEmail";
         $Content = file_get_contents($url);
         Funcoes::enviarEmail($ToEmail, $Subject, $Content);
+    }
+
+    public function revisaoAction() {
+        $sessao = new Container(Constantes::$NOME_APLICACAO);
+        $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
+        $idEntidadeAtual = $sessao->idEntidadeAtual;
+        $entidade = $repositorioORM->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+        $grupo = $entidade->getGrupo();
+        $gruposAbaixo = $grupo->getGrupoPaiFilhoFilhos();
+
+        foreach ($gruposAbaixo as $gpFilho) {
+            $grupoFilho = $gpFilho->getGrupoPaiFilhoFilho();
+            $entidadeFilho = $grupoFilho->getEntidadeAtiva();
+            if ($entidadeFilho->getTipo_id() == 6) {
+                $gruposIgrejas[] = $entidadeFilho;
+            }
+        }
+        $form = new RevisaoForm('revisaoForm', $gruposIgrejas);
+        $view = new ViewModel(array(
+            'revisaoForm' => $form,
+            'igrejas' => $gruposIgrejas,
+        ));
+
+        return $view;
+    }
+
+    public function salvarRevisaoAction() {
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            try {
+                $post_data = $request->getPost();
+
+                /* Entidades * */
+                $evento = new Evento();
+
+                /* validação * */
+                $sessao = new Container(Constantes::$NOME_APLICACAO);
+                $criarNovoEvento = true;
+
+                /* Entidades * */
+                $evento = new Evento();
+                $grupoEvento = new GrupoEvento();
+
+                /* Repositorios * */
+                $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
+                $validatedData = $post_data;
+
+
+                if ($criarNovoEvento) {
+                    /* Entidade selecionada * */
+                    $idEntidadeAtual = $sessao->idEntidadeAtual;
+                    $entidade = $repositorioORM->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+
+                    $evento->setDia(6);
+                    $evento->setHora('21:00:00');
+                    $dataParaCadastro = Funcoes::dataAtual();
+                    $evento->setData_criacao(Funcoes::mudarPadraoData($validatedData['dataRevisao'], 0));
+                    $evento->setHora_criacao(Funcoes::horaAtual());
+
+                    $evento->setEventoTipo($repositorioORM->getEventoTipoORM()->encontrarPorId(3));
+
+                    $grupoEvento->setData_criacao(Funcoes::dataAtual());
+                    $grupoEvento->setHora_criacao(Funcoes::horaAtual());
+                    $grupoEvento->setGrupo($entidade->getGrupo());
+                    $grupoEvento->setEvento($evento);
+
+                    /* Persistindo * */
+                    $repositorioORM->getEventoORM()->persistir($evento);
+                    $repositorioORM->getGrupoEventoORM()->persistir($grupoEvento);
+                    /* Sessão * */
+                    $sessao->tipoMensagem = Constantes::$TIPO_MENSAGEM_CADASTRAR_CULTO;
+                    $sessao->textoMensagem = $evento->getNome();
+                    $sessao->idSessao = $evento->getId();
+
+                    /* Grupos Abaixos ou Equipes * */
+                    foreach ($post_data['igrejas'] as $value) {
+                        $stringValor = explode('#', $value);
+                        $entidadeIgreja = $repositorioORM->getEntidadeORM()->encontrarPorId($stringValor[1]);
+                        $grupoIgreja = $repositorioORM->getGrupoORM()->encontrarPorId($entidadeIgreja->getGrupo_id());
+                        $grupoEventoIgreja = new GrupoEvento();
+                        $grupoEventoIgreja->setData_criacao(Funcoes::dataAtual());
+                        $grupoEventoIgreja->setHora_criacao(Funcoes::horaAtual());
+                        $grupoEventoIgreja->setGrupo($grupoIgreja);
+                        $grupoEventoIgreja->setEvento($evento);
+                        $repositorioORM->getGrupoEventoORM()->persistir($grupoEventoIgreja);
+                    }
+                }
+
+                return $this->redirect()->toRoute(Constantes::$ROUTE_CADASTRO, array(
+                            Constantes::$PAGINA => Constantes::$PAGINA_CADASTRO_REVISAO,
+                ));
+            } catch (Exception $exc) {
+                echo $exc->getMessage();
+            }
+        }
     }
 
 }
