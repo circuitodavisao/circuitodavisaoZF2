@@ -20,6 +20,8 @@ function abrirContinuar() {
  */
 function abrirOpcao(valor) {
     var resposta = false;
+    var divMensagens = $('#divMensagens');
+    divMensagens.addClass('hidden');
     if (valor != 0) {
         var check_value = $('.opcao:checked').val();
         if (check_value == 1) {

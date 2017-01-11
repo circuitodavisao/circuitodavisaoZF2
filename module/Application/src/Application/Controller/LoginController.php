@@ -52,21 +52,20 @@ class LoginController extends CircuitoController {
      * GET /
      */
     public function indexAction() {
+        $mensagem = '';
         $tipoMensagem = 0;
+        $tipoNaoEncontrouNaBaseDeDados = 1;
         $formLogin = new LoginForm(Constantes::$LOGIN_FORM);
 
-        $inputEmailDaRota = $this->params()->fromRoute(Constantes::$INPUT_EMAIL);
-        $mensagem = $this->params()->fromRoute(Constantes::$MENSAGEM);
+        $inputEmailDaRota = $this->params()->fromRoute(Constantes::$INPUT_USUARIO);
         $tipo = $this->params()->fromRoute(Constantes::$TIPO);
 
-        if (!empty($inputEmailDaRota)) {
-            $formLogin->get(Constantes::$INPUT_EMAIL)->setValue($inputEmailDaRota);
-            if ($tipo == 1) {//warning
-                $mensagem = Constantes::$TRADUCAO_PESSOA_INATIVADA;
-                $tipoMensagem = 1; // warning
-            } else {// danger
+        if (!empty($tipo)) {
+            $formLogin->get(Constantes::$INPUT_USUARIO)->setValue($inputEmailDaRota);
+            if ($tipo == $tipoNaoEncontrouNaBaseDeDados) {
                 $mensagem = Constantes::$TRADUCAO_FALHA_LOGIN;
-                $tipoMensagem = 4; // danger
+                ;
+                $tipoMensagem = $tipoNaoEncontrouNaBaseDeDados;
             }
         }
 
@@ -110,13 +109,13 @@ class LoginController extends CircuitoController {
         $data = $this->getRequest()->getPost();
 
         /* Post sem email */
-        if (is_null($data[Constantes::$INPUT_EMAIL])) {
+        if (is_null($data[Constantes::$INPUT_USUARIO])) {
             /* Redirecionamento */
             return $this->redirect()->toRoute(Constantes::$ROUTE_LOGIN);
         }
 
         $adapter = $this->getDoctrineAuthenticationServicer()->getAdapter();
-        $adapter->setIdentityValue($data[Constantes::$INPUT_EMAIL]);
+        $adapter->setIdentityValue($data[Constantes::$INPUT_USUARIO]);
         $adapter->setCredentialValue(md5($data[Constantes::$INPUT_SENHA]));
         $authenticationResult = $this->getDoctrineAuthenticationServicer()->authenticate();
         if ($authenticationResult->isValid()) {
@@ -126,7 +125,7 @@ class LoginController extends CircuitoController {
             $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
 
             /* Verificar se existe pessoa por email informado */
-            $pessoa = $repositorioORM->getPessoaORM()->encontrarPorEmail($data[Constantes::$INPUT_EMAIL]);
+            $pessoa = $repositorioORM->getPessoaORM()->encontrarPorEmail($data[Constantes::$INPUT_USUARIO]);
 
             /* Tem responsabilidade(s) */
             if (count($pessoa->getResponsabilidadesAtivas()) > 0) {
@@ -149,17 +148,17 @@ class LoginController extends CircuitoController {
                 /* Login sem responsabilidade(s) */
                 return $this->forward()->dispatch(Constantes::$CONTROLLER_LOGIN, array(
                             Constantes::$ACTION => Constantes::$ACTION_INDEX,
-                            Constantes::$INPUT_EMAIL => $data[Constantes::$INPUT_EMAIL],
-                            Constantes::$MENSAGEM => $this->getTranslator()->translate(Constantes::$TRADUCAO_PESSOA_INATIVADA),
-                            Constantes::$TIPO => 1, // warning
+                            Constantes::$INPUT_USUARIO => $data[Constantes::$INPUT_USUARIO],
+                            Constantes::$TIPO => 1,
                 ));
             }
         } else {
-            /* Autenticacao falhou */
+            /* Nao encontrou na base de dados */
             /* Redirecionamento */
             return $this->forward()->dispatch(Constantes::$CONTROLLER_LOGIN, array(
                         Constantes::$ACTION => Constantes::$ACTION_INDEX,
-                        Constantes::$INPUT_EMAIL => $data[Constantes::$INPUT_EMAIL]
+                        Constantes::$INPUT_USUARIO => $data[Constantes::$INPUT_USUARIO],
+                        Constantes::$TIPO => 1,
             ));
         }
     }
@@ -228,6 +227,7 @@ class LoginController extends CircuitoController {
      */
     public function recuperarAcessoAction() {
         $resposta = '';
+        $pessoa = null;
         $request = $this->getRequest();
         if ($request->isPost()) {
             /* Helper Controller */
@@ -237,48 +237,48 @@ class LoginController extends CircuitoController {
             $dataPost = $request->getPost();
 
             /* recupera o id vindo da url */
-            $idTipo = $this->params()->fromRoute(Constantes::$ID, 0);
-            if ($idTipo == 1) {
-                /* Verificar se existe pessoa por email informado */
-                $email = $dataPost[Constantes::$ENTITY_PESSOA_EMAIL];
-                $pessoa = $repositorioORM->getPessoaORM()->encontrarPorEmail($email);
+            $tipoDePesquisa = $this->params()->fromRoute(Constantes::$ID);
+
+            /* Verificar se existe pessoa por email informado */
+            if ($tipoDePesquisa == 1) {
+                $email = $dataPost[Constantes::$INPUT_USUARIO];
+                if ($email) {
+                    $pessoa = $repositorioORM->getPessoaORM()->encontrarPorEmail($email);
+                }
             }
-            if ($idTipo == 2) {
+            if ($tipoDePesquisa == 2) {
                 /* Verificar se existe pessoa por data de nascimento e digitos do CPF informado */
                 $documento = $dataPost[Constantes::$INPUT_CPF];
-                $dataNascimento = Funcoes::mudarPadraoData($dataPost[Constantes::$INPUT_DATA_NASCIMENTO], 0);
-                $pessoa = $repositorioORM->getPessoaORM()->encontrarPorCPFEDataNascimento($documento, $dataNascimento);
+                $diaNascimento = $dataPost[Constantes::$FORM_INPUT_DIA];
+                $mesNascimento = $dataPost[Constantes::$FORM_INPUT_MES];
+                $anoNascimento = $dataPost[Constantes::$FORM_INPUT_ANO];
+
+                $pessoa = $repositorioORM->getPessoaORM()->
+                        encontrarPorCPFEDataNascimento($documento, $anoNascimento . '-' . $mesNascimento . '-' . $diaNascimento);
             }
 
-            /* Div que precisa esta aberta na volta */
-            $div = 0;
-            if ($idTipo == 1) {
-                $div = 1;
-            } else {
-                $div = 2;
-            }
+
 
             /* Pessoa não encontrada */
             if (!$pessoa) {
                 /* Redirecionamento */
                 return $this->forward()->dispatch(Constantes::$CONTROLLER_LOGIN, array(
                             Constantes::$ACTION => Constantes::$ACTION_ESQUECEU_SENHA,
-                            Constantes::$TIPO => 4, //danger
+                            Constantes::$TIPO => 1, //danger
                             Constantes::$MENSAGEM => Constantes::$TRADUCAO_PESSOA_NAO_ENCONTRADA,
-                            Constantes::$DIV => $div,
                 ));
             } else {
-                if (!(count($pessoa->getResponsabilidadesAtivas()) > 0)) {
+                $contagemDeResponsabilidadesAtivas = count($pessoa->getResponsabilidadesAtivas());
+                if ($contagemDeResponsabilidadesAtivas === 0) {
                     /* Redirecionamento */
                     return $this->forward()->dispatch(Constantes::$CONTROLLER_LOGIN, array(
                                 Constantes::$ACTION => Constantes::$ACTION_ESQUECEU_SENHA,
                                 Constantes::$TIPO => 1,
                                 Constantes::$MENSAGEM => Constantes::$TRADUCAO_PESSOA_INATIVADA,
-                                Constantes::$DIV => $div,
                     ));
                 } else {
                     /* Email */
-                    if ($idTipo == 1) {
+                    if ($tipoDePesquisa == 1) {
                         $mensagemOriginal = $this->getTranslator()->translate(Constantes::$TRADUCAO_EMAIL_MENSAGEM_RECUPERAR_SENHA);
                         $mensagemComEmail = str_replace('#email', $email, $mensagemOriginal);
                         $tokenDeAgora = $pessoa->gerarToken();
@@ -295,7 +295,7 @@ class LoginController extends CircuitoController {
                         ));
                     }
                     /* CPF e Data de Nascimento */
-                    if ($idTipo == 2) {
+                    if ($tipoDePesquisa == 2) {
                         $resposta = $this->getTranslator()->translate(Constantes::$TRADUCAO_SEU_LOGIN_E) . ' <b>' . $pessoa->getEmail() . '</b>';
                     }
                 }

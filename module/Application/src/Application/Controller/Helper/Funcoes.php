@@ -19,7 +19,7 @@ class Funcoes {
      * 2 dd-mm-YYYY -> dd/mm/YYYY
      * @param String $data
      * @param int $padrao
-     * @return date 
+     * @return date  
      */
     public static function mudarPadraoData($data, $padrao) {
         if ($padrao !== 2) {

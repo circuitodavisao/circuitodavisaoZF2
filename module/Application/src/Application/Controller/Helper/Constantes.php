@@ -22,6 +22,7 @@ class Constantes {
     public static $ACTION = 'action';
     public static $ACTION_LOGAR = 'logar';
     public static $INPUT_EMAIL = 'email';
+    public static $INPUT_USUARIO = 'usuario';
     public static $INPUT_SENHA = 'senha';
     public static $INPUT_NOVA_SENHA = 'novaSenha';
     public static $CLASS_FORM_CONTROL = 'form-control';
@@ -79,7 +80,7 @@ class Constantes {
     public static $TRADUCAO_ENVIAR_EMAIL = 'Send email';
     public static $TRADUCAO_VERIFICAR_USUARIO = 'Check User';
     public static $TRADUCAO_PERGUNTA_ESQUECI_SENHA = 'Because you can not enter the View of the Circuit?';
-    public static $TRADUCAO_TITULO_ESQUECI_MINHA_SENHA = 'We can help you reset your password. First, enter your email and follow the instructions.';
+    public static $TRADUCAO_TITULO_ESQUECI_MINHA_SENHA = 'We can help you reset your password. First, enter your user and follow the instructions.';
     public static $TRADUCAO_INFORME_2_DIGITO_CPF_DATA_NASCIMENTO = 'Tell us what the last 2 digits of your <b>Social Security number</b> and <b>date of birth</b>.';
     public static $TRADUCAO_SOLICITACAO_ENVIADA_AS = 'request sent at';
     public static $TRADUCAO_ACESSE_O = 'Access';
