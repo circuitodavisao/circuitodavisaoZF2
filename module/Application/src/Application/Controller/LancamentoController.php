@@ -66,6 +66,12 @@ class LancamentoController extends CircuitoController {
                         Constantes::$ACTION => Constantes::$PAGINA_MUDAR_FREQUENCIA,
             ));
         }
+        if ($pagina == 'MudarAtendimento') {
+
+            return $this->forward()->dispatch(Constantes::$CONTROLLER_LANCAMENTO, array(
+                        Constantes::$ACTION => 'MudarAtendimento',
+            ));
+        }
         if ($pagina == Constantes::$PAGINA_ENVIAR_RELATORIO) {
             return $this->forward()->dispatch(Constantes::$CONTROLLER_LANCAMENTO, array(
                         Constantes::$ACTION => Constantes::$PAGINA_ENVIAR_RELATORIO,
@@ -610,6 +616,8 @@ class LancamentoController extends CircuitoController {
      * @return ViewModel
      */
     public function lancarAtendimentoAction() {
+        $request = $this->getRequest();
+        $response = $this->getResponse();
         $sessao = new Container(Constantes::$NOME_APLICACAO);
         $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
         $mes = $sessao->mesAtendimento;
@@ -672,6 +680,92 @@ class LancamentoController extends CircuitoController {
         $view->addChild($layoutJS2, Constantes::$STRING_JS_VALIDACAO_ATENDIMENTO);
 
         return $view;
+    }
+
+    /**
+     * Muda atendimento
+     * @return Json
+     */
+    public function mudarAtendimentoAction() {
+        $request = $this->getRequest();
+        $response = $this->getResponse();
+        if ($request->isPost()) {
+            try {
+                $post_data = $request->getPost();
+                $valor = $post_data['tipo'];
+                $idEventoFrequencia = $post_data['idGrupo'];
+
+                $sessao = new Container(Constantes::$NOME_APLICACAO);
+                $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
+                $mes = $sessao->mesAtendimento;
+                $atendimentosFiltrados = 0;
+                $validatedData = $post_data;
+                $timeNow = new DateTime();
+
+                if ($validatedData['tipo'] == 1) {
+                    $grupoAtendimento->setGrupo_id($validatedData['idGrupo']);
+                    $grupoAtendimento->setQuem($sessao->idPessoa);
+                    $grupoAtendimento->setDia($timeNow->format('Y-m-d'));
+                    $grupoAtendimento->setDataEHoraDeCriacao();
+                    /* Helper Controller */
+
+                    $grupoLancado = $repositorioORM->getGrupoORM()->encontrarPorId($grupoAtendimento->getGrupo_id());
+                    $grupoAtendimento->setGrupo($grupoLancado);
+                    $repositorioORM->getGrupoAtendimentoORM()->persistir($grupoAtendimento);
+                    $grupo = $repositorioORM->getGrupoORM()->encontrarPorId($atendimento->getGrupo_id());
+                    $atendimentos = $grupo->getGrupoAtendimento();
+                    foreach ($atendimentos as $a) {
+                        if ($a->verificarSeEstaAtivo()) {
+                            $partes = explode("/", $a->getDia());
+                            if ($partes[1] == $mes) {
+                                $atendimentosFiltrados[] = $a;
+                            }
+                        }
+                    }
+                    $numeroAtendimentos = count($atendimentosFiltrados);
+                } else {
+                    $grupo = $repositorioORM->getGrupoORM()->encontrarPorId($validatedData['idGrupo']);
+                    $atendimentosOld = $grupo->getGrupoAtendimento();
+                    $contador = 0;
+                    foreach ($atendimentosOld as $a) {
+                        if ($a->verificarSeEstaAtivo()) {
+                            if($contador == 0){
+                                $ateParaDesativar = $a;
+                            }
+                        }
+                        $contador++;
+                    }
+                    $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
+                    $atendimentoNaSessao = $repositorioORM->getGrupoAtendimentoORM()->encontrarPorId($ateParaDesativar->getId());
+
+                    /* Persistindo */
+                    /* Inativando o Atendimento */
+                    $atendimentoParaInativar = $atendimentoNaSessao;
+
+                    $atendimentoParaInativar->setData_inativacao(Funcoes::dataAtual());
+                    $atendimentoParaInativar->setHora_inativacao(Funcoes::horaAtual());
+                    $repositorioORM->getGrupoAtendimentoORM()->persistir($atendimentoParaInativar);
+                    $grupoNew = $repositorioORM->getGrupoORM()->encontrarPorId($validatedData['idGrupo']);
+                    $atendimentos = $grupoNew->getGrupoAtendimento();
+                    foreach ($atendimentos as $a) {
+                        if ($a->verificarSeEstaAtivo()) {
+                            $partes = explode("/", $a->getDia());
+                            if ($partes[1] == $mes) {
+                                $atendimentosFiltrados[] = $a;
+                            }
+                        }
+                    }
+                    $numeroAtendimentos = count($atendimentosFiltrados);
+                    
+                }
+                $response->setContent(Json::encode(
+                                array('response' => 'true',
+                                    'numeroAtendimentos' => $numeroAtendimentos)));
+            } catch (Exception $exc) {
+                echo $exc->getTraceAsString();
+            }
+        }
+        return $response;
     }
 
     /**

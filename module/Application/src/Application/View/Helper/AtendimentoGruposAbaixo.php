@@ -96,19 +96,23 @@ class AtendimentoGruposAbaixo extends AbstractHelper {
                 $html .= '<div class="row">';
                 $html .= '<div class="col-md-11 col-xs-9" style="padding-top: 3px; padding-right: 4px;">';
                 $html .= '<div class="progress progress-bar-xl" style="margin-bottom: 0px;">';
-                $html .= '<div id="divProgressBar" class="progress-bar ' . $colorBar . '" role="progressbar" aria-valuenow="' . $valueNow . '" aria-valuemin="0" aria-valuemax="5" style="width: ' . $valueNow . '%;">' . $labelProgressBar . '</div>';
+                $html .= '<div id="progressBarAtendimento'.$grupoFilho->getId().'" class="progress-bar ' . $colorBar . '" role="progressbar" aria-valuenow="' . $valueNow . '" aria-valuemin="0" aria-valuemax="5" style="width: ' . $valueNow . '%;">' . $labelProgressBar . '</div>';
                 $html .= '</div>';
                 $html .= '<span style="padding-top: 0px;">' . $informacaoEntidade . '</span>';
                 $html .= '</div>';
 
                 $html .= '<div class="col-md-1 col-xs-3" style="padding-left: 0px; padding-top: 3px; vertical-align: middle;">';
-                $html .= '<button type="button" onclick="funcaoLancamento(\'LancarAtendimento\',' . $grupoFilho->getId() . ');" class="btn btn-xs btn-primary" style="padding-top: 0px; padding-bottom: 0px;">';
+                $html .= '<button id="bl_'.$grupoFilho->getId().'" type="button" onclick="mudarAtendimento(' . $grupoFilho->getId() . ', 2);" class="btn btn-xs btn-primary" style="padding-top: 0px; padding-bottom: 0px;">';
+                $html .= '<i class="fa fa-minus" aria-hidden="true"></i>';
+                $html .= '</button>';
+                $html .= '&nbsp';
+                $html .= '<button  id="br_'.$grupoFilho->getId().'" type="button" onclick="mudarAtendimento('. $grupoFilho->getId() . ', 1);" class="btn btn-xs btn-primary" style="padding-top: 0px; padding-bottom: 0px;">';
                 $html .= '<i class="fa fa-plus" aria-hidden="true"></i>';
                 $html .= '</button>';
                 $html .= '</div>';
                 $html .= '</div>';
                 $html .= '</div>';
-                $html .= '</div>';
+                $html .= '</div>';   
             }
         }
         return $html;
