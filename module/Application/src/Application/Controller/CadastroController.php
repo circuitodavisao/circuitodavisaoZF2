@@ -216,10 +216,6 @@ class CadastroController extends CircuitoController {
         $layoutJS->setTemplate(Constantes::$LAYOUT_JS_EVENTO);
         $view->addChild($layoutJS, Constantes::$LAYOUT_STRING_JS_EVENTO);
 
-        $layoutJSValidacao = new ViewModel();
-        $layoutJSValidacao->setTemplate(Constantes::$LAYOUT_JS_EVENTO_VALIDACAO);
-        $view->addChild($layoutJSValidacao, Constantes::$LAYOUT_STRING_JS_EVENTO_VALIDACAO);
-
         return $view;
     }
 

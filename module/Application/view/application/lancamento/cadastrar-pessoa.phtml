@@ -22,45 +22,27 @@ $form->setAttribute(Constantes::$ACTION, $this->url(Constantes::$ROUTE_LANCAMENT
                 </blockquote>
                 <div class="panel panel-danger heading-border">
                     <?php echo $this->form()->openTag($form); ?>
-                    <div class="panel-body p25">
-
-                        <!-- Nome Input -->
-                        <div class="section">
-                            <?php echo $this->inputFormulario(Constantes::$TRADUCAO_NOME, $form, Constantes::$INPUT_NOME, Constantes::$ICONE_USER); ?>
-                        </div>
-                        <!-- Telefone Input -->
-                        <div class="row section">
-                            <div class="col-xs-5 col-sm-5 col-md-2">
-                                <?php echo $this->inputFormulario(Constantes::$TRADUCAO_DDD, $form, Constantes::$INPUT_DDD, Constantes::$ICONE_PHONE); ?>
-                            </div>
-                            <div class="col-xs-7 col-sm-7 col-md-10">
-                                <?php echo $this->inputFormulario(Constantes::$TRADUCAO_TELEFONE, $form, Constantes::$INPUT_TELEFONE, Constantes::$ICONE_PHONE); ?>
-                            </div>
-                        </div>
-                        <!-- Tipo Input Select --> 
-                        <div class="section">
-                            <label for="<?php echo Constantes::$TRADUCAO_TIPO; ?>" class="field-label">
-                                <?php echo $this->translate(Constantes::$TRADUCAO_TIPO); ?>
-                            </label>
-                            <label for="<?php echo Constantes::$TRADUCAO_TIPO; ?>" class="field prepend-icon">
-                                <?php echo $this->formSelect($form->get(Constantes::$INPUT_TIPO)); ?>
-                            </label>    
-                        </div> 
-                        <!-- Tipo Input Radio --> 
-                        <div id="ocultar_checkbox" class="mb15" style="display: none;">
-                            <label for="<?php echo Constantes::$TRADUCAO_NUCLEO_CELULA; ?>" class="field-label">
-                                <?php echo $this->translate(Constantes::$TRADUCAO_NUCLEO_CELULA); ?>
-                            </label>
-                            <div class="option-group field">
-                                <?php echo $this->formRadio($form->get(Constantes::$INPUT_NUCLEO_PERFEITO)); ?>
-                            </div>
-                        </div>
+                    <div class="panel-body bg-light p25">
+                        <?php
+                        echo $this->divMensagens();
+                        echo $this->inputFormularioSimples(Constantes::$TRADUCAO_NOME, $form->get(Constantes::$INPUT_NOME));
+                        echo $this->inputFormularioSimples(Constantes::$TRADUCAO_DDD, $form->get(Constantes::$INPUT_DDD), 3);
+                        echo $this->inputFormularioSimples(Constantes::$TRADUCAO_TELEFONE, $form->get(Constantes::$INPUT_TELEFONE), 9);
+                        echo $this->inputFormularioSimples(Constantes::$TRADUCAO_TIPO, $form->get(Constantes::$INPUT_TIPO), null, 2);
+                        echo '<div id="ocultar_checkbox" class="hidden">';
+                        echo $this->inputFormularioSimples(Constantes::$TRADUCAO_NUCLEO_CELULA, $form->get(Constantes::$INPUT_NUCLEO_PERFEITO), null, 3);
+                        echo '</div>';
+                        ?> 
                     </div>
                     <!-- end .form-body section -->
                     <div class="panel-footer text-right">
                         <?php echo $this->formHidden($form->get(Constantes::$INPUT_CSRF)); ?>
                         <?php echo $this->botaoLink(Constantes::$TRADUCAO_VOLTAR, Constantes::$ROUTE_LANCAMENTO, 2); ?>
-                        <?php echo $this->botaoSubmit(Constantes::$TRADUCAO_CADASTRAR, Constantes::$CLASS_BTN_DANGER_DARK); ?>
+                        <?php
+                        /* Submit */
+                        $funcaoVerificarCadastroPessoa = $this->funcaoOnClick('validarLancamentoCadastrarPessoa(this.form)');
+                        echo $this->botaoSimples(Constantes::$TRADUCAO_CADASTRAR, $funcaoVerificarCadastroPessoa);
+                        ?>
                     </div>
                     <!-- end .form-footer section -->
                     <?php echo $this->form()->closeTag() ?>

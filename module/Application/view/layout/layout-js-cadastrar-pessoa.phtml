@@ -1,10 +1,10 @@
 <?php
 
-$versao = '?v=0.9';
+$versao = '?v=1.4';
 
 echo $this
         ->headScript()
-        ->prependFile($this->basePath() . '/js/circuito_da_visao/ocultar-campos-formularios.js' . $versao)
-        ->prependFile($this->basePath() . '/vendor/plugins/validate/jquery.validate.min.js')
+        ->prependFile($this->basePath() . '/js/circuito_da_visao/mostrar-nucleo-perfeito.js' . $versao)
+        ->prependFile($this->basePath() . '/js/circuito_da_visao/validar-lancamento-cadastrar-pessoa.js' . $versao)
 ;
 echo $this->inlineScript();

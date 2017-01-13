@@ -1,11 +1,11 @@
 <?php
 
-$versao = '?v=6.6';
+$versao = '?v=8.3';
 
 echo $this
         ->headScript()
         ->prependFile($this->basePath() . '/js/circuito_da_visao/buscar-endereco.js' . $versao)
         ->prependFile($this->basePath() . '/js/circuito_da_visao/modal-loader.js' . $versao)
-        ->prependFile($this->basePath() . '/vendor/plugins/validate/jquery.validate.min.js')
+        ->prependFile($this->basePath() . '/js/circuito_da_visao/validar-cadastro-evento.js' . $versao)
 ;
 echo $this->inlineScript();

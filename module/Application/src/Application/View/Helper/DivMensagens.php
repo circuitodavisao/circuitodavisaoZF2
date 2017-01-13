@@ -19,6 +19,15 @@ class DivMensagens extends AbstractHelper {
         
     }
 
+    /**
+     * Monta uma div com as mensagens estaticas
+     * Tipo 1: success
+     * Tipo 2: danger
+     * @param string $label
+     * @param int $tipo
+     * @param boolean $mostrar
+     * @return string
+     */
     public function __invoke($label = '', $tipo = 2, $mostrar = false) {
         $this->setLabel($label);
         $this->setTipo($tipo);

@@ -58,7 +58,7 @@ class ListagemDeEventos extends AbstractHelper {
                 $html .= '<th class="text-center">';
                 $html .= $this->view->translate(Constantes::$TRADUCAO_DIA_DA_SEMANA_SIMPLIFICADO) . ' / ' . $this->view->translate(Constantes::$TRADUCAO_HORA);
                 $html .= '</th>';
-                $html .= '<th class="text-center">';
+                $html .= '<th class="text-center visible-lg visible-md visible-sm">';
                 $html .= $this->view->translate(Constantes::$TRADUCAO_NOME);
                 $html .= '</th>';
                 $html .= '<th class="text-center">';
@@ -97,9 +97,9 @@ class ListagemDeEventos extends AbstractHelper {
                     foreach ($grupoEventoAtivos as $gea) {
                         if ($this->view->extra != $gea->getGrupo()->getId()) {
                             $texto .= $gea->getGrupo()->getEntidadeAtiva()->infoEntidade() . '<br />';
-                        }
+                        } 
                     }
-                    $html .= '<td class="text-center"><span class="visible-lg visible-md">' . $evento->getNome() . '</span><span class="visible-sm visible-xs">' . $evento->getNomeAjustado() . '</span></td>';
+                    $html .= '<td class="text-center visible-lg visible-md visible-sm">' . $evento->getNome() . '</span></td>';
                     $html .= '<td class="text-center">' . $this->view->BotaoPopover(count($grupoEventoAtivos) - 1, $texto) . '</td>';
                     $html .= '<td class="text-center">';
                     $html .= $this->view->botaoLink(Constantes::$STRING_ICONE_PENCIL, Constantes::$STRING_HASHTAG, 3, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClick));
@@ -131,7 +131,7 @@ class ListagemDeEventos extends AbstractHelper {
         if ($tipoCulto) {
             $stringNomeDaFuncaoOnClickCadastro = 'funcaoCadastro("' . Constantes::$PAGINA_EVENTO_CULTO . '", 0)';
             $html .= $this->view->botaoLink(Constantes::$STRING_ICONE_PLUS . ' ' . $this->view->translate(Constantes::$TRADUCAO_NOVO_CULTO), Constantes::$STRING_HASHTAG, 0, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClickCadastro));
-        }
+        } 
         /* Fim Botões */
         $html .= '</div>';
         /* Fim panel-footer */

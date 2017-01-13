@@ -182,6 +182,8 @@ class Constantes {
     public static $STRING_LOGIN_BOTTON = 'layoutLoginBotton';
     public static $TEMPLATE_JS_RECUPERAR_ACESSO = 'layout/layout-js-recuperar-acesso';
     public static $STRING_JS_RECUPERAR_ACESSO = 'layoutJSRecuperarAcesso';
+    public static $TEMPLATE_JS_RECUPERAR_SENHA = 'layout/layout-js-recuperar-senha';
+    public static $STRING_JS_RECUPERAR_SENHA = 'layoutJSRecuperarSenha';
     public static $TEMPLATE_JS_NOVA_SENHA_VALIDACAO = 'layout/layout-js-nova-senha-validacao';
     public static $STRING_JS_NOVA_SENHA_VALIDACAO = 'validarSenhas';
     public static $TEMPLATE_JS_MODAL_SELECIONAR_PERFIL = 'layout/layout-js-modal-selecionar-perfil';
@@ -639,8 +641,6 @@ class Constantes {
     public static $LAYOUT_STRING_JS_EVENTO = 'layoutJSEvento';
     public static $LAYOUT_JS_GRUPO_VALIDACAO = 'layout/layout-js-grupo-validacao';
     public static $LAYOUT_STRING_JS_GRUPO_VALIDACAO = 'layoutJSGrupoValidacao';
-    public static $LAYOUT_JS_EVENTO_VALIDACAO = 'layout/layout-js-evento-validacao';
-    public static $LAYOUT_STRING_JS_EVENTO_VALIDACAO = 'layoutJSEventoValidacao';
     public static $LAYOUT_JS_EVENTOS = 'layout/layout-js-eventos';
     public static $LAYOUT_JS_EVENTOS_VALIDACAO = 'layout/layout-js-eventos-validacao';
     public static $LAYOUT_STRING_JS_EVENTOS = 'layoutJSEventos';

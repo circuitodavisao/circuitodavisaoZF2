@@ -29,6 +29,7 @@ class RepositorioORM {
     private $_grupoResponsavelORM;
     private $_grupoPaiFilhoORM;
     private $_grupoAtendimentoORM;
+    private $_eventoFrequenciaORM;
 
     /**
      * Contrutor
@@ -213,6 +214,17 @@ class RepositorioORM {
             $this->_turmaAlunoORM = new CircuitoORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_TURMA_ALUNO);
         }
         return $this->_turmaAlunoORM;
+    }
+
+    /**
+     * Metodo public para obter a instancia do EventoTipoORM
+     * @return CircuitoORM
+     */
+    public function getEventoFrequenciaORM() {
+        if (is_null($this->_eventoFrequenciaORM)) {
+            $this->_eventoFrequenciaORM = new CircuitoORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_EVENTO_FREQUENCIA);
+        }
+        return $this->_eventoFrequenciaORM;
     }
 
     /**

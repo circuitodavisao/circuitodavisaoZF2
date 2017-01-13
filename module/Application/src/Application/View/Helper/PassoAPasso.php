@@ -4,6 +4,8 @@ namespace Application\View\Helper;
 
 use Application\Controller\Helper\Constantes;
 use Application\Form\AtualizarCadastroForm;
+use Application\Form\CelulaForm;
+use Application\Form\EventoForm;
 use Application\Form\GrupoForm;
 use Zend\View\Helper\AbstractHelper;
 
@@ -32,7 +34,9 @@ class PassoAPasso extends AbstractHelper {
         if ($this->getForm() instanceof GrupoForm) {
             $numeroDePassos = 4;
         }
-        if ($this->getForm() instanceof AtualizarCadastroForm) {
+        if ($this->getForm() instanceof AtualizarCadastroForm
+                || $this->getForm() instanceof EventoForm
+                || $this->getForm() instanceof CelulaForm) {
             $numeroDePassos = 3;
         }
         $conteudo = '';
@@ -74,6 +78,38 @@ class PassoAPasso extends AbstractHelper {
                         break;
                 }
             }
+            /* Evento culto */
+            if ($this->getForm() instanceof EventoForm) {
+                switch ($indiceDePonto) {
+                    case 1:
+                        $nomePonto = 'Dia e Hora';
+                        break;
+                    case 2:
+                        $nomePonto = 'Nome e Equipes';
+                        break;
+                    case 3:
+                        $nomePonto = 'Confirmação';
+                        break;
+                    default:
+                        break;
+                }
+            }
+            /* Evento culto */
+            if ($this->getForm() instanceof CelulaForm) {
+                switch ($indiceDePonto) {
+                    case 1:
+                        $nomePonto = 'Dia e Hora';
+                        break;
+                    case 2:
+                        $nomePonto = 'Dados Hospedeiro';
+                        break;
+                    case 3:
+                        $nomePonto = 'Confirmação';
+                        break;
+                    default:
+                        break;
+                }
+            }
             $conteudo .= $this->montarUmPontoDoPassoAPasso($indiceDePonto, $nomePonto);
         }
         $conteudo .= '</div>';
@@ -93,6 +129,9 @@ class PassoAPasso extends AbstractHelper {
         }
         if ($this->getForm() instanceof AtualizarCadastroForm) {
             $class .= ' stepwizard-step-atualizacao-grupo';
+        }
+        if ($this->getForm() instanceof EventoForm) {
+            $class .= ' stepwizard-step-cadastro-evento-culto';
         }
         $conteudo = '';
         $conteudo .= '<button id="botaoPasso' . $id . '" type="button" class="btn btn-' . $corPonto . ' btn-circle" disabled="disabled">' . $id . '</button>';

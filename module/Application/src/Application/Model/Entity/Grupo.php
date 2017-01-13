@@ -122,7 +122,6 @@ class Grupo extends CircuitoEntity {
                 break;
             }
         }
-
         return $grupoResponsavel;
     }
 
@@ -437,27 +436,6 @@ class Grupo extends CircuitoEntity {
     function setEnvio($envio) {
         $this->envio = $envio;
     }
-
-    /**
-     * Seta o status de envio para sim e alterar data e hora de envio
-     * @param CircuitoORM $lancamentoORM
-     */
-//    function setRelatorioEnviado(CircuitoORM $lancamentoORM) {
-//        $this->envio = 'S';
-//        $timeNow = new DateTime();
-//        $this->setEnvio_data($timeNow->format('Y-m-d'));
-//        $this->setEnvio_hora($timeNow->format('H:s:i'));
-//        $lancamentoORM->getGrupoORM()->persistirGrupo($this);
-//    }
-
-    /**
-     * Seta o status de envio para não
-     * @param CircuitoORM $lancamentoORM
-     */
-//    function setRelatorioPendente(CircuitoORM $lancamentoORM) {
-//        $this->envio = 'N';
-//        $lancamentoORM->getGrupoORM()->persistirGrupo($this);
-//    }
 
     /**
      * Verificar o status de envio o relatório

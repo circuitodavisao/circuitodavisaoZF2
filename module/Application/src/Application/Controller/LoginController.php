@@ -364,8 +364,8 @@ class LoginController extends CircuitoController {
 
         /* Javascript especifico */
         $layoutJSIndex = new ViewModel();
-        $layoutJSIndex->setTemplate(Constantes::$TEMPLATE_JS_RECUPERAR_ACESSO);
-        $view->addChild($layoutJSIndex, Constantes::$STRING_JS_RECUPERAR_ACESSO);
+        $layoutJSIndex->setTemplate(Constantes::$TEMPLATE_JS_RECUPERAR_SENHA);
+        $view->addChild($layoutJSIndex, Constantes::$STRING_JS_RECUPERAR_SENHA);
 
         return $view;
     }

@@ -47,7 +47,6 @@ use Application\View\Helper\LinkLogo;
 use Application\View\Helper\ListagemDeEventos;
 use Application\View\Helper\ListagemDePessoasComEventos;
 use Application\View\Helper\MensagemRelatorioEnviado;
-use Application\View\Helper\MensagemStatica;
 use Application\View\Helper\Menu;
 use Application\View\Helper\MenuHierarquia;
 use Application\View\Helper\ModalAba;
@@ -91,9 +90,6 @@ class Module {
             'factories' => array(
                 'linkLogo' => function($sm) {
                     return new LinkLogo();
-                },
-                'mensagemStatica' => function($sm) {
-                    return new MensagemStatica();
                 },
                 'divCapslock' => function($sm) {
                     return new DivCapslock();
@@ -151,9 +147,6 @@ class Module {
                 },
                 'abas' => function($sm) {
                     return new Abas();
-                },
-                'mensagemStatica' => function($sm) {
-                    return new MensagemStatica();
                 },
                 'mensagemRelatorioEnviado' => function($sm) {
                     return new MensagemRelatorioEnviado();
