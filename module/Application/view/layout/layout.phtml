@@ -1,7 +1,7 @@
 <?php echo $this->doctype(); ?>
 
 <?php
-$versao = '?v=1.1.1';
+$versao = '?v=1.1.2';
 
 use Application\Controller\Helper\Constantes;
 ?>
@@ -71,8 +71,11 @@ use Application\Controller\Helper\Constantes;
 
         <!-- BEGIN: PAGE SCRIPTS -->
         <?php
+        echo $this->modalLoader();
+
         echo $this
                 ->headScript()
+                ->prependFile($this->basePath() . '/js/circuito_da_visao/modal-loader.js' . $versao)
                 ->prependFile($this->basePath() . '/js/circuito_da_visao/modal-selecionar-perfil.js' . $versao)
                 ->prependFile($this->basePath() . '/js/circuito_da_visao/funcao-cadastro.js' . $versao)
                 ->prependFile($this->basePath() . '/assets/js/main.js')
@@ -106,13 +109,31 @@ use Application\Controller\Helper\Constantes;
 
                 // Init Ladda Plugin on buttons
                 Ladda.bind('.ladda-button', {
-                    timeout: 2000
+                    timeout: 500
                 });
 
                 // Init FooTable
                 $('.footable').footable();
 
             });
+
+            window.onload = maxWindow;
+
+            function maxWindow() {
+                window.moveTo(0, 0);
+
+
+                if (document.all) {
+                    top.window.resizeTo(screen.availWidth, screen.availHeight);
+                }
+
+                else if (document.layers || document.getElementById) {
+                    if (top.window.outerHeight < screen.availHeight || top.window.outerWidth < screen.availWidth) {
+                        top.window.outerHeight = screen.availHeight;
+                        top.window.outerWidth = screen.availWidth;
+                    }
+                }
+            }
         </script>
         <!-- END: PAGE SCRIPTS -->
     </body>

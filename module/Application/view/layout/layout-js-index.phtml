@@ -1,9 +1,10 @@
 <?php
 
-$versao = '?v=0.2';
+$versao = '?v=0.6';
 
 echo $this
         ->headScript()
         ->prependFile($this->basePath() . '/js/circuito_da_visao/capslock.js' . $versao)
+        ->prependFile($this->basePath() . '/js/circuito_da_visao/validar-login.js' . $versao)
 ;
 echo $this->inlineScript();

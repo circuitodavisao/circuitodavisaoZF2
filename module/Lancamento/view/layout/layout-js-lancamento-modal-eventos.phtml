@@ -1,9 +1,0 @@
-<?php
-
-$versao = '?v=0.1';
-if ($this->quantidadeDeEventosNoCiclo > 4) {
-    echo $this
-            ->headScript()
-            ->prependFile($this->basePath() . '/js/circuito_da_visao/verificar-orientacao-tela-lancamento.js' . $versao);
-    echo $this->inlineScript();
-}

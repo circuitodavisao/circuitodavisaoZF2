@@ -99,6 +99,7 @@ class CadastrarPessoaForm extends Form {
             $select->setAttributes(array(
                 Constantes::$FORM_STRING_CLASS => Constantes::$FORM_STRING_CLASS_GUI_INPUT,
                 Constantes::$FORM_STRING_ID => Constantes::$INPUT_TIPO,
+                Constantes::$FORM_ONCHANGE => 'mostrarNucleoPerfeito()',
             ));
             $select->setValueOptions($arrayGPT);
             $this->add($select);

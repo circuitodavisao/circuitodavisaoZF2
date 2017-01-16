@@ -1,40 +1,73 @@
-/*! circuito-mascaras_e_validacoes.js - v0.1
- * http://circuitodavisao.com.br
- * Copyright (c) 2016 Circuito da Visão;*/
 
-function desabilitarElemento(id) {
-    $(id).prop('disabled', true);
-}
-
-function verificaNumero(e) {
-    if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
-        return false;
+function validarUsuario() {
+    var usuario = $('#usuario').val();
+    var temErro = false;
+    var divMensagens = $('#divMensagens');
+    if (usuario.length === 0) {
+        temErro = true;
+    }
+    if (temErro) {
+        divMensagens
+                .html('Preencha o usuário')
+                .removeClass('alert-success')
+                .removeClass('hidden')
+                .addClass('alert-danger');
+    } else {
+        abrirModalCarregando();
+        divMensagens
+                .addClass('hidden');
+        $('#RecuperarAcessoForm').submit();
     }
 }
+
+function validarCPFEDataNascimento() {
+    var cpf = $('#cpf').val();
+    var dataNascimento = $('#dataNascimento').val();
+    var temErro = false;
+    var divMensagens = $('#divMensagens');
+    if (cpf.length === 0) {
+        temErro = true;
+    }
+    if (dataNascimento.length === 0) {
+        temErro = true;
+    } else {
+        var er = RegExp("(0[1-9]|[012][0-9]|3[01])/(0[1-9]|1[012])/[12][0-9]{3}");
+        if (!er.test(dataNascimento)) {
+            temErro = true;
+        }
+    }
+    if (temErro) {
+        divMensagens
+                .html('Preencha os digitos do CPF e Data de Nascimento Valida')
+                .removeClass('alert-success')
+                .removeClass('hidden')
+                .addClass('alert-danger');
+    } else {
+        abrirModalCarregando();
+        divMensagens
+                .addClass('hidden');
+        $('#RecuperarAcessoForm').submit();
+    }
+}
+
 
 function validarDataNascimento(dataNascimento, icone, botaoSubmit) {
     var er = RegExp("(0[1-9]|[012][0-9]|3[01])/(0[1-9]|1[012])/[12][0-9]{3}");
     var botaoSubmit = document.getElementById(botaoSubmit);
-    var icone = document.getElementById(icone);
 
     if (er.test(dataNascimento) == false) {
         botaoSubmit.disabled = 'disabled';
-        icone.className = 'fa fa-times danger-style';
     } else {
         botaoSubmit.disabled = false;
-        icone.className = 'fa fa-check sucess-style';
     }
 }
 
-function validarDigitosDoCPF(digitosCPF, icone, botaoSubmit) {
-    var botaoSubmit = document.getElementById(botaoSubmit);
-    var icone = document.getElementById(icone);
+function validarDigitosDoCPF() {
+
     if (digitosCPF.length < 2) {
         botaoSubmit.disabled = 'disabled';
-        icone.className = 'fa fa-times danger-style';
     } else {
         botaoSubmit.disabled = false;
-        icone.className = 'fa fa-check sucess-style';
     }
 }
 

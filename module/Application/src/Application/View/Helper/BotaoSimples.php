@@ -1,0 +1,71 @@
+<?php
+
+namespace Application\View\Helper;
+
+use Application\Controller\Helper\Constantes;
+use Zend\View\Helper\AbstractHelper;
+
+/**
+ * Nome: BotaoSimples.php
+ * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com>
+ * Descricao: Classe helper view para mostrar um botao
+ */
+class BotaoSimples extends AbstractHelper {
+
+    private $label;
+    private $extra;
+    private $tipoBotao;
+
+    public function __construct() {
+        
+    }
+
+    public function __invoke($label, $extra = '', $tipoBotao = 1) {
+        $this->setLabel($label);
+        $this->setExtra($extra);
+        $this->setTipoBotao($tipoBotao);
+        return $this->renderHtml();
+    }
+
+    public function renderHtml() {
+        $html = '';
+        $classCor = Constantes::$COR_BOTAO;
+        if($this->getTipoBotao() === 2){
+            $classCor = 'default';
+        }
+        $html .= '<button type="button" ' . $this->getExtra() . ' class="btn ladda-button btn-' . $classCor . ' pull-right ml10" data-style="zoom-in">';
+        $html .= '<span class="ladda-label">';
+        $html .= $this->view->translate($this->getLabel());
+        $html .= '</span>';
+        $html .= '</button>';
+        return $html;
+    }
+
+    function getLabel() {
+        return $this->label;
+    }
+
+    function getExtra() {
+        return $this->extra;
+    }
+
+    function setLabel($label) {
+        $this->label = $label;
+        return $this;
+    }
+
+    function setExtra($extra) {
+        $this->extra = $extra;
+        return $this;
+    }
+
+    function getTipoBotao() {
+        return $this->tipoBotao;
+    }
+
+    function setTipoBotao($tipoBotao) {
+        $this->tipoBotao = $tipoBotao;
+        return $this;
+    }
+
+}

@@ -59,6 +59,12 @@
 .stepwizard-step-atualizacao-grupo {   
     width: 33%;
 }
+.stepwizard-step-cadastro-evento-culto {   
+    width: 33%;
+}
+.stepwizard-step-cadastro-evento-celula {   
+    width: 25%;
+}
 
 .btn-circle {
     width: 30px;

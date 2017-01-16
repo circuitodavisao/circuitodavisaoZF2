@@ -89,7 +89,7 @@ class EventoForm extends Form {
                 (new Text())
                         ->setName(Constantes::$FORM_NOME)
                         ->setAttributes([
-                            Constantes::$FORM_CLASS => Constantes::$FORM_CLASS_GUI_INPUT,
+                            Constantes::$FORM_CLASS => Constantes::$FORM_CLASS_FORM_CONTROL,
                             Constantes::$FORM_ID => Constantes::$FORM_NOME,
                             Constantes::$FORM_PLACEHOLDER => Constantes::$TRADUCAO_NOME,
                         ])

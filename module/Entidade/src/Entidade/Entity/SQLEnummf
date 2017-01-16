@@ -1,1 +1,0 @@
-CREATE TYPE enummf AS ENUM ('M', 'F');

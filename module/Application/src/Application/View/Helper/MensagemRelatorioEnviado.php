@@ -19,16 +19,15 @@ class MensagemRelatorioEnviado extends AbstractHelper {
     public function __invoke() {
         $html = '';
 
-        $hiddenMensagemRelatorioAtualizado = 1;
-        $hiddenMensagemRelatorioDesatualizado = 1;
-        if ($this->view->statusEnvio == 1) {
-            $hiddenMensagemRelatorioAtualizado = 0;
+        $mostrar = false;
+        if ($this->view->statusEnvio) {
+            $mostrar = true;
         }
+        $mensagem = Constantes::$TRADUCAO_RELATORIO_ATUALIZADO;
         if ($this->view->statusEnvio == 2) {
-            $hiddenMensagemRelatorioDesatualizado = 0;
+            $mensagem = Constantes::$TRADUCAO_RELATORIO_DEZATUALIZADO;
         }
-        $html .= $this->view->mensagemStatica($this->view->translate(Constantes::$TRADUCAO_RELATORIO_ATUALIZADO), 3, 0, $hiddenMensagemRelatorioAtualizado, Constantes::$STATUS_ENVIO . '1');
-        $html .= $this->view->mensagemStatica($this->view->translate(Constantes::$TRADUCAO_RELATORIO_DEZATUALIZADO), 1, 0, $hiddenMensagemRelatorioDesatualizado, Constantes::$STATUS_ENVIO . '2');
+        $html .= $this->view->divMensagens($mensagem, $this->view->statusEnvio, $mostrar);
 
         return $html;
     }

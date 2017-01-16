@@ -1,0 +1,9 @@
+<?php
+
+$versao = '?v=1.2';
+
+echo $this
+        ->headScript()
+        ->prependFile($this->basePath() . '/js/circuito_da_visao/validar-recupera-senha.js' . $versao)
+;
+echo $this->inlineScript();

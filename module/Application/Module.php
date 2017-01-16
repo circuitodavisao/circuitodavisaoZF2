@@ -23,6 +23,7 @@ use Application\View\Helper\BlocoDiv;
 use Application\View\Helper\BlocoResponsavel;
 use Application\View\Helper\BotaoLink;
 use Application\View\Helper\BotaoPopover;
+use Application\View\Helper\BotaoSimples;
 use Application\View\Helper\BotaoSubmit;
 use Application\View\Helper\BotaoSubmitDesabilitado;
 use Application\View\Helper\CabecalhoDeAtendimentos;
@@ -31,6 +32,7 @@ use Application\View\Helper\CabecalhoDeEventos;
 use Application\View\Helper\DadosEntidade;
 use Application\View\Helper\DivCapslock;
 use Application\View\Helper\DivJavaScript;
+use Application\View\Helper\DivMensagens;
 use Application\View\Helper\FuncaoOnClick;
 use Application\View\Helper\GrupoDadosComplementares;
 use Application\View\Helper\GrupoEstadoCivil;
@@ -40,11 +42,11 @@ use Application\View\Helper\InputCampoEndereco;
 use Application\View\Helper\InputDiaDaSemanaHoraMinuto;
 use Application\View\Helper\InputExtras;
 use Application\View\Helper\InputFormulario;
+use Application\View\Helper\InputFormularioSimples;
 use Application\View\Helper\LinkLogo;
 use Application\View\Helper\ListagemDeEventos;
 use Application\View\Helper\ListagemDePessoasComEventos;
 use Application\View\Helper\MensagemRelatorioEnviado;
-use Application\View\Helper\MensagemStatica;
 use Application\View\Helper\Menu;
 use Application\View\Helper\MenuHierarquia;
 use Application\View\Helper\ModalAba;
@@ -88,9 +90,6 @@ class Module {
             'factories' => array(
                 'linkLogo' => function($sm) {
                     return new LinkLogo();
-                },
-                'mensagemStatica' => function($sm) {
-                    return new MensagemStatica();
                 },
                 'divCapslock' => function($sm) {
                     return new DivCapslock();
@@ -149,9 +148,6 @@ class Module {
                 'abas' => function($sm) {
                     return new Abas();
                 },
-                'mensagemStatica' => function($sm) {
-                    return new MensagemStatica();
-                },
                 'mensagemRelatorioEnviado' => function($sm) {
                     return new MensagemRelatorioEnviado();
                 },
@@ -170,8 +166,14 @@ class Module {
                 'inputFormulario' => function($sm) {
                     return new InputFormulario();
                 },
-                'inputFormulario' => function($sm) {
-                    return new InputFormulario();
+                'inputFormularioSimples' => function($sm) {
+                    return new InputFormularioSimples();
+                },
+                'divMensagens' => function($sm) {
+                    return new DivMensagens();
+                },
+                'botaoSimples' => function($sm) {
+                    return new BotaoSimples();
                 },
                 'botaoSubmit' => function($sm) {
                     return new BotaoSubmit();

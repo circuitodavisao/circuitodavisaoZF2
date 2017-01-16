@@ -24,8 +24,18 @@ echo $this->layoutLoginTop;
         </div>
     </div>
     <?php
-    /* Mensagem Estatica */
-    echo $this->mensagemStatica($this->translate($this->mensagem), $this->tipo);
+    $tipoNaoEncontrouNaBaseDeDados = 1;
+    $tipoMensagemDeSucesso = 1;
+    $tipoMensagemDeErro = 2;
+
+    $tipoDaMensagem = $tipoMensagemDeSucesso;
+    $mostraMensagem = false;
+    if ($this->tipo == $tipoNaoEncontrouNaBaseDeDados) {
+        $tipoDaMensagem = 2;
+        $mostraMensagem = true;
+    }
+    /* Div Mensagens */
+    echo $this->divMensagens($this->mensagem, $tipoDaMensagem, $mostraMensagem);
     ?>
     <!-- Opções -->
     <div id="opcoes" class="panel mt30 mb25 <?php echo $this->classDiv0; ?>">
@@ -46,29 +56,20 @@ echo $this->layoutLoginTop;
     ?>
     <!-- Opção 1 -->
     <div id="opcao_1" class="panel mt30 mb25 <?php echo $this->classDiv1; ?>">
-        <div class="panel-body bg-light">
+        <div class="panel-body bg-light"> 
+            <p class="text-center"><?php echo $this->translate(Constantes::$TRADUCAO_TITULO_ESQUECI_MINHA_SENHA); ?></p>
             <?php
-            /* Capslock */
-            echo $this->DivCapslock();
+            /* Username Input */
+            echo $this->inputFormularioSimples(Constantes::$TRADUCAO_USUARIO, $formRecuperarAcesso->get(Constantes::$INPUT_USUARIO));
             ?>
-            <div class="section mn">
-                <div class="smart-widget">
-                    <p class="text-center"><?php echo $this->translate(Constantes::$TRADUCAO_TITULO_ESQUECI_MINHA_SENHA); ?></p>
-                    <div class="input-group">
-                        <span class="input-group-addon">
-                            <i class="fa fa-envelope-o"></i>
-                        </span>
-                        <?php echo $this->formInput($formRecuperarAcesso->get(Constantes::$INPUT_EMAIL)); ?>
-                    </div>
-                </div>
-                <!-- end .smart-widget section -->
-
-            </div>
-            <!-- end section -->
         </div>
         <div class="panel-footer text-right">
-            <?php echo $this->botaoLink(Constantes::$TRADUCAO_CANCELAR, Constantes::$INDEX, 2, Constantes::$FORM_STRING_ONCLICK . '="abrirOpcao(0);"'); ?>
-            <?php echo $this->botaoSubmit(Constantes::$TRADUCAO_ENVIAR_EMAIL); ?>
+            <?php
+            /* Submit */
+            $funcaoVerificarUsuario = $this->funcaoOnClick('validarUsuario(this.form)');
+            echo $this->botaoSimples(Constantes::$TRADUCAO_ENVIAR_EMAIL, $funcaoVerificarUsuario);
+            echo $this->botaoLink(Constantes::$TRADUCAO_CANCELAR, Constantes::$INDEX, 2, Constantes::$FORM_STRING_ONCLICK . '="abrirOpcao(0);"');
+            ?>
         </div>
     </div>
     <?php echo $this->form()->closeTag(); ?>
@@ -84,32 +85,34 @@ echo $this->layoutLoginTop;
                     <p class="text-center"><?php echo $this->translate(Constantes::$TRADUCAO_INFORME_2_DIGITO_CPF_DATA_NASCIMENTO); ?></p>
                     <div class="input-group">
                         <span class="input-group-addon">XXX.XXX.XXX-</span>
-                        <?php echo $this->formInput($formRecuperarAcesso->get(Constantes::$INPUT_CPF)); ?>
-                        <span class="input-group-addon" id="basic-addon2">
-                            <i id="idIconeDigitoCPFEsqueciEmail" class="hidden"></i>
-                        </span>  
+                        <?php echo $this->formInput($formRecuperarAcesso->get(Constantes::$INPUT_CPF)); ?>                       
                     </div>
                 </div>
                 <!-- end .smart-widget section -->
                 <br />
-                <div class="smart-widget">
-                    <div class="input-group">
-                        <span class="input-group-addon">
-                            <i class="fa fa-calendar"></i>
-                        </span>
-                        <?php echo $this->formInput($formRecuperarAcesso->get(Constantes::$INPUT_DATA_NASCIMENTO)); ?>
-                        <span class="input-group-addon" id="basic-addon2">
-                            <i id="idIconeDataNascimentoEsqueciEmail" class="hidden"></i>
-                        </span>                      
-                    </div>
-                </div>
-                <!-- end .smart-widget section -->
+                <?php
+                echo '<div class="row">';
+                echo '<div class="col-xs-4">';
+                echo $this->formSelect($formRecuperarAcesso->get(Constantes::$FORM_INPUT_DIA));
+                echo '</div>';
+                echo '<div class="col-xs-4">';
+                echo $this->formSelect($formRecuperarAcesso->get(Constantes::$FORM_INPUT_MES));
+                echo '</div>';
+                echo '<div class="col-xs-4">';
+                echo $this->formSelect($formRecuperarAcesso->get(Constantes::$FORM_INPUT_ANO));
+                echo '</div>';
+                echo '</div>';
+                ?>                
             </div>
             <!-- end section -->
         </div>
         <div class="panel-footer text-right">
             <?php echo $this->botaoLink(Constantes::$TRADUCAO_CANCELAR, Constantes::$INDEX, 2, Constantes::$FORM_STRING_ONCLICK . '="abrirOpcao(0);"'); ?>
-            <?php echo $this->botaoSubmit(Constantes::$TRADUCAO_VERIFICAR_USUARIO); ?>
+            <?php
+            /* Submit */
+            $funcaoVerificarCPFEDataDeNascimento = $this->funcaoOnClick('validarCPFEDataNascimento(this.form)');
+            echo $this->botaoSimples(Constantes::$TRADUCAO_VERIFICAR_USUARIO, $funcaoVerificarCPFEDataDeNascimento);
+            ?>
         </div>
     </div>
 

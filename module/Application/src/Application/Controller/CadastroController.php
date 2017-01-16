@@ -223,10 +223,6 @@ class CadastroController extends CircuitoController {
         $layoutJS->setTemplate(Constantes::$LAYOUT_JS_EVENTO);
         $view->addChild($layoutJS, Constantes::$LAYOUT_STRING_JS_EVENTO);
 
-        $layoutJSValidacao = new ViewModel();
-        $layoutJSValidacao->setTemplate(Constantes::$LAYOUT_JS_EVENTO_VALIDACAO);
-        $view->addChild($layoutJSValidacao, Constantes::$LAYOUT_STRING_JS_EVENTO_VALIDACAO);
-
         return $view;
     }
 
@@ -482,7 +478,7 @@ class CadastroController extends CircuitoController {
                             if ($post_data[(Constantes::$FORM_COMPLEMENTO)] != $eventoCelulaAtual->getComplemento()) {
                                 $eventoCelulaAtual->setComplemento(strtoupper($post_data[(Constantes::$FORM_COMPLEMENTO)]));
                             }
-                            $repositorioORM->getEventoCelulaORM()->persistir($eventoCelulaAtual);
+                            $repositorioORM->getEventoCelulaORM()->persistir($eventoCelulaAtual, false);
                             /* Dados do Evento - Hora */
                             $eventoAtual = $eventoCelulaAtual->getEvento();
                             if ($validatedData[Constantes::$FORM_HORA] != $eventoAtual->getHoraSemMinutosESegundos()) {
@@ -529,7 +525,7 @@ class CadastroController extends CircuitoController {
 
                         /* Persistindo */
                         $repositorioORM->getEventoORM()->persistir($evento);
-                        $repositorioORM->getEventoCelulaORM()->persistir($eventoCelula);
+                        $repositorioORM->getEventoCelulaORM()->persistir($eventoCelula,false);
                         $repositorioORM->getGrupoEventoORM()->persistir($grupoEvento);
                         /* Sessão */
                         $sessao->tipoMensagem = Constantes::$TIPO_MENSAGEM_CADASTRAR_CELULA;
@@ -984,7 +980,7 @@ class CadastroController extends CircuitoController {
         $Content = file_get_contents($url);
         Funcoes::enviarEmail($ToEmail, $Subject, $Content);
     }
-
+    
     public function cadastrarRevisaoAction() {
         $sessao = new Container(Constantes::$NOME_APLICACAO);
         $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());

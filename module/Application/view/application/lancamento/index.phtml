@@ -6,16 +6,17 @@ use Application\Controller\Helper\Constantes;
     <div class="row background-mobile">
         <?php echo $this->dadosEntidade(); ?>
     </div>
-    <!--MENSAGENS DE RELATORIO ENVIADO-->
-    <?php echo $this->mensagemRelatorioEnviado(); ?>
+
     <!-- MODAL COM LOADER -->
     <?php echo $this->modalAba(); ?>
     <div id='panelLancamento' class="panel">
+        <!--MENSAGENS DE RELATORIO ENVIADO-->
+        <?php echo $this->mensagemRelatorioEnviado(); ?>
         <div class="panel-heading">
             <!-- Abertura de Abas -->
             <?php echo $this->abas(); ?>
         </div> 
-        <div class="panel-body center-block mg-left-cv">
+        <div class="panel-body center-block mg-left-cv">           
             <!-- Tabela de lançamento de dados --> 
             <?php echo $this->cabecalhoDeCiclos(); ?>
             <!-- Tabela de lançamento de dados --> 

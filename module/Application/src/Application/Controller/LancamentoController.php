@@ -60,7 +60,7 @@ class LancamentoController extends CircuitoController {
         $pagina = $this->getEvent()->getRouteMatch()->getParam(Constantes::$PAGINA, 1);
         if ($pagina == Constantes::$PAGINA_MUDAR_FREQUENCIA) {
             $grupo = $entidade->getGrupo();
-            $grupo->setRelatorioPendente($repositorioORM);
+            $repositorioORM->getGrupoORM()->setRelatorioPendente($grupo);
 
             return $this->forward()->dispatch(Constantes::$CONTROLLER_LANCAMENTO, array(
                         Constantes::$ACTION => Constantes::$PAGINA_MUDAR_FREQUENCIA,
@@ -295,11 +295,6 @@ class LancamentoController extends CircuitoController {
         $layoutJS->setTemplate(Constantes::$TEMPLATE_JS_CADASTRAR_PESSOA);
         $view->addChild($layoutJS, Constantes::$STRING_JS_CADASTRAR_PESSOA);
 
-        /* Javascript especifico de validação */
-        $layoutJS2 = new ViewModel();
-        $layoutJS2->setTemplate(Constantes::$TEMPLATE_JS_CADASTRAR_PESSOA_VALIDACAO);
-        $view->addChild($layoutJS2, Constantes::$STRING_JS_CADASTRAR_PESSOA_VALIDACAO);
-
         return $view;
     }
 
@@ -383,8 +378,8 @@ class LancamentoController extends CircuitoController {
                 /* Helper Controller */
                 $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
 
-                $pessoa = $repositorioORM->getPessoaORM()->encontrarPorIdPessoa($explodeIdEventoFrequencia[1]);
-                $evento = $repositorioORM->getEventoORM()->encontrarPorIdEvento($explodeIdEventoFrequencia[2]);
+                $pessoa = $repositorioORM->getPessoaORM()->encontrarPorId($explodeIdEventoFrequencia[1]);
+                $evento = $repositorioORM->getEventoORM()->encontrarPorId($explodeIdEventoFrequencia[2]);
                 /* Verificar se a frequencia ja existe */
                 $mes = Funcoes::mesPorAbaSelecionada($aba);
                 $ano = Funcoes::anoPorAbaSelecionada($aba);
@@ -399,7 +394,7 @@ class LancamentoController extends CircuitoController {
                     /* Frequencia existe */
                     $frequencia = $eventosFiltrados->first();
                     $frequencia->setFrequencia($valor);
-                    $repositorioORM->getEventoFrequenciaORM()->persistirSemDispacharEventoFrequencia($frequencia);
+                    $repositorioORM->getEventoFrequenciaORM()->persistir($frequencia);
                 } else {
                     /* Persitir frequencia */
                     $eventoFrequencia = new EventoFrequencia();
@@ -409,7 +404,7 @@ class LancamentoController extends CircuitoController {
                     $eventoFrequencia->setCiclo($ciclo);
                     $eventoFrequencia->setMes($mes);
                     $eventoFrequencia->setAno($ano);
-                    $repositorioORM->getEventoFrequenciaORM()->persistirSemDispacharEventoFrequencia($eventoFrequencia);
+                    $repositorioORM->getEventoFrequenciaORM()->persistir($eventoFrequencia);
                 }
                 $response->setContent(Json::encode(
                                 array('response' => 'true',
@@ -437,7 +432,7 @@ class LancamentoController extends CircuitoController {
                 /* Helper Controller */
                 $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
 
-                $pessoa = $repositorioORM->getPessoaORM()->encontrarPorIdPessoa($idPessoa);
+                $pessoa = $repositorioORM->getPessoaORM()->encontrarPorId($idPessoa);
                 $pessoa->setNome(strtoupper($nome));
                 $repositorioORM->getPessoaORM()->persistir($pessoa);
 

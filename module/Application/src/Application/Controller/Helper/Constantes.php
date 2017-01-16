@@ -22,6 +22,7 @@ class Constantes {
     public static $ACTION = 'action';
     public static $ACTION_LOGAR = 'logar';
     public static $INPUT_EMAIL = 'email';
+    public static $INPUT_USUARIO = 'usuario';
     public static $INPUT_SENHA = 'senha';
     public static $INPUT_NOVA_SENHA = 'novaSenha';
     public static $CLASS_FORM_CONTROL = 'form-control';
@@ -79,7 +80,7 @@ class Constantes {
     public static $TRADUCAO_ENVIAR_EMAIL = 'Send email';
     public static $TRADUCAO_VERIFICAR_USUARIO = 'Check User';
     public static $TRADUCAO_PERGUNTA_ESQUECI_SENHA = 'Because you can not enter the View of the Circuit?';
-    public static $TRADUCAO_TITULO_ESQUECI_MINHA_SENHA = 'We can help you reset your password. First, enter your email and follow the instructions.';
+    public static $TRADUCAO_TITULO_ESQUECI_MINHA_SENHA = 'We can help you reset your password. First, enter your user and follow the instructions.';
     public static $TRADUCAO_INFORME_2_DIGITO_CPF_DATA_NASCIMENTO = 'Tell us what the last 2 digits of your <b>Social Security number</b> and <b>date of birth</b>.';
     public static $TRADUCAO_SOLICITACAO_ENVIADA_AS = 'request sent at';
     public static $TRADUCAO_ACESSE_O = 'Access';
@@ -181,6 +182,8 @@ class Constantes {
     public static $STRING_LOGIN_BOTTON = 'layoutLoginBotton';
     public static $TEMPLATE_JS_RECUPERAR_ACESSO = 'layout/layout-js-recuperar-acesso';
     public static $STRING_JS_RECUPERAR_ACESSO = 'layoutJSRecuperarAcesso';
+    public static $TEMPLATE_JS_RECUPERAR_SENHA = 'layout/layout-js-recuperar-senha';
+    public static $STRING_JS_RECUPERAR_SENHA = 'layoutJSRecuperarSenha';
     public static $TEMPLATE_JS_NOVA_SENHA_VALIDACAO = 'layout/layout-js-nova-senha-validacao';
     public static $STRING_JS_NOVA_SENHA_VALIDACAO = 'validarSenhas';
     public static $TEMPLATE_JS_MODAL_SELECIONAR_PERFIL = 'layout/layout-js-modal-selecionar-perfil';
@@ -644,8 +647,6 @@ class Constantes {
     public static $LAYOUT_STRING_JS_EVENTO = 'layoutJSEvento';
     public static $LAYOUT_JS_GRUPO_VALIDACAO = 'layout/layout-js-grupo-validacao';
     public static $LAYOUT_STRING_JS_GRUPO_VALIDACAO = 'layoutJSGrupoValidacao';
-    public static $LAYOUT_JS_EVENTO_VALIDACAO = 'layout/layout-js-evento-validacao';
-    public static $LAYOUT_STRING_JS_EVENTO_VALIDACAO = 'layoutJSEventoValidacao';
     public static $LAYOUT_JS_EVENTOS = 'layout/layout-js-eventos';
     public static $LAYOUT_JS_EVENTOS_VALIDACAO = 'layout/layout-js-eventos-validacao';
     public static $LAYOUT_STRING_JS_EVENTOS = 'layoutJSEventos';

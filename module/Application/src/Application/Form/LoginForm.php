@@ -35,12 +35,11 @@ class LoginForm extends Form {
          */
         $this->add(
                 (new Text())
-                        ->setName(Constantes::$INPUT_EMAIL)
+                        ->setName(Constantes::$INPUT_USUARIO)
                         ->setAttributes([
                             Constantes::$FORM_STRING_CLASS => Constantes::$FORM_STRING_CLASS_GUI_INPUT,
-                            Constantes::$FORM_STRING_ID => Constantes::$INPUT_EMAIL,
+                            Constantes::$FORM_STRING_ID => Constantes::$INPUT_USUARIO,
                             Constantes::$FORM_STRING_PLACEHOLDER => Constantes::$TRADUCAO_USUARIO_PLACEHOLDER,
-                            Constantes::$FORM_STRING_REQUIRED => Constantes::$FORM_STRING_REQUIRED,
                             Constantes::$FORM_STRING_ONKEYPRESS => Constantes::$FORM_STRING_FUNCAO_CAPSLOCK,
                         ])
         );
@@ -57,7 +56,6 @@ class LoginForm extends Form {
                             Constantes::$FORM_STRING_CLASS => Constantes::$FORM_STRING_CLASS_GUI_INPUT,
                             Constantes::$FORM_STRING_ID => Constantes::$INPUT_SENHA,
                             Constantes::$FORM_STRING_PLACEHOLDER => Constantes::$TRADUCAO_SENHA_PLACEHOLDER,
-                            Constantes::$FORM_STRING_REQUIRED => Constantes::$FORM_STRING_REQUIRED,
                             Constantes::$FORM_STRING_ONKEYPRESS => Constantes::$FORM_STRING_FUNCAO_CAPSLOCK,
                         ])
         );

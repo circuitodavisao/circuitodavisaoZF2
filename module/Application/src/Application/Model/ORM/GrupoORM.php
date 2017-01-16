@@ -3,6 +3,7 @@
 namespace Application\Model\ORM;
 
 use Application\Model\Entity\Grupo;
+use DateTime;
 
 /**
  * Nome: GrupoORM.php
@@ -17,6 +18,18 @@ class GrupoORM extends CircuitoORM {
      */
     function setRelatorioEnviado($grupo) {
         $grupo->setEnvio('S');
+        $timeNow = new DateTime();
+        $grupo->setEnvio_data($timeNow->format('Y-m-d'));
+        $grupo->setEnvio_hora($timeNow->format('H:s:i'));
+        $this->persistir($grupo);
+    }
+
+    /**
+     * Seta o status de envio para não
+     * @param Grupo $grupo
+     */
+    function setRelatorioPendente($grupo) {
+        $grupo->setEnvio('N');
         $this->persistir($grupo);
     }
 

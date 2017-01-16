@@ -33,9 +33,11 @@ class InputExtras extends AbstractHelper {
         $html = '';
         if ($this->getForm() instanceof CelulaForm) {
             /* Montar endereço */
+            $html .= '<div id="divEndereco">';
             $html .= $this->view->montarEndereco($this->getForm());
             $html .= '</div>';
             /* Dados do Hospedeiro */
+            $html .= '<div id="divDadosHospedeiro" class="hidden">';
             $html .= '<div class="section-divider mv40">';
             $html .= '<span>' . $this->view->translate(Constantes::$TRADUCAO_DADOS_DO_HOSPEDEIRO) . '</span>';
             $html .= '</div>';
@@ -54,6 +56,7 @@ class InputExtras extends AbstractHelper {
             $html .= '</div>';
             $html .= '<div class="col-xs-7 col-sm-7 col-md-10">';
             $html .= $this->view->inputFormulario(Constantes::$TRADUCAO_TELEFONE_HOSPEDEIRO, $this->getForm(), Constantes::$FORM_TELEFONE_HOSPEDEIRO, Constantes::$FORM_ICONE_TELEFONE_HOSPEDEIRO);
+            $html .= '</div>';
             $html .= '</div>';
             $html .= '</div>';
             $html .= '</div>';
