@@ -51,11 +51,20 @@ echo $this->templateFormularioTopo($tituloDaPagina);
 
         echo '<div id="divExtras" class="hidden">';
         echo $this->inputExtras($form, $this->extra);
-        $funcaoNome = $this->funcaoOnClick('validarNome()');
-        echo $this->botaoSimples(Constantes::$TRADUCAO_CONTINUAR, $funcaoNome);
+        $funcaoContinuar = '';
+        if ($form instanceof EventoForm) {
+            $funcaoContinuar = $this->funcaoOnClick('validarNome()');
+        }
+        if ($form instanceof CelulaForm) {
+            $funcaoContinuar = $this->funcaoOnClick('validarDadosHospedeiro()');
+        }
+        echo $this->botaoSimples(Constantes::$TRADUCAO_CONTINUAR, $funcaoContinuar);
         $funcaoVoltar2 = $this->funcaoOnClick('voltarSelecionarDiaHoraEMinuto()');
         echo $this->botaoSimples(Constantes::$TRADUCAO_VOLTAR, $funcaoVoltar2, 2);
         echo '</div>';
+        if ($form instanceof CelulaForm) {
+            echo '</div>';
+        }
         ?> 
         <div id="divConfirmacao" class="hidden">         
             <address>

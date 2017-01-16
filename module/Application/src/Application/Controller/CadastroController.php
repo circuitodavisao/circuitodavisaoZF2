@@ -471,7 +471,7 @@ class CadastroController extends CircuitoController {
                             if ($post_data[(Constantes::$FORM_COMPLEMENTO)] != $eventoCelulaAtual->getComplemento()) {
                                 $eventoCelulaAtual->setComplemento(strtoupper($post_data[(Constantes::$FORM_COMPLEMENTO)]));
                             }
-                            $repositorioORM->getEventoCelulaORM()->persistir($eventoCelulaAtual);
+                            $repositorioORM->getEventoCelulaORM()->persistir($eventoCelulaAtual, false);
                             /* Dados do Evento - Hora */
                             $eventoAtual = $eventoCelulaAtual->getEvento();
                             if ($validatedData[Constantes::$FORM_HORA] != $eventoAtual->getHoraSemMinutosESegundos()) {
@@ -518,7 +518,7 @@ class CadastroController extends CircuitoController {
 
                         /* Persistindo */
                         $repositorioORM->getEventoORM()->persistir($evento);
-                        $repositorioORM->getEventoCelulaORM()->persistir($eventoCelula);
+                        $repositorioORM->getEventoCelulaORM()->persistir($eventoCelula,false);
                         $repositorioORM->getGrupoEventoORM()->persistir($grupoEvento);
                         /* Sessão */
                         $sessao->tipoMensagem = Constantes::$TIPO_MENSAGEM_CADASTRAR_CELULA;

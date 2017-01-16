@@ -108,10 +108,6 @@ function validarNome() {
                 .removeClass(btnDefault)
                 .addClass(btnPrimary);
     }
-
-
-
-
 }
 
 function voltarPreencherNome() {
@@ -156,4 +152,83 @@ function retornaDiaDaSemanaPorExtenso(diaDaSemana) {
 function submeter(form) {
     abrirModalCarregando();
     form.submit();
+}
+
+function abrirDadosHospedeiro() {
+    $('#divEndereco').addClass('hidden');
+    $('#divDadosHospedeiro').removeClass('hidden');
+    $('#botaoPasso3')
+            .removeClass(btnDefault)
+            .addClass(btnPrimary);
+}
+
+function validarDadosHospedeiro() {
+    var nome_hospedeiro = $('#nome_hospedeiro').val();
+    var ddd_hospedeiro = $('#ddd_hospedeiro').val();
+    var telefone_hospedeiro = $('#telefone_hospedeiro').val();
+
+    var temErro = false;
+    var divMensagens = $('#divMensagens');
+    var mensagem = '';
+
+    if (telefone_hospedeiro.length < 8) {
+        temErro = true;
+        mensagem = 'Telefone tem que ter pelo menos 8 caracteres';
+    }
+    if (telefone_hospedeiro.length === 0) {
+        temErro = true;
+        mensagem = 'Preencha o telefone do hospedeiro';
+    }
+    if (ddd_hospedeiro.length !== 2) {
+        temErro = true;
+        mensagem = 'DDD tem que ter pelo menos 2 caracteres';
+    }
+    if (ddd_hospedeiro.length === 0) {
+        temErro = true;
+        mensagem = 'Preencha o DDD do hospedeiro';
+    }
+    if (nome_hospedeiro.length < 3) {
+        temErro = true;
+        mensagem = 'Nome do hospedeiro tem que ter pelo menos 3 caracteres';
+    }
+    if (nome_hospedeiro.length === 0) {
+        temErro = true;
+        mensagem = 'Preencha o nome do hospedeiro';
+    }
+    if (temErro) {
+        divMensagens
+                .html(mensagem)
+                .removeClass('alert-success')
+                .removeClass('hidden')
+                .addClass('alert-danger');
+    } else {
+        // Preenchendo os campos
+        var valorDiaDaSemana = $('#dia_da_semana').val();
+        var diaDaSemanaPorExtenso = retornaDiaDaSemanaPorExtenso(valorDiaDaSemana);
+        var spanDiaHora = diaDaSemanaPorExtenso + '/' + $('#hora').val() + ':' + $('#minutos').val();
+        var spanNome = nome_hospedeiro;
+        spanNome = spanNome.toUpperCase();
+        var spanTelefone =
+                '(' + $('#ddd_hospedeiro').val() + ') '
+                + $('#telefone_hospedeiro').val();
+        var spanLogradouroComplemento = $('#logradouro').val() + ', ' +
+                $('#complemento').val();
+        var spanEndereco = $('#cidade').val() + '&nbsp;-&nbsp;' +
+                $('#bairro').val() + ',&nbsp;' +
+                $('#uf').val() + '&nbsp; CEP:' +
+                $('#cep_logradouro').val();
+        $('#spanDiaHora').html(spanDiaHora);
+        $('#spanNome').html(spanNome);
+        $('#spanTelefone').html(spanTelefone);
+        $('#spanLogradouroComplemento').html(spanLogradouroComplemento);
+        $('#spanEndereco').html(spanEndereco);
+
+        divMensagens
+                .addClass('hidden');
+        $('#divExtras').addClass('hidden');
+        $('#divConfirmacao').removeClass('hidden');
+        $('#botaoPasso4')
+                .removeClass(btnDefault)
+                .addClass(btnPrimary);
+    }
 }

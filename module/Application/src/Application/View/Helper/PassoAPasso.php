@@ -34,10 +34,11 @@ class PassoAPasso extends AbstractHelper {
         if ($this->getForm() instanceof GrupoForm) {
             $numeroDePassos = 4;
         }
-        if ($this->getForm() instanceof AtualizarCadastroForm
-                || $this->getForm() instanceof EventoForm
-                || $this->getForm() instanceof CelulaForm) {
+        if ($this->getForm() instanceof AtualizarCadastroForm || $this->getForm() instanceof EventoForm) {
             $numeroDePassos = 3;
+        }
+        if ($this->getForm() instanceof CelulaForm) {
+            $numeroDePassos = 4;
         }
         $conteudo = '';
         $conteudo .= '<div class="stepwizard-row">';
@@ -101,9 +102,12 @@ class PassoAPasso extends AbstractHelper {
                         $nomePonto = 'Dia e Hora';
                         break;
                     case 2:
-                        $nomePonto = 'Dados Hospedeiro';
+                        $nomePonto = 'Endereço';
                         break;
                     case 3:
+                        $nomePonto = 'Dados Hospedeiro';
+                        break;
+                    case 4:
                         $nomePonto = 'Confirmação';
                         break;
                     default:
@@ -132,6 +136,9 @@ class PassoAPasso extends AbstractHelper {
         }
         if ($this->getForm() instanceof EventoForm) {
             $class .= ' stepwizard-step-cadastro-evento-culto';
+        }
+        if ($this->getForm() instanceof CelulaForm) {
+            $class .= ' stepwizard-step-cadastro-evento-celula';
         }
         $conteudo = '';
         $conteudo .= '<button id="botaoPasso' . $id . '" type="button" class="btn btn-' . $corPonto . ' btn-circle" disabled="disabled">' . $id . '</button>';
