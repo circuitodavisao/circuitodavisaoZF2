@@ -10,6 +10,7 @@ return array(
         'Application',
         'DoctrineModule',
         'DoctrineORMModule',
+        'Migracao',
     ),
     'module_listener_options' => array(
         'module_paths' => array(

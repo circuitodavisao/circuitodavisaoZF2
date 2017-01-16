@@ -307,8 +307,11 @@ class Module {
             if ($sessao->idEntidadeAtual) {
                 $entidade = $repositorioORM->getEntidadeORM()->encontrarPorId($sessao->idEntidadeAtual);
                 $grupo = $entidade->getGrupo();
-                $viewModel->discipulos = $grupo->getGrupoPaiFilhoFilhos();
-//                $viewModel->discipulos = 0;
+                $discipulos = null;
+                if (count($grupo->getGrupoPaiFilhoFilhos()) > 0) {
+                    $discipulos = $grupo->getGrupoPaiFilhoFilhos();
+                }
+                $viewModel->discipulos = $discipulos;
             }
             if ($pessoa->getAtualizar_dados() === 'S') {
                 $viewModel->mostrarMenu = 0;
