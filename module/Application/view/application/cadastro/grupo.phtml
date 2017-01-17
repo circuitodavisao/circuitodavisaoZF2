@@ -11,11 +11,11 @@ $form = $this->Form;
 $form->prepare();
 $form->setAttribute(Constantes::$FORM_ACTION, Constantes::$ROUTE_CADASTRO . Constantes::$PAGINA_GRUPO_FINALIZAR);
 echo $this->form()->openTag($form);
-echo $this->templateFormularioTopo(Constantes::$TRADUCAO_TITULO_PAGINA_CADASTRO_GRUPO_SUB_EQUIPE);
+echo $this->templateFormularioTopo($this->tituloDaPagina);
 ?>
 <!-- Inicio panel-body -->
 <div class="panel-body bg-light">
-    <?php if ($form->getAlunos()) { ?>
+    <?php if ($this->mostrarCadastro) { ?>
         <!-- Estado Civil -->
         <?php echo $this->grupoEstadoCivil($form); ?>
         <!-- Confirmacao -->
@@ -65,7 +65,9 @@ echo $this->templateFormularioTopo(Constantes::$TRADUCAO_TITULO_PAGINA_CADASTRO_
                 <!-- HelperView Dados -->
                 <div id="divDadosSelecionados" class="alert alert-info hidden">
                     <?php
-                    echo $this->SpanDadosValidados('Matricula', 'info-circle');
+                    if ($this->entidadeTipo !== 1 && $this->entidadeTipo !== 2 && $this->entidadeTipo !== 3 && $this->entidadeTipo !== 4) {
+                        echo $this->SpanDadosValidados('Matricula', 'info-circle');
+                    }
                     echo $this->SpanDadosValidados('Nome', 'user');
                     echo $this->SpanDadosValidados('DataNascimento', 'birthday-cake');
                     echo $this->SpanDadosValidados('CPF', 'info-circle');
@@ -127,7 +129,8 @@ echo $this->templateFormularioTopo(Constantes::$TRADUCAO_TITULO_PAGINA_CADASTRO_
                 <div id="divBotoesBuscaCPF" class="mt10">
                     <?php
                     echo '<div id="botaoBuscarCPF" class="quebraDeLinhaDeSpan">';
-                    echo $this->botaoLink(Constantes::$TRADUCAO_BUSCAR, Constantes::$STRING_HASHTAG, 7, $this->funcaoOnClick(Constantes::$FORM_FUNCAO_BUSCAR_CPF));
+                    $funcao = str_replace('#entidadeTipo', $this->entidadeTipo, Constantes::$FORM_FUNCAO_BUSCAR_CPF);
+                    echo $this->botaoLink(Constantes::$TRADUCAO_BUSCAR, Constantes::$STRING_HASHTAG, 7, $this->funcaoOnClick($funcao));
                     echo '</div>';
                     echo '<div id="botaoCPFLiberado" class="quebraDeLinhaDeSpan hidden">';
                     echo $this->botaoLink($labelBotaoContinuar, Constantes::$STRING_HASHTAG, 7, $this->funcaoOnClick('mostrarDivEmail()'));
@@ -199,9 +202,11 @@ echo $this->templateFormularioTopo(Constantes::$TRADUCAO_TITULO_PAGINA_CADASTRO_
             <!-- HelperView dados complementares -->
             <?php echo $this->grupoDadosComplementares($form); ?>       
         </div>
-    <?php }else{
-     echo '<span class="alert alert-warning quebraDeLinhaDeSpan">Sem alunos cadastrados!</span>';
-    } ?>
+        <?php
+    } else {
+        echo '<span class="alert alert-warning quebraDeLinhaDeSpan">Sem alunos cadastrados!</span>';
+    }
+    ?>
 </div>
 <?php
 echo $this->formHidden($form->get(Constantes::$INPUT_CSRF));
@@ -227,8 +232,6 @@ echo $this->formHidden($form->get(Constantes::$FORM_NOME_ALUNO));
 
 echo $this->templateFormularioRodape();
 echo $this->form()->closeTag();
-
-echo $this->modalLoader();
 
 /* Layout com javascript para tela de cadastro de grupo */
 echo $this->layoutJSGrupoValidacao;

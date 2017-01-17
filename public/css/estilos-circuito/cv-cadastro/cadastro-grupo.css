@@ -56,6 +56,9 @@
 .stepwizard-step-cadastro-grupo {   
     width: 25%;
 }
+.stepwizard-step-cadastro-grupo-acima {   
+    width: 33%;
+}
 .stepwizard-step-atualizacao-grupo {   
     width: 33%;
 }

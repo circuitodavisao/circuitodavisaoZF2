@@ -157,8 +157,8 @@ class CadastroController extends CircuitoController {
             $tipoEvento = 3;
             $extra = $grupo->getId();
         }
-        
- 
+
+
         $view = new ViewModel(array(
             Constantes::$LISTAGEM_EVENTOS => $listagemDeEventos,
             Constantes::$TITULO_DA_PAGINA => $tituloDaPagina,
@@ -525,7 +525,7 @@ class CadastroController extends CircuitoController {
 
                         /* Persistindo */
                         $repositorioORM->getEventoORM()->persistir($evento);
-                        $repositorioORM->getEventoCelulaORM()->persistir($eventoCelula,false);
+                        $repositorioORM->getEventoCelulaORM()->persistir($eventoCelula, false);
                         $repositorioORM->getGrupoEventoORM()->persistir($grupoEvento);
                         /* Sessão */
                         $sessao->tipoMensagem = Constantes::$TIPO_MENSAGEM_CADASTRAR_CELULA;
@@ -641,9 +641,50 @@ class CadastroController extends CircuitoController {
 
         $form = new GrupoForm(Constantes::$FORM, $arrayGrupoAlunos, $arrayHierarquia);
 
+        $mostrarCadastro = false;
+        if ($entidade->getTipo_id() == 1 ||
+                $entidade->getTipo_id() == 2 ||
+                $entidade->getTipo_id() == 3 ||
+                $entidade->getTipo_id() == 4) {
+            $mostrarCadastro = true;
+        }
+        if ($entidade->getTipo_id() == 5 ||
+                $entidade->getTipo_id() == 6 ||
+                $entidade->getTipo_id() == 7) {
+            if ($form->getAlunos()) {
+                $mostrarCadastro = true;
+            }
+        }
+        $tituloDaPagina = Constantes::$TRADUCAO_TITULO_PAGINA_CADASTRO_GRUPO;
+        switch ($entidade->getTipo_id()) {
+            case 1:
+                $tituloDaPagina = str_replace('#tipo', 'Nacional', $tituloDaPagina);
+                break;
+            case 2:
+                $tituloDaPagina = str_replace('#tipo', 'Regional', $tituloDaPagina);
+                break;
+            case 3:
+                $tituloDaPagina = str_replace('#tipo', 'Coordenação', $tituloDaPagina);
+                break;
+            case 4:
+                $tituloDaPagina = str_replace('#tipo', 'Igreja', $tituloDaPagina);
+                break;
+            case 5:
+                $tituloDaPagina = str_replace('#tipo', 'Equipe', $tituloDaPagina);
+                break;
+            case 6:
+                $tituloDaPagina = str_replace('#tipo', 'Subequipe', $tituloDaPagina);
+                break;
+            case 7:
+                $tituloDaPagina = str_replace('#tipo', 'Subequipe', $tituloDaPagina);
+                break;
+        }
+
         $view = new ViewModel(array(
             Constantes::$FORM => $form,
-            'tipoEntidade' => $entidade->getTipo_id(),
+            'mostrarCadastro' => $mostrarCadastro,
+            'tituloDaPagina' => $tituloDaPagina,
+            'entidadeTipo' => $entidade->getTipo_id()
         ));
 
         /* Javascript */
@@ -675,8 +716,8 @@ class CadastroController extends CircuitoController {
                 $repositorioORM->getGrupoORM()->persistir($grupoNovo);
 
                 /* Entidade abaixo do perfil selecionado/logado */
-                $tipoEntidadeAbaixo = 8; // sub equipe por padrao
-                if ($entidadeLogada->getTipo_id() != 8) {
+                $tipoEntidadeAbaixo = 7; // sub equipe por padrao
+                if ($entidadeLogada->getTipo_id() != 7) {
                     $tipoEntidadeAbaixo = $entidadeLogada->getTipo_id() + 1;
                 }
                 $entidadeNova = new Entidade();
@@ -703,13 +744,26 @@ class CadastroController extends CircuitoController {
                     $indicePessoasFim = 2;
                 }
                 for ($indicePessoas = $indicePessoasInicio; $indicePessoas <= $indicePessoasFim; $indicePessoas++) {
-                    $matricula = $post_data[Constantes::$FORM_ID_ALUNO_SELECIONADO . $indicePessoas];
-                    $turmaAluno = $repositorioORM->getTurmaAlunoORM()->encontrarPorId($matricula);
-                    $pessoaSelecionada = $turmaAluno->getPessoa();
-                    $tokenDeAgora = $pessoaSelecionada->gerarToken($indicePessoas);
-                    $pessoaSelecionada->setToken($tokenDeAgora);
-                    $pessoaAtualizada = $loginORM->getPessoaORM()->
-                            atualizarAlunoComDadosDaBuscaPorCPF($pessoaSelecionada, $post_data, $indicePessoas);
+                    $pessoaSelecionada = null;
+                    if ($entidadeLogada->getTipo_id() !== 1 && $entidadeLogada->getTipo_id() !== 2 && $entidadeLogada->getTipo_id() !== 3 && $entidadeLogada->getTipo_id() !== 4) {
+                        $matricula = $post_data[Constantes::$FORM_ID_ALUNO_SELECIONADO . $indicePessoas];
+                        $turmaAluno = $repositorioORM->getTurmaAlunoORM()->encontrarPorId($matricula);
+                        $pessoaSelecionada = $turmaAluno->getPessoa();
+                        $tokenDeAgora = $pessoaSelecionada->gerarToken($indicePessoas);
+                        $pessoaSelecionada->setToken($tokenDeAgora);
+                        $pessoaAtualizada = $repositorioORM->getPessoaORM()->
+                                atualizarAlunoComDadosDaBuscaPorCPF($pessoaSelecionada, $post_data, $indicePessoas);
+                    } else {
+                        $pessoaSelecionada = new Pessoa();
+                        $pessoaSelecionada->setDocumento(intval($post_data[Constantes::$FORM_CPF . $indicePessoas]));
+                        $pessoaSelecionada->setNome($post_data[Constantes::$FORM_NOME . $indicePessoas]);
+                        $pessoaSelecionada->setEmail($post_data[Constantes::$FORM_EMAIL . $indicePessoas]);
+                        $pessoaSelecionada->setData_nascimento(Funcoes::mudarPadraoData($post_data[Constantes::$FORM_DATA_NASCIMENTO . $indicePessoas], 0));
+                        $tokenDeAgora = $pessoaSelecionada->gerarToken($indicePessoas);
+                        $pessoaSelecionada->setToken($tokenDeAgora);
+                        $repositorioORM->getPessoaORM()->persistir($pessoaSelecionada);
+                        $pessoaAtualizada = $pessoaSelecionada;
+                    }
 
                     /* Criar hierarquia */
                     $idHierarquia = $post_data[Constantes::$FORM_HIERARQUIA . $indicePessoas];
@@ -775,12 +829,11 @@ class CadastroController extends CircuitoController {
         if ($request->isPost()) {
             try {
                 $post_data = $request->getPost();
-                $loginORM = new RepositorioORM($this->getDoctrineORMEntityManager());
-                $pessoa = $loginORM->getPessoaORM()->encontrarPorId($post_data[Constantes::$ID]);
+                $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
+                $pessoa = $repositorioORM->getPessoaORM()->encontrarPorId($post_data[Constantes::$ID]);
                 $pessoa->setTelefone($post_data[Constantes::$FORM_INPUT_DDD] + $post_data[Constantes::$FORM_INPUT_CELULAR]);
-                $pessoa->setAtualizar_dados($atualizar_dados);
                 $pessoa->dadosAtualizados();
-                $loginORM->getPessoaORM()->persistir($pessoa);
+                $repositorioORM->getPessoaORM()->persistir($pessoa, false);
             } catch (Exception $exc) {
                 $this->direcionaErroDeCadastro($exc->getMessage());
             }
@@ -980,7 +1033,7 @@ class CadastroController extends CircuitoController {
         $Content = file_get_contents($url);
         Funcoes::enviarEmail($ToEmail, $Subject, $Content);
     }
-    
+
     public function cadastrarRevisaoAction() {
         $sessao = new Container(Constantes::$NOME_APLICACAO);
         $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());

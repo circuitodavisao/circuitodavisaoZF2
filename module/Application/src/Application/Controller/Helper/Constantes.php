@@ -397,6 +397,7 @@ class Constantes {
     public static $TRADUCAO_INSERIR = 'Insert';
     public static $TRADUCAO_LIMPAR = 'Clean';
     public static $TRADUCAO_TITULO_PAGINA_CADASTRO_GRUPO_SUB_EQUIPE = 'Registration of <span class="text-primary">Sub Team</span>';
+    public static $TRADUCAO_TITULO_PAGINA_CADASTRO_GRUPO = 'Registration of <span class="text-primary">#tipo</span>';
     public static $TRADUCAO_INSIRA_OS_DADOS_DOS_RESPONSAVEIS_E_DADOS_COMPLEMENTARES = 'Enter the Responsible(s) and the complementary data';
     public static $TRADUCAO_INSIRA_OS_DADOS_COMPLEMENTARES = 'Enter the Complementary Data';
     public static $TRADUCAO_SELECIONE_O_ALUNO = 'Select the Student that will be used for the registration';
@@ -471,7 +472,7 @@ class Constantes {
     public static $PROCOB_SENHA = 'HK8C';
 
     /* Funcões JS */
-    public static $FUNCAO_JS_ABRIR_TELAS_DE_ALUNO = 'abrirTelaDeAlunos(#tipo)';
+    public static $FUNCAO_JS_ABRIR_TELAS_DE_ALUNO = 'abrirTelaDeAlunos(#tipo, #entidadeTipo)';
 
     /* Forms */
     public static $FORM_ACTION_CADASTRO_GRUPO_FINALIZAR = 'cadastroGrupoFinalizar';
@@ -527,7 +528,7 @@ class Constantes {
     public static $FORM_ONCLICK = 'onClick';
     public static $FORM_ONCHANGE = 'onChange';
     public static $FORM_FUNCAO_BUSCAR_CEP = 'buscarEndereco()';
-    public static $FORM_FUNCAO_BUSCAR_CPF = 'buscarCPF()';
+    public static $FORM_FUNCAO_BUSCAR_CPF = 'buscarCPF(#entidadeTipo)';
     public static $FORM_FUNCAO_BUSCAR_EMAIL = 'buscarEmail()';
     public static $FORM_FUNCAO_VERIFICAR_EMAIL_IGUAL = 'verificarEmailIgual(this.value);';
     public static $FORM_FUNCAO_VALIDAR_FORMULARIO = 'validarFormulario();';

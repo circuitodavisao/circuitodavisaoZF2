@@ -25,38 +25,32 @@ class GrupoDadosComplementares extends AbstractHelper {
 
     public function renderHtml() {
         $html = '';
-        $tipoNumero = 1;
-        $tipoNome = 2;
-        $tipoEntidade = $this->view->tipoEntidade;
+        $tipoEntidade = $this->view->entidadeTipo;
         $nomeDoGrupo = '';
         $stringNome = 'Nome';
         $stringNumero = 'Número';
-        $tipoDadosComplementar = 0;
 
         switch ($tipoEntidade) {
-            case 1:// Presidencial
+            case 1:
                 $nomeDoGrupo = $stringNome . ' do Nacional';
                 break;
-            case 2:// Nacional
+            case 2:
                 $nomeDoGrupo = $stringNome . ' da Região';
                 break;
-            case 3:// Regiao
-                $nomeDoGrupo = $stringNumero . ' da Sub Região';
-                break;
-            case 4:// Sub Regiao
+            case 3:
                 $nomeDoGrupo = $stringNumero . ' da Coordenação';
                 break;
-            case 5:// Coordenacao
-                $nomeDoGrupo = $stringNumero . ' da Sub Coordenação';
-                break;
-            case 6:// Sub Coordenacao
+            case 4:
                 $nomeDoGrupo = $stringNome . ' da Igreja';
                 break;
-            case 7:// Igreja
+            case 5:
                 $nomeDoGrupo = $stringNome . ' da Equipe';
                 break;
-            case 8:// Equipe
-                $nomeDoGrupo = $stringNumero . ' da Sub Equipe';
+            case 6:
+                $nomeDoGrupo = $stringNumero . ' da Subequipe';
+                break;
+            case 7:
+                $nomeDoGrupo = $stringNumero . ' da Subequipe';
                 break;
             default:
                 break;
@@ -64,10 +58,12 @@ class GrupoDadosComplementares extends AbstractHelper {
 
         /* Verificando o tipo de entidade */
         $mostrarBotao = Constantes::$CLASS_HIDDEN;
+        $tipoDadosComplementar = 0;
 
         /* Numero da entidade abaixo */
-        if ($tipoEntidade === 7 || // Equipe
-                $tipoEntidade === 8) {// Sub equipe
+        if ($tipoEntidade === 3 ||
+                $tipoEntidade === 6 ||
+                $tipoEntidade === 7) {
             /* Selecionar Numeracao */
             $html .= '<label class = "field-label">' . $this->view->translate(Constantes::$TRADUCAO_SELECIONE_O_NUMERO_DA_SUB_EQUIPE);
             $html .= '</label>';
@@ -75,10 +71,10 @@ class GrupoDadosComplementares extends AbstractHelper {
             $tipoDadosComplementar = 1;
         }
         /* Nome da entidade abaixo */
-        if ($tipoEntidade === 1 || // Presidente
-                $tipoEntidade === 2 || // Regiao
-                $tipoEntidade === 4 || // Coordenacao
-                $tipoEntidade === 5) { // Sub Coordenacao
+        if ($tipoEntidade === 1 ||
+                $tipoEntidade === 2 ||
+                $tipoEntidade === 4 ||
+                $tipoEntidade === 5) {
             /* Nome Entidade */
             $html .= '<label class="field-label">' . $nomeDoGrupo . '</label>';
             $html .= $this->view->formInput($this->getForm()->get(Constantes::$FORM_NOME_ENTIDADE));
@@ -86,8 +82,6 @@ class GrupoDadosComplementares extends AbstractHelper {
             $mostrarBotao = '';
             $tipoDadosComplementar = 2;
         }
-
-
 
         /* Fim HelperView dados complementares */
         $html .= '<div class="mt10">';

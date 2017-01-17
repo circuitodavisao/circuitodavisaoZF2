@@ -48,7 +48,7 @@ echo $this->inlineScript();
         $('#divConfirmacao').removeClass('hidden');
     }
 
-    function abrirTelaDeAlunos(tipo) {
+    function abrirTelaDeAlunos(tipo, entidadeTipo) {
         $('#botaoInserirResponsavel0').addClass(hidden);
         $('#botaoInserirResponsavel1').addClass(hidden);
         $('#botaoInserirResponsavel2').addClass(hidden);
@@ -80,6 +80,13 @@ echo $this->inlineScript();
         $('#divSpanResponsavelEmail').addClass(hidden);
         $('#botaoHierarquiaSelecionada').addClass(hidden);
         $('#divHierarquia').addClass(hidden);
+        if (entidadeTipo === 1
+                || entidadeTipo === 2
+                || entidadeTipo === 3
+                || entidadeTipo === 4) {
+            $('#divSelecionarAluno').addClass(hidden);
+            $('#divCPFDataNascimento').removeClass(hidden);
+        }
         limparPassoAPasso(tipo);
     }
 
@@ -132,7 +139,7 @@ echo $this->inlineScript();
         return !isNaN(parseFloat(n)) && isFinite(n);
     }
 
-    function buscarCPF() {
+    function buscarCPF(entidadeTipo) {
         $('#botaoCPFLiberado').addClass(hidden);
         var cpf = $("#cpf").val();
         var stringBarra = '/';
@@ -180,20 +187,25 @@ echo $this->inlineScript();
                     var splitNomeDoAluno = nomeDoAlunoSelecionado.split(" ");
                     var splitNomeEncontradoNaBusca = data.nome.split(" ");
                     var dadosValidados = true;
-                    if (splitNomeDoAluno[0] !== splitNomeEncontradoNaBusca[0]) {
-                        dadosValidados = false;
-                        spanMensagens
-                                .addClass(alertDanger)
-                                .text('<?php echo $this->translate(Constantes::$TRADUCAO_NOME_NAO_CONFERE); ?>')
-                                .removeClass(hidden);
-                    }
+                    if (entidadeTipo !== 1
+                            && entidadeTipo !== 2
+                            && entidadeTipo !== 3
+                            && entidadeTipo !== 4) {
+                        if (splitNomeDoAluno[0] !== splitNomeEncontradoNaBusca[0]) {
+                            dadosValidados = false;
+                            spanMensagens
+                                    .addClass(alertDanger)
+                                    .text('<?php echo $this->translate(Constantes::$TRADUCAO_NOME_NAO_CONFERE); ?>')
+                                    .removeClass(hidden);
+                        }
 
-                    if (dataNascimento !== data.dataNascimento) {
-                        dadosValidados = false;
-                        spanMensagens
-                                .addClass(alertDanger)
-                                .text('<?php echo $this->translate(Constantes::$TRADUCAO_DATA_NASCIMENTO_NAO_CONFERE); ?>')
-                                .removeClass(hidden);
+                        if (dataNascimento !== data.dataNascimento) {
+                            dadosValidados = false;
+                            spanMensagens
+                                    .addClass(alertDanger)
+                                    .text('<?php echo $this->translate(Constantes::$TRADUCAO_DATA_NASCIMENTO_NAO_CONFERE); ?>')
+                                    .removeClass(hidden);
+                        }
                     }
                     if (dadosValidados) {
                         /* Mensagem de sucesso */

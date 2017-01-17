@@ -100,7 +100,7 @@ class Entidade extends CircuitoEntity {
     }
 
     function setNome($nome) {
-        $this->nome = $nome;
+        $this->nome = strtoupper($nome);
     }
 
     function setNumero($numero) {
