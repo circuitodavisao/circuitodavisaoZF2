@@ -307,7 +307,9 @@ class Module {
             if ($sessao->idEntidadeAtual) {
                 $entidade = $repositorioORM->getEntidadeORM()->encontrarPorId($sessao->idEntidadeAtual);
                 $grupo = $entidade->getGrupo();
+
                 $viewModel->entidade = $entidade;
+
                 $discipulos = null;
                 if (count($grupo->getGrupoPaiFilhoFilhos()) > 0) {
                     $discipulos = $grupo->getGrupoPaiFilhoFilhos();
@@ -327,7 +329,8 @@ class Module {
         //this is a whitelist for routes that are allowed without authentication
         //!!! Your authentication route must be whitelisted
         $allowedRoutesConfig = array(
-            Constantes::$ROUTE_LOGIN
+            Constantes::$ROUTE_LOGIN,
+            'migracao'
         );
         if (!isset($matchedRoute) || in_array($matchedRoute->getMatchedRouteName(), $allowedRoutesConfig)) {
             // no auth check required

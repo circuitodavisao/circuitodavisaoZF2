@@ -1,0 +1,35 @@
+<?php echo $this->doctype(); ?>
+
+<?php
+$versao = '?v=1.1.2';
+
+use Application\Controller\Helper\Constantes;
+?>
+
+<html lang="pt-BR">
+    <head>
+        <meta charset="utf-8">
+        <!-- Title Head -->
+        <?php
+        $NAME_APPLICATION = $this->translate(Constantes::$TRADUCAO_NOME_APLICACAO);
+        echo $this
+                ->headTitle($NAME_APPLICATION)
+                ->setSeparator(' - ')
+                ->setAutoEscape(false)
+        ;
+        ?>
+
+        <!-- Meta Head -->
+        <?php
+        echo $this
+                ->headMeta()
+                ->appendName('viewport', 'width=device-width, initial-scale=1.0, maximum-scale=1')
+                ->appendName('theme-color', '#3498db')
+                ->appendHttpEquiv('X-UA-Compatible', 'IE=edge')
+        ;
+        ?>              
+    </head>
+    <body>       
+        <?php echo $this->content; ?>
+    </body>
+</html>
