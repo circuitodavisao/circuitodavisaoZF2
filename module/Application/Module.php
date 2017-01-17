@@ -307,9 +307,7 @@ class Module {
             if ($sessao->idEntidadeAtual) {
                 $entidade = $repositorioORM->getEntidadeORM()->encontrarPorId($sessao->idEntidadeAtual);
                 $grupo = $entidade->getGrupo();
-
                 $viewModel->entidade = $entidade;
-
                 $discipulos = null;
                 if (count($grupo->getGrupoPaiFilhoFilhos()) > 0) {
                     $discipulos = $grupo->getGrupoPaiFilhoFilhos();
