@@ -41,8 +41,9 @@ class Menu extends AbstractHelper {
         $html .= '<ul class="nav navbar-nav navbar-right">';
         $html .= '<li class="dropdown menu-merge">';
         $html .= '<a href="#" class="dropdown-toggle fw600 p15" data-toggle="dropdown">';
-        $html .= '<img src="/img/avatars/' . $stringFoto . '" alt="' . $this->view->pessoa->getNomePrimeiroUltimo() . '" class="mw30 br64">';
-        $html .= '<span class="pl15">' . $this->view->pessoa->getNomePrimeiroUltimo() . '</span>';
+        $nomeEntidade = $this->view->entidade->getEntidadeTipo()->getNome();
+        $html .= '<img src="/img/avatars/' . $stringFoto . '" alt="' . $this->view->pessoa->getNomePrimeiroUltimo() . '" class="mw30 br64">' . Constantes::$NBSP . $nomeEntidade;
+        $html .= '<span class="pl5">- ' . $this->view->pessoa->getNomePrimeiroUltimo() . '</span>';
         $html .= '<span class="caret caret-tp"></span>';
         $html .= '</a>';
 
@@ -103,7 +104,6 @@ class Menu extends AbstractHelper {
 
         /* Pegar pessoas abaixo */
         if ($this->view->discipulos) {
-
             $html .= '<li>';
             $html .= '<a class="accordion-toggle" href="#">';
             $html .= '<span class="fa fa-sitemap"></span>';
@@ -111,11 +111,9 @@ class Menu extends AbstractHelper {
             $html .= '<span class="caret"></span>';
             $html .= '</a>';
             $html .= '<ul class="nav sub-nav">';
-
             foreach ($this->view->discipulos as $gpFilho) {
                 $grupoFilho = $gpFilho->getGrupoPaiFilhoFilho();
                 $entidadeFilho = $grupoFilho->getEntidadeAtiva();
-
                 $grupoResponsavel = $grupoFilho->getResponsabilidadesAtivas();
                 $nomeLideres = '';
                 if ($grupoResponsavel) {
@@ -138,14 +136,12 @@ class Menu extends AbstractHelper {
                         $contagem++;
                     }
                 }
-
                 $informacaoEntidade = '';
                 if (!empty($entidadeFilho)) {
                     $informacaoEntidade = $entidadeFilho->infoEntidade();
                 }
                 $html .= $this->view->menuHierarquia($nomeLideres, $informacaoEntidade);
             }
-
             /* Discipulos 12 */
 //            $html .= $this->view->menuHierarquia('Lucas e Paloma', 'Salt');
 //            $html .= $this->view->menuHierarquia('Léo e Vivian', 'Galapagos', 2);
@@ -168,11 +164,8 @@ class Menu extends AbstractHelper {
 //
 //            $html .= $this->view->menuHierarquia('Ivan e Nubia', 'Bodão');
             /* Fim Discipulos 12 */
-
             $html .= '</ul>';
-
             $html .= '</li>';
-
             $html .= '</ul>';
         } else {
             $html .= '<li>';
