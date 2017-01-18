@@ -384,7 +384,7 @@ class LoginController extends CircuitoController {
                 /* Dados da requisição POST */
                 $dataPost = $request->getPost();
                 $pessoa = $repositorioORM->getPessoaORM()->encontrarPorId($dataPost[Constantes::$INPUT_ID_PESSOA]);
-                $pessoa->setSenha($dataPost[Constantes::$INPUT_SENHA]);
+                $pessoa->setSenha($dataPost[Constantes::$INPUT_REPETIR_SENHA]);
                 $pessoa->setToken(null);
                 $pessoa->setToken_data(null);
                 $pessoa->setToken_hora(null);
@@ -417,10 +417,6 @@ class LoginController extends CircuitoController {
             /* Responsabilidades */
             $responsabilidadesAtivas = $pessoa->getResponsabilidadesAtivas();
             if ($responsabilidadesAtivas) {
-                if (count($responsabilidadesAtivas) === 1) {
-                    $sessao->idEntidadeAtual = $responsabilidadesAtivas[0]->getId();
-                }
-
                 $view = new ViewModel(array(Constantes::$RESPONSABILIDADES => $responsabilidadesAtivas));
 
                 /* Javascript especifico */

@@ -42,6 +42,7 @@ class TabelaDeAlunos extends AbstractHelper {
                 $turmaAluno = $ga->getTurmaAluno();
                 $aluno = $turmaAluno->getPessoa();
                 $aluno->setMatriculaAtual($turmaAluno->getMatricula());
+                $classeAluno = '';
                 if ($aluno->getSexo() === 'M') {
                     $classeAluno = 'alunoM';
                     $tipoResponsavel = 1;

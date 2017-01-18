@@ -9,7 +9,7 @@ CREATE TABLE grupo
   hora_criacao time without time zone NOT NULL DEFAULT ('now'::text)::time with time zone, -- Hora de criação do grupo
   data_inativacao date, -- Data de inativação do grupo
   hora_inativacao time without time zone, -- Hora de inativação do grupo
-  envio enumsn, -- Status de envio do relatório
+  envio enumsn DEFAULT 'N'::enumsn, -- Status de envio do relatório
   envio_data date, -- Data de envio do relatório
   envio_hora time without time zone, -- Hora de envio do relatório
   CONSTRAINT pk_grupo PRIMARY KEY (id)

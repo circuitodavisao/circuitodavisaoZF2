@@ -8,8 +8,10 @@ namespace Application\Controller\Helper;
  * Descricao: Classe com constantes
  */
 class Constantes {
-    /* Constates Login */
 
+    public static $IP = '158.69.124.139';
+
+    /* Constates Login */
     public static $CONTROLLER_LOGIN = 'Application\Controller\Login';
     public static $CONTROLLER_PRINCIPAL = 'Principal\Controller\Principal';
     public static $LOGIN_FORM = 'LoginForm';
@@ -604,7 +606,7 @@ class Constantes {
     public static $TRADUCAO_NOVA = 'New';
     public static $TRADUCAO_NOVA_CELULA = 'New Cell';
     public static $TRADUCAO_NOVO_CULTO = 'New Cult';
-    public static $TRADUCAO_NOVO_REVISAO = 'New Revision'; 
+    public static $TRADUCAO_NOVO_REVISAO = 'New Revision';
     public static $TRADUCAO_MULTIPLICACAO = 'Multiplication';
     public static $TRADUCAO_LISTAGEM_CULTOS = 'Listing <b class="text-danger">Cults</b>';
     public static $TRADUCAO_LISTAGEM_REVISAO = 'Listing <b class="text-danger">Revision of lives</b>';

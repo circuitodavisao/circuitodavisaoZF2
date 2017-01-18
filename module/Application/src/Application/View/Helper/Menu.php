@@ -138,7 +138,7 @@ class Menu extends AbstractHelper {
                 }
                 $informacaoEntidade = '';
                 if (!empty($entidadeFilho)) {
-                    $informacaoEntidade = $entidadeFilho->getEntidadeTipo()->getNome() . ' ' . $entidadeFilho->infoEntidade();
+                    $informacaoEntidade = $entidadeFilho->getEntidadeTipo()->getNome() . ' <small>' . $entidadeFilho->infoEntidade() . '</small>';
                 }
                 $html .= $this->view->menuHierarquia($nomeLideres, $informacaoEntidade);
             }

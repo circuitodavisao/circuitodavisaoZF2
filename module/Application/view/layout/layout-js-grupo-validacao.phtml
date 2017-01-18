@@ -86,6 +86,7 @@ echo $this->inlineScript();
                 || entidadeTipo === 4) {
             $('#divSelecionarAluno').addClass(hidden);
             $('#divCPFDataNascimento').removeClass(hidden);
+            $('#divDadosSelecionados').removeClass(hidden);
         }
         limparPassoAPasso(tipo);
     }
@@ -206,6 +207,8 @@ echo $this->inlineScript();
                                     .text('<?php echo $this->translate(Constantes::$TRADUCAO_DATA_NASCIMENTO_NAO_CONFERE); ?>')
                                     .removeClass(hidden);
                         }
+                    } else {
+                        $('#divDadosSelecionados').removeClass(hidden);
                     }
                     if (dadosValidados) {
                         /* Mensagem de sucesso */

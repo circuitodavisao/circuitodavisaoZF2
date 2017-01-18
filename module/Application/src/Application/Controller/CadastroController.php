@@ -633,11 +633,13 @@ class CadastroController extends CircuitoController {
         $sessao = new Container(Constantes::$NOME_APLICACAO);
         $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
 
-        $idEntidadeAtual = $sessao->idEntidadeAtual;
-        $entidade = $repositorioORM->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+        $entidade = $repositorioORM->getEntidadeORM()->encontrarPorId($sessao->idEntidadeAtual);
+        $pessoaLogada = $repositorioORM->getPessoaORM()->encontrarPorId($sessao->idPessoa);
+        $hierarquiaId = $pessoaLogada->getPessoaHierarquiaAtivo()->getHierarquia()->getId();
         $grupo = $entidade->getGrupo();
-        $arrayGrupoAlunos = $grupo->getGrupoAlunoAtivos();
-        $arrayHierarquia = $repositorioORM->getHierarquiaORM()->encontrarTodas();
+
+        $arrayGrupoAlunos = $grupo->getGrupoAlunoAtivosSemCadastro();
+        $arrayHierarquia = $repositorioORM->getHierarquiaORM()->encontrarTodas($hierarquiaId);
 
         $form = new GrupoForm(Constantes::$FORM, $arrayGrupoAlunos, $arrayHierarquia);
 
@@ -704,7 +706,7 @@ class CadastroController extends CircuitoController {
         if ($request->isPost()) {
             try {
                 $post_data = $request->getPost();
-                $loginORM = new RepositorioORM($this->getDoctrineORMEntityManager());
+                $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
                 $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
 
                 $sessao = new Container(Constantes::$NOME_APLICACAO);
@@ -837,8 +839,8 @@ class CadastroController extends CircuitoController {
             } catch (Exception $exc) {
                 $this->direcionaErroDeCadastro($exc->getMessage());
             }
-            return $this->redirect()->toRoute('principal', array(
-                        'mostrarMenu' => 1
+            return $this->redirect()->toRoute('login', array(
+                        Constantes::$ACTION => Constantes::$ACTION_SELECIONAR_PERFIL
             ));
         }
     }
@@ -897,8 +899,8 @@ class CadastroController extends CircuitoController {
                 $post_data = $request->getPost();
                 $email = $post_data[Constantes::$FORM_EMAIL];
 
-                $loginORM = new RepositorioORM($this->getDoctrineORMEntityManager());
-                $pessoaPesquisada = $loginORM->getPessoaORM()->encontrarPorEmail($email);
+                $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
+                $pessoaPesquisada = $repositorioORM->getPessoaORM()->encontrarPorEmail($email);
 
                 if ($pessoaPesquisada) {
                     $resposta = 1;
@@ -961,8 +963,8 @@ class CadastroController extends CircuitoController {
                     $resposta = 1;
 
                     /* CPF encontrado na receita verificando se tem cadastro no sistema */
-                    $loginORM = new RepositorioORM($this->getDoctrineORMEntityManager());
-                    if ($loginORM->getPessoaORM()->encontrarPorCPF($cpf)) {
+                    $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
+                    if ($repositorioORM->getPessoaORM()->encontrarPorCPF($cpf)) {
                         $resposta = 3;
                     }
                 }
@@ -1018,18 +1020,19 @@ class CadastroController extends CircuitoController {
      */
     public function enviarEmailParaCompletarOsDados($tokenDeAgora, $pessoa) {
         $sessao = new Container(Constantes::$NOME_APLICACAO);
-        $loginORM = new RepositorioORM($this->getDoctrineORMEntityManager());
-        $pessoaLogada = $loginORM->getPessoaORM()->encontrarPorId($sessao->idPessoa);
+        $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
+        $pessoaLogada = $repositorioORM->getPessoaORM()->encontrarPorId($sessao->idPessoa);
 
         $Subject = 'Convite';
-        $ToEmail = 'falecomleonardopereira@gmail.com';
+//        $ToEmail = 'falecomleonardopereira@gmail.com';
+        $ToEmail = $pessoa->getEmail();
         $avatar = 'placeholder.png';
         if ($pessoaLogada->getFoto()) {
             $avatar = $pessoaLogada->getFoto();
         }
         $nomeLider = str_replace(' ', '', $pessoaLogada->getNomePrimeiro());
         $nomePessoaEmail = str_replace(' ', '', $pessoa->getNomePrimeiro());
-        $url = "http://158.69.124.139/convite.php?nomeLider=$nomeLider&avatar=$avatar&token=$tokenDeAgora&nomePessoaEmail=$nomePessoaEmail";
+        $url = "http://" . Constantes::$IP . "/convite.php?nomeLider=$nomeLider&avatar=$avatar&token=$tokenDeAgora&nomePessoaEmail=$nomePessoaEmail";
         $Content = file_get_contents($url);
         Funcoes::enviarEmail($ToEmail, $Subject, $Content);
     }
