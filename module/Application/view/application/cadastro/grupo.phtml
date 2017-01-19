@@ -133,9 +133,9 @@ echo $this->templateFormularioTopo($this->tituloDaPagina);
                     echo $this->botaoLink(Constantes::$TRADUCAO_BUSCAR, Constantes::$STRING_HASHTAG, 7, $this->funcaoOnClick($funcao));
                     echo '</div>';
                     echo '<div id="botaoCPFLiberado" class="quebraDeLinhaDeSpan hidden">';
-                    echo $this->botaoLink($labelBotaoContinuar, Constantes::$STRING_HASHTAG, 7, $this->funcaoOnClick('mostrarDivEmail()'));
+                    echo $this->botaoLink($labelBotaoContinuar, Constantes::$STRING_HASHTAG, 7, $this->funcaoOnClick('mostrarDivEmail(' . $this->entidadeTipo . ')'));
                     echo '</div>';
-                    echo $this->botaoLink($labelVoltar, Constantes::$STRING_HASHTAG, 8, $this->funcaoOnClick('botaoVoltarDataNascimentoCPF()'));
+                    echo $this->botaoLink($labelVoltar, Constantes::$STRING_HASHTAG, 8, $this->funcaoOnClick('botaoVoltarDataNascimentoCPF(' . $this->entidadeTipo . ')'));
                     ?>
                 </div>
             </div>
@@ -143,21 +143,21 @@ echo $this->templateFormularioTopo($this->tituloDaPagina);
             <!-- Div Email -->
             <div id="divEmail" class="hidden">
                 <?php
-                echo '<div class="col-xs-12">';
+                echo '<div class = "col-xs-12">';
                 echo $this->formInput($form->get(Constantes::$FORM_EMAIL));
                 echo '</div>';
-                echo '<div class="col-xs-12 mt10 mb10">';
+                echo '<div class = "col-xs-12 mt10 mb10">';
                 echo $this->formInput($form->get(Constantes::$FORM_REPETIR_EMAIL));
                 echo '</div>';
                 /* Botões */
-                echo '<div id="botaoBuscarEmail" class="quebraDeLinhaDeSpan">';
+                echo '<div id = "botaoBuscarEmail" class = "quebraDeLinhaDeSpan">';
                 echo $this->botaoLink(Constantes::$TRADUCAO_BUSCAR, Constantes::$STRING_HASHTAG, 7, $this->funcaoOnClick(Constantes::$FORM_FUNCAO_BUSCAR_EMAIL));
                 echo '</div>';
-                echo '<div id="botaoEmailLiberado" class="quebraDeLinhaDeSpan hidden">';
+                echo '<div id = "botaoEmailLiberado" class = "quebraDeLinhaDeSpan hidden">';
                 echo $this->botaoLink($labelBotaoContinuar, Constantes::$STRING_HASHTAG, 7, $this->funcaoOnClick('mostrarDivHierarquia()'));
                 echo '</div>';
                 /* Botao Voltar Data de Nascimento e CPF */
-                echo $this->botaoLink($labelVoltar, Constantes::$STRING_HASHTAG, 8, $this->funcaoOnClick('botaoVoltarEmail()'));
+                echo $this->botaoLink($labelVoltar, Constantes::$STRING_HASHTAG, 8, $this->funcaoOnClick('botaoVoltarEmail(' . $this->entidadeTipo . ')'));
                 ?>
             </div>
 
@@ -168,11 +168,11 @@ echo $this->templateFormularioTopo($this->tituloDaPagina);
                 <!-- Fim Selecionar Hierarquia -->
                 <div class="mt10">
                     <?php
-                    echo '<div id="botaoHierarquiaSelecionada" class="quebraDeLinhaDeSpan hidden">';
+                    echo '<div id = "botaoHierarquiaSelecionada" class = "quebraDeLinhaDeSpan hidden">';
 
-                    echo '<div id="botaoInserirResponsavel" class="">';
+                    echo '<div id = "botaoInserirResponsavel" class = "">';
                     $labelInserirResponsavel = Constantes::$TRADUCAO_INSERIR;
-                    $extraInserirResponsavel = ' id="botaoInserirResponsavel#numero" onclick="
+                    $extraInserirResponsavel = ' id = "botaoInserirResponsavel#numero" onclick = "
                 insereResponsavelNaTelaDeConfimacao(#numero, 0); 
                     $(\'#divConfirmacao\').removeClass(\'hidden\');            
                     $(\'#divResponsavel\').addClass(\'hidden\');

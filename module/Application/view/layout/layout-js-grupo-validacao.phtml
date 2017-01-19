@@ -251,13 +251,23 @@ echo $this->inlineScript();
         }
     }
 
-    function mostrarDivEmail() {
+    function mostrarDivEmail(entidadeTipo) {
         $('#divCPFDataNascimento').addClass(hidden);
         $('#botaoCPFLiberado').addClass(hidden);
         $('#divEmail').removeClass(hidden);
-        $('#botaoPasso3')
-                .removeClass('btn-default')
-                .addClass('btn-primary');
+
+        if (entidadeTipo !== 1
+                && entidadeTipo !== 2
+                && entidadeTipo !== 3
+                && entidadeTipo !== 4) {
+            $('#botaoPasso3')
+                    .removeClass('btn-default')
+                    .addClass('btn-primary');
+        } else {
+            $('#botaoPasso2')
+                    .removeClass('btn-default')
+                    .addClass('btn-primary');
+        }
         escondeMensagem();
         $('#botaoBuscarEmail').removeClass(hidden);
     }
@@ -336,11 +346,22 @@ echo $this->inlineScript();
 
     }
 
-    function mostrarDivHierarquia() {
+    function mostrarDivHierarquia(entidadeTipo) {
         $('#divEmail').addClass(hidden);
-        $('#botaoPasso4')
-                .removeClass('btn-default')
-                .addClass('btn-primary');
+
+        if (entidadeTipo !== 1
+                && entidadeTipo !== 2
+                && entidadeTipo !== 3
+                && entidadeTipo !== 4) {
+            $('#botaoPasso4')
+                    .removeClass('btn-default')
+                    .addClass('btn-primary');
+        } else {
+            $('#botaoPasso3')
+                    .removeClass('btn-default')
+                    .addClass('btn-primary');
+        }
+
         $('#divHierarquia').removeClass(hidden);
         escondeMensagem();
     }
@@ -634,7 +655,7 @@ echo $this->inlineScript();
 
     function insereNomeNaTelaDeConfimacao(mudarBarraDeProgresso) {
         var spanDadosComplementares = $('#spanDadosComplementares');
-        spanDadosComplementares.html('Nome: ' + stringNBSP + $('#nomeEntidade').val());
+        spanDadosComplementares.html('Nome: ' + stringNBSP + $('#nomeEntidade').val().toUpperCase());
         insereDadosComplementares(mudarBarraDeProgresso);
     }
 
@@ -682,9 +703,18 @@ echo $this->inlineScript();
         $('#divConfirmacao').removeClass(hidden);
     }
 
-    function botaoVoltarDataNascimentoCPF() {
+    function botaoVoltarDataNascimentoCPF(entidadeTipo) {
+        if (entidadeTipo === 1
+                || entidadeTipo === 2
+                || entidadeTipo === 3
+                || entidadeTipo === 4) {
+            $('#divIncluirResponsavel').addClass(hidden);
+            $('#divPassoAPasso').addClass(hidden);
+            $('#divConfirmacao').removeClass(hidden);
+        } else {
+            $('#divSelecionarAluno').removeClass(hidden);
+        }
         $('#divCPFDataNascimento').addClass(hidden);
-        $('#divSelecionarAluno').removeClass(hidden);
         $('#divDadosSelecionados').addClass(hidden);
         $('#spanMensagens').addClass(hidden);
         $('#divSpanResponsavelCPF').addClass(hidden);
@@ -692,11 +722,12 @@ echo $this->inlineScript();
         $('#Dia').val(0);
         $('#Mes').val(0);
         $('#Ano').val(0);
+        $('#cpf').val('');
         $('#botaoCPFLiberado').addClass(hidden);
         $('#botaoPasso2').removeClass(btnPrimary).addClass(btnDefault);
     }
 
-    function botaoVoltarEmail() {
+    function botaoVoltarEmail(entidadeTipo) {
         $('#divCPFDataNascimento').removeClass(hidden);
         $('#divEmail').addClass(hidden);
         $('#botaoCPFLiberado').addClass(hidden);
@@ -707,7 +738,16 @@ echo $this->inlineScript();
         $('#botaoEmailLiberado').addClass(hidden);
         $('#divSpanResponsavelCPF').addClass(hidden);
         $('#divSpanResponsavelDataNascimento').addClass(hidden);
-        $('#botaoPasso3').removeClass(btnPrimary).addClass(btnDefault);
+        if (entidadeTipo === 1
+                || entidadeTipo === 2
+                || entidadeTipo === 3
+                || entidadeTipo === 4) {
+            $('#botaoPasso2').removeClass(btnPrimary).addClass(btnDefault);
+            $('#divDadosSelecionados').addClass(hidden);
+        } else {
+            $('#botaoPasso3').removeClass(btnPrimary).addClass(btnDefault);
+        }
+        $('#botaoBuscarCPF').removeClass(hidden);
     }
     function botaoVoltarHierarquia() {
         $('#divEmail').removeClass(hidden);
@@ -717,6 +757,7 @@ echo $this->inlineScript();
         $('#hierarquia').val(0);
         $('#botaoHierarquiaSelecionada').addClass(hidden);
         $('#divSpanResponsavelEmail').addClass(hidden);
+        $('#botaoBuscarEmail').removeClass(hidden);
         $('#botaoPasso4').removeClass(btnPrimary).addClass(btnDefault);
     }
 
