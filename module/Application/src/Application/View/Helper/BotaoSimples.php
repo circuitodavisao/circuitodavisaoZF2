@@ -33,6 +33,9 @@ class BotaoSimples extends AbstractHelper {
         if($this->getTipoBotao() === 2){
             $classCor = 'default';
         }
+        if($this->getTipoBotao() === 3){
+            $classCor = 'success';
+        }
         $html .= '<button type="button" ' . $this->getExtra() . ' class="btn ladda-button btn-' . $classCor . ' pull-right ml10" data-style="zoom-in">';
         $html .= '<span class="ladda-label">';
         $html .= $this->view->translate($this->getLabel());

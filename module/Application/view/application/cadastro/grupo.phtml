@@ -130,12 +130,12 @@ echo $this->templateFormularioTopo($this->tituloDaPagina);
                     <?php
                     echo '<div id="botaoBuscarCPF" class="quebraDeLinhaDeSpan">';
                     $funcao = str_replace('#entidadeTipo', $this->entidadeTipo, Constantes::$FORM_FUNCAO_BUSCAR_CPF);
-                    echo $this->botaoLink(Constantes::$TRADUCAO_BUSCAR, Constantes::$STRING_HASHTAG, 7, $this->funcaoOnClick($funcao));
+                    echo $this->botaoSimples(Constantes::$TRADUCAO_BUSCAR, $this->funcaoOnClick($funcao));
                     echo '</div>';
                     echo '<div id="botaoCPFLiberado" class="quebraDeLinhaDeSpan hidden">';
-                    echo $this->botaoLink($labelBotaoContinuar, Constantes::$STRING_HASHTAG, 7, $this->funcaoOnClick('mostrarDivEmail(' . $this->entidadeTipo . ')'));
+                    echo $this->botaoSimples($labelBotaoContinuar, $this->funcaoOnClick('mostrarDivEmail(' . $this->entidadeTipo . ')'), 3);
                     echo '</div>';
-                    echo $this->botaoLink($labelVoltar, Constantes::$STRING_HASHTAG, 8, $this->funcaoOnClick('botaoVoltarDataNascimentoCPF(' . $this->entidadeTipo . ')'));
+                    echo $this->botaoSimples($labelVoltar, $this->funcaoOnClick('botaoVoltarDataNascimentoCPF(' . $this->entidadeTipo . ')'), 2);
                     ?>
                 </div>
             </div>
@@ -151,13 +151,13 @@ echo $this->templateFormularioTopo($this->tituloDaPagina);
                 echo '</div>';
                 /* Botões */
                 echo '<div id = "botaoBuscarEmail" class = "quebraDeLinhaDeSpan">';
-                echo $this->botaoLink(Constantes::$TRADUCAO_BUSCAR, Constantes::$STRING_HASHTAG, 7, $this->funcaoOnClick(Constantes::$FORM_FUNCAO_BUSCAR_EMAIL));
+                echo $this->botaoSimples(Constantes::$TRADUCAO_BUSCAR, $this->funcaoOnClick(Constantes::$FORM_FUNCAO_BUSCAR_EMAIL));
                 echo '</div>';
                 echo '<div id = "botaoEmailLiberado" class = "quebraDeLinhaDeSpan hidden">';
-                echo $this->botaoLink($labelBotaoContinuar, Constantes::$STRING_HASHTAG, 7, $this->funcaoOnClick('mostrarDivHierarquia()'));
+                echo $this->botaoSimples($labelBotaoContinuar, $this->funcaoOnClick('mostrarDivHierarquia()'), 3);
                 echo '</div>';
                 /* Botao Voltar Data de Nascimento e CPF */
-                echo $this->botaoLink($labelVoltar, Constantes::$STRING_HASHTAG, 8, $this->funcaoOnClick('botaoVoltarEmail(' . $this->entidadeTipo . ')'));
+                echo $this->botaoSimples($labelVoltar, $this->funcaoOnClick('botaoVoltarEmail(' . $this->entidadeTipo . ')'), 2);
                 ?>
             </div>
 
