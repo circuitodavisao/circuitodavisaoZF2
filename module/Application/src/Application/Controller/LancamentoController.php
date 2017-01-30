@@ -12,6 +12,7 @@ use Application\Model\Entity\GrupoAtendimento;
 use Application\Model\Entity\GrupoPessoa;
 use Application\Model\Entity\Pessoa;
 use Application\Model\ORM\RepositorioORM;
+use DateTime;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManager;
 use Exception;
@@ -682,6 +683,43 @@ class LancamentoController extends CircuitoController {
         return $view;
     }
 
+    function retornaProgressoUsuarioLogadoCabecalhoAtendimento() {
+        $sessao = new Container(Constantes::$NOME_APLICACAO);
+        $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
+        $idEntidadeAtual = $sessao->idEntidadeAtual;
+        $entidade = $repositorioORM->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+        $grupo = $entidade->getGrupo();
+        $gruposAbaixo = $grupo->getGrupoPaiFilhoFilhos();
+        $totalGruposFilhos = 0;
+        $totalGruposAtendidos = 0;
+        foreach ($gruposAbaixo as $gpFilho) {
+            $totalGruposAtendido = 0;
+            $grupoFilho = $gpFilho->getGrupoPaiFilhoFilho();
+            $entidadeFilho = $grupoFilho->getEntidadeAtiva();
+            $grupoResponsavel = $grupoFilho->getResponsabilidadesAtivas();
+            if ($grupoResponsavel) {
+                $atendimentosDoGrupo = $grupoFilho->getGrupoAtendimento();
+                foreach ($atendimentosDoGrupo as $ga) {
+                    if ($ga->verificarSeEstaAtivo()) {
+                        $partes = explode("/", $ga->getDia());
+                        if ($partes[1] == $sessao->mesAtendimento) {
+                            $totalGruposAtendido++;
+                        }
+                    }
+                }
+                if ($totalGruposAtendido >= 1) {
+                    $totalGruposAtendidos++;
+                }
+
+                $totalGruposFilhos++;
+            }
+        }
+
+        $progresso = ($totalGruposAtendidos / $totalGruposFilhos) * 100;
+        
+        return $progresso."_".$totalGruposAtendidos;
+    }
+
     /**
      * Muda atendimento
      * @return Json
@@ -701,10 +739,14 @@ class LancamentoController extends CircuitoController {
                 $atendimentosFiltrados = 0;
                 $validatedData = $post_data;
                 $timeNow = new DateTime();
+                $grupoAtendimento = new GrupoAtendimento();
 
                 if ($validatedData['tipo'] == 1) {
                     $grupoAtendimento->setGrupo_id($validatedData['idGrupo']);
                     $grupoAtendimento->setQuem($sessao->idPessoa);
+                    if($mes != $timeNow->format('m')){
+                        $timeNow->sub(new \DateInterval("P31D"));
+                    }
                     $grupoAtendimento->setDia($timeNow->format('Y-m-d'));
                     $grupoAtendimento->setDataEHoraDeCriacao();
                     /* Helper Controller */
@@ -712,8 +754,9 @@ class LancamentoController extends CircuitoController {
                     $grupoLancado = $repositorioORM->getGrupoORM()->encontrarPorId($grupoAtendimento->getGrupo_id());
                     $grupoAtendimento->setGrupo($grupoLancado);
                     $repositorioORM->getGrupoAtendimentoORM()->persistir($grupoAtendimento);
-                    $grupo = $repositorioORM->getGrupoORM()->encontrarPorId($atendimento->getGrupo_id());
+                    $grupo = $repositorioORM->getGrupoORM()->encontrarPorId($grupoAtendimento->getGrupo_id());
                     $atendimentos = $grupo->getGrupoAtendimento();
+                    $atendimentosFiltrados = array();
                     foreach ($atendimentos as $a) {
                         if ($a->verificarSeEstaAtivo()) {
                             $partes = explode("/", $a->getDia());
@@ -728,12 +771,16 @@ class LancamentoController extends CircuitoController {
                     $atendimentosOld = $grupo->getGrupoAtendimento();
                     $contador = 0;
                     foreach ($atendimentosOld as $a) {
+                        
                         if ($a->verificarSeEstaAtivo()) {
-                            if($contador == 0){
-                                $ateParaDesativar = $a;
+                            $partes = explode("/", $a->getDia());
+                            if ($partes[1] == $mes) {
+                                if ($contador == 0) {
+                                    $ateParaDesativar = $a;
+                                    $contador++;
+                                }
                             }
                         }
-                        $contador++;
                     }
                     $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
                     $atendimentoNaSessao = $repositorioORM->getGrupoAtendimentoORM()->encontrarPorId($ateParaDesativar->getId());
@@ -747,6 +794,7 @@ class LancamentoController extends CircuitoController {
                     $repositorioORM->getGrupoAtendimentoORM()->persistir($atendimentoParaInativar);
                     $grupoNew = $repositorioORM->getGrupoORM()->encontrarPorId($validatedData['idGrupo']);
                     $atendimentos = $grupoNew->getGrupoAtendimento();
+                    $atendimentosFiltrados = array();
                     foreach ($atendimentos as $a) {
                         if ($a->verificarSeEstaAtivo()) {
                             $partes = explode("/", $a->getDia());
@@ -756,11 +804,22 @@ class LancamentoController extends CircuitoController {
                         }
                     }
                     $numeroAtendimentos = count($atendimentosFiltrados);
-                    
+                }
+                $explodeProgresso = explode('_', $this->retornaProgressoUsuarioLogadoCabecalhoAtendimento());
+                $progresso = number_format($explodeProgresso[0], 2, '.', '');
+                if ($progresso > 50 && $progresso < 80) {
+                    $colorBarTotal = "progress-bar-warning";
+                } else if ($progresso >= 80) {
+                    $colorBarTotal = "progress-bar-success";
+                } else {
+                    $colorBarTotal = "progress-bar-danger";
                 }
                 $response->setContent(Json::encode(
                                 array('response' => 'true',
-                                    'numeroAtendimentos' => $numeroAtendimentos)));
+                                    'numeroAtendimentos' => $numeroAtendimentos,
+                                    'progresso' => $progresso,
+                                    'corBarraTotal' => $colorBarTotal,
+                                    'totalGruposAtendidos' => $explodeProgresso[1],)));
             } catch (Exception $exc) {
                 echo $exc->getTraceAsString();
             }

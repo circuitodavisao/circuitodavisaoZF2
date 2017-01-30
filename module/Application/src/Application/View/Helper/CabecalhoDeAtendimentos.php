@@ -59,7 +59,7 @@ class CabecalhoDeAtendimentos extends AbstractHelper {
         
         $html .= '<div class="row center-block text-center">';
         $html .=    '<div class="section-divider mt30">';
-        $html .=        '<span>'.$totalGruposAtendidos.' de '.$totalGruposFilhos.' discipulos foram atendidos.</span>';
+        $html .=        '<span><span id="totalGruposAtendidos">'.$totalGruposAtendidos.'</span> de <span id="totalGruposFilhos">'.$totalGruposFilhos.'</span> discipulos foram atendidos.</span>';
         $html .=    '</div>';
         $html .= '</div>';
         $html .= '<div class="row">';
