@@ -75,6 +75,7 @@ use Application\Controller\Helper\Constantes;
 
         echo $this
                 ->headScript()
+                ->prependFile($this->basePath() . '/js/circuito_da_visao/analyticstracking.js' . $versao)
                 ->prependFile($this->basePath() . '/js/circuito_da_visao/modal-loader.js' . $versao)
                 ->prependFile($this->basePath() . '/js/circuito_da_visao/modal-selecionar-perfil.js' . $versao)
                 ->prependFile($this->basePath() . '/js/circuito_da_visao/funcao-cadastro.js' . $versao)
