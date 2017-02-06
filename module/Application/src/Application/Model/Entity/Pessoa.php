@@ -7,17 +7,11 @@ namespace Application\Model\Entity;
  * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com>
  * Descricao: Entidade anotada da tabela pessoa
  */
+use Application\Controller\Helper\Funcoes;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Entidade\Entity\Entidade;
-use Entidade\Entity\EventoFrequencia;
-use Entidade\Entity\GrupoPessoa;
-use Entidade\Entity\GrupoResponsavel;
-use Entidade\Entity\PessoaHierarquia;
-use Entidade\Entity\TurmaAluno;
-use Application\Controller\Helper\Funcoes;
-use SebastianBergmann\RecursionContext\Exception;
+use Exception;
 use Zend\InputFilter\InputFilter;
 use Zend\InputFilter\InputFilterAwareInterface;
 use Zend\InputFilter\InputFilterInterface;
@@ -269,6 +263,21 @@ class Pessoa extends CircuitoEntity implements InputFilterAwareInterface {
         return $grupoResponsavel;
     }
 
+    /**
+     * Verificar se te alguma responsabilidade ativa
+     * @return boolean
+     */
+    public function verificarSeTemAlgumaResponsabilidadeAtiva() {
+        $resposta = false;
+        foreach ($this->getGrupoResponsavel() as $gr) {
+            if ($gr->verificarSeEstaAtivo()) {
+                $resposta = true;
+                break;
+            }
+        }
+        return $resposta;
+    }
+
     function getNome() {
         return $this->nome;
     }
@@ -294,15 +303,19 @@ class Pessoa extends CircuitoEntity implements InputFilterAwareInterface {
     }
 
     function setNome($nome) {
-        $this->nome = $nome;
+        $this->nome = trim($nome);
     }
 
     function setEmail($email) {
-        $this->email = strtolower($email);
+        $this->email = trim(strtolower($email));
     }
 
-    function setSenha($senha) {
-        $this->senha = md5($senha);
+    function setSenha($senha, $adicionarMD5 = true) {
+        $senhaAjustada = $senha;
+        if ($adicionarMD5) {
+            $senhaAjustada = md5($senha);
+        }
+        $this->senha = $senhaAjustada;
     }
 
     function setData_nascimento($data_nascimento) {
@@ -560,6 +573,21 @@ class Pessoa extends CircuitoEntity implements InputFilterAwareInterface {
         }
 
         return $turmaAlunoAtiva;
+    }
+
+    /**
+     * Retorna a pessoa hierarquia ativo
+     * @return PessoaHierarquia
+     */
+    function getPessoaHierarquiaAtivo() {
+        $pessoaHierarquiaAtiva = null;
+        foreach ($this->getPessoaHierarquia() as $ph) {
+            if ($ph->verificarSeEstaAtivo()) {
+                $pessoaHierarquiaAtiva = $ph;
+                break;
+            }
+        }
+        return $pessoaHierarquiaAtiva;
     }
 
     /**

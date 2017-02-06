@@ -10,7 +10,6 @@ use Doctrine\ORM\Mapping as ORM;
  * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com>
  * Descricao: Entidade anotada base
  */
-
 class CircuitoEntity {
 
     /**

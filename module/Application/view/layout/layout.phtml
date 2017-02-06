@@ -1,14 +1,14 @@
 <?php echo $this->doctype(); ?>
 
 <?php
-$versao = '?v=1.1.2';
+$versao = '?v=1.1.6';
 
 use Application\Controller\Helper\Constantes;
 ?>
 
 <html lang="pt-BR">
     <head>
-        <meta charset="utf-8">
+        <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
         <!-- Title Head -->
         <?php
         $NAME_APPLICATION = $this->translate(Constantes::$TRADUCAO_NOME_APLICACAO);
@@ -38,6 +38,7 @@ use Application\Controller\Helper\Constantes;
                 ->headLink(array('rel' => 'apple-touch-icon', 'sizes' => '120x120', 'href' => $this->basePath() . '/img/icons/touch-icon-iphone-retina.png'))
                 ->headLink(array('rel' => 'apple-touch-icon', 'sizes' => '152x152', 'href' => $this->basePath() . '/img/icons/touch-icon-ipad-retina.png'))
                 ->headLink(array('rel' => 'apple-touch-icon', 'sizes' => '256x256', 'href' => $this->basePath() . '/img/icons/touch-icon-iphone.png'))
+                ->prependStylesheet($this->basePath() . '/css/estilos-circuito/splash.css' . $versao)
                 ->prependStylesheet($this->basePath() . '/vendor/plugins/ladda/ladda.min.css')
                 ->prependStylesheet($this->basePath() . '/vendor/plugins/magnific/magnific-popup.css')
                 ->prependStylesheet($this->basePath() . '/vendor/plugins/footable/css/footable.core.min.css')
@@ -75,7 +76,6 @@ use Application\Controller\Helper\Constantes;
 
         echo $this
                 ->headScript()
-                ->prependFile($this->basePath() . '/js/circuito_da_visao/analyticstracking.js' . $versao)
                 ->prependFile($this->basePath() . '/js/circuito_da_visao/modal-loader.js' . $versao)
                 ->prependFile($this->basePath() . '/js/circuito_da_visao/modal-selecionar-perfil.js' . $versao)
                 ->prependFile($this->basePath() . '/js/circuito_da_visao/funcao-cadastro.js' . $versao)
@@ -85,8 +85,6 @@ use Application\Controller\Helper\Constantes;
                 ->prependFile('https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js', 'text/javascript', array('conditional' => 'lt IE 9',))
                 ->prependFile($this->basePath() . '/vendor/plugins/ladda/ladda.min.js')
                 ->prependFile($this->basePath() . '/vendor/plugins/magnific/jquery.magnific-popup.js')
-                ->prependFile($this->basePath() . '/vendor/plugins/footable/js/footable.all.min.js')
-                ->prependFile($this->basePath() . '/vendor/plugins/jquerymask/jquery.maskedinput.min.js')
                 ->prependFile($this->basePath() . '/vendor/jquery/jquery_ui/jquery-ui.min.js')
                 ->prependFile($this->basePath() . '/vendor/jquery/jquery-1.11.1.min.js')
         ;
@@ -112,29 +110,13 @@ use Application\Controller\Helper\Constantes;
                 Ladda.bind('.ladda-button', {
                     timeout: 500
                 });
-
-                // Init FooTable
-                $('.footable').footable();
-
+             
             });
 
-            window.onload = maxWindow;
-
-            function maxWindow() {
-                window.moveTo(0, 0);
-
-
-                if (document.all) {
-                    top.window.resizeTo(screen.availWidth, screen.availHeight);
-                }
-
-                else if (document.layers || document.getElementById) {
-                    if (top.window.outerHeight < screen.availHeight || top.window.outerWidth < screen.availWidth) {
-                        top.window.outerHeight = screen.availHeight;
-                        top.window.outerWidth = screen.availWidth;
-                    }
-                }
-            }
+            $(window).bind("load", function () {
+                // Remove splash screen after load
+                $('.splash').css('display', 'none')
+            });
         </script>
         <!-- END: PAGE SCRIPTS -->
     </body>

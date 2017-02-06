@@ -3,7 +3,6 @@
 namespace Application\Model\ORM;
 
 use Application\Model\Entity\CircuitoEntity;
-use Application\Model\Entity\EventoCelula;
 use Doctrine\ORM\EntityManager;
 use Exception;
 
@@ -54,7 +53,7 @@ class CircuitoORM {
     public function persistir($entidade, $setarDataEHora = true) {
         try {
             if ($setarDataEHora) {
-                $entidade->setDataEHoraDeCriacao();
+                $entidade->setDataEHoraDeCriacao(); 
             }
             $this->getEntityManager()->persist($entidade);
             $this->getEntityManager()->flush($entidade);
