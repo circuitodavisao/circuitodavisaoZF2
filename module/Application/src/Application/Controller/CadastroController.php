@@ -996,7 +996,7 @@ class CadastroController extends CircuitoController {
         foreach ($gruposAbaixo as $gpFilho) {
             $grupoFilho = $gpFilho->getGrupoPaiFilhoFilho();
             $entidadeFilho = $grupoFilho->getEntidadeAtiva();
-            if ($entidadeFilho->getTipo_id() == 6) {
+            if ($entidadeFilho->getTipo_id() == 5) {
                 $gruposIgrejas[] = $entidadeFilho;
             }
         }

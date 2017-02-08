@@ -67,10 +67,10 @@ class LancamentoController extends CircuitoController {
                         Constantes::$ACTION => Constantes::$PAGINA_MUDAR_FREQUENCIA,
             ));
         }
-        if ($pagina == 'MudarAtendimento') {
+        if ($pagina == Constantes::$PAGINA_MUDAR_ATENDIMENTO) {
 
             return $this->forward()->dispatch(Constantes::$CONTROLLER_LANCAMENTO, array(
-                        Constantes::$ACTION => 'MudarAtendimento',
+                        Constantes::$ACTION => Constantes::$PAGINA_MUDAR_ATENDIMENTO,
             ));
         }
         if ($pagina == Constantes::$PAGINA_ENVIAR_RELATORIO) {
@@ -816,10 +816,10 @@ class LancamentoController extends CircuitoController {
                 }
                 $response->setContent(Json::encode(
                                 array('response' => 'true',
-                                    'numeroAtendimentos' => $numeroAtendimentos,
-                                    'progresso' => $progresso,
-                                    'corBarraTotal' => $colorBarTotal,
-                                    'totalGruposAtendidos' => $explodeProgresso[1],)));
+                                    Constantes::$NUMERO_ATENDIMENTOS => $numeroAtendimentos,
+                                    Constantes::$PROGRESSO_ATENDIMENTOS  => $progresso,
+                                    Constantes::$COR_BARRA_ATENDIMENTOS => $colorBarTotal,
+                                    Constantes::$TOTAL_DE_ATENDIMENTOS_GRUPO => $explodeProgresso[1],)));
             } catch (Exception $exc) {
                 echo $exc->getTraceAsString();
             }

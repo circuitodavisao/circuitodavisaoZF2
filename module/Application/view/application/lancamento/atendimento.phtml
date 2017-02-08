@@ -1,4 +1,11 @@
 
+
+
+<?php
+
+use Application\Controller\Helper\Constantes;
+
+?>
 <!-- Nome: atendimento.phtml
      @author Lucas Filipe de Carvalho Cunha <lucascarvalho.esw@gmail.com>
      Descricao: Página para mostrar eficiência em atendimentos e a quantidade que cada disicpulo foi atendido.
@@ -9,7 +16,7 @@
 
     <blockquote class = "blockquote-primary">
         <small>
-            Relat&oacute;rio de <span class="text-primary">Atendimento</span>
+          <?php  echo $this->translate(Constantes::$TRADUCAO_CABECALHO_TITULO_ATENDIMENTOS); ?>
         </small>
     </blockquote>
     <div id="atendimento" class="panel">
