@@ -164,6 +164,59 @@ class LoginController extends CircuitoController {
     }
 
     /**
+     * Função que tenta logar
+     * POST /logarJason
+     */
+    public function logarJasonAction() {
+        $data = $this->getRequest()->getPost();
+        $response = $this->getResponse();
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            /* Post sem email */
+            if (is_null($data[Constantes::$INPUT_USUARIO])) {
+                /* Redirecionamento */
+                return $this->redirect()->toRoute(Constantes::$ROUTE_LOGIN);
+            }
+
+            $adapter = $this->getDoctrineAuthenticationServicer()->getAdapter();
+            $adapter->setIdentityValue($data[Constantes::$INPUT_USUARIO]);
+            $adapter->setCredentialValue(md5($data[Constantes::$INPUT_SENHA]));
+            $authenticationResult = $this->getDoctrineAuthenticationServicer()->authenticate();
+            if ($authenticationResult->isValid()) {
+                /* Autenticacao valida */
+
+                /* Helper Controller */
+                $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
+
+                /* Verificar se existe pessoa por email informado */
+                $pessoa = $repositorioORM->getPessoaORM()->encontrarPorEmail($data[Constantes::$INPUT_USUARIO]);
+
+                /* Tem responsabilidade(s) */
+                if (count($pessoa->getResponsabilidadesAtivas()) > 0) {
+                    /* Registro de sessão */
+                    $sessao = new Container(Constantes::$NOME_APLICACAO);
+                    $sessao->idPessoa = $pessoa->getId();
+                    /* Não precisa atualizar dados */
+                    if ($pessoa->getAtualizar_dados() === 'N') {
+                        $response->setContent(Json::encode(
+                                        array('response' => 'true')));
+                    } else {/* Precisa atualizar dados */
+                        $response->setContent(Json::encode(
+                                        array('response' => 'true')));
+                    }
+                } else {
+                    $response->setContent(Json::encode(
+                                    array('response' => 'false')));
+                }
+            } else {
+                $response->setContent(Json::encode(
+                                array('response' => 'false')));
+            }
+        }
+        return $response;
+    }
+
+    /**
      * Função que direciona a tela de email enviado
      * GET /emailEnviado
      */

@@ -52,43 +52,40 @@ class IndexController extends CircuitoController {
             $this->abreConexao();
             $this->getRepositorio()->iniciarTransacao();
 
-//            $queryCoordenacoes = mysqli_query($this->getConexao(), 'SELECT * FROM ursula_sub_regiao_ursula WHERE idRegiao = 1');
-//            while ($rowCoordenacoes = mysqli_fetch_array($queryCoordenacoes)) {
-                $queryIgrejas = mysqli_query($this->getConexao(), 'SELECT * FROM ursula_igreja_ursula WHERE idCoordenacao = 10');
-                while ($row = mysqli_fetch_array($queryIgrejas)) {
-                    $idPerfilIgreja = 18;
-                    $grupoIgreja = $this->cadastrarEntidade($row[$stringIdResponsavel1], $idPerfilIgreja, $row[$stringNome], null, $row[$stringIdResponsavel2]);
+            $queryIgrejas = mysqli_query($this->getConexao(), 'SELECT * FROM ursula_igreja_ursula WHERE idCoordenacao = 8');
+            while ($row = mysqli_fetch_array($queryIgrejas)) {
+                $idPerfilIgreja = 18;
+                $grupoIgreja = $this->cadastrarEntidade($row[$stringIdResponsavel1], $idPerfilIgreja, $row[$stringNome], null, $row[$stringIdResponsavel2]);
 
-                    $urlEquipe = 'SELECT * FROM ursula_equipe_ursula WHERE ativa = "S" AND idIgreja = ' . $row['id'];
-                    $queryEquipes = mysqli_query($this->getConexao(), $urlEquipe);
-                    while ($rowEquipe = mysqli_fetch_array($queryEquipes)) {
-                        $idPerfilEquipe = 15;
-                        $grupoEquipe = $this->cadastrarEntidade($rowEquipe[$stringIdResponsavel1], $idPerfilEquipe, $rowEquipe[$stringNome], $grupoIgreja, $rowEquipe[$stringIdResponsavel2]);
+                $urlEquipe = 'SELECT * FROM ursula_equipe_ursula WHERE ativa = "S" AND idIgreja = ' . $row['id'];
+                $queryEquipes = mysqli_query($this->getConexao(), $urlEquipe);
+                while ($rowEquipe = mysqli_fetch_array($queryEquipes)) {
+                    $idPerfilEquipe = 15;
+                    $grupoEquipe = $this->cadastrarEntidade($rowEquipe[$stringIdResponsavel1], $idPerfilEquipe, $rowEquipe[$stringNome], $grupoIgreja, $rowEquipe[$stringIdResponsavel2]);
 
-                        $urlSub = 'SELECT * FROM ursula_subequipe_ursula WHERE ativa = "S" AND idSubEquipePai = 0 and idEquipe = ' . $rowEquipe['id'];
-                        $querySubEquipes = mysqli_query($this->getConexao(), $urlSub);
-                        while ($rowSubs = mysqli_fetch_array($querySubEquipes)) {
-                            $idPerfilSub = 17;
-                            $grupoSub = $this->cadastrarEntidade($rowSubs[$stringIdResponsavel1], $idPerfilSub, $rowSubs[$stringNumero], $grupoEquipe, $rowSubs[$stringIdResponsavel2]);
+                    $urlSub = 'SELECT * FROM ursula_subequipe_ursula WHERE ativa = "S" AND idSubEquipePai = 0 and idEquipe = ' . $rowEquipe['id'];
+                    $querySubEquipes = mysqli_query($this->getConexao(), $urlSub);
+                    while ($rowSubs = mysqli_fetch_array($querySubEquipes)) {
+                        $idPerfilSub = 17;
+                        $grupoSub = $this->cadastrarEntidade($rowSubs[$stringIdResponsavel1], $idPerfilSub, $rowSubs[$stringNumero], $grupoEquipe, $rowSubs[$stringIdResponsavel2]);
 
-                            $querySubEquipes144 = mysqli_query($this->getConexao(), 'SELECT * FROM ursula_subequipe_ursula WHERE ativa = "S" AND idSubEquipePai = ' . $rowSubs['id']);
-                            while ($rowSubs144 = mysqli_fetch_array($querySubEquipes144)) {
-                                $grupoSub144 = $this->cadastrarEntidade($rowSubs144[$stringIdResponsavel1], $idPerfilSub, $rowSubs144[$stringNumero], $grupoSub, $rowSubs144[$stringIdResponsavel2]);
+                        $querySubEquipes144 = mysqli_query($this->getConexao(), 'SELECT * FROM ursula_subequipe_ursula WHERE ativa = "S" AND idSubEquipePai = ' . $rowSubs['id']);
+                        while ($rowSubs144 = mysqli_fetch_array($querySubEquipes144)) {
+                            $grupoSub144 = $this->cadastrarEntidade($rowSubs144[$stringIdResponsavel1], $idPerfilSub, $rowSubs144[$stringNumero], $grupoSub, $rowSubs144[$stringIdResponsavel2]);
 
-                                $querySubEquipes1728 = mysqli_query($this->getConexao(), 'SELECT * FROM ursula_subequipe_ursula WHERE ativa = "S" AND idSubEquipePai = ' . $rowSubs144['id']);
-                                while ($rowSubs1728 = mysqli_fetch_array($querySubEquipes1728)) {
-                                    $grupoSub1728 = $this->cadastrarEntidade($rowSubs1728[$stringIdResponsavel1], $idPerfilSub, $rowSubs1728[$stringNumero], $grupoSub144, $rowSubs1728[$stringIdResponsavel2]);
+                            $querySubEquipes1728 = mysqli_query($this->getConexao(), 'SELECT * FROM ursula_subequipe_ursula WHERE ativa = "S" AND idSubEquipePai = ' . $rowSubs144['id']);
+                            while ($rowSubs1728 = mysqli_fetch_array($querySubEquipes1728)) {
+                                $grupoSub1728 = $this->cadastrarEntidade($rowSubs1728[$stringIdResponsavel1], $idPerfilSub, $rowSubs1728[$stringNumero], $grupoSub144, $rowSubs1728[$stringIdResponsavel2]);
 
-                                    $querySubEquipes20736 = mysqli_query($this->getConexao(), 'SELECT * FROM ursula_subequipe_ursula WHERE ativa = "S" AND idSubEquipePai = ' . $rowSubs1728['id']);
-                                    while ($rowSubs20736 = mysqli_fetch_array($querySubEquipes20736)) {
-                                        $grupoSub20736 = $this->cadastrarEntidade($rowSubs20736[$stringIdResponsavel1], $idPerfilSub, $rowSubs20736[$stringNumero], $grupoSub1728, $rowSubs20736[$stringIdResponsavel2]);
-                                    }
+                                $querySubEquipes20736 = mysqli_query($this->getConexao(), 'SELECT * FROM ursula_subequipe_ursula WHERE ativa = "S" AND idSubEquipePai = ' . $rowSubs1728['id']);
+                                while ($rowSubs20736 = mysqli_fetch_array($querySubEquipes20736)) {
+                                    $grupoSub20736 = $this->cadastrarEntidade($rowSubs20736[$stringIdResponsavel1], $idPerfilSub, $rowSubs20736[$stringNumero], $grupoSub1728, $rowSubs20736[$stringIdResponsavel2]);
                                 }
                             }
                         }
                     }
                 }
-//            }
+            }
 
             $this->getRepositorio()->fecharTransacao();
         } catch (Exception $exc) {
@@ -120,7 +117,7 @@ class IndexController extends CircuitoController {
         while ($row = mysqli_fetch_array($queryPessoa)) {
             $pessoa = new Pessoa();
             $pessoa->setNome($row['nome']);
-            $pessoa->setDocumento($row['documento']);
+//            $pessoa->setDocumento($row['documento']);
             $queryUsuario = mysqli_query($this->getConexao(), 'SELECT usuario, senha FROM ursula_usuario_ursula WHERE status = "A" AND idPerfil = ' . $idPerfil . ' AND idPessoa = ' . $idInt);
             while ($row = mysqli_fetch_array($queryUsuario)) {
                 $pessoa->setEmail($row['usuario']);
