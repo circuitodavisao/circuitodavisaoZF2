@@ -3,6 +3,9 @@
 namespace Application\Form;
 
 use Application\Controller\Helper\Constantes;
+use Application\Controller\Helper\Funcoes;
+use Application\Model\Entity\Evento;
+use Application\Model\ORM\RepositorioORM;
 use Zend\Form\Element\Date;
 use Zend\Form\Element\Hidden;
 use Zend\Form\Element\MultiCheckbox;
@@ -21,7 +24,7 @@ class RevisaoForm extends Form {
      * Contrutor
      * @param String $name
      */
-    public function __construct($name = null, $igrejas = null) {
+    public function __construct($name = null, $gruposIgrejas = null, Evento $revisao = null) {
         parent::__construct($name);
         /**
          * Configuração do formulário
@@ -66,10 +69,38 @@ class RevisaoForm extends Form {
                             Constantes::$FORM_PLACEHOLDER => Constantes::$TRADUCAO_NOME,
                         ])
         );
-        
-        foreach($igrejas as $i){
-            $arrayIgrejas[$i->getNome().'#'.$i->getId()] = $i->getNome();
+
+
+        if (!is_null($revisao)) {
+            if (!is_null($revisao->getId())) {
+
+                $this->get(Constantes::$FORM_ID)->setValue($revisao->getId());
+                $this->get(Constantes::$FORM_INPUT_DATA_REVISAO)->setValue(Funcoes::mudarPadraoData($revisao->getData_criacao(), 1));
+                $this->get(Constantes::$FORM_NOME)->setValue($revisao->getNome());
+                foreach ($gruposIgrejas as $gi) {
+                    $i = $gi->getEntidadeAtiva();
+                    if ($gi->verificaSeParticipaDoEvento($this->get(Constantes::$FORM_ID)->getValue())) {
+                        $selected = true;
+                    }
+
+                    $arrayIgrejas [] = array(
+                        'value' => $i->getNome() . '#' . $i->getId(),
+                        'label' => $i->getNome(),
+                        'selected' => $selected,
+                    );
+                }
+            }
+        } else {
+            foreach ($gruposIgrejas as $gi) {
+                $i = $gi->getEntidadeAtiva();
+                $arrayIgrejas [] = array(
+                    'value' => $i->getNome() . '#' . $i->getId(),
+                    'label' => $i->getNome(),
+                    'selected' => false,
+                );
+            }
         }
+
         $multiCheckbox = new MultiCheckbox('igrejas');
         $multiCheckbox->setValueOptions($arrayIgrejas);
         $multiCheckbox->setAttribute('id', 'igrejas');

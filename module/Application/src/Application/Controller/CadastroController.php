@@ -157,8 +157,8 @@ class CadastroController extends CircuitoController {
             $tipoEvento = 3;
             $extra = $grupo->getId();
         }
-        
- 
+
+
         $view = new ViewModel(array(
             Constantes::$LISTAGEM_EVENTOS => $listagemDeEventos,
             Constantes::$TITULO_DA_PAGINA => $tituloDaPagina,
@@ -409,136 +409,131 @@ class CadastroController extends CircuitoController {
 
                 /* Entidades */
                 $eventoCelula = new EventoCelula();
-                $celulaForm = new CelulaForm(Constantes::$FORM_CELULA, $eventoCelula);
-                $celulaForm->setInputFilter($eventoCelula->getInputFilter());
-                $celulaForm->setData($post_data);
+           
 
                 /* validação */
-                if ($celulaForm->isValid()) {
-                    $sessao = new Container(Constantes::$NOME_APLICACAO);
-                    $criarNovaCelula = true;
-                    $mudarDataDeCadstroParaProximoDomingo = false;
-                    $validatedData = $celulaForm->getData();
+                $sessao = new Container(Constantes::$NOME_APLICACAO);
+                $criarNovaCelula = true;
+                $mudarDataDeCadstroParaProximoDomingo = false;
+               
+                /* Entidades */
+                $evento = new Evento();
+                $grupoEvento = new GrupoEvento();
 
-                    /* Entidades */
-                    $evento = new Evento();
-                    $grupoEvento = new GrupoEvento();
+                /* Repositorios */
+                $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
 
-                    /* Repositorios */
-                    $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
+                /* ALTERANDO */
+                if (!empty($post_data[Constantes::$FORM_ID])) {
+                    $criarNovaCelula = false;
+                    $eventoCelulaAtual = $repositorioORM->getEventoCelulaORM()->encontrarPorId($post_data[Constantes::$FORM_ID]);
 
-                    /* ALTERANDO */
-                    if (!empty($post_data[Constantes::$FORM_ID])) {
-                        $criarNovaCelula = false;
-                        $eventoCelulaAtual = $repositorioORM->getEventoCelulaORM()->encontrarPorId($post_data[Constantes::$FORM_ID]);
-
-                        /* Dia foi alterado */
-                        if ($post_data[Constantes::$FORM_DIA_DA_SEMANA] != $eventoCelulaAtual->getEvento()->getDia()) {
-                            /* Persistindo */
-                            /* Inativando o Evento */
-                            $eventoParaInativar = $eventoCelulaAtual->getEvento();
-                            $eventoParaInativar->setData_inativacao(Funcoes::dataAtual());
-                            $eventoParaInativar->setHora_inativacao(Funcoes::horaAtual());
-                            $repositorioORM->getEventoORM()->persistir($eventoParaInativar);
-                            /* Inativando o Grupo Evento */
-                            $grupoEventoAtivos = $eventoParaInativar->getGrupoEventoAtivos();
-                            $grupoEventoAtivos[0]->setData_inativacao(Funcoes::dataAtual());
-                            $grupoEventoAtivos[0]->setHora_inativacao(Funcoes::horaAtual());
-                            $repositorioORM->getGrupoEventoORM()->persistir($grupoEventoAtivos[0]);
-                            $criarNovaCelula = true;
-                            $mudarDataDeCadstroParaProximoDomingo = true;
-                        } else {
-                            /* Dia não foi alterado */
-
-                            /* Dados exclusivo da célula */
-                            if ($validatedData[Constantes::$FORM_NOME_HOSPEDEIRO] != $eventoCelulaAtual->getNome_hospedeiro()) {
-                                $eventoCelulaAtual->setNome_hospedeiro($validatedData[Constantes::$FORM_NOME_HOSPEDEIRO]);
-                            }
-                            if ($validatedData[Constantes::$FORM_DDD_HOSPEDEIRO] != $eventoCelulaAtual->getTelefone_hospedeiroDDDSemTelefone()) {
-                                $eventoCelulaAtual->setTelefone_hospedeiro($validatedData[Constantes::$FORM_DDD_HOSPEDEIRO] . $validatedData[Constantes::$FORM_TELEFONE_HOSPEDEIRO]);
-                            }
-                            if ($validatedData[Constantes::$FORM_TELEFONE_HOSPEDEIRO] != $eventoCelulaAtual->getTelefone_hospedeiroTelefoneSemDDD()) {
-                                $eventoCelulaAtual->setTelefone_hospedeiro($validatedData[Constantes::$FORM_DDD_HOSPEDEIRO] . $validatedData[Constantes::$FORM_TELEFONE_HOSPEDEIRO]);
-                            }
-                            if ($validatedData[Constantes::$FORM_CEP_LOGRADOURO] != $eventoCelulaAtual->getCep()) {
-                                $eventoCelulaAtual->setCep($validatedData[Constantes::$FORM_CEP_LOGRADOURO]);
-                            }
-                            if ($post_data[(Constantes::$FORM_HIDDEN . Constantes::$FORM_UF)] != $eventoCelulaAtual->getUf()) {
-                                $eventoCelulaAtual->setUf($post_data[(Constantes::$FORM_HIDDEN . Constantes::$FORM_UF)]);
-                            }
-                            if ($post_data[(Constantes::$FORM_HIDDEN . Constantes::$FORM_CIDADE)] != $eventoCelulaAtual->getCidade()) {
-                                $eventoCelulaAtual->setCidade($post_data[(Constantes::$FORM_HIDDEN . Constantes::$FORM_CIDADE)]);
-                            }
-                            if ($post_data[(Constantes::$FORM_HIDDEN . Constantes::$FORM_BAIRRO)] != $eventoCelulaAtual->getBairro()) {
-                                $eventoCelulaAtual->setBairro($post_data[(Constantes::$FORM_HIDDEN . Constantes::$FORM_BAIRRO)]);
-                            }
-                            if ($post_data[(Constantes::$FORM_HIDDEN . Constantes::$FORM_LOGRADOURO)] != $eventoCelulaAtual->getLogradouro()) {
-                                $eventoCelulaAtual->setLogradouro($post_data[(Constantes::$FORM_HIDDEN . Constantes::$FORM_LOGRADOURO)]);
-                            }
-                            if ($post_data[(Constantes::$FORM_COMPLEMENTO)] != $eventoCelulaAtual->getComplemento()) {
-                                $eventoCelulaAtual->setComplemento(strtoupper($post_data[(Constantes::$FORM_COMPLEMENTO)]));
-                            }
-                            $repositorioORM->getEventoCelulaORM()->persistir($eventoCelulaAtual, false);
-                            /* Dados do Evento - Hora */
-                            $eventoAtual = $eventoCelulaAtual->getEvento();
-                            if ($validatedData[Constantes::$FORM_HORA] != $eventoAtual->getHoraSemMinutosESegundos()) {
-                                $eventoAtual->setHora($validatedData[Constantes::$FORM_HORA] . ':' . $validatedData[Constantes::$FORM_MINUTOS]);
-                            }
-                            if ($validatedData[Constantes::$FORM_MINUTOS] != $eventoAtual->getMinutosSemHorasESegundos()) {
-                                $eventoAtual->setHora($validatedData[Constantes::$FORM_HORA] . ':' . $validatedData[Constantes::$FORM_MINUTOS]);
-                            }
-                            $repositorioORM->getEventoORM()->persistir($eventoAtual);
-                            /* Sessão */
-                            $sessao->tipoMensagem = Constantes::$TIPO_MENSAGEM_ALTERAR_CELULA;
-                            $sessao->textoMensagem = $eventoCelulaAtual->getNome_hospedeiro();
-                        }
-                    }
-                    if ($criarNovaCelula) {
-                        /* Entidade selecionada */
-                        $idEntidadeAtual = $sessao->idEntidadeAtual;
-                        $entidade = $repositorioORM->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
-
-                        $eventoCelula->exchangeArray($celulaForm->getData());
-                        $eventoCelula->setTelefone_hospedeiro($validatedData[Constantes::$FORM_DDD_HOSPEDEIRO] . $validatedData[Constantes::$FORM_TELEFONE_HOSPEDEIRO]);
-                        $eventoCelula->setUf($post_data[(Constantes::$FORM_HIDDEN . Constantes::$FORM_UF)]);
-                        $eventoCelula->setCidade($post_data[(Constantes::$FORM_HIDDEN . Constantes::$FORM_CIDADE)]);
-                        $eventoCelula->setLogradouro($post_data[(Constantes::$FORM_HIDDEN . Constantes::$FORM_LOGRADOURO)]);
-                        $eventoCelula->setBairro($post_data[(Constantes::$FORM_HIDDEN . Constantes::$FORM_BAIRRO)]);
-                        $eventoCelula->setComplemento(strtoupper($post_data[Constantes::$FORM_COMPLEMENTO]));
-                        $eventoCelula->setCep($validatedData[Constantes::$FORM_CEP_LOGRADOURO]);
-                        $eventoCelula->setEvento($evento);
-
-                        $dataParaCadastro = Funcoes::dataAtual();
-                        if ($mudarDataDeCadstroParaProximoDomingo) {
-                            $dataParaCadastro = Funcoes::proximoDomingo();
-                        }
-                        $evento->setData_criacao($dataParaCadastro);
-                        $evento->setHora_criacao(Funcoes::horaAtual());
-                        $evento->setHora($validatedData[Constantes::$FORM_HORA] . ':' . $validatedData[Constantes::$FORM_MINUTOS]);
-                        $evento->setDia($validatedData[Constantes::$FORM_DIA_DA_SEMANA]);
-                        $evento->setEventoTipo($repositorioORM->getEventoTipoORM()->encontrarPorId(2));
-
-                        $grupoEvento->setData_criacao(Funcoes::dataAtual());
-                        $grupoEvento->setHora_criacao(Funcoes::horaAtual());
-                        $grupoEvento->setGrupo($entidade->getGrupo());
-                        $grupoEvento->setEvento($evento);
-
+                    /* Dia foi alterado */
+                    if ($post_data[Constantes::$FORM_DIA_DA_SEMANA] != $eventoCelulaAtual->getEvento()->getDia()) {
                         /* Persistindo */
-                        $repositorioORM->getEventoORM()->persistir($evento);
-                        $repositorioORM->getEventoCelulaORM()->persistir($eventoCelula,false);
-                        $repositorioORM->getGrupoEventoORM()->persistir($grupoEvento);
+                        /* Inativando o Evento */
+                        $eventoParaInativar = $eventoCelulaAtual->getEvento();
+                        $eventoParaInativar->setData_inativacao(Funcoes::dataAtual());
+                        $eventoParaInativar->setHora_inativacao(Funcoes::horaAtual());
+                        $repositorioORM->getEventoORM()->persistir($eventoParaInativar);
+                        /* Inativando o Grupo Evento */
+                        $grupoEventoAtivos = $eventoParaInativar->getGrupoEventoAtivos();
+                        $grupoEventoAtivos[0]->setData_inativacao(Funcoes::dataAtual());
+                        $grupoEventoAtivos[0]->setHora_inativacao(Funcoes::horaAtual());
+                        $repositorioORM->getGrupoEventoORM()->persistir($grupoEventoAtivos[0]);
+                        $criarNovaCelula = true;
+                        $mudarDataDeCadstroParaProximoDomingo = true;
+                    } else {
+                        /* Dia não foi alterado */
+
+                        /* Dados exclusivo da célula */
+                        if ($post_data[Constantes::$FORM_NOME_HOSPEDEIRO] != $eventoCelulaAtual->getNome_hospedeiro()) {
+                            $eventoCelulaAtual->setNome_hospedeiro($post_data[Constantes::$FORM_NOME_HOSPEDEIRO]);
+                        }
+                        if ($post_data[Constantes::$FORM_DDD_HOSPEDEIRO] != $eventoCelulaAtual->getTelefone_hospedeiroDDDSemTelefone()) {
+                            $eventoCelulaAtual->setTelefone_hospedeiro($post_data[Constantes::$FORM_DDD_HOSPEDEIRO] . $post_data[Constantes::$FORM_TELEFONE_HOSPEDEIRO]);
+                        }
+                        if ($post_data[Constantes::$FORM_TELEFONE_HOSPEDEIRO] != $eventoCelulaAtual->getTelefone_hospedeiroTelefoneSemDDD()) {
+                            $eventoCelulaAtual->setTelefone_hospedeiro($post_data[Constantes::$FORM_DDD_HOSPEDEIRO] . $post_data[Constantes::$FORM_TELEFONE_HOSPEDEIRO]);
+                        }
+                        if ($post_data[Constantes::$FORM_CEP_LOGRADOURO] != $eventoCelulaAtual->getCep()) {
+                            $eventoCelulaAtual->setCep($post_data[Constantes::$FORM_CEP_LOGRADOURO]);
+                        }
+                        if ($post_data[(Constantes::$FORM_HIDDEN . Constantes::$FORM_UF)] != $eventoCelulaAtual->getUf()) {
+                            $eventoCelulaAtual->setUf($post_data[(Constantes::$FORM_HIDDEN . Constantes::$FORM_UF)]);
+                        }
+                        if ($post_data[(Constantes::$FORM_HIDDEN . Constantes::$FORM_CIDADE)] != $eventoCelulaAtual->getCidade()) {
+                            $eventoCelulaAtual->setCidade($post_data[(Constantes::$FORM_HIDDEN . Constantes::$FORM_CIDADE)]);
+                        }
+                        if ($post_data[(Constantes::$FORM_HIDDEN . Constantes::$FORM_BAIRRO)] != $eventoCelulaAtual->getBairro()) {
+                            $eventoCelulaAtual->setBairro($post_data[(Constantes::$FORM_HIDDEN . Constantes::$FORM_BAIRRO)]);
+                        }
+                        if ($post_data[(Constantes::$FORM_HIDDEN . Constantes::$FORM_LOGRADOURO)] != $eventoCelulaAtual->getLogradouro()) {
+                            $eventoCelulaAtual->setLogradouro($post_data[(Constantes::$FORM_HIDDEN . Constantes::$FORM_LOGRADOURO)]);
+                        }
+                        if ($post_data[(Constantes::$FORM_COMPLEMENTO)] != $eventoCelulaAtual->getComplemento()) {
+                            $eventoCelulaAtual->setComplemento(strtoupper($post_data[(Constantes::$FORM_COMPLEMENTO)]));
+                        }
+                        $repositorioORM->getEventoCelulaORM()->persistir($eventoCelulaAtual, false);
+                        /* Dados do Evento - Hora */
+                        $eventoAtual = $eventoCelulaAtual->getEvento();
+                        if ($post_data[Constantes::$FORM_HORA] != $eventoAtual->getHoraSemMinutosESegundos()) {
+                            $eventoAtual->setHora($post_data[Constantes::$FORM_HORA] . ':' . $post_data[Constantes::$FORM_MINUTOS]);
+                        }
+                        if ($post_data[Constantes::$FORM_MINUTOS] != $eventoAtual->getMinutosSemHorasESegundos()) {
+                            $eventoAtual->setHora($post_data[Constantes::$FORM_HORA] . ':' . $post_data[Constantes::$FORM_MINUTOS]);
+                        }
+                        $repositorioORM->getEventoORM()->persistir($eventoAtual);
                         /* Sessão */
-                        $sessao->tipoMensagem = Constantes::$TIPO_MENSAGEM_CADASTRAR_CELULA;
-                        $sessao->textoMensagem = $eventoCelula->getNome_hospedeiro();
-                        $sessao->idSessao = $eventoCelula->getId();
+                        $sessao->tipoMensagem = Constantes::$TIPO_MENSAGEM_ALTERAR_CELULA;
+                        $sessao->textoMensagem = $eventoCelulaAtual->getNome_hospedeiro();
                     }
-                } else {
-                    $this->direcionaErroDeCadastro($celulaForm->getMessages());
                 }
+                if ($criarNovaCelula) {
+                    /* Entidade selecionada */
+                    $idEntidadeAtual = $sessao->idEntidadeAtual;
+                    $entidade = $repositorioORM->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+
+                    $eventoCelula->exchangeArray($post_data);
+                    $eventoCelula->setTelefone_hospedeiro($post_data[Constantes::$FORM_DDD_HOSPEDEIRO] . $post_data[Constantes::$FORM_TELEFONE_HOSPEDEIRO]);
+                    $eventoCelula->setUf($post_data[(Constantes::$FORM_HIDDEN . Constantes::$FORM_UF)]);
+                    $eventoCelula->setCidade($post_data[(Constantes::$FORM_HIDDEN . Constantes::$FORM_CIDADE)]);
+                    $eventoCelula->setLogradouro($post_data[(Constantes::$FORM_HIDDEN . Constantes::$FORM_LOGRADOURO)]);
+                    $eventoCelula->setBairro($post_data[(Constantes::$FORM_HIDDEN . Constantes::$FORM_BAIRRO)]);
+                    $eventoCelula->setComplemento(strtoupper($post_data[Constantes::$FORM_COMPLEMENTO]));
+                    $eventoCelula->setCep($post_data[Constantes::$FORM_CEP]);
+                    $eventoCelula->setEvento($evento);
+
+                    $dataParaCadastro = Funcoes::dataAtual();
+                    if ($mudarDataDeCadstroParaProximoDomingo) {
+                        $dataParaCadastro = Funcoes::proximoDomingo();
+                    }
+                    $evento->setData_criacao($dataParaCadastro);
+                    $evento->setHora_criacao(Funcoes::horaAtual());
+                    $evento->setHora($post_data[Constantes::$FORM_HORA] . ':' . $post_data[Constantes::$FORM_MINUTOS]);
+                    $evento->setDia($post_data[Constantes::$FORM_DIA_DA_SEMANA]);
+                    $evento->setEventoTipo($repositorioORM->getEventoTipoORM()->encontrarPorId(2));
+
+                    $grupoEvento->setData_criacao(Funcoes::dataAtual());
+                    $grupoEvento->setHora_criacao(Funcoes::horaAtual());
+                    $grupoEvento->setGrupo($entidade->getGrupo());
+                    $grupoEvento->setEvento($evento);
+
+                    /* Persistindo */
+                    $repositorioORM->getEventoORM()->persistir($evento);
+                    $repositorioORM->getEventoCelulaORM()->persistir($eventoCelula, false);
+                    $repositorioORM->getGrupoEventoORM()->persistir($grupoEvento);
+                    /* Sessão */
+                    $sessao->tipoMensagem = Constantes::$TIPO_MENSAGEM_CADASTRAR_CELULA;
+                    $sessao->textoMensagem = $eventoCelula->getNome_hospedeiro();
+                    $sessao->idSessao = $eventoCelula->getId();
+                }
+
                 return $this->redirect()->toRoute(Constantes::$ROUTE_CADASTRO, array(
                             Constantes::$PAGINA => Constantes::$PAGINA_CELULAS,
                 ));
             } catch (Exception $exc) {
+                echo $exc->getMessage();
                 $this->direcionaErroDeCadastro($celulaForm->getMessages());
             }
         }
@@ -633,17 +628,60 @@ class CadastroController extends CircuitoController {
         $sessao = new Container(Constantes::$NOME_APLICACAO);
         $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
 
-        $idEntidadeAtual = $sessao->idEntidadeAtual;
-        $entidade = $repositorioORM->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+        $entidade = $repositorioORM->getEntidadeORM()->encontrarPorId($sessao->idEntidadeAtual);
+        $pessoaLogada = $repositorioORM->getPessoaORM()->encontrarPorId($sessao->idPessoa);
+        $hierarquiaId = $pessoaLogada->getPessoaHierarquiaAtivo()->getHierarquia()->getId();
         $grupo = $entidade->getGrupo();
-        $arrayGrupoAlunos = $grupo->getGrupoAlunoAtivos();
-        $arrayHierarquia = $repositorioORM->getHierarquiaORM()->encontrarTodas();
+
+        $arrayGrupoAlunos = $grupo->getGrupoAlunoAtivosSemCadastro();
+        $arrayHierarquia = $repositorioORM->getHierarquiaORM()->encontrarTodas($hierarquiaId);
 
         $form = new GrupoForm(Constantes::$FORM, $arrayGrupoAlunos, $arrayHierarquia);
 
+        $mostrarCadastro = false;
+        if ($entidade->getTipo_id() == 1 ||
+                $entidade->getTipo_id() == 2 ||
+                $entidade->getTipo_id() == 3 ||
+                $entidade->getTipo_id() == 4) {
+            $mostrarCadastro = true;
+        }
+        if ($entidade->getTipo_id() == 5 ||
+                $entidade->getTipo_id() == 6 ||
+                $entidade->getTipo_id() == 7) {
+            if ($form->getAlunos()) {
+                $mostrarCadastro = true;
+            }
+        }
+        $tituloDaPagina = Constantes::$TRADUCAO_TITULO_PAGINA_CADASTRO_GRUPO;
+        switch ($entidade->getTipo_id()) {
+            case 1:
+                $tituloDaPagina = str_replace('#tipo', 'Nacional', $tituloDaPagina);
+                break;
+            case 2:
+                $tituloDaPagina = str_replace('#tipo', 'Regional', $tituloDaPagina);
+                break;
+            case 3:
+                $tituloDaPagina = str_replace('#tipo', 'Coordenação', $tituloDaPagina);
+                break;
+            case 4:
+                $tituloDaPagina = str_replace('#tipo', 'Igreja', $tituloDaPagina);
+                break;
+            case 5:
+                $tituloDaPagina = str_replace('#tipo', 'Equipe', $tituloDaPagina);
+                break;
+            case 6:
+                $tituloDaPagina = str_replace('#tipo', 'Subequipe', $tituloDaPagina);
+                break;
+            case 7:
+                $tituloDaPagina = str_replace('#tipo', 'Subequipe', $tituloDaPagina);
+                break;
+        }
+
         $view = new ViewModel(array(
             Constantes::$FORM => $form,
-            'tipoEntidade' => $entidade->getTipo_id(),
+            'mostrarCadastro' => $mostrarCadastro,
+            'tituloDaPagina' => $tituloDaPagina,
+            'entidadeTipo' => $entidade->getTipo_id()
         ));
 
         /* Javascript */
@@ -663,7 +701,6 @@ class CadastroController extends CircuitoController {
         if ($request->isPost()) {
             try {
                 $post_data = $request->getPost();
-                $loginORM = new RepositorioORM($this->getDoctrineORMEntityManager());
                 $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
 
                 $sessao = new Container(Constantes::$NOME_APLICACAO);
@@ -675,8 +712,8 @@ class CadastroController extends CircuitoController {
                 $repositorioORM->getGrupoORM()->persistir($grupoNovo);
 
                 /* Entidade abaixo do perfil selecionado/logado */
-                $tipoEntidadeAbaixo = 8; // sub equipe por padrao
-                if ($entidadeLogada->getTipo_id() != 8) {
+                $tipoEntidadeAbaixo = 7; // sub equipe por padrao
+                if ($entidadeLogada->getTipo_id() != 7) {
                     $tipoEntidadeAbaixo = $entidadeLogada->getTipo_id() + 1;
                 }
                 $entidadeNova = new Entidade();
@@ -684,13 +721,16 @@ class CadastroController extends CircuitoController {
                         $repositorioORM->getEntidadeTipoORM()->encontrarPorId($tipoEntidadeAbaixo)
                 );
                 $entidadeNova->setGrupo($grupoNovo);
-                if ($post_data[Constantes::$FORM_NUMERACAO]) {
-                    $entidadeNova->setNumero($post_data[Constantes::$FORM_NUMERACAO]);
+                $entidadeTipoPresidente = 1;
+                if ($entidadeLogada->getTipo_id() !== $entidadeTipoPresidente) {
+                    if ($post_data[Constantes::$FORM_NUMERACAO]) {
+                        $entidadeNova->setNumero($post_data[Constantes::$FORM_NUMERACAO]);
+                    }
+                    if ($post_data['nomeEntidade']) {
+                        $entidadeNova->setNome($post_data['nomeEntidade']);
+                    }
                 }
-                if ($post_data['nomeEntidade']) {
-                    $entidadeNova->setNome($post_data['nomeEntidade']);
-                }
-                $repositorioORM->getEntidadeORM()->persistir($entidadeNova);
+
 
                 $inputEstadoCivil = intval($post_data[Constantes::$INPUT_ESTADO_CIVIL]);
                 /* Alterar dados do aluno */
@@ -702,15 +742,36 @@ class CadastroController extends CircuitoController {
                     $indicePessoasInicio = 1;
                     $indicePessoasFim = 2;
                 }
+                $nomeNacional = 'Nacional ';
                 for ($indicePessoas = $indicePessoasInicio; $indicePessoas <= $indicePessoasFim; $indicePessoas++) {
-                    $matricula = $post_data[Constantes::$FORM_ID_ALUNO_SELECIONADO . $indicePessoas];
-                    $turmaAluno = $repositorioORM->getTurmaAlunoORM()->encontrarPorId($matricula);
-                    $pessoaSelecionada = $turmaAluno->getPessoa();
-                    $tokenDeAgora = $pessoaSelecionada->gerarToken($indicePessoas);
-                    $pessoaSelecionada->setToken($tokenDeAgora);
-                    $pessoaAtualizada = $loginORM->getPessoaORM()->
-                            atualizarAlunoComDadosDaBuscaPorCPF($pessoaSelecionada, $post_data, $indicePessoas);
-
+                    $pessoaSelecionada = null;
+                    if ($entidadeLogada->getTipo_id() !== 1 && $entidadeLogada->getTipo_id() !== 2 && $entidadeLogada->getTipo_id() !== 3 && $entidadeLogada->getTipo_id() !== 4) {
+                        $matricula = $post_data[Constantes::$FORM_ID_ALUNO_SELECIONADO . $indicePessoas];
+                        $turmaAluno = $repositorioORM->getTurmaAlunoORM()->encontrarPorId($matricula);
+                        $pessoaSelecionada = $turmaAluno->getPessoa();
+                        $tokenDeAgora = $pessoaSelecionada->gerarToken($indicePessoas);
+                        $pessoaSelecionada->setToken($tokenDeAgora);
+                        $pessoaAtualizada = $repositorioORM->getPessoaORM()->
+                                atualizarAlunoComDadosDaBuscaPorCPF($pessoaSelecionada, $post_data, $indicePessoas);
+                    } else {
+                        $pessoaSelecionada = new Pessoa();
+                        $pessoaSelecionada->setDocumento(intval($post_data[Constantes::$FORM_CPF . $indicePessoas]));
+                        $pessoaSelecionada->setNome($post_data[Constantes::$FORM_NOME . $indicePessoas]);
+                        $pessoaSelecionada->setEmail($post_data[Constantes::$FORM_EMAIL . $indicePessoas]);
+                        $pessoaSelecionada->setData_nascimento(Funcoes::mudarPadraoData($post_data[Constantes::$FORM_DATA_NASCIMENTO . $indicePessoas], 0));
+                        $tokenDeAgora = $pessoaSelecionada->gerarToken($indicePessoas);
+                        $pessoaSelecionada->setToken($tokenDeAgora);
+                        $repositorioORM->getPessoaORM()->persistir($pessoaSelecionada);
+                        $pessoaAtualizada = $pessoaSelecionada;
+                    }
+                    if ($entidadeLogada->getTipo_id() === $entidadeTipoPresidente) {
+                        if ($indicePessoas === 1) {
+                            $nomeNacional .= $pessoaSelecionada->getNomePrimeiro();
+                        }
+                        if ($indicePessoas === 2) {
+                            $nomeNacional .= ' & ' . $pessoaSelecionada->getNomePrimeiro();
+                        }
+                    }
                     /* Criar hierarquia */
                     $idHierarquia = $post_data[Constantes::$FORM_HIERARQUIA . $indicePessoas];
                     $hierarquia = $repositorioORM->getHierarquiaORM()->encontrarPorId($idHierarquia);
@@ -728,6 +789,10 @@ class CadastroController extends CircuitoController {
                     // Enviar Email
                     $this->enviarEmailParaCompletarOsDados($tokenDeAgora, $pessoaSelecionada);
                 }
+                if ($entidadeLogada->getTipo_id() === $entidadeTipoPresidente) {
+                    $entidadeNova->setNome($nomeNacional);
+                }
+                $repositorioORM->getEntidadeORM()->persistir($entidadeNova);
 
                 /* Criar Grupo_Pai_Filho */
                 $grupoAtualSelecionado = $entidadeLogada->getGrupo();
@@ -759,9 +824,9 @@ class CadastroController extends CircuitoController {
         ));
 
         /* Javascript */
-//        $layoutJS = new ViewModel();
-//        $layoutJS->setTemplate(Constantes::$LAYOUT_JS_GRUPO_VALIDACAO);
-//        $view->addChild($layoutJS, Constantes::$LAYOUT_STRING_JS_GRUPO_VALIDACAO);
+        $layoutJS = new ViewModel();
+        $layoutJS->setTemplate(Constantes::$LAYOUT_JS_GRUPO_ATUALIZACAO_VALIDACAO);
+        $view->addChild($layoutJS, Constantes::$LAYOUT_STRING_JS_GRUPO_ATUALIZACAO_VALIDACAO);
 
         return $view;
     }
@@ -775,17 +840,16 @@ class CadastroController extends CircuitoController {
         if ($request->isPost()) {
             try {
                 $post_data = $request->getPost();
-                $loginORM = new RepositorioORM($this->getDoctrineORMEntityManager());
-                $pessoa = $loginORM->getPessoaORM()->encontrarPorId($post_data[Constantes::$ID]);
+                $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
+                $pessoa = $repositorioORM->getPessoaORM()->encontrarPorId($post_data[Constantes::$ID]);
                 $pessoa->setTelefone($post_data[Constantes::$FORM_INPUT_DDD] + $post_data[Constantes::$FORM_INPUT_CELULAR]);
-                $pessoa->setAtualizar_dados($atualizar_dados);
                 $pessoa->dadosAtualizados();
-                $loginORM->getPessoaORM()->persistir($pessoa);
+                $repositorioORM->getPessoaORM()->persistir($pessoa, false);
             } catch (Exception $exc) {
                 $this->direcionaErroDeCadastro($exc->getMessage());
             }
-            return $this->redirect()->toRoute('principal', array(
-                        'mostrarMenu' => 1
+            return $this->redirect()->toRoute('login', array(
+                        Constantes::$ACTION => Constantes::$ACTION_SELECIONAR_PERFIL
             ));
         }
     }
@@ -796,8 +860,8 @@ class CadastroController extends CircuitoController {
      */
     public function direcionaErroDeCadastro($mensagens) {
         echo "ERRO: Cadastro invalido!<br /><br />########################<br />";
-        foreach ($mensagens as $value) {
-            foreach ($value as $key => $value) {
+        foreach ($mensagens as $mensagem) {
+            foreach ($mensagem as $key => $value) {
                 echo "$key => $value <br />";
             }
         }
@@ -844,8 +908,8 @@ class CadastroController extends CircuitoController {
                 $post_data = $request->getPost();
                 $email = $post_data[Constantes::$FORM_EMAIL];
 
-                $loginORM = new RepositorioORM($this->getDoctrineORMEntityManager());
-                $pessoaPesquisada = $loginORM->getPessoaORM()->encontrarPorEmail($email);
+                $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
+                $pessoaPesquisada = $repositorioORM->getPessoaORM()->encontrarPorEmail($email);
 
                 if ($pessoaPesquisada) {
                     $resposta = 1;
@@ -908,8 +972,8 @@ class CadastroController extends CircuitoController {
                     $resposta = 1;
 
                     /* CPF encontrado na receita verificando se tem cadastro no sistema */
-                    $loginORM = new RepositorioORM($this->getDoctrineORMEntityManager());
-                    if ($loginORM->getPessoaORM()->encontrarPorCPF($cpf)) {
+                    $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
+                    if ($repositorioORM->getPessoaORM()->encontrarPorCPF($cpf)) {
                         $resposta = 3;
                     }
                 }
@@ -965,22 +1029,23 @@ class CadastroController extends CircuitoController {
      */
     public function enviarEmailParaCompletarOsDados($tokenDeAgora, $pessoa) {
         $sessao = new Container(Constantes::$NOME_APLICACAO);
-        $loginORM = new RepositorioORM($this->getDoctrineORMEntityManager());
-        $pessoaLogada = $loginORM->getPessoaORM()->encontrarPorId($sessao->idPessoa);
+        $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
+        $pessoaLogada = $repositorioORM->getPessoaORM()->encontrarPorId($sessao->idPessoa);
 
         $Subject = 'Convite';
-        $ToEmail = 'falecomleonardopereira@gmail.com';
+//        $ToEmail = 'falecomleonardopereira@gmail.com';
+        $ToEmail = $pessoa->getEmail();
         $avatar = 'placeholder.png';
         if ($pessoaLogada->getFoto()) {
             $avatar = $pessoaLogada->getFoto();
         }
         $nomeLider = str_replace(' ', '', $pessoaLogada->getNomePrimeiro());
         $nomePessoaEmail = str_replace(' ', '', $pessoa->getNomePrimeiro());
-        $url = "http://158.69.124.139/convite.php?nomeLider=$nomeLider&avatar=$avatar&token=$tokenDeAgora&nomePessoaEmail=$nomePessoaEmail";
+        $url = "http://" . Constantes::$IP . "/convite.php?nomeLider=$nomeLider&avatar=$avatar&token=$tokenDeAgora&nomePessoaEmail=$nomePessoaEmail";
         $Content = file_get_contents($url);
         Funcoes::enviarEmail($ToEmail, $Subject, $Content);
     }
-    
+
     public function cadastrarRevisaoAction() {
         $sessao = new Container(Constantes::$NOME_APLICACAO);
         $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
@@ -988,18 +1053,24 @@ class CadastroController extends CircuitoController {
         $entidade = $repositorioORM->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
         $grupo = $entidade->getGrupo();
         $gruposAbaixo = $grupo->getGrupoPaiFilhoFilhos();
-
+        
         foreach ($gruposAbaixo as $gpFilho) {
             $grupoFilho = $gpFilho->getGrupoPaiFilhoFilho();
             $entidadeFilho = $grupoFilho->getEntidadeAtiva();
-            if ($entidadeFilho->getTipo_id() == 6) {
-                $gruposIgrejas[] = $entidadeFilho;
+            if ($entidadeFilho->getTipo_id() == 5) {
+                $entidadeIgrejas[] = $entidadeFilho;
+                $gruposIgrejas[] = $grupoFilho;
             }
         }
-        $form = new RevisaoForm('revisaoForm', $gruposIgrejas);
+        $revisaoNaSessao = new Evento();
+        if(!empty($sessao->idSessao)){
+            $revisaoNaSessao = $repositorioORM->getEventoORM()->encontrarPorId($sessao->idSessao);
+        }
+        
+        $form = new RevisaoForm('revisaoForm', $gruposIgrejas, $revisaoNaSessao);
         $view = new ViewModel(array(
             'revisaoForm' => $form,
-            'igrejas' => $gruposIgrejas,
+            'igrejas' => $entidadeIgrejas,
         ));
 
         return $view;
@@ -1016,7 +1087,7 @@ class CadastroController extends CircuitoController {
 
                 /* validação * */
                 $sessao = new Container(Constantes::$NOME_APLICACAO);
-                $criarNovoEvento = true;
+                
 
                 /* Entidades * */
                 $evento = new Evento();
@@ -1026,7 +1097,12 @@ class CadastroController extends CircuitoController {
                 $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
                 $validatedData = $post_data;
 
-
+                
+                if(empty($validatedData['id'])){
+                    $criarNovoEvento = true;
+                }else{
+                    $criarNovoEvento = false;
+                }
                 if ($criarNovoEvento) {
                     /* Entidade selecionada * */
                     $idEntidadeAtual = $sessao->idEntidadeAtual;
@@ -1034,6 +1110,7 @@ class CadastroController extends CircuitoController {
 
                     $evento->setDia(6);
                     $evento->setHora('21:00:00');
+                    $evento->setNome($validatedData['nome']);    
                     $dataParaCadastro = Funcoes::dataAtual();
                     $evento->setData_criacao(Funcoes::mudarPadraoData($validatedData['dataRevisao'], 0));
                     $evento->setHora_criacao(Funcoes::horaAtual());
@@ -1049,7 +1126,7 @@ class CadastroController extends CircuitoController {
                     $repositorioORM->getEventoORM()->persistir($evento);
                     $repositorioORM->getGrupoEventoORM()->persistir($grupoEvento);
                     /* Sessão * */
-                    $sessao->tipoMensagem = Constantes::$TIPO_MENSAGEM_CADASTRAR_CULTO;
+                    $sessao->tipoMensagem = Constantes::$TIPO_MENSAGEM_CADASTRAR_REVISAO;
                     $sessao->textoMensagem = $evento->getNome();
                     $sessao->idSessao = $evento->getId();
 
@@ -1068,7 +1145,7 @@ class CadastroController extends CircuitoController {
                 }
 
                 return $this->redirect()->toRoute(Constantes::$ROUTE_CADASTRO, array(
-                            Constantes::$PAGINA => Constantes::$PAGINA_CADASTRO_REVISAO,
+                            Constantes::$PAGINA => Constantes::$PAGINA_REVISAO,
                 ));
             } catch (Exception $exc) {
                 echo $exc->getMessage();

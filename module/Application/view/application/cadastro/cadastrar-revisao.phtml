@@ -1,7 +1,6 @@
 <?php
 
 use Application\Controller\Helper\Constantes;
-
 $form = $this->revisaoForm;
 $form->prepare();
 $form->setAttribute(Constantes::$ACTION, $this->url(Constantes::$ROUTE_CADASTRO, array(Constantes::$PAGINA => Constantes::$PAGINA_SALVAR_REVISAO)));
@@ -169,12 +168,13 @@ $form->setAttribute(Constantes::$ACTION, $this->url(Constantes::$ROUTE_CADASTRO,
                         }
                         function botaoVoltarIgrejas() {
                             $('#botaoPasso3').removeClass(btnPrimary);
-                            $('#botaoPasso3').addClass(btnDefault);
+                            $('#botaoPasso3').addClass(btnDefault);  
                             $('#botaoPasso2').removeClass(btnDefault);
                             $('#botaoPasso2').addClass(btnPrimary);
                             $('#divConfirmacao').addClass(hidden);
                             $('#divIgrejas').removeClass(hidden);
                             $('#divDadosEmcima').addClass(hidden);
+                            $('#divObservacao').addClass(hidden);
                         }
                         function botaoProsseguirIgrejas() {
                             valorData = $('#dataRevisao').val();
