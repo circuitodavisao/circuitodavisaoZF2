@@ -309,7 +309,7 @@ class Pessoa extends CircuitoEntity implements InputFilterAwareInterface {
     function setEmail($email) {
         $this->email = trim(strtolower($email));
     }
-
+            
     function setSenha($senha, $adicionarMD5 = true) {
         $senhaAjustada = $senha;
         if ($adicionarMD5) {
