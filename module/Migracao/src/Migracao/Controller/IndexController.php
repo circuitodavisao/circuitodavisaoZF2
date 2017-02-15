@@ -4,10 +4,11 @@ namespace Migracao\Controller;
 
 use Application\Controller\CircuitoController;
 use Application\Model\Entity\Entidade;
+use Application\Model\Entity\Evento;
 use Application\Model\Entity\Grupo;
+use Application\Model\Entity\GrupoEvento;
 use Application\Model\Entity\GrupoPaiFilho;
 use Application\Model\Entity\GrupoPessoa;
-use Application\Model\Entity\GrupoPessoaTipo;
 use Application\Model\Entity\GrupoResponsavel;
 use Application\Model\Entity\Pessoa;
 use Application\Model\ORM\RepositorioORM;
@@ -43,6 +44,8 @@ class IndexController extends CircuitoController {
      * GET /
      */
     public function indexAction() {
+        ini_set('memory_limit', '256M');
+        ini_set('max_execution_time', '60');
         list($usec, $sec) = explode(' ', microtime());
         $script_start = (float) $sec + (float) $usec;
         $html = '';
@@ -60,6 +63,7 @@ class IndexController extends CircuitoController {
                 $informacaoEntidade = $row[$stringNome];
                 $grupoIgreja = $this->cadastrarEntidade($row[$stringIdResponsavel1], $idPerfilIgreja, $informacaoEntidade, null, $row[$stringIdResponsavel2]);
                 $this->cadastrarPessoasVolateis($row[$stringIdResponsavel1], $grupoIgreja);
+                $eventosCulto = $this->cadastrarCulto($row[$stringIdResponsavel1], $grupoIgreja);
 
                 $urlEquipe = 'SELECT * FROM ursula_equipe_ursula WHERE ativa = "S" AND idIgreja = ' . $row['id'];
                 $queryEquipes = mysqli_query($this->getConexao(), $urlEquipe);
@@ -68,6 +72,7 @@ class IndexController extends CircuitoController {
                     $informacaoEntidade = $rowEquipe[$stringNome];
                     $grupoEquipe = $this->cadastrarEntidade($rowEquipe[$stringIdResponsavel1], $idPerfilEquipe, $informacaoEntidade, $grupoIgreja, $rowEquipe[$stringIdResponsavel2]);
                     $this->cadastrarPessoasVolateis($rowEquipe[$stringIdResponsavel1], $grupoEquipe);
+                    $this->cadastrarCultoEquipe($eventosCulto, $rowEquipe['id'], $grupoEquipe);
 
                     $urlSub = 'SELECT * FROM ursula_subequipe_ursula WHERE ativa = "S" AND dataInativacao IS NULL AND idSubEquipePai = 0 and idEquipe = ' . $rowEquipe['id'];
                     $querySubEquipes = mysqli_query($this->getConexao(), $urlSub);
@@ -140,6 +145,36 @@ class IndexController extends CircuitoController {
         return $pessoa;
     }
 
+    private function buscaCultosPorIgreja($id) {
+        $idInt = (int) $id;
+        $eventos = null;
+        $eventoTipo = $this->getRepositorio()->getEventoTipoORM()->encontrarPorId(1);
+        $sqlCultos = 'SELECT * FROM ursula_igreja_culto_ursula WHERE mes = MONTH(NOW()) AND ano = YEAR(NOW()) AND idIgreja = ' . $idInt;
+        $queryCultos = mysqli_query($this->getConexao(), $sqlCultos);
+        while ($rowCultos = mysqli_fetch_array($queryCultos)) {
+            $evento = new Evento();
+            $evento->setNome($rowCultos['nome']);
+            $evento->setHora($rowCultos['horario']);
+            $evento->setDia($rowCultos['dia']);
+            $evento->setEventoTipo($eventoTipo);
+            $evento->setIdAntigo($rowCultos['id']);
+            $eventos[] = $evento;
+        }
+        return $eventos;
+    }
+
+    private function consultarSeExiteCultoParaEquipe($idCulto, $idEquipe) {
+        $resposta = false;
+        $idCultoInteiro = (int) $idCulto;
+        $idEquipeInteiro = (int) $idEquipe;
+        $sql = 'SELECT * FROM ursula_igreja_culto_equipe_ursula WHERE idCulto = ' . $idCultoInteiro . ' AND idEquipe = ' . $idEquipeInteiro . ' AND dataInativacao IS NULL;';
+        $query = mysqli_query($this->getConexao(), $sql);
+        if (mysqli_num_rows($query) === 1) {
+            $resposta = true;
+        }
+        return $resposta;
+    }
+
     private function buscaPessoasVolateis($id) {
         $idInt = (int) $id;
         $pessoas = null;
@@ -156,30 +191,71 @@ class IndexController extends CircuitoController {
         while ($rowGrupo = mysqli_fetch_array($queryGrupo)) {
             $idGrupoMensal = $rowGrupo['id'];
         }
-
-        $sqlPessoasVolateis = 'SELECT * FROM circuito_visao.ursula_pessoa_ursula where idGrupoMensal = ' . $idGrupoMensal;
-        $queryPessoasVolateis = mysqli_query($this->getConexao(), $sqlPessoasVolateis);
-        while ($rowPessoasVolateis = mysqli_fetch_array($queryPessoasVolateis)) {
-            $pessoa = new Pessoa();
-            $pessoa->setNome($rowPessoasVolateis['nome']);
-            $pessoa->setTelefone($rowPessoasVolateis['dddCelular'] . $rowPessoasVolateis['telefoneCelular']);
-            $pessoa->setTipo($rowPessoasVolateis['idClassificacao']);
-            $pessoas[] = $pessoa;
+        $pessoas;
+        if ($idGrupoMensal) {
+            $sqlPessoasVolateis = 'SELECT * FROM circuito_visao.ursula_pessoa_ursula where idGrupoMensal = ' . $idGrupoMensal;
+            $queryPessoasVolateis = mysqli_query($this->getConexao(), $sqlPessoasVolateis);
+            while ($rowPessoasVolateis = mysqli_fetch_array($queryPessoasVolateis)) {
+                $pessoa = new Pessoa();
+                $pessoa->setNome($rowPessoasVolateis['nome']);
+                $telefone = 0;
+                if (strlen($rowPessoasVolateis['dddCelular'] . $rowPessoasVolateis['telefoneCelular']) <= 11 && strlen($rowPessoasVolateis['dddCelular'] . $rowPessoasVolateis['telefoneCelular']) >= 10) {
+                    $telefone = $rowPessoasVolateis['dddCelular'] . $rowPessoasVolateis['telefoneCelular'];
+                }
+                $pessoa->setTelefone($telefone);
+                $pessoa->setTipo($rowPessoasVolateis['idClassificacao']);
+                $pessoas[] = $pessoa;
+            }
         }
         return $pessoas;
     }
 
+    private function cadastrarCulto($id, $grupo) {
+        $eventos = $this->buscaCultosPorIgreja($id);
+        if ($eventos) {
+            foreach ($eventos as $evento) {
+                $this->getRepositorio()->getEventoORM()->persistir($evento);
+
+                $grupoEvento = new GrupoEvento();
+                $grupoEvento->setGrupo($grupo);
+                $grupoEvento->setEvento($evento);
+                $this->getRepositorio()->getGrupoEventoORM()->persistir($grupoEvento);
+            }
+        }
+        return $eventos;
+    }
+
+    private function cadastrarCultoEquipe($eventosCulto, $idEquipe, $grupoEquipe) {
+        if ($eventosCulto) {
+            foreach ($eventosCulto as $eventoCulto) {
+                if ($this->consultarSeExiteCultoParaEquipe($eventoCulto->getIdAntigo(), $idEquipe)) {
+                    $grupoEvento = new GrupoEvento();
+                    $grupoEvento->setGrupo($grupoEquipe);
+                    $grupoEvento->setEvento($eventoCulto);
+                    $this->getRepositorio()->getGrupoEventoORM()->persistir($grupoEvento);
+                }
+            }
+        }
+    }
+
     private function cadastrarPessoasVolateis($id, $grupo) {
         $pessoasVolateis = $this->buscaPessoasVolateis($id);
-        foreach ($pessoasVolateis as $pessoaVolatil) {
-            $this->getRepositorio()->getPessoaORM()->persistir($pessoaVolatil);
+        if ($pessoasVolateis) {
+            foreach ($pessoasVolateis as $pessoaVolatil) {
+                $this->getRepositorio()->getPessoaORM()->persistir($pessoaVolatil);
 
-            $grupoPessoaTipo = $this->getRepositorio()->getGrupoPessoaTipoORM()->encontrarPorId($pessoaVolatil->getTipo());
-            $grupoPessoa = new GrupoPessoa();
-            $grupoPessoa->setGrupo($grupo);
-            $grupoPessoa->setPessoa($pessoaVolatil);
-            $grupoPessoa->setGrupoPessoaTipo($grupoPessoaTipo);
-            $this->getRepositorio()->getGrupoPessoaORM()->persistir($grupoPessoa);
+                $tipo = 1;
+                if ($pessoaVolatil->getTipo()) {
+                    $tipo = $pessoaVolatil->getTipo();
+                }
+
+                $grupoPessoaTipo = $this->getRepositorio()->getGrupoPessoaTipoORM()->encontrarPorId($tipo);
+                $grupoPessoa = new GrupoPessoa();
+                $grupoPessoa->setGrupo($grupo);
+                $grupoPessoa->setPessoa($pessoaVolatil);
+                $grupoPessoa->setGrupoPessoaTipo($grupoPessoaTipo);
+                $this->getRepositorio()->getGrupoPessoaORM()->persistir($grupoPessoa);
+            }
         }
     }
 

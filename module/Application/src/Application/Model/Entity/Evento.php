@@ -19,6 +19,7 @@ use Zend\InputFilter\InputFilterInterface;
 class Evento extends CircuitoEntity implements InputFilterAwareInterface {
 
     protected $inputFilter;
+    protected $idAntigo;
 
     /**
      * @ORM\OneToOne(targetEntity="EventoCelula", mappedBy="evento")
@@ -212,7 +213,7 @@ class Evento extends CircuitoEntity implements InputFilterAwareInterface {
         }
         return $resposta;
     }
-    
+
     /**
      * Verifica se o evento é do tipo culto
      * @return boolean
@@ -224,8 +225,7 @@ class Evento extends CircuitoEntity implements InputFilterAwareInterface {
         }
         return $resposta;
     }
-    
-    
+
     function getTipo_id() {
         return $this->tipo_id;
     }
@@ -316,6 +316,14 @@ class Evento extends CircuitoEntity implements InputFilterAwareInterface {
 
     public function exchangeArray($data) {
         $this->nome = (!empty($data[Constantes::$FORM_NOME]) ? strtoupper($data[Constantes::$FORM_NOME]) : null);
+    }
+
+    function getIdAntigo() {
+        return $this->idAntigo;
+    }
+
+    function setIdAntigo($idAntigo) {
+        $this->idAntigo = $idAntigo;
     }
 
 }
