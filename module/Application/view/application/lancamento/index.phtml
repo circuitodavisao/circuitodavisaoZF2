@@ -5,13 +5,8 @@ use Application\Controller\Helper\Constantes;
 <div id="content">
     <div class="row background-mobile">
         <?php echo $this->dadosEntidade(); ?>
-    </div>
-
-    <!-- MODAL COM LOADER -->
-    <?php echo $this->modalAba(); ?>
+    </div>   
     <div id='panelLancamento' class="panel">
-        <!--MENSAGENS DE RELATORIO ENVIADO-->
-        <?php echo $this->mensagemRelatorioEnviado(); ?>
         <div class="panel-heading">
             <!-- Abertura de Abas -->
             <?php echo $this->abas(); ?>
@@ -23,9 +18,6 @@ use Application\Controller\Helper\Constantes;
             <?php echo $this->tabelaLancamento(); ?>
         </div>
         <div class="panel-footer text-center">
-            <!--BOTAO DE ENVIO DE RELATORIO-->
-            <a class="btn btn-success" href="/lancamentoEnviarRelatorio" title="<?php echo $this->translate(Constantes::$TRADUCAO_ENVIAR_RELATORIO); ?>"><?php echo $this->translate(Constantes::$TRADUCAO_ENVIAR_RELATORIO); ?></a>
-
             <a class="btn btn-dark" href='#' onclick="verificarMuitosCadastros(<?php echo $this->validacao; ?>);">Cadastrar</a>
         </div>
     </div>

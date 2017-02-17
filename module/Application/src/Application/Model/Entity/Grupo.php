@@ -8,8 +8,6 @@ namespace Application\Model\Entity;
  * Descricao: Entidade anotada da tabela grupo
  */
 use Application\Controller\Helper\Funcoes;
-use Application\Model\ORM\CircuitoORM;
-use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -165,9 +163,29 @@ class Grupo extends CircuitoEntity {
      * @return GrupoEvento
      */
     function getGrupoEventoOrdenadosPorDiaDaSemana() {
-        $grupoEventos = $this->getGrupoEvento();
+        $tipoSubequipe = 7;
+        $tipoEquipe = 6;
+        $grupoSelecionado = $this;
+        $grupoEventosCelulas = null;
+        $grupoEventos = null;
+        if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === $tipoSubequipe) {
+            $grupoEventosCelulas = $grupoSelecionado->getGrupoEvento();
+            while ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === $tipoSubequipe) {
+                $grupoSelecionado = $grupoSelecionado->getGrupoPaiFilhoPai()->getGrupoPaiFilhoPai();
+                if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === $tipoEquipe) {
+                    break;
+                }
+            }
+        }
+        $grupoEventos = $grupoSelecionado->getGrupoEvento();
+        if ($grupoEventosCelulas) {
+            foreach ($grupoEventosCelulas as $eventoCelula) {
+                $grupoEventos[] = $eventoCelula;
+            }
+        }
+
         for ($i = 0; $i < count($grupoEventos); $i++) {
-            for ($j = 0; $j < count($grupoEventos); $j++) {
+            for ($j = 1; $j < count($grupoEventos); $j++) {
                 $evento1 = $grupoEventos[$i];
                 $evento2 = $grupoEventos[$j];
                 $trocar = 0;
@@ -212,6 +230,23 @@ class Grupo extends CircuitoEntity {
         foreach ($this->getGrupoAluno() as $ga) {
             if ($ga->verificarSeEstaAtivo()) {
                 $grupoAlunos[] = $ga;
+            }
+        }
+        return $grupoAlunos;
+    }
+
+    /**
+     * Retorna o grupo aluno que não tem cadastro
+     * @return GrupoAluno
+     */
+    function getGrupoAlunoAtivosSemCadastro() {
+        $grupoAlunos = null;
+        foreach ($this->getGrupoAluno() as $ga) {
+            if ($ga->verificarSeEstaAtivo()) {
+                $aluno = $ga->getTurmaAluno()->getPessoa();
+                if (!$aluno->verificarSeTemAlgumaResponsabilidadeAtiva()) {
+                    $grupoAlunos[] = $ga;
+                }
             }
         }
         return $grupoAlunos;
@@ -357,7 +392,7 @@ class Grupo extends CircuitoEntity {
         $this->setEventos($eventos);
         return $this->getEventos();
     }
-    
+
     function getGrupoEventoRevisao() {
         $eventos = null;
         if (!empty($this->getGrupoEvento())) {
@@ -370,7 +405,6 @@ class Grupo extends CircuitoEntity {
         $this->setEventos($eventos);
         return $this->getEventos();
     }
-    
 
     function setGrupoEvento($grupoEvento) {
         $this->grupoEvento = $grupoEvento;

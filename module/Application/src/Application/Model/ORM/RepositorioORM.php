@@ -4,6 +4,7 @@ namespace Application\Model\ORM;
 
 use Application\Controller\Helper\Constantes;
 use Doctrine\ORM\EntityManager;
+use Exception;
 
 /**
  * Nome: RepositorioORM.php
