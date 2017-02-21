@@ -169,15 +169,18 @@ class Grupo extends CircuitoEntity {
         $grupoEventosCelulas = null;
         $grupoEventos = null;
         if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === $tipoSubequipe) {
-            $grupoEventosCelulas = $grupoSelecionado->getGrupoEvento();
+            $grupoEventosCelulas = $grupoSelecionado->getGrupoEventoAtivosPorTipo(2);
             while ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === $tipoSubequipe) {
                 $grupoSelecionado = $grupoSelecionado->getGrupoPaiFilhoPai()->getGrupoPaiFilhoPai();
                 if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === $tipoEquipe) {
                     break;
                 }
             }
+            $grupoEventos = $grupoSelecionado->getGrupoEventoAtivosPorTipo(1);
+        } else {
+            $grupoEventos = $grupoSelecionado->getGrupoEventoAtivos();
         }
-        $grupoEventos = $grupoSelecionado->getGrupoEvento();
+
         if ($grupoEventosCelulas) {
             foreach ($grupoEventosCelulas as $eventoCelula) {
                 $grupoEventos[] = $eventoCelula;
@@ -185,10 +188,11 @@ class Grupo extends CircuitoEntity {
         }
 
         for ($i = 0; $i < count($grupoEventos); $i++) {
-            for ($j = 1; $j < count($grupoEventos); $j++) {
+            for ($j = 0; $j < count($grupoEventos); $j++) {
                 $evento1 = $grupoEventos[$i];
                 $evento2 = $grupoEventos[$j];
                 $trocar = 0;
+
                 if ($evento1->getEvento()->getDiaAjustado() <= $evento2->getEvento()->getDiaAjustado()) {
                     if ($evento1->getEvento()->getDiaAjustado() == $evento2->getEvento()->getDiaAjustado()) {
                         if ($evento1->getEvento()->getHora() < $evento2->getEvento()->getHora()) {
@@ -216,6 +220,31 @@ class Grupo extends CircuitoEntity {
         foreach ($this->getGrupoEvento() as $ge) {
             if ($ge->verificarSeEstaAtivo()) {
                 $grupoEventos[] = $ge;
+            }
+        }
+        return $grupoEventos;
+    }
+
+    /**
+     * Retorna o grupo evento
+     * @return GrupoEvento
+     */
+    function getGrupoEventoAtivosPorTipo($tipo = 0) {
+        $grupoEventos = null;
+        $tipoCulto = 1;
+        $tipoCelula = 2;
+        foreach ($this->getGrupoEvento() as $ge) {
+            if ($ge->verificarSeEstaAtivo()) {
+
+                if ($tipo === 0) {
+                    $grupoEventos[] = $ge;
+                }
+                if ($tipo === $tipoCulto && $ge->getEvento()->verificaSeECulto()) {
+                    $grupoEventos[] = $ge;
+                }
+                if ($tipo === $tipoCelula && $ge->getEvento()->verificaSeECelula()) {
+                    $grupoEventos[] = $ge;
+                }
             }
         }
         return $grupoEventos;

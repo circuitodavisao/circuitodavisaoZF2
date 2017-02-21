@@ -196,7 +196,7 @@ class Evento extends CircuitoEntity implements InputFilterAwareInterface {
      */
     function verificaSeECelula() {
         $resposta = false;
-        if ($this->getTipo_id() == 2) {
+        if ($this->getEventoTipo()->getId() === 2) {
             $resposta = true;
         }
         return $resposta;
@@ -208,7 +208,7 @@ class Evento extends CircuitoEntity implements InputFilterAwareInterface {
      */
     function verificaSeECulto() {
         $resposta = false;
-        if ($this->getTipo_id() == 1) {
+        if ($this->getEventoTipo()->getId() === 1) {
             $resposta = true;
         }
         return $resposta;
