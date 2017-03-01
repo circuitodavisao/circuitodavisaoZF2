@@ -110,12 +110,24 @@ use Application\Controller\Helper\Constantes;
                 Ladda.bind('.ladda-button', {
                     timeout: 500
                 });
-             
+
             });
 
             $(window).bind("load", function () {
                 // Remove splash screen after load
-                $('.splash').css('display', 'none')
+                $('.splash').css('display', 'none');
+
+                var url = window.location.href;
+                var splitUrl = url.split('/');
+                if (splitUrl[3].includes('principal')
+                        || splitUrl[3].includes('cadastro')
+                        || splitUrl[3].includes('lancamento')
+                        || splitUrl[3].includes('relatorio')) {
+                    
+                    $('body')
+                            .removeClass('external-page')
+                            .removeClass('external-alt');
+                }
             });
         </script>
         <!-- END: PAGE SCRIPTS -->

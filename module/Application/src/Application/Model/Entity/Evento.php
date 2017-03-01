@@ -56,6 +56,9 @@ class Evento extends CircuitoEntity implements InputFilterAwareInterface {
     /** @ORM\Column(type="string") */
     protected $hora;
 
+    /** @ORM\Column(type="string") */
+    protected $data;
+
     /** @ORM\Column(type="integer") */
     protected $tipo_id;
 
@@ -324,6 +327,14 @@ class Evento extends CircuitoEntity implements InputFilterAwareInterface {
 
     function setIdAntigo($idAntigo) {
         $this->idAntigo = $idAntigo;
+    }
+
+    function getData() {
+        return $this->data;
+    }
+
+    function setData($data) {
+        $this->data = $data;
     }
 
 }

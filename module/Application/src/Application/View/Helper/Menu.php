@@ -297,6 +297,14 @@ class Menu extends AbstractHelper {
         $html .= '<span class="sidebar-title">Relatórios</span>';
         $html .= '<span class="caret"></span>';
         $html .= '</a>';
+        $html .= '<ul class="nav sub-nav">';
+        $html .= '<li>';
+        $html .= '<a href="/relatorio">';
+        $html .= '<span class="fa fa-terminal"></span>';
+        $html .= 'Membresia';
+        $html .= '</a>';
+        $html .= '</li>';
+        $html .= '</ul>';
         $html .= '</li>';
 
         $html .= '<li>';

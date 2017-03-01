@@ -16,6 +16,7 @@ return array(
             'Application\Controller\Principal' => 'Application\Controller\Factory\PrincipalControllerFactory',
             'Application\Controller\Lancamento' => 'Application\Controller\Factory\LancamentoControllerFactory',
             'Application\Controller\Cadastro' => 'Application\Controller\Factory\CadastroControllerFactory',
+            'Application\Controller\Relatorio' => 'Application\Controller\Factory\RelatorioControllerFactory',
         ),
     ),
     # definir e gerenciar rotas
@@ -68,6 +69,19 @@ return array(
                     ),
                     'defaults' => array(
                         'controller' => 'Application\Controller\Cadastro',
+                        'action' => 'index',
+                    ),
+                ),
+            ),
+            'relatorio' => array(
+                'type' => 'Segment',
+                'options' => array(
+                    'route' => '/relatorio[:action]',
+                    'constraints' => array(
+                        'action' => '[a-zA-Z]+',
+                    ),
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\Relatorio',
                         'action' => 'index',
                     ),
                 ),
@@ -141,12 +155,13 @@ return array(
             'cadastro/cadastro/celula-confirmacao' => __DIR__ . '/../view/cadastro/celula-confirmacao.phtml',
             'cadastro/cadastro/celula-exclusao' => __DIR__ . '/../view/cadastro/celula-exclusao.phtml',
             'cadastro/cadastro/celulas' => __DIR__ . '/../view/cadastro/celulas.phtml',
+            'cadastro/cadastro/revisao' => __DIR__ . '/../view/cadastro/revisao.phtml',
+            'relatorio/relatorio/index' => __DIR__ . '/../view/relatorio/index.phtml',
             'layout/layout-js-celulas' => __DIR__ . '/../view/layout/layout-js-celulas.phtml',
             'layout/layout-js-celula' => __DIR__ . '/../view/layout/layout-js-celula.phtml',
             'layout/layout-js-celula-validacao' => __DIR__ . '/../view/layout/layout-js-celula-validacao.phtml',
             'layout/layout-js-celulas-validacao' => __DIR__ . '/../view/layout/layout-js-celulas-validacao.phtml',
             'layout/layout-js-grupo' => __DIR__ . '/../view/layout/layout-js-grupo.phtml',
-            'cadastro/cadastro/revisao' => __DIR__ . '/../view/cadastro/revisao.phtml',
             'error/404' => __DIR__ . '/../view/error/404.phtml',
             'error/index' => __DIR__ . '/../view/error/index.phtml',
         ),
