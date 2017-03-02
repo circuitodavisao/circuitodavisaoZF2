@@ -17,8 +17,18 @@ class HierarquiaORM extends CircuitoORM {
      * @return Hieraquia[]
      * @throws Exception
      */
-    public function encontrarTodas() {
-        $entidades = $this->getEntityManager()->getRepository($this->getEntity())->findAll();
+    public function encontrarTodas($hieraquiaDaPessoaLogada = 1) {
+        $entidades = null;
+        $todasHierarquias = $this->getEntityManager()->getRepository($this->getEntity())->findAll();
+        if ($hieraquiaDaPessoaLogada != 1) {
+            foreach ($todasHierarquias as $hieraquia) {
+                if ($hieraquia->getId() >= $hieraquiaDaPessoaLogada) {
+                    $entidades[] = $hieraquia;
+                }
+            }
+        } else {
+            $entidades = $todasHierarquias;
+        }
         if (!$entidades) {
             throw new Exception("Não foi encontrado nenhum hierarquia");
         }

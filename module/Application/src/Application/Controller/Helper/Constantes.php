@@ -1,7 +1,7 @@
 <?php
 
 namespace Application\Controller\Helper;
- 
+
 /**
  * Nome: Constantes.php
  * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com>
@@ -124,7 +124,7 @@ class Constantes {
     /* Pre saida */
     public static $TRADUCAO_SESSAO_ENCERRADA = 'Closed Session';
     public static $TRADUCAO_SESSAO_ATIVA = 'You need to log out to continue.';
-    public static $TRADUCAO_PRECISA_DESLOGAR = 'You need to log out before registering a password for a new user';  
+    public static $TRADUCAO_PRECISA_DESLOGAR = 'You need to log out before registering a password for a new user';
     public static $TRADUCAO_OLA = 'Hello';
     public static $TRADUCAO_PRE_SAIDA = 'Use the LOGOUT option <a href="/">CircuitoDaVisão.com.br</a> when using a device that is not of particular use. The <a href="/">CircuitoDaVisão.com.br</a> home page will be opened in 30 seconds.';
     public static $TRADUCAO_ENTRAR_NOVAMENTE = 'Reenter';
@@ -174,6 +174,9 @@ class Constantes {
     public static $ENTITY_PESSOA_PERFIL_ACESSO = 'Application\Model\Entity\PessoaPerfilAcesso';
     public static $ENTITY_PESSOA_PERFIL_ACESSO_ID_PESSOA = 'id_pessoa';
     public static $ENTITY_FATO_CICLO_NUMERO_IDENTIFICADOR = 'numero_identificador';
+    public static $ENTITY_FATO_CICLO_CICLO = 'ciclo';
+    public static $ENTITY_FATO_CICLO_MES = 'mes';
+    public static $ENTITY_FATO_CICLO_ANO = 'ano'; 
 
     /* Templates */
     public static $TEMPLATE_SELECIONAR_PERFIL = 'layout/layout-selecionar-perfil';
@@ -406,6 +409,7 @@ class Constantes {
     public static $TRADUCAO_CULTO_TEXTO = 'Name: ';
     public static $TRADUCAO_CELULA_ = 'Cell ';
     public static $TRADUCAO_CULTO_ = 'Cult ';
+    public static $TRADUCAO_REVISAO = 'Revision ';
     public static $TRADUCAO_FINALIZAR = 'Finish';
     public static $TRADUCAO_INSERIR = 'Insert';
     public static $TRADUCAO_LIMPAR = 'Clean';
@@ -440,12 +444,12 @@ class Constantes {
     public static $TRADUCAO_CLIQUE_EM_CONTINUAR = '. Click Continue';
     public static $TRADUCAO_CELULAR_INVALIDO = 'Phone is invalid';
     public static $TRADUCAO_DDD_INVALIDO = 'DDD is invalid';
-    public static $TRADUCAO_PREENCHA_O_CELULAR = 'Fill in the Phone'; 
+    public static $TRADUCAO_PREENCHA_O_CELULAR = 'Fill in the Phone';
     public static $TRADUCAO_PREENCHA_O_DDD = 'Fill in the DDD';
     public static $TRADUCAO_PREENCHA_O_DDD_E_CELULAR = 'Fill in the DDD and Phone';
     public static $TRADUCAO_CODIGO_VERIFICADOR_INVALIDO = 'Invalid tester code';
     public static $TRADUCAO_PREENCHA_O_CODIGO_VERIFICADOR = 'Fill in the Verifier Code';
-    public static $TRADUCAO_CODIGO_VERIFICADOR_LIBERADO = 'Code Released click finish.';    
+    public static $TRADUCAO_CODIGO_VERIFICADOR_LIBERADO = 'Code Released click finish.';
     public static $TRADUCAO_DADOS_NAO_CADASTRADOS = 'Data not found in the database';
     public static $TRADUCAO_CPF_JA_UTILIZADO = 'CPF already used';
     public static $TRADUCAO_CPF_NAO_EXISTE = 'CPF does not exist';
@@ -488,6 +492,7 @@ class Constantes {
     public static $TIPO_MENSAGEM_CADASTRAR_CULTO = 4;
     public static $TIPO_MENSAGEM_ALTERAR_CULTO = 5;
     public static $TIPO_MENSAGEM_EXCLUIR_CULTO = 6;
+    public static $TIPO_MENSAGEM_CADASTRAR_REVISAO = 7;
     /* Inputs */
     public static $INPUT_ESTADO_CIVIL = 'inputEstadoCivil';
 
@@ -675,7 +680,7 @@ class Constantes {
     public static $LAYOUT_JS_EVENTO = 'layout/layout-js-evento';
     public static $LAYOUT_STRING_JS_EVENTO = 'layoutJSEvento';
     public static $LAYOUT_JS_GRUPO_VALIDACAO = 'layout/layout-js-grupo-validacao';
-    public static $LAYOUT_STRING_JS_GRUPO_VALIDACAO = 'layoutJSGrupoValidacao'; 
+    public static $LAYOUT_STRING_JS_GRUPO_VALIDACAO = 'layoutJSGrupoValidacao';
     public static $LAYOUT_JS_GRUPO_ATUALIZACAO_VALIDACAO = 'layout/layout-js-grupo-atualizacao-validacao';
     public static $LAYOUT_STRING_JS_GRUPO_ATUALIZACAO_VALIDACAO = 'layoutJSGrupoAtualizacaoValidacao';
     public static $LAYOUT_JS_EVENTOS = 'layout/layout-js-eventos';

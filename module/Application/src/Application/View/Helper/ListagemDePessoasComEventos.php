@@ -383,7 +383,7 @@ class ListagemDePessoasComEventos extends AbstractHelper {
                                     ->andWhere(Criteria::expr()->eq("ciclo", $this->view->cicloSelecionado))
                             ;
                             $eventosFiltrados = $eventoFrequencia->matching($criteria);
-                            if ($eventosFiltrados->count() == 1) {
+                            if ($eventosFiltrados->count() === 1) {
                                 $valor = $eventosFiltrados->first()->getFrequencia();
                                 if ($valor == 'S') {
                                     $class = 'btn-success';
@@ -396,7 +396,7 @@ class ListagemDePessoasComEventos extends AbstractHelper {
                         }
                         $html .= '<button id="b_' . $idEventoFrequencia . '" type="button" class="btn ' . $class . ' btn-sm"'
                                 . ' onclick=\'mudarFrequencia(';
-                        $html .= "\"$idEventoFrequencia\", {$this->view->cicloSelecionado}, {$this->view->abaSelecionada}";
+                        $html .= "\"$idEventoFrequencia\", {$this->view->cicloSelecionado}, {$this->view->abaSelecionada}, {$this->view->grupo->getId()}";
                         $html .= ');\'>';
                         $html .= '<i id="i_' . $idEventoFrequencia . '" class="fa ' . $classIco . '"></i>';
                         $html .= '</button>';

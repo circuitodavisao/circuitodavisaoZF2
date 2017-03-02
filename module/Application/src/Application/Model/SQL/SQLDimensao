@@ -1,0 +1,44 @@
+-- Table: dimensao
+
+-- DROP TABLE dimensao;
+
+CREATE TABLE dimensao
+(
+  id serial NOT NULL, -- Identificação
+  fato_ciclo_id integer NOT NULL, -- Identificação do fato ciclo
+  dimensao_tipo_id integer NOT NULL, -- Identificação do tipo dos dados
+  visitante integer NOT NULL DEFAULT 0, -- Número de visitantes lançados
+  consolidacao integer NOT NULL DEFAULT 0, -- Número de consolidações lançadas
+  membro integer NOT NULL DEFAULT 0, -- Número de membros lançados
+  data_criacao date NOT NULL DEFAULT ('now'::text)::date, -- Data de criação da dimensão
+  hora_criacao time without time zone NOT NULL DEFAULT ('now'::text)::time with time zone, -- Hora de criação da dimensão
+  data_inativacao date, -- Data de inativação da dimensão
+  hora_inativacao time without time zone, -- Hora da inativação da dimensão
+  lider integer NOT NULL DEFAULT 0, -- Número de líderes lançados
+  CONSTRAINT pk_dimensao PRIMARY KEY (id),
+  CONSTRAINT fk_dimensao_dimensao_tipo_id FOREIGN KEY (dimensao_tipo_id)
+      REFERENCES dimensao_tipo (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION,
+  CONSTRAINT fk_dimensao_fato_ciclo_id FOREIGN KEY (fato_ciclo_id)
+      REFERENCES fato_ciclo (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE dimensao
+  OWNER TO postgres;
+COMMENT ON TABLE dimensao
+  IS 'Dimensão dos dados';
+COMMENT ON COLUMN dimensao.id IS 'Identificação';
+COMMENT ON COLUMN dimensao.fato_ciclo_id IS 'Identificação do fato ciclo';
+COMMENT ON COLUMN dimensao.dimensao_tipo_id IS 'Identificação do tipo dos dados';
+COMMENT ON COLUMN dimensao.visitante IS 'Número de visitantes lançados';
+COMMENT ON COLUMN dimensao.consolidacao IS 'Número de consolidações lançadas';
+COMMENT ON COLUMN dimensao.membro IS 'Número de membros lançados';
+COMMENT ON COLUMN dimensao.data_criacao IS 'Data de criação da dimensão';
+COMMENT ON COLUMN dimensao.hora_criacao IS 'Hora de criação da dimensão';
+COMMENT ON COLUMN dimensao.data_inativacao IS 'Data de inativação da dimensão';
+COMMENT ON COLUMN dimensao.hora_inativacao IS 'Hora da inativação da dimensão';
+COMMENT ON COLUMN dimensao.lider IS 'Número de líderes lançados';
+
