@@ -107,7 +107,7 @@ class Dimensao extends CircuitoEntity {
 
     function getLider() {
         return $this->lider;
-    }
+    } 
 
     function setLider($lider) {
         $this->lider = $lider;

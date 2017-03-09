@@ -25,7 +25,7 @@ use Zend\Session\Container;
 use Zend\View\Model\ViewModel;
 
 /**
- * Nome: LancamentoController.php
+ * Nome: LancamentoContgetLiderroller.php
  * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com>
  * Descricao: Controle de todas ações de lancamento
  */
@@ -317,7 +317,6 @@ class LancamentoController extends CircuitoController {
     public function cadastrarPessoaRevisaoAction() {
         $sessao = new Container(Constantes::$NOME_APLICACAO);
         $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
-        $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
         $grupoPessoa = $repositorioORM->getGrupoPessoaORM()->encontrarPorId($sessao->idFuncaoLancamento);
         $pessoa = $grupoPessoa->getPessoa();
         $pessoa->setData_revisao(date('Y-m-d'));
@@ -405,65 +404,39 @@ class LancamentoController extends CircuitoController {
                 } else {
                     $valorParaSomar = -1;
                 }
-                $numeroIdentificador = '000100000100000005';
+
                 $grupoPassado = $repositorioORM->getGrupoORM()->encontrarPorId($post_data['idGrupo']);
                 $numeroIdentificador = $repositorioORM->getFatoCicloORM()->montarNumeroIdentificador($grupoPassado);
 
                 $eventoTipoCulto = 1;
                 $eventoTipoCelula = 2;
-                $meta = 1;
                 $dimensaoTipoCelula = 1;
                 $dimensaoTipoCulto = 2;
                 $dimensaoTipoArena = 3;
                 $dimensaoTipoDomingo = 4;
                 $dimensaoSelecionada = null;
-                $dimensoes = null;
 
-                $fatoCicloSelecionado = $repositorioORM->getFatoCicloORM()->encontrarPorNumeroIdentificador($numeroIdentificador, $ciclo, $mes, $ano);
+                $fatoCicloSelecionado = $repositorioORM->getFatoCicloORM()->encontrarPorNumeroIdentificador($numeroIdentificador, $ciclo, $mes, $ano, $repositorioORM);
 
-                /* tem cadastro */
-                if ($fatoCicloSelecionado) {
-                    if ($fatoCicloSelecionado->getDimensao()) {
-                        foreach ($fatoCicloSelecionado->getDimensao() as $dimensao) {
-                            switch ($dimensao->getDimensaoTipo()->getId()) {
-                                case $dimensaoTipoCelula:
-                                    $dimensoes[$dimensaoTipoCelula] = $dimensao;
-                                    break;
-                                case $dimensaoTipoCulto:
-                                    $dimensoes[$dimensaoTipoCulto] = $dimensao;
-                                    break;
-                                case $dimensaoTipoArena:
-                                    $dimensoes[$dimensaoTipoArena] = $dimensao;
-                                    break;
-                                case $dimensaoTipoDomingo:
-                                    $dimensoes[$dimensaoTipoDomingo] = $dimensao;
-                                    break;
-                            }
+
+                if ($fatoCicloSelecionado->getDimensao()) {
+                    foreach ($fatoCicloSelecionado->getDimensao() as $dimensao) {
+                        switch ($dimensao->getDimensaoTipo()->getId()) {
+                            case $dimensaoTipoCelula:
+                                $dimensoes[$dimensaoTipoCelula] = $dimensao;
+                                break;
+                            case $dimensaoTipoCulto:
+                                $dimensoes[$dimensaoTipoCulto] = $dimensao;
+                                break;
+                            case $dimensaoTipoArena:
+                                $dimensoes[$dimensaoTipoArena] = $dimensao;
+                                break;
+                            case $dimensaoTipoDomingo:
+                                $dimensoes[$dimensaoTipoDomingo] = $dimensao;
+                                break;
                         }
                     }
-                } else {
-                    $fatoCiclo = new FatoCiclo();
-                    $fatoCiclo->setNumero_identificador($numeroIdentificador);
-                    $fatoCiclo->setAno($ano);
-                    $fatoCiclo->setMes($mes);
-                    $fatoCiclo->setCiclo($ciclo);
-                    $fatoCiclo->setMeta($meta);
-                    $repositorioORM->getFatoCicloORM()->persistir($fatoCiclo);
-                    for ($indiceDimensoes = 1; $indiceDimensoes <= 4; $indiceDimensoes++) {
-                        $dimensao = new Dimensao();
-                        $dimensao->setFatoCiclo($fatoCiclo);
-                        $dimensaoTipo = $repositorioORM->getDimensaoTipoORM()->encontrarPorId($indiceDimensoes);
-                        $dimensao->setDimensaoTipo($dimensaoTipo);
-                        $dimensao->setVisitante(0);
-                        $dimensao->setConsolidacao(0);
-                        $dimensao->setMembro(0);
-                        $dimensao->setLider(0);
-                        $repositorioORM->getDimensaoORM()->persistir($dimensao);
-                        $dimensoes[$indiceDimensoes] = $dimensao;
-                    }
-                    $fatoCicloSelecionado = $repositorioORM->getFatoCicloORM()->encontrarPorNumeroIdentificador($numeroIdentificador, $ciclo, $mes, $ano);
                 }
-
                 if ($evento->getEventoTipo()->getId() === $eventoTipoCulto) {
                     $diaDeSabado = 7;
                     $diaDeDomingo = 1;

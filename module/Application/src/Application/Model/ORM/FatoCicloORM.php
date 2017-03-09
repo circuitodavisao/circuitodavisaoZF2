@@ -3,6 +3,7 @@
 namespace Application\Model\ORM;
 
 use Application\Controller\Helper\Constantes;
+use Application\Model\Entity\Dimensao;
 use Application\Model\Entity\FatoCiclo;
 use Application\Model\Entity\Grupo;
 use Exception;
@@ -20,9 +21,10 @@ class FatoCicloORM extends CircuitoORM {
      * @param type $ciclo
      * @param type $mes
      * @param type $ano
-     * @return FatoCiclo
+     * @param RepositorioORM $repositorioORM
+     * @return type
      */
-    public function encontrarPorNumeroIdentificador($numeroIdentificador, $ciclo, $mes, $ano) {
+    public function encontrarPorNumeroIdentificador($numeroIdentificador, $ciclo, $mes, $ano, RepositorioORM $repositorioORM) {
         $cicloInt = (int) $ciclo;
         $mesInt = (int) $mes;
         $anoInt = (int) $ano;
@@ -36,6 +38,13 @@ class FatoCicloORM extends CircuitoORM {
                         Constantes::$ENTITY_FATO_CICLO_ANO => $anoInt,
                         Constantes::$ENTITY_FATO_CICLO_CICLO => $cicloInt,
             ));
+
+            if (empty($resposta)) {
+                $meta = 6;
+                $resposta = $this->criarFatoNoCiclo($numeroIdentificador, $ano, $mes, $ciclo, $meta, $repositorioORM);
+            }
+
+
             return $resposta;
         } catch (Exception $exc) {
             echo $exc->getTraceAsString();
@@ -69,6 +78,61 @@ class FatoCicloORM extends CircuitoORM {
             }
 
             return $numeroIdentificador;
+        } catch (Exception $exc) {
+            echo $exc->getMessage();
+        }
+    }
+
+    /**
+     * Criar fato ciclo 
+     * @param type $numeroIdentificador
+     * @param type $ano
+     * @param type $mes
+     * @param type $ciclo
+     * @param type $meta
+     * @param RepositorioORM $repositorioORM
+     * @return FatoCiclo
+     */
+    public function criarFatoNoCiclo($numeroIdentificador, $ano, $mes, $ciclo, $meta, RepositorioORM $repositorioORM) {
+        $fatoCiclo = new FatoCiclo();
+        try {
+            $fatoCiclo->setNumero_identificador($numeroIdentificador);
+            $fatoCiclo->setAno($ano);
+            $fatoCiclo->setMes($mes);
+            $fatoCiclo->setCiclo($ciclo);
+            $fatoCiclo->setMeta($meta);
+            $this->persistir($fatoCiclo);
+            $dimensoes = $this->criarDimensoes($fatoCiclo, $repositorioORM);
+            $fatoCicloPesquisa = $this->encontrarPorNumeroIdentificador($numeroIdentificador, $ciclo, $mes, $ano, $repositorioORM);
+            $fatoCicloPesquisa->setDimensao($dimensoes);
+            return $fatoCicloPesquisa;
+        } catch (Exception $exc) {
+            echo $exc->getMessage();
+        }
+    }
+
+    /**
+     * Criar dimensões
+     * @param type $fatoCiclo
+     * @param \Application\Model\ORM\RepositorioORM $repositorioORM
+     * @return Dimensao
+     */
+    public function criarDimensoes($fatoCiclo, RepositorioORM $repositorioORM) {
+        $dimensoes = null;
+        try {
+            for ($indiceDimensoes = 1; $indiceDimensoes <= 4; $indiceDimensoes++) {
+                $dimensao = new Dimensao();
+                $dimensao->setFatoCiclo($fatoCiclo);
+                $dimensaoTipo = $repositorioORM->getDimensaoTipoORM()->encontrarPorId($indiceDimensoes);
+                $dimensao->setDimensaoTipo($dimensaoTipo);
+                $dimensao->setVisitante(0);
+                $dimensao->setConsolidacao(0);
+                $dimensao->setMembro(0);
+                $dimensao->setLider(0);
+                $repositorioORM->getDimensaoORM()->persistir($dimensao);
+                $dimensoes[] = $dimensao;
+            }
+            return $dimensoes;
         } catch (Exception $exc) {
             echo $exc->getMessage();
         }

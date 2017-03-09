@@ -1,73 +1,250 @@
-<h1> Relatório Membresia</h1>
-<div class="panel">
-    <div class="panel-heading">
-        <ul class="nav panel-tabs-border panel-tabs panel-tabs-left">
-            <li class="active">
-                <a href="#tab8_1" data-toggle="tab">PERIODO ATUAL</a>
-            </li>
-            <li>
-                <a href="#tab8_2" data-toggle="tab">PERIODO ANTERIOR</a>
-            </li>
-        </ul>
-    </div>
-    <div class="panel-body pn">    
-        <div class="tab-content br-n pn">
-            <div id="tab18_1" class="tab-pane active">
-                <table class="text-center table table-condensed bg-light">
-                    <thead>
-                        <tr>                   
-                            <th colspan="6" class="text-center">
-                                27/02 a 05/03
-                            </th>                    
-                        </tr>
-                        <tr>
-                            <th>#</th>
-                            <th>TIMES</th>
-                            <th>META</th>
-                            <th>LIDERES</th>
-                            <th>CUL</th>
-                            <th>SAB</th>
-                            <th>DOM</th>
-                            <th>%</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr class="success">
-                            <td>1</td>
-                            <td>BKB</td>
-                            <td>6</td>
-                            <td>1</td>
-                            <td>1</td>
-                            <td>1</td>
-                            <td>1</td>
-                            <td>50,00%</td>
-                        </tr> 
-                        <tr class="warning">
-                            <td>2</td>
-                            <td>FALCONS</td>
-                            <td>6</td>
-                            <td>1</td>
-                            <td>1</td>
-                            <td>1</td>
-                            <td>1</td>
-                            <td>50,00%</td>
-                        </tr>
-                    </tbody>
-                    <tfoot>
-                        <tr>  
-                            <td></td>
-                            <td>TOTAL</td>
-                            <td>12</td>
-                            <td>2</td>
-                            <td>2</td>
-                            <td>2</td>
-                            <td>2</td>
-                            <td>50,00%</td>
-                        </tr>
-                    </tfoot>
-                </table>
+<div class="mw600 center-block">
+    <div class="panel-body bg-light">
+        <h1> Relatório Membresia</h1>
+        <div class="panel">
+            <div class="panel-heading">
+                <ul class="nav panel-tabs-border panel-tabs panel-tabs-left">
+                    <li class="active">
+                        <a href="#tab8_1" data-toggle="tab">PERIODO ATUAL</a>
+                    </li>
+                    <li>
+                        <a href="#tab8_2" data-toggle="tab">PERIODO ANTERIOR</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="panel-body pn">    
+                <div class="tab-content br-n pn">
+                    <div id="tab18_1" class="tab-pane active">
+                        <table class="text-center table table-condensed bg-light">
+                            <thead>
+                                <tr>                   
+                                    <th colspan="6" class="text-center">
+                                        27/02 a 05/03
+                                    </th>                    
+                                </tr>
+                                <tr>
+                                    <th>#</th>
+                                    <th>TIMES</th>
+                                    <th>META</th>
+                                    <th>LIDERES</th>
+                                    <th>CUL</th>
+                                    <th>SAB</th>
+                                    <th>DOM</th>
+                                    <th>%</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="success">
+                                    <td>1</td>
+                                    <td>BKB</td>
+                                    <td>6</td>
+                                    <td>1</td>
+                                    <td>1</td>
+                                    <td>1</td>
+                                    <td>1</td>
+                                    <td>50,00%</td>
+                                </tr> 
+                                <tr class="warning">
+                                    <td>2</td>
+                                    <td>FALCONS</td>
+                                    <td>6</td>
+                                    <td>1</td>
+                                    <td>1</td>
+                                    <td>1</td>
+                                    <td>1</td>
+                                    <td>50,00%</td>
+                                </tr>
+                            </tbody>
+                            <tfoot>
+                                <tr>  
+                                    <td></td>
+                                    <td>TOTAL</td>
+                                    <td>12</td>
+                                    <td>2</td>
+                                    <td>2</td>
+                                    <td>2</td>
+                                    <td>2</td>
+                                    <td>50,00%</td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+
             </div>
         </div>
 
+        <h1> Relatório Celula</h1>
+        <div class="panel">
+            <div class="panel-heading">
+                <ul class="nav panel-tabs-border panel-tabs panel-tabs-left">
+                    <li class="active">
+                        <a href="#tab8_1" data-toggle="tab">PERIODO ATUAL</a>
+                    </li>
+                    <li>
+                        <a href="#tab8_2" data-toggle="tab">PERIODO ANTERIOR</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="panel-body pn">    
+                <div class="tab-content br-n pn">
+                    <div id="tab18_1" class="tab-pane active">
+                        <table class="text-center table table-condensed bg-light">
+                            <thead>
+                                <tr>                   
+                                    <th colspan="6" class="text-center">
+                                        27/02 a 05/03
+                                    </th>                    
+                                </tr>
+                                <tr>
+                                    <th>#</th>
+                                    <th>TIMES</th>
+                                    <th>LIDERES</th>
+                                    <th>META</th>                                   
+                                    <th>CEL</th>
+                                    <th>%</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php
+                                $dimensaoTipoCelula = 1;
+                                foreach ($this->fatoCiclo->getDimensao() as $dimensao) {
+                                    if ($dimensao->getDimensaoTipo()->getId() === $dimensaoTipoCelula) {
+                                        $lideres = 1;
+                                        $meta = 6 * $lideres;
+                                        $somaCelula = $dimensao->getVisitante() +
+                                                $dimensao->getConsolidacao() +
+                                                $dimensao->getMembro() +
+                                                $dimensao->getLider();
+                                        $performance = $somaCelula / $meta * 100;
+                                        $performanceFormatada = number_format($performance, 2, ',', '.');
+                                        echo '<tr>';
+                                        echo '<td></td>';
+                                        echo '<td>MEU</td>';
+                                        echo '<td>1</td>';
+                                        echo '<td>6</td>';
+                                        echo '<td>' . $somaCelula . '</td>';
+                                        echo '<td>' . $performance . '%</td>';
+                                        echo '</tr>';
+                                    }
+                                }
+                                ?>                     
+                            </tbody>
+
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <h1> Relatório Membresia</h1>
+        <div class="panel">
+            <div class="panel-heading">
+                <ul class="nav panel-tabs-border panel-tabs panel-tabs-left">
+                    <li class="active">
+                        <a href="#tab8_1" data-toggle="tab">PERIODO ATUAL</a>
+                    </li>
+                    <li>
+                        <a href="#tab8_2" data-toggle="tab">PERIODO ANTERIOR</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="panel-body pn">    
+                <div class="tab-content br-n pn">
+                    <div id="tab18_1" class="tab-pane active">
+                        <table class="text-center table table-condensed bg-light">
+                            <thead>
+                                <tr>                   
+                                    <th colspan="7" class="text-center">
+                                        27/02 a 05/03
+                                    </th>                    
+                                </tr>
+                                <tr>
+                                    <th>#</th>
+                                    <th>TIMES</th>
+                                    <th>LIDERES</th>
+                                    <th>META</th>                                   
+                                    <th>CUL</th>
+                                    <th>ARE</th>
+                                    <th>DOM</th>
+                                    <th>MEM</th>
+                                    <th>%</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php
+                                $soma;
+                                $performance;
+                                $dimensaoTipoCelula = 1;
+                                $dimensaoTipoCulto = 2;
+                                $dimensaoTipoArena = 3;
+                                $dimensaoTipoDomingo = 4;
+                                $lideres = 1;
+                                $meta = 6 * $lideres;
+                                foreach ($this->fatoCiclo->getDimensao() as $dimensao) {
+                                    if ($dimensao->getDimensaoTipo()->getId() !== $dimensaoTipoCelula) {
+                                        $soma[$dimensao->getDimensaoTipo()->getId()] = $dimensao->getVisitante() +
+                                                $dimensao->getConsolidacao() +
+                                                $dimensao->getMembro() +
+                                                $dimensao->getLider();
+                                    }
+                                }
+                                $membresia = $soma[$dimensaoTipoCulto] / 3 + $soma[$dimensaoTipoArena] / 2 + $soma[$dimensaoTipoDomingo];
+                                $membresiaFormatada = number_format($membresia, 2, ',', '.');
+                                $performance = $membresia / $meta * 100;
+                                $performanceFormatada = number_format($performance, 2, ',', '.');
+                                echo '<tr>';
+                                echo '<td></td>';
+                                echo '<td>MEU</td>';
+                                echo '<td>1</td>';
+                                echo '<td>6</td>';
+                                echo '<td>' . $soma[$dimensaoTipoCulto] . '</td>';
+                                echo '<td>' . $soma[$dimensaoTipoArena] . '</td>';
+                                echo '<td>' . $soma[$dimensaoTipoDomingo] . '</td>';
+                                echo '<td>' . $membresiaFormatada . '</td>';
+                                echo '<td>' . $performanceFormatada . '%</td>';
+                                echo '</tr>';
+                                ?>                     
+                            </tbody>
+
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <!-- dashboard tiles -->
+        <div class="row">
+            <div class="panel panel-tile text-center br-a br-grey">
+                <div class="panel-body">
+                    <h1 class="text-system">CICLO <?php echo $this->fatoCiclo->getCiclo(); ?></h1>
+                    <table class="table table-condensed table-bordered">
+                        <thead>
+                            <tr>
+                                <td>Dimensao</td>
+                                <td>Visitante</td>
+                                <td>Consolidacao</td>
+                                <td>Membro</td>
+                                <td>Lider</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+<?php
+foreach ($this->fatoCiclo->getDimensao() as $dimensao) {
+    echo '<tr>';
+    echo '<td>' . $dimensao->getDimensaoTipo()->getNome() . '</td>';
+    echo '<td>' . $dimensao->getVisitante() . '</td>';
+    echo '<td>' . $dimensao->getConsolidacao() . '</td>';
+    echo '<td>' . $dimensao->getMembro() . '</td>';
+    echo '<td>' . $dimensao->getLider() . '</td>';
+    echo '</tr>';
+}
+?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
