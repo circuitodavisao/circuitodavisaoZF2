@@ -123,7 +123,7 @@ class ListagemDeEventos extends AbstractHelper {
                 }
                 if ($tipoRevisao) {
                     
-                    $html .= '<td class="text-center">' . Funcoes::mudarPadraoData($evento->getData_criacao(), 1) .  '</td>';
+                    $html .= '<td class="text-center">' . Funcoes::mudarPadraoData($evento->getData(), 1) .  '</td>';
                     $stringNomeDaFuncaoOnClick = 'funcaoCadastro("' . Constantes::$PAGINA_CADASTRO_REVISAO . '", ' . $evento->getId() . ')';
                     $stringNomeDaFuncaoOnClickExclusao = 'funcaoCadastro("' . Constantes::$PAGINA_CADASTRO_REVISAO . '", ' . $evento->getId() . ')';
                     $grupoEventoAtivos = $evento->getGrupoEventoAtivos();

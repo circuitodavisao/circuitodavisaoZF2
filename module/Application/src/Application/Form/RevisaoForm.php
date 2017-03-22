@@ -71,24 +71,23 @@ class RevisaoForm extends Form {
         );
 
 
-        if (!is_null($revisao)) {
-            if (!is_null($revisao->getId())) {
 
-                $this->get(Constantes::$FORM_ID)->setValue($revisao->getId());
-                $this->get(Constantes::$FORM_INPUT_DATA_REVISAO)->setValue(Funcoes::mudarPadraoData($revisao->getData_criacao(), 1));
-                $this->get(Constantes::$FORM_NOME)->setValue($revisao->getNome());
-                foreach ($gruposIgrejas as $gi) {
-                    $i = $gi->getEntidadeAtiva();
-                    if ($gi->verificaSeParticipaDoEvento($this->get(Constantes::$FORM_ID)->getValue())) {
-                        $selected = true;
-                    }
+        if (!is_null($revisao->getId())) {
 
-                    $arrayIgrejas [] = array(
-                        'value' => $i->getNome() . '#' . $i->getId(),
-                        'label' => $i->getNome(),
-                        'selected' => $selected,
-                    );
+            $this->get(Constantes::$FORM_ID)->setValue($revisao->getId());
+            $this->get(Constantes::$FORM_INPUT_DATA_REVISAO)->setValue(Funcoes::mudarPadraoData($revisao->getData(), 1));
+            $this->get(Constantes::$FORM_NOME)->setValue($revisao->getNome());
+            foreach ($gruposIgrejas as $gi) {
+                $i = $gi->getEntidadeAtiva();
+                if ($gi->verificaSeParticipaDoEvento($this->get(Constantes::$FORM_ID)->getValue())) {
+                    $selected = true;
                 }
+
+                $arrayIgrejas [] = array(
+                    'value' => $i->getNome() . '#' . $i->getId(),
+                    'label' => $i->getNome(),
+                    'selected' => $selected,
+                );
             }
         } else {
             foreach ($gruposIgrejas as $gi) {

@@ -1059,7 +1059,7 @@ class CadastroController extends CircuitoController {
             $entidadeFilho = $grupoFilho->getEntidadeAtiva();
             if ($entidadeFilho->getTipo_id() == 5) {
                 $entidadeIgrejas[] = $entidadeFilho;
-                $gruposIgrejas[] = $grupoFilho;
+                $gruposIgrejas[] = $grupoFilho; 
             }
         }
         $revisaoNaSessao = new Evento();
@@ -1096,7 +1096,7 @@ class CadastroController extends CircuitoController {
                 /* Repositorios * */
                 $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
                 $validatedData = $post_data;
-
+                print_r($validatedData);
                 
                 if(empty($validatedData['id'])){
                     $criarNovoEvento = true;
@@ -1112,9 +1112,10 @@ class CadastroController extends CircuitoController {
                     $evento->setHora('21:00:00');
                     $evento->setNome($validatedData['nome']);    
                     $dataParaCadastro = Funcoes::dataAtual();
-                    $evento->setData_criacao(Funcoes::mudarPadraoData($validatedData['dataRevisao'], 0));
+                    $evento->setData_criacao(Funcoes::dataAtual());
                     $evento->setHora_criacao(Funcoes::horaAtual());
-
+                    $evento->setData($validatedData['dataRevisao']);
+                   
                     $evento->setEventoTipo($repositorioORM->getEventoTipoORM()->encontrarPorId(3));
 
                     $grupoEvento->setData_criacao(Funcoes::dataAtual());
@@ -1142,6 +1143,63 @@ class CadastroController extends CircuitoController {
                         $grupoEventoIgreja->setEvento($evento);
                         $repositorioORM->getGrupoEventoORM()->persistir($grupoEventoIgreja);
                     }
+                }else{
+                        $eventoAtual = $repositorioORM->getEventoORM()->encontrarPorId($post_data[Constantes::$FORM_ID]);
+                        $grupoEventoAtivos = $eventoAtual->getGrupoEventoAtivos();
+                        $eventoAtual->setNome($validatedData['nome']);
+                        $eventoAtual->setData($validatedData['dataRevisao']); 
+                        $repositorioORM->getEventoORM()->persistir($eventoAtual);
+                    /* Marcação */
+                        foreach ($post_data['igrejas'] as $value) {
+                            
+                            
+                                $stringValor = explode('#', $value);
+                                /* Verificando marcações */
+                                $validacaoMarcado = false;
+                                foreach ($grupoEventoAtivos as $gea) {
+                                    if ($gea->getGrupo()->getId() == $stringValor[1]) {
+                                        $validacaoMarcado = true;
+                                    }
+                                }
+                                /* Equipe esta marcada mas não foi gerada ainda */
+                                if (!$validacaoMarcado) {
+                                    $grupoEquipe = $repositorioORM->getGrupoORM()->encontrarPorId($stringValor[1]);
+                                    $grupoEventoEquipe = new GrupoEvento();
+                                    $grupoEventoEquipe->setData_criacao(Funcoes::dataAtual());
+                                    $grupoEventoEquipe->setHora_criacao(Funcoes::horaAtual());
+                                    $grupoEventoEquipe->setGrupo($grupoEquipe);
+                                    $grupoEventoEquipe->setEvento($eventoAtual);
+                                    $repositorioORM->getGrupoEventoORM()->persistir($grupoEventoEquipe);
+                                }
+                            
+                        }
+                        /* Desmarcação */
+                        foreach ($grupoEventoAtivos as $gea) {
+                            $idEntidadeAtual = $sessao->idEntidadeAtual;
+                            $entidade = $repositorioORM->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+                            $grupo = $entidade->getGrupo();
+                            if ($gea->getGrupo()->getId() != $grupo->getId()) {
+                                $validacaoMarcado = false;
+                                foreach ($post_data['igrejas'] as $value) {
+                                    
+                                    
+                                        $stringValor = explode('#', $value);
+                                        if ($gea->getGrupo()->getId() == $stringValor[1]) {
+                                            $validacaoMarcado = true;
+                                        }
+                                    
+                                }
+                                /* Equipe esta marcada mas não foi gerada ainda */
+                                if (!$validacaoMarcado) {
+                                    $gea->setData_inativacao(Funcoes::dataAtual());
+                                    $gea->setHora_inativacao(Funcoes::horaAtual());
+                                    $repositorioORM->getGrupoEventoORM()->persistir($gea);
+                                }
+                            }
+                        }
+                        
+                        
+                        
                 }
 
                 return $this->redirect()->toRoute(Constantes::$ROUTE_CADASTRO, array(

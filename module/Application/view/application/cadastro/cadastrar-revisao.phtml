@@ -4,6 +4,7 @@ use Application\Controller\Helper\Constantes;
 $form = $this->revisaoForm;
 $form->prepare();
 $form->setAttribute(Constantes::$ACTION, $this->url(Constantes::$ROUTE_CADASTRO, array(Constantes::$PAGINA => Constantes::$PAGINA_SALVAR_REVISAO)));
+echo $this->formHidden($form->get(Constantes::$FORM_ID));
 ?>
 <div class="mw1000 center-block">
     <div class="admin-form theme-primary">
@@ -11,7 +12,7 @@ $form->setAttribute(Constantes::$ACTION, $this->url(Constantes::$ROUTE_CADASTRO,
             <!-- Estado Civil -->
 
 
-            <?php echo $this->form()->openTag($form); ?>
+            <?php echo $this->form()->openTag($form); ?> 
             <!-- Incluir Responsavel -->
             <div id="divIncluirDados" class="">
                 <!-- Passo a Passo -->
@@ -29,11 +30,11 @@ $form->setAttribute(Constantes::$ACTION, $this->url(Constantes::$ROUTE_CADASTRO,
                                 <p>Igrejas</p>
                             </div>
                             <div id="3"  class="stepwizard-step stepwizard-step-cadastro-grupo">
-                                <button id="botaoPasso2" type="button" class="btn btn-default btn-circle" disabled="disabled">2</button>
+                                <button id="botaoPasso3" type="button" class="btn btn-default btn-circle" disabled="disabled">3</button>
                                 <p>Observação</p>
                             </div>
                             <div id="4"  class="stepwizard-step stepwizard-step-cadastro-grupo">
-                                <button id="botaoPasso3" type="button" class="btn btn-default btn-circle" disabled="disabled">3</button>
+                                <button id="botaoPasso4" type="button" class="btn btn-default btn-circle" disabled="disabled">4</button>
                                 <p>Confirme</p>
                             </div>
                         </div>
@@ -91,7 +92,7 @@ $form->setAttribute(Constantes::$ACTION, $this->url(Constantes::$ROUTE_CADASTRO,
                 </div>
                 <div id="divObservacao" class="hidden">
                     <div class="section-divider mt40">
-                        <span id="spanInserirObservacao"> Qual observação do Revisao? </span>
+                        <span id="spanInserirObservacao"> Qual nome do Revisao? </span>
                     </div> 
                     <div class="panel-menu">
                         <?php echo $this->formInput($form->get('nome')); ?>
@@ -110,7 +111,7 @@ $form->setAttribute(Constantes::$ACTION, $this->url(Constantes::$ROUTE_CADASTRO,
                 </div>
                 <div id="divConfirmacao" class="hidden">
                     <div class="section-divider mt40">
-                        <span>Confirme seus dados</span>
+                        <span>Confirme os dados</span>
                     </div> 
 
                     <!-- Tabela de Alunos -->
@@ -130,7 +131,7 @@ $form->setAttribute(Constantes::$ACTION, $this->url(Constantes::$ROUTE_CADASTRO,
         </div>
 
     </div>
-    <input type="hidden" name="csrf" value="5eba170143d6203790316849f91763e9-70d7b665696cfe75f4d9bb2cdaabd8e2"><input type="hidden" name="idAlunoSelecionado0" id="idAlunoSelecionado0" value=""><input type="hidden" name="idAlunoSelecionado1" id="idAlunoSelecionado1" value=""><input type="hidden" name="idAlunoSelecionado2" id="idAlunoSelecionado2" value=""><input type="hidden" name="nome0" id="nome0" value=""><input type="hidden" name="nome1" id="nome1" value=""><input type="hidden" name="nome2" id="nome2" value=""><input type="hidden" name="email0" id="email0" value=""><input type="hidden" name="email1" id="email1" value=""><input type="hidden" name="email2" id="email2" value=""><input type="hidden" name="cpf0" id="cpf0" value=""><input type="hidden" name="cpf1" id="cpf1" value=""><input type="hidden" name="cpf2" id="cpf2" value=""><input type="hidden" name="hierarquia0" id="hierarquia0" value=""><input type="hidden" name="hierarquia1" id="hierarquia1" value=""><input type="hidden" name="hierarquia2" id="hierarquia2" value=""><input type="hidden" name="dataNascimento0" id="dataNascimento0" value=""><input type="hidden" name="dataNascimento1" id="dataNascimento1" value=""><input type="hidden" name="dataNascimento2" id="dataNascimento2" value=""><input type="hidden" name="nomeAluno" id="nomeAluno" value=""></div></div></div></form><div id="modalBuscando" class="admin-form mfp-with-anim mfp-hide"><div align="center"><img src="/img/loader-grande.gif"></i></div></div><script type="text/javascript" src="/js/circuito_da_visao/modal-loader.js?v=7.0"></script>
+    <?php echo $this->form()->closeTag(); ?>
 <script type="text/javascript">
                         /**
                          * Nome: layout-js-grupo-validacao.js
@@ -176,6 +177,16 @@ $form->setAttribute(Constantes::$ACTION, $this->url(Constantes::$ROUTE_CADASTRO,
                             $('#divDadosEmcima').addClass(hidden);
                             $('#divObservacao').addClass(hidden);
                         }
+                        function botaoVoltarObservacao() {
+                            $('#botaoPasso4').removeClass(btnPrimary);
+                            $('#botaoPasso4').addClass(btnDefault);  
+                            $('#botaoPasso3').removeClass(btnDefault);
+                            $('#botaoPasso3').addClass(btnPrimary);
+                            $('#divConfirmacao').addClass(hidden);
+                            $('#divIgrejas').addClass(hidden);
+                            $('#divDadosEmcima').addClass(hidden);
+                            $('#divObservacao').removeClass(hidden);
+                        }
                         function botaoProsseguirIgrejas() {
                             valorData = $('#dataRevisao').val();
                             var spanMensagens = $('#spanMensagens');
@@ -208,10 +219,10 @@ $form->setAttribute(Constantes::$ACTION, $this->url(Constantes::$ROUTE_CADASTRO,
 
                             } else {
                                 $('#spanMensagens').addClass(hidden);
-                                $('#botaoPasso1').removeClass(btnPrimary);
-                                $('#botaoPasso1').addClass(btnDefault);
-                                $('#botaoPasso2').removeClass(btnDefault);
-                                $('#botaoPasso2').addClass(btnPrimary);
+                                $('#botaoPasso2').removeClass(btnPrimary);
+                                $('#botaoPasso2').addClass(btnDefault);
+                                $('#botaoPasso3').removeClass(btnDefault);
+                                $('#botaoPasso3').addClass(btnPrimary);
                                 $('#divIgrejas').addClass(hidden);
                                 $('#divObservacao').removeClass(hidden);
                                 data = 'Quais Igrejas Participaram do Evento na sexta dia ' + $('#dataRevisao').val();
@@ -239,10 +250,10 @@ $form->setAttribute(Constantes::$ACTION, $this->url(Constantes::$ROUTE_CADASTRO,
                                     }
                                 }
                                 $('#spanMensagens').addClass(hidden);
-                                $('#botaoPasso2').removeClass(btnPrimary);
-                                $('#botaoPasso2').addClass(btnDefault);
-                                $('#botaoPasso3').removeClass(btnDefault);
-                                $('#botaoPasso3').addClass(btnPrimary);
+                                $('#botaoPasso3').removeClass(btnPrimary);
+                                $('#botaoPasso3').addClass(btnDefault);
+                                $('#botaoPasso4').removeClass(btnDefault);
+                                $('#botaoPasso4').addClass(btnPrimary);
                                 $('#divObservacao').addClass(hidden);
                                 $('#divConfirmacao').removeClass(hidden);
                                 dataRevisao = 'Data do Revisão ' + $('#dataRevisao').val();

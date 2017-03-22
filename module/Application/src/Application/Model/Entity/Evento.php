@@ -19,6 +19,7 @@ use Zend\InputFilter\InputFilterInterface;
 class Evento extends CircuitoEntity implements InputFilterAwareInterface {
 
     protected $inputFilter;
+    protected $idAntigo;
 
     /**
      * @ORM\OneToOne(targetEntity="EventoCelula", mappedBy="evento")
@@ -54,6 +55,9 @@ class Evento extends CircuitoEntity implements InputFilterAwareInterface {
 
     /** @ORM\Column(type="string") */
     protected $hora;
+
+    /** @ORM\Column(type="string") */
+    protected $data;
 
     /** @ORM\Column(type="integer") */
     protected $tipo_id;
@@ -195,7 +199,7 @@ class Evento extends CircuitoEntity implements InputFilterAwareInterface {
      */
     function verificaSeECelula() {
         $resposta = false;
-        if ($this->getTipo_id() == 2) {
+        if ($this->getEventoTipo()->getId() === 2) {
             $resposta = true;
         }
         return $resposta;
@@ -207,12 +211,12 @@ class Evento extends CircuitoEntity implements InputFilterAwareInterface {
      */
     function verificaSeECulto() {
         $resposta = false;
-        if ($this->getTipo_id() == 1) {
+        if ($this->getEventoTipo()->getId() === 1) {
             $resposta = true;
         }
         return $resposta;
     }
-    
+
     /**
      * Verifica se o evento é do tipo culto
      * @return boolean
@@ -224,8 +228,7 @@ class Evento extends CircuitoEntity implements InputFilterAwareInterface {
         }
         return $resposta;
     }
-    
-    
+
     function getTipo_id() {
         return $this->tipo_id;
     }
@@ -316,6 +319,22 @@ class Evento extends CircuitoEntity implements InputFilterAwareInterface {
 
     public function exchangeArray($data) {
         $this->nome = (!empty($data[Constantes::$FORM_NOME]) ? strtoupper($data[Constantes::$FORM_NOME]) : null);
+    }
+
+    function getIdAntigo() {
+        return $this->idAntigo;
+    }
+
+    function setIdAntigo($idAntigo) {
+        $this->idAntigo = $idAntigo;
+    }
+
+    function getData() {
+        return $this->data;
+    }
+
+    function setData($data) {
+        $this->data = $data;
     }
 
 }
