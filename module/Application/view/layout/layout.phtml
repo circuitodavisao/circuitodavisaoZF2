@@ -1,7 +1,7 @@
 <?php echo $this->doctype(); ?>
 
 <?php
-$versao = '?v=1.1.6';
+$versao = '?v=1.1.7';
 
 use Application\Controller\Helper\Constantes;
 ?>
@@ -123,7 +123,7 @@ use Application\Controller\Helper\Constantes;
                         || splitUrl[3].includes('cadastro')
                         || splitUrl[3].includes('lancamento')
                         || splitUrl[3].includes('relatorio')) {
-                    
+
                     $('body')
                             .removeClass('external-page')
                             .removeClass('external-alt');

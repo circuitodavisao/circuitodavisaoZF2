@@ -1,0 +1,239 @@
+<?php
+
+use Application\Controller\Helper\Constantes;
+use Application\Controller\Helper\Funcoes;
+?>
+
+<div class="mw600 center-block">
+    <div class="panel-body bg-light">    
+
+        <!--        <h1> Relatório Celula</h1>
+                <div class="panel">
+                    <div class="panel-heading">
+                        <ul class="nav panel-tabs-border panel-tabs panel-tabs-left">
+                            <li class="active">
+                                <a href="#tab8_1" data-toggle="tab">PERIODO ATUAL</a>
+                            </li>
+                            <li>
+                                <a href="#tab8_2" data-toggle="tab">PERIODO ANTERIOR</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="panel-body pn">    
+                        <div class="tab-content br-n pn">
+                            <div id="tab18_1" class="tab-pane active">
+                                <table class="text-center table table-condensed table-bordered bg-light">
+                                    <thead>
+                                        <tr>                   
+                                            <th colspan="6" class="text-center">
+                                                Período <?php echo $this->periodoSelecionado ?>
+                                            </th>                    
+                                        </tr>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>TIMES</th>
+                                            <th>LIDERES</th>
+                                            <th>META</th>                                   
+                                            <th>CEL</th>
+                                            <th>%</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+        <?php
+//        $dimensaoTipoCelula = 1;
+//        foreach ($this->fatoCiclo->getDimensao() as $dimensao) {
+//            if ($dimensao->getDimensaoTipo()->getId() === $dimensaoTipoCelula) {
+//                $lideres = 1;
+//                $meta = 6 * $lideres;
+//                $somaCelula = $dimensao->getVisitante() +
+//                        $dimensao->getConsolidacao() +
+//                        $dimensao->getMembro() +
+//                        $dimensao->getLider();
+//                $performance = $somaCelula / $meta * 100;
+//                $performanceFormatada = number_format($performance, 2, ',', '.');
+//                echo '<tr>';
+//                echo '<td></td>';
+//                echo '<td>MEU</td>';
+//                echo '<td>1</td>';
+//                echo '<td>6</td>';
+//                echo '<td>' . $somaCelula . '</td>';
+//                echo '<td>' . $performance . '%</td>';
+//                echo '</tr>';
+//            }
+//        }
+        ?>                     
+                                    </tbody>
+        
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>-->
+
+        <!--<h1> Relatório Membresia</h1>-->
+        <?php
+        $urlBase = $this->url(Constantes::$ROUTE_RELATORIO) . 'Membresia';
+        $urlBase2 = $urlBase . '/2';
+        ?>
+        <div class="panel">
+            <div class="panel-heading">
+                <ul class="nav panel-tabs-border panel-tabs panel-tabs-left">
+                    <li <?php echo Constantes::$ONCLICK_ABRIR_MODAL . ' ' . $this->abaSelecionada($this->abaSelecionada, 1); ?>>
+                        <?php echo '<a href="' . $urlBase . '">Período Atual</a>'; ?>
+                    </li>
+                    <li <?php echo Constantes::$ONCLICK_ABRIR_MODAL . ' ' . $this->abaSelecionada($this->abaSelecionada, 2); ?>>
+                        <?php echo '<a href="' . $urlBase2 . '">Período Anterior</a>'; ?>
+                    </li>
+                </ul>
+            </div>
+            <div class="panel-body pn">    
+                <div class="tab-content br-n pn">
+                    <div id="tab18_1" class="tab-pane active">
+                        <table class="text-center table table-condensed table-bordered bg-light">
+                            <thead>
+                                <tr>                   
+                                    <th colspan="9" class="text-center">
+                                        Período <?php echo $this->periodoSelecionado ?>
+                                    </th>                    
+                                </tr>
+                                <tr>
+                                    <th>#</th>
+                                    <th>TIMES</th>
+                                    <th class="hidden-xs">LIDERES</th>
+                                    <th class="hidden-xs">META</th>                                   
+                                    <th>CUL</th>
+                                    <th>ARE</th>
+                                    <th>DOM</th>
+                                    <th>MEM</th>
+                                    <th>%</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php
+                                unset($somaGeral);
+                                unset($soma);
+                                unset($performance);
+                                $dimensaoTipoCulto = 2;
+                                $dimensaoTipoArena = 3;
+                                $dimensaoTipoDomingo = 4;
+                                $lideres = 1;
+                                $meta = 6 * $lideres;
+                                foreach ($this->relatorio as $key => $value) {
+                                    $soma[$key] = 0;
+                                    $somaGeral[$key] = 0;
+                                    foreach ($value as $campo) {
+                                        foreach ($campo as $valorCampo) {
+                                            $soma[$key] += $valorCampo;
+                                            $somaGeral[$key] += $valorCampo;
+                                        }
+                                    }
+                                }
+                                $membresia = $soma[$dimensaoTipoCulto] / 3 + $soma[$dimensaoTipoArena] / 2 + $soma[$dimensaoTipoDomingo];
+                                $performance = $membresia / $meta * 100;
+                                echo '<tr>';
+                                echo '<td></td>';
+                                echo '<td>MEU</td>';
+                                echo '<td class="hidden-xs">1</td>';
+                                echo '<td class="hidden-xs">6</td>';
+                                echo '<td>' . $soma[$dimensaoTipoCulto] . '</td>';
+                                echo '<td>' . $soma[$dimensaoTipoArena] . '</td>';
+                                echo '<td>' . $soma[$dimensaoTipoDomingo] . '</td>';
+                                echo '<td>' . number_format($membresia, 2, ',', '.') . '</td>';
+                                echo '<td>' . number_format($performance, 2, ',', '.') . '%</td>';
+                                echo '</tr>';
+
+
+                                if ($discipulos) {
+                                    $contagemRanking = 1;
+                                    foreach ($discipulos as $gpFilho) {
+                                        if ($contagemRanking >= 1 && $contagemRanking < 4) {
+                                            $classeLinha = 'success';
+                                        }
+                                        if ($contagemRanking >= 4 && $contagemRanking < 7) {
+                                            $classeLinha = 'warning';
+                                        }
+                                        if ($contagemRanking >= 7) {
+                                            $classeLinha = 'danger';
+                                        }
+                                        $grupoFilho = $gpFilho->getGrupoPaiFilhoFilho();
+                                        $entidadeFilho = $grupoFilho->getEntidadeAtiva();
+
+                                        $numeroIdentificador = $this->repositorioORM->getFatoCicloORM()->montarNumeroIdentificador($grupoFilho);
+                                        $tipoRelatorioSomado = 2;
+                                        $mesSelecionado = date('n');
+                                        $anoSelecionado = date('Y');
+                                        $cicloSelecionado = Funcoes::cicloAtual($mesSelecionado, $anoSelecionado);
+
+                                        if ($abaSelecionada == 2) {
+                                            if ($cicloSelecionado > 1) {
+                                                $cicloSelecionado--;
+                                            } else {
+                                                /* Mês Passado */
+                                                if ($cicloSelecionado == 1) {
+                                                    if (date('n') == 1) {
+                                                        $mesSelecionado = 12;
+                                                        $anoSelecionado = date('Y') - 1;
+                                                    } else {
+                                                        $mesSelecionado = date('n') - 1;
+                                                        $anoSelecionado = date('Y');
+                                                    }
+                                                    $cicloSelecionado = Funcoes::cicloAtual($mesSelecionado, $anoSelecionado);
+                                                }
+                                            }
+                                        }
+                                        $relatorio = $this->repositorioORM->getFatoCicloORM()->montarRelatorioPorNumeroIdentificador($numeroIdentificador, $cicloSelecionado, $mesSelecionado, $anoSelecionado, $tipoRelatorioSomado);
+
+                                        unset($soma);
+                                        unset($performance);
+                                        $lideres = 1;
+                                        $meta = 6 * $lideres;
+                                        foreach ($relatorio as $key => $value) {
+                                            $soma[$key] = 0;
+                                            foreach ($value as $campo) {
+                                                foreach ($campo as $valorCampo) {
+                                                    $soma[$key] += $valorCampo;
+                                                    $somaGeral[$key] += $valorCampo;
+                                                }
+                                            }
+                                        }
+                                        $membresia = $soma[$dimensaoTipoCulto] / 3 + $soma[$dimensaoTipoArena] / 2 + $soma[$dimensaoTipoDomingo];
+                                        $performance = $membresia / $meta * 100;
+
+                                        echo '<tr class="' . $classeLinha . '">';
+                                        echo '<td>' . $contagemRanking . '°</td>';
+                                        echo '<td>' . $entidadeFilho->infoEntidade() . '</td>';
+                                        echo '<td class="hidden-xs">1</td>';
+                                        echo '<td class="hidden-xs">6</td>';
+                                        echo '<td>' . $soma[$dimensaoTipoCulto] . '</td>';
+                                        echo '<td>' . $soma[$dimensaoTipoArena] . '</td>';
+                                        echo '<td>' . $soma[$dimensaoTipoDomingo] . '</td>';
+                                        echo '<td>' . number_format($membresia, 2, ',', '.') . '</td>';
+                                        echo '<td>' . number_format($performance, 2, ',', '.') . '%</td>';
+                                        echo '</tr>';
+                                        $contagemRanking++;
+                                    }
+                                }
+
+                                $membresia = $somaGeral[$dimensaoTipoCulto] / 3 + $somaGeral[$dimensaoTipoArena] / 2 + $somaGeral[$dimensaoTipoDomingo];
+                                $performance = $membresia / $meta * 100;
+                                echo '<tr class="dark">';
+                                echo '<td></td>';
+                                echo '<td>Total</td>';
+                                echo '<td class="hidden-xs">1</td>';
+                                echo '<td class="hidden-xs">6</td>';
+                                echo '<td>' . $somaGeral[$dimensaoTipoCulto] . '</td>';
+                                echo '<td>' . $somaGeral[$dimensaoTipoArena] . '</td>';
+                                echo '<td>' . $somaGeral[$dimensaoTipoDomingo] . '</td>';
+                                echo '<td>' . number_format($membresia, 2, ',', '.') . '</td>';
+                                echo '<td>' . number_format($performance, 2, ',', '.') . '%</td>';
+                                echo '</tr>';
+                                ?>                     
+                            </tbody>
+
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

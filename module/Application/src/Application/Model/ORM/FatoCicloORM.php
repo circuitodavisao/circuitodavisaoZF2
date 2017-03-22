@@ -24,21 +24,37 @@ class FatoCicloORM extends CircuitoORM {
      * @param RepositorioORM $repositorioORM
      * @return type
      */
-    public function encontrarPorNumeroIdentificador($numeroIdentificador, $ciclo, $mes, $ano, RepositorioORM $repositorioORM) {
+    public function encontrarPorNumeroIdentificador($numeroIdentificador, $ciclo, $mes, $ano, RepositorioORM $repositorioORM, $tipo = 1) {
         $cicloInt = (int) $ciclo;
         $mesInt = (int) $mes;
         $anoInt = (int) $ano;
         try {
-            $resposta = $this->getEntityManager()
-                    ->getRepository($this->getEntity())
-                    ->findOneBy(
-                    array(
-                        Constantes::$ENTITY_FATO_CICLO_NUMERO_IDENTIFICADOR => $numeroIdentificador,
-                        Constantes::$ENTITY_FATO_CICLO_MES => $mesInt,
-                        Constantes::$ENTITY_FATO_CICLO_ANO => $anoInt,
-                        Constantes::$ENTITY_FATO_CICLO_CICLO => $cicloInt,
-            ));
+            if ($tipo === 1) {
+                $resposta = $this->getEntityManager()
+                        ->getRepository($this->getEntity())
+                        ->findOneBy(
+                        array(
+                            Constantes::$ENTITY_FATO_CICLO_NUMERO_IDENTIFICADOR => $numeroIdentificador,
+                            Constantes::$ENTITY_FATO_CICLO_MES => $mesInt,
+                            Constantes::$ENTITY_FATO_CICLO_ANO => $anoInt,
+                            Constantes::$ENTITY_FATO_CICLO_CICLO => $cicloInt,
+                ));
+            }
+            if ($tipo === 2) {
+                $dql = "SELECT fc FROM  " . Constantes::$ENTITY_FATO_CICLO . " fc JOIN fc.dimensao d " .
+                        "WHERE fc.numero_identificador LIKE ?1 AND fc.mes = ?2 AND fc.ano = ?3 AND fc.ciclo = ?4";
 
+                $result = $this->getEntityManager()->createQuery($dql)
+                        ->setParameter(1, $numeroIdentificador . '%')
+                        ->setParameter(2, $mesInt)
+                        ->setParameter(3, $anoInt)
+                        ->setParameter(4, $cicloInt)
+                        ->getResult();
+
+                if ($result) {
+                    $resposta = $result[0];
+                }
+            }
             if (empty($resposta)) {
                 $meta = 6;
                 $resposta = $this->criarFatoNoCiclo($numeroIdentificador, $ano, $mes, $ciclo, $meta, $repositorioORM);
@@ -46,6 +62,58 @@ class FatoCicloORM extends CircuitoORM {
 
 
             return $resposta;
+        } catch (Exception $exc) {
+            echo $exc->getTraceAsString();
+        }
+    }
+
+    /**
+     * Localizar fato_ciclo por numeroIdentificador
+     * @param type $numeroIdentificador
+     * @param type $ciclo
+     * @param type $mes
+     * @param type $ano
+     * @param RepositorioORM $repositorioORM
+     * @return type
+     */
+    public function montarRelatorioPorNumeroIdentificador($numeroIdentificador, $ciclo, $mes, $ano, $tipoComparacao) {
+        $cicloInt = (int) $ciclo;
+        $mesInt = (int) $mes;
+        $anoInt = (int) $ano;
+        $dimensaoTipoCulto = 2;
+        $dimensaoTipoDomingo = 4;
+        $dqlBase = "SELECT "
+                . "SUM(d.lider) lideres, "
+                . "SUM(d.visitante) visitantes, "
+                . "SUM(d.consolidacao) consolidacoes, "
+                . "SUM(d.membro) membros "
+                . "FROM  " . Constantes::$ENTITY_FATO_CICLO . " fc "
+                . "JOIN fc.dimensao d "
+                . "WHERE "
+                . "d.dimensaoTipo = #dimensaoTipo "
+                . "AND fc.numero_identificador #tipoComparacao ?1 "
+                . "AND fc.mes = ?2 "
+                . "AND fc.ano = ?3 "
+                . "AND fc.ciclo = ?4";
+        try {
+            if ($tipoComparacao == 1) {
+                $dqlAjustadaTipoComparacao = str_replace('#tipoComparacao', '=', $dqlBase);
+            }
+            if ($tipoComparacao == 2) {
+                $dqlAjustadaTipoComparacao = str_replace('#tipoComparacao', 'LIKE', $dqlBase);
+                $numeroIdentificador .= '%';
+            }
+            for ($indice = $dimensaoTipoCulto; $indice <= $dimensaoTipoDomingo; $indice++) {
+                $dqlAjustada = str_replace('#dimensaoTipo', $indice, $dqlAjustadaTipoComparacao);
+                $result[$indice] = $this->getEntityManager()->createQuery($dqlAjustada)
+                        ->setParameter(1, $numeroIdentificador)
+                        ->setParameter(2, $mesInt)
+                        ->setParameter(3, $anoInt)
+                        ->setParameter(4, $cicloInt)
+                        ->getResult();
+            }
+
+            return $result;
         } catch (Exception $exc) {
             echo $exc->getTraceAsString();
         }
@@ -66,15 +134,15 @@ class FatoCicloORM extends CircuitoORM {
             $tipoIgreja = 5;
             $grupoSelecionado = $grupo;
             while ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === $tipoSubequipe) {
-                $numeroIdentificador .= str_pad($grupoSelecionado->getId(), $tamanho, 0, STR_PAD_LEFT);
+                $numeroIdentificador = str_pad($grupoSelecionado->getId(), $tamanho, 0, STR_PAD_LEFT) . $numeroIdentificador;
                 $grupoSelecionado = $grupoSelecionado->getGrupoPaiFilhoPai()->getGrupoPaiFilhoPai();
             }
             if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === $tipoEquipe) {
-                $numeroIdentificador .= str_pad($grupoSelecionado->getId(), $tamanho, 0, STR_PAD_LEFT);
+                $numeroIdentificador = str_pad($grupoSelecionado->getId(), $tamanho, 0, STR_PAD_LEFT) . $numeroIdentificador;
                 $grupoSelecionado = $grupoSelecionado->getGrupoPaiFilhoPai()->getGrupoPaiFilhoPai();
             }
             if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === $tipoIgreja) {
-                $numeroIdentificador .= str_pad($grupoSelecionado->getId(), $tamanho, 0, STR_PAD_LEFT);
+                $numeroIdentificador = str_pad($grupoSelecionado->getId(), $tamanho, 0, STR_PAD_LEFT) . $numeroIdentificador;
             }
 
             return $numeroIdentificador;
@@ -114,7 +182,7 @@ class FatoCicloORM extends CircuitoORM {
     /**
      * Criar dimensões
      * @param type $fatoCiclo
-     * @param \Application\Model\ORM\RepositorioORM $repositorioORM
+     * @param RepositorioORM $repositorioORM
      * @return Dimensao
      */
     public function criarDimensoes($fatoCiclo, RepositorioORM $repositorioORM) {

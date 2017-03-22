@@ -31,19 +31,61 @@ class RelatorioController extends CircuitoController {
      * GET /principal
      */
     public function indexAction() {
+        
+    }
+
+    /**
+     * Função padrão, traz a tela principal
+     * GET /principal
+     */
+    public function membresiaAction() {
         $sessao = new Container(Constantes::$NOME_APLICACAO);
         $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
         $idEntidadeAtual = $sessao->idEntidadeAtual;
         $entidade = $repositorioORM->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
         $grupo = $entidade->getGrupo();
         $numeroIdentificador = $repositorioORM->getFatoCicloORM()->montarNumeroIdentificador($grupo);
-        $mes = Funcoes::mesPorAbaSelecionada(1);
-        $ano = Funcoes::anoPorAbaSelecionada(1);
-        $ciclo = Funcoes::cicloAtual($mes, $ano);
-        $fatoCiclo = $repositorioORM->getFatoCicloORM()->encontrarPorNumeroIdentificador($numeroIdentificador, $ciclo, $mes, $ano, $repositorioORM);
+        /* Aba selecionada e ciclo */
+        $abaSelecionada = $this->params()->fromRoute(Constantes::$ID);
+        if (empty($abaSelecionada)) {
+            $abaSelecionada = 1;
+        }
+
+        $mesSelecionado = date('n');
+        $anoSelecionado = date('Y');
+        $cicloSelecionado = Funcoes::cicloAtual($mesSelecionado, $anoSelecionado);
+
+        if ($abaSelecionada == 2) {
+            if ($cicloSelecionado > 1) {
+                $cicloSelecionado--;
+            } else {
+                /* Mês Passado */
+                if ($cicloSelecionado == 1) {
+                    if (date('n') == 1) {
+                        $mesSelecionado = 12;
+                        $anoSelecionado = date('Y') - 1;
+                    } else {
+                        $mesSelecionado = date('n') - 1;
+                        $anoSelecionado = date('Y');
+                    }
+                    $cicloSelecionado = Funcoes::cicloAtual($mesSelecionado, $anoSelecionado);
+                }
+            }
+        }
+
+        $tipoRelatorioPessoal = 1;
+        $relatorio = $repositorioORM->getFatoCicloORM()->montarRelatorioPorNumeroIdentificador($numeroIdentificador, $cicloSelecionado, $mesSelecionado, $anoSelecionado, $tipoRelatorioPessoal);
+        $discipulos = $grupo->getGrupoPaiFilhoFilhos();
+        $periodoSelecionado = Funcoes::periodoCicloMesAno($cicloSelecionado, $mesSelecionado, $anoSelecionado);
 
         return new ViewModel(
-                array('fatoCiclo' => $fatoCiclo)
+                array(
+            'relatorio' => $relatorio,
+            'periodoSelecionado' => $periodoSelecionado,
+            'discipulos' => $discipulos,
+            'repositorioORM' => $repositorioORM,
+            'abaSelecionada' => $abaSelecionada
+                )
         );
     }
 

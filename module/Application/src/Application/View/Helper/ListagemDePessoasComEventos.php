@@ -41,7 +41,7 @@ class ListagemDePessoasComEventos extends AbstractHelper {
                 $adicionarVisitante = true;
                 $grupoPessoaTipo = $gp->getGrupoPessoaTipo();
                 if (!$gp->verificarSeEstaAtivo() && $grupoPessoaTipo->getId() == 1) {
-                    $resposta = $this->view->lancamentoORM->getGrupoPessoaORM()->encontrarPorIdPessoaAtivoETipo($gp->getPessoa_id(), null, 2); /* Consolidacao */
+                    $resposta = $this->view->repositorioORM->getGrupoPessoaORM()->encontrarPorIdPessoaAtivoETipo($gp->getPessoa_id(), null, 2); /* Consolidacao */
                     if (!empty($resposta)) {
                         $adicionarVisitante = false;
                     }

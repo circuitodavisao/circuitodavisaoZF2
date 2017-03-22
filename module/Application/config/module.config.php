@@ -76,9 +76,10 @@ return array(
             'relatorio' => array(
                 'type' => 'Segment',
                 'options' => array(
-                    'route' => '/relatorio[:action]',
+                    'route' => '/relatorio[:action[/:id]]',
                     'constraints' => array(
                         'action' => '[a-zA-Z]+',
+                        'id' => '[1-2]',
                     ),
                     'defaults' => array(
                         'controller' => 'Application\Controller\Relatorio',
@@ -156,7 +157,7 @@ return array(
             'cadastro/cadastro/celula-exclusao' => __DIR__ . '/../view/cadastro/celula-exclusao.phtml',
             'cadastro/cadastro/celulas' => __DIR__ . '/../view/cadastro/celulas.phtml',
             'cadastro/cadastro/revisao' => __DIR__ . '/../view/cadastro/revisao.phtml',
-            'relatorio/relatorio/index' => __DIR__ . '/../view/relatorio/index.phtml',
+            'relatorio/relatorio/membresia' => __DIR__ . '/../view/relatorio/membresia.phtml',
             'layout/layout-js-celulas' => __DIR__ . '/../view/layout/layout-js-celulas.phtml',
             'layout/layout-js-celula' => __DIR__ . '/../view/layout/layout-js-celula.phtml',
             'layout/layout-js-celula-validacao' => __DIR__ . '/../view/layout/layout-js-celula-validacao.phtml',

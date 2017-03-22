@@ -176,7 +176,7 @@ class Constantes {
     public static $ENTITY_FATO_CICLO_NUMERO_IDENTIFICADOR = 'numero_identificador';
     public static $ENTITY_FATO_CICLO_CICLO = 'ciclo';
     public static $ENTITY_FATO_CICLO_MES = 'mes';
-    public static $ENTITY_FATO_CICLO_ANO = 'ano'; 
+    public static $ENTITY_FATO_CICLO_ANO = 'ano';
 
     /* Templates */
     public static $TEMPLATE_SELECIONAR_PERFIL = 'layout/layout-selecionar-perfil';
@@ -276,7 +276,7 @@ class Constantes {
     public static $PAGINA_LABEL_LANCAR_ATENDIMENTO = 'Lançar';
     public static $PAGINA_SALVAR_ATENDIMENTO = 'SalvarAtendimento';
     public static $PAGINA_EXCLUIR_ATENDIMENTO = 'AtendimentoExclusao';
-    public static $ONCLICK_ABRIR_MODAL = 'onclick="abrirModal();"';
+    public static $ONCLICK_ABRIR_MODAL = 'onclick="abrirModalCarregando();"';
     public static $PAGINA = 'pagina';
     public static $PAGINA_CADASTRAR_PESSOA = 'CadastrarPessoa';
     public static $PAGINA_CADASTRAR_PESSOA_REVISAO = 'CadastrarPessoaRevisao';
@@ -361,6 +361,7 @@ class Constantes {
     public static $ROUTE_CADASTRAR_PESSOA_REVISAO = 'CadastrarPessoaRevisao';
     public static $ROUTE_INDEX = 'Index';
     public static $ROUTE_FICHA_REVISAO = 'FichaRevisao';
+    public static $ROUTE_RELATORIO = 'relatorio';
 
     /* Fim lançamento */
 
@@ -483,7 +484,6 @@ class Constantes {
     public static $TRADUCAO_BOTAO_PRONTO = 'Ready';
     public static $TRADUCAO_ENTRE_COM_A_SENHA = 'Enter the Password';
     public static $TRADUCAO_REPITA_A_SENHA = 'Repeat the Password';
-
 
     /* Tipo de Mensagens */
     public static $TIPO_MENSAGEM_CADASTRAR_CELULA = 1;
