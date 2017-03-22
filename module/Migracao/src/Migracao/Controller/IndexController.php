@@ -67,7 +67,7 @@ class IndexController extends CircuitoController {
                 $eventosCulto = $this->cadastrarCulto($row[$stringIdResponsavel1], $grupoIgreja);
                 $this->cadastrarCelulas($row[$stringIdResponsavel1], $grupoIgreja, $row[$stringIdResponsavel2]);
 
-                $urlEquipe = 'SELECT * FROM ursula_equipe_ursula WHERE ativa = "S" AND idIgreja = ' . $row['id'];
+                $urlEquipe = 'SELECT * FROM ursula_equipe_ursula WHERE id = 1 AND ativa = "S" AND idIgreja = ' . $row['id'];
 //                $urlEquipe = 'SELECT * FROM ursula_equipe_ursula WHERE ativa = "S" AND idIgreja = 14';
                 $queryEquipes = mysqli_query($this->getConexao(), $urlEquipe);
                 while ($rowEquipe = mysqli_fetch_array($queryEquipes)) {

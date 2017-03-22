@@ -7,7 +7,6 @@ namespace Application\Model\Entity;
  * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com>
  * Descricao: Entidade anotada da tabela fato_ciclo 
  */
-
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -39,7 +38,7 @@ class FatoCiclo extends CircuitoEntity {
     protected $ciclo;
 
     /** @ORM\Column(type="integer") */
-    protected $meta;
+    protected $lideres;
 
     function getNumero_identificador() {
         return $this->numero_identificador;
@@ -57,8 +56,8 @@ class FatoCiclo extends CircuitoEntity {
         return $this->ciclo;
     }
 
-    function getMeta() {
-        return $this->meta;
+    function getLideres() {
+        return $this->lideres;
     }
 
     function setNumero_identificador($numero_identificador) {
@@ -77,8 +76,8 @@ class FatoCiclo extends CircuitoEntity {
         $this->ciclo = $ciclo;
     }
 
-    function setMeta($meta) {
-        $this->meta = $meta;
+    function setLideres($lideres) {
+        $this->lideres = $lideres;
     }
 
     /**

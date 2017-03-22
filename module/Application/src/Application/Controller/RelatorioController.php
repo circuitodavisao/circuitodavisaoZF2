@@ -28,7 +28,7 @@ class RelatorioController extends CircuitoController {
 
     /**
      * Função padrão, traz a tela principal
-     * GET /principal
+     * GET /relatorio
      */
     public function indexAction() {
         
@@ -36,7 +36,7 @@ class RelatorioController extends CircuitoController {
 
     /**
      * Função padrão, traz a tela principal
-     * GET /principal
+     * GET /relatorioMembresia
      */
     public function membresiaAction() {
         $sessao = new Container(Constantes::$NOME_APLICACAO);
@@ -50,7 +50,6 @@ class RelatorioController extends CircuitoController {
         if (empty($abaSelecionada)) {
             $abaSelecionada = 1;
         }
-
         $mesSelecionado = date('n');
         $anoSelecionado = date('Y');
         $cicloSelecionado = Funcoes::cicloAtual($mesSelecionado, $anoSelecionado);
@@ -72,7 +71,6 @@ class RelatorioController extends CircuitoController {
                 }
             }
         }
-
         $tipoRelatorioPessoal = 1;
         $relatorio = $repositorioORM->getFatoCicloORM()->montarRelatorioPorNumeroIdentificador($numeroIdentificador, $cicloSelecionado, $mesSelecionado, $anoSelecionado, $tipoRelatorioPessoal);
         $discipulos = $grupo->getGrupoPaiFilhoFilhos();
@@ -87,6 +85,37 @@ class RelatorioController extends CircuitoController {
             'abaSelecionada' => $abaSelecionada
                 )
         );
+    }
+
+    /**
+     * Função padrão, traz a tela principal
+     * GET /relatorioGerar
+     */
+    public function gerarAction() {
+        set_time_limit(0);
+        ini_set('memory_limit', '-1');
+        $mesSelecionado = date('n');
+        $anoSelecionado = date('Y');
+        $cicloSelecionado = Funcoes::cicloAtual($mesSelecionado, $anoSelecionado);
+        $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
+        $tipoCelular = 2;
+
+        $grupos = $repositorioORM->getGrupoORM()->encontrarTodos();
+        echo "<br />Pegou grupos: " . count($grupos);
+        foreach ($grupos as $grupo) {
+            $numeroIdentificador = $repositorioORM->getFatoCicloORM()->montarNumeroIdentificador($grupo);
+            echo "<br />$numeroIdentificador";
+
+            $quantidadeLideres = 0;
+            if ($grupo->getGrupoEventoAtivosPorTipo($tipoCelular)) {
+                $quantidadeLideres = count($grupo->getResponsabilidadesAtivas());
+            }
+
+            $repositorioORM->getFatoCicloORM()->encontrarPorNumeroIdentificador(
+                    $numeroIdentificador, $cicloSelecionado, $mesSelecionado, $anoSelecionado, $repositorioORM, $quantidadeLideres);
+        }
+
+        return new ViewModel();
     }
 
 }

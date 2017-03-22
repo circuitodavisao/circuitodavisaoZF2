@@ -123,11 +123,11 @@ class RepositorioORM {
 
     /**
      * Metodo public para obter a instancia do CircuitoORM
-     * @return CircuitoORM
+     * @return GrupoORM
      */
     public function getGrupoORM() {
         if (is_null($this->_grupoORM)) {
-            $this->_grupoORM = new CircuitoORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_GRUPO);
+            $this->_grupoORM = new GrupoORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_GRUPO);
         }
         return $this->_grupoORM;
     }

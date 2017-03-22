@@ -10,6 +10,7 @@ namespace Application\Controller\Helper;
 class Constantes {
 
     public static $IP = '158.69.124.139';
+    public static $META_LIDER = 6;
 
     /* Constates Login */
     public static $CONTROLLER_LOGIN = 'Application\Controller\Login';

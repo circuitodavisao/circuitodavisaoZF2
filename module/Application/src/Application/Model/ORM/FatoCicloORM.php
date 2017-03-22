@@ -21,46 +21,27 @@ class FatoCicloORM extends CircuitoORM {
      * @param type $ciclo
      * @param type $mes
      * @param type $ano
-     * @param RepositorioORM $repositorioORM
+     * @param \Application\Model\ORM\RepositorioORM $repositorioORM
+     * @param type $quantidadeLideres
      * @return type
      */
-    public function encontrarPorNumeroIdentificador($numeroIdentificador, $ciclo, $mes, $ano, RepositorioORM $repositorioORM, $tipo = 1) {
+    public function encontrarPorNumeroIdentificador($numeroIdentificador, $ciclo, $mes, $ano, RepositorioORM $repositorioORM, $quantidadeLideres) {
         $cicloInt = (int) $ciclo;
         $mesInt = (int) $mes;
         $anoInt = (int) $ano;
         try {
-            if ($tipo === 1) {
-                $resposta = $this->getEntityManager()
-                        ->getRepository($this->getEntity())
-                        ->findOneBy(
-                        array(
-                            Constantes::$ENTITY_FATO_CICLO_NUMERO_IDENTIFICADOR => $numeroIdentificador,
-                            Constantes::$ENTITY_FATO_CICLO_MES => $mesInt,
-                            Constantes::$ENTITY_FATO_CICLO_ANO => $anoInt,
-                            Constantes::$ENTITY_FATO_CICLO_CICLO => $cicloInt,
-                ));
-            }
-            if ($tipo === 2) {
-                $dql = "SELECT fc FROM  " . Constantes::$ENTITY_FATO_CICLO . " fc JOIN fc.dimensao d " .
-                        "WHERE fc.numero_identificador LIKE ?1 AND fc.mes = ?2 AND fc.ano = ?3 AND fc.ciclo = ?4";
-
-                $result = $this->getEntityManager()->createQuery($dql)
-                        ->setParameter(1, $numeroIdentificador . '%')
-                        ->setParameter(2, $mesInt)
-                        ->setParameter(3, $anoInt)
-                        ->setParameter(4, $cicloInt)
-                        ->getResult();
-
-                if ($result) {
-                    $resposta = $result[0];
-                }
-            }
+            $resposta = $this->getEntityManager()
+                    ->getRepository($this->getEntity())
+                    ->findOneBy(
+                    array(
+                        Constantes::$ENTITY_FATO_CICLO_NUMERO_IDENTIFICADOR => $numeroIdentificador,
+                        Constantes::$ENTITY_FATO_CICLO_MES => $mesInt,
+                        Constantes::$ENTITY_FATO_CICLO_ANO => $anoInt,
+                        Constantes::$ENTITY_FATO_CICLO_CICLO => $cicloInt,
+            ));
             if (empty($resposta)) {
-                $meta = 6;
-                $resposta = $this->criarFatoNoCiclo($numeroIdentificador, $ano, $mes, $ciclo, $meta, $repositorioORM);
+                $resposta = $this->criarFatoNoCiclo($numeroIdentificador, $ano, $mes, $ciclo, $repositorioORM, $quantidadeLideres);
             }
-
-
             return $resposta;
         } catch (Exception $exc) {
             echo $exc->getTraceAsString();
@@ -69,12 +50,12 @@ class FatoCicloORM extends CircuitoORM {
 
     /**
      * Localizar fato_ciclo por numeroIdentificador
-     * @param type $numeroIdentificador
-     * @param type $ciclo
-     * @param type $mes
-     * @param type $ano
-     * @param RepositorioORM $repositorioORM
-     * @return type
+     * @param string $numeroIdentificador
+     * @param int $ciclo
+     * @param int $mes
+     * @param int $ano
+     * @param int $tipoComparacao
+     * @return array
      */
     public function montarRelatorioPorNumeroIdentificador($numeroIdentificador, $ciclo, $mes, $ano, $tipoComparacao) {
         $cicloInt = (int) $ciclo;
@@ -86,7 +67,8 @@ class FatoCicloORM extends CircuitoORM {
                 . "SUM(d.lider) lideres, "
                 . "SUM(d.visitante) visitantes, "
                 . "SUM(d.consolidacao) consolidacoes, "
-                . "SUM(d.membro) membros "
+                . "SUM(d.membro) membros, "
+                . "SUM(fc.lideres) quantidade_lideres "
                 . "FROM  " . Constantes::$ENTITY_FATO_CICLO . " fc "
                 . "JOIN fc.dimensao d "
                 . "WHERE "
@@ -112,7 +94,6 @@ class FatoCicloORM extends CircuitoORM {
                         ->setParameter(4, $cicloInt)
                         ->getResult();
             }
-
             return $result;
         } catch (Exception $exc) {
             echo $exc->getTraceAsString();
@@ -135,11 +116,15 @@ class FatoCicloORM extends CircuitoORM {
             $grupoSelecionado = $grupo;
             while ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === $tipoSubequipe) {
                 $numeroIdentificador = str_pad($grupoSelecionado->getId(), $tamanho, 0, STR_PAD_LEFT) . $numeroIdentificador;
-                $grupoSelecionado = $grupoSelecionado->getGrupoPaiFilhoPai()->getGrupoPaiFilhoPai();
+                if ($grupoSelecionado->getGrupoPaiFilhoPai()) {
+                    $grupoSelecionado = $grupoSelecionado->getGrupoPaiFilhoPai()->getGrupoPaiFilhoPai();
+                }
             }
             if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === $tipoEquipe) {
                 $numeroIdentificador = str_pad($grupoSelecionado->getId(), $tamanho, 0, STR_PAD_LEFT) . $numeroIdentificador;
-                $grupoSelecionado = $grupoSelecionado->getGrupoPaiFilhoPai()->getGrupoPaiFilhoPai();
+                if ($grupoSelecionado->getGrupoPaiFilhoPai()) {
+                    $grupoSelecionado = $grupoSelecionado->getGrupoPaiFilhoPai()->getGrupoPaiFilhoPai();
+                }
             }
             if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === $tipoIgreja) {
                 $numeroIdentificador = str_pad($grupoSelecionado->getId(), $tamanho, 0, STR_PAD_LEFT) . $numeroIdentificador;
@@ -152,26 +137,26 @@ class FatoCicloORM extends CircuitoORM {
     }
 
     /**
-     * Criar fato ciclo 
+     * Criar fato ciclo
      * @param type $numeroIdentificador
      * @param type $ano
      * @param type $mes
      * @param type $ciclo
-     * @param type $meta
-     * @param RepositorioORM $repositorioORM
-     * @return FatoCiclo
+     * @param \Application\Model\ORM\RepositorioORM $repositorioORM
+     * @param type $quantidadeLideres
+     * @return type
      */
-    public function criarFatoNoCiclo($numeroIdentificador, $ano, $mes, $ciclo, $meta, RepositorioORM $repositorioORM) {
+    public function criarFatoNoCiclo($numeroIdentificador, $ano, $mes, $ciclo, RepositorioORM $repositorioORM, $quantidadeLideres) {
         $fatoCiclo = new FatoCiclo();
         try {
             $fatoCiclo->setNumero_identificador($numeroIdentificador);
             $fatoCiclo->setAno($ano);
             $fatoCiclo->setMes($mes);
             $fatoCiclo->setCiclo($ciclo);
-            $fatoCiclo->setMeta($meta);
+            $fatoCiclo->setLideres($quantidadeLideres);
             $this->persistir($fatoCiclo);
             $dimensoes = $this->criarDimensoes($fatoCiclo, $repositorioORM);
-            $fatoCicloPesquisa = $this->encontrarPorNumeroIdentificador($numeroIdentificador, $ciclo, $mes, $ano, $repositorioORM);
+            $fatoCicloPesquisa = $this->encontrarPorNumeroIdentificador($numeroIdentificador, $ciclo, $mes, $ano, $repositorioORM, $quantidadeLideres);
             $fatoCicloPesquisa->setDimensao($dimensoes);
             return $fatoCicloPesquisa;
         } catch (Exception $exc) {

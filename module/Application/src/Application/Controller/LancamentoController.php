@@ -6,9 +6,7 @@ use Application\Controller\Helper\Constantes;
 use Application\Controller\Helper\Funcoes;
 use Application\Form\CadastrarAtendimentoForm;
 use Application\Form\CadastrarPessoaForm;
-use Application\Model\Entity\Dimensao;
 use Application\Model\Entity\EventoFrequencia;
-use Application\Model\Entity\FatoCiclo;
 use Application\Model\Entity\Grupo;
 use Application\Model\Entity\GrupoAtendimento;
 use Application\Model\Entity\GrupoPessoa;
@@ -22,7 +20,7 @@ use Exception;
 use Zend\Json\Json;
 use Zend\Mvc\I18n\Translator;
 use Zend\Session\Container;
-use Zend\View\Model\ViewModel; 
+use Zend\View\Model\ViewModel;
 
 /**
  * Nome: LancamentoContgetLiderroller.php
@@ -416,7 +414,8 @@ class LancamentoController extends CircuitoController {
                 $dimensaoTipoDomingo = 4;
                 $dimensaoSelecionada = null;
 
-                $fatoCicloSelecionado = $repositorioORM->getFatoCicloORM()->encontrarPorNumeroIdentificador($numeroIdentificador, $ciclo, $mes, $ano, $repositorioORM);
+                $fatoCicloSelecionado = $repositorioORM->getFatoCicloORM()->encontrarPorNumeroIdentificador(
+                        $numeroIdentificador, $ciclo, $mes, $ano, $repositorioORM, count($grupoPassado->getResponsabilidadesAtivas()));
 
                 if ($fatoCicloSelecionado->getDimensao()) {
                     foreach ($fatoCicloSelecionado->getDimensao() as $dimensao) {
