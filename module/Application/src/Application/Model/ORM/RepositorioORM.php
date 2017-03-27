@@ -32,6 +32,7 @@ class RepositorioORM {
     private $_grupoAtendimentoORM;
     private $_eventoFrequenciaORM;
     private $_fatoCicloORM;
+    private $_fatoLiderORM;
     private $_dimensaoORM;
     private $_dimensaoTipoORM;
 
@@ -240,6 +241,17 @@ class RepositorioORM {
             $this->_fatoCicloORM = new FatoCicloORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_FATO_CICLO);
         }
         return $this->_fatoCicloORM;
+    }
+
+    /**
+     * Metodo public para obter a instancia do FatoLiderORM
+     * @return FatoLiderORM
+     */
+    public function getFatoLiderORM() {
+        if (is_null($this->_fatoLiderORM)) {
+            $this->_fatoLiderORM = new FatoLiderORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_FATO_LIDER);
+        }
+        return $this->_fatoLiderORM;
     }
 
     /**

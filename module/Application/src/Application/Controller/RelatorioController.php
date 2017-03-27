@@ -76,6 +76,10 @@ class RelatorioController extends CircuitoController {
         $discipulos = $grupo->getGrupoPaiFilhoFilhos();
         $periodoSelecionado = Funcoes::periodoCicloMesAno($cicloSelecionado, $mesSelecionado, $anoSelecionado);
 
+        $fatoLider = $repositorioORM->getFatoLiderORM()->encontrarPorNumeroIdentificador($numeroIdentificador, $tipoRelatorioPessoal);
+        echo "<pre>";
+        var_dump($fatoLider);
+        echo "</pre>";
         return new ViewModel(
                 array(
             'relatorio' => $relatorio,
@@ -110,7 +114,6 @@ class RelatorioController extends CircuitoController {
             if ($grupo->getGrupoEventoAtivosPorTipo($tipoCelular)) {
                 $quantidadeLideres = count($grupo->getResponsabilidadesAtivas());
             }
-
             $repositorioORM->getFatoCicloORM()->encontrarPorNumeroIdentificador(
                     $numeroIdentificador, $cicloSelecionado, $mesSelecionado, $anoSelecionado, $repositorioORM, $quantidadeLideres);
         }

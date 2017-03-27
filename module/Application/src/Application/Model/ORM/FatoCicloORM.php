@@ -22,10 +22,9 @@ class FatoCicloORM extends CircuitoORM {
      * @param type $mes
      * @param type $ano
      * @param \Application\Model\ORM\RepositorioORM $repositorioORM
-     * @param type $quantidadeLideres
      * @return type
      */
-    public function encontrarPorNumeroIdentificador($numeroIdentificador, $ciclo, $mes, $ano, RepositorioORM $repositorioORM, $quantidadeLideres) {
+    public function encontrarPorNumeroIdentificador($numeroIdentificador, $ciclo, $mes, $ano, RepositorioORM $repositorioORM) {
         $cicloInt = (int) $ciclo;
         $mesInt = (int) $mes;
         $anoInt = (int) $ano;
@@ -40,7 +39,7 @@ class FatoCicloORM extends CircuitoORM {
                         Constantes::$ENTITY_FATO_CICLO_CICLO => $cicloInt,
             ));
             if (empty($resposta)) {
-                $resposta = $this->criarFatoNoCiclo($numeroIdentificador, $ano, $mes, $ciclo, $repositorioORM, $quantidadeLideres);
+                $resposta = $this->criarFatoNoCiclo($numeroIdentificador, $ano, $mes, $ciclo, $repositorioORM);
             }
             return $resposta;
         } catch (Exception $exc) {
@@ -67,8 +66,7 @@ class FatoCicloORM extends CircuitoORM {
                 . "SUM(d.lider) lideres, "
                 . "SUM(d.visitante) visitantes, "
                 . "SUM(d.consolidacao) consolidacoes, "
-                . "SUM(d.membro) membros, "
-                . "SUM(fc.lideres) quantidade_lideres "
+                . "SUM(d.membro) membros "
                 . "FROM  " . Constantes::$ENTITY_FATO_CICLO . " fc "
                 . "JOIN fc.dimensao d "
                 . "WHERE "
@@ -143,20 +141,18 @@ class FatoCicloORM extends CircuitoORM {
      * @param type $mes
      * @param type $ciclo
      * @param \Application\Model\ORM\RepositorioORM $repositorioORM
-     * @param type $quantidadeLideres
      * @return type
      */
-    public function criarFatoNoCiclo($numeroIdentificador, $ano, $mes, $ciclo, RepositorioORM $repositorioORM, $quantidadeLideres) {
+    public function criarFatoNoCiclo($numeroIdentificador, $ano, $mes, $ciclo, RepositorioORM $repositorioORM) {
         $fatoCiclo = new FatoCiclo();
         try {
             $fatoCiclo->setNumero_identificador($numeroIdentificador);
             $fatoCiclo->setAno($ano);
             $fatoCiclo->setMes($mes);
             $fatoCiclo->setCiclo($ciclo);
-            $fatoCiclo->setLideres($quantidadeLideres);
             $this->persistir($fatoCiclo);
             $dimensoes = $this->criarDimensoes($fatoCiclo, $repositorioORM);
-            $fatoCicloPesquisa = $this->encontrarPorNumeroIdentificador($numeroIdentificador, $ciclo, $mes, $ano, $repositorioORM, $quantidadeLideres);
+            $fatoCicloPesquisa = $this->encontrarPorNumeroIdentificador($numeroIdentificador, $ciclo, $mes, $ano, $repositorioORM);
             $fatoCicloPesquisa->setDimensao($dimensoes);
             return $fatoCicloPesquisa;
         } catch (Exception $exc) {

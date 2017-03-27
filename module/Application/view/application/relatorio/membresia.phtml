@@ -52,19 +52,15 @@ use Application\Controller\Helper\Funcoes;
                         $lideres = 1;
 
                         unset($quantidadeLideres);
+                        $quantidadeLideres = 1;
+                        $somaGeralLideres = 1;
                         foreach ($this->relatorio as $key => $value) {
                             $soma[$key] = 0;
                             $somaGeral[$key] = 0;
                             foreach ($value as $campo) {
                                 foreach ($campo as $keyCampo => $valorCampo) {
-                                    if ($keyCampo != 'quantidade_lideres') {
-                                        $soma[$key] += $valorCampo;
-                                        $somaGeral[$key] += $valorCampo;
-                                    }
-                                    if ($keyCampo === 'quantidade_lideres') {
-                                        $quantidadeLideres = $valorCampo;
-                                        $somaGeralLideres = $valorCampo;
-                                    }
+                                    $soma[$key] += $valorCampo;
+                                    $somaGeral[$key] += $valorCampo;
                                 }
                             }
                         }
@@ -127,18 +123,13 @@ use Application\Controller\Helper\Funcoes;
                                 unset($soma);
                                 unset($performance);
                                 unset($quantidadeLideres);
-
+                                $quantidadeLideres = 1;
                                 foreach ($relatorio as $key => $value) {
                                     $soma[$key] = 0;
                                     foreach ($value as $campo) {
                                         foreach ($campo as $keyCampo => $valorCampo) {
-                                            if ($keyCampo != 'quantidade_lideres') {
-                                                $soma[$key] += $valorCampo;
-                                                $somaGeral[$key] += $valorCampo;
-                                            }
-                                            if ($keyCampo === 'quantidade_lideres') {
-                                                $quantidadeLideres = $valorCampo;
-                                            }
+                                            $soma[$key] += $valorCampo;
+                                            $somaGeral[$key] += $valorCampo;
                                         }
                                     }
                                 }

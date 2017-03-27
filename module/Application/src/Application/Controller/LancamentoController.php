@@ -415,7 +415,7 @@ class LancamentoController extends CircuitoController {
                 $dimensaoSelecionada = null;
 
                 $fatoCicloSelecionado = $repositorioORM->getFatoCicloORM()->encontrarPorNumeroIdentificador(
-                        $numeroIdentificador, $ciclo, $mes, $ano, $repositorioORM, count($grupoPassado->getResponsabilidadesAtivas()));
+                        $numeroIdentificador, $ciclo, $mes, $ano, $repositorioORM);
 
                 if ($fatoCicloSelecionado->getDimensao()) {
                     foreach ($fatoCicloSelecionado->getDimensao() as $dimensao) {

@@ -37,9 +37,6 @@ class FatoCiclo extends CircuitoEntity {
     /** @ORM\Column(type="integer") */
     protected $ciclo;
 
-    /** @ORM\Column(type="integer") */
-    protected $lideres;
-
     function getNumero_identificador() {
         return $this->numero_identificador;
     }
@@ -56,10 +53,6 @@ class FatoCiclo extends CircuitoEntity {
         return $this->ciclo;
     }
 
-    function getLideres() {
-        return $this->lideres;
-    }
-
     function setNumero_identificador($numero_identificador) {
         $this->numero_identificador = $numero_identificador;
     }
@@ -74,10 +67,6 @@ class FatoCiclo extends CircuitoEntity {
 
     function setCiclo($ciclo) {
         $this->ciclo = $ciclo;
-    }
-
-    function setLideres($lideres) {
-        $this->lideres = $lideres;
     }
 
     /**

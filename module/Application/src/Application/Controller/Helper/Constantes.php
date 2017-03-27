@@ -219,6 +219,7 @@ class Constantes {
     public static $ENTITY_PESSOA_HIERAQUIA = 'Application\Model\Entity\PessoaHierarquia';
     public static $ENTITY_EVENTO_FREQUENCIA = 'Application\Model\Entity\EventoFrequencia';
     public static $ENTITY_FATO_CICLO = 'Application\Model\Entity\FatoCiclo';
+    public static $ENTITY_FATO_LIDER = 'Application\Model\Entity\FatoLider';
     public static $ENTITY_DIMENSAO_TIPO = 'Application\Model\Entity\DimensaoTipo';
     public static $ENTITY_DIMENSAO = 'Application\Model\Entity\Dimensao';
     public static $ENTITY_GRUPO = 'Application\Model\Entity\Grupo';
