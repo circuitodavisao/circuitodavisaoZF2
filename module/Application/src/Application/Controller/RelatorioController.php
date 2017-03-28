@@ -77,16 +77,15 @@ class RelatorioController extends CircuitoController {
         $periodoSelecionado = Funcoes::periodoCicloMesAno($cicloSelecionado, $mesSelecionado, $anoSelecionado);
 
         $fatoLider = $repositorioORM->getFatoLiderORM()->encontrarPorNumeroIdentificador($numeroIdentificador, $tipoRelatorioPessoal);
-        echo "<pre>";
-        var_dump($fatoLider);
-        echo "</pre>";
+
         return new ViewModel(
                 array(
             'relatorio' => $relatorio,
             'periodoSelecionado' => $periodoSelecionado,
             'discipulos' => $discipulos,
             'repositorioORM' => $repositorioORM,
-            'abaSelecionada' => $abaSelecionada
+            'abaSelecionada' => $abaSelecionada,
+            'fatoLider' => $fatoLider
                 )
         );
     }
@@ -102,21 +101,22 @@ class RelatorioController extends CircuitoController {
         $anoSelecionado = date('Y');
         $cicloSelecionado = Funcoes::cicloAtual($mesSelecionado, $anoSelecionado);
         $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
-        $tipoCelular = 2;
+        $tipoCelula = 2;
 
-        $grupos = $repositorioORM->getGrupoORM()->encontrarTodos();
-        echo "<br />Pegou grupos: " . count($grupos);
-        foreach ($grupos as $grupo) {
+        $grupo = $repositorioORM->getGrupoORM()->encontrarPorId(155306);
+//        echo "<br />Pegou grupos: " . count($grupos);
+//        foreach ($grupos as $grupo) {
             $numeroIdentificador = $repositorioORM->getFatoCicloORM()->montarNumeroIdentificador($grupo);
             echo "<br />$numeroIdentificador";
 
-            $quantidadeLideres = 0;
-            if ($grupo->getGrupoEventoAtivosPorTipo($tipoCelular)) {
-                $quantidadeLideres = count($grupo->getResponsabilidadesAtivas());
-            }
-            $repositorioORM->getFatoCicloORM()->encontrarPorNumeroIdentificador(
-                    $numeroIdentificador, $cicloSelecionado, $mesSelecionado, $anoSelecionado, $repositorioORM, $quantidadeLideres);
-        }
+//            $quantidadeLideres = 0;
+//            if ($grupo->getGrupoEventoAtivosPorTipo($tipoCelula)) {
+//                $quantidadeLideres = count($grupo->getResponsabilidadesAtivas());
+//            }
+//            $repositorioORM->getFatoCicloORM()->encontrarPorNumeroIdentificador(
+//                    $numeroIdentificador, $cicloSelecionado, $mesSelecionado, $anoSelecionado, $repositorioORM, $quantidadeLideres); 
+//            $repositorioORM->getFatoLiderORM()->criarFatoLider($numeroIdentificador, $quantidadeLideres);
+//        }
 
         return new ViewModel();
     }

@@ -3,6 +3,7 @@
 namespace Migracao\Controller;
 
 use Application\Controller\CircuitoController;
+use Application\Controller\Helper\Funcoes;
 use Application\Model\Entity\Entidade;
 use Application\Model\Entity\Evento;
 use Application\Model\Entity\EventoCelula;
@@ -45,8 +46,10 @@ class IndexController extends CircuitoController {
      * GET /
      */
     public function indexAction() {
-        ini_set('memory_limit', '256M');
+        set_time_limit(0);
+        ini_set('memory_limit', '-1');
         ini_set('max_execution_time', '60');
+
         list($usec, $sec) = explode(' ', microtime());
         $script_start = (float) $sec + (float) $usec;
         $html = '';
@@ -117,6 +120,35 @@ class IndexController extends CircuitoController {
             $this->getRepositorio()->desfazerTransacao();
             $html = $exc->getTraceAsString();
         }
+
+
+        $mesSelecionado = date('n');
+        $anoSelecionado = date('Y');
+        $cicloSelecionado = Funcoes::cicloAtual($mesSelecionado, $anoSelecionado);
+        $tipoCelula = 2;
+
+        $grupos = $this->getRepositorio()->getGrupoORM()->encontrarTodos();
+        $html .= "<br />Pegou grupos: " . count($grupos);
+        foreach ($grupos as $grupo) {
+            $numeroIdentificador = null;
+            $html .= "<br />getId" . $grupo->getId();
+            if ($grupo->getId() > 7) {
+                $numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($grupo);
+                $html .= "<br />numeroIdentificador" . $numeroIdentificador;
+
+                if ($numeroIdentificador) {
+                    $quantidadeLideres = 0;
+                    if ($grupo->getGrupoEventoAtivosPorTipo($tipoCelula)) {
+                        $quantidadeLideres = count($grupo->getResponsabilidadesAtivas());
+                    }
+                    $this->getRepositorio()->getFatoCicloORM()->encontrarPorNumeroIdentificador(
+                            $numeroIdentificador, $cicloSelecionado, $mesSelecionado, $anoSelecionado, $this->getRepositorio(), $quantidadeLideres);
+                    $this->getRepositorio()->getFatoLiderORM()->criarFatoLider($numeroIdentificador, $quantidadeLideres);
+                }
+            }
+        }
+
+
         list($usec, $sec) = explode(' ', microtime());
         $script_end = (float) $sec + (float) $usec;
         $elapsed_time = round($script_end - $script_start, 5);
@@ -339,6 +371,17 @@ class IndexController extends CircuitoController {
                 $this->getRepositorio()->getGrupoEventoORM()->persistir($grupoEvento);
             }
         }
+    }
+
+    private function cadastrarFatoLider($grupo, $idLider2 = null) {
+        $quantidadeDeLideres = 0;
+        if ($idLider2) {
+            $quantidadeDeLideres = 2;
+        } else {
+            $quantidadeDeLideres = 1;
+        }
+        $numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($grupo);
+        $this->getRepositorio()->getFatoLiderORM()->criarFatoLider($numeroIdentificador, $quantidadeDeLideres);
     }
 
     private function cadastrarCultoEquipe($eventosCulto, $idEquipe, $grupoEquipe) {

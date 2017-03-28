@@ -15,13 +15,13 @@ class FatoLiderORM extends CircuitoORM {
 
     /**
      * Localizar fato_lider por numeroIdentificador
-     * @param type $numeroIdentificador
-     * @param type $tipoComparacao
-     * @return FatoLider
+     * @param String $numeroIdentificador
+     * @param integer $tipoComparacao
+     * @return String
      */
     public function encontrarPorNumeroIdentificador($numeroIdentificador, $tipoComparacao) {
         $dqlBase = "SELECT "
-                . "fl "
+                . "SUM(fl.lideres) lideres "
                 . "FROM  " . Constantes::$ENTITY_FATO_LIDER . " fl "
                 . "WHERE "
                 . " fl.numero_identificador #tipoComparacao ?1 "
@@ -38,12 +38,26 @@ class FatoLiderORM extends CircuitoORM {
             $result = $this->getEntityManager()->createQuery($dqlAjustadaTipoComparacao)
                     ->setParameter(1, $numeroIdentificador)
                     ->getResult();
-
-            echo "<pre>";
-            var_dump($result);
-            echo "</pre>";
-
+//            echo "<pre>";
+//            var_dump($result);
+//            echo "</pre>";
             return $result;
+        } catch (Exception $exc) {
+            echo $exc->getMessage();
+        }
+    }
+
+    /**
+     * Criar fato lider
+     * @param String $numeroIdentificador
+     * @param integer $quantidadeDeLideres
+     */
+    public function criarFatoLider($numeroIdentificador, $quantidadeDeLideres) {
+        $fatoLider = new FatoLider();
+        try {
+            $fatoLider->setNumero_identificador($numeroIdentificador);
+            $fatoLider->setLideres($quantidadeDeLideres);
+            $this->persistir($fatoLider);
         } catch (Exception $exc) {
             echo $exc->getMessage();
         }

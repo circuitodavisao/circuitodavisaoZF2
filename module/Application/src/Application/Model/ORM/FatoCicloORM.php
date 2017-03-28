@@ -104,7 +104,7 @@ class FatoCicloORM extends CircuitoORM {
      * @return string
      * @throws Exception
      */
-    public function montarNumeroIdentificador($grupo) {
+    public function montarNumeroIdentificador($grupo, $tipo = 0) {
         $numeroIdentificador = null;
         $tamanho = 8;
         try {
@@ -112,20 +112,22 @@ class FatoCicloORM extends CircuitoORM {
             $tipoEquipe = 6;
             $tipoIgreja = 5;
             $grupoSelecionado = $grupo;
-            while ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === $tipoSubequipe) {
-                $numeroIdentificador = str_pad($grupoSelecionado->getId(), $tamanho, 0, STR_PAD_LEFT) . $numeroIdentificador;
-                if ($grupoSelecionado->getGrupoPaiFilhoPai()) {
-                    $grupoSelecionado = $grupoSelecionado->getGrupoPaiFilhoPai()->getGrupoPaiFilhoPai();
+            if ($grupoSelecionado->getEntidadeAtiva()) {
+                while ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === $tipoSubequipe) {
+                    $numeroIdentificador = str_pad($grupoSelecionado->getId(), $tamanho, 0, STR_PAD_LEFT) . $numeroIdentificador;
+                    if ($grupoSelecionado->getGrupoPaiFilhoPai()) {
+                        $grupoSelecionado = $grupoSelecionado->getGrupoPaiFilhoPai()->getGrupoPaiFilhoPai();
+                    }
                 }
-            }
-            if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === $tipoEquipe) {
-                $numeroIdentificador = str_pad($grupoSelecionado->getId(), $tamanho, 0, STR_PAD_LEFT) . $numeroIdentificador;
-                if ($grupoSelecionado->getGrupoPaiFilhoPai()) {
-                    $grupoSelecionado = $grupoSelecionado->getGrupoPaiFilhoPai()->getGrupoPaiFilhoPai();
+                if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === $tipoEquipe) {
+                    $numeroIdentificador = str_pad($grupoSelecionado->getId(), $tamanho, 0, STR_PAD_LEFT) . $numeroIdentificador;
+                    if ($grupoSelecionado->getGrupoPaiFilhoPai()) {
+                        $grupoSelecionado = $grupoSelecionado->getGrupoPaiFilhoPai()->getGrupoPaiFilhoPai();
+                    }
                 }
-            }
-            if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === $tipoIgreja) {
-                $numeroIdentificador = str_pad($grupoSelecionado->getId(), $tamanho, 0, STR_PAD_LEFT) . $numeroIdentificador;
+                if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === $tipoIgreja) {
+                    $numeroIdentificador = str_pad($grupoSelecionado->getId(), $tamanho, 0, STR_PAD_LEFT) . $numeroIdentificador;
+                }
             }
 
             return $numeroIdentificador;

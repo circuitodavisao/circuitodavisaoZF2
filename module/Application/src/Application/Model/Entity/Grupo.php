@@ -96,7 +96,6 @@ class Grupo extends CircuitoEntity {
                 break;
             }
         }
-
         return $entidadeAtiva;
     }
 
