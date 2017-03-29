@@ -141,8 +141,16 @@ class IndexController extends CircuitoController {
                     if ($grupo->getGrupoEventoAtivosPorTipo($tipoCelula)) {
                         $quantidadeLideres = count($grupo->getResponsabilidadesAtivas());
                     }
-                    $this->getRepositorio()->getFatoCicloORM()->encontrarPorNumeroIdentificador(
+                    $fatoCiclo = $this->getRepositorio()->getFatoCicloORM()->encontrarPorNumeroIdentificador(
                             $numeroIdentificador, $cicloSelecionado, $mesSelecionado, $anoSelecionado, $this->getRepositorio(), $quantidadeLideres);
+
+                    $eventosCelulas = $grupo->getGrupoEventoAtivosPorTipo(2);
+                    $quantidadeDeCelulas = count($eventosCelulas);
+                    if ($quantidadeDeCelulas > 0) {
+                        foreach ($eventosCelulas as $evento) {
+                            $this->getRepositorio()->getFatoCelulaORM()->criarFatoCelula($fatoCiclo);
+                        }
+                    }
                     $this->getRepositorio()->getFatoLiderORM()->criarFatoLider($numeroIdentificador, $quantidadeLideres);
                 }
             }

@@ -45,6 +45,7 @@ class RelatorioController extends CircuitoController {
         $entidade = $repositorioORM->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
         $grupo = $entidade->getGrupo();
         $numeroIdentificador = $repositorioORM->getFatoCicloORM()->montarNumeroIdentificador($grupo);
+
         /* Aba selecionada e ciclo */
         $abaSelecionada = $this->params()->fromRoute(Constantes::$ID);
         if (empty($abaSelecionada)) {
@@ -88,37 +89,6 @@ class RelatorioController extends CircuitoController {
             'fatoLider' => $fatoLider
                 )
         );
-    }
-
-    /**
-     * Função padrão, traz a tela principal
-     * GET /relatorioGerar
-     */
-    public function gerarAction() {
-        set_time_limit(0);
-        ini_set('memory_limit', '-1');
-        $mesSelecionado = date('n');
-        $anoSelecionado = date('Y');
-        $cicloSelecionado = Funcoes::cicloAtual($mesSelecionado, $anoSelecionado);
-        $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
-        $tipoCelula = 2;
-
-        $grupo = $repositorioORM->getGrupoORM()->encontrarPorId(155306);
-//        echo "<br />Pegou grupos: " . count($grupos);
-//        foreach ($grupos as $grupo) {
-            $numeroIdentificador = $repositorioORM->getFatoCicloORM()->montarNumeroIdentificador($grupo);
-            echo "<br />$numeroIdentificador";
-
-//            $quantidadeLideres = 0;
-//            if ($grupo->getGrupoEventoAtivosPorTipo($tipoCelula)) {
-//                $quantidadeLideres = count($grupo->getResponsabilidadesAtivas());
-//            }
-//            $repositorioORM->getFatoCicloORM()->encontrarPorNumeroIdentificador(
-//                    $numeroIdentificador, $cicloSelecionado, $mesSelecionado, $anoSelecionado, $repositorioORM, $quantidadeLideres); 
-//            $repositorioORM->getFatoLiderORM()->criarFatoLider($numeroIdentificador, $quantidadeLideres);
-//        }
-
-        return new ViewModel();
     }
 
 }

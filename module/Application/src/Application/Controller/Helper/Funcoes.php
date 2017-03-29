@@ -365,4 +365,10 @@ class Funcoes {
         return date('Y-m-d', $proximoDomingo);
     }
 
+    public static function var_dump($expression) {
+        echo "<pre>";
+        var_dump($expression);
+        echo "</pre>";
+    }
+
 }

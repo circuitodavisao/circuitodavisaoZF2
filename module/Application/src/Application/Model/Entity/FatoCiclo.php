@@ -7,6 +7,7 @@ namespace Application\Model\Entity;
  * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com>
  * Descricao: Entidade anotada da tabela fato_ciclo 
  */
+
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -21,8 +22,14 @@ class FatoCiclo extends CircuitoEntity {
      */
     protected $dimensao;
 
+    /**
+     * @ORM\OneToMany(targetEntity="FatoCelula", mappedBy="fatoCiclo") 
+     */
+    protected $fatoCelula;
+
     public function __construct() {
         $this->dimensao = new ArrayCollection();
+        $this->fatoCelula = new ArrayCollection();
     }
 
     /** @ORM\Column(type="integer") */
@@ -79,6 +86,18 @@ class FatoCiclo extends CircuitoEntity {
 
     function setDimensao($dimensao) {
         $this->dimensao = $dimensao;
+    }
+
+    /**
+     * Retorna fato celula
+     * @return FatoCelula
+     */
+    function getFatoCelula() {
+        return $this->fatoCelula;
+    }
+
+    function setFatoCelula($fatoCelula) {
+        $this->fatoCelula = $fatoCelula;
     }
 
 }
