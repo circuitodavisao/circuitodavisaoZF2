@@ -3,6 +3,7 @@
 namespace Application\Model\ORM;
 
 use Application\Controller\Helper\Constantes;
+use Application\Controller\Helper\Funcoes;
 use Application\Model\Entity\Dimensao;
 use Application\Model\Entity\FatoCiclo;
 use Application\Model\Entity\Grupo;
@@ -21,7 +22,7 @@ class FatoCicloORM extends CircuitoORM {
      * @param type $ciclo
      * @param type $mes
      * @param type $ano
-     * @param \Application\Model\ORM\RepositorioORM $repositorioORM
+     * @param RepositorioORM $repositorioORM
      * @return type
      */
     public function encontrarPorNumeroIdentificador($numeroIdentificador, $ciclo, $mes, $ano, RepositorioORM $repositorioORM) {
@@ -99,6 +100,51 @@ class FatoCicloORM extends CircuitoORM {
     }
 
     /**
+     * Localizar fato_ciclo por numeroIdentificador
+     * @param string $numeroIdentificador
+     * @param int $ciclo
+     * @param int $mes
+     * @param int $ano
+     * @param int $tipoComparacao
+     * @return array
+     */
+    public function montarRelatorioCelulaPorNumeroIdentificador($numeroIdentificador, $ciclo, $mes, $ano, $tipoComparacao) {
+        $cicloInt = (int) $ciclo;
+        $mesInt = (int) $mes;
+        $anoInt = (int) $ano;
+        $dqlBase = "SELECT "
+                . "COUNT(c.id) quantidade, "
+                . "SUM(c.realizada) realizadas "
+                . "FROM  " . Constantes::$ENTITY_FATO_CICLO . " fc "
+                . "JOIN fc.fatoCelula c "
+                . "WHERE "
+                . "fc.numero_identificador #tipoComparacao ?1 "
+                . "AND fc.mes = ?2 "
+                . "AND fc.ano = ?3 "
+                . "AND fc.ciclo = ?4";
+        try {
+            if ($tipoComparacao == 1) {
+                $dqlAjustadaTipoComparacao = str_replace('#tipoComparacao', '=', $dqlBase);
+            }
+            if ($tipoComparacao == 2) {
+                $dqlAjustadaTipoComparacao = str_replace('#tipoComparacao', 'LIKE', $dqlBase);
+                $numeroIdentificador .= '%';
+            }
+
+            $result = $this->getEntityManager()->createQuery($dqlAjustadaTipoComparacao)
+                    ->setParameter(1, $numeroIdentificador)
+                    ->setParameter(2, $mesInt)
+                    ->setParameter(3, $anoInt)
+                    ->setParameter(4, $cicloInt)
+                    ->getResult();
+
+            return $result;
+        } catch (Exception $exc) {
+            echo $exc->getTraceAsString();
+        }
+    }
+
+    /**
      * Montar numeroIdentificador
      * @param Grupo $grupo
      * @return string
@@ -142,7 +188,7 @@ class FatoCicloORM extends CircuitoORM {
      * @param type $ano
      * @param type $mes
      * @param type $ciclo
-     * @param \Application\Model\ORM\RepositorioORM $repositorioORM
+     * @param RepositorioORM $repositorioORM
      * @return type
      */
     public function criarFatoNoCiclo($numeroIdentificador, $ano, $mes, $ciclo, RepositorioORM $repositorioORM) {

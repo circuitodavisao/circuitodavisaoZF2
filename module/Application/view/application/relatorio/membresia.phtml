@@ -171,6 +171,59 @@ use Application\Controller\Helper\Funcoes;
                         ?>                     
                     </tbody>
                 </table>
+
+
+                <table class="text-center table table-condensed bg-light" style="font-size:10px;">
+                    <thead>
+                        <tr>                   
+                            <th colspan="5" class="text-center"  style="font-size:12px;">
+                                Período <?php echo $this->periodoSelecionado ?>
+                            </th>                    
+                        </tr>
+                        <tr>
+                            <th>#</th>
+                            <th>TIMES</th>
+                            <th>CÉLULAS</th>
+                            <th>REALIZADAS</th>
+                            <th>%</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        $somaQuantidadeCelulas = 0;
+                        $somaQuantidadeCelulasRealizadas = 0;
+
+                        $quantidadeCelulas = $this->relatorioCelula[0]['quantidade'];
+                        $somaQuantidadeCelulas += $this->relatorioCelula[0]['quantidade'];
+                        $quantidadeCelulasRealizadas = $this->relatorioCelula[0]['realizadas'];
+                        $somaQuantidadeCelulasRealizadas += $this->relatorioCelula[0]['realizadas'];
+                        $performanceCelulas = 0;
+                        if ($quantidadeCelulas) {
+                            $performanceCelulas = $quantidadeCelulasRealizadas / $quantidadeCelulas * 100;
+                        }
+                        echo '<tr>';
+                        echo '<td></td>';
+                        echo '<td>MEU</td>';
+                        echo '<td>' . $quantidadeCelulas . '</td>';
+                        echo '<td>' . $quantidadeCelulasRealizadas . '</td>';
+                        echo '<td>' . number_format($performanceCelulas, 2, ',', '.') . '%</td>';
+                        echo '</tr>';
+
+
+                        $performanceSomaCelulas = 0;
+                        if ($somaQuantidadeCelulas) {
+                            $performanceSomaCelulas = $somaQuantidadeCelulasRealizadas / $somaQuantidadeCelulas * 100;
+                        }
+                        echo '<tr class="dark">';
+                        echo '<td></td>';
+                        echo '<td>TOTAL</td>';
+                        echo '<td>' . $somaQuantidadeCelulas . '</td>';
+                        echo '<td>' . $somaQuantidadeCelulasRealizadas . '</td>';
+                        echo '<td>' . number_format($performanceSomaCelulas, 2, ',', '.') . '%</td>';
+                        echo '</tr>';
+                        ?>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>

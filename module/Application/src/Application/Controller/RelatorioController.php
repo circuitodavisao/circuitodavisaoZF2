@@ -79,6 +79,7 @@ class RelatorioController extends CircuitoController {
 
         $fatoLider = $repositorioORM->getFatoLiderORM()->encontrarPorNumeroIdentificador($numeroIdentificador, $tipoRelatorioPessoal);
 
+        $relatorioCelula = $repositorioORM->getFatoCicloORM()->montarRelatorioCelulaPorNumeroIdentificador($numeroIdentificador, $cicloSelecionado, $mesSelecionado, $anoSelecionado, $tipoRelatorioPessoal);
         return new ViewModel(
                 array(
             'relatorio' => $relatorio,
@@ -86,7 +87,8 @@ class RelatorioController extends CircuitoController {
             'discipulos' => $discipulos,
             'repositorioORM' => $repositorioORM,
             'abaSelecionada' => $abaSelecionada,
-            'fatoLider' => $fatoLider
+            'fatoLider' => $fatoLider,
+            'relatorioCelula' => $relatorioCelula
                 )
         );
     }
