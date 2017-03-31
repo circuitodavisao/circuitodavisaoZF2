@@ -178,6 +178,7 @@ class Constantes {
     public static $ENTITY_FATO_CICLO_CICLO = 'ciclo';
     public static $ENTITY_FATO_CICLO_MES = 'mes';
     public static $ENTITY_FATO_CICLO_ANO = 'ano';
+    public static $ENTITY_EVENTO_CELULA_ID = 'evento_celula_id';
 
     /* Templates */
     public static $TEMPLATE_SELECIONAR_PERFIL = 'layout/layout-selecionar-perfil';

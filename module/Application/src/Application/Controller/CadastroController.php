@@ -157,8 +157,8 @@ class CadastroController extends CircuitoController {
             $tipoEvento = 3;
             $extra = $grupo->getId();
         }
-        
- 
+
+
         $view = new ViewModel(array(
             Constantes::$LISTAGEM_EVENTOS => $listagemDeEventos,
             Constantes::$TITULO_DA_PAGINA => $tituloDaPagina,
@@ -411,6 +411,7 @@ class CadastroController extends CircuitoController {
                 $eventoCelula = new EventoCelula();
                 $celulaForm = new CelulaForm(Constantes::$FORM_CELULA, $eventoCelula);
                 $celulaForm->setInputFilter($eventoCelula->getInputFilter());
+                $post_data[Constantes::$FORM_CEP_LOGRADOURO] = $post_data[Constantes::$FORM_CEP];
                 $celulaForm->setData($post_data);
 
                 /* validação */
@@ -460,8 +461,8 @@ class CadastroController extends CircuitoController {
                             if ($validatedData[Constantes::$FORM_TELEFONE_HOSPEDEIRO] != $eventoCelulaAtual->getTelefone_hospedeiroTelefoneSemDDD()) {
                                 $eventoCelulaAtual->setTelefone_hospedeiro($validatedData[Constantes::$FORM_DDD_HOSPEDEIRO] . $validatedData[Constantes::$FORM_TELEFONE_HOSPEDEIRO]);
                             }
-                            if ($validatedData[Constantes::$FORM_CEP_LOGRADOURO] != $eventoCelulaAtual->getCep()) {
-                                $eventoCelulaAtual->setCep($validatedData[Constantes::$FORM_CEP_LOGRADOURO]);
+                            if ($post_data[Constantes::$FORM_CEP_LOGRADOURO] != $eventoCelulaAtual->getCep()) {
+                                $eventoCelulaAtual->setCep($validatedData[Constantes::$FORM_CEP]);
                             }
                             if ($post_data[(Constantes::$FORM_HIDDEN . Constantes::$FORM_UF)] != $eventoCelulaAtual->getUf()) {
                                 $eventoCelulaAtual->setUf($post_data[(Constantes::$FORM_HIDDEN . Constantes::$FORM_UF)]);
@@ -505,7 +506,7 @@ class CadastroController extends CircuitoController {
                         $eventoCelula->setLogradouro($post_data[(Constantes::$FORM_HIDDEN . Constantes::$FORM_LOGRADOURO)]);
                         $eventoCelula->setBairro($post_data[(Constantes::$FORM_HIDDEN . Constantes::$FORM_BAIRRO)]);
                         $eventoCelula->setComplemento(strtoupper($post_data[Constantes::$FORM_COMPLEMENTO]));
-                        $eventoCelula->setCep($validatedData[Constantes::$FORM_CEP_LOGRADOURO]);
+                        $eventoCelula->setCep($post_data[Constantes::$FORM_CEP]);
                         $eventoCelula->setEvento($evento);
 
                         $dataParaCadastro = Funcoes::dataAtual();
@@ -525,12 +526,20 @@ class CadastroController extends CircuitoController {
 
                         /* Persistindo */
                         $repositorioORM->getEventoORM()->persistir($evento);
-                        $repositorioORM->getEventoCelulaORM()->persistir($eventoCelula,false);
+                        $repositorioORM->getEventoCelulaORM()->persistir($eventoCelula, false);
                         $repositorioORM->getGrupoEventoORM()->persistir($grupoEvento);
                         /* Sessão */
                         $sessao->tipoMensagem = Constantes::$TIPO_MENSAGEM_CADASTRAR_CELULA;
                         $sessao->textoMensagem = $eventoCelula->getNome_hospedeiro();
                         $sessao->idSessao = $eventoCelula->getId();
+
+                        /* Cadastro do fato celula */
+                        $mesSelecionado = date('n');
+                        $anoSelecionado = date('Y');
+                        $cicloSelecionado = Funcoes::cicloAtual($mesSelecionado, $anoSelecionado);
+                        $numeroIdentificador = $repositorioORM->getFatoCicloORM()->montarNumeroIdentificador($entidade->getGrupo());
+                        $fatoCiclo = $repositorioORM->getFatoCicloORM()->encontrarPorNumeroIdentificador($numeroIdentificador, $cicloSelecionado, $mesSelecionado, $anoSelecionado, $repositorioORM);
+                        $repositorioORM->getFatoCelulaORM()->criarFatoCelula($fatoCiclo, $eventoCelula->getId());
                     }
                 } else {
                     $this->direcionaErroDeCadastro($celulaForm->getMessages());
@@ -796,7 +805,8 @@ class CadastroController extends CircuitoController {
      */
     public function direcionaErroDeCadastro($mensagens) {
         echo "ERRO: Cadastro invalido!<br /><br />########################<br />";
-        foreach ($mensagens as $value) {
+        foreach ($mensagens as $l => $value) {
+            echo "key? $l<br >";
             foreach ($value as $key => $value) {
                 echo "$key => $value <br />";
             }
@@ -980,7 +990,7 @@ class CadastroController extends CircuitoController {
         $Content = file_get_contents($url);
         Funcoes::enviarEmail($ToEmail, $Subject, $Content);
     }
-    
+
     public function cadastrarRevisaoAction() {
         $sessao = new Container(Constantes::$NOME_APLICACAO);
         $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());

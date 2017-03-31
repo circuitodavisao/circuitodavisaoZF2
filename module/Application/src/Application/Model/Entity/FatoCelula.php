@@ -7,7 +7,6 @@ namespace Application\Model\Entity;
  * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com>
  * Descricao: Entidade anotada da tabela fato_celula
  */
-
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -27,6 +26,9 @@ class FatoCelula extends CircuitoEntity {
 
     /** @ORM\Column(type="integer") */
     protected $realizada;
+
+    /** @ORM\Column(type="integer") */
+    protected $evento_celula_id;
 
     function getFato_ciclo_id() {
         return $this->fato_ciclo_id;
@@ -54,6 +56,14 @@ class FatoCelula extends CircuitoEntity {
 
     function setFatoCiclo($fatoCiclo) {
         $this->fatoCiclo = $fatoCiclo;
+    }
+
+    function getEvento_celula_id() {
+        return $this->evento_celula_id;
+    }
+
+    function setEvento_celula_id($evento_celula_id) {
+        $this->evento_celula_id = $evento_celula_id;
     }
 
 }

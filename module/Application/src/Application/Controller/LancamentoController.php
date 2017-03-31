@@ -452,6 +452,30 @@ class LancamentoController extends CircuitoController {
                 }
                 if ($evento->getEventoTipo()->getId() === $eventoTipoCelula) {
                     $dimensaoSelecionada = $dimensoes[$dimensaoTipoCelula];
+
+                    /* Atualiza o relatorio de celulas */
+                    $criteria = Criteria::create()
+                            ->andWhere(Criteria::expr()->eq("ano", $ano))
+                            ->andWhere(Criteria::expr()->eq("mes", $mes))
+                            ->andWhere(Criteria::expr()->eq("ciclo", $ciclo));
+
+                    $frequencias = $evento->getEventoFrequencia()->matching($criteria);
+                    $somaFrequencias = 0;
+                    foreach ($frequencias as $frequenca) {
+                        if ($frequenca->getFrequencia() === 'S') {
+                            $somaFrequencias+= 1;
+                        }
+                    }
+                    if ($somaFrequencias === 0) {
+                        $realizada = 0;
+                    } else {
+                        $realizada = 1;
+                    }
+                    $eventoCelulaId = $evento->getEventoCelula()->getId();
+                    $fatoCelula = $repositorioORM->getFatoCelulaORM()->encontrarPorEventoCelulaId($eventoCelulaId);
+                    $fatoCelula->setRealizada($realizada);
+                    $setarDataEHora = false;
+                    $repositorioORM->getFatoCelulaORM()->persistir($fatoCelula, $setarDataEHora);
                 }
                 if ($pessoa->getGrupoPessoaAtivo()) {
                     /* Pessoa volateis */

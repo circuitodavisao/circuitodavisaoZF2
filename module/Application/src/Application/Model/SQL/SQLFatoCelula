@@ -11,6 +11,7 @@ CREATE TABLE fato_celula
   hora_inativacao time without time zone, -- Hora da inativação do relatório
   realizada smallint NOT NULL DEFAULT 0, -- Realizada 1 ou 0
   fato_ciclo_id integer NOT NULL, -- Identificação do fato ciclo
+  evento_celula_id integer NOT NULL, -- Identificação do evento célula
   CONSTRAINT pk_fato_celula PRIMARY KEY (id),
   CONSTRAINT fk_fato_celula_fato_ciclo FOREIGN KEY (fato_ciclo_id)
       REFERENCES fato_ciclo (id) MATCH SIMPLE
@@ -30,4 +31,5 @@ COMMENT ON COLUMN fato_celula.data_inativacao IS 'Data da inativação do relat�
 COMMENT ON COLUMN fato_celula.hora_inativacao IS 'Hora da inativação do relatório';
 COMMENT ON COLUMN fato_celula.realizada IS 'Realizada 1 ou 0';
 COMMENT ON COLUMN fato_celula.fato_ciclo_id IS 'Identificação do fato ciclo';
+COMMENT ON COLUMN fato_celula.evento_celula_id IS 'Identificação do evento célula';
 
