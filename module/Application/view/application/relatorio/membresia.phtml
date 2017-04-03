@@ -123,7 +123,7 @@ use Application\Controller\Helper\Funcoes;
                                 unset($soma);
                                 unset($performance);
                                 unset($quantidadeLideres);
-                                $fatoLider = $repositorioORM->getFatoLiderORM()->encontrarPorNumeroIdentificador($numeroIdentificador, $tipoRelatorioSomado);
+                                $fatoLider = $this->repositorioORM->getFatoLiderORM()->encontrarPorNumeroIdentificador($numeroIdentificador, $tipoRelatorioSomado);
                                 $quantidadeLideres = $fatoLider[0]['lideres'];
                                 foreach ($relatorio as $key => $value) {
                                     $soma[$key] = 0;
@@ -209,6 +209,48 @@ use Application\Controller\Helper\Funcoes;
                         echo '<td>' . number_format($performanceCelulas, 2, ',', '.') . '%</td>';
                         echo '</tr>';
 
+                        if ($discipulos) {
+                            $contagemRanking = 1;
+                            foreach ($discipulos as $gpFilho) {
+                                if ($contagemRanking >= 1 && $contagemRanking < 4) {
+                                    $classeLinha = 'success';
+                                }
+                                if ($contagemRanking >= 4 && $contagemRanking < 7) {
+                                    $classeLinha = 'warning';
+                                }
+                                if ($contagemRanking >= 7) {
+                                    $classeLinha = 'danger';
+                                }
+
+                                $grupoFilho = $gpFilho->getGrupoPaiFilhoFilho();
+                                $entidadeFilho = $grupoFilho->getEntidadeAtiva();
+
+                                $numeroIdentificador = $this->repositorioORM->getFatoCicloORM()->montarNumeroIdentificador($grupoFilho);
+                                $tipoRelatorioSomado = 2;
+                                $mesSelecionado = date('n');
+                                $anoSelecionado = date('Y');
+                                $cicloSelecionado = Funcoes::cicloAtual($mesSelecionado, $anoSelecionado);
+                                $relatorioCelula = $this->repositorioORM->getFatoCicloORM()->montarRelatorioCelulaPorNumeroIdentificador($numeroIdentificador, $cicloSelecionado, $mesSelecionado, $anoSelecionado, $tipoRelatorioSomado);
+
+                                $quantidadeCelulas = $relatorioCelula[0]['quantidade'];
+                                $somaQuantidadeCelulas += $relatorioCelula[0]['quantidade'];
+                                $quantidadeCelulasRealizadas = $relatorioCelula[0]['realizadas'];
+                                $somaQuantidadeCelulasRealizadas += $relatorioCelula[0]['realizadas'];
+                                $performanceCelulas = 0;
+                                if ($quantidadeCelulas) {
+                                    $performanceCelulas = $quantidadeCelulasRealizadas / $quantidadeCelulas * 100;
+                                }
+
+                                echo '<tr class="' . $classeLinha . '">';
+                                echo '<td class="hidden-xs">' . $contagemRanking . '°</td>';
+                                echo '<td>' . $entidadeFilho->infoEntidade() . '</td>';
+                                echo '<td>' . $quantidadeCelulas . '</td>';
+                                echo '<td>' . $quantidadeCelulasRealizadas . '</td>';
+                                echo '<td>' . number_format($performanceCelulas, 2, ',', '.') . '%</td>';
+                                echo '</tr>';
+                                $contagemRanking++;
+                            }
+                        }
 
                         $performanceSomaCelulas = 0;
                         if ($somaQuantidadeCelulas) {

@@ -121,41 +121,41 @@ class IndexController extends CircuitoController {
             $html = $exc->getTraceAsString();
         }
 
-
         $mesSelecionado = date('n');
         $anoSelecionado = date('Y');
         $cicloSelecionado = Funcoes::cicloAtual($mesSelecionado, $anoSelecionado);
         $tipoCelula = 2;
 
         $grupos = $this->getRepositorio()->getGrupoORM()->encontrarTodos();
-        $html .= "<br />Pegou grupos: " . count($grupos);
         foreach ($grupos as $grupo) {
             $numeroIdentificador = null;
-            $html .= "<br />getId" . $grupo->getId();
             if ($grupo->getId() > 7) {
                 $numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($grupo);
-                $html .= "<br />numeroIdentificador" . $numeroIdentificador;
-
                 if ($numeroIdentificador) {
                     $quantidadeLideres = 0;
                     if ($grupo->getGrupoEventoAtivosPorTipo($tipoCelula)) {
                         $quantidadeLideres = count($grupo->getResponsabilidadesAtivas());
                     }
-
                     $fatoCiclo = $this->getRepositorio()->getFatoCicloORM()->encontrarPorNumeroIdentificador($numeroIdentificador, $cicloSelecionado, $mesSelecionado, $anoSelecionado, $this->getRepositorio());
 
-                    $eventosCelulas = $grupo->getGrupoEventoAtivosPorTipo(2);
-                    $quantidadeDeCelulas = count($eventosCelulas);
-                    if ($quantidadeDeCelulas > 0) {
-                        foreach ($eventosCelulas as $evento) {
-                            $this->getRepositorio()->getFatoCelulaORM()->criarFatoCelula($fatoCiclo, $evento->getEvento()->getEventoCelula()->getId());
+                    /* Celulas */
+//                        $cicloSelecionado = 4;
+//                        $mesSelecionado = 3;
+                    $grupoEventosNoCiclo = $grupo->getGrupoEventoNoCiclo($cicloSelecionado, $mesSelecionado, $anoSelecionado);
+                    $quantidadeDeEventosNoCiclo = count($grupoEventosNoCiclo);
+
+                    if ($quantidadeDeEventosNoCiclo > 0) {
+                        foreach ($grupoEventosNoCiclo as $grupoEventoNoCiclo) {
+                            if ($grupoEventoNoCiclo->getEvento()->verificaSeECelula()) {
+                                $this->getRepositorio()->getFatoCelulaORM()->criarFatoCelula($fatoCiclo, $grupoEventoNoCiclo->getEvento()->getEventoCelula()->getId());
+                            }
                         }
                     }
+
                     $this->getRepositorio()->getFatoLiderORM()->criarFatoLider($numeroIdentificador, $quantidadeLideres);
                 }
             }
         }
-
 
         list($usec, $sec) = explode(' ', microtime());
         $script_end = (float) $sec + (float) $usec;
