@@ -115,46 +115,63 @@ class IndexController extends CircuitoController {
                 }
             }
 
+
+
             $this->getRepositorio()->fecharTransacao();
         } catch (Exception $exc) {
             $this->getRepositorio()->desfazerTransacao();
             $html = $exc->getTraceAsString();
         }
 
-        $mesSelecionado = date('n');
-        $anoSelecionado = date('Y');
-        $cicloSelecionado = Funcoes::cicloAtual($mesSelecionado, $anoSelecionado);
-        $tipoCelula = 2;
 
-        $grupos = $this->getRepositorio()->getGrupoORM()->encontrarTodos();
-        foreach ($grupos as $grupo) {
-            $numeroIdentificador = null;
-            if ($grupo->getId() > 7) {
-                $numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($grupo);
-                if ($numeroIdentificador) {
-                    $quantidadeLideres = 0;
-                    if ($grupo->getGrupoEventoAtivosPorTipo($tipoCelula)) {
-                        $quantidadeLideres = count($grupo->getResponsabilidadesAtivas());
+        /* Relatorios */
+        try {
+            $this->getRepositorio()->iniciarTransacao();
+            $mesSelecionado = date('n');
+            $anoSelecionado = date('Y');
+            $cicloSelecionado = Funcoes::cicloAtual($mesSelecionado, $anoSelecionado);
+            $tipoCelula = 2;
+
+            $grupos = $this->getRepositorio()->getGrupoORM()->encontrarTodos();
+            foreach ($grupos as $grupo) {
+                if ($grupo->getId() > 7) {
+                    echo "<br /><br /><br />Grupo: " . $grupo->getId();
+                    if ($grupo->getEntidadeAtiva()) {
+                        echo "<br />Entidade " . $grupo->getEntidadeAtiva()->infoEntidade();
                     }
-                    $fatoCiclo = $this->getRepositorio()->getFatoCicloORM()->encontrarPorNumeroIdentificador($numeroIdentificador, $cicloSelecionado, $mesSelecionado, $anoSelecionado, $this->getRepositorio());
 
-                    /* Celulas */
+                    $numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($grupo);
+                    echo "<br />NumeroIdentificador: " . $numeroIdentificador;
+                    if ($numeroIdentificador > 0) {
+
+                        $fatoCiclo = $this->getRepositorio()->getFatoCicloORM()->encontrarPorNumeroIdentificador($numeroIdentificador, $cicloSelecionado, $mesSelecionado, $anoSelecionado, $this->getRepositorio());
+
+                        /* Celulas */
 //                        $cicloSelecionado = 4;
 //                        $mesSelecionado = 3;
-                    $grupoEventosNoCiclo = $grupo->getGrupoEventoNoCiclo($cicloSelecionado, $mesSelecionado, $anoSelecionado);
-                    $quantidadeDeEventosNoCiclo = count($grupoEventosNoCiclo);
-
-                    if ($quantidadeDeEventosNoCiclo > 0) {
-                        foreach ($grupoEventosNoCiclo as $grupoEventoNoCiclo) {
-                            if ($grupoEventoNoCiclo->getEvento()->verificaSeECelula()) {
-                                $this->getRepositorio()->getFatoCelulaORM()->criarFatoCelula($fatoCiclo, $grupoEventoNoCiclo->getEvento()->getEventoCelula()->getId());
+                        $grupoEventosNoCiclo = $grupo->getGrupoEventoNoCiclo($cicloSelecionado, $mesSelecionado, $anoSelecionado);
+                        $quantidadeDeEventosNoCiclo = count($grupoEventosNoCiclo);
+                        if ($quantidadeDeEventosNoCiclo > 0) {
+                            foreach ($grupoEventosNoCiclo as $grupoEventoNoCiclo) {
+                                if ($grupoEventoNoCiclo->getEvento()->verificaSeECelula()) {
+                                    $this->getRepositorio()->getFatoCelulaORM()->criarFatoCelula($fatoCiclo, $grupoEventoNoCiclo->getEvento()->getEventoCelula()->getId());
+                                }
                             }
                         }
-                    }
 
-                    $this->getRepositorio()->getFatoLiderORM()->criarFatoLider($numeroIdentificador, $quantidadeLideres);
+                        $quantidadeLideres = 0;
+                        if ($grupo->getGrupoEventoAtivosPorTipo($tipoCelula)) {
+                            $quantidadeLideres = count($grupo->getResponsabilidadesAtivas());
+                        }
+                        echo "<br />quantidadeLideres" . $quantidadeLideres;
+                        $this->getRepositorio()->getFatoLiderORM()->criarFatoLider($numeroIdentificador, $quantidadeLideres);
+                    }
                 }
             }
+            $this->getRepositorio()->fecharTransacao();
+        } catch (Exception $exc) {
+            $this->getRepositorio()->desfazerTransacao();
+            $html = $exc->getTraceAsString();
         }
 
         list($usec, $sec) = explode(' ', microtime());
