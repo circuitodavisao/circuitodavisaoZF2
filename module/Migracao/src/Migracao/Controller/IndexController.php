@@ -239,10 +239,17 @@ class IndexController extends CircuitoController {
                         FROM
                             ursula_celula_ursula
                         WHERE
-                            (idLider1 = ' . $idLider1Int . ' OR idlider2 = ' . $idLider1Int . ') AND tipo = "A" AND status = "A" AND dia IS NOT NULL
+                            (idLider1 = ' . $idLider1Int . ' OR idlider2 = ' . $idLider1Int . ' #condicao2) AND tipo = "A" AND status = "A" AND dia IS NOT NULL
                                 AND mes = MONTH(NOW())
                                 AND ano = YEAR(NOW());';
-        $queryCelulas1 = mysqli_query($this->getConexao(), $sqlCelulas1);
+        if ($idLider2 != 0 && $idLider2 != null) {
+            $idLider2Int = (int) $idLider2;
+            $sqlCelulas = str_replace('#condicao2', ' OR idLider1 = ' . $idLider2Int . ' OR idlider2 = ' . $idLider2Int, $sqlCelulas1);
+        } else {
+            $sqlCelulas = str_replace('#condicao2', '', $sqlCelulas1);
+        }
+//        echo "<br />$sqlCelulas";
+        $queryCelulas1 = mysqli_query($this->getConexao(), $sqlCelulas);
         while ($rowCelulas = mysqli_fetch_array($queryCelulas1)) {
             $evento = new Evento();
             $evento->setHora($rowCelulas['hora']);
@@ -268,44 +275,6 @@ class IndexController extends CircuitoController {
             $evento->setEventoCelula($eventoCelula);
 
             $eventos[] = $evento;
-        }
-        if ($idLider2 != 0 && $idLider2 != null) {
-            $idLider2Int = (int) $idLider2;
-            $sqlCelulas2 = 'SELECT 
-                            *
-                        FROM
-                            ursula_celula_ursula
-                        WHERE
-                            (idLider1 = ' . $idLider2Int . ' OR idlider2 = ' . $idLider2Int . ') AND tipo = "A" AND status = "A" AND dia IS NOT NULL
-                                AND mes = MONTH(NOW())
-                                AND ano = YEAR(NOW());';
-            $queryCelulas2 = mysqli_query($this->getConexao(), $sqlCelulas2);
-            while ($rowCelulas = mysqli_fetch_array($queryCelulas2)) {
-                $evento = new Evento();
-                $evento->setHora($rowCelulas['hora']);
-                $evento->setDia($rowCelulas['dia']);
-                $evento->setEventoTipo($eventoTipo);
-
-                $eventoCelula = new EventoCelula();
-                $eventoCelula->setEvento($evento);
-                $eventoCelula->setNome_hospedeiro($rowCelulas['nomeHospedeiro']);
-                $ddd = $rowCelulas['ddd'];
-                if (empty($ddd)) {
-                    $ddd = 61;
-                }
-                $telefone = $ddd . $rowCelulas['telefoneHospedeiro'];
-                $telefone = str_replace('-', '', $telefone);
-                $eventoCelula->setTelefone_hospedeiro($telefone);
-                $eventoCelula->setLogradouro($rowCelulas['logradouro']);
-                $eventoCelula->setComplemento($rowCelulas['complemento']);
-                $eventoCelula->setBairro($rowCelulas['idBairro']);
-                $eventoCelula->setCidade($rowCelulas['idCidade']);
-                $eventoCelula->setUf($rowCelulas['idUF']);
-                $eventoCelula->setCep(0);
-                $evento->setEventoCelula($eventoCelula);
-
-                $eventos[] = $evento;
-            }
         }
         return $eventos;
     }

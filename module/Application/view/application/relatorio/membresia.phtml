@@ -2,6 +2,8 @@
 
 use Application\Controller\Helper\Constantes;
 use Application\Controller\Helper\Funcoes;
+
+$classeLinha = '';
 ?>
 <div class="mw600 center-block">
     <div class="panel-body bg-light">    
@@ -83,15 +85,15 @@ use Application\Controller\Helper\Funcoes;
                         if ($discipulos) {
                             $contagemRanking = 1;
                             foreach ($discipulos as $gpFilho) {
-                                if ($contagemRanking >= 1 && $contagemRanking < 4) {
-                                    $classeLinha = 'success';
-                                }
-                                if ($contagemRanking >= 4 && $contagemRanking < 7) {
-                                    $classeLinha = 'warning';
-                                }
-                                if ($contagemRanking >= 7) {
-                                    $classeLinha = 'danger';
-                                }
+//                                if ($contagemRanking >= 1 && $contagemRanking < 4) {
+//                                    $classeLinha = 'success';
+//                                }
+//                                if ($contagemRanking >= 4 && $contagemRanking < 7) {
+//                                    $classeLinha = 'warning';
+//                                }
+//                                if ($contagemRanking >= 7) {
+//                                    $classeLinha = 'danger';
+//                                }
                                 $grupoFilho = $gpFilho->getGrupoPaiFilhoFilho();
                                 $entidadeFilho = $grupoFilho->getEntidadeAtiva();
 
@@ -212,15 +214,15 @@ use Application\Controller\Helper\Funcoes;
                         if ($discipulos) {
                             $contagemRanking = 1;
                             foreach ($discipulos as $gpFilho) {
-                                if ($contagemRanking >= 1 && $contagemRanking < 4) {
-                                    $classeLinha = 'success';
-                                }
-                                if ($contagemRanking >= 4 && $contagemRanking < 7) {
-                                    $classeLinha = 'warning';
-                                }
-                                if ($contagemRanking >= 7) {
-                                    $classeLinha = 'danger';
-                                }
+//                                if ($contagemRanking >= 1 && $contagemRanking < 4) {
+//                                    $classeLinha = 'success';
+//                                }
+//                                if ($contagemRanking >= 4 && $contagemRanking < 7) {
+//                                    $classeLinha = 'warning';
+//                                }
+//                                if ($contagemRanking >= 7) {
+//                                    $classeLinha = 'danger';
+//                                }
 
                                 $grupoFilho = $gpFilho->getGrupoPaiFilhoFilho();
                                 $entidadeFilho = $grupoFilho->getEntidadeAtiva();
@@ -242,7 +244,7 @@ use Application\Controller\Helper\Funcoes;
                                 }
 
                                 echo '<tr class="' . $classeLinha . '">';
-                                echo '<td class="hidden-xs">' . $contagemRanking . '°</td>';
+                                echo '<td>' . $contagemRanking . '°</td>';
                                 echo '<td>' . $entidadeFilho->infoEntidade() . '</td>';
                                 echo '<td>' . $quantidadeCelulas . '</td>';
                                 echo '<td>' . $quantidadeCelulasRealizadas . '</td>';
