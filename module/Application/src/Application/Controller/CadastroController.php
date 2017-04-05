@@ -607,24 +607,21 @@ class CadastroController extends CircuitoController {
             /* Persistindo */
             /* Inativando o Evento */
             $eventoParaInativar = $eventoNaSessao;
-            $eventoParaInativar->setData_inativacao(Funcoes::dataAtual());
-            $eventoParaInativar->setHora_inativacao(Funcoes::horaAtual());
 
             /* Relatório de célula */
             if ($eventoParaInativar->getEventoCelula()) {
                 $fatoCelula = $repositorioORM->getFatoCelulaORM()->encontrarPorEventoCelulaId($eventoParaInativar->getEventoCelula()->getId());
-                $fatoCelula->setData_inativacao(Funcoes::dataAtual());
-                $fatoCelula->setHora_inativacao(Funcoes::horaAtual());
+                $fatoCelula->setDataEHoraDeInativacao();
                 $repositorioORM->getFatoCelulaORM()->persistir($fatoCelula, false);
             }
 
+            $eventoParaInativar->setDataEHoraDeInativacao();
             $repositorioORM->getEventoORM()->persistir($eventoParaInativar, false);
 
             /* Inativando o Grupo Evento */
             $grupoEventoAtivos = $eventoParaInativar->getGrupoEventoAtivos();
             foreach ($grupoEventoAtivos as $gea) {
-                $gea->setData_inativacao(Funcoes::dataAtual());
-                $gea->setHora_inativacao(Funcoes::horaAtual());
+                $gea->setDataEHoraDeInativacao();
                 $repositorioORM->getGrupoEventoORM()->persistir($gea, false);
             }
         }

@@ -10,7 +10,6 @@ use Doctrine\ORM\Mapping as ORM;
  * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com>
  * Descricao: Entidade anotada base
  */
-
 class CircuitoEntity {
 
     /**
@@ -20,13 +19,13 @@ class CircuitoEntity {
      */
     protected $id;
 
-    /** @ORM\Column(type="string") */
+    /** @ORM\Column(type="datetime", name="data_criacao") */
     protected $data_criacao;
 
     /** @ORM\Column(type="string") */
     protected $hora_criacao;
 
-    /** @ORM\Column(type="string") */
+    /** @ORM\Column(type="datetime", name="data_inativacao") */
     protected $data_inativacao;
 
     /** @ORM\Column(type="string") */
@@ -37,8 +36,17 @@ class CircuitoEntity {
      */
     function setDataEHoraDeCriacao() {
         $timeNow = new DateTime();
-        $this->setData_criacao($timeNow->format('Y-m-d'));
+        $this->setData_criacao($timeNow);
         $this->setHora_criacao($timeNow->format('H:s:i'));
+    }
+
+    /**
+     * Seta data e hora de criação
+     */
+    function setDataEHoraDeInativacao() {
+        $timeNow = new DateTime();
+        $this->setData_inativacao($timeNow);
+        $this->setHora_inativacao($timeNow->format('H:s:i'));
     }
 
     /**

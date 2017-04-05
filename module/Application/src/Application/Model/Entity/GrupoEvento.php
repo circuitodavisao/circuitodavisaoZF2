@@ -75,15 +75,15 @@ class GrupoEvento extends CircuitoEntity {
     }
 
     function getData_criacaoAno() {
-        return explode('-', $this->getData_criacao())[0];
+        return $this->getData_criacao()->format('Y');
     }
 
     function getData_criacaoMes() {
-        return explode('-', $this->getData_criacao())[1];
+        return $this->getData_criacao()->format('m');
     }
 
     function getData_criacaoDia() {
-        return explode('-', $this->getData_criacao())[2];
+        return $this->getData_criacao()->format('d');
     }
 
     function getNovo() {

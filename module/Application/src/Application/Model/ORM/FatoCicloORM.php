@@ -118,7 +118,8 @@ class FatoCicloORM extends CircuitoORM {
                 . "FROM  " . Constantes::$ENTITY_FATO_CICLO . " fc "
                 . "JOIN fc.fatoCelula c "
                 . "WHERE "
-                . "fc.numero_identificador #tipoComparacao ?1 "
+                . "fc.data_inativacao IS NULL "
+                . "AND fc.numero_identificador #tipoComparacao ?1 "
                 . "AND fc.mes = ?2 "
                 . "AND fc.ano = ?3 "
                 . "AND fc.ciclo = ?4";
@@ -130,13 +131,13 @@ class FatoCicloORM extends CircuitoORM {
                 $dqlAjustadaTipoComparacao = str_replace('#tipoComparacao', 'LIKE', $dqlBase);
                 $numeroIdentificador .= '%';
             }
-
             $result = $this->getEntityManager()->createQuery($dqlAjustadaTipoComparacao)
                     ->setParameter(1, $numeroIdentificador)
                     ->setParameter(2, $mesInt)
                     ->setParameter(3, $anoInt)
                     ->setParameter(4, $cicloInt)
                     ->getResult();
+
 
             return $result;
         } catch (Exception $exc) {
