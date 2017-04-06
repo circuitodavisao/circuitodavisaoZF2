@@ -20,6 +20,7 @@ use Application\Model\Entity\GrupoResponsavel;
 use Application\Model\Entity\Pessoa;
 use Application\Model\Entity\PessoaHierarquia;
 use Application\Model\ORM\RepositorioORM;
+use DateTime;
 use Exception;
 use Zend\Json\Json;
 use Zend\Session\Container;
@@ -610,9 +611,21 @@ class CadastroController extends CircuitoController {
 
             /* Relatório de célula */
             if ($eventoParaInativar->getEventoCelula()) {
-                $fatoCelula = $repositorioORM->getFatoCelulaORM()->encontrarPorEventoCelulaId($eventoParaInativar->getEventoCelula()->getId());
-                $fatoCelula->setDataEHoraDeInativacao();
-                $repositorioORM->getFatoCelulaORM()->persistir($fatoCelula, false);
+                /* Somente inativar caso o dia do evento seja posterior ao dia da exclusao */
+                $timeNow = new DateTime();
+                $format = 'N';
+                $diaDaSemana = $timeNow->format($format);
+                $eventoParaInativar->getDia();
+                if ($diaDaSemana == 7) {
+                    $diaDaSemana = 1;
+                } else {
+                    $diaDaSemana++;
+                }
+                if ($diaDaSemana < $eventoParaInativar->getDia()) {
+                    $fatoCelula = $repositorioORM->getFatoCelulaORM()->encontrarPorEventoCelulaId($eventoParaInativar->getEventoCelula()->getId());
+                    $fatoCelula->setDataEHoraDeInativacao();
+                    $repositorioORM->getFatoCelulaORM()->persistir($fatoCelula, false);
+                }
             }
 
             $eventoParaInativar->setDataEHoraDeInativacao();
