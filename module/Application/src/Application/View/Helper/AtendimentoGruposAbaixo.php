@@ -20,7 +20,7 @@ class AtendimentoGruposAbaixo extends AbstractHelper {
     }
 
     public function renderHtml() {
-        $html = '';
+                $html = '';
         if (!empty($this->view->gruposAbaixo)) {
             foreach ($this->view->gruposAbaixo as $gpFilho) {
                 $grupoFilho = $gpFilho->getGrupoPaiFilhoFilho();
@@ -36,12 +36,10 @@ class AtendimentoGruposAbaixo extends AbstractHelper {
                         }
                         $pessoas[] = $p;
                     }
-
                     $informacaoEntidade = '';
                     $informacaoFoto = '';
                     $contagem = 1;
                     $totalPessoas = count($pessoas);
-
                     foreach ($pessoas as $p) {
                         if ($contagem == 2) {
                             $informacaoEntidade .= '&nbsp;&nbsp;';
@@ -70,7 +68,6 @@ class AtendimentoGruposAbaixo extends AbstractHelper {
                             }
                         }
                     }
-
                     $numeroAtendimentos = $totalGruposAtendidoIndividual;
                     /* percentagem da meta, sendo que a meta é 2 atendimentos por mes */
                     if ($numeroAtendimentos == 1) {
@@ -89,7 +86,6 @@ class AtendimentoGruposAbaixo extends AbstractHelper {
                         $colorBar = "progress-bar-danger";
                         $disabledMinus = 'disabled';
                     }
-
                     $html .= '<div class="row mt10">';
                     $html .= '<div class="col-md-3 col-xs-4" style="padding-right: 0px;">';
                     $html .= '<span class="" href="#" >';
@@ -104,7 +100,6 @@ class AtendimentoGruposAbaixo extends AbstractHelper {
                     $html .= '</div>';
                     $html .= '<span style="padding-top: 0px;">' . $informacaoEntidade . '</span>';
                     $html .= '</div>';
-
                     $html .= '<div class="col-md-2 col-sm-2 col-xs-5" style="padding-left: 0px; padding-top: 3px; vertical-align: middle;">';
                     $html .= '<button id="br_' . $grupoFilho->getId() . '" type="button" onclick="mudarAtendimento(' . $grupoFilho->getId() . ', 2);" class="btn btn-md btn-primary ' . $disabledMinus . '" style="padding-top: 0px; padding-bottom: 0px;">';
                     $html .= '<i class="fa fa-minus" aria-hidden="true"></i>';
@@ -124,5 +119,4 @@ class AtendimentoGruposAbaixo extends AbstractHelper {
         }
         return $html;
     }
-
 }
