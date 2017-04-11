@@ -12,6 +12,7 @@ use Application\Model\Entity\GrupoAtendimento;
 use Application\Model\Entity\GrupoPessoa;
 use Application\Model\Entity\Pessoa;
 use Application\Model\ORM\RepositorioORM;
+use DateInterval;
 use DateTime;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManager;
@@ -19,10 +20,10 @@ use Exception;
 use Zend\Json\Json;
 use Zend\Mvc\I18n\Translator;
 use Zend\Session\Container;
-use Zend\View\Model\ViewModel;
+use Zend\View\Model\ViewModel; 
 
 /**
- * Nome: LancamentoController.php
+ * Nome: LancamentoContgetLiderroller.php
  * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com>
  * Descricao: Controle de todas ações de lancamento
  */
@@ -60,17 +61,13 @@ class LancamentoController extends CircuitoController {
         /* Verificando rota */
         $pagina = $this->getEvent()->getRouteMatch()->getParam(Constantes::$PAGINA, 1);
         if ($pagina == Constantes::$PAGINA_MUDAR_FREQUENCIA) {
-            $grupo = $entidade->getGrupo();
-            $grupo->setRelatorioPendente($repositorioORM);
-
             return $this->forward()->dispatch(Constantes::$CONTROLLER_LANCAMENTO, array(
                         Constantes::$ACTION => Constantes::$PAGINA_MUDAR_FREQUENCIA,
             ));
         }
-        if ($pagina == Constantes::$PAGINA_MUDAR_ATENDIMENTO) {
-
+        if ($pagina == 'MudarAtendimento') {
             return $this->forward()->dispatch(Constantes::$CONTROLLER_LANCAMENTO, array(
-                        Constantes::$ACTION => Constantes::$PAGINA_MUDAR_ATENDIMENTO,
+                        Constantes::$ACTION => 'MudarAtendimento',
             ));
         }
         if ($pagina == Constantes::$PAGINA_ENVIAR_RELATORIO) {
@@ -151,6 +148,11 @@ class LancamentoController extends CircuitoController {
         if ($pagina == Constantes::$PAGINA_ATENDIMENTO_EXCLUSAO_CONFIRMACAO) {
             return $this->forward()->dispatch(Constantes::$CONTROLLER_LANCAMENTO, array(
                         Constantes::$ACTION => Constantes::$PAGINA_ATENDIMENTO_EXCLUSAO_CONFIRMACAO,
+            ));
+        }
+        if ($pagina == 'RelatorioAtendimento') {
+            return $this->forward()->dispatch(Constantes::$CONTROLLER_LANCAMENTO, array(
+                        Constantes::$ACTION => 'RelatorioAtendimento',
             ));
         }
         /* Funcoes */
@@ -261,6 +263,7 @@ class LancamentoController extends CircuitoController {
             Constantes::$VALIDACAO_ENTIDADE_INATIVA => $validacaoEntidadeInativa,
             Constantes::$ENTIDADE_INATIVA => $entidadeInativa,
             Constantes::$LANCAMENTO_ORM => $repositorioORM,
+            Constantes::$GRUPO => $grupo,
                 )
         );
 
@@ -317,7 +320,6 @@ class LancamentoController extends CircuitoController {
     public function cadastrarPessoaRevisaoAction() {
         $sessao = new Container(Constantes::$NOME_APLICACAO);
         $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
-        $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
         $grupoPessoa = $repositorioORM->getGrupoPessoaORM()->encontrarPorId($sessao->idFuncaoLancamento);
         $pessoa = $grupoPessoa->getPessoa();
         $pessoa->setData_revisao(date('Y-m-d'));
@@ -350,28 +352,6 @@ class LancamentoController extends CircuitoController {
     }
 
     /**
-     * Abri tela para enviar relatorio
-     * @return ViewModel
-     */
-    public function enviarRelatorioAction() {
-        /* Helper Controller */
-        $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
-
-        $sessao = new Container(Constantes::$NOME_APLICACAO);
-        $idEntidadeAtual = $sessao->idEntidadeAtual;
-        $entidade = $repositorioORM->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
-        $repositorioORM->getGrupoORM()->setRelatorioEnviado($entidade->getGrupo());
-
-        $view = new ViewModel();
-        /* Javascript especifico */
-        $layoutJS = new ViewModel();
-        $layoutJS->setTemplate(Constantes::$TEMPLATE_JS_CADASTRAR_PESSOA);
-        $view->addChild($layoutJS, Constantes::$STRING_JS_CADASTRAR_PESSOA);
-
-        return $view;
-    }
-
-    /**
      * Muda a frequência de um evento
      * @return Json
      */
@@ -379,7 +359,11 @@ class LancamentoController extends CircuitoController {
         $request = $this->getRequest();
         $response = $this->getResponse();
         if ($request->isPost()) {
+            /* Helper Controller */
+            $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
             try {
+                $repositorioORM->iniciarTransacao();
+
                 $post_data = $request->getPost();
                 $valor = $post_data['valor'];
                 $idEventoFrequencia = $post_data['idEventoFrequencia'];
@@ -387,11 +371,9 @@ class LancamentoController extends CircuitoController {
                 $aba = $post_data['aba'];
                 $explodeIdEventoFrequencia = explode('_', $idEventoFrequencia);
 
-                /* Helper Controller */
-                $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
+                $pessoa = $repositorioORM->getPessoaORM()->encontrarPorId($explodeIdEventoFrequencia[1]);
+                $evento = $repositorioORM->getEventoORM()->encontrarPorId($explodeIdEventoFrequencia[2]);
 
-                $pessoa = $repositorioORM->getPessoaORM()->encontrarPorIdPessoa($explodeIdEventoFrequencia[1]);
-                $evento = $repositorioORM->getEventoORM()->encontrarPorIdEvento($explodeIdEventoFrequencia[2]);
                 /* Verificar se a frequencia ja existe */
                 $mes = Funcoes::mesPorAbaSelecionada($aba);
                 $ano = Funcoes::anoPorAbaSelecionada($aba);
@@ -402,11 +384,11 @@ class LancamentoController extends CircuitoController {
                         ->andWhere(Criteria::expr()->eq("ciclo", $ciclo));
 
                 $eventosFiltrados = $pessoa->getEventoFrequencia()->matching($criteria);
-                if ($eventosFiltrados->count() == 1) {
+                if ($eventosFiltrados->count() === 1) {
                     /* Frequencia existe */
                     $frequencia = $eventosFiltrados->first();
                     $frequencia->setFrequencia($valor);
-                    $repositorioORM->getEventoFrequenciaORM()->persistirSemDispacharEventoFrequencia($frequencia);
+                    $repositorioORM->getEventoFrequenciaORM()->persistir($frequencia);
                 } else {
                     /* Persitir frequencia */
                     $eventoFrequencia = new EventoFrequencia();
@@ -416,12 +398,122 @@ class LancamentoController extends CircuitoController {
                     $eventoFrequencia->setCiclo($ciclo);
                     $eventoFrequencia->setMes($mes);
                     $eventoFrequencia->setAno($ano);
-                    $repositorioORM->getEventoFrequenciaORM()->persistirSemDispacharEventoFrequencia($eventoFrequencia);
+                    $repositorioORM->getEventoFrequenciaORM()->persistir($eventoFrequencia);
                 }
+
+                $valorParaSomar = 0;
+                if ($valor === 'S') {
+                    $valorParaSomar = 1;
+                } else {
+                    $valorParaSomar = -1;
+                }
+
+                $grupoPassado = $repositorioORM->getGrupoORM()->encontrarPorId($post_data['idGrupo']);
+                $numeroIdentificador = $repositorioORM->getFatoCicloORM()->montarNumeroIdentificador($grupoPassado);
+
+                $eventoTipoCulto = 1;
+                $eventoTipoCelula = 2;
+                $dimensaoTipoCelula = 1;
+                $dimensaoTipoCulto = 2;
+                $dimensaoTipoArena = 3;
+                $dimensaoTipoDomingo = 4;
+                $dimensaoSelecionada = null;
+
+                $fatoCicloSelecionado = $repositorioORM->getFatoCicloORM()->encontrarPorNumeroIdentificador(
+                        $numeroIdentificador, $ciclo, $mes, $ano, $repositorioORM);
+
+                if ($fatoCicloSelecionado->getDimensao()) {
+                    foreach ($fatoCicloSelecionado->getDimensao() as $dimensao) {
+                        switch ($dimensao->getDimensaoTipo()->getId()) {
+                            case $dimensaoTipoCelula:
+                                $dimensoes[$dimensaoTipoCelula] = $dimensao;
+                                break;
+                            case $dimensaoTipoCulto:
+                                $dimensoes[$dimensaoTipoCulto] = $dimensao;
+                                break;
+                            case $dimensaoTipoArena:
+                                $dimensoes[$dimensaoTipoArena] = $dimensao;
+                                break;
+                            case $dimensaoTipoDomingo:
+                                $dimensoes[$dimensaoTipoDomingo] = $dimensao;
+                                break;
+                        }
+                    }
+                }
+                if ($evento->getEventoTipo()->getId() === $eventoTipoCulto) {
+                    $diaDeSabado = 7;
+                    $diaDeDomingo = 1;
+                    switch ($evento->getDia()) {
+                        case $diaDeSabado:
+                            $dimensaoSelecionada = $dimensoes[$dimensaoTipoArena];
+                            break;
+                        case $diaDeDomingo:
+                            $dimensaoSelecionada = $dimensoes[$dimensaoTipoDomingo];
+                            break;
+                        default:
+                            $dimensaoSelecionada = $dimensoes[$dimensaoTipoCulto];
+                            break;
+                    };
+                }
+                if ($evento->getEventoTipo()->getId() === $eventoTipoCelula) {
+                    $dimensaoSelecionada = $dimensoes[$dimensaoTipoCelula];
+
+                    /* Atualiza o relatorio de celulas */
+                    $criteria = Criteria::create()
+                            ->andWhere(Criteria::expr()->eq("ano", $ano))
+                            ->andWhere(Criteria::expr()->eq("mes", $mes))
+                            ->andWhere(Criteria::expr()->eq("ciclo", $ciclo));
+
+                    $frequencias = $evento->getEventoFrequencia()->matching($criteria);
+                    $somaFrequencias = 0;
+                    foreach ($frequencias as $frequenca) {
+                        if ($frequenca->getFrequencia() === 'S') {
+                            $somaFrequencias+= 1;
+                        }
+                    }
+                    if ($somaFrequencias === 0) {
+                        $realizada = 0;
+                    } else {
+                        $realizada = 1;
+                    }
+                    $eventoCelulaId = $evento->getEventoCelula()->getId();
+                    $fatoCelula = $repositorioORM->getFatoCelulaORM()->encontrarPorEventoCelulaId($eventoCelulaId);
+                    $fatoCelula->setRealizada($realizada);
+                    $setarDataEHora = false;
+                    $repositorioORM->getFatoCelulaORM()->persistir($fatoCelula, $setarDataEHora);
+                }
+                if ($pessoa->getGrupoPessoaAtivo()) {
+                    /* Pessoa volateis */
+                    $pessoaTipoVisitante = 1;
+                    $pessoaTipoConsolidacao = 2;
+                    $pessoaTipoMembro = 3;
+                    $valorDoCampo = 0;
+                    switch ($pessoa->getGrupoPessoaAtivo()->getGrupoPessoaTipo()->getId()) {
+                        case $pessoaTipoVisitante:
+                            $valorDoCampo = $dimensaoSelecionada->getVisitante();
+                            $dimensaoSelecionada->setVisitante($valorDoCampo + $valorParaSomar);
+                            break;
+                        case $pessoaTipoConsolidacao:
+                            $valorDoCampo = $dimensaoSelecionada->getConsolidacao();
+                            $dimensaoSelecionada->setConsolidacao($valorDoCampo + $valorParaSomar);
+                            break;
+                        case $pessoaTipoMembro:
+                            $valorDoCampo = $dimensaoSelecionada->getMembro();
+                            $dimensaoSelecionada->setMembro($valorDoCampo + $valorParaSomar);
+                            break;
+                    }
+                } else {
+                    $valorDoCampo = $dimensaoSelecionada->getLider();
+                    $dimensaoSelecionada->setLider($valorDoCampo + $valorParaSomar);
+                }
+                $repositorioORM->getDimensaoORM()->persistir($dimensaoSelecionada, false);
+
+                $repositorioORM->fecharTransacao();
                 $response->setContent(Json::encode(
                                 array('response' => 'true',
                                     'idEvento' => $evento->getId())));
             } catch (Exception $exc) {
+                $repositorioORM->desfazerTransacao();
                 echo $exc->getTraceAsString();
             }
         }
@@ -444,7 +536,7 @@ class LancamentoController extends CircuitoController {
                 /* Helper Controller */
                 $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
 
-                $pessoa = $repositorioORM->getPessoaORM()->encontrarPorIdPessoa($idPessoa);
+                $pessoa = $repositorioORM->getPessoaORM()->encontrarPorId($idPessoa);
                 $pessoa->setNome(strtoupper($nome));
                 $repositorioORM->getPessoaORM()->persistir($pessoa);
 
@@ -556,11 +648,11 @@ class LancamentoController extends CircuitoController {
                     $sessao = new Container(Constantes::$NOME_APLICACAO);
                     $sessao->nomePessoaCadastrada = $pessoa->getNome();
 
-                    return $this->forward()->dispatch(Constantes::$CONTROLLER_LANCAMENTO, array(
+                    return $this->redirect()->toRoute(Constantes::$ROUTE_LANCAMENTO, array(
                                 Constantes::$ACTION => Constantes::$ROUTE_INDEX,
                     ));
                 } else {
-                    return $this->forward()->dispatch(Constantes::$CONTROLLER_LOGIN, array(
+                    return $this->redirect()->toRoute(Constantes::$ROUTE_LOGIN, array(
                                 Constantes::$ACTION => Constantes::$ROUTE_INDEX,
                     ));
                 }
@@ -716,8 +808,8 @@ class LancamentoController extends CircuitoController {
         }
 
         $progresso = ($totalGruposAtendidos / $totalGruposFilhos) * 100;
-        
-        return $progresso."_".$totalGruposAtendidos;
+
+        return $progresso . "_" . $totalGruposAtendidos;
     }
 
     /**
@@ -744,8 +836,8 @@ class LancamentoController extends CircuitoController {
                 if ($validatedData['tipo'] == 1) {
                     $grupoAtendimento->setGrupo_id($validatedData['idGrupo']);
                     $grupoAtendimento->setQuem($sessao->idPessoa);
-                    if($mes != $timeNow->format('m')){
-                        $timeNow->sub(new \DateInterval("P31D"));
+                    if ($mes != $timeNow->format('m')) {
+                        $timeNow->sub(new DateInterval("P31D"));
                     }
                     $grupoAtendimento->setDia($timeNow->format('Y-m-d'));
                     $grupoAtendimento->setDataEHoraDeCriacao();
@@ -771,7 +863,7 @@ class LancamentoController extends CircuitoController {
                     $atendimentosOld = $grupo->getGrupoAtendimento();
                     $contador = 0;
                     foreach ($atendimentosOld as $a) {
-                        
+
                         if ($a->verificarSeEstaAtivo()) {
                             $partes = explode("/", $a->getDia());
                             if ($partes[1] == $mes) {
@@ -816,10 +908,10 @@ class LancamentoController extends CircuitoController {
                 }
                 $response->setContent(Json::encode(
                                 array('response' => 'true',
-                                    Constantes::$NUMERO_ATENDIMENTOS => $numeroAtendimentos,
-                                    Constantes::$PROGRESSO_ATENDIMENTOS  => $progresso,
-                                    Constantes::$COR_BARRA_ATENDIMENTOS => $colorBarTotal,
-                                    Constantes::$TOTAL_DE_ATENDIMENTOS_GRUPO => $explodeProgresso[1],)));
+                                    'numeroAtendimentos' => $numeroAtendimentos,
+                                    'progresso' => $progresso,
+                                    'corBarraTotal' => $colorBarTotal,
+                                    'totalGruposAtendidos' => $explodeProgresso[1],)));
             } catch (Exception $exc) {
                 echo $exc->getTraceAsString();
             }
@@ -990,5 +1082,43 @@ class LancamentoController extends CircuitoController {
         $entidade = $repositorioORM->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
         return $entidade->getGrupo();
     }
+    
+    public function relatorioAtendimentoAction(){
+        $sessao = new Container(Constantes::$NOME_APLICACAO);
+        $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
+        $idEntidadeAtual = $sessao->idEntidadeAtual;
+        $entidade = $repositorioORM->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+        $grupo = $entidade->getGrupo();
+        $gruposAbaixo = $grupo->getGrupoPaiFilhoFilhos();
+        $mes = $sessao->mesAtendimento;
+        if ($mes == date('n')) {
+            $aba = 1;
+        } else {
+            $aba = 2;
+        }
+        $titulo = '';
+        $texto = '';
+        $mostrar = false;
+        
 
+        if ($sessao->tipoMensagem) {
+            $mostrar = true;
+            $titulo = $sessao->titulo;
+            $texto = $sessao->mensagem;
+            $sessao->tipoMensagem = null;
+        }
+        $view = new ViewModel(array(
+            Constantes::$GRUPOS_ABAIXO => $gruposAbaixo,
+            Constantes::$MES_ATENDIMENTO => $mes,
+            Constantes::$ABA_SELECIONADA => $aba,
+        ));
+        $layoutJS2 = new ViewModel(array(Constantes::$TITULO_MENSAGEM => $titulo,
+            Constantes::$TEXTO_MENSAGEM => $texto,
+            Constantes::$MOSTRAR_MENSAGEM => $mostrar,
+        ));
+        $layoutJS2->setTemplate(Constantes::$TEMPLATE_JS_CADASTRAR_ATENDIMENTO);
+        $view->addChild($layoutJS2, Constantes::$STRING_JS_CADASTRAR_ATENDIMENTO);
+
+        return $view;
+    }
 }

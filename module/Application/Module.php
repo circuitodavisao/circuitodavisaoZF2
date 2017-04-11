@@ -17,12 +17,14 @@ use Application\View\Helper\AbasAtendimento;
 use Application\View\Helper\AbaSelecionada;
 use Application\View\Helper\AlertaEnvioRelatorio;
 use Application\View\Helper\AtendimentoGruposAbaixo;
+use Application\View\Helper\AtendimentoGruposAbaixoRelatorio;
 use Application\View\Helper\AtendimentosDoGrupo;
 use Application\View\Helper\BarraDeProgresso;
 use Application\View\Helper\BlocoDiv;
 use Application\View\Helper\BlocoResponsavel;
 use Application\View\Helper\BotaoLink;
 use Application\View\Helper\BotaoPopover;
+use Application\View\Helper\BotaoSimples;
 use Application\View\Helper\BotaoSubmit;
 use Application\View\Helper\BotaoSubmitDesabilitado;
 use Application\View\Helper\CabecalhoDeAtendimentos;
@@ -31,6 +33,7 @@ use Application\View\Helper\CabecalhoDeEventos;
 use Application\View\Helper\DadosEntidade;
 use Application\View\Helper\DivCapslock;
 use Application\View\Helper\DivJavaScript;
+use Application\View\Helper\DivMensagens;
 use Application\View\Helper\FuncaoOnClick;
 use Application\View\Helper\GrupoDadosComplementares;
 use Application\View\Helper\GrupoEstadoCivil;
@@ -40,11 +43,11 @@ use Application\View\Helper\InputCampoEndereco;
 use Application\View\Helper\InputDiaDaSemanaHoraMinuto;
 use Application\View\Helper\InputExtras;
 use Application\View\Helper\InputFormulario;
+use Application\View\Helper\InputFormularioSimples;
 use Application\View\Helper\LinkLogo;
 use Application\View\Helper\ListagemDeEventos;
 use Application\View\Helper\ListagemDePessoasComEventos;
 use Application\View\Helper\MensagemRelatorioEnviado;
-use Application\View\Helper\MensagemStatica;
 use Application\View\Helper\Menu;
 use Application\View\Helper\MenuHierarquia;
 use Application\View\Helper\ModalAba;
@@ -88,9 +91,6 @@ class Module {
             'factories' => array(
                 'linkLogo' => function($sm) {
                     return new LinkLogo();
-                },
-                'mensagemStatica' => function($sm) {
-                    return new MensagemStatica();
                 },
                 'divCapslock' => function($sm) {
                     return new DivCapslock();
@@ -149,9 +149,6 @@ class Module {
                 'abas' => function($sm) {
                     return new Abas();
                 },
-                'mensagemStatica' => function($sm) {
-                    return new MensagemStatica();
-                },
                 'mensagemRelatorioEnviado' => function($sm) {
                     return new MensagemRelatorioEnviado();
                 },
@@ -170,8 +167,14 @@ class Module {
                 'inputFormulario' => function($sm) {
                     return new InputFormulario();
                 },
-                'inputFormulario' => function($sm) {
-                    return new InputFormulario();
+                'inputFormularioSimples' => function($sm) {
+                    return new InputFormularioSimples();
+                },
+                'divMensagens' => function($sm) {
+                    return new DivMensagens();
+                },
+                'botaoSimples' => function($sm) {
+                    return new BotaoSimples();
                 },
                 'botaoSubmit' => function($sm) {
                     return new BotaoSubmit();
@@ -248,6 +251,9 @@ class Module {
                 'atendimentoGruposAbaixo' => function($sm) {
                     return new AtendimentoGruposAbaixo();
                 },
+                'atendimentoGruposAbaixoRelatorio' => function($sm) {
+                    return new AtendimentoGruposAbaixoRelatorio();
+                },
                 'cabecalhoDeAtendimentos' => function($sm) {
                     return new CabecalhoDeAtendimentos();
                 },
@@ -294,23 +300,26 @@ class Module {
         //attach event here
         $eventManager->attach('route', array($this, 'checkUserAuth'), 2);
 
+        $viewModel = $e->getApplication()->getMvcEvent()->getViewModel();
         $sessao = new Container(Constantes::$NOME_APLICACAO);
-        if ($sessao->idPessoa) {
+        if (!empty($sessao->idEntidadeAtual)) {
             $serviceManager = $e->getApplication()->getServiceManager();
-            $viewModel = $e->getApplication()->getMvcEvent()->getViewModel();
+
             $repositorioORM = new RepositorioORM($serviceManager->get('Doctrine\ORM\EntityManager'));
             $pessoa = $repositorioORM->getPessoaORM()->encontrarPorId($sessao->idPessoa);
             $viewModel->pessoa = $pessoa;
             $viewModel->responsabilidades = $pessoa->getResponsabilidadesAtivas();
-            if ($sessao->idEntidadeAtual) {
-                $entidade = $repositorioORM->getEntidadeORM()->encontrarPorId($sessao->idEntidadeAtual);
-                $grupo = $entidade->getGrupo();
-                $viewModel->discipulos = $grupo->getGrupoPaiFilhoFilhos();
-//                $viewModel->discipulos = 0;
+            $entidade = $repositorioORM->getEntidadeORM()->encontrarPorId($sessao->idEntidadeAtual);
+            $grupo = $entidade->getGrupo();
+            $viewModel->entidade = $entidade;
+            $discipulos = null;
+            if (count($grupo->getGrupoPaiFilhoFilhos()) > 0) {
+                $discipulos = $grupo->getGrupoPaiFilhoFilhos();
             }
-            if ($pessoa->getAtualizar_dados() === 'S') {
-                $viewModel->mostrarMenu = 0;
-            }
+            $viewModel->discipulos = $discipulos;
+        }
+        if (empty($sessao->idEntidadeAtual) || $pessoa->getAtualizar_dados() === 'S') {
+            $viewModel->mostrarMenu = 0;
         }
     }
 
@@ -318,27 +327,28 @@ class Module {
         $router = $e->getRouter();
         $matchedRoute = $router->match($e->getRequest());
 
-        //this is a whitelist for routes that are allowed without authentication
-        //!!! Your authentication route must be whitelisted
+//this is a whitelist for routes that are allowed without authentication
+//!!! Your authentication route must be whitelisted
         $allowedRoutesConfig = array(
-            Constantes::$ROUTE_LOGIN
+            Constantes::$ROUTE_LOGIN,
+            'migracao'
         );
         if (!isset($matchedRoute) || in_array($matchedRoute->getMatchedRouteName(), $allowedRoutesConfig)) {
-            // no auth check required
+// no auth check required
             return;
         }
         $seviceManager = $e->getApplication()->getServiceManager();
         $authenticationService = $seviceManager->get('Zend\Authentication\AuthenticationService');
         $identity = $authenticationService->getIdentity();
         if (!$identity) {
-            //redirect to login route...
+//redirect to login route...
             $response = $e->getResponse();
             $response->setStatusCode(302);
-            //this is the login screen redirection url
+//this is the login screen redirection url
             $url = $e->getRequest()->getBaseUrl() . '/';
             $response->getHeaders()->addHeaderLine('Location', $url);
             $app = $e->getTarget();
-            //dont do anything other - just finish here
+//dont do anything other - just finish here
             $app->getEventManager()->trigger(MvcEvent::EVENT_FINISH, $e);
             $e->stopPropagation();
         }
