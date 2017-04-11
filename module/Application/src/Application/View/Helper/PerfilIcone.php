@@ -15,6 +15,7 @@ class PerfilIcone extends AbstractHelper {
 
     protected $entidade;
     protected $totalEntidades;
+    protected $grupoResponsavelAtivo;
 
     public function __construct() {
         
@@ -24,9 +25,10 @@ class PerfilIcone extends AbstractHelper {
      * @param Entidade $entidade
      * @return html
      */
-    public function __invoke($entidade, $totalEntidades) {
+    public function __invoke($entidade, $totalEntidades, $grupoResponsavelAtivo = true) {
         $this->setEntidade($entidade);
         $this->setTotalEntidades($totalEntidades);
+        $this->setGrupoResponsavelAtivo($grupoResponsavelAtivo);
         return $this->renderHtml();
     }
 
@@ -58,7 +60,7 @@ class PerfilIcone extends AbstractHelper {
             /* Link com ativacao do modal */
             $html .= '<a onclick=\'abrirModal("modal-' . $this->getEntidade()->getId() . '", ' . $this->getEntidade()->getId() . ',"perfilSelecionado");\' href="#modal-image" data-effect="mfp-fullscale" class="pageload-link">';
 
-            $html .= PerfilIcone::htmlPanel(1, $tipoEntidade, $nomeEntidade, $infoEntidade);
+            $html .= PerfilIcone::htmlPanel(1, $tipoEntidade, $nomeEntidade, $infoEntidade, $this->getGrupoResponsavelAtivo());
 
             /* FIM Link com ativacao do modal */
             $html .= '</a>';
@@ -96,43 +98,27 @@ class PerfilIcone extends AbstractHelper {
     public static function corDoPanel($tipo) {
         $class = '';
         switch ($tipo) {
-            //Presidencial
             case 1:
                 $class = 'bg-system light';
                 break;
-
-            //Líder Regional
             case 2:
                 $class = 'bg-alert light';
                 break;
 
-            //Líder Sub-Regional
             case 3:
                 $class = 'bg-danger light';
                 break;
-
-            //Coordenador
             case 4:
                 $class = 'bg-warning light';
                 break;
 
-            //Sub-Coordenador
             case 5:
                 $class = 'bg-success light';
                 break;
-
-            //Líder de Igreja
             case 6:
                 $class = 'bg-primary light';
                 break;
-
-            //Líder de Equipe
             case 7:
-                $class = 'bg-dark';
-                break;
-
-            //Líder de Sub-Equipe
-            case 8:
                 $class = 'bg-light';
                 break;
         }
@@ -166,9 +152,6 @@ class PerfilIcone extends AbstractHelper {
                 $classFooter = 'bg-primary br-n';
                 break;
             case 7:
-                $classFooter = 'bg-dark light br-t br-white';
-                break;
-            case 8:
                 $classFooter = 'bg-light dark br-t br-light';
                 break;
         }
@@ -193,7 +176,7 @@ class PerfilIcone extends AbstractHelper {
      * @param type $tipo
      * @return string
      */
-    public static function htmlPanel($tipo, $tipoId, $nomeEntidade, $infoEntidade) {
+    public static function htmlPanel($tipo, $tipoId, $nomeEntidade, $infoEntidade, $grupoResponsavelAtivo = true) {
         $html = '';
         $corDoPanel = PerfilIcone::corDoPanel($tipoId);
         $corDoFooter = PerfilIcone::corDoFooter($tipoId);
@@ -216,10 +199,19 @@ class PerfilIcone extends AbstractHelper {
             $html .= '</div>';
         }
         /* ICONE */
-        $html .= '<i class="fa fa-twitter text-muted fs70 mt10"></i>';
+        if (!$grupoResponsavelAtivo) {
+            $html .= '<i class="fa fa-times text-muted fs70 mt10"></i>';
+        } else {
+            $html .= '<i class="fa fa-twitter text-muted fs70 mt10"></i>';
+        }
+
 
         /* Info da entidade */
-        $html .= '<h1 class="fs35-responsiva mbn">' . $nomeEntidade . '</h1>';
+        $html .= '<h1 class="fs35-responsiva mbn">';
+        if (!$grupoResponsavelAtivo) {
+            $html .= '(INATIVADA) ';
+        }
+        $html .= $nomeEntidade . '</h1>';
         /* FIM Info da entidade */
 
         /* Tipo da entidade */
@@ -229,16 +221,16 @@ class PerfilIcone extends AbstractHelper {
         /* FIM Div Panel Body */
         $html .= '</div>';
 
-        /* Div Footer */
-        $html .= '<div class="panel-footer ' . $corDoFooter . ' br-t br-light p12">';
-        /* Dados Estaticos */
-        $html .= '<span class="fs11 ' . $corDoTexto . '">';
-        $html .= '<i class="fa fa-clock-o"></i> ÚLTIMO LOGIN';
-        $html .= '<b>2 DIAS ATRÁS</b>';
-        $html .= '</span>';
-
-        /* FIM Div Footer */
-        $html .= '</div>';
+//        /* Div Footer */
+//        $html .= '<div class="panel-footer ' . $corDoFooter . ' br-t br-light p12">';
+//        /* Dados Estaticos */
+//        $html .= '<span class="fs11 ' . $corDoTexto . '">';
+//        $html .= '<i class="fa fa-clock-o"></i> ÚLTIMO LOGIN';
+//        $html .= '<b>2 DIAS ATRÁS</b>';
+//        $html .= '</span>';
+//
+//        /* FIM Div Footer */
+//        $html .= '</div>';
         /* FIM Div Panel */
         $html .= '</div>';
         return $html;
@@ -250,6 +242,14 @@ class PerfilIcone extends AbstractHelper {
 
     function setTotalEntidades($totalEntidades) {
         $this->totalEntidades = $totalEntidades;
+    }
+
+    function getGrupoResponsavelAtivo() {
+        return $this->grupoResponsavelAtivo;
+    }
+
+    function setGrupoResponsavelAtivo($grupoResponsavelAtivo) {
+        $this->grupoResponsavelAtivo = $grupoResponsavelAtivo;
     }
 
 }
