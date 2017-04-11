@@ -111,14 +111,18 @@ class Pessoa extends CircuitoEntity implements InputFilterAwareInterface {
      * Recupera as Responsabilidades ativas
      * @return Entidade[]
      */
-    function getResponsabilidadesAtivas() {
+    function getResponsabilidadesAtivas($todasResposabilidades = false) {
         $responsabilidadesAtivas = array();
         /* Responsabilidades */
         $responsabilidadesTodosStatus = $this->getGrupoResponsavel();
+
         if ($responsabilidadesTodosStatus) {
             /* Verificar responsabilidades ativas */
             foreach ($responsabilidadesTodosStatus as $responsabilidadeTodosStatus) {
-                if ($responsabilidadeTodosStatus->verificarSeEstaAtivo()) {
+                if ($todasResposabilidades) {
+                    $responsabilidadesAtivas[] = $responsabilidadeTodosStatus;
+                }
+                if ($responsabilidadeTodosStatus->verificarSeEstaAtivo() && !$todasResposabilidades) {
                     $responsabilidadesAtivas[] = $responsabilidadeTodosStatus;
                 }
             }
@@ -126,7 +130,7 @@ class Pessoa extends CircuitoEntity implements InputFilterAwareInterface {
         /* Ordenando */
         if ($responsabilidadesAtivas) {
             for ($i = 0; $i < count($responsabilidadesAtivas); $i++) {
-                for ($j = 0; $j < count($responsabilidadesAtivas); $j++) {
+                for ($j = 1; $j < count($responsabilidadesAtivas); $j++) {
                     $r[1] = $responsabilidadesAtivas[$i];
                     $tipo[1] = $r[1]->getGrupo()->getEntidadeAtiva()->getEntidadeTipo()->getId();
 
@@ -309,7 +313,7 @@ class Pessoa extends CircuitoEntity implements InputFilterAwareInterface {
     function setEmail($email) {
         $this->email = trim(strtolower($email));
     }
-            
+
     function setSenha($senha, $adicionarMD5 = true) {
         $senhaAjustada = $senha;
         if ($adicionarMD5) {

@@ -468,11 +468,11 @@ class LoginController extends CircuitoController {
         if ($idPessoa) {
             $pessoa = $repositorioORM->getPessoaORM()->encontrarPorId($idPessoa);
             /* Responsabilidades */
-            $responsabilidadesAtivas = $pessoa->getResponsabilidadesAtivas();
+            $responsabilidadesAtivas = $pessoa->getResponsabilidadesAtivas(true);
             if ($responsabilidadesAtivas) {
-                if (count($responsabilidadesAtivas) === 1) {
-                    $sessao->idEntidadeAtual = $responsabilidadesAtivas[0]->getId();
-                }
+//                if (count($responsabilidadesAtivas) === 1) {
+//                    $sessao->idEntidadeAtual = $responsabilidadesAtivas[0]->getId();
+//                }
 
                 $view = new ViewModel(array(Constantes::$RESPONSABILIDADES => $responsabilidadesAtivas));
 

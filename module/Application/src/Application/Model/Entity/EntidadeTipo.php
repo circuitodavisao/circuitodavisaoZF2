@@ -6,15 +6,6 @@ namespace Application\Model\Entity;
  * Nome: EntidadeTipo.php
  * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com>
  * Descricao: Entidade anotada da tabela entidade_tipo 
- * 1 - PRESIDENCIAL* 1 - PRESIDENCIAL
- * 2 - NACIONAL
- * 3 - REGIÃO
- * 4 - SUB REGIÃO
- * 5 - COORDENAÇÃO
- * 6 - SUB COORDENAÇÃO
- * 7 - IGREJA
- * 8 - EQUIPE
- * 9 - SUB EQUIPE
  */
 use Doctrine\ORM\Mapping as ORM;
 
@@ -23,6 +14,14 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="entidade_tipo")
  */
 class EntidadeTipo extends CircuitoEntity {
+
+    const presidencial = 1;
+    const nacional = 2;
+    const regiao = 3;
+    const coordenacao = 4;
+    const igreja = 5;
+    const equipe = 6;
+    const subEquipe = 7;
 
     /**
      * @ORM\OneToMany(targetEntity="Entidade", mappedBy="entidadeTipo") 

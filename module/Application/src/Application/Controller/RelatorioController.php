@@ -4,6 +4,11 @@ namespace Application\Controller;
 
 use Application\Controller\Helper\Constantes;
 use Application\Controller\Helper\Funcoes;
+use Application\Model\Entity\Entidade;
+use Application\Model\Entity\EntidadeTipo;
+use Application\Model\Entity\Grupo;
+use Application\Model\Entity\GrupoPaiFilho;
+use Application\Model\Entity\GrupoResponsavel;
 use Application\Model\ORM\RepositorioORM;
 use Doctrine\ORM\EntityManager;
 use Zend\Session\Container;
@@ -91,6 +96,51 @@ class RelatorioController extends CircuitoController {
             'relatorioCelula' => $relatorioCelula
                 )
         );
+    }
+
+    public function testeAction() {
+        try {
+            $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
+            $setarDataEHora = false;
+
+            $pessoa = $repositorioORM->getPessoaORM()->encontrarPorEmail('falecomleonardopereira@gmail.com');
+
+            /* Inativando */
+            $grupoResponsavels = $pessoa->getGrupoResponsavel();
+            foreach ($grupoResponsavels as $gr) {
+                $gr->setDataEHoraDeInativacao();
+                $repositorioORM->getGrupoResponsavelORM()->persistir($gr, $setarDataEHora);
+
+                $gpf = $gr->getGrupo()->getGrupoPaiFilhoPai();
+                $gpf->setDataEHoraDeInativacao();
+                $repositorioORM->getGrupoPaiFilhoORM()->persistir($gpf, $setarDataEHora);
+            }
+
+            $grupoNovo = new Grupo();
+            $repositorioORM->getGrupoORM()->persistir($grupoNovo);
+
+            $novaEntidade = new Entidade();
+            $novaEntidade->setGrupo($grupoNovo);
+            $novaEntidade->setNome('TRANSFERENCIA');
+            $novaEntidade->setEntidadeTipo($repositorioORM->getEntidadeTipoORM()->encontrarPorId(EntidadeTipo::subEquipe));
+            $repositorioORM->getEntidadeORM()->persistir($novaEntidade);
+
+            $pessoaPai = $repositorioORM->getPessoaORM()->encontrarPorEmail('rsilverio2012@hotmail.com');
+            $grPai = $pessoaPai->getGrupoResponsavel()[0];
+            $grupoPai = $grPai->getGrupo();
+
+            $grupoPF = new GrupoPaiFilho();
+            $grupoPF->setGrupoPaiFilhoFilho($grupoNovo);
+            $grupoPF->setGrupoPaiFilhoPai($grupoPai);
+            $repositorioORM->getGrupoPaiFilhoORM()->persistir($grupoPF);
+
+            $grupoResponsavelNovo = new GrupoResponsavel();
+            $grupoResponsavelNovo->setGrupo($grupoNovo);
+            $grupoResponsavelNovo->setPessoa($pessoa);
+            $repositorioORM->getGrupoResponsavelORM()->persistir($grupoResponsavelNovo);
+        } catch (Exception $exc) {
+            echo $exc->getTraceAsString();
+        }
     }
 
 }

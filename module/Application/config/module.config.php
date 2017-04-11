@@ -158,6 +158,7 @@ return array(
             'cadastro/cadastro/celulas' => __DIR__ . '/../view/cadastro/celulas.phtml',
             'cadastro/cadastro/revisao' => __DIR__ . '/../view/cadastro/revisao.phtml',
             'relatorio/relatorio/membresia' => __DIR__ . '/../view/relatorio/membresia.phtml',
+            'relatorio/relatorio/teste' => __DIR__ . '/../view/relatorio/teste.phtml',
             'layout/layout-js-celulas' => __DIR__ . '/../view/layout/layout-js-celulas.phtml',
             'layout/layout-js-celula' => __DIR__ . '/../view/layout/layout-js-celula.phtml',
             'layout/layout-js-celula-validacao' => __DIR__ . '/../view/layout/layout-js-celula-validacao.phtml',
