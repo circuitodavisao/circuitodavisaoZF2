@@ -202,7 +202,7 @@ class PerfilIcone extends AbstractHelper {
         if (!$grupoResponsavelAtivo) {
             $html .= '<i class="fa fa-times text-muted fs70 mt10"></i>';
         } else {
-            $html .= '<i class="fa fa-twitter text-muted fs70 mt10"></i>';
+            $html .= '<i class="fa fa-users text-muted fs70 mt10"></i>';
         }
 
 

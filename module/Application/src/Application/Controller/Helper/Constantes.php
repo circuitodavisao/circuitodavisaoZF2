@@ -253,7 +253,6 @@ class Constantes {
     public static $VALIDACAO = 'validacao';
     public static $VALIDACAO_NESSE_MES = 'validacaoNesseMes';
     public static $VALIDACAO_ENTIDADE_INATIVA = 'validacaoEntidadeInativa';
-    public static $STATUS_ENVIO = 'statusEnvio';
     public static $TEMPLATE_JS_LANCAMENTO = 'layout/layout-js-lancamento';
     public static $TEMPLATE_JS_CADASTRAR_PESSOA = 'layout/layout-js-cadastrar-pessoa';
     public static $TEMPLATE_JS_CADASTRAR_PESSOA_VALIDACAO = 'layout/layout-js-cadastrar-pessoa-validacao';

@@ -67,15 +67,6 @@ class Grupo extends CircuitoEntity {
         $this->grupoAluno = new ArrayCollection();
     }
 
-    /** @ORM\Column(type="string") */
-    protected $envio;
-
-    /** @ORM\Column(type="string") */
-    protected $envio_data;
-
-    /** @ORM\Column(type="string") */
-    protected $envio_hora;
-
     /**
      * Recupera todas as entidades vinculadas aquele grupo
      * @return Entidade
@@ -162,20 +153,18 @@ class Grupo extends CircuitoEntity {
      * @return GrupoEvento
      */
     function getGrupoEventoOrdenadosPorDiaDaSemana() {
-        $tipoSubequipe = 7;
-        $tipoEquipe = 6;
         $grupoSelecionado = $this;
         $grupoEventosCelulas = null;
         $grupoEventos = null;
-        if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === $tipoSubequipe) {
-            $grupoEventosCelulas = $grupoSelecionado->getGrupoEventoAtivosPorTipo(2);
-            while ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === $tipoSubequipe) {
+        if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::SUBEQUIPE) {
+            $grupoEventosCelulas = $grupoSelecionado->getGrupoEventoAtivosPorTipo(GrupoEvento::CELULA);
+            while ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::SUBEQUIPE) {
                 $grupoSelecionado = $grupoSelecionado->getGrupoPaiFilhoPai()->getGrupoPaiFilhoPai();
-                if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === $tipoEquipe) {
+                if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::EQUIPE) {
                     break;
                 }
             }
-            $grupoEventos = $grupoSelecionado->getGrupoEventoAtivosPorTipo(1);
+            $grupoEventos = $grupoSelecionado->getGrupoEventoAtivosPorTipo(GrupoEvento::CULTO);
         } else {
             $grupoEventos = $grupoSelecionado->getGrupoEventoAtivos();
         }
@@ -230,18 +219,16 @@ class Grupo extends CircuitoEntity {
      */
     function getGrupoEventoAtivosPorTipo($tipo = 0) {
         $grupoEventos = null;
-        $tipoCulto = 1;
-        $tipoCelula = 2;
         foreach ($this->getGrupoEvento() as $ge) {
             if ($ge->verificarSeEstaAtivo()) {
 
                 if ($tipo === 0) {
                     $grupoEventos[] = $ge;
                 }
-                if ($tipo === $tipoCulto && $ge->getEvento()->verificaSeECulto()) {
+                if ($tipo === GrupoEvento::CULTO && $ge->getEvento()->verificaSeECulto()) {
                     $grupoEventos[] = $ge;
                 }
-                if ($tipo === $tipoCelula && $ge->getEvento()->verificaSeECelula()) {
+                if ($tipo === GrupoEvento::CELULA && $ge->getEvento()->verificaSeECelula()) {
                     $grupoEventos[] = $ge;
                 }
             }
@@ -327,8 +314,8 @@ class Grupo extends CircuitoEntity {
                 foreach ($this->getGrupoEventoOrdenadosPorDiaDaSemana() as $ge) {
                     $validacaoCelulaExcluidaMesmoDia = false;
                     /* Validação de célula , quando excluida no dia sem lançamento não aparecer */
-                    if ($ge->getEvento()->getEventoTipo()->getId() == 2) {
-                        if ($ge->getData_criacao() == $ge->getData_inativacao()) {
+                    if ($ge->getEvento()->verificaSeECelula()) {
+                        if ($ge->getData_criacao() === $ge->getData_inativacao()) {
                             if (!count($ge->getEvento()->getEventoFrequencia())) {
                                 $validacaoCelulaExcluidaMesmoDia = true;
                             }
@@ -348,7 +335,15 @@ class Grupo extends CircuitoEntity {
                                     if ($ge->getData_criacaoMes() == $mes) {
                                         $ge->setNovo(true);
                                         if ($ciclo == $cicloAtual) {
-                                            if ($ge->getData_criacaoDia() <= $diaAtual) {
+                                            /* Validar dia cadastro grupo e evento */
+                                            $diaDaCriacao = $ge->getData_criacaoDia();
+                                            $diaDaSemanaDaCriacao = date('N', mktime(0, 0, 0, $mes, $diaDaCriacao, $ano));
+                                            if ($diaDaSemanaDaCriacao == 1) {
+                                                $diaDaSemanaDaCriacao = 8;
+                                            } else {
+                                                $diaDaSemanaDaCriacao++;
+                                            }
+                                            if (!($ge->getEvento()->getDiaAjustado() < $diaDaSemanaDaCriacao) && $ge->getData_criacaoDia() <= $diaAtual) {
                                                 $verificacaoData = true;
                                             }
                                         } else {
@@ -383,7 +378,6 @@ class Grupo extends CircuitoEntity {
                         } else {
                             $verificacaoDiaSemana = true;
                         }
-
                         if ($verificacaoData && $verificacaoDiaSemana) {
                             $eventos[] = $ge;
                         }
@@ -495,42 +489,6 @@ class Grupo extends CircuitoEntity {
 
     function setEventos($eventos) {
         $this->eventos = $eventos;
-    }
-
-    function getEnvio() {
-        return $this->envio;
-    }
-
-    function getEnvio_data() {
-        return $this->envio_data;
-    }
-
-    function getEnvio_hora() {
-        return $this->envio_hora;
-    }
-
-    function setEnvio($envio) {
-        $this->envio = $envio;
-    }
-
-    /**
-     * Verificar o status de envio o relatório
-     * @return boolean
-     */
-    public function verificarSeFoiEnviadoORelatorio() {
-        $resposta = false;
-        if ($this->getEnvio() == 'S') {
-            $resposta = true;
-        }
-        return $resposta;
-    }
-
-    function setEnvio_data($envio_data) {
-        $this->envio_data = $envio_data;
-    }
-
-    function setEnvio_hora($envio_hora) {
-        $this->envio_hora = $envio_hora;
     }
 
     /**

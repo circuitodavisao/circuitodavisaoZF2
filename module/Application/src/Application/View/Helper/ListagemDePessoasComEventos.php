@@ -262,8 +262,20 @@ class ListagemDePessoasComEventos extends AbstractHelper {
                     $classIco = 'fa-thumbs-down';
                     $evento = $ge->getEvento();
 
-                    /* Validacao para poucos eventos 5 a 7 ou mais */
+                    /* Validacao para eventos 5 a 7 ou mais */
                     switch ($this->view->quantidadeDeEventosNoCiclo) {
+                        case 1:
+                            $style = 'style="width:100%;"';
+                            break;
+                        case 2:
+                            $style = 'style="width:50%;"';
+                            break;
+                        case 3:
+                            $style = 'style="width:33%;"';
+                            break;
+                        case 4:
+                            $style = 'style="width:25%;"';
+                            break;
                         case 5:
                             $style = 'style="width:20%;"';
                             break;

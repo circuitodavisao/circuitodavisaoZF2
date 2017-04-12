@@ -7,10 +7,13 @@ use Application\Controller\Helper\Funcoes;
 use Application\Model\Entity\Entidade;
 use Application\Model\Entity\EntidadeTipo;
 use Application\Model\Entity\Grupo;
+use Application\Model\Entity\GrupoEvento;
 use Application\Model\Entity\GrupoPaiFilho;
+use Application\Model\Entity\GrupoPessoa;
 use Application\Model\Entity\GrupoResponsavel;
 use Application\Model\ORM\RepositorioORM;
 use Doctrine\ORM\EntityManager;
+use Exception;
 use Zend\Session\Container;
 use Zend\View\Model\ViewModel;
 
@@ -107,21 +110,27 @@ class RelatorioController extends CircuitoController {
 
             /* Inativando */
             $grupoResponsavels = $pessoa->getGrupoResponsavel();
+            $gruposAtual = null;
             foreach ($grupoResponsavels as $gr) {
                 $gr->setDataEHoraDeInativacao();
                 $repositorioORM->getGrupoResponsavelORM()->persistir($gr, $setarDataEHora);
-
-                $gpf = $gr->getGrupo()->getGrupoPaiFilhoPai();
-                $gpf->setDataEHoraDeInativacao();
-                $repositorioORM->getGrupoPaiFilhoORM()->persistir($gpf, $setarDataEHora);
+                $gruposAtual = $gr->getGrupo();
             }
+            $gpf = $gruposAtual->getGrupoPaiFilhoPai();
+            $gpf->setDataEHoraDeInativacao();
+            $repositorioORM->getGrupoPaiFilhoORM()->persistir($gpf, $setarDataEHora);
 
+            $entidade = $gruposAtual->getEntidadeAtiva();
+            $entidade->setNome('TRANSFERIDA - ' . $entidade->getNome());
+            $repositorioORM->getEntidadeORM()->persistir($entidade, $setarDataEHora);
+
+            /* Cadastrando */
             $grupoNovo = new Grupo();
             $repositorioORM->getGrupoORM()->persistir($grupoNovo);
 
             $novaEntidade = new Entidade();
             $novaEntidade->setGrupo($grupoNovo);
-            $novaEntidade->setNome('TRANSFERENCIA');
+            $novaEntidade->setNome('NOVO GRUPO');
             $novaEntidade->setEntidadeTipo($repositorioORM->getEntidadeTipoORM()->encontrarPorId(EntidadeTipo::subEquipe));
             $repositorioORM->getEntidadeORM()->persistir($novaEntidade);
 
@@ -138,8 +147,24 @@ class RelatorioController extends CircuitoController {
             $grupoResponsavelNovo->setGrupo($grupoNovo);
             $grupoResponsavelNovo->setPessoa($pessoa);
             $repositorioORM->getGrupoResponsavelORM()->persistir($grupoResponsavelNovo);
+
+            $gpessoas = $gruposAtual->getGrupoPessoa();
+            foreach ($gpessoas as $gp) {
+                $grupoPessoa = new GrupoPessoa();
+                $grupoPessoa->setGrupo($grupoNovo);
+                $grupoPessoa->setPessoa($gp->getPessoa());
+                $grupoPessoa->setGrupoPessoaTipo($gp->getGrupoPessoaTipo());
+                $repositorioORM->getGrupoPessoaORM()->persistir($grupoPessoa);
+            }
+            $geventos = $gruposAtual->getGrupoEventoAtivosPorTipo(GrupoEvento::CELULA);
+            foreach ($geventos as $ge) {
+                $grupoEvento = new GrupoEvento();
+                $grupoEvento->setGrupo($grupoNovo);
+                $grupoEvento->setEvento($ge->getEvento());
+                $repositorioORM->getGrupoEventoORM()->persistir($grupoEvento);
+            }
         } catch (Exception $exc) {
-            echo $exc->getTraceAsString();
+            echo $exc->getMessage();
         }
     }
 

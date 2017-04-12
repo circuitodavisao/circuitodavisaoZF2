@@ -6,6 +6,7 @@ use Application\Controller\Helper\Constantes;
 use Application\Controller\Helper\Funcoes;
 use Application\Form\CadastrarAtendimentoForm;
 use Application\Form\CadastrarPessoaForm;
+use Application\Model\Entity\Entidade;
 use Application\Model\Entity\EventoFrequencia;
 use Application\Model\Entity\Grupo;
 use Application\Model\Entity\GrupoAtendimento;
@@ -20,7 +21,7 @@ use Exception;
 use Zend\Json\Json;
 use Zend\Mvc\I18n\Translator;
 use Zend\Session\Container;
-use Zend\View\Model\ViewModel; 
+use Zend\View\Model\ViewModel;
 
 /**
  * Nome: LancamentoContgetLiderroller.php
@@ -150,6 +151,11 @@ class LancamentoController extends CircuitoController {
                         Constantes::$ACTION => Constantes::$PAGINA_ATENDIMENTO_EXCLUSAO_CONFIRMACAO,
             ));
         }
+        if ($pagina == 'RelatorioAtendimento') {
+            return $this->forward()->dispatch(Constantes::$CONTROLLER_LANCAMENTO, array(
+                        Constantes::$ACTION => 'RelatorioAtendimento',
+            ));
+        }
         /* Funcoes */
         if ($pagina == Constantes::$PAGINA_FUNCOES) {
             /* Registro de sessão com o id passado na função */
@@ -196,17 +202,6 @@ class LancamentoController extends CircuitoController {
             $cicloSelecionado = $explodeParamentro[1];
         }
 
-        /* Envio de relatorio */
-        $resposta = $entidade->getGrupo()->verificarSeFoiEnviadoORelatorio();
-        $statusEnvio = 0; /* Sem relatorio */
-        if (!empty($entidade->getGrupo()->getEnvio())) {
-            if ($resposta) {
-                $statusEnvio = 1; /* Relatorio Atualizado */
-            } else {
-                $statusEnvio = 2; /* Relatorio Dezatualizado */
-            }
-        }
-
         $mesSelecionado = Funcoes::mesPorAbaSelecionada($abaSelecionada);
         $anoSelecionado = Funcoes::anoPorAbaSelecionada($abaSelecionada);
         $grupo = $entidade->getGrupo();
@@ -233,14 +228,11 @@ class LancamentoController extends CircuitoController {
             $pessoa = $grupoResponsavel->getPessoa();
             if ($pessoa->verificarSeTemAlgumaResponsabilidadeInativadoNaDataInformado($grupoResponsavel->getData_criacao())) {
                 $grupoResponsavelInativadoNessaData = $pessoa->verificarSeTemAlgumaResponsabilidadeInativadoNaDataInformado($grupoResponsavel->getData_criacao());
-                /* Verificar o tipo da entidade
-                 * 6 - IGREJA
-                 * 7 - EQUIPE
-                 * 8 - SUB EQUIPE
-                 */
                 $grupoInativo = $grupoResponsavelInativadoNessaData->getGrupo();
                 $entidadeInativa = $grupoInativo->getEntidadeAtiva();
-                if ($entidadeInativa->getTipo_id() == 6 || $entidadeInativa->getTipo_id() == 7 || $entidadeInativa->getTipo_id() == 8) {
+                if ($entidadeInativa->getTipo_id() === Entidade::SUBEQUIPE ||
+                        $entidadeInativa->getTipo_id() === Entidade::EQUIPE ||
+                        $entidadeInativa->getTipo_id() === Entidade::IGREJA) {
                     $validacaoEntidadeInativa = 1;
                 }
             }
@@ -252,7 +244,6 @@ class LancamentoController extends CircuitoController {
             Constantes::$ABA_SELECIONADA => $abaSelecionada,
             Constantes::$CICLO_SELECIONADO => (int) $cicloSelecionado,
             Constantes::$QUANTIDADE_EVENTOS_CICLOS => count($eventos),
-            Constantes::$STATUS_ENVIO => $statusEnvio,
             Constantes::$VALIDACAO => $validacaoPessoasCadastradas,
             Constantes::$VALIDACAO_NESSE_MES => $validacaoNesseMes,
             Constantes::$VALIDACAO_ENTIDADE_INATIVA => $validacaoEntidadeInativa,
@@ -1076,6 +1067,45 @@ class LancamentoController extends CircuitoController {
 
         $entidade = $repositorioORM->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
         return $entidade->getGrupo();
+    }
+
+    public function relatorioAtendimentoAction() {
+        $sessao = new Container(Constantes::$NOME_APLICACAO);
+        $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
+        $idEntidadeAtual = $sessao->idEntidadeAtual;
+        $entidade = $repositorioORM->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+        $grupo = $entidade->getGrupo();
+        $gruposAbaixo = $grupo->getGrupoPaiFilhoFilhos();
+        $mes = $sessao->mesAtendimento;
+        if ($mes == date('n')) {
+            $aba = 1;
+        } else {
+            $aba = 2;
+        }
+        $titulo = '';
+        $texto = '';
+        $mostrar = false;
+
+
+        if ($sessao->tipoMensagem) {
+            $mostrar = true;
+            $titulo = $sessao->titulo;
+            $texto = $sessao->mensagem;
+            $sessao->tipoMensagem = null;
+        }
+        $view = new ViewModel(array(
+            Constantes::$GRUPOS_ABAIXO => $gruposAbaixo,
+            Constantes::$MES_ATENDIMENTO => $mes,
+            Constantes::$ABA_SELECIONADA => $aba,
+        ));
+        $layoutJS2 = new ViewModel(array(Constantes::$TITULO_MENSAGEM => $titulo,
+            Constantes::$TEXTO_MENSAGEM => $texto,
+            Constantes::$MOSTRAR_MENSAGEM => $mostrar,
+        ));
+        $layoutJS2->setTemplate(Constantes::$TEMPLATE_JS_CADASTRAR_ATENDIMENTO);
+        $view->addChild($layoutJS2, Constantes::$STRING_JS_CADASTRAR_ATENDIMENTO);
+
+        return $view;
     }
 
 }

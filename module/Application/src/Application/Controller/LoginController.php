@@ -470,10 +470,6 @@ class LoginController extends CircuitoController {
             /* Responsabilidades */
             $responsabilidadesAtivas = $pessoa->getResponsabilidadesAtivas(true);
             if ($responsabilidadesAtivas) {
-//                if (count($responsabilidadesAtivas) === 1) {
-//                    $sessao->idEntidadeAtual = $responsabilidadesAtivas[0]->getId();
-//                }
-
                 $view = new ViewModel(array(Constantes::$RESPONSABILIDADES => $responsabilidadesAtivas));
 
                 /* Javascript especifico */

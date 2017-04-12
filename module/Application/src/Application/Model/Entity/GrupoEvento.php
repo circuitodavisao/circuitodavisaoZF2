@@ -15,6 +15,10 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class GrupoEvento extends CircuitoEntity {
 
+    const CELULA = 1;
+    const CULTO = 2;
+    const REVISAO = 3;
+
     /**
      * @ORM\ManyToOne(targetEntity="Evento", inversedBy="grupoEvento")
      * @ORM\JoinColumn(name="evento_id", referencedColumnName="id")
@@ -72,19 +76,7 @@ class GrupoEvento extends CircuitoEntity {
 
     function setGrupo_id($grupo_id) {
         $this->grupo_id = $grupo_id;
-    }
-
-    function getData_criacaoAno() {
-        return $this->getData_criacao()->format('Y');
-    }
-
-    function getData_criacaoMes() {
-        return $this->getData_criacao()->format('m');
-    }
-
-    function getData_criacaoDia() {
-        return $this->getData_criacao()->format('d');
-    }
+    }   
 
     function getNovo() {
         return $this->novo;

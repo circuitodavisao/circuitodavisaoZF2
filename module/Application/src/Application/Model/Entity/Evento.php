@@ -62,18 +62,6 @@ class Evento extends CircuitoEntity implements InputFilterAwareInterface {
     /** @ORM\Column(type="integer") */
     protected $tipo_id;
 
-    function getData_criacaoAno() {
-        return explode('-', $this->getData_criacao())[0];
-    }
-
-    function getData_criacaoMes() {
-        return explode('-', $this->getData_criacao())[1];
-    }
-
-    function getData_criacaoDia() {
-        return explode('-', $this->getData_criacao())[2];
-    }
-
     /**
      * Retorna o tipo de evento
      * @return EventoTipo

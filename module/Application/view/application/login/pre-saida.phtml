@@ -13,7 +13,7 @@ use Application\Controller\Helper\Constantes;
     <!-- Start: Header -->
     <header class="navbar-fixed-top barra-transparente">
         <a href="<?php echo Constantes::$INDEX; ?>">
-            <img src="<?php echo Constantes::$IMAGEM_LOGO_BRANCA; ?>" title="<?php echo $this->translate(Constantes::$TRADUCAO_NOME_APLICACAO) ?>" class="img-responsive" style="max-width: 275px;">
+            <img src="<?php echo Constantes::$IMAGEM_LOGO; ?>" title="<?php echo $this->translate(Constantes::$TRADUCAO_NOME_APLICACAO) ?>" class="img-responsive" style="max-width: 275px;">
         </a>
     </header>
     <!-- End: Header -->
@@ -27,12 +27,12 @@ use Application\Controller\Helper\Constantes;
                 <div class="row table-layout">
 
                     <div class="col-xs-7 pln">
-                        <h2 class="text-white mbn confirmation-header"><?php echo $this->translate(Constantes::$TRADUCAO_SESSAO_ENCERRADA); ?></h2>
+                        <h2 class="mbn confirmation-header"><?php echo $this->translate(Constantes::$TRADUCAO_SESSAO_ENCERRADA); ?></h2>
                     </div>
 
                     <div class="col-xs-5 text-right va-b">
                         <div class="meta-links">
-                            <a href="<?php echo $this->url(Constantes::$ROUTE_LOGIN); ?>" class="text-white"><?php echo Constantes::$STRING_LINK_TEXTO; ?></a>          
+                            <a href="<?php echo $this->url(Constantes::$ROUTE_LOGIN); ?>"><?php echo Constantes::$STRING_LINK_TEXTO; ?></a>          
                         </div>
                     </div>
 

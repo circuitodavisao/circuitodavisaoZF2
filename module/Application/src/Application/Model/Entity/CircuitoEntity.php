@@ -101,4 +101,28 @@ class CircuitoEntity {
         $this->hora_inativacao = $hora_inativacao;
     }
 
+    function getData_criacaoAno() {
+        return $this->getData_criacao()->format('Y');
+    }
+
+    function getData_criacaoMes() {
+        return $this->getData_criacao()->format('m');
+    }
+
+    function getData_criacaoDia() {
+        return $this->getData_criacao()->format('d');
+    }
+
+    function getData_inativacaoAno() {
+        return $this->getData_inativacao()->format('Y');
+    }
+
+    function getData_inativacaoMes() {
+        return $this->getData_inativacao()->format('m');
+    }
+
+    function getData_inativacaoDia() {
+        return $this->getData_inativacao()->format('d');
+    }
+
 }

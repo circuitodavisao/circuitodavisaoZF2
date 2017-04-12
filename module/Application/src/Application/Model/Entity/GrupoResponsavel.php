@@ -58,14 +58,6 @@ class GrupoResponsavel extends CircuitoEntity {
         return $this->grupo;
     }
 
-    function getData_criacaoMes() {
-        return explode('-', $this->data_criacao)[1];
-    }
-
-    function getData_criacaoAno() {
-        return explode('-', $this->data_criacao)[0];
-    }
-
     function getPessoa_id() {
         return $this->pessoa_id;
     }

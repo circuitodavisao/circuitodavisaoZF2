@@ -24,6 +24,14 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Entidade extends CircuitoEntity {
 
+    const SUBEQUIPE = 7;
+    const EQUIPE = 6;
+    const IGREJA = 5;
+    const COORDENACAO = 4;
+    const REGIONAL = 3;
+    const NACIONAL = 2;
+    const PRESIDENTE = 1;
+
     /**
      * @ORM\ManyToOne(targetEntity="EntidadeTipo", inversedBy="entidade")
      * @ORM\JoinColumn(name="tipo_id", referencedColumnName="id")
