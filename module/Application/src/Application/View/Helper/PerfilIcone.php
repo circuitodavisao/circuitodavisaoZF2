@@ -200,10 +200,11 @@ class PerfilIcone extends AbstractHelper {
         }
         /* ICONE */
         if (!$grupoResponsavelAtivo) {
-            $html .= '<i class="fa fa-times text-muted fs70 mt10"></i>';
+            $faIcon = 'times';
         } else {
-            $html .= '<i class="fa fa-users text-muted fs70 mt10"></i>';
+            $faIcon = 'users';
         }
+        $html .= '<i class="fa fa-' . $faIcon . ' text-muted fs70 mt10"></i>';
 
 
         /* Info da entidade */

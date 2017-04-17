@@ -294,10 +294,23 @@ class Grupo extends CircuitoEntity {
      * @return GrupoEvento
      */
     function getGrupoEventoNoCiclo($ciclo = 1, $mes = 5, $ano = 2016) {
-        if (is_null($this->getEventos())) {
-            $eventos = null;
-            if (!empty($this->getGrupoEventoOrdenadosPorDiaDaSemana())) {
-                if ($ciclo == 1) {
+        $mes = str_pad($mes, 2, 0, STR_PAD_LEFT);
+        /* Validar Inativado */
+        $verificacaoDataInativacao = false;
+        if ($this->verificarSeEstaAtivo()) {
+            $verificacaoDataInativacao = true;
+        } else {
+            if ($this->getData_inativacaoAno() == $ano && $this->getData_inativacaoMes() == $mes) {
+                $verificacaoDataInativacao = true;
+            }
+        }
+        if ($verificacaoDataInativacao) {
+            if (is_null($this->getEventos())) {
+                $diaAtual = date('d');
+                $mesAtual = date('m'); /* Mes com zero */
+                $anoAtual = date('Y');
+                $cicloAtual = Funcoes::cicloAtual($mes, $ano);
+                if ($ciclo === 1) {
                     $primeiroDiaDaSemana = date('N', mktime(0, 0, 0, $mes, 1, $ano));
                     if ($primeiroDiaDaSemana == 1) {
                         $primeiroDiaDaSemana = 8;
@@ -311,44 +324,60 @@ class Grupo extends CircuitoEntity {
                 } else {
                     $ultimoDiaDaSemana++;
                 }
-                foreach ($this->getGrupoEventoOrdenadosPorDiaDaSemana() as $ge) {
-                    $validacaoCelulaExcluidaMesmoDia = false;
-                    /* Validação de célula , quando excluida no dia sem lançamento não aparecer */
-                    if ($ge->getEvento()->verificaSeECelula()) {
-                        if ($ge->getData_criacao() === $ge->getData_inativacao()) {
-                            if (!count($ge->getEvento()->getEventoFrequencia())) {
-                                $validacaoCelulaExcluidaMesmoDia = true;
+                $eventos = null;
+                if (!empty($this->getGrupoEventoOrdenadosPorDiaDaSemana())) {
+
+                    foreach ($this->getGrupoEventoOrdenadosPorDiaDaSemana() as $ge) {
+                        $verificacaoDiaInativacao = false;
+                        /* Validando dia da inativacao */
+                        $primeiroDiaDoCiclo = Funcoes::periodoCicloMesAno($ciclo, $mes, $ano, '', 1);
+                        if ($this->verificarSeEstaAtivo()) {
+                            $verificacaoDiaInativacao = true;
+                        } else {
+                            if ($this->getData_inativacaoDia() >= $primeiroDiaDoCiclo) {
+                                $verificacaoDiaInativacao = true;
                             }
                         }
-                    }
 
-                    if (!$validacaoCelulaExcluidaMesmoDia) {
-                        /* Condição para data de cadastro */
-                        $verificacaoData = false;
-                        $diaAtual = date('d');
-                        $mesAtual = date('m'); /* Mes com zero */
-                        $anoAtual = date('Y');
-                        $cicloAtual = Funcoes::cicloAtual($mes, $ano);
-                        if ($ge->getData_criacaoAno() <= $ano) {
-                            if ($ge->getData_criacaoAno() == $ano) {
-                                if ($ge->getData_criacaoMes() <= $mes) {
-                                    if ($ge->getData_criacaoMes() == $mes) {
-                                        $ge->setNovo(true);
-                                        if ($ciclo == $cicloAtual) {
-                                            /* Validar dia cadastro grupo e evento */
-                                            $diaDaCriacao = $ge->getData_criacaoDia();
-                                            $diaDaSemanaDaCriacao = date('N', mktime(0, 0, 0, $mes, $diaDaCriacao, $ano));
-                                            if ($diaDaSemanaDaCriacao == 1) {
-                                                $diaDaSemanaDaCriacao = 8;
+                        if ($verificacaoDiaInativacao) {
+                            $validacaoCelulaExcluidaMesmoDia = false;
+                            /* Validação de célula , quando excluida no dia sem lançamento não aparecer */
+                            if ($ge->getEvento()->verificaSeECelula()) {
+                                if ($ge->getData_criacao() === $ge->getData_inativacao()) {
+                                    if (!count($ge->getEvento()->getEventoFrequencia())) {
+                                        $validacaoCelulaExcluidaMesmoDia = true;
+                                    }
+                                }
+                            }
+
+                            if (!$validacaoCelulaExcluidaMesmoDia) {
+                                /* Condição para data de cadastro */
+                                $verificacaoData = false;
+
+                                if ($ge->getData_criacaoAno() <= $ano) {
+                                    if ($ge->getData_criacaoAno() == $ano) {
+                                        if ($ge->getData_criacaoMes() <= $mes) {
+                                            if ($ge->getData_criacaoMes() == $mes) {
+                                                $ge->setNovo(true);
+                                                if ($ciclo == $cicloAtual) {
+                                                    /* Validar dia cadastro grupo e evento */
+                                                    $diaDaCriacao = $ge->getData_criacaoDia();
+                                                    $diaDaSemanaDaCriacao = date('N', mktime(0, 0, 0, $mes, $diaDaCriacao, $ano));
+                                                    if ($diaDaSemanaDaCriacao == 1) {
+                                                        $diaDaSemanaDaCriacao = 8;
+                                                    } else {
+                                                        $diaDaSemanaDaCriacao++;
+                                                    }
+                                                    if (!($ge->getEvento()->getDiaAjustado() < $diaDaSemanaDaCriacao) && $ge->getData_criacaoDia() <= $diaAtual) {
+                                                        $verificacaoData = true;
+                                                    }
+                                                } else {
+                                                    $primeiroDiaCiclo = Funcoes::periodoCicloMesAno($ciclo, $mes, $ano, '', 1);
+                                                    if ($ge->getData_criacaoDia() < $primeiroDiaCiclo) {
+                                                        $verificacaoData = true;
+                                                    }
+                                                }
                                             } else {
-                                                $diaDaSemanaDaCriacao++;
-                                            }
-                                            if (!($ge->getEvento()->getDiaAjustado() < $diaDaSemanaDaCriacao) && $ge->getData_criacaoDia() <= $diaAtual) {
-                                                $verificacaoData = true;
-                                            }
-                                        } else {
-                                            $primeiroDiaCiclo = Funcoes::periodoCicloMesAno($ciclo, $mes, $ano, '', 1);
-                                            if ($ge->getData_criacaoDia() < $primeiroDiaCiclo) {
                                                 $verificacaoData = true;
                                             }
                                         }
@@ -356,35 +385,33 @@ class Grupo extends CircuitoEntity {
                                         $verificacaoData = true;
                                     }
                                 }
-                            } else {
-                                $verificacaoData = true;
-                            }
-                        }
 
-                        /* Validacao de ciclos inicial e final */
-                        $verificacaoDiaSemana = false;
-                        $cicloTotal = Funcoes::totalCiclosMes($mes, $ano);
-                        if ($verificacaoData && ($ciclo == 1 || $ciclo == $cicloTotal)) {
-                            if ($ciclo == 1) {
-                                if ($ge->getEvento()->getDiaAjustado() >= $primeiroDiaDaSemana) {
+                                /* Validacao de ciclos inicial e final */
+                                $verificacaoDiaSemana = false;
+                                $cicloTotal = Funcoes::totalCiclosMes($mes, $ano);
+                                if ($verificacaoData && ($ciclo == 1 || $ciclo == $cicloTotal)) {
+                                    if ($ciclo == 1) {
+                                        if ($ge->getEvento()->getDiaAjustado() >= $primeiroDiaDaSemana) {
+                                            $verificacaoDiaSemana = true;
+                                        }
+                                    }
+                                    if ($ciclo == $cicloTotal) {
+                                        if ($ge->getEvento()->getDiaAjustado() <= $ultimoDiaDaSemana) {
+                                            $verificacaoDiaSemana = true;
+                                        }
+                                    }
+                                } else {
                                     $verificacaoDiaSemana = true;
                                 }
-                            }
-                            if ($ciclo == $cicloTotal) {
-                                if ($ge->getEvento()->getDiaAjustado() <= $ultimoDiaDaSemana) {
-                                    $verificacaoDiaSemana = true;
+                                if ($verificacaoData && $verificacaoDiaSemana) {
+                                    $eventos[] = $ge;
                                 }
                             }
-                        } else {
-                            $verificacaoDiaSemana = true;
-                        }
-                        if ($verificacaoData && $verificacaoDiaSemana) {
-                            $eventos[] = $ge;
                         }
                     }
                 }
+                $this->setEventos($eventos);
             }
-            $this->setEventos($eventos);
         }
         return $this->getEventos();
     }

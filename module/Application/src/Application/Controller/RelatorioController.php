@@ -116,6 +116,9 @@ class RelatorioController extends CircuitoController {
                 $repositorioORM->getGrupoResponsavelORM()->persistir($gr, $setarDataEHora);
                 $gruposAtual = $gr->getGrupo();
             }
+            $gruposAtual->setDataEHoraDeInativacao();
+            $repositorioORM->getGrupoORM()->persistir($gruposAtual, $setarDataEHora);
+
             $gpf = $gruposAtual->getGrupoPaiFilhoPai();
             $gpf->setDataEHoraDeInativacao();
             $repositorioORM->getGrupoPaiFilhoORM()->persistir($gpf, $setarDataEHora);
