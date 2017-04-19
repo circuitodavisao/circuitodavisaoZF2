@@ -10,6 +10,7 @@ use Application\Form\CelulaForm;
 use Application\Form\EventoForm;
 use Application\Form\GrupoForm;
 use Application\Form\RevisaoForm;
+use Application\Form\TransferenciaForm;
 use Application\Model\Entity\Entidade;
 use Application\Model\Entity\Evento;
 use Application\Model\Entity\EventoCelula;
@@ -120,6 +121,11 @@ class CadastroController extends CircuitoController {
         if ($pagina == Constantes::$PAGINA_SALVAR_REVISAO) {
             return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
                         Constantes::$ACTION => Constantes::$PAGINA_SALVAR_REVISAO,
+            ));
+        }
+        if ($pagina == Constantes::$PAGINA_CADASTRO_TRANSFERENCIA) {
+            return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
+                        Constantes::$ACTION => Constantes::$PAGINA_CADASTRO_TRANSFERENCIA,
             ));
         }
 
@@ -1114,6 +1120,23 @@ class CadastroController extends CircuitoController {
         $listagemDeEventos = $grupo->getGrupoEventoRevisao();
         $tituloDaPagina = Constantes::$TRADUCAO_LISTAGEM_CELULAS . ' <b class="text-danger">' . Constantes::$TRADUCAO_MULTIPLICACAO . '</b>';
         $tipoEvento = 2;
+    }
+
+    public function transferenciaAction() {
+        $form = new TransferenciaForm('transferencia');
+
+        $sessao = new Container(Constantes::$NOME_APLICACAO);
+        $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
+        $idEntidadeAtual = $sessao->idEntidadeAtual;
+        $entidade = $repositorioORM->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+        $grupo = $entidade->getGrupo();
+        $discipulos = $grupo->getGrupoPaiFilhoFilhos();
+
+        return new ViewModel(
+                array(
+            Constantes::$FORM => $form,
+            'discipulos' => $discipulos,
+        ));
     }
 
 }

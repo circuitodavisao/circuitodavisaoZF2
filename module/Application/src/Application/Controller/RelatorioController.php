@@ -40,7 +40,7 @@ class RelatorioController extends CircuitoController {
      */
     public function indexAction() {
         
-    }
+    }  
 
     /**
      * Função padrão, traz a tela principal

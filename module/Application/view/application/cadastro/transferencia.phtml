@@ -1,0 +1,79 @@
+<?php
+echo $this->templateFormularioTopo('Transferência');
+?>
+<div class="panel-body bg-light">
+    <?php echo $this->passoAPasso($this->Form); ?>
+    <div>
+        <div class="panel-menu">
+            <input id="fooFilter" type="text" class="form-control" placeholder="Filtro">
+        </div>
+        <table class="table footable no-paging" data-filter="#fooFilter" data-page-navigation=".pagination" data-page-size="5">
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Equipe</th>
+                    <td></td>
+                </tr>
+            </thead>
+            <tbody>
+                <?php echo $this->listagemLideresTransferencia($this->discipulos); ?>
+            </tbody>
+            <tfoot class="footer-menu">
+                <tr>
+                    <td colspan="3">
+                        <nav class="text-right">
+                            <ul class="pagination hide-if-no-paging"></ul>
+                        </nav>
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+    <hr />
+    <div class="">
+        <div class="panel-menu">
+            <input id="fooFilter2" type="text" class="form-control" placeholder="Filtro">
+        </div>
+        <table class="table footable no-paging" data-filter="#fooFilter2" data-page-navigation=".pagination" data-page-size="5">
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Equipe</th>
+                    <th class="text-right">Selecionar</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php echo $this->listagemLideresTransferencia($this->discipulos); ?>           
+            </tbody>
+            <tfoot class="footer-menu">
+                <tr>
+                    <td colspan="3">
+                        <nav class="text-right">
+                            <ul class="pagination hide-if-no-paging"></ul>
+                        </nav>
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+    <hr />
+    <div class="">
+        <blockquote>
+            <p>Voce inativará a Equipe BLACKBELT 5.4 Leonardo & Vivian</p>          
+        </blockquote>
+        <blockquote>
+            <p>Será tranferida para a Equipe BALCKBELT 1 com numeração/nome de BALCKBELT 1.20.1.5</p>
+        </blockquote>
+        <div class="text-center mt10">
+            <button class="btn btn-primary">Confirmo</button>
+        </div>
+    </div>
+    <hr />
+    <div class="">
+        <input type="password" class="form-control" placeholder="Senha" />
+
+        <div class="text-center mt10">
+            <button class="btn btn-primary">Transferir</button>
+        </div>
+    </div>
+</div>

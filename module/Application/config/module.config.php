@@ -157,6 +157,7 @@ return array(
             'cadastro/cadastro/celula-exclusao' => __DIR__ . '/../view/cadastro/celula-exclusao.phtml',
             'cadastro/cadastro/celulas' => __DIR__ . '/../view/cadastro/celulas.phtml',
             'cadastro/cadastro/revisao' => __DIR__ . '/../view/cadastro/revisao.phtml',
+            'cadastro/cadastro/transferencia' => __DIR__ . '/../view/cadastro/transferencia.phtml',
             'relatorio/relatorio/membresia' => __DIR__ . '/../view/relatorio/membresia.phtml',
             'relatorio/relatorio/teste' => __DIR__ . '/../view/relatorio/teste.phtml',
             'layout/layout-js-celulas' => __DIR__ . '/../view/layout/layout-js-celulas.phtml',

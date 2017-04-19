@@ -132,6 +132,38 @@ class Grupo extends CircuitoEntity {
         return $responsabilidadesAtivas;
     }
 
+    function getPessoasAtivas() {
+        $pessoas = null;
+        $grupoResponsavel = $this->getResponsabilidadesAtivas();
+        if ($grupoResponsavel) {
+            $pessoas = array();
+            foreach ($grupoResponsavel as $gr) {
+                $p = $gr->getPessoa();
+                $pessoas[] = $p;
+            }
+        }
+        return $pessoas;
+    }
+
+    function getNomeLideresAtivos() {
+        $pessoas = $this->getPessoasAtivas();
+        $nomes = '';
+        $contador = 1;
+
+        foreach ($pessoas as $pessoa) {
+            if ($contador === 2) {
+                $nomes .= ' & ';
+            }
+            if (count($pessoas) == 2) {
+                $nomes .= $pessoa->getNomePrimeiro();
+            } else {
+                $nomes .= $pessoa->getNomePrimeiroUltimo();
+            }
+            $contador++;
+        }
+        return $nomes;
+    }
+
     function setEntidade($entidade) {
         $this->entidade = $entidade;
     }
