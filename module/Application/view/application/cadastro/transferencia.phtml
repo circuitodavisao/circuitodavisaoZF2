@@ -3,7 +3,7 @@ echo $this->templateFormularioTopo('Transferência');
 ?>
 <div class="panel-body bg-light">
     <?php echo $this->passoAPasso($this->Form); ?>
-    <div>
+    <div id="divLideresParaTransferir">
         <div class="panel-menu">
             <input id="fooFilter" type="text" class="form-control" placeholder="Filtro">
         </div>
@@ -29,8 +29,10 @@ echo $this->templateFormularioTopo('Transferência');
             </tfoot>
         </table>
     </div>
-    <hr />
-    <div class="">
+    <div id="divDadosSelecionados" class="hidden alert alert-info" role="alert">
+        <span id="spanLiderParaSerTransferido"></span>
+    </div>
+    <div id="divLideresParaQuemSeraTransferido" class="hidden">
         <div class="panel-menu">
             <input id="fooFilter2" type="text" class="form-control" placeholder="Filtro">
         </div>
@@ -39,11 +41,11 @@ echo $this->templateFormularioTopo('Transferência');
                 <tr>
                     <th>Nome</th>
                     <th>Equipe</th>
-                    <th class="text-right">Selecionar</th>
+                    <td class="text-right"></td>
                 </tr>
             </thead>
             <tbody>
-                <?php echo $this->listagemLideresTransferencia($this->discipulos); ?>           
+                <?php echo $this->listagemLideresTransferencia($this->discipulos, 2); ?>           
             </tbody>
             <tfoot class="footer-menu">
                 <tr>
@@ -56,8 +58,7 @@ echo $this->templateFormularioTopo('Transferência');
             </tfoot>
         </table>
     </div>
-    <hr />
-    <div class="">
+    <div id="divConfirmacao" class="hidden">
         <blockquote>
             <p>Voce inativará a Equipe BLACKBELT 5.4 Leonardo & Vivian</p>          
         </blockquote>
@@ -68,8 +69,7 @@ echo $this->templateFormularioTopo('Transferência');
             <button class="btn btn-primary">Confirmo</button>
         </div>
     </div>
-    <hr />
-    <div class="">
+    <div class="hidden">
         <input type="password" class="form-control" placeholder="Senha" />
 
         <div class="text-center mt10">
@@ -77,3 +77,45 @@ echo $this->templateFormularioTopo('Transferência');
         </div>
     </div>
 </div>
+
+<script type="text/javascript">
+    /**
+     * Nome: layout-js-transferencia-validacao.js
+     * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com>
+     * Descricao: Funções para cadastro de transferência
+     */
+
+    /* Dados */
+    var idGrupoParaTransferir = 0;
+    var idGrupoNovoLider = 0;
+    var iconeTime = '<i class="fa fa-times" aria-hidden="true"></i>';
+    var iconeCheck = '<i class="fa fa-check" aria-hidden="true"></i>';
+    var hidden = 'hidden';
+    var textDanger = 'text-danger';
+    var textSuccess = 'text-success';
+    var stringNBSP = '&nbsp;';
+    var alertDanger = 'alert-danger';
+    var alertSuccess = 'alert-success';
+    var btnDefault = 'btn-default';
+    var btnPrimary = 'btn-primary';
+
+    function selecionarLiderParaTransferir(idGrupo, informacao) {
+        idGrupoParaTransferir = idGrupo;
+        $('#botaoPasso2')
+                .removeClass('btn-default')
+                .addClass('btn-primary');
+        $('#divLideresParaTransferir').addClass(hidden);
+        $('#divDadosSelecionados').removeClass(hidden);
+        $('#divLideresParaQuemSeraTransferido').removeClass(hidden);
+        $('#spanLiderParaSerTransferido').html('Lider que será transferido: '+informacao);
+    }
+
+    function selecionarDeQuemSeraDiscipulo(idGrupo) {
+        idGrupoNovoLider = idGrupo;
+        $('#botaoPasso3')
+                .removeClass('btn-default')
+                .addClass('btn-primary');
+        $('#divLideresParaQuemSeraTransferido').addClass(hidden);
+        $('#divConfirmacao').removeClass(hidden);
+    }
+</script>
