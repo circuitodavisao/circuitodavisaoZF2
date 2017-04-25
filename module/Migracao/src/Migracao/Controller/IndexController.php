@@ -13,6 +13,7 @@ use Application\Model\Entity\GrupoPaiFilho;
 use Application\Model\Entity\GrupoPessoa;
 use Application\Model\Entity\GrupoResponsavel;
 use Application\Model\Entity\Pessoa;
+use Application\Model\Entity\PessoaHierarquia;
 use Application\Model\ORM\RepositorioORM;
 use Doctrine\ORM\EntityManager;
 use Exception;
@@ -66,7 +67,7 @@ class IndexController extends CircuitoController {
                 $idPerfilIgreja = 18;
                 $informacaoEntidade = $row[$stringNome];
                 $grupoIgreja = $this->cadastrarEntidade($row[$stringIdResponsavel1], $idPerfilIgreja, $informacaoEntidade, null, $row[$stringIdResponsavel2]);
-//                $this->cadastrarPessoasVolateis($row[$stringIdResponsavel1], $grupoIgreja);
+                $this->cadastrarPessoasVolateis($row[$stringIdResponsavel1], $grupoIgreja);
                 $eventosCulto = $this->cadastrarCulto($row[$stringIdResponsavel1], $grupoIgreja);
                 $this->cadastrarCelulas($row[$stringIdResponsavel1], $grupoIgreja, $row[$stringIdResponsavel2]);
 
@@ -87,13 +88,13 @@ class IndexController extends CircuitoController {
                         $idPerfilSub = 17;
                         $informacaoEntidade = $rowEquipe[$stringNome] . '.' . $rowSubs[$stringNumero];
                         $grupoSub = $this->cadastrarEntidade($rowSubs[$stringIdResponsavel1], $idPerfilSub, $informacaoEntidade, $grupoEquipe, $rowSubs[$stringIdResponsavel2]);
-//                        $this->cadastrarPessoasVolateis($rowSubs[$stringIdResponsavel1], $grupoSub);
+                        $this->cadastrarPessoasVolateis($rowSubs[$stringIdResponsavel1], $grupoSub);
                         $this->cadastrarCelulas($rowSubs[$stringIdResponsavel1], $grupoSub, $rowSubs[$stringIdResponsavel2]);
                         $querySubEquipes144 = mysqli_query($this->getConexao(), 'SELECT * FROM ursula_subequipe_ursula WHERE ativa = "S" AND dataInativacao IS NULL AND idSubEquipePai = ' . $rowSubs['id']);
 //                        $querySubEquipes144 = mysqli_query($this->getConexao(), 'SELECT * FROM ursula_subequipe_ursula WHERE id = 11888;');
                         while ($rowSubs144 = mysqli_fetch_array($querySubEquipes144)) {
                             $informacaoEntidade = $rowEquipe[$stringNome] . '.' . $rowSubs[$stringNumero] . '.' . $rowSubs144[$stringNumero];
-                            $grupoSub144 = $this->cadastrarEntidade($rowSubs144[$stringIdResponsavel1], $idPerfilSub, $informacaoEntidade, $grupoSub, $rowSubs144[$stringIdResponsavel2]);
+                            $grupoSub144 = $this->cadastrarEntidade($rowSubs144[$stringIdResponsavel1], $idPerfilSub, $informacaoEntidade, $grupoSub, $rowSubs144[$stringIdResponsavel2], $rowSubs144['id']);
                             $this->cadastrarPessoasVolateis($rowSubs144[$stringIdResponsavel1], $grupoSub144);
                             $this->cadastrarCelulas($rowSubs144[$stringIdResponsavel1], $grupoSub144, $rowSubs144[$stringIdResponsavel2]);
 
@@ -208,7 +209,7 @@ class IndexController extends CircuitoController {
     private function buscaPessoaPorId($id, $idPerfil) {
         $idInt = (int) $id;
         $pessoa = null;
-        $queryPessoa = mysqli_query($this->getConexao(), 'SELECT * FROM ursula_pessoa_ursula WHERE id = ' . $idInt);
+        $queryPessoa = mysqli_query($this->getConexao(), 'SELECT nome, documento, email FROM ursula_pessoa_ursula WHERE id = ' . $idInt);
         while ($rowPessoa = mysqli_fetch_array($queryPessoa)) {
             $pessoa = new Pessoa();
             $pessoa->setNome($rowPessoa['nome']);
@@ -223,6 +224,83 @@ class IndexController extends CircuitoController {
 //            $pessoa->setSenha(123);
         }
         return $pessoa;
+    }
+
+    private function buscaHierarquiaPorIdGrupoEPerfil($id, $idPerfil) {
+        $idInt = (int) $id;
+        switch ($idPerfil) {
+            case 18:
+                $sql = 'SELECT idHierarquia AS idHierarquia FROM ursula_igreja_ursula WHERE id = ' . $idInt;
+                break;
+            case 15:
+                $sql = 'SELECT idHierarquia1 AS idHierarquia FROM ursula_equipe_ursula WHERE id = ' . $idInt;
+                break;
+            case 17:
+                $sql = 'SELECT idHierarquia1 AS idHierarquia FROM ursula_subequipe_ursula WHERE id = ' . $idInt;
+                break;
+        }
+        $query = mysqli_query($this->getConexao(), $sql);
+
+        while ($row = mysqli_fetch_array($query)) {
+            $hierarquia = $row['idHierarquia'];
+        }
+
+        return $hierarquia;
+    }
+
+    private function cadastrarHierarquia($idGrupo, $idPerfil, $pessoa) {
+        $hierarquiaAntigo = $this->buscaHierarquiaPorIdGrupoEPerfil($idGrupo, $idPerfil);
+        if ($hierarquiaAntigo) {
+            $idSistemaNovo = 0;
+            switch ($hierarquiaAntigo) {
+                case 1:
+                    $idSistemaNovo = 6;
+                    break;
+                case 16:
+                    $idSistemaNovo = 5;
+                    break;
+                case 2:
+                    $idSistemaNovo = 4;
+                    break;
+                case 3:
+                    $idSistemaNovo = 2;
+                    break;
+                case 4:
+                    $idSistemaNovo = 2;
+                    break;
+                case 9:
+                    $idSistemaNovo = 1;
+                    break;
+                case 10:
+                    $idSistemaNovo = 1;
+                    break;
+                case 11:
+                    $idSistemaNovo = 6;
+                    break;
+                case 12:
+                    $idSistemaNovo = 6;
+                    break;
+                case 13:
+                    $idSistemaNovo = 6;
+                    break;
+                case 14:
+                    $idSistemaNovo = 6;
+                    break;
+                case 15:
+                    $idSistemaNovo = 3;
+                    break;
+
+                default:
+                    $idSistemaNovo = 6;
+                    break;
+            }
+            $hierarquia = $this->getRepositorio()->getHierarquiaORM()->encontrarPorId($idSistemaNovo);
+            $pessoaHierarquia = new PessoaHierarquia();
+            $pessoaHierarquia->setHierarquia($hierarquia);
+            $pessoaHierarquia->setPessoa($pessoa);
+
+            $this->getRepositorio()->getPessoaHierarquiaORM()->persistir($pessoaHierarquia);
+        }
     }
 
     private function buscaCultosPorIgreja($id) {
@@ -325,14 +403,35 @@ class IndexController extends CircuitoController {
         if ($idGrupoMensal) {
             $sqlPessoasVolateis = 'SELECT * FROM circuito_visao.ursula_pessoa_ursula where idGrupoMensal = ' . $idGrupoMensal;
             $queryPessoasVolateis = mysqli_query($this->getConexao(), $sqlPessoasVolateis);
-            while ($rowPessoasVolateis = mysqli_fetch_array($queryPessoasVolateis)) {
+            if ($queryPessoasVolateis) {
+                while ($rowPessoasVolateis = mysqli_fetch_array($queryPessoasVolateis)) {
+                    $telefone = 0;
+                    if (strlen($rowPessoasVolateis['dddCelular'] . $rowPessoasVolateis['telefoneCelular']) <= 11) {
+                        $telefone = $rowPessoasVolateis['dddCelular'] . $rowPessoasVolateis['telefoneCelular'];
+                        $pessoa = new Pessoa();
+                        $pessoa->setNome($rowPessoasVolateis['nome']);
+                        $pessoa->setTelefone($telefone);
+                        $pessoa->setTipo($rowPessoasVolateis['idClassificacao']);
+                        $pessoas[] = $pessoa;
+                    }
+                }
+            }
+        }
+        /* Alunos para pessoas */
+        $sqlAlunos = "SELECT  
+        p.nome, P.dddCelular, p.telefoneCelular
+        FROM ursula_pessoa_ursula AS p, ursula_turma_aluno_ursula AS ta WHERE p.idLider = '. $idInt . '
+         AND ta.status = 'A' AND ta.idSituacao <> 9 AND ta.idAluno = p.id AND p.mostrarCiclos = 'S' ";
+        $queryAlunos = mysqli_query($this->getConexao(), $sqlAlunos);
+        if ($queryAlunos) {
+            while ($rowAlunos = mysqli_fetch_array($queryAlunos)) {
                 $telefone = 0;
-                if (strlen($rowPessoasVolateis['dddCelular'] . $rowPessoasVolateis['telefoneCelular']) <= 11 && strlen($rowPessoasVolateis['dddCelular'] . $rowPessoasVolateis['telefoneCelular']) >= 10) {
-                    $telefone = $rowPessoasVolateis['dddCelular'] . $rowPessoasVolateis['telefoneCelular'];
+                if (strlen($rowAlunos['dddCelular'] . $rowAlunos['telefoneCelular']) <= 11) {
+                    $telefone = $rowAlunos['dddCelular'] . $rowAlunos['telefoneCelular'];
                     $pessoa = new Pessoa();
-                    $pessoa->setNome($rowPessoasVolateis['nome']);
+                    $pessoa->setNome($rowAlunos['nome']);
                     $pessoa->setTelefone($telefone);
-                    $pessoa->setTipo($rowPessoasVolateis['idClassificacao']);
+                    $pessoa->setTipo(3);
                     $pessoas[] = $pessoa;
                 }
             }
@@ -365,7 +464,16 @@ class IndexController extends CircuitoController {
                     $evento->setHora($horaAjustada);
                 }
                 if (substr($evento->getHora(), 0, 1) > 2) {
-                    $evento->setHora('00:00:00');
+                    $evento->setHora('00:00
+
+            :00 
+
+                
+
+              '
+                    )
+
+                    ;
                 }
                 $eventoCelula = $evento->getEventoCelula();
                 $evento->setEventoCelula(null);
@@ -378,17 +486,6 @@ class IndexController extends CircuitoController {
                 $this->getRepositorio()->getGrupoEventoORM()->persistir($grupoEvento);
             }
         }
-    }
-
-    private function cadastrarFatoLider($grupo, $idLider2 = null) {
-        $quantidadeDeLideres = 0;
-        if ($idLider2) {
-            $quantidadeDeLideres = 2;
-        } else {
-            $quantidadeDeLideres = 1;
-        }
-        $numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($grupo);
-        $this->getRepositorio()->getFatoLiderORM()->criarFatoLider($numeroIdentificador, $quantidadeDeLideres);
     }
 
     private function cadastrarCultoEquipe($eventosCulto, $idEquipe, $grupoEquipe) {
@@ -425,7 +522,7 @@ class IndexController extends CircuitoController {
         }
     }
 
-    private function cadastrarEntidade($idLider1, $idPerfil, $informacaoEntidade, $grupoPai = null, $idLider2 = null) {
+    private function cadastrarEntidade($idLider1, $idPerfil, $informacaoEntidade, $grupoPai = null, $idLider2 = null, $idGrupoAntigo = null) {
         $idPerfilIgreja = 18;
         $idPerfilEquipe = 15;
         $idPerfilSub = 17;
@@ -473,8 +570,13 @@ class IndexController extends CircuitoController {
                 $grupoResponsavel->setGrupo($grupo);
                 $grupoResponsavel->setPessoa($lider);
                 $this->getRepositorio()->getGrupoResponsavelORM()->persistir($grupoResponsavel);
+                if ($idGrupoAntigo > 0) {
+                    $this->cadastrarHierarquia($idGrupoAntigo, $idPerfil, $lider);
+                }
             }
         }
+
+
         /* Fim gerando */
         return $grupo;
     }
