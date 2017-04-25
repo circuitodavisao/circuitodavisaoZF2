@@ -47,6 +47,7 @@ use Application\View\Helper\InputFormularioSimples;
 use Application\View\Helper\LinkLogo;
 use Application\View\Helper\ListagemDeEventos;
 use Application\View\Helper\ListagemDePessoasComEventos;
+use Application\View\Helper\ListagemLideresTransferencia;
 use Application\View\Helper\MensagemRelatorioEnviado;
 use Application\View\Helper\Menu;
 use Application\View\Helper\MenuHierarquia;
@@ -265,6 +266,9 @@ class Module {
                 },
                 'atendimentosDoGrupo' => function ($sm) {
                     return new AtendimentosDoGrupo();
+                },
+                'listagemLideresTransferencia' => function ($sm) {
+                    return new ListagemLideresTransferencia();
                 }
             )
         );
