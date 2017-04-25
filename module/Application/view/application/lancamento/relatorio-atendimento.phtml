@@ -19,12 +19,14 @@ use Application\Controller\Helper\Constantes;
           <?php  echo $this->translate(Constantes::$TRADUCAO_CABECALHO_TITULO_ATENDIMENTOS); ?>
         </small>
     </blockquote>
+    <div class="row">
     <div id="atendimento" class="panel">
         <div class="panel-heading">
             <?php echo $this->abasAtendimento(); ?>
 
         </div> 
     </div>    
+    </div>
 
             <?php
 //            echo $this->cabecalhoDeAtendimentos();
@@ -32,8 +34,26 @@ use Application\Controller\Helper\Constantes;
             ?>        
         
     
-
+<script type="text/javascript">
+    function abrir144(idGrupo12) {
+        var div144 = $('#grupos144'+ idGrupo12);
+        var botaoMais = $('#botaoMais'+ idGrupo12);
+        var botaoMenos = $('#botaoMenos'+ idGrupo12);
+        div144.removeClass('hidden');
+        botaoMais.addClass('hidden');
+        botaoMenos.removeClass('hidden');
+    }
+    function fechar144(idGrupo12) {
+        var div144 = $('#grupos144'+ idGrupo12);
+        var botaoMenos = $('#botaoMenos'+ idGrupo12);
+        var botaoMais = $('#botaoMais'+ idGrupo12);
+        div144.addClass('hidden');
+        botaoMenos.addClass('hidden');
+        botaoMais.removeClass('hidden');
+    }
+</script>
     <?php
     /* Layout com javascript para tela de index */
+    
 
     

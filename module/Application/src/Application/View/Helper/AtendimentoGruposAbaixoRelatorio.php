@@ -20,12 +20,18 @@ class AtendimentoGruposAbaixoRelatorio extends AbstractHelper {
     }
 
     public function renderHtml() {
-        $html = '';
+        $htmlRaiz = '';
+
         if (!empty($this->view->gruposAbaixo)) {
+            $arrayCompleto = array();
+            $arrayIncompleto = array();
+            $auxI = 0;
+            $auxN = 0;
             foreach ($this->view->gruposAbaixo as $gp12) {
+
                 $grupo12 = $gp12->getGrupoPaiFilhoFilho();
                 $grupos144 = $grupo12->getGrupoPaiFilhoFilhos();
-
+                $html[$grupo12->getId()] = '';
                 $entidadeFilho12 = $grupo12->getEntidadeAtiva();
                 $grupoResponsavel12 = $grupo12->getResponsabilidadesAtivas();
                 $nomeEntidade12 = $grupo12->getEntidadeAtiva()->infoEntidade();
@@ -65,30 +71,7 @@ class AtendimentoGruposAbaixoRelatorio extends AbstractHelper {
                         }
                         $contagem12++;
                     }
-                    $html .= '<div class="row">';
-                    $html .= '<div class="panel-default">';
 
-                    $html .= '</div>';
-                    $html .= '</div>';
-                    $html .= '<div class= "panel">';
-                    $html .= '<div class="panel-body center-block">';
-                    $html .= '</br>';
-                    $html .= '<div class="row mt10 text-center ">';
-                    $html .= '<div class="col-md-3 col-xs-4" style="padding-right: 0px;">';
-                    $html .= '<span class="" href="#" >';
-                    $html .= $informacaoFoto12;
-                    $html .= '</span>';
-                    $html .= '</div>';
-                    $html .= '<div class="col-md-9 col-xs-8" style="padding-left: 2px; padding-right: 2px;">';
-                    $html .= '<div class="row">';
-                    $html .= '<div class="col-md-10 col-sm-10 col-xs-7" style="padding-top: 3px; padding-right: 4px;">';
-
-                    $html .= '<span style="padding-top: 0px;">' . $informacaoEntidade12 . ' - ' . $nomeEntidade12 . ' </span>';
-                    $html .= '</div>';
-                    $html .= '</div>';
-                    $html .= '</div>';
-                    $html .= '</div>';
-                    $html .= '</br>';
                     $totalGruposAtendidos = 0;
                     $totalGruposFilhos = 0;
                     foreach ($grupos144 as $gpFilho) {
@@ -113,19 +96,87 @@ class AtendimentoGruposAbaixoRelatorio extends AbstractHelper {
                             $totalGruposFilhos++;
                         }
                     }
+
+//                    $html[$grupo12->getId()] .= '<div class="panel-default">';
+//
+//                    $html[$grupo12->getId()] .= '</div>';
+
+
+
+
+                    $html[$grupo12->getId()] .= '<div class= "panel">';
+                    $html[$grupo12->getId()] .= '<div class="panel-body center-block">';
+
                     if (count($grupos144) > 0) {
-                    $progresso12 = ($totalGruposAtendidos / $totalGruposFilhos) * 100;
+                        $progresso12 = ($totalGruposAtendidos / $totalGruposFilhos) * 100;
+                        $disabledPlus = '';
+                    } else {
+                        $progresso12 = 0;
+                        $disabledPlus = 'disabled';
                     }
 
                     /* percentagem da meta, sendo que a meta é 2 atendimentos por mes */
                     if ($progresso12 > 50 && $progresso12 < 80) {
-                        $colorBarTotal12 = "alert-warning";
+                        $colorBarTotal = "progress-bar-warning";
                     } else if ($progresso12 >= 80) {
-                        $colorBarTotal12 = "alert-success";
+                        $colorBarTotal = "progress-bar-success";
                     } else {
-                        $colorBarTotal12 = "alert-danger";
+                        $colorBarTotal = "progress-bar-danger";
                     }
+
+//                    $html[$grupo12->getId()] .= '<div class="row mt10 ">';
+//                    $html[$grupo12->getId()] .= '<div class="col-md-3 col-xs-4" style="padding-right: 0px;">';
+//                    $html[$grupo12->getId()] .= '<span class="" href="#" >';
+//                    $html[$grupo12->getId()] .= $informacaoFoto12;
+//                    $html[$grupo12->getId()] .= '</span>';
+//                    $html[$grupo12->getId()] .= '</div>';
+//                    $html[$grupo12->getId()] .= '<div class="col-md-9 col-xs-8" style="padding-left: 2px; padding-right: 2px;">';
+//                    $html[$grupo12->getId()] .= '<div class="row">';
+//                    $html[$grupo12->getId()] .= '<div class="col-md-10 col-sm-10 col-xs-7" style="padding-top: 3px; padding-right: 4px;">';
+//
+//                    $html[$grupo12->getId()] .= '<span style="padding-top: 0px;">' . $informacaoEntidade12 . ' - ' . $nomeEntidade12 . ' </span>';
+//                    $html[$grupo12->getId()] .= '</div>';
+//                    $html[$grupo12->getId()] .= '</div>';
+//                    $html[$grupo12->getId()] .= '</div>';
+//                    $html[$grupo12->getId()] .= '</div>';
+//                    $html[$grupo12->getId()] .= '</br>';
+
+                    $html[$grupo12->getId()] .= '<div class="row mt10" >';
+                    $html[$grupo12->getId()] .= '<div class="col-md-3 col-xs-4" style="padding-right: 0px;">';
+                    $html[$grupo12->getId()] .= '<span class="" href="#" >';
+                    $html[$grupo12->getId()] .= $informacaoFoto12;
+                    $html[$grupo12->getId()] .= '</span>';
+                    $html[$grupo12->getId()] .= '</div>';
+                    $html[$grupo12->getId()] .= '<div class="col-md-9 col-xs-8" style="padding-left: 2px; padding-right: 2px;">';
+
+                    $html[$grupo12->getId()] .= '<div class="row">';
+                    $html[$grupo12->getId()] .= '<div class="col-md-11 col-sm-10 col-xs-9" style="padding-top: 0px; padding-right: 4px;">';
+                    $html[$grupo12->getId()] .= '<span><span id="totalGruposAtendidos">' . $totalGruposAtendidos . ' </span> de <span id="totalGruposFilhos">' . $totalGruposFilhos . '</span> Discipulos Foram Atendidos</span>';
+                    $html[$grupo12->getId()] .= '<div class="progress progress-bar-xl" style="margin-bottom: 0px;">';
+                    $html[$grupo12->getId()] .= '<div id="divProgressBar" class="progress-bar ' . $colorBarTotal . '" role="progressbar" aria-valuenow="' . number_format($progresso12, 2, '.', '') . '" aria-valuemin="0" aria-valuemax="100" style="width: ' . number_format($progresso12, 2, '.', '') . '%;">' . number_format($progresso12, 2, '.', '') . '%</div>';
+                    $html[$grupo12->getId()] .= '</div>';
+                    $html[$grupo12->getId()] .= '<span style="padding-top: 0px;">' . $informacaoEntidade12 . ' - ' . $nomeEntidade12 . '</span>';
+                    $html[$grupo12->getId()] .= '</div>';
+                    $html[$grupo12->getId()] .= '<div class="col-md-1 col-sm-2 col-xs-3" style="padding-left: 0px; padding-top: 20px; vertical-align: middle;">';
+                    $html[$grupo12->getId()] .= '<div id="botaoMais' . $grupo12->getId() . '"> ';
+                    $html[$grupo12->getId()] .= '<button  id="bl_' . $grupo12->getId() . '" type="button" onclick="abrir144(' . $grupo12->getId() . ');" class="btn btn-md btn-primary" ' . $disabledPlus . ' style="padding-top: 0px; padding-bottom: 0px;">';
+                    $html[$grupo12->getId()] .= '<i class="fa fa-plus" aria-hidden="true"></i>';
+                    $auxI = 0;
+                    $html[$grupo12->getId()] .= '</button>';
+                    $html[$grupo12->getId()] .= '</div>';
+                    $html[$grupo12->getId()] .= '<div id="botaoMenos' . $grupo12->getId() . '" class="hidden"> ';
+                    $html[$grupo12->getId()] .= '<button  id="bl_' . $grupo12->getId() . '" type="button" onclick="fechar144(' . $grupo12->getId() . ');" class="btn btn-md btn-primary" ' . $disabledPlus . ' style="padding-top: 0px; padding-bottom: 0px;">';
+                    $html[$grupo12->getId()] .= '<i class="fa fa-minus" aria-hidden="true"></i>';
+                    $html[$grupo12->getId()] .= '</button>';
+                    $html[$grupo12->getId()] .= '</div>';
+                    $html[$grupo12->getId()] .= '</div>';
+                    $html[$grupo12->getId()] .= '</div>';
+                    $html[$grupo12->getId()] .= '</div>';
+                    $html[$grupo12->getId()] .= '</div>';
+
+
                     if (count($grupos144) > 0) {
+                        $html[$grupo12->getId()] .= '<div id="grupos144' . $grupo12->getId() . '" class="hidden">';
                         foreach ($grupos144 as $gpFilho) {
                             $grupoFilho = $gpFilho->getGrupoPaiFilhoFilho();
                             $entidadeFilho = $grupoFilho->getEntidadeAtiva();
@@ -195,49 +246,118 @@ class AtendimentoGruposAbaixoRelatorio extends AbstractHelper {
                                     $disabledMinus = 'disabled';
                                 }
 
-                                $html .= '<div class="row mt10">';
-                                $html .= '<div class="col-md-3 col-xs-4" style="padding-right: 0px;">';
-                                $html .= '<span class="" href="#" >';
-                                $html .= $informacaoFoto;
-                                $html .= '</span>';
-                                $html .= '</div>';
-                                $html .= '<div class="col-md-9 col-xs-8" style="padding-left: 2px; padding-right: 2px;">';
-                                $html .= '<div class="row">';
-                                $html .= '<div class="col-md-11 col-sm-11 col-xs-11" style="padding-top: 3px; padding-right: 4px;">';
-                                $html .= '<div class="progress progress-bar-xl" style="margin-bottom: 0px;">';
-                                $html .= '<div id="progressBarAtendimento' . $grupoFilho->getId() . '" class="progress-bar ' . $colorBar . '" role="progressbar" aria-valuenow="' . $valueNow . '" aria-valuemin="0" aria-valuemax="5" style="width: ' . $valueNow . '%;">' . $labelProgressBar . '</div>';
-                                $html .= '</div>';
-                                $html .= '<span style="padding-top: 0px;">' . $informacaoEntidade . ' - ' . $nomeEntidade . ' </span>';
-                                $html .= '</div>';
-
-//                    $html .= '<div class="col-md-2 col-sm-2 col-xs-5" style="padding-left: 0px; padding-top: 3px; vertical-align: middle;">';
-//                    $html .= '<button id="br_' . $grupoFilho->getId() . '" type="button" onclick="mudarAtendimento(' . $grupoFilho->getId() . ', 2);" class="btn btn-md btn-primary ' . $disabledMinus . '" style="padding-top: 0px; padding-bottom: 0px;">';
-//                    $html .= '<i class="fa fa-minus" aria-hidden="true"></i>';
-//                    $html .= '</button>';
-//                    $html .= '&nbsp';
-//                    $html .= '<button  id="bl_' . $grupoFilho->getId() . '" type="button" onclick="mudarAtendimento(' . $grupoFilho->getId() . ', 1);" class="btn btn-md btn-primary" style="padding-top: 0px; padding-bottom: 0px;">';
-//                    $html .= '<i class="fa fa-plus" aria-hidden="true"></i>';
-//                    $html .= '</button>';
-//                    $html .= '</div>';
-                                $html .= '</div>';
-                                $html .= '</div>';
-                                $html .= '</div>';
+                                $html[$grupo12->getId()] .= '<div class="row mt10">';
+                                $html[$grupo12->getId()] .= '<div class="col-md-3 col-xs-4" style="padding-right: 0px;">';
+                                $html[$grupo12->getId()] .= '<span class="" href="#" >';
+                                $html[$grupo12->getId()] .= $informacaoFoto;
+                                $html[$grupo12->getId()] .= '</span>';
+                                $html[$grupo12->getId()] .= '</div>';
+                                $html[$grupo12->getId()] .= '<div class="col-md-9 col-xs-8" style="padding-left: 2px; padding-right: 2px;">';
+                                $html[$grupo12->getId()] .= '<div class="row">';
+                                $html[$grupo12->getId()] .= '<div class="col-md-11 col-sm-11 col-xs-11" style="padding-top: 3px; padding-right: 4px;">';
+                                $html[$grupo12->getId()] .= '<div class="progress progress-bar-xl" style="margin-bottom: 0px;">';
+                                $html[$grupo12->getId()] .= '<div id="progressBarAtendimento' . $grupoFilho->getId() . '" class="progress-bar ' . $colorBar . '" role="progressbar" aria-valuenow="' . $valueNow . '" aria-valuemin="0" aria-valuemax="5" style="width: ' . $valueNow . '%;">' . $labelProgressBar . '</div>';
+                                $html[$grupo12->getId()] .= '</div>';
+                                $html[$grupo12->getId()] .= '<span style="padding-top: 0px;">' . $informacaoEntidade . ' - ' . $nomeEntidade . ' </span>';
+                                $html[$grupo12->getId()] .= '</div>';
+                                $html[$grupo12->getId()] .= '</div>';
+                                $html[$grupo12->getId()] .= '</div>';
+                                $html[$grupo12->getId()] .= '</div>';
                             }
                         }
-                        $html .= '</div>';
-                        $html .= '<div class="alert '. $colorBarTotal12.'"><i class="fa fa-warning pr10" aria-hidden="true"></i>' . $totalGruposAtendidos . ' de ' . $totalGruposFilhos . ' foram Atendidos!!!</div>';
-                        $html .= '</div>';
+                        $html[$grupo12->getId()] .= '</div>';
+                        $html[$grupo12->getId()] .= '</div>';
+                        $html[$grupo12->getId()] .= '</div>';
                     } else {
-                        $html .= '<div class="alert alert-warning"><i class="fa fa-warning pr10" aria-hidden="true"></i>&nbsp;Sem Discipulos cadastrados!</div>';
-                        $html .= '</div>';
-                        $html .= '</div>';
+                        $html[$grupo12->getId()] .= '<div class="alert alert-warning"><i class="fa fa-warning pr10" aria-hidden="true"></i>&nbsp;Sem Discipulos cadastrados!</div>';
+                        $html[$grupo12->getId()] .= '</div>';
+                        $html[$grupo12->getId()] .= '</div>';
+                    }
+                    if ($totalPessoas12 == 2) {
+                        $ideal = 24;
+                    } else {
+                        $ideal = 12;
+                    }
+
+
+                    if ($totalGruposFilhos >= $ideal) {
+                        $arrayCompleto[$auxI]['progresso'] = $progresso12;
+                        $arrayCompleto[$auxI]['html'] = $html[$grupo12->getId()];
+                        $auxI++;
+                    } else {
+                        $arrayIncompleto[$auxN]['progresso'] = $progresso12;
+                        $arrayIncompleto[$auxN]['html'] = $html[$grupo12->getId()];
+                        $auxN++;
                     }
                 }
             }
+
+            if (count($arrayCompleto) != 0) {
+                for ($i = 0; $i < count($arrayCompleto); $i++) {
+                    for ($j = 0; $j < count($arrayCompleto); $j++) {
+                        if ($arrayCompleto[$i]['progresso'] > $arrayCompleto[$j]['progresso']) {
+                            $aux = $arrayCompleto[$i];
+                            $arrayCompleto[$i] = $arrayCompleto[$j];
+                            $arrayCompleto[$j] = $aux;
+                        }
+                    }
+                }
+            }
+            if (count($arrayIncompleto) != 0) {
+                for ($i = 0; $i < count($arrayIncompleto); $i++) {
+                    for ($j = 0; $j < count($arrayIncompleto); $j++) {
+                        if ($arrayIncompleto[$i]['progresso'] > $arrayIncompleto[$j]['progresso']) {
+                            $aux = $arrayIncompleto[$i];
+                            $arrayIncompleto[$i] = $arrayIncompleto[$j];
+                            $arrayIncompleto[$j] = $aux;
+                        }
+                    }
+                }
+            }
+
+            if (count($arrayCompleto) != 0) {
+                for ($i = 0; $i < count($arrayCompleto); $i++) {
+                    $htmlRaiz .= '<div class="row">';
+                    $htmlRaiz .= '<div class="panel-default">';
+                    $htmlRaiz .= '<div class="panel-heading text-center">';
+                    $htmlRaiz .= '<b>TIME COMPLETO</b>';
+                    $htmlRaiz .= '</div>';
+                    $htmlRaiz .= $arrayCompleto[$i]['html'];
+                    $htmlRaiz .= '</div>';
+                    $htmlRaiz .= '</div>';
+                }
+            } else {
+//                $htmlRaiz .= '<div class="alert alert-warning"><i class="fa fa-warning pr10" aria-hidden="true"></i>&nbsp;Sem Membros!</div>';
+            }
+
+
+//            $htmlRaiz .= '<div class="row mt10">';
+//            $htmlRaiz .= '<div class="panel-default">';
+//            $htmlRaiz .= '<div class="panel-heading text-center">';
+//            $htmlRaiz .= 'TIME INCOMPLETO';
+//            $htmlRaiz .= '</div>';
+            if (count($arrayIncompleto) != 0) {
+                for ($i = 0; $i < count($arrayIncompleto); $i++) {
+                    $htmlRaiz .= '<div class="row">';
+                    $htmlRaiz .= '<div class="panel-default">';
+                    $htmlRaiz .= '<div class="panel-heading text-center">';
+                    $htmlRaiz .= '<b>TIME INCOMPLETO</b>';
+                    $htmlRaiz .= '</div>';
+                    $htmlRaiz .= $arrayIncompleto[$i]['html'];
+                    $htmlRaiz .= '</div>';
+                    $htmlRaiz .= '</div>';
+                }
+            } else {
+//                $htmlRaiz .= '</br>NAO TEM NGM </br>';
+            }
+//            $htmlRaiz .= '</div>';
+//            $htmlRaiz .= '</div>';
         } else {
-            $html .= '<div class="alert alert-warning"><i class="fa fa-warning pr10" aria-hidden="true"></i>&nbsp;Sem Discipulos cadastrados!</div>';
+            $htmlRaiz .= '<div class="alert alert-warning"><i class="fa fa-warning pr10" aria-hidden="true"></i>&nbsp;Sem Discipulos cadastrados!</div>';
         }
-        return $html;
+
+
+        return $htmlRaiz;
     }
 
 }
