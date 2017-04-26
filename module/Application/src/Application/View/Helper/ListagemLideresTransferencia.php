@@ -48,7 +48,7 @@ class ListagemLideresTransferencia extends AbstractHelper {
     private function montarLinhaLider($grupo) {
         $entidade = $grupo->getEntidadeAtiva();
         $nomeLideres = $grupo->getNomeLideresAtivos();
-        $informacao = $nomeLideres . '' . $entidade->infoEntidade();
+        $informacao = $nomeLideres . ' - ' . $entidade->infoEntidade();
         echo '<tr>';
         echo '<td>' . $nomeLideres . '</td>';
         echo '<td>' . $entidade->infoEntidade() . '</td>';
@@ -58,7 +58,7 @@ class ListagemLideresTransferencia extends AbstractHelper {
             $funcaoOnclick = $this->view->funcaoOnClick('selecionarLiderParaTransferir(' . $grupo->getId() . ',"' . $informacao . '")');
         }
         if ($this->getTipo() === 2) {
-            $funcaoOnclick = $this->view->funcaoOnClick('selecionarDeQuemSeraDiscipulo(' . $grupo->getId() . ')');
+            $funcaoOnclick = $this->view->funcaoOnClick('selecionarDeQuemSeraDiscipulo(' . $grupo->getId() . ',"' . $informacao . '")');
         }
         $iconeEnviar = '<span class="fa fa-send"></span>';
         echo $this->view->botaoSimples($iconeEnviar, $funcaoOnclick);

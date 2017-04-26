@@ -34,7 +34,7 @@ class Menu extends AbstractHelper {
         $html .= '<header class="navbar navbar-fixed-top">';
         $html .= '<div class="navbar-branding">';
         $html .= '<a class="navbar-brand" href="#" style="padding-top: 22px;">';
-        $html .= '<img src="' . Constantes::$IMAGEM_LOGO_PEQUENA . '" title="' . 
+        $html .= '<img src="' . Constantes::$IMAGEM_LOGO_PEQUENA . '" title="' .
                 $this->view->translate(Constantes::$TRADUCAO_NOME_APLICACAO) . '" class="img-responsive" style="max-width:100%;">';
         $html .= '</a>';
         $html .= '<span id="toggle_sidemenu_l" class="ad ad-lines"></span>';
@@ -44,7 +44,7 @@ class Menu extends AbstractHelper {
         $html .= '<a href="#" class="dropdown-toggle fw600 p15" data-toggle="dropdown">';
         $nomeEntidade = $this->view->entidade->getEntidadeTipo()->getNome();
         $infoEntidade = $this->view->entidade->infoEntidade();
-        $html .= '<img src="/img/avatars/' . $stringFoto . '" alt="' . $this->view->pessoa->getNomePrimeiroUltimo() . '" class="mw30 br64">' . 
+        $html .= '<img src="/img/avatars/' . $stringFoto . '" alt="' . $this->view->pessoa->getNomePrimeiroUltimo() . '" class="mw30 br64">' .
                 Constantes::$NBSP . $nomeEntidade . Constantes::$NBSP . '-' . Constantes::$NBSP . $infoEntidade;
         $html .= '<span class="pl5">- ' . $this->view->pessoa->getNomePrimeiroUltimo() . '</span>';
         $html .= '<span class="caret caret-tp"></span>';
@@ -266,6 +266,13 @@ class Menu extends AbstractHelper {
         $html .= '</a>';
         $html .= '</li>';
 
+        $html .= '<li>';
+        $html .= '<a href="/cadastroTransferencia">';
+        $html .= '<span class="fa fa-users"></span>';
+        $html .= 'Transferência';
+        $html .= '</a>';
+        $html .= '</li>';
+
         $html .= '</ul>';
 
         $html .= '</li>';
@@ -305,6 +312,12 @@ class Menu extends AbstractHelper {
         $html .= '<a href="/relatorioMembresia">';
         $html .= '<span class="fa fa-terminal"></span>';
         $html .= 'Membresia';
+        $html .= '</a>';
+        $html .= '</li>';
+        $html .= '<li>';
+        $html .= '<a href="/lancamentoRelatorioAtendimento">';
+        $html .= '<span class="fa fa-terminal"></span>';
+        $html .= 'Atendimento';
         $html .= '</a>';
         $html .= '</li>';
         $html .= '</ul>';
