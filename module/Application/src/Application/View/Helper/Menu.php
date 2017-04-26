@@ -30,7 +30,7 @@ class Menu extends AbstractHelper {
         if (empty($stringFoto)) {
             $stringFoto = 'placeholder.png';
         }
-        // Start: Header 
+// Start: Header 
         $html .= '<header class="navbar navbar-fixed-top">';
         $html .= '<div class="navbar-branding">';
         $html .= '<a class="navbar-brand" href="#" style="padding-top: 22px;">';
@@ -73,18 +73,18 @@ class Menu extends AbstractHelper {
         $html .= '</li>';
         $html .= '</ul>';
         $html .= '</header>';
-        // End: Header 
-        // 
-        // Start: Sidebar
+// End: Header 
+// 
+// Start: Sidebar
         $html .= '<aside id="sidebar_left" class="nano nano-light affix">';
 
-        // Start: Sidebar Left Content
+// Start: Sidebar Left Content
         $html .= '<div class="sidebar-left-content nano-content">';
 
-        // Start: Sidebar Header
+// Start: Sidebar Header
         $html .= '<header class="sidebar-header">';
 
-        // Sidebar Widget - Author 
+// Sidebar Widget - Author 
         $html .= '<div class="sidebar-widget author-widget">';
         $html .= '<div class="media">';
         $html .= '<a class="media-left" href="#">';
