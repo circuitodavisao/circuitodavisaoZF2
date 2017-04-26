@@ -40,6 +40,7 @@ class PassoAPasso extends AbstractHelper {
                     $this->view->entidadeTipo == Entidade::NACIONAL ||
                     $this->view->entidadeTipo == Entidade::REGIONAL ||
                     $this->view->entidadeTipo == Entidade::COORDENACAO) {
+
                 $numeroDePassos = 3;
             }
         }

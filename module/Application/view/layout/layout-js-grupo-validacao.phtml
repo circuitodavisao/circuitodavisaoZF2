@@ -48,7 +48,7 @@ echo $this->inlineScript();
         $('#divConfirmacao').removeClass('hidden');
     }
 
-    function abrirTelaDeAlunos(tipo) {
+    function abrirTelaDeAlunos(tipo, entidadeTipo) {
         $('#botaoInserirResponsavel0').addClass(hidden);
         $('#botaoInserirResponsavel1').addClass(hidden);
         $('#botaoInserirResponsavel2').addClass(hidden);
@@ -80,6 +80,14 @@ echo $this->inlineScript();
         $('#divSpanResponsavelEmail').addClass(hidden);
         $('#botaoHierarquiaSelecionada').addClass(hidden);
         $('#divHierarquia').addClass(hidden);
+        if (entidadeTipo === 1
+                || entidadeTipo === 2
+                || entidadeTipo === 3
+                || entidadeTipo === 4) {
+            $('#divSelecionarAluno').addClass(hidden);
+            $('#divCPFDataNascimento').removeClass(hidden);
+            $('#divDadosSelecionados').removeClass(hidden);
+        }
         limparPassoAPasso(tipo);
     }
 
@@ -132,13 +140,18 @@ echo $this->inlineScript();
         return !isNaN(parseFloat(n)) && isFinite(n);
     }
 
-    function buscarCPF() {
+    function buscarCPF(entidadeTipo) {
         $('#botaoCPFLiberado').addClass(hidden);
-        var cpf = $("#cpf").val();
+        var inputCPF = $("#cpf");
+        var inputDia = $("#Dia");
+        var inputMes = $("#Mes");
+        var inputAno = $("#Ano");
+
+        var cpf = inputCPF.val();
         var stringBarra = '/';
-        var DiaDataNascimento = $("#Dia").val();
-        var MesDataNascimento = $("#Mes").val();
-        var AnoDataNascimento = $("#Ano").val();
+        var DiaDataNascimento = inputDia.val();
+        var MesDataNascimento = inputMes.val();
+        var AnoDataNascimento = inputAno.val();
         DiaDataNascimento = parseInt(DiaDataNascimento);
         MesDataNascimento = parseInt(MesDataNascimento);
         AnoDataNascimento = parseInt(AnoDataNascimento);
@@ -147,9 +160,41 @@ echo $this->inlineScript();
                 .removeClass(alertSuccess)
                 .addClass(hidden);
         var temErro = false;
-        if (cpf.length === 0 || DiaDataNascimento === 0 || MesDataNascimento === 0 || AnoDataNascimento === 0) {
+        var erros = '';
+
+        if (DiaDataNascimento === 0) {
             temErro = true;
-            spanMensagens.text('<?php echo $this->translate(Constantes::$TRADUCAO_PREENCHA_DATA_NASCIMENTO_E_CPF); ?>');
+            if (erros === '') {
+                erros += 'Dia';
+            } else {
+                erros += ', Dia';
+            }
+        }
+        if (MesDataNascimento === 0) {
+            temErro = true;
+            if (erros === '') {
+                erros += 'Mês';
+            } else {
+                erros += ', Mês';
+            }
+        }
+        if (AnoDataNascimento === 0) {
+            temErro = true;
+            if (erros === '') {
+                erros += 'Ano';
+            } else
+                erros += ', Ano';
+        }
+        if (cpf.length === 0) {
+            temErro = true;
+            if (erros === '') {
+                erros += 'CPF';
+            } else {
+                erros += ', CPF';
+            }
+        }
+        if (temErro) {
+            spanMensagens.text('Preencha: ' + erros);
         } else {
             if (DiaDataNascimento < 10) {
                 DiaDataNascimento = '0' + DiaDataNascimento;
@@ -180,22 +225,32 @@ echo $this->inlineScript();
                     var splitNomeDoAluno = nomeDoAlunoSelecionado.split(" ");
                     var splitNomeEncontradoNaBusca = data.nome.split(" ");
                     var dadosValidados = true;
-                    if (splitNomeDoAluno[0] !== splitNomeEncontradoNaBusca[0]) {
-                        dadosValidados = false;
-                        spanMensagens
-                                .addClass(alertDanger)
-                                .text('<?php echo $this->translate(Constantes::$TRADUCAO_NOME_NAO_CONFERE); ?>')
-                                .removeClass(hidden);
+                    if (entidadeTipo !== 1
+                            && entidadeTipo !== 2
+                            && entidadeTipo !== 3
+                            && entidadeTipo !== 4) {
+                        if (splitNomeDoAluno[0] !== splitNomeEncontradoNaBusca[0]) {
+                            dadosValidados = false;
+                            spanMensagens
+                                    .addClass(alertDanger)
+                                    .text('<?php echo $this->translate(Constantes::$TRADUCAO_NOME_NAO_CONFERE); ?>')
+                                    .removeClass(hidden);
+                        }
                     }
-
                     if (dataNascimento !== data.dataNascimento) {
                         dadosValidados = false;
                         spanMensagens
                                 .addClass(alertDanger)
-                                .text('<?php echo $this->translate(Constantes::$TRADUCAO_DATA_NASCIMENTO_NAO_CONFERE); ?>')
+                                .text('Os dados não conferem com a Base de Dados')
                                 .removeClass(hidden);
                     }
                     if (dadosValidados) {
+                        /* desabilitando campos para edicao*/
+                        inputCPF.attr('disabled', 'disabled');
+                        inputDia.attr('disabled', 'disabled');
+                        inputMes.attr('disabled', 'disabled');
+                        inputAno.attr('disabled', 'disabled');
+                        $('#divDadosSelecionados').removeClass(hidden);
                         /* Mensagem de sucesso */
                         spanMensagens
                                 .text('<?php echo $this->translate(Constantes::$TRADUCAO_DADOS_LIBERADOS); ?>')
@@ -219,6 +274,13 @@ echo $this->inlineScript();
                 if (resposta === 3) {
                     /* Já cadastrado */
                     spanMensagens.text('<?php echo $this->translate(Constantes::$TRADUCAO_CPF_JA_UTILIZADO); ?>');
+                    if (entidadeTipo === 1
+                            || entidadeTipo === 2
+                            || entidadeTipo === 3
+                            || entidadeTipo === 4) {
+                        var mensagemAtual = spanMensagens.text();
+                        spanMensagens.html(mensagemAtual + ', Para vincular uma nova responsabilidade a esse usuário clique no menu: <p><code>Cadastrar -> Nova Responsabilidade</code></p>');
+                    }
                 }
 
                 if (resposta === 2 || resposta === 3) {
@@ -236,21 +298,34 @@ echo $this->inlineScript();
         }
     }
 
-    function mostrarDivEmail() {
+    function mostrarDivEmail(entidadeTipo) {
         $('#divCPFDataNascimento').addClass(hidden);
         $('#botaoCPFLiberado').addClass(hidden);
         $('#divEmail').removeClass(hidden);
-        $('#botaoPasso3')
-                .removeClass('btn-default')
-                .addClass('btn-primary');
+
+        if (entidadeTipo !== 1
+                && entidadeTipo !== 2
+                && entidadeTipo !== 3
+                && entidadeTipo !== 4) {
+            $('#botaoPasso3')
+                    .removeClass('btn-default')
+                    .addClass('btn-primary');
+        } else {
+            $('#botaoPasso2')
+                    .removeClass('btn-default')
+                    .addClass('btn-primary');
+        }
         escondeMensagem();
         $('#botaoBuscarEmail').removeClass(hidden);
     }
 
     function buscarEmail() {
         var temErro = false;
-        var email = $('#email').val();
-        var repetirEmail = $('#repetirEmail').val();
+        var inputEmail = $('#email');
+        var inputRepetirEmail = $('#repetirEmail');
+
+        var email = inputEmail.val();
+        var repetirEmail = inputRepetirEmail.val();
         var spanMensagens = $('#spanMensagens');
         spanMensagens
                 .addClass(hidden)
@@ -294,6 +369,9 @@ echo $this->inlineScript();
             function (data) {
 // liberado
                 if (!data.resposta) {
+                    inputEmail.attr('disabled', 'disabled');
+                    inputRepetirEmail.attr('disabled', 'disabled');
+
                     spanMensagens
                             .html('<?php echo $this->translate(Constantes::$TRADUCAO_EMAIL_LIBERADO); ?>')
                             .removeClass(hidden)
@@ -321,11 +399,22 @@ echo $this->inlineScript();
 
     }
 
-    function mostrarDivHierarquia() {
+    function mostrarDivHierarquia(entidadeTipo) {
         $('#divEmail').addClass(hidden);
-        $('#botaoPasso4')
-                .removeClass('btn-default')
-                .addClass('btn-primary');
+
+        if (entidadeTipo !== 1
+                && entidadeTipo !== 2
+                && entidadeTipo !== 3
+                && entidadeTipo !== 4) {
+            $('#botaoPasso4')
+                    .removeClass('btn-default')
+                    .addClass('btn-primary');
+        } else {
+            $('#botaoPasso3')
+                    .removeClass('btn-default')
+                    .addClass('btn-primary');
+        }
+
         $('#divHierarquia').removeClass(hidden);
         escondeMensagem();
     }
@@ -619,7 +708,7 @@ echo $this->inlineScript();
 
     function insereNomeNaTelaDeConfimacao(mudarBarraDeProgresso) {
         var spanDadosComplementares = $('#spanDadosComplementares');
-        spanDadosComplementares.html('Nome: ' + stringNBSP + $('#nomeEntidade').val());
+        spanDadosComplementares.html('Nome: ' + stringNBSP + $('#nomeEntidade').val().toUpperCase());
         insereDadosComplementares(mudarBarraDeProgresso);
     }
 
@@ -667,21 +756,48 @@ echo $this->inlineScript();
         $('#divConfirmacao').removeClass(hidden);
     }
 
-    function botaoVoltarDataNascimentoCPF() {
+    function botaoVoltarDataNascimentoCPF(entidadeTipo) {
+        var inputCPF = $("#cpf");
+        var inputDia = $("#Dia");
+        var inputMes = $("#Mes");
+        var inputAno = $("#Ano");
+
+        if (entidadeTipo === 1
+                || entidadeTipo === 2
+                || entidadeTipo === 3
+                || entidadeTipo === 4) {
+            $('#divIncluirResponsavel').addClass(hidden);
+            $('#divPassoAPasso').addClass(hidden);
+            $('#divConfirmacao').removeClass(hidden);
+        } else {
+            $('#divSelecionarAluno').removeClass(hidden);
+        }
+        $('#botaoBuscarCPF').removeClass(hidden);
         $('#divCPFDataNascimento').addClass(hidden);
-        $('#divSelecionarAluno').removeClass(hidden);
         $('#divDadosSelecionados').addClass(hidden);
         $('#spanMensagens').addClass(hidden);
         $('#divSpanResponsavelCPF').addClass(hidden);
         $('#divSpanResponsavelDataNascimento').addClass(hidden);
-        $('#Dia').val(0);
-        $('#Mes').val(0);
-        $('#Ano').val(0);
+        inputDia.val(0);
+        inputMes.val(0);
+        inputAno.val(0);
+        inputCPF.val('');
+        inputCPF.removeAttr('disabled');
+        inputDia.removeAttr('disabled');
+        inputMes.removeAttr('disabled');
+        inputAno.removeAttr('disabled');
         $('#botaoCPFLiberado').addClass(hidden);
         $('#botaoPasso2').removeClass(btnPrimary).addClass(btnDefault);
     }
 
-    function botaoVoltarEmail() {
+    function botaoVoltarEmail(entidadeTipo) {
+        var inputEmail = $('#email');
+        var inputRepetirEmail = $('#repetirEmail');
+        var inputCPF = $("#cpf");
+        var inputDia = $("#Dia");
+        var inputMes = $("#Mes");
+        var inputAno = $("#Ano");
+
         $('#divCPFDataNascimento').removeClass(hidden);
         $('#divEmail').addClass(hidden);
         $('#botaoCPFLiberado').addClass(hidden);
@@ -692,9 +808,26 @@ echo $this->inlineScript();
         $('#botaoEmailLiberado').addClass(hidden);
         $('#divSpanResponsavelCPF').addClass(hidden);
         $('#divSpanResponsavelDataNascimento').addClass(hidden);
-        $('#botaoPasso3').removeClass(btnPrimary).addClass(btnDefault);
+        if (entidadeTipo === 1
+                || entidadeTipo === 2
+                || entidadeTipo === 3
+                || entidadeTipo === 4) {
+            $('#botaoPasso2').removeClass(btnPrimary).addClass(btnDefault);
+            $('#divDadosSelecionados').addClass(hidden);
+        } else {
+            $('#botaoPasso3').removeClass(btnPrimary).addClass(btnDefault);
+        }
+        inputEmail.removeAttr('disabled');
+        inputRepetirEmail.removeAttr('disabled');
+        inputCPF.removeAttr('disabled');
+        inputDia.removeAttr('disabled');
+        inputMes.removeAttr('disabled');
+        inputAno.removeAttr('disabled');
+        $('#botaoBuscarCPF').removeClass(hidden);
     }
     function botaoVoltarHierarquia() {
+        var inputEmail = $('#email');
+        var inputRepetirEmail = $('#repetirEmail');
         $('#divEmail').removeClass(hidden);
         $('#divHierarquia').addClass(hidden);
         $('#botaoEmailLiberado').addClass(hidden);
@@ -702,7 +835,11 @@ echo $this->inlineScript();
         $('#hierarquia').val(0);
         $('#botaoHierarquiaSelecionada').addClass(hidden);
         $('#divSpanResponsavelEmail').addClass(hidden);
+        $('#botaoBuscarEmail').removeClass(hidden);
         $('#botaoPasso4').removeClass(btnPrimary).addClass(btnDefault);
+        inputEmail.removeAttr('disabled');
+        inputRepetirEmail.removeAttr('disabled');
+
     }
 
     function botaoSubmeterFormulario(form) {

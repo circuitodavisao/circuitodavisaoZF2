@@ -27,6 +27,7 @@ class BlocoResponsavel extends AbstractHelper {
         $html = '';
 
         $funcaoJS = str_replace('#tipo', $this->getTipo(), Constantes::$FUNCAO_JS_ABRIR_TELAS_DE_ALUNO);
+        $funcaoJS = str_replace('#entidadeTipo', $this->view->entidadeTipo, $funcaoJS);
         $textoFuncaoJS = $this->view->funcaoOnClick($funcaoJS);
 
         $html .= '<div id="blocoResponsavel' . $this->getTipo() . '" class="well col-xs-12 btn btn-default text-left" ' . $textoFuncaoJS . '>';
@@ -45,7 +46,10 @@ class BlocoResponsavel extends AbstractHelper {
                 break;
         }
         $html .= '<span id="spanInsiraOsDadosDoResponsavel">' . $textoInsiraOResponsavel . '</span>';
-        $html .= '<span class="quebraDeLinhaDeSpan" id="spanMatricula' . $this->getTipo() . '"></span>';
+        if ($this->view->entidadeTipo !== 1 && $this->view->entidadeTipo !== 2 && $this->view->entidadeTipo !== 3 && $this->view->entidadeTipo !== 4) {
+            $html .= '<span class="quebraDeLinhaDeSpan" id="spanMatricula' . $this->getTipo() . '"></span>';
+        }
+
         $html .= '<span class="quebraDeLinhaDeSpan" id="spanCPF' . $this->getTipo() . '"></span>';
         $html .= '<span class="quebraDeLinhaDeSpan hidden-xs" id="spanNome' . $this->getTipo() . '"></span>';
         $html .= '<span class="quebraDeLinhaDeSpan quebraDeLinhaDeSpan hidden-xs" id="spanEmail' . $this->getTipo() . '"></span>';
@@ -59,7 +63,7 @@ class BlocoResponsavel extends AbstractHelper {
         $id[$contadoDeDiv] = 'divBotaoInserirResponsavel' . $this->getTipo();
         $class[$contadoDeDiv] = '';
         $conteudo[$contadoDeDiv] = $this->view->botaoLink(
-                Constantes::$TRADUCAO_INSERIR, Constantes::$STRING_HASHTAG, 5, $this->view->funcaoOnClick('abrirTelaDeAlunos(' . $this->getTipo() . ')'));
+                Constantes::$TRADUCAO_INSERIR, Constantes::$STRING_HASHTAG, 5, $this->view->funcaoOnClick('abrirTelaDeAlunos(' . $this->getTipo() . ',' . $this->view->entidadeTipo . ')'));
         $html .= $this->view->blocoDiv($id[$contadoDeDiv], $class[$contadoDeDiv], $conteudo[$contadoDeDiv]);
 
         /* Botao Limpar Responsavel */

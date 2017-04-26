@@ -437,7 +437,7 @@ class LoginController extends CircuitoController {
                 /* Dados da requisição POST */
                 $dataPost = $request->getPost();
                 $pessoa = $repositorioORM->getPessoaORM()->encontrarPorId($dataPost[Constantes::$INPUT_ID_PESSOA]);
-                $pessoa->setSenha($dataPost[Constantes::$INPUT_SENHA]);
+                $pessoa->setSenha($dataPost[Constantes::$INPUT_REPETIR_SENHA]);
                 $pessoa->setToken(null);
                 $pessoa->setToken_data(null);
                 $pessoa->setToken_hora(null);
