@@ -32,6 +32,7 @@ class ListagemDeEventos extends AbstractHelper {
         $tipoCelula = ($this->view->tipoEvento == 2);
         $tipoCulto = ($this->view->tipoEvento == 1);
         $tipoRevisao = ($this->view->tipoEvento == 3);
+        $tipoRevisionistas = ($this->view->tipoEvento == 4);
 
         $html .= $this->view->templateFormularioTopo($this->getTitulo());
         $html .= '<div class="panel-body bg-light">';
