@@ -22,9 +22,18 @@ class ModalLoader extends AbstractHelper {
 
     public function renderHtml() {
         $html = '';
-        $html .= '<div id="modalBuscando" class="admin-form mfp-with-anim mfp-hide">';
-        $html .= '<div align="center">';
-        $html .= '<img src="' . Constantes::$LOADER_GIF_GRANDE . '"></i>';
+        $html .= '<!-- Simple splash screen-->';
+        $html .= '<div class="splash">'; 
+        $html .= '<div class="color-line"></div>';
+        $html .= '<div class="splash-title">';
+        $html .= '<h1>Circuito da Visão</h1>';
+        $html .= '<div class="spinner">';
+        $html .= '<div class="rect1"></div>';
+        $html .= '<div class="rect2"></div>';
+        $html .= '<div class="rect3"></div>';
+        $html .= '<div class="rect4"></div>';
+        $html .= '<div class="rect5"></div>';
+        $html .= '</div>';
         $html .= '</div>';
         $html .= '</div>';
         return $html;

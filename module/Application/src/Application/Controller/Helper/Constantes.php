@@ -8,8 +8,11 @@ namespace Application\Controller\Helper;
  * Descricao: Classe com constantes
  */
 class Constantes {
-    /* Constates Login */
 
+    public static $IP = '158.69.124.139';
+    public static $META_LIDER = 6;
+
+    /* Constates Login */
     public static $CONTROLLER_LOGIN = 'Application\Controller\Login';
     public static $CONTROLLER_PRINCIPAL = 'Principal\Controller\Principal';
     public static $LOGIN_FORM = 'LoginForm';
@@ -121,6 +124,8 @@ class Constantes {
 
     /* Pre saida */
     public static $TRADUCAO_SESSAO_ENCERRADA = 'Closed Session';
+    public static $TRADUCAO_SESSAO_ATIVA = 'You need to log out to continue.';
+    public static $TRADUCAO_PRECISA_DESLOGAR = 'You need to log out before registering a password for a new user';
     public static $TRADUCAO_OLA = 'Hello';
     public static $TRADUCAO_PRE_SAIDA = 'Use the LOGOUT option <a href="/">CircuitoDaVisão.com.br</a> when using a device that is not of particular use. The <a href="/">CircuitoDaVisão.com.br</a> home page will be opened in 30 seconds.';
     public static $TRADUCAO_ENTRAR_NOVAMENTE = 'Reenter';
@@ -169,6 +174,11 @@ class Constantes {
     public static $ENTITY_PERFIL_ACESSO = 'Application\Model\Entity\PerfilAcesso';
     public static $ENTITY_PESSOA_PERFIL_ACESSO = 'Application\Model\Entity\PessoaPerfilAcesso';
     public static $ENTITY_PESSOA_PERFIL_ACESSO_ID_PESSOA = 'id_pessoa';
+    public static $ENTITY_FATO_CICLO_NUMERO_IDENTIFICADOR = 'numero_identificador';
+    public static $ENTITY_FATO_CICLO_CICLO = 'ciclo';
+    public static $ENTITY_FATO_CICLO_MES = 'mes';
+    public static $ENTITY_FATO_CICLO_ANO = 'ano';
+    public static $ENTITY_EVENTO_CELULA_ID = 'evento_celula_id';
 
     /* Templates */
     public static $TEMPLATE_SELECIONAR_PERFIL = 'layout/layout-selecionar-perfil';
@@ -209,6 +219,11 @@ class Constantes {
     public static $ENTITY_HIERAQUIA = 'Application\Model\Entity\Hierarquia';
     public static $ENTITY_PESSOA_HIERAQUIA = 'Application\Model\Entity\PessoaHierarquia';
     public static $ENTITY_EVENTO_FREQUENCIA = 'Application\Model\Entity\EventoFrequencia';
+    public static $ENTITY_FATO_CICLO = 'Application\Model\Entity\FatoCiclo';
+    public static $ENTITY_FATO_LIDER = 'Application\Model\Entity\FatoLider';
+    public static $ENTITY_FATO_CELULA = 'Application\Model\Entity\FatoCelula';
+    public static $ENTITY_DIMENSAO_TIPO = 'Application\Model\Entity\DimensaoTipo';
+    public static $ENTITY_DIMENSAO = 'Application\Model\Entity\Dimensao';
     public static $ENTITY_GRUPO = 'Application\Model\Entity\Grupo';
     public static $ENTITY_GRUPO_EVENTO = 'Application\Model\Entity\GrupoEvento';
     public static $ENTITY_GRUPO_ATENDIMENTO = 'Application\Model\Entity\GrupoAtendimento';
@@ -223,6 +238,11 @@ class Constantes {
     public static $TURMA = 'turma';
     public static $GRUPO = 'grupo';
     public static $NUMERO_ATENDIMENTOS = 'numeroAtendimentos';
+    public static $PROGRESSO_ATENDIMENTOS = 'progresso';
+    public static $COR_BARRA_ATENDIMENTOS = 'corBarraTotal';
+    public static $TOTAL_DE_ATENDIMENTOS_GRUPO = 'totalGruposAtendidos';
+    public static $CABECALHO_TITULO_ATENDIMENTOS = 'Relat&oacute;rio de <span class="text-primary">Atendimento</span>';
+    public static $SUBTITULO_CABECALHO_ATENDIMENTO = 'disc&iacute;pulos foram atendidos.';
     public static $ARRAY_ATENDIMENTOS_GRUPO = 'atendimentosGrupo';
     public static $NOME_LIDER_ATENDIMENTO = 'nomePessoaPai';
     public static $QUANTIDADE_MAXIMA_PESSOAS_NO_LANÇAMENTO = 60;
@@ -233,7 +253,6 @@ class Constantes {
     public static $VALIDACAO = 'validacao';
     public static $VALIDACAO_NESSE_MES = 'validacaoNesseMes';
     public static $VALIDACAO_ENTIDADE_INATIVA = 'validacaoEntidadeInativa';
-    public static $STATUS_ENVIO = 'statusEnvio';
     public static $TEMPLATE_JS_LANCAMENTO = 'layout/layout-js-lancamento';
     public static $TEMPLATE_JS_CADASTRAR_PESSOA = 'layout/layout-js-cadastrar-pessoa';
     public static $TEMPLATE_JS_CADASTRAR_PESSOA_VALIDACAO = 'layout/layout-js-cadastrar-pessoa-validacao';
@@ -260,12 +279,13 @@ class Constantes {
     public static $PAGINA_LABEL_LANCAR_ATENDIMENTO = 'Lançar';
     public static $PAGINA_SALVAR_ATENDIMENTO = 'SalvarAtendimento';
     public static $PAGINA_EXCLUIR_ATENDIMENTO = 'AtendimentoExclusao';
-    public static $ONCLICK_ABRIR_MODAL = 'onclick="abrirModal();"';
+    public static $ONCLICK_ABRIR_MODAL = 'onclick="abrirModalCarregando();"';
     public static $PAGINA = 'pagina';
     public static $PAGINA_CADASTRAR_PESSOA = 'CadastrarPessoa';
     public static $PAGINA_CADASTRAR_PESSOA_REVISAO = 'CadastrarPessoaRevisao';
     public static $PAGINA_FICHA_REVISAO = 'FichaRevisao';
     public static $PAGINA_FUNCOES = 'Funcoes';
+    public static $PAGINA_MUDAR_ATENDIMENTO = 'MudarAtendimento';
     public static $PAGINA_MUDAR_FREQUENCIA = 'MudarFrequencia';
     public static $PAGINA_ENVIAR_RELATORIO = 'EnviarRelatorio';
     public static $PAGINA_ALTERAR_NOME = 'AlterarNome';
@@ -292,10 +312,7 @@ class Constantes {
     public static $TRADUCAO_VALIDACAO_MIN_DATE = 'Please enter a valid date. Min: 10 characters';
     public static $TRADUCAO_VALIDACAO_LIDER = 'Select Leader';
     /* Tradução */
-    public static $TRADUCAO_ENVIAR_RELATORIO = 'Send Report';
     public static $TRADUCAO_GIRE_O_CELULAR = '<h3>ROTATE THE CELLULAR</h3><span>Turn your phone to landscape to view all your events.</span>';
-    public static $TRADUCAO_RELATORIO_ATUALIZADO = 'Report <strong>Updated!</strong>';
-    public static $TRADUCAO_RELATORIO_DEZATUALIZADO = 'Report outdated! <strong>Send your report</strong>';
     public static $TRADUCAO_MES_ATUAL = 'Current Month';
     public static $TRADUCAO_MES_ANTERIOR = 'Last Month';
     public static $TRADUCAO_CARREGANDO = 'Loading';
@@ -324,6 +341,8 @@ class Constantes {
     public static $TRADUCAO_VALIDACAO_TELEFONE_MAX = 'Enter at 9 numbers';
     public static $TRADUCAO_VALIDACAO_TIPO_VAZIO = 'Choose a Type';
     public static $TRADUCAO_PESSOA_CADASTRADA = 'Person Registered';
+    public static $TRADUCAO_CABECALHO_TITULO_ATENDIMENTOS = "Report of <span class=\"text-primary\"> Counseling </span>";
+    public static $TRADUCAO_SUBTITULO_CABECALHO_ATENDIMENTO = 'disciples were attended to.';
     /* Fomulário */
     public static $INPUT_NOME = 'nome';
     public static $INPUT_DATA_ATENDIMENTO = 'dataAtendimento';
@@ -345,6 +364,7 @@ class Constantes {
     public static $ROUTE_CADASTRAR_PESSOA_REVISAO = 'CadastrarPessoaRevisao';
     public static $ROUTE_INDEX = 'Index';
     public static $ROUTE_FICHA_REVISAO = 'FichaRevisao';
+    public static $ROUTE_RELATORIO = 'relatorio';
 
     /* Fim lançamento */
 
@@ -373,6 +393,7 @@ class Constantes {
     public static $PAGINA_BUSCAR_EMAIL = 'BuscarEmail';
     public static $PAGINA_CADASTRO_REVISAO = 'CadastrarRevisao';
     public static $PAGINA_SALVAR_REVISAO = 'SalvarRevisao';
+    public static $PAGINA_CADASTRO_TRANSFERENCIA = 'Transferencia';
     public static $CONTROLLER_CADASTRO = 'Application\Controller\Cadastro';
     public static $ROUTE_CADASTRO = 'cadastro';
     /* Entidades */
@@ -393,10 +414,12 @@ class Constantes {
     public static $TRADUCAO_CULTO_TEXTO = 'Name: ';
     public static $TRADUCAO_CELULA_ = 'Cell ';
     public static $TRADUCAO_CULTO_ = 'Cult ';
+    public static $TRADUCAO_REVISAO = 'Revision ';
     public static $TRADUCAO_FINALIZAR = 'Finish';
     public static $TRADUCAO_INSERIR = 'Insert';
     public static $TRADUCAO_LIMPAR = 'Clean';
     public static $TRADUCAO_TITULO_PAGINA_CADASTRO_GRUPO_SUB_EQUIPE = 'Registration of <span class="text-primary">Sub Team</span>';
+    public static $TRADUCAO_TITULO_PAGINA_CADASTRO_GRUPO = 'Registration of <span class="text-primary">#tipo</span>';
     public static $TRADUCAO_INSIRA_OS_DADOS_DOS_RESPONSAVEIS_E_DADOS_COMPLEMENTARES = 'Enter the Responsible(s) and the complementary data';
     public static $TRADUCAO_INSIRA_OS_DADOS_COMPLEMENTARES = 'Enter the Complementary Data';
     public static $TRADUCAO_SELECIONE_O_ALUNO = 'Select the Student that will be used for the registration';
@@ -423,12 +446,24 @@ class Constantes {
     public static $TRADUCAO_NOME_NAO_CONFERE = 'Name of the CPF does not match with the student';
     public static $TRADUCAO_DATA_NASCIMENTO_NAO_CONFERE = 'Date of Birth does not match with found';
     public static $TRADUCAO_DADOS_LIBERADOS = 'Data Released';
+    public static $TRADUCAO_CLIQUE_EM_CONTINUAR = '. Click Continue';
+    public static $TRADUCAO_CELULAR_INVALIDO = 'Phone is invalid';
+    public static $TRADUCAO_DDD_INVALIDO = 'DDD is invalid';
+    public static $TRADUCAO_PREENCHA_O_CELULAR = 'Fill in the Phone';
+    public static $TRADUCAO_PREENCHA_O_DDD = 'Fill in the DDD';
+    public static $TRADUCAO_PREENCHA_O_DDD_E_CELULAR = 'Fill in the DDD and Phone';
+    public static $TRADUCAO_CODIGO_VERIFICADOR_INVALIDO = 'Invalid tester code';
+    public static $TRADUCAO_PREENCHA_O_CODIGO_VERIFICADOR = 'Fill in the Verifier Code';
+    public static $TRADUCAO_CODIGO_VERIFICADOR_LIBERADO = 'Code Released click finish.';
     public static $TRADUCAO_DADOS_NAO_CADASTRADOS = 'Data not found in the database';
     public static $TRADUCAO_CPF_JA_UTILIZADO = 'CPF already used';
+    public static $TRADUCAO_CPF_NAO_EXISTE = 'CPF does not exist';
+    public static $TRADUCAO_NOVA_RESPONSABILIDADE = ', To link a new responsibility to this user click on the menu:<p><code>Register -> New Responsibility</code></p>';
     public static $TRADUCAO_EMAILS_NAO_CONFEREM = 'Emails do not match';
     public static $TRADUCAO_PREENCHA_O_EMAIL = 'Fill in the email';
     public static $TRADUCAO_EMAIL_INVALIDO = 'Email is invalid';
     public static $TRADUCAO_EMAIL_USADO_PELO_CONJUGE = 'Email already used by the spouse';
+    public static $TRADUCAO_CPF_USADO_PELO_CONJUGE = 'CPF already used by the spouse';
     public static $TRADUCAO_REPETIR_EMAIL = 'Repeat Email';
     public static $TRADUCAO_PREENCHA_E_REPETA_O_EMAIL = 'Fill in and repeat Email';
     public static $TRADUCAO_EMAIL_LIBERADO = 'Email Released';
@@ -441,6 +476,8 @@ class Constantes {
     public static $TRADUCAO_INSIRA_DADOS_DA_MULHER = 'Insert Woman Details';
     public static $TRADUCAO_NUMERACAO = 'Numberation: ';
     public static $TRADUCAO_DADOS_COMPLEMENTARES = 'Complemetary Data';
+    public static $TRADUCAO_NOME_MAIOR_QUE_3 = 'The name that is less than 3 characters';
+    public static $TRADUCAO_PREENCHA_O_NOME = 'Fill in the name';
     public static $TRADUCAO_PASSO_A_PASSO_SELECIONE_O_ALUNO = 'Select the Student';
     public static $TRADUCAO_PASSO_A_PASSO_DADOS_PESSOAIS = 'Personal Data';
     public static $TRADUCAO_PASSO_A_PASSO_EMAIL = 'Email';
@@ -452,7 +489,6 @@ class Constantes {
     public static $TRADUCAO_ENTRE_COM_A_SENHA = 'Enter the Password';
     public static $TRADUCAO_REPITA_A_SENHA = 'Repeat the Password';
 
-
     /* Tipo de Mensagens */
     public static $TIPO_MENSAGEM_CADASTRAR_CELULA = 1;
     public static $TIPO_MENSAGEM_ALTERAR_CELULA = 2;
@@ -460,6 +496,7 @@ class Constantes {
     public static $TIPO_MENSAGEM_CADASTRAR_CULTO = 4;
     public static $TIPO_MENSAGEM_ALTERAR_CULTO = 5;
     public static $TIPO_MENSAGEM_EXCLUIR_CULTO = 6;
+    public static $TIPO_MENSAGEM_CADASTRAR_REVISAO = 7;
     /* Inputs */
     public static $INPUT_ESTADO_CIVIL = 'inputEstadoCivil';
 
@@ -471,7 +508,7 @@ class Constantes {
     public static $PROCOB_SENHA = 'HK8C';
 
     /* Funcões JS */
-    public static $FUNCAO_JS_ABRIR_TELAS_DE_ALUNO = 'abrirTelaDeAlunos(#tipo)';
+    public static $FUNCAO_JS_ABRIR_TELAS_DE_ALUNO = 'abrirTelaDeAlunos(#tipo, #entidadeTipo)';
 
     /* Forms */
     public static $FORM_ACTION_CADASTRO_GRUPO_FINALIZAR = 'cadastroGrupoFinalizar';
@@ -500,6 +537,7 @@ class Constantes {
     public static $FORM_MINUTOS = 'minutos';
     public static $FORM_ICONE_HORA = 'fa-clock-o';
     public static $FORM_CEP_LOGRADOURO = 'cep_logradouro';
+    public static $FORM_CEP = 'hiddenCep';
     public static $FORM_CPF = 'cpf';
     public static $FORM_EMAIL = 'email';
     public static $FORM_REPETIR_EMAIL = 'repetirEmail';
@@ -527,7 +565,7 @@ class Constantes {
     public static $FORM_ONCLICK = 'onClick';
     public static $FORM_ONCHANGE = 'onChange';
     public static $FORM_FUNCAO_BUSCAR_CEP = 'buscarEndereco()';
-    public static $FORM_FUNCAO_BUSCAR_CPF = 'buscarCPF()';
+    public static $FORM_FUNCAO_BUSCAR_CPF = 'buscarCPF(#entidadeTipo)';
     public static $FORM_FUNCAO_BUSCAR_EMAIL = 'buscarEmail()';
     public static $FORM_FUNCAO_VERIFICAR_EMAIL_IGUAL = 'verificarEmailIgual(this.value);';
     public static $FORM_FUNCAO_VALIDAR_FORMULARIO = 'validarFormulario();';
@@ -603,7 +641,7 @@ class Constantes {
     public static $TRADUCAO_NOVA = 'New';
     public static $TRADUCAO_NOVA_CELULA = 'New Cell';
     public static $TRADUCAO_NOVO_CULTO = 'New Cult';
-    public static $TRADUCAO_NOVO_REVISAO = 'New Revision'; 
+    public static $TRADUCAO_NOVO_REVISAO = 'New Revision';
     public static $TRADUCAO_MULTIPLICACAO = 'Multiplication';
     public static $TRADUCAO_LISTAGEM_CULTOS = 'Listing <b class="text-danger">Cults</b>';
     public static $TRADUCAO_LISTAGEM_REVISAO = 'Listing <b class="text-danger">Revision of lives</b>';
@@ -647,6 +685,8 @@ class Constantes {
     public static $LAYOUT_STRING_JS_EVENTO = 'layoutJSEvento';
     public static $LAYOUT_JS_GRUPO_VALIDACAO = 'layout/layout-js-grupo-validacao';
     public static $LAYOUT_STRING_JS_GRUPO_VALIDACAO = 'layoutJSGrupoValidacao';
+    public static $LAYOUT_JS_GRUPO_ATUALIZACAO_VALIDACAO = 'layout/layout-js-grupo-atualizacao-validacao';
+    public static $LAYOUT_STRING_JS_GRUPO_ATUALIZACAO_VALIDACAO = 'layoutJSGrupoAtualizacaoValidacao';
     public static $LAYOUT_JS_EVENTOS = 'layout/layout-js-eventos';
     public static $LAYOUT_JS_EVENTOS_VALIDACAO = 'layout/layout-js-eventos-validacao';
     public static $LAYOUT_STRING_JS_EVENTOS = 'layoutJSEventos';

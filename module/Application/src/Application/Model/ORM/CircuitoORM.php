@@ -63,7 +63,7 @@ class CircuitoORM {
         }
     }
 
-    public function getEntityManager() {
+       public function getEntityManager() {
         return $this->_entityManager;
     }
 

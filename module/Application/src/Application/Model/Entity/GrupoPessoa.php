@@ -121,15 +121,6 @@ class GrupoPessoa extends CircuitoEntity {
     }
 
     /**
-     * Seta data e hora de inativação
-     */
-    function inativar() {
-        $timeNow = new DateTime();
-        $this->setData_inativacao($timeNow->format('Y-m-d'));
-        $this->setHora_inativacao($timeNow->format('H:s:i'));
-    }
-
-    /**
      * Retorna grupo pessoa tipo
      * @return GrupoPessoaTipo
      */
@@ -139,22 +130,6 @@ class GrupoPessoa extends CircuitoEntity {
 
     function setGrupoPessoaTipo($grupoPessoaTipo) {
         $this->grupoPessoaTipo = $grupoPessoaTipo;
-    }
-
-    function getData_criacaoAno() {
-        return explode('-', $this->getData_criacao())[0];
-    }
-
-    function getData_criacaoMes() {
-        return explode('-', $this->getData_criacao())[1];
-    }
-
-    function getData_inativacaoAno() {
-        return explode('-', $this->getData_inativacao())[0];
-    }
-
-    function getData_inativacaoMes() {
-        return explode('-', $this->getData_inativacao())[1];
     }
 
     function getTransferido() {

@@ -22,14 +22,7 @@ class DadosEntidade extends AbstractHelper {
 
     public function renderHtml() {
         $grupo = $this->view->entidade->getGrupo();
-        $grupoResponsavel = $grupo->getResponsabilidadesAtivas();
-        if ($grupoResponsavel) {
-            $pessoas = array();
-            foreach ($grupoResponsavel as $gr) {
-                $p = $gr->getPessoa();
-                $pessoas[] = $p;
-            }
-        }
+        $pessoas = $grupo->getPessoasAtivas();
         $html = '';
 
         $html .= '<div class="media media-dados-entidade" style="margin-right:0px;">';

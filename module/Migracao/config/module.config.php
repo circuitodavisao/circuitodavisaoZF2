@@ -19,9 +19,12 @@ return array(
     'router' => array(
         'routes' => array(
             'migracao' => array(
-                'type' => 'Literal',
+                'type' => 'Segment',
                 'options' => array(
-                    'route' => '/migracao',
+                    'route' => '/migracao[:action]',
+                    'constraints' => array(
+                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                    ),
                     'defaults' => array(
                         'controller' => 'Migracao\Controller\Index',
                         'action' => 'index',
@@ -47,8 +50,9 @@ return array(
         'template_map' => array(
             'layout/migracao' => __DIR__ . '/../view/layout/layout.phtml',
             'migracao/migracao/index' => __DIR__ . '/../view/migracao/index/index.phtml',
-            'error/404' => __DIR__ . '/../view/error/404.phtml',
-            'error/index' => __DIR__ . '/../view/error/index.phtml',
+            'migracao/migracao/relatorio' => __DIR__ . '/../view/migracao/index/relatorio.phtml',
+            'error/404' => __DIR__ . '/../../Application/view/error/404.phtml',
+            'error/index' => __DIR__ . '/../../Application/view/error/index.phtml',
         ),
         'template_path_stack' => array(
             __DIR__ . '/../view',

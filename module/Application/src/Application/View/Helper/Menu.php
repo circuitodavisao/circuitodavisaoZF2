@@ -34,7 +34,8 @@ class Menu extends AbstractHelper {
         $html .= '<header class="navbar navbar-fixed-top">';
         $html .= '<div class="navbar-branding">';
         $html .= '<a class="navbar-brand" href="#" style="padding-top: 22px;">';
-        $html .= '<img src="' . Constantes::$IMAGEM_LOGO_PEQUENA . '" title="' . $this->view->translate(Constantes::$TRADUCAO_NOME_APLICACAO) . '" class="img-responsive" style="max-width:100%;">';
+        $html .= '<img src="' . Constantes::$IMAGEM_LOGO_PEQUENA . '" title="' .
+                $this->view->translate(Constantes::$TRADUCAO_NOME_APLICACAO) . '" class="img-responsive" style="max-width:100%;">';
         $html .= '</a>';
         $html .= '<span id="toggle_sidemenu_l" class="ad ad-lines"></span>';
         $html .= '</div>';
@@ -42,7 +43,9 @@ class Menu extends AbstractHelper {
         $html .= '<li class="dropdown menu-merge">';
         $html .= '<a href="#" class="dropdown-toggle fw600 p15" data-toggle="dropdown">';
         $nomeEntidade = $this->view->entidade->getEntidadeTipo()->getNome();
-        $html .= '<img src="/img/avatars/' . $stringFoto . '" alt="' . $this->view->pessoa->getNomePrimeiroUltimo() . '" class="mw30 br64">' . Constantes::$NBSP . $nomeEntidade;
+        $infoEntidade = $this->view->entidade->infoEntidade();
+        $html .= '<img src="/img/avatars/' . $stringFoto . '" alt="' . $this->view->pessoa->getNomePrimeiroUltimo() . '" class="mw30 br64">' .
+                Constantes::$NBSP . $nomeEntidade . Constantes::$NBSP . '-' . Constantes::$NBSP . $infoEntidade;
         $html .= '<span class="pl5">- ' . $this->view->pessoa->getNomePrimeiroUltimo() . '</span>';
         $html .= '<span class="caret caret-tp"></span>';
         $html .= '</a>';
@@ -98,8 +101,17 @@ class Menu extends AbstractHelper {
 
         $html .= '</header>';
 
-        /* Arvore */
         $html .= '<ul class="nav sidebar-menu">';
+
+        $html .= '<li class="sidebar-label pt20">Principal</li>';
+        $html .= '<li>';
+        $html .= '<a href="/principal">';
+        $html .= '<span class="fa fa-home"></span>';
+        $html .= '<span class="sidebar-title">Principal</span>';
+        $html .= '</a>';
+        $html .= '</li>';
+
+        /* Arvore */
         $html .= '<li class="sidebar-label pt20">Hierarquia</li>';
 
         /* Pegar pessoas abaixo */
@@ -138,9 +150,43 @@ class Menu extends AbstractHelper {
                 }
                 $informacaoEntidade = '';
                 if (!empty($entidadeFilho)) {
-                    $informacaoEntidade = $entidadeFilho->infoEntidade();
+                    $informacaoEntidade = '<small>' . $entidadeFilho->infoEntidade() . '</small>';
                 }
-                $html .= $this->view->menuHierarquia($nomeLideres, $informacaoEntidade);
+                $html .= $this->view->menuHierarquia($nomeLideres, $informacaoEntidade, 2);
+                $html .= $this->view->menuHierarquia('', '', 3);
+                foreach ($grupoFilho->getGrupoPaiFilhoFilhos() as $gpFilho1) {
+                    $grupoFilho = $gpFilho1->getGrupoPaiFilhoFilho();
+                    $entidadeFilho = $grupoFilho->getEntidadeAtiva();
+                    $grupoResponsavel = $grupoFilho->getResponsabilidadesAtivas();
+                    $nomeLideres = '';
+                    if ($grupoResponsavel) {
+                        $pessoas = [];
+                        foreach ($grupoResponsavel as $gr) {
+                            $p = $gr->getPessoa();
+                            $pessoas[] = $p;
+                        }
+                        $contagem = 1;
+                        $totalPessoas = count($pessoas);
+                        foreach ($pessoas as $p) {
+                            if ($contagem == 2) {
+                                $nomeLideres .= '&nbsp;&&nbsp;';
+                            }
+                            if ($totalPessoas == 1) {
+                                $nomeLideres .= $p->getNomePrimeiroUltimo();
+                            } else {// duas pessoas
+                                $nomeLideres .= $p->getNomePrimeiroPrimeiraSiglaUltimo();
+                            }
+                            $contagem++;
+                        }
+                    }
+                    $informacaoEntidade = '';
+                    if (!empty($entidadeFilho)) {
+                        $informacaoEntidade = $entidadeFilho->getEntidadeTipo()->getNome() . ' <small>' . $entidadeFilho->infoEntidade() . '</small>';
+                    }
+                    $html .= $this->view->menuHierarquia($nomeLideres, $informacaoEntidade);
+                    $grupoFilho->getGrupoPaiFilhoFilhos();
+                }
+                $html .= $this->view->menuHierarquia('', '', 4);
             }
             /* Discipulos 12 */
 //            $html .= $this->view->menuHierarquia('Lucas e Paloma', 'Salt');
@@ -209,7 +255,7 @@ class Menu extends AbstractHelper {
         $html .= '<li>';
         $html .= '<a href="/cadastroGrupo">';
         $html .= '<span class="fa fa-users"></span>';
-        $html .= 'Grupo';
+        $html .= 'Time';
         $html .= '</a>';
         $html .= '</li>';
 
@@ -217,6 +263,13 @@ class Menu extends AbstractHelper {
         $html .= '<a href="/cadastroRevisao">';
         $html .= '<span class="fa fa-users"></span>';
         $html .= 'Revisão de Vidas';
+        $html .= '</a>';
+        $html .= '</li>';
+
+        $html .= '<li>';
+        $html .= '<a href="/cadastroTransferencia">';
+        $html .= '<span class="fa fa-users"></span>';
+        $html .= 'Transferência';
         $html .= '</a>';
         $html .= '</li>';
 
@@ -254,6 +307,20 @@ class Menu extends AbstractHelper {
         $html .= '<span class="sidebar-title">Relatórios</span>';
         $html .= '<span class="caret"></span>';
         $html .= '</a>';
+        $html .= '<ul class="nav sub-nav">';
+        $html .= '<li>';
+        $html .= '<a href="/relatorioMembresia">';
+        $html .= '<span class="fa fa-terminal"></span>';
+        $html .= 'Membresia';
+        $html .= '</a>';
+        $html .= '</li>';
+        $html .= '<li>';
+        $html .= '<a href="/lancamentoRelatorioAtendimento">';
+        $html .= '<span class="fa fa-terminal"></span>';
+        $html .= 'Atendimento';
+        $html .= '</a>';
+        $html .= '</li>';
+        $html .= '</ul>';
         $html .= '</li>';
 
         $html .= '<li>';

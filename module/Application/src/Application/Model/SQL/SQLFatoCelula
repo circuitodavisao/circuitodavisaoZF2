@@ -1,0 +1,35 @@
+-- Table: fato_celula
+
+-- DROP TABLE fato_celula;
+
+CREATE TABLE fato_celula
+(
+  id serial NOT NULL, -- Identificação do relatório
+  data_criacao date NOT NULL DEFAULT ('now'::text)::date, -- Data de criação do relatório
+  hora_criacao time without time zone NOT NULL DEFAULT ('now'::text)::time with time zone, -- Hora da criação do relatório
+  data_inativacao date, -- Data da inativação do relatório
+  hora_inativacao time without time zone, -- Hora da inativação do relatório
+  realizada smallint NOT NULL DEFAULT 0, -- Realizada 1 ou 0
+  fato_ciclo_id integer NOT NULL, -- Identificação do fato ciclo
+  evento_celula_id integer NOT NULL, -- Identificação do evento célula
+  CONSTRAINT pk_fato_celula PRIMARY KEY (id),
+  CONSTRAINT fk_fato_celula_fato_ciclo FOREIGN KEY (fato_ciclo_id)
+      REFERENCES fato_ciclo (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE fato_celula
+  OWNER TO postgres;
+COMMENT ON TABLE fato_celula
+  IS 'Tabela com a quantidade de celulas atuais e realizadas no ciclo';
+COMMENT ON COLUMN fato_celula.id IS 'Identificação do relatório';
+COMMENT ON COLUMN fato_celula.data_criacao IS 'Data de criação do relatório';
+COMMENT ON COLUMN fato_celula.hora_criacao IS 'Hora da criação do relatório';
+COMMENT ON COLUMN fato_celula.data_inativacao IS 'Data da inativação do relatório';
+COMMENT ON COLUMN fato_celula.hora_inativacao IS 'Hora da inativação do relatório';
+COMMENT ON COLUMN fato_celula.realizada IS 'Realizada 1 ou 0';
+COMMENT ON COLUMN fato_celula.fato_ciclo_id IS 'Identificação do fato ciclo';
+COMMENT ON COLUMN fato_celula.evento_celula_id IS 'Identificação do evento célula';
+

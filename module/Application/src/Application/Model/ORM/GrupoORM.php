@@ -3,34 +3,27 @@
 namespace Application\Model\ORM;
 
 use Application\Model\Entity\Grupo;
-use DateTime;
+use Application\Model\ORM\CircuitoORM;
+use Exception;
 
 /**
  * Nome: GrupoORM.php
  * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com>
- * Descricao: Classe com acesso doctrine a entity grupo
+ * Descricao: Classe com acesso doctrine a entity hierarquia
  */
 class GrupoORM extends CircuitoORM {
 
     /**
-     * Seta o relatorio como enviado
-     * @param Grupo $grupo
+     * Localizar todos os grupos
+     * @return Grupo[]
+     * @throws Exception
      */
-    function setRelatorioEnviado($grupo) {
-        $grupo->setEnvio('S');
-        $timeNow = new DateTime();
-        $grupo->setEnvio_data($timeNow->format('Y-m-d'));
-        $grupo->setEnvio_hora($timeNow->format('H:s:i'));
-        $this->persistir($grupo);
-    }
-
-    /**
-     * Seta o status de envio para não
-     * @param Grupo $grupo
-     */
-    function setRelatorioPendente($grupo) {
-        $grupo->setEnvio('N');
-        $this->persistir($grupo);
+    public function encontrarTodos() {
+        $entidades = $this->getEntityManager()->getRepository($this->getEntity())->findAll();
+        if (!$entidades) {
+            throw new Exception("Não foi encontrado nenhum grupo");
+        }
+        return $entidades;
     }
 
 }

@@ -5,7 +5,7 @@
  */
 
 
-function mudarFrequencia(idEventoFrequencia, ciclo, aba) {
+function mudarFrequencia(idEventoFrequencia, ciclo, aba, idGrupo) {
     var faThumbsDown = 'fa-thumbs-down';
     var faThumbsUp = 'fa-thumbs-up';
     var iconefaThumbsDown = '<i class="fa ' + faThumbsDown + '"></i>';
@@ -36,6 +36,7 @@ function mudarFrequencia(idEventoFrequencia, ciclo, aba) {
                 idEventoFrequencia: idEventoFrequencia,
                 ciclo: ciclo,
                 aba: aba,
+                idGrupo: idGrupo,
             },
             function (data) {
                 if (data.response) {

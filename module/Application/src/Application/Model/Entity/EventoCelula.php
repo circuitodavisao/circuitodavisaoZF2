@@ -184,28 +184,6 @@ class EventoCelula implements InputFilterAwareInterface {
         if (!$this->inputFilter) {
             $inputFilter = Evento::getInputFilterEvento();
 
-            /* CEP */
-            $inputFilter->add(array(
-                Constantes::$VALIDACAO_NAME => Constantes::$FORM_CEP_LOGRADOURO,
-                Constantes::$VALIDACAO_REQUIRED => true,
-                Constantes::$VALIDACAO_FILTER => array(
-                    array(Constantes::$VALIDACAO_NAME => Constantes::$VALIDACAO_STRING_TAGS), // removel xml e html string
-                    array(Constantes::$VALIDACAO_NAME => Constantes::$VALIDACAO_STRING_TRIM), // removel espaco do inicio e do final da string
-                    array(Constantes::$VALIDACAO_NAME => Constantes::$VALIDACAO_INT), //transforma string para inteiro
-                ),
-                Constantes::$VALIDACAO_VALIDATORS => array(
-                    array(
-                        Constantes::$VALIDACAO_NAME => Constantes::$VALIDACAO_NOT_EMPTY,
-                    ),
-                    array(
-                        Constantes::$VALIDACAO_NAME => Constantes::$VALIDACAO_STRING_LENGTH,
-                        Constantes::$VALIDACAO_OPTIONS => array(
-                            Constantes::$VALIDACAO_MIN => 8,
-                            Constantes::$VALIDACAO_MAX => 8,
-                        ),
-                    ),
-                ),
-            ));
             /* Nome Hospedeiro */
             $inputFilter->add(array(
                 Constantes::$VALIDACAO_NAME => Constantes::$FORM_NOME_HOSPEDEIRO,

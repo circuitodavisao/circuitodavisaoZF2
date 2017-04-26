@@ -8,8 +8,6 @@ namespace Application\Model\Entity;
  * Descricao: Entidade anotada da tabela grupo
  */
 use Application\Controller\Helper\Funcoes;
-use Application\Model\ORM\CircuitoORM;
-use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -69,15 +67,6 @@ class Grupo extends CircuitoEntity {
         $this->grupoAluno = new ArrayCollection();
     }
 
-    /** @ORM\Column(type="string") */
-    protected $envio;
-
-    /** @ORM\Column(type="string") */
-    protected $envio_data;
-
-    /** @ORM\Column(type="string") */
-    protected $envio_hora;
-
     /**
      * Recupera todas as entidades vinculadas aquele grupo
      * @return Entidade
@@ -98,7 +87,6 @@ class Grupo extends CircuitoEntity {
                 break;
             }
         }
-
         return $entidadeAtiva;
     }
 
@@ -144,6 +132,38 @@ class Grupo extends CircuitoEntity {
         return $responsabilidadesAtivas;
     }
 
+    function getPessoasAtivas() {
+        $pessoas = null;
+        $grupoResponsavel = $this->getResponsabilidadesAtivas();
+        if ($grupoResponsavel) {
+            $pessoas = array();
+            foreach ($grupoResponsavel as $gr) {
+                $p = $gr->getPessoa();
+                $pessoas[] = $p;
+            }
+        }
+        return $pessoas;
+    }
+
+    function getNomeLideresAtivos() {
+        $pessoas = $this->getPessoasAtivas();
+        $nomes = '';
+        $contador = 1;
+
+        foreach ($pessoas as $pessoa) {
+            if ($contador === 2) {
+                $nomes .= ' & ';
+            }
+            if (count($pessoas) == 2) {
+                $nomes .= $pessoa->getNomePrimeiro();
+            } else {
+                $nomes .= $pessoa->getNomePrimeiroUltimo();
+            }
+            $contador++;
+        }
+        return $nomes;
+    }
+
     function setEntidade($entidade) {
         $this->entidade = $entidade;
     }
@@ -165,12 +185,34 @@ class Grupo extends CircuitoEntity {
      * @return GrupoEvento
      */
     function getGrupoEventoOrdenadosPorDiaDaSemana() {
-        $grupoEventos = $this->getGrupoEvento();
+        $grupoSelecionado = $this;
+        $grupoEventosCelulas = null;
+        $grupoEventos = null;
+        if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::SUBEQUIPE) {
+            $grupoEventosCelulas = $grupoSelecionado->getGrupoEventoAtivosPorTipo(GrupoEvento::CELULA);
+            while ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::SUBEQUIPE) {
+                $grupoSelecionado = $grupoSelecionado->getGrupoPaiFilhoPai()->getGrupoPaiFilhoPai();
+                if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::EQUIPE) {
+                    break;
+                }
+            }
+            $grupoEventos = $grupoSelecionado->getGrupoEventoAtivosPorTipo(GrupoEvento::CULTO);
+        } else {
+            $grupoEventos = $grupoSelecionado->getGrupoEventoAtivos();
+        }
+
+        if ($grupoEventosCelulas) {
+            foreach ($grupoEventosCelulas as $eventoCelula) {
+                $grupoEventos[] = $eventoCelula;
+            }
+        }
+
         for ($i = 0; $i < count($grupoEventos); $i++) {
             for ($j = 0; $j < count($grupoEventos); $j++) {
                 $evento1 = $grupoEventos[$i];
                 $evento2 = $grupoEventos[$j];
                 $trocar = 0;
+
                 if ($evento1->getEvento()->getDiaAjustado() <= $evento2->getEvento()->getDiaAjustado()) {
                     if ($evento1->getEvento()->getDiaAjustado() == $evento2->getEvento()->getDiaAjustado()) {
                         if ($evento1->getEvento()->getHora() < $evento2->getEvento()->getHora()) {
@@ -204,6 +246,29 @@ class Grupo extends CircuitoEntity {
     }
 
     /**
+     * Retorna o grupo evento
+     * @return GrupoEvento
+     */
+    function getGrupoEventoAtivosPorTipo($tipo = 0) {
+        $grupoEventos = null;
+        foreach ($this->getGrupoEvento() as $ge) {
+            if ($ge->verificarSeEstaAtivo()) {
+
+                if ($tipo === 0) {
+                    $grupoEventos[] = $ge;
+                }
+                if ($tipo === GrupoEvento::CULTO && $ge->getEvento()->verificaSeECulto()) {
+                    $grupoEventos[] = $ge;
+                }
+                if ($tipo === GrupoEvento::CELULA && $ge->getEvento()->verificaSeECelula()) {
+                    $grupoEventos[] = $ge;
+                }
+            }
+        }
+        return $grupoEventos;
+    }
+
+    /**
      * Retorna o grupo aluno
      * @return GrupoAluno
      */
@@ -212,6 +277,23 @@ class Grupo extends CircuitoEntity {
         foreach ($this->getGrupoAluno() as $ga) {
             if ($ga->verificarSeEstaAtivo()) {
                 $grupoAlunos[] = $ga;
+            }
+        }
+        return $grupoAlunos;
+    }
+
+    /**
+     * Retorna o grupo aluno que não tem cadastro
+     * @return GrupoAluno
+     */
+    function getGrupoAlunoAtivosSemCadastro() {
+        $grupoAlunos = null;
+        foreach ($this->getGrupoAluno() as $ga) {
+            if ($ga->verificarSeEstaAtivo()) {
+                $aluno = $ga->getTurmaAluno()->getPessoa();
+                if (!$aluno->verificarSeTemAlgumaResponsabilidadeAtiva()) {
+                    $grupoAlunos[] = $ga;
+                }
             }
         }
         return $grupoAlunos;
@@ -244,10 +326,23 @@ class Grupo extends CircuitoEntity {
      * @return GrupoEvento
      */
     function getGrupoEventoNoCiclo($ciclo = 1, $mes = 5, $ano = 2016) {
-        if (is_null($this->getEventos())) {
-            $eventos = null;
-            if (!empty($this->getGrupoEventoOrdenadosPorDiaDaSemana())) {
-                if ($ciclo == 1) {
+        $mes = str_pad($mes, 2, 0, STR_PAD_LEFT);
+        /* Validar Inativado */
+        $verificacaoDataInativacao = false;
+        if ($this->verificarSeEstaAtivo()) {
+            $verificacaoDataInativacao = true;
+        } else {
+            if ($this->getData_inativacaoAno() == $ano && $this->getData_inativacaoMes() == $mes) {
+                $verificacaoDataInativacao = true;
+            }
+        }
+        if ($verificacaoDataInativacao) {
+            if (is_null($this->getEventos())) {
+                $diaAtual = date('d');
+                $mesAtual = date('m'); /* Mes com zero */
+                $anoAtual = date('Y');
+                $cicloAtual = Funcoes::cicloAtual($mes, $ano);
+                if ($ciclo === 1) {
                     $primeiroDiaDaSemana = date('N', mktime(0, 0, 0, $mes, 1, $ano));
                     if ($primeiroDiaDaSemana == 1) {
                         $primeiroDiaDaSemana = 8;
@@ -261,36 +356,60 @@ class Grupo extends CircuitoEntity {
                 } else {
                     $ultimoDiaDaSemana++;
                 }
-                foreach ($this->getGrupoEventoOrdenadosPorDiaDaSemana() as $ge) {
-                    $validacaoCelulaExcluidaMesmoDia = false;
-                    /* Validação de célula , quando excluida no dia sem lançamento não aparecer */
-                    if ($ge->getEvento()->getEventoTipo()->getId() == 2) {
-                        if ($ge->getData_criacao() == $ge->getData_inativacao()) {
-                            if (!count($ge->getEvento()->getEventoFrequencia())) {
-                                $validacaoCelulaExcluidaMesmoDia = true;
+                $eventos = null;
+                if (!empty($this->getGrupoEventoOrdenadosPorDiaDaSemana())) {
+
+                    foreach ($this->getGrupoEventoOrdenadosPorDiaDaSemana() as $ge) {
+                        $verificacaoDiaInativacao = false;
+                        /* Validando dia da inativacao */
+                        $primeiroDiaDoCiclo = Funcoes::periodoCicloMesAno($ciclo, $mes, $ano, '', 1);
+                        if ($this->verificarSeEstaAtivo()) {
+                            $verificacaoDiaInativacao = true;
+                        } else {
+                            if ($this->getData_inativacaoDia() >= $primeiroDiaDoCiclo) {
+                                $verificacaoDiaInativacao = true;
                             }
                         }
-                    }
 
-                    if (!$validacaoCelulaExcluidaMesmoDia) {
-                        /* Condição para data de cadastro */
-                        $verificacaoData = false;
-                        $diaAtual = date('d');
-                        $mesAtual = date('m'); /* Mes com zero */
-                        $anoAtual = date('Y');
-                        $cicloAtual = Funcoes::cicloAtual($mes, $ano);
-                        if ($ge->getData_criacaoAno() <= $ano) {
-                            if ($ge->getData_criacaoAno() == $ano) {
-                                if ($ge->getData_criacaoMes() <= $mes) {
-                                    if ($ge->getData_criacaoMes() == $mes) {
-                                        $ge->setNovo(true);
-                                        if ($ciclo == $cicloAtual) {
-                                            if ($ge->getData_criacaoDia() <= $diaAtual) {
-                                                $verificacaoData = true;
-                                            }
-                                        } else {
-                                            $primeiroDiaCiclo = Funcoes::periodoCicloMesAno($ciclo, $mes, $ano, '', 1);
-                                            if ($ge->getData_criacaoDia() < $primeiroDiaCiclo) {
+                        if ($verificacaoDiaInativacao) {
+                            $validacaoCelulaExcluidaMesmoDia = false;
+                            /* Validação de célula , quando excluida no dia sem lançamento não aparecer */
+                            if ($ge->getEvento()->verificaSeECelula()) {
+                                if ($ge->getData_criacao() === $ge->getData_inativacao()) {
+                                    if (!count($ge->getEvento()->getEventoFrequencia())) {
+                                        $validacaoCelulaExcluidaMesmoDia = true;
+                                    }
+                                }
+                            }
+
+                            if (!$validacaoCelulaExcluidaMesmoDia) {
+                                /* Condição para data de cadastro */
+                                $verificacaoData = false;
+
+                                if ($ge->getData_criacaoAno() <= $ano) {
+                                    if ($ge->getData_criacaoAno() == $ano) {
+                                        if ($ge->getData_criacaoMes() <= $mes) {
+                                            if ($ge->getData_criacaoMes() == $mes) {
+                                                $ge->setNovo(true);
+                                                if ($ciclo == $cicloAtual) {
+                                                    /* Validar dia cadastro grupo e evento */
+                                                    $diaDaCriacao = $ge->getData_criacaoDia();
+                                                    $diaDaSemanaDaCriacao = date('N', mktime(0, 0, 0, $mes, $diaDaCriacao, $ano));
+                                                    if ($diaDaSemanaDaCriacao == 1) {
+                                                        $diaDaSemanaDaCriacao = 8;
+                                                    } else {
+                                                        $diaDaSemanaDaCriacao++;
+                                                    }
+                                                    if (!($ge->getEvento()->getDiaAjustado() < $diaDaSemanaDaCriacao) && $ge->getData_criacaoDia() <= $diaAtual) {
+                                                        $verificacaoData = true;
+                                                    }
+                                                } else {
+                                                    $primeiroDiaCiclo = Funcoes::periodoCicloMesAno($ciclo, $mes, $ano, '', 1);
+                                                    if ($ge->getData_criacaoDia() < $primeiroDiaCiclo) {
+                                                        $verificacaoData = true;
+                                                    }
+                                                }
+                                            } else {
                                                 $verificacaoData = true;
                                             }
                                         }
@@ -298,36 +417,33 @@ class Grupo extends CircuitoEntity {
                                         $verificacaoData = true;
                                     }
                                 }
-                            } else {
-                                $verificacaoData = true;
-                            }
-                        }
 
-                        /* Validacao de ciclos inicial e final */
-                        $verificacaoDiaSemana = false;
-                        $cicloTotal = Funcoes::totalCiclosMes($mes, $ano);
-                        if ($verificacaoData && ($ciclo == 1 || $ciclo == $cicloTotal)) {
-                            if ($ciclo == 1) {
-                                if ($ge->getEvento()->getDiaAjustado() >= $primeiroDiaDaSemana) {
+                                /* Validacao de ciclos inicial e final */
+                                $verificacaoDiaSemana = false;
+                                $cicloTotal = Funcoes::totalCiclosMes($mes, $ano);
+                                if ($verificacaoData && ($ciclo == 1 || $ciclo == $cicloTotal)) {
+                                    if ($ciclo == 1) {
+                                        if ($ge->getEvento()->getDiaAjustado() >= $primeiroDiaDaSemana) {
+                                            $verificacaoDiaSemana = true;
+                                        }
+                                    }
+                                    if ($ciclo == $cicloTotal) {
+                                        if ($ge->getEvento()->getDiaAjustado() <= $ultimoDiaDaSemana) {
+                                            $verificacaoDiaSemana = true;
+                                        }
+                                    }
+                                } else {
                                     $verificacaoDiaSemana = true;
                                 }
-                            }
-                            if ($ciclo == $cicloTotal) {
-                                if ($ge->getEvento()->getDiaAjustado() <= $ultimoDiaDaSemana) {
-                                    $verificacaoDiaSemana = true;
+                                if ($verificacaoData && $verificacaoDiaSemana) {
+                                    $eventos[] = $ge;
                                 }
                             }
-                        } else {
-                            $verificacaoDiaSemana = true;
-                        }
-
-                        if ($verificacaoData && $verificacaoDiaSemana) {
-                            $eventos[] = $ge;
                         }
                     }
                 }
+                $this->setEventos($eventos);
             }
-            $this->setEventos($eventos);
         }
         return $this->getEventos();
     }
@@ -357,7 +473,7 @@ class Grupo extends CircuitoEntity {
         $this->setEventos($eventos);
         return $this->getEventos();
     }
-    
+
     function getGrupoEventoRevisao() {
         $eventos = null;
         if (!empty($this->getGrupoEvento())) {
@@ -370,7 +486,6 @@ class Grupo extends CircuitoEntity {
         $this->setEventos($eventos);
         return $this->getEventos();
     }
-    
 
     function setGrupoEvento($grupoEvento) {
         $this->grupoEvento = $grupoEvento;
@@ -433,42 +548,6 @@ class Grupo extends CircuitoEntity {
 
     function setEventos($eventos) {
         $this->eventos = $eventos;
-    }
-
-    function getEnvio() {
-        return $this->envio;
-    }
-
-    function getEnvio_data() {
-        return $this->envio_data;
-    }
-
-    function getEnvio_hora() {
-        return $this->envio_hora;
-    }
-
-    function setEnvio($envio) {
-        $this->envio = $envio;
-    }
-
-    /**
-     * Verificar o status de envio o relatório
-     * @return boolean
-     */
-    public function verificarSeFoiEnviadoORelatorio() {
-        $resposta = false;
-        if ($this->getEnvio() == 'S') {
-            $resposta = true;
-        }
-        return $resposta;
-    }
-
-    function setEnvio_data($envio_data) {
-        $this->envio_data = $envio_data;
-    }
-
-    function setEnvio_hora($envio_hora) {
-        $this->envio_hora = $envio_hora;
     }
 
     /**

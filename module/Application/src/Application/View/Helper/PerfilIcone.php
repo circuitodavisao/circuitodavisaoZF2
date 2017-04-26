@@ -15,6 +15,7 @@ class PerfilIcone extends AbstractHelper {
 
     protected $entidade;
     protected $totalEntidades;
+    protected $grupoResponsavelAtivo;
 
     public function __construct() {
         
@@ -24,9 +25,10 @@ class PerfilIcone extends AbstractHelper {
      * @param Entidade $entidade
      * @return html
      */
-    public function __invoke($entidade, $totalEntidades) {
+    public function __invoke($entidade, $totalEntidades, $grupoResponsavelAtivo = true) {
         $this->setEntidade($entidade);
         $this->setTotalEntidades($totalEntidades);
+        $this->setGrupoResponsavelAtivo($grupoResponsavelAtivo);
         return $this->renderHtml();
     }
 
@@ -58,7 +60,7 @@ class PerfilIcone extends AbstractHelper {
             /* Link com ativacao do modal */
             $html .= '<a onclick=\'abrirModal("modal-' . $this->getEntidade()->getId() . '", ' . $this->getEntidade()->getId() . ',"perfilSelecionado");\' href="#modal-image" data-effect="mfp-fullscale" class="pageload-link">';
 
-            $html .= PerfilIcone::htmlPanel(1, $tipoEntidade, $nomeEntidade, $infoEntidade);
+            $html .= PerfilIcone::htmlPanel(1, $tipoEntidade, $nomeEntidade, $infoEntidade, $this->getGrupoResponsavelAtivo());
 
             /* FIM Link com ativacao do modal */
             $html .= '</a>';
@@ -174,7 +176,7 @@ class PerfilIcone extends AbstractHelper {
      * @param type $tipo
      * @return string
      */
-    public static function htmlPanel($tipo, $tipoId, $nomeEntidade, $infoEntidade) {
+    public static function htmlPanel($tipo, $tipoId, $nomeEntidade, $infoEntidade, $grupoResponsavelAtivo = true) {
         $html = '';
         $corDoPanel = PerfilIcone::corDoPanel($tipoId);
         $corDoFooter = PerfilIcone::corDoFooter($tipoId);
@@ -197,10 +199,20 @@ class PerfilIcone extends AbstractHelper {
             $html .= '</div>';
         }
         /* ICONE */
-        $html .= '<i class="fa fa-twitter text-muted fs70 mt10"></i>';
+        if (!$grupoResponsavelAtivo) {
+            $faIcon = 'times';
+        } else {
+            $faIcon = 'users';
+        }
+        $html .= '<i class="fa fa-' . $faIcon . ' text-muted fs70 mt10"></i>';
+
 
         /* Info da entidade */
-        $html .= '<h1 class="fs35-responsiva mbn">' . $nomeEntidade . '</h1>';
+        $html .= '<h1 class="fs35-responsiva mbn">';
+        if (!$grupoResponsavelAtivo) {
+            $html .= '(INATIVADA) ';
+        }
+        $html .= $nomeEntidade . '</h1>';
         /* FIM Info da entidade */
 
         /* Tipo da entidade */
@@ -231,6 +243,14 @@ class PerfilIcone extends AbstractHelper {
 
     function setTotalEntidades($totalEntidades) {
         $this->totalEntidades = $totalEntidades;
+    }
+
+    function getGrupoResponsavelAtivo() {
+        return $this->grupoResponsavelAtivo;
+    }
+
+    function setGrupoResponsavelAtivo($grupoResponsavelAtivo) {
+        $this->grupoResponsavelAtivo = $grupoResponsavelAtivo;
     }
 
 }

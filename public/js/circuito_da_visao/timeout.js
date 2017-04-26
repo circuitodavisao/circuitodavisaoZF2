@@ -6,4 +6,4 @@
 
 setTimeout(function () {
     location.href = '/sair';
-}, 3000);
+}, 30000);

@@ -38,8 +38,8 @@ use Application\Controller\Helper\Constantes;
                         /* Entidades do grupo */
                         $entidades = $grupo->getEntidade();
                         foreach ($entidades as $entidade) {
-                            if ($entidade->verificarSeEstaAtivo()) {
-                                echo $this->perfilIcone($entidade, count($this->responsabilidades));
+                            if ($entidade->verificarSeEstaAtivo()) { 
+                                echo $this->perfilIcone($entidade, count($this->responsabilidades), $responsabilidade->verificarSeEstaAtivo());
                             }
                         }
                     }

@@ -114,7 +114,7 @@ class Funcoes {
      * @param type $anoUsado
      * @return string
      */
-    static public function periodoCicloMesAno($ciclo = 1, $mesUsado = 5, $anoUsado = 2016, $traducaoPeriodo, $retorno = 0) {
+    static public function periodoCicloMesAno($ciclo = 1, $mesUsado = 5, $anoUsado = 2016, $traducaoPeriodo = '', $retorno = 0) {
         $resposta = '';
         $primeiroDiaCiclo = '';
         $ultimoDiaCiclo = '';
@@ -363,6 +363,12 @@ class Funcoes {
     public static function proximoDomingo() {
         $proximoDomingo = strtotime("next Sunday");
         return date('Y-m-d', $proximoDomingo);
+    }
+
+    public static function var_dump($expression) {
+        echo "<pre>";
+        var_dump($expression);
+        echo "</pre>";
     }
 
 }

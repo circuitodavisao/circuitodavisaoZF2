@@ -4,6 +4,7 @@ namespace Application\Model\ORM;
 
 use Application\Controller\Helper\Constantes;
 use Doctrine\ORM\EntityManager;
+use Exception;
 
 /**
  * Nome: RepositorioORM.php
@@ -30,6 +31,11 @@ class RepositorioORM {
     private $_grupoPaiFilhoORM;
     private $_grupoAtendimentoORM;
     private $_eventoFrequenciaORM;
+    private $_fatoCicloORM;
+    private $_fatoCelulaORM;
+    private $_fatoLiderORM;
+    private $_dimensaoORM;
+    private $_dimensaoTipoORM;
 
     /**
      * Contrutor
@@ -96,7 +102,7 @@ class RepositorioORM {
     }
 
     /**
-     * Metodo public para obter a instancia do GrupoPessoaORM
+     * Metodo public para obter a instancia do CircuitoORM
      * @return CircuitoORM
      */
     public function getGrupoResponsavelORM() {
@@ -107,7 +113,7 @@ class RepositorioORM {
     }
 
     /**
-     * Metodo public para obter a instancia do GrupoPessoaORM
+     * Metodo public para obter a instancia do CircuitoORM
      * @return CircuitoORM
      */
     public function getGrupoPaiFilhoORM() {
@@ -118,7 +124,7 @@ class RepositorioORM {
     }
 
     /**
-     * Metodo public para obter a instancia do GrupoORM
+     * Metodo public para obter a instancia do CircuitoORM
      * @return GrupoORM
      */
     public function getGrupoORM() {
@@ -228,11 +234,99 @@ class RepositorioORM {
     }
 
     /**
+     * Metodo public para obter a instancia do FatoCicloORM
+     * @return FatoCicloORM
+     */
+    public function getFatoCicloORM() {
+        if (is_null($this->_fatoCicloORM)) {
+            $this->_fatoCicloORM = new FatoCicloORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_FATO_CICLO);
+        }
+        return $this->_fatoCicloORM;
+    }
+
+    /**
+     * Metodo public para obter a instancia do FatoCelulaORM
+     * @return FatoCelulaORM
+     */
+    public function getFatoCelulaORM() {
+        if (is_null($this->_fatoCelulaORM)) {
+            $this->_fatoCelulaORM = new FatoCelulaORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_FATO_CELULA);
+        }
+        return $this->_fatoCelulaORM;
+    }
+
+    /**
+     * Metodo public para obter a instancia do FatoLiderORM
+     * @return FatoLiderORM
+     */
+    public function getFatoLiderORM() {
+        if (is_null($this->_fatoLiderORM)) {
+            $this->_fatoLiderORM = new FatoLiderORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_FATO_LIDER);
+        }
+        return $this->_fatoLiderORM;
+    }
+
+    /**
+     * Metodo public para obter a instancia do DimensaoTipoORM
+     * @return CircuitoORM
+     */
+    public function getDimensaoORM() {
+        if (is_null($this->_dimensaoORM)) {
+            $this->_dimensaoORM = new CircuitoORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_DIMENSAO);
+        }
+        return $this->_dimensaoORM;
+    }
+
+    /**
+     * Metodo public para obter a instancia do DimensaoTipoORM
+     * @return CircuitoORM
+     */
+    public function getDimensaoTipoORM() {
+        if (is_null($this->_dimensaoTipoORM)) {
+            $this->_dimensaoTipoORM = new CircuitoORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_DIMENSAO_TIPO);
+        }
+        return $this->_dimensaoTipoORM;
+    }
+
+    /**
      * Metodo public para obter a instancia EntityManager com acesso ao banco de dados
      * @return EntityManager
      */
     public function getDoctrineORMEntityManager() {
         return $this->_doctrineORMEntityManager;
+    }
+
+    /**
+     * Iniciar transação
+     */
+    public function iniciarTransacao() {
+        try {
+            $this->getDoctrineORMEntityManager()->beginTransaction();
+        } catch (Exception $exc) {
+            echo $exc->getMessage();
+        }
+    }
+
+    /**
+     * Fechar transação
+     */
+    public function fecharTransacao() {
+        try {
+            $this->getDoctrineORMEntityManager()->commit();
+        } catch (Exception $exc) {
+            echo $exc->getMessage();
+        }
+    }
+
+    /**
+     * Desfazer transação
+     */
+    public function desfazerTransacao() {
+        try {
+            $this->getDoctrineORMEntityManager()->rollback();
+        } catch (Exception $exc) {
+            echo $exc->getMessage();
+        }
     }
 
 }

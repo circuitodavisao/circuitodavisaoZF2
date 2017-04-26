@@ -41,7 +41,7 @@ class ListagemDePessoasComEventos extends AbstractHelper {
                 $adicionarVisitante = true;
                 $grupoPessoaTipo = $gp->getGrupoPessoaTipo();
                 if (!$gp->verificarSeEstaAtivo() && $grupoPessoaTipo->getId() == 1) {
-                    $resposta = $this->view->lancamentoORM->getGrupoPessoaORM()->encontrarPorIdPessoaAtivoETipo($gp->getPessoa_id(), null, 2); /* Consolidacao */
+                    $resposta = $this->view->repositorioORM->getGrupoPessoaORM()->encontrarPorIdPessoaAtivoETipo($gp->getPessoa_id(), null, 2); /* Consolidacao */
                     if (!empty($resposta)) {
                         $adicionarVisitante = false;
                     }
@@ -262,8 +262,20 @@ class ListagemDePessoasComEventos extends AbstractHelper {
                     $classIco = 'fa-thumbs-down';
                     $evento = $ge->getEvento();
 
-                    /* Validacao para poucos eventos 5 a 7 ou mais */
+                    /* Validacao para eventos 5 a 7 ou mais */
                     switch ($this->view->quantidadeDeEventosNoCiclo) {
+                        case 1:
+                            $style = 'style="width:100%;"';
+                            break;
+                        case 2:
+                            $style = 'style="width:50%;"';
+                            break;
+                        case 3:
+                            $style = 'style="width:33%;"';
+                            break;
+                        case 4:
+                            $style = 'style="width:25%;"';
+                            break;
                         case 5:
                             $style = 'style="width:20%;"';
                             break;
@@ -383,7 +395,7 @@ class ListagemDePessoasComEventos extends AbstractHelper {
                                     ->andWhere(Criteria::expr()->eq("ciclo", $this->view->cicloSelecionado))
                             ;
                             $eventosFiltrados = $eventoFrequencia->matching($criteria);
-                            if ($eventosFiltrados->count() == 1) {
+                            if ($eventosFiltrados->count() === 1) {
                                 $valor = $eventosFiltrados->first()->getFrequencia();
                                 if ($valor == 'S') {
                                     $class = 'btn-success';
@@ -396,7 +408,7 @@ class ListagemDePessoasComEventos extends AbstractHelper {
                         }
                         $html .= '<button id="b_' . $idEventoFrequencia . '" type="button" class="btn ' . $class . ' btn-sm"'
                                 . ' onclick=\'mudarFrequencia(';
-                        $html .= "\"$idEventoFrequencia\", {$this->view->cicloSelecionado}, {$this->view->abaSelecionada}";
+                        $html .= "\"$idEventoFrequencia\", {$this->view->cicloSelecionado}, {$this->view->abaSelecionada}, {$this->view->grupo->getId()}";
                         $html .= ');\'>';
                         $html .= '<i id="i_' . $idEventoFrequencia . '" class="fa ' . $classIco . '"></i>';
                         $html .= '</button>';
