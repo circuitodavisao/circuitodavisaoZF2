@@ -118,6 +118,11 @@ class CadastroController extends CircuitoController {
                         Constantes::$ACTION => Constantes::$PAGINA_CADASTRO_REVISAO,
             ));
         }
+        if ($pagina == Constantes::$PAGINA_INSERIR_REVISAO) {
+            return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
+                        Constantes::$ACTION => Constantes::$PAGINA_INSERIR_REVISAO,
+            ));
+        }
         if ($pagina == Constantes::$PAGINA_SALVAR_REVISAO) {
             return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
                         Constantes::$ACTION => Constantes::$PAGINA_SALVAR_REVISAO,
@@ -163,6 +168,12 @@ class CadastroController extends CircuitoController {
             $tituloDaPagina = Constantes::$TRADUCAO_LISTAGEM_REVISAO;
             $tipoEvento = 3;
             $extra = $grupo->getId();
+        }
+        if ($pagina == Constantes::$PAGINA_REVISIONISTAS) {
+            $listagemDeEventos = $grupo->getGrupoEventoRevisao();
+            $tituloDaPagina = Constantes::$TRADUCAO_LISTAGEM_REVISIONISTAS;
+            $tipoEvento = 4;
+            $extra = $grupo->getId(); 
         }
 
 
@@ -667,60 +678,17 @@ class CadastroController extends CircuitoController {
         $sessao = new Container(Constantes::$NOME_APLICACAO);
         $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
 
-        $entidade = $repositorioORM->getEntidadeORM()->encontrarPorId($sessao->idEntidadeAtual);
-        $pessoaLogada = $repositorioORM->getPessoaORM()->encontrarPorId($sessao->idPessoa);
-        $hierarquiaId = $pessoaLogada->getPessoaHierarquiaAtivo()->getHierarquia()->getId();
+        $idEntidadeAtual = $sessao->idEntidadeAtual;
+        $entidade = $repositorioORM->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
         $grupo = $entidade->getGrupo();
-
-        $arrayGrupoAlunos = $grupo->getGrupoAlunoAtivosSemCadastro();
-        $arrayHierarquia = $repositorioORM->getHierarquiaORM()->encontrarTodas($hierarquiaId);
+        $arrayGrupoAlunos = $grupo->getGrupoAlunoAtivos();
+        $arrayHierarquia = $repositorioORM->getHierarquiaORM()->encontrarTodas();
 
         $form = new GrupoForm(Constantes::$FORM, $arrayGrupoAlunos, $arrayHierarquia);
 
-        $mostrarCadastro = false;
-        if ($entidade->getTipo_id() == 1 ||
-                $entidade->getTipo_id() == 2 ||
-                $entidade->getTipo_id() == 3 ||
-                $entidade->getTipo_id() == 4) {
-            $mostrarCadastro = true;
-        }
-        if ($entidade->getTipo_id() == 5 ||
-                $entidade->getTipo_id() == 6 ||
-                $entidade->getTipo_id() == 7) {
-            if ($form->getAlunos()) {
-                $mostrarCadastro = true;
-            }
-        }
-        $tituloDaPagina = Constantes::$TRADUCAO_TITULO_PAGINA_CADASTRO_GRUPO;
-        switch ($entidade->getTipo_id()) {
-            case 1:
-                $tituloDaPagina = str_replace('#tipo', 'Nacional', $tituloDaPagina);
-                break;
-            case 2:
-                $tituloDaPagina = str_replace('#tipo', 'Regional', $tituloDaPagina);
-                break;
-            case 3:
-                $tituloDaPagina = str_replace('#tipo', 'Coordenação', $tituloDaPagina);
-                break;
-            case 4:
-                $tituloDaPagina = str_replace('#tipo', 'Igreja', $tituloDaPagina);
-                break;
-            case 5:
-                $tituloDaPagina = str_replace('#tipo', 'Equipe', $tituloDaPagina);
-                break;
-            case 6:
-                $tituloDaPagina = str_replace('#tipo', 'Subequipe', $tituloDaPagina);
-                break;
-            case 7:
-                $tituloDaPagina = str_replace('#tipo', 'Subequipe', $tituloDaPagina);
-                break;
-        }
-
         $view = new ViewModel(array(
             Constantes::$FORM => $form,
-            'mostrarCadastro' => $mostrarCadastro,
-            'tituloDaPagina' => $tituloDaPagina,
-            'entidadeTipo' => $entidade->getTipo_id()
+            'tipoEntidade' => $entidade->getTipo_id(),
         ));
 
         /* Javascript */
@@ -740,7 +708,7 @@ class CadastroController extends CircuitoController {
         if ($request->isPost()) {
             try {
                 $post_data = $request->getPost();
-                $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
+                $loginORM = new RepositorioORM($this->getDoctrineORMEntityManager());
                 $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
 
                 $sessao = new Container(Constantes::$NOME_APLICACAO);
@@ -752,8 +720,8 @@ class CadastroController extends CircuitoController {
                 $repositorioORM->getGrupoORM()->persistir($grupoNovo);
 
                 /* Entidade abaixo do perfil selecionado/logado */
-                $tipoEntidadeAbaixo = 7; // sub equipe por padrao
-                if ($entidadeLogada->getTipo_id() != 7) {
+                $tipoEntidadeAbaixo = 8; // sub equipe por padrao
+                if ($entidadeLogada->getTipo_id() != 8) {
                     $tipoEntidadeAbaixo = $entidadeLogada->getTipo_id() + 1;
                 }
                 $entidadeNova = new Entidade();
@@ -780,26 +748,13 @@ class CadastroController extends CircuitoController {
                     $indicePessoasFim = 2;
                 }
                 for ($indicePessoas = $indicePessoasInicio; $indicePessoas <= $indicePessoasFim; $indicePessoas++) {
-                    $pessoaSelecionada = null;
-                    if ($entidadeLogada->getTipo_id() !== 1 && $entidadeLogada->getTipo_id() !== 2 && $entidadeLogada->getTipo_id() !== 3 && $entidadeLogada->getTipo_id() !== 4) {
-                        $matricula = $post_data[Constantes::$FORM_ID_ALUNO_SELECIONADO . $indicePessoas];
-                        $turmaAluno = $repositorioORM->getTurmaAlunoORM()->encontrarPorId($matricula);
-                        $pessoaSelecionada = $turmaAluno->getPessoa();
-                        $tokenDeAgora = $pessoaSelecionada->gerarToken($indicePessoas);
-                        $pessoaSelecionada->setToken($tokenDeAgora);
-                        $pessoaAtualizada = $repositorioORM->getPessoaORM()->
-                                atualizarAlunoComDadosDaBuscaPorCPF($pessoaSelecionada, $post_data, $indicePessoas);
-                    } else {
-                        $pessoaSelecionada = new Pessoa();
-                        $pessoaSelecionada->setDocumento(intval($post_data[Constantes::$FORM_CPF . $indicePessoas]));
-                        $pessoaSelecionada->setNome($post_data[Constantes::$FORM_NOME . $indicePessoas]);
-                        $pessoaSelecionada->setEmail($post_data[Constantes::$FORM_EMAIL . $indicePessoas]);
-                        $pessoaSelecionada->setData_nascimento(Funcoes::mudarPadraoData($post_data[Constantes::$FORM_DATA_NASCIMENTO . $indicePessoas], 0));
-                        $tokenDeAgora = $pessoaSelecionada->gerarToken($indicePessoas);
-                        $pessoaSelecionada->setToken($tokenDeAgora);
-                        $repositorioORM->getPessoaORM()->persistir($pessoaSelecionada);
-                        $pessoaAtualizada = $pessoaSelecionada;
-                    }
+                    $matricula = $post_data[Constantes::$FORM_ID_ALUNO_SELECIONADO . $indicePessoas];
+                    $turmaAluno = $repositorioORM->getTurmaAlunoORM()->encontrarPorId($matricula);
+                    $pessoaSelecionada = $turmaAluno->getPessoa();
+                    $tokenDeAgora = $pessoaSelecionada->gerarToken($indicePessoas);
+                    $pessoaSelecionada->setToken($tokenDeAgora);
+                    $pessoaAtualizada = $loginORM->getPessoaORM()->
+                            atualizarAlunoComDadosDaBuscaPorCPF($pessoaSelecionada, $post_data, $indicePessoas);
 
                     /* Criar hierarquia */
                     $idHierarquia = $post_data[Constantes::$FORM_HIERARQUIA . $indicePessoas];
@@ -865,16 +820,17 @@ class CadastroController extends CircuitoController {
         if ($request->isPost()) {
             try {
                 $post_data = $request->getPost();
-                $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
-                $pessoa = $repositorioORM->getPessoaORM()->encontrarPorId($post_data[Constantes::$ID]);
+                $loginORM = new RepositorioORM($this->getDoctrineORMEntityManager());
+                $pessoa = $loginORM->getPessoaORM()->encontrarPorId($post_data[Constantes::$ID]);
                 $pessoa->setTelefone($post_data[Constantes::$FORM_INPUT_DDD] + $post_data[Constantes::$FORM_INPUT_CELULAR]);
+                $pessoa->setAtualizar_dados($atualizar_dados);
                 $pessoa->dadosAtualizados();
-                $repositorioORM->getPessoaORM()->persistir($pessoa, false);
+                $loginORM->getPessoaORM()->persistir($pessoa);
             } catch (Exception $exc) {
                 $this->direcionaErroDeCadastro($exc->getMessage());
             }
-            return $this->redirect()->toRoute('login', array(
-                        Constantes::$ACTION => Constantes::$ACTION_SELECIONAR_PERFIL
+            return $this->redirect()->toRoute('principal', array(
+                        'mostrarMenu' => 1
             ));
         }
     }
@@ -934,8 +890,8 @@ class CadastroController extends CircuitoController {
                 $post_data = $request->getPost();
                 $email = $post_data[Constantes::$FORM_EMAIL];
 
-                $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
-                $pessoaPesquisada = $repositorioORM->getPessoaORM()->encontrarPorEmail($email);
+                $loginORM = new RepositorioORM($this->getDoctrineORMEntityManager());
+                $pessoaPesquisada = $loginORM->getPessoaORM()->encontrarPorEmail($email);
 
                 if ($pessoaPesquisada) {
                     $resposta = 1;
@@ -998,8 +954,8 @@ class CadastroController extends CircuitoController {
                     $resposta = 1;
 
                     /* CPF encontrado na receita verificando se tem cadastro no sistema */
-                    $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
-                    if ($repositorioORM->getPessoaORM()->encontrarPorCPF($cpf)) {
+                    $loginORM = new RepositorioORM($this->getDoctrineORMEntityManager());
+                    if ($loginORM->getPessoaORM()->encontrarPorCPF($cpf)) {
                         $resposta = 3;
                     }
                 }
@@ -1055,19 +1011,18 @@ class CadastroController extends CircuitoController {
      */
     public function enviarEmailParaCompletarOsDados($tokenDeAgora, $pessoa) {
         $sessao = new Container(Constantes::$NOME_APLICACAO);
-        $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
-        $pessoaLogada = $repositorioORM->getPessoaORM()->encontrarPorId($sessao->idPessoa);
+        $loginORM = new RepositorioORM($this->getDoctrineORMEntityManager());
+        $pessoaLogada = $loginORM->getPessoaORM()->encontrarPorId($sessao->idPessoa);
 
         $Subject = 'Convite';
-//        $ToEmail = 'falecomleonardopereira@gmail.com';
-        $ToEmail = $pessoa->getEmail();
+        $ToEmail = 'falecomleonardopereira@gmail.com';
         $avatar = 'placeholder.png';
         if ($pessoaLogada->getFoto()) {
             $avatar = $pessoaLogada->getFoto();
         }
         $nomeLider = str_replace(' ', '', $pessoaLogada->getNomePrimeiro());
         $nomePessoaEmail = str_replace(' ', '', $pessoa->getNomePrimeiro());
-        $url = "http://" . Constantes::$IP . "/convite.php?nomeLider=$nomeLider&avatar=$avatar&token=$tokenDeAgora&nomePessoaEmail=$nomePessoaEmail";
+        $url = "http://158.69.124.139/convite.php?nomeLider=$nomeLider&avatar=$avatar&token=$tokenDeAgora&nomePessoaEmail=$nomePessoaEmail";
         $Content = file_get_contents($url);
         Funcoes::enviarEmail($ToEmail, $Subject, $Content);
     }
@@ -1193,6 +1148,30 @@ class CadastroController extends CircuitoController {
             Constantes::$FORM => $form,
             'discipulos' => $discipulos,
         ));
+    }
+    
+    public function inserirRevisaoAction() {
+        $sessao = new Container(Constantes::$NOME_APLICACAO);
+        $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
+        $idEntidadeAtual = $sessao->idEntidadeAtual;
+        $entidade = $repositorioORM->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+        $grupo = $entidade->getGrupo();
+        $gruposAbaixo = $grupo->getGrupoPaiFilhoFilhos();
+
+        foreach ($gruposAbaixo as $gpFilho) {
+            $grupoFilho = $gpFilho->getGrupoPaiFilhoFilho();
+            $entidadeFilho = $grupoFilho->getEntidadeAtiva();
+            if ($entidadeFilho->getTipo_id() == 6) {
+                $gruposIgrejas[] = $entidadeFilho;
+            }
+        }
+        $form = new RevisaoForm('revisaoForm', $gruposIgrejas);
+        $view = new ViewModel(array(
+            'revisaoForm' => $form,
+            'igrejas' => $gruposIgrejas,
+        ));
+
+        return $view;
     }
 
 }
