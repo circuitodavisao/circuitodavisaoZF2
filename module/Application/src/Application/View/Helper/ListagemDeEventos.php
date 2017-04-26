@@ -32,6 +32,7 @@ class ListagemDeEventos extends AbstractHelper {
         $tipoCelula = ($this->view->tipoEvento == 2);
         $tipoCulto = ($this->view->tipoEvento == 1);
         $tipoRevisao = ($this->view->tipoEvento == 3);
+        $tipoRevisionistas = ($this->view->tipoEvento == 4);
 
         $html .= $this->view->templateFormularioTopo($this->getTitulo());
         $html .= '<div class="panel-body bg-light">';
@@ -123,7 +124,7 @@ class ListagemDeEventos extends AbstractHelper {
                 }
                 if ($tipoRevisao) {
                     
-                    $html .= '<td class="text-center">' . Funcoes::mudarPadraoData($evento->getData_criacao(), 1) .  '</td>';
+                    $html .= '<td class="text-center">' . Funcoes::mudarPadraoData($evento->getData(), 1) .  '</td>';
                     $stringNomeDaFuncaoOnClick = 'funcaoCadastro("' . Constantes::$PAGINA_CADASTRO_REVISAO . '", ' . $evento->getId() . ')';
                     $stringNomeDaFuncaoOnClickExclusao = 'funcaoCadastro("' . Constantes::$PAGINA_CADASTRO_REVISAO . '", ' . $evento->getId() . ')';
                     $grupoEventoAtivos = $evento->getGrupoEventoAtivos();

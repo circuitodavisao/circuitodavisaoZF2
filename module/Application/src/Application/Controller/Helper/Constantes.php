@@ -372,7 +372,8 @@ class Constantes {
     /* Rotas */
     public static $PAGINA_CELULAS = 'Celulas';
     public static $PAGINA_CULTOS = 'Cultos';
-    public static $PAGINA_REVISAO = 'Revisao';
+    public static $PAGINA_REVISAO = 'Revisao'; 
+    public static $PAGINA_REVISIONISTAS = 'Revisionistas';
     public static $PAGINA_CELULA = 'Celula';
     public static $PAGINA_EVENTO_CULTO = 'EventoCulto';
     public static $PAGINA_EVENTO_CELULA = 'EventoCelula';
@@ -392,6 +393,7 @@ class Constantes {
     public static $PAGINA_BUSCAR_CPF = 'BuscarCPF';
     public static $PAGINA_BUSCAR_EMAIL = 'BuscarEmail';
     public static $PAGINA_CADASTRO_REVISAO = 'CadastrarRevisao';
+    public static $PAGINA_INSERIR_REVISAO = 'InserirRevisao';
     public static $PAGINA_SALVAR_REVISAO = 'SalvarRevisao';
     public static $PAGINA_CADASTRO_TRANSFERENCIA = 'Transferencia';
     public static $CONTROLLER_CADASTRO = 'Application\Controller\Cadastro';
@@ -645,6 +647,7 @@ class Constantes {
     public static $TRADUCAO_MULTIPLICACAO = 'Multiplication';
     public static $TRADUCAO_LISTAGEM_CULTOS = 'Listing <b class="text-danger">Cults</b>';
     public static $TRADUCAO_LISTAGEM_REVISAO = 'Listing <b class="text-danger">Revision of lives</b>';
+    public static $TRADUCAO_LISTAGEM_REVISIONISTAS = 'Listing <b class="text-danger">Revision of lives</b>';
     public static $TRADUCAO_LISTAGEM_CELULAS = 'Listing Cells of';
     public static $TRADUCAO_DIA_HORA = 'Day / Hour';
     public static $TRADUCAO_DADOS_DO_HOSPEDEIRO = 'Data from Host';

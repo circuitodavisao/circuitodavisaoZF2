@@ -36,8 +36,11 @@ if ($sessao->tipoMensagem) {
             $titulo = Constantes::$TRADUCAO_CULTO_ . Constantes::$TRADUCAO_EXCLUIDO;
             $texto = Constantes::$TRADUCAO_CULTO_TEXTO . $sessao->textoMensagem;
             break;
+        case 7:
+            $titulo = Constantes::$TRADUCAO_REVISAO . Constantes::$TRADUCAO_CADASTRADO;
+            $texto = COnstantes::$TRADUCAO_CULTO_TEXTO . $sessao->textoMensagem;
     }
-    $sessao->tipoMensagem = '';
+    $sessao->tipoMensagem = '';  
     $sessao->textoMensagem = '';
 }
 ?>
