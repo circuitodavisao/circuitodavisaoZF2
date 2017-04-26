@@ -10,6 +10,7 @@ namespace Application\Controller\Helper;
 class Constantes {
 
     public static $IP = '158.69.124.139';
+    public static $META_LIDER = 6;
 
     /* Constates Login */
     public static $CONTROLLER_LOGIN = 'Application\Controller\Login';
@@ -124,7 +125,7 @@ class Constantes {
     /* Pre saida */
     public static $TRADUCAO_SESSAO_ENCERRADA = 'Closed Session';
     public static $TRADUCAO_SESSAO_ATIVA = 'You need to log out to continue.';
-    public static $TRADUCAO_PRECISA_DESLOGAR = 'You need to log out before registering a password for a new user';  
+    public static $TRADUCAO_PRECISA_DESLOGAR = 'You need to log out before registering a password for a new user';
     public static $TRADUCAO_OLA = 'Hello';
     public static $TRADUCAO_PRE_SAIDA = 'Use the LOGOUT option <a href="/">CircuitoDaVisão.com.br</a> when using a device that is not of particular use. The <a href="/">CircuitoDaVisão.com.br</a> home page will be opened in 30 seconds.';
     public static $TRADUCAO_ENTRAR_NOVAMENTE = 'Reenter';
@@ -174,6 +175,10 @@ class Constantes {
     public static $ENTITY_PESSOA_PERFIL_ACESSO = 'Application\Model\Entity\PessoaPerfilAcesso';
     public static $ENTITY_PESSOA_PERFIL_ACESSO_ID_PESSOA = 'id_pessoa';
     public static $ENTITY_FATO_CICLO_NUMERO_IDENTIFICADOR = 'numero_identificador';
+    public static $ENTITY_FATO_CICLO_CICLO = 'ciclo';
+    public static $ENTITY_FATO_CICLO_MES = 'mes';
+    public static $ENTITY_FATO_CICLO_ANO = 'ano';
+    public static $ENTITY_EVENTO_CELULA_ID = 'evento_celula_id';
 
     /* Templates */
     public static $TEMPLATE_SELECIONAR_PERFIL = 'layout/layout-selecionar-perfil';
@@ -215,6 +220,8 @@ class Constantes {
     public static $ENTITY_PESSOA_HIERAQUIA = 'Application\Model\Entity\PessoaHierarquia';
     public static $ENTITY_EVENTO_FREQUENCIA = 'Application\Model\Entity\EventoFrequencia';
     public static $ENTITY_FATO_CICLO = 'Application\Model\Entity\FatoCiclo';
+    public static $ENTITY_FATO_LIDER = 'Application\Model\Entity\FatoLider';
+    public static $ENTITY_FATO_CELULA = 'Application\Model\Entity\FatoCelula';
     public static $ENTITY_DIMENSAO_TIPO = 'Application\Model\Entity\DimensaoTipo';
     public static $ENTITY_DIMENSAO = 'Application\Model\Entity\Dimensao';
     public static $ENTITY_GRUPO = 'Application\Model\Entity\Grupo';
@@ -246,7 +253,6 @@ class Constantes {
     public static $VALIDACAO = 'validacao';
     public static $VALIDACAO_NESSE_MES = 'validacaoNesseMes';
     public static $VALIDACAO_ENTIDADE_INATIVA = 'validacaoEntidadeInativa';
-    public static $STATUS_ENVIO = 'statusEnvio';
     public static $TEMPLATE_JS_LANCAMENTO = 'layout/layout-js-lancamento';
     public static $TEMPLATE_JS_CADASTRAR_PESSOA = 'layout/layout-js-cadastrar-pessoa';
     public static $TEMPLATE_JS_CADASTRAR_PESSOA_VALIDACAO = 'layout/layout-js-cadastrar-pessoa-validacao';
@@ -273,7 +279,7 @@ class Constantes {
     public static $PAGINA_LABEL_LANCAR_ATENDIMENTO = 'Lançar';
     public static $PAGINA_SALVAR_ATENDIMENTO = 'SalvarAtendimento';
     public static $PAGINA_EXCLUIR_ATENDIMENTO = 'AtendimentoExclusao';
-    public static $ONCLICK_ABRIR_MODAL = 'onclick="abrirModal();"';
+    public static $ONCLICK_ABRIR_MODAL = 'onclick="abrirModalCarregando();"';
     public static $PAGINA = 'pagina';
     public static $PAGINA_CADASTRAR_PESSOA = 'CadastrarPessoa';
     public static $PAGINA_CADASTRAR_PESSOA_REVISAO = 'CadastrarPessoaRevisao';
@@ -358,6 +364,7 @@ class Constantes {
     public static $ROUTE_CADASTRAR_PESSOA_REVISAO = 'CadastrarPessoaRevisao';
     public static $ROUTE_INDEX = 'Index';
     public static $ROUTE_FICHA_REVISAO = 'FichaRevisao';
+    public static $ROUTE_RELATORIO = 'relatorio';
 
     /* Fim lançamento */
 
@@ -365,7 +372,8 @@ class Constantes {
     /* Rotas */
     public static $PAGINA_CELULAS = 'Celulas';
     public static $PAGINA_CULTOS = 'Cultos';
-    public static $PAGINA_REVISAO = 'Revisao';
+    public static $PAGINA_REVISAO = 'Revisao'; 
+    public static $PAGINA_REVISIONISTAS = 'Revisionistas';
     public static $PAGINA_CELULA = 'Celula';
     public static $PAGINA_EVENTO_CULTO = 'EventoCulto';
     public static $PAGINA_EVENTO_CELULA = 'EventoCelula';
@@ -377,7 +385,7 @@ class Constantes {
     public static $PAGINA_GRUPO_EMAIL_ENVIADO = 'GrupoEmailEnviado';
     public static $PAGINA_EVENTO_CELULA_PERSISTIR = 'EventoCelulaPersistir';
     public static $PAGINA_EVENTO_CULTO_PERSISTIR = 'EventoCultoPersistir';
-    public static $PAGINA_EVENTO_EXCLUSAO = 'EventoExclusao';  
+    public static $PAGINA_EVENTO_EXCLUSAO = 'EventoExclusao';
     public static $PAGINA_CELULA_EXCLUSAO_CONFIRMACAO = 'CelulaExclusaoConfirmacao';
     public static $PAGINA_EVENTO_EXCLUSAO_CONFIRMACAO = 'EventoExclusaoConfirmacao';
     public static $PAGINA_CELULA_CONFIRMACAO = 'CelulaConfirmacao';
@@ -385,7 +393,9 @@ class Constantes {
     public static $PAGINA_BUSCAR_CPF = 'BuscarCPF';
     public static $PAGINA_BUSCAR_EMAIL = 'BuscarEmail';
     public static $PAGINA_CADASTRO_REVISAO = 'CadastrarRevisao';
+    public static $PAGINA_INSERIR_REVISAO = 'InserirRevisao';
     public static $PAGINA_SALVAR_REVISAO = 'SalvarRevisao';
+    public static $PAGINA_CADASTRO_TRANSFERENCIA = 'Transferencia';
     public static $CONTROLLER_CADASTRO = 'Application\Controller\Cadastro';
     public static $ROUTE_CADASTRO = 'cadastro';
     /* Entidades */
@@ -441,12 +451,12 @@ class Constantes {
     public static $TRADUCAO_CLIQUE_EM_CONTINUAR = '. Click Continue';
     public static $TRADUCAO_CELULAR_INVALIDO = 'Phone is invalid';
     public static $TRADUCAO_DDD_INVALIDO = 'DDD is invalid';
-    public static $TRADUCAO_PREENCHA_O_CELULAR = 'Fill in the Phone'; 
+    public static $TRADUCAO_PREENCHA_O_CELULAR = 'Fill in the Phone';
     public static $TRADUCAO_PREENCHA_O_DDD = 'Fill in the DDD';
     public static $TRADUCAO_PREENCHA_O_DDD_E_CELULAR = 'Fill in the DDD and Phone';
     public static $TRADUCAO_CODIGO_VERIFICADOR_INVALIDO = 'Invalid tester code';
     public static $TRADUCAO_PREENCHA_O_CODIGO_VERIFICADOR = 'Fill in the Verifier Code';
-    public static $TRADUCAO_CODIGO_VERIFICADOR_LIBERADO = 'Code Released click finish.';    
+    public static $TRADUCAO_CODIGO_VERIFICADOR_LIBERADO = 'Code Released click finish.';
     public static $TRADUCAO_DADOS_NAO_CADASTRADOS = 'Data not found in the database';
     public static $TRADUCAO_CPF_JA_UTILIZADO = 'CPF already used';
     public static $TRADUCAO_CPF_NAO_EXISTE = 'CPF does not exist';
@@ -480,7 +490,6 @@ class Constantes {
     public static $TRADUCAO_BOTAO_PRONTO = 'Ready';
     public static $TRADUCAO_ENTRE_COM_A_SENHA = 'Enter the Password';
     public static $TRADUCAO_REPITA_A_SENHA = 'Repeat the Password';
-
 
     /* Tipo de Mensagens */
     public static $TIPO_MENSAGEM_CADASTRAR_CELULA = 1;
@@ -638,6 +647,7 @@ class Constantes {
     public static $TRADUCAO_MULTIPLICACAO = 'Multiplication';
     public static $TRADUCAO_LISTAGEM_CULTOS = 'Listing <b class="text-danger">Cults</b>';
     public static $TRADUCAO_LISTAGEM_REVISAO = 'Listing <b class="text-danger">Revision of lives</b>';
+    public static $TRADUCAO_LISTAGEM_REVISIONISTAS = 'Listing <b class="text-danger">Revision of lives</b>';
     public static $TRADUCAO_LISTAGEM_CELULAS = 'Listing Cells of';
     public static $TRADUCAO_DIA_HORA = 'Day / Hour';
     public static $TRADUCAO_DADOS_DO_HOSPEDEIRO = 'Data from Host';
@@ -677,7 +687,7 @@ class Constantes {
     public static $LAYOUT_JS_EVENTO = 'layout/layout-js-evento';
     public static $LAYOUT_STRING_JS_EVENTO = 'layoutJSEvento';
     public static $LAYOUT_JS_GRUPO_VALIDACAO = 'layout/layout-js-grupo-validacao';
-    public static $LAYOUT_STRING_JS_GRUPO_VALIDACAO = 'layoutJSGrupoValidacao'; 
+    public static $LAYOUT_STRING_JS_GRUPO_VALIDACAO = 'layoutJSGrupoValidacao';
     public static $LAYOUT_JS_GRUPO_ATUALIZACAO_VALIDACAO = 'layout/layout-js-grupo-atualizacao-validacao';
     public static $LAYOUT_STRING_JS_GRUPO_ATUALIZACAO_VALIDACAO = 'layoutJSGrupoAtualizacaoValidacao';
     public static $LAYOUT_JS_EVENTOS = 'layout/layout-js-eventos';
