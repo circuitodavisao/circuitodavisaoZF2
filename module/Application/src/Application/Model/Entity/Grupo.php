@@ -18,6 +18,11 @@ class Grupo extends CircuitoEntity {
     protected $eventos;
 
     /**
+     * @ORM\OneToOne(targetEntity="GrupoCv", mappedBy="grupo")
+     */
+    private $grupoCv;
+
+    /**
      * @ORM\OneToMany(targetEntity="Entidade", mappedBy="grupo") 
      */
     protected $entidade;
@@ -589,6 +594,14 @@ class Grupo extends CircuitoEntity {
     function setGrupoAtendimento($grupoAtendimento) {
         $this->grupoAtendimento = $grupoAtendimento;
         return $this;
+    }
+
+    function getGrupoCv() {
+        return $this->grupoCv;
+    }
+
+    function setGrupoCv($grupoCv) {
+        $this->grupoCv = $grupoCv;
     }
 
 }

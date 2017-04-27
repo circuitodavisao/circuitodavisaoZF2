@@ -1,0 +1,23 @@
+-- Table: grupo_cv
+
+-- DROP TABLE grupo_cv;
+
+CREATE TABLE grupo_cv
+(
+  id serial NOT NULL,
+  grupo_id bigint NOT NULL,
+  lider1 integer NOT NULL,
+  lider2 integer,
+  entidade integer NOT NULL,
+  CONSTRAINT pk_grupo_cv PRIMARY KEY (id),
+  CONSTRAINT fk_grupo_cv_grupo_id FOREIGN KEY (grupo_id)
+      REFERENCES grupo (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE grupo_cv
+  OWNER TO postgres;
+COMMENT ON TABLE grupo_cv
+  IS 'Tabela associativa com o sistema antigo';

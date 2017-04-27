@@ -8,6 +8,7 @@ use Application\Model\Entity\Entidade;
 use Application\Model\Entity\Evento;
 use Application\Model\Entity\EventoCelula;
 use Application\Model\Entity\Grupo;
+use Application\Model\Entity\GrupoCv;
 use Application\Model\Entity\GrupoEvento;
 use Application\Model\Entity\GrupoPaiFilho;
 use Application\Model\Entity\GrupoPessoa;
@@ -66,7 +67,7 @@ class IndexController extends CircuitoController {
             while ($row = mysqli_fetch_array($queryIgrejas)) {
                 $idPerfilIgreja = 18;
                 $informacaoEntidade = $row[$stringNome];
-                $grupoIgreja = $this->cadastrarEntidade($row[$stringIdResponsavel1], $idPerfilIgreja, $informacaoEntidade, null, $row[$stringIdResponsavel2]);
+                $grupoIgreja = $this->cadastrarEntidade($row[$stringIdResponsavel1], $idPerfilIgreja, $informacaoEntidade, null, $row[$stringIdResponsavel2], $row['id']);
                 $this->cadastrarPessoasVolateis($row[$stringIdResponsavel1], $grupoIgreja);
                 $eventosCulto = $this->cadastrarCulto($row[$stringIdResponsavel1], $grupoIgreja);
                 $this->cadastrarCelulas($row[$stringIdResponsavel1], $grupoIgreja, $row[$stringIdResponsavel2]);
@@ -77,7 +78,7 @@ class IndexController extends CircuitoController {
                 while ($rowEquipe = mysqli_fetch_array($queryEquipes)) {
                     $idPerfilEquipe = 15;
                     $informacaoEntidade = $rowEquipe[$stringNome];
-                    $grupoEquipe = $this->cadastrarEntidade($rowEquipe[$stringIdResponsavel1], $idPerfilEquipe, $informacaoEntidade, $grupoIgreja, $rowEquipe[$stringIdResponsavel2]);
+                    $grupoEquipe = $this->cadastrarEntidade($rowEquipe[$stringIdResponsavel1], $idPerfilEquipe, $informacaoEntidade, $grupoIgreja, $rowEquipe[$stringIdResponsavel2], $rowEquipe['id']);
 //                    $this->cadastrarPessoasVolateis($rowEquipe[$stringIdResponsavel1], $grupoEquipe);
                     $this->cadastrarCultoEquipe($eventosCulto, $rowEquipe['id'], $grupoEquipe);
                     $this->cadastrarCelulas($rowEquipe[$stringIdResponsavel1], $grupoEquipe, $rowEquipe[$stringIdResponsavel2]);
@@ -88,7 +89,7 @@ class IndexController extends CircuitoController {
                         $idPerfilSub = 17;
 //                        $informacaoEntidade = $rowEquipe[$stringNome] . '.' . $rowSubs[$stringNumero];
                         $informacaoEntidade = $rowSubs[$stringNumero];
-                        $grupoSub = $this->cadastrarEntidade($rowSubs[$stringIdResponsavel1], $idPerfilSub, $informacaoEntidade, $grupoEquipe, $rowSubs[$stringIdResponsavel2]);
+                        $grupoSub = $this->cadastrarEntidade($rowSubs[$stringIdResponsavel1], $idPerfilSub, $informacaoEntidade, $grupoEquipe, $rowSubs[$stringIdResponsavel2], $rowSubs['id']);
                         $this->cadastrarPessoasVolateis($rowSubs[$stringIdResponsavel1], $grupoSub);
                         $this->cadastrarCelulas($rowSubs[$stringIdResponsavel1], $grupoSub, $rowSubs[$stringIdResponsavel2]);
                         $querySubEquipes144 = mysqli_query($this->getConexao(), 'SELECT * FROM ursula_subequipe_ursula WHERE ativa = "S" AND dataInativacao IS NULL AND idSubEquipePai = ' . $rowSubs['id']);
@@ -102,13 +103,13 @@ class IndexController extends CircuitoController {
 
                             $querySubEquipes1728 = mysqli_query($this->getConexao(), 'SELECT * FROM ursula_subequipe_ursula WHERE ativa = "S" AND idSubEquipePai = ' . $rowSubs144['id']);
                             while ($rowSubs1728 = mysqli_fetch_array($querySubEquipes1728)) {
-                                $grupoSub1728 = $this->cadastrarEntidade($rowSubs1728[$stringIdResponsavel1], $idPerfilSub, $rowSubs1728[$stringNumero], $grupoSub144, $rowSubs1728[$stringIdResponsavel2]);
+                                $grupoSub1728 = $this->cadastrarEntidade($rowSubs1728[$stringIdResponsavel1], $idPerfilSub, $rowSubs1728[$stringNumero], $grupoSub144, $rowSubs1728[$stringIdResponsavel2], $rowSubs1728['id']);
                                 $this->cadastrarPessoasVolateis($rowSubs1728[$stringIdResponsavel1], $grupoSub1728);
                                 $this->cadastrarCelulas($rowSubs1728[$stringIdResponsavel1], $grupoSub1728, $rowSubs1728[$stringIdResponsavel2]);
 
                                 $querySubEquipes20736 = mysqli_query($this->getConexao(), 'SELECT * FROM ursula_subequipe_ursula WHERE ativa = "S" AND idSubEquipePai = ' . $rowSubs1728['id']);
                                 while ($rowSubs20736 = mysqli_fetch_array($querySubEquipes20736)) {
-                                    $grupoSub20736 = $this->cadastrarEntidade($rowSubs20736[$stringIdResponsavel1], $idPerfilSub, $rowSubs20736[$stringNumero], $grupoSub1728, $rowSubs20736[$stringIdResponsavel2]);
+                                    $grupoSub20736 = $this->cadastrarEntidade($rowSubs20736[$stringIdResponsavel1], $idPerfilSub, $rowSubs20736[$stringNumero], $grupoSub1728, $rowSubs20736[$stringIdResponsavel2], $rowSubs20736['id']);
                                     $this->cadastrarPessoasVolateis($rowSubs20736[$stringIdResponsavel1], $grupoSub20736);
                                     $this->cadastrarCelulas($rowSubs20736[$stringIdResponsavel1], $grupoSub20736, $rowSubs20736[$stringIdResponsavel2]);
                                 }
@@ -553,10 +554,11 @@ class IndexController extends CircuitoController {
         $entidade = new Entidade();
         $entidade->setEntidadeTipo($entidadeTipo);
         $entidade->setGrupo($grupo);
-        $entidade->setNome($informacaoEntidade);
-//        if ($idPerfil === $idPerfilSub) {
-//            $entidade->setNumero($informacaoEntidade);
-//        }
+        if ($idPerfil === $idPerfilSub) {
+            $entidade->setNumero($informacaoEntidade);
+        } else {
+            $entidade->setNome($informacaoEntidade);
+        }
         $this->getRepositorio()->getEntidadeORM()->persistir($entidade);
 
         if ($grupoPai) {
@@ -578,6 +580,13 @@ class IndexController extends CircuitoController {
             }
         }
 
+        /* Cadastro do grupo_cv */
+        $grupoCV = new GrupoCv();
+        $grupoCV->setGrupo($grupo);
+        $grupoCV->setLider1($idLider1);
+        $grupoCV->setLider2($idLider2);
+        $grupoCV->setEntidade($idGrupoAntigo);
+        $this->getRepositorio()->getGrupoCvORM()->persistir($grupoCV, false);
 
         /* Fim gerando */
         return $grupo;

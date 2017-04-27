@@ -36,6 +36,7 @@ class RepositorioORM {
     private $_fatoLiderORM;
     private $_dimensaoORM;
     private $_dimensaoTipoORM;
+    private $_grupoCvORM;
 
     /**
      * Contrutor
@@ -286,6 +287,17 @@ class RepositorioORM {
             $this->_dimensaoTipoORM = new CircuitoORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_DIMENSAO_TIPO);
         }
         return $this->_dimensaoTipoORM;
+    }
+
+    /**
+     * Metodo public para obter a instancia do DimensaoTipoORM
+     * @return CircuitoORM
+     */
+    public function getGrupoCvORM() {
+        if (is_null($this->_grupoCvORM)) {
+            $this->_grupoCvORM = new CircuitoORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_GRUPO_CV);
+        }
+        return $this->_grupoCvORM;
     }
 
     /**
