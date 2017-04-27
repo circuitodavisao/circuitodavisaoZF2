@@ -7,6 +7,7 @@ namespace Application\Model\Entity;
  * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com>
  * Descricao: Entidade anotada da tabela grupo
  */
+
 use Application\Controller\Helper\Funcoes;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -596,6 +597,10 @@ class Grupo extends CircuitoEntity {
         return $this;
     }
 
+    /**
+     * Retorn o GrupoCv
+     * @return GrupoCv
+     */
     function getGrupoCv() {
         return $this->grupoCv;
     }

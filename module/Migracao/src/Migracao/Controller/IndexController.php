@@ -199,7 +199,7 @@ class IndexController extends CircuitoController {
         return new ViewModel(array('html' => $html));
     }
 
-    private function abreConexao() {
+    public function abreConexao() {
         try {
             if (empty($this->getConexao())) {
                 $this->setConexao(mysqli_connect('167.114.118.195', 'circuito_visao2', 'Z#03SOye(hRN', 'circuito_visao', '3306'));
@@ -207,6 +207,61 @@ class IndexController extends CircuitoController {
         } catch (Exception $exc) {
             echo $exc->getMessage();
         }
+    }
+
+    public static function pegaConexaoStatica() {
+        return mysqli_connect('167.114.118.195', 'circuito_visao2', 'Z#03SOye(hRN', 'circuito_visao', '3306');
+    }
+
+    public static function buscaQuantidadeDeAtendimentoPorLideres($mes, $ano, $lider1, $lider2 = null) {
+        $atendimento = null;
+        $sqlAtendimento = "SELECT 
+                                IF(s1 = 'S', 1, 0) 
+                                + IF(s2 = 'S', 1, 0) 
+                                + IF(s3 = 'S', 1, 0) 
+                                + IF(s4 = 'S', 1, 0) 
+                                + IF(s5 = 'S', 1, 0)
+                                AS quantidadeAtendimentos
+                            FROM
+                                ursula_atendimento_ursula
+                            WHERE
+                                mes = $mes AND ano = $ano AND idLider1 = $lider1";
+        $queryAtendimento = mysqli_query(IndexController::pegaConexaoStatica(), $sqlAtendimento);
+        if (mysqli_num_rows($queryAtendimento) == 0) {
+            IndexController::cadastrarVazioAtendimentoPorLideres($mes, $ano, $lider1, $lider2);
+            $atendimento = 0;
+        } else {
+            while ($rowAtendimento = mysqli_fetch_array($queryAtendimento)) {
+                $atendimento = $rowAtendimento['quantidadeAtendimentos'];
+            }
+        }
+        return $atendimento;
+    }
+
+    public static function buscaIdAtendimentoPorLideres($mes, $ano, $lider1, $lider2 = null) {
+        $atendimento = null;
+        $sqlAtendimento = "SELECT id
+                    FROM
+                        ursula_atendimento_ursula
+                    WHERE
+                        mes = $mes AND ano = $ano AND idLider1 = $lider1";
+
+        $queryAtendimento = mysqli_query(IndexController::pegaConexaoStatica(), $sqlAtendimento);
+        if (mysqli_num_rows($queryAtendimento) > 0) {
+            while ($rowAtendimento = mysqli_fetch_array($queryAtendimento)) {
+                $atendimento = $rowAtendimento['id'];
+            }
+        } else {
+            IndexController::cadastrarVazioAtendimentoPorLideres($mes, $ano, $lider1, $lider2);
+        }
+
+        return $atendimento;
+    }
+
+    public static function cadastrarVazioAtendimentoPorLideres($mes, $ano, $lider1, $lider2 = null) {
+        $stringValues = "$lider1, $lider2, $mes, $ano";
+        $sqlAtendimentoInsert = "INSERT INTO ursula_atendimento_ursula(idLider1, idLider2, mes, ano) VALUES($stringValues);";
+        mysqli_query(IndexController::pegaConexaoStatica(), $sqlAtendimentoInsert);
     }
 
     private function buscaPessoaPorId($id, $idPerfil) {

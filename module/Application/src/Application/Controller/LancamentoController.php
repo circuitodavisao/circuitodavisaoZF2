@@ -18,6 +18,7 @@ use DateTime;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManager;
 use Exception;
+use Migracao\Controller\IndexController;
 use Zend\Json\Json;
 use Zend\Mvc\I18n\Translator;
 use Zend\Session\Container;
@@ -66,9 +67,9 @@ class LancamentoController extends CircuitoController {
                         Constantes::$ACTION => Constantes::$PAGINA_MUDAR_FREQUENCIA,
             ));
         }
-        if ($pagina == 'MudarAtendimento') {
+        if ($pagina == Constantes::$PAGINA_MUDAR_ATENDIMENTO) {
             return $this->forward()->dispatch(Constantes::$CONTROLLER_LANCAMENTO, array(
-                        Constantes::$ACTION => 'MudarAtendimento',
+                        Constantes::$ACTION => Constantes::$PAGINA_MUDAR_ATENDIMENTO,
             ));
         }
         if ($pagina == Constantes::$PAGINA_ENVIAR_RELATORIO) {
@@ -866,10 +867,9 @@ class LancamentoController extends CircuitoController {
                     /* Persistindo */
                     /* Inativando o Atendimento */
                     $atendimentoParaInativar = $atendimentoNaSessao;
-
-                    $atendimentoParaInativar->setData_inativacao(Funcoes::dataAtual());
-                    $atendimentoParaInativar->setHora_inativacao(Funcoes::horaAtual());
-                    $repositorioORM->getGrupoAtendimentoORM()->persistir($atendimentoParaInativar);
+                    $timeNow = new DateTime();
+                    $atendimentoParaInativar->setDataEHoraDeInativacao();
+                    $repositorioORM->getGrupoAtendimentoORM()->persistir($atendimentoParaInativar, false);
                     $grupoNew = $repositorioORM->getGrupoORM()->encontrarPorId($validatedData['idGrupo']);
                     $atendimentos = $grupoNew->getGrupoAtendimento();
                     $atendimentosFiltrados = array();
@@ -892,6 +892,12 @@ class LancamentoController extends CircuitoController {
                 } else {
                     $colorBarTotal = "progress-bar-danger";
                 }
+
+                /* Cadastrar atendimento no circuito antigo */
+                $idAtendimento = IndexController::buscaIdAtendimentoPorLideres(
+                                $mes, 2017, $grupo->getGrupoCv()->getLider1(), $grupo->getGrupoCv()->getLider2()
+                );
+
                 $response->setContent(Json::encode(
                                 array('response' => 'true',
                                     'numeroAtendimentos' => $numeroAtendimentos,
