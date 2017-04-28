@@ -133,6 +133,11 @@ class CadastroController extends CircuitoController {
                         Constantes::$ACTION => Constantes::$PAGINA_CADASTRO_TRANSFERENCIA,
             ));
         }
+        if ($pagina == Constantes::$PAGINA_SELECIONAR_REVISIONISTA){
+            return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
+                        Constantes::$ACTION => Constantes::$PAGINA_SELECIONAR_REVISIONISTA,
+            ));
+        }
 
         /* Funcoes */
         if ($pagina == Constantes::$PAGINA_FUNCOES) {
@@ -1150,7 +1155,7 @@ class CadastroController extends CircuitoController {
         ));
     }
     
-    public function inserirRevisaoAction() {
+    public function selecionarRevisionistaAction() {
         $sessao = new Container(Constantes::$NOME_APLICACAO);
         $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
         $idEntidadeAtual = $sessao->idEntidadeAtual;
