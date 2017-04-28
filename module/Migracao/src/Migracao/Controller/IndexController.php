@@ -213,31 +213,6 @@ class IndexController extends CircuitoController {
         return mysqli_connect('167.114.118.195', 'circuito_visao2', 'Z#03SOye(hRN', 'circuito_visao', '3306');
     }
 
-    public static function buscaQuantidadeDeAtendimentoPorLideres($mes, $ano, $lider1, $lider2 = null) {
-        $atendimento = null;
-        $sqlAtendimento = "SELECT 
-                                IF(s1 = 'S', 1, 0) 
-                                + IF(s2 = 'S', 1, 0) 
-                                + IF(s3 = 'S', 1, 0) 
-                                + IF(s4 = 'S', 1, 0) 
-                                + IF(s5 = 'S', 1, 0)
-                                AS quantidadeAtendimentos
-                            FROM
-                                ursula_atendimento_ursula
-                            WHERE
-                                mes = $mes AND ano = $ano AND idLider1 = $lider1";
-        $queryAtendimento = mysqli_query(IndexController::pegaConexaoStatica(), $sqlAtendimento);
-        if (mysqli_num_rows($queryAtendimento) == 0) {
-            IndexController::cadastrarVazioAtendimentoPorLideres($mes, $ano, $lider1, $lider2);
-            $atendimento = 0;
-        } else {
-            while ($rowAtendimento = mysqli_fetch_array($queryAtendimento)) {
-                $atendimento = $rowAtendimento['quantidadeAtendimentos'];
-            }
-        }
-        return $atendimento;
-    }
-
     public static function buscaIdAtendimentoPorLideres($mes, $ano, $lider1, $lider2 = null) {
         $atendimento = null;
         $sqlAtendimento = "SELECT id
@@ -262,6 +237,13 @@ class IndexController extends CircuitoController {
         $stringValues = "$lider1, $lider2, $mes, $ano";
         $sqlAtendimentoInsert = "INSERT INTO ursula_atendimento_ursula(idLider1, idLider2, mes, ano) VALUES($stringValues);";
         mysqli_query(IndexController::pegaConexaoStatica(), $sqlAtendimentoInsert);
+    }
+
+    public static function cadastrarAtendimentoPorid($id, $atendimentoLancado) {
+        $stringValues = "s1 = '$atendimentoLancado[1]', s2 = '$atendimentoLancado[2]', s3 = '$atendimentoLancado[3]', s4 = '$atendimentoLancado[4]', s5 = '$atendimentoLancado[5]'";
+        $sqlAtendimentoUpdate = "UPDATE ursula_atendimento_ursula SET $stringValues WHERE id = $id;";
+//        echo "$sqlAtendimentoUpdate";
+        mysqli_query(IndexController::pegaConexaoStatica(), $sqlAtendimentoUpdate);
     }
 
     private function buscaPessoaPorId($id, $idPerfil) {

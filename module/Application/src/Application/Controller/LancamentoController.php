@@ -898,6 +898,16 @@ class LancamentoController extends CircuitoController {
                                 $mes, 2017, $grupo->getGrupoCv()->getLider1(), $grupo->getGrupoCv()->getLider2()
                 );
 
+                unset($atendimentoLancado);
+                for ($index = 1; $index <= 5; $index++) {
+                    if ($index <= $numeroAtendimentos) {
+                        $atendimentoLancado[$index] = 'S';
+                    } else {
+                        $atendimentoLancado[$index] = 'N';
+                    }
+                }
+                IndexController::cadastrarAtendimentoPorid($idAtendimento, $atendimentoLancado);
+
                 $response->setContent(Json::encode(
                                 array('response' => 'true',
                                     'numeroAtendimentos' => $numeroAtendimentos,
