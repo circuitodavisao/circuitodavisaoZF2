@@ -275,6 +275,7 @@ class Constantes {
     public static $PAGINA_LANCAR_ATENDIMENTO = 'LancarAtendimento';
     public static $PAGINA_LANCAR_ATENDIMENTO_EDIT = 'LancarAtendimentoEdit';
     public static $PAGINA_ATENDIMENTO_EXCLUSAO = 'AtendimentoExclusao';
+    public static $PAGINA_RELATORIO_ATENDIMENTO = 'RelatorioAtendimento';
     public static $PAGINA_ATENDIMENTO_EXCLUSAO_CONFIRMACAO = 'AtendimentoExclusaoConfirmacao';
     public static $PAGINA_LABEL_LANCAR_ATENDIMENTO = 'Lançar';
     public static $PAGINA_SALVAR_ATENDIMENTO = 'SalvarAtendimento';
@@ -393,6 +394,7 @@ class Constantes {
     public static $PAGINA_BUSCAR_CPF = 'BuscarCPF';
     public static $PAGINA_BUSCAR_EMAIL = 'BuscarEmail';
     public static $PAGINA_CADASTRO_REVISAO = 'CadastrarRevisao';
+    public static $PAGINA_SELECIONAR_REVISIONISTA = 'SelecionarRevisionista';
     public static $PAGINA_INSERIR_REVISAO = 'InserirRevisao';
     public static $PAGINA_SALVAR_REVISAO = 'SalvarRevisao';
     public static $PAGINA_CADASTRO_TRANSFERENCIA = 'Transferencia';
@@ -644,6 +646,7 @@ class Constantes {
     public static $TRADUCAO_NOVA_CELULA = 'New Cell';
     public static $TRADUCAO_NOVO_CULTO = 'New Cult';
     public static $TRADUCAO_NOVO_REVISAO = 'New Revision';
+    public static $TRADUCAO_NOVO_REVISIONISTA = 'Insert';
     public static $TRADUCAO_MULTIPLICACAO = 'Multiplication';
     public static $TRADUCAO_LISTAGEM_CULTOS = 'Listing <b class="text-danger">Cults</b>';
     public static $TRADUCAO_LISTAGEM_REVISAO = 'Listing <b class="text-danger">Revision of lives</b>';
