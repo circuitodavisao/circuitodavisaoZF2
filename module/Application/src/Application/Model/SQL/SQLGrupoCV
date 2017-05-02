@@ -8,7 +8,7 @@ CREATE TABLE grupo_cv
   grupo_id bigint NOT NULL,
   lider1 integer NOT NULL,
   lider2 integer,
-  entidade integer NOT NULL,
+  numero_identificador character varying(64),
   CONSTRAINT pk_grupo_cv PRIMARY KEY (id),
   CONSTRAINT fk_grupo_cv_grupo_id FOREIGN KEY (grupo_id)
       REFERENCES grupo (id) MATCH SIMPLE

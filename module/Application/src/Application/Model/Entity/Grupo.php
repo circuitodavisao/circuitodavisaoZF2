@@ -7,7 +7,6 @@ namespace Application\Model\Entity;
  * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com>
  * Descricao: Entidade anotada da tabela grupo
  */
-
 use Application\Controller\Helper\Funcoes;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -344,12 +343,12 @@ class Grupo extends CircuitoEntity {
         }
         if ($verificacaoDataInativacao) {
             if (is_null($this->getEventos())) {
+                $primeiroDiaDaSemana = date('N', mktime(0, 0, 0, $mes, 1, $ano));
                 $diaAtual = date('d');
                 $mesAtual = date('m'); /* Mes com zero */
                 $anoAtual = date('Y');
                 $cicloAtual = Funcoes::cicloAtual($mes, $ano);
                 if ($ciclo === 1) {
-                    $primeiroDiaDaSemana = date('N', mktime(0, 0, 0, $mes, 1, $ano));
                     if ($primeiroDiaDaSemana == 1) {
                         $primeiroDiaDaSemana = 8;
                     } else {

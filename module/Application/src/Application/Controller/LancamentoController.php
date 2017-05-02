@@ -152,9 +152,9 @@ class LancamentoController extends CircuitoController {
                         Constantes::$ACTION => Constantes::$PAGINA_ATENDIMENTO_EXCLUSAO_CONFIRMACAO,
             ));
         }
-        if ($pagina == 'RelatorioAtendimento') {
+        if ($pagina == Constantes::$PAGINA_RELATORIO_ATENDIMENTO) {
             return $this->forward()->dispatch(Constantes::$CONTROLLER_LANCAMENTO, array(
-                        Constantes::$ACTION => 'RelatorioAtendimento',
+                        Constantes::$ACTION => Constantes::$PAGINA_RELATORIO_ATENDIMENTO,
             ));
         }
         /* Funcoes */
@@ -427,22 +427,27 @@ class LancamentoController extends CircuitoController {
                         }
                     }
                 }
+                $tipoCampo = 0;
                 if ($evento->getEventoTipo()->getId() === $eventoTipoCulto) {
                     $diaDeSabado = 7;
                     $diaDeDomingo = 1;
                     switch ($evento->getDia()) {
                         case $diaDeSabado:
                             $dimensaoSelecionada = $dimensoes[$dimensaoTipoArena];
+                            $tipoCampo = 3;
                             break;
                         case $diaDeDomingo:
                             $dimensaoSelecionada = $dimensoes[$dimensaoTipoDomingo];
+                            $tipoCampo = 4;
                             break;
                         default:
                             $dimensaoSelecionada = $dimensoes[$dimensaoTipoCulto];
+                            $tipoCampo = 2;
                             break;
                     };
                 }
                 if ($evento->getEventoTipo()->getId() === $eventoTipoCelula) {
+                    $tipoCampo = 1;
                     $dimensaoSelecionada = $dimensoes[$dimensaoTipoCelula];
 
                     /* Atualiza o relatorio de celulas */
@@ -469,6 +474,8 @@ class LancamentoController extends CircuitoController {
                     $setarDataEHora = false;
                     $repositorioORM->getFatoCelulaORM()->persistir($fatoCelula, $setarDataEHora);
                 }
+
+                $tipoPessoa = 0;
                 if ($pessoa->getGrupoPessoaAtivo()) {
                     /* Pessoa volateis */
                     $pessoaTipoVisitante = 1;
@@ -479,21 +486,29 @@ class LancamentoController extends CircuitoController {
                         case $pessoaTipoVisitante:
                             $valorDoCampo = $dimensaoSelecionada->getVisitante();
                             $dimensaoSelecionada->setVisitante($valorDoCampo + $valorParaSomar);
+                            $tipoPessoa = 1;
                             break;
                         case $pessoaTipoConsolidacao:
                             $valorDoCampo = $dimensaoSelecionada->getConsolidacao();
                             $dimensaoSelecionada->setConsolidacao($valorDoCampo + $valorParaSomar);
+                            $tipoPessoa = 2;
                             break;
                         case $pessoaTipoMembro:
                             $valorDoCampo = $dimensaoSelecionada->getMembro();
                             $dimensaoSelecionada->setMembro($valorDoCampo + $valorParaSomar);
+                            $tipoPessoa = 3;
                             break;
                     }
                 } else {
+                    $tipoPessoa = 4;
                     $valorDoCampo = $dimensaoSelecionada->getLider();
                     $dimensaoSelecionada->setLider($valorDoCampo + $valorParaSomar);
                 }
                 $repositorioORM->getDimensaoORM()->persistir($dimensaoSelecionada, false);
+
+                /* Atualizar DW circuito antigo */
+                $grupoCv = $grupoPassado->getGrupoCv();
+                IndexController::mudarFrequencia($grupoCv->getNumero_identificador(), $mes, $ano, $tipoCampo, $tipoPessoa, $ciclo, $valorParaSomar);
 
                 $repositorioORM->fecharTransacao();
                 $response->setContent(Json::encode(

@@ -37,8 +37,8 @@ class GrupoCv {
     /** @ORM\Column(type="integer") */
     protected $lider2;
 
-    /** @ORM\Column(type="integer") */
-    protected $entidade;
+    /** @ORM\Column(type="string") */
+    protected $numero_identificador;
 
     function getId() {
         return $this->id;
@@ -54,10 +54,6 @@ class GrupoCv {
 
     function getLider2() {
         return $this->lider2;
-    }
-
-    function getEntidade() {
-        return $this->entidade;
     }
 
     function setId($id) {
@@ -76,16 +72,20 @@ class GrupoCv {
         $this->lider2 = $lider2;
     }
 
-    function setEntidade($entidade) {
-        $this->entidade = $entidade;
-    }
-
     function getGrupo_id() {
         return $this->grupo_id;
     }
 
     function setGrupo_id($grupo_id) {
         $this->grupo_id = $grupo_id;
+    }
+
+    function getNumero_identificador() {
+        return $this->numero_identificador;
+    }
+
+    function setNumero_identificador($numero_identificador) {
+        $this->numero_identificador = $numero_identificador;
     }
 
 }
