@@ -138,6 +138,11 @@ class CadastroController extends CircuitoController {
                         Constantes::$ACTION => Constantes::$PAGINA_SELECIONAR_REVISIONISTA,
             ));
         }
+        if ($pagina == Constantes::$PAGINA_CADASTRAR_PESSOA_REVISAO){
+            return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
+                        Constantes::$ACTION => Constantes::$PAGINA_CADASTRAR_PESSOA_REVISAO,
+            ));
+        }
 
         /* Funcoes */
         if ($pagina == Constantes::$PAGINA_FUNCOES) {
@@ -1160,23 +1165,29 @@ class CadastroController extends CircuitoController {
         $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
         $idEntidadeAtual = $sessao->idEntidadeAtual;
         $entidade = $repositorioORM->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
-        $grupo = $entidade->getGrupo();
-        $gruposAbaixo = $grupo->getGrupoPaiFilhoFilhos();
-
-        foreach ($gruposAbaixo as $gpFilho) {
-            $grupoFilho = $gpFilho->getGrupoPaiFilhoFilho();
-            $entidadeFilho = $grupoFilho->getEntidadeAtiva();
-            if ($entidadeFilho->getTipo_id() == 6) {
-                $gruposIgrejas[] = $entidadeFilho;
-            }
-        }
-        $form = new RevisaoForm('revisaoForm', $gruposIgrejas);
+        
+        
+        
         $view = new ViewModel(array(
-            'revisaoForm' => $form,
-            'igrejas' => $gruposIgrejas,
+            Constantes::$ENTIDADE => $entidade,
+
         ));
 
+        /* Javascript */
+        $layoutJS = new ViewModel();
+        $layoutJS->setTemplate(Constantes::$LAYOUT_JS_EVENTOS);
+        $view->addChild($layoutJS, Constantes::$LAYOUT_STRING_JS_EVENTOS);
+
+        $layoutJSValidacao = new ViewModel();
+        $layoutJSValidacao->setTemplate(Constantes::$LAYOUT_JS_EVENTOS_VALIDACAO);
+        $view->addChild($layoutJSValidacao, Constantes::$LAYOUT_STRING_JS_EVENTOS_VALIDACAO);
+
         return $view;
+        
+    }
+    
+    public function cadastrarPessoaRevisaoAction(){
+        
     }
 
 }
