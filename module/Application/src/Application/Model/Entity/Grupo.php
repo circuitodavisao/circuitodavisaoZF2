@@ -331,6 +331,7 @@ class Grupo extends CircuitoEntity {
      * @return GrupoEvento
      */
     function getGrupoEventoNoCiclo($ciclo = 1, $mes = 5, $ano = 2016) {
+        $ciclo = (int) $ciclo;
         $mes = str_pad($mes, 2, 0, STR_PAD_LEFT);
         /* Validar Inativado */
         $verificacaoDataInativacao = false;
@@ -348,13 +349,13 @@ class Grupo extends CircuitoEntity {
                 $mesAtual = date('m'); /* Mes com zero */
                 $anoAtual = date('Y');
                 $cicloAtual = Funcoes::cicloAtual($mes, $ano);
-                if ($ciclo === 1) {
-                    if ($primeiroDiaDaSemana == 1) {
-                        $primeiroDiaDaSemana = 8;
-                    } else {
-                        $primeiroDiaDaSemana++;
-                    }
-                }
+//                if ($ciclo === 1) {
+//                    if ($primeiroDiaDaSemana === 1) {
+//                        $primeiroDiaDaSemana = 8;
+//                    } else {
+//                        $primeiroDiaDaSemana++;
+//                    }
+//                }
                 $ultimoDiaDaSemana = date('N', mktime(0, 0, 0, $mes, cal_days_in_month(CAL_GREGORIAN, $mes, $ano), $ano));
                 if ($ultimoDiaDaSemana == 1) {
                     $ultimoDiaDaSemana = 8;
@@ -396,7 +397,7 @@ class Grupo extends CircuitoEntity {
                                         if ($ge->getData_criacaoMes() <= $mes) {
                                             if ($ge->getData_criacaoMes() == $mes) {
                                                 $ge->setNovo(true);
-                                                if ($ciclo == $cicloAtual) {
+                                                if ($ciclo === $cicloAtual) {
                                                     /* Validar dia cadastro grupo e evento */
                                                     $diaDaCriacao = $ge->getData_criacaoDia();
                                                     $diaDaSemanaDaCriacao = date('N', mktime(0, 0, 0, $mes, $diaDaCriacao, $ano));
@@ -426,8 +427,8 @@ class Grupo extends CircuitoEntity {
                                 /* Validacao de ciclos inicial e final */
                                 $verificacaoDiaSemana = false;
                                 $cicloTotal = Funcoes::totalCiclosMes($mes, $ano);
-                                if ($verificacaoData && ($ciclo == 1 || $ciclo == $cicloTotal)) {
-                                    if ($ciclo == 1) {
+                                if ($verificacaoData && ($ciclo === 1 || $ciclo === $cicloTotal)) {
+                                    if ($ciclo === 1) {
                                         if ($ge->getEvento()->getDiaAjustado() >= $primeiroDiaDaSemana) {
                                             $verificacaoDiaSemana = true;
                                         }
