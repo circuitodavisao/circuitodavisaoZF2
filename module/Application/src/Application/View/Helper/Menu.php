@@ -30,7 +30,7 @@ class Menu extends AbstractHelper {
         if (empty($stringFoto)) {
             $stringFoto = 'placeholder.png';
         }
-// Start: Header 
+        // Start: Header 
         $html .= '<header class="navbar navbar-fixed-top">';
         $html .= '<div class="navbar-branding">';
         $html .= '<a class="navbar-brand" href="#" style="padding-top: 22px;">';
@@ -73,18 +73,18 @@ class Menu extends AbstractHelper {
         $html .= '</li>';
         $html .= '</ul>';
         $html .= '</header>';
-// End: Header 
-// 
-// Start: Sidebar
+        // End: Header 
+        // 
+        // Start: Sidebar
         $html .= '<aside id="sidebar_left" class="nano nano-light affix">';
 
-// Start: Sidebar Left Content
+        // Start: Sidebar Left Content
         $html .= '<div class="sidebar-left-content nano-content">';
 
-// Start: Sidebar Header
+        // Start: Sidebar Header
         $html .= '<header class="sidebar-header">';
 
-// Sidebar Widget - Author 
+        // Sidebar Widget - Author 
         $html .= '<div class="sidebar-widget author-widget">';
         $html .= '<div class="media">';
         $html .= '<a class="media-left" href="#">';
@@ -150,7 +150,7 @@ class Menu extends AbstractHelper {
                 }
                 $informacaoEntidade = '';
                 if (!empty($entidadeFilho)) {
-                    $informacaoEntidade = $entidadeFilho->getEntidadeTipo()->getNome() . ' <small>' . $entidadeFilho->infoEntidade() . '</small>';
+                    $informacaoEntidade = '<small>' . $entidadeFilho->infoEntidade() . '</small>';
                 }
                 $html .= $this->view->menuHierarquia($nomeLideres, $informacaoEntidade, 2);
                 $html .= $this->view->menuHierarquia('', '', 3);
@@ -188,28 +188,7 @@ class Menu extends AbstractHelper {
                 }
                 $html .= $this->view->menuHierarquia('', '', 4);
             }
-            /* Discipulos 12 */
-//            $html .= $this->view->menuHierarquia('Lucas e Paloma', 'Salt');
-//            $html .= $this->view->menuHierarquia('Léo e Vivian', 'Galapagos', 2);
-//
-//            $html .= $this->view->menuHierarquia('', 'Galapagos', 3);
-//            /* Discipulos 144 */
-//            $html .= $this->view->menuHierarquia('Juno', 'Galapagos&nbsp;' . 1, 5);
-//            $html .= $this->view->menuHierarquia('Denise', 'Galapagos&nbsp;' . 2, 5);
-//            $html .= $this->view->menuHierarquia('Bluuh', 'Galapagos&nbsp;' . 3, 5);
-//
-//            $html .= $this->view->menuHierarquia('Jaspio', 'Galapagos&nbsp;' . 55, 6);
-//            $html .= $this->view->menuHierarquia('', 'Galapagos&nbsp;' . 55, 7);
-//            /* Discipulos 1728 */
-//            $html .= $this->view->menuHierarquia('Paloma', 'Galapagos&nbsp;55.77', 8);
-//            /* Fim Discipulos 1728 */
-//            $html .= $this->view->menuHierarquia('', '', 4);
-//
-//            $html .= $this->view->menuHierarquia('', '', 4);
-//            /* Fim Discipulos 144 */
-//
-//            $html .= $this->view->menuHierarquia('Ivan e Nubia', 'Bodão');
-            /* Fim Discipulos 12 */
+            
             $html .= '</ul>';
             $html .= '</li>';
             $html .= '</ul>';

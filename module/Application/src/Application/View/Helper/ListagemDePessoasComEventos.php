@@ -147,25 +147,32 @@ class ListagemDePessoasComEventos extends AbstractHelper {
             foreach ($pessoas as $pessoa) {
                 $classLinha = '';
                 $corBotao = 'btn-dark';
-                $corTextoTagsExtras = '';
+                $corTextoTagsExtrasXs = ' class="hidden-lg" ';
+                $corTextoTagsExtrasLg = ' class="hidden-xs hidden-sm hidden-md" ';
                 $classLinha2 = '';
                 if ($pessoa->getTipo() != 'LP' && !$pessoa->getAtivo()) {
                     $classLinha = 'class="row-warning warning"';
                     $classLinha2 = 'footable-visible footable-first-column';
                     $corBotao = 'btn-warning disabled';
-                    $corTextoTagsExtras = 'class="text-warning" data-toggle="tooltip" data-placement="center" title data-original-title="Inativo"';
+                    $base = ' text-warning" data-toggle="tooltip" data-placement="center" title data-original-title="Inativo"';
+                    $corTextoTagsExtrasXs = 'class="hidden-lg' . $base;
+                    $corTextoTagsExtrasLg = 'class="hidden-xs hidden-sm hidden-md' . $base;
                 }
                 if ($pessoa->verificarSeFoiTransferido($mesSelecionado, $anoSelecionado)) {
                     $classLinha = 'class="row-dark default"';
                     $corBotao = 'btn-default';
-                    $corTextoTagsExtras = 'class="text-muted" data-toggle="tooltip" data-placement="center" title data-original-title="Transferido"';
+                    $base = ' text-muted" data-toggle="tooltip" data-placement="center" title data-original-title="Transferido"';
+                    $corTextoTagsExtrasXs = 'class="hidden-lg' . $base;
+                    $corTextoTagsExtrasLg = 'class="hidden-xs hidden-sm hidden-md' . $base;
                 }
                 /* Reserva do revisão de vidas */
                 if (!empty($pessoa->verificaSeRevisaoFoiCadastraddoNoMesEAno($mesSelecionado, $anoSelecionado))) {
                     $classLinha = 'class="row-success success"';
                     $classLinha2 = 'footable-visible footable-first-column';
                     $corBotao = 'btn-success';
-                    $corTextoTagsExtras = 'class="text-success" data-toggle="tooltip" data-placement="center" title data-original-title="Revisão de vidas"';
+                    $base = ' text-success" data-toggle="tooltip" data-placement="center" title data-original-title="Revisão de vidas"';
+                    $corTextoTagsExtrasXs = 'class="hidden-lg' . $base;
+                    $corTextoTagsExtrasLg = 'class="hidden-xs hidden-sm hidden-md' . $base;
                 }
                 $html .= '<tr id="tr_' . $pessoa->getIdGrupoPessoa() . '" ' . $classLinha . '>';
 
@@ -190,18 +197,18 @@ class ListagemDePessoasComEventos extends AbstractHelper {
                                 . 'class="btn ladda-button btn-sm" style="margin-left:5px;"><i class="fa fa-trash-o"></i></span>';
                         $html .= '</span>';
 
-                        /* Reserva do revisão de vidas */
-                        if (empty($pessoa->verificaSeRevisaoFoiCadastraddoNoMesEAno($mesSelecionado, $anoSelecionado))) {
-                            $html .= '<span class="input-group-btn">';
-                            $html .= '<span onclick="funcaoPessoa(\'' . Constantes::$ROUTE_CADASTRAR_PESSOA_REVISAO . '\', ' . $pessoa->getIdGrupoPessoa() . ');" '
-                                    . 'class="btn ladda-button btn-sm" style="margin-left:5px;"><i class="fa fa-send"></i></span>';
-                            $html .= '</span>';
-                        } else {
-                            $html .= '<span class="input-group-btn">';
-                            $html .= '<span onclick="funcaoPessoa(\'' . Constantes::$ROUTE_FICHA_REVISAO . '\', ' . $pessoa->getIdGrupoPessoa() . ');" '
-                                    . 'class="btn ladda-button btn-sm" style="margin-left:5px;"><i class="fa fa-file-text-o"></i></span>';
-                            $html .= '</span>';
-                        }
+//                        /* Reserva do revisão de vidas */
+//                        if (empty($pessoa->verificaSeRevisaoFoiCadastraddoNoMesEAno($mesSelecionado, $anoSelecionado))) {
+//                            $html .= '<span class="input-group-btn">';
+//                            $html .= '<span onclick="funcaoPessoa(\'' . Constantes::$ROUTE_CADASTRAR_PESSOA_REVISAO . '\', ' . $pessoa->getIdGrupoPessoa() . ');" '
+//                                    . 'class="btn ladda-button btn-sm" style="margin-left:5px;"><i class="fa fa-send"></i></span>';
+//                            $html .= '</span>';
+//                        } else {
+//                            $html .= '<span class="input-group-btn">';
+//                            $html .= '<span onclick="funcaoPessoa(\'' . Constantes::$ROUTE_FICHA_REVISAO . '\', ' . $pessoa->getIdGrupoPessoa() . ');" '
+//                                    . 'class="btn ladda-button btn-sm" style="margin-left:5px;"><i class="fa fa-file-text-o"></i></span>';
+//                            $html .= '</span>';
+//                        }
 
                         $html .= '</div>';
                     }
@@ -231,10 +238,14 @@ class ListagemDePessoasComEventos extends AbstractHelper {
                 if (!($pessoa->getTipo() != 'LP' && !$pessoa->getAtivo())) {
                     $html .= '<a id="menudrop_' . $pessoa->getId() . '" class="tdNome text-left dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">';
                 }
-                $html .= '<span id="span_nome_' . $pessoa->getId() . '" ' . $corTextoTagsExtras . '>';
-                /* Validação de quantos eventos */
+                /* nome */
+                $html .= '<span id="span_nome_' . $pessoa->getId() . '" ' . $corTextoTagsExtrasXs . '>';
                 $html .= $pessoa->getNomeListaDeLancamento($this->view->quantidadeDeEventosNoCiclo);
                 $html .= '</span>';
+                $html .= '<span ' . $corTextoTagsExtrasLg . '>';
+                $html .= $pessoa->getNome();
+                $html .= '</span>';
+                /* fim nome */
                 $html .= '</a>';
                 if (!($pessoa->getTipo() != 'LP' && !$pessoa->getAtivo())) {
                     $html .= '<ul class="dropdown-menu sobrepor-elementos modal-edicao-nome">';

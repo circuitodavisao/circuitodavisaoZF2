@@ -191,16 +191,19 @@ class IndexController extends CircuitoController {
 //                        $mesSelecionado = 3;
                     $grupoEventosNoCiclo = $grupo->getGrupoEventoNoCiclo($cicloSelecionado, $mesSelecionado, $anoSelecionado);
                     $quantidadeDeEventosNoCiclo = count($grupoEventosNoCiclo);
+                    $temCelula = false;
                     if ($quantidadeDeEventosNoCiclo > 0) {
                         foreach ($grupoEventosNoCiclo as $grupoEventoNoCiclo) {
                             if ($grupoEventoNoCiclo->getEvento()->verificaSeECelula()) {
                                 $this->getRepositorio()->getFatoCelulaORM()->criarFatoCelula($fatoCiclo, $grupoEventoNoCiclo->getEvento()->getEventoCelula()->getId());
+                                $html .= "<br />Fato Celula ";
+                                $temCelula = true;
                             }
                         }
                     }
 
                     $quantidadeLideres = 0;
-                    if ($grupo->getGrupoEventoAtivosPorTipo($tipoCelula)) {
+                    if ($temCelula) {
                         $quantidadeLideres = count($grupo->getResponsabilidadesAtivas());
                     }
                     $html .= "<br />quantidadeLideres" . $quantidadeLideres;
