@@ -45,6 +45,7 @@ use Application\View\Helper\InputExtras;
 use Application\View\Helper\InputFormulario;
 use Application\View\Helper\InputFormularioSimples;
 use Application\View\Helper\LinkLogo;
+use Application\View\Helper\ListagemConsolidacaoParaRevisao;
 use Application\View\Helper\ListagemDeEventos;
 use Application\View\Helper\ListagemDePessoasComEventos;
 use Application\View\Helper\ListagemLideresTransferencia;
@@ -137,6 +138,9 @@ class Module {
                 },
                 'listagemDePessoasComEventos' => function($sm) {
                     return new ListagemDePessoasComEventos();
+                },
+                'listagemConsolidacaoParaRevisao' => function($sm) {
+                    return new ListagemConsolidacaoParaRevisao();
                 },
                 'tabelaLancamento' => function($sm) {
                     return new TabelaLancamento();
