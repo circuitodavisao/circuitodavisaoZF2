@@ -88,6 +88,14 @@ class RelatorioController extends CircuitoController {
         $fatoLider = $repositorioORM->getFatoLiderORM()->encontrarPorNumeroIdentificador($numeroIdentificador, $tipoRelatorioPessoal);
 
         $relatorioCelula = $repositorioORM->getFatoCicloORM()->montarRelatorioCelulaPorNumeroIdentificador($numeroIdentificador, $cicloSelecionado, $mesSelecionado, $anoSelecionado, $tipoRelatorioPessoal);
+
+        /* Verificar data de cadastro da responsabilidade */
+        $validacaoNesseMes = 0;
+        $grupoResponsavel = $grupo->getGrupoResponsavelAtivo();
+        if ($grupoResponsavel->verificarSeFoiCadastradoNesseMes()) {
+            $validacaoNesseMes = 1;
+        }
+
         return new ViewModel(
                 array(
             'relatorio' => $relatorio,
@@ -96,7 +104,8 @@ class RelatorioController extends CircuitoController {
             'repositorioORM' => $repositorioORM,
             'abaSelecionada' => $abaSelecionada,
             'fatoLider' => $fatoLider,
-            'relatorioCelula' => $relatorioCelula
+            'relatorioCelula' => $relatorioCelula,
+            Constantes::$VALIDACAO_NESSE_MES => $validacaoNesseMes,
                 )
         );
     }

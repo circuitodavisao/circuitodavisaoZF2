@@ -17,9 +17,11 @@ $classeLinha = '';
                     <li <?php echo Constantes::$ONCLICK_ABRIR_MODAL . ' ' . $this->abaSelecionada($this->abaSelecionada, 1); ?>>
                         <?php echo '<a href="' . $urlBase . '">Período Atual</a>'; ?>
                     </li>
-                    <li <?php echo Constantes::$ONCLICK_ABRIR_MODAL . ' ' . $this->abaSelecionada($this->abaSelecionada, 2); ?>>
-                        <?php echo '<a href="' . $urlBase2 . '">Período Anterior</a>'; ?>
-                    </li>
+                    <?php if ($this->validacaoNesseMes == 0) { ?>
+                        <li <?php echo Constantes::$ONCLICK_ABRIR_MODAL . ' ' . $this->abaSelecionada($this->abaSelecionada, 2); ?>>
+                            <?php echo '<a href="' . $urlBase2 . '">Período Anterior</a>'; ?>
+                        </li>
+                    <?php } ?>
                 </ul>
             </div>
             <div class="panel-body pn">

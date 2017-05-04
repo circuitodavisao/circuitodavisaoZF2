@@ -463,16 +463,23 @@ class LancamentoController extends CircuitoController {
                             $somaFrequencias+= 1;
                         }
                     }
+
                     if ($somaFrequencias === 0) {
                         $realizada = 0;
                     } else {
                         $realizada = 1;
                     }
+
                     $eventoCelulaId = $evento->getEventoCelula()->getId();
                     $fatoCelula = $repositorioORM->getFatoCelulaORM()->encontrarPorEventoCelulaId($eventoCelulaId);
+                    $realizadaAntesDeMudar = $fatoCelula->getRealizada();
                     $fatoCelula->setRealizada($realizada);
                     $setarDataEHora = false;
                     $repositorioORM->getFatoCelulaORM()->persistir($fatoCelula, $setarDataEHora);
+
+                    /* Atualizar DW celulas circuito antigo */
+                    $grupoCv = $grupoPassado->getGrupoCv();
+                    IndexController::mudarCelulasRealizadas($grupoCv->getNumero_identificador(), $mes, $ano, $ciclo, $realizada, $realizadaAntesDeMudar);
                 }
 
                 $tipoPessoa = 0;

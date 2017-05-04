@@ -347,6 +347,46 @@ class IndexController extends CircuitoController {
 //        mysql_query($sqlAtualizarDataEnvio);
     }
 
+    public static function mudarCelulasRealizadas($numeroIdentificador, $mes, $ano, $ciclo, $realizada, $realizadaAntesDeMudar, $idTipo = 0, $idEntidade = 0, $idPai = 0) {
+        $dimensoes = IndexController::buscaDimensoesPorIdFatoGrupo($numeroIdentificador, $mes, $ano, $idTipo, $idEntidade, $idPai);
+        $valorDoCampo = IndexController::buscaValorDoCampoDimensaoelula($ciclo, $dimensoes[1]);
+        $tabela = "ursula_dim_celula_ursula";
+        $campo = 'c' . $ciclo . 'n';
+
+        $valor = null;
+
+        /* Foi realizada e saiu do zero */
+        if ($realizada === 1 && $realizadaAntesDeMudar === 0) {
+            if ($valorDoCampo > 0) {
+                $valor = $valorDoCampo - 1;
+            }
+        }
+
+        /* Nao realizada e existe */
+        if ($realizada === 0 && $realizadaAntesDeMudar === 1) {
+            $valor = $valorDoCampo + 1;
+        }
+
+        if ($valor) {
+            $sqlMudarCelulasRealizadas = 'UPDATE ' . $tabela . ' SET ' . $campo . ' = ' . $valor . ' WHERE id = ' . $dimensoes[1] . ';';
+            mysqli_query(IndexController::pegaConexaoStaticaDW(), $sqlMudarCelulasRealizadas);
+        }
+    }
+
+    public static function buscaValorDoCampoDimensaoelula($ciclo, $idDimCelula) {
+        $valor = null;
+        $tabela = "ursula_dim_celula_ursula";
+        $campo = 'c' . $ciclo . 'n';
+        $sqlCampoDimensaoCelula = 'SELECT ' . $campo . ' FROM ' . $tabela . ' WHERE id = ' . $idDimCelula . ';';
+        $queryCampoDimensaoCelula = mysqli_query(IndexController::pegaConexaoStaticaDW(), $sqlCampoDimensaoCelula);
+        if (mysqli_num_rows($queryCampoDimensaoCelula) > 0) {
+            while ($rowFatoGrupo = mysqli_fetch_array($queryCampoDimensaoCelula)) {
+                $valor = $rowFatoGrupo[$campo];
+            }
+        }
+        return $valor;
+    }
+
     public static function buscaIdFatoGrupoPorNumeroIdentificador($numeroIdentificador, $mes, $ano, $idTipo = 0, $idEntidade = 0, $idPai = 0) {
         $fatoGrupo = null;
         $sqlFatoGrupo = "SELECT id
