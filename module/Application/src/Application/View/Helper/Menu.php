@@ -188,14 +188,14 @@ class Menu extends AbstractHelper {
                 }
                 $html .= $this->view->menuHierarquia('', '', 4);
             }
-            
+
             $html .= '</ul>';
             $html .= '</li>';
             $html .= '</ul>';
         } else {
             $html .= '<li>';
             $html .= '<a href="#">';
-            $html .= '<span class="fa fa-wheelchair"></span>';
+            $html .= '<span class="fa fa-user-times"></span>';
             $html .= '<span class="sidebar-title">Sem Time</span>';
             $html .= '</a>';
             $html .= '</li>';
@@ -211,42 +211,47 @@ class Menu extends AbstractHelper {
         $html .= '<li>';
         $html .= '<a class="accordion-toggle" href="#">';
         $html .= '<span class="fa fa-terminal"></span>';
-        $html .= '<span class="sidebar-title">Cadastrar</span>';
+        $html .= '<span class="sidebar-title">Cadastro(Manutenção)</span>';
         $html .= '<span class="caret"></span>';
         $html .= '</a>';
 
         $html .= '<ul class="nav sub-nav">';
 
         $html .= '<li>';
-        $html .= '<a href="/cadastroCelulas">';
+//        $html .= '<a href="/cadastroCelulas">';
+        $html .= '<a href="#">';
         $html .= '<span class="fa fa-users"></span>';
         $html .= 'Células';
         $html .= '</a>';
         $html .= '</li>';
 
         $html .= '<li>';
-        $html .= '<a href="/cadastroCultos">';
+//        $html .= '<a href="/cadastroCultos">';
+        $html .= '<a href="#">';
         $html .= '<span class="fa fa-users"></span>';
         $html .= 'Cultos';
         $html .= '</a>';
         $html .= '</li>';
 
         $html .= '<li>';
-        $html .= '<a href="/cadastroGrupo">';
+//        $html .= '<a href="/cadastroGrupo">';
+        $html .= '<a href="#">';
         $html .= '<span class="fa fa-users"></span>';
         $html .= 'Time';
         $html .= '</a>';
         $html .= '</li>';
 
         $html .= '<li>';
-        $html .= '<a href="/cadastroRevisao">';
+//        $html .= '<a href="/cadastroRevisao">';
+        $html .= '<a href="#">';
         $html .= '<span class="fa fa-users"></span>';
         $html .= 'Revisão de Vidas';
         $html .= '</a>';
         $html .= '</li>';
 
         $html .= '<li>';
-        $html .= '<a href="/cadastroTransferencia">';
+//        $html .= '<a href="/cadastroTransferencia">';
+        $html .= '<a href="#">';
         $html .= '<span class="fa fa-users"></span>';
         $html .= 'Transferência';
         $html .= '</a>';
@@ -290,7 +295,7 @@ class Menu extends AbstractHelper {
         $html .= '<li>';
         $html .= '<a href="/relatorioMembresia">';
         $html .= '<span class="fa fa-terminal"></span>';
-        $html .= 'Membresia';
+        $html .= 'Membresia/Células Realizadas';
         $html .= '</a>';
         $html .= '</li>';
         $html .= '<li>';
@@ -302,10 +307,18 @@ class Menu extends AbstractHelper {
         $html .= '</ul>';
         $html .= '</li>';
 
+        $html .= '<li class="sidebar-label pt20">Chamada I.V.</li>';
+        $html .= '<li>';
+        $html .= '<a href="/instituto">';
+        $html .= '<span class="fa fa-list"></span>';
+        $html .= '<span class="sidebar-title">Chamada I.V.</span>';
+        $html .= '</a>';
+        $html .= '</li>';
+
         $html .= '<li>';
         $html .= '<a class="accordion-toggle" href="#">';
         $html .= '<span class="fa fa-print"></span>';
-        $html .= '<span class="sidebar-title">Imprimir</span>';
+        $html .= '<span class="sidebar-title">Imprimir (Manutenção)</span>';
         $html .= '<span class="caret"></span>';
         $html .= '</a>';
         $html .= '</li>';
@@ -313,7 +326,7 @@ class Menu extends AbstractHelper {
         $html .= '<li>';
         $html .= '<a class="accordion-toggle" href="#">';
         $html .= '<span class="fa fa-cogs"></span>';
-        $html .= '<span class="sidebar-title">Administração</span>';
+        $html .= '<span class="sidebar-title">Adm. (Manutenção)</span>';
         $html .= '<span class="caret"></span>';
         $html .= '</a>';
         $html .= '</li>';

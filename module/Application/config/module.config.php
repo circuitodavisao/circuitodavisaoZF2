@@ -17,6 +17,7 @@ return array(
             'Application\Controller\Lancamento' => 'Application\Controller\Factory\LancamentoControllerFactory',
             'Application\Controller\Cadastro' => 'Application\Controller\Factory\CadastroControllerFactory',
             'Application\Controller\Relatorio' => 'Application\Controller\Factory\RelatorioControllerFactory',
+            'Application\Controller\Instituto' => 'Application\Controller\Factory\InstitutoControllerFactory',
         ),
     ),
     # definir e gerenciar rotas
@@ -83,6 +84,20 @@ return array(
                     ),
                     'defaults' => array(
                         'controller' => 'Application\Controller\Relatorio',
+                        'action' => 'index',
+                    ),
+                ),
+            ),
+            'instituto' => array(
+                'type' => 'Segment',
+                'options' => array(
+                    'route' => '/instituto[:action[/:id]]',
+                    'constraints' => array(
+                        'action' => '[a-zA-Z]+',
+                        'id' => '[1-2]',
+                    ),
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\Instituto',
                         'action' => 'index',
                     ),
                 ),
@@ -158,8 +173,10 @@ return array(
             'cadastro/cadastro/celulas' => __DIR__ . '/../view/cadastro/celulas.phtml',
             'cadastro/cadastro/revisao' => __DIR__ . '/../view/cadastro/revisao.phtml',
             'cadastro/cadastro/transferencia' => __DIR__ . '/../view/cadastro/transferencia.phtml',
+            'cadastro/cadastro/selecionar_revisionista' => __DIR__ . '/../view/cadastro/selecionar_revisionista.phtml',
             'relatorio/relatorio/membresia' => __DIR__ . '/../view/relatorio/membresia.phtml',
-            'relatorio/relatorio/teste' => __DIR__ . '/../view/relatorio/teste.phtml',
+//            'relatorio/relatorio/teste' => __DIR__ . '/../view/relatorio/teste.phtml',
+            'instituto/instituto/index' => __DIR__ . '/../view/instituto/index.phtml',
             'layout/layout-js-celulas' => __DIR__ . '/../view/layout/layout-js-celulas.phtml',
             'layout/layout-js-celula' => __DIR__ . '/../view/layout/layout-js-celula.phtml',
             'layout/layout-js-celula-validacao' => __DIR__ . '/../view/layout/layout-js-celula-validacao.phtml',
