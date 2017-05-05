@@ -260,7 +260,7 @@ class ListagemConsolidacaoParaRevisao extends AbstractHelper {
 
                             $html .= '<td class="text-center">' . $pessoa->getTipo() . '</td>';
 
-                            $stringNomeDaFuncaoOnClickInserir = 'funcaoCadastro("' . Constantes::$PAGINA_SELECIONAR_REVISIONISTA . '", ' . $pessoa->getId() . ')';
+                            $stringNomeDaFuncaoOnClickInserir = 'funcaoCadastro("' . Constantes::$PAGINA_CADASTRAR_PESSOA_REVISAO . '", ' . $pessoa->getId() . ')';
                             
                             $html .= '<td class="text-center"><span class="visible-lg visible-md">' . $pessoa->getNome() . '</span><span class="visible-sm visible-xs">' . $pessoa->getNomePrimeiroUltimo() . '</span></td>';
 
@@ -294,7 +294,7 @@ class ListagemConsolidacaoParaRevisao extends AbstractHelper {
 //                    $html .= $this->view->botaoLink(Constantes::$STRING_ICONE_PLUS . ' ' . $this->view->translate(Constantes::$TRADUCAO_NOVO_CULTO), Constantes::$STRING_HASHTAG, 0, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClickCadastro));
 //                }
 //                if ($tipoRevisao) {
-                    $stringNomeDaFuncaoOnClickCadastro = 'funcaoCadastro("' . Constantes::$PAGINA_REVISIONISTAS . '", 0)';
+                    $stringNomeDaFuncaoOnClickCadastro = 'funcaoCadastro("' . Constantes::$PAGINA_REVISIONISTAS . '", '.$pessoa->getId().')';
                     $html .= $this->view->botaoLink($this->view->translate(Constantes::$TRADUCAO_VOLTAR), Constantes::$STRING_HASHTAG, 0, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClickCadastro));
 //                }
 

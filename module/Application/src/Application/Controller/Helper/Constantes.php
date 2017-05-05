@@ -296,6 +296,7 @@ class Constantes {
     public static $NBSP = '&nbsp;';
     public static $CLASS_PHONE = 'phone';
     public static $FORM_CADASTRAR_PESSOA = 'CadastrarPessoaForm';
+    public static $FORM_CADASTRAR_PESSOA_REVISAO = 'CadastrarPessoaRevisaoForm';
     public static $FORM_CADASTRAR_ATENDIMENTO = 'CadastrarAtendimentoForm';
     public static $GRUPOS_ABAIXO = 'gruposAbaixo';
     public static $MES_ATENDIMENTO = 'mes';
@@ -322,11 +323,14 @@ class Constantes {
     public static $TRADUCAO_LIMITE_CADASTROS = 'Maximum limit of entries achieved!';
     public static $TRADUCAO_NOVO = 'New';
     public static $TRADUCAO_NOVO_CADASTRO = 'New Register';
+    public static $TRADUCAO_NOVO_CADASTRO_REVISAO = 'New Person in Revision of Life';
     public static $TRADUCAO_NOVO_CADASTRO_LABEL = 'Person at the launch line';
+    public static $TRADUCAO_NOVO_CADASTRO_REVISAO_LABEL = 'Person at the revision of live';
     public static $TRADUCAO_DDD = 'DDD';
     public static $TRADUCAO_TELEFONE = 'Phone';
     public static $TRADUCAO_TIPO = 'Type';
     public static $TRADUCAO_NUCLEO_CELULA = 'Perfect Core';
+    public static $TRADUCAO_SEXO = 'Sex';
     public static $TRADUCAO_SELECIONE = 'SELECT';
     public static $TRADUCAO_CADASTRAR = 'Register';
     public static $TRADUCAO_VALIDACAO_NOME_VAZIO = 'Enter Full Name';

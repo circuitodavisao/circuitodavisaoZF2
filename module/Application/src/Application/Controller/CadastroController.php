@@ -6,6 +6,7 @@ use Application\Controller\Helper\Constantes;
 use Application\Controller\Helper\Correios;
 use Application\Controller\Helper\Funcoes;
 use Application\Form\AtualizarCadastroForm;
+use Application\Form\CadastrarPessoaRevisaoForm;
 use Application\Form\CelulaForm;
 use Application\Form\EventoForm;
 use Application\Form\GrupoForm;
@@ -1163,9 +1164,10 @@ class CadastroController extends CircuitoController {
     public function selecionarRevisionistaAction() {
         $sessao = new Container(Constantes::$NOME_APLICACAO);
         $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
+        $idRevisao = $sessao->idSessao;
         $idEntidadeAtual = $sessao->idEntidadeAtual;
         $entidade = $repositorioORM->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
-        
+        $sessao->idRevisao = $idRevisao;
         
         
         $view = new ViewModel(array(
@@ -1187,7 +1189,32 @@ class CadastroController extends CircuitoController {
     }
     
     public function cadastrarPessoaRevisaoAction(){
+        /* Helper Controller */
+        $sessao = new Container(Constantes::$NOME_APLICACAO);
+        $idPessoa = $sessao->idSessao;
+        $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
+        $tipos = $repositorioORM->getGrupoPessoaTipoORM()->tipoDePessoaLancamento();
+        $pessoa = $repositorioORM->getPessoaORM()->encontrarPorId($idPessoa);
+        $grupoPessoa = $pessoa->getGrupoPessoaAtivo();
         
+        /* Formulario */
+        $formCadastrarPessoaRevisao = new CadastrarPessoaRevisaoForm(Constantes::$FORM_CADASTRAR_PESSOA_REVISAO, $pessoa);
+
+        $view = new ViewModel(array(
+            Constantes::$FORM_CADASTRAR_PESSOA_REVISAO => $formCadastrarPessoaRevisao,
+        ));
+
+        /* Javascript especifico */
+        $layoutJS = new ViewModel();
+        $layoutJS->setTemplate(Constantes::$TEMPLATE_JS_CADASTRAR_PESSOA);
+        $view->addChild($layoutJS, Constantes::$STRING_JS_CADASTRAR_PESSOA);
+
+        /* Javascript especifico de validação */
+        $layoutJS2 = new ViewModel();
+        $layoutJS2->setTemplate(Constantes::$TEMPLATE_JS_CADASTRAR_PESSOA_VALIDACAO);
+        $view->addChild($layoutJS2, Constantes::$STRING_JS_CADASTRAR_PESSOA_VALIDACAO);
+
+        return $view;
     }
 
 }
