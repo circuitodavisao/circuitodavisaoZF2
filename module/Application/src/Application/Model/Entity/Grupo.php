@@ -398,20 +398,26 @@ class Grupo extends CircuitoEntity {
                                             if ($ge->getData_criacaoMes() == $mes) {
                                                 $ge->setNovo(true);
                                                 if ($ciclo === $cicloAtual) {
-                                                    /* Validar dia cadastro grupo e evento */
+                                                    /* se foi cadastrado antes do dia atual ja esta valido */
                                                     $diaDaCriacao = $ge->getData_criacaoDia();
-                                                    $diaDaSemanaDaCriacao = date('N', mktime(0, 0, 0, $mes, $diaDaCriacao, $ano));
-                                                    if ($diaDaSemanaDaCriacao == 1) {
-                                                        $diaDaSemanaDaCriacao = 8;
-                                                    } else {
-                                                        $diaDaSemanaDaCriacao++;
-                                                    }
-                                                    if (!($ge->getEvento()->getDiaAjustado() < $diaDaSemanaDaCriacao) && $ge->getData_criacaoDia() <= $diaAtual) {
+
+                                                    if ($diaDaCriacao <= date('d')) {
                                                         $verificacaoData = true;
+                                                    } else {
+                                                        /* Validar dia cadastro grupo e evento */
+                                                        $diaDaSemanaDaCriacao = date('N', mktime(0, 0, 0, $mes, $diaDaCriacao, $ano));
+                                                        if ($diaDaSemanaDaCriacao == 1) {
+                                                            $diaDaSemanaDaCriacao = 8;
+                                                        } else {
+                                                            $diaDaSemanaDaCriacao++;
+                                                        }
+                                                        if (!($ge->getEvento()->getDiaAjustado() < $diaDaSemanaDaCriacao) && $ge->getData_criacaoDia() <= $diaAtual) {
+                                                            $verificacaoData = true;
+                                                        }
                                                     }
                                                 } else {
                                                     $primeiroDiaCiclo = Funcoes::periodoCicloMesAno($ciclo, $mes, $ano, '', 1);
-                                                    if ($ge->getData_criacaoDia() < $primeiroDiaCiclo) {
+                                                    if ($ge->getData_criacaoDia() <= $primeiroDiaCiclo) {
                                                         $verificacaoData = true;
                                                     }
                                                 }
@@ -441,6 +447,7 @@ class Grupo extends CircuitoEntity {
                                 } else {
                                     $verificacaoDiaSemana = true;
                                 }
+
                                 if ($verificacaoData && $verificacaoDiaSemana) {
                                     $eventos[] = $ge;
                                 }

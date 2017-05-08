@@ -89,13 +89,6 @@ class RelatorioController extends CircuitoController {
 
         $relatorioCelula = $repositorioORM->getFatoCicloORM()->montarRelatorioCelulaPorNumeroIdentificador($numeroIdentificador, $cicloSelecionado, $mesSelecionado, $anoSelecionado, $tipoRelatorioPessoal);
 
-        /* Verificar data de cadastro da responsabilidade */
-        $validacaoNesseMes = 0;
-        $grupoResponsavel = $grupo->getGrupoResponsavelAtivo();
-        if ($grupoResponsavel->verificarSeFoiCadastradoNesseMes()) {
-            $validacaoNesseMes = 1;
-        }
-
         return new ViewModel(
                 array(
             'relatorio' => $relatorio,
@@ -105,7 +98,6 @@ class RelatorioController extends CircuitoController {
             'abaSelecionada' => $abaSelecionada,
             'fatoLider' => $fatoLider,
             'relatorioCelula' => $relatorioCelula,
-            Constantes::$VALIDACAO_NESSE_MES => $validacaoNesseMes,
                 )
         );
     }

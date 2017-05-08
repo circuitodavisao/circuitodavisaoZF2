@@ -210,10 +210,10 @@ class Constantes {
 
     /* Lançamento */
     public static $ENTITY_GRUPO_PESSOA = 'Application\Model\Entity\GrupoPessoa';
-    public static $ENTITY_GRUPO_CV = 'Application\Model\Entity\GrupoCv';
     public static $ENTITY_GRUPO_RESPONSAVEL = 'Application\Model\Entity\GrupoResponsavel';
     public static $ENTITY_GRUPO_PAI_FILHO = 'Application\Model\Entity\GrupoPaiFilho';
     public static $ENTITY_GRUPO_PESSOA_TIPO = 'Application\Model\Entity\GrupoPessoaTipo';
+    public static $ENTITY_GRUPO_CV = 'Application\Model\Entity\GrupoCv';
     public static $ENTITY_EVENTO = 'Application\Model\Entity\Evento';
     public static $ENTITY_EVENTO_CELULA = 'Application\Model\Entity\EventoCelula';
     public static $ENTITY_EVENTO_TIPO = 'Application\Model\Entity\EventoTipo';
@@ -297,6 +297,7 @@ class Constantes {
     public static $NBSP = '&nbsp;';
     public static $CLASS_PHONE = 'phone';
     public static $FORM_CADASTRAR_PESSOA = 'CadastrarPessoaForm';
+    public static $FORM_CADASTRAR_PESSOA_REVISAO = 'CadastrarPessoaRevisaoForm';
     public static $FORM_CADASTRAR_ATENDIMENTO = 'CadastrarAtendimentoForm';
     public static $GRUPOS_ABAIXO = 'gruposAbaixo';
     public static $MES_ATENDIMENTO = 'mes';
@@ -323,11 +324,14 @@ class Constantes {
     public static $TRADUCAO_LIMITE_CADASTROS = 'Maximum limit of entries achieved!';
     public static $TRADUCAO_NOVO = 'New';
     public static $TRADUCAO_NOVO_CADASTRO = 'New Register';
+    public static $TRADUCAO_NOVO_CADASTRO_REVISAO = 'New Person in Revision of Life';
     public static $TRADUCAO_NOVO_CADASTRO_LABEL = 'Person at the launch line';
+    public static $TRADUCAO_NOVO_CADASTRO_REVISAO_LABEL = 'Person at the revision of live';
     public static $TRADUCAO_DDD = 'DDD';
     public static $TRADUCAO_TELEFONE = 'Phone';
     public static $TRADUCAO_TIPO = 'Type';
     public static $TRADUCAO_NUCLEO_CELULA = 'Perfect Core';
+    public static $TRADUCAO_SEXO = 'Sex';
     public static $TRADUCAO_SELECIONE = 'SELECT';
     public static $TRADUCAO_CADASTRAR = 'Register';
     public static $TRADUCAO_VALIDACAO_NOME_VAZIO = 'Enter Full Name';
@@ -641,13 +645,15 @@ class Constantes {
     public static $TRADUCAO_DIA_DA_SEMANA = 'Day of Week';
     public static $TRADUCAO_DIA_DA_SEMANA_SIMPLIFICADO = 'Day';
     public static $TRADUCAO_DATA_SIMPLIFICADO = 'Date';
+    public static $TRADUCAO_TIPO_REVISIONISTA = 'Type';
+    public static $TRADUCAO_NOME_REVISIONISTA = 'Name';
     public static $TRADUCAO_CADASTRO_CELULA = 'Registration Cell';
     public static $TRADUCAO_CADASTRO_CULTO = 'Registration <b class="text-danger">Cult</b>';
     public static $TRADUCAO_NOVA = 'New';
     public static $TRADUCAO_NOVA_CELULA = 'New Cell';
     public static $TRADUCAO_NOVO_CULTO = 'New Cult';
     public static $TRADUCAO_NOVO_REVISAO = 'New Revision';
-    public static $TRADUCAO_NOVO_REVISIONISTA = 'Insert';
+    public static $TRADUCAO_NOVO_REVISIONISTA = 'Select';
     public static $TRADUCAO_MULTIPLICACAO = 'Multiplication';
     public static $TRADUCAO_LISTAGEM_CULTOS = 'Listing <b class="text-danger">Cults</b>';
     public static $TRADUCAO_LISTAGEM_REVISAO = 'Listing <b class="text-danger">Revision of lives</b>';

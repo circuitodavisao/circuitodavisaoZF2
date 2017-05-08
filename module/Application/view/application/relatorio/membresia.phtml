@@ -17,11 +17,9 @@ $classeLinha = '';
                     <li <?php echo Constantes::$ONCLICK_ABRIR_MODAL . ' ' . $this->abaSelecionada($this->abaSelecionada, 1); ?>>
                         <?php echo '<a href="' . $urlBase . '">Período Atual</a>'; ?>
                     </li>
-                    <?php if ($this->validacaoNesseMes == 0) { ?>
-                        <li <?php echo Constantes::$ONCLICK_ABRIR_MODAL . ' ' . $this->abaSelecionada($this->abaSelecionada, 2); ?>>
-                            <?php echo '<a href="' . $urlBase2 . '">Período Anterior</a>'; ?>
-                        </li>
-                    <?php } ?>
+                    <li <?php echo Constantes::$ONCLICK_ABRIR_MODAL . ' ' . $this->abaSelecionada($this->abaSelecionada, 2); ?>>
+                        <?php echo '<a href="' . $urlBase2 . '">Período Anterior</a>'; ?>
+                    </li>
                 </ul>
             </div>
             <div class="panel-body pn">
@@ -87,15 +85,7 @@ $classeLinha = '';
                         if ($discipulos) {
                             $contagemRanking = 1;
                             foreach ($discipulos as $gpFilho) {
-//                                if ($contagemRanking >= 1 && $contagemRanking < 4) {
-//                                    $classeLinha = 'success';
-//                                }
-//                                if ($contagemRanking >= 4 && $contagemRanking < 7) {
-//                                    $classeLinha = 'warning';
-//                                }
-//                                if ($contagemRanking >= 7) {
-//                                    $classeLinha = 'danger';
-//                                }
+                                
                                 $grupoFilho = $gpFilho->getGrupoPaiFilhoFilho();
                                 $entidadeFilho = $grupoFilho->getEntidadeAtiva();
 

@@ -77,9 +77,9 @@ class IndexController extends CircuitoController {
                 $numeroIdentificadorIgreja = "$codigoRegiao$codigoCoordenacao$codigoIgreja";
                 $informacaoEntidade = $row[$stringNome];
                 $grupoIgreja = $this->cadastrarEntidade($row[$stringIdResponsavel1], $idPerfilIgreja, $informacaoEntidade, null, $row[$stringIdResponsavel2], $row['id'], $numeroIdentificadorIgreja);
-                $this->cadastrarPessoasVolateis($row[$stringIdResponsavel1], $grupoIgreja);
+//                $this->cadastrarPessoasVolateis($row[$stringIdResponsavel1], $grupoIgreja);
                 $eventosCulto = $this->cadastrarCulto($row[$stringIdResponsavel1], $grupoIgreja);
-                $this->cadastrarCelulas($row[$stringIdResponsavel1], $grupoIgreja, $row[$stringIdResponsavel2]);
+//                $this->cadastrarCelulas($row[$stringIdResponsavel1], $grupoIgreja, $row[$stringIdResponsavel2]);
 
                 $urlEquipe = 'SELECT * FROM ursula_equipe_ursula WHERE id = 1 AND ativa = "S" AND idIgreja = ' . $row['id'];
 //                $urlEquipe = 'SELECT * FROM ursula_equipe_ursula WHERE ativa = "S" AND idIgreja = 14';
@@ -92,7 +92,7 @@ class IndexController extends CircuitoController {
                     $this->cadastrarPessoasVolateis($rowEquipe[$stringIdResponsavel1], $grupoEquipe);
                     $this->cadastrarCultoEquipe($eventosCulto, $rowEquipe['id'], $grupoEquipe);
                     $this->cadastrarCelulas($rowEquipe[$stringIdResponsavel1], $grupoEquipe, $rowEquipe[$stringIdResponsavel2]);
-                    $urlSub = 'SELECT * FROM ursula_subequipe_ursula WHERE ativa = "S" AND dataInativacao IS NULL AND idSubEquipePai = 0 and idEquipe = ' . $rowEquipe['id'];
+                    $urlSub = 'SELECT * FROM ursula_subequipe_ursula WHERE ativa = "S" AND dataInativacao IS NULL AND idSubEquipePai = 0 and idEquipe = ' . $rowEquipe['id']. ' AND id <> 53842 AND id <> 53944;';
 //                    $urlSub = 'SELECT * FROM ursula_subequipe_ursula WHERE id = 16';
                     $querySubEquipes = mysqli_query($this->getConexao(), $urlSub);
                     while ($rowSubs = mysqli_fetch_array($querySubEquipes)) {
@@ -170,6 +170,7 @@ class IndexController extends CircuitoController {
         $mesSelecionado = date('n');
         $anoSelecionado = date('Y');
         $cicloSelecionado = Funcoes::cicloAtual($mesSelecionado, $anoSelecionado);
+//        $cicloSelecionado = 1;
         $tipoCelula = 2;
 
         $grupos = $this->getRepositorio()->getGrupoORM()->encontrarTodos();
@@ -202,12 +203,12 @@ class IndexController extends CircuitoController {
                         }
                     }
 
-                    $quantidadeLideres = 0;
-                    if ($temCelula) {
-                        $quantidadeLideres = count($grupo->getResponsabilidadesAtivas());
-                    }
-                    $html .= "<br />quantidadeLideres" . $quantidadeLideres;
-                    $this->getRepositorio()->getFatoLiderORM()->criarFatoLider($numeroIdentificador, $quantidadeLideres);
+//                    $quantidadeLideres = 0;
+//                    if ($temCelula) {
+//                        $quantidadeLideres = count($grupo->getResponsabilidadesAtivas());
+//                    }
+//                    $html .= "<br />quantidadeLideres" . $quantidadeLideres;
+//                    $this->getRepositorio()->getFatoLiderORM()->criarFatoLider($numeroIdentificador, $quantidadeLideres);
                 }
             }
         }
