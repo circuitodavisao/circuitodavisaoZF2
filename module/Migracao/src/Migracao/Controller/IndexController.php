@@ -92,7 +92,7 @@ class IndexController extends CircuitoController {
                     $this->cadastrarPessoasVolateis($rowEquipe[$stringIdResponsavel1], $grupoEquipe);
                     $this->cadastrarCultoEquipe($eventosCulto, $rowEquipe['id'], $grupoEquipe);
                     $this->cadastrarCelulas($rowEquipe[$stringIdResponsavel1], $grupoEquipe, $rowEquipe[$stringIdResponsavel2]);
-                    $urlSub = 'SELECT * FROM ursula_subequipe_ursula WHERE ativa = "S" AND dataInativacao IS NULL AND idSubEquipePai = 0 and idEquipe = ' . $rowEquipe['id']. ' AND id <> 53842 AND id <> 53944;';
+                    $urlSub = 'SELECT * FROM ursula_subequipe_ursula WHERE ativa = "S" AND dataInativacao IS NULL AND idSubEquipePai = 0 and idEquipe = ' . $rowEquipe['id'] . ' AND id <> 53842 AND id <> 53944;';
 //                    $urlSub = 'SELECT * FROM ursula_subequipe_ursula WHERE id = 16';
                     $querySubEquipes = mysqli_query($this->getConexao(), $urlSub);
                     while ($rowSubs = mysqli_fetch_array($querySubEquipes)) {
@@ -368,10 +368,8 @@ class IndexController extends CircuitoController {
             $valor = $valorDoCampo + 1;
         }
 
-        if ($valor) {
-            $sqlMudarCelulasRealizadas = 'UPDATE ' . $tabela . ' SET ' . $campo . ' = ' . $valor . ' WHERE id = ' . $dimensoes[1] . ';';
-            mysqli_query(IndexController::pegaConexaoStaticaDW(), $sqlMudarCelulasRealizadas);
-        }
+        $sqlMudarCelulasRealizadas = 'UPDATE ' . $tabela . ' SET ' . $campo . ' = ' . $valor . ' WHERE id = ' . $dimensoes[1] . ';';
+        mysqli_query(IndexController::pegaConexaoStaticaDW(), $sqlMudarCelulasRealizadas);
     }
 
     public static function buscaValorDoCampoDimensaoelula($ciclo, $idDimCelula) {

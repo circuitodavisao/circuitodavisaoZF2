@@ -460,7 +460,7 @@ class LancamentoController extends CircuitoController {
                     $somaFrequencias = 0;
                     foreach ($frequencias as $frequenca) {
                         if ($frequenca->getFrequencia() === 'S') {
-                            $somaFrequencias+= 1;
+                            $somaFrequencias++;
                         }
                     }
 
@@ -471,11 +471,18 @@ class LancamentoController extends CircuitoController {
                     }
 
                     $eventoCelulaId = $evento->getEventoCelula()->getId();
-                    $fatoCelula = $repositorioORM->getFatoCelulaORM()->encontrarPorEventoCelulaId($eventoCelulaId);
-                    $realizadaAntesDeMudar = $fatoCelula->getRealizada();
-                    $fatoCelula->setRealizada($realizada);
+
+                    $fatoCelulas = $fatoCicloSelecionado->getFatoCelula();
+                    $fatoCelulaSelecionado = null;
+                    foreach ($fatoCelulas as $fc) {
+                        if ($fc->getEvento_celula_id() == $eventoCelulaId) {
+                            $fatoCelulaSelecionado = $fc;
+                        }
+                    }
+                    $realizadaAntesDeMudar = $fatoCelulaSelecionado->getRealizada();
+                    $fatoCelulaSelecionado->setRealizada($realizada);
                     $setarDataEHora = false;
-                    $repositorioORM->getFatoCelulaORM()->persistir($fatoCelula, $setarDataEHora);
+                    $repositorioORM->getFatoCelulaORM()->persistir($fatoCelulaSelecionado, $setarDataEHora);
 
                     /* Atualizar DW celulas circuito antigo */
                     $grupoCv = $grupoPassado->getGrupoCv();
