@@ -98,6 +98,9 @@ class RelatorioController extends CircuitoController {
             'abaSelecionada' => $abaSelecionada,
             'fatoLider' => $fatoLider,
             'relatorioCelula' => $relatorioCelula,
+            'cicloSelecionado' => $cicloSelecionado,
+            'mesSelecionado' => $mesSelecionado,
+            'anoSelecionado' => $anoSelecionado,
                 )
         );
     }

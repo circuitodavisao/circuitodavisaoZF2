@@ -118,7 +118,6 @@ class FatoCicloORM extends CircuitoORM {
                 . "FROM  " . Constantes::$ENTITY_FATO_CICLO . " fc "
                 . "JOIN fc.fatoCelula c "
                 . "WHERE "
-                . "c.data_inativacao IS NULL AND "
                 . "fc.numero_identificador #tipoComparacao ?1 "
                 . "AND fc.mes = ?2 "
                 . "AND fc.ano = ?3 "
