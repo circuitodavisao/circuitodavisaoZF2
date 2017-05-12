@@ -8,26 +8,72 @@ function validarLancamentoCadastrarPessoa(form) {
     var temErro = false;
     var divMensagens = $('#divMensagens');
     var mensagem = '';
-    
-    if (tipo.length === 0) {
+
+
+    if (nome.length === 0) {
         temErro = true;
-        mensagem = 'Preencha o Tipo';
-    }
-    if (telefone.length === 0) {
-        temErro = true;
-        mensagem = 'Preencha o Telefone';
+        if (mensagem === '') {
+            mensagem += '  Nome';
+        } else {
+            mensagem += ', Nome';
+        }
+    } else {
+        var reg = /^[A-Za-záàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ ]+$/;
+        if (!reg.exec(nome)) {
+            temErro = true;
+            if (mensagem === '') {
+                mensagem += '  Nome Invalido';
+            } else {
+                mensagem += ', Nome Invalido';
+            }
+        }
     }
     if (ddd.length === 0) {
         temErro = true;
-        mensagem = 'Preencha o DDD';
+        if (mensagem === '') {
+            mensagem += ' DDD';
+        } else {
+            mensagem += ', DDD';
+        }
+    } else {
+        if (ddd.length !== 2) {
+            temErro = true;
+            if (mensagem === '') {
+                mensagem += ' DDD Invalido';
+            } else {
+                mensagem += ', DDD Invalido';
+            }
+        }
     }
-    if (nome.length === 0) {
+    if (telefone.length === 0) {
         temErro = true;
-        mensagem = 'Preencha o Nome';
+        if (mensagem === '') {
+            mensagem += ' Telefone';
+        } else {
+            mensagem += ', Telefone';
+        }
+    } else {
+        if (!(telefone.length >= 8 && telefone.length <= 9)) {
+            temErro = true;
+            if (mensagem === '') {
+                mensagem += ' Telefone Invalido';
+            } else {
+                mensagem += ', Telefone Invalido';
+            }
+        }
     }
+    if (tipo.length === 0) {
+        temErro = true;
+        if (mensagem === '') {
+            mensagem += ' Tipo';
+        } else {
+            mensagem += ', Tipo';
+        }
+    }
+
     if (temErro) {
         divMensagens
-                .html(mensagem)
+                .html('Preenchao seguintes campos corretamente:' + mensagem)
                 .removeClass('alert-success')
                 .removeClass('hidden')
                 .addClass('alert-danger');

@@ -114,15 +114,21 @@ class CircuitoEntity {
     }
 
     function getData_inativacaoAno() {
-        return $this->getData_inativacao()->format('Y');
+        if ($this->getData_inativacao()) {
+            return $this->getData_inativacao()->format('Y');
+        }
     }
 
     function getData_inativacaoMes() {
-        return $this->getData_inativacao()->format('m');
+        if ($this->getData_inativacao()) {
+            return $this->getData_inativacao()->format('m');
+        }
     }
 
     function getData_inativacaoDia() {
-        return $this->getData_inativacao()->format('d');
+        if ($this->getData_inativacao()) {
+            return $this->getData_inativacao()->format('d');
+        }
     }
 
 }

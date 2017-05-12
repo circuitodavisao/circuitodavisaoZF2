@@ -76,6 +76,8 @@ class Constantes {
     public static $ACTION_ALTERAR_SENHA = 'alterarSenha';
     public static $TRADUCAO_CANCELAR = 'Back';
     public static $TRADUCAO_VOLTAR = 'Back';
+    public static $TRADUCAO_PRIMEIRO_NOME = 'First Name';
+    public static $TRADUCAO_ULTIMO_NOME = 'Last Name';
     public static $TRADUCAO_CONTINUAR = 'Continue';
     public static $TRADUCAO_CAPTCHA_LABEL = 'Please verify you are human';
     public static $TRADUCAO_ESQUECI_MINHA_SENHA = ' Because I forgot my password.';
@@ -83,7 +85,7 @@ class Constantes {
     public static $TRADUCAO_ENVIAR_EMAIL = 'Send email';
     public static $TRADUCAO_VERIFICAR_USUARIO = 'Check User';
     public static $TRADUCAO_PERGUNTA_ESQUECI_SENHA = 'Because you can not enter the View of the Circuit?';
-    public static $TRADUCAO_TITULO_ESQUECI_MINHA_SENHA = 'We can help you reset your password. First, enter your user and follow the instructions.';
+    public static $TRADUCAO_TITULO_ESQUECI_MINHA_SENHA = 'We can help you reset your password. First, enter your email and follow the instructions.';
     public static $TRADUCAO_INFORME_2_DIGITO_CPF_DATA_NASCIMENTO = 'Tell us what the last 2 digits of your <b>Social Security number</b> and <b>date of birth</b>.';
     public static $TRADUCAO_SOLICITACAO_ENVIADA_AS = 'request sent at';
     public static $TRADUCAO_ACESSE_O = 'Access';
@@ -235,7 +237,7 @@ class Constantes {
     public static $ENTIDADE = 'entidade';
     public static $ENTIDADE_INATIVA = 'entidadeInativa';
     public static $DOCTRINE_ORM_ENTITY_MANAGER = 'doctrineORMEntityManager';
-    public static $LANCAMENTO_ORM = 'lancamentoORM';
+    public static $REPOSITORIO_ORM = 'repositorioORM';
     public static $TURMA = 'turma';
     public static $GRUPO = 'grupo';
     public static $NUMERO_ATENDIMENTOS = 'numeroAtendimentos';
@@ -257,6 +259,7 @@ class Constantes {
     public static $TEMPLATE_JS_LANCAMENTO = 'layout/layout-js-lancamento';
     public static $TEMPLATE_JS_CADASTRAR_PESSOA = 'layout/layout-js-cadastrar-pessoa';
     public static $TEMPLATE_JS_CADASTRAR_PESSOA_VALIDACAO = 'layout/layout-js-cadastrar-pessoa-validacao';
+    public static $TEMPLATE_JS_CADASTRAR_PESSOA_REVISAO = 'layout/layout-js-cadastrar-pessoa-revisao';
     public static $TEMPLATE_JS_CADASTRAR_ATENDIMENTO = 'layout/layout-js-cadastrar-atendimento';
     public static $TEMPLATE_JS_VALIDACAO_ATENDIMENTO = 'layout/layout-js-validacao-atendimento';
     public static $TEMPLATE_JS_LANCAMENTO_MODAL_EVENTOS = 'layout/layout-js-lancamento-modal-eventos';
@@ -264,6 +267,7 @@ class Constantes {
     public static $STRING_JS_LANCAMENTO = 'layoutJSLancamento';
     public static $STRING_JS_CADASTRAR_PESSOA = 'layoutJSCadastrarPessoa';
     public static $STRING_JS_CADASTRAR_PESSOA_VALIDACAO = 'layoutJSCadastrarPessoaValidacao';
+    public static $STRING_JS_CADASTRAR_PESSOA_REVISAO = 'layoutJSCadastrarPessoaRevisao';
     public static $STRING_JS_CADASTRAR_ATENDIMENTO = 'layoutJSCadastrarAtendimento';
     public static $STRING_JS_VALIDACAO_ATENDIMENTO = 'layoutJSValidacaoAtendimento';
     public static $STRING_JS_LANCAMENTO_MODAL_EVENTOS = 'layoutJSLancamentoModalEventos';
@@ -285,6 +289,7 @@ class Constantes {
     public static $PAGINA = 'pagina';
     public static $PAGINA_CADASTRAR_PESSOA = 'CadastrarPessoa';
     public static $PAGINA_CADASTRAR_PESSOA_REVISAO = 'CadastrarPessoaRevisao';
+    public static $PAGINA_SALVAR_PESSOA_REVISAO = 'SalvarPessoaRevisao';
     public static $PAGINA_FICHA_REVISAO = 'FichaRevisao';
     public static $PAGINA_FUNCOES = 'Funcoes';
     public static $PAGINA_MUDAR_ATENDIMENTO = 'MudarAtendimento';
@@ -334,6 +339,7 @@ class Constantes {
     public static $TRADUCAO_SEXO = 'Sex';
     public static $TRADUCAO_SELECIONE = 'SELECT';
     public static $TRADUCAO_CADASTRAR = 'Register';
+    public static $TRADUCAO_CADASTRAR_PESSOA = 'Register Person';
     public static $TRADUCAO_VALIDACAO_NOME_VAZIO = 'Enter Full Name';
     public static $TRADUCAO_VALIDACAO_NOME_MIN = 'Enter at least 3 characters or more';
     public static $TRADUCAO_VALIDACAO_NOME_MAX = 'Enter at 80 characters';
@@ -351,6 +357,8 @@ class Constantes {
     public static $TRADUCAO_SUBTITULO_CABECALHO_ATENDIMENTO = 'disciples were attended to.';
     /* Fomulário */
     public static $INPUT_NOME = 'nome';
+    public static $INPUT_PRIMEIRO_NOME = 'primeiro-nome';
+    public static $INPUT_ULTIMO_NOME = 'ultimo-nome';
     public static $INPUT_DATA_ATENDIMENTO = 'dataAtendimento';
     public static $INPUT_QUEM_ATENDEU = 'quem';
     public static $INPUT_ID_GRUPO_ATENDIDO = 'idGrupo';
@@ -378,7 +386,7 @@ class Constantes {
     /* Rotas */
     public static $PAGINA_CELULAS = 'Celulas';
     public static $PAGINA_CULTOS = 'Cultos';
-    public static $PAGINA_REVISAO = 'Revisao'; 
+    public static $PAGINA_REVISAO = 'Revisao';
     public static $PAGINA_REVISIONISTAS = 'Revisionistas';
     public static $PAGINA_CELULA = 'Celula';
     public static $PAGINA_EVENTO_CULTO = 'EventoCulto';

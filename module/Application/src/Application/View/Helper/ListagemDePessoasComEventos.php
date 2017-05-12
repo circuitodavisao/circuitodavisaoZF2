@@ -165,15 +165,15 @@ class ListagemDePessoasComEventos extends AbstractHelper {
                     $corTextoTagsExtrasXs = 'class="hidden-lg' . $base;
                     $corTextoTagsExtrasLg = 'class="hidden-xs hidden-sm hidden-md' . $base;
                 }
-                /* Reserva do revisão de vidas */
-                if (!empty($pessoa->verificaSeRevisaoFoiCadastraddoNoMesEAno($mesSelecionado, $anoSelecionado))) {
-                    $classLinha = 'class="row-success success"';
-                    $classLinha2 = 'footable-visible footable-first-column';
-                    $corBotao = 'btn-success';
-                    $base = ' text-success" data-toggle="tooltip" data-placement="center" title data-original-title="Revisão de vidas"';
-                    $corTextoTagsExtrasXs = 'class="hidden-lg' . $base;
-                    $corTextoTagsExtrasLg = 'class="hidden-xs hidden-sm hidden-md' . $base;
-                }
+//                /* Reserva do revisão de vidas */
+//                if (!empty($pessoa->verificaSeRevisaoFoiCadastraddoNoMesEAno($mesSelecionado, $anoSelecionado))) {
+//                    $classLinha = 'class="row-success success"';
+//                    $classLinha2 = 'footable-visible footable-first-column';
+//                    $corBotao = 'btn-success';
+//                    $base = ' text-success" data-toggle="tooltip" data-placement="center" title data-original-title="Revisão de vidas"';
+//                    $corTextoTagsExtrasXs = 'class="hidden-lg' . $base;
+//                    $corTextoTagsExtrasLg = 'class="hidden-xs hidden-sm hidden-md' . $base;
+//                }
                 $html .= '<tr id="tr_' . $pessoa->getIdGrupoPessoa() . '" ' . $classLinha . '>';
 
                 /* TIPO */
@@ -185,7 +185,7 @@ class ListagemDePessoasComEventos extends AbstractHelper {
                 $html .= '<span class="sr-only"></span>';
                 $html .= '</span>';
                 if ($pessoa->getTipo() != 'LP' && $this->view->abaSelecionada == 1 && $pessoa->getAtivo()) {
-                    $html .= '<ul class="dropdown-menu sobrepor-elementos">';
+                    $html .= '<ul class="dropdown-menu sobrepor-elementos" style="min-width: 50px;">';
                     $html .= '<span class="editable-container editable-inline">';
                     $html .= '<div class="ml5 definicao-altura-30">';
 
@@ -383,10 +383,10 @@ class ListagemDePessoasComEventos extends AbstractHelper {
                             /* Data Inativacao */
                             $primeiroDiaCiclo = Funcoes::periodoCicloMesAno($this->view->cicloSelecionado, $mesSelecionado, $anoSelecionado, '', 1);
                             $ultimoDiaCiclo = Funcoes::periodoCicloMesAno($this->view->cicloSelecionado, $mesSelecionado, $anoSelecionado, '', 2);
-                            if ($pessoa->getDataInativacaoDia() > $ultimoDiaCiclo) {
+                            if ($pessoa->getData_inativacaoDia() > $ultimoDiaCiclo) {
                                 $mostrar = true;
                             }
-                            if ($pessoa->getDataInativacaoDia() < $primeiroDiaCiclo && $pessoa->getDataInativacaoMes() == $mesSelecionado && $pessoa->getDataInativacaoAno() == $anoSelecionado) {
+                            if ($pessoa->getData_inativacaoDia() < $primeiroDiaCiclo && $pessoa->getData_inativacaoMes() == $mesSelecionado && $pessoa->getData_inativacaoAno() == $anoSelecionado) {
                                 $icone = 3;
                                 $mostrar = false;
                             }

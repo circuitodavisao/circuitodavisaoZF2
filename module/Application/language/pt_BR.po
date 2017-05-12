@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: ZendSkeletonApplication\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-07-05 22:17-0700\n"
-"PO-Revision-Date: 2017-01-31 18:39-0200\n"
+"PO-Revision-Date: 2017-05-12 16:51-0300\n"
 "Last-Translator: Diogo Melo <dmelo87@gmail.com>\n"
 "Language-Team: ZF Contibutors <zf-devteam@zend.com>\n"
 "Language: pt\n"
@@ -12,7 +12,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Poedit-KeywordsList: translate\n"
 "X-Poedit-Basepath: .\n"
-"X-Generator: Poedit 1.8.7.1\n"
+"X-Generator: Poedit 1.8.11\n"
 "X-Poedit-SearchPath-0: ..\n"
 
 # ############
@@ -140,7 +140,7 @@ msgid "Enter your new password"
 msgstr "Entre sua nova senha"
 
 #: ../view/login/index/recuperar-senha.phtml:999
-msgid "Reenter your password"
+msgid "Repeat the Password"
 msgstr "Repita sua senha"
 
 #: ../view/login/index/recuperar-senha.phtml:999
@@ -371,6 +371,10 @@ msgstr " CO-LÍDER"
 #: Lancamento/view/lancamento/index.phtml:37
 msgid "Person Registered"
 msgstr "Pessoa Cadastrada"
+
+#: Lancamento/view/lancamento/cadastrar-pessoa.phtml:999
+msgid "Register Person"
+msgstr "Cadastrar Pessoa"
 
 # ##########
 # CADASTRO #
@@ -666,8 +670,36 @@ msgid "Data not found in the database"
 msgstr "Dados não encontrado na base de dados"
 
 #: Cadastro/view/cadastro/grupo.phtml:131
+msgid "The name that is less than 3 characters"
+msgstr "O nome tem que sem maior que 3 caracteres"
+
+#: Cadastro/view/cadastro/grupo.phtml:131
+msgid "Insert Responsible Details"
+msgstr "Insira os dados do responsável"
+
+#: Cadastro/view/cadastro/grupo.phtml:131
+msgid "Insert Man Details"
+msgstr "Insira os dados do Homem"
+
+#: Cadastro/view/cadastro/grupo.phtml:131
+msgid "Insert Woman Details"
+msgstr "Insira os dados da Mulher"
+
+#: Cadastro/view/cadastro/grupo.phtml:131
 msgid "CPF already used"
 msgstr "CPF já utilizado"
+
+#: Cadastro/view/cadastro/grupo.phtml:131
+msgid "CPF does not exist"
+msgstr "CPF não existe"
+
+#: Cadastro/view/cadastro/grupo.phtml:131
+msgid ", To link a new responsibility to this user click on the menu:<p><code>Register -> New Responsibility</code></p>"
+msgstr ", Para vincular uma nova responsabilidade a esse usuário clique no menu:<p><code>Cadastrar -> Nova Responsabilidade</code></p>"
+
+#: Cadastro/view/cadastro/grupo.phtml:131
+msgid ". Click Continue"
+msgstr ". Clique em continuar"
 
 #: Cadastro/view/cadastro/grupo.phtml:148
 msgid "Repeat Email"
@@ -683,7 +715,7 @@ msgstr "Preencha o email"
 
 #: Cadastro/view/cadastro/grupo.phtml:152
 msgid "Email is invalid"
-msgstr "email é inválido"
+msgstr "Email é inválido"
 
 #: Cadastro/view/cadastro/grupo.phtml:152
 msgid "Email already used by the spouse"
@@ -745,14 +777,42 @@ msgstr "<small>Mas <strong>NÃO ESTÁ TERMINADO</strong> em pouco minutos o(s) u
 msgid "Ready"
 msgstr "Pronto"
 
-# Cabecalho Atendimento
-msgid "Report of <span class=\"text-primary\">Counseling</span>"
-msgstr "Relat&oacute;rio de <span class=\"text-primary\">Atendimento</span>"
+#: Cadastro/view/login/precisa-deslogar.phtml
+msgid "You need to log out to continue."
+msgstr "Você precisa deslogar para continuar."
 
-# informacao sub titulo atendimentos
-msgid "disciples were attended to."
-msgstr "disc&iacute;pulos foram atendidos."
+#: Cadastro/view/login/precisa-deslogar.phtml
+msgid "You need to log out before registering a password for a new user"
+msgstr "Você presisa deslogar antes de cadastrar uma senha para um novo usuário"
 
-# de
-msgid "of"
-msgstr "de"
+#: Cadastro/view/cadastro/cadastro-atualizacao.phtml
+msgid "Phone is invalid"
+msgstr "Celular é inválido"
+
+#: Cadastro/view/cadastro/cadastro-atualizacao.phtml
+msgid "DDD is invalid"
+msgstr "DDD é inválido"
+
+#: Cadastro/view/cadastro/cadastro-atualizacao.phtml
+msgid "Fill in the Phone"
+msgstr "Preencha o Celular"
+
+#: Cadastro/view/cadastro/cadastro-atualizacao.phtml
+msgid "Fill in the DDD"
+msgstr "Preencha o DDD"
+
+#: Cadastro/view/cadastro/cadastro-atualizacao.phtml
+msgid "Fill in the DDD and Phone"
+msgstr "Preencha o DDD e o Celular"
+
+#: Cadastro/view/cadastro/cadastro-atualizacao.phtml
+msgid "Invalid tester code"
+msgstr "Código verificador inválido"
+
+#: Cadastro/view/cadastro/cadastro-atualizacao.phtml
+msgid "Fill in the Verifier Code"
+msgstr "Preencha o Código verificador"
+
+#: Cadastro/view/cadastro/cadastro-atualizacao.phtml
+msgid "Code Released click finish."
+msgstr "Código Liberado clique em finalizar."

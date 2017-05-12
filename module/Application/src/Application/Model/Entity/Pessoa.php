@@ -509,60 +509,12 @@ class Pessoa extends CircuitoEntity implements InputFilterAwareInterface {
         $this->dataInativacao = $dataInativacao;
     }
 
-    function getDataInativacaoAno() {
-        $resposta = '';
-        if (!empty($this->getDataInativacao())) {
-            $resposta = explode('-', $this->getDataInativacao())[0];
-        }
-        return $resposta;
-    }
-
-    function getDataInativacaoMes() {
-        $resposta = '';
-        if (!empty($this->getDataInativacao())) {
-            $resposta = explode('-', $this->getDataInativacao())[1];
-        }
-        return $resposta;
-    }
-
-    function getDataInativacaoDia() {
-        $resposta = '';
-        if (!empty($this->getDataInativacao())) {
-            $resposta = explode('-', $this->getDataInativacao())[2];
-        }
-        return $resposta;
-    }
-
     function getData_revisao() {
         return $this->data_revisao;
     }
 
     function setData_revisao($data_revisao) {
         $this->data_revisao = $data_revisao;
-    }
-
-    function getData_revisaoAno() {
-        $resposta = '';
-        if (!empty($this->getData_revisao())) {
-            $resposta = explode('-', $this->getData_revisao())[0];
-        }
-        return $resposta;
-    }
-
-    function getData_revisaoMes() {
-        $resposta = '';
-        if (!empty($this->getData_revisao())) {
-            $resposta = explode('-', $this->getData_revisao())[1];
-        }
-        return $resposta;
-    }
-
-    function verificaSeRevisaoFoiCadastraddoNoMesEAno($mes, $ano) {
-        $resposta = false;
-        if ($mes == $this->getData_revisaoMes() && $ano == $this->getData_revisaoAno()) {
-            $resposta = true;
-        }
-        return $resposta;
     }
 
     function getTurmaAluno() {

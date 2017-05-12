@@ -97,11 +97,6 @@ class LancamentoController extends CircuitoController {
                         Constantes::$ACTION => Constantes::$PAGINA_CADASTRAR_PESSOA_REVISAO,
             ));
         }
-        if ($pagina == Constantes::$PAGINA_FICHA_REVISAO) {
-            return $this->forward()->dispatch(Constantes::$CONTROLLER_LANCAMENTO, array(
-                        Constantes::$ACTION => Constantes::$PAGINA_FICHA_REVISAO,
-            ));
-        }
         if ($pagina == Constantes::$PAGINA_SALVAR_PESSOA) {
             return $this->forward()->dispatch(Constantes::$CONTROLLER_LANCAMENTO, array(
                         Constantes::$ACTION => Constantes::$PAGINA_SALVAR_PESSOA,
@@ -249,7 +244,7 @@ class LancamentoController extends CircuitoController {
             Constantes::$VALIDACAO_NESSE_MES => $validacaoNesseMes,
             Constantes::$VALIDACAO_ENTIDADE_INATIVA => $validacaoEntidadeInativa,
             Constantes::$ENTIDADE_INATIVA => $entidadeInativa,
-            Constantes::$LANCAMENTO_ORM => $repositorioORM,
+            Constantes::$REPOSITORIO_ORM => $repositorioORM,
             Constantes::$GRUPO => $grupo,
                 )
         );
@@ -298,44 +293,6 @@ class LancamentoController extends CircuitoController {
         $view->addChild($layoutJS2, Constantes::$STRING_JS_CADASTRAR_PESSOA_VALIDACAO);
 
         return $view;
-    }
-
-    /**
-     * Abri tela para cadastro de pessoa o revisão de vidas
-     * @return ViewModel
-     */
-    public function cadastrarPessoaRevisaoAction() {
-        $sessao = new Container(Constantes::$NOME_APLICACAO);
-        $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
-        $grupoPessoa = $repositorioORM->getGrupoPessoaORM()->encontrarPorId($sessao->idFuncaoLancamento);
-        $pessoa = $grupoPessoa->getPessoa();
-        $pessoa->setData_revisao(date('Y-m-d'));
-        $repositorioORM->getPessoaORM()->persistir($pessoa);
-        return new ViewModel();
-    }
-
-    /**
-     * Abri tela com a ficha do revisão de vidas
-     * @return ViewModel
-     */
-    public function fichaRevisaoAction() {
-        $sessao = new Container(Constantes::$NOME_APLICACAO);
-        $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
-        $grupoPessoa = $repositorioORM->getGrupoPessoaORM()->encontrarPorId($sessao->idFuncaoLancamento);
-        $pessoa = $grupoPessoa->getPessoa();
-        try {
-            if (!empty($pessoa->getTurmaPessoaAtiva())) {
-                $turmaPessoa = $pessoa->getTurmaPessoaAtiva();
-            }
-            return new ViewModel(
-                    array(
-                Constantes::$TURMA => $turmaPessoa->getTurma(),
-                Constantes::$PESSOA => $pessoa,
-                    )
-            );
-        } catch (Exception $exc) {
-            echo $exc->getTraceAsString();
-        }
     }
 
     /**
@@ -580,7 +537,7 @@ class LancamentoController extends CircuitoController {
             $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
 
             $grupoPessoa = $repositorioORM->getGrupoPessoaORM()->encontrarPorId($sessao->idFuncaoLancamento);
-            $grupoPessoa->inativar();
+            $grupoPessoa->setDataEHoraDeInativacao();
             $repositorioORM->getGrupoPessoaORM()->persistir($grupoPessoa);
 
             return $this->forward()->dispatch(Constantes::$CONTROLLER_LANCAMENTO, array(
@@ -667,13 +624,9 @@ class LancamentoController extends CircuitoController {
                     return $this->redirect()->toRoute(Constantes::$ROUTE_LANCAMENTO, array(
                                 Constantes::$ACTION => Constantes::$ROUTE_INDEX,
                     ));
-                } else {
-                    return $this->redirect()->toRoute(Constantes::$ROUTE_LOGIN, array(
-                                Constantes::$ACTION => Constantes::$ROUTE_INDEX,
-                    ));
                 }
             } catch (Exception $exc) {
-                echo $exc->getMessage();
+                CircuitoController::direcionaErroDeCadastro($exc->getMessage());
             }
         }
     }

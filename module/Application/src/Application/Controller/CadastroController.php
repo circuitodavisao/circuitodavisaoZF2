@@ -827,7 +827,7 @@ class CadastroController extends CircuitoController {
                 $pessoa->dadosAtualizados();
                 $loginORM->getPessoaORM()->persistir($pessoa);
             } catch (Exception $exc) {
-                $this->direcionaErroDeCadastro($exc->getMessage());
+                CircuitoController::direcionaErroDeCadastro($exc->getMessage());
             }
             return $this->redirect()->toRoute('principal', array(
                         'mostrarMenu' => 1
@@ -835,19 +835,7 @@ class CadastroController extends CircuitoController {
         }
     }
 
-    /**
-     * Mostrar as mensagens de erro
-     * @param type $mensagens
-     */
-    public function direcionaErroDeCadastro($mensagens) {
-        echo "ERRO: Cadastro invalido!<br /><br />########################<br />";
-        foreach ($mensagens as $l => $value) {
-            echo "key? $l<br >";
-            foreach ($value as $key => $value) {
-                echo "$key => $value <br />";
-            }
-        }
-    }
+    
 
     /**
      * Busca de endereço por cep ou logradouro

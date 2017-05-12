@@ -45,6 +45,7 @@ use Application\View\Helper\InputExtras;
 use Application\View\Helper\InputFormulario;
 use Application\View\Helper\InputFormularioSimples;
 use Application\View\Helper\LinkLogo;
+use Application\View\Helper\ListagemConsolidacaoParaRevisao;
 use Application\View\Helper\ListagemDeEventos;
 use Application\View\Helper\ListagemDePessoasComEventos;
 use Application\View\Helper\ListagemLideresTransferencia;
@@ -137,6 +138,9 @@ class Module {
                 },
                 'listagemDePessoasComEventos' => function($sm) {
                     return new ListagemDePessoasComEventos();
+                },
+                'listagemConsolidacaoParaRevisao' => function($sm) {
+                    return new ListagemConsolidacaoParaRevisao();
                 },
                 'tabelaLancamento' => function($sm) {
                     return new TabelaLancamento();
@@ -322,7 +326,8 @@ class Module {
             }
             $viewModel->discipulos = $discipulos;
         }
-        if (empty($sessao->idEntidadeAtual) || $pessoa->getAtualizar_dados() === 'S') {
+
+        if (empty($sessao->idEntidadeAtual) || $pessoa->getAtualizar_dados() === 'S' || $e->getRequest()->getUriString() == 'http://158.69.124.139/preSaida') {
             $viewModel->mostrarMenu = 0;
         }
     }

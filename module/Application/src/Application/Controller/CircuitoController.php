@@ -31,5 +31,19 @@ class CircuitoController extends AbstractActionController {
     public function getDoctrineORMEntityManager() {
         return $this->_doctrineORMEntityManager;
     }
+    
+    /**
+     * Mostrar as mensagens de erro
+     * @param type $mensagens
+     */
+    public static function direcionaErroDeCadastro($mensagens) {
+        echo "ERRO: Cadastro invalido!<br /><br />########################<br />";
+        foreach ($mensagens as $l => $value) {
+            echo "key? $l<br >";
+            foreach ($value as $key => $value) {
+                echo "$key => $value <br />";
+            }
+        }
+    }
 
 }

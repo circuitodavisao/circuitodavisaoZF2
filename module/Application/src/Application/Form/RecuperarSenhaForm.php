@@ -58,7 +58,7 @@ class RecuperarSenhaForm extends Form {
                         ->setAttributes([
                             Constantes::$FORM_STRING_CLASS => Constantes::$FORM_STRING_CLASS_GUI_INPUT,
                             Constantes::$FORM_STRING_ID => Constantes::$INPUT_REPETIR_SENHA,
-                            Constantes::$FORM_STRING_PLACEHOLDER => Constantes::$TRADUCAO_REPETIR_SENHA_PLACEHOLDER,
+                            Constantes::$FORM_STRING_PLACEHOLDER => Constantes::$TRADUCAO_REPITA_A_SENHA,
                             Constantes::$FORM_STRING_REQUIRED => Constantes::$FORM_STRING_REQUIRED,
                             Constantes::$FORM_STRING_ONKEYUP => str_replace('#tipo', 2, Constantes::$FORM_STRING_FUNCAO_VERIFICAR_SENHAS),
                         ])
