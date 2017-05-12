@@ -50,11 +50,24 @@ class CadastrarPessoaRevisaoForm extends Form {
          */
         $this->add(
                 (new Text())
-                        ->setName(Constantes::$INPUT_NOME)
+                        ->setName(Constantes::$INPUT_PRIMEIRO_NOME)
                         ->setAttributes([
                             Constantes::$FORM_STRING_CLASS => Constantes::$FORM_STRING_CLASS_GUI_INPUT,
-                            Constantes::$FORM_STRING_ID => Constantes::$INPUT_NOME,
-                            Constantes::$FORM_STRING_PLACEHOLDER => Constantes::$TRADUCAO_NOME,
+                            Constantes::$FORM_STRING_ID => Constantes::$INPUT_PRIMEIRO_NOME,
+                            Constantes::$FORM_STRING_PLACEHOLDER => Constantes::$TRADUCAO_PRIMEIRO_NOME,
+                        ])
+        );
+        /**
+         * Nome
+         * Elemento do tipo text
+         */
+        $this->add(
+                (new Text())
+                        ->setName(Constantes::$INPUT_ULTIMO_NOME)
+                        ->setAttributes([
+                            Constantes::$FORM_STRING_CLASS => Constantes::$FORM_STRING_CLASS_GUI_INPUT,
+                            Constantes::$FORM_STRING_ID => Constantes::$INPUT_ULTIMO_NOME,
+                            Constantes::$FORM_STRING_PLACEHOLDER => Constantes::$TRADUCAO_ULTIMO_NOME,
                         ])
         );
 
@@ -163,8 +176,7 @@ class CadastrarPessoaRevisaoForm extends Form {
                                     Constantes::$FORM_STRING_VALUE => 'F',
                                     Constantes::$FORM_STRING_LABEL => ' FEMININO',
                                     Constantes::$FORM_STRING_LABEL_ATRIBUTES => array(Constantes::$FORM_STRING_CLASS => $classOption),
-                                ),
-                               
+                                ),   
                             ),
                         ])
         );
@@ -175,9 +187,15 @@ class CadastrarPessoaRevisaoForm extends Form {
                         ->setName(Constantes::$INPUT_CSRF)
         );
         
-        $this->get(Constantes::$FORM_ID)->setValue($pessoa->getId());
-        $this->get(Constantes::$FORM_NOME)->setValue($pessoa->getNome());
-        $this->get(Constantes::$INPUT_TELEFONE)->setValue($pessoa->getTelefone());
+        $telefoneCelular = substr($pessoa->getTelefone(), 2);
+        $dddTelefone = substr($pessoa->getTelefone(), 0,2);
+        $nomeExplodido = explode(' ', $pessoa->getNome());
+        $ultimo = count($nomeExplodido);
+        $this->get(Constantes::$FORM_ID)->setValue($pessoa->getId()); 
+        $this->get(Constantes::$INPUT_PRIMEIRO_NOME)->setValue($nomeExplodido[0]);
+        $this->get(Constantes::$INPUT_ULTIMO_NOME)->setValue($nomeExplodido[$ultimo-1]);
+        $this->get(Constantes::$INPUT_TELEFONE)->setValue($telefoneCelular);
+        $this->get(Constantes::$INPUT_DDD)->setValue($dddTelefone);    
     }
 
 }
