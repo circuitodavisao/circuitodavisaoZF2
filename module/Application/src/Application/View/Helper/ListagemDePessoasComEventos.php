@@ -165,15 +165,6 @@ class ListagemDePessoasComEventos extends AbstractHelper {
                     $corTextoTagsExtrasXs = 'class="hidden-lg' . $base;
                     $corTextoTagsExtrasLg = 'class="hidden-xs hidden-sm hidden-md' . $base;
                 }
-//                /* Reserva do revisão de vidas */
-//                if (!empty($pessoa->verificaSeRevisaoFoiCadastraddoNoMesEAno($mesSelecionado, $anoSelecionado))) {
-//                    $classLinha = 'class="row-success success"';
-//                    $classLinha2 = 'footable-visible footable-first-column';
-//                    $corBotao = 'btn-success';
-//                    $base = ' text-success" data-toggle="tooltip" data-placement="center" title data-original-title="Revisão de vidas"';
-//                    $corTextoTagsExtrasXs = 'class="hidden-lg' . $base;
-//                    $corTextoTagsExtrasLg = 'class="hidden-xs hidden-sm hidden-md' . $base;
-//                }
                 $html .= '<tr id="tr_' . $pessoa->getIdGrupoPessoa() . '" ' . $classLinha . '>';
 
                 /* TIPO */
@@ -184,34 +175,21 @@ class ListagemDePessoasComEventos extends AbstractHelper {
                 $html .= $pessoa->getTipo();
                 $html .= '<span class="sr-only"></span>';
                 $html .= '</span>';
+
                 if ($pessoa->getTipo() != 'LP' && $this->view->abaSelecionada == 1 && $pessoa->getAtivo()) {
-                    $html .= '<ul class="dropdown-menu sobrepor-elementos" style="min-width: 50px;">';
+                    $html .= '<ul class="dropdown-menu sobrepor-elementos" style="min-width: 43px;">';
                     $html .= '<span class="editable-container editable-inline">';
-                    $html .= '<div class="ml5 definicao-altura-30">';
+                    $html .= '<div class="definicao-altura-30">';
 
-                    if ($pessoa->getTipo() != 'AL') {
-                        $html .= '<div class="control-group form-group">';
+                    $html .= '<div class="control-group form-group">';
 
-                        $html .= '<span class="input-group-btn">';
-                        $html .= '<span onclick="funcaoPessoa(\'' . Constantes::$ROUTE_REMOVER_PESSOA . '\', ' . $pessoa->getIdGrupoPessoa() . ');" '
-                                . 'class="btn ladda-button btn-sm" style="margin-left:5px;"><i class="fa fa-trash-o"></i></span>';
-                        $html .= '</span>';
+                    /* Remover Pessoa */
+                    $html .= '<span class="input-group-btn">';
+                    $html .= '<span onclick="funcaoPessoa(\'' . Constantes::$ROUTE_REMOVER_PESSOA . '\', ' . $pessoa->getIdGrupoPessoa() . ');" '
+                            . 'class="btn ladda-button btn-sm" style="margin-left:5px;"><i class="fa fa-trash-o"></i></span>';
+                    $html .= '</span>';
 
-//                        /* Reserva do revisão de vidas */
-//                        if (empty($pessoa->verificaSeRevisaoFoiCadastraddoNoMesEAno($mesSelecionado, $anoSelecionado))) {
-//                            $html .= '<span class="input-group-btn">';
-//                            $html .= '<span onclick="funcaoPessoa(\'' . Constantes::$ROUTE_CADASTRAR_PESSOA_REVISAO . '\', ' . $pessoa->getIdGrupoPessoa() . ');" '
-//                                    . 'class="btn ladda-button btn-sm" style="margin-left:5px;"><i class="fa fa-send"></i></span>';
-//                            $html .= '</span>';
-//                        } else {
-//                            $html .= '<span class="input-group-btn">';
-//                            $html .= '<span onclick="funcaoPessoa(\'' . Constantes::$ROUTE_FICHA_REVISAO . '\', ' . $pessoa->getIdGrupoPessoa() . ');" '
-//                                    . 'class="btn ladda-button btn-sm" style="margin-left:5px;"><i class="fa fa-file-text-o"></i></span>';
-//                            $html .= '</span>';
-//                        }
-
-                        $html .= '</div>';
-                    }
+                    $html .= '</div>';
 
                     $html .= '</div>';
                     $html .= '</span>';
@@ -235,7 +213,7 @@ class ListagemDePessoasComEventos extends AbstractHelper {
                 $html .= '<td class="text-left ' . $empuraColunas . '">&nbsp;';
                 /* Menu dropup Nome */
                 $html .= '<div class="btn-group dropdown">';
-                if (!($pessoa->getTipo() != 'LP' && !$pessoa->getAtivo())) {
+                if ($pessoa->getTipo() != 'LP' && $pessoa->getAtivo()) {
                     $html .= '<a id="menudrop_' . $pessoa->getId() . '" class="tdNome text-left dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">';
                 }
                 /* nome */
@@ -246,13 +224,13 @@ class ListagemDePessoasComEventos extends AbstractHelper {
                 $html .= $pessoa->getNome();
                 $html .= '</span>';
                 /* fim nome */
-                $html .= '</a>';
-                if (!($pessoa->getTipo() != 'LP' && !$pessoa->getAtivo())) {
+                if ($pessoa->getTipo() != 'LP' && $pessoa->getAtivo()) {
+                    $html .= '</a>';
                     $html .= '<ul class="dropdown-menu sobrepor-elementos modal-edicao-nome">';
                     $html .= '<span class="editable-container editable-inline">';
                     $html .= '<div class="ml10 campo-edicao-nome">';
                     $html .= '<form class="form-inline editableform">';
-                    $html .= '<div class="control-group form-group" style="width:140px;">';
+                    $html .= '<div class="control-group form-group">';
                     $html .= '<div>';
                     $html .= '<div class="input-group">';
                     $html .= '<input type="text" class="form-control" id="nome_' . $pessoa->getId() . '" value="' . $pessoa->getNome() . '" />';

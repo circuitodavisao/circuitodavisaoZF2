@@ -20,7 +20,7 @@ class ModalMuitosEventos extends AbstractHelper {
         $html = '';
         /* Modal */
         $html .= '<div id="modalMuitosEventos" class="popup-basic admin-form mfp-with-anim mfp-hide p25" data-effect="mfp-with-fade">';
-        $html .= '<div class="">' . Constantes::$TRADUCAO_GIRE_O_CELULAR . '</div>';
+        $html .= '<div class="">' . $this->view->translate(Constantes::$TRADUCAO_GIRE_O_CELULAR) . '</div>';
         /* FIM Modal */
         $html .= '</div>';
         return $html;

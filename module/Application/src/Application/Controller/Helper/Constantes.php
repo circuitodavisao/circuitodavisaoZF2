@@ -353,7 +353,7 @@ class Constantes {
     public static $TRADUCAO_VALIDACAO_TELEFONE_MAX = 'Enter at 9 numbers';
     public static $TRADUCAO_VALIDACAO_TIPO_VAZIO = 'Choose a Type';
     public static $TRADUCAO_PESSOA_CADASTRADA = 'Person Registered';
-    public static $TRADUCAO_CABECALHO_TITULO_ATENDIMENTOS = "Report of <span class=\"text-primary\"> Counseling </span>";
+    public static $TRADUCAO_CABECALHO_TITULO_ATENDIMENTOS = "Launch of <span class=\"text-primary\">Counseling</span>";
     public static $TRADUCAO_SUBTITULO_CABECALHO_ATENDIMENTO = 'disciples were attended to.';
     /* Fomulário */
     public static $INPUT_NOME = 'nome';

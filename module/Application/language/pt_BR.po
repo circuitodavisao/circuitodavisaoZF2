@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: ZendSkeletonApplication\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-07-05 22:17-0700\n"
-"PO-Revision-Date: 2017-05-12 16:51-0300\n"
+"PO-Revision-Date: 2017-05-15 16:43-0300\n"
 "Last-Translator: Diogo Melo <dmelo87@gmail.com>\n"
 "Language-Team: ZF Contibutors <zf-devteam@zend.com>\n"
 "Language: pt\n"
@@ -12,7 +12,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Poedit-KeywordsList: translate\n"
 "X-Poedit-Basepath: .\n"
-"X-Generator: Poedit 1.8.11\n"
+"X-Generator: Poedit 2.0.1\n"
 "X-Poedit-SearchPath-0: ..\n"
 
 # ############
@@ -375,6 +375,30 @@ msgstr "Pessoa Cadastrada"
 #: Lancamento/view/lancamento/cadastrar-pessoa.phtml:999
 msgid "Register Person"
 msgstr "Cadastrar Pessoa"
+
+#: Lancamento/view/lancamento/index.phtml:27
+msgid "<h3>ROTATE THE CELLULAR</h3><span>Turn your phone to landscape to view all your events.</span>"
+msgstr "<h3>GIRE O CELULAR</h3><span>Mude a orientação do seu celular para paisagem para ver todos os eventos.</span>"
+
+#: Lancamento/view/lancamento/index.phtml:16
+msgid "Cult"
+msgstr "Culto"
+
+#: Lancamento/view/lancamento/index.phtml:16
+msgid "Cell"
+msgstr "Célula"
+
+#: Lancamento/view/lancamento/atendimento.phtml:14
+msgid "Launch of <span class=\"text-primary\">Counseling</span>"
+msgstr "Lançamento de <span class=\"text-primary\">Atendimento</span>"
+
+#: Lancamento/view/lancamento/atendimento.phtml:14
+msgid "disciples were attended to."
+msgstr "discipulo(s) foi(ram) atendido(s)."
+
+#: Lancamento/view/lancamento/atendimento.phtml:14
+msgid "of"
+msgstr "de"
 
 # ##########
 # CADASTRO #

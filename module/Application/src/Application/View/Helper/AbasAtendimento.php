@@ -25,8 +25,9 @@ class AbasAtendimento extends AbstractHelper {
         $html .= '<ul class="nav panel-tabs-border panel-tabs panel-tabs-left">';
         $html .= '<li role="presentation" ' . Constantes::$ONCLICK_ABRIR_MODAL . ' ' . $this->view->abaSelecionada($this->view->abaSelecionada, 1) . '><a href="' . $urlBase . '">' . $this->view->translate(Constantes::$TRADUCAO_MES_ATUAL) . '</a></li>';
 
-        $html .= '<li role="presentation" ' . Constantes::$ONCLICK_ABRIR_MODAL . ' ' . $this->view->abaSelecionada($this->view->abaSelecionada, 2) . '><a href="' . $urlBase2 . '">' . $this->view->translate(Constantes::$TRADUCAO_MES_ANTERIOR) . '</a></li>';
-
+        if ($this->view->validacaoNesseMes != 1) {
+            $html .= '<li role="presentation" ' . Constantes::$ONCLICK_ABRIR_MODAL . ' ' . $this->view->abaSelecionada($this->view->abaSelecionada, 2) . '><a href="' . $urlBase2 . '">' . $this->view->translate(Constantes::$TRADUCAO_MES_ANTERIOR) . '</a></li>';
+        }
         $html .= '</ul>';
 
         return $html;

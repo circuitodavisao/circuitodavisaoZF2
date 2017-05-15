@@ -217,7 +217,12 @@ class Pessoa extends CircuitoEntity implements InputFilterAwareInterface {
                 }
                 break;
             default:
-                $nome = substr($this->getNome(), 0, 8) . '..';
+                if (strlen($this->getNome()) > 8) {
+                    $nome = substr($this->getNome(), 0, 8) . '..';
+                } else {
+                    $nome = $this->getNome();
+                }
+
                 break;
         }
 
