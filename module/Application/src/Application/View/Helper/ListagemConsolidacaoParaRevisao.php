@@ -144,7 +144,7 @@ class ListagemConsolidacaoParaRevisao extends AbstractHelper {
                 $html .= $this->view->templateFormularioTopo('Pessoas Pagina Lancamento');
                 $html .= '<div class="panel-body bg-light">';
                 
-                    $html .= '<table class="table">';
+                    $html .= '<table class="table">'; 
                     $html .= '<thead>';
                     $html .= '<tr>';
 

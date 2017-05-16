@@ -136,7 +136,7 @@ class Module {
                 'cabecalhoDeEventos' => function($sm) {
                     return new CabecalhoDeEventos();
                 },
-                'listagemDePessoasComEventos' => function($sm) {
+                'listagemDePessoasComEventos' => function($sm) { 
                     return new ListagemDePessoasComEventos();
                 },
                 'listagemConsolidacaoParaRevisao' => function($sm) {
@@ -326,7 +326,8 @@ class Module {
             }
             $viewModel->discipulos = $discipulos;
         }
-        if (empty($sessao->idEntidadeAtual) || $pessoa->getAtualizar_dados() === 'S') {
+
+        if (empty($sessao->idEntidadeAtual) || $pessoa->getAtualizar_dados() === 'S' || $e->getRequest()->getUriString() == 'http://158.69.124.139/preSaida') {
             $viewModel->mostrarMenu = 0;
         }
     }

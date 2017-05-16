@@ -237,7 +237,7 @@ class Constantes {
     public static $ENTIDADE = 'entidade';
     public static $ENTIDADE_INATIVA = 'entidadeInativa';
     public static $DOCTRINE_ORM_ENTITY_MANAGER = 'doctrineORMEntityManager';
-    public static $LANCAMENTO_ORM = 'lancamentoORM';
+    public static $REPOSITORIO_ORM = 'repositorioORM';
     public static $TURMA = 'turma';
     public static $GRUPO = 'grupo';
     public static $NUMERO_ATENDIMENTOS = 'numeroAtendimentos';
@@ -259,7 +259,7 @@ class Constantes {
     public static $TEMPLATE_JS_LANCAMENTO = 'layout/layout-js-lancamento';
     public static $TEMPLATE_JS_CADASTRAR_PESSOA = 'layout/layout-js-cadastrar-pessoa';
     public static $TEMPLATE_JS_CADASTRAR_PESSOA_VALIDACAO = 'layout/layout-js-cadastrar-pessoa-validacao';
-    public static $TEMPLATE_JS_CADASTRAR_PESSOA_REVISAO= 'layout/layout-js-cadastrar-pessoa-revisao';
+    public static $TEMPLATE_JS_CADASTRAR_PESSOA_REVISAO = 'layout/layout-js-cadastrar-pessoa-revisao';
     public static $TEMPLATE_JS_CADASTRAR_ATENDIMENTO = 'layout/layout-js-cadastrar-atendimento';
     public static $TEMPLATE_JS_VALIDACAO_ATENDIMENTO = 'layout/layout-js-validacao-atendimento';
     public static $TEMPLATE_JS_LANCAMENTO_MODAL_EVENTOS = 'layout/layout-js-lancamento-modal-eventos';
@@ -339,6 +339,7 @@ class Constantes {
     public static $TRADUCAO_SEXO = 'Sex';
     public static $TRADUCAO_SELECIONE = 'SELECT';
     public static $TRADUCAO_CADASTRAR = 'Register';
+    public static $TRADUCAO_CADASTRAR_PESSOA = 'Register Person';
     public static $TRADUCAO_VALIDACAO_NOME_VAZIO = 'Enter Full Name';
     public static $TRADUCAO_VALIDACAO_NOME_MIN = 'Enter at least 3 characters or more';
     public static $TRADUCAO_VALIDACAO_NOME_MAX = 'Enter at 80 characters';
@@ -352,7 +353,7 @@ class Constantes {
     public static $TRADUCAO_VALIDACAO_TELEFONE_MAX = 'Enter at 9 numbers';
     public static $TRADUCAO_VALIDACAO_TIPO_VAZIO = 'Choose a Type';
     public static $TRADUCAO_PESSOA_CADASTRADA = 'Person Registered';
-    public static $TRADUCAO_CABECALHO_TITULO_ATENDIMENTOS = "Report of <span class=\"text-primary\"> Counseling </span>";
+    public static $TRADUCAO_CABECALHO_TITULO_ATENDIMENTOS = "Launch of <span class=\"text-primary\">Counseling</span>";
     public static $TRADUCAO_SUBTITULO_CABECALHO_ATENDIMENTO = 'disciples were attended to.';
     /* Fomulário */
     public static $INPUT_NOME = 'nome';
@@ -385,7 +386,7 @@ class Constantes {
     /* Rotas */
     public static $PAGINA_CELULAS = 'Celulas';
     public static $PAGINA_CULTOS = 'Cultos';
-    public static $PAGINA_REVISAO = 'Revisao'; 
+    public static $PAGINA_REVISAO = 'Revisao';
     public static $PAGINA_REVISIONISTAS = 'Revisionistas';
     public static $PAGINA_CELULA = 'Celula';
     public static $PAGINA_EVENTO_CULTO = 'EventoCulto';

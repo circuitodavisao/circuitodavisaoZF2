@@ -136,7 +136,7 @@ class CadastroController extends CircuitoController {
                         Constantes::$ACTION => Constantes::$PAGINA_CADASTRO_TRANSFERENCIA,
             ));
         }
-        if ($pagina == Constantes::$PAGINA_SELECIONAR_REVISIONISTA) {
+        if ($pagina == Constantes::$PAGINA_SELECIONAR_REVISIONISTA) {  
             return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
                         Constantes::$ACTION => Constantes::$PAGINA_SELECIONAR_REVISIONISTA,
             ));
@@ -1183,12 +1183,12 @@ class CadastroController extends CircuitoController {
 
         $view = new ViewModel(array(
             Constantes::$ENTIDADE => $entidade,
-            'repositorioORM' => $repositorioORM,
+            'repositorioORM' => $repositorioORM, 
         ));
 
         /* Javascript */
         $layoutJS = new ViewModel();
-        $layoutJS->setTemplate(Constantes::$LAYOUT_JS_EVENTOS);
+        $layoutJS->setTemplate(Constantes::$LAYOUT_JS_EVENTOS); 
         $view->addChild($layoutJS, Constantes::$LAYOUT_STRING_JS_EVENTOS);
 
         $layoutJSValidacao = new ViewModel();
@@ -1240,7 +1240,7 @@ class CadastroController extends CircuitoController {
     
     public function salvarPessoaRevisaoAction() {
         $request = $this->getRequest();
-        if ($request->isPost()) {
+        
 //            try {
                 $post_data = $request->getPost();
 
@@ -1298,7 +1298,7 @@ class CadastroController extends CircuitoController {
 //            } catch (Exception $exc) {
 //                echo $exc->getMessage();
 //            }
-        }
+        
     }
     
     public function fichaRevisaoAction(){
