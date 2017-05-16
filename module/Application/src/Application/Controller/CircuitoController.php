@@ -36,7 +36,7 @@ class CircuitoController extends AbstractActionController {
      * Mostrar as mensagens de erro
      * @param type $mensagens
      */
-    public static function direcionaErroDeCadastro($mensagens) {
+    public function direcionaErroDeCadastro($mensagens) {
         echo "ERRO: Cadastro invalido!<br /><br />########################<br />";
         foreach ($mensagens as $l => $value) {
             echo "key? $l<br >";

@@ -173,7 +173,7 @@ class CadastroController extends CircuitoController {
             $listagemDeEventos = $grupo->getGrupoEventoRevisao();
             $tituloDaPagina = Constantes::$TRADUCAO_LISTAGEM_REVISIONISTAS;
             $tipoEvento = 4;
-            $extra = $grupo->getId(); 
+            $extra = $grupo->getId();
         }
 
 
@@ -827,15 +827,13 @@ class CadastroController extends CircuitoController {
                 $pessoa->dadosAtualizados();
                 $loginORM->getPessoaORM()->persistir($pessoa);
             } catch (Exception $exc) {
-                CircuitoController::direcionaErroDeCadastro($exc->getMessage());
+                $this->direcionaErroDeCadastro($exc->getMessage());
             }
             return $this->redirect()->toRoute('principal', array(
                         'mostrarMenu' => 1
             ));
         }
     }
-
-    
 
     /**
      * Busca de endereço por cep ou logradouro
@@ -1137,7 +1135,7 @@ class CadastroController extends CircuitoController {
             'discipulos' => $discipulos,
         ));
     }
-    
+
     public function inserirRevisaoAction() {
         $sessao = new Container(Constantes::$NOME_APLICACAO);
         $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
