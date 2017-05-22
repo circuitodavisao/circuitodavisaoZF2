@@ -64,7 +64,7 @@ class CabecalhoDeAtendimentos extends AbstractHelper {
 
         $html .= '<div class="row center-block text-center">';
         $html .= '<div class="section-divider mt30">';
-        $html .= '<span><span id="totalGruposAtendidos">' . $totalGruposAtendidos . ' </span>' . $this->view->translate('of') . ' <span id="totalGruposFilhos">' . $totalGruposFilhos . '</span> ' . $this->view->translate(Constantes::$TRADUCAO_SUBTITULO_CABECALHO_ATENDIMENTO) . '</span>';
+        $html .= '<span><span id="totalGruposAtendidos">' . $totalGruposAtendidos . ' </span> ' . $this->view->translate('of') . ' <span id="totalGruposFilhos">' . $totalGruposFilhos . '</span> ' . $this->view->translate(Constantes::$TRADUCAO_SUBTITULO_CABECALHO_ATENDIMENTO) . '</span>';
         $html .= '</div>';
         $html .= '</div>';
         $html .= '<div class="row">';
