@@ -1,6 +1,6 @@
 <?php
 
-use Login\Controller\Helper\Funcoes;
+use Application\Controller\Helper\Funcoes;
 
 //echo 'turma->getId: ' . $this->turma->getId() . '<br />';
 //echo 'turma->getData_criacao: ' . $this->turma->getData_criacao() . '<br />';
@@ -40,7 +40,7 @@ use Login\Controller\Helper\Funcoes;
                                     <br>
                                     <div>
                                         <div class = "pull-left font-montserrat bold all-caps">Revis&atilde;o de Vidas :</div>
-                                        <div class = "pull-right"> <?php echo Funcoes::mudarPadraoData($this->turma->getData_revisao(), 1); ?></div>
+                                        <div class = "pull-right"> <?php echo Funcoes::mudarPadraoData($this->revisao->getData(), 1); ?></div>
                                         <div class = "clearfix"></div>
                                     </div>
                                 </div>
@@ -63,8 +63,8 @@ use Login\Controller\Helper\Funcoes;
                                                 Endereço da Igreja - Quinta-Feira às 18:00.
                                             </p>
                                         </td>
-                                        <td class = "text-center" style = "border-bottom-color: #fff;">Sérgio Silva</td>
-                                        <td class = "text-right" style = "border-bottom-color: #fff;">(61)994102960</td>
+                                        <td class = "text-center" style = "border-bottom-color: #fff;"><?php echo $this->pessoaLider->getNome(); ?></td>
+                                        <td class = "text-right" style = "border-bottom-color: #fff;"><?php echo $this->pessoaLider->getTelefone(); ?></td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -82,7 +82,7 @@ use Login\Controller\Helper\Funcoes;
                                     <tr>
                                         <th class = "">Igreja</th>
                                         <th class = "text-center">Líder</th>
-                                        <th class = "text-center">Idade</th>
+                                        
                                         <th class = "text-right">Contato(s)</th>
                                     </tr>
                                 </thead>
@@ -91,12 +91,12 @@ use Login\Controller\Helper\Funcoes;
                                         <td class = "">
                                             <p class = "text-black">SNT Ceilândia Centro</p>
                                             <p class = "small hint-text">
-                                                Revisão de Vidas 00/00/00 - Quinta-Feira às 18:00.
+                                                Revisão de Vidas <?php echo Funcoes::mudarPadraoData($this->revisao->getData(), 1); ?> - Sexta às 19:00.
                                             </p>
                                         </td>
-                                        <td class = "text-center">Sérgio Silva</td>
-                                        <td class = "text-center">24</td>
-                                        <td class = "text-right">(61)994102960</td>
+                                        <td class = "text-center"><?php echo $this->pessoaLider->getNome(); ?></td>
+                                        
+                                        <td class = "text-right"><?php echo $this->pessoaLider->getTelefone(); ?></td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -163,7 +163,7 @@ use Login\Controller\Helper\Funcoes;
     <div class = "container-fluid container-fixed-lg footer">
         <div class = "copyright sm-text-center">
             <p class = "small no-margin pull-left sm-pull-reset">
-                <span class = "hint-text">Copyright © 2016 </span>
+                <span class = "hint-text">Copyright © 2017 </span>
                 <span class = "font-montserrat">SARA NOSSA TERRA</span>.
                 <span class = "hint-text">Todos os direitos reservados. </span>
                 <span class = "sm-block"><a href = "#" class = "m-l-10 m-r-10">Termos de Uso</a> | <a href = "#" class = "m-l-10">Política de Privacidade</a></span>
