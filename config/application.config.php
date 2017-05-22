@@ -10,6 +10,7 @@ return array(
         'Application',
         'DoctrineModule',
         'DoctrineORMModule',
+        'ZendDeveloperTools',
         'Migracao',
     ),
     'module_listener_options' => array(

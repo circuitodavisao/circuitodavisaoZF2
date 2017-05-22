@@ -25,7 +25,6 @@ function validarLogin() {
                 .removeClass('hidden')
                 .addClass('alert-danger');
     } else {
-        abrirModalCarregando();
         divMensagens
                 .addClass('hidden');
         $('#LoginForm').submit();
