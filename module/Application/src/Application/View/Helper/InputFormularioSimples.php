@@ -46,7 +46,9 @@ class InputFormularioSimples extends AbstractHelper {
             $tamanhoGrid = $this->getTamanhoGrid();
         }
         $html .= '<div class="form-group col-lg-' . $tamanhoGrid . '">';
-        $html .= '<label class="field-label text-muted fs18 mb10">' . $this->view->translate($this->getLabel()) . '</label>';
+        if($this->getLabel() != -1){
+            $html .= '<label class="field-label text-muted fs18 mb10">' . $this->view->translate($this->getLabel()) . '</label>';
+        }
         if ($this->getTipoInput() === 1) {
             $html .= $this->view->formInput($this->getInput());
         }

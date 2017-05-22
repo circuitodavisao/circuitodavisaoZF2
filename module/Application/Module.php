@@ -136,7 +136,7 @@ class Module {
                 'cabecalhoDeEventos' => function($sm) {
                     return new CabecalhoDeEventos();
                 },
-                'listagemDePessoasComEventos' => function($sm) {
+                'listagemDePessoasComEventos' => function($sm) { 
                     return new ListagemDePessoasComEventos();
                 },
                 'listagemConsolidacaoParaRevisao' => function($sm) {

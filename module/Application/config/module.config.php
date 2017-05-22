@@ -173,7 +173,7 @@ return array(
             'cadastro/cadastro/celulas' => __DIR__ . '/../view/cadastro/celulas.phtml',
             'cadastro/cadastro/revisao' => __DIR__ . '/../view/cadastro/revisao.phtml',
             'cadastro/cadastro/transferencia' => __DIR__ . '/../view/cadastro/transferencia.phtml',
-            'cadastro/cadastro/selecionar_revisionista' => __DIR__ . '/../view/cadastro/selecionar_revisionista.phtml',
+            'cadastro/cadastro/selecionar_revisionista' => __DIR__ . '/../view/cadastro/selecionar_revisionista.phtml', 
             'relatorio/relatorio/membresia' => __DIR__ . '/../view/relatorio/membresia.phtml',
 //            'relatorio/relatorio/teste' => __DIR__ . '/../view/relatorio/teste.phtml',
             'instituto/instituto/index' => __DIR__ . '/../view/instituto/index.phtml',
