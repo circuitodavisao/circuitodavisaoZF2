@@ -12,7 +12,7 @@ use Zend\View\Helper\AbstractHelper;
  * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com>
  * Descricao: Classe helper view para mostrar a listagem de eventos com frequencia
  */
-class ListagemConsolidacaoParaRevisao extends AbstractHelper {
+class ListagemFichasParaRevisao extends AbstractHelper {
 
     public function __construct() {
         
@@ -28,7 +28,7 @@ class ListagemConsolidacaoParaRevisao extends AbstractHelper {
         $anoSelecionado = date("Y");
         $pessoas = array();
         $pessoasGrupo = array();
-        $grupo = $this->view->entidade->getGrupo();
+        $frequencias = $this->view->evento->getEventoFrequencia();
 //        foreach ($grupo->getResponsabilidadesAtivas() as $gr) {
 //            $p = $gr->getPessoa();
 //            $p->setTipo('LP');
@@ -81,7 +81,7 @@ class ListagemConsolidacaoParaRevisao extends AbstractHelper {
                         }
                     }
                 }   
-                if($p->getTipo() == 'CO' || $p->getTipo() == 'VI'){
+                if($p->getTipo() == 'CO' || $p->getTipo() == 'VI' && $p->getAtivo()){
                     if ($adicionar && $adicionarVisitante) {
                         $pessoasGrupo[] = $p;
                     }
