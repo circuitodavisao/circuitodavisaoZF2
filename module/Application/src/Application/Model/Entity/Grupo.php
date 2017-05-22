@@ -237,6 +237,38 @@ class Grupo extends CircuitoEntity {
     }
 
     /**
+     * Retorna o grupo evento Revisao
+     * @return GrupoEvento
+     */
+    function getGrupoEventoRevisao() {
+        $grupoSelecionado = $this;
+        $grupoEventos = null;
+        if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::SUBEQUIPE) {
+
+            while ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::SUBEQUIPE ||
+            $grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::EQUIPE) {
+                $grupoSelecionado = $grupoSelecionado->getGrupoPaiFilhoPai()->getGrupoPaiFilhoPai();
+                if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::IGREJA) {
+                    break;
+                }
+            }
+            $grupoEventos = $grupoSelecionado->getGrupoEventoAtivosPorTipo(GrupoEvento::REVISAO);
+        } else if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::EQUIPE) {
+            while ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::EQUIPE) {
+                $grupoSelecionado = $grupoSelecionado->getGrupoPaiFilhoPai()->getGrupoPaiFilhoPai();
+                if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::IGREJA) {
+                    break;
+                }
+            }
+            $grupoEventos = $grupoSelecionado->getGrupoEventoAtivosPorTipo(GrupoEvento::REVISAO);
+        } else {
+            $grupoEventos = $grupoSelecionado->getGrupoEventoAtivosPorTipo(GrupoEvento::REVISAO);
+        }
+
+        return $grupoEventos;
+    }
+
+    /**
      * Retorna o grupo evento
      * @return GrupoEvento
      */
@@ -266,6 +298,9 @@ class Grupo extends CircuitoEntity {
                     $grupoEventos[] = $ge;
                 }
                 if ($tipo === GrupoEvento::CELULA && $ge->getEvento()->verificaSeECelula()) {
+                    $grupoEventos[] = $ge;
+                }
+                if ($tipo === GrupoEvento::REVISAO && $ge->getEvento()->verificaSeERevisao()) {
                     $grupoEventos[] = $ge;
                 }
             }
@@ -487,18 +522,18 @@ class Grupo extends CircuitoEntity {
         return $this->getEventos();
     }
 
-    function getGrupoEventoRevisao() {
-        $eventos = null;
-        if (!empty($this->getGrupoEvento())) {
-            foreach ($this->getGrupoEvento() as $ge) {
-                if ($ge->verificarSeEstaAtivo() && $ge->getEvento()->verificaSeERevisao()) {
-                    $eventos[] = $ge;
-                }
-            }
-        }
-        $this->setEventos($eventos);
-        return $this->getEventos();
-    }
+//    function getGrupoEventoRevisao() {
+//        $eventos = null;
+//        if (!empty($this->getGrupoEvento())) {
+//            foreach ($this->getGrupoEvento() as $ge) {
+//                if ($ge->verificarSeEstaAtivo() && $ge->getEvento()->verificaSeERevisao()) {
+//                    $eventos[] = $ge;
+//                }
+//            }
+//        }
+//        $this->setEventos($eventos);
+//        return $this->getEventos();
+//    }
 
     function setGrupoEvento($grupoEvento) {
         $this->grupoEvento = $grupoEvento;

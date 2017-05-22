@@ -170,7 +170,7 @@ class IndexController extends CircuitoController {
         $mesSelecionado = date('n');
         $anoSelecionado = date('Y');
         $cicloSelecionado = Funcoes::cicloAtual($mesSelecionado, $anoSelecionado);
-//        $cicloSelecionado = 1;
+//        $cicloSelecionado = 4; 
         $tipoCelula = 2;
 
         $grupos = $this->getRepositorio()->getGrupoORM()->encontrarTodos();
