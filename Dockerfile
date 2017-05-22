@@ -7,7 +7,7 @@ COPY / /var/www/html/
 ADD 000-default.conf /etc/apache2/sites-enabled/000-default.conf
 # COPY opcache.ini $PHP_INI_DIR/conf.d/
 
-RUN chmod -R 755 /var/www
+RUN chmod -R 777 /var/www
 RUN a2enmod rewrite
 RUN a2enmod php5
 # RUN php5enmod opcache
