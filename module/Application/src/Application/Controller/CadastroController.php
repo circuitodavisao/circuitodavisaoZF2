@@ -136,7 +136,7 @@ class CadastroController extends CircuitoController {
                         Constantes::$ACTION => Constantes::$PAGINA_CADASTRO_TRANSFERENCIA,
             ));
         }
-        if ($pagina == Constantes::$PAGINA_SELECIONAR_REVISIONISTA) {  
+        if ($pagina == Constantes::$PAGINA_SELECIONAR_REVISIONISTA) {
             return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
                         Constantes::$ACTION => Constantes::$PAGINA_SELECIONAR_REVISIONISTA,
             ));
@@ -195,6 +195,18 @@ class CadastroController extends CircuitoController {
             $listagemDeEventos = $grupo->getGrupoEventoRevisao();
             $tituloDaPagina = Constantes::$TRADUCAO_LISTAGEM_REVISIONISTAS;
             $tipoEvento = 4;
+            $extra = $grupo->getId();
+        }
+        if ($pagina == Constantes::$PAGINA_FICHA_REVISIONISTAS) {
+            $listagemDeEventos = $grupo->getGrupoEventoRevisao();
+            $tituloDaPagina = Constantes::$TRADUCAO_LISTAGEM_REVISIONISTAS;
+            $tipoEvento = 5;
+            $extra = $grupo->getId();
+        }
+        if ($pagina == Constantes::$PAGINA_ATIVOS_REVISIONISTAS) {
+            $listagemDeEventos = $grupo->getGrupoEventoRevisao();
+            $tituloDaPagina = Constantes::$TRADUCAO_LISTAGEM_REVISIONISTAS;
+            $tipoEvento = 6;
             $extra = $grupo->getId();
         }
 
@@ -1183,12 +1195,12 @@ class CadastroController extends CircuitoController {
 
         $view = new ViewModel(array(
             Constantes::$ENTIDADE => $entidade,
-            'repositorioORM' => $repositorioORM, 
+            'repositorioORM' => $repositorioORM,
         ));
 
         /* Javascript */
         $layoutJS = new ViewModel();
-        $layoutJS->setTemplate(Constantes::$LAYOUT_JS_EVENTOS); 
+        $layoutJS->setTemplate(Constantes::$LAYOUT_JS_EVENTOS);
         $view->addChild($layoutJS, Constantes::$LAYOUT_STRING_JS_EVENTOS);
 
         $layoutJSValidacao = new ViewModel();
@@ -1224,7 +1236,7 @@ class CadastroController extends CircuitoController {
 
         return $view;
     }
-    
+
     /**
      * Recupera o grupo do perfil selecionado
      * @param RepositorioORM $repositorioORM
@@ -1237,86 +1249,132 @@ class CadastroController extends CircuitoController {
         $entidade = $repositorioORM->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
         return $entidade->getGrupo();
     }
-    
+
     public function salvarPessoaRevisaoAction() {
         $request = $this->getRequest();
-        
+
 //            try {
-                $post_data = $request->getPost();
+        $post_data = $request->getPost();
 
-                
-                $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
-                $pessoa = $repositorioORM->getPessoaORM()->encontrarPorId($post_data[Constantes::$FORM_ID]);
 
-                /* validação */
-                $pessoa->setNome($post_data[Constantes::$INPUT_PRIMEIRO_NOME]." ".$post_data[Constantes::$INPUT_ULTIMO_NOME]);
-                $pessoa->setTelefone($post_data[Constantes::$INPUT_DDD] . $post_data[Constantes::$INPUT_TELEFONE]);
-                $pessoa->setData_nascimento($post_data[Constantes::$FORM_INPUT_ANO]."-".$post_data[Constantes::$FORM_INPUT_MES]."-".
+        $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
+        $pessoa = $repositorioORM->getPessoaORM()->encontrarPorId($post_data[Constantes::$FORM_ID]);
+
+        /* validação */
+        $pessoa->setNome($post_data[Constantes::$INPUT_PRIMEIRO_NOME] . " " . $post_data[Constantes::$INPUT_ULTIMO_NOME]);
+        $pessoa->setTelefone($post_data[Constantes::$INPUT_DDD] . $post_data[Constantes::$INPUT_TELEFONE]);
+        $pessoa->setData_nascimento($post_data[Constantes::$FORM_INPUT_ANO] . "-" . $post_data[Constantes::$FORM_INPUT_MES] . "-" .
                 $post_data[Constantes::$FORM_INPUT_DIA]);
-                $pessoa->setSexo($post_data[Constantes::$INPUT_NUCLEO_PERFEITO]);
-                
-                $grupoPessoaAntigo = $pessoa->getGrupoPessoaAtivo();
-//              $grupoPessoaAntigo->setDataEHoraDeInativacao();  
-                $repositorioORM->getGrupoPessoaORM()->persistir($grupoPessoaAntigo, false);
-               
-                /* Grupo selecionado */
-                $grupo = $this->getGrupoSelecionado($repositorioORM);
+        $pessoa->setSexo($post_data[Constantes::$INPUT_NUCLEO_PERFEITO]);
 
-                /* Salvar a pessoa e o grupo pessoa correspondente */
-                $repositorioORM->getPessoaORM()->persistir($pessoa, false);
-                /* Todo revisionista é Membro. Id = 3 */
-                $grupoPessoaTipo = $repositorioORM->getGrupoPessoaTipoORM()->encontrarPorId(3);
-                
-                /* Bloco para inclusao da pessoa no grupo Pessoa */
-                $grupoPessoa = new GrupoPessoa();
-                $grupoPessoa->setPessoa($pessoa);
-                $grupoPessoa->setGrupo($grupo);
-                $grupoPessoa->setGrupoPessoaTipo($grupoPessoaTipo); 
-                $sessao = new Container(Constantes::$NOME_APLICACAO);
-                $sessao->idRevisionista = $pessoa->getId();
-                $repositorioORM->getGrupoPessoaORM()->persistir($grupoPessoa);
-                
-                /* Bloco para inclusao da pessoa no evento frequencia */
-                $idRevisao = $sessao->idRevisao;
-                $eventoFrequencia = new EventoFrequencia();
-                $eventoRevisao = $repositorioORM->getEventoORM()->encontrarPorId($idRevisao);
-                $eventoFrequencia->setEvento($eventoRevisao);
-                $eventoFrequencia->setPessoa($pessoa);
-                $eventoFrequencia->setCiclo(0);
-                $eventoFrequencia->setMes(date('N'));
-                $eventoFrequencia->setAno(date('Y'));
-                $eventoFrequencia->setFrequencia('N');
-                $repositorioORM->getEventoFrequenciaORM()->persistir($eventoFrequencia);
+//        $grupoPessoaAntigo = $pessoa->getGrupoPessoaAtivo();
+//        $grupoPessoaAntigo->setDataEHoraDeInativacao();
+        $repositorioORM->getGrupoPessoaORM()->persistir($grupoPessoaAntigo, false);
 
-                /* Pondo valores na sessao */
-                
-                
+        /* Grupo selecionado */
+        $grupo = $this->getGrupoSelecionado($repositorioORM);
 
-                return $this->redirect()->toRoute(Constantes::$ROUTE_CADASTRO, array(
-                            Constantes::$ACTION => Constantes::$PAGINA_FICHA_REVISAO,
-                ));
+        /* Salvar a pessoa e o grupo pessoa correspondente */
+        $repositorioORM->getPessoaORM()->persistir($pessoa, false);
+        /* Todo revisionista é Membro. Id = 3 */
+        $grupoPessoaTipo = $repositorioORM->getGrupoPessoaTipoORM()->encontrarPorId(3);
+
+        /* Bloco para inclusao da pessoa no grupo Pessoa */
+//        $grupoPessoa = new GrupoPessoa();
+//        $grupoPessoa->setPessoa($pessoa);
+//        $grupoPessoa->setGrupo($grupo);
+//        $grupoPessoa->setGrupoPessoaTipo($grupoPessoaTipo);
+//        $repositorioORM->getGrupoPessoaORM()->persistir($grupoPessoa);
+        
+        
+        $sessao = new Container(Constantes::$NOME_APLICACAO);
+        $sessao->idRevisionista = $pessoa->getId();
+        
+
+        /* Bloco para inclusao da pessoa no evento frequencia */
+        $idRevisao = $sessao->idRevisao;
+        $eventoFrequencia = new EventoFrequencia();
+        $eventoRevisao = $repositorioORM->getEventoORM()->encontrarPorId($idRevisao);
+        $eventoFrequencia->setEvento($eventoRevisao);
+        $eventoFrequencia->setPessoa($pessoa);
+        $eventoFrequencia->setCiclo(0);
+        $eventoFrequencia->setMes(date('N'));
+        $eventoFrequencia->setAno(date('Y'));
+        $eventoFrequencia->setFrequencia('N');
+        $repositorioORM->getEventoFrequenciaORM()->persistir($eventoFrequencia);
+
+        /* Pondo valores na sessao */
+
+
+
+        return $this->redirect()->toRoute(Constantes::$ROUTE_CADASTRO, array(
+                    Constantes::$PAGINA => Constantes::$PAGINA_FICHA_REVISAO,
+        ));
 //            } catch (Exception $exc) {
 //                echo $exc->getMessage();
 //            }
-        
     }
-    
-    public function fichaRevisaoAction(){
+
+    public function fichaRevisaoAction() {
         $sessao = new Container(Constantes::$NOME_APLICACAO);
         $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
         $idRevisionista = $sessao->idRevisionista;
         $pessoaRevisionista = $repositorioORM->getPessoaORM()->encontrarPorId($idRevisionista);
+        $idRevisao = $sessao->idRevisao;
+        $eventoRevisao = $repositorioORM->getEventoORM()->encontrarPorId($idRevisao);
+        $grupoPessoaRevisionista = $pessoaRevisionista->getGrupoPessoaAtivo();
+        $grupoLider = $grupoPessoaRevisionista->getGrupo();
+        $nomeEntidadeLider = $grupoLider->getEntidadeAtiva()->infoEntidade();
+        $grupoResponsavel = $grupoLider->getResponsabilidadesAtivas();
+        $pessoas = array();
+        foreach ($grupoResponsavel as $gr) {
+            $p = $gr->getPessoa();
+            $pessoas[] = $p;
+        }
+        
         $view = new ViewModel(array(
-           'pessoa' => $pessoaRevisionista,
+            Constantes::$PESSOA_REVISAO => $pessoaRevisionista,
+            Constantes::$REVISAO_VIEW => $eventoRevisao,
+            Constantes::$PESSOA_LIDER_REVISAO => $pessoas[0],
+            Constantes::$ENTIDADE_REVISAO => $nomeEntidadeLider,
+            
         ));
+
 
         /* Javascript especifico */
 //        $layoutJS = new ViewModel();
 //        $layoutJS->setTemplate(Constantes::$TEMPLATE_JS_CADASTRAR_PESSOA_REVISAO);
 //        $view->addChild($layoutJS, Constantes::$STRING_JS_CADASTRAR_PESSOA_REVISAO);
 
-        
+
 
         return $view;
     }
+    
+        public function selecionarFichaRevisionistasAction() {
+        $sessao = new Container(Constantes::$NOME_APLICACAO);
+        $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
+        $idRevisao = $sessao->idSessao;
+        $idEntidadeAtual = $sessao->idEntidadeAtual;
+        $entidade = $repositorioORM->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+        $sessao->idRevisao = $idRevisao;
+
+
+        $view = new ViewModel(array(
+            Constantes::$ENTIDADE => $entidade,
+            'repositorioORM' => $repositorioORM,
+        ));
+
+        /* Javascript */
+        $layoutJS = new ViewModel();
+        $layoutJS->setTemplate(Constantes::$LAYOUT_JS_EVENTOS);
+        $view->addChild($layoutJS, Constantes::$LAYOUT_STRING_JS_EVENTOS);
+
+        $layoutJSValidacao = new ViewModel();
+        $layoutJSValidacao->setTemplate(Constantes::$LAYOUT_JS_EVENTOS_VALIDACAO);
+        $view->addChild($layoutJSValidacao, Constantes::$LAYOUT_STRING_JS_EVENTOS_VALIDACAO);
+
+        return $view;
+    }
+
 }

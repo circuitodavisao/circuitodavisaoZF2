@@ -287,6 +287,10 @@ class Constantes {
     public static $PAGINA_EXCLUIR_ATENDIMENTO = 'AtendimentoExclusao';
     public static $ONCLICK_ABRIR_MODAL = 'onclick="abrirModalCarregando();"';
     public static $PAGINA = 'pagina';
+    public static $PESSOA_REVISAO = 'pessoa';
+    public static $PESSOA_LIDER_REVISAO = 'pessoaLider';
+    public static $ENTIDADE_REVISAO = 'infoEntidadeRevisao';
+    public static $REVISAO_VIEW = 'revisao';
     public static $PAGINA_CADASTRAR_PESSOA = 'CadastrarPessoa';
     public static $PAGINA_CADASTRAR_PESSOA_REVISAO = 'CadastrarPessoaRevisao';
     public static $PAGINA_SALVAR_PESSOA_REVISAO = 'SalvarPessoaRevisao';
@@ -388,6 +392,8 @@ class Constantes {
     public static $PAGINA_CULTOS = 'Cultos';
     public static $PAGINA_REVISAO = 'Revisao';
     public static $PAGINA_REVISIONISTAS = 'Revisionistas';
+    public static $PAGINA_FICHA_REVISIONISTAS = 'FichaRevisionistas';
+    public static $PAGINA_ATIVOS_REVISIONISTAS = 'AtivosRevisionistas';
     public static $PAGINA_CELULA = 'Celula';
     public static $PAGINA_EVENTO_CULTO = 'EventoCulto';
     public static $PAGINA_EVENTO_CELULA = 'EventoCelula';
@@ -408,6 +414,7 @@ class Constantes {
     public static $PAGINA_BUSCAR_EMAIL = 'BuscarEmail';
     public static $PAGINA_CADASTRO_REVISAO = 'CadastrarRevisao';
     public static $PAGINA_SELECIONAR_REVISIONISTA = 'SelecionarRevisionista';
+    public static $PAGINA_SELECIONAR_FICHA_REVISIONISTA = 'SelecionarFichaRevisionista';
     public static $PAGINA_INSERIR_REVISAO = 'InserirRevisao';
     public static $PAGINA_SALVAR_REVISAO = 'SalvarRevisao';
     public static $PAGINA_CADASTRO_TRANSFERENCIA = 'Transferencia';
