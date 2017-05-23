@@ -3,7 +3,7 @@ var btnDefault = 'btn-default';
 var btnPrimary = 'btn-primary';
 
 function voltarListagemCultos() {
-    abrirModalCarregando();
+  
     location.href = "/cadastroCultos";
 }
 
@@ -150,7 +150,7 @@ function retornaDiaDaSemanaPorExtenso(diaDaSemana) {
 }
 
 function submeter(form) {
-    abrirModalCarregando();
+ 
     form.submit();
 }
 

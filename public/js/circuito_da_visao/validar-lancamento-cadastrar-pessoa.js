@@ -78,7 +78,7 @@ function validarLancamentoCadastrarPessoa(form) {
                 .removeClass('hidden')
                 .addClass('alert-danger');
     } else {
-        abrirModalCarregando();
+      
         divMensagens
                 .addClass('hidden');
         form.submit();

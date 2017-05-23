@@ -7,7 +7,7 @@
 
 function funcaoCadastro(funcao, id) {
     var resposta = true;
-    abrirModalCarregando();
+    
     if (resposta) {
         $.post(
                 '/cadastroFuncoes',

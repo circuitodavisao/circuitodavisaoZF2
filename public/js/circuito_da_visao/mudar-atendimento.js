@@ -32,7 +32,7 @@ function mudarAtendimento(idGrupo, tipo) {
 
     /* Desabilitar botão ate terminar o processamento */
     botao.addClass('disabled');
-    abrirModalCarregando();
+
     $.post(
             "/lancamentoMudarAtendimento",
             {

@@ -13,7 +13,6 @@ function validarUsuario() {
                 .removeClass('hidden')
                 .addClass('alert-danger');
     } else {
-        abrirModalCarregando();
         divMensagens
                 .addClass('hidden');
         $('#RecuperarAcessoForm').submit();
@@ -43,7 +42,7 @@ function validarCPFEDataNascimento() {
                 .removeClass('hidden')
                 .addClass('alert-danger');
     } else {
-        abrirModalCarregando();
+
         divMensagens
                 .addClass('hidden');
         $('#RecuperarAcessoForm').submit();
