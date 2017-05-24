@@ -1,7 +1,7 @@
 <?php
-
+$versao = '?v=1.0';
 echo $this
         ->headScript()
-        ->prependFile($this->basePath() . '/vendor/plugins/pnotify/pnotify.js')
+        ->prependFile($this->basePath() . '/js/circuito_da_visao/qrcode.js' . $versao)
 ;
 echo $this->inlineScript();

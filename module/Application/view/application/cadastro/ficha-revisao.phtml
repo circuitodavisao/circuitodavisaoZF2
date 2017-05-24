@@ -24,7 +24,7 @@ use Application\Controller\Helper\Funcoes;
                             </div>
                             <div class = "pull-right sm-m-t-20">
                                 <h4 class = "font-montserrat all-caps hint-text">Ficha de Inscri&ccedil;&atilde;o</h4>
-                                <img width = "150" height = "75" alt = "" class = "pull-right" data-src-retina = "/img/invoice/barcode.png" data-src = "/img/invoice/barcode.png" src = "/img/invoice/barcode.png">
+                                <div id="qrcode" style="width:150px; height:150px; margin-top:15px;"></div>
                             </div>
                             <div class = "clearfix"></div>
                         </div>
@@ -174,3 +174,13 @@ use Application\Controller\Helper\Funcoes;
     <!--END COPYRIGHT -->
 </div>
 <!--END PAGE CONTENT WRAPPER -->
+<?php echo $this->layoutJSFichaRevisao; ?>
+<script>
+    var qrcode = new QRCode(document.getElementById("qrcode"), {
+        width: 150,
+        height: 150
+    });
+        qrcode.makeCode('&ativa=true');
+
+    
+</script>

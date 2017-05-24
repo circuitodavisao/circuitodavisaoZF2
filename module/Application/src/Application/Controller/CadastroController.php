@@ -1325,12 +1325,13 @@ class CadastroController extends CircuitoController {
             Constantes::$PESSOA_LIDER_REVISAO => $pessoas[0],
             Constantes::$ENTIDADE_REVISAO => $nomeEntidadeLider,
         ));
+        
 
 
         /* Javascript especifico */
-//        $layoutJS = new ViewModel();
-//        $layoutJS->setTemplate(Constantes::$TEMPLATE_JS_CADASTRAR_PESSOA_REVISAO);
-//        $view->addChild($layoutJS, Constantes::$STRING_JS_CADASTRAR_PESSOA_REVISAO);
+        $layoutJS = new ViewModel();
+        $layoutJS->setTemplate(Constantes::$TEMPLATE_JS_FICHA_REVISAO);
+        $view->addChild($layoutJS, Constantes::$STRING_JS_FICHA_REVISAO);
 
 
 

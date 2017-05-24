@@ -260,6 +260,8 @@ class Constantes {
     public static $TEMPLATE_JS_CADASTRAR_PESSOA = 'layout/layout-js-cadastrar-pessoa';
     public static $TEMPLATE_JS_CADASTRAR_PESSOA_VALIDACAO = 'layout/layout-js-cadastrar-pessoa-validacao';
     public static $TEMPLATE_JS_CADASTRAR_PESSOA_REVISAO = 'layout/layout-js-cadastrar-pessoa-revisao';
+    public static $TEMPLATE_JS_FICHA_REVISAO = 'layout/layout-js-ficha-revisao';
+    public static $TEMPLATE_FICHA_REVISAO = 'layout/layout-ficha-revisao';
     public static $TEMPLATE_JS_CADASTRAR_ATENDIMENTO = 'layout/layout-js-cadastrar-atendimento';
     public static $TEMPLATE_JS_VALIDACAO_ATENDIMENTO = 'layout/layout-js-validacao-atendimento';
     public static $TEMPLATE_JS_LANCAMENTO_MODAL_EVENTOS = 'layout/layout-js-lancamento-modal-eventos';
@@ -268,6 +270,7 @@ class Constantes {
     public static $STRING_JS_CADASTRAR_PESSOA = 'layoutJSCadastrarPessoa';
     public static $STRING_JS_CADASTRAR_PESSOA_VALIDACAO = 'layoutJSCadastrarPessoaValidacao';
     public static $STRING_JS_CADASTRAR_PESSOA_REVISAO = 'layoutJSCadastrarPessoaRevisao';
+    public static $STRING_JS_FICHA_REVISAO = 'layoutJSFichaRevisao';
     public static $STRING_JS_CADASTRAR_ATENDIMENTO = 'layoutJSCadastrarAtendimento';
     public static $STRING_JS_VALIDACAO_ATENDIMENTO = 'layoutJSValidacaoAtendimento';
     public static $STRING_JS_LANCAMENTO_MODAL_EVENTOS = 'layoutJSLancamentoModalEventos';
@@ -294,7 +297,7 @@ class Constantes {
     public static $PAGINA_CADASTRAR_PESSOA = 'CadastrarPessoa';
     public static $PAGINA_CADASTRAR_PESSOA_REVISAO = 'CadastrarPessoaRevisao';
     public static $PAGINA_SALVAR_PESSOA_REVISAO = 'SalvarPessoaRevisao';
-    public static $PAGINA_FICHA_REVISAO = 'FichaRevisao';
+    public static $PAGINA_FICHA_REVISAO = 'FichaRevisao'; 
     public static $PAGINA_FUNCOES = 'Funcoes';
     public static $PAGINA_MUDAR_ATENDIMENTO = 'MudarAtendimento';
     public static $PAGINA_MUDAR_FREQUENCIA = 'MudarFrequencia';
