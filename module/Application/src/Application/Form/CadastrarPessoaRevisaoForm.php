@@ -193,7 +193,10 @@ class CadastrarPessoaRevisaoForm extends Form {
         $ultimo = count($nomeExplodido);
         $this->get(Constantes::$FORM_ID)->setValue($pessoa->getId()); 
         $this->get(Constantes::$INPUT_PRIMEIRO_NOME)->setValue($nomeExplodido[0]);
-        $this->get(Constantes::$INPUT_ULTIMO_NOME)->setValue($nomeExplodido[$ultimo-1]);
+        
+        if($ultimo > 1){
+            $this->get(Constantes::$INPUT_ULTIMO_NOME)->setValue($nomeExplodido[$ultimo-1]);
+        }
         $this->get(Constantes::$INPUT_TELEFONE)->setValue($telefoneCelular);
         $this->get(Constantes::$INPUT_DDD)->setValue($dddTelefone);    
     }

@@ -6,173 +6,119 @@ use Application\Controller\Helper\Funcoes;
 //echo 'turma->getData_criacao: ' . $this->turma->getData_criacao() . '<br />';
 //echo 'turma->getData_revisao: ' . $this->turma->getData_revisao();
 ?>
-<link class = "main-stylesheet" href = "/css/estilos-circuito/cv-impressos/pages.css" rel = "stylesheet" type = "text/css" />
 
-<!--START PAGE CONTENT WRAPPER -->
-<div class = "page-content-wrapper">
-    <!--START PAGE CONTENT -->
-    <div class = "content">
-        <!--START CONTAINER FLUID -->
-        <div class = "container-fluid container-fixed-lg">
-            <!--START PANEL -->
-            <div class = "panel panel-default">
-                <div class = "panel-body">
-                    <div class = "invoice padding-50 sm-padding-10">
-                        <div>
-                            <div class = "pull-left">
-                                <img width = "235" height = "23" alt = "" class = "invoice-logo" data-src-retina = "/img/logos/circuito_visao-color.png" data-src = "/img/logos/circuito_visao-color.png" src = "/img/logos/circuito_visao-color.png">
-                            </div>
-                            <div class = "pull-right sm-m-t-20">
-                                <h4 class = "font-montserrat all-caps hint-text">Ficha de Inscri&ccedil;&atilde;o</h4>
-                                <div id="qrcode" style="width:150px; height:150px; margin-top:15px;"></div>
-                            </div>
-                            <div class = "clearfix"></div>
-                        </div>
-                        <br>
-                        <br>
-                        <div class = "container-sm-height">
-                            <div class = "row-sm-height">
-                                <div class = "col-md-9 col-sm-height sm-no-padding">
-                                    <p class = "small no-margin">Revisionista: </p>
-                                    <h5 class = "semi-bold m-t-0"><?php echo $this->pessoa->getNome(); ?> | <b><?php echo $this->pessoa->getIdade(); ?> anos</b></h5>
-                                </div>
-                                <div class = "col-md-3 col-sm-height col-bottom sm-no-padding sm-p-b-20">
-                                    <br>
-                                    <div>
-                                        <div class = "pull-left font-montserrat bold all-caps">Revis&atilde;o de Vidas :</div>
-                                        <div class = "pull-right"> <?php echo Funcoes::mudarPadraoData($this->revisao->getData(), 1); ?></div>
-                                        <div class = "clearfix"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class = "table-responsive">
-                            <table class = "table m-t-50">
-                                <thead>
-                                    <tr>
-                                        <th class = "">Igreja</th>
-                                        <th class = "text-center">Líder</th>
-                                        <th class = "text-right">Contato(s)</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td style = "border-bottom-color: #fff;">
-                                            <p class = "text-black">SNT Ceilândia Centro</p>
-                                            <p class = "small hint-text">
-                                                Endereço da Igreja - Quinta-Feira às 18:00.
-                                            </p>
-                                        </td>
-                                        <td class = "text-center" style = "border-bottom-color: #fff;"><?php echo $this->pessoaLider->getNome(); ?></td>
-                                        <td class = "text-right" style = "border-bottom-color: #fff;"><?php echo $this->pessoaLider->getTelefone(); ?></td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        <div class = "pull-right">
-                            <i class = "fa fa-cut"></i>
-                        </div>
-                        <hr>
-                        <div class = "pull-right sm-m-t-20">
-                            <h4 class = "font-montserrat all-caps hint-text">Recibo</h4>
-                        </div>
-                        <div class = "table-responsive">
-                            <table class = "table m-t-50">
-                                <thead>
-                                    <tr>
-                                        <th class = "">Igreja</th>
-                                        <th class = "text-center">Líder</th>
-                                        
-                                        <th class = "text-right">Contato(s)</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td class = "">
-                                            <p class = "text-black">SNT Ceilândia Centro</p>
-                                            <p class = "small hint-text">
-                                                Revisão de Vidas <?php echo Funcoes::mudarPadraoData($this->revisao->getData(), 1); ?> - Sexta às 19:00.
-                                            </p>
-                                        </td>
-                                        <td class = "text-center"><?php echo $this->pessoaLider->getNome(); ?></td>
-                                        
-                                        <td class = "text-right"><?php echo $this->pessoaLider->getTelefone(); ?></td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        <br>
-                        <div class = "footer-print">
-                            <img src = "/img/logos/circuito_visao-preto.png" alt = "logo" data-src = "/img/logos/circuito_visao-preto.png" data-src-retina = "/img/logos/circuito_visao-preto.png" width = "228" height = "22">
-                            <span class = "m-l-40 text-black sm-pull-right">supporte@circuitodavisao.com</span>
-                        </div>
-                    </div>
-                </div>
+
+<div align="center">
+    <fieldset>
+        <div style="display: block;">
+            <div style="float: left; display: inline">
+                <img src="/img/logos/logo_sara.jpg"  /> 
             </div>
-            <!--END PANEL -->
-        </div>
-        <!--END CONTAINER FLUID -->
-    </div>
-    <!--END PAGE CONTENT -->
-</div>
-<!--END PAGE CONTENT WRAPPER -->
-
-<!--START PAGE CONTENT WRAPPER -->
-<div class = "page-content-wrapper">
-    <!--START PAGE CONTENT -->
-    <div class = "content">
-        <!--START CONTAINER FLUID -->
-        <div class = "container-fluid container-fixed-lg">
-            <!--START PANEL -->
-            <div class = "panel panel-default">
-                <div class = "panel-body">
-                    <div class = "invoice padding-50 sm-padding-10">
-                        <div>
-                            <div class = "pull-left">
-                                <img width = "235" height = "23" alt = "" class = "invoice-logo" data-src-retina = "/img/logos/circuito_visao-color.png" data-src = "/img/logos/circuito_visao-color.png" src = "/img/logos/circuito_visao-color.png">
-                            </div>
-                            <div class = "pull-right sm-m-t-20">
-                                <h4 class = "font-montserrat all-caps hint-text">Autorização</h4>
-                            </div>
-                            <div class = "clearfix"></div>
-                        </div>
-                        <br>
-                        <div class = "container-sm-height">
-                            <div class = "row-sm-height">
-                                <p class = "hint-text">Eu, ____________________________________________________ autorizo meu(inha) filho(a) _____________________________________________________ a participar do Revisão de Vida, no periódo de ______ a ______ de _____________________ de 20______.</p>
-                                <p class = "hint-text">Estou ciente de que ele(a) estará em um ônibus fretado pela igreja Sara Nossa Terra e saindo na sexta-feira, às 19 horas, aonde o(a) pegarei no domingo à noite. Nestes dias meus telefones de contato são: ______________________/_________________________, para falar comigo caso precisem. </p>
-                            </div>
-                        </div>
-
-                        <br>
-                        <hr>
-                        <div class = "footer-print">
-                            <img src = "/img/logos/circuito_visao-preto.png" alt = "logo" data-src = "/img/logos/circuito_visao-preto.png" data-src-retina = "/img/logos/circuito_visao-preto.png" width = "228" height = "22">
-                            <span class = "m-l-40 text-black sm-pull-right">supporte@circuitodavisao.com</span>
-                        </div>
-                    </div>
-                </div>
+            <div style="float: right; display: inline">
+                <div id="qrcode" style="width:150px; height:150px; margin-top:15px; "></div>
+                <?php echo $this->pessoa->getId(); ?>
             </div>
-            <!--END PANEL -->
         </div>
-        <!--END CONTAINER FLUID -->
-    </div>
-    <!--END PAGE CONTENT -->
-    <!--START COPYRIGHT -->
-    <!--START CONTAINER FLUID -->
-    <div class = "container-fluid container-fixed-lg footer">
-        <div class = "copyright sm-text-center">
-            <p class = "small no-margin pull-left sm-pull-reset">
-                <span class = "hint-text">Copyright © 2017 </span>
-                <span class = "font-montserrat">SARA NOSSA TERRA</span>.
-                <span class = "hint-text">Todos os direitos reservados. </span>
-                <span class = "sm-block"><a href = "#" class = "m-l-10 m-r-10">Termos de Uso</a> | <a href = "#" class = "m-l-10">Política de Privacidade</a></span>
-            </p>
-            <div class = "clearfix"></div>
+        <div id="corpo" style="clear: both;">
+        <br />
+        FICHA DE INSCRI&Ccedil;&Atilde;O - REVIS&Atilde;O DE VIDAS - <?php echo Funcoes::mudarPadraoData($this->revisao->getData(), 1); ?> <br />
+
+
+        <table style="width: 100%;">
+            <tr>
+                <td>MATRICULA: <b><span style="font-size: 16px;"><?php echo $this->pessoa->getId(); ?></span></b></td>
+                <td>IGREJA: <?php echo "SNT CEILANDIA"; ?></td>
+                <td>EQUIPE: <?php echo "TIME DAS 18"; ?></td>
+            </tr>
+        </table>
+
+        <table style="width: 100%;">
+            <tr>
+                <td>NOME: <b><span style="font-size: 16px;"><?php echo $this->pessoa->getNome(); ?></span></b></td>      
+                <td>TELEFONE(S): <?php echo $this->pessoa->getTelefone(); ?></td>                   
+            </tr>
+            <tr>
+                <td>DATA NASCIMENTO: <?php echo Funcoes::mudarPadraoData($this->pessoa->getData_nascimento(), 1); ?></td>  
+                <td>IDADE: <?php echo $this->pessoa->getIdade(); ?> ANOS</td>  
+            </tr>
+            <tr>
+
+            </tr>
+            <tr>
+                <td>L&Iacute;DER DIRETO: <?php echo $this->pessoaLider->getNome(); ?></td>                   
+                <td>CELULAR: <?php echo $this->pessoaLider->getTelefone(); ?></td>                   
+            </tr>
+        </table>
+        <br />
+        <?php if ($this->pessoa->getIdade() < 18) { ?>
+            <hr />
+            <fieldset>
+                AUTORIZA&Ccedil;&Atilde;O
+                (PARA MENORES DE 18 ANOS)
+                <br />  
+                <br />  
+                Eu, ____________________________________________________ autorizo meu(inha) filho(a) _____________________________________________________
+                a participar do Revis&atilde;o de Vida, no peri&oacute;do de ____ a ____ de ___________________
+                de 20______.
+                <br />
+                <br />
+                Estou ciente de que ele(a) estar&aacute; em um &ocirc;nibus fretado pela igreja Sara Nossa Terra e saindo na sexta-feira, &agrave;s 19 horas, aonde
+                o(a) pegarei no domingo &agrave; noite.
+                Nestes dias meus telefones de contato s&atilde;o: ______________________/_________________________, para falar comigo caso precisem.
+
+
+                <br /> 
+                <br />
+                __________________________________________<br />
+
+
+                <br />
+                <div align="right">
+                    ________________________________<br />
+                    FACILITADOR&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                </div>
+            </fieldset>
+        <?php } ?>
+        <br />
+        <hr />
+        <h1>RECIBO</h1>
+        FICHA DE INSCRI&Ccedil;&Atilde;O - REVIS&Atilde;O DE VIDAS - <?php echo Funcoes::mudarPadraoData($this->revisao->getData(), 1); ?> <br />
+
+
+        <table style="width: 100%;">
+            <tr>
+                <td>MATRICULA: <b><span style="font-size: 16px;"><?php echo $this->pessoa->getId(); ?></span></b></td>
+                <td>IGREJA: <?php echo "SNT CEILANDIA"; ?></td>
+                <td>EQUIPE: <?php echo "TIME DAS 18"; ?></td>
+            </tr>
+        </table>
+
+        <table style="width: 100%;">
+            <tr>
+                <td>NOME: <b><span style="font-size: 16px;"><?php echo $this->pessoa->getNome(); ?></span></b></td>      
+                <td>TELEFONE(S): <?php echo $this->pessoa->getTelefone(); ?></td>                   
+            </tr>
+            <tr>
+                <td style="height:20px;"></td>
+            </tr>
+            <tr>
+                <td colspan="2" style="text-align: center;">
+                    _____________________________________________________
+                </td>                   
+            </tr>
+            <tr>
+                <td colspan="2" class="text-center">
+                    <input type="button" class="btn btn-black" value='VOLTAR' onclick="location.href = '../ciclo/lancamentoDadosCiclo.php?acao=filtrar&mes=<?php echo date('n'); ?>&ano=<?php echo date('Y'); ?>'" />
+                    &nbsp;<input type="button" class="btn btn-black" value='IMPRIMIR' onclick="print();" />
+                </td>
+            </tr>
+        </table>
         </div>
-    </div>
-    <!--END COPYRIGHT -->
+    </fieldset>
 </div>
+
+
+
 <!--END PAGE CONTENT WRAPPER -->
 <?php echo $this->layoutJSFichaRevisao; ?>
 <script>
@@ -180,7 +126,7 @@ use Application\Controller\Helper\Funcoes;
         width: 150,
         height: 150
     });
-        qrcode.makeCode('&ativa=true');
+    qrcode.makeCode('158.69.124.139/cadastroAtivacaoRevisao/<?php echo $this->pessoa->getId(); ?>');
 
-    
+
 </script>
