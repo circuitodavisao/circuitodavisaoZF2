@@ -354,7 +354,6 @@ class LancamentoController extends CircuitoController {
 
                 $grupoPassado = $repositorioORM->getGrupoORM()->encontrarPorId($post_data['idGrupo']);
                 $numeroIdentificador = $repositorioORM->getFatoCicloORM()->montarNumeroIdentificador($grupoPassado);
-
                 $eventoTipoCulto = 1;
                 $eventoTipoCelula = 2;
                 $dimensaoTipoCelula = 1;
@@ -428,8 +427,8 @@ class LancamentoController extends CircuitoController {
                     }
 
                     $eventoCelulaId = $evento->getEventoCelula()->getId();
-
                     $fatoCelulas = $fatoCicloSelecionado->getFatoCelula();
+                 
                     $fatoCelulaSelecionado = null;
                     foreach ($fatoCelulas as $fc) {
                         if ($fc->getEvento_celula_id() == $eventoCelulaId) {

@@ -3,7 +3,6 @@
 namespace Application\Model\ORM;
 
 use Application\Controller\Helper\Constantes;
-use Application\Controller\Helper\Funcoes;
 use Application\Model\Entity\Dimensao;
 use Application\Model\Entity\FatoCiclo;
 use Application\Model\Entity\Grupo;
@@ -23,7 +22,7 @@ class FatoCicloORM extends CircuitoORM {
      * @param type $mes
      * @param type $ano
      * @param RepositorioORM $repositorioORM
-     * @return type
+     * @return FatoCiclo
      */
     public function encontrarPorNumeroIdentificador($numeroIdentificador, $ciclo, $mes, $ano, RepositorioORM $repositorioORM) {
         $cicloInt = (int) $ciclo;

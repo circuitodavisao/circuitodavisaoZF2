@@ -170,7 +170,7 @@ class IndexController extends CircuitoController {
         $mesSelecionado = date('n');
         $anoSelecionado = date('Y');
         $cicloSelecionado = Funcoes::cicloAtual($mesSelecionado, $anoSelecionado);
-//        $cicloSelecionado = 4; 
+        $cicloSelecionado = 4;
         $tipoCelula = 2;
 
         $grupos = $this->getRepositorio()->getGrupoORM()->encontrarTodos();
@@ -183,18 +183,16 @@ class IndexController extends CircuitoController {
 
                 $numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($grupo);
                 $html .= "<br />NumeroIdentificador: " . $numeroIdentificador;
-                if ($numeroIdentificador > 0) {
-
+                if ($numeroIdentificador) {
                     $fatoCiclo = $this->getRepositorio()->getFatoCicloORM()->encontrarPorNumeroIdentificador($numeroIdentificador, $cicloSelecionado, $mesSelecionado, $anoSelecionado, $this->getRepositorio());
-
                     /* Celulas */
-//                        $cicloSelecionado = 4;
-//                        $mesSelecionado = 3;
                     $grupoEventosNoCiclo = $grupo->getGrupoEventoNoCiclo($cicloSelecionado, $mesSelecionado, $anoSelecionado);
                     $quantidadeDeEventosNoCiclo = count($grupoEventosNoCiclo);
                     $temCelula = false;
+                    $html .= "<br />quantidadeDeEventosNoCiclo $quantidadeDeEventosNoCiclo";
                     if ($quantidadeDeEventosNoCiclo > 0) {
                         foreach ($grupoEventosNoCiclo as $grupoEventoNoCiclo) {
+                            $html .= "<br />verificaSeECelula: " . $grupoEventoNoCiclo->getEvento()->verificaSeECelula();
                             if ($grupoEventoNoCiclo->getEvento()->verificaSeECelula()) {
                                 $this->getRepositorio()->getFatoCelulaORM()->criarFatoCelula($fatoCiclo, $grupoEventoNoCiclo->getEvento()->getEventoCelula()->getId());
                                 $html .= "<br />Fato Celula ";

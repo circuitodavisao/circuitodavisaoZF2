@@ -2,7 +2,10 @@
 
 namespace Application\Controller;
 
-use Doctrine\ORM\EntityManager;
+use Application\Controller\Helper\Constantes;
+use Application\Controller\Helper\Funcoes;
+use Application\Model\ORM\RepositorioORM;
+use Zend\Session\Container;
 use Zend\View\Model\ViewModel;
 
 /**
@@ -13,21 +16,49 @@ use Zend\View\Model\ViewModel;
 class PrincipalController extends CircuitoController {
 
     /**
-     * Contrutor sobrecarregado com os serviços de ORM
-     */
-    public function __construct(EntityManager $doctrineORMEntityManager = null) {
-
-        if (!is_null($doctrineORMEntityManager)) {
-            parent::__construct($doctrineORMEntityManager);
-        }
-    }
-
-    /**
      * Função padrão, traz a tela principal
      * GET /principal
      */
     public function indexAction() {
-        return new ViewModel();
+        $sessao = new Container(Constantes::$NOME_APLICACAO);
+        $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
+        $idEntidadeAtual = $sessao->idEntidadeAtual;
+        $entidade = $repositorioORM->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+        $grupo = $entidade->getGrupo();
+        $numeroIdentificador = $repositorioORM->getFatoCicloORM()->montarNumeroIdentificador($grupo);
+
+        $mesSelecionado = date('n');
+        $anoSelecionado = date('Y');
+        $cicloSelecionado = Funcoes::cicloAtual($mesSelecionado, $anoSelecionado);
+
+        if ($cicloSelecionado > 1) {
+            $cicloSelecionado--;
+        } else {
+            /* Mês Passado */
+            if ($cicloSelecionado == 1) {
+                if (date('n') == 1) {
+                    $mesSelecionado = 12;
+                    $anoSelecionado = date('Y') - 1;
+                } else {
+                    $mesSelecionado = date('n') - 1;
+                    $anoSelecionado = date('Y');
+                }
+                $cicloSelecionado = Funcoes::cicloAtual($mesSelecionado, $anoSelecionado);
+            }
+        }
+
+        $tipoRelatorioPessoal = 1;
+        $relatorio = $repositorioORM->getFatoCicloORM()->montarRelatorioPorNumeroIdentificador($numeroIdentificador, $cicloSelecionado, $mesSelecionado, $anoSelecionado, $tipoRelatorioPessoal);
+        $discipulos = $grupo->getGrupoPaiFilhoFilhos();
+        $periodoSelecionado = Funcoes::periodoCicloMesAno($cicloSelecionado, $mesSelecionado, $anoSelecionado);
+
+        $relatorioCelula = $repositorioORM->getFatoCicloORM()->montarRelatorioCelulaPorNumeroIdentificador($numeroIdentificador, $cicloSelecionado, $mesSelecionado, $anoSelecionado, $tipoRelatorioPessoal);
+
+
+        return new ViewModel(
+                array(
+            'periodo' => $periodoSelecionado,
+        ));
     }
 
 }
