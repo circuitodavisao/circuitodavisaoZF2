@@ -1,4 +1,7 @@
+<?php
 
+use Application\Controller\RelatorioController;
+?>
 <section id="content" class="table-layout animated fadeIn">
 
     <!-- begin: .tray-center -->
@@ -9,20 +12,29 @@
             </div>
             <div class="panel-body pn">
                 <table class="table mbn tc-med-1 tc-bold-last">
-                    <tr class="info">
+                    <tr>
+                        <td></td>
+                        <td>Meta</td>
+                        <td>Valor</td>
+                        <td>Perf.%</td>
+                    </tr>
+                    <tr class="<?php echo $this->relatorio['membresiaPerformanceClass']; ?>">
                         <td>Membresia</td>
-                        <td>52</td>
-                        <td>52%</td>
+                        <td><?php echo $this->relatorio['membresiaMeta']; ?></td>
+                        <td><?php echo RelatorioController::formataNumeroRelatorio($this->relatorio['membresia']); ?></td>
+                        <td><?php echo RelatorioController::formataNumeroRelatorio($this->relatorio['membresiaPerformance']); ?>%</td>
                     </tr>
-                    <tr class="success">
+                    <tr class="<?php echo $this->relatorio['celulaPerformanceClass']; ?>">
                         <td>Célula</td>
-                        <td>52</td>
-                        <td>52%</td>
+                        <td><?php echo $this->relatorio['membresiaMeta']; ?></td>
+                        <td><?php echo $this->relatorio['celula']; ?></td>
+                        <td><?php echo RelatorioController::formataNumeroRelatorio($this->relatorio['celulaPerformance']); ?>%</td>
                     </tr>
-                    <tr class="warning">
-                        <td>Realizadas</td>
-                        <td>1/2</td>
-                        <td>52%</td>
+                    <tr class="<?php echo $this->relatorio['celulaRealizadasPerformanceClass']; ?>">
+                        <td>Cél. Realizadas</td>
+                        <td><?php echo $this->relatorio['celulaQuantidade']; ?></td>
+                        <td><?php echo $this->relatorio['celulaRealizadas']; ?></td>
+                        <td><?php echo RelatorioController::formataNumeroRelatorio($this->relatorio['celulaRealizadasPerformance']); ?>%</td>
                     </tr>
                 </table>
             </div>
@@ -33,20 +45,29 @@
             </div>
             <div class="panel-body pn">
                 <table class="table mbn tc-med-1 tc-bold-last">
-                    <tr class="info">
+                    <tr>
+                        <td></td>
+                        <td>Meta</td>
+                        <td>Valor</td>
+                        <td>Perf.%</td>
+                    </tr>
+                    <tr class="<?php echo $this->relatorioEquipe['membresiaPerformanceClass']; ?>">
                         <td>Membresia</td>
-                        <td>52</td>
-                        <td>52%</td>
+                        <td><?php echo $this->relatorioEquipe['membresiaMeta']; ?></td>
+                        <td><?php echo RelatorioController::formataNumeroRelatorio($this->relatorioEquipe['membresia']); ?></td>
+                        <td><?php echo RelatorioController::formataNumeroRelatorio($this->relatorioEquipe['membresiaPerformance']); ?>%</td>
                     </tr>
-                    <tr class="success">
+                    <tr class="<?php echo $this->relatorioEquipe['celulaPerformanceClass']; ?>">
                         <td>Célula</td>
-                        <td>52</td>
-                        <td>52%</td>
+                        <td><?php echo $this->relatorioEquipe['membresiaMeta']; ?></td>
+                        <td><?php echo $this->relatorioEquipe['celula']; ?></td>
+                        <td><?php echo RelatorioController::formataNumeroRelatorio($this->relatorioEquipe['celulaPerformance']); ?>%</td>
                     </tr>
-                    <tr class="warning">
-                        <td>Realizadas</td>
-                        <td>1/2</td>
-                        <td>52%</td>
+                    <tr class="<?php echo $this->relatorioEquipe['celulaRealizadasPerformanceClass']; ?>">
+                        <td>Cél. Realizadas</td>
+                        <td><?php echo $this->relatorioEquipe['celulaQuantidade']; ?></td>
+                        <td><?php echo $this->relatorioEquipe['celulaRealizadas']; ?></td>
+                        <td><?php echo RelatorioController::formataNumeroRelatorio($this->relatorioEquipe['celulaRealizadasPerformance']); ?>%</td>
                     </tr>
                 </table>
             </div>

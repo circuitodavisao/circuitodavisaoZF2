@@ -73,7 +73,7 @@ $somaQuantidadeCelulasRealizadas = 0;
                         echo '<td>' . $this->relatorio['membresiaArena'] . '</td>';
                         echo '<td>' . $this->relatorio['membresiaDomingo'] . '</td>';
                         echo '<td>' . RelatorioController::formataNumeroRelatorio($this->relatorio['membresia']) . '</td>';
-                        echo '<td>' . RelatorioController::formataNumeroRelatorio($this->relatorio['membresiaPerfomance']) . '%</td>';
+                        echo '<td>' . RelatorioController::formataNumeroRelatorio($this->relatorio['membresiaPerformance']) . '%</td>';
                         echo '</tr>';
 
                         if ($this->discipulosOrdenadoPorRelatorio[1]) {
@@ -89,7 +89,7 @@ $somaQuantidadeCelulasRealizadas = 0;
                                 $soma[$dimensaoTipoDomingo] = $relatorioDiscipulo['membresiaDomingo'];
                                 $meta = $relatorioDiscipulo['membresiaMeta'];
                                 $membresia = $relatorioDiscipulo['membresia'];
-                                $performance = $relatorioDiscipulo['membresiaPerfomance'];
+                                $performance = $relatorioDiscipulo['membresiaPerformance'];
 
                                 /* Cor da linha */
                                 $corDaLinha = 'default';
@@ -165,7 +165,7 @@ $somaQuantidadeCelulasRealizadas = 0;
                         echo '<td>MEU</td>';
                         echo '<td>' . $this->relatorio['celulaQuantidade'] . '</td>';
                         echo '<td>' . $this->relatorio['celulaRealizadas'] . '</td>';
-                        echo '<td>' . RelatorioController::formataNumeroRelatorio($this->relatorio['celulaPerformance']) . '%</td>';
+                        echo '<td>' . RelatorioController::formataNumeroRelatorio($this->relatorio['celulaRealizadasPerformance']) . '%</td>';
                         echo '</tr>';
 
                         if ($this->discipulosOrdenadoPorRelatorio[2]) {
@@ -178,7 +178,7 @@ $somaQuantidadeCelulasRealizadas = 0;
 
                                 $quantidadeCelulas = $relatorioDiscipulo['celulaQuantidade'];
                                 $quantidadeCelulasRealizadas = $relatorioDiscipulo['celulaRealizadas'];
-                                $performanceCelulas = $relatorioDiscipulo['celulaPerformance'];
+                                $performanceCelulas = $relatorioDiscipulo['celulaRealizadasPerformance'];
 
                                 /* Cor da linha */
                                 $corDaLinha = 'default';

@@ -48,16 +48,18 @@ class PrincipalController extends CircuitoController {
         }
 
         $tipoRelatorioPessoal = 1;
-        $relatorio = $repositorioORM->getFatoCicloORM()->montarRelatorioPorNumeroIdentificador($numeroIdentificador, $cicloSelecionado, $mesSelecionado, $anoSelecionado, $tipoRelatorioPessoal);
-        $discipulos = $grupo->getGrupoPaiFilhoFilhos();
-        $periodoSelecionado = Funcoes::periodoCicloMesAno($cicloSelecionado, $mesSelecionado, $anoSelecionado);
+        $tipoRelatorioEquipe = 2;
+        $relatorio = RelatorioController::montaRelatorio($repositorioORM, $numeroIdentificador, $cicloSelecionado, $mesSelecionado, $anoSelecionado, $tipoRelatorioPessoal);
+        $relatorioEquipe = RelatorioController::montaRelatorio($repositorioORM, $numeroIdentificador, $cicloSelecionado, $mesSelecionado, $anoSelecionado, $tipoRelatorioEquipe);
 
-        $relatorioCelula = $repositorioORM->getFatoCicloORM()->montarRelatorioCelulaPorNumeroIdentificador($numeroIdentificador, $cicloSelecionado, $mesSelecionado, $anoSelecionado, $tipoRelatorioPessoal);
+        $periodoSelecionado = Funcoes::periodoCicloMesAno($cicloSelecionado, $mesSelecionado, $anoSelecionado);
 
 
         return new ViewModel(
                 array(
             'periodo' => $periodoSelecionado,
+            'relatorio' => $relatorio,
+            'relatorioEquipe' => $relatorioEquipe,
         ));
     }
 
