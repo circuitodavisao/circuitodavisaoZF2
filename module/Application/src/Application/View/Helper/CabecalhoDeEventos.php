@@ -46,11 +46,20 @@ class CabecalhoDeEventos extends AbstractHelper {
                 $eventoFrequencia = $evento->getEventoFrequencia();
                 $total = 0;
                 if (count($eventoFrequencia) > 0) {
+                    $grupoPessoas = $grupo->getGrupoPessoaAtivasEDoMes($mesSelecionado, $anoSelecionado);
+                    $pessoasParaComprar = array();
+                    foreach ($grupo->getResponsabilidadesAtivas() as $gr) {
+                        $pessoasParaComprar[] = $gr->getPessoa()->getId();
+                    }
+                    foreach ($grupoPessoas as $gp) {
+                        $pessoasParaComprar[] = $gp->getPessoa()->getId();
+                    }
                     $criteria = Criteria::create()
                             ->andWhere(Criteria::expr()->eq("ano", $anoSelecionado))
                             ->andWhere(Criteria::expr()->eq("mes", $mesSelecionado))
                             ->andWhere(Criteria::expr()->eq("ciclo", $this->view->cicloSelecionado))
                             ->andWhere(Criteria::expr()->eq("frequencia", "S"))
+                            ->andWhere(Criteria::expr()->in("pessoa_id", $pessoasParaComprar))
                     ;
                     $eventosFiltrados = $eventoFrequencia->matching($criteria);
                     $total = count($eventosFiltrados);
