@@ -58,11 +58,27 @@ class Entidade extends CircuitoEntity {
 
     public function infoEntidade() {
         $resposta = '';
-        if ($this->getNome()) {
+        $grupoSelecionado = $this->getGrupo();
+        if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::SUBEQUIPE) {
+            $numeroSub = '';
+            $aux = 0;
+            while ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::SUBEQUIPE) {   
+                if($aux == 0){
+                    $numeroSub = $grupoSelecionado->getEntidadeAtiva()->getNumero();
+                }else{
+                    $numeroSub = $grupoSelecionado->getEntidadeAtiva()->getNumero().'.'.$numeroSub;
+                }
+                $aux++;
+                $grupoSelecionado = $grupoSelecionado->getGrupoPaiFilhoPai()->getGrupoPaiFilhoPai();
+                if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::EQUIPE) {
+                    break;
+                }
+                
+            }
+            $resposta = $grupoSelecionado->getEntidadeAtiva()->getNome().".".$numeroSub;
+            
+        }  else{
             $resposta = $this->getNome();
-        }
-        if ($this->getNumero()) {
-            $resposta = $this->getNumero();
         }
         return $resposta;
     }

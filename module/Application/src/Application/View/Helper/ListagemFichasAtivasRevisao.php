@@ -12,7 +12,7 @@ use Zend\View\Helper\AbstractHelper;
  * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com>
  * Descricao: Classe helper view para mostrar a listagem de eventos com frequencia
  */
-class ListagemFichasParaRevisao extends AbstractHelper {
+class ListagemFichasAtivasRevisao extends AbstractHelper {
 
     public function __construct() {
         
@@ -43,7 +43,7 @@ class ListagemFichasParaRevisao extends AbstractHelper {
                 if ($grupoPessoa != null) {
                     $grupoDaPessoa = $grupoPessoa->getGrupo();
                     $grupoOnline = $this->view->entidade->getGrupo();
-                    if (($grupoDaPessoa->getId() == $grupoOnline->getId()) && ($f->getFrequencia() == 'N')) {
+                    if (($grupoDaPessoa->getId() == $grupoOnline->getId()) && ($f->getFrequencia() == 'S')) {
                         $p->setId($f->getId());
                         $pessoas[] = $p;
                     }
@@ -53,7 +53,7 @@ class ListagemFichasParaRevisao extends AbstractHelper {
 
         /* Sem pessoas cadastrados */
         if (count($pessoas) == 0) {
-            $html .= '<div class="alert alert-warning"><i class="fa fa-warning pr10" aria-hidden="true"></i>&nbsp;Sem Pessoas Cadastradas!</div>';
+            $html .= '<div class="alert alert-warning"><i class="fa fa-warning pr10" aria-hidden="true"></i>&nbsp;Sem Fichas Ativas</div>';
         } else {
 
             $html .= $this->view->templateFormularioTopo('Fichas do Revisão de Vidas');

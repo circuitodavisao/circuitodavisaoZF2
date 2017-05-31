@@ -11,7 +11,7 @@ use Zend\View\Helper\AbstractHelper;
  * Nome: ListagemDePessoasComEventos.php
  * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com>
  * Descricao: Classe helper view para mostrar a listagem de eventos com frequencia
- */
+ */ 
 class ListagemConsolidacaoParaRevisao extends AbstractHelper {
 
     public function __construct() {
@@ -81,7 +81,7 @@ class ListagemConsolidacaoParaRevisao extends AbstractHelper {
                         }
                     }
                 }   
-                if($p->getTipo() == 'CO' || $p->getTipo() == 'VI' && $p->getAtivo()){
+                if(($p->getTipo() == 'CO' || $p->getTipo() == 'VI') && $p->getAtivo()){
                     if ($adicionar && $adicionarVisitante) {
                         $pessoasGrupo[] = $p;
                     }

@@ -11,10 +11,8 @@ use Application\Controller\Helper\Funcoes;
 <div align="center">
     <fieldset>
         <div style="display: block;">
-            <div style="float: left; display: inline">
-                <img src="/img/logos/logo_sara.jpg"  /> 
-            </div>
-            <div style="float: right; display: inline">
+            
+            <div style="display: inline">
                 <div id="qrcode" style="width:150px; height:150px; margin-top:15px; "></div>
                 <?php echo $this->pessoa->getId(); ?>
             </div>
@@ -22,17 +20,16 @@ use Application\Controller\Helper\Funcoes;
         <div id="corpo" style="clear: both;">
         <br />
         FICHA DE INSCRI&Ccedil;&Atilde;O - REVIS&Atilde;O DE VIDAS - <?php echo Funcoes::mudarPadraoData($this->revisao->getData(), 1); ?> <br />
-
-
+        IGREJA: <b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $this->nomeIgreja; ?></b>
+        <br />
+        <br />
         <table style="width: 100%;">
+           
             <tr>
-                <td>MATRICULA: <b><span style="font-size: 16px;"><?php echo $this->pessoa->getId(); ?></span></b></td>
-                <td>IGREJA: <?php echo "SNT CEILANDIA"; ?></td>
-                <td>EQUIPE: <?php echo "TIME DAS 18"; ?></td>
+                <td>MATRICULA: <b><span style="font-size: 16px;"><?php echo $this->idEventoFrequencia; ?></span></b></td>
+                <td>EQUIPE: <b><?php echo $this->infoEntidadeRevisao; ?></b></td>
             </tr>
-        </table>
-
-        <table style="width: 100%;">
+        
             <tr>
                 <td>NOME: <b><span style="font-size: 16px;"><?php echo $this->pessoa->getNome(); ?></span></b></td>      
                 <td>TELEFONE(S): <?php echo $this->pessoa->getTelefone(); ?></td>                   
@@ -57,9 +54,10 @@ use Application\Controller\Helper\Funcoes;
                 (PARA MENORES DE 18 ANOS)
                 <br />  
                 <br />  
-                Eu, ____________________________________________________ autorizo meu(inha) filho(a) _____________________________________________________
-                a participar do Revis&atilde;o de Vida, no peri&oacute;do de ____ a ____ de ___________________
-                de 20______.
+                <p align="justify"> 
+                Eu, ______________________________________________________________ autorizo meu(inha) filho(a) _____________________________________________________
+                a participar do Revis&atilde;o de Vida, que acontecerá de ____ a ____ de ___________________
+                de 20______. </p>
                 <br />
                 <br />
                 Estou ciente de que ele(a) estar&aacute; em um &ocirc;nibus fretado pela igreja Sara Nossa Terra e saindo na sexta-feira, &agrave;s 19 horas, aonde
@@ -69,31 +67,28 @@ use Application\Controller\Helper\Funcoes;
 
                 <br /> 
                 <br />
+                <br />
                 __________________________________________<br />
-
+                               ASSINATURA
 
                 <br />
-                <div align="right">
-                    ________________________________<br />
-                    FACILITADOR&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                </div>
+                
             </fieldset>
         <?php } ?>
         <br />
         <hr />
         <h1>RECIBO</h1>
         FICHA DE INSCRI&Ccedil;&Atilde;O - REVIS&Atilde;O DE VIDAS - <?php echo Funcoes::mudarPadraoData($this->revisao->getData(), 1); ?> <br />
+        IGREJA: <b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $this->nomeIgreja; ?> </b> </br><br/>
 
 
         <table style="width: 100%;">
             <tr>
-                <td>MATRICULA: <b><span style="font-size: 16px;"><?php echo $this->pessoa->getId(); ?></span></b></td>
-                <td>IGREJA: <?php echo "SNT CEILANDIA"; ?></td>
-                <td>EQUIPE: <?php echo "TIME DAS 18"; ?></td>
+                <td>MATRICULA: <b><span style="font-size: 16px;"><?php echo $this->idEventoFrequencia; ?></span></b></td>
+                
+                <td>EQUIPE: <b><?php echo $this->infoEntidadeRevisao; ?></td>
             </tr>
-        </table>
-
-        <table style="width: 100%;">
+        
             <tr>
                 <td>NOME: <b><span style="font-size: 16px;"><?php echo $this->pessoa->getNome(); ?></span></b></td>      
                 <td>TELEFONE(S): <?php echo $this->pessoa->getTelefone(); ?></td>                   
@@ -108,7 +103,7 @@ use Application\Controller\Helper\Funcoes;
             </tr>
             <tr>
                 <td colspan="2" class="text-center">
-                    <input type="button" class="btn btn-black" value='VOLTAR' onclick="location.href = '../ciclo/lancamentoDadosCiclo.php?acao=filtrar&mes=<?php echo date('n'); ?>&ano=<?php echo date('Y'); ?>'" />
+                    <input type="button" class="btn btn-black" value='VOLTAR' onclick="location.href = '../cadastroFichaRevisionistas'" />
                     &nbsp;<input type="button" class="btn btn-black" value='IMPRIMIR' onclick="print();" />
                 </td>
             </tr>
@@ -116,7 +111,9 @@ use Application\Controller\Helper\Funcoes;
         </div>
     </fieldset>
 </div>
-
+<!--<div style="float: right; display: inline">
+                <img src="/img/logos/logo_png.png" height="100px" width="170px"  /> 
+            </div>-->
 
 
 <!--END PAGE CONTENT WRAPPER -->
@@ -126,7 +123,7 @@ use Application\Controller\Helper\Funcoes;
         width: 150,
         height: 150
     });
-    qrcode.makeCode('158.69.124.139/cadastroAtivacaoRevisao/<?php echo $this->pessoa->getId(); ?>');
+    qrcode.makeCode('http://158.69.124.139/cadastroAtivarFichaRevisao/<?php echo $this->idEventoFrequencia; ?>');
 
 
 </script>
