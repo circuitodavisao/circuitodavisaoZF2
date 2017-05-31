@@ -2,24 +2,22 @@
 
 use Application\Controller\Helper\Constantes;
 ?>
-<div id="content">
-    <div class="row background-mobile">
-        <?php echo $this->dadosEntidade(); ?>
-    </div>   
-    <div id='panelLancamento' class="panel">
-        <div class="panel-heading">
-            <!-- Abertura de Abas -->
-            <?php echo $this->abas(); ?>
-        </div> 
-        <div class="panel-body center-block mg-left-cv">           
-            <!-- Tabela de lançamento de dados --> 
-            <?php echo $this->cabecalhoDeCiclos(); ?>
-            <!-- Tabela de lançamento de dados --> 
-            <?php echo $this->tabelaLancamento(); ?>
-        </div>
-        <div class="panel-footer text-center">
-            <a class="btn btn-dark" href='#' onclick="verificarMuitosCadastros(<?php echo $this->validacao; ?>);"><?php echo $this->translate(Constantes::$TRADUCAO_CADASTRAR_PESSOA); ?></a>
-        </div>
+<div class="row background-mobile">
+    <?php echo $this->dadosEntidade(); ?>
+</div>   
+<div id='panelLancamento' class="panel">
+    <div class="panel-heading">
+        <!-- Abertura de Abas -->
+        <?php echo $this->abas(); ?>
+    </div> 
+    <div class="panel-body center-block">           
+        <!-- Tabela de lançamento de dados --> 
+        <?php echo $this->cabecalhoDeCiclos(); ?>
+        <!-- Tabela de lançamento de dados --> 
+        <?php echo $this->tabelaLancamento(); ?>
+    </div>
+    <div class="panel-footer text-center">
+        <a class="btn btn-dark" href='#' onclick="verificarMuitosCadastros(<?php echo $this->validacao; ?>);"><?php echo $this->translate(Constantes::$TRADUCAO_CADASTRAR_PESSOA); ?></a>
     </div>
 </div>
 <!-- MODAL PARA MUITOS ELEMENTOS -->

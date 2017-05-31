@@ -84,7 +84,7 @@ class RelatorioController extends CircuitoController {
         $dados = array(
             'relatorio' => $relatorio,
             'periodoSelecionado' => $periodoSelecionado,
-            'abaSelecionada' => $abaSelecionada,
+            Constantes::$ABA_SELECIONADA => $abaSelecionada,
         );
 
         $discipulos = $grupo->getGrupoPaiFilhoFilhos();
@@ -102,6 +102,41 @@ class RelatorioController extends CircuitoController {
         }
 
         return new ViewModel($dados);
+    }
+
+    public function atendimentoAction() {
+        $sessao = new Container(Constantes::$NOME_APLICACAO);
+        $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
+        $idEntidadeAtual = $sessao->idEntidadeAtual;
+        $entidade = $repositorioORM->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+        $grupo = $entidade->getGrupo();
+        $gruposAbaixo = $grupo->getGrupoPaiFilhoFilhos();
+
+        /* Verificar data de cadastro da responsabilidade */
+        $validacaoNesseMes = 0;
+        $grupoResponsavel = $grupo->getGrupoResponsavelAtivo();
+        if ($grupoResponsavel->verificarSeFoiCadastradoNesseMes()) {
+            $validacaoNesseMes = 1;
+        }
+
+        /* Aba selecionada e ciclo */
+        $abaSelecionada = $this->params()->fromRoute(Constantes::$ID);
+        if (empty($abaSelecionada)) {
+            $abaSelecionada = 1;
+        }
+
+        $view = new ViewModel(array(
+            Constantes::$GRUPOS_ABAIXO => $gruposAbaixo,
+            Constantes::$VALIDACAO_NESSE_MES => $validacaoNesseMes,
+            Constantes::$ABA_SELECIONADA => $abaSelecionada,
+        ));
+
+        /* Javascript especifico */
+        $layoutJS = new ViewModel();
+        $layoutJS->setTemplate(Constantes::$TEMPLATE_JS_RELATORIO_ATENDIMENTO);
+        $view->addChild($layoutJS, Constantes::$STRING_JS_RELATORIO_ATENDIMENTO);
+
+        return $view;
     }
 
     public static function montaRelatorio($repositorioORM, $numeroIdentificador, $cicloSelecionado, $mesSelecionado, $anoSelecionado, $tipoRelatorio) {
@@ -123,7 +158,10 @@ class RelatorioController extends CircuitoController {
         $relatorio['membresiaMeta'] = Constantes::$META_LIDER * $quantidadeLideres;
         $relatorio['membresia'] = RelatorioController::calculaMembresia(
                         $soma[RelatorioController::dimensaoTipoCulto], $soma[RelatorioController::dimensaoTipoArena], $soma[RelatorioController::dimensaoTipoDomingo]);
-        $relatorio['membresiaPerformance'] = $relatorio['membresia'] / $relatorio['membresiaMeta'] * 100;
+        $relatorio['membresiaPerformance'] = 0;
+        if ($relatorio['membresiaMeta'] < 0) {
+            $relatorio['membresiaPerformance'] = $relatorio['membresia'] / $relatorio['membresiaMeta'] * 100;
+        }
         $relatorio['membresiaPerformanceClass'] = RelatorioController::corDaLinhaPelaPerformance($relatorio['membresiaPerformance']);
         $relatorio['quantidadeLideres'] = $quantidadeLideres;
 
@@ -141,7 +179,7 @@ class RelatorioController extends CircuitoController {
             $performanceCelulasRealizadas = $quantidadeCelulasRealizadas / $quantidadeCelulas * 100;
         }
         $performanceCelula = 0;
-        if ($soma[RelatorioController::dimensaoTipoCelula]) {
+        if ($relatorio['membresiaMeta'] > 0) {
             $performanceCelula = $soma[RelatorioController::dimensaoTipoCelula] / $relatorio['membresiaMeta'] * 100;
         }
         $relatorio['celula'] = $soma[RelatorioController::dimensaoTipoCelula];

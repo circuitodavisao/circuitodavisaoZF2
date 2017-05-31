@@ -136,7 +136,7 @@ class Module {
                 'cabecalhoDeEventos' => function($sm) {
                     return new CabecalhoDeEventos();
                 },
-                'listagemDePessoasComEventos' => function($sm) { 
+                'listagemDePessoasComEventos' => function($sm) {
                     return new ListagemDePessoasComEventos();
                 },
                 'listagemConsolidacaoParaRevisao' => function($sm) {
@@ -262,9 +262,6 @@ class Module {
                 'cabecalhoDeAtendimentos' => function($sm) {
                     return new CabecalhoDeAtendimentos();
                 },
-                'abasAtendimento' => function($sm) {
-                    return new AbasAtendimento();
-                },
                 'informacoesGrupoAtendido' => function ($sm) {
                     return new InformacoesGrupoAtendido();
                 },
@@ -273,6 +270,9 @@ class Module {
                 },
                 'listagemLideresTransferencia' => function ($sm) {
                     return new ListagemLideresTransferencia();
+                },
+                'abasAtendimento' => function ($sm) {
+                    return new AbasAtendimento();
                 }
             )
         );

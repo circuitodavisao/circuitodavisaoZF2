@@ -72,7 +72,11 @@ class CircuitoEntity {
     function getHora_criacao() {
         return $this->hora_criacao;
     }
-
+  
+    /**
+     * Retorna a data de inativacao
+     * @return DateTime
+     */
     function getData_inativacao() {
         return $this->data_inativacao;
     }

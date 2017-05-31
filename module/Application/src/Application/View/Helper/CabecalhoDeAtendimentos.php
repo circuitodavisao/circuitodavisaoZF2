@@ -27,14 +27,12 @@ class CabecalhoDeAtendimentos extends AbstractHelper {
         foreach ($this->view->gruposAbaixo as $gpFilho) {
             $totalGruposAtendido = 0;
             $grupoFilho = $gpFilho->getGrupoPaiFilhoFilho();
-            $entidadeFilho = $grupoFilho->getEntidadeAtiva();
             $grupoResponsavel = $grupoFilho->getResponsabilidadesAtivas();
             if ($grupoResponsavel) {
                 $atendimentosDoGrupo = $grupoFilho->getGrupoAtendimento();
                 foreach ($atendimentosDoGrupo as $ga) {
                     if ($ga->verificarSeEstaAtivo()) {
-                        $partes = explode("/", $ga->getDia());
-                        if ($partes[1] == $this->view->mes) {
+                        if ($ga->getData_criacaoMes() == $this->view->mes) {
                             $totalGruposAtendido++;
                         }
                     }

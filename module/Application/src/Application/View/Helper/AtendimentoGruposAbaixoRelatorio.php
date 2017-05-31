@@ -33,16 +33,12 @@ class AtendimentoGruposAbaixoRelatorio extends AbstractHelper {
                 $grupo12 = $gp12->getGrupoPaiFilhoFilho();
                 $grupos144 = $grupo12->getGrupoPaiFilhoFilhos();
                 $html[$grupo12->getId()] = '';
-                $entidadeFilho12 = $grupo12->getEntidadeAtiva();
                 $grupoResponsavel12 = $grupo12->getResponsabilidadesAtivas();
                 $nomeEntidade12 = $grupo12->getEntidadeAtiva()->infoEntidade();
-                $tipoDaEntidade = $grupo12->getEntidadeAtiva()->getEntidadeTipo()->getNome();
                 if ($grupoResponsavel12) {
                     $pessoas12 = array();
                     foreach ($grupoResponsavel12 as $gr12) {
                         $p = $gr12->getPessoa();
-
-
                         $imagem = 'placeholder.png';
                         if (!empty($p->getFoto())) {
                             $imagem = $p->getFoto();
@@ -98,9 +94,6 @@ class AtendimentoGruposAbaixoRelatorio extends AbstractHelper {
                         }
                     }
 
-                    $html[$grupo12->getId()] .= '<div class= "panel">';
-                    $html[$grupo12->getId()] .= '<div class="panel-body center-block">';
-
                     if (count($grupos144) > 0) {
                         $progresso12 = ($totalGruposAtendidos / $totalGruposFilhos) * 100;
                         $disabledPlus = '';
@@ -118,29 +111,33 @@ class AtendimentoGruposAbaixoRelatorio extends AbstractHelper {
                         $colorBarTotal = "progress-bar-danger";
                     }
 
-                    $html[$grupo12->getId()] .= '<div class="row text-center">';
-                    $html[$grupo12->getId()] .= $tipoDaEntidade . ' ' . $nomeEntidade12;
+                    /* Inicio panel */
+                    $html[$grupo12->getId()] .= '<div class="panel">';
+                    $html[$grupo12->getId()] .= '<div class="panel-body">';
+
+                    $html[$grupo12->getId()] .= '<div class="text-center mb10">';
+                    $html[$grupo12->getId()] .= '<b>' . $nomeEntidade12 . '</b>';
                     $html[$grupo12->getId()] .= '</div>';
 
-                    $html[$grupo12->getId()] .= '<div class="row mt10" >';
-                    $html[$grupo12->getId()] .= '<div class="col-md-3 col-xs-4" style="padding-right: 0px;">';
-                    $html[$grupo12->getId()] .= '<span class="" href="#" >';
+                    $html[$grupo12->getId()] .= '<div class="text-center mb10">';
+                    $html[$grupo12->getId()] .= $informacaoEntidade12;
+                    $html[$grupo12->getId()] .= '</div>';
+
+                    $html[$grupo12->getId()] .= '<div class="col-md-3 col-xs-3">';
                     $html[$grupo12->getId()] .= $informacaoFoto12;
-                    $html[$grupo12->getId()] .= '</span>';
                     $html[$grupo12->getId()] .= '</div>';
-                    $html[$grupo12->getId()] .= '<div class="col-md-9 col-xs-8" style="padding-left: 2px; padding-right: 2px;">';
-
-                    $html[$grupo12->getId()] .= '<div class="row">';
-                    $html[$grupo12->getId()] .= '<div class="col-md-11 col-sm-10 col-xs-9" style="padding-top: 0px; padding-right: 4px;">';
+                    $html[$grupo12->getId()] .= '<div class="col-md-9 col-xs-9">';
                     if (count($grupos144)) {
-                        $html[$grupo12->getId()] .= '<span><span id="totalGruposAtendidos">' . $totalGruposAtendidos . ' </span> ' . $this->view->translate('of') . ' <span id="totalGruposFilhos">' . $totalGruposFilhos . '</span> ' . $this->view->translate(Constantes::$TRADUCAO_SUBTITULO_CABECALHO_ATENDIMENTO) . '</span>';
-                        $html[$grupo12->getId()] .= '<div class="progress progress-bar-xl" style="margin-bottom: 0px;">';
+                        $html[$grupo12->getId()] .= '<div class="col-md-11 col-sm-10 col-xs-9">';
+                        $html[$grupo12->getId()] .= '<span id="totalGruposAtendidos">' . $totalGruposAtendidos . ' </span> ' .
+                                $this->view->translate('of') .
+                                ' <span id="totalGruposFilhos">' . $totalGruposFilhos . '</span> ' .
+                                $this->view->translate(Constantes::$TRADUCAO_SUBTITULO_CABECALHO_ATENDIMENTO);
+                        $html[$grupo12->getId()] .= '<div class="progress progress-bar-xl">';
                         $html[$grupo12->getId()] .= '<div id="divProgressBar" class="progress-bar ' . $colorBarTotal . '" role="progressbar" aria-valuenow="' . number_format($progresso12, 2, '.', '') . '" aria-valuemin="0" aria-valuemax="100" style="width: ' . number_format($progresso12, 2, '.', '') . '%;">' . number_format($progresso12, 2, '.', '') . '%</div>';
                         $html[$grupo12->getId()] .= '</div>';
-                    }
-                    $html[$grupo12->getId()] .= '<span style="padding-top: 0px;">' . $informacaoEntidade12 . '</span>';
-                    if (count($grupos144)) {
                         $html[$grupo12->getId()] .= '</div>';
+
                         $html[$grupo12->getId()] .= '<div class="col-md-1 col-sm-2 col-xs-3" style="padding-left: 0px; padding-top: 20px; vertical-align: middle;">';
                         $html[$grupo12->getId()] .= '<div id="botaoMais' . $grupo12->getId() . '"> ';
                         $html[$grupo12->getId()] .= '<button  id="bl_' . $grupo12->getId() . '" type="button" onclick="abrir144(' . $grupo12->getId() . ');" class="btn btn-md btn-primary" ' . $disabledPlus . ' style="padding-top: 0px; padding-bottom: 0px;">';
@@ -153,13 +150,8 @@ class AtendimentoGruposAbaixoRelatorio extends AbstractHelper {
                         $html[$grupo12->getId()] .= '<i class="fa fa-eye-slash" aria-hidden="true"></i>';
                         $html[$grupo12->getId()] .= '</button>';
                         $html[$grupo12->getId()] .= '</div>';
-                    }
-                    $html[$grupo12->getId()] .= '</div>';
-                    $html[$grupo12->getId()] .= '</div>';
-                    $html[$grupo12->getId()] .= '</div>';
-                    $html[$grupo12->getId()] .= '</div>';
+                        $html[$grupo12->getId()] .= '</div>';
 
-                    if (count($grupos144) > 0) {
                         $html[$grupo12->getId()] .= '<div id="grupos144' . $grupo12->getId() . '" class="hidden">';
                         foreach ($grupos144 as $gpFilho) {
                             $grupoFilho = $gpFilho->getGrupoPaiFilhoFilho();
@@ -205,6 +197,7 @@ class AtendimentoGruposAbaixoRelatorio extends AbstractHelper {
                                 foreach ($atendimentosDoGrupoIndividual as $ga) {
                                     if ($ga->verificarSeEstaAtivo()) {
                                         $partes = explode("/", $ga->getDia());
+                                        echo "";
                                         if ($partes[1] == $this->view->mes) {
                                             $totalGruposAtendidoIndividual++;
                                         }
@@ -253,8 +246,14 @@ class AtendimentoGruposAbaixoRelatorio extends AbstractHelper {
                     } else {
                         $html[$grupo12->getId()] .= '<div class="alert alert-warning"><i class="fa fa-warning pr10" aria-hidden="true"></i>&nbsp;Sem Discipulos cadastrados!</div>';
                     }
+
+                    $html[$grupo12->getId()] .= '</div>';
+
                     $html[$grupo12->getId()] .= '</div>';
                     $html[$grupo12->getId()] .= '</div>';
+                    /* Fim panel */
+
+
                     if ($totalPessoas12 == 2) {
                         $ideal = 24;
                     } else {
@@ -296,37 +295,29 @@ class AtendimentoGruposAbaixoRelatorio extends AbstractHelper {
             }
 
             if (count($arrayCompleto) != 0) {
-                $htmlRaiz .= '<div class="row">';
-                $htmlRaiz .= '<div class="panel-default">';
-                $htmlRaiz .= '<div class="panel-heading text-center">';
-                $htmlRaiz .= '<b>TIME COMPLETO</b>';
-                $htmlRaiz .= '</div>';
+                $corTime = 'default';
+                $elemento = '<b>TIME COMPLETO</b></div>';
                 for ($i = 0; $i < count($arrayCompleto); $i++) {
-                    $htmlRaiz .= $arrayCompleto[$i]['html'];
+                    $elemento .= $arrayCompleto[$i]['html'];
                 }
-                $htmlRaiz .= '</div>';
-                $htmlRaiz .= '</div>';
             } else {
-                $htmlRaiz .= '<div class="row">';
-                $htmlRaiz .= '<div class="panel-danger">';
-                $htmlRaiz .= '<div class="panel-heading text-center">';
-                $htmlRaiz .= '<b>SEM DISCPULOS COM TIME COMPLETO</b>';
-                $htmlRaiz .= '</div>';
-                $htmlRaiz .= '</div>';
-                $htmlRaiz .= '</div>';
-                $htmlRaiz .= '<hr />';
+                $corTime = 'danger';
+                $elemento = '<b>SEM DISC&Iacute;PULOS COM TIME COMPLETO</b></div>';
             }
 
+            $htmlRaiz .= '<div class="panel panel-' . $corTime . ' p10">';
+            $htmlRaiz .= '<div class="panel-heading text-center">';
+            $htmlRaiz .= $elemento;
+            $htmlRaiz .= '</div>';
+
             if (count($arrayIncompleto) != 0) {
-                $htmlRaiz .= '<div class="row">';
-                $htmlRaiz .= '<div class="panel-default">';
-                $htmlRaiz .= '<div class="panel-heading text-center">';
+                $htmlRaiz .= '<div class="panel panel-warning p10">';
+                $htmlRaiz .= '<div class="panel-heading text-center mb10">';
                 $htmlRaiz .= '<b>TIME INCOMPLETO</b>';
                 $htmlRaiz .= '</div>';
                 for ($i = 0; $i < count($arrayIncompleto); $i++) {
                     $htmlRaiz .= $arrayIncompleto[$i]['html'];
                 }
-                $htmlRaiz .= '</div>';
                 $htmlRaiz .= '</div>';
             }
         } else {

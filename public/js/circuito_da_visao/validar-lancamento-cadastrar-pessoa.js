@@ -22,9 +22,9 @@ function validarLancamentoCadastrarPessoa(form) {
         if (!reg.exec(nome)) {
             temErro = true;
             if (mensagem === '') {
-                mensagem += '  Nome Invalido';
+                mensagem += '  Nome Inválido';
             } else {
-                mensagem += ', Nome Invalido';
+                mensagem += ', Nome Inválido';
             }
         }
     }
@@ -39,9 +39,9 @@ function validarLancamentoCadastrarPessoa(form) {
         if (ddd.length !== 2) {
             temErro = true;
             if (mensagem === '') {
-                mensagem += ' DDD Invalido';
+                mensagem += ' DDD Inválido';
             } else {
-                mensagem += ', DDD Invalido';
+                mensagem += ', DDD Inválido';
             }
         }
     }
@@ -56,9 +56,9 @@ function validarLancamentoCadastrarPessoa(form) {
         if (!(telefone.length >= 8 && telefone.length <= 9)) {
             temErro = true;
             if (mensagem === '') {
-                mensagem += ' Telefone Invalido';
+                mensagem += ' Telefone Inválido';
             } else {
-                mensagem += ', Telefone Invalido';
+                mensagem += ', Telefone Inválido';
             }
         }
     }

@@ -6,20 +6,28 @@
 
 
 function alterarNome(idPessoa) {
-
-    var botao = $('#nome_' + idPessoa);
+    var inputNome = $('#nome_' + idPessoa);
     var spanNome = $('#span_nome_' + idPessoa);
+    var spanNomeLg = $('#span_nome_lg_' + idPessoa);
     var dropDown = $('#menudrop_' + idPessoa);
-    $.post(
-            "/lancamentoAlterarNome",
-            {
-                idPessoa: idPessoa,
-                nome: botao.val()
-            },
-            function (data) {
-                if (data.response) {
-                    spanNome.html(data.nomeAjustado);
-                    dropDown.dropdown('toggle');
-                }
-            }, 'json');
+
+    var reg = /^[A-Za-záàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ ]+$/;
+    if (!reg.exec(inputNome.val())) {
+        alert('Nome inválido');
+    } else {
+        $.post(
+                "/lancamentoAlterarNome",
+                {
+                    idPessoa: idPessoa,
+                    nome: inputNome.val()
+                },
+                function (data) {
+                    if (data.response) {
+                        spanNome.html(data.nomeAjustado);
+                        spanNomeLg.html(data.nome);
+                        inputNome.val(data.nome);
+                        dropDown.dropdown('toggle');
+                    }
+                }, 'json');
+    }
 }

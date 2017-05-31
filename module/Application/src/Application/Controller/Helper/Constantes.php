@@ -204,6 +204,8 @@ class Constantes {
     public static $STRING_JS_PRE_SAIDA = 'layoutJSPreSaida';
     public static $TEMPLATE_JS_PRINCIPAL = 'layout/layout-js-principal';
     public static $STRING_JS_PRINCIPAL = 'layoutJSPrincipal';
+    public static $TEMPLATE_JS_FICHA_REVISAO = 'layout/layout-js-ficha-revisao';
+    public static $STRING_JS_FICHA_REVISAO = 'layoutJSFichaRevisao';
 
     /* Geral */
     public static $NOME_APLICACAO = 'CircuitoDaVisao';
@@ -264,6 +266,7 @@ class Constantes {
     public static $TEMPLATE_JS_VALIDACAO_ATENDIMENTO = 'layout/layout-js-validacao-atendimento';
     public static $TEMPLATE_JS_LANCAMENTO_MODAL_EVENTOS = 'layout/layout-js-lancamento-modal-eventos';
     public static $TEMPLATE_JS_LANCAMENTO_MODAL_MUITOS_CADASTROS = 'layout/layout-js-lancamento-modal-muitos-cadastros';
+    public static $TEMPLATE_JS_RELATORIO_ATENDIMENTO = 'layout/layout-js-relatorio-atendimento';
     public static $STRING_JS_LANCAMENTO = 'layoutJSLancamento';
     public static $STRING_JS_CADASTRAR_PESSOA = 'layoutJSCadastrarPessoa';
     public static $STRING_JS_CADASTRAR_PESSOA_VALIDACAO = 'layoutJSCadastrarPessoaValidacao';
@@ -272,6 +275,7 @@ class Constantes {
     public static $STRING_JS_VALIDACAO_ATENDIMENTO = 'layoutJSValidacaoAtendimento';
     public static $STRING_JS_LANCAMENTO_MODAL_EVENTOS = 'layoutJSLancamentoModalEventos';
     public static $STRING_JS_LANCAMENTO_MODAL_MUITOS_CADASTROS = 'layoutJSLancamentoModalMuitosCadastros';
+    public static $STRING_JS_RELATORIO_ATENDIMENTO = 'layoutJSRelatorioAtendimento';
     public static $STRING_FUNCAO_VALIDACAO_ATENDIMENTO = 'preValidacao()';
     public static $ROUTE_LANCAMENTO = 'lancamento';
     public static $PAGINA_SALVAR_PESSOA = 'SalvarPessoa';
@@ -294,6 +298,8 @@ class Constantes {
     public static $PAGINA_CADASTRAR_PESSOA = 'CadastrarPessoa';
     public static $PAGINA_CADASTRAR_PESSOA_REVISAO = 'CadastrarPessoaRevisao';
     public static $PAGINA_SALVAR_PESSOA_REVISAO = 'SalvarPessoaRevisao';
+    public static $NOME_IGREJA_FICHA_REVISAO = 'nomeIgreja';
+    public static $STRING_ID_EVENTO_FREQUENCIA = 'idEventoFrequencia';
     public static $PAGINA_FICHA_REVISAO = 'FichaRevisao';
     public static $PAGINA_FUNCOES = 'Funcoes';
     public static $PAGINA_MUDAR_ATENDIMENTO = 'MudarAtendimento';
@@ -357,6 +363,7 @@ class Constantes {
     public static $TRADUCAO_VALIDACAO_TELEFONE_MAX = 'Enter at 9 numbers';
     public static $TRADUCAO_VALIDACAO_TIPO_VAZIO = 'Choose a Type';
     public static $TRADUCAO_PESSOA_CADASTRADA = 'Person Registered';
+    public static $TRADUCAO_PESSOA_INATIVADA_LANCAMENTO = 'Person Inactivated';
     public static $TRADUCAO_CABECALHO_TITULO_ATENDIMENTOS = "Launch of <span class=\"text-primary\">Counseling</span>";
     public static $TRADUCAO_SUBTITULO_CABECALHO_ATENDIMENTO = 'disciples were attended to.';
     /* Fomulário */
@@ -375,7 +382,9 @@ class Constantes {
     public static $ICONE_USER = 'fa-user';
     public static $ICONE_PHONE = 'fa-phone-square';
     public static $INPUT_SELECTED = 'selected';
+    public static $MOSTRAR_NOTIFICACAO = 'nostrarNotificacao';
     public static $NOME_PESSOA_CADASTRADA = 'nomePessoaCadastrada';
+    public static $EXCLUSAO = 'exclusao';
 
     /* Rotas */
     public static $ROUTE_REMOVER_PESSOA = 'RemoverPessoa';
@@ -414,7 +423,8 @@ class Constantes {
     public static $PAGINA_BUSCAR_EMAIL = 'BuscarEmail';
     public static $PAGINA_CADASTRO_REVISAO = 'CadastrarRevisao';
     public static $PAGINA_SELECIONAR_REVISIONISTA = 'SelecionarRevisionista';
-    public static $PAGINA_SELECIONAR_FICHA_REVISIONISTA = 'SelecionarFichaRevisionista';
+    public static $PAGINA_SELECIONAR_FICHA_REVISIONISTA = 'SelecionarFichasRevisionista';
+    public static $PAGINA_SELECIONAR_FICHA_ATIVAS = 'SelecionarFichasAtivas';
     public static $PAGINA_INSERIR_REVISAO = 'InserirRevisao';
     public static $PAGINA_SALVAR_REVISAO = 'SalvarRevisao';
     public static $PAGINA_CADASTRO_TRANSFERENCIA = 'Transferencia';

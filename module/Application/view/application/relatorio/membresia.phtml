@@ -14,20 +14,19 @@ $somaGeral[4] = 0;
 $somaGeralLideres = 0;
 $somaQuantidadeCelulas = 0;
 $somaQuantidadeCelulasRealizadas = 0;
+
+$urlBase = $this->url(Constantes::$ROUTE_RELATORIO) . 'Membresia';
+$urlBase2 = $urlBase . '/2';
 ?>
 <div class="mw600 center-block">
-    <div class="panel-body bg-light">    
-        <?php
-        $urlBase = $this->url(Constantes::$ROUTE_RELATORIO) . 'Membresia';
-        $urlBase2 = $urlBase . '/2';
-        ?>
+    <div class="panel-body bg-light">  
         <div class="panel">
             <div class="panel-heading">
                 <ul class="nav panel-tabs-border panel-tabs panel-tabs-left">
-                    <li <?php echo Constantes::$ONCLICK_ABRIR_MODAL . ' ' . $this->abaSelecionada($this->abaSelecionada, 1); ?>>
+                    <li <?php echo $this->abaSelecionada($this->abaSelecionada, 1); ?>>
                         <?php echo '<a href="' . $urlBase . '">Período Atual</a>'; ?>
                     </li>
-                    <li <?php echo Constantes::$ONCLICK_ABRIR_MODAL . ' ' . $this->abaSelecionada($this->abaSelecionada, 2); ?>>
+                    <li <?php echo $this->abaSelecionada($this->abaSelecionada, 2); ?>>
                         <?php echo '<a href="' . $urlBase2 . '">Período Anterior</a>'; ?>
                     </li>
                 </ul>
@@ -115,6 +114,8 @@ $somaQuantidadeCelulasRealizadas = 0;
                                 echo '<td>' . RelatorioController::formataNumeroRelatorio($performance) . '%</td>';
                                 echo '</tr>';
                                 $contagemRanking++;
+
+                                $somaGeralLideres += $relatorioDiscipulo['quantidadeLideres'];
                             }
                         }
 

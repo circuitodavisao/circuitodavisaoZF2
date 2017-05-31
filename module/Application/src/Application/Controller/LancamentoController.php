@@ -4,7 +4,6 @@ namespace Application\Controller;
 
 use Application\Controller\Helper\Constantes;
 use Application\Controller\Helper\Funcoes;
-use Application\Form\CadastrarAtendimentoForm;
 use Application\Form\CadastrarPessoaForm;
 use Application\Model\Entity\Entidade;
 use Application\Model\Entity\EventoFrequencia;
@@ -125,33 +124,6 @@ class LancamentoController extends CircuitoController {
                         Constantes::$ACTION => Constantes::$PAGINA_LANCAR_ATENDIMENTO,
             ));
         }
-        if ($pagina == Constantes::$PAGINA_LANCAR_ATENDIMENTO_EDIT) {
-            $sessao->editAtendimento = true;
-            ;
-            return $this->forward()->dispatch(Constantes::$CONTROLLER_LANCAMENTO, array(
-                        Constantes::$ACTION => Constantes::$PAGINA_LANCAR_ATENDIMENTO,
-            ));
-        }
-        if ($pagina == Constantes::$PAGINA_SALVAR_ATENDIMENTO) {
-            return $this->forward()->dispatch(Constantes::$CONTROLLER_LANCAMENTO, array(
-                        Constantes::$ACTION => Constantes::$PAGINA_SALVAR_ATENDIMENTO,
-            ));
-        }
-        if ($pagina == Constantes::$PAGINA_EXCLUIR_ATENDIMENTO) {
-            return $this->forward()->dispatch(Constantes::$CONTROLLER_LANCAMENTO, array(
-                        Constantes::$ACTION => Constantes::$PAGINA_EXCLUIR_ATENDIMENTO,
-            ));
-        }
-        if ($pagina == Constantes::$PAGINA_ATENDIMENTO_EXCLUSAO_CONFIRMACAO) {
-            return $this->forward()->dispatch(Constantes::$CONTROLLER_LANCAMENTO, array(
-                        Constantes::$ACTION => Constantes::$PAGINA_ATENDIMENTO_EXCLUSAO_CONFIRMACAO,
-            ));
-        }
-        if ($pagina == Constantes::$PAGINA_RELATORIO_ATENDIMENTO) {
-            return $this->forward()->dispatch(Constantes::$CONTROLLER_LANCAMENTO, array(
-                        Constantes::$ACTION => Constantes::$PAGINA_RELATORIO_ATENDIMENTO,
-            ));
-        }
         /* Funcoes */
         if ($pagina == Constantes::$PAGINA_FUNCOES) {
             /* Registro de sessão com o id passado na função */
@@ -249,20 +221,21 @@ class LancamentoController extends CircuitoController {
                 )
         );
 
-        /* Verificando se alguem foi cadastrado */
-        $nomePessoaCadastrada = '';
-        if (!empty($sessao->nomePessoaCadastrada)) {
-            $nomePessoaCadastrada = $sessao->nomePessoaCadastrada;
-            unset($sessao->nomePessoaCadastrada);
-        }
         /* Javascript especifico */
-        $layoutJS = new ViewModel(array(Constantes::$NOME_PESSOA_CADASTRADA => $nomePessoaCadastrada,));
+        $layoutJS = new ViewModel();
         $layoutJS->setTemplate(Constantes::$TEMPLATE_JS_LANCAMENTO);
         $view->addChild($layoutJS, Constantes::$STRING_JS_LANCAMENTO);
 
         $layoutJS2 = new ViewModel(array(Constantes::$QUANTIDADE_EVENTOS_CICLOS => count($eventos),));
         $layoutJS2->setTemplate(Constantes::$TEMPLATE_JS_LANCAMENTO_MODAL_EVENTOS);
         $view->addChild($layoutJS2, Constantes::$STRING_JS_LANCAMENTO_MODAL_EVENTOS);
+
+        if ($sessao->jaMostreiANotificacao) {
+            unset($sessao->mostrarNotificacao);
+            unset($sessao->nomePessoa);
+            unset($sessao->exclusao);
+            unset($sessao->jaMostreiANotificacao);
+        }
 
         return $view;
     }
@@ -287,10 +260,10 @@ class LancamentoController extends CircuitoController {
         $layoutJS->setTemplate(Constantes::$TEMPLATE_JS_CADASTRAR_PESSOA);
         $view->addChild($layoutJS, Constantes::$STRING_JS_CADASTRAR_PESSOA);
 
-        /* Javascript especifico de validação */
-        $layoutJS2 = new ViewModel();
-        $layoutJS2->setTemplate(Constantes::$TEMPLATE_JS_CADASTRAR_PESSOA_VALIDACAO);
-        $view->addChild($layoutJS2, Constantes::$STRING_JS_CADASTRAR_PESSOA_VALIDACAO);
+//        /* Javascript especifico de validação */
+//        $layoutJS2 = new ViewModel();
+//        $layoutJS2->setTemplate(Constantes::$TEMPLATE_JS_CADASTRAR_PESSOA_VALIDACAO);
+//        $view->addChild($layoutJS2, Constantes::$STRING_JS_CADASTRAR_PESSOA_VALIDACAO);
 
         return $view;
     }
@@ -428,7 +401,7 @@ class LancamentoController extends CircuitoController {
 
                     $eventoCelulaId = $evento->getEventoCelula()->getId();
                     $fatoCelulas = $fatoCicloSelecionado->getFatoCelula();
-                 
+
                     $fatoCelulaSelecionado = null;
                     foreach ($fatoCelulas as $fc) {
                         if ($fc->getEvento_celula_id() == $eventoCelulaId) {
@@ -509,13 +482,14 @@ class LancamentoController extends CircuitoController {
                 $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
 
                 $pessoa = $repositorioORM->getPessoaORM()->encontrarPorId($idPessoa);
-                $pessoa->setNome(strtoupper($nome));
+                $pessoa->setNome($nome);
                 $repositorioORM->getPessoaORM()->persistir($pessoa);
 
                 $response->setContent(Json::encode(
                                 array(
                                     'response' => 'true',
                                     'nomeAjustado' => $pessoa->getNomeListaDeLancamento(),
+                                    'nome' => $pessoa->getNome(),
                 )));
             } catch (Exception $exc) {
                 echo $exc->getTraceAsString();
@@ -538,6 +512,11 @@ class LancamentoController extends CircuitoController {
             $grupoPessoa = $repositorioORM->getGrupoPessoaORM()->encontrarPorId($sessao->idFuncaoLancamento);
             $grupoPessoa->setDataEHoraDeInativacao();
             $repositorioORM->getGrupoPessoaORM()->persistir($grupoPessoa);
+
+            /* Pondo valores na sessao */
+            $sessao->mostrarNotificacao = true;
+            $sessao->nomePessoa = $grupoPessoa->getPessoa()->getNome();
+            $sessao->exclusao = true;
 
             return $this->forward()->dispatch(Constantes::$CONTROLLER_LANCAMENTO, array(
                         Constantes::$ACTION => Constantes::$ROUTE_INDEX,
@@ -618,7 +597,9 @@ class LancamentoController extends CircuitoController {
 
                     /* Pondo valores na sessao */
                     $sessao = new Container(Constantes::$NOME_APLICACAO);
-                    $sessao->nomePessoaCadastrada = $pessoa->getNome();
+                    $sessao->mostrarNotificacao = true;
+                    $sessao->nomePessoa = $pessoa->getNome();
+                    unset($sessao->exclusao);
 
                     return $this->redirect()->toRoute(Constantes::$ROUTE_LANCAMENTO, array(
                                 Constantes::$ACTION => Constantes::$ROUTE_INDEX,
@@ -641,21 +622,12 @@ class LancamentoController extends CircuitoController {
         $entidade = $repositorioORM->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
         $grupo = $entidade->getGrupo();
         $gruposAbaixo = $grupo->getGrupoPaiFilhoFilhos();
-        $mes = $sessao->mesAtendimento;
-        if ($mes == date('n')) {
-            $aba = 1;
-        } else {
-            $aba = 2;
-        }
-        $titulo = '';
-        $texto = '';
-        $mostrar = false;
 
-        if ($sessao->tipoMensagem) {
-            $mostrar = true;
-            $titulo = $sessao->titulo;
-            $texto = $sessao->mensagem;
-            $sessao->tipoMensagem = null;
+        /* Aba selecionada e ciclo */
+        $mesSelecionado = date('n');
+        $abaSelecionada = $this->params()->fromRoute(Constantes::$ID);
+        if (empty($abaSelecionada)) {
+            $abaSelecionada = 1;
         }
 
         /* Verificar data de cadastro da responsabilidade */
@@ -667,17 +639,10 @@ class LancamentoController extends CircuitoController {
 
         $view = new ViewModel(array(
             Constantes::$GRUPOS_ABAIXO => $gruposAbaixo,
-            Constantes::$MES_ATENDIMENTO => $mes,
-            Constantes::$ABA_SELECIONADA => $aba,
+            Constantes::$MES_ATENDIMENTO => $mesSelecionado,
             Constantes::$VALIDACAO_NESSE_MES => $validacaoNesseMes,
+            Constantes::$ABA_SELECIONADA => $abaSelecionada,
         ));
-        $layoutJS2 = new ViewModel(array(Constantes::$TITULO_MENSAGEM => $titulo,
-            Constantes::$TEXTO_MENSAGEM => $texto,
-            Constantes::$MOSTRAR_MENSAGEM => $mostrar,
-        ));
-        $layoutJS2->setTemplate(Constantes::$TEMPLATE_JS_CADASTRAR_ATENDIMENTO);
-        $view->addChild($layoutJS2, Constantes::$STRING_JS_CADASTRAR_ATENDIMENTO);
-
         return $view;
     }
 
@@ -859,55 +824,6 @@ class LancamentoController extends CircuitoController {
 
         $entidade = $repositorioORM->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
         return $entidade->getGrupo();
-    }
-
-    public function relatorioAtendimentoAction() {
-        $sessao = new Container(Constantes::$NOME_APLICACAO);
-        $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
-        $idEntidadeAtual = $sessao->idEntidadeAtual;
-        $entidade = $repositorioORM->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
-        $grupo = $entidade->getGrupo();
-        $gruposAbaixo = $grupo->getGrupoPaiFilhoFilhos();
-        $mes = $sessao->mesAtendimento;
-        if ($mes == date('n')) {
-            $aba = 1;
-        } else {
-            $aba = 2;
-        }
-        $titulo = '';
-        $texto = '';
-        $mostrar = false;
-
-
-        if ($sessao->tipoMensagem) {
-            $mostrar = true;
-            $titulo = $sessao->titulo;
-            $texto = $sessao->mensagem;
-            $sessao->tipoMensagem = null;
-        }
-
-        /* Verificar data de cadastro da responsabilidade */
-        $validacaoNesseMes = 0;
-        $grupoResponsavel = $grupo->getGrupoResponsavelAtivo();
-        if ($grupoResponsavel->verificarSeFoiCadastradoNesseMes()) {
-            $validacaoNesseMes = 1;
-        }
-
-        $view = new ViewModel(array(
-            Constantes::$GRUPOS_ABAIXO => $gruposAbaixo,
-            Constantes::$MES_ATENDIMENTO => $mes,
-            Constantes::$ABA_SELECIONADA => $aba,
-            Constantes::$VALIDACAO_NESSE_MES => $validacaoNesseMes,
-        ));
-
-        $layoutJS2 = new ViewModel(array(Constantes::$TITULO_MENSAGEM => $titulo,
-            Constantes::$TEXTO_MENSAGEM => $texto,
-            Constantes::$MOSTRAR_MENSAGEM => $mostrar,
-        ));
-        $layoutJS2->setTemplate(Constantes::$TEMPLATE_JS_CADASTRAR_ATENDIMENTO);
-        $view->addChild($layoutJS2, Constantes::$STRING_JS_CADASTRAR_ATENDIMENTO);
-
-        return $view;
     }
 
 }

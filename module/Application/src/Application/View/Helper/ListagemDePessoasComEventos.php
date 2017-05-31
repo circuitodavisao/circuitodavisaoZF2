@@ -2,9 +2,9 @@
 
 namespace Application\View\Helper;
 
-use Doctrine\Common\Collections\Criteria;
 use Application\Controller\Helper\Constantes;
 use Application\Controller\Helper\Funcoes;
+use Doctrine\Common\Collections\Criteria;
 use Zend\View\Helper\AbstractHelper;
 
 /**
@@ -217,10 +217,12 @@ class ListagemDePessoasComEventos extends AbstractHelper {
                     $html .= '<a id="menudrop_' . $pessoa->getId() . '" class="tdNome text-left dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">';
                 }
                 /* nome */
+                /* Indicação de que eh aluno */
+//                $html .= '<i class="fa fa-graduation-cap" aria-hidden="true"></i>&nbsp;';
                 $html .= '<span id="span_nome_' . $pessoa->getId() . '" ' . $corTextoTagsExtrasXs . '>';
                 $html .= $pessoa->getNomeListaDeLancamento($this->view->quantidadeDeEventosNoCiclo);
                 $html .= '</span>';
-                $html .= '<span ' . $corTextoTagsExtrasLg . '>';
+                $html .= '<span id="span_nome_lg_' . $pessoa->getId() . '"' . $corTextoTagsExtrasLg . '>';
                 $html .= $pessoa->getNome();
                 $html .= '</span>';
                 /* fim nome */
@@ -357,16 +359,28 @@ class ListagemDePessoasComEventos extends AbstractHelper {
                         $icone = 2;
                     } else {
                         /* Verificando inativado */
-                        if (!empty($pessoa->getDataInativacao())) {
-                            /* Data Inativacao */
-                            $primeiroDiaCiclo = Funcoes::periodoCicloMesAno($this->view->cicloSelecionado, $mesSelecionado, $anoSelecionado, '', 1);
-                            $ultimoDiaCiclo = Funcoes::periodoCicloMesAno($this->view->cicloSelecionado, $mesSelecionado, $anoSelecionado, '', 2);
-                            if ($pessoa->getData_inativacaoDia() > $ultimoDiaCiclo) {
-                                $mostrar = true;
-                            }
-                            if ($pessoa->getData_inativacaoDia() < $primeiroDiaCiclo && $pessoa->getData_inativacaoMes() == $mesSelecionado && $pessoa->getData_inativacaoAno() == $anoSelecionado) {
-                                $icone = 3;
-                                $mostrar = false;
+                        if ($pessoa->getGrupoPessoaAtivo()) {
+                            $grupoPessoa = $pessoa->getGrupoPessoaAtivo();
+//                            if($grupoPessoa->verificarSeEstaAtivo()){
+//                                echo "<br /><br />estou ativo";
+//                            }else{
+//                                 echo "<br /><br /> #### estou ativo";
+//                            }
+                            if (!$grupoPessoa->verificarSeEstaAtivo()) {
+//                                echo "inativado";
+                                /* Data Inativacao */
+                                $primeiroDiaCiclo = Funcoes::periodoCicloMesAno($this->view->cicloSelecionado, $mesSelecionado, $anoSelecionado, '', 1);
+                                $ultimoDiaCiclo = Funcoes::periodoCicloMesAno($this->view->cicloSelecionado, $mesSelecionado, $anoSelecionado, '', 2);
+                                if ($grupoPessoa->getData_inativacaoDia() > $ultimoDiaCiclo) {
+                                    $mostrar = true;
+                                }
+//                                echo "<br />grupoPessoa->getData_inativacaoDia()".$grupoPessoa->getData_inativacaoDia();
+                                if ($grupoPessoa->getData_inativacaoDia() < $primeiroDiaCiclo &&
+                                        $grupoPessoa->getData_inativacaoMes() == $mesSelecionado &&
+                                        $grupoPessoa->getData_inativacaoAno() == $anoSelecionado) {
+                                    $icone = 3;
+                                    $mostrar = false;
+                                }
                             }
                         }
                     }

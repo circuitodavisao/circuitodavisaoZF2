@@ -20,7 +20,7 @@ class AtendimentoGruposAbaixo extends AbstractHelper {
     }
 
     public function renderHtml() {
-                $html = '';
+        $html = '';
         if (!empty($this->view->gruposAbaixo)) {
             foreach ($this->view->gruposAbaixo as $gpFilho) {
                 $grupoFilho = $gpFilho->getGrupoPaiFilhoFilho();
@@ -62,8 +62,7 @@ class AtendimentoGruposAbaixo extends AbstractHelper {
                     $atendimentosDoGrupoIndividual = $grupoFilho->getGrupoAtendimento();
                     foreach ($atendimentosDoGrupoIndividual as $ga) {
                         if ($ga->verificarSeEstaAtivo()) {
-                            $partes = explode("/", $ga->getDia());
-                            if ($partes[1] == $this->view->mes) {
+                            if ($ga->getData_criacaoMes() == $this->view->mes) {
                                 $totalGruposAtendidoIndividual++;
                             }
                         }
@@ -114,9 +113,10 @@ class AtendimentoGruposAbaixo extends AbstractHelper {
                     $html .= '</div>';
                 }
             }
-        }else{
-             $html .= '<div class="alert alert-warning"><i class="fa fa-warning pr10" aria-hidden="true"></i>&nbsp;Sem Discipulos cadastrados!</div>';
+        } else {
+            $html .= '<div class="alert alert-warning"><i class="fa fa-warning pr10" aria-hidden="true"></i>&nbsp;Sem Discipulos cadastrados!</div>';
         }
         return $html;
     }
+
 }
