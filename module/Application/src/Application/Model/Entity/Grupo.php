@@ -621,8 +621,8 @@ class Grupo extends CircuitoEntity {
                 }
                 $condicao[1] = ($gp->verificarSeEstaAtivo() && $verificacaoData);
                 $condicao[2] = (!$gp->verificarSeEstaAtivo() && $gp->verificarSeInativacaoFoiNoMesInformado($mes, $ano));
-                $condicao[3] = (!$gp->verificarSeEstaAtivo() && $verificacaoData);
-                if ($condicao[1] || $condicao[2] || $condicao[3]) {
+//                $condicao[3] = (!$gp->verificarSeEstaAtivo() && $verificacaoData);
+                if ($condicao[1] || $condicao[2]) {
                     $pessoas[] = $gp;
                 }
             }
