@@ -41,14 +41,14 @@ class CabecalhoDeCiclos extends AbstractHelper {
 
         if ($mostrarAnterior) {
             $urlCicloAnterior = $urlBaseCiclo . ($this->view->cicloSelecionado - 1);
-            $html .= '<a ' . Constantes::$ONCLICK_ABRIR_MODAL . ' href="' . $urlCicloAnterior . '"><button class="btn btn-default btn-sm"><i class="fa fa-angle-double-left"></i></button></a>&nbsp;';
+            $html .= '<a href="' . $urlCicloAnterior . '"><button class="btn btn-default btn-sm"><i class="fa fa-angle-double-left"></i></button></a>&nbsp;';
         }
         $traducaoPeriodo = $this->view->translate(Constantes::$TRADUCAO_PERIODO);
         $html .= $this->view->translate(Constantes::$TRADUCAO_CICLO) . Constantes::$NBSP . $this->view->cicloSelecionado . '&nbsp;-&nbsp;' . Funcoes::periodoCicloMesAno($this->view->cicloSelecionado, $mesSelecionado, $anoSelecionado, $traducaoPeriodo);
         $totalDeCiclos = Funcoes::totalCiclosMes($mesSelecionado, $anoSelecionado);
         if ($this->view->cicloSelecionado < $totalDeCiclos) {
             $urlCicloPosterior = $urlBaseCiclo . ($this->view->cicloSelecionado + 1);
-            $html .= '&nbsp;<a ' . Constantes::$ONCLICK_ABRIR_MODAL . ' href="' . $urlCicloPosterior . '"><button class="btn btn-default btn-sm"><i class="fa fa-angle-double-right"></i></button></a>';
+            $html .= '&nbsp;<a href="' . $urlCicloPosterior . '"><button class="btn btn-default btn-sm"><i class="fa fa-angle-double-right"></i></button></a>';
         }
 
         $html .= '</div>';

@@ -205,7 +205,9 @@ class Constantes {
     public static $TEMPLATE_JS_PRINCIPAL = 'layout/layout-js-principal';
     public static $STRING_JS_PRINCIPAL = 'layoutJSPrincipal';
     public static $TEMPLATE_JS_FICHA_REVISAO = 'layout/layout-js-ficha-revisao';
+    public static $TEMPLATE_JS_ATIVAR_FICHA = 'layout/layout-js-ativar-ficha-revisao';
     public static $STRING_JS_FICHA_REVISAO = 'layoutJSFichaRevisao';
+    public static $STRING_JS_ATIVAR_FICHA_REVISAO = 'layoutJSAtivarFichaRevisao';
 
     /* Geral */
     public static $NOME_APLICACAO = 'CircuitoDaVisao';
@@ -259,6 +261,7 @@ class Constantes {
     public static $VALIDACAO_NESSE_MES = 'validacaoNesseMes';
     public static $VALIDACAO_ENTIDADE_INATIVA = 'validacaoEntidadeInativa';
     public static $TEMPLATE_JS_LANCAMENTO = 'layout/layout-js-lancamento';
+    public static $TEMPLATE_JS_LANCAMENTO_ATENDIMENTO = 'layout/layout-js-lancamento-atendimento';
     public static $TEMPLATE_JS_CADASTRAR_PESSOA = 'layout/layout-js-cadastrar-pessoa';
     public static $TEMPLATE_JS_CADASTRAR_PESSOA_VALIDACAO = 'layout/layout-js-cadastrar-pessoa-validacao';
     public static $TEMPLATE_JS_CADASTRAR_PESSOA_REVISAO = 'layout/layout-js-cadastrar-pessoa-revisao';
@@ -268,6 +271,7 @@ class Constantes {
     public static $TEMPLATE_JS_LANCAMENTO_MODAL_MUITOS_CADASTROS = 'layout/layout-js-lancamento-modal-muitos-cadastros';
     public static $TEMPLATE_JS_RELATORIO_ATENDIMENTO = 'layout/layout-js-relatorio-atendimento';
     public static $STRING_JS_LANCAMENTO = 'layoutJSLancamento';
+    public static $STRING_JS_LANCAMENTO_ATENDIMENTO = 'layoutJSLancamentoAtendimento';
     public static $STRING_JS_CADASTRAR_PESSOA = 'layoutJSCadastrarPessoa';
     public static $STRING_JS_CADASTRAR_PESSOA_VALIDACAO = 'layoutJSCadastrarPessoaValidacao';
     public static $STRING_JS_CADASTRAR_PESSOA_REVISAO = 'layoutJSCadastrarPessoaRevisao';
@@ -289,7 +293,6 @@ class Constantes {
     public static $PAGINA_LABEL_LANCAR_ATENDIMENTO = 'Lançar';
     public static $PAGINA_SALVAR_ATENDIMENTO = 'SalvarAtendimento';
     public static $PAGINA_EXCLUIR_ATENDIMENTO = 'AtendimentoExclusao';
-    public static $ONCLICK_ABRIR_MODAL = 'onclick="abrirModalCarregando();"';
     public static $PAGINA = 'pagina';
     public static $PESSOA_REVISAO = 'pessoa';
     public static $PESSOA_LIDER_REVISAO = 'pessoaLider';
@@ -301,6 +304,8 @@ class Constantes {
     public static $NOME_IGREJA_FICHA_REVISAO = 'nomeIgreja';
     public static $STRING_ID_EVENTO_FREQUENCIA = 'idEventoFrequencia';
     public static $PAGINA_FICHA_REVISAO = 'FichaRevisao';
+    public static $PAGINA_ATIVAR_FICHA_REVISAO = 'AtivarFichaRevisao';
+    public static $PAGINA_CONSULTAR_FICHA = 'ConsultarFicha';
     public static $PAGINA_FUNCOES = 'Funcoes';
     public static $PAGINA_MUDAR_ATENDIMENTO = 'MudarAtendimento';
     public static $PAGINA_MUDAR_FREQUENCIA = 'MudarFrequencia';
@@ -313,9 +318,11 @@ class Constantes {
     public static $CLASS_PHONE = 'phone';
     public static $FORM_CADASTRAR_PESSOA = 'CadastrarPessoaForm';
     public static $FORM_CADASTRAR_PESSOA_REVISAO = 'CadastrarPessoaRevisaoForm';
+    public static $FORM_ATIVAR_FICHA = 'AtivarFichaForm';
     public static $FORM_CADASTRAR_ATENDIMENTO = 'CadastrarAtendimentoForm';
     public static $GRUPOS_ABAIXO = 'gruposAbaixo';
-    public static $MES_ATENDIMENTO = 'mes';
+    public static $MES = 'mes';
+    public static $ANO = 'ano';
     public static $TITULO_MENSAGEM = 'titulo';
     public static $TEXTO_MENSAGEM = 'texto';
     public static $MOSTRAR_MENSAGEM = 'mostrar';
@@ -341,6 +348,8 @@ class Constantes {
     public static $TRADUCAO_NOVO_CADASTRO = 'New Register';
     public static $TRADUCAO_NOVO_CADASTRO_REVISAO = 'New Person in Revision of Life';
     public static $TRADUCAO_NOVO_CADASTRO_LABEL = 'Person at the launch line';
+    public static $TRADUCAO_ATIVAR_FICHA = 'Enable Bookmarks of Revision of Life';
+    public static $TRADUCAO_ATIVAR_FICHA_LABEL = 'Enable Bookmarks';
     public static $TRADUCAO_NOVO_CADASTRO_REVISAO_LABEL = 'Person at the revision of live';
     public static $TRADUCAO_DDD = 'DDD';
     public static $TRADUCAO_TELEFONE = 'Phone';
@@ -368,6 +377,7 @@ class Constantes {
     public static $TRADUCAO_SUBTITULO_CABECALHO_ATENDIMENTO = 'disciples were attended to.';
     /* Fomulário */
     public static $INPUT_NOME = 'nome';
+    public static $INPUT_CODIGO = 'codigo';
     public static $INPUT_PRIMEIRO_NOME = 'primeiro-nome';
     public static $INPUT_ULTIMO_NOME = 'ultimo-nome';
     public static $INPUT_DATA_ATENDIMENTO = 'dataAtendimento';

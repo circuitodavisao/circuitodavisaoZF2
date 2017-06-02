@@ -6,8 +6,8 @@
 
 
 function mudarAtendimento(idGrupo, tipo) {
-    var botaoLancar = $('#bl_' + idGrupo);
-    var botaoRemover = $('#br_' + idGrupo);
+    var botaoLancar = $('#botao1_' + idGrupo);
+    var botaoRemover = $('#botao2_' + idGrupo);
     var progressBar = $('#progressBarAtendimento' + idGrupo);
     var progressBarCabecalho = $('#divProgressBar');
     var iconePlus = '<i class="fa fa-plus" aria-hidden="true"></i>';
@@ -15,7 +15,6 @@ function mudarAtendimento(idGrupo, tipo) {
     var corBarraVermelha = 'progress-bar-danger';
     var corBarraAmarela = 'progress-bar-warning';
     var corBarraVerde = 'progress-bar-success';
-    var loader = '<img width="11" hegth="11" src="/img/loader.gif"></i>';
     var botao;
     var icone;
 
@@ -27,9 +26,6 @@ function mudarAtendimento(idGrupo, tipo) {
         icone = iconeMinus;
     }
 
-
-    botao.html(loader);
-
     /* Desabilitar botão ate terminar o processamento */
     botao.addClass('disabled');
 
@@ -37,8 +33,7 @@ function mudarAtendimento(idGrupo, tipo) {
             "/lancamentoMudarAtendimento",
             {
                 idGrupo: idGrupo,
-                tipo: tipo,
-
+                tipo: tipo
             },
             function (data) {
                 if (data.response) {
@@ -49,7 +44,7 @@ function mudarAtendimento(idGrupo, tipo) {
                     } else {
                         var textoProgressBar = numeroAtendimentos + ' Atendimentos';
                     }
-                    
+
                     botao.removeClass('disabled');
                     if (numeroAtendimentos == 1) {
                         progressBar.removeClass(corBarraVermelha);
@@ -65,9 +60,9 @@ function mudarAtendimento(idGrupo, tipo) {
                         botaoRemover.removeClass('disabled');
                         progressBarCabecalho.attr('aria-valuenow', progresso)
                                 .addClass(data.corBarraTotal)
-                                .html(progresso+'%')
-                                .css('width', progresso+'%');
-                        
+                                .html(progresso + '%')
+                                .css('width', progresso + '%');
+
                         $('#totalGruposAtendidos').text(data.totalGruposAtendidos);
                     }
                     if (numeroAtendimentos == 2) {
@@ -102,14 +97,14 @@ function mudarAtendimento(idGrupo, tipo) {
                                 .css('width', '10%');
                         progressBarCabecalho.attr('aria-valuenow', progresso)
                                 .addClass(data.corBarraTotal)
-                                .html(progresso+'%')
-                                .css('width', progresso+'%');
+                                .html(progresso + '%')
+                                .css('width', progresso + '%');
                         $('#totalGruposAtendidos').text(data.totalGruposAtendidos);
                     }
 
                     botao.html('');
                     botao.html(icone);
-                    fecharModalCarregando();
+                    botao.removeClass('disabled');
                 }
             }, 'json');
 }

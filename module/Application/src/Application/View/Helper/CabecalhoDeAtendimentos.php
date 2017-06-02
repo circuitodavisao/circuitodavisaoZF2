@@ -24,55 +24,56 @@ class CabecalhoDeAtendimentos extends AbstractHelper {
         $html = '';
         $totalGruposFilhos = 0;
         $totalGruposAtendidos = 0;
-        foreach ($this->view->gruposAbaixo as $gpFilho) {
-            $totalGruposAtendido = 0;
-            $grupoFilho = $gpFilho->getGrupoPaiFilhoFilho();
-            $grupoResponsavel = $grupoFilho->getResponsabilidadesAtivas();
-            if ($grupoResponsavel) {
-                $atendimentosDoGrupo = $grupoFilho->getGrupoAtendimento();
-                foreach ($atendimentosDoGrupo as $ga) {
-                    if ($ga->verificarSeEstaAtivo()) {
-                        if ($ga->getData_criacaoMes() == $this->view->mes) {
-                            $totalGruposAtendido++;
+        if ($this->view->gruposAbaixo) {
+            foreach ($this->view->gruposAbaixo as $gpFilho) {
+                $totalGruposAtendido = 0;
+                $grupoFilho = $gpFilho->getGrupoPaiFilhoFilho();
+                $grupoResponsavel = $grupoFilho->getResponsabilidadesAtivas();
+                if ($grupoResponsavel) {
+                    $atendimentosDoGrupo = $grupoFilho->getGrupoAtendimento();
+                    foreach ($atendimentosDoGrupo as $ga) {
+                        if ($ga->verificarSeEstaAtivo()) {
+                            if ($ga->getData_criacaoMes() == $this->view->mes) {
+                                $totalGruposAtendido++;
+                            }
                         }
                     }
-                }
-                if ($totalGruposAtendido >= 1) {
-                    $totalGruposAtendidos++;
-                }
+                    if ($totalGruposAtendido >= 1) {
+                        $totalGruposAtendidos++;
+                    }
 
-                $totalGruposFilhos++;
+                    $totalGruposFilhos++;
+                }
             }
+
+            if ($totalGruposFilhos) {
+                $progresso = ($totalGruposAtendidos / $totalGruposFilhos) * 100;
+            } else {
+                $progresso = 0;
+            }
+
+            /* percentagem da meta, sendo que a meta é 2 atendimentos por mes */
+            if ($progresso > 50 && $progresso < 80) {
+                $colorBarTotal = "progress-bar-warning";
+            } else if ($progresso >= 80) {
+                $colorBarTotal = "progress-bar-success";
+            } else {
+                $colorBarTotal = "progress-bar-danger";
+            }
+
+            $html .= '<div class="row center-block text-center">';
+            $html .= '<div class="section-divider mt30">';
+            $html .= '<span><span id="totalGruposAtendidos">' . $totalGruposAtendidos . ' </span> ' . $this->view->translate('of') . ' <span id="totalGruposFilhos">' . $totalGruposFilhos . '</span> ' . $this->view->translate(Constantes::$TRADUCAO_SUBTITULO_CABECALHO_ATENDIMENTO) . '</span>';
+            $html .= '</div>';
+            $html .= '</div>';
+            $html .= '<div class="row">';
+            $html .= '<div class="col-md-12 col-xs-12">';
+            $html .= '<div class="progress progress-bar-xl">';
+            $html .= '<div id="divProgressBar" class="progress-bar ' . $colorBarTotal . '" role="progressbar" aria-valuenow="' . number_format($progresso, 2, '.', '') . '" aria-valuemin="0" aria-valuemax="100" style="width: ' . number_format($progresso, 2, '.', '') . '%;">' . number_format($progresso, 2, '.', '') . '%</div>';
+            $html .= '</div>';
+            $html .= '</div>';
+            $html .= '</div>';
         }
-
-        if ($totalGruposFilhos) {
-            $progresso = ($totalGruposAtendidos / $totalGruposFilhos) * 100;
-        } else {
-            $progresso = 0;
-        }
-
-        /* percentagem da meta, sendo que a meta é 2 atendimentos por mes */
-        if ($progresso > 50 && $progresso < 80) {
-            $colorBarTotal = "progress-bar-warning";
-        } else if ($progresso >= 80) {
-            $colorBarTotal = "progress-bar-success";
-        } else {
-            $colorBarTotal = "progress-bar-danger";
-        }
-
-        $html .= '<div class="row center-block text-center">';
-        $html .= '<div class="section-divider mt30">';
-        $html .= '<span><span id="totalGruposAtendidos">' . $totalGruposAtendidos . ' </span> ' . $this->view->translate('of') . ' <span id="totalGruposFilhos">' . $totalGruposFilhos . '</span> ' . $this->view->translate(Constantes::$TRADUCAO_SUBTITULO_CABECALHO_ATENDIMENTO) . '</span>';
-        $html .= '</div>';
-        $html .= '</div>';
-        $html .= '<div class="row">';
-        $html .= '<div class="col-md-12 col-xs-12">';
-        $html .= '<div class="progress progress-bar-xl">';
-        $html .= '<div id="divProgressBar" class="progress-bar ' . $colorBarTotal . '" role="progressbar" aria-valuenow="' . number_format($progresso, 2, '.', '') . '" aria-valuemin="0" aria-valuemax="100" style="width: ' . number_format($progresso, 2, '.', '') . '%;">' . number_format($progresso, 2, '.', '') . '%</div>';
-        $html .= '</div>';
-        $html .= '</div>';
-        $html .= '</div>';
-
         return $html;
     }
 

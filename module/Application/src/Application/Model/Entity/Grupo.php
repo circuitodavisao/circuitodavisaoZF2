@@ -137,6 +137,25 @@ class Grupo extends CircuitoEntity {
         return $responsabilidadesAtivas;
     }
 
+    /**
+     * Recupera as pessoas das responsabilidades ativas
+     * @return Pessoa[]
+     */
+    function getGrupoPaiFilhoFilhosAtivos() {
+        $grupoPaiFilhoFilhosAtivos = array();
+        /* Responsabilidades */
+        $grupoPaiFilhoFilhos = $this->getGrupoPaiFilhoFilhos();
+        if ($grupoPaiFilhoFilhos) {
+            /* Verificar responsabilidades ativas */
+            foreach ($grupoPaiFilhoFilhos as $gpf) {
+                if ($gpf->verificarSeEstaAtivo()) {
+                    $grupoPaiFilhoFilhosAtivos[] = $gpf;
+                }
+            }
+        }
+        return $grupoPaiFilhoFilhosAtivos;
+    }
+
     function getPessoasAtivas() {
         $pessoas = null;
         $grupoResponsavel = $this->getResponsabilidadesAtivas();
@@ -267,6 +286,7 @@ class Grupo extends CircuitoEntity {
 
         return $grupoEventos;
     }
+
     /**
      * Retorna o grupo igreja do Grupo
      * @return GrupoEvento
@@ -284,7 +304,6 @@ class Grupo extends CircuitoEntity {
                 }
             }
             $grupoIgreja = $grupoSelecionado;
-            
         } else if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::EQUIPE) {
             while ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::EQUIPE) {
                 $grupoSelecionado = $grupoSelecionado->getGrupoPaiFilhoPai()->getGrupoPaiFilhoPai();
@@ -293,9 +312,9 @@ class Grupo extends CircuitoEntity {
                 }
             }
             $grupoIgreja = $grupoSelecionado;
-        } else if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::IGREJA){
+        } else if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::IGREJA) {
             $grupoIgreja = $grupoSelecionado->getGrupoEventoAtivosPorTipo(GrupoEvento::REVISAO);
-        } else{
+        } else {
             $grupoIgreja = null;
         }
 

@@ -24,6 +24,24 @@ class GrupoAtendimento extends CircuitoEntity {
     /** @ORM\Column(type="integer") */
     protected $grupo_id;
 
+    /**
+     * Retorna se tem atendimento nesse mes e ano
+     * @param int $mes
+     * @param int $ano
+     * @return boolean
+     */
+    function verificaSeTemNesseMesEAno($mes, $ano) {
+        $resposta = false;
+        $mesComDuasCasas = str_pad($mes, 2, 0, STR_PAD_LEFT);
+        if ($this->verificarSeEstaAtivo()) {
+            if ($this->getData_criacaoMes() == $mesComDuasCasas &&
+                    $this->getData_criacaoAno() == $ano) {
+                $resposta = true;
+            }
+        }
+        return $resposta;
+    }
+
     function getGrupo() {
         return $this->grupo;
     }

@@ -12,9 +12,8 @@ namespace Application;
 
 use Application\Controller\Helper\Constantes;
 use Application\Model\ORM\RepositorioORM;
-use Application\View\Helper\Abas;
-use Application\View\Helper\AbasAtendimento;
 use Application\View\Helper\AbaSelecionada;
+use Application\View\Helper\AbasPanel;
 use Application\View\Helper\AlertaEnvioRelatorio;
 use Application\View\Helper\AtendimentoGruposAbaixo;
 use Application\View\Helper\AtendimentoGruposAbaixoRelatorio;
@@ -52,7 +51,6 @@ use Application\View\Helper\ListagemLideresTransferencia;
 use Application\View\Helper\MensagemRelatorioEnviado;
 use Application\View\Helper\Menu;
 use Application\View\Helper\MenuHierarquia;
-use Application\View\Helper\ModalAba;
 use Application\View\Helper\ModalLoader;
 use Application\View\Helper\ModalMuitosCadastros;
 use Application\View\Helper\ModalMuitosEventos;
@@ -130,9 +128,6 @@ class Module {
                 'abaSelecionada' => function($sm) {
                     return new AbaSelecionada();
                 },
-                'ModalAba' => function($sm) {
-                    return new ModalAba();
-                },
                 'cabecalhoDeEventos' => function($sm) {
                     return new CabecalhoDeEventos();
                 },
@@ -151,8 +146,8 @@ class Module {
                 'modalMuitosEventos' => function($sm) {
                     return new ModalMuitosEventos();
                 },
-                'abas' => function($sm) {
-                    return new Abas();
+                'abasPanel' => function($sm) {
+                    return new AbasPanel();
                 },
                 'mensagemRelatorioEnviado' => function($sm) {
                     return new MensagemRelatorioEnviado();
@@ -271,9 +266,6 @@ class Module {
                 'listagemLideresTransferencia' => function ($sm) {
                     return new ListagemLideresTransferencia();
                 },
-                'abasAtendimento' => function ($sm) {
-                    return new AbasAtendimento();
-                }
             )
         );
     }

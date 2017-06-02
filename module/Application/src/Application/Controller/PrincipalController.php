@@ -29,32 +29,28 @@ class PrincipalController extends CircuitoController {
 
         $mesSelecionado = date('n');
         $anoSelecionado = date('Y');
-        $cicloSelecionado = Funcoes::cicloAtual($mesSelecionado, $anoSelecionado);
+        $cicloAtual = Funcoes::cicloAtual($mesSelecionado, $anoSelecionado);
+        $cicloPassado = 0;
 
-        if ($cicloSelecionado > 1) {
-            $cicloSelecionado--;
+        if ($cicloAtual > 1) {
+            $cicloPassado = $cicloAtual - 1;
         } else {
-            /* Mês Passado */
-            if ($cicloSelecionado == 1) {
-                if (date('n') == 1) {
-                    $mesSelecionado = 12;
-                    $anoSelecionado = date('Y') - 1;
-                } else {
-                    $mesSelecionado = date('n') - 1;
-                    $anoSelecionado = date('Y');
-                }
-                $cicloSelecionado = Funcoes::cicloAtual($mesSelecionado, $anoSelecionado);
+            $anoPesquisa = $anoSelecionado;
+            $mesPesquisa = $mesSelecionado - 1;
+            if ($mesSelecionado == 1) {
+                $anoPesquisa = $anoSelecionado - 1;
+                $mesPesquisa = 1;
             }
+            $cicloPassado = Funcoes::totalCiclosMes($mesPesquisa, $anoPesquisa);
         }
 
         $tipoRelatorioPessoal = 1;
         $tipoRelatorioEquipe = 2;
-        $relatorio = RelatorioController::montaRelatorio($repositorioORM, $numeroIdentificador, $cicloSelecionado, $mesSelecionado, $anoSelecionado, $tipoRelatorioPessoal);
-        $relatorioEquipe = RelatorioController::montaRelatorio($repositorioORM, $numeroIdentificador, $cicloSelecionado, $mesSelecionado, $anoSelecionado, $tipoRelatorioEquipe);
+        $relatorio = RelatorioController::montaRelatorio($repositorioORM, $numeroIdentificador, $cicloPassado, $mesPesquisa, $anoPesquisa, $tipoRelatorioPessoal);
+        $relatorioEquipe = RelatorioController::montaRelatorio($repositorioORM, $numeroIdentificador, $cicloPassado, $mesPesquisa, $anoPesquisa, $tipoRelatorioEquipe);
+        $periodoSelecionado = Funcoes::periodoCicloMesAno($cicloPassado, $mesPesquisa, $anoPesquisa);
 
-        $periodoSelecionado = Funcoes::periodoCicloMesAno($cicloSelecionado, $mesSelecionado, $anoSelecionado);
-
-
+        echo "anoPesquisa$anoPesquisa mesPesquisa$mesPesquisa cicloPassado$cicloPassado";
         return new ViewModel(
                 array(
             'periodo' => $periodoSelecionado,

@@ -19,7 +19,6 @@ use Doctrine\ORM\EntityManager;
 use Exception;
 use Migracao\Controller\IndexController;
 use Zend\Json\Json;
-use Zend\Mvc\I18n\Translator;
 use Zend\Session\Container;
 use Zend\View\Model\ViewModel;
 
@@ -30,20 +29,13 @@ use Zend\View\Model\ViewModel;
  */
 class LancamentoController extends CircuitoController {
 
-    private $_translator;
-
     /**
-     * Contrutor sobrecarregado com os serviços de ORM e Translator
+     * Contrutor sobrecarregado com os serviços de ORM 
      */
     public function __construct(
-    EntityManager $doctrineORMEntityManager = null, Translator $translator = null) {
-
+    EntityManager $doctrineORMEntityManager = null) {
         if (!is_null($doctrineORMEntityManager)) {
             parent::__construct($doctrineORMEntityManager);
-        }
-
-        if (!is_null($translator)) {
-            $this->_translator = $translator;
         }
     }
 
@@ -61,69 +53,6 @@ class LancamentoController extends CircuitoController {
 
         /* Verificando rota */
         $pagina = $this->getEvent()->getRouteMatch()->getParam(Constantes::$PAGINA, 1);
-        if ($pagina == Constantes::$PAGINA_MUDAR_FREQUENCIA) {
-            return $this->forward()->dispatch(Constantes::$CONTROLLER_LANCAMENTO, array(
-                        Constantes::$ACTION => Constantes::$PAGINA_MUDAR_FREQUENCIA,
-            ));
-        }
-        if ($pagina == Constantes::$PAGINA_MUDAR_ATENDIMENTO) {
-            return $this->forward()->dispatch(Constantes::$CONTROLLER_LANCAMENTO, array(
-                        Constantes::$ACTION => Constantes::$PAGINA_MUDAR_ATENDIMENTO,
-            ));
-        }
-        if ($pagina == Constantes::$PAGINA_ENVIAR_RELATORIO) {
-            return $this->forward()->dispatch(Constantes::$CONTROLLER_LANCAMENTO, array(
-                        Constantes::$ACTION => Constantes::$PAGINA_ENVIAR_RELATORIO,
-            ));
-        }
-        if ($pagina == Constantes::$PAGINA_ALTERAR_NOME) {
-            return $this->forward()->dispatch(Constantes::$CONTROLLER_LANCAMENTO, array(
-                        Constantes::$ACTION => Constantes::$PAGINA_ALTERAR_NOME,
-            ));
-        }
-        if ($pagina == Constantes::$PAGINA_REMOVER_PESSOA) {
-            return $this->forward()->dispatch(Constantes::$CONTROLLER_LANCAMENTO, array(
-                        Constantes::$ACTION => Constantes::$PAGINA_REMOVER_PESSOA,
-            ));
-        }
-        if ($pagina == Constantes::$PAGINA_CADASTRAR_PESSOA) {
-            return $this->forward()->dispatch(Constantes::$CONTROLLER_LANCAMENTO, array(
-                        Constantes::$ACTION => Constantes::$PAGINA_CADASTRAR_PESSOA,
-            ));
-        }
-        if ($pagina == Constantes::$PAGINA_CADASTRAR_PESSOA_REVISAO) {
-            return $this->forward()->dispatch(Constantes::$CONTROLLER_LANCAMENTO, array(
-                        Constantes::$ACTION => Constantes::$PAGINA_CADASTRAR_PESSOA_REVISAO,
-            ));
-        }
-        if ($pagina == Constantes::$PAGINA_SALVAR_PESSOA) {
-            return $this->forward()->dispatch(Constantes::$CONTROLLER_LANCAMENTO, array(
-                        Constantes::$ACTION => Constantes::$PAGINA_SALVAR_PESSOA,
-            ));
-        }
-        if ($pagina == Constantes::$PAGINA_ATENDIMENTO) {
-            $parametro = $this->params()->fromRoute(Constantes::$ID);
-            if (empty($parametro)) {
-                $abaSelecionada = 1;
-            } else {
-                if ($parametro == 1) {
-                    $abaSelecionada = 1;
-                } else {
-
-                    $abaSelecionada = 2;
-                }
-            }
-            $mes = Funcoes::mesPorAbaSelecionada($abaSelecionada);
-            $sessao->mesAtendimento = $mes;
-            return $this->forward()->dispatch(Constantes::$CONTROLLER_LANCAMENTO, array(
-                        Constantes::$ACTION => Constantes::$PAGINA_ATENDIMENTO,
-            ));
-        }
-        if ($pagina == Constantes::$PAGINA_LANCAR_ATENDIMENTO) {
-            return $this->forward()->dispatch(Constantes::$CONTROLLER_LANCAMENTO, array(
-                        Constantes::$ACTION => Constantes::$PAGINA_LANCAR_ATENDIMENTO,
-            ));
-        }
         /* Funcoes */
         if ($pagina == Constantes::$PAGINA_FUNCOES) {
             /* Registro de sessão com o id passado na função */
@@ -151,8 +80,6 @@ class LancamentoController extends CircuitoController {
             } else {
                 if ($explodeParamentro[0] == 2) {
                     $abaSelecionada = 2;
-                } else {
-                    $abaSelecionada = 3;
                 }
             }
         }
@@ -236,34 +163,6 @@ class LancamentoController extends CircuitoController {
             unset($sessao->exclusao);
             unset($sessao->jaMostreiANotificacao);
         }
-
-        return $view;
-    }
-
-    /**
-     * Abri tela para cadastro de pessoa para lançamento
-     * @return ViewModel
-     */
-    public function cadastrarPessoaAction() {
-        /* Helper Controller */
-        $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
-        $tipos = $repositorioORM->getGrupoPessoaTipoORM()->tipoDePessoaLancamento();
-        /* Formulario */
-        $formCadastrarPessoa = new CadastrarPessoaForm(Constantes::$FORM_CADASTRAR_PESSOA, $tipos);
-
-        $view = new ViewModel(array(
-            Constantes::$FORM_CADASTRAR_PESSOA => $formCadastrarPessoa,
-        ));
-
-        /* Javascript especifico */
-        $layoutJS = new ViewModel();
-        $layoutJS->setTemplate(Constantes::$TEMPLATE_JS_CADASTRAR_PESSOA);
-        $view->addChild($layoutJS, Constantes::$STRING_JS_CADASTRAR_PESSOA);
-
-//        /* Javascript especifico de validação */
-//        $layoutJS2 = new ViewModel();
-//        $layoutJS2->setTemplate(Constantes::$TEMPLATE_JS_CADASTRAR_PESSOA_VALIDACAO);
-//        $view->addChild($layoutJS2, Constantes::$STRING_JS_CADASTRAR_PESSOA_VALIDACAO);
 
         return $view;
     }
@@ -466,6 +365,92 @@ class LancamentoController extends CircuitoController {
     }
 
     /**
+     * Abri tela para cadastro de pessoa para lançamento
+     * @return ViewModel
+     */
+    public function cadastrarPessoaAction() {
+        /* Helper Controller */
+        $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
+        $tipos = $repositorioORM->getGrupoPessoaTipoORM()->tipoDePessoaLancamento();
+        /* Formulario */
+        $formCadastrarPessoa = new CadastrarPessoaForm(Constantes::$FORM_CADASTRAR_PESSOA, $tipos);
+
+        $view = new ViewModel(array(
+            Constantes::$FORM_CADASTRAR_PESSOA => $formCadastrarPessoa,
+        ));
+
+        /* Javascript especifico */
+        $layoutJS = new ViewModel();
+        $layoutJS->setTemplate(Constantes::$TEMPLATE_JS_CADASTRAR_PESSOA);
+        $view->addChild($layoutJS, Constantes::$STRING_JS_CADASTRAR_PESSOA);
+
+//        /* Javascript especifico de validação */
+//        $layoutJS2 = new ViewModel();
+//        $layoutJS2->setTemplate(Constantes::$TEMPLATE_JS_CADASTRAR_PESSOA_VALIDACAO);
+//        $view->addChild($layoutJS2, Constantes::$STRING_JS_CADASTRAR_PESSOA_VALIDACAO);
+
+        return $view;
+    }
+
+    /**
+     * Salva uma nova pessoa na linha de lançamento
+     */
+    public function salvarPessoaAction() {
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            try {
+                $post_data = $request->getPost();
+
+                $pessoa = new Pessoa();
+                $formCadastrarPessoa = new CadastrarPessoaForm(Constantes::$FORM_CADASTRAR_PESSOA);
+                $formCadastrarPessoa->setInputFilter($pessoa->getInputFilterPessoaFrequencia());
+                $formCadastrarPessoa->setData($post_data);
+
+                /* validação */
+                if ($formCadastrarPessoa->isValid()) {
+                    $validatedData = $formCadastrarPessoa->getData();
+
+                    $pessoa->exchangeArray($formCadastrarPessoa->getData());
+                    $pessoa->setTelefone($validatedData[Constantes::$INPUT_DDD] . $validatedData[Constantes::$INPUT_TELEFONE]);
+
+                    /* Helper Controller */
+                    $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
+
+                    /* Grupo selecionado */
+                    $grupo = $this->getGrupoSelecionado($repositorioORM);
+
+                    /* Salvar a pessoa e o grupo pessoa correspondente */
+                    $repositorioORM->getPessoaORM()->persistir($pessoa);
+                    $grupoPessoaTipo = $repositorioORM->getGrupoPessoaTipoORM()->encontrarPorId($post_data[Constantes::$INPUT_TIPO]);
+
+                    $grupoPessoa = new GrupoPessoa();
+                    $grupoPessoa->setPessoa($pessoa);
+                    $grupoPessoa->setGrupo($grupo);
+                    $grupoPessoa->setGrupoPessoaTipo($grupoPessoaTipo);
+                    $nucleoPerfeito = $validatedData[Constantes::$INPUT_NUCLEO_PERFEITO];
+                    if ($nucleoPerfeito != 0) {
+                        $grupoPessoa->setNucleo_perfeito($nucleoPerfeito);
+                    }
+
+                    $repositorioORM->getGrupoPessoaORM()->persistir($grupoPessoa);
+
+                    /* Pondo valores na sessao */
+                    $sessao = new Container(Constantes::$NOME_APLICACAO);
+                    $sessao->mostrarNotificacao = true;
+                    $sessao->nomePessoa = $pessoa->getNome();
+                    unset($sessao->exclusao);
+
+                    return $this->redirect()->toRoute(Constantes::$ROUTE_LANCAMENTO, array(
+                                Constantes::$ACTION => Constantes::$ROUTE_INDEX,
+                    ));
+                }
+            } catch (Exception $exc) {
+                CircuitoController::direcionaErroDeCadastro($exc->getMessage());
+            }
+        }
+    }
+
+    /**
      * Alterar nome de uma pessoa
      * @return Json
      */
@@ -554,64 +539,6 @@ class LancamentoController extends CircuitoController {
     }
 
     /**
-     * Salva uma nova pessoa na linha de lançamento
-     */
-    public function salvarPessoaAction() {
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            try {
-                $post_data = $request->getPost();
-
-                $pessoa = new Pessoa();
-                $formCadastrarPessoa = new CadastrarPessoaForm(Constantes::$FORM_CADASTRAR_PESSOA);
-                $formCadastrarPessoa->setInputFilter($pessoa->getInputFilterPessoaFrequencia());
-                $formCadastrarPessoa->setData($post_data);
-
-                /* validação */
-                if ($formCadastrarPessoa->isValid()) {
-                    $validatedData = $formCadastrarPessoa->getData();
-
-                    $pessoa->exchangeArray($formCadastrarPessoa->getData());
-                    $pessoa->setTelefone($validatedData[Constantes::$INPUT_DDD] . $validatedData[Constantes::$INPUT_TELEFONE]);
-
-                    /* Helper Controller */
-                    $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
-
-                    /* Grupo selecionado */
-                    $grupo = $this->getGrupoSelecionado($repositorioORM);
-
-                    /* Salvar a pessoa e o grupo pessoa correspondente */
-                    $repositorioORM->getPessoaORM()->persistir($pessoa);
-                    $grupoPessoaTipo = $repositorioORM->getGrupoPessoaTipoORM()->encontrarPorId($post_data[Constantes::$INPUT_TIPO]);
-
-                    $grupoPessoa = new GrupoPessoa();
-                    $grupoPessoa->setPessoa($pessoa);
-                    $grupoPessoa->setGrupo($grupo);
-                    $grupoPessoa->setGrupoPessoaTipo($grupoPessoaTipo);
-                    $nucleoPerfeito = $validatedData[Constantes::$INPUT_NUCLEO_PERFEITO];
-                    if ($nucleoPerfeito != 0) {
-                        $grupoPessoa->setNucleo_perfeito($nucleoPerfeito);
-                    }
-
-                    $repositorioORM->getGrupoPessoaORM()->persistir($grupoPessoa);
-
-                    /* Pondo valores na sessao */
-                    $sessao = new Container(Constantes::$NOME_APLICACAO);
-                    $sessao->mostrarNotificacao = true;
-                    $sessao->nomePessoa = $pessoa->getNome();
-                    unset($sessao->exclusao);
-
-                    return $this->redirect()->toRoute(Constantes::$ROUTE_LANCAMENTO, array(
-                                Constantes::$ACTION => Constantes::$ROUTE_INDEX,
-                    ));
-                }
-            } catch (Exception $exc) {
-                CircuitoController::direcionaErroDeCadastro($exc->getMessage());
-            }
-        }
-    }
-
-    /**
      * Abri tela para relatorio de atendimento 
      * @return ViewModel
      */
@@ -621,14 +548,20 @@ class LancamentoController extends CircuitoController {
         $idEntidadeAtual = $sessao->idEntidadeAtual;
         $entidade = $repositorioORM->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
         $grupo = $entidade->getGrupo();
-        $gruposAbaixo = $grupo->getGrupoPaiFilhoFilhos();
 
-        /* Aba selecionada e ciclo */
-        $mesSelecionado = date('n');
-        $abaSelecionada = $this->params()->fromRoute(Constantes::$ID);
-        if (empty($abaSelecionada)) {
-            $abaSelecionada = 1;
+        $gruposAbaixo = null;
+        if ($grupo->getGrupoPaiFilhoFilhosAtivos()) {
+            $gruposAbaixo = $grupo->getGrupoPaiFilhoFilhosAtivos();
         }
+
+        $parametro = $this->params()->fromRoute(Constantes::$ID);
+        if (empty($parametro)) {
+            $abaSelecionada = 1;
+        } else {
+            $abaSelecionada = $parametro;
+        }
+        $mesSelecionado = Funcoes::mesPorAbaSelecionada($abaSelecionada);
+        $anoSelecionado = Funcoes::anoPorAbaSelecionada($abaSelecionada);
 
         /* Verificar data de cadastro da responsabilidade */
         $validacaoNesseMes = 0;
@@ -639,48 +572,18 @@ class LancamentoController extends CircuitoController {
 
         $view = new ViewModel(array(
             Constantes::$GRUPOS_ABAIXO => $gruposAbaixo,
-            Constantes::$MES_ATENDIMENTO => $mesSelecionado,
+            Constantes::$MES => $mesSelecionado,
+            Constantes::$ANO => $anoSelecionado,
             Constantes::$VALIDACAO_NESSE_MES => $validacaoNesseMes,
             Constantes::$ABA_SELECIONADA => $abaSelecionada,
         ));
+
+        /* Javascript especifico */
+        $layoutJS = new ViewModel();
+        $layoutJS->setTemplate(Constantes::$TEMPLATE_JS_LANCAMENTO_ATENDIMENTO);
+        $view->addChild($layoutJS, Constantes::$STRING_JS_LANCAMENTO_ATENDIMENTO);
+
         return $view;
-    }
-
-    function retornaProgressoUsuarioLogadoCabecalhoAtendimento() {
-        $sessao = new Container(Constantes::$NOME_APLICACAO);
-        $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
-        $idEntidadeAtual = $sessao->idEntidadeAtual;
-        $entidade = $repositorioORM->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
-        $grupo = $entidade->getGrupo();
-        $gruposAbaixo = $grupo->getGrupoPaiFilhoFilhos();
-        $totalGruposFilhos = 0;
-        $totalGruposAtendidos = 0;
-        foreach ($gruposAbaixo as $gpFilho) {
-            $totalGruposAtendido = 0;
-            $grupoFilho = $gpFilho->getGrupoPaiFilhoFilho();
-            $entidadeFilho = $grupoFilho->getEntidadeAtiva();
-            $grupoResponsavel = $grupoFilho->getResponsabilidadesAtivas();
-            if ($grupoResponsavel) {
-                $atendimentosDoGrupo = $grupoFilho->getGrupoAtendimento();
-                foreach ($atendimentosDoGrupo as $ga) {
-                    if ($ga->verificarSeEstaAtivo()) {
-                        $partes = explode("/", $ga->getDia());
-                        if ($partes[1] == $sessao->mesAtendimento) {
-                            $totalGruposAtendido++;
-                        }
-                    }
-                }
-                if ($totalGruposAtendido >= 1) {
-                    $totalGruposAtendidos++;
-                }
-
-                $totalGruposFilhos++;
-            }
-        }
-
-        $progresso = ($totalGruposAtendidos / $totalGruposFilhos) * 100;
-
-        return $progresso . "_" . $totalGruposAtendidos;
     }
 
     /**
@@ -690,127 +593,19 @@ class LancamentoController extends CircuitoController {
     public function mudarAtendimentoAction() {
         $request = $this->getRequest();
         $response = $this->getResponse();
+        $tipoLancar = 1;
+        $tipoRemover = 2;
         if ($request->isPost()) {
             try {
-                $post_data = $request->getPost();
-                $valor = $post_data['tipo'];
-                $idEventoFrequencia = $post_data['idGrupo'];
-
-                $sessao = new Container(Constantes::$NOME_APLICACAO);
                 $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
-                $mes = $sessao->mesAtendimento;
-                $atendimentosFiltrados = 0;
-                $validatedData = $post_data;
-                $timeNow = new DateTime();
-                $grupoAtendimento = new GrupoAtendimento();
-
-                if ($validatedData['tipo'] == 1) {
-                    $grupoAtendimento->setGrupo_id($validatedData['idGrupo']);
-                    $grupoAtendimento->setQuem($sessao->idPessoa);
-                    if ($mes != $timeNow->format('m')) {
-                        $timeNow->sub(new DateInterval("P31D"));
-                    }
-                    $grupoAtendimento->setDia($timeNow->format('Y-m-d'));
-                    $grupoAtendimento->setDataEHoraDeCriacao();
-                    /* Helper Controller */
-
-                    $grupoLancado = $repositorioORM->getGrupoORM()->encontrarPorId($grupoAtendimento->getGrupo_id());
-                    $grupoAtendimento->setGrupo($grupoLancado);
-                    $repositorioORM->getGrupoAtendimentoORM()->persistir($grupoAtendimento);
-                    $grupo = $repositorioORM->getGrupoORM()->encontrarPorId($grupoAtendimento->getGrupo_id());
-                    $atendimentos = $grupo->getGrupoAtendimento();
-                    $atendimentosFiltrados = array();
-                    foreach ($atendimentos as $a) {
-                        if ($a->verificarSeEstaAtivo()) {
-                            $partes = explode("/", $a->getDia());
-                            if ($partes[1] == $mes) {
-                                $atendimentosFiltrados[] = $a;
-                            }
-                        }
-                    }
-                    $numeroAtendimentos = count($atendimentosFiltrados);
-                } else {
-                    $grupo = $repositorioORM->getGrupoORM()->encontrarPorId($validatedData['idGrupo']);
-                    $atendimentosOld = $grupo->getGrupoAtendimento();
-                    $contador = 0;
-                    foreach ($atendimentosOld as $a) {
-
-                        if ($a->verificarSeEstaAtivo()) {
-                            $partes = explode("/", $a->getDia());
-                            if ($partes[1] == $mes) {
-                                if ($contador == 0) {
-                                    $ateParaDesativar = $a;
-                                    $contador++;
-                                }
-                            }
-                        }
-                    }
-                    $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
-                    $atendimentoNaSessao = $repositorioORM->getGrupoAtendimentoORM()->encontrarPorId($ateParaDesativar->getId());
-
-                    /* Persistindo */
-                    /* Inativando o Atendimento */
-                    $atendimentoParaInativar = $atendimentoNaSessao;
-                    $timeNow = new DateTime();
-                    $atendimentoParaInativar->setDataEHoraDeInativacao();
-                    $repositorioORM->getGrupoAtendimentoORM()->persistir($atendimentoParaInativar, false);
-                    $grupoNew = $repositorioORM->getGrupoORM()->encontrarPorId($validatedData['idGrupo']);
-                    $atendimentos = $grupoNew->getGrupoAtendimento();
-                    $atendimentosFiltrados = array();
-                    foreach ($atendimentos as $a) {
-                        if ($a->verificarSeEstaAtivo()) {
-                            $partes = explode("/", $a->getDia());
-                            if ($partes[1] == $mes) {
-                                $atendimentosFiltrados[] = $a;
-                            }
-                        }
-                    }
-                    $numeroAtendimentos = count($atendimentosFiltrados);
-                }
-                $explodeProgresso = explode('_', $this->retornaProgressoUsuarioLogadoCabecalhoAtendimento());
-                $progresso = number_format($explodeProgresso[0], 2, '.', '');
-                if ($progresso > 50 && $progresso < 80) {
-                    $colorBarTotal = "progress-bar-warning";
-                } else if ($progresso >= 80) {
-                    $colorBarTotal = "progress-bar-success";
-                } else {
-                    $colorBarTotal = "progress-bar-danger";
-                }
-
-                /* Cadastrar atendimento no circuito antigo */
-                $idAtendimento = IndexController::buscaIdAtendimentoPorLideres(
-                                $mes, 2017, $grupo->getGrupoCv()->getLider1(), $grupo->getGrupoCv()->getLider2()
-                );
-
-                unset($atendimentoLancado);
-                for ($index = 1; $index <= 5; $index++) {
-                    if ($index <= $numeroAtendimentos) {
-                        $atendimentoLancado[$index] = 'S';
-                    } else {
-                        $atendimentoLancado[$index] = 'N';
-                    }
-                }
-                IndexController::cadastrarAtendimentoPorid($idAtendimento, $atendimentoLancado);
-
-                $response->setContent(Json::encode(
-                                array('response' => 'true',
-                                    'numeroAtendimentos' => $numeroAtendimentos,
-                                    'progresso' => $progresso,
-                                    'corBarraTotal' => $colorBarTotal,
-                                    'totalGruposAtendidos' => $explodeProgresso[1],)));
+                $post_data = $request->getPost();
+                $tipo = $post_data['tipo'];
+                $idGrupo = $post_data['idGrupo'];
             } catch (Exception $exc) {
                 echo $exc->getTraceAsString();
             }
         }
         return $response;
-    }
-
-    /**
-     * Recupera translator
-     * @return translator
-     */
-    public function getTranslator() {
-        return $this->_translator;
     }
 
     /**
