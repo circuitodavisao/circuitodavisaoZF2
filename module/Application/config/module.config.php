@@ -47,7 +47,7 @@ return array(
                     ),
                 ),
             ),
-            'lancamento' => array(
+            'lancamento' => array( 
                 'type' => 'Segment',
                 'options' => array(
                     'route' => '/lancamento[:action[/:id]]',

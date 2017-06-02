@@ -38,7 +38,7 @@ class BotaoSimples extends AbstractHelper {
         if ($this->getTipoBotao() === BotaoSimples::botaoMenorImportancia) {
             $classBotao = 'default';
         }
-        if ($this->getTipoBotao() === BotaoSimples::botaoMenorImportancia) {
+        if ($this->getTipoBotao() === BotaoSimples::botaoSucesso) {
             $classBotao = 'success';
         }
         if ($this->getTipoBotao() === BotaoSimples::botaoPequenoImportante) {

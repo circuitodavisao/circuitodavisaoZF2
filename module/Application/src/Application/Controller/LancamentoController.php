@@ -8,12 +8,9 @@ use Application\Form\CadastrarPessoaForm;
 use Application\Model\Entity\Entidade;
 use Application\Model\Entity\EventoFrequencia;
 use Application\Model\Entity\Grupo;
-use Application\Model\Entity\GrupoAtendimento;
 use Application\Model\Entity\GrupoPessoa;
 use Application\Model\Entity\Pessoa;
 use Application\Model\ORM\RepositorioORM;
-use DateInterval;
-use DateTime;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManager;
 use Exception;
@@ -50,20 +47,6 @@ class LancamentoController extends CircuitoController {
         $sessao = new Container(Constantes::$NOME_APLICACAO);
         $idEntidadeAtual = $sessao->idEntidadeAtual;
         $entidade = $repositorioORM->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
-
-        /* Verificando rota */
-        $pagina = $this->getEvent()->getRouteMatch()->getParam(Constantes::$PAGINA, 1);
-        /* Funcoes */
-        if ($pagina == Constantes::$PAGINA_FUNCOES) {
-            /* Registro de sessão com o id passado na função */
-            $request = $this->getRequest();
-            $post_data = $request->getPost();
-
-            $sessao->idFuncaoLancamento = $post_data[Constantes::$ID];
-            return $this->forward()->dispatch(Constantes::$CONTROLLER_LANCAMENTO, array(
-                        Constantes::$ACTION => Constantes::$PAGINA_FUNCOES,
-            ));
-        }
 
         /* Teste de funcao */
 //        echo "testando funcao de alterarVisitanteParaConsolidacao <br />";
@@ -384,11 +367,6 @@ class LancamentoController extends CircuitoController {
         $layoutJS->setTemplate(Constantes::$TEMPLATE_JS_CADASTRAR_PESSOA);
         $view->addChild($layoutJS, Constantes::$STRING_JS_CADASTRAR_PESSOA);
 
-//        /* Javascript especifico de validação */
-//        $layoutJS2 = new ViewModel();
-//        $layoutJS2->setTemplate(Constantes::$TEMPLATE_JS_CADASTRAR_PESSOA_VALIDACAO);
-//        $view->addChild($layoutJS2, Constantes::$STRING_JS_CADASTRAR_PESSOA_VALIDACAO);
-
         return $view;
     }
 
@@ -494,9 +472,9 @@ class LancamentoController extends CircuitoController {
             /* Helper Controller */
             $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
 
-            $grupoPessoa = $repositorioORM->getGrupoPessoaORM()->encontrarPorId($sessao->idFuncaoLancamento);
+            $grupoPessoa = $repositorioORM->getGrupoPessoaORM()->encontrarPorId($sessao->idSessao);
             $grupoPessoa->setDataEHoraDeInativacao();
-            $repositorioORM->getGrupoPessoaORM()->persistir($grupoPessoa);
+            $repositorioORM->getGrupoPessoaORM()->persistir($grupoPessoa, false);
 
             /* Pondo valores na sessao */
             $sessao->mostrarNotificacao = true;
@@ -507,7 +485,7 @@ class LancamentoController extends CircuitoController {
                         Constantes::$ACTION => Constantes::$ROUTE_INDEX,
             ));
         } catch (Exception $exc) {
-            echo $exc->getTraceAsString();
+            CircuitoController::direcionaErroDeCadastro($exc->getMessage());
         }
     }
 

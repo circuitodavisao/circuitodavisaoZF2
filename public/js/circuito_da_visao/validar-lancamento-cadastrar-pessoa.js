@@ -81,6 +81,7 @@ function validarLancamentoCadastrarPessoa(form) {
       
         divMensagens
                 .addClass('hidden');
+        
         form.submit();
     }
 }
