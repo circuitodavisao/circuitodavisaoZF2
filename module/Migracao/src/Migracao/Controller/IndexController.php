@@ -205,12 +205,12 @@ class IndexController extends CircuitoController {
                         }
                     }
 
-                    $quantidadeLideres = 0;
-                    if ($temCelula) {
-                        $quantidadeLideres = count($grupo->getResponsabilidadesAtivas());
-                    }
-                    $html .= "<br />quantidadeLideres" . $quantidadeLideres;
-                    $this->getRepositorio()->getFatoLiderORM()->criarFatoLider($numeroIdentificador, $quantidadeLideres);
+//                    $quantidadeLideres = 0;
+//                    if ($temCelula) {
+//                        $quantidadeLideres = count($grupo->getResponsabilidadesAtivas());
+//                    }
+//                    $html .= "<br />quantidadeLideres" . $quantidadeLideres;
+//                    $this->getRepositorio()->getFatoLiderORM()->criarFatoLider($numeroIdentificador, $quantidadeLideres);
                 }
             }
         }
