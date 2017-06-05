@@ -3,6 +3,7 @@
 namespace Migracao\Controller;
 
 use Application\Controller\CircuitoController;
+use Application\Controller\Helper\Constantes;
 use Application\Controller\Helper\Funcoes;
 use Application\Model\Entity\Entidade;
 use Application\Model\Entity\Evento;
@@ -155,8 +156,8 @@ class IndexController extends CircuitoController {
     }
 
     /**
-     * Função padrão, traz a tela para login
-     * GET /migracao
+     * Gera os realtorios
+     * GET /migracaoRelatorio
      */
     public function relatorioAction() {
         set_time_limit(0);
@@ -170,7 +171,10 @@ class IndexController extends CircuitoController {
         $mesSelecionado = date('n');
         $anoSelecionado = date('Y');
         $cicloSelecionado = Funcoes::cicloAtual($mesSelecionado, $anoSelecionado);
-        $cicloSelecionado = 4;
+        if ($this->params()->fromRoute(Constantes::$ID)) {
+            $cicloSelecionado = $this->params()->fromRoute(Constantes::$ID);
+        }
+        $html .= "<br /><br /><br />CicloSelecionado: " . $cicloSelecionado;
         $tipoCelula = 2;
 
         $grupos = $this->getRepositorio()->getGrupoORM()->encontrarTodos();
@@ -201,12 +205,12 @@ class IndexController extends CircuitoController {
                         }
                     }
 
-                    $quantidadeLideres = 0;
-                    if ($temCelula) {
-                        $quantidadeLideres = count($grupo->getResponsabilidadesAtivas());
-                    }
-                    $html .= "<br />quantidadeLideres" . $quantidadeLideres;
-                    $this->getRepositorio()->getFatoLiderORM()->criarFatoLider($numeroIdentificador, $quantidadeLideres);
+//                    $quantidadeLideres = 0;
+//                    if ($temCelula) {
+//                        $quantidadeLideres = count($grupo->getResponsabilidadesAtivas());
+//                    }
+//                    $html .= "<br />quantidadeLideres" . $quantidadeLideres;
+//                    $this->getRepositorio()->getFatoLiderORM()->criarFatoLider($numeroIdentificador, $quantidadeLideres);
                 }
             }
         }
