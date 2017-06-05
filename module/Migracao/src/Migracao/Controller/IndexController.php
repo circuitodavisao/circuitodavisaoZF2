@@ -179,7 +179,7 @@ class IndexController extends CircuitoController {
 
         $grupos = $this->getRepositorio()->getGrupoORM()->encontrarTodos();
         foreach ($grupos as $grupo) {
-            if ($grupo->getId() > 7) {
+            if ($grupo->getId() <= 7) {
                 $html .= "<br /><br /><br />Grupo: " . $grupo->getId();
                 if ($grupo->getEntidadeAtiva()) {
                     $html .= "<br />Entidade " . $grupo->getEntidadeAtiva()->infoEntidade();
