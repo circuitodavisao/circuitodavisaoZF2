@@ -34,6 +34,8 @@ class PrincipalController extends CircuitoController {
 
         if ($cicloAtual > 1) {
             $cicloPassado = $cicloAtual - 1;
+            $anoPesquisa = $anoSelecionado;
+            $mesPesquisa = $mesSelecionado;
         } else {
             $anoPesquisa = $anoSelecionado;
             $mesPesquisa = $mesSelecionado - 1;
@@ -50,7 +52,6 @@ class PrincipalController extends CircuitoController {
         $relatorioEquipe = RelatorioController::montaRelatorio($repositorioORM, $numeroIdentificador, $cicloPassado, $mesPesquisa, $anoPesquisa, $tipoRelatorioEquipe);
         $periodoSelecionado = Funcoes::periodoCicloMesAno($cicloPassado, $mesPesquisa, $anoPesquisa);
 
-        echo "anoPesquisa$anoPesquisa mesPesquisa$mesPesquisa cicloPassado$cicloPassado";
         return new ViewModel(
                 array(
             'periodo' => $periodoSelecionado,
