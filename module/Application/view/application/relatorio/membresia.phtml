@@ -116,6 +116,9 @@ $urlBase2 = $urlBase . '/2';
                                 $contagemRanking++;
 
                                 $somaGeralLideres += $relatorioDiscipulo['quantidadeLideres'];
+                                $somaGeral[$dimensaoTipoCulto] += $relatorioDiscipulo['membresiaCulto'];
+                                $somaGeral[$dimensaoTipoArena] += $relatorioDiscipulo['membresiaArena'];
+                                $somaGeral[$dimensaoTipoDomingo] += $relatorioDiscipulo['membresiaDomingo'];
                             }
                         }
 
@@ -201,6 +204,9 @@ $urlBase2 = $urlBase . '/2';
                                 echo '<td>' . RelatorioController::formataNumeroRelatorio($performanceCelulas) . '%</td>';
                                 echo '</tr>';
                                 $contagemRanking++;
+
+                                $somaQuantidadeCelulas += $relatorioDiscipulo['celulaQuantidade'];
+                                $somaQuantidadeCelulasRealizadas += $relatorioDiscipulo['celulaRealizadas'];
                             }
                         }
 
