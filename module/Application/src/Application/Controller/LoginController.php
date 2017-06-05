@@ -114,9 +114,12 @@ class LoginController extends CircuitoController {
             return $this->redirect()->toRoute(Constantes::$ROUTE_LOGIN);
         }
 
+        $usuarioTrim = trim($data[Constantes::$INPUT_USUARIO]);
+        $senhaSTrim = trim($data[Constantes::$INPUT_SENHA]);
+
         $adapter = $this->getDoctrineAuthenticationServicer()->getAdapter();
-        $adapter->setIdentityValue($data[Constantes::$INPUT_USUARIO]);
-        $adapter->setCredentialValue(md5($data[Constantes::$INPUT_SENHA]));
+        $adapter->setIdentityValue($usuarioTrim);
+        $adapter->setCredentialValue(md5($senhaSTrim));
         $authenticationResult = $this->getDoctrineAuthenticationServicer()->authenticate();
         if ($authenticationResult->isValid()) {
             /* Autenticacao valida */
@@ -125,7 +128,7 @@ class LoginController extends CircuitoController {
             $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
 
             /* Verificar se existe pessoa por email informado */
-            $pessoa = $repositorioORM->getPessoaORM()->encontrarPorEmail($data[Constantes::$INPUT_USUARIO]);
+            $pessoa = $repositorioORM->getPessoaORM()->encontrarPorEmail($usuarioTrim);
 
             /* Tem responsabilidade(s) */
             if (count($pessoa->getResponsabilidadesAtivas()) > 0) {
@@ -148,7 +151,7 @@ class LoginController extends CircuitoController {
                 /* Login sem responsabilidade(s) */
                 return $this->forward()->dispatch(Constantes::$CONTROLLER_LOGIN, array(
                             Constantes::$ACTION => Constantes::$ACTION_INDEX,
-                            Constantes::$INPUT_USUARIO => $data[Constantes::$INPUT_USUARIO],
+                            Constantes::$INPUT_USUARIO => $usuarioTrim,
                             Constantes::$TIPO => 1,
                 ));
             }
@@ -157,7 +160,7 @@ class LoginController extends CircuitoController {
             /* Redirecionamento */
             return $this->forward()->dispatch(Constantes::$CONTROLLER_LOGIN, array(
                         Constantes::$ACTION => Constantes::$ACTION_INDEX,
-                        Constantes::$INPUT_USUARIO => $data[Constantes::$INPUT_USUARIO],
+                        Constantes::$INPUT_USUARIO => $usuarioTrim,
                         Constantes::$TIPO => 1,
             ));
         }
