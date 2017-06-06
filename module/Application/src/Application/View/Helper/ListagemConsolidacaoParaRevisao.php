@@ -81,7 +81,7 @@ class ListagemConsolidacaoParaRevisao extends AbstractHelper {
                         }
                     }
                 }   
-                if(($p->getTipo() == 'CO' || $p->getTipo() == 'VI') && $p->getAtivo()){
+                if(($p->getTipo() == 'CO' || $p->getTipo() == 'VI') && $gp->verificarSeEstaAtivo()){
                     if ($adicionar && $adicionarVisitante) {
                         $pessoasGrupo[] = $p;
                     }

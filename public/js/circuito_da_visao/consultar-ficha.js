@@ -22,6 +22,14 @@ function consultarFicha() {
             },
             function (data) {
                 if (data.response) {
+                    var status = parseBoolean(data.status);
+                    if(status){
+                        var nomeRevisionista = data.nomeRevisionista;
+                        var nomeEntidadeLider = data.nomeEntidadeLider;
+                        var idEventoFrequencia = data.idEventoFrequencia;
+                    }else{
+                        
+                    }
                     var numeroAtendimentos = parseInt(data.numeroAtendimentos);
                     var progresso = parseFloat(data.progresso);
                     if (numeroAtendimentos === 0) {
