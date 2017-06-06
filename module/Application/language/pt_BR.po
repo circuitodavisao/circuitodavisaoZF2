@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: ZendSkeletonApplication\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-07-05 22:17-0700\n"
-"PO-Revision-Date: 2017-05-15 16:43-0300\n"
+"PO-Revision-Date: 2017-05-31 13:17-0300\n"
 "Last-Translator: Diogo Melo <dmelo87@gmail.com>\n"
 "Language-Team: ZF Contibutors <zf-devteam@zend.com>\n"
 "Language: pt\n"
@@ -12,7 +12,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Poedit-KeywordsList: translate\n"
 "X-Poedit-Basepath: .\n"
-"X-Generator: Poedit 2.0.1\n"
+"X-Generator: Poedit 2.0.2\n"
 "X-Poedit-SearchPath-0: ..\n"
 
 # ############
@@ -371,6 +371,10 @@ msgstr " CO-LÍDER"
 #: Lancamento/view/lancamento/index.phtml:37
 msgid "Person Registered"
 msgstr "Pessoa Cadastrada"
+
+#: Lancamento/view/lancamento/index.phtml:37
+msgid "Person Inactivated"
+msgstr "Pessoa Inativada"
 
 #: Lancamento/view/lancamento/cadastrar-pessoa.phtml:999
 msgid "Register Person"

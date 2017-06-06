@@ -2,6 +2,8 @@
 
 namespace Application\View\Helper;
 
+use Application\Controller\Helper\Constantes;
+use Application\Model\Helper\FuncoesEntidade;
 use Zend\View\Helper\AbstractHelper;
 
 /**
@@ -20,37 +22,31 @@ class AtendimentoGruposAbaixo extends AbstractHelper {
     }
 
     public function renderHtml() {
-                $html = '';
+        $html = '';
         if (!empty($this->view->gruposAbaixo)) {
             foreach ($this->view->gruposAbaixo as $gpFilho) {
                 $grupoFilho = $gpFilho->getGrupoPaiFilhoFilho();
-                $entidadeFilho = $grupoFilho->getEntidadeAtiva();
                 $grupoResponsavel = $grupoFilho->getResponsabilidadesAtivas();
                 if ($grupoResponsavel) {
                     $pessoas = array();
                     foreach ($grupoResponsavel as $gr) {
                         $p = $gr->getPessoa();
-                        $imagem = 'placeholder.png';
-                        if (!empty($p->getFoto())) {
-                            $imagem = $p->getFoto();
-                        }
                         $pessoas[] = $p;
                     }
                     $informacaoEntidade = '';
                     $informacaoFoto = '';
                     $contagem = 1;
+                    $tamanho = 45;
                     $totalPessoas = count($pessoas);
+
+                    /* Coloca a foto da(s) pessoa(s) */
                     foreach ($pessoas as $p) {
                         if ($contagem == 2) {
                             $informacaoEntidade .= '&nbsp;&nbsp;';
                             $informacaoFoto .= '';
                         }
-                        $imagem = 'placeholder.png';
-                        $tamanho = 40;
-                        if (!empty($p->getFoto())) {
-                            $imagem = $p->getFoto();
-                        }
-                        $informacaoFoto .= '<img src="/img/avatars/' . $imagem . '" class="img-thumbnail" width="' . $tamanho . '%"  height="' . $tamanho . '%" />&nbsp;';
+                        $informacaoFoto .= FuncoesEntidade::tagImgComFotoDaPessoa($p, $tamanho, '%');
+
                         if ($totalPessoas == 1) {
                             $informacaoEntidade .= $p->getNomePrimeiroUltimo();
                         } else {// duas pessoas
@@ -58,65 +54,123 @@ class AtendimentoGruposAbaixo extends AbstractHelper {
                         }
                         $contagem++;
                     }
-                    $totalGruposAtendidoIndividual = 0;
-                    $atendimentosDoGrupoIndividual = $grupoFilho->getGrupoAtendimento();
-                    foreach ($atendimentosDoGrupoIndividual as $ga) {
-                        if ($ga->verificarSeEstaAtivo()) {
-                            $partes = explode("/", $ga->getDia());
-                            if ($partes[1] == $this->view->mes) {
-                                $totalGruposAtendidoIndividual++;
+
+                    $numeroAtendimentos = 0;
+
+                    if ($grupoFilho->getGrupoAtendimento()) {
+                        foreach ($grupoFilho->getGrupoAtendimento() as $ga) {
+                            $temAtendimentoNoMesEAno = $ga->verificaSeTemNesseMesEAno($this->view->mes, $this->view->ano);
+                            if ($temAtendimentoNoMesEAno) {
+                                $numeroAtendimentos++;
                             }
                         }
                     }
-                    $numeroAtendimentos = $totalGruposAtendidoIndividual;
-                    /* percentagem da meta, sendo que a meta é 2 atendimentos por mes */
-                    if ($numeroAtendimentos == 1) {
-                        $valueNow = 50;
-                        $labelProgressBar = "$numeroAtendimentos Atendimento";
-                        $colorBar = "progress-bar-warning";
-                        $disabledMinus = '';
-                    } else if ($numeroAtendimentos >= 2) {
-                        $valueNow = 100;
-                        $labelProgressBar = "$numeroAtendimentos Atendimentos";
-                        $colorBar = "progress-bar-success";
-                        $disabledMinus = '';
-                    } else {
-                        $valueNow = 10;
-                        $labelProgressBar = " 0 Atd.";
-                        $colorBar = "progress-bar-danger";
-                        $disabledMinus = 'disabled';
-                    }
+
+                    /* Linha de atendimento */
                     $html .= '<div class="row mt10">';
-                    $html .= '<div class="col-md-3 col-xs-4" style="padding-right: 0px;">';
-                    $html .= '<span class="" href="#" >';
+
+                    $html .= '<div class="col-md-3 col-xs-3">';
                     $html .= $informacaoFoto;
-                    $html .= '</span>';
                     $html .= '</div>';
-                    $html .= '<div class="col-md-9 col-xs-8" style="padding-left: 2px; padding-right: 2px;">';
-                    $html .= '<div class="row">';
-                    $html .= '<div class="col-md-10 col-sm-10 col-xs-7" style="padding-top: 3px; padding-right: 4px;">';
-                    $html .= '<div class="progress progress-bar-xl" style="margin-bottom: 0px;">';
-                    $html .= '<div id="progressBarAtendimento' . $grupoFilho->getId() . '" class="progress-bar ' . $colorBar . '" role="progressbar" aria-valuenow="' . $valueNow . '" aria-valuemin="0" aria-valuemax="5" style="width: ' . $valueNow . '%;">' . $labelProgressBar . '</div>';
+
+                    $html .= '<div class="col-md-9 col-xs-9">';
+                    $html .= $this->montarBarraDeProgressoAtendimento($grupoFilho->getId(), $numeroAtendimentos, $informacaoEntidade);
                     $html .= '</div>';
-                    $html .= '<span style="padding-top: 0px;">' . $informacaoEntidade . '</span>';
+
                     $html .= '</div>';
-                    $html .= '<div class="col-md-2 col-sm-2 col-xs-5" style="padding-left: 0px; padding-top: 3px; vertical-align: middle;">';
-                    $html .= '<button id="br_' . $grupoFilho->getId() . '" type="button" onclick="mudarAtendimento(' . $grupoFilho->getId() . ', 2);" class="btn btn-md btn-primary ' . $disabledMinus . '" style="padding-top: 0px; padding-bottom: 0px;">';
-                    $html .= '<i class="fa fa-minus" aria-hidden="true"></i>';
-                    $html .= '</button>';
-                    $html .= '&nbsp';
-                    $html .= '<button  id="bl_' . $grupoFilho->getId() . '" type="button" onclick="mudarAtendimento(' . $grupoFilho->getId() . ', 1);" class="btn btn-md btn-primary" style="padding-top: 0px; padding-bottom: 0px;">';
-                    $html .= '<i class="fa fa-plus" aria-hidden="true"></i>';
-                    $html .= '</button>';
-                    $html .= '</div>';
-                    $html .= '</div>';
-                    $html .= '</div>';
-                    $html .= '</div>';
+                    /* Fim Linha de atendimento */
                 }
             }
-        }else{
-             $html .= '<div class="alert alert-warning"><i class="fa fa-warning pr10" aria-hidden="true"></i>&nbsp;Sem Discipulos cadastrados!</div>';
+        } else {
+            $html .= '<div class="alert alert-warning">'
+                    . '<i class="fa fa-warning pr10" aria-hidden="true"></i>&nbsp;Sem Discipulos cadastrados para lan&ccedil;ar atendimento!'
+                    . '</div>';
         }
         return $html;
     }
+
+    public function montarBarraDeProgressoAtendimento($idGrupo, $numeroAtendimentos, $informacaoEntidade) {
+        $html = '';
+
+        /* Coluna 1 - Barra */
+        $html .= '<div class="col-md-10 col-sm-10 col-xs-7">';
+
+        $html .= '<div class="progress progress-bar-xl" style="margin-bottom: 0px;">';
+        $html .= $this->montarBarraDeProgresso($idGrupo, $numeroAtendimentos);
+        $html .= '</div>';
+        $html .= '<span style="padding-top: 0px;">' . $informacaoEntidade . '</span>';
+
+        $html .= '</div>';
+        /* Fim Coluna 1 */
+
+        /* Coluna 2 - Botões */
+        $html .= '<div class="col-md-2 col-sm-2 col-xs-5">';
+
+        $html .= $this->botaoAtendimento($idGrupo, 1);
+        $html .= Constantes::$NBSP;
+        $html .= $this->botaoAtendimento($idGrupo, 2, $numeroAtendimentos);
+
+        $html .= '</div>';
+        /* Fim Coluna 2 */
+
+        return $html;
+    }
+
+    public function montarBarraDeProgresso($idGrupo, $numeroAtendimentos) {
+        $html = '';
+
+        /* percentagem da meta, sendo que a meta é 2 atendimentos por mes */
+        $valor = 10;
+        $colorBar = "progress-bar-danger";
+        $disabledMinus = 'disabled';
+        if ($numeroAtendimentos === 1) {
+            $valor = 50;
+            $colorBar = "progress-bar-warning";
+            $disabledMinus = '';
+        }
+        if ($numeroAtendimentos >= 2) {
+            $valor = 100;
+            $colorBar = "progress-bar-success";
+            $disabledMinus = '';
+        }
+
+        $idDiv = 'progressBarAtendimento' . $idGrupo;
+        $html .= '<div id="' . $idDiv . '" '
+                . 'class="progress-bar ' . $colorBar . '" '
+                . 'role="progressbar" '
+                . 'aria-valuenow="' . $valor . '" '
+                . 'aria-valuemin="0" '
+                . 'aria-valuemax="5" '
+                . 'style="width: ' . $valor . '%;">' .
+                $numeroAtendimentos;
+        $html .= '</div>';
+        return $html;
+    }
+
+    public function botaoAtendimento($idGrupo, $tipoBotao = 1, $numeroAtendimentos = 0) {
+        $html = '';
+        $tipoRemover = 2;
+
+        $iconeDoBotao = 'plus';
+        $tipoDoBotao = BotaoSimples::botaoPequenoImportante;
+        $disabled = '';
+        if ($tipoBotao === $tipoRemover) {
+            $iconeDoBotao = 'minus';
+            $tipoDoBotao = BotaoSimples::botaoPequenoMenosImportante;
+            if ($numeroAtendimentos === 0) {
+                $disabled = 'disabled';
+            }
+        }
+        $stringIcone = '<i class="fa fa-' . $iconeDoBotao . '" aria-hidden="true"></i>';
+
+        $idButton = 'id="botao' . $tipoBotao . '_' . $idGrupo . '"';
+        $funcaoOnClick = $this->view->funcaoOnClick('mudarAtendimento(' . $idGrupo . ', ' . $tipoBotao . ')');
+//        $style = 'style = "padding-top: 0px; padding-bottom: 0px;"';
+        $style = '';
+        $extra = $idButton . ' ' . $funcaoOnClick . ' ' . $style . ' ' . $disabled;
+
+        $html .= $this->view->botaoSimples($stringIcone, $extra, $tipoDoBotao);
+        return $html;
+    }
+
 }

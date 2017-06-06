@@ -20,16 +20,7 @@ class LancamentoControllerFactory extends CircuitoControllerFactory implements F
         $sm = $serviceLocator->getServiceLocator();
         $doctrineORMEntityManager = parent::createServiceORM($sm);
 
-        // Serviço de tradução
-        try {
-            $translator = $sm->get('translator');
-        } catch (ServiceNotCreatedException $e) {
-            $translator = null;
-        } catch (ExtensionNotLoadedException $e) {
-            $translator = null;
-        }
-
-        return new LancamentoController($doctrineORMEntityManager, $translator);
+        return new LancamentoController($doctrineORMEntityManager);
     }
 
 }

@@ -13,7 +13,7 @@ function validarUsuario(form) {
                 .removeClass('hidden')
                 .addClass('alert-danger');
     } else {
-        abrirModalCarregando();
+       
         divMensagens
                 .addClass('hidden');
         form.submit();
@@ -40,7 +40,7 @@ function validarCPFEDataNascimento(form) {
                 .removeClass('hidden')
                 .addClass('alert-danger');
     } else {
-        abrirModalCarregando();
+       
         divMensagens
                 .addClass('hidden');
         form.submit();

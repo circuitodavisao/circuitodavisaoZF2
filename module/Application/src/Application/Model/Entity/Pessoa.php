@@ -318,7 +318,7 @@ class Pessoa extends CircuitoEntity implements InputFilterAwareInterface {
     }
 
     function setNome($nome) {
-        $this->nome = trim($nome);
+        $this->nome = trim(strtoupper($nome));
     }
 
     function setEmail($email) {

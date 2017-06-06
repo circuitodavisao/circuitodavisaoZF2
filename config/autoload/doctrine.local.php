@@ -11,12 +11,13 @@ return array(
             'orm_default' => array(
                 'driverClass' => 'Doctrine\DBAL\Driver\PDOPgSql\Driver',
                 'params' => array(
-                    'host' => '158.69.124.139',
-                    //'host' => 'localhost',
+//                    'host' => '158.69.124.139',
+                    'host' => '172.17.0.2',
                     'port' => '5432',
                     'user' => 'postgres',
                     'password' => 'qwaszx159753',
-                    'dbname' => 'homologacao',
+//                    'dbname' => 'homologacao',
+                    'dbname' => 'postgres',
                     'encoding' => 'utf8',
                 )
             )

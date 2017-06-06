@@ -16,14 +16,14 @@ class FuncoesEntidade {
      * @param Pessoa $p
      * @return string
      */
-    static public function tagImgComFotoDaPessoa(Pessoa $p, $tamanho = 50) {
+    static public function tagImgComFotoDaPessoa(Pessoa $p, $tamanho = 50, $tipoTamanho = 'px') {
         $resposta = '';
 
         $imagem = 'placeholder.png';
         if (!empty($p->getFoto())) {
             $imagem = $p->getFoto();
         }
-        $resposta = '<img src="/img/avatars/' . $imagem . '" class="img-thumbnail" width="' . $tamanho . 'px"  height="' . $tamanho . 'px" />&nbsp;';
+        $resposta = '<img src="/img/avatars/' . $imagem . '" class="img-thumbnail" width="' . $tamanho . $tipoTamanho . '"  height="' . $tamanho . $tipoTamanho . '" />&nbsp;';
 
         return $resposta;
     }

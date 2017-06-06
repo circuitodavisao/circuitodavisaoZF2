@@ -1,8 +1,9 @@
 <?php
 
 use Application\Controller\Helper\Constantes;
+use Zend\Session\Container;
 
-$versao = '?v=1.7';
+$versao = '?v=1.0.6';
 
 echo $this
         ->headScript()
@@ -15,13 +16,29 @@ echo $this
         ->prependFile($this->basePath() . '/js/circuito_da_visao/modal-muitos-cadastros.js' . $versao)
 ;
 echo $this->inlineScript();
+
+$mensagemPNotify = '';
+$nomePessoa = '';
+$sessao = new Container(Constantes::$NOME_APLICACAO);
+$mostrarNotificacao = false;
+if ($sessao->mostrarNotificacao) {
+    $mostrarNotificacao = true;
+    $mensagemPNotify = $this->translate(Constantes::$TRADUCAO_PESSOA_CADASTRADA);
+    if ($sessao->exclusao) {
+        $mensagemPNotify = $this->translate(Constantes::$TRADUCAO_PESSOA_INATIVADA_LANCAMENTO);
+    }
+    if ($sessao->nomePessoa) {
+        $nomePessoa = $sessao->nomePessoa;
+    }
+    $sessao->jaMostreiANotificacao = true;
+}
 ?>
 <script type = "text/javascript">
-<?php if (!empty($this->nomePessoaCadastrada)) { ?>
-        window.onload = modalCadastro;
+<?php if ($mostrarNotificacao) { ?>
+        window.onload = modalPNotify;
 <?php } ?>
 
-    function modalCadastro() {
+    function modalPNotify() {
         var stack_bar_bottom = {
             "dir1": "up",
             "dir2": "right",
@@ -34,8 +51,8 @@ echo $this->inlineScript();
         var noteOpacity = 1;
 
         new PNotify({
-            title: '<?php echo $this->translate(Constantes::$TRADUCAO_PESSOA_CADASTRADA); ?>!',
-            text: '<?php echo $this->nomePessoaCadastrada; ?>',
+            title: '<?php echo $mensagemPNotify; ?>!',
+            text: '<?php echo $nomePessoa; ?>',
             shadow: noteShadow,
             opacity: noteOpacity,
             addclass: 'stack_bar_bottom',

@@ -16,6 +16,11 @@ class BotaoSimples extends AbstractHelper {
     private $extra;
     private $tipoBotao;
 
+    const botaoMenorImportancia = 2;
+    const botaoSucesso = 3;
+    const botaoPequenoImportante = 4;
+    const botaoPequenoMenosImportante = 5;
+
     public function __construct() {
         
     }
@@ -29,14 +34,20 @@ class BotaoSimples extends AbstractHelper {
 
     public function renderHtml() {
         $html = '';
-        $classCor = Constantes::$COR_BOTAO;
-        if($this->getTipoBotao() === 2){
-            $classCor = 'default';
+        $classBotao = Constantes::$COR_BOTAO;
+        if ($this->getTipoBotao() === BotaoSimples::botaoMenorImportancia) {
+            $classBotao = 'default';
         }
-        if($this->getTipoBotao() === 3){
-            $classCor = 'success';
+        if ($this->getTipoBotao() === BotaoSimples::botaoSucesso) {
+            $classBotao = 'success';
         }
-        $html .= '<button type="button" ' . $this->getExtra() . ' class="btn ladda-button btn-' . $classCor . ' pull-right ml10" data-style="zoom-in">';
+        if ($this->getTipoBotao() === BotaoSimples::botaoPequenoImportante) {
+            $classBotao = 'sm btn-' . Constantes::$COR_BOTAO;
+        }
+        if ($this->getTipoBotao() === BotaoSimples::botaoPequenoMenosImportante) {
+            $classBotao = 'sm btn-default';
+        }
+        $html .= '<button type="button" ' . $this->getExtra() . ' class="btn ladda-button btn-' . $classBotao . ' pull-right ml10" data-style="zoom-in">';
         $html .= '<span class="ladda-label">';
         $html .= $this->view->translate($this->getLabel());
         $html .= '</span>';

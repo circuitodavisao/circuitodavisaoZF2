@@ -9,7 +9,7 @@ use Application\Controller\Helper\Constantes;
  */
 $form = $this->CadastrarPessoaForm;
 $form->prepare();
-$form->setAttribute(Constantes::$ACTION, $this->url(Constantes::$ROUTE_LANCAMENTO, array(Constantes::$PAGINA => Constantes::$PAGINA_SALVAR_PESSOA)));
+$form->setAttribute(Constantes::$ACTION, $this->url(Constantes::$ROUTE_LANCAMENTO, array(Constantes::$ACTION => Constantes::$PAGINA_SALVAR_PESSOA)));
 echo $this->form()->openTag($form);
 echo $this->templateFormularioTopo(Constantes::$TRADUCAO_NOVO_CADASTRO_LABEL);
 ?>

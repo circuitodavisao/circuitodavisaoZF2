@@ -37,7 +37,7 @@ class CabecalhoDeEventos extends AbstractHelper {
 
                 $html .= '<th class="text-center">';
                 $html .= '<div style="font-size:9px; width:100%">' . $this->view->translate($eventoNome) . '</div>';
-                $html .= '<div style="font-size:8px; width:100%">' . $diaDaSemanaAjustado . $ge->getEvento()->getHoraFormatoHoraMinuto() . '</div>';
+                $html .= '<div style="font-size:8px; width:100%">' . $this->view->translate($diaDaSemanaAjustado) . $ge->getEvento()->getHoraFormatoHoraMinuto() . '</div>';
 
                 /* Totais */
                 $evento = $ge->getEvento();
@@ -46,11 +46,22 @@ class CabecalhoDeEventos extends AbstractHelper {
                 $eventoFrequencia = $evento->getEventoFrequencia();
                 $total = 0;
                 if (count($eventoFrequencia) > 0) {
+                    $grupoPessoas = $grupo->getGrupoPessoaAtivasEDoMes($mesSelecionado, $anoSelecionado);
+                    $pessoasParaComprar = array();
+                    foreach ($grupo->getResponsabilidadesAtivas() as $gr) {
+                        $pessoasParaComprar[] = $gr->getPessoa()->getId();
+                    }
+                    if ($grupoPessoas) {
+                        foreach ($grupoPessoas as $gp) {
+                            $pessoasParaComprar[] = $gp->getPessoa()->getId();
+                        }
+                    }
                     $criteria = Criteria::create()
                             ->andWhere(Criteria::expr()->eq("ano", $anoSelecionado))
                             ->andWhere(Criteria::expr()->eq("mes", $mesSelecionado))
                             ->andWhere(Criteria::expr()->eq("ciclo", $this->view->cicloSelecionado))
                             ->andWhere(Criteria::expr()->eq("frequencia", "S"))
+                            ->andWhere(Criteria::expr()->in("pessoa_id", $pessoasParaComprar))
                     ;
                     $eventosFiltrados = $eventoFrequencia->matching($criteria);
                     $total = count($eventosFiltrados);

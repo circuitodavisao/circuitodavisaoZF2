@@ -1,121 +1,32 @@
 <?php
 
 use Application\Controller\Helper\Constantes;
+use Application\Controller\RelatorioController;
 
-if ($discipulos) {
-    $dimensaoTipoCulto = 2;
-    $dimensaoTipoArena = 3;
-    $dimensaoTipoDomingo = 4;
+$dimensaoTipoCulto = 2;
+$dimensaoTipoArena = 3;
+$dimensaoTipoDomingo = 4;
 
-    $somaGeral[1] = 0;
-    $somaGeral[2] = 0;
-    $somaGeral[3] = 0;
-    $somaGeral[4] = 0;
-    $somaGeralLideres = 0;
-    $somaQuantidadeCelulas = 0;
-    $somaQuantidadeCelulasRealizadas = 0;
+$somaGeral[1] = 0;
+$somaGeral[2] = 0;
+$somaGeral[3] = 0;
+$somaGeral[4] = 0;
+$somaGeralLideres = 0;
+$somaQuantidadeCelulas = 0;
+$somaQuantidadeCelulasRealizadas = 0;
 
-    /* Ordenacao */
-    unset($relatorio);
-    foreach ($discipulos as $gpFilho) {
-        $grupoFilho = $gpFilho->getGrupoPaiFilhoFilho();
-        $entidadeFilho = $grupoFilho->getEntidadeAtiva();
-
-        $numeroIdentificador = $this->repositorioORM->getFatoCicloORM()->montarNumeroIdentificador($grupoFilho);
-        $tipoRelatorioSomado = 2;
-
-        $relatorioMembresia = $this->repositorioORM->getFatoCicloORM()->montarRelatorioPorNumeroIdentificador
-                ($numeroIdentificador, $this->cicloSelecionado, $this->mesSelecionado, $this->anoSelecionado, $tipoRelatorioSomado);
-        $relatorioCelula = $this->repositorioORM->getFatoCicloORM()->montarRelatorioCelulaPorNumeroIdentificador
-                ($numeroIdentificador, $this->cicloSelecionado, $this->mesSelecionado, $this->anoSelecionado, $tipoRelatorioSomado);
-
-        /* Membresia */
-        $fatoLider = $this->repositorioORM->getFatoLiderORM()->encontrarPorNumeroIdentificador($numeroIdentificador, $tipoRelatorioSomado);
-        $quantidadeLideres = $fatoLider[0]['lideres'];
-        foreach ($relatorioMembresia as $key => $value) {
-            $soma[$key] = 0;
-            foreach ($value as $campo) {
-                foreach ($campo as $keyCampo => $valorCampo) {
-                    $soma[$key] += $valorCampo;
-                    $somaGeral[$key] += $valorCampo;
-                }
-            }
-        }
-        $somaGeralLideres += $quantidadeLideres;
-
-        $relatorio[$gpFilho->getId()]['membresiaCulto'] = $soma[$dimensaoTipoCulto];
-        $relatorio[$gpFilho->getId()]['membresiaArena'] = $soma[$dimensaoTipoArena];
-        $relatorio[$gpFilho->getId()]['membresiaDomingo'] = $soma[$dimensaoTipoDomingo];
-        $relatorio[$gpFilho->getId()]['membresiaMeta'] = Constantes::$META_LIDER * $quantidadeLideres;
-        $relatorio[$gpFilho->getId()]['membresia'] = $soma[$dimensaoTipoCulto] / 3 + $soma[$dimensaoTipoArena] / 2 + $soma[$dimensaoTipoDomingo];
-        $relatorio[$gpFilho->getId()]['membresiaPerfomance'] = $relatorio[$gpFilho->getId()]['membresia'] / $relatorio[$gpFilho->getId()]['membresiaMeta'] * 100;
-        /* Fim Membresia */
-
-        /* Celulas */
-        $quantidadeCelulas = $relatorioCelula[0]['quantidade'];
-        $somaQuantidadeCelulas += $relatorioCelula[0]['quantidade'];
-        $quantidadeCelulasRealizadas = $relatorioCelula[0]['realizadas'];
-        $somaQuantidadeCelulasRealizadas += $relatorioCelula[0]['realizadas'];
-
-        $performanceCelulas = 0;
-        if ($quantidadeCelulas) {
-            $performanceCelulas = $quantidadeCelulasRealizadas / $quantidadeCelulas * 100;
-        }
-        $relatorio[$gpFilho->getId()]['celulaQuantidade'] = $quantidadeCelulas;
-        $relatorio[$gpFilho->getId()]['celulaRealizadas'] = $quantidadeCelulasRealizadas;
-        $relatorio[$gpFilho->getId()]['celulaPerformance'] = $performanceCelulas;
-        /* Fim Celulas */
-    }
-    /* Ordenando membresia */
-    $discipulosMembresia = $discipulos;
-    for ($i = 0; $i < count($discipulosMembresia); $i++) {
-        for ($j = 0; $j < count($discipulosMembresia); $j++) {
-
-            $discipulo1 = $discipulosMembresia[$i];
-            $percentual1 = $relatorio[$discipulo1->getId()]['membresiaPerfomance'];
-
-            $discipulo2 = $discipulosMembresia[$j];
-            $percentual2 = $relatorio[$discipulo2->getId()]['membresiaPerfomance'];
-
-            if ($percentual1 > $percentual2) {
-                $discipulosMembresia[$i] = $discipulo2;
-                $discipulosMembresia[$j] = $discipulo1;
-            }
-        }
-    }
-
-    $discipulosCelulas = $discipulos;
-    for ($i = 0; $i < count($discipulosCelulas); $i++) {
-        for ($j = 0; $j < count($discipulosCelulas); $j++) {
-
-            $discipulo1 = $discipulosCelulas[$i];
-            $percentual1 = $relatorio[$discipulo1->getId()]['celulaPerformance'];
-
-            $discipulo2 = $discipulosCelulas[$j];
-            $percentual2 = $relatorio[$discipulo2->getId()]['celulaPerformance'];
-
-            if ($percentual1 > $percentual2) {
-                $discipulosCelulas[$i] = $discipulo2;
-                $discipulosCelulas[$j] = $discipulo1;
-            }
-        }
-    }
-    /* Fim ordenação */
-}
+$urlBase = $this->url(Constantes::$ROUTE_RELATORIO) . 'Membresia';
+$urlBase2 = $urlBase . '/2';
 ?>
 <div class="mw600 center-block">
-    <div class="panel-body bg-light">    
-        <?php
-        $urlBase = $this->url(Constantes::$ROUTE_RELATORIO) . 'Membresia';
-        $urlBase2 = $urlBase . '/2';
-        ?>
+    <div class="panel-body bg-light">  
         <div class="panel">
             <div class="panel-heading">
                 <ul class="nav panel-tabs-border panel-tabs panel-tabs-left">
-                    <li <?php echo Constantes::$ONCLICK_ABRIR_MODAL . ' ' . $this->abaSelecionada($this->abaSelecionada, 1); ?>>
+                    <li <?php echo $this->abaSelecionada($this->abaSelecionada, 1); ?>>
                         <?php echo '<a href="' . $urlBase . '">Período Atual</a>'; ?>
                     </li>
-                    <li <?php echo Constantes::$ONCLICK_ABRIR_MODAL . ' ' . $this->abaSelecionada($this->abaSelecionada, 2); ?>>
+                    <li <?php echo $this->abaSelecionada($this->abaSelecionada, 2); ?>>
                         <?php echo '<a href="' . $urlBase2 . '">Período Anterior</a>'; ?>
                     </li>
                 </ul>
@@ -147,73 +58,55 @@ if ($discipulos) {
                     </thead>
                     <tbody>
                         <?php
-                        unset($quantidadeLideres);
-                        $quantidadeLideres = $fatoLider[0]['lideres'];
-                        $somaGeralLideres = $fatoLider[0]['lideres'];
-                        foreach ($this->relatorio as $key => $value) {
-                            $soma[$key] = 0;
-                            $somaGeral[$key] = 0;
-                            foreach ($value as $campo) {
-                                foreach ($campo as $keyCampo => $valorCampo) {
-                                    $soma[$key] += $valorCampo;
-                                    $somaGeral[$key] += $valorCampo;
-                                }
-                            }
-                        }
-                        $meta = Constantes::$META_LIDER * $quantidadeLideres;
-                        $membresia = $soma[$dimensaoTipoCulto] / 3 + $soma[$dimensaoTipoArena] / 2 + $soma[$dimensaoTipoDomingo];
-                        $performance = $membresia / $meta * 100;
+                        $somaGeralLideres = $this->relatorio['quantidadeLideres'];
+                        $somaGeral[$dimensaoTipoCulto] = $this->relatorio['membresiaCulto'];
+                        $somaGeral[$dimensaoTipoArena] = $this->relatorio['membresiaArena'];
+                        $somaGeral[$dimensaoTipoDomingo] = $this->relatorio['membresiaDomingo'];
 
                         echo '<tr>';
                         echo '<td class="hidden-xs"></td>';
                         echo '<td>MEU</td>';
-                        echo '<td class="hidden-xs">' . $quantidadeLideres . '</td>';
-                        echo '<td>' . $meta . '</td>';
-                        echo '<td>' . $soma[$dimensaoTipoCulto] . '</td>';
-                        echo '<td>' . $soma[$dimensaoTipoArena] . '</td>';
-                        echo '<td>' . $soma[$dimensaoTipoDomingo] . '</td>';
-                        echo '<td>' . number_format($membresia, 2, ',', '.') . '</td>';
-                        echo '<td>' . number_format($performance, 2, ',', '.') . '%</td>';
+                        echo '<td class="hidden-xs">' . $this->relatorio['quantidadeLideres'] . '</td>';
+                        echo '<td>' . $this->relatorio['membresiaMeta'] . '</td>';
+                        echo '<td>' . $this->relatorio['membresiaCulto'] . '</td>';
+                        echo '<td>' . $this->relatorio['membresiaArena'] . '</td>';
+                        echo '<td>' . $this->relatorio['membresiaDomingo'] . '</td>';
+                        echo '<td>' . RelatorioController::formataNumeroRelatorio($this->relatorio['membresia']) . '</td>';
+                        echo '<td>' . RelatorioController::formataNumeroRelatorio($this->relatorio['membresiaPerformance']) . '%</td>';
                         echo '</tr>';
 
-
-                        if ($discipulosMembresia) {
+                        if ($this->discipulosOrdenadoMembresia) {
                             $contagemRanking = 1;
-                            foreach ($discipulosMembresia as $gpFilho) {
-                                $grupoFilho = $gpFilho->getGrupoPaiFilhoFilho();
+                            foreach ($this->discipulosOrdenadoMembresia as $gpFilhoMembresia) {
+                                $grupoFilho = $gpFilhoMembresia->getGrupoPaiFilhoFilho();
                                 $entidadeFilho = $grupoFilho->getEntidadeAtiva();
 
-                                $soma[$dimensaoTipoCulto] = $relatorio[$gpFilho->getId()]['membresiaCulto'];
-                                $soma[$dimensaoTipoArena] = $relatorio[$gpFilho->getId()]['membresiaArena'];
-                                $soma[$dimensaoTipoDomingo] = $relatorio[$gpFilho->getId()]['membresiaDomingo'];
-                                $meta = $relatorio[$gpFilho->getId()]['membresiaMeta'];
-                                $membresia = $relatorio[$gpFilho->getId()]['membresia'];
-                                $performance = $relatorio[$gpFilho->getId()]['membresiaPerfomance'];
+                                $relatorioDiscipulo = $this->discipulosRelatorio[$grupoFilho->getId()];
 
-                                /* Cor da linha */
-                                $corDaLinha = 'default';
-                                if ($performance >= 0 && $performance < 70) {
-                                    $corDaLinha = 'danger';
-                                }
-                                if ($performance >= 70 && $performance < 85) {
-                                    $corDaLinha = 'warning';
-                                }
-                                if ($performance > 85) {
-                                    $corDaLinha = 'success';
-                                }
+                                $soma[$dimensaoTipoCulto] = $relatorioDiscipulo['membresiaCulto'];
+                                $soma[$dimensaoTipoArena] = $relatorioDiscipulo['membresiaArena'];
+                                $soma[$dimensaoTipoDomingo] = $relatorioDiscipulo['membresiaDomingo'];
+                                $meta = $relatorioDiscipulo['membresiaMeta'];
+                                $membresia = $relatorioDiscipulo['membresia'];
+                                $performance = $relatorioDiscipulo['membresiaPerformance'];
 
-                                echo '<tr class="' . $corDaLinha . '">';
+                                echo '<tr class="' . $relatorioDiscipulo['membresiaPerformanceClass'] . '">';
                                 echo '<td class="hidden-xs">' . $contagemRanking . '°</td>';
                                 echo '<td>' . $entidadeFilho->infoEntidade() . '</td>';
-                                echo '<td class="hidden-xs">' . $quantidadeLideres . '</td>';
+                                echo '<td class="hidden-xs">' . $relatorioDiscipulo['quantidadeLideres'] . '</td>';
                                 echo '<td>' . $meta . '</td>';
                                 echo '<td>' . $soma[$dimensaoTipoCulto] . '</td>';
                                 echo '<td>' . $soma[$dimensaoTipoArena] . '</td>';
                                 echo '<td>' . $soma[$dimensaoTipoDomingo] . '</td>';
-                                echo '<td>' . number_format($membresia, 2, ',', '.') . '</td>';
-                                echo '<td>' . number_format($performance, 2, ',', '.') . '%</td>';
+                                echo '<td>' . RelatorioController::formataNumeroRelatorio($membresia) . '</td>';
+                                echo '<td>' . RelatorioController::formataNumeroRelatorio($performance) . '%</td>';
                                 echo '</tr>';
                                 $contagemRanking++;
+
+                                $somaGeralLideres += $relatorioDiscipulo['quantidadeLideres'];
+                                $somaGeral[$dimensaoTipoCulto] += $relatorioDiscipulo['membresiaCulto'];
+                                $somaGeral[$dimensaoTipoArena] += $relatorioDiscipulo['membresiaArena'];
+                                $somaGeral[$dimensaoTipoDomingo] += $relatorioDiscipulo['membresiaDomingo'];
                             }
                         }
 
@@ -228,96 +121,10 @@ if ($discipulos) {
                         echo '<td>' . $somaGeral[$dimensaoTipoCulto] . '</td>';
                         echo '<td>' . $somaGeral[$dimensaoTipoArena] . '</td>';
                         echo '<td>' . $somaGeral[$dimensaoTipoDomingo] . '</td>';
-                        echo '<td>' . number_format($membresia, 2, ',', '.') . '</td>';
-                        echo '<td>' . number_format($performance, 2, ',', '.') . '%</td>';
+                        echo '<td>' . RelatorioController::formataNumeroRelatorio($membresia) . '</td>';
+                        echo '<td>' . RelatorioController::formataNumeroRelatorio($performance) . '%</td>';
                         echo '</tr>';
                         ?>                     
-                    </tbody>
-                </table>
-                <hr />
-                <table class="text-center table table-condensed bg-light" style="font-size:10px;">
-                    <thead>
-                        <tr>                   
-                            <th colspan="5" class="text-center"  style="font-size:12px;">
-                                Células Realizadas
-                            </th>                    
-                        </tr>
-                        <tr>                   
-                            <th colspan="5" class="text-center"  style="font-size:12px;">
-                                Período <?php echo $this->periodoSelecionado ?>
-                            </th>                    
-                        </tr>
-                        <tr>
-                            <th>#</th>
-                            <th>TIMES</th>
-                            <th>CÉLULAS</th>
-                            <th>REALIZADAS</th>
-                            <th>%</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php
-                        $quantidadeCelulas = $this->relatorioCelula[0]['quantidade'];
-                        $somaQuantidadeCelulas += $this->relatorioCelula[0]['quantidade'];
-                        $quantidadeCelulasRealizadas = $this->relatorioCelula[0]['realizadas'];
-                        $somaQuantidadeCelulasRealizadas += $this->relatorioCelula[0]['realizadas'];
-                        $performanceCelulas = 0;
-                        if ($quantidadeCelulas) {
-                            $performanceCelulas = $quantidadeCelulasRealizadas / $quantidadeCelulas * 100;
-                        }
-                        echo '<tr>';
-                        echo '<td></td>';
-                        echo '<td>MEU</td>';
-                        echo '<td>' . $quantidadeCelulas . '</td>';
-                        echo '<td>' . $quantidadeCelulasRealizadas . '</td>';
-                        echo '<td>' . number_format($performanceCelulas, 2, ',', '.') . '%</td>';
-                        echo '</tr>';
-
-                        if ($discipulosCelulas) {
-                            $contagemRanking = 1;
-                            foreach ($discipulosCelulas as $gpFilho) {
-                                $grupoFilho = $gpFilho->getGrupoPaiFilhoFilho();
-                                $entidadeFilho = $grupoFilho->getEntidadeAtiva();
-
-                                $quantidadeCelulas = $relatorio[$gpFilho->getId()]['celulaQuantidade'];
-                                $quantidadeCelulasRealizadas = $relatorio[$gpFilho->getId()]['celulaRealizadas'];
-                                $performanceCelulas = $relatorio[$gpFilho->getId()]['celulaPerformance'];
-
-                                /* Cor da linha */
-                                $corDaLinha = 'default';
-                                if ($performanceCelulas >= 0 && $performanceCelulas < 70) {
-                                    $corDaLinha = 'danger';
-                                }
-                                if ($performanceCelulas >= 70 && $performanceCelulas < 85) {
-                                    $corDaLinha = 'warning';
-                                }
-                                if ($performanceCelulas > 85) {
-                                    $corDaLinha = 'success';
-                                }
-
-                                echo '<tr class="' . $corDaLinha . '">';
-                                echo '<td>' . $contagemRanking . '°</td>';
-                                echo '<td>' . $entidadeFilho->infoEntidade() . '</td>';
-                                echo '<td>' . $quantidadeCelulas . '</td>';
-                                echo '<td>' . $quantidadeCelulasRealizadas . '</td>';
-                                echo '<td>' . number_format($performanceCelulas, 2, ',', '.') . '%</td>';
-                                echo '</tr>';
-                                $contagemRanking++;
-                            }
-                        }
-
-                        $performanceSomaCelulas = 0;
-                        if ($somaQuantidadeCelulas) {
-                            $performanceSomaCelulas = $somaQuantidadeCelulasRealizadas / $somaQuantidadeCelulas * 100;
-                        }
-                        echo '<tr class="dark">';
-                        echo '<td></td>';
-                        echo '<td>TOTAL</td>';
-                        echo '<td>' . $somaQuantidadeCelulas . '</td>';
-                        echo '<td>' . $somaQuantidadeCelulasRealizadas . '</td>';
-                        echo '<td>' . number_format($performanceSomaCelulas, 2, ',', '.') . '%</td>';
-                        echo '</tr>';
-                        ?>
                     </tbody>
                 </table>
             </div>

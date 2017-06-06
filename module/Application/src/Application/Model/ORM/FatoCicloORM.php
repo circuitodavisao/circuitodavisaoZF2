@@ -3,7 +3,6 @@
 namespace Application\Model\ORM;
 
 use Application\Controller\Helper\Constantes;
-use Application\Controller\Helper\Funcoes;
 use Application\Model\Entity\Dimensao;
 use Application\Model\Entity\FatoCiclo;
 use Application\Model\Entity\Grupo;
@@ -23,7 +22,7 @@ class FatoCicloORM extends CircuitoORM {
      * @param type $mes
      * @param type $ano
      * @param RepositorioORM $repositorioORM
-     * @return type
+     * @return FatoCiclo
      */
     public function encontrarPorNumeroIdentificador($numeroIdentificador, $ciclo, $mes, $ano, RepositorioORM $repositorioORM) {
         $cicloInt = (int) $ciclo;
@@ -61,7 +60,7 @@ class FatoCicloORM extends CircuitoORM {
         $cicloInt = (int) $ciclo;
         $mesInt = (int) $mes;
         $anoInt = (int) $ano;
-        $dimensaoTipoCulto = 2;
+        $dimensaoTipoCelula = 1;
         $dimensaoTipoDomingo = 4;
         $dqlBase = "SELECT "
                 . "SUM(d.lider) lideres, "
@@ -84,7 +83,7 @@ class FatoCicloORM extends CircuitoORM {
                 $dqlAjustadaTipoComparacao = str_replace('#tipoComparacao', 'LIKE', $dqlBase);
                 $numeroIdentificador .= '%';
             }
-            for ($indice = $dimensaoTipoCulto; $indice <= $dimensaoTipoDomingo; $indice++) {
+            for ($indice = $dimensaoTipoCelula; $indice <= $dimensaoTipoDomingo; $indice++) {
                 $dqlAjustada = str_replace('#dimensaoTipo', $indice, $dqlAjustadaTipoComparacao);
                 $result[$indice] = $this->getEntityManager()->createQuery($dqlAjustada)
                         ->setParameter(1, $numeroIdentificador)

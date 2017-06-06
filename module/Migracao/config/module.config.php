@@ -6,7 +6,7 @@
  * Descricao: Arquivo com as configurações globais da aplicação, como modulos ativos, caminhos para eles e arquivos gerais
  */
 
-namespace Application;
+namespace Migracao;
 
 return array(
     # definir e gerenciar controllers
@@ -21,9 +21,10 @@ return array(
             'migracao' => array(
                 'type' => 'Segment',
                 'options' => array(
-                    'route' => '/migracao[:action]',
+                    'route' => '/migracao[:action][/:id]',
                     'constraints' => array(
                         'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                        'id' => '[a-zA-Z0-9]+',
                     ),
                     'defaults' => array(
                         'controller' => 'Migracao\Controller\Index',
@@ -51,6 +52,7 @@ return array(
             'layout/migracao' => __DIR__ . '/../view/layout/layout.phtml',
             'migracao/migracao/index' => __DIR__ . '/../view/migracao/index/index.phtml',
             'migracao/migracao/relatorio' => __DIR__ . '/../view/migracao/index/relatorio.phtml',
+            'migracao/migracao/lideres' => __DIR__ . '/../view/migracao/index/lideres.phtml',
             'error/404' => __DIR__ . '/../../Application/view/error/404.phtml',
             'error/index' => __DIR__ . '/../../Application/view/error/index.phtml',
         ),

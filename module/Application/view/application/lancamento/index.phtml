@@ -2,19 +2,14 @@
 
 use Application\Controller\Helper\Constantes;
 ?>
-<div id="content">
+<div class="mw1000 center-block">
     <div class="row background-mobile">
         <?php echo $this->dadosEntidade(); ?>
     </div>   
-    <div id='panelLancamento' class="panel">
-        <div class="panel-heading">
-            <!-- Abertura de Abas -->
-            <?php echo $this->abas(); ?>
-        </div> 
-        <div class="panel-body center-block mg-left-cv">           
-            <!-- Tabela de lançamento de dados --> 
+    <div id='panelLancamento' class="panel mw1000">
+        <?php echo $this->abasPanel(Constantes::$ROUTE_LANCAMENTO); ?>
+        <div class="panel-body center-block">       
             <?php echo $this->cabecalhoDeCiclos(); ?>
-            <!-- Tabela de lançamento de dados --> 
             <?php echo $this->tabelaLancamento(); ?>
         </div>
         <div class="panel-footer text-center">

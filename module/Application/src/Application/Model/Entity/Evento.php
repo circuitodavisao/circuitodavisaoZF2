@@ -183,7 +183,7 @@ class Evento extends CircuitoEntity implements InputFilterAwareInterface {
 
     /**
      * Verifica se o evento é do tipo célula
-     * @return boolean
+     * @return boolean 
      */
     function verificaSeECelula() {
         $resposta = false;

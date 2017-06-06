@@ -53,14 +53,12 @@ function buscarEndereco() {
     $('#hiddenbairro').val('');
     $('#hiddenlogradouro').val('');
 
-    abrirModalCarregando();
     $.post(
             "/cadastroBuscarEndereco",
             {
                 cep_logradouro: cep_logradouro,
             },
             function (data) {
-
                 $('#endereco').addClass(hidden);
                 $('#resultadoBusca').html('');
                 if (data.quantidadeDeResultados === 0) {
@@ -92,7 +90,6 @@ function buscarEndereco() {
                     $('#divBotaoBuscarCep').addClass(hidden);
                     $('#divBotaoCepContinuar').removeClass(hidden);
                 }
-                fecharModalCarregando();
             }
     , 'json');
 }
