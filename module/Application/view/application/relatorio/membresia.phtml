@@ -75,10 +75,10 @@ $urlBase2 = $urlBase . '/2';
                         echo '<td>' . RelatorioController::formataNumeroRelatorio($this->relatorio['membresiaPerformance']) . '%</td>';
                         echo '</tr>';
 
-                        if ($this->discipulosOrdenadoPorRelatorio[1]) {
+                        if ($this->discipulosOrdenadoMembresia) {
                             $contagemRanking = 1;
-                            foreach ($this->discipulosOrdenadoPorRelatorio[1] as $gpFilho) {
-                                $grupoFilho = $gpFilho->getGrupoPaiFilhoFilho();
+                            foreach ($this->discipulosOrdenadoMembresia as $gpFilhoMembresia) {
+                                $grupoFilho = $gpFilhoMembresia->getGrupoPaiFilhoFilho();
                                 $entidadeFilho = $grupoFilho->getEntidadeAtiva();
 
                                 $relatorioDiscipulo = $this->discipulosRelatorio[$grupoFilho->getId()];
@@ -90,19 +90,7 @@ $urlBase2 = $urlBase . '/2';
                                 $membresia = $relatorioDiscipulo['membresia'];
                                 $performance = $relatorioDiscipulo['membresiaPerformance'];
 
-                                /* Cor da linha */
-                                $corDaLinha = 'default';
-                                if ($performance >= 0 && $performance < 70) {
-                                    $corDaLinha = 'danger';
-                                }
-                                if ($performance >= 70 && $performance < 85) {
-                                    $corDaLinha = 'warning';
-                                }
-                                if ($performance > 85) {
-                                    $corDaLinha = 'success';
-                                }
-
-                                echo '<tr class="' . $corDaLinha . '">';
+                                echo '<tr class="' . $relatorioDiscipulo['membresiaPerformanceClass'] . '">';
                                 echo '<td class="hidden-xs">' . $contagemRanking . '°</td>';
                                 echo '<td>' . $entidadeFilho->infoEntidade() . '</td>';
                                 echo '<td class="hidden-xs">' . $relatorioDiscipulo['quantidadeLideres'] . '</td>';
@@ -137,91 +125,6 @@ $urlBase2 = $urlBase . '/2';
                         echo '<td>' . RelatorioController::formataNumeroRelatorio($performance) . '%</td>';
                         echo '</tr>';
                         ?>                     
-                    </tbody>
-                </table>
-                <hr />
-                <table class="text-center table table-condensed bg-light" style="font-size:10px;">
-                    <thead>
-                        <tr>                   
-                            <th colspan="5" class="text-center"  style="font-size:12px;">
-                                Células Realizadas
-                            </th>                    
-                        </tr>
-                        <tr>                   
-                            <th colspan="5" class="text-center"  style="font-size:12px;">
-                                Período <?php echo $this->periodoSelecionado ?>
-                            </th>                    
-                        </tr>
-                        <tr>
-                            <th>#</th>
-                            <th>TIMES</th>
-                            <th>CÉLULAS</th>
-                            <th>REALIZADAS</th>
-                            <th>%</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php
-                        $somaQuantidadeCelulas += $this->relatorio['celulaQuantidade'];
-                        $somaQuantidadeCelulasRealizadas += $this->relatorio['celulaRealizadas'];
-                        echo '<tr>';
-                        echo '<td></td>';
-                        echo '<td>MEU</td>';
-                        echo '<td>' . $this->relatorio['celulaQuantidade'] . '</td>';
-                        echo '<td>' . $this->relatorio['celulaRealizadas'] . '</td>';
-                        echo '<td>' . RelatorioController::formataNumeroRelatorio($this->relatorio['celulaRealizadasPerformance']) . '%</td>';
-                        echo '</tr>';
-
-                        if ($this->discipulosOrdenadoPorRelatorio[2]) {
-                            $contagemRanking = 1;
-                            foreach ($this->discipulosOrdenadoPorRelatorio[2] as $gpFilho) {
-                                $grupoFilho = $gpFilho->getGrupoPaiFilhoFilho();
-                                $entidadeFilho = $grupoFilho->getEntidadeAtiva();
-
-                                $relatorioDiscipulo = $this->discipulosRelatorio[$grupoFilho->getId()];
-
-                                $quantidadeCelulas = $relatorioDiscipulo['celulaQuantidade'];
-                                $quantidadeCelulasRealizadas = $relatorioDiscipulo['celulaRealizadas'];
-                                $performanceCelulas = $relatorioDiscipulo['celulaRealizadasPerformance'];
-
-                                /* Cor da linha */
-                                $corDaLinha = 'default';
-                                if ($performanceCelulas >= 0 && $performanceCelulas < 70) {
-                                    $corDaLinha = 'danger';
-                                }
-                                if ($performanceCelulas >= 70 && $performanceCelulas < 85) {
-                                    $corDaLinha = 'warning';
-                                }
-                                if ($performanceCelulas > 85) {
-                                    $corDaLinha = 'success';
-                                }
-
-                                echo '<tr class="' . $corDaLinha . '">';
-                                echo '<td>' . $contagemRanking . '°</td>';
-                                echo '<td>' . $entidadeFilho->infoEntidade() . '</td>';
-                                echo '<td>' . $quantidadeCelulas . '</td>';
-                                echo '<td>' . $quantidadeCelulasRealizadas . '</td>';
-                                echo '<td>' . RelatorioController::formataNumeroRelatorio($performanceCelulas) . '%</td>';
-                                echo '</tr>';
-                                $contagemRanking++;
-
-                                $somaQuantidadeCelulas += $relatorioDiscipulo['celulaQuantidade'];
-                                $somaQuantidadeCelulasRealizadas += $relatorioDiscipulo['celulaRealizadas'];
-                            }
-                        }
-
-                        $performanceSomaCelulas = 0;
-                        if ($somaQuantidadeCelulas) {
-                            $performanceSomaCelulas = $somaQuantidadeCelulasRealizadas / $somaQuantidadeCelulas * 100;
-                        }
-                        echo '<tr class="dark">';
-                        echo '<td></td>';
-                        echo '<td>TOTAL</td>';
-                        echo '<td>' . $somaQuantidadeCelulas . '</td>';
-                        echo '<td>' . $somaQuantidadeCelulasRealizadas . '</td>';
-                        echo '<td>' . RelatorioController::formataNumeroRelatorio($performanceSomaCelulas) . '%</td>';
-                        echo '</tr>';
-                        ?>
                     </tbody>
                 </table>
             </div>

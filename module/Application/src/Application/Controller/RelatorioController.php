@@ -20,6 +20,8 @@ class RelatorioController extends CircuitoController {
     const dimensaoTipoCulto = 2;
     const dimensaoTipoArena = 3;
     const dimensaoTipoDomingo = 4;
+    const stringRelatorio = 'relatorio';
+    const stringPeriodoSelecionado = 'periodoSelecionado';
 
     /**
      * Contrutor sobrecarregado com os serviços de ORM
@@ -82,22 +84,88 @@ class RelatorioController extends CircuitoController {
         $periodoSelecionado = Funcoes::periodoCicloMesAno($cicloSelecionado, $mesSelecionado, $anoSelecionado);
 
         $dados = array(
-            'relatorio' => $relatorio,
-            'periodoSelecionado' => $periodoSelecionado,
+            RelatorioController::stringRelatorio => $relatorio,
+            RelatorioController::stringPeriodoSelecionado => $periodoSelecionado,
             Constantes::$ABA_SELECIONADA => $abaSelecionada,
         );
 
-        $discipulos = $grupo->getGrupoPaiFilhoFilhos();
-        if ($discipulos) {
+        if ($grupo->getGrupoPaiFilhoFilhos()) {
             $relatorioDiscipulos = array();
-            foreach ($discipulos as $gpFilho) {
+            foreach ($grupo->getGrupoPaiFilhoFilhos() as $gpFilho) {
                 $grupoFilho = $gpFilho->getGrupoPaiFilhoFilho();
                 $numeroIdentificador = $repositorioORM->getFatoCicloORM()->montarNumeroIdentificador($grupoFilho);
                 $tipoRelatorioSomado = 2;
                 $relatorioDiscipulos[$grupoFilho->getId()] = RelatorioController::montaRelatorio($repositorioORM, $numeroIdentificador, $cicloSelecionado, $mesSelecionado, $anoSelecionado, $tipoRelatorioSomado);
             }
-            $discipulosOrdenadoPorRelatorio = RelatorioController::ordenacaoDiscipulos($discipulos, $relatorioDiscipulos);
-            $dados['discipulosOrdenadoPorRelatorio'] = $discipulosOrdenadoPorRelatorio;
+
+            $discipulosOrdenadoMembresia = RelatorioController::ordenacaoDiscipulos($grupo->getGrupoPaiFilhoFilhos(), $relatorioDiscipulos, 1);
+
+            $dados['discipulosOrdenadoMembresia'] = $discipulosOrdenadoMembresia;
+            $dados['discipulosRelatorio'] = $relatorioDiscipulos;
+        }
+
+        return new ViewModel($dados);
+    }
+
+    /**
+     * Função padrão, traz a tela principal
+     * GET /relatorioCelulasRealizadas
+     */
+    public function celulasRealizadasAction() {
+        $sessao = new Container(Constantes::$NOME_APLICACAO);
+        $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
+        $idEntidadeAtual = $sessao->idEntidadeAtual;
+        $entidade = $repositorioORM->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+        $grupo = $entidade->getGrupo();
+        $numeroIdentificador = $repositorioORM->getFatoCicloORM()->montarNumeroIdentificador($grupo);
+
+        /* Aba selecionada e ciclo */
+        $abaSelecionada = $this->params()->fromRoute(Constantes::$ID);
+        if (empty($abaSelecionada)) {
+            $abaSelecionada = 1;
+        }
+        $mesSelecionado = date('n');
+        $anoSelecionado = date('Y');
+        $cicloSelecionado = Funcoes::cicloAtual($mesSelecionado, $anoSelecionado);
+
+        if ($abaSelecionada == 2) {
+            if ($cicloSelecionado > 1) {
+                $cicloSelecionado--;
+            } else {
+                /* Mês Passado */
+                if ($cicloSelecionado == 1) {
+                    if (date('n') == 1) {
+                        $mesSelecionado = 12;
+                        $anoSelecionado = date('Y') - 1;
+                    } else {
+                        $mesSelecionado = date('n') - 1;
+                        $anoSelecionado = date('Y');
+                    }
+                    $cicloSelecionado = Funcoes::cicloAtual($mesSelecionado, $anoSelecionado);
+                }
+            }
+        }
+        $tipoRelatorioPessoal = 1;
+        $relatorio = RelatorioController::montaRelatorio($repositorioORM, $numeroIdentificador, $cicloSelecionado, $mesSelecionado, $anoSelecionado, $tipoRelatorioPessoal);
+        $periodoSelecionado = Funcoes::periodoCicloMesAno($cicloSelecionado, $mesSelecionado, $anoSelecionado);
+
+        $dados = array(
+            RelatorioController::stringRelatorio => $relatorio,
+            RelatorioController::stringPeriodoSelecionado => $periodoSelecionado,
+            Constantes::$ABA_SELECIONADA => $abaSelecionada,
+        );
+
+        if ($grupo->getGrupoPaiFilhoFilhos()) {
+            $relatorioDiscipulos = array();
+            foreach ($grupo->getGrupoPaiFilhoFilhos() as $gpFilho) {
+                $grupoFilho = $gpFilho->getGrupoPaiFilhoFilho();
+                $numeroIdentificador = $repositorioORM->getFatoCicloORM()->montarNumeroIdentificador($grupoFilho);
+                $tipoRelatorioSomado = 2;
+                $relatorioDiscipulos[$grupoFilho->getId()] = RelatorioController::montaRelatorio($repositorioORM, $numeroIdentificador, $cicloSelecionado, $mesSelecionado, $anoSelecionado, $tipoRelatorioSomado);
+            }
+            $discipulosOrdenadoCelulaRealizadas = RelatorioController::ordenacaoDiscipulos($grupo->getGrupoPaiFilhoFilhos(), $relatorioDiscipulos, 2);
+
+            $dados['discipulosOrdenadoCelulaRealizadas'] = $discipulosOrdenadoCelulaRealizadas;
             $dados['discipulosRelatorio'] = $relatorioDiscipulos;
         }
 
@@ -216,57 +284,41 @@ class RelatorioController extends CircuitoController {
         if ($valor > 70 && $valor <= 85) {
             $class = 'warning';
         }
-        if ($valor > 85 && $valor <= 100) {
+        if ($valor > 85) {
             $class = 'success';
         }
-
         return $class;
     }
 
-    public static function ordenacaoDiscipulos($discipulos, $relatorio) {
-        /* Ordenacao */
-        $tamanhoArray = count($discipulos);
-        /* Ordenando membresia */
-        $discipulosComRelatorio[1] = $discipulos;
+    public static function ordenacaoDiscipulos($discipulosLocal, $relatorio, $tipo) {
+
+        if ($tipo === 1) {
+            $campo = 'membresiaPerformance';
+        }
+        if ($tipo === 2) {
+            $campo = 'celulaRealizadasPerformance';
+        }
+        $tamanhoArray = count($discipulosLocal);
+
         for ($i = 0; $i < $tamanhoArray; $i++) {
             for ($j = 0; $j < $tamanhoArray; $j++) {
 
-                $discipulo1 = $discipulosComRelatorio[1][$i];
+                $discipulo1 = $discipulosLocal[$i];
                 $grupoFilho1 = $discipulo1->getGrupoPaiFilhoFilho();
-                $percentual1 = $relatorio[$grupoFilho1->getId()]['membresiaPerformance'];
+                $percentual1 = $relatorio[$grupoFilho1->getId()][$campo];
 
-                $discipulo2 = $discipulosComRelatorio[1][$j];
+                $discipulo2 = $discipulosLocal[$j];
                 $grupoFilho2 = $discipulo2->getGrupoPaiFilhoFilho();
-                $percentual2 = $relatorio[$grupoFilho2->getId()]['membresiaPerformance'];
+                $percentual2 = $relatorio[$grupoFilho2->getId()][$campo];
 
                 if ($percentual1 > $percentual2) {
-                    $discipulosComRelatorio[1][$i] = $discipulo2;
-                    $discipulosComRelatorio[1][$j] = $discipulo1;
+                    $aux = $discipulo1;
+                    $discipulosLocal[$i] = $discipulo2;
+                    $discipulosLocal[$j] = $aux;
                 }
             }
         }
-
-        $discipulosComRelatorio[2] = $discipulos;
-        for ($i = 0; $i < $tamanhoArray; $i++) {
-            for ($j = 0; $j < $tamanhoArray; $j++) {
-
-                $discipulo1 = $discipulosComRelatorio[2][$i];
-                $grupoFilho1 = $discipulo1->getGrupoPaiFilhoFilho();
-                $percentual1 = $relatorio[$grupoFilho1->getId()]['celulaPerformance'];
-
-                $discipulo2 = $discipulosComRelatorio[2][$j];
-                $grupoFilho2 = $discipulo2->getGrupoPaiFilhoFilho();
-                $percentual2 = $relatorio[$grupoFilho2->getId()]['celulaPerformance'];
-
-                if ($percentual1 > $percentual2) {
-                    $discipulosComRelatorio[2][$i] = $discipulo2;
-                    $discipulosComRelatorio[2][$j] = $discipulo1;
-                }
-            }
-        }
-        /* Fim ordenação */
-
-        return $discipulosComRelatorio;
+        return $discipulosLocal;
     }
 
 //    public function testeAction() {

@@ -296,7 +296,13 @@ class Menu extends AbstractHelper {
         $html .= '<li>';
         $html .= '<a href="/relatorioMembresia">';
         $html .= '<span class="fa fa-terminal"></span>';
-        $html .= 'Membresia/Células Realizadas';
+        $html .= 'Membresia';
+        $html .= '</a>';
+        $html .= '</li>';
+        $html .= '<li>';
+        $html .= '<a href="/relatorioCelulasRealizadas">';
+        $html .= '<span class="fa fa-terminal"></span>';
+        $html .= 'Células Realizadas';
         $html .= '</a>';
         $html .= '</li>';
         $html .= '<li>';

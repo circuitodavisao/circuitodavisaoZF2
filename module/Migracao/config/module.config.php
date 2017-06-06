@@ -52,6 +52,7 @@ return array(
             'layout/migracao' => __DIR__ . '/../view/layout/layout.phtml',
             'migracao/migracao/index' => __DIR__ . '/../view/migracao/index/index.phtml',
             'migracao/migracao/relatorio' => __DIR__ . '/../view/migracao/index/relatorio.phtml',
+            'migracao/migracao/lideres' => __DIR__ . '/../view/migracao/index/lideres.phtml',
             'error/404' => __DIR__ . '/../../Application/view/error/404.phtml',
             'error/index' => __DIR__ . '/../../Application/view/error/index.phtml',
         ),
