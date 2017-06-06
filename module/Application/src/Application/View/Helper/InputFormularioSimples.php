@@ -15,7 +15,7 @@ class InputFormularioSimples extends AbstractHelper {
     private $input;
     private $tamanhoGrid;
     private $tipoInput;
-
+    private $extra;
     public function __construct() {
         
     }
@@ -31,19 +31,24 @@ class InputFormularioSimples extends AbstractHelper {
      * @param int $tipoInput
      * @return string
      */
-    public function __invoke($label = '', $input = '', $tamanhoGrid = null, $tipoInput = 1) {
+    public function __invoke($label = '', $input = '', $tamanhoGrid = null, $tipoInput = 1, $extra = null) {
         $this->setLabel($label);
         $this->setInput($input);
         $this->setTamanhoGrid($tamanhoGrid);
         $this->setTipoInput($tipoInput);
+        $this->setExtra($extra);
         return $this->renderHtml();
     }
 
     public function renderHtml() {
         $html = '';
         $tamanhoGrid = 12;
+        $extra = '';
         if ($this->getTamanhoGrid()) {
             $tamanhoGrid = $this->getTamanhoGrid();
+        }
+        if($this->getExtra()){
+            $extra = $this->getExtra();
         }
         $html .= '<div class="form-group col-lg-' . $tamanhoGrid . '">';
         if($this->getLabel() != -1){
@@ -97,5 +102,14 @@ class InputFormularioSimples extends AbstractHelper {
         $this->tipoInput = $tipoInput;
         return $this;
     }
+    function getExtra() {
+        return $this->extra;
+    }
+
+    function setExtra($extra) {
+        $this->extra = $extra;
+    }
+
+
 
 }

@@ -5,6 +5,7 @@ namespace Application\Controller;
 use Application\Controller\Helper\Constantes;
 use Application\Controller\Helper\Correios;
 use Application\Controller\Helper\Funcoes;
+use Application\Form\AtivarFichaForm;
 use Application\Form\AtualizarCadastroForm;
 use Application\Form\CadastrarPessoaRevisaoForm;
 use Application\Form\CelulaForm;
@@ -164,6 +165,16 @@ class CadastroController extends CircuitoController {
         if ($pagina == Constantes::$PAGINA_FICHA_REVISAO) {
             return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
                         Constantes::$ACTION => Constantes::$PAGINA_FICHA_REVISAO,
+            ));
+        }
+        if ($pagina == Constantes::$PAGINA_ATIVAR_FICHA_REVISAO) {
+            return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
+                        Constantes::$ACTION => Constantes::$PAGINA_ATIVAR_FICHA_REVISAO,
+            ));
+        }
+        if ($pagina == Constantes::$PAGINA_CONSULTAR_FICHA) {
+            return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
+                        Constantes::$ACTION => Constantes::$PAGINA_CONSULTAR_FICHA,
             ));
         }
         /* Funcoes */
@@ -1316,9 +1327,9 @@ class CadastroController extends CircuitoController {
     public function fichaRevisaoAction() {
         $sessao = new Container(Constantes::$NOME_APLICACAO);
         $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
-        if($sessao->idEventoFrequenciaRevisaoFicha == null || $sessao->idEventoFrequenciaRevisaoFicha == 0){
+        if ($sessao->idEventoFrequenciaRevisaoFicha == null || $sessao->idEventoFrequenciaRevisaoFicha == 0) {
             $idEventoFrequencia = $sessao->idSessao;
-        }else{
+        } else {
             $idEventoFrequencia = $sessao->idEventoFrequenciaRevisaoFicha;
         }
         $eventoFrequencia = $repositorioORM->getEventoFrequenciaORM()->encontrarPorId($idEventoFrequencia);
@@ -1345,7 +1356,7 @@ class CadastroController extends CircuitoController {
             Constantes::$NOME_IGREJA_FICHA_REVISAO => $nomeIgreja,
             Constantes::$STRING_ID_EVENTO_FREQUENCIA => $idEventoFrequencia,
         ));
-        
+
 
 
         /* Javascript especifico */
@@ -1383,47 +1394,22 @@ class CadastroController extends CircuitoController {
 
         return $view;
     }
-    
-    public function ativarFichaRevisaoAction(){
-        $parametro = $this->params()->fromRoute(Constantes::$ID);
-        $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
-        $eventoFrequencia = $repositorioORM->getEventoFrequenciaORM()->encontrarPorId($parametro);
-        $pessoaRevisionista = $eventoFrequencia->getPessoa();
-        $eventoFrequencia->setFrequencia('S');
-        $repositorioORM->getEventoFrequenciaORM()->persistir($eventoFrequencia,false);
-        $idRevisao = $sessao->idRevisao;
-        $eventoRevisao = $repositorioORM->getEventoORM()->encontrarPorId($idRevisao);
-        $grupoPessoaRevisionista = $pessoaRevisionista->getGrupoPessoaAtivo();
-        $grupoLider = $grupoPessoaRevisionista->getGrupo();
-        $nomeEntidadeLider = $grupoLider->getEntidadeAtiva()->infoEntidade();
-        $grupoIgreja = $grupoLider->getGrupoIgreja();
-        $nomeIgreja = $grupoIgreja->getEntidadeAtiva()->infoEntidade();
-        $grupoResponsavel = $grupoLider->getResponsabilidadesAtivas();
-        $pessoas = array();
-        foreach ($grupoResponsavel as $gr) {
-            $p = $gr->getPessoa();
-            $pessoas[] = $p;
-        }
-        
+
+    public function ativarFichaRevisaoAction() {
+
+        $formAtivarFicha = new AtivarFichaForm(Constantes::$FORM_ATIVAR_FICHA, null);
         $view = new ViewModel(array(
-            Constantes::$PESSOA_REVISAO => $pessoaRevisionista,
-            Constantes::$REVISAO_VIEW => $eventoRevisao,
-            Constantes::$PESSOA_LIDER_REVISAO => $pessoas[0],
-            Constantes::$ENTIDADE_REVISAO => $nomeEntidadeLider,
-            Constantes::$NOME_IGREJA_FICHA_REVISAO => $nomeIgreja,
+            Constantes::$FORM_ATIVAR_FICHA => $formAtivarFicha,
         ));
-        
+
         /* Javascript especifico */
         $layoutJS = new ViewModel();
-        $layoutJS->setTemplate(Constantes::$TEMPLATE_JS_FICHA_REVISAO);
-        $view->addChild($layoutJS, Constantes::$STRING_JS_FICHA_REVISAO);
-
-
+        $layoutJS->setTemplate(Constantes::$TEMPLATE_JS_ATIVAR_FICHA);
+        $view->addChild($layoutJS, Constantes::$STRING_JS_ATIVAR_FICHA_REVISAO);
 
         return $view;
-        
     }
-    
+
     public function selecionarFichasAtivasAction() {
         $sessao = new Container(Constantes::$NOME_APLICACAO);
         $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
@@ -1449,4 +1435,46 @@ class CadastroController extends CircuitoController {
 
         return $view;
     }
+
+    public function consultarFichaAction() {
+        $request = $this->getRequest();
+        $response = $this->getResponse();
+        $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
+        if ($request->isPost()) {
+          
+                $post_data = $request->getPost();
+                $idEventoFrequencia = $post_data['idEventoFrequencia'];
+                if($idEventoFrequencia != null || $idEventoFrequencia == 0){
+                $eventoFrequencia = $repositorioORM->getEventoFrequenciaORM()->encontrarPorId($idEventoFrequencia);
+                $pessoaRevisionista = $eventoFrequencia->getPessoa();
+                
+                
+                $grupoPessoaRevisionista = $pessoaRevisionista->getGrupoPessoaAtivo();
+                $grupoLider = $grupoPessoaRevisionista->getGrupo();
+                $nomeEntidadeLider = $grupoLider->getEntidadeAtiva()->infoEntidade();
+                $grupoIgreja = $grupoLider->getGrupoIgreja();
+                $nomeIgreja = $grupoIgreja->getEntidadeAtiva()->infoEntidade();
+                $grupoResponsavel = $grupoLider->getResponsabilidadesAtivas();
+                $pessoas = array();
+                foreach ($grupoResponsavel as $gr) {
+                    $p = $gr->getPessoa();
+                    $pessoas[] = $p;
+                }
+                $response->setContent(Json::encode(
+                                array('response' => 'true',
+                                    'status' => true,
+                                    'nomeRevisionista' => $pessoaRevisionista->getNome(),
+                                    'nomeEntidadeLider' => $nomeEntidadeLider,
+                                    'idEventoFrequencia' => $eventoFrequencia->getId(),
+                                )));
+                }else{
+                    $response->setContent(Json::encode(
+                                array('response' => 'true',
+                                    'status' => false,
+                                )));
+                }
+                return $response;
+        }
+    }
+
 }

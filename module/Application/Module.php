@@ -12,9 +12,8 @@ namespace Application;
 
 use Application\Controller\Helper\Constantes;
 use Application\Model\ORM\RepositorioORM;
-use Application\View\Helper\Abas;
-use Application\View\Helper\AbasAtendimento;
 use Application\View\Helper\AbaSelecionada;
+use Application\View\Helper\AbasPanel;
 use Application\View\Helper\AlertaEnvioRelatorio;
 use Application\View\Helper\AtendimentoGruposAbaixo;
 use Application\View\Helper\AtendimentoGruposAbaixoRelatorio;
@@ -48,13 +47,11 @@ use Application\View\Helper\LinkLogo;
 use Application\View\Helper\ListagemConsolidacaoParaRevisao;
 use Application\View\Helper\ListagemDeEventos;
 use Application\View\Helper\ListagemDePessoasComEventos;
-use Application\View\Helper\ListagemFichasAtivasRevisao;
 use Application\View\Helper\ListagemFichasParaRevisao;
 use Application\View\Helper\ListagemLideresTransferencia;
 use Application\View\Helper\MensagemRelatorioEnviado;
 use Application\View\Helper\Menu;
 use Application\View\Helper\MenuHierarquia;
-use Application\View\Helper\ModalAba;
 use Application\View\Helper\ModalLoader;
 use Application\View\Helper\ModalMuitosCadastros;
 use Application\View\Helper\ModalMuitosEventos;
@@ -132,9 +129,6 @@ class Module {
                 'abaSelecionada' => function($sm) {
                     return new AbaSelecionada();
                 },
-                'ModalAba' => function($sm) {
-                    return new ModalAba();
-                },
                 'cabecalhoDeEventos' => function($sm) {
                     return new CabecalhoDeEventos();
                 },
@@ -143,12 +137,6 @@ class Module {
                 },
                 'listagemConsolidacaoParaRevisao' => function($sm) {
                     return new ListagemConsolidacaoParaRevisao();
-                },
-                'listagemFichasParaRevisao' => function($sm) {
-                    return new ListagemFichasParaRevisao();
-                },
-                'listagemFichasAtivasRevisao' => function($sm) {
-                    return new ListagemFichasAtivasRevisao();
                 },
                 'tabelaLancamento' => function($sm) {
                     return new TabelaLancamento();
@@ -159,8 +147,8 @@ class Module {
                 'modalMuitosEventos' => function($sm) {
                     return new ModalMuitosEventos();
                 },
-                'abas' => function($sm) {
-                    return new Abas();
+                'abasPanel' => function($sm) {
+                    return new AbasPanel();
                 },
                 'mensagemRelatorioEnviado' => function($sm) {
                     return new MensagemRelatorioEnviado();
@@ -219,6 +207,15 @@ class Module {
                 'listagemDeEventos' => function($sm) {
                     return new ListagemDeEventos();
                 },
+                'listagemConsolidacaoParaRevisao' => function($sm) {
+                    return new ListagemConsolidacaoParaRevisao();
+                },
+                'listagemFichasParaRevisao' => function($sm) {
+                    return new ListagemFichasParaRevisao();
+                },
+                'listagemFichasAtivasParaRevisao' => function($sm) {
+                    return new ListagemFichasAtivasParaRevisao();
+                },
                 'inputExtras' => function($sm) {
                     return new InputExtras();
                 },
@@ -270,9 +267,6 @@ class Module {
                 'cabecalhoDeAtendimentos' => function($sm) {
                     return new CabecalhoDeAtendimentos();
                 },
-                'abasAtendimento' => function($sm) {
-                    return new AbasAtendimento();
-                },
                 'informacoesGrupoAtendido' => function ($sm) {
                     return new InformacoesGrupoAtendido();
                 },
@@ -281,7 +275,7 @@ class Module {
                 },
                 'listagemLideresTransferencia' => function ($sm) {
                     return new ListagemLideresTransferencia();
-                }
+                },
             )
         );
     }
@@ -335,7 +329,7 @@ class Module {
             $viewModel->discipulos = $discipulos;
         }
 
-        if (empty($sessao->idEntidadeAtual) || $pessoa->getAtualizar_dados() === 'S' || $e->getRequest()->getUriString() == 'http://158.69.124.139/preSaida' || $e->getRequest()->getUriString() == 'http://158.69.124.139/cadastroFichaRevisao') {
+        if (empty($sessao->idEntidadeAtual) || $pessoa->getAtualizar_dados() === 'S' || $e->getRequest()->getUriString() == 'http://158.69.124.139/preSaida') {
             $viewModel->mostrarMenu = 0;
         }
     }

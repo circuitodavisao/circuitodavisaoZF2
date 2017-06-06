@@ -1,0 +1,10 @@
+<?php
+
+
+$versao = '?v=11.1';
+
+echo $this
+        ->headScript()
+        ->prependFile($this->basePath() . '/js/circuito_da_visao/consultar-ficha.js'.$versao)
+;
+echo $this->inlineScript();
