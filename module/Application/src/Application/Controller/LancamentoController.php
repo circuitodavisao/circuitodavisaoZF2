@@ -332,14 +332,14 @@ class LancamentoController extends CircuitoController {
                 }
                 $repositorioORM->getDimensaoORM()->persistir($dimensaoSelecionada, false);
 
-//                /* Atualizar DW circuito antigo */
-//                $grupoCv = $grupoPassado->getGrupoCv();
-//                IndexController::mudarFrequencia($grupoCv->getNumero_identificador(), $mes, $ano, $tipoCampo, $tipoPessoa, $ciclo, $valorParaSomar);
-//
-//                $repositorioORM->fecharTransacao();
-//                $response->setContent(Json::encode(
-//                                array('response' => 'true',
-//                                    'idEvento' => $evento->getId())));
+                /* Atualizar DW circuito antigo */
+                $grupoCv = $grupoPassado->getGrupoCv();
+                IndexController::mudarFrequencia($grupoCv->getNumero_identificador(), $mes, $ano, $tipoCampo, $tipoPessoa, $ciclo, $valorParaSomar);
+
+                $repositorioORM->fecharTransacao();
+                $response->setContent(Json::encode(
+                                array('response' => 'true',
+                                    'idEvento' => $evento->getId())));
             } catch (Exception $exc) {
                 $repositorioORM->desfazerTransacao();
                 echo $exc->getTraceAsString();
