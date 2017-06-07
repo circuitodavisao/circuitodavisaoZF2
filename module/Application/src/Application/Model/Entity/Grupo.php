@@ -138,6 +138,21 @@ class Grupo extends CircuitoEntity {
     }
 
     /**
+     * Recupera o taotal de grupo atendimentos ativos no mes e ano
+     * @return integer
+     */
+    function totalDeAtendimentos($mes, $ano) {
+        $total = 0;
+        $grupoAtendimentos = $this->getGrupoAtendimento();
+        foreach ($grupoAtendimentos as $grupoAtendimento) {
+            if ($grupoAtendimento->verificaSeTemNesseMesEAno($mes, $ano)) {
+                $total++;
+            }
+        }
+        return $total;
+    }
+
+    /**
      * Recupera as pessoas das responsabilidades ativas
      * @return Pessoa[]
      */

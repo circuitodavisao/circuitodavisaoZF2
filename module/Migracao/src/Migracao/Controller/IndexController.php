@@ -305,22 +305,23 @@ class IndexController extends CircuitoController {
     }
 
     public static function buscaIdAtendimentoPorLideres($mes, $ano, $lider1, $lider2 = null) {
-        $atendimento = null;
+        $idAtendimento = null;
         $sqlAtendimento = "SELECT id
                     FROM
                         ursula_atendimento_ursula
                     WHERE
                         mes = $mes AND ano = $ano AND idLider1 = $lider1";
         $queryAtendimento = mysqli_query(IndexController::pegaConexaoStatica(), $sqlAtendimento);
-        if (mysqli_num_rows($queryAtendimento) > 0) {
-            while ($rowAtendimento = mysqli_fetch_array($queryAtendimento)) {
-                $atendimento = $rowAtendimento['id'];
-            }
-        } else {
+        if (mysqli_num_rows($queryAtendimento) == 0) {
             IndexController::cadastrarVazioAtendimentoPorLideres($mes, $ano, $lider1, $lider2);
+            $queryAtendimento = mysqli_query(IndexController::pegaConexaoStatica(), $sqlAtendimento);
         }
 
-        return $atendimento;
+        while ($rowAtendimento = mysqli_fetch_array($queryAtendimento)) {
+            $idAtendimento = $rowAtendimento['id'];
+        }
+
+        return $idAtendimento;
     }
 
     public static function cadastrarVazioAtendimentoPorLideres($mes, $ano, $lider1, $lider2 = null) {
@@ -333,7 +334,9 @@ class IndexController extends CircuitoController {
         }
 
         $sqlAtendimentoInsert = "INSERT INTO ursula_atendimento_ursula ($campos) VALUES ($stringValues);";
+//        echo "$sqlAtendimentoInsert";
         mysqli_query(IndexController::pegaConexaoStatica(), $sqlAtendimentoInsert);
+        return mysqli_insert_id(IndexController::pegaConexaoStatica());
     }
 
     public static function cadastrarAtendimentoPorid($id, $atendimentoLancado) {
