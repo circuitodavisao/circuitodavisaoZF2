@@ -3,6 +3,7 @@
 namespace Application\View\Helper;
 
 use Application\Controller\Helper\Constantes;
+use Application\Controller\LancamentoController;
 use Zend\View\Helper\AbstractHelper;
 
 /**
@@ -53,23 +54,35 @@ class CabecalhoDeAtendimentos extends AbstractHelper {
             }
 
             /* percentagem da meta, sendo que a meta é 2 atendimentos por mes */
-            if ($progresso > 50 && $progresso < 80) {
-                $colorBarTotal = "progress-bar-warning";
-            } else if ($progresso >= 80) {
-                $colorBarTotal = "progress-bar-success";
-            } else {
-                $colorBarTotal = "progress-bar-danger";
-            }
+            $colorBarTotal = LancamentoController::retornaClassBarradeProgressoPeloValor($progresso);
 
+            $valorBarraFormatada = 0;
+            if ($progresso > 0) {
+                $valorBarraFormatada = number_format($progresso, 2, '.', '');
+            }
             $html .= '<div class="row center-block text-center">';
             $html .= '<div class="section-divider mt30">';
-            $html .= '<span><span id="totalGruposAtendidos">' . $totalGruposAtendidos . ' </span> ' . $this->view->translate('of') . ' <span id="totalGruposFilhos">' . $totalGruposFilhos . '</span> ' . $this->view->translate(Constantes::$TRADUCAO_SUBTITULO_CABECALHO_ATENDIMENTO) . '</span>';
+            $html .= '<span>'
+                    . '<span id="totalGruposAtendidos">' . $totalGruposAtendidos . ' </span> '
+                    . $this->view->translate('of')
+                    . ' <span id="totalGruposFilhos">' . $totalGruposFilhos . '</span> '
+                    . $this->view->translate(Constantes::$TRADUCAO_SUBTITULO_CABECALHO_ATENDIMENTO)
+                    . '</span>';
             $html .= '</div>';
             $html .= '</div>';
             $html .= '<div class="row">';
             $html .= '<div class="col-md-12 col-xs-12">';
             $html .= '<div class="progress progress-bar-xl">';
-            $html .= '<div id="divProgressBar" class="progress-bar ' . $colorBarTotal . '" role="progressbar" aria-valuenow="' . number_format($progresso, 2, '.', '') . '" aria-valuemin="0" aria-valuemax="100" style="width: ' . number_format($progresso, 2, '.', '') . '%;">' . number_format($progresso, 2, '.', '') . '%</div>';
+            $html .= '<div '
+                    . 'id="divProgressBar" '
+                    . 'class="progress-bar ' . $colorBarTotal . '" '
+                    . 'role="progressbar" '
+                    . 'aria-valuenow="' . $valorBarraFormatada . '" '
+                    . 'aria-valuemin="0" '
+                    . 'aria-valuemax="100" '
+                    . 'style="width: ' . $valorBarraFormatada . '%;">'
+                    . $valorBarraFormatada . '%'
+                    . '</div>';
             $html .= '</div>';
             $html .= '</div>';
             $html .= '</div>';

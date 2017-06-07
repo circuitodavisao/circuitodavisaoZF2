@@ -74,7 +74,7 @@ class AtendimentoGruposAbaixo extends AbstractHelper {
                     $html .= '</div>';
 
                     $html .= '<div class="col-md-9 col-xs-9">';
-                    $html .= $this->montarBarraDeProgressoAtendimento($grupoFilho->getId(), $numeroAtendimentos, $informacaoEntidade);
+                    $html .= $this->montarBarraDeProgressoAtendimento($grupoFilho->getId(), $numeroAtendimentos, $informacaoEntidade, $this->view->abaSelecionada);
                     $html .= '</div>';
 
                     $html .= '</div>';
@@ -89,7 +89,7 @@ class AtendimentoGruposAbaixo extends AbstractHelper {
         return $html;
     }
 
-    public function montarBarraDeProgressoAtendimento($idGrupo, $numeroAtendimentos, $informacaoEntidade) {
+    public function montarBarraDeProgressoAtendimento($idGrupo, $numeroAtendimentos, $informacaoEntidade, $abaSelecionada) {
         $html = '';
 
         /* Coluna 1 - Barra */
@@ -106,9 +106,9 @@ class AtendimentoGruposAbaixo extends AbstractHelper {
         /* Coluna 2 - Botões */
         $html .= '<div class="col-md-2 col-sm-2 col-xs-5">';
 
-        $html .= $this->botaoAtendimento($idGrupo, 1);
+        $html .= $this->botaoAtendimento($idGrupo, 1, $abaSelecionada);
         $html .= Constantes::$NBSP;
-        $html .= $this->botaoAtendimento($idGrupo, 2, $numeroAtendimentos);
+        $html .= $this->botaoAtendimento($idGrupo, 2, $abaSelecionada, $numeroAtendimentos);
 
         $html .= '</div>';
         /* Fim Coluna 2 */
@@ -147,7 +147,7 @@ class AtendimentoGruposAbaixo extends AbstractHelper {
         return $html;
     }
 
-    public function botaoAtendimento($idGrupo, $tipoBotao = 1, $numeroAtendimentos = 0) {
+    public function botaoAtendimento($idGrupo, $tipoBotao = 1, $abaSelecionada, $numeroAtendimentos = 0) {
         $html = '';
         $tipoRemover = 2;
 
@@ -164,10 +164,8 @@ class AtendimentoGruposAbaixo extends AbstractHelper {
         $stringIcone = '<i class="fa fa-' . $iconeDoBotao . '" aria-hidden="true"></i>';
 
         $idButton = 'id="botao' . $tipoBotao . '_' . $idGrupo . '"';
-        $funcaoOnClick = $this->view->funcaoOnClick('mudarAtendimento(' . $idGrupo . ', ' . $tipoBotao . ')');
-//        $style = 'style = "padding-top: 0px; padding-bottom: 0px;"';
-        $style = '';
-        $extra = $idButton . ' ' . $funcaoOnClick . ' ' . $style . ' ' . $disabled;
+        $funcaoOnClick = $this->view->funcaoOnClick('mudarAtendimento(' . $idGrupo . ', ' . $tipoBotao . ', ' . $abaSelecionada . ')');
+        $extra = $idButton . ' ' . $funcaoOnClick . ' ' . $disabled;
 
         $html .= $this->view->botaoSimples($stringIcone, $extra, $tipoDoBotao);
         return $html;

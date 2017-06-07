@@ -138,6 +138,21 @@ class Grupo extends CircuitoEntity {
     }
 
     /**
+     * Recupera o taotal de grupo atendimentos ativos no mes e ano
+     * @return integer
+     */
+    function totalDeAtendimentos($mes, $ano) {
+        $total = 0;
+        $grupoAtendimentos = $this->getGrupoAtendimento();
+        foreach ($grupoAtendimentos as $grupoAtendimento) {
+            if ($grupoAtendimento->verificaSeTemNesseMesEAno($mes, $ano)) {
+                $total++;
+            }
+        }
+        return $total;
+    }
+
+    /**
      * Recupera as pessoas das responsabilidades ativas
      * @return Pessoa[]
      */
@@ -285,40 +300,6 @@ class Grupo extends CircuitoEntity {
         }
 
         return $grupoEventos;
-    }
-    /**
-     * Retorna o grupo igreja do Grupo
-     * @return GrupoEvento
-     */
-    function getGrupoIgreja() {
-        $grupoSelecionado = $this;
-        $grupoIgreja = null;
-        if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::SUBEQUIPE) {
-            while ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::SUBEQUIPE ||
-            $grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::EQUIPE) {
-
-                $grupoSelecionado = $grupoSelecionado->getGrupoPaiFilhoPai()->getGrupoPaiFilhoPai();
-                if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::IGREJA) {
-                    break;
-                }
-            }
-            $grupoIgreja = $grupoSelecionado;
-            
-        } else if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::EQUIPE) {
-            while ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::EQUIPE) {
-                $grupoSelecionado = $grupoSelecionado->getGrupoPaiFilhoPai()->getGrupoPaiFilhoPai();
-                if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::IGREJA) {
-                    break;
-                }
-            }
-            $grupoIgreja = $grupoSelecionado;
-        } else if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::IGREJA){
-            $grupoIgreja = $grupoSelecionado->getGrupoEventoAtivosPorTipo(GrupoEvento::REVISAO);
-        } else{
-            $grupoIgreja = null;
-        }
-
-        return $grupoIgreja;
     }
 
     /**

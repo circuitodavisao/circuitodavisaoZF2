@@ -8,6 +8,7 @@ use Application\Form\CadastrarPessoaForm;
 use Application\Model\Entity\Entidade;
 use Application\Model\Entity\EventoFrequencia;
 use Application\Model\Entity\Grupo;
+use Application\Model\Entity\GrupoAtendimento;
 use Application\Model\Entity\GrupoPessoa;
 use Application\Model\Entity\Pessoa;
 use Application\Model\ORM\RepositorioORM;
@@ -331,14 +332,14 @@ class LancamentoController extends CircuitoController {
                 }
                 $repositorioORM->getDimensaoORM()->persistir($dimensaoSelecionada, false);
 
-                /* Atualizar DW circuito antigo */
-                $grupoCv = $grupoPassado->getGrupoCv();
-                IndexController::mudarFrequencia($grupoCv->getNumero_identificador(), $mes, $ano, $tipoCampo, $tipoPessoa, $ciclo, $valorParaSomar);
-
-                $repositorioORM->fecharTransacao();
-                $response->setContent(Json::encode(
-                                array('response' => 'true',
-                                    'idEvento' => $evento->getId())));
+//                /* Atualizar DW circuito antigo */
+//                $grupoCv = $grupoPassado->getGrupoCv();
+//                IndexController::mudarFrequencia($grupoCv->getNumero_identificador(), $mes, $ano, $tipoCampo, $tipoPessoa, $ciclo, $valorParaSomar);
+//
+//                $repositorioORM->fecharTransacao();
+//                $response->setContent(Json::encode(
+//                                array('response' => 'true',
+//                                    'idEvento' => $evento->getId())));
             } catch (Exception $exc) {
                 $repositorioORM->desfazerTransacao();
                 echo $exc->getTraceAsString();
@@ -574,16 +575,119 @@ class LancamentoController extends CircuitoController {
         $tipoLancar = 1;
         $tipoRemover = 2;
         if ($request->isPost()) {
+            $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
             try {
-                $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
+                $repositorioORM->iniciarTransacao();
+
                 $post_data = $request->getPost();
-                $tipo = $post_data['tipo'];
+                $tipo = (int) $post_data['tipo'];
                 $idGrupo = $post_data['idGrupo'];
+                $abaSelecionada = $post_data['abaSelecionada'];
+                $mesSelecionado = Funcoes::mesPorAbaSelecionada($abaSelecionada);
+                $anoSelecionado = Funcoes::anoPorAbaSelecionada($abaSelecionada);
+
+                $grupoAtendimentosFiltrados = array();
+                $grupoLancado = $repositorioORM->getGrupoORM()->encontrarPorId($idGrupo);
+
+                if ($tipo === $tipoLancar) {
+                    $grupoAtendimento = new GrupoAtendimento();
+                    $grupoAtendimento->setDataEHoraDeCriacao();
+                    $grupoAtendimento->setGrupo($grupoLancado);
+                    $repositorioORM->getGrupoAtendimentoORM()->persistir($grupoAtendimento);
+                }
+                if ($tipo === $tipoRemover) {
+                    $grupoAtendimentoParaDesativar = null;
+                    $grupoAtendimentosAtuais = $grupoLancado->getGrupoAtendimento();
+                    $contador = 0;
+                    foreach ($grupoAtendimentosAtuais as $grupoAtendimento) {
+                        if ($grupoAtendimento->verificaSeTemNesseMesEAno($mesSelecionado, $anoSelecionado)) {
+                            if ($contador === 0) {
+                                $grupoAtendimentoParaDesativar = $grupoAtendimento;
+                                break;
+                            }
+                        }
+                    }
+                    if ($grupoAtendimentoParaDesativar) {
+                        $grupoAtendimentoParaDesativar->setDataEHoraDeInativacao();
+                        $repositorioORM->getGrupoAtendimentoORM()->persistir($grupoAtendimentoParaDesativar, false);
+                    }
+                }
+
+                $numeroAtendimentos = $grupoLancado->totalDeAtendimentos($mesSelecionado, $anoSelecionado);
+
+                $explodeProgresso = explode('_', $this->retornaProgressoUsuarioNoMesEAno($repositorioORM, $mesSelecionado, $anoSelecionado));
+                $progresso = number_format($explodeProgresso[0], 2, '.', '');
+                $colorBarTotal = LancamentoController::retornaClassBarradeProgressoPeloValor($progresso);
+
+                /* Cadastrar atendimento no circuito antigo */
+                $idAtendimento = IndexController::buscaIdAtendimentoPorLideres(
+                                $mesSelecionado, $anoSelecionado, $grupoLancado->getGrupoCv()->getLider1(), $grupoLancado->getGrupoCv()->getLider2()
+                );
+
+                unset($atendimentoLancado);
+                for ($index = 1; $index <= 5; $index++) {
+                    if ($index <= $numeroAtendimentos) {
+                        $atendimentoLancado[$index] = 'S';
+                    } else {
+                        $atendimentoLancado[$index] = 'N';
+                    }
+                }
+                IndexController::cadastrarAtendimentoPorid($idAtendimento, $atendimentoLancado);
+
+                $repositorioORM->fecharTransacao();
+                $response->setContent(Json::encode(
+                                array('response' => 'true',
+                                    'numeroAtendimentos' => $numeroAtendimentos,
+                                    'progresso' => $progresso,
+                                    'corBarraTotal' => $colorBarTotal,
+                                    'totalGruposAtendidos' => $explodeProgresso[1],)));
             } catch (Exception $exc) {
+                $repositorioORM->desfazerTransacao();
                 echo $exc->getTraceAsString();
             }
         }
         return $response;
+    }
+
+    public function retornaProgressoUsuarioNoMesEAno($repositorioORM, $mes, $ano) {
+        $grupo = $this->getGrupoSelecionado($repositorioORM);
+        $gruposAbaixo = $grupo->getGrupoPaiFilhoFilhos();
+        $totalGruposFilhosAtivos = 0;
+        $totalGruposAtendidos = 0;
+        foreach ($gruposAbaixo as $gpFilho) {
+            $encontrouAtendimento = false;
+            $grupoFilho = $gpFilho->getGrupoPaiFilhoFilho();
+            $grupoResponsavelAtivos = $grupoFilho->getResponsabilidadesAtivas();
+            if ($grupoResponsavelAtivos) {
+                $atendimentosDoGrupo = $grupoFilho->getGrupoAtendimento();
+                foreach ($atendimentosDoGrupo as $atendimentos) {
+                    if ($atendimentos->verificaSeTemNesseMesEAno($mes, $ano)) {
+                        $encontrouAtendimento = true;
+                    }
+                }
+                if ($encontrouAtendimento) {
+                    $totalGruposAtendidos++;
+                }
+            }
+            if ($grupoFilho->verificarSeEstaAtivo()) {
+                $totalGruposFilhosAtivos++;
+            }
+        }
+        $progresso = ($totalGruposAtendidos / $totalGruposFilhosAtivos) * 100;
+
+        return $progresso . "_" . $totalGruposAtendidos;
+    }
+
+    public static function retornaClassBarradeProgressoPeloValor($valor) {
+        $class = '';
+        if ($valor > 50 && $valor < 80) {
+            $class = "progress-bar-warning";
+        } else if ($valor >= 80) {
+            $class = "progress-bar-success";
+        } else {
+            $class = "progress-bar-danger";
+        }
+        return $class;
     }
 
     /**
@@ -591,10 +695,9 @@ class LancamentoController extends CircuitoController {
      * @param RepositorioORM $repositorioORM
      * @return Grupo
      */
-    private function getGrupoSelecionado($repositorioORM) {
+    public function getGrupoSelecionado($repositorioORM) {
         $sessao = new Container(Constantes::$NOME_APLICACAO);
         $idEntidadeAtual = $sessao->idEntidadeAtual;
-
         $entidade = $repositorioORM->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
         return $entidade->getGrupo();
     }
