@@ -1,32 +1,18 @@
 <?php
 
+use Application\Controller\Helper\Constantes;
+
 /**
  * Nome: atendimento.phtml
  * @author Lucas Filipe de Carvalho Cunha <lucascarvalho.esw@gmail.com>
  * Descricao: Página para mostrar eficiência em atendimentos e a quantidade que cada disicpulo foi atendido.
  */
-use Application\Controller\Helper\Constantes;
-
-$urlBase = $this->url(Constantes::$ROUTE_RELATORIO) . 'Atendimento';
-$urlBase2 = $urlBase . '/2';
 ?>
-<div class="mw1000 center-block p10">
-    <div class="panel-body bg-light"> 
-        <div class="panel">
-            <div class="panel-heading">
-
-                <ul class="nav panel-tabs-border panel-tabs panel-tabs-left">
-                    <li <?php echo $this->abaSelecionada($this->abaSelecionada, 1); ?>>
-                        <?php echo '<a href="' . $urlBase . '">Período Atual</a>'; ?>
-                    </li>
-                    <li <?php echo $this->abaSelecionada($this->abaSelecionada, 2); ?>>
-                        <?php echo '<a href="' . $urlBase2 . '">Período Anterior</a>'; ?>
-                    </li>
-                </ul>
-            </div>
-            <div class="panel-body pn">
-                <?php echo $this->atendimentoGruposAbaixoRelatorio(); ?>  
-            </div>
+<div class="mw1000 center-block">
+    <div class="panel">      
+        <?php echo $this->abasPanel(Constantes::$ROUTE_LANCAMENTO, 'Atendimento'); ?>
+        <div class="panel-body center-block">
+            <?php echo $this->atendimentoGruposAbaixo(2); ?>  
         </div>
     </div>
 </div>

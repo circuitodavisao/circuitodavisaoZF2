@@ -13,42 +13,43 @@ use Zend\View\Helper\AbstractHelper;
  */
 class CabecalhoDeAtendimentos extends AbstractHelper {
 
+    protected $gruposAbaixo;
+
     public function __construct() {
         
     }
 
-    public function __invoke() {
+    public function __invoke($gruposAbaixo) {
+        $this->setGruposAbaixo($gruposAbaixo);
         return $this->renderHtml();
     }
 
     public function renderHtml() {
         $html = '';
-        $totalGruposFilhos = 0;
+        $totalGruposFilhosAtivos = 0;
         $totalGruposAtendidos = 0;
-        if ($this->view->gruposAbaixo) {
-            foreach ($this->view->gruposAbaixo as $gpFilho) {
+
+        if ($this->getGruposAbaixo()) {
+            foreach ($this->getGruposAbaixo() as $gpFilho) {
                 $totalGruposAtendido = 0;
                 $grupoFilho = $gpFilho->getGrupoPaiFilhoFilho();
-                $grupoResponsavel = $grupoFilho->getResponsabilidadesAtivas();
-                if ($grupoResponsavel) {
-                    $atendimentosDoGrupo = $grupoFilho->getGrupoAtendimento();
-                    foreach ($atendimentosDoGrupo as $ga) {
-                        if ($ga->verificarSeEstaAtivo()) {
-                            if ($ga->getData_criacaoMes() == $this->view->mes) {
-                                $totalGruposAtendido++;
-                            }
+                if ($grupoFilho->getResponsabilidadesAtivas()) {
+                    foreach ($grupoFilho->getGrupoAtendimento() as $grupoAtendimento) {
+                        if ($grupoAtendimento->verificaSeTemNesseMesEAno(
+                                        $this->view->mes, $this->view->ano)) {
+                            $totalGruposAtendido++;
                         }
                     }
                     if ($totalGruposAtendido >= 1) {
                         $totalGruposAtendidos++;
                     }
 
-                    $totalGruposFilhos++;
+                    $totalGruposFilhosAtivos++;
                 }
             }
 
-            if ($totalGruposFilhos) {
-                $progresso = ($totalGruposAtendidos / $totalGruposFilhos) * 100;
+            if ($totalGruposFilhosAtivos) {
+                $progresso = ($totalGruposAtendidos / $totalGruposFilhosAtivos) * 100;
             } else {
                 $progresso = 0;
             }
@@ -60,18 +61,10 @@ class CabecalhoDeAtendimentos extends AbstractHelper {
             if ($progresso > 0) {
                 $valorBarraFormatada = number_format($progresso, 2, '.', '');
             }
-            $html .= '<div class="row center-block text-center">';
-            $html .= '<div class="section-divider mt30">';
-            $html .= '<span>'
-                    . '<span id="totalGruposAtendidos">' . $totalGruposAtendidos . ' </span> '
+            $html .= '<span id="totalGruposAtendidos">' . $totalGruposAtendidos . ' </span> '
                     . $this->view->translate('of')
-                    . ' <span id="totalGruposFilhos">' . $totalGruposFilhos . '</span> '
-                    . $this->view->translate(Constantes::$TRADUCAO_SUBTITULO_CABECALHO_ATENDIMENTO)
-                    . '</span>';
-            $html .= '</div>';
-            $html .= '</div>';
-            $html .= '<div class="row">';
-            $html .= '<div class="col-md-12 col-xs-12">';
+                    . ' <span id="totalGruposFilhos">' . $totalGruposFilhosAtivos . '</span> '
+                    . '<span class="hidden-xs">' . $this->view->translate(Constantes::$TRADUCAO_SUBTITULO_CABECALHO_ATENDIMENTO) . '</span>';
             $html .= '<div class="progress progress-bar-xl">';
             $html .= '<div '
                     . 'id="divProgressBar" '
@@ -84,10 +77,16 @@ class CabecalhoDeAtendimentos extends AbstractHelper {
                     . $valorBarraFormatada . '%'
                     . '</div>';
             $html .= '</div>';
-            $html .= '</div>';
-            $html .= '</div>';
         }
         return $html;
+    }
+
+    function getGruposAbaixo() {
+        return $this->gruposAbaixo;
+    }
+
+    function setGruposAbaixo($gruposAbaixo) {
+        $this->gruposAbaixo = $gruposAbaixo;
     }
 
 }
