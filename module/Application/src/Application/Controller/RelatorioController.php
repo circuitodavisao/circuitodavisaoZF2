@@ -119,15 +119,21 @@ class RelatorioController extends CircuitoController {
         }
 
         /* Aba selecionada e ciclo */
-        $abaSelecionada = $this->params()->fromRoute(Constantes::$ID);
-        if (empty($abaSelecionada)) {
+        $parametro = $this->params()->fromRoute(Constantes::$ID);
+        if (empty($parametro)) {
             $abaSelecionada = 1;
+        } else {
+            $abaSelecionada = $parametro;
         }
+        $mesSelecionado = Funcoes::mesPorAbaSelecionada($abaSelecionada);
+        $anoSelecionado = Funcoes::anoPorAbaSelecionada($abaSelecionada);
 
         $view = new ViewModel(array(
             Constantes::$GRUPOS_ABAIXO => $gruposAbaixo,
             Constantes::$VALIDACAO_NESSE_MES => $validacaoNesseMes,
             Constantes::$ABA_SELECIONADA => $abaSelecionada,
+            Constantes::$MES => $mesSelecionado,
+            Constantes::$ANO => $anoSelecionado,
         ));
 
         /* Javascript especifico */

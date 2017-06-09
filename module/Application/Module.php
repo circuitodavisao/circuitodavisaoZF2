@@ -16,7 +16,6 @@ use Application\View\Helper\AbaSelecionada;
 use Application\View\Helper\AbasPanel;
 use Application\View\Helper\AlertaEnvioRelatorio;
 use Application\View\Helper\AtendimentoGruposAbaixo;
-use Application\View\Helper\AtendimentoGruposAbaixoRelatorio;
 use Application\View\Helper\AtendimentosDoGrupo;
 use Application\View\Helper\BarraDeProgresso;
 use Application\View\Helper\BlocoDiv;
@@ -260,9 +259,6 @@ class Module {
                 },
                 'atendimentoGruposAbaixo' => function($sm) {
                     return new AtendimentoGruposAbaixo();
-                },
-                'atendimentoGruposAbaixoRelatorio' => function($sm) {
-                    return new AtendimentoGruposAbaixoRelatorio();
                 },
                 'cabecalhoDeAtendimentos' => function($sm) {
                     return new CabecalhoDeAtendimentos();

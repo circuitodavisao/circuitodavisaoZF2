@@ -227,7 +227,7 @@ $urlBase2 = $urlBase . '/2';
                         if ($this->tipoRelatorio == 3) {
                             echo '<td class = "hidden-xs">' . $somaGeralLideres . '</td>';
                             echo '<td>' . $meta . '</td>';
-                            echo '<td>' . RelatorioController::formataNumeroRelatorio($somaGeral[$dimensaoTipoCelula]) . '</td>';
+                            echo '<td>' . $somaGeral[$dimensaoTipoCelula] . '</td>';
                             echo '<td>' . RelatorioController::formataNumeroRelatorio($performance) . '%</td>';
                         }
                         echo '</tr>';
