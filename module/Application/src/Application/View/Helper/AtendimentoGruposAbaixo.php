@@ -34,11 +34,15 @@ class AtendimentoGruposAbaixo extends AbstractHelper {
 
     public function renderHtml() {
         $html = '';
-        if (!empty($this->view->gruposAbaixo)) {
+
+        $mensagemAlertaSemDiscipulos = '<div class="alert alert-warning">'
+                . '<i class="fa fa-warning pr10" aria-hidden="true"></i>&nbsp;Sem Discipulos cadastrados!'
+                . '</div>';
+        if (count($this->view->gruposAbaixo) > 0) {
             foreach ($this->view->gruposAbaixo as $gpFilho) {
-                
+
                 $grupoFilho = $gpFilho->getGrupoPaiFilhoFilho();
-                if ($grupoFilho->getResponsabilidadesAtivas()) {                   
+                if ($grupoFilho->getResponsabilidadesAtivas()) {
 
                     $html .= $this->montarLinhaDeAtendimento($grupoFilho);
 
@@ -55,17 +59,13 @@ class AtendimentoGruposAbaixo extends AbstractHelper {
                             }
                             $html .= '</div>';
                         } else {
-                            $html .= '<div class="alert alert-sm alert-warning">'
-                                    . '<i class="fa fa-warning pr10" aria-hidden="true"></i>&nbsp;Sem Discipulos cadastrados!'
-                                    . '</div>';
+                            $html .= $mensagemAlertaSemDiscipulos;
                         }
                     }
                 }
             }
         } else {
-            $html .= '<div class="alert alert-warning">'
-                    . '<i class="fa fa-warning pr10" aria-hidden="true"></i>&nbsp;Sem Discipulos cadastrados para lan&ccedil;ar atendimento!'
-                    . '</div>';
+            $html .= $mensagemAlertaSemDiscipulos;
         }
         return $html;
     }
