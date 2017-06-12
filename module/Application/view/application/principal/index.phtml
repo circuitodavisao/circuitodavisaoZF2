@@ -5,6 +5,34 @@ use Application\Controller\RelatorioController;
 <div class="mw800 center-block">
     <div class="panel">
         <div class="panel-heading">
+            <span class="panel-title">Supervis&atilde;o</span>
+        </div>
+        <div class="panel-body pn">
+            <table class="table mbn tc-med-1 tc-bold-last">
+                <tr>
+                    <td colspan="3" class="text-center">Celulas N&atilde;o Realizadas</td>
+                </tr>
+
+                <?php
+                if ($this->discipulos) {
+                    foreach ($this->discipulos as $gpFilho) {
+                        $grupoFilho = $gpFilho->getGrupoPaiFilhoFilho();
+                        $nomeLideres = $grupoFilho->getNomeLideresAtivos();
+
+                        $relatorioDiscipulo = $this->discipulosRelatorio[$grupoFilho->getId()];
+                        echo '<tr>';
+                        echo '<td>' . $nomeLideres . '</td>';
+                        echo '<td>' . $relatorioDiscipulo['celulaQuantidade'] . '</td>';
+                        echo '<td>' . $relatorioDiscipulo['celulaRealizadas'] . '</td>';
+                        echo '</tr>';
+                    }
+                }
+                ?>
+            </table>
+        </div>
+    </div>
+    <div class="panel">
+        <div class="panel-heading">
             <span class="panel-title">Pessoal - <?php echo $this->periodo; ?></span>
         </div>
         <div class="panel-body pn">

@@ -279,7 +279,7 @@ class Menu extends AbstractHelper {
         $html .= '<li>';
 //        $html .= '<a href="#">';
         $html .= '<a href="/lancamentoAtendimento">';
-        $html .= '<span class="fa fa-terminal"></span>';
+        $html .= '<span class="fa fa-users"></span>';
         $html .= 'Atendimento';
         $html .= '</a>';
         $html .= '</li>';

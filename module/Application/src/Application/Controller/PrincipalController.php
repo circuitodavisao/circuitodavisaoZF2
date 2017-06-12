@@ -52,12 +52,33 @@ class PrincipalController extends CircuitoController {
         $relatorioEquipe = RelatorioController::montaRelatorio($repositorioORM, $numeroIdentificador, $cicloPassado, $mesPesquisa, $anoPesquisa, $tipoRelatorioEquipe);
         $periodoSelecionado = Funcoes::periodoCicloMesAno($cicloPassado, $mesPesquisa, $anoPesquisa);
 
-        return new ViewModel(
-                array(
-            'periodo' => $periodoSelecionado,
-            'relatorio' => $relatorio,
-            'relatorioEquipe' => $relatorioEquipe,
-        ));
+        $dados = array();
+        $dados['periodo'] = $periodoSelecionado;
+        $dados['relatorio'] = $relatorio;
+        $dados['relatorioEquipe'] = $relatorioEquipe;
+
+        $grupoPaiFilhoFilhos = $grupo->getGrupoPaiFilhoFilhos();
+        if ($grupoPaiFilhoFilhos) {
+            $relatorioDiscipulos = array();
+            $discipulos = array();
+            foreach ($grupoPaiFilhoFilhos as $gpFilho) {
+                $grupoFilho = $gpFilho->getGrupoPaiFilhoFilho();
+                $numeroIdentificador = $repositorioORM->getFatoCicloORM()->montarNumeroIdentificador($grupoFilho);
+                $tipoRelatorioSomado = 2;
+                $relatorio = RelatorioController::montaRelatorio($repositorioORM, $numeroIdentificador, $cicloPassado, $mesSelecionado, $anoSelecionado, $tipoRelatorioSomado);
+                if ($relatorio['celulaQuantidade'] > 0) {
+                    if ($relatorio['celulaRealizadas'] < $relatorio['celulaQuantidade']) {
+                        $relatorioDiscipulos[$grupoFilho->getId()] = $relatorio;
+                        $discipulos[] = $gpFilho;
+                    }
+                }
+            }
+
+            $dados['discipulos'] = $discipulos;
+            $dados['discipulosRelatorio'] = $relatorioDiscipulos;
+        }
+
+        return new ViewModel($dados);
     }
 
 }
