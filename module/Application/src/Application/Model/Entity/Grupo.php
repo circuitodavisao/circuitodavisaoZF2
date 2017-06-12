@@ -138,7 +138,7 @@ class Grupo extends CircuitoEntity {
     }
 
     /**
-     * Recupera o taotal de grupo atendimentos ativos no mes e ano
+     * Recupera o total de grupo atendimentos ativos no mes e ano
      * @return integer
      */
     function totalDeAtendimentos($mes, $ano) {
@@ -150,6 +150,43 @@ class Grupo extends CircuitoEntity {
             }
         }
         return $total;
+    }
+
+    /**
+     * Recupera o total de grupo atendimentos ativos no mes e ano
+     * @return integer
+     */
+    public static function relatorioDeAtendimentosAbaixo($discipulos, $mes, $ano) {
+        $relatorio = array();
+        $totalGruposFilhosAtivos = 0;
+        $totalGruposAtendidos = 0;
+        foreach ($discipulos as $gpFilho) {
+            $totalGruposAtendido = 0;
+            $grupoFilho = $gpFilho->getGrupoPaiFilhoFilho();
+            if ($grupoFilho->getResponsabilidadesAtivas()) {
+                foreach ($grupoFilho->getGrupoAtendimento() as $grupoAtendimento) {
+                    if ($grupoAtendimento->verificaSeTemNesseMesEAno(
+                                    $mes, $ano)) {
+                        $totalGruposAtendido++;
+                    }
+                }
+                if ($totalGruposAtendido >= 1) {
+                    $totalGruposAtendidos++;
+                }
+
+                $totalGruposFilhosAtivos++;
+            }
+        }
+
+        if ($totalGruposFilhosAtivos) {
+            $progresso = ($totalGruposAtendidos / $totalGruposFilhosAtivos) * 100;
+        } else {
+            $progresso = 0;
+        }
+        $relatorio[0] = $progresso;
+        $relatorio[1] = $totalGruposAtendidos;
+        $relatorio[2] = $totalGruposFilhosAtivos;
+        return $relatorio;
     }
 
     /**
