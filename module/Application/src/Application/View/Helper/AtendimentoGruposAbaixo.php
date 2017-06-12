@@ -38,9 +38,11 @@ class AtendimentoGruposAbaixo extends AbstractHelper {
         $mensagemAlertaSemDiscipulos = '<div class="alert alert-warning">'
                 . '<i class="fa fa-warning pr10" aria-hidden="true"></i>&nbsp;Sem Discipulos cadastrados!'
                 . '</div>';
+
         if (count($this->view->gruposAbaixo) > 0) {
             foreach ($this->view->gruposAbaixo as $gpFilho) {
 
+                $html .= '<hr/>';
                 $grupoFilho = $gpFilho->getGrupoPaiFilhoFilho();
                 if ($grupoFilho->getResponsabilidadesAtivas()) {
 
@@ -77,10 +79,10 @@ class AtendimentoGruposAbaixo extends AbstractHelper {
         $tamanhoColuna2 = 'col-md-2 col-sm-2 col-xs-5';
         if ($this->getTipo() === AtendimentoGruposAbaixo::tipoRelatorio && !$discipuloAbaixo) {
             $tamanhoColuna1 = 'col-md-10 col-sm-10 col-xs-10';
-            $tamanhoColuna2 = 'col-md-2 col-sm-2 col-xs-2';
+            $tamanhoColuna2 = 'col-md-2 col-sm-2 col-xs-2" style="padding-left: 0px; padding-top: 20px; vertical-align: middle;';
         }
         if ($discipuloAbaixo) {
-            $tamanhoColuna1 = 'col-md-12 col-sm-12 col-xs-12';
+            $tamanhoColuna1 = 'col-md-10 col-sm-10 col-xs-10';
             $tamanhoColuna2 = '';
         }
 
@@ -187,12 +189,12 @@ class AtendimentoGruposAbaixo extends AbstractHelper {
         }
         if ($tipoBotao === AtendimentoGruposAbaixo::tipoRelatorioVer) {
             $iconeDoBotao = 'eye';
-            $tipoDoBotao = BotaoSimples::botaoPequenoImportante;
+            $tipoDoBotao = BotaoSimples::botaoMuitoPequenoImportante;
             $disabled = '';
         }
         if ($tipoBotao === AtendimentoGruposAbaixo::tipoRelatorioEsconder) {
             $iconeDoBotao = 'eye-slash';
-            $tipoDoBotao = BotaoSimples::botaoPequenoImportante;
+            $tipoDoBotao = BotaoSimples::botaoMuitoPequenoMenosImportante;
             $disabled = '';
         }
         $stringIcone = '<i class="fa fa-' . $iconeDoBotao . '" aria-hidden="true"></i>';
@@ -221,7 +223,7 @@ class AtendimentoGruposAbaixo extends AbstractHelper {
 
         $html .= '<div class="row mt10">';
 
-        $html .= '<div class="col-md-3 col-xs-3">';
+        $html .= '<div class="col-md-3 hidden-xs">';
         if (!$discipuloAbaixo) {
             $quantidadeDeLideres = 1;
             foreach ($grupo->getResponsabilidadesAtivas() as $grupoResponsavel) {
@@ -235,7 +237,7 @@ class AtendimentoGruposAbaixo extends AbstractHelper {
         }
         $html .= '</div>';
 
-        $html .= '<div class="col-md-9 col-xs-9">';
+        $html .= '<div class="col-md-9 col-xs-12">';
         $html .= $this->montarBarraDeProgressoAtendimento($grupo, $discipuloAbaixo);
         $html .= '</div>';
 

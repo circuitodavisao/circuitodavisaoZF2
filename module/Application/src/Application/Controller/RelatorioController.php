@@ -4,6 +4,7 @@ namespace Application\Controller;
 
 use Application\Controller\Helper\Constantes;
 use Application\Controller\Helper\Funcoes;
+use Application\Model\Entity\Grupo;
 use Application\Model\ORM\RepositorioORM;
 use Doctrine\ORM\EntityManager;
 use Zend\Session\Container;
@@ -111,6 +112,8 @@ class RelatorioController extends CircuitoController {
         $grupo = $entidade->getGrupo();
         $gruposAbaixo = $grupo->getGrupoPaiFilhoFilhos();
 
+
+
         /* Verificar data de cadastro da responsabilidade */
         $validacaoNesseMes = 0;
         $grupoResponsavel = $grupo->getGrupoResponsavelAtivo();
@@ -128,8 +131,10 @@ class RelatorioController extends CircuitoController {
         $mesSelecionado = Funcoes::mesPorAbaSelecionada($abaSelecionada);
         $anoSelecionado = Funcoes::anoPorAbaSelecionada($abaSelecionada);
 
+        $discipulos = RelatorioController::ordenacaoDiscipulosAtendimento($gruposAbaixo, $mesSelecionado, $anoSelecionado);
+
         $view = new ViewModel(array(
-            Constantes::$GRUPOS_ABAIXO => $gruposAbaixo,
+            Constantes::$GRUPOS_ABAIXO => $discipulos,
             Constantes::$VALIDACAO_NESSE_MES => $validacaoNesseMes,
             Constantes::$ABA_SELECIONADA => $abaSelecionada,
             Constantes::$MES => $mesSelecionado,
@@ -259,6 +264,46 @@ class RelatorioController extends CircuitoController {
             }
         }
         return $discipulosLocal;
+    }
+
+    public static function ordenacaoDiscipulosAtendimento($discipulos, $mes, $ano) {
+        $relatorioDicipulo = array();
+        foreach ($discipulos as $gpFilho) {
+            $grupoFilho = $gpFilho->getGrupoPaiFilhoFilho();
+
+            if (count($grupoFilho) > 0) {
+                $relatorioAtendimento = Grupo::relatorioDeAtendimentosAbaixo(
+                                $grupoFilho->getGrupoPaiFilhoFilhos(), $mes, $ano
+                );
+            } else {
+                $relatorioAtendimento[0] = -2;
+            }
+            
+            $relatorioDicipulo[$grupoFilho->getId()] = $relatorioAtendimento[0];
+        }
+
+        $tamanhoArray = count($discipulos);
+
+        for ($i = 0; $i < $tamanhoArray; $i++) {
+            for ($j = 0; $j < $tamanhoArray; $j++) {
+
+                $discipulo1 = $discipulos[$i];
+                $grupoFilho1 = $discipulo1->getGrupoPaiFilhoFilho();
+                $percentual1 = $relatorioDicipulo[$grupoFilho1->getId()];
+
+                $discipulo2 = $discipulos[$j];
+                $grupoFilho2 = $discipulo2->getGrupoPaiFilhoFilho();
+                $percentual2 = $relatorioDicipulo[$grupoFilho2->getId()];
+
+                if ($percentual1 > $percentual2) {
+                    $aux = $discipulo1;
+                    $discipulos[$i] = $discipulo2;
+                    $discipulos[$j] = $aux;
+                }
+            }
+        }
+
+        return $discipulos;
     }
 
 //    public function testeAction() {

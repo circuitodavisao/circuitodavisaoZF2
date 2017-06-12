@@ -4,8 +4,8 @@ use Application\Controller\RelatorioController;
 ?>
 <div class="mw800 center-block">
     <div class="panel">
-        <div class="panel-heading">
-            <span class="panel-title">Supervis&atilde;o</span>
+        <div class="panel-heading text-center">
+            <span class="panel-title"><b>Supervis&atilde;o</b></span>
         </div>
         <div class="panel-body pn">
             <table class="table mbn tc-med-1 tc-bold-last">
@@ -22,8 +22,8 @@ use Application\Controller\RelatorioController;
                         $relatorioDiscipulo = $this->discipulosRelatorio[$grupoFilho->getId()];
                         echo '<tr>';
                         echo '<td>' . $nomeLideres . '</td>';
-                        echo '<td>' . $relatorioDiscipulo['celulaQuantidade'] . '</td>';
-                        echo '<td>' . $relatorioDiscipulo['celulaRealizadas'] . '</td>';
+                        echo '<td class="text-right">' . $relatorioDiscipulo['celulaQuantidade'] . '</td>';
+                        echo '<td class="text-left">' . $relatorioDiscipulo['celulaRealizadas'] . '</td>';
                         echo '</tr>';
                     }
                 }
