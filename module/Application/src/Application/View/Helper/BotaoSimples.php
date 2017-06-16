@@ -20,6 +20,8 @@ class BotaoSimples extends AbstractHelper {
     const botaoSucesso = 3;
     const botaoPequenoImportante = 4;
     const botaoPequenoMenosImportante = 5;
+    const botaoMuitoPequenoImportante = 6;
+    const botaoMuitoPequenoMenosImportante = 7;
 
     public function __construct() {
         
@@ -46,6 +48,12 @@ class BotaoSimples extends AbstractHelper {
         }
         if ($this->getTipoBotao() === BotaoSimples::botaoPequenoMenosImportante) {
             $classBotao = 'sm btn-default';
+        }
+        if ($this->getTipoBotao() === BotaoSimples::botaoMuitoPequenoImportante) {
+            $classBotao = 'xs btn-' . Constantes::$COR_BOTAO;
+        }
+        if ($this->getTipoBotao() === BotaoSimples::botaoMuitoPequenoMenosImportante) {
+            $classBotao = 'xs btn-default';
         }
         $html .= '<button type="button" ' . $this->getExtra() . ' class="btn ladda-button btn-' . $classBotao . ' pull-right ml10" data-style="zoom-in">';
         $html .= '<span class="ladda-label">';

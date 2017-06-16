@@ -1441,39 +1441,90 @@ class CadastroController extends CircuitoController {
         $response = $this->getResponse();
         $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
         if ($request->isPost()) {
-          
-                $post_data = $request->getPost();
-                $idEventoFrequencia = $post_data['idEventoFrequencia'];
-                if($idEventoFrequencia != null || $idEventoFrequencia == 0){
-                $eventoFrequencia = $repositorioORM->getEventoFrequenciaORM()->encontrarPorId($idEventoFrequencia);
-                $pessoaRevisionista = $eventoFrequencia->getPessoa();
-                
-                
-                $grupoPessoaRevisionista = $pessoaRevisionista->getGrupoPessoaAtivo();
-                $grupoLider = $grupoPessoaRevisionista->getGrupo();
-                $nomeEntidadeLider = $grupoLider->getEntidadeAtiva()->infoEntidade();
-                $grupoIgreja = $grupoLider->getGrupoIgreja();
-                $nomeIgreja = $grupoIgreja->getEntidadeAtiva()->infoEntidade();
-                $grupoResponsavel = $grupoLider->getResponsabilidadesAtivas();
-                $pessoas = array();
-                foreach ($grupoResponsavel as $gr) {
-                    $p = $gr->getPessoa();
-                    $pessoas[] = $p;
+
+            $post_data = $request->getPost();
+            $idEventoFrequencia = $post_data['idEventoFrequencia'];
+            if ($idEventoFrequencia != null || $idEventoFrequencia == 0) {
+
+                $eventoFrequencia = $repositorioORM->getEventoFrequenciaORM()->encontrarPorIdEventoFrequencia($idEventoFrequencia); 
+                if (!$eventoFrequencia) {
+                    $response->setContent(Json::encode(
+                                    array('response' => 'true',
+                                        'status' => 0,
+                                        
+                    )));
+                } else {
+
+                    $pessoaRevisionista = $eventoFrequencia->getPessoa(); 
+
+
+                    $grupoPessoaRevisionista = $pessoaRevisionista->getGrupoPessoaAtivo();
+                    $grupoLider = $grupoPessoaRevisionista->getGrupo();
+                    $nomeEntidadeLider = $grupoLider->getEntidadeAtiva()->infoEntidade();
+                    $grupoIgreja = $grupoLider->getGrupoIgreja();
+                    $nomeIgreja = $grupoIgreja->getEntidadeAtiva()->infoEntidade();
+                    $grupoResponsavel = $grupoLider->getResponsabilidadesAtivas();
+                    $pessoas = array();
+                    foreach ($grupoResponsavel as $gr) {
+                        $p = $gr->getPessoa();
+                        $pessoas[] = $p;
+                    }
+                    $response->setContent(Json::encode(
+                                    array('response' => 'true',
+                                        'status' => 1,
+                                        'nomeRevisionista' => $pessoaRevisionista->getNome(),
+                                        'nomeEntidadeLider' => $nomeEntidadeLider,
+                                        'idEventoFrequencia' => $eventoFrequencia->getId(),
+                    )));
                 }
+            } else {
                 $response->setContent(Json::encode(
                                 array('response' => 'true',
-                                    'status' => true,
-                                    'nomeRevisionista' => $pessoaRevisionista->getNome(),
-                                    'nomeEntidadeLider' => $nomeEntidadeLider,
-                                    'idEventoFrequencia' => $eventoFrequencia->getId(),
-                                )));
-                }else{
-                    $response->setContent(Json::encode(
+                                    'status' => 0,
+                )));
+            }
+            return $response;
+        }
+    }
+    
+    public function ativarReservaRevisao(){
+        $request = $this->getRequest();
+        $response = $this->getResponse();
+        $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
+        if ($request->isPost()) {
+
+            $post_data = $request->getPost();
+            $idEventoFrequencia = $post_data['codigo'];
+            
+            /* Resgatando Dados do EventoFrequencia e do Revisionista */
+            $eventoFrequencia = $repositorioORM->getEventoFrequenciaORM()->encontrarPorIdEventoFrequencia($idEventoFrequencia); 
+            $pessoaRevisionista = $eventoFrequencia->getPessoa();
+            $grupoRevisionista = $pessoaRevisionista->getGrupo();
+            
+            /* Inativando o grupo pessoa de consolidação do revisionista */
+            $grupoPessoaRevisionistaAntigo = $pessoaRevisionista->getGrupoPessoaAtivo();
+            $grupoPessoaRevisionistaAntigo->setDataEHoraDeInativacao();
+            $repositorioORM->getGrupoPessoaORM()->persistir($grupoPessoaRevisionistaAntigo, false);
+            
+            /* Todo revisionista é Membro. Id = 3 */
+            $grupoPessoaTipo = $repositorioORM->getGrupoPessoaTipoORM()->encontrarPorId(3);
+            
+            /* Bloco para inclusao da pessoa no grupo Pessoa como membro. */
+            $grupoPessoa = new GrupoPessoa();
+            $grupoPessoa->setPessoa($pessoaRevisionista);
+            $grupoPessoa->setGrupo($grupo);
+            $grupoPessoa->setGrupoPessoaTipo($grupoPessoaTipo);
+            $repositorioORM->getGrupoPessoaORM()->persistir($grupoPessoa);
+            
+            /* Ativando a presença do Revisionista  */
+            if($grupoPessoa){
+            } else {
+                $response->setContent(Json::encode(
                                 array('response' => 'true',
-                                    'status' => false,
-                                )));
-                }
-                return $response;
+                                    'status' => 0,
+                )));
+            }
+            return $response;
         }
     }
 

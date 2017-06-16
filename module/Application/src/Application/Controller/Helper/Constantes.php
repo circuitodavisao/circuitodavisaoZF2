@@ -753,6 +753,9 @@ class Constantes {
     public static $LISTAGEM_CELULAS = 'celulas';
     public static $CELULA = 'celula';
     public static $EVENTO = 'evento';
+    
+    /* IDS DOS TIPOS DE EVENTOS */ 
+    public static $ID_TIPO_REVISAO = 3; 
 
     /* Fim Cadastro */
 }
