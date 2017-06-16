@@ -47,7 +47,7 @@ return array(
                     ),
                 ),
             ),
-            'lancamento' => array( 
+            'lancamento' => array(
                 'type' => 'Segment',
                 'options' => array(
                     'route' => '/lancamento[:action[/:id]]',
@@ -77,9 +77,10 @@ return array(
             'relatorio' => array(
                 'type' => 'Segment',
                 'options' => array(
-                    'route' => '/relatorio[:action[/:id]]',
+                    'route' => '/relatorio[:action][/:tipoRelatorio][/:id]',
                     'constraints' => array(
                         'action' => '[a-zA-Z]+',
+                        'tipoRelatorio' => '[1-4]',
                         'id' => '[1-2]',
                     ),
                     'defaults' => array(
@@ -163,7 +164,7 @@ return array(
             'cadastro/cadastro/revisao' => __DIR__ . '/../view/cadastro/revisao.phtml',
             'cadastro/cadastro/transferencia' => __DIR__ . '/../view/cadastro/transferencia.phtml',
             'cadastro/cadastro/selecionar_revisionista' => __DIR__ . '/../view/cadastro/selecionar_revisionista.phtml',
-            'relatorio/relatorio/membresia' => __DIR__ . '/../view/relatorio/membresia.phtml',
+            'relatorio/relatorio/index' => __DIR__ . '/../view/relatorio/index.phtml',
             'relatorio/relatorio/atendimento' => __DIR__ . '/../view/relatorio/atendimento.phtml',
             'instituto/instituto/index' => __DIR__ . '/../view/instituto/index.phtml',
             'layout/layout-js-relatorio-atendimento' => __DIR__ . '/../view/layout/layout-js-relatorio-atendimento.phtml',

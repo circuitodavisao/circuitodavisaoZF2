@@ -138,6 +138,58 @@ class Grupo extends CircuitoEntity {
     }
 
     /**
+     * Recupera o total de grupo atendimentos ativos no mes e ano
+     * @return integer
+     */
+    function totalDeAtendimentos($mes, $ano) {
+        $total = 0;
+        $grupoAtendimentos = $this->getGrupoAtendimento();
+        foreach ($grupoAtendimentos as $grupoAtendimento) {
+            if ($grupoAtendimento->verificaSeTemNesseMesEAno($mes, $ano)) {
+                $total++;
+            }
+        }
+        return $total;
+    }
+
+    /**
+     * Recupera o total de grupo atendimentos ativos no mes e ano
+     * @return integer
+     */
+    public static function relatorioDeAtendimentosAbaixo($discipulos, $mes, $ano) {
+        $relatorio = array();
+        $totalGruposFilhosAtivos = 0;
+        $totalGruposAtendidos = 0;
+        foreach ($discipulos as $gpFilho) {
+            $totalGruposAtendido = 0;
+            $grupoFilho = $gpFilho->getGrupoPaiFilhoFilho();
+            if ($grupoFilho->getResponsabilidadesAtivas()) {
+                foreach ($grupoFilho->getGrupoAtendimento() as $grupoAtendimento) {
+                    if ($grupoAtendimento->verificaSeTemNesseMesEAno(
+                                    $mes, $ano)) {
+                        $totalGruposAtendido++;
+                    }
+                }
+                if ($totalGruposAtendido >= 1) {
+                    $totalGruposAtendidos++;
+                }
+
+                $totalGruposFilhosAtivos++;
+            }
+        }
+
+        if ($totalGruposFilhosAtivos) {
+            $progresso = ($totalGruposAtendidos / $totalGruposFilhosAtivos) * 100;
+        } else {
+            $progresso = 0;
+        }
+        $relatorio[0] = $progresso;
+        $relatorio[1] = $totalGruposAtendidos;
+        $relatorio[2] = $totalGruposFilhosAtivos;
+        return $relatorio;
+    }
+
+    /**
      * Recupera as pessoas das responsabilidades ativas
      * @return Pessoa[]
      */
@@ -285,40 +337,6 @@ class Grupo extends CircuitoEntity {
         }
 
         return $grupoEventos;
-    }
-    /**
-     * Retorna o grupo igreja do Grupo
-     * @return GrupoEvento
-     */
-    function getGrupoIgreja() {
-        $grupoSelecionado = $this;
-        $grupoIgreja = null;
-        if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::SUBEQUIPE) {
-            while ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::SUBEQUIPE ||
-            $grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::EQUIPE) {
-
-                $grupoSelecionado = $grupoSelecionado->getGrupoPaiFilhoPai()->getGrupoPaiFilhoPai();
-                if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::IGREJA) {
-                    break;
-                }
-            }
-            $grupoIgreja = $grupoSelecionado;
-            
-        } else if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::EQUIPE) {
-            while ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::EQUIPE) {
-                $grupoSelecionado = $grupoSelecionado->getGrupoPaiFilhoPai()->getGrupoPaiFilhoPai();
-                if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::IGREJA) {
-                    break;
-                }
-            }
-            $grupoIgreja = $grupoSelecionado;
-        } else if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::IGREJA){
-            $grupoIgreja = $grupoSelecionado->getGrupoEventoAtivosPorTipo(GrupoEvento::REVISAO);
-        } else{
-            $grupoIgreja = null;
-        }
-
-        return $grupoIgreja;
     }
 
     /**
