@@ -72,7 +72,7 @@ class CircuitoEntity {
     function getHora_criacao() {
         return $this->hora_criacao;
     }
-  
+
     /**
      * Retorna a data de inativacao
      * @return DateTime
@@ -133,6 +133,14 @@ class CircuitoEntity {
         if ($this->getData_inativacao()) {
             return $this->getData_inativacao()->format('d');
         }
+    }
+
+    function getData_criacaoStringPadraoBrasil() {
+        return $this->getData_criacao()->format('d/m/Y');
+    }
+
+    function getData_criacaoStringPadraoBanco() {
+        return $this->getData_criacao()->format('Y-m-d');
     }
 
 }

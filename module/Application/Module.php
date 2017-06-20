@@ -28,6 +28,7 @@ use Application\View\Helper\BotaoSubmitDesabilitado;
 use Application\View\Helper\CabecalhoDeAtendimentos;
 use Application\View\Helper\CabecalhoDeCiclos;
 use Application\View\Helper\CabecalhoDeEventos;
+use Application\View\Helper\CabecalhoDePeriodos;
 use Application\View\Helper\DadosEntidade;
 use Application\View\Helper\DivCapslock;
 use Application\View\Helper\DivJavaScript;
@@ -46,6 +47,7 @@ use Application\View\Helper\LinkLogo;
 use Application\View\Helper\ListagemConsolidacaoParaRevisao;
 use Application\View\Helper\ListagemDeEventos;
 use Application\View\Helper\ListagemDePessoasComEventos;
+use Application\View\Helper\ListagemFichasParaRevisao;
 use Application\View\Helper\ListagemLideresTransferencia;
 use Application\View\Helper\MensagemRelatorioEnviado;
 use Application\View\Helper\Menu;
@@ -205,6 +207,15 @@ class Module {
                 'listagemDeEventos' => function($sm) {
                     return new ListagemDeEventos();
                 },
+                'listagemConsolidacaoParaRevisao' => function($sm) {
+                    return new ListagemConsolidacaoParaRevisao();
+                },
+                'listagemFichasParaRevisao' => function($sm) {
+                    return new ListagemFichasParaRevisao();
+                },
+                'listagemFichasAtivasParaRevisao' => function($sm) {
+                    return new ListagemFichasAtivasParaRevisao();
+                },
                 'inputExtras' => function($sm) {
                     return new InputExtras();
                 },
@@ -261,6 +272,9 @@ class Module {
                 },
                 'listagemLideresTransferencia' => function ($sm) {
                     return new ListagemLideresTransferencia();
+                },
+                'cabecalhoDePeriodos' => function ($sm) {
+                    return new CabecalhoDePeriodos();
                 },
             )
         );

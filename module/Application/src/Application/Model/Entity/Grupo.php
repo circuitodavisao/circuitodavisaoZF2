@@ -8,6 +8,8 @@ namespace Application\Model\Entity;
  * Descricao: Entidade anotada da tabela grupo
  */
 use Application\Controller\Helper\Funcoes;
+use DateTime;
+use DateTimeZone;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -282,7 +284,6 @@ class Grupo extends CircuitoEntity {
                 $grupoEventos[] = $eventoCelula;
             }
         }
-
         for ($i = 0; $i < count($grupoEventos); $i++) {
             for ($j = 0; $j < count($grupoEventos); $j++) {
                 $evento1 = $grupoEventos[$i];
@@ -297,7 +298,7 @@ class Grupo extends CircuitoEntity {
                     } else {
                         $trocar = 1;
                     }
-                    if ($trocar == 1) {
+                    if ($trocar === 1) {
                         $grupoEventos[$i] = $evento2;
                         $grupoEventos[$j] = $evento1;
                     }
@@ -393,20 +394,20 @@ class Grupo extends CircuitoEntity {
      */
     function getGrupoEventoAtivosPorTipo($tipo = 0) {
         $grupoEventos = null;
-        foreach ($this->getGrupoEvento() as $ge) {
-            if ($ge->verificarSeEstaAtivo()) {
+        foreach ($this->getGrupoEvento() as $grupoEvento) {
+            if ($grupoEvento->verificarSeEstaAtivo()) {
 
                 if ($tipo === 0) {
-                    $grupoEventos[] = $ge;
+                    $grupoEventos[] = $grupoEvento;
                 }
-                if ($tipo === GrupoEvento::CULTO && $ge->getEvento()->verificaSeECulto()) {
-                    $grupoEventos[] = $ge;
+                if ($tipo === GrupoEvento::CULTO && $grupoEvento->getEvento()->verificaSeECulto()) {
+                    $grupoEventos[] = $grupoEvento;
                 }
-                if ($tipo === GrupoEvento::CELULA && $ge->getEvento()->verificaSeECelula()) {
-                    $grupoEventos[] = $ge;
+                if ($tipo === GrupoEvento::CELULA && $grupoEvento->getEvento()->verificaSeECelula()) {
+                    $grupoEventos[] = $grupoEvento;
                 }
-                if ($tipo === GrupoEvento::REVISAO && $ge->getEvento()->verificaSeERevisao()) {
-                    $grupoEventos[] = $ge;
+                if ($tipo === GrupoEvento::REVISAO && $grupoEvento->getEvento()->verificaSeERevisao()) {
+                    $grupoEventos[] = $grupoEvento;
                 }
             }
         }
@@ -461,6 +462,47 @@ class Grupo extends CircuitoEntity {
             }
         }
         return $resposta;
+    }
+
+    function getGrupoEventoNoPeriodo($periodo) {
+        $grupoEventosNoPeriodo = array();
+        $grupoEventoOrdenadosPorDiaDaSemana = $this->getGrupoEventoOrdenadosPorDiaDaSemana();
+
+        if (!empty($grupoEventoOrdenadosPorDiaDaSemana)) {
+            foreach ($grupoEventoOrdenadosPorDiaDaSemana as $grupoEvento) {
+
+                $arrayPeriodo = Funcoes::montaPeriodo($periodo);
+                $stringComecoDoPeriodo = $arrayPeriodo[3] . '-' . $arrayPeriodo[2] . '-' . $arrayPeriodo[1];
+                $dataDoInicioDoPeriodoParaComparar = strtotime($stringComecoDoPeriodo);
+                $dataDoGrupoEventoParaComparar = strtotime($grupoEvento->getData_criacaoStringPadraoBanco());
+
+                if ($dataDoGrupoEventoParaComparar <= $dataDoInicioDoPeriodoParaComparar) {
+                    $grupoEventosNoPeriodo[] = $grupoEvento;
+                }
+            }
+        }
+        return $grupoEventosNoPeriodo;
+    }
+
+    function getGrupoPessoasNoPeriodo() {
+        $grupoPessoasNoPeriodo = array();
+        $timeZone = new DateTimeZone('UTC');
+        $grupoPessoas = $this->getGrupoPessoa();
+        if (!empty($grupoPessoas)) {
+            foreach ($grupoPessoas as $grupoPessoa) {
+
+                $dataDoGrupoPessoaParaComparar = strtotime($grupoPessoa->getData_criacaoStringPadraoBrasil());
+                $dataDoInicioDoPeriodoParaComparar = strtotime(Funcoes::montaPeriodo()[1] . '/' . date('m') . '/' . date('Y'));
+
+                $data1 = DateTime::createFromFormat('d/m/Y', $dataDoGrupoPessoaParaComparar, $timeZone);
+                $data2 = DateTime::createFromFormat('d/m/Y', $dataDoInicioDoPeriodoParaComparar, $timeZone);
+
+                if ($data1 <= $data2) {
+                    $grupoPessoasNoPeriodo[] = $grupoPessoa;
+                }
+            }
+        }
+        return $grupoPessoasNoPeriodo;
     }
 
     /**

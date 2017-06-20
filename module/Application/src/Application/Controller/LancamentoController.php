@@ -12,10 +12,10 @@ use Application\Model\Entity\GrupoAtendimento;
 use Application\Model\Entity\GrupoPessoa;
 use Application\Model\Entity\Pessoa;
 use Application\Model\ORM\RepositorioORM;
+use DateTime;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManager;
 use Exception;
-use Migracao\Controller\IndexController;
 use Zend\Json\Json;
 use Zend\Session\Container;
 use Zend\View\Model\ViewModel;
@@ -152,6 +152,49 @@ class LancamentoController extends CircuitoController {
     }
 
     /**
+     * Traz a tela para lancamento de arregimentação
+     * GET /lancamentoArregimetnacaoAction
+     */
+    public function arregimentacaoAction() {
+        /* Helper Controller */
+        $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
+        $sessao = new Container(Constantes::$NOME_APLICACAO);
+        $entidade = CircuitoController::getEntidadeLogada($repositorioORM, $sessao);
+        $grupo = $entidade->getGrupo();
+
+        $periodo = $this->getEvent()->getRouteMatch()->getParam(Constantes::$ID, 0);
+
+        $grupoEventoNoPeriodo = $grupo->getGrupoEventoNoPeriodo($periodo);
+
+        $view = new ViewModel(
+                array(
+            Constantes::$QUANTIDADE_EVENTOS_CICLOS => count($grupoEventoNoPeriodo),
+            Constantes::$REPOSITORIO_ORM => $repositorioORM,
+            Constantes::$GRUPO => $grupo,
+            'periodo' => $periodo,
+                )
+        );
+
+        /* Javascript especifico */
+        $layoutJS = new ViewModel();
+        $layoutJS->setTemplate(Constantes::$TEMPLATE_JS_LANCAMENTO);
+        $view->addChild($layoutJS, Constantes::$STRING_JS_LANCAMENTO);
+
+        $layoutJS2 = new ViewModel(array(Constantes::$QUANTIDADE_EVENTOS_CICLOS => 5,));
+        $layoutJS2->setTemplate(Constantes::$TEMPLATE_JS_LANCAMENTO_MODAL_EVENTOS);
+        $view->addChild($layoutJS2, Constantes::$STRING_JS_LANCAMENTO_MODAL_EVENTOS);
+
+        if ($sessao->jaMostreiANotificacao) {
+            unset($sessao->mostrarNotificacao);
+            unset($sessao->nomePessoa);
+            unset($sessao->exclusao);
+            unset($sessao->jaMostreiANotificacao);
+        }
+
+        return $view;
+    }
+
+    /**
      * Muda a frequência de um evento
      * @return Json
      */
@@ -166,24 +209,17 @@ class LancamentoController extends CircuitoController {
 
                 $post_data = $request->getPost();
                 $valor = $post_data['valor'];
-                $idEventoFrequencia = $post_data['idEventoFrequencia'];
-                $ciclo = $post_data['ciclo'];
-                $aba = $post_data['aba'];
-                $explodeIdEventoFrequencia = explode('_', $idEventoFrequencia);
+                $idPessoa = $post_data['idPessoa'];
+                $idEvento = $post_data['idEvento'];
+                $diaRealDoEvento = $post_data['diaRealDoEvento'];
+                $dateFormatada = DateTime::createFromFormat('Y-m-d', $diaRealDoEvento);
+                $idGrupo = $post_data['idGrupo'];
 
-                $pessoa = $repositorioORM->getPessoaORM()->encontrarPorId($explodeIdEventoFrequencia[1]);
-                $evento = $repositorioORM->getEventoORM()->encontrarPorId($explodeIdEventoFrequencia[2]);
+                $pessoa = $repositorioORM->getPessoaORM()->encontrarPorId($idPessoa);
+                $evento = $repositorioORM->getEventoORM()->encontrarPorId($idEvento);
 
                 /* Verificar se a frequencia ja existe */
-                $mes = Funcoes::mesPorAbaSelecionada($aba);
-                $ano = Funcoes::anoPorAbaSelecionada($aba);
-                $criteria = Criteria::create()
-                        ->andWhere(Criteria::expr()->eq("evento_id", (int) $explodeIdEventoFrequencia[2]))
-                        ->andWhere(Criteria::expr()->eq("ano", $ano))
-                        ->andWhere(Criteria::expr()->eq("mes", $mes))
-                        ->andWhere(Criteria::expr()->eq("ciclo", $ciclo));
-
-                $eventosFiltrados = $pessoa->getEventoFrequencia()->matching($criteria);
+                $eventosFiltrados = $pessoa->getEventoFrequenciasFiltradosPorEventoEDia($idEvento, $dateFormatada);
                 if ($eventosFiltrados->count() === 1) {
                     /* Frequencia existe */
                     $frequencia = $eventosFiltrados->first();
@@ -195,9 +231,7 @@ class LancamentoController extends CircuitoController {
                     $eventoFrequencia->setPessoa($pessoa);
                     $eventoFrequencia->setEvento($evento);
                     $eventoFrequencia->setFrequencia($valor);
-                    $eventoFrequencia->setCiclo($ciclo);
-                    $eventoFrequencia->setMes($mes);
-                    $eventoFrequencia->setAno($ano);
+                    $eventoFrequencia->setDia($dateFormatada);
                     $repositorioORM->getEventoFrequenciaORM()->persistir($eventoFrequencia);
                 }
 
@@ -208,7 +242,7 @@ class LancamentoController extends CircuitoController {
                     $valorParaSomar = -1;
                 }
 
-                $grupoPassado = $repositorioORM->getGrupoORM()->encontrarPorId($post_data['idGrupo']);
+                $grupoPassado = $repositorioORM->getGrupoORM()->encontrarPorId($idGrupo);
                 $numeroIdentificador = $repositorioORM->getFatoCicloORM()->montarNumeroIdentificador($grupoPassado);
                 $eventoTipoCulto = 1;
                 $eventoTipoCelula = 2;
@@ -218,8 +252,8 @@ class LancamentoController extends CircuitoController {
                 $dimensaoTipoDomingo = 4;
                 $dimensaoSelecionada = null;
 
-                $fatoCicloSelecionado = $repositorioORM->getFatoCicloORM()->encontrarPorNumeroIdentificador(
-                        $numeroIdentificador, $ciclo, $mes, $ano, $repositorioORM);
+                $fatoCicloSelecionado = $repositorioORM->getFatoCicloORM()->encontrarPorNumeroIdentificadorEDataCriacao(
+                        $numeroIdentificador, $dateFormatada, $repositorioORM);
 
                 if ($fatoCicloSelecionado->getDimensao()) {
                     foreach ($fatoCicloSelecionado->getDimensao() as $dimensao) {
@@ -264,9 +298,7 @@ class LancamentoController extends CircuitoController {
 
                     /* Atualiza o relatorio de celulas */
                     $criteria = Criteria::create()
-                            ->andWhere(Criteria::expr()->eq("ano", $ano))
-                            ->andWhere(Criteria::expr()->eq("mes", $mes))
-                            ->andWhere(Criteria::expr()->eq("ciclo", $ciclo));
+                            ->andWhere(Criteria::expr()->eq("dia", $dateFormatada));
 
                     $frequencias = $evento->getEventoFrequencia()->matching($criteria);
                     $somaFrequencias = 0;
@@ -285,22 +317,23 @@ class LancamentoController extends CircuitoController {
                     $eventoCelulaId = $evento->getEventoCelula()->getId();
                     $fatoCelulas = $fatoCicloSelecionado->getFatoCelula();
 
+                    echo "fatoCicloSelecionado" . $fatoCicloSelecionado->getId();
                     $fatoCelulaSelecionado = null;
                     foreach ($fatoCelulas as $fc) {
+                        echo "celulas";
                         if ($fc->getEvento_celula_id() == $eventoCelulaId) {
                             $fatoCelulaSelecionado = $fc;
                         }
                     }
-                    $realizadaAntesDeMudar = $fatoCelulaSelecionado->getRealizada();
-                    $fatoCelulaSelecionado->setRealizada($realizada);
-                    $setarDataEHora = false;
-                    $repositorioORM->getFatoCelulaORM()->persistir($fatoCelulaSelecionado, $setarDataEHora);
+//                    $realizadaAntesDeMudar = $fatoCelulaSelecionado->getRealizada();
+//                    $fatoCelulaSelecionado->setRealizada($realizada);
+//                    $setarDataEHora = false;
+//                    $repositorioORM->getFatoCelulaORM()->persistir($fatoCelulaSelecionado, $setarDataEHora);
 
                     /* Atualizar DW celulas circuito antigo */
-                    $grupoCv = $grupoPassado->getGrupoCv();
-                    IndexController::mudarCelulasRealizadas($grupoCv->getNumero_identificador(), $mes, $ano, $ciclo, $realizada, $realizadaAntesDeMudar);
+//                    $grupoCv = $grupoPassado->getGrupoCv();
+//                    IndexController::mudarCelulasRealizadas($grupoCv->getNumero_identificador(), $mes, $ano, $ciclo, $realizada, $realizadaAntesDeMudar);
                 }
-
                 $tipoPessoa = 0;
                 if ($pessoa->getGrupoPessoaAtivo()) {
                     /* Pessoa volateis */
@@ -333,8 +366,8 @@ class LancamentoController extends CircuitoController {
                 $repositorioORM->getDimensaoORM()->persistir($dimensaoSelecionada, false);
 
                 /* Atualizar DW circuito antigo */
-                $grupoCv = $grupoPassado->getGrupoCv();
-                IndexController::mudarFrequencia($grupoCv->getNumero_identificador(), $mes, $ano, $tipoCampo, $tipoPessoa, $ciclo, $valorParaSomar);
+//                $grupoCv = $grupoPassado->getGrupoCv();
+//                IndexController::mudarFrequencia($grupoCv->getNumero_identificador(), $mes, $ano, $tipoCampo, $tipoPessoa, $ciclo, $valorParaSomar);
 
                 $repositorioORM->fecharTransacao();
                 $response->setContent(Json::encode(
@@ -620,19 +653,19 @@ class LancamentoController extends CircuitoController {
                 $colorBarTotal = LancamentoController::retornaClassBarradeProgressoPeloValor($progresso);
 
                 /* Cadastrar atendimento no circuito antigo */
-                $idAtendimento = IndexController::buscaIdAtendimentoPorLideres(
-                                $mesSelecionado, $anoSelecionado, $grupoLancado->getGrupoCv()->getLider1(), $grupoLancado->getGrupoCv()->getLider2()
-                );
-
-                unset($atendimentoLancado);
-                for ($index = 1; $index <= 5; $index++) {
-                    if ($index <= $numeroAtendimentos) {
-                        $atendimentoLancado[$index] = 'S';
-                    } else {
-                        $atendimentoLancado[$index] = 'N';
-                    }
-                }
-                IndexController::cadastrarAtendimentoPorid($idAtendimento, $atendimentoLancado);
+//                $idAtendimento = IndexController::buscaIdAtendimentoPorLideres(
+//                                $mesSelecionado, $anoSelecionado, $grupoLancado->getGrupoCv()->getLider1(), $grupoLancado->getGrupoCv()->getLider2()
+//                );
+//
+//                unset($atendimentoLancado);
+//                for ($index = 1; $index <= 5; $index++) {
+//                    if ($index <= $numeroAtendimentos) {
+//                        $atendimentoLancado[$index] = 'S';
+//                    } else {
+//                        $atendimentoLancado[$index] = 'N';
+//                    }
+//                }
+//                IndexController::cadastrarAtendimentoPorid($idAtendimento, $atendimentoLancado);
 
                 $repositorioORM->fecharTransacao();
                 $response->setContent(Json::encode(

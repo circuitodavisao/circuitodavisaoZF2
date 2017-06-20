@@ -6,6 +6,7 @@ use Application\Controller\Helper\Constantes;
 use Application\Model\Entity\Dimensao;
 use Application\Model\Entity\FatoCiclo;
 use Application\Model\Entity\Grupo;
+use DateTime;
 use Exception;
 
 /**
@@ -14,6 +15,25 @@ use Exception;
  * Descricao: Classe com acesso doctrine a entity fato_ciclo
  */
 class FatoCicloORM extends CircuitoORM {
+
+    public function encontrarPorNumeroIdentificadorEDataCriacao($numeroIdentificador, $dia, RepositorioORM $repositorioORM) {
+
+        try {
+            $resposta = $this->getEntityManager()
+                    ->getRepository($this->getEntity())
+                    ->findOneBy(
+                    array(
+                        Constantes::$ENTITY_FATO_CICLO_NUMERO_IDENTIFICADOR => $numeroIdentificador,
+                        'data_criacao' => $dia,
+            ));
+            if (empty($resposta)) {
+                $resposta = $this->criarFatoNoCiclo($numeroIdentificador, $dia, $repositorioORM);
+            }
+            return $resposta;
+        } catch (Exception $exc) {
+            echo $exc->getTraceAsString();
+        }
+    }
 
     /**
      * Localizar fato_ciclo por numeroIdentificador
@@ -183,23 +203,16 @@ class FatoCicloORM extends CircuitoORM {
 
     /**
      * Criar fato ciclo
-     * @param type $numeroIdentificador
-     * @param type $ano
-     * @param type $mes
-     * @param type $ciclo
-     * @param RepositorioORM $repositorioORM
-     * @return type
      */
-    public function criarFatoNoCiclo($numeroIdentificador, $ano, $mes, $ciclo, RepositorioORM $repositorioORM) {
+    public function criarFatoNoCiclo($numeroIdentificador, $dia, RepositorioORM $repositorioORM) {
         $fatoCiclo = new FatoCiclo();
         try {
             $fatoCiclo->setNumero_identificador($numeroIdentificador);
-            $fatoCiclo->setAno($ano);
-            $fatoCiclo->setMes($mes);
-            $fatoCiclo->setCiclo($ciclo);
-            $this->persistir($fatoCiclo);
+            $fatoCiclo->setDataEHoraDeCriacao();
+            $fatoCiclo->setData_criacao($dia);
+            $this->persistir($fatoCiclo, false);
             $dimensoes = $this->criarDimensoes($fatoCiclo, $repositorioORM);
-            $fatoCicloPesquisa = $this->encontrarPorNumeroIdentificador($numeroIdentificador, $ciclo, $mes, $ano, $repositorioORM);
+            $fatoCicloPesquisa = $this->encontrarPorId($fatoCiclo->getId());
             $fatoCicloPesquisa->setDimensao($dimensoes);
             return $fatoCicloPesquisa;
         } catch (Exception $exc) {

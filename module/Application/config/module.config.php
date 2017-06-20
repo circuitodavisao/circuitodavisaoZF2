@@ -53,7 +53,7 @@ return array(
                     'route' => '/lancamento[:action[/:id]]',
                     'constraints' => array(
                         'action' => '[a-zA-z]*',
-                        'id' => '[1-2]|[1-2]_[1-6]',
+                        'id' => '[-0-9]+',
                     ),
                     'defaults' => array(
                         'controller' => 'Application\Controller\Lancamento',
@@ -151,6 +151,7 @@ return array(
             'lancamento/lancamento/cadastrar-pessoa-revisao' => __DIR__ . '/../view/lancamento/cadastrar-pessoa-revisao.phtml',
             'lancamento/lancamento/ficha-revisao' => __DIR__ . '/../view/lancamento/ficha-revisao.phtml',
             'lancamento/lancamento/atendimento' => __DIR__ . '/../view/lancamento/atendimento.phtml',
+            'lancamento/lancamento/arregimentacao' => __DIR__ . '/../view/lancamento/arregimentacao.phtml',
             'cadastro/cadastro/index' => __DIR__ . '/../view/cadastro/index.phtml',
             'cadastro/cadastro/evento' => __DIR__ . '/../view/cadastro/evento.phtml',
             'cadastro/cadastro/evento-exclusao' => __DIR__ . '/../view/cadastro/evento-exclusao.phtml',

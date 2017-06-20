@@ -5,18 +5,17 @@
  */
 
 
-function mudarFrequencia(idEventoFrequencia, ciclo, aba, idGrupo) {
+function mudarFrequencia(idPessoa, idEvento, diaRealDoEvento, idGrupo) {
     var faThumbsDown = 'fa-thumbs-down';
     var faThumbsUp = 'fa-thumbs-up';
+    var disabled = 'disabled';
     var iconefaThumbsDown = '<i class="fa ' + faThumbsDown + '"></i>';
     var iconefaThumbsUp = '<i class="fa ' + faThumbsUp + '"></i>';
     var loader = '<img width="11" hegth="11" src="/img/loader.gif"></i>';
     var btnDefault = 'btn-default';
-    var btnSuccess = 'btn-success';
+    var btnSuccess = 'btn-primary';
     var btnTransicao = 'btn-default';
-    var botao = $('#b_' + idEventoFrequencia);
-    var mensagem1 = $('#statusEnvio1');
-    var mensagem2 = $('#statusEnvio2');
+    var botao = $('#botao_' + idPessoa + '_' + idEvento);
 
     var valor = 'N';
     if (botao.hasClass(btnDefault)) {
@@ -28,14 +27,14 @@ function mudarFrequencia(idEventoFrequencia, ciclo, aba, idGrupo) {
     botao.addClass(btnTransicao);
 
     /* Desabilitar botão ate terminar o processamento */
-    botao.addClass('disabled');
+    botao.addClass(disabled);
     $.post(
             "/lancamentoMudarFrequencia",
             {
                 valor: valor,
-                idEventoFrequencia: idEventoFrequencia,
-                ciclo: ciclo,
-                aba: aba,
+                idPessoa: idPessoa,
+                idEvento: idEvento,
+                diaRealDoEvento: diaRealDoEvento,
                 idGrupo: idGrupo,
             },
             function (data) {
@@ -54,10 +53,8 @@ function mudarFrequencia(idEventoFrequencia, ciclo, aba, idGrupo) {
                         botao.html(iconefaThumbsDown);
                         totalSoma--;
                     }
-                    botao.removeClass('disabled');
+                    botao.removeClass(disabled);
                     total.html(totalSoma);
-                    mensagem1.addClass('hidden');
-                    mensagem2.removeClass('hidden');
                 }
             }, 'json');
 }

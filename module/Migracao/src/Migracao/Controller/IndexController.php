@@ -17,6 +17,7 @@ use Application\Model\Entity\GrupoResponsavel;
 use Application\Model\Entity\Pessoa;
 use Application\Model\Entity\PessoaHierarquia;
 use Application\Model\ORM\RepositorioORM;
+use DateTime;
 use Doctrine\ORM\EntityManager;
 use Exception;
 use Zend\View\Model\ViewModel;
@@ -168,14 +169,10 @@ class IndexController extends CircuitoController {
         $script_start = (float) $sec + (float) $usec;
         $html = '';
 
-        $mesSelecionado = date('n');
-        $anoSelecionado = date('Y');
-        $cicloSelecionado = Funcoes::cicloAtual($mesSelecionado, $anoSelecionado);
-        if ($this->params()->fromRoute(Constantes::$ID)) {
-            $cicloSelecionado = $this->params()->fromRoute(Constantes::$ID);
-        }
-        $html .= "<br /><br /><br />CicloSelecionado: " . $cicloSelecionado;
         $tipoCelula = 2;
+//        $dateFormatada = DateTime::createFromFormat('Y-m-d', date('Y-m-d'));
+//        $data = '2017-06-19';
+        $dateFormatada = DateTime::createFromFormat('Y-m-d', '2017-6-19');
 
         $grupos = $this->getRepositorio()->getGrupoORM()->encontrarTodos();
         foreach ($grupos as $grupo) {
@@ -187,23 +184,23 @@ class IndexController extends CircuitoController {
             $numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($grupo);
             $html .= "<br />NumeroIdentificador: " . $numeroIdentificador;
             if ($numeroIdentificador) {
-                $fatoCiclo = $this->getRepositorio()->getFatoCicloORM()->encontrarPorNumeroIdentificador($numeroIdentificador, $cicloSelecionado, $mesSelecionado, $anoSelecionado, $this->getRepositorio());
-                /* Celulas */
-                $grupoEventosNoCiclo = $grupo->getGrupoEventoNoCiclo($cicloSelecionado, $mesSelecionado, $anoSelecionado);
-                $quantidadeDeEventosNoCiclo = count($grupoEventosNoCiclo);
+
+                $fatoCiclo = $this->getRepositorio()->getFatoCicloORM()->encontrarPorNumeroIdentificadorEDataCriacao($numeroIdentificador, $dateFormatada, $this->getRepositorio());
+                $periodo = 0;
+                $grupoEventoNoPeriodo = $grupo->getGrupoEventoNoPeriodo($periodo);
+                $quantidadeDeEventosNoCiclo = count($grupoEventoNoPeriodo);
                 $temCelula = false;
                 $html .= "<br />quantidadeDeEventosNoCiclo $quantidadeDeEventosNoCiclo";
-                if ($quantidadeDeEventosNoCiclo > 0) {
-                    foreach ($grupoEventosNoCiclo as $grupoEventoNoCiclo) {
-                        $html .= "<br />verificaSeECelula: " . $grupoEventoNoCiclo->getEvento()->verificaSeECelula();
-                        if ($grupoEventoNoCiclo->getEvento()->verificaSeECelula()) {
-                            $this->getRepositorio()->getFatoCelulaORM()->criarFatoCelula($fatoCiclo, $grupoEventoNoCiclo->getEvento()->getEventoCelula()->getId());
+                if ($grupoEventoNoPeriodo > 0) {
+                    foreach ($grupoEventoNoPeriodo as $grupoEvento) {
+                        $html .= "<br />verificaSeECelula: " . $grupoEvento->getEvento()->verificaSeECelula();
+                        if ($grupoEvento->getEvento()->verificaSeECelula()) {
+                            $this->getRepositorio()->getFatoCelulaORM()->criarFatoCelula($fatoCiclo, $grupoEvento->getEvento()->getEventoCelula()->getId());
                             $html .= "<br />Fato Celula ";
                             $temCelula = true;
                         }
                     }
                 }
-
 //                $quantidadeLideres = 0;
 //                if ($temCelula) {
 //                    $quantidadeLideres = count($grupo->getResponsabilidadesAtivas());

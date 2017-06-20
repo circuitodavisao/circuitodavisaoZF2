@@ -37,14 +37,8 @@ class EventoFrequencia extends CircuitoEntity {
     /** @ORM\Column(type="string") */
     protected $frequencia;
 
-    /** @ORM\Column(type="integer") */
-    protected $ciclo;
-
-    /** @ORM\Column(type="integer") */
-    protected $mes;
-
-    /** @ORM\Column(type="integer") */
-    protected $ano;
+    /** @ORM\Column(type="datetime", name="dia") */
+    protected $dia;
 
     function getPessoa() {
         return $this->pessoa;
@@ -86,28 +80,12 @@ class EventoFrequencia extends CircuitoEntity {
         $this->frequencia = $frequencia;
     }
 
-    function getCiclo() {
-        return $this->ciclo;
+    function getDia() {
+        return $this->dia;
     }
 
-    function setCiclo($ciclo) {
-        $this->ciclo = $ciclo;
-    }
-
-    function getMes() {
-        return $this->mes;
-    }
-
-    function getAno() {
-        return $this->ano;
-    }
-
-    function setMes($mes) {
-        $this->mes = $mes;
-    }
-
-    function setAno($ano) {
-        $this->ano = $ano;
+    function setDia($dia) {
+        $this->dia = $dia;
     }
 
 }
