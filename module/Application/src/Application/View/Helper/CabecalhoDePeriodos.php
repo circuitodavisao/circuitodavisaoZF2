@@ -13,19 +13,33 @@ use Zend\View\Helper\AbstractHelper;
  */
 class CabecalhoDePeriodos extends AbstractHelper {
 
+    private $rota;
+    private $tipoRelatorio;
+
     public function __construct() {
         
     }
 
-    public function __invoke() {
+    public function __invoke($rota = null, $tipoRelatorio = 0) {
+        if ($rota === null) {
+            $rota = Constantes::$ROUTE_LANCAMENTO;
+        }
+        $this->setRota($rota);
+        $this->setTipoRelatorio($tipoRelatorio);
         return $this->renderHtml();
     }
 
     public function renderHtml() {
         $html = '';
 
-        $urlBase = $this->view->url(Constantes::$ROUTE_LANCAMENTO);
-        $urlBaseCiclo = $urlBase . 'Arregimentacao';
+        $urlBase = $this->view->url($this->getRota());
+        $urlBaseCiclo = $urlBase;
+
+        if ($this->getTipoRelatorio() != 0) {
+            $urlBaseCiclo .= '/' . $this->getTipoRelatorio();
+        } else {
+            $urlBaseCiclo .= 'Arregimentacao';
+        }
 
         $periodo = $this->view->periodo;
         $urlCicloAnterior = $urlBaseCiclo . '/' . ($periodo - 1);
@@ -48,6 +62,22 @@ class CabecalhoDePeriodos extends AbstractHelper {
         $html .= $botaoDireito;
         $html .= '</div>';
         return $html;
+    }
+
+    function getRota() {
+        return $this->rota;
+    }
+
+    function setRota($rota) {
+        $this->rota = $rota;
+    }
+
+    function getTipoRelatorio() {
+        return $this->tipoRelatorio;
+    }
+
+    function setTipoRelatorio($tipoRelatorio) {
+        $this->tipoRelatorio = $tipoRelatorio;
     }
 
 }

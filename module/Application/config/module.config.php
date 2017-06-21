@@ -80,8 +80,8 @@ return array(
                     'route' => '/relatorio[:action][/:tipoRelatorio][/:id]',
                     'constraints' => array(
                         'action' => '[a-zA-Z]+',
-                        'tipoRelatorio' => '[1-4]',
-                        'id' => '[1-2]',
+                        'tipoRelatorio' => '[1-3]',
+                        'id' => '[-0-9]+',
                     ),
                     'defaults' => array(
                         'controller' => 'Application\Controller\Relatorio',

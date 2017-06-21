@@ -15,23 +15,12 @@ $somaGeral[4] = 0;
 $somaGeralLideres = 0;
 $somaQuantidadeCelulas = 0;
 $somaQuantidadeCelulasRealizadas = 0;
-
-$urlBase = $this->url(Constantes::$ROUTE_RELATORIO)
-        . '/' . $this->tipoRelatorio;
-$urlBase2 = $urlBase . '/2';
 ?>
 <div class="mw600 center-block">
     <div class="panel-body bg-light">  
         <div class="panel">
             <div class="panel-heading">
-                <ul class="nav panel-tabs-border panel-tabs panel-tabs-left">
-                    <li <?php echo $this->abaSelecionada($this->abaSelecionada, 1); ?>>
-                        <?php echo '<a href="' . $urlBase . '">Período Atual</a>'; ?>
-                    </li>
-                    <li <?php echo $this->abaSelecionada($this->abaSelecionada, 2); ?>>
-                        <?php echo '<a href="' . $urlBase2 . '">Período Anterior</a>'; ?>
-                    </li>
-                </ul>
+                <?php echo $this->cabecalhoDePeriodos(Constantes::$ROUTE_RELATORIO, $this->tipoRelatorio); ?> 
             </div>
             <div class="panel-body pn">
                 <table class="text-center table table-condensed bg-light" style="font-size:10px;">
