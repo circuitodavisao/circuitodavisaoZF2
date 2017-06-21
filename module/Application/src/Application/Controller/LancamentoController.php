@@ -214,6 +214,7 @@ class LancamentoController extends CircuitoController {
                 $diaRealDoEvento = $post_data['diaRealDoEvento'];
                 $dateFormatada = DateTime::createFromFormat('Y-m-d', $diaRealDoEvento);
                 $idGrupo = $post_data['idGrupo'];
+                $periodo = $post_data['periodo'];
 
                 $pessoa = $repositorioORM->getPessoaORM()->encontrarPorId($idPessoa);
                 $evento = $repositorioORM->getEventoORM()->encontrarPorId($idEvento);
@@ -252,8 +253,11 @@ class LancamentoController extends CircuitoController {
                 $dimensaoTipoDomingo = 4;
                 $dimensaoSelecionada = null;
 
+                $resultadoPeriodo = Funcoes::montaPeriodo($periodo);
+                $dataDoPeriodo = $resultadoPeriodo[3] . '-' . $resultadoPeriodo[2] . '-' . $resultadoPeriodo[1];
+                $dataDoPeriodoFormatada = DateTime::createFromFormat('Y-m-d', $dataDoPeriodo);
                 $fatoCicloSelecionado = $repositorioORM->getFatoCicloORM()->encontrarPorNumeroIdentificadorEDataCriacao(
-                        $numeroIdentificador, $dateFormatada, $repositorioORM);
+                        $numeroIdentificador, $dataDoPeriodoFormatada, $repositorioORM);
 
                 if ($fatoCicloSelecionado->getDimensao()) {
                     foreach ($fatoCicloSelecionado->getDimensao() as $dimensao) {
@@ -317,18 +321,16 @@ class LancamentoController extends CircuitoController {
                     $eventoCelulaId = $evento->getEventoCelula()->getId();
                     $fatoCelulas = $fatoCicloSelecionado->getFatoCelula();
 
-                    echo "fatoCicloSelecionado" . $fatoCicloSelecionado->getId();
                     $fatoCelulaSelecionado = null;
                     foreach ($fatoCelulas as $fc) {
-                        echo "celulas";
                         if ($fc->getEvento_celula_id() == $eventoCelulaId) {
                             $fatoCelulaSelecionado = $fc;
                         }
                     }
-//                    $realizadaAntesDeMudar = $fatoCelulaSelecionado->getRealizada();
-//                    $fatoCelulaSelecionado->setRealizada($realizada);
-//                    $setarDataEHora = false;
-//                    $repositorioORM->getFatoCelulaORM()->persistir($fatoCelulaSelecionado, $setarDataEHora);
+                    $realizadaAntesDeMudar = $fatoCelulaSelecionado->getRealizada();
+                    $fatoCelulaSelecionado->setRealizada($realizada);
+                    $setarDataEHora = false;
+                    $repositorioORM->getFatoCelulaORM()->persistir($fatoCelulaSelecionado, $setarDataEHora);
 
                     /* Atualizar DW celulas circuito antigo */
 //                    $grupoCv = $grupoPassado->getGrupoCv();

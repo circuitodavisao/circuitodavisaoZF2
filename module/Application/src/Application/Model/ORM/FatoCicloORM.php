@@ -17,7 +17,6 @@ use Exception;
 class FatoCicloORM extends CircuitoORM {
 
     public function encontrarPorNumeroIdentificadorEDataCriacao($numeroIdentificador, $dia, RepositorioORM $repositorioORM) {
-
         try {
             $resposta = $this->getEntityManager()
                     ->getRepository($this->getEntity())

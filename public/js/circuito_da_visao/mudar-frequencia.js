@@ -5,7 +5,7 @@
  */
 
 
-function mudarFrequencia(idPessoa, idEvento, diaRealDoEvento, idGrupo) {
+function mudarFrequencia(idPessoa, idEvento, diaRealDoEvento, idGrupo, periodo) {
     var faThumbsDown = 'fa-thumbs-down';
     var faThumbsUp = 'fa-thumbs-up';
     var disabled = 'disabled';
@@ -36,6 +36,7 @@ function mudarFrequencia(idPessoa, idEvento, diaRealDoEvento, idGrupo) {
                 idEvento: idEvento,
                 diaRealDoEvento: diaRealDoEvento,
                 idGrupo: idGrupo,
+                periodo: periodo,
             },
             function (data) {
                 if (data.response) {

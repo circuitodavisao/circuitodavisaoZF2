@@ -340,7 +340,7 @@ class ListagemDePessoasComEventos extends AbstractHelper {
                 $idEventoFrequencia = $pessoa->getId() . '_' . $grupoEvento->getEvento()->getId();
                 $iconeBotao = '<i id="icone_' . $idEventoFrequencia . '" class="fa ' . $icone . '"></i>';
                 $idDoBotao = 'id="botao_' . $idEventoFrequencia . '"';
-                $parametrosMudarFrequencia = $pessoa->getId() . ',' . $grupoEvento->getEvento()->getId() . ', "' . $diaRealDoEvento . '", ' . $this->view->grupo->getId();
+                $parametrosMudarFrequencia = $pessoa->getId() . ',' . $grupoEvento->getEvento()->getId() . ', "' . $diaRealDoEvento . '", ' . $this->view->grupo->getId() . ', ' . $this->view->periodo;
                 $funcaoMudarFrequencia = 'mudarFrequencia(' . $parametrosMudarFrequencia . ')';
                 $funcaoOnclick = $this->view->funcaoOnClick($funcaoMudarFrequencia);
                 $extra = $idDoBotao . ' ' . $funcaoOnclick;
@@ -374,27 +374,56 @@ class ListagemDePessoasComEventos extends AbstractHelper {
     }
 
     private static function diaRealDoEvento($diaDaSemanaDoEvento) {
+
         switch ($diaDaSemanaDoEvento) {
             case 1:
-                $stringDoDia = 'today';
+                if (date('N') == 1) {
+                    $stringDoDia = 'Today';
+                } else {
+                    $stringDoDia = 'last Monday';
+                }
                 break;
             case 2:
-                $stringDoDia = 'last Tuesday';
+                if (date('N') == 2) {
+                    $stringDoDia = 'Today';
+                } else {
+                    $stringDoDia = 'last Tuesday';
+                }
                 break;
             case 3:
-                $stringDoDia = 'last Wednesday';
+                if (date('N') == 3) {
+                    $stringDoDia = 'Today';
+                } else {
+                    $stringDoDia = 'last Wednesday';
+                }
                 break;
             case 4:
-                $stringDoDia = 'last Thursday';
+                if (date('N') == 4) {
+                    $stringDoDia = 'Today';
+                } else {
+                    $stringDoDia = 'last Thursday';
+                }
                 break;
             case 5:
-                $stringDoDia = 'last Friday';
+                if (date('N') == 5) {
+                    $stringDoDia = 'Today';
+                } else {
+                    $stringDoDia = 'last Friday';
+                }
                 break;
             case 6:
-                $stringDoDia = 'last Saturday';
+                if (date('N') == 6) {
+                    $stringDoDia = 'Today';
+                } else {
+                    $stringDoDia = 'last Saturday';
+                }
                 break;
             case 7:
-                $stringDoDia = 'last Sunday';
+                if (date('N') == 7) {
+                    $stringDoDia = 'Today';
+                } else {
+                    $stringDoDia = 'last Sunday';
+                }
                 break;
         }
 
