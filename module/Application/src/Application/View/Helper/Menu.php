@@ -256,6 +256,14 @@ class Menu extends AbstractHelper {
         $html .= 'Transferência';
         $html .= '</a>';
         $html .= '</li>';
+        
+        $html .= '<li>';
+        $html .= '<a href="/cadastroRevisionistas">';
+//        $html .= '<a href="#">';
+        $html .= '<span class="fa fa-users"></span>';
+        $html .= 'Revisionistas';
+        $html .= '</a>';
+        $html .= '</li>';
 
         $html .= '</ul>';
 
@@ -271,7 +279,7 @@ class Menu extends AbstractHelper {
         $html .= '</a>';
         $html .= '<ul class="nav sub-nav">';
         $html .= '<li>';
-        $html .= '<a href="/lancamento">';
+        $html .= '<a href="/lancamentoArregimentacao">';
         $html .= '<span class="fa fa-terminal"></span>';
         $html .= 'Arregimentação';
         $html .= '</a>';
