@@ -47,34 +47,32 @@ class RelatorioController extends CircuitoController {
         $numeroIdentificador = $repositorioORM->getFatoCicloORM()->montarNumeroIdentificador($grupo);
         $periodo = $this->getEvent()->getRouteMatch()->getParam(Constantes::$ID, 0);
 
-//        $tipoRelatorioPessoal = 1;
-//        $relatorio = RelatorioController::montaRelatorio($repositorioORM, $numeroIdentificador, $cicloSelecionado, $mesSelecionado, $anoSelecionado, $tipoRelatorioPessoal);
-//        $periodoSelecionado = Funcoes::periodoCicloMesAno($cicloSelecionado, $mesSelecionado, $anoSelecionado);
+        $tipoRelatorioPessoal = 1;
+        $relatorio = RelatorioController::montaRelatorio($repositorioORM, $numeroIdentificador, $periodo, $tipoRelatorioPessoal);
+
         $tipoRelatorio = (int) $this->params()->fromRoute('tipoRelatorio');
 
         $dados = array(
-//            RelatorioController::stringRelatorio => $relatorio,
-//            RelatorioController::stringPeriodoSelecionado => $periodoSelecionado,
-//            Constantes::$ABA_SELECIONADA => $abaSelecionada,
+            RelatorioController::stringRelatorio => $relatorio,
             'tipoRelatorio' => $tipoRelatorio,
             'periodo' => $periodo,
         );
 
-//        $grupoPaiFilhoFilhos = $grupo->getGrupoPaiFilhoFilhos();
-//        if ($grupoPaiFilhoFilhos) {
-//            $relatorioDiscipulos = array();
-//            foreach ($grupoPaiFilhoFilhos as $gpFilho) {
-//                $grupoFilho = $gpFilho->getGrupoPaiFilhoFilho();
-//                $numeroIdentificador = $repositorioORM->getFatoCicloORM()->montarNumeroIdentificador($grupoFilho);
-//                $tipoRelatorioSomado = 2;
-//                $relatorioDiscipulos[$grupoFilho->getId()] = RelatorioController::montaRelatorio($repositorioORM, $numeroIdentificador, $cicloSelecionado, $mesSelecionado, $anoSelecionado, $tipoRelatorioSomado);
-//            }
-//
-//            $discipulosOrdenado = RelatorioController::ordenacaoDiscipulos($grupoPaiFilhoFilhos, $relatorioDiscipulos, $tipoRelatorio);
-//
-//            $dados['discipulosOrdenado'] = $discipulosOrdenado;
-//            $dados['discipulosRelatorio'] = $relatorioDiscipulos;
-//        }
+        $grupoPaiFilhoFilhos = $grupo->getGrupoPaiFilhoFilhos();
+        if ($grupoPaiFilhoFilhos) {
+            $relatorioDiscipulos = array();
+            foreach ($grupoPaiFilhoFilhos as $gpFilho) {
+                $grupoFilho = $gpFilho->getGrupoPaiFilhoFilho();
+                $numeroIdentificador = $repositorioORM->getFatoCicloORM()->montarNumeroIdentificador($grupoFilho);
+                $tipoRelatorioSomado = 2;
+                $relatorioDiscipulos[$grupoFilho->getId()] = RelatorioController::montaRelatorio($repositorioORM, $numeroIdentificador, $periodo, $tipoRelatorioSomado);
+            }
+
+            $discipulosOrdenado = RelatorioController::ordenacaoDiscipulos($grupoPaiFilhoFilhos, $relatorioDiscipulos, $tipoRelatorio);
+
+            $dados['discipulosOrdenado'] = $discipulosOrdenado;
+            $dados['discipulosRelatorio'] = $relatorioDiscipulos;
+        }
 
         return new ViewModel($dados);
     }
@@ -124,9 +122,9 @@ class RelatorioController extends CircuitoController {
         return $view;
     }
 
-    public static function montaRelatorio($repositorioORM, $numeroIdentificador, $cicloSelecionado, $mesSelecionado, $anoSelecionado, $tipoRelatorio) {
+    public static function montaRelatorio($repositorioORM, $numeroIdentificador, $periodo, $tipoRelatorio) {
         /* Membresia */
-        $relatorioMembresia = $repositorioORM->getFatoCicloORM()->montarRelatorioPorNumeroIdentificador($numeroIdentificador, $cicloSelecionado, $mesSelecionado, $anoSelecionado, $tipoRelatorio);
+        $relatorioMembresia = $repositorioORM->getFatoCicloORM()->montarRelatorioPorNumeroIdentificador($numeroIdentificador, $periodo, $tipoRelatorio);
         $fatoLider = $repositorioORM->getFatoLiderORM()->encontrarPorNumeroIdentificador($numeroIdentificador, $tipoRelatorio);
         $quantidadeLideres = $fatoLider[0]['lideres'];
         foreach ($relatorioMembresia as $key => $value) {
@@ -151,7 +149,7 @@ class RelatorioController extends CircuitoController {
         $relatorio['quantidadeLideres'] = $quantidadeLideres;
 
         /* Célula */
-        $relatorioCelula = $repositorioORM->getFatoCicloORM()->montarRelatorioCelulaPorNumeroIdentificador($numeroIdentificador, $cicloSelecionado, $mesSelecionado, $anoSelecionado, $tipoRelatorio);
+        $relatorioCelula = $repositorioORM->getFatoCicloORM()->montarRelatorioCelulaPorNumeroIdentificador($numeroIdentificador, $periodo, $tipoRelatorio);
 
         $quantidadeCelulas = $relatorioCelula[0]['quantidade'];
         $quantidadeCelulasRealizadas = 0;
@@ -195,7 +193,10 @@ class RelatorioController extends CircuitoController {
 
     public static function corDaLinhaPelaPerformance($valor) {
         $class = '';
-        if ($valor < 70) {
+        if ($valor == 0) {
+            $class = 'dark';
+        }
+        if ($valor < 70 && $valor > 0) {
             $class = 'danger';
         }
         if ($valor > 70 && $valor <= 85) {

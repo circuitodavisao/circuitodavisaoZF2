@@ -27,33 +27,16 @@ class PrincipalController extends CircuitoController {
         $grupo = $entidade->getGrupo();
         $numeroIdentificador = $repositorioORM->getFatoCicloORM()->montarNumeroIdentificador($grupo);
 
-        $mesSelecionado = date('n');
-        $anoSelecionado = date('Y');
-        $cicloAtual = Funcoes::cicloAtual($mesSelecionado, $anoSelecionado);
-        $cicloPassado = 0;
-
-        if ($cicloAtual > 1) {
-            $cicloPassado = $cicloAtual - 1;
-            $anoPesquisa = $anoSelecionado;
-            $mesPesquisa = $mesSelecionado;
-        } else {
-            $anoPesquisa = $anoSelecionado;
-            $mesPesquisa = $mesSelecionado - 1;
-            if ($mesSelecionado == 1) {
-                $anoPesquisa = $anoSelecionado - 1;
-                $mesPesquisa = 1;
-            }
-            $cicloPassado = Funcoes::totalCiclosMes($mesPesquisa, $anoPesquisa);
-        }
-
         $tipoRelatorioPessoal = 1;
         $tipoRelatorioEquipe = 2;
-        $relatorio = RelatorioController::montaRelatorio($repositorioORM, $numeroIdentificador, $cicloPassado, $mesPesquisa, $anoPesquisa, $tipoRelatorioPessoal);
-        $relatorioEquipe = RelatorioController::montaRelatorio($repositorioORM, $numeroIdentificador, $cicloPassado, $mesPesquisa, $anoPesquisa, $tipoRelatorioEquipe);
-        $periodoSelecionado = Funcoes::periodoCicloMesAno($cicloPassado, $mesPesquisa, $anoPesquisa);
+        $periodo = -1;
+        $relatorio = RelatorioController::montaRelatorio($repositorioORM, $numeroIdentificador, $periodo, $tipoRelatorioPessoal);
+        $relatorioEquipe = RelatorioController::montaRelatorio($repositorioORM, $numeroIdentificador, $periodo, $tipoRelatorioEquipe);
+
 
         $dados = array();
-        $dados['periodo'] = $periodoSelecionado;
+        $arrayPeriodo = Funcoes::montaPeriodo($periodo);
+        $dados['periodo'] = $arrayPeriodo[0];
         $dados['relatorio'] = $relatorio;
         $dados['relatorioEquipe'] = $relatorioEquipe;
 
@@ -65,7 +48,7 @@ class PrincipalController extends CircuitoController {
                 $grupoFilho = $gpFilho->getGrupoPaiFilhoFilho();
                 $numeroIdentificador = $repositorioORM->getFatoCicloORM()->montarNumeroIdentificador($grupoFilho);
                 $tipoRelatorioSomado = 2;
-                $relatorio = RelatorioController::montaRelatorio($repositorioORM, $numeroIdentificador, $cicloPassado, $mesSelecionado, $anoSelecionado, $tipoRelatorioSomado);
+                $relatorio = RelatorioController::montaRelatorio($repositorioORM, $numeroIdentificador, $periodo, $tipoRelatorioSomado);
                 if ($relatorio['celulaQuantidade'] > 0) {
                     if ($relatorio['celulaRealizadas'] < $relatorio['celulaQuantidade']) {
                         $relatorioDiscipulos[$grupoFilho->getId()] = $relatorio;
