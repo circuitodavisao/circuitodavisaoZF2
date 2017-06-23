@@ -7,7 +7,6 @@ namespace Application\Model\Entity;
  * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com>
  * Descricao: Entidade anotada da tabela grupo
  */
-
 use Application\Controller\Helper\Funcoes;
 use DateTime;
 use DateTimeZone;
@@ -367,13 +366,39 @@ class Grupo extends CircuitoEntity {
             }
             $grupoIgreja = $grupoSelecionado;
         } else if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::IGREJA) {
-            $grupoIgreja = $grupoSelecionado->getGrupoEventoAtivosPorTipo(GrupoEvento::REVISAO);
+            $grupoIgreja = $grupoSelecionado;
         } else {
             $grupoIgreja = null;
         }
 
         return $grupoIgreja;
     }
+    
+    /**
+     * Retorna o grupo equipe do Grupo
+     * @return GrupoEvento
+     */
+    function getGrupoEquipe() { 
+        $grupoSelecionado = $this;
+        $grupoEquipe = null;
+        if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::SUBEQUIPE) {
+            while ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::SUBEQUIPE) {
+
+                $grupoSelecionado = $grupoSelecionado->getGrupoPaiFilhoPai()->getGrupoPaiFilhoPai();
+                if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::EQUIPE) {
+                    break;
+                }
+            }
+            $grupoEquipe = $grupoSelecionado;
+        } else if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::EQUIPE) {
+            $grupoEquipe = $grupoSelecionado;
+        } else {
+            $grupoEquipe = null;
+        }
+
+        return $grupoEquipe;
+    }
+
 
     /**
      * Retorna o grupo evento

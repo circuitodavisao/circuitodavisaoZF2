@@ -3,8 +3,10 @@ var btnDefault = 'btn-default';
 var btnPrimary = 'btn-primary';
 
 function voltarListagemCultos() {
-  
     location.href = "/cadastroCultos";
+}
+function voltarListagemCelulas() {
+    location.href = "/cadastroCelulas";
 }
 
 function validarDiaHoraEMinuto() {
@@ -52,6 +54,15 @@ function voltarSelecionarDiaHoraEMinuto() {
     $('#divDiaDaSemanaHoraMinuto').removeClass('hidden');
     $('#divExtras').addClass('hidden');
     $('#botaoPasso2')
+            .addClass(btnDefault)
+            .removeClass(btnPrimary);
+}
+function voltarEndereco() {
+    $('#divMensagens')
+            .addClass('hidden');
+    $('#divEndereco').removeClass('hidden');
+    $('#divDadosHospedeiro').addClass('hidden');
+    $('#botaoPasso3')
             .addClass(btnDefault)
             .removeClass(btnPrimary);
 }
@@ -150,7 +161,7 @@ function retornaDiaDaSemanaPorExtenso(diaDaSemana) {
 }
 
 function submeter(form) {
- 
+
     form.submit();
 }
 
