@@ -9,7 +9,7 @@ use Application\Controller\Helper\Constantes;
  */
 $form = $this->AtivarFichaForm;
 $form->prepare();
-$form->setAttribute(Constantes::$ACTION, $this->url(Constantes::$ROUTE_CADASTRO, array(Constantes::$PAGINA => Constantes::$PAGINA_SALVAR_PESSOA_REVISAO)));
+$form->setAttribute(Constantes::$ACTION, $this->url(Constantes::$ROUTE_CADASTRO, array(Constantes::$PAGINA => Constantes::$PAGINA_ATIVAR_RESERVA_REVISAO)));
 ?>
 <div class="mw1000 center-block p10">
     <div class="row ">
@@ -50,8 +50,8 @@ $form->setAttribute(Constantes::$ACTION, $this->url(Constantes::$ROUTE_CADASTRO,
                             </span>
                             <?php
                             /* Submit */
-                            $funcaoVerificarCadastroPessoa = $this->funcaoOnClick('consultarFicha()');
-                            echo $this->botaoSimples(Constantes::$TRADUCAO_ATIVAR, "id ='botaoBuscarFicha' disabled");
+                            $funcaoVerificarCadastroPessoa = $this->funcaoOnClick('confirmar(this.form)');
+                            echo $this->botaoSimples(Constantes::$TRADUCAO_ATIVAR, "id ='botaoBuscarFicha' type='submit' disabled ".$funcaoVerificarCadastroPessoa);
                             ?>
                             
                         </div>

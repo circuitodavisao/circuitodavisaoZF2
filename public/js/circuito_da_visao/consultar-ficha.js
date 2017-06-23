@@ -80,3 +80,10 @@ function limparCampos(){
     codigo.val('');
     divInputCodigo.removeClass('hidden');
 }
+
+function confirmar(form){
+    var divMensagens = $('#divMensagens');
+    divMensagens
+                .addClass('hidden');
+        form.submit();
+}

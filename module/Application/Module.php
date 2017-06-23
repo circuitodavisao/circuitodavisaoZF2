@@ -28,6 +28,7 @@ use Application\View\Helper\BotaoSubmitDesabilitado;
 use Application\View\Helper\CabecalhoDeAtendimentos;
 use Application\View\Helper\CabecalhoDeCiclos;
 use Application\View\Helper\CabecalhoDeEventos;
+use Application\View\Helper\CabecalhoDePeriodos;
 use Application\View\Helper\DadosEntidade;
 use Application\View\Helper\DivCapslock;
 use Application\View\Helper\DivJavaScript;
@@ -46,6 +47,7 @@ use Application\View\Helper\LinkLogo;
 use Application\View\Helper\ListagemConsolidacaoParaRevisao;
 use Application\View\Helper\ListagemDeEventos;
 use Application\View\Helper\ListagemDePessoasComEventos;
+use Application\View\Helper\ListagemFichasAtivasRevisao;
 use Application\View\Helper\ListagemFichasParaRevisao;
 use Application\View\Helper\ListagemLideresTransferencia;
 use Application\View\Helper\MensagemRelatorioEnviado;
@@ -136,6 +138,9 @@ class Module {
                 },
                 'listagemConsolidacaoParaRevisao' => function($sm) {
                     return new ListagemConsolidacaoParaRevisao();
+                },
+                'listagemFichasAtivasRevisao' => function($sm) {
+                    return new ListagemFichasAtivasRevisao();
                 },
                 'tabelaLancamento' => function($sm) {
                     return new TabelaLancamento();
@@ -272,6 +277,9 @@ class Module {
                 'listagemLideresTransferencia' => function ($sm) {
                     return new ListagemLideresTransferencia();
                 },
+                'cabecalhoDePeriodos' => function ($sm) {
+                    return new CabecalhoDePeriodos();
+                },
             )
         );
     }
@@ -325,7 +333,7 @@ class Module {
             $viewModel->discipulos = $discipulos;
         }
 
-        if (empty($sessao->idEntidadeAtual) || $pessoa->getAtualizar_dados() === 'S' || $e->getRequest()->getUriString() == 'http://158.69.124.139/preSaida') {
+        if (empty($sessao->idEntidadeAtual) || $pessoa->getAtualizar_dados() === 'S' || $e->getRequest()->getUriString() == 'http://158.69.124.139/preSaida' || $e->getRequest()->getUriString() == 'http://158.69.124.139/cadastroFichaRevisao') {
             $viewModel->mostrarMenu = 0;
         }
     }

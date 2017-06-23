@@ -2,9 +2,10 @@
 
 namespace Application\View\Helper;
 
-use Doctrine\Common\Collections\Criteria;
 use Application\Controller\Helper\Constantes;
 use Application\Controller\Helper\Funcoes;
+use Application\Model\Entity\Entidade;
+use Doctrine\Common\Collections\Criteria;
 use Zend\View\Helper\AbstractHelper;
 
 /**
@@ -41,11 +42,20 @@ class ListagemFichasParaRevisao extends AbstractHelper {
                 $p = $f->getPessoa();
                 $grupoPessoa = $p->getGrupoPessoaAtivo();
                 if ($grupoPessoa != null) {
-                    $grupoDaPessoa = $grupoPessoa->getGrupo();
-                    $grupoOnline = $this->view->entidade->getGrupo();
-                    if (($grupoDaPessoa->getId() == $grupoOnline->getId()) && ($f->getFrequencia() == 'N')) {
-                        $p->setId($f->getId());
-                        $pessoas[] = $p;
+                    if($this->view->entidade->getGrupo()->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::IGREJA){
+                        $idGrupoIgrejaDoRevisionista = $grupoPessoa->getGrupo()->getGrupoIgreja();
+                        $idGrupoIgrejaLogado = $this->view->entidade->getGrupo()->getGrupoIgreja();
+                        if (($idGrupoIgrejaDoRevisionista == $idGrupoIgrejaLogado) && ($f->getFrequencia() == 'S')) {
+                            $p->setId($f->getId());
+                            $pessoas[] = $p;
+                        }
+                    }else{
+                        $idGrupoEquipeDoRevisionista = $grupoPessoa->getGrupo()->getGrupoEquipe(); 
+                        $idGrupoEquipeLogado = $this->view->entidade->getGrupo()->getGrupoEquipe();
+                        if (($idGrupoEquipeDoRevisionista == $idGrupoEquipeLogado) && ($f->getFrequencia() == 'S')) {
+                            $p->setId($f->getId());
+                            $pessoas[] = $p;
+                        }
                     }
                 }
             }

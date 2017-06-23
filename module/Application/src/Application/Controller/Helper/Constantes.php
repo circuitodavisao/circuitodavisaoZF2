@@ -11,6 +11,7 @@ class Constantes {
 
     public static $IP = '158.69.124.139';
     public static $META_LIDER = 6;
+    public static $ID_TIPO_REVISAO = 3;
 
     /* Constates Login */
     public static $CONTROLLER_LOGIN = 'Application\Controller\Login';
@@ -69,6 +70,7 @@ class Constantes {
     public static $INPUT_ID_PESSOA = 'idPessoa';
     public static $INPUT_DATA_NASCIMENTO = 'dataNascimento';
     public static $INPUT_TIPO = 'tipo';
+    public static $INPUT_LIDERES = 'demo1';
     public static $INPUT_ALTERAR = 'alterar';
     public static $INDEX = '/';
     public static $ACTION_ESQUECEU_SENHA = 'esqueceuSenha';
@@ -206,8 +208,10 @@ class Constantes {
     public static $STRING_JS_PRINCIPAL = 'layoutJSPrincipal';
     public static $TEMPLATE_JS_FICHA_REVISAO = 'layout/layout-js-ficha-revisao';
     public static $TEMPLATE_JS_ATIVAR_FICHA = 'layout/layout-js-ativar-ficha-revisao';
+    public static $TEMPLATE_JS_SELECIONAR_LIDER_REVISAO = 'layout/layout-js-selecionar-lider-revisao';
     public static $STRING_JS_FICHA_REVISAO = 'layoutJSFichaRevisao';
     public static $STRING_JS_ATIVAR_FICHA_REVISAO = 'layoutJSAtivarFichaRevisao';
+    public static $STRING_JS_SELECIONAR_LIDER_REVISAO = 'layoutJSSelecionarLiderRevisao';
 
     /* Geral */
     public static $NOME_APLICACAO = 'CircuitoDaVisao';
@@ -301,6 +305,8 @@ class Constantes {
     public static $PAGINA_CADASTRAR_PESSOA = 'CadastrarPessoa';
     public static $PAGINA_CADASTRAR_PESSOA_REVISAO = 'CadastrarPessoaRevisao';
     public static $PAGINA_SALVAR_PESSOA_REVISAO = 'SalvarPessoaRevisao';
+    public static $PAGINA_ATIVAR_RESERVA_REVISAO = 'AtivarReservaRevisao';
+    public static $PAGINA_SELECIONAR_LIDER_REVISAO = 'SelecionarLiderRevisao';
     public static $NOME_IGREJA_FICHA_REVISAO = 'nomeIgreja';
     public static $STRING_ID_EVENTO_FREQUENCIA = 'idEventoFrequencia';
     public static $PAGINA_FICHA_REVISAO = 'FichaRevisao';
@@ -319,6 +325,7 @@ class Constantes {
     public static $FORM_CADASTRAR_PESSOA = 'CadastrarPessoaForm';
     public static $FORM_CADASTRAR_PESSOA_REVISAO = 'CadastrarPessoaRevisaoForm';
     public static $FORM_ATIVAR_FICHA = 'AtivarFichaForm';
+    public static $FORM_SELECIONAR_LIDER_REVISAO = 'SelecionarLiderRevisaoForm';
     public static $FORM_CADASTRAR_ATENDIMENTO = 'CadastrarAtendimentoForm';
     public static $GRUPOS_ABAIXO = 'gruposAbaixo';
     public static $MES = 'mes';
@@ -349,9 +356,9 @@ class Constantes {
     public static $TRADUCAO_NOVO_CADASTRO_REVISAO = 'New Person in Revision of Life';
     public static $TRADUCAO_NOVO_CADASTRO_LABEL = 'Person at the launch line';
     public static $TRADUCAO_ATIVAR_FICHA = 'Enable Bookmarks of Revision of Life';
-
+    public static $TRADUCAO_SELECIONAR_LIDER_REVISAO_PRIMEIRO_LABEL = 'List of';
+    public static $TRADUCAO_SELECIONAR_LIDER_REVISAO_SEGUNDO_LABEL = 'Leaders';
     public static $TRADUCAO_ATIVAR = 'Enable';
-
     public static $TRADUCAO_ATIVAR_FICHA_LABEL = 'Enable Bookmarks';
     public static $TRADUCAO_NOVO_CADASTRO_REVISAO_LABEL = 'Person at the revision of live';
     public static $TRADUCAO_DDD = 'DDD';
@@ -416,6 +423,7 @@ class Constantes {
     public static $PAGINA_REVISIONISTAS = 'Revisionistas';
     public static $PAGINA_FICHA_REVISIONISTAS = 'FichaRevisionistas';
     public static $PAGINA_ATIVOS_REVISIONISTAS = 'AtivosRevisionistas';
+    public static $PAGINA_LIDERES_REVISAO = 'LideresRevisao'; 
     public static $PAGINA_CELULA = 'Celula';
     public static $PAGINA_EVENTO_CULTO = 'EventoCulto';
     public static $PAGINA_EVENTO_CELULA = 'EventoCelula';
@@ -438,6 +446,7 @@ class Constantes {
     public static $PAGINA_SELECIONAR_REVISIONISTA = 'SelecionarRevisionista';
     public static $PAGINA_SELECIONAR_FICHA_REVISIONISTA = 'SelecionarFichasRevisionista';
     public static $PAGINA_SELECIONAR_FICHA_ATIVAS = 'SelecionarFichasAtivas';
+    public static $PAGINA_ATIVAR_LIDERES_REVISAO = 'AtivarLideresRevisao';
     public static $PAGINA_INSERIR_REVISAO = 'InserirRevisao';
     public static $PAGINA_SALVAR_REVISAO = 'SalvarRevisao';
     public static $PAGINA_CADASTRO_TRANSFERENCIA = 'Transferencia';
@@ -544,6 +553,7 @@ class Constantes {
     public static $TIPO_MENSAGEM_ALTERAR_CULTO = 5;
     public static $TIPO_MENSAGEM_EXCLUIR_CULTO = 6;
     public static $TIPO_MENSAGEM_CADASTRAR_REVISAO = 7;
+    public static $TIPO_MENSAGEM_CADASTRAR_REVISIONISTA = 8;
     /* Inputs */
     public static $INPUT_ESTADO_CIVIL = 'inputEstadoCivil';
 
@@ -685,6 +695,7 @@ class Constantes {
     public static $TRADUCAO_DATA_SIMPLIFICADO = 'Date';
     public static $TRADUCAO_TIPO_REVISIONISTA = 'Type';
     public static $TRADUCAO_NOME_REVISIONISTA = 'Name';
+    public static $TRADUCAO_ENTIDADE_REVISIONISTA = 'Entity';
     public static $TRADUCAO_CADASTRO_CELULA = 'Registration Cell';
     public static $TRADUCAO_CADASTRO_CULTO = 'Registration <b class="text-danger">Cult</b>';
     public static $TRADUCAO_NOVA = 'New';
@@ -692,6 +703,7 @@ class Constantes {
     public static $TRADUCAO_NOVO_CULTO = 'New Cult';
     public static $TRADUCAO_NOVO_REVISAO = 'New Revision';
     public static $TRADUCAO_NOVO_REVISIONISTA = 'Select';
+    public static $TRADUCAO_REMOVER_REVISIONISTA = 'Remove';
     public static $TRADUCAO_MULTIPLICACAO = 'Multiplication';
     public static $TRADUCAO_LISTAGEM_CULTOS = 'Listing <b class="text-danger">Cults</b>';
     public static $TRADUCAO_LISTAGEM_REVISAO = 'Listing <b class="text-danger">Revision of lives</b>';
@@ -753,9 +765,6 @@ class Constantes {
     public static $LISTAGEM_CELULAS = 'celulas';
     public static $CELULA = 'celula';
     public static $EVENTO = 'evento';
-    
-    /* IDS DOS TIPOS DE EVENTOS */ 
-    public static $ID_TIPO_REVISAO = 3; 
 
     /* Fim Cadastro */
 }
