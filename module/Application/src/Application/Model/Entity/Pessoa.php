@@ -7,6 +7,7 @@ namespace Application\Model\Entity;
  * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com>
  * Descricao: Entidade anotada da tabela pessoa
  */
+
 use Application\Controller\Helper\Funcoes;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;

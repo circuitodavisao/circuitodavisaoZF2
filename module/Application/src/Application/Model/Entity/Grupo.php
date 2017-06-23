@@ -7,6 +7,7 @@ namespace Application\Model\Entity;
  * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com>
  * Descricao: Entidade anotada da tabela grupo
  */
+
 use Application\Controller\Helper\Funcoes;
 use DateTime;
 use DateTimeZone;
@@ -464,7 +465,7 @@ class Grupo extends CircuitoEntity {
         return $resposta;
     }
 
-    function getGrupoEventoNoPeriodo($periodo) {
+    function getGrupoEventoNoPeriodo($periodo) { 
         $grupoEventosNoPeriodo = array();
         $grupoEventoOrdenadosPorDiaDaSemana = $this->getGrupoEventoOrdenadosPorDiaDaSemana();
 

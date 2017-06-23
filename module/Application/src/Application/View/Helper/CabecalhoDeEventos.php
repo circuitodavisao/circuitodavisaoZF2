@@ -23,7 +23,7 @@ class CabecalhoDeEventos extends AbstractHelper {
     public function renderHtml() {
         $html = '';
 
-        $grupoEventoNoPeriodo = $this->view->grupo->getGrupoEventoNoPeriodo($this->view->periodo);
+        $grupoEventoNoPeriodo = $this->view->grupo->getGrupoEventoNoPeriodo($this->view->periodo); 
         if (!empty($grupoEventoNoPeriodo)) {
             $html .= '<tr>';
             $html .= '<th class="tdTipo"></th>';

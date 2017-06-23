@@ -5,7 +5,6 @@ namespace Application\Controller;
 use Application\Controller\Helper\Constantes;
 use Application\Controller\Helper\Funcoes;
 use Application\Form\CadastrarPessoaForm;
-use Application\Model\Entity\Entidade;
 use Application\Model\Entity\EventoFrequencia;
 use Application\Model\Entity\Grupo;
 use Application\Model\Entity\GrupoAtendimento;
