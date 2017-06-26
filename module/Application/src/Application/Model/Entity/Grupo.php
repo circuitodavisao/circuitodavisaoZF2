@@ -373,12 +373,12 @@ class Grupo extends CircuitoEntity {
 
         return $grupoIgreja;
     }
-    
+
     /**
      * Retorna o grupo equipe do Grupo
      * @return GrupoEvento
      */
-    function getGrupoEquipe() { 
+    function getGrupoEquipe() {
         $grupoSelecionado = $this;
         $grupoEquipe = null;
         if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::SUBEQUIPE) {
@@ -399,7 +399,6 @@ class Grupo extends CircuitoEntity {
         return $grupoEquipe;
     }
 
-
     /**
      * Retorna o grupo evento
      * @return GrupoEvento
@@ -418,7 +417,7 @@ class Grupo extends CircuitoEntity {
      * Retorna o grupo evento
      * @return GrupoEvento
      */
-    function getGrupoEventoAtivosPorTipo($tipo = 0) {
+    function getGrupoEventoAtivosPorTipo($tipo = 0) { 
         $grupoEventos = null;
         foreach ($this->getGrupoEvento() as $grupoEvento) {
             if ($grupoEvento->verificarSeEstaAtivo()) {
@@ -490,7 +489,7 @@ class Grupo extends CircuitoEntity {
         return $resposta;
     }
 
-    function getGrupoEventoNoPeriodo($periodo) { 
+    function getGrupoEventoNoPeriodo($periodo) {
         $grupoEventosNoPeriodo = array();
         $grupoEventoOrdenadosPorDiaDaSemana = $this->getGrupoEventoOrdenadosPorDiaDaSemana();
 
@@ -670,29 +669,23 @@ class Grupo extends CircuitoEntity {
     }
 
     function getGrupoEventoCelula() {
-        $eventos = null;
-        if (!empty($this->getGrupoEvento())) {
-            foreach ($this->getGrupoEvento() as $ge) {
-                if ($ge->verificarSeEstaAtivo() && $ge->getEvento()->verificaSeECelula()) {
-                    $eventos[] = $ge;
-                }
+        $grupoEventos = null;
+        foreach ($this->getGrupoEvento() as $grupoEvento) {
+            if ($grupoEvento->verificarSeEstaAtivo() && $grupoEvento->getEvento()->verificaSeECelula()) {
+                $grupoEventos[] = $grupoEvento;
             }
         }
-        $this->setEventos($eventos);
-        return $this->getEventos();
+        return $grupoEventos;
     }
 
     function getGrupoEventoCulto() {
-        $eventos = null;
-        if (!empty($this->getGrupoEvento())) {
-            foreach ($this->getGrupoEvento() as $ge) {
-                if ($ge->verificarSeEstaAtivo() && $ge->getEvento()->verificaSeECulto()) {
-                    $eventos[] = $ge;
-                }
+        $grupoEventos = null;
+        foreach ($this->getGrupoEvento() as $ge) {
+            if ($ge->verificarSeEstaAtivo() && $ge->getEvento()->verificaSeECulto()) {
+                $grupoEventos[] = $ge;
             }
         }
-        $this->setEventos($eventos);
-        return $this->getEventos();
+        return $grupoEventos;
     }
 
 //    function getGrupoEventoRevisao() {

@@ -211,19 +211,22 @@ class CadastroController extends CircuitoController {
 
         $extra = '';
         $tipoEvento = 0;
+        $tipoCelula = 1;
+        $tipoCulto = 2;
+        $tipoRevisao = 3;
         if ($pagina == Constantes::$PAGINA_CELULAS) {
-            $listagemDeEventos = $grupo->getGrupoEventoCelula();
+            $listagemDeEventos = $grupo->getGrupoEventoAtivosPorTipo($tipoCelula);
             $tituloDaPagina = Constantes::$TRADUCAO_LISTAGEM_CELULAS . ' <b class="text-danger">' . Constantes::$TRADUCAO_MULTIPLICACAO . '</b>';
             $tipoEvento = 2;
         }
         if ($pagina == Constantes::$PAGINA_CULTOS) {
-            $listagemDeEventos = $grupo->getGrupoEventoCulto();
+            $listagemDeEventos = $grupo->getGrupoEventoAtivosPorTipo($tipoCulto);
             $tituloDaPagina = Constantes::$TRADUCAO_LISTAGEM_CULTOS;
             $tipoEvento = 1;
             $extra = $grupo->getId();
         }
         if ($pagina == Constantes::$PAGINA_REVISAO) {
-            $listagemDeEventos = $grupo->getGrupoEventoRevisao();
+            $listagemDeEventos = $grupo->getGrupoEventoAtivosPorTipo($tipoRevisao);
             $tituloDaPagina = Constantes::$TRADUCAO_LISTAGEM_REVISAO;
             $tipoEvento = 3;
             $extra = $grupo->getId();
@@ -329,7 +332,10 @@ class CadastroController extends CircuitoController {
         $stringCheckEquipe = 'checkEquipe';
         $request = $this->getRequest();
         if ($request->isPost()) {
+            /* Repositorios */
+            $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
             try {
+                $repositorioORM->iniciarTransacao();
                 $post_data = $request->getPost();
 
                 /* Entidades */
@@ -349,27 +355,23 @@ class CadastroController extends CircuitoController {
                     $evento = new Evento();
                     $grupoEvento = new GrupoEvento();
 
-                    /* Repositorios */
-                    $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
-
                     /* ALTERANDO */
                     if (!empty($post_data[Constantes::$FORM_ID])) {
                         $criarNovoEvento = false;
                         $eventoAtual = $repositorioORM->getEventoORM()->encontrarPorId($post_data[Constantes::$FORM_ID]);
+                        echo "EventoAtual: " . $eventoAtual->getId();
                         $grupoEventoAtivos = $eventoAtual->getGrupoEventoAtivos();
                         /* Dia foi alterado */
                         if ($post_data[Constantes::$FORM_DIA_DA_SEMANA] != $eventoAtual->getDia()) {
                             /* Persistindo */
                             /* Inativando o Evento */
                             $eventoParaInativar = $eventoAtual;
-                            $eventoParaInativar->setData_inativacao(Funcoes::dataAtual());
-                            $eventoParaInativar->setHora_inativacao(Funcoes::horaAtual());
-                            $repositorioORM->getEventoORM()->persistir($eventoParaInativar);
+                            $eventoParaInativar->setDataEHoraDeInativacao();
+                            $repositorioORM->getEventoORM()->persistir($eventoParaInativar, false);
                             /* Inativando todos Grupo Evento */
                             foreach ($grupoEventoAtivos as $gea) {
-                                $gea->setData_inativacao(Funcoes::dataAtual());
-                                $gea->setHora_inativacao(Funcoes::horaAtual());
-                                $repositorioORM->getGrupoEventoORM()->persistir($gea);
+                                $gea->setDataEHoraDeInativacao();
+                                $repositorioORM->getGrupoEventoORM()->persistir($gea, false);
                             }
                             $criarNovoEvento = true;
                             $mudarDataDeCadastroParaProximoDomingo = true;
@@ -381,7 +383,7 @@ class CadastroController extends CircuitoController {
                                 $eventoAtual->setNome(strtoupper($post_data[(Constantes::$FORM_NOME)]));
                             }
                             $eventoAtual->setHora($post_data[(Constantes::$FORM_HORA)] . ':' . $post_data[(Constantes::$FORM_MINUTOS)] . ':00');
-                            $repositorioORM->getEventoORM()->persistir($eventoAtual);
+                            $repositorioORM->getEventoORM()->persistir($eventoAtual, false);
                             /* Sessão */
                             $sessao->tipoMensagem = Constantes::$TIPO_MENSAGEM_ALTERAR_CULTO;
                             $sessao->textoMensagem = $eventoAtual->getNome() . ' ' . $eventoAtual->getHoraFormatoHoraMinutoParaListagem();
@@ -403,8 +405,7 @@ class CadastroController extends CircuitoController {
                                 if (!$validacaoMarcado) {
                                     $grupoEquipe = $repositorioORM->getGrupoORM()->encontrarPorId($stringValor);
                                     $grupoEventoEquipe = new GrupoEvento();
-                                    $grupoEventoEquipe->setData_criacao(Funcoes::dataAtual());
-                                    $grupoEventoEquipe->setHora_criacao(Funcoes::horaAtual());
+                                    $grupoEventoEquipe->setDataEHoraDeCriacao();
                                     $grupoEventoEquipe->setGrupo($grupoEquipe);
                                     $grupoEventoEquipe->setEvento($eventoAtual);
                                     $repositorioORM->getGrupoEventoORM()->persistir($grupoEventoEquipe);
@@ -430,7 +431,7 @@ class CadastroController extends CircuitoController {
                                 /* Equipe esta marcada mas não foi gerada ainda */
                                 if (!$validacaoMarcado) {
                                     $grupoEventAtivo->setDataEHoraDeInativacao();
-                                    $repositorioORM->getGrupoEventoORM()->persistir($grupoEventAtivo);
+                                    $repositorioORM->getGrupoEventoORM()->persistir($grupoEventAtivo, false);
                                 }
                             }
                         }
@@ -482,10 +483,13 @@ class CadastroController extends CircuitoController {
                 } else {
                     $this->direcionaErroDeCadastro($eventoForm->getMessages());
                 }
+
+                $repositorioORM->fecharTransacao();
                 return $this->redirect()->toRoute(Constantes::$ROUTE_CADASTRO, array(
                             Constantes::$PAGINA => Constantes::$PAGINA_CULTOS,
                 ));
             } catch (Exception $exc) {
+                $repositorioORM->desfazerTransacao();
                 echo $exc->getMessage();
             }
         }
@@ -498,15 +502,14 @@ class CadastroController extends CircuitoController {
     public function eventoCelulaPersistirAction() {
         $request = $this->getRequest();
         if ($request->isPost()) {
+            $eventoCelula = new EventoCelula();
             $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
             $celulaForm = new CelulaForm(Constantes::$FORM_CELULA, $eventoCelula);
+            $repositorioORM->iniciarTransacao();
             try {
-                $repositorioORM->iniciarTransacao();
-
                 $post_data = $request->getPost();
 
                 /* Entidades */
-                $eventoCelula = new EventoCelula();
                 $celulaForm->setInputFilter($eventoCelula->getInputFilter());
                 $celulaForm->setData($post_data);
 
@@ -532,14 +535,12 @@ class CadastroController extends CircuitoController {
                             /* Persistindo */
                             /* Inativando o Evento */
                             $eventoParaInativar = $eventoCelulaAtual->getEvento();
-                            $eventoParaInativar->setData_inativacao(Funcoes::dataAtual());
-                            $eventoParaInativar->setHora_inativacao(Funcoes::horaAtual());
-                            $repositorioORM->getEventoORM()->persistir($eventoParaInativar);
+                            $eventoParaInativar->setDataEHoraDeInativacao();
+                            $repositorioORM->getEventoORM()->persistir($eventoParaInativar, false);
                             /* Inativando o Grupo Evento */
                             $grupoEventoAtivos = $eventoParaInativar->getGrupoEventoAtivos();
-                            $grupoEventoAtivos[0]->setData_inativacao(Funcoes::dataAtual());
-                            $grupoEventoAtivos[0]->setHora_inativacao(Funcoes::horaAtual());
-                            $repositorioORM->getGrupoEventoORM()->persistir($grupoEventoAtivos[0]);
+                            $grupoEventoAtivos[0]->setDataEHoraDeInativacao();
+                            $repositorioORM->getGrupoEventoORM()->persistir($grupoEventoAtivos[0], false);
                             $criarNovaCelula = true;
                             $mudarDataDeCadstroParaProximoDomingo = true;
                         } else {
@@ -683,6 +684,7 @@ class CadastroController extends CircuitoController {
         $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
         $repositorioORM->iniciarTransacao();
         try {
+
             /* Verificando a se tem algum id na sessão */
             $sessao = new Container(Constantes::$NOME_APLICACAO);
             $eventoNaSessao = new Evento();
@@ -690,8 +692,6 @@ class CadastroController extends CircuitoController {
                 $eventoNaSessao = $repositorioORM->getEventoORM()->encontrarPorId($sessao->idSessao);
 
                 /* Persistindo */
-                /* Inativando o Evento */
-                $eventoParaInativar = $eventoNaSessao;
 
                 /* Relatório de célula */
 //                if ($eventoParaInativar->getEventoCelula()) {
@@ -712,11 +712,13 @@ class CadastroController extends CircuitoController {
 //                    }
 //                }
 
-                $eventoParaInativar->setDataEHoraDeInativacao();
-                $repositorioORM->getEventoORM()->persistir($eventoParaInativar, false);
+                /* Inativando o Evento */
+                $eventoNaSessao->setDataEHoraDeInativacao();
+                $repositorioORM->getEventoORM()->persistir($eventoNaSessao, false);
 
                 /* Inativando o Grupo Evento */
-                $grupoEventoAtivos = $eventoParaInativar->getGrupoEventoAtivos();
+                $grupoEventoAtivos = $eventoNaSessao->getGrupoEventoAtivos();
+
                 foreach ($grupoEventoAtivos as $grupoEventoAtivo) {
                     $grupoEventoAtivo->setDataEHoraDeInativacao();
                     $repositorioORM->getGrupoEventoORM()->persistir($grupoEventoAtivo, false);
@@ -729,8 +731,8 @@ class CadastroController extends CircuitoController {
                     $sessao->tipoMensagem = Constantes::$TIPO_MENSAGEM_EXCLUIR_CELULA;
                     $sessao->textoMensagem = $celula->getNome_hospedeiro();
                 }
-                /* Sessão */
                 $sessao->nomeEventoExcluido = $eventoNaSessao->getNome();
+                unset($sessao->idSessao);
 
                 $tipoCelula = !empty($eventoNaSessao->verificaSeECelula());
                 $pagina = Constantes::$PAGINA_CULTOS;
@@ -738,11 +740,11 @@ class CadastroController extends CircuitoController {
                     $pagina = Constantes::$PAGINA_CELULAS;
                 }
 
+                $repositorioORM->fecharTransacao();
                 return $this->redirect()->toRoute(Constantes::$ROUTE_CADASTRO, array(
-                            Constantes::$PAGINA => $pagina,
+                            Constantes::$PAGINA => Constantes::$PAGINA_CELULAS,
                 ));
             }
-            $repositorioORM->fecharTransacao();
         } catch (Exception $exc) {
             $repositorioORM->desfazerTransacao();
             echo $exc->getTraceAsString();
@@ -775,6 +777,7 @@ class CadastroController extends CircuitoController {
             Constantes::$FORM => $form,
             'tipoEntidade' => $entidade->getTipo_id(),
             'mostrarCadastro' => $mostrarCadastro,
+            'tituloDaPagina' => 'Cadastro de Time',
         ));
 
         /* Javascript */

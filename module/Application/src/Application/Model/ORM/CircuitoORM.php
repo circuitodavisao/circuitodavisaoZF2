@@ -59,11 +59,11 @@ class CircuitoORM {
             $this->getEntityManager()->persist($entidade);
             $this->getEntityManager()->flush($entidade);
         } catch (Exception $exc) {
-            echo $exc->getMessage();
+            echo $exc->getTraceAsString;
         }
     }
 
-       public function getEntityManager() {
+    public function getEntityManager() {
         return $this->_entityManager;
     }
 

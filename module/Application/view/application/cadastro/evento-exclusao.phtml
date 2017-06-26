@@ -98,7 +98,7 @@ echo $this->templateFormularioTopo($tituloDaPagina, Constantes::$STRING_DIV_CONF
                 <div class="col-sm-12 col-xs-12">
                     <div class="section text-center">
                         <select class="gui-input">
-                            <option>SELECT</option>
+                            <option><?php echo $this->translate(Constantes::$TRADUCAO_SELECIONE); ?></option>
                             <option>SAIU DA IGREJA</option>
                             <option>OUTRO</option>
                         </select>
@@ -120,8 +120,8 @@ echo $this->templateFormularioTopo($tituloDaPagina, Constantes::$STRING_DIV_CONF
         </div>
         <div class="panel-footer text-right" style="height:65px;">
             <?php
-            $labelVoltar = Constantes::$STRING_ICONE_ARROW_LEFT . ' ' . $this->translate(Constantes::$TRADUCAO_VOLTAR);
-            $labelContinuar = $this->translate(Constantes::$TRADUCAO_CONTINUAR) . ' ' . Constantes::$STRING_ICONE_ARROW_RIGHT;
+            $labelVoltar = $this->translate(Constantes::$TRADUCAO_VOLTAR);
+            $labelContinuar = $this->translate(Constantes::$TRADUCAO_CONTINUAR);
             $stringNomeDaFuncaoOnClickContinuarExclusao = '$("#divConfirmacao").toggleClass("' . Constantes::$FORM_HIDDEN . '");' .
                     '$("#divSenha").toggleClass("' . Constantes::$FORM_HIDDEN . '")';
             /* Botões */

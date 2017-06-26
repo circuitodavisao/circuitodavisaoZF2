@@ -120,8 +120,8 @@ echo $this->templateFormularioTopo($tituloDaPagina);
     <div class="hidden panel-footer text-right" style="height:65px;">
         <?php
         /* Botões */
-        $labelVoltar = Constantes::$STRING_ICONE_ARROW_LEFT . ' ' . $this->translate(Constantes::$TRADUCAO_VOLTAR);
-        $labelContinuar = $this->translate(Constantes::$TRADUCAO_CONTINUAR) . ' ' . Constantes::$STRING_ICONE_ARROW_RIGHT;
+        $labelVoltar = $this->translate(Constantes::$TRADUCAO_VOLTAR);
+        $labelContinuar = $this->translate(Constantes::$TRADUCAO_CONTINUAR);
         $funcaoPreValidacao = '';
         $urlVoltar = '';
         if ($form instanceof CelulaForm) {

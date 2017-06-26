@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: ZendSkeletonApplication\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-07-05 22:17-0700\n"
-"PO-Revision-Date: 2017-05-31 13:17-0300\n"
+"PO-Revision-Date: 2017-06-26 17:41-0300\n"
 "Last-Translator: Diogo Melo <dmelo87@gmail.com>\n"
 "Language-Team: ZF Contibutors <zf-devteam@zend.com>\n"
 "Language: pt\n"
@@ -473,7 +473,7 @@ msgstr "Minutos"
 
 #: Cadastro/view/cadastro/evento.phtml:47
 msgid " - Do not know your ZIP code <u><a target=\"_blank\" href=\"http://www.buscacep.correios.com.br/sistemas/buscacep/\">Click Here</a></u>"
-msgstr " - Não sabe seu CEP <u><a target=\"_blank\" href=\"http://www.buscacep.correios.com.br/sistemas/buscacep/\">Click Aqui</a></u>"
+msgstr " - Não sabe seu CEP <u><a target=\"_blank\" href=\"http://www.buscacep.correios.com.br/sistemas/buscacep/\">Clique Aqui</a></u>"
 
 #: Cadastro/view/cadastro/evento.phtml:47
 msgid "Data from Host"
@@ -542,7 +542,7 @@ msgid "FRIDAY"
 msgstr "SEXTA-FEIRA"
 
 msgid "FRI"
-msgstr "SEXA"
+msgstr "SEX"
 
 msgid "SATURDAY"
 msgstr "SÁBADO"
@@ -573,6 +573,54 @@ msgstr "Eu <span class=\"text-danger\">concordo</span> que <span class=\"text-da
 #: Cadastro/view/cadastro/evento-exclusao.phtml:15
 msgid "I am <span class=\"text-danger\">aware</span> that by <span class=\"text-danger\">excluding cell</span> is the same no longer appear in the <span class=\"text-danger\">launch line</span>!"
 msgstr "Eu <span class=\"text-danger\">concordo</span> que <span class=\"text-danger\">excluindo a célula</span> a mesma não aparecerá mais na minha <span class=\"text-danger\">linha de lançamento</span> e equipes!"
+
+#: Cadastro/view/cadastro/evento-exclusao.phtml:95
+msgid "What reason for exclusion?"
+msgstr "Qual o motivo de exclusão?"
+
+#: Cadastro/view/cadastro/evento-exclusao.phtml:112
+msgid "Please specify the reason"
+msgstr "Descreva o motivo"
+
+#: Cadastro/view/cadastro/evento-exclusao.phtml:146
+msgid "Enter your password to confirm the deletion"
+msgstr "Entre com sua senha para confimar a exclusão"
+
+#: Cadastro/view/cadastro/evento-exclusao.phtml:159
+msgid "Confirm"
+msgstr "Confirmar"
+
+#: Cadastro/view/cadastro/evento.phtml:*
+msgid "Registered"
+msgstr "Cadastrado(a)"
+
+#: Cadastro/view/cadastro/evento.phtml:*
+msgid "Changed"
+msgstr "Alterado(a)"
+
+#: Cadastro/view/cadastro/evento.phtml:*
+msgid "Deleted"
+msgstr "Excluido"
+
+#: Cadastro/view/cadastro/evento.phtml:*
+msgid "Host: "
+msgstr "Hospederio: "
+
+#: Cadastro/view/cadastro/evento.phtml:*
+msgid "Name: "
+msgstr "Nome: "
+
+#: Cadastro/view/cadastro/evento.phtml:*
+msgid "Cell "
+msgstr "Célula "
+
+#: Cadastro/view/cadastro/evento.phtml:*
+msgid "Cult "
+msgstr "Culto "
+
+#: Cadastro/view/cadastro/evento.phtml:*
+msgid "Revision "
+msgstr "Revisão De Vidas "
 
 # #####################
 # CADASTRO DE GRUPOS #

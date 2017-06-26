@@ -126,7 +126,7 @@ function voltarPreencherNome() {
             .addClass('hidden');
     $('#divExtras').removeClass('hidden');
     $('#divConfirmacao').addClass('hidden');
-    $('#botaoPasso3')
+    $('#botaoPasso4')
             .addClass(btnDefault)
             .removeClass(btnPrimary);
 }
