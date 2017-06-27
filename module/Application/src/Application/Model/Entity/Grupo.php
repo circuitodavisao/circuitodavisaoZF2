@@ -267,6 +267,7 @@ class Grupo extends CircuitoEntity {
         $grupoEventosCelulas = null;
         $grupoEventos = null;
         if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::SUBEQUIPE) {
+
             $grupoEventosCelulas = $grupoSelecionado->getGrupoEventoAtivosPorTipo(GrupoEvento::CELULA);
             while ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::SUBEQUIPE) {
                 $grupoSelecionado = $grupoSelecionado->getGrupoPaiFilhoPai()->getGrupoPaiFilhoPai();
@@ -417,7 +418,7 @@ class Grupo extends CircuitoEntity {
      * Retorna o grupo evento
      * @return GrupoEvento
      */
-    function getGrupoEventoAtivosPorTipo($tipo = 0) { 
+    function getGrupoEventoAtivosPorTipo($tipo = 0) {
         $grupoEventos = null;
         foreach ($this->getGrupoEvento() as $grupoEvento) {
             if ($grupoEvento->verificarSeEstaAtivo()) {
@@ -489,19 +490,46 @@ class Grupo extends CircuitoEntity {
         return $resposta;
     }
 
-    function getGrupoEventoNoPeriodo($periodo) {
+    function getGrupoEventoNoPeriodo($periodo, $apenasCelulas = false) {
         $grupoEventosNoPeriodo = array();
         $grupoEventoOrdenadosPorDiaDaSemana = $this->getGrupoEventoOrdenadosPorDiaDaSemana();
 
-        if (!empty($grupoEventoOrdenadosPorDiaDaSemana)) {
-            foreach ($grupoEventoOrdenadosPorDiaDaSemana as $grupoEvento) {
+        $grupoEventos = $grupoEventoOrdenadosPorDiaDaSemana;
+        if ($apenasCelulas) {
+            unset($grupoEventos);
+            if (!empty($grupoEventoOrdenadosPorDiaDaSemana)) {
+                foreach ($grupoEventoOrdenadosPorDiaDaSemana as $grupoEventoTodos) {
+                    if ($grupoEventoTodos->getEvento()->verificaSeECelula()) {
+                        $grupoEventos[] = $grupoEventoTodos;
+                    }
+                }
+            }
+        }
+
+        if (!empty($grupoEventos)) {
+            foreach ($grupoEventos as $grupoEvento) {
 
                 $arrayPeriodo = Funcoes::montaPeriodo($periodo);
                 $stringComecoDoPeriodo = $arrayPeriodo[3] . '-' . $arrayPeriodo[2] . '-' . $arrayPeriodo[1];
                 $dataDoInicioDoPeriodoParaComparar = strtotime($stringComecoDoPeriodo);
                 $dataDoGrupoEventoParaComparar = strtotime($grupoEvento->getData_criacaoStringPadraoBanco());
 
+                /* Evento criado antes do inicio do periodo */
+                $validacaoDataDeCriacaoAntesDoInicioDoPeriodo = false;
                 if ($dataDoGrupoEventoParaComparar <= $dataDoInicioDoPeriodoParaComparar) {
+                    $validacaoDataDeCriacaoAntesDoInicioDoPeriodo = true;
+                }
+
+                /* Evento criado no meio do periodo */
+                $stringFimDoPeriodo = $arrayPeriodo[6] . '-' . $arrayPeriodo[5] . '-' . $arrayPeriodo[4];
+                $dataDoFimDoPeriodoParaComparar = strtotime($stringFimDoPeriodo);
+                $validacaoDataDeCriacaoNoMeioDoPeriodo = false;
+                if ($dataDoGrupoEventoParaComparar > $dataDoInicioDoPeriodoParaComparar && $dataDoGrupoEventoParaComparar <= $dataDoFimDoPeriodoParaComparar) {
+                    $validacaoDataDeCriacaoNoMeioDoPeriodo = true;
+                }
+
+
+                if ($validacaoDataDeCriacaoAntesDoInicioDoPeriodo || $validacaoDataDeCriacaoNoMeioDoPeriodo) {
                     $grupoEventosNoPeriodo[] = $grupoEvento;
                 }
             }

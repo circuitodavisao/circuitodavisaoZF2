@@ -170,9 +170,9 @@ class IndexController extends CircuitoController {
         $html = '';
 
         $tipoCelula = 2;
-//        $dateFormatada = DateTime::createFromFormat('Y-m-d', date('Y-m-d'));
-//        $data = '2017-06-19';
-        $dateFormatada = DateTime::createFromFormat('Y-m-d', '2017-6-19');
+        /* rodar toda segunda */
+        $dateFormatada = DateTime::createFromFormat('Y-m-d', date('Y-m-d'));
+//        $dateFormatada = DateTime::createFromFormat('Y-m-d', '2017-6-26');
 
         $grupos = $this->getRepositorio()->getGrupoORM()->encontrarTodos();
         foreach ($grupos as $grupo) {
@@ -184,10 +184,11 @@ class IndexController extends CircuitoController {
             $numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($grupo);
             $html .= "<br />NumeroIdentificador: " . $numeroIdentificador;
             if ($numeroIdentificador) {
-
                 $fatoCiclo = $this->getRepositorio()->getFatoCicloORM()->encontrarPorNumeroIdentificadorEDataCriacao($numeroIdentificador, $dateFormatada, $this->getRepositorio());
+                $html .= "<br />fatoCiclo " . $fatoCiclo->getId();
                 $periodo = 0;
-                $grupoEventoNoPeriodo = $grupo->getGrupoEventoNoPeriodo($periodo);
+                $apenasCelulas = true;
+                $grupoEventoNoPeriodo = $grupo->getGrupoEventoNoPeriodo($periodo, $apenasCelulas);
                 $quantidadeDeEventosNoCiclo = count($grupoEventoNoPeriodo);
                 $temCelula = false;
                 $html .= "<br />quantidadeDeEventosNoCiclo $quantidadeDeEventosNoCiclo";
@@ -195,6 +196,7 @@ class IndexController extends CircuitoController {
                     foreach ($grupoEventoNoPeriodo as $grupoEvento) {
                         $html .= "<br />verificaSeECelula: " . $grupoEvento->getEvento()->verificaSeECelula();
                         if ($grupoEvento->getEvento()->verificaSeECelula()) {
+                            $html .= "<br />EventoCelula: " . $grupoEvento->getEvento()->getEventoCelula()->getId();
                             $this->getRepositorio()->getFatoCelulaORM()->criarFatoCelula($fatoCiclo, $grupoEvento->getEvento()->getEventoCelula()->getId());
                             $html .= "<br />Fato Celula ";
                             $temCelula = true;

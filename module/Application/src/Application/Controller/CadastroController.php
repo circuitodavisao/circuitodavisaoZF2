@@ -626,18 +626,22 @@ class CadastroController extends CircuitoController {
                         $sessao->idSessao = $eventoCelula->getId();
 
                         /* Cadastro do fato celula */
-//                        $numeroIdentificador = $repositorioORM->getFatoCicloORM()->montarNumeroIdentificador($entidade->getGrupo());
-//                        $dia = '';
-//                        $fatoCiclo = $repositorioORM->getFatoCicloORM()->encontrarPorNumeroIdentificadorEDataCriacao($numeroIdentificador, $dia, $repositorioORM);
-//                        $repositorioORM->getFatoCelulaORM()->criarFatoCelula($fatoCiclo, $eventoCelula->getId());
+                        $numeroIdentificador = $repositorioORM->getFatoCicloORM()->montarNumeroIdentificador($entidade->getGrupo());
+                        $periodo = 0;
+                        $arrayPeriodo = Funcoes::montaPeriodo($periodo);
+                        $stringData = $arrayPeriodo[3] . '-' . $arrayPeriodo[2] . '-' . $arrayPeriodo[1];
+                        $dateFormatada = DateTime::createFromFormat('Y-m-d', $stringData);
+                        $fatoPeriodo = $repositorioORM->getFatoCicloORM()->encontrarPorNumeroIdentificadorEDataCriacao($numeroIdentificador, $dateFormatada, $repositorioORM);
+                        $repositorioORM->getFatoCelulaORM()->criarFatoCelula($fatoPeriodo, $eventoCelula->getId());
                     }
                     $repositorioORM->fecharTransacao();
+
+                    return $this->redirect()->toRoute(Constantes::$ROUTE_CADASTRO, array(
+                                Constantes::$PAGINA => Constantes::$PAGINA_CELULAS,
+                    ));
                 } else {
                     $this->direcionaErroDeCadastro($celulaForm->getMessages());
                 }
-                return $this->redirect()->toRoute(Constantes::$ROUTE_CADASTRO, array(
-                            Constantes::$PAGINA => Constantes::$PAGINA_CELULAS,
-                ));
             } catch (Exception $exc) {
                 $repositorioORM->desfazerTransacao();
                 $this->direcionaErroDeCadastro($celulaForm->getMessages());

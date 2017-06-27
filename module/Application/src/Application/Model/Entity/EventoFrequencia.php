@@ -7,7 +7,7 @@ namespace Application\Model\Entity;
  * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com>
  * Descricao: Entidade anotada da tabela evento_frequencia
  */
-use DateTime;
+
 use Doctrine\ORM\Mapping as ORM;
 
 /**
