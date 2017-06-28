@@ -673,11 +673,19 @@ class CadastroController extends CircuitoController {
                 }
             }
         }
-        return new ViewModel(array(
+
+        $view = new ViewModel(array(
             Constantes::$EVENTO => $eventoNaSessao,
             Constantes::$ENTIDADE => $entidade,
             Constantes::$EXTRA => $extra,
         ));
+
+        /* Javascript */
+        $layoutJS = new ViewModel();
+        $layoutJS->setTemplate(Constantes::$LAYOUT_JS_EXCLUSAO_EVENTO);
+        $view->addChild($layoutJS, Constantes::$LAYOUT_STRING_JS_EXCLUSAO_EVENTO);
+
+        return $view;
     }
 
     /**

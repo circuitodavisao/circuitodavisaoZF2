@@ -4,6 +4,7 @@ namespace Application\Form;
 
 use Application\Controller\Helper\Constantes;
 use Zend\Form\Element\Text;
+use Zend\Form\Element\Number;
 use Zend\Form\Form;
 
 /**
@@ -20,7 +21,7 @@ class Endereco {
     public static function MontaEnderecoFormulario(Form $formulario) {
         /* CEP ou Logradouro */
         $formulario->add(
-                (new Text())
+                (new Number())
                         ->setName(Constantes::$FORM_CEP_LOGRADOURO)
                         ->setAttributes([
                             Constantes::$FORM_CLASS => Constantes::$FORM_CLASS_FORM_CONTROL,
