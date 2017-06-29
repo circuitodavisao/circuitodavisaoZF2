@@ -171,8 +171,8 @@ class IndexController extends CircuitoController {
 
         $tipoCelula = 2;
         /* rodar toda segunda */
-        $dateFormatada = DateTime::createFromFormat('Y-m-d', date('Y-m-d'));
-//        $dateFormatada = DateTime::createFromFormat('Y-m-d', '2017-6-26');
+//        $dateFormatada = DateTime::createFromFormat('Y-m-d', date('Y-m-d'));
+        $dateFormatada = DateTime::createFromFormat('Y-m-d', '2017-6-19');
 
         $grupos = $this->getRepositorio()->getGrupoORM()->encontrarTodos();
         foreach ($grupos as $grupo) {

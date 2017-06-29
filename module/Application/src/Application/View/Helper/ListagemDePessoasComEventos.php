@@ -52,7 +52,7 @@ class ListagemDePessoasComEventos extends AbstractHelper {
             $pessoas[] = $p;
         }
 
-        $grupoPessoas = $this->view->grupo->getGrupoPessoasNoPeriodo();
+        $grupoPessoas = $this->view->grupo->getGrupoPessoasNoPeriodo($this->view->periodo);
         if (count($grupoPessoas) > 0) {
             foreach ($grupoPessoas as $grupoPessoa) {
 //
@@ -373,7 +373,7 @@ class ListagemDePessoasComEventos extends AbstractHelper {
         return $html;
     }
 
-    private static function diaRealDoEvento($diaDaSemanaDoEvento) {
+    public static function diaRealDoEvento($diaDaSemanaDoEvento) {
 
         switch ($diaDaSemanaDoEvento) {
             case 1:

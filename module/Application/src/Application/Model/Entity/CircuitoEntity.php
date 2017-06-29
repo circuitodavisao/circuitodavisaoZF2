@@ -143,4 +143,8 @@ class CircuitoEntity {
         return $this->getData_criacao()->format('Y-m-d');
     }
 
+    function getData_inativacaoStringPadraoBanco() {
+        return $this->getData_inativacao()->format('Y-m-d');
+    }
+
 }

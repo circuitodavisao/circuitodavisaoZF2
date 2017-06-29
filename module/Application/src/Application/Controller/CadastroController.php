@@ -631,7 +631,8 @@ class CadastroController extends CircuitoController {
                         $arrayPeriodo = Funcoes::montaPeriodo($periodo);
                         $stringData = $arrayPeriodo[3] . '-' . $arrayPeriodo[2] . '-' . $arrayPeriodo[1];
                         $dateFormatada = DateTime::createFromFormat('Y-m-d', $stringData);
-                        $fatoPeriodo = $repositorioORM->getFatoCicloORM()->encontrarPorNumeroIdentificadorEDataCriacao($numeroIdentificador, $dateFormatada, $repositorioORM);
+                        $fatoPeriodo = $repositorioORM->getFatoCicloORM()->
+                                encontrarPorNumeroIdentificadorEDataCriacao($numeroIdentificador, $dateFormatada, $repositorioORM);
                         $repositorioORM->getFatoCelulaORM()->criarFatoCelula($fatoPeriodo, $eventoCelula->getId());
                     }
                     $repositorioORM->fecharTransacao();

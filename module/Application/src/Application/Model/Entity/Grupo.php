@@ -537,20 +537,37 @@ class Grupo extends CircuitoEntity {
         return $grupoEventosNoPeriodo;
     }
 
-    function getGrupoPessoasNoPeriodo() {
+    function getGrupoPessoasNoPeriodo($periodo) {
+
         $grupoPessoasNoPeriodo = array();
-        $timeZone = new DateTimeZone('UTC');
         $grupoPessoas = $this->getGrupoPessoa();
         if (!empty($grupoPessoas)) {
             foreach ($grupoPessoas as $grupoPessoa) {
 
-                $dataDoGrupoPessoaParaComparar = strtotime($grupoPessoa->getData_criacaoStringPadraoBrasil());
-                $dataDoInicioDoPeriodoParaComparar = strtotime(Funcoes::montaPeriodo()[1] . '/' . date('m') . '/' . date('Y'));
+                $dataDoGrupoPessoaParaComparar = strtotime($grupoPessoa->getData_criacaoStringPadraoBanco());
+                $arrayPeriodo = Funcoes::montaPeriodo($periodo);
+                $stringPeriodo = $arrayPeriodo[3] . '-' . $arrayPeriodo[2] . '-' . $arrayPeriodo[1];
+                $dataDoInicioDoPeriodoParaComparar = strtotime($stringPeriodo);
 
-                $data1 = DateTime::createFromFormat('d/m/Y', $dataDoGrupoPessoaParaComparar, $timeZone);
-                $data2 = DateTime::createFromFormat('d/m/Y', $dataDoInicioDoPeriodoParaComparar, $timeZone);
+                $validacaoDataCriacao = false;
+                if ($dataDoGrupoPessoaParaComparar <= $dataDoInicioDoPeriodoParaComparar) {
+                    $validacaoDataCriacao = true;
+                }
 
-                if ($data1 <= $data2) {
+                $stringFimPeriodo = $arrayPeriodo[6] . '-' . $arrayPeriodo[5] . '-' . $arrayPeriodo[4];
+                $dataDoFimParaComparar = strtotime($stringFimPeriodo);
+                if ($dataDoGrupoPessoaParaComparar > $dataDoInicioDoPeriodoParaComparar && $dataDoGrupoPessoaParaComparar <= $dataDoFimParaComparar) {
+                    $validacaoDataCriacao = true;
+                }
+
+                $validacaoAtivoEDataInativacao = true;
+                if (!$grupoPessoa->verificarSeEstaAtivo()) {
+                    $dataDoGrupoPessoaInativacaoParaComparar = strtotime($grupoPessoa->getData_inativacaoStringPadraoBanco());
+                    if ($dataDoGrupoPessoaInativacaoParaComparar <= $dataDoInicioDoPeriodoParaComparar) {
+                        $validacaoAtivoEDataInativacao = false;
+                    }
+                }
+                if ($validacaoDataCriacao && $validacaoAtivoEDataInativacao) {
                     $grupoPessoasNoPeriodo[] = $grupoPessoa;
                 }
             }

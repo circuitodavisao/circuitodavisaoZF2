@@ -340,7 +340,7 @@ class LancamentoController extends CircuitoController {
                     unset($sessao->exclusao);
 
                     return $this->redirect()->toRoute(Constantes::$ROUTE_LANCAMENTO, array(
-                                Constantes::$ACTION => Constantes::$ROUTE_INDEX,
+                                Constantes::$ACTION => 'Arregimentacao',
                     ));
                 }
             } catch (Exception $exc) {
@@ -403,7 +403,7 @@ class LancamentoController extends CircuitoController {
             $sessao->exclusao = true;
 
             return $this->forward()->dispatch(Constantes::$CONTROLLER_LANCAMENTO, array(
-                        Constantes::$ACTION => Constantes::$ROUTE_INDEX,
+                        Constantes::$ACTION => 'Arregimentacao',
             ));
         } catch (Exception $exc) {
             CircuitoController::direcionaErroDeCadastro($exc->getMessage());
