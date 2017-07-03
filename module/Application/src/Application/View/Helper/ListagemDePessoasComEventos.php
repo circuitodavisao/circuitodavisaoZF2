@@ -4,7 +4,7 @@ namespace Application\View\Helper;
 
 use Application\Controller\Helper\Constantes;
 use Application\Controller\Helper\Funcoes;
-use Doctrine\Common\Collections\Criteria;
+use DateTime;
 use Zend\View\Helper\AbstractHelper;
 
 /**
@@ -13,6 +13,8 @@ use Zend\View\Helper\AbstractHelper;
  * Descricao: Classe helper view para mostrar a listagem de eventos com frequencia
  */
 class ListagemDePessoasComEventos extends AbstractHelper {
+
+    private $diaDeSemanaHoje;
 
     public function __construct() {
         
@@ -24,71 +26,88 @@ class ListagemDePessoasComEventos extends AbstractHelper {
 
     public function renderHtml() {
         $html = '';
-        $mesSelecionado = Funcoes::mesPorAbaSelecionada($this->view->abaSelecionada);
-        $anoSelecionado = Funcoes::anoPorAbaSelecionada($this->view->abaSelecionada);
+
+        $pessoas = $this->montaListagemDePessoas();
+
+        $grupoEventoNoPeriodo = $this->view->grupo->getGrupoEventoNoPeriodo($this->view->periodo);
+        if (count($grupoEventoNoPeriodo) == 0) {
+            $html .= '<div class="alert alert-warning"><i class="fa fa-warning pr10" aria-hidden="true"></i>&nbsp;Sem eventos cadastrados!</div>';
+        } else {
+            $this->setDiaDeSemanaHoje(date('N'));
+            foreach ($pessoas as $pessoa) {
+                $html .= $this->montaLinhaDaPessoa($pessoa, $grupoEventoNoPeriodo);
+            }
+        }
+        return $html;
+    }
+
+    private function montaListagemDePessoas() {
         $pessoas = array();
         $pessoasGrupo = array();
-        $grupo = $this->view->entidade->getGrupo();
-        foreach ($grupo->getResponsabilidadesAtivas() as $gr) {
+
+        $grupoResponsabilidadesAtivas = $this->view->grupo->getResponsabilidadesAtivas();
+        foreach ($grupoResponsabilidadesAtivas as $gr) {
             $p = $gr->getPessoa();
             $p->setTipo('LP');
             $pessoas[] = $p;
         }
-        if (count($grupo->getGrupoPessoaAtivasEDoMes($mesSelecionado, $anoSelecionado)) > 0) {
-            foreach ($grupo->getGrupoPessoaAtivasEDoMes($mesSelecionado, $anoSelecionado) as $gp) {
 
-                /* Validação para visitantes inativados nesse mes transformados em consolidacoes */
-                $adicionarVisitante = true;
-                $grupoPessoaTipo = $gp->getGrupoPessoaTipo();
-                if (!$gp->verificarSeEstaAtivo() && $grupoPessoaTipo->getId() == 1) {
-                    $resposta = $this->view->repositorioORM->getGrupoPessoaORM()->encontrarPorIdPessoaAtivoETipo($gp->getPessoa_id(), null, 2); /* Consolidacao */
-                    if (!empty($resposta)) {
-                        $adicionarVisitante = false;
-                    }
-                }
-                /* Fim validacao */
-
-                $p = $gp->getPessoa();
-                if (empty($gp->getNucleo_perfeito())) {
-                    $p->setTipo($gp->getGrupoPessoaTipo()->getNomeSimplificado());
+        $grupoPessoas = $this->view->grupo->getGrupoPessoasNoPeriodo($this->view->periodo);
+        if (count($grupoPessoas) > 0) {
+            foreach ($grupoPessoas as $grupoPessoa) {
+//
+//                /* Validação para visitantes inativados nesse mes transformados em consolidacoes */
+//                $adicionarVisitante = true;
+//                $grupoPessoaTipo = $gp->getGrupoPessoaTipo();
+//                if (!$gp->verificarSeEstaAtivo() && $grupoPessoaTipo->getId() == 1) {
+//                    $resposta = $this->view->repositorioORM->getGrupoPessoaORM()->encontrarPorIdPessoaAtivoETipo($gp->getPessoa_id(), null, 2); /* Consolidacao */
+//                    if (!empty($resposta)) {
+//                        $adicionarVisitante = false;
+//                    }
+//                }
+//                /* Fim validacao */
+//
+                $pessoa = $grupoPessoa->getPessoa();
+                if (empty($grupoPessoa->getNucleo_perfeito())) {
+                    $pessoa->setTipo($grupoPessoa->getGrupoPessoaTipo()->getNomeSimplificado());
                 } else {
-                    if ($gp->getNucleo_perfeito() == "C") {
-                        $p->setTipo('CO');
+                    if ($grupoPessoa->getNucleo_perfeito() == "C") {
+                        $pessoa->setTipo('CO');
                     }
-                    if ($gp->getNucleo_perfeito() == "L") {
-                        $p->setTipo('LT');
-                    }
-                }
-                $p->setTransferido($gp->getTransferido(), $gp->getData_criacao(), $gp->getData_inativacao());
-                $p->setIdGrupoPessoa($gp->getId());
-                $p->setAtivo($gp->verificarSeEstaAtivo());
-                if (!$p->getAtivo()) {
-                    $p->setDataInativacao($gp->getData_inativacao());
-                }
-                $adicionar = true;
-                /* Validacao de tranferencia */
-                if ($p->verificarSeFoiTransferido($mesSelecionado, $anoSelecionado)) {
-                    $adicionar = false;
-
-                    /* Condição para data de cadastro */
-                    $primeiroDiaCiclo = Funcoes::periodoCicloMesAno($this->view->cicloSelecionado, $mesSelecionado, $anoSelecionado, '', 1);
-                    $ultimoDiaCiclo = Funcoes::periodoCicloMesAno($this->view->cicloSelecionado, $mesSelecionado, $anoSelecionado, '', 2);
-                    $mesAtual = date('m'); /* Mes com zero */
-                    $anoAtual = date('Y');
-
-                    if ($p->getDataTransferidoAno() <= $anoAtual) {
-                        if ($p->getDataTransferidoAno() == $anoAtual) {
-                            if ($p->getDataTransferidoMes() <= $mesAtual) {
-                                $adicionar = true;
-                            }
-                        } else {
-                            $adicionar = true;
-                        }
+                    if ($grupoPessoa->getNucleo_perfeito() == "L") {
+                        $pessoa->setTipo('LT');
                     }
                 }
-                if ($adicionar && $adicionarVisitante) {
-                    $pessoasGrupo[] = $p;
+//                $p->setTransferido($gp->getTransferido(), $gp->getData_criacao(), $gp->getData_inativacao());
+                $pessoa->setIdGrupoPessoa($grupoPessoa->getId());
+                $pessoa->setAtivo($grupoPessoa->verificarSeEstaAtivo());
+                if (!$pessoa->getAtivo()) {
+                    $pessoa->setDataInativacao($grupoPessoa->getData_inativacao());
                 }
+//                $adicionar = true;
+//                /* Validacao de tranferencia */
+//                if ($p->verificarSeFoiTransferido($mesSelecionado, $anoSelecionado)) {
+//                    $adicionar = false;
+//
+//                    /* Condição para data de cadastro */
+//                    $primeiroDiaCiclo = Funcoes::periodoCicloMesAno($this->view->cicloSelecionado, $mesSelecionado, $anoSelecionado, '', 1);
+//                    $ultimoDiaCiclo = Funcoes::periodoCicloMesAno($this->view->cicloSelecionado, $mesSelecionado, $anoSelecionado, '', 2);
+//                    $mesAtual = date('m'); /* Mes com zero */
+//                    $anoAtual = date('Y');
+//
+//                    if ($p->getDataTransferidoAno() <= $anoAtual) {
+//                        if ($p->getDataTransferidoAno() == $anoAtual) {
+//                            if ($p->getDataTransferidoMes() <= $mesAtual) {
+//                                $adicionar = true;
+//                            }
+//                        } else {
+//                            $adicionar = true;
+//                        }
+//                    }
+//                }
+//                if ($adicionar && $adicionarVisitante) {
+                $pessoasGrupo[] = $pessoa;
+//                }
             }
         }
 
@@ -112,9 +131,9 @@ class ListagemDePessoasComEventos extends AbstractHelper {
             }
             if (!$pg->getAtivo()) {
                 $valor = -2;
-                if (!$pg->verificarSeFoiTransferido($mesSelecionado, $anoSelecionado)) {
-                    $valor = -1;
-                }
+//                if (!$pg->verificarSeFoiTransferido($mesSelecionado, $anoSelecionado)) {
+//                    $valor = -1;
+//                }
             }
             $valores[$pg->getId()] = $valor;
         }
@@ -135,306 +154,317 @@ class ListagemDePessoasComEventos extends AbstractHelper {
         foreach ($pessoasGrupo as $pgA) {
             $pessoas[] = $pgA;
         }
-        /* FIM Ordenacao de pessoas */
 
-        /* Listagem dos eventos */
-        $eventos = $grupo->getGrupoEventoNoCiclo($this->view->cicloSelecionado, $mesSelecionado, $anoSelecionado);
+        return $pessoas;
+    }
 
-        /* Sem eventos cadastrados */
-        if (count($eventos) == 0) {
-            $html .= '<div class="alert alert-warning"><i class="fa fa-warning pr10" aria-hidden="true"></i>&nbsp;Sem eventos cadastrados!</div>';
-        } else {
-            foreach ($pessoas as $pessoa) {
-                $classLinha = '';
-                $corBotao = 'btn-dark';
-                $corTextoTagsExtrasXs = ' class="hidden-lg" ';
-                $corTextoTagsExtrasLg = ' class="hidden-xs hidden-sm hidden-md" ';
-                $classLinha2 = '';
-                if ($pessoa->getTipo() != 'LP' && !$pessoa->getAtivo()) {
-                    $classLinha = 'class="row-warning warning"';
-                    $classLinha2 = 'footable-visible footable-first-column';
-                    $corBotao = 'btn-warning disabled';
-                    $base = ' text-warning" data-toggle="tooltip" data-placement="center" title data-original-title="Inativo"';
-                    $corTextoTagsExtrasXs = 'class="hidden-lg' . $base;
-                    $corTextoTagsExtrasLg = 'class="hidden-xs hidden-sm hidden-md' . $base;
-                }
-                if ($pessoa->verificarSeFoiTransferido($mesSelecionado, $anoSelecionado)) {
-                    $classLinha = 'class="row-dark default"';
-                    $corBotao = 'btn-default';
-                    $base = ' text-muted" data-toggle="tooltip" data-placement="center" title data-original-title="Transferido"';
-                    $corTextoTagsExtrasXs = 'class="hidden-lg' . $base;
-                    $corTextoTagsExtrasLg = 'class="hidden-xs hidden-sm hidden-md' . $base;
-                }
-                $html .= '<tr id="tr_' . $pessoa->getIdGrupoPessoa() . '" ' . $classLinha . '>';
-
-                /* TIPO */
-                $html .= '<td class="tdTipo ' . $classLinha2 . '">';
-                /* Menu dropup Tipo */
-                $html .= '<div class="btn-group btn-block dropdown">';
-                $html .= '<span class="btn ' . $corBotao . ' btn-xs btn-block dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">';
-                $html .= $pessoa->getTipo();
-                $html .= '<span class="sr-only"></span>';
-                $html .= '</span>';
-
-                if ($pessoa->getTipo() != 'LP' && $this->view->abaSelecionada == 1 && $pessoa->getAtivo()) {
-                    $html .= '<ul class="dropdown-menu sobrepor-elementos" style="min-width: 43px;">';
-                    $html .= '<span class="editable-container editable-inline">';
-                    $html .= '<div class="definicao-altura-30">';
-
-                    $html .= '<div class="control-group form-group">';
-
-                    /* Remover Pessoa */
-                    $html .= '<span class="input-group-btn">';
-                    $html .= '<span onclick="funcaoPessoa(\'' . Constantes::$ROUTE_REMOVER_PESSOA . '\', ' . $pessoa->getIdGrupoPessoa() . ');" '
-                            . 'class="btn ladda-button btn-sm" style="margin-left:5px;"><i class="fa fa-trash-o"></i></span>';
-                    $html .= '</span>';
-
-                    $html .= '</div>';
-
-                    $html .= '</div>';
-                    $html .= '</span>';
-                    $html .= '</ul>';
-                }
-
-                /* Fim Menu dropup */
-
-                $html .= '</td>';
-
-                // AJUSTE 
-                // 29/07/2016
-                // Empura as colunas de eventos quando tem menos de 4 eventos
-                $empuraColunas = '';
-                if ($this->view->quantidadeDeEventosNoCiclo < 4) {
-                    $empuraColunas = 'col-xs-10 col-sm-10 col-md-10';
-                }
-                // FIM AJUSTE
-
-                /* NOME */
-                $html .= '<td class="text-left ' . $empuraColunas . '">&nbsp;';
-                /* Menu dropup Nome */
-                $html .= '<div class="btn-group dropdown">';
-                if ($pessoa->getTipo() != 'LP' && $pessoa->getAtivo()) {
-                    $html .= '<a id="menudrop_' . $pessoa->getId() . '" class="tdNome text-left dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">';
-                }
-                /* nome */
-                /* Indicação de que eh aluno */
-//                $html .= '<i class="fa fa-graduation-cap" aria-hidden="true"></i>&nbsp;';
-                $html .= '<span id="span_nome_' . $pessoa->getId() . '" ' . $corTextoTagsExtrasXs . '>';
-                $html .= $pessoa->getNomeListaDeLancamento($this->view->quantidadeDeEventosNoCiclo);
-                $html .= '</span>';
-                $html .= '<span id="span_nome_lg_' . $pessoa->getId() . '"' . $corTextoTagsExtrasLg . '>';
-                $html .= $pessoa->getNome();
-                $html .= '</span>';
-                /* fim nome */
-                if ($pessoa->getTipo() != 'LP' && $pessoa->getAtivo()) {
-                    $html .= '</a>';
-                    $html .= '<ul class="dropdown-menu sobrepor-elementos modal-edicao-nome">';
-                    $html .= '<span class="editable-container editable-inline">';
-                    $html .= '<div class="ml10 campo-edicao-nome">';
-                    $html .= '<form class="form-inline editableform">';
-                    $html .= '<div class="control-group form-group">';
-                    $html .= '<div>';
-                    $html .= '<div class="input-group">';
-                    $html .= '<input type="text" class="form-control" id="nome_' . $pessoa->getId() . '" value="' . $pessoa->getNome() . '" />';
-                    $html .= '<span class="input-group-btn">';
-                    $html .= '<span onclick="alterarNome(' . $pessoa->getId() . ')" class="btn ladda-button btn-primary" data-style="zoom-in"><span class="ladda-label"><i class="fa fa-check"></i></span></span>';
-                    $html .= '</span>';
-                    $html .= '</div>';
-                    $html .= '</div>';
-                    $html .= '</div>';
-
-                    $html .= '</div>';
-                }
-                /* Fim Menu dropup */
-                $html .= '</td>';
-                foreach ($eventos as $ge) {
-                    $valor = '';
-                    $class = 'btn-default';
-                    $classIco = 'fa-thumbs-down';
-                    $evento = $ge->getEvento();
-
-                    /* Validacao para eventos 5 a 7 ou mais */
-                    switch ($this->view->quantidadeDeEventosNoCiclo) {
-                        case 1:
-                            $style = 'style="width:100%;"';
-                            break;
-                        case 2:
-                            $style = 'style="width:50%;"';
-                            break;
-                        case 3:
-                            $style = 'style="width:33%;"';
-                            break;
-                        case 4:
-                            $style = 'style="width:25%;"';
-                            break;
-                        case 5:
-                            $style = 'style="width:20%;"';
-                            break;
-                        case 6:
-                            $style = 'style="width:18%;"';
-                            break;
-                        case 7:
-                            $style = 'style="width:15%;"';
-                            break;
-                        case 8:
-                            $style = 'style="width:12%;"';
-                            break;
-                        default:
-                            $style = 'style="width:20%;"';
-                            break;
-                    }
-
-                    /* Condições mes anteiror, mes atual e ciclos */
-                    $condicaoMesAnterior = ($this->view->abaSelecionada == 2);
-                    $condicaoCicloAtual = ($this->view->abaSelecionada == 1 && $this->view->cicloSelecionado == Funcoes::cicloAtual($mesSelecionado, $anoSelecionado));
-                    $condicaoCicloAnteriores = ($this->view->abaSelecionada == 1 && $this->view->cicloSelecionado < Funcoes::cicloAtual($mesSelecionado, $anoSelecionado));
-                    $diaDaSemana = date('N');
-                    if ($diaDaSemana == 7) {
-                        $diaDaSemana = 8;
-                    } else {
-                        $diaDaSemana++;
-                    }
-                    $condicaoDiaSemana = ($condicaoCicloAtual && $evento->getDiaAjustado() <= $diaDaSemana);
-
-                    /* Validação */
-                    $mostrar = false;
-                    /* Validando abas */
-                    if ($condicaoMesAnterior) {
-                        $mostrar = true;
-                    }
-                    if ($condicaoCicloAnteriores) {
-                        $mostrar = true;
-                    } else {
-                        if ($condicaoDiaSemana) {
-                            $mostrar = true;
-                        }
-                    }
-
-                    /* Validação de transferencias */
-                    $icone = 1;
-                    $primeiroDiaCiclo = Funcoes::periodoCicloMesAno($this->view->cicloSelecionado, $mesSelecionado, $anoSelecionado, '', 1);
-                    if ($pessoa->verificarSeFoiTransferido($mesSelecionado, $anoSelecionado)) {
-                        $mostrar = false;
-                        $icone = 2;
-                        /* Condição para data de cadastro */
-
-                        $ultimoDiaCiclo = Funcoes::periodoCicloMesAno($this->view->cicloSelecionado, $mesSelecionado, $anoSelecionado, '', 2);
-
-                        /* cadastrado nesse mes com dia anteiror o ciclo */
-                        if ($condicaoDiaSemana || $condicaoCicloAnteriores || $condicaoMesAnterior) {
-                            if ($pessoa->verificarSeFoiTransferido($mesSelecionado, $anoSelecionado, 1)) {
-                                $mostrar = true;
-                                if ($condicaoMesAnterior) {
-                                    if (!$pessoa->verificarSeFoiTransferido($mesSelecionado, $anoSelecionado, 2)) {
-                                        $mostrar = true;
-                                    }
-                                }
-                            } else {
-                                if ($pessoa->getDataTransferidoDia() <= $primeiroDiaCiclo) {
-                                    $mostrar = true;
-                                } else {
-                                    if ($pessoa->getDataTransferidoDia() <= $ultimoDiaCiclo) {
-                                        /* Verificar dia da semana da transferencia */
-                                        $diaDaSemana = date('N', mktime(0, 0, 0, $pessoa->getDataTransferidoMes(), $pessoa->getDataTransferidoDia(), $pessoa->getDataTransferidoAno()));
-                                        if ($diaDaSemana == 1) {
-                                            $diaDaSemana = 8;
-                                        } else {
-                                            $diaDaSemana++;
-                                        }
-                                        if ($diaDaSemana >= $evento->getDiaAjustado()) {
-                                            $mostrar = true;
-                                        }
-                                    }
-                                    if ($pessoa->getDataTransferidoDia() > $ultimoDiaCiclo) {
-                                        $mostrar = true;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    if (!$condicaoDiaSemana && !$condicaoMesAnterior) {
-                        $icone = 1;
-                    }
-                    if ($pessoa->verificarSeFoiTransferido($mesSelecionado, $anoSelecionado, 2)) {
-                        $icone = 2;
-                    } else {
-                        /* Verificando inativado */
-                        if ($pessoa->getGrupoPessoaAtivo()) {
-                            $grupoPessoa = $pessoa->getGrupoPessoaAtivo();
-//                            if($grupoPessoa->verificarSeEstaAtivo()){
-//                                echo "<br /><br />estou ativo";
-//                            }else{
-//                                 echo "<br /><br /> #### estou ativo";
-//                            }
-                            if (!$grupoPessoa->verificarSeEstaAtivo()) {
-//                                echo "inativado";
-                                /* Data Inativacao */
-                                $primeiroDiaCiclo = Funcoes::periodoCicloMesAno($this->view->cicloSelecionado, $mesSelecionado, $anoSelecionado, '', 1);
-                                $ultimoDiaCiclo = Funcoes::periodoCicloMesAno($this->view->cicloSelecionado, $mesSelecionado, $anoSelecionado, '', 2);
-                                if ($grupoPessoa->getData_inativacaoDia() > $ultimoDiaCiclo) {
-                                    $mostrar = true;
-                                }
-//                                echo "<br />grupoPessoa->getData_inativacaoDia()".$grupoPessoa->getData_inativacaoDia();
-                                if ($grupoPessoa->getData_inativacaoDia() < $primeiroDiaCiclo &&
-                                        $grupoPessoa->getData_inativacaoMes() == $mesSelecionado &&
-                                        $grupoPessoa->getData_inativacaoAno() == $anoSelecionado) {
-                                    $icone = 3;
-                                    $mostrar = false;
-                                }
-                            }
-                        }
-                    }
-
-                    $html .= '<td ' . $style . ' class="text-center">';
-                    $html .= '<div class="btn-group">';
-                    if ($mostrar) {
-                        $eventoFrequencia = $evento->getEventoFrequencia();
-                        $idEventoFrequencia = 'ico_' . $pessoa->getId() . '_' . $evento->getId();
-                        if (count($eventoFrequencia) > 0) {
-                            $criteria = Criteria::create()
-                                    ->andWhere(Criteria::expr()->eq("pessoa_id", $pessoa->getId()))
-                                    ->andWhere(Criteria::expr()->eq("ano", $anoSelecionado))
-                                    ->andWhere(Criteria::expr()->eq("mes", $mesSelecionado))
-                                    ->andWhere(Criteria::expr()->eq("ciclo", $this->view->cicloSelecionado))
-                            ;
-                            $eventosFiltrados = $eventoFrequencia->matching($criteria);
-                            if ($eventosFiltrados->count() === 1) {
-                                $valor = $eventosFiltrados->first()->getFrequencia();
-                                if ($valor == 'S') {
-                                    $class = 'btn-success';
-                                    $classIco = 'fa-thumbs-up';
-                                } else {
-                                    $class = 'btn-default';
-                                    $classIco = 'fa-thumbs-down';
-                                }
-                            }
-                        }
-                        $html .= '<button id="b_' . $idEventoFrequencia . '" type="button" class="btn ' . $class . ' btn-sm"'
-                                . ' onclick=\'mudarFrequencia(';
-                        $html .= "\"$idEventoFrequencia\", {$this->view->cicloSelecionado}, {$this->view->abaSelecionada}, {$this->view->grupo->getId()}";
-                        $html .= ');\'>';
-                        $html .= '<i id="i_' . $idEventoFrequencia . '" class="fa ' . $classIco . '"></i>';
-                        $html .= '</button>';
-                    } else {/* Eventos futuro */
-                        $html .= '<button type="button" class="btn btn-sm disabled">';
-                        if ($icone == 1) {
-                            $html .= '<i class="fa fa-clock-o"></i>';
-                        }
-                        if ($icone == 2) {
-                            $html .= '<i class="fa fa-random"></i>';
-                        }
-                        if ($icone == 3) {
-                            $html .= '<i class="fa fa-ban"></i>';
-                        }
-                        $html .= '</button>';
-                    }
-                    $html .= '</div>';
-                    $html .= '</td>';
-                }
-                $html .= '</tr>';
-            }
+    private function montaLinhaDaPessoa($pessoa, $grupoEventoNoPeriodo) {
+        $html = '';
+        $classLinha = '';
+        $corBotao = 'btn-dark';
+        $corTextoTagsExtrasXs = ' class="hidden-lg" ';
+        $corTextoTagsExtrasLg = ' class="hidden-xs hidden-sm hidden-md" ';
+        $classLinha2 = '';
+        if ($pessoa->getTipo() != 'LP' && !$pessoa->getAtivo()) {
+            $classLinha = 'class="row-warning warning"';
+            $classLinha2 = 'footable-visible footable-first-column';
+            $corBotao = 'btn-warning disabled';
+            $base = ' text-warning" data-toggle="tooltip" data-placement="center" title data-original-title="Inativo"';
+            $corTextoTagsExtrasXs = 'class="hidden-lg' . $base;
+            $corTextoTagsExtrasLg = 'class="hidden-xs hidden-sm hidden-md' . $base;
         }
+//                if ($pessoa->verificarSeFoiTransferido($mesSelecionado, $anoSelecionado)) {
+//                    $classLinha = 'class="row-dark default"';
+//                    $corBotao = 'btn-default';
+//                    $base = ' text-muted" data-toggle="tooltip" data-placement="center" title data-original-title="Transferido"';
+//                    $corTextoTagsExtrasXs = 'class="hidden-lg' . $base;
+//                    $corTextoTagsExtrasLg = 'class="hidden-xs hidden-sm hidden-md' . $base;
+//                }
+        $html .= '<tr id="tr_' . $pessoa->getIdGrupoPessoa() . '" ' . $classLinha . '>';
+
+        /* TIPO */
+        $html .= '<td class="tdTipo ' . $classLinha2 . '">';
+        /* Menu dropup Tipo */
+        $html .= '<div class="btn-group btn-block dropdown">';
+        $html .= '<span class="btn ' . $corBotao . ' btn-xs btn-block dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">';
+        $html .= $pessoa->getTipo();
+        $html .= '<span class="sr-only"></span>';
+        $html .= '</span>';
+
+        if ($pessoa->getTipo() != 'LP' && $pessoa->getAtivo()) {
+            $html .= '<ul class="dropdown-menu sobrepor-elementos" style="min-width: 43px;">';
+            $html .= '<span class="editable-container editable-inline">';
+            $html .= '<div class="definicao-altura-30">';
+
+            $html .= '<div class="control-group form-group">';
+
+            /* Remover Pessoa */
+            $html .= '<span class="input-group-btn">';
+            $html .= '<span onclick="funcaoPessoa(\'' . Constantes::$ROUTE_REMOVER_PESSOA . '\', ' . $pessoa->getIdGrupoPessoa() . ');" '
+                    . 'class="btn ladda-button btn-sm" style="margin-left:5px;"><i class="fa fa-trash-o"></i></span>';
+            $html .= '</span>';
+
+            $html .= '</div>';
+
+            $html .= '</div>';
+            $html .= '</span>';
+            $html .= '</ul>';
+        }
+
+        /* Fim Menu dropup */
+
+        $html .= '</td>';
+
+        $empuraColunas = '';
+        if ($this->view->quantidadeDeEventosNoCiclo < 4) {
+            $empuraColunas = 'col-xs-10 col-sm-10 col-md-10';
+        }
+
+        /* NOME */
+        $html .= '<td class="text-left ' . $empuraColunas . '">&nbsp;';
+        /* Menu dropup Nome */
+        $html .= '<div class="btn-group dropdown">';
+        if ($pessoa->getTipo() != 'LP' && $pessoa->getAtivo()) {
+            $html .= '<a id="menudrop_' . $pessoa->getId() . '" class="tdNome text-left dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">';
+        }
+        /* nome */
+        /* Indicação de que eh aluno */
+//                $html .= '<i class="fa fa-graduation-cap" aria-hidden="true"></i>&nbsp;';
+        $html .= '<span id="span_nome_' . $pessoa->getId() . '" ' . $corTextoTagsExtrasXs . '>';
+        $html .= $pessoa->getNomeListaDeLancamento(5);
+        $html .= '</span>';
+        $html .= '<span id="span_nome_lg_' . $pessoa->getId() . '"' . $corTextoTagsExtrasLg . '>';
+        $html .= $pessoa->getNome();
+        $html .= '</span>';
+        /* fim nome */
+
+        /* Alteracao de nome */
+        if ($pessoa->getTipo() != 'LP' && $pessoa->getAtivo()) {
+            $html .= '</a>';
+            $html .= '<ul class="dropdown-menu sobrepor-elementos modal-edicao-nome">';
+            $html .= '<span class="editable-container editable-inline">';
+            $html .= '<div class="ml10 campo-edicao-nome">';
+            $html .= '<form class="form-inline editableform">';
+            $html .= '<div class="control-group form-group">';
+            $html .= '<div>';
+            $html .= '<div class="input-group">';
+            $html .= '<input type="text" class="form-control" id="nome_' . $pessoa->getId() . '" value="' . $pessoa->getNome() . '" />';
+            $html .= '<span class="input-group-btn">';
+            $html .= '<span onclick="alterarNome(' . $pessoa->getId() . ')" class="btn ladda-button btn-primary" data-style="zoom-in"><span class="ladda-label"><i class="fa fa-check"></i></span></span>';
+            $html .= '</span>';
+            $html .= '</div>';
+            $html .= '</div>';
+            $html .= '</div>';
+
+            $html .= '</div>';
+        }
+        /* Fim Menu dropup */
+        $html .= '</td>';
+        foreach ($grupoEventoNoPeriodo as $grupoEvento) {
+            switch ($this->view->quantidadeDeEventosNoCiclo) {
+                case 1:
+                    $style = 'style="width:100%;"';
+                    break;
+                case 2:
+                    $style = 'style="width:50%;"';
+                    break;
+                case 3:
+                    $style = 'style="width:33%;"';
+                    break;
+                case 4:
+                    $style = 'style="width:25%;"';
+                    break;
+                case 5:
+                    $style = 'style="width:20%;"';
+                    break;
+                case 6:
+                    $style = 'style="width:18%;"';
+                    break;
+                case 7:
+                    $style = 'style="width:15%;"';
+                    break;
+                case 8:
+                    $style = 'style="width:12%;"';
+                    break;
+                default:
+                    $style = 'style="width:20%;"';
+                    break;
+            }
+
+            $diaDaSemanaDoEvento = (int) $grupoEvento->getEvento()->getDia();
+            /* Validação Evento mostrar ou não */
+            $mostrarParaLancar = false;
+            if ($this->view->periodo < 0) {
+                $arrayPeriodo = Funcoes::montaPeriodo($this->view->periodo);
+                $stringComecoDoPeriodo = $arrayPeriodo[3] . '-' . $arrayPeriodo[2] . '-' . $arrayPeriodo[1];
+                $dataDoInicioDoPeriodoParaComparar = strtotime($stringComecoDoPeriodo);
+                $dataDoGrupoEventoParaComparar = strtotime($grupoEvento->getData_criacaoStringPadraoBanco());
+
+                if ($dataDoGrupoEventoParaComparar <= $dataDoInicioDoPeriodoParaComparar) {
+                    $mostrarParaLancar = true;
+                }
+            }
+            if ($this->view->periodo <= 0) {
+                /* Verificar se o dia do culto é igual ou menor que o dia atual */
+                if ($diaDaSemanaDoEvento === 1) {
+                    $diaDaSemanaDoEvento = 7; // domingo
+                } else {
+                    $diaDaSemanaDoEvento--;
+                }
+                if ($diaDaSemanaDoEvento <= $this->getDiaDeSemanaHoje()) {
+                    $mostrarParaLancar = true;
+                }
+            }
+
+            $html .= '<td ' . $style . ' class="text-center">';
+            $html .= '<div class="btn-group">';
+
+            if ($mostrarParaLancar) {
+                $corDoBotao = BotaoSimples::botaoPequenoMenosImportante;
+                $icone = 'fa-thumbs-down';
+                $diaRealDoEvento = ListagemDePessoasComEventos::diaRealDoEvento($diaDaSemanaDoEvento, $this->view->periodo);
+                $dateFormatada = DateTime::createFromFormat('Y-m-d', $diaRealDoEvento);
+                $eventoFrequencia = $grupoEvento->getEvento()->getEventoFrequencia();
+
+                if (count($eventoFrequencia) > 0) {
+                    $eventosFiltrados = $pessoa->getEventoFrequenciasFiltradosPorEventoEDia(
+                            $grupoEvento->getEvento()->getId(), $dateFormatada);
+                    if ($eventosFiltrados->count() === 1) {
+                        $valor = $eventosFiltrados->first()->getFrequencia();
+                        if ($valor == 'S') {
+                            $corDoBotao = BotaoSimples::botaoPequenoImportante;
+                            $icone = 'fa-thumbs-up';
+                        }
+                    }
+                }
+
+                $idEventoFrequencia = $pessoa->getId() . '_' . $grupoEvento->getEvento()->getId();
+                $iconeBotao = '<i id="icone_' . $idEventoFrequencia . '" class="fa ' . $icone . '"></i>';
+                $idDoBotao = 'id="botao_' . $idEventoFrequencia . '"';
+                $parametrosMudarFrequencia = $pessoa->getId() . ',' . $grupoEvento->getEvento()->getId() . ', "' . $diaRealDoEvento . '", ' . $this->view->grupo->getId() . ', ' . $this->view->periodo;
+                $funcaoMudarFrequencia = 'mudarFrequencia(' . $parametrosMudarFrequencia . ')';
+                $funcaoOnclick = $this->view->funcaoOnClick($funcaoMudarFrequencia);
+                $extra = $idDoBotao . ' ' . $funcaoOnclick;
+                $html .= $this->view->botaoSimples($iconeBotao, $extra, $corDoBotao, BotaoSimples::posicaoAoCentro);
+            } else {/* Eventos futuro */
+                $icone = 1;
+                $iconeRelogio = 1;
+
+                $html .= '<button type = "button" class = "btn btn-sm disabled">';
+                if ($icone === $iconeRelogio) {
+                    $html .= '<i class = "fa fa-clock-o"></i>';
+                }
+//                if ($icone == 2) {
+//                    $html .= '<i class = "fa fa-random"></i>';
+//                }
+//                if ($icone == 3) {
+//                    $html .= '<i class = "fa fa-ban"></i>';
+//                }
+                $html .= '</button>';
+            }
+            $html .= '</div>';
+            $html .= '</td>';
+        }
+        $html .= '</tr>
+
+                
+
+                ';
+
         return $html;
+    }
+
+    public static function diaRealDoEvento($diaDaSemanaDoEvento, $periodo = 0) {
+
+        switch ($diaDaSemanaDoEvento) {
+            case 1:
+                if ($periodo < 0) {
+                    $stringDoDia = 'last Monday';
+                } else {
+                    if (date('N') == 1) {
+                        $stringDoDia = 'Today';
+                    } else {
+                        $stringDoDia = 'next Monday';
+                    }
+                }
+                break;
+            case 2:
+                if ($periodo < 0) {
+                    $stringDoDia = 'last Tuesday';
+                } else {
+                    if (date('N') == 2) {
+                        $stringDoDia = 'Today';
+                    } else {
+                        $stringDoDia = 'next Tuesday';
+                    }
+                }
+                break;
+            case 3:
+                if ($periodo < 0) {
+                    $stringDoDia = 'last Wednesday';
+                } else {
+                    if (date('N') == 3) {
+                        $stringDoDia = 'Today';
+                    } else {
+                        $stringDoDia = 'next Wednesday';
+                    }
+                }
+                break;
+            case 4:
+                if ($periodo < 0) {
+                    $stringDoDia = 'last Thursday';
+                } else {
+                    if (date('N') == 4) {
+                        $stringDoDia = 'Today';
+                    } else {
+                        $stringDoDia = 'next Thursday';
+                    }
+                }
+                break;
+            case 5:
+                if ($periodo < 0) {
+                    $stringDoDia = 'last Friday';
+                } else {
+                    if (date('N') == 5) {
+                        $stringDoDia = 'Today';
+                    } else {
+                        $stringDoDia = 'next Friday';
+                    }
+                }
+                break;
+            case 6:
+                if ($periodo < 0) {
+                    $stringDoDia = 'last Saturday';
+                } else {
+                    if (date('N') == 6) {
+                        $stringDoDia = 'Today';
+                    } else {
+                        $stringDoDia = 'next Saturday';
+                    }
+                }
+                break;
+            case 7:
+                if ($periodo < 0) {
+                    $stringDoDia = 'last Sunday';
+                } else {
+                    if (date('N') == 7) {
+                        $stringDoDia = 'Today';
+                    } else {
+                        $stringDoDia = 'next Sunday';
+                    }
+                }
+                break;
+        }
+
+        return date("Y-m-d", strtotime($stringDoDia));
+    }
+
+    function getDiaDeSemanaHoje() {
+        return $this->diaDeSemanaHoje;
+    }
+
+    function setDiaDeSemanaHoje($diaDeSemanaHoje) {
+        $this->diaDeSemanaHoje = $diaDeSemanaHoje;
     }
 
 }

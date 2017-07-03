@@ -123,6 +123,8 @@ class LoginController extends CircuitoController {
         $authenticationResult = $this->getDoctrineAuthenticationServicer()->authenticate();
         if ($authenticationResult->isValid()) {
             /* Autenticacao valida */
+            $identity = $authenticationResult->getIdentity();
+            $this->getDoctrineAuthenticationServicer()->getStorage()->write($identity);
 
             /* Helper Controller */
             $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
@@ -214,6 +216,29 @@ class LoginController extends CircuitoController {
             } else {
                 $response->setContent(Json::encode(
                                 array('response' => 'false')));
+            }
+        }
+        return $response;
+    }
+
+    /**
+     * Função que tenta logar
+     * POST /logarJason
+     */
+    public function validarSenhaAction() {
+        $data = $this->getRequest()->getPost();
+        $response = $this->getResponse();
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $senhaInformada = md5($data['senha']);
+            $senhaNaIdentidade = $this->identity()->getSenha();
+
+            if ($senhaNaIdentidade === $senhaInformada) {
+                $response->setContent(Json::encode(
+                                array('response' => true)));
+            } else {
+                $response->setContent(Json::encode(
+                                array('response' => false)));
             }
         }
         return $response;

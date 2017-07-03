@@ -35,7 +35,7 @@ class MontarEndereco extends AbstractHelper {
         $html .= '</div>';
         $html .= '<div id="divBotaoBuscarCep" class="row">';
         $html .= $this->view->botaoSimples(Constantes::$TRADUCAO_BUSCAR_CEP_LOGRADOURO, $this->view->funcaoOnClick(Constantes::$FORM_FUNCAO_BUSCAR_CEP));
-        if ($this->getForm() instanceof CelulaForm) {
+        if ($this->getForm() instanceof CelulaForm && $this->getForm()->get(Constantes::$FORM_ID)->getValue() === '') {
             $funcaoVoltar = $this->view->funcaoOnClick('voltarSelecionarDiaHoraEMinuto()');
             $html .= $this->view->botaoSimples(Constantes::$TRADUCAO_VOLTAR, $funcaoVoltar, 2);
         }

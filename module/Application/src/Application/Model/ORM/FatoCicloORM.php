@@ -3,9 +3,11 @@
 namespace Application\Model\ORM;
 
 use Application\Controller\Helper\Constantes;
+use Application\Controller\Helper\Funcoes;
 use Application\Model\Entity\Dimensao;
 use Application\Model\Entity\FatoCiclo;
 use Application\Model\Entity\Grupo;
+use DateTime;
 use Exception;
 
 /**
@@ -14,6 +16,24 @@ use Exception;
  * Descricao: Classe com acesso doctrine a entity fato_ciclo
  */
 class FatoCicloORM extends CircuitoORM {
+
+    public function encontrarPorNumeroIdentificadorEDataCriacao($numeroIdentificador, $dia, RepositorioORM $repositorioORM) {
+        try {
+            $resposta = $this->getEntityManager()
+                    ->getRepository($this->getEntity())
+                    ->findOneBy(
+                    array(
+                        Constantes::$ENTITY_FATO_CICLO_NUMERO_IDENTIFICADOR => $numeroIdentificador,
+                        'data_criacao' => $dia,
+            ));
+            if (empty($resposta)) {
+                $resposta = $this->criarFatoNoCiclo($numeroIdentificador, $dia, $repositorioORM);
+            }
+            return $resposta;
+        } catch (Exception $exc) {
+            echo $exc->getTraceAsString();
+        }
+    }
 
     /**
      * Localizar fato_ciclo por numeroIdentificador
@@ -50,16 +70,11 @@ class FatoCicloORM extends CircuitoORM {
     /**
      * Localizar fato_ciclo por numeroIdentificador
      * @param string $numeroIdentificador
-     * @param int $ciclo
-     * @param int $mes
-     * @param int $ano
+     * @param int $periodo
      * @param int $tipoComparacao
      * @return array
      */
-    public function montarRelatorioPorNumeroIdentificador($numeroIdentificador, $ciclo, $mes, $ano, $tipoComparacao) {
-        $cicloInt = (int) $ciclo;
-        $mesInt = (int) $mes;
-        $anoInt = (int) $ano;
+    public function montarRelatorioPorNumeroIdentificador($numeroIdentificador, $periodo, $tipoComparacao) {
         $dimensaoTipoCelula = 1;
         $dimensaoTipoDomingo = 4;
         $dqlBase = "SELECT "
@@ -72,9 +87,7 @@ class FatoCicloORM extends CircuitoORM {
                 . "WHERE "
                 . "d.dimensaoTipo = #dimensaoTipo "
                 . "AND fc.numero_identificador #tipoComparacao ?1 "
-                . "AND fc.mes = ?2 "
-                . "AND fc.ano = ?3 "
-                . "AND fc.ciclo = ?4";
+                . "AND fc.data_criacao = ?2 ";
         try {
             if ($tipoComparacao == 1) {
                 $dqlAjustadaTipoComparacao = str_replace('#tipoComparacao', '=', $dqlBase);
@@ -83,13 +96,15 @@ class FatoCicloORM extends CircuitoORM {
                 $dqlAjustadaTipoComparacao = str_replace('#tipoComparacao', 'LIKE', $dqlBase);
                 $numeroIdentificador .= '%';
             }
+            $resultadoPeriodo = Funcoes::montaPeriodo($periodo);
+            $dataDoPeriodo = $resultadoPeriodo[3] . '-' . $resultadoPeriodo[2] . '-' . $resultadoPeriodo[1];
+            $dataDoPeriodoFormatada = DateTime::createFromFormat('Y-m-d', $dataDoPeriodo);
+
             for ($indice = $dimensaoTipoCelula; $indice <= $dimensaoTipoDomingo; $indice++) {
                 $dqlAjustada = str_replace('#dimensaoTipo', $indice, $dqlAjustadaTipoComparacao);
                 $result[$indice] = $this->getEntityManager()->createQuery($dqlAjustada)
                         ->setParameter(1, $numeroIdentificador)
-                        ->setParameter(2, $mesInt)
-                        ->setParameter(3, $anoInt)
-                        ->setParameter(4, $cicloInt)
+                        ->setParameter(2, $dataDoPeriodoFormatada)
                         ->getResult();
             }
             return $result;
@@ -101,16 +116,11 @@ class FatoCicloORM extends CircuitoORM {
     /**
      * Localizar fato_ciclo por numeroIdentificador
      * @param string $numeroIdentificador
-     * @param int $ciclo
-     * @param int $mes
-     * @param int $ano
+     * @param int $periodo
      * @param int $tipoComparacao
      * @return array
      */
-    public function montarRelatorioCelulaPorNumeroIdentificador($numeroIdentificador, $ciclo, $mes, $ano, $tipoComparacao) {
-        $cicloInt = (int) $ciclo;
-        $mesInt = (int) $mes;
-        $anoInt = (int) $ano;
+    public function montarRelatorioCelulaPorNumeroIdentificador($numeroIdentificador, $periodo, $tipoComparacao) {
         $dqlBase = "SELECT "
                 . "COUNT(c.id) quantidade, "
                 . "SUM(c.realizada) realizadas "
@@ -118,9 +128,7 @@ class FatoCicloORM extends CircuitoORM {
                 . "JOIN fc.fatoCelula c "
                 . "WHERE "
                 . "fc.numero_identificador #tipoComparacao ?1 "
-                . "AND fc.mes = ?2 "
-                . "AND fc.ano = ?3 "
-                . "AND fc.ciclo = ?4";
+                . "AND fc.data_criacao = ?2 ";
         try {
             if ($tipoComparacao == 1) {
                 $dqlAjustadaTipoComparacao = str_replace('#tipoComparacao', '=', $dqlBase);
@@ -129,11 +137,12 @@ class FatoCicloORM extends CircuitoORM {
                 $dqlAjustadaTipoComparacao = str_replace('#tipoComparacao', 'LIKE', $dqlBase);
                 $numeroIdentificador .= '%';
             }
+            $resultadoPeriodo = Funcoes::montaPeriodo($periodo);
+            $dataDoPeriodo = $resultadoPeriodo[3] . '-' . $resultadoPeriodo[2] . '-' . $resultadoPeriodo[1];
+            $dataDoPeriodoFormatada = DateTime::createFromFormat('Y-m-d', $dataDoPeriodo);
             $result = $this->getEntityManager()->createQuery($dqlAjustadaTipoComparacao)
                     ->setParameter(1, $numeroIdentificador)
-                    ->setParameter(2, $mesInt)
-                    ->setParameter(3, $anoInt)
-                    ->setParameter(4, $cicloInt)
+                    ->setParameter(2, $dataDoPeriodoFormatada)
                     ->getResult();
 
 
@@ -183,23 +192,16 @@ class FatoCicloORM extends CircuitoORM {
 
     /**
      * Criar fato ciclo
-     * @param type $numeroIdentificador
-     * @param type $ano
-     * @param type $mes
-     * @param type $ciclo
-     * @param RepositorioORM $repositorioORM
-     * @return type
      */
-    public function criarFatoNoCiclo($numeroIdentificador, $ano, $mes, $ciclo, RepositorioORM $repositorioORM) {
+    public function criarFatoNoCiclo($numeroIdentificador, $dia, RepositorioORM $repositorioORM) {
         $fatoCiclo = new FatoCiclo();
         try {
             $fatoCiclo->setNumero_identificador($numeroIdentificador);
-            $fatoCiclo->setAno($ano);
-            $fatoCiclo->setMes($mes);
-            $fatoCiclo->setCiclo($ciclo);
-            $this->persistir($fatoCiclo);
+            $fatoCiclo->setDataEHoraDeCriacao();
+            $fatoCiclo->setData_criacao($dia);
+            $this->persistir($fatoCiclo, false);
             $dimensoes = $this->criarDimensoes($fatoCiclo, $repositorioORM);
-            $fatoCicloPesquisa = $this->encontrarPorNumeroIdentificador($numeroIdentificador, $ciclo, $mes, $ano, $repositorioORM);
+            $fatoCicloPesquisa = $this->encontrarPorId($fatoCiclo->getId());
             $fatoCicloPesquisa->setDimensao($dimensoes);
             return $fatoCicloPesquisa;
         } catch (Exception $exc) {

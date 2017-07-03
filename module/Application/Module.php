@@ -47,7 +47,6 @@ use Application\View\Helper\LinkLogo;
 use Application\View\Helper\ListagemConsolidacaoParaRevisao;
 use Application\View\Helper\ListagemDeEventos;
 use Application\View\Helper\ListagemDePessoasComEventos;
-use Application\View\Helper\ListagemFichasAtivasRevisao;
 use Application\View\Helper\ListagemFichasParaRevisao;
 use Application\View\Helper\ListagemLideresTransferencia;
 use Application\View\Helper\MensagemRelatorioEnviado;

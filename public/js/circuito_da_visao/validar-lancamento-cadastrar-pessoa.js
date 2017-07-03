@@ -12,63 +12,63 @@ function validarLancamentoCadastrarPessoa(form) {
 
     if (nome.length === 0) {
         temErro = true;
-        if (mensagem === '') {
-            mensagem += '  Nome';
-        } else {
-            mensagem += ', Nome';
+        if (mensagem !== '') {
+            mensagem += ', ';
         }
+        mensagem += 'Nome';
     } else {
         var reg = /^[A-Za-záàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ ]+$/;
         if (!reg.exec(nome)) {
             temErro = true;
-            if (mensagem === '') {
-                mensagem += '  Nome Inválido';
-            } else {
-                mensagem += ', Nome Inválido';
+            if (mensagem !== '') {
+                mensagem += ', ';
             }
+            mensagem += 'Nome Inválido';
+        }
+        if (nome.length > 80) {
+            temErro = true;
+            if (mensagem !== '') {
+                mensagem += ', ';
+            }
+            mensagem += 'Nome pode ter no máximo 80 caracteres';
         }
     }
     if (ddd.length === 0) {
         temErro = true;
-        if (mensagem === '') {
-            mensagem += ' DDD';
-        } else {
-            mensagem += ', DDD';
+        if (mensagem !== '') {
+            mensagem += ', ';
         }
+        mensagem += 'DDD';
     } else {
         if (ddd.length !== 2) {
             temErro = true;
-            if (mensagem === '') {
-                mensagem += ' DDD Inválido';
-            } else {
-                mensagem += ', DDD Inválido';
+            if (mensagem !== '') {
+                mensagem += ', ';
             }
+            mensagem += 'DDD Inválido';
         }
     }
     if (telefone.length === 0) {
         temErro = true;
-        if (mensagem === '') {
-            mensagem += ' Telefone';
-        } else {
-            mensagem += ', Telefone';
+        if (mensagem !== '') {
+            mensagem += ', ';
         }
+        mensagem += 'Telefone';
     } else {
         if (!(telefone.length >= 8 && telefone.length <= 9)) {
             temErro = true;
-            if (mensagem === '') {
-                mensagem += ' Telefone Inválido';
-            } else {
-                mensagem += ', Telefone Inválido';
+            if (mensagem !== '') {
+                mensagem += ', ';
             }
+            mensagem += 'Telefone Inválido';
         }
     }
     if (tipo.length === 0) {
         temErro = true;
-        if (mensagem === '') {
-            mensagem += ' Tipo';
-        } else {
-            mensagem += ', Tipo';
+        if (mensagem !== '') {
+            mensagem += ', ';
         }
+        mensagem += 'Tipo';
     }
 
     if (temErro) {
@@ -78,10 +78,10 @@ function validarLancamentoCadastrarPessoa(form) {
                 .removeClass('hidden')
                 .addClass('alert-danger');
     } else {
-      
+
         divMensagens
                 .addClass('hidden');
-        
+
         form.submit();
     }
 }

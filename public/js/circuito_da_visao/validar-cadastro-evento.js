@@ -3,8 +3,10 @@ var btnDefault = 'btn-default';
 var btnPrimary = 'btn-primary';
 
 function voltarListagemCultos() {
-  
     location.href = "/cadastroCultos";
+}
+function voltarListagemCelulas() {
+    location.href = "/cadastroCelulas";
 }
 
 function validarDiaHoraEMinuto() {
@@ -52,6 +54,15 @@ function voltarSelecionarDiaHoraEMinuto() {
     $('#divDiaDaSemanaHoraMinuto').removeClass('hidden');
     $('#divExtras').addClass('hidden');
     $('#botaoPasso2')
+            .addClass(btnDefault)
+            .removeClass(btnPrimary);
+}
+function voltarEndereco() {
+    $('#divMensagens')
+            .addClass('hidden');
+    $('#divEndereco').removeClass('hidden');
+    $('#divDadosHospedeiro').addClass('hidden');
+    $('#botaoPasso3')
             .addClass(btnDefault)
             .removeClass(btnPrimary);
 }
@@ -115,7 +126,7 @@ function voltarPreencherNome() {
             .addClass('hidden');
     $('#divExtras').removeClass('hidden');
     $('#divConfirmacao').addClass('hidden');
-    $('#botaoPasso3')
+    $('#botaoPasso4')
             .addClass(btnDefault)
             .removeClass(btnPrimary);
 }
@@ -150,16 +161,34 @@ function retornaDiaDaSemanaPorExtenso(diaDaSemana) {
 }
 
 function submeter(form) {
- 
+
     form.submit();
 }
 
 function abrirDadosHospedeiro() {
-    $('#divEndereco').addClass('hidden');
-    $('#divDadosHospedeiro').removeClass('hidden');
-    $('#botaoPasso3')
-            .removeClass(btnDefault)
-            .addClass(btnPrimary);
+    var temErro = false;
+    var divMensagens = $('#divMensagens');
+    var mensagem = '';
+
+    if ($('#cep_logradouro').val().length < 8) {
+        temErro = true;
+        mensagem = 'Preencha o CEP corretamente';
+    }
+
+    if (temErro) {
+        divMensagens
+                .html(mensagem)
+                .removeClass('alert-success')
+                .removeClass('hidden')
+                .addClass('alert-danger');
+    } else {
+        divMensagens.addClass('hidden');
+        $('#divEndereco').addClass('hidden');
+        $('#divDadosHospedeiro').removeClass('hidden');
+        $('#botaoPasso3')
+                .removeClass(btnDefault)
+                .addClass(btnPrimary);
+    }
 }
 
 function validarDadosHospedeiro() {
@@ -171,9 +200,9 @@ function validarDadosHospedeiro() {
     var divMensagens = $('#divMensagens');
     var mensagem = '';
 
-    if (telefone_hospedeiro.length < 8) {
+    if (telefone_hospedeiro.length < 8 || telefone_hospedeiro.length > 9) {
         temErro = true;
-        mensagem = 'Telefone tem que ter pelo menos 8 caracteres';
+        mensagem = 'Telefone tem que ter de 8 a 9 caracteres';
     }
     if (telefone_hospedeiro.length === 0) {
         temErro = true;
@@ -186,6 +215,10 @@ function validarDadosHospedeiro() {
     if (ddd_hospedeiro.length === 0) {
         temErro = true;
         mensagem = 'Preencha o DDD do hospedeiro';
+    }
+    if (nome_hospedeiro.length > 80) {
+        temErro = true;
+        mensagem = 'Nome do hospedeiro pode ter no máximo 80 caracteres';
     }
     if (nome_hospedeiro.length < 3) {
         temErro = true;
