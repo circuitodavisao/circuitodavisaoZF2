@@ -549,21 +549,25 @@ class Grupo extends CircuitoEntity {
                 $stringPeriodo = $arrayPeriodo[3] . '-' . $arrayPeriodo[2] . '-' . $arrayPeriodo[1];
                 $dataDoInicioDoPeriodoParaComparar = strtotime($stringPeriodo);
 
+                /* Criando antes do começo do periodo */
                 $validacaoDataCriacao = false;
                 if ($dataDoGrupoPessoaParaComparar <= $dataDoInicioDoPeriodoParaComparar) {
                     $validacaoDataCriacao = true;
                 }
 
+                /* Criando no periodo */
                 $stringFimPeriodo = $arrayPeriodo[6] . '-' . $arrayPeriodo[5] . '-' . $arrayPeriodo[4];
                 $dataDoFimParaComparar = strtotime($stringFimPeriodo);
                 if ($dataDoGrupoPessoaParaComparar > $dataDoInicioDoPeriodoParaComparar && $dataDoGrupoPessoaParaComparar <= $dataDoFimParaComparar) {
                     $validacaoDataCriacao = true;
                 }
 
+                /* Se esta inativo */
                 $validacaoAtivoEDataInativacao = true;
                 if (!$grupoPessoa->verificarSeEstaAtivo()) {
+                    /* Inativado no periodo */
                     $dataDoGrupoPessoaInativacaoParaComparar = strtotime($grupoPessoa->getData_inativacaoStringPadraoBanco());
-                    if ($dataDoGrupoPessoaInativacaoParaComparar <= $dataDoInicioDoPeriodoParaComparar) {
+                    if ($dataDoGrupoPessoaInativacaoParaComparar < $dataDoInicioDoPeriodoParaComparar) {
                         $validacaoAtivoEDataInativacao = false;
                     }
                 }

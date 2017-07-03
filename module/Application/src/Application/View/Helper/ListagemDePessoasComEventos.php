@@ -304,7 +304,7 @@ class ListagemDePessoasComEventos extends AbstractHelper {
                     $mostrarParaLancar = true;
                 }
             }
-            if ($this->view->periodo == 0) {
+            if ($this->view->periodo <= 0) {
                 /* Verificar se o dia do culto é igual ou menor que o dia atual */
                 if ($diaDaSemanaDoEvento === 1) {
                     $diaDaSemanaDoEvento = 7; // domingo
@@ -318,10 +318,11 @@ class ListagemDePessoasComEventos extends AbstractHelper {
 
             $html .= '<td ' . $style . ' class="text-center">';
             $html .= '<div class="btn-group">';
+
             if ($mostrarParaLancar) {
                 $corDoBotao = BotaoSimples::botaoPequenoMenosImportante;
                 $icone = 'fa-thumbs-down';
-                $diaRealDoEvento = ListagemDePessoasComEventos::diaRealDoEvento($diaDaSemanaDoEvento);
+                $diaRealDoEvento = ListagemDePessoasComEventos::diaRealDoEvento($diaDaSemanaDoEvento, $this->view->periodo);
                 $dateFormatada = DateTime::createFromFormat('Y-m-d', $diaRealDoEvento);
                 $eventoFrequencia = $grupoEvento->getEvento()->getEventoFrequencia();
 
@@ -373,56 +374,84 @@ class ListagemDePessoasComEventos extends AbstractHelper {
         return $html;
     }
 
-    public static function diaRealDoEvento($diaDaSemanaDoEvento) {
+    public static function diaRealDoEvento($diaDaSemanaDoEvento, $periodo = 0) {
 
         switch ($diaDaSemanaDoEvento) {
             case 1:
-                if (date('N') == 1) {
-                    $stringDoDia = 'Today';
-                } else {
+                if ($periodo < 0) {
                     $stringDoDia = 'last Monday';
+                } else {
+                    if (date('N') == 1) {
+                        $stringDoDia = 'Today';
+                    } else {
+                        $stringDoDia = 'next Monday';
+                    }
                 }
                 break;
             case 2:
-                if (date('N') == 2) {
-                    $stringDoDia = 'Today';
-                } else {
+                if ($periodo < 0) {
                     $stringDoDia = 'last Tuesday';
+                } else {
+                    if (date('N') == 2) {
+                        $stringDoDia = 'Today';
+                    } else {
+                        $stringDoDia = 'next Tuesday';
+                    }
                 }
                 break;
             case 3:
-                if (date('N') == 3) {
-                    $stringDoDia = 'Today';
-                } else {
+                if ($periodo < 0) {
                     $stringDoDia = 'last Wednesday';
+                } else {
+                    if (date('N') == 3) {
+                        $stringDoDia = 'Today';
+                    } else {
+                        $stringDoDia = 'next Wednesday';
+                    }
                 }
                 break;
             case 4:
-                if (date('N') == 4) {
-                    $stringDoDia = 'Today';
-                } else {
+                if ($periodo < 0) {
                     $stringDoDia = 'last Thursday';
+                } else {
+                    if (date('N') == 4) {
+                        $stringDoDia = 'Today';
+                    } else {
+                        $stringDoDia = 'next Thursday';
+                    }
                 }
                 break;
             case 5:
-                if (date('N') == 5) {
-                    $stringDoDia = 'Today';
-                } else {
+                if ($periodo < 0) {
                     $stringDoDia = 'last Friday';
+                } else {
+                    if (date('N') == 5) {
+                        $stringDoDia = 'Today';
+                    } else {
+                        $stringDoDia = 'next Friday';
+                    }
                 }
                 break;
             case 6:
-                if (date('N') == 6) {
-                    $stringDoDia = 'Today';
-                } else {
+                if ($periodo < 0) {
                     $stringDoDia = 'last Saturday';
+                } else {
+                    if (date('N') == 6) {
+                        $stringDoDia = 'Today';
+                    } else {
+                        $stringDoDia = 'next Saturday';
+                    }
                 }
                 break;
             case 7:
-                if (date('N') == 7) {
-                    $stringDoDia = 'Today';
-                } else {
+                if ($periodo < 0) {
                     $stringDoDia = 'last Sunday';
+                } else {
+                    if (date('N') == 7) {
+                        $stringDoDia = 'Today';
+                    } else {
+                        $stringDoDia = 'next Sunday';
+                    }
                 }
                 break;
         }

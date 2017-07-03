@@ -29,7 +29,9 @@ class CabecalhoDeEventos extends AbstractHelper {
         if (!empty($grupoEventoNoPeriodo)) {
             $html .= '<tr>';
             $html .= '<th class="tdTipo"></th>';
-            $html .= '<th class="tdNome text-right">Totais</th>';
+            $html .= '<th class="tdNome text-right">';
+//            $html .= 'Totais';
+            $html .= '</th>';
             foreach ($grupoEventoNoPeriodo as $grupoEvento) {
                 $diaDaSemanaAjustado = Funcoes::diaDaSemanaPorDia($grupoEvento->getEvento()->getDia());
                 $eventoNome = Funcoes::nomeDoEvento($grupoEvento->getEvento()->getTipo_id());
@@ -43,44 +45,34 @@ class CabecalhoDeEventos extends AbstractHelper {
                         . '</div>';
 
                 /* Totais */
-                $evento = $grupoEvento->getEvento();
-                $html .= "<div style='width:100%' id='total_{$evento->getId()}'>";
-                $eventoFrequencia = $evento->getEventoFrequencia();
-                $total = 0;
-                if (count($eventoFrequencia) > 0) {
-                    $arrayPeriodo = Funcoes::montaPeriodo($this->view->periodo);
-                    $grupoPessoas = $this->view->grupo->getGrupoPessoaAtivasEDoMes($arrayPeriodo[2], $arrayPeriodo[3]);
-                    $pessoasParaComparar = array();
-                    foreach ($this->view->grupo->getResponsabilidadesAtivas() as $grupoResponsavel) {
-                        $pessoasParaComparar[] = $grupoResponsavel->getPessoa()->getId();
-                    }
-                    if ($grupoPessoas) {
-                        foreach ($grupoPessoas as $grupoPessoa) {
-                            $pessoasParaComparar[] = $grupoPessoa->getPessoa()->getId();
-                        }
-                    }
-
-                    $diaDaSemanaDoEvento = (int) $grupoEvento->getEvento()->getDia();
-                    if ($this->view->periodo == 0) {
-                        /* Verificar se o dia do culto é igual ou menor que o dia atual */
-                        if ($diaDaSemanaDoEvento === 1) {
-                            $diaDaSemanaDoEvento = 7; // domingo
-                        } else {
-                            $diaDaSemanaDoEvento--;
-                        }
-                    }
-                    $diaRealDoEvento = ListagemDePessoasComEventos::diaRealDoEvento($diaDaSemanaDoEvento);
-                    $dateFormatada = DateTime::createFromFormat('Y-m-d', $diaRealDoEvento);
-                    $criteria = Criteria::create()
-                            ->andWhere(Criteria::expr()->eq("dia", $dateFormatada))
-                            ->andWhere(Criteria::expr()->eq("frequencia", "S"))
-                            ->andWhere(Criteria::expr()->in("pessoa_id", $pessoasParaComparar))
-                    ;
-                    $eventosFiltrados = $eventoFrequencia->matching($criteria);
-                    $total = count($eventosFiltrados);
-                }
-                $html .= $total;
-                $html .= "</div>";
+//                $evento = $grupoEvento->getEvento();
+//                $html .= "<div style='width:100%' id='total_{$evento->getId()}'>";
+//                $eventoFrequencias = $evento->getEventoFrequencia();
+//                $total = 0;
+//                if (count($eventoFrequencias) > 0) {
+//                    $grupoPessoas = $this->view->grupo->getGrupoPessoasNoPeriodo($this->view->periodo);
+//                    $pessoasParaComparar = array();
+//                    foreach ($this->view->grupo->getResponsabilidadesAtivas() as $grupoResponsavel) {
+//                        $pessoasParaComparar[] = (int) $grupoResponsavel->getPessoa()->getId();
+//                    }
+//                    if ($grupoPessoas) {
+//                        foreach ($grupoPessoas as $grupoPessoa) {
+//                            $pessoasParaComparar[] = (int) $grupoPessoa->getPessoa()->getId();
+//                        }
+//                    }
+//
+//                    $diaDoEventoFormatado = DateTime::createFromFormat('Y-m-d', '2017-06-27');
+//                    $criteria = Criteria::create()
+//                            ->andWhere(Criteria::expr()->eq('dia', $diaDoEventoFormatado))
+//                            ->andWhere(Criteria::expr()->eq('frequencia', (string) 'S'))
+//                            ->andWhere(Criteria::expr()->in('pessoa_id', $pessoasParaComparar))
+//                    ;
+//                    $eventosFrequenciaFiltrados = $eventoFrequencias->matching($criteria);
+//
+//                    $total = count($eventosFrequenciaFiltrados);
+//                }
+//                $html .= $total;
+//                $html .= "</div>";
 
                 $html .= "</th>";
             }

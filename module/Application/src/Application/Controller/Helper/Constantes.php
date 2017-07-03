@@ -244,6 +244,7 @@ class Constantes {
     public static $REPOSITORIO_ORM = 'repositorioORM';
     public static $TURMA = 'turma';
     public static $GRUPO = 'grupo';
+    public static $PERIODO = 'periodo';
     public static $NUMERO_ATENDIMENTOS = 'numeroAtendimentos';
     public static $PROGRESSO_ATENDIMENTOS = 'progresso';
     public static $COR_BARRA_ATENDIMENTOS = 'corBarraTotal';

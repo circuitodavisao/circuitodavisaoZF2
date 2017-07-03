@@ -3,7 +3,7 @@
 namespace Application\Model\ORM;
 
 use Application\Model\Entity\CircuitoEntity;
-use Application\Model\Entity\EventoCelula;
+use DateTime;
 use Doctrine\ORM\EntityManager;
 use Exception;
 

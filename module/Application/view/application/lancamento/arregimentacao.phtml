@@ -1,6 +1,7 @@
 <?php
 
 use Application\Controller\Helper\Constantes;
+use Application\View\Helper\BotaoSimples;
 ?>
 <div class="mw1000 center-block">    
     <div id='panelLancamento' class="panel mw1000">
@@ -14,11 +15,12 @@ use Application\Controller\Helper\Constantes;
             ?>
         </div>
         <div class="panel-footer text-center">
-            <a class="btn btn-dark" 
-               href='#' 
-               onclick="verificarMuitosCadastros(<?php echo $this->validacao; ?>);">
-                   <?php echo $this->translate(Constantes::$TRADUCAO_CADASTRAR_PESSOA); ?>
-            </a>
+            <?php
+            $label = $this->translate(Constantes::$TRADUCAO_CADASTRAR_PESSOA);
+            $extra = $this->funcaoOnClick('verificarMuitosCadastros(' . $this->validacao . ')');
+
+            echo $this->botaoSimples($label, $extra, BotaoSimples::botaoImportante, BotaoSimples::posicaoAoCentro);
+            ?>
         </div>
     </div>
 </div>
