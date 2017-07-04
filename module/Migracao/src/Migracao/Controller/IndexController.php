@@ -35,7 +35,7 @@ class IndexController extends CircuitoController {
     private $entidadeTipoEquipe;
     private $entidadeTipoSub;
 
-    const DATA_CRIACAO = '2017-06-26';
+    const DATA_CRIACAO = '2017-07-03';
 
     /**
      * Contrutor sobrecarregado com os serviços de ORM e Autenticador
@@ -212,7 +212,7 @@ class IndexController extends CircuitoController {
                         $quantidadeLideres = count($grupo->getResponsabilidadesAtivas());
                     }
                     $html .= "<br />quantidadeLideres" . $quantidadeLideres;
-//                    $this->getRepositorio()->getFatoLiderORM()->criarFatoLider($numeroIdentificador, $quantidadeLideres);
+                    $this->getRepositorio()->getFatoLiderORM()->criarFatoLider($numeroIdentificador, $quantidadeLideres);
                 }
             }
         }
