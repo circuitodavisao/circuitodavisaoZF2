@@ -312,8 +312,6 @@ class Constantes {
     public static $STRING_ID_EVENTO_FREQUENCIA = 'idEventoFrequencia';
     public static $PAGINA_FICHA_REVISAO = 'FichaRevisao';
     public static $PAGINA_ATIVAR_FICHA_REVISAO = 'AtivarFichaRevisao';
-    public static $PAGINA_ATIVAR_RESERVA_REVISAO = 'AtivarReservaRevisao';
-    public static $PAGINA_SELECIONAR_LIDER_REVISAO = 'SelecionarLiderRevisao';
     public static $PAGINA_ATIVAR_LIDERES_REVISAO = 'AtivarLideresRevisao';
     public static $PAGINA_LIDERES_REVISAO = 'LideresRevisao';
     public static $PAGINA_CONSULTAR_FICHA = 'ConsultarFicha';
@@ -428,7 +426,6 @@ class Constantes {
     public static $PAGINA_REVISIONISTAS = 'Revisionistas';
     public static $PAGINA_FICHA_REVISIONISTAS = 'FichaRevisionistas';
     public static $PAGINA_ATIVOS_REVISIONISTAS = 'AtivosRevisionistas';
-    public static $PAGINA_LIDERES_REVISAO = 'LideresRevisao'; 
     public static $PAGINA_CELULA = 'Celula';
     public static $PAGINA_EVENTO_CULTO = 'EventoCulto';
     public static $PAGINA_EVENTO_CELULA = 'EventoCelula';
@@ -451,7 +448,6 @@ class Constantes {
     public static $PAGINA_SELECIONAR_REVISIONISTA = 'SelecionarRevisionista';
     public static $PAGINA_SELECIONAR_FICHA_REVISIONISTA = 'SelecionarFichasRevisionista';
     public static $PAGINA_SELECIONAR_FICHA_ATIVAS = 'SelecionarFichasAtivas';
-    public static $PAGINA_ATIVAR_LIDERES_REVISAO = 'AtivarLideresRevisao';
     public static $PAGINA_INSERIR_REVISAO = 'InserirRevisao';
     public static $PAGINA_SALVAR_REVISAO = 'SalvarRevisao';
     public static $PAGINA_CADASTRO_TRANSFERENCIA = 'Transferencia';
