@@ -4,8 +4,7 @@
  * Descricao: Função para lançar frequência de evento
  */
 
-
-function mudarAtendimento(idGrupo, tipo) {
+function mudarAtendimento(idGrupo, tipo, abaSelecionada) {
     var botaoLancar = $('#botao1_' + idGrupo);
     var botaoRemover = $('#botao2_' + idGrupo);
     var progressBar = $('#progressBarAtendimento' + idGrupo);
@@ -18,10 +17,11 @@ function mudarAtendimento(idGrupo, tipo) {
     var botao;
     var icone;
 
-    if (tipo === 1) {
+    if (tipo == 1) {
         botao = botaoLancar;
         icone = iconePlus;
-    } else {
+    }
+    if (tipo == 2) {
         botao = botaoRemover;
         icone = iconeMinus;
     }
@@ -33,31 +33,31 @@ function mudarAtendimento(idGrupo, tipo) {
             "/lancamentoMudarAtendimento",
             {
                 idGrupo: idGrupo,
-                tipo: tipo
+                tipo: tipo,
+                abaSelecionada: abaSelecionada
             },
             function (data) {
                 if (data.response) {
                     var numeroAtendimentos = parseInt(data.numeroAtendimentos);
                     var progresso = parseFloat(data.progresso);
-                    if (numeroAtendimentos === 0) {
-                        var textoProgressBar = numeroAtendimentos + ' Atd.';
-                    } else {
-                        var textoProgressBar = numeroAtendimentos + ' Atendimentos';
-                    }
+
+                    progressBar.removeClass(corBarraVermelha);
+                    progressBar.removeClass(corBarraAmarela);
+                    progressBar.removeClass(corBarraVerde);
 
                     botao.removeClass('disabled');
+
                     if (numeroAtendimentos == 1) {
-                        progressBar.removeClass(corBarraVermelha);
-                        progressBar.removeClass(corBarraAmarela);
-                        progressBar.removeClass(corBarraVerde);
+                        botaoRemover.removeClass('disabled');
+                        botaoRemover.removeAttr('disabled');
                         progressBarCabecalho.removeClass(corBarraVermelha);
                         progressBarCabecalho.removeClass(corBarraAmarela);
                         progressBarCabecalho.removeClass(corBarraVerde);
                         progressBar.attr('aria-valuenow', 50)
                                 .addClass(corBarraAmarela)
-                                .html(textoProgressBar)
+                                .html(numeroAtendimentos)
                                 .css('width', '50%');
-                        botaoRemover.removeClass('disabled');
+
                         progressBarCabecalho.attr('aria-valuenow', progresso)
                                 .addClass(data.corBarraTotal)
                                 .html(progresso + '%')
@@ -65,22 +65,11 @@ function mudarAtendimento(idGrupo, tipo) {
 
                         $('#totalGruposAtendidos').text(data.totalGruposAtendidos);
                     }
-                    if (numeroAtendimentos == 2) {
-                        progressBar.removeClass(corBarraVermelha);
-                        progressBar.removeClass(corBarraAmarela);
-                        progressBar.removeClass(corBarraVerde);
+                    if (numeroAtendimentos >= 2) {
+                        botaoRemover.removeClass('disabled');
                         progressBar.attr('aria-valuenow', 100)
                                 .addClass(corBarraVerde)
-                                .html(textoProgressBar)
-                                .css('width', '100%');
-                    }
-                    if (numeroAtendimentos > 2) {
-                        progressBar.removeClass(corBarraVermelha);
-                        progressBar.removeClass(corBarraAmarela);
-                        progressBar.removeClass(corBarraVerde);
-                        progressBar.attr('aria-valuenow', 100)
-                                .addClass(corBarraVerde)
-                                .html(textoProgressBar)
+                                .html(numeroAtendimentos)
                                 .css('width', '100%');
                     }
                     if (numeroAtendimentos == 0) {
@@ -88,12 +77,10 @@ function mudarAtendimento(idGrupo, tipo) {
                         progressBarCabecalho.removeClass(corBarraVermelha);
                         progressBarCabecalho.removeClass(corBarraAmarela);
                         progressBarCabecalho.removeClass(corBarraVerde);
-                        progressBar.removeClass(corBarraVermelha);
-                        progressBar.removeClass(corBarraAmarela);
-                        progressBar.removeClass(corBarraVerde);
+
                         progressBar.attr('aria-valuenow', 10)
                                 .addClass(corBarraVermelha)
-                                .html(textoProgressBar)
+                                .html(numeroAtendimentos)
                                 .css('width', '10%');
                         progressBarCabecalho.attr('aria-valuenow', progresso)
                                 .addClass(data.corBarraTotal)
@@ -104,7 +91,6 @@ function mudarAtendimento(idGrupo, tipo) {
 
                     botao.html('');
                     botao.html(icone);
-                    botao.removeClass('disabled');
                 }
             }, 'json');
 }

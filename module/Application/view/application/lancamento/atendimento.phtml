@@ -2,8 +2,6 @@
 
 use Application\Controller\Helper\Constantes;
 
-$urlBase = $this->url(Constantes::$ROUTE_LANCAMENTO) . 'Atendimento';
-$urlBase2 = $urlBase . '/2';
 /**
  * Nome: atendimento.phtml
  * @author Lucas Filipe de Carvalho Cunha <lucascarvalho.esw@gmail.com>
@@ -14,10 +12,10 @@ $urlBase2 = $urlBase . '/2';
     <div class="panel">      
         <?php echo $this->abasPanel(Constantes::$ROUTE_LANCAMENTO, 'Atendimento'); ?>
         <div class="panel-body center-block">
-            <?php
-            echo $this->cabecalhoDeAtendimentos();
-            echo $this->atendimentoGruposAbaixo();
-            ?>        
+            <div class="row center-block text-center">
+                <?php echo $this->cabecalhoDeAtendimentos($this->gruposAbaixo); ?>     
+            </div>
+            <?php echo $this->atendimentoGruposAbaixo(); ?>        
         </div>
     </div>
 </div>

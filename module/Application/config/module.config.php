@@ -47,13 +47,13 @@ return array(
                     ),
                 ),
             ),
-            'lancamento' => array( 
+            'lancamento' => array(
                 'type' => 'Segment',
                 'options' => array(
                     'route' => '/lancamento[:action[/:id]]',
                     'constraints' => array(
                         'action' => '[a-zA-z]*',
-                        'id' => '[1-2]|[1-2]_[1-6]',
+                        'id' => '[-0-9]+',
                     ),
                     'defaults' => array(
                         'controller' => 'Application\Controller\Lancamento',
@@ -77,10 +77,11 @@ return array(
             'relatorio' => array(
                 'type' => 'Segment',
                 'options' => array(
-                    'route' => '/relatorio[:action[/:id]]',
+                    'route' => '/relatorio[:action][/:tipoRelatorio][/:id]',
                     'constraints' => array(
                         'action' => '[a-zA-Z]+',
-                        'id' => '[1-2]',
+                        'tipoRelatorio' => '[1-3]',
+                        'id' => '[-0-9]+',
                     ),
                     'defaults' => array(
                         'controller' => 'Application\Controller\Relatorio',
@@ -150,6 +151,7 @@ return array(
             'lancamento/lancamento/cadastrar-pessoa-revisao' => __DIR__ . '/../view/lancamento/cadastrar-pessoa-revisao.phtml',
             'lancamento/lancamento/ficha-revisao' => __DIR__ . '/../view/lancamento/ficha-revisao.phtml',
             'lancamento/lancamento/atendimento' => __DIR__ . '/../view/lancamento/atendimento.phtml',
+            'lancamento/lancamento/arregimentacao' => __DIR__ . '/../view/lancamento/arregimentacao.phtml',
             'cadastro/cadastro/index' => __DIR__ . '/../view/cadastro/index.phtml',
             'cadastro/cadastro/evento' => __DIR__ . '/../view/cadastro/evento.phtml',
             'cadastro/cadastro/evento-exclusao' => __DIR__ . '/../view/cadastro/evento-exclusao.phtml',
@@ -163,7 +165,7 @@ return array(
             'cadastro/cadastro/revisao' => __DIR__ . '/../view/cadastro/revisao.phtml',
             'cadastro/cadastro/transferencia' => __DIR__ . '/../view/cadastro/transferencia.phtml',
             'cadastro/cadastro/selecionar_revisionista' => __DIR__ . '/../view/cadastro/selecionar_revisionista.phtml',
-            'relatorio/relatorio/membresia' => __DIR__ . '/../view/relatorio/membresia.phtml',
+            'relatorio/relatorio/index' => __DIR__ . '/../view/relatorio/index.phtml',
             'relatorio/relatorio/atendimento' => __DIR__ . '/../view/relatorio/atendimento.phtml',
             'instituto/instituto/index' => __DIR__ . '/../view/instituto/index.phtml',
             'layout/layout-js-relatorio-atendimento' => __DIR__ . '/../view/layout/layout-js-relatorio-atendimento.phtml',

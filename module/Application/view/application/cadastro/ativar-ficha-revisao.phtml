@@ -9,7 +9,7 @@ use Application\Controller\Helper\Constantes;
  */
 $form = $this->AtivarFichaForm;
 $form->prepare();
-$form->setAttribute(Constantes::$ACTION, $this->url(Constantes::$ROUTE_CADASTRO, array(Constantes::$PAGINA => Constantes::$PAGINA_SALVAR_PESSOA_REVISAO)));
+$form->setAttribute(Constantes::$ACTION, $this->url(Constantes::$ROUTE_CADASTRO, array(Constantes::$PAGINA => Constantes::$PAGINA_ATIVAR_RESERVA_REVISAO)));
 ?>
 <div class="mw1000 center-block p10">
     <div class="row ">
@@ -25,23 +25,35 @@ $form->setAttribute(Constantes::$ACTION, $this->url(Constantes::$ROUTE_CADASTRO,
                         <?php echo $this->form()->openTag($form); ?>
                         <div class="panel-body bg-light p25">
                             <?php
-                            echo $this->divMensagens();
+                            echo $this->divMensagens(); ?>
+                            <div id="inputCodigo">
+                            <?php
                             echo $this->inputFormularioSimples(Constantes::$TRADUCAO_MATRICULA, $form->get(Constantes::$INPUT_CODIGO), 6);
                             ?> 
+                            </div>    
                         </div>
                         <!-- end .form-body section -->
                         <div class="panel-footer text-right">
                             <?php echo $this->formHidden($form->get(Constantes::$FORM_ID)); ?>
                             <?php echo $this->formHidden($form->get(Constantes::$INPUT_CSRF)); ?>
+                            
                             <?php
                             $stringNomeDaFuncaoOnClickCadastro = 'funcaoCadastro("' . Constantes::$PAGINA_SELECIONAR_REVISIONISTA . '", 0)';
                             echo $this->botaoLink($this->translate(Constantes::$TRADUCAO_VOLTAR), Constantes::$STRING_HASHTAG, 2, $this->funcaoOnClick($stringNomeDaFuncaoOnClickCadastro));
                             ?>
+                            
+                            <span id='botaoLimparCampos' class='hidden'>
+                            <?php 
+                            $stringNomeDaFuncaoOnClickLimparCampos = 'limparCampos()';
+                            echo $this->botaoLink($this->translate(Constantes::$TRADUCAO_LIMPAR), Constantes::$STRING_HASHTAG, 2, $this->funcaoOnClick($stringNomeDaFuncaoOnClickLimparCampos));
+                            ?>
+                            </span>
                             <?php
                             /* Submit */
-                            $funcaoVerificarCadastroPessoa = $this->funcaoOnClick('consultarFicha()');
-                            echo $this->botaoSimples(Constantes::$TRADUCAO_ATIVAR, "id ='botaoBuscarFicha' disabled " . $funcaoVerificarCadastroPessoa);
+                            $funcaoVerificarCadastroPessoa = $this->funcaoOnClick('confirmar(this.form)');
+                            echo $this->botaoSimples(Constantes::$TRADUCAO_ATIVAR, "id ='botaoBuscarFicha' type='submit' disabled ".$funcaoVerificarCadastroPessoa);
                             ?>
+                            
                         </div>
                         <!-- end .form-footer section -->
                         <?php echo $this->form()->closeTag() ?>

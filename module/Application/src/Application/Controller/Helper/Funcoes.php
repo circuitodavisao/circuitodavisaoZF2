@@ -108,13 +108,40 @@ class Funcoes {
     }
 
     /**
+     * Retorna o ciclo atual baseado no mes e ano informado
+     * @param int $mesUsado
+     * @param int $anoUsado
+     * @return int
+     */
+    static public function cicloPorData($dia, $mes, $ano) {
+        $diaDaSemanaDoPrimeiroDia = date('N', mktime(0, 0, 0, $mes, 1, $ano));
+        if ($diaDaSemanaDoPrimeiroDia == 1) {
+            $resposta = 0;
+        } else {
+            $resposta = 1;
+        }
+
+        for ($z = 1; $z <= 31; $z++) {
+            $diaDaSemana = date('N', mktime(0, 0, 0, $mes, $z, $ano));
+            if ($diaDaSemana == 1) {
+                $resposta++;
+            }
+
+            if ($dia == $z) {
+                break;
+            }
+        }
+        return $resposta;
+    }
+
+    /**
      * Retorna o perido do ciclo selecionado
      * @param type $ciclo
      * @param type $mesUsado
      * @param type $anoUsado
      * @return string
      */
-    static public function periodoCicloMesAno($ciclo = 1, $mesUsado = 5, $anoUsado = 2016, $traducaoPeriodo = '', $retorno = 0) {
+    static public function periodoCicloMesAno($ciclo = 1, $mesUsado = 5, $anoUsado = 2016, $retorno = 0) {
         $resposta = '';
         $primeiroDiaCiclo = '';
         $ultimoDiaCiclo = '';
@@ -160,6 +187,45 @@ class Funcoes {
                 $resposta = $ultimoDiaCiclo;
             }
         }
+        return $resposta;
+    }
+
+    /**
+     * Retorna o periodo
+     * @return string
+     */
+    static public function montaPeriodo($periodo = 0) {
+        $resposta = array();
+
+        $diaDaSemana = date('N', mktime(0, 0, 0, date('m'), date('d'), date('Y')));
+
+        $stringPeriodo = '';
+        if ($periodo > 0) {
+            $stringPeriodo = '+' . $periodo;
+        } else {
+            $stringPeriodo = $periodo;
+        }
+        $tempoUnix = strtotime($stringPeriodo . ' week -' . ($diaDaSemana - 1) . ' days');
+        $diaAjustado = date('d', $tempoUnix);
+        $mesAjustado = date('m', $tempoUnix);
+        $anoAjustado = date('Y', $tempoUnix);
+
+        $inicioPeriodo = $diaAjustado;
+        $stringDataInicioPeriodo = $anoAjustado . '-' . $mesAjustado . '-' . $diaAjustado;
+        $tempoUnixMais6Dias = strtotime($stringDataInicioPeriodo . ' +6 days');
+        $diaFimPeriodo = date('d', $tempoUnixMais6Dias);
+        $mesFimPeriodo = date('m', $tempoUnixMais6Dias);
+        $anoFimPeriodo = date('Y', $tempoUnixMais6Dias);
+
+        $inicioPeriodoFormatado = str_pad($inicioPeriodo, 2, 0, STR_PAD_LEFT);
+        $diaFimPeriodoFormatado = str_pad($diaFimPeriodo, 2, 0, STR_PAD_LEFT);
+        $resposta[0] = $inicioPeriodoFormatado . '/' . $mesAjustado . '&nbsp;-&nbsp;' . $diaFimPeriodoFormatado . '/' . $mesFimPeriodo;
+        $resposta[1] = $inicioPeriodoFormatado;
+        $resposta[2] = $mesAjustado;
+        $resposta[3] = $anoAjustado;
+        $resposta[4] = $diaFimPeriodoFormatado;
+        $resposta[5] = $mesFimPeriodo;
+        $resposta[6] = $anoFimPeriodo;
         return $resposta;
     }
 

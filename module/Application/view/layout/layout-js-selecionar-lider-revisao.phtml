@@ -1,0 +1,11 @@
+<?php
+
+
+$versao = '?v=0.91';
+
+echo $this
+        ->headScript()
+        ->prependFile($this->basePath() . '/js/circuito_da_visao/selecionar-lider-revisao.js'.$versao)
+        ->prependFile($this->basePath() . '/vendor/plugins/duallistbox/jquery.bootstrap-duallistbox.min.js'.$versao)
+;
+echo $this->inlineScript();

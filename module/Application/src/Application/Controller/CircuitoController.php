@@ -2,6 +2,7 @@
 
 namespace Application\Controller;
 
+use Application\Model\Entity\Entidade;
 use Doctrine\ORM\EntityManager;
 use Zend\Mvc\Controller\AbstractActionController;
 
@@ -31,7 +32,7 @@ class CircuitoController extends AbstractActionController {
     public function getDoctrineORMEntityManager() {
         return $this->_doctrineORMEntityManager;
     }
-    
+
     /**
      * Mostrar as mensagens de erro
      * @param type $mensagens
@@ -44,6 +45,16 @@ class CircuitoController extends AbstractActionController {
                 echo "$key => $value <br />";
             }
         }
+    }
+
+    /**
+     * Retona a entidade Logada
+     * @param Entidade $entidade
+     */
+    public static function getEntidadeLogada($repositorioORM, $sessao) {
+        $idEntidadeAtual = $sessao->idEntidadeAtual;
+        $entidade = $repositorioORM->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+        return $entidade;
     }
 
 }

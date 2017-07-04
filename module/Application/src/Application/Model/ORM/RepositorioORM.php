@@ -228,8 +228,8 @@ class RepositorioORM {
      * @return CircuitoORM
      */
     public function getEventoFrequenciaORM() {
-        if (is_null($this->_eventoFrequenciaORM)) {
-            $this->_eventoFrequenciaORM = new CircuitoORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_EVENTO_FREQUENCIA);
+        if (is_null($this->_eventoFrequenciaORM)) { 
+            $this->_eventoFrequenciaORM = new EventoFrequenciaORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_EVENTO_FREQUENCIA);
         }
         return $this->_eventoFrequenciaORM;
     }

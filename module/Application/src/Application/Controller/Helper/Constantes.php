@@ -244,6 +244,7 @@ class Constantes {
     public static $REPOSITORIO_ORM = 'repositorioORM';
     public static $TURMA = 'turma';
     public static $GRUPO = 'grupo';
+    public static $PERIODO = 'periodo';
     public static $NUMERO_ATENDIMENTOS = 'numeroAtendimentos';
     public static $PROGRESSO_ATENDIMENTOS = 'progresso';
     public static $COR_BARRA_ATENDIMENTOS = 'corBarraTotal';
@@ -305,6 +306,10 @@ class Constantes {
     public static $STRING_ID_EVENTO_FREQUENCIA = 'idEventoFrequencia';
     public static $PAGINA_FICHA_REVISAO = 'FichaRevisao';
     public static $PAGINA_ATIVAR_FICHA_REVISAO = 'AtivarFichaRevisao';
+    public static $PAGINA_ATIVAR_RESERVA_REVISAO = 'AtivarReservaRevisao';
+    public static $PAGINA_SELECIONAR_LIDER_REVISAO = 'SelecionarLiderRevisao';
+    public static $PAGINA_ATIVAR_LIDERES_REVISAO = 'AtivarLideresRevisao';
+    public static $PAGINA_LIDERES_REVISAO = 'LideresRevisao';
     public static $PAGINA_CONSULTAR_FICHA = 'ConsultarFicha';
     public static $PAGINA_FUNCOES = 'Funcoes';
     public static $PAGINA_MUDAR_ATENDIMENTO = 'MudarAtendimento';
@@ -349,16 +354,14 @@ class Constantes {
     public static $TRADUCAO_NOVO_CADASTRO_REVISAO = 'New Person in Revision of Life';
     public static $TRADUCAO_NOVO_CADASTRO_LABEL = 'Person at the launch line';
     public static $TRADUCAO_ATIVAR_FICHA = 'Enable Bookmarks of Revision of Life';
-
     public static $TRADUCAO_ATIVAR = 'Enable';
-
     public static $TRADUCAO_ATIVAR_FICHA_LABEL = 'Enable Bookmarks';
     public static $TRADUCAO_NOVO_CADASTRO_REVISAO_LABEL = 'Person at the revision of live';
     public static $TRADUCAO_DDD = 'DDD';
     public static $TRADUCAO_TELEFONE = 'Phone';
     public static $TRADUCAO_TIPO = 'Type';
     public static $TRADUCAO_NUCLEO_CELULA = 'Perfect Core';
-    public static $TRADUCAO_SEXO = 'Sex';
+    public static $TRADUCAO_SEXO = 'Gender';
     public static $TRADUCAO_SELECIONE = 'SELECT';
     public static $TRADUCAO_CADASTRAR = 'Register';
     public static $TRADUCAO_CADASTRAR_PESSOA = 'Register Person';
@@ -734,6 +737,8 @@ class Constantes {
     /* Layout */
     public static $LAYOUT_JS_EVENTO = 'layout/layout-js-evento';
     public static $LAYOUT_STRING_JS_EVENTO = 'layoutJSEvento';
+    public static $LAYOUT_JS_EXCLUSAO_EVENTO = 'layout/layout-js-exclusao-evento';
+    public static $LAYOUT_STRING_JS_EXCLUSAO_EVENTO = 'layoutJSExclusaoEvento';
     public static $LAYOUT_JS_GRUPO_VALIDACAO = 'layout/layout-js-grupo-validacao';
     public static $LAYOUT_STRING_JS_GRUPO_VALIDACAO = 'layoutJSGrupoValidacao';
     public static $LAYOUT_JS_GRUPO_ATUALIZACAO_VALIDACAO = 'layout/layout-js-grupo-atualizacao-validacao';

@@ -27,7 +27,7 @@ echo $this->templateFormularioTopo(Constantes::$TRADUCAO_NOVO_CADASTRO_LABEL);
     $funcaoVerificarCadastroPessoa = $this->funcaoOnClick('validarLancamentoCadastrarPessoa(this.form)');
     echo $this->botaoSimples(Constantes::$TRADUCAO_CADASTRAR, $funcaoVerificarCadastroPessoa);
 
-    $funcaoVoltar = $this->funcaoOnClick('location.href="' . Constantes::$ROUTE_LANCAMENTO . '"');
+    $funcaoVoltar = $this->funcaoOnClick('location.href="' . Constantes::$ROUTE_LANCAMENTO . 'Arregimentacao"');
     echo $this->botaoSimples(Constantes::$TRADUCAO_VOLTAR, $funcaoVoltar, 2);
 
     echo $this->formHidden($form->get(Constantes::$INPUT_CSRF));

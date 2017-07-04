@@ -8,6 +8,8 @@ namespace Application\Model\Entity;
  * Descricao: Entidade anotada da tabela grupo
  */
 use Application\Controller\Helper\Funcoes;
+use DateTime;
+use DateTimeZone;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -138,6 +140,58 @@ class Grupo extends CircuitoEntity {
     }
 
     /**
+     * Recupera o total de grupo atendimentos ativos no mes e ano
+     * @return integer
+     */
+    function totalDeAtendimentos($mes, $ano) {
+        $total = 0;
+        $grupoAtendimentos = $this->getGrupoAtendimento();
+        foreach ($grupoAtendimentos as $grupoAtendimento) {
+            if ($grupoAtendimento->verificaSeTemNesseMesEAno($mes, $ano)) {
+                $total++;
+            }
+        }
+        return $total;
+    }
+
+    /**
+     * Recupera o total de grupo atendimentos ativos no mes e ano
+     * @return integer
+     */
+    public static function relatorioDeAtendimentosAbaixo($discipulos, $mes, $ano) {
+        $relatorio = array();
+        $totalGruposFilhosAtivos = 0;
+        $totalGruposAtendidos = 0;
+        foreach ($discipulos as $gpFilho) {
+            $totalGruposAtendido = 0;
+            $grupoFilho = $gpFilho->getGrupoPaiFilhoFilho();
+            if ($grupoFilho->getResponsabilidadesAtivas()) {
+                foreach ($grupoFilho->getGrupoAtendimento() as $grupoAtendimento) {
+                    if ($grupoAtendimento->verificaSeTemNesseMesEAno(
+                                    $mes, $ano)) {
+                        $totalGruposAtendido++;
+                    }
+                }
+                if ($totalGruposAtendido >= 1) {
+                    $totalGruposAtendidos++;
+                }
+
+                $totalGruposFilhosAtivos++;
+            }
+        }
+
+        if ($totalGruposFilhosAtivos) {
+            $progresso = ($totalGruposAtendidos / $totalGruposFilhosAtivos) * 100;
+        } else {
+            $progresso = 0;
+        }
+        $relatorio[0] = $progresso;
+        $relatorio[1] = $totalGruposAtendidos;
+        $relatorio[2] = $totalGruposFilhosAtivos;
+        return $relatorio;
+    }
+
+    /**
      * Recupera as pessoas das responsabilidades ativas
      * @return Pessoa[]
      */
@@ -213,6 +267,7 @@ class Grupo extends CircuitoEntity {
         $grupoEventosCelulas = null;
         $grupoEventos = null;
         if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::SUBEQUIPE) {
+
             $grupoEventosCelulas = $grupoSelecionado->getGrupoEventoAtivosPorTipo(GrupoEvento::CELULA);
             while ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::SUBEQUIPE) {
                 $grupoSelecionado = $grupoSelecionado->getGrupoPaiFilhoPai()->getGrupoPaiFilhoPai();
@@ -230,7 +285,6 @@ class Grupo extends CircuitoEntity {
                 $grupoEventos[] = $eventoCelula;
             }
         }
-
         for ($i = 0; $i < count($grupoEventos); $i++) {
             for ($j = 0; $j < count($grupoEventos); $j++) {
                 $evento1 = $grupoEventos[$i];
@@ -245,7 +299,7 @@ class Grupo extends CircuitoEntity {
                     } else {
                         $trocar = 1;
                     }
-                    if ($trocar == 1) {
+                    if ($trocar === 1) {
                         $grupoEventos[$i] = $evento2;
                         $grupoEventos[$j] = $evento1;
                     }
@@ -286,40 +340,6 @@ class Grupo extends CircuitoEntity {
 
         return $grupoEventos;
     }
-    /**
-     * Retorna o grupo igreja do Grupo
-     * @return GrupoEvento
-     */
-    function getGrupoIgreja() {
-        $grupoSelecionado = $this;
-        $grupoIgreja = null;
-        if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::SUBEQUIPE) {
-            while ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::SUBEQUIPE ||
-            $grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::EQUIPE) {
-
-                $grupoSelecionado = $grupoSelecionado->getGrupoPaiFilhoPai()->getGrupoPaiFilhoPai();
-                if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::IGREJA) {
-                    break;
-                }
-            }
-            $grupoIgreja = $grupoSelecionado;
-            
-        } else if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::EQUIPE) {
-            while ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::EQUIPE) {
-                $grupoSelecionado = $grupoSelecionado->getGrupoPaiFilhoPai()->getGrupoPaiFilhoPai();
-                if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::IGREJA) {
-                    break;
-                }
-            }
-            $grupoIgreja = $grupoSelecionado;
-        } else if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::IGREJA){
-            $grupoIgreja = $grupoSelecionado->getGrupoEventoAtivosPorTipo(GrupoEvento::REVISAO);
-        } else{
-            $grupoIgreja = null;
-        }
-
-        return $grupoIgreja;
-    }
 
     /**
      * Retorna o grupo igreja do Grupo
@@ -347,12 +367,37 @@ class Grupo extends CircuitoEntity {
             }
             $grupoIgreja = $grupoSelecionado;
         } else if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::IGREJA) {
-            $grupoIgreja = $grupoSelecionado->getGrupoEventoAtivosPorTipo(GrupoEvento::REVISAO);
+            $grupoIgreja = $grupoSelecionado;
         } else {
             $grupoIgreja = null;
         }
 
         return $grupoIgreja;
+    }
+
+    /**
+     * Retorna o grupo equipe do Grupo
+     * @return GrupoEvento
+     */
+    function getGrupoEquipe() {
+        $grupoSelecionado = $this;
+        $grupoEquipe = null;
+        if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::SUBEQUIPE) {
+            while ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::SUBEQUIPE) {
+
+                $grupoSelecionado = $grupoSelecionado->getGrupoPaiFilhoPai()->getGrupoPaiFilhoPai();
+                if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::EQUIPE) {
+                    break;
+                }
+            }
+            $grupoEquipe = $grupoSelecionado;
+        } else if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::EQUIPE) {
+            $grupoEquipe = $grupoSelecionado;
+        } else {
+            $grupoEquipe = null;
+        }
+
+        return $grupoEquipe;
     }
 
     /**
@@ -375,20 +420,20 @@ class Grupo extends CircuitoEntity {
      */
     function getGrupoEventoAtivosPorTipo($tipo = 0) {
         $grupoEventos = null;
-        foreach ($this->getGrupoEvento() as $ge) {
-            if ($ge->verificarSeEstaAtivo()) {
+        foreach ($this->getGrupoEvento() as $grupoEvento) {
+            if ($grupoEvento->verificarSeEstaAtivo()) {
 
                 if ($tipo === 0) {
-                    $grupoEventos[] = $ge;
+                    $grupoEventos[] = $grupoEvento;
                 }
-                if ($tipo === GrupoEvento::CULTO && $ge->getEvento()->verificaSeECulto()) {
-                    $grupoEventos[] = $ge;
+                if ($tipo === GrupoEvento::CULTO && $grupoEvento->getEvento()->verificaSeECulto()) {
+                    $grupoEventos[] = $grupoEvento;
                 }
-                if ($tipo === GrupoEvento::CELULA && $ge->getEvento()->verificaSeECelula()) {
-                    $grupoEventos[] = $ge;
+                if ($tipo === GrupoEvento::CELULA && $grupoEvento->getEvento()->verificaSeECelula()) {
+                    $grupoEventos[] = $grupoEvento;
                 }
-                if ($tipo === GrupoEvento::REVISAO && $ge->getEvento()->verificaSeERevisao()) {
-                    $grupoEventos[] = $ge;
+                if ($tipo === GrupoEvento::REVISAO && $grupoEvento->getEvento()->verificaSeERevisao()) {
+                    $grupoEventos[] = $grupoEvento;
                 }
             }
         }
@@ -443,6 +488,95 @@ class Grupo extends CircuitoEntity {
             }
         }
         return $resposta;
+    }
+
+    function getGrupoEventoNoPeriodo($periodo, $apenasCelulas = false) {
+        $grupoEventosNoPeriodo = array();
+        $grupoEventoOrdenadosPorDiaDaSemana = $this->getGrupoEventoOrdenadosPorDiaDaSemana();
+
+        $grupoEventos = $grupoEventoOrdenadosPorDiaDaSemana;
+        if ($apenasCelulas) {
+            unset($grupoEventos);
+            if (!empty($grupoEventoOrdenadosPorDiaDaSemana)) {
+                foreach ($grupoEventoOrdenadosPorDiaDaSemana as $grupoEventoTodos) {
+                    if ($grupoEventoTodos->getEvento()->verificaSeECelula()) {
+                        $grupoEventos[] = $grupoEventoTodos;
+                    }
+                }
+            }
+        }
+
+        if (!empty($grupoEventos)) {
+            foreach ($grupoEventos as $grupoEvento) {
+
+                $arrayPeriodo = Funcoes::montaPeriodo($periodo);
+                $stringComecoDoPeriodo = $arrayPeriodo[3] . '-' . $arrayPeriodo[2] . '-' . $arrayPeriodo[1];
+                $dataDoInicioDoPeriodoParaComparar = strtotime($stringComecoDoPeriodo);
+                $dataDoGrupoEventoParaComparar = strtotime($grupoEvento->getData_criacaoStringPadraoBanco());
+
+                /* Evento criado antes do inicio do periodo */
+                $validacaoDataDeCriacaoAntesDoInicioDoPeriodo = false;
+                if ($dataDoGrupoEventoParaComparar <= $dataDoInicioDoPeriodoParaComparar) {
+                    $validacaoDataDeCriacaoAntesDoInicioDoPeriodo = true;
+                }
+
+                /* Evento criado no meio do periodo */
+                $stringFimDoPeriodo = $arrayPeriodo[6] . '-' . $arrayPeriodo[5] . '-' . $arrayPeriodo[4];
+                $dataDoFimDoPeriodoParaComparar = strtotime($stringFimDoPeriodo);
+                $validacaoDataDeCriacaoNoMeioDoPeriodo = false;
+                if ($dataDoGrupoEventoParaComparar > $dataDoInicioDoPeriodoParaComparar && $dataDoGrupoEventoParaComparar <= $dataDoFimDoPeriodoParaComparar) {
+                    $validacaoDataDeCriacaoNoMeioDoPeriodo = true;
+                }
+
+
+                if ($validacaoDataDeCriacaoAntesDoInicioDoPeriodo || $validacaoDataDeCriacaoNoMeioDoPeriodo) {
+                    $grupoEventosNoPeriodo[] = $grupoEvento;
+                }
+            }
+        }
+        return $grupoEventosNoPeriodo;
+    }
+
+    function getGrupoPessoasNoPeriodo($periodo) {
+
+        $grupoPessoasNoPeriodo = array();
+        $grupoPessoas = $this->getGrupoPessoa();
+        if (!empty($grupoPessoas)) {
+            foreach ($grupoPessoas as $grupoPessoa) {
+
+                $dataDoGrupoPessoaParaComparar = strtotime($grupoPessoa->getData_criacaoStringPadraoBanco());
+                $arrayPeriodo = Funcoes::montaPeriodo($periodo);
+                $stringPeriodo = $arrayPeriodo[3] . '-' . $arrayPeriodo[2] . '-' . $arrayPeriodo[1];
+                $dataDoInicioDoPeriodoParaComparar = strtotime($stringPeriodo);
+
+                /* Criando antes do começo do periodo */
+                $validacaoDataCriacao = false;
+                if ($dataDoGrupoPessoaParaComparar <= $dataDoInicioDoPeriodoParaComparar) {
+                    $validacaoDataCriacao = true;
+                }
+
+                /* Criando no periodo */
+                $stringFimPeriodo = $arrayPeriodo[6] . '-' . $arrayPeriodo[5] . '-' . $arrayPeriodo[4];
+                $dataDoFimParaComparar = strtotime($stringFimPeriodo);
+                if ($dataDoGrupoPessoaParaComparar > $dataDoInicioDoPeriodoParaComparar && $dataDoGrupoPessoaParaComparar <= $dataDoFimParaComparar) {
+                    $validacaoDataCriacao = true;
+                }
+
+                /* Se esta inativo */
+                $validacaoAtivoEDataInativacao = true;
+                if (!$grupoPessoa->verificarSeEstaAtivo()) {
+                    /* Inativado no periodo */
+                    $dataDoGrupoPessoaInativacaoParaComparar = strtotime($grupoPessoa->getData_inativacaoStringPadraoBanco());
+                    if ($dataDoGrupoPessoaInativacaoParaComparar < $dataDoInicioDoPeriodoParaComparar) {
+                        $validacaoAtivoEDataInativacao = false;
+                    }
+                }
+                if ($validacaoDataCriacao && $validacaoAtivoEDataInativacao) {
+                    $grupoPessoasNoPeriodo[] = $grupoPessoa;
+                }
+            }
+        }
+        return $grupoPessoasNoPeriodo;
     }
 
     /**
@@ -584,29 +718,23 @@ class Grupo extends CircuitoEntity {
     }
 
     function getGrupoEventoCelula() {
-        $eventos = null;
-        if (!empty($this->getGrupoEvento())) {
-            foreach ($this->getGrupoEvento() as $ge) {
-                if ($ge->verificarSeEstaAtivo() && $ge->getEvento()->verificaSeECelula()) {
-                    $eventos[] = $ge;
-                }
+        $grupoEventos = null;
+        foreach ($this->getGrupoEvento() as $grupoEvento) {
+            if ($grupoEvento->verificarSeEstaAtivo() && $grupoEvento->getEvento()->verificaSeECelula()) {
+                $grupoEventos[] = $grupoEvento;
             }
         }
-        $this->setEventos($eventos);
-        return $this->getEventos();
+        return $grupoEventos;
     }
 
     function getGrupoEventoCulto() {
-        $eventos = null;
-        if (!empty($this->getGrupoEvento())) {
-            foreach ($this->getGrupoEvento() as $ge) {
-                if ($ge->verificarSeEstaAtivo() && $ge->getEvento()->verificaSeECulto()) {
-                    $eventos[] = $ge;
-                }
+        $grupoEventos = null;
+        foreach ($this->getGrupoEvento() as $ge) {
+            if ($ge->verificarSeEstaAtivo() && $ge->getEvento()->verificaSeECulto()) {
+                $grupoEventos[] = $ge;
             }
         }
-        $this->setEventos($eventos);
-        return $this->getEventos();
+        return $grupoEventos;
     }
 
 //    function getGrupoEventoRevisao() {

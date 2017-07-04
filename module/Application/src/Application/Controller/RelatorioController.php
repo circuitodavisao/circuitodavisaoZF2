@@ -4,6 +4,7 @@ namespace Application\Controller;
 
 use Application\Controller\Helper\Constantes;
 use Application\Controller\Helper\Funcoes;
+use Application\Model\Entity\Grupo;
 use Application\Model\ORM\RepositorioORM;
 use Doctrine\ORM\EntityManager;
 use Zend\Session\Container;
@@ -35,137 +36,41 @@ class RelatorioController extends CircuitoController {
 
     /**
      * Função padrão, traz a tela principal
-     * GET /relatorio
+     * GET /relatorio[/tipoRelatorio][/abaSelecionada]
      */
     public function indexAction() {
-        
-    }
-
-    /**
-     * Função padrão, traz a tela principal
-     * GET /relatorioMembresia
-     */
-    public function membresiaAction() {
         $sessao = new Container(Constantes::$NOME_APLICACAO);
         $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
         $idEntidadeAtual = $sessao->idEntidadeAtual;
         $entidade = $repositorioORM->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
         $grupo = $entidade->getGrupo();
         $numeroIdentificador = $repositorioORM->getFatoCicloORM()->montarNumeroIdentificador($grupo);
+        $periodo = $this->getEvent()->getRouteMatch()->getParam(Constantes::$ID, 0);
 
-        /* Aba selecionada e ciclo */
-        $abaSelecionada = $this->params()->fromRoute(Constantes::$ID);
-        if (empty($abaSelecionada)) {
-            $abaSelecionada = 1;
-        }
-        $mesSelecionado = date('n');
-        $anoSelecionado = date('Y');
-        $cicloSelecionado = Funcoes::cicloAtual($mesSelecionado, $anoSelecionado);
-
-        if ($abaSelecionada == 2) {
-            if ($cicloSelecionado > 1) {
-                $cicloSelecionado--;
-            } else {
-                /* Mês Passado */
-                if ($cicloSelecionado == 1) {
-                    if (date('n') == 1) {
-                        $mesSelecionado = 12;
-                        $anoSelecionado = date('Y') - 1;
-                    } else {
-                        $mesSelecionado = date('n') - 1;
-                        $anoSelecionado = date('Y');
-                    }
-                    $cicloSelecionado = Funcoes::cicloAtual($mesSelecionado, $anoSelecionado);
-                }
-            }
-        }
         $tipoRelatorioPessoal = 1;
-        $relatorio = RelatorioController::montaRelatorio($repositorioORM, $numeroIdentificador, $cicloSelecionado, $mesSelecionado, $anoSelecionado, $tipoRelatorioPessoal);
-        $periodoSelecionado = Funcoes::periodoCicloMesAno($cicloSelecionado, $mesSelecionado, $anoSelecionado);
+        $relatorio = RelatorioController::montaRelatorio($repositorioORM, $numeroIdentificador, $periodo, $tipoRelatorioPessoal);
+
+        $tipoRelatorio = (int) $this->params()->fromRoute('tipoRelatorio');
 
         $dados = array(
             RelatorioController::stringRelatorio => $relatorio,
-            RelatorioController::stringPeriodoSelecionado => $periodoSelecionado,
-            Constantes::$ABA_SELECIONADA => $abaSelecionada,
+            'tipoRelatorio' => $tipoRelatorio,
+            'periodo' => $periodo,
         );
 
-        if ($grupo->getGrupoPaiFilhoFilhos()) {
+        $grupoPaiFilhoFilhos = $grupo->getGrupoPaiFilhoFilhos();
+        if ($grupoPaiFilhoFilhos) {
             $relatorioDiscipulos = array();
-            foreach ($grupo->getGrupoPaiFilhoFilhos() as $gpFilho) {
+            foreach ($grupoPaiFilhoFilhos as $gpFilho) {
                 $grupoFilho = $gpFilho->getGrupoPaiFilhoFilho();
                 $numeroIdentificador = $repositorioORM->getFatoCicloORM()->montarNumeroIdentificador($grupoFilho);
                 $tipoRelatorioSomado = 2;
-                $relatorioDiscipulos[$grupoFilho->getId()] = RelatorioController::montaRelatorio($repositorioORM, $numeroIdentificador, $cicloSelecionado, $mesSelecionado, $anoSelecionado, $tipoRelatorioSomado);
+                $relatorioDiscipulos[$grupoFilho->getId()] = RelatorioController::montaRelatorio($repositorioORM, $numeroIdentificador, $periodo, $tipoRelatorioSomado);
             }
 
-            $discipulosOrdenadoMembresia = RelatorioController::ordenacaoDiscipulos($grupo->getGrupoPaiFilhoFilhos(), $relatorioDiscipulos, 1);
+            $discipulosOrdenado = RelatorioController::ordenacaoDiscipulos($grupoPaiFilhoFilhos, $relatorioDiscipulos, $tipoRelatorio);
 
-            $dados['discipulosOrdenadoMembresia'] = $discipulosOrdenadoMembresia;
-            $dados['discipulosRelatorio'] = $relatorioDiscipulos;
-        }
-
-        return new ViewModel($dados);
-    }
-
-    /**
-     * Função padrão, traz a tela principal
-     * GET /relatorioCelulasRealizadas
-     */
-    public function celulasRealizadasAction() {
-        $sessao = new Container(Constantes::$NOME_APLICACAO);
-        $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
-        $idEntidadeAtual = $sessao->idEntidadeAtual;
-        $entidade = $repositorioORM->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
-        $grupo = $entidade->getGrupo();
-        $numeroIdentificador = $repositorioORM->getFatoCicloORM()->montarNumeroIdentificador($grupo);
-
-        /* Aba selecionada e ciclo */
-        $abaSelecionada = $this->params()->fromRoute(Constantes::$ID);
-        if (empty($abaSelecionada)) {
-            $abaSelecionada = 1;
-        }
-        $mesSelecionado = date('n');
-        $anoSelecionado = date('Y');
-        $cicloSelecionado = Funcoes::cicloAtual($mesSelecionado, $anoSelecionado);
-
-        if ($abaSelecionada == 2) {
-            if ($cicloSelecionado > 1) {
-                $cicloSelecionado--;
-            } else {
-                /* Mês Passado */
-                if ($cicloSelecionado == 1) {
-                    if (date('n') == 1) {
-                        $mesSelecionado = 12;
-                        $anoSelecionado = date('Y') - 1;
-                    } else {
-                        $mesSelecionado = date('n') - 1;
-                        $anoSelecionado = date('Y');
-                    }
-                    $cicloSelecionado = Funcoes::cicloAtual($mesSelecionado, $anoSelecionado);
-                }
-            }
-        }
-        $tipoRelatorioPessoal = 1;
-        $relatorio = RelatorioController::montaRelatorio($repositorioORM, $numeroIdentificador, $cicloSelecionado, $mesSelecionado, $anoSelecionado, $tipoRelatorioPessoal);
-        $periodoSelecionado = Funcoes::periodoCicloMesAno($cicloSelecionado, $mesSelecionado, $anoSelecionado);
-
-        $dados = array(
-            RelatorioController::stringRelatorio => $relatorio,
-            RelatorioController::stringPeriodoSelecionado => $periodoSelecionado,
-            Constantes::$ABA_SELECIONADA => $abaSelecionada,
-        );
-
-        if ($grupo->getGrupoPaiFilhoFilhos()) {
-            $relatorioDiscipulos = array();
-            foreach ($grupo->getGrupoPaiFilhoFilhos() as $gpFilho) {
-                $grupoFilho = $gpFilho->getGrupoPaiFilhoFilho();
-                $numeroIdentificador = $repositorioORM->getFatoCicloORM()->montarNumeroIdentificador($grupoFilho);
-                $tipoRelatorioSomado = 2;
-                $relatorioDiscipulos[$grupoFilho->getId()] = RelatorioController::montaRelatorio($repositorioORM, $numeroIdentificador, $cicloSelecionado, $mesSelecionado, $anoSelecionado, $tipoRelatorioSomado);
-            }
-            $discipulosOrdenadoCelulaRealizadas = RelatorioController::ordenacaoDiscipulos($grupo->getGrupoPaiFilhoFilhos(), $relatorioDiscipulos, 2);
-
-            $dados['discipulosOrdenadoCelulaRealizadas'] = $discipulosOrdenadoCelulaRealizadas;
+            $dados['discipulosOrdenado'] = $discipulosOrdenado;
             $dados['discipulosRelatorio'] = $relatorioDiscipulos;
         }
 
@@ -180,6 +85,8 @@ class RelatorioController extends CircuitoController {
         $grupo = $entidade->getGrupo();
         $gruposAbaixo = $grupo->getGrupoPaiFilhoFilhos();
 
+
+
         /* Verificar data de cadastro da responsabilidade */
         $validacaoNesseMes = 0;
         $grupoResponsavel = $grupo->getGrupoResponsavelAtivo();
@@ -188,15 +95,23 @@ class RelatorioController extends CircuitoController {
         }
 
         /* Aba selecionada e ciclo */
-        $abaSelecionada = $this->params()->fromRoute(Constantes::$ID);
-        if (empty($abaSelecionada)) {
+        $parametro = $this->params()->fromRoute(Constantes::$ID);
+        if (empty($parametro)) {
             $abaSelecionada = 1;
+        } else {
+            $abaSelecionada = $parametro;
         }
+        $mesSelecionado = Funcoes::mesPorAbaSelecionada($abaSelecionada);
+        $anoSelecionado = Funcoes::anoPorAbaSelecionada($abaSelecionada);
+
+        $discipulos = RelatorioController::ordenacaoDiscipulosAtendimento($gruposAbaixo, $mesSelecionado, $anoSelecionado);
 
         $view = new ViewModel(array(
-            Constantes::$GRUPOS_ABAIXO => $gruposAbaixo,
+            Constantes::$GRUPOS_ABAIXO => $discipulos,
             Constantes::$VALIDACAO_NESSE_MES => $validacaoNesseMes,
             Constantes::$ABA_SELECIONADA => $abaSelecionada,
+            Constantes::$MES => $mesSelecionado,
+            Constantes::$ANO => $anoSelecionado,
         ));
 
         /* Javascript especifico */
@@ -207,9 +122,9 @@ class RelatorioController extends CircuitoController {
         return $view;
     }
 
-    public static function montaRelatorio($repositorioORM, $numeroIdentificador, $cicloSelecionado, $mesSelecionado, $anoSelecionado, $tipoRelatorio) {
+    public static function montaRelatorio($repositorioORM, $numeroIdentificador, $periodo, $tipoRelatorio) {
         /* Membresia */
-        $relatorioMembresia = $repositorioORM->getFatoCicloORM()->montarRelatorioPorNumeroIdentificador($numeroIdentificador, $cicloSelecionado, $mesSelecionado, $anoSelecionado, $tipoRelatorio);
+        $relatorioMembresia = $repositorioORM->getFatoCicloORM()->montarRelatorioPorNumeroIdentificador($numeroIdentificador, $periodo, $tipoRelatorio);
         $fatoLider = $repositorioORM->getFatoLiderORM()->encontrarPorNumeroIdentificador($numeroIdentificador, $tipoRelatorio);
         $quantidadeLideres = $fatoLider[0]['lideres'];
         foreach ($relatorioMembresia as $key => $value) {
@@ -234,7 +149,7 @@ class RelatorioController extends CircuitoController {
         $relatorio['quantidadeLideres'] = $quantidadeLideres;
 
         /* Célula */
-        $relatorioCelula = $repositorioORM->getFatoCicloORM()->montarRelatorioCelulaPorNumeroIdentificador($numeroIdentificador, $cicloSelecionado, $mesSelecionado, $anoSelecionado, $tipoRelatorio);
+        $relatorioCelula = $repositorioORM->getFatoCicloORM()->montarRelatorioCelulaPorNumeroIdentificador($numeroIdentificador, $periodo, $tipoRelatorio);
 
         $quantidadeCelulas = $relatorioCelula[0]['quantidade'];
         $quantidadeCelulasRealizadas = 0;
@@ -273,12 +188,15 @@ class RelatorioController extends CircuitoController {
     }
 
     public static function formataNumeroRelatorio($valor) {
-        return number_format($valor, 2, ',', '.');
+        return number_format((double) $valor, 2, ',', '.');
     }
 
     public static function corDaLinhaPelaPerformance($valor) {
         $class = '';
-        if ($valor < 70) {
+        if ($valor == 0) {
+            $class = 'dark';
+        }
+        if ($valor < 70 && $valor > 0) {
             $class = 'danger';
         }
         if ($valor > 70 && $valor <= 85) {
@@ -297,6 +215,9 @@ class RelatorioController extends CircuitoController {
         }
         if ($tipo === 2) {
             $campo = 'celulaRealizadasPerformance';
+        }
+        if ($tipo === 3) {
+            $campo = 'celulaPerformance';
         }
         $tamanhoArray = count($discipulosLocal);
 
@@ -319,6 +240,46 @@ class RelatorioController extends CircuitoController {
             }
         }
         return $discipulosLocal;
+    }
+
+    public static function ordenacaoDiscipulosAtendimento($discipulos, $mes, $ano) {
+        $relatorioDicipulo = array();
+        foreach ($discipulos as $gpFilho) {
+            $grupoFilho = $gpFilho->getGrupoPaiFilhoFilho();
+
+            if (count($grupoFilho) > 0) {
+                $relatorioAtendimento = Grupo::relatorioDeAtendimentosAbaixo(
+                                $grupoFilho->getGrupoPaiFilhoFilhos(), $mes, $ano
+                );
+            } else {
+                $relatorioAtendimento[0] = -2;
+            }
+
+            $relatorioDicipulo[$grupoFilho->getId()] = $relatorioAtendimento[0];
+        }
+
+        $tamanhoArray = count($discipulos);
+
+        for ($i = 0; $i < $tamanhoArray; $i++) {
+            for ($j = 0; $j < $tamanhoArray; $j++) {
+
+                $discipulo1 = $discipulos[$i];
+                $grupoFilho1 = $discipulo1->getGrupoPaiFilhoFilho();
+                $percentual1 = $relatorioDicipulo[$grupoFilho1->getId()];
+
+                $discipulo2 = $discipulos[$j];
+                $grupoFilho2 = $discipulo2->getGrupoPaiFilhoFilho();
+                $percentual2 = $relatorioDicipulo[$grupoFilho2->getId()];
+
+                if ($percentual1 > $percentual2) {
+                    $aux = $discipulo1;
+                    $discipulos[$i] = $discipulo2;
+                    $discipulos[$j] = $aux;
+                }
+            }
+        }
+
+        return $discipulos;
     }
 
 //    public function testeAction() {

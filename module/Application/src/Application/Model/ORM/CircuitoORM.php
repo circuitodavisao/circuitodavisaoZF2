@@ -3,7 +3,7 @@
 namespace Application\Model\ORM;
 
 use Application\Model\Entity\CircuitoEntity;
-use Application\Model\Entity\EventoCelula;
+use DateTime;
 use Doctrine\ORM\EntityManager;
 use Exception;
 
@@ -59,11 +59,11 @@ class CircuitoORM {
             $this->getEntityManager()->persist($entidade);
             $this->getEntityManager()->flush($entidade);
         } catch (Exception $exc) {
-            echo $exc->getMessage();
+            echo $exc->getTraceAsString;
         }
     }
 
-       public function getEntityManager() {
+    public function getEntityManager() {
         return $this->_entityManager;
     }
 
