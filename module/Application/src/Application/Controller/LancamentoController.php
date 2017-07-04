@@ -15,6 +15,7 @@ use DateTime;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManager;
 use Exception;
+use Migracao\Controller\IndexController;
 use Zend\Json\Json;
 use Zend\Session\Container;
 use Zend\View\Model\ViewModel;
@@ -47,8 +48,7 @@ class LancamentoController extends CircuitoController {
         $entidade = CircuitoController::getEntidadeLogada($repositorioORM, $sessao);
         $grupo = $entidade->getGrupo();
 
-
-        $periodo = $this->getEvent()->getRouteMatch()->getParam(Constantes::$ID, 0);
+	$periodo = $this->getEvent()->getRouteMatch()->getParam(Constantes::$ID, 0);
 
         $grupoEventoNoPeriodo = $grupo->getGrupoEventoNoPeriodo($periodo);
 

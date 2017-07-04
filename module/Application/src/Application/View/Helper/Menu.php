@@ -225,7 +225,6 @@ class Menu extends AbstractHelper {
         $html .= '</li>';
 
         $html .= '<li>';
-//        $html .= '<a href="/cadastroCultos">';
         $html .= '<a href="#">';
         $html .= '<span class="fa fa-users"></span>';
         $html .= 'Cultos (Manutenção)';
@@ -233,41 +232,11 @@ class Menu extends AbstractHelper {
         $html .= '</li>';
 
         $html .= '<li>';
-//        $html .= '<a href="/cadastroGrupo">';
         $html .= '<a href="#">';
         $html .= '<span class="fa fa-users"></span>';
         $html .= 'Time (Manutenção)';
         $html .= '</a>';
         $html .= '</li>';
-
-//        $html .= '<li>';
-//        $html .= '<a href="/cadastroRevisao">';
-//        $html .= '<a href="#">';
-//        $html .= '<span class="fa fa-users"></span>';
-//        $html .= 'Revisão de Vidas(Manutenção)';
-//        $html .= '</a>';
-//        $html .= '</li>';
-//        $html .= '<li>';
-//        $html .= '<a href="/cadastroTransferencia">';
-//        $html .= '<a href="#">';
-//        $html .= '<span class="fa fa-users"></span>';
-//        $html .= 'Transferência(Manut.)';
-//        $html .= '</a>';
-//        $html .= '</li>';
-//        $html .= '<li>';
-//        $html .= '<a href="/cadastroRevisionistas">';
-//        $html .= '<a href="#">';
-//        $html .= '<span class="fa fa-users"></span>';
-//        $html .= 'Revisionistas(Manut.)';
-//        $html .= '</a>';
-//        $html .= '</li>';
-//        $html .= '<li>';
-//        $html .= '<a href="/cadastroAtivarFichaRevisao">';
-//        $html .= '<a href="#">';
-//        $html .= '<span class="fa fa-users"></span>';
-//        $html .= 'Ativar Fichas';
-//        $html .= '</a>';
-//        $html .= '</li>';
 
         $html .= '</ul>';
 
@@ -289,7 +258,6 @@ class Menu extends AbstractHelper {
         $html .= '</a>';
         $html .= '</li>';
         $html .= '<li>';
-//        $html .= '<a href="#">';
         $html .= '<a href="/lancamentoAtendimento">';
         $html .= '<span class="fa fa-users"></span>';
         $html .= 'Atendimento';
@@ -344,6 +312,7 @@ class Menu extends AbstractHelper {
         $html .= '<a class="accordion-toggle" href="#">';
         $html .= '<span class="fa fa-print"></span>';
 
+
         $html .= '<span class="sidebar-title">Imprimir(Manutenção)</span>';
         $html .= '<span class="caret"></span>';
         $html .= '</a>';
@@ -351,7 +320,6 @@ class Menu extends AbstractHelper {
 
         $html .= '<li>';
         $html .= '<a href="#">';
-//        $html .= '<a href="/cadastroFichaRevisionistas">';
         $html .= '<span class="fa fa-terminal"></span>';
         $html .= 'Fichas Revisao';
         $html .= '</a>';
@@ -359,7 +327,6 @@ class Menu extends AbstractHelper {
 
         $html .= '<li>';
         $html .= '<a href="#">';
-//        $html .= '<a href="/cadastroAtivosRevisionistas">';
         $html .= '<span class="fa fa-terminal"></span>';
         $html .= 'Listagem Revisionistas';
         $html .= '</a>';

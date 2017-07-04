@@ -16,7 +16,6 @@ return array(
                     'port' => '5432',
                     'user' => 'postgres',
                     'password' => 'qwaszx159753',
-//                    'dbname' => 'homologacao',
                     'dbname' => 'postgres',
                     'encoding' => 'utf8',
                 )
