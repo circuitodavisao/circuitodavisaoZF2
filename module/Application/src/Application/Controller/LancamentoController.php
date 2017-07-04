@@ -47,8 +47,7 @@ class LancamentoController extends CircuitoController {
         $entidade = CircuitoController::getEntidadeLogada($repositorioORM, $sessao);
         $grupo = $entidade->getGrupo();
 
-
-        $periodo = $this->getEvent()->getRouteMatch()->getParam(Constantes::$ID, 0);
+	$periodo = $this->getEvent()->getRouteMatch()->getParam(Constantes::$ID, 0);
 
         $grupoEventoNoPeriodo = $grupo->getGrupoEventoNoPeriodo($periodo);
 

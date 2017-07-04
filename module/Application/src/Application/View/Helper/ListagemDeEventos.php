@@ -234,6 +234,7 @@ class ListagemDeEventos extends AbstractHelper {
                     $html .= '<td class="text-center">' . Funcoes::mudarPadraoData($evento->getData(), 1) . '</td>';
 
                     $stringNomeDaFuncaoOnClickInserir = 'funcaoCadastro("' . Constantes::$PAGINA_SELECIONAR_FICHA_ATIVAS . '", ' . $evento->getId() . ')';
+
                     $grupoEventoAtivos = $evento->getGrupoEventoAtivos();
                     $texto = '';
                     foreach ($grupoEventoAtivos as $gea) {
@@ -265,8 +266,28 @@ class ListagemDeEventos extends AbstractHelper {
                     $html .= '<td class="text-center">';
 
                     $html .= $this->view->botaoLink(Constantes::$STRING_ICONE_PLUS . '  ' . $this->view->translate(Constantes::$TRADUCAO_NOVO_REVISIONISTA), Constantes::$STRING_HASHTAG, 4, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClickInserir));
+                   $html .= '</td>';
+              }
+                if ($tipoLideresRevisao) {
+
+                    $html .= '<td class="text-center">' . Funcoes::mudarPadraoData($evento->getData(), 1) . '</td>';
+
+                    $stringNomeDaFuncaoOnClickInserir = 'funcaoCadastro("' . Constantes::$PAGINA_SELECIONAR_LIDER_REVISAO . '", ' . $evento->getId() . ')';
+                    $grupoEventoAtivos = $evento->getGrupoEventoAtivos();
+                    $texto = '';
+                    foreach ($grupoEventoAtivos as $gea) {
+                        if ($this->view->extra != $gea->getGrupo()->getId()) {
+                            $texto .= $gea->getGrupo()->getEntidadeAtiva()->infoEntidade() . '<br />';
+                        }
+                    }
+                    $html .= '<td class="text-center"><span class="visible-lg visible-md">' . $evento->getNome() . '</span><span class="visible-sm visible-xs">' . $evento->getNomeAjustado() . '</span></td>';
+
+                    $html .= '<td class="text-center">';
+
+                    $html .= $this->view->botaoLink(Constantes::$STRING_ICONE_PLUS . '  ' . $this->view->translate(Constantes::$TRADUCAO_NOVO_REVISIONISTA), Constantes::$STRING_HASHTAG, 4, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClickInserir));
                     $html .= '</td>';
-                }
+
+               }
                 $html .= '</tr>';
             }
             $html .= '</tbody>';

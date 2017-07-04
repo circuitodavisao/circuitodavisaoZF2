@@ -392,32 +392,7 @@ class Grupo extends CircuitoEntity {
             }
             $grupoEquipe = $grupoSelecionado;
         } else if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::EQUIPE) {
-            $grupoEquipe = $grupoSelecionado;
-        } else {
-            $grupoEquipe = null;
-        }
-
-        return $grupoEquipe;
-    }
-
-    /**
-     * Retorna o grupo equipe do Grupo
-     * @return GrupoEvento
-     */
-    function getGrupoEquipe() {
-        $grupoSelecionado = $this;
-        $grupoEquipe = null;
-        if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::SUBEQUIPE) {
-            while ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::SUBEQUIPE) {
-
-                $grupoSelecionado = $grupoSelecionado->getGrupoPaiFilhoPai()->getGrupoPaiFilhoPai();
-                if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::EQUIPE) {
-                    break;
-                }
-            }
-            $grupoEquipe = $grupoSelecionado;
-        } else if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::EQUIPE) {
-            $grupoEquipe = $grupoSelecionado;
+            $grupoEquipe = $grupoSelecionado
         } else {
             $grupoEquipe = null;
         }
@@ -533,8 +508,6 @@ class Grupo extends CircuitoEntity {
 
         if (!empty($grupoEventos)) {
             foreach ($grupoEventos as $grupoEvento) {
-
-
                 $arrayPeriodo = Funcoes::montaPeriodo($periodo);
                 $stringComecoDoPeriodo = $arrayPeriodo[3] . '-' . $arrayPeriodo[2] . '-' . $arrayPeriodo[1];
                 $dataDoInicioDoPeriodoParaComparar = strtotime($stringComecoDoPeriodo);
@@ -556,7 +529,6 @@ class Grupo extends CircuitoEntity {
 
 
                 if ($validacaoDataDeCriacaoAntesDoInicioDoPeriodo || $validacaoDataDeCriacaoNoMeioDoPeriodo) {
-
                     $grupoEventosNoPeriodo[] = $grupoEvento;
                 }
             }
@@ -571,7 +543,7 @@ class Grupo extends CircuitoEntity {
         $grupoPessoas = $this->getGrupoPessoa();
         if (!empty($grupoPessoas)) {
             foreach ($grupoPessoas as $grupoPessoa) {
-                $dataDoGrupoPessoaParaComparar = strtotime($grupoPessoa->getData_criacaoStringPadraoBanco());
+               $dataDoGrupoPessoaParaComparar = strtotime($grupoPessoa->getData_criacaoStringPadraoBanco());
                 $arrayPeriodo = Funcoes::montaPeriodo($periodo);
                 $stringPeriodo = $arrayPeriodo[3] . '-' . $arrayPeriodo[2] . '-' . $arrayPeriodo[1];
                 $dataDoInicioDoPeriodoParaComparar = strtotime($stringPeriodo);
@@ -599,8 +571,7 @@ class Grupo extends CircuitoEntity {
                     }
                 }
                 if ($validacaoDataCriacao && $validacaoAtivoEDataInativacao) {
-
-                    $grupoPessoasNoPeriodo[] = $grupoPessoa;
+                   $grupoPessoasNoPeriodo[] = $grupoPessoa;
                 }
             }
         }
