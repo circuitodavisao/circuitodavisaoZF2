@@ -511,6 +511,17 @@ class Grupo extends CircuitoEntity {
                         $validacaoAtivoEDataInativacao = false;
                     }
                 }
+
+                /* Periodo a frente */
+                if (!$validacaoDataCriacao) {
+                    $arrayPeriodoAFrente = Funcoes::montaPeriodo($periodo + 1);
+                    $stringPeriodoAFrente = $arrayPeriodoAFrente[3] . '-' . $arrayPeriodoAFrente[2] . '-' . $arrayPeriodoAFrente[1];
+                    $dataDoInicioDoPeriodoAFrenteParaComparar = strtotime($stringPeriodoAFrente);
+                    if ($dataDoGrupoPessoaParaComparar >= $dataDoInicioDoPeriodoAFrenteParaComparar) {
+                        $validacaoDataCriacao = true;
+                    }
+                }
+
                 if ($validacaoDataCriacao && $validacaoAtivoEDataInativacao) {
                     $grupoPessoasNoPeriodo[] = $grupoPessoa;
                 }

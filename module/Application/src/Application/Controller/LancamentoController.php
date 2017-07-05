@@ -48,7 +48,7 @@ class LancamentoController extends CircuitoController {
         $entidade = CircuitoController::getEntidadeLogada($repositorioORM, $sessao);
         $grupo = $entidade->getGrupo();
 
-	$periodo = $this->getEvent()->getRouteMatch()->getParam(Constantes::$ID, 0);
+        $periodo = $this->getEvent()->getRouteMatch()->getParam(Constantes::$ID, 0);
 
         $grupoEventoNoPeriodo = $grupo->getGrupoEventoNoPeriodo($periodo);
 
@@ -289,9 +289,11 @@ class LancamentoController extends CircuitoController {
         $tipos = $repositorioORM->getGrupoPessoaTipoORM()->tipoDePessoaLancamento();
         /* Formulario */
         $formCadastrarPessoa = new CadastrarPessoaForm(Constantes::$FORM_CADASTRAR_PESSOA, $tipos);
+        $periodo = $this->getEvent()->getRouteMatch()->getParam(Constantes::$ID, 0);
 
         $view = new ViewModel(array(
             Constantes::$FORM_CADASTRAR_PESSOA => $formCadastrarPessoa,
+            Constantes::$PERIODO => $periodo,
         ));
 
         /* Javascript especifico */
@@ -350,8 +352,11 @@ class LancamentoController extends CircuitoController {
                     $sessao->nomePessoa = $pessoa->getNome();
                     unset($sessao->exclusao);
 
+                    $periodo = $post_data[Constantes::$PERIODO];
+
                     return $this->redirect()->toRoute(Constantes::$ROUTE_LANCAMENTO, array(
                                 Constantes::$ACTION => 'Arregimentacao',
+                                Constantes::$ID => $periodo,
                     ));
                 }
             } catch (Exception $exc) {

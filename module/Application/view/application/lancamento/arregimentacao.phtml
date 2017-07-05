@@ -17,7 +17,7 @@ use Application\View\Helper\BotaoSimples;
         <div class="panel-footer text-center">
             <?php
             $label = $this->translate(Constantes::$TRADUCAO_CADASTRAR_PESSOA);
-            $extra = $this->funcaoOnClick('verificarMuitosCadastros(' . $this->validacao . ')');
+            $extra = $this->funcaoOnClick('verificarMuitosCadastros(' . $this->validacao . ', ' . $this->periodo . ')');
 
             echo $this->botaoSimples($label, $extra, BotaoSimples::botaoImportante, BotaoSimples::posicaoAoCentro);
             ?>

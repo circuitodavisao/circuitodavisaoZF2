@@ -3,7 +3,7 @@
  * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com>
  * Descricao: Função para fechar modal caso a tela seja virada
  */
-function verificarMuitosCadastros(validacao) {
+function verificarMuitosCadastros(validacao, periodo) {
     if (validacao == 1) {
         $.magnificPopup.open({
             removalDelay: 500, //delay removal by X to allow out-animation,
@@ -20,7 +20,7 @@ function verificarMuitosCadastros(validacao) {
             midClick: true // allow opening popup on middle mouse click. Always set it to true if you don't provide alternative source.
         });
     } else {
-        location.href = '/lancamentoCadastrarPessoa';
+        location.href = '/lancamentoCadastrarPessoa/' + periodo;
     }
 }
 

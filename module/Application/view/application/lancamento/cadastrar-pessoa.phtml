@@ -14,6 +14,7 @@ echo $this->form()->openTag($form);
 echo $this->templateFormularioTopo(Constantes::$TRADUCAO_NOVO_CADASTRO_LABEL);
 ?>
 <div class="panel-body bg-light">
+    <input type="hidden" id="periodo" name="periodo" value="<?php echo $this->periodo; ?>" />
     <?php
     echo $this->divMensagens();
     echo $this->inputFormularioSimples(Constantes::$TRADUCAO_NOME, $form->get(Constantes::$INPUT_NOME));
@@ -27,7 +28,7 @@ echo $this->templateFormularioTopo(Constantes::$TRADUCAO_NOVO_CADASTRO_LABEL);
     $funcaoVerificarCadastroPessoa = $this->funcaoOnClick('validarLancamentoCadastrarPessoa(this.form)');
     echo $this->botaoSimples(Constantes::$TRADUCAO_CADASTRAR, $funcaoVerificarCadastroPessoa);
 
-    $funcaoVoltar = $this->funcaoOnClick('location.href="' . Constantes::$ROUTE_LANCAMENTO . 'Arregimentacao"');
+    $funcaoVoltar = $this->funcaoOnClick('location.href="/' . Constantes::$ROUTE_LANCAMENTO . 'Arregimentacao/' . $this->periodo . '"');
     echo $this->botaoSimples(Constantes::$TRADUCAO_VOLTAR, $funcaoVoltar, 2);
 
     echo $this->formHidden($form->get(Constantes::$INPUT_CSRF));
@@ -36,3 +37,7 @@ echo $this->templateFormularioTopo(Constantes::$TRADUCAO_NOVO_CADASTRO_LABEL);
 <?php
 echo $this->templateFormularioRodape();
 echo $this->form()->closeTag();
+?>
+<script type="text/javascript">
+    document.getElementById('nome').focus();
+</script>
