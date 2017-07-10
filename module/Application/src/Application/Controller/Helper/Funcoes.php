@@ -430,6 +430,15 @@ class Funcoes {
         $proximoDomingo = strtotime("next Sunday");
         return date('Y-m-d', $proximoDomingo);
     }
+    
+     /**
+     * Retorna a data do proximo domingo
+     * @return String
+     */
+    public static function proximaSegunda() {
+        $proximoDomingo = strtotime("next Monday");
+        return date('Y-m-d', $proximoDomingo);
+    }
 
     public static function var_dump($expression) {
         echo "<pre>";

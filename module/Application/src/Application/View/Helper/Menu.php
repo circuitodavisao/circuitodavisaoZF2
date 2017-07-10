@@ -220,7 +220,7 @@ class Menu extends AbstractHelper {
         $html .= '<li>';
         $html .= '<a href="/cadastroCelulas">';
         $html .= '<span class="fa fa-users"></span>';
-        $html .= 'Células';
+        $html .= 'Células'; 
         $html .= '</a>';
         $html .= '</li>';
 

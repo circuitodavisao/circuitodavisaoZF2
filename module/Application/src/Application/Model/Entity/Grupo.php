@@ -268,14 +268,14 @@ class Grupo extends CircuitoEntity {
         $grupoEventos = null;
         if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::SUBEQUIPE) {
 
-            $grupoEventosCelulas = $grupoSelecionado->getGrupoEventoAtivosPorTipo(GrupoEvento::CELULA);
+            $grupoEventosCelulas = $grupoSelecionado->getGrupoEventoPorTipoEAtivo(GrupoEvento::CELULA);
             while ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::SUBEQUIPE) {
                 $grupoSelecionado = $grupoSelecionado->getGrupoPaiFilhoPai()->getGrupoPaiFilhoPai();
                 if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::EQUIPE) {
                     break;
                 }
             }
-            $grupoEventos = $grupoSelecionado->getGrupoEventoAtivosPorTipo(GrupoEvento::CULTO);
+            $grupoEventos = $grupoSelecionado->getGrupoEventoPorTipoEAtivo(GrupoEvento::CULTO);
         } else {
             $grupoEventos = $grupoSelecionado->getGrupoEventoAtivos();
         }
@@ -382,6 +382,46 @@ class Grupo extends CircuitoEntity {
     }
 
     /**
+     * Retorna o grupo evento
+     * @return GrupoEvento
+     */
+    function getGrupoEventoPorTipoEAtivo($tipo = 0, $ativo = 0) {
+        $grupoEventos = null;
+        foreach ($this->getGrupoEvento() as $grupoEvento) {
+            $condicaoTipo = false;
+            $condicaoAtivo = false;
+
+            if ($tipo === 0) {
+                $condicaoTipo = true;
+            }
+            if ($tipo === GrupoEvento::CULTO && $grupoEvento->getEvento()->verificaSeECulto()) {
+                $condicaoTipo = true;
+            }
+            if ($tipo === GrupoEvento::CELULA && $grupoEvento->getEvento()->verificaSeECelula()) {
+                $condicaoTipo = true;
+            }
+            if ($tipo === GrupoEvento::REVISAO && $grupoEvento->getEvento()->verificaSeERevisao()) {
+                $condicaoTipo = true;
+            }
+
+            if ($ativo === 0) {
+                $condicaoAtivo = true;
+            }
+            if ($ativo === 1 && $grupoEvento->verificarSeEstaAtivo()) {
+                $condicaoAtivo = true;
+            }
+            if ($ativo === 2 && !$grupoEvento->verificarSeEstaAtivo()) {
+                $condicaoAtivo = true;
+            }
+
+            if ($condicaoTipo && $condicaoAtivo) {
+                $grupoEventos[] = $grupoEvento;
+            }
+        }
+        return $grupoEventos;
+    }
+
+    /**
      * Retorna o grupo aluno
      * @return GrupoAluno
      */
@@ -454,20 +494,55 @@ class Grupo extends CircuitoEntity {
                 $dataDoInicioDoPeriodoParaComparar = strtotime($stringComecoDoPeriodo);
                 $dataDoGrupoEventoParaComparar = strtotime($grupoEvento->getData_criacaoStringPadraoBanco());
 
-                /* Evento criado antes do inicio do periodo */
                 $validacaoDataDeCriacaoAntesDoInicioDoPeriodo = false;
-                if ($dataDoGrupoEventoParaComparar <= $dataDoInicioDoPeriodoParaComparar) {
-                    $validacaoDataDeCriacaoAntesDoInicioDoPeriodo = true;
-                }
-
-                /* Evento criado no meio do periodo */
-                $stringFimDoPeriodo = $arrayPeriodo[6] . '-' . $arrayPeriodo[5] . '-' . $arrayPeriodo[4];
-                $dataDoFimDoPeriodoParaComparar = strtotime($stringFimDoPeriodo);
                 $validacaoDataDeCriacaoNoMeioDoPeriodo = false;
-                if ($dataDoGrupoEventoParaComparar > $dataDoInicioDoPeriodoParaComparar && $dataDoGrupoEventoParaComparar <= $dataDoFimDoPeriodoParaComparar) {
-                    $validacaoDataDeCriacaoNoMeioDoPeriodo = true;
+
+                if ($grupoEvento->verificarSeEstaAtivo()) {
+                    /* Evento criado antes do inicio do periodo */
+                    if ($dataDoGrupoEventoParaComparar <= $dataDoInicioDoPeriodoParaComparar) {
+                        $validacaoDataDeCriacaoAntesDoInicioDoPeriodo = true;
+                    }
+
+                    /* Evento criado no meio do periodo */
+                    $stringFimDoPeriodo = $arrayPeriodo[6] . '-' . $arrayPeriodo[5] . '-' . $arrayPeriodo[4];
+                    $dataDoFimDoPeriodoParaComparar = strtotime($stringFimDoPeriodo);
+
+                    if ($dataDoGrupoEventoParaComparar > $dataDoInicioDoPeriodoParaComparar && $dataDoGrupoEventoParaComparar <= $dataDoFimDoPeriodoParaComparar) {
+                        $validacaoDataDeCriacaoNoMeioDoPeriodo = true;
+                    }
                 }
 
+                /* Evento inativao no meio do periodo */
+                if (!$grupoEvento->verificarSeEstaAtivo()) {
+                    $stringFimDoPeriodo = $arrayPeriodo[6] . '-' . $arrayPeriodo[5] . '-' . $arrayPeriodo[4];
+                    $dataDoFimDoPeriodoParaComparar = strtotime($stringFimDoPeriodo);
+                    $dataDoGrupoEventoParaComparar = strtotime($grupoEvento->getData_inativacaoStringPadraoBanco());
+
+                    /* Meio do periodo */
+                    $excluidoDepoisQueOEventoOcorreu = true;
+                    $diaQueOcorreOEvento = $grupoEvento->getEvento()->getDia();
+                    if ($diaQueOcorreOEvento == 1) {
+                        $diaQueOcorreOEvento = 7;
+                    } else {
+                        $diaQueOcorreOEvento--;
+                    }
+                    $diaDaSemanaQueFoiExcluido = date('w', $dataDoGrupoEventoParaComparar);
+                    if ($diaDaSemanaQueFoiExcluido == 0) {
+                        $diaDaSemanaQueFoiExcluido = 7;
+                    }
+                    if ($diaQueOcorreOEvento > $diaDaSemanaQueFoiExcluido) {
+                        $excluidoDepoisQueOEventoOcorreu = false;
+                    }
+                    if ($dataDoGrupoEventoParaComparar >= $dataDoInicioDoPeriodoParaComparar &&
+                            $dataDoGrupoEventoParaComparar <= $dataDoFimDoPeriodoParaComparar &&
+                            $excluidoDepoisQueOEventoOcorreu) {
+                        $validacaoDataDeCriacaoAntesDoInicioDoPeriodo = true;
+                    } else {
+                        if ($dataDoGrupoEventoParaComparar > $dataDoFimDoPeriodoParaComparar) {
+                            $validacaoDataDeCriacaoAntesDoInicioDoPeriodo = true;
+                        }
+                    }
+                }
 
                 if ($validacaoDataDeCriacaoAntesDoInicioDoPeriodo || $validacaoDataDeCriacaoNoMeioDoPeriodo) {
                     $grupoEventosNoPeriodo[] = $grupoEvento;

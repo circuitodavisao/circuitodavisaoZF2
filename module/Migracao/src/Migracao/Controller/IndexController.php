@@ -173,7 +173,7 @@ class IndexController extends CircuitoController {
 
         $tipoCelula = 2;
         /* rodar toda segunda */
-        $dateFormatada = DateTime::createFromFormat('Y-m-d', date('Y-m-d'));
+        $dateFormatada = DateTime::createFromFormat('Y-m-d', date('Y-m-d')); 
 //        $dateFormatada = DateTime::createFromFormat('Y-m-d', self::DATA_CRIACAO);
         $tipoGerarRelatorioDeLider = $this->params()->fromRoute(Constantes::$ID, 0);
 

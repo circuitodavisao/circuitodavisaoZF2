@@ -82,7 +82,7 @@ class ListagemDePessoasComEventos extends AbstractHelper {
                 $pessoa->setIdGrupoPessoa($grupoPessoa->getId());
                 $pessoa->setAtivo($grupoPessoa->verificarSeEstaAtivo());
                 if (!$pessoa->getAtivo()) {
-                    $pessoa->setDataInativacao($grupoPessoa->getData_inativacao());
+                    $pessoa->setDataInativacao($grupoPessoa->getData_inativacaoStringPadraoBanco());
                 }
 //                $adicionar = true;
 //                /* Validacao de tranferencia */
@@ -166,12 +166,24 @@ class ListagemDePessoasComEventos extends AbstractHelper {
         $corTextoTagsExtrasLg = ' class="hidden-xs hidden-sm hidden-md" ';
         $classLinha2 = '';
         if ($pessoa->getTipo() != 'LP' && !$pessoa->getAtivo()) {
-            $classLinha = 'class="row-warning warning"';
-            $classLinha2 = 'footable-visible footable-first-column';
-            $corBotao = 'btn-warning disabled';
-            $base = ' text-warning" data-toggle="tooltip" data-placement="center" title data-original-title="Inativo"';
-            $corTextoTagsExtrasXs = 'class="hidden-lg' . $base;
-            $corTextoTagsExtrasLg = 'class="hidden-xs hidden-sm hidden-md' . $base;
+            if ($pessoa->getDataInativacao()) {
+                /* Verificando em qual periodo foi inativado */
+                $arrayPeriodo = Funcoes::montaPeriodo($this->view->periodo);
+                $stringPeriodo = $arrayPeriodo[3] . '-' . $arrayPeriodo[2] . '-' . $arrayPeriodo[1];
+                $dataDoInicioDoPeriodoParaComparar = strtotime($stringPeriodo);
+                $stringPeriodoFim = $arrayPeriodo[6] . '-' . $arrayPeriodo[5] . '-' . $arrayPeriodo[4];
+                $dataDoFimDoPeriodoParaComparar = strtotime($stringPeriodoFim);
+                $dataDeInativacaoDaPessoaParaComparar = strtotime($pessoa->getDataInativacao());
+                if ($dataDeInativacaoDaPessoaParaComparar >= $dataDoInicioDoPeriodoParaComparar 
+                        && $dataDeInativacaoDaPessoaParaComparar <= $dataDoFimDoPeriodoParaComparar) {
+                    $classLinha = 'class="row-warning warning"';
+                    $classLinha2 = 'footable-visible footable-first-column';
+                    $corBotao = 'btn-warning disabled';
+                    $base = ' text-warning" data-toggle="tooltip" data-placement="center" title data-original-title="Inativo"';
+                    $corTextoTagsExtrasXs = 'class="hidden-lg' . $base;
+                    $corTextoTagsExtrasLg = 'class="hidden-xs hidden-sm hidden-md' . $base;
+                }
+            }
         }
 //                if ($pessoa->verificarSeFoiTransferido($mesSelecionado, $anoSelecionado)) {
 //                    $classLinha = 'class="row-dark default"';
@@ -191,7 +203,7 @@ class ListagemDePessoasComEventos extends AbstractHelper {
         $html .= '<span class="sr-only"></span>';
         $html .= '</span>';
 
-        if ($pessoa->getTipo() != 'LP' && $pessoa->getAtivo()) {
+        if ($this->view->periodo == 0 && $pessoa->getTipo() != 'LP' && $pessoa->getAtivo()) {
             $html .= '<ul class="dropdown-menu sobrepor-elementos" style="min-width: 43px;">';
             $html .= '<span class="editable-container editable-inline">';
             $html .= '<div class="definicao-altura-30">';
