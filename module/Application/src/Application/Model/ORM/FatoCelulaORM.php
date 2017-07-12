@@ -3,7 +3,6 @@
 namespace Application\Model\ORM;
 
 use Application\Controller\Helper\Constantes;
-use Application\Model\Entity\CircuitoEntity;
 use Application\Model\Entity\FatoCelula;
 use Application\Model\Entity\FatoCiclo;
 use Exception;
@@ -30,6 +29,23 @@ class FatoCelulaORM extends CircuitoORM {
         } catch (Exception $exc) {
             echo $exc->getMessage();
         }
-    }   
+    }
+
+    /**
+     * Localizar entidade por evento_celula_id
+     * @param integer $id
+     * @return FatoCelula
+     * @throws Exception
+     */
+    public function encontrarPorEventoCelulaId($id) {
+        $idInteiro = (int) $id;
+        $entidade = $this->getEntityManager()
+                ->getRepository($this->getEntity())
+                ->findOneBy(array(Constantes::$ENTITY_EVENTO_CELULA_ID => $idInteiro));
+        if (!$entidade) {
+            throw new Exception("Não foi encontrado a entidade de id = {$idInteiro}");
+        }
+        return $entidade;
+    }
 
 }

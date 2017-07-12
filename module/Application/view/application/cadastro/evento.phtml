@@ -45,6 +45,9 @@ echo $this->templateFormularioTopo($tituloDaPagina);
         $funcaoValidarDiaHoraEMinuto = $this->funcaoOnClick('validarDiaHoraEMinuto()');
         echo $this->botaoSimples(Constantes::$TRADUCAO_CONTINUAR, $funcaoValidarDiaHoraEMinuto);
         $funcaoVoltar = $this->funcaoOnClick('voltarListagemCultos()');
+        if ($form instanceof CelulaForm) {
+            $funcaoVoltar = $this->funcaoOnClick('voltarListagemCelulas()');
+        }
         echo $this->botaoSimples(Constantes::$TRADUCAO_VOLTAR, $funcaoVoltar, 2);
         /* Fim Botoes */
         echo '</div>';
@@ -60,6 +63,9 @@ echo $this->templateFormularioTopo($tituloDaPagina);
         }
         echo $this->botaoSimples(Constantes::$TRADUCAO_CONTINUAR, $funcaoContinuar);
         $funcaoVoltar2 = $this->funcaoOnClick('voltarSelecionarDiaHoraEMinuto()');
+        if ($form instanceof CelulaForm) {
+            $funcaoVoltar2 = $this->funcaoOnClick('voltarEndereco()');
+        }
         echo $this->botaoSimples(Constantes::$TRADUCAO_VOLTAR, $funcaoVoltar2, 2);
         echo '</div>';
         if ($form instanceof CelulaForm) {
@@ -114,8 +120,8 @@ echo $this->templateFormularioTopo($tituloDaPagina);
     <div class="hidden panel-footer text-right" style="height:65px;">
         <?php
         /* Botões */
-        $labelVoltar = Constantes::$STRING_ICONE_ARROW_LEFT . ' ' . $this->translate(Constantes::$TRADUCAO_VOLTAR);
-        $labelContinuar = $this->translate(Constantes::$TRADUCAO_CONTINUAR) . ' ' . Constantes::$STRING_ICONE_ARROW_RIGHT;
+        $labelVoltar = $this->translate(Constantes::$TRADUCAO_VOLTAR);
+        $labelContinuar = $this->translate(Constantes::$TRADUCAO_CONTINUAR);
         $funcaoPreValidacao = '';
         $urlVoltar = '';
         if ($form instanceof CelulaForm) {

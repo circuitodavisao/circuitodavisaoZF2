@@ -11,37 +11,51 @@ $mostrar = false;
 
 if ($sessao->tipoMensagem) {
     $mostrar = true;
+
+    $traducaoCelula = $this->translate(Constantes::$TRADUCAO_CELULA_);
+    $traducaoCulto = $this->translate(Constantes::$TRADUCAO_CULTO_);
+    $traducaoRevisao = $this->translate(Constantes::$TRADUCAO_REVISAO);
+
+    $traducaoCadastrado = $this->translate(Constantes::$TRADUCAO_CADASTRADO);
+    $traducaoAlterado = $this->translate(Constantes::$TRADUCAO_ALTERADO);
+    $traducaoExcluido = $this->translate(Constantes::$TRADUCAO_EXCLUIDO);
+
+    $traducaoHost = $this->translate(Constantes::$TRADUCAO_CELULA_TEXTO);
+    $traducaoNomeCulto = $this->translate(Constantes::$TRADUCAO_CULTO_TEXTO);
     switch ($sessao->tipoMensagem) {
         case 1:
-            $titulo = Constantes::$TRADUCAO_CELULA_ . Constantes::$TRADUCAO_CADASTRADO;
-            $texto = Constantes::$TRADUCAO_CELULA_TEXTO . $sessao->textoMensagem;
+            $titulo = $traducaoCelula . $traducaoCadastrado;
+            $texto = $traducaoHost . $sessao->textoMensagem;
             break;
         case 2:
-            $titulo = Constantes::$TRADUCAO_CELULA_ . Constantes::$TRADUCAO_ALTERADO;
-            $texto = Constantes::$TRADUCAO_CELULA_TEXTO . $sessao->textoMensagem;
+            $titulo = $traducaoCelula . $traducaoAlterado;
+            $texto = $traducaoHost . $sessao->textoMensagem;
             break;
         case 3:
-            $titulo = Constantes::$TRADUCAO_CELULA_ . Constantes::$TRADUCAO_EXCLUIDO;
-            $texto = Constantes::$TRADUCAO_CELULA_TEXTO . $sessao->textoMensagem;
+            $titulo = $traducaoCelula . $traducaoExcluido;
+            $texto = $traducaoHost . $sessao->textoMensagem;
             break;
         case 4:
-            $titulo = Constantes::$TRADUCAO_CULTO_ . Constantes::$TRADUCAO_CADASTRADO;
-            $texto = Constantes::$TRADUCAO_CULTO_TEXTO . $sessao->textoMensagem;
+            $titulo = $traducaoCulto . $traducaoCadastrado;
+            $texto = $traducaoNomeCulto . $sessao->textoMensagem;
             break;
         case 5:
-            $titulo = Constantes::$TRADUCAO_CULTO_ . Constantes::$TRADUCAO_ALTERADO;
-            $texto = Constantes::$TRADUCAO_CULTO_TEXTO . $sessao->textoMensagem;
+            $titulo = $traducaoCulto . $traducaoAlterado;
+            $texto = $traducaoNomeCulto . $sessao->textoMensagem;
             break;
         case 6:
-            $titulo = Constantes::$TRADUCAO_CULTO_ . Constantes::$TRADUCAO_EXCLUIDO;
-            $texto = Constantes::$TRADUCAO_CULTO_TEXTO . $sessao->textoMensagem;
+            $titulo = $traducaoCulto . $traducaoExcluido;
+            $texto = $traducaoNomeCulto . $sessao->textoMensagem;
             break;
         case 7:
-            $titulo = Constantes::$TRADUCAO_REVISAO . Constantes::$TRADUCAO_CADASTRADO;
-            $texto = COnstantes::$TRADUCAO_CULTO_TEXTO . $sessao->textoMensagem;
+            $titulo = $traducaoRevisao . $traducaoCadastrado;
+            $texto = $traducaoNomeCulto . $sessao->textoMensagem;
     }
-    $sessao->tipoMensagem = '';  
+    $sessao->tipoMensagem = '';
     $sessao->textoMensagem = '';
+
+    $titulo = $this->translate($titulo);
+    $texto = $this->translate($texto);
 }
 ?>
 <script type="text/javascript">

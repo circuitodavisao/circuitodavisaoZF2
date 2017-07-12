@@ -6,6 +6,7 @@ use Application\Controller\Helper\Constantes;
 use Application\Model\Entity\EventoCelula;
 use Zend\Form\Element\Button;
 use Zend\Form\Element\Text;
+use Zend\Form\Element\Number;
 
 /**
  * Nome: CelulaForm.php
@@ -38,7 +39,7 @@ class CelulaForm extends EventoForm {
 
         /* DDD Hospedeiro */
         $this->add(
-                (new Text())
+                (new Number())
                         ->setName(Constantes::$FORM_DDD_HOSPEDEIRO)
                         ->setAttributes([
                             Constantes::$FORM_CLASS => Constantes::$FORM_CLASS_FORM_CONTROL,
@@ -49,7 +50,7 @@ class CelulaForm extends EventoForm {
 
         /* Telefone Hospedeiro */
         $this->add(
-                (new Text())
+                (new Number())
                         ->setName(Constantes::$FORM_TELEFONE_HOSPEDEIRO)
                         ->setAttributes([
                             Constantes::$FORM_CLASS => Constantes::$FORM_CLASS_FORM_CONTROL,

@@ -1,0 +1,32 @@
+<?php
+
+use Application\Controller\Helper\Constantes;
+use Application\View\Helper\BotaoSimples;
+?>
+<div class="mw1000 center-block">    
+    <div id='panelLancamento' class="panel mw1000">
+        <div class="panel-heading">
+            Lan&ccedil;amento de Arregimenta&ccedil;&atilde;o
+        </div>      
+        <div class="panel-body center-block">       
+            <?php
+            echo $this->cabecalhoDePeriodos();
+            echo $this->tabelaLancamento();
+            ?>
+        </div>
+        <div class="panel-footer text-center">
+            <?php
+            $label = $this->translate(Constantes::$TRADUCAO_CADASTRAR_PESSOA);
+            $extra = $this->funcaoOnClick('verificarMuitosCadastros(' . $this->validacao . ', ' . $this->periodo . ')');
+
+            echo $this->botaoSimples($label, $extra, BotaoSimples::botaoImportante, BotaoSimples::posicaoAoCentro);
+            ?>
+        </div>
+    </div>
+</div>
+<!-- MODAL PARA MUITOS ELEMENTOS -->
+<?php
+echo $this->modalMuitosEventos();
+echo $this->modalMuitosCadastros();
+
+echo $this->layoutJSLancamento;

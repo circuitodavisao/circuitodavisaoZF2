@@ -26,9 +26,15 @@ function buscarEndereco() {
     var cep_logradouro = $('#cep_logradouro').val();
     $('#endereco').addClass(hidden);
     var spanMensagemDeErro = $('#spanMensagemDeErro');
+    var divMensagens = $('#divMensagens');
 
     if (cep_logradouro.length === 0) {
         spanMensagemDeErro
+                .removeClass('alert-success')
+                .addClass('alert-danger')
+                .html('Preencha o CEP')
+                .removeClass(hidden);
+        divMensagens
                 .removeClass('alert-success')
                 .addClass('alert-danger')
                 .html('Preencha o CEP')
@@ -37,6 +43,11 @@ function buscarEndereco() {
     }
     if (!isNumber(cep_logradouro) || cep_logradouro.length !== 8) {
         spanMensagemDeErro
+                .removeClass('alert-success')
+                .addClass('alert-danger')
+                .html('Cep é invalido!')
+                .removeClass(hidden);
+        divMensagens
                 .removeClass('alert-success')
                 .addClass('alert-danger')
                 .html('Cep é invalido!')
@@ -72,6 +83,10 @@ function buscarEndereco() {
                             .removeClass('alert-success')
                             .addClass('alert-danger')
                             .html('CEP não encontrado');
+                    divMensagens
+                            .removeClass('alert-success')
+                            .addClass('alert-danger')
+                            .html('CEP não encontrado');
                 }
                 if (data.quantidadeDeResultados === 1) {
                     $('#endereco').removeClass(hidden);
@@ -87,6 +102,7 @@ function buscarEndereco() {
                     $('#botaoContinuar').removeAttr("disabled");
                     $('#complemento').focus();
                     spanMensagemDeErro.addClass(hidden);
+                    divMensagens.addClass(hidden);
                     $('#divBotaoBuscarCep').addClass(hidden);
                     $('#divBotaoCepContinuar').removeClass(hidden);
                 }

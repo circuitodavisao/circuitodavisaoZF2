@@ -168,7 +168,6 @@ class CadastrarPessoaRevisaoForm extends Form {
                             Constantes::$FORM_STRING_VALUE_OPTIONS => array(
                                 1 => array(
                                     Constantes::$FORM_STRING_VALUE => 'M',
-                                    Constantes::$INPUT_SELECTED => Constantes::$INPUT_SELECTED,
                                     Constantes::$FORM_STRING_LABEL => ' MASCULINO',
                                     Constantes::$FORM_STRING_LABEL_ATRIBUTES => array(Constantes::$FORM_STRING_CLASS => $classOption),
                                 ),

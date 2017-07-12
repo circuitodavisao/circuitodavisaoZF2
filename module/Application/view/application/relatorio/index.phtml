@@ -15,23 +15,12 @@ $somaGeral[4] = 0;
 $somaGeralLideres = 0;
 $somaQuantidadeCelulas = 0;
 $somaQuantidadeCelulasRealizadas = 0;
-
-$urlBase = $this->url(Constantes::$ROUTE_RELATORIO)
-        . '/' . $this->tipoRelatorio;
-$urlBase2 = $urlBase . '/2';
 ?>
 <div class="mw600 center-block">
     <div class="panel-body bg-light">  
         <div class="panel">
             <div class="panel-heading">
-                <ul class="nav panel-tabs-border panel-tabs panel-tabs-left">
-                    <li <?php echo $this->abaSelecionada($this->abaSelecionada, 1); ?>>
-                        <?php echo '<a href="' . $urlBase . '">Período Atual</a>'; ?>
-                    </li>
-                    <li <?php echo $this->abaSelecionada($this->abaSelecionada, 2); ?>>
-                        <?php echo '<a href="' . $urlBase2 . '">Período Anterior</a>'; ?>
-                    </li>
-                </ul>
+                <?php echo $this->cabecalhoDePeriodos(Constantes::$ROUTE_RELATORIO, $this->tipoRelatorio); ?> 
             </div>
             <div class="panel-body pn">
                 <table class="text-center table table-condensed bg-light" style="font-size:10px;">
@@ -154,7 +143,7 @@ $urlBase2 = $urlBase . '/2';
                                     echo '<td class = "hidden-xs">' . $relatorioDiscipulo['membresiaArena'] . '</td>';
                                     echo '<td class = "hidden-xs">' . $relatorioDiscipulo['membresiaDomingo'] . '</td>';
                                     echo '<td>' . RelatorioController::formataNumeroRelatorio($relatorioDiscipulo['membresia']) . '</td>';
-                                    echo '<td>' . RelatorioController::formataNumeroRelatorio($relatorioDiscipulo['membresiaPerformanceClass']) . '%</td>';
+                                    echo '<td>' . RelatorioController::formataNumeroRelatorio($relatorioDiscipulo['membresiaPerformance']) . '%</td>';
                                 }
                                 if ($this->tipoRelatorio == 2) {
                                     echo '<td>' . $relatorioDiscipulo['celulaQuantidade'] . '</td>';
@@ -207,7 +196,7 @@ $urlBase2 = $urlBase . '/2';
                         if ($this->tipoRelatorio == 3) {
                             $performance = $somaGeral[$dimensaoTipoCelula] / $meta * 100;
                         }
-                        echo '<tr class = "dark">';
+                        echo '<tr>';
                         echo '<td class = "hidden-xs"></td>';
                         echo '<td>TOTAL</td>';
                         if ($this->tipoRelatorio == 1) {

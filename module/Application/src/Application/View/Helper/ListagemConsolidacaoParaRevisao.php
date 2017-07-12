@@ -141,7 +141,7 @@ class ListagemConsolidacaoParaRevisao extends AbstractHelper {
             $html .= '<div class="alert alert-warning"><i class="fa fa-warning pr10" aria-hidden="true"></i>&nbsp;Sem Pessoas Cadastradas!</div>';
         } else {
             
-                $html .= $this->view->templateFormularioTopo('Pessoas Pagina Lancamento');
+                $html .= $this->view->templateFormularioTopo('Selecionar pessoa para o revisão');
                 $html .= '<div class="panel-body bg-light">';
                 
                     $html .= '<table class="table">'; 

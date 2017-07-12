@@ -35,45 +35,12 @@ class FatoCiclo extends CircuitoEntity {
     /** @ORM\Column(type="integer") */
     protected $numero_identificador;
 
-    /** @ORM\Column(type="integer") */
-    protected $mes;
-
-    /** @ORM\Column(type="integer") */
-    protected $ano;
-
-    /** @ORM\Column(type="integer") */
-    protected $ciclo;
-
     function getNumero_identificador() {
         return $this->numero_identificador;
     }
 
-    function getMes() {
-        return $this->mes;
-    }
-
-    function getAno() {
-        return $this->ano;
-    }
-
-    function getCiclo() {
-        return $this->ciclo;
-    }
-
     function setNumero_identificador($numero_identificador) {
         $this->numero_identificador = $numero_identificador;
-    }
-
-    function setMes($mes) {
-        $this->mes = $mes;
-    }
-
-    function setAno($ano) {
-        $this->ano = $ano;
-    }
-
-    function setCiclo($ciclo) {
-        $this->ciclo = $ciclo;
     }
 
     /**

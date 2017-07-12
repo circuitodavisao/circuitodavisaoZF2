@@ -267,6 +267,7 @@ class Grupo extends CircuitoEntity {
         $grupoEventosCelulas = null;
         $grupoEventos = null;
         if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::SUBEQUIPE) {
+
             $grupoEventosCelulas = $grupoSelecionado->getGrupoEventoAtivosPorTipo(GrupoEvento::CELULA);
             while ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::SUBEQUIPE) {
                 $grupoSelecionado = $grupoSelecionado->getGrupoPaiFilhoPai()->getGrupoPaiFilhoPai();
@@ -339,66 +340,6 @@ class Grupo extends CircuitoEntity {
 
         return $grupoEventos;
     }
-
-    /**
-     * Retorna o grupo igreja do Grupo
-     * @return GrupoEvento
-     */
-    function getGrupoIgreja() {
-        $grupoSelecionado = $this;
-        $grupoIgreja = null;
-        if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::SUBEQUIPE) {
-            while ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::SUBEQUIPE ||
-            $grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::EQUIPE) {
-
-                $grupoSelecionado = $grupoSelecionado->getGrupoPaiFilhoPai()->getGrupoPaiFilhoPai();
-                if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::IGREJA) {
-                    break;
-                }
-            }
-            $grupoIgreja = $grupoSelecionado;
-        } else if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::EQUIPE) {
-            while ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::EQUIPE) {
-                $grupoSelecionado = $grupoSelecionado->getGrupoPaiFilhoPai()->getGrupoPaiFilhoPai();
-                if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::IGREJA) {
-                    break;
-                }
-            }
-            $grupoIgreja = $grupoSelecionado;
-        } else if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::IGREJA) {
-            $grupoIgreja = $grupoSelecionado;
-        } else {
-            $grupoIgreja = null;
-        }
-
-        return $grupoIgreja;
-    }
-    
-    /**
-     * Retorna o grupo equipe do Grupo
-     * @return GrupoEvento
-     */
-    function getGrupoEquipe() { 
-        $grupoSelecionado = $this;
-        $grupoEquipe = null;
-        if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::SUBEQUIPE) {
-            while ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::SUBEQUIPE) {
-
-                $grupoSelecionado = $grupoSelecionado->getGrupoPaiFilhoPai()->getGrupoPaiFilhoPai();
-                if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::EQUIPE) {
-                    break;
-                }
-            }
-            $grupoEquipe = $grupoSelecionado;
-        } else if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::EQUIPE) {
-            $grupoEquipe = $grupoSelecionado;
-        } else {
-            $grupoEquipe = null;
-        }
-
-        return $grupoEquipe;
-    }
-
 
     /**
      * Retorna o grupo evento
@@ -490,19 +431,45 @@ class Grupo extends CircuitoEntity {
         return $resposta;
     }
 
-    function getGrupoEventoNoPeriodo($periodo) { 
+    function getGrupoEventoNoPeriodo($periodo, $apenasCelulas = false) {
         $grupoEventosNoPeriodo = array();
         $grupoEventoOrdenadosPorDiaDaSemana = $this->getGrupoEventoOrdenadosPorDiaDaSemana();
 
-        if (!empty($grupoEventoOrdenadosPorDiaDaSemana)) {
-            foreach ($grupoEventoOrdenadosPorDiaDaSemana as $grupoEvento) {
+        $grupoEventos = $grupoEventoOrdenadosPorDiaDaSemana;
+        if ($apenasCelulas) {
+            unset($grupoEventos);
+            if (!empty($grupoEventoOrdenadosPorDiaDaSemana)) {
+                foreach ($grupoEventoOrdenadosPorDiaDaSemana as $grupoEventoTodos) {
+                    if ($grupoEventoTodos->getEvento()->verificaSeECelula()) {
+                        $grupoEventos[] = $grupoEventoTodos;
+                    }
+                }
+            }
+        }
 
+        if (!empty($grupoEventos)) {
+            foreach ($grupoEventos as $grupoEvento) {
                 $arrayPeriodo = Funcoes::montaPeriodo($periodo);
                 $stringComecoDoPeriodo = $arrayPeriodo[3] . '-' . $arrayPeriodo[2] . '-' . $arrayPeriodo[1];
                 $dataDoInicioDoPeriodoParaComparar = strtotime($stringComecoDoPeriodo);
                 $dataDoGrupoEventoParaComparar = strtotime($grupoEvento->getData_criacaoStringPadraoBanco());
 
+                /* Evento criado antes do inicio do periodo */
+                $validacaoDataDeCriacaoAntesDoInicioDoPeriodo = false;
                 if ($dataDoGrupoEventoParaComparar <= $dataDoInicioDoPeriodoParaComparar) {
+                    $validacaoDataDeCriacaoAntesDoInicioDoPeriodo = true;
+                }
+
+                /* Evento criado no meio do periodo */
+                $stringFimDoPeriodo = $arrayPeriodo[6] . '-' . $arrayPeriodo[5] . '-' . $arrayPeriodo[4];
+                $dataDoFimDoPeriodoParaComparar = strtotime($stringFimDoPeriodo);
+                $validacaoDataDeCriacaoNoMeioDoPeriodo = false;
+                if ($dataDoGrupoEventoParaComparar > $dataDoInicioDoPeriodoParaComparar && $dataDoGrupoEventoParaComparar <= $dataDoFimDoPeriodoParaComparar) {
+                    $validacaoDataDeCriacaoNoMeioDoPeriodo = true;
+                }
+
+
+                if ($validacaoDataDeCriacaoAntesDoInicioDoPeriodo || $validacaoDataDeCriacaoNoMeioDoPeriodo) {
                     $grupoEventosNoPeriodo[] = $grupoEvento;
                 }
             }
@@ -510,20 +477,52 @@ class Grupo extends CircuitoEntity {
         return $grupoEventosNoPeriodo;
     }
 
-    function getGrupoPessoasNoPeriodo() {
+    function getGrupoPessoasNoPeriodo($periodo) {
+
         $grupoPessoasNoPeriodo = array();
-        $timeZone = new DateTimeZone('UTC');
+
         $grupoPessoas = $this->getGrupoPessoa();
         if (!empty($grupoPessoas)) {
             foreach ($grupoPessoas as $grupoPessoa) {
+                $dataDoGrupoPessoaParaComparar = strtotime($grupoPessoa->getData_criacaoStringPadraoBanco());
+                $arrayPeriodo = Funcoes::montaPeriodo($periodo);
+                $stringPeriodo = $arrayPeriodo[3] . '-' . $arrayPeriodo[2] . '-' . $arrayPeriodo[1];
+                $dataDoInicioDoPeriodoParaComparar = strtotime($stringPeriodo);
 
-                $dataDoGrupoPessoaParaComparar = strtotime($grupoPessoa->getData_criacaoStringPadraoBrasil());
-                $dataDoInicioDoPeriodoParaComparar = strtotime(Funcoes::montaPeriodo()[1] . '/' . date('m') . '/' . date('Y'));
+                /* Criando antes do começo do periodo */
+                $validacaoDataCriacao = false;
+                if ($dataDoGrupoPessoaParaComparar <= $dataDoInicioDoPeriodoParaComparar) {
+                    $validacaoDataCriacao = true;
+                }
 
-                $data1 = DateTime::createFromFormat('d/m/Y', $dataDoGrupoPessoaParaComparar, $timeZone);
-                $data2 = DateTime::createFromFormat('d/m/Y', $dataDoInicioDoPeriodoParaComparar, $timeZone);
+                /* Criando no periodo */
+                $stringFimPeriodo = $arrayPeriodo[6] . '-' . $arrayPeriodo[5] . '-' . $arrayPeriodo[4];
+                $dataDoFimParaComparar = strtotime($stringFimPeriodo);
+                if ($dataDoGrupoPessoaParaComparar > $dataDoInicioDoPeriodoParaComparar && $dataDoGrupoPessoaParaComparar <= $dataDoFimParaComparar) {
+                    $validacaoDataCriacao = true;
+                }
 
-                if ($data1 <= $data2) {
+                /* Se esta inativo */
+                $validacaoAtivoEDataInativacao = true;
+                if (!$grupoPessoa->verificarSeEstaAtivo()) {
+                    /* Inativado no periodo */
+                    $dataDoGrupoPessoaInativacaoParaComparar = strtotime($grupoPessoa->getData_inativacaoStringPadraoBanco());
+                    if ($dataDoGrupoPessoaInativacaoParaComparar < $dataDoInicioDoPeriodoParaComparar) {
+                        $validacaoAtivoEDataInativacao = false;
+                    }
+                }
+
+                /* Periodo a frente */
+                if (!$validacaoDataCriacao) {
+                    $arrayPeriodoAFrente = Funcoes::montaPeriodo($periodo + 1);
+                    $stringPeriodoAFrente = $arrayPeriodoAFrente[3] . '-' . $arrayPeriodoAFrente[2] . '-' . $arrayPeriodoAFrente[1];
+                    $dataDoInicioDoPeriodoAFrenteParaComparar = strtotime($stringPeriodoAFrente);
+                    if ($dataDoGrupoPessoaParaComparar >= $dataDoInicioDoPeriodoAFrenteParaComparar) {
+                        $validacaoDataCriacao = true;
+                    }
+                }
+
+                if ($validacaoDataCriacao && $validacaoAtivoEDataInativacao) {
                     $grupoPessoasNoPeriodo[] = $grupoPessoa;
                 }
             }
@@ -670,29 +669,23 @@ class Grupo extends CircuitoEntity {
     }
 
     function getGrupoEventoCelula() {
-        $eventos = null;
-        if (!empty($this->getGrupoEvento())) {
-            foreach ($this->getGrupoEvento() as $ge) {
-                if ($ge->verificarSeEstaAtivo() && $ge->getEvento()->verificaSeECelula()) {
-                    $eventos[] = $ge;
-                }
+        $grupoEventos = null;
+        foreach ($this->getGrupoEvento() as $grupoEvento) {
+            if ($grupoEvento->verificarSeEstaAtivo() && $grupoEvento->getEvento()->verificaSeECelula()) {
+                $grupoEventos[] = $grupoEvento;
             }
         }
-        $this->setEventos($eventos);
-        return $this->getEventos();
+        return $grupoEventos;
     }
 
     function getGrupoEventoCulto() {
-        $eventos = null;
-        if (!empty($this->getGrupoEvento())) {
-            foreach ($this->getGrupoEvento() as $ge) {
-                if ($ge->verificarSeEstaAtivo() && $ge->getEvento()->verificaSeECulto()) {
-                    $eventos[] = $ge;
-                }
+        $grupoEventos = null;
+        foreach ($this->getGrupoEvento() as $ge) {
+            if ($ge->verificarSeEstaAtivo() && $ge->getEvento()->verificaSeECulto()) {
+                $grupoEventos[] = $ge;
             }
         }
-        $this->setEventos($eventos);
-        return $this->getEventos();
+        return $grupoEventos;
     }
 
 //    function getGrupoEventoRevisao() {

@@ -23,9 +23,11 @@ class Menu extends AbstractHelper {
     public function __invoke() {
         return $this->renderHtml();
     }
- 
-    public function renderHtml() { 
-        $html = ''; 
+
+
+    public function renderHtml() {
+        $html = '';
+
         $stringFoto = $this->view->pessoa->getFoto();
         if (empty($stringFoto)) {
             $stringFoto = 'placeholder.png';
@@ -211,67 +213,33 @@ class Menu extends AbstractHelper {
         $html .= '<li>';
         $html .= '<a class="accordion-toggle" href="#">';
         $html .= '<span class="fa fa-terminal"></span>';
-        $html .= '<span class="sidebar-title">Cadastro(Manutenção)</span>';
+        $html .= '<span class="sidebar-title">Cadastro</span>';
         $html .= '<span class="caret"></span>';
         $html .= '</a>';
 
         $html .= '<ul class="nav sub-nav">';
 
         $html .= '<li>';
-//        $html .= '<a href="/cadastroCelulas">';
-        $html .= '<a href="#">';
+        $html .= '<a href="/cadastroCelulas">';
         $html .= '<span class="fa fa-users"></span>';
         $html .= 'Células';
         $html .= '</a>';
         $html .= '</li>';
 
         $html .= '<li>';
-//        $html .= '<a href="/cadastroCultos">';
         $html .= '<a href="#">';
         $html .= '<span class="fa fa-users"></span>';
-        $html .= 'Cultos';
+        $html .= 'Cultos (Manutenção)';
         $html .= '</a>';
         $html .= '</li>';
 
         $html .= '<li>';
-//        $html .= '<a href="/cadastroGrupo">';
         $html .= '<a href="#">';
         $html .= '<span class="fa fa-users"></span>';
-        $html .= 'Time';
+        $html .= 'Time (Manutenção)';
         $html .= '</a>';
         $html .= '</li>';
 
-        $html .= '<li>';
-        $html .= '<a href="/cadastroRevisao">';
-//        $html .= '<a href="#">';
-        $html .= '<span class="fa fa-users"></span>';
-        $html .= 'Revisão de Vidas';
-        $html .= '</a>';
-        $html .= '</li>';
-
-        $html .= '<li>';
-//        $html .= '<a href="/cadastroTransferencia">';
-        $html .= '<a href="#">';
-        $html .= '<span class="fa fa-users"></span>';
-        $html .= 'Transferência';
-        $html .= '</a>';
-        $html .= '</li>';
-        
-        $html .= '<li>';
-        $html .= '<a href="/cadastroRevisionistas">';
-//        $html .= '<a href="#">';
-        $html .= '<span class="fa fa-users"></span>';
-        $html .= 'Revisionistas';
-        $html .= '</a>';
-        $html .= '</li>';
-
-        $html .= '<li>';
-        $html .= '<a href="/cadastroAtivarFichaRevisao">';
-//        $html .= '<a href="#">';
-        $html .= '<span class="fa fa-users"></span>';
-        $html .= 'Ativar Fichas';
-        $html .= '</a>';
-        $html .= '</li>';
         $html .= '</ul>';
 
         $html .= '</li>';
@@ -292,7 +260,6 @@ class Menu extends AbstractHelper {
         $html .= '</a>';
         $html .= '</li>';
         $html .= '<li>';
-//        $html .= '<a href="#">';
         $html .= '<a href="/lancamentoAtendimento">';
         $html .= '<span class="fa fa-users"></span>';
         $html .= 'Atendimento';
@@ -328,7 +295,7 @@ class Menu extends AbstractHelper {
         $html .= '</li>';
         $html .= '<li>';
         $html .= '<a href="/relatorioAtendimento">';
-        $html .= '<span class="fa fa-terminal"></span>';
+        $html .= '<span class="fa fa-users"></span>';
         $html .= 'Atendimento';
         $html .= '</a>';
         $html .= '</li>';
@@ -346,25 +313,27 @@ class Menu extends AbstractHelper {
         $html .= '<li>';
         $html .= '<a class="accordion-toggle" href="#">';
         $html .= '<span class="fa fa-print"></span>';
-        $html .= '<span class="sidebar-title">Imprimir</span>';
+
+
+        $html .= '<span class="sidebar-title">Imprimir(Manutenção)</span>';
         $html .= '<span class="caret"></span>';
         $html .= '</a>';
         $html .= '<ul class="nav sub-nav">';
-        
+
         $html .= '<li>';
-        $html .= '<a href="/cadastroFichaRevisionistas">';
+        $html .= '<a href="#">';
         $html .= '<span class="fa fa-terminal"></span>';
         $html .= 'Fichas Revisao';
         $html .= '</a>';
         $html .= '</li>';
-        
+
         $html .= '<li>';
-        $html .= '<a href="/cadastroAtivosRevisionistas">'; 
+        $html .= '<a href="#">';
         $html .= '<span class="fa fa-terminal"></span>';
         $html .= 'Listagem Revisionistas';
         $html .= '</a>';
         $html .= '</li>';
-        
+
         $html .= '</ul>';
         $html .= '</li>';
 
@@ -426,7 +395,7 @@ class Menu extends AbstractHelper {
     }
 
     function setPessoa($pessoa) {
-        $this->pessoa = $pessoa;
+        $this->pessoa = $pessoa; 
     }
 
 }

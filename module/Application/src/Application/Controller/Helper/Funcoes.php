@@ -108,6 +108,33 @@ class Funcoes {
     }
 
     /**
+     * Retorna o ciclo atual baseado no mes e ano informado
+     * @param int $mesUsado
+     * @param int $anoUsado
+     * @return int
+     */
+    static public function cicloPorData($dia, $mes, $ano) {
+        $diaDaSemanaDoPrimeiroDia = date('N', mktime(0, 0, 0, $mes, 1, $ano));
+        if ($diaDaSemanaDoPrimeiroDia == 1) {
+            $resposta = 0;
+        } else {
+            $resposta = 1;
+        }
+
+        for ($z = 1; $z <= 31; $z++) {
+            $diaDaSemana = date('N', mktime(0, 0, 0, $mes, $z, $ano));
+            if ($diaDaSemana == 1) {
+                $resposta++;
+            }
+
+            if ($dia == $z) {
+                break;
+            }
+        }
+        return $resposta;
+    }
+
+    /**
      * Retorna o perido do ciclo selecionado
      * @param type $ciclo
      * @param type $mesUsado

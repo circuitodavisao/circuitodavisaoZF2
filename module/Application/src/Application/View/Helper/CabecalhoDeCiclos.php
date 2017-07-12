@@ -29,28 +29,14 @@ class CabecalhoDeCiclos extends AbstractHelper {
         $urlBase = $this->view->url(Constantes::$ROUTE_LANCAMENTO);
         $urlBaseCiclo = $urlBase . '/' . $this->view->abaSelecionada . '_';
 
-        $html .= '<div class="center-block text-center" style="padding:10px;"> ';
-
-        $mostrarAnterior = false;
-        if ($this->view->cicloSelecionado > 1) {
-            $mostrarAnterior = true;
-        }
-//        if ($this->view->validacaoNesseMes == 1) {
-//            $mostrarAnterior = false;
-//        }
-
-        if ($mostrarAnterior) {
-            $urlCicloAnterior = $urlBaseCiclo . ($this->view->cicloSelecionado - 1);
-            $html .= '<a href="' . $urlCicloAnterior . '"><button class="btn btn-default btn-sm"><i class="fa fa-angle-double-left"></i></button></a>&nbsp;';
-        }
         $traducaoPeriodo = $this->view->translate(Constantes::$TRADUCAO_PERIODO);
-        $html .= $this->view->translate(Constantes::$TRADUCAO_CICLO) . Constantes::$NBSP . $this->view->cicloSelecionado . '&nbsp;-&nbsp;' . Funcoes::periodoCicloMesAno($this->view->cicloSelecionado, $mesSelecionado, $anoSelecionado, $traducaoPeriodo);
-        $totalDeCiclos = Funcoes::totalCiclosMes($mesSelecionado, $anoSelecionado);
-        if ($this->view->cicloSelecionado < $totalDeCiclos) {
-            $urlCicloPosterior = $urlBaseCiclo . ($this->view->cicloSelecionado + 1);
-            $html .= '&nbsp;<a href="' . $urlCicloPosterior . '"><button class="btn btn-default btn-sm"><i class="fa fa-angle-double-right"></i></button></a>';
-        }
+        $urlCicloAnterior = $urlBaseCiclo . ($this->view->cicloSelecionado - 1);
+        $urlCicloPosterior = $urlBaseCiclo . ($this->view->cicloSelecionado + 1);
 
+        $html .= '<div class="center-block text-center" style="padding:10px;"> ';
+        $html .= '<a href="' . $urlCicloAnterior . '"><button class="btn btn-default btn-sm"><i class="fa fa-angle-double-left"></i></button></a>&nbsp;';
+        $html .= $this->view->translate(Constantes::$TRADUCAO_PERIODO) . '&nbsp;-&nbsp;' . Funcoes::periodoCicloMesAno($this->view->cicloSelecionado, $mesSelecionado, $anoSelecionado);
+        $html .= '&nbsp;<a href="' . $urlCicloPosterior . '"><button class="btn btn-default btn-sm"><i class="fa fa-angle-double-right"></i></button></a>';
         $html .= '</div>';
         return $html;
     }
