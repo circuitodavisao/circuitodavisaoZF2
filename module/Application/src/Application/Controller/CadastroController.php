@@ -1511,7 +1511,6 @@ class CadastroController extends CircuitoController {
         $response = $this->getResponse();
         $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
         if ($request->isPost()) {
-
             try {
 
                 $post_data = $request->getPost();

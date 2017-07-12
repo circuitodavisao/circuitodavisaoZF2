@@ -15,7 +15,7 @@ use Application\Model\ORM\RepositorioORM;
 use Application\View\Helper\AbaSelecionada;
 use Application\View\Helper\AbasPanel;
 use Application\View\Helper\AlertaEnvioRelatorio;
-use Application\View\Helper\AtendimentoGruposAbaixo;
+use Application\View\Helper\AtendimentoGruposAbaixo; 
 use Application\View\Helper\AtendimentosDoGrupo;
 use Application\View\Helper\BarraDeProgresso;
 use Application\View\Helper\BlocoDiv;

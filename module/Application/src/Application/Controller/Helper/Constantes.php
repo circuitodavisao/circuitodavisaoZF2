@@ -55,7 +55,7 @@ class Constantes {
     public static $ID = 'id';
     public static $FUNCAO = 'funcao';
     public static $DIV = 'div';
-
+ 
     /* Constantes recuperar acesso */
     public static $RECUPERAR_ACESSO_FORM = 'RecuperarAcessoForm';
     public static $FORM_RECUPERAR_ACESSO = 'formRecuperarAcesso';

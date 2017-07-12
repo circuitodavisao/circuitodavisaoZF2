@@ -282,5 +282,5 @@ class ListagemDeEventos extends AbstractHelper {
     function setTitulo($titulo) {
         $this->titulo = $titulo;
     }
-
+ 
 }

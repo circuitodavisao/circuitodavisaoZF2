@@ -24,8 +24,8 @@ class Menu extends AbstractHelper {
         return $this->renderHtml();
     }
  
-    public function renderHtml() {
-        $html = '';
+    public function renderHtml() { 
+        $html = ''; 
         $stringFoto = $this->view->pessoa->getFoto();
         if (empty($stringFoto)) {
             $stringFoto = 'placeholder.png';
