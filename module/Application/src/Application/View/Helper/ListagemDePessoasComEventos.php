@@ -174,8 +174,7 @@ class ListagemDePessoasComEventos extends AbstractHelper {
                 $stringPeriodoFim = $arrayPeriodo[6] . '-' . $arrayPeriodo[5] . '-' . $arrayPeriodo[4];
                 $dataDoFimDoPeriodoParaComparar = strtotime($stringPeriodoFim);
                 $dataDeInativacaoDaPessoaParaComparar = strtotime($pessoa->getDataInativacao());
-                if ($dataDeInativacaoDaPessoaParaComparar >= $dataDoInicioDoPeriodoParaComparar 
-                        && $dataDeInativacaoDaPessoaParaComparar <= $dataDoFimDoPeriodoParaComparar) {
+                if ($dataDeInativacaoDaPessoaParaComparar >= $dataDoInicioDoPeriodoParaComparar && $dataDeInativacaoDaPessoaParaComparar <= $dataDoFimDoPeriodoParaComparar) {
                     $classLinha = 'class="row-warning warning"';
                     $classLinha2 = 'footable-visible footable-first-column';
                     $corBotao = 'btn-warning disabled';
@@ -388,87 +387,78 @@ class ListagemDePessoasComEventos extends AbstractHelper {
 
     public static function diaRealDoEvento($diaDaSemanaDoEvento, $periodo = 0) {
 
+        $stringDias[1] = 'Monday';
+        $stringDias[2] = 'Tuesday';
+        $stringDias[3] = 'Wednesday';
+        $stringDias[4] = 'Thursday';
+        $stringDias[5] = 'Friday';
+        $stringDias[6] = 'Saturday';
+        $stringDias[7] = 'Sunday';
+        $stringThisWeek = 'This week ';
+        $stringLast = 'last ';
+        $plus = $periodo + 1 . ' week ';
+
         switch ($diaDaSemanaDoEvento) {
             case 1:
                 if ($periodo < 0) {
-                    $stringDoDia = 'last Monday';
-                } else {
-                    if (date('N') == 1) {
-                        $stringDoDia = 'Today';
-                    } else {
-                        $stringDoDia = 'next Monday';
-                    }
+                    $stringDoDia = $plus . $stringLast . $stringDias[$diaDaSemanaDoEvento];
+                }
+                if ($periodo == 0) {
+                    $stringDoDia = $stringThisWeek . $stringDias[$diaDaSemanaDoEvento];
                 }
                 break;
             case 2:
                 if ($periodo < 0) {
-                    $stringDoDia = 'last Tuesday';
-                } else {
-                    if (date('N') == 2) {
-                        $stringDoDia = 'Today';
-                    } else {
-                        $stringDoDia = 'next Tuesday';
-                    }
+                    $stringDoDia = $plus . $stringLast . $stringDias[$diaDaSemanaDoEvento];
+                }
+                if ($periodo == 0) {
+                    $stringDoDia = $stringThisWeek . $stringDias[$diaDaSemanaDoEvento];
                 }
                 break;
             case 3:
                 if ($periodo < 0) {
-                    $stringDoDia = 'last Wednesday';
-                } else {
-                    if (date('N') == 3) {
-                        $stringDoDia = 'Today';
-                    } else {
-                        $stringDoDia = 'next Wednesday';
-                    }
+                    $stringDoDia = $plus . $stringLast . $stringDias[$diaDaSemanaDoEvento];
+                }
+                if ($periodo == 0) {
+                    $stringDoDia = $stringThisWeek . $stringDias[$diaDaSemanaDoEvento];
                 }
                 break;
             case 4:
                 if ($periodo < 0) {
-                    $stringDoDia = 'last Thursday';
-                } else {
-                    if (date('N') == 4) {
-                        $stringDoDia = 'Today';
-                    } else {
-                        $stringDoDia = 'next Thursday';
-                    }
+                    $stringDoDia = $plus . $stringLast . $stringDias[$diaDaSemanaDoEvento];
+                }
+                if ($periodo == 0) {
+                    $stringDoDia = $stringThisWeek . $stringDias[$diaDaSemanaDoEvento];
                 }
                 break;
             case 5:
                 if ($periodo < 0) {
-                    $stringDoDia = 'last Friday';
-                } else {
-                    if (date('N') == 5) {
-                        $stringDoDia = 'Today';
-                    } else {
-                        $stringDoDia = 'next Friday';
-                    }
+                    $stringDoDia = $plus . $stringLast . $stringDias[$diaDaSemanaDoEvento];
+                }
+                if ($periodo == 0) {
+                    $stringDoDia = $stringThisWeek . $stringDias[$diaDaSemanaDoEvento];
                 }
                 break;
             case 6:
                 if ($periodo < 0) {
-                    $stringDoDia = 'last Saturday';
-                } else {
-                    if (date('N') == 6) {
-                        $stringDoDia = 'Today';
-                    } else {
-                        $stringDoDia = 'next Saturday';
-                    }
+                    $stringDoDia = $plus . $stringLast . $stringDias[$diaDaSemanaDoEvento];
+                }
+                if ($periodo == 0) {
+                    $stringDoDia = $stringThisWeek . $stringDias[$diaDaSemanaDoEvento];
                 }
                 break;
             case 7:
                 if ($periodo < 0) {
-                    $stringDoDia = 'last Sunday';
-                } else {
-                    if (date('N') == 7) {
-                        $stringDoDia = 'Today';
-                    } else {
-                        $stringDoDia = 'next Sunday';
-                    }
+                    $stringDoDia = $plus . $stringLast . $stringDias[$diaDaSemanaDoEvento];
+                }
+                if ($periodo == 0) {
+                    $stringDoDia = $stringThisWeek . $stringDias[$diaDaSemanaDoEvento];
                 }
                 break;
         }
 
-        return date("Y-m-d", strtotime($stringDoDia));
+        $resposta = date("Y-m-d", strtotime($stringDoDia));
+        return $resposta;
     }
 
     function getDiaDeSemanaHoje() {

@@ -430,8 +430,8 @@ class Funcoes {
         $proximoDomingo = strtotime("next Sunday");
         return date('Y-m-d', $proximoDomingo);
     }
-    
-     /**
+
+    /**
      * Retorna a data do proximo domingo
      * @return String
      */
