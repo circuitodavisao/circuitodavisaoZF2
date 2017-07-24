@@ -35,7 +35,7 @@ class IndexController extends CircuitoController {
     private $entidadeTipoEquipe;
     private $entidadeTipoSub;
 
-    const DATA_CRIACAO = '2017-07-03';
+    const DATA_CRIACAO = '2017-07-17'; 
 
     /**
      * Contrutor sobrecarregado com os serviços de ORM e Autenticador
@@ -173,7 +173,7 @@ class IndexController extends CircuitoController {
 
         $tipoCelula = 2;
         /* rodar toda segunda */
-        $dateFormatada = DateTime::createFromFormat('Y-m-d', date('Y-m-d'));
+        $dateFormatada = DateTime::createFromFormat('Y-m-d', date('Y-m-d')); 
 //        $dateFormatada = DateTime::createFromFormat('Y-m-d', self::DATA_CRIACAO);
         $tipoGerarRelatorioDeLider = $this->params()->fromRoute(Constantes::$ID, 0);
 
