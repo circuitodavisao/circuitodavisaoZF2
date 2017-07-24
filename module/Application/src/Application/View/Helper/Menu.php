@@ -395,7 +395,7 @@ class Menu extends AbstractHelper {
     }
 
     function setPessoa($pessoa) {
-        $this->pessoa = $pessoa; 
+        $this->pessoa = $pessoa;  
     }
 
 }
