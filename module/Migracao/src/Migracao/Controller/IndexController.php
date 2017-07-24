@@ -35,7 +35,7 @@ class IndexController extends CircuitoController {
     private $entidadeTipoEquipe;
     private $entidadeTipoSub;
 
-    const DATA_CRIACAO = '2017-07-03';
+    const DATA_CRIACAO = '2017-07-17'; 
 
     /**
      * Contrutor sobrecarregado com os serviços de ORM e Autenticador
