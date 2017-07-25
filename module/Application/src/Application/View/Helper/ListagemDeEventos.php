@@ -8,7 +8,7 @@ use Zend\View\Helper\AbstractHelper;
 
 /**
  * Nome: TemplateFormularioRodape.php
- * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com>
+ * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com> 
  * Descricao: Classe helper view para mostrar a listagem de eventos
  */
 class ListagemDeEventos extends AbstractHelper {
@@ -110,9 +110,9 @@ class ListagemDeEventos extends AbstractHelper {
                     $html .= '<td class="text-center visible-lg visible-md visible-sm">' . $celula->getTelefone_hospedeiroFormatado() . '</td>';
                     $html .= '<td class="text-center visible-lg visible-md visible-sm">' . $celula->getLogradouro() . '&nbsp;' . $celula->getComplemento() . '</td>';
                     $html .= '<td class="text-center">';
-//                    $html .= $this->view->botaoLink(Constantes::$STRING_ICONE_PENCIL, Constantes::$STRING_HASHTAG, 3, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClick));
+                    $html .= $this->view->botaoLink(Constantes::$STRING_ICONE_PENCIL, Constantes::$STRING_HASHTAG, 3, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClick));
                     /* Inativar celula */
-//                    $html .= $this->view->botaoLink(Constantes::$STRING_ICONE_TIMES, Constantes::$STRING_HASHTAG, 4, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClickExclusao));
+                    $html .= $this->view->botaoLink(Constantes::$STRING_ICONE_TIMES, Constantes::$STRING_HASHTAG, 4, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClickExclusao));
                     $html .= '</td>';
                 }
                 if ($tipoCulto) {
@@ -136,7 +136,7 @@ class ListagemDeEventos extends AbstractHelper {
                 }
                 if ($tipoRevisao) {
 
-                    $html .= '<td class="text-center">' . Funcoes::mudarPadraoData($evento->getData(), 1) . '</td>';
+                    $html .= '<td class="text-center">' . Funcoes::mudarPadraoData($evento->getData()->forma, 2) . '</td>';
                     $stringNomeDaFuncaoOnClick = 'funcaoCadastro("' . Constantes::$PAGINA_CADASTRO_REVISAO . '", ' . $evento->getId() . ')';
                     $stringNomeDaFuncaoOnClickExclusao = 'funcaoCadastro("' . Constantes::$PAGINA_CADASTRO_REVISAO . '", ' . $evento->getId() . ')';
                     $grupoEventoAtivos = $evento->getGrupoEventoAtivos();
@@ -155,7 +155,7 @@ class ListagemDeEventos extends AbstractHelper {
                 }
                 if ($tipoRevisionistas) {
 
-                    $html .= '<td class="text-center">' . Funcoes::mudarPadraoData($evento->getData(), 1) . '</td>';
+                    $html .= '<td class="text-center">' . Funcoes::mudarPadraoData($evento->getData(), 2) . '</td>';
 
                     $stringNomeDaFuncaoOnClickInserir = 'funcaoCadastro("' . Constantes::$PAGINA_SELECIONAR_REVISIONISTA . '", ' . $evento->getId() . ')';
                     $grupoEventoAtivos = $evento->getGrupoEventoAtivos();
@@ -341,5 +341,5 @@ class ListagemDeEventos extends AbstractHelper {
     function setTitulo($titulo) {
         $this->titulo = $titulo;
     }
- 
+
 }

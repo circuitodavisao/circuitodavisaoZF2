@@ -7,6 +7,7 @@ function validarLancamentoCadastrarPessoaRevisao(form) {
     var Dia = $('#Dia').val();
     var Mes = $('#Mes').val();
     var Ano = $('#Ano').val();
+    var sexo = $('#nucleoPerfeito');
 
     var temErro = false;
     var divMensagens = $('#divMensagens');
@@ -72,6 +73,17 @@ function validarLancamentoCadastrarPessoaRevisao(form) {
             mensagem += ', Ano';
         }
     }
+    
+    if (! $("input[type='radio'][name='nucleoPerfeito']").is(':checked') ){
+        temErro = true;
+        if(mensagem == ''){
+            mensagem = 'Sexo';
+        }else{
+            mensagem += ', Sexo';
+        }
+ 
+    }
+        
     if (temErro) {
         mensagemReal = 'Preencha o(s) seguinte(s) campo(s): ' + mensagem;
         divMensagens

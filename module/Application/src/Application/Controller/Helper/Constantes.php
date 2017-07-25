@@ -4,7 +4,7 @@ namespace Application\Controller\Helper;
 
 /**
  * Nome: Constantes.php
- * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com>
+ * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com> 
  * Descricao: Classe com constantes
  */
 class Constantes {
@@ -55,7 +55,7 @@ class Constantes {
     public static $ID = 'id';
     public static $FUNCAO = 'funcao';
     public static $DIV = 'div';
- 
+
     /* Constantes recuperar acesso */
     public static $RECUPERAR_ACESSO_FORM = 'RecuperarAcessoForm';
     public static $FORM_RECUPERAR_ACESSO = 'formRecuperarAcesso';
@@ -453,6 +453,7 @@ class Constantes {
     public static $PAGINA_CADASTRO_TRANSFERENCIA = 'Transferencia';
     public static $CONTROLLER_CADASTRO = 'Application\Controller\Cadastro';
     public static $ROUTE_CADASTRO = 'cadastro';
+    
     /* Entidades */
     public static $ENTIDADE_EVENTO_CELULA = 'Entidade\Entity\EventoCelula';
     public static $ENTIDADE_EVENTO_TIPO = 'Entidade\Entity\EventoTipo';
