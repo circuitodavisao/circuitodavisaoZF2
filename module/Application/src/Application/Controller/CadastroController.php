@@ -143,6 +143,11 @@ class CadastroController extends CircuitoController {
                         Constantes::$ACTION => Constantes::$PAGINA_FICHA_REVISAO,
             ));
         }
+        if ($pagina == Constantes::$PAGINA_SELECIONAR_FICHA_REVISIONISTA) {
+            return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
+                        Constantes::$ACTION => Constantes::$PAGINA_SELECIONAR_FICHA_REVISIONISTA,
+            ));
+        }
         /* Funcoes */
         if ($pagina == Constantes::$PAGINA_FUNCOES) {
             return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
@@ -187,7 +192,7 @@ class CadastroController extends CircuitoController {
             $tipoEvento = 4;
             $extra = $grupo->getId();
         }
-        if ($pagina == Constantes::$PAGINA_FICHA_REVISIONISTAS) {
+        if ($pagina == Constantes::$PAGINA_FICHA_REVISIONISTAS) { 
             $listagemDeEventos = $grupo->getGrupoEventoRevisao();
             $tituloDaPagina = Constantes::$TRADUCAO_LISTAGEM_REVISIONISTAS;
             $tipoEvento = 5;
@@ -1221,14 +1226,10 @@ class CadastroController extends CircuitoController {
             Constantes::$STRING_ID_EVENTO_FREQUENCIA => $idEventoFrequencia,
         ));
 
-
-
         /* Javascript especifico */
         $layoutJS = new ViewModel();
         $layoutJS->setTemplate(Constantes::$TEMPLATE_JS_FICHA_REVISAO);
         $view->addChild($layoutJS, Constantes::$STRING_JS_FICHA_REVISAO);
-
-
 
         return $view;
     }

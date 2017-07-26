@@ -705,6 +705,7 @@ class Constantes {
     public static $TRADUCAO_NOVO_CULTO = 'New Cult';
     public static $TRADUCAO_NOVO_REVISAO = 'New Revision';
     public static $TRADUCAO_NOVO_REVISIONISTA = 'Select';
+    public static $TRADUCAO_VER_FICHA_REVISIONISTA = 'See';
     public static $TRADUCAO_REMOVER_REVISIONISTA = 'Remove';
     public static $TRADUCAO_MULTIPLICACAO = 'Multiplication';
     public static $TRADUCAO_LISTAGEM_CULTOS = 'Listing <b class="text-danger">Cults</b>';

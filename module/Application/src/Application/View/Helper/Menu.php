@@ -322,14 +322,14 @@ class Menu extends AbstractHelper {
         $html .= '<span class="fa fa-print"></span>';
 
 
-        $html .= '<span class="sidebar-title">Imprimir(Manutenção)</span>';
+        $html .= '<span class="sidebar-title">Imprimir</span>';
         $html .= '<span class="caret"></span>';
         $html .= '</a>';
         $html .= '<ul class="nav sub-nav">';
 
         $html .= '<li>';
-        $html .= '<a href="#">';
-        $html .= '<span class="fa fa-terminal"></span>';
+        $html .= '<a href="/cadastroFichaRevisionistas">';
+        $html .= '<span class="fa fa-terminal"></span>'; 
         $html .= 'Fichas Revisao';
         $html .= '</a>';
         $html .= '</li>';
@@ -337,7 +337,7 @@ class Menu extends AbstractHelper {
         $html .= '<li>';
         $html .= '<a href="#">';
         $html .= '<span class="fa fa-terminal"></span>';
-        $html .= 'Listagem Revisionistas';
+        $html .= 'Listagem Revisionistas(Manutenção)';
         $html .= '</a>';
         $html .= '</li>';
 

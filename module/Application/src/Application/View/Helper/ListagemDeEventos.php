@@ -136,7 +136,7 @@ class ListagemDeEventos extends AbstractHelper {
                 }
                 if ($tipoRevisao) {
 
-                    $html .= '<td class="text-center">' . Funcoes::mudarPadraoData($evento->getData()->forma, 2) . '</td>';
+                    $html .= '<td class="text-center">' . Funcoes::mudarPadraoData($evento->getData()->forma, 1) . '</td>';
                     $stringNomeDaFuncaoOnClick = 'funcaoCadastro("' . Constantes::$PAGINA_CADASTRO_REVISAO . '", ' . $evento->getId() . ')';
                     $stringNomeDaFuncaoOnClickExclusao = 'funcaoCadastro("' . Constantes::$PAGINA_CADASTRO_REVISAO . '", ' . $evento->getId() . ')';
                     $grupoEventoAtivos = $evento->getGrupoEventoAtivos();
@@ -155,7 +155,7 @@ class ListagemDeEventos extends AbstractHelper {
                 }
                 if ($tipoRevisionistas) {
 
-                    $html .= '<td class="text-center">' . Funcoes::mudarPadraoData($evento->getData(), 2) . '</td>';
+                    $html .= '<td class="text-center">' . Funcoes::mudarPadraoData($evento->getData(), 1) . '</td>';
 
                     $stringNomeDaFuncaoOnClickInserir = 'funcaoCadastro("' . Constantes::$PAGINA_SELECIONAR_REVISIONISTA . '", ' . $evento->getId() . ')';
                     $grupoEventoAtivos = $evento->getGrupoEventoAtivos();
@@ -174,7 +174,7 @@ class ListagemDeEventos extends AbstractHelper {
                 }
                 if ($tipoFichasRevisionistas) {
 
-                    $html .= '<td class="text-center">' . Funcoes::mudarPadraoData($evento->getData(), 1) . '</td>';
+                    $html .= '<td class="text-center">' . Funcoes::mudarPadraoData($evento->getData(), 2) . '</td>';
 
                     $stringNomeDaFuncaoOnClickInserir = 'funcaoCadastro("' . Constantes::$PAGINA_SELECIONAR_FICHA_REVISIONISTA . '", ' . $evento->getId() . ')';
                     $grupoEventoAtivos = $evento->getGrupoEventoAtivos();
