@@ -5,6 +5,7 @@ namespace Application\View\Helper;
 use Application\Controller\Helper\Constantes;
 use Application\Controller\Helper\Funcoes;
 use Application\Model\Entity\Entidade;
+use Application\Model\Entity\Pessoa;
 use Doctrine\Common\Collections\Criteria;
 use Zend\View\Helper\AbstractHelper;
 
@@ -38,23 +39,26 @@ class ListagemFichasParaRevisao extends AbstractHelper {
         if (count($frequencias) > 0) {
             foreach ($frequencias as $f) {
 
-
+                $p = null;
                 $p = $f->getPessoa();
+                $pAux = new Pessoa();
                 $grupoPessoa = $p->getGrupoPessoaAtivo();
                 if ($grupoPessoa != null) {
                     if($this->view->entidade->getGrupo()->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::IGREJA){
                         $idGrupoIgrejaDoRevisionista = $grupoPessoa->getGrupo()->getGrupoIgreja();
                         $idGrupoIgrejaLogado = $this->view->entidade->getGrupo()->getGrupoIgreja();
                         if (($idGrupoIgrejaDoRevisionista == $idGrupoIgrejaLogado) && ($f->getFrequencia() == 'N')) {
-                            $p->setId($f->getId());
-                            $pessoas[] = $p;
+                            $pAux->setId($f->getId());
+                            $pAux->setNome($p->getNome());
+                            $pessoas[] = $pAux;
                         }
                     }else{
                         $idGrupoEquipeDoRevisionista = $grupoPessoa->getGrupo()->getGrupoEquipe(); 
                         $idGrupoEquipeLogado = $this->view->entidade->getGrupo()->getGrupoEquipe();
                         if (($idGrupoEquipeDoRevisionista == $idGrupoEquipeLogado) && ($f->getFrequencia() == 'N')) {
-                            $p->setId($f->getId());
-                            $pessoas[] = $p;
+                            $pAux->setId($f->getId());
+                            $pAux->setNome($p->getNome());
+                            $pessoas[] = $pAux; 
                         }
                     }
                 }
