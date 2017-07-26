@@ -174,7 +174,7 @@ class ListagemDeEventos extends AbstractHelper {
                 }
                 if ($tipoFichasRevisionistas) {
 
-                    $html .= '<td class="text-center">' . Funcoes::mudarPadraoData($evento->getData(), 2) . '</td>';
+                    $html .= '<td class="text-center">' . Funcoes::mudarPadraoData($evento->getData(), 1) . '</td>';
 
                     $stringNomeDaFuncaoOnClickInserir = 'funcaoCadastro("' . Constantes::$PAGINA_SELECIONAR_FICHA_REVISIONISTA . '", ' . $evento->getId() . ')';
                     $grupoEventoAtivos = $evento->getGrupoEventoAtivos();

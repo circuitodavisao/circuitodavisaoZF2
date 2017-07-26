@@ -17,12 +17,12 @@ use Application\View\Helper\BotaoSimples;
         <div class="panel-footer text-center">
             <?php
             $label = $this->translate(Constantes::$TRADUCAO_CADASTRAR_PESSOA);
-            $extra = $this->funcaoOnClick('verificarMuitosCadastros(' . $this->validacao . ', ' . $this->periodo . ')');
+            $extra = $this->funcaoOnClick('verificarMuitosCadastros(' . 0 . ', ' . $this->periodo . ')');
 
             echo $this->botaoSimples($label, $extra, BotaoSimples::botaoImportante, BotaoSimples::posicaoAoCentro);
             ?>
         </div>
-    </div>
+    </div> 
 </div>
 <!-- MODAL PARA MUITOS ELEMENTOS -->
 <?php
