@@ -4,7 +4,7 @@ namespace Application\Controller;
 
 use Application\Controller\Helper\Constantes;
 use Application\Controller\Helper\Correios;
-use Application\Controller\Helper\Funcoes;
+use Application\Controller\Helper\Funcoes; 
 use Application\Form\AtivarFichaForm;
 use Application\Form\AtualizarCadastroForm;
 use Application\Form\CadastrarPessoaRevisaoForm;
@@ -34,7 +34,7 @@ use Zend\View\Model\ViewModel;
 
 /**
  * Nome: CadastroController.php
- * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com>
+ * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com> 
  * Descricao: Controle de todas ações de lancamento
  */
 class CadastroController extends CircuitoController {
@@ -43,7 +43,7 @@ class CadastroController extends CircuitoController {
      * Função padrão, traz a tela para lancamento
      * GET /cadastro[:pagina]
      */
-    public function indexAction() {
+    public function indexAction() { 
         $sessao = new Container(Constantes::$NOME_APLICACAO);
         $sessao->pagina = '';
         $extra = '';
@@ -123,6 +123,31 @@ class CadastroController extends CircuitoController {
                         Constantes::$ACTION => Constantes::$PAGINA_CADASTRO_TRANSFERENCIA,
             ));
         }
+        if ($pagina == Constantes::$PAGINA_SELECIONAR_REVISIONISTA) {
+            return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
+                        Constantes::$ACTION => Constantes::$PAGINA_SELECIONAR_REVISIONISTA,
+            ));
+        }
+        if ($pagina == Constantes::$PAGINA_CADASTRAR_PESSOA_REVISAO) {
+            return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
+                        Constantes::$ACTION => Constantes::$PAGINA_CADASTRAR_PESSOA_REVISAO,
+            ));
+        }
+        if ($pagina == Constantes::$PAGINA_SALVAR_PESSOA_REVISAO) {
+            return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
+                        Constantes::$ACTION => Constantes::$PAGINA_SALVAR_PESSOA_REVISAO,
+            ));
+        }
+        if ($pagina == Constantes::$PAGINA_FICHA_REVISAO) {
+            return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
+                        Constantes::$ACTION => Constantes::$PAGINA_FICHA_REVISAO,
+            ));
+        }
+        if ($pagina == Constantes::$PAGINA_SELECIONAR_FICHA_REVISIONISTA) {
+            return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
+                        Constantes::$ACTION => Constantes::$PAGINA_SELECIONAR_FICHA_REVISIONISTA,
+            ));
+        }
         /* Funcoes */
         if ($pagina == Constantes::$PAGINA_FUNCOES) {
             return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
@@ -167,7 +192,7 @@ class CadastroController extends CircuitoController {
             $tipoEvento = 4;
             $extra = $grupo->getId();
         }
-        if ($pagina == Constantes::$PAGINA_FICHA_REVISIONISTAS) {
+        if ($pagina == Constantes::$PAGINA_FICHA_REVISIONISTAS) { 
             $listagemDeEventos = $grupo->getGrupoEventoRevisao();
             $tituloDaPagina = Constantes::$TRADUCAO_LISTAGEM_REVISIONISTAS;
             $tipoEvento = 5;
@@ -1179,7 +1204,7 @@ class CadastroController extends CircuitoController {
 //            } catch (Exception $exc) {
 //                echo $exc->getMessage();
 //            }
-    }
+    } 
 
     public function fichaRevisaoAction() {
         $sessao = new Container(Constantes::$NOME_APLICACAO);
@@ -1214,14 +1239,10 @@ class CadastroController extends CircuitoController {
             Constantes::$STRING_ID_EVENTO_FREQUENCIA => $idEventoFrequencia,
         ));
 
-
-
         /* Javascript especifico */
         $layoutJS = new ViewModel();
         $layoutJS->setTemplate(Constantes::$TEMPLATE_JS_FICHA_REVISAO);
         $view->addChild($layoutJS, Constantes::$STRING_JS_FICHA_REVISAO);
-
-
 
         return $view;
     }

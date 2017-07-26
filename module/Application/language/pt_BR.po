@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: ZendSkeletonApplication\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-07-05 22:17-0700\n"
-"PO-Revision-Date: 2017-06-26 17:41-0300\n"
+"PO-Revision-Date: 2017-07-26 15:53-0300\n"
 "Last-Translator: Diogo Melo <dmelo87@gmail.com>\n"
 "Language-Team: ZF Contibutors <zf-devteam@zend.com>\n"
 "Language: pt\n"
@@ -12,7 +12,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Poedit-KeywordsList: translate\n"
 "X-Poedit-Basepath: .\n"
-"X-Generator: Poedit 2.0.2\n"
+"X-Generator: Poedit 1.8.7.1\n"
 "X-Poedit-SearchPath-0: ..\n"
 
 # ############
@@ -892,3 +892,35 @@ msgstr "Preencha o Código verificador"
 #: Cadastro/view/cadastro/cadastro-atualizacao.phtml
 msgid "Code Released click finish."
 msgstr "Código Liberado clique em finalizar."
+
+#: Cadastro/view/cadastro/cadastro-atualizacao.phtml
+msgid "Listing <b class=\"text-danger\">Revision of lives</b>"
+msgstr "Lista de <b class=\"text-danger\">Revisão de Vidas</b>"
+
+#: Cadastro/view/cadastro/cadastro-pessoa-revisao.phtml
+msgid "New Person in Revision of Life"
+msgstr "Novo Pessoa no Revisão de Vida"
+
+#: Cadastro/view/cadastro/cadastro-pessoa-revisao.phtml
+msgid "Person at the revision of live"
+msgstr "Pessoa para o revisão de vidas"
+
+#: Cadastro/view/cadastro/cadastro-pessoa-revisao.phtml
+msgid "See"
+msgstr "Ver"
+
+#: Cadastro/view/cadastro/cadastro-pessoa-revisao.phtml
+msgid "Select"
+msgstr "Selecionar"
+
+#: Cadastro/view/cadastro/cadastro-pessoa-revisao.phtml
+msgid "Gender"
+msgstr "Sexo"
+
+#: Cadastro/view/cadastro/cadastro-pessoa-revisao.phtml
+msgid "First Name"
+msgstr "Primeiro Nome"
+
+#: Cadastro/view/cadastro/cadastro-pessoa-revisao.phtml
+msgid "Last Name"
+msgstr "Ultímo Nome"

@@ -8,7 +8,7 @@ use Zend\View\Helper\AbstractHelper;
 
 /**
  * Nome: TemplateFormularioRodape.php
- * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com>
+ * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com> 
  * Descricao: Classe helper view para mostrar a listagem de eventos
  */
 class ListagemDeEventos extends AbstractHelper {
@@ -136,7 +136,7 @@ class ListagemDeEventos extends AbstractHelper {
                 }
                 if ($tipoRevisao) {
 
-                    $html .= '<td class="text-center">' . Funcoes::mudarPadraoData($evento->getData(), 1) . '</td>';
+                    $html .= '<td class="text-center">' . Funcoes::mudarPadraoData($evento->getData()->forma, 1) . '</td>';
                     $stringNomeDaFuncaoOnClick = 'funcaoCadastro("' . Constantes::$PAGINA_CADASTRO_REVISAO . '", ' . $evento->getId() . ')';
                     $stringNomeDaFuncaoOnClickExclusao = 'funcaoCadastro("' . Constantes::$PAGINA_CADASTRO_REVISAO . '", ' . $evento->getId() . ')';
                     $grupoEventoAtivos = $evento->getGrupoEventoAtivos();
@@ -174,7 +174,7 @@ class ListagemDeEventos extends AbstractHelper {
                 }
                 if ($tipoFichasRevisionistas) {
 
-                    $html .= '<td class="text-center">' . Funcoes::mudarPadraoData($evento->getData(), 1) . '</td>';
+                    $html .= '<td class="text-center">' . Funcoes::mudarPadraoData($evento->getData(), 2) . '</td>';
 
                     $stringNomeDaFuncaoOnClickInserir = 'funcaoCadastro("' . Constantes::$PAGINA_SELECIONAR_FICHA_REVISIONISTA . '", ' . $evento->getId() . ')';
                     $grupoEventoAtivos = $evento->getGrupoEventoAtivos();
@@ -341,5 +341,5 @@ class ListagemDeEventos extends AbstractHelper {
     function setTitulo($titulo) {
         $this->titulo = $titulo;
     }
- 
+
 }

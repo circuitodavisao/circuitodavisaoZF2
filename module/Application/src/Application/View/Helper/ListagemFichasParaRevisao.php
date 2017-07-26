@@ -45,14 +45,14 @@ class ListagemFichasParaRevisao extends AbstractHelper {
                     if($this->view->entidade->getGrupo()->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::IGREJA){
                         $idGrupoIgrejaDoRevisionista = $grupoPessoa->getGrupo()->getGrupoIgreja();
                         $idGrupoIgrejaLogado = $this->view->entidade->getGrupo()->getGrupoIgreja();
-                        if (($idGrupoIgrejaDoRevisionista == $idGrupoIgrejaLogado) && ($f->getFrequencia() == 'S')) {
+                        if (($idGrupoIgrejaDoRevisionista == $idGrupoIgrejaLogado) && ($f->getFrequencia() == 'N')) {
                             $p->setId($f->getId());
                             $pessoas[] = $p;
                         }
                     }else{
                         $idGrupoEquipeDoRevisionista = $grupoPessoa->getGrupo()->getGrupoEquipe(); 
                         $idGrupoEquipeLogado = $this->view->entidade->getGrupo()->getGrupoEquipe();
-                        if (($idGrupoEquipeDoRevisionista == $idGrupoEquipeLogado) && ($f->getFrequencia() == 'S')) {
+                        if (($idGrupoEquipeDoRevisionista == $idGrupoEquipeLogado) && ($f->getFrequencia() == 'N')) {
                             $p->setId($f->getId());
                             $pessoas[] = $p;
                         }
@@ -191,7 +191,7 @@ class ListagemFichasParaRevisao extends AbstractHelper {
 
                 $html .= '<td class="text-center">';
 
-                $html .= $this->view->botaoLink(Constantes::$STRING_ICONE_PLUS . '  ' . $this->view->translate(Constantes::$TRADUCAO_NOVO_REVISIONISTA), Constantes::$STRING_HASHTAG, 4, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClickInserir));
+                $html .= $this->view->botaoLink(Constantes::$STRING_ICONE_PLUS . '  ' . $this->view->translate(Constantes::$TRADUCAO_VER_FICHA_REVISIONISTA), Constantes::$STRING_HASHTAG, 4, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClickInserir));
                 $html .= '</td>';
 //                        }
                 $html .= '</tr>';
