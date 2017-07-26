@@ -1095,8 +1095,6 @@ class CadastroController extends CircuitoController {
         $idEntidadeAtual = $sessao->idEntidadeAtual;
         $entidade = $repositorioORM->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
         $sessao->idRevisao = $idRevisao;
-
-
         $view = new ViewModel(array(
             Constantes::$ENTIDADE => $entidade,
             'repositorioORM' => $repositorioORM,
@@ -1117,6 +1115,11 @@ class CadastroController extends CircuitoController {
     public function cadastrarPessoaRevisaoAction() {
         /* Helper Controller */
         $sessao = new Container(Constantes::$NOME_APLICACAO);
+        if($sessao->idSessao == null || $sessao->idRevisao == null){
+            return $this->redirect()->toRoute(Constantes::$ROUTE_CADASTRO, array(
+                    Constantes::$PAGINA => Constantes::$PAGINA_REVISIONISTAS,
+            ));
+        }
         $idPessoa = $sessao->idSessao;
         $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
         $tipos = $repositorioORM->getGrupoPessoaTipoORM()->tipoDePessoaLancamento();
@@ -1156,7 +1159,7 @@ class CadastroController extends CircuitoController {
 
     public function salvarPessoaRevisaoAction() {
         $request = $this->getRequest();
-
+        
 //            try {
         $post_data = $request->getPost();
 
@@ -1177,13 +1180,19 @@ class CadastroController extends CircuitoController {
 
         /* Bloco para inclusao da pessoa no evento frequencia */
         $idRevisao = $sessao->idRevisao;
+        if($sessao->idRevisao == null){
+            return $this->redirect()->toRoute(Constantes::$ROUTE_CADASTRO, array(
+                    Constantes::$PAGINA => Constantes::$PAGINA_REVISIONISTAS,
+            ));
+        }
+        unset($sessao->idRevisao); 
         $eventoFrequencia = new EventoFrequencia();
         $eventoRevisao = $repositorioORM->getEventoORM()->encontrarPorId($idRevisao);
         $eventoFrequencia->setEvento($eventoRevisao);
         $eventoFrequencia->setPessoa($pessoa);
         $eventoFrequencia->setFrequencia('N');
         $repositorioORM->getEventoFrequenciaORM()->persistir($eventoFrequencia);
-        $sessao->idEventoFrequenciaRevisaoFicha = $eventoFrequencia->getId();
+        $sessao->idSessao = $eventoFrequencia->getId();
 
         return $this->redirect()->toRoute(Constantes::$ROUTE_CADASTRO, array(
                     Constantes::$PAGINA => Constantes::$PAGINA_FICHA_REVISAO,
@@ -1193,17 +1202,14 @@ class CadastroController extends CircuitoController {
 //            }
     } 
 
-    public function fichaRevisaoAction() {
+    public function fichaRevisaoAction() { 
         $sessao = new Container(Constantes::$NOME_APLICACAO);
         $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
-        if ($sessao->idEventoFrequenciaRevisaoFicha == null || $sessao->idEventoFrequenciaRevisaoFicha == 0) {
-            $idEventoFrequencia = $sessao->idSessao;
-        } else {
-            $idEventoFrequencia = $sessao->idEventoFrequenciaRevisaoFicha;
-        }
+        $idEventoFrequencia = $sessao->idSessao;
+        unset($sessao->idSessao);
         $eventoFrequencia = $repositorioORM->getEventoFrequenciaORM()->encontrarPorId($idEventoFrequencia);
         $pessoaRevisionista = $eventoFrequencia->getPessoa();
-        $idRevisao = $sessao->idRevisao;
+        $idRevisao = $eventoFrequencia->getEvento()->getId();
         $eventoRevisao = $repositorioORM->getEventoORM()->encontrarPorId($idRevisao);
         $grupoPessoaRevisionista = $pessoaRevisionista->getGrupoPessoaAtivo();
         $grupoLider = $grupoPessoaRevisionista->getGrupo();
