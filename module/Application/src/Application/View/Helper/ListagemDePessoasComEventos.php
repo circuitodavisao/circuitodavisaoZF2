@@ -82,7 +82,7 @@ class ListagemDePessoasComEventos extends AbstractHelper {
                 $pessoa->setIdGrupoPessoa($grupoPessoa->getId());
                 $pessoa->setAtivo($grupoPessoa->verificarSeEstaAtivo());
                 if (!$pessoa->getAtivo()) {
-                    $pessoa->setDataInativacao($grupoPessoa->getData_inativacao());
+                    $pessoa->setDataInativacao($grupoPessoa->getData_inativacaoStringPadraoBanco());
                 }
 //                $adicionar = true;
 //                /* Validacao de tranferencia */
@@ -166,12 +166,23 @@ class ListagemDePessoasComEventos extends AbstractHelper {
         $corTextoTagsExtrasLg = ' class="hidden-xs hidden-sm hidden-md" ';
         $classLinha2 = '';
         if ($pessoa->getTipo() != 'LP' && !$pessoa->getAtivo()) {
-            $classLinha = 'class="row-warning warning"';
-            $classLinha2 = 'footable-visible footable-first-column';
-            $corBotao = 'btn-warning disabled';
-            $base = ' text-warning" data-toggle="tooltip" data-placement="center" title data-original-title="Inativo"';
-            $corTextoTagsExtrasXs = 'class="hidden-lg' . $base;
-            $corTextoTagsExtrasLg = 'class="hidden-xs hidden-sm hidden-md' . $base;
+            if ($pessoa->getDataInativacao()) {
+                /* Verificando em qual periodo foi inativado */
+                $arrayPeriodo = Funcoes::montaPeriodo($this->view->periodo);
+                $stringPeriodo = $arrayPeriodo[3] . '-' . $arrayPeriodo[2] . '-' . $arrayPeriodo[1];
+                $dataDoInicioDoPeriodoParaComparar = strtotime($stringPeriodo);
+                $stringPeriodoFim = $arrayPeriodo[6] . '-' . $arrayPeriodo[5] . '-' . $arrayPeriodo[4];
+                $dataDoFimDoPeriodoParaComparar = strtotime($stringPeriodoFim);
+                $dataDeInativacaoDaPessoaParaComparar = strtotime($pessoa->getDataInativacao());
+                if ($dataDeInativacaoDaPessoaParaComparar >= $dataDoInicioDoPeriodoParaComparar && $dataDeInativacaoDaPessoaParaComparar <= $dataDoFimDoPeriodoParaComparar) {
+                    $classLinha = 'class="row-warning warning"';
+                    $classLinha2 = 'footable-visible footable-first-column';
+                    $corBotao = 'btn-warning disabled';
+                    $base = ' text-warning" data-toggle="tooltip" data-placement="center" title data-original-title="Inativo"';
+                    $corTextoTagsExtrasXs = 'class="hidden-lg' . $base;
+                    $corTextoTagsExtrasLg = 'class="hidden-xs hidden-sm hidden-md' . $base;
+                }
+            }
         }
 //                if ($pessoa->verificarSeFoiTransferido($mesSelecionado, $anoSelecionado)) {
 //                    $classLinha = 'class="row-dark default"';
@@ -191,7 +202,7 @@ class ListagemDePessoasComEventos extends AbstractHelper {
         $html .= '<span class="sr-only"></span>';
         $html .= '</span>';
 
-        if ($pessoa->getTipo() != 'LP' && $pessoa->getAtivo()) {
+        if ($this->view->periodo == 0 && $pessoa->getTipo() != 'LP' && $pessoa->getAtivo()) {
             $html .= '<ul class="dropdown-menu sobrepor-elementos" style="min-width: 43px;">';
             $html .= '<span class="editable-container editable-inline">';
             $html .= '<div class="definicao-altura-30">';
@@ -365,98 +376,27 @@ class ListagemDePessoasComEventos extends AbstractHelper {
             $html .= '</div>';
             $html .= '</td>';
         }
-        $html .= '</tr>
-
-                
-
-                ';
+        $html .= '</tr>';
 
         return $html;
     }
 
     public static function diaRealDoEvento($diaDaSemanaDoEvento, $periodo = 0) {
+        $diaDaSemanaSegunda = 1;
+        $stringSegunda = '';
 
-        switch ($diaDaSemanaDoEvento) {
-            case 1:
-                if ($periodo < 0) {
-                    $stringDoDia = 'last Monday';
-                } else {
-                    if (date('N') == 1) {
-                        $stringDoDia = 'Today';
-                    } else {
-                        $stringDoDia = 'next Monday';
-                    }
-                }
-                break;
-            case 2:
-                if ($periodo < 0) {
-                    $stringDoDia = 'last Tuesday';
-                } else {
-                    if (date('N') == 2) {
-                        $stringDoDia = 'Today';
-                    } else {
-                        $stringDoDia = 'next Tuesday';
-                    }
-                }
-                break;
-            case 3:
-                if ($periodo < 0) {
-                    $stringDoDia = 'last Wednesday';
-                } else {
-                    if (date('N') == 3) {
-                        $stringDoDia = 'Today';
-                    } else {
-                        $stringDoDia = 'next Wednesday';
-                    }
-                }
-                break;
-            case 4:
-                if ($periodo < 0) {
-                    $stringDoDia = 'last Thursday';
-                } else {
-                    if (date('N') == 4) {
-                        $stringDoDia = 'Today';
-                    } else {
-                        $stringDoDia = 'next Thursday';
-                    }
-                }
-                break;
-            case 5:
-                if ($periodo < 0) {
-                    $stringDoDia = 'last Friday';
-                } else {
-                    if (date('N') == 5) {
-                        $stringDoDia = 'Today';
-                    } else {
-                        $stringDoDia = 'next Friday';
-                    }
-                }
-                break;
-            case 6:
-                if ($periodo < 0) {
-                    $stringDoDia = 'last Saturday';
-                } else {
-                    if (date('N') == 6) {
-                        $stringDoDia = 'Today';
-                    } else {
-                        $stringDoDia = 'next Saturday';
-                    }
-                }
-                break;
-            case 7:
-                if ($periodo < 0) {
-                    $stringDoDia = 'last Sunday';
-                } else {
-                    if (date('N') == 7) {
-                        $stringDoDia = 'Today';
-                    } else {
-                        $stringDoDia = 'next Sunday';
-                    }
-                }
-                break;
+        if (date('N') == $diaDaSemanaSegunda) {
+            $stringSegunda .= 'Now';
+        } else {
+            $stringSegunda .= 'Last Monday';
+        }
+        if ($periodo < 0) {
+            $stringSegunda = $periodo . ' week ' . $stringSegunda;
         }
 
-        return date("Y-m-d", strtotime($stringDoDia));
+        $stringDia = $stringSegunda . ' + ' . ($diaDaSemanaDoEvento - 1) . ' day';
+        $resposta = date("Y-m-d", strtotime($stringDia));
+        return $resposta;
     }
 
     function getDiaDeSemanaHoje() {
