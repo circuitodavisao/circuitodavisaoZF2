@@ -490,7 +490,7 @@ class CadastroController extends CircuitoController {
                 if ($celulaForm->isValid()) {
                     $sessao = new Container(Constantes::$NOME_APLICACAO);
                     $criarNovaCelula = true;
-                    $mudarDataDeCadstroParaProximoDomingo = false;
+                    $mudarDataDeCadastroParaProximoDomingo = false;
                     $validatedData = $celulaForm->getData();
 
                     /* Entidades */
@@ -506,16 +506,21 @@ class CadastroController extends CircuitoController {
                         /* Dia foi alterado */
                         if ($post_data[Constantes::$FORM_DIA_DA_SEMANA] != $eventoCelulaAtual->getEvento()->getDia()) {
                             /* Persistindo */
-                            /* Inativando o Evento */
+                            $dataParaInativacao = Funcoes::proximoDomingo();
+                            $dataParaInativacaoFormatada = DateTime::createFromFormat('Y-m-d', $dataParaInativacao);
+
                             $eventoParaInativar = $eventoCelulaAtual->getEvento();
-                            $eventoParaInativar->setDataEHoraDeInativacao();
-                            $repositorioORM->getEventoORM()->persistir($eventoParaInativar, false);
-                            /* Inativando o Grupo Evento */
                             $grupoEventoAtivos = $eventoParaInativar->getGrupoEventoAtivos();
-                            $grupoEventoAtivos[0]->setDataEHoraDeInativacao();
+
+                            $eventoParaInativar->setData_inativacao($dataParaInativacaoFormatada);
+                            $eventoParaInativar->setHora_inativacao('00:00:00');
+                            $grupoEventoAtivos[0]->setData_inativacao($dataParaInativacaoFormatada);
+                            $grupoEventoAtivos[0]->setHora_inativacao('00:00:00');
+
                             $repositorioORM->getGrupoEventoORM()->persistir($grupoEventoAtivos[0], false);
+                            $repositorioORM->getEventoORM()->persistir($eventoParaInativar, false);
                             $criarNovaCelula = true;
-                            $mudarDataDeCadstroParaProximoDomingo = true;
+                            $mudarDataDeCadastroParaProximoDomingo = true;
                         } else {
                             /* Dia não foi alterado */
 
@@ -577,10 +582,15 @@ class CadastroController extends CircuitoController {
                         $eventoCelula->setCep($post_data[Constantes::$FORM_CEP_LOGRADOURO]);
 
                         $eventoCelula->setEvento($evento);
-
-                        $dataParaCadastro = Funcoes::dataAtual();
-                        if ($mudarDataDeCadstroParaProximoDomingo) {
-                            $dataParaCadastro = Funcoes::proximoDomingo();
+                        $alterarDataDeCriacao = true;
+                        if ($mudarDataDeCadastroParaProximoDomingo) {
+                            $alterarDataDeCriacao = false;
+                            $dataParaCriacao = Funcoes::proximaSegunda();
+                            $dataParaCriacaoFormatada = DateTime::createFromFormat('Y-m-d', $dataParaCriacao);
+                            $evento->setData_criacao($dataParaCriacaoFormatada);
+                            $evento->setHora_criacao('00:00:00');
+                            $grupoEvento->setData_criacao($dataParaCriacaoFormatada);
+                            $grupoEvento->setHora_criacao('00:00:00');
                         }
                         $evento->setHora($validatedData[Constantes::$FORM_HORA] . ':' . $validatedData[Constantes::$FORM_MINUTOS]);
                         $evento->setDia($validatedData[Constantes::$FORM_DIA_DA_SEMANA]);
@@ -590,23 +600,26 @@ class CadastroController extends CircuitoController {
                         $grupoEvento->setEvento($evento);
 
                         /* Persistindo */
-                        $repositorioORM->getEventoORM()->persistir($evento);
+                        $repositorioORM->getEventoORM()->persistir($evento, $alterarDataDeCriacao);
                         $repositorioORM->getEventoCelulaORM()->persistir($eventoCelula, false);
-                        $repositorioORM->getGrupoEventoORM()->persistir($grupoEvento);
+                        $repositorioORM->getGrupoEventoORM()->persistir($grupoEvento, $alterarDataDeCriacao);
                         /* Sessão */
                         $sessao->tipoMensagem = Constantes::$TIPO_MENSAGEM_CADASTRAR_CELULA;
                         $sessao->textoMensagem = $eventoCelula->getNome_hospedeiro();
                         $sessao->idSessao = $eventoCelula->getId();
 
                         /* Cadastro do fato celula */
-                        $numeroIdentificador = $repositorioORM->getFatoCicloORM()->montarNumeroIdentificador($entidade->getGrupo());
-                        $periodo = 0;
-                        $arrayPeriodo = Funcoes::montaPeriodo($periodo);
-                        $stringData = $arrayPeriodo[3] . '-' . $arrayPeriodo[2] . '-' . $arrayPeriodo[1];
-                        $dateFormatada = DateTime::createFromFormat('Y-m-d', $stringData);
-                        $fatoPeriodo = $repositorioORM->getFatoCicloORM()->
-                                encontrarPorNumeroIdentificadorEDataCriacao($numeroIdentificador, $dateFormatada, $repositorioORM);
-                        $repositorioORM->getFatoCelulaORM()->criarFatoCelula($fatoPeriodo, $eventoCelula->getId());
+                        /* cadastro fato apenas se for nova celula */
+                        if (empty($post_data[Constantes::$FORM_ID])) {
+                            $numeroIdentificador = $repositorioORM->getFatoCicloORM()->montarNumeroIdentificador($entidade->getGrupo());
+                            $periodo = 0;
+                            $arrayPeriodo = Funcoes::montaPeriodo($periodo);
+                            $stringData = $arrayPeriodo[3] . '-' . $arrayPeriodo[2] . '-' . $arrayPeriodo[1];
+                            $dateFormatada = DateTime::createFromFormat('Y-m-d', $stringData);
+                            $fatoPeriodo = $repositorioORM->getFatoCicloORM()->
+                                    encontrarPorNumeroIdentificadorEDataCriacao($numeroIdentificador, $dateFormatada, $repositorioORM);
+                            $repositorioORM->getFatoCelulaORM()->criarFatoCelula($fatoPeriodo, $eventoCelula->getId());
+                        }
                     }
                     $repositorioORM->fecharTransacao();
 
@@ -680,23 +693,23 @@ class CadastroController extends CircuitoController {
                 /* Persistindo */
 
                 /* Relatório de célula */
-//                if ($eventoParaInativar->getEventoCelula()) {
-//                    /* Somente inativar caso o dia do evento seja posterior ao dia da exclusao */
-//                    $timeNow = new DateTime();
-//                    $format = 'N';
-//                    $diaDaSemana = $timeNow->format($format);
-//                    $eventoParaInativar->getDia();
-//                    if ($diaDaSemana == 7) {
-//                        $diaDaSemana = 1;
-//                    } else {
-//                        $diaDaSemana++;
-//                    }
-//                    if ($diaDaSemana < $eventoParaInativar->getDia()) {
-//                        $fatoCelula = $repositorioORM->getFatoCelulaORM()->encontrarPorEventoCelulaId($eventoParaInativar->getEventoCelula()->getId());
-//                        $fatoCelula->setDataEHoraDeInativacao();
-//                        $repositorioORM->getFatoCelulaORM()->persistir($fatoCelula, false);
-//                    }
-//                }
+                if ($eventoNaSessao->getEventoCelula()) {
+                    /* Somente inativar caso o dia do evento seja posterior ao dia da exclusao */
+                    $timeNow = new DateTime();
+                    $format = 'N';
+                    $diaDaSemana = $timeNow->format($format);
+                    $eventoNaSessao->getDia();
+                    if ($diaDaSemana == 7) {
+                        $diaDaSemana = 1;
+                    } else {
+                        $diaDaSemana++;
+                    }
+                    if ($diaDaSemana < $eventoNaSessao->getDia()) {
+                        $fatoCelula = $repositorioORM->getFatoCelulaORM()->encontrarPorEventoCelulaId($eventoNaSessao->getEventoCelula()->getId());
+                        $fatoCelula->setDataEHoraDeInativacao();
+                        $repositorioORM->getFatoCelulaORM()->persistir($fatoCelula, false);
+                    }
+                }
 
                 /* Inativando o Evento */
                 $eventoNaSessao->setDataEHoraDeInativacao();
