@@ -272,7 +272,7 @@ class IndexController extends CircuitoController {
             $stringValues = "$lider1, $mes, $ano";
         }
 
-        $sqlAtendimentoInsert = "INSERT INTO ursula_atendimento_ursula ($campos) VALUES ($stringValues);";
+        $sqlAtendimentoInsert = "INSERT INTO ursula_atendimento_ursula ($campos) VALUES ($stringValues);"; 
 //        echo "$sqlAtendimentoInsert";
         mysqli_query(IndexController::pegaConexaoStatica(), $sqlAtendimentoInsert);
         return mysqli_insert_id(IndexController::pegaConexaoStatica());

@@ -254,7 +254,7 @@ class Menu extends AbstractHelper {
         $html .= '</li>';
         /* Fim Menu Cadastro */
 
-        /* Menu Lançamento */
+        /* Menu Lançamento */ 
         $html .= '<li>';
         $html .= '<a class="accordion-toggle" href="#">';
         $html .= '<span class="fa fa-pencil"></span>';

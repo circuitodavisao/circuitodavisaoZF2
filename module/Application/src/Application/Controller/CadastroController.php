@@ -1292,7 +1292,7 @@ class CadastroController extends CircuitoController {
         ));
 
         /* Javascript especifico */
-        $layoutJS = new ViewModel();
+        $layoutJS = new ViewModel(); 
         $layoutJS->setTemplate(Constantes::$TEMPLATE_JS_ATIVAR_FICHA);
         $view->addChild($layoutJS, Constantes::$STRING_JS_ATIVAR_FICHA_REVISAO);
 
