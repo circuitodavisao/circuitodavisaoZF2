@@ -5,6 +5,7 @@ namespace Application\View\Helper;
 use Application\Controller\Helper\Constantes;
 use Entidade\Entity\Pessoa;
 use Zend\View\Helper\AbstractHelper;
+use Zend\View\Helper\Placeholder\Container;
 
 /**
  * Nome: Menu.php
@@ -26,6 +27,7 @@ class Menu extends AbstractHelper {
 
 
     public function renderHtml() {
+        $sessao = new Container(Constantes::$NOME_APLICACAO);
         $html = '';
 
         $stringFoto = $this->view->pessoa->getFoto();
@@ -272,12 +274,14 @@ class Menu extends AbstractHelper {
         $html .= 'Atendimento';
         $html .= '</a>';
         $html .= '</li>';
+        if($sessao->idPessoa == 3){
         $html .= '<li>';
         $html .= '<a href="/cadastro'.Constantes::$PAGINA_ATIVAR_FICHA_REVISAO.'">';
         $html .= '<span class="fa fa-users"></span>';
         $html .= 'Fichas Revisão de Vidas';
         $html .= '</a>';
         $html .= '</li>';
+        }
         $html .= '</ul>';
         $html .= '</li>';
 
