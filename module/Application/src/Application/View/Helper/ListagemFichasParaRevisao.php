@@ -11,8 +11,8 @@ use Zend\View\Helper\AbstractHelper;
 
 /**
  * Nome: ListagemDePessoasComEventos.php
- * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com>
- * Descricao: Classe helper view para mostrar a listagem de eventos com frequencia
+ * @author Lucas Filipe de Carvalho Cunha <lucascarvalho.esw@gmail.com>
+ * Descricao: Classe helper view para mostrar a listagem de fichas do revisão
  */
 class ListagemFichasParaRevisao extends AbstractHelper {
 

@@ -83,7 +83,9 @@ function limparCampos(){
 
 function confirmar(form){
     var divMensagens = $('#divMensagens');
-    divMensagens
-                .addClass('hidden');
-        form.submit();
+    var loader = '<img width="11" hegth="11" src="/img/loader.gif"></i>';
+    var botao = $('#botaoBuscarFicha');
+    botao.html(loader);
+    botao.addClass('disabled');
+    form.submit();
 }

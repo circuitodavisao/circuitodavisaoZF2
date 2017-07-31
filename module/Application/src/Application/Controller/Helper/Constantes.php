@@ -363,6 +363,7 @@ class Constantes {
     public static $TRADUCAO_SELECIONAR_LIDER_REVISAO_SEGUNDO_LABEL = 'Leaders';
     public static $TRADUCAO_ATIVAR = 'Enable';
     public static $TRADUCAO_ATIVAR_FICHA_LABEL = 'Enable Bookmarks';
+    public static $TRADUCAO_FICHAS_ATIVAS_LABEL = 'Bookmarks Enables';
     public static $TRADUCAO_NOVO_CADASTRO_REVISAO_LABEL = 'Person at the revision of live';
     public static $TRADUCAO_DDD = 'DDD';
     public static $TRADUCAO_TELEFONE = 'Phone';
@@ -705,6 +706,7 @@ class Constantes {
     public static $TRADUCAO_NOVO_CULTO = 'New Cult';
     public static $TRADUCAO_NOVO_REVISAO = 'New Revision';
     public static $TRADUCAO_NOVO_REVISIONISTA = 'Select';
+    public static $TRADUCAO_SELECIONAR = 'Select';
     public static $TRADUCAO_VER_FICHA_REVISIONISTA = 'See';
     public static $TRADUCAO_REMOVER_REVISIONISTA = 'Remove';
     public static $TRADUCAO_MULTIPLICACAO = 'Multiplication';

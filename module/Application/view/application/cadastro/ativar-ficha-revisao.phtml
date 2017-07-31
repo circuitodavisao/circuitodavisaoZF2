@@ -32,15 +32,11 @@ $form->setAttribute(Constantes::$ACTION, $this->url(Constantes::$ROUTE_CADASTRO,
                             ?> 
                             </div>    
                         </div>
+                        <?php echo $this->formHidden($form->get(Constantes::$FORM_ID)); ?>
+                        <?php echo $this->formHidden($form->get(Constantes::$INPUT_CSRF)); ?>
                         <!-- end .form-body section -->
                         <div class="panel-footer text-right">
-                            <?php echo $this->formHidden($form->get(Constantes::$FORM_ID)); ?>
-                            <?php echo $this->formHidden($form->get(Constantes::$INPUT_CSRF)); ?>
                             
-                            <?php
-//                            $stringNomeDaFuncaoOnClickCadastro = 'funcaoCadastro("' . Constantes::$PAGINA_SELECIONAR_REVISIONISTA . '", 0)';
-//                            echo $this->botaoLink($this->translate(Constantes::$TRADUCAO_VOLTAR), Constantes::$STRING_HASHTAG, 2, $this->funcaoOnClick($stringNomeDaFuncaoOnClickCadastro));
-                            ?>
                             
                             <span id='botaoLimparCampos' class='hidden'>
                             <?php 
@@ -58,6 +54,8 @@ $form->setAttribute(Constantes::$ACTION, $this->url(Constantes::$ROUTE_CADASTRO,
                         <!-- end .form-footer section -->
                         <?php echo $this->form()->closeTag() ?>
                     </div>
+                    <br />
+                    <?php echo $this->listagemFichasAtivasRevisao(1); ?>
                     <!-- end .admin-form section -->
                 </div>
                 <!-- end: .admin-form -->
@@ -66,5 +64,6 @@ $form->setAttribute(Constantes::$ACTION, $this->url(Constantes::$ROUTE_CADASTRO,
     </div>
 </div>
 <?php
+
 /* Layout com javascript para tela de index */
 echo $this->layoutJSAtivarFichaRevisao;

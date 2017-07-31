@@ -165,6 +165,11 @@ class CadastroController extends CircuitoController {
                         Constantes::$ACTION => Constantes::$PAGINA_ATIVAR_RESERVA_REVISAO,
             ));
         }
+        if ($pagina == Constantes::$PAGINA_SELECIONAR_FICHA_ATIVAS) {
+            return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
+                        Constantes::$ACTION => Constantes::$PAGINA_SELECIONAR_FICHA_ATIVAS,
+            ));
+        }
         /* Fim Páginas Revisão */
         /* Funcoes */
         if ($pagina == Constantes::$PAGINA_FUNCOES) {
@@ -226,6 +231,12 @@ class CadastroController extends CircuitoController {
             $listagemDeEventos = $grupo->getGrupoEventoRevisao();
             $tituloDaPagina = Constantes::$TRADUCAO_LISTAGEM_REVISIONISTAS;
             $tipoEvento = 7;
+            $extra = $grupo->getId();
+        }
+        if ($pagina == 'AtivarFichas') {
+            $listagemDeEventos = $grupo->getGrupoEventoRevisao();
+            $tituloDaPagina = Constantes::$TRADUCAO_LISTAGEM_REVISIONISTAS;
+            $tipoEvento = 8;
             $extra = $grupo->getId();
         }
 
@@ -1283,6 +1294,7 @@ class CadastroController extends CircuitoController {
             Constantes::$ENTIDADE => $entidade,
             'repositorioORM' => $repositorioORM,
             'evento' => $eventoRevisao,
+            'entidade' => $entidade,
         ));
 
         /* Javascript */
@@ -1298,14 +1310,22 @@ class CadastroController extends CircuitoController {
     }
 
     public function ativarFichaRevisaoAction() {
-
+        $sessao = new Container(Constantes::$NOME_APLICACAO);
+        $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
+        $idRevisao = $sessao->idSessao;
+        $eventoRevisao = $repositorioORM->getEventoORM()->encontrarPorId($idRevisao);
         $formAtivarFicha = new AtivarFichaForm(Constantes::$FORM_ATIVAR_FICHA, null);
+        $idEntidadeAtual = $sessao->idEntidadeAtual;
+        $entidade = $repositorioORM->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
         $view = new ViewModel(array(
             Constantes::$FORM_ATIVAR_FICHA => $formAtivarFicha,
+            'repositorioORM' => $repositorioORM,
+            'evento' => $eventoRevisao,
+            'entidade' => $entidade,
         ));
 
         /* Javascript especifico */
-        $layoutJS = new ViewModel(); 
+        $layoutJS = new ViewModel();
         $layoutJS->setTemplate(Constantes::$TEMPLATE_JS_ATIVAR_FICHA);
         $view->addChild($layoutJS, Constantes::$STRING_JS_ATIVAR_FICHA_REVISAO);
 
@@ -1411,7 +1431,7 @@ class CadastroController extends CircuitoController {
         $grupoPessoa->setGrupo($grupoPessoaRevisionistaAntigo->getGrupo());
         $grupoPessoa->setGrupoPessoaTipo($grupoPessoaTipo);
         $repositorioORM->getGrupoPessoaORM()->persistir($grupoPessoa);
-        
+
         return $grupoPessoa;
     }
 
@@ -1419,7 +1439,7 @@ class CadastroController extends CircuitoController {
         $request = $this->getRequest();
         $response = $this->getResponse();
         $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
-        if ($request->isPost()) { 
+        if ($request->isPost()) {
             try {
                 $repositorioORM->iniciarTransacao();
                 $post_data = $request->getPost();
@@ -1427,7 +1447,7 @@ class CadastroController extends CircuitoController {
 
                 /* Resgatando Dados do EventoFrequencia e do Revisionista */
                 $eventoFrequencia = $repositorioORM->getEventoFrequenciaORM()->encontrarPorIdEventoFrequencia($idEventoFrequencia);
-                if($eventoFrequencia->getFrequencia() == 'N'){
+                if ($eventoFrequencia->getFrequencia() == 'N') {
                     $pessoaRevisionista = $eventoFrequencia->getPessoa();
                     /* Membro = idTipo 3 */
                     $grupoPessoaRevisionista = $this->alterarGrupoPessoaTipo(3, $repositorioORM, $pessoaRevisionista);
@@ -1437,42 +1457,44 @@ class CadastroController extends CircuitoController {
                     $repositorioORM->getEventoFrequenciaORM()->persistir($eventoFrequencia, false);
 
                     /* Mensagens de retorno */
-                    $sessao = new Container(Constantes::$NOME_APLICACAO);
-                    $sessao->mostrarNotificacao = true;
-                    $sessao->tipoMensagem = Constantes::$TIPO_MENSAGEM_CADASTRAR_REVISIONISTA;
-                    $sessao->textoMensagem = $pessoaRevisionista->getNome();
-                    $sessao->idSessao = $eventoFrequencia->getId();
+//                    $sessao = new Container(Constantes::$NOME_APLICACAO);
+//                    $sessao->mostrarNotificacao = true;
+//                    $sessao->tipoMensagem = Constantes::$TIPO_MENSAGEM_CADASTRAR_REVISIONISTA;
+//                    $sessao->textoMensagem = $pessoaRevisionista->getNome();
+//                    $sessao->idSessao = $eventoFrequencia->getId();
+//
+//                    /*Migração Sitema Antigo */
+//
+//                    $grupoLider = $grupoPessoaRevisionista->getGrupo();
+//                    $grupoResponsavel = $grupoLider->getResponsabilidadesAtivas();
+//                    $numeroLideres = count($grupoResponsavel);
+//                    $grupoCv = $grupoLider->getGrupoCv();
+//                    if($numeroLideres > 1){
+//                        $idAluno = IndexController::cadastrarPessoaRevisionista($pessoaRevisionista->getNome(), substr(''.$pessoaRevisionista->getTelefone().'',0,2),
+//                        substr(''.$pessoaRevisionista->getTelefone().'', 2, strlen(''.$pessoaRevisionista->getTelefone().'')), $pessoaRevisionista->getSexo(),
+//                                $pessoaRevisionista->getData_nascimento(),$grupoCv->getLider1(), $grupoCv->getLider2());
+//                    }else{
+//                        $idAluno = IndexController::cadastrarPessoaRevisionista($pessoaRevisionista->getNome(), substr(''.$pessoaRevisionista->getTelefone().'',0,2),
+//                        substr(''.$pessoaRevisionista->getTelefone().'', 2, strlen(''.$pessoaRevisionista->getTelefone().'')), $pessoaRevisionista->getSexo(),
+//                                $pessoaRevisionista->getData_nascimento(),$grupoCv->getLider1());
+//
+//                    }
+//                    IndexController::cadastrarPessoaAluno($idAluno, 5930, 'A', 1);
 
-                    /*Migração Sitema Antigo */
-
-                    $grupoLider = $grupoPessoaRevisionista->getGrupo();
-                    $grupoResponsavel = $grupoLider->getResponsabilidadesAtivas();
-                    $numeroLideres = count($grupoResponsavel);
-                    $grupoCv = $grupoLider->getGrupoCv();
-                    if($numeroLideres > 1){
-                        $idAluno = IndexController::cadastrarPessoaRevisionista($pessoaRevisionista->getNome(), substr(''.$pessoaRevisionista->getTelefone().'',0,2),
-                        substr(''.$pessoaRevisionista->getTelefone().'', 2, strlen(''.$pessoaRevisionista->getTelefone().'')), $pessoaRevisionista->getSexo(),
-                                $pessoaRevisionista->getData_nascimento(),$grupoCv->getLider1(), $grupoCv->getLider2());
-                    }else{
-                        $idAluno = IndexController::cadastrarPessoaRevisionista($pessoaRevisionista->getNome(), substr(''.$pessoaRevisionista->getTelefone().'',0,2),
-                        substr(''.$pessoaRevisionista->getTelefone().'', 2, strlen(''.$pessoaRevisionista->getTelefone().'')), $pessoaRevisionista->getSexo(),
-                                $pessoaRevisionista->getData_nascimento(),$grupoCv->getLider1());
-
-                    }
-                    IndexController::cadastrarPessoaAluno($idAluno, 5930, 'A', 1);
+                    /* Fim da migração do Sistema Antigo */
 
                     $repositorioORM->fecharTransacao();
                     return $this->redirect()->toRoute(Constantes::$ROUTE_CADASTRO, array(
                                 Constantes::$PAGINA => Constantes::$PAGINA_ATIVAR_FICHA_REVISAO,
-                    )); 
-                }else{
+                    ));
+                } else {
                     $repositorioORM->desfazerTransacao();
                     return $this->redirect()->toRoute(Constantes::$ROUTE_CADASTRO, array(
                                 Constantes::$PAGINA => Constantes::$PAGINA_ATIVAR_FICHA_REVISAO,
                     ));
-                }    
+                }
             } catch (Exception $exc) {
-                $repositorioORM->desfazerTransacao(); 
+                $repositorioORM->desfazerTransacao();
                 echo $exc->getTraceAsString();
             }
         }
@@ -1605,6 +1627,67 @@ class CadastroController extends CircuitoController {
 //            } catch (Exception $exc) {
 //                echo $exc->getMessage();
 //            }
+        }
+    }
+
+    public function removerRevisionistasAtivosAction() {
+        $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
+        try {
+            $sessao = new Container(Constantes::$NOME_APLICACAO);
+            $repositorioORM->iniciarTransacao();
+            $idEventoFrequencia = $sessao->idSessao;
+
+            /* Resgatando Dados do EventoFrequencia e do Revisionista */
+            $eventoFrequencia = $repositorioORM->getEventoFrequenciaORM()->encontrarPorIdEventoFrequencia($idEventoFrequencia);
+            if ($eventoFrequencia->getFrequencia() == 'S') {
+                $pessoaRevisionista = $eventoFrequencia->getPessoa();
+                /* Membro = idTipo 3 */
+                $grupoPessoaRevisionista = $this->alterarGrupoPessoaTipo(3, $repositorioORM, $pessoaRevisionista);
+
+                /* Ativando a presença do Revisionista  */
+                $eventoFrequencia->setFrequencia('N');
+                $repositorioORM->getEventoFrequenciaORM()->persistir($eventoFrequencia, false);
+
+                /* Mensagens de retorno */
+//                    $sessao = new Container(Constantes::$NOME_APLICACAO);
+//                    $sessao->mostrarNotificacao = true;
+//                    $sessao->tipoMensagem = Constantes::$TIPO_MENSAGEM_CADASTRAR_REVISIONISTA;
+//                    $sessao->textoMensagem = $pessoaRevisionista->getNome();
+//                    $sessao->idSessao = $eventoFrequencia->getId();
+//
+//                    /*Migração Sitema Antigo */
+//
+//                    $grupoLider = $grupoPessoaRevisionista->getGrupo();
+//                    $grupoResponsavel = $grupoLider->getResponsabilidadesAtivas();
+//                    $numeroLideres = count($grupoResponsavel);
+//                    $grupoCv = $grupoLider->getGrupoCv();
+//                    if($numeroLideres > 1){
+//                        $idAluno = IndexController::cadastrarPessoaRevisionista($pessoaRevisionista->getNome(), substr(''.$pessoaRevisionista->getTelefone().'',0,2),
+//                        substr(''.$pessoaRevisionista->getTelefone().'', 2, strlen(''.$pessoaRevisionista->getTelefone().'')), $pessoaRevisionista->getSexo(),
+//                                $pessoaRevisionista->getData_nascimento(),$grupoCv->getLider1(), $grupoCv->getLider2());
+//                    }else{
+//                        $idAluno = IndexController::cadastrarPessoaRevisionista($pessoaRevisionista->getNome(), substr(''.$pessoaRevisionista->getTelefone().'',0,2),
+//                        substr(''.$pessoaRevisionista->getTelefone().'', 2, strlen(''.$pessoaRevisionista->getTelefone().'')), $pessoaRevisionista->getSexo(),
+//                                $pessoaRevisionista->getData_nascimento(),$grupoCv->getLider1());
+//
+//                    }
+//                    IndexController::cadastrarPessoaAluno($idAluno, 5930, 'A', 1);
+
+                /* Fim da migração do Sistema Antigo */
+
+                $repositorioORM->fecharTransacao();
+                return $this->redirect()->toRoute(Constantes::$ROUTE_CADASTRO, array(
+                            Constantes::$PAGINA => Constantes::$PAGINA_ATIVAR_FICHA_REVISAO,
+                ));
+            } else {
+                $repositorioORM->desfazerTransacao();
+                return $this->redirect()->toRoute(Constantes::$ROUTE_CADASTRO, array(
+                            Constantes::$PAGINA => Constantes::$PAGINA_ATIVAR_FICHA_REVISAO,
+                ));
+            }
+        } catch (Exception $exc) {
+            $repositorioORM->desfazerTransacao();
+            echo $exc->getTraceAsString();
         }
     }
 

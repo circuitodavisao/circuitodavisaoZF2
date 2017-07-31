@@ -28,7 +28,9 @@ class TemplateFormularioTopo extends AbstractHelper {
         $html = '';
         $html .= '<div class="mw1000 center-block">';
         $html .= '<div class="admin-form theme-primary">';
-        $html .= $this->view->tituloDaPagina($this->getLabel());
+        if($this->getLabel() != ''){
+            $html .= $this->view->tituloDaPagina($this->getLabel());
+        }
         $html .= '<div id="' . $this->getId() . '" class="panel heading-border panel-primary">';
         return $html;
     }
