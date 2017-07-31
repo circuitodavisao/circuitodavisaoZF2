@@ -5,6 +5,7 @@ namespace Application\View\Helper;
 use Application\Controller\Helper\Constantes;
 use Entidade\Entity\Pessoa;
 use Zend\View\Helper\AbstractHelper;
+use Zend\View\Helper\Placeholder\Container;
 
 /**
  * Nome: Menu.php
@@ -26,6 +27,7 @@ class Menu extends AbstractHelper {
 
 
     public function renderHtml() {
+        $sessao = new Container(Constantes::$NOME_APLICACAO);
         $html = '';
 
         $stringFoto = $this->view->pessoa->getFoto();
@@ -239,13 +241,20 @@ class Menu extends AbstractHelper {
         $html .= 'Time (Manutenção)';
         $html .= '</a>';
         $html .= '</li>';
+        
+        $html .= '<li>';
+        $html .= '<a href="/cadastroRevisionistas">';
+        $html .= '<span class="fa fa-users"></span>';
+        $html .= 'Revisionistas';
+        $html .= '</a>'; 
+        $html .= '</li>';
 
         $html .= '</ul>';
 
         $html .= '</li>';
         /* Fim Menu Cadastro */
 
-        /* Menu Lançamento */
+        /* Menu Lançamento */ 
         $html .= '<li>';
         $html .= '<a class="accordion-toggle" href="#">';
         $html .= '<span class="fa fa-pencil"></span>';
@@ -265,6 +274,14 @@ class Menu extends AbstractHelper {
         $html .= 'Atendimento';
         $html .= '</a>';
         $html .= '</li>';
+        if($sessao->idPessoa == 3){
+        $html .= '<li>';
+        $html .= '<a href="/cadastro'.Constantes::$PAGINA_ATIVAR_FICHA_REVISAO.'">';
+        $html .= '<span class="fa fa-users"></span>';
+        $html .= 'Fichas Revisão de Vidas';
+        $html .= '</a>';
+        $html .= '</li>';
+        }
         $html .= '</ul>';
         $html .= '</li>';
 
@@ -315,14 +332,14 @@ class Menu extends AbstractHelper {
         $html .= '<span class="fa fa-print"></span>';
 
 
-        $html .= '<span class="sidebar-title">Imprimir(Manutenção)</span>';
+        $html .= '<span class="sidebar-title">Imprimir</span>';
         $html .= '<span class="caret"></span>';
         $html .= '</a>';
         $html .= '<ul class="nav sub-nav">';
 
         $html .= '<li>';
-        $html .= '<a href="#">';
-        $html .= '<span class="fa fa-terminal"></span>';
+        $html .= '<a href="/cadastroFichaRevisionistas">';
+        $html .= '<span class="fa fa-terminal"></span>'; 
         $html .= 'Fichas Revisao';
         $html .= '</a>';
         $html .= '</li>';
@@ -330,7 +347,7 @@ class Menu extends AbstractHelper {
         $html .= '<li>';
         $html .= '<a href="#">';
         $html .= '<span class="fa fa-terminal"></span>';
-        $html .= 'Listagem Revisionistas';
+        $html .= 'Listagem Revisionistas(Manutenção)';
         $html .= '</a>';
         $html .= '</li>';
 

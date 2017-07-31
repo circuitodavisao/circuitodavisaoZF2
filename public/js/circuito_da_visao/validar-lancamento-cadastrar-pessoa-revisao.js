@@ -1,12 +1,13 @@
 
 function validarLancamentoCadastrarPessoaRevisao(form) {
     var primeiroNome = $('#primeiro-nome').val();
-    var ultimoNome = $('#ultimo-nome').val();
+    var ultimoNome = $('#ultimo-nome').val(); 
     var ddd = $('#ddd').val();
     var telefone = $('#telefone').val();
     var Dia = $('#Dia').val();
     var Mes = $('#Mes').val();
     var Ano = $('#Ano').val();
+    var sexo = $('#nucleoPerfeito');
 
     var temErro = false;
     var divMensagens = $('#divMensagens');
@@ -15,34 +16,80 @@ function validarLancamentoCadastrarPessoaRevisao(form) {
     
     if (primeiroNome.length === 0) {
         temErro = true;
-        if (mensagem == '') {
-            mensagem = 'Primeiro Nome';
-        } else {
-            mensagem += ', Primeiro Nome';
+        if (mensagem !== '') {
+            mensagem += ', ';
+        }
+        mensagem += 'Primeiro Nome';
+    } else {
+        var reg = /^[A-Za-záàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ ]+$/;
+        if (!reg.exec(primeiroNome)) {
+            temErro = true;
+            if (mensagem !== '') {
+                mensagem += ', ';
+            }
+            mensagem += 'Primeiro Nome Inválido';
+        }
+        if (primeiroNome.length > 15) {
+            temErro = true;
+            if (mensagem !== '') {
+                mensagem += ', ';
+            }
+            mensagem += 'Primeiro Nome pode ter no máximo 15 caracteres';
         }
     }
+    
     if (ultimoNome.length === 0) {
         temErro = true;
-        if (mensagem == '') {
-            mensagem = 'Ultimo Nome';
-        } else {
-            mensagem += ', Ultimo Nome';
+        if (mensagem !== '') {
+            mensagem += ', ';
+        }
+        mensagem += 'Ultimo Nome';
+    } else {
+        var reg = /^[A-Za-záàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ ]+$/;
+        if (!reg.exec(ultimoNome)) {
+            temErro = true;
+            if (mensagem !== '') {
+                mensagem += ', ';
+            }
+            mensagem += 'Ultimo Nome Inválido';
+        }
+        if (ultimoNome.length > 15) {
+            temErro = true;
+            if (mensagem !== '') {
+                mensagem += ', ';
+            }
+            mensagem += 'Ultimo Nome pode ter no máximo 15 caracteres';
         }
     }
+    
     if (ddd.length === 0) {
         temErro = true;
-        if (mensagem == '') {
-            mensagem = 'DDD';
-        } else {
-            mensagem += ', DDD';
+        if (mensagem !== '') {
+            mensagem += ', ';
+        }
+        mensagem += 'DDD';
+    } else {
+        if (ddd.length !== 2) {
+            temErro = true;
+            if (mensagem !== '') {
+                mensagem += ', ';
+            }
+            mensagem += 'DDD Inválido';
         }
     }
     if (telefone.length === 0) {
         temErro = true;
-        if (mensagem == '') {
-            mensagem = 'Telefone';
-        } else {
-            mensagem += ', Telefone';
+        if (mensagem !== '') {
+            mensagem += ', ';
+        }
+        mensagem += 'Telefone';
+    } else {
+        if (!(telefone.length >= 8 && telefone.length <= 9)) {
+            temErro = true;
+            if (mensagem !== '') {
+                mensagem += ', ';
+            }
+            mensagem += 'Telefone Inválido';
         }
     }
     
@@ -72,6 +119,17 @@ function validarLancamentoCadastrarPessoaRevisao(form) {
             mensagem += ', Ano';
         }
     }
+    
+    if (! $("input[type='radio'][name='nucleoPerfeito']").is(':checked') ){
+        temErro = true;
+        if(mensagem == ''){
+            mensagem = 'Sexo';
+        }else{
+            mensagem += ', Sexo';
+        }
+ 
+    }
+        
     if (temErro) {
         mensagemReal = 'Preencha o(s) seguinte(s) campo(s): ' + mensagem;
         divMensagens

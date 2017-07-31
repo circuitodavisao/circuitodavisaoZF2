@@ -5,6 +5,7 @@ namespace Application\View\Helper;
 use Application\Controller\Helper\Constantes;
 use Application\Controller\Helper\Funcoes;
 use Application\Model\Entity\Entidade;
+use Application\Model\Entity\Pessoa;
 use Doctrine\Common\Collections\Criteria;
 use Zend\View\Helper\AbstractHelper;
 
@@ -38,23 +39,27 @@ class ListagemFichasParaRevisao extends AbstractHelper {
         if (count($frequencias) > 0) {
             foreach ($frequencias as $f) {
 
-
+                $p = null;
+                $pAux = null;
                 $p = $f->getPessoa();
+                $pAux = new Pessoa();
                 $grupoPessoa = $p->getGrupoPessoaAtivo();
                 if ($grupoPessoa != null) {
                     if($this->view->entidade->getGrupo()->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::IGREJA){
                         $idGrupoIgrejaDoRevisionista = $grupoPessoa->getGrupo()->getGrupoIgreja();
                         $idGrupoIgrejaLogado = $this->view->entidade->getGrupo()->getGrupoIgreja();
-                        if (($idGrupoIgrejaDoRevisionista == $idGrupoIgrejaLogado) && ($f->getFrequencia() == 'S')) {
-                            $p->setId($f->getId());
-                            $pessoas[] = $p;
+                        if (($idGrupoIgrejaDoRevisionista == $idGrupoIgrejaLogado) && ($f->getFrequencia() == 'N')) {
+                            $pAux->setId($f->getId());
+                            $pAux->setNome($p->getNome());
+                            $pessoas[] = $pAux;
                         }
                     }else{
                         $idGrupoEquipeDoRevisionista = $grupoPessoa->getGrupo()->getGrupoEquipe(); 
                         $idGrupoEquipeLogado = $this->view->entidade->getGrupo()->getGrupoEquipe();
-                        if (($idGrupoEquipeDoRevisionista == $idGrupoEquipeLogado) && ($f->getFrequencia() == 'S')) {
-                            $p->setId($f->getId());
-                            $pessoas[] = $p;
+                        if (($idGrupoEquipeDoRevisionista == $idGrupoEquipeLogado) && ($f->getFrequencia() == 'N')) {
+                            $pAux->setId($f->getId());
+                            $pAux->setNome($p->getNome());
+                            $pessoas[] = $pAux; 
                         }
                     }
                 }
@@ -73,44 +78,6 @@ class ListagemFichasParaRevisao extends AbstractHelper {
             $html .= '<thead>';
             $html .= '<tr>';
 
-            /* Caso seja evento do tipo Célula */
-//                    if ($tipoCelula) {
-//                        $html .= '<th class="text-center">';
-//                        $html .= $this->view->translate(Constantes::$TRADUCAO_DIA_DA_SEMANA_SIMPLIFICADO) . ' / ' . $this->view->translate(Constantes::$TRADUCAO_HORA);
-//                        $html .= '</th>';
-//                        $html .= '<th class="text-center">';
-//                        $html .= $this->view->translate(Constantes::$TRADUCAO_NOME_HOSPEDEIRO);
-//                        $html .= '</th>';
-//                        $html .= '<th class="text-center visible-lg visible-md visible-sm">';
-//                        $html .= $this->view->translate(Constantes::$TRADUCAO_TELEFONE_HOSPEDEIRO);
-//                        $html .= '</th>';
-//                        $html .= '<th class="text-center visible-lg visible-md visible-sm">';
-//                        $html .= $this->view->translate(Constantes::$TRADUCAO_LOGRADOURO);
-//                        $html .= '</th>';
-//                    }
-//                    if ($tipoCulto) {
-//                        $html .= '<th class="text-center">';
-//                        $html .= $this->view->translate(Constantes::$TRADUCAO_DIA_DA_SEMANA_SIMPLIFICADO) . ' / ' . $this->view->translate(Constantes::$TRADUCAO_HORA);
-//                        $html .= '</th>';
-//                        $html .= '<th class="text-center visible-lg visible-md visible-sm">';
-//                        $html .= $this->view->translate(Constantes::$TRADUCAO_NOME);
-//                        $html .= '</th>';
-//                        $html .= '<th class="text-center">';
-//                        $html .= $this->view->translate(Constantes::$TRADUCAO_EQUIPES);
-//                        $html .= '</th>';
-//                    }
-//                    if ($tipoRevisao) {
-//                        $html .= '<th class="text-center">';
-//                        $html .= $this->view->translate(Constantes::$TRADUCAO_DATA_SIMPLIFICADO);
-//                        $html .= '</th>';
-//                        $html .= '<th class="text-center">';
-//                        $html .= $this->view->translate(Constantes::$TRADUCAO_OBSERVACAO);
-//                        $html .= '</th>';
-//                        $html .= '<th class="text-center">';
-//                        $html .= $this->view->translate(Constantes::$TRADUCAO_IGREJAS);
-//                        $html .= '</th>';
-//                    }
-//                    if ($tipoRevisionistas) {
             $html .= '<th class="text-center">';
             $html .= $this->view->translate(Constantes::$TRADUCAO_MATRICULA);
             $html .= '</th>';
@@ -124,65 +91,8 @@ class ListagemFichasParaRevisao extends AbstractHelper {
             $html .= '<tbody>';
 
             foreach ($pessoas as $pessoa) {
-//                        $evento = $ge->getEvento();
-//                        $diaDaSemanaAjustado = Funcoes::diaDaSemanaPorDia($evento->getDia());
-
                 $html .= '<tr>';
-//                        if ($tipoCelula) {
-//
-//                            $html .= '<td class="text-center">' . $this->view->translate($diaDaSemanaAjustado) . '/' . $evento->getHoraFormatoHoraMinutoParaListagem() . '</td>';
-//                            $celula = $evento->getEventoCelula();
-//                            $stringNomeDaFuncaoOnClick = 'funcaoCadastro("' . Constantes::$PAGINA_EVENTO_CELULA . '", ' . $celula->getId() . ')';
-//                            $stringNomeDaFuncaoOnClickExclusao = 'funcaoCadastro("' . Constantes::$PAGINA_EVENTO_EXCLUSAO . '", ' . $evento->getId() . ')';
-//
-//                            $html .= '<td class="text-center">' . $celula->getNome_hospedeiroPrimeiroNome() . '</td>';
-//                            $html .= '<td class="text-center visible-lg visible-md visible-sm">' . $celula->getTelefone_hospedeiroFormatado() . '</td>';
-//                            $html .= '<td class="text-center visible-lg visible-md visible-sm">' . $celula->getLogradouro() . '&nbsp;' . $celula->getComplemento() . '</td>';
-//                            $html .= '<td class="text-center">';
-//                            $html .= $this->view->botaoLink(Constantes::$STRING_ICONE_PENCIL, Constantes::$STRING_HASHTAG, 3, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClick));
-//                            $html .= $this->view->botaoLink(Constantes::$STRING_ICONE_TIMES, Constantes::$STRING_HASHTAG, 4, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClickExclusao));
-//                            $html .= '</td>';
-//                        }
-//                        if ($tipoCulto) {
-//
-//                            $html .= '<td class="text-center">' . $this->view->translate($diaDaSemanaAjustado) . '/' . $evento->getHoraFormatoHoraMinutoParaListagem() . '</td>';
-//                            $stringNomeDaFuncaoOnClick = 'funcaoCadastro("' . Constantes::$PAGINA_EVENTO_CULTO . '", ' . $evento->getId() . ')';
-//                            $stringNomeDaFuncaoOnClickExclusao = 'funcaoCadastro("' . Constantes::$PAGINA_EVENTO_EXCLUSAO . '", ' . $evento->getId() . ')';
-//                            $grupoEventoAtivos = $evento->getGrupoEventoAtivos();
-//                            $texto = '';
-//                            foreach ($grupoEventoAtivos as $gea) {
-//                                if ($this->view->extra != $gea->getGrupo()->getId()) {
-//                                    $texto .= $gea->getGrupo()->getEntidadeAtiva()->infoEntidade() . '<br />';
-//                                }
-//                            }
-//                            $html .= '<td class="text-center visible-lg visible-md visible-sm">' . $evento->getNome() . '</span></td>';
-//                            $html .= '<td class="text-center">' . $this->view->BotaoPopover(count($grupoEventoAtivos) - 1, $texto) . '</td>';
-//                            $html .= '<td class="text-center">';
-//                            $html .= $this->view->botaoLink(Constantes::$STRING_ICONE_PENCIL, Constantes::$STRING_HASHTAG, 3, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClick));
-//                            $html .= $this->view->botaoLink(Constantes::$STRING_ICONE_TIMES, Constantes::$STRING_HASHTAG, 4, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClickExclusao));
-//                            $html .= '</td>';
-//                        }
-//                        if ($tipoRevisao) {
-//
-//                            $html .= '<td class="text-center">' . Funcoes::mudarPadraoData($evento->getData(), 1) . '</td>';
-//                            $stringNomeDaFuncaoOnClick = 'funcaoCadastro("' . Constantes::$PAGINA_CADASTRO_REVISAO . '", ' . $evento->getId() . ')';
-//                            $stringNomeDaFuncaoOnClickExclusao = 'funcaoCadastro("' . Constantes::$PAGINA_CADASTRO_REVISAO . '", ' . $evento->getId() . ')';
-//                            $grupoEventoAtivos = $evento->getGrupoEventoAtivos();
-//                            $texto = '';
-//                            foreach ($grupoEventoAtivos as $gea) {
-//                                if ($this->view->extra != $gea->getGrupo()->getId()) {
-//                                    $texto .= $gea->getGrupo()->getEntidadeAtiva()->infoEntidade() . '<br />';
-//                                }
-//                            }
-//                            $html .= '<td class="text-center"><span class="visible-lg visible-md">' . $evento->getNome() . '</span><span class="visible-sm visible-xs">' . $evento->getNomeAjustado() . '</span></td>';
-//                            $html .= '<td class="text-center">' . $this->view->BotaoPopover(count($grupoEventoAtivos) - 1, $texto) . '</td>';
-//                            $html .= '<td class="text-center">';
-//                            $html .= $this->view->botaoLink(Constantes::$STRING_ICONE_PENCIL, Constantes::$STRING_HASHTAG, 3, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClick));
-//                            $html .= $this->view->botaoLink(Constantes::$STRING_ICONE_TIMES, Constantes::$STRING_HASHTAG, 4, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClickExclusao));
-//                            $html .= '</td>';
-//                        }
-//                        if ($tipoRevisionistas) {
-
+ 
                 $html .= '<td class="text-center">' . $pessoa->getId() . '</td>';
 
                 $stringNomeDaFuncaoOnClickInserir = 'funcaoCadastro("' . Constantes::$PAGINA_FICHA_REVISAO . '", ' . $pessoa->getId() . ')';
@@ -191,7 +101,7 @@ class ListagemFichasParaRevisao extends AbstractHelper {
 
                 $html .= '<td class="text-center">';
 
-                $html .= $this->view->botaoLink(Constantes::$STRING_ICONE_PLUS . '  ' . $this->view->translate(Constantes::$TRADUCAO_NOVO_REVISIONISTA), Constantes::$STRING_HASHTAG, 4, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClickInserir));
+                $html .= $this->view->botaoLink(Constantes::$STRING_ICONE_PLUS . '  ' . $this->view->translate(Constantes::$TRADUCAO_VER_FICHA_REVISIONISTA), Constantes::$STRING_HASHTAG, 4, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClickInserir));
                 $html .= '</td>';
 //                        }
                 $html .= '</tr>';

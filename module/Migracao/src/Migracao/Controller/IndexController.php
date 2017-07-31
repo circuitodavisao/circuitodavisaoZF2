@@ -272,9 +272,44 @@ class IndexController extends CircuitoController {
             $stringValues = "$lider1, $mes, $ano";
         }
 
-        $sqlAtendimentoInsert = "INSERT INTO ursula_atendimento_ursula ($campos) VALUES ($stringValues);";
+        $sqlAtendimentoInsert = "INSERT INTO ursula_atendimento_ursula ($campos) VALUES ($stringValues);"; 
 //        echo "$sqlAtendimentoInsert";
         mysqli_query(IndexController::pegaConexaoStatica(), $sqlAtendimentoInsert);
+        return mysqli_insert_id(IndexController::pegaConexaoStatica());
+    }
+    
+     public static function cadastrarPessoaRevisionista($nome, $ddd, $telefone, $sexo, $dataNascimento, $lider1, $lider2= null, $idEquipe = 1) {
+        if ($lider2) {
+            $campos = 'nome, dddCelular, telefoneCelular, sexo, dataNascimento , idLider, idLider2, idEquipe';
+            $stringValues = "'$nome', $ddd, $telefone, '$sexo', '$dataNascimento', $lider1, $lider2, $idEquipe";
+        } else {
+            $campos = 'nome, dddCelular, telefoneCelular, sexo, dataNascimento, idLider, idEquipe';
+            $stringValues = "'$nome', $ddd, $telefone, '$sexo', '$dataNascimento', $lider1, $idEquipe";
+        }
+        $camposSelect = "nome = '$nome' AND dddCelular = $ddd AND telefoneCelular = $telefone AND sexo = '$sexo' AND dataNascimento = '$dataNascimento' AND"
+                . " idLider= $lider1 AND  idEquipe = $idEquipe ";
+        $sqlPessoaInsert = "INSERT INTO ursula_pessoa_ursula ($campos) VALUES ($stringValues);";
+        echo "$sqlPessoaInsert";
+        mysqli_query(IndexController::pegaConexaoStatica(), $sqlPessoaInsert);
+        $sqlSelectPessoa = "SELECT id FROM ursula_pessoa_ursula WHERE $camposSelect LIMIT 1 ;"; 
+        $queryPessoa = mysqli_query(IndexController::pegaConexaoStatica(), $sqlSelectPessoa); 
+        echo $sqlSelectPessoa;
+        $idAluno = 0;
+        while ($rowUsuario = mysqli_fetch_array($queryPessoa)) {
+                $idAluno = $rowUsuario['id'];
+            }
+        return $idAluno;
+        
+    }
+    
+    public static function cadastrarPessoaAluno($idAluno, $idTurma, $status, $idSituacao){
+        $campos = 'idAluno, idTurma, status, idSituacao';
+        $stringValues = "$idAluno, $idTurma, '$status', $idSituacao";
+        
+        $sqlPessoaAluno = "INSERT INTO ursula_turma_aluno_ursula ($campos) VALUES ($stringValues);";
+        echo "$sqlPessoaAluno";
+        mysqli_query(IndexController::pegaConexaoStatica(), $sqlPessoaAluno);
+        
         return mysqli_insert_id(IndexController::pegaConexaoStatica());
     }
 

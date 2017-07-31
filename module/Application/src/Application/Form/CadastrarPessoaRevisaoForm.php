@@ -5,6 +5,7 @@ namespace Application\Form;
 use Application\Controller\Helper\Constantes;
 use Zend\Form\Element\Csrf;
 use Zend\Form\Element\Hidden;
+use Zend\Form\Element\Number;
 use Zend\Form\Element\Radio;
 use Zend\Form\Element\Select;
 use Zend\Form\Element\Text;
@@ -76,7 +77,7 @@ class CadastrarPessoaRevisaoForm extends Form {
          * Elemento do tipo text
          */
         $this->add(
-                (new Text())
+                (new Number())
                         ->setName(Constantes::$INPUT_DDD)
                         ->setAttributes([
                             Constantes::$FORM_STRING_CLASS => Constantes::$FORM_STRING_CLASS_GUI_INPUT,
@@ -89,7 +90,7 @@ class CadastrarPessoaRevisaoForm extends Form {
          * Elemento do tipo text
          */
         $this->add(
-                (new Text())
+                (new Number())
                         ->setName(Constantes::$INPUT_TELEFONE)
                         ->setAttributes([
                             Constantes::$FORM_STRING_CLASS => Constantes::$FORM_STRING_CLASS_GUI_INPUT,
