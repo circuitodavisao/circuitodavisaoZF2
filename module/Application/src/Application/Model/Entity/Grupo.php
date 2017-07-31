@@ -589,7 +589,7 @@ class Grupo extends CircuitoEntity {
                     /* Revisao de vidas */
                     $semOutraPessoa = false;
                     foreach ($grupoPessoas as $grupoPessoaParaVerificar) {
-                        if ($grupoPessoaParaVerificar->getPessoa()->getId() === $grupoPessoa->getId()) {
+                        if ($grupoPessoaParaVerificar->getPessoa()->getId() === $grupoPessoa->getPessoa()->getId()) {
                             $semOutraPessoa = true;
                         }
                     }
