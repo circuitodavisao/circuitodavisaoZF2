@@ -307,7 +307,9 @@ class Constantes {
     public static $PAGINA_CADASTRAR_PESSOA_REVISAO = 'CadastrarPessoaRevisao';
     public static $PAGINA_SALVAR_PESSOA_REVISAO = 'SalvarPessoaRevisao';
     public static $PAGINA_ATIVAR_RESERVA_REVISAO = 'AtivarReservaRevisao';
+    public static $PAGINA_ATIVAR_FICHAS = 'AtivarFichas';
     public static $PAGINA_SELECIONAR_LIDER_REVISAO = 'SelecionarLiderRevisao';
+    public static $PAGINA_REMOVER_REVISIONISTA_ATIVO = 'RemoverRevisionistaAtivo';
     public static $NOME_IGREJA_FICHA_REVISAO = 'nomeIgreja';
     public static $STRING_ID_EVENTO_FREQUENCIA = 'idEventoFrequencia';
     public static $PAGINA_FICHA_REVISAO = 'FichaRevisao';
@@ -359,8 +361,8 @@ class Constantes {
     public static $TRADUCAO_NOVO_CADASTRO_REVISAO = 'New Person in Revision of Life';
     public static $TRADUCAO_NOVO_CADASTRO_LABEL = 'Person at the launch line';
     public static $TRADUCAO_ATIVAR_FICHA = 'Enable Bookmarks of Revision of Life';
-    public static $TRADUCAO_SELECIONAR_LIDER_REVISAO_PRIMEIRO_LABEL = 'List of';
-    public static $TRADUCAO_SELECIONAR_LIDER_REVISAO_SEGUNDO_LABEL = 'Leaders';
+    public static $TRADUCAO_SELECIONAR_LIDER_REVISAO_PRIMEIRO_LABEL = 'Enable Leaders in';
+    public static $TRADUCAO_SELECIONAR_LIDER_REVISAO_SEGUNDO_LABEL = 'Life Review';
     public static $TRADUCAO_ATIVAR = 'Enable';
     public static $TRADUCAO_ATIVAR_FICHA_LABEL = 'Enable Bookmarks';
     public static $TRADUCAO_FICHAS_ATIVAS_LABEL = 'Bookmarks Enables';
@@ -649,6 +651,7 @@ class Constantes {
     public static $STRING_ICONE_PENCIL = '<i class="fa fa-pencil" aria-hidden="true"></i>';
     public static $STRING_ICONE_TIMES = '<i class="fa fa-times" aria-hidden="true"></i>';
     public static $STRING_ICONE_PLUS = '<i class="fa fa-plus" aria-hidden="true"></i>';
+    public static $STRING_ICONE_MINUS = '<i class="fa fa-minus" aria-hidden="true"></i>';
     public static $STRING_ICONE_ARROW_LEFT = '<i class="fa fa-arrow-left" aria-hidden="true"></i>';
     public static $STRING_ICONE_ARROW_RIGHT = '<i class="fa fa-arrow-right" aria-hidden="true"></i>';
     public static $STRING_HASHTAG = '#';

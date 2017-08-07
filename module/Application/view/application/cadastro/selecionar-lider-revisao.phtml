@@ -3,13 +3,10 @@
 use Application\Controller\Helper\Constantes;
 
 /**
- * Nome: selecionar_revisionistas.phtml
+ * Nome: selecionar_lider_revisao.phtml
  * @author Lucas Filipe de Carvalho Cunha <lucsacarvalho.esw@gmail.com> 
- * Descricao: Página de listagem de pessoas para o Revisao
+ * Descricao: Página de inscrição de líder com o revisão.
  */
-$form = $this->SelecionarLiderRevisaoForm;
-$form->prepare();
-$form->setAttribute(Constantes::$ACTION, $this->url(Constantes::$ROUTE_CADASTRO, array(Constantes::$PAGINA => Constantes::$PAGINA_ATIVAR_LIDERES_REVISAO)));
 ?>
 <div class="mw1000 center-block p10">
     <div class="row ">
@@ -22,11 +19,9 @@ $form->setAttribute(Constantes::$ACTION, $this->url(Constantes::$ROUTE_CADASTRO,
                         <small><?php echo $this->translate(Constantes::$TRADUCAO_SELECIONAR_LIDER_REVISAO_SEGUNDO_LABEL); ?></small>
                     </blockquote>
                 <div class="panel panel-primary heading-border">
-                    <?php echo $this->form()->openTag($form); ?>
-                        
                         <div class="panel-body bg-light p25">
                             <?php
-                            echo $this->formSelect($form->get(Constantes::$INPUT_LIDERES));
+                            echo "TEM CERTEZA QUE DESEJA TRABALHAR COMO LÍDER NO REVISÃO DE VIDAS? ";
                             ?> 
                         </div>
                         <div class="panel-footer text-right">
@@ -34,11 +29,11 @@ $form->setAttribute(Constantes::$ACTION, $this->url(Constantes::$ROUTE_CADASTRO,
                             
                             $stringNomeDaFuncaoOnClickCadastro = 'funcaoCadastro("' . Constantes::$PAGINA_LIDERES_REVISAO . '", 0)';
                             echo $this->botaoLink($this->translate(Constantes::$TRADUCAO_VOLTAR), Constantes::$STRING_HASHTAG, 2, $this->funcaoOnClick($stringNomeDaFuncaoOnClickCadastro));
-                            $funcaoVerificarCadastroPessoa = $this->funcaoOnClick('confirmar(this.form)');
-                            echo $this->botaoSimples(Constantes::$TRADUCAO_ATIVAR, "id ='botaoBuscarFicha' ".$funcaoVerificarCadastroPessoa);
+                            $stringNomeDaFuncaoOnClickAtivar = $this->funcaoOnClick('funcaoCadastro("' . Constantes::$PAGINA_ATIVAR_LIDERES_REVISAO . '", '.$this->idRevisao.')');
+                            echo $this->botaoSimples(Constantes::$TRADUCAO_ATIVAR, "id ='botaoBuscarFicha'  ".$stringNomeDaFuncaoOnClickAtivar);
                             ?>
                         </div>
-                    <?php echo $this->form()->closeTag() ?>
+                    
                 </div>
                 <!-- end: .admin-form -->
             </div>

@@ -124,5 +124,19 @@ class PessoaORM extends CircuitoORM {
             echo $exc->getTraceAsString();
         }
     }
+    
+    /**
+     * Busca Pessoa Lider para o Revisao por Id  (Não retorna excesção caso não encontre)
+     * @param idPessoa
+     */
+    public function encontrarPorIdPessoaParaRevisao($idPessoa) {  
+        $idInteiro = (int) $idPessoa;
+
+        $entidade = $this->getEntityManager()->find($this->getEntity(), $idInteiro);
+        if (!$entidade) {
+            return false;
+        }
+        return $entidade;
+    }   
 
 }

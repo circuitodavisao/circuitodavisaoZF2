@@ -44,7 +44,10 @@ $form->setAttribute(Constantes::$ACTION, $this->url(Constantes::$ROUTE_CADASTRO,
                             echo $this->botaoLink($this->translate(Constantes::$TRADUCAO_LIMPAR), Constantes::$STRING_HASHTAG, 2, $this->funcaoOnClick($stringNomeDaFuncaoOnClickLimparCampos));
                             ?>
                             </span>
+                            
                             <?php
+                            $stringNomeDaFuncaoOnClickCadastro = 'funcaoCadastro("' . Constantes::$PAGINA_ATIVAR_FICHAS . '", 0)';
+                            echo $this->botaoLink($this->translate(Constantes::$TRADUCAO_VOLTAR), Constantes::$STRING_HASHTAG, 2, $this->funcaoOnClick($stringNomeDaFuncaoOnClickCadastro));
                             /* Submit */
                             $funcaoVerificarCadastroPessoa = $this->funcaoOnClick('confirmar(this.form)');
                             echo $this->botaoSimples(Constantes::$TRADUCAO_ATIVAR, "id ='botaoBuscarFicha' type='submit' disabled ".$funcaoVerificarCadastroPessoa);

@@ -147,13 +147,13 @@ class ListagemFichasAtivasRevisao extends AbstractHelper {
 
                     $html .= '<td class="text-center">' . $pessoa->getId() . '</td>';
 
-                    $stringNomeDaFuncaoOnClickInserir = 'funcaoCadastro("' . Constantes::$PAGINA_FICHA_REVISAO . '", ' . $pessoa->getId() . ')';
+                    $stringNomeDaFuncaoOnClickInserir = 'funcaoCadastro("' . Constantes::$PAGINA_REMOVER_REVISIONISTA_ATIVO . '", ' . $pessoa->getId() . ')';
 
                     $html .= '<td class="text-center"><span class="visible-lg visible-md">' . $pessoa->getNome() . '</span><span class="visible-sm visible-xs">' . $pessoa->getNomePrimeiroUltimo() . '</span></td>';
 
                     $html .= '<td class="text-center">';
 
-                    $html .= $this->view->botaoLink(Constantes::$STRING_ICONE_PLUS . '  ' . $this->view->translate(Constantes::$TRADUCAO_REMOVER_REVISIONISTA), Constantes::$STRING_HASHTAG, 4, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClickInserir));
+                    $html .= $this->view->botaoLink(Constantes::$STRING_ICONE_MINUS . '  ' . $this->view->translate(Constantes::$TRADUCAO_REMOVER_REVISIONISTA), Constantes::$STRING_HASHTAG, 4, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClickInserir));
                     $html .= '</td>';
 //                        }
                     $html .= '</tr>';
