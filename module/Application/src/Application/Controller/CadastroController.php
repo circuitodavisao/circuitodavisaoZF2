@@ -14,6 +14,7 @@ use Application\Form\GrupoForm;
 use Application\Form\RevisaoForm;
 use Application\Form\SelecionarLiderRevisaoForm;
 use Application\Form\TransferenciaForm;
+use Application\Form\TurmaForm;
 use Application\Model\Entity\Entidade;
 use Application\Model\Entity\Evento;
 use Application\Model\Entity\EventoCelula;
@@ -22,7 +23,7 @@ use Application\Model\Entity\Grupo;
 use Application\Model\Entity\GrupoEvento;
 use Application\Model\Entity\GrupoPaiFilho;
 use Application\Model\Entity\GrupoPessoa;
-use Application\Model\Entity\GrupoResponsavel;
+use Application\Model\Entity\GrupoResponsavel; 
 use Application\Model\Entity\Pessoa;
 use Application\Model\Entity\PessoaHierarquia;
 use Application\Model\ORM\RepositorioORM;
@@ -186,6 +187,12 @@ class CadastroController extends CircuitoController {
             ));
         }
         /* Fim Páginas Revisão */
+        /* Início das páginas relaiconadas ao Iv */
+        if ($pagina == Constantes::$PAGINA_CADASTRAR_TURMA){
+            return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
+                        Constantes::$ACTION => Constantes::$PAGINA_CADASTRO_TURMA, 
+            ));
+        }
         /* Funcoes */
         if ($pagina == Constantes::$PAGINA_FUNCOES) {
             return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
@@ -1278,7 +1285,6 @@ class CadastroController extends CircuitoController {
 //            $p = $gr->getPessoa();
 //            $pessoas[] = $p;
 //        }
-
 //        $view = new ViewModel(array(
 //            Constantes::$PESSOA_REVISAO => $pessoaRevisionista,
 //            Constantes::$REVISAO_VIEW => $eventoRevisao,
@@ -1287,7 +1293,7 @@ class CadastroController extends CircuitoController {
 //            Constantes::$NOME_IGREJA_FICHA_REVISAO => $nomeIgreja,
 //            Constantes::$STRING_ID_EVENTO_FREQUENCIA => $idEventoFrequencia,
 //        ));
-        
+
         $view = new ViewModel();
 
         /* Javascript especifico */
@@ -1641,4 +1647,14 @@ class CadastroController extends CircuitoController {
         }
     }
 
+    public function turmaAction() {
+//        $formCadastroTurma = new TurmaForm();  
+//        $view = new ViewModel(array(
+//            'formCadastroTurma' => $formCadastroTurma,
+//        )); 
+       
+        $view = new ViewModel();  
+        return $view; 
+    }
+ 
 }
