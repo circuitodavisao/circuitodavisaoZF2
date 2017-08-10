@@ -35,7 +35,7 @@ class IndexController extends CircuitoController {
     private $entidadeTipoEquipe;
     private $entidadeTipoSub;
 
-    const DATA_CRIACAO = '2017-07-17'; 
+    const DATA_CRIACAO = '2017-07-17';
 
     /**
      * Contrutor sobrecarregado com os serviços de ORM e Autenticador
@@ -173,7 +173,7 @@ class IndexController extends CircuitoController {
 
         $tipoCelula = 2;
         /* rodar toda segunda */
-        $dateFormatada = DateTime::createFromFormat('Y-m-d', date('Y-m-d')); 
+        $dateFormatada = DateTime::createFromFormat('Y-m-d', date('Y-m-d'));
 //        $dateFormatada = DateTime::createFromFormat('Y-m-d', self::DATA_CRIACAO);
         $tipoGerarRelatorioDeLider = $this->params()->fromRoute(Constantes::$ID, 0);
 
@@ -272,13 +272,13 @@ class IndexController extends CircuitoController {
             $stringValues = "$lider1, $mes, $ano";
         }
 
-        $sqlAtendimentoInsert = "INSERT INTO ursula_atendimento_ursula ($campos) VALUES ($stringValues);"; 
+        $sqlAtendimentoInsert = "INSERT INTO ursula_atendimento_ursula ($campos) VALUES ($stringValues);";
 //        echo "$sqlAtendimentoInsert";
         mysqli_query(IndexController::pegaConexaoStatica(), $sqlAtendimentoInsert);
         return mysqli_insert_id(IndexController::pegaConexaoStatica());
     }
-    
-     public static function cadastrarPessoaRevisionista($nome, $ddd, $telefone, $sexo, $dataNascimento, $lider1, $lider2= null, $idEquipe = 1) {
+
+    public static function cadastrarPessoaRevisionista($nome, $ddd, $telefone, $sexo, $dataNascimento, $lider1, $lider2 = null, $idEquipe = 1) {
         if ($lider2) {
             $campos = 'nome, dddCelular, telefoneCelular, sexo, dataNascimento , idLider, idLider2, idEquipe';
             $stringValues = "'$nome', $ddd, $telefone, '$sexo', '$dataNascimento', $lider1, $lider2, $idEquipe";
@@ -291,25 +291,24 @@ class IndexController extends CircuitoController {
         $sqlPessoaInsert = "INSERT INTO ursula_pessoa_ursula ($campos) VALUES ($stringValues);";
         echo "$sqlPessoaInsert";
         mysqli_query(IndexController::pegaConexaoStatica(), $sqlPessoaInsert);
-        $sqlSelectPessoa = "SELECT id FROM ursula_pessoa_ursula WHERE $camposSelect LIMIT 1 ;"; 
-        $queryPessoa = mysqli_query(IndexController::pegaConexaoStatica(), $sqlSelectPessoa); 
+        $sqlSelectPessoa = "SELECT id FROM ursula_pessoa_ursula WHERE $camposSelect LIMIT 1 ;";
+        $queryPessoa = mysqli_query(IndexController::pegaConexaoStatica(), $sqlSelectPessoa);
         echo $sqlSelectPessoa;
         $idAluno = 0;
         while ($rowUsuario = mysqli_fetch_array($queryPessoa)) {
-                $idAluno = $rowUsuario['id'];
-            }
+            $idAluno = $rowUsuario['id'];
+        }
         return $idAluno;
-        
     }
-    
-    public static function cadastrarPessoaAluno($idAluno, $idTurma, $status, $idSituacao){
+
+    public static function cadastrarPessoaAluno($idAluno, $idTurma, $status, $idSituacao) {
         $campos = 'idAluno, idTurma, status, idSituacao';
         $stringValues = "$idAluno, $idTurma, '$status', $idSituacao";
-        
+
         $sqlPessoaAluno = "INSERT INTO ursula_turma_aluno_ursula ($campos) VALUES ($stringValues);";
         echo "$sqlPessoaAluno";
         mysqli_query(IndexController::pegaConexaoStatica(), $sqlPessoaAluno);
-        
+
         return mysqli_insert_id(IndexController::pegaConexaoStatica());
     }
 
@@ -786,16 +785,7 @@ class IndexController extends CircuitoController {
                     $evento->setHora($horaAjustada);
                 }
                 if (substr($evento->getHora(), 0, 1) > 2) {
-                    $evento->setHora('00:00
-
-            :00 
-
-                
-
-              '
-                    )
-
-                    ;
+                    $evento->setHora('00:00:00');
                 }
                 $eventoCelula = $evento->getEventoCelula();
                 $evento->setEventoCelula(null);

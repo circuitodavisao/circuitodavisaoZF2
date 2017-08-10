@@ -333,8 +333,7 @@ class Module {
             $viewModel->discipulos = $discipulos;
         }
 
-        if (empty($sessao->idEntidadeAtual) || $pessoa->getAtualizar_dados() === 'S' || $e->getRequest()->getUriString() == 'https://circuitodavisaonovo.com.br/preSaida' || $e->getRequest()->getUriString() == 'https://circuitodavisaonovo.com.br/cadastroFichaRevisao' 
-                || $e->getRequest()->getUriString() == 'https://www.circuitodavisaonovo.com.br/preSaida' || $e->getRequest()->getUriString() == 'https://www.circuitodavisaonovo.com.br/cadastroFichaRevisao') {
+        if (empty($sessao->idEntidadeAtual) || $pessoa->getAtualizar_dados() === 'S' || $e->getRequest()->getUriString() == 'http://158.69.124.139/preSaida' || $e->getRequest()->getUriString() == 'http://158.69.124.139/cadastroFichaRevisao') {
             $viewModel->mostrarMenu = 0;
         }
     }

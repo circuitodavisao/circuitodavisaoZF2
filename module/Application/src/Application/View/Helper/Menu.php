@@ -198,7 +198,7 @@ class Menu extends AbstractHelper {
             $html .= '</ul>';
         } else {
             $html .= '<li>';
-            $html .= '<a href="#">';
+            $html .= '<a href="/cadastroGrupo">';
             $html .= '<span class="fa fa-user-times"></span>';
             $html .= '<span class="sidebar-title">Sem Time</span>';
             $html .= '</a>';

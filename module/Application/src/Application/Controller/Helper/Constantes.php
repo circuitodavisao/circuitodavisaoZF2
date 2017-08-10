@@ -307,7 +307,9 @@ class Constantes {
     public static $PAGINA_CADASTRAR_PESSOA_REVISAO = 'CadastrarPessoaRevisao';
     public static $PAGINA_SALVAR_PESSOA_REVISAO = 'SalvarPessoaRevisao';
     public static $PAGINA_ATIVAR_RESERVA_REVISAO = 'AtivarReservaRevisao';
+    public static $PAGINA_ATIVAR_FICHAS = 'AtivarFichas';
     public static $PAGINA_SELECIONAR_LIDER_REVISAO = 'SelecionarLiderRevisao';
+    public static $PAGINA_REMOVER_REVISIONISTA_ATIVO = 'RemoverRevisionistaAtivo';
     public static $NOME_IGREJA_FICHA_REVISAO = 'nomeIgreja';
     public static $STRING_ID_EVENTO_FREQUENCIA = 'idEventoFrequencia';
     public static $PAGINA_FICHA_REVISAO = 'FichaRevisao';
@@ -359,10 +361,11 @@ class Constantes {
     public static $TRADUCAO_NOVO_CADASTRO_REVISAO = 'New Person in Revision of Life';
     public static $TRADUCAO_NOVO_CADASTRO_LABEL = 'Person at the launch line';
     public static $TRADUCAO_ATIVAR_FICHA = 'Enable Bookmarks of Revision of Life';
-    public static $TRADUCAO_SELECIONAR_LIDER_REVISAO_PRIMEIRO_LABEL = 'List of';
-    public static $TRADUCAO_SELECIONAR_LIDER_REVISAO_SEGUNDO_LABEL = 'Leaders';
+    public static $TRADUCAO_SELECIONAR_LIDER_REVISAO_PRIMEIRO_LABEL = 'Enable Leaders in';
+    public static $TRADUCAO_SELECIONAR_LIDER_REVISAO_SEGUNDO_LABEL = 'Life Review';
     public static $TRADUCAO_ATIVAR = 'Enable';
     public static $TRADUCAO_ATIVAR_FICHA_LABEL = 'Enable Bookmarks';
+    public static $TRADUCAO_FICHAS_ATIVAS_LABEL = 'Bookmarks Enables';
     public static $TRADUCAO_NOVO_CADASTRO_REVISAO_LABEL = 'Person at the revision of live';
     public static $TRADUCAO_DDD = 'DDD';
     public static $TRADUCAO_TELEFONE = 'Phone';
@@ -453,6 +456,9 @@ class Constantes {
     public static $PAGINA_CADASTRO_TRANSFERENCIA = 'Transferencia';
     public static $CONTROLLER_CADASTRO = 'Application\Controller\Cadastro';
     public static $ROUTE_CADASTRO = 'cadastro';
+    /* páginas relacionadas ao IV */
+    public static $PAGINA_CADASTRAR_TURMA = 'Turma';
+    /* Fim das páginas relaciondas ao IV */
     
     /* Entidades */
     public static $ENTIDADE_EVENTO_CELULA = 'Entidade\Entity\EventoCelula';
@@ -482,7 +488,7 @@ class Constantes {
     public static $TRADUCAO_INSIRA_OS_DADOS_COMPLEMENTARES = 'Enter the Complementary Data';
     public static $TRADUCAO_SELECIONE_O_ALUNO = 'Select the Student that will be used for the registration';
     public static $TRADUCAO_MATRICULA = 'Registration';
-    public static $TRADUCAO_NOME = 'Name';
+    public static $TRADUCAO_NOME = 'Note';
     public static $TRADUCAO_OBSERVACAO = 'Observation';
     public static $TRADUCAO_IGREJAS = 'Churches';
     public static $TRADUCAO_DATA_NASCIMENTO = 'Birth Date';
@@ -573,6 +579,7 @@ class Constantes {
     public static $FORM_ACTION_CADASTRO_GRUPO_FINALIZAR = 'cadastroGrupoFinalizar';
     public static $FORM_INPUT_DIA = 'Dia';
     public static $FORM_INPUT_MES = 'Mes';
+    public static $FORM_INPUT_TIPO = 'Tipo';
     public static $FORM_INPUT_ANO = 'Ano';
     public static $FORM_INPUT_DDD = 'inputDDD';
     public static $FORM_INPUT_DATA_REVISAO = 'dataRevisao';
@@ -610,6 +617,7 @@ class Constantes {
     public static $FORM_ICONE_DATABASE = 'fa-database';
     public static $FORM_NOME_HOSPEDEIRO = 'nome_hospedeiro';
     public static $FORM_NOME = 'nome';
+    public static $FORM_OBSERVACAO = 'observacao';
     public static $FORM_NOME_ENTIDADE = 'nomeEntidade';
     public static $FORM_ICONE_NOME_HOSPEDEIRO = 'fa-terminal';
     public static $FORM_DDD_HOSPEDEIRO = 'ddd_hospedeiro';
@@ -648,6 +656,7 @@ class Constantes {
     public static $STRING_ICONE_PENCIL = '<i class="fa fa-pencil" aria-hidden="true"></i>';
     public static $STRING_ICONE_TIMES = '<i class="fa fa-times" aria-hidden="true"></i>';
     public static $STRING_ICONE_PLUS = '<i class="fa fa-plus" aria-hidden="true"></i>';
+    public static $STRING_ICONE_MINUS = '<i class="fa fa-minus" aria-hidden="true"></i>';
     public static $STRING_ICONE_ARROW_LEFT = '<i class="fa fa-arrow-left" aria-hidden="true"></i>';
     public static $STRING_ICONE_ARROW_RIGHT = '<i class="fa fa-arrow-right" aria-hidden="true"></i>';
     public static $STRING_HASHTAG = '#';
@@ -705,6 +714,7 @@ class Constantes {
     public static $TRADUCAO_NOVO_CULTO = 'New Cult';
     public static $TRADUCAO_NOVO_REVISAO = 'New Revision';
     public static $TRADUCAO_NOVO_REVISIONISTA = 'Select';
+    public static $TRADUCAO_SELECIONAR = 'Select';
     public static $TRADUCAO_VER_FICHA_REVISIONISTA = 'See';
     public static $TRADUCAO_REMOVER_REVISIONISTA = 'Remove';
     public static $TRADUCAO_MULTIPLICACAO = 'Multiplication';
