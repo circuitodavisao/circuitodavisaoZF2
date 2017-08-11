@@ -129,13 +129,13 @@ echo $this->templateFormularioTopo($this->tituloDaPagina);
                 <div id="divBotoesBuscaCPF" class="mt10">
                     <?php
                     echo '<div id="botaoBuscarCPF" class="quebraDeLinhaDeSpan">';
-                    $funcao = str_replace('#entidadeTipo', $this->entidadeTipo, Constantes::$FORM_FUNCAO_BUSCAR_CPF);
+                    $funcao = str_replace('#entidadeTipo', $this->tipoEntidade, Constantes::$FORM_FUNCAO_BUSCAR_CPF);
                     echo $this->botaoSimples(Constantes::$TRADUCAO_BUSCAR, $this->funcaoOnClick($funcao));
                     echo '</div>';
                     echo '<div id="botaoCPFLiberado" class="quebraDeLinhaDeSpan hidden">';
-                    echo $this->botaoSimples($labelBotaoContinuar, $this->funcaoOnClick('mostrarDivEmail(' . $this->entidadeTipo . ')'), 3);
+                    echo $this->botaoSimples($labelBotaoContinuar, $this->funcaoOnClick('mostrarDivEmail(' . $this->tipoEntidade . ')'), 3);
                     echo '</div>';
-                    echo $this->botaoSimples($labelVoltar, $this->funcaoOnClick('botaoVoltarDataNascimentoCPF(' . $this->entidadeTipo . ')'), 2);
+                    echo $this->botaoSimples($labelVoltar, $this->funcaoOnClick('botaoVoltarDataNascimentoCPF(' . $this->tipoEntidade . ')'), 2);
                     ?>
                 </div>
             </div>
