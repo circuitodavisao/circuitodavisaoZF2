@@ -5,6 +5,7 @@ namespace Application\Model\ORM;
 use Application\Controller\Helper\Constantes;
 use Application\Controller\Helper\Funcoes;
 use Application\Model\Entity\Dimensao;
+use Application\Model\Entity\Entidade;
 use Application\Model\Entity\FatoCiclo;
 use Application\Model\Entity\Grupo;
 use DateTime;
@@ -162,24 +163,21 @@ class FatoCicloORM extends CircuitoORM {
         $numeroIdentificador = null;
         $tamanho = 8;
         try {
-            $tipoSubequipe = 7;
-            $tipoEquipe = 6;
-            $tipoIgreja = 5;
             $grupoSelecionado = $grupo;
             if ($grupoSelecionado->getEntidadeAtiva()) {
-                while ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === $tipoSubequipe) {
+                while ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::SUBEQUIPE) {
                     $numeroIdentificador = str_pad($grupoSelecionado->getId(), $tamanho, 0, STR_PAD_LEFT) . $numeroIdentificador;
                     if ($grupoSelecionado->getGrupoPaiFilhoPai()) {
                         $grupoSelecionado = $grupoSelecionado->getGrupoPaiFilhoPai()->getGrupoPaiFilhoPai();
                     }
                 }
-                if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === $tipoEquipe) {
+                if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::EQUIPE) {
                     $numeroIdentificador = str_pad($grupoSelecionado->getId(), $tamanho, 0, STR_PAD_LEFT) . $numeroIdentificador;
                     if ($grupoSelecionado->getGrupoPaiFilhoPai()) {
                         $grupoSelecionado = $grupoSelecionado->getGrupoPaiFilhoPai()->getGrupoPaiFilhoPai();
                     }
                 }
-                if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === $tipoIgreja) {
+                if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::IGREJA) {
                     $numeroIdentificador = str_pad($grupoSelecionado->getId(), $tamanho, 0, STR_PAD_LEFT) . $numeroIdentificador;
                 }
             }

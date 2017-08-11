@@ -150,7 +150,7 @@ echo $this->modalLoader();
     }
 
     function validarTelefone() {
-        abrirModalCarregando();
+        
         var valorDDD = $('#inputDDD').val();
         var valorCelular = $('#inputCelular').val();
         var temErro = false;
@@ -191,7 +191,7 @@ echo $this->modalLoader();
         spanMensagemDeErro
                 .removeClass(hidden);
 
-        fecharModalCarregando();
+        
     }
 
     function abrirDivCodigoVerificador() {
@@ -213,7 +213,7 @@ echo $this->modalLoader();
     }
 
     function verificarCodigoVerificador() {
-        abrirModalCarregando();
+        
         var valorCodigoVerificador = $('#inputCodigoVerificador').val();
         var temErro = false;
         var mensagemDeErro;
@@ -244,11 +244,11 @@ echo $this->modalLoader();
         }
         spanMensagemDeErro
                 .removeClass(hidden);
-        fecharModalCarregando();
+        
     }
 
     function finalizarAtualizacao(f) {
-        abrirModalCarregando();
+        
         f.submit();
     }
 </script>

@@ -1,7 +1,6 @@
 <?php
 
 use Application\Controller\Helper\Constantes;
-
 ?>
 
 <script type="text/javascript">
@@ -25,7 +24,7 @@ use Application\Controller\Helper\Constantes;
     var btnPrimary = 'btn-primary';
     function validarEstadoCivil() {
         var valorSelecionado = $('input[name=inputEstadoCivil]:checked').val();
-        estadoCivil = parseInt(valorSelecionado);
+        var estadoCivil = parseInt(valorSelecionado);
         switch (estadoCivil) {
             case 1:
                 $('#blocoResponsavel1').addClass('hidden');
@@ -103,17 +102,28 @@ use Application\Controller\Helper\Constantes;
         $('#spanResponsavelDataNascimento').html(dataNascimento);
         /* Por matricula do aluno no campo */
         var inputIdAlunoSelecionado;
-        switch (tipo) {
+        var valorSelecionado = $('input[name=inputEstadoCivil]:checked').val();
+        var estadoCivil = parseInt(valorSelecionado);
+        switch (estadoCivil) {
             case 1:
-                inputIdAlunoSelecionado = $('#idAlunoSelecionado1');
-                break;
-            case 2:
-                inputIdAlunoSelecionado = $('#idAlunoSelecionado2');
-                break;
-            default:
                 inputIdAlunoSelecionado = $('#idAlunoSelecionado0');
                 break;
+            case 2:
+                switch (tipo) {
+                    case '1':
+                        inputIdAlunoSelecionado = $('#idAlunoSelecionado1');
+                        break;
+                    case '2':
+                        inputIdAlunoSelecionado = $('#idAlunoSelecionado2');
+                        break;
+                    default:
+                        break;
+                }
+                break;
+            default:
+                break;
         }
+
         inputIdAlunoSelecionado.val(matricula);
         /* Limpar campos */
         $('#cpf').val('');
@@ -127,6 +137,15 @@ use Application\Controller\Helper\Constantes;
         $('#divDadosSelecionados').removeClass(hidden);
         $('#nomeAluno').val(nome);
         $('#botaoBuscarCPF').removeClass(hidden);
+
+        var inputCPF = $("#cpf");
+        var inputDia = $("#Dia");
+        var inputMes = $("#Mes");
+        var inputAno = $("#Ano");
+        inputCPF.removeAttr('disabled');
+        inputDia.removeAttr('disabled');
+        inputMes.removeAttr('disabled');
+        inputAno.removeAttr('disabled');
     }
 
     function isNumber(n) {
@@ -204,85 +223,85 @@ use Application\Controller\Helper\Constantes;
             }
         }
         if (!temErro) {
-            abrirModalCarregando();
+
             $.post(
                     "/cadastroBuscarCPF",
                     {
                         cpf: cpf,
                         dataNascimento: dataNascimento
                     },
-            function (data) {
-                var resposta = parseInt(data.resposta);
-                if (resposta === 1) {
-                    var nomeDoAlunoSelecionado = $('#nomeAluno').val();
-                    var splitNomeDoAluno = nomeDoAlunoSelecionado.split(" ");
-                    var splitNomeEncontradoNaBusca = data.nome.split(" ");
-                    var dadosValidados = true;
-                    if (entidadeTipo !== 1
-                            && entidadeTipo !== 2
-                            && entidadeTipo !== 3
-                            && entidadeTipo !== 4) {
-                        if (splitNomeDoAluno[0] !== splitNomeEncontradoNaBusca[0]) {
-                            dadosValidados = false;
+                    function (data) {
+                        var resposta = parseInt(data.resposta);
+                        if (resposta === 1) {
+                            var nomeDoAlunoSelecionado = $('#nomeAluno').val();
+                            var splitNomeDoAluno = nomeDoAlunoSelecionado.split(" ");
+                            var splitNomeEncontradoNaBusca = data.nome.split(" ");
+                            var dadosValidados = true;
+                            if (entidadeTipo !== 1
+                                    && entidadeTipo !== 2
+                                    && entidadeTipo !== 3
+                                    && entidadeTipo !== 4) {
+                                if (splitNomeDoAluno[0] !== splitNomeEncontradoNaBusca[0]) {
+                                    dadosValidados = false;
+                                    spanMensagens
+                                            .addClass(alertDanger)
+                                            .text('<?php echo $this->translate(Constantes::$TRADUCAO_NOME_NAO_CONFERE); ?>')
+                                            .removeClass(hidden);
+                                }
+                            }
+                            if (dataNascimento !== data.dataNascimento) {
+                                dadosValidados = false;
+                                spanMensagens
+                                        .addClass(alertDanger)
+                                        .text('Os dados não conferem com a Base de Dados')
+                                        .removeClass(hidden);
+                            }
+                            if (dadosValidados) {
+                                /* desabilitando campos para edicao*/
+                                inputCPF.attr('disabled', 'disabled');
+                                inputDia.attr('disabled', 'disabled');
+                                inputMes.attr('disabled', 'disabled');
+                                inputAno.attr('disabled', 'disabled');
+                                $('#divDadosSelecionados').removeClass(hidden);
+                                /* Mensagem de sucesso */
+                                spanMensagens
+                                        .text('<?php echo $this->translate(Constantes::$TRADUCAO_DADOS_LIBERADOS); ?>')
+                                        .addClass(alertSuccess)
+                                        .removeClass(hidden);
+                                $('#botaoCPFLiberado').removeClass(hidden);
+                                /* Pondo valores encontrados na tela */
+                                $('#spanResponsavelNome').html(data.nome);
+                                $('#spanResponsavelCPF').html(data.cpf);
+                                $('#divSpanResponsavelCPF').removeClass(hidden);
+                                $('#spanResponsavelDataNascimento').html(data.dataNascimento);
+                                $('#divSpanResponsavelDataNascimento').removeClass(hidden);
+                                $('#botaoBuscarCPF').addClass(hidden);
+                            }
+                        }
+                        if (resposta === 2) {
+                            /* Não encontrou no PROCOB */
+                            spanMensagens.text('<?php echo $this->translate(Constantes::$TRADUCAO_DADOS_NAO_CADASTRADOS); ?>');
+                        }
+
+                        if (resposta === 3) {
+                            /* Já cadastrado */
+                            spanMensagens.text('<?php echo $this->translate(Constantes::$TRADUCAO_CPF_JA_UTILIZADO); ?>');
+                            if (entidadeTipo === 1
+                                    || entidadeTipo === 2
+                                    || entidadeTipo === 3
+                                    || entidadeTipo === 4) {
+                                var mensagemAtual = spanMensagens.text();
+                                spanMensagens.html(mensagemAtual + ', Para vincular uma nova responsabilidade a esse usuário clique no menu: <p><code>Cadastrar -> Nova Responsabilidade</code></p>');
+                            }
+                        }
+
+                        if (resposta === 2 || resposta === 3) {
                             spanMensagens
                                     .addClass(alertDanger)
-                                    .text('<?php echo $this->translate(Constantes::$TRADUCAO_NOME_NAO_CONFERE); ?>')
                                     .removeClass(hidden);
                         }
-                    }
-                    if (dataNascimento !== data.dataNascimento) {
-                        dadosValidados = false;
-                        spanMensagens
-                                .addClass(alertDanger)
-                                .text('Os dados não conferem com a Base de Dados')
-                                .removeClass(hidden);
-                    }
-                    if (dadosValidados) {
-                        /* desabilitando campos para edicao*/
-                        inputCPF.attr('disabled', 'disabled');
-                        inputDia.attr('disabled', 'disabled');
-                        inputMes.attr('disabled', 'disabled');
-                        inputAno.attr('disabled', 'disabled');
-                        $('#divDadosSelecionados').removeClass(hidden);
-                        /* Mensagem de sucesso */
-                        spanMensagens
-                                .text('<?php echo $this->translate(Constantes::$TRADUCAO_DADOS_LIBERADOS); ?>')
-                                .addClass(alertSuccess)
-                                .removeClass(hidden);
-                        $('#botaoCPFLiberado').removeClass(hidden);
-                        /* Pondo valores encontrados na tela */
-                        $('#spanResponsavelNome').html(data.nome);
-                        $('#spanResponsavelCPF').html(data.cpf);
-                        $('#divSpanResponsavelCPF').removeClass(hidden);
-                        $('#spanResponsavelDataNascimento').html(data.dataNascimento);
-                        $('#divSpanResponsavelDataNascimento').removeClass(hidden);
-                        $('#botaoBuscarCPF').addClass(hidden);
-                    }
-                }
-                if (resposta === 2) {
-                    /* Não encontrou no PROCOB */
-                    spanMensagens.text('<?php echo $this->translate(Constantes::$TRADUCAO_DADOS_NAO_CADASTRADOS); ?>');
-                }
 
-                if (resposta === 3) {
-                    /* Já cadastrado */
-                    spanMensagens.text('<?php echo $this->translate(Constantes::$TRADUCAO_CPF_JA_UTILIZADO); ?>');
-                    if (entidadeTipo === 1
-                            || entidadeTipo === 2
-                            || entidadeTipo === 3
-                            || entidadeTipo === 4) {
-                        var mensagemAtual = spanMensagens.text();
-                        spanMensagens.html(mensagemAtual + ', Para vincular uma nova responsabilidade a esse usuário clique no menu: <p><code>Cadastrar -> Nova Responsabilidade</code></p>');
                     }
-                }
-
-                if (resposta === 2 || resposta === 3) {
-                    spanMensagens
-                            .addClass(alertDanger)
-                            .removeClass(hidden);
-                }
-                fecharModalCarregando();
-            }
             , 'json');
         } else {
             spanMensagens
@@ -310,6 +329,11 @@ use Application\Controller\Helper\Constantes;
         }
         escondeMensagem();
         $('#botaoBuscarEmail').removeClass(hidden);
+
+        var inputEmail = $('#email');
+        var inputRepetirEmail = $('#repetirEmail');
+        inputEmail.removeAttr('disabled');
+        inputRepetirEmail.removeAttr('disabled');
     }
 
     function buscarEmail() {
@@ -355,34 +379,34 @@ use Application\Controller\Helper\Constantes;
             spanMensagens.html('<?php echo $this->translate(Constantes::$TRADUCAO_EMAIL_USADO_PELO_CONJUGE); ?>');
         }
         if (!temErro) {
-            abrirModalCarregando();
+
             $.post(
                     "/cadastroBuscarEmail",
                     {email: email},
-            function (data) {
+                    function (data) {
 // liberado
-                if (!data.resposta) {
-                    inputEmail.attr('disabled', 'disabled');
-                    inputRepetirEmail.attr('disabled', 'disabled');
+                        if (!data.resposta) {
+                            inputEmail.attr('disabled', 'disabled');
+                            inputRepetirEmail.attr('disabled', 'disabled');
 
-                    spanMensagens
-                            .html('<?php echo $this->translate(Constantes::$TRADUCAO_EMAIL_LIBERADO); ?>')
-                            .removeClass(hidden)
-                            .addClass(alertSuccess);
-                    $('#divSpanResponsavelEmail').removeClass(hidden);
-                    $('#spanResponsavelEmail').html(email);
-                    $('#botaoEmailLiberado').removeClass(hidden);
-                    $('#botaoBuscarEmail').addClass(hidden);
-                }
+                            spanMensagens
+                                    .html('<?php echo $this->translate(Constantes::$TRADUCAO_EMAIL_LIBERADO); ?>')
+                                    .removeClass(hidden)
+                                    .addClass(alertSuccess);
+                            $('#divSpanResponsavelEmail').removeClass(hidden);
+                            $('#spanResponsavelEmail').html(email);
+                            $('#botaoEmailLiberado').removeClass(hidden);
+                            $('#botaoBuscarEmail').addClass(hidden);
+                        }
 // não liberado
-                if (data.resposta) {
-                    spanMensagens
-                            .html('<?php echo $this->translate(Constantes::$TRADUCAO_EMAIL_JA_UTILIZADO); ?>')
-                            .addClass(alertDanger)
-                            .removeClass(hidden);
-                }
-                fecharModalCarregando();
-            }, 'json');
+                        if (data.resposta) {
+                            spanMensagens
+                                    .html('<?php echo $this->translate(Constantes::$TRADUCAO_EMAIL_JA_UTILIZADO); ?>')
+                                    .addClass(alertDanger)
+                                    .removeClass(hidden);
+                        }
+
+                    }, 'json');
         } else {
             spanMensagens
                     .removeClass(hidden)
@@ -836,7 +860,7 @@ use Application\Controller\Helper\Constantes;
     }
 
     function botaoSubmeterFormulario(form) {
-        abrirModalCarregando();
+
         form.submit();
     }
 
@@ -855,15 +879,16 @@ use Application\Controller\Helper\Constantes;
         $('#divDadosComplementares').removeClass(hidden);
     }
 
-    function botaoAbreDadosComplementares(tipoDeDadoComplementar) {
+    function botaoAbreDadosComplementares(tipoDeDadoComplementar, adicionarABarraDeProgresso) {
         var tipoNumeracao = 1;
         var tipoNome = 2;
         var temErro = false;
         var spanMensagens = $('#spanMensagensDadosComplementares');
         var mensagemDeErro = '';
         if (tipoDeDadoComplementar === tipoNumeracao) {
-            if ($('#numeracao').val()) {
-
+            if ($('#numeracao').val() === 0) {
+                temErro = true;
+                mensagemDeErro = 'Selecione a numeração';
             }
         }
         if (tipoDeDadoComplementar === tipoNome) {
@@ -880,11 +905,15 @@ use Application\Controller\Helper\Constantes;
 
         /* Não tem erro */
         if (!temErro) {
+            var valorProgresso = 0;
+            if (adicionarABarraDeProgresso) {
+                valorProgresso = 50;
+            }
             if (tipoDeDadoComplementar === tipoNumeracao) {
-                insereNumeracaoNaTelaDeConfimacao(50);
+                insereNumeracaoNaTelaDeConfimacao(valorProgresso);
             }
             if (tipoDeDadoComplementar === tipoNome) {
-                insereNomeNaTelaDeConfimacao(50);
+                insereNomeNaTelaDeConfimacao(valorProgresso);
             }
             $('#divDadosComplementares').addClass(hidden);
             $('#divConfirmacao').removeClass(hidden);

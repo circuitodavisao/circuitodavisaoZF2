@@ -115,11 +115,10 @@ class LoginController extends CircuitoController {
         }
 
         $usuarioTrim = trim($data[Constantes::$INPUT_USUARIO]);
-        $senhaSTrim = trim($data[Constantes::$INPUT_SENHA]);
-
+        $senhaTrim = trim($data[Constantes::$INPUT_SENHA]);
         $adapter = $this->getDoctrineAuthenticationServicer()->getAdapter();
         $adapter->setIdentityValue($usuarioTrim);
-        $adapter->setCredentialValue(md5($senhaSTrim));
+        $adapter->setCredentialValue(md5($senhaTrim));
         $authenticationResult = $this->getDoctrineAuthenticationServicer()->authenticate();
         if ($authenticationResult->isValid()) {
             /* Autenticacao valida */
@@ -158,13 +157,13 @@ class LoginController extends CircuitoController {
                 ));
             }
         } else {
-            /* Nao encontrou na base de dados */
-            /* Redirecionamento */
-            return $this->forward()->dispatch(Constantes::$CONTROLLER_LOGIN, array(
-                        Constantes::$ACTION => Constantes::$ACTION_INDEX,
-                        Constantes::$INPUT_USUARIO => $usuarioTrim,
-                        Constantes::$TIPO => 1,
-            ));
+//            /* Nao encontrou na base de dados */
+//            /* Redirecionamento */
+//            return $this->forward()->dispatch(Constantes::$CONTROLLER_LOGIN, array(
+//                        Constantes::$ACTION => Constantes::$ACTION_INDEX,
+//                        Constantes::$INPUT_USUARIO => $usuarioTrim,
+//                        Constantes::$TIPO => 1,
+//            ));
         }
     }
 
@@ -465,7 +464,12 @@ class LoginController extends CircuitoController {
                 /* Dados da requisição POST */
                 $dataPost = $request->getPost();
                 $pessoa = $repositorioORM->getPessoaORM()->encontrarPorId($dataPost[Constantes::$INPUT_ID_PESSOA]);
-                $pessoa->setSenha($dataPost[Constantes::$INPUT_SENHA]);
+
+                $senhaNova = $dataPost[Constantes::$INPUT_SENHA];
+                if (!$senhaNova) {
+                    $senhaNova = $dataPost[Constantes::$INPUT_NOVA_SENHA];
+                }
+                $pessoa->setSenha($senhaNova);
                 $pessoa->setToken(null);
                 $pessoa->setToken_data(null);
                 $pessoa->setToken_hora(null);
@@ -481,7 +485,7 @@ class LoginController extends CircuitoController {
         /* Adicionando layout extras */
         $this->colocaTopEBottonModuloLogin($view);
 
-        return $view;
+//        return $view;
     }
 
     /**

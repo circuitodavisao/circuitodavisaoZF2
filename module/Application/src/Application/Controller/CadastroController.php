@@ -14,6 +14,7 @@ use Application\Form\GrupoForm;
 use Application\Form\RevisaoForm;
 use Application\Form\SelecionarLiderRevisaoForm;
 use Application\Form\TransferenciaForm;
+use Application\Form\TurmaForm;
 use Application\Model\Entity\Entidade;
 use Application\Model\Entity\Evento;
 use Application\Model\Entity\EventoCelula;
@@ -186,6 +187,12 @@ class CadastroController extends CircuitoController {
             ));
         }
         /* Fim Páginas Revisão */
+        /* Início das páginas relaiconadas ao Iv */
+        if ($pagina == Constantes::$PAGINA_CADASTRAR_TURMA) {
+            return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
+                        Constantes::$ACTION => Constantes::$PAGINA_CADASTRAR_TURMA,
+            ));
+        }
         /* Funcoes */
         if ($pagina == Constantes::$PAGINA_FUNCOES) {
             return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
@@ -794,7 +801,8 @@ class CadastroController extends CircuitoController {
         $mostrarCadastro = true;
 //        }
 
-        $arrayHierarquia = $repositorioORM->getHierarquiaORM()->encontrarTodas();
+        $pessoa = $repositorioORM->getPessoaORM()->encontrarPorId($sessao->idPessoa);
+        $arrayHierarquia = $repositorioORM->getHierarquiaORM()->encontrarTodas($pessoa->getPessoaHierarquiaAtivo()->getHierarquia()->getId());
 
         $form = new GrupoForm(Constantes::$FORM, $arrayGrupoAlunos, $arrayHierarquia);
 
@@ -820,10 +828,12 @@ class CadastroController extends CircuitoController {
     public function grupoFinalizarAction() {
         $request = $this->getRequest();
         if ($request->isPost()) {
+            $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
             try {
+                $repositorioORM->iniciarTransacao();
                 $post_data = $request->getPost();
                 $loginORM = new RepositorioORM($this->getDoctrineORMEntityManager());
-                $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
+
 
                 $sessao = new Container(Constantes::$NOME_APLICACAO);
                 $idEntidadeAtual = $sessao->idEntidadeAtual;
@@ -834,8 +844,8 @@ class CadastroController extends CircuitoController {
                 $repositorioORM->getGrupoORM()->persistir($grupoNovo);
 
                 /* Entidade abaixo do perfil selecionado/logado */
-                $tipoEntidadeAbaixo = 8; // sub equipe por padrao
-                if ($entidadeLogada->getTipo_id() != 8) {
+                $tipoEntidadeAbaixo = Entidade::SUBEQUIPE; // sub equipe por padrao
+                if ($entidadeLogada->getTipo_id() != Entidade::SUBEQUIPE) {
                     $tipoEntidadeAbaixo = $entidadeLogada->getTipo_id() + 1;
                 }
                 $entidadeNova = new Entidade();
@@ -895,9 +905,13 @@ class CadastroController extends CircuitoController {
                 $grupoPaiFilhoNovo->setGrupoPaiFilhoFilho($grupoNovo);
                 $repositorioORM->getGrupoPaiFilhoORM()->persistir($grupoPaiFilhoNovo);
 
+//                $repositorioORM->desfazerTransacao();
+                $repositorioORM->fecharTransacao();
                 $view = new ViewModel();
                 return $view;
             } catch (Exception $exc) {
+                $repositorioORM->desfazerTransacao();
+                echo $exc->getTraceAsString();
                 $this->direcionaErroDeCadastro($exc->getMessage());
             }
         }
@@ -937,14 +951,13 @@ class CadastroController extends CircuitoController {
                 $loginORM = new RepositorioORM($this->getDoctrineORMEntityManager());
                 $pessoa = $loginORM->getPessoaORM()->encontrarPorId($post_data[Constantes::$ID]);
                 $pessoa->setTelefone($post_data[Constantes::$FORM_INPUT_DDD] + $post_data[Constantes::$FORM_INPUT_CELULAR]);
-                $pessoa->setAtualizar_dados($atualizar_dados);
                 $pessoa->dadosAtualizados();
                 $loginORM->getPessoaORM()->persistir($pessoa);
             } catch (Exception $exc) {
                 $this->direcionaErroDeCadastro($exc->getMessage());
             }
-            return $this->redirect()->toRoute('principal', array(
-                        'mostrarMenu' => 1
+            return $this->forward()->dispatch(Constantes::$CONTROLLER_LOGIN, array(
+                        Constantes::$ACTION => Constantes::$ACTION_SELECIONAR_PERFIL,
             ));
         }
     }
@@ -1115,7 +1128,8 @@ class CadastroController extends CircuitoController {
         $pessoaLogada = $loginORM->getPessoaORM()->encontrarPorId($sessao->idPessoa);
 
         $Subject = 'Convite';
-        $ToEmail = 'falecomleonardopereira@gmail.com';
+//        $ToEmail = 'falecomleonardopereira@gmail.com';
+        $ToEmail = $pessoa->getEmail();
         $avatar = 'placeholder.png';
         if ($pessoaLogada->getFoto()) {
             $avatar = $pessoaLogada->getFoto();
@@ -1287,7 +1301,7 @@ class CadastroController extends CircuitoController {
 //            Constantes::$NOME_IGREJA_FICHA_REVISAO => $nomeIgreja,
 //            Constantes::$STRING_ID_EVENTO_FREQUENCIA => $idEventoFrequencia,
 //        ));
-        
+
         $view = new ViewModel();
 
         /* Javascript especifico */
@@ -1639,6 +1653,16 @@ class CadastroController extends CircuitoController {
             $repositorioORM->desfazerTransacao();
             echo $exc->getTraceAsString();
         }
+    }
+
+    public function turmaFormAction() {
+        $formCadastroTurma = new TurmaForm('formulario');
+
+
+        $view = new ViewModel(array(
+            'formCadastroTurma' => $formCadastroTurma,
+        ));
+        return $view;
     }
 
 }

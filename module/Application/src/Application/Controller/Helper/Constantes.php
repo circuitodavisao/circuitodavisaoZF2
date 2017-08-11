@@ -456,6 +456,9 @@ class Constantes {
     public static $PAGINA_CADASTRO_TRANSFERENCIA = 'Transferencia';
     public static $CONTROLLER_CADASTRO = 'Application\Controller\Cadastro';
     public static $ROUTE_CADASTRO = 'cadastro';
+    /* páginas relacionadas ao IV */
+    public static $PAGINA_CADASTRAR_TURMA = 'Turma';
+    /* Fim das páginas relaciondas ao IV */
     
     /* Entidades */
     public static $ENTIDADE_EVENTO_CELULA = 'Entidade\Entity\EventoCelula';
@@ -485,7 +488,7 @@ class Constantes {
     public static $TRADUCAO_INSIRA_OS_DADOS_COMPLEMENTARES = 'Enter the Complementary Data';
     public static $TRADUCAO_SELECIONE_O_ALUNO = 'Select the Student that will be used for the registration';
     public static $TRADUCAO_MATRICULA = 'Registration';
-    public static $TRADUCAO_NOME = 'Name';
+    public static $TRADUCAO_NOME = 'Note';
     public static $TRADUCAO_OBSERVACAO = 'Observation';
     public static $TRADUCAO_IGREJAS = 'Churches';
     public static $TRADUCAO_DATA_NASCIMENTO = 'Birth Date';
@@ -576,6 +579,7 @@ class Constantes {
     public static $FORM_ACTION_CADASTRO_GRUPO_FINALIZAR = 'cadastroGrupoFinalizar';
     public static $FORM_INPUT_DIA = 'Dia';
     public static $FORM_INPUT_MES = 'Mes';
+    public static $FORM_INPUT_TIPO = 'Tipo';
     public static $FORM_INPUT_ANO = 'Ano';
     public static $FORM_INPUT_DDD = 'inputDDD';
     public static $FORM_INPUT_DATA_REVISAO = 'dataRevisao';
@@ -613,6 +617,7 @@ class Constantes {
     public static $FORM_ICONE_DATABASE = 'fa-database';
     public static $FORM_NOME_HOSPEDEIRO = 'nome_hospedeiro';
     public static $FORM_NOME = 'nome';
+    public static $FORM_OBSERVACAO = 'observacao';
     public static $FORM_NOME_ENTIDADE = 'nomeEntidade';
     public static $FORM_ICONE_NOME_HOSPEDEIRO = 'fa-terminal';
     public static $FORM_DDD_HOSPEDEIRO = 'ddd_hospedeiro';

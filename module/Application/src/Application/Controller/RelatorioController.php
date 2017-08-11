@@ -282,73 +282,74 @@ class RelatorioController extends CircuitoController {
         return $discipulos;
     }
 
-//    public function testeAction() {
-//        try {
-//            $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
-//            $setarDataEHora = false;
-//
-//            $pessoa = $repositorioORM->getPessoaORM()->encontrarPorEmail('falecomleonardopereira@gmail.com');
-//
-//            /* Inativando */
-//            $grupoResponsavels = $pessoa->getGrupoResponsavel();
-//            $gruposAtual = null;
-//            foreach ($grupoResponsavels as $gr) {
-//                $gr->setDataEHoraDeInativacao();
-//                $repositorioORM->getGrupoResponsavelORM()->persistir($gr, $setarDataEHora);
-//                $gruposAtual = $gr->getGrupo();
-//            }
-//            $gruposAtual->setDataEHoraDeInativacao();
-//            $repositorioORM->getGrupoORM()->persistir($gruposAtual, $setarDataEHora);
-//
-//            $gpf = $gruposAtual->getGrupoPaiFilhoPai();
-//            $gpf->setDataEHoraDeInativacao();
-//            $repositorioORM->getGrupoPaiFilhoORM()->persistir($gpf, $setarDataEHora);
-//
-//            $entidade = $gruposAtual->getEntidadeAtiva();
-//            $entidade->setNome('TRANSFERIDA - ' . $entidade->getNome());
-//            $repositorioORM->getEntidadeORM()->persistir($entidade, $setarDataEHora);
-//
-//            /* Cadastrando */
-//            $grupoNovo = new Grupo();
-//            $repositorioORM->getGrupoORM()->persistir($grupoNovo);
-//
-//            $novaEntidade = new Entidade();
-//            $novaEntidade->setGrupo($grupoNovo);
-//            $novaEntidade->setNome('NOVO GRUPO');
-//            $novaEntidade->setEntidadeTipo($repositorioORM->getEntidadeTipoORM()->encontrarPorId(EntidadeTipo::subEquipe));
-//            $repositorioORM->getEntidadeORM()->persistir($novaEntidade);
-//
-//            $pessoaPai = $repositorioORM->getPessoaORM()->encontrarPorEmail('rsilverio2012@hotmail.com');
-//            $grPai = $pessoaPai->getGrupoResponsavel()[0];
-//            $grupoPai = $grPai->getGrupo();
-//
-//            $grupoPF = new GrupoPaiFilho();
-//            $grupoPF->setGrupoPaiFilhoFilho($grupoNovo);
-//            $grupoPF->setGrupoPaiFilhoPai($grupoPai);
-//            $repositorioORM->getGrupoPaiFilhoORM()->persistir($grupoPF);
-//
-//            $grupoResponsavelNovo = new GrupoResponsavel();
-//            $grupoResponsavelNovo->setGrupo($grupoNovo);
-//            $grupoResponsavelNovo->setPessoa($pessoa);
-//            $repositorioORM->getGrupoResponsavelORM()->persistir($grupoResponsavelNovo);
-//
-//            $gpessoas = $gruposAtual->getGrupoPessoa();
-//            foreach ($gpessoas as $gp) {
-//                $grupoPessoa = new GrupoPessoa();
-//                $grupoPessoa->setGrupo($grupoNovo);
-//                $grupoPessoa->setPessoa($gp->getPessoa());
-//                $grupoPessoa->setGrupoPessoaTipo($gp->getGrupoPessoaTipo());
-//                $repositorioORM->getGrupoPessoaORM()->persistir($grupoPessoa);
-//            }
-//            $geventos = $gruposAtual->getGrupoEventoAtivosPorTipo(GrupoEvento::CELULA);
-//            foreach ($geventos as $ge) {
-//                $grupoEvento = new GrupoEvento();
-//                $grupoEvento->setGrupo($grupoNovo);
-//                $grupoEvento->setEvento($ge->getEvento());
-//                $repositorioORM->getGrupoEventoORM()->persistir($grupoEvento);
-//            }
-//        } catch (Exception $exc) {
-//            echo $exc->getMessage();
-//        }
-//    }
+    public function testeAction() {
+        try {
+            $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
+            $setarDataEHora = false;
+
+            $pessoa = $repositorioORM->getPessoaORM()->encontrarPorEmail('falecomleonardopereira@gmail.com');
+
+            /* Inativando */
+            $grupoResponsavels = $pessoa->getGrupoResponsavel();
+            $gruposAtual = null;
+            foreach ($grupoResponsavels as $gr) {
+                $gr->setDataEHoraDeInativacao();
+                $repositorioORM->getGrupoResponsavelORM()->persistir($gr, $setarDataEHora);
+                $gruposAtual = $gr->getGrupo();
+            }
+            $gruposAtual->setDataEHoraDeInativacao();
+            $repositorioORM->getGrupoORM()->persistir($gruposAtual, $setarDataEHora);
+
+            $gpf = $gruposAtual->getGrupoPaiFilhoPai();
+            $gpf->setDataEHoraDeInativacao();
+            $repositorioORM->getGrupoPaiFilhoORM()->persistir($gpf, $setarDataEHora);
+
+            $entidade = $gruposAtual->getEntidadeAtiva();
+            $entidade->setNome('TRANSFERIDA - ' . $entidade->getNome());
+            $repositorioORM->getEntidadeORM()->persistir($entidade, $setarDataEHora);
+
+            /* Cadastrando */
+            $grupoNovo = new Grupo();
+            $repositorioORM->getGrupoORM()->persistir($grupoNovo);
+
+            $novaEntidade = new Entidade();
+            $novaEntidade->setGrupo($grupoNovo);
+            $novaEntidade->setNome('NOVO GRUPO');
+            $novaEntidade->setEntidadeTipo($repositorioORM->getEntidadeTipoORM()->encontrarPorId(EntidadeTipo::subEquipe));
+            $repositorioORM->getEntidadeORM()->persistir($novaEntidade);
+
+            $pessoaPai = $repositorioORM->getPessoaORM()->encontrarPorEmail('rsilverio2012@hotmail.com');
+            $grPai = $pessoaPai->getGrupoResponsavel()[0];
+            $grupoPai = $grPai->getGrupo();
+
+            $grupoPF = new GrupoPaiFilho();
+            $grupoPF->setGrupoPaiFilhoFilho($grupoNovo);
+            $grupoPF->setGrupoPaiFilhoPai($grupoPai);
+            $repositorioORM->getGrupoPaiFilhoORM()->persistir($grupoPF);
+
+            $grupoResponsavelNovo = new GrupoResponsavel();
+            $grupoResponsavelNovo->setGrupo($grupoNovo);
+            $grupoResponsavelNovo->setPessoa($pessoa);
+            $repositorioORM->getGrupoResponsavelORM()->persistir($grupoResponsavelNovo);
+
+            $gpessoas = $gruposAtual->getGrupoPessoa();
+            foreach ($gpessoas as $gp) {
+                $grupoPessoa = new GrupoPessoa();
+                $grupoPessoa->setGrupo($grupoNovo);
+                $grupoPessoa->setPessoa($gp->getPessoa());
+                $grupoPessoa->setGrupoPessoaTipo($gp->getGrupoPessoaTipo());
+                $repositorioORM->getGrupoPessoaORM()->persistir($grupoPessoa);
+            }
+            $geventos = $gruposAtual->getGrupoEventoAtivosPorTipo(GrupoEvento::CELULA);
+            foreach ($geventos as $ge) {
+                $grupoEvento = new GrupoEvento();
+                $grupoEvento->setGrupo($grupoNovo);
+                $grupoEvento->setEvento($ge->getEvento());
+                $repositorioORM->getGrupoEventoORM()->persistir($grupoEvento);
+            }
+        } catch (Exception $exc) {
+            echo $exc->getMessage();
+        }
+    }
+
 }

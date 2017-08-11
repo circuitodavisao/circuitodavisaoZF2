@@ -25,11 +25,10 @@ class GrupoDadosComplementares extends AbstractHelper {
 
     public function renderHtml() {
         $html = '';
-        $tipoEntidade = $this->view->entidadeTipo;
+        $tipoEntidade = $this->view->tipoEntidade;
         $nomeDoGrupo = '';
         $stringNome = 'Nome';
-        $stringNumero = 'Número';
-
+        $stringNumero = 'Número';        
         switch ($tipoEntidade) {
             case 1:
                 $nomeDoGrupo = $stringNome . ' do Nacional';
@@ -88,11 +87,11 @@ class GrupoDadosComplementares extends AbstractHelper {
 
         $html .= '<div id="divInserirAlterarDadosComplementares" class="' . $mostrarBotao . '">';
         $html .= '<div id="divBotaoInserirSelectDadosComplementares">';
-        $html .= $this->view->botaoLink(Constantes::$TRADUCAO_INSERIR, Constantes::$STRING_HASHTAG, 7, $this->view->funcaoOnClick('botaoAbreDadosComplementares(' . $tipoDadosComplementar . ')'));
+        $html .= $this->view->botaoLink(Constantes::$TRADUCAO_INSERIR, Constantes::$STRING_HASHTAG, 7, $this->view->funcaoOnClick('botaoAbreDadosComplementares(' . $tipoDadosComplementar . ', true)'));
         $html .= '</div>';
 
         $html .= '<div id = "divBotaoAlterarSelectDadosComplementares" class="hidden">';
-        $html .= $this->view->botaoLink(Constantes::$TRADUCAO_ALTERAR, Constantes::$STRING_HASHTAG, 7, $this->view->funcaoOnClick('botaoAbreDadosComplementares(' . $tipoDadosComplementar . ')'));
+        $html .= $this->view->botaoLink(Constantes::$TRADUCAO_ALTERAR, Constantes::$STRING_HASHTAG, 7, $this->view->funcaoOnClick('botaoAbreDadosComplementares(' . $tipoDadosComplementar . ', false)'));
         $html .= '</div>';
         $html .= '</div>';
 
