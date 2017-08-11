@@ -912,7 +912,7 @@ class CadastroController extends CircuitoController {
             } catch (Exception $exc) {
                 $repositorioORM->desfazerTransacao();
                 echo $exc->getTraceAsString();
-//                $this->direcionaErroDeCadastro($exc->getMessage());
+                $this->direcionaErroDeCadastro($exc->getMessage());
             }
         }
     }

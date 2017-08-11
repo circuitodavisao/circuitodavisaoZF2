@@ -236,9 +236,9 @@ class Menu extends AbstractHelper {
         $html .= '</li>';
 
         $html .= '<li>';
-        $html .= '<a href="#">';
+        $html .= '<a href="/cadastroGrupo">';
         $html .= '<span class="fa fa-users"></span>';
-        $html .= 'Time (Manutenção)';
+        $html .= 'Time';
         $html .= '</a>';
         $html .= '</li>';
         
