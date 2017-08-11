@@ -806,9 +806,10 @@ class CadastroController extends CircuitoController {
 
         $form = new GrupoForm(Constantes::$FORM, $arrayGrupoAlunos, $arrayHierarquia);
 
+        
         $view = new ViewModel(array(
             Constantes::$FORM => $form,
-            'tipoEntidade' => $entidade->getTipo_id(),
+            'tipoEntidade' => Entidade::COORDENACAO,
             'mostrarCadastro' => $mostrarCadastro,
             'tituloDaPagina' => 'Cadastro de Time',
         ));
