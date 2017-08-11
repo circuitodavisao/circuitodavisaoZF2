@@ -24,7 +24,7 @@ use Application\Controller\Helper\Constantes;
     var btnPrimary = 'btn-primary';
     function validarEstadoCivil() {
         var valorSelecionado = $('input[name=inputEstadoCivil]:checked').val();
-        estadoCivil = parseInt(valorSelecionado);
+        var estadoCivil = parseInt(valorSelecionado);
         switch (estadoCivil) {
             case 1:
                 $('#blocoResponsavel1').addClass('hidden');
@@ -102,17 +102,28 @@ use Application\Controller\Helper\Constantes;
         $('#spanResponsavelDataNascimento').html(dataNascimento);
         /* Por matricula do aluno no campo */
         var inputIdAlunoSelecionado;
-        switch (tipo) {
+        var valorSelecionado = $('input[name=inputEstadoCivil]:checked').val();
+        var estadoCivil = parseInt(valorSelecionado);
+        switch (estadoCivil) {
             case 1:
-                inputIdAlunoSelecionado = $('#idAlunoSelecionado1');
-                break;
-            case 2:
-                inputIdAlunoSelecionado = $('#idAlunoSelecionado2');
-                break;
-            default:
                 inputIdAlunoSelecionado = $('#idAlunoSelecionado0');
                 break;
+            case 2:
+                switch (tipo) {
+                    case '1':
+                        inputIdAlunoSelecionado = $('#idAlunoSelecionado1');
+                        break;
+                    case '2':
+                        inputIdAlunoSelecionado = $('#idAlunoSelecionado2');
+                        break;
+                    default:
+                        break;
+                }
+                break;
+            default:
+                break;
         }
+
         inputIdAlunoSelecionado.val(matricula);
         /* Limpar campos */
         $('#cpf').val('');
@@ -126,6 +137,15 @@ use Application\Controller\Helper\Constantes;
         $('#divDadosSelecionados').removeClass(hidden);
         $('#nomeAluno').val(nome);
         $('#botaoBuscarCPF').removeClass(hidden);
+
+        var inputCPF = $("#cpf");
+        var inputDia = $("#Dia");
+        var inputMes = $("#Mes");
+        var inputAno = $("#Ano");
+        inputCPF.removeAttr('disabled');
+        inputDia.removeAttr('disabled');
+        inputMes.removeAttr('disabled');
+        inputAno.removeAttr('disabled');
     }
 
     function isNumber(n) {
@@ -309,6 +329,11 @@ use Application\Controller\Helper\Constantes;
         }
         escondeMensagem();
         $('#botaoBuscarEmail').removeClass(hidden);
+
+        var inputEmail = $('#email');
+        var inputRepetirEmail = $('#repetirEmail');
+        inputEmail.removeAttr('disabled');
+        inputRepetirEmail.removeAttr('disabled');
     }
 
     function buscarEmail() {
@@ -881,7 +906,7 @@ use Application\Controller\Helper\Constantes;
         /* Não tem erro */
         if (!temErro) {
             var valorProgresso = 0;
-            if(adicionarABarraDeProgresso){
+            if (adicionarABarraDeProgresso) {
                 valorProgresso = 50;
             }
             if (tipoDeDadoComplementar === tipoNumeracao) {

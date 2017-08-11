@@ -905,6 +905,7 @@ class CadastroController extends CircuitoController {
                 $grupoPaiFilhoNovo->setGrupoPaiFilhoFilho($grupoNovo);
                 $repositorioORM->getGrupoPaiFilhoORM()->persistir($grupoPaiFilhoNovo);
 
+//                $repositorioORM->desfazerTransacao();
                 $repositorioORM->fecharTransacao();
                 $view = new ViewModel();
                 return $view;
