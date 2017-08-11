@@ -3,6 +3,7 @@
 namespace Application\Form;
 
 use Application\Controller\Helper\Constantes;
+use Zend\Form\Element\Csrf;
 use Zend\Form\Element\Hidden;
 use Zend\Form\Element\Select;
 use Zend\Form\Element\Textarea;
@@ -40,7 +41,12 @@ class TurmaForm extends Form {
                         ])
         );
 
-        
+        $this->add(
+                (new Csrf())
+                        ->setName(Constantes::$INPUT_CSRF)
+        );
+
+
         /* Tipo */
         $arrayTipo = array();
         $arrayTipo[0] = Constantes::$TRADUCAO_TIPO;
@@ -51,9 +57,9 @@ class TurmaForm extends Form {
             Constantes::$FORM_CLASS => Constantes::$FORM_CLASS_FORM_CONTROL,
             Constantes::$FORM_ID => Constantes::$FORM_INPUT_TIPO,
         ));
-        $inputSelectTipoTurma->setValueOptions($arrayMesTurma);
+        $inputSelectTipoTurma->setValueOptions($arrayTipo);
         $this->add($inputSelectTipoTurma);
-        
+
         /* Mês da Turma */
         $arrayMesTurma = array();
         $arrayMesTurma[0] = Constantes::$TRADUCAO_MES;
@@ -86,17 +92,13 @@ class TurmaForm extends Form {
         $inputSelectAnoTurma->setValueOptions($arrayAnoTurma);
         $this->add($inputSelectAnoTurma);
 
+        $observacaoTextArea = new Textarea(Constantes::$FORM_OBSERVACAO);
+        $observacaoTextArea->setAttributes(array(
+            Constantes::$FORM_CLASS => Constantes::$FORM_CLASS_GUI_INPUT,
+            Constantes::$FORM_ID => Constantes::$FORM_OBSERVACAO,
+        ));
         /* Observacao */
-        $this->add(
-                (new Textarea())
-                        ->setName(Constantes::$FORM_OBSERVACAO)
-                        ->setAttributes([
-                            Constantes::$FORM_CLASS => Constantes::$FORM_CLASS_GUI_INPUT,
-                            Constantes::$FORM_ID => Constantes::$FORM_OBSERVACAO,
-                            Constantes::$FORM_PLACEHOLDER => Constantes::$TRADUCAO_OBSERVACAO,
-                        ])
-        );
-
+        $this->add($observacaoTextArea);
     }
 
 }

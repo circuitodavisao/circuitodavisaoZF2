@@ -23,7 +23,7 @@ use Application\Model\Entity\Grupo;
 use Application\Model\Entity\GrupoEvento;
 use Application\Model\Entity\GrupoPaiFilho;
 use Application\Model\Entity\GrupoPessoa;
-use Application\Model\Entity\GrupoResponsavel; 
+use Application\Model\Entity\GrupoResponsavel;
 use Application\Model\Entity\Pessoa;
 use Application\Model\Entity\PessoaHierarquia;
 use Application\Model\ORM\RepositorioORM;
@@ -188,9 +188,9 @@ class CadastroController extends CircuitoController {
         }
         /* Fim Páginas Revisão */
         /* Início das páginas relaiconadas ao Iv */
-        if ($pagina == Constantes::$PAGINA_CADASTRAR_TURMA){
+        if ($pagina == Constantes::$PAGINA_CADASTRAR_TURMA) {
             return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
-                        Constantes::$ACTION => Constantes::$PAGINA_CADASTRO_TURMA, 
+                        Constantes::$ACTION => Constantes::$PAGINA_CADASTRAR_TURMA,
             ));
         }
         /* Funcoes */
@@ -827,10 +827,12 @@ class CadastroController extends CircuitoController {
     public function grupoFinalizarAction() {
         $request = $this->getRequest();
         if ($request->isPost()) {
+            $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
             try {
+                $repositorioORM->iniciarTransacao();
                 $post_data = $request->getPost();
                 $loginORM = new RepositorioORM($this->getDoctrineORMEntityManager());
-                $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
+
 
                 $sessao = new Container(Constantes::$NOME_APLICACAO);
                 $idEntidadeAtual = $sessao->idEntidadeAtual;
@@ -841,8 +843,8 @@ class CadastroController extends CircuitoController {
                 $repositorioORM->getGrupoORM()->persistir($grupoNovo);
 
                 /* Entidade abaixo do perfil selecionado/logado */
-                $tipoEntidadeAbaixo = 8; // sub equipe por padrao
-                if ($entidadeLogada->getTipo_id() != 8) {
+                $tipoEntidadeAbaixo = Entidade::SUBEQUIPE; // sub equipe por padrao
+                if ($entidadeLogada->getTipo_id() != Entidade::SUBEQUIPE) {
                     $tipoEntidadeAbaixo = $entidadeLogada->getTipo_id() + 1;
                 }
                 $entidadeNova = new Entidade();
@@ -902,10 +904,13 @@ class CadastroController extends CircuitoController {
                 $grupoPaiFilhoNovo->setGrupoPaiFilhoFilho($grupoNovo);
                 $repositorioORM->getGrupoPaiFilhoORM()->persistir($grupoPaiFilhoNovo);
 
+                $repositorioORM->fecharTransacao();
                 $view = new ViewModel();
                 return $view;
             } catch (Exception $exc) {
-                $this->direcionaErroDeCadastro($exc->getMessage());
+                $repositorioORM->desfazerTransacao();
+                echo $exc->getTraceAsString();
+//                $this->direcionaErroDeCadastro($exc->getMessage());
             }
         }
     }
@@ -1122,7 +1127,8 @@ class CadastroController extends CircuitoController {
         $pessoaLogada = $loginORM->getPessoaORM()->encontrarPorId($sessao->idPessoa);
 
         $Subject = 'Convite';
-        $ToEmail = 'falecomleonardopereira@gmail.com';
+//        $ToEmail = 'falecomleonardopereira@gmail.com';
+        $ToEmail = $pessoa->getEmail();
         $avatar = 'placeholder.png';
         if ($pessoaLogada->getFoto()) {
             $avatar = $pessoaLogada->getFoto();
@@ -1647,14 +1653,14 @@ class CadastroController extends CircuitoController {
         }
     }
 
-    public function turmaAction() {
-//        $formCadastroTurma = new TurmaForm();  
-//        $view = new ViewModel(array(
-//            'formCadastroTurma' => $formCadastroTurma,
-//        )); 
+    public function turmaFormAction() {
+        $formCadastroTurma = new TurmaForm('formulario');  
+
        
-        $view = new ViewModel();  
-        return $view; 
+        $view = new ViewModel(array(
+            'formCadastroTurma' => $formCadastroTurma,
+        )); 
+        return $view;
     }
- 
+
 }
