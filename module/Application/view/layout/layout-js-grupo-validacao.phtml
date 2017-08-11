@@ -237,18 +237,18 @@ use Application\Controller\Helper\Constantes;
                             var splitNomeDoAluno = nomeDoAlunoSelecionado.split(" ");
                             var splitNomeEncontradoNaBusca = data.nome.split(" ");
                             var dadosValidados = true;
-                            if (entidadeTipo !== 1
-                                    && entidadeTipo !== 2
-                                    && entidadeTipo !== 3
-                                    && entidadeTipo !== 4) {
-                                if (splitNomeDoAluno[0] !== splitNomeEncontradoNaBusca[0]) {
-                                    dadosValidados = false;
-                                    spanMensagens
-                                            .addClass(alertDanger)
-                                            .text('<?php echo $this->translate(Constantes::$TRADUCAO_NOME_NAO_CONFERE); ?>')
-                                            .removeClass(hidden);
-                                }
-                            }
+//                            if (entidadeTipo !== 1
+//                                    && entidadeTipo !== 2
+//                                    && entidadeTipo !== 3
+//                                    && entidadeTipo !== 4) {
+//                                if (splitNomeDoAluno[0] !== splitNomeEncontradoNaBusca[0]) {
+//                                    dadosValidados = false;
+//                                    spanMensagens
+//                                            .addClass(alertDanger)
+//                                            .text('<?php // echo $this->translate(Constantes::$TRADUCAO_NOME_NAO_CONFERE); ?>')
+//                                            .removeClass(hidden);
+//                                }
+//                            }
                             if (dataNascimento !== data.dataNascimento) {
                                 dadosValidados = false;
                                 spanMensagens

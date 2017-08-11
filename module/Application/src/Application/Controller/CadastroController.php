@@ -797,19 +797,19 @@ class CadastroController extends CircuitoController {
         $grupo = $entidade->getGrupo();
         $arrayGrupoAlunos = $grupo->getGrupoAlunoAtivos();
         $mostrarCadastro = false;
-//        if (!empty($arrayGrupoAlunos)) {
-        $mostrarCadastro = true;
-//        }
+        if (!empty($arrayGrupoAlunos)) {
+            $mostrarCadastro = true;
+        }
 
         $pessoa = $repositorioORM->getPessoaORM()->encontrarPorId($sessao->idPessoa);
         $arrayHierarquia = $repositorioORM->getHierarquiaORM()->encontrarTodas($pessoa->getPessoaHierarquiaAtivo()->getHierarquia()->getId());
 
         $form = new GrupoForm(Constantes::$FORM, $arrayGrupoAlunos, $arrayHierarquia);
 
-        
+
         $view = new ViewModel(array(
             Constantes::$FORM => $form,
-            'tipoEntidade' => Entidade::COORDENACAO,
+            'tipoEntidade' => $entidade->getTipo_id(),
             'mostrarCadastro' => $mostrarCadastro,
             'tituloDaPagina' => 'Cadastro de Time',
         ));
@@ -1293,7 +1293,6 @@ class CadastroController extends CircuitoController {
 //            $p = $gr->getPessoa();
 //            $pessoas[] = $p;
 //        }
-
 //        $view = new ViewModel(array(
 //            Constantes::$PESSOA_REVISAO => $pessoaRevisionista,
 //            Constantes::$REVISAO_VIEW => $eventoRevisao,
