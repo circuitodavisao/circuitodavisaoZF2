@@ -215,7 +215,7 @@ class Menu extends AbstractHelper {
         $html .= '<li>';
         $html .= '<a class="accordion-toggle" href="#">';
         $html .= '<span class="fa fa-terminal"></span>';
-        $html .= '<span class="sidebar-title">Cadastro (Manutenção)</span>';
+        $html .= '<span class="sidebar-title">Cadastro</span>';
         $html .= '<span class="caret"></span>';
         $html .= '</a>';
 
@@ -224,14 +224,14 @@ class Menu extends AbstractHelper {
         $html .= '<li>';
         $html .= '<a href="#">';
         $html .= '<span class="fa fa-users"></span>';
-        $html .= 'Células (Manutenção)'; 
+        $html .= 'Células(Manutenção)'; 
         $html .= '</a>';
         $html .= '</li>';
 
         $html .= '<li>';
         $html .= '<a href="#">';
         $html .= '<span class="fa fa-users"></span>';
-        $html .= 'Cultos (Manutenção)';
+        $html .= 'Cultos(Manutenção)';
         $html .= '</a>';
         $html .= '</li>';
 

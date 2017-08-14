@@ -75,12 +75,29 @@ use Application\Controller\Helper\Constantes;
         if (entidadeTipo === 1
                 || entidadeTipo === 2
                 || entidadeTipo === 3
-                || entidadeTipo === 4) {
+                || entidadeTipo === 4
+                || entidadeTipo === 6
+                || entidadeTipo === 7) {
             $('#divSelecionarAluno').addClass(hidden);
             $('#divCPFDataNascimento').removeClass(hidden);
             $('#divDadosSelecionados').removeClass(hidden);
         }
         limparPassoAPasso(tipo);
+        var inputCPF = $("#cpf");
+        var inputDia = $("#Dia");
+        var inputMes = $("#Mes");
+        var inputAno = $("#Ano");
+        inputDia.val(0);
+        inputMes.val(0);
+        inputAno.val(0);
+        inputCPF.val('');
+        inputCPF.removeAttr('disabled');
+        inputDia.removeAttr('disabled');
+        inputMes.removeAttr('disabled');
+        inputAno.removeAttr('disabled');
+
+        var inputDivBotoesBuscaCPF = $("#botaoBuscarCPF");
+        inputDivBotoesBuscaCPF.removeClass(hidden);
     }
 
     function selecionarAlunoPeloNome(idAluno) {
@@ -160,6 +177,10 @@ use Application\Controller\Helper\Constantes;
         var inputAno = $("#Ano");
 
         var cpf = inputCPF.val();
+
+        var spanMensagens = $('#spanMensagens');
+        var temErro = false;
+
         var stringBarra = '/';
         var DiaDataNascimento = inputDia.val();
         var MesDataNascimento = inputMes.val();
@@ -167,11 +188,11 @@ use Application\Controller\Helper\Constantes;
         DiaDataNascimento = parseInt(DiaDataNascimento);
         MesDataNascimento = parseInt(MesDataNascimento);
         AnoDataNascimento = parseInt(AnoDataNascimento);
-        var spanMensagens = $('#spanMensagens');
+
         spanMensagens.removeClass(alertDanger)
                 .removeClass(alertSuccess)
                 .addClass(hidden);
-        var temErro = false;
+
         var erros = '';
 
         if (DiaDataNascimento === 0) {
@@ -221,6 +242,13 @@ use Application\Controller\Helper\Constantes;
                 spanMensagens.text('<?php echo $this->translate(Constantes::$TRADUCAO_CPF_INVALIDO); ?>');
                 temErro = true;
             }
+            // verificando cpf repetido
+            var inputCPF1 = $("#cpf1");
+            var inputCPF2 = $("#cpf2");
+            if (cpf == inputCPF1.val() || cpf == inputCPF2.val()) {
+                spanMensagens.text('Não use o CPF do seu cônjuge');
+                temErro = true;
+            }
         }
         if (!temErro) {
 
@@ -237,18 +265,20 @@ use Application\Controller\Helper\Constantes;
                             var splitNomeDoAluno = nomeDoAlunoSelecionado.split(" ");
                             var splitNomeEncontradoNaBusca = data.nome.split(" ");
                             var dadosValidados = true;
-//                            if (entidadeTipo !== 1
-//                                    && entidadeTipo !== 2
-//                                    && entidadeTipo !== 3
-//                                    && entidadeTipo !== 4) {
-//                                if (splitNomeDoAluno[0] !== splitNomeEncontradoNaBusca[0]) {
-//                                    dadosValidados = false;
-//                                    spanMensagens
-//                                            .addClass(alertDanger)
-//                                            .text('<?php // echo $this->translate(Constantes::$TRADUCAO_NOME_NAO_CONFERE); ?>')
-//                                            .removeClass(hidden);
-//                                }
-//                            }
+                            if (entidadeTipo !== 1
+                                    && entidadeTipo !== 2
+                                    && entidadeTipo !== 3
+                                    && entidadeTipo !== 4
+                                    && entidadeTipo !== 6
+                                    && entidadeTipo !== 7) {
+                                if (splitNomeDoAluno[0] !== splitNomeEncontradoNaBusca[0]) {
+                                    dadosValidados = false;
+                                    spanMensagens
+                                            .addClass(alertDanger)
+                                            .text('<?php echo $this->translate(Constantes::$TRADUCAO_NOME_NAO_CONFERE); ?>')
+                                            .removeClass(hidden);
+                                }
+                            }
                             if (dataNascimento !== data.dataNascimento) {
                                 dadosValidados = false;
                                 spanMensagens
@@ -782,7 +812,9 @@ use Application\Controller\Helper\Constantes;
         if (entidadeTipo === 1
                 || entidadeTipo === 2
                 || entidadeTipo === 3
-                || entidadeTipo === 4) {
+                || entidadeTipo === 4
+                || entidadeTipo === 6
+                || entidadeTipo === 7) {
             $('#divIncluirResponsavel').addClass(hidden);
             $('#divPassoAPasso').addClass(hidden);
             $('#divConfirmacao').removeClass(hidden);
