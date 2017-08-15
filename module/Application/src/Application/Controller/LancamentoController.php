@@ -229,8 +229,10 @@ class LancamentoController extends CircuitoController {
                     $repositorioORM->getFatoCelulaORM()->persistir($fatoCelulaSelecionado, $setarDataEHora);
 
                     /* Atualizar DW celulas circuito antigo */
-                    $grupoCv = $grupoPassado->getGrupoCv();
-                    IndexController::mudarCelulasRealizadas($grupoCv->getNumero_identificador(), $arrayDataReal[1], $arrayDataReal[0], $ciclo, $realizada, $realizadaAntesDeMudar);
+                    if ($grupoPassado->getGrupoCv()) {
+                        $grupoCv = $grupoPassado->getGrupoCv();
+                        IndexController::mudarCelulasRealizadas($grupoCv->getNumero_identificador(), $arrayDataReal[1], $arrayDataReal[0], $ciclo, $realizada, $realizadaAntesDeMudar);
+                    }
                 }
                 $tipoPessoa = 0;
                 if ($pessoa->getGrupoPessoaAtivo()) {
@@ -264,9 +266,10 @@ class LancamentoController extends CircuitoController {
                 $repositorioORM->getDimensaoORM()->persistir($dimensaoSelecionada, false);
 
                 /* Atualizar DW circuito antigo */
-                $grupoCv = $grupoPassado->getGrupoCv();
-                IndexController::mudarFrequencia($grupoCv->getNumero_identificador(), $arrayDataReal[1], $arrayDataReal[0], $tipoCampo, $tipoPessoa, $ciclo, $valorParaSomar);
-
+                if ($grupoPassado->getGrupoCv()) {
+                    $grupoCv = $grupoPassado->getGrupoCv();
+                    IndexController::mudarFrequencia($grupoCv->getNumero_identificador(), $arrayDataReal[1], $arrayDataReal[0], $tipoCampo, $tipoPessoa, $ciclo, $valorParaSomar);
+                }
                 $repositorioORM->fecharTransacao();
                 $response->setContent(Json::encode(
                                 array('response' => 'true',
@@ -555,21 +558,22 @@ class LancamentoController extends CircuitoController {
                 $progresso = number_format($explodeProgresso[0], 2, '.', '');
                 $colorBarTotal = LancamentoController::retornaClassBarradeProgressoPeloValor($progresso);
 
-                /* Cadastrar atendimento no circuito antigo */
-                $idAtendimento = IndexController::buscaIdAtendimentoPorLideres(
-                                $mesSelecionado, $anoSelecionado, $grupoLancado->getGrupoCv()->getLider1(), $grupoLancado->getGrupoCv()->getLider2()
-                );
+                if ($grupoLancado->getGrupoCv()) {
+                    /* Cadastrar atendimento no circuito antigo */
+                    $idAtendimento = IndexController::buscaIdAtendimentoPorLideres(
+                                    $mesSelecionado, $anoSelecionado, $grupoLancado->getGrupoCv()->getLider1(), $grupoLancado->getGrupoCv()->getLider2()
+                    );
 
-                unset($atendimentoLancado);
-                for ($index = 1; $index <= 5; $index++) {
-                    if ($index <= $numeroAtendimentos) {
-                        $atendimentoLancado[$index] = 'S';
-                    } else {
-                        $atendimentoLancado[$index] = 'N';
+                    unset($atendimentoLancado);
+                    for ($index = 1; $index <= 5; $index++) {
+                        if ($index <= $numeroAtendimentos) {
+                            $atendimentoLancado[$index] = 'S';
+                        } else {
+                            $atendimentoLancado[$index] = 'N';
+                        }
                     }
+                    IndexController::cadastrarAtendimentoPorid($idAtendimento, $atendimentoLancado);
                 }
-                IndexController::cadastrarAtendimentoPorid($idAtendimento, $atendimentoLancado);
-
                 $repositorioORM->fecharTransacao();
                 $response->setContent(Json::encode(
                                 array('response' => 'true',
