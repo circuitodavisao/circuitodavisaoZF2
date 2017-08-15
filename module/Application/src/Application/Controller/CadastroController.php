@@ -797,9 +797,9 @@ class CadastroController extends CircuitoController {
         $grupo = $entidade->getGrupo();
         $arrayGrupoAlunos = $grupo->getGrupoAlunoAtivos();
         $mostrarCadastro = false;
-        if (!empty($arrayGrupoAlunos)) {
-            $mostrarCadastro = true;
-        }
+//        if (!empty($arrayGrupoAlunos)) {
+        $mostrarCadastro = true;
+//        }
 
         $pessoa = $repositorioORM->getPessoaORM()->encontrarPorId($sessao->idPessoa);
         $arrayHierarquia = $repositorioORM->getHierarquiaORM()->encontrarTodas($pessoa->getPessoaHierarquiaAtivo()->getHierarquia()->getId());
@@ -873,30 +873,40 @@ class CadastroController extends CircuitoController {
                     $indicePessoasFim = 2;
                 }
                 for ($indicePessoas = $indicePessoasInicio; $indicePessoas <= $indicePessoasFim; $indicePessoas++) {
-                    $matricula = $post_data[Constantes::$FORM_ID_ALUNO_SELECIONADO . $indicePessoas];
-                    $turmaAluno = $repositorioORM->getTurmaAlunoORM()->encontrarPorId($matricula);
-                    $pessoaSelecionada = $turmaAluno->getPessoa();
-                    $tokenDeAgora = $pessoaSelecionada->gerarToken($indicePessoas);
-                    $pessoaSelecionada->setToken($tokenDeAgora);
-                    $pessoaAtualizada = $loginORM->getPessoaORM()->
-                            atualizarAlunoComDadosDaBuscaPorCPF($pessoaSelecionada, $post_data, $indicePessoas);
+                    /* PReciso gera uma nova pessoa */
+                    $novaPessoa = new Pessoa();
+                    $novaPessoa->setNome($post_data[Constantes::$FORM_NOME . $indicePessoas]);
+                    $novaPessoa->setEmail($post_data[Constantes::$FORM_EMAIL . $indicePessoas]);
+                    $novaPessoa->setDocumento($post_data[Constantes::$FORM_CPF . $indicePessoas]);
+                    $novaPessoa->setData_nascimento($post_data[Constantes::$FORM_DATA_NASCIMENTO . $indicePessoas]);
+                    $tokenDeAgora = $novaPessoa->gerarToken($indicePessoas);
+                    $novaPessoa->setToken($tokenDeAgora);
+                    $repositorioORM->getPessoaORM()->persistir($novaPessoa);
+
+//                    $matricula = $post_data[Constantes::$FORM_ID_ALUNO_SELECIONADO . $indicePessoas];
+//                    $turmaAluno = $repositorioORM->getTurmaAlunoORM()->encontrarPorId($matricula);
+//                    $pessoaSelecionada = $turmaAluno->getPessoa();
+//                    $tokenDeAgora = $pessoaSelecionada->gerarToken($indicePessoas);
+//                    $pessoaSelecionada->setToken($tokenDeAgora);
+//                    $pessoaAtualizada = $loginORM->getPessoaORM()->
+//                            atualizarAlunoComDadosDaBuscaPorCPF($pessoaSelecionada, $post_data, $indicePessoas);
 
                     /* Criar hierarquia */
                     $idHierarquia = $post_data[Constantes::$FORM_HIERARQUIA . $indicePessoas];
                     $hierarquia = $repositorioORM->getHierarquiaORM()->encontrarPorId($idHierarquia);
                     $pessoaHierarquia = new PessoaHierarquia();
-                    $pessoaHierarquia->setPessoa($pessoaAtualizada);
+                    $pessoaHierarquia->setPessoa($novaPessoa);
                     $pessoaHierarquia->setHierarquia($hierarquia);
                     $repositorioORM->getPessoaHierarquiaORM()->persistir($pessoaHierarquia);
 
                     /* Criar Grupo_Responsavel */
                     $grupoResponsavelNovo = new GrupoResponsavel();
-                    $grupoResponsavelNovo->setPessoa($pessoaAtualizada);
+                    $grupoResponsavelNovo->setPessoa($novaPessoa);
                     $grupoResponsavelNovo->setGrupo($grupoNovo);
                     $repositorioORM->getGrupoResponsavelORM()->persistir($grupoResponsavelNovo);
 
                     // Enviar Email
-                    $this->enviarEmailParaCompletarOsDados($tokenDeAgora, $pessoaSelecionada);
+                    $this->enviarEmailParaCompletarOsDados($tokenDeAgora, $novaPessoa);
                 }
 
                 /* Criar Grupo_Pai_Filho */
