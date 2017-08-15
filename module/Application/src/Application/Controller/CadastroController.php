@@ -916,7 +916,6 @@ class CadastroController extends CircuitoController {
                 $grupoPaiFilhoNovo->setGrupoPaiFilhoFilho($grupoNovo);
                 $repositorioORM->getGrupoPaiFilhoORM()->persistir($grupoPaiFilhoNovo);
 
-//                $repositorioORM->desfazerTransacao();
                 $repositorioORM->fecharTransacao();
                 $view = new ViewModel();
                 return $view;
@@ -924,6 +923,7 @@ class CadastroController extends CircuitoController {
                 $repositorioORM->desfazerTransacao();
                 echo $exc->getTraceAsString();
                 $this->direcionaErroDeCadastro($exc->getMessage());
+
             }
         }
     }
@@ -1666,12 +1666,14 @@ class CadastroController extends CircuitoController {
     }
 
     public function turmaFormAction() {
-        $formCadastroTurma = new TurmaForm('formulario');
 
+        $formCadastroTurma = new TurmaForm('formulario');  
 
+       
         $view = new ViewModel(array(
             'formCadastroTurma' => $formCadastroTurma,
-        ));
+        )); 
+
         return $view;
     }
 
