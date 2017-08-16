@@ -37,9 +37,10 @@ class RepositorioORM {
     private $_dimensaoORM;
     private $_dimensaoTipoORM;
     private $_grupoCvORM;
+    private $_turmaORM;
 
     /**
-     * Contrutor
+     * Contrutor 
      */
     public function __construct(EntityManager $doctrineORMEntityManager = null) {
         if (!is_null($doctrineORMEntityManager)) {
@@ -298,6 +299,17 @@ class RepositorioORM {
             $this->_grupoCvORM = new CircuitoORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_GRUPO_CV);
         }
         return $this->_grupoCvORM;
+    }
+    
+    /**
+     * Metodo public para obter a instancia do TurmaORM
+     * @return TurmaORM
+     */
+    public function getTurmaORM() {
+        if (is_null($this->_turmaORM)) {
+            $this->_turmaORM = new TurmaORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_TURMA);
+        }
+        return $this->_turmaORM;
     }
 
     /**

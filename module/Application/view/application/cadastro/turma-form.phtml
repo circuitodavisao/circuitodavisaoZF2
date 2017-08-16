@@ -9,7 +9,7 @@ use Application\Controller\Helper\Constantes;
  */
 $form = $this->formCadastroTurma;
 $form->prepare();
-$form->setAttribute(Constantes::$ACTION, $this->url(Constantes::$ROUTE_CADASTRO, array(Constantes::$PAGINA => Constantes::$PAGINA_CADASTRAR_TURMA)));
+$form->setAttribute(Constantes::$ACTION, $this->url(Constantes::$ROUTE_CADASTRO, array(Constantes::$PAGINA => Constantes::$PAGINA_SALVAR_TURMA)));
 ?>  
 <div class="mw1000 center-block p10">
     <div class="row ">
@@ -71,9 +71,9 @@ function validarLancamentoCadastrarTurma(form) {
 
         temErro = true;
         if (mensagem == '') {
-            mensagem = 'Dia';
+            mensagem = 'Tipo';
         } else {
-            mensagem += ', Dia';
+            mensagem += ', Tipo';
         }
     }
     if (Mes === '0') {

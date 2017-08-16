@@ -239,6 +239,7 @@ class Constantes {
     public static $ENTITY_GRUPO_EVENTO = 'Application\Model\Entity\GrupoEvento';
     public static $ENTITY_GRUPO_ATENDIMENTO = 'Application\Model\Entity\GrupoAtendimento';
     public static $ENTITY_TURMA_ALUNO = 'Application\Model\Entity\TurmaAluno';
+    public static $ENTITY_TURMA = 'Application\Model\Entity\Turma'; 
     public static $ENTITY_PESSOA_ID = 'pessoa_id';
     public static $ENTITY_DATA_INATIVACAO = 'data_inativacao';
     public static $ENTITY_TIPO_ID = 'tipo_id';
@@ -458,6 +459,7 @@ class Constantes {
     public static $ROUTE_CADASTRO = 'cadastro';
     /* páginas relacionadas ao IV */
     public static $PAGINA_CADASTRAR_TURMA = 'TurmaForm';
+    public static $PAGINA_SALVAR_TURMA = 'SalvarTurma';
     /* Fim das páginas relaciondas ao IV */
     
     /* Entidades */
