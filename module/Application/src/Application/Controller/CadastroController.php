@@ -11,8 +11,6 @@ use Application\Form\CadastrarPessoaRevisaoForm;
 use Application\Form\CelulaForm;
 use Application\Form\EventoForm;
 use Application\Form\GrupoForm;
-use Application\Form\RevisaoForm;
-use Application\Form\SelecionarLiderRevisaoForm;
 use Application\Form\TransferenciaForm;
 use Application\Form\TurmaForm;
 use Application\Model\Entity\Entidade;
@@ -26,10 +24,10 @@ use Application\Model\Entity\GrupoPessoa;
 use Application\Model\Entity\GrupoResponsavel;
 use Application\Model\Entity\Pessoa;
 use Application\Model\Entity\PessoaHierarquia;
+use Application\Model\Entity\Turma;
 use Application\Model\ORM\RepositorioORM;
 use DateTime;
 use Exception;
-use Migracao\Controller\IndexController;
 use Zend\Json\Json;
 use Zend\Session\Container;
 use Zend\View\Model\ViewModel;
@@ -191,6 +189,11 @@ class CadastroController extends CircuitoController {
         if ($pagina == Constantes::$PAGINA_CADASTRAR_TURMA) {
             return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
                         Constantes::$ACTION => Constantes::$PAGINA_CADASTRAR_TURMA,
+            ));
+        }
+        if ($pagina == Constantes::$PAGINA_SALVAR_TURMA) {
+            return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
+                        Constantes::$ACTION => Constantes::$PAGINA_SALVAR_TURMA,
             ));
         }
         /* Funcoes */
@@ -923,7 +926,6 @@ class CadastroController extends CircuitoController {
                 $repositorioORM->desfazerTransacao();
                 echo $exc->getTraceAsString();
                 $this->direcionaErroDeCadastro($exc->getMessage());
-
             }
         }
     }
@@ -1667,12 +1669,52 @@ class CadastroController extends CircuitoController {
 
     public function turmaFormAction() {
 
-        $formCadastroTurma = new TurmaForm('formulario');  
+        $formCadastroTurma = new TurmaForm('formulario');
 
-       
+
         $view = new ViewModel(array(
             'formCadastroTurma' => $formCadastroTurma,
-        )); 
+        ));
+
+        return $view;
+    }
+
+    public function salvarTurmaAction() {
+        $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
+        $request = $this->getRequest();
+        $response = $this->getResponse();
+        if ($request->isPost()) {
+            try {
+                $repositorioORM->iniciarTransacao();
+                
+                $dadosPost = $request->getPost();
+                $idTipo = $dadosPost['Tipo'];
+                $mes = $dadosPost['Mes'];
+                $ano = $dadosPost['Ano'];
+                $observacao = $dadosPost['observacao'];
+                
+                $turma = new Turma();
+                $turma->setAno($ano);
+                $turma->setMes($mes);
+                $turma->setObservacao($observacao);
+                
+                $repositorioORM->getTurmaORM()->persistir($turma);
+                
+                $repositorioORM->fecharTransacao();
+                
+            } catch (Exception $exc) {
+                $repositorioORM->desfazerTransacao();
+                echo $exc->getTraceAsString();
+            }
+        }
+    }
+    
+    public function listarTurmasAction(){
+        $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
+        $turmas = $repositorioORM->getTurmaORM()->encontrarTodas();
+        $view = new ViewModel(array(
+            'turmas' => $turmas,
+        ));
 
         return $view;
     }
