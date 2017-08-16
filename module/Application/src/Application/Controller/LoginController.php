@@ -157,13 +157,13 @@ class LoginController extends CircuitoController {
                 ));
             }
         } else {
-//            /* Nao encontrou na base de dados */
-//            /* Redirecionamento */
-//            return $this->forward()->dispatch(Constantes::$CONTROLLER_LOGIN, array(
-//                        Constantes::$ACTION => Constantes::$ACTION_INDEX,
-//                        Constantes::$INPUT_USUARIO => $usuarioTrim,
-//                        Constantes::$TIPO => 1,
-//            ));
+            /* Nao encontrou na base de dados */
+            /* Redirecionamento */
+            return $this->forward()->dispatch(Constantes::$CONTROLLER_LOGIN, array(
+                        Constantes::$ACTION => Constantes::$ACTION_INDEX,
+                        Constantes::$INPUT_USUARIO => $usuarioTrim,
+                        Constantes::$TIPO => 1,
+            ));
         }
     }
 
