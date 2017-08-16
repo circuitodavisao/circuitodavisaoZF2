@@ -222,18 +222,18 @@ class Menu extends AbstractHelper {
         $html .= '<ul class="nav sub-nav">';
 
         $html .= '<li>';
-        $html .= '<a href="#">';
+        $html .= '<a href="/cadastroCelulas">';
         $html .= '<span class="fa fa-users"></span>';
-        $html .= 'Células(Manutenção)'; 
+        $html .= 'Células'; 
         $html .= '</a>';
         $html .= '</li>';
 
-        $html .= '<li>';
-        $html .= '<a href="#">';
-        $html .= '<span class="fa fa-users"></span>';
-        $html .= 'Cultos(Manutenção)';
-        $html .= '</a>';
-        $html .= '</li>';
+//        $html .= '<li>';
+//        $html .= '<a href="#">';
+//        $html .= '<span class="fa fa-users"></span>';
+//        $html .= 'Cultos(Manutenção)';
+//        $html .= '</a>';
+//        $html .= '</li>';
 
         $html .= '<li>';
         $html .= '<a href="/cadastroGrupo">';
