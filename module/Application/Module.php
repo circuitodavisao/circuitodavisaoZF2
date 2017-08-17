@@ -15,7 +15,7 @@ use Application\Model\ORM\RepositorioORM;
 use Application\View\Helper\AbaSelecionada;
 use Application\View\Helper\AbasPanel;
 use Application\View\Helper\AlertaEnvioRelatorio;
-use Application\View\Helper\AtendimentoGruposAbaixo; 
+use Application\View\Helper\AtendimentoGruposAbaixo;
 use Application\View\Helper\AtendimentosDoGrupo;
 use Application\View\Helper\BarraDeProgresso;
 use Application\View\Helper\BlocoDiv;
@@ -50,6 +50,7 @@ use Application\View\Helper\ListagemDePessoasComEventos;
 use Application\View\Helper\ListagemFichasAtivasRevisao;
 use Application\View\Helper\ListagemFichasParaRevisao;
 use Application\View\Helper\ListagemLideresTransferencia;
+use Application\View\Helper\ListagemTurmas;
 use Application\View\Helper\MensagemRelatorioEnviado;
 use Application\View\Helper\Menu;
 use Application\View\Helper\MenuHierarquia;
@@ -219,6 +220,9 @@ class Module {
                 },
                 'listagemFichasAtivasParaRevisao' => function($sm) {
                     return new ListagemFichasAtivasParaRevisao();
+                },
+                'listagemTurmas' => function($sm) {
+                    return new ListagemTurmas();
                 },
                 'inputExtras' => function($sm) {
                     return new InputExtras();

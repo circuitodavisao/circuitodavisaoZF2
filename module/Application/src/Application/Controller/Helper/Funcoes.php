@@ -407,6 +407,79 @@ class Funcoes {
     }
 
     /**
+     * Retorna o mês por extenso.
+     * @param int $mes
+     * @param int $tipo
+     * @return string
+     */
+    public static function mesPorExtenso($mes, $tipo = 0) {
+        $resposta = '';
+        switch ($mes) {
+            case 1:$resposta = 'JAN';
+                if ($tipo == 1) {
+                    $resposta = 'JANEIRO';
+                }
+                break;
+            case 2:$resposta = 'FEV';
+                if ($tipo == 1) {
+                    $resposta = 'FEVEREIRO';
+                }
+                break;
+            case 3:$resposta = 'MAR';
+                if ($tipo == 1) {
+                    $resposta = 'MARÇO';
+                }
+                break;
+            case 4:$resposta = 'ABR';
+                if ($tipo == 1) {
+                    $resposta = 'ABRIL';
+                }
+                break;
+            case 5:$resposta = 'MAI';
+                if ($tipo == 1) {
+                    $resposta = 'MAIO';
+                }
+                break;
+            case 6:$resposta = 'JUN';
+                if ($tipo == 1) {
+                    $resposta = 'JUNHO';
+                }
+                break;
+            case 7:$resposta = 'JUL';
+                if ($tipo == 1) {
+                    $resposta = 'JULHO';
+                }
+                break;
+            case 8:$resposta = 'AGO';
+                if ($tipo == 1) {
+                    $resposta = 'AGOSTO';
+                }
+                break;
+            case 9:$resposta = 'SET';
+                if ($tipo == 1) {
+                    $resposta = 'SETEMBRO';
+                }
+                break;
+            case 10:$resposta = 'OUT';
+                if ($tipo == 1) {
+                    $resposta = 'OUTUBRO';
+                }
+                break;
+            case 11:$resposta = 'NOV';
+                if ($tipo == 1) {
+                    $resposta = 'NOVEMBRO';
+                }
+                break;
+            case 12:$resposta = 'DEZ';
+                if ($tipo == 1) {
+                    $resposta = 'DEZEMBRO';
+                }
+                break;
+        }
+        return $resposta;
+    }
+
+    /**
      * Retorna a data atual formato Y-m-d
      * @return String
      */

@@ -3,23 +3,22 @@
 namespace Application\View\Helper;
 
 use Application\Controller\Helper\Constantes;
+use Application\Controller\Helper\Funcoes;
 use Zend\View\Helper\AbstractHelper;
 
 /**
- * Nome: ListagemDePessoasComEventos.php
+ * Nome: ListagemTurmas.php
  * @author Lucas Filipe de Carvalho Cunha <lucascarvalho.esw@gmail.com>
  * Descricao: Classe helper view para mostrar a listagem de pesoas ativas no revisão seleiconado 
  */
 class ListagemTurmas extends AbstractHelper {
 
-    private $amostragem;
 
     public function __construct() {
         
     }
 
-    public function __invoke($amostragem = null) {
-        $this->setAmostragem($amostragem);
+    public function __invoke() {
         return $this->renderHtml();
     }
 
@@ -29,7 +28,7 @@ class ListagemTurmas extends AbstractHelper {
         
 
         /* Sem pessoas cadastrados */
-        if (count($pessoas) == 0) {
+        if (count($turmas) == 0) {
 
             $html .= '<div class="panel-body bg-light">';
 
@@ -40,8 +39,8 @@ class ListagemTurmas extends AbstractHelper {
 
             ;
         } else {
-            if ($this->getAmostragem() == null) {
-                $html .= $this->view->templateFormularioTopo('Fichas do Revisão de Vidas');
+            
+                $html .= $this->view->templateFormularioTopo('Turmas do IV');
                 $html .= '<div class="panel-body bg-light">';
 
                 $html .= '<table class="table">';
@@ -57,6 +56,9 @@ class ListagemTurmas extends AbstractHelper {
                 $html .= '<th class="text-center">';
                 $html .= 'Ano';
                 $html .= '</th>';
+                $html .= '<th class="text-center">';
+                $html .= 'Observação';
+                $html .= '</th>';
 //                    }
                 $html .= '<th class="text-center"></th>';
                 $html .= '</tr>';
@@ -69,13 +71,17 @@ class ListagemTurmas extends AbstractHelper {
                     $html .= '<td class="text-center">' . $turma->getId() . '</td>';
 
                     $stringNomeDaFuncaoOnClickInserir = 'funcaoCadastro("' . Constantes::$PAGINA_FICHA_REVISAO . '", ' . $turma->getId() . ')';
-
-                    $html .= '<td class="text-center">' . $turma->getMes() . '</td>';
+                    $stringNomeDaFuncaoOnClick = 'funcaoCadastro("' . Constantes::$PAGINA_EDITAR_TURMA . '", ' . $turma->getId() . ')';
+                    $stringNomeDaFuncaoOnClickExclusao = 'funcaoCadastro("' . Constantes::$PAGINA_EVENTO_EXCLUSAO . '", ' . $turma->getId() . ')';
+                    
+                    $html .= '<td class="text-center">' . Funcoes::mesPorExtenso($turma->getMes(),1) . '</td>';
                     $html .= '<td class="text-center">' . $turma->getAno() . '</td>';
+                    $html .= '<td class="text-center">' . $turma->getObservacao() . '</td>';
 
                     $html .= '<td class="text-center">';
 
-                    $html .= $this->view->botaoLink(Constantes::$STRING_ICONE_PLUS . '  ' . $this->view->translate(Constantes::$TRADUCAO_VER_FICHA_REVISIONISTA), Constantes::$STRING_HASHTAG, 4, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClickInserir));
+                    $html .= $this->view->botaoLink(Constantes::$STRING_ICONE_PENCIL, Constantes::$STRING_HASHTAG, 3, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClick));
+                    $html .= $this->view->botaoLink(Constantes::$STRING_ICONE_TIMES, Constantes::$STRING_HASHTAG, 4, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClickExclusao));
                     $html .= '</td>';
 //                        }
                     $html .= '</tr>';
@@ -87,64 +93,17 @@ class ListagemTurmas extends AbstractHelper {
                 /* Fim panel-body */
                 $html .= '<div class="panel-footer text-right">';
 
-                $stringNomeDaFuncaoOnClickCadastro = 'funcaoCadastro("' . Constantes::$PAGINA_FICHA_REVISIONISTAS . '", ' . $pessoa->getId() . ')';
-                $html .= $this->view->botaoLink($this->view->translate(Constantes::$TRADUCAO_VOLTAR), Constantes::$STRING_HASHTAG, 0, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClickCadastro));
+                $stringNomeDaFuncaoOnClickCadastro = 'funcaoCadastro("' . Constantes::$PAGINA_CADASTRAR_TURMA . '", 0)';
+                $html .= $this->view->botaoLink($this->view->translate(Constantes::$TRADUCAO_CADASTRAR), Constantes::$STRING_HASHTAG, 0, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClickCadastro));
 
                 /* Fim Botões */
                 $html .= '</div>';
                 /* Fim panel-footer */
-                $html .= $this->view->templateFormularioRodape();
-            } else {
-                
-                $html .= '<div class="panel-body bg-light">';
-
-                $html .= '<table class="table">';
-                $html .= '<thead>';
-                $html .= '<tr>';
-
-                $html .= '<th class="text-center" colspan=2>';
-                $html .= $this->view->translate(Constantes::$TRADUCAO_FICHAS_ATIVAS_LABEL);
-                $html .= '</th>';
-//                    }
-                $html .= '<th class="text-center"></th>';
-                $html .= '</tr>';
-                $html .= '</thead>';
-                $html .= '<tbody>';
-
-                foreach ($pessoas as $pessoa) {
-                    $html .= '<tr>';
-
-                    $html .= '<td class="text-center">' . $pessoa->getId() . '</td>';
-
-                    $stringNomeDaFuncaoOnClickInserir = 'funcaoCadastro("' . Constantes::$PAGINA_REMOVER_REVISIONISTA_ATIVO . '", ' . $pessoa->getId() . ')';
-
-                    $html .= '<td class="text-center"><span class="visible-lg visible-md">' . $pessoa->getNome() . '</span><span class="visible-sm visible-xs">' . $pessoa->getNomePrimeiroUltimo() . '</span></td>';
-
-                    $html .= '<td class="text-center">';
-
-                    $html .= $this->view->botaoLink(Constantes::$STRING_ICONE_MINUS . '  ' . $this->view->translate(Constantes::$TRADUCAO_REMOVER_REVISIONISTA), Constantes::$STRING_HASHTAG, 4, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClickInserir));
-                    $html .= '</td>';
-//                        }
-                    $html .= '</tr>';
-                }
-                $html .= '</tbody>';
-                $html .= '</table>';
-
-                $html .= '</div>';
-                /* Fim panel-body */
-
-            }
+                $html .= $this->view->templateFormularioRodape();   
+            
         }
 
         return $html;
-    }
-
-    function getAmostragem() {
-        return $this->amostragem;
-    }
-
-    function setAmostragem($amostragem) {
-        $this->amostragem = $amostragem;
     }
 
 }

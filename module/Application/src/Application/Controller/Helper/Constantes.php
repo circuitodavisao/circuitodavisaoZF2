@@ -460,6 +460,8 @@ class Constantes {
     /* páginas relacionadas ao IV */
     public static $PAGINA_CADASTRAR_TURMA = 'TurmaForm';
     public static $PAGINA_SALVAR_TURMA = 'SalvarTurma';
+    public static $PAGINA_EDITAR_TURMA = 'TurmaFormEdit';
+    public static $PAGINA_LISTAR_TURMA = 'ListarTurma'; 
     /* Fim das páginas relaciondas ao IV */
     
     /* Entidades */
