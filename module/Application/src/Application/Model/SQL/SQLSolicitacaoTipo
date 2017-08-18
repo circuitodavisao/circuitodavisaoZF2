@@ -1,0 +1,28 @@
+-- Table: solicitacao_tipo
+
+-- DROP TABLE solicitacao_tipo;
+
+CREATE TABLE solicitacao_tipo
+(
+  id serial NOT NULL, -- Identificação
+  nome character varying(20) NOT NULL, -- Nome tipo da solicitacao
+  data_criacao date NOT NULL DEFAULT ('now'::text)::date, -- Data de criação do tipo da solicitacao
+  hora_criacao time without time zone NOT NULL DEFAULT ('now'::text)::time with time zone, -- Hora de criação do tipo da solicitacao
+  data_inativacao date, -- Data de inativação do tipo da solicitacao
+  hora_inativacao time without time zone, -- Hora de inativação do tipo da solicitacao
+  CONSTRAINT pk_solicitacao_tipo PRIMARY KEY (id)
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE solicitacao_tipo
+  OWNER TO postgres;
+COMMENT ON TABLE solicitacao_tipo
+  IS 'Tabela com os tipos de dimensões';
+COMMENT ON COLUMN solicitacao_tipo.id IS 'Identificação';
+COMMENT ON COLUMN solicitacao_tipo.nome IS 'Nome tipo da solicitacao';
+COMMENT ON COLUMN solicitacao_tipo.data_criacao IS 'Data de criação do tipo da solicitacao';
+COMMENT ON COLUMN solicitacao_tipo.hora_criacao IS 'Hora de criação do tipo da solicitacao';
+COMMENT ON COLUMN solicitacao_tipo.data_inativacao IS 'Data de inativação do tipo da solicitacao';
+COMMENT ON COLUMN solicitacao_tipo.hora_inativacao IS 'Hora de inativação do tipo da solicitacao';
+

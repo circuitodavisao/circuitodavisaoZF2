@@ -37,6 +37,8 @@ class RepositorioORM {
     private $_dimensaoORM;
     private $_dimensaoTipoORM;
     private $_grupoCvORM;
+    private $_solicitacaoORM;
+    private $_solicitacaoTipoORM;
 
     /**
      * Contrutor
@@ -228,7 +230,7 @@ class RepositorioORM {
      * @return CircuitoORM
      */
     public function getEventoFrequenciaORM() {
-        if (is_null($this->_eventoFrequenciaORM)) { 
+        if (is_null($this->_eventoFrequenciaORM)) {
             $this->_eventoFrequenciaORM = new EventoFrequenciaORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_EVENTO_FREQUENCIA);
         }
         return $this->_eventoFrequenciaORM;
@@ -298,6 +300,28 @@ class RepositorioORM {
             $this->_grupoCvORM = new CircuitoORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_GRUPO_CV);
         }
         return $this->_grupoCvORM;
+    }
+
+    /**
+     * Metodo public para obter a instancia do CircuitoORM
+     * @return SolicitacaoORM
+     */
+    public function getSolicitacaoORM() {
+        if (is_null($this->_solicitacaoORM)) {
+            $this->_solicitacaoORM = new CircuitoORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_SOLICITACAO);
+        }
+        return $this->_solicitacaoORM;
+    }
+
+    /**
+     * Metodo public para obter a instancia do CircuitoORM
+     * @return CircuitoORM
+     */
+    public function getSolicitacaoTipoORM() {
+        if (is_null($this->_solicitacaoTipoORM)) {
+            $this->_solicitacaoTipoORM = new CircuitoORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_SOLICITACAO_TIPO);
+        }
+        return $this->_solicitacaoTipoORM;
     }
 
     /**

@@ -120,9 +120,14 @@ class CadastroController extends CircuitoController {
                         Constantes::$ACTION => Constantes::$PAGINA_BUSCAR_EMAIL,
             ));
         }
-        if ($pagina == Constantes::$PAGINA_CADASTRO_TRANSFERENCIA) {
+        if ($pagina == Constantes::$PAGINA_SOLICITACOES) {
             return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
-                        Constantes::$ACTION => Constantes::$PAGINA_CADASTRO_TRANSFERENCIA,
+                        Constantes::$ACTION => Constantes::$PAGINA_SOLICITACOES,
+            ));
+        }
+        if ($pagina == Constantes::$PAGINA_SOLICITACAO) {
+            return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
+                        Constantes::$ACTION => Constantes::$PAGINA_SOLICITACAO,
             ));
         }
         /* Páginas Revisão */
@@ -1672,6 +1677,25 @@ class CadastroController extends CircuitoController {
         $view = new ViewModel(array(
             'formCadastroTurma' => $formCadastroTurma,
         ));
+        return $view;
+    }
+
+    public function solicitacoesAction() {
+        $sessao = new Container(Constantes::$NOME_APLICACAO);
+        $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
+        $idEntidadeAtual = $sessao->idEntidadeAtual;
+        $entidade = $repositorioORM->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+        $grupo = $entidade->getGrupo();
+        $solicitacoes = $grupo->getSolicitacao();
+        $view = new ViewModel(array(
+            'solicitacoes' => $solicitacoes,
+        ));
+        return $view;
+    }
+
+    public function solicitacaoAction() {
+
+        $view = new ViewModel(array());
         return $view;
     }
 
