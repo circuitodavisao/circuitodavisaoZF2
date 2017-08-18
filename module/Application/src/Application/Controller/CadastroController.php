@@ -206,6 +206,11 @@ class CadastroController extends CircuitoController {
                         Constantes::$ACTION => Constantes::$PAGINA_LISTAR_TURMA,
             ));
         }
+        if ($pagina == Constantes::$PAGINA_EXCLUIR_TURMA) {
+            return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
+                        Constantes::$ACTION => Constantes::$PAGINA_EXCLUIR_TURMA,
+            ));
+        }
         /* Funcoes */
         if ($pagina == Constantes::$PAGINA_FUNCOES) {
             return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
@@ -1715,9 +1720,9 @@ class CadastroController extends CircuitoController {
                 
                 if($id){
                     $repositorioORM->getTurmaORM()->persistir($turma, false);
-                }else{ 
-                    
+                }else{     
                     $repositorioORM->getTurmaORM()->persistir($turma);
+                    
                 }
                 
                 $repositorioORM->fecharTransacao();
@@ -1764,6 +1769,10 @@ class CadastroController extends CircuitoController {
         $turma = $repositorioORM->getTurmaORM()->encontrarPorId($idTurma);
         $turma->setDataEHoraDeInativacao();
         $repositorioORM->getTurmaORM()->persistir($turma, false);
+        
+        return $this->redirect()->toRoute(Constantes::$ROUTE_CADASTRO, array(
+                            Constantes::$PAGINA => Constantes::$PAGINA_LISTAR_TURMA,
+        ));
     }
 
 }

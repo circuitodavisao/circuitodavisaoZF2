@@ -72,7 +72,7 @@ class ListagemTurmas extends AbstractHelper {
 
                     $stringNomeDaFuncaoOnClickInserir = 'funcaoCadastro("' . Constantes::$PAGINA_FICHA_REVISAO . '", ' . $turma->getId() . ')';
                     $stringNomeDaFuncaoOnClick = 'funcaoCadastro("' . Constantes::$PAGINA_EDITAR_TURMA . '", ' . $turma->getId() . ')';
-                    $stringNomeDaFuncaoOnClickExclusao = 'funcaoCadastro("' . Constantes::$PAGINA_EVENTO_EXCLUSAO . '", ' . $turma->getId() . ')';
+                    $stringNomeDaFuncaoOnClickExclusao = 'funcaoCadastro("' . Constantes::$PAGINA_EXCLUIR_TURMA . '", ' . $turma->getId() . ')'; 
                     
                     $html .= '<td class="text-center">' . Funcoes::mesPorExtenso($turma->getMes(),1) . '</td>';
                     $html .= '<td class="text-center">' . $turma->getAno() . '</td>';
