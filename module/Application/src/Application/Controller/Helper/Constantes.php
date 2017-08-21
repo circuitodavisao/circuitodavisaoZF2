@@ -580,6 +580,7 @@ class Constantes {
 
     /* Forms */
     public static $FORM_ACTION_CADASTRO_GRUPO_FINALIZAR = 'cadastroGrupoFinalizar';
+    public static $FORM_ACTION_CADASTRO_SOLICITACAO_FINALIZAR = 'cadastroSolicitacaoFinalizar';
     public static $FORM_INPUT_DIA = 'Dia';
     public static $FORM_INPUT_MES = 'Mes';
     public static $FORM_INPUT_TIPO = 'Tipo';

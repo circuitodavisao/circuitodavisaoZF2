@@ -578,7 +578,6 @@ class LoginController extends CircuitoController {
      * GET /novaSenha
      */
     public function novaSenhaAction() {
-        unset($dados);
         /* Helper Controller */
         $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
 
@@ -590,7 +589,7 @@ class LoginController extends CircuitoController {
         } else {
             /* Redirecionamento */
             return $this->forward()->dispatch(Constantes::$CONTROLLER_LOGIN, array(
-                        Constantes::$ACTION => Constantes::$ACTION_ESQUECEU_SENHA,
+                        Constantes::$ACTION => Constantes::$ACTION_INDEX,
                         Constantes::$TIPO => 4,
                         Constantes::$MENSAGEM => 'Seu link de recuperacao expirou',
             ));
