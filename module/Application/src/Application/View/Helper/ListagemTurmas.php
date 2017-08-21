@@ -25,10 +25,15 @@ class ListagemTurmas extends AbstractHelper {
     public function renderHtml() {
         $html = '';
         $turmas = $this->view->turmas;
-        
+        $turmasAtivas = array();
+        foreach($turmas as $turma){
+            if($turma->verificarSeEstaAtivo()){
+                $turmasAtivas[] = $turma;
+            }
+        }
 
         /* Sem pessoas cadastrados */
-        if (count($turmas) == 0) {
+        if (count($turmasAtivas) == 0) {
 
             $html .= '<div class="panel-body bg-light">';
 
@@ -65,18 +70,18 @@ class ListagemTurmas extends AbstractHelper {
                 $html .= '</thead>';
                 $html .= '<tbody>';
 
-                foreach ($turmas as $turma) {
+                foreach ($turmasAtivas as $turma) {
                     $html .= '<tr>';
 
                     $html .= '<td class="text-center">' . $turma->getId() . '</td>';
 
                     $stringNomeDaFuncaoOnClickInserir = 'funcaoCadastro("' . Constantes::$PAGINA_FICHA_REVISAO . '", ' . $turma->getId() . ')';
                     $stringNomeDaFuncaoOnClick = 'funcaoCadastro("' . Constantes::$PAGINA_EDITAR_TURMA . '", ' . $turma->getId() . ')';
-                    $stringNomeDaFuncaoOnClickExclusao = 'funcaoCadastro("' . Constantes::$PAGINA_EXCLUIR_TURMA . '", ' . $turma->getId() . ')'; 
+                    $stringNomeDaFuncaoOnClickExclusao = 'funcaoCadastro("' . Constantes::$PAGINA_EXCLUIR_TURMA . '", ' . $turma->getId() . ')';  
                     
                     $html .= '<td class="text-center">' . Funcoes::mesPorExtenso($turma->getMes(),1) . '</td>';
                     $html .= '<td class="text-center">' . $turma->getAno() . '</td>';
-                    $html .= '<td class="text-center">' . $turma->getObservacao() . '</td>';
+                    $html .= '<td class="text-center">' . $turma->getObservacao() . '</td>'; 
 
                     $html .= '<td class="text-center">';
 

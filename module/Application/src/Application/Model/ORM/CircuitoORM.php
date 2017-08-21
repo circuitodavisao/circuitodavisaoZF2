@@ -51,7 +51,7 @@ class CircuitoORM {
      * Atualiza a entidade no banco de dados
      * @param CircuitoEntity $entidade
      */
-    public function persistir($entidade, $setarDataEHora = true) {
+    public function persistir($entidade, $setarDataEHora = true) { 
         try {
             if ($setarDataEHora) {
                 $entidade->setDataEHoraDeCriacao();

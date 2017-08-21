@@ -15,7 +15,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity 
  * @ORM\Table(name="turma")
  */
-class Turma extends CircuitoEntity {
+class Turma extends CircuitoEntity { 
 
     /**
      * @ORM\OneToMany(targetEntity="TurmaAluno", mappedBy="pessoa") 

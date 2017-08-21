@@ -22,7 +22,7 @@ class TurmaForm extends Form {
      * Construtor
      * @param String $name
      */
-    public function __construct($name = null, Turma $turma = null) {
+    public function __construct($name = null, Turma $turma = null) { 
         parent::__construct($name);
         /**
          * Configuração do formulário

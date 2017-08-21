@@ -412,7 +412,7 @@ class Funcoes {
      * @param int $tipo
      * @return string
      */
-    public static function mesPorExtenso($mes, $tipo = 0) {
+    public static function mesPorExtenso($mes, $tipo = 0) { 
         $resposta = '';
         switch ($mes) {
             case 1:$resposta = 'JAN';

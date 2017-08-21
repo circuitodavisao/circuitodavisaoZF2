@@ -15,7 +15,7 @@ class Constantes {
 
     /* Constates Login */
     public static $CONTROLLER_LOGIN = 'Application\Controller\Login';
-    public static $CONTROLLER_PRINCIPAL = 'Principal\Controller\Principal';
+    public static $CONTROLLER_PRINCIPAL = 'Principal\Controller\Principal'; 
     public static $LOGIN_FORM = 'LoginForm';
     public static $FORM_LOGIN = 'formLogin';
     public static $ROUTE_LOGIN = 'login';

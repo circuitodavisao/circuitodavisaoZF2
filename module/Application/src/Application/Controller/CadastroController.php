@@ -1768,7 +1768,7 @@ class CadastroController extends CircuitoController {
         $idTurma = $sessao->idSessao;
         $turma = $repositorioORM->getTurmaORM()->encontrarPorId($idTurma);
         $turma->setDataEHoraDeInativacao();
-        $repositorioORM->getTurmaORM()->persistir($turma, false);
+        $repositorioORM->getTurmaORM()->persistir($turma, false); 
         
         return $this->redirect()->toRoute(Constantes::$ROUTE_CADASTRO, array(
                             Constantes::$PAGINA => Constantes::$PAGINA_LISTAR_TURMA,
