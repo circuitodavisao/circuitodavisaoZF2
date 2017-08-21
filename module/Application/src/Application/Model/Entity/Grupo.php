@@ -64,6 +64,11 @@ class Grupo extends CircuitoEntity {
      */
     protected $grupoPaiFilhoPai;
 
+    /**
+     * @ORM\OneToOne(targetEntity="Solicitacao", mappedBy="grupo") 
+     */
+    protected $solicitacao;
+
     public function __construct() {
         $this->entidade = new ArrayCollection();
         $this->grupoResponsavel = new ArrayCollection();
@@ -72,6 +77,7 @@ class Grupo extends CircuitoEntity {
         $this->grupoAtendimento = new ArrayCollection();
         $this->grupoPaiFilhoFilhos = new ArrayCollection();
         $this->grupoAluno = new ArrayCollection();
+        $this->solicitacao = new ArrayCollection();
     }
 
     /**
@@ -902,6 +908,14 @@ class Grupo extends CircuitoEntity {
 
     function setGrupoCv($grupoCv) {
         $this->grupoCv = $grupoCv;
+    }
+
+    function getSolicitacao() {
+        return $this->solicitacao;
+    }
+
+    function setSolicitacao($solicitacao) {
+        $this->solicitacao = $solicitacao;
     }
 
     /**

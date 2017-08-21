@@ -24,13 +24,18 @@ echo $this->layoutLoginTop;
         <!-- Mensagens -->
         <?php
         $tipoNaoEncontrouNaBaseDeDados = 1;
+        $tokenInvalido = 4;
         $tipoMensagemDeSucesso = 1;
         $tipoMensagemDeErro = 2;
 
         $tipoDaMensagem = $tipoMensagemDeSucesso;
         $mostraMensagem = false;
         if ($this->tipo == $tipoNaoEncontrouNaBaseDeDados) {
-            $tipoDaMensagem = 2;
+            $tipoDaMensagem = $tipoMensagemDeErro;
+            $mostraMensagem = true;
+        }
+        if ($this->tipo == $tokenInvalido) {
+            $tipoDaMensagem = $tipoMensagemDeErro;
             $mostraMensagem = true;
         }
         /* Div Mensagens */

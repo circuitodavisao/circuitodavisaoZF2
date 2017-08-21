@@ -240,6 +240,8 @@ class Constantes {
     public static $ENTITY_GRUPO_ATENDIMENTO = 'Application\Model\Entity\GrupoAtendimento';
     public static $ENTITY_TURMA_ALUNO = 'Application\Model\Entity\TurmaAluno';
     public static $ENTITY_TURMA = 'Application\Model\Entity\Turma'; 
+    public static $ENTITY_SOLICITACAO = 'Application\Model\Entity\Solicitacao';
+    public static $ENTITY_SOLICITACAO_TIPO = 'Application\Model\Entity\SolicitacaoTipo';
     public static $ENTITY_PESSOA_ID = 'pessoa_id';
     public static $ENTITY_DATA_INATIVACAO = 'data_inativacao';
     public static $ENTITY_TIPO_ID = 'tipo_id';
@@ -454,7 +456,8 @@ class Constantes {
     public static $PAGINA_SELECIONAR_FICHA_ATIVAS = 'SelecionarFichasAtivas';
     public static $PAGINA_INSERIR_REVISAO = 'InserirRevisao';
     public static $PAGINA_SALVAR_REVISAO = 'SalvarRevisao';
-    public static $PAGINA_CADASTRO_TRANSFERENCIA = 'Transferencia';
+    public static $PAGINA_SOLICITACOES = 'Solicitacoes';
+    public static $PAGINA_SOLICITACAO = 'Solicitacao';
     public static $CONTROLLER_CADASTRO = 'Application\Controller\Cadastro';
     public static $ROUTE_CADASTRO = 'cadastro';
     /* páginas relacionadas ao IV */
@@ -582,6 +585,7 @@ class Constantes {
 
     /* Forms */
     public static $FORM_ACTION_CADASTRO_GRUPO_FINALIZAR = 'cadastroGrupoFinalizar';
+    public static $FORM_ACTION_CADASTRO_SOLICITACAO_FINALIZAR = 'cadastroSolicitacaoFinalizar';
     public static $FORM_INPUT_DIA = 'Dia';
     public static $FORM_INPUT_MES = 'Mes';
     public static $FORM_INPUT_TIPO = 'Tipo';
