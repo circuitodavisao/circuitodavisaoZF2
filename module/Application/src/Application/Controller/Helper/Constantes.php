@@ -15,7 +15,7 @@ class Constantes {
 
     /* Constates Login */
     public static $CONTROLLER_LOGIN = 'Application\Controller\Login';
-    public static $CONTROLLER_PRINCIPAL = 'Principal\Controller\Principal';
+    public static $CONTROLLER_PRINCIPAL = 'Principal\Controller\Principal'; 
     public static $LOGIN_FORM = 'LoginForm';
     public static $FORM_LOGIN = 'formLogin';
     public static $ROUTE_LOGIN = 'login';
@@ -460,6 +460,9 @@ class Constantes {
     /* páginas relacionadas ao IV */
     public static $PAGINA_CADASTRAR_TURMA = 'TurmaForm';
     public static $PAGINA_SALVAR_TURMA = 'SalvarTurma';
+    public static $PAGINA_EDITAR_TURMA = 'TurmaFormEdit';
+    public static $PAGINA_LISTAR_TURMA = 'ListarTurma'; 
+    public static $PAGINA_EXCLUIR_TURMA = 'TurmaExcluir'; 
     /* Fim das páginas relaciondas ao IV */
     
     /* Entidades */

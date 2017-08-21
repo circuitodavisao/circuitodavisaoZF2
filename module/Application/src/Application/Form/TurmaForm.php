@@ -3,6 +3,7 @@
 namespace Application\Form;
 
 use Application\Controller\Helper\Constantes;
+use Application\Model\Entity\Turma;
 use Zend\Form\Element\Csrf;
 use Zend\Form\Element\Hidden;
 use Zend\Form\Element\Select;
@@ -21,7 +22,7 @@ class TurmaForm extends Form {
      * Construtor
      * @param String $name
      */
-    public function __construct($name = null) {
+    public function __construct($name = null, Turma $turma = null) { 
         parent::__construct($name);
         /**
          * Configuração do formulário
@@ -35,9 +36,9 @@ class TurmaForm extends Form {
          */
         $this->add(
                 (new Hidden())
-                        ->setName(Constantes::$ID)
+                        ->setName(Constantes::$FORM_ID)
                         ->setAttributes([
-                            Constantes::$FORM_STRING_ID => Constantes::$ID,
+                            Constantes::$FORM_STRING_ID => Constantes::$FORM_ID,
                         ])
         );
 
@@ -99,6 +100,14 @@ class TurmaForm extends Form {
         ));
         /* Observacao */
         $this->add($observacaoTextArea);
+        
+        if(!is_null($turma)){
+            $this->get(Constantes::$FORM_ID)->setValue($turma->getId());
+            $this->get(Constantes::$FORM_INPUT_MES)->setValue($turma->getMes());
+            $this->get(Constantes::$FORM_INPUT_ANO)->setValue($turma->getAno());
+            $this->get(Constantes::$FORM_OBSERVACAO)->setValue($turma->getObservacao());            
+        }
+        
     }
 
 }

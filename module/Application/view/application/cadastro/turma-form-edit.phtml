@@ -4,7 +4,7 @@ use Application\Controller\Helper\Constantes;
 
 /**
  * Nome: turma.phtml
- * @author Lucas Filipe de Carvalho Cunha <lucascarvalho.esw@gmail.com> 
+ * @author Lucas Filipe de Carvalho Cunha <lucascarvalho.esw@gmail.com>
  * Descricao: Página de cadastro de turmas no IV.
  */
 $form = $this->formCadastroTurma;
@@ -16,7 +16,7 @@ $form->setAttribute(Constantes::$ACTION, $this->url(Constantes::$ROUTE_CADASTRO,
         <div id="content" class="animated fadeIn">
             <div class="row">
                 <!-- Cadastro de Pessoa -->
-                <div class="admin-form " id="register1" role="tabpanel">
+                <div class="admin-form " id="register1" role="tabpanel"> 
                     <blockquote class="blockquote-primary">
                         <p>Cadastro de Turmas</p>
                         <small>Instituto de Vencedores</small>
@@ -37,7 +37,7 @@ $form->setAttribute(Constantes::$ACTION, $this->url(Constantes::$ROUTE_CADASTRO,
                             <?php
                             echo $this->formHidden($form->get(Constantes::$FORM_ID));
                             echo $this->formHidden($form->get(Constantes::$INPUT_CSRF));
-                            $stringNomeDaFuncaoOnClickCadastro = 'funcaoCadastro("' . Constantes::$PAGINA_LISTAR_TURMA . '", 0)';  
+                            $stringNomeDaFuncaoOnClickCadastro = 'funcaoCadastro("' . Constantes::$PAGINA_LISTAR_TURMA . '", 0)'; 
                             echo $this->botaoLink($this->translate(Constantes::$TRADUCAO_VOLTAR), Constantes::$STRING_HASHTAG, 2, $this->funcaoOnClick($stringNomeDaFuncaoOnClickCadastro));
                             /* Submit */
                             $funcaoVerificarCadastroPessoa = $this->funcaoOnClick('validarLancamentoCadastrarTurma(this.form)');

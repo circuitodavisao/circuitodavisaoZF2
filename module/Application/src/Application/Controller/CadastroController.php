@@ -196,6 +196,21 @@ class CadastroController extends CircuitoController {
                         Constantes::$ACTION => Constantes::$PAGINA_SALVAR_TURMA,
             ));
         }
+        if ($pagina == Constantes::$PAGINA_EDITAR_TURMA) {
+            return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
+                        Constantes::$ACTION => Constantes::$PAGINA_EDITAR_TURMA,
+            ));
+        }
+        if ($pagina == Constantes::$PAGINA_LISTAR_TURMA) {
+            return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
+                        Constantes::$ACTION => Constantes::$PAGINA_LISTAR_TURMA,
+            ));
+        }
+        if ($pagina == Constantes::$PAGINA_EXCLUIR_TURMA) {
+            return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
+                        Constantes::$ACTION => Constantes::$PAGINA_EXCLUIR_TURMA,
+            ));
+        }
         /* Funcoes */
         if ($pagina == Constantes::$PAGINA_FUNCOES) {
             return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
@@ -1668,15 +1683,14 @@ class CadastroController extends CircuitoController {
     }
 
     public function turmaFormAction() {
-
-        $formCadastroTurma = new TurmaForm('formulario');
-
+        
+        $formCadastroTurma = new TurmaForm('formulario'); 
 
         $view = new ViewModel(array(
             'formCadastroTurma' => $formCadastroTurma,
         ));
 
-        return $view;
+        return $view; 
     }
 
     public function salvarTurmaAction() {
@@ -1686,30 +1700,45 @@ class CadastroController extends CircuitoController {
         if ($request->isPost()) {
             try {
                 $repositorioORM->iniciarTransacao();
-                
+
                 $dadosPost = $request->getPost();
+                $id = $dadosPost['id'];
                 $idTipo = $dadosPost['Tipo'];
                 $mes = $dadosPost['Mes'];
                 $ano = $dadosPost['Ano'];
                 $observacao = $dadosPost['observacao'];
                 
-                $turma = new Turma();
+                if($id){
+                    $turma = $repositorioORM->getTurmaORM()->encontrarPorId($id);
+                }else{
+                    $turma = new Turma();
+                }
+                
                 $turma->setAno($ano);
                 $turma->setMes($mes);
                 $turma->setObservacao($observacao);
                 
-                $repositorioORM->getTurmaORM()->persistir($turma);
+                if($id){
+                    $repositorioORM->getTurmaORM()->persistir($turma, false);
+                }else{     
+                    $repositorioORM->getTurmaORM()->persistir($turma);
+                    
+                }
                 
                 $repositorioORM->fecharTransacao();
+                return $this->redirect()->toRoute(Constantes::$ROUTE_CADASTRO, array(
+                            Constantes::$PAGINA => Constantes::$PAGINA_LISTAR_TURMA,
+                )); 
                 
+                  
             } catch (Exception $exc) {
                 $repositorioORM->desfazerTransacao();
                 echo $exc->getTraceAsString();
             }
         }
     }
-    
-    public function listarTurmasAction(){
+
+    public function listarTurmaAction() {
         $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
         $turmas = $repositorioORM->getTurmaORM()->encontrarTodas();
         $view = new ViewModel(array(
@@ -1717,6 +1746,33 @@ class CadastroController extends CircuitoController {
         ));
 
         return $view;
+    }
+
+    public function turmaFormEditAction() {
+        $sessao = new Container(Constantes::$NOME_APLICACAO);
+        $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
+        $idTurma = $sessao->idSessao;
+        $turma = $repositorioORM->getTurmaORM()->encontrarPorId($idTurma);
+        $formCadastroTurma = new TurmaForm('formulario', $turma);
+
+        $view = new ViewModel(array(
+            'formCadastroTurma' => $formCadastroTurma,
+        ));
+
+        return $view;
+    }
+    
+    public function turmaExcluirAction(){
+        $sessao = new Container(Constantes::$NOME_APLICACAO);
+        $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
+        $idTurma = $sessao->idSessao;
+        $turma = $repositorioORM->getTurmaORM()->encontrarPorId($idTurma);
+        $turma->setDataEHoraDeInativacao();
+        $repositorioORM->getTurmaORM()->persistir($turma, false); 
+        
+        return $this->redirect()->toRoute(Constantes::$ROUTE_CADASTRO, array(
+                            Constantes::$PAGINA => Constantes::$PAGINA_LISTAR_TURMA,
+        ));
     }
 
 }
