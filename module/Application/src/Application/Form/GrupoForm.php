@@ -28,7 +28,7 @@ class GrupoForm extends Form {
      * @param String $name
      * @param GrupoAluno $alunos
      */
-    public function __construct($name = null, $alunos = null, $hierarquia = null) {
+    public function __construct($name = null, $alunos = null, $hierarquia = null, $numeros = null) {
         parent::__construct($name);
 
         $this->setAlunos($alunos);
@@ -338,8 +338,18 @@ class GrupoForm extends Form {
         $arrayNumeracao = array();
         $arrayNumeracao[0] = Constantes::$FORM_SELECT;
         for ($indiceNumeroSubEquipe = 1; $indiceNumeroSubEquipe <= 24; $indiceNumeroSubEquipe++) {
-            $numeroAjustado = str_pad($indiceNumeroSubEquipe, 2, 0, STR_PAD_LEFT);
-            $arrayNumeracao[$indiceNumeroSubEquipe] = $numeroAjustado;
+            $adicionarNumero = true;
+            if ($numeros) {
+                foreach ($numeros as $numero) {
+                    if ($indiceNumeroSubEquipe == $numero) {
+                        $adicionarNumero = false;
+                    }
+                }
+            }
+            if ($adicionarNumero) {
+                $numeroAjustado = str_pad($indiceNumeroSubEquipe, 2, 0, STR_PAD_LEFT);
+                $arrayNumeracao[$indiceNumeroSubEquipe] = $numeroAjustado;
+            }
         }
         $inputSelectNumeracao = new Select();
         $inputSelectNumeracao->setName(Constantes::$FORM_NUMERACAO);

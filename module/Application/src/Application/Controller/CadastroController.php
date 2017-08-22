@@ -806,7 +806,17 @@ class CadastroController extends CircuitoController {
         $pessoa = $repositorioORM->getPessoaORM()->encontrarPorId($sessao->idPessoa);
         $arrayHierarquia = $repositorioORM->getHierarquiaORM()->encontrarTodas($pessoa->getPessoaHierarquiaAtivo()->getHierarquia()->getId());
 
-        $form = new GrupoForm(Constantes::$FORM, $arrayGrupoAlunos, $arrayHierarquia);
+        $arrayDeNumerosUsados = array();
+        if ($grupo->getGrupoPaiFilhoFilhos()) {
+            $filhos = $grupo->getGrupoPaiFilhoFilhos();
+            foreach ($filhos as $filho) {
+                if ($filho->getGrupoPaiFilhoFilho()->getEntidadeAtiva()->getNumero()) {
+                    $numero = $filho->getGrupoPaiFilhoFilho()->getEntidadeAtiva()->getNumero();
+                    $arrayDeNumerosUsados[] = $numero;
+                }
+            }
+        }
+        $form = new GrupoForm(Constantes::$FORM, $arrayGrupoAlunos, $arrayHierarquia, $arrayDeNumerosUsados);
 
         $view = new ViewModel(array(
             Constantes::$FORM => $form,
