@@ -11,8 +11,6 @@ use Application\Form\CadastrarPessoaRevisaoForm;
 use Application\Form\CelulaForm;
 use Application\Form\EventoForm;
 use Application\Form\GrupoForm;
-use Application\Form\RevisaoForm;
-use Application\Form\SelecionarLiderRevisaoForm;
 use Application\Form\TransferenciaForm;
 use Application\Form\TurmaForm;
 use Application\Model\Entity\Entidade;
@@ -29,7 +27,6 @@ use Application\Model\Entity\PessoaHierarquia;
 use Application\Model\ORM\RepositorioORM;
 use DateTime;
 use Exception;
-use Migracao\Controller\IndexController;
 use Zend\Json\Json;
 use Zend\Session\Container;
 use Zend\View\Model\ViewModel;
@@ -811,7 +808,6 @@ class CadastroController extends CircuitoController {
 
         $form = new GrupoForm(Constantes::$FORM, $arrayGrupoAlunos, $arrayHierarquia);
 
-
         $view = new ViewModel(array(
             Constantes::$FORM => $form,
             'tipoEntidade' => $entidade->getTipo_id(),
@@ -838,8 +834,6 @@ class CadastroController extends CircuitoController {
             try {
                 $repositorioORM->iniciarTransacao();
                 $post_data = $request->getPost();
-                $loginORM = new RepositorioORM($this->getDoctrineORMEntityManager());
-
 
                 $sessao = new Container(Constantes::$NOME_APLICACAO);
                 $idEntidadeAtual = $sessao->idEntidadeAtual;
@@ -883,11 +877,10 @@ class CadastroController extends CircuitoController {
                     $novaPessoa->setNome($post_data[Constantes::$FORM_NOME . $indicePessoas]);
                     $novaPessoa->setEmail($post_data[Constantes::$FORM_EMAIL . $indicePessoas]);
                     $novaPessoa->setDocumento($post_data[Constantes::$FORM_CPF . $indicePessoas]);
-                    $novaPessoa->setData_nascimento($post_data[Constantes::$FORM_DATA_NASCIMENTO . $indicePessoas]);
+                    $novaPessoa->setData_nascimento(Funcoes::mudarPadraoData($post_data[Constantes::$FORM_DATA_NASCIMENTO . $indicePessoas], 0));
                     $tokenDeAgora = $novaPessoa->gerarToken($indicePessoas);
                     $novaPessoa->setToken($tokenDeAgora);
                     $repositorioORM->getPessoaORM()->persistir($novaPessoa);
-
 //                    $matricula = $post_data[Constantes::$FORM_ID_ALUNO_SELECIONADO . $indicePessoas];
 //                    $turmaAluno = $repositorioORM->getTurmaAlunoORM()->encontrarPorId($matricula);
 //                    $pessoaSelecionada = $turmaAluno->getPessoa();
@@ -923,8 +916,6 @@ class CadastroController extends CircuitoController {
 
 //                $repositorioORM->desfazerTransacao();
                 $repositorioORM->fecharTransacao();
-                $view = new ViewModel();
-                return $view;
             } catch (Exception $exc) {
                 $repositorioORM->desfazerTransacao();
                 echo $exc->getTraceAsString();
