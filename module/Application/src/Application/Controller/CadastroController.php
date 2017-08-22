@@ -827,8 +827,17 @@ class CadastroController extends CircuitoController {
         $pessoa = $repositorioORM->getPessoaORM()->encontrarPorId($sessao->idPessoa);
         $arrayHierarquia = $repositorioORM->getHierarquiaORM()->encontrarTodas($pessoa->getPessoaHierarquiaAtivo()->getHierarquia()->getId());
 
-        $form = new GrupoForm(Constantes::$FORM, $arrayGrupoAlunos, $arrayHierarquia);
-
+        $arrayDeNumerosUsados = array();
+        if ($grupo->getGrupoPaiFilhoFilhos()) {
+            $filhos = $grupo->getGrupoPaiFilhoFilhos();
+            foreach ($filhos as $filho) {
+                if ($filho->getGrupoPaiFilhoFilho()->getEntidadeAtiva()->getNumero()) {
+                    $numero = $filho->getGrupoPaiFilhoFilho()->getEntidadeAtiva()->getNumero();
+                    $arrayDeNumerosUsados[] = $numero;
+                }
+            }
+        }
+        $form = new GrupoForm(Constantes::$FORM, $arrayGrupoAlunos, $arrayHierarquia, $arrayDeNumerosUsados);
 
         $view = new ViewModel(array(
             Constantes::$FORM => $form,
@@ -856,8 +865,6 @@ class CadastroController extends CircuitoController {
             try {
                 $repositorioORM->iniciarTransacao();
                 $post_data = $request->getPost();
-                $loginORM = new RepositorioORM($this->getDoctrineORMEntityManager());
-
 
                 $sessao = new Container(Constantes::$NOME_APLICACAO);
                 $idEntidadeAtual = $sessao->idEntidadeAtual;
@@ -901,11 +908,10 @@ class CadastroController extends CircuitoController {
                     $novaPessoa->setNome($post_data[Constantes::$FORM_NOME . $indicePessoas]);
                     $novaPessoa->setEmail($post_data[Constantes::$FORM_EMAIL . $indicePessoas]);
                     $novaPessoa->setDocumento($post_data[Constantes::$FORM_CPF . $indicePessoas]);
-                    $novaPessoa->setData_nascimento($post_data[Constantes::$FORM_DATA_NASCIMENTO . $indicePessoas]);
+                    $novaPessoa->setData_nascimento(Funcoes::mudarPadraoData($post_data[Constantes::$FORM_DATA_NASCIMENTO . $indicePessoas], 0));
                     $tokenDeAgora = $novaPessoa->gerarToken($indicePessoas);
                     $novaPessoa->setToken($tokenDeAgora);
                     $repositorioORM->getPessoaORM()->persistir($novaPessoa);
-
 //                    $matricula = $post_data[Constantes::$FORM_ID_ALUNO_SELECIONADO . $indicePessoas];
 //                    $turmaAluno = $repositorioORM->getTurmaAlunoORM()->encontrarPorId($matricula);
 //                    $pessoaSelecionada = $turmaAluno->getPessoa();
@@ -940,8 +946,6 @@ class CadastroController extends CircuitoController {
                 $repositorioORM->getGrupoPaiFilhoORM()->persistir($grupoPaiFilhoNovo);
 
                 $repositorioORM->fecharTransacao();
-                $view = new ViewModel();
-                return $view;
             } catch (Exception $exc) {
                 $repositorioORM->desfazerTransacao();
                 echo $exc->getTraceAsString();

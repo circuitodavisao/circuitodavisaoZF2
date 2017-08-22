@@ -7,9 +7,8 @@ namespace Application\Model\Entity;
  * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com>
  * Descricao: Entidade anotada da tabela grupo
  */
+
 use Application\Controller\Helper\Funcoes;
-use DateTime;
-use DateTimeZone;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -65,7 +64,7 @@ class Grupo extends CircuitoEntity {
     protected $grupoPaiFilhoPai;
 
     /**
-     * @ORM\OneToOne(targetEntity="Solicitacao", mappedBy="grupo") 
+     * @ORM\OneToMany(targetEntity="Solicitacao", mappedBy="grupo") 
      */
     protected $solicitacao;
 

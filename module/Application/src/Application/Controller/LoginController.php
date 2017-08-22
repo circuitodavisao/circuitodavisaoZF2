@@ -55,6 +55,7 @@ class LoginController extends CircuitoController {
         $mensagem = '';
         $tipoMensagem = 0;
         $tipoNaoEncontrouNaBaseDeDados = 1;
+        $tipoLinkExpirou = 4;
         $formLogin = new LoginForm(Constantes::$LOGIN_FORM);
 
         $inputEmailDaRota = $this->params()->fromRoute(Constantes::$INPUT_USUARIO);
@@ -64,8 +65,11 @@ class LoginController extends CircuitoController {
             $formLogin->get(Constantes::$INPUT_USUARIO)->setValue($inputEmailDaRota);
             if ($tipo == $tipoNaoEncontrouNaBaseDeDados) {
                 $mensagem = Constantes::$TRADUCAO_FALHA_LOGIN;
-                ;
                 $tipoMensagem = $tipoNaoEncontrouNaBaseDeDados;
+            }
+            if ($tipo == $tipoLinkExpirou) {
+                $mensagem = $inputEmailDaRota = $this->params()->fromRoute(Constantes::$MENSAGEM);
+                $tipoMensagem = $tipoLinkExpirou;
             }
         }
 
