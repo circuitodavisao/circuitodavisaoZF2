@@ -55,6 +55,20 @@ class PrincipalController extends CircuitoController {
                         $discipulos[] = $gpFilho;
                     }
                 }
+
+                $grupoPaiFilhoFilhos144 = $grupoFilho->getGrupoPaiFilhoFilhos();
+                if ($grupoPaiFilhoFilhos144) {
+                    foreach ($grupoPaiFilhoFilhos144 as $gpFilho144) {
+                        $grupoFilho144 = $gpFilho144->getGrupoPaiFilhoFilho();
+                        $numeroIdentificador144 = $repositorioORM->getFatoCicloORM()->montarNumeroIdentificador($grupoFilho144);
+                        $relatorio = RelatorioController::montaRelatorio($repositorioORM, $numeroIdentificador144, $periodo, $tipoRelatorioSomado);
+                        if ($relatorio['celulaQuantidade'] > 0) {
+                            if ($relatorio['celulaRealizadas'] < $relatorio['celulaQuantidade']) {
+                                $relatorioDiscipulos[$grupoFilho144->getId()] = $relatorio;
+                            }
+                        }
+                    }
+                }
             }
 
             $dados['discipulos'] = $discipulos;
