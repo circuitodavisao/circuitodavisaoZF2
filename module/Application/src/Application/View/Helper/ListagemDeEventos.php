@@ -255,7 +255,17 @@ class ListagemDeEventos extends AbstractHelper {
             $html .= '</tbody>';
             $html .= '</table>';
         } else {
-            $html .= '<div class="alert alert-warning"><i class="fa fa-warning pr10" aria-hidden="true"></i>&nbsp;Sem Eventos cadastrados!</div>';
+            $stringTipoEvento = '';
+            if ($tipoCelula) {
+                $stringTipoEvento = 'Células';
+            }
+            if ($tipoCulto) {
+                $stringTipoEvento = 'Cultos';
+            }
+            if ($tipoRevisao) {
+                $stringTipoEvento = 'Revisões de Vidas';
+            }
+            $html .= '<div class="alert alert-warning"><i class="fa fa-warning pr10" aria-hidden="true"></i>&nbsp;Sem ' . $stringTipoEvento . ' cadastrados!</div>';
         }
         $html .= '</div>';
         /* Fim panel-body */
