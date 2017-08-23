@@ -11,8 +11,8 @@ return array(
             'orm_default' => array(
                 'driverClass' => 'Doctrine\DBAL\Driver\PDOPgSql\Driver',
                 'params' => array(
-                    'host' => 'localhost',
-//                    'host' => '172.17.0.2',
+//                    'host' => 'localhost', 
+                    'host' => '172.17.0.2',
                     'port' => '5432',
                     'user' => 'postgres',
                     'password' => 'qwaszx159753',

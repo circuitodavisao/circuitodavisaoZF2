@@ -18,13 +18,27 @@ use Application\Controller\RelatorioController;
                     foreach ($this->discipulos as $gpFilho) {
                         $grupoFilho = $gpFilho->getGrupoPaiFilhoFilho();
                         $nomeLideres = $grupoFilho->getNomeLideresAtivos();
-
                         $relatorioDiscipulo = $this->discipulosRelatorio[$grupoFilho->getId()];
-                        echo '<tr>';
+                        $diferenca = $relatorioDiscipulo['celulaQuantidade'] - $relatorioDiscipulo['celulaRealizadas'];
+                        echo '<tr class="dark">';
                         echo '<td>' . $nomeLideres . '</td>';
-                        echo '<td class="text-right">' . $relatorioDiscipulo['celulaQuantidade'] . '</td>';
-                        echo '<td class="text-left">' . $relatorioDiscipulo['celulaRealizadas'] . '</td>';
+                        echo '<td>' . $diferenca . '</td>';
                         echo '</tr>';
+                        $grupoPaiFilhoFilhos144 = $grupoFilho->getGrupoPaiFilhoFilhos();
+                        if ($grupoPaiFilhoFilhos144) {
+                            foreach ($grupoPaiFilhoFilhos144 as $gpFilho144) {
+                                $grupoFilho144 = $gpFilho144->getGrupoPaiFilhoFilho();
+                                $nomeLideres144 = $grupoFilho144->getNomeLideresAtivos();
+                                $relatorioDiscipulo144 = $this->discipulosRelatorio[$grupoFilho144->getId()];
+                                if ($relatorioDiscipulo144) {
+                                    $diferenca144 = $relatorioDiscipulo144['celulaQuantidade'] - $relatorioDiscipulo144['celulaRealizadas'];
+                                    echo '<tr>';
+                                    echo '<td>' . $nomeLideres144 . '</td>';
+                                    echo '<td class="text-right">' . $diferenca144 . '</td>';
+                                    echo '</tr>';
+                                }
+                            }
+                        }
                     }
                 }
                 ?>
