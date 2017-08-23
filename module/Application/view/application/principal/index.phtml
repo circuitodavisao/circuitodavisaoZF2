@@ -21,8 +21,8 @@ use Application\Controller\RelatorioController;
                         $relatorioDiscipulo = $this->discipulosRelatorio[$grupoFilho->getId()];
                         $diferenca = $relatorioDiscipulo['celulaQuantidade'] - $relatorioDiscipulo['celulaRealizadas'];
                         echo '<tr class="dark">';
-                        echo '<td>' . $nomeLideres . '</td>';
-                        echo '<td>' . $diferenca . '</td>';
+                        echo '<td>EQUIPE - ' . $nomeLideres . '</td>';
+                        echo '<td></td>';
                         echo '</tr>';
                         $grupoPaiFilhoFilhos144 = $grupoFilho->getGrupoPaiFilhoFilhos();
                         if ($grupoPaiFilhoFilhos144) {
@@ -33,12 +33,19 @@ use Application\Controller\RelatorioController;
                                 if ($relatorioDiscipulo144) {
                                     $diferenca144 = $relatorioDiscipulo144['celulaQuantidade'] - $relatorioDiscipulo144['celulaRealizadas'];
                                     echo '<tr>';
-                                    echo '<td>' . $nomeLideres144 . '</td>';
-                                    echo '<td class="text-right">' . $diferenca144 . '</td>';
+                                    echo '<td class="text-right">' . $nomeLideres144 . '</td>';
+                                    echo '<td>' . $diferenca144 . '</td>';
                                     echo '</tr>';
                                 }
                             }
                         }
+                        echo '<tr class="">';
+                        echo '<td class="text-right">TOTAL</td>';
+                        echo '<td>' . $diferenca . '</td>';
+                        echo '</tr>';
+                        echo '<tr>';
+                        echo '<td colspan="2"></td>';
+                        echo '</tr>';
                     }
                 }
                 ?>
