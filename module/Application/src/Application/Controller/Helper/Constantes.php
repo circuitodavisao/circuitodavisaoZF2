@@ -10,12 +10,13 @@ namespace Application\Controller\Helper;
 class Constantes {
 
     public static $IP = '158.69.124.139';
+    public static $HOST = 'circuitodavisaonovo.com.br';
     public static $META_LIDER = 6;
-    public static $ID_TIPO_REVISAO = 3;
+    public static $ID_TIPO_REVISAO = 3;  
 
     /* Constates Login */
     public static $CONTROLLER_LOGIN = 'Application\Controller\Login';
-    public static $CONTROLLER_PRINCIPAL = 'Principal\Controller\Principal';
+    public static $CONTROLLER_PRINCIPAL = 'Principal\Controller\Principal'; 
     public static $LOGIN_FORM = 'LoginForm';
     public static $FORM_LOGIN = 'formLogin';
     public static $ROUTE_LOGIN = 'login';
@@ -239,6 +240,7 @@ class Constantes {
     public static $ENTITY_GRUPO_EVENTO = 'Application\Model\Entity\GrupoEvento';
     public static $ENTITY_GRUPO_ATENDIMENTO = 'Application\Model\Entity\GrupoAtendimento';
     public static $ENTITY_TURMA_ALUNO = 'Application\Model\Entity\TurmaAluno';
+    public static $ENTITY_TURMA = 'Application\Model\Entity\Turma'; 
     public static $ENTITY_SOLICITACAO = 'Application\Model\Entity\Solicitacao';
     public static $ENTITY_SOLICITACAO_TIPO = 'Application\Model\Entity\SolicitacaoTipo';
     public static $ENTITY_PESSOA_ID = 'pessoa_id';
@@ -460,7 +462,11 @@ class Constantes {
     public static $CONTROLLER_CADASTRO = 'Application\Controller\Cadastro';
     public static $ROUTE_CADASTRO = 'cadastro';
     /* páginas relacionadas ao IV */
-    public static $PAGINA_CADASTRAR_TURMA = 'Turma';
+    public static $PAGINA_CADASTRAR_TURMA = 'TurmaForm';
+    public static $PAGINA_SALVAR_TURMA = 'SalvarTurma';
+    public static $PAGINA_EDITAR_TURMA = 'TurmaFormEdit';
+    public static $PAGINA_LISTAR_TURMA = 'ListarTurma'; 
+    public static $PAGINA_EXCLUIR_TURMA = 'TurmaExcluir'; 
     /* Fim das páginas relaciondas ao IV */
     
     /* Entidades */
