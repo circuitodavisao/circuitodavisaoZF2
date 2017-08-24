@@ -64,6 +64,10 @@ function buscarEndereco() {
     $('#hiddenbairro').val('');
     $('#hiddenlogradouro').val('');
 
+    spanMensagemDeErro
+            .addClass(hidden);
+    divMensagens
+            .addClass(hidden);
     $.post(
             "/cadastroBuscarEndereco",
             {

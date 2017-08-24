@@ -11,6 +11,8 @@ namespace Application\Model\Entity;
  * 3 - MISSIONARIO
  * 4 - DIACONO
  * 5 - OBREIRO
+ * 6 - LIDER DE CELULA
+ * 7 - LIDER EM TREINAMENTO
  */
 use Doctrine\ORM\Mapping as ORM;
 

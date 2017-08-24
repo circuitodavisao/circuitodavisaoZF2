@@ -497,7 +497,7 @@ class Constantes {
     public static $TRADUCAO_INSIRA_OS_DADOS_COMPLEMENTARES = 'Enter the Complementary Data';
     public static $TRADUCAO_SELECIONE_O_ALUNO = 'Select the Student that will be used for the registration';
     public static $TRADUCAO_MATRICULA = 'Registration';
-    public static $TRADUCAO_NOME = 'Note';
+    public static $TRADUCAO_NOME = 'Nome';
     public static $TRADUCAO_OBSERVACAO = 'Observation';
     public static $TRADUCAO_IGREJAS = 'Churches';
     public static $TRADUCAO_DATA_NASCIMENTO = 'Birth Date';
