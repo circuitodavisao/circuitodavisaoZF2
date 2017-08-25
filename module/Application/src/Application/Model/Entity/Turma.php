@@ -31,6 +31,8 @@ class Turma extends CircuitoEntity {
     /** @ORM\Column(type="string") */
     protected $observacao;
     
+    /** @ORM\Column(type="integer") */
+    protected $tipo_turma_id;
     
     public function __construct() {
         $this->turmaAluno = new ArrayCollection();
@@ -79,5 +81,11 @@ class Turma extends CircuitoEntity {
         $this->observacao = $observacao;
     }
 
+    function getTipo_turma_id() {
+        return $this->tipo_turma_id;
+    }
 
+    function setTipo_turma_id($tipo_turma_id) {
+        $this->tipo_turma_id = $tipo_turma_id;
+    }
 }

@@ -467,6 +467,7 @@ class Constantes {
     public static $PAGINA_EDITAR_TURMA = 'TurmaFormEdit';
     public static $PAGINA_LISTAR_TURMA = 'ListarTurma'; 
     public static $PAGINA_EXCLUIR_TURMA = 'TurmaExcluir'; 
+    public static $PAGINA_INCLUIR_ALUNOS_TURMA = 'TurmaIncluirAluno';
     /* Fim das páginas relaciondas ao IV */
     
     /* Entidades */

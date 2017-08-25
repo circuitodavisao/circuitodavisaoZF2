@@ -1675,7 +1675,7 @@ class CadastroController extends CircuitoController {
                 /* Fim da migração do Sistema Antigo */
 
                 $repositorioORM->fecharTransacao();
-                return $this->redirect()->toRoute(Constantes::$ROUTE_CADASTRO, array(
+                return $this->redirect()->toRoute(Constantes::$ROUTE_CADASTRO, array( 
                             Constantes::$PAGINA => Constantes::$PAGINA_ATIVAR_FICHA_REVISAO,
                 ));
             } else {
@@ -1688,7 +1688,7 @@ class CadastroController extends CircuitoController {
             $repositorioORM->desfazerTransacao();
             echo $exc->getTraceAsString();
         }
-    }
+    } 
 
     public function turmaFormAction() {
         
@@ -1725,6 +1725,7 @@ class CadastroController extends CircuitoController {
                 $turma->setAno($ano);
                 $turma->setMes($mes);
                 $turma->setObservacao($observacao);
+                $turma->setTipo_turma_id($idTipo);
                 
                 if($id){
                     $repositorioORM->getTurmaORM()->persistir($turma, false);
@@ -1781,7 +1782,7 @@ class CadastroController extends CircuitoController {
         return $this->redirect()->toRoute(Constantes::$ROUTE_CADASTRO, array(
                             Constantes::$PAGINA => Constantes::$PAGINA_LISTAR_TURMA,
         ));
-    }
+    } 
 
     public function solicitacoesAction() {
         $sessao = new Container(Constantes::$NOME_APLICACAO);
