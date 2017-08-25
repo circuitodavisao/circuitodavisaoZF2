@@ -11,7 +11,7 @@ class Constantes {
 
     public static $IP = '158.69.124.139';
     public static $META_LIDER = 6;
-    public static $ID_TIPO_REVISAO = 3;
+    public static $ID_TIPO_REVISAO = 3;  
 
     /* Constates Login */
     public static $CONTROLLER_LOGIN = 'Application\Controller\Login';
@@ -466,6 +466,7 @@ class Constantes {
     public static $PAGINA_EDITAR_TURMA = 'TurmaFormEdit';
     public static $PAGINA_LISTAR_TURMA = 'ListarTurma'; 
     public static $PAGINA_EXCLUIR_TURMA = 'TurmaExcluir'; 
+    public static $PAGINA_INCLUIR_ALUNOS_TURMA = 'TurmaIncluirAluno';
     /* Fim das páginas relaciondas ao IV */
     
     /* Entidades */
