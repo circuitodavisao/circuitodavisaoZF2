@@ -197,7 +197,7 @@ class Grupo extends CircuitoEntity {
     }
 
     /**
-     * Recupera as pessoas das responsabilidades ativas
+     * Recupera os filhos ativos
      * @return Pessoa[]
      */
     function getGrupoPaiFilhoFilhosAtivos() {

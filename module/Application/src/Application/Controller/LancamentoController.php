@@ -571,7 +571,7 @@ class LancamentoController extends CircuitoController {
                         } else {
                             $atendimentoLancado[$index] = 'N';
                         }
-                    }
+                    } 
                     IndexController::cadastrarAtendimentoPorid($idAtendimento, $atendimentoLancado);
                 }
                 $repositorioORM->fecharTransacao();
