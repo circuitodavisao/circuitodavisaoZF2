@@ -666,7 +666,7 @@ class Constantes {
 
     /* Formulario de Celulas */
     public static $STRING_DIV_CONFIRMACAO = 'divConfirmacao';
-    public static $STRING_ICONE_PENCIL = '<i class="fa fa-pencil" aria-hidden="true"></i>';
+    public static $STRING_ICONE_PENCIL = '<i class="fa fa-pencil" aria-hidden="true"></i>'; 
     public static $STRING_ICONE_TIMES = '<i class="fa fa-times" aria-hidden="true"></i>';
     public static $STRING_ICONE_PLUS = '<i class="fa fa-plus" aria-hidden="true"></i>';
     public static $STRING_ICONE_MINUS = '<i class="fa fa-minus" aria-hidden="true"></i>';

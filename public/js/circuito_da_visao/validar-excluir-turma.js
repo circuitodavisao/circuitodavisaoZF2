@@ -12,7 +12,7 @@ function validarExclusao(idTurma) {
                 .html('Preencha a senha')
                 .removeClass('alert-success')
                 .removeClass('hidden')
-                .addClass('alert-danger');
+                .addClass('alert-danger'); 
         return false;
     } else {
         $.post(

@@ -1795,7 +1795,7 @@ class CadastroController extends CircuitoController {
         $idEntidadeAtual = $sessao->idEntidadeAtual;
         $entidade = $repositorioORM->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
         $grupo = $entidade->getGrupo();
-        $solicitacoes = $grupo->getSolicitacao();
+        $solicitacoes = $grupo->getSolicitacao(); 
         $view = new ViewModel(array(
             'solicitacoes' => $solicitacoes,
         ));

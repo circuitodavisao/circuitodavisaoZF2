@@ -82,7 +82,7 @@ class ListagemTurmas extends AbstractHelper {
                     
                     $html .= '<td class="text-center">' . Funcoes::mesPorExtenso($turma->getMes(),1) . '</td>';
                     $html .= '<td class="text-center">' . $turma->getAno() . '</td>';
-                    $html .= '<td class="text-center hidden-xs">' . $turma->getObservacao() . '</td>'; 
+                    $html .= '<td class="text-center hidden-xs">' . $turma->getObservacao() . '</td>';   
 
                     $html .= '<td class="text-center">';
 
