@@ -139,6 +139,9 @@ class RelatorioController extends CircuitoController {
         $relatorio['membresiaArena'] = $soma[RelatorioController::dimensaoTipoArena];
         $relatorio['membresiaDomingo'] = $soma[RelatorioController::dimensaoTipoDomingo];
         $relatorio['membresiaMeta'] = Constantes::$META_LIDER * $quantidadeLideres;
+        if ($quantidadeLideres == 1) {
+            $relatorio['membresiaMeta'] = 12;
+        }
         $relatorio['membresia'] = RelatorioController::calculaMembresia(
                         $soma[RelatorioController::dimensaoTipoCulto], $soma[RelatorioController::dimensaoTipoArena], $soma[RelatorioController::dimensaoTipoDomingo]);
         $relatorio['membresiaPerformance'] = 0;
