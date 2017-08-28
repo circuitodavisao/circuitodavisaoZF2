@@ -43,15 +43,18 @@ class PrincipalController extends CircuitoController {
         $grupoPaiFilhoFilhos = $grupo->getGrupoPaiFilhoFilhos();
         if ($grupoPaiFilhoFilhos) {
             $relatorioDiscipulos = array();
+            $relatorioDiscipulosPessoal = array();
             $discipulos = array();
             foreach ($grupoPaiFilhoFilhos as $gpFilho) {
                 $grupoFilho = $gpFilho->getGrupoPaiFilhoFilho();
                 $numeroIdentificador = $repositorioORM->getFatoCicloORM()->montarNumeroIdentificador($grupoFilho);
                 $tipoRelatorioSomado = 2;
                 $relatorio12 = RelatorioController::montaRelatorio($repositorioORM, $numeroIdentificador, $periodo, $tipoRelatorioSomado);
+                $relatorio12Pessoal = RelatorioController::montaRelatorio($repositorioORM, $numeroIdentificador, $periodo, $tipoRelatorioPessoal);
                 if ($relatorio12['celulaQuantidade'] > 0) {
                     if ($relatorio12['celulaRealizadas'] < $relatorio12['celulaQuantidade']) {
                         $relatorioDiscipulos[$grupoFilho->getId()] = $relatorio12;
+                        $relatorioDiscipulosPessoal[$grupoFilho->getId()] = $relatorio12Pessoal;
                         $discipulos[] = $gpFilho;
                     }
                 }
@@ -73,6 +76,7 @@ class PrincipalController extends CircuitoController {
 
             $dados['discipulos'] = $discipulos;
             $dados['discipulosRelatorio'] = $relatorioDiscipulos;
+            $dados['discipulosRelatorioPessoal'] = $relatorioDiscipulosPessoal;
         }
 
         return new ViewModel($dados);
