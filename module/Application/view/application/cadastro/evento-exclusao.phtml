@@ -14,6 +14,7 @@ $tituloDaPagina = $this->translate(Constantes::$TRADUCAO_CONFIRMACAO_EXCLUSAO);
 
 echo $this->templateFormularioTopo($tituloDaPagina, Constantes::$STRING_DIV_CONFIRMACAO);
 ?>
+
 <div class="panel-body bg-light">
     <div class="section-divider">
         <span>
@@ -167,7 +168,7 @@ echo $this->templateFormularioTopo($tituloDaPagina, Constantes::$STRING_DIV_CONF
         echo $this->botaoLink($labelVoltar, Constantes::$STRING_HASHTAG, 2, $this->funcaoOnClick($stringNomeDaFuncaoOnClickContinuarExclusao));
         echo $this->botaoLink($labelConfirmar, Constantes::$STRING_HASHTAG, 0, $this->funcaoOnClick($stringNomeDaFuncaoOnClickConfimarExclusao));
         ?>      
-    </div>
+    </div>  
     <?php
     echo $this->templateFormularioRodape();
     
