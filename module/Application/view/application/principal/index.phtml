@@ -19,11 +19,16 @@ use Application\Controller\RelatorioController;
                         $grupoFilho = $gpFilho->getGrupoPaiFilhoFilho();
                         $nomeLideres = $grupoFilho->getNomeLideresAtivos();
                         $relatorioDiscipulo = $this->discipulosRelatorio[$grupoFilho->getId()];
-
+                        $relatorioDiscipuloPessoal = $this->discipulosRelatorioPessoal[$grupoFilho->getId()];
                         $diferenca = $relatorioDiscipulo['celulaQuantidade'] - $relatorioDiscipulo['celulaRealizadas'];
+                        $diferencaPessoal = $relatorioDiscipuloPessoal['celulaQuantidade'] - $relatorioDiscipuloPessoal['celulaRealizadas'];
                         echo '<tr class="dark">';
                         echo '<td>EQUIPE - ' . $nomeLideres . '</td>';
                         echo '<td></td>';
+                        echo '</tr>';
+                        echo '<tr>';
+                        echo '<td class="text-right">' . $nomeLideres . '</td>';
+                        echo '<td>' . $diferencaPessoal . '</td>';
                         echo '</tr>';
                         $grupoPaiFilhoFilhos144 = $grupoFilho->getGrupoPaiFilhoFilhos();
                         if ($grupoPaiFilhoFilhos144) {
