@@ -58,7 +58,7 @@ class RelatorioController extends CircuitoController {
             'periodo' => $periodo,
         );
 
-        $grupoPaiFilhoFilhos = $grupo->getGrupoPaiFilhoFilhos();
+        $grupoPaiFilhoFilhos = $grupo->getGrupoPaiFilhoFilhosAtivos();
         if ($grupoPaiFilhoFilhos) {
             $relatorioDiscipulos = array();
             foreach ($grupoPaiFilhoFilhos as $gpFilho) {
@@ -83,9 +83,7 @@ class RelatorioController extends CircuitoController {
         $idEntidadeAtual = $sessao->idEntidadeAtual;
         $entidade = $repositorioORM->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
         $grupo = $entidade->getGrupo();
-        $gruposAbaixo = $grupo->getGrupoPaiFilhoFilhos();
-
-
+        $gruposAbaixo = $grupo->getGrupoPaiFilhoFilhosAtivos();
 
         /* Verificar data de cadastro da responsabilidade */
         $validacaoNesseMes = 0;
