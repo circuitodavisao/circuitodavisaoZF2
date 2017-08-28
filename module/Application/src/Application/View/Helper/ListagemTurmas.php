@@ -77,12 +77,12 @@ class ListagemTurmas extends AbstractHelper {
 
                     $stringNomeDaFuncaoOnClickInserir = 'funcaoCadastro("' . Constantes::$PAGINA_FICHA_REVISAO . '", ' . $turma->getId() . ')';
                     $stringNomeDaFuncaoOnClick = 'funcaoCadastro("' . Constantes::$PAGINA_EDITAR_TURMA . '", ' . $turma->getId() . ')';
-                    $stringNomeDaFuncaoOnClickExclusao = 'funcaoCadastro("' . Constantes::$PAGINA_EXCLUIR_TURMA . '", ' . $turma->getId() . ')';
+                    $stringNomeDaFuncaoOnClickExclusao = 'funcaoCadastro("' . Constantes::$PAGINA_EXCLUSAO_TURMA . '", ' . $turma->getId() . ')';
                     $stringNomeDaFuncaoOnClickIncluirAlunos = 'funcaoCadastro("'.Constantes::$PAGINA_INCLUIR_ALUNOS_TURMA.','.$turma->getId().')';
                     
                     $html .= '<td class="text-center">' . Funcoes::mesPorExtenso($turma->getMes(),1) . '</td>';
                     $html .= '<td class="text-center">' . $turma->getAno() . '</td>';
-                    $html .= '<td class="text-center hidden-xs">' . $turma->getObservacao() . '</td>'; 
+                    $html .= '<td class="text-center hidden-xs">' . $turma->getObservacao() . '</td>';   
 
                     $html .= '<td class="text-center">';
 
