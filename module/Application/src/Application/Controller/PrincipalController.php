@@ -40,7 +40,7 @@ class PrincipalController extends CircuitoController {
         $dados['relatorio'] = $relatorio;
         $dados['relatorioEquipe'] = $relatorioEquipe;
 
-        $grupoPaiFilhoFilhos = $grupo->getGrupoPaiFilhoFilhos();
+        $grupoPaiFilhoFilhos = $grupo->getGrupoPaiFilhoFilhosAtivos();
         if ($grupoPaiFilhoFilhos) {
             $relatorioDiscipulos = array();
             $relatorioDiscipulosPessoal = array();
