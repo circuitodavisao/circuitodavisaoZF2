@@ -48,10 +48,10 @@ class PrincipalController extends CircuitoController {
                 $grupoFilho = $gpFilho->getGrupoPaiFilhoFilho();
                 $numeroIdentificador = $repositorioORM->getFatoCicloORM()->montarNumeroIdentificador($grupoFilho);
                 $tipoRelatorioSomado = 2;
-                $relatorio = RelatorioController::montaRelatorio($repositorioORM, $numeroIdentificador, $periodo, $tipoRelatorioSomado);
-                if ($relatorio['celulaQuantidade'] > 0) {
-                    if ($relatorio['celulaRealizadas'] < $relatorio['celulaQuantidade']) {
-                        $relatorioDiscipulos[$grupoFilho->getId()] = $relatorio;
+                $relatorio12 = RelatorioController::montaRelatorio($repositorioORM, $numeroIdentificador, $periodo, $tipoRelatorioSomado);
+                if ($relatorio12['celulaQuantidade'] > 0) {
+                    if ($relatorio12['celulaRealizadas'] < $relatorio12['celulaQuantidade']) {
+                        $relatorioDiscipulos[$grupoFilho->getId()] = $relatorio12;
                         $discipulos[] = $gpFilho;
                     }
                 }
@@ -61,10 +61,10 @@ class PrincipalController extends CircuitoController {
                     foreach ($grupoPaiFilhoFilhos144 as $gpFilho144) {
                         $grupoFilho144 = $gpFilho144->getGrupoPaiFilhoFilho();
                         $numeroIdentificador144 = $repositorioORM->getFatoCicloORM()->montarNumeroIdentificador($grupoFilho144);
-                        $relatorio = RelatorioController::montaRelatorio($repositorioORM, $numeroIdentificador144, $periodo, $tipoRelatorioSomado);
-                        if ($relatorio['celulaQuantidade'] > 0) {
-                            if ($relatorio['celulaRealizadas'] < $relatorio['celulaQuantidade']) {
-                                $relatorioDiscipulos[$grupoFilho144->getId()] = $relatorio;
+                        $relatorio144 = RelatorioController::montaRelatorio($repositorioORM, $numeroIdentificador144, $periodo, $tipoRelatorioSomado);
+                        if ($relatorio144['celulaQuantidade'] > 0) {
+                            if ($relatorio144['celulaRealizadas'] < $relatorio144['celulaQuantidade']) {
+                                $relatorioDiscipulos[$grupoFilho144->getId()] = $relatorio144;
                             }
                         }
                     }
