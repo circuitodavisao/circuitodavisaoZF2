@@ -198,7 +198,7 @@ class IndexController extends CircuitoController {
                 if ($grupoEventoNoPeriodo > 0) {
                     foreach ($grupoEventoNoPeriodo as $grupoEvento) {
                         $html .= "<br />verificaSeECelula: " . $grupoEvento->getEvento()->verificaSeECelula();
-                        if ($grupoEvento->getEvento()->verificaSeECelula()) {
+                        if ($grupoEvento->getEvento()->verificaSeECelula() && $grupoEvento->verificarSeEstaAtivo()) {
                             $html .= "<br />EventoCelula: " . $grupoEvento->getEvento()->getEventoCelula()->getId();
                             $this->getRepositorio()->getFatoCelulaORM()->criarFatoCelula($fatoCiclo, $grupoEvento->getEvento()->getEventoCelula()->getId());
                             $html .= "<br />Fato Celula ";
