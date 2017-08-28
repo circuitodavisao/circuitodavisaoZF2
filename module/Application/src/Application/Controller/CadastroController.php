@@ -216,9 +216,14 @@ class CadastroController extends CircuitoController {
                         Constantes::$ACTION => Constantes::$PAGINA_EXCLUIR_TURMA,
             ));
         }
+        if ($pagina == Constantes::$PAGINA_EXCLUSAO_TURMA) {
+            return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
+                        Constantes::$ACTION => Constantes::$PAGINA_EXCLUSAO_TURMA,
+            ));
+        }
         /* Funcoes */
         if ($pagina == Constantes::$PAGINA_FUNCOES) {
-            return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
+            return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array( 
                         Constantes::$ACTION => Constantes::$PAGINA_FUNCOES,
             ));
         }
@@ -1652,7 +1657,7 @@ class CadastroController extends CircuitoController {
                 $sessao->mostrarNotificacao = true;
                 $sessao->tipoMensagem = Constantes::$TIPO_MENSAGEM_CADASTRAR_REVISIONISTA;
                 $sessao->textoMensagem = $pessoaRevisionista->getNome();
-                $sessao->idSessao = $eventoFrequencia->getEVento()->getId();
+                $sessao->idSessao = $eventoFrequencia->getEvento()->getId();
 
                 /* Migração Sitema Antigo */
 
@@ -1802,5 +1807,32 @@ class CadastroController extends CircuitoController {
         $view = new ViewModel(array());
         return $view;
     }
+    
+    /**
+     * Tela com formulário de exclusão de turma
+     * GET /cadastroTurmaExclusao
+     */
+    public function turmaExclusaoAction() {
+        /* Verificando a se tem algum id na sessão */
+        $sessao = new Container(Constantes::$NOME_APLICACAO);
+        $extra = null;
+        $idTurma = $sessao->idSessao;
+        $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
+        $entidade = $repositorioORM->getEntidadeORM()->encontrarPorId($sessao->idEntidadeAtual);
+        $turma = $repositorioORM->getTurmaORM()->encontrarPorId($idTurma);
+
+        $view = new ViewModel(array(
+            Constantes::$NOME_ENTIDADE_TURMA => $turma,
+            Constantes::$ENTIDADE => $entidade,
+        ));
+
+        /* Javascript */
+        $layoutJS = new ViewModel();
+        $layoutJS->setTemplate(Constantes::$LAYOUT_JS_EXCLUSAO_TURMA);
+        $view->addChild($layoutJS, Constantes::$LAYOUT_STRING_JS_EXCLUSAO_TURMA);
+
+        return $view;
+    }
+    
 
 }

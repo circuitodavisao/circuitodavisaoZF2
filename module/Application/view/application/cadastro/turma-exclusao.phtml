@@ -2,70 +2,34 @@
 
 use Application\Controller\Helper\Constantes;
 use Application\Controller\Helper\Funcoes;
-use Application\Model\Entity\Evento;
 
-$eventoRecebido = $this->evento;
-$tipoCelula = !empty($eventoRecebido->verificaSeECelula());
-if ($tipoCelula) {
-    $celula = $eventoRecebido->getEventoCelula();
-}
-$diaDaSemanaAjustado = Funcoes::diaDaSemanaPorDia($eventoRecebido->getDia(), 1);
+$turmaRecebida = $this->turma;
+
 $tituloDaPagina = $this->translate(Constantes::$TRADUCAO_CONFIRMACAO_EXCLUSAO);
-
 echo $this->templateFormularioTopo($tituloDaPagina, Constantes::$STRING_DIV_CONFIRMACAO);
 ?>
 <div class="panel-body bg-light">
     <div class="section-divider">
         <span>
             <?php
-            if ($tipoCelula) {
-                echo $this->translate(Constantes::$TRADUCAO_PERGUNTA_EXCLUSAO_CELULA);
-            } else {
-                if ($eventoRecebido instanceof Evento) {
-                    echo $this->translate(Constantes::$TRADUCAO_PERGUNTA_EXCLUSAO_CULTO);
-                }
-            }
+            echo $this->translate(Constantes::$TRADUCAO_PERGUNTA_EXCLUSAO_TURMA); 
             ?>
         </span>
     </div>
     <div class="panel heading-border panel-danger">
         <div class="panel-body">
-            <?php if ($tipoCelula) { ?>
-                <address>
-                    <?php echo $this->dadosEntidade(); ?>
-                </address>
-            <?php } ?>
+
             <address>
-                <div><strong><?php echo $this->translate(Constantes::$TRADUCAO_DIA_DA_SEMANA_SIMPLIFICADO) . '/' . $this->translate(Constantes::$TRADUCAO_HORA); ?></strong></div>
-                <div><?php echo $this->translate($diaDaSemanaAjustado) . '/' . $eventoRecebido->getHoraFormatoHoraMinutoParaListagem(); ?></div>
+                <?php echo $this->dadosEntidade(); ?>
             </address>
-            <?php if ($tipoCelula) { ?>
-                <address>
-                    <div><strong><?php echo $this->translate(Constantes::$TRADUCAO_HOSPEDEIRO); ?></strong></div>
-                    <div><?php echo $celula->getNome_hospedeiro(); ?></div>
-                    <div><?php echo $this->translate(Constantes::$TRADUCAO_TELEFONE); ?>: <?php echo $celula->getTelefone_hospedeiroFormatado(); ?></div>
-                </address>                     
-                <address>
-                    <div><strong><?php echo $this->translate(Constantes::$TRADUCAO_ENDERECO); ?></strong></div>
-                    <div><?php echo $celula->getLogradouro() . ',&nbsp;' . $celula->getComplemento(); ?></div>
-                    <div><?php echo $celula->getCidade() . '&nbsp;-&nbsp;' . $celula->getBairro() . ',&nbsp;' . $celula->getUf() . '&nbsp; CEP:' . $celula->getCep(); ?></div>                  
-                </address>
-                <?php
-            } else {
-                if ($eventoRecebido instanceof Evento) {
-                    ?>
-                    <address>
-                        <div><strong>Nome</strong></div>
-                        <div><?php echo $eventoRecebido->getNome(); ?></div>
-                    </address>   
-                    <address>
-                        <div><strong>Equipe(s)</strong></div>
-                        <div><?php echo $this->extra; ?></div> 
-                    </address>   
-                    <?php
-                }
-            }
-            ?>
+            <address>
+                <div><strong><?php echo $this->translate(Constantes::$TRADUCAO_MES) . '/' . $this->translate(Constantes::$TRADUCAO_ANO); ?></strong></div>
+                <div><?php echo Funcoes::mesPorExtenso($turmaRecebida->getMes()) . '/' . $turmaRecebida->getAno(); ?></div>
+            </address>
+            <address>
+                <div><strong><?php echo $this->translate(Constantes::$TRADUCAO_TIPO); ?></strong></div>
+                <div><?php echo $turmaRecebida->getTipo_turma_id(); ?></div>
+            </address>                     
         </div>                 
     </div>
     <div class="row">
@@ -75,13 +39,7 @@ echo $this->templateFormularioTopo($tituloDaPagina, Constantes::$STRING_DIV_CONF
                     <input type="checkbox" name="checked" value="checked" onclick="mostrarMotivos();">
                     <span class="checkbox"></span>
                     <?php
-                    if ($tipoCelula) {
-                        echo $this->translate(Constantes::$TRADUCAO_CIENCIA_EXCLUSAO_CELULA);
-                    } else {
-                        if ($eventoRecebido instanceof Evento) {
-                            echo $this->translate(Constantes::$TRADUCAO_CIENCIA_EXCLUSAO_CULTO);
-                        }
-                    }
+                    echo $this->translate(Constantes::$TRADUCAO_CIENCIA_EXCLUSAO_TURMA);
                     ?>
                 </label> 
             </div>
@@ -117,39 +75,34 @@ echo $this->templateFormularioTopo($tituloDaPagina, Constantes::$STRING_DIV_CONF
             </div>
         </div>
         <div class="panel-footer text-right" style="height:65px;">
-            <?php
-            $labelVoltar = $this->translate(Constantes::$TRADUCAO_VOLTAR);
-            /* Botões */
-            $urlVoltar = Constantes::$ROUTE_CADASTRO;
-            if ($tipoCelula) {
-                $urlVoltar .= Constantes::$PAGINA_CELULAS;
-            } else {
-                if ($eventoRecebido instanceof Evento) {
-                    $urlVoltar .= Constantes::$PAGINA_CULTOS;
-                }
-            }
-            $labelContinuar = $this->translate(Constantes::$TRADUCAO_CONTINUAR);
-            $stringNomeDaFuncaoOnClickContinuarExclusao = '$("#divConfirmacao").toggleClass("' . Constantes::$FORM_HIDDEN . '");' .
-                    '$("#divSenha").toggleClass("' . Constantes::$FORM_HIDDEN . '")';
+<?php
+$labelVoltar = $this->translate(Constantes::$TRADUCAO_VOLTAR);
+/* Botões */
+$urlVoltar = Constantes::$ROUTE_CADASTRO;
+$urlVoltar .= Constantes::$PAGINA_LISTAR_TURMA;
 
-            echo $this->botaoLink($labelVoltar, $urlVoltar, 2, '');
-            echo $this->botaoLink($labelContinuar, Constantes::$STRING_HASHTAG, 0, $this->funcaoOnClick($stringNomeDaFuncaoOnClickContinuarExclusao));
-            ?>
+$labelContinuar = $this->translate(Constantes::$TRADUCAO_CONTINUAR);
+$stringNomeDaFuncaoOnClickContinuarExclusao = '$("#divConfirmacao").toggleClass("' . Constantes::$FORM_HIDDEN . '");' .
+        '$("#divSenha").toggleClass("' . Constantes::$FORM_HIDDEN . '")';
+
+echo $this->botaoLink($labelVoltar, $urlVoltar, 2, '');
+echo $this->botaoLink($labelContinuar, Constantes::$STRING_HASHTAG, 0, $this->funcaoOnClick($stringNomeDaFuncaoOnClickContinuarExclusao));
+?>
         </div>
     </div>
     <div id="divBotaoVoltar" class="panel-footer text-right" style="height:65px;">
-        <?php
-        echo $this->botaoLink($labelVoltar, $urlVoltar, 2, '');
-        ?>
+<?php
+echo $this->botaoLink($labelVoltar, $urlVoltar, 2, '');
+?>
     </div>
 </div>
-</div>
+</div> 
 <div id="divSenha" class="panel heading-border panel-danger hidden">
     <div class="panel-body bg-light">
         <div class="section-divider">
             <span><?php echo $this->translate(Constantes::$TRADUCAO_DIGITE_SENHA_EXCUSAO_SENHA); ?></span>
         </div>
-        <?php echo $this->divMensagens(); ?>
+<?php echo $this->divMensagens(); ?>
         <div class="row">
             <div class="col-sm-12 col-xs-12">
                 <div class="section text-center">
@@ -159,15 +112,15 @@ echo $this->templateFormularioTopo($tituloDaPagina, Constantes::$STRING_DIV_CONF
         </div>
     </div>
     <div class="panel-footer text-right" style="height:65px;">
-        <?php
-        /* Botões */
-        $labelConfirmar = $this->translate(Constantes::$TRADUCAO_CONFIRMACAO);
-        $stringNomeDaFuncaoOnClickConfimarExclusao = 'validarExclusao(' . $eventoRecebido->getId() . ')';
+<?php
+/* Botões */
+$labelConfirmar = $this->translate(Constantes::$TRADUCAO_CONFIRMACAO);
+$stringNomeDaFuncaoOnClickConfimarExclusao = 'validarExclusao(' . $turma->getId() . ')';
 
-        echo $this->botaoLink($labelVoltar, Constantes::$STRING_HASHTAG, 2, $this->funcaoOnClick($stringNomeDaFuncaoOnClickContinuarExclusao));
-        echo $this->botaoLink($labelConfirmar, Constantes::$STRING_HASHTAG, 0, $this->funcaoOnClick($stringNomeDaFuncaoOnClickConfimarExclusao));
-        ?>      
+echo $this->botaoLink($labelVoltar, Constantes::$STRING_HASHTAG, 2, $this->funcaoOnClick($stringNomeDaFuncaoOnClickContinuarExclusao));
+echo $this->botaoLink($labelConfirmar, Constantes::$STRING_HASHTAG, 0, $this->funcaoOnClick($stringNomeDaFuncaoOnClickConfimarExclusao));
+?>      
     </div>
-    <?php
-    echo $this->templateFormularioRodape();
-    
+        <?php
+        echo $this->templateFormularioRodape();
+        
