@@ -7,8 +7,8 @@ CREATE TABLE evento_celula
   id serial NOT NULL, -- Identificação do dados do evento tipo célula
   nome_hospedeiro character varying(80) NOT NULL, -- Nome do hospedeiro da célula
   telefone_hospedeiro bigint NOT NULL, -- Telefone do hospedeiro com 9 digitos com DDD
-  logradouro character varying(80) NOT NULL, -- Logradouro da célula
-  complemento character varying(80), -- Complemento do endereço da célula
+  logradouro character varying(100) NOT NULL, -- Logradouro da célula
+  complemento character varying(100), -- Complemento do endereço da célula
   evento_id integer NOT NULL, -- Identificação do evento
   bairro character varying(30), -- Bairro do local da célula
   cidade character varying(30) NOT NULL, -- Cidade do local da célula

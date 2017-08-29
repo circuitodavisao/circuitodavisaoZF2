@@ -363,6 +363,8 @@ class CadastroController extends CircuitoController {
      * POST /eventoCultoPersistir
      */
     public function eventoCultoPersistirAction() {
+        CircuitoController::verificandoSessao(new Container(Constantes::$NOME_APLICACAO), $this);
+
         $stringCheckEquipe = 'checkEquipe';
         $request = $this->getRequest();
         if ($request->isPost()) {
@@ -516,6 +518,7 @@ class CadastroController extends CircuitoController {
                     }
                 } else {
                     $this->direcionaErroDeCadastro($eventoForm->getMessages());
+                    CircuitoController::direcionandoAoLogin($this);
                 }
 
                 $repositorioORM->fecharTransacao();
@@ -525,6 +528,7 @@ class CadastroController extends CircuitoController {
             } catch (Exception $exc) {
                 $repositorioORM->desfazerTransacao();
                 echo $exc->getMessage();
+                CircuitoController::direcionandoAoLogin($this);
             }
         }
     }
@@ -534,6 +538,8 @@ class CadastroController extends CircuitoController {
      * POST /eventoCelulaPersistir
      */
     public function eventoCelulaPersistirAction() {
+        CircuitoController::verificandoSessao(new Container(Constantes::$NOME_APLICACAO), $this);
+
         $request = $this->getRequest();
         if ($request->isPost()) {
             $eventoCelula = new EventoCelula();
@@ -557,7 +563,6 @@ class CadastroController extends CircuitoController {
                     /* Entidades */
                     $evento = new Evento();
                     $grupoEvento = new GrupoEvento();
-
 
                     /* ALTERANDO */
                     if (!empty($post_data[Constantes::$FORM_ID])) {
@@ -689,10 +694,12 @@ class CadastroController extends CircuitoController {
                     ));
                 } else {
                     $this->direcionaErroDeCadastro($celulaForm->getMessages());
+                    CircuitoController::direcionandoAoLogin($this);
                 }
             } catch (Exception $exc) {
                 $repositorioORM->desfazerTransacao();
                 $this->direcionaErroDeCadastro($celulaForm->getMessages());
+                CircuitoController::direcionandoAoLogin($this);
             }
         }
     }
@@ -741,6 +748,7 @@ class CadastroController extends CircuitoController {
      * GET /cadastroEventoConfirmacao
      */
     public function eventoExclusaoConfirmacaoAction() {
+        CircuitoController::verificandoSessao(new Container(Constantes::$NOME_APLICACAO), $this);
         $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
         $repositorioORM->iniciarTransacao();
         try {
@@ -808,6 +816,7 @@ class CadastroController extends CircuitoController {
         } catch (Exception $exc) {
             $repositorioORM->desfazerTransacao();
             echo $exc->getTraceAsString();
+            CircuitoController::direcionandoAoLogin($this);
         }
     }
 
@@ -864,6 +873,8 @@ class CadastroController extends CircuitoController {
      * POST /cadastroGrupoFinalizar
      */
     public function grupoFinalizarAction() {
+        CircuitoController::verificandoSessao(new Container(Constantes::$NOME_APLICACAO), $this);
+
         $request = $this->getRequest();
         if ($request->isPost()) {
             $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
@@ -955,6 +966,7 @@ class CadastroController extends CircuitoController {
                 $repositorioORM->desfazerTransacao();
                 echo $exc->getTraceAsString();
                 $this->direcionaErroDeCadastro($exc->getMessage());
+                CircuitoController::direcionandoAoLogin($this);
             }
         }
     }
@@ -986,6 +998,7 @@ class CadastroController extends CircuitoController {
      * POST /cadastroGrupoAtualizar
      */
     public function grupoAtualizarAction() {
+        CircuitoController::verificandoSessao(new Container(Constantes::$NOME_APLICACAO), $this);
         $request = $this->getRequest();
         if ($request->isPost()) {
             try {
@@ -997,6 +1010,7 @@ class CadastroController extends CircuitoController {
                 $loginORM->getPessoaORM()->persistir($pessoa);
             } catch (Exception $exc) {
                 $this->direcionaErroDeCadastro($exc->getMessage());
+                CircuitoController::direcionandoAoLogin($this);
             }
             return $this->forward()->dispatch(Constantes::$CONTROLLER_LOGIN, array(
                         Constantes::$ACTION => Constantes::$ACTION_SELECIONAR_PERFIL,
