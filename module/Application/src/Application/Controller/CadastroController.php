@@ -211,8 +211,13 @@ class CadastroController extends CircuitoController {
                         Constantes::$ACTION => Constantes::$PAGINA_LISTAR_TURMA,
             ));
         }
-        if ($pagina == Constantes::$PAGINA_EXCLUIR_TURMA) {
+        if ($pagina == Constantes::$PAGINA_LISTAR_TURMA_INATIVA) {
             return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
+                        Constantes::$ACTION => Constantes::$PAGINA_LISTAR_TURMA_INATIVA,
+            ));
+        }
+        if ($pagina == Constantes::$PAGINA_EXCLUIR_TURMA) {
+            return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array( 
                         Constantes::$ACTION => Constantes::$PAGINA_EXCLUIR_TURMA,
             ));
         }
@@ -1848,5 +1853,14 @@ class CadastroController extends CircuitoController {
         return $view;
     }
     
+    public function listarTurmaInativaAction() {
+        $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
+        $turmas = $repositorioORM->getTurmaORM()->encontrarTodas();
+        $view = new ViewModel(array(
+            'turmas' => $turmas,
+        ));
 
+        return $view;
+    }
+    
 }
