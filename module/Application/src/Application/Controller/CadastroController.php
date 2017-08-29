@@ -294,6 +294,13 @@ class CadastroController extends CircuitoController {
             $tipoEvento = 8;
             $extra = $grupo->getId();
         }
+        if ($pagina == Constantes::$PAGINA_LISTAGEM_REVISAO_TURMA) {
+            $listagemDeEventos = $grupo->getGrupoEventoRevisao();
+            $tituloDaPagina = Constantes::$TRADUCAO_LISTAGEM_REVISAO;
+            $tipoEvento = 9;
+            /* Id da Turma em que os alunos serão selecionados */
+            $extra = $sessao->idSessao;
+        }
 
 
         $view = new ViewModel(array(
@@ -1861,6 +1868,10 @@ class CadastroController extends CircuitoController {
         ));
 
         return $view;
+    }
+    
+    public function turmaSelecionarAlunosAction(){
+        
     }
     
 }

@@ -27,7 +27,7 @@ class ListagemTurmasInativas extends AbstractHelper {
         $turmas = $this->view->turmas;
         $turmasInativas = array();
         foreach($turmas as $turma){
-            if($turma->verificarSeEstaAtivo()){
+            if($turma->verificarSeEstaAtivo() == false){
                 $turmasInativas[] = $turma; 
             }
         }
@@ -83,7 +83,7 @@ class ListagemTurmasInativas extends AbstractHelper {
                     $html .= '<td class="text-center">' . $turma->getAno() . '</td>';
                     $html .= '<td class="text-center hidden-xs">' . $turma->getObservacao() . '</td>';   
 
-                    $html .= '<td class="text-center">'.$turma->getData_inativacao().'</td>';
+                    $html .= '<td class="text-center">'.$turma->getData_inativacaoStringPadraoBrasil().'</td>';
 //                        }
                     $html .= '</tr>';
                 }
@@ -94,8 +94,8 @@ class ListagemTurmasInativas extends AbstractHelper {
                 /* Fim panel-body */
                 $html .= '<div class="panel-footer text-right">';
 
-                $stringNomeDaFuncaoOnClickCadastro = 'funcaoCadastro("' . Constantes::$PAGINA_CADASTRAR_TURMA . '", 0)';
-                $html .= $this->view->botaoLink($this->view->translate(Constantes::$TRADUCAO_CADASTRAR), Constantes::$STRING_HASHTAG, 0, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClickCadastro));
+                $stringNomeDaFuncaoOnClickCadastro = 'funcaoCadastro("' . Constantes::$PAGINA_LISTAR_TURMA . '", 0)'; 
+                $html .= $this->view->botaoLink($this->view->translate(Constantes::$TRADUCAO_VOLTAR), Constantes::$STRING_HASHTAG, 0, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClickCadastro));
 
                 /* Fim Botões */
                 $html .= '</div>';

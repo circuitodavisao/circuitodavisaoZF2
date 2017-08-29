@@ -37,6 +37,7 @@ class ListagemDeEventos extends AbstractHelper {
         $tipoAtivosRevisionistas = ($this->view->tipoEvento == 6);
         $tipoLideresRevisao = ($this->view->tipoEvento == 7);
         $tipoAtivacaoFichas = ($this->view->tipoEvento == 8);
+        $tipoListarRevisaoTurma = ($this->view->tipoEvento == 9);
 
         $html .= $this->view->templateFormularioTopo($this->getTitulo());
         $html .= '<div class="panel-body bg-light">';
@@ -83,6 +84,14 @@ class ListagemDeEventos extends AbstractHelper {
                 $html .= '</th>';
             }
             if ($tipoRevisionistas || $tipoFichasRevisionistas || $tipoAtivosRevisionistas || $tipoLideresRevisao) {
+                $html .= '<th class="text-center">';
+                $html .= $this->view->translate(Constantes::$TRADUCAO_DATA_SIMPLIFICADO);
+                $html .= '</th>';
+                $html .= '<th class="text-center">';
+                $html .= $this->view->translate(Constantes::$TRADUCAO_OBSERVACAO);
+                $html .= '</th>';
+            }
+            if ($tipoListarRevisaoTurma){
                 $html .= '<th class="text-center">';
                 $html .= $this->view->translate(Constantes::$TRADUCAO_DATA_SIMPLIFICADO);
                 $html .= '</th>';
@@ -248,6 +257,25 @@ class ListagemDeEventos extends AbstractHelper {
                     $html .= '<td class="text-center">';
 
                     $html .= $this->view->botaoLink(Constantes::$STRING_ICONE_PLUS . '  ' . $this->view->translate(Constantes::$TRADUCAO_SELECIONAR), Constantes::$STRING_HASHTAG, 4, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClickInserir));
+                    $html .= '</td>';
+                }
+                if ($tipoListarRevisaoTurma) {
+
+                    $html .= '<td class="text-center">' . Funcoes::mudarPadraoData($evento->getData(), 1) . '</td>';
+
+                    $stringNomeDaFuncaoOnClickInserir = 'funcaoCadastro("' . Constantes::$PAGINA_SELECIONAR_REVISIONISTA . '", ' . $this->extra . ')';
+                    $grupoEventoAtivos = $evento->getGrupoEventoAtivos();
+                    $texto = '';
+                    foreach ($grupoEventoAtivos as $gea) {
+                        if ($this->view->extra != $gea->getGrupo()->getId()) {
+                            $texto .= $gea->getGrupo()->getEntidadeAtiva()->infoEntidade() . '<br />';
+                        }
+                    }
+                    $html .= '<td class="text-center"><span class="visible-lg visible-md">' . $evento->getNome() . '</span><span class="visible-sm visible-xs">' . $evento->getNomeAjustado() . '</span></td>';
+
+                    $html .= '<td class="text-center">';
+
+                    $html .= $this->view->botaoLink(Constantes::$STRING_ICONE_PLUS . '  ' . $this->view->translate(Constantes::$TRADUCAO_NOVO_REVISIONISTA), Constantes::$STRING_HASHTAG, 4, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClickInserir));
                     $html .= '</td>';
                 }
                 $html .= '</tr>';
