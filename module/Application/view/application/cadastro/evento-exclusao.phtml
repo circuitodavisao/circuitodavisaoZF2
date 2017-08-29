@@ -14,9 +14,8 @@ $tituloDaPagina = $this->translate(Constantes::$TRADUCAO_CONFIRMACAO_EXCLUSAO);
 
 echo $this->templateFormularioTopo($tituloDaPagina, Constantes::$STRING_DIV_CONFIRMACAO);
 ?>
-
 <div class="panel-body bg-light">
-    <div class="section-divider">
+    <div class="section-divider"> 
         <span>
             <?php
             if ($tipoCelula) {
@@ -80,7 +79,7 @@ echo $this->templateFormularioTopo($tituloDaPagina, Constantes::$STRING_DIV_CONF
                         echo $this->translate(Constantes::$TRADUCAO_CIENCIA_EXCLUSAO_CELULA);
                     } else {
                         if ($eventoRecebido instanceof Evento) {
-                            echo $this->translate(Constantes::$TRADUCAO_CIENCIA_EXCLUSAO_CULTO);
+                            echo $this->translate(Constantes::$TRADUCAO_CIENCIA_EXCLUSAO_CULTO); 
                         }
                     }
                     ?>

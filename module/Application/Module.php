@@ -22,7 +22,7 @@ use Application\View\Helper\BlocoDiv;
 use Application\View\Helper\BlocoResponsavel;
 use Application\View\Helper\BotaoLink;
 use Application\View\Helper\BotaoPopover;
-use Application\View\Helper\BotaoSimples; 
+use Application\View\Helper\BotaoSimples;
 use Application\View\Helper\BotaoSubmit;
 use Application\View\Helper\BotaoSubmitDesabilitado;
 use Application\View\Helper\CabecalhoDeAtendimentos;
@@ -51,6 +51,7 @@ use Application\View\Helper\ListagemFichasAtivasRevisao;
 use Application\View\Helper\ListagemFichasParaRevisao;
 use Application\View\Helper\ListagemLideresTransferencia;
 use Application\View\Helper\ListagemTurmas;
+use Application\View\Helper\ListagemTurmasInativas;
 use Application\View\Helper\MensagemRelatorioEnviado;
 use Application\View\Helper\Menu;
 use Application\View\Helper\MenuHierarquia;
@@ -169,7 +170,7 @@ class Module {
                 },
                 'botaoLink' => function($sm) {
                     return new BotaoLink();
-                },
+                }, 
                 'inputFormulario' => function($sm) {
                     return new InputFormulario();
                 },
@@ -223,6 +224,9 @@ class Module {
                 },
                 'listagemTurmas' => function($sm) {
                     return new ListagemTurmas();
+                },
+                'listagemTurmasInativas' => function($sm) {
+                    return new ListagemTurmasInativas();
                 },
                 'inputExtras' => function($sm) {
                     return new InputExtras();

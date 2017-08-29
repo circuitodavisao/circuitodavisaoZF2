@@ -466,6 +466,7 @@ class Constantes {
     public static $PAGINA_SALVAR_TURMA = 'SalvarTurma';
     public static $PAGINA_EDITAR_TURMA = 'TurmaFormEdit';
     public static $PAGINA_LISTAR_TURMA = 'ListarTurma'; 
+    public static $PAGINA_LISTAR_TURMA_INATIVA = 'ListarTurmaInativa';  
     public static $PAGINA_EXCLUIR_TURMA = 'TurmaExcluir'; 
     public static $PAGINA_EXCLUSAO_TURMA = 'TurmaExclusao';  
     public static $PAGINA_INCLUIR_ALUNOS_TURMA = 'TurmaIncluirAluno';
@@ -763,6 +764,7 @@ class Constantes {
     public static $TRADUCAO_PERGUNTA_EXCLUSAO_CULTO = 'Really want to delete this cult?';
     public static $TRADUCAO_CIENCIA_CADASTRO_CELULA = 'I confirm that the data is correct';
     public static $TRADUCAO_CIENCIA_EXCLUSAO_CULTO = 'I am <span class="text-danger">aware</span> that by <span class="text-danger">excluding cult</span> is the same no longer appear in the <span class="text-danger">launch line</span>!';
+    public static $TRADUCAO_CIENCIA_EXCLUSAO_CELULA = 'I am <span class="text-danger">aware</span> that by <span class="text-danger">excluding cell</span> is the same no longer appear in the <span class="text-danger">launch line</span>!';
     public static $TRADUCAO_CIENCIA_EXCLUSAO_TURMA = 'I am <span class="text-danger">aware</span> that by <span class="text-danger">excluding class</span> is the same no longer appear! ';
     public static $TRADUCAO_MOTIVO_EXCLUSAO = 'What reason for exclusion?';
     public static $TRADUCAO_DESCREVA_MOTIVO_EXCLUSAO = 'Please specify the reason';

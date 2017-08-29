@@ -11,7 +11,7 @@ use Zend\View\Helper\AbstractHelper;
  * @author Lucas Filipe de Carvalho Cunha <lucascarvalho.esw@gmail.com>
  * Descricao: Classe helper view para mostrar a listagem de pesoas ativas no revisão seleiconado 
  */
-class ListagemTurmas extends AbstractHelper {
+class ListagemTurmasInativas extends AbstractHelper {
 
 
     public function __construct() {
@@ -25,15 +25,15 @@ class ListagemTurmas extends AbstractHelper {
     public function renderHtml() {
         $html = '';
         $turmas = $this->view->turmas;
-        $turmasAtivas = array();
+        $turmasInativas = array();
         foreach($turmas as $turma){
             if($turma->verificarSeEstaAtivo()){
-                $turmasAtivas[] = $turma;
+                $turmasInativas[] = $turma; 
             }
         }
 
         /* Sem pessoas cadastrados */
-        if (count($turmasAtivas) == 0) {
+        if (count($turmasInativas) == 0) { 
 
             $html .= '<div class="panel-body bg-light">';
 
@@ -45,7 +45,7 @@ class ListagemTurmas extends AbstractHelper {
             ;
         } else {
             
-                $html .= $this->view->templateFormularioTopo('Turmas do IV');
+                $html .= $this->view->templateFormularioTopo('Turmas INATIVADAS'); 
                 $html .= '<div class="panel-body bg-light">';
 
                 $html .= '<table class="table">';
@@ -65,31 +65,25 @@ class ListagemTurmas extends AbstractHelper {
                 $html .= 'Observação';
                 $html .= '</th>';
 //                    }
-                $html .= '<th class="text-center"></th>';
+                $html .= '<th class="text-center">';
+                $html .= 'Data Inativação';
+                $html .= '</th>';
                 $html .= '</tr>';
                 $html .= '</thead>';
                 $html .= '<tbody>';
 
-                foreach ($turmasAtivas as $turma) { 
+                foreach ($turmasInativas as $turma) { 
                     $html .= '<tr>';
 
                     $html .= '<td class="text-center">' . $turma->getId() . '</td>';
 
-                    $stringNomeDaFuncaoOnClickInserir = 'funcaoCadastro("' . Constantes::$PAGINA_FICHA_REVISAO . '", ' . $turma->getId() . ')';
-                    $stringNomeDaFuncaoOnClick = 'funcaoCadastro("' . Constantes::$PAGINA_EDITAR_TURMA . '", ' . $turma->getId() . ')';
-                    $stringNomeDaFuncaoOnClickExclusao = 'funcaoCadastro("' . Constantes::$PAGINA_EXCLUSAO_TURMA . '", ' . $turma->getId() . ')';
-                    $stringNomeDaFuncaoOnClickIncluirAlunos = 'funcaoCadastro("'.Constantes::$PAGINA_INCLUIR_ALUNOS_TURMA.','.$turma->getId().')';
+                   
                     
                     $html .= '<td class="text-center">' . Funcoes::mesPorExtenso($turma->getMes(),1) . '</td>';
                     $html .= '<td class="text-center">' . $turma->getAno() . '</td>';
                     $html .= '<td class="text-center hidden-xs">' . $turma->getObservacao() . '</td>';   
 
-                    $html .= '<td class="text-center">';
-
-                    $html .= $this->view->botaoLink(Constantes::$STRING_ICONE_PENCIL, Constantes::$STRING_HASHTAG, 3, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClick));
-                    $html .= $this->view->botaoLink(Constantes::$STRING_ICONE_TIMES, Constantes::$STRING_HASHTAG, 4, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClickExclusao));
-                    $html .= $this->view->botaoLink(Constantes::$STRING_ICONE_PLUS, Constantes::$STRING_HASHTAG, 4, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClickIncluirAlunos));
-                    $html .= '</td>';
+                    $html .= '<td class="text-center">'.$turma->getData_inativacao().'</td>';
 //                        }
                     $html .= '</tr>';
                 }
