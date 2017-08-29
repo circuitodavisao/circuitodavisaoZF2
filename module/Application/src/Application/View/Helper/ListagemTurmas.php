@@ -112,7 +112,7 @@ class ListagemTurmas extends AbstractHelper {
             
         }
 
-        return $html;
+        return $html; 
     }
 
 }

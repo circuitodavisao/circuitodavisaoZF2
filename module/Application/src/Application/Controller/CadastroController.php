@@ -49,7 +49,7 @@ class CadastroController extends CircuitoController {
         $extra = '';
         /* Verificando rota */
         $pagina = $this->getEvent()->getRouteMatch()->getParam(Constantes::$PAGINA, 1);
-        if ($pagina == Constantes::$PAGINA_EVENTO_CULTO || $pagina == Constantes::$PAGINA_EVENTO_CELULA) {
+        if ($pagina == Constantes::$PAGINA_EVENTO_CULTO || $pagina == Constantes::$PAGINA_EVENTO_CELULA) { 
             if ($pagina == Constantes::$PAGINA_EVENTO_CULTO) {
                 $sessao->pagina = Constantes::$PAGINA_EVENTO_CULTO;
             }

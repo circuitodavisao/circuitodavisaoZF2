@@ -147,7 +147,7 @@ class CircuitoEntity {
         return $this->getData_inativacao()->format('Y-m-d');
     }
     
-    function getData_inativacaoStringPadraoBrasil() {
+    function getData_inativacaoStringPadraoBrasil() { 
         return $this->getData_inativacao()->format('d/m/Y');
     }
 

@@ -88,7 +88,7 @@ class ListagemTurmasInativas extends AbstractHelper {
                     $html .= '</tr>';
                 }
                 $html .= '</tbody>'; 
-                $html .= '</table>';
+                $html .= '</table>'; 
 
                 $html .= '</div>';
                 /* Fim panel-body */
