@@ -14,6 +14,7 @@ class MenuHierarquia extends AbstractHelper {
     protected $nomeLideres;
     protected $nomeEntidade;
     protected $tipo;
+    protected $grupoId;
 
     public function __construct() {
         
@@ -33,10 +34,11 @@ class MenuHierarquia extends AbstractHelper {
      * @param int $tipo
      * @return String
      */
-    public function __invoke($nomeLideres = '', $nomeEntidade = '', $tipo = 1) {
+    public function __invoke($nomeLideres = '', $nomeEntidade = '', $tipo = 1, $grupoId = 0) {
         $this->setNomeLideres($nomeLideres);
         $this->setNomeEntidade($nomeEntidade);
         $this->setTipo($tipo);
+        $this->setGrupoId($grupoId);
         return $this->renderHtml();
     }
 
@@ -58,13 +60,10 @@ class MenuHierarquia extends AbstractHelper {
         }
         if ($this->getTipo() === 3 || $this->getTipo() === 7) {
             $html .= '<ul class="nav sub-nav">';
-            $html .= '<li class="' . $classUnbind . '">';
+            $html .= '<li class="" style="height:55px;">';
             $html .= '<a href="#">';
-            $html .= '&nbsp;&nbsp;';
-            if ($this->getTipo() === 7) {
-                $html .= '&nbsp;&nbsp;';
-            }
-            $html .= 'Ver&nbsp;' . $this->getNomeEntidade();
+            $extra = 'onclick="funcaoCircuito(\'principalVer\', ' . $this->getGrupoId() . ');"';
+            $html .= $this->view->botaoSimples('Ver&nbsp;', $extra);
             $html .= '</a>';
             $html .= '</li>';
         }
@@ -128,6 +127,14 @@ class MenuHierarquia extends AbstractHelper {
     function setTipo($tipo) {
         $this->tipo = $tipo;
         return $this;
+    }
+
+    function getGrupoId() {
+        return $this->grupoId;
+    }
+
+    function setGrupoId($grupoId) {
+        $this->grupoId = $grupoId;
     }
 
 }

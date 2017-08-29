@@ -5,6 +5,8 @@ namespace Application\Controller;
 use Application\Controller\Helper\Constantes;
 use Application\Controller\Helper\Funcoes;
 use Application\Model\ORM\RepositorioORM;
+use Exception;
+use Zend\Json\Json;
 use Zend\Session\Container;
 use Zend\View\Model\ViewModel;
 
@@ -80,6 +82,40 @@ class PrincipalController extends CircuitoController {
         }
 
         return new ViewModel($dados);
+    }
+
+    public function verAction() {
+        $sessao = new Container(Constantes::$NOME_APLICACAO);
+        $dados = array();
+        $dados['grupoId'] = $sessao->idSessao;
+        return new ViewModel($dados);
+    }
+
+    /**
+     * Controle de funçoes da tela de cadastro
+     * @return Json
+     */
+    public function funcoesAction() {
+        $request = $this->getRequest();
+        $response = $this->getResponse();
+        if ($request->isPost()) {
+            try {
+                $post_data = $request->getPost();
+                $funcao = $post_data[Constantes::$FUNCAO];
+                $id = $post_data[Constantes::$ID];
+                $sessao = new Container(Constantes::$NOME_APLICACAO);
+                $sessao->idSessao = $id;
+                $response->setContent(Json::encode(
+                                array(
+                                    'response' => 'true',
+                                    'tipoDeRetorno' => 1,
+                                    'url' => '/' . $funcao,
+                )));
+            } catch (Exception $exc) {
+                echo $exc->get();
+            }
+        }
+        return $response;
     }
 
 }

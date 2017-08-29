@@ -25,7 +25,6 @@ class Menu extends AbstractHelper {
         return $this->renderHtml();
     }
 
-
     public function renderHtml() {
         $sessao = new Container(Constantes::$NOME_APLICACAO);
         $html = '';
@@ -157,7 +156,7 @@ class Menu extends AbstractHelper {
                     $informacaoEntidade = '<small>' . $entidadeFilho->infoEntidade() . '</small>';
                 }
                 $html .= $this->view->menuHierarquia($nomeLideres, $informacaoEntidade, 2);
-                $html .= $this->view->menuHierarquia('', '', 3);
+                $html .= $this->view->menuHierarquia('', '', 3, $grupoFilho->getId());
                 foreach ($grupoFilho->getGrupoPaiFilhoFilhos() as $gpFilho1) {
                     $grupoFilho = $gpFilho1->getGrupoPaiFilhoFilho();
                     $entidadeFilho = $grupoFilho->getEntidadeAtiva();
@@ -224,7 +223,7 @@ class Menu extends AbstractHelper {
         $html .= '<li>';
         $html .= '<a href="/cadastroCelulas">';
         $html .= '<span class="fa fa-users"></span>';
-        $html .= 'Células'; 
+        $html .= 'Células';
         $html .= '</a>';
         $html .= '</li>';
 
@@ -241,12 +240,12 @@ class Menu extends AbstractHelper {
         $html .= 'Time';
         $html .= '</a>';
         $html .= '</li>';
-        
+
         $html .= '<li>';
         $html .= '<a href="/cadastroRevisionistas">';
         $html .= '<span class="fa fa-users"></span>';
         $html .= 'Revisionistas';
-        $html .= '</a>'; 
+        $html .= '</a>';
         $html .= '</li>';
 
         $html .= '</ul>';
@@ -254,7 +253,7 @@ class Menu extends AbstractHelper {
         $html .= '</li>';
         /* Fim Menu Cadastro */
 
-        /* Menu Lançamento */ 
+        /* Menu Lançamento */
         $html .= '<li>';
         $html .= '<a class="accordion-toggle" href="#">';
         $html .= '<span class="fa fa-pencil"></span>';
@@ -274,13 +273,13 @@ class Menu extends AbstractHelper {
         $html .= 'Atendimento';
         $html .= '</a>';
         $html .= '</li>';
-        if($sessao->idPessoa == 3){
-        $html .= '<li>';
-        $html .= '<a href="/cadastro'.Constantes::$PAGINA_ATIVAR_FICHA_REVISAO.'">';
-        $html .= '<span class="fa fa-users"></span>';
-        $html .= 'Fichas Revisão de Vidas';
-        $html .= '</a>';
-        $html .= '</li>';
+        if ($sessao->idPessoa == 3) {
+            $html .= '<li>';
+            $html .= '<a href="/cadastro' . Constantes::$PAGINA_ATIVAR_FICHA_REVISAO . '">';
+            $html .= '<span class="fa fa-users"></span>';
+            $html .= 'Fichas Revisão de Vidas';
+            $html .= '</a>';
+            $html .= '</li>';
         }
         $html .= '</ul>';
         $html .= '</li>';
@@ -339,7 +338,7 @@ class Menu extends AbstractHelper {
 
         $html .= '<li>';
         $html .= '<a href="/cadastroFichaRevisionistas">';
-        $html .= '<span class="fa fa-terminal"></span>'; 
+        $html .= '<span class="fa fa-terminal"></span>';
         $html .= 'Fichas Revisao';
         $html .= '</a>';
         $html .= '</li>';
@@ -412,7 +411,7 @@ class Menu extends AbstractHelper {
     }
 
     function setPessoa($pessoa) {
-        $this->pessoa = $pessoa;  
+        $this->pessoa = $pessoa;
     }
 
 }
