@@ -49,12 +49,37 @@ class CircuitoController extends AbstractActionController {
 
     /**
      * Retona a entidade Logada
-     * @param Entidade $entidade
      */
     public static function getEntidadeLogada($repositorioORM, $sessao) {
         $idEntidadeAtual = $sessao->idEntidadeAtual;
         $entidade = $repositorioORM->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
         return $entidade;
+    }
+
+    /**
+     * Verifica a sessao
+     */
+    public static function verificandoSessao($sessao, $abstractActionController) {
+        if (empty($sessao->idPessoa)) {
+            return $abstractActionController->forward()->dispatch(Constantes::$CONTROLLER_LOGIN, array(
+                        Constantes::$ACTION => Constantes::$ACTION_INDEX,
+                        Constantes::$TIPO => 4,
+                        Constantes::$MENSAGEM => 'Sua sessão expirou!',
+            ));
+        } else {
+            return true;
+        }
+    }
+
+    /**
+     * Verifica a sessao
+     */
+    public static function direcionandoAoLogin($abstractActionController) {
+        return $abstractActionController->forward()->dispatch(Constantes::$CONTROLLER_LOGIN, array(
+                    Constantes::$ACTION => Constantes::$ACTION_INDEX,
+                    Constantes::$TIPO => 4,
+                    Constantes::$MENSAGEM => 'Sua sessão expirou!',
+        ));
     }
 
 }

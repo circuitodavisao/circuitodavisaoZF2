@@ -318,14 +318,14 @@ $nomePessoaEmail = (string) \filter_input(\INPUT_GET, $stringNomePessoaEmail);
                                 <td width="100%" height="80" valign="top" style="text-align: center; vertical-align:middle;">
                                     <!--[if gte mso 9]>
                                     <v:rect xmlns:v="urn:schemas-microsoft-com:vml" fill="true" stroke="false" style="mso-width-percent:1000;height:80px; v-text-anchor:middle;">
-                                      <v:fill type="tile" src="www.circuitodavisao.com.br/img/logos/new_logo-circuito.png" color="#ffffff" />
+                                      <v:fill type="tile" src="www.circuitodavisaonovo.com.br/img/logos/new_logo-circuito.png" color="#ffffff" />
                                       <v:textbox inset="0,0,0,0">
                                     <![endif]-->
                                     <center>
                                         <table cellpadding="0" cellspacing="0" width="600" class="w320">
                                             <tr>
                                                 <td class="mobile-header" style="vertical-align: middle;">
-                                                    <a href=""><img src="www.circuitodavisao.com.br/img/logos/new_logo-circuito.png" alt="logo" /></a>
+                                                    <a href=""><img src="www.circuitodavisaonovo.com.br/img/logos/new_logo-circuito.png" alt="logo" /></a>
                                                 </td>                                              
                                             </tr>
                                         </table>
@@ -360,7 +360,7 @@ $nomePessoaEmail = (string) \filter_input(\INPUT_GET, $stringNomePessoaEmail);
                                                             <table cellspacing="0" cellpadding="0" width="100%">
                                                                 <tr>
                                                                     <td class="user-img">
-                                                                        <a href=""><img class="user-img" src="www.circuitodavisao.com.br/img/avatars/<?php echo $avatar; ?>" alt="user img" /></a>
+                                                                        <a href=""><img class="user-img" src="www.circuitodavisaonovo.com.br/img/avatars/<?php echo $avatar; ?>" alt="user img" /></a>
                                                                         <br />
                                                                         @<?php echo $nomeLider; ?></a></span> convidou você para participar do 
                                                                         <br />Circuito da Visão!
@@ -382,7 +382,7 @@ $nomePessoaEmail = (string) \filter_input(\INPUT_GET, $stringNomePessoaEmail);
                                                                     <center style="color:#ffffff;font-family:Helvetica, Arial, sans-serif;font-size:14px;font-weight:regular;">Sign Up</center>
                                                                   </v:roundrect>
                                                                 <![endif]-->
-                                                                    <a href="www.circuitodavisao.com.br/novaSenha/<?php echo $token; ?>"
+                                                                    <a href="www.circuitodavisaonovo.com.br/novaSenha/<?php echo $token; ?>"
                                                                        style="background-color:#e9573f;border-radius:5px;color:#ffffff;display:inline-block;font-family:'Cabin', Helvetica, Arial, sans-serif;font-size:14px;font-weight:regular;line-height:45px;text-align:center;text-decoration:none;width:155px;-webkit-text-size-adjust:none;mso-hide:all;">
                                                                        Continuar o Cadastro
                                                                     </a>
