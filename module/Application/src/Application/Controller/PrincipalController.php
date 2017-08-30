@@ -86,9 +86,52 @@ class PrincipalController extends CircuitoController {
 
     public function verAction() {
         $sessao = new Container(Constantes::$NOME_APLICACAO);
-        $dados = array();
-        $dados['grupoId'] = $sessao->idSessao;
-        return new ViewModel($dados);
+        $idSessao = $sessao->idSessao;
+        unset($sessao->idSessao);
+        if ($idSessao) {
+            $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
+            $grupoSessao = $repositorioORM->getGrupoORM()->encontrarPorId($idSessao);
+            $tenhoDiscipulosAtivos = false;
+            if (count($grupoSessao->getGrupoPaiFilhoFilhosAtivos()) > 0) {
+                $tenhoDiscipulosAtivos = true;
+            }
+            $dados = array();
+            $dados['idGrupo'] = $idSessao;
+            $dados['entidade'] = $grupoSessao->getEntidadeAtiva();
+            $dados['tenhoDiscipulosAtivos'] = $tenhoDiscipulosAtivos;
+            return new ViewModel($dados);
+        } else {
+            return $this->redirect()->toRoute('principal');
+        }
+    }
+
+    public function grupoExclusaoAction() {
+        $sessao = new Container(Constantes::$NOME_APLICACAO);
+        $idSessao = $sessao->idSessao;
+        unset($sessao->idSessao);
+        if ($idSessao) {
+            $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
+            $grupoSessao = $repositorioORM->getGrupoORM()->encontrarPorId($idSessao);
+
+            $dados = array();
+            $dados['idGrupo'] = $idSessao;
+            $dados['entidade'] = $grupoSessao->getEntidadeAtiva();
+            $dados[Constantes::$EXTRA] = null;
+
+            $view = new ViewModel($dados);
+            /* Javascript */
+            $layoutJS = new ViewModel();
+            $layoutJS->setTemplate('layout/layout-js-exclusao');
+            $view->addChild($layoutJS, 'layoutJSExclusao');
+
+            return $view;
+        } else {
+            return $this->redirect()->toRoute('principal');
+        }
+    }
+
+    public function grupoExclusaoConfirmacaoAction() {
+        return $this->redirect()->toRoute('principal');
     }
 
     /**

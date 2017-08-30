@@ -1,0 +1,112 @@
+<?php
+
+use Application\Controller\Helper\Constantes;
+
+$tituloDaPagina = $this->translate('Confirmacao de exclusao');
+echo $this->templateFormularioTopo($tituloDaPagina, Constantes::$STRING_DIV_CONFIRMACAO);
+?>
+<div class="panel-body bg-light">
+    <div class="section-divider"> 
+        <span>
+            <?php echo $this->translate('Quer mesmo inativar o grupo?'); ?>
+        </span>
+    </div>
+    <div class="panel heading-border panel-danger">
+        <div class="panel-body">
+            <address>
+                <?php echo $this->dadosEntidade(); ?>
+            </address>         
+        </div>                 
+    </div>
+    <div class="row">
+        <div class="col-sm-12 col-xs-12">
+            <div class="section text-center">
+                <label class="option block mt15">
+                    <input type="checkbox" name="checked" value="checked" onclick="mostrarMotivos();">
+                    <span class="checkbox"></span>
+                    <?php
+                    echo $this->translate(Constantes::$TRADUCAO_CIENCIA_EXCLUSAO_CELULA);
+                    ?>
+                </label> 
+            </div>
+        </div>
+    </div>
+    <div id="divMotivo" class="panel heading-border panel-danger hidden">
+        <div class="panel-body bg-light">
+            <div class="section-divider">
+                <span><?php echo $this->translate(Constantes::$TRADUCAO_MOTIVO_EXCLUSAO); ?></span>
+            </div>
+            <div class="row">
+                <div class="col-sm-12 col-xs-12">
+                    <div class="section text-center">
+                        <select class="gui-input">
+                            <option><?php echo $this->translate(Constantes::$TRADUCAO_SELECIONE); ?></option>
+                            <option>SAIU DA IGREJA</option>
+                            <option>OUTRO</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12 col-xs-12">
+                    <div class="section">
+                        <label class="field prepend-icon">
+                            <textarea class="gui-textarea" id="comment" name="comment" placeholder="<?php echo $this->translate(Constantes::$TRADUCAO_DESCREVA_MOTIVO_EXCLUSAO); ?>"></textarea>
+                            <label for="comment" class="field-icon">
+                                <i class="fa fa-comments"></i>
+                            </label>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="panel-footer text-right" style="height:65px;">
+            <?php
+            $labelVoltar = $this->translate(Constantes::$TRADUCAO_VOLTAR);
+            /* Botões */
+            $urlVoltar = Constantes::$ROUTE_CADASTRO;
+            $urlVoltar .= Constantes::$PAGINA_CULTOS;
+
+            $labelContinuar = $this->translate(Constantes::$TRADUCAO_CONTINUAR);
+            $stringNomeDaFuncaoOnClickContinuarExclusao = '$("#divConfirmacao").toggleClass("' . Constantes::$FORM_HIDDEN . '");' .
+                    '$("#divSenha").toggleClass("' . Constantes::$FORM_HIDDEN . '")';
+
+            echo $this->botaoLink($labelVoltar, $urlVoltar, 2, '');
+            echo $this->botaoLink($labelContinuar, Constantes::$STRING_HASHTAG, 0, $this->funcaoOnClick($stringNomeDaFuncaoOnClickContinuarExclusao));
+            ?>
+        </div>
+    </div>
+    <div id="divBotaoVoltar" class="panel-footer text-right" style="height:65px;">
+        <?php
+        echo $this->botaoLink($labelVoltar, $urlVoltar, 2, '');
+        ?>
+    </div>
+</div>
+</div>
+<div id="divSenha" class="panel heading-border panel-danger hidden">
+    <div class="panel-body bg-light">
+        <div class="section-divider">
+            <span><?php echo $this->translate(Constantes::$TRADUCAO_DIGITE_SENHA_EXCUSAO_SENHA); ?></span>
+        </div>
+        <?php echo $this->divMensagens(); ?>
+        <div class="row">
+            <div class="col-sm-12 col-xs-12">
+                <div class="section text-center">
+                    <input id="senha" type="password" class="gui-input" placeholder="<?php echo $this->translate(Constantes::$TRADUCAO_SENHA); ?>" />
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="panel-footer text-right" style="height:65px;">
+        <?php
+        /* Botões */
+        $labelConfirmar = $this->translate(Constantes::$TRADUCAO_CONFIRMACAO);
+        $stringNomeDaFuncaoOnClickConfimarExclusao = 'validarExclusao("principalGrupoExclusaoConfirmacao", ' . $this->idGrupo . ')';
+
+        echo $this->botaoLink($labelVoltar, Constantes::$STRING_HASHTAG, 2, $this->funcaoOnClick($stringNomeDaFuncaoOnClickContinuarExclusao));
+        echo $this->botaoLink($labelConfirmar, Constantes::$STRING_HASHTAG, 0, $this->funcaoOnClick($stringNomeDaFuncaoOnClickConfimarExclusao));
+        ?>      
+    </div>  
+    <?php
+    echo $this->templateFormularioRodape();
+    

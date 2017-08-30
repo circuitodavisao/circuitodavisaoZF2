@@ -24,6 +24,7 @@ class BotaoSimples extends AbstractHelper {
     const botaoPequenoMenosImportante = 5;
     const botaoMuitoPequenoImportante = 6;
     const botaoMuitoPequenoMenosImportante = 7;
+    const botaoPerigoso = 8;
     const posicaoADireita = 1;
     const posicaoAEsquerda = 2;
     const posicaoAoCentro = 3;
@@ -49,6 +50,9 @@ class BotaoSimples extends AbstractHelper {
         }
         if ($this->getTipoBotao() === BotaoSimples::botaoSucesso) {
             $classBotao = 'success';
+        }
+        if ($this->getTipoBotao() === BotaoSimples::botaoPerigoso) {
+            $classBotao = 'danger';
         }
         if ($this->getTipoBotao() === BotaoSimples::botaoPequenoImportante) {
             $classBotao = 'sm btn-' . Constantes::$COR_BOTAO;

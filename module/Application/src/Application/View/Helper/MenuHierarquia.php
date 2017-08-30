@@ -63,7 +63,7 @@ class MenuHierarquia extends AbstractHelper {
             $html .= '<li class="" style="height:55px;">';
             $html .= '<a href="#">';
             $extra = 'onclick="funcaoCircuito(\'principalVer\', ' . $this->getGrupoId() . ');"';
-            $html .= $this->view->botaoSimples('Ver&nbsp;', $extra);
+            $html .= $this->view->botaoSimples('Ver', $extra);
             $html .= '</a>';
             $html .= '</li>';
         }
