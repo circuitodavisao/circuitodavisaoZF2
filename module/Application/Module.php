@@ -170,7 +170,7 @@ class Module {
                 },
                 'botaoLink' => function($sm) {
                     return new BotaoLink();
-                }, 
+                },
                 'inputFormulario' => function($sm) {
                     return new InputFormulario();
                 },
@@ -335,8 +335,8 @@ class Module {
             $grupo = $entidade->getGrupo();
             $viewModel->entidade = $entidade;
             $discipulos = null;
-            if (count($grupo->getGrupoPaiFilhoFilhos()) > 0) {
-                $discipulos = $grupo->getGrupoPaiFilhoFilhos();
+            if (count($grupo->getGrupoPaiFilhoFilhosAtivos()) > 0) {
+                $discipulos = $grupo->getGrupoPaiFilhoFilhosAtivos();
             }
             $viewModel->discipulos = $discipulos;
         }

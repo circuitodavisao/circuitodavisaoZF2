@@ -81,7 +81,20 @@ class PrincipalController extends CircuitoController {
             $dados['discipulosRelatorioPessoal'] = $relatorioDiscipulosPessoal;
         }
 
-        return new ViewModel($dados);
+        $view = new ViewModel($dados);
+        /* Javascript */
+        $layoutJS = new ViewModel();
+        $layoutJS->setTemplate('layout/layout-js-principal');
+        $view->addChild($layoutJS, 'layoutJSPrincipal');
+
+        if ($sessao->jaMostreiANotificacao) {
+            unset($sessao->mostrarNotificacao);
+            unset($sessao->nomePessoa);
+            unset($sessao->exclusao);
+            unset($sessao->jaMostreiANotificacao);
+        }
+
+        return $view;
     }
 
     public function verAction() {
@@ -92,7 +105,9 @@ class PrincipalController extends CircuitoController {
             $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
             $grupoSessao = $repositorioORM->getGrupoORM()->encontrarPorId($idSessao);
             $tenhoDiscipulosAtivos = false;
-            if (count($grupoSessao->getGrupoPaiFilhoFilhosAtivos()) > 0) {
+            $quantidadeDeDiscipulos = count($grupoSessao->getGrupoPaiFilhoFilhosAtivos());
+            echo "quantidadeDeDiscipulos$quantidadeDeDiscipulos";
+            if ($quantidadeDeDiscipulos > 0) {
                 $tenhoDiscipulosAtivos = true;
             }
             $dados = array();
@@ -107,30 +122,66 @@ class PrincipalController extends CircuitoController {
 
     public function grupoExclusaoAction() {
         $sessao = new Container(Constantes::$NOME_APLICACAO);
+        $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
+        try {
+            $repositorioORM->iniciarTransacao();
+            $idSessao = $sessao->idSessao;
+            unset($sessao->idSessao);
+            if ($idSessao) {
+                $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
+                $grupoSessao = $repositorioORM->getGrupoORM()->encontrarPorId($idSessao);
+
+                $dados = array();
+                $dados['idGrupo'] = $idSessao;
+                $dados['entidade'] = $grupoSessao->getEntidadeAtiva();
+                $dados[Constantes::$EXTRA] = null;
+
+                $view = new ViewModel($dados);
+                /* Javascript */
+                $layoutJS = new ViewModel();
+                $layoutJS->setTemplate('layout/layout-js-exclusao');
+                $view->addChild($layoutJS, 'layoutJSExclusao');
+
+                return $view;
+            } else {
+                return $this->redirect()->toRoute('principal');
+            }
+            $repositorioORM->fecharTransacao();
+        } catch (Exception $exc) {
+            $repositorioORM->desfazerTransacao();
+            echo $exc->getTraceAsString();
+            $this->direcionaErroDeCadastro($exc->getMessage());
+            CircuitoController::direcionandoAoLogin($this);
+        }
+    }
+
+    public function grupoExclusaoConfirmacaoAction() {
+        $sessao = new Container(Constantes::$NOME_APLICACAO);
         $idSessao = $sessao->idSessao;
         unset($sessao->idSessao);
         if ($idSessao) {
             $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
             $grupoSessao = $repositorioORM->getGrupoORM()->encontrarPorId($idSessao);
 
+            $grupoPaiFilhoPai = $grupoSessao->getGrupoPaiFilhoPai();
+            $grupoPaiFilhoPai->setDataEHoraDeInativacao();
+            $repositorioORM->getGrupoPaiFilhoORM()->persistir($grupoPaiFilhoPai, false);
+
+            foreach ($grupoSessao->getResponsabilidadesAtivas() as $grupoResponsavel) {
+                $grupoResponsavel->setDataEHoraDeInativacao();
+                $repositorioORM->getGrupoResponsavelORM()->persistir($grupoResponsavel, false);
+            }
+
+            $sessao->mostrarNotificacao = true;
+            $sessao->nomePessoa = $grupoSessao->getEntidadeAtiva()->infoEntidade();
+            $sessao->exclusao = true;
+
             $dados = array();
-            $dados['idGrupo'] = $idSessao;
-            $dados['entidade'] = $grupoSessao->getEntidadeAtiva();
-            $dados[Constantes::$EXTRA] = null;
-
             $view = new ViewModel($dados);
-            /* Javascript */
-            $layoutJS = new ViewModel();
-            $layoutJS->setTemplate('layout/layout-js-exclusao');
-            $view->addChild($layoutJS, 'layoutJSExclusao');
-
             return $view;
         } else {
             return $this->redirect()->toRoute('principal');
         }
-    }
-
-    public function grupoExclusaoConfirmacaoAction() {
         return $this->redirect()->toRoute('principal');
     }
 

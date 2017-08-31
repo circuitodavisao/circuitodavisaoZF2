@@ -25,7 +25,8 @@ echo $this->templateFormularioTopo($tituloDaPagina, Constantes::$STRING_DIV_CONF
                     <input type="checkbox" name="checked" value="checked" onclick="mostrarMotivos();">
                     <span class="checkbox"></span>
                     <?php
-                    echo $this->translate(Constantes::$TRADUCAO_CIENCIA_EXCLUSAO_CELULA);
+                    $pergunta = 'Eu <span class=\"text-danger\">concordo</span> que <span class=\"text-danger\">excluindo esse time</span> o mesmo não aparecerá mais nos meus <span class=\"text-danger\">relatórios e atendimentos</span>!';
+                    echo $this->translate($pergunta);
                     ?>
                 </label> 
             </div>

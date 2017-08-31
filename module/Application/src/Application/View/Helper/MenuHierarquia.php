@@ -82,6 +82,10 @@ class MenuHierarquia extends AbstractHelper {
             if ($this->getTipo() === 8) {
                 $html .= '&nbsp;&nbsp;';
             }
+            if ($this->getGrupoId()) {
+                $extra1 = 'onclick="funcaoCircuito(\'principalVer\', ' . $this->getGrupoId() . ');"';
+                $html .= $this->view->botaoSimples('Ver', $extra1, 4);
+            }
             $html .= $this->getNomeEntidade() . '<br />';
 
             if ($this->getTipo() === 5 || $this->getTipo() === 6 || $this->getTipo() === 8) {

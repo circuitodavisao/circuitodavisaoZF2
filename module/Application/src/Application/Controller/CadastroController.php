@@ -11,6 +11,7 @@ use Application\Form\CadastrarPessoaRevisaoForm;
 use Application\Form\CelulaForm;
 use Application\Form\EventoForm;
 use Application\Form\GrupoForm;
+use Application\Form\SelecionarAlunosForm;
 use Application\Form\TransferenciaForm;
 use Application\Form\TurmaForm;
 use Application\Model\Entity\Entidade;
@@ -217,7 +218,7 @@ class CadastroController extends CircuitoController {
             ));
         }
         if ($pagina == Constantes::$PAGINA_EXCLUIR_TURMA) {
-            return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array( 
+            return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
                         Constantes::$ACTION => Constantes::$PAGINA_EXCLUIR_TURMA,
             ));
         }
@@ -226,9 +227,19 @@ class CadastroController extends CircuitoController {
                         Constantes::$ACTION => Constantes::$PAGINA_EXCLUSAO_TURMA,
             ));
         }
+        if ($pagina == Constantes::$PAGINA_SELECIONAR_ALUNOS_TURMA) {
+            return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
+                        Constantes::$ACTION => Constantes::$PAGINA_SELECIONAR_ALUNOS_TURMA,
+            ));
+        }
+        if ($pagina == Constantes::$PAGINA_FUNCOES_SELECIONAR_ALUNOS) {
+            return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
+                        Constantes::$ACTION => Constantes::$PAGINA_FUNCOES_SELECIONAR_ALUNOS,
+            ));
+        }
         /* Funcoes */
         if ($pagina == Constantes::$PAGINA_FUNCOES) {
-            return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array( 
+            return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
                         Constantes::$ACTION => Constantes::$PAGINA_FUNCOES,
             ));
         }
@@ -293,6 +304,13 @@ class CadastroController extends CircuitoController {
             $tituloDaPagina = Constantes::$TRADUCAO_LISTAGEM_REVISIONISTAS;
             $tipoEvento = 8;
             $extra = $grupo->getId();
+        }
+        if ($pagina == Constantes::$PAGINA_LISTAGEM_REVISAO_TURMA) {
+            $listagemDeEventos = $grupo->getGrupoEventoRevisao();
+            $tituloDaPagina = Constantes::$TRADUCAO_LISTAGEM_REVISAO;
+            $tipoEvento = 9;
+            /* Id da Turma em que os alunos serão selecionados */
+            $extra = $sessao->idSessao;
         }
 
 
@@ -924,30 +942,32 @@ class CadastroController extends CircuitoController {
                     $indicePessoasFim = 2;
                 }
                 for ($indicePessoas = $indicePessoasInicio; $indicePessoas <= $indicePessoasFim; $indicePessoas++) {
-                    /* PReciso gera uma nova pessoa */
-                    $novaPessoa = new Pessoa();
+
+                    $mudarDataDeCriacao = true;
+                    if ($repositorioORM->getPessoaORM()->encontrarPorCPF($cpf)) {
+                        $novaPessoa = $repositorioORM->getPessoaORM()->encontrarPorCPF($cpf);
+                        $mudarDataDeCriacao = false;
+                    } else {
+                        $novaPessoa = new Pessoa();
+                    }
                     $novaPessoa->setNome($post_data[Constantes::$FORM_NOME . $indicePessoas]);
                     $novaPessoa->setEmail($post_data[Constantes::$FORM_EMAIL . $indicePessoas]);
                     $novaPessoa->setDocumento($post_data[Constantes::$FORM_CPF . $indicePessoas]);
                     $novaPessoa->setData_nascimento(Funcoes::mudarPadraoData($post_data[Constantes::$FORM_DATA_NASCIMENTO . $indicePessoas], 0));
                     $tokenDeAgora = $novaPessoa->gerarToken($indicePessoas);
                     $novaPessoa->setToken($tokenDeAgora);
-                    $repositorioORM->getPessoaORM()->persistir($novaPessoa);
-//                    $matricula = $post_data[Constantes::$FORM_ID_ALUNO_SELECIONADO . $indicePessoas];
-//                    $turmaAluno = $repositorioORM->getTurmaAlunoORM()->encontrarPorId($matricula);
-//                    $pessoaSelecionada = $turmaAluno->getPessoa();
-//                    $tokenDeAgora = $pessoaSelecionada->gerarToken($indicePessoas);
-//                    $pessoaSelecionada->setToken($tokenDeAgora);
-//                    $pessoaAtualizada = $loginORM->getPessoaORM()->
-//                            atualizarAlunoComDadosDaBuscaPorCPF($pessoaSelecionada, $post_data, $indicePessoas);
+                    $repositorioORM->getPessoaORM()->persistir($novaPessoa, $mudarDataDeCriacao);
 
-                    /* Criar hierarquia */
-                    $idHierarquia = $post_data[Constantes::$FORM_HIERARQUIA . $indicePessoas];
-                    $hierarquia = $repositorioORM->getHierarquiaORM()->encontrarPorId($idHierarquia);
-                    $pessoaHierarquia = new PessoaHierarquia();
-                    $pessoaHierarquia->setPessoa($novaPessoa);
-                    $pessoaHierarquia->setHierarquia($hierarquia);
-                    $repositorioORM->getPessoaHierarquiaORM()->persistir($pessoaHierarquia);
+                    /* Apenas para uma nova pessoa, quem ja tem nao muda apenas pelo juridico*/
+                    if ($mudarDataDeCriacao) {
+                        /* Criar hierarquia */
+                        $idHierarquia = $post_data[Constantes::$FORM_HIERARQUIA . $indicePessoas];
+                        $hierarquia = $repositorioORM->getHierarquiaORM()->encontrarPorId($idHierarquia);
+                        $pessoaHierarquia = new PessoaHierarquia();
+                        $pessoaHierarquia->setPessoa($novaPessoa);
+                        $pessoaHierarquia->setHierarquia($hierarquia);
+                        $repositorioORM->getPessoaHierarquiaORM()->persistir($pessoaHierarquia);
+                    }
 
                     /* Criar Grupo_Responsavel */
                     $grupoResponsavelNovo = new GrupoResponsavel();
@@ -955,7 +975,7 @@ class CadastroController extends CircuitoController {
                     $grupoResponsavelNovo->setGrupo($grupoNovo);
                     $repositorioORM->getGrupoResponsavelORM()->persistir($grupoResponsavelNovo);
 
-                    // Enviar Email
+// Enviar Email
                     $this->enviarEmailParaCompletarOsDados($tokenDeAgora, $novaPessoa);
                 }
 
@@ -966,7 +986,7 @@ class CadastroController extends CircuitoController {
                 $grupoPaiFilhoNovo->setGrupoPaiFilhoFilho($grupoNovo);
                 $repositorioORM->getGrupoPaiFilhoORM()->persistir($grupoPaiFilhoNovo);
 
-                $repositorioORM->fecharTransacao();
+//                $repositorioORM->fecharTransacao();
             } catch (Exception $exc) {
                 $repositorioORM->desfazerTransacao();
                 echo $exc->getTraceAsString();
@@ -1128,9 +1148,11 @@ class CadastroController extends CircuitoController {
                     $resposta = 1;
 
                     /* CPF encontrado na receita verificando se tem cadastro no sistema */
-                    $loginORM = new RepositorioORM($this->getDoctrineORMEntityManager());
-                    if ($loginORM->getPessoaORM()->encontrarPorCPF($cpf)) {
-                        $resposta = 3;
+                    $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
+                    if ($pessoaEncotrada = $repositorioORM->getPessoaORM()->encontrarPorCPF($cpf)) {
+                        if (count($pessoaEncotrada->getResponsabilidadesAtivas()) === 0) {
+                            $resposta = 3;
+                        }
                     }
                 }
                 if ($json[$stringCode] === '001' || $json[$stringCode] === '999') {
@@ -1699,7 +1721,7 @@ class CadastroController extends CircuitoController {
                 /* Fim da migração do Sistema Antigo */
 
                 $repositorioORM->fecharTransacao();
-                return $this->redirect()->toRoute(Constantes::$ROUTE_CADASTRO, array( 
+                return $this->redirect()->toRoute(Constantes::$ROUTE_CADASTRO, array(
                             Constantes::$PAGINA => Constantes::$PAGINA_ATIVAR_FICHA_REVISAO,
                 ));
             } else {
@@ -1712,17 +1734,17 @@ class CadastroController extends CircuitoController {
             $repositorioORM->desfazerTransacao();
             echo $exc->getTraceAsString();
         }
-    } 
+    }
 
     public function turmaFormAction() {
-        
-        $formCadastroTurma = new TurmaForm('formulario'); 
+
+        $formCadastroTurma = new TurmaForm('formulario');
 
         $view = new ViewModel(array(
             'formCadastroTurma' => $formCadastroTurma,
         ));
 
-        return $view; 
+        return $view;
     }
 
     public function salvarTurmaAction() {
@@ -1739,31 +1761,28 @@ class CadastroController extends CircuitoController {
                 $mes = $dadosPost['Mes'];
                 $ano = $dadosPost['Ano'];
                 $observacao = $dadosPost['observacao'];
-                
-                if($id){
+
+                if ($id) {
                     $turma = $repositorioORM->getTurmaORM()->encontrarPorId($id);
-                }else{
+                } else {
                     $turma = new Turma();
                 }
-                
+
                 $turma->setAno($ano);
                 $turma->setMes($mes);
                 $turma->setObservacao($observacao);
                 $turma->setTipo_turma_id($idTipo);
-                
-                if($id){
+
+                if ($id) {
                     $repositorioORM->getTurmaORM()->persistir($turma, false);
-                }else{     
+                } else {
                     $repositorioORM->getTurmaORM()->persistir($turma);
-                    
                 }
-                
+
                 $repositorioORM->fecharTransacao();
                 return $this->redirect()->toRoute(Constantes::$ROUTE_CADASTRO, array(
                             Constantes::$PAGINA => Constantes::$PAGINA_LISTAR_TURMA,
-                )); 
-                
-                  
+                ));
             } catch (Exception $exc) {
                 $repositorioORM->desfazerTransacao();
                 echo $exc->getTraceAsString();
@@ -1794,19 +1813,19 @@ class CadastroController extends CircuitoController {
 
         return $view;
     }
-    
-    public function turmaExcluirAction(){
+
+    public function turmaExcluirAction() {
         $sessao = new Container(Constantes::$NOME_APLICACAO);
         $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
         $idTurma = $sessao->idSessao;
         $turma = $repositorioORM->getTurmaORM()->encontrarPorId($idTurma);
         $turma->setDataEHoraDeInativacao();
-        $repositorioORM->getTurmaORM()->persistir($turma, false); 
-        
+        $repositorioORM->getTurmaORM()->persistir($turma, false);
+
         return $this->redirect()->toRoute(Constantes::$ROUTE_CADASTRO, array(
-                            Constantes::$PAGINA => Constantes::$PAGINA_LISTAR_TURMA,
+                    Constantes::$PAGINA => Constantes::$PAGINA_LISTAR_TURMA,
         ));
-    } 
+    }
 
     public function solicitacoesAction() {
         $sessao = new Container(Constantes::$NOME_APLICACAO);
@@ -1814,7 +1833,7 @@ class CadastroController extends CircuitoController {
         $idEntidadeAtual = $sessao->idEntidadeAtual;
         $entidade = $repositorioORM->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
         $grupo = $entidade->getGrupo();
-        $solicitacoes = $grupo->getSolicitacao(); 
+        $solicitacoes = $grupo->getSolicitacao();
         $view = new ViewModel(array(
             'solicitacoes' => $solicitacoes,
         ));
@@ -1826,7 +1845,7 @@ class CadastroController extends CircuitoController {
         $view = new ViewModel(array());
         return $view;
     }
-    
+
     /**
      * Tela com formulário de exclusão de turma
      * GET /cadastroTurmaExclusao
@@ -1852,7 +1871,7 @@ class CadastroController extends CircuitoController {
 
         return $view;
     }
-    
+
     public function listarTurmaInativaAction() {
         $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
         $turmas = $repositorioORM->getTurmaORM()->encontrarTodas();
@@ -1862,5 +1881,68 @@ class CadastroController extends CircuitoController {
 
         return $view;
     }
-    
+
+    public function turmaSelecionarAlunosAction() {
+        $sessao = new Container(Constantes::$NOME_APLICACAO);
+        $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
+        $idTurma = $sessao->idTurma;
+        $idRevisao = $sessao->idRevisao;
+        $eventoRevisao = $repositorioORM->getEventoORM()->encontrarPorId($idRevisao);
+
+        $pessoas = array();
+        $frequencias = $eventoRevisao->getEventoFrequencia();
+        if (count($frequencias) > 0) {
+            foreach ($frequencias as $f) {
+                $p = null;
+                $pAux = null;
+                $p = $f->getPessoa();
+                $pAux = new Pessoa();
+                $grupoPessoa = $p->getGrupoPessoaAtivo();
+                if ($grupoPessoa != null) {
+                    if ($f->getFrequencia() == 'S') {
+                        $pAux->setNome($p->getNome());
+                        $pessoas[] = $pAux;
+                    }
+                }
+            }
+        }
+        $formSelecionarAlunos = new SelecionarAlunosForm('selecionar-alunos', $idTurma, $pessoas);
+
+        $view = new ViewModel(array(
+            'formSelecionarAlunos' => $formSelecionarAlunos,
+        ));
+
+        return $view;
+    }
+
+    /**
+     * Controle de funçoes da tela de cadastro
+     * @return Json
+     */
+    public function funcoesSelecionarAlunosAction() {
+        $request = $this->getRequest();
+        $response = $this->getResponse();
+        if ($request->isPost()) {
+            try {
+                $post_data = $request->getPost();
+                $idTurma = $post_data['idTurma'];
+                $idRevisao = $post_data['idRevisao'];
+                $sessao = new Container(Constantes::$NOME_APLICACAO);
+
+
+                $sessao->idTurma = $idTurma;
+                $sessao->idRevisao = $idRevisao;
+                $response->setContent(Json::encode(
+                                array(
+                                    'response' => 'true',
+                                    'tipoDeRetorno' => 1,
+                                    'url' => '/cadastroTurmaSelecionarAlunos',
+                )));
+            } catch (Exception $exc) {
+                echo $exc->get();
+            }
+        }
+        return $response;
+    }
+
 }

@@ -157,7 +157,7 @@ class Menu extends AbstractHelper {
                 }
                 $html .= $this->view->menuHierarquia($nomeLideres, $informacaoEntidade, 2);
                 $html .= $this->view->menuHierarquia('', '', 3, $grupoFilho->getId());
-                foreach ($grupoFilho->getGrupoPaiFilhoFilhos() as $gpFilho1) {
+                foreach ($grupoFilho->getGrupoPaiFilhoFilhosAtivos() as $gpFilho1) {
                     $grupoFilho = $gpFilho1->getGrupoPaiFilhoFilho();
                     $entidadeFilho = $grupoFilho->getEntidadeAtiva();
                     $grupoResponsavel = $grupoFilho->getResponsabilidadesAtivas();
@@ -186,7 +186,7 @@ class Menu extends AbstractHelper {
                     if (!empty($entidadeFilho)) {
                         $informacaoEntidade = $entidadeFilho->getEntidadeTipo()->getNome() . ' <small>' . $entidadeFilho->infoEntidade() . '</small>';
                     }
-                    $html .= $this->view->menuHierarquia($nomeLideres, $informacaoEntidade);
+                    $html .= $this->view->menuHierarquia($nomeLideres, $informacaoEntidade, 1, $grupoFilho->getId());
                     $grupoFilho->getGrupoPaiFilhoFilhos();
                 }
                 $html .= $this->view->menuHierarquia('', '', 4);
