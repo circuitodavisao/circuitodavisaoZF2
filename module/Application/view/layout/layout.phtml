@@ -1,6 +1,6 @@
 <?php
 echo $this->doctype();
-$versao = '?v=1.1.9';
+$versao = '?v=1.2.8';
 
 use Application\Controller\Helper\Constantes;
 ?>
@@ -74,6 +74,7 @@ use Application\Controller\Helper\Constantes;
         echo $this
                 ->headScript()
                 ->prependFile($this->basePath() . '/js/circuito_da_visao/modal-selecionar-perfil.js' . $versao)
+                ->prependFile($this->basePath() . '/js/circuito_da_visao/funcao-circuito.js' . $versao)
                 ->prependFile($this->basePath() . '/js/circuito_da_visao/funcao-cadastro.js' . $versao)
                 ->prependFile($this->basePath() . '/assets/js/main.js')
                 ->prependFile($this->basePath() . '/assets/js/utility/utility.js')

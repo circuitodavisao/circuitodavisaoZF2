@@ -470,7 +470,9 @@ class Constantes {
     public static $PAGINA_EXCLUIR_TURMA = 'TurmaExcluir'; 
     public static $PAGINA_EXCLUSAO_TURMA = 'TurmaExclusao';  
     public static $PAGINA_INCLUIR_ALUNOS_TURMA = 'TurmaIncluirAluno';
-    public static $PAGINA_LISTAGEM_REVISAO_TURMA = 'TurmaSelecionarRevisao'; 
+    public static $PAGINA_LISTAGEM_REVISAO_TURMA = 'TurmaSelecionarRevisao';
+    public static $PAGINA_SELECIONAR_ALUNOS_TURMA = 'TurmaSelecionarAlunos';
+    public static $PAGINA_FUNCOES_SELECIONAR_ALUNOS = 'FuncoesSelecionarAlunos';
     public static $NOME_ENTIDADE_TURMA = 'turma';
     /* Fim das páginas relaciondas ao IV */
     

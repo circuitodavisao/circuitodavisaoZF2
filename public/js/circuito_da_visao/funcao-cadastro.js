@@ -7,7 +7,7 @@
 
 function funcaoCadastro(funcao, id) {
     var resposta = true;
-    
+
     if (resposta) {
         $.post(
                 '/cadastroFuncoes',
@@ -22,5 +22,27 @@ function funcaoCadastro(funcao, id) {
                 }
             }
         }, 'json');
+    }
+}
+
+function funcaoSelecionarAlunosTurma(idTurma, idRevisao) {
+    var resposta = true;
+
+    if (resposta) {
+        if (resposta) {
+            $.post(
+                    '/cadastroFuncoesSelecionarAlunos',
+                    {
+                        idTurma: idTurma,
+                        idRevisao: idRevisao 
+                    },
+            function (data) {
+                if (data.response) {
+                    if (data.tipoDeRetorno === 1) {
+                        location.href = data.url;
+                    }
+                }
+            }, 'json');
+        }
     }
 }
