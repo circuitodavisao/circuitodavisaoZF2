@@ -140,7 +140,7 @@ class LancamentoController extends CircuitoController {
                 }
 
                 $grupoPassado = $repositorioORM->getGrupoORM()->encontrarPorId($idGrupo);
-                $numeroIdentificador = $repositorioORM->getFatoCicloORM()->montarNumeroIdentificador($grupoPassado);
+                $numeroIdentificador = $repositorioORM->getFatoCicloORM()->montarNumeroIdentificador($repositorioORM);
                 $eventoTipoCulto = 1;
                 $eventoTipoCelula = 2;
                 $dimensaoTipoCelula = 1;
@@ -571,7 +571,7 @@ class LancamentoController extends CircuitoController {
                         } else {
                             $atendimentoLancado[$index] = 'N';
                         }
-                    } 
+                    }
                     IndexController::cadastrarAtendimentoPorid($idAtendimento, $atendimentoLancado);
                 }
                 $repositorioORM->fecharTransacao();

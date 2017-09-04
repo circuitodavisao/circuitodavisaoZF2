@@ -552,6 +552,9 @@ class LoginController extends CircuitoController {
         $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
         $sessao = new Container(Constantes::$NOME_APLICACAO);
         $idPessoa = $sessao->idPessoa;
+        if (!$idPessoa) {
+            CircuitoController::direcionandoAoLogin($this);
+        }
         $pessoa = $repositorioORM->getPessoaORM()->encontrarPorId($idPessoa);
 
         $view = new ViewModel(array(Constantes::$ENTITY_PESSOA_NOME => $pessoa->getNomePrimeiroUltimo()));

@@ -170,7 +170,7 @@ class Module {
                 },
                 'botaoLink' => function($sm) {
                     return new BotaoLink();
-                }, 
+                },
                 'inputFormulario' => function($sm) {
                     return new InputFormulario();
                 },
@@ -335,13 +335,13 @@ class Module {
             $grupo = $entidade->getGrupo();
             $viewModel->entidade = $entidade;
             $discipulos = null;
-            if (count($grupo->getGrupoPaiFilhoFilhos()) > 0) {
-                $discipulos = $grupo->getGrupoPaiFilhoFilhos();
+            if (count($grupo->getGrupoPaiFilhoFilhosAtivos()) > 0) {
+                $discipulos = $grupo->getGrupoPaiFilhoFilhosAtivos();
             }
             $viewModel->discipulos = $discipulos;
         }
 
-        if (empty($sessao->idEntidadeAtual) || $pessoa->getAtualizar_dados() === 'S' || $e->getRequest()->getUriString() == 'http://158.69.124.139/preSaida' || $e->getRequest()->getUriString() == 'http://158.69.124.139/cadastroFichaRevisao') {
+        if (empty($sessao->idEntidadeAtual) || $pessoa->getAtualizar_dados() === 'S' || $e->getRequest()->getUriString() == 'https://www.circuitodavisaonovo.com.br/preSaida' || $e->getRequest()->getUriString() == 'https://www.circuitodavisaonovo.com.br/cadastroFichaRevisao') {
             $viewModel->mostrarMenu = 0;
         }
     }

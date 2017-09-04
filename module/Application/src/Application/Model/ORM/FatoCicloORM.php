@@ -10,6 +10,7 @@ use Application\Model\Entity\FatoCiclo;
 use Application\Model\Entity\Grupo;
 use DateTime;
 use Exception;
+use Zend\Session\Container;
 
 /**
  * Nome: FatoCicloORM.php
@@ -155,15 +156,21 @@ class FatoCicloORM extends CircuitoORM {
 
     /**
      * Montar numeroIdentificador
-     * @param Grupo $grupo
-     * @return string
-     * @throws Exception
      */
-    public function montarNumeroIdentificador($grupo, $tipo = 0) {
+    public function montarNumeroIdentificador(RepositorioORM $repositorioORM, $grupo = null) {
         $numeroIdentificador = null;
         $tamanho = 8;
-        try {
+
+        if (!$grupo) {
+            $sessao = new Container(Constantes::$NOME_APLICACAO);
+            $idEntidadeAtual = $sessao->idEntidadeAtual;
+            $entidadeSelecionada = $repositorioORM->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+            $grupoSelecionado = $entidadeSelecionada->getGrupo();
+        } else {
             $grupoSelecionado = $grupo;
+        }
+
+        try {
             if ($grupoSelecionado->getEntidadeAtiva()) {
                 while ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::SUBEQUIPE) {
                     $numeroIdentificador = str_pad($grupoSelecionado->getId(), $tamanho, 0, STR_PAD_LEFT) . $numeroIdentificador;

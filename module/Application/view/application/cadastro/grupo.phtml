@@ -163,6 +163,7 @@ echo $this->templateFormularioTopo($this->tituloDaPagina);
 
             <!-- Div Hierarquia -->
             <div id="divHierarquia" class="hidden">
+                <div id="divMensagemHierarquia" class="hidden alert alert-success"></div>
                 <!-- Selecionar Hierarquia -->
                 <?php echo $this->formSelect($form->get(Constantes::$FORM_HIERARQUIA)); ?>
                 <!-- Fim Selecionar Hierarquia -->

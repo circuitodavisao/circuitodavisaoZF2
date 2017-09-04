@@ -1,0 +1,22 @@
+<?php
+
+use Application\Model\Entity\EntidadeTipo;
+use Application\View\Helper\BotaoSimples;
+
+echo $this->dadosEntidade();
+?>
+<?php
+
+if ($this->tenhoDiscipulosAtivos) {
+    echo '<div class="alert alert-info mt10">Tenho discipulos nao posso inativar!</div>';
+} else {
+    $extra = 'onclick="funcaoCircuito(\'principalGrupoExclusao\', ' . $this->idGrupo . ');"';
+    echo '<div class="panel mt10">';
+    echo '<div class="panel-body">';
+    if ($this->idEntidadeTipo === EntidadeTipo::equipe || $this->idEntidadeTipo === EntidadeTipo::igreja) {
+        echo $this->botaoSimples(
+                'Inativar', $extra, BotaoSimples::botaoPerigoso, BotaoSimples::posicaoAEsquerda);
+    }
+    echo '</div>';
+    echo '</div>';
+}
