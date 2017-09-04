@@ -4,6 +4,7 @@ namespace Application\Controller;
 
 use Application\Controller\Helper\Constantes;
 use Application\Controller\Helper\Funcoes;
+use Application\Model\Entity\EntidadeTipo;
 use Application\Model\ORM\RepositorioORM;
 use Exception;
 use Zend\Json\Json;
@@ -27,7 +28,7 @@ class PrincipalController extends CircuitoController {
         $idEntidadeAtual = $sessao->idEntidadeAtual;
         $entidade = $repositorioORM->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
         $grupo = $entidade->getGrupo();
-        $numeroIdentificador = $repositorioORM->getFatoCicloORM()->montarNumeroIdentificador($grupo);
+        $numeroIdentificador = $repositorioORM->getFatoCicloORM()->montarNumeroIdentificador($repositorioORM);
 
         $tipoRelatorioPessoal = 1;
         $tipoRelatorioEquipe = 2;
@@ -49,7 +50,7 @@ class PrincipalController extends CircuitoController {
             $discipulos = array();
             foreach ($grupoPaiFilhoFilhos as $gpFilho) {
                 $grupoFilho = $gpFilho->getGrupoPaiFilhoFilho();
-                $numeroIdentificador = $repositorioORM->getFatoCicloORM()->montarNumeroIdentificador($grupoFilho);
+                $numeroIdentificador = $repositorioORM->getFatoCicloORM()->montarNumeroIdentificador($repositorioORM, $grupoFilho);
                 $tipoRelatorioSomado = 2;
                 $relatorio12 = RelatorioController::montaRelatorio($repositorioORM, $numeroIdentificador, $periodo, $tipoRelatorioSomado);
                 $relatorio12Pessoal = RelatorioController::montaRelatorio($repositorioORM, $numeroIdentificador, $periodo, $tipoRelatorioPessoal);
@@ -65,7 +66,7 @@ class PrincipalController extends CircuitoController {
                 if ($grupoPaiFilhoFilhos144) {
                     foreach ($grupoPaiFilhoFilhos144 as $gpFilho144) {
                         $grupoFilho144 = $gpFilho144->getGrupoPaiFilhoFilho();
-                        $numeroIdentificador144 = $repositorioORM->getFatoCicloORM()->montarNumeroIdentificador($grupoFilho144);
+                        $numeroIdentificador144 = $repositorioORM->getFatoCicloORM()->montarNumeroIdentificador($repositorioORM, $grupoFilho144);
                         $relatorio144 = RelatorioController::montaRelatorio($repositorioORM, $numeroIdentificador144, $periodo, $tipoRelatorioSomado);
                         if ($relatorio144['celulaQuantidade'] > 0) {
                             if ($relatorio144['celulaRealizadas'] < $relatorio144['celulaQuantidade']) {
@@ -106,13 +107,15 @@ class PrincipalController extends CircuitoController {
             $grupoSessao = $repositorioORM->getGrupoORM()->encontrarPorId($idSessao);
             $tenhoDiscipulosAtivos = false;
             $quantidadeDeDiscipulos = count($grupoSessao->getGrupoPaiFilhoFilhosAtivos());
-            echo "quantidadeDeDiscipulos$quantidadeDeDiscipulos";
             if ($quantidadeDeDiscipulos > 0) {
                 $tenhoDiscipulosAtivos = true;
             }
+            $entidade = $grupoSessao->getEntidadeAtiva();
+            $entidadeLogada = $repositorioORM->getEntidadeORM()->encontrarPorId($sessao->idEntidadeAtual);
             $dados = array();
             $dados['idGrupo'] = $idSessao;
-            $dados['entidade'] = $grupoSessao->getEntidadeAtiva();
+            $dados['entidade'] = $entidade;
+            $dados['idEntidadeTipo'] = $entidadeLogada->getTipo_id();
             $dados['tenhoDiscipulosAtivos'] = $tenhoDiscipulosAtivos;
             return new ViewModel($dados);
         } else {
