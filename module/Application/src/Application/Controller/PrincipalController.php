@@ -178,12 +178,6 @@ class PrincipalController extends CircuitoController {
             $sessao->mostrarNotificacao = true;
             $sessao->nomePessoa = $grupoSessao->getEntidadeAtiva()->infoEntidade();
             $sessao->exclusao = true;
-
-            $dados = array();
-            $view = new ViewModel($dados);
-            return $view;
-        } else {
-            return $this->redirect()->toRoute('principal');
         }
         return $this->redirect()->toRoute('principal');
     }
