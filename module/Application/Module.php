@@ -354,7 +354,8 @@ class Module {
 //!!! Your authentication route must be whitelisted
         $allowedRoutesConfig = array(
             Constantes::$ROUTE_LOGIN,
-            'migracao'
+            'migracao',
+            'deploy'
         );
         if (!isset($matchedRoute) || in_array($matchedRoute->getMatchedRouteName(), $allowedRoutesConfig)) {
 // no auth check required
