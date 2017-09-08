@@ -33,9 +33,12 @@ class DeployController extends CircuitoController {
         $token = $this->getEvent()->getRouteMatch()->getParam(Constantes::$ID, 0);
         if ($token === 'c76ec8866438d1e6ddc90909b0debbe3') {
             $stringHashtag = '###';
+            $gitUser = 'lpmagalhaes';
+            $gitPassword = 'leonardo142857';
+            $linkGit = 'github.com/circuitodavisao/circuitodavisaoZf2';
             echo $stringHashtag . 'Iniciando o deploy' . $stringHashtag . PHP_EOL;
-//        $comando = 'git pull https://lpmagalhaes:leonardo142857@github.com/circuitodavisao/circuitodavisaoZf2';
-            $comando = 'git branch -av';
+            $comando = 'git pull https://' . $gitUser . ':' . $gitPassword . '@' . $linkGit;
+//            $comando = 'git branch -av';
             echo '<pre>';
             passthru($comando);
             echo '</pre>';
@@ -43,7 +46,6 @@ class DeployController extends CircuitoController {
         } else {
             echo "Sem token";
         }
-
     }
 
 }
