@@ -35,7 +35,9 @@ class DeployController extends CircuitoController {
             $stringHashtag = '###';
             $gitUser = 'lpmagalhaes';
             $gitPassword = 'leonardo142857';
+
             $linkGit = 'github.com/circuitodavisao/circuitodavisaoZf2.git master';
+		echo 'deploy automatico';
             echo $stringHashtag . 'Iniciando o deploy' . $stringHashtag . PHP_EOL;
             $comando = 'git pull https://' . $gitUser . ':' . $gitPassword . '@' . $linkGit;
 //            echo PHP_EOL . $comando . PHP_EOL;
