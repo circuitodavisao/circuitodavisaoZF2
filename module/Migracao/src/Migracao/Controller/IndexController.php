@@ -184,7 +184,7 @@ class IndexController extends CircuitoController {
                 $html .= "<br />Entidade " . $grupo->getEntidadeAtiva()->infoEntidade();
             }
 
-            $numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($grupo);
+            $numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupo);
             $html .= "<br />NumeroIdentificador: " . $numeroIdentificador;
             if ($numeroIdentificador) {
                 $fatoCiclo = $this->getRepositorio()->getFatoCicloORM()->encontrarPorNumeroIdentificadorEDataCriacao($numeroIdentificador, $dateFormatada, $this->getRepositorio());
