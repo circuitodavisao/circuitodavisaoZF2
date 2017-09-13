@@ -38,9 +38,12 @@ return array(
                 ),
             ),
             'principal' => array(
-                'type' => 'Literal',
+                'type' => 'Segment',
                 'options' => array(
-                    'route' => '/principal',
+                    'route' => '/principal[:action]',
+                    'constraints' => array(
+                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                    ),
                     'defaults' => array(
                         'controller' => 'Application\Controller\Principal',
                         'action' => 'index',
@@ -164,7 +167,7 @@ return array(
             'cadastro/cadastro/celulas' => __DIR__ . '/../view/cadastro/celulas.phtml',
             'cadastro/cadastro/revisao' => __DIR__ . '/../view/cadastro/revisao.phtml',
             'cadastro/cadastro/transferencia' => __DIR__ . '/../view/cadastro/transferencia.phtml',
-            'cadastro/cadastro/selecionar_revisionista' => __DIR__ . '/../view/cadastro/selecionar_revisionista.phtml', 
+            'cadastro/cadastro/selecionar_revisionista' => __DIR__ . '/../view/cadastro/selecionar_revisionista.phtml',
             'cadastro/cadastro/turma' => __DIR__ . '/../view/cadastro/selecionar_revisionista.phtml',
             'relatorio/relatorio/index' => __DIR__ . '/../view/relatorio/index.phtml',
             'relatorio/relatorio/atendimento' => __DIR__ . '/../view/relatorio/atendimento.phtml',

@@ -700,7 +700,7 @@ class CadastroController extends CircuitoController {
                         /* Cadastro do fato celula */
                         /* cadastro fato apenas se for nova celula */
                         if (empty($post_data[Constantes::$FORM_ID])) {
-                            $numeroIdentificador = $repositorioORM->getFatoCicloORM()->montarNumeroIdentificador($entidade->getGrupo());
+                            $numeroIdentificador = $repositorioORM->getFatoCicloORM()->montarNumeroIdentificador($repositorioORM);
                             $periodo = 0;
                             $arrayPeriodo = Funcoes::montaPeriodo($periodo);
                             $stringData = $arrayPeriodo[3] . '-' . $arrayPeriodo[2] . '-' . $arrayPeriodo[1];
@@ -942,39 +942,40 @@ class CadastroController extends CircuitoController {
                     $indicePessoasFim = 2;
                 }
                 for ($indicePessoas = $indicePessoasInicio; $indicePessoas <= $indicePessoasFim; $indicePessoas++) {
-                    /* PReciso gera uma nova pessoa */
-                    $novaPessoa = new Pessoa();
-                    $novaPessoa->setNome($post_data[Constantes::$FORM_NOME . $indicePessoas]);
-                    $novaPessoa->setEmail($post_data[Constantes::$FORM_EMAIL . $indicePessoas]);
-                    $novaPessoa->setDocumento($post_data[Constantes::$FORM_CPF . $indicePessoas]);
-                    $novaPessoa->setData_nascimento(Funcoes::mudarPadraoData($post_data[Constantes::$FORM_DATA_NASCIMENTO . $indicePessoas], 0));
-                    $tokenDeAgora = $novaPessoa->gerarToken($indicePessoas);
-                    $novaPessoa->setToken($tokenDeAgora);
-                    $repositorioORM->getPessoaORM()->persistir($novaPessoa);
-//                    $matricula = $post_data[Constantes::$FORM_ID_ALUNO_SELECIONADO . $indicePessoas];
-//                    $turmaAluno = $repositorioORM->getTurmaAlunoORM()->encontrarPorId($matricula);
-//                    $pessoaSelecionada = $turmaAluno->getPessoa();
-//                    $tokenDeAgora = $pessoaSelecionada->gerarToken($indicePessoas);
-//                    $pessoaSelecionada->setToken($tokenDeAgora);
-//                    $pessoaAtualizada = $loginORM->getPessoaORM()->
-//                            atualizarAlunoComDadosDaBuscaPorCPF($pessoaSelecionada, $post_data, $indicePessoas);
+                    $mudarDataDeCriacao = true;
+                    if ($repositorioORM->getPessoaORM()->encontrarPorCPF($cpf)) {
+                        $pessoaSelecionada = $repositorioORM->getPessoaORM()->encontrarPorCPF($cpf);
+                        $mudarDataDeCriacao = false;
+                    } else {
+                        $pessoaSelecionada = new Pessoa();
+                    }
+                    $pessoaSelecionada->setNome($post_data[Constantes::$FORM_NOME . $indicePessoas]);
+                    $pessoaSelecionada->setEmail($post_data[Constantes::$FORM_EMAIL . $indicePessoas]);
+                    $pessoaSelecionada->setDocumento($post_data[Constantes::$FORM_CPF . $indicePessoas]);
+                    $pessoaSelecionada->setData_nascimento(Funcoes::mudarPadraoData($post_data[Constantes::$FORM_DATA_NASCIMENTO . $indicePessoas], 0));
+                    $tokenDeAgora = $pessoaSelecionada->gerarToken($indicePessoas);
+                    $pessoaSelecionada->setToken($tokenDeAgora);
+                    $repositorioORM->getPessoaORM()->persistir($pessoaSelecionada, $mudarDataDeCriacao);
 
-                    /* Criar hierarquia */
-                    $idHierarquia = $post_data[Constantes::$FORM_HIERARQUIA . $indicePessoas];
-                    $hierarquia = $repositorioORM->getHierarquiaORM()->encontrarPorId($idHierarquia);
-                    $pessoaHierarquia = new PessoaHierarquia();
-                    $pessoaHierarquia->setPessoa($novaPessoa);
-                    $pessoaHierarquia->setHierarquia($hierarquia);
-                    $repositorioORM->getPessoaHierarquiaORM()->persistir($pessoaHierarquia);
+                    /* Apenas para uma nova pessoa, quem ja tem nao muda apenas pelo juridico */
+                    if ($mudarDataDeCriacao) {
+                        /* Criar hierarquia */
+                        $idHierarquia = $post_data[Constantes::$FORM_HIERARQUIA . $indicePessoas];
+                        $hierarquia = $repositorioORM->getHierarquiaORM()->encontrarPorId($idHierarquia);
+                        $pessoaHierarquia = new PessoaHierarquia();
+                        $pessoaHierarquia->setPessoa($pessoaSelecionada);
+                        $pessoaHierarquia->setHierarquia($hierarquia);
+                        $repositorioORM->getPessoaHierarquiaORM()->persistir($pessoaHierarquia);
+                    }
 
                     /* Criar Grupo_Responsavel */
                     $grupoResponsavelNovo = new GrupoResponsavel();
-                    $grupoResponsavelNovo->setPessoa($novaPessoa);
+                    $grupoResponsavelNovo->setPessoa($pessoaSelecionada);
                     $grupoResponsavelNovo->setGrupo($grupoNovo);
                     $repositorioORM->getGrupoResponsavelORM()->persistir($grupoResponsavelNovo);
 
-// Enviar Email
-                    $this->enviarEmailParaCompletarOsDados($tokenDeAgora, $novaPessoa);
+                    /* Enviar Email */
+                    $this->enviarEmailParaCompletarOsDados($tokenDeAgora, $pessoaSelecionada);
                 }
 
                 /* Criar Grupo_Pai_Filho */
@@ -984,7 +985,7 @@ class CadastroController extends CircuitoController {
                 $grupoPaiFilhoNovo->setGrupoPaiFilhoFilho($grupoNovo);
                 $repositorioORM->getGrupoPaiFilhoORM()->persistir($grupoPaiFilhoNovo);
 
-                $repositorioORM->fecharTransacao();
+//                $repositorioORM->fecharTransacao();
             } catch (Exception $exc) {
                 $repositorioORM->desfazerTransacao();
                 echo $exc->getTraceAsString();
@@ -1109,10 +1110,15 @@ class CadastroController extends CircuitoController {
      */
     public function buscarCPFAction() {
         $resposta = 0;
+        $respostaSucesso = 1;
+        $respostaNaoEncotrado = 2;
+        $respostaTemCadastroAtivo = 3;
+        $respostaTemCadastroInativo = 4;
         $request = $this->getRequest();
         $response = $this->getResponse();
         if ($request->isPost()) {
             try {
+                $idPessoa = 0;
                 $post_data = $request->getPost();
                 $cpf = $post_data[Constantes::$FORM_CPF];
 
@@ -1139,29 +1145,37 @@ class CadastroController extends CircuitoController {
                 $stringDataNascimento = 'data_nascimento';
 
                 curl_close($curl);
+
+                $dados = array();
                 /* Sucesso */
                 if ($json[$stringCode] === '000') {
                     $nomeDaPesquisa = $json[$stringContent][$stringNome];
                     $dataDeNascimentoDaPesquisa = $json[$stringContent][$stringDataNascimento];
-                    $resposta = 1;
+                    $resposta = $respostaSucesso;
 
                     /* CPF encontrado na receita verificando se tem cadastro no sistema */
-                    $loginORM = new RepositorioORM($this->getDoctrineORMEntityManager());
-                    if ($loginORM->getPessoaORM()->encontrarPorCPF($cpf)) {
-                        $resposta = 3;
+                    $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
+                    if ($pessoaEncotrada = $repositorioORM->getPessoaORM()->encontrarPorCPF($cpf)) {
+                        $responsabilidadesAtivas = count($pessoaEncotrada->getResponsabilidadesAtivas());
+                        if ($responsabilidadesAtivas === 0) {
+                            $resposta = $respostaTemCadastroInativo;
+                            $idPessoa = $pessoaEncotrada->getId();
+                            $dados['idHierarquia'] = $pessoaEncotrada->getPessoaHierarquiaAtivo()->getHierarquia()->getId();
+                        } else {
+                            $resposta = $respostaTemCadastroAtivo;
+                        }
                     }
                 }
                 if ($json[$stringCode] === '001' || $json[$stringCode] === '999') {
-                    $resposta = 2;
+                    $resposta = $respostaNaoEncotrado;
                 }
 
-                $dadosDeResposta = array(
-                    'resposta' => $resposta,
-                    'cpf' => $cpf,
-                    'nome' => $nomeDaPesquisa,
-                    'dataNascimento' => $dataDeNascimentoDaPesquisa,
-                );
-                $response->setContent(Json::encode($dadosDeResposta));
+                $dados['resposta'] = $resposta;
+                $dados['cpf'] = $cpf;
+                $dados['nome'] = $nomeDaPesquisa;
+                $dados['dataNascimento'] = $dataDeNascimentoDaPesquisa;
+                $dados['idPessoa'] = $idPessoa;
+                $response->setContent(Json::encode($dados));
             } catch (Exception $exc) {
                 echo $exc->getTraceAsString();
             }

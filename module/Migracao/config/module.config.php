@@ -13,6 +13,7 @@ return array(
     'controllers' => array(
         'factories' => array(
             'Migracao\Controller\Index' => 'Migracao\Controller\Factory\IndexControllerFactory',
+            'Deploy\Controller\Index' => 'Migracao\Controller\Factory\DeployControllerFactory',
         ),
     ),
     # definir e gerenciar rotas
@@ -28,6 +29,20 @@ return array(
                     ),
                     'defaults' => array(
                         'controller' => 'Migracao\Controller\Index',
+                        'action' => 'index',
+                    ),
+                ),
+            ),
+            'deploy' => array(
+                'type' => 'Segment',
+                'options' => array(
+                    'route' => '/deploy[:action][/:id]',
+                    'constraints' => array(
+                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                        'id' => '[a-zA-Z0-9]+',
+                    ),
+                    'defaults' => array(
+                        'controller' => 'Deploy\Controller\Index',
                         'action' => 'index',
                     ),
                 ),

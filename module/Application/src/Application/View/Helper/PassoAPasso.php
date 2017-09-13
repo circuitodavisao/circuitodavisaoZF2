@@ -35,14 +35,14 @@ class PassoAPasso extends AbstractHelper {
         $class = 'stepwizard';
 
         if ($this->getForm() instanceof GrupoForm) {
-            $numeroDePassos = 4;
-            if ($this->view->entidadeTipo == Entidade::PRESIDENTE ||
-                    $this->view->entidadeTipo == Entidade::NACIONAL ||
-                    $this->view->entidadeTipo == Entidade::REGIONAL ||
-                    $this->view->entidadeTipo == Entidade::COORDENACAO) {
-
-                $numeroDePassos = 3;
-            }
+            $numeroDePassos = 3;
+//            if ($this->view->entidadeTipo == Entidade::PRESIDENTE ||
+//                    $this->view->entidadeTipo == Entidade::NACIONAL ||
+//                    $this->view->entidadeTipo == Entidade::REGIONAL ||
+//                    $this->view->entidadeTipo == Entidade::COORDENACAO) {
+//
+//                $numeroDePassos = 3;
+//            }
         }
         if ($this->getForm() instanceof AtualizarCadastroForm || $this->getForm() instanceof EventoForm) {
             $numeroDePassos = 3;
@@ -60,7 +60,7 @@ class PassoAPasso extends AbstractHelper {
             $nomePonto = '';
             /* Cadastro de grupo */
             if ($this->getForm() instanceof GrupoForm) {
-                if ($this->view->entidadeTipo == 1 || $this->view->entidadeTipo == 2 || $this->view->entidadeTipo == 3 || $this->view->entidadeTipo == 4) {
+//                if ($this->view->entidadeTipo == 1 || $this->view->entidadeTipo == 2 || $this->view->entidadeTipo == 3 || $this->view->entidadeTipo == 4) {
                     switch ($indiceDePonto) {
                         case 1:
                             $nomePonto = $this->view->translate(Constantes::$TRADUCAO_PASSO_A_PASSO_DADOS_PESSOAIS);
@@ -74,24 +74,24 @@ class PassoAPasso extends AbstractHelper {
                         default:
                             break;
                     }
-                } else {
-                    switch ($indiceDePonto) {
-                        case 1:
-                            $nomePonto = $this->view->translate(Constantes::$TRADUCAO_PASSO_A_PASSO_SELECIONE_O_ALUNO);
-                            break;
-                        case 2:
-                            $nomePonto = $this->view->translate(Constantes::$TRADUCAO_PASSO_A_PASSO_DADOS_PESSOAIS);
-                            break;
-                        case 3:
-                            $nomePonto = $this->view->translate(Constantes::$TRADUCAO_PASSO_A_PASSO_EMAIL);
-                            break;
-                        case 4:
-                            $nomePonto = $this->view->translate(Constantes::$TRADUCAO_PASSO_A_PASSO_HIERARQUIA);
-                            break;
-                        default:
-                            break;
-                    }
-                }
+//                } else {
+//                    switch ($indiceDePonto) {
+//                        case 1:
+//                            $nomePonto = $this->view->translate(Constantes::$TRADUCAO_PASSO_A_PASSO_SELECIONE_O_ALUNO);
+//                            break;
+//                        case 2:
+//                            $nomePonto = $this->view->translate(Constantes::$TRADUCAO_PASSO_A_PASSO_DADOS_PESSOAIS);
+//                            break;
+//                        case 3:
+//                            $nomePonto = $this->view->translate(Constantes::$TRADUCAO_PASSO_A_PASSO_EMAIL);
+//                            break;
+//                        case 4:
+//                            $nomePonto = $this->view->translate(Constantes::$TRADUCAO_PASSO_A_PASSO_HIERARQUIA);
+//                            break;
+//                        default:
+//                            break;
+//                    }
+//                }
             }
             /* Atualização de grupo */
             if ($this->getForm() instanceof AtualizarCadastroForm) {

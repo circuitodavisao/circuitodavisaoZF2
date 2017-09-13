@@ -1,0 +1,60 @@
+<?php
+
+use Application\Controller\Helper\Constantes;
+use Zend\Session\Container;
+
+$versao = '?v=1.1.3';
+
+echo $this
+        ->headScript()
+        ->prependFile($this->basePath() . '/vendor/plugins/pnotify/pnotify.js')
+;
+echo $this->inlineScript();
+
+$mensagemPNotify = '';
+$nomePessoa = '';
+$sessao = new Container(Constantes::$NOME_APLICACAO);
+$mostrarNotificacao = false;
+if ($sessao->mostrarNotificacao) {
+    $mostrarNotificacao = true;
+    $mensagemPNotify = $this->translate(Constantes::$TRADUCAO_PESSOA_CADASTRADA);
+    if ($sessao->exclusao) {
+        $mensagemPNotify = $this->translate(Constantes::$TRADUCAO_PESSOA_INATIVADA_LANCAMENTO);
+    }
+    if ($sessao->nomePessoa) {
+        $nomePessoa = $sessao->nomePessoa;
+    }
+    $sessao->jaMostreiANotificacao = true;
+}
+?>
+<script type = "text/javascript">
+<?php if ($mostrarNotificacao) { ?>
+        window.onload = modalPNotify;
+<?php } ?>
+
+    function modalPNotify() {
+        var stack_bar_bottom = {
+            "dir1": "up",
+            "dir2": "right",
+            "spacing1": 0,
+            "spacing2": 0
+        }
+
+        var noteStyle = 'success';
+        var noteShadow = true;
+        var noteOpacity = 1;
+
+        new PNotify({
+            title: '<?php echo $mensagemPNotify; ?>!',
+            text: '<?php echo $nomePessoa; ?>',
+            shadow: noteShadow,
+            opacity: noteOpacity,
+            addclass: 'stack_bar_bottom',
+            type: noteStyle,
+            stack: stack_bar_bottom,
+            width: '70%',
+            delay: 10000
+        });
+
+    }
+</script>

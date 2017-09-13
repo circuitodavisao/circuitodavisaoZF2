@@ -44,7 +44,7 @@ class RelatorioController extends CircuitoController {
         $idEntidadeAtual = $sessao->idEntidadeAtual;
         $entidade = $repositorioORM->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
         $grupo = $entidade->getGrupo();
-        $numeroIdentificador = $repositorioORM->getFatoCicloORM()->montarNumeroIdentificador($grupo);
+        $numeroIdentificador = $repositorioORM->getFatoCicloORM()->montarNumeroIdentificador($repositorioORM);
         $periodo = $this->getEvent()->getRouteMatch()->getParam(Constantes::$ID, 0);
 
         $tipoRelatorioPessoal = 1;
@@ -63,7 +63,7 @@ class RelatorioController extends CircuitoController {
             $relatorioDiscipulos = array();
             foreach ($grupoPaiFilhoFilhos as $gpFilho) {
                 $grupoFilho = $gpFilho->getGrupoPaiFilhoFilho();
-                $numeroIdentificador = $repositorioORM->getFatoCicloORM()->montarNumeroIdentificador($grupoFilho);
+                $numeroIdentificador = $repositorioORM->getFatoCicloORM()->montarNumeroIdentificador($repositorioORM, $grupoFilho);
                 $tipoRelatorioSomado = 2;
                 $relatorioDiscipulos[$grupoFilho->getId()] = RelatorioController::montaRelatorio($repositorioORM, $numeroIdentificador, $periodo, $tipoRelatorioSomado);
             }
