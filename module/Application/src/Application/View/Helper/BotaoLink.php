@@ -37,8 +37,11 @@ class BotaoLink extends AbstractHelper {
         if ($this->getTipo() == 2 || $this->getTipo() == 3 || $this->getTipo() == 6 || $this->getTipo() == 8) {// tipo de menor importancia
             $classCor = 'default dark';
         }
+        if ($this->getTipo() == 9){
+            $classCor = 'danger dark';
+        }
         $tamanho = '';
-        if ($this->getTipo() == 3 || $this->getTipo() == 4 || $this->getTipo() == 5 || $this->getTipo() == 6) {// tamanho extra pequeno
+        if ($this->getTipo() == 3 || $this->getTipo() == 4 || $this->getTipo() == 5 || $this->getTipo() == 6 || $this->getTipo() == 9) {// tamanho extra pequeno
             $tamanho = 'btn-xs';
             $margenRight = 'mr5';
         }

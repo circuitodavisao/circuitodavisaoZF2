@@ -232,9 +232,9 @@ class CadastroController extends CircuitoController {
                         Constantes::$ACTION => Constantes::$PAGINA_SELECIONAR_ALUNOS_TURMA,
             ));
         }
-        if ($pagina == Constantes::$PAGINA_FUNCOES_SELECIONAR_ALUNOS) {
+        if ($pagina == Constantes::$PAGINA_CURSO_LISTAR) {
             return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
-                        Constantes::$ACTION => Constantes::$PAGINA_FUNCOES_SELECIONAR_ALUNOS,
+                        Constantes::$ACTION => Constantes::$PAGINA_CURSO_LISTAR,
             ));
         }
         /* Funcoes */
@@ -1375,25 +1375,23 @@ class CadastroController extends CircuitoController {
         $eventoRevisao = $repositorioORM->getEventoORM()->encontrarPorId($idRevisao);
         $grupoPessoaRevisionista = $pessoaRevisionista->getGrupoPessoaAtivo();
         $grupoLider = $grupoPessoaRevisionista->getGrupo();
-//        $nomeEntidadeLider = $grupoLider->getEntidadeAtiva()->infoEntidade();
-//        $grupoIgreja = $grupoLider->getGrupoIgreja();
-//        $nomeIgreja = $grupoIgreja->getEntidadeAtiva()->infoEntidade();
-//        $grupoResponsavel = $grupoLider->getResponsabilidadesAtivas();
-//        $pessoas = array();
-//        foreach ($grupoResponsavel as $gr) {
-//            $p = $gr->getPessoa();
-//            $pessoas[] = $p;
-//        }
-//        $view = new ViewModel(array(
-//            Constantes::$PESSOA_REVISAO => $pessoaRevisionista,
-//            Constantes::$REVISAO_VIEW => $eventoRevisao,
-//            Constantes::$PESSOA_LIDER_REVISAO => $pessoas[0],
-//            Constantes::$ENTIDADE_REVISAO => $nomeEntidadeLider,
-//            Constantes::$NOME_IGREJA_FICHA_REVISAO => $nomeIgreja,
-//            Constantes::$STRING_ID_EVENTO_FREQUENCIA => $idEventoFrequencia,
-//        ));
-
-        $view = new ViewModel();
+        $nomeEntidadeLider = $grupoLider->getEntidadeAtiva()->infoEntidade();
+        $grupoIgreja = $grupoLider->getGrupoIgreja();
+        $nomeIgreja = $grupoIgreja->getEntidadeAtiva()->infoEntidade();
+        $grupoResponsavel = $grupoLider->getResponsabilidadesAtivas();
+        $pessoas = array();
+        foreach ($grupoResponsavel as $gr) {
+            $p = $gr->getPessoa();
+            $pessoas[] = $p;
+        }
+        $view = new ViewModel(array(
+            Constantes::$PESSOA_REVISAO => $pessoaRevisionista,
+            Constantes::$REVISAO_VIEW => $eventoRevisao,
+            Constantes::$PESSOA_LIDER_REVISAO => $pessoas[0],
+            Constantes::$ENTIDADE_REVISAO => $nomeEntidadeLider,
+            Constantes::$NOME_IGREJA_FICHA_REVISAO => $nomeIgreja,
+            Constantes::$STRING_ID_EVENTO_FREQUENCIA => $idEventoFrequencia,
+        ));
 
         /* Javascript especifico */
         $layoutJS = new ViewModel();
@@ -1954,5 +1952,19 @@ class CadastroController extends CircuitoController {
         }
         return $response;
     }
+    
+    /**
+     * Função de listagem de curso
+     */
+    
+    public function cursoListarAction(){
+        $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
+        $cursos = $repositorioORM->getCursoORM()->buscarTodosRegistrosEntidade();
+        $view = new ViewModel(array(
+            'cursos' => $cursos,
+        ));
+
+        return $view;
+    }       
 
 }
