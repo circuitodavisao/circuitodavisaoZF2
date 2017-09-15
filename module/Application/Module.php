@@ -45,6 +45,7 @@ use Application\View\Helper\InputFormulario;
 use Application\View\Helper\InputFormularioSimples;
 use Application\View\Helper\LinkLogo;
 use Application\View\Helper\ListagemConsolidacaoParaRevisao;
+use Application\View\Helper\ListagemCursos;
 use Application\View\Helper\ListagemDeEventos;
 use Application\View\Helper\ListagemDePessoasComEventos;
 use Application\View\Helper\ListagemFichasAtivasRevisao;
@@ -224,6 +225,9 @@ class Module {
                 },
                 'listagemTurmas' => function($sm) {
                     return new ListagemTurmas();
+                },
+                'listagemCursos' => function($sm) {
+                    return new ListagemCursos();
                 },
                 'listagemTurmasInativas' => function($sm) {
                     return new ListagemTurmasInativas();

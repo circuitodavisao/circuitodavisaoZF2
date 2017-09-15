@@ -31,7 +31,7 @@ $form->setAttribute(Constantes::$ACTION, $this->url(Constantes::$ROUTE_CADASTRO,
                             <?php 
                             echo $this->formHidden($form->get('idTurma'));
                             echo $this->formHidden($form->get(Constantes::$INPUT_CSRF));
-                            $stringNomeDaFuncaoOnClickCadastro = 'funcaoCadastro("' . Constantes::$PAGINA_LISTAR_TURMA . '", 0)';  
+                            $stringNomeDaFuncaoOnClickCadastro = 'funcaoCadastro("' . Constantes::$PAGINA_LISTAGEM_REVISAO_TURMA . '", 0)';   
                             echo $this->botaoLink($this->translate(Constantes::$TRADUCAO_VOLTAR), Constantes::$STRING_HASHTAG, 2, $this->funcaoOnClick($stringNomeDaFuncaoOnClickCadastro));
                             /* Submit */
                             $funcaoVerificarCadastroPessoa = $this->funcaoOnClick('validarLancamentoCadastrarTurma(this.form)');

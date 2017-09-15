@@ -46,6 +46,19 @@ class CircuitoORM {
         }
         return $entidade;
     }
+    
+    /**
+     * Buscar todos os registros da entidade
+     * @return CircuitoEntity
+     * @throws Exception
+     */
+    public function buscarTodosRegistrosEntidade() {
+        $entidades = $this->getEntityManager()->getRepository($this->getEntity())->findAll();
+        if (!$entidades) {
+            throw new Exception("Não foi encontrado nenhuma registro da Entidade"); 
+        }
+        return $entidades;
+    }
 
     /**
      * Atualiza a entidade no banco de dados

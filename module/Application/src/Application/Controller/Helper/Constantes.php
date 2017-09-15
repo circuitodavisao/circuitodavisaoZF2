@@ -225,6 +225,7 @@ class Constantes {
     public static $ENTITY_GRUPO_PAI_FILHO = 'Application\Model\Entity\GrupoPaiFilho';
     public static $ENTITY_GRUPO_PESSOA_TIPO = 'Application\Model\Entity\GrupoPessoaTipo';
     public static $ENTITY_GRUPO_CV = 'Application\Model\Entity\GrupoCv';
+    public static $ENTITY_CURSO = 'Application\Model\Entity\Curso';
     public static $ENTITY_EVENTO = 'Application\Model\Entity\Evento';
     public static $ENTITY_EVENTO_CELULA = 'Application\Model\Entity\EventoCelula';
     public static $ENTITY_EVENTO_TIPO = 'Application\Model\Entity\EventoTipo';
@@ -473,6 +474,8 @@ class Constantes {
     public static $PAGINA_LISTAGEM_REVISAO_TURMA = 'TurmaSelecionarRevisao';
     public static $PAGINA_SELECIONAR_ALUNOS_TURMA = 'TurmaSelecionarAlunos';
     public static $PAGINA_FUNCOES_SELECIONAR_ALUNOS = 'FuncoesSelecionarAlunos';
+    public static $PAGINA_CURSO_LISTAR = 'CursoListar';
+    public static $PAGINA_CADASTRAR_CURSO = 'CursoForm';
     public static $NOME_ENTIDADE_TURMA = 'turma';
     /* Fim das páginas relaciondas ao IV */
     
