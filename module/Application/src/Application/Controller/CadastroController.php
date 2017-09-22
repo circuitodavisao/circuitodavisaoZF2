@@ -1572,7 +1572,7 @@ class CadastroController extends CircuitoController {
 
                 /* Resgatando Dados do EventoFrequencia e do Revisionista */ 
                 $eventoFrequencia = $repositorioORM->getEventoFrequenciaORM()->encontrarPorIdEventoFrequencia($idEventoFrequencia);
-//                if ($eventoFrequencia->getFrequencia() == 'N') {
+                if ($eventoFrequencia->getFrequencia() == 'N') {
                     $pessoaRevisionista = $eventoFrequencia->getPessoa();
                     /* Membro = idTipo 3 */
                     $grupoPessoaRevisionista = $this->alterarGrupoPessoaTipo(3, $repositorioORM, $pessoaRevisionista);
@@ -1582,10 +1582,10 @@ class CadastroController extends CircuitoController {
                     $repositorioORM->getEventoFrequenciaORM()->persistir($eventoFrequencia, false);
 
                     /* Mensagens de retorno */
-//                    $sessao = new Container(Constantes::$NOME_APLICACAO);
-//                    $sessao->mostrarNotificacao = true;
-//                    $sessao->tipoMensagem = Constantes::$TIPO_MENSAGEM_CADASTRAR_REVISIONISTA;
-//                    $sessao->textoMensagem = $pessoaRevisionista->getNome();
+                    $sessao = new Container(Constantes::$NOME_APLICACAO);
+                    $sessao->mostrarNotificacao = true;
+                    $sessao->tipoMensagem = Constantes::$TIPO_MENSAGEM_CADASTRAR_REVISIONISTA;
+                    $sessao->textoMensagem = $pessoaRevisionista->getNome();
 //                    $sessao->idSessao = $eventoFrequencia->getId();
 
                     /*Migração Sitema Antigo */
@@ -1612,12 +1612,12 @@ class CadastroController extends CircuitoController {
                     return $this->redirect()->toRoute(Constantes::$ROUTE_CADASTRO, array(
                                 Constantes::$PAGINA => Constantes::$PAGINA_ATIVAR_FICHA_REVISAO,
                     ));
-//                } else {
-//                    $repositorioORM->desfazerTransacao();
-//                    return $this->redirect()->toRoute(Constantes::$ROUTE_CADASTRO, array(
-//                                Constantes::$PAGINA => Constantes::$PAGINA_ATIVAR_FICHA_REVISAO,
-//                    ));
-//                }
+                } else {
+                    $repositorioORM->desfazerTransacao();
+                    return $this->redirect()->toRoute(Constantes::$ROUTE_CADASTRO, array(
+                                Constantes::$PAGINA => Constantes::$PAGINA_ATIVAR_FICHA_REVISAO,
+                    ));
+                }
             } catch (Exception $exc) {
                 $repositorioORM->desfazerTransacao();
                 echo $exc->getTraceAsString();
