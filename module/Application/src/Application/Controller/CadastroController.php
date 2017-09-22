@@ -9,11 +9,13 @@ use Application\Form\AtivarFichaForm;
 use Application\Form\AtualizarCadastroForm;
 use Application\Form\CadastrarPessoaRevisaoForm;
 use Application\Form\CelulaForm;
+use Application\Form\CursoForm;
 use Application\Form\EventoForm;
 use Application\Form\GrupoForm;
 use Application\Form\SelecionarAlunosForm;
 use Application\Form\TransferenciaForm;
 use Application\Form\TurmaForm;
+use Application\Model\Entity\Curso;
 use Application\Model\Entity\Entidade;
 use Application\Model\Entity\Evento;
 use Application\Model\Entity\EventoCelula;
@@ -29,6 +31,7 @@ use Application\Model\Entity\Turma;
 use Application\Model\ORM\RepositorioORM;
 use DateTime;
 use Exception;
+use Migracao\Controller\IndexController;
 use Zend\Json\Json;
 use Zend\Session\Container;
 use Zend\View\Model\ViewModel;
@@ -237,6 +240,16 @@ class CadastroController extends CircuitoController {
                         Constantes::$ACTION => Constantes::$PAGINA_CURSO_LISTAR,
             ));
         }
+        if ($pagina == Constantes::$PAGINA_CURSO_CADASTRAR) {
+            return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
+                        Constantes::$ACTION => Constantes::$PAGINA_CURSO_CADASTRAR, 
+            ));
+        } 
+        if ($pagina == Constantes::$PAGINA_CURSO_SALVAR) {
+            return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
+                        Constantes::$ACTION => Constantes::$PAGINA_CURSO_SALVAR, 
+            ));
+        } 
         /* Funcoes */
         if ($pagina == Constantes::$PAGINA_FUNCOES) {
             return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
@@ -1569,29 +1582,29 @@ class CadastroController extends CircuitoController {
                     $repositorioORM->getEventoFrequenciaORM()->persistir($eventoFrequencia, false);
 
                     /* Mensagens de retorno */
-//                    $sessao = new Container(Constantes::$NOME_APLICACAO);
-//                    $sessao->mostrarNotificacao = true;
-//                    $sessao->tipoMensagem = Constantes::$TIPO_MENSAGEM_CADASTRAR_REVISIONISTA;
-//                    $sessao->textoMensagem = $pessoaRevisionista->getNome();
-//                    $sessao->idSessao = $eventoFrequencia->getId();
-//
-//                    /*Migração Sitema Antigo */
-//
-//                    $grupoLider = $grupoPessoaRevisionista->getGrupo();
-//                    $grupoResponsavel = $grupoLider->getResponsabilidadesAtivas();
-//                    $numeroLideres = count($grupoResponsavel);
-//                    $grupoCv = $grupoLider->getGrupoCv();
-//                    if($numeroLideres > 1){
-//                        $idAluno = IndexController::cadastrarPessoaRevisionista($pessoaRevisionista->getNome(), substr(''.$pessoaRevisionista->getTelefone().'',0,2),
-//                        substr(''.$pessoaRevisionista->getTelefone().'', 2, strlen(''.$pessoaRevisionista->getTelefone().'')), $pessoaRevisionista->getSexo(),
-//                                $pessoaRevisionista->getData_nascimento(),$grupoCv->getLider1(), $grupoCv->getLider2());
-//                    }else{
-//                        $idAluno = IndexController::cadastrarPessoaRevisionista($pessoaRevisionista->getNome(), substr(''.$pessoaRevisionista->getTelefone().'',0,2),
-//                        substr(''.$pessoaRevisionista->getTelefone().'', 2, strlen(''.$pessoaRevisionista->getTelefone().'')), $pessoaRevisionista->getSexo(),
-//                                $pessoaRevisionista->getData_nascimento(),$grupoCv->getLider1());
-//
-//                    }
-//                    IndexController::cadastrarPessoaAluno($idAluno, 5930, 'A', 1);
+                    $sessao = new Container(Constantes::$NOME_APLICACAO);
+                    $sessao->mostrarNotificacao = true;
+                    $sessao->tipoMensagem = Constantes::$TIPO_MENSAGEM_CADASTRAR_REVISIONISTA;
+                    $sessao->textoMensagem = $pessoaRevisionista->getNome();
+                    $sessao->idSessao = $eventoFrequencia->getId();
+
+                    /*Migração Sitema Antigo */
+
+                    $grupoLider = $grupoPessoaRevisionista->getGrupo();
+                    $grupoResponsavel = $grupoLider->getResponsabilidadesAtivas();
+                    $numeroLideres = count($grupoResponsavel);
+                    $grupoCv = $grupoLider->getGrupoCv(); 
+                    if($numeroLideres > 1){
+                        $idAluno = IndexController::cadastrarPessoaRevisionista($pessoaRevisionista->getNome(), substr(''.$pessoaRevisionista->getTelefone().'',0,2),
+                        substr(''.$pessoaRevisionista->getTelefone().'', 2, strlen(''.$pessoaRevisionista->getTelefone().'')), $pessoaRevisionista->getSexo(),
+                                $pessoaRevisionista->getData_nascimento(),$grupoCv->getLider1(), $grupoCv->getLider2());
+                    }else{
+                        $idAluno = IndexController::cadastrarPessoaRevisionista($pessoaRevisionista->getNome(), substr(''.$pessoaRevisionista->getTelefone().'',0,2),
+                        substr(''.$pessoaRevisionista->getTelefone().'', 2, strlen(''.$pessoaRevisionista->getTelefone().'')), $pessoaRevisionista->getSexo(),
+                                $pessoaRevisionista->getData_nascimento(),$grupoCv->getLider1());
+
+                    }
+                    IndexController::cadastrarPessoaAluno($idAluno, 6503, 'A', 1);
 
                     /* Fim da migração do Sistema Antigo */
 
@@ -1966,5 +1979,56 @@ class CadastroController extends CircuitoController {
 
         return $view;
     }       
+    /*
+     * Função de retornar formulario de cadastro de cursos
+     */
+    public function cursoFormAction(){
+        $formCadastroCurso = new CursoForm('formulario');
+        $view = new ViewModel(array(
+            'formCadastroCurso' => $formCadastroCurso,
+        ));
+
+        return $view;
+    }
+    
+    public function cursoSalvarAction() {
+        $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
+        $request = $this->getRequest();
+        $response = $this->getResponse();
+        if ($request->isPost()) {
+            try {
+                $repositorioORM->iniciarTransacao();
+
+                $dadosPost = $request->getPost();
+                $id = $dadosPost['id'];
+                $nome = $dadosPost['nome'];
+                $sessao = new Container(Constantes::$NOME_APLICACAO);
+                $idPessoaLogada = $sessao->idEntidadeLogada;
+                $pessoaLogada = $repositorioORM->getPessoaORM()->encontrarPorId($idPessoaLogada);
+                if ($id) {
+                    $curso = $repositorioORM->getCursoORM()->encontrarPorId($id);
+                } else {
+                    $curso = new Curso();
+                }
+
+                $curso->setNome($nome);
+                $curso->setPessoa($pessoaLogada);
+
+                if ($id) {
+                    $repositorioORM->getCursoORM()->persistir($curso, false);
+                } else {
+                    $repositorioORM->getCursoORM()->persistir($curso);
+                }
+
+                $repositorioORM->fecharTransacao();
+                return $this->redirect()->toRoute(Constantes::$ROUTE_CADASTRO, array(
+                            Constantes::$PAGINA => Constantes::$PAGINA_CURSO_LISTAR,
+                ));
+            } catch (Exception $exc) {
+                $repositorioORM->desfazerTransacao();
+                echo $exc->getTraceAsString();
+            }
+        }
+    }
 
 }

@@ -463,7 +463,7 @@ class Constantes {
     public static $CONTROLLER_CADASTRO = 'Application\Controller\Cadastro';
     public static $ROUTE_CADASTRO = 'cadastro';
     /* páginas relacionadas ao IV */
-    public static $PAGINA_CADASTRAR_TURMA = 'TurmaForm';
+    public static $PAGINA_CADASTRAR_TURMA = 'TurmaForm'; 
     public static $PAGINA_SALVAR_TURMA = 'SalvarTurma';
     public static $PAGINA_EDITAR_TURMA = 'TurmaFormEdit';
     public static $PAGINA_LISTAR_TURMA = 'ListarTurma'; 
@@ -475,7 +475,8 @@ class Constantes {
     public static $PAGINA_SELECIONAR_ALUNOS_TURMA = 'TurmaSelecionarAlunos';
     public static $PAGINA_FUNCOES_SELECIONAR_ALUNOS = 'FuncoesSelecionarAlunos';
     public static $PAGINA_CURSO_LISTAR = 'CursoListar';
-    public static $PAGINA_CADASTRAR_CURSO = 'CursoForm';
+    public static $PAGINA_CURSO_CADASTRAR = 'CursoForm';
+    public static $PAGINA_CURSO_SALVAR = 'CursoSalvar';
     public static $NOME_ENTIDADE_TURMA = 'turma';
     /* Fim das páginas relaciondas ao IV */
     
@@ -508,6 +509,8 @@ class Constantes {
     public static $TRADUCAO_SELECIONE_O_ALUNO = 'Select the Student that will be used for the registration';
     public static $TRADUCAO_MATRICULA = 'Registration';
     public static $TRADUCAO_NOME = 'Nome';
+    public static $TRADUCAO_NOME_CURSO = 'Choose the name of the course';
+    public static $TRADUCAO_NOME_CURSO_PLACEHOLDER = 'Name of the course';
     public static $TRADUCAO_OBSERVACAO = 'Observation';
     public static $TRADUCAO_IGREJAS = 'Churches';
     public static $TRADUCAO_DATA_NASCIMENTO = 'Birth Date';
