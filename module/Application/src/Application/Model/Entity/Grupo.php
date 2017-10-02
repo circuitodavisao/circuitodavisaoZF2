@@ -254,6 +254,7 @@ class Grupo extends CircuitoEntity {
         if (!$pessoas) {
             $inativa = true;
             $pessoas = $this->getPessoasInativas();
+            $dataInativacao = $pessoas[0]->getGrupoResponsavel()[0]->getData_inativacaoStringPadraoBrasil();
         }
         foreach ($pessoas as $pessoa) {
             if ($contador === 2) {
@@ -267,7 +268,7 @@ class Grupo extends CircuitoEntity {
             $contador++;
         }
         if ($inativa) {
-            $nomes = $nomes . '(INATIVO)';
+            $nomes = $nomes . '(INATIVO ' . $dataInativacao . ')';
         }
         return $nomes;
     }
