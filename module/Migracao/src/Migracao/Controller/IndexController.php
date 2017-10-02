@@ -177,7 +177,8 @@ class IndexController extends CircuitoController {
 //        $dateFormatada = DateTime::createFromFormat('Y-m-d', self::DATA_CRIACAO);
         $tipoGerarRelatorioDeLider = $this->params()->fromRoute(Constantes::$ID, 0);
 
-        $grupos = $this->getRepositorio()->getGrupoORM()->encontrarTodos();
+        $somenteAtivos = true;
+        $grupos = $this->getRepositorio()->getGrupoORM()->encontrarTodos($somenteAtivos);
         foreach ($grupos as $grupo) {
             $html .= "<br /><br /><br />Grupo: " . $grupo->getId();
             if ($grupo->getEntidadeAtiva()) {

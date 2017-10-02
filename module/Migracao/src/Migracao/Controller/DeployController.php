@@ -40,8 +40,6 @@ class DeployController extends CircuitoController {
 		echo 'deploy automatico';
             echo $stringHashtag . 'Iniciando o deploy' . $stringHashtag . PHP_EOL;
             $comando = 'git pull https://' . $gitUser . ':' . $gitPassword . '@' . $linkGit;
-//            echo PHP_EOL . $comando . PHP_EOL;
-//            $comando = 'git branch -av';
             echo '<pre>';
             passthru($comando);
             echo '</pre>';
