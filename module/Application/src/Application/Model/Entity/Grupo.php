@@ -7,7 +7,6 @@ namespace Application\Model\Entity;
  * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com>
  * Descricao: Entidade anotada da tabela grupo
  */
-
 use Application\Controller\Helper\Funcoes;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -129,15 +128,19 @@ class Grupo extends CircuitoEntity {
      * Recupera as pessoas das responsabilidades ativas
      * @return Pessoa[]
      */
-    function getResponsabilidadesAtivas() {
+    function getResponsabilidadesAtivas($inativos = false) {
         $responsabilidadesAtivas = array();
         /* Responsabilidades */
         $responsabilidadesTodosStatus = $this->getGrupoResponsavel();
         if ($responsabilidadesTodosStatus) {
             /* Verificar responsabilidades ativas */
             foreach ($responsabilidadesTodosStatus as $responsabilidadeTodosStatus) {
-                if ($responsabilidadeTodosStatus->verificarSeEstaAtivo()) {
+                if ($inativos) {
                     $responsabilidadesAtivas[] = $responsabilidadeTodosStatus;
+                } else {
+                    if ($responsabilidadeTodosStatus->verificarSeEstaAtivo()) {
+                        $responsabilidadesAtivas[] = $responsabilidadeTodosStatus;
+                    }
                 }
             }
         }
@@ -228,8 +231,49 @@ class Grupo extends CircuitoEntity {
         return $pessoas;
     }
 
+    function getPessoasInativas() {
+        $pessoas = null;
+        $comInativos = true;
+        $grupoResponsavel = $this->getResponsabilidadesAtivas($comInativos);
+        if ($grupoResponsavel) {
+            $pessoas = array();
+            foreach ($grupoResponsavel as $gr) {
+                $p = $gr->getPessoa();
+                $pessoas[] = $p;
+            }
+        }
+        return $pessoas;
+    }
+
     function getNomeLideresAtivos() {
         $pessoas = $this->getPessoasAtivas();
+        $nomes = '';
+        $contador = 1;
+        $inativa = false;
+
+        if (!$pessoas) {
+            $inativa = true;
+            $pessoas = $this->getPessoasInativas();
+        }
+        foreach ($pessoas as $pessoa) {
+            if ($contador === 2) {
+                $nomes .= ' & ';
+            }
+            if (count($pessoas) == 2) {
+                $nomes .= $pessoa->getNomePrimeiro();
+            } else {
+                $nomes .= $pessoa->getNomePrimeiroUltimo();
+            }
+            $contador++;
+        }
+        if ($inativa) {
+            $nomes = $nomes . '(INATIVO)';
+        }
+        return $nomes;
+    }
+
+    function getNomeLideresInativos() {
+        $pessoas = $this->getPessoasInativas();
         $nomes = '';
         $contador = 1;
 

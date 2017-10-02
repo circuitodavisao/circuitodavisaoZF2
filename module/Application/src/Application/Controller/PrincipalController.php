@@ -36,7 +36,6 @@ class PrincipalController extends CircuitoController {
         $relatorio = RelatorioController::montaRelatorio($repositorioORM, $numeroIdentificador, $periodo, $tipoRelatorioPessoal);
         $relatorioEquipe = RelatorioController::montaRelatorio($repositorioORM, $numeroIdentificador, $periodo, $tipoRelatorioEquipe);
 
-
         $dados = array();
         $arrayPeriodo = Funcoes::montaPeriodo($periodo);
         $dados['periodo'] = $arrayPeriodo[0];

@@ -161,7 +161,7 @@ class FatoCicloORM extends CircuitoORM {
         $numeroIdentificador = null;
         $tamanho = 8;
 
-        if (!$grupo) {
+        if ($grupo === null) {
             $sessao = new Container(Constantes::$NOME_APLICACAO);
             $idEntidadeAtual = $sessao->idEntidadeAtual;
             $entidadeSelecionada = $repositorioORM->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
