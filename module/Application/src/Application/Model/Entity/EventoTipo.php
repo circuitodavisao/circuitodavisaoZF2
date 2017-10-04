@@ -16,6 +16,10 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class EventoTipo extends CircuitoEntity {
 
+    const tipoCulto = 1;
+    const tipoCelula = 2;
+    const tipoRevisao = 3;
+
     /**
      * @ORM\OneToMany(targetEntity="Evento", mappedBy="eventoTipo") 
      */

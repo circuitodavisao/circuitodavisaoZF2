@@ -7,7 +7,6 @@ namespace Application\Model\Entity;
  * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com>
  * Descricao: Entidade anotada da tabela pessoa
  */
-
 use Application\Controller\Helper\Funcoes;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -231,11 +230,10 @@ class Pessoa extends CircuitoEntity implements InputFilterAwareInterface {
         return $nome;
     }
 
-    function getEventoFrequenciasFiltradosPorEventoEDia($idEvento, $dia) {
+    function getEventoFrequenciasFiltradosPorEventoEDia($idEvento) {
         $criteria = Criteria::create()
                 ->andWhere(Criteria::expr()->eq("evento_id", (int) $idEvento))
-                ->andWhere(Criteria::expr()->eq("dia", $dia));
-
+        ;
         return $this->getEventoFrequencia()->matching($criteria);
     }
 
@@ -582,6 +580,23 @@ class Pessoa extends CircuitoEntity implements InputFilterAwareInterface {
         return $grupoPessoaAtiva;
     }
 
+    /**
+     * Varifica se a pessoa participou de algum revisao
+     * @return boolean
+     */
+    function verificaSeParticipouDoRevisao() {
+        $resposta = false;
+        $eventosFrequencia = $this->getEventoFrequencia();
+        foreach ($eventosFrequencia as $frequencia) {
+            if ($frequencia->getEvento()->getEventoTipo()->getId() == EventoTipo::tipoRevisao) {
+                if ($frequencia->getFrequencia() === 'S') {
+                    $resposta = true;
+                }
+            }
+        }
+        return $resposta;
+    }
+
     function setTurmaAluno($turmaAluno) {
         $this->turmaAluno = $turmaAluno;
     }
@@ -748,7 +763,5 @@ class Pessoa extends CircuitoEntity implements InputFilterAwareInterface {
     function dadosAtualizados() {
         $this->setAtualizar_dados('N');
     }
-
-
 
 }

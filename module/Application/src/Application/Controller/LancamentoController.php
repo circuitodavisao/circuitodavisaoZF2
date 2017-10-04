@@ -39,7 +39,7 @@ class LancamentoController extends CircuitoController {
 
     /**
      * Traz a tela para lancamento de arregimentação
-     * GET /lancamentoArregimetnacao
+     * GET /lancamentoArregimentacao
      */
     public function arregimentacaoAction() {
         /* Helper Controller */
@@ -60,7 +60,6 @@ class LancamentoController extends CircuitoController {
 
         $view = new ViewModel(
                 array(
-            Constantes::$QUANTIDADE_EVENTOS_CICLOS => count($grupoEventoNoPeriodo),
             Constantes::$REPOSITORIO_ORM => $repositorioORM,
             Constantes::$GRUPO => $grupo,
             Constantes::$PERIODO => $periodo,
@@ -73,7 +72,7 @@ class LancamentoController extends CircuitoController {
         $layoutJS->setTemplate(Constantes::$TEMPLATE_JS_LANCAMENTO);
         $view->addChild($layoutJS, Constantes::$STRING_JS_LANCAMENTO);
 
-        $layoutJS2 = new ViewModel(array(Constantes::$QUANTIDADE_EVENTOS_CICLOS => 5,));
+        $layoutJS2 = new ViewModel(array(Constantes::$QUANTIDADE_EVENTOS_CICLOS => count($grupoEventoNoPeriodo),));
         $layoutJS2->setTemplate(Constantes::$TEMPLATE_JS_LANCAMENTO_MODAL_EVENTOS);
         $view->addChild($layoutJS2, Constantes::$STRING_JS_LANCAMENTO_MODAL_EVENTOS);
 
@@ -208,6 +207,7 @@ class LancamentoController extends CircuitoController {
                         }
                     }
 
+                    /* Atualizando relatorio individual da celula no periodo */
                     if ($somaFrequencias === 0) {
                         $realizada = 0;
                     } else {

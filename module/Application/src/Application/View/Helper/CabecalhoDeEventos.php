@@ -3,7 +3,6 @@
 namespace Application\View\Helper;
 
 use Application\Controller\Helper\Funcoes;
-use DateTime;
 use Doctrine\Common\Collections\Criteria;
 use Zend\View\Helper\AbstractHelper;
 
@@ -45,34 +44,46 @@ class CabecalhoDeEventos extends AbstractHelper {
                         . '</div>';
 
                 /* Totais */
-//                $evento = $grupoEvento->getEvento();
-//                $html .= "<div style='width:100%' id='total_{$evento->getId()}'>";
-//                $eventoFrequencias = $evento->getEventoFrequencia();
-//                $total = 0;
-//                if (count($eventoFrequencias) > 0) {
-//                    $grupoPessoas = $this->view->grupo->getGrupoPessoasNoPeriodo($this->view->periodo);
-//                    $pessoasParaComparar = array();
-//                    foreach ($this->view->grupo->getResponsabilidadesAtivas() as $grupoResponsavel) {
-//                        $pessoasParaComparar[] = (int) $grupoResponsavel->getPessoa()->getId();
-//                    }
-//                    if ($grupoPessoas) {
-//                        foreach ($grupoPessoas as $grupoPessoa) {
-//                            $pessoasParaComparar[] = (int) $grupoPessoa->getPessoa()->getId();
-//                        }
-//                    }
-//
-//                    $diaDoEventoFormatado = DateTime::createFromFormat('Y-m-d', '2017-06-27');
-//                    $criteria = Criteria::create()
-//                            ->andWhere(Criteria::expr()->eq('dia', $diaDoEventoFormatado))
-//                            ->andWhere(Criteria::expr()->eq('frequencia', (string) 'S'))
-//                            ->andWhere(Criteria::expr()->in('pessoa_id', $pessoasParaComparar))
-//                    ;
-//                    $eventosFrequenciaFiltrados = $eventoFrequencias->matching($criteria);
-//
-//                    $total = count($eventosFrequenciaFiltrados);
-//                }
-//                $html .= $total;
-//                $html .= "</div>";
+                $evento = $grupoEvento->getEvento();
+                $html .= "<div style='width:100%' id='total_{$evento->getId()}'>";
+                $eventoFrequencias = $evento->getEventoFrequencia();
+                $total = 0;
+                if (count($eventoFrequencias) > 0) {
+                    $grupoPessoas = $this->view->grupo->getGrupoPessoasNoPeriodo($this->view->periodo);
+                    $pessoasParaComparar = array();
+                    foreach ($this->view->grupo->getResponsabilidadesAtivas() as $grupoResponsavel) {
+                        $pessoasParaComparar[] = (int) $grupoResponsavel->getPessoa()->getId();
+                    }
+                    if ($grupoPessoas) {
+                        foreach ($grupoPessoas as $grupoPessoa) {
+                            $pessoasParaComparar[] = (int) $grupoPessoa->getPessoa()->getId();
+                        }
+                    }
+                    $criteria = Criteria::create()
+                            ->andWhere(Criteria::expr()->eq('frequencia', 'S'))
+                            ->andWhere(Criteria::expr()->in('pessoa_id', $pessoasParaComparar))
+                    ;
+                    $eventosFrequenciaFiltrados = $eventoFrequencias->matching($criteria);
+
+                    $contagem = 0;
+
+                    $diaDaSemanaDoEvento = (int) $evento->getDia();
+                    /* Verificar se o dia do culto é igual ou menor que o dia atual */
+                    if ($diaDaSemanaDoEvento === 1) {
+                        $diaDaSemanaDoEvento = 7; // domingo
+                    } else {
+                        $diaDaSemanaDoEvento--;
+                    }
+                    $diaRealDoEvento = ListagemDePessoasComEventos::diaRealDoEvento($diaDaSemanaDoEvento, $this->view->periodo);
+
+                    foreach ($eventosFrequenciaFiltrados as $frequencia) {
+                        if ($frequencia->getDia()->format('Y-m-d') === $diaRealDoEvento) {
+                            $contagem++;
+                        }
+                    }
+                }
+                $html .= $contagem;
+                $html .= "</div>";
 
                 $html .= "</th>";
             }

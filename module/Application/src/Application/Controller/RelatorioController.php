@@ -4,9 +4,17 @@ namespace Application\Controller;
 
 use Application\Controller\Helper\Constantes;
 use Application\Controller\Helper\Funcoes;
+use Application\Model\Entity\Entidade;
+use Application\Model\Entity\EntidadeTipo;
 use Application\Model\Entity\Grupo;
+use Application\Model\Entity\GrupoEvento;
+use Application\Model\Entity\GrupoPaiFilho;
+use Application\Model\Entity\GrupoPessoa;
+use Application\Model\Entity\GrupoResponsavel;
 use Application\Model\ORM\RepositorioORM;
 use Doctrine\ORM\EntityManager;
+use Exception;
+use Zend\Json\Json;
 use Zend\Session\Container;
 use Zend\View\Model\ViewModel;
 
@@ -120,7 +128,23 @@ class RelatorioController extends CircuitoController {
         return $view;
     }
 
-    public static function montaRelatorio($repositorioORM, $numeroIdentificador, $periodo, $tipoRelatorio) {
+    public function liderAction() {
+        $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
+
+        $idUrl = $this->getEvent()->getRouteMatch()->getParam(Constantes::$ID, 0);
+        $entidade = $repositorioORM->getEntidadeORM()->encontrarPorId($idUrl);
+        $numeroIdentificador = $repositorioORM->getFatoCicloORM()->montarNumeroIdentificador($repositorioORM, $entidade->getGrupo());
+        $periodo = 0; // atual
+        $tipoRelatorioEquipe = 2;
+        $retornaJson = true;
+        $relatorio = RelatorioController::montaRelatorio($repositorioORM, $numeroIdentificador, $periodo, $tipoRelatorioEquipe, $retornaJson);
+
+        $response = $this->getResponse();
+        $response->setContent($relatorio);
+        return $response;
+    }
+
+    public static function montaRelatorio($repositorioORM, $numeroIdentificador, $periodo, $tipoRelatorio, $retornaJson = false) {
         /* Membresia */
         $relatorioMembresia = $repositorioORM->getFatoCicloORM()->montarRelatorioPorNumeroIdentificador($numeroIdentificador, $periodo, $tipoRelatorio);
         $fatoLider = $repositorioORM->getFatoLiderORM()->encontrarPorNumeroIdentificador($numeroIdentificador, $tipoRelatorio);
@@ -173,6 +197,10 @@ class RelatorioController extends CircuitoController {
         $relatorio['celulaRealizadas'] = $quantidadeCelulasRealizadas;
         $relatorio['celulaRealizadasPerformance'] = $performanceCelulasRealizadas;
         $relatorio['celulaRealizadasPerformanceClass'] = RelatorioController::corDaLinhaPelaPerformance($relatorio['celulaRealizadasPerformance']);
+
+        if ($retornaJson) {
+            $relatorio = Json::encode($relatorio);
+        }
 
         return $relatorio;
     }

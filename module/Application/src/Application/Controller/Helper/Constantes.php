@@ -13,6 +13,7 @@ class Constantes {
     public static $HOST = 'circuitodavisaonovo.com.br';
     public static $META_LIDER = 6;
     public static $ID_TIPO_REVISAO = 3;  
+    const QUANTIDADES_DE_EVENTOS_NA_TELA = 4;
 
     /* Constates Login */
     public static $CONTROLLER_LOGIN = 'Application\Controller\Login';

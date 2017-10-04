@@ -1,7 +1,9 @@
 <?php
 
-$versao = '?v=0.2';
-if ($this->quantidadeDeEventosNoCiclo > 4) {
+use Application\Controller\Helper\Constantes;
+
+$versao = '?v=0.4';
+if ($this->quantidadeDeEventosNoCiclo > Constantes::QUANTIDADES_DE_EVENTOS_NA_TELA) {
     echo $this
             ->headScript()
             ->prependFile($this->basePath() . '/js/circuito_da_visao/verificar-orientacao-tela-lancamento.js' . $versao);

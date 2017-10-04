@@ -235,7 +235,7 @@ class ListagemDePessoasComEventos extends AbstractHelper {
         $html .= '<td class="text-left ' . $empuraColunas . '">&nbsp;';
         /* Menu dropup Nome */
         $html .= '<div class="btn-group dropdown">';
-        if ($pessoa->getTipo() != 'LP' && $pessoa->getAtivo()) {
+        if ($pessoa->getTipo() != 'LP' && $pessoa->getAtivo() && !$pessoa->verificaSeParticipouDoRevisao()) {
             $html .= '<a id="menudrop_' . $pessoa->getId() . '" class="tdNome text-left dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">';
         }
         /* nome */
@@ -250,7 +250,7 @@ class ListagemDePessoasComEventos extends AbstractHelper {
         /* fim nome */
 
         /* Alteracao de nome */
-        if ($pessoa->getTipo() != 'LP' && $pessoa->getAtivo()) {
+        if ($pessoa->getTipo() != 'LP' && $pessoa->getAtivo() && !$pessoa->verificaSeParticipouDoRevisao()) {
             $html .= '</a>';
             $html .= '<ul class="dropdown-menu sobrepor-elementos modal-edicao-nome">';
             $html .= '<span class="editable-container editable-inline">';
@@ -334,17 +334,25 @@ class ListagemDePessoasComEventos extends AbstractHelper {
                 $corDoBotao = BotaoSimples::botaoPequenoMenosImportante;
                 $icone = 'fa-thumbs-down';
                 $diaRealDoEvento = ListagemDePessoasComEventos::diaRealDoEvento($diaDaSemanaDoEvento, $this->view->periodo);
-                $dateFormatada = DateTime::createFromFormat('Y-m-d', $diaRealDoEvento);
                 $eventoFrequencia = $grupoEvento->getEvento()->getEventoFrequencia();
 
                 if (count($eventoFrequencia) > 0) {
-                    $eventosFiltrados = $pessoa->getEventoFrequenciasFiltradosPorEventoEDia(
-                            $grupoEvento->getEvento()->getId(), $dateFormatada);
-                    if ($eventosFiltrados->count() === 1) {
-                        $valor = $eventosFiltrados->first()->getFrequencia();
-                        if ($valor == 'S') {
-                            $corDoBotao = BotaoSimples::botaoPequenoImportante;
-                            $icone = 'fa-thumbs-up';
+                    $eventosFrequenciaFiltrados = $pessoa->getEventoFrequenciasFiltradosPorEventoEDia(
+                            $grupoEvento->getEvento()->getId());
+                    if ($eventosFrequenciaFiltrados->count() > 0) {
+                        $eventoSelecionado = null;
+                        foreach ($eventosFrequenciaFiltrados as $eventosFrequenciaFiltrado) {
+                            if ($eventosFrequenciaFiltrado->getDia()->format('Y-m-d') == $diaRealDoEvento) {
+                                $eventoSelecionado = $eventosFrequenciaFiltrado;
+                                break;
+                            }
+                        }
+                        if ($eventoSelecionado) {
+                            $valor = $eventoSelecionado->getFrequencia();
+                            if ($valor == 'S') {
+                                $corDoBotao = BotaoSimples::botaoPequenoImportante;
+                                $icone = 'fa-thumbs-up';
+                            }
                         }
                     }
                 }
