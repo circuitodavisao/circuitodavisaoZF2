@@ -104,9 +104,9 @@ class LancamentoController extends CircuitoController {
                 $idPessoa = $post_data['idPessoa'];
                 $idEvento = $post_data['idEvento'];
                 $diaRealDoEvento = $post_data['diaRealDoEvento'];
-                $dateFormatada = DateTime::createFromFormat('Y-m-d', $diaRealDoEvento);
                 $idGrupo = $post_data['idGrupo'];
                 $periodo = $post_data['periodo'];
+                $dateFormatada = DateTime::createFromFormat('Y-m-d', $diaRealDoEvento);
 
                 $arrayDataReal = explode('-', $diaRealDoEvento);
                 $ciclo = Funcoes::cicloPorData($arrayDataReal[2], $arrayDataReal[1], $arrayDataReal[0]);
@@ -115,10 +115,10 @@ class LancamentoController extends CircuitoController {
                 $evento = $repositorioORM->getEventoORM()->encontrarPorId($idEvento);
 
                 /* Verificar se a frequencia ja existe */
-                $eventosFiltrados = $pessoa->getEventoFrequenciasFiltradosPorEventoEDia($idEvento, $dateFormatada);
-                if ($eventosFiltrados->count() === 1) {
+                $eventosFiltrado = $pessoa->getEventoFrequenciaFiltradoPorEventoEDia($idEvento, $diaRealDoEvento);
+                if ($eventosFiltrado) {
                     /* Frequencia existe */
-                    $frequencia = $eventosFiltrados->first();
+                    $frequencia = $eventosFiltrado;
                     $frequencia->setFrequencia($valor);
                     $repositorioORM->getEventoFrequenciaORM()->persistir($frequencia);
                 } else {

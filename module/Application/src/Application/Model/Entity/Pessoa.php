@@ -230,11 +230,25 @@ class Pessoa extends CircuitoEntity implements InputFilterAwareInterface {
         return $nome;
     }
 
-    function getEventoFrequenciasFiltradosPorEventoEDia($idEvento) {
+    function getEventoFrequenciasFiltradosPorEvento($idEvento) {
         $criteria = Criteria::create()
                 ->andWhere(Criteria::expr()->eq("evento_id", (int) $idEvento))
         ;
         return $this->getEventoFrequencia()->matching($criteria);
+    }
+
+    function getEventoFrequenciaFiltradoPorEventoEDia($idEvento, $diaRealDoEvento) {
+        $eventoSelecionado = null;
+        $eventosFrequenciaFiltrados = $this->getEventoFrequenciasFiltradosPorEvento($idEvento);
+        if ($eventosFrequenciaFiltrados->count() > 0) {
+            foreach ($eventosFrequenciaFiltrados as $eventosFrequenciaFiltrado) {
+                if ($eventosFrequenciaFiltrado->getDia()->format('Y-m-d') == $diaRealDoEvento) {
+                    $eventoSelecionado = $eventosFrequenciaFiltrado;
+                    break;
+                }
+            }
+        }
+        return $eventoSelecionado;
     }
 
     /**

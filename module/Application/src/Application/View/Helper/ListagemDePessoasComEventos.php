@@ -231,11 +231,12 @@ class ListagemDePessoasComEventos extends AbstractHelper {
             $empuraColunas = 'col-xs-10 col-sm-10 col-md-10';
         }
 
+        $validacaoPossoAlterarNome = $pessoa->getTipo() != 'LP' && $pessoa->getAtivo() && !$pessoa->verificaSeParticipouDoRevisao();
         /* NOME */
         $html .= '<td class="text-left ' . $empuraColunas . '">&nbsp;';
         /* Menu dropup Nome */
         $html .= '<div class="btn-group dropdown">';
-        if ($pessoa->getTipo() != 'LP' && $pessoa->getAtivo() && !$pessoa->verificaSeParticipouDoRevisao()) {
+        if ($validacaoPossoAlterarNome) {
             $html .= '<a id="menudrop_' . $pessoa->getId() . '" class="tdNome text-left dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">';
         }
         /* nome */
@@ -250,7 +251,7 @@ class ListagemDePessoasComEventos extends AbstractHelper {
         /* fim nome */
 
         /* Alteracao de nome */
-        if ($pessoa->getTipo() != 'LP' && $pessoa->getAtivo() && !$pessoa->verificaSeParticipouDoRevisao()) {
+        if ($validacaoPossoAlterarNome) {
             $html .= '</a>';
             $html .= '<ul class="dropdown-menu sobrepor-elementos modal-edicao-nome">';
             $html .= '<span class="editable-container editable-inline">';
@@ -337,22 +338,14 @@ class ListagemDePessoasComEventos extends AbstractHelper {
                 $eventoFrequencia = $grupoEvento->getEvento()->getEventoFrequencia();
 
                 if (count($eventoFrequencia) > 0) {
-                    $eventosFrequenciaFiltrados = $pessoa->getEventoFrequenciasFiltradosPorEventoEDia(
-                            $grupoEvento->getEvento()->getId());
-                    if ($eventosFrequenciaFiltrados->count() > 0) {
-                        $eventoSelecionado = null;
-                        foreach ($eventosFrequenciaFiltrados as $eventosFrequenciaFiltrado) {
-                            if ($eventosFrequenciaFiltrado->getDia()->format('Y-m-d') == $diaRealDoEvento) {
-                                $eventoSelecionado = $eventosFrequenciaFiltrado;
-                                break;
-                            }
-                        }
-                        if ($eventoSelecionado) {
-                            $valor = $eventoSelecionado->getFrequencia();
-                            if ($valor == 'S') {
-                                $corDoBotao = BotaoSimples::botaoPequenoImportante;
-                                $icone = 'fa-thumbs-up';
-                            }
+                    $eventosFrequenciaSelecionado = $pessoa->getEventoFrequenciaFiltradoPorEventoEDia(
+                            $grupoEvento->getEvento()->getId(), $diaRealDoEvento
+                    );
+                    if ($eventosFrequenciaSelecionado) {
+                        $valor = $eventosFrequenciaSelecionado->getFrequencia();
+                        if ($valor == 'S') {
+                            $corDoBotao = BotaoSimples::botaoPequenoImportante;
+                            $icone = 'fa-thumbs-up';
                         }
                     }
                 }
