@@ -18,7 +18,7 @@ use Application\Form\TurmaForm;
 use Application\Model\Entity\Curso;
 use Application\Model\Entity\Entidade;
 use Application\Model\Entity\Evento;
-use Application\Model\Entity\EventoCelula;
+use Application\Model\Entity\EventoCelula; 
 use Application\Model\Entity\EventoFrequencia;
 use Application\Model\Entity\Grupo;
 use Application\Model\Entity\GrupoEvento;
@@ -2003,9 +2003,9 @@ class CadastroController extends CircuitoController {
                 $id = $dadosPost['id'];
                 $nome = $dadosPost['nome'];
                 $sessao = new Container(Constantes::$NOME_APLICACAO);
-                $idPessoaLogada = $sessao->idEntidadeLogada;
+                $idPessoaLogada = $sessao->idPessoa;
                 $pessoaLogada = $repositorioORM->getPessoaORM()->encontrarPorId($idPessoaLogada);
-                if ($id) {
+                if($id) {
                     $curso = $repositorioORM->getCursoORM()->encontrarPorId($id);
                 } else {
                     $curso = new Curso();

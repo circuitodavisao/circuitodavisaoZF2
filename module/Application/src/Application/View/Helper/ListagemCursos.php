@@ -107,7 +107,7 @@ class ListagemCursos extends AbstractHelper {
                 $html .= '<div class="panel-footer">';
 //                $html .= '<a href="/cadastroListarTurmaInativa">Turmas Inativas </a>';
                 $html .= '<div class="text-right">';
-                $stringNomeDaFuncaoOnClickCadastro = 'funcaoCadastro("' . Constantes::$PAGINA_CADASTRAR_TURMA . '", 0)';
+                $stringNomeDaFuncaoOnClickCadastro = 'funcaoCadastro("' . Constantes::$PAGINA_CURSO_CADASTRAR . '", 0)'; 
                 $html .= $this->view->botaoLink($this->view->translate(Constantes::$TRADUCAO_CADASTRAR), Constantes::$STRING_HASHTAG, 0, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClickCadastro));
                 $html .= '</div>';
                 /* Fim Botões */

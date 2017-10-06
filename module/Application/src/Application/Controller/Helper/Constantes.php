@@ -475,7 +475,7 @@ class Constantes {
     public static $PAGINA_LISTAGEM_REVISAO_TURMA = 'TurmaSelecionarRevisao';
     public static $PAGINA_SELECIONAR_ALUNOS_TURMA = 'TurmaSelecionarAlunos';
     public static $PAGINA_FUNCOES_SELECIONAR_ALUNOS = 'FuncoesSelecionarAlunos';
-    public static $PAGINA_CURSO_LISTAR = 'CursoListar';
+    public static $PAGINA_CURSO_LISTAR = 'CursoListar'; 
     public static $PAGINA_CURSO_CADASTRAR = 'CursoForm';
     public static $PAGINA_CURSO_SALVAR = 'CursoSalvar';
     public static $NOME_ENTIDADE_TURMA = 'turma';
