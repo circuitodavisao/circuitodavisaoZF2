@@ -345,7 +345,15 @@ class Module {
             $viewModel->discipulos = $discipulos;
         }
 
-        if (empty($sessao->idEntidadeAtual) || $pessoa->getAtualizar_dados() === 'S' || $e->getRequest()->getUriString() == 'https://www.circuitodavisaonovo.com.br/preSaida' || $e->getRequest()->getUriString() == 'https://www.circuitodavisaonovo.com.br/cadastroFichaRevisao') {
+        if (empty($sessao->idEntidadeAtual) || 
+                empty($sessao->idPessoa) || 
+                $pessoa->getAtualizar_dados() === 'S' || 
+                $e->getRequest()->getUriString() == 'https://www.circuitodavisaonovo.com.br' || 
+                $e->getRequest()->getUriString() == 'https://www.circuitodavisaonovo.com.br/' || 
+                $e->getRequest()->getUriString() == 'https://www.circuitodavisaonovo.com.br/logar' || 
+                $e->getRequest()->getUriString() == 'https://www.circuitodavisaonovo.com.br/selecionarPerfil' ||
+                $e->getRequest()->getUriString() == 'https://www.circuitodavisaonovo.com.br/preSaida' || 
+                $e->getRequest()->getUriString() == 'https://www.circuitodavisaonovo.com.br/cadastroFichaRevisao') {
             $viewModel->mostrarMenu = 0;
         }
     }
