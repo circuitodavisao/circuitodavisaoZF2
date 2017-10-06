@@ -52,6 +52,10 @@ class LoginController extends CircuitoController {
      * GET /
      */
     public function indexAction() {
+        /* Destroi a sessao ao acessar a index */
+        $sessao = new Container(Constantes::$NOME_APLICACAO);
+        $sessao->getManager()->destroy();
+
         $mensagem = '';
         $tipoMensagem = 0;
         $tipoNaoEncontrouNaBaseDeDados = 1;
