@@ -101,7 +101,7 @@ class Constantes {
 
     /* Constantes recuperar senha */
     public static $TRADUCAO_EMAIL_TITULO_RECUPERAR_SENHA = 'Recover Password';
-    public static $TRADUCAO_EMAIL_MENSAGEM_RECUPERAR_SENHA = '<pre>Hello #email</pre><pre>We received a request to reset the password for your account CircuitoDaVisão.com . To reset your password, use the links below:</pre><pre>Reset your password using a Web browser:</pre><pre><a href="https://circuitodavisaonovo.com.br/recuperarSenha/#id">https://circuitodavisaonovo.com.br/recuperarSenha/#id</a></pre><pre>If you did not request a password reset, you can ignore this message and your password will not change.</pre>';
+    public static $TRADUCAO_EMAIL_MENSAGEM_RECUPERAR_SENHA = '<pre>Hello #email</pre><pre>We received a request to reset the password for your account CircuitoDaVisão.com. To reset your password, use the links below:</pre><pre>Reset your password using a Web browser:</pre><pre><a href="https://circuitodavisaonovo.com.br/recuperarSenha/#id">https://circuitodavisaonovo.com.br/recuperarSenha/#id</a></pre><pre>If you did not request a password reset, you can ignore this message and your password will not change.</pre>';
     public static $TRADUCAO_ALTERAR = 'Update';
     public static $RECUPERAR_SENHA_FORM = 'RecuperarSenhaForm';
     public static $NOVA_SENHA_FORM = 'NovaSenhaForm';
