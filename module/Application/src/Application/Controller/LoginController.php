@@ -345,8 +345,6 @@ class LoginController extends CircuitoController {
                         encontrarPorCPFEDataNascimento($documento, $anoNascimento . '-' . $mesNascimento . '-' . $diaNascimento);
             }
 
-
-
             /* Pessoa não encontrada */
             if (!$pessoa) {
                 /* Redirecionamento */
@@ -367,7 +365,7 @@ class LoginController extends CircuitoController {
                 } else {
                     /* Email */
                     if ($tipoDePesquisa == 1) {
-                        $mensagemOriginal = $this->getTranslator()->translate(Constantes::$TRADUCAO_EMAIL_MENSAGEM_RECUPERAR_SENHA);
+                        $mensagemOriginal = $this->getTranslator()->translate(Constantes::$TRADUCAO_EMAIL_MENSAGEM_RECUPERAR_SENHA_NOVO);
                         $mensagemComEmail = str_replace('#email', $email, $mensagemOriginal);
                         $tokenDeAgora = $pessoa->gerarToken();
                         /* Persistir pessoa */

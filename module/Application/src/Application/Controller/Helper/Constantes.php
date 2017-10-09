@@ -101,7 +101,7 @@ class Constantes {
 
     /* Constantes recuperar senha */
     public static $TRADUCAO_EMAIL_TITULO_RECUPERAR_SENHA = 'Recover Password';
-    public static $TRADUCAO_EMAIL_MENSAGEM_RECUPERAR_SENHA = '<pre>Hello #email</pre><pre>We received a request to reset the password for your account CircuitoDaVisão.com. To reset your password, use the links below:</pre><pre>Reset your password using a Web browser:</pre><pre><a href="https://circuitodavisaonovo.com.br/recuperarSenha/#id">https://circuitodavisaonovo.com.br/recuperarSenha/#id</a></pre><pre>If you did not request a password reset, you can ignore this message and your password will not change.</pre>';
+    public static $TRADUCAO_EMAIL_MENSAGEM_RECUPERAR_SENHA_NOVO = '<pre>Hello #email</pre><pre>We received a request to reset the password for your account CircuitoDaVisão.com.br . To reset your password, use the links below:</pre><pre>Reset your password using a Web browser:</pre><pre><a href="https://circuitodavisaonovo.com.br/recuperarSenha/#id">https://circuitodavisaonovo.com.br/recuperarSenha/#id</a></pre><pre>If you did not request a password reset, you can ignore this message and your password will not change.</pre>';
     public static $TRADUCAO_ALTERAR = 'Update';
     public static $RECUPERAR_SENHA_FORM = 'RecuperarSenhaForm';
     public static $NOVA_SENHA_FORM = 'NovaSenhaForm';
@@ -475,10 +475,14 @@ class Constantes {
     public static $PAGINA_LISTAGEM_REVISAO_TURMA = 'TurmaSelecionarRevisao';
     public static $PAGINA_SELECIONAR_ALUNOS_TURMA = 'TurmaSelecionarAlunos';
     public static $PAGINA_FUNCOES_SELECIONAR_ALUNOS = 'FuncoesSelecionarAlunos';
-    public static $PAGINA_CURSO_LISTAR = 'CursoListar';
+    public static $PAGINA_CURSO_LISTAR = 'CursoListar'; 
     public static $PAGINA_CURSO_CADASTRAR = 'CursoForm';
+    public static $PAGINA_CURSO_EDITAR = 'CursoFormEdit'; 
     public static $PAGINA_CURSO_SALVAR = 'CursoSalvar';
+    public static $PAGINA_CURSO_EXCLUIR = 'CursoExcluir';
+    public static $PAGINA_CURSO_EXCLUSAO = 'CursoExclusao';
     public static $NOME_ENTIDADE_TURMA = 'turma';
+    public static $NOME_ENTIDADE_CURSO = 'curso';  
     /* Fim das páginas relaciondas ao IV */
     
     /* Entidades */
@@ -787,8 +791,10 @@ class Constantes {
     public static $LAYOUT_STRING_JS_EVENTO = 'layoutJSEvento';
     public static $LAYOUT_JS_EXCLUSAO_EVENTO = 'layout/layout-js-exclusao-evento';
     public static $LAYOUT_JS_EXCLUSAO_TURMA = 'layout/layout-js-exclusao-turma'; 
+    public static $LAYOUT_JS_EXCLUSAO_CURSO = 'layout/layout-js-exclusao-curso'; 
     public static $LAYOUT_STRING_JS_EXCLUSAO_EVENTO = 'layoutJSExclusaoEvento';
     public static $LAYOUT_STRING_JS_EXCLUSAO_TURMA = 'layoutJSExclusaoTurma';
+    public static $LAYOUT_STRING_JS_EXCLUSAO_CURSO = 'layoutJSExclusaoCurso';
     public static $LAYOUT_JS_GRUPO_VALIDACAO = 'layout/layout-js-grupo-validacao';
     public static $LAYOUT_STRING_JS_GRUPO_VALIDACAO = 'layoutJSGrupoValidacao';
     public static $LAYOUT_JS_GRUPO_ATUALIZACAO_VALIDACAO = 'layout/layout-js-grupo-atualizacao-validacao';
