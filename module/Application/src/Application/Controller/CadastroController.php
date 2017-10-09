@@ -18,7 +18,7 @@ use Application\Form\TurmaForm;
 use Application\Model\Entity\Curso;
 use Application\Model\Entity\Entidade;
 use Application\Model\Entity\Evento;
-use Application\Model\Entity\EventoCelula; 
+use Application\Model\Entity\EventoCelula;
 use Application\Model\Entity\EventoFrequencia;
 use Application\Model\Entity\Grupo;
 use Application\Model\Entity\GrupoEvento;
@@ -250,6 +250,21 @@ class CadastroController extends CircuitoController {
                         Constantes::$ACTION => Constantes::$PAGINA_CURSO_SALVAR, 
             ));
         } 
+        if ($pagina == Constantes::$PAGINA_CURSO_EDITAR) {
+            return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
+                        Constantes::$ACTION => Constantes::$PAGINA_CURSO_EDITAR, 
+            ));
+        }
+        if ($pagina == Constantes::$PAGINA_CURSO_EXCLUIR) {
+            return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
+                        Constantes::$ACTION => Constantes::$PAGINA_CURSO_EXCLUIR, 
+            ));
+        }
+        if ($pagina == Constantes::$PAGINA_CURSO_EXCLUSAO) {
+            return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
+                        Constantes::$ACTION => Constantes::$PAGINA_CURSO_EXCLUSAO, 
+            ));
+        }
         /* Funcoes */
         if ($pagina == Constantes::$PAGINA_FUNCOES) {
             return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
@@ -2002,12 +2017,12 @@ class CadastroController extends CircuitoController {
                 $dadosPost = $request->getPost();
                 $id = $dadosPost['id'];
                 $nome = $dadosPost['nome'];
-                $sessao = new Container(Constantes::$NOME_APLICACAO);
+                $sessao = new Container(Constantes::$NOME_APLICACAO); 
                 $idPessoaLogada = $sessao->idPessoa;
                 $pessoaLogada = $repositorioORM->getPessoaORM()->encontrarPorId($idPessoaLogada);
                 if($id) {
                     $curso = $repositorioORM->getCursoORM()->encontrarPorId($id);
-                } else {
+                } else { 
                     $curso = new Curso();
                 }
 
@@ -2029,6 +2044,59 @@ class CadastroController extends CircuitoController {
                 echo $exc->getTraceAsString();
             }
         }
+    }
+    
+    public function cursoFormEditAction() {
+        $sessao = new Container(Constantes::$NOME_APLICACAO);
+        $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
+        $idCurso = $sessao->idSessao;
+        $curso = $repositorioORM->getCursoORM()->encontrarPorId($idCurso);
+        $formCadastroCurso = new CursoForm('formulario', $curso);
+
+        $view = new ViewModel(array(
+            'formCadastroCurso' => $formCadastroCurso,
+        ));
+
+        return $view;
+    }
+    
+    /**
+     * Tela com formulário de exclusão de curso
+     * GET /cadastroTurmaExclusao
+     */
+    public function cursoExclusaoAction() {
+        /* Verificando a se tem algum id na sessão */
+        $sessao = new Container(Constantes::$NOME_APLICACAO);
+        $extra = null;
+        $idCurso = $sessao->idSessao;
+        $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
+        $entidade = $repositorioORM->getEntidadeORM()->encontrarPorId($sessao->idEntidadeAtual);
+        $curso = $repositorioORM->getCursoORM()->encontrarPorId($idCurso);
+
+        $view = new ViewModel(array(
+            Constantes::$NOME_ENTIDADE_CURSO => $curso,
+            Constantes::$ENTIDADE => $entidade,
+        ));
+
+        /* Javascript */
+        $layoutJS = new ViewModel();
+        $layoutJS->setTemplate(Constantes::$LAYOUT_JS_EXCLUSAO_CURSO);
+        $view->addChild($layoutJS, Constantes::$LAYOUT_STRING_JS_EXCLUSAO_CURSO);
+
+        return $view;
+    }
+    
+    public function cursoExcluirAction() {
+        $sessao = new Container(Constantes::$NOME_APLICACAO);
+        $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
+        $idCurso = $sessao->idSessao;
+        $curso = $repositorioORM->getCursoORM()->encontrarPorId($idCurso);
+        $curso->setDataEHoraDeInativacao();
+        $repositorioORM->getCursoORM()->persistir($curso, false);
+
+        return $this->redirect()->toRoute(Constantes::$ROUTE_CADASTRO, array(
+                    Constantes::$PAGINA => Constantes::$PAGINA_CURSO_LISTAR,
+        ));
     }
 
 }

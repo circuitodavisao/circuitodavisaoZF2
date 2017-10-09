@@ -3,7 +3,7 @@
 use Application\Controller\Helper\Constantes;
 
 /**
- * Nome: curso.phtml
+ * Nome: curso-form-edit.phtml
  * @author Lucas Filipe de Carvalho Cunha <lucascarvalho.esw@gmail.com> 
  * Descricao: Página de cadastro de cursos no IV.
  */
@@ -70,16 +70,6 @@ function validarLancamentoCadastrarCurso(form) {
             mensagem = 'Nome';
         } else {
             mensagem += ', Nome';
-        }
-    }
-    
-    if (nome.length > 80) {
-
-        temErro = true;
-        if (mensagem == '') {
-            mensagem = 'Nome pode ter no máximo 80 caracteres';
-        } else {
-            mensagem += ', Nome pode ter no máximo 80 caracteres';
         }
     }
     

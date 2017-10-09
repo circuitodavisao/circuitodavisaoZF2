@@ -101,7 +101,7 @@ class Constantes {
 
     /* Constantes recuperar senha */
     public static $TRADUCAO_EMAIL_TITULO_RECUPERAR_SENHA = 'Recover Password';
-    public static $TRADUCAO_EMAIL_MENSAGEM_RECUPERAR_SENHA = '<pre>Hello #email</pre><pre>We received a request to reset the password for your account CircuitoDaVisão.com . To reset your password, use the links below:</pre><pre>Reset your password using a Web browser:</pre><pre><a href="https://circuitodavisaonovo.com.br/recuperarSenha/#id">https://circuitodavisaonovo.com.br/recuperarSenha/#id</a></pre><pre>If you did not request a password reset, you can ignore this message and your password will not change.</pre>';
+    public static $TRADUCAO_EMAIL_MENSAGEM_RECUPERAR_SENHA_NOVO = '<pre>Hello #email</pre><pre>We received a request to reset the password for your account CircuitoDaVisão.com.br . To reset your password, use the links below:</pre><pre>Reset your password using a Web browser:</pre><pre><a href="https://circuitodavisaonovo.com.br/recuperarSenha/#id">https://circuitodavisaonovo.com.br/recuperarSenha/#id</a></pre><pre>If you did not request a password reset, you can ignore this message and your password will not change.</pre>';
     public static $TRADUCAO_ALTERAR = 'Update';
     public static $RECUPERAR_SENHA_FORM = 'RecuperarSenhaForm';
     public static $NOVA_SENHA_FORM = 'NovaSenhaForm';
@@ -477,8 +477,12 @@ class Constantes {
     public static $PAGINA_FUNCOES_SELECIONAR_ALUNOS = 'FuncoesSelecionarAlunos';
     public static $PAGINA_CURSO_LISTAR = 'CursoListar'; 
     public static $PAGINA_CURSO_CADASTRAR = 'CursoForm';
+    public static $PAGINA_CURSO_EDITAR = 'CursoFormEdit'; 
     public static $PAGINA_CURSO_SALVAR = 'CursoSalvar';
+    public static $PAGINA_CURSO_EXCLUIR = 'CursoExcluir';
+    public static $PAGINA_CURSO_EXCLUSAO = 'CursoExclusao';
     public static $NOME_ENTIDADE_TURMA = 'turma';
+    public static $NOME_ENTIDADE_CURSO = 'curso';  
     /* Fim das páginas relaciondas ao IV */
     
     /* Entidades */
@@ -771,11 +775,13 @@ class Constantes {
     public static $TRADUCAO_PERGUNTA_CADASTRO_CELULA = 'The data are correct?';
     public static $TRADUCAO_PERGUNTA_EXCLUSAO_CELULA = 'Really want to delete this cell?';
     public static $TRADUCAO_PERGUNTA_EXCLUSAO_TURMA = 'Really want to delete this class?';
+    public static $TRADUCAO_PERGUNTA_EXCLUSAO_CURSO = 'Really want to delete this course?';
     public static $TRADUCAO_PERGUNTA_EXCLUSAO_CULTO = 'Really want to delete this cult?';
     public static $TRADUCAO_CIENCIA_CADASTRO_CELULA = 'I confirm that the data is correct';
     public static $TRADUCAO_CIENCIA_EXCLUSAO_CULTO = 'I am <span class="text-danger">aware</span> that by <span class="text-danger">excluding cult</span> is the same no longer appear in the <span class="text-danger">launch line</span>!';
     public static $TRADUCAO_CIENCIA_EXCLUSAO_CELULA = 'I am <span class="text-danger">aware</span> that by <span class="text-danger">excluding cell</span> is the same no longer appear in the <span class="text-danger">launch line</span>!';
     public static $TRADUCAO_CIENCIA_EXCLUSAO_TURMA = 'I am <span class="text-danger">aware</span> that by <span class="text-danger">excluding class</span> is the same no longer appear! ';
+    public static $TRADUCAO_CIENCIA_EXCLUSAO_CURSO = 'I am <span class="text-danger">aware</span> that by <span class="text-danger">excluding course</span> is the same no longer appear! ';
     public static $TRADUCAO_MOTIVO_EXCLUSAO = 'What reason for exclusion?';
     public static $TRADUCAO_DESCREVA_MOTIVO_EXCLUSAO = 'Please specify the reason';
     public static $TRADUCAO_DIGITE_SENHA_EXCUSAO_SENHA = 'Enter your password to confirm the deletion';
@@ -787,8 +793,10 @@ class Constantes {
     public static $LAYOUT_STRING_JS_EVENTO = 'layoutJSEvento';
     public static $LAYOUT_JS_EXCLUSAO_EVENTO = 'layout/layout-js-exclusao-evento';
     public static $LAYOUT_JS_EXCLUSAO_TURMA = 'layout/layout-js-exclusao-turma'; 
+    public static $LAYOUT_JS_EXCLUSAO_CURSO = 'layout/layout-js-exclusao-curso'; 
     public static $LAYOUT_STRING_JS_EXCLUSAO_EVENTO = 'layoutJSExclusaoEvento';
     public static $LAYOUT_STRING_JS_EXCLUSAO_TURMA = 'layoutJSExclusaoTurma';
+    public static $LAYOUT_STRING_JS_EXCLUSAO_CURSO = 'layoutJSExclusaoCurso';
     public static $LAYOUT_JS_GRUPO_VALIDACAO = 'layout/layout-js-grupo-validacao';
     public static $LAYOUT_STRING_JS_GRUPO_VALIDACAO = 'layoutJSGrupoValidacao';
     public static $LAYOUT_JS_GRUPO_ATUALIZACAO_VALIDACAO = 'layout/layout-js-grupo-atualizacao-validacao';
