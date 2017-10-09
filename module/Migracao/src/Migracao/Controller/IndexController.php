@@ -35,7 +35,7 @@ class IndexController extends CircuitoController {
     private $entidadeTipoEquipe;
     private $entidadeTipoSub;
 
-    const DATA_CRIACAO = '2017-07-17';
+    const DATA_CRIACAO = '2017-10-02';
 
     /**
      * Contrutor sobrecarregado com os serviços de ORM e Autenticador
@@ -199,7 +199,26 @@ class IndexController extends CircuitoController {
                 if ($grupoEventoNoPeriodo > 0) {
                     foreach ($grupoEventoNoPeriodo as $grupoEvento) {
                         $html .= "<br />verificaSeECelula: " . $grupoEvento->getEvento()->verificaSeECelula();
-                        if ($grupoEvento->getEvento()->verificaSeECelula() && $grupoEvento->verificarSeEstaAtivo()) {
+                        $html .= "<br /><br /><br />GrupoEvento->id: " . $grupoEvento->getId();
+                        $validacaoInativadaNessePeriodo = false;
+                        if (!$grupoEvento->verificarSeEstaAtivo()) {
+                            $html .= "<br />Celula Inativada";
+                            $arrayPeriodo = Funcoes::montaPeriodo($periodo);
+                            $stringComecoDoPeriodo = $arrayPeriodo[3] . '-' . $arrayPeriodo[2] . '-' . $arrayPeriodo[1];
+                            $dataDoInicioDoPeriodoParaComparar = strtotime($stringComecoDoPeriodo);
+                            $dataDeInativacaoParaComparar = strtotime($grupoEvento->getData_inativacaoStringPadraoBanco());
+
+                            $html .= '<br />stringComecoDoPeriodo: ' . $stringComecoDoPeriodo;
+                            $html .= '<br />dataDeInativacaoParaComparar: ' . $grupoEvento->getData_inativacaoStringPadraoBanco();
+
+                            $html .= "<br />dataDeInativacaoParaComparar $dataDeInativacaoParaComparar >= dataDoInicioDoPeriodoParaComparar$dataDoInicioDoPeriodoParaComparar";
+                            if ($dataDeInativacaoParaComparar >= $dataDoInicioDoPeriodoParaComparar) {
+                                $validacaoInativadaNessePeriodo = true;
+                                $html .= "<br />validacaoInativadaNessePeriodo: " . $validacaoInativadaNessePeriodo;
+                            }
+                        }
+
+                        if ($grupoEvento->getEvento()->verificaSeECelula() && ($grupoEvento->verificarSeEstaAtivo() || $validacaoInativadaNessePeriodo)) {
                             $html .= "<br />EventoCelula: " . $grupoEvento->getEvento()->getEventoCelula()->getId();
                             $this->getRepositorio()->getFatoCelulaORM()->criarFatoCelula($fatoCiclo, $grupoEvento->getEvento()->getEventoCelula()->getId());
                             $html .= "<br />Fato Celula ";

@@ -345,7 +345,24 @@ class Module {
             $viewModel->discipulos = $discipulos;
         }
 
-        if (empty($sessao->idEntidadeAtual) || $pessoa->getAtualizar_dados() === 'S' || $e->getRequest()->getUriString() == 'https://www.circuitodavisaonovo.com.br/preSaida' || $e->getRequest()->getUriString() == 'https://www.circuitodavisaonovo.com.br/cadastroFichaRevisao') {
+        $stringHttps = 'https://';
+        $stringUrl = 'circuitodavisaonovo.com.br';
+        if (empty($sessao->idEntidadeAtual) ||
+                empty($sessao->idPessoa) ||
+                $pessoa->getAtualizar_dados() === 'S' ||
+                $e->getRequest()->getUriString() == $stringHttps . 'www.' . $stringUrl ||
+                $e->getRequest()->getUriString() == $stringHttps . 'www.' . $stringUrl . '/' ||
+                $e->getRequest()->getUriString() == $stringHttps . 'www.' . $stringUrl . '/logar' ||
+                $e->getRequest()->getUriString() == $stringHttps . 'www.' . $stringUrl . '/selecionarPerfil' ||
+                $e->getRequest()->getUriString() == $stringHttps . 'www.' . $stringUrl . '/preSaida' ||
+                $e->getRequest()->getUriString() == $stringHttps . 'www.' . $stringUrl . '/cadastroFichaRevisao' ||
+                $e->getRequest()->getUriString() == $stringHttps . $stringUrl ||
+                $e->getRequest()->getUriString() == $stringHttps . $stringUrl . '/' ||
+                $e->getRequest()->getUriString() == $stringHttps . $stringUrl . '/logar' ||
+                $e->getRequest()->getUriString() == $stringHttps . $stringUrl . '/selecionarPerfil' ||
+                $e->getRequest()->getUriString() == $stringHttps . $stringUrl . '/preSaida' ||
+                $e->getRequest()->getUriString() == $stringHttps . $stringUrl . '/cadastroFichaRevisao'
+        ) {
             $viewModel->mostrarMenu = 0;
         }
     }

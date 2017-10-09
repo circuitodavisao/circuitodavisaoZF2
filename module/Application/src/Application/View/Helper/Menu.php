@@ -126,70 +126,66 @@ class Menu extends AbstractHelper {
             $html .= '<span class="caret"></span>';
             $html .= '</a>';
             $html .= '<ul class="nav sub-nav">';
-            foreach ($this->view->discipulos as $gpFilho) {
-                $grupoFilho = $gpFilho->getGrupoPaiFilhoFilho();
+            foreach ($this->view->discipulos as $gpFilho12) {
+                $grupoFilho = $gpFilho12->getGrupoPaiFilhoFilho();
                 $entidadeFilho = $grupoFilho->getEntidadeAtiva();
                 $grupoResponsavel = $grupoFilho->getResponsabilidadesAtivas();
-                $nomeLideres = '';
-                if ($grupoResponsavel) {
-                    $pessoas = [];
-                    foreach ($grupoResponsavel as $gr) {
-                        $p = $gr->getPessoa();
-                        $pessoas[] = $p;
-                    }
-                    $contagem = 1;
-                    $totalPessoas = count($pessoas);
-                    foreach ($pessoas as $p) {
-                        if ($contagem == 2) {
-                            $nomeLideres .= '&nbsp;&&nbsp;';
-                        }
-                        if ($totalPessoas == 1) {
-                            $nomeLideres .= $p->getNomePrimeiroUltimo();
-                        } else {// duas pessoas
-                            $nomeLideres .= $p->getNomePrimeiroPrimeiraSiglaUltimo();
-                        }
-                        $contagem++;
-                    }
-                }
-                $informacaoEntidade = '';
-                if (!empty($entidadeFilho)) {
-                    $informacaoEntidade = '<small>' . $entidadeFilho->infoEntidade() . '</small>';
-                }
-                $html .= $this->view->menuHierarquia($nomeLideres, $informacaoEntidade, 2);
-                $html .= $this->view->menuHierarquia('', '', 3, $grupoFilho->getId());
-                foreach ($grupoFilho->getGrupoPaiFilhoFilhosAtivos() as $gpFilho1) {
-                    $grupoFilho = $gpFilho1->getGrupoPaiFilhoFilho();
-                    $entidadeFilho = $grupoFilho->getEntidadeAtiva();
-                    $grupoResponsavel = $grupoFilho->getResponsabilidadesAtivas();
-                    $nomeLideres = '';
-                    if ($grupoResponsavel) {
-                        $pessoas = [];
-                        foreach ($grupoResponsavel as $gr) {
-                            $p = $gr->getPessoa();
-                            $pessoas[] = $p;
-                        }
-                        $contagem = 1;
-                        $totalPessoas = count($pessoas);
-                        foreach ($pessoas as $p) {
-                            if ($contagem == 2) {
-                                $nomeLideres .= '&nbsp;&&nbsp;';
+
+                $nomeLideres = Self::montaNomeLideres($grupoResponsavel);
+                $informacaoEntidade = Self::montaInformacaoEntidade($entidadeFilho);
+
+                $discipulos144 = $grupoFilho->getGrupoPaiFilhoFilhosAtivos();
+                if (count($discipulos144) > 0) {
+                    $html .= $this->view->menuHierarquia($nomeLideres, $informacaoEntidade, 2);
+                    $html .= $this->view->menuHierarquia('', '', 3, $grupoFilho->getId());
+                    foreach ($discipulos144 as $gpFilho144) {
+                        $grupoFilho144 = $gpFilho144->getGrupoPaiFilhoFilho();
+                        $entidadeFilho144 = $grupoFilho144->getEntidadeAtiva();
+                        $grupoResponsavel144 = $grupoFilho144->getResponsabilidadesAtivas();
+
+                        $nomeLideres144 = Self::montaNomeLideres($grupoResponsavel144);
+                        $informacaoEntidade144 = Self::montaInformacaoEntidade($entidadeFilho144);
+
+                        $discipulos1728 = $grupoFilho144->getGrupoPaiFilhoFilhos();
+                        if (count($discipulos1728) > 0) {
+                            $html .= $this->view->menuHierarquia($nomeLideres144, $informacaoEntidade144, 2);
+                            $html .= $this->view->menuHierarquia('', '', 3, $grupoFilho144->getId());
+                            foreach ($discipulos1728 as $gpFilho1728) {
+                                $grupoFilho1728 = $gpFilho1728->getGrupoPaiFilhoFilho();
+                                $entidadeFilho1728 = $grupoFilho1728->getEntidadeAtiva();
+                                $grupoResponsavel1728 = $grupoFilho1728->getResponsabilidadesAtivas();
+
+                                $nomeLideres1728 = Self::montaNomeLideres($grupoResponsavel1728);
+                                $informacaoEntidade1728 = Self::montaInformacaoEntidade($entidadeFilho1728);
+
+                                $discipulos20736 = $grupoFilho1728->getGrupoPaiFilhoFilhos();
+                                if (count($discipulos20736) > 0) {
+                                    $html .= $this->view->menuHierarquia($nomeLideres1728, $informacaoEntidade1728, 2);
+                                    $html .= $this->view->menuHierarquia('', '', 3, $grupoFilho1728->getId());
+                                    foreach ($discipulos20736 as $gpFilho20736) {
+                                        $grupoFilho20736 = $gpFilho20736->getGrupoPaiFilhoFilho();
+                                        $entidadeFilho20736 = $grupoFilho20736->getEntidadeAtiva();
+                                        $grupoResponsavel20736 = $grupoFilho20736->getResponsabilidadesAtivas();
+
+                                        $nomeLideres20736 = Self::montaNomeLideres($grupoResponsavel20736);
+                                        $informacaoEntidade20736 = Self::montaInformacaoEntidade($entidadeFilho20736);
+
+                                        $html .= $this->view->menuHierarquia($nomeLideres20736, $informacaoEntidade20736, 1, $grupoFilho20736->getId());
+                                    }
+                                    $html .= $this->view->menuHierarquia('', '', 4);
+                                } else {
+                                    $html .= $this->view->menuHierarquia($nomeLideres1728, $informacaoEntidade1728, 1, $grupoFilho1728->getId());
+                                }
                             }
-                            if ($totalPessoas == 1) {
-                                $nomeLideres .= $p->getNomePrimeiroUltimo();
-                            } else {// duas pessoas
-                                $nomeLideres .= $p->getNomePrimeiroPrimeiraSiglaUltimo();
-                            }
-                            $contagem++;
+                            $html .= $this->view->menuHierarquia('', '', 4);
+                        } else {
+                            $html .= $this->view->menuHierarquia($nomeLideres144, $informacaoEntidade144, 1, $grupoFilho144->getId());
                         }
                     }
-                    $informacaoEntidade = '';
-                    if (!empty($entidadeFilho)) {
-                        $informacaoEntidade = $entidadeFilho->getEntidadeTipo()->getNome() . ' <small>' . $entidadeFilho->infoEntidade() . '</small>';
-                    }
+                    $html .= $this->view->menuHierarquia('', '', 4);
+                } else {
                     $html .= $this->view->menuHierarquia($nomeLideres, $informacaoEntidade, 1, $grupoFilho->getId());
-                    $grupoFilho->getGrupoPaiFilhoFilhos();
                 }
-                $html .= $this->view->menuHierarquia('', '', 4);
             }
 
             $html .= '</ul>';
@@ -392,6 +388,39 @@ class Menu extends AbstractHelper {
         }
         $html .= '</div>';
         return $html;
+    }
+
+    static public function montaNomeLideres($grupoResponsavel) {
+        $nomeLideres = '';
+        if ($grupoResponsavel) {
+            $pessoas = [];
+            foreach ($grupoResponsavel as $gr) {
+                $p = $gr->getPessoa();
+                $pessoas[] = $p;
+            }
+            $contagem = 1;
+            $totalPessoas = count($pessoas);
+            foreach ($pessoas as $p) {
+                if ($contagem == 2) {
+                    $nomeLideres .= '&nbsp;&&nbsp;';
+                }
+                if ($totalPessoas == 1) {
+                    $nomeLideres .= $p->getNomePrimeiroUltimo();
+                } else {// duas pessoas
+                    $nomeLideres .= $p->getNomePrimeiroPrimeiraSiglaUltimo();
+                }
+                $contagem++;
+            }
+        }
+        return $nomeLideres;
+    }
+
+    static public function montaInformacaoEntidade($entidadeFilho) {
+        $informacaoEntidade = '';
+        if (!empty($entidadeFilho)) {
+            $informacaoEntidade = '<small>' . $entidadeFilho->infoEntidade() . '</small>';
+        }
+        return $informacaoEntidade;
     }
 
     function getResponsabilidades() {
