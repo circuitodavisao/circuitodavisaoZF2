@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: ZendSkeletonApplication\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-07-05 22:17-0700\n"
-"PO-Revision-Date: 2017-10-09 14:05-0300\n"
+"PO-Revision-Date: 2017-10-09 14:10-0300\n"
 "Last-Translator: Diogo Melo <dmelo87@gmail.com>\n"
 "Language-Team: ZF Contibutors <zf-devteam@zend.com>\n"
 "Language: pt\n"
@@ -163,7 +163,7 @@ msgstr "Sua senha foi cadastrada com sucesso!"
 msgid "To access"
 msgstr "Acessar o Circuito da Visão"
 
-#: Email de recuperacao senha MENSAGEM NOVO
+#: Email de recuperacao senha MENSAGEM NOVO 2
 msgid "<pre>Hello #email</pre><pre>We received a request to reset the password for your account CircuitoDaVisão.com.br . To reset your password, use the links below:</pre><pre>Reset your password using a Web browser:</pre><pre><a href=\"https://circuitodavisaonovo.com.br/recuperarSenha/#id\">https://circuitodavisaonovo.com.br/recuperarSenha/#id</a></pre><pre>If you did not request a password reset, you can ignore this message and your password will not change.</pre>"
 msgstr "<pre>Olá #email</pre><pre>Recebemos uma solicitação de redefinição da senha para sua conta do CircuitoDaVisão.com.br . Para redefinir sua senha, use o link abaixo:</pre><pre>Redefinir sua senha usando um navegador da Web:</pre><pre><a href=\"https://circuitodavisaonovo.com.br/recuperarSenha/#id\">https://circuitodavisaonovo.com.br/recuperarSenha/#id</a></pre><pre>Se você não solicitou uma redefinição de senha, voce pode ignorar esta mensagem e a sua senha não será alterada.</pre>"
 
