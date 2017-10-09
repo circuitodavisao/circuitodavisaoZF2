@@ -242,14 +242,14 @@ class CadastroController extends CircuitoController {
         }
         if ($pagina == Constantes::$PAGINA_CURSO_CADASTRAR) {
             return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
-                        Constantes::$ACTION => Constantes::$PAGINA_CURSO_CADASTRAR, 
+                        Constantes::$ACTION => Constantes::$PAGINA_CURSO_CADASTRAR,
             ));
-        } 
+        }
         if ($pagina == Constantes::$PAGINA_CURSO_SALVAR) {
             return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
-                        Constantes::$ACTION => Constantes::$PAGINA_CURSO_SALVAR, 
+                        Constantes::$ACTION => Constantes::$PAGINA_CURSO_SALVAR,
             ));
-        } 
+        }
         /* Funcoes */
         if ($pagina == Constantes::$PAGINA_FUNCOES) {
             return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
@@ -986,9 +986,6 @@ class CadastroController extends CircuitoController {
                     $grupoResponsavelNovo->setPessoa($pessoaSelecionada);
                     $grupoResponsavelNovo->setGrupo($grupoNovo);
                     $repositorioORM->getGrupoResponsavelORM()->persistir($grupoResponsavelNovo);
-
-                    /* Enviar Email */
-                    $this->enviarEmailParaCompletarOsDados($tokenDeAgora, $pessoaSelecionada);
                 }
 
                 /* Criar Grupo_Pai_Filho */
@@ -998,7 +995,12 @@ class CadastroController extends CircuitoController {
                 $grupoPaiFilhoNovo->setGrupoPaiFilhoFilho($grupoNovo);
                 $repositorioORM->getGrupoPaiFilhoORM()->persistir($grupoPaiFilhoNovo);
 
-//                $repositorioORM->fecharTransacao();
+                $repositorioORM->fecharTransacao();
+
+                for ($indicePessoas = $indicePessoasInicio; $indicePessoas <= $indicePessoasFim; $indicePessoas++) {
+                    /* Enviar Email */
+                    $this->enviarEmailParaCompletarOsDados($tokenDeAgora, $pessoaSelecionada);
+                }
             } catch (Exception $exc) {
                 $repositorioORM->desfazerTransacao();
                 echo $exc->getTraceAsString();
@@ -1570,7 +1572,7 @@ class CadastroController extends CircuitoController {
                 $post_data = $request->getPost();
                 $idEventoFrequencia = $post_data['codigo'];
 
-                /* Resgatando Dados do EventoFrequencia e do Revisionista */ 
+                /* Resgatando Dados do EventoFrequencia e do Revisionista */
                 $eventoFrequencia = $repositorioORM->getEventoFrequenciaORM()->encontrarPorIdEventoFrequencia($idEventoFrequencia);
                 if ($eventoFrequencia->getFrequencia() == 'N') {
                     $pessoaRevisionista = $eventoFrequencia->getPessoa();
@@ -1588,21 +1590,16 @@ class CadastroController extends CircuitoController {
                     $sessao->textoMensagem = $pessoaRevisionista->getNome();
 //                    $sessao->idSessao = $eventoFrequencia->getId();
 
-                    /*Migração Sitema Antigo */
+                    /* Migração Sitema Antigo */
 
                     $grupoLider = $grupoPessoaRevisionista->getGrupo();
                     $grupoResponsavel = $grupoLider->getResponsabilidadesAtivas();
                     $numeroLideres = count($grupoResponsavel);
-                    $grupoCv = $grupoLider->getGrupoCv(); 
-                    if($numeroLideres > 1){
-                        $idAluno = IndexController::cadastrarPessoaRevisionista($pessoaRevisionista->getNome(), substr(''.$pessoaRevisionista->getTelefone().'',0,2),
-                        substr(''.$pessoaRevisionista->getTelefone().'', 2, strlen(''.$pessoaRevisionista->getTelefone().'')), $pessoaRevisionista->getSexo(),
-                                $pessoaRevisionista->getData_nascimento(),$grupoCv->getLider1(), $grupoCv->getLider2());
-                    }else{
-                        $idAluno = IndexController::cadastrarPessoaRevisionista($pessoaRevisionista->getNome(), substr(''.$pessoaRevisionista->getTelefone().'',0,2),
-                        substr(''.$pessoaRevisionista->getTelefone().'', 2, strlen(''.$pessoaRevisionista->getTelefone().'')), $pessoaRevisionista->getSexo(),
-                                $pessoaRevisionista->getData_nascimento(),$grupoCv->getLider1());
-
+                    $grupoCv = $grupoLider->getGrupoCv();
+                    if ($numeroLideres > 1) {
+                        $idAluno = IndexController::cadastrarPessoaRevisionista($pessoaRevisionista->getNome(), substr('' . $pessoaRevisionista->getTelefone() . '', 0, 2), substr('' . $pessoaRevisionista->getTelefone() . '', 2, strlen('' . $pessoaRevisionista->getTelefone() . '')), $pessoaRevisionista->getSexo(), $pessoaRevisionista->getData_nascimento(), $grupoCv->getLider1(), $grupoCv->getLider2());
+                    } else {
+                        $idAluno = IndexController::cadastrarPessoaRevisionista($pessoaRevisionista->getNome(), substr('' . $pessoaRevisionista->getTelefone() . '', 0, 2), substr('' . $pessoaRevisionista->getTelefone() . '', 2, strlen('' . $pessoaRevisionista->getTelefone() . '')), $pessoaRevisionista->getSexo(), $pessoaRevisionista->getData_nascimento(), $grupoCv->getLider1());
                     }
                     IndexController::cadastrarPessoaAluno($idAluno, 6503, 'A', 1);
 
@@ -1965,12 +1962,11 @@ class CadastroController extends CircuitoController {
         }
         return $response;
     }
-    
+
     /**
      * Função de listagem de curso
      */
-    
-    public function cursoListarAction(){
+    public function cursoListarAction() {
         $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
         $cursos = $repositorioORM->getCursoORM()->buscarTodosRegistrosEntidade();
         $view = new ViewModel(array(
@@ -1978,11 +1974,13 @@ class CadastroController extends CircuitoController {
         ));
 
         return $view;
-    }       
+    }
+
     /*
      * Função de retornar formulario de cadastro de cursos
      */
-    public function cursoFormAction(){
+
+    public function cursoFormAction() {
         $formCadastroCurso = new CursoForm('formulario');
         $view = new ViewModel(array(
             'formCadastroCurso' => $formCadastroCurso,
@@ -1990,7 +1988,7 @@ class CadastroController extends CircuitoController {
 
         return $view;
     }
-    
+
     public function cursoSalvarAction() {
         $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
         $request = $this->getRequest();
