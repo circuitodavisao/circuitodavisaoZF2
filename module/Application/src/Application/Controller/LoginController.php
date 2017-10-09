@@ -375,7 +375,7 @@ class LoginController extends CircuitoController {
                         $repositorioORM->getPessoaORM()->persistir($pessoa, false);
 
                         $mensagemAjustada = str_replace('#id', $tokenDeAgora, $mensagemComEmail);
-                        Funcoes::enviarEmail($email, $this->getTranslator()->translate(Constantes::$TRADUCAO_EMAIL_TITULO_RECUPERAR_SENHA), $mensagemAjustada);
+                        Funcoes::enviarEmail($email, Constantes::$TRADUCAO_EMAIL_TITULO_RECUPERAR_SENHA, $mensagemAjustada);
 
                         /* Redirecionamento */
                         return $this->forward()->dispatch(Constantes::$CONTROLLER_LOGIN, array(
