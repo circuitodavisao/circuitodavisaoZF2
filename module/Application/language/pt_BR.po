@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: ZendSkeletonApplication\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-07-05 22:17-0700\n"
-"PO-Revision-Date: 2017-10-09 14:10-0300\n"
+"PO-Revision-Date: 2017-10-09 15:43-0300\n"
 "Last-Translator: Diogo Melo <dmelo87@gmail.com>\n"
 "Language-Team: ZF Contibutors <zf-devteam@zend.com>\n"
 "Language: pt\n"
@@ -12,7 +12,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Poedit-KeywordsList: translate\n"
 "X-Poedit-Basepath: .\n"
-"X-Generator: Poedit 2.0.2\n"
+"X-Generator: Poedit 2.0.3\n"
 "X-Poedit-SearchPath-0: ..\n"
 
 # ############
@@ -952,3 +952,19 @@ msgstr "Fichas Ativadas"
 #: Cadastro/view/cadastro/ativar-ficha-revisao.phtml
 msgid "Select Sub Team Numbering"
 msgstr "Selecione o Número da Sub Equipe"
+
+#: Cadastro/view/cadastro/ativar-ficha-revisao.phtml
+msgid "Choose the name of the course"
+msgstr "Escolha o nome do Curso"
+
+#: Cadastro/view/cadastro/ativar-ficha-revisao.phtml
+msgid "Name of the course"
+msgstr "Nome do Curso"
+
+#: Cadastro/view/cadastro/ativar-ficha-revisao.phtml
+msgid "Really want to delete this course?"
+msgstr "Deseja realmente excluir o curso"
+
+#: Cadastro/view/cadastro/ativar-ficha-revisao.phtml
+msgid "I am <span class=\"text-danger\">aware</span> that by <span class=\"text-danger\">excluding course</span> is the same no longer appear! "
+msgstr "Estou ciente<span class=\"text-danger\">aware</span> de que <span class=\"text-danger\"> excluindo o curso </span> o mesmo não aparecerá mais! "
