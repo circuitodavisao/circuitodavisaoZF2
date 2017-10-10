@@ -1,1 +1,16 @@
-<h1>Ver usuario</h1>
+<?php
+
+echo "<pre>";
+echo "<h1>Ver usuario</h1>";
+//print_r($this->resultado);
+foreach ($this->resultado as $key => $value) {
+    echo "<br />";
+    for ($indiceHastag = 1; $indiceHastag <= 50; $indiceHastag++) {
+        echo "#";
+    }
+    echo "<br />key => $key";
+    foreach ($value as $key1 => $value1) {
+        echo "<br />$key1 => $value1";
+    }
+}
+echo "</pre>";

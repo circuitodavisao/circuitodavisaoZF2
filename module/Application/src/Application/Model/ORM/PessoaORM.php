@@ -75,6 +75,26 @@ class PessoaORM extends CircuitoORM {
         }
     }
 
+    public function verificarSeTemCPFCadastrado($CPF) {
+        $resposta = false;
+        try {
+            $dql = "SELECT p.id, p.nome, p.documento, p.email, p.senha "
+                    . "FROM  " . Constantes::$ENTITY_PESSOA . " p "
+                    . "WHERE "
+                    . "p.documento = ?1 ";
+
+            $resultado = $this->getEntityManager()->createQuery($dql)
+                    ->setParameter(1, $CPF)
+                    ->getResult();
+            if (count($resultado) > 0) {
+                $resposta = true;
+            }
+            return $resposta;
+        } catch (Exception $exc) {
+            echo $exc->getMessage();
+        }
+    }
+
     /**
      * Localizar pessoa por token
      * 

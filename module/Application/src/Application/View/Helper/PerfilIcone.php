@@ -60,7 +60,7 @@ class PerfilIcone extends AbstractHelper {
             /* Link com ativacao do modal */
             $html .= '<a onclick=\'abrirModal("modal-' . $this->getEntidade()->getId() . '", ' . $this->getEntidade()->getId() . ',"perfilSelecionado");\' href="#modal-image" data-effect="mfp-fullscale" class="pageload-link">';
 
-            $html .= PerfilIcone::htmlPanel(1, $tipoEntidade, $nomeEntidade, $infoEntidade, $this->getGrupoResponsavelAtivo());
+            $html .= PerfilIcone::htmlPanel(1, $tipoEntidade, $nomeEntidade, $infoEntidade, $this->getGrupoResponsavelAtivo(), $this->getEntidade());
 
             /* FIM Link com ativacao do modal */
             $html .= '</a>';
@@ -176,7 +176,7 @@ class PerfilIcone extends AbstractHelper {
      * @param type $tipo
      * @return string
      */
-    public static function htmlPanel($tipo, $tipoId, $nomeEntidade, $infoEntidade, $grupoResponsavelAtivo = true) {
+    public static function htmlPanel($tipo, $tipoId, $nomeEntidade, $infoEntidade, $grupoResponsavelAtivo = true, $entidade = null) {
         $html = '';
         $corDoPanel = PerfilIcone::corDoPanel($tipoId);
         $corDoFooter = PerfilIcone::corDoFooter($tipoId);
@@ -204,8 +204,17 @@ class PerfilIcone extends AbstractHelper {
         } else {
             $faIcon = 'users';
         }
-        $html .= '<i class="fa fa-' . $faIcon . ' text-muted fs70 mt10"></i>';
 
+        /* Pegando dados do lider */
+
+        if ($entidade) {
+            $grupoResponsabilidades = $entidade->getGrupo()
+                            ->getGrupoPaiFilhoPai()->getGrupoPaiFilhoPai()->getResponsabilidadesAtivas();
+            $nomeLideres = Menu::montaNomeLideres($grupoResponsabilidades);
+            $html .= '<h2>Discipulo de: ' . $nomeLideres . '</h2>';
+        }
+
+        $html .= '<i class="fa fa-' . $faIcon . ' text-muted fs40 mt10"></i>';
 
         /* Info da entidade */
         $html .= '<h1 class="fs35-responsiva mbn">';

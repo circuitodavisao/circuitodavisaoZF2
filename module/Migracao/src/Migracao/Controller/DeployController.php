@@ -4,9 +4,9 @@ namespace Migracao\Controller;
 
 use Application\Controller\CircuitoController;
 use Application\Controller\Helper\Constantes;
-use Application\Model\Entity\Pessoa;
 use Application\Model\ORM\RepositorioORM;
 use Doctrine\ORM\EntityManager;
+use Zend\View\Model\ViewModel;
 
 /**
  * Nome: DeployController.php
@@ -52,31 +52,35 @@ class DeployController extends CircuitoController {
 
     public function verUsuarioAction() {
         $idPessoa = $this->getEvent()->getRouteMatch()->getParam(Constantes::$ID, 0);
-        echo "<pre>";
+        $resultado = array();
         if ($idPessoa) {
             $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
+
             if (intval($idPessoa)) {
                 $pessoa = $repositorioORM->getPessoaORM()->encontrarPorId($idPessoa);
-                echo "<br />Nome: " . $pessoa->getNome();
-                echo "<br />Documento: " . $pessoa->getDocumento();
-                echo "<br />Email: " . $pessoa->getEmail();
-                echo "<br />Senha: " . $pessoa->getSenha();
+                $dados = array();
+                $dados['id'] = $pessoa->getId();
+                $dados['nome'] = $pessoa->getNome();
+                $dados['documento'] = $pessoa->getDocumento();
+                $dados['email'] = $pessoa->getEmail();
+                $dados['senha'] = $pessoa->getSenha();
+                $dados['hierarquia'] = $pessoa->getPessoaHierarquiaAtivo()->getHierarquia()->getNome();
+                $resultado[] = $dados;
             } else {
                 $resposta = $repositorioORM->getPessoaORM()->encontrarPorNome($idPessoa);
-
                 for ($indiceResposta = 0; $indiceResposta < count($resposta); $indiceResposta++) {
-                    echo "<br />############################################################";
-                    echo "<br />Id: " . $resposta[$indiceResposta]['id'];
-                    echo "<br />Nome: " . $resposta[$indiceResposta]['nome'];
-                    echo "<br />Documento: " . $resposta[$indiceResposta]['documento'];
-                    echo "<br />Email: " . $resposta[$indiceResposta]['email'];
-                    echo "<br />Senha: " . $resposta[$indiceResposta]['senha'];
+                    $dados = array();
+                    $dados['id'] = $resposta[$indiceResposta]['id'];
+                    $dados['nome'] = $resposta[$indiceResposta]['nome'];
+                    $dados['documento'] = $resposta[$indiceResposta]['documento'];
+                    $dados['email'] = $resposta[$indiceResposta]['email'];
+                    $dados['senha'] = $resposta[$indiceResposta]['senha'];
+                    $resultado[] = $dados;
                 }
             }
-        } else {
-            echo "<br />Sem idPessoa";
         }
-        echo "</pre>";
+
+        return new ViewModel(array('resultado' => $resultado,));
     }
 
 }

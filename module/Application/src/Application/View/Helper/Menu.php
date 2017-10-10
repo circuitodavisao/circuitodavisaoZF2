@@ -269,14 +269,14 @@ class Menu extends AbstractHelper {
         $html .= 'Atendimento';
         $html .= '</a>';
         $html .= '</li>';
-        if ($sessao->idPessoa == 3) {
-            $html .= '<li>';
-            $html .= '<a href="/cadastro' . Constantes::$PAGINA_ATIVAR_FICHA_REVISAO . '">';
-            $html .= '<span class="fa fa-users"></span>';
-            $html .= 'Fichas Revisão de Vidas';
-            $html .= '</a>';
-            $html .= '</li>';
-        }
+        
+//                $html .= '<li>';
+//                $html .= '<a href="/cadastro' . Constantes::$PAGINA_ATIVAR_FICHA_REVISAO . '">';
+//                $html .= '<span class="fa fa-users"></span>';
+//                $html .= 'Fichas Revisão de Vidas';
+//                $html .= '</a>';
+//                $html .= '</li>';
+           
         $html .= '</ul>';
         $html .= '</li>';
 
