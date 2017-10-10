@@ -34,6 +34,26 @@ class PessoaORM extends CircuitoORM {
     }
 
     /**
+     * Localizar pessoa por nome
+     */
+    public function encontrarPorNome($nome) {
+        try {
+            $dql = "SELECT p.id, p.nome, p.documento, p.email, p.senha "
+                    . "FROM  " . Constantes::$ENTITY_PESSOA . " p "
+                    . "WHERE "
+                    . "p.nome LIKE ?1 ";
+
+            $nomeAjustado = '%' . $nome . '%';
+            $resultado = $this->getEntityManager()->createQuery($dql)
+                    ->setParameter(1, $nomeAjustado)
+                    ->getResult();
+            return $resultado;
+        } catch (Exception $exc) {
+            echo $exc->getMessage();
+        }
+    }
+
+    /**
      * Localizar pessoa por CPF
      * 
      * @param String $CPF
@@ -124,12 +144,12 @@ class PessoaORM extends CircuitoORM {
             echo $exc->getTraceAsString();
         }
     }
-    
+
     /**
      * Busca Pessoa Lider para o Revisao por Id  (Não retorna excesção caso não encontre)
      * @param idPessoa
      */
-    public function encontrarPorIdPessoaParaRevisao($idPessoa) {  
+    public function encontrarPorIdPessoaParaRevisao($idPessoa) {
         $idInteiro = (int) $idPessoa;
 
         $entidade = $this->getEntityManager()->find($this->getEntity(), $idInteiro);
@@ -137,6 +157,6 @@ class PessoaORM extends CircuitoORM {
             return false;
         }
         return $entidade;
-    }   
+    }
 
 }

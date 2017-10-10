@@ -4,8 +4,9 @@ namespace Migracao\Controller;
 
 use Application\Controller\CircuitoController;
 use Application\Controller\Helper\Constantes;
+use Application\Model\Entity\Pessoa;
+use Application\Model\ORM\RepositorioORM;
 use Doctrine\ORM\EntityManager;
-use Zend\View\Model\ViewModel;
 
 /**
  * Nome: DeployController.php
@@ -37,7 +38,7 @@ class DeployController extends CircuitoController {
             $gitPassword = 'leonardo142857';
 
             $linkGit = 'github.com/circuitodavisao/circuitodavisaoZf2.git master';
-		echo 'deploy automatico';
+            echo 'deploy automatico';
             echo $stringHashtag . 'Iniciando o deploy' . $stringHashtag . PHP_EOL;
             $comando = 'git pull https://' . $gitUser . ':' . $gitPassword . '@' . $linkGit;
             echo '<pre>';
@@ -47,6 +48,35 @@ class DeployController extends CircuitoController {
         } else {
             echo "Sem token";
         }
+    }
+
+    public function verUsuarioAction() {
+        $idPessoa = $this->getEvent()->getRouteMatch()->getParam(Constantes::$ID, 0);
+        echo "<pre>";
+        if ($idPessoa) {
+            $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
+            if (intval($idPessoa)) {
+                $pessoa = $repositorioORM->getPessoaORM()->encontrarPorId($idPessoa);
+                echo "<br />Nome: " . $pessoa->getNome();
+                echo "<br />Documento: " . $pessoa->getDocumento();
+                echo "<br />Email: " . $pessoa->getEmail();
+                echo "<br />Senha: " . $pessoa->getSenha();
+            } else {
+                $resposta = $repositorioORM->getPessoaORM()->encontrarPorNome($idPessoa);
+
+                for ($indiceResposta = 0; $indiceResposta < count($resposta); $indiceResposta++) {
+                    echo "<br />############################################################";
+                    echo "<br />Id: " . $resposta[$indiceResposta]['id'];
+                    echo "<br />Nome: " . $resposta[$indiceResposta]['nome'];
+                    echo "<br />Documento: " . $resposta[$indiceResposta]['documento'];
+                    echo "<br />Email: " . $resposta[$indiceResposta]['email'];
+                    echo "<br />Senha: " . $resposta[$indiceResposta]['senha'];
+                }
+            }
+        } else {
+            echo "<br />Sem idPessoa";
+        }
+        echo "</pre>";
     }
 
 }
