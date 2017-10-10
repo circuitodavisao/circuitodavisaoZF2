@@ -77,8 +77,8 @@ class ListagemCursos extends AbstractHelper {
                     $html .= '<td class="text-center">' . $curso->getId() . '</td>';
 
                     $stringNomeDaFuncaoOnClickInserir = 'funcaoCadastro("' . Constantes::$PAGINA_FICHA_REVISAO . '", ' . $curso->getId() . ')';
-                    $stringNomeDaFuncaoOnClick = 'funcaoCadastro("' . Constantes::$PAGINA_EDITAR_TURMA . '", ' . $curso->getId() . ')';
-                    $stringNomeDaFuncaoOnClickExclusao = 'funcaoCadastro("' . Constantes::$PAGINA_EXCLUSAO_TURMA . '", ' . $curso->getId() . ')';
+                    $stringNomeDaFuncaoOnClick = 'funcaoCadastro("' . Constantes::$PAGINA_CURSO_EDITAR . '", ' . $curso->getId() . ')';
+                    $stringNomeDaFuncaoOnClickExclusao = 'funcaoCadastro("' . Constantes::$PAGINA_CURSO_EXCLUSAO . '", ' . $curso->getId() . ')';
                     $stringNomeDaFuncaoOnClickIncluirAlunos = 'funcaoCadastro("'.Constantes::$PAGINA_LISTAGEM_REVISAO_TURMA.'",'.$curso->getId().')';
                     
                     $html .= '<td class="text-center">' . $curso->getData_criacaoStringPadraoBrasil() . '</td>';
@@ -107,7 +107,7 @@ class ListagemCursos extends AbstractHelper {
                 $html .= '<div class="panel-footer">';
 //                $html .= '<a href="/cadastroListarTurmaInativa">Turmas Inativas </a>';
                 $html .= '<div class="text-right">';
-                $stringNomeDaFuncaoOnClickCadastro = 'funcaoCadastro("' . Constantes::$PAGINA_CADASTRAR_TURMA . '", 0)';
+                $stringNomeDaFuncaoOnClickCadastro = 'funcaoCadastro("' . Constantes::$PAGINA_CURSO_CADASTRAR . '", 0)'; 
                 $html .= $this->view->botaoLink($this->view->translate(Constantes::$TRADUCAO_CADASTRAR), Constantes::$STRING_HASHTAG, 0, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClickCadastro));
                 $html .= '</div>';
                 /* Fim Botões */

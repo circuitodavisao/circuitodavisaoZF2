@@ -61,7 +61,7 @@ class CursoForm extends Form {
         
         if(!is_null($curso)){
             $this->get(Constantes::$FORM_ID)->setValue($curso->getId());
-            $this->get(Constantes::$FORM_NOME)->setValue($curso->getMes());
+            $this->get(Constantes::$FORM_NOME)->setValue($curso->getNome());
         }
         
     }
