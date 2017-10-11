@@ -24,10 +24,19 @@ class Curso extends CircuitoEntity {
     protected $pessoa_id;
     
     /**
+     * @ORM\OneToMany(targetEntity="Disciplina", mappedBy="curso")  
+     */
+    protected $disciplina;
+    
+    /**
      * @ORM\ManyToOne(targetEntity="Pessoa", inversedBy="Curso")
      * @ORM\JoinColumn(name="pessoa_id", referencedColumnName="id")
      */
     private $pessoa;
+    
+    public function __construct() {
+        $this->disciplina = new ArrayCollection();
+    }
     
     function getPessoa_id() {
         return $this->pessoa_id;
@@ -51,6 +60,14 @@ class Curso extends CircuitoEntity {
 
     function setNome($nome) {
         $this->nome = $nome;
+    }
+    
+    function getDisciplina() {
+        return $this->disciplina;
+    }
+
+    function setDisciplina($disciplina) {
+        $this->disciplina = $disciplina;
     }
 
 }

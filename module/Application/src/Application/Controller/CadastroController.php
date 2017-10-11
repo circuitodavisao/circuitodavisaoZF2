@@ -251,22 +251,51 @@ class CadastroController extends CircuitoController {
             return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
                         Constantes::$ACTION => Constantes::$PAGINA_CURSO_SALVAR,
             ));
-        } 
+        }
         if ($pagina == Constantes::$PAGINA_CURSO_EDITAR) {
             return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
-                        Constantes::$ACTION => Constantes::$PAGINA_CURSO_EDITAR, 
+                        Constantes::$ACTION => Constantes::$PAGINA_CURSO_EDITAR,
             ));
         }
         if ($pagina == Constantes::$PAGINA_CURSO_EXCLUIR) {
             return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
-                        Constantes::$ACTION => Constantes::$PAGINA_CURSO_EXCLUIR, 
+                        Constantes::$ACTION => Constantes::$PAGINA_CURSO_EXCLUIR,
             ));
         }
         if ($pagina == Constantes::$PAGINA_CURSO_EXCLUSAO) {
             return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
-                        Constantes::$ACTION => Constantes::$PAGINA_CURSO_EXCLUSAO, 
+                        Constantes::$ACTION => Constantes::$PAGINA_CURSO_EXCLUSAO,
             ));
-
+        }
+        if ($pagina == Constantes::$PAGINA_DISCIPLINA_LISTAR) {
+            return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
+                        Constantes::$ACTION => Constantes::$PAGINA_DISCIPLINA_LISTAR,
+            ));
+        }
+        if ($pagina == Constantes::$PAGINA_DISCIPLINA_CADASTRAR) {
+            return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
+                        Constantes::$ACTION => Constantes::$PAGINA_DISCIPLINA_CADASTRAR,
+            ));
+        }
+        if ($pagina == Constantes::$PAGINA_DISCIPLINA_SALVAR) {
+            return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
+                        Constantes::$ACTION => Constantes::$PAGINA_DISCIPLINA_SALVAR,
+            ));
+        }
+        if ($pagina == Constantes::$PAGINA_DISCIPLINA_EDITAR) {
+            return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
+                        Constantes::$ACTION => Constantes::$PAGINA_DISCIPLINA_EDITAR,
+            ));
+        }
+        if ($pagina == Constantes::$PAGINA_DISCIPLINA_EXCLUIR) {
+            return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
+                        Constantes::$ACTION => Constantes::$PAGINA_DISCIPLINA_EXCLUIR,
+            ));
+        }
+        if ($pagina == Constantes::$PAGINA_DISCIPLINA_EXCLUSAO) {
+            return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
+                        Constantes::$ACTION => Constantes::$PAGINA_DISCIPLINA_EXCLUSAO,
+            ));
         }
         if ($pagina == Constantes::$PAGINA_DISCIPLINA_LISTAR) {
             return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
@@ -2049,12 +2078,12 @@ class CadastroController extends CircuitoController {
                 $dadosPost = $request->getPost();
                 $id = $dadosPost['id'];
                 $nome = $dadosPost['nome'];
-                $sessao = new Container(Constantes::$NOME_APLICACAO); 
+                $sessao = new Container(Constantes::$NOME_APLICACAO);
                 $idPessoaLogada = $sessao->idPessoa;
                 $pessoaLogada = $repositorioORM->getPessoaORM()->encontrarPorId($idPessoaLogada);
-                if($id) {
+                if ($id) {
                     $curso = $repositorioORM->getCursoORM()->encontrarPorId($id);
-                } else { 
+                } else {
                     $curso = new Curso();
                 }
 
@@ -2077,7 +2106,7 @@ class CadastroController extends CircuitoController {
             }
         }
     }
-    
+
     public function cursoFormEditAction() {
         $sessao = new Container(Constantes::$NOME_APLICACAO);
         $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
@@ -2091,7 +2120,7 @@ class CadastroController extends CircuitoController {
 
         return $view;
     }
-    
+
     /**
      * Tela com formulário de exclusão de curso
      * GET /cadastroTurmaExclusao
@@ -2117,7 +2146,7 @@ class CadastroController extends CircuitoController {
 
         return $view;
     }
-    
+
     public function cursoExcluirAction() {
         $sessao = new Container(Constantes::$NOME_APLICACAO);
         $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
@@ -2246,6 +2275,141 @@ class CadastroController extends CircuitoController {
         return $view;
     }
     
+    public function disciplinaExcluirAction() {
+        $sessao = new Container(Constantes::$NOME_APLICACAO);
+        $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
+        $idCurso = $sessao->idSessao;
+        $curso = $repositorioORM->getCursoORM()->encontrarPorId($idCurso);
+        $curso->setDataEHoraDeInativacao();
+        $repositorioORM->getCursoORM()->persistir($curso, false);
+
+        return $this->redirect()->toRoute(Constantes::$ROUTE_CADASTRO, array(
+                    Constantes::$PAGINA => Constantes::$PAGINA_CURSO_LISTAR,
+        ));
+    }
+
+    /**
+     * Função de listagem de disciplina
+     */
+    public function disciplinaListarAction() {
+        $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
+        $sessao = new Container(Constantes::$NOME_APLICACAO);
+        $idCurso = $sessao->idSessao;
+        $disciplinas = $repositorioORM->getDisciplinaORM()->buscarTodosRegistrosEntidade();
+        $view = new ViewModel(array(
+            'disciplinas' => $disciplinas,
+            'idCurso' => $idCurso,
+        ));
+
+        return $view;
+    }
+
+    /*
+     * Função de retornar formulario de cadastro de disciplinas
+     */
+
+    public function disciplinaFormAction() {
+        $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
+        $sessao = new Container(Constantes::$NOME_APLICACAO);
+        $idCurso = $sessao->idSessao;
+        $curso = $repositorioORM->getCursoORM()->encontrarPorId($idCurso);
+        $disciplinas = $curso->getDisciplina();
+        $formCadastroDisciplina = new DisciplinaForm('formulario', $idCurso, $disciplinas);
+        $view = new ViewModel(array(
+            'formCadastroDisciplina' => $formCadastroDisciplina,
+            'idCurso' => $idCurso, 
+        ));
+
+        return $view;
+    }
+
+    public function disciplinaSalvarAction() {
+        $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
+        $request = $this->getRequest();
+        $response = $this->getResponse();
+        if ($request->isPost()) {
+            try {
+                $repositorioORM->iniciarTransacao();
+
+                $dadosPost = $request->getPost();
+                $id = $dadosPost['id'];
+                $nome = $dadosPost['nome'];
+                $posicao = $dadosPost['posicao'];
+                $idCurso = $dadosPost['idCurso'];
+                if ($id) {
+                    $disciplina = $repositorioORM->getDisciplinaORM()->encontrarPorId($id);
+                } else {
+                    $disciplina = new Disciplina();
+                }
+                $curso = $repositorioORM->getCursoORM()->encontrarPorId($idCurso);
+                $disciplina->setNome($nome);
+                $disciplina->setPosicao($posicao);
+                $disciplina->setCurso($curso);
+
+                if ($id) {
+                    $repositorioORM->getDisciplinaORM()->persistir($disciplina, false);
+                } else {
+                    $repositorioORM->getDisciplinaORM()->persistir($disciplina);
+                }
+
+                $repositorioORM->fecharTransacao();
+                $sessao = new Container(Constantes::$NOME_APLICACAO);
+                $sessao->idSessao = $idCurso;
+                return $this->redirect()->toRoute(Constantes::$ROUTE_CADASTRO, array(
+                            Constantes::$PAGINA => Constantes::$PAGINA_DISCIPLINA_LISTAR,
+                ));
+            } catch (Exception $exc) {
+                $repositorioORM->desfazerTransacao();
+                echo $exc->getTraceAsString();
+            }
+        }
+    }
+
+    public function disciplinaFormEditAction() {
+        $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
+        $sessao = new Container(Constantes::$NOME_APLICACAO);
+        $idDisciplina = $sessao->idSessao;
+        $disciplina = $repositorioORM->getDisciplinaORM()->encontrarPorId($idDisciplina);
+        $curso = $disciplina->getCurso();
+        $disciplinas = $curso->getDisciplina(); 
+        $formCadastroDisciplina = new DisciplinaForm('formulario', $idCurso, $disciplinas, $disciplina);
+        $view = new ViewModel(array(
+            'formCadastroDisciplina' => $formCadastroDisciplina,
+            'idCurso' => $curso->getId(), 
+        ));
+        
+
+        return $view;
+    }
+
+    /**
+     * Tela com formulário de exclusão de disciplina
+     * GET /cadastroTurmaExclusao
+     */
+    public function disciplinaExclusaoAction() {
+        /* Verificando a se tem algum id na sessão */
+        $sessao = new Container(Constantes::$NOME_APLICACAO);
+        $extra = null;
+        $idDisciplina = $sessao->idSessao;
+        $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
+        $entidade = $repositorioORM->getEntidadeORM()->encontrarPorId($sessao->idEntidadeAtual);
+        $disciplina = $repositorioORM->getDisciplinaORM()->encontrarPorId($idDisciplina);
+
+        $view = new ViewModel(array(
+            Constantes::$NOME_ENTIDADE_CURSO => $disciplina,
+            Constantes::$ENTIDADE => $entidade,
+            
+            
+        ));
+
+        /* Javascript */
+        $layoutJS = new ViewModel();
+        $layoutJS->setTemplate(Constantes::$LAYOUT_JS_EXCLUSAO_DISCIPLINA);
+        $view->addChild($layoutJS, Constantes::$LAYOUT_STRING_JS_EXCLUSAO_DISCIPLINA);
+
+        return $view;
+    }
+
     public function disciplinaExcluirAction() {
         $sessao = new Container(Constantes::$NOME_APLICACAO);
         $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());

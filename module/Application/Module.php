@@ -48,6 +48,7 @@ use Application\View\Helper\ListagemConsolidacaoParaRevisao;
 use Application\View\Helper\ListagemCursos;
 use Application\View\Helper\ListagemDeEventos;
 use Application\View\Helper\ListagemDePessoasComEventos;
+use Application\View\Helper\ListagemDisciplinas;
 use Application\View\Helper\ListagemFichasAtivasRevisao;
 use Application\View\Helper\ListagemFichasParaRevisao;
 use Application\View\Helper\ListagemLideresTransferencia;
@@ -217,7 +218,7 @@ class Module {
                 'listagemConsolidacaoParaRevisao' => function($sm) {
                     return new ListagemConsolidacaoParaRevisao();
                 },
-                'listagemFichasParaRevisao' => function($sm) {
+                'listagemFichasParaRevisao' => function($sm) { 
                     return new ListagemFichasParaRevisao();
                 },
                 'listagemFichasAtivasParaRevisao' => function($sm) {
@@ -228,6 +229,9 @@ class Module {
                 },
                 'listagemCursos' => function($sm) {
                     return new ListagemCursos();
+                },
+                'listagemDisciplinas' => function($sm) {
+                    return new ListagemDisciplinas();
                 },
                 'listagemTurmasInativas' => function($sm) {
                     return new ListagemTurmasInativas();
