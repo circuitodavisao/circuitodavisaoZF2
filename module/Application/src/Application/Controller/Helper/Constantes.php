@@ -227,6 +227,7 @@ class Constantes {
     public static $ENTITY_GRUPO_PESSOA_TIPO = 'Application\Model\Entity\GrupoPessoaTipo';
     public static $ENTITY_GRUPO_CV = 'Application\Model\Entity\GrupoCv';
     public static $ENTITY_CURSO = 'Application\Model\Entity\Curso';
+    public static $ENTITY_DISCIPLINA = 'Application\Model\Entity\Disciplina';
     public static $ENTITY_EVENTO = 'Application\Model\Entity\Evento';
     public static $ENTITY_EVENTO_CELULA = 'Application\Model\Entity\EventoCelula';
     public static $ENTITY_EVENTO_TIPO = 'Application\Model\Entity\EventoTipo';
@@ -464,7 +465,7 @@ class Constantes {
     public static $CONTROLLER_CADASTRO = 'Application\Controller\Cadastro';
     public static $ROUTE_CADASTRO = 'cadastro';
     /* páginas relacionadas ao IV */
-    public static $PAGINA_CADASTRAR_TURMA = 'TurmaForm'; 
+    public static $PAGINA_CADASTRAR_TURMA = 'TurmaForm';  
     public static $PAGINA_SALVAR_TURMA = 'SalvarTurma';
     public static $PAGINA_EDITAR_TURMA = 'TurmaFormEdit';
     public static $PAGINA_LISTAR_TURMA = 'ListarTurma'; 
@@ -481,8 +482,15 @@ class Constantes {
     public static $PAGINA_CURSO_SALVAR = 'CursoSalvar';
     public static $PAGINA_CURSO_EXCLUIR = 'CursoExcluir';
     public static $PAGINA_CURSO_EXCLUSAO = 'CursoExclusao';
+    public static $PAGINA_DISCIPLINA_LISTAR = 'DisciplinaListar'; 
+    public static $PAGINA_DISCIPLINA_CADASTRAR = 'DisciplinaForm';
+    public static $PAGINA_DISCIPLINA_EDITAR = 'DisciplinaFormEdit'; 
+    public static $PAGINA_DISCIPLINA_SALVAR = 'DisciplinaSalvar';
+    public static $PAGINA_DISCIPLINA_EXCLUIR = 'DisciplinaExcluir';
+    public static $PAGINA_DISCIPLINA_EXCLUSAO = 'DisciplinaExclusao';
     public static $NOME_ENTIDADE_TURMA = 'turma';
     public static $NOME_ENTIDADE_CURSO = 'curso';  
+    public static $NOME_ENTIDADE_DISCIPLINA = 'disciplina';  
     /* Fim das páginas relaciondas ao IV */
     
     /* Entidades */
@@ -514,6 +522,7 @@ class Constantes {
     public static $TRADUCAO_SELECIONE_O_ALUNO = 'Select the Student that will be used for the registration';
     public static $TRADUCAO_MATRICULA = 'Registration';
     public static $TRADUCAO_NOME = 'Nome';
+    public static $TRADUCAO_POSICAO = 'Position';
     public static $TRADUCAO_NOME_CURSO = 'Choose the name of the course';
     public static $TRADUCAO_NOME_CURSO_PLACEHOLDER = 'Name of the course';
     public static $TRADUCAO_OBSERVACAO = 'Observation';
@@ -620,9 +629,11 @@ class Constantes {
     public static $FORM_METHOD = 'method';
     public static $FORM_POST = 'POST';
     public static $FORM_ID = 'id';
+    public static $FORM_ID_CURSO = 'idCurso';
     public static $FORM_ID_ALUNO_SELECIONADO = 'idAlunoSelecionado';
     public static $FORM_SELECT = 'SELECT';
     public static $FORM_DIA_DA_SEMANA = 'dia_da_semana';
+    public static $FORM_POSICAO = 'posicao';
     public static $FORM_HIERARQUIA = 'hierarquia';
     public static $FORM_DATA_NASCIMENTO = 'dataNascimento';
     public static $FORM_NOME_ALUNO = 'nomeAluno';
@@ -794,9 +805,11 @@ class Constantes {
     public static $LAYOUT_JS_EXCLUSAO_EVENTO = 'layout/layout-js-exclusao-evento';
     public static $LAYOUT_JS_EXCLUSAO_TURMA = 'layout/layout-js-exclusao-turma'; 
     public static $LAYOUT_JS_EXCLUSAO_CURSO = 'layout/layout-js-exclusao-curso'; 
+    public static $LAYOUT_JS_EXCLUSAO_DISCIPLINA = 'layout/layout-js-exclusao-disciplina'; 
     public static $LAYOUT_STRING_JS_EXCLUSAO_EVENTO = 'layoutJSExclusaoEvento';
     public static $LAYOUT_STRING_JS_EXCLUSAO_TURMA = 'layoutJSExclusaoTurma';
     public static $LAYOUT_STRING_JS_EXCLUSAO_CURSO = 'layoutJSExclusaoCurso';
+    public static $LAYOUT_STRING_JS_EXCLUSAO_DISCIPLINA = 'layoutJSExclusaoDisciplina';
     public static $LAYOUT_JS_GRUPO_VALIDACAO = 'layout/layout-js-grupo-validacao';
     public static $LAYOUT_STRING_JS_GRUPO_VALIDACAO = 'layoutJSGrupoValidacao';
     public static $LAYOUT_JS_GRUPO_ATUALIZACAO_VALIDACAO = 'layout/layout-js-grupo-atualizacao-validacao';

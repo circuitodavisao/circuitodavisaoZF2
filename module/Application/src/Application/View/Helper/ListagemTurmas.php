@@ -100,7 +100,9 @@ class ListagemTurmas extends AbstractHelper {
                 /* Fim panel-body */
                 
                 $html .= '<div class="panel-footer">';
+                $html .= '<span class="align-bottom">';
                 $html .= '<a href="/cadastroListarTurmaInativa">Turmas Inativas </a>';
+                $html .= '</span>';
                 $html .= '<div class="text-right">';
                 $stringNomeDaFuncaoOnClickCadastro = 'funcaoCadastro("' . Constantes::$PAGINA_CADASTRAR_TURMA . '", 0)';
                 $html .= $this->view->botaoLink($this->view->translate(Constantes::$TRADUCAO_CADASTRAR), Constantes::$STRING_HASHTAG, 0, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClickCadastro));
