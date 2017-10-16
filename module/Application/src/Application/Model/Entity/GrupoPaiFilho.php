@@ -23,7 +23,7 @@ class GrupoPaiFilho extends CircuitoEntity {
     private $grupoPaiFilhoPai;
 
     /**
-     * @ORM\OneToOne(targetEntity="Grupo", inversedBy="grupoPaiFilhoPai")
+     * @ORM\ManyToOne(targetEntity="Grupo", inversedBy="grupoPaiFilhoPai")
      * @ORM\JoinColumn(name="filho_id", referencedColumnName="id")
      */
     private $grupoPaiFilhoFilho;

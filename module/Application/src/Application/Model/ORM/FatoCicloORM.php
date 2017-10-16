@@ -174,14 +174,14 @@ class FatoCicloORM extends CircuitoORM {
             if ($grupoSelecionado->getEntidadeAtiva()) {
                 while ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::SUBEQUIPE) {
                     $numeroIdentificador = str_pad($grupoSelecionado->getId(), $tamanho, 0, STR_PAD_LEFT) . $numeroIdentificador;
-                    if ($grupoSelecionado->getGrupoPaiFilhoPai()) {
-                        $grupoSelecionado = $grupoSelecionado->getGrupoPaiFilhoPai()->getGrupoPaiFilhoPai();
-                    }
+                    if ($grupoSelecionado->getGrupoPaiFilhoPaiAtivo()) {
+                        $grupoSelecionado = $grupoSelecionado->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai();
+                    } 
                 }
                 if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::EQUIPE) {
                     $numeroIdentificador = str_pad($grupoSelecionado->getId(), $tamanho, 0, STR_PAD_LEFT) . $numeroIdentificador;
-                    if ($grupoSelecionado->getGrupoPaiFilhoPai()) {
-                        $grupoSelecionado = $grupoSelecionado->getGrupoPaiFilhoPai()->getGrupoPaiFilhoPai();
+                    if ($grupoSelecionado->getGrupoPaiFilhoPaiAtivo()) {
+                        $grupoSelecionado = $grupoSelecionado->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai();
                     }
                 }
                 if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::IGREJA) {
