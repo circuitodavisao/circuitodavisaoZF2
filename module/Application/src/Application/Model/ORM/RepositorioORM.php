@@ -41,6 +41,7 @@ class RepositorioORM {
     private $_solicitacaoORM;
     private $_solicitacaoTipoORM;
     private $_cursoORM;
+    private $_disciplinaORM;
 
     /**
      * Contrutor 
@@ -298,7 +299,7 @@ class RepositorioORM {
      * @return CircuitoORM
      */
     public function getGrupoCvORM() {
-        if (is_null($this->_grupoCvORM)) {
+        if (is_null($this->_grupoCvORM)) { 
             $this->_grupoCvORM = new CircuitoORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_GRUPO_CV);
         }
         return $this->_grupoCvORM;
@@ -308,11 +309,22 @@ class RepositorioORM {
      * Metodo public para obter a instancia do CursoORM
      * @return CircuitoORM
      */
-    public function getCursoORM() {
+    public function getCursoORM() { 
         if (is_null($this->_cursoORM)) {
             $this->_cursoORM = new CircuitoORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_CURSO);
         }
         return $this->_cursoORM;
+    }
+    
+    /**
+     * Metodo public para obter a instancia do DisciplinaORM
+     * @return CircuitoORM
+     */
+    public function getDisciplinaORM() { 
+        if (is_null($this->_disciplinaORM)) {
+            $this->_disciplinaORM = new CircuitoORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_DISCIPLINA);
+        }
+        return $this->_disciplinaORM;
     }
     
     /**

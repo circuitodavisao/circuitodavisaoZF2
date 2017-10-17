@@ -79,7 +79,7 @@ class ListagemCursos extends AbstractHelper {
                     $stringNomeDaFuncaoOnClickInserir = 'funcaoCadastro("' . Constantes::$PAGINA_FICHA_REVISAO . '", ' . $curso->getId() . ')';
                     $stringNomeDaFuncaoOnClick = 'funcaoCadastro("' . Constantes::$PAGINA_CURSO_EDITAR . '", ' . $curso->getId() . ')';
                     $stringNomeDaFuncaoOnClickExclusao = 'funcaoCadastro("' . Constantes::$PAGINA_CURSO_EXCLUSAO . '", ' . $curso->getId() . ')';
-                    $stringNomeDaFuncaoOnClickIncluirAlunos = 'funcaoCadastro("'.Constantes::$PAGINA_LISTAGEM_REVISAO_TURMA.'",'.$curso->getId().')';
+                    $stringNomeDaFuncaoOnClickIncluirDisciplinas = 'funcaoCadastro("'.Constantes::$PAGINA_DISCIPLINA_LISTAR.'",'.$curso->getId().')';
                     
                     $html .= '<td class="text-center">' . $curso->getData_criacaoStringPadraoBrasil() . '</td>';
                     if(strlen($curso->getPessoa()->getNomePrimeiroUltimo()) <= 12){
@@ -93,7 +93,7 @@ class ListagemCursos extends AbstractHelper {
                     $html .= '<td class="text-center">';
                     $html .= $this->view->botaoLink(Constantes::$STRING_ICONE_TIMES, Constantes::$STRING_HASHTAG, 9, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClickExclusao));
                     $html .= $this->view->botaoLink(Constantes::$STRING_ICONE_PENCIL, Constantes::$STRING_HASHTAG, 3, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClick));
-                    $html .= $this->view->botaoLink('Incluir Disciplinas', Constantes::$STRING_HASHTAG, 4, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClickIncluirAlunos));
+                    $html .= $this->view->botaoLink('Incluir Disciplinas', Constantes::$STRING_HASHTAG, 4, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClickIncluirDisciplinas));
                     $html .= '</td>';
 //                        }
                     $html .= '</tr>';
