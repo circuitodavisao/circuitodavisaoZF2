@@ -28,7 +28,7 @@ class PrincipalController extends CircuitoController {
         $idEntidadeAtual = $sessao->idEntidadeAtual;
         $entidade = $repositorioORM->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
         $grupo = $entidade->getGrupo();
-        $numeroIdentificador = $repositorioORM->getFatoCicloORM()->montarNumeroIdentificador($repositorioORM);
+        $numeroIdentificador = $repositorioORM->getFatoCicloORM()->montarNumeroIdentificador($repositorioORM, $grupo);
 
         $tipoRelatorioPessoal = 1;
         $tipoRelatorioEquipe = 2;
@@ -61,7 +61,7 @@ class PrincipalController extends CircuitoController {
                     }
                 }
 
-                $grupoPaiFilhoFilhos144 = $grupoFilho->getGrupoPaiFilhoFilhos();
+                $grupoPaiFilhoFilhos144 = $grupoFilho->getGrupoPaiFilhoFilhosAtivos();
                 if ($grupoPaiFilhoFilhos144) {
                     foreach ($grupoPaiFilhoFilhos144 as $gpFilho144) {
                         $grupoFilho144 = $gpFilho144->getGrupoPaiFilhoFilho();
