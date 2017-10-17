@@ -810,7 +810,7 @@ class Constantes {
     public static $LAYOUT_STRING_JS_EXCLUSAO_TURMA = 'layoutJSExclusaoTurma';
     public static $LAYOUT_STRING_JS_EXCLUSAO_CURSO = 'layoutJSExclusaoCurso';
     public static $LAYOUT_STRING_JS_EXCLUSAO_DISCIPLINA = 'layoutJSExclusaoDisciplina';
-    public static $LAYOUT_JS_GRUPO_VALIDACAO = 'layout/layout-js-grupo-validacao';
+    public static $LAYOUT_JS_GRUPO_VALIDACAO = 'layout/layout-js-grupo-validacao';  
     public static $LAYOUT_STRING_JS_GRUPO_VALIDACAO = 'layoutJSGrupoValidacao';
     public static $LAYOUT_JS_GRUPO_ATUALIZACAO_VALIDACAO = 'layout/layout-js-grupo-atualizacao-validacao';
     public static $LAYOUT_STRING_JS_GRUPO_ATUALIZACAO_VALIDACAO = 'layoutJSGrupoAtualizacaoValidacao';

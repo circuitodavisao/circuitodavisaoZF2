@@ -2169,134 +2169,6 @@ class CadastroController extends CircuitoController {
         $idCurso = $sessao->idSessao;
         $disciplinas = $repositorioORM->getDisciplinaORM()->buscarTodosRegistrosEntidade();
         $view = new ViewModel(array(
-            'disciplinas' => $disciplinas, 
-            'idCurso' => $idCurso,
-        ));
-
-        return $view;
-    }
-
-    /*
-     * Função de retornar formulario de cadastro de disciplinas
-     */
-
-    public function disciplinaFormAction() {
-        $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
-        $sessao = new Container(Constantes::$NOME_APLICACAO);
-        $idCurso = $sessao->idSessao;
-        $curso = $repositorioORM->getCursoORM()->encontrarPorId($idCurso);
-        $disciplinas = $curso->getDisciplina();
-        $formCadastroDisciplina = new DisciplinaForm('formulario', $idCurso, $disciplinas);
-        $view = new ViewModel(array(
-            'formCadastroDisciplina' => $formCadastroDisciplina,
-            'idCurso' => $idCurso,
-        ));
-
-        return $view;
-    }
-
-    public function disciplinaSalvarAction() {
-        $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
-        $request = $this->getRequest();
-        $response = $this->getResponse();
-        if ($request->isPost()) {
-            try {
-                $repositorioORM->iniciarTransacao();
-
-                $dadosPost = $request->getPost();
-                $id = $dadosPost['id'];
-                $nome = $dadosPost['nome'];
-                $posicao = $dadosPost['posicao'];
-                $sessao = new Container(Constantes::$NOME_APLICACAO); 
-                if($id) {
-                    $disciplina = $repositorioORM->getDisciplinaORM()->encontrarPorId($id);
-                } else { 
-                    $disciplina = new Disciplina();
-                }
-
-                $disciplina->setNome($nome);
-                $disciplina->setPosicao($posicao);
-                $disciplina->setPessoa($pessoaLogada);
-
-                if ($id) {
-                    $repositorioORM->getDisciplinaORM()->persistir($disciplina, false);
-                } else {
-                    $repositorioORM->getDisciplinaORM()->persistir($disciplina);
-                }
-
-                $repositorioORM->fecharTransacao();
-                return $this->redirect()->toRoute(Constantes::$ROUTE_CADASTRO, array(
-                            Constantes::$PAGINA => Constantes::$PAGINA_CURSO_LISTAR,
-                ));
-            } catch (Exception $exc) {
-                $repositorioORM->desfazerTransacao();
-                echo $exc->getTraceAsString();
-            }
-        }
-    }
-    
-    public function disciplinaFormEditAction() {
-        $sessao = new Container(Constantes::$NOME_APLICACAO);
-        $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
-        $idCurso = $sessao->idSessao;
-        $curso = $repositorioORM->getCursoORM()->encontrarPorId($idCurso);
-        $formCadastroCurso = new CursoForm('formulario', $curso);
-
-        $view = new ViewModel(array(
-            'formCadastroCurso' => $formCadastroCurso,
-        ));
-
-        return $view;
-    }
-    
-    /**
-     * Tela com formulário de exclusão de curso
-     * GET /cadastroTurmaExclusao
-     */
-    public function disciplinaExclusaoAction() {
-        /* Verificando a se tem algum id na sessão */
-        $sessao = new Container(Constantes::$NOME_APLICACAO);
-        $extra = null;
-        $idCurso = $sessao->idSessao;
-        $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
-        $entidade = $repositorioORM->getEntidadeORM()->encontrarPorId($sessao->idEntidadeAtual);
-        $curso = $repositorioORM->getCursoORM()->encontrarPorId($idCurso);
-
-        $view = new ViewModel(array(
-            Constantes::$NOME_ENTIDADE_CURSO => $curso,
-            Constantes::$ENTIDADE => $entidade,
-        ));
-
-        /* Javascript */
-        $layoutJS = new ViewModel();
-        $layoutJS->setTemplate(Constantes::$LAYOUT_JS_EXCLUSAO_CURSO);
-        $view->addChild($layoutJS, Constantes::$LAYOUT_STRING_JS_EXCLUSAO_CURSO);
-
-        return $view;
-    }
-    
-    public function disciplinaExcluirAction() {
-        $sessao = new Container(Constantes::$NOME_APLICACAO);
-        $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
-        $idCurso = $sessao->idSessao;
-        $curso = $repositorioORM->getCursoORM()->encontrarPorId($idCurso);
-        $curso->setDataEHoraDeInativacao();
-        $repositorioORM->getCursoORM()->persistir($curso, false);
-
-        return $this->redirect()->toRoute(Constantes::$ROUTE_CADASTRO, array(
-                    Constantes::$PAGINA => Constantes::$PAGINA_CURSO_LISTAR,
-        ));
-    }
-
-    /**
-     * Função de listagem de disciplina
-     */
-    public function disciplinaListarAction() {
-        $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
-        $sessao = new Container(Constantes::$NOME_APLICACAO);
-        $idCurso = $sessao->idSessao;
-        $disciplinas = $repositorioORM->getDisciplinaORM()->buscarTodosRegistrosEntidade();
-        $view = new ViewModel(array(
             'disciplinas' => $disciplinas,
             'idCurso' => $idCurso,
         ));
@@ -2396,7 +2268,7 @@ class CadastroController extends CircuitoController {
         $disciplina = $repositorioORM->getDisciplinaORM()->encontrarPorId($idDisciplina);
 
         $view = new ViewModel(array(
-            Constantes::$NOME_ENTIDADE_CURSO => $disciplina,
+            Constantes::$NOME_ENTIDADE_DISCIPLINA => $disciplina,
             Constantes::$ENTIDADE => $entidade,
             
             
@@ -2413,13 +2285,13 @@ class CadastroController extends CircuitoController {
     public function disciplinaExcluirAction() {
         $sessao = new Container(Constantes::$NOME_APLICACAO);
         $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
-        $idCurso = $sessao->idSessao;
-        $curso = $repositorioORM->getCursoORM()->encontrarPorId($idCurso);
-        $curso->setDataEHoraDeInativacao();
-        $repositorioORM->getCursoORM()->persistir($curso, false);
-
+        $idDisciplina = $sessao->idSessao;
+        $disciplina = $repositorioORM->getDisciplinaORM()->encontrarPorId($idDisciplina);
+        $disciplina->setDataEHoraDeInativacao();
+        $repositorioORM->getCursoORM()->persistir($disciplina, false);
+        $sessao->idSessao = $disciplina->getCurso_id();
         return $this->redirect()->toRoute(Constantes::$ROUTE_CADASTRO, array(
-                    Constantes::$PAGINA => Constantes::$PAGINA_CURSO_LISTAR,
+                    Constantes::$PAGINA => Constantes::$PAGINA_DISCIPLINA_LISTAR,
         ));
     }
 
