@@ -57,6 +57,9 @@ class LancamentoController extends CircuitoController {
         if ($contagemDePessoasCadastradas > Constantes::$QUANTIDADE_MAXIMA_PESSOAS_NO_LANÇAMENTO) {
             $validacaoPessoasCadastradas = 1;
         }
+        
+        /* Verificando se a entidade esta ativa */
+        $entidade;
 
         $view = new ViewModel(
                 array(

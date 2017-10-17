@@ -16,6 +16,7 @@ class PerfilIcone extends AbstractHelper {
     protected $entidade;
     protected $totalEntidades;
     protected $grupoResponsavelAtivo;
+    protected $grupoPai;
 
     public function __construct() {
         
@@ -25,10 +26,11 @@ class PerfilIcone extends AbstractHelper {
      * @param Entidade $entidade
      * @return html
      */
-    public function __invoke($entidade, $totalEntidades, $grupoResponsavelAtivo = true) {
+    public function __invoke($entidade, $totalEntidades, $grupoResponsavelAtivo = true, $grupoPai = null) {
         $this->setEntidade($entidade);
         $this->setTotalEntidades($totalEntidades);
         $this->setGrupoResponsavelAtivo($grupoResponsavelAtivo);
+        $this->setGrupoPai($grupoPai);
         return $this->renderHtml();
     }
 
@@ -58,9 +60,10 @@ class PerfilIcone extends AbstractHelper {
             $html .= '<div id="" class="col-sm-4 col-md-' . $col . '">';
 
             /* Link com ativacao do modal */
-            $html .= '<a onclick=\'abrirModal("modal-' . $this->getEntidade()->getId() . '", ' . $this->getEntidade()->getId() . ',"perfilSelecionado");\' href="#modal-image" data-effect="mfp-fullscale" class="pageload-link">';
+            $idComposto = $this->getEntidade()->getId() . '_' . $this->getGrupoPai()->getId();
+            $html .= '<a onclick=\'abrirModal("modal-' . $this->getEntidade()->getId() . '", "' . $idComposto . '", "perfilSelecionado");\' href="#modal-image" data-effect="mfp-fullscale" class="pageload-link">';
 
-            $html .= PerfilIcone::htmlPanel(1, $tipoEntidade, $nomeEntidade, $infoEntidade, $this->getGrupoResponsavelAtivo(), $this->getEntidade());
+            $html .= PerfilIcone::htmlPanel(1, $tipoEntidade, $nomeEntidade, $infoEntidade, $this->getGrupoResponsavelAtivo(), $this->getGrupoPai());
 
             /* FIM Link com ativacao do modal */
             $html .= '</a>';
@@ -176,7 +179,7 @@ class PerfilIcone extends AbstractHelper {
      * @param type $tipo
      * @return string
      */
-    public static function htmlPanel($tipo, $tipoId, $nomeEntidade, $infoEntidade, $grupoResponsavelAtivo = true, $entidade = null) {
+    public static function htmlPanel($tipo, $tipoId, $nomeEntidade, $infoEntidade, $grupoResponsavelAtivo = true, $grupoPai = null) {
         $html = '';
         $corDoPanel = PerfilIcone::corDoPanel($tipoId);
         $corDoFooter = PerfilIcone::corDoFooter($tipoId);
@@ -206,12 +209,10 @@ class PerfilIcone extends AbstractHelper {
         }
 
         /* Pegando dados do lider */
-
-        if ($entidade) {
-            $grupoResponsabilidades = $entidade->getGrupo()
-                            ->getGrupoPaiFilhoPai()->getGrupoPaiFilhoPai()->getResponsabilidadesAtivas();
+        if ($grupoPai) {
+            $grupoResponsabilidades = $grupoPai->getResponsabilidadesAtivas();
             $nomeLideres = Menu::montaNomeLideres($grupoResponsabilidades);
-            $html .= '<h2>Discipulo de: ' . $nomeLideres . '</h2>';
+            $html .= '<h3>Discipulo de: ' . $nomeLideres . '</h3>';
         }
 
         $html .= '<i class="fa fa-' . $faIcon . ' text-muted fs40 mt10"></i>';
@@ -260,6 +261,14 @@ class PerfilIcone extends AbstractHelper {
 
     function setGrupoResponsavelAtivo($grupoResponsavelAtivo) {
         $this->grupoResponsavelAtivo = $grupoResponsavelAtivo;
+    }
+
+    function getGrupoPai() {
+        return $this->grupoPai;
+    }
+
+    function setGrupoPai($grupoPai) {
+        $this->grupoPai = $grupoPai;
     }
 
 }

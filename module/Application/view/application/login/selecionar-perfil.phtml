@@ -35,12 +35,15 @@ use Application\Controller\Helper\Constantes;
                     foreach ($this->responsabilidades as $responsabilidade) {
                         /* Grupo da responsabilidades */
                         $grupo = $responsabilidade->getGrupo();
-                        /* Entidades do grupo */
-                        $entidades = $grupo->getEntidade();
-                        foreach ($entidades as $entidade) {
-                            if ($entidade->verificarSeEstaAtivo()) { 
-                                echo $this->perfilIcone($entidade, count($this->responsabilidades), $responsabilidade->verificarSeEstaAtivo());
+                        foreach ($grupo->getGrupoPaiFilhoPai() as $gpfPai) {
+                            $ativo = true;
+                            $entidadeSelecionada = $grupo->getEntidadeAtiva();
+                            if (!$gpfPai->verificarSeEstaAtivo()) {
+                                $ativo = false;
+                                $entidadeSelecionada = $grupo->getEntidadeInativaPorDataInativacao($gpfPai->getData_inativacaoStringPadraoBanco());
                             }
+                            $grupoPai = $gpfPai->getGrupoPaiFilhoPai();
+                            echo $this->perfilIcone($entidadeSelecionada, count($this->responsabilidades), $ativo, $grupoPai);
                         }
                     }
                     ?>

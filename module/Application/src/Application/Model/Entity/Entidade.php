@@ -59,26 +59,33 @@ class Entidade extends CircuitoEntity {
     public function infoEntidade() {
         $resposta = '';
         $grupoSelecionado = $this->getGrupo();
-        if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::SUBEQUIPE) {
-            $numeroSub = '';
-            $aux = 0;
-            while ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::SUBEQUIPE) {   
-                if($aux == 0){
-                    $numeroSub = $grupoSelecionado->getEntidadeAtiva()->getNumero();
-                }else{
-                    $numeroSub = $grupoSelecionado->getEntidadeAtiva()->getNumero().'.'.$numeroSub;
+        if ($this->verificarSeEstaAtivo()) {
+            if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::SUBEQUIPE) {
+                $numeroSub = '';
+                $contagemHierarquica = 0;
+                while ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::SUBEQUIPE) {
+                    if ($contagemHierarquica == 0) {
+                        $numeroSub = $grupoSelecionado->getEntidadeAtiva()->getNumero();
+                    } else {
+                        $numeroSub = $grupoSelecionado->getEntidadeAtiva()->getNumero() . '.' . $numeroSub;
+                    }
+                    $contagemHierarquica++;
+                    $grupoSelecionado = $grupoSelecionado->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai();
+                    if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::EQUIPE) {
+                        break;
+                    }
                 }
-                $aux++;
-                $grupoSelecionado = $grupoSelecionado->getGrupoPaiFilhoPai()->getGrupoPaiFilhoPai();
-                if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::EQUIPE) {
-                    break;
-                }
-                
+                $resposta = $grupoSelecionado->getEntidadeAtiva()->getNome() . "." . $numeroSub;
+            } else {
+                $resposta = $this->getNome();
             }
-            $resposta = $grupoSelecionado->getEntidadeAtiva()->getNome().".".$numeroSub;
-            
-        }  else{
-            $resposta = $this->getNome();
+        } else {
+            /* Entidade Inativa */
+            if ($this->getEntidadeTipo()->getId() === Entidade::SUBEQUIPE) {
+                $resposta = $this->getNumero();
+            } else {
+                $resposta = $this->getNome();
+            }
         }
         return $resposta;
     }

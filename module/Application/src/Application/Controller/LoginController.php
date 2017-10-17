@@ -509,12 +509,6 @@ class LoginController extends CircuitoController {
             $responsabilidadesAtivas = $pessoa->getResponsabilidadesAtivas(true);
             if ($responsabilidadesAtivas) {
                 $view = new ViewModel(array(Constantes::$RESPONSABILIDADES => $responsabilidadesAtivas));
-
-                /* Javascript especifico */
-                $layoutJS = new ViewModel();
-                $layoutJS->setTemplate(Constantes::$TEMPLATE_JS_MODAL_SELECIONAR_PERFIL);
-                $view->addChild($layoutJS, Constantes::$STRING_JS_MODAL_SELECIONAR_PERFIL);
-
                 return $view;
             }
         }
@@ -530,9 +524,10 @@ class LoginController extends CircuitoController {
         if ($request->isPost()) {
             try {
                 $post_data = $request->getPost();
-                $idEntidade = $post_data[Constantes::$ID];
+                $idComposto = $post_data[Constantes::$ID];
+                $explodeId = explode('_', $idComposto);
                 $sessao = new Container(Constantes::$NOME_APLICACAO);
-                $sessao->idEntidadeAtual = $idEntidade;
+                $sessao->idEntidadeAtual = $explodeId[0];
 
                 $response->setContent(Json::encode(
                                 array('response' => 'true')));

@@ -14,6 +14,8 @@ class PerfilDropDown extends AbstractHelper {
 
     private $entidade;
     private $tipo;
+    protected $grupoResponsavelAtivo;
+    protected $grupoPai;
 
     public function __construct() {
         
@@ -28,9 +30,11 @@ class PerfilDropDown extends AbstractHelper {
      * @param int $tipo
      * @return string
      */
-    public function __invoke($entidade, $tipo) {
+    public function __invoke($entidade, $tipo, $grupoResponsavelAtivo = true, $grupoPai = null) {
         $this->setEntidade($entidade);
         $this->setTipo($tipo);
+        $this->setGrupoResponsavelAtivo($grupoResponsavelAtivo);
+        $this->setGrupoPai($grupoPai);
         return $this->renderHtml();
     }
 
@@ -45,7 +49,7 @@ class PerfilDropDown extends AbstractHelper {
         if ($this->getTipo() == 2) {
             /* Modal */
             $html .= '<div id="modal-' . $this->getEntidade()->getId() . '" class="popup-basic admin-form mfp-with-anim mfp-hide">';
-            $html .= PerfilIcone::htmlPanel(2, $tipoEntidade, $nomeEntidade, $infoEntidade);
+            $html .= PerfilIcone::htmlPanel(2, $tipoEntidade, $nomeEntidade, $infoEntidade, $this->getGrupoResponsavelAtivo(), $this->getGrupoPai());
             $html .= '</div>';
         }
 
@@ -89,6 +93,22 @@ class PerfilDropDown extends AbstractHelper {
 
     function setTipo($tipo) {
         $this->tipo = $tipo;
+    }
+
+    function getGrupoResponsavelAtivo() {
+        return $this->grupoResponsavelAtivo;
+    }
+
+    function getGrupoPai() {
+        return $this->grupoPai;
+    }
+
+    function setGrupoResponsavelAtivo($grupoResponsavelAtivo) {
+        $this->grupoResponsavelAtivo = $grupoResponsavelAtivo;
+    }
+
+    function setGrupoPai($grupoPai) {
+        $this->grupoPai = $grupoPai;
     }
 
 }

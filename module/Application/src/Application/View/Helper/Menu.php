@@ -55,17 +55,18 @@ class Menu extends AbstractHelper {
 
         $html .= '<ul class="dropdown-menu list-group dropdown-persist w250" role="menu">';
         /* Laço para mostrar as responsabilidades ativas */
-        if (count($this->view->responsabilidades) > 1) {
-            foreach ($this->view->responsabilidades as $responsabilidade) {
-                /* Grupo da responsabilidades */
-                $grupo = $responsabilidade->getGrupo();
-                /* Entidades do grupo */
-                $entidades = $grupo->getEntidade();
-                foreach ($entidades as $entidade) {
-                    if ($entidade->verificarSeEstaAtivo()) {
-                        $html .= $this->view->perfilDropDown($entidade, 1);
-                    }
+        foreach ($this->view->responsabilidades as $responsabilidade) {
+            /* Grupo da responsabilidades */
+            $grupo = $responsabilidade->getGrupo();
+            foreach ($grupo->getGrupoPaiFilhoPai() as $gpfPai) {
+                $ativo = true;
+                $entidadeSelecionada = $grupo->getEntidadeAtiva();
+                if (!$gpfPai->verificarSeEstaAtivo()) {
+                    $ativo = false;
+                    $entidadeSelecionada = $grupo->getEntidadeInativaPorDataInativacao($gpfPai->getData_inativacaoStringPadraoBanco());
                 }
+                $grupoPai = $gpfPai->getGrupoPaiFilhoPai();
+                $html .= $this->view->perfilDropDown($entidadeSelecionada, 1, $ativo, $grupoPai);
             }
         }
         $html .= '<li class="dropdown-footer">';
@@ -269,14 +270,14 @@ class Menu extends AbstractHelper {
         $html .= 'Atendimento';
         $html .= '</a>';
         $html .= '</li>';
-        
+
 //                $html .= '<li>';
 //                $html .= '<a href="/cadastro' . Constantes::$PAGINA_ATIVAR_FICHA_REVISAO . '">';
 //                $html .= '<span class="fa fa-users"></span>';
 //                $html .= 'Fichas Revisão de Vidas';
 //                $html .= '</a>';
 //                $html .= '</li>';
-           
+
         $html .= '</ul>';
         $html .= '</li>';
 
@@ -377,13 +378,15 @@ class Menu extends AbstractHelper {
         foreach ($this->view->responsabilidades as $responsabilidade) {
             /* Grupo da responsabilidades */
             $grupo = $responsabilidade->getGrupo();
-            /* Entidades do grupo */
-
-            $entidades = $grupo->getEntidade();
-            foreach ($entidades as $entidade) {
-                if ($entidade->verificarSeEstaAtivo()) {
-                    echo $this->view->perfilDropDown($entidade, 2);
+            foreach ($grupo->getGrupoPaiFilhoPai() as $gpfPai) {
+                $ativo = true;
+                $entidadeSelecionada = $grupo->getEntidadeAtiva();
+                if (!$gpfPai->verificarSeEstaAtivo()) {
+                    $ativo = false;
+                    $entidadeSelecionada = $grupo->getEntidadeInativaPorDataInativacao($gpfPai->getData_inativacaoStringPadraoBanco());
                 }
+                $grupoPai = $gpfPai->getGrupoPaiFilhoPai();
+                $html .= $this->view->perfilDropDown($entidadeSelecionada, 2, $ativo, $grupoPai);
             }
         }
         $html .= '</div>';

@@ -4,7 +4,7 @@
  * Descricao: Função para abrir o modal com loader
  */
 
-function abrirModal(idIcone, idResponsabilidade, acao) {
+function abrirModal(idIcone, id, acao) {
     $.magnificPopup.open({
         removalDelay: 500, //delay removal by X to allow out-animation,
         items: {
@@ -25,7 +25,7 @@ function abrirModal(idIcone, idResponsabilidade, acao) {
     $.post(
             url,
             {
-                id: idResponsabilidade,
+                id: id,
             },
             function (data) {
                 if (data.response) {
