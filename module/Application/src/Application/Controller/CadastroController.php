@@ -2291,7 +2291,7 @@ class CadastroController extends CircuitoController {
         $repositorioORM->getCursoORM()->persistir($disciplina, false);
         $sessao->idSessao = $disciplina->getCurso_id();
         return $this->redirect()->toRoute(Constantes::$ROUTE_CADASTRO, array(
-                    Constantes::$PAGINA => Constantes::$PAGINA_DISCIPLINA_LISTAR,
+                    Constantes::$PAGINA => Constantes::$PAGINA_DISCIPLINA_LISTAR,  
         ));
     }
 

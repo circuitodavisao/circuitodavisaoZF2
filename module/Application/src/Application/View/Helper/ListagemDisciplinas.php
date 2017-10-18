@@ -69,15 +69,19 @@ class ListagemDisciplinas extends AbstractHelper {
             foreach ($disciplinasAtivas as $disciplina) {
                 $html .= '<tr>';
 
-
+ 
                 $stringNomeDaFuncaoOnClickInserir = 'funcaoCadastro("' . Constantes::$PAGINA_FICHA_REVISAO . '", ' . $disciplina->getId() . ')';
                 $stringNomeDaFuncaoOnClick = 'funcaoCadastro("' . Constantes::$PAGINA_DISCIPLINA_EDITAR . '", ' . $disciplina->getId() . ')';
                 $stringNomeDaFuncaoOnClickExclusao = 'funcaoCadastro("' . Constantes::$PAGINA_DISCIPLINA_EXCLUSAO . '", ' . $disciplina->getId() . ')';
                 $stringNomeDaFuncaoOnClickIncluirAlunos = 'funcaoCadastro("' . Constantes::$PAGINA_LISTAGEM_REVISAO_TURMA . '",' . $disciplina->getId() . ')';
 
                 $html .= '<td class="text-center">' . $disciplina->getPosicao() . '</td>';
-                $html .= '<td class="text-center">' . $disciplina->getNome() . '</td>';
-
+                if (strlen($disciplina->getNome()) > 20) {
+                    $nome = substr($disciplina->getNome(), 0, 15) . '..';
+                } else {
+                    $nome = $disciplina->getNome();
+                }
+                $html .= '<td class="text-center">' . $nome . '</td>';
                 $html .= '<td class="text-center">';
                 $html .= $this->view->botaoLink(Constantes::$STRING_ICONE_TIMES, Constantes::$STRING_HASHTAG, 9, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClickExclusao));
                 $html .= $this->view->botaoLink(Constantes::$STRING_ICONE_PENCIL, Constantes::$STRING_HASHTAG, 3, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClick));

@@ -81,7 +81,17 @@ function validarLancamentoCadastrarDisciplina(form) {
         if (mensagem == '') {
             mensagem = 'Nome pode ter no máximo 80 caracteres';
         } else {
-            mensagem += ', Nome pode ter no máximo 80 caracteres';
+            mensagem += ', Nome pode ter no máximo 80 caracteres'; 
+        }
+    }
+    
+    if (nome.length < 3) {
+
+        temErro = true;
+        if (mensagem == '') {
+            mensagem = 'Nome tem que conter no mínimo 3 caracteres';
+        } else {
+            mensagem += ', Nome tem que conter no mínimo 3 caracteres';
         }
     }
     
