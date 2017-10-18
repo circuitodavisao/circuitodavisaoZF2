@@ -316,8 +316,9 @@ class ListagemDePessoasComEventos extends AbstractHelper {
                     $mostrarParaLancar = true;
                 }
             }
-            if ($this->view->periodo <= 0) {
-                /* Verificar se o dia do culto é igual ou menor que o dia atual */
+
+            if ($this->view->periodo == 0) {
+                /* Verificar se o dia do evento é igual ou menor que o dia atual */
                 if ($diaDaSemanaDoEvento === 1) {
                     $diaDaSemanaDoEvento = 7; // domingo
                 } else {
@@ -327,7 +328,9 @@ class ListagemDePessoasComEventos extends AbstractHelper {
                     $mostrarParaLancar = true;
                 }
             }
-
+            if ($this->view->periodo < 0) {
+                $mostrarParaLancar = true;
+            }
             $html .= '<td ' . $style . ' class="text-center">';
             $html .= '<div class="btn-group">';
 
