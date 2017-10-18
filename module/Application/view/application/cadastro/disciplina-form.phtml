@@ -58,7 +58,7 @@ $form->setAttribute(Constantes::$ACTION, $this->url(Constantes::$ROUTE_CADASTRO,
     
 function validarLancamentoCadastrarDisciplina(form) {
     var nome = $('#nome').val();
-     
+    var posicao = $('#posicao').val(); 
 
     var temErro = false;
     var divMensagens = $('#divMensagens');
@@ -83,6 +83,14 @@ function validarLancamentoCadastrarDisciplina(form) {
         } else {
             mensagem += ', Nome pode ter no máximo 80 caracteres';
         }
+    }
+    
+    if (posicao == 0) {
+        temErro = true;
+        if (mensagem !== '') {
+            mensagem += ', ';
+        }
+        mensagem += 'Posicao';
     }
     
         
