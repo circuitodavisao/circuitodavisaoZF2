@@ -278,7 +278,7 @@ class RelatorioController extends CircuitoController {
 
             if (count($grupoFilho) > 0) {
                 $relatorioAtendimento = Grupo::relatorioDeAtendimentosAbaixo(
-                                $grupoFilho->getGrupoPaiFilhoFilhos(), $mes, $ano
+                                $grupoFilho->getGrupoPaiFilhoFilhosAtivos(), $mes, $ano
                 );
             } else {
                 $relatorioAtendimento[0] = -2;

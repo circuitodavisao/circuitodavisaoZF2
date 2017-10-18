@@ -238,7 +238,7 @@ class Grupo extends CircuitoEntity {
         $grupoPaiFilhoPaiAtivo = null;
         /* Responsabilidades */
         $grupoPaiFilhoPais = $this->getGrupoPaiFilhoPai();
-        if ($grupoPaiFilhoPais) {
+        if (count($grupoPaiFilhoPais) > 0) {
             /* Verificar responsabilidades ativas */
             foreach ($grupoPaiFilhoPais as $gpp) {
                 if ($gpp->verificarSeEstaAtivo()) {
