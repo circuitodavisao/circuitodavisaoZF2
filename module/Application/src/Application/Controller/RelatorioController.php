@@ -66,7 +66,7 @@ class RelatorioController extends CircuitoController {
             'periodo' => $periodo,
         );
 
-        $grupoPaiFilhoFilhos = $grupo->getGrupoPaiFilhoFilhosAtivos();
+        $grupoPaiFilhoFilhos = $grupo->getGrupoPaiFilhoFilhosAtivos($periodo);
         if ($grupoPaiFilhoFilhos) {
             $relatorioDiscipulos = array();
             foreach ($grupoPaiFilhoFilhos as $gpFilho) {

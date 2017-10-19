@@ -70,8 +70,12 @@ class Entidade extends CircuitoEntity {
                         $numeroSub = $grupoSelecionado->getEntidadeAtiva()->getNumero() . '.' . $numeroSub;
                     }
                     $contagemHierarquica++;
-                    $grupoSelecionado = $grupoSelecionado->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai();
-                    if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::EQUIPE) {
+                    if ($grupoSelecionado->getGrupoPaiFilhoPaiAtivo()) {
+                        $grupoSelecionado = $grupoSelecionado->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai();
+                        if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::EQUIPE) {
+                            break;
+                        }
+                    } else {
                         break;
                     }
                 }

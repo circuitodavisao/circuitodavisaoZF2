@@ -42,7 +42,7 @@ class PrincipalController extends CircuitoController {
         $dados['relatorio'] = $relatorio;
         $dados['relatorioEquipe'] = $relatorioEquipe;
 
-        $grupoPaiFilhoFilhos = $grupo->getGrupoPaiFilhoFilhosAtivos();
+        $grupoPaiFilhoFilhos = $grupo->getGrupoPaiFilhoFilhosAtivos($periodo);
         if ($grupoPaiFilhoFilhos) {
             $relatorioDiscipulos = array();
             $relatorioDiscipulosPessoal = array();
@@ -61,7 +61,7 @@ class PrincipalController extends CircuitoController {
                     }
                 }
 
-                $grupoPaiFilhoFilhos144 = $grupoFilho->getGrupoPaiFilhoFilhosAtivos();
+                $grupoPaiFilhoFilhos144 = $grupoFilho->getGrupoPaiFilhoFilhosAtivos($periodo);
                 if ($grupoPaiFilhoFilhos144) {
                     foreach ($grupoPaiFilhoFilhos144 as $gpFilho144) {
                         $grupoFilho144 = $gpFilho144->getGrupoPaiFilhoFilho();
@@ -75,7 +75,6 @@ class PrincipalController extends CircuitoController {
                     }
                 }
             }
-
             $dados['discipulos'] = $discipulos;
             $dados['discipulosRelatorio'] = $relatorioDiscipulos;
             $dados['discipulosRelatorioPessoal'] = $relatorioDiscipulosPessoal;
