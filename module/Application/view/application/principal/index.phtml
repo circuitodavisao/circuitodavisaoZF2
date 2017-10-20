@@ -9,12 +9,12 @@ use Application\Controller\RelatorioController;
         </div>
         <div class="panel-body pn">
             <table class="table mbn tc-med-1 tc-bold-last">
-                <tr>
-                    <td colspan="3" class="text-center">Celulas N&atilde;o Realizadas</td>
-                </tr>
+
 
                 <?php
                 if ($this->discipulos) {
+                    $html = '';
+                    $totalDeCelulasNaoRealizadas = 0;
                     foreach ($this->discipulos as $gpFilho) {
                         $grupoFilho = $gpFilho->getGrupoPaiFilhoFilho();
                         $nomeLideres = $grupoFilho->getNomeLideresAtivos();
@@ -22,14 +22,14 @@ use Application\Controller\RelatorioController;
                         $relatorioDiscipuloPessoal = $this->discipulosRelatorioPessoal[$grupoFilho->getId()];
                         $diferenca = $relatorioDiscipulo['celulaQuantidade'] - $relatorioDiscipulo['celulaRealizadas'];
                         $diferencaPessoal = $relatorioDiscipuloPessoal['celulaQuantidade'] - $relatorioDiscipuloPessoal['celulaRealizadas'];
-                        echo '<tr class="dark">';
-                        echo '<td>EQUIPE - ' . $nomeLideres . '</td>';
-                        echo '<td></td>';
-                        echo '</tr>';
-                        echo '<tr>';
-                        echo '<td class="text-right">' . $nomeLideres . '</td>';
-                        echo '<td>' . $diferencaPessoal . '</td>';
-                        echo '</tr>';
+                        $html .= '<tr class="dark">';
+                        $html .= '<td>EQUIPE - ' . $nomeLideres . '</td>';
+                        $html .= '<td></td>';
+                        $html .= '</tr>';
+                        $html .= '<tr>';
+                        $html .= '<td class="text-right">' . $nomeLideres . '</td>';
+                        $html .= '<td>' . $diferencaPessoal . '</td>';
+                        $html .= '</tr>';
                         $grupoPaiFilhoFilhos144 = $grupoFilho->getGrupoPaiFilhoFilhosAtivos($this->periodo);
                         if ($grupoPaiFilhoFilhos144) {
                             foreach ($grupoPaiFilhoFilhos144 as $gpFilho144) {
@@ -38,21 +38,26 @@ use Application\Controller\RelatorioController;
                                 $relatorioDiscipulo144 = $this->discipulosRelatorio[$grupoFilho144->getId()];
                                 if ($relatorioDiscipulo144) {
                                     $diferenca144 = $relatorioDiscipulo144['celulaQuantidade'] - $relatorioDiscipulo144['celulaRealizadas'];
-                                    echo '<tr>';
-                                    echo '<td class="text-right">' . $nomeLideres144 . '</td>';
-                                    echo '<td>' . $diferenca144 . '</td>';
-                                    echo '</tr>';
+                                    $html .= '<tr>';
+                                    $html .= '<td class="text-right">' . $nomeLideres144 . '</td>';
+                                    $html .= '<td>' . $diferenca144 . '</td>';
+                                    $html .= '</tr>';
                                 }
                             }
                         }
-                        echo '<tr class="">';
-                        echo '<td class="text-right">TOTAL</td>';
-                        echo '<td>' . $diferenca . '</td>';
-                        echo '</tr>';
-                        echo '<tr>';
-                        echo '<td colspan="2"></td>';
-                        echo '</tr>';
+                        $html .= '<tr class="">';
+                        $html .= '<td class="text-right">TOTAL</td>';
+                        $html .= '<td>' . $diferenca . '</td>';
+                        $html .= '</tr>';
+                        $html .= '<tr>';
+                        $html .= '<td colspan="2"></td>';
+                        $html .= '</tr>';
+                        $totalDeCelulasNaoRealizadas += $diferenca;
                     }
+                    echo '<tr>';
+                    echo '<td colspan="3" class="text-center">Celulas <b>N&atilde;o</b> Realizadas: ' . $totalDeCelulasNaoRealizadas . '</td>';
+                    echo '</tr>';
+                    echo $html;
                 }
                 ?>
             </table>

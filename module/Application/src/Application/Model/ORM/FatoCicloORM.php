@@ -175,10 +175,8 @@ class FatoCicloORM extends CircuitoORM {
                 $numeroIdentificador = str_pad($grupoSelecionado->getId(), $tamanho, 0, STR_PAD_LEFT) . $numeroIdentificador;
                 if ($grupoSelecionado->getGrupoPaiFilhoPaiAtivo()) {
                     $grupoSelecionado = $grupoSelecionado->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai();
-                    break;
                 } else {
                     $grupoSelecionado = $grupoSelecionado->getGrupoPaiFilhoPaiInativo()->getGrupoPaiFilhoPai();
-                    break;
                 }
             }
             if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::EQUIPE) {
