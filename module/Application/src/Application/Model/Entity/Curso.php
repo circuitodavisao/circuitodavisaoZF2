@@ -29,7 +29,7 @@ class Curso extends CircuitoEntity {
     protected $disciplina;
     
     /**
-     * @ORM\ManyToOne(targetEntity="Pessoa", inversedBy="Curso")
+     * @ORM\ManyToOne(targetEntity="Pessoa", inversedBy="curso")
      * @ORM\JoinColumn(name="pessoa_id", referencedColumnName="id")
      */
     private $pessoa;

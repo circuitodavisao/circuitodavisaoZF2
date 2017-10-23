@@ -8,31 +8,33 @@ namespace Application\Model\Entity;
  * Descricao: Entidade anotada da tabela disciplina
  */
 
-use Doctrine\Common\Collections\ArrayCollection; 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity 
  * @ORM\Table(name="disciplina")
  */
-class Disciplina extends CircuitoEntity {  
-    
+class Disciplina extends CircuitoEntity {
+
     /** @ORM\Column(type="string") */
     protected $nome;
-    
+
     /** @ORM\Column(type="integer") */
     protected $curso_id;
-    
+
     /** @ORM\Column(type="integer") */
     protected $posicao;
-    
+
     /**
-     * @ORM\ManyToOne(targetEntity="Curso", inversedBy="Disciplina")
+     * @ORM\ManyToOne(targetEntity="Curso", inversedBy="disciplina")
      * @ORM\JoinColumn(name="curso_id", referencedColumnName="id")
      */
     protected $curso;
-    
-    
+
+    public function __construct() {
+        
+    }
+
     function getNome() {
         return $this->nome;
     }
@@ -64,7 +66,5 @@ class Disciplina extends CircuitoEntity {
     function setCurso($curso) {
         $this->curso = $curso;
     }
-
-
 
 }

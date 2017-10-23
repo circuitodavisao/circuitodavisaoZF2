@@ -46,7 +46,7 @@ $somaQuantidadeCelulasRealizadas = 0;
                             </th>                    
                         </tr>
                         <tr>
-                            <th class="hidden-xs">#</th>
+                            <th>#</th>
                             <th>TIMES</th>
                             <?php
                             if ($this->tipoRelatorio == 1) {
@@ -75,7 +75,7 @@ $somaQuantidadeCelulasRealizadas = 0;
                     <tbody>
                         <?php
                         echo '<tr>';
-                        echo '<td class = "hidden-xs"></td>';
+                        echo '<td></td>';
                         echo '<td>MEU</td>';
                         if ($this->tipoRelatorio == 1) {
                             echo '<td class = "hidden-xs">' . $this->relatorio['quantidadeLideres'] . '</td>';
@@ -132,8 +132,8 @@ $somaQuantidadeCelulasRealizadas = 0;
                                     $linhaDiscipulo = $relatorioDiscipulo['celulaPerformanceClass'];
                                 }
 
-                                echo '<tr class = "' . $linhaDiscipulo . '">';
-                                echo '<td class = "hidden-xs">' . $contagemRanking . '°</td>';
+                                echo '<tr class="' . $linhaDiscipulo . '">';
+                                echo '<td>' . $contagemRanking . '°</td>';
                                 echo '<td class="text-left">' . $grupoFilho->getNomeLideresAtivos() . '</td>';
 
                                 if ($this->tipoRelatorio == 1) {
@@ -197,7 +197,7 @@ $somaQuantidadeCelulasRealizadas = 0;
                             $performance = $somaGeral[$dimensaoTipoCelula] / $meta * 100;
                         }
                         echo '<tr>';
-                        echo '<td class = "hidden-xs"></td>';
+                        echo '<td></td>';
                         echo '<td>TOTAL</td>';
                         if ($this->tipoRelatorio == 1) {
                             echo '<td class = "hidden-xs">' . $somaGeralLideres . '</td>';
