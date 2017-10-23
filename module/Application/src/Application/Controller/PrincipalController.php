@@ -42,7 +42,7 @@ class PrincipalController extends CircuitoController {
         $dados['relatorio'] = $relatorio;
         $dados['relatorioEquipe'] = $relatorioEquipe;
 
-        $grupoPaiFilhoFilhos = $grupo->getGrupoPaiFilhoFilhosAtivos();
+        $grupoPaiFilhoFilhos = $grupo->getGrupoPaiFilhoFilhosAtivos($periodo);
         if ($grupoPaiFilhoFilhos) {
             $relatorioDiscipulos = array();
             $relatorioDiscipulosPessoal = array();
@@ -50,8 +50,7 @@ class PrincipalController extends CircuitoController {
             foreach ($grupoPaiFilhoFilhos as $gpFilho) {
                 $grupoFilho = $gpFilho->getGrupoPaiFilhoFilho();
                 $numeroIdentificador = $repositorioORM->getFatoCicloORM()->montarNumeroIdentificador($repositorioORM, $grupoFilho);
-                $tipoRelatorioSomado = 2;
-                $relatorio12 = RelatorioController::montaRelatorio($repositorioORM, $numeroIdentificador, $periodo, $tipoRelatorioSomado);
+                $relatorio12 = RelatorioController::montaRelatorio($repositorioORM, $numeroIdentificador, $periodo, $tipoRelatorioEquipe);
                 $relatorio12Pessoal = RelatorioController::montaRelatorio($repositorioORM, $numeroIdentificador, $periodo, $tipoRelatorioPessoal);
                 if ($relatorio12['celulaQuantidade'] > 0) {
                     if ($relatorio12['celulaRealizadas'] < $relatorio12['celulaQuantidade']) {
@@ -61,12 +60,12 @@ class PrincipalController extends CircuitoController {
                     }
                 }
 
-                $grupoPaiFilhoFilhos144 = $grupoFilho->getGrupoPaiFilhoFilhosAtivos();
+                $grupoPaiFilhoFilhos144 = $grupoFilho->getGrupoPaiFilhoFilhosAtivos($periodo);
                 if ($grupoPaiFilhoFilhos144) {
                     foreach ($grupoPaiFilhoFilhos144 as $gpFilho144) {
                         $grupoFilho144 = $gpFilho144->getGrupoPaiFilhoFilho();
                         $numeroIdentificador144 = $repositorioORM->getFatoCicloORM()->montarNumeroIdentificador($repositorioORM, $grupoFilho144);
-                        $relatorio144 = RelatorioController::montaRelatorio($repositorioORM, $numeroIdentificador144, $periodo, $tipoRelatorioSomado);
+                        $relatorio144 = RelatorioController::montaRelatorio($repositorioORM, $numeroIdentificador144, $periodo, $tipoRelatorioEquipe);
                         if ($relatorio144['celulaQuantidade'] > 0) {
                             if ($relatorio144['celulaRealizadas'] < $relatorio144['celulaQuantidade']) {
                                 $relatorioDiscipulos[$grupoFilho144->getId()] = $relatorio144;
@@ -75,7 +74,6 @@ class PrincipalController extends CircuitoController {
                     }
                 }
             }
-
             $dados['discipulos'] = $discipulos;
             $dados['discipulosRelatorio'] = $relatorioDiscipulos;
             $dados['discipulosRelatorioPessoal'] = $relatorioDiscipulosPessoal;

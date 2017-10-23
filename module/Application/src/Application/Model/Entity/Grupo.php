@@ -212,10 +212,10 @@ class Grupo extends CircuitoEntity {
     }
 
     /**
-     * Recupera os filhos ativos
+     * Recupera os filhos ativos por periodo
      * @return Pessoa[]
      */
-    function getGrupoPaiFilhoFilhosAtivos() {
+    function getGrupoPaiFilhoFilhosAtivos($periodo = -1) {
         $grupoPaiFilhoFilhosAtivos = array();
         /* Responsabilidades */
         $grupoPaiFilhoFilhos = $this->getGrupoPaiFilhoFilhos();
@@ -224,6 +224,15 @@ class Grupo extends CircuitoEntity {
             foreach ($grupoPaiFilhoFilhos as $gpf) {
                 if ($gpf->verificarSeEstaAtivo()) {
                     $grupoPaiFilhoFilhosAtivos[] = $gpf;
+                } else {
+                    /* Inativo */
+                    $arrayPeriodo = Funcoes::montaPeriodo($periodo);
+                    $stringComecoDoPeriodo = $arrayPeriodo[3] . '-' . $arrayPeriodo[2] . '-' . $arrayPeriodo[1];
+                    $dataDoInicioDoPeriodoParaComparar = strtotime($stringComecoDoPeriodo);
+                    $dataDoGrupoGrupoPaiFilhoInativadoParaComparar = strtotime($gpf->getData_inativacaoStringPadraoBanco());
+                    if ($dataDoGrupoGrupoPaiFilhoInativadoParaComparar >= $dataDoInicioDoPeriodoParaComparar) {
+                        $grupoPaiFilhoFilhosAtivos[] = $gpf;
+                    }
                 }
             }
         }
@@ -248,6 +257,26 @@ class Grupo extends CircuitoEntity {
             }
         }
         return $grupoPaiFilhoPaiAtivo;
+    }
+
+    /**
+     * Recupera os filhos ativos
+     * @return Pessoa[]
+     */
+    function getGrupoPaiFilhoPaiInativo() {
+        $grupoPaiFilhoPaiInativo = null;
+        /* Responsabilidades */
+        $grupoPaiFilhoPais = $this->getGrupoPaiFilhoPai();
+        if (count($grupoPaiFilhoPais) > 0) {
+            /* Verificar responsabilidades ativas */
+            foreach ($grupoPaiFilhoPais as $gpp) {
+                if (!$gpp->verificarSeEstaAtivo()) {
+                    $grupoPaiFilhoPaiInativo = $gpp;
+                    break;
+                }
+            }
+        }
+        return $grupoPaiFilhoPaiInativo;
     }
 
     function getGrupoPaiFilhoPaiPorDataInativacao($dataInativacao) {
