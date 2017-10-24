@@ -55,11 +55,15 @@ class CabecalhoDePeriodos extends AbstractHelper {
                 $iconeFlechaDireita, $funcaoOnclickDireita, BotaoSimples::botaoMuitoPequenoImportante, BotaoSimples::posicaoAoCentro);
 
         $html .= '<div class="center-block text-center mb10"> ';
-        $html .= $botaoEsquerdo;
+        if ($this->view->mostrarBotaoPeriodoAnterior) {
+            $html .= $botaoEsquerdo;
+        }
         $html .= Constantes::$NBSP;
         $html .= $this->view->translate(Constantes::$TRADUCAO_PERIODO) . '&nbsp;-&nbsp;' . Funcoes::montaPeriodo($periodo)[0];
         $html .= Constantes::$NBSP;
-        $html .= $botaoDireito;
+        if ($this->view->mostrarBotaoPeriodoAfrente) {
+            $html .= $botaoDireito;
+        }
         $html .= '</div>';
         return $html;
     }

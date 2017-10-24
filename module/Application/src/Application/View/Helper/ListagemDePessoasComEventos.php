@@ -304,6 +304,11 @@ class ListagemDePessoasComEventos extends AbstractHelper {
             }
 
             $diaDaSemanaDoEvento = (int) $grupoEvento->getEvento()->getDia();
+            if ($diaDaSemanaDoEvento === 1) {
+                $diaDaSemanaDoEvento = 7; // domingo
+            } else {
+                $diaDaSemanaDoEvento--;
+            }
             /* Validação Evento mostrar ou não */
             $mostrarParaLancar = false;
             if ($this->view->periodo < 0) {
@@ -319,11 +324,6 @@ class ListagemDePessoasComEventos extends AbstractHelper {
 
             if ($this->view->periodo == 0) {
                 /* Verificar se o dia do evento é igual ou menor que o dia atual */
-                if ($diaDaSemanaDoEvento === 1) {
-                    $diaDaSemanaDoEvento = 7; // domingo
-                } else {
-                    $diaDaSemanaDoEvento--;
-                }
                 if ($diaDaSemanaDoEvento <= $this->getDiaDeSemanaHoje()) {
                     $mostrarParaLancar = true;
                 }

@@ -50,6 +50,41 @@ class LancamentoController extends CircuitoController {
 
         $periodo = $this->getEvent()->getRouteMatch()->getParam(Constantes::$ID, 0);
 
+        /* Verificando se posso recuar no periodo */
+        $mostrarBotaoPeriodoAnterior = true;
+        $mostrarBotaoPeriodoAfrente = false;
+        $arrayPeriodo = Funcoes::montaPeriodo($periodo);
+        $stringComecoDoPeriodo = $arrayPeriodo[3] . '-' . $arrayPeriodo[2] . '-' . $arrayPeriodo[1];
+//        $stringFimDoPeriodo = $arrayPeriodo[6] . '-' . $arrayPeriodo[5] . '-' . $arrayPeriodo[4];
+        $dataDoInicioDoPeriodoParaComparar = strtotime($stringComecoDoPeriodo);
+//        $dataDoFimDoPeriodoParaComparar = strtotime($stringFimDoPeriodo);
+
+        if ($grupo->getGrupoPaiFilhoPaiAtivo()) {
+            $dataDoGrupoPaiFilhoCriacaoParaComparar = strtotime($grupo->getGrupoPaiFilhoPaiAtivo()->getData_criacaoStringPadraoBanco());
+            if ($dataDoGrupoPaiFilhoCriacaoParaComparar >= $dataDoInicioDoPeriodoParaComparar) {
+                $mostrarBotaoPeriodoAnterior = false;
+            }
+        }
+
+        /* Redirecionar ao tentar acessar o que nao deve */
+//        $retornaAoInicioDoLancamento = false;
+//        if ($dataDoGrupoGrupoPaiFilhoCriacaoParaComparar < $dataDoInicioDoPeriodoParaComparar) {
+//            $retornaAoInicioDoLancamento = true;
+//        }
+//        if ($dataDoGrupoGrupoPaiFilhoCriacaoParaComparar > $dataDoFimDoPeriodoParaComparar) {
+//            $retornaAoInicioDoLancamento = true;
+//        }
+//        if ($retornaAoInicioDoLancamento) {
+//            return $this->redirect()->toRoute(Constantes::$ROUTE_LANCAMENTO, array(
+//                        Constantes::$ACTION => 'Arregimentacao',
+//            ));
+//        }
+
+        if ($periodo < 0) {
+            $mostrarBotaoPeriodoAfrente = true;
+        }
+
+
         $grupoEventoNoPeriodo = $grupo->getGrupoEventoNoPeriodo($periodo);
 
         $contagemDePessoasCadastradas = count($grupo->getGrupoPessoasNoPeriodo($periodo));
@@ -57,9 +92,6 @@ class LancamentoController extends CircuitoController {
         if ($contagemDePessoasCadastradas > Constantes::$QUANTIDADE_MAXIMA_PESSOAS_NO_LANÇAMENTO) {
             $validacaoPessoasCadastradas = 1;
         }
-        
-        /* Verificando se a entidade esta ativa */
-        $entidade;
 
         $view = new ViewModel(
                 array(
@@ -67,6 +99,8 @@ class LancamentoController extends CircuitoController {
             Constantes::$GRUPO => $grupo,
             Constantes::$PERIODO => $periodo,
             Constantes::$VALIDACAO => $validacaoPessoasCadastradas,
+            'mostrarBotaoPeriodoAnterior' => $mostrarBotaoPeriodoAnterior,
+            'mostrarBotaoPeriodoAfrente' => $mostrarBotaoPeriodoAfrente,
                 )
         );
 
@@ -470,17 +504,20 @@ class LancamentoController extends CircuitoController {
         $entidade = $repositorioORM->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
         $grupo = $entidade->getGrupo();
 
-        $gruposAbaixo = null;
-        if ($grupo->getGrupoPaiFilhoFilhosAtivos()) {
-            $gruposAbaixo = $grupo->getGrupoPaiFilhoFilhosAtivos();
-        }
-
         $parametro = $this->params()->fromRoute(Constantes::$ID);
+        $periodo = 0;
         if (empty($parametro)) {
             $abaSelecionada = 1;
         } else {
+            $periodo = -1;
             $abaSelecionada = $parametro;
         }
+
+        $gruposAbaixo = null;
+        if ($grupo->getGrupoPaiFilhoFilhosAtivos($periodo)) {
+            $gruposAbaixo = $grupo->getGrupoPaiFilhoFilhosAtivos($periodo);
+        }
+
         $mesSelecionado = Funcoes::mesPorAbaSelecionada($abaSelecionada);
         $anoSelecionado = Funcoes::anoPorAbaSelecionada($abaSelecionada);
 

@@ -60,10 +60,14 @@ class RelatorioController extends CircuitoController {
 
         $tipoRelatorio = (int) $this->params()->fromRoute('tipoRelatorio');
 
+        $mostrarBotaoPeriodoAnterior = true;
+        $mostrarBotaoPeriodoAfrente = true;
         $dados = array(
             RelatorioController::stringRelatorio => $relatorio,
             'tipoRelatorio' => $tipoRelatorio,
             'periodo' => $periodo,
+            'mostrarBotaoPeriodoAnterior' => $mostrarBotaoPeriodoAnterior,
+            'mostrarBotaoPeriodoAfrente' => $mostrarBotaoPeriodoAfrente,
         );
 
         $grupoPaiFilhoFilhos = $grupo->getGrupoPaiFilhoFilhosAtivos($periodo);
@@ -91,7 +95,6 @@ class RelatorioController extends CircuitoController {
         $idEntidadeAtual = $sessao->idEntidadeAtual;
         $entidade = $repositorioORM->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
         $grupo = $entidade->getGrupo();
-        $gruposAbaixo = $grupo->getGrupoPaiFilhoFilhosAtivos();
 
         /* Verificar data de cadastro da responsabilidade */
         $validacaoNesseMes = 0;
@@ -102,11 +105,14 @@ class RelatorioController extends CircuitoController {
 
         /* Aba selecionada e ciclo */
         $parametro = $this->params()->fromRoute(Constantes::$ID);
+        $periodo = 0;
         if (empty($parametro)) {
             $abaSelecionada = 1;
         } else {
+            $periodo = -1;
             $abaSelecionada = $parametro;
         }
+        $gruposAbaixo = $grupo->getGrupoPaiFilhoFilhosAtivos($periodo);
         $mesSelecionado = Funcoes::mesPorAbaSelecionada($abaSelecionada);
         $anoSelecionado = Funcoes::anoPorAbaSelecionada($abaSelecionada);
 

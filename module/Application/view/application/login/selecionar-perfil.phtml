@@ -38,12 +38,14 @@ use Application\Controller\Helper\Constantes;
                         foreach ($grupo->getGrupoPaiFilhoPai() as $gpfPai) {
                             $ativo = true;
                             $entidadeSelecionada = $grupo->getEntidadeAtiva();
-                            if (!$gpfPai->verificarSeEstaAtivo()) {
-                                $ativo = false;
-                                $entidadeSelecionada = $grupo->getEntidadeInativaPorDataInativacao($gpfPai->getData_inativacaoStringPadraoBanco());
+//                            if (!$gpfPai->verificarSeEstaAtivo()) {
+//                                $ativo = false;
+//                                $entidadeSelecionada = $grupo->getEntidadeInativaPorDataInativacao($gpfPai->getData_inativacaoStringPadraoBanco());
+//                            }
+                            if ($gpfPai->verificarSeEstaAtivo()) {
+                                $grupoPai = $gpfPai->getGrupoPaiFilhoPai();
+                                echo $this->perfilIcone($entidadeSelecionada, count($this->responsabilidades), $ativo, $grupoPai);
                             }
-                            $grupoPai = $gpfPai->getGrupoPaiFilhoPai();
-                            echo $this->perfilIcone($entidadeSelecionada, count($this->responsabilidades), $ativo, $grupoPai);
                         }
                     }
                     ?>
