@@ -58,11 +58,14 @@ class LancamentoController extends CircuitoController {
         $stringFimDoPeriodo = $arrayPeriodo[3] . '-' . $arrayPeriodo[2] . '-' . $arrayPeriodo[1];
         $dataDoInicioDoPeriodoParaComparar = strtotime($stringComecoDoPeriodo);
 //        $dataDoFimDoPeriodoParaComparar = strtotime($stringFimDoPeriodo);
-        $dataDoGrupoGrupoPaiFilhoCriacaoParaComparar = strtotime($grupo->getGrupoPaiFilhoPai()->first()->getData_criacaoStringPadraoBanco());
-        if ($dataDoGrupoGrupoPaiFilhoCriacaoParaComparar >= $dataDoInicioDoPeriodoParaComparar) {
-            $mostrarBotaoPeriodoAnterior = false;
+
+        if ($grupo->getGrupoPaiFilhoPaiAtivo()) {
+            $dataDoGrupoPaiFilhoCriacaoParaComparar = strtotime($grupo->getGrupoPaiFilhoPaiAtivo()->getData_criacaoStringPadraoBanco());
+            if ($dataDoGrupoPaiFilhoCriacaoParaComparar >= $dataDoInicioDoPeriodoParaComparar) {
+                $mostrarBotaoPeriodoAnterior = false;
+            }
         }
-        
+
         /* Redirecionar ao tentar acessar o que nao deve */
 //        $retornaAoInicioDoLancamento = false;
 //        if ($dataDoGrupoGrupoPaiFilhoCriacaoParaComparar < $dataDoInicioDoPeriodoParaComparar) {
