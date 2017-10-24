@@ -4,7 +4,6 @@ namespace Application\Controller;
 
 use Application\Controller\Helper\Constantes;
 use Application\Controller\Helper\Funcoes;
-use Application\Model\Entity\EntidadeTipo;
 use Application\Model\ORM\RepositorioORM;
 use Exception;
 use Zend\Json\Json;

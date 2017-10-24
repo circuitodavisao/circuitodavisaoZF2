@@ -50,6 +50,39 @@ class LancamentoController extends CircuitoController {
 
         $periodo = $this->getEvent()->getRouteMatch()->getParam(Constantes::$ID, 0);
 
+        /* Verificando se posso recuar no periodo */
+        $mostrarBotaoPeriodoAnterior = true;
+        $mostrarBotaoPeriodoAfrente = false;
+        $arrayPeriodo = Funcoes::montaPeriodo($periodo);
+        $stringComecoDoPeriodo = $arrayPeriodo[3] . '-' . $arrayPeriodo[2] . '-' . $arrayPeriodo[1];
+        $stringFimDoPeriodo = $arrayPeriodo[3] . '-' . $arrayPeriodo[2] . '-' . $arrayPeriodo[1];
+        $dataDoInicioDoPeriodoParaComparar = strtotime($stringComecoDoPeriodo);
+        $dataDoFimDoPeriodoParaComparar = strtotime($stringFimDoPeriodo);
+        $dataDoGrupoGrupoPaiFilhoCriacaoParaComparar = strtotime($grupo->getGrupoPaiFilhoPai()->first()->getData_criacaoStringPadraoBanco());
+
+        if ($dataDoGrupoGrupoPaiFilhoCriacaoParaComparar >= $dataDoInicioDoPeriodoParaComparar) {
+            $mostrarBotaoPeriodoAnterior = false;
+        }
+        $retornaAoInicioDoLancamento = false;
+        if ($dataDoGrupoGrupoPaiFilhoCriacaoParaComparar < $dataDoInicioDoPeriodoParaComparar) {
+            $retornaAoInicioDoLancamento = true;
+        }
+        if ($dataDoGrupoGrupoPaiFilhoCriacaoParaComparar > $dataDoFimDoPeriodoParaComparar) {
+            $retornaAoInicioDoLancamento = true;
+        }
+        if ($retornaAoInicioDoLancamento) {
+            return $this->redirect()->toRoute(Constantes::$ROUTE_LANCAMENTO, array(
+                        Constantes::$ACTION => 'Arregimentacao',
+                        Constantes::$ID => 0,
+            ));
+        }
+
+
+        if ($periodo < 0) {
+            $mostrarBotaoPeriodoAfrente = true;
+        }
+
+
         $grupoEventoNoPeriodo = $grupo->getGrupoEventoNoPeriodo($periodo);
 
         $contagemDePessoasCadastradas = count($grupo->getGrupoPessoasNoPeriodo($periodo));
@@ -57,9 +90,6 @@ class LancamentoController extends CircuitoController {
         if ($contagemDePessoasCadastradas > Constantes::$QUANTIDADE_MAXIMA_PESSOAS_NO_LANÇAMENTO) {
             $validacaoPessoasCadastradas = 1;
         }
-        
-        /* Verificando se a entidade esta ativa */
-        $entidade;
 
         $view = new ViewModel(
                 array(
@@ -67,6 +97,8 @@ class LancamentoController extends CircuitoController {
             Constantes::$GRUPO => $grupo,
             Constantes::$PERIODO => $periodo,
             Constantes::$VALIDACAO => $validacaoPessoasCadastradas,
+            'mostrarBotaoPeriodoAnterior' => $mostrarBotaoPeriodoAnterior,
+            'mostrarBotaoPeriodoAfrente' => $mostrarBotaoPeriodoAfrente,
                 )
         );
 
