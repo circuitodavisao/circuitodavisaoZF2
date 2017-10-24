@@ -51,8 +51,8 @@ class LancamentoController extends CircuitoController {
         $periodo = $this->getEvent()->getRouteMatch()->getParam(Constantes::$ID, 0);
 
         /* Verificando se posso recuar no periodo */
-//        $mostrarBotaoPeriodoAnterior = true;
-//        $mostrarBotaoPeriodoAfrente = false;
+        $mostrarBotaoPeriodoAnterior = true;
+        $mostrarBotaoPeriodoAfrente = false;
 //        $arrayPeriodo = Funcoes::montaPeriodo($periodo);
 //        $stringComecoDoPeriodo = $arrayPeriodo[3] . '-' . $arrayPeriodo[2] . '-' . $arrayPeriodo[1];
 //        $stringFimDoPeriodo = $arrayPeriodo[3] . '-' . $arrayPeriodo[2] . '-' . $arrayPeriodo[1];
