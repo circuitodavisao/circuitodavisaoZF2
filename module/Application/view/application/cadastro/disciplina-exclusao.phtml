@@ -55,15 +55,15 @@ $urlVoltar .= Constantes::$PAGINA_DISCIPLINA_LISTAR;
 $labelContinuar = $this->translate(Constantes::$TRADUCAO_CONTINUAR);
 $stringNomeDaFuncaoOnClickContinuarExclusao = '$("#divConfirmacao").toggleClass("' . Constantes::$FORM_HIDDEN . '");' .
         '$("#divSenha").toggleClass("' . Constantes::$FORM_HIDDEN . '")';
-
-echo $this->botaoLink($labelVoltar, $urlVoltar, 2, '');
+$stringNomeDaFuncaoOnClickVoltar = 'funcaoCadastro("' . Constantes::$PAGINA_DISCIPLINA_LISTAR . '", '.$this->idCurso.')';
+echo $this->botaoLink($this->translate(Constantes::$TRADUCAO_VOLTAR), Constantes::$STRING_HASHTAG, 2, $this->funcaoOnClick($stringNomeDaFuncaoOnClickVoltar));
 echo $this->botaoLink($labelContinuar, Constantes::$STRING_HASHTAG, 0, $this->funcaoOnClick($stringNomeDaFuncaoOnClickContinuarExclusao));
 ?>
         </div>
     </div>
     <div id="divBotaoVoltar" class="panel-footer text-right" style="height:65px;">
 <?php
-echo $this->botaoLink($labelVoltar, $urlVoltar, 2, '');
+echo $this->botaoLink($this->translate(Constantes::$TRADUCAO_VOLTAR), Constantes::$STRING_HASHTAG, 2, $this->funcaoOnClick($stringNomeDaFuncaoOnClickVoltar));
 ?>
     </div>
 </div>

@@ -2270,7 +2270,7 @@ class CadastroController extends CircuitoController {
         $view = new ViewModel(array(
             Constantes::$NOME_ENTIDADE_DISCIPLINA => $disciplina,
             Constantes::$ENTIDADE => $entidade,
-            
+            'idCurso' => $disciplina->getCurso_id(),
             
         ));
 

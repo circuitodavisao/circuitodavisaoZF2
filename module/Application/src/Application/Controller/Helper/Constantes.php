@@ -794,7 +794,7 @@ class Constantes {
     public static $TRADUCAO_CIENCIA_EXCLUSAO_CELULA = 'I am <span class="text-danger">aware</span> that by <span class="text-danger">excluding cell</span> is the same no longer appear in the <span class="text-danger">launch line</span>!';
     public static $TRADUCAO_CIENCIA_EXCLUSAO_TURMA = 'I am <span class="text-danger">aware</span> that by <span class="text-danger">excluding class</span> is the same no longer appear! ';
     public static $TRADUCAO_CIENCIA_EXCLUSAO_CURSO = 'I am <span class="text-danger">aware</span> that by <span class="text-danger">excluding course</span> is the same no longer appear! ';
-    public static $TRADUCAO_CIENCIA_EXCLUSAO_DISCIPLINA = 'I am <span class="text-danger">aware</span> that by <span class="text-danger">excluding disciplina</span> is the same no longer appear! ';
+    public static $TRADUCAO_CIENCIA_EXCLUSAO_DISCIPLINA = 'I am <span class="text-danger">aware</span> that by <span class="text-danger">excluding discipline</span> is the same no longer appear! ';
     public static $TRADUCAO_MOTIVO_EXCLUSAO = 'What reason for exclusion?';
     public static $TRADUCAO_DESCREVA_MOTIVO_EXCLUSAO = 'Please specify the reason';
     public static $TRADUCAO_DIGITE_SENHA_EXCUSAO_SENHA = 'Enter your password to confirm the deletion';

@@ -53,9 +53,9 @@ class CircuitoORM {
      * @throws Exception
      */
     public function buscarTodosRegistrosEntidade() {
-        $entidades = $this->getEntityManager()->getRepository($this->getEntity())->findAll();
+        $entidades = $this->getEntityManager()->getRepository($this->getEntity())->findAll(array(), array('posicao' => 'asc'));
         if (!$entidades) {
-            throw new Exception("Não foi encontrado nenhuma registro da Entidade"); 
+            return false;
         }
         return $entidades;
     }

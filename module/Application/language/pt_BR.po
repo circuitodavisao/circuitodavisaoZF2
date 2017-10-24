@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: ZendSkeletonApplication\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-07-05 22:17-0700\n"
-"PO-Revision-Date: 2017-10-18 16:36-0200\n"
+"PO-Revision-Date: 2017-10-24 14:25-0200\n"
 "Last-Translator: Diogo Melo <dmelo87@gmail.com>\n"
 "Language-Team: ZF Contibutors <zf-devteam@zend.com>\n"
 "Language: pt\n"
@@ -966,11 +966,11 @@ msgid "Really want to delete this course?"
 msgstr "Deseja realmente excluir o curso"
 
 #: Cadastro/view/cadastro/ativar-ficha-revisao.phtml
-msgid "I am <span class=\"text-danger\">ciente</span> that by <span class=\"text-danger\">excluding course</span> is the same no longer appear! "
+msgid "I am <span class=\"text-danger\">aware</span> that by <span class=\"text-danger\">excluding course</span> is the same no longer appear! "
 msgstr "Estou ciente<span class=\"text-danger\">ciente</span> de que <span class=\"text-danger\"> excluindo o curso </span> o mesmo não aparecerá mais! "
 
 #: Cadastro/view/cadastro/ativar-ficha-revisao.phtml
-msgid "I am <span class=\"text-danger\">ciente</span> that by <span class=\"text-danger\">excluding discipline</span> is the same no longer appear! "
+msgid "I am <span class=\"text-danger\">aware</span> that by <span class=\"text-danger\">excluding discipline</span> is the same no longer appear! "
 msgstr "Estou <span class=\"text-danger\">ciente</span> de que <span class=\"text-danger\"> excluindo a disciplina </span> a mesmo não aparecerá mais! "
 
 #: Cadastro/view/cadastro/ativar-ficha-revisao.phtml
