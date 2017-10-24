@@ -75,7 +75,6 @@ class CabecalhoDeEventos extends AbstractHelper {
                         $diaDaSemanaDoEvento--;
                     }
                     $diaRealDoEvento = ListagemDePessoasComEventos::diaRealDoEvento($diaDaSemanaDoEvento, $this->view->periodo);
-
                     foreach ($eventosFrequenciaFiltrados as $frequencia) {
                         if ($frequencia->getDia()->format('Y-m-d') === $diaRealDoEvento) {
                             $contagem++;
