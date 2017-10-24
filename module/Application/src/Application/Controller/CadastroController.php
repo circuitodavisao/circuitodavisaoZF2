@@ -2167,7 +2167,7 @@ class CadastroController extends CircuitoController {
         $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
         $sessao = new Container(Constantes::$NOME_APLICACAO);
         $idCurso = $sessao->idSessao;
-        $disciplinas = $repositorioORM->getDisciplinaORM()->buscarTodosRegistrosEntidade();
+        $disciplinas = $repositorioORM->getDisciplinaORM()->buscarTodosRegistrosEntidade('posicao', 'ASC');
         $view = new ViewModel(array(
             'disciplinas' => $disciplinas,
             'idCurso' => $idCurso,

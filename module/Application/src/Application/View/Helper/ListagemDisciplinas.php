@@ -53,10 +53,10 @@ class ListagemDisciplinas extends AbstractHelper {
             $html .= '<tr>';
 
 
-            $html .= '<th class="text-center hidden-xs">';
+            $html .= '<th class="text-center">';
             $html .= 'Posição';
             $html .= '</th>';
-            $html .= '<th class="text-center">';
+            $html .= '<th class="text-center">'; 
             $html .= 'Nome';
             $html .= '</th>';
 
