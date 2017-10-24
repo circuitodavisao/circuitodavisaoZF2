@@ -51,31 +51,30 @@ class LancamentoController extends CircuitoController {
         $periodo = $this->getEvent()->getRouteMatch()->getParam(Constantes::$ID, 0);
 
         /* Verificando se posso recuar no periodo */
-        $mostrarBotaoPeriodoAnterior = true;
-        $mostrarBotaoPeriodoAfrente = false;
-        $arrayPeriodo = Funcoes::montaPeriodo($periodo);
-        $stringComecoDoPeriodo = $arrayPeriodo[3] . '-' . $arrayPeriodo[2] . '-' . $arrayPeriodo[1];
-        $stringFimDoPeriodo = $arrayPeriodo[3] . '-' . $arrayPeriodo[2] . '-' . $arrayPeriodo[1];
-        $dataDoInicioDoPeriodoParaComparar = strtotime($stringComecoDoPeriodo);
-        $dataDoFimDoPeriodoParaComparar = strtotime($stringFimDoPeriodo);
-        $dataDoGrupoGrupoPaiFilhoCriacaoParaComparar = strtotime($grupo->getGrupoPaiFilhoPai()->first()->getData_criacaoStringPadraoBanco());
-
-        if ($dataDoGrupoGrupoPaiFilhoCriacaoParaComparar >= $dataDoInicioDoPeriodoParaComparar) {
-            $mostrarBotaoPeriodoAnterior = false;
-        }
-        $retornaAoInicioDoLancamento = false;
-        if ($dataDoGrupoGrupoPaiFilhoCriacaoParaComparar < $dataDoInicioDoPeriodoParaComparar) {
-            $retornaAoInicioDoLancamento = true;
-        }
-        if ($dataDoGrupoGrupoPaiFilhoCriacaoParaComparar > $dataDoFimDoPeriodoParaComparar) {
-            $retornaAoInicioDoLancamento = true;
-        }
-        if ($retornaAoInicioDoLancamento) {
-            return $this->redirect()->toRoute(Constantes::$ROUTE_LANCAMENTO, array(
-                        Constantes::$ACTION => 'Arregimentacao',
-                        Constantes::$ID => 0,
-            ));
-        }
+//        $mostrarBotaoPeriodoAnterior = true;
+//        $mostrarBotaoPeriodoAfrente = false;
+//        $arrayPeriodo = Funcoes::montaPeriodo($periodo);
+//        $stringComecoDoPeriodo = $arrayPeriodo[3] . '-' . $arrayPeriodo[2] . '-' . $arrayPeriodo[1];
+//        $stringFimDoPeriodo = $arrayPeriodo[3] . '-' . $arrayPeriodo[2] . '-' . $arrayPeriodo[1];
+//        $dataDoInicioDoPeriodoParaComparar = strtotime($stringComecoDoPeriodo);
+//        $dataDoFimDoPeriodoParaComparar = strtotime($stringFimDoPeriodo);
+//        $dataDoGrupoGrupoPaiFilhoCriacaoParaComparar = strtotime($grupo->getGrupoPaiFilhoPai()->first()->getData_criacaoStringPadraoBanco());
+//        if ($dataDoGrupoGrupoPaiFilhoCriacaoParaComparar >= $dataDoInicioDoPeriodoParaComparar) {
+//            $mostrarBotaoPeriodoAnterior = false;
+//        }
+//        $retornaAoInicioDoLancamento = false;
+//        if ($dataDoGrupoGrupoPaiFilhoCriacaoParaComparar < $dataDoInicioDoPeriodoParaComparar) {
+//            $retornaAoInicioDoLancamento = true;
+//        }
+//        if ($dataDoGrupoGrupoPaiFilhoCriacaoParaComparar > $dataDoFimDoPeriodoParaComparar) {
+//            $retornaAoInicioDoLancamento = true;
+//        }
+//        if ($retornaAoInicioDoLancamento) {
+//            return $this->redirect()->toRoute(Constantes::$ROUTE_LANCAMENTO, array(
+//                        Constantes::$ACTION => 'Arregimentacao',
+//                        Constantes::$ID => 0,
+//            ));
+//        }
 
 
         if ($periodo < 0) {

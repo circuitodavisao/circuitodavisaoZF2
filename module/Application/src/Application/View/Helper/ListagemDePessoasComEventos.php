@@ -340,8 +340,6 @@ class ListagemDePessoasComEventos extends AbstractHelper {
                 $diaRealDoEvento = ListagemDePessoasComEventos::diaRealDoEvento($diaDaSemanaDoEvento, $this->view->periodo);
                 $eventoFrequencia = $grupoEvento->getEvento()->getEventoFrequencia();
 
-
-                echo "<br />diaRealDoEvento$diaRealDoEvento";
                 if (count($eventoFrequencia) > 0) {
                     $eventosFrequenciaSelecionado = $pessoa->getEventoFrequenciaFiltradoPorEventoEDia(
                             $grupoEvento->getEvento()->getId(), $diaRealDoEvento
