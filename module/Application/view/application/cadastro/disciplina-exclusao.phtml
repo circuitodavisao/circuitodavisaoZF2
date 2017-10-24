@@ -12,7 +12,7 @@ echo $this->templateFormularioTopo($tituloDaPagina, Constantes::$STRING_DIV_CONF
     <div class="section-divider">
         <span>
             <?php
-            echo $this->translate(Constantes::$TRADUCAO_PERGUNTA_EXCLUSAO_CURSO);  
+            echo $this->translate(Constantes::$TRADUCAO_PERGUNTA_EXCLUSAO_DISCIPLINA);  
             ?>
         </span>
     </div>
@@ -37,7 +37,7 @@ echo $this->templateFormularioTopo($tituloDaPagina, Constantes::$STRING_DIV_CONF
                     <input type="checkbox" name="checked" value="checked" onclick="mostrarMotivos();">
                     <span class="checkbox"></span>
                     <?php
-                    echo $this->translate(Constantes::$TRADUCAO_CIENCIA_EXCLUSAO_CURSO);
+                    echo $this->translate(Constantes::$TRADUCAO_CIENCIA_EXCLUSAO_DISCIPLINA);
                     ?>
                 </label> 
             </div>
@@ -50,24 +50,24 @@ echo $this->templateFormularioTopo($tituloDaPagina, Constantes::$STRING_DIV_CONF
 $labelVoltar = $this->translate(Constantes::$TRADUCAO_VOLTAR);
 /* Botões */
 $urlVoltar = Constantes::$ROUTE_CADASTRO;
-$urlVoltar .= Constantes::$PAGINA_CURSO_LISTAR;
+$urlVoltar .= Constantes::$PAGINA_DISCIPLINA_LISTAR; 
 
 $labelContinuar = $this->translate(Constantes::$TRADUCAO_CONTINUAR);
 $stringNomeDaFuncaoOnClickContinuarExclusao = '$("#divConfirmacao").toggleClass("' . Constantes::$FORM_HIDDEN . '");' .
         '$("#divSenha").toggleClass("' . Constantes::$FORM_HIDDEN . '")';
-
-echo $this->botaoLink($labelVoltar, $urlVoltar, 2, '');
+$stringNomeDaFuncaoOnClickVoltar = 'funcaoCadastro("' . Constantes::$PAGINA_DISCIPLINA_LISTAR . '", '.$this->idCurso.')';
+echo $this->botaoLink($this->translate(Constantes::$TRADUCAO_VOLTAR), Constantes::$STRING_HASHTAG, 2, $this->funcaoOnClick($stringNomeDaFuncaoOnClickVoltar));
 echo $this->botaoLink($labelContinuar, Constantes::$STRING_HASHTAG, 0, $this->funcaoOnClick($stringNomeDaFuncaoOnClickContinuarExclusao));
 ?>
         </div>
     </div>
     <div id="divBotaoVoltar" class="panel-footer text-right" style="height:65px;">
 <?php
-echo $this->botaoLink($labelVoltar, $urlVoltar, 2, '');
+echo $this->botaoLink($this->translate(Constantes::$TRADUCAO_VOLTAR), Constantes::$STRING_HASHTAG, 2, $this->funcaoOnClick($stringNomeDaFuncaoOnClickVoltar));
 ?>
     </div>
 </div>
-</div> 
+</div>  
 <div id="divSenha" class="panel heading-border panel-danger hidden">
     <div class="panel-body bg-light">
         <div class="section-divider"> 

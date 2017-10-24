@@ -2167,7 +2167,7 @@ class CadastroController extends CircuitoController {
         $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
         $sessao = new Container(Constantes::$NOME_APLICACAO);
         $idCurso = $sessao->idSessao;
-        $disciplinas = $repositorioORM->getDisciplinaORM()->buscarTodosRegistrosEntidade();
+        $disciplinas = $repositorioORM->getDisciplinaORM()->buscarTodosRegistrosEntidade('posicao', 'ASC');
         $view = new ViewModel(array(
             'disciplinas' => $disciplinas,
             'idCurso' => $idCurso,
@@ -2270,7 +2270,7 @@ class CadastroController extends CircuitoController {
         $view = new ViewModel(array(
             Constantes::$NOME_ENTIDADE_DISCIPLINA => $disciplina,
             Constantes::$ENTIDADE => $entidade,
-            
+            'idCurso' => $disciplina->getCurso_id(),
             
         ));
 
@@ -2291,7 +2291,7 @@ class CadastroController extends CircuitoController {
         $repositorioORM->getCursoORM()->persistir($disciplina, false);
         $sessao->idSessao = $disciplina->getCurso_id();
         return $this->redirect()->toRoute(Constantes::$ROUTE_CADASTRO, array(
-                    Constantes::$PAGINA => Constantes::$PAGINA_DISCIPLINA_LISTAR,
+                    Constantes::$PAGINA => Constantes::$PAGINA_DISCIPLINA_LISTAR,  
         ));
     }
 

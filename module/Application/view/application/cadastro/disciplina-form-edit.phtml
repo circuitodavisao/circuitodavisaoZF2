@@ -18,7 +18,7 @@ $form->setAttribute(Constantes::$ACTION, $this->url(Constantes::$ROUTE_CADASTRO,
                 <!-- Cadastro de Pessoa -->
                 <div class="admin-form " id="register1" role="tabpanel">
                     <blockquote class="blockquote-primary">
-                        <p>Cadastro de Disciplinas</p>
+                        <p>Edição de Disciplinas</p>
                         <small>Instituto de Vencedores</small>
                     </blockquote>
                     <div class="panel panel-primary heading-border">
@@ -41,7 +41,7 @@ $form->setAttribute(Constantes::$ACTION, $this->url(Constantes::$ROUTE_CADASTRO,
                             echo $this->botaoLink($this->translate(Constantes::$TRADUCAO_VOLTAR), Constantes::$STRING_HASHTAG, 2, $this->funcaoOnClick($stringNomeDaFuncaoOnClickCadastro));
                             /* Submit */
                             $funcaoVerificarCadastroPessoa = $this->funcaoOnClick('validarLancamentoCadastrarDisciplina(this.form)');
-                            echo $this->botaoSimples(Constantes::$TRADUCAO_CADASTRAR, $funcaoVerificarCadastroPessoa);
+                            echo $this->botaoSimples(Constantes::$TRADUCAO_ALTERAR, $funcaoVerificarCadastroPessoa);
                             ?>
                         </div>
                         <!-- end .form-footer section -->
@@ -58,7 +58,7 @@ $form->setAttribute(Constantes::$ACTION, $this->url(Constantes::$ROUTE_CADASTRO,
     
 function validarLancamentoCadastrarDisciplina(form) {
     var nome = $('#nome').val();
-     
+    var posicao = $('#posicao').val();  
 
     var temErro = false;
     var divMensagens = $('#divMensagens');
@@ -81,8 +81,26 @@ function validarLancamentoCadastrarDisciplina(form) {
         if (mensagem == '') {
             mensagem = 'Nome pode ter no máximo 80 caracteres';
         } else {
-            mensagem += ', Nome pode ter no máximo 80 caracteres';
+            mensagem += ', Nome pode ter no máximo 80 caracteres'; 
         }
+    }
+    
+    if (nome.length < 3) {
+
+        temErro = true;
+        if (mensagem == '') {
+            mensagem = 'Nome tem que conter no mínimo 3 caracteres';
+        } else {
+            mensagem += ', Nome tem que conter no mínimo 3 caracteres';
+        }
+    }
+    
+    if (posicao == 0) {
+        temErro = true;
+        if (mensagem !== '') {
+            mensagem += ', ';
+        }
+        mensagem += 'Posição';
     }
     
         

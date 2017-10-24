@@ -46,16 +46,20 @@ class CircuitoORM {
         }
         return $entidade;
     }
-    
+
     /**
      * Buscar todos os registros da entidade
      * @return CircuitoEntity
      * @throws Exception
      */
-    public function buscarTodosRegistrosEntidade() {
-        $entidades = $this->getEntityManager()->getRepository($this->getEntity())->findAll();
+    public function buscarTodosRegistrosEntidade($campoOrderBy = null, $sentidoOrderBy = null) {
+        if ($campoOrderBy) {
+            $entidades = $this->getEntityManager()->getRepository($this->getEntity())->findBy(array(), array("$campoOrderBy" => "$sentidoOrderBy"));
+        }else{
+            $entidades = $this->getEntityManager()->getRepository($this->getEntity())->findAll();
+        }
         if (!$entidades) {
-            throw new Exception("Não foi encontrado nenhuma registro da Entidade"); 
+            return false;
         }
         return $entidades;
     }
@@ -64,7 +68,7 @@ class CircuitoORM {
      * Atualiza a entidade no banco de dados
      * @param CircuitoEntity $entidade
      */
-    public function persistir($entidade, $setarDataEHora = true) { 
+    public function persistir($entidade, $setarDataEHora = true) {
         try {
             if ($setarDataEHora) {
                 $entidade->setDataEHoraDeCriacao();
