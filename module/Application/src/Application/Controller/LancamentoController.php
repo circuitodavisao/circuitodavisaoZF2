@@ -53,15 +53,17 @@ class LancamentoController extends CircuitoController {
         /* Verificando se posso recuar no periodo */
         $mostrarBotaoPeriodoAnterior = true;
         $mostrarBotaoPeriodoAfrente = false;
-//        $arrayPeriodo = Funcoes::montaPeriodo($periodo);
-//        $stringComecoDoPeriodo = $arrayPeriodo[3] . '-' . $arrayPeriodo[2] . '-' . $arrayPeriodo[1];
-//        $stringFimDoPeriodo = $arrayPeriodo[3] . '-' . $arrayPeriodo[2] . '-' . $arrayPeriodo[1];
-//        $dataDoInicioDoPeriodoParaComparar = strtotime($stringComecoDoPeriodo);
+        $arrayPeriodo = Funcoes::montaPeriodo($periodo);
+        $stringComecoDoPeriodo = $arrayPeriodo[3] . '-' . $arrayPeriodo[2] . '-' . $arrayPeriodo[1];
+        $stringFimDoPeriodo = $arrayPeriodo[3] . '-' . $arrayPeriodo[2] . '-' . $arrayPeriodo[1];
+        $dataDoInicioDoPeriodoParaComparar = strtotime($stringComecoDoPeriodo);
 //        $dataDoFimDoPeriodoParaComparar = strtotime($stringFimDoPeriodo);
-//        $dataDoGrupoGrupoPaiFilhoCriacaoParaComparar = strtotime($grupo->getGrupoPaiFilhoPai()->first()->getData_criacaoStringPadraoBanco());
-//        if ($dataDoGrupoGrupoPaiFilhoCriacaoParaComparar >= $dataDoInicioDoPeriodoParaComparar) {
-//            $mostrarBotaoPeriodoAnterior = false;
-//        }
+        $dataDoGrupoGrupoPaiFilhoCriacaoParaComparar = strtotime($grupo->getGrupoPaiFilhoPai()->first()->getData_criacaoStringPadraoBanco());
+        if ($dataDoGrupoGrupoPaiFilhoCriacaoParaComparar >= $dataDoInicioDoPeriodoParaComparar) {
+            $mostrarBotaoPeriodoAnterior = false;
+        }
+        
+        /* Redirecionar ao tentar acessar o que nao deve */
 //        $retornaAoInicioDoLancamento = false;
 //        if ($dataDoGrupoGrupoPaiFilhoCriacaoParaComparar < $dataDoInicioDoPeriodoParaComparar) {
 //            $retornaAoInicioDoLancamento = true;
@@ -72,10 +74,8 @@ class LancamentoController extends CircuitoController {
 //        if ($retornaAoInicioDoLancamento) {
 //            return $this->redirect()->toRoute(Constantes::$ROUTE_LANCAMENTO, array(
 //                        Constantes::$ACTION => 'Arregimentacao',
-//                        Constantes::$ID => 0,
 //            ));
 //        }
-
 
         if ($periodo < 0) {
             $mostrarBotaoPeriodoAfrente = true;
