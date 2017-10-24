@@ -222,11 +222,16 @@ class Grupo extends CircuitoEntity {
         if ($grupoPaiFilhoFilhos) {
             /* Verificar responsabilidades ativas */
             foreach ($grupoPaiFilhoFilhos as $gpf) {
+                $arrayPeriodo = Funcoes::montaPeriodo($periodo);
                 if ($gpf->verificarSeEstaAtivo()) {
-                    $grupoPaiFilhoFilhosAtivos[] = $gpf;
+                    $stringFimDoPeriodo = $arrayPeriodo[6] . '-' . $arrayPeriodo[5] . '-' . $arrayPeriodo[4];
+                    $dataDoInicioDoPeriodoParaComparar = strtotime($stringFimDoPeriodo);
+                    $dataDoGrupoPaiFilhoCriacaoParaComparar = strtotime($gpf->getData_criacaoStringPadraoBanco());
+                    if ($dataDoGrupoPaiFilhoCriacaoParaComparar <= $dataDoInicioDoPeriodoParaComparar) {
+                        $grupoPaiFilhoFilhosAtivos[] = $gpf;
+                    }
                 } else {
                     /* Inativo */
-                    $arrayPeriodo = Funcoes::montaPeriodo($periodo);
                     $stringComecoDoPeriodo = $arrayPeriodo[3] . '-' . $arrayPeriodo[2] . '-' . $arrayPeriodo[1];
                     $dataDoInicioDoPeriodoParaComparar = strtotime($stringComecoDoPeriodo);
                     $dataDoGrupoGrupoPaiFilhoInativadoParaComparar = strtotime($gpf->getData_inativacaoStringPadraoBanco());

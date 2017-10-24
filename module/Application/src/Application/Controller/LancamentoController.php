@@ -55,7 +55,7 @@ class LancamentoController extends CircuitoController {
         $mostrarBotaoPeriodoAfrente = false;
         $arrayPeriodo = Funcoes::montaPeriodo($periodo);
         $stringComecoDoPeriodo = $arrayPeriodo[3] . '-' . $arrayPeriodo[2] . '-' . $arrayPeriodo[1];
-        $stringFimDoPeriodo = $arrayPeriodo[3] . '-' . $arrayPeriodo[2] . '-' . $arrayPeriodo[1];
+//        $stringFimDoPeriodo = $arrayPeriodo[6] . '-' . $arrayPeriodo[5] . '-' . $arrayPeriodo[4];
         $dataDoInicioDoPeriodoParaComparar = strtotime($stringComecoDoPeriodo);
 //        $dataDoFimDoPeriodoParaComparar = strtotime($stringFimDoPeriodo);
 
@@ -504,17 +504,20 @@ class LancamentoController extends CircuitoController {
         $entidade = $repositorioORM->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
         $grupo = $entidade->getGrupo();
 
-        $gruposAbaixo = null;
-        if ($grupo->getGrupoPaiFilhoFilhosAtivos()) {
-            $gruposAbaixo = $grupo->getGrupoPaiFilhoFilhosAtivos();
-        }
-
         $parametro = $this->params()->fromRoute(Constantes::$ID);
+        $periodo = 0;
         if (empty($parametro)) {
             $abaSelecionada = 1;
         } else {
+            $periodo = -1;
             $abaSelecionada = $parametro;
         }
+
+        $gruposAbaixo = null;
+        if ($grupo->getGrupoPaiFilhoFilhosAtivos($periodo)) {
+            $gruposAbaixo = $grupo->getGrupoPaiFilhoFilhosAtivos($periodo);
+        }
+
         $mesSelecionado = Funcoes::mesPorAbaSelecionada($abaSelecionada);
         $anoSelecionado = Funcoes::anoPorAbaSelecionada($abaSelecionada);
 
