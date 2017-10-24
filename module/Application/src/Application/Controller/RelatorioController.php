@@ -60,10 +60,14 @@ class RelatorioController extends CircuitoController {
 
         $tipoRelatorio = (int) $this->params()->fromRoute('tipoRelatorio');
 
+        $mostrarBotaoPeriodoAnterior = true;
+        $mostrarBotaoPeriodoAfrente = true;
         $dados = array(
             RelatorioController::stringRelatorio => $relatorio,
             'tipoRelatorio' => $tipoRelatorio,
             'periodo' => $periodo,
+            'mostrarBotaoPeriodoAnterior' => $mostrarBotaoPeriodoAnterior,
+            'mostrarBotaoPeriodoAfrente' => $mostrarBotaoPeriodoAfrente,
         );
 
         $grupoPaiFilhoFilhos = $grupo->getGrupoPaiFilhoFilhosAtivos($periodo);

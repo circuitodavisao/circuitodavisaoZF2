@@ -61,12 +61,14 @@ class Menu extends AbstractHelper {
             foreach ($grupo->getGrupoPaiFilhoPai() as $gpfPai) {
                 $ativo = true;
                 $entidadeSelecionada = $grupo->getEntidadeAtiva();
-                if (!$gpfPai->verificarSeEstaAtivo()) {
-                    $ativo = false;
-                    $entidadeSelecionada = $grupo->getEntidadeInativaPorDataInativacao($gpfPai->getData_inativacaoStringPadraoBanco());
+//                if (!$gpfPai->verificarSeEstaAtivo()) {
+//                    $ativo = false;
+//                    $entidadeSelecionada = $grupo->getEntidadeInativaPorDataInativacao($gpfPai->getData_inativacaoStringPadraoBanco());
+//                }
+                if ($gpfPai->verificarSeEstaAtivo()) {
+                    $grupoPai = $gpfPai->getGrupoPaiFilhoPai();
+                    $html .= $this->view->perfilDropDown($entidadeSelecionada, 1, $ativo, $grupoPai);
                 }
-                $grupoPai = $gpfPai->getGrupoPaiFilhoPai();
-                $html .= $this->view->perfilDropDown($entidadeSelecionada, 1, $ativo, $grupoPai);
             }
         }
         $html .= '<li class="dropdown-footer">';
