@@ -318,13 +318,13 @@ class RepositorioORM {
     
     /**
      * Metodo public para obter a instancia do DisciplinaORM
-     * @return CircuitoORM
+     * @return DisciplinaORM
      */
     public function getDisciplinaORM() { 
         if (is_null($this->_disciplinaORM)) {
-            $this->_disciplinaORM = new CircuitoORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_DISCIPLINA);
+            $this->_disciplinaORM = new DisciplinaORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_DISCIPLINA);
         }
-        return $this->_disciplinaORM;
+        return $this->_disciplinaORM;  
     }
     
     /**

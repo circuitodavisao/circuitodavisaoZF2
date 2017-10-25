@@ -74,20 +74,29 @@ class DisciplinaForm extends Form {
 
         /* Posição */
         $arrayPosicao = array();
-        $arrayPosicao[''] = Constantes::$FORM_SELECT;
         if (!empty($disciplinas)) {
             for ($indicePosicao = 1; $indicePosicao <= 24; $indicePosicao++) {
+                $adicionarPosicao = true;
                 foreach ($disciplinas as $d) {
-                    if ($indicePosicao != $d->getPosicao()) {
-                        $arrayPosicao[$indicePosicao] = $indicePosicao;
+                    if ($indicePosicao === $d->getPosicao()) {
+                        $adicionarPosicao = false;
                     }
+                }
+                if ($indicePosicao == $disciplina->getPosicao()) {
+                    $adicionarPosicao = true;
+                }
+
+                if ($adicionarPosicao) {
+                    $arrayPosicao[$indicePosicao] = $indicePosicao;
                 }
             }
         } else {
             for ($indicePosicao = 1; $indicePosicao <= 24; $indicePosicao++) {
+
                 $arrayPosicao[$indicePosicao] = $indicePosicao;
             }
         }
+
         $inputSelectPosicao = new Select();
         $inputSelectPosicao->setName(Constantes::$FORM_POSICAO);
         $inputSelectPosicao->setAttributes(array(
@@ -95,6 +104,7 @@ class DisciplinaForm extends Form {
             Constantes::$FORM_ID => Constantes::$FORM_POSICAO,
         ));
         $inputSelectPosicao->setValueOptions($arrayPosicao);
+        $inputSelectPosicao->setEmptyOption(Constantes::$FORM_SELECT);
         $this->add($inputSelectPosicao);
 
         if (!is_null($disciplina)) {

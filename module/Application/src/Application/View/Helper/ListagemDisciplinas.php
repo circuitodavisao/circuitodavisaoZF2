@@ -34,15 +34,24 @@ class ListagemDisciplinas extends AbstractHelper {
 
         /* Sem pessoas cadastrados */
         if (count($disciplinasAtivas) == 0) {
-
+            $html .= $this->view->templateFormularioTopo('Disciplinas');
             $html .= '<div class="panel-body bg-light">';
 
             $html .= '<div class="alert alert-warning"><i class="fa fa-warning pr10" aria-hidden="true"></i>&nbsp;Sem Disciplinas</div>';
 
             $html .= '</div>';
-
-
-            ;
+            $html .= '<div class="panel-footer">';
+//            $html .= '<a href="/cadastroListarTurmaInativa">Disciplinas Inativas </a>';
+            $html .= '<div class="text-right">';
+            $stringNomeDaFuncaoOnClickVoltar = 'funcaoCadastro("' . Constantes::$PAGINA_CURSO_LISTAR . '", 0)';
+            $html .= $this->view->botaoLink($this->view->translate(Constantes::$TRADUCAO_VOLTAR), Constantes::$STRING_HASHTAG, 2, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClickVoltar));
+            $stringNomeDaFuncaoOnClickCadastro = 'funcaoCadastro("' . Constantes::$PAGINA_DISCIPLINA_CADASTRAR . '", ' . $this->view->idCurso . ')';
+            $html .= $this->view->botaoLink($this->view->translate(Constantes::$TRADUCAO_CADASTRAR), Constantes::$STRING_HASHTAG, 0, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClickCadastro));
+            $html .= '</div>';
+            /* Fim Botões */
+            $html .= '</div>';
+            /* Fim panel-footer */
+            $html .= $this->view->templateFormularioRodape();
         } else {
 
             $html .= $this->view->templateFormularioTopo('Disciplinas');
@@ -56,7 +65,7 @@ class ListagemDisciplinas extends AbstractHelper {
             $html .= '<th class="text-center">';
             $html .= 'Posição';
             $html .= '</th>';
-            $html .= '<th class="text-center">'; 
+            $html .= '<th class="text-center">';
             $html .= 'Nome';
             $html .= '</th>';
 
@@ -69,7 +78,7 @@ class ListagemDisciplinas extends AbstractHelper {
             foreach ($disciplinasAtivas as $disciplina) {
                 $html .= '<tr>';
 
- 
+
                 $stringNomeDaFuncaoOnClickInserir = 'funcaoCadastro("' . Constantes::$PAGINA_FICHA_REVISAO . '", ' . $disciplina->getId() . ')';
                 $stringNomeDaFuncaoOnClick = 'funcaoCadastro("' . Constantes::$PAGINA_DISCIPLINA_EDITAR . '", ' . $disciplina->getId() . ')';
                 $stringNomeDaFuncaoOnClickExclusao = 'funcaoCadastro("' . Constantes::$PAGINA_DISCIPLINA_EXCLUSAO . '", ' . $disciplina->getId() . ')';

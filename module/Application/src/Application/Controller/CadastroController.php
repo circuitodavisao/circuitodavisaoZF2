@@ -2185,7 +2185,7 @@ class CadastroController extends CircuitoController {
         $sessao = new Container(Constantes::$NOME_APLICACAO);
         $idCurso = $sessao->idSessao;
         $curso = $repositorioORM->getCursoORM()->encontrarPorId($idCurso);
-        $disciplinas = $curso->getDisciplina();
+        $disciplinas = $repositorioORM->getDisciplinaORM()->encontrarTodasPorIdCurso($idCurso);
         $formCadastroDisciplina = new DisciplinaForm('formulario', $idCurso, $disciplinas);
         $view = new ViewModel(array(
             'formCadastroDisciplina' => $formCadastroDisciplina,
@@ -2242,12 +2242,11 @@ class CadastroController extends CircuitoController {
         $sessao = new Container(Constantes::$NOME_APLICACAO);
         $idDisciplina = $sessao->idSessao;
         $disciplina = $repositorioORM->getDisciplinaORM()->encontrarPorId($idDisciplina);
-        $curso = $disciplina->getCurso();
-        $disciplinas = $curso->getDisciplina(); 
-        $formCadastroDisciplina = new DisciplinaForm('formulario', $idCurso, $disciplinas, $disciplina);
+        $disciplinas = $repositorioORM->getDisciplinaORM()->encontrarTodasPorIdCurso($disciplina->getCurso_id());  
+        $formCadastroDisciplina = new DisciplinaForm('formulario', $disciplina->getCurso_id(), $disciplinas, $disciplina);
         $view = new ViewModel(array(
             'formCadastroDisciplina' => $formCadastroDisciplina,
-            'idCurso' => $curso->getId(), 
+            'idCurso' => $disciplina->getCurso_id(), 
         ));
         
 
