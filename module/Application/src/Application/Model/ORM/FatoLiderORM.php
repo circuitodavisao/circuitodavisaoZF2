@@ -47,6 +47,21 @@ class FatoLiderORM extends CircuitoORM {
         }
     }
 
+    public function encontrarFatoLiderPorNumeroIdentificador($numeroIdentificador) {
+        $resposta = null;
+        try {
+            $pessoa = $this->getEntityManager()
+                    ->getRepository($this->getEntity())
+                    ->findOneBy(array(Constantes::$ENTITY_FATO_CICLO_NUMERO_IDENTIFICADOR => $numeroIdentificador));
+            if ($pessoa) {
+                $resposta = $pessoa;
+            }
+            return $resposta;
+        } catch (Exception $exc) {
+            echo $exc->getTraceAsString();
+        }
+    }
+
     /**
      * Criar fato lider
      * @param String $numeroIdentificador

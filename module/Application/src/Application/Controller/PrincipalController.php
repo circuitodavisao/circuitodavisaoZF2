@@ -17,23 +17,25 @@ use Zend\View\Model\ViewModel;
  */
 class PrincipalController extends CircuitoController {
 
+    private $repositorio;
+
     /**
      * Função padrão, traz a tela principal
      * GET /principal
      */
     public function indexAction() {
         $sessao = new Container(Constantes::$NOME_APLICACAO);
-        $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
+        
         $idEntidadeAtual = $sessao->idEntidadeAtual;
-        $entidade = $repositorioORM->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+        $entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
         $grupo = $entidade->getGrupo();
-        $numeroIdentificador = $repositorioORM->getFatoCicloORM()->montarNumeroIdentificador($repositorioORM, $grupo);
+        $numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupo);
 
         $tipoRelatorioPessoal = 1;
         $tipoRelatorioEquipe = 2;
         $periodo = -1;
-        $relatorio = RelatorioController::montaRelatorio($repositorioORM, $numeroIdentificador, $periodo, $tipoRelatorioPessoal);
-        $relatorioEquipe = RelatorioController::montaRelatorio($repositorioORM, $numeroIdentificador, $periodo, $tipoRelatorioEquipe);
+        $relatorio = RelatorioController::montaRelatorio($this->getRepositorio(), $numeroIdentificador, $periodo, $tipoRelatorioPessoal);
+        $relatorioEquipe = RelatorioController::montaRelatorio($this->getRepositorio(), $numeroIdentificador, $periodo, $tipoRelatorioEquipe);
 
         $dados = array();
         $arrayPeriodo = Funcoes::montaPeriodo($periodo);
@@ -48,9 +50,9 @@ class PrincipalController extends CircuitoController {
             $discipulos = array();
             foreach ($grupoPaiFilhoFilhos as $gpFilho) {
                 $grupoFilho = $gpFilho->getGrupoPaiFilhoFilho();
-                $numeroIdentificador = $repositorioORM->getFatoCicloORM()->montarNumeroIdentificador($repositorioORM, $grupoFilho);
-                $relatorio12 = RelatorioController::montaRelatorio($repositorioORM, $numeroIdentificador, $periodo, $tipoRelatorioEquipe);
-                $relatorio12Pessoal = RelatorioController::montaRelatorio($repositorioORM, $numeroIdentificador, $periodo, $tipoRelatorioPessoal);
+                $numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupoFilho);
+                $relatorio12 = RelatorioController::montaRelatorio($this->getRepositorio(), $numeroIdentificador, $periodo, $tipoRelatorioEquipe);
+                $relatorio12Pessoal = RelatorioController::montaRelatorio($this->getRepositorio(), $numeroIdentificador, $periodo, $tipoRelatorioPessoal);
                 if ($relatorio12['celulaQuantidade'] > 0) {
                     if ($relatorio12['celulaRealizadas'] < $relatorio12['celulaQuantidade']) {
                         $relatorioDiscipulos[$grupoFilho->getId()] = $relatorio12;
@@ -63,8 +65,8 @@ class PrincipalController extends CircuitoController {
                 if ($grupoPaiFilhoFilhos144) {
                     foreach ($grupoPaiFilhoFilhos144 as $gpFilho144) {
                         $grupoFilho144 = $gpFilho144->getGrupoPaiFilhoFilho();
-                        $numeroIdentificador144 = $repositorioORM->getFatoCicloORM()->montarNumeroIdentificador($repositorioORM, $grupoFilho144);
-                        $relatorio144 = RelatorioController::montaRelatorio($repositorioORM, $numeroIdentificador144, $periodo, $tipoRelatorioEquipe);
+                        $numeroIdentificador144 = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupoFilho144);
+                        $relatorio144 = RelatorioController::montaRelatorio($this->getRepositorio(), $numeroIdentificador144, $periodo, $tipoRelatorioEquipe);
                         if ($relatorio144['celulaQuantidade'] > 0) {
                             if ($relatorio144['celulaRealizadas'] < $relatorio144['celulaQuantidade']) {
                                 $relatorioDiscipulos[$grupoFilho144->getId()] = $relatorio144;
@@ -99,15 +101,15 @@ class PrincipalController extends CircuitoController {
         $idSessao = $sessao->idSessao;
         unset($sessao->idSessao);
         if ($idSessao) {
-            $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
-            $grupoSessao = $repositorioORM->getGrupoORM()->encontrarPorId($idSessao);
+            
+            $grupoSessao = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idSessao);
             $tenhoDiscipulosAtivos = false;
             $quantidadeDeDiscipulos = count($grupoSessao->getGrupoPaiFilhoFilhosAtivos());
             if ($quantidadeDeDiscipulos > 0) {
                 $tenhoDiscipulosAtivos = true;
             }
             $entidade = $grupoSessao->getEntidadeAtiva();
-            $entidadeLogada = $repositorioORM->getEntidadeORM()->encontrarPorId($sessao->idEntidadeAtual);
+            $entidadeLogada = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($sessao->idEntidadeAtual);
             $dados = array();
             $dados['idGrupo'] = $idSessao;
             $dados['entidade'] = $entidade;
@@ -121,14 +123,14 @@ class PrincipalController extends CircuitoController {
 
     public function grupoExclusaoAction() {
         $sessao = new Container(Constantes::$NOME_APLICACAO);
-        $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
+        
         try {
-            $repositorioORM->iniciarTransacao();
+            $this->getRepositorio()->iniciarTransacao();
             $idSessao = $sessao->idSessao;
             unset($sessao->idSessao);
             if ($idSessao) {
-                $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
-                $grupoSessao = $repositorioORM->getGrupoORM()->encontrarPorId($idSessao);
+                
+                $grupoSessao = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idSessao);
 
                 $dados = array();
                 $dados['idGrupo'] = $idSessao;
@@ -145,9 +147,9 @@ class PrincipalController extends CircuitoController {
             } else {
                 return $this->redirect()->toRoute('principal');
             }
-            $repositorioORM->fecharTransacao();
+            $this->getRepositorio()->fecharTransacao();
         } catch (Exception $exc) {
-            $repositorioORM->desfazerTransacao();
+            $this->getRepositorio()->desfazerTransacao();
             echo $exc->getTraceAsString();
             $this->direcionaErroDeCadastro($exc->getMessage());
             CircuitoController::direcionandoAoLogin($this);
@@ -159,16 +161,16 @@ class PrincipalController extends CircuitoController {
         $idSessao = $sessao->idSessao;
         unset($sessao->idSessao);
         if ($idSessao) {
-            $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
-            $grupoSessao = $repositorioORM->getGrupoORM()->encontrarPorId($idSessao);
+            
+            $grupoSessao = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idSessao);
 
             $grupoPaiFilhoPai = $grupoSessao->getGrupoPaiFilhoPai();
             $grupoPaiFilhoPai->setDataEHoraDeInativacao();
-            $repositorioORM->getGrupoPaiFilhoORM()->persistir($grupoPaiFilhoPai, false);
+            $this->getRepositorio()->getGrupoPaiFilhoORM()->persistir($grupoPaiFilhoPai, false);
 
             foreach ($grupoSessao->getResponsabilidadesAtivas() as $grupoResponsavel) {
                 $grupoResponsavel->setDataEHoraDeInativacao();
-                $repositorioORM->getGrupoResponsavelORM()->persistir($grupoResponsavel, false);
+                $this->getRepositorio()->getGrupoResponsavelORM()->persistir($grupoResponsavel, false);
             }
 
             $sessao->mostrarNotificacao = true;
@@ -203,6 +205,13 @@ class PrincipalController extends CircuitoController {
             }
         }
         return $response;
+    }
+
+    function getRepositorio() {
+        if (empty($this->repositorio)) {
+            $this->repositorio = new RepositorioORM($this->getDoctrineORMEntityManager());
+        }
+        return $this->repositorio;
     }
 
 }

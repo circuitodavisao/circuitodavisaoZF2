@@ -32,6 +32,8 @@ class RelatorioController extends CircuitoController {
     const stringRelatorio = 'relatorio';
     const stringPeriodoSelecionado = 'periodoSelecionado';
 
+    private $repositorio;
+
     /**
      * Contrutor sobrecarregado com os serviços de ORM
      */
@@ -48,20 +50,29 @@ class RelatorioController extends CircuitoController {
      */
     public function indexAction() {
         $sessao = new Container(Constantes::$NOME_APLICACAO);
-        $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
+
         $idEntidadeAtual = $sessao->idEntidadeAtual;
-        $entidade = $repositorioORM->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+        $entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
         $grupo = $entidade->getGrupo();
-        $numeroIdentificador = $repositorioORM->getFatoCicloORM()->montarNumeroIdentificador($repositorioORM);
+        $numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio());
         $periodo = $this->getEvent()->getRouteMatch()->getParam(Constantes::$ID, 0);
 
         $tipoRelatorioPessoal = 1;
-        $relatorio = RelatorioController::montaRelatorio($repositorioORM, $numeroIdentificador, $periodo, $tipoRelatorioPessoal);
+        $relatorio = RelatorioController::montaRelatorio($this->getRepositorio(), $numeroIdentificador, $periodo, $tipoRelatorioPessoal);
 
         $tipoRelatorio = (int) $this->params()->fromRoute('tipoRelatorio');
 
         $mostrarBotaoPeriodoAnterior = true;
         $mostrarBotaoPeriodoAfrente = true;
+        $arrayPeriodo = Funcoes::montaPeriodo($periodo);
+        $stringComecoDoPeriodo = $arrayPeriodo[3] . '-' . $arrayPeriodo[2] . '-' . $arrayPeriodo[1];
+        $dataDoInicioDoPeriodoParaComparar = strtotime($stringComecoDoPeriodo);
+        if ($grupo->getGrupoPaiFilhoPaiAtivo()) {
+            $dataDoGrupoPaiFilhoCriacaoParaComparar = strtotime($grupo->getGrupoPaiFilhoPaiAtivo()->getData_criacaoStringPadraoBanco());
+            if ($dataDoGrupoPaiFilhoCriacaoParaComparar >= $dataDoInicioDoPeriodoParaComparar) {
+                $mostrarBotaoPeriodoAnterior = false;
+            }
+        }
         $dados = array(
             RelatorioController::stringRelatorio => $relatorio,
             'tipoRelatorio' => $tipoRelatorio,
@@ -75,9 +86,9 @@ class RelatorioController extends CircuitoController {
             $relatorioDiscipulos = array();
             foreach ($grupoPaiFilhoFilhos as $gpFilho) {
                 $grupoFilho = $gpFilho->getGrupoPaiFilhoFilho();
-                $numeroIdentificador = $repositorioORM->getFatoCicloORM()->montarNumeroIdentificador($repositorioORM, $grupoFilho);
+                $numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupoFilho);
                 $tipoRelatorioSomado = 2;
-                $relatorioDiscipulos[$grupoFilho->getId()] = RelatorioController::montaRelatorio($repositorioORM, $numeroIdentificador, $periodo, $tipoRelatorioSomado);
+                $relatorioDiscipulos[$grupoFilho->getId()] = RelatorioController::montaRelatorio($this->getRepositorio(), $numeroIdentificador, $periodo, $tipoRelatorioSomado);
             }
 
             $discipulosOrdenado = RelatorioController::ordenacaoDiscipulos($grupoPaiFilhoFilhos, $relatorioDiscipulos, $tipoRelatorio);
@@ -91,9 +102,9 @@ class RelatorioController extends CircuitoController {
 
     public function atendimentoAction() {
         $sessao = new Container(Constantes::$NOME_APLICACAO);
-        $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
+
         $idEntidadeAtual = $sessao->idEntidadeAtual;
-        $entidade = $repositorioORM->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+        $entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
         $grupo = $entidade->getGrupo();
 
         /* Verificar data de cadastro da responsabilidade */
@@ -135,15 +146,13 @@ class RelatorioController extends CircuitoController {
     }
 
     public function liderAction() {
-        $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
-
         $idUrl = $this->getEvent()->getRouteMatch()->getParam(Constantes::$ID, 0);
-        $entidade = $repositorioORM->getEntidadeORM()->encontrarPorId($idUrl);
-        $numeroIdentificador = $repositorioORM->getFatoCicloORM()->montarNumeroIdentificador($repositorioORM, $entidade->getGrupo());
+        $entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idUrl);
+        $numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $entidade->getGrupo());
         $periodo = 0; // atual
         $tipoRelatorioEquipe = 2;
         $retornaJson = true;
-        $relatorio = RelatorioController::montaRelatorio($repositorioORM, $numeroIdentificador, $periodo, $tipoRelatorioEquipe, $retornaJson);
+        $relatorio = RelatorioController::montaRelatorio($this->getRepositorio(), $numeroIdentificador, $periodo, $tipoRelatorioEquipe, $retornaJson);
 
         $response = $this->getResponse();
         $response->setContent($relatorio);
@@ -319,53 +328,53 @@ class RelatorioController extends CircuitoController {
 
     public function testeAction() {
         try {
-            $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
+
             $setarDataEHora = false;
 
-            $pessoa = $repositorioORM->getPessoaORM()->encontrarPorEmail('falecomleonardopereira@gmail.com');
+            $pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorEmail('falecomleonardopereira@gmail.com');
 
             /* Inativando */
             $grupoResponsavels = $pessoa->getGrupoResponsavel();
             $gruposAtual = null;
             foreach ($grupoResponsavels as $gr) {
                 $gr->setDataEHoraDeInativacao();
-                $repositorioORM->getGrupoResponsavelORM()->persistir($gr, $setarDataEHora);
+                $this->getRepositorio()->getGrupoResponsavelORM()->persistir($gr, $setarDataEHora);
                 $gruposAtual = $gr->getGrupo();
             }
             $gruposAtual->setDataEHoraDeInativacao();
-            $repositorioORM->getGrupoORM()->persistir($gruposAtual, $setarDataEHora);
+            $this->getRepositorio()->getGrupoORM()->persistir($gruposAtual, $setarDataEHora);
 
             $gpf = $gruposAtual->getGrupoPaiFilhoPai();
             $gpf->setDataEHoraDeInativacao();
-            $repositorioORM->getGrupoPaiFilhoORM()->persistir($gpf, $setarDataEHora);
+            $this->getRepositorio()->getGrupoPaiFilhoORM()->persistir($gpf, $setarDataEHora);
 
             $entidade = $gruposAtual->getEntidadeAtiva();
             $entidade->setNome('TRANSFERIDA - ' . $entidade->getNome());
-            $repositorioORM->getEntidadeORM()->persistir($entidade, $setarDataEHora);
+            $this->getRepositorio()->getEntidadeORM()->persistir($entidade, $setarDataEHora);
 
             /* Cadastrando */
             $grupoNovo = new Grupo();
-            $repositorioORM->getGrupoORM()->persistir($grupoNovo);
+            $this->getRepositorio()->getGrupoORM()->persistir($grupoNovo);
 
             $novaEntidade = new Entidade();
             $novaEntidade->setGrupo($grupoNovo);
             $novaEntidade->setNome('NOVO GRUPO');
-            $novaEntidade->setEntidadeTipo($repositorioORM->getEntidadeTipoORM()->encontrarPorId(EntidadeTipo::subEquipe));
-            $repositorioORM->getEntidadeORM()->persistir($novaEntidade);
+            $novaEntidade->setEntidadeTipo($this->getRepositorio()->getEntidadeTipoORM()->encontrarPorId(EntidadeTipo::subEquipe));
+            $this->getRepositorio()->getEntidadeORM()->persistir($novaEntidade);
 
-            $pessoaPai = $repositorioORM->getPessoaORM()->encontrarPorEmail('rsilverio2012@hotmail.com');
+            $pessoaPai = $this->getRepositorio()->getPessoaORM()->encontrarPorEmail('rsilverio2012@hotmail.com');
             $grPai = $pessoaPai->getGrupoResponsavel()[0];
             $grupoPai = $grPai->getGrupo();
 
             $grupoPF = new GrupoPaiFilho();
             $grupoPF->setGrupoPaiFilhoFilho($grupoNovo);
             $grupoPF->setGrupoPaiFilhoPai($grupoPai);
-            $repositorioORM->getGrupoPaiFilhoORM()->persistir($grupoPF);
+            $this->getRepositorio()->getGrupoPaiFilhoORM()->persistir($grupoPF);
 
             $grupoResponsavelNovo = new GrupoResponsavel();
             $grupoResponsavelNovo->setGrupo($grupoNovo);
             $grupoResponsavelNovo->setPessoa($pessoa);
-            $repositorioORM->getGrupoResponsavelORM()->persistir($grupoResponsavelNovo);
+            $this->getRepositorio()->getGrupoResponsavelORM()->persistir($grupoResponsavelNovo);
 
             $gpessoas = $gruposAtual->getGrupoPessoa();
             foreach ($gpessoas as $gp) {
@@ -373,18 +382,25 @@ class RelatorioController extends CircuitoController {
                 $grupoPessoa->setGrupo($grupoNovo);
                 $grupoPessoa->setPessoa($gp->getPessoa());
                 $grupoPessoa->setGrupoPessoaTipo($gp->getGrupoPessoaTipo());
-                $repositorioORM->getGrupoPessoaORM()->persistir($grupoPessoa);
+                $this->getRepositorio()->getGrupoPessoaORM()->persistir($grupoPessoa);
             }
             $geventos = $gruposAtual->getGrupoEventoAtivosPorTipo(GrupoEvento::CELULA);
             foreach ($geventos as $ge) {
                 $grupoEvento = new GrupoEvento();
                 $grupoEvento->setGrupo($grupoNovo);
                 $grupoEvento->setEvento($ge->getEvento());
-                $repositorioORM->getGrupoEventoORM()->persistir($grupoEvento);
+                $this->getRepositorio()->getGrupoEventoORM()->persistir($grupoEvento);
             }
         } catch (Exception $exc) {
             echo $exc->getMessage();
         }
+    }
+
+    function getRepositorio() {
+        if (empty($this->repositorio)) {
+            $this->repositorio = new RepositorioORM($this->getDoctrineORMEntityManager());
+        }
+        return $this->repositorio;
     }
 
 }

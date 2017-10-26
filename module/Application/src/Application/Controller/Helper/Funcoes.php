@@ -61,17 +61,19 @@ class Funcoes {
         try {
 //            $mail->SMTPDebug = 1;
             $mail->isSMTP();
+            $mail->Charset = 'utf8_decode()';
             $mail->Host = '200.147.36.31';
             $mail->SMTPAuth = true;
             $mail->Username = 'leonardo@circuitodavisao.com.br';
             $mail->Password = 'Leonardo142857';
 //      $mail->SMTPSecure = 'tls';                            
             $mail->Port = 587;
-            $mail->setFrom('leonardo@circuitodavisao.com.br', 'Circuito da Visao');
+            $mail->From = 'leonardo@circuitodavisao.com.br';
+            $mail->FromName = utf8_decode('Circuito da Visão');
             $mail->addAddress($email);
             $mail->isHTML(true);
-            $mail->Subject = $titulo;
-            $mail->Body = $mensagem;
+            $mail->Subject = utf8_decode($titulo);
+            $mail->Body = utf8_decode($mensagem);
 //      $mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
             $mail->send();
         } catch (Exception $exc) {
@@ -412,7 +414,7 @@ class Funcoes {
      * @param int $tipo
      * @return string
      */
-    public static function mesPorExtenso($mes, $tipo = 0) { 
+    public static function mesPorExtenso($mes, $tipo = 0) {
         $resposta = '';
         switch ($mes) {
             case 1:$resposta = 'JAN';

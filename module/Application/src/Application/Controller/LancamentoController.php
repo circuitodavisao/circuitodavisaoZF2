@@ -27,6 +27,8 @@ use Zend\View\Model\ViewModel;
  */
 class LancamentoController extends CircuitoController {
 
+    private $repositorio;
+
     /**
      * Contrutor sobrecarregado com os serviços de ORM 
      */
@@ -43,9 +45,9 @@ class LancamentoController extends CircuitoController {
      */
     public function arregimentacaoAction() {
         /* Helper Controller */
-        $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
+
         $sessao = new Container(Constantes::$NOME_APLICACAO);
-        $entidade = CircuitoController::getEntidadeLogada($repositorioORM, $sessao);
+        $entidade = CircuitoController::getEntidadeLogada($this->getRepositorio(), $sessao);
         $grupo = $entidade->getGrupo();
 
         $periodo = $this->getEvent()->getRouteMatch()->getParam(Constantes::$ID, 0);
@@ -95,7 +97,7 @@ class LancamentoController extends CircuitoController {
 
         $view = new ViewModel(
                 array(
-            Constantes::$REPOSITORIO_ORM => $repositorioORM,
+            Constantes::$REPOSITORIO_ORM => $this->getRepositorio(),
             Constantes::$GRUPO => $grupo,
             Constantes::$PERIODO => $periodo,
             Constantes::$VALIDACAO => $validacaoPessoasCadastradas,
@@ -132,9 +134,9 @@ class LancamentoController extends CircuitoController {
         $response = $this->getResponse();
         if ($request->isPost()) {
             /* Helper Controller */
-            $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
+
             try {
-                $repositorioORM->iniciarTransacao();
+                $this->getRepositorio()->iniciarTransacao();
 
                 $post_data = $request->getPost();
                 $valor = $post_data['valor'];
@@ -148,8 +150,8 @@ class LancamentoController extends CircuitoController {
                 $arrayDataReal = explode('-', $diaRealDoEvento);
                 $ciclo = Funcoes::cicloPorData($arrayDataReal[2], $arrayDataReal[1], $arrayDataReal[0]);
 
-                $pessoa = $repositorioORM->getPessoaORM()->encontrarPorId($idPessoa);
-                $evento = $repositorioORM->getEventoORM()->encontrarPorId($idEvento);
+                $pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($idPessoa);
+                $evento = $this->getRepositorio()->getEventoORM()->encontrarPorId($idEvento);
 
                 /* Verificar se a frequencia ja existe */
                 $eventosFiltrado = $pessoa->getEventoFrequenciaFiltradoPorEventoEDia($idEvento, $diaRealDoEvento);
@@ -157,7 +159,7 @@ class LancamentoController extends CircuitoController {
                     /* Frequencia existe */
                     $frequencia = $eventosFiltrado;
                     $frequencia->setFrequencia($valor);
-                    $repositorioORM->getEventoFrequenciaORM()->persistir($frequencia);
+                    $this->getRepositorio()->getEventoFrequenciaORM()->persistir($frequencia);
                 } else {
                     /* Persitir frequencia */
                     $eventoFrequencia = new EventoFrequencia();
@@ -165,7 +167,7 @@ class LancamentoController extends CircuitoController {
                     $eventoFrequencia->setEvento($evento);
                     $eventoFrequencia->setFrequencia($valor);
                     $eventoFrequencia->setDia($dateFormatada);
-                    $repositorioORM->getEventoFrequenciaORM()->persistir($eventoFrequencia);
+                    $this->getRepositorio()->getEventoFrequenciaORM()->persistir($eventoFrequencia);
                 }
 
                 $valorParaSomar = 0;
@@ -175,8 +177,8 @@ class LancamentoController extends CircuitoController {
                     $valorParaSomar = -1;
                 }
 
-                $grupoPassado = $repositorioORM->getGrupoORM()->encontrarPorId($idGrupo);
-                $numeroIdentificador = $repositorioORM->getFatoCicloORM()->montarNumeroIdentificador($repositorioORM);
+                $grupoPassado = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupo);
+                $numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio());
                 $eventoTipoCulto = 1;
                 $eventoTipoCelula = 2;
                 $dimensaoTipoCelula = 1;
@@ -188,8 +190,8 @@ class LancamentoController extends CircuitoController {
                 $resultadoPeriodo = Funcoes::montaPeriodo($periodo);
                 $dataDoPeriodo = $resultadoPeriodo[3] . '-' . $resultadoPeriodo[2] . '-' . $resultadoPeriodo[1];
                 $dataDoPeriodoFormatada = DateTime::createFromFormat('Y-m-d', $dataDoPeriodo);
-                $fatoCicloSelecionado = $repositorioORM->getFatoCicloORM()->encontrarPorNumeroIdentificadorEDataCriacao(
-                        $numeroIdentificador, $dataDoPeriodoFormatada, $repositorioORM);
+                $fatoCicloSelecionado = $this->getRepositorio()->getFatoCicloORM()->encontrarPorNumeroIdentificadorEDataCriacao(
+                        $numeroIdentificador, $dataDoPeriodoFormatada, $this->getRepositorio());
 
                 if ($fatoCicloSelecionado->getDimensao()) {
                     foreach ($fatoCicloSelecionado->getDimensao() as $dimensao) {
@@ -263,7 +265,7 @@ class LancamentoController extends CircuitoController {
                     $realizadaAntesDeMudar = $fatoCelulaSelecionado->getRealizada();
                     $fatoCelulaSelecionado->setRealizada($realizada);
                     $setarDataEHora = false;
-                    $repositorioORM->getFatoCelulaORM()->persistir($fatoCelulaSelecionado, $setarDataEHora);
+                    $this->getRepositorio()->getFatoCelulaORM()->persistir($fatoCelulaSelecionado, $setarDataEHora);
 
                     /* Atualizar DW celulas circuito antigo */
                     if ($grupoPassado->getGrupoCv()) {
@@ -300,19 +302,19 @@ class LancamentoController extends CircuitoController {
                     $valorDoCampo = $dimensaoSelecionada->getLider();
                     $dimensaoSelecionada->setLider($valorDoCampo + $valorParaSomar);
                 }
-                $repositorioORM->getDimensaoORM()->persistir($dimensaoSelecionada, false);
+                $this->getRepositorio()->getDimensaoORM()->persistir($dimensaoSelecionada, false);
 
                 /* Atualizar DW circuito antigo */
                 if ($grupoPassado->getGrupoCv()) {
                     $grupoCv = $grupoPassado->getGrupoCv();
                     IndexController::mudarFrequencia($grupoCv->getNumero_identificador(), $arrayDataReal[1], $arrayDataReal[0], $tipoCampo, $tipoPessoa, $ciclo, $valorParaSomar);
                 }
-                $repositorioORM->fecharTransacao();
+                $this->getRepositorio()->fecharTransacao();
                 $response->setContent(Json::encode(
                                 array('response' => 'true',
                                     'idEvento' => $evento->getId())));
             } catch (Exception $exc) {
-                $repositorioORM->desfazerTransacao();
+                $this->getRepositorio()->desfazerTransacao();
                 echo $exc->getTraceAsString();
             }
         }
@@ -325,8 +327,8 @@ class LancamentoController extends CircuitoController {
      */
     public function cadastrarPessoaAction() {
         /* Helper Controller */
-        $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
-        $tipos = $repositorioORM->getGrupoPessoaTipoORM()->tipoDePessoaLancamento();
+
+        $tipos = $this->getRepositorio()->getGrupoPessoaTipoORM()->tipoDePessoaLancamento();
         /* Formulario */
         $formCadastrarPessoa = new CadastrarPessoaForm(Constantes::$FORM_CADASTRAR_PESSOA, $tipos);
         $periodo = $this->getEvent()->getRouteMatch()->getParam(Constantes::$ID, 0);
@@ -366,14 +368,14 @@ class LancamentoController extends CircuitoController {
                     $pessoa->setTelefone($validatedData[Constantes::$INPUT_DDD] . $validatedData[Constantes::$INPUT_TELEFONE]);
 
                     /* Helper Controller */
-                    $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
+
 
                     /* Grupo selecionado */
-                    $grupo = $this->getGrupoSelecionado($repositorioORM);
+                    $grupo = $this->getGrupoSelecionado($this->getRepositorio());
 
                     /* Salvar a pessoa e o grupo pessoa correspondente */
-                    $repositorioORM->getPessoaORM()->persistir($pessoa);
-                    $grupoPessoaTipo = $repositorioORM->getGrupoPessoaTipoORM()->encontrarPorId($post_data[Constantes::$INPUT_TIPO]);
+                    $this->getRepositorio()->getPessoaORM()->persistir($pessoa);
+                    $grupoPessoaTipo = $this->getRepositorio()->getGrupoPessoaTipoORM()->encontrarPorId($post_data[Constantes::$INPUT_TIPO]);
 
                     $grupoPessoa = new GrupoPessoa();
                     $grupoPessoa->setPessoa($pessoa);
@@ -384,7 +386,7 @@ class LancamentoController extends CircuitoController {
                         $grupoPessoa->setNucleo_perfeito($nucleoPerfeito);
                     }
 
-                    $repositorioORM->getGrupoPessoaORM()->persistir($grupoPessoa);
+                    $this->getRepositorio()->getGrupoPessoaORM()->persistir($grupoPessoa);
 
                     /* Pondo valores na sessao */
                     $sessao = new Container(Constantes::$NOME_APLICACAO);
@@ -419,11 +421,11 @@ class LancamentoController extends CircuitoController {
                 $nome = $post_data['nome'];
 
                 /* Helper Controller */
-                $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
 
-                $pessoa = $repositorioORM->getPessoaORM()->encontrarPorId($idPessoa);
+
+                $pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($idPessoa);
                 $pessoa->setNome($nome);
-                $repositorioORM->getPessoaORM()->persistir($pessoa);
+                $this->getRepositorio()->getPessoaORM()->persistir($pessoa);
 
                 $response->setContent(Json::encode(
                                 array(
@@ -447,11 +449,11 @@ class LancamentoController extends CircuitoController {
             $sessao = new Container(Constantes::$NOME_APLICACAO);
 
             /* Helper Controller */
-            $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
 
-            $grupoPessoa = $repositorioORM->getGrupoPessoaORM()->encontrarPorId($sessao->idSessao);
+
+            $grupoPessoa = $this->getRepositorio()->getGrupoPessoaORM()->encontrarPorId($sessao->idSessao);
             $grupoPessoa->setDataEHoraDeInativacao();
-            $repositorioORM->getGrupoPessoaORM()->persistir($grupoPessoa, false);
+            $this->getRepositorio()->getGrupoPessoaORM()->persistir($grupoPessoa, false);
 
             /* Pondo valores na sessao */
             $sessao->mostrarNotificacao = true;
@@ -499,9 +501,9 @@ class LancamentoController extends CircuitoController {
      */
     public function atendimentoAction() {
         $sessao = new Container(Constantes::$NOME_APLICACAO);
-        $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
+
         $idEntidadeAtual = $sessao->idEntidadeAtual;
-        $entidade = $repositorioORM->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+        $entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
         $grupo = $entidade->getGrupo();
 
         $parametro = $this->params()->fromRoute(Constantes::$ID);
@@ -554,9 +556,9 @@ class LancamentoController extends CircuitoController {
         $tipoLancar = 1;
         $tipoRemover = 2;
         if ($request->isPost()) {
-            $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
+
             try {
-                $repositorioORM->iniciarTransacao();
+                $this->getRepositorio()->iniciarTransacao();
 
                 $post_data = $request->getPost();
                 $tipo = (int) $post_data['tipo'];
@@ -566,13 +568,13 @@ class LancamentoController extends CircuitoController {
                 $anoSelecionado = Funcoes::anoPorAbaSelecionada($abaSelecionada);
 
                 $grupoAtendimentosFiltrados = array();
-                $grupoLancado = $repositorioORM->getGrupoORM()->encontrarPorId($idGrupo);
+                $grupoLancado = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupo);
 
                 if ($tipo === $tipoLancar) {
                     $grupoAtendimento = new GrupoAtendimento();
                     $grupoAtendimento->setDataEHoraDeCriacao();
                     $grupoAtendimento->setGrupo($grupoLancado);
-                    $repositorioORM->getGrupoAtendimentoORM()->persistir($grupoAtendimento);
+                    $this->getRepositorio()->getGrupoAtendimentoORM()->persistir($grupoAtendimento);
                 }
                 if ($tipo === $tipoRemover) {
                     $grupoAtendimentoParaDesativar = null;
@@ -588,13 +590,13 @@ class LancamentoController extends CircuitoController {
                     }
                     if ($grupoAtendimentoParaDesativar) {
                         $grupoAtendimentoParaDesativar->setDataEHoraDeInativacao();
-                        $repositorioORM->getGrupoAtendimentoORM()->persistir($grupoAtendimentoParaDesativar, false);
+                        $this->getRepositorio()->getGrupoAtendimentoORM()->persistir($grupoAtendimentoParaDesativar, false);
                     }
                 }
 
                 $numeroAtendimentos = $grupoLancado->totalDeAtendimentos($mesSelecionado, $anoSelecionado);
 
-                $explodeProgresso = explode('_', $this->retornaProgressoUsuarioNoMesEAno($repositorioORM, $mesSelecionado, $anoSelecionado));
+                $explodeProgresso = explode('_', $this->retornaProgressoUsuarioNoMesEAno($this->getRepositorio(), $mesSelecionado, $anoSelecionado));
                 $progresso = number_format($explodeProgresso[0], 2, '.', '');
                 $colorBarTotal = LancamentoController::retornaClassBarradeProgressoPeloValor($progresso);
 
@@ -614,7 +616,7 @@ class LancamentoController extends CircuitoController {
                     }
                     IndexController::cadastrarAtendimentoPorid($idAtendimento, $atendimentoLancado);
                 }
-                $repositorioORM->fecharTransacao();
+                $this->getRepositorio()->fecharTransacao();
                 $response->setContent(Json::encode(
                                 array('response' => 'true',
                                     'numeroAtendimentos' => $numeroAtendimentos,
@@ -622,7 +624,7 @@ class LancamentoController extends CircuitoController {
                                     'corBarraTotal' => $colorBarTotal,
                                     'totalGruposAtendidos' => $explodeProgresso[1],)));
             } catch (Exception $exc) {
-                $repositorioORM->desfazerTransacao();
+                $this->getRepositorio()->desfazerTransacao();
                 echo $exc->getTraceAsString();
             }
         }
@@ -680,6 +682,13 @@ class LancamentoController extends CircuitoController {
         $idEntidadeAtual = $sessao->idEntidadeAtual;
         $entidade = $repositorioORM->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
         return $entidade->getGrupo();
+    }
+
+    function getRepositorio() {
+        if (empty($this->repositorio)) {
+            $this->repositorio = new RepositorioORM($this->getDoctrineORMEntityManager());
+        }
+        return $this->repositorio;
     }
 
 }
