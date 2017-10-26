@@ -137,7 +137,7 @@ class Menu extends AbstractHelper {
                 $nomeLideres = Self::montaNomeLideres($grupoResponsavel);
                 $informacaoEntidade = Self::montaInformacaoEntidade($entidadeFilho);
 
-                $discipulos144 = $grupoFilho->getGrupoPaiFilhoFilhosAtivos(1);
+                $discipulos144 = $grupoFilho->getGrupoPaiFilhoFilhosAtivos(0);
                 if (count($discipulos144) > 0) {
                     $html .= $this->view->menuHierarquia($nomeLideres, $informacaoEntidade, 2);
                     $html .= $this->view->menuHierarquia('', '', 3, $grupoFilho->getId());
@@ -149,7 +149,7 @@ class Menu extends AbstractHelper {
                         $nomeLideres144 = Self::montaNomeLideres($grupoResponsavel144);
                         $informacaoEntidade144 = Self::montaInformacaoEntidade($entidadeFilho144);
 
-                        $discipulos1728 = $grupoFilho144->getGrupoPaiFilhoFilhosAtivos(1);
+                        $discipulos1728 = $grupoFilho144->getGrupoPaiFilhoFilhosAtivos(0);
                         if (count($discipulos1728) > 0) {
                             $html .= $this->view->menuHierarquia($nomeLideres144, $informacaoEntidade144, 2);
                             $html .= $this->view->menuHierarquia('', '', 3, $grupoFilho144->getId());
@@ -161,7 +161,7 @@ class Menu extends AbstractHelper {
                                 $nomeLideres1728 = Self::montaNomeLideres($grupoResponsavel1728);
                                 $informacaoEntidade1728 = Self::montaInformacaoEntidade($entidadeFilho1728);
 
-                                $discipulos20736 = $grupoFilho1728->getGrupoPaiFilhoFilhosAtivos(1);
+                                $discipulos20736 = $grupoFilho1728->getGrupoPaiFilhoFilhosAtivos(0);
                                 if (count($discipulos20736) > 0) {
                                     $html .= $this->view->menuHierarquia($nomeLideres1728, $informacaoEntidade1728, 2);
                                     $html .= $this->view->menuHierarquia('', '', 3, $grupoFilho1728->getId());
