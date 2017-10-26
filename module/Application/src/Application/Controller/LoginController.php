@@ -27,6 +27,7 @@ class LoginController extends CircuitoController {
 
     private $_doctrineAuthenticationService;
     private $_translator;
+    private $repositorio;
 
     /**
      * Contrutor sobrecarregado com os serviços de ORM e Autenticador
@@ -134,10 +135,10 @@ class LoginController extends CircuitoController {
             $this->getDoctrineAuthenticationServicer()->getStorage()->write($identity);
 
             /* Helper Controller */
-            $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
+
 
             /* Verificar se existe pessoa por email informado */
-            $pessoa = $repositorioORM->getPessoaORM()->encontrarPorEmail($usuarioTrim);
+            $pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorEmail($usuarioTrim);
 
             /* Tem responsabilidade(s) */
             if (count($pessoa->getResponsabilidadesAtivas()) > 0) {
@@ -198,10 +199,10 @@ class LoginController extends CircuitoController {
                 /* Autenticacao valida */
 
                 /* Helper Controller */
-                $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
+
 
                 /* Verificar se existe pessoa por email informado */
-                $pessoa = $repositorioORM->getPessoaORM()->encontrarPorEmail($data[Constantes::$INPUT_USUARIO]);
+                $pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorEmail($data[Constantes::$INPUT_USUARIO]);
 
                 /* Tem responsabilidade(s) */
                 if (count($pessoa->getResponsabilidadesAtivas()) > 0) {
@@ -319,7 +320,7 @@ class LoginController extends CircuitoController {
         $request = $this->getRequest();
         if ($request->isPost()) {
             /* Helper Controller */
-            $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
+
 
             /* Dados da requisição POST */
             $dataPost = $request->getPost();
@@ -331,7 +332,7 @@ class LoginController extends CircuitoController {
             if ($tipoDePesquisa == 1) {
                 $email = $dataPost[Constantes::$INPUT_USUARIO];
                 if ($email) {
-                    $pessoa = $repositorioORM->getPessoaORM()->encontrarPorEmail($email);
+                    $pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorEmail($email);
                 }
             }
             if ($tipoDePesquisa == 2) {
@@ -341,7 +342,7 @@ class LoginController extends CircuitoController {
                 $mesNascimento = $dataPost[Constantes::$FORM_INPUT_MES];
                 $anoNascimento = $dataPost[Constantes::$FORM_INPUT_ANO];
 
-                $pessoa = $repositorioORM->getPessoaORM()->
+                $pessoa = $this->getRepositorio()->getPessoaORM()->
                         encontrarPorCPFEDataNascimento($documento, $anoNascimento . '-' . $mesNascimento . '-' . $diaNascimento);
             }
 
@@ -370,7 +371,7 @@ class LoginController extends CircuitoController {
                         $tokenDeAgora = $pessoa->gerarToken();
                         /* Persistir pessoa */
                         $pessoa->setToken($tokenDeAgora);
-                        $repositorioORM->getPessoaORM()->persistir($pessoa, false);
+                        $this->getRepositorio()->getPessoaORM()->persistir($pessoa, false);
 
                         $mensagemAjustada = str_replace('#id', $tokenDeAgora, $mensagemComEmail);
                         Funcoes::enviarEmail($email, $this->getTranslator()->translate(Constantes::$TRADUCAO_EMAIL_TITULO_RECUPERAR_SENHA), $mensagemAjustada);
@@ -403,10 +404,10 @@ class LoginController extends CircuitoController {
     public function recuperarSenhaAction() {
         unset($dados);
         /* Helper Controller */
-        $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
+
 
         $tokenDaRota = $this->params()->fromRoute(Constantes::$ID);
-        $pessoa = $repositorioORM->getPessoaORM()->encontrarPorToken($tokenDaRota);
+        $pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorToken($tokenDaRota);
         if ($pessoa) {
             /* Verificando se se passaram 24 horas desde a solicitacao */
             /* Data e Hora atual */
@@ -465,11 +466,11 @@ class LoginController extends CircuitoController {
         if ($request->isPost()) {
             try {
                 /* Helper Controller */
-                $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
+
 
                 /* Dados da requisição POST */
                 $dataPost = $request->getPost();
-                $pessoa = $repositorioORM->getPessoaORM()->encontrarPorId($dataPost[Constantes::$INPUT_ID_PESSOA]);
+                $pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($dataPost[Constantes::$INPUT_ID_PESSOA]);
 
                 $senhaNova = $dataPost[Constantes::$INPUT_SENHA];
                 if (!$senhaNova) {
@@ -480,7 +481,7 @@ class LoginController extends CircuitoController {
                 $pessoa->setToken_data(null);
                 $pessoa->setToken_hora(null);
                 /* Salvando nova senha */
-                $repositorioORM->getPessoaORM()->persistir($pessoa, false);
+                $this->getRepositorio()->getPessoaORM()->persistir($pessoa, false);
             } catch (Exception $exc) {
                 echo $exc->getMessage();
             }
@@ -500,11 +501,11 @@ class LoginController extends CircuitoController {
      */
     public function selecionarPerfilAction() {
         /* Helper Controller */
-        $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
+
         $sessao = new Container(Constantes::$NOME_APLICACAO);
         $idPessoa = $sessao->idPessoa;
         if ($idPessoa) {
-            $pessoa = $repositorioORM->getPessoaORM()->encontrarPorId($idPessoa);
+            $pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($idPessoa);
             /* Responsabilidades */
             $responsabilidadesAtivas = $pessoa->getResponsabilidadesAtivas(true);
             if ($responsabilidadesAtivas) {
@@ -546,13 +547,13 @@ class LoginController extends CircuitoController {
     public function preSaidaAction() {
 
         /* Helper Controller */
-        $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
+
         $sessao = new Container(Constantes::$NOME_APLICACAO);
         $idPessoa = $sessao->idPessoa;
         if (!$idPessoa) {
             CircuitoController::direcionandoAoLogin($this);
         }
-        $pessoa = $repositorioORM->getPessoaORM()->encontrarPorId($idPessoa);
+        $pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($idPessoa);
 
         $view = new ViewModel(array(Constantes::$ENTITY_PESSOA_NOME => $pessoa->getNomePrimeiroUltimo()));
 
@@ -582,11 +583,9 @@ class LoginController extends CircuitoController {
      * GET /novaSenha
      */
     public function novaSenhaAction() {
-        /* Helper Controller */
-        $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
 
         $tokenDaRota = $this->params()->fromRoute(Constantes::$ID);
-        $pessoa = $repositorioORM->getPessoaORM()->encontrarPorToken($tokenDaRota);
+        $pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorToken($tokenDaRota);
         if ($pessoa) {
             $formNovaSenha = new NovaSenhaForm(Constantes::$NOVA_SENHA_FORM, $pessoa->getId());
             $dados[Constantes::$FORM_NOVA_SENHA] = $formNovaSenha;
@@ -625,6 +624,13 @@ class LoginController extends CircuitoController {
      */
     public function getTranslator() {
         return $this->_translator;
+    }
+
+    function getRepositorio() {
+        if (empty($this->repositorio)) {
+            $this->repositorio = new RepositorioORM($this->getDoctrineORMEntityManager());
+        }
+        return $this->repositorio;
     }
 
 }

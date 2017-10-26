@@ -34,8 +34,12 @@ class CircuitoEntity {
     /**
      * Seta data e hora de criação
      */
-    function setDataEHoraDeCriacao() {
-        $timeNow = new DateTime();
+    function setDataEHoraDeCriacao($date = null) {
+        if ($date) {
+            $timeNow = DateTime::createFromFormat('Y-m-d', $date);
+        } else {
+            $timeNow = new DateTime();
+        }
         $this->setData_criacao($timeNow);
         $this->setHora_criacao($timeNow->format('H:s:i'));
     }
@@ -43,8 +47,12 @@ class CircuitoEntity {
     /**
      * Seta data e hora de criação
      */
-    function setDataEHoraDeInativacao() {
-        $timeNow = new DateTime();
+    function setDataEHoraDeInativacao($date = null) {
+        if ($date) {
+            $timeNow = DateTime::createFromFormat('Y-m-d', $date);
+        } else {
+            $timeNow = new DateTime();
+        }
         $this->setData_inativacao($timeNow);
         $this->setHora_inativacao($timeNow->format('H:s:i'));
     }

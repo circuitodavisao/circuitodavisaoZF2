@@ -65,6 +65,16 @@ class DeployController extends CircuitoController {
                 $dados['email'] = $pessoa->getEmail();
                 $dados['senha'] = $pessoa->getSenha();
                 $dados['hierarquia'] = $pessoa->getPessoaHierarquiaAtivo()->getHierarquia()->getNome();
+                if ($grupoResponsaveis = $pessoa->getResponsabilidadesAtivas()) {
+                    foreach ($grupoResponsaveis as $grupoResponsavel) {
+                        $dados['GrupoResponsabilidadeGrupoId-' . $grupoResponsavel->getId()] = $grupoResponsavel->getGrupo()->getId();
+                        foreach ($grupoResponsavel->getGrupo()->getEntidade() as $entidade) {
+                            $dados['Entidade-' . $grupoResponsavel->getId()] = $entidade->getId();
+                            $dados['EntidadeInfo-' . $grupoResponsavel->getId()] = $entidade->infoEntidade();
+                        }
+                    }
+                }
+
                 $resultado[] = $dados;
             } else {
                 $resposta = $repositorioORM->getPessoaORM()->encontrarPorNome($idPessoa);
