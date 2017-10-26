@@ -3,6 +3,8 @@
 namespace Migracao\Controller;
 
 use Application\Controller\CircuitoController;
+use Application\Controller\Helper\Constantes;
+use Application\Controller\Helper\Funcoes;
 use Application\Model\Entity\Entidade;
 use Application\Model\Entity\Evento;
 use Application\Model\Entity\EventoCelula;
@@ -16,6 +18,7 @@ use Application\Model\Entity\GrupoResponsavel;
 use Application\Model\Entity\Pessoa;
 use Application\Model\Entity\PessoaHierarquia;
 use Application\Model\ORM\RepositorioORM;
+use DateTime;
 use Doctrine\ORM\EntityManager;
 use Exception;
 use Zend\View\Model\ViewModel;
