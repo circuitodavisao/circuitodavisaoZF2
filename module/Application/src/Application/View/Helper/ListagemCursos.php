@@ -72,6 +72,9 @@ class ListagemCursos extends AbstractHelper {
             $html .= '<th class="text-center">';
             $html .= 'Nome';
             $html .= '</th>';
+            $html .= '<th class="text-center hidden-xs">';
+            $html .= 'Qtd. de Disciplinas';
+            $html .= '</th>';
 
 //                    }
             $html .= '<th class="text-center">Ações</th>';
@@ -97,6 +100,7 @@ class ListagemCursos extends AbstractHelper {
                 }
                 $html .= '<td class="text-center hidden-xs">' . $nomePessoaQueCriou . '</td>';
                 $html .= '<td class="text-center">' . $curso->getNome() . '</td>';
+                $html .= '<td class="text-center">' . count($curso->getDisciplina()) . '</td>';
 
                 $html .= '<td class="text-center">';
                 $html .= $this->view->botaoLink(Constantes::$STRING_ICONE_TIMES, Constantes::$STRING_HASHTAG, 9, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClickExclusao));
