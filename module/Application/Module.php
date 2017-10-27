@@ -347,7 +347,7 @@ class Module {
             $grupo = $entidade->getGrupo();
             $viewModel->entidade = $entidade;
             $discipulos = null;
-            if (count($grupo->getGrupoPaiFilhoFilhosAtivos()) > 0) {
+            if (count($grupo->getGrupoPaiFilhoFilhosAtivos(0)) > 0) {
                 $discipulos = $grupo->getGrupoPaiFilhoFilhosAtivos(0);
             }
             $viewModel->discipulos = $discipulos;
