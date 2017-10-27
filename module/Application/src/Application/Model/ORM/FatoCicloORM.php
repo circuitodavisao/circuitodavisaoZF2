@@ -157,7 +157,7 @@ class FatoCicloORM extends CircuitoORM {
     /**
      * Montar numeroIdentificador
      */
-    public function montarNumeroIdentificador(RepositorioORM $repositorioORM, $grupo = null) {
+    public function montarNumeroIdentificador(RepositorioORM $repositorioORM, $grupo = null, $dataInativacao = null) {
         $numeroIdentificador = null;
         $tamanho = 8;
         $grupoSelecionado = null;
@@ -171,18 +171,36 @@ class FatoCicloORM extends CircuitoORM {
             $grupoSelecionado = $grupo;
         }
         try {
-            while ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::SUBEQUIPE) {
+            $entidadeSelecionada = null;
+            if (!$grupoSelecionado->getEntidadeInativaPorDataInativacao($dataInativacao)) {
+                $entidadeSelecionada = $grupoSelecionado->getEntidadeAtiva();
+            } else {
+                $entidadeSelecionada = $grupoSelecionado->getEntidadeInativaPorDataInativacao($dataInativacao);
+            }
+            $tipoEntidade = $entidadeSelecionada->getEntidadeTipo()->getId();
+            while ($tipoEntidade === Entidade::SUBEQUIPE) {
                 $numeroIdentificador = str_pad($grupoSelecionado->getId(), $tamanho, 0, STR_PAD_LEFT) . $numeroIdentificador;
-                if ($grupoSelecionado->getGrupoPaiFilhoPaiAtivo()) {
-                    $grupoSelecionado = $grupoSelecionado->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai();
+                if (!$grupoSelecionado->getGrupoPaiFilhoPaiPorDataInativacao($dataInativacao)) {
+                    if ($grupoSelecionado->getGrupoPaiFilhoPaiAtivo()) {
+                        $grupoSelecionado = $grupoSelecionado->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai();
+                    } else {
+                        break;
+                    }
                 } else {
-                    $grupoSelecionado = $grupoSelecionado->getGrupoPaiFilhoPaiInativo()->getGrupoPaiFilhoPai();
+                    $grupoSelecionado = $grupoSelecionado->getGrupoPaiFilhoPaiPorDataInativacao($dataInativacao)->getGrupoPaiFilhoPai();
+                }
+                if (!$grupoSelecionado->getEntidadeInativaPorDataInativacao($dataInativacao)) {
+                    $tipoEntidade = $grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId();
+                } else {
+                    $tipoEntidade = $grupoSelecionado->getEntidadeInativaPorDataInativacao($dataInativacao)->getEntidadeTipo()->getId();
                 }
             }
             if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::EQUIPE) {
                 $numeroIdentificador = str_pad($grupoSelecionado->getId(), $tamanho, 0, STR_PAD_LEFT) . $numeroIdentificador;
-                if ($grupoSelecionado->getGrupoPaiFilhoPaiAtivo()) {
+                if (!$grupoSelecionado->getGrupoPaiFilhoPaiPorDataInativacao($dataInativacao)) {
                     $grupoSelecionado = $grupoSelecionado->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai();
+                } else {
+                    $grupoSelecionado = $grupoSelecionado->getGrupoPaiFilhoPaiPorDataInativacao($dataInativacao)->getGrupoPaiFilhoPai();
                 }
             }
             if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::IGREJA) {

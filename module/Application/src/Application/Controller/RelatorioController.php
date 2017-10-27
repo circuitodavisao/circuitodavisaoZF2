@@ -86,7 +86,11 @@ class RelatorioController extends CircuitoController {
             $relatorioDiscipulos = array();
             foreach ($grupoPaiFilhoFilhos as $gpFilho) {
                 $grupoFilho = $gpFilho->getGrupoPaiFilhoFilho();
-                $numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupoFilho);
+                $dataInativacao = null;
+                if ($gpFilho->getData_inativacao()) {
+                    $dataInativacao = $gpFilho->getData_inativacaoStringPadraoBanco();
+                }
+                $numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupoFilho, $dataInativacao);
                 $tipoRelatorioSomado = 2;
                 $relatorioDiscipulos[$grupoFilho->getId()] = RelatorioController::montaRelatorio($this->getRepositorio(), $numeroIdentificador, $periodo, $tipoRelatorioSomado);
             }
