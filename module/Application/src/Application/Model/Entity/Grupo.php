@@ -104,10 +104,12 @@ class Grupo extends CircuitoEntity {
 
     function getEntidadeInativaPorDataInativacao($dataInativacao) {
         $entidadeInativa = null;
-        foreach ($this->getEntidade() as $entidade) {
-            if ($entidade->getData_inativacaoStringPadraoBanco() === $dataInativacao) {
-                $entidadeInativa = $entidade;
-                break;
+        if ($dataInativacao) {
+            foreach ($this->getEntidade() as $entidade) {
+                if ($entidade->getData_inativacaoStringPadraoBanco() === $dataInativacao) {
+                    $entidadeInativa = $entidade;
+                    break;
+                }
             }
         }
         return $entidadeInativa;
@@ -286,14 +288,16 @@ class Grupo extends CircuitoEntity {
 
     function getGrupoPaiFilhoPaiPorDataInativacao($dataInativacao) {
         $grupoPaiFilhoPaiInativada = null;
-        /* Responsabilidades */
-        $grupoPaiFilhoPais = $this->getGrupoPaiFilhoPai();
-        if ($grupoPaiFilhoPais) {
-            /* Verificar responsabilidades ativas */
-            foreach ($grupoPaiFilhoPais as $gpp) {
-                if ($gpp->getData_inativacaoStringPadraoBanco() === $dataInativacao) {
-                    $grupoPaiFilhoPaiInativada = $gpp;
-                    break;
+        if ($dataInativacao) {
+            /* Responsabilidades */
+            $grupoPaiFilhoPais = $this->getGrupoPaiFilhoPai();
+            if ($grupoPaiFilhoPais) {
+                /* Verificar responsabilidades ativas */
+                foreach ($grupoPaiFilhoPais as $gpp) {
+                    if ($gpp->getData_inativacaoStringPadraoBanco() === $dataInativacao) {
+                        $grupoPaiFilhoPaiInativada = $gpp;
+                        break;
+                    }
                 }
             }
         }
