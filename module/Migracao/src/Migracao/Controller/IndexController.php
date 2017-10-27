@@ -250,7 +250,8 @@ class IndexController extends CircuitoController {
         $grupoId = 55;
         $grupoPaiNovo = 2;
         $entidadeNovaInformacao = -9;
-        $dataParaInativar = '2017-10-23';
+        $dataParaInativar = '2017-10-22';
+        $dataParaCriar = '2017-10-23';
 
         $htmlBr = '<br />';
         $html = '';
@@ -286,7 +287,7 @@ class IndexController extends CircuitoController {
             $grupoPaiFilhoNovo = new GrupoPaiFilho();
             $grupoPaiFilhoNovo->setGrupoPaiFilhoPai($grupoPaiSelecionado);
             $grupoPaiFilhoNovo->setGrupoPaiFilhoFilho($grupoSelecionado);
-            $grupoPaiFilhoNovo->setDataEHoraDeCriacao($dataParaInativar);
+            $grupoPaiFilhoNovo->setDataEHoraDeCriacao($dataParaCriar);
             $html .= $htmlBr . 'DataCriacao: ' . $grupoPaiFilhoNovo->getData_criacaoStringPadraoBanco();
 
             $html .= $htmlBr . $htmlBr . "Inativando entidade atual";
@@ -301,7 +302,7 @@ class IndexController extends CircuitoController {
             $entidadeNova->setGrupo($grupoSelecionado);
             $entidadeNova->setEntidadeTipo($entidadeTipo);
             $entidadeNova->setNumero($entidadeNovaInformacao);
-            $entidadeNova->setDataEHoraDeCriacao($dataParaInativar);
+            $entidadeNova->setDataEHoraDeCriacao($dataParaCriar);
             $html .= $htmlBr . 'DataCriacao: ' . $entidadeNova->getData_criacaoStringPadraoBanco();
 
             $html .= $htmlBr . $htmlBr . "Inativando fato_lider";
@@ -315,7 +316,7 @@ class IndexController extends CircuitoController {
             $fatoLiderNovo = new FatoLider();
             $fatoLiderNovo->setLideres($fatoLiderAtual->getLideres());
             $fatoLiderNovo->setNumero_identificador($numeroIdentificadorNovo);
-            $fatoLiderNovo->setDataEHoraDeCriacao($dataParaInativar);
+            $fatoLiderNovo->setDataEHoraDeCriacao($dataParaCriar);
             $html .= $htmlBr . 'numeroIdentificadorNovo: ' . $numeroIdentificadorNovo;
             $html .= $htmlBr . 'DataCriacao: ' . $fatoLiderNovo->getData_criacaoStringPadraoBanco();
 
