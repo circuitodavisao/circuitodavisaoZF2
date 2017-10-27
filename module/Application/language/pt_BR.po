@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: ZendSkeletonApplication\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-07-05 22:17-0700\n"
-"PO-Revision-Date: 2017-10-24 14:25-0200\n"
+"PO-Revision-Date: 2017-10-27 17:00-0200\n"
 "Last-Translator: Diogo Melo <dmelo87@gmail.com>\n"
 "Language-Team: ZF Contibutors <zf-devteam@zend.com>\n"
 "Language: pt\n"
@@ -980,3 +980,11 @@ msgstr "Posição"
 #: Cadastro/view/cadastro/ativar-ficha-revisao.phtml
 msgid "Really want to delete this discipline?"
 msgstr "Deseja realmente excluir a disciplina"
+
+#: Cadastro/view/cadastro/aula-exclusao.phtml
+msgid "Really want to delete this lesson?"
+msgstr "Deseja realmente excluir a aula"
+
+#: Cadastro/view/cadastro/aula-exclusao.phtml
+msgid "I am <span class=\"text-danger\">aware</span> that by <span class=\"text-danger\">excluding lesson</span> is the same no longer appear! "
+msgstr "Estou <span class=\"text-danger\">ciente</span> de que <span class=\"text-danger\"> excluindo a aula </span> a mesmo não aparecerá mais! "

@@ -24,6 +24,11 @@ class Disciplina extends CircuitoEntity {
 
     /** @ORM\Column(type="integer") */
     protected $posicao;
+    
+    /**
+     * @ORM\OneToMany(targetEntity="Aula", mappedBy="disciplina")  
+     */
+    protected $aula;
 
     /**
      * @ORM\ManyToOne(targetEntity="Curso", inversedBy="disciplina")
@@ -66,5 +71,15 @@ class Disciplina extends CircuitoEntity {
     function setCurso($curso) {
         $this->curso = $curso;
     }
+    
+    function getAula() {
+        return $this->aula;
+    }
+
+    function setAula($aula) {
+        $this->aula = $aula;
+    }
+
+
 
 }

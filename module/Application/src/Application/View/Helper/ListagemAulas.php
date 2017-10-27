@@ -6,11 +6,11 @@ use Application\Controller\Helper\Constantes;
 use Zend\View\Helper\AbstractHelper;
 
 /**
- * Nome: ListagemDisciplinas.php
+ * Nome: ListagemAulas.php
  * @author Lucas Filipe de Carvalho Cunha <lucascarvalho.esw@gmail.com>
- * Descricao: Classe Helper responsável pela listagem de disciplinas. 
+ * Descricao: Classe Helper responsável pela listagem de aulas. 
  */
-class ListagemDisciplinas extends AbstractHelper {
+class ListagemAulas extends AbstractHelper {
 
     public function __construct() {
         
@@ -22,30 +22,30 @@ class ListagemDisciplinas extends AbstractHelper {
 
     public function renderHtml() {
         $html = '';
-        $disciplinas = $this->view->disciplinas;
-        $disciplinasAtivas = array();
-        foreach ($disciplinas as $disciplina) {
-            if ($disciplina->verificarSeEstaAtivo()) {
-                if ($disciplina->getCurso_id() == $this->view->idCurso) {
-                    $disciplinasAtivas[] = $disciplina;
+        $aulas = $this->view->aulas;
+        $aulasAtivas = array();
+        foreach ($aulas as $aula) {
+            if ($aula->verificarSeEstaAtivo()) {
+                if ($aula->getDisciplina_id() == $this->view->idDisciplina) {
+                    $aulasAtivas[] = $aula;
                 }
             }
         }
 
         /* Sem pessoas cadastrados */
-        if (count($disciplinasAtivas) == 0) {
-            $html .= $this->view->templateFormularioTopo('Disciplinas');
+        if (count($aulasAtivas) == 0) {
+            $html .= $this->view->templateFormularioTopo('Aulas');
             $html .= '<div class="panel-body bg-light">';
 
-            $html .= '<div class="alert alert-warning"><i class="fa fa-warning pr10" aria-hidden="true"></i>&nbsp;Sem Disciplinas</div>';
+            $html .= '<div class="alert alert-warning"><i class="fa fa-warning pr10" aria-hidden="true"></i>&nbsp;Sem Aulas</div>';
 
             $html .= '</div>';
             $html .= '<div class="panel-footer">';
-//            $html .= '<a href="/cadastroListarTurmaInativa">Disciplinas Inativas </a>';
+//            $html .= '<a href="/cadastroListarTurmaInativa">Aulas Inativas </a>';
             $html .= '<div class="text-right">';
-            $stringNomeDaFuncaoOnClickVoltar = 'funcaoCadastro("' . Constantes::$PAGINA_CURSO_LISTAR . '", 0)';
+            $stringNomeDaFuncaoOnClickVoltar = 'funcaoCadastro("' . Constantes::$PAGINA_DISCIPLINA_LISTAR . '", '.$this->view->idCurso.')';
             $html .= $this->view->botaoLink($this->view->translate(Constantes::$TRADUCAO_VOLTAR), Constantes::$STRING_HASHTAG, 2, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClickVoltar));
-            $stringNomeDaFuncaoOnClickCadastro = 'funcaoCadastro("' . Constantes::$PAGINA_DISCIPLINA_CADASTRAR . '", ' . $this->view->idCurso . ')';
+            $stringNomeDaFuncaoOnClickCadastro = 'funcaoCadastro("' . Constantes::$PAGINA_AULA_CADASTRAR . '", ' . $this->view->idDisciplina . ')';
             $html .= $this->view->botaoLink($this->view->translate(Constantes::$TRADUCAO_CADASTRAR), Constantes::$STRING_HASHTAG, 0, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClickCadastro));
             $html .= '</div>';
             /* Fim Botões */
@@ -54,7 +54,7 @@ class ListagemDisciplinas extends AbstractHelper {
             $html .= $this->view->templateFormularioRodape();
         } else {
 
-            $html .= $this->view->templateFormularioTopo('Disciplinas');
+            $html .= $this->view->templateFormularioTopo('Aulas');
             $html .= '<div class="panel-body bg-light">';
 
             $html .= '<table class="table">';
@@ -75,20 +75,20 @@ class ListagemDisciplinas extends AbstractHelper {
             $html .= '</thead>';
             $html .= '<tbody>';
 
-            foreach ($disciplinasAtivas as $disciplina) {
+            foreach ($aulasAtivas as $aula) {
                 $html .= '<tr>';
 
 
-                $stringNomeDaFuncaoOnClickInserir = 'funcaoCadastro("' . Constantes::$PAGINA_FICHA_REVISAO . '", ' . $disciplina->getId() . ')';
-                $stringNomeDaFuncaoOnClick = 'funcaoCadastro("' . Constantes::$PAGINA_DISCIPLINA_EDITAR . '", ' . $disciplina->getId() . ')';
-                $stringNomeDaFuncaoOnClickExclusao = 'funcaoCadastro("' . Constantes::$PAGINA_DISCIPLINA_EXCLUSAO . '", ' . $disciplina->getId() . ')';
-                $stringNomeDaFuncaoOnClickIncluirAlunos = 'funcaoCadastro("' . Constantes::$PAGINA_AULA_LISTAR . '",' . $disciplina->getId() . ')';
+                $stringNomeDaFuncaoOnClickInserir = 'funcaoCadastro("' . Constantes::$PAGINA_FICHA_REVISAO . '", ' . $aula->getId() . ')';
+                $stringNomeDaFuncaoOnClick = 'funcaoCadastro("' . Constantes::$PAGINA_AULA_EDITAR . '", ' . $aula->getId() . ')';
+                $stringNomeDaFuncaoOnClickExclusao = 'funcaoCadastro("' . Constantes::$PAGINA_AULA_EXCLUSAO . '", ' . $aula->getId() . ')';
+                $stringNomeDaFuncaoOnClickIncluirAlunos = 'funcaoCadastro("' . Constantes::$PAGINA_LISTAGEM_REVISAO_TURMA . '",' . $aula->getId() . ')';
 
-                $html .= '<td class="text-center">' . $disciplina->getPosicao() . '</td>';
-                if (strlen($disciplina->getNome()) > 20) {
-                    $nome = substr($disciplina->getNome(), 0, 15) . '..';
+                $html .= '<td class="text-center">' . $aula->getPosicao() . '</td>';
+                if (strlen($aula->getNome()) > 20) {
+                    $nome = substr($aula->getNome(), 0, 15) . '..';
                 } else {
-                    $nome = $disciplina->getNome();
+                    $nome = $aula->getNome();
                 }
                 $html .= '<td class="text-center">' . $nome . '</td>';
                 $html .= '<td class="text-center">';
@@ -106,11 +106,11 @@ class ListagemDisciplinas extends AbstractHelper {
             /* Fim panel-body */
 
             $html .= '<div class="panel-footer">';
-//            $html .= '<a href="/cadastroListarTurmaInativa">Disciplinas Inativas </a>';
+//            $html .= '<a href="/cadastroListarTurmaInativa">Aulas Inativas </a>';
             $html .= '<div class="text-right">';
-            $stringNomeDaFuncaoOnClickVoltar = 'funcaoCadastro("' . Constantes::$PAGINA_CURSO_LISTAR . '", 0)';
+            $stringNomeDaFuncaoOnClickVoltar = 'funcaoCadastro("' . Constantes::$PAGINA_DISCIPLINA_LISTAR . '", '.$this->view->idCurso.')'; 
             $html .= $this->view->botaoLink($this->view->translate(Constantes::$TRADUCAO_VOLTAR), Constantes::$STRING_HASHTAG, 2, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClickVoltar));
-            $stringNomeDaFuncaoOnClickCadastro = 'funcaoCadastro("' . Constantes::$PAGINA_DISCIPLINA_CADASTRAR . '", ' . $this->view->idCurso . ')';
+            $stringNomeDaFuncaoOnClickCadastro = 'funcaoCadastro("' . Constantes::$PAGINA_AULA_CADASTRAR . '", ' . $this->view->idDisciplina . ')';
             $html .= $this->view->botaoLink($this->view->translate(Constantes::$TRADUCAO_CADASTRAR), Constantes::$STRING_HASHTAG, 0, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClickCadastro));
             $html .= '</div>';
             /* Fim Botões */

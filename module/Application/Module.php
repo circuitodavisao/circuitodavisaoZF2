@@ -44,6 +44,7 @@ use Application\View\Helper\InputExtras;
 use Application\View\Helper\InputFormulario;
 use Application\View\Helper\InputFormularioSimples;
 use Application\View\Helper\LinkLogo;
+use Application\View\Helper\ListagemAulas;
 use Application\View\Helper\ListagemConsolidacaoParaRevisao;
 use Application\View\Helper\ListagemCursos;
 use Application\View\Helper\ListagemDeEventos;
@@ -218,7 +219,7 @@ class Module {
                 'listagemConsolidacaoParaRevisao' => function($sm) {
                     return new ListagemConsolidacaoParaRevisao();
                 },
-                'listagemFichasParaRevisao' => function($sm) { 
+                'listagemFichasParaRevisao' => function($sm) {
                     return new ListagemFichasParaRevisao();
                 },
                 'listagemFichasAtivasParaRevisao' => function($sm) {
@@ -232,6 +233,9 @@ class Module {
                 },
                 'listagemDisciplinas' => function($sm) {
                     return new ListagemDisciplinas();
+                },
+                'listagemAulas' => function($sm) {
+                    return new ListagemAulas();
                 },
                 'listagemTurmasInativas' => function($sm) {
                     return new ListagemTurmasInativas();

@@ -1,0 +1,10 @@
+<?php
+
+$versao = '?v=0.8';
+
+echo $this
+        ->headScript()
+        ->prependFile($this->basePath() . '/js/circuito_da_visao/validar-excluir-aula.js' . $versao)
+;
+echo $this->inlineScript();
+ 

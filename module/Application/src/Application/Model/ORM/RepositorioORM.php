@@ -42,6 +42,7 @@ class RepositorioORM {
     private $_solicitacaoTipoORM;
     private $_cursoORM;
     private $_disciplinaORM;
+    private $_aulaORM;
 
     /**
      * Contrutor 
@@ -325,6 +326,17 @@ class RepositorioORM {
             $this->_disciplinaORM = new DisciplinaORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_DISCIPLINA);
         }
         return $this->_disciplinaORM;  
+    }
+    
+    /**
+     * Metodo public para obter a instancia do AulaORM
+     * @return AulaORM
+     */
+    public function getAulaORM() { 
+        if (is_null($this->_aulaORM)) {
+            $this->_aulaORM = new CircuitoORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_AULA);
+        }
+        return $this->_aulaORM;  
     }
     
     /**
