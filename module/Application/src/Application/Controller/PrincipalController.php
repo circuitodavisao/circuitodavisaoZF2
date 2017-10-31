@@ -25,7 +25,7 @@ class PrincipalController extends CircuitoController {
      */
     public function indexAction() {
         $sessao = new Container(Constantes::$NOME_APLICACAO);
-        
+
         $idEntidadeAtual = $sessao->idEntidadeAtual;
         $entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
         $grupo = $entidade->getGrupo();
@@ -39,7 +39,7 @@ class PrincipalController extends CircuitoController {
 
         $dados = array();
         $arrayPeriodo = Funcoes::montaPeriodo($periodo);
-        $dados['periodo'] = $arrayPeriodo[0];
+        $dados['periodoExtenso'] = $arrayPeriodo[0];
         $dados['relatorio'] = $relatorio;
         $dados['relatorioEquipe'] = $relatorioEquipe;
 
@@ -61,17 +61,18 @@ class PrincipalController extends CircuitoController {
                     }
                 }
 
+
                 $grupoPaiFilhoFilhos144 = $grupoFilho->getGrupoPaiFilhoFilhosAtivos($periodo);
                 if ($grupoPaiFilhoFilhos144) {
                     foreach ($grupoPaiFilhoFilhos144 as $gpFilho144) {
                         $grupoFilho144 = $gpFilho144->getGrupoPaiFilhoFilho();
                         $numeroIdentificador144 = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupoFilho144);
                         $relatorio144 = RelatorioController::montaRelatorio($this->getRepositorio(), $numeroIdentificador144, $periodo, $tipoRelatorioEquipe);
-                        if ($relatorio144['celulaQuantidade'] > 0) {
+//                        if ($relatorio144['celulaQuantidade'] > 0) {
                             if ($relatorio144['celulaRealizadas'] < $relatorio144['celulaQuantidade']) {
                                 $relatorioDiscipulos[$grupoFilho144->getId()] = $relatorio144;
                             }
-                        }
+//                        }
                     }
                 }
             }
@@ -101,7 +102,7 @@ class PrincipalController extends CircuitoController {
         $idSessao = $sessao->idSessao;
         unset($sessao->idSessao);
         if ($idSessao) {
-            
+
             $grupoSessao = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idSessao);
             $tenhoDiscipulosAtivos = false;
             $quantidadeDeDiscipulos = count($grupoSessao->getGrupoPaiFilhoFilhosAtivos());
@@ -123,13 +124,13 @@ class PrincipalController extends CircuitoController {
 
     public function grupoExclusaoAction() {
         $sessao = new Container(Constantes::$NOME_APLICACAO);
-        
+
         try {
             $this->getRepositorio()->iniciarTransacao();
             $idSessao = $sessao->idSessao;
             unset($sessao->idSessao);
             if ($idSessao) {
-                
+
                 $grupoSessao = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idSessao);
 
                 $dados = array();
@@ -161,7 +162,7 @@ class PrincipalController extends CircuitoController {
         $idSessao = $sessao->idSessao;
         unset($sessao->idSessao);
         if ($idSessao) {
-            
+
             $grupoSessao = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idSessao);
 
             $grupoPaiFilhoPai = $grupoSessao->getGrupoPaiFilhoPai();

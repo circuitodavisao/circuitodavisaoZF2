@@ -67,7 +67,7 @@ class Menu extends AbstractHelper {
 //                }
                 if ($gpfPai->verificarSeEstaAtivo()) {
                     $grupoPai = $gpfPai->getGrupoPaiFilhoPai();
-                    $html .= $this->view->perfilDropDown($entidadeSelecionada, 1, $ativo, $grupoPai);
+//                    $html .= $this->view->perfilDropDown($entidadeSelecionada, 1, $ativo, $grupoPai);
                 }
             }
         }
@@ -388,7 +388,7 @@ class Menu extends AbstractHelper {
                     $entidadeSelecionada = $grupo->getEntidadeInativaPorDataInativacao($gpfPai->getData_inativacaoStringPadraoBanco());
                 }
                 $grupoPai = $gpfPai->getGrupoPaiFilhoPai();
-                $html .= $this->view->perfilDropDown($entidadeSelecionada, 2, $ativo, $grupoPai);
+//                $html .= $this->view->perfilDropDown($entidadeSelecionada, 2, $ativo, $grupoPai);
             }
         }
         $html .= '</div>';
