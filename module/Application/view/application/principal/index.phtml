@@ -24,10 +24,12 @@ use Application\Controller\RelatorioController;
                         $html .= '<td>EQUIPE - ' . $nomeLideres . '</td>';
                         $html .= '<td></td>';
                         $html .= '</tr>';
-                        $html .= '<tr>';
-                        $html .= '<td class="text-right">' . $nomeLideres . '</td>';
-                        $html .= '<td>' . $diferencaPessoal . '</td>';
-                        $html .= '</tr>';
+                        if ($diferencaPessoal > 0) {
+                            $html .= '<tr>';
+                            $html .= '<td class="text-right">' . $nomeLideres . '</td>';
+                            $html .= '<td>' . $diferencaPessoal . '</td>';
+                            $html .= '</tr>';
+                        }
                         $grupoPaiFilhoFilhos144 = $grupoFilho->getGrupoPaiFilhoFilhosAtivos(-1);
                         if ($grupoPaiFilhoFilhos144) {
                             foreach ($grupoPaiFilhoFilhos144 as $gpFilho144) {

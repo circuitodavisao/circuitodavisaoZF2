@@ -311,28 +311,27 @@ class CadastroController extends CircuitoController {
             return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
                         Constantes::$ACTION => Constantes::$PAGINA_DISCIPLINA_SALVAR,
             ));
-        } 
+        }
         if ($pagina == Constantes::$PAGINA_DISCIPLINA_EDITAR) {
             return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
-                        Constantes::$ACTION => Constantes::$PAGINA_DISCIPLINA_EDITAR, 
+                        Constantes::$ACTION => Constantes::$PAGINA_DISCIPLINA_EDITAR,
             ));
         }
         if ($pagina == Constantes::$PAGINA_DISCIPLINA_EXCLUIR) {
             return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
-                        Constantes::$ACTION => Constantes::$PAGINA_DISCIPLINA_EXCLUIR, 
+                        Constantes::$ACTION => Constantes::$PAGINA_DISCIPLINA_EXCLUIR,
             ));
         }
         if ($pagina == Constantes::$PAGINA_DISCIPLINA_EXCLUSAO) {
             return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
-                        Constantes::$ACTION => Constantes::$PAGINA_DISCIPLINA_EXCLUSAO, 
+                        Constantes::$ACTION => Constantes::$PAGINA_DISCIPLINA_EXCLUSAO,
             ));
-
         }
         /* Funcoes */
         if ($pagina == Constantes::$PAGINA_FUNCOES) {
             return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
                         Constantes::$ACTION => Constantes::$PAGINA_FUNCOES,
-            )); 
+            ));
         }
 
         /* Por titulo e eventos na sessão para passar a tela */
@@ -1077,7 +1076,7 @@ class CadastroController extends CircuitoController {
 
                 for ($indicePessoas = $indicePessoasInicio; $indicePessoas <= $indicePessoasFim; $indicePessoas++) {
                     /* Enviar Email */
-                    $this->enviarEmailParaCompletarOsDados($tokenDeAgora, $pessoaSelecionada);
+                    $this->enviarEmailParaCompletarOsDados($repositorioORM, $sessao->idPessoa, $tokenDeAgora, $pessoaSelecionada);
                 }
             } catch (Exception $exc) {
                 $repositorioORM->desfazerTransacao();
@@ -1308,10 +1307,8 @@ class CadastroController extends CircuitoController {
      * @param string $tokenDeAgora
      * @param Pessoa $pessoa
      */
-    public function enviarEmailParaCompletarOsDados($tokenDeAgora, $pessoa) {
-        $sessao = new Container(Constantes::$NOME_APLICACAO);
-        $loginORM = new RepositorioORM($this->getDoctrineORMEntityManager());
-        $pessoaLogada = $loginORM->getPessoaORM()->encontrarPorId($sessao->idPessoa);
+    public static function enviarEmailParaCompletarOsDados($repositorio, $idPessoaLogada, $tokenDeAgora, $pessoa) {
+        $pessoaLogada = $repositorio->getPessoaORM()->encontrarPorId($idPessoaLogada);
 
         $Subject = 'Convite';
         $ToEmail = $pessoa->getEmail();
@@ -2127,7 +2124,7 @@ class CadastroController extends CircuitoController {
      */
     public function cursoExclusaoAction() {
         /* Verificando a se tem algum id na sessão */
-        $sessao = new Container(Constantes::$NOME_APLICACAO); 
+        $sessao = new Container(Constantes::$NOME_APLICACAO);
         $extra = null;
         $idCurso = $sessao->idSessao;
         $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
@@ -2159,7 +2156,7 @@ class CadastroController extends CircuitoController {
                     Constantes::$PAGINA => Constantes::$PAGINA_CURSO_LISTAR,
         ));
     }
-    
+
     /**
      * Função de listagem de disciplina
      */
@@ -2189,7 +2186,7 @@ class CadastroController extends CircuitoController {
         $formCadastroDisciplina = new DisciplinaForm('formulario', $idCurso, $disciplinas);
         $view = new ViewModel(array(
             'formCadastroDisciplina' => $formCadastroDisciplina,
-            'idCurso' => $idCurso, 
+            'idCurso' => $idCurso,
         ));
 
         return $view;
@@ -2243,13 +2240,13 @@ class CadastroController extends CircuitoController {
         $idDisciplina = $sessao->idSessao;
         $disciplina = $repositorioORM->getDisciplinaORM()->encontrarPorId($idDisciplina);
         $curso = $disciplina->getCurso();
-        $disciplinas = $curso->getDisciplina(); 
+        $disciplinas = $curso->getDisciplina();
         $formCadastroDisciplina = new DisciplinaForm('formulario', $idCurso, $disciplinas, $disciplina);
         $view = new ViewModel(array(
             'formCadastroDisciplina' => $formCadastroDisciplina,
-            'idCurso' => $curso->getId(), 
+            'idCurso' => $curso->getId(),
         ));
-        
+
 
         return $view;
     }
@@ -2270,8 +2267,6 @@ class CadastroController extends CircuitoController {
         $view = new ViewModel(array(
             Constantes::$NOME_ENTIDADE_DISCIPLINA => $disciplina,
             Constantes::$ENTIDADE => $entidade,
-            
-            
         ));
 
         /* Javascript */
