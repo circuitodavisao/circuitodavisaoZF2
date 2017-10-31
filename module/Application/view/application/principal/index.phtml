@@ -5,7 +5,7 @@ use Application\Controller\RelatorioController;
 <div class="mw800 center-block">
     <div class="panel">
         <div class="panel-heading text-center">
-            <span class="panel-title"><b>Supervis&atilde;o - <?php echo $this->periodo; ?></b></span>
+            <span class="panel-title"><b>Supervis&atilde;o - <?php echo $this->periodoExtenso; ?></b></span>
         </div>
         <div class="panel-body pn">
             <table class="table mbn tc-med-1 tc-bold-last">
@@ -30,7 +30,7 @@ use Application\Controller\RelatorioController;
                         $html .= '<td class="text-right">' . $nomeLideres . '</td>';
                         $html .= '<td>' . $diferencaPessoal . '</td>';
                         $html .= '</tr>';
-                        $grupoPaiFilhoFilhos144 = $grupoFilho->getGrupoPaiFilhoFilhosAtivos($this->periodo);
+                        $grupoPaiFilhoFilhos144 = $grupoFilho->getGrupoPaiFilhoFilhosAtivos(-1);
                         if ($grupoPaiFilhoFilhos144) {
                             foreach ($grupoPaiFilhoFilhos144 as $gpFilho144) {
                                 $grupoFilho144 = $gpFilho144->getGrupoPaiFilhoFilho();
