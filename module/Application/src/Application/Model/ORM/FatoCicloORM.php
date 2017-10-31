@@ -158,10 +158,9 @@ class FatoCicloORM extends CircuitoORM {
      * Montar numeroIdentificador
      */
     public function montarNumeroIdentificador(RepositorioORM $repositorioORM, $grupo = null, $dataInativacao = null) {
-        $numeroIdentificador = null;
+        $numeroIdentificador = '';
         $tamanho = 8;
         $grupoSelecionado = null;
-
         if ($grupo === null) {
             $sessao = new Container(Constantes::$NOME_APLICACAO);
             $idEntidadeAtual = $sessao->idEntidadeAtual;
@@ -184,7 +183,7 @@ class FatoCicloORM extends CircuitoORM {
                     if ($grupoSelecionado->getGrupoPaiFilhoPaiAtivo()) {
                         $grupoSelecionado = $grupoSelecionado->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai();
                     } else {
-                        break;
+                        $grupoSelecionado = $grupoSelecionado->getGrupoPaiFilhoPaiInativo()->getGrupoPaiFilhoPai();
                     }
                 } else {
                     $grupoSelecionado = $grupoSelecionado->getGrupoPaiFilhoPaiPorDataInativacao($dataInativacao)->getGrupoPaiFilhoPai();

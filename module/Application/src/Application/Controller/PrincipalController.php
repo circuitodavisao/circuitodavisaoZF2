@@ -108,6 +108,16 @@ class PrincipalController extends CircuitoController {
             if ($quantidadeDeDiscipulos > 0) {
                 $tenhoDiscipulosAtivos = true;
             }
+
+            $mostrarParaReenviarEmails = false;
+            foreach ($grupoSessao->getResponsabilidadesAtivas() as $grupoResponsavel) {
+                $pessoaSelecionada = $grupoResponsavel->getPessoa();
+                if ($pessoaSelecionada->getToken()) {
+                    $mostrarParaReenviarEmails = true;
+                }
+            }
+
+
             $entidade = $grupoSessao->getEntidadeAtiva();
             $entidadeLogada = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($sessao->idEntidadeAtual);
             $dados = array();
@@ -115,6 +125,7 @@ class PrincipalController extends CircuitoController {
             $dados['entidade'] = $entidade;
             $dados['idEntidadeTipo'] = $entidadeLogada->getTipo_id();
             $dados['tenhoDiscipulosAtivos'] = $tenhoDiscipulosAtivos;
+            $dados['mostrarParaReenviarEmails'] = $mostrarParaReenviarEmails;
             return new ViewModel($dados);
         } else {
             return $this->redirect()->toRoute('principal');
@@ -123,7 +134,6 @@ class PrincipalController extends CircuitoController {
 
     public function grupoExclusaoAction() {
         $sessao = new Container(Constantes::$NOME_APLICACAO);
-
         try {
             $this->getRepositorio()->iniciarTransacao();
             $idSessao = $sessao->idSessao;
@@ -159,12 +169,10 @@ class PrincipalController extends CircuitoController {
     public function grupoExclusaoConfirmacaoAction() {
         $sessao = new Container(Constantes::$NOME_APLICACAO);
         $idSessao = $sessao->idSessao;
-        unset($sessao->idSessao);
         if ($idSessao) {
-
             $grupoSessao = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idSessao);
 
-            $grupoPaiFilhoPai = $grupoSessao->getGrupoPaiFilhoPai();
+            $grupoPaiFilhoPai = $grupoSessao->getGrupoPaiFilhoPaiAtivo();
             $grupoPaiFilhoPai->setDataEHoraDeInativacao();
             $this->getRepositorio()->getGrupoPaiFilhoORM()->persistir($grupoPaiFilhoPai, false);
 
@@ -173,11 +181,35 @@ class PrincipalController extends CircuitoController {
                 $this->getRepositorio()->getGrupoResponsavelORM()->persistir($grupoResponsavel, false);
             }
 
+            unset($sessao->idSessao);
             $sessao->mostrarNotificacao = true;
             $sessao->nomePessoa = $grupoSessao->getEntidadeAtiva()->infoEntidade();
             $sessao->exclusao = true;
+            return $this->redirect()->toRoute('principal');
         }
-        return $this->redirect()->toRoute('principal');
+    }
+
+    public function enviarEmailAction() {
+        $sessao = new Container(Constantes::$NOME_APLICACAO);
+        try {
+            $idSessao = $sessao->idSessao;
+            unset($sessao->idSessao);
+            if ($idSessao) {
+                $grupoSessao = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idSessao);
+                foreach ($grupoSessao->getResponsabilidadesAtivas() as $grupoResponsavel) {
+                    $pessoaSelecionada = $grupoResponsavel->getPessoa();
+                    if ($pessoaSelecionada->getToken()) {
+                        CadastroController::enviarEmailParaCompletarOsDados($this->getRepositorio(), $sessao->idPessoa, $pessoaSelecionada->getToken(), $pessoaSelecionada);
+                    }
+                }
+
+                $sessao->mostrarNotificacao = true;
+                $sessao->emailEnviado = true;
+                return $this->redirect()->toRoute('principal');
+            }
+        } catch (Exception $exc) {
+            echo $exc->getMessage();
+        }
     }
 
     /**
@@ -185,6 +217,7 @@ class PrincipalController extends CircuitoController {
      * @return Json
      */
     public function funcoesAction() {
+        $sessao = new Container(Constantes::$NOME_APLICACAO);
         $request = $this->getRequest();
         $response = $this->getResponse();
         if ($request->isPost()) {
@@ -192,7 +225,6 @@ class PrincipalController extends CircuitoController {
                 $post_data = $request->getPost();
                 $funcao = $post_data[Constantes::$FUNCAO];
                 $id = $post_data[Constantes::$ID];
-                $sessao = new Container(Constantes::$NOME_APLICACAO);
                 $sessao->idSessao = $id;
                 $response->setContent(Json::encode(
                                 array(
@@ -201,7 +233,7 @@ class PrincipalController extends CircuitoController {
                                     'url' => '/' . $funcao,
                 )));
             } catch (Exception $exc) {
-                echo $exc->get();
+                echo $exc->getMessage();
             }
         }
         return $response;

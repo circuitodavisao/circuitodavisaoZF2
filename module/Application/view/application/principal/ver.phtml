@@ -10,12 +10,19 @@ echo $this->dadosEntidade();
 if ($this->tenhoDiscipulosAtivos) {
     echo '<div class="alert alert-info mt10">Tenho discipulos nao posso inativar!</div>';
 } else {
-    $extra = 'onclick="funcaoCircuito(\'principalGrupoExclusao\', ' . $this->idGrupo . ');"';
+
     echo '<div class="panel mt10">';
     echo '<div class="panel-body">';
+
     if ($this->idEntidadeTipo === EntidadeTipo::equipe || $this->idEntidadeTipo === EntidadeTipo::igreja) {
+        $extraBotaoInativar = 'onclick="funcaoCircuito(\'principalGrupoExclusao\', ' . $this->idGrupo . ');"';
         echo $this->botaoSimples(
-                'Inativar', $extra, BotaoSimples::botaoPerigoso, BotaoSimples::posicaoAEsquerda);
+                'Inativar', $extraBotaoInativar, BotaoSimples::botaoPerigoso, BotaoSimples::posicaoAEsquerda);
+    }
+    if ($this->mostrarParaReenviarEmails) {
+        $extraBotaoEmail = 'onclick="funcaoCircuito(\'principalEnviarEmail\', ' . $this->idGrupo . ');"';
+        echo $this->botaoSimples(
+                'Reenviar Email de acesso', $extraBotaoEmail, BotaoSimples::botaoMenorImportancia, BotaoSimples::posicaoAEsquerda);
     }
     echo '</div>';
     echo '</div>';
