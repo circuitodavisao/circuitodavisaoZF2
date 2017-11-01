@@ -46,10 +46,26 @@ function validarEnvioDeEmail(form) {
                 .removeClass('hidden')
                 .addClass('alert-danger');
     } else {
+        /* Consultar se ja esta usando */
+        $.post(
+                "/cadastroBuscarEmail",
+                {
+                    email: email,
+                },
+                function (data) {
+                    if (parseInt(data.resposta) === 0) {
+                        divMensagens
+                                .addClass('hidden');
+                        form.submit();
+                    } else {
+                        divMensagens
+                                .html('Email já utilizado')
+                                .removeClass('alert-success')
+                                .removeClass('hidden')
+                                .addClass('alert-danger');
+                    }
+                }, 'json');
 
-        divMensagens
-                .addClass('hidden');
-        form.submit();
     }
 }
 
