@@ -1,0 +1,9 @@
+<?php
+
+$versao = '?v=5.7';
+
+echo $this
+        ->headScript()
+        ->prependFile($this->basePath() . '/js/circuito_da_visao/validar-recuperar-acesso.js' . $versao)
+;
+echo $this->inlineScript();
