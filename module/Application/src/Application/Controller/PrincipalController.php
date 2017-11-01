@@ -4,6 +4,7 @@ namespace Application\Controller;
 
 use Application\Controller\Helper\Constantes;
 use Application\Controller\Helper\Funcoes;
+use Application\Form\NovoEmailForm;
 use Application\Model\ORM\RepositorioORM;
 use Exception;
 use Zend\Json\Json;
@@ -99,7 +100,7 @@ class PrincipalController extends CircuitoController {
     public function verAction() {
         $sessao = new Container(Constantes::$NOME_APLICACAO);
         $idSessao = $sessao->idSessao;
-        unset($sessao->idSessao);
+//        unset($sessao->idSessao);
         if ($idSessao) {
 
             $grupoSessao = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idSessao);
@@ -117,7 +118,6 @@ class PrincipalController extends CircuitoController {
                 }
             }
 
-
             $entidade = $grupoSessao->getEntidadeAtiva();
             $entidadeLogada = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($sessao->idEntidadeAtual);
             $dados = array();
@@ -126,6 +126,7 @@ class PrincipalController extends CircuitoController {
             $dados['idEntidadeTipo'] = $entidadeLogada->getTipo_id();
             $dados['tenhoDiscipulosAtivos'] = $tenhoDiscipulosAtivos;
             $dados['mostrarParaReenviarEmails'] = $mostrarParaReenviarEmails;
+            $dados['responsabilidades'] = $grupoSessao->getResponsabilidadesAtivas();
             return new ViewModel($dados);
         } else {
             return $this->redirect()->toRoute('principal');
@@ -189,26 +190,52 @@ class PrincipalController extends CircuitoController {
         }
     }
 
+    public function novoEmailParaEnviarAction() {
+        $sessao = new Container(Constantes::$NOME_APLICACAO);
+        $idSessao = $sessao->idSessao;
+        if ($idSessao) {
+            $form = new NovoEmailForm(Constantes::$FORM, $idSessao);
+
+            $pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($idSessao);
+
+            $view = new ViewModel(
+                    array(
+                Constantes::$FORM => $form,
+                'nome' => $pessoa->getNome(),
+            ));
+            $layoutJS = new ViewModel();
+            $layoutJS->setTemplate('layout/layout-js-enviar-email');
+            $view->addChild($layoutJS, 'layoutJSEnviarEmail');
+            unset($sessao->idSessao);
+            return $view;
+        } else {
+            return $this->redirect()->toRoute('principal');
+        }
+    }
+
     public function enviarEmailAction() {
         $sessao = new Container(Constantes::$NOME_APLICACAO);
-        try {
-            $idSessao = $sessao->idSessao;
-            unset($sessao->idSessao);
-            if ($idSessao) {
-                $grupoSessao = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idSessao);
-                foreach ($grupoSessao->getResponsabilidadesAtivas() as $grupoResponsavel) {
-                    $pessoaSelecionada = $grupoResponsavel->getPessoa();
-                    if ($pessoaSelecionada->getToken()) {
-                        CadastroController::enviarEmailParaCompletarOsDados($this->getRepositorio(), $sessao->idPessoa, $pessoaSelecionada->getToken(), $pessoaSelecionada);
-                    }
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            try {
+                $this->getRepositorio()->iniciarTransacao();
+                $post_data = $request->getPost();
+                $idPessoa = $post_data[Constantes::$INPUT_ID_PESSOA];
+                $pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($idPessoa);
+                $pessoa->setEmail($post_data[Constantes::$INPUT_EMAIL]);
+                $setarDataEHora = false;
+                $this->getRepositorio()->getPessoaORM()->persistir($pessoa, $setarDataEHora);
+                if ($pessoa->getToken()) {
+                    CadastroController::enviarEmailParaCompletarOsDados($this->getRepositorio(), $sessao->idPessoa, $pessoa->getToken(), $pessoa);
                 }
-
                 $sessao->mostrarNotificacao = true;
                 $sessao->emailEnviado = true;
+                $this->getRepositorio()->fecharTransacao();
                 return $this->redirect()->toRoute('principal');
+            } catch (Exception $exc) {
+                $this->getRepositorio()->desfazerTransacao();
+                echo $exc->getMessage();
             }
-        } catch (Exception $exc) {
-            echo $exc->getMessage();
         }
     }
 
