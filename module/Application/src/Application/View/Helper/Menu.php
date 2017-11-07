@@ -289,32 +289,60 @@ class Menu extends AbstractHelper {
         $html .= '<span class="sidebar-title">Relatórios</span>';
         $html .= '<span class="caret"></span>';
         $html .= '</a>';
+        
         $html .= '<ul class="nav sub-nav">';
+        
         $html .= '<li>';
         $html .= '<a href="/relatorio/1">';
         $html .= '<span class="fa fa-terminal"></span>';
         $html .= 'Membresia';
         $html .= '</a>';
         $html .= '</li>';
+        
         $html .= '<li>';
         $html .= '<a href="/relatorio/2">';
         $html .= '<span class="fa fa-terminal"></span>';
         $html .= 'Células Realizadas';
         $html .= '</a>';
         $html .= '</li>';
+        
         $html .= '<li>';
         $html .= '<a href="/relatorio/3">';
         $html .= '<span class="fa fa-terminal"></span>';
         $html .= 'Células Quantidade';
         $html .= '</a>';
         $html .= '</li>';
+        
+        $html .= '<li>';
+        $html .= '<a href="/relatorio/4">';
+        $html .= '<span class="fa fa-terminal"></span>';
+        $html .= 'Culto da Semana';
+        $html .= '</a>';
+        $html .= '</li>';
+        
+        $html .= '<li>';
+        $html .= '<a href="/relatorio/5">';
+        $html .= '<span class="fa fa-terminal"></span>';
+        $html .= 'Arena';
+        $html .= '</a>';
+        $html .= '</li>';
+        
+        $html .= '<li>';
+        $html .= '<a href="/relatorio/6">';
+        $html .= '<span class="fa fa-terminal"></span>';
+        $html .= 'Domingo';
+        $html .= '</a>';
+        $html .= '</li>';
+        
         $html .= '<li>';
         $html .= '<a href="/relatorioAtendimento">';
         $html .= '<span class="fa fa-users"></span>';
         $html .= 'Atendimento';
         $html .= '</a>';
         $html .= '</li>';
+        
         $html .= '</ul>';
+        
         $html .= '</li>';
 
         $html .= '<li class="sidebar-label pt20">Chamada I.V.</li>';

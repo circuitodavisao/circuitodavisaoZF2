@@ -76,7 +76,7 @@ class FatoCicloORM extends CircuitoORM {
      * @param int $tipoComparacao
      * @return array
      */
-    public function montarRelatorioPorNumeroIdentificador($numeroIdentificador, $periodo, $tipoComparacao) {
+    public function montarRelatorioPorNumeroIdentificador($numeroIdentificador, $periodo, $tipoComparacao, $periodoInicial = 0) {
         $dimensaoTipoCelula = 1;
         $dimensaoTipoDomingo = 4;
         $dqlBase = "SELECT "
@@ -89,8 +89,9 @@ class FatoCicloORM extends CircuitoORM {
                 . "WHERE "
                 . "d.dimensaoTipo = #dimensaoTipo "
                 . "AND fc.numero_identificador #tipoComparacao ?1 "
-                . "AND fc.data_criacao = ?2 ";
+                . "#data";
         try {
+
             if ($tipoComparacao == 1) {
                 $dqlAjustadaTipoComparacao = str_replace('#tipoComparacao', '=', $dqlBase);
             }
@@ -98,9 +99,20 @@ class FatoCicloORM extends CircuitoORM {
                 $dqlAjustadaTipoComparacao = str_replace('#tipoComparacao', 'LIKE', $dqlBase);
                 $numeroIdentificador .= '%';
             }
+            
             $resultadoPeriodo = Funcoes::montaPeriodo($periodo);
             $dataDoPeriodo = $resultadoPeriodo[3] . '-' . $resultadoPeriodo[2] . '-' . $resultadoPeriodo[1];
             $dataDoPeriodoFormatada = DateTime::createFromFormat('Y-m-d', $dataDoPeriodo);
+
+            if ($periodoInicial === 0) {
+                $dqlAjustadaTipoComparacao = str_replace('#data', 'AND fc.data_criacao = ?2 ', $dqlAjustadaTipoComparacao);
+            } else {
+                $resultadoPeriodoInicial = Funcoes::montaPeriodo($periodoInicial);
+                $dataDoPeriodoInicial = $resultadoPeriodoInicial[3] . '-' . $resultadoPeriodoInicial[2] . '-' . $resultadoPeriodoInicial[1];
+                $stringDatas = "AND fc.data_criacao >= '$dataDoPeriodoInicial' AND fc.data_criacao <= ?2 ";
+                $dqlAjustadaTipoComparacao = str_replace('#data', $stringDatas, $dqlAjustadaTipoComparacao);
+                $dataDoPeriodoFormatada = $dataDoPeriodo;
+            }
 
             for ($indice = $dimensaoTipoCelula; $indice <= $dimensaoTipoDomingo; $indice++) {
                 $dqlAjustada = str_replace('#dimensaoTipo', $indice, $dqlAjustadaTipoComparacao);

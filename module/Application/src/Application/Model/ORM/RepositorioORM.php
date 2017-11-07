@@ -12,7 +12,7 @@ use Exception;
  * Descricao: Classe com acesso ao repositorio ORM
  */
 class RepositorioORM {
- 
+
     private $_doctrineORMEntityManager;
     private $_pessoaORM;
     private $_entidadeORM;
@@ -300,28 +300,28 @@ class RepositorioORM {
      * @return CircuitoORM
      */
     public function getGrupoCvORM() {
-        if (is_null($this->_grupoCvORM)) { 
+        if (is_null($this->_grupoCvORM)) {
             $this->_grupoCvORM = new CircuitoORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_GRUPO_CV);
         }
         return $this->_grupoCvORM;
     }
-    
+
     /**
      * Metodo public para obter a instancia do CursoORM
      * @return CircuitoORM
      */
-    public function getCursoORM() { 
+    public function getCursoORM() {
         if (is_null($this->_cursoORM)) {
             $this->_cursoORM = new CircuitoORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_CURSO);
         }
         return $this->_cursoORM;
     }
-    
+
     /**
      * Metodo public para obter a instancia do DisciplinaORM
      * @return DisciplinaORM
      */
-    public function getDisciplinaORM() { 
+    public function getDisciplinaORM() {
         if (is_null($this->_disciplinaORM)) {
             $this->_disciplinaORM = new DisciplinaORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_DISCIPLINA);
         }
@@ -338,7 +338,7 @@ class RepositorioORM {
         }
         return $this->_aulaORM;  
     }
-    
+
     /**
      * Metodo public para obter a instancia do TurmaORM
      * @return TurmaORM
@@ -367,7 +367,7 @@ class RepositorioORM {
      */
     public function getSolicitacaoTipoORM() {
         if (is_null($this->_solicitacaoTipoORM)) {
-            $this->_solicitacaoTipoORM = new CircuitoORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_SOLICITACAO_TIPO);
+            $this->_solicitacaoTipoORM = new SolicitacaoTipoORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_SOLICITACAO_TIPO);
         }
         return $this->_solicitacaoTipoORM;
     }

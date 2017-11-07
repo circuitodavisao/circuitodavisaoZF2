@@ -18,8 +18,6 @@ use Zend\View\Model\ViewModel;
  */
 class PrincipalController extends CircuitoController {
 
-    private $repositorio;
-
     /**
      * Função padrão, traz a tela principal
      * GET /principal
@@ -171,22 +169,33 @@ class PrincipalController extends CircuitoController {
         $sessao = new Container(Constantes::$NOME_APLICACAO);
         $idSessao = $sessao->idSessao;
         if ($idSessao) {
-            $grupoSessao = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idSessao);
+            $this->getRepositorio()->iniciarTransacao();
+            try {
+                $grupoSessao = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idSessao);
 
-            $grupoPaiFilhoPai = $grupoSessao->getGrupoPaiFilhoPaiAtivo();
-            $grupoPaiFilhoPai->setDataEHoraDeInativacao();
-            $this->getRepositorio()->getGrupoPaiFilhoORM()->persistir($grupoPaiFilhoPai, false);
+                $grupoPaiFilhoPai = $grupoSessao->getGrupoPaiFilhoPaiAtivo();
+                $grupoPaiFilhoPai->setDataEHoraDeInativacao();
+                $this->getRepositorio()->getGrupoPaiFilhoORM()->persistir($grupoPaiFilhoPai, false);
 
-            foreach ($grupoSessao->getResponsabilidadesAtivas() as $grupoResponsavel) {
-                $grupoResponsavel->setDataEHoraDeInativacao();
-                $this->getRepositorio()->getGrupoResponsavelORM()->persistir($grupoResponsavel, false);
+                foreach ($grupoSessao->getResponsabilidadesAtivas() as $grupoResponsavel) {
+                    $grupoResponsavel->setDataEHoraDeInativacao();
+                    $this->getRepositorio()->getGrupoResponsavelORM()->persistir($grupoResponsavel, false);
+                }
+                $numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupoSessao);
+                $fatoLiderSelecionado = $this->getRepositorio()->getFatoLiderORM()->encontrarFatoLiderPorNumeroIdentificador($numeroIdentificador);
+                $fatoLiderSelecionado->setDataEHoraDeInativacao();
+                $this->getRepositorio()->getFatoLiderORM()->persistir($fatoLiderSelecionado, false);
+
+                $this->getRepositorio()->fecharTransacao();
+                unset($sessao->idSessao);
+                $sessao->mostrarNotificacao = true;
+                $sessao->nomePessoa = $grupoSessao->getEntidadeAtiva()->infoEntidade();
+                $sessao->exclusao = true;
+                return $this->redirect()->toRoute('principal');
+            } catch (Exception $exc) {
+                echo $exc->getTraceAsString();
+                $this->getRepositorio()->desfazerTransacao();
             }
-
-            unset($sessao->idSessao);
-            $sessao->mostrarNotificacao = true;
-            $sessao->nomePessoa = $grupoSessao->getEntidadeAtiva()->infoEntidade();
-            $sessao->exclusao = true;
-            return $this->redirect()->toRoute('principal');
         }
     }
 
@@ -264,13 +273,6 @@ class PrincipalController extends CircuitoController {
             }
         }
         return $response;
-    }
-
-    function getRepositorio() {
-        if (empty($this->repositorio)) {
-            $this->repositorio = new RepositorioORM($this->getDoctrineORMEntityManager());
-        }
-        return $this->repositorio;
     }
 
 }

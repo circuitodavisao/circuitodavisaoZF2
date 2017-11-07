@@ -27,17 +27,7 @@ use Zend\View\Model\ViewModel;
  */
 class LancamentoController extends CircuitoController {
 
-    private $repositorio;
-
-    /**
-     * Contrutor sobrecarregado com os serviços de ORM 
-     */
-    public function __construct(
-    EntityManager $doctrineORMEntityManager = null) {
-        if (!is_null($doctrineORMEntityManager)) {
-            parent::__construct($doctrineORMEntityManager);
-        }
-    }
+    
 
     /**
      * Traz a tela para lancamento de arregimentação
@@ -682,13 +672,6 @@ class LancamentoController extends CircuitoController {
         $idEntidadeAtual = $sessao->idEntidadeAtual;
         $entidade = $repositorioORM->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
         return $entidade->getGrupo();
-    }
-
-    function getRepositorio() {
-        if (empty($this->repositorio)) {
-            $this->repositorio = new RepositorioORM($this->getDoctrineORMEntityManager());
-        }
-        return $this->repositorio;
     }
 
 }

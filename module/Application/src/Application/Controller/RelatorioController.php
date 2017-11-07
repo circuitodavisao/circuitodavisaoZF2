@@ -11,10 +11,8 @@ use Application\Model\Entity\GrupoEvento;
 use Application\Model\Entity\GrupoPaiFilho;
 use Application\Model\Entity\GrupoPessoa;
 use Application\Model\Entity\GrupoResponsavel;
-use Application\Model\ORM\RepositorioORM;
 use Doctrine\ORM\EntityManager;
 use Exception;
-use Zend\Json\Json;
 use Zend\Session\Container;
 use Zend\View\Model\ViewModel;
 
@@ -31,8 +29,6 @@ class RelatorioController extends CircuitoController {
     const dimensaoTipoDomingo = 4;
     const stringRelatorio = 'relatorio';
     const stringPeriodoSelecionado = 'periodoSelecionado';
-
-    private $repositorio;
 
     /**
      * Contrutor sobrecarregado com os serviços de ORM
@@ -163,10 +159,10 @@ class RelatorioController extends CircuitoController {
         return $response;
     }
 
-    public static function montaRelatorio($repositorioORM, $numeroIdentificador, $periodo, $tipoRelatorio, $retornaJson = false) {
+    public static function montaRelatorio($repositorioORM, $numeroIdentificador, $periodo, $tipoRelatorio, $periodoInicial = 0) {
         /* Membresia */
         $relatorioMembresia = $repositorioORM->getFatoCicloORM()->montarRelatorioPorNumeroIdentificador($numeroIdentificador, $periodo, $tipoRelatorio);
-        $fatoLider = $repositorioORM->getFatoLiderORM()->encontrarPorNumeroIdentificador($numeroIdentificador, $tipoRelatorio);
+        $fatoLider = $repositorioORM->getFatoLiderORM()->encontrarPorNumeroIdentificador($numeroIdentificador, $tipoRelatorio, $periodo);
         $quantidadeLideres = $fatoLider[0]['lideres'];
         foreach ($relatorioMembresia as $key => $value) {
             $soma[$key] = 0;
@@ -180,9 +176,6 @@ class RelatorioController extends CircuitoController {
         $relatorio['membresiaArena'] = $soma[RelatorioController::dimensaoTipoArena];
         $relatorio['membresiaDomingo'] = $soma[RelatorioController::dimensaoTipoDomingo];
         $relatorio['membresiaMeta'] = Constantes::$META_LIDER * $quantidadeLideres;
-        if ($quantidadeLideres == 1) {
-            $relatorio['membresiaMeta'] = 12;
-        }
         $relatorio['membresia'] = RelatorioController::calculaMembresia(
                         $soma[RelatorioController::dimensaoTipoCulto], $soma[RelatorioController::dimensaoTipoArena], $soma[RelatorioController::dimensaoTipoDomingo]);
         $relatorio['membresiaPerformance'] = 0;
@@ -216,10 +209,6 @@ class RelatorioController extends CircuitoController {
         $relatorio['celulaRealizadas'] = $quantidadeCelulasRealizadas;
         $relatorio['celulaRealizadasPerformance'] = $performanceCelulasRealizadas;
         $relatorio['celulaRealizadasPerformanceClass'] = RelatorioController::corDaLinhaPelaPerformance($relatorio['celulaRealizadasPerformance']);
-
-        if ($retornaJson) {
-            $relatorio = Json::encode($relatorio);
-        }
 
         return $relatorio;
     }
@@ -257,7 +246,7 @@ class RelatorioController extends CircuitoController {
     }
 
     public static function ordenacaoDiscipulos($discipulosLocal, $relatorio, $tipo) {
-
+        $campo = '';
         if ($tipo === 1) {
             $campo = 'membresiaPerformance';
         }
@@ -266,6 +255,15 @@ class RelatorioController extends CircuitoController {
         }
         if ($tipo === 3) {
             $campo = 'celulaPerformance';
+        }
+        if ($tipo === 4) {
+            $campo = 'membresiaCulto';
+        }
+        if ($tipo === 5) {
+            $campo = 'membresiaArena';
+        }
+        if ($tipo === 6) {
+            $campo = 'membresiaDomingo';
         }
         $tamanhoArray = count($discipulosLocal);
 
@@ -398,13 +396,6 @@ class RelatorioController extends CircuitoController {
         } catch (Exception $exc) {
             echo $exc->getMessage();
         }
-    }
-
-    function getRepositorio() {
-        if (empty($this->repositorio)) {
-            $this->repositorio = new RepositorioORM($this->getDoctrineORMEntityManager());
-        }
-        return $this->repositorio;
     }
 
 }

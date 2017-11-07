@@ -83,7 +83,7 @@ return array(
                     'route' => '/relatorio[:action][/:tipoRelatorio][/:id]',
                     'constraints' => array(
                         'action' => '[a-zA-Z]+',
-                        'tipoRelatorio' => '[1-3]',
+                        'tipoRelatorio' => '[1-6]',
                         'id' => '[-0-9]+',
                     ),
                     'defaults' => array(
