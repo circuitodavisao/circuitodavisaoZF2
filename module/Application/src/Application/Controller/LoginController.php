@@ -27,7 +27,6 @@ class LoginController extends CircuitoController {
 
     private $_doctrineAuthenticationService;
     private $_translator;
-    private $repositorio;
 
     /**
      * Contrutor sobrecarregado com os serviços de ORM e Autenticador
@@ -624,13 +623,6 @@ class LoginController extends CircuitoController {
      */
     public function getTranslator() {
         return $this->_translator;
-    }
-
-    function getRepositorio() {
-        if (empty($this->repositorio)) {
-            $this->repositorio = new RepositorioORM($this->getDoctrineORMEntityManager());
-        }
-        return $this->repositorio;
-    }
+    }  
 
 }

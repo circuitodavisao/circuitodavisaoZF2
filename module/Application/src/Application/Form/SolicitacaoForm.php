@@ -15,17 +15,8 @@ use Zend\Form\Form;
  */
 class SolicitacaoForm extends Form {
 
-    private $solicitacaoTipo;
-
-    /**
-     * Contrutor
-     * @param String $name
-     * @param GrupoAluno $alunos
-     */
     public function __construct($name = null, $solicitacaoTipo = null) {
         parent::__construct($name);
-
-        $this->setSolicitacaoTipo($solicitacaoTipo);
 
         /**
          * Configuração do formulário
@@ -35,14 +26,22 @@ class SolicitacaoForm extends Form {
             Constantes::$FORM_ACTION => Constantes::$FORM_ACTION_CADASTRO_SOLICITACAO_FINALIZAR,
         ));
 
-        /* solicitacaoTipoId */
-        $this->add(
-                (new Select())
-                        ->setName('solicitacaoTipoId')
-                        ->setAttributes([
-                            Constantes::$FORM_ID => 'solicitacaoTipoId',
-                        ])
-        );
+        /* SolicitacaoTipo */
+        $arraySolicitacaoTipo = array();
+        $arraySolicitacaoTipo[0] = Constantes::$TRADUCAO_SELECIONE;
+        foreach ($solicitacaoTipo as $tipo) {
+            $arraySolicitacaoTipo[$tipo->getId()] = $tipo->getNome();
+        }
+
+        $inputSelectTipo = new Select();
+        $inputSelectTipo->setName('solicitacaoTipoId');
+        $inputSelectTipo->setAttributes(array(
+            Constantes::$FORM_CLASS => Constantes::$FORM_CLASS_FORM_CONTROL,
+            Constantes::$FORM_ID => 'solicitacaoTipoId',
+            Constantes::$FORM_ONCHANGE => 'selecionarTipo(this.value);',
+        ));
+        $inputSelectTipo->setValueOptions($arraySolicitacaoTipo);
+        $this->add($inputSelectTipo);
         /* objeto1 */
         $this->add(
                 (new Select())
