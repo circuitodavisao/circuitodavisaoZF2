@@ -57,12 +57,22 @@ class CabecalhoDePeriodos extends AbstractHelper {
         $html .= '<div class="center-block text-center mb10"> ';
         if ($this->view->mostrarBotaoPeriodoAnterior) {
             $html .= $botaoEsquerdo;
+//            $html .= '<select id="periodoInicial">';
+//            $html .= '<option value="-8">06/11 - 12/11</option>';
+//            $html .= '</select>';
         }
         $html .= Constantes::$NBSP;
-        $html .= $this->view->translate(Constantes::$TRADUCAO_PERIODO) . '&nbsp;-&nbsp;' . Funcoes::montaPeriodo($periodo)[0];
+        $html .= $this->view->translate(Constantes::$TRADUCAO_PERIODO)
+                . '&nbsp;-&nbsp;'
+                . Funcoes::montaPeriodo($periodo)[0]
+        ;
         $html .= Constantes::$NBSP;
         if ($this->view->mostrarBotaoPeriodoAfrente) {
             $html .= $botaoDireito;
+
+//            $html .= '<select id="periodoFinal">';
+//            $html .= '<option value="-2">06/11 - 12/11</option>';
+//            $html .= '</select>';
         }
         $html .= '</div>';
         return $html;

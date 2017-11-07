@@ -3,7 +3,9 @@
 namespace Application\Model\ORM;
 
 use Application\Controller\Helper\Constantes;
+use Application\Controller\Helper\Funcoes;
 use Application\Model\Entity\FatoLider;
+use DateTime;
 use Exception;
 
 /**
@@ -19,13 +21,13 @@ class FatoLiderORM extends CircuitoORM {
      * @param integer $tipoComparacao
      * @return String
      */
-    public function encontrarPorNumeroIdentificador($numeroIdentificador, $tipoComparacao) {
+    public function encontrarPorNumeroIdentificador($numeroIdentificador, $tipoComparacao, $periodo = 0) {
         $dqlBase = "SELECT "
                 . "SUM(fl.lideres) lideres "
                 . "FROM  " . Constantes::$ENTITY_FATO_LIDER . " fl "
                 . "WHERE "
-                . " fl.numero_identificador #tipoComparacao ?1 "
-                . "AND fl.data_inativacao IS NULL";
+                . "fl.numero_identificador #tipoComparacao ?1 "
+                . "AND ((fl.data_criacao <= ?2 AND fl.data_inativacao IS NULL) OR (1 = 2)) ";
         try {
             if ($tipoComparacao == 1) {
                 $dqlAjustadaTipoComparacao = str_replace('#tipoComparacao', '=', $dqlBase);
@@ -34,9 +36,12 @@ class FatoLiderORM extends CircuitoORM {
                 $dqlAjustadaTipoComparacao = str_replace('#tipoComparacao', 'LIKE', $dqlBase);
                 $numeroIdentificador .= '%';
             }
-
+            $resultadoPeriodo = Funcoes::montaPeriodo($periodo);
+            $dataDoPeriodo = $resultadoPeriodo[3] . '-' . $resultadoPeriodo[2] . '-' . $resultadoPeriodo[1];
+            $dataDoPeriodoFormatada = DateTime::createFromFormat('Y-m-d', $dataDoPeriodo);
             $result = $this->getEntityManager()->createQuery($dqlAjustadaTipoComparacao)
                     ->setParameter(1, $numeroIdentificador)
+                    ->setParameter(2, $dataDoPeriodoFormatada)
                     ->getResult();
 //            echo "<pre>";
 //            var_dump($result);

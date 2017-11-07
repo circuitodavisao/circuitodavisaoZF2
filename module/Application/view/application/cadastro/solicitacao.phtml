@@ -1,1 +1,253 @@
-solicitacao
+<?php
+echo $this->templateFormularioTopo('Solicitacao');
+?>
+<div class="panel-body bg-light">
+
+    <!--divSolicitacaoTipo-->
+    <div id="divSolicitacaoTipo">
+        <div class="section-divider mt20">
+            <span>Selecione uma das opções abaixo</span>
+        </div>
+        Tipo de solicitação
+        <select id="solicitacaoTipoId" class="mt10 form-control">
+            <option value="0">SELECIONE</option>
+            <option value="1">TRANSFERIR LIDER EM SUA PRORPIA EQUIPE</option>
+        </select>
+        <button type="button" onClick='selecionarTipo()' style="float: right;" class="mt10 btn ladda-button btn-primary mr5" data-style="zoom-in">
+            <span class="ladda-label">Selecionar</span>
+        </button>
+    </div>
+    <!-- Progress Bar -->
+    <div id="divProgress"  class="col-xs-12 hidden">
+        <div class="progress">
+            <div id="divProgressBar" class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;">
+                0%
+            </div>
+        </div>
+    </div>  
+    <div id="divObjetos" class="hidden">
+        <?php
+        for ($indiceDeObejtos = 1; $indiceDeObejtos <= 3; $indiceDeObejtos++) {
+            $funcaoOnclick = 'abrirSelecionarObjeto(' . $indiceDeObejtos . ');';
+            if ($indiceDeObejtos === 1) {
+                $stringSelecioneOObjeto = 'Selecione o Lider que será transferido';
+            }
+            if ($indiceDeObejtos === 2) {
+                $stringSelecioneOObjeto = 'Selecione o Lider que receberá a transfêrencia';
+            }
+            if ($indiceDeObejtos === 3) {
+                $stringSelecioneOObjeto = 'Selecione os dados complementares';
+            }
+            ?>
+            <!-- Bloco objeto -->
+            <div id="blocoObjeto<?php echo $indiceDeObejtos; ?>" class="well col-xs-12 btn btn-default text-left" onClick='<?php echo $funcaoOnclick; ?>'>
+                <address>
+                    <span id="spanSelecioneObjeto<?php echo $indiceDeObejtos; ?>"><?php echo $stringSelecioneOObjeto; ?></span>
+                    <span id="spanObjeto<?php echo $indiceDeObejtos; ?>"></span>
+                </address>
+                <div id="divBotaoSelecionar<?php echo $indiceDeObejtos; ?>">
+                    <button type="button" onClick='<?php echo $funcaoOnclick; ?>' style="float: right;" onclick='location.href = "#";' class="btn ladda-button btn-primary btn-xs mr5" data-style="zoom-in">
+                        <span class="ladda-label">Selecionar</span>
+                    </button>
+                </div>
+                <div id="divBotaoLimpar<?php echo $indiceDeObejtos; ?>"  class="hidden">
+                    <button type="button" onClick='limparObjeto(<?php echo $indiceDeObejtos; ?>);' style="float: right;" onclick='location.href = "#";' class="btn ladda-button btn-default dark btn-xs mr5" data-style="zoom-in">
+                        <span class="ladda-label">Limpar</span>
+                    </button>
+                </div>
+                <div id="divCheckDadosInseridos<?php echo $indiceDeObejtos; ?>" class="checkDadosInseridos hidden">
+                    <span class="glyphicon glyphicon-ok text-success"></span>
+                </div>
+            </div>
+            <?php
+        }
+        ?>
+    </div>
+    <!--divSelecionarLider-->
+    <div id="divSelecionarLider" class="hidden">
+        <div class="panel-menu">
+            <input id="fooFilter" type="text" class="form-control" placeholder="Filtro">
+        </div>
+        <table class="table footable no-paging" data-filter="#fooFilter" data-page-navigation=".pagination" data-page-size="5">
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Equipe</th>
+                    <td></td>
+                </tr>
+            </thead>
+            <tbody>
+                <?php echo $this->listagemLideresTransferencia($this->discipulos); ?>
+            </tbody>
+            <tfoot class="footer-menu">
+                <tr>
+                    <td colspan="3">
+                        <nav class="text-right">
+                            <ul class="pagination hide-if-no-paging"></ul>
+                        </nav>
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    </div> 
+    <div id="divSelecionarNumeracao" class="hidden">
+        <div class="section-divider mt20">
+            <span>Selecione uma numeração</span>
+        </div>
+        <select id="numeracao" class="mt10 form-control">
+            <option value="0">SELECIONE</option>
+            <?php
+            for ($indiceNumeracao = 1; $indiceNumeracao <= 24; $indiceNumeracao++) {
+                echo "<option value='$indiceNumeracao'>$indiceNumeracao</option>";
+            }
+            ?>
+        </select>
+        <button type="button" onClick='selecionarNumeracao()' style="float: right;" class="mt10 btn ladda-button btn-primary mr5" data-style="zoom-in">
+            <span class="ladda-label">Selecionar</span>
+        </button>
+    </div>
+</div>
+
+
+
+<script type="text/javascript">
+    /**
+     * Nome: layout-js-transferencia-validacao.js
+     * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com>
+     * Descricao: Funções para cadastro de transferência
+     */
+
+    /* Dados */
+    var arrayObjetos = [0, 0, 0];
+    var iconeTime = '<i class="fa fa-times" aria-hidden="true"></i>';
+    var iconeCheck = '<i class="fa fa-check" aria-hidden="true"></i>';
+    var hidden = 'hidden';
+    var textDanger = 'text-danger';
+    var textSuccess = 'text-success';
+    var stringNBSP = '&nbsp;';
+    var alertDanger = 'alert-danger';
+    var alertSuccess = 'alert-success';
+    var btnDefault = 'btn-default';
+    var btnPrimary = 'btn-primary';
+    var objetoSelecionado = 0;
+    var stringSpanObjeto = '#spanObjeto';
+    var stringSpanSelecioneObjeto = '#spanSelecioneObjeto';
+    var stringDivBotaoSelecionar = '#divBotaoSelecionar';
+    var stringDivBotaoLimpar = '#divBotaoLimpar';
+    var stringDivCheckDadosInseridos = '#divCheckDadosInseridos';
+    var stringBlocoObjeto = '#blocoObjeto';
+    var stringDivSolicitacaoTipo = '#divSolicitacaoTipo';
+    var stringDivObjetos = '#divObjetos';
+    var stringDivSelecionarLider = '#divSelecionarLider';
+    var stringDivSelecionarNumeracao = '#divSelecionarNumeracao';
+    var objeto;
+    var spanSelecioneOObjeto;
+    var botaoSelecionar;
+    var botaoLimpar;
+    var check;
+    var blocoObjeto;
+
+    function selecionarTipo() {
+        if (parseInt($('#solicitacaoTipoId').val()) === 0) {
+            alert('Selecion um tipo de solicitacao');
+        } else {
+            $(stringDivSolicitacaoTipo).addClass(hidden);
+            $(stringDivObjetos).removeClass(hidden);
+            $('#divProgress').removeClass(hidden);
+            $('#tituloDaPagina').html($('#tituloDaPagina').html() + ' - ' + $('#solicitacaoTipoId option:selected').text());
+        }
+    }
+
+    function abrirSelecionarObjeto(qualObjeto) {
+        $(stringDivObjetos).addClass(hidden);
+        if (qualObjeto != 3) {
+            $(stringDivSelecionarLider).removeClass(hidden);
+        } else {
+            $(stringDivSelecionarNumeracao).removeClass(hidden);
+        }
+        objetoSelecionado = qualObjeto;
+    }
+
+    function selecionarObjeto(id, informacao) {
+        $(stringDivObjetos).removeClass(hidden);
+        if (parseInt(objetoSelecionado) !== 3) {
+            $(stringDivSelecionarLider).addClass(hidden);
+            $('#tr_' + id).addClass(hidden);
+        } else {
+            $(stringDivSelecionarNumeracao).addClass(hidden);
+        }
+
+        objeto = $(stringSpanObjeto + objetoSelecionado);
+        spanSelecioneOObjeto = $(stringSpanSelecioneObjeto + objetoSelecionado);
+        botaoSelecionar = $(stringDivBotaoSelecionar + objetoSelecionado);
+        botaoLimpar = $(stringDivBotaoLimpar + objetoSelecionado);
+        check = $(stringDivCheckDadosInseridos + objetoSelecionado);
+        blocoObjeto = $(stringBlocoObjeto + objetoSelecionado);
+
+        if (parseInt(objetoSelecionado) === 3) {
+            informacao = 'Nova numeração: ' + informacao;
+        }
+        objeto.html(informacao);
+        spanSelecioneOObjeto.addClass(hidden);
+        botaoSelecionar.addClass(hidden);
+        botaoLimpar.removeClass(hidden);
+        check.removeClass(hidden);
+        blocoObjeto.removeClass('btn').removeClass('btn-default').prop('onclick', null).off('click');
+
+        arrayObjetos[objetoSelecionado] = id;
+        atualizarBarraDeProgresso(25);
+    }
+
+    function selecionarNumeracao() {
+        var numeracao = $('#numeracao').val();
+        if (parseInt(numeracao) === 0) {
+            alert('Selecion uma numeracao');
+        } else {
+            selecionarObjeto(numeracao, numeracao);
+        }
+    }
+
+    function limparObjeto(qualObjeto) {
+        objeto = $(stringSpanObjeto + qualObjeto);
+        spanSelecioneOObjeto = $(stringSpanSelecioneObjeto + qualObjeto);
+        botaoSelecionar = $(stringDivBotaoSelecionar + qualObjeto);
+        botaoLimpar = $(stringDivBotaoLimpar + qualObjeto);
+        check = $(stringDivCheckDadosInseridos + qualObjeto);
+
+        objeto.html('');
+        spanSelecioneOObjeto.removeClass(hidden);
+        botaoSelecionar.removeClass(hidden);
+        botaoLimpar.addClass(hidden);
+        check.addClass(hidden);
+        if (qualObjeto != 3) {
+            $('#tr_' + arrayObjetos[qualObjeto]).removeClass(hidden);
+        } else {
+            $('#numeracao').val(0);
+        }
+        atualizarBarraDeProgresso(-25);
+    }
+
+    /* por em funcoes */
+    /* atualizar grupo-validacao tbm */
+    function atualizarBarraDeProgresso(valorParaSomar) {
+        valorParaSomar = parseInt(valorParaSomar);
+        var valorAtualDaBarraDeProgresso = pegaValorBarraDeProgresso();
+        var valorAtualizadoDaBarraDeProgresso = parseInt(valorAtualDaBarraDeProgresso) + valorParaSomar;
+        var stringPercentual = '%';
+        $('#divProgressBar')
+                .attr("aria-valuenow", valorAtualizadoDaBarraDeProgresso)
+                .html(valorAtualizadoDaBarraDeProgresso + stringPercentual)
+                .css('width', valorAtualizadoDaBarraDeProgresso + stringPercentual);
+        var divBotaoSubmit = $('#divBotaoSubmit');
+        if (valorAtualizadoDaBarraDeProgresso == 100) {
+            divBotaoSubmit.removeClass(hidden);
+        } else {
+            divBotaoSubmit.addClass(hidden);
+        }
+    }
+
+    function pegaValorBarraDeProgresso() {
+        return $('#divProgressBar').attr("aria-valuenow");
+    }
+
+</script>
