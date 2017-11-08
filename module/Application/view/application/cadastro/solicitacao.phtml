@@ -1,4 +1,9 @@
 <?php
+
+use Application\Controller\Helper\Constantes;
+use Application\View\Helper\BotaoSimples;
+
+$labelVoltar = $this->translate(Constantes::$TRADUCAO_VOLTAR);
 echo $this->templateFormularioTopo('Solicitacao');
 ?>
 <div class="panel-body bg-light">
@@ -25,6 +30,7 @@ echo $this->templateFormularioTopo('Solicitacao');
             </div>
         </div>
     </div>  
+    <!--divObjetos-->
     <div id="divObjetos" class="hidden">
         <?php
         for ($indiceDeObejtos = 1; $indiceDeObejtos <= 3; $indiceDeObejtos++) {
@@ -90,6 +96,7 @@ echo $this->templateFormularioTopo('Solicitacao');
             </tfoot>
         </table>
     </div> 
+    <!--divSelecionarNumeracao-->
     <div id="divSelecionarNumeracao" class="hidden">
         <div class="section-divider mt20">
             <span>Selecione uma numeração</span>
@@ -105,6 +112,64 @@ echo $this->templateFormularioTopo('Solicitacao');
         <button type="button" onClick='selecionarNumeracao()' style="float: right;" class="mt10 btn ladda-button btn-primary mr5" data-style="zoom-in">
             <span class="ladda-label">Selecionar</span>
         </button>
+    </div>
+    <!--divBotaoContinuar-->
+    <div id="divBotaoContinuar" class="hidden">
+        <button type="button" onClick='continuarParaConfimacao()' style="float: right;" class="mt10 btn ladda-button btn-primary mr5" data-style="zoom-in">
+            <span class="ladda-label">Continuar</span>
+        </button>
+    </div>
+    <!--divTelaConfirmacao-->
+    <div id="divTelaConfirmacao" class="hidden">
+        <div class="panel heading-border panel-info">
+            <div class="panel-body">
+                <address>
+                    tem isso
+                    va acontecer isso
+                </address>                                  
+            </div>                 
+        </div>
+        <div class="row">
+            <div class="col-sm-12 col-xs-12">
+                <div class="section text-center">
+                    <label class="option block mt15">
+                        <input type="checkbox" name="checked" value="checked" onclick="pedirSenha();">
+                        <span class="checkbox"></span>
+                        Confirmo isso
+                    </label> 
+                </div>
+            </div>
+        </div>
+        <?php
+        $stringNomeDaFuncaoOnClickVoltar = 'selecionarTipo()';
+        echo $this->botaoSimples($labelVoltar, $this->funcaoOnClick($stringNomeDaFuncaoOnClickVoltar), BotaoSimples::botaoMenorImportancia);
+        ?>
+    </div>
+    <!--divSenha-->
+    <div id="divSenha" class="hidden">
+        <div class="">
+            <div class="section-divider"> 
+                <span><?php echo $this->translate(Constantes::$TRADUCAO_DIGITE_SENHA_EXCUSAO_SENHA); ?></span>
+            </div>
+            <?php // echo $this->divMensagens();  ?>
+            <div class="row">
+                <div class="col-sm-12 col-xs-12">
+                    <div class="section text-center">
+                        <input id="senha" type="password" class="gui-input" placeholder="<?php echo $this->translate(Constantes::$TRADUCAO_SENHA); ?>" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="text-right" style="height:65px;">
+            <?php
+            /* Botões */
+            $labelConfirmar = $this->translate(Constantes::$TRADUCAO_CONFIRMACAO);
+            $stringNomeDaFuncaoOnClickVoltarConfirmacao = 'continuarParaConfimacao()';
+            $stringNomeDaFuncaoOnClickConfimarSolicitacao = 'alert("foi")';
+            echo $this->botaoSimples($labelConfirmar, $this->funcaoOnClick($stringNomeDaFuncaoOnClickConfimarSolicitacao), BotaoSimples::botaoPerigoso);
+            echo $this->botaoSimples($labelVoltar, $this->funcaoOnClick($stringNomeDaFuncaoOnClickVoltarConfirmacao), BotaoSimples::botaoMenorImportancia);
+            ?>      
+        </div>    
     </div>
 </div>
 
@@ -156,6 +221,8 @@ echo $this->templateFormularioTopo('Solicitacao');
             $('#divProgress').removeClass(hidden);
             $('#tituloDaPagina').html($('#tituloDaPagina').html() + ' - ' + $('#solicitacaoTipoId option:selected').text());
         }
+        $('#divTelaConfirmacao').addClass(hidden);
+        verificarSeMostraOBotaoDeContinuar();
     }
 
     function abrirSelecionarObjeto(qualObjeto) {
@@ -195,7 +262,12 @@ echo $this->templateFormularioTopo('Solicitacao');
         blocoObjeto.removeClass('btn').removeClass('btn-default').prop('onclick', null).off('click');
 
         arrayObjetos[objetoSelecionado] = id;
-        atualizarBarraDeProgresso(25);
+        var valorParaAdicionar = 35;
+        if (parseInt(objetoSelecionado) === 3) {
+            valorParaAdicionar = 30;
+        }
+        atualizarBarraDeProgresso(valorParaAdicionar);
+        verificarSeMostraOBotaoDeContinuar();
     }
 
     function selecionarNumeracao() {
@@ -224,7 +296,35 @@ echo $this->templateFormularioTopo('Solicitacao');
         } else {
             $('#numeracao').val(0);
         }
-        atualizarBarraDeProgresso(-25);
+        var valorParaRemover = -35;
+        if (parseInt(qualObjeto) === 3) {
+            valorParaRemover = -30;
+        }
+        atualizarBarraDeProgresso(valorParaRemover);
+        verificarSeMostraOBotaoDeContinuar();
+    }
+
+    function verificarSeMostraOBotaoDeContinuar() {
+        var valorAtualDaBarraDeProgresso = pegaValorBarraDeProgresso();
+        var divBotaoContinuar = $('#divBotaoContinuar');
+        if (parseInt(valorAtualDaBarraDeProgresso) === 100) {
+            divBotaoContinuar.removeClass(hidden);
+        } else {
+            divBotaoContinuar.addClass(hidden);
+        }
+    }
+
+    function continuarParaConfimacao() {
+        $('#divProgress').addClass(hidden);
+        $('#divObjetos').addClass(hidden);
+        $('#divBotaoContinuar').addClass(hidden);
+        $('#divTelaConfirmacao').removeClass(hidden);
+        $('#divSenha').addClass(hidden);
+    }
+
+    function pedirSenha() {
+        $('#divTelaConfirmacao').addClass(hidden);
+        $('#divSenha').removeClass(hidden);
     }
 
     /* por em funcoes */

@@ -53,7 +53,7 @@ class Pessoa extends CircuitoEntity implements InputFilterAwareInterface {
      * @ORM\OneToMany(targetEntity="PessoaHierarquia", mappedBy="pessoa") 
      */
     protected $pessoaHierarquia;
-    
+
     /**
      * @ORM\OneToMany(targetEntity="Curso", mappedBy="pessoa") 
      */
@@ -609,9 +609,7 @@ class Pessoa extends CircuitoEntity implements InputFilterAwareInterface {
         $eventosFrequencia = $this->getEventoFrequencia();
         foreach ($eventosFrequencia as $frequencia) {
             if ($frequencia->getEvento()->getEventoTipo()->getId() == EventoTipo::tipoRevisao) {
-                if ($frequencia->getFrequencia() === 'S') {
-                    $resposta = true;
-                }
+                $resposta = true;
             }
         }
         return $resposta;
@@ -783,7 +781,7 @@ class Pessoa extends CircuitoEntity implements InputFilterAwareInterface {
     function dadosAtualizados() {
         $this->setAtualizar_dados('N');
     }
-    
+
     function getCurso() {
         return $this->curso;
     }
@@ -791,4 +789,5 @@ class Pessoa extends CircuitoEntity implements InputFilterAwareInterface {
     function setCurso($curso) {
         $this->curso = $curso;
     }
+
 }
