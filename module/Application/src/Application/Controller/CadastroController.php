@@ -1323,23 +1323,6 @@ class CadastroController extends CircuitoController {
         Funcoes::enviarEmail($ToEmail, $Subject, $Content);
     }
 
-    public function transferenciaAction() {
-        $form = new TransferenciaForm('transferencia');
-
-        $sessao = new Container(Constantes::$NOME_APLICACAO);
-
-        $idEntidadeAtual = $sessao->idEntidadeAtual;
-        $entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
-        $grupo = $entidade->getGrupo();
-        $discipulos = $grupo->getGrupoPaiFilhoFilhos();
-
-        return new ViewModel(
-                array(
-            Constantes::$FORM => $form,
-            'discipulos' => $discipulos,
-        ));
-    }
-
     public function selecionarRevisionistaAction() {
 
         $sessao = new Container(Constantes::$NOME_APLICACAO);
@@ -1350,7 +1333,7 @@ class CadastroController extends CircuitoController {
         $sessao->idRevisao = $idRevisao;
         $view = new ViewModel(array(
             Constantes::$ENTIDADE => $entidade,
-            'repositorioORM' => $repositorioORM,
+            'repositorioORM' => $this->getRepositorio(),
         ));
 
         /* Javascript */
@@ -1501,7 +1484,7 @@ class CadastroController extends CircuitoController {
         $eventoRevisao = $this->getRepositorio()->getEventoORM()->encontrarPorId($idRevisao);
         $view = new ViewModel(array(
             Constantes::$ENTIDADE => $entidade,
-            'repositorioORM' => $repositorioORM,
+            'repositorioORM' => $this->getRepositorio(),
             'evento' => $eventoRevisao,
             'entidade' => $entidade,
         ));
@@ -1528,7 +1511,7 @@ class CadastroController extends CircuitoController {
         $entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
         $view = new ViewModel(array(
             Constantes::$FORM_ATIVAR_FICHA => $formAtivarFicha,
-            'repositorioORM' => $repositorioORM,
+            'repositorioORM' => $this->getRepositorio(),
             'evento' => $eventoRevisao,
             'entidade' => $entidade,
         ));
@@ -1551,7 +1534,7 @@ class CadastroController extends CircuitoController {
         $eventoRevisao = $this->getRepositorio()->getEventoORM()->encontrarPorId($idRevisao);
         $view = new ViewModel(array(
             Constantes::$ENTIDADE => $entidade,
-            'repositorioORM' => $repositorioORM,
+            'repositorioORM' => $this->getRepositorio(),
             'evento' => $eventoRevisao,
         ));
 
@@ -1706,7 +1689,7 @@ class CadastroController extends CircuitoController {
         $eventoFrequencia = $this->getRepositorio()->getEventoFrequenciaORM()->encontrarPorIdEventoFrequencia($idEventoFrequencia);
         $pessoaRevisionista = $eventoFrequencia->getPessoa();
         /* Membro = idTipo 3 */
-        $this->alterarGrupoPessoaTipo(3, $repositorioORM, $pessoaRevisionista);
+        $this->alterarGrupoPessoaTipo(3, $this->getRepositorio(), $pessoaRevisionista);
 
         /* Ativando a presença do Revisionista  */
         $eventoFrequencia->setFrequencia('S');
@@ -1781,7 +1764,7 @@ class CadastroController extends CircuitoController {
             if ($eventoFrequencia->getFrequencia() == 'S') {
                 $pessoaRevisionista = $eventoFrequencia->getPessoa();
                 /* Membro = idTipo 3 */
-                $grupoPessoaRevisionista = $this->alterarGrupoPessoaTipo(3, $repositorioORM, $pessoaRevisionista);
+                $grupoPessoaRevisionista = $this->alterarGrupoPessoaTipo(3, $this->getRepositorio(), $pessoaRevisionista);
 
                 /* Ativando a presença do Revisionista  */
                 $eventoFrequencia->setFrequencia('N');
