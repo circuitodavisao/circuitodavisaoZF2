@@ -11,7 +11,7 @@ use Zend\View\Helper\AbstractHelper;
  * Nome: ListagemDePessoasComEventos.php
  * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com>
  * Descricao: Classe helper view para mostrar a listagem de eventos com frequencia
- */ 
+ */
 class ListagemConsolidacaoParaRevisao extends AbstractHelper {
 
     public function __construct() {
@@ -80,9 +80,9 @@ class ListagemConsolidacaoParaRevisao extends AbstractHelper {
                             $adicionar = true;
                         }
                     }
-                }   
-                if(($p->getTipo() == 'CO' || $p->getTipo() == 'VI') && $gp->verificarSeEstaAtivo()){
-                    if ($adicionar && $adicionarVisitante) {
+                }
+                if (($p->getTipo() == 'CO' || $p->getTipo() == 'VI') && $gp->verificarSeEstaAtivo()) {
+                    if ($adicionar && $adicionarVisitante && !$p->verificaSeParticipouDoRevisao()) {
                         $pessoasGrupo[] = $p;
                     }
                 }
@@ -91,7 +91,7 @@ class ListagemConsolidacaoParaRevisao extends AbstractHelper {
 
         /* Ordenacao de pessoas */
         $valores = array();
-        foreach ($pessoasGrupo as $pg) { 
+        foreach ($pessoasGrupo as $pg) {
             $valor = 0;
             switch ($pg->getTipo()) {
                 case 'CO':
@@ -140,15 +140,15 @@ class ListagemConsolidacaoParaRevisao extends AbstractHelper {
         if (count($pessoas) == 0) {
             $html .= '<div class="alert alert-warning"><i class="fa fa-warning pr10" aria-hidden="true"></i>&nbsp;Sem Pessoas Cadastradas!</div>';
         } else {
-            
-                $html .= $this->view->templateFormularioTopo('Selecionar pessoa para o revisão');
-                $html .= '<div class="panel-body bg-light">';
-                
-                    $html .= '<table class="table">'; 
-                    $html .= '<thead>';
-                    $html .= '<tr>';
 
-                    /* Caso seja evento do tipo Célula */
+            $html .= $this->view->templateFormularioTopo('Selecionar pessoa para o revisão');
+            $html .= '<div class="panel-body bg-light">';
+
+            $html .= '<table class="table">';
+            $html .= '<thead>';
+            $html .= '<tr>';
+
+            /* Caso seja evento do tipo Célula */
 //                    if ($tipoCelula) {
 //                        $html .= '<th class="text-center">';
 //                        $html .= $this->view->translate(Constantes::$TRADUCAO_DIA_DA_SEMANA_SIMPLIFICADO) . ' / ' . $this->view->translate(Constantes::$TRADUCAO_HORA);
@@ -186,23 +186,23 @@ class ListagemConsolidacaoParaRevisao extends AbstractHelper {
 //                        $html .= '</th>';
 //                    }
 //                    if ($tipoRevisionistas) {
-                        $html .= '<th class="text-center">';
-                        $html .= $this->view->translate(Constantes::$TRADUCAO_TIPO_REVISIONISTA);
-                        $html .= '</th>';
-                        $html .= '<th class="text-center">';
-                        $html .= $this->view->translate(Constantes::$TRADUCAO_NOME_REVISIONISTA);
-                        $html .= '</th>';
+            $html .= '<th class="text-center">';
+            $html .= $this->view->translate(Constantes::$TRADUCAO_TIPO_REVISIONISTA);
+            $html .= '</th>';
+            $html .= '<th class="text-center">';
+            $html .= $this->view->translate(Constantes::$TRADUCAO_NOME_REVISIONISTA);
+            $html .= '</th>';
 //                    }
-                    $html .= '<th class="text-center"></th>';
-                    $html .= '</tr>';
-                    $html .= '</thead>';
-                    $html .= '<tbody>';
+            $html .= '<th class="text-center"></th>';
+            $html .= '</tr>';
+            $html .= '</thead>';
+            $html .= '<tbody>';
 
-                    foreach ($pessoas as $pessoa) {
+            foreach ($pessoas as $pessoa) {
 //                        $evento = $ge->getEvento();
 //                        $diaDaSemanaAjustado = Funcoes::diaDaSemanaPorDia($evento->getDia());
 
-                        $html .= '<tr>';
+                $html .= '<tr>';
 //                        if ($tipoCelula) {
 //
 //                            $html .= '<td class="text-center">' . $this->view->translate($diaDaSemanaAjustado) . '/' . $evento->getHoraFormatoHoraMinutoParaListagem() . '</td>';
@@ -258,26 +258,26 @@ class ListagemConsolidacaoParaRevisao extends AbstractHelper {
 //                        }
 //                        if ($tipoRevisionistas) {
 
-                            $html .= '<td class="text-center">' . $pessoa->getTipo() . '</td>';
+                $html .= '<td class="text-center">' . $pessoa->getTipo() . '</td>';
 
-                            $stringNomeDaFuncaoOnClickInserir = 'funcaoCadastro("' . Constantes::$PAGINA_CADASTRAR_PESSOA_REVISAO . '", ' . $pessoa->getId() . ')';
-                            
-                            $html .= '<td class="text-center"><span class="visible-lg visible-md">' . $pessoa->getNome() . '</span><span class="visible-sm visible-xs">' . $pessoa->getNomePrimeiroUltimo() . '</span></td>';
+                $stringNomeDaFuncaoOnClickInserir = 'funcaoCadastro("' . Constantes::$PAGINA_CADASTRAR_PESSOA_REVISAO . '", ' . $pessoa->getId() . ')';
 
-                            $html .= '<td class="text-center">';
+                $html .= '<td class="text-center"><span class="visible-lg visible-md">' . $pessoa->getNome() . '</span><span class="visible-sm visible-xs">' . $pessoa->getNomePrimeiroUltimo() . '</span></td>';
 
-                            $html .= $this->view->botaoLink(Constantes::$STRING_ICONE_PLUS . '  ' . $this->view->translate(Constantes::$TRADUCAO_NOVO_REVISIONISTA), Constantes::$STRING_HASHTAG, 4, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClickInserir));
-                            $html .= '</td>';
+                $html .= '<td class="text-center">';
+
+                $html .= $this->view->botaoLink(Constantes::$STRING_ICONE_PLUS . '  ' . $this->view->translate(Constantes::$TRADUCAO_NOVO_REVISIONISTA), Constantes::$STRING_HASHTAG, 4, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClickInserir));
+                $html .= '</td>';
 //                        }
-                        $html .= '</tr>';
-                    }
-                    $html .= '</tbody>';
-                    $html .= '</table>';
-                
-                $html .= '</div>';
-                /* Fim panel-body */
-                $html .= '<div class="panel-footer text-right">';
-                /* Botões */
+                $html .= '</tr>';
+            }
+            $html .= '</tbody>';
+            $html .= '</table>';
+
+            $html .= '</div>';
+            /* Fim panel-body */
+            $html .= '<div class="panel-footer text-right">';
+            /* Botões */
 //                if ($tipoCelula) {
 //                    if (count($this->getEventos()) < 2) {
 //                        $stringNomeDaFuncaoOnClickCadastro = 'funcaoCadastro("' . Constantes::$PAGINA_EVENTO_CELULA . '", 0)';
@@ -294,20 +294,17 @@ class ListagemConsolidacaoParaRevisao extends AbstractHelper {
 //                    $html .= $this->view->botaoLink(Constantes::$STRING_ICONE_PLUS . ' ' . $this->view->translate(Constantes::$TRADUCAO_NOVO_CULTO), Constantes::$STRING_HASHTAG, 0, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClickCadastro));
 //                }
 //                if ($tipoRevisao) {
-                    $stringNomeDaFuncaoOnClickCadastro = 'funcaoCadastro("' . Constantes::$PAGINA_REVISIONISTAS . '", '.$pessoa->getId().')';
-                    $html .= $this->view->botaoLink($this->view->translate(Constantes::$TRADUCAO_VOLTAR), Constantes::$STRING_HASHTAG, 0, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClickCadastro));
+            $stringNomeDaFuncaoOnClickCadastro = 'funcaoCadastro("' . Constantes::$PAGINA_REVISIONISTAS . '", ' . $pessoa->getId() . ')';
+            $html .= $this->view->botaoLink($this->view->translate(Constantes::$TRADUCAO_VOLTAR), Constantes::$STRING_HASHTAG, 0, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClickCadastro));
 //                }
 
-                /* Fim Botões */
-                $html .= '</div>';
-                /* Fim panel-footer */
-                $html .= $this->view->templateFormularioRodape();
-            }
-    
-            return $html;
+            /* Fim Botões */
+            $html .= '</div>';
+            /* Fim panel-footer */
+            $html .= $this->view->templateFormularioRodape();
         }
-        
-        
-    }
-    
 
+        return $html;
+    }
+
+}
