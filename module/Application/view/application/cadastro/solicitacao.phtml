@@ -141,7 +141,7 @@ echo $this->templateFormularioTopo('Solicitacao');
             </div>
         </div>
         <?php
-        $stringNomeDaFuncaoOnClickVoltar = 'selecionarTipo()';
+        $stringNomeDaFuncaoOnClickVoltar = 'voltaAosObjetos()';
         echo $this->botaoSimples($labelVoltar, $this->funcaoOnClick($stringNomeDaFuncaoOnClickVoltar), BotaoSimples::botaoMenorImportancia);
         ?>
     </div>
@@ -151,7 +151,7 @@ echo $this->templateFormularioTopo('Solicitacao');
             <div class="section-divider"> 
                 <span><?php echo $this->translate(Constantes::$TRADUCAO_DIGITE_SENHA_EXCUSAO_SENHA); ?></span>
             </div>
-            <?php // echo $this->divMensagens();  ?>
+            <?php echo $this->divMensagens();  ?>
             <div class="row">
                 <div class="col-sm-12 col-xs-12">
                     <div class="section text-center">
@@ -221,8 +221,6 @@ echo $this->templateFormularioTopo('Solicitacao');
             $('#divProgress').removeClass(hidden);
             $('#tituloDaPagina').html($('#tituloDaPagina').html() + ' - ' + $('#solicitacaoTipoId option:selected').text());
         }
-        $('#divTelaConfirmacao').addClass(hidden);
-        verificarSeMostraOBotaoDeContinuar();
     }
 
     function abrirSelecionarObjeto(qualObjeto) {
@@ -325,6 +323,13 @@ echo $this->templateFormularioTopo('Solicitacao');
     function pedirSenha() {
         $('#divTelaConfirmacao').addClass(hidden);
         $('#divSenha').removeClass(hidden);
+    }
+
+    function voltaAosObjetos() {
+        $('#divTelaConfirmacao').addClass(hidden);
+        verificarSeMostraOBotaoDeContinuar();
+        $(stringDivObjetos).removeClass(hidden);
+        $('#divProgress').removeClass(hidden);
     }
 
     /* por em funcoes */

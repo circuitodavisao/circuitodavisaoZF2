@@ -1,1 +1,40 @@
-solicitacoes
+<?php
+
+use Application\Controller\Helper\Constantes;
+
+$html .= '<div class="panel-body bg-light">';
+
+$html .= '<table class="table">';
+
+$html .= '<thead>';
+
+$html .= '<tr>';
+$html .= '<th>Tipo</th>';
+$html .= '<th>Data Solicitacao</th>';
+$html .= '<th>Solicitante</th>';
+$html .= '<th>Objeto 1</th>';
+$html .= '<th>Objeto 2</th>';
+$html .= '</tr>';
+
+$html .= '</thead>';
+
+$html .= '<tbody>';
+foreach ($this->solicitacoes as $solicitacao) {
+    $html .= '<tr>';
+    $html .= '<th>' . $solicitacao->getSolicitacaoTipo()->getNome() . '</th>';
+    $html .= '<th>' . $solicitacao->getData_criacaoStringPadraoBrasil() . '</th>';
+    $html .= '<th>' . $solicitacao->getPessoa()->getNome() . '</th>';
+    $html .= '<th>' . $solicitacao->getObjeto1() . '</th>';
+    $html .= '<th>' . $solicitacao->getObjeto2() . '</th>';
+    $html .= '</tr>';
+}
+$html .= '</tbody>';
+
+$html .= '</table>';
+$stringNomeDaFuncaoOnClickCadastro = 'funcaoCircuito("cadastroSolicitacao", 0)';
+$html .= $this->botaoSimples($this->translate(Constantes::$TRADUCAO_CADASTRAR), $this->funcaoOnClick($stringNomeDaFuncaoOnClickCadastro));
+
+$html .= '</div>';
+
+echo $html;
+

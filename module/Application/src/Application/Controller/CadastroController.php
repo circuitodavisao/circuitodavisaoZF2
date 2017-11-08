@@ -1909,7 +1909,15 @@ class CadastroController extends CircuitoController {
         $idEntidadeAtual = $sessao->idEntidadeAtual;
         $entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
         $grupo = $entidade->getGrupo();
-        $solicitacoes = $grupo->getSolicitacao();
+        $solicitacoes = null;
+        foreach ($grupo->getResponsabilidadesAtivas() as $grupoResponsavel) {
+            $pessoa = $grupoResponsavel->getPessoa();
+            if ($pessoa->getSolicitacao()) {
+                foreach ($pessoa->getSolicitacao() as $solicitacao) {
+                    $solicitacoes[] = $solicitacao;
+                }
+            }
+        }
         $view = new ViewModel(array(
             'solicitacoes' => $solicitacoes,
         ));
