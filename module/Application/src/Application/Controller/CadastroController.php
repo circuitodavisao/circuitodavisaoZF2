@@ -14,7 +14,7 @@ use Application\Form\DisciplinaForm;
 use Application\Form\EventoForm;
 use Application\Form\GrupoForm;
 use Application\Form\SelecionarAlunosForm;
-use Application\Form\TransferenciaForm;
+use Application\Form\SolicitacaoForm;
 use Application\Form\TurmaForm;
 use Application\Model\Entity\Curso;
 use Application\Model\Entity\Disciplina;
@@ -29,6 +29,7 @@ use Application\Model\Entity\GrupoPessoa;
 use Application\Model\Entity\GrupoResponsavel;
 use Application\Model\Entity\Pessoa;
 use Application\Model\Entity\PessoaHierarquia;
+use Application\Model\Entity\Solicitacao;
 use Application\Model\Entity\Turma;
 use Application\Model\ORM\RepositorioORM;
 use DateTime;
@@ -132,6 +133,11 @@ class CadastroController extends CircuitoController {
         if ($pagina == Constantes::$PAGINA_SOLICITACAO) {
             return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
                         Constantes::$ACTION => Constantes::$PAGINA_SOLICITACAO,
+            ));
+        }
+        if ($pagina == Constantes::$PAGINA_SOLICITACAO_FINALIZAR) {
+            return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
+                        Constantes::$ACTION => Constantes::$PAGINA_SOLICITACAO_FINALIZAR,
             ));
         }
         /* Páginas Revisão */
@@ -1920,6 +1926,7 @@ class CadastroController extends CircuitoController {
         }
         $view = new ViewModel(array(
             'solicitacoes' => $solicitacoes,
+            'titulo' => 'Solicitações',
         ));
         return $view;
     }
@@ -1933,10 +1940,60 @@ class CadastroController extends CircuitoController {
         $periodo = 0;
         $grupoPaiFilhoFilhos = $grupo->getGrupoPaiFilhoFilhosAtivos($periodo);
 
+        $solicitacaoTipos = $this->getRepositorio()->getSolicitacaoTipoORM()->encontrarTodos();
+        $formSolicitacao = new SolicitacaoForm('formSolicitacao');
+
         $view = new ViewModel(array(
             'discipulos' => $grupoPaiFilhoFilhos,
+            'solicitacaoTipos' => $solicitacaoTipos,
+            Constantes::$FORM => $formSolicitacao,
         ));
+
+        /* Javascript */
+        $layoutJS = new ViewModel();
+        $layoutJS->setTemplate('layout/layout-js-cadastrar-solicitacao');
+        $view->addChild($layoutJS, 'layoutJSCadastrarSolicitacao');
+
         return $view;
+    }
+
+    /**
+     * Tela com confrmação de cadastro de grupo
+     * POST /cadastroSolicitacaoFinalizar
+     */
+    public function solicitacaoFinalizarAction() {
+        CircuitoController::verificandoSessao(new Container(Constantes::$NOME_APLICACAO), $this);
+
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            try {
+                $this->getRepositorio()->iniciarTransacao();
+                $post_data = $request->getPost();
+
+                $sessao = new Container(Constantes::$NOME_APLICACAO);
+                $idPessoaAtual = $sessao->idPessoa;
+                $pessoaLogada = $this->getRepositorio()->getPessoaORM()->encontrarPorId($idPessoaAtual);
+                $solicitacaoTipo = $this->getRepositorio()->getSolicitacaoTipoORM()->encontrarPorId($post_data['solicitacaoTipoId']);
+
+                /* Criando */
+                $solicitacao = new Solicitacao();
+                $solicitacao->setPessoa($pessoaLogada);
+                $solicitacao->setSolicitacaoTipo($solicitacaoTipo);
+                $solicitacao->setObjeto1($post_data['objeto1']);
+                $solicitacao->setObjeto2($post_data['objeto2']);
+                $this->getRepositorio()->getSolicitacaoORM()->persistir($solicitacao);
+
+                $this->getRepositorio()->fecharTransacao();
+
+                return $this->redirect()->toRoute(Constantes::$ROUTE_CADASTRO, array(
+                            Constantes::$PAGINA => Constantes::$PAGINA_SOLICITACOES,
+                ));
+            } catch (Exception $exc) {
+                $this->getRepositorio()->desfazerTransacao();
+                echo $exc->getTraceAsString();
+                $this->direcionaErroDeCadastro($exc->getMessage());
+            }
+        }
     }
 
     /**

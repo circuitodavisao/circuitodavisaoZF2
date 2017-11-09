@@ -1,0 +1,11 @@
+<?php
+ 
+$versao = '?v=0.2';
+
+echo $this
+        ->headScript()
+        ->prependFile($this->basePath() . '/js/circuito_da_visao/validar-cadastro-solicitacao.js' . $versao)
+        ->prependFile($this->basePath() . '/js/circuito_da_visao/validar-senha-e-submeter.js' . $versao)
+;
+echo $this->inlineScript();
+ 

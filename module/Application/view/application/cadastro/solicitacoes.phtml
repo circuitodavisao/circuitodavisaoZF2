@@ -2,6 +2,7 @@
 
 use Application\Controller\Helper\Constantes;
 
+$html .= $this->templateFormularioTopo($this->titulo);
 $html .= '<div class="panel-body bg-light">';
 
 $html .= '<table class="table">';
@@ -21,20 +22,24 @@ $html .= '</thead>';
 $html .= '<tbody>';
 foreach ($this->solicitacoes as $solicitacao) {
     $html .= '<tr>';
-    $html .= '<th>' . $solicitacao->getSolicitacaoTipo()->getNome() . '</th>';
-    $html .= '<th>' . $solicitacao->getData_criacaoStringPadraoBrasil() . '</th>';
-    $html .= '<th>' . $solicitacao->getPessoa()->getNome() . '</th>';
-    $html .= '<th>' . $solicitacao->getObjeto1() . '</th>';
-    $html .= '<th>' . $solicitacao->getObjeto2() . '</th>';
+    $html .= '<td>' . $solicitacao->getSolicitacaoTipo()->getNome() . '</td>';
+    $html .= '<td>' . $solicitacao->getData_criacaoStringPadraoBrasil() . '</td>';
+    $html .= '<td>' . $solicitacao->getPessoa()->getNome() . '</td>';
+    $html .= '<td>' . $solicitacao->getObjeto1() . '</td>';
+    $html .= '<td>' . $solicitacao->getObjeto2() . '</td>';
     $html .= '</tr>';
 }
 $html .= '</tbody>';
 
 $html .= '</table>';
-$stringNomeDaFuncaoOnClickCadastro = 'funcaoCircuito("cadastroSolicitacao", 0)';
-$html .= $this->botaoSimples($this->translate(Constantes::$TRADUCAO_CADASTRAR), $this->funcaoOnClick($stringNomeDaFuncaoOnClickCadastro));
 
 $html .= '</div>';
 
+$html .= '<div class="panel-footer text-right">';
+$stringNomeDaFuncaoOnClickCadastro = 'funcaoCircuito("cadastroSolicitacao", 0)';
+$html .= $this->botaoSimples($this->translate(Constantes::$TRADUCAO_CADASTRAR), $this->funcaoOnClick($stringNomeDaFuncaoOnClickCadastro));
+$html .= '</div>';
+
+$html .= $this->templateFormularioRodape();
 echo $html;
 
