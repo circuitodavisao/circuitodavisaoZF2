@@ -95,9 +95,9 @@ $somaQuantidadeCelulasRealizadas = 0;
                         if ($this->tipoRelatorio == 1) {
                             echo '<td class = "hidden-xs">' . $this->relatorio['quantidadeLideres'] . '</td>';
                             echo '<td>' . $this->relatorio['membresiaMeta'] . '</td>';
-                            echo '<td class = "hidden-xs">' . $this->relatorio['membresiaCulto'] . '</td>';
-                            echo '<td class = "hidden-xs">' . $this->relatorio['membresiaArena'] . '</td>';
-                            echo '<td class = "hidden-xs">' . $this->relatorio['membresiaDomingo'] . '</td>';
+                            echo '<td class = "hidden-xs">' . RelatorioController::formataNumeroRelatorio($this->relatorio['membresiaCulto']) . '</td>';
+                            echo '<td class = "hidden-xs">' . RelatorioController::formataNumeroRelatorio($this->relatorio['membresiaArena']) . '</td>';
+                            echo '<td class = "hidden-xs">' . RelatorioController::formataNumeroRelatorio($this->relatorio['membresiaDomingo']) . '</td>';
                             echo '<td>' . RelatorioController::formataNumeroRelatorio($this->relatorio['membresia']) . '</td>';
                             echo '<td>' . RelatorioController::formataNumeroRelatorio($this->relatorio['membresiaPerformance']) . '%</td>';
                         }
@@ -128,7 +128,7 @@ $somaQuantidadeCelulasRealizadas = 0;
                                     break;
                             }
                             echo '<td>' . $this->relatorio['quantidadeLideres'] . '</td>';
-                            echo '<td>' . $quantidade . '</td>';
+                            echo '<td>' . RelatorioController::formataNumeroRelatorio($quantidade) . '</td>';
                         }
                         echo '</tr>';
 
@@ -180,9 +180,9 @@ $somaQuantidadeCelulasRealizadas = 0;
                                 if ($this->tipoRelatorio == 1) {
                                     echo '<td class = "hidden-xs">' . $relatorioDiscipulo['quantidadeLideres'] . '</td>';
                                     echo '<td>' . $relatorioDiscipulo['membresiaMeta'] . '</td>';
-                                    echo '<td class = "hidden-xs">' . $relatorioDiscipulo['membresiaCulto'] . '</td>';
-                                    echo '<td class = "hidden-xs">' . $relatorioDiscipulo['membresiaArena'] . '</td>';
-                                    echo '<td class = "hidden-xs">' . $relatorioDiscipulo['membresiaDomingo'] . '</td>';
+                                    echo '<td class = "hidden-xs">' . RelatorioController::formataNumeroRelatorio($relatorioDiscipulo['membresiaCulto']) . '</td>';
+                                    echo '<td class = "hidden-xs">' . RelatorioController::formataNumeroRelatorio($relatorioDiscipulo['membresiaArena']) . '</td>';
+                                    echo '<td class = "hidden-xs">' . RelatorioController::formataNumeroRelatorio($relatorioDiscipulo['membresiaDomingo']) . '</td>';
                                     echo '<td>' . RelatorioController::formataNumeroRelatorio($relatorioDiscipulo['membresia']) . '</td>';
                                     echo '<td>' . RelatorioController::formataNumeroRelatorio($relatorioDiscipulo['membresiaPerformance']) . '%</td>';
                                 }
@@ -213,7 +213,7 @@ $somaQuantidadeCelulasRealizadas = 0;
                                             break;
                                     }
                                     echo '<td>' . $relatorioDiscipulo['quantidadeLideres'] . '</td>';
-                                    echo '<td>' . $quantidade . '</td>';
+                                    echo '<td>' . RelatorioController::formataNumeroRelatorio($quantidade) . '</td>';
                                 }
 
                                 echo '</tr>';
@@ -268,9 +268,9 @@ $somaQuantidadeCelulasRealizadas = 0;
                         if ($this->tipoRelatorio == 1) {
                             echo '<td class = "hidden-xs">' . $somaGeralLideres . '</td>';
                             echo '<td>' . $meta . '</td>';
-                            echo '<td class = "hidden-xs">' . $somaGeral[$dimensaoTipoCulto] . '</td>';
-                            echo '<td class = "hidden-xs">' . $somaGeral[$dimensaoTipoArena] . '</td>';
-                            echo '<td class = "hidden-xs">' . $somaGeral[$dimensaoTipoDomingo] . '</td>';
+                            echo '<td class = "hidden-xs">' . RelatorioController::formataNumeroRelatorio($somaGeral[$dimensaoTipoCulto]) . '</td>';
+                            echo '<td class = "hidden-xs">' . RelatorioController::formataNumeroRelatorio($somaGeral[$dimensaoTipoArena]) . '</td>';
+                            echo '<td class = "hidden-xs">' . RelatorioController::formataNumeroRelatorio($somaGeral[$dimensaoTipoDomingo]) . '</td>';
                             echo '<td>' . RelatorioController::formataNumeroRelatorio($membresia) . '</td>';
                             echo '<td>' . RelatorioController::formataNumeroRelatorio($performance) . '%</td>';
                         }
@@ -301,7 +301,7 @@ $somaQuantidadeCelulasRealizadas = 0;
                                     break;
                             }
                             echo '<td>' . $somaGeralLideres . '</td>';
-                            echo '<td>' . $quantidade . '</td>';
+                            echo '<td>' . RelatorioController::formataNumeroRelatorio($quantidade) . '</td>';
                         }
                         echo '</tr>';
                         ?>                     

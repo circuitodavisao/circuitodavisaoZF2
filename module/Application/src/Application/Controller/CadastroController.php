@@ -357,12 +357,12 @@ class CadastroController extends CircuitoController {
         if ($pagina == Constantes::$PAGINA_CELULAS) {
             $listagemDeEventos = $grupo->getGrupoEventoAtivosPorTipo($tipoCelula);
             $tituloDaPagina = Constantes::$TRADUCAO_LISTAGEM_CELULAS . ' <b class="text-danger">' . Constantes::$TRADUCAO_MULTIPLICACAO . '</b>';
-            $tipoEvento = 2;
+            $tipoEvento = 1;
         }
         if ($pagina == Constantes::$PAGINA_CULTOS) {
             $listagemDeEventos = $grupo->getGrupoEventoAtivosPorTipo($tipoCulto);
             $tituloDaPagina = Constantes::$TRADUCAO_LISTAGEM_CULTOS;
-            $tipoEvento = 1;
+            $tipoEvento = 2;
             $extra = $grupo->getId();
         }
         if ($pagina == Constantes::$PAGINA_REVISAO) {
@@ -795,15 +795,21 @@ class CadastroController extends CircuitoController {
 
                         /* Cadastro do fato celula */
                         /* cadastro fato apenas se for nova celula */
+                        $numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio());
                         if (empty($post_data[Constantes::$FORM_ID])) {
-                            $numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($repositorioORM);
                             $periodo = 0;
                             $arrayPeriodo = Funcoes::montaPeriodo($periodo);
                             $stringData = $arrayPeriodo[3] . '-' . $arrayPeriodo[2] . '-' . $arrayPeriodo[1];
                             $dateFormatada = DateTime::createFromFormat('Y-m-d', $stringData);
                             $fatoPeriodo = $this->getRepositorio()->getFatoCicloORM()->
-                                    encontrarPorNumeroIdentificadorEDataCriacao($numeroIdentificador, $dateFormatada, $repositorioORM);
+                                    encontrarPorNumeroIdentificadorEDataCriacao($numeroIdentificador, $dateFormatada, $this->getRepositorio());
                             $this->getRepositorio()->getFatoCelulaORM()->criarFatoCelula($fatoPeriodo, $eventoCelula->getId());
+
+                            /* caso seja primeira celula, criar fato lider e nao tenha */
+                            if (!$this->getRepositorio()->getFatoLiderORM()->encontrarFatoLiderPorNumeroIdentificador($numeroIdentificador)) {
+                                $quantidadeLideres = count($entidade->getGrupo()->getResponsabilidadesAtivas());
+                                $this->getRepositorio()->getFatoLiderORM()->criarFatoLider($numeroIdentificador, $quantidadeLideres);
+                            }
                         }
                     }
                     $this->getRepositorio()->fecharTransacao();
@@ -1082,7 +1088,7 @@ class CadastroController extends CircuitoController {
 
                 for ($indicePessoas = $indicePessoasInicio; $indicePessoas <= $indicePessoasFim; $indicePessoas++) {
                     /* Enviar Email */
-                    $this->enviarEmailParaCompletarOsDados($repositorioORM, $sessao->idPessoa, $tokenDeAgora, $pessoaSelecionada);
+                    $this->enviarEmailParaCompletarOsDados($this->getRepositorio(), $sessao->idPessoa, $tokenDeAgora, $pessoaSelecionada);
                 }
             } catch (Exception $exc) {
                 $this->getRepositorio()->desfazerTransacao();
@@ -1641,7 +1647,7 @@ class CadastroController extends CircuitoController {
                 if ($eventoFrequencia->getFrequencia() == 'N') {
                     $pessoaRevisionista = $eventoFrequencia->getPessoa();
                     /* Membro = idTipo 3 */
-                    $grupoPessoaRevisionista = $this->alterarGrupoPessoaTipo(3, $repositorioORM, $pessoaRevisionista);
+                    $grupoPessoaRevisionista = $this->alterarGrupoPessoaTipo(3, $this->getRepositorio(), $pessoaRevisionista);
 
                     /* Ativando a presença do Revisionista  */
                     $eventoFrequencia->setFrequencia('S');

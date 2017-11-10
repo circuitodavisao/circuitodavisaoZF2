@@ -54,14 +54,12 @@ class CabecalhoDePeriodos extends AbstractHelper {
         $botaoDireito = $this->view->botaoSimples(
                 $iconeFlechaDireita, $funcaoOnclickDireita, BotaoSimples::botaoMuitoPequenoImportante, BotaoSimples::posicaoAoCentro);
 
-//        $periodoInicialMontado = Funcoes::montaPeriodo($this->view->periodoInicial);
-//        $periodoFinalMontado = Funcoes::montaPeriodo($this->view->periodoFinal);
+        $periodoInicialMontado = Funcoes::montaPeriodo($this->view->periodoInicial);
+        $periodoFinalMontado = Funcoes::montaPeriodo($this->view->periodoFinal);
 
         $html .= '<div class="center-block text-center mb10"> ';
-        if ($this->view->mostrarBotaoPeriodoAnterior) {
-            $html .= $botaoEsquerdo;
 //        $html .= 'Periodo Inicial ';
-//        $html .= '<select id="periodoInicial">';
+//        $html .= '<select id="periodoInicial" onchange="mudarPeriodo();">';
 //        for ($i = 0; $i > -30; $i--) {
 //            $selected = '';
 //            if ($i == $this->view->periodoInicial) {
@@ -70,18 +68,9 @@ class CabecalhoDePeriodos extends AbstractHelper {
 //            $html .= '<option value="' . $i . '" ' . $selected . '>' . Funcoes::montaPeriodo($i)[0] . '</option>';
 //        }
 //        $html .= '</select>';
-        }
 //        $html .= Constantes::$NBSP . '-' . Constantes::$NBSP;
-        $html .= Constantes::$NBSP;
-        $html .= $this->view->translate(Constantes::$TRADUCAO_PERIODO)
-                . '&nbsp;-&nbsp;'
-                . Funcoes::montaPeriodo($periodo)[0]
-        ;
-        $html .= Constantes::$NBSP;
-        if ($this->view->mostrarBotaoPeriodoAfrente) {
-            $html .= $botaoDireito;
 //        $html .= 'Periodo Final ';
-//        $html .= '<select id="periodoFinal">';
+//        $html .= '<select id="periodoFinal" onchange="mudarPeriodo();">';
 //        for ($i = 0; $i > -30; $i--) {
 //            $selected = '';
 //            if ($i == $this->view->periodoFinal) {
@@ -90,6 +79,17 @@ class CabecalhoDePeriodos extends AbstractHelper {
 //            $html .= '<option value="' . $i . '" ' . $selected . '>' . Funcoes::montaPeriodo($i)[0] . '</option>';
 //        }
 //        $html .= '</select>';
+        if ($this->view->mostrarBotaoPeriodoAnterior) {
+            $html .= $botaoEsquerdo;
+        }
+        $html .= Constantes::$NBSP;
+        $html .= $this->view->translate(Constantes::$TRADUCAO_PERIODO)
+                . '&nbsp;-&nbsp;'
+                . Funcoes::montaPeriodo($periodo)[0]
+        ;
+        $html .= Constantes::$NBSP;
+        if ($this->view->mostrarBotaoPeriodoAfrente) {
+            $html .= $botaoDireito;
         }
         $html .= '</div>';
         return $html;

@@ -29,8 +29,8 @@ class ListagemDeEventos extends AbstractHelper {
     public function renderHtml() {
         $html = '';
 
-        $tipoCelula = ($this->view->tipoEvento == 2);
-        $tipoCulto = ($this->view->tipoEvento == 1);
+        $tipoCelula = ($this->view->tipoEvento == 1);
+        $tipoCulto = ($this->view->tipoEvento == 2);
         $tipoRevisao = ($this->view->tipoEvento == 3);
         $tipoRevisionistas = ($this->view->tipoEvento == 4);
         $tipoFichasRevisionistas = ($this->view->tipoEvento == 5);
@@ -91,7 +91,7 @@ class ListagemDeEventos extends AbstractHelper {
                 $html .= $this->view->translate(Constantes::$TRADUCAO_OBSERVACAO);
                 $html .= '</th>';
             }
-            if ($tipoListarRevisaoTurma){
+            if ($tipoListarRevisaoTurma) {
                 $html .= '<th class="text-center">';
                 $html .= $this->view->translate(Constantes::$TRADUCAO_DATA_SIMPLIFICADO);
                 $html .= '</th>';
@@ -263,7 +263,7 @@ class ListagemDeEventos extends AbstractHelper {
 
                     $html .= '<td class="text-center">' . Funcoes::mudarPadraoData($evento->getData(), 1) . '</td>';
 
-                    $stringNomeDaFuncaoOnClickInserir = 'funcaoSelecionarAlunosTurma(' . $this->view->extra. ', ' . $evento->getId() . ')'; 
+                    $stringNomeDaFuncaoOnClickInserir = 'funcaoSelecionarAlunosTurma(' . $this->view->extra . ', ' . $evento->getId() . ')';
                     $grupoEventoAtivos = $evento->getGrupoEventoAtivos();
                     $texto = '';
                     foreach ($grupoEventoAtivos as $gea) {

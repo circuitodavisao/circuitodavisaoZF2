@@ -11,7 +11,6 @@ echo $this->dadosEntidade();
 if ($this->tenhoDiscipulosAtivos) {
     echo '<div class="alert alert-info mt10">Tenho discipulos nao posso inativar!</div>';
 } else {
-
     echo '<div class="panel mt10">';
     echo '<div class="panel-body">';
 
@@ -37,3 +36,5 @@ if ($this->tenhoDiscipulosAtivos) {
     echo '</div>';
     echo '</div>';
 }
+
+echo $this->listagemDeEventos('', $this->eventos);

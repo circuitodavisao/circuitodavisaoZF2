@@ -398,14 +398,14 @@ class Grupo extends CircuitoEntity {
         $grupoEventos = null;
         if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::SUBEQUIPE) {
 
-            $grupoEventosCelulas = $grupoSelecionado->getGrupoEventoPorTipoEAtivo(GrupoEvento::CELULA);
+            $grupoEventosCelulas = $grupoSelecionado->getGrupoEventoPorTipoEAtivo(EventoTipo::tipoCelula);
             while ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::SUBEQUIPE) {
                 $grupoSelecionado = $grupoSelecionado->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai();
                 if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::EQUIPE) {
                     break;
                 }
             }
-            $grupoEventos = $grupoSelecionado->getGrupoEventoPorTipoEAtivo(GrupoEvento::CULTO);
+            $grupoEventos = $grupoSelecionado->getGrupoEventoPorTipoEAtivo(EventoTipo::tipoCulto);
         } else {
             $grupoEventos = $grupoSelecionado->getGrupoEventoAtivos();
         }
@@ -455,7 +455,7 @@ class Grupo extends CircuitoEntity {
                     break;
                 }
             }
-            $grupoEventos = $grupoSelecionado->getGrupoEventoAtivosPorTipo(GrupoEvento::REVISAO);
+            $grupoEventos = $grupoSelecionado->getGrupoEventoAtivosPorTipo(EventoTipo::tipoRevisao);
         } else if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::EQUIPE) {
             while ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::EQUIPE) {
                 $grupoSelecionado = $grupoSelecionado->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai();
@@ -463,9 +463,9 @@ class Grupo extends CircuitoEntity {
                     break;
                 }
             }
-            $grupoEventos = $grupoSelecionado->getGrupoEventoAtivosPorTipo(GrupoEvento::REVISAO);
+            $grupoEventos = $grupoSelecionado->getGrupoEventoAtivosPorTipo(EventoTipo::tipoRevisao);
         } else {
-            $grupoEventos = $grupoSelecionado->getGrupoEventoAtivosPorTipo(GrupoEvento::REVISAO);
+            $grupoEventos = $grupoSelecionado->getGrupoEventoAtivosPorTipo(EventoTipo::tipoRevisao);
         }
 
         return $grupoEventos;
@@ -493,17 +493,16 @@ class Grupo extends CircuitoEntity {
         $grupoEventos = null;
         foreach ($this->getGrupoEvento() as $grupoEvento) {
             if ($grupoEvento->verificarSeEstaAtivo()) {
-
                 if ($tipo === 0) {
                     $grupoEventos[] = $grupoEvento;
                 }
-                if ($tipo === GrupoEvento::CULTO && $grupoEvento->getEvento()->verificaSeECulto()) {
+                if ($tipo === EventoTipo::tipoCulto && $grupoEvento->getEvento()->verificaSeECulto()) {
                     $grupoEventos[] = $grupoEvento;
                 }
-                if ($tipo === GrupoEvento::CELULA && $grupoEvento->getEvento()->verificaSeECelula()) {
+                if ($tipo === EventoTipo::tipoCelula && $grupoEvento->getEvento()->verificaSeECelula()) {
                     $grupoEventos[] = $grupoEvento;
                 }
-                if ($tipo === GrupoEvento::REVISAO && $grupoEvento->getEvento()->verificaSeERevisao()) {
+                if ($tipo === EventoTipo::tipoRevisao && $grupoEvento->getEvento()->verificaSeERevisao()) {
                     $grupoEventos[] = $grupoEvento;
                 }
             }
@@ -524,13 +523,13 @@ class Grupo extends CircuitoEntity {
             if ($tipo === 0) {
                 $condicaoTipo = true;
             }
-            if ($tipo === GrupoEvento::CULTO && $grupoEvento->getEvento()->verificaSeECulto()) {
+            if ($tipo === EventoTipo::tipoCulto && $grupoEvento->getEvento()->verificaSeECulto()) {
                 $condicaoTipo = true;
             }
-            if ($tipo === GrupoEvento::CELULA && $grupoEvento->getEvento()->verificaSeECelula()) {
+            if ($tipo === EventoTipo::tipoCelula && $grupoEvento->getEvento()->verificaSeECelula()) {
                 $condicaoTipo = true;
             }
-            if ($tipo === GrupoEvento::REVISAO && $grupoEvento->getEvento()->verificaSeERevisao()) {
+            if ($tipo === EventoTipo::tipoRevisao && $grupoEvento->getEvento()->verificaSeERevisao()) {
                 $condicaoTipo = true;
             }
 
