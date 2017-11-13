@@ -10,7 +10,6 @@ namespace Application\Model\Entity;
  * 2 - CONSOLIDACAO
  * 3 - MEMBRO
  */
-
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -19,6 +18,10 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="grupo_pessoa_tipo")
  */
 class GrupoPessoaTipo extends CircuitoEntity {
+
+    const VISITANTE = 1;
+    const CONSOLIDACAO = 2;
+    const MEMBRO = 3;
 
     /**
      * @ORM\OneToMany(targetEntity="GrupoPessoa", mappedBy="grupoPessoaTipo") 
