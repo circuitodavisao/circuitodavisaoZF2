@@ -5,10 +5,13 @@ namespace Application\Controller;
 use Application\Controller\Helper\Constantes;
 use Application\Controller\Helper\Funcoes;
 use Application\Form\CadastrarPessoaForm;
+use Application\Model\Entity\DimensaoTipo;
 use Application\Model\Entity\EventoFrequencia;
+use Application\Model\Entity\EventoTipo;
 use Application\Model\Entity\Grupo;
 use Application\Model\Entity\GrupoAtendimento;
 use Application\Model\Entity\GrupoPessoa;
+use Application\Model\Entity\GrupoPessoaTipo;
 use Application\Model\Entity\Pessoa;
 use Application\Model\ORM\RepositorioORM;
 use DateTime;
@@ -25,8 +28,6 @@ use Zend\View\Model\ViewModel;
  * Descricao: Controle de todas ações de lancamento
  */
 class LancamentoController extends CircuitoController {
-
-    
 
     /**
      * Traz a tela para lancamento de arregimentação
@@ -167,12 +168,6 @@ class LancamentoController extends CircuitoController {
 
                 $grupoPassado = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupo);
                 $numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio());
-                $eventoTipoCulto = 1;
-                $eventoTipoCelula = 2;
-                $dimensaoTipoCelula = 1;
-                $dimensaoTipoCulto = 2;
-                $dimensaoTipoArena = 3;
-                $dimensaoTipoDomingo = 4;
                 $dimensaoSelecionada = null;
 
                 $resultadoPeriodo = Funcoes::montaPeriodo($periodo);
@@ -184,43 +179,43 @@ class LancamentoController extends CircuitoController {
                 if ($fatoCicloSelecionado->getDimensao()) {
                     foreach ($fatoCicloSelecionado->getDimensao() as $dimensao) {
                         switch ($dimensao->getDimensaoTipo()->getId()) {
-                            case $dimensaoTipoCelula:
-                                $dimensoes[$dimensaoTipoCelula] = $dimensao;
+                            case DimensaoTipo::CELULA:
+                                $dimensoes[DimensaoTipo::CELULA] = $dimensao;
                                 break;
-                            case $dimensaoTipoCulto:
-                                $dimensoes[$dimensaoTipoCulto] = $dimensao;
+                            case DimensaoTipo::CULTO:
+                                $dimensoes[DimensaoTipo::CULTO] = $dimensao;
                                 break;
-                            case $dimensaoTipoArena:
-                                $dimensoes[$dimensaoTipoArena] = $dimensao;
+                            case DimensaoTipo::ARENA:
+                                $dimensoes[DimensaoTipo::ARENA] = $dimensao;
                                 break;
-                            case $dimensaoTipoDomingo:
-                                $dimensoes[$dimensaoTipoDomingo] = $dimensao;
+                            case DimensaoTipo::DOMINGO:
+                                $dimensoes[DimensaoTipo::DOMINGO] = $dimensao;
                                 break;
                         }
                     }
                 }
                 $tipoCampo = 0;
-                if ($evento->getEventoTipo()->getId() === $eventoTipoCulto) {
+                if ($evento->getEventoTipo()->getId() === EventoTipo::tipoCulto) {
                     $diaDeSabado = 7;
                     $diaDeDomingo = 1;
                     switch ($evento->getDia()) {
                         case $diaDeSabado:
-                            $dimensaoSelecionada = $dimensoes[$dimensaoTipoArena];
+                            $dimensaoSelecionada = $dimensoes[DimensaoTipo::ARENA];
                             $tipoCampo = 3;
                             break;
                         case $diaDeDomingo:
-                            $dimensaoSelecionada = $dimensoes[$dimensaoTipoDomingo];
+                            $dimensaoSelecionada = $dimensoes[DimensaoTipo::DOMINGO];
                             $tipoCampo = 4;
                             break;
                         default:
-                            $dimensaoSelecionada = $dimensoes[$dimensaoTipoCulto];
+                            $dimensaoSelecionada = $dimensoes[DimensaoTipo::CULTO];
                             $tipoCampo = 2;
                             break;
                     };
                 }
-                if ($evento->getEventoTipo()->getId() === $eventoTipoCelula) {
+                if ($evento->getEventoTipo()->getId() === EventoTipo::tipoCelula) {
                     $tipoCampo = 1;
-                    $dimensaoSelecionada = $dimensoes[$dimensaoTipoCelula];
+                    $dimensaoSelecionada = $dimensoes[DimensaoTipo::CELULA];
 
                     /* Atualiza o relatorio de celulas */
                     $criteria = Criteria::create()
@@ -264,22 +259,19 @@ class LancamentoController extends CircuitoController {
                 $tipoPessoa = 0;
                 if ($pessoa->getGrupoPessoaAtivo()) {
                     /* Pessoa volateis */
-                    $pessoaTipoVisitante = 1;
-                    $pessoaTipoConsolidacao = 2;
-                    $pessoaTipoMembro = 3;
                     $valorDoCampo = 0;
                     switch ($pessoa->getGrupoPessoaAtivo()->getGrupoPessoaTipo()->getId()) {
-                        case $pessoaTipoVisitante:
+                        case GrupoPessoaTipo::VISITANTE:
                             $valorDoCampo = $dimensaoSelecionada->getVisitante();
                             $dimensaoSelecionada->setVisitante($valorDoCampo + $valorParaSomar);
                             $tipoPessoa = 1;
                             break;
-                        case $pessoaTipoConsolidacao:
+                        case GrupoPessoaTipo::CONSOLIDACAO:
                             $valorDoCampo = $dimensaoSelecionada->getConsolidacao();
                             $dimensaoSelecionada->setConsolidacao($valorDoCampo + $valorParaSomar);
                             $tipoPessoa = 2;
                             break;
-                        case $pessoaTipoMembro:
+                        case GrupoPessoaTipo::MEMBRO:
                             $valorDoCampo = $dimensaoSelecionada->getMembro();
                             $dimensaoSelecionada->setMembro($valorDoCampo + $valorParaSomar);
                             $tipoPessoa = 3;

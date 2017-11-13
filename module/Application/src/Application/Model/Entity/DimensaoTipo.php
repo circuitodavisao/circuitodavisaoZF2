@@ -16,6 +16,11 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class DimensaoTipo extends CircuitoEntity {
 
+    const CELULA = 1;
+    const CULTO = 2;
+    const ARENA = 3;
+    const DOMINGO = 4;
+
     /**
      * @ORM\OneToMany(targetEntity="Dimensao", mappedBy="dimensaoTipo") 
      */
