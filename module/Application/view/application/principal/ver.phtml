@@ -4,12 +4,26 @@ use Application\Controller\Helper\Constantes;
 use Application\Model\Entity\EntidadeTipo;
 use Application\View\Helper\BotaoSimples;
 
+echo '<div class="mw1000 center-block">';
 echo $this->dadosEntidade();
-?>
-<?php
+echo'</div>';
 
+echo '<div class="panel panel-info mw1000 center-block">';
+echo '<div class="panel-heading">';
+echo 'C&eacute;lula(s)';
+echo '</div>';
+echo '<div class="panel-body">';
+echo $this->listagemDeEventos('', $this->eventos);
+echo'</div>';
+echo'</div>';
+
+echo '<div class="panel panel-danger mw1000 center-block">';
+echo '<div class="panel-heading">';
+echo 'Inativar';
+echo '</div>';
+echo '<div class="panel-body">';
 if ($this->tenhoDiscipulosAtivos) {
-    echo '<div class="alert alert-info mt10">Tenho discipulos nao posso inativar!</div>';
+    echo '<div class="alert alert-warning mt10">Tenho discipulos nao posso inativar!</div>';
 } else {
     echo '<div class="panel mt10">';
     echo '<div class="panel-body">';
@@ -36,5 +50,5 @@ if ($this->tenhoDiscipulosAtivos) {
     echo '</div>';
     echo '</div>';
 }
+echo '</div>'; // fim panel-body
 
-echo $this->listagemDeEventos('', $this->eventos);

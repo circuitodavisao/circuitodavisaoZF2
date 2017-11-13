@@ -415,6 +415,7 @@ class CadastroController extends CircuitoController {
             Constantes::$TITULO_DA_PAGINA => $tituloDaPagina,
             Constantes::$TIPO_EVENTO => $tipoEvento,
             Constantes::$EXTRA => $extra,
+            'mostrarOpcoes' => true, 
         ));
 
         /* Javascript */
