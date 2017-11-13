@@ -415,7 +415,7 @@ class CadastroController extends CircuitoController {
             Constantes::$TITULO_DA_PAGINA => $tituloDaPagina,
             Constantes::$TIPO_EVENTO => $tipoEvento,
             Constantes::$EXTRA => $extra,
-            'mostrarOpcoes' => true, 
+            'mostrarOpcoes' => true,
         ));
 
         /* Javascript */
@@ -903,6 +903,11 @@ class CadastroController extends CircuitoController {
                         $fatoCelula = $this->getRepositorio()->getFatoCelulaORM()->encontrarPorEventoCelulaId($eventoNaSessao->getEventoCelula()->getId());
                         $fatoCelula->setDataEHoraDeInativacao();
                         $this->getRepositorio()->getFatoCelulaORM()->persistir($fatoCelula, false);
+                    }
+                    /* Inativando fato/-lider caso nao tenha mais celulas */
+                    $grupoDoEvento = $eventoNaSessao->getGrupoEventoAtivo()->getGrupo();
+                    if (!$grupoDoEvento->getGrupoEventoAtivosPorTipo(EventoTipo::tipoCelula)) {
+                        $this->inativarFatoLiderPorGrupo($grupoDoEvento);
                     }
                 }
 
