@@ -76,7 +76,7 @@ class FatoCicloORM extends CircuitoORM {
      * @param int $tipoComparacao
      * @return array
      */
-    public function montarRelatorioPorNumeroIdentificador($numeroIdentificador, $periodo, $tipoComparacao, $periodoInicial = 0) {
+    public function montarRelatorioPorNumeroIdentificador($numeroIdentificador, $periodoInicial, $tipoComparacao, $periodoFinal = 0) {
         $dimensaoTipoCelula = 1;
         $dimensaoTipoDomingo = 4;
         $dqlBase = "SELECT "
@@ -99,21 +99,20 @@ class FatoCicloORM extends CircuitoORM {
                 $dqlAjustadaTipoComparacao = str_replace('#tipoComparacao', 'LIKE', $dqlBase);
                 $numeroIdentificador .= '%';
             }
-            
-            $resultadoPeriodo = Funcoes::montaPeriodo($periodo);
+
+            $resultadoPeriodo = Funcoes::montaPeriodo($periodoInicial);
             $dataDoPeriodo = $resultadoPeriodo[3] . '-' . $resultadoPeriodo[2] . '-' . $resultadoPeriodo[1];
             $dataDoPeriodoFormatada = DateTime::createFromFormat('Y-m-d', $dataDoPeriodo);
 
-            if ($periodoInicial === 0) {
+            if ($periodoFinal === 0) {
                 $dqlAjustadaTipoComparacao = str_replace('#data', 'AND fc.data_criacao = ?2 ', $dqlAjustadaTipoComparacao);
             } else {
-                $resultadoPeriodoInicial = Funcoes::montaPeriodo($periodoInicial);
+                $resultadoPeriodoInicial = Funcoes::montaPeriodo($periodoFinal);
                 $dataDoPeriodoInicial = $resultadoPeriodoInicial[3] . '-' . $resultadoPeriodoInicial[2] . '-' . $resultadoPeriodoInicial[1];
-                $stringDatas = "AND fc.data_criacao >= '$dataDoPeriodoInicial' AND fc.data_criacao <= ?2 ";
+                $stringDatas = "AND fc.data_criacao >= ?2 AND fc.data_criacao <= '$dataDoPeriodoInicial' ";
                 $dqlAjustadaTipoComparacao = str_replace('#data', $stringDatas, $dqlAjustadaTipoComparacao);
                 $dataDoPeriodoFormatada = $dataDoPeriodo;
             }
-
             for ($indice = $dimensaoTipoCelula; $indice <= $dimensaoTipoDomingo; $indice++) {
                 $dqlAjustada = str_replace('#dimensaoTipo', $indice, $dqlAjustadaTipoComparacao);
                 $result[$indice] = $this->getEntityManager()->createQuery($dqlAjustada)

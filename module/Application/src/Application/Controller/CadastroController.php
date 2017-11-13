@@ -15,7 +15,7 @@ use Application\Form\DisciplinaForm;
 use Application\Form\EventoForm;
 use Application\Form\GrupoForm;
 use Application\Form\SelecionarAlunosForm;
-use Application\Form\TransferenciaForm;
+use Application\Form\SolicitacaoForm;
 use Application\Form\TurmaForm;
 use Application\Model\Entity\Aula;
 use Application\Model\Entity\Curso;
@@ -31,6 +31,7 @@ use Application\Model\Entity\GrupoPessoa;
 use Application\Model\Entity\GrupoResponsavel;
 use Application\Model\Entity\Pessoa;
 use Application\Model\Entity\PessoaHierarquia;
+use Application\Model\Entity\Solicitacao;
 use Application\Model\Entity\Turma;
 use Application\Model\ORM\RepositorioORM;
 use DateTime;
@@ -134,6 +135,11 @@ class CadastroController extends CircuitoController {
         if ($pagina == Constantes::$PAGINA_SOLICITACAO) {
             return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
                         Constantes::$ACTION => Constantes::$PAGINA_SOLICITACAO,
+            ));
+        }
+        if ($pagina == Constantes::$PAGINA_SOLICITACAO_FINALIZAR) {
+            return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
+                        Constantes::$ACTION => Constantes::$PAGINA_SOLICITACAO_FINALIZAR,
             ));
         }
         /* Páginas Revisão */
@@ -353,12 +359,12 @@ class CadastroController extends CircuitoController {
         if ($pagina == Constantes::$PAGINA_CELULAS) {
             $listagemDeEventos = $grupo->getGrupoEventoAtivosPorTipo($tipoCelula);
             $tituloDaPagina = Constantes::$TRADUCAO_LISTAGEM_CELULAS . ' <b class="text-danger">' . Constantes::$TRADUCAO_MULTIPLICACAO . '</b>';
-            $tipoEvento = 2;
+            $tipoEvento = 1;
         }
         if ($pagina == Constantes::$PAGINA_CULTOS) {
             $listagemDeEventos = $grupo->getGrupoEventoAtivosPorTipo($tipoCulto);
             $tituloDaPagina = Constantes::$TRADUCAO_LISTAGEM_CULTOS;
-            $tipoEvento = 1;
+            $tipoEvento = 2;
             $extra = $grupo->getId();
         }
         if ($pagina == Constantes::$PAGINA_REVISAO) {
@@ -411,6 +417,7 @@ class CadastroController extends CircuitoController {
             Constantes::$TITULO_DA_PAGINA => $tituloDaPagina,
             Constantes::$TIPO_EVENTO => $tipoEvento,
             Constantes::$EXTRA => $extra,
+            'mostrarOpcoes' => true, 
         ));
 
         /* Javascript */
@@ -791,15 +798,21 @@ class CadastroController extends CircuitoController {
 
                         /* Cadastro do fato celula */
                         /* cadastro fato apenas se for nova celula */
+                        $numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio());
                         if (empty($post_data[Constantes::$FORM_ID])) {
-                            $numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($repositorioORM);
                             $periodo = 0;
                             $arrayPeriodo = Funcoes::montaPeriodo($periodo);
                             $stringData = $arrayPeriodo[3] . '-' . $arrayPeriodo[2] . '-' . $arrayPeriodo[1];
                             $dateFormatada = DateTime::createFromFormat('Y-m-d', $stringData);
                             $fatoPeriodo = $this->getRepositorio()->getFatoCicloORM()->
-                                    encontrarPorNumeroIdentificadorEDataCriacao($numeroIdentificador, $dateFormatada, $repositorioORM);
+                                    encontrarPorNumeroIdentificadorEDataCriacao($numeroIdentificador, $dateFormatada, $this->getRepositorio());
                             $this->getRepositorio()->getFatoCelulaORM()->criarFatoCelula($fatoPeriodo, $eventoCelula->getId());
+
+                            /* caso seja primeira celula, criar fato lider e nao tenha */
+                            if (!$this->getRepositorio()->getFatoLiderORM()->encontrarFatoLiderPorNumeroIdentificador($numeroIdentificador)) {
+                                $quantidadeLideres = count($entidade->getGrupo()->getResponsabilidadesAtivas());
+                                $this->getRepositorio()->getFatoLiderORM()->criarFatoLider($numeroIdentificador, $quantidadeLideres);
+                            }
                         }
                     }
                     $this->getRepositorio()->fecharTransacao();
@@ -1078,7 +1091,7 @@ class CadastroController extends CircuitoController {
 
                 for ($indicePessoas = $indicePessoasInicio; $indicePessoas <= $indicePessoasFim; $indicePessoas++) {
                     /* Enviar Email */
-                    $this->enviarEmailParaCompletarOsDados($repositorioORM, $sessao->idPessoa, $tokenDeAgora, $pessoaSelecionada);
+                    $this->enviarEmailParaCompletarOsDados($this->getRepositorio(), $sessao->idPessoa, $tokenDeAgora, $pessoaSelecionada);
                 }
             } catch (Exception $exc) {
                 $this->getRepositorio()->desfazerTransacao();
@@ -1637,7 +1650,7 @@ class CadastroController extends CircuitoController {
                 if ($eventoFrequencia->getFrequencia() == 'N') {
                     $pessoaRevisionista = $eventoFrequencia->getPessoa();
                     /* Membro = idTipo 3 */
-                    $grupoPessoaRevisionista = $this->alterarGrupoPessoaTipo(3, $repositorioORM, $pessoaRevisionista);
+                    $grupoPessoaRevisionista = $this->alterarGrupoPessoaTipo(3, $this->getRepositorio(), $pessoaRevisionista);
 
                     /* Ativando a presença do Revisionista  */
                     $eventoFrequencia->setFrequencia('S');
@@ -1911,9 +1924,18 @@ class CadastroController extends CircuitoController {
         $idEntidadeAtual = $sessao->idEntidadeAtual;
         $entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
         $grupo = $entidade->getGrupo();
-        $solicitacoes = $grupo->getSolicitacao();
+        $solicitacoes = null;
+        foreach ($grupo->getResponsabilidadesAtivas() as $grupoResponsavel) {
+            $pessoa = $grupoResponsavel->getPessoa();
+            if ($pessoa->getSolicitacao()) {
+                foreach ($pessoa->getSolicitacao() as $solicitacao) {
+                    $solicitacoes[] = $solicitacao;
+                }
+            }
+        }
         $view = new ViewModel(array(
             'solicitacoes' => $solicitacoes,
+            'titulo' => 'Solicitações',
         ));
         return $view;
     }
@@ -1927,10 +1949,60 @@ class CadastroController extends CircuitoController {
         $periodo = 0;
         $grupoPaiFilhoFilhos = $grupo->getGrupoPaiFilhoFilhosAtivos($periodo);
 
+        $solicitacaoTipos = $this->getRepositorio()->getSolicitacaoTipoORM()->encontrarTodos();
+        $formSolicitacao = new SolicitacaoForm('formSolicitacao');
+
         $view = new ViewModel(array(
             'discipulos' => $grupoPaiFilhoFilhos,
+            'solicitacaoTipos' => $solicitacaoTipos,
+            Constantes::$FORM => $formSolicitacao,
         ));
+
+        /* Javascript */
+        $layoutJS = new ViewModel();
+        $layoutJS->setTemplate('layout/layout-js-cadastrar-solicitacao');
+        $view->addChild($layoutJS, 'layoutJSCadastrarSolicitacao');
+
         return $view;
+    }
+
+    /**
+     * Tela com confrmação de cadastro de grupo
+     * POST /cadastroSolicitacaoFinalizar
+     */
+    public function solicitacaoFinalizarAction() {
+        CircuitoController::verificandoSessao(new Container(Constantes::$NOME_APLICACAO), $this);
+
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            try {
+                $this->getRepositorio()->iniciarTransacao();
+                $post_data = $request->getPost();
+
+                $sessao = new Container(Constantes::$NOME_APLICACAO);
+                $idPessoaAtual = $sessao->idPessoa;
+                $pessoaLogada = $this->getRepositorio()->getPessoaORM()->encontrarPorId($idPessoaAtual);
+                $solicitacaoTipo = $this->getRepositorio()->getSolicitacaoTipoORM()->encontrarPorId($post_data['solicitacaoTipoId']);
+
+                /* Criando */
+                $solicitacao = new Solicitacao();
+                $solicitacao->setPessoa($pessoaLogada);
+                $solicitacao->setSolicitacaoTipo($solicitacaoTipo);
+                $solicitacao->setObjeto1($post_data['objeto1']);
+                $solicitacao->setObjeto2($post_data['objeto2']);
+                $this->getRepositorio()->getSolicitacaoORM()->persistir($solicitacao);
+
+                $this->getRepositorio()->fecharTransacao();
+
+                return $this->redirect()->toRoute(Constantes::$ROUTE_CADASTRO, array(
+                            Constantes::$PAGINA => Constantes::$PAGINA_SOLICITACOES,
+                ));
+            } catch (Exception $exc) {
+                $this->getRepositorio()->desfazerTransacao();
+                echo $exc->getTraceAsString();
+                $this->direcionaErroDeCadastro($exc->getMessage());
+            }
+        }
     }
 
     /**
