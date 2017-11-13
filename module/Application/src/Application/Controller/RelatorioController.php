@@ -55,7 +55,7 @@ class RelatorioController extends CircuitoController {
         $periodoFinal = $this->getEvent()->getRouteMatch()->getParam('periodoInicial', 0);
 
         $tipoRelatorioPessoal = 1;
-        $relatorio = RelatorioController::montaRelatorio($this->getRepositorio(), $numeroIdentificador, $periodoInicial, $tipoRelatorioPessoal);
+        $relatorio = RelatorioController::montaRelatorio($this->getRepositorio(), $numeroIdentificador, $periodoInicial, $tipoRelatorioPessoal, $periodoFinal);
 
         $tipoRelatorio = (int) $this->params()->fromRoute('tipoRelatorio');
 
@@ -163,7 +163,7 @@ class RelatorioController extends CircuitoController {
 
     public static function montaRelatorio($repositorioORM, $numeroIdentificador, $periodoInicial, $tipoRelatorio, $periodoFinal = 0) {
         /* Membresia */
-        $relatorioMembresia = $repositorioORM->getFatoCicloORM()->montarRelatorioPorNumeroIdentificador($numeroIdentificador, $periodoInicial, $tipoRelatorio);
+        $relatorioMembresia = $repositorioORM->getFatoCicloORM()->montarRelatorioPorNumeroIdentificador($numeroIdentificador, $periodoInicial, $tipoRelatorio, $periodoFinal);
         $fatoLider = $repositorioORM->getFatoLiderORM()->encontrarPorNumeroIdentificador($numeroIdentificador, $tipoRelatorio, $periodoInicial);
         $quantidadeLideres = $fatoLider[0]['lideres'];
         foreach ($relatorioMembresia as $key => $value) {
@@ -174,12 +174,17 @@ class RelatorioController extends CircuitoController {
                 }
             }
         }
-        $relatorio['membresiaCulto'] = $soma[RelatorioController::dimensaoTipoCulto];
-        $relatorio['membresiaArena'] = $soma[RelatorioController::dimensaoTipoArena];
-        $relatorio['membresiaDomingo'] = $soma[RelatorioController::dimensaoTipoDomingo];
+        $direfenraDePeriodos = 1;
+        if ($periodoFinal !== 0) {
+            $direfenraDePeriodos = $periodoFinal - $periodoInicial;
+        }
+
+        $relatorio['membresiaCulto'] = $soma[RelatorioController::dimensaoTipoCulto] / $direfenraDePeriodos;
+        $relatorio['membresiaArena'] = $soma[RelatorioController::dimensaoTipoArena] / $direfenraDePeriodos;
+        $relatorio['membresiaDomingo'] = $soma[RelatorioController::dimensaoTipoDomingo] / $direfenraDePeriodos;
         $relatorio['membresiaMeta'] = Constantes::$META_LIDER * $quantidadeLideres;
         $relatorio['membresia'] = RelatorioController::calculaMembresia(
-                        $soma[RelatorioController::dimensaoTipoCulto], $soma[RelatorioController::dimensaoTipoArena], $soma[RelatorioController::dimensaoTipoDomingo]);
+                        $soma[RelatorioController::dimensaoTipoCulto], $soma[RelatorioController::dimensaoTipoArena], $soma[RelatorioController::dimensaoTipoDomingo]) / $direfenraDePeriodos;
         $relatorio['membresiaPerformance'] = 0;
         if ($relatorio['membresiaMeta'] > 0) {
             $relatorio['membresiaPerformance'] = $relatorio['membresia'] / $relatorio['membresiaMeta'] * 100;
@@ -204,7 +209,7 @@ class RelatorioController extends CircuitoController {
         if ($relatorio['membresiaMeta'] > 0) {
             $performanceCelula = $soma[RelatorioController::dimensaoTipoCelula] / $relatorio['membresiaMeta'] * 100;
         }
-        $relatorio['celula'] = $soma[RelatorioController::dimensaoTipoCelula];
+        $relatorio['celula'] = $soma[RelatorioController::dimensaoTipoCelula] / $direfenraDePeriodos;
         $relatorio['celulaPerformance'] = $performanceCelula;
         $relatorio['celulaPerformanceClass'] = RelatorioController::corDaLinhaPelaPerformance($relatorio['celulaPerformance']);
         $relatorio['celulaQuantidade'] = $quantidadeCelulas;

@@ -5,7 +5,7 @@ namespace Application\Controller;
 use Application\Controller\Helper\Constantes;
 use Application\Controller\Helper\Funcoes;
 use Application\Form\NovoEmailForm;
-use Application\Model\ORM\RepositorioORM;
+use Application\Model\Entity\EventoTipo;
 use Exception;
 use Zend\Json\Json;
 use Zend\Session\Container;
@@ -118,6 +118,11 @@ class PrincipalController extends CircuitoController {
 
             $entidade = $grupoSessao->getEntidadeAtiva();
             $entidadeLogada = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($sessao->idEntidadeAtual);
+            $listagemDeEventos = $entidade->getGrupo()->getGrupoEventoAtivosPorTipo(EventoTipo::tipoCelula);
+            echo "grupo: " . $entidade->getGrupo()->getId();
+            echo "evento: " . count($listagemDeEventos);
+
+
             $dados = array();
             $dados['idGrupo'] = $idSessao;
             $dados['entidade'] = $entidade;
@@ -125,6 +130,9 @@ class PrincipalController extends CircuitoController {
             $dados['tenhoDiscipulosAtivos'] = $tenhoDiscipulosAtivos;
             $dados['mostrarParaReenviarEmails'] = $mostrarParaReenviarEmails;
             $dados['responsabilidades'] = $grupoSessao->getResponsabilidadesAtivas();
+            $dados[Constantes::$LISTAGEM_EVENTOS] = $listagemDeEventos;
+            $dados[Constantes::$TIPO_EVENTO] = EventoTipo::tipoCelula;
+
             return new ViewModel($dados);
         } else {
             return $this->redirect()->toRoute('principal');

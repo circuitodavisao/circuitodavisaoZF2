@@ -7,7 +7,7 @@
 
 function funcaoCircuito(funcao, id) {
     var resposta = true;
- 
+
     if (resposta) {
         $.post(
                 '/principalFuncoes',
@@ -15,12 +15,25 @@ function funcaoCircuito(funcao, id) {
                     id: id,
                     funcao: funcao
                 },
-        function (data) {
-            if (data.response) {
-                if (data.tipoDeRetorno === 1) {
-                    location.href = data.url;
-                }
-            }
-        }, 'json');
+                function (data) {
+                    if (data.response) {
+                        if (data.tipoDeRetorno === 1) {
+                            location.href = data.url;
+                        }
+                    }
+                }, 'json');
     }
+}
+
+function mudarPeriodo() {
+    var url = document.URL;
+
+    var periodoInicial = $('#periodoInicial').val();
+    var periodoFinal = $('#periodoFinal').val();
+
+    var explodeURL = url.split("/");
+
+    var novaURL = explodeURL[0] + '//' + explodeURL[2] + '/' + explodeURL[3] + '/' + explodeURL[4] + '/' + periodoInicial + '/' + periodoFinal;
+
+    location.href = novaURL;
 }

@@ -13,7 +13,6 @@ use Application\Model\Entity\Pessoa;
 use Application\Model\ORM\RepositorioORM;
 use DateTime;
 use Doctrine\Common\Collections\Criteria;
-use Doctrine\ORM\EntityManager;
 use Exception;
 use Migracao\Controller\IndexController;
 use Zend\Json\Json;
@@ -75,7 +74,6 @@ class LancamentoController extends CircuitoController {
         if ($periodo < 0) {
             $mostrarBotaoPeriodoAfrente = true;
         }
-
 
         $grupoEventoNoPeriodo = $grupo->getGrupoEventoNoPeriodo($periodo);
 

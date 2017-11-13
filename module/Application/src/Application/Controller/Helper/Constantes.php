@@ -463,6 +463,7 @@ class Constantes {
     public static $PAGINA_SALVAR_REVISAO = 'SalvarRevisao';
     public static $PAGINA_SOLICITACOES = 'Solicitacoes';
     public static $PAGINA_SOLICITACAO = 'Solicitacao';
+    public static $PAGINA_SOLICITACAO_FINALIZAR = 'SolicitacaoFinalizar';
     public static $CONTROLLER_CADASTRO = 'Application\Controller\Cadastro';
     public static $ROUTE_CADASTRO = 'cadastro';
     /* páginas relacionadas ao IV */

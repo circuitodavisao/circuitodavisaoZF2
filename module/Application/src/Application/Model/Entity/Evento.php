@@ -7,6 +7,7 @@ namespace Application\Model\Entity;
  * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com>
  * Descricao: Entidade anotada da tabela Evento
  */
+
 use Application\Controller\Helper\Constantes;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -187,7 +188,7 @@ class Evento extends CircuitoEntity implements InputFilterAwareInterface {
      */
     function verificaSeECelula() {
         $resposta = false;
-        if ($this->getEventoTipo()->getId() === 2) {
+        if ($this->getEventoTipo()->getId() === EventoTipo::tipoCelula) {
             $resposta = true;
         }
         return $resposta;
@@ -199,7 +200,7 @@ class Evento extends CircuitoEntity implements InputFilterAwareInterface {
      */
     function verificaSeECulto() {
         $resposta = false;
-        if ($this->getEventoTipo()->getId() === 1) {
+        if ($this->getEventoTipo()->getId() === EventoTipo::tipoCulto) {
             $resposta = true;
         }
         return $resposta;
@@ -211,7 +212,7 @@ class Evento extends CircuitoEntity implements InputFilterAwareInterface {
      */
     function verificaSeERevisao() {
         $resposta = false;
-        if ($this->getTipo_id() == 3) {
+        if ($this->getTipo_id() == EventoTipo::tipoRevisao) {
             $resposta = true;
         }
         return $resposta;

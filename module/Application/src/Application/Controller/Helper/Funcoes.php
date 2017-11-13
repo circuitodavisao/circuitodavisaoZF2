@@ -2,6 +2,7 @@
 
 namespace Application\Controller\Helper;
 
+use Application\Model\Entity\EventoTipo;
 use Exception;
 use PHPMailer;
 
@@ -348,10 +349,10 @@ class Funcoes {
         $resposta = '';
         $id = (int) $idEvento;
         switch ($id) {
-            case 1:
+            case EventoTipo::tipoCulto:
                 $resposta = 'Cult';
                 break;
-            case 2:
+            case EventoTipo::tipoCelula:
                 $resposta = 'Cell';
                 break;
             default:
