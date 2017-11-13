@@ -7,7 +7,6 @@ namespace Application\Model\Entity;
  * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com>
  * Descricao: Entidade anotada da tabela Evento
  */
-
 use Application\Controller\Helper\Constantes;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -152,6 +151,21 @@ class Evento extends CircuitoEntity implements InputFilterAwareInterface {
             }
         }
         return $grupoEventos;
+    }
+
+    /**
+     * Retorna o grupo evento
+     * @return GrupoEvento
+     */
+    function getGrupoEventoAtivo() {
+        $grupoEvento = null;
+        foreach ($this->getGrupoEvento() as $ge) {
+            if ($ge->verificarSeEstaAtivo()) {
+                $grupoEvento = $ge;
+                break;
+            }
+        }
+        return $grupoEvento;
     }
 
     function setGrupoEvento($grupoEvento) {

@@ -122,6 +122,8 @@ class ListagemDeEventos extends AbstractHelper {
                     $html .= '<td class="text-center">';
                     if ($this->view->mostrarOpcoes) {
                         $html .= $this->view->botaoLink(Constantes::$STRING_ICONE_PENCIL, Constantes::$STRING_HASHTAG, 3, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClick));
+                    }
+                    if ($this->view->mostrarExcluirCelula) {
                         /* Inativar celula */
                         $html .= $this->view->botaoLink(Constantes::$STRING_ICONE_TIMES, Constantes::$STRING_HASHTAG, 4, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClickExclusao));
                     }

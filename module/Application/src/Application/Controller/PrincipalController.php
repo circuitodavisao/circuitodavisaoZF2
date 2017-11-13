@@ -5,6 +5,7 @@ namespace Application\Controller;
 use Application\Controller\Helper\Constantes;
 use Application\Controller\Helper\Funcoes;
 use Application\Form\NovoEmailForm;
+use Application\Model\Entity\EntidadeTipo;
 use Application\Model\Entity\EventoTipo;
 use Exception;
 use Zend\Json\Json;
@@ -119,9 +120,6 @@ class PrincipalController extends CircuitoController {
             $entidade = $grupoSessao->getEntidadeAtiva();
             $entidadeLogada = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($sessao->idEntidadeAtual);
             $listagemDeEventos = $entidade->getGrupo()->getGrupoEventoAtivosPorTipo(EventoTipo::tipoCelula);
-            echo "grupo: " . $entidade->getGrupo()->getId();
-            echo "evento: " . count($listagemDeEventos);
-
 
             $dados = array();
             $dados['idGrupo'] = $idSessao;
@@ -132,6 +130,11 @@ class PrincipalController extends CircuitoController {
             $dados['responsabilidades'] = $grupoSessao->getResponsabilidadesAtivas();
             $dados[Constantes::$LISTAGEM_EVENTOS] = $listagemDeEventos;
             $dados[Constantes::$TIPO_EVENTO] = EventoTipo::tipoCelula;
+            $dados['mostrarExcluirCelula'] = false;
+            if ($entidadeLogada->getEntidadeTipo()->getId() === EntidadeTipo::equipe ||
+                    $entidadeLogada->getEntidadeTipo()->getId() === EntidadeTipo::igreja) {
+                $dados['mostrarExcluirCelula'] = true;
+            }
 
             return new ViewModel($dados);
         } else {
@@ -189,10 +192,7 @@ class PrincipalController extends CircuitoController {
                     $grupoResponsavel->setDataEHoraDeInativacao();
                     $this->getRepositorio()->getGrupoResponsavelORM()->persistir($grupoResponsavel, false);
                 }
-                $numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupoSessao);
-                $fatoLiderSelecionado = $this->getRepositorio()->getFatoLiderORM()->encontrarFatoLiderPorNumeroIdentificador($numeroIdentificador);
-                $fatoLiderSelecionado->setDataEHoraDeInativacao();
-                $this->getRepositorio()->getFatoLiderORM()->persistir($fatoLiderSelecionado, false);
+                $this->inativarFatoLiderPorGrupo($grupoSessao);
 
                 $this->getRepositorio()->fecharTransacao();
                 unset($sessao->idSessao);
