@@ -3,6 +3,7 @@
 namespace Application\View\Helper;
 
 use Application\Controller\Helper\Constantes;
+use Application\Model\Entity\EntidadeTipo;
 use Entidade\Entity\Pessoa;
 use Zend\View\Helper\AbstractHelper;
 use Zend\View\Helper\Placeholder\Container;
@@ -247,12 +248,15 @@ class Menu extends AbstractHelper {
         $html .= '</a>';
         $html .= '</li>';
 
-        $html .= '<li>';
-        $html .= '<a href="/cadastroSolicitacoes">';
-        $html .= '<span class="fa fa-users"></span>';
-        $html .= 'Solicita&ccedil;&otilde;es';
-        $html .= '</a>';
-        $html .= '</li>';
+        if ($this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::equipe ||
+                $this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja) {
+            $html .= '<li>';
+            $html .= '<a href="/cadastroSolicitacoes">';
+            $html .= '<span class="fa fa-users"></span>';
+            $html .= 'Solicita&ccedil;&otilde;es';
+            $html .= '</a>';
+            $html .= '</li>';
+        }
 
         $html .= '</ul>';
 
@@ -296,60 +300,60 @@ class Menu extends AbstractHelper {
         $html .= '<span class="sidebar-title">Relatórios</span>';
         $html .= '<span class="caret"></span>';
         $html .= '</a>';
-        
+
         $html .= '<ul class="nav sub-nav">';
-        
+
         $html .= '<li>';
         $html .= '<a href="/relatorio/1">';
         $html .= '<span class="fa fa-terminal"></span>';
         $html .= 'Membresia';
         $html .= '</a>';
         $html .= '</li>';
-        
+
         $html .= '<li>';
         $html .= '<a href="/relatorio/2">';
         $html .= '<span class="fa fa-terminal"></span>';
         $html .= 'Células Realizadas';
         $html .= '</a>';
         $html .= '</li>';
-        
+
         $html .= '<li>';
         $html .= '<a href="/relatorio/3">';
         $html .= '<span class="fa fa-terminal"></span>';
         $html .= 'Células Quantidade';
         $html .= '</a>';
         $html .= '</li>';
-        
+
         $html .= '<li>';
         $html .= '<a href="/relatorio/4">';
         $html .= '<span class="fa fa-terminal"></span>';
         $html .= 'Culto da Semana';
         $html .= '</a>';
         $html .= '</li>';
-        
+
         $html .= '<li>';
         $html .= '<a href="/relatorio/5">';
         $html .= '<span class="fa fa-terminal"></span>';
         $html .= 'Arena';
         $html .= '</a>';
         $html .= '</li>';
-        
+
         $html .= '<li>';
         $html .= '<a href="/relatorio/6">';
         $html .= '<span class="fa fa-terminal"></span>';
         $html .= 'Domingo';
         $html .= '</a>';
         $html .= '</li>';
-        
+
         $html .= '<li>';
         $html .= '<a href="/relatorioAtendimento">';
         $html .= '<span class="fa fa-users"></span>';
         $html .= 'Atendimento';
         $html .= '</a>';
         $html .= '</li>';
-        
+
         $html .= '</ul>';
-        
+
         $html .= '</li>';
 
         $html .= '<li class="sidebar-label pt20">Chamada I.V.</li>';
