@@ -10,6 +10,7 @@ use Application\Model\Entity\Grupo;
 use Application\Model\Entity\GrupoEvento;
 use Application\Model\Entity\GrupoPaiFilho;
 use Application\Model\Entity\GrupoPessoa;
+use Application\Model\Entity\GrupoPessoaTipo;
 use Application\Model\Entity\GrupoResponsavel;
 use Doctrine\ORM\EntityManager;
 use Exception;
@@ -100,6 +101,66 @@ class RelatorioController extends CircuitoController {
         }
 
         return new ViewModel($dados);
+    }
+
+    public function pessoasFrequentesAction() {
+        $sessao = new Container(Constantes::$NOME_APLICACAO);
+        $html = '';
+
+        $idEntidadeAtual = $sessao->idEntidadeAtual;
+        $entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+        $grupo = $entidade->getGrupo();
+        $grupoPaiFilhoFilhos = $grupo->getGrupoPaiFilhoFilhosAtivos(0);
+        $html .= '<table class="table table-condesed">';
+        $arrayPeriodo = Funcoes::montaPeriodo(-3);
+        $stringComecoDoPeriodo = $arrayPeriodo[3] . '-' . $arrayPeriodo[2] . '-' . $arrayPeriodo[1];
+        $dataDoInicioDoPeriodoParaComparar = strtotime($stringComecoDoPeriodo);
+
+        if ($grupoPaiFilhoFilhos) {
+            foreach ($grupoPaiFilhoFilhos as $gpFilho) {
+                $grupoFilho = $gpFilho->getGrupoPaiFilhoFilho();
+                $dadosEntidade = $grupoFilho->getEntidadeAtiva()->infoEntidade() . ' - ' . $grupoFilho->getNomeLideresAtivos();
+                $html .= '<tr class="info">';
+                $html .= '<td colspan="2">' . $dadosEntidade . '</td>';
+                $html .= '</tr>';
+                $grupoPessoas = $grupoFilho->getGrupoPessoa();
+                if ($grupoPessoas) {
+                    $contadorDePessoas = 0;
+                    foreach ($grupoPessoas as $grupoPessoa) {
+                        $contadorDeEventos = 0;
+                        $pessoa = $grupoPessoa->getPessoa();
+                        if ($grupoPessoa->getGrupoPessoaTipo()->getId() === GrupoPessoaTipo::VISITANTE ||
+                                $grupoPessoa->getGrupoPessoaTipo()->getId() === GrupoPessoaTipo::CONSOLIDACAO) {
+
+                            $frequencias = $pessoa->getEventoFrequencia();
+                            if ($frequencias) {
+                                foreach ($frequencias as $eventoFrequencia) {
+                                    $dataParaComparar = strtotime($eventoFrequencia->getDiaStringPadraoBanco());
+                                    if ($dataParaComparar >= $dataDoInicioDoPeriodoParaComparar) {
+                                        $contadorDeEventos ++;
+                                    }
+                                }
+                                if ($contadorDeEventos >= 6) {
+                                    $html .= '<tr>';
+                                    $html .= '<td>' . $pessoa->getNome() . '</td>';
+                                    $html .= '<td>' . $pessoa->getTelefone() . '</td>';
+                                    $html .= '</tr>';
+                                    $contadorDePessoas++;
+                                }
+                            }
+                        }
+                    }
+                    if ($contadorDePessoas === 0) {
+                        $html .= '<tr class="warning">';
+                        $html .= '<td colspan="2">Sem pessoas frequentes</td>';
+                        $html .= '</tr>';
+                    }
+                }
+            }
+        }
+        $html .= '</table>';
+        $view = new ViewModel(array('html' => $html));
+        return $view;
     }
 
     public function atendimentoAction() {
