@@ -7,7 +7,6 @@ namespace Application\Model\Entity;
  * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com>
  * Descricao: Entidade anotada da tabela evento_frequencia
  */
-
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -39,6 +38,12 @@ class EventoFrequencia extends CircuitoEntity {
 
     /** @ORM\Column(type="datetime", name="dia") */
     protected $dia;
+
+    function getDiaStringPadraoBanco() {
+        if ($this->getDia()) {
+            return $this->getDia()->format('Y-m-d');
+        }
+    }
 
     function getPessoa() {
         return $this->pessoa;
