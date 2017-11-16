@@ -246,6 +246,8 @@ class Constantes {
     public static $ENTITY_TURMA = 'Application\Model\Entity\Turma'; 
     public static $ENTITY_SOLICITACAO = 'Application\Model\Entity\Solicitacao';
     public static $ENTITY_SOLICITACAO_TIPO = 'Application\Model\Entity\SolicitacaoTipo';
+    public static $ENTITY_SOLICITACAO_SITUACAO = 'Application\Model\Entity\SolicitacaoSituacao';
+    public static $ENTITY_SITUACAO = 'Application\Model\Entity\Situacao';
     public static $ENTITY_PESSOA_ID = 'pessoa_id';
     public static $ENTITY_DATA_INATIVACAO = 'data_inativacao';
     public static $ENTITY_TIPO_ID = 'tipo_id';

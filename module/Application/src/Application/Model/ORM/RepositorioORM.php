@@ -42,6 +42,8 @@ class RepositorioORM {
     private $_solicitacaoTipoORM;
     private $_cursoORM;
     private $_disciplinaORM;
+    private $_solicitacaoSituacaoORM;
+    private $_situacaoORM;
 
     /**
      * Contrutor 
@@ -358,6 +360,28 @@ class RepositorioORM {
             $this->_solicitacaoTipoORM = new SolicitacaoTipoORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_SOLICITACAO_TIPO);
         }
         return $this->_solicitacaoTipoORM;
+    }
+
+    /**
+     * Metodo public para obter a instancia do CircuitoORM
+     * @return CircuitoORM
+     */
+    public function getSolicitacaoSituacaoORM() {
+        if (is_null($this->_solicitacaoSituacaoORM)) {
+            $this->_solicitacaoSituacaoORM = new SolicitacaoTipoORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_SOLICITACAO_SITUACAO);
+        }
+        return $this->_solicitacaoSituacaoORM;
+    }
+
+    /**
+     * Metodo public para obter a instancia do CircuitoORM
+     * @return CircuitoORM
+     */
+    public function getSituacaoORM() {
+        if (is_null($this->_situacaoORM)) {
+            $this->_situacaoORM = new SolicitacaoTipoORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_SITUACAO);
+        }
+        return $this->_situacaoORM;
     }
 
     /**
