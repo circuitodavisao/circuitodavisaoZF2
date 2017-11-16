@@ -283,13 +283,15 @@ class Menu extends AbstractHelper {
         $html .= 'Atendimento';
         $html .= '</a>';
         $html .= '</li>';
-
-//                $html .= '<li>';
-//                $html .= '<a href="/cadastro' . Constantes::$PAGINA_ATIVAR_FICHA_REVISAO . '">';
-//                $html .= '<span class="fa fa-users"></span>';
-//                $html .= 'Fichas Revisão de Vidas';
-//                $html .= '</a>';
-//                $html .= '</li>';
+        
+        if ($this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja) {
+            $html .= '<li>';
+            $html .= '<a href="/cadastroAtivarFichas">';
+            $html .= '<span class="fa fa-users"></span>';
+            $html .= 'Fichas Revisão de Vidas';
+            $html .= '</a>';
+            $html .= '</li>';
+        }
 
         $html .= '</ul>';
         $html .= '</li>';
@@ -303,47 +305,39 @@ class Menu extends AbstractHelper {
 
         $html .= '<ul class="nav sub-nav">';
 
-        $html .= '<li>';
-        $html .= '<a href="/relatorio/1">';
-        $html .= '<span class="fa fa-terminal"></span>';
-        $html .= 'Membresia';
-        $html .= '</a>';
-        $html .= '</li>';
+        for ($indiceMenuRelatorio = 1; $indiceMenuRelatorio <= 7; $indiceMenuRelatorio++) {
 
-        $html .= '<li>';
-        $html .= '<a href="/relatorio/2">';
-        $html .= '<span class="fa fa-terminal"></span>';
-        $html .= 'Células Realizadas';
-        $html .= '</a>';
-        $html .= '</li>';
-
-        $html .= '<li>';
-        $html .= '<a href="/relatorio/3">';
-        $html .= '<span class="fa fa-terminal"></span>';
-        $html .= 'Células Quantidade';
-        $html .= '</a>';
-        $html .= '</li>';
-
-        $html .= '<li>';
-        $html .= '<a href="/relatorio/4">';
-        $html .= '<span class="fa fa-terminal"></span>';
-        $html .= 'Culto da Semana';
-        $html .= '</a>';
-        $html .= '</li>';
-
-        $html .= '<li>';
-        $html .= '<a href="/relatorio/5">';
-        $html .= '<span class="fa fa-terminal"></span>';
-        $html .= 'Arena';
-        $html .= '</a>';
-        $html .= '</li>';
-
-        $html .= '<li>';
-        $html .= '<a href="/relatorio/6">';
-        $html .= '<span class="fa fa-terminal"></span>';
-        $html .= 'Domingo';
-        $html .= '</a>';
-        $html .= '</li>';
+            $label = '';
+            switch ($indiceMenuRelatorio) {
+                case 1:
+                    $label = 'Membresia';
+                    break;
+                case 2:
+                    $label = 'C&eacute;lulas Realizadas';
+                    break;
+                case 3:
+                    $label = 'C&eacute;lulas Quantidade';
+                    break;
+                case 4:
+                    $label = 'Culto da Semana';
+                    break;
+                case 5:
+                    $label = 'Arena';
+                    break;
+                case 6:
+                    $label = 'Domingo';
+                    break;
+                case 7:
+                    $label = 'C&eacute;lula/Arena';
+                    break;
+            }
+            $html .= '<li>';
+            $html .= '<a href="/relatorio/' . $indiceMenuRelatorio . '">';
+            $html .= '<span class="fa fa-terminal"></span>';
+            $html .= $label;
+            $html .= '</a>';
+            $html .= '</li>';
+        }
 
         $html .= '<li>';
         $html .= '<a href="/relatorioAtendimento">';

@@ -46,6 +46,9 @@ $somaQuantidadeCelulasRealizadas = 0;
                                 if ($this->tipoRelatorio == 6) {
                                     echo 'Domingo';
                                 }
+                                if ($this->tipoRelatorio == 7) {
+                                    echo 'C&eacute;lula/Arena';
+                                }
                                 ?>
                             </th>                    
                         </tr>
@@ -55,7 +58,11 @@ $somaQuantidadeCelulasRealizadas = 0;
                             </th>                    
                         </tr>
                         <tr>
-                            <th>#</th>
+                            <?php
+                            if ($this->tipoRelatorio != 7) {
+                                echo '<th>#</th>';
+                            }
+                            ?>
                             <th>TIMES</th>
                             <?php
                             if ($this->tipoRelatorio == 1) {
@@ -84,13 +91,19 @@ $somaQuantidadeCelulasRealizadas = 0;
                                 echo '<th>LID</th>';
                                 echo '<th>QTD</th>';
                             }
+                            if ($this->tipoRelatorio == 7) {
+                                echo '<th>CÉLULA</th>';
+                                echo '<th>ARENA</th>';
+                            }
                             ?>                           
                         </tr>
                     </thead>
                     <tbody>
                         <?php
                         echo '<tr>';
-                        echo '<td></td>';
+                        if ($this->tipoRelatorio != 7) {
+                            echo '<td></td>';
+                        }
                         echo '<td>MEU</td>';
                         if ($this->tipoRelatorio == 1) {
                             echo '<td class = "hidden-xs">' . $this->relatorio['quantidadeLideres'] . '</td>';
@@ -130,6 +143,11 @@ $somaQuantidadeCelulasRealizadas = 0;
                             echo '<td>' . $this->relatorio['quantidadeLideres'] . '</td>';
                             echo '<td>' . RelatorioController::formataNumeroRelatorio($quantidade) . '</td>';
                         }
+
+                        if ($this->tipoRelatorio == 7) {
+                            echo '<td>' . $this->relatorio['celula'] . '</td>';
+                            echo '<td class = "hidden-xs">' . RelatorioController::formataNumeroRelatorio($this->relatorio['membresiaArena']) . '</td>';
+                        }
                         echo '</tr>';
 
                         if ($this->tipoRelatorio == 1 ||
@@ -142,7 +160,8 @@ $somaQuantidadeCelulasRealizadas = 0;
                         if ($this->tipoRelatorio == 1 ||
                                 $this->tipoRelatorio == 4 ||
                                 $this->tipoRelatorio == 5 ||
-                                $this->tipoRelatorio == 6) {
+                                $this->tipoRelatorio == 6 ||
+                                $this->tipoRelatorio == 7) {
                             $somaGeral[$dimensaoTipoCulto] = $this->relatorio['membresiaCulto'];
                             $somaGeral[$dimensaoTipoArena] = $this->relatorio['membresiaArena'];
                             $somaGeral[$dimensaoTipoDomingo] = $this->relatorio['membresiaDomingo'];
@@ -151,7 +170,7 @@ $somaQuantidadeCelulasRealizadas = 0;
                             $somaQuantidadeCelulas += $this->relatorio['celulaQuantidade'];
                             $somaQuantidadeCelulasRealizadas += $this->relatorio['celulaRealizadas'];
                         }
-                        if ($this->tipoRelatorio == 3) {
+                        if ($this->tipoRelatorio == 3 || $this->tipoRelatorio == 7) {
                             $somaGeral[$dimensaoTipoCelula] += $this->relatorio['celula'];
                         }
 
@@ -174,7 +193,9 @@ $somaQuantidadeCelulasRealizadas = 0;
                                 }
 
                                 echo '<tr class="' . $linhaDiscipulo . '">';
-                                echo '<td>' . $contagemRanking . '°</td>';
+                                if ($this->tipoRelatorio != 7) {
+                                    echo '<td>' . $contagemRanking . '°</td>';
+                                }
                                 echo '<td class="text-left">' . $grupoFilho->getNomeLideresAtivos() . '</td>';
 
                                 if ($this->tipoRelatorio == 1) {
@@ -215,6 +236,10 @@ $somaQuantidadeCelulasRealizadas = 0;
                                     echo '<td>' . $relatorioDiscipulo['quantidadeLideres'] . '</td>';
                                     echo '<td>' . RelatorioController::formataNumeroRelatorio($quantidade) . '</td>';
                                 }
+                                if ($this->tipoRelatorio == 7) {
+                                    echo '<td>' . $relatorioDiscipulo['celula'] . '</td>';
+                                    echo '<td>' . RelatorioController::formataNumeroRelatorio($relatorioDiscipulo['membresiaArena']) . '</td>';
+                                }
 
                                 echo '</tr>';
                                 $contagemRanking++;
@@ -229,7 +254,8 @@ $somaQuantidadeCelulasRealizadas = 0;
                                 if ($this->tipoRelatorio == 1 ||
                                         $this->tipoRelatorio == 4 ||
                                         $this->tipoRelatorio == 5 ||
-                                        $this->tipoRelatorio == 6) {
+                                        $this->tipoRelatorio == 6 ||
+                                        $this->tipoRelatorio == 7) {
                                     $somaGeral[$dimensaoTipoCulto] += $relatorioDiscipulo['membresiaCulto'];
                                     $somaGeral[$dimensaoTipoArena] += $relatorioDiscipulo['membresiaArena'];
                                     $somaGeral[$dimensaoTipoDomingo] += $relatorioDiscipulo['membresiaDomingo'];
@@ -238,7 +264,7 @@ $somaQuantidadeCelulasRealizadas = 0;
                                     $somaQuantidadeCelulas += $relatorioDiscipulo['celulaQuantidade'];
                                     $somaQuantidadeCelulasRealizadas += $relatorioDiscipulo['celulaRealizadas'];
                                 }
-                                if ($this->tipoRelatorio == 3) {
+                                if ($this->tipoRelatorio == 3 || $this->tipoRelatorio == 7) {
                                     $somaGeral[$dimensaoTipoCelula] += $relatorioDiscipulo['celula'];
                                 }
                             }
@@ -263,7 +289,9 @@ $somaQuantidadeCelulasRealizadas = 0;
                             $performance = $somaGeral[$dimensaoTipoCelula] / $meta * 100;
                         }
                         echo '<tr>';
-                        echo '<td></td>';
+                        if ($this->tipoRelatorio != 7) {
+                            echo '<td></td>';
+                        }
                         echo '<td>TOTAL</td>';
                         if ($this->tipoRelatorio == 1) {
                             echo '<td class = "hidden-xs">' . $somaGeralLideres . '</td>';
@@ -302,6 +330,10 @@ $somaQuantidadeCelulasRealizadas = 0;
                             }
                             echo '<td>' . $somaGeralLideres . '</td>';
                             echo '<td>' . RelatorioController::formataNumeroRelatorio($quantidade) . '</td>';
+                        }
+                        if ($this->tipoRelatorio == 7) {
+                            echo '<td>' . $somaGeral[$dimensaoTipoCelula] . '</td>';
+                            echo '<td>' . RelatorioController::formataNumeroRelatorio($somaGeral[$dimensaoTipoArena]) . '</td>';
                         }
                         echo '</tr>';
                         ?>                     

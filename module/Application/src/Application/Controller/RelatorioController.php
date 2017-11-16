@@ -52,7 +52,7 @@ class RelatorioController extends CircuitoController {
         $grupo = $entidade->getGrupo();
         $numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio());
         $periodoInicial = $this->getEvent()->getRouteMatch()->getParam(Constantes::$ID, 0);
-        $periodoFinal = $this->getEvent()->getRouteMatch()->getParam('periodoInicial', 0);
+        $periodoFinal = $this->getEvent()->getRouteMatch()->getParam('periodoFinal', 0);
 
         $tipoRelatorioPessoal = 1;
         $relatorio = RelatorioController::montaRelatorio($this->getRepositorio(), $numeroIdentificador, $periodoInicial, $tipoRelatorioPessoal, $periodoFinal);
