@@ -4,42 +4,43 @@ use Application\Controller\Helper\Constantes;
 
 $html .= $this->templateFormularioTopo($this->titulo);
 $html .= '<div class="panel-body bg-light">';
+if ($this->solicitacoes) {
+    $html .= '<table class="table">';
 
-$html .= '<table class="table">';
+    $html .= '<thead>';
 
-$html .= '<thead>';
-
-$html .= '<tr>';
-$html .= '<th>Tipo</th>';
-$html .= '<th>Data Solicitacao</th>';
-$html .= '<th>Solicitante</th>';
-$html .= '<th>Objeto 1</th>';
-$html .= '<th>Objeto 2</th>';
-$html .= '</tr>';
-
-$html .= '</thead>';
-
-$html .= '<tbody>';
-foreach ($this->solicitacoes as $solicitacao) {
     $html .= '<tr>';
-    $html .= '<td>' . $solicitacao->getSolicitacaoTipo()->getNome() . '</td>';
-    $html .= '<td>' . $solicitacao->getData_criacaoStringPadraoBrasil() . '</td>';
-    $html .= '<td>' . $solicitacao->getPessoa()->getNome() . '</td>';
-    $html .= '<td>' . $solicitacao->getObjeto1() . '</td>';
-    $html .= '<td>' . $solicitacao->getObjeto2() . '</td>';
+    $html .= '<th>Tipo</th>';
+    $html .= '<th>Solicitado em</th>';
+    $html .= '<th>Por</th>';
+    $html .= '<th>O que ou quem?</th>';
+    $html .= '<th>Para</th>';
+    $html .= '<th>Status</th>';
     $html .= '</tr>';
+
+    $html .= '</thead>';
+
+    $html .= '<tbody>';
+    foreach ($this->solicitacoes as $solicitacao) {
+        $html .= '<tr>';
+        $html .= '<td>' . $solicitacao->getSolicitacaoTipo()->getNome() . '</td>';
+        $html .= '<td>' . $solicitacao->getData_criacaoStringPadraoBrasil() . '</td>';
+        $html .= '<td>' . $solicitacao->getPessoa()->getNomePrimeiroUltimo() . '</td>';
+        $html .= '<td>' . $solicitacao->getObjeto1() . '</td>';
+        $html .= '<td>' . $solicitacao->getObjeto2() . '</td>';
+        $html .= '</tr>';
+    }
+    $html .= '</tbody>';
+
+    $html .= '</table>';
+
+    $html .= '</div>';
+
+    $html .= '<div class="panel-footer text-right">';
+    $stringNomeDaFuncaoOnClickCadastro = 'funcaoCircuito("cadastroSolicitacao", 0)';
+    $html .= $this->botaoSimples($this->translate(Constantes::$TRADUCAO_CADASTRAR), $this->funcaoOnClick($stringNomeDaFuncaoOnClickCadastro));
+    $html .= '</div>';
 }
-$html .= '</tbody>';
-
-$html .= '</table>';
-
-$html .= '</div>';
-
-$html .= '<div class="panel-footer text-right">';
-$stringNomeDaFuncaoOnClickCadastro = 'funcaoCircuito("cadastroSolicitacao", 0)';
-$html .= $this->botaoSimples($this->translate(Constantes::$TRADUCAO_CADASTRAR), $this->funcaoOnClick($stringNomeDaFuncaoOnClickCadastro));
-$html .= '</div>';
-
 $html .= $this->templateFormularioRodape();
 echo $html;
 

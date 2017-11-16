@@ -120,7 +120,6 @@ echo $this->form()->openTag($form);
 <?php
 echo $this->formHidden($form->get(Constantes::$ID));
 echo $this->form()->closeTag();
-echo $this->modalLoader();
 ?>
 <script type="text/javascript">
     var hidden = 'hidden';
@@ -128,6 +127,11 @@ echo $this->modalLoader();
     var classAlertSuccess = 'alert-success';
     var btnDefault = 'btn-default';
     var btnPrimary = 'btn-primary';
+    var validacao;
+    validacao[1] = '1658';
+    validacao[2] = '2487';
+    validacao[3] = '3694';
+    validacao[4] = '4851';
 
     function pegaSpanMensagemDeErro() {
         return $('#spanMensagemDeErro');
@@ -150,7 +154,7 @@ echo $this->modalLoader();
     }
 
     function validarTelefone() {
-        
+
         var valorDDD = $('#inputDDD').val();
         var valorCelular = $('#inputCelular').val();
         var temErro = false;
@@ -181,17 +185,30 @@ echo $this->modalLoader();
                     .addClass(classAlertDanger)
                     .html(mensagemDeErro);
         } else {
-            spanMensagemDeErro
-                    .removeClass(classAlertDanger)
-                    .addClass(classAlertSuccess)
-                    .html('<?php echo $this->translate(Constantes::$TRADUCAO_DADOS_LIBERADOS); ?>');
-            $('#divBotaoVerificarTelefone').addClass(hidden);
-            $('#divBotaoTelefoneContinuar').removeClass(hidden);
+            /* Enviar codigo verificador */
+            $.post(
+                    "/cadastroEnviarSMS",
+                    {
+                        numero: valorDDD + valorCelular,
+                    },
+                    function (data) {
+                        if (data.resposta) {
+                            spanMensagemDeErro
+                                    .removeClass(classAlertDanger)
+                                    .addClass(classAlertSuccess)
+                                    .html('<?php echo $this->translate(Constantes::$TRADUCAO_DADOS_LIBERADOS); ?>');
+                            $('#divBotaoVerificarTelefone').addClass(hidden);
+                            $('#divBotaoTelefoneContinuar').removeClass(hidden);
+                        }
+                    }
+            , 'json');
+
+
         }
         spanMensagemDeErro
                 .removeClass(hidden);
 
-        
+
     }
 
     function abrirDivCodigoVerificador() {
@@ -213,14 +230,17 @@ echo $this->modalLoader();
     }
 
     function verificarCodigoVerificador() {
-        
+
         var valorCodigoVerificador = $('#inputCodigoVerificador').val();
         var temErro = false;
         var mensagemDeErro;
         var spanMensagemDeErro = pegaSpanMensagemDeErro();
         spanMensagemDeErro.html('').addClass(hidden);
 
-        if (valorCodigoVerificador != "1") {
+        if (valorCodigoVerificador != validacao[1] &&
+                valorCodigoVerificador != validacao[2] &&
+                valorCodigoVerificador != validacao[3] &&
+                valorCodigoVerificador != validacao[4]) {
             temErro = true;
             mensagemDeErro = 'Codigo verificador inválido';
         }
@@ -244,11 +264,11 @@ echo $this->modalLoader();
         }
         spanMensagemDeErro
                 .removeClass(hidden);
-        
+
     }
 
     function finalizarAtualizacao(f) {
-        
+
         f.submit();
     }
 </script>

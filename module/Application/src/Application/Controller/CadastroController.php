@@ -1295,6 +1295,28 @@ class CadastroController extends CircuitoController {
         return $response;
     }
 
+    public function enviarSMSAction() {
+        $resposta = false;
+        $request = $this->getRequest();
+        $response = $this->getResponse();
+        if ($request->isPost()) {
+            try {
+
+                $post_data = $request->getPost();
+                $numero = $post_data['numero'];
+
+                $resposta = Funcoes::enviarSMS($numero);
+                
+                $dados = array();
+                $dados['resposta'] = $resposta;
+                $response->setContent(Json::encode($dados));
+            } catch (Exception $exc) {
+                echo $exc->getTraceAsString();
+            }
+        }
+        return $response;
+    }
+
     /**
      * Controle de funçoes da tela de cadastro
      * @return Json
@@ -1418,8 +1440,6 @@ class CadastroController extends CircuitoController {
 
 //            try {
         $post_data = $request->getPost();
-
-
         $pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($post_data[Constantes::$FORM_ID]);
 
         /* validação */
@@ -1679,7 +1699,7 @@ class CadastroController extends CircuitoController {
                     } else {
                         $idAluno = IndexController::cadastrarPessoaRevisionista($pessoaRevisionista->getNome(), substr('' . $pessoaRevisionista->getTelefone() . '', 0, 2), substr('' . $pessoaRevisionista->getTelefone() . '', 2, strlen('' . $pessoaRevisionista->getTelefone() . '')), $pessoaRevisionista->getSexo(), $pessoaRevisionista->getData_nascimento(), $grupoCv->getLider1());
                     }
-                    IndexController::cadastrarPessoaAluno($idAluno, 6503, 'A', 1);
+                    IndexController::cadastrarPessoaAluno($idAluno, 6711, 'A', 1);
 
                     /* Fim da migração do Sistema Antigo */
 
