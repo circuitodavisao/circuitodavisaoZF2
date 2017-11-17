@@ -129,14 +129,15 @@ class RelatorioController extends CircuitoController {
                     foreach ($grupoPessoas as $grupoPessoa) {
                         $contadorDeEventos = 0;
                         $pessoa = $grupoPessoa->getPessoa();
-                        if ($grupoPessoa->getGrupoPessoaTipo()->getId() === GrupoPessoaTipo::VISITANTE ||
-                                $grupoPessoa->getGrupoPessoaTipo()->getId() === GrupoPessoaTipo::CONSOLIDACAO) {
+                        if (($grupoPessoa->getGrupoPessoaTipo()->getId() === GrupoPessoaTipo::VISITANTE ||
+                                $grupoPessoa->getGrupoPessoaTipo()->getId() === GrupoPessoaTipo::CONSOLIDACAO) &&
+                                $grupoPessoa->verificarSeEstaAtivo()) {
 
                             $frequencias = $pessoa->getEventoFrequencia();
                             if ($frequencias) {
                                 foreach ($frequencias as $eventoFrequencia) {
                                     $dataParaComparar = strtotime($eventoFrequencia->getDiaStringPadraoBanco());
-                                    if ($dataParaComparar >= $dataDoInicioDoPeriodoParaComparar) {
+                                    if ($dataParaComparar >= $dataDoInicioDoPeriodoParaComparar && $eventoFrequencia->getFrequencia() == 'S') {
                                         $contadorDeEventos ++;
                                     }
                                 }

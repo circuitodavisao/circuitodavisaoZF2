@@ -18,7 +18,7 @@ CREATE TABLE solicitacao
       REFERENCES grupo (id) MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE NO ACTION,
   CONSTRAINT fk_solicitacao_solicitacao_tipo_id FOREIGN KEY (solicitacao_tipo_id)
-      REFERENCES solicitacao (id) MATCH SIMPLE
+      REFERENCES solicitacao_tipo (id) MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE NO ACTION
 )
 WITH (
