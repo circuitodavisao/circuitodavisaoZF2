@@ -551,10 +551,11 @@ class LancamentoController extends CircuitoController {
                 $grupoLancado = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupo);
 
                 if ($tipo === $tipoLancar) {
+                    $dataCriacao = $anoSelecionado . '-' . $mesSelecionado . '-01';
                     $grupoAtendimento = new GrupoAtendimento();
-                    $grupoAtendimento->setDataEHoraDeCriacao();
+                    $grupoAtendimento->setDataEHoraDeCriacao($dataCriacao);
                     $grupoAtendimento->setGrupo($grupoLancado);
-                    $this->getRepositorio()->getGrupoAtendimentoORM()->persistir($grupoAtendimento);
+                    $this->getRepositorio()->getGrupoAtendimentoORM()->persistir($grupoAtendimento, false);
                 }
                 if ($tipo === $tipoRemover) {
                     $grupoAtendimentoParaDesativar = null;
@@ -575,7 +576,6 @@ class LancamentoController extends CircuitoController {
                 }
 
                 $numeroAtendimentos = $grupoLancado->totalDeAtendimentos($mesSelecionado, $anoSelecionado);
-
                 $explodeProgresso = explode('_', $this->retornaProgressoUsuarioNoMesEAno($this->getRepositorio(), $mesSelecionado, $anoSelecionado));
                 $progresso = number_format($explodeProgresso[0], 2, '.', '');
                 $colorBarTotal = LancamentoController::retornaClassBarradeProgressoPeloValor($progresso);
