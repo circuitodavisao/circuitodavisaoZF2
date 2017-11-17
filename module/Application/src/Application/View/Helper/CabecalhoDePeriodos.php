@@ -42,7 +42,7 @@ class CabecalhoDePeriodos extends AbstractHelper {
         }
 
         $periodo = $this->view->periodoInicial;
-        if (!$periodo) {
+        if ($this->view->periodo) {
             $periodo = $this->view->periodo;
         }
         $urlCicloAnterior = $urlBaseCiclo . '/' . ($periodo - 1);
