@@ -123,6 +123,12 @@ class CadastroController extends CircuitoController {
                         Constantes::$ACTION => Constantes::$PAGINA_BUSCAR_CPF,
             ));
         }
+        /* Enviar SMS */
+        if ($pagina == Constantes::$PAGINA_ENVIAR_SMS) {
+            return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
+                        Constantes::$ACTION => Constantes::$PAGINA_ENVIAR_SMS,
+            ));
+        }
         /* Busca de Email JSON */
         if ($pagina == Constantes::$PAGINA_BUSCAR_EMAIL) {
             return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
@@ -1303,7 +1309,6 @@ class CadastroController extends CircuitoController {
         $response = $this->getResponse();
         if ($request->isPost()) {
             try {
-
                 $post_data = $request->getPost();
                 $numero = $post_data['numero'];
 
@@ -1983,6 +1988,7 @@ class CadastroController extends CircuitoController {
             'discipulos' => $grupoPaiFilhoFilhos,
             'solicitacaoTipos' => $solicitacaoTipos,
             Constantes::$FORM => $formSolicitacao,
+            'titulo' => 'Solicitação',
         ));
 
         /* Javascript */

@@ -9,7 +9,7 @@ $form = $this->Form;
 $form->prepare();
 $form->setAttribute(Constantes::$FORM_ACTION, Constantes::$ROUTE_CADASTRO . 'SolicitacaoFinalizar');
 echo $this->form()->openTag($form);
-echo $this->templateFormularioTopo('Solicitacao');
+echo $this->templateFormularioTopo($this->titulo);
 ?>
 <div class="panel-body bg-light">
 
@@ -19,18 +19,19 @@ echo $this->templateFormularioTopo('Solicitacao');
             <span>Selecione uma das opções abaixo</span>
         </div>
         Tipo de solicitação
-        <select id="solicitacaoTipo" class="mt10 form-control">
+        <select id="solicitacaoTipo" class="mt10 form-control" onchange="mostrarBotaoContinuar();">
             <option value="0">SELECIONE</option>
             <?php
             foreach ($this->solicitacaoTipos as $solicitacaoTipo) {
                 echo '<option value="' . $solicitacaoTipo->getId() . '">' . $solicitacaoTipo->getNome() . '</option>';
             }
             ?>
-
         </select>
-        <button type="button" onClick='selecionarTipo()' style="float: right;" class="mt10 btn ladda-button btn-primary mr5" data-style="zoom-in">
-            <span class="ladda-label">Selecionar</span>
-        </button>
+        <div id="divBotaoContinuarSelecionarTipo" class="hidden mt10">
+            <?php
+            echo $this->botaoSimples(Constantes::$TRADUCAO_CONTINUAR, $this->funcaoOnClick('selecionarTipo()'));
+            ?>
+        </div>
     </div>
     <!-- Progress Bar -->
     <div id="divProgress"  class="col-xs-12 hidden">
@@ -56,16 +57,22 @@ echo $this->templateFormularioTopo('Solicitacao');
             }
             ?>
             <!-- Bloco objeto -->
-            <div id="blocoObjeto<?php echo $indiceDeObejtos; ?>" class="well col-xs-12 btn btn-default text-left" onClick='<?php echo $funcaoOnclick; ?>'>
+            <div id="blocoObjeto<?php echo $indiceDeObejtos; ?>" class="well col-xs-12 text-left" onClick='<?php // echo $funcaoOnclick;   ?>'>
                 <address>
                     <span id="spanSelecioneObjeto<?php echo $indiceDeObejtos; ?>"><?php echo $stringSelecioneOObjeto; ?></span>
                     <span id="spanObjeto<?php echo $indiceDeObejtos; ?>"></span>
                 </address>
-                <div id="divBotaoSelecionar<?php echo $indiceDeObejtos; ?>">
-                    <button type="button" onClick='<?php echo $funcaoOnclick; ?>' style="float: right;" onclick='location.href = "#";' class="btn ladda-button btn-primary btn-xs mr5" data-style="zoom-in">
-                        <span class="ladda-label">Selecionar</span>
-                    </button>
-                </div>
+                <?php
+//                if ($indiceDeObejtos === 1) {
+                    ?>
+                    <div id="divBotaoSelecionar<?php echo $indiceDeObejtos; ?>">
+                        <button type="button" onClick='<?php echo $funcaoOnclick; ?>' style="float: right;" onclick='location.href = "#";' class="btn ladda-button btn-primary btn-xs mr5" data-style="zoom-in">
+                            <span class="ladda-label">Selecionar</span>
+                        </button>
+                    </div>
+                    <?php
+//                }
+                ?>
                 <div id="divBotaoLimpar<?php echo $indiceDeObejtos; ?>"  class="hidden">
                     <button type="button" onClick='limparObjeto(<?php echo $indiceDeObejtos; ?>);' style="float: right;" onclick='location.href = "#";' class="btn ladda-button btn-default dark btn-xs mr5" data-style="zoom-in">
                         <span class="ladda-label">Limpar</span>
@@ -125,9 +132,9 @@ echo $this->templateFormularioTopo('Solicitacao');
     </div>
     <!--divBotaoContinuar-->
     <div id="divBotaoContinuar" class="hidden">
-        <button type="button" onClick='continuarParaConfimacao()' style="float: right;" class="mt10 btn ladda-button btn-primary mr5" data-style="zoom-in">
-            <span class="ladda-label">Continuar</span>
-        </button>
+        <?php
+        echo $this->botaoSimples(Constantes::$TRADUCAO_CONTINUAR, $this->funcaoOnClick('continuarParaConfimacao()'), BotaoSimples::botaoSucesso);
+        ?>
     </div>
     <!--divTelaConfirmacao-->
     <div id="divTelaConfirmacao" class="hidden">
@@ -183,7 +190,6 @@ echo $this->templateFormularioTopo('Solicitacao');
     </div>
 </div>
 <?php
-
 echo $this->formHidden($form->get('solicitacaoTipoId'));
 echo $this->formHidden($form->get('objeto1'));
 echo $this->formHidden($form->get('objeto2'));

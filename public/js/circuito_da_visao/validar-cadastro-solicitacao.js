@@ -29,9 +29,18 @@ var botaoLimpar;
 var check;
 var blocoObjeto;
 
+function mostrarBotaoContinuar() {
+    var divBotaoContinuarSelecionarTipo = $('#divBotaoContinuarSelecionarTipo');
+    if (parseInt($('#solicitacaoTipo').val()) === 0) {
+        divBotaoContinuarSelecionarTipo.addClass(hidden);
+    } else {
+        divBotaoContinuarSelecionarTipo.removeClass(hidden);
+    }
+}
+
 function selecionarTipo() {
     if (parseInt($('#solicitacaoTipo').val()) === 0) {
-        alert('Selecion um tipo de solicitacao');
+
     } else {
         $(stringDivSolicitacaoTipo).addClass(hidden);
         $(stringDivObjetos).removeClass(hidden);
