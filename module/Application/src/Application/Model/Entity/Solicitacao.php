@@ -7,6 +7,7 @@ namespace Application\Model\Entity;
  * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com>
  * Descricao: Entidade anotada da tabela solicitacao
  */
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -27,6 +28,15 @@ class Solicitacao extends CircuitoEntity {
      */
     private $solicitacaoTipo;
 
+    /**
+     * @ORM\OneToMany(targetEntity="SolicitacaoSituacao", mappedBy="solicitacao") 
+     */
+    protected $solicitacaoSituacao;
+
+    public function __construct() {
+        $this->solicitacaoSituacao = new ArrayCollection();
+    }
+
     /** @ORM\Column(type="integer") */
     protected $objeto1;
 
@@ -38,6 +48,17 @@ class Solicitacao extends CircuitoEntity {
 
     /** @ORM\Column(type="integer") */
     protected $solicitacao_tipo_id;
+
+    function getSolicitacaoSituacaoAtiva() {
+        $solicitacaoSituacaoAtiva = null;
+        foreach ($this->getSolicitacaoSituacao() as $solicitacaoSituacao) {
+            if ($solicitacaoSituacao->verificarSeEstaAtivo()) {
+                $solicitacaoSituacaoAtiva = $solicitacaoSituacao;
+                break;
+            }
+        }
+        return $solicitacaoSituacaoAtiva;
+    }
 
     function getSolicitacaoTipo() {
         return $this->solicitacaoTipo;
@@ -85,6 +106,14 @@ class Solicitacao extends CircuitoEntity {
 
     function setSolicitante_id($solicitante_id) {
         $this->solicitante_id = $solicitante_id;
+    }
+
+    function getSolicitacaoSituacao() {
+        return $this->solicitacaoSituacao;
+    }
+
+    function setSolicitacaoSituacao($solicitacaoSituacao) {
+        $this->solicitacaoSituacao = $solicitacaoSituacao;
     }
 
 }

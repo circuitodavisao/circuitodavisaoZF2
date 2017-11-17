@@ -28,6 +28,9 @@ if ($this->solicitacoes) {
         $html .= '<td>' . $solicitacao->getPessoa()->getNomePrimeiroUltimo() . '</td>';
         $html .= '<td>' . $solicitacao->getObjeto1() . '</td>';
         $html .= '<td>' . $solicitacao->getObjeto2() . '</td>';
+        if ($solicitacao->getSolicitacaoSituacaoAtiva()) {
+            $html .= '<td>' . $solicitacao->getSolicitacaoSituacaoAtiva()->getSituacao()->getNome() . '</td>';
+        }
         $html .= '</tr>';
     }
     $html .= '</tbody>';
