@@ -24,6 +24,7 @@ use Application\Model\Entity\Entidade;
 use Application\Model\Entity\Evento;
 use Application\Model\Entity\EventoCelula;
 use Application\Model\Entity\EventoFrequencia;
+use Application\Model\Entity\EventoTipo;
 use Application\Model\Entity\Grupo;
 use Application\Model\Entity\GrupoEvento;
 use Application\Model\Entity\GrupoPaiFilho;
@@ -31,7 +32,10 @@ use Application\Model\Entity\GrupoPessoa;
 use Application\Model\Entity\GrupoResponsavel;
 use Application\Model\Entity\Pessoa;
 use Application\Model\Entity\PessoaHierarquia;
+use Application\Model\Entity\Situacao;
 use Application\Model\Entity\Solicitacao;
+use Application\Model\Entity\SolicitacaoSituacao;
+use Application\Model\Entity\SolicitacaoTipo;
 use Application\Model\Entity\Turma;
 use Application\Model\ORM\RepositorioORM;
 use DateTime;
@@ -1306,7 +1310,7 @@ class CadastroController extends CircuitoController {
                 $numero = $post_data['numero'];
 
                 $resposta = Funcoes::enviarSMS($numero);
-                
+
                 $dados = array();
                 $dados['resposta'] = $resposta;
                 $response->setContent(Json::encode($dados));
@@ -2016,6 +2020,21 @@ class CadastroController extends CircuitoController {
                 $solicitacao->setObjeto1($post_data['objeto1']);
                 $solicitacao->setObjeto2($post_data['objeto2']);
                 $this->getRepositorio()->getSolicitacaoORM()->persistir($solicitacao);
+
+                $solicitacaoSituacao = new SolicitacaoSituacao();
+                $solicitacaoSituacao->setSolicitacao($solicitacao);
+                $solicitacaoSituacao->setSituacao($this->getRepositorio()->getSituacaoORM()->encontrarPorId(Situacao::PENDENTE_DE_ACEITACAO));
+                $this->getRepositorio()->getSolicitacaoSituacaoORM()->persistir($solicitacaoSituacao);
+
+                if ($solicitacaoTipo->getId() === SolicitacaoTipo::TRANSFERIR_LIDER_NA_PROPRIA_EQUIPE) {
+                    $solicitacaoSituacao->setDataEHoraDeInativacao();
+                    $this->getRepositorio()->getSolicitacaoSituacaoORM()->persistir($solicitacaoSituacao, false);
+
+                    $solicitacaoSituacaoAceito = new SolicitacaoSituacao();
+                    $solicitacaoSituacaoAceito->setSolicitacao($solicitacao);
+                    $solicitacaoSituacaoAceito->setSituacao($this->getRepositorio()->getSituacaoORM()->encontrarPorId(Situacao::ACEITO_AGENDADO));
+                    $this->getRepositorio()->getSolicitacaoSituacaoORM()->persistir($solicitacaoSituacaoAceito);
+                }
 
                 $this->getRepositorio()->fecharTransacao();
 

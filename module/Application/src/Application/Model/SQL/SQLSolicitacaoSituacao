@@ -1,0 +1,54 @@
+
+CREATE TABLE public.solicitacao_situacao
+(
+    id serial NOT NULL,
+    solicitacao_id integer NOT NULL,
+    situacao_id integer NOT NULL,
+    data_criacao date NOT NULL,
+    hora_criacao time without time zone NOT NULL,
+    data_inativacao date,
+    hora_inativacao time without time zone,
+    extra character varying(100),
+    CONSTRAINT pk_solicitacao_situacao PRIMARY KEY (id),
+    CONSTRAINT fk_solicitacao_situacao_solicitacao_id FOREIGN KEY (solicitacao_id)
+        REFERENCES public.solicitacao (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION,
+    CONSTRAINT fk_solicitacao_situacao_situacao_id FOREIGN KEY (situacao_id)
+        REFERENCES public.situacao (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+)
+WITH (
+    OIDS = FALSE
+);
+
+ALTER TABLE public.solicitacao_situacao
+    OWNER to postgres;
+COMMENT ON TABLE public.solicitacao_situacao
+    IS 'Associação entre solicitação e situação';
+
+COMMENT ON COLUMN public.solicitacao_situacao.id
+    IS 'identificação';
+
+COMMENT ON COLUMN public.solicitacao_situacao.solicitacao_id
+    IS 'Identificação da solicitacao';
+
+COMMENT ON COLUMN public.solicitacao_situacao.situacao_id
+    IS 'Identificação da sistuacao';
+
+COMMENT ON COLUMN public.solicitacao_situacao.data_criacao
+    IS 'Data de criação';
+
+COMMENT ON COLUMN public.solicitacao_situacao.hora_criacao
+    IS 'Hora de criação';
+
+COMMENT ON COLUMN public.solicitacao_situacao.data_inativacao
+    IS 'Data de inativação';
+COMMENT ON CONSTRAINT pk_solicitacao_situacao ON public.solicitacao_situacao
+    IS 'Chave primaria da associação entre solicitação e situação';
+
+COMMENT ON CONSTRAINT fk_solicitacao_situacao_solicitacao_id ON public.solicitacao_situacao
+    IS 'Chave estrangeira da identificação da solicitação';
+COMMENT ON CONSTRAINT fk_solicitacao_situacao_situacao_id ON public.solicitacao_situacao
+    IS 'Chave estrangeira da identificação da situação';
