@@ -1,22 +1,54 @@
 <?php
 
+use Application\Controller\Helper\Constantes;
 use Application\Model\Entity\EntidadeTipo;
 use Application\View\Helper\BotaoSimples;
 
+echo '<div class="mw1000 center-block">';
 echo $this->dadosEntidade();
-?>
-<?php
+echo'</div>';
 
+echo '<div class="panel panel-info mw1000 center-block">';
+echo '<div class="panel-heading">';
+echo 'C&eacute;lula(s)';
+echo '</div>';
+echo '<div class="panel-body">';
+echo $this->listagemDeEventos('', $this->eventos);
+echo'</div>';
+echo'</div>';
+
+echo '<div class="panel panel-danger mw1000 center-block">';
+echo '<div class="panel-heading">';
+echo 'Inativar';
+echo '</div>';
+echo '<div class="panel-body">';
 if ($this->tenhoDiscipulosAtivos) {
-    echo '<div class="alert alert-info mt10">Tenho discipulos nao posso inativar!</div>';
+    echo '<div class="alert alert-warning mt10">Tenho discipulos nao posso inativar!</div>';
 } else {
-    $extra = 'onclick="funcaoCircuito(\'principalGrupoExclusao\', ' . $this->idGrupo . ');"';
     echo '<div class="panel mt10">';
     echo '<div class="panel-body">';
+
     if ($this->idEntidadeTipo === EntidadeTipo::equipe || $this->idEntidadeTipo === EntidadeTipo::igreja) {
+        $extraBotaoInativar = 'onclick="funcaoCircuito(\'principalGrupoExclusao\', ' . $this->idGrupo . ');"';
         echo $this->botaoSimples(
-                'Inativar', $extra, BotaoSimples::botaoPerigoso, BotaoSimples::posicaoAEsquerda);
+                'Inativar', $extraBotaoInativar, BotaoSimples::botaoPerigoso, BotaoSimples::posicaoAEsquerda);
+    }
+    if ($this->mostrarParaReenviarEmails) {
+        foreach ($this->responsabilidades as $grupoResponsavel) {
+            echo Constantes::$NBSP;
+            $pessoa = $grupoResponsavel->getPessoa();
+            if ($pessoa->getToken()) {
+                $nome = $pessoa->getNomePrimeiro();
+                $extraBotaoEmail = $this->funcaoOnClick('funcaoCircuito("principalNovoEmailParaEnviar", ' . $pessoa->getId() . ')');
+
+                $labelBotao = 'Reenviar Email de acesso: ' . $nome;
+                echo $this->botaoSimples(
+                        $labelBotao, $extraBotaoEmail, BotaoSimples::botaoMenorImportancia, BotaoSimples::posicaoAEsquerda);
+            }
+        }
     }
     echo '</div>';
     echo '</div>';
 }
+echo '</div>'; // fim panel-body
+

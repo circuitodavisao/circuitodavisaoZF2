@@ -30,7 +30,9 @@ class PerfilIcone extends AbstractHelper {
         $this->setEntidade($entidade);
         $this->setTotalEntidades($totalEntidades);
         $this->setGrupoResponsavelAtivo($grupoResponsavelAtivo);
-        $this->setGrupoPai($grupoPai);
+        if ($grupoPai) {
+            $this->setGrupoPai($grupoPai);
+        }
         return $this->renderHtml();
     }
 
@@ -55,12 +57,15 @@ class PerfilIcone extends AbstractHelper {
 
         $html = '';
         if ($this->getEntidade()->getEntidadeTipo()) {
-
             /* Div com tamanho das colunas */
             $html .= '<div id="" class="col-sm-4 col-md-' . $col . '">';
 
             /* Link com ativacao do modal */
-            $idComposto = $this->getEntidade()->getId() . '_' . $this->getGrupoPai()->getId();
+            $idPai = 0;
+            if ($this->getGrupoPai()) {
+                $idPai = $this->getGrupoPai()->getId();
+            }
+            $idComposto = $this->getEntidade()->getId() . '_' . $idPai;
             $html .= '<a onclick=\'abrirModal("modal-' . $this->getEntidade()->getId() . '", "' . $idComposto . '", "perfilSelecionado");\' href="#modal-image" data-effect="mfp-fullscale" class="pageload-link">';
 
             $html .= PerfilIcone::htmlPanel(1, $tipoEntidade, $nomeEntidade, $infoEntidade, $this->getGrupoResponsavelAtivo(), $this->getGrupoPai());
@@ -207,7 +212,6 @@ class PerfilIcone extends AbstractHelper {
         } else {
             $faIcon = 'users';
         }
-
         /* Pegando dados do lider */
         if ($grupoPai) {
             $grupoResponsabilidades = $grupoPai->getResponsabilidadesAtivas();

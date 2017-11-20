@@ -29,8 +29,8 @@ class ListagemDeEventos extends AbstractHelper {
     public function renderHtml() {
         $html = '';
 
-        $tipoCelula = ($this->view->tipoEvento == 2);
-        $tipoCulto = ($this->view->tipoEvento == 1);
+        $tipoCelula = ($this->view->tipoEvento == 1);
+        $tipoCulto = ($this->view->tipoEvento == 2);
         $tipoRevisao = ($this->view->tipoEvento == 3);
         $tipoRevisionistas = ($this->view->tipoEvento == 4);
         $tipoFichasRevisionistas = ($this->view->tipoEvento == 5);
@@ -91,7 +91,7 @@ class ListagemDeEventos extends AbstractHelper {
                 $html .= $this->view->translate(Constantes::$TRADUCAO_OBSERVACAO);
                 $html .= '</th>';
             }
-            if ($tipoListarRevisaoTurma){
+            if ($tipoListarRevisaoTurma) {
                 $html .= '<th class="text-center">';
                 $html .= $this->view->translate(Constantes::$TRADUCAO_DATA_SIMPLIFICADO);
                 $html .= '</th>';
@@ -120,9 +120,13 @@ class ListagemDeEventos extends AbstractHelper {
                     $html .= '<td class="text-center visible-lg visible-md visible-sm">' . $celula->getTelefone_hospedeiroFormatado() . '</td>';
                     $html .= '<td class="text-center visible-lg visible-md visible-sm">' . $celula->getLogradouro() . '&nbsp;' . $celula->getComplemento() . '</td>';
                     $html .= '<td class="text-center">';
-                    $html .= $this->view->botaoLink(Constantes::$STRING_ICONE_PENCIL, Constantes::$STRING_HASHTAG, 3, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClick));
-                    /* Inativar celula */
-                    $html .= $this->view->botaoLink(Constantes::$STRING_ICONE_TIMES, Constantes::$STRING_HASHTAG, 4, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClickExclusao));
+                    if ($this->view->mostrarOpcoes) {
+                        $html .= $this->view->botaoLink(Constantes::$STRING_ICONE_PENCIL, Constantes::$STRING_HASHTAG, 3, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClick));
+                    }
+                    if ($this->view->mostrarExcluirCelula) {
+                        /* Inativar celula */
+                        $html .= $this->view->botaoLink(Constantes::$STRING_ICONE_TIMES, Constantes::$STRING_HASHTAG, 4, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClickExclusao));
+                    }
                     $html .= '</td>';
                 }
                 if ($tipoCulto) {
@@ -263,7 +267,7 @@ class ListagemDeEventos extends AbstractHelper {
 
                     $html .= '<td class="text-center">' . Funcoes::mudarPadraoData($evento->getData(), 1) . '</td>';
 
-                    $stringNomeDaFuncaoOnClickInserir = 'funcaoSelecionarAlunosTurma(' . $this->view->extra. ', ' . $evento->getId() . ')'; 
+                    $stringNomeDaFuncaoOnClickInserir = 'funcaoSelecionarAlunosTurma(' . $this->view->extra . ', ' . $evento->getId() . ')';
                     $grupoEventoAtivos = $evento->getGrupoEventoAtivos();
                     $texto = '';
                     foreach ($grupoEventoAtivos as $gea) {
@@ -297,30 +301,32 @@ class ListagemDeEventos extends AbstractHelper {
         }
         $html .= '</div>';
         /* Fim panel-body */
-        $html .= '<div class="panel-footer text-right">';
-        /* Botões */
-        if ($tipoCelula) {
-            if (count($this->getGrupoEventos()) < 2) {
-                $stringNomeDaFuncaoOnClickCadastro = 'funcaoCadastro("' . Constantes::$PAGINA_EVENTO_CELULA . '", 0)';
-                $html .= $this->view->botaoLink(Constantes::$STRING_ICONE_PLUS . ' ' . $this->view->translate(Constantes::$TRADUCAO_NOVA_CELULA), Constantes::$STRING_HASHTAG, 0, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClickCadastro));
-            } else {
-                $html .= '<div class="alert alert-micro alert-warning">';
-                $html .= '<i class="fa fa-warning pr10" aria-hidden="true"></i>';
-                $html .= $this->view->translate(Constantes::$TRADUCAO_NUMERO_MAXIMO_CELULAS);
-                $html .= '</div>';
+        if ($this->view->mostrarOpcoes) {
+            $html .= '<div class="panel-footer text-right">';
+            /* Botões */
+            if ($tipoCelula) {
+                if (count($this->getGrupoEventos()) < 2) {
+                    $stringNomeDaFuncaoOnClickCadastro = 'funcaoCadastro("' . Constantes::$PAGINA_EVENTO_CELULA . '", 0)';
+                    $html .= $this->view->botaoLink(Constantes::$STRING_ICONE_PLUS . ' ' . $this->view->translate(Constantes::$TRADUCAO_NOVA_CELULA), Constantes::$STRING_HASHTAG, 0, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClickCadastro));
+                } else {
+                    $html .= '<div class="alert alert-micro alert-warning">';
+                    $html .= '<i class="fa fa-warning pr10" aria-hidden="true"></i>';
+                    $html .= $this->view->translate(Constantes::$TRADUCAO_NUMERO_MAXIMO_CELULAS);
+                    $html .= '</div>';
+                }
             }
-        }
-        if ($tipoCulto) {
-            $stringNomeDaFuncaoOnClickCadastro = 'funcaoCadastro("' . Constantes::$PAGINA_EVENTO_CULTO . '", 0)';
-            $html .= $this->view->botaoLink(Constantes::$STRING_ICONE_PLUS . ' ' . $this->view->translate(Constantes::$TRADUCAO_NOVO_CULTO), Constantes::$STRING_HASHTAG, 0, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClickCadastro));
-        }
-        if ($tipoRevisao) {
-            $stringNomeDaFuncaoOnClickCadastro = 'funcaoCadastro("' . Constantes::$PAGINA_CADASTRO_REVISAO . '", 0)';
-            $html .= $this->view->botaoLink(Constantes::$STRING_ICONE_PLUS . ' ' . $this->view->translate(Constantes::$TRADUCAO_NOVO_REVISAO), Constantes::$STRING_HASHTAG, 0, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClickCadastro));
-        }
+            if ($tipoCulto) {
+                $stringNomeDaFuncaoOnClickCadastro = 'funcaoCadastro("' . Constantes::$PAGINA_EVENTO_CULTO . '", 0)';
+                $html .= $this->view->botaoLink(Constantes::$STRING_ICONE_PLUS . ' ' . $this->view->translate(Constantes::$TRADUCAO_NOVO_CULTO), Constantes::$STRING_HASHTAG, 0, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClickCadastro));
+            }
+            if ($tipoRevisao) {
+                $stringNomeDaFuncaoOnClickCadastro = 'funcaoCadastro("' . Constantes::$PAGINA_CADASTRO_REVISAO . '", 0)';
+                $html .= $this->view->botaoLink(Constantes::$STRING_ICONE_PLUS . ' ' . $this->view->translate(Constantes::$TRADUCAO_NOVO_REVISAO), Constantes::$STRING_HASHTAG, 0, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClickCadastro));
+            }
 
-        /* Fim Botões */
-        $html .= '</div>';
+            /* Fim Botões */
+            $html .= '</div>';
+        }
         /* Fim panel-footer */
         $html .= $this->view->templateFormularioRodape();
         return $html;

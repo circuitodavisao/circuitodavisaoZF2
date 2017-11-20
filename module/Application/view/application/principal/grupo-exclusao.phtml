@@ -65,8 +65,7 @@ echo $this->templateFormularioTopo($tituloDaPagina, Constantes::$STRING_DIV_CONF
             <?php
             $labelVoltar = $this->translate(Constantes::$TRADUCAO_VOLTAR);
             /* Botões */
-            $urlVoltar = Constantes::$ROUTE_CADASTRO;
-            $urlVoltar .= Constantes::$PAGINA_CULTOS;
+            $urlVoltar = 'principal';
 
             $labelContinuar = $this->translate(Constantes::$TRADUCAO_CONTINUAR);
             $stringNomeDaFuncaoOnClickContinuarExclusao = '$("#divConfirmacao").toggleClass("' . Constantes::$FORM_HIDDEN . '");' .

@@ -16,8 +16,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class EventoTipo extends CircuitoEntity {
 
-    const tipoCulto = 1;
-    const tipoCelula = 2;
+    const tipoCelula = 1;
+    const tipoCulto = 2;
     const tipoRevisao = 3;
 
     /**

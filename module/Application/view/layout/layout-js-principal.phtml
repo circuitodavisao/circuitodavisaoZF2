@@ -21,6 +21,9 @@ if ($sessao->mostrarNotificacao) {
     if ($sessao->exclusao) {
         $mensagemPNotify = $this->translate(Constantes::$TRADUCAO_PESSOA_INATIVADA_LANCAMENTO);
     }
+    if ($sessao->emailEnviado) {
+        $mensagemPNotify = 'Email(s) reenviado(s)';
+    }
     if ($sessao->nomePessoa) {
         $nomePessoa = $sessao->nomePessoa;
     }

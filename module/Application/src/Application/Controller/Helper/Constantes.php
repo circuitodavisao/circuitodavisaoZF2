@@ -247,6 +247,8 @@ class Constantes {
     public static $ENTITY_TURMA = 'Application\Model\Entity\Turma'; 
     public static $ENTITY_SOLICITACAO = 'Application\Model\Entity\Solicitacao';
     public static $ENTITY_SOLICITACAO_TIPO = 'Application\Model\Entity\SolicitacaoTipo';
+    public static $ENTITY_SOLICITACAO_SITUACAO = 'Application\Model\Entity\SolicitacaoSituacao';
+    public static $ENTITY_SITUACAO = 'Application\Model\Entity\Situacao';
     public static $ENTITY_PESSOA_ID = 'pessoa_id';
     public static $ENTITY_DATA_INATIVACAO = 'data_inativacao';
     public static $ENTITY_TIPO_ID = 'tipo_id';
@@ -463,6 +465,7 @@ class Constantes {
     public static $PAGINA_SALVAR_REVISAO = 'SalvarRevisao';
     public static $PAGINA_SOLICITACOES = 'Solicitacoes';
     public static $PAGINA_SOLICITACAO = 'Solicitacao';
+    public static $PAGINA_SOLICITACAO_FINALIZAR = 'SolicitacaoFinalizar';
     public static $CONTROLLER_CADASTRO = 'Application\Controller\Cadastro';
     public static $ROUTE_CADASTRO = 'cadastro';
     /* páginas relacionadas ao IV */

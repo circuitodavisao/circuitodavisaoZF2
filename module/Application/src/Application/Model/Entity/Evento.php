@@ -153,6 +153,21 @@ class Evento extends CircuitoEntity implements InputFilterAwareInterface {
         return $grupoEventos;
     }
 
+    /**
+     * Retorna o grupo evento
+     * @return GrupoEvento
+     */
+    function getGrupoEventoAtivo() {
+        $grupoEvento = null;
+        foreach ($this->getGrupoEvento() as $ge) {
+            if ($ge->verificarSeEstaAtivo()) {
+                $grupoEvento = $ge;
+                break;
+            }
+        }
+        return $grupoEvento;
+    }
+
     function setGrupoEvento($grupoEvento) {
         $this->grupoEvento = $grupoEvento;
     }
@@ -187,7 +202,7 @@ class Evento extends CircuitoEntity implements InputFilterAwareInterface {
      */
     function verificaSeECelula() {
         $resposta = false;
-        if ($this->getEventoTipo()->getId() === 2) {
+        if ($this->getEventoTipo()->getId() === EventoTipo::tipoCelula) {
             $resposta = true;
         }
         return $resposta;
@@ -199,7 +214,7 @@ class Evento extends CircuitoEntity implements InputFilterAwareInterface {
      */
     function verificaSeECulto() {
         $resposta = false;
-        if ($this->getEventoTipo()->getId() === 1) {
+        if ($this->getEventoTipo()->getId() === EventoTipo::tipoCulto) {
             $resposta = true;
         }
         return $resposta;
@@ -211,7 +226,7 @@ class Evento extends CircuitoEntity implements InputFilterAwareInterface {
      */
     function verificaSeERevisao() {
         $resposta = false;
-        if ($this->getTipo_id() == 3) {
+        if ($this->getTipo_id() == EventoTipo::tipoRevisao) {
             $resposta = true;
         }
         return $resposta;

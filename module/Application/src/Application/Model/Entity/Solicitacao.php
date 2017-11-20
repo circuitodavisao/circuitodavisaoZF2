@@ -7,6 +7,7 @@ namespace Application\Model\Entity;
  * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com>
  * Descricao: Entidade anotada da tabela solicitacao
  */
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -16,16 +17,25 @@ use Doctrine\ORM\Mapping as ORM;
 class Solicitacao extends CircuitoEntity {
 
     /**
-     * @ORM\ManyToOne(targetEntity="Grupo", inversedBy="solicitacao")
-     * @ORM\JoinColumn(name="grupo_id", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="Pessoa", inversedBy="solicitacao")
+     * @ORM\JoinColumn(name="solicitante_id", referencedColumnName="id")
      */
-    private $grupo;
+    private $pessoa;
 
     /**
      * @ORM\ManyToOne(targetEntity="SolicitacaoTipo", inversedBy="solicitacao")
      * @ORM\JoinColumn(name="solicitacao_tipo_id", referencedColumnName="id")
      */
     private $solicitacaoTipo;
+
+    /**
+     * @ORM\OneToMany(targetEntity="SolicitacaoSituacao", mappedBy="solicitacao") 
+     */
+    protected $solicitacaoSituacao;
+
+    public function __construct() {
+        $this->solicitacaoSituacao = new ArrayCollection();
+    }
 
     /** @ORM\Column(type="integer") */
     protected $objeto1;
@@ -34,13 +44,20 @@ class Solicitacao extends CircuitoEntity {
     protected $objeto2;
 
     /** @ORM\Column(type="integer") */
-    protected $grupo_id;
+    protected $solicitante_id;
 
     /** @ORM\Column(type="integer") */
     protected $solicitacao_tipo_id;
 
-    function getGrupo() {
-        return $this->grupo;
+    function getSolicitacaoSituacaoAtiva() {
+        $solicitacaoSituacaoAtiva = null;
+        foreach ($this->getSolicitacaoSituacao() as $solicitacaoSituacao) {
+            if ($solicitacaoSituacao->verificarSeEstaAtivo()) {
+                $solicitacaoSituacaoAtiva = $solicitacaoSituacao;
+                break;
+            }
+        }
+        return $solicitacaoSituacaoAtiva;
     }
 
     function getSolicitacaoTipo() {
@@ -55,16 +72,8 @@ class Solicitacao extends CircuitoEntity {
         return $this->objeto2;
     }
 
-    function getGrupo_id() {
-        return $this->grupo_id;
-    }
-
     function getSolicitacao_tipo_id() {
         return $this->solicitacao_tipo_id;
-    }
-
-    function setGrupo($grupo) {
-        $this->grupo = $grupo;
     }
 
     function setSolicitacaoTipo($solicitacaoTipo) {
@@ -79,12 +88,32 @@ class Solicitacao extends CircuitoEntity {
         $this->objeto2 = $objeto2;
     }
 
-    function setGrupo_id($grupo_id) {
-        $this->grupo_id = $grupo_id;
-    }
-
     function setSolicitacao_tipo_id($solicitacao_tipo_id) {
         $this->solicitacao_tipo_id = $solicitacao_tipo_id;
+    }
+
+    function getPessoa() {
+        return $this->pessoa;
+    }
+
+    function getSolicitante_id() {
+        return $this->solicitante_id;
+    }
+
+    function setPessoa($pessoa) {
+        $this->pessoa = $pessoa;
+    }
+
+    function setSolicitante_id($solicitante_id) {
+        $this->solicitante_id = $solicitante_id;
+    }
+
+    function getSolicitacaoSituacao() {
+        return $this->solicitacaoSituacao;
+    }
+
+    function setSolicitacaoSituacao($solicitacaoSituacao) {
+        $this->solicitacaoSituacao = $solicitacaoSituacao;
     }
 
 }

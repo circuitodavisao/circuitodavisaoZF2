@@ -5,7 +5,7 @@
 CREATE TABLE solicitacao
 (
   id serial NOT NULL, -- Identificação da associação da pessoa com a hierarquia
-  grupo_id integer NOT NULL, -- Identificação do grupo
+  solicitante_id integer NOT NULL, -- Identificação da pessoa solicitante
   solicitacao_tipo_id integer NOT NULL, -- Tipo da solicitação
   objeto1 integer NOT NULL, -- Id do objeto que vai ser transferido
   objeto2 integer NOT NULL, -- Id do objeto para onde vai
@@ -18,7 +18,7 @@ CREATE TABLE solicitacao
       REFERENCES grupo (id) MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE NO ACTION,
   CONSTRAINT fk_solicitacao_solicitacao_tipo_id FOREIGN KEY (solicitacao_tipo_id)
-      REFERENCES solicitacao (id) MATCH SIMPLE
+      REFERENCES solicitacao_tipo (id) MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE NO ACTION
 )
 WITH (
@@ -29,7 +29,7 @@ ALTER TABLE solicitacao
 COMMENT ON TABLE solicitacao
   IS 'Tabela associativa do grupo com a solicitacao';
 COMMENT ON COLUMN solicitacao.id IS 'Identificação da associação da grupo com a hierarquia';
-COMMENT ON COLUMN solicitacao.grupo_id IS 'Identificação da grupo';
+COMMENT ON COLUMN solicitacao.solicitante_id IS 'Identificação da pessoa solicitante';
 COMMENT ON COLUMN solicitacao.solicitacao_tipo_id IS 'Identificação da solicitacao tipo';
 COMMENT ON COLUMN solicitacao.data_criacao IS 'Data de criação da associação grupo com a solicitacao';
 COMMENT ON COLUMN solicitacao.hora_criacao IS 'Hora de criação da associação grupo com a solicitacao';

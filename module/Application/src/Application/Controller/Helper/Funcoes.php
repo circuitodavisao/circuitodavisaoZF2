@@ -2,6 +2,7 @@
 
 namespace Application\Controller\Helper;
 
+use Application\Model\Entity\EventoTipo;
 use Exception;
 use PHPMailer;
 
@@ -80,6 +81,21 @@ class Funcoes {
             echo $mail->ErrorInfo;
             echo $exc->getMessage();
         }
+    }
+
+    public static function enviarSMS($numero, $mensagem = 'Codigo de ativacao: ') {
+        $validacao[1] = '1658';
+        $validacao[2] = '2487';
+        $validacao[3] = '3694';
+        $validacao[4] = '4851';
+
+        $numeroDe1A4 = rand(1, 4);
+        $mensagem = $mensagem . $validacao[$numeroDe1A4];
+
+        $msgEncoded = urlencode($mensagem);
+        $urlChamada = "https://www.facilitamovel.com.br/api/simpleSend.ft?user=diegokort&password=qwaszx159753&destinatario=" . $numero . "&msg=" . $msgEncoded;
+        echo file_get_contents($urlChamada);
+        return true;
     }
 
     /**
@@ -348,10 +364,10 @@ class Funcoes {
         $resposta = '';
         $id = (int) $idEvento;
         switch ($id) {
-            case 1:
+            case EventoTipo::tipoCulto:
                 $resposta = 'Cult';
                 break;
-            case 2:
+            case EventoTipo::tipoCelula:
                 $resposta = 'Cell';
                 break;
             default:

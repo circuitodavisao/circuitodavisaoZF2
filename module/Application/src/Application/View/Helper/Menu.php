@@ -3,6 +3,7 @@
 namespace Application\View\Helper;
 
 use Application\Controller\Helper\Constantes;
+use Application\Model\Entity\EntidadeTipo;
 use Entidade\Entity\Pessoa;
 use Zend\View\Helper\AbstractHelper;
 use Zend\View\Helper\Placeholder\Container;
@@ -67,7 +68,7 @@ class Menu extends AbstractHelper {
 //                }
                 if ($gpfPai->verificarSeEstaAtivo()) {
                     $grupoPai = $gpfPai->getGrupoPaiFilhoPai();
-                    $html .= $this->view->perfilDropDown($entidadeSelecionada, 1, $ativo, $grupoPai);
+//                    $html .= $this->view->perfilDropDown($entidadeSelecionada, 1, $ativo, $grupoPai);
                 }
             }
         }
@@ -247,6 +248,16 @@ class Menu extends AbstractHelper {
         $html .= '</a>';
         $html .= '</li>';
 
+        if ($this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::equipe ||
+                $this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja) {
+            $html .= '<li>';
+            $html .= '<a href="/cadastroSolicitacoes">';
+            $html .= '<span class="fa fa-users"></span>';
+            $html .= 'Solicita&ccedil;&otilde;es';
+            $html .= '</a>';
+            $html .= '</li>';
+        }
+
         $html .= '</ul>';
 
         $html .= '</li>';
@@ -272,13 +283,15 @@ class Menu extends AbstractHelper {
         $html .= 'Atendimento';
         $html .= '</a>';
         $html .= '</li>';
-
-//                $html .= '<li>';
-//                $html .= '<a href="/cadastro' . Constantes::$PAGINA_ATIVAR_FICHA_REVISAO . '">';
-//                $html .= '<span class="fa fa-users"></span>';
-//                $html .= 'Fichas Revisão de Vidas';
-//                $html .= '</a>';
-//                $html .= '</li>';
+        
+        if ($this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja) {
+            $html .= '<li>';
+            $html .= '<a href="/cadastroAtivarFichas">';
+            $html .= '<span class="fa fa-users"></span>';
+            $html .= 'Fichas Revisão de Vidas';
+            $html .= '</a>';
+            $html .= '</li>';
+        }
 
         $html .= '</ul>';
         $html .= '</li>';
@@ -289,32 +302,59 @@ class Menu extends AbstractHelper {
         $html .= '<span class="sidebar-title">Relatórios</span>';
         $html .= '<span class="caret"></span>';
         $html .= '</a>';
+
         $html .= '<ul class="nav sub-nav">';
+
+        for ($indiceMenuRelatorio = 1; $indiceMenuRelatorio <= 7; $indiceMenuRelatorio++) {
+
+            $label = '';
+            switch ($indiceMenuRelatorio) {
+                case 1:
+                    $label = 'Membresia';
+                    break;
+                case 2:
+                    $label = 'C&eacute;lulas Realizadas';
+                    break;
+                case 3:
+                    $label = 'C&eacute;lulas Quantidade';
+                    break;
+                case 4:
+                    $label = 'Culto da Semana';
+                    break;
+                case 5:
+                    $label = 'Arena';
+                    break;
+                case 6:
+                    $label = 'Domingo';
+                    break;
+                case 7:
+                    $label = 'C&eacute;lula/Arena';
+                    break;
+            }
+            $html .= '<li>';
+            $html .= '<a href="/relatorio/' . $indiceMenuRelatorio . '">';
+            $html .= '<span class="fa fa-terminal"></span>';
+            $html .= $label;
+            $html .= '</a>';
+            $html .= '</li>';
+        }
+
         $html .= '<li>';
-        $html .= '<a href="/relatorio/1">';
-        $html .= '<span class="fa fa-terminal"></span>';
-        $html .= 'Membresia';
+        $html .= '<a href="/relatorioPessoasFrequentes">';
+        $html .= '<span class="fa fa-users"></span>';
+        $html .= 'Pessoas Frequentes';
         $html .= '</a>';
         $html .= '</li>';
-        $html .= '<li>';
-        $html .= '<a href="/relatorio/2">';
-        $html .= '<span class="fa fa-terminal"></span>';
-        $html .= 'Células Realizadas';
-        $html .= '</a>';
-        $html .= '</li>';
-        $html .= '<li>';
-        $html .= '<a href="/relatorio/3">';
-        $html .= '<span class="fa fa-terminal"></span>';
-        $html .= 'Células Quantidade';
-        $html .= '</a>';
-        $html .= '</li>';
+        
         $html .= '<li>';
         $html .= '<a href="/relatorioAtendimento">';
         $html .= '<span class="fa fa-users"></span>';
         $html .= 'Atendimento';
         $html .= '</a>';
         $html .= '</li>';
+
         $html .= '</ul>';
+
         $html .= '</li>';
 
         $html .= '<li class="sidebar-label pt20">Chamada I.V.</li>';
@@ -388,7 +428,7 @@ class Menu extends AbstractHelper {
                     $entidadeSelecionada = $grupo->getEntidadeInativaPorDataInativacao($gpfPai->getData_inativacaoStringPadraoBanco());
                 }
                 $grupoPai = $gpfPai->getGrupoPaiFilhoPai();
-                $html .= $this->view->perfilDropDown($entidadeSelecionada, 2, $ativo, $grupoPai);
+//                $html .= $this->view->perfilDropDown($entidadeSelecionada, 2, $ativo, $grupoPai);
             }
         }
         $html .= '</div>';

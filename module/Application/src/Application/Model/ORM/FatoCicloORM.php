@@ -76,7 +76,7 @@ class FatoCicloORM extends CircuitoORM {
      * @param int $tipoComparacao
      * @return array
      */
-    public function montarRelatorioPorNumeroIdentificador($numeroIdentificador, $periodo, $tipoComparacao) {
+    public function montarRelatorioPorNumeroIdentificador($numeroIdentificador, $periodoInicial, $tipoComparacao, $periodoFinal = 0) {
         $dimensaoTipoCelula = 1;
         $dimensaoTipoDomingo = 4;
         $dqlBase = "SELECT "
@@ -89,8 +89,9 @@ class FatoCicloORM extends CircuitoORM {
                 . "WHERE "
                 . "d.dimensaoTipo = #dimensaoTipo "
                 . "AND fc.numero_identificador #tipoComparacao ?1 "
-                . "AND fc.data_criacao = ?2 ";
+                . "#data";
         try {
+
             if ($tipoComparacao == 1) {
                 $dqlAjustadaTipoComparacao = str_replace('#tipoComparacao', '=', $dqlBase);
             }
@@ -98,10 +99,20 @@ class FatoCicloORM extends CircuitoORM {
                 $dqlAjustadaTipoComparacao = str_replace('#tipoComparacao', 'LIKE', $dqlBase);
                 $numeroIdentificador .= '%';
             }
-            $resultadoPeriodo = Funcoes::montaPeriodo($periodo);
+
+            $resultadoPeriodo = Funcoes::montaPeriodo($periodoInicial);
             $dataDoPeriodo = $resultadoPeriodo[3] . '-' . $resultadoPeriodo[2] . '-' . $resultadoPeriodo[1];
             $dataDoPeriodoFormatada = DateTime::createFromFormat('Y-m-d', $dataDoPeriodo);
 
+            if ($periodoFinal === 0) {
+                $dqlAjustadaTipoComparacao = str_replace('#data', 'AND fc.data_criacao = ?2 ', $dqlAjustadaTipoComparacao);
+            } else {
+                $resultadoPeriodoInicial = Funcoes::montaPeriodo($periodoFinal);
+                $dataDoPeriodoInicial = $resultadoPeriodoInicial[3] . '-' . $resultadoPeriodoInicial[2] . '-' . $resultadoPeriodoInicial[1];
+                $stringDatas = "AND fc.data_criacao >= ?2 AND fc.data_criacao <= '$dataDoPeriodoInicial' ";
+                $dqlAjustadaTipoComparacao = str_replace('#data', $stringDatas, $dqlAjustadaTipoComparacao);
+                $dataDoPeriodoFormatada = $dataDoPeriodo;
+            }
             for ($indice = $dimensaoTipoCelula; $indice <= $dimensaoTipoDomingo; $indice++) {
                 $dqlAjustada = str_replace('#dimensaoTipo', $indice, $dqlAjustadaTipoComparacao);
                 $result[$indice] = $this->getEntityManager()->createQuery($dqlAjustada)
@@ -157,11 +168,10 @@ class FatoCicloORM extends CircuitoORM {
     /**
      * Montar numeroIdentificador
      */
-    public function montarNumeroIdentificador(RepositorioORM $repositorioORM, $grupo = null) {
-        $numeroIdentificador = null;
+    public function montarNumeroIdentificador(RepositorioORM $repositorioORM, $grupo = null, $dataInativacao = null) {
+        $numeroIdentificador = '';
         $tamanho = 8;
         $grupoSelecionado = null;
-
         if ($grupo === null) {
             $sessao = new Container(Constantes::$NOME_APLICACAO);
             $idEntidadeAtual = $sessao->idEntidadeAtual;
@@ -171,18 +181,36 @@ class FatoCicloORM extends CircuitoORM {
             $grupoSelecionado = $grupo;
         }
         try {
-            while ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::SUBEQUIPE) {
+            $entidadeSelecionada = null;
+            if (!$grupoSelecionado->getEntidadeInativaPorDataInativacao($dataInativacao)) {
+                $entidadeSelecionada = $grupoSelecionado->getEntidadeAtiva();
+            } else {
+                $entidadeSelecionada = $grupoSelecionado->getEntidadeInativaPorDataInativacao($dataInativacao);
+            }
+            $tipoEntidade = $entidadeSelecionada->getEntidadeTipo()->getId();
+            while ($tipoEntidade === Entidade::SUBEQUIPE) {
                 $numeroIdentificador = str_pad($grupoSelecionado->getId(), $tamanho, 0, STR_PAD_LEFT) . $numeroIdentificador;
-                if ($grupoSelecionado->getGrupoPaiFilhoPaiAtivo()) {
-                    $grupoSelecionado = $grupoSelecionado->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai();
+                if (!$grupoSelecionado->getGrupoPaiFilhoPaiPorDataInativacao($dataInativacao)) {
+                    if ($grupoSelecionado->getGrupoPaiFilhoPaiAtivo()) {
+                        $grupoSelecionado = $grupoSelecionado->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai();
+                    } else {
+                        $grupoSelecionado = $grupoSelecionado->getGrupoPaiFilhoPaiInativo()->getGrupoPaiFilhoPai();
+                    }
                 } else {
-                    $grupoSelecionado = $grupoSelecionado->getGrupoPaiFilhoPaiInativo()->getGrupoPaiFilhoPai();
+                    $grupoSelecionado = $grupoSelecionado->getGrupoPaiFilhoPaiPorDataInativacao($dataInativacao)->getGrupoPaiFilhoPai();
+                }
+                if (!$grupoSelecionado->getEntidadeInativaPorDataInativacao($dataInativacao)) {
+                    $tipoEntidade = $grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId();
+                } else {
+                    $tipoEntidade = $grupoSelecionado->getEntidadeInativaPorDataInativacao($dataInativacao)->getEntidadeTipo()->getId();
                 }
             }
             if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::EQUIPE) {
                 $numeroIdentificador = str_pad($grupoSelecionado->getId(), $tamanho, 0, STR_PAD_LEFT) . $numeroIdentificador;
-                if ($grupoSelecionado->getGrupoPaiFilhoPaiAtivo()) {
+                if (!$grupoSelecionado->getGrupoPaiFilhoPaiPorDataInativacao($dataInativacao)) {
                     $grupoSelecionado = $grupoSelecionado->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai();
+                } else {
+                    $grupoSelecionado = $grupoSelecionado->getGrupoPaiFilhoPaiPorDataInativacao($dataInativacao)->getGrupoPaiFilhoPai();
                 }
             }
             if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::IGREJA) {

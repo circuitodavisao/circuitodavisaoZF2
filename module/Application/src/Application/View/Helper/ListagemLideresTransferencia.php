@@ -12,15 +12,13 @@ use Zend\View\Helper\AbstractHelper;
 class ListagemLideresTransferencia extends AbstractHelper {
 
     private $discipulos;
-    private $tipo;
 
     public function __construct() {
         
     }
 
-    public function __invoke($discipulos, $tipo = 1) {
+    public function __invoke($discipulos) {
         $this->setDiscipulos($discipulos);
-        $this->setTipo($tipo);
         return $this->renderHtml();
     }
 
@@ -49,17 +47,13 @@ class ListagemLideresTransferencia extends AbstractHelper {
         $entidade = $grupo->getEntidadeAtiva();
         $nomeLideres = $grupo->getNomeLideresAtivos();
         $informacao = $nomeLideres . ' - ' . $entidade->infoEntidade();
-        echo '<tr>';
+        echo '<tr id="tr_' . $grupo->getId() . '">';
         echo '<td>' . $nomeLideres . '</td>';
         echo '<td>' . $entidade->infoEntidade() . '</td>';
         echo '<td>';
 
-        if ($this->getTipo() === 1) {
-            $funcaoOnclick = $this->view->funcaoOnClick('selecionarLiderParaTransferir(' . $grupo->getId() . ',"' . $informacao . '")');
-        }
-        if ($this->getTipo() === 2) {
-            $funcaoOnclick = $this->view->funcaoOnClick('selecionarDeQuemSeraDiscipulo(' . $grupo->getId() . ',"' . $informacao . '")');
-        }
+        $funcaoOnclick = $this->view->funcaoOnClick('selecionarObjeto(' . $grupo->getId() . ',"' . $informacao . '")');
+
         $iconeEnviar = '<span class="fa fa-send"></span>';
         echo $this->view->botaoSimples($iconeEnviar, $funcaoOnclick);
 
@@ -73,14 +67,6 @@ class ListagemLideresTransferencia extends AbstractHelper {
 
     function setDiscipulos($discipulos) {
         $this->discipulos = $discipulos;
-    }
-
-    function getTipo() {
-        return $this->tipo;
-    }
-
-    function setTipo($tipo) {
-        $this->tipo = $tipo;
     }
 
 }

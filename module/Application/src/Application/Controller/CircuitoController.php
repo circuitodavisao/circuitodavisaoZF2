@@ -2,7 +2,8 @@
 
 namespace Application\Controller;
 
-use Application\Model\Entity\Entidade;
+use Application\Controller\Helper\Constantes;
+use Application\Model\ORM\RepositorioORM;
 use Doctrine\ORM\EntityManager;
 use Zend\Mvc\Controller\AbstractActionController;
 
@@ -14,6 +15,7 @@ use Zend\Mvc\Controller\AbstractActionController;
 class CircuitoController extends AbstractActionController {
 
     private $_doctrineORMEntityManager;
+    private $repositorio;
 
     /**
      * Contrutor sobrecarregado com os serviços de ORM
@@ -44,6 +46,15 @@ class CircuitoController extends AbstractActionController {
             foreach ($value as $key => $value) {
                 echo "$key => $value <br />";
             }
+        }
+    }
+
+    public function inativarFatoLiderPorGrupo($grupo) {
+        $numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupo);
+        $fatoLiderSelecionado = $this->getRepositorio()->getFatoLiderORM()->encontrarFatoLiderPorNumeroIdentificador($numeroIdentificador);
+        if ($fatoLiderSelecionado) {
+            $fatoLiderSelecionado->setDataEHoraDeInativacao();
+            $this->getRepositorio()->getFatoLiderORM()->persistir($fatoLiderSelecionado, false);
         }
     }
 
@@ -80,6 +91,13 @@ class CircuitoController extends AbstractActionController {
                     Constantes::$TIPO => 4,
                     Constantes::$MENSAGEM => 'Sua sessão expirou!',
         ));
+    }
+
+    public function getRepositorio() {
+        if (empty($this->repositorio)) {
+            $this->repositorio = new RepositorioORM($this->getDoctrineORMEntityManager());
+        }
+        return $this->repositorio;
     }
 
 }

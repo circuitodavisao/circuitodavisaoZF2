@@ -15,7 +15,7 @@ use Application\Form\DisciplinaForm;
 use Application\Form\EventoForm;
 use Application\Form\GrupoForm;
 use Application\Form\SelecionarAlunosForm;
-use Application\Form\TransferenciaForm;
+use Application\Form\SolicitacaoForm;
 use Application\Form\TurmaForm;
 use Application\Model\Entity\Aula;
 use Application\Model\Entity\Curso;
@@ -24,6 +24,7 @@ use Application\Model\Entity\Entidade;
 use Application\Model\Entity\Evento;
 use Application\Model\Entity\EventoCelula;
 use Application\Model\Entity\EventoFrequencia;
+use Application\Model\Entity\EventoTipo;
 use Application\Model\Entity\Grupo;
 use Application\Model\Entity\GrupoEvento;
 use Application\Model\Entity\GrupoPaiFilho;
@@ -31,6 +32,10 @@ use Application\Model\Entity\GrupoPessoa;
 use Application\Model\Entity\GrupoResponsavel;
 use Application\Model\Entity\Pessoa;
 use Application\Model\Entity\PessoaHierarquia;
+use Application\Model\Entity\Situacao;
+use Application\Model\Entity\Solicitacao;
+use Application\Model\Entity\SolicitacaoSituacao;
+use Application\Model\Entity\SolicitacaoTipo;
 use Application\Model\Entity\Turma;
 use Application\Model\ORM\RepositorioORM;
 use DateTime;
@@ -134,6 +139,11 @@ class CadastroController extends CircuitoController {
         if ($pagina == Constantes::$PAGINA_SOLICITACAO) {
             return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
                         Constantes::$ACTION => Constantes::$PAGINA_SOLICITACAO,
+            ));
+        }
+        if ($pagina == Constantes::$PAGINA_SOLICITACAO_FINALIZAR) {
+            return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
+                        Constantes::$ACTION => Constantes::$PAGINA_SOLICITACAO_FINALIZAR,
             ));
         }
         /* Páginas Revisão */
@@ -313,37 +323,36 @@ class CadastroController extends CircuitoController {
             return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
                         Constantes::$ACTION => Constantes::$PAGINA_AULA_SALVAR,
             ));
-        } 
-        if ($pagina == Constantes::$PAGINA_AULA_EDITAR) {
+        }
+        if ($pagina == Constantes::$PAGINA_DISCIPLINA_EDITAR) {
             return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
-                        Constantes::$ACTION => Constantes::$PAGINA_AULA_EDITAR, 
+                        Constantes::$ACTION => Constantes::$PAGINA_DISCIPLINA_EDITAR,
             ));
         }
         if ($pagina == Constantes::$PAGINA_AULA_EXCLUIR) {
             return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
-                        Constantes::$ACTION => Constantes::$PAGINA_AULA_EXCLUIR, 
+                        Constantes::$ACTION => Constantes::$PAGINA_DISCIPLINA_EXCLUIR,
             ));
         }
         if ($pagina == Constantes::$PAGINA_AULA_EXCLUSAO) {
             return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
-                        Constantes::$ACTION => Constantes::$PAGINA_AULA_EXCLUSAO, 
+                        Constantes::$ACTION => Constantes::$PAGINA_DISCIPLINA_EXCLUSAO,
             ));
-
         }
         /* Funcoes */
         if ($pagina == Constantes::$PAGINA_FUNCOES) {
             return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
                         Constantes::$ACTION => Constantes::$PAGINA_FUNCOES,
-            )); 
+            ));
         }
 
         /* Por titulo e eventos na sessão para passar a tela */
         $listagemDeEventos = null;
         $tituloDaPagina = '';
         /* Listagem de celulas */
-        $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
+
         $idEntidadeAtual = $sessao->idEntidadeAtual;
-        $entidade = $repositorioORM->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+        $entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
         $grupo = $entidade->getGrupo();
 
         $extra = '';
@@ -354,12 +363,12 @@ class CadastroController extends CircuitoController {
         if ($pagina == Constantes::$PAGINA_CELULAS) {
             $listagemDeEventos = $grupo->getGrupoEventoAtivosPorTipo($tipoCelula);
             $tituloDaPagina = Constantes::$TRADUCAO_LISTAGEM_CELULAS . ' <b class="text-danger">' . Constantes::$TRADUCAO_MULTIPLICACAO . '</b>';
-            $tipoEvento = 2;
+            $tipoEvento = 1;
         }
         if ($pagina == Constantes::$PAGINA_CULTOS) {
             $listagemDeEventos = $grupo->getGrupoEventoAtivosPorTipo($tipoCulto);
             $tituloDaPagina = Constantes::$TRADUCAO_LISTAGEM_CULTOS;
-            $tipoEvento = 1;
+            $tipoEvento = 2;
             $extra = $grupo->getId();
         }
         if ($pagina == Constantes::$PAGINA_REVISAO) {
@@ -412,6 +421,7 @@ class CadastroController extends CircuitoController {
             Constantes::$TITULO_DA_PAGINA => $tituloDaPagina,
             Constantes::$TIPO_EVENTO => $tipoEvento,
             Constantes::$EXTRA => $extra,
+            'mostrarOpcoes' => true,
         ));
 
         /* Javascript */
@@ -438,13 +448,13 @@ class CadastroController extends CircuitoController {
         if ($sessao->pagina == Constantes::$PAGINA_EVENTO_CULTO) {
             /* Verificando a se tem algum id na sessão */
             $eventoNaSessao = new Evento();
-            $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
+
             if (!empty($sessao->idSessao)) {
-                $eventoNaSessao = $repositorioORM->getEventoORM()->encontrarPorId($sessao->idSessao);
+                $eventoNaSessao = $this->getRepositorio()->getEventoORM()->encontrarPorId($sessao->idSessao);
             }
             $form = new EventoForm(Constantes::$FORM, $eventoNaSessao);
             $idEntidadeAtual = $sessao->idEntidadeAtual;
-            $entidade = $repositorioORM->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+            $entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
             $grupo = $entidade->getGrupo();
             $extra = $grupo->getGrupoPaiFilhoFilhos();
         }
@@ -452,8 +462,8 @@ class CadastroController extends CircuitoController {
             /* Verificando a se tem algum id na sessão */
             $eventoCelulaNaSessao = new EventoCelula();
             if (!empty($sessao->idSessao)) {
-                $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
-                $eventoCelulaNaSessao = $repositorioORM->getEventoCelulaORM()->encontrarPorId($sessao->idSessao);
+
+                $eventoCelulaNaSessao = $this->getRepositorio()->getEventoCelulaORM()->encontrarPorId($sessao->idSessao);
             } else {
                 $enderecoHidden = Constantes::$FORM_HIDDEN;
             }
@@ -485,9 +495,9 @@ class CadastroController extends CircuitoController {
         $request = $this->getRequest();
         if ($request->isPost()) {
             /* Repositorios */
-            $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
+
             try {
-                $repositorioORM->iniciarTransacao();
+                $this->getRepositorio()->iniciarTransacao();
                 $post_data = $request->getPost();
 
                 /* Entidades */
@@ -510,7 +520,7 @@ class CadastroController extends CircuitoController {
                     /* ALTERANDO */
                     if (!empty($post_data[Constantes::$FORM_ID])) {
                         $criarNovoEvento = false;
-                        $eventoAtual = $repositorioORM->getEventoORM()->encontrarPorId($post_data[Constantes::$FORM_ID]);
+                        $eventoAtual = $this->getRepositorio()->getEventoORM()->encontrarPorId($post_data[Constantes::$FORM_ID]);
                         echo "EventoAtual: " . $eventoAtual->getId();
                         $grupoEventoAtivos = $eventoAtual->getGrupoEventoAtivos();
                         /* Dia foi alterado */
@@ -519,11 +529,11 @@ class CadastroController extends CircuitoController {
                             /* Inativando o Evento */
                             $eventoParaInativar = $eventoAtual;
                             $eventoParaInativar->setDataEHoraDeInativacao();
-                            $repositorioORM->getEventoORM()->persistir($eventoParaInativar, false);
+                            $this->getRepositorio()->getEventoORM()->persistir($eventoParaInativar, false);
                             /* Inativando todos Grupo Evento */
                             foreach ($grupoEventoAtivos as $gea) {
                                 $gea->setDataEHoraDeInativacao();
-                                $repositorioORM->getGrupoEventoORM()->persistir($gea, false);
+                                $this->getRepositorio()->getGrupoEventoORM()->persistir($gea, false);
                             }
                             $criarNovoEvento = true;
                             $mudarDataDeCadastroParaProximoDomingo = true;
@@ -535,7 +545,7 @@ class CadastroController extends CircuitoController {
                                 $eventoAtual->setNome(strtoupper($post_data[(Constantes::$FORM_NOME)]));
                             }
                             $eventoAtual->setHora($post_data[(Constantes::$FORM_HORA)] . ':' . $post_data[(Constantes::$FORM_MINUTOS)] . ':00');
-                            $repositorioORM->getEventoORM()->persistir($eventoAtual, false);
+                            $this->getRepositorio()->getEventoORM()->persistir($eventoAtual, false);
                             /* Sessão */
                             $sessao->tipoMensagem = Constantes::$TIPO_MENSAGEM_ALTERAR_CULTO;
                             $sessao->textoMensagem = $eventoAtual->getNome() . ' ' . $eventoAtual->getHoraFormatoHoraMinutoParaListagem();
@@ -555,19 +565,19 @@ class CadastroController extends CircuitoController {
                                 }
                                 /* Equipe esta marcada mas não foi gerada ainda */
                                 if (!$validacaoMarcado) {
-                                    $grupoEquipe = $repositorioORM->getGrupoORM()->encontrarPorId($stringValor);
+                                    $grupoEquipe = $this->getRepositorio()->getGrupoORM()->encontrarPorId($stringValor);
                                     $grupoEventoEquipe = new GrupoEvento();
                                     $grupoEventoEquipe->setDataEHoraDeCriacao();
                                     $grupoEventoEquipe->setGrupo($grupoEquipe);
                                     $grupoEventoEquipe->setEvento($eventoAtual);
-                                    $repositorioORM->getGrupoEventoORM()->persistir($grupoEventoEquipe);
+                                    $this->getRepositorio()->getGrupoEventoORM()->persistir($grupoEventoEquipe);
                                 }
                             }
                         }
                         /* Desmarcação */
                         foreach ($grupoEventoAtivos as $grupoEventAtivo) {
                             $idEntidadeAtual = $sessao->idEntidadeAtual;
-                            $entidade = $repositorioORM->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+                            $entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
                             $grupo = $entidade->getGrupo();
                             if ($grupoEventAtivo->getGrupo()->getId() != $grupo->getId()) {
                                 $validacaoMarcado = false;
@@ -583,7 +593,7 @@ class CadastroController extends CircuitoController {
                                 /* Equipe esta marcada mas não foi gerada ainda */
                                 if (!$validacaoMarcado) {
                                     $grupoEventAtivo->setDataEHoraDeInativacao();
-                                    $repositorioORM->getGrupoEventoORM()->persistir($grupoEventAtivo, false);
+                                    $this->getRepositorio()->getGrupoEventoORM()->persistir($grupoEventAtivo, false);
                                 }
                             }
                         }
@@ -591,7 +601,7 @@ class CadastroController extends CircuitoController {
                     if ($criarNovoEvento) {
                         /* Entidade selecionada */
                         $idEntidadeAtual = $sessao->idEntidadeAtual;
-                        $entidade = $repositorioORM->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+                        $entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
 
                         $evento->exchangeArray($eventoForm->getData());
                         $dataParaCadastro = Funcoes::dataAtual();
@@ -602,7 +612,7 @@ class CadastroController extends CircuitoController {
                         $evento->setHora_criacao(Funcoes::horaAtual());
                         $evento->setHora($validatedData[Constantes::$FORM_HORA] . ':' . $validatedData[Constantes::$FORM_MINUTOS]);
                         $evento->setDia($validatedData[Constantes::$FORM_DIA_DA_SEMANA]);
-                        $evento->setEventoTipo($repositorioORM->getEventoTipoORM()->encontrarPorId(1));
+                        $evento->setEventoTipo($this->getRepositorio()->getEventoTipoORM()->encontrarPorId(1));
 
                         $grupoEvento->setData_criacao(Funcoes::dataAtual());
                         $grupoEvento->setHora_criacao(Funcoes::horaAtual());
@@ -610,8 +620,8 @@ class CadastroController extends CircuitoController {
                         $grupoEvento->setEvento($evento);
 
                         /* Persistindo */
-                        $repositorioORM->getEventoORM()->persistir($evento);
-                        $repositorioORM->getGrupoEventoORM()->persistir($grupoEvento);
+                        $this->getRepositorio()->getEventoORM()->persistir($evento);
+                        $this->getRepositorio()->getGrupoEventoORM()->persistir($grupoEvento);
                         /* Sessão */
                         $sessao->tipoMensagem = Constantes::$TIPO_MENSAGEM_CADASTRAR_CULTO;
                         $sessao->textoMensagem = $evento->getNome();
@@ -622,13 +632,13 @@ class CadastroController extends CircuitoController {
                             $stringParaVerificar = substr($key, 0, strlen($stringCheckEquipe));
                             if (!\strcmp($stringParaVerificar, $stringCheckEquipe)) {
                                 $stringValor = substr($key, strlen($stringParaVerificar));
-                                $grupoEquipe = $repositorioORM->getGrupoORM()->encontrarPorId($stringValor);
+                                $grupoEquipe = $this->getRepositorio()->getGrupoORM()->encontrarPorId($stringValor);
                                 $grupoEventoEquipe = new GrupoEvento();
                                 $grupoEventoEquipe->setData_criacao(Funcoes::dataAtual());
                                 $grupoEventoEquipe->setHora_criacao(Funcoes::horaAtual());
                                 $grupoEventoEquipe->setGrupo($grupoEquipe);
                                 $grupoEventoEquipe->setEvento($evento);
-                                $repositorioORM->getGrupoEventoORM()->persistir($grupoEventoEquipe);
+                                $this->getRepositorio()->getGrupoEventoORM()->persistir($grupoEventoEquipe);
                             }
                         }
                     }
@@ -637,12 +647,12 @@ class CadastroController extends CircuitoController {
                     CircuitoController::direcionandoAoLogin($this);
                 }
 
-                $repositorioORM->fecharTransacao();
+                $this->getRepositorio()->fecharTransacao();
                 return $this->redirect()->toRoute(Constantes::$ROUTE_CADASTRO, array(
                             Constantes::$PAGINA => Constantes::$PAGINA_CULTOS,
                 ));
             } catch (Exception $exc) {
-                $repositorioORM->desfazerTransacao();
+                $this->getRepositorio()->desfazerTransacao();
                 echo $exc->getMessage();
                 CircuitoController::direcionandoAoLogin($this);
             }
@@ -659,9 +669,9 @@ class CadastroController extends CircuitoController {
         $request = $this->getRequest();
         if ($request->isPost()) {
             $eventoCelula = new EventoCelula();
-            $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
+
             $celulaForm = new CelulaForm(Constantes::$FORM_CELULA, $eventoCelula);
-            $repositorioORM->iniciarTransacao();
+            $this->getRepositorio()->iniciarTransacao();
             try {
                 $post_data = $request->getPost();
 
@@ -683,7 +693,7 @@ class CadastroController extends CircuitoController {
                     /* ALTERANDO */
                     if (!empty($post_data[Constantes::$FORM_ID])) {
                         $criarNovaCelula = false;
-                        $eventoCelulaAtual = $repositorioORM->getEventoCelulaORM()->encontrarPorId($post_data[Constantes::$FORM_ID]);
+                        $eventoCelulaAtual = $this->getRepositorio()->getEventoCelulaORM()->encontrarPorId($post_data[Constantes::$FORM_ID]);
 
                         /* Dia foi alterado */
                         if ($post_data[Constantes::$FORM_DIA_DA_SEMANA] != $eventoCelulaAtual->getEvento()->getDia()) {
@@ -699,8 +709,8 @@ class CadastroController extends CircuitoController {
                             $grupoEventoAtivos[0]->setData_inativacao($dataParaInativacaoFormatada);
                             $grupoEventoAtivos[0]->setHora_inativacao('00:00:00');
 
-                            $repositorioORM->getGrupoEventoORM()->persistir($grupoEventoAtivos[0], false);
-                            $repositorioORM->getEventoORM()->persistir($eventoParaInativar, false);
+                            $this->getRepositorio()->getGrupoEventoORM()->persistir($grupoEventoAtivos[0], false);
+                            $this->getRepositorio()->getEventoORM()->persistir($eventoParaInativar, false);
                             $criarNovaCelula = true;
                             $mudarDataDeCadastroParaProximoDomingo = true;
                         } else {
@@ -734,7 +744,7 @@ class CadastroController extends CircuitoController {
                             if ($post_data[(Constantes::$FORM_COMPLEMENTO)] != $eventoCelulaAtual->getComplemento()) {
                                 $eventoCelulaAtual->setComplemento(strtoupper($post_data[(Constantes::$FORM_COMPLEMENTO)]));
                             }
-                            $repositorioORM->getEventoCelulaORM()->persistir($eventoCelulaAtual, false);
+                            $this->getRepositorio()->getEventoCelulaORM()->persistir($eventoCelulaAtual, false);
                             /* Dados do Evento - Hora */
                             $eventoAtual = $eventoCelulaAtual->getEvento();
                             if ($validatedData[Constantes::$FORM_HORA] != $eventoAtual->getHoraSemMinutosESegundos()) {
@@ -743,7 +753,7 @@ class CadastroController extends CircuitoController {
                             if ($validatedData[Constantes::$FORM_MINUTOS] != $eventoAtual->getMinutosSemHorasESegundos()) {
                                 $eventoAtual->setHora($validatedData[Constantes::$FORM_HORA] . ':' . $validatedData[Constantes::$FORM_MINUTOS]);
                             }
-                            $repositorioORM->getEventoORM()->persistir($eventoAtual);
+                            $this->getRepositorio()->getEventoORM()->persistir($eventoAtual);
                             /* Sessão */
                             $sessao->tipoMensagem = Constantes::$TIPO_MENSAGEM_ALTERAR_CELULA;
                             $sessao->textoMensagem = $eventoCelulaAtual->getNome_hospedeiro();
@@ -752,7 +762,7 @@ class CadastroController extends CircuitoController {
                     if ($criarNovaCelula) {
                         /* Entidade selecionada */
                         $idEntidadeAtual = $sessao->idEntidadeAtual;
-                        $entidade = $repositorioORM->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+                        $entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
 
                         $eventoCelula->exchangeArray($celulaForm->getData());
                         $eventoCelula->setTelefone_hospedeiro($validatedData[Constantes::$FORM_DDD_HOSPEDEIRO] . $validatedData[Constantes::$FORM_TELEFONE_HOSPEDEIRO]);
@@ -776,15 +786,15 @@ class CadastroController extends CircuitoController {
                         }
                         $evento->setHora($validatedData[Constantes::$FORM_HORA] . ':' . $validatedData[Constantes::$FORM_MINUTOS]);
                         $evento->setDia($validatedData[Constantes::$FORM_DIA_DA_SEMANA]);
-                        $evento->setEventoTipo($repositorioORM->getEventoTipoORM()->encontrarPorId(2));
+                        $evento->setEventoTipo($this->getRepositorio()->getEventoTipoORM()->encontrarPorId(2));
 
                         $grupoEvento->setGrupo($entidade->getGrupo());
                         $grupoEvento->setEvento($evento);
 
                         /* Persistindo */
-                        $repositorioORM->getEventoORM()->persistir($evento, $alterarDataDeCriacao);
-                        $repositorioORM->getEventoCelulaORM()->persistir($eventoCelula, false);
-                        $repositorioORM->getGrupoEventoORM()->persistir($grupoEvento, $alterarDataDeCriacao);
+                        $this->getRepositorio()->getEventoORM()->persistir($evento, $alterarDataDeCriacao);
+                        $this->getRepositorio()->getEventoCelulaORM()->persistir($eventoCelula, false);
+                        $this->getRepositorio()->getGrupoEventoORM()->persistir($grupoEvento, $alterarDataDeCriacao);
                         /* Sessão */
                         $sessao->tipoMensagem = Constantes::$TIPO_MENSAGEM_CADASTRAR_CELULA;
                         $sessao->textoMensagem = $eventoCelula->getNome_hospedeiro();
@@ -792,18 +802,24 @@ class CadastroController extends CircuitoController {
 
                         /* Cadastro do fato celula */
                         /* cadastro fato apenas se for nova celula */
+                        $numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio());
                         if (empty($post_data[Constantes::$FORM_ID])) {
-                            $numeroIdentificador = $repositorioORM->getFatoCicloORM()->montarNumeroIdentificador($repositorioORM);
                             $periodo = 0;
                             $arrayPeriodo = Funcoes::montaPeriodo($periodo);
                             $stringData = $arrayPeriodo[3] . '-' . $arrayPeriodo[2] . '-' . $arrayPeriodo[1];
                             $dateFormatada = DateTime::createFromFormat('Y-m-d', $stringData);
-                            $fatoPeriodo = $repositorioORM->getFatoCicloORM()->
-                                    encontrarPorNumeroIdentificadorEDataCriacao($numeroIdentificador, $dateFormatada, $repositorioORM);
-                            $repositorioORM->getFatoCelulaORM()->criarFatoCelula($fatoPeriodo, $eventoCelula->getId());
+                            $fatoPeriodo = $this->getRepositorio()->getFatoCicloORM()->
+                                    encontrarPorNumeroIdentificadorEDataCriacao($numeroIdentificador, $dateFormatada, $this->getRepositorio());
+                            $this->getRepositorio()->getFatoCelulaORM()->criarFatoCelula($fatoPeriodo, $eventoCelula->getId());
+
+                            /* caso seja primeira celula, criar fato lider e nao tenha */
+                            if (!$this->getRepositorio()->getFatoLiderORM()->encontrarFatoLiderPorNumeroIdentificador($numeroIdentificador)) {
+                                $quantidadeLideres = count($entidade->getGrupo()->getResponsabilidadesAtivas());
+                                $this->getRepositorio()->getFatoLiderORM()->criarFatoLider($numeroIdentificador, $quantidadeLideres);
+                            }
                         }
                     }
-                    $repositorioORM->fecharTransacao();
+                    $this->getRepositorio()->fecharTransacao();
 
                     return $this->redirect()->toRoute(Constantes::$ROUTE_CADASTRO, array(
                                 Constantes::$PAGINA => Constantes::$PAGINA_CELULAS,
@@ -813,7 +829,7 @@ class CadastroController extends CircuitoController {
                     CircuitoController::direcionandoAoLogin($this);
                 }
             } catch (Exception $exc) {
-                $repositorioORM->desfazerTransacao();
+                $this->getRepositorio()->desfazerTransacao();
                 $this->direcionaErroDeCadastro($celulaForm->getMessages());
                 CircuitoController::direcionandoAoLogin($this);
             }
@@ -829,10 +845,10 @@ class CadastroController extends CircuitoController {
         $sessao = new Container(Constantes::$NOME_APLICACAO);
         $extra = null;
         $eventoNaSessao = new Evento();
-        $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
-        $entidade = $repositorioORM->getEntidadeORM()->encontrarPorId($sessao->idEntidadeAtual);
+
+        $entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($sessao->idEntidadeAtual);
         if (!empty($sessao->idSessao)) {
-            $eventoNaSessao = $repositorioORM->getEventoORM()->encontrarPorId($sessao->idSessao);
+            $eventoNaSessao = $this->getRepositorio()->getEventoORM()->encontrarPorId($sessao->idSessao);
             if ($eventoNaSessao->getGrupoEventoAtivos() > 1) {
                 $grupo = $entidade->getGrupo();
                 foreach ($eventoNaSessao->getGrupoEventoAtivos() as $eg) {
@@ -865,15 +881,15 @@ class CadastroController extends CircuitoController {
      */
     public function eventoExclusaoConfirmacaoAction() {
         CircuitoController::verificandoSessao(new Container(Constantes::$NOME_APLICACAO), $this);
-        $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
-        $repositorioORM->iniciarTransacao();
+
+        $this->getRepositorio()->iniciarTransacao();
         try {
 
             /* Verificando a se tem algum id na sessão */
             $sessao = new Container(Constantes::$NOME_APLICACAO);
             $eventoNaSessao = new Evento();
             if (!empty($sessao->idSessao)) {
-                $eventoNaSessao = $repositorioORM->getEventoORM()->encontrarPorId($sessao->idSessao);
+                $eventoNaSessao = $this->getRepositorio()->getEventoORM()->encontrarPorId($sessao->idSessao);
 
                 /* Persistindo */
 
@@ -890,22 +906,27 @@ class CadastroController extends CircuitoController {
                         $diaDaSemana++;
                     }
                     if ($diaDaSemana < $eventoNaSessao->getDia()) {
-                        $fatoCelula = $repositorioORM->getFatoCelulaORM()->encontrarPorEventoCelulaId($eventoNaSessao->getEventoCelula()->getId());
+                        $fatoCelula = $this->getRepositorio()->getFatoCelulaORM()->encontrarPorEventoCelulaId($eventoNaSessao->getEventoCelula()->getId());
                         $fatoCelula->setDataEHoraDeInativacao();
-                        $repositorioORM->getFatoCelulaORM()->persistir($fatoCelula, false);
+                        $this->getRepositorio()->getFatoCelulaORM()->persistir($fatoCelula, false);
+                    }
+                    /* Inativando fato/-lider caso nao tenha mais celulas */
+                    $grupoDoEvento = $eventoNaSessao->getGrupoEventoAtivo()->getGrupo();
+                    if (!$grupoDoEvento->getGrupoEventoAtivosPorTipo(EventoTipo::tipoCelula)) {
+                        $this->inativarFatoLiderPorGrupo($grupoDoEvento);
                     }
                 }
 
                 /* Inativando o Evento */
                 $eventoNaSessao->setDataEHoraDeInativacao();
-                $repositorioORM->getEventoORM()->persistir($eventoNaSessao, false);
+                $this->getRepositorio()->getEventoORM()->persistir($eventoNaSessao, false);
 
                 /* Inativando o Grupo Evento */
                 $grupoEventoAtivos = $eventoNaSessao->getGrupoEventoAtivos();
 
                 foreach ($grupoEventoAtivos as $grupoEventoAtivo) {
                     $grupoEventoAtivo->setDataEHoraDeInativacao();
-                    $repositorioORM->getGrupoEventoORM()->persistir($grupoEventoAtivo, false);
+                    $this->getRepositorio()->getGrupoEventoORM()->persistir($grupoEventoAtivo, false);
                 }
 
                 $sessao->tipoMensagem = Constantes::$TIPO_MENSAGEM_EXCLUIR_CULTO;
@@ -924,13 +945,13 @@ class CadastroController extends CircuitoController {
                     $pagina = Constantes::$PAGINA_CELULAS;
                 }
 
-                $repositorioORM->fecharTransacao();
+                $this->getRepositorio()->fecharTransacao();
                 return $this->redirect()->toRoute(Constantes::$ROUTE_CADASTRO, array(
                             Constantes::$PAGINA => Constantes::$PAGINA_CELULAS,
                 ));
             }
         } catch (Exception $exc) {
-            $repositorioORM->desfazerTransacao();
+            $this->getRepositorio()->desfazerTransacao();
             echo $exc->getTraceAsString();
             CircuitoController::direcionandoAoLogin($this);
         }
@@ -942,10 +963,10 @@ class CadastroController extends CircuitoController {
      */
     public function grupoAction() {
         $sessao = new Container(Constantes::$NOME_APLICACAO);
-        $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
+
 
         $idEntidadeAtual = $sessao->idEntidadeAtual;
-        $entidade = $repositorioORM->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+        $entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
 
         $grupo = $entidade->getGrupo();
         $arrayGrupoAlunos = $grupo->getGrupoAlunoAtivos();
@@ -954,8 +975,8 @@ class CadastroController extends CircuitoController {
         $mostrarCadastro = true;
 //        }
 
-        $pessoa = $repositorioORM->getPessoaORM()->encontrarPorId($sessao->idPessoa);
-        $arrayHierarquia = $repositorioORM->getHierarquiaORM()->encontrarTodas($pessoa->getPessoaHierarquiaAtivo()->getHierarquia()->getId());
+        $pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($sessao->idPessoa);
+        $arrayHierarquia = $this->getRepositorio()->getHierarquiaORM()->encontrarTodas($pessoa->getPessoaHierarquiaAtivo()->getHierarquia()->getId());
 
         $arrayDeNumerosUsados = array();
         if ($grupo->getGrupoPaiFilhoFilhos()) {
@@ -993,18 +1014,18 @@ class CadastroController extends CircuitoController {
 
         $request = $this->getRequest();
         if ($request->isPost()) {
-            $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
+
             try {
-                $repositorioORM->iniciarTransacao();
+                $this->getRepositorio()->iniciarTransacao();
                 $post_data = $request->getPost();
 
                 $sessao = new Container(Constantes::$NOME_APLICACAO);
                 $idEntidadeAtual = $sessao->idEntidadeAtual;
-                $entidadeLogada = $repositorioORM->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+                $entidadeLogada = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
 
                 /* Criar Grupo */
                 $grupoNovo = new Grupo();
-                $repositorioORM->getGrupoORM()->persistir($grupoNovo);
+                $this->getRepositorio()->getGrupoORM()->persistir($grupoNovo);
 
                 /* Entidade abaixo do perfil selecionado/logado */
                 $tipoEntidadeAbaixo = Entidade::SUBEQUIPE; // sub equipe por padrao
@@ -1013,7 +1034,7 @@ class CadastroController extends CircuitoController {
                 }
                 $entidadeNova = new Entidade();
                 $entidadeNova->setEntidadeTipo(
-                        $repositorioORM->getEntidadeTipoORM()->encontrarPorId($tipoEntidadeAbaixo)
+                        $this->getRepositorio()->getEntidadeTipoORM()->encontrarPorId($tipoEntidadeAbaixo)
                 );
                 $entidadeNova->setGrupo($grupoNovo);
                 if ($post_data[Constantes::$FORM_NUMERACAO]) {
@@ -1022,7 +1043,7 @@ class CadastroController extends CircuitoController {
                 if ($post_data['nomeEntidade']) {
                     $entidadeNova->setNome($post_data['nomeEntidade']);
                 }
-                $repositorioORM->getEntidadeORM()->persistir($entidadeNova);
+                $this->getRepositorio()->getEntidadeORM()->persistir($entidadeNova);
 
                 $inputEstadoCivil = intval($post_data[Constantes::$INPUT_ESTADO_CIVIL]);
                 /* Alterar dados do aluno */
@@ -1036,8 +1057,8 @@ class CadastroController extends CircuitoController {
                 }
                 for ($indicePessoas = $indicePessoasInicio; $indicePessoas <= $indicePessoasFim; $indicePessoas++) {
                     $mudarDataDeCriacao = true;
-                    if ($repositorioORM->getPessoaORM()->verificarSeTemCPFCadastrado($cpf)) {
-                        $pessoaSelecionada = $repositorioORM->getPessoaORM()->encontrarPorCPF($cpf);
+                    if ($this->getRepositorio()->getPessoaORM()->verificarSeTemCPFCadastrado($cpf)) {
+                        $pessoaSelecionada = $this->getRepositorio()->getPessoaORM()->encontrarPorCPF($cpf);
                         $mudarDataDeCriacao = false;
                     } else {
                         $pessoaSelecionada = new Pessoa();
@@ -1048,24 +1069,24 @@ class CadastroController extends CircuitoController {
                     $pessoaSelecionada->setData_nascimento(Funcoes::mudarPadraoData($post_data[Constantes::$FORM_DATA_NASCIMENTO . $indicePessoas], 0));
                     $tokenDeAgora = $pessoaSelecionada->gerarToken($indicePessoas);
                     $pessoaSelecionada->setToken($tokenDeAgora);
-                    $repositorioORM->getPessoaORM()->persistir($pessoaSelecionada, $mudarDataDeCriacao);
+                    $this->getRepositorio()->getPessoaORM()->persistir($pessoaSelecionada, $mudarDataDeCriacao);
 
                     /* Apenas para uma nova pessoa, quem ja tem nao muda apenas pelo juridico */
                     if ($mudarDataDeCriacao) {
                         /* Criar hierarquia */
                         $idHierarquia = $post_data[Constantes::$FORM_HIERARQUIA . $indicePessoas];
-                        $hierarquia = $repositorioORM->getHierarquiaORM()->encontrarPorId($idHierarquia);
+                        $hierarquia = $this->getRepositorio()->getHierarquiaORM()->encontrarPorId($idHierarquia);
                         $pessoaHierarquia = new PessoaHierarquia();
                         $pessoaHierarquia->setPessoa($pessoaSelecionada);
                         $pessoaHierarquia->setHierarquia($hierarquia);
-                        $repositorioORM->getPessoaHierarquiaORM()->persistir($pessoaHierarquia);
+                        $this->getRepositorio()->getPessoaHierarquiaORM()->persistir($pessoaHierarquia);
                     }
 
                     /* Criar Grupo_Responsavel */
                     $grupoResponsavelNovo = new GrupoResponsavel();
                     $grupoResponsavelNovo->setPessoa($pessoaSelecionada);
                     $grupoResponsavelNovo->setGrupo($grupoNovo);
-                    $repositorioORM->getGrupoResponsavelORM()->persistir($grupoResponsavelNovo);
+                    $this->getRepositorio()->getGrupoResponsavelORM()->persistir($grupoResponsavelNovo);
                 }
 
                 /* Criar Grupo_Pai_Filho */
@@ -1073,16 +1094,16 @@ class CadastroController extends CircuitoController {
                 $grupoPaiFilhoNovo = new GrupoPaiFilho();
                 $grupoPaiFilhoNovo->setGrupoPaiFilhoPai($grupoAtualSelecionado);
                 $grupoPaiFilhoNovo->setGrupoPaiFilhoFilho($grupoNovo);
-                $repositorioORM->getGrupoPaiFilhoORM()->persistir($grupoPaiFilhoNovo);
+                $this->getRepositorio()->getGrupoPaiFilhoORM()->persistir($grupoPaiFilhoNovo);
 
-                $repositorioORM->fecharTransacao();
+                $this->getRepositorio()->fecharTransacao();
 
                 for ($indicePessoas = $indicePessoasInicio; $indicePessoas <= $indicePessoasFim; $indicePessoas++) {
                     /* Enviar Email */
-                    $this->enviarEmailParaCompletarOsDados($tokenDeAgora, $pessoaSelecionada);
+                    $this->enviarEmailParaCompletarOsDados($this->getRepositorio(), $sessao->idPessoa, $tokenDeAgora, $pessoaSelecionada);
                 }
             } catch (Exception $exc) {
-                $repositorioORM->desfazerTransacao();
+                $this->getRepositorio()->desfazerTransacao();
                 echo $exc->getTraceAsString();
                 $this->direcionaErroDeCadastro($exc->getMessage());
                 CircuitoController::direcionandoAoLogin($this);
@@ -1249,8 +1270,8 @@ class CadastroController extends CircuitoController {
                     $resposta = $respostaSucesso;
 
                     /* CPF encontrado na receita verificando se tem cadastro no sistema */
-                    $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
-                    if ($pessoaEncotrada = $repositorioORM->getPessoaORM()->encontrarPorCPF($cpf)) {
+
+                    if ($pessoaEncotrada = $this->getRepositorio()->getPessoaORM()->encontrarPorCPF($cpf)) {
                         $responsabilidadesAtivas = count($pessoaEncotrada->getResponsabilidadesAtivas());
                         if ($responsabilidadesAtivas === 0) {
                             $resposta = $respostaTemCadastroInativo;
@@ -1270,6 +1291,28 @@ class CadastroController extends CircuitoController {
                 $dados['nome'] = $nomeDaPesquisa;
                 $dados['dataNascimento'] = $dataDeNascimentoDaPesquisa;
                 $dados['idPessoa'] = $idPessoa;
+                $response->setContent(Json::encode($dados));
+            } catch (Exception $exc) {
+                echo $exc->getTraceAsString();
+            }
+        }
+        return $response;
+    }
+
+    public function enviarSMSAction() {
+        $resposta = false;
+        $request = $this->getRequest();
+        $response = $this->getResponse();
+        if ($request->isPost()) {
+            try {
+
+                $post_data = $request->getPost();
+                $numero = $post_data['numero'];
+
+                $resposta = Funcoes::enviarSMS($numero);
+
+                $dados = array();
+                $dados['resposta'] = $resposta;
                 $response->setContent(Json::encode($dados));
             } catch (Exception $exc) {
                 echo $exc->getTraceAsString();
@@ -1310,10 +1353,8 @@ class CadastroController extends CircuitoController {
      * @param string $tokenDeAgora
      * @param Pessoa $pessoa
      */
-    public function enviarEmailParaCompletarOsDados($tokenDeAgora, $pessoa) {
-        $sessao = new Container(Constantes::$NOME_APLICACAO);
-        $loginORM = new RepositorioORM($this->getDoctrineORMEntityManager());
-        $pessoaLogada = $loginORM->getPessoaORM()->encontrarPorId($sessao->idPessoa);
+    public static function enviarEmailParaCompletarOsDados($repositorio, $idPessoaLogada, $tokenDeAgora, $pessoa) {
+        $pessoaLogada = $repositorio->getPessoaORM()->encontrarPorId($idPessoaLogada);
 
         $Subject = 'Convite';
         $ToEmail = $pessoa->getEmail();
@@ -1328,34 +1369,17 @@ class CadastroController extends CircuitoController {
         Funcoes::enviarEmail($ToEmail, $Subject, $Content);
     }
 
-    public function transferenciaAction() {
-        $form = new TransferenciaForm('transferencia');
-
-        $sessao = new Container(Constantes::$NOME_APLICACAO);
-        $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
-        $idEntidadeAtual = $sessao->idEntidadeAtual;
-        $entidade = $repositorioORM->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
-        $grupo = $entidade->getGrupo();
-        $discipulos = $grupo->getGrupoPaiFilhoFilhos();
-
-        return new ViewModel(
-                array(
-            Constantes::$FORM => $form,
-            'discipulos' => $discipulos,
-        ));
-    }
-
     public function selecionarRevisionistaAction() {
 
         $sessao = new Container(Constantes::$NOME_APLICACAO);
-        $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
+
         $idRevisao = $sessao->idSessao;
         $idEntidadeAtual = $sessao->idEntidadeAtual;
-        $entidade = $repositorioORM->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+        $entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
         $sessao->idRevisao = $idRevisao;
         $view = new ViewModel(array(
             Constantes::$ENTIDADE => $entidade,
-            'repositorioORM' => $repositorioORM,
+            'repositorioORM' => $this->getRepositorio(),
         ));
 
         /* Javascript */
@@ -1379,9 +1403,9 @@ class CadastroController extends CircuitoController {
             ));
         }
         $idPessoa = $sessao->idSessao;
-        $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
-        $tipos = $repositorioORM->getGrupoPessoaTipoORM()->tipoDePessoaLancamento();
-        $pessoa = $repositorioORM->getPessoaORM()->encontrarPorId($idPessoa);
+
+        $tipos = $this->getRepositorio()->getGrupoPessoaTipoORM()->tipoDePessoaLancamento();
+        $pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($idPessoa);
         $grupoPessoa = $pessoa->getGrupoPessoaAtivo();
 
 
@@ -1411,7 +1435,7 @@ class CadastroController extends CircuitoController {
         $sessao = new Container(Constantes::$NOME_APLICACAO);
         $idEntidadeAtual = $sessao->idEntidadeAtual;
 
-        $entidade = $repositorioORM->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+        $entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
         return $entidade->getGrupo();
     }
 
@@ -1420,9 +1444,7 @@ class CadastroController extends CircuitoController {
 
 //            try {
         $post_data = $request->getPost();
-
-        $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
-        $pessoa = $repositorioORM->getPessoaORM()->encontrarPorId($post_data[Constantes::$FORM_ID]);
+        $pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($post_data[Constantes::$FORM_ID]);
 
         /* validação */
         $pessoa->setNome($post_data[Constantes::$INPUT_PRIMEIRO_NOME] . " " . $post_data[Constantes::$INPUT_ULTIMO_NOME]);
@@ -1432,7 +1454,7 @@ class CadastroController extends CircuitoController {
         $pessoa->setSexo($post_data[Constantes::$INPUT_NUCLEO_PERFEITO]);
 
         /* Salvar a pessoa e o grupo pessoa correspondente */
-        $repositorioORM->getPessoaORM()->persistir($pessoa, false);
+        $this->getRepositorio()->getPessoaORM()->persistir($pessoa, false);
         $sessao = new Container(Constantes::$NOME_APLICACAO);
         $sessao->idRevisionista = $pessoa->getId();
 
@@ -1445,11 +1467,11 @@ class CadastroController extends CircuitoController {
         }
         unset($sessao->idRevisao);
         $eventoFrequencia = new EventoFrequencia();
-        $eventoRevisao = $repositorioORM->getEventoORM()->encontrarPorId($idRevisao);
+        $eventoRevisao = $this->getRepositorio()->getEventoORM()->encontrarPorId($idRevisao);
         $eventoFrequencia->setEvento($eventoRevisao);
         $eventoFrequencia->setPessoa($pessoa);
         $eventoFrequencia->setFrequencia('N');
-        $repositorioORM->getEventoFrequenciaORM()->persistir($eventoFrequencia);
+        $this->getRepositorio()->getEventoFrequenciaORM()->persistir($eventoFrequencia);
         $sessao->idSessao = $eventoFrequencia->getId();
 
         return $this->redirect()->toRoute(Constantes::$ROUTE_CADASTRO, array(
@@ -1462,12 +1484,12 @@ class CadastroController extends CircuitoController {
 
     public function fichaRevisaoAction() {
         $sessao = new Container(Constantes::$NOME_APLICACAO);
-        $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
+
         $idEventoFrequencia = $sessao->idSessao;
-        $eventoFrequencia = $repositorioORM->getEventoFrequenciaORM()->encontrarPorId($idEventoFrequencia);
+        $eventoFrequencia = $this->getRepositorio()->getEventoFrequenciaORM()->encontrarPorId($idEventoFrequencia);
         $pessoaRevisionista = $eventoFrequencia->getPessoa();
         $idRevisao = $eventoFrequencia->getEvento()->getId();
-        $eventoRevisao = $repositorioORM->getEventoORM()->encontrarPorId($idRevisao);
+        $eventoRevisao = $this->getRepositorio()->getEventoORM()->encontrarPorId($idRevisao);
         $grupoPessoaRevisionista = $pessoaRevisionista->getGrupoPessoaAtivo();
         $grupoLider = $grupoPessoaRevisionista->getGrupo();
         $nomeEntidadeLider = $grupoLider->getEntidadeAtiva()->infoEntidade();
@@ -1498,15 +1520,15 @@ class CadastroController extends CircuitoController {
 
     public function selecionarFichasRevisionistaAction() {
         $sessao = new Container(Constantes::$NOME_APLICACAO);
-        $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
+
         $idRevisao = $sessao->idSessao;
         $idEntidadeAtual = $sessao->idEntidadeAtual;
-        $entidade = $repositorioORM->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+        $entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
         $sessao->idRevisao = $idRevisao;
-        $eventoRevisao = $repositorioORM->getEventoORM()->encontrarPorId($idRevisao);
+        $eventoRevisao = $this->getRepositorio()->getEventoORM()->encontrarPorId($idRevisao);
         $view = new ViewModel(array(
             Constantes::$ENTIDADE => $entidade,
-            'repositorioORM' => $repositorioORM,
+            'repositorioORM' => $this->getRepositorio(),
             'evento' => $eventoRevisao,
             'entidade' => $entidade,
         ));
@@ -1525,15 +1547,15 @@ class CadastroController extends CircuitoController {
 
     public function ativarFichaRevisaoAction() {
         $sessao = new Container(Constantes::$NOME_APLICACAO);
-        $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
+
         $idRevisao = $sessao->idSessao;
-        $eventoRevisao = $repositorioORM->getEventoORM()->encontrarPorId($idRevisao);
+        $eventoRevisao = $this->getRepositorio()->getEventoORM()->encontrarPorId($idRevisao);
         $formAtivarFicha = new AtivarFichaForm(Constantes::$FORM_ATIVAR_FICHA, null);
         $idEntidadeAtual = $sessao->idEntidadeAtual;
-        $entidade = $repositorioORM->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+        $entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
         $view = new ViewModel(array(
             Constantes::$FORM_ATIVAR_FICHA => $formAtivarFicha,
-            'repositorioORM' => $repositorioORM,
+            'repositorioORM' => $this->getRepositorio(),
             'evento' => $eventoRevisao,
             'entidade' => $entidade,
         ));
@@ -1548,15 +1570,15 @@ class CadastroController extends CircuitoController {
 
     public function selecionarFichasAtivasAction() {
         $sessao = new Container(Constantes::$NOME_APLICACAO);
-        $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
+
         $idRevisao = $sessao->idSessao;
         $idEntidadeAtual = $sessao->idEntidadeAtual;
-        $entidade = $repositorioORM->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+        $entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
         $sessao->idRevisao = $idRevisao;
-        $eventoRevisao = $repositorioORM->getEventoORM()->encontrarPorId($idRevisao);
+        $eventoRevisao = $this->getRepositorio()->getEventoORM()->encontrarPorId($idRevisao);
         $view = new ViewModel(array(
             Constantes::$ENTIDADE => $entidade,
-            'repositorioORM' => $repositorioORM,
+            'repositorioORM' => $this->getRepositorio(),
             'evento' => $eventoRevisao,
         ));
 
@@ -1575,14 +1597,14 @@ class CadastroController extends CircuitoController {
     public function consultarFichaAction() {
         $request = $this->getRequest();
         $response = $this->getResponse();
-        $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
+
         if ($request->isPost()) {
 
             $post_data = $request->getPost();
             $idEventoFrequencia = $post_data['idEventoFrequencia'];
             if ($idEventoFrequencia != null || $idEventoFrequencia == 0) {
 
-                $eventoFrequencia = $repositorioORM->getEventoFrequenciaORM()->encontrarPorIdEventoFrequencia($idEventoFrequencia);
+                $eventoFrequencia = $this->getRepositorio()->getEventoFrequenciaORM()->encontrarPorIdEventoFrequencia($idEventoFrequencia);
 
                 if (!$eventoFrequencia) {
                     $response->setContent(Json::encode(
@@ -1627,17 +1649,17 @@ class CadastroController extends CircuitoController {
         /* Inativando o grupo pessoa antigo */
         $grupoPessoaRevisionistaAntigo = $pessoaRevisionista->getGrupoPessoaAtivo();
         $grupoPessoaRevisionistaAntigo->setDataEHoraDeInativacao();
-        $repositorioORM->getGrupoPessoaORM()->persistir($grupoPessoaRevisionistaAntigo, false);
+        $this->getRepositorio()->getGrupoPessoaORM()->persistir($grupoPessoaRevisionistaAntigo, false);
 
         /* Busca GrupoPessoaTipo */
-        $grupoPessoaTipo = $repositorioORM->getGrupoPessoaTipoORM()->encontrarPorId($idTipo);
+        $grupoPessoaTipo = $this->getRepositorio()->getGrupoPessoaTipoORM()->encontrarPorId($idTipo);
 
         /* Bloco para inclusao da pessoa no grupo Pessoa como membro. */
         $grupoPessoa = new GrupoPessoa();
         $grupoPessoa->setPessoa($pessoaRevisionista);
         $grupoPessoa->setGrupo($grupoPessoaRevisionistaAntigo->getGrupo());
         $grupoPessoa->setGrupoPessoaTipo($grupoPessoaTipo);
-        $repositorioORM->getGrupoPessoaORM()->persistir($grupoPessoa);
+        $this->getRepositorio()->getGrupoPessoaORM()->persistir($grupoPessoa);
 
         return $grupoPessoa;
     }
@@ -1645,23 +1667,23 @@ class CadastroController extends CircuitoController {
     public function ativarReservaRevisaoAction() {
         $request = $this->getRequest();
         $response = $this->getResponse();
-        $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
+
         if ($request->isPost()) {
             try {
-                $repositorioORM->iniciarTransacao();
+                $this->getRepositorio()->iniciarTransacao();
                 $post_data = $request->getPost();
                 $idEventoFrequencia = $post_data['codigo'];
 
                 /* Resgatando Dados do EventoFrequencia e do Revisionista */
-                $eventoFrequencia = $repositorioORM->getEventoFrequenciaORM()->encontrarPorIdEventoFrequencia($idEventoFrequencia);
+                $eventoFrequencia = $this->getRepositorio()->getEventoFrequenciaORM()->encontrarPorIdEventoFrequencia($idEventoFrequencia);
                 if ($eventoFrequencia->getFrequencia() == 'N') {
                     $pessoaRevisionista = $eventoFrequencia->getPessoa();
                     /* Membro = idTipo 3 */
-                    $grupoPessoaRevisionista = $this->alterarGrupoPessoaTipo(3, $repositorioORM, $pessoaRevisionista);
+                    $grupoPessoaRevisionista = $this->alterarGrupoPessoaTipo(3, $this->getRepositorio(), $pessoaRevisionista);
 
                     /* Ativando a presença do Revisionista  */
                     $eventoFrequencia->setFrequencia('S');
-                    $repositorioORM->getEventoFrequenciaORM()->persistir($eventoFrequencia, false);
+                    $this->getRepositorio()->getEventoFrequenciaORM()->persistir($eventoFrequencia, false);
 
                     /* Mensagens de retorno */
                     $sessao = new Container(Constantes::$NOME_APLICACAO);
@@ -1681,22 +1703,22 @@ class CadastroController extends CircuitoController {
                     } else {
                         $idAluno = IndexController::cadastrarPessoaRevisionista($pessoaRevisionista->getNome(), substr('' . $pessoaRevisionista->getTelefone() . '', 0, 2), substr('' . $pessoaRevisionista->getTelefone() . '', 2, strlen('' . $pessoaRevisionista->getTelefone() . '')), $pessoaRevisionista->getSexo(), $pessoaRevisionista->getData_nascimento(), $grupoCv->getLider1());
                     }
-                    IndexController::cadastrarPessoaAluno($idAluno, 6503, 'A', 1);
+                    IndexController::cadastrarPessoaAluno($idAluno, 6711, 'A', 1);
 
                     /* Fim da migração do Sistema Antigo */
 
-                    $repositorioORM->fecharTransacao();
+                    $this->getRepositorio()->fecharTransacao();
                     return $this->redirect()->toRoute(Constantes::$ROUTE_CADASTRO, array(
                                 Constantes::$PAGINA => Constantes::$PAGINA_ATIVAR_FICHA_REVISAO,
                     ));
                 } else {
-                    $repositorioORM->desfazerTransacao();
+                    $this->getRepositorio()->desfazerTransacao();
                     return $this->redirect()->toRoute(Constantes::$ROUTE_CADASTRO, array(
                                 Constantes::$PAGINA => Constantes::$PAGINA_ATIVAR_FICHA_REVISAO,
                     ));
                 }
             } catch (Exception $exc) {
-                $repositorioORM->desfazerTransacao();
+                $this->getRepositorio()->desfazerTransacao();
                 echo $exc->getTraceAsString();
             }
         }
@@ -1708,10 +1730,10 @@ class CadastroController extends CircuitoController {
         $idEventoFrequencia = $parametro;
 
         /* Resgatando Dados do EventoFrequencia e do Revisionista */
-        $eventoFrequencia = $repositorioORM->getEventoFrequenciaORM()->encontrarPorIdEventoFrequencia($idEventoFrequencia);
+        $eventoFrequencia = $this->getRepositorio()->getEventoFrequenciaORM()->encontrarPorIdEventoFrequencia($idEventoFrequencia);
         $pessoaRevisionista = $eventoFrequencia->getPessoa();
         /* Membro = idTipo 3 */
-        $this->alterarGrupoPessoaTipo(3, $repositorioORM, $pessoaRevisionista);
+        $this->alterarGrupoPessoaTipo(3, $this->getRepositorio(), $pessoaRevisionista);
 
         /* Ativando a presença do Revisionista  */
         $eventoFrequencia->setFrequencia('S');
@@ -1730,10 +1752,10 @@ class CadastroController extends CircuitoController {
 
     public function selecionarLiderRevisaoAction() {
         $sessao = new Container(Constantes::$NOME_APLICACAO);
-        $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
+
         $idRevisao = $sessao->idSessao;
         $idEntidadeAtual = $sessao->idEntidadeAtual;
-        $entidade = $repositorioORM->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+        $entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
 
         $view = new ViewModel(array(
             Constantes::$ENTIDADE => $entidade,
@@ -1750,47 +1772,47 @@ class CadastroController extends CircuitoController {
     }
 
     public function ativarLideresRevisaoAction() {
-        $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
+
         try {
-            $repositorioORM->iniciarTransacao();
+            $this->getRepositorio()->iniciarTransacao();
             $sessao = new Container(Constantes::$NOME_APLICACAO);
             $idRevisao = $sessao->idSessao;
             $idPessoa = $sessao->idPessoa;
-            $pessoaLogada = $repositorioORM->getPessoaORM()->encontrarPorId($idPessoa);
-            $eventoRevisao = $repositorioORM->getEventoORM()->encontrarPorId($idRevisao);
+            $pessoaLogada = $this->getRepositorio()->getPessoaORM()->encontrarPorId($idPessoa);
+            $eventoRevisao = $this->getRepositorio()->getEventoORM()->encontrarPorId($idRevisao);
             $eventoFrequencia = new EventoFrequencia();
             $eventoFrequencia->setEvento($eventoRevisao);
             $eventoFrequencia->setPessoa($pessoaLogada);
             $eventoFrequencia->setFrequencia('N');
-            $repositorioORM->getEventoFrequenciaORM()->persistir($eventoFrequencia);
+            $this->getRepositorio()->getEventoFrequenciaORM()->persistir($eventoFrequencia);
             $sessao->idSessao = $eventoFrequencia->getId();
-            $repositorioORM->fecharTransacao();
+            $this->getRepositorio()->fecharTransacao();
             return $this->redirect()->toRoute(Constantes::$ROUTE_CADASTRO, array(
                         Constantes::$PAGINA => Constantes::$PAGINA_FICHA_REVISAO,
             ));
         } catch (Exception $exc) {
-            $repositorioORM->desfazerTransacao();
+            $this->getRepositorio()->desfazerTransacao();
             echo $exc->getTraceAsString();
         }
     }
 
     public function removerRevisionistaAtivoAction() {
-        $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
+
         try {
             $sessao = new Container(Constantes::$NOME_APLICACAO);
-            $repositorioORM->iniciarTransacao();
+            $this->getRepositorio()->iniciarTransacao();
             $idEventoFrequencia = $sessao->idSessao;
 
             /* Resgatando Dados do EventoFrequencia e do Revisionista */
-            $eventoFrequencia = $repositorioORM->getEventoFrequenciaORM()->encontrarPorIdEventoFrequencia($idEventoFrequencia);
+            $eventoFrequencia = $this->getRepositorio()->getEventoFrequenciaORM()->encontrarPorIdEventoFrequencia($idEventoFrequencia);
             if ($eventoFrequencia->getFrequencia() == 'S') {
                 $pessoaRevisionista = $eventoFrequencia->getPessoa();
                 /* Membro = idTipo 3 */
-                $grupoPessoaRevisionista = $this->alterarGrupoPessoaTipo(3, $repositorioORM, $pessoaRevisionista);
+                $grupoPessoaRevisionista = $this->alterarGrupoPessoaTipo(3, $this->getRepositorio(), $pessoaRevisionista);
 
                 /* Ativando a presença do Revisionista  */
                 $eventoFrequencia->setFrequencia('N');
-                $repositorioORM->getEventoFrequenciaORM()->persistir($eventoFrequencia, false);
+                $this->getRepositorio()->getEventoFrequenciaORM()->persistir($eventoFrequencia, false);
 
                 /* Mensagens de retorno */
                 $sessao->mostrarNotificacao = true;
@@ -1818,18 +1840,18 @@ class CadastroController extends CircuitoController {
 
                 /* Fim da migração do Sistema Antigo */
 
-                $repositorioORM->fecharTransacao();
+                $this->getRepositorio()->fecharTransacao();
                 return $this->redirect()->toRoute(Constantes::$ROUTE_CADASTRO, array(
                             Constantes::$PAGINA => Constantes::$PAGINA_ATIVAR_FICHA_REVISAO,
                 ));
             } else {
-                $repositorioORM->desfazerTransacao();
+                $this->getRepositorio()->desfazerTransacao();
                 return $this->redirect()->toRoute(Constantes::$ROUTE_CADASTRO, array(
                             Constantes::$PAGINA => Constantes::$PAGINA_ATIVAR_FICHA_REVISAO,
                 ));
             }
         } catch (Exception $exc) {
-            $repositorioORM->desfazerTransacao();
+            $this->getRepositorio()->desfazerTransacao();
             echo $exc->getTraceAsString();
         }
     }
@@ -1846,12 +1868,12 @@ class CadastroController extends CircuitoController {
     }
 
     public function salvarTurmaAction() {
-        $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
+
         $request = $this->getRequest();
         $response = $this->getResponse();
         if ($request->isPost()) {
             try {
-                $repositorioORM->iniciarTransacao();
+                $this->getRepositorio()->iniciarTransacao();
 
                 $dadosPost = $request->getPost();
                 $id = $dadosPost['id'];
@@ -1861,7 +1883,7 @@ class CadastroController extends CircuitoController {
                 $observacao = $dadosPost['observacao'];
 
                 if ($id) {
-                    $turma = $repositorioORM->getTurmaORM()->encontrarPorId($id);
+                    $turma = $this->getRepositorio()->getTurmaORM()->encontrarPorId($id);
                 } else {
                     $turma = new Turma();
                 }
@@ -1872,25 +1894,25 @@ class CadastroController extends CircuitoController {
                 $turma->setTipo_turma_id($idTipo);
 
                 if ($id) {
-                    $repositorioORM->getTurmaORM()->persistir($turma, false);
+                    $this->getRepositorio()->getTurmaORM()->persistir($turma, false);
                 } else {
-                    $repositorioORM->getTurmaORM()->persistir($turma);
+                    $this->getRepositorio()->getTurmaORM()->persistir($turma);
                 }
 
-                $repositorioORM->fecharTransacao();
+                $this->getRepositorio()->fecharTransacao();
                 return $this->redirect()->toRoute(Constantes::$ROUTE_CADASTRO, array(
                             Constantes::$PAGINA => Constantes::$PAGINA_LISTAR_TURMA,
                 ));
             } catch (Exception $exc) {
-                $repositorioORM->desfazerTransacao();
+                $this->getRepositorio()->desfazerTransacao();
                 echo $exc->getTraceAsString();
             }
         }
     }
 
     public function listarTurmaAction() {
-        $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
-        $turmas = $repositorioORM->getTurmaORM()->encontrarTodas();
+
+        $turmas = $this->getRepositorio()->getTurmaORM()->encontrarTodas();
         $view = new ViewModel(array(
             'turmas' => $turmas,
         ));
@@ -1900,9 +1922,9 @@ class CadastroController extends CircuitoController {
 
     public function turmaFormEditAction() {
         $sessao = new Container(Constantes::$NOME_APLICACAO);
-        $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
+
         $idTurma = $sessao->idSessao;
-        $turma = $repositorioORM->getTurmaORM()->encontrarPorId($idTurma);
+        $turma = $this->getRepositorio()->getTurmaORM()->encontrarPorId($idTurma);
         $formCadastroTurma = new TurmaForm('formulario', $turma);
 
         $view = new ViewModel(array(
@@ -1914,11 +1936,11 @@ class CadastroController extends CircuitoController {
 
     public function turmaExcluirAction() {
         $sessao = new Container(Constantes::$NOME_APLICACAO);
-        $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
+
         $idTurma = $sessao->idSessao;
-        $turma = $repositorioORM->getTurmaORM()->encontrarPorId($idTurma);
+        $turma = $this->getRepositorio()->getTurmaORM()->encontrarPorId($idTurma);
         $turma->setDataEHoraDeInativacao();
-        $repositorioORM->getTurmaORM()->persistir($turma, false);
+        $this->getRepositorio()->getTurmaORM()->persistir($turma, false);
 
         return $this->redirect()->toRoute(Constantes::$ROUTE_CADASTRO, array(
                     Constantes::$PAGINA => Constantes::$PAGINA_LISTAR_TURMA,
@@ -1927,21 +1949,104 @@ class CadastroController extends CircuitoController {
 
     public function solicitacoesAction() {
         $sessao = new Container(Constantes::$NOME_APLICACAO);
-        $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
+
         $idEntidadeAtual = $sessao->idEntidadeAtual;
-        $entidade = $repositorioORM->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+        $entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
         $grupo = $entidade->getGrupo();
-        $solicitacoes = $grupo->getSolicitacao();
+        $solicitacoes = null;
+        foreach ($grupo->getResponsabilidadesAtivas() as $grupoResponsavel) {
+            $pessoa = $grupoResponsavel->getPessoa();
+            if ($pessoa->getSolicitacao()) {
+                foreach ($pessoa->getSolicitacao() as $solicitacao) {
+                    $solicitacoes[] = $solicitacao;
+                }
+            }
+        }
         $view = new ViewModel(array(
             'solicitacoes' => $solicitacoes,
+            'titulo' => 'Solicitações',
         ));
         return $view;
     }
 
     public function solicitacaoAction() {
+        $sessao = new Container(Constantes::$NOME_APLICACAO);
 
-        $view = new ViewModel(array());
+        $idEntidadeAtual = $sessao->idEntidadeAtual;
+        $entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+        $grupo = $entidade->getGrupo();
+        $periodo = 0;
+        $grupoPaiFilhoFilhos = $grupo->getGrupoPaiFilhoFilhosAtivos($periodo);
+
+        $solicitacaoTipos = $this->getRepositorio()->getSolicitacaoTipoORM()->encontrarTodos();
+        $formSolicitacao = new SolicitacaoForm('formSolicitacao');
+
+        $view = new ViewModel(array(
+            'discipulos' => $grupoPaiFilhoFilhos,
+            'solicitacaoTipos' => $solicitacaoTipos,
+            Constantes::$FORM => $formSolicitacao,
+        ));
+
+        /* Javascript */
+        $layoutJS = new ViewModel();
+        $layoutJS->setTemplate('layout/layout-js-cadastrar-solicitacao');
+        $view->addChild($layoutJS, 'layoutJSCadastrarSolicitacao');
+
         return $view;
+    }
+
+    /**
+     * Tela com confrmação de cadastro de grupo
+     * POST /cadastroSolicitacaoFinalizar
+     */
+    public function solicitacaoFinalizarAction() {
+        CircuitoController::verificandoSessao(new Container(Constantes::$NOME_APLICACAO), $this);
+
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            try {
+                $this->getRepositorio()->iniciarTransacao();
+                $post_data = $request->getPost();
+
+                $sessao = new Container(Constantes::$NOME_APLICACAO);
+                $idPessoaAtual = $sessao->idPessoa;
+                $pessoaLogada = $this->getRepositorio()->getPessoaORM()->encontrarPorId($idPessoaAtual);
+                $solicitacaoTipo = $this->getRepositorio()->getSolicitacaoTipoORM()->encontrarPorId($post_data['solicitacaoTipoId']);
+
+                /* Criando */
+                $solicitacao = new Solicitacao();
+                $solicitacao->setPessoa($pessoaLogada);
+                $solicitacao->setSolicitacaoTipo($solicitacaoTipo);
+                $solicitacao->setObjeto1($post_data['objeto1']);
+                $solicitacao->setObjeto2($post_data['objeto2']);
+                $this->getRepositorio()->getSolicitacaoORM()->persistir($solicitacao);
+
+                $solicitacaoSituacao = new SolicitacaoSituacao();
+                $solicitacaoSituacao->setSolicitacao($solicitacao);
+                $solicitacaoSituacao->setSituacao($this->getRepositorio()->getSituacaoORM()->encontrarPorId(Situacao::PENDENTE_DE_ACEITACAO));
+                $this->getRepositorio()->getSolicitacaoSituacaoORM()->persistir($solicitacaoSituacao);
+
+                if ($solicitacaoTipo->getId() === SolicitacaoTipo::TRANSFERIR_LIDER_NA_PROPRIA_EQUIPE) {
+                    $solicitacaoSituacao->setDataEHoraDeInativacao();
+                    $this->getRepositorio()->getSolicitacaoSituacaoORM()->persistir($solicitacaoSituacao, false);
+
+                    $solicitacaoSituacaoAceito = new SolicitacaoSituacao();
+                    $solicitacaoSituacaoAceito->setSolicitacao($solicitacao);
+                    $solicitacaoSituacaoAceito->setSituacao($this->getRepositorio()->getSituacaoORM()->encontrarPorId(Situacao::ACEITO_AGENDADO));
+                    $this->getRepositorio()->getSolicitacaoSituacaoORM()->persistir($solicitacaoSituacaoAceito);
+                }
+
+                $this->getRepositorio()->fecharTransacao();
+
+                return $this->redirect()->toRoute(Constantes::$ROUTE_CADASTRO, array(
+                            Constantes::$PAGINA => Constantes::$PAGINA_SOLICITACOES,
+                ));
+            } catch (Exception $exc) {
+                $this->getRepositorio()->desfazerTransacao();
+                echo $exc->getTraceAsString();
+                $this->direcionaErroDeCadastro($exc->getMessage());
+            }
+        }
     }
 
     /**
@@ -1953,9 +2058,9 @@ class CadastroController extends CircuitoController {
         $sessao = new Container(Constantes::$NOME_APLICACAO);
         $extra = null;
         $idTurma = $sessao->idSessao;
-        $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
-        $entidade = $repositorioORM->getEntidadeORM()->encontrarPorId($sessao->idEntidadeAtual);
-        $turma = $repositorioORM->getTurmaORM()->encontrarPorId($idTurma);
+
+        $entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($sessao->idEntidadeAtual);
+        $turma = $this->getRepositorio()->getTurmaORM()->encontrarPorId($idTurma);
 
         $view = new ViewModel(array(
             Constantes::$NOME_ENTIDADE_TURMA => $turma,
@@ -1971,8 +2076,8 @@ class CadastroController extends CircuitoController {
     }
 
     public function listarTurmaInativaAction() {
-        $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
-        $turmas = $repositorioORM->getTurmaORM()->encontrarTodas();
+
+        $turmas = $this->getRepositorio()->getTurmaORM()->encontrarTodas();
         $view = new ViewModel(array(
             'turmas' => $turmas,
         ));
@@ -1982,10 +2087,10 @@ class CadastroController extends CircuitoController {
 
     public function turmaSelecionarAlunosAction() {
         $sessao = new Container(Constantes::$NOME_APLICACAO);
-        $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
+
         $idTurma = $sessao->idTurma;
         $idRevisao = $sessao->idRevisao;
-        $eventoRevisao = $repositorioORM->getEventoORM()->encontrarPorId($idRevisao);
+        $eventoRevisao = $this->getRepositorio()->getEventoORM()->encontrarPorId($idRevisao);
 
         $pessoas = array();
         $frequencias = $eventoRevisao->getEventoFrequencia();
@@ -2047,8 +2152,8 @@ class CadastroController extends CircuitoController {
      * Função de listagem de curso
      */
     public function cursoListarAction() {
-        $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
-        $cursos = $repositorioORM->getCursoORM()->buscarTodosRegistrosEntidade();
+
+        $cursos = $this->getRepositorio()->getCursoORM()->buscarTodosRegistrosEntidade();
         $view = new ViewModel(array(
             'cursos' => $cursos,
         ));
@@ -2070,21 +2175,21 @@ class CadastroController extends CircuitoController {
     }
 
     public function cursoSalvarAction() {
-        $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
+
         $request = $this->getRequest();
         $response = $this->getResponse();
         if ($request->isPost()) {
             try {
-                $repositorioORM->iniciarTransacao();
+                $this->getRepositorio()->iniciarTransacao();
 
                 $dadosPost = $request->getPost();
                 $id = $dadosPost['id'];
                 $nome = $dadosPost['nome'];
                 $sessao = new Container(Constantes::$NOME_APLICACAO);
                 $idPessoaLogada = $sessao->idPessoa;
-                $pessoaLogada = $repositorioORM->getPessoaORM()->encontrarPorId($idPessoaLogada);
+                $pessoaLogada = $this->getRepositorio()->getPessoaORM()->encontrarPorId($idPessoaLogada);
                 if ($id) {
-                    $curso = $repositorioORM->getCursoORM()->encontrarPorId($id);
+                    $curso = $this->getRepositorio()->getCursoORM()->encontrarPorId($id);
                 } else {
                     $curso = new Curso();
                 }
@@ -2093,17 +2198,17 @@ class CadastroController extends CircuitoController {
                 $curso->setPessoa($pessoaLogada);
 
                 if ($id) {
-                    $repositorioORM->getCursoORM()->persistir($curso, false);
+                    $this->getRepositorio()->getCursoORM()->persistir($curso, false);
                 } else {
-                    $repositorioORM->getCursoORM()->persistir($curso);
+                    $this->getRepositorio()->getCursoORM()->persistir($curso);
                 }
 
-                $repositorioORM->fecharTransacao();
+                $this->getRepositorio()->fecharTransacao();
                 return $this->redirect()->toRoute(Constantes::$ROUTE_CADASTRO, array(
                             Constantes::$PAGINA => Constantes::$PAGINA_CURSO_LISTAR,
                 ));
             } catch (Exception $exc) {
-                $repositorioORM->desfazerTransacao();
+                $this->getRepositorio()->desfazerTransacao();
                 echo $exc->getTraceAsString();
             }
         }
@@ -2111,9 +2216,9 @@ class CadastroController extends CircuitoController {
 
     public function cursoFormEditAction() {
         $sessao = new Container(Constantes::$NOME_APLICACAO);
-        $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
+
         $idCurso = $sessao->idSessao;
-        $curso = $repositorioORM->getCursoORM()->encontrarPorId($idCurso);
+        $curso = $this->getRepositorio()->getCursoORM()->encontrarPorId($idCurso);
         $formCadastroCurso = new CursoForm('formulario', $curso);
 
         $view = new ViewModel(array(
@@ -2129,12 +2234,12 @@ class CadastroController extends CircuitoController {
      */
     public function cursoExclusaoAction() {
         /* Verificando a se tem algum id na sessão */
-        $sessao = new Container(Constantes::$NOME_APLICACAO); 
+        $sessao = new Container(Constantes::$NOME_APLICACAO);
         $extra = null;
         $idCurso = $sessao->idSessao;
-        $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
-        $entidade = $repositorioORM->getEntidadeORM()->encontrarPorId($sessao->idEntidadeAtual);
-        $curso = $repositorioORM->getCursoORM()->encontrarPorId($idCurso);
+
+        $entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($sessao->idEntidadeAtual);
+        $curso = $this->getRepositorio()->getCursoORM()->encontrarPorId($idCurso);
 
         $view = new ViewModel(array(
             Constantes::$NOME_ENTIDADE_CURSO => $curso,
@@ -2151,25 +2256,25 @@ class CadastroController extends CircuitoController {
 
     public function cursoExcluirAction() {
         $sessao = new Container(Constantes::$NOME_APLICACAO);
-        $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
+
         $idCurso = $sessao->idSessao;
-        $curso = $repositorioORM->getCursoORM()->encontrarPorId($idCurso);
+        $curso = $this->getRepositorio()->getCursoORM()->encontrarPorId($idCurso);
         $curso->setDataEHoraDeInativacao();
-        $repositorioORM->getCursoORM()->persistir($curso, false);
+        $this->getRepositorio()->getCursoORM()->persistir($curso, false);
 
         return $this->redirect()->toRoute(Constantes::$ROUTE_CADASTRO, array(
                     Constantes::$PAGINA => Constantes::$PAGINA_CURSO_LISTAR,
         ));
     }
-    
+
     /**
      * Função de listagem de disciplina
      */
     public function disciplinaListarAction() {
-        $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
+
         $sessao = new Container(Constantes::$NOME_APLICACAO);
         $idCurso = $sessao->idSessao;
-        $disciplinas = $repositorioORM->getDisciplinaORM()->buscarTodosRegistrosEntidade('posicao', 'ASC');
+        $disciplinas = $this->getRepositorio()->getDisciplinaORM()->buscarTodosRegistrosEntidade();
         $view = new ViewModel(array(
             'disciplinas' => $disciplinas,
             'idCurso' => $idCurso,
@@ -2183,27 +2288,29 @@ class CadastroController extends CircuitoController {
      */
 
     public function disciplinaFormAction() {
-        $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
+
         $sessao = new Container(Constantes::$NOME_APLICACAO);
         $idCurso = $sessao->idSessao;
-        $curso = $repositorioORM->getCursoORM()->encontrarPorId($idCurso);
-        $disciplinas = $repositorioORM->getDisciplinaORM()->encontrarTodasPorIdCurso($idCurso);
+
+        $curso = $this->getRepositorio()->getCursoORM()->encontrarPorId($idCurso);
+        $disciplinas = $curso->getDisciplina();
+
         $formCadastroDisciplina = new DisciplinaForm('formulario', $idCurso, $disciplinas);
         $view = new ViewModel(array(
             'formCadastroDisciplina' => $formCadastroDisciplina,
-            'idCurso' => $idCurso, 
+            'idCurso' => $idCurso,
         ));
 
         return $view;
     }
 
     public function disciplinaSalvarAction() {
-        $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
+
         $request = $this->getRequest();
         $response = $this->getResponse();
         if ($request->isPost()) {
             try {
-                $repositorioORM->iniciarTransacao();
+                $this->getRepositorio()->iniciarTransacao();
 
                 $dadosPost = $request->getPost();
                 $id = $dadosPost['id'];
@@ -2211,46 +2318,49 @@ class CadastroController extends CircuitoController {
                 $posicao = $dadosPost['posicao'];
                 $idCurso = $dadosPost['idCurso'];
                 if ($id) {
-                    $disciplina = $repositorioORM->getDisciplinaORM()->encontrarPorId($id);
+                    $disciplina = $this->getRepositorio()->getDisciplinaORM()->encontrarPorId($id);
                 } else {
                     $disciplina = new Disciplina();
                 }
-                $curso = $repositorioORM->getCursoORM()->encontrarPorId($idCurso);
+                $curso = $this->getRepositorio()->getCursoORM()->encontrarPorId($idCurso);
                 $disciplina->setNome($nome);
                 $disciplina->setPosicao($posicao);
                 $disciplina->setCurso($curso);
 
                 if ($id) {
-                    $repositorioORM->getDisciplinaORM()->persistir($disciplina, false);
+                    $this->getRepositorio()->getDisciplinaORM()->persistir($disciplina, false);
                 } else {
-                    $repositorioORM->getDisciplinaORM()->persistir($disciplina);
+                    $this->getRepositorio()->getDisciplinaORM()->persistir($disciplina);
                 }
 
-                $repositorioORM->fecharTransacao();
+                $this->getRepositorio()->fecharTransacao();
                 $sessao = new Container(Constantes::$NOME_APLICACAO);
                 $sessao->idSessao = $idCurso;
                 return $this->redirect()->toRoute(Constantes::$ROUTE_CADASTRO, array(
                             Constantes::$PAGINA => Constantes::$PAGINA_DISCIPLINA_LISTAR,
                 ));
             } catch (Exception $exc) {
-                $repositorioORM->desfazerTransacao();
+                $this->getRepositorio()->desfazerTransacao();
                 echo $exc->getTraceAsString();
             }
         }
     }
 
     public function disciplinaFormEditAction() {
-        $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
+
         $sessao = new Container(Constantes::$NOME_APLICACAO);
         $idDisciplina = $sessao->idSessao;
-        $disciplina = $repositorioORM->getDisciplinaORM()->encontrarPorId($idDisciplina);
-        $disciplinas = $repositorioORM->getDisciplinaORM()->encontrarTodasPorIdCurso($disciplina->getCurso_id());  
-        $formCadastroDisciplina = new DisciplinaForm('formulario', $disciplina->getCurso_id(), $disciplinas, $disciplina);
+
+        $disciplina = $this->getRepositorio()->getDisciplinaORM()->encontrarPorId($idDisciplina);
+
+        $curso = $disciplina->getCurso();
+        $disciplinas = $curso->getDisciplina();
+        $formCadastroDisciplina = new DisciplinaForm('formulario', $idCurso, $disciplinas, $disciplina);
         $view = new ViewModel(array(
             'formCadastroDisciplina' => $formCadastroDisciplina,
-            'idCurso' => $disciplina->getCurso_id(), 
+            'idCurso' => $curso->getId(),
         ));
-        
+
 
         return $view;
     }
@@ -2264,15 +2374,13 @@ class CadastroController extends CircuitoController {
         $sessao = new Container(Constantes::$NOME_APLICACAO);
         $extra = null;
         $idDisciplina = $sessao->idSessao;
-        $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
-        $entidade = $repositorioORM->getEntidadeORM()->encontrarPorId($sessao->idEntidadeAtual);
-        $disciplina = $repositorioORM->getDisciplinaORM()->encontrarPorId($idDisciplina);
+
+        $entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($sessao->idEntidadeAtual);
+        $disciplina = $this->getRepositorio()->getDisciplinaORM()->encontrarPorId($idDisciplina);
 
         $view = new ViewModel(array(
             Constantes::$NOME_ENTIDADE_DISCIPLINA => $disciplina,
             Constantes::$ENTIDADE => $entidade,
-            'idCurso' => $disciplina->getCurso_id(),
-            
         ));
 
         /* Javascript */
@@ -2285,17 +2393,17 @@ class CadastroController extends CircuitoController {
 
     public function disciplinaExcluirAction() {
         $sessao = new Container(Constantes::$NOME_APLICACAO);
-        $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
+
         $idDisciplina = $sessao->idSessao;
-        $disciplina = $repositorioORM->getDisciplinaORM()->encontrarPorId($idDisciplina);
+        $disciplina = $this->getRepositorio()->getDisciplinaORM()->encontrarPorId($idDisciplina);
         $disciplina->setDataEHoraDeInativacao();
-        $repositorioORM->getCursoORM()->persistir($disciplina, false);
+        $this->getRepositorio()->getCursoORM()->persistir($disciplina, false);
         $sessao->idSessao = $disciplina->getCurso_id();
         return $this->redirect()->toRoute(Constantes::$ROUTE_CADASTRO, array(
-                    Constantes::$PAGINA => Constantes::$PAGINA_DISCIPLINA_LISTAR,  
+                    Constantes::$PAGINA => Constantes::$PAGINA_DISCIPLINA_LISTAR,
         ));
     }
-    
+
     /**
      * Função de listagem de aula
      */
@@ -2327,7 +2435,7 @@ class CadastroController extends CircuitoController {
         $formCadastroAula = new AulaForm('formulario', $idDisciplina, $aulas);
         $view = new ViewModel(array(
             'formCadastroAula' => $formCadastroAula,
-            'idDisciplina' => $idDisciplina, 
+            'idDisciplina' => $idDisciplina,
             'idCurso' => $disciplina->getCurso_id(),
         ));
 
@@ -2381,13 +2489,13 @@ class CadastroController extends CircuitoController {
         $sessao = new Container(Constantes::$NOME_APLICACAO);
         $idAula = $sessao->idSessao;
         $aula = $repositorioORM->getAulaORM()->encontrarPorId($idAula);
-        $aulas = $aula->getDisciplina()->getAula();  
+        $aulas = $aula->getDisciplina()->getAula();
         $formCadastroAula = new AulaForm('formulario', $aula->getDisciplina_id(), $aulas, $aula);
         $view = new ViewModel(array(
             'formCadastroAula' => $formCadastroAula,
-            'idDisciplina' => $aula->getDisciplina_id(), 
+            'idDisciplina' => $aula->getDisciplina_id(),
         ));
-        
+
 
         return $view;
     }
@@ -2409,7 +2517,6 @@ class CadastroController extends CircuitoController {
             Constantes::$NOME_ENTIDADE_AULA => $aula,
             Constantes::$ENTIDADE => $entidade,
             'idDisciplina' => $aula->getDisciplina_id(),
-            
         ));
 
         /* Javascript */
@@ -2429,7 +2536,7 @@ class CadastroController extends CircuitoController {
         $repositorioORM->getDisciplinaORM()->persistir($aula, false);
         $sessao->idSessao = $aula->getDisciplina_id();
         return $this->redirect()->toRoute(Constantes::$ROUTE_CADASTRO, array(
-                    Constantes::$PAGINA => Constantes::$PAGINA_AULA_LISTAR,  
+                    Constantes::$PAGINA => Constantes::$PAGINA_AULA_LISTAR,
         ));
     }
 

@@ -1,10 +1,5 @@
 
-function mostrarMotivos() {
-    $('#divMotivo').toggleClass('hidden');
-    $('#divBotaoVoltar').toggleClass('hidden');
-}
-
-function validarExclusao(funcao, id) {
+function validarSenha(form) {
     var inputSenha = $('#senha');
     var divMensagens = $('#divMensagens');
     if (inputSenha.val().length === 0) {
@@ -24,7 +19,7 @@ function validarExclusao(funcao, id) {
                     if (data.response) {
                         divMensagens
                                 .addClass('hidden');
-                        funcaoCircuito(funcao, id);
+                        form.submit();
                     } else {
                         divMensagens
                                 .html('Senha não confere')

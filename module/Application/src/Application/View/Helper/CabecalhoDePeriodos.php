@@ -41,7 +41,10 @@ class CabecalhoDePeriodos extends AbstractHelper {
             $urlBaseCiclo .= 'Arregimentacao';
         }
 
-        $periodo = $this->view->periodo;
+        $periodo = $this->view->periodoInicial;
+        if ($this->view->periodo) {
+            $periodo = $this->view->periodo;
+        }
         $urlCicloAnterior = $urlBaseCiclo . '/' . ($periodo - 1);
         $urlCicloPosterior = $urlBaseCiclo . '/' . ($periodo + 1);
 
@@ -54,12 +57,39 @@ class CabecalhoDePeriodos extends AbstractHelper {
         $botaoDireito = $this->view->botaoSimples(
                 $iconeFlechaDireita, $funcaoOnclickDireita, BotaoSimples::botaoMuitoPequenoImportante, BotaoSimples::posicaoAoCentro);
 
+        $periodoInicialMontado = Funcoes::montaPeriodo($this->view->periodoInicial);
+        $periodoFinalMontado = Funcoes::montaPeriodo($this->view->periodoFinal);
+
         $html .= '<div class="center-block text-center mb10"> ';
+//        $html .= 'Periodo Inicial ';
+//        $html .= '<select id="periodoInicial" onchange="mudarPeriodo();">';
+//        for ($i = 0; $i > -30; $i--) {
+//            $selected = '';
+//            if ($i == $this->view->periodoInicial) {
+//                $selected = 'selected';
+//            }
+//            $html .= '<option value="' . $i . '" ' . $selected . '>' . Funcoes::montaPeriodo($i)[0] . '</option>';
+//        }
+//        $html .= '</select>';
+//        $html .= Constantes::$NBSP . '-' . Constantes::$NBSP;
+//        $html .= 'Periodo Final ';
+//        $html .= '<select id="periodoFinal" onchange="mudarPeriodo();">';
+//        for ($i = 0; $i > -30; $i--) {
+//            $selected = '';
+//            if ($i == $this->view->periodoFinal) {
+//                $selected = 'selected';
+//            }
+//            $html .= '<option value="' . $i . '" ' . $selected . '>' . Funcoes::montaPeriodo($i)[0] . '</option>';
+//        }
+//        $html .= '</select>';
         if ($this->view->mostrarBotaoPeriodoAnterior) {
             $html .= $botaoEsquerdo;
         }
         $html .= Constantes::$NBSP;
-        $html .= $this->view->translate(Constantes::$TRADUCAO_PERIODO) . '&nbsp;-&nbsp;' . Funcoes::montaPeriodo($periodo)[0];
+        $html .= $this->view->translate(Constantes::$TRADUCAO_PERIODO)
+                . '&nbsp;-&nbsp;'
+                . Funcoes::montaPeriodo($periodo)[0]
+        ;
         $html .= Constantes::$NBSP;
         if ($this->view->mostrarBotaoPeriodoAfrente) {
             $html .= $botaoDireito;

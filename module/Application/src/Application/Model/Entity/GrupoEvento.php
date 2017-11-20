@@ -7,6 +7,7 @@ namespace Application\Model\Entity;
  * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com>
  * Descricao: Entidade anotada da tabela grupo_evento
  */
+
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -14,10 +15,6 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="grupo_evento")
  */
 class GrupoEvento extends CircuitoEntity {
-
-    const CELULA = 1;
-    const CULTO = 2;
-    const REVISAO = 3;
 
     /**
      * @ORM\ManyToOne(targetEntity="Evento", inversedBy="grupoEvento")
@@ -76,7 +73,7 @@ class GrupoEvento extends CircuitoEntity {
 
     function setGrupo_id($grupo_id) {
         $this->grupo_id = $grupo_id;
-    }   
+    }
 
     function getNovo() {
         return $this->novo;

@@ -8,6 +8,7 @@ use Application\Controller\Helper\Funcoes;
 use Application\Model\Entity\Entidade;
 use Application\Model\Entity\Evento;
 use Application\Model\Entity\EventoCelula;
+use Application\Model\Entity\EventoTipo;
 use Application\Model\Entity\FatoLider;
 use Application\Model\Entity\Grupo;
 use Application\Model\Entity\GrupoCv;
@@ -339,7 +340,13 @@ class IndexController extends CircuitoController {
     }
 
     public function testeSerproAction() {
-        $html = '';
+        $html = 'Teste Serpro';
+        $comandoBase64 = 'echo -n "djaR21PGoYp1iyK2n2ACOH9REdUb:ObRsAJWOL4fv2Tp27D1vd8fB3Ote" | base64';
+        $comandoPegaToken = 'curl -k -d "grant_type=client_credentials" -H "Authorization: Basic ZGphUjIxUEdvWXAxaXlLMm4yQUNPSDlSRWRVYjpPYlJzQUpXT0w0ZnYyVHAyN0QxdmQ4ZkIzT3Rl==" https://apigateway.serpro.gov.br/token';
+        $script = 'curl -X GET "https://apigateway.serpro.gov.br/consulta-cpf-trial/1/cpf/63017285995" -H  "accept: application/json" -H  "Authorization: Bearer 4e1a1858bdd584fdc077fb7d80f39283"';
+        echo '<pre>';
+        passthru($script);
+        echo '</pre>';
         return new ViewModel(array('html' => $html));
     }
 
@@ -745,7 +752,7 @@ class IndexController extends CircuitoController {
     private function buscaCultosPorIgreja($id) {
         $idInt = (int) $id;
         $eventos = null;
-        $eventoTipo = $this->getRepositorio()->getEventoTipoORM()->encontrarPorId(1);
+        $eventoTipo = $this->getRepositorio()->getEventoTipoORM()->encontrarPorId(EventoTipo::tipoCulto);
         $sqlCultos = 'SELECT * FROM ursula_igreja_culto_ursula WHERE mes = MONTH(NOW()) AND ano = YEAR(NOW()) AND idIgreja = ' . $idInt;
         $queryCultos = mysqli_query($this->getConexao(), $sqlCultos);
         while ($rowCultos = mysqli_fetch_array($queryCultos)) {
@@ -763,7 +770,7 @@ class IndexController extends CircuitoController {
     private function buscaCelulasPorLideres($idLider1, $idLider2 = null) {
         $eventos = null;
         $idLider1Int = (int) $idLider1;
-        $eventoTipo = $this->getRepositorio()->getEventoTipoORM()->encontrarPorId(2);
+        $eventoTipo = $this->getRepositorio()->getEventoTipoORM()->encontrarPorId(EventoTipo::tipoCelula);
         $sqlCelulas1 = 'SELECT 
                             *
                         FROM
