@@ -47,7 +47,7 @@ use Zend\View\Model\ViewModel;
 
 /**
  * Nome: CadastroController.php
- * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com> 
+ * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com>
  * Descricao: Controle de todas ações de lancamento
  */
 class CadastroController extends CircuitoController {
@@ -1187,7 +1187,7 @@ class CadastroController extends CircuitoController {
 
     /**
      * Busca de email
-     * Resposta: 0 - Não utilizado; 1 - Utilizado; 
+     * Resposta: 0 - Não utilizado; 1 - Utilizado;
      * @return Json
      */
     public function buscarEmailAction() {
