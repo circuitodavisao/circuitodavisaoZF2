@@ -2453,7 +2453,7 @@ class CadastroController extends CircuitoController {
                 $dadosPost = $request->getPost();
                 $id = $dadosPost['id'];
                 $nome = $dadosPost['nome'];
-                $posicao = $dadosPost['posicao'];
+                $posicao = $dadosPost['posicao']; 
                 $idDisciplina = $dadosPost['idDisciplina'];
                 if ($id) {
                     $aula = $repositorioORM->getAulaORM()->encontrarPorId($id);
