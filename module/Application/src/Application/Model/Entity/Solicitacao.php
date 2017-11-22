@@ -43,6 +43,12 @@ class Solicitacao extends CircuitoEntity {
     /** @ORM\Column(type="integer") */
     protected $objeto2;
 
+    /** @ORM\Column(type="string") */
+    protected $nome;
+
+    /** @ORM\Column(type="integer") */
+    protected $numero;
+
     /** @ORM\Column(type="integer") */
     protected $solicitante_id;
 
@@ -114,6 +120,22 @@ class Solicitacao extends CircuitoEntity {
 
     function setSolicitacaoSituacao($solicitacaoSituacao) {
         $this->solicitacaoSituacao = $solicitacaoSituacao;
+    }
+
+    function getNome() {
+        return $this->nome;
+    }
+
+    function getNumero() {
+        return $this->numero;
+    }
+
+    function setNome($nome) {
+        $this->nome = $nome;
+    }
+
+    function setNumero($numero) {
+        $this->numero = $numero;
     }
 
 }

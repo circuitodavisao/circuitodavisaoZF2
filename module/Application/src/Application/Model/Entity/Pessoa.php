@@ -174,7 +174,7 @@ class Pessoa extends CircuitoEntity implements InputFilterAwareInterface {
         $explodeNome = explode(" ", $this->getNome());
         $primeiroNome = $explodeNome[0];
         if (count($explodeNome) > 1) {
-            $primeiroNome .= '&nbsp;' . $explodeNome[(count($explodeNome) - 1)];
+            $primeiroNome .= ' ' . $explodeNome[(count($explodeNome) - 1)];
         }
         return $primeiroNome;
     }

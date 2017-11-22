@@ -2023,6 +2023,12 @@ class CadastroController extends CircuitoController {
                 $solicitacao->setSolicitacaoTipo($solicitacaoTipo);
                 $solicitacao->setObjeto1($post_data['objeto1']);
                 $solicitacao->setObjeto2($post_data['objeto2']);
+                if ($post_data['numero']) {
+                    $solicitacao->setNumero($post_data['numero']);
+                }
+                if ($post_data['nome']) {
+                    $solicitacao->setNome($post_data['nome']);
+                }
                 $this->getRepositorio()->getSolicitacaoORM()->persistir($solicitacao);
 
                 $solicitacaoSituacao = new SolicitacaoSituacao();

@@ -12,8 +12,10 @@ use Application\Model\Entity\GrupoPaiFilho;
 use Application\Model\Entity\GrupoPessoa;
 use Application\Model\Entity\GrupoPessoaTipo;
 use Application\Model\Entity\GrupoResponsavel;
+use Application\Model\Helper\FuncoesEntidade;
 use Doctrine\ORM\EntityManager;
 use Exception;
+use Zend\Json\Json;
 use Zend\Session\Container;
 use Zend\View\Model\ViewModel;
 
@@ -220,6 +222,38 @@ class RelatorioController extends CircuitoController {
 
         $response = $this->getResponse();
         $response->setContent($relatorio);
+        return $response;
+    }
+
+    public function buscarDadosGrupoAction() {
+        $request = $this->getRequest();
+        $response = $this->getResponse();
+        if ($request->isPost()) {
+            try {
+                $post_data = $request->getPost();
+                $idGrupo = $post_data['idGrupo'];
+                $grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupo);
+                $numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupo);
+                $tipoRelatorioEquipe = 2;
+                $periodoInicial = 0;
+                $relatorio = RelatorioController::montaRelatorio($this->getRepositorio(), $numeroIdentificador, $periodoInicial, $tipoRelatorioEquipe);
+                $resposta = true;
+                $grupoResponsabilidades = $grupo->getResponsabilidadesAtivas();
+                $fotos = '';
+                foreach ($grupoResponsabilidades as $grupoResponsabilidade) {
+                    $fotos .= FuncoesEntidade::tagImgComFotoDaPessoa($grupoResponsabilidade->getPessoa(), 96);
+                }
+                $dados = array();
+                $dados['nomeLideres'] = $grupo->getNomeLideresAtivos();
+                $dados['fotos'] = $fotos;
+                $dados['celulaQuantidade'] = $relatorio['celulaQuantidade'];
+                $dados['quantidadeLideres'] = $relatorio['quantidadeLideres'];
+                $dados['resposta'] = $resposta;
+                $response->setContent(Json::encode($dados));
+            } catch (Exception $exc) {
+                echo $exc->getTraceAsString();
+            }
+        }
         return $response;
     }
 
