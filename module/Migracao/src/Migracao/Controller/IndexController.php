@@ -199,10 +199,14 @@ class IndexController extends CircuitoController {
                     if ($solicitacao->getNome()) {
                         $extra = (string) $solicitacao->getNome();
                     }
-                    echo $this->transferirLider($grupoQueSeraSemeado, $grupoQueRecebera, $extra);
+                    $solicitacaoSituacaoAtiva = $solicitacao->getSolicitacaoSituacaoAtiva();
+
+                    if ($solicitacaoSituacaoAtiva->getSituacao()->getId() === Situacao::ACEITO_AGENDADO) {
+                        echo $this->transferirLider($grupoQueSeraSemeado, $grupoQueRecebera, $extra);
+                    }
 
                     /* inativar solicitacao situacao ativa */
-                    $solicitacaoSituacaoAtiva = $solicitacao->getSolicitacaoSituacaoAtiva();
+
                     $solicitacaoSituacaoAtiva->setDataEHoraDeInativacao();
                     $this->getRepositorio()->getSolicitacaoSituacaoORM()->persistir($solicitacaoSituacaoAtiva, false);
 

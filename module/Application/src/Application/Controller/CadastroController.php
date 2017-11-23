@@ -1978,13 +1978,13 @@ class CadastroController extends CircuitoController {
         $idEntidadeAtual = $sessao->idEntidadeAtual;
         $entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
         $grupo = $entidade->getGrupo();
-        $periodo = 0;
-        $grupoPaiFilhoFilhos = $grupo->getGrupoPaiFilhoFilhosAtivos($periodo);
+        $grupoPaiFilhoFilhos = $grupo->getGrupoPaiFilhoFilhosAtivosReal();
 
         $solicitacaoTipos = $this->getRepositorio()->getSolicitacaoTipoORM()->encontrarTodos();
         $formSolicitacao = new SolicitacaoForm('formSolicitacao');
 
         $view = new ViewModel(array(
+            'grupo' => $grupo,
             'discipulos' => $grupoPaiFilhoFilhos,
             'solicitacaoTipos' => $solicitacaoTipos,
             Constantes::$FORM => $formSolicitacao,

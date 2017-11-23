@@ -225,7 +225,7 @@ class Grupo extends CircuitoEntity {
      * @return Pessoa[]
      */
     function getGrupoPaiFilhoFilhosAtivos($periodo = -1) {
-        $grupoPaiFilhoFilhosAtivos = array();
+        $grupoPaiFilhoFilhosAtivos = null;
         /* Responsabilidades */
         $grupoPaiFilhoFilhos = $this->getGrupoPaiFilhoFilhos();
         if ($grupoPaiFilhoFilhos) {
@@ -247,6 +247,21 @@ class Grupo extends CircuitoEntity {
                     if ($dataDoGrupoGrupoPaiFilhoInativadoParaComparar >= $dataDoInicioDoPeriodoParaComparar) {
                         $grupoPaiFilhoFilhosAtivos[] = $gpf;
                     }
+                }
+            }
+        }
+        return $grupoPaiFilhoFilhosAtivos;
+    }
+
+    function getGrupoPaiFilhoFilhosAtivosReal() {
+        $grupoPaiFilhoFilhosAtivos = null;
+        /* Responsabilidades */
+        $grupoPaiFilhoFilhos = $this->getGrupoPaiFilhoFilhos();
+        if ($grupoPaiFilhoFilhos) {
+            /* Verificar responsabilidades ativas */
+            foreach ($grupoPaiFilhoFilhos as $gpf) {
+                if ($gpf->verificarSeEstaAtivo()) {
+                    $grupoPaiFilhoFilhosAtivos[] = $gpf;
                 }
             }
         }

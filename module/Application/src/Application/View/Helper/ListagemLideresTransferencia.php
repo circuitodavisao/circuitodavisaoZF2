@@ -24,6 +24,10 @@ class ListagemLideresTransferencia extends AbstractHelper {
 
     public function renderHtml() {
         $html = '';
+        $entidade = $this->view->grupo->getEntidadeAtiva();
+        $nomeLideres = $this->view->grupo->getNomeLideresAtivos();
+        $informacao = $nomeLideres . ' - ' . $entidade->infoEntidade();
+        $html .= '<li id="lider_' . $this->view->grupo->getId() . '">' . $informacao;
         foreach ($this->getDiscipulos() as $gpFilho) {
             $grupo = $gpFilho->getGrupoPaiFilhoFilho();
             $mostrarFolder = false;

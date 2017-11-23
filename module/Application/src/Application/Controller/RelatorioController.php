@@ -237,17 +237,48 @@ class RelatorioController extends CircuitoController {
                 $tipoRelatorioEquipe = 2;
                 $periodoInicial = 0;
                 $relatorio = RelatorioController::montaRelatorio($this->getRepositorio(), $numeroIdentificador, $periodoInicial, $tipoRelatorioEquipe);
-                $resposta = true;
+
                 $grupoResponsabilidades = $grupo->getResponsabilidadesAtivas();
                 $fotos = '';
                 foreach ($grupoResponsabilidades as $grupoResponsabilidade) {
                     $fotos .= FuncoesEntidade::tagImgComFotoDaPessoa($grupoResponsabilidade->getPessoa(), 96);
                 }
+                $resposta = true;
                 $dados = array();
                 $dados['nomeLideres'] = $grupo->getNomeLideresAtivos();
                 $dados['fotos'] = $fotos;
                 $dados['celulaQuantidade'] = $relatorio['celulaQuantidade'];
                 $dados['quantidadeLideres'] = $relatorio['quantidadeLideres'];
+                $dados['resposta'] = $resposta;
+                $response->setContent(Json::encode($dados));
+            } catch (Exception $exc) {
+                echo $exc->getTraceAsString();
+            }
+        }
+        return $response;
+    }
+
+    public function buscarNumeracoesDisponivelAction() {
+        $request = $this->getRequest();
+        $response = $this->getResponse();
+        if ($request->isPost()) {
+            try {
+                $post_data = $request->getPost();
+                $idGrupo = $post_data['idGrupo'];
+                $grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupo);
+                $arrayDeNumerosUsados = array();
+                if ($grupo->getGrupoPaiFilhoFilhosAtivosReal()) {
+                    $filhos = $grupo->getGrupoPaiFilhoFilhosAtivosReal();
+                    foreach ($filhos as $filho) {
+                        if ($filho->getGrupoPaiFilhoFilho()->getEntidadeAtiva()->getNumero()) {
+                            $numero = $filho->getGrupoPaiFilhoFilho()->getEntidadeAtiva()->getNumero();
+                            $arrayDeNumerosUsados[] = $numero;
+                        }
+                    }
+                }
+                $resposta = true;
+                $dados = array();
+                $dados['numerosUsados'] = $arrayDeNumerosUsados;
                 $dados['resposta'] = $resposta;
                 $response->setContent(Json::encode($dados));
             } catch (Exception $exc) {

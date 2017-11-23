@@ -44,7 +44,7 @@ echo $this->templateFormularioTopo($this->titulo);
     <div id="divObjetos" class="hidden">
         <?php
         for ($indiceDeObejtos = 1; $indiceDeObejtos <= 3; $indiceDeObejtos++) {
-            $funcaoOnclick = 'abrirSelecionarObjeto(' . $indiceDeObejtos . ')';
+            $funcaoOnclick = 'abrirSelecionarObjeto(' . $indiceDeObejtos . ', ' . $this->grupo->getId() . ')';
             $mostrarBotaoAdicionar = '';
             if ($indiceDeObejtos === 1) {
                 $stringSelecioneOObjeto = 'Selecione o Lider que será transferido';
@@ -59,7 +59,7 @@ echo $this->templateFormularioTopo($this->titulo);
             }
             ?>
             <!-- Bloco objeto -->
-            <div id="blocoObjeto<?php echo $indiceDeObejtos; ?>" class="well col-xs-12 text-left" onClick='<?php // echo $funcaoOnclick;     ?>'>
+            <div id="blocoObjeto<?php echo $indiceDeObejtos; ?>" class="well col-xs-12 text-left" onClick='<?php // echo $funcaoOnclick;      ?>'>
                 <div class="col-md-12">
                     <span id="spanSelecioneObjeto<?php echo $indiceDeObejtos; ?>"><?php echo $stringSelecioneOObjeto; ?></span>    
                     <span id="spanObjeto<?php echo $indiceDeObejtos; ?>"></span>

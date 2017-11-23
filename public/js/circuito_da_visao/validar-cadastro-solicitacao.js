@@ -64,18 +64,14 @@ function mostrarBotaoContinuar() {
 }
 
 function selecionarTipo() {
-    if (parseInt($('#solicitacaoTipo').val()) === 0) {
-
-    } else {
-        $(stringDivSolicitacaoTipo).addClass(hidden);
-        $(stringDivObjetos).removeClass(hidden);
-        $('#divProgress').removeClass(hidden);
-        $('#tituloDaPagina').html($('#tituloDaPagina').html() + ' - ' + $('#solicitacaoTipo option:selected').text());
-        $('#solicitacaoTipoId').val($('#solicitacaoTipo').val());
-    }
+    $(stringDivSolicitacaoTipo).addClass(hidden);
+    $(stringDivObjetos).removeClass(hidden);
+    $('#divProgress').removeClass(hidden);
+    $('#tituloDaPagina').html($('#tituloDaPagina').html() + ' - ' + $('#solicitacaoTipo option:selected').text());
+    $('#solicitacaoTipoId').val($('#solicitacaoTipo').val());
 }
 
-function abrirSelecionarObjeto(qualObjeto) {
+function abrirSelecionarObjeto(qualObjeto, idLider) {
     $(stringDivObjetos).addClass(hidden);
     if (qualObjeto != 3) {
         $(stringDivSelecionarLider).removeClass(hidden);
@@ -83,6 +79,17 @@ function abrirSelecionarObjeto(qualObjeto) {
         $(stringDivSelecionarNumeracao).removeClass(hidden);
     }
     objetoSelecionado = qualObjeto;
+
+    var tree = $("#treeLideres").fancytree("getTree");
+    var node = tree.getNodeByKey('lider_' + idLider);
+    if (objetoSelecionado === 1) {
+        /* Esconder lider */
+        $(node.span).closest('li').addClass('hide');
+    }
+    if (objetoSelecionado === 2) {
+        /* mostrar lider */
+        $(node.span).closest('li').removeClass('hide');
+    }
 }
 
 function selecionarObjeto(id, informacao) {
@@ -107,10 +114,15 @@ function selecionarObjeto(id, informacao) {
     spanSelecioneOObjeto.addClass(hidden);
     botaoSelecionar.addClass(hidden);
     /* buscar dados do grupo */
+    var idGrupo = id;
+    var splitId = id.split('_')
+    if (splitId[1]) {
+        idGrupo = splitId[1];
+    }
     $.post(
             "/relatorioBuscarDadosGrupo",
             {
-                idGrupo: id
+                idGrupo: idGrupo
             },
             function (data) {
                 if (data.resposta) {
@@ -153,6 +165,43 @@ function selecionarObjeto(id, informacao) {
                         $(stringDivBotaoSelecionar + 3).removeClass(hidden);
                     }
 
+                    var objetoQueVaiReceber = 2;
+                    var tipoTransferenciaDeLiderNaEquipe = 1;
+                    if (parseInt(objetoSelecionado) === objetoQueVaiReceber &&
+                            parseInt($('#solicitacaoTipo').val()) === tipoTransferenciaDeLiderNaEquipe) {
+                        $('#numero')
+                                .find('option')
+                                .remove()
+                                .end();
+                        /* Buscar numeracao das subs liberadas */
+                        $('#numero').append($('<option>', {
+                            value: 0,
+                            text: 'SELECIONE'
+                        }));
+                        $.post(
+                                "/relatorioBuscarNumeracoesDisponivel",
+                                {
+                                    idGrupo: idGrupo
+                                },
+                                function (data) {
+                                    if (data.resposta) {
+                                        for (var i = 1, max = 36; i < max; i++) {
+                                            var mostrarOption = true;
+                                            $.each(data.numerosUsados, function (index, value) {
+                                                if (i === parseInt(value)) {
+                                                    mostrarOption = false;
+                                                }
+                                            });
+                                            if (mostrarOption) {
+                                                $('#numero').append($('<option>', {
+                                                    value: i,
+                                                    text: i
+                                                }));
+                                            }
+                                        }
+                                    }
+                                }, 'json');
+                    }
                 }
             }, 'json');
 }
@@ -187,16 +236,11 @@ function limparObjeto(qualObjeto) {
     botaoLimpar.addClass(hidden);
     check.addClass(hidden);
     if (qualObjeto === 3) {
-        $('#numeracao').val(0);
+        $('#numero').val(0);
     }
-    var valorParaRemover = -35;
-    if (parseInt(qualObjeto) === 3) {
-        valorParaRemover = -30;
-    }
-    atualizarBarraDeProgresso(valorParaRemover);
-    verificarSeMostraOBotaoDeContinuar();
 
-    if (qualObjeto === 1 || qualObjeto === 2) {
+    var valorParaRemover;
+    if (parseInt(qualObjeto) === 1 || parseInt(qualObjeto) === 2) {
         for (var i = qualObjeto, max = 3; i <= max; i++) {
             $(stringSpanObjeto + i).html('');
             $(stringSpanNomeLideres + i).html('');
@@ -210,8 +254,22 @@ function limparObjeto(qualObjeto) {
             if (qualObjeto === 1 && i !== 1) {
                 $(stringDivBotaoSelecionar + i).addClass(hidden);
             }
+            valorParaRemover = -35;
+            if (i === 3) {
+                valorParaRemover = -30;
+            }
+            atualizarBarraDeProgresso(valorParaRemover);
         }
+        $('#numero').val(0);
     }
+    if (parseInt(qualObjeto) === 3) {
+        valorParaRemover = -30;
+        atualizarBarraDeProgresso(valorParaRemover);
+
+
+    }
+
+    verificarSeMostraOBotaoDeContinuar();
 }
 
 function verificarSeMostraOBotaoDeContinuar() {
