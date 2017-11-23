@@ -1,0 +1,102 @@
+<?php
+
+use Application\Controller\Helper\Constantes;
+
+/**
+ * Nome: curso.phtml
+ * @author Lucas Filipe de Carvalho Cunha <lucascarvalho.esw@gmail.com> 
+ * Descricao: Página de cadastro de cursos no IV.
+ */
+$form = $this->formCadastroCurso;
+$form->prepare();
+$form->setAttribute(Constantes::$ACTION, $this->url(Constantes::$ROUTE_CADASTRO, array(Constantes::$PAGINA => Constantes::$PAGINA_CURSO_SALVAR))); 
+?>  
+<div class="mw1000 center-block p10">
+    <div class="row ">
+        <div id="content" class="animated fadeIn">
+            <div class="row">
+                <!-- Cadastro de Pessoa -->
+                <div class="admin-form " id="register1" role="tabpanel">
+                    <blockquote class="blockquote-primary">
+                        <p>Cadastro de Cursos</p>
+                        <small>Instituto de Vencedores</small>
+                    </blockquote>
+                    <div class="panel panel-primary heading-border">
+                        <?php echo $this->form()->openTag($form); ?>
+                        <div class="panel-body bg-light p25">
+                            <?php
+                            echo $this->divMensagens();
+                            echo $this->inputFormularioSimples(Constantes::$TRADUCAO_NOME_CURSO, $form->get(Constantes::$FORM_NOME), 12);
+                          
+                            ?> 
+                        </div>
+                        <!-- end .form-body section -->
+                        <div class="panel-footer text-right">
+                            <?php
+                            echo $this->formHidden($form->get(Constantes::$FORM_ID));
+                            echo $this->formHidden($form->get(Constantes::$INPUT_CSRF));
+                            $stringNomeDaFuncaoOnClickCadastro = 'funcaoCadastro("' . Constantes::$PAGINA_CURSO_LISTAR . '", 0)';  
+                            echo $this->botaoLink($this->translate(Constantes::$TRADUCAO_VOLTAR), Constantes::$STRING_HASHTAG, 2, $this->funcaoOnClick($stringNomeDaFuncaoOnClickCadastro));
+                            /* Submit */
+                            $funcaoVerificarCadastroPessoa = $this->funcaoOnClick('validarLancamentoCadastrarCurso(this.form)');
+                            echo $this->botaoSimples(Constantes::$TRADUCAO_CADASTRAR, $funcaoVerificarCadastroPessoa);
+                            ?>
+                        </div>
+                        <!-- end .form-footer section -->
+<?php echo $this->form()->closeTag(); ?>
+                    </div>
+                    <!-- end .admin-form section -->
+                </div>
+                <!-- end: .admin-form -->
+            </div>
+        </div>
+    </div>
+</div>
+<script type="application/javascript">
+    
+function validarLancamentoCadastrarCurso(form) {
+    var nome = $('#nome').val();
+     
+
+    var temErro = false;
+    var divMensagens = $('#divMensagens');
+    var mensagem = '';
+    var mensagemReal = '';
+    
+    if (nome === '') {
+
+        temErro = true;
+        if (mensagem == '') {
+            mensagem = 'Nome';
+        } else {
+            mensagem += ', Nome';
+        }
+    }
+    
+    if (nome.length > 80) {
+
+        temErro = true;
+        if (mensagem == '') {
+            mensagem = 'Nome pode ter no máximo 80 caracteres';
+        } else {
+            mensagem += ', Nome pode ter no máximo 80 caracteres';
+        }
+    }
+    
+        
+    if (temErro) {
+        mensagemReal = 'Preencha o(s) seguinte(s) campo(s): ' + mensagem;
+        divMensagens
+                .html(mensagemReal)
+                .removeClass('alert-success')
+                .removeClass('hidden')
+                .addClass('alert-danger');
+    } else {
+      
+        divMensagens
+                .addClass('hidden');
+        form.submit();
+    }
+}    
+    
+</script>    
