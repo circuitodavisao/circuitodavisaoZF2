@@ -165,6 +165,37 @@ class FatoCicloORM extends CircuitoORM {
         }
     }
 
+    public function montarRelatorioCelulaDeElitePorNumeroIdentificador($numeroIdentificador, $periodo, $tipoComparacao) {
+        $dqlBase = "SELECT "
+                . "count(d.id) celulaDeElite "
+                . "FROM  " . Constantes::$ENTITY_FATO_CICLO . " fc "
+                . "JOIN fc.dimensao d "
+                . "WHERE "
+                . "d.dimensaoTipo = 1 "
+                . "AND fc.numero_identificador #tipoComparacao ?1 "
+                . "AND fc.data_criacao = ?2 "
+                . "AND (d.lider + d.visitante + d.consolidacao + d.membro) > 1";
+        try {
+            if ($tipoComparacao == 1) {
+                $dqlAjustadaTipoComparacao = str_replace('#tipoComparacao', '=', $dqlBase);
+            }
+            if ($tipoComparacao == 2) {
+                $dqlAjustadaTipoComparacao = str_replace('#tipoComparacao', 'LIKE', $dqlBase);
+                $numeroIdentificador .= '%';
+            }
+            $resultadoPeriodo = Funcoes::montaPeriodo($periodo);
+            $dataDoPeriodo = $resultadoPeriodo[3] . '-' . $resultadoPeriodo[2] . '-' . $resultadoPeriodo[1];
+            $dataDoPeriodoFormatada = DateTime::createFromFormat('Y-m-d', $dataDoPeriodo);
+            $result = $this->getEntityManager()->createQuery($dqlAjustadaTipoComparacao)
+                    ->setParameter(1, $numeroIdentificador)
+                    ->setParameter(2, $dataDoPeriodoFormatada)
+                    ->getResult();
+            return $result;
+        } catch (Exception $exc) {
+            echo $exc->getTraceAsString();
+        }
+    }
+
     /**
      * Montar numeroIdentificador
      */

@@ -9,6 +9,8 @@ CREATE TABLE solicitacao
   solicitacao_tipo_id integer NOT NULL, -- Tipo da solicitação
   objeto1 integer NOT NULL, -- Id do objeto que vai ser transferido
   objeto2 integer NOT NULL, -- Id do objeto para onde vai
+  nome character varying(45), -- Nome para as entidades: igreja, equipes
+  numero integer, -- Número para as entidades: região, coordenação e subs
   data_criacao date NOT NULL DEFAULT ('now'::text)::date, -- Data de criação da associação pessoa com a hierarquia
   hora_criacao time without time zone NOT NULL DEFAULT ('now'::text)::time with time zone, -- Hora de criação da associação pessoa com a hierarquia
   data_inativacao date, -- Data da inativação da associação pessoa com a hierarquia

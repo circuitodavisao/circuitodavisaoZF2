@@ -125,6 +125,12 @@ class CadastroController extends CircuitoController {
                         Constantes::$ACTION => Constantes::$PAGINA_BUSCAR_CPF,
             ));
         }
+        /* Enviar SMS */
+        if ($pagina == Constantes::$PAGINA_ENVIAR_SMS) {
+            return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
+                        Constantes::$ACTION => Constantes::$PAGINA_ENVIAR_SMS,
+            ));
+        }
         /* Busca de Email JSON */
         if ($pagina == Constantes::$PAGINA_BUSCAR_EMAIL) {
             return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
@@ -1305,7 +1311,6 @@ class CadastroController extends CircuitoController {
         $response = $this->getResponse();
         if ($request->isPost()) {
             try {
-
                 $post_data = $request->getPost();
                 $numero = $post_data['numero'];
 
@@ -1975,16 +1980,17 @@ class CadastroController extends CircuitoController {
         $idEntidadeAtual = $sessao->idEntidadeAtual;
         $entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
         $grupo = $entidade->getGrupo();
-        $periodo = 0;
-        $grupoPaiFilhoFilhos = $grupo->getGrupoPaiFilhoFilhosAtivos($periodo);
+        $grupoPaiFilhoFilhos = $grupo->getGrupoPaiFilhoFilhosAtivosReal();
 
         $solicitacaoTipos = $this->getRepositorio()->getSolicitacaoTipoORM()->encontrarTodos();
         $formSolicitacao = new SolicitacaoForm('formSolicitacao');
 
         $view = new ViewModel(array(
+            'grupo' => $grupo,
             'discipulos' => $grupoPaiFilhoFilhos,
             'solicitacaoTipos' => $solicitacaoTipos,
             Constantes::$FORM => $formSolicitacao,
+            'titulo' => 'Solicitação',
         ));
 
         /* Javascript */
@@ -2019,6 +2025,12 @@ class CadastroController extends CircuitoController {
                 $solicitacao->setSolicitacaoTipo($solicitacaoTipo);
                 $solicitacao->setObjeto1($post_data['objeto1']);
                 $solicitacao->setObjeto2($post_data['objeto2']);
+                if ($post_data['numero']) {
+                    $solicitacao->setNumero($post_data['numero']);
+                }
+                if ($post_data['nome']) {
+                    $solicitacao->setNome($post_data['nome']);
+                }
                 $this->getRepositorio()->getSolicitacaoORM()->persistir($solicitacao);
 
                 $solicitacaoSituacao = new SolicitacaoSituacao();

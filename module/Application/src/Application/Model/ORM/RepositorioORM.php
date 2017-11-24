@@ -353,12 +353,12 @@ class RepositorioORM {
     }
 
     /**
-     * Metodo public para obter a instancia do CircuitoORM
+     * Metodo public para obter a instancia do SolicitacaoORM
      * @return SolicitacaoORM
      */
     public function getSolicitacaoORM() {
         if (is_null($this->_solicitacaoORM)) {
-            $this->_solicitacaoORM = new CircuitoORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_SOLICITACAO);
+            $this->_solicitacaoORM = new SolicitacaoORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_SOLICITACAO);
         }
         return $this->_solicitacaoORM;
     }

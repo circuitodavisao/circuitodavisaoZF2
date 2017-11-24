@@ -83,7 +83,7 @@ class Funcoes {
         }
     }
 
-    public static function enviarSMS($numero, $mensagem = 'Codigo de ativacao: ') {
+    public static function enviarSMS($numero, $mensagem = 'Codigo de ativacao do Circuito da Visao: ') {
         $validacao[1] = '1658';
         $validacao[2] = '2487';
         $validacao[3] = '3694';
@@ -94,7 +94,7 @@ class Funcoes {
 
         $msgEncoded = urlencode($mensagem);
         $urlChamada = "https://www.facilitamovel.com.br/api/simpleSend.ft?user=diegokort&password=qwaszx159753&destinatario=" . $numero . "&msg=" . $msgEncoded;
-        echo file_get_contents($urlChamada);
+        file_get_contents($urlChamada);
         return true;
     }
 
