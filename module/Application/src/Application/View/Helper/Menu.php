@@ -283,7 +283,7 @@ class Menu extends AbstractHelper {
         $html .= 'Atendimento';
         $html .= '</a>';
         $html .= '</li>';
-        
+
         if ($this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja) {
             $html .= '<li>';
             $html .= '<a href="/cadastroAtivarFichas">';
@@ -305,7 +305,7 @@ class Menu extends AbstractHelper {
 
         $html .= '<ul class="nav sub-nav">';
 
-        for ($indiceMenuRelatorio = 1; $indiceMenuRelatorio <= 7; $indiceMenuRelatorio++) {
+        for ($indiceMenuRelatorio = 1; $indiceMenuRelatorio <= 8; $indiceMenuRelatorio++) {
 
             $label = '';
             switch ($indiceMenuRelatorio) {
@@ -330,10 +330,13 @@ class Menu extends AbstractHelper {
                 case 7:
                     $label = 'C&eacute;lula/Arena';
                     break;
+                case 8: 
+                    $label = 'C&eacute;lulas de Elite';
+                    break;
             }
             $html .= '<li>';
             $html .= '<a href="/relatorio/' . $indiceMenuRelatorio . '">';
-            $html .= '<span class="fa fa-terminal"></span>';
+            $html .= '<span class="fa fa-table"></span>';
             $html .= $label;
             $html .= '</a>';
             $html .= '</li>';
@@ -345,7 +348,7 @@ class Menu extends AbstractHelper {
         $html .= 'Pessoas Frequentes';
         $html .= '</a>';
         $html .= '</li>';
-        
+
         $html .= '<li>';
         $html .= '<a href="/relatorioAtendimento">';
         $html .= '<span class="fa fa-users"></span>';

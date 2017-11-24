@@ -301,17 +301,17 @@ class RelatorioController extends CircuitoController {
                 }
             }
         }
-        $direfenraDePeriodos = 1;
+        $diferencaDePeriodos = 1;
         if ($periodoFinal !== 0) {
-            $direfenraDePeriodos = $periodoFinal - $periodoInicial;
+            $diferencaDePeriodos = $periodoFinal - $periodoInicial;
         }
 
-        $relatorio['membresiaCulto'] = $soma[RelatorioController::dimensaoTipoCulto] / $direfenraDePeriodos;
-        $relatorio['membresiaArena'] = $soma[RelatorioController::dimensaoTipoArena] / $direfenraDePeriodos;
-        $relatorio['membresiaDomingo'] = $soma[RelatorioController::dimensaoTipoDomingo] / $direfenraDePeriodos;
+        $relatorio['membresiaCulto'] = $soma[RelatorioController::dimensaoTipoCulto] / $diferencaDePeriodos;
+        $relatorio['membresiaArena'] = $soma[RelatorioController::dimensaoTipoArena] / $diferencaDePeriodos;
+        $relatorio['membresiaDomingo'] = $soma[RelatorioController::dimensaoTipoDomingo] / $diferencaDePeriodos;
         $relatorio['membresiaMeta'] = Constantes::$META_LIDER * $quantidadeLideres;
         $relatorio['membresia'] = RelatorioController::calculaMembresia(
-                        $soma[RelatorioController::dimensaoTipoCulto], $soma[RelatorioController::dimensaoTipoArena], $soma[RelatorioController::dimensaoTipoDomingo]) / $direfenraDePeriodos;
+                        $soma[RelatorioController::dimensaoTipoCulto], $soma[RelatorioController::dimensaoTipoArena], $soma[RelatorioController::dimensaoTipoDomingo]) / $diferencaDePeriodos;
         $relatorio['membresiaPerformance'] = 0;
         if ($relatorio['membresiaMeta'] > 0) {
             $relatorio['membresiaPerformance'] = $relatorio['membresia'] / $relatorio['membresiaMeta'] * 100;
@@ -321,6 +321,7 @@ class RelatorioController extends CircuitoController {
 
         /* Célula */
         $relatorioCelula = $repositorioORM->getFatoCicloORM()->montarRelatorioCelulaPorNumeroIdentificador($numeroIdentificador, $periodoInicial, $tipoRelatorio);
+        $relatorioCelulaDeElite = $repositorioORM->getFatoCicloORM()->montarRelatorioCelulaDeElitePorNumeroIdentificador($numeroIdentificador, $periodoInicial, $tipoRelatorio);
 
         $quantidadeCelulas = $relatorioCelula[0]['quantidade'];
         $quantidadeCelulasRealizadas = 0;
@@ -336,13 +337,21 @@ class RelatorioController extends CircuitoController {
         if ($relatorio['membresiaMeta'] > 0) {
             $performanceCelula = $soma[RelatorioController::dimensaoTipoCelula] / $relatorio['membresiaMeta'] * 100;
         }
-        $relatorio['celula'] = $soma[RelatorioController::dimensaoTipoCelula] / $direfenraDePeriodos;
+        $performanceCelulasDeElite = 0;
+        $celulasDeElite = $relatorioCelulaDeElite[0]['celulaDeElite'];
+        if ($celulasDeElite) {
+            $performanceCelulasDeElite = $celulasDeElite / $quantidadeCelulas * 100;
+        }
+        $relatorio['celula'] = $soma[RelatorioController::dimensaoTipoCelula] / $diferencaDePeriodos;
         $relatorio['celulaPerformance'] = $performanceCelula;
         $relatorio['celulaPerformanceClass'] = RelatorioController::corDaLinhaPelaPerformance($relatorio['celulaPerformance']);
         $relatorio['celulaQuantidade'] = $quantidadeCelulas;
         $relatorio['celulaRealizadas'] = $quantidadeCelulasRealizadas;
         $relatorio['celulaRealizadasPerformance'] = $performanceCelulasRealizadas;
         $relatorio['celulaRealizadasPerformanceClass'] = RelatorioController::corDaLinhaPelaPerformance($relatorio['celulaRealizadasPerformance']);
+        $relatorio['celulaDeElite'] = $celulasDeElite;
+        $relatorio['celulaDeElitePerformance'] = $performanceCelulasDeElite;
+        $relatorio['celulaDeElitePerformanceClass'] = RelatorioController::corDaLinhaPelaPerformance($relatorio['celulaDeElitePerformance']);
 
         return $relatorio;
     }
@@ -398,6 +407,9 @@ class RelatorioController extends CircuitoController {
         }
         if ($tipo === 6) {
             $campo = 'membresiaDomingo';
+        }
+        if ($tipo === 8) {
+            $campo = 'celulaDeElitePerformance';
         }
         $tamanhoArray = count($discipulosLocal);
 
