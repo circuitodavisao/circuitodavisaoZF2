@@ -379,10 +379,10 @@ class RelatorioController extends CircuitoController {
         if ($valor < 70 && $valor > 0) {
             $class = 'danger';
         }
-        if ($valor > 70 && $valor <= 85) {
+        if ($valor >= 70 && $valor < 85) {
             $class = 'warning';
         }
-        if ($valor > 85) {
+        if ($valor >= 85) {
             $class = 'success';
         }
         return $class;
