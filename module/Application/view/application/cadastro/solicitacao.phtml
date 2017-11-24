@@ -9,31 +9,31 @@ $form = $this->Form;
 $form->prepare();
 $form->setAttribute(Constantes::$FORM_ACTION, Constantes::$ROUTE_CADASTRO . 'SolicitacaoFinalizar');
 echo $this->form()->openTag($form);
-echo $this->templateFormularioTopo('Solicitacao');
+echo $this->templateFormularioTopo($this->titulo);
 ?>
 <div class="panel-body bg-light">
-
     <!--divSolicitacaoTipo-->
     <div id="divSolicitacaoTipo">
         <div class="section-divider mt20">
             <span>Selecione uma das opções abaixo</span>
         </div>
         Tipo de solicitação
-        <select id="solicitacaoTipo" class="mt10 form-control">
+        <select id="solicitacaoTipo" class="mt10 form-control" onchange="mostrarBotaoContinuar();">
             <option value="0">SELECIONE</option>
             <?php
             foreach ($this->solicitacaoTipos as $solicitacaoTipo) {
                 echo '<option value="' . $solicitacaoTipo->getId() . '">' . $solicitacaoTipo->getNome() . '</option>';
             }
             ?>
-
         </select>
-        <button type="button" onClick='selecionarTipo()' style="float: right;" class="mt10 btn ladda-button btn-primary mr5" data-style="zoom-in">
-            <span class="ladda-label">Selecionar</span>
-        </button>
+        <div id="divBotaoContinuarSelecionarTipo" class="hidden mt10">
+            <?php
+            echo $this->botaoSimples(Constantes::$TRADUCAO_CONTINUAR, $this->funcaoOnClick('selecionarTipo()'));
+            ?>
+        </div>
     </div>
     <!-- Progress Bar -->
-    <div id="divProgress"  class="col-xs-12 hidden">
+    <div id="divProgress"  class="col-xs-12 hidden mt10 mb10">
         <div class="progress">
             <div id="divProgressBar" class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;">
                 0%
@@ -44,29 +44,41 @@ echo $this->templateFormularioTopo('Solicitacao');
     <div id="divObjetos" class="hidden">
         <?php
         for ($indiceDeObejtos = 1; $indiceDeObejtos <= 3; $indiceDeObejtos++) {
-            $funcaoOnclick = 'abrirSelecionarObjeto(' . $indiceDeObejtos . ');';
+            $funcaoOnclick = 'abrirSelecionarObjeto(' . $indiceDeObejtos . ', ' . $this->grupo->getId() . ')';
+            $mostrarBotaoAdicionar = '';
             if ($indiceDeObejtos === 1) {
                 $stringSelecioneOObjeto = 'Selecione o Lider que será transferido';
             }
             if ($indiceDeObejtos === 2) {
+                $mostrarBotaoAdicionar = 'hidden';
                 $stringSelecioneOObjeto = 'Selecione o Lider que receberá a transfêrencia';
             }
             if ($indiceDeObejtos === 3) {
+                $mostrarBotaoAdicionar = 'hidden';
                 $stringSelecioneOObjeto = 'Selecione os dados complementares';
             }
             ?>
             <!-- Bloco objeto -->
-            <div id="blocoObjeto<?php echo $indiceDeObejtos; ?>" class="well col-xs-12 btn btn-default text-left" onClick='<?php echo $funcaoOnclick; ?>'>
-                <address>
-                    <span id="spanSelecioneObjeto<?php echo $indiceDeObejtos; ?>"><?php echo $stringSelecioneOObjeto; ?></span>
+            <div id="blocoObjeto<?php echo $indiceDeObejtos; ?>" class="well col-xs-12 text-left" onClick='<?php // echo $funcaoOnclick;      ?>'>
+                <div class="col-md-12">
+                    <span id="spanSelecioneObjeto<?php echo $indiceDeObejtos; ?>"><?php echo $stringSelecioneOObjeto; ?></span>    
                     <span id="spanObjeto<?php echo $indiceDeObejtos; ?>"></span>
-                </address>
-                <div id="divBotaoSelecionar<?php echo $indiceDeObejtos; ?>">
-                    <button type="button" onClick='<?php echo $funcaoOnclick; ?>' style="float: right;" onclick='location.href = "#";' class="btn ladda-button btn-primary btn-xs mr5" data-style="zoom-in">
-                        <span class="ladda-label">Selecionar</span>
-                    </button>
+                    <span class="hidden" id="spanLoader<?php echo $indiceDeObejtos; ?>">Carregando <img src="/img/loader.gif" /></span>  
                 </div>
-                <div id="divBotaoLimpar<?php echo $indiceDeObejtos; ?>"  class="hidden">
+                <div class="col-md-6">
+                    <span id="spanFotos<?php echo $indiceDeObejtos; ?>"></span>
+                </div>
+                <div class="col-md-6">
+                    <span class="quebraDeLinhaDeSpan" id="spanNomeLideres<?php echo $indiceDeObejtos; ?>"></span>
+                    <span class="quebraDeLinhaDeSpan" id="spanCelulaQuantidade<?php echo $indiceDeObejtos; ?>"></span>
+                    <span class="quebraDeLinhaDeSpan" id="spanQuantidadeLideres<?php echo $indiceDeObejtos; ?>"></span>
+                </div>
+                <div id="divBotaoSelecionar<?php echo $indiceDeObejtos; ?>" class="<?php echo $mostrarBotaoAdicionar ?>">
+                    <?php
+                    echo $this->botaoSimples(Constantes::$TRADUCAO_SELECIONAR, $this->funcaoOnClick($funcaoOnclick), BotaoSimples::botaoPequenoImportante);
+                    ?>
+                </div>
+                <div id="divBotaoLimpar<?php echo $indiceDeObejtos; ?>" class="hidden">
                     <button type="button" onClick='limparObjeto(<?php echo $indiceDeObejtos; ?>);' style="float: right;" onclick='location.href = "#";' class="btn ladda-button btn-default dark btn-xs mr5" data-style="zoom-in">
                         <span class="ladda-label">Limpar</span>
                     </button>
@@ -81,30 +93,11 @@ echo $this->templateFormularioTopo('Solicitacao');
     </div>
     <!--divSelecionarLider-->
     <div id="divSelecionarLider" class="hidden">
-        <div class="panel-menu">
-            <input id="fooFilter" type="text" class="form-control" placeholder="Filtro">
-        </div>
-        <table class="table footable no-paging" data-filter="#fooFilter" data-page-navigation=".pagination" data-page-size="5">
-            <thead>
-                <tr>
-                    <th>Nome</th>
-                    <th>Equipe</th>
-                    <td></td>
-                </tr>
-            </thead>
-            <tbody>
+        <div id="treeLideres" class="fancytree-radio">
+            <ul id="treeData" style="display: none;">
                 <?php echo $this->listagemLideresTransferencia($this->discipulos); ?>
-            </tbody>
-            <tfoot class="footer-menu">
-                <tr>
-                    <td colspan="3">
-                        <nav class="text-right">
-                            <ul class="pagination hide-if-no-paging"></ul>
-                        </nav>
-                    </td>
-                </tr>
-            </tfoot>
-        </table>
+            </ul>
+        </div>
     </div> 
     <!--divSelecionarNumeracao-->
     <div id="divSelecionarNumeracao" class="hidden">
@@ -125,9 +118,9 @@ echo $this->templateFormularioTopo('Solicitacao');
     </div>
     <!--divBotaoContinuar-->
     <div id="divBotaoContinuar" class="hidden">
-        <button type="button" onClick='continuarParaConfimacao()' style="float: right;" class="mt10 btn ladda-button btn-primary mr5" data-style="zoom-in">
-            <span class="ladda-label">Continuar</span>
-        </button>
+        <?php
+        echo $this->botaoSimples(Constantes::$TRADUCAO_CONTINUAR, $this->funcaoOnClick('continuarParaConfimacao()'), BotaoSimples::botaoSucesso);
+        ?>
     </div>
     <!--divTelaConfirmacao-->
     <div id="divTelaConfirmacao" class="hidden">
@@ -183,7 +176,6 @@ echo $this->templateFormularioTopo('Solicitacao');
     </div>
 </div>
 <?php
-
 echo $this->formHidden($form->get('solicitacaoTipoId'));
 echo $this->formHidden($form->get('objeto1'));
 echo $this->formHidden($form->get('objeto2'));

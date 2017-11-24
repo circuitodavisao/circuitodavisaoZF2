@@ -22,6 +22,11 @@ var stringDivSolicitacaoTipo = '#divSolicitacaoTipo';
 var stringDivObjetos = '#divObjetos';
 var stringDivSelecionarLider = '#divSelecionarLider';
 var stringDivSelecionarNumeracao = '#divSelecionarNumeracao';
+var stringSpanNomeLideres = '#spanNomeLideres';
+var stringSpanCelulaQuantidade = '#spanCelulaQuantidade';
+var stringSpanQuantidadeLideres = '#spanQuantidadeLideres';
+var stringSpanFotos = '#spanFotos';
+var stringSpanLoader = '#spanLoader';
 var objeto;
 var spanSelecioneOObjeto;
 var botaoSelecionar;
@@ -29,19 +34,44 @@ var botaoLimpar;
 var check;
 var blocoObjeto;
 
-function selecionarTipo() {
+$("#treeLideres").fancytree({
+    checkbox: "radio",
+    selectMode: 1,
+    clickFolderMode: 2,
+    extensions: ["childcounter"],
+    childcounter: {
+        deep: true,
+        hideZeros: true,
+        hideExpanded: true
+    },
+    select: function (event, data) {
+        var node = data.tree.getNodeByKey(data.node.key);
+        $(node.span).closest('li').addClass('hide');
+        if (data.node.isSelected()) {
+            selecionarObjeto(node.key, node.title);
+        }
+        data.node.setSelected(false);
+    }
+});
+
+function mostrarBotaoContinuar() {
+    var divBotaoContinuarSelecionarTipo = $('#divBotaoContinuarSelecionarTipo');
     if (parseInt($('#solicitacaoTipo').val()) === 0) {
-        alert('Selecion um tipo de solicitacao');
+        divBotaoContinuarSelecionarTipo.addClass(hidden);
     } else {
-        $(stringDivSolicitacaoTipo).addClass(hidden);
-        $(stringDivObjetos).removeClass(hidden);
-        $('#divProgress').removeClass(hidden);
-        $('#tituloDaPagina').html($('#tituloDaPagina').html() + ' - ' + $('#solicitacaoTipo option:selected').text());
-        $('#solicitacaoTipoId').val($('#solicitacaoTipo').val());
+        divBotaoContinuarSelecionarTipo.removeClass(hidden);
     }
 }
 
-function abrirSelecionarObjeto(qualObjeto) {
+function selecionarTipo() {
+    $(stringDivSolicitacaoTipo).addClass(hidden);
+    $(stringDivObjetos).removeClass(hidden);
+    $('#divProgress').removeClass(hidden);
+    $('#tituloDaPagina').html($('#tituloDaPagina').html() + ' - ' + $('#solicitacaoTipo option:selected').text());
+    $('#solicitacaoTipoId').val($('#solicitacaoTipo').val());
+}
+
+function abrirSelecionarObjeto(qualObjeto, idLider) {
     $(stringDivObjetos).addClass(hidden);
     if (qualObjeto != 3) {
         $(stringDivSelecionarLider).removeClass(hidden);
@@ -49,47 +79,131 @@ function abrirSelecionarObjeto(qualObjeto) {
         $(stringDivSelecionarNumeracao).removeClass(hidden);
     }
     objetoSelecionado = qualObjeto;
+
+    var tree = $("#treeLideres").fancytree("getTree");
+    var node = tree.getNodeByKey('lider_' + idLider);
+    if (objetoSelecionado === 1) {
+        /* Esconder lider */
+        $(node.span).closest('li').addClass('hide');
+    }
+    if (objetoSelecionado === 2) {
+        /* mostrar lider */
+        $(node.span).closest('li').removeClass('hide');
+    }
 }
 
 function selecionarObjeto(id, informacao) {
     $(stringDivObjetos).removeClass(hidden);
     if (parseInt(objetoSelecionado) !== 3) {
         $(stringDivSelecionarLider).addClass(hidden);
-        $('#tr_' + id).addClass(hidden);
     } else {
         $(stringDivSelecionarNumeracao).addClass(hidden);
     }
-
     objeto = $(stringSpanObjeto + objetoSelecionado);
+    spanNomeLideres = $(stringSpanNomeLideres + objetoSelecionado);
+    spanCelulaQuantidade = $(stringSpanCelulaQuantidade + objetoSelecionado);
+    spanQuantidadeLideres = $(stringSpanQuantidadeLideres + objetoSelecionado);
+    spanFotos = $(stringSpanFotos + objetoSelecionado);
     spanSelecioneOObjeto = $(stringSpanSelecioneObjeto + objetoSelecionado);
     botaoSelecionar = $(stringDivBotaoSelecionar + objetoSelecionado);
     botaoLimpar = $(stringDivBotaoLimpar + objetoSelecionado);
     check = $(stringDivCheckDadosInseridos + objetoSelecionado);
     blocoObjeto = $(stringBlocoObjeto + objetoSelecionado);
-
-    if (parseInt(objetoSelecionado) === 3) {
-        informacao = 'Nova numeração: ' + informacao;
-    }
-    objeto.html(informacao);
+    spanLoader = $(stringSpanLoader + objetoSelecionado);
+    spanLoader.removeClass(hidden);
     spanSelecioneOObjeto.addClass(hidden);
     botaoSelecionar.addClass(hidden);
-    botaoLimpar.removeClass(hidden);
-    check.removeClass(hidden);
-    blocoObjeto.removeClass('btn').removeClass('btn-default').prop('onclick', null).off('click');
-
-    arrayObjetos[objetoSelecionado] = id;
-    var valorParaAdicionar = 35;
-    if (parseInt(objetoSelecionado) === 3) {
-        valorParaAdicionar = 30;
+    /* buscar dados do grupo */
+    var idGrupo = id;
+    var splitId = id.split('_')
+    if (splitId[1]) {
+        idGrupo = splitId[1];
     }
-    atualizarBarraDeProgresso(valorParaAdicionar);
-    verificarSeMostraOBotaoDeContinuar();
+    $.post(
+            "/relatorioBuscarDadosGrupo",
+            {
+                idGrupo: idGrupo
+            },
+            function (data) {
+                if (data.resposta) {
+                    spanLoader.addClass(hidden);
+                    if (parseInt(objetoSelecionado) === 3) {
+                        informacao = 'Nova numeração: ' + informacao;
+                        objeto.html(informacao);
+                    } else {
+                        if (parseInt(objetoSelecionado) === 1) {
+                            objeto.html('Líderes que serão transferidos');
+                        }
+                        if (parseInt(objetoSelecionado) === 2) {
+                            objeto.html('Líderes que receberão');
+                        }
+                        spanNomeLideres.html('Nome dos Líderes: ' + data.nomeLideres);
+                        spanCelulaQuantidade.html('Quantidade de Células: ' + data.celulaQuantidade);
+                        spanQuantidadeLideres.html('Quantidade de Líderes: ' + data.quantidadeLideres);
+                        spanFotos.html(data.fotos);
+                    }
 
-    if (objetoSelecionado != 3) {
-        $('#objeto' + objetoSelecionado).val(id);
-    } else {
-        $('#numeracao').val(id);
-    }
+                    botaoLimpar.removeClass(hidden);
+                    check.removeClass(hidden);
+
+                    arrayObjetos[objetoSelecionado] = id;
+                    var valorParaAdicionar = 35;
+                    if (parseInt(objetoSelecionado) === 3) {
+                        valorParaAdicionar = 30;
+                    }
+                    atualizarBarraDeProgresso(valorParaAdicionar);
+                    verificarSeMostraOBotaoDeContinuar();
+
+                    if (objetoSelecionado != 3) {
+                        $('#objeto' + objetoSelecionado).val(id);
+                    } else {
+                        $('#numeracao').val(id);
+                    }
+
+                    if (parseInt(objetoSelecionado) === 1) {
+                        $(stringDivBotaoSelecionar + 2).removeClass(hidden);
+                        $(stringDivBotaoSelecionar + 3).removeClass(hidden);
+                    }
+
+                    var objetoQueVaiReceber = 2;
+                    var tipoTransferenciaDeLiderNaEquipe = 1;
+                    if (parseInt(objetoSelecionado) === objetoQueVaiReceber &&
+                            parseInt($('#solicitacaoTipo').val()) === tipoTransferenciaDeLiderNaEquipe) {
+                        $('#numero')
+                                .find('option')
+                                .remove()
+                                .end();
+                        /* Buscar numeracao das subs liberadas */
+                        $('#numero').append($('<option>', {
+                            value: 0,
+                            text: 'SELECIONE'
+                        }));
+                        $.post(
+                                "/relatorioBuscarNumeracoesDisponivel",
+                                {
+                                    idGrupo: idGrupo
+                                },
+                                function (data) {
+                                    if (data.resposta) {
+                                        for (var i = 1, max = 36; i < max; i++) {
+                                            var mostrarOption = true;
+                                            $.each(data.numerosUsados, function (index, value) {
+                                                if (i === parseInt(value)) {
+                                                    mostrarOption = false;
+                                                }
+                                            });
+                                            if (mostrarOption) {
+                                                $('#numero').append($('<option>', {
+                                                    value: i,
+                                                    text: i
+                                                }));
+                                            }
+                                        }
+                                    }
+                                }, 'json');
+                    }
+                }
+            }, 'json');
 }
 
 function selecionarNumeracao() {
@@ -103,26 +217,58 @@ function selecionarNumeracao() {
 
 function limparObjeto(qualObjeto) {
     objeto = $(stringSpanObjeto + qualObjeto);
+    spanNomeLideres = $(stringSpanNomeLideres + objetoSelecionado);
+    spanCelulaQuantidade = $(stringSpanCelulaQuantidade + objetoSelecionado);
+    spanQuantidadeLideres = $(stringSpanQuantidadeLideres + objetoSelecionado);
+    spanFotos = $(stringSpanFotos + objetoSelecionado);
     spanSelecioneOObjeto = $(stringSpanSelecioneObjeto + qualObjeto);
     botaoSelecionar = $(stringDivBotaoSelecionar + qualObjeto);
     botaoLimpar = $(stringDivBotaoLimpar + qualObjeto);
     check = $(stringDivCheckDadosInseridos + qualObjeto);
 
     objeto.html('');
+    spanNomeLideres.html('');
+    spanCelulaQuantidade.html('');
+    spanQuantidadeLideres.html('');
+    spanFotos.html('');
     spanSelecioneOObjeto.removeClass(hidden);
     botaoSelecionar.removeClass(hidden);
     botaoLimpar.addClass(hidden);
     check.addClass(hidden);
-    if (qualObjeto != 3) {
-        $('#tr_' + arrayObjetos[qualObjeto]).removeClass(hidden);
-    } else {
-        $('#numeracao').val(0);
+    if (qualObjeto === 3) {
+        $('#numero').val(0);
     }
-    var valorParaRemover = -35;
+
+    var valorParaRemover;
+    if (parseInt(qualObjeto) === 1 || parseInt(qualObjeto) === 2) {
+        for (var i = qualObjeto, max = 3; i <= max; i++) {
+            $(stringSpanObjeto + i).html('');
+            $(stringSpanNomeLideres + i).html('');
+            $(stringSpanCelulaQuantidade + i).html('');
+            $(stringSpanQuantidadeLideres + i).html('');
+            $(stringSpanFotos + i).html('');
+            $(stringSpanSelecioneObjeto + i).removeClass(hidden);
+            $(stringDivBotaoSelecionar + i).removeClass(hidden);
+            $(stringDivBotaoLimpar + i).addClass(hidden);
+            $(stringDivCheckDadosInseridos + i).addClass(hidden);
+            if (qualObjeto === 1 && i !== 1) {
+                $(stringDivBotaoSelecionar + i).addClass(hidden);
+            }
+            valorParaRemover = -35;
+            if (i === 3) {
+                valorParaRemover = -30;
+            }
+            atualizarBarraDeProgresso(valorParaRemover);
+        }
+        $('#numero').val(0);
+    }
     if (parseInt(qualObjeto) === 3) {
         valorParaRemover = -30;
+        atualizarBarraDeProgresso(valorParaRemover);
+
+
     }
-    atualizarBarraDeProgresso(valorParaRemover);
+
     verificarSeMostraOBotaoDeContinuar();
 }
 

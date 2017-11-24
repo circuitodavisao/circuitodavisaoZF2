@@ -21,6 +21,7 @@ if ($this->solicitacoes) {
     $html .= '</thead>';
 
     $html .= '<tbody>';
+
     foreach ($this->solicitacoes as $solicitacao) {
         $html .= '<tr>';
         $html .= '<td>' . $solicitacao->getSolicitacaoTipo()->getNome() . '</td>';
@@ -33,17 +34,20 @@ if ($this->solicitacoes) {
         }
         $html .= '</tr>';
     }
+
     $html .= '</tbody>';
 
     $html .= '</table>';
-
-    $html .= '</div>';
-
-    $html .= '<div class="panel-footer text-right">';
-    $stringNomeDaFuncaoOnClickCadastro = 'funcaoCircuito("cadastroSolicitacao", 0)';
-    $html .= $this->botaoSimples($this->translate(Constantes::$TRADUCAO_CADASTRAR), $this->funcaoOnClick($stringNomeDaFuncaoOnClickCadastro));
-    $html .= '</div>';
+} else {
+    $html .= '<div class="alert alert-warning"><i class="fa fa-warning pr10" aria-hidden="true"></i>&nbsp;Sem solicitações!</div>';
 }
+$html .= '</div>';
+
+$html .= '<div class="panel-footer text-right">';
+$stringNomeDaFuncaoOnClickCadastro = 'funcaoCircuito("cadastroSolicitacao", 0)';
+$html .= $this->botaoLink($this->translate(Constantes::$TRADUCAO_CADASTRAR), Constantes::$STRING_HASHTAG, 0, $this->funcaoOnClick($stringNomeDaFuncaoOnClickCadastro));
+$html .= '</div>';
+
 $html .= $this->templateFormularioRodape();
 echo $html;
 
