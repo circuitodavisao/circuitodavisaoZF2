@@ -188,33 +188,34 @@ class IndexController extends CircuitoController {
 
         $this->getRepositorio()->iniciarTransacao();
         try {
-            foreach ($solicitacoesPorData as $arraySolicitacao) {
-                $solicitacao = $this->getRepositorio()->getSolicitacaoORM()->encontrarPorId($arraySolicitacao['id']);
-                if ($solicitacao->getSolicitacaoSituacaoAtiva()->getSituacao()->getId() === Situacao::ACEITO_AGENDADO) {
-                    $grupoQueSeraSemeado = $this->getRepositorio()->getGrupoORM()->encontrarPorId($arraySolicitacao['objeto1']);
-                    $grupoQueRecebera = $this->getRepositorio()->getGrupoORM()->encontrarPorId($arraySolicitacao['objeto2']);
-                    if ($solicitacao->getNumero()) {
-                        $extra = (int) $solicitacao->getNumero();
+            if ($solicitacoesPorData) {
+                foreach ($solicitacoesPorData as $arraySolicitacao) {
+                    $solicitacao = $this->getRepositorio()->getSolicitacaoORM()->encontrarPorId($arraySolicitacao['id']);
+                    if ($solicitacao->getSolicitacaoSituacaoAtiva()->getSituacao()->getId() === Situacao::ACEITO_AGENDADO) {
+                        $grupoQueSeraSemeado = $this->getRepositorio()->getGrupoORM()->encontrarPorId($arraySolicitacao['objeto1']);
+                        $grupoQueRecebera = $this->getRepositorio()->getGrupoORM()->encontrarPorId($arraySolicitacao['objeto2']);
+                        if ($solicitacao->getNumero()) {
+                            $extra = (int) $solicitacao->getNumero();
+                        }
+                        if ($solicitacao->getNome()) {
+                            $extra = (string) $solicitacao->getNome();
+                        }
+                        $solicitacaoSituacaoAtiva = $solicitacao->getSolicitacaoSituacaoAtiva();
+
+                        if ($solicitacaoSituacaoAtiva->getSituacao()->getId() === Situacao::ACEITO_AGENDADO) {
+                            echo $this->transferirLider($grupoQueSeraSemeado, $grupoQueRecebera, $extra);
+                        }
+
+                        /* inativar solicitacao situacao ativa */
+                        $solicitacaoSituacaoAtiva->setDataEHoraDeInativacao();
+                        $this->getRepositorio()->getSolicitacaoSituacaoORM()->persistir($solicitacaoSituacaoAtiva, false);
+
+                        /* Nova solicitacao situacao */
+                        $solicitacaoSituacao = new SolicitacaoSituacao();
+                        $solicitacaoSituacao->setSolicitacao($solicitacao);
+                        $solicitacaoSituacao->setSituacao($this->getRepositorio()->getSituacaoORM()->encontrarPorId(Situacao::CONCLUIDO));
+                        $this->getRepositorio()->getSolicitacaoSituacaoORM()->persistir($solicitacaoSituacao);
                     }
-                    if ($solicitacao->getNome()) {
-                        $extra = (string) $solicitacao->getNome();
-                    }
-                    $solicitacaoSituacaoAtiva = $solicitacao->getSolicitacaoSituacaoAtiva();
-
-                    if ($solicitacaoSituacaoAtiva->getSituacao()->getId() === Situacao::ACEITO_AGENDADO) {
-                        echo $this->transferirLider($grupoQueSeraSemeado, $grupoQueRecebera, $extra);
-                    }
-
-                    /* inativar solicitacao situacao ativa */
-
-                    $solicitacaoSituacaoAtiva->setDataEHoraDeInativacao();
-                    $this->getRepositorio()->getSolicitacaoSituacaoORM()->persistir($solicitacaoSituacaoAtiva, false);
-
-                    /* Nova solicitacao situacao */
-                    $solicitacaoSituacao = new SolicitacaoSituacao();
-                    $solicitacaoSituacao->setSolicitacao($solicitacao);
-                    $solicitacaoSituacao->setSituacao($this->getRepositorio()->getSituacaoORM()->encontrarPorId(Situacao::CONCLUIDO));
-                    $this->getRepositorio()->getSolicitacaoSituacaoORM()->persistir($solicitacaoSituacao);
                 }
             }
             $this->getRepositorio()->fecharTransacao();

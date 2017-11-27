@@ -174,7 +174,7 @@ class FatoCicloORM extends CircuitoORM {
                 . "d.dimensaoTipo = 1 "
                 . "AND fc.numero_identificador #tipoComparacao ?1 "
                 . "AND fc.data_criacao = ?2 "
-                . "AND (d.lider + d.visitante + d.consolidacao + d.membro) > 1";
+                . "AND (d.lider + d.visitante + d.consolidacao + d.membro) > 6";
         try {
             if ($tipoComparacao == 1) {
                 $dqlAjustadaTipoComparacao = str_replace('#tipoComparacao', '=', $dqlBase);
