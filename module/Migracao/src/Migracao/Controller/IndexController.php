@@ -397,11 +397,11 @@ class IndexController extends CircuitoController {
 
     public function testeSerproAction() {
         $html = 'Teste Serpro';
-        $comandoBase64 = 'echo -n "djaR21PGoYp1iyK2n2ACOH9REdUb:ObRsAJWOL4fv2Tp27D1vd8fB3Ote" | base64';
-        $comandoPegaToken = 'curl -k -d "grant_type=client_credentials" -H "Authorization: Basic ZGphUjIxUEdvWXAxaXlLMm4yQUNPSDlSRWRVYjpPYlJzQUpXT0w0ZnYyVHAyN0QxdmQ4ZkIzT3Rl==" https://apigateway.serpro.gov.br/token';
-        $script = 'curl -X GET "https://apigateway.serpro.gov.br/consulta-cpf-trial/1/cpf/63017285995" -H  "accept: application/json" -H  "Authorization: Bearer 4e1a1858bdd584fdc077fb7d80f39283"';
+        $comandoBase64 = 'echo -n "EOwWukq8w_ornUy0eXsYkfDgmHIa:eHAIjnZrYbb7K5yuM796nQRhWg4a" | base64';
+        $comandoPegaToken = 'curl -k -d "grant_type=client_credentials" -H "Authorization: Basic RU93V3VrcTh3X29yblV5MGVYc1lrZkRnbUhJYTplSEFJam5aclliYjdLNXl1TTc5Nm5RUmhXZzRh" https://apigateway.serpro.gov.br/token';
+        $url = 'curl -X GET --header "Accept: application/json" --header "Authorization: Bearer 35afc0b45e873453d574717938add5be" "https://apigateway.serpro.gov.br/consulta-cpf/v1/cpf/04510847130"';
         echo '<pre>';
-        passthru($script);
+        passthru($url);
         echo '</pre>';
         return new ViewModel(array('html' => $html));
     }
