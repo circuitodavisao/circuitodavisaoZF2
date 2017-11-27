@@ -13,9 +13,11 @@ class Constantes {
     public static $HOST = 'circuitodavisaonovo.com.br';
     public static $META_LIDER = 6;
     public static $ID_TIPO_REVISAO = 3;
+
     const QUANTIDADES_DE_EVENTOS_NA_TELA = 4;
 
     /* Constates Login */
+
     public static $CONTROLLER_LOGIN = 'Application\Controller\Login';
     public static $CONTROLLER_PRINCIPAL = 'Principal\Controller\Principal';
     public static $LOGIN_FORM = 'LoginForm';
@@ -488,7 +490,6 @@ class Constantes {
     public static $PAGINA_CURSO_SALVAR = 'CursoSalvar';
     public static $PAGINA_CURSO_EXCLUIR = 'CursoExcluir';
     public static $PAGINA_CURSO_EXCLUSAO = 'CursoExclusao';
-
     public static $PAGINA_DISCIPLINA_LISTAR = 'DisciplinaListar';
     public static $PAGINA_DISCIPLINA_CADASTRAR = 'DisciplinaForm';
     public static $PAGINA_DISCIPLINA_EDITAR = 'DisciplinaFormEdit';
@@ -498,16 +499,13 @@ class Constantes {
     public static $PAGINA_AULA_LISTAR = 'AulaListar';
     public static $PAGINA_AULA_CADASTRAR = 'AulaForm';
     public static $PAGINA_AULA_EDITAR = 'AulaFormEdit';
-
     public static $PAGINA_AULA_SALVAR = 'AulaSalvar';
     public static $PAGINA_AULA_EXCLUIR = 'AulaExcluir';
     public static $PAGINA_AULA_EXCLUSAO = 'AulaExclusao';
     public static $NOME_ENTIDADE_TURMA = 'turma';
-
     public static $NOME_ENTIDADE_CURSO = 'curso';
     public static $NOME_ENTIDADE_DISCIPLINA = 'disciplina';
     public static $NOME_ENTIDADE_AULA = 'aula';
-
     /* Fim das páginas relaciondas ao IV */
 
     /* Entidades */
@@ -808,7 +806,7 @@ class Constantes {
     public static $TRADUCAO_PERGUNTA_EXCLUSAO_DISCIPLINA = 'Really want to delete this discipline?';
     public static $TRADUCAO_PERGUNTA_EXCLUSAO_AULA = 'Really want to delete this lesson?';
     public static $TRADUCAO_PERGUNTA_EXCLUSAO_CULTO = 'Really want to delete this cult?';
-    public static $TRADUCAO_CIENCIA_CADASTRO_CELULA = 'I confirm that the data is correct'; 
+    public static $TRADUCAO_CIENCIA_CADASTRO_CELULA = 'I confirm that the data is correct';
     public static $TRADUCAO_CIENCIA_EXCLUSAO_CULTO = 'I am <span class="text-danger">aware</span> that by <span class="text-danger">excluding cult</span> is the same no longer appear in the <span class="text-danger">launch line</span>!';
     public static $TRADUCAO_CIENCIA_EXCLUSAO_CELULA = 'I am <span class="text-danger">aware</span> that by <span class="text-danger">excluding cell</span> is the same no longer appear in the <span class="text-danger">launch line</span>!';
     public static $TRADUCAO_CIENCIA_EXCLUSAO_TURMA = 'I am <span class="text-danger">aware</span> that by <span class="text-danger">excluding class</span> is the same no longer appear! ';
@@ -825,20 +823,16 @@ class Constantes {
     public static $LAYOUT_JS_EVENTO = 'layout/layout-js-evento';
     public static $LAYOUT_STRING_JS_EVENTO = 'layoutJSEvento';
     public static $LAYOUT_JS_EXCLUSAO_EVENTO = 'layout/layout-js-exclusao-evento';
-
     public static $LAYOUT_JS_EXCLUSAO_TURMA = 'layout/layout-js-exclusao-turma';
     public static $LAYOUT_JS_EXCLUSAO_CURSO = 'layout/layout-js-exclusao-curso';
     public static $LAYOUT_JS_EXCLUSAO_DISCIPLINA = 'layout/layout-js-exclusao-disciplina';
-
     public static $LAYOUT_JS_EXCLUSAO_AULA = 'layout/layout-js-exclusao-aula';
     public static $LAYOUT_STRING_JS_EXCLUSAO_EVENTO = 'layoutJSExclusaoEvento';
     public static $LAYOUT_STRING_JS_EXCLUSAO_TURMA = 'layoutJSExclusaoTurma';
     public static $LAYOUT_STRING_JS_EXCLUSAO_CURSO = 'layoutJSExclusaoCurso';
     public static $LAYOUT_STRING_JS_EXCLUSAO_DISCIPLINA = 'layoutJSExclusaoDisciplina';
     public static $LAYOUT_STRING_JS_EXCLUSAO_AULA = 'layoutJSExclusaoAula';
-
     public static $LAYOUT_JS_GRUPO_VALIDACAO = 'layout/layout-js-grupo-validacao';
-
     public static $LAYOUT_STRING_JS_GRUPO_VALIDACAO = 'layoutJSGrupoValidacao';
     public static $LAYOUT_JS_GRUPO_ATUALIZACAO_VALIDACAO = 'layout/layout-js-grupo-atualizacao-validacao';
     public static $LAYOUT_STRING_JS_GRUPO_ATUALIZACAO_VALIDACAO = 'layoutJSGrupoAtualizacaoValidacao';

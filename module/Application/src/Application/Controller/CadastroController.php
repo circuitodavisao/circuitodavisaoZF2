@@ -47,7 +47,7 @@ use Zend\View\Model\ViewModel;
 
 /**
  * Nome: CadastroController.php
- * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com> 
+ * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com>
  * Descricao: Controle de todas ações de lancamento
  */
 class CadastroController extends CircuitoController {
@@ -1193,7 +1193,7 @@ class CadastroController extends CircuitoController {
 
     /**
      * Busca de email
-     * Resposta: 0 - Não utilizado; 1 - Utilizado; 
+     * Resposta: 0 - Não utilizado; 1 - Utilizado;
      * @return Json
      */
     public function buscarEmailAction() {
@@ -2024,12 +2024,14 @@ class CadastroController extends CircuitoController {
                 $solicitacao->setPessoa($pessoaLogada);
                 $solicitacao->setSolicitacaoTipo($solicitacaoTipo);
                 $solicitacao->setObjeto1($post_data['objeto1']);
+                
                 $objeto2 = $post_data['objeto2'];
                 $explodeObjeto2 = explode('_', $objeto2);
                 if ($explodeObjeto2[1]) {
                     $objeto2 = $explodeObjeto2[1];
                 }
                 $solicitacao->setObjeto2($objeto2);
+                
                 if ($post_data['numero']) {
                     $solicitacao->setNumero($post_data['numero']);
                 }

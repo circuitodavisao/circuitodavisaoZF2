@@ -13,8 +13,8 @@ use Zend\Form\Form;
 /**
  * Nome: DisciplinaForm.php
  * @author Lucas Carvalho  <lucascarvalho.esw@gmail.com>
- * Descricao: Formulario para cadastrar disciplinas do instituto de vencedores.            
- *              
+ * Descricao: Formulario para cadastrar disciplinas do instituto de vencedores.
+ *
  */
 class DisciplinaForm extends Form {
 
@@ -74,7 +74,7 @@ class DisciplinaForm extends Form {
 
         /* Posição */
         $arrayPosicao = array();
-        if (!empty($disciplinas)) {
+        if (count($disciplinas) > 0) {
             for ($indicePosicao = 1; $indicePosicao <= 24; $indicePosicao++) {
                 $adicionarPosicao = true;
                 foreach ($disciplinas as $d) {
