@@ -2022,7 +2022,12 @@ class CadastroController extends CircuitoController {
                 $solicitacao->setPessoa($pessoaLogada);
                 $solicitacao->setSolicitacaoTipo($solicitacaoTipo);
                 $solicitacao->setObjeto1($post_data['objeto1']);
-                $solicitacao->setObjeto2($post_data['objeto2']);
+                $objeto2 = $post_data['objeto2'];
+                $explodeObjeto2 = explode('_', $objeto2);
+                if ($explodeObjeto2[1]) {
+                    $objeto2 = $explodeObjeto2[1];
+                }
+                $solicitacao->setObjeto2($objeto2);
                 if ($post_data['numero']) {
                     $solicitacao->setNumero($post_data['numero']);
                 }
