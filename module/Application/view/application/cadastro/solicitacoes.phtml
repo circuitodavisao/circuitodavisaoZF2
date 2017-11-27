@@ -1,6 +1,7 @@
 <?php
 
 use Application\Controller\Helper\Constantes;
+use Application\Model\Entity\SolicitacaoTipo;
 
 $html .= $this->templateFormularioTopo($this->titulo);
 $html .= '<div class="panel-body bg-light">';
@@ -27,8 +28,21 @@ if ($this->solicitacoes) {
         $html .= '<td>' . $solicitacao->getSolicitacaoTipo()->getNome() . '</td>';
         $html .= '<td>' . $solicitacao->getData_criacaoStringPadraoBrasil() . '</td>';
         $html .= '<td>' . $solicitacao->getPessoa()->getNomePrimeiroUltimo() . '</td>';
-        $html .= '<td>' . $solicitacao->getObjeto1() . '</td>';
-        $html .= '<td>' . $solicitacao->getObjeto2() . '</td>';
+
+        if ($solicitacao->getSolicitacaoTipo()->getId() === SolicitacaoTipo::TRANSFERIR_LIDER_NA_PROPRIA_EQUIPE) {
+            for ($indice = 1; $indice <= 2; $indice++) {
+                $html .= '<td>';
+                if ($indice === 1) {
+                    $objeto = $solicitacao->getObjeto1();
+                }
+                if ($indice === 2) {
+                    $objeto = $solicitacao->getObjeto2();
+                }
+                $grupo = $this->repositorio->getGrupoORM()->encontrarPorId($objeto);
+                $html .= $grupo->getNomeLideresAtivos();
+                $html .= '</td>';
+            }
+        }
         if ($solicitacao->getSolicitacaoSituacaoAtiva()) {
             $html .= '<td>' . $solicitacao->getSolicitacaoSituacaoAtiva()->getSituacao()->getNome() . '</td>';
         }
