@@ -13,9 +13,11 @@ class Constantes {
     public static $HOST = 'circuitodavisaonovo.com.br';
     public static $META_LIDER = 6;
     public static $ID_TIPO_REVISAO = 3;
+
     const QUANTIDADES_DE_EVENTOS_NA_TELA = 4;
 
     /* Constates Login */
+
     public static $CONTROLLER_LOGIN = 'Application\Controller\Login';
     public static $CONTROLLER_PRINCIPAL = 'Principal\Controller\Principal';
     public static $LOGIN_FORM = 'LoginForm';
@@ -488,10 +490,6 @@ class Constantes {
     public static $PAGINA_CURSO_SALVAR = 'CursoSalvar';
     public static $PAGINA_CURSO_EXCLUIR = 'CursoExcluir';
     public static $PAGINA_CURSO_EXCLUSAO = 'CursoExclusao';
-<<<<<<< HEAD
-
-=======
->>>>>>> iv
     public static $PAGINA_DISCIPLINA_LISTAR = 'DisciplinaListar';
     public static $PAGINA_DISCIPLINA_CADASTRAR = 'DisciplinaForm';
     public static $PAGINA_DISCIPLINA_EDITAR = 'DisciplinaFormEdit';
@@ -501,25 +499,13 @@ class Constantes {
     public static $PAGINA_AULA_LISTAR = 'AulaListar';
     public static $PAGINA_AULA_CADASTRAR = 'AulaForm';
     public static $PAGINA_AULA_EDITAR = 'AulaFormEdit';
-<<<<<<< HEAD
-
-=======
->>>>>>> iv
     public static $PAGINA_AULA_SALVAR = 'AulaSalvar';
     public static $PAGINA_AULA_EXCLUIR = 'AulaExcluir';
     public static $PAGINA_AULA_EXCLUSAO = 'AulaExclusao';
     public static $NOME_ENTIDADE_TURMA = 'turma';
-<<<<<<< HEAD
-
     public static $NOME_ENTIDADE_CURSO = 'curso';
     public static $NOME_ENTIDADE_DISCIPLINA = 'disciplina';
     public static $NOME_ENTIDADE_AULA = 'aula';
-
-=======
-    public static $NOME_ENTIDADE_CURSO = 'curso';
-    public static $NOME_ENTIDADE_DISCIPLINA = 'disciplina';
-    public static $NOME_ENTIDADE_AULA = 'aula';
->>>>>>> iv
     /* Fim das páginas relaciondas ao IV */
 
     /* Entidades */
@@ -837,30 +823,16 @@ class Constantes {
     public static $LAYOUT_JS_EVENTO = 'layout/layout-js-evento';
     public static $LAYOUT_STRING_JS_EVENTO = 'layoutJSEvento';
     public static $LAYOUT_JS_EXCLUSAO_EVENTO = 'layout/layout-js-exclusao-evento';
-<<<<<<< HEAD
-
     public static $LAYOUT_JS_EXCLUSAO_TURMA = 'layout/layout-js-exclusao-turma';
     public static $LAYOUT_JS_EXCLUSAO_CURSO = 'layout/layout-js-exclusao-curso';
     public static $LAYOUT_JS_EXCLUSAO_DISCIPLINA = 'layout/layout-js-exclusao-disciplina';
-
-=======
-    public static $LAYOUT_JS_EXCLUSAO_TURMA = 'layout/layout-js-exclusao-turma';
-    public static $LAYOUT_JS_EXCLUSAO_CURSO = 'layout/layout-js-exclusao-curso';
-    public static $LAYOUT_JS_EXCLUSAO_DISCIPLINA = 'layout/layout-js-exclusao-disciplina';
->>>>>>> iv
     public static $LAYOUT_JS_EXCLUSAO_AULA = 'layout/layout-js-exclusao-aula';
     public static $LAYOUT_STRING_JS_EXCLUSAO_EVENTO = 'layoutJSExclusaoEvento';
     public static $LAYOUT_STRING_JS_EXCLUSAO_TURMA = 'layoutJSExclusaoTurma';
     public static $LAYOUT_STRING_JS_EXCLUSAO_CURSO = 'layoutJSExclusaoCurso';
     public static $LAYOUT_STRING_JS_EXCLUSAO_DISCIPLINA = 'layoutJSExclusaoDisciplina';
     public static $LAYOUT_STRING_JS_EXCLUSAO_AULA = 'layoutJSExclusaoAula';
-<<<<<<< HEAD
-
     public static $LAYOUT_JS_GRUPO_VALIDACAO = 'layout/layout-js-grupo-validacao';
-
-=======
-    public static $LAYOUT_JS_GRUPO_VALIDACAO = 'layout/layout-js-grupo-validacao';
->>>>>>> iv
     public static $LAYOUT_STRING_JS_GRUPO_VALIDACAO = 'layoutJSGrupoValidacao';
     public static $LAYOUT_JS_GRUPO_ATUALIZACAO_VALIDACAO = 'layout/layout-js-grupo-atualizacao-validacao';
     public static $LAYOUT_STRING_JS_GRUPO_ATUALIZACAO_VALIDACAO = 'layoutJSGrupoAtualizacaoValidacao';
