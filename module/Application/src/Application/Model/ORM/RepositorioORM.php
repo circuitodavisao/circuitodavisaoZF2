@@ -47,7 +47,7 @@ class RepositorioORM {
     private $_situacaoORM;
 
     /**
-     * Contrutor 
+     * Contrutor
      */
     public function __construct(EntityManager $doctrineORMEntityManager = null) {
         if (!is_null($doctrineORMEntityManager)) {
@@ -327,18 +327,18 @@ class RepositorioORM {
         if (is_null($this->_disciplinaORM)) {
             $this->_disciplinaORM = new DisciplinaORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_DISCIPLINA);
         }
-        return $this->_disciplinaORM;  
+        return $this->_disciplinaORM;
     }
-    
+
     /**
      * Metodo public para obter a instancia do AulaORM
-     * @return AulaORM
+     * @return CircuitoORM
      */
     public function getAulaORM() { 
         if (is_null($this->_aulaORM)) {
             $this->_aulaORM = new CircuitoORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_AULA);
         }
-        return $this->_aulaORM;  
+        return $this->_aulaORM;
     }
 
     /**

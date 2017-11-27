@@ -3,13 +3,13 @@
 use Application\Controller\Helper\Constantes;
 
 /**
- * Nome: curso.phtml
+ * Nome: curso-form-edit.phtml
  * @author Lucas Filipe de Carvalho Cunha <lucascarvalho.esw@gmail.com>
  * Descricao: Página de cadastro de cursos no IV.
  */
 $form = $this->formCadastroCurso;
 $form->prepare();
-$form->setAttribute(Constantes::$ACTION, $this->url(Constantes::$ROUTE_CADASTRO, array(Constantes::$PAGINA => Constantes::$PAGINA_CURSO_SALVAR)));
+$form->setAttribute(Constantes::$ACTION, $this->url(Constantes::$ROUTE_CURSO, array(Constantes::$ACTION => Constantes::$PAGINA_CURSO_SALVAR)));
 ?>
 <div class="mw1000 center-block p10">
     <div class="row ">
@@ -35,7 +35,7 @@ $form->setAttribute(Constantes::$ACTION, $this->url(Constantes::$ROUTE_CADASTRO,
                             <?php
                             echo $this->formHidden($form->get(Constantes::$FORM_ID));
                             echo $this->formHidden($form->get(Constantes::$INPUT_CSRF));
-                            $stringNomeDaFuncaoOnClickCadastro = 'funcaoCircuito("curso' . Constantes::$PAGINA_CURSO_LISTAR . '", 0)';  
+                            $stringNomeDaFuncaoOnClickCadastro = 'funcaoCircuito("curso' . Constantes::$PAGINA_CURSO_LISTAR . '", 0)';
                             echo $this->botaoLink($this->translate(Constantes::$TRADUCAO_VOLTAR), Constantes::$STRING_HASHTAG, 2, $this->funcaoOnClick($stringNomeDaFuncaoOnClickCadastro));
                             /* Submit */
                             $funcaoVerificarCadastroPessoa = $this->funcaoOnClick('validarLancamentoCadastrarCurso(this.form)');
@@ -70,16 +70,6 @@ function validarLancamentoCadastrarCurso(form) {
             mensagem = 'Nome';
         } else {
             mensagem += ', Nome';
-        }
-    }
-
-    if (nome.length > 80) {
-
-        temErro = true;
-        if (mensagem == '') {
-            mensagem = 'Nome pode ter no máximo 80 caracteres';
-        } else {
-            mensagem += ', Nome pode ter no máximo 80 caracteres';
         }
     }
 

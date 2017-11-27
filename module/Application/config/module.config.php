@@ -2,7 +2,7 @@
 
 /**
  * Nome: module.config.php
- * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com>
+ * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com> e Lucas Filipe de Carvalho Cunha <lucascarvalho.esw@gmail.com>
  * Descricao: Arquivo com as configurações globais da aplicação, como modulos ativos, caminhos para eles e arquivos gerais
  */
 
@@ -17,13 +17,13 @@ return array(
             'Application\Controller\Lancamento' => 'Application\Controller\Factory\LancamentoControllerFactory',
             'Application\Controller\Cadastro' => 'Application\Controller\Factory\CadastroControllerFactory',
             'Application\Controller\Relatorio' => 'Application\Controller\Factory\RelatorioControllerFactory',
-            'Application\Controller\Instituto' => 'Application\Controller\Factory\InstitutoControllerFactory',
+            'Application\Controller\Curso' => 'Application\Controller\Factory\CursoControllerFactory',
         ),
     ),
     # definir e gerenciar rotas
     'router' => array(
         'routes' => array(
-            'login' => array(
+            'login' => array( 
                 'type' => 'Segment',
                 'options' => array(
                     'route' => '/[:action][/:id]',
@@ -103,6 +103,19 @@ return array(
                     ),
                     'defaults' => array(
                         'controller' => 'Application\Controller\Instituto',
+                        'action' => 'index',
+                    ),
+                ),
+            ),
+            'curso' => array(
+                'type' => 'Segment',
+                'options' => array(
+                    'route' => '/curso[:action]',
+                    'constraints' => array(
+                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                    ),
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\Curso',
                         'action' => 'index',
                     ),
                 ),
