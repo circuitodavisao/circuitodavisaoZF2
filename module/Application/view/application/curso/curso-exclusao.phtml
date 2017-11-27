@@ -7,19 +7,19 @@ $cursoRecebida = $this->curso;
 
 $tituloDaPagina = $this->translate(Constantes::$TRADUCAO_CONFIRMACAO_EXCLUSAO);
 echo $this->templateFormularioTopo($tituloDaPagina, Constantes::$STRING_DIV_CONFIRMACAO);
-?> 
+?>
 <div class="panel-body bg-light">
     <div class="section-divider">
         <span>
             <?php
-            echo $this->translate(Constantes::$TRADUCAO_PERGUNTA_EXCLUSAO_CURSO);  
+            echo $this->translate(Constantes::$TRADUCAO_PERGUNTA_EXCLUSAO_CURSO);
             ?>
         </span>
     </div>
     <div class="panel heading-border panel-danger">
-        <div class="panel-body">
+        <div class="panel-body"> 
 
-            
+
             <address>
                 <div><strong><?php echo $this->translate(Constantes::$TRADUCAO_NOME); ?></strong></div>
                 <div><?php echo $cursoRecebida->getNome(); ?></div>
@@ -32,7 +32,7 @@ echo $this->templateFormularioTopo($tituloDaPagina, Constantes::$STRING_DIV_CONF
                 <div><strong><?php echo "Criado Por:" ?></strong></div>
                 <div><?php echo $cursoRecebida->getPessoa()->getNomePrimeiroPrimeiraSiglaUltimo(); ?></div>
             </address>
-        </div>                 
+        </div>
     </div>
     <div class="row">
         <div class="col-sm-12 col-xs-12">
@@ -43,17 +43,17 @@ echo $this->templateFormularioTopo($tituloDaPagina, Constantes::$STRING_DIV_CONF
                     <?php
                     echo $this->translate(Constantes::$TRADUCAO_CIENCIA_EXCLUSAO_CURSO);
                     ?>
-                </label> 
+                </label>
             </div>
         </div>
     </div>
     <div id="divMotivo" class="panel heading-border panel-danger hidden">
-        
+
         <div class="panel-footer text-right" style="height:65px;">
 <?php
 $labelVoltar = $this->translate(Constantes::$TRADUCAO_VOLTAR);
 /* Botões */
-$urlVoltar = Constantes::$ROUTE_CADASTRO;
+$urlVoltar = Constantes::$ROUTE_CURSO;
 $urlVoltar .= Constantes::$PAGINA_CURSO_LISTAR;
 
 $labelContinuar = $this->translate(Constantes::$TRADUCAO_CONTINUAR);
@@ -71,10 +71,10 @@ echo $this->botaoLink($labelVoltar, $urlVoltar, 2, '');
 ?>
     </div>
 </div>
-</div> 
+</div>
 <div id="divSenha" class="panel heading-border panel-danger hidden">
     <div class="panel-body bg-light">
-        <div class="section-divider"> 
+        <div class="section-divider">
             <span><?php echo $this->translate(Constantes::$TRADUCAO_DIGITE_SENHA_EXCUSAO_SENHA); ?></span>
         </div>
 <?php echo $this->divMensagens(); ?>
@@ -94,8 +94,7 @@ $stringNomeDaFuncaoOnClickConfimarExclusao = 'validarExclusao(' . $curso->getId(
 
 echo $this->botaoLink($labelVoltar, Constantes::$STRING_HASHTAG, 2, $this->funcaoOnClick($stringNomeDaFuncaoOnClickContinuarExclusao));
 echo $this->botaoLink($labelConfirmar, Constantes::$STRING_HASHTAG, 0, $this->funcaoOnClick($stringNomeDaFuncaoOnClickConfimarExclusao));
-?>      
+?>
     </div>
         <?php
         echo $this->templateFormularioRodape();
-        

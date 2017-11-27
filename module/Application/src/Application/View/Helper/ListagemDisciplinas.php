@@ -8,12 +8,12 @@ use Zend\View\Helper\AbstractHelper;
 /**
  * Nome: ListagemDisciplinas.php
  * @author Lucas Filipe de Carvalho Cunha <lucascarvalho.esw@gmail.com>
- * Descricao: Classe Helper responsável pela listagem de disciplinas. 
+ * Descricao: Classe Helper responsável pela listagem de disciplinas.
  */
 class ListagemDisciplinas extends AbstractHelper {
 
     public function __construct() {
-        
+
     }
 
     public function __invoke() {
@@ -43,9 +43,9 @@ class ListagemDisciplinas extends AbstractHelper {
             $html .= '<div class="panel-footer">';
 //            $html .= '<a href="/cadastroListarTurmaInativa">Disciplinas Inativas </a>';
             $html .= '<div class="text-right">';
-            $stringNomeDaFuncaoOnClickVoltar = 'funcaoCadastro("' . Constantes::$PAGINA_CURSO_LISTAR . '", 0)';
+            $stringNomeDaFuncaoOnClickVoltar = 'funcaoCircuito("' .Constantes::$ROUTE_CURSO. Constantes::$PAGINA_CURSO_LISTAR . '", 0)';
             $html .= $this->view->botaoLink($this->view->translate(Constantes::$TRADUCAO_VOLTAR), Constantes::$STRING_HASHTAG, 2, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClickVoltar));
-            $stringNomeDaFuncaoOnClickCadastro = 'funcaoCadastro("' . Constantes::$PAGINA_DISCIPLINA_CADASTRAR . '", ' . $this->view->idCurso . ')';
+            $stringNomeDaFuncaoOnClickCadastro = 'funcaoCircuito("' .Constantes::$ROUTE_CURSO. Constantes::$PAGINA_DISCIPLINA_CADASTRAR . '", ' . $this->view->idCurso . ')';
             $html .= $this->view->botaoLink($this->view->translate(Constantes::$TRADUCAO_CADASTRAR), Constantes::$STRING_HASHTAG, 0, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClickCadastro));
             $html .= '</div>';
             /* Fim Botões */
@@ -82,10 +82,10 @@ class ListagemDisciplinas extends AbstractHelper {
                 $html .= '<tr>';
 
 
-                $stringNomeDaFuncaoOnClickInserir = 'funcaoCadastro("' . Constantes::$PAGINA_FICHA_REVISAO . '", ' . $disciplina->getId() . ')';
-                $stringNomeDaFuncaoOnClick = 'funcaoCadastro("' . Constantes::$PAGINA_DISCIPLINA_EDITAR . '", ' . $disciplina->getId() . ')';
-                $stringNomeDaFuncaoOnClickExclusao = 'funcaoCadastro("' . Constantes::$PAGINA_DISCIPLINA_EXCLUSAO . '", ' . $disciplina->getId() . ')';
-                $stringNomeDaFuncaoOnClickIncluirAlunos = 'funcaoCadastro("' . Constantes::$PAGINA_AULA_LISTAR . '",' . $disciplina->getId() . ')';
+                $stringNomeDaFuncaoOnClickInserir = 'funcaoCircuito("' .Constantes::$ROUTE_CURSO. Constantes::$PAGINA_FICHA_REVISAO . '", ' . $disciplina->getId() . ')';
+                $stringNomeDaFuncaoOnClick = 'funcaoCircuito("' .Constantes::$ROUTE_CURSO. Constantes::$PAGINA_DISCIPLINA_EDITAR . '", ' . $disciplina->getId() . ')';
+                $stringNomeDaFuncaoOnClickExclusao = 'funcaoCircuito("' .Constantes::$ROUTE_CURSO. Constantes::$PAGINA_DISCIPLINA_EXCLUSAO . '", ' . $disciplina->getId() . ')';
+                $stringNomeDaFuncaoOnClickIncluirAlunos = 'funcaoCircuito("' .Constantes::$ROUTE_CURSO. Constantes::$PAGINA_AULA_LISTAR . '",' . $disciplina->getId() . ')';
 
                 $html .= '<td class="text-center">' . $disciplina->getPosicao() . '</td>';
                 if (strlen($disciplina->getNome()) > 20) {
@@ -112,9 +112,9 @@ class ListagemDisciplinas extends AbstractHelper {
             $html .= '<div class="panel-footer">';
 //            $html .= '<a href="/cadastroListarTurmaInativa">Disciplinas Inativas </a>';
             $html .= '<div class="text-right">';
-            $stringNomeDaFuncaoOnClickVoltar = 'funcaoCadastro("' . Constantes::$PAGINA_CURSO_LISTAR . '", 0)';
+            $stringNomeDaFuncaoOnClickVoltar = 'funcaoCircuito("' .Constantes::$ROUTE_CURSO. Constantes::$PAGINA_CURSO_LISTAR . '", 0)';
             $html .= $this->view->botaoLink($this->view->translate(Constantes::$TRADUCAO_VOLTAR), Constantes::$STRING_HASHTAG, 2, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClickVoltar));
-            $stringNomeDaFuncaoOnClickCadastro = 'funcaoCadastro("' . Constantes::$PAGINA_DISCIPLINA_CADASTRAR . '", ' . $this->view->idCurso . ')';
+            $stringNomeDaFuncaoOnClickCadastro = 'funcaoCircuito("' .Constantes::$ROUTE_CURSO. Constantes::$PAGINA_DISCIPLINA_CADASTRAR . '", ' . $this->view->idCurso . ')';
             $html .= $this->view->botaoLink($this->view->translate(Constantes::$TRADUCAO_CADASTRAR), Constantes::$STRING_HASHTAG, 0, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClickCadastro));
             $html .= '</div>';
             /* Fim Botões */

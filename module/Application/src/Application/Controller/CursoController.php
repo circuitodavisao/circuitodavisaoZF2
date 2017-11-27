@@ -80,8 +80,8 @@ class CursoController extends CircuitoController {
               }
 
               $this->getRepositorio()->fecharTransacao();
-              return $this->redirect()->toRoute(Constantes::$ROUTE_CADASTRO, array(
-                          Constantes::$PAGINA => Constantes::$PAGINA_CURSO_LISTAR,
+              return $this->redirect()->toRoute(Constantes::$ROUTE_CURSO, array(
+                          Constantes::$ACTION => Constantes::$PAGINA_CURSO_LISTAR,
               ));
           } catch (Exception $exc) {
               $this->getRepositorio()->desfazerTransacao();
@@ -138,8 +138,8 @@ class CursoController extends CircuitoController {
       $curso->setDataEHoraDeInativacao();
       $this->getRepositorio()->getCursoORM()->persistir($curso, false);
 
-      return $this->redirect()->toRoute(Constantes::$ROUTE_CADASTRO, array(
-                  Constantes::$PAGINA => Constantes::$PAGINA_CURSO_LISTAR,
+      return $this->redirect()->toRoute(Constantes::$ROUTE_CURSO, array(
+                  Constantes::$ACTION => Constantes::$PAGINA_CURSO_LISTAR,
       ));
   }
 
@@ -212,8 +212,8 @@ class CursoController extends CircuitoController {
               $this->getRepositorio()->fecharTransacao();
               $sessao = new Container(Constantes::$NOME_APLICACAO);
               $sessao->idSessao = $idCurso;
-              return $this->redirect()->toRoute(Constantes::$ROUTE_CADASTRO, array(
-                          Constantes::$PAGINA => Constantes::$PAGINA_DISCIPLINA_LISTAR,
+              return $this->redirect()->toRoute(Constantes::$ROUTE_CURSO, array(
+                          Constantes::$ACTION => Constantes::$PAGINA_DISCIPLINA_LISTAR,
               ));
           } catch (Exception $exc) {
               $this->getRepositorio()->desfazerTransacao();
@@ -275,8 +275,8 @@ class CursoController extends CircuitoController {
       $disciplina->setDataEHoraDeInativacao();
       $this->getRepositorio()->getCursoORM()->persistir($disciplina, false);
       $sessao->idSessao = $disciplina->getCurso_id();
-      return $this->redirect()->toRoute(Constantes::$ROUTE_CADASTRO, array(
-                  Constantes::$PAGINA => Constantes::$PAGINA_DISCIPLINA_LISTAR,
+      return $this->redirect()->toRoute(Constantes::$ROUTE_CURSO, array(
+                  Constantes::$ACTION => Constantes::$PAGINA_DISCIPLINA_LISTAR,
       ));
   }
 
@@ -284,12 +284,12 @@ class CursoController extends CircuitoController {
    * Função de listagem de aula
    */
   public function aulaListarAction() {
-      $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
+
       $sessao = new Container(Constantes::$NOME_APLICACAO);
       $idDisciplina = $sessao->idSessao;
-      $disciplina = $repositorioORM->getDisciplinaORM()->encontrarPorId($idDisciplina);
-      $aulas = $repositorioORM->getAulaORM()->buscarTodosRegistrosEntidade('posicao', 'ASC');
-      $view = new ViewModel(array(
+      $disciplina = $this->getRepositorio()->getDisciplinaORM()->encontrarPorId($idDisciplina);
+      $aulas = $this->getRepositorio()->getAulaORM()->buscarTodosRegistrosEntidade('posicao', 'ASC');
+      $view = new ViewModel(array( 
           'aulas' => $aulas,
           'idDisciplina' => $idDisciplina,
           'idCurso' => $disciplina->getCurso_id(),
@@ -350,8 +350,8 @@ class CursoController extends CircuitoController {
               $repositorioORM->fecharTransacao();
               $sessao = new Container(Constantes::$NOME_APLICACAO);
               $sessao->idSessao = $idDisciplina;
-              return $this->redirect()->toRoute(Constantes::$ROUTE_CADASTRO, array(
-                          Constantes::$PAGINA => Constantes::$PAGINA_AULA_LISTAR,
+              return $this->redirect()->toRoute(Constantes::$ROUTE_CURSO, array(
+                          Constantes::$ACTION => Constantes::$PAGINA_AULA_LISTAR,
               ));
           } catch (Exception $exc) {
               $repositorioORM->desfazerTransacao();
@@ -411,8 +411,8 @@ class CursoController extends CircuitoController {
       $aula->setDataEHoraDeInativacao();
       $repositorioORM->getDisciplinaORM()->persistir($aula, false);
       $sessao->idSessao = $aula->getDisciplina_id();
-      return $this->redirect()->toRoute(Constantes::$ROUTE_CADASTRO, array(
-                  Constantes::$PAGINA => Constantes::$PAGINA_AULA_LISTAR,
+      return $this->redirect()->toRoute(Constantes::$ROUTE_CURSO, array(
+                  Constantes::$ACTION => Constantes::$PAGINA_AULA_LISTAR,
       ));
   }
 

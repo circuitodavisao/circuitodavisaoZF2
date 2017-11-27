@@ -4,13 +4,13 @@ use Application\Controller\Helper\Constantes;
 
 /**
  * Nome: disciplina.phtml
- * @author Lucas Filipe de Carvalho Cunha <lucascarvalho.esw@gmail.com> 
+ * @author Lucas Filipe de Carvalho Cunha <lucascarvalho.esw@gmail.com>
  * Descricao: Página de cadastro de aulas no IV.
  */
 $form = $this->formCadastroAula;
 $form->prepare();
-$form->setAttribute(Constantes::$ACTION, $this->url(Constantes::$ROUTE_CADASTRO, array(Constantes::$PAGINA => Constantes::$PAGINA_AULA_SALVAR))); 
-?>  
+$form->setAttribute(Constantes::$ACTION, $this->url(Constantes::$ROUTE_CURSO, array(Constantes::$ACTION => Constantes::$PAGINA_AULA_SALVAR)));
+?>
 <div class="mw1000 center-block p10">
     <div class="row ">
         <div id="content" class="animated fadeIn">
@@ -28,8 +28,8 @@ $form->setAttribute(Constantes::$ACTION, $this->url(Constantes::$ROUTE_CADASTRO,
                             echo $this->divMensagens();
                             echo $this->inputFormularioSimples(Constantes::$TRADUCAO_POSICAO, $form->get(Constantes::$FORM_POSICAO), 12, 2);
                             echo $this->inputFormularioSimples(Constantes::$TRADUCAO_NOME, $form->get(Constantes::$FORM_NOME), 12);
-                            
-                            ?> 
+
+                            ?>
                         </div>
                         <!-- end .form-body section -->
                         <div class="panel-footer text-right">
@@ -37,7 +37,7 @@ $form->setAttribute(Constantes::$ACTION, $this->url(Constantes::$ROUTE_CADASTRO,
                             echo $this->formHidden($form->get(Constantes::$FORM_ID));
                             echo $this->formHidden($form->get(Constantes::$FORM_ID_DISCIPLINA));
                             echo $this->formHidden($form->get(Constantes::$INPUT_CSRF));
-                            $stringNomeDaFuncaoOnClickCadastro = 'funcaoCadastro("' . Constantes::$PAGINA_AULA_LISTAR . '", '.$this->idDisciplina.')';  
+                            $stringNomeDaFuncaoOnClickCadastro = 'funcaoCircuito("' .Constantes::$ROUTE_CURSO. Constantes::$PAGINA_AULA_LISTAR . '", '.$this->idDisciplina.')';
                             echo $this->botaoLink($this->translate(Constantes::$TRADUCAO_VOLTAR), Constantes::$STRING_HASHTAG, 2, $this->funcaoOnClick($stringNomeDaFuncaoOnClickCadastro));
                             /* Submit */
                             $funcaoVerificarCadastroPessoa = $this->funcaoOnClick('validarLancamentoCadastrarAula(this.form)');
@@ -55,16 +55,16 @@ $form->setAttribute(Constantes::$ACTION, $this->url(Constantes::$ROUTE_CADASTRO,
     </div>
 </div>
 <script type="application/javascript">
-    
+
 function validarLancamentoCadastrarAula(form) {
     var nome = $('#nome').val();
-    var posicao = $('#posicao').val(); 
+    var posicao = $('#posicao').val();
 
     var temErro = false;
     var divMensagens = $('#divMensagens');
     var mensagem = '';
     var mensagemReal = '';
-    
+
     if (nome === '') {
 
         temErro = true;
@@ -74,17 +74,17 @@ function validarLancamentoCadastrarAula(form) {
             mensagem += ', Nome';
         }
     }
-    
+
     if (nome.length > 80) {
 
         temErro = true;
         if (mensagem == '') {
             mensagem = 'Nome pode ter no máximo 80 caracteres';
         } else {
-            mensagem += ', Nome pode ter no máximo 80 caracteres'; 
+            mensagem += ', Nome pode ter no máximo 80 caracteres';
         }
     }
-    
+
     if (nome.length < 3) {
 
         temErro = true;
@@ -94,7 +94,7 @@ function validarLancamentoCadastrarAula(form) {
             mensagem += ', Nome tem que conter no mínimo 3 caracteres';
         }
     }
-    
+
     if (posicao == 0) {
         temErro = true;
         if (mensagem !== '') {
@@ -102,8 +102,8 @@ function validarLancamentoCadastrarAula(form) {
         }
         mensagem += 'Posição';
     }
-    
-        
+
+
     if (temErro) {
         mensagemReal = 'Preencha o(s) seguinte(s) campo(s): ' + mensagem;
         divMensagens
@@ -112,11 +112,11 @@ function validarLancamentoCadastrarAula(form) {
                 .removeClass('hidden')
                 .addClass('alert-danger');
     } else {
-      
+
         divMensagens
                 .addClass('hidden');
         form.submit();
     }
-}    
-    
-</script>    
+}
+
+</script>

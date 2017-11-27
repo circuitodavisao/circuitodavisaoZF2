@@ -23,7 +23,7 @@ return array(
     # definir e gerenciar rotas
     'router' => array(
         'routes' => array(
-            'login' => array(
+            'login' => array( 
                 'type' => 'Segment',
                 'options' => array(
                     'route' => '/[:action][/:id]',

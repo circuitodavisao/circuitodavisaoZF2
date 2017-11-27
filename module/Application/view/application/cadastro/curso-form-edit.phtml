@@ -4,13 +4,13 @@ use Application\Controller\Helper\Constantes;
 
 /**
  * Nome: curso-form-edit.phtml
- * @author Lucas Filipe de Carvalho Cunha <lucascarvalho.esw@gmail.com> 
+ * @author Lucas Filipe de Carvalho Cunha <lucascarvalho.esw@gmail.com>
  * Descricao: Página de cadastro de cursos no IV.
  */
 $form = $this->formCadastroCurso;
 $form->prepare();
-$form->setAttribute(Constantes::$ACTION, $this->url(Constantes::$ROUTE_CADASTRO, array(Constantes::$PAGINA => Constantes::$PAGINA_CURSO_SALVAR))); 
-?>  
+$form->setAttribute(Constantes::$ACTION, $this->url(Constantes::$ROUTE_CADASTRO, array(Constantes::$PAGINA => Constantes::$PAGINA_CURSO_SALVAR)));
+?>
 <div class="mw1000 center-block p10">
     <div class="row ">
         <div id="content" class="animated fadeIn">
@@ -27,15 +27,15 @@ $form->setAttribute(Constantes::$ACTION, $this->url(Constantes::$ROUTE_CADASTRO,
                             <?php
                             echo $this->divMensagens();
                             echo $this->inputFormularioSimples(Constantes::$TRADUCAO_NOME_CURSO, $form->get(Constantes::$FORM_NOME), 12);
-                          
-                            ?> 
+
+                            ?>
                         </div>
                         <!-- end .form-body section -->
                         <div class="panel-footer text-right">
                             <?php
                             echo $this->formHidden($form->get(Constantes::$FORM_ID));
                             echo $this->formHidden($form->get(Constantes::$INPUT_CSRF));
-                            $stringNomeDaFuncaoOnClickCadastro = 'funcaoCadastro("' . Constantes::$PAGINA_CURSO_LISTAR . '", 0)';  
+                            $stringNomeDaFuncaoOnClickCadastro = 'funcaoCircuito("curso' . Constantes::$PAGINA_CURSO_LISTAR . '", 0)';
                             echo $this->botaoLink($this->translate(Constantes::$TRADUCAO_VOLTAR), Constantes::$STRING_HASHTAG, 2, $this->funcaoOnClick($stringNomeDaFuncaoOnClickCadastro));
                             /* Submit */
                             $funcaoVerificarCadastroPessoa = $this->funcaoOnClick('validarLancamentoCadastrarCurso(this.form)');
@@ -53,16 +53,16 @@ $form->setAttribute(Constantes::$ACTION, $this->url(Constantes::$ROUTE_CADASTRO,
     </div>
 </div>
 <script type="application/javascript">
-    
+
 function validarLancamentoCadastrarCurso(form) {
     var nome = $('#nome').val();
-     
+
 
     var temErro = false;
     var divMensagens = $('#divMensagens');
     var mensagem = '';
     var mensagemReal = '';
-    
+
     if (nome === '') {
 
         temErro = true;
@@ -72,8 +72,8 @@ function validarLancamentoCadastrarCurso(form) {
             mensagem += ', Nome';
         }
     }
-    
-        
+
+
     if (temErro) {
         mensagemReal = 'Preencha o(s) seguinte(s) campo(s): ' + mensagem;
         divMensagens
@@ -82,11 +82,11 @@ function validarLancamentoCadastrarCurso(form) {
                 .removeClass('hidden')
                 .addClass('alert-danger');
     } else {
-      
+
         divMensagens
                 .addClass('hidden');
         form.submit();
     }
-}    
-    
-</script>    
+}
+
+</script>
