@@ -1,6 +1,7 @@
 <?php
 
 use Application\Controller\Helper\Constantes;
+use Application\View\Helper\BotaoSimples;
 
 /**
  * Nome: grupo.phtml
@@ -53,7 +54,10 @@ echo $this->templateFormularioTopo($this->tituloDaPagina);
                 </div>
             </div>
             <div id="divBotaoSubmit" class="hidden">
-                <?php echo $this->botaoLink(Constantes::$TRADUCAO_FINALIZAR, '#', 7, $this->funcaoOnClick('botaoSubmeterFormulario(this.form)')); ?>
+                <?php
+                $funcaoOnclick = 'botaoSubmeterFormulario(this.form)';
+                echo $this->botaoSimples(Constantes::$TRADUCAO_FINALIZAR, $this->funcaoOnClick($funcaoOnclick), BotaoSimples::botaoSucesso);
+                ?>
             </div>
         </div>
 
