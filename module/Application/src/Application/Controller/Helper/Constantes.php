@@ -13,9 +13,11 @@ class Constantes {
     public static $HOST = 'circuitodavisaonovo.com.br';
     public static $META_LIDER = 6;
     public static $ID_TIPO_REVISAO = 3;
+
     const QUANTIDADES_DE_EVENTOS_NA_TELA = 4;
 
     /* Constates Login */
+
     public static $CONTROLLER_LOGIN = 'Application\Controller\Login';
     public static $CONTROLLER_PRINCIPAL = 'Principal\Controller\Principal';
     public static $LOGIN_FORM = 'LoginForm';
@@ -613,13 +615,6 @@ class Constantes {
     public static $TIPO_MENSAGEM_CADASTRAR_REVISIONISTA = 8;
     /* Inputs */
     public static $INPUT_ESTADO_CIVIL = 'inputEstadoCivil';
-
-    /* Dados PROCOB */
-    public static $PROCOB_URL = 'https://api.procob.com/consultas/v1/';
-    public static $PROCOB_URL_DADOS_PESSOAIS = 'L0032/';
-    public static $PROCOB_URL_RECEITA_FEDERAL = 'L0014/';
-    public static $PROCOB_USUARIO = 'comunidadeevangelica@sara.com';
-    public static $PROCOB_SENHA = 'HK8C';
 
     /* Funcões JS */
     public static $FUNCAO_JS_ABRIR_TELAS_DE_ALUNO = 'abrirTelaDeAlunos(#tipo, #entidadeTipo)';
