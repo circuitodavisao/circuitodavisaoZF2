@@ -1,0 +1,2 @@
+0 0 * * * /home/backup/backup.sh
+0 0 * * 1 /usr/bin/wget - O -q 'https://circuitodavisaonovo.com.br/migracaoRelatorio'
