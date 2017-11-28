@@ -37,7 +37,7 @@ $form->setAttribute(Constantes::$ACTION, $this->url(Constantes::$ROUTE_CURSO, ar
                             echo $this->formHidden($form->get(Constantes::$FORM_ID));
                             echo $this->formHidden($form->get(Constantes::$FORM_ID_CURSO));
                             echo $this->formHidden($form->get(Constantes::$INPUT_CSRF));
-                            $stringNomeDaFuncaoOnClickCadastro = 'funcaoCircuito("' Constantes::$ROUTE_CURSO. Constantes::$PAGINA_DISCIPLINA_LISTAR . '", '.$this->idCurso.')';
+                            $stringNomeDaFuncaoOnClickCadastro = 'funcaoCircuito("' .Constantes::$ROUTE_CURSO. Constantes::$PAGINA_DISCIPLINA_LISTAR . '", '.$this->idCurso.')';
                             echo $this->botaoLink($this->translate(Constantes::$TRADUCAO_VOLTAR), Constantes::$STRING_HASHTAG, 2, $this->funcaoOnClick($stringNomeDaFuncaoOnClickCadastro));
                             /* Submit */
                             $funcaoVerificarCadastroPessoa = $this->funcaoOnClick('validarLancamentoCadastrarDisciplina(this.form)');

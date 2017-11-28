@@ -26,7 +26,7 @@ echo $this->templateFormularioTopo($tituloDaPagina, Constantes::$STRING_DIV_CONF
             </address>
             <address>
                 <div><strong><?php echo "Posição:" ?></strong></div>
-                <div><?php echo $disciplinaRecebida->getPosicao(); ?></div> 
+                <div><?php echo $disciplinaRecebida->getPosicao(); ?></div>
             </address>
         </div>
     </div>
@@ -55,7 +55,7 @@ $urlVoltar .= Constantes::$PAGINA_DISCIPLINA_LISTAR;
 $labelContinuar = $this->translate(Constantes::$TRADUCAO_CONTINUAR);
 $stringNomeDaFuncaoOnClickContinuarExclusao = '$("#divConfirmacao").toggleClass("' . Constantes::$FORM_HIDDEN . '");' .
         '$("#divSenha").toggleClass("' . Constantes::$FORM_HIDDEN . '")';
-$stringNomeDaFuncaoOnClickVoltar = 'funcaoCircuito("' Constantes::$ROUTE_CURSO. Constantes::$PAGINA_DISCIPLINA_LISTAR . '", '.$this->idCurso.')';
+$stringNomeDaFuncaoOnClickVoltar = 'funcaoCircuito("' .Constantes::$ROUTE_CURSO. Constantes::$PAGINA_DISCIPLINA_LISTAR . '", '.$this->idCurso.')';
 echo $this->botaoLink($this->translate(Constantes::$TRADUCAO_VOLTAR), Constantes::$STRING_HASHTAG, 2, $this->funcaoOnClick($stringNomeDaFuncaoOnClickVoltar));
 echo $this->botaoLink($labelContinuar, Constantes::$STRING_HASHTAG, 0, $this->funcaoOnClick($stringNomeDaFuncaoOnClickContinuarExclusao));
 ?>

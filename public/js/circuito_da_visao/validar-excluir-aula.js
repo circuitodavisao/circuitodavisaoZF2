@@ -12,7 +12,7 @@ function validarExclusao(idAula) {
                 .html('Preencha a senha')
                 .removeClass('alert-success')
                 .removeClass('hidden')
-                .addClass('alert-danger'); 
+                .addClass('alert-danger');
         return false;
     } else {
         $.post(
@@ -24,7 +24,7 @@ function validarExclusao(idAula) {
                     if (data.response) {
                         divMensagens
                                 .addClass('hidden');
-                        funcaoCadastro('AulaExcluir', idAula);
+                        funcaoCircuito('cursoAulaExcluir', idAula);
                     } else {
                         divMensagens
                                 .html('Senha não confere')
@@ -39,4 +39,3 @@ function validarExclusao(idAula) {
 
 
 }
-   

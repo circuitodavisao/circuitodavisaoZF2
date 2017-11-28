@@ -78,14 +78,15 @@ class DisciplinaForm extends Form {
             for ($indicePosicao = 1; $indicePosicao <= 24; $indicePosicao++) {
                 $adicionarPosicao = true;
                 foreach ($disciplinas as $d) {
-                    if ($indicePosicao === $d->getPosicao()) {
+                    if ($indicePosicao === $d->getPosicao() ) {
                         $adicionarPosicao = false;
                     }
                 }
-                if ($indicePosicao == $disciplina->getPosicao()) {
-                    $adicionarPosicao = true;
+                if(!empty($disciplina)){
+                  if ($indicePosicao == $disciplina->getPosicao()) {
+                      $adicionarPosicao = true;
+                  }
                 }
-
                 if ($adicionarPosicao) {
                     $arrayPosicao[$indicePosicao] = $indicePosicao;
                 }

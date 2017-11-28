@@ -82,7 +82,7 @@ class ListagemAulas extends AbstractHelper {
                 $stringNomeDaFuncaoOnClickInserir = 'funcaoCircuito("' .Constantes::$ROUTE_CURSO. Constantes::$PAGINA_FICHA_REVISAO . '", ' . $aula->getId() . ')';
                 $stringNomeDaFuncaoOnClick = 'funcaoCircuito("' .Constantes::$ROUTE_CURSO. Constantes::$PAGINA_AULA_EDITAR . '", ' . $aula->getId() . ')';
                 $stringNomeDaFuncaoOnClickExclusao = 'funcaoCircuito("' .Constantes::$ROUTE_CURSO. Constantes::$PAGINA_AULA_EXCLUSAO . '", ' . $aula->getId() . ')';
-                $stringNomeDaFuncaoOnClickIncluirAlunos = 'funcaoCircuito("' .Constantes::$ROUTE_CURSO. Constantes::$PAGINA_LISTAGEM_REVISAO_TURMA . '",' . $aula->getId() . ')';
+              
 
                 $html .= '<td class="text-center">' . $aula->getPosicao() . '</td>';
                 if (strlen($aula->getNome()) > 20) {
@@ -94,7 +94,7 @@ class ListagemAulas extends AbstractHelper {
                 $html .= '<td class="text-center">';
                 $html .= $this->view->botaoLink(Constantes::$STRING_ICONE_TIMES, Constantes::$STRING_HASHTAG, 9, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClickExclusao));
                 $html .= $this->view->botaoLink(Constantes::$STRING_ICONE_PENCIL, Constantes::$STRING_HASHTAG, 3, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClick));
-                $html .= $this->view->botaoLink('Incluir Aulas', Constantes::$STRING_HASHTAG, 4, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClickIncluirAlunos));
+
                 $html .= '</td>';
 //                        }
                 $html .= '</tr>';

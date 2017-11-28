@@ -170,7 +170,8 @@ class CursoController extends CircuitoController {
 
       $curso = $this->getRepositorio()->getCursoORM()->encontrarPorId($idCurso);
       $disciplinas = $curso->getDisciplina();
-
+      //echo count($disciplinas);
+      //echo "\n".$disciplinas[0]->getPosicao();
       $formCadastroDisciplina = new DisciplinaForm('formulario', $idCurso, $disciplinas);
       $view = new ViewModel(array(
           'formCadastroDisciplina' => $formCadastroDisciplina,
@@ -289,7 +290,7 @@ class CursoController extends CircuitoController {
       $idDisciplina = $sessao->idSessao;
       $disciplina = $this->getRepositorio()->getDisciplinaORM()->encontrarPorId($idDisciplina);
       $aulas = $this->getRepositorio()->getAulaORM()->buscarTodosRegistrosEntidade('posicao', 'ASC');
-      $view = new ViewModel(array( 
+      $view = new ViewModel(array(
           'aulas' => $aulas,
           'idDisciplina' => $idDisciplina,
           'idCurso' => $disciplina->getCurso_id(),
@@ -410,7 +411,7 @@ class CursoController extends CircuitoController {
       $aula = $repositorioORM->getAulaORM()->encontrarPorId($idAula);
       $aula->setDataEHoraDeInativacao();
       $repositorioORM->getDisciplinaORM()->persistir($aula, false);
-      $sessao->idSessao = $aula->getDisciplina_id();
+      $sessao->idSessao = $aula->getDisciplina_id(); 
       return $this->redirect()->toRoute(Constantes::$ROUTE_CURSO, array(
                   Constantes::$ACTION => Constantes::$PAGINA_AULA_LISTAR,
       ));
