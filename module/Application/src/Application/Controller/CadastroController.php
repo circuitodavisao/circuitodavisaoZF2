@@ -970,6 +970,10 @@ class CadastroController extends CircuitoController {
     public function grupoAction() {
         $sessao = new Container(Constantes::$NOME_APLICACAO);
 
+        unset($sessao->token);
+        $comandoPegaToken = 'curl -k -d "grant_type=client_credentials" -H "Authorization: Basic RU93V3VrcTh3X29yblV5MGVYc1lrZkRnbUhJYTplSEFJam5aclliYjdLNXl1TTc5Nm5RUmhXZzRh" https://apigateway.serpro.gov.br/token';
+        $arrayToken = system($comandoPegaToken);
+        $sessao->token = explode('"', $arrayToken)[13];
 
         $idEntidadeAtual = $sessao->idEntidadeAtual;
         $entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
@@ -1236,6 +1240,8 @@ class CadastroController extends CircuitoController {
         $respostaNaoEncotrado = 2;
         $respostaTemCadastroAtivo = 3;
         $respostaTemCadastroInativo = 4;
+        $sessao = new Container(Constantes::$NOME_APLICACAO);
+
         $request = $this->getRequest();
         $response = $this->getResponse();
         if ($request->isPost()) {
@@ -1247,36 +1253,21 @@ class CadastroController extends CircuitoController {
                 $nomeDaPesquisa = '';
                 $dataDeNascimentoDaPesquisa = '';
 
-                $explodeDataNascimento = explode('/', $post_data[Constantes::$FORM_DATA_NASCIMENTO]);
-                $dia = str_pad($explodeDataNascimento[0], 2, 0, STR_PAD_LEFT);
-                $mes = str_pad($explodeDataNascimento[1], 2, 0, STR_PAD_LEFT);
-                $ano = $explodeDataNascimento[2];
-                $dataNascimento = $dia . $mes . $ano;
-                $urlUsada = Constantes::$PROCOB_URL . Constantes::$PROCOB_URL_RECEITA_FEDERAL . $cpf . '?dataNascimento=' . $dataNascimento;
-                $curl = curl_init();
-                curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-                curl_setopt($curl, CURLOPT_USERPWD, Constantes::$PROCOB_USUARIO . ':' . Constantes::$PROCOB_SENHA);
-                curl_setopt($curl, CURLOPT_URL, $urlUsada);
-                curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
-                $result = curl_exec($curl);
-                $json = Json::decode($result, TRUE);
-//                var_dump($json);
-                $stringCode = 'code';
-                $stringContent = 'content';
-                $stringNome = 'nome';
-                $stringDataNascimento = 'data_nascimento';
-
-                curl_close($curl);
+                $urlBuscaCPFSerpro = 'curl -X GET --header "Accept: application/json" --header "Authorization: Bearer ' . $sessao->token . '" "https://apigateway.serpro.gov.br/consulta-cpf/v1/cpf/' . $cpf . '"';
+                exec($urlBuscaCPFSerpro, $respostaSerpro);
+                $arrayCodigo = explode('"', $respostaSerpro[5]);
+                $arrayNome = explode('"', $respostaSerpro[2]);
+                $arrayDataDeNascimento = explode('"', $respostaSerpro[3]);
 
                 $dados = array();
                 /* Sucesso */
-                if ($json[$stringCode] === '000') {
-                    $nomeDaPesquisa = $json[$stringContent][$stringNome];
-                    $dataDeNascimentoDaPesquisa = $json[$stringContent][$stringDataNascimento];
+                if ($arrayCodigo[3] == '0') {
+                    $nomeDaPesquisa = $arrayNome[3];
+                    $dataSemFormato = $arrayDataDeNascimento[3];
+                    $dataDeNascimentoDaPesquisa = substr($dataSemFormato, 0, 2) . '/' . substr($dataSemFormato, 2, 2) . '/' . substr($dataSemFormato, 4);
                     $resposta = $respostaSucesso;
 
                     /* CPF encontrado na receita verificando se tem cadastro no sistema */
-
                     if ($pessoaEncotrada = $this->getRepositorio()->getPessoaORM()->encontrarPorCPF($cpf)) {
                         $responsabilidadesAtivas = count($pessoaEncotrada->getResponsabilidadesAtivas());
                         if ($responsabilidadesAtivas === 0) {
@@ -1288,7 +1279,7 @@ class CadastroController extends CircuitoController {
                         }
                     }
                 }
-                if ($json[$stringCode] === '001' || $json[$stringCode] === '999') {
+                if ($resposta === 0) {
                     $resposta = $respostaNaoEncotrado;
                 }
 
