@@ -978,7 +978,7 @@ class CadastroController extends CircuitoController {
 
         $grupo = $entidade->getGrupo();
         $arrayGrupoAlunos = $grupo->getGrupoAlunoAtivos();
-        $mostrarCadastro = false;
+//        $mostrarCadastro = false;
 //        if (!empty($arrayGrupoAlunos)) {
         $mostrarCadastro = true;
 //        }
