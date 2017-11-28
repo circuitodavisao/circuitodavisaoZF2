@@ -481,6 +481,11 @@ class LoginController extends CircuitoController {
                 $pessoa->setToken_hora(null);
                 /* Salvando nova senha */
                 $this->getRepositorio()->getPessoaORM()->persistir($pessoa, false);
+
+                $Subject = 'Dados de Acesso ao CV';
+                $ToEmail = $pessoa->getEmail();
+                $Content = '<pre>Olá</pre><pre>Seu usuário é: ' . $pessoa->getEmail() . '</pre><pre>Sua Senha é: ' . $senhaNova . '</pre>';
+                Funcoes::enviarEmail($ToEmail, $Subject, $Content);
             } catch (Exception $exc) {
                 echo $exc->getMessage();
             }
@@ -623,6 +628,6 @@ class LoginController extends CircuitoController {
      */
     public function getTranslator() {
         return $this->_translator;
-    }  
+    }
 
 }
