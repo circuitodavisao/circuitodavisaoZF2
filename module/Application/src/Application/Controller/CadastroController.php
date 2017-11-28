@@ -766,20 +766,12 @@ class CadastroController extends CircuitoController {
                         }
                     }
                     if ($criarNovaCelula) {
+
                         /* Entidade selecionada */
                         $idEntidadeAtual = $sessao->idEntidadeAtual;
                         $entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
 
-                        $eventoCelula->exchangeArray($celulaForm->getData());
-                        $eventoCelula->setTelefone_hospedeiro($validatedData[Constantes::$FORM_DDD_HOSPEDEIRO] . $validatedData[Constantes::$FORM_TELEFONE_HOSPEDEIRO]);
-                        $eventoCelula->setUf($post_data[(Constantes::$FORM_HIDDEN . Constantes::$FORM_UF)]);
-                        $eventoCelula->setCidade($post_data[(Constantes::$FORM_HIDDEN . Constantes::$FORM_CIDADE)]);
-                        $eventoCelula->setLogradouro($post_data[(Constantes::$FORM_HIDDEN . Constantes::$FORM_LOGRADOURO)]);
-                        $eventoCelula->setBairro($post_data[(Constantes::$FORM_HIDDEN . Constantes::$FORM_BAIRRO)]);
-                        $eventoCelula->setComplemento(strtoupper($post_data[Constantes::$FORM_COMPLEMENTO]));
-                        $eventoCelula->setCep($post_data[Constantes::$FORM_CEP_LOGRADOURO]);
-
-                        $eventoCelula->setEvento($evento);
+                        /* Evento */
                         $alterarDataDeCriacao = true;
                         if ($mudarDataDeCadastroParaProximoDomingo) {
                             $alterarDataDeCriacao = false;
@@ -792,38 +784,46 @@ class CadastroController extends CircuitoController {
                         }
                         $evento->setHora($validatedData[Constantes::$FORM_HORA] . ':' . $validatedData[Constantes::$FORM_MINUTOS]);
                         $evento->setDia($validatedData[Constantes::$FORM_DIA_DA_SEMANA]);
-                        $evento->setEventoTipo($this->getRepositorio()->getEventoTipoORM()->encontrarPorId(2));
+                        $evento->setEventoTipo($this->getRepositorio()->getEventoTipoORM()->encontrarPorId(EventoTipo::tipoCelula));
+                        $this->getRepositorio()->getEventoORM()->persistir($evento, $alterarDataDeCriacao);
+
+                        /* Evento celula */
+                        $eventoCelula->exchangeArray($celulaForm->getData());
+                        $eventoCelula->setTelefone_hospedeiro($validatedData[Constantes::$FORM_DDD_HOSPEDEIRO] . $validatedData[Constantes::$FORM_TELEFONE_HOSPEDEIRO]);
+                        $eventoCelula->setUf($post_data[(Constantes::$FORM_HIDDEN . Constantes::$FORM_UF)]);
+                        $eventoCelula->setCidade($post_data[(Constantes::$FORM_HIDDEN . Constantes::$FORM_CIDADE)]);
+                        $eventoCelula->setLogradouro($post_data[(Constantes::$FORM_HIDDEN . Constantes::$FORM_LOGRADOURO)]);
+                        $eventoCelula->setBairro($post_data[(Constantes::$FORM_HIDDEN . Constantes::$FORM_BAIRRO)]);
+                        $eventoCelula->setComplemento(strtoupper($post_data[Constantes::$FORM_COMPLEMENTO]));
+                        $eventoCelula->setCep($post_data[Constantes::$FORM_CEP_LOGRADOURO]);
+                        $eventoCelula->setEvento($evento);
+                        $this->getRepositorio()->getEventoCelulaORM()->persistir($eventoCelula, false);
 
                         $grupoEvento->setGrupo($entidade->getGrupo());
                         $grupoEvento->setEvento($evento);
-
-                        /* Persistindo */
-                        $this->getRepositorio()->getEventoORM()->persistir($evento, $alterarDataDeCriacao);
-                        $this->getRepositorio()->getEventoCelulaORM()->persistir($eventoCelula, false);
                         $this->getRepositorio()->getGrupoEventoORM()->persistir($grupoEvento, $alterarDataDeCriacao);
-                        /* Sessão */
-                        $sessao->tipoMensagem = Constantes::$TIPO_MENSAGEM_CADASTRAR_CELULA;
-                        $sessao->textoMensagem = $eventoCelula->getNome_hospedeiro();
-                        $sessao->idSessao = $eventoCelula->getId();
 
                         /* Cadastro do fato celula */
                         /* cadastro fato apenas se for nova celula */
                         $numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio());
-                        if (empty($post_data[Constantes::$FORM_ID])) {
-                            $periodo = 0;
-                            $arrayPeriodo = Funcoes::montaPeriodo($periodo);
-                            $stringData = $arrayPeriodo[3] . '-' . $arrayPeriodo[2] . '-' . $arrayPeriodo[1];
-                            $dateFormatada = DateTime::createFromFormat('Y-m-d', $stringData);
-                            $fatoPeriodo = $this->getRepositorio()->getFatoCicloORM()->
-                                    encontrarPorNumeroIdentificadorEDataCriacao($numeroIdentificador, $dateFormatada, $this->getRepositorio());
-                            $this->getRepositorio()->getFatoCelulaORM()->criarFatoCelula($fatoPeriodo, $eventoCelula->getId());
+                        $periodo = 0;
+                        $arrayPeriodo = Funcoes::montaPeriodo($periodo);
+                        $stringData = $arrayPeriodo[3] . '-' . $arrayPeriodo[2] . '-' . $arrayPeriodo[1];
+                        $dateFormatada = DateTime::createFromFormat('Y-m-d', $stringData);
+                        $fatoPeriodo = $this->getRepositorio()->getFatoCicloORM()->
+                                encontrarPorNumeroIdentificadorEDataCriacao($numeroIdentificador, $dateFormatada, $this->getRepositorio());
+                        $this->getRepositorio()->getFatoCelulaORM()->criarFatoCelula($fatoPeriodo, $eventoCelula->getId());
 
-                            /* caso seja primeira celula, criar fato lider e nao tenha */
-                            if (!$this->getRepositorio()->getFatoLiderORM()->encontrarFatoLiderPorNumeroIdentificador($numeroIdentificador)) {
-                                $quantidadeLideres = count($entidade->getGrupo()->getResponsabilidadesAtivas());
-                                $this->getRepositorio()->getFatoLiderORM()->criarFatoLider($numeroIdentificador, $quantidadeLideres);
-                            }
+                        /* caso seja primeira celula, criar fato lider e nao tenha */
+                        if (!$this->getRepositorio()->getFatoLiderORM()->encontrarFatoLiderPorNumeroIdentificador($numeroIdentificador)) {
+                            $quantidadeLideres = count($entidade->getGrupo()->getResponsabilidadesAtivas());
+                            $this->getRepositorio()->getFatoLiderORM()->criarFatoLider($numeroIdentificador, $quantidadeLideres);
                         }
+
+                        /* Sessão */
+                        $sessao->tipoMensagem = Constantes::$TIPO_MENSAGEM_CADASTRAR_CELULA;
+                        $sessao->textoMensagem = $eventoCelula->getNome_hospedeiro();
+                        $sessao->idSessao = $eventoCelula->getId();
                     }
                     $this->getRepositorio()->fecharTransacao();
 
@@ -1066,15 +1066,17 @@ class CadastroController extends CircuitoController {
                 }
                 for ($indicePessoas = $indicePessoasInicio; $indicePessoas <= $indicePessoasFim; $indicePessoas++) {
                     $mudarDataDeCriacao = true;
+                    $cpf = $post_data[Constantes::$FORM_CPF . $indicePessoas];
                     if ($this->getRepositorio()->getPessoaORM()->verificarSeTemCPFCadastrado($cpf)) {
                         $pessoaSelecionada = $this->getRepositorio()->getPessoaORM()->encontrarPorCPF($cpf);
+                        $pessoaSelecionada->setSenha(null);
                         $mudarDataDeCriacao = false;
                     } else {
                         $pessoaSelecionada = new Pessoa();
                     }
                     $pessoaSelecionada->setNome($post_data[Constantes::$FORM_NOME . $indicePessoas]);
                     $pessoaSelecionada->setEmail($post_data[Constantes::$FORM_EMAIL . $indicePessoas]);
-                    $pessoaSelecionada->setDocumento($post_data[Constantes::$FORM_CPF . $indicePessoas]);
+                    $pessoaSelecionada->setDocumento($cpf);
                     $pessoaSelecionada->setData_nascimento(Funcoes::mudarPadraoData($post_data[Constantes::$FORM_DATA_NASCIMENTO . $indicePessoas], 0));
                     $tokenDeAgora = $pessoaSelecionada->gerarToken($indicePessoas);
                     $pessoaSelecionada->setToken($tokenDeAgora);
@@ -1209,12 +1211,13 @@ class CadastroController extends CircuitoController {
                 $email = $post_data[Constantes::$FORM_EMAIL];
 
                 $loginORM = new RepositorioORM($this->getDoctrineORMEntityManager());
-                $pessoaPesquisada = $loginORM->getPessoaORM()->encontrarPorEmail($email);
-
-                if ($pessoaPesquisada) {
+                if ($pessoaPesquisada = $loginORM->getPessoaORM()->encontrarPorEmail($email)) {
                     $resposta = 1;
+//                    $responsabilidadesAtivas = count($pessoaPesquisada->getResponsabilidadesAtivas());
+//                    if ($responsabilidadesAtivas !== 0) {
+//                        $resposta = 1;
+//                    }
                 }
-
                 $dadosDeResposta = array(
                     'resposta' => $resposta,
                 );
