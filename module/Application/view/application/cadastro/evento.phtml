@@ -3,6 +3,7 @@
 use Application\Controller\Helper\Constantes;
 use Application\Form\CelulaForm;
 use Application\Form\EventoForm;
+use Application\View\Helper\BotaoSimples;
 
 /**
  * Nome: celula.phtml
@@ -35,6 +36,7 @@ echo $this->templateFormularioTopo($tituloDaPagina);
     <!-- Inicio panel-body -->
     <div class="panel-body bg-light">
         <?php
+        echo $this->divTempoRestante();
         echo $this->passoAPasso($form);
         echo $this->divMensagens();
 
@@ -109,7 +111,7 @@ echo $this->templateFormularioTopo($tituloDaPagina);
                 $traducaoDoBotao = Constantes::$TRADUCAO_ALTERAR;
             }
             $funcaoSubmeter = $this->funcaoOnClick('submeter(this.form)');
-            echo $this->botaoSimples($traducaoDoBotao, $funcaoSubmeter);
+            echo $this->botaoSimples($traducaoDoBotao, $funcaoSubmeter, BotaoSimples::botaoSucesso);
             $funcaoVoltarNome = $this->funcaoOnClick('voltarPreencherNome()');
             echo $this->botaoSimples(Constantes::$TRADUCAO_VOLTAR, $funcaoVoltarNome, 2);
             ?>  

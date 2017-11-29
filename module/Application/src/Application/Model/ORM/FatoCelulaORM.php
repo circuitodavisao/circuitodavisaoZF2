@@ -48,4 +48,25 @@ class FatoCelulaORM extends CircuitoORM {
         return $entidade;
     }
 
+    /**
+     * Localizar entidade por evento_celula_id
+     * @param integer $id
+     * @return FatoCelula
+     * @throws Exception
+     */
+    public function encontrarPorEventoCelulaIdEFatoCiclo($idEventoCelula, $idFatoCiclo) {
+        $idEventoCelulaInt = (int) $idEventoCelula;
+        $idFatoCicloInt = (int) $idFatoCiclo;
+        $entidade = $this->getEntityManager()
+                ->getRepository($this->getEntity())
+                ->findOneBy(array(
+            Constantes::$ENTITY_EVENTO_CELULA_ID => $idEventoCelulaInt,
+            'fato_ciclo_id' => $idFatoCicloInt
+        ));
+        if (!$entidade) {
+            throw new Exception("Não foi encontrado a entidade de idEventoCelula = {$idEventoCelula} e idFatoCiclo = {$idFatoCiclo}");
+        }
+        return $entidade;
+    }
+
 }

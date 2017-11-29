@@ -89,6 +89,7 @@ class FatoCicloORM extends CircuitoORM {
                 . "WHERE "
                 . "d.dimensaoTipo = #dimensaoTipo "
                 . "AND fc.numero_identificador #tipoComparacao ?1 "
+                . "AND fc.data_inativacao is null "
                 . "#data";
         try {
 
@@ -141,6 +142,7 @@ class FatoCicloORM extends CircuitoORM {
                 . "JOIN fc.fatoCelula c "
                 . "WHERE "
                 . "fc.numero_identificador #tipoComparacao ?1 "
+                . "AND fc.data_inativacao is null "
                 . "AND fc.data_criacao = ?2 ";
         try {
             if ($tipoComparacao == 1) {
@@ -173,6 +175,7 @@ class FatoCicloORM extends CircuitoORM {
                 . "WHERE "
                 . "d.dimensaoTipo = 1 "
                 . "AND fc.numero_identificador #tipoComparacao ?1 "
+                . "AND fc.data_inativacao is null "
                 . "AND fc.data_criacao = ?2 "
                 . "AND (d.lider + d.visitante + d.consolidacao + d.membro) > 6";
         try {
