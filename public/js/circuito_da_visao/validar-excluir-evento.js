@@ -15,6 +15,7 @@ function validarExclusao(idEvento) {
                 .addClass('alert-danger');
         return false;
     } else {
+        $('.splash').css('display', 'block');
         $.post(
                 "/validarSenha",
                 {

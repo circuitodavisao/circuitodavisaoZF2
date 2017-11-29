@@ -223,16 +223,18 @@ class Menu extends AbstractHelper {
         $html .= '<li>';
         $html .= '<a href="/cadastroCelulas">';
         $html .= '<span class="fa fa-users"></span>';
-        $html .= 'Células';
+        $html .= 'Minha Célula';
         $html .= '</a>';
         $html .= '</li>';
 
-//        $html .= '<li>';
-//        $html .= '<a href="#">';
-//        $html .= '<span class="fa fa-users"></span>';
-//        $html .= 'Cultos(Manutenção)';
-//        $html .= '</a>';
-//        $html .= '</li>';
+        if ($this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja) {
+            $html .= '<li>';
+            $html .= '<a href="#">';
+            $html .= '<span class="fa fa-users"></span>';
+            $html .= 'Cultos(Manutenção)';
+            $html .= '</a>';
+            $html .= '</li>';
+        }
 
         $html .= '<li>';
         $html .= '<a href="/cadastroGrupo">';
@@ -330,7 +332,7 @@ class Menu extends AbstractHelper {
                 case 7:
                     $label = 'C&eacute;lula/Arena';
                     break;
-                case 8: 
+                case 8:
                     $label = 'C&eacute;lulas de Elite';
                     break;
             }
@@ -362,7 +364,7 @@ class Menu extends AbstractHelper {
 
         $html .= '<li class="sidebar-label pt20">Chamada I.V.</li>';
         $html .= '<li>';
-        $html .= '<a href="/instituto">';
+        $html .= '<a href="/principalChamada">';
         $html .= '<span class="fa fa-list"></span>';
         $html .= '<span class="sidebar-title">Chamada I.V.</span>';
         $html .= '</a>';
