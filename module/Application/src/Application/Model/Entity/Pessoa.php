@@ -131,7 +131,7 @@ class Pessoa extends CircuitoEntity implements InputFilterAwareInterface {
      * @return Entidade[]
      */
     function getResponsabilidadesAtivas($todasResposabilidades = false) {
-        $responsabilidadesAtivas = array();
+        $responsabilidadesAtivas = null;
         /* Responsabilidades */
         $responsabilidadesTodosStatus = $this->getGrupoResponsavel();
 
@@ -786,6 +786,10 @@ class Pessoa extends CircuitoEntity implements InputFilterAwareInterface {
 
     function dadosAtualizados() {
         $this->setAtualizar_dados('N');
+    }
+    
+    function setPrecisaAtualizarDados() {
+        $this->setAtualizar_dados('S');
     }
 
     function getCurso() {

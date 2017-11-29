@@ -616,7 +616,7 @@ class CadastroController extends CircuitoController {
                         $evento->setHora_criacao(Funcoes::horaAtual());
                         $evento->setHora($validatedData[Constantes::$FORM_HORA] . ':' . $validatedData[Constantes::$FORM_MINUTOS]);
                         $evento->setDia($validatedData[Constantes::$FORM_DIA_DA_SEMANA]);
-                        $evento->setEventoTipo($this->getRepositorio()->getEventoTipoORM()->encontrarPorId(1));
+                        $evento->setEventoTipo($this->getRepositorio()->getEventoTipoORM()->encontrarPorId(EventoTipo::tipoCulto));
 
                         $grupoEvento->setData_criacao(Funcoes::dataAtual());
                         $grupoEvento->setHora_criacao(Funcoes::horaAtual());
@@ -1067,7 +1067,8 @@ class CadastroController extends CircuitoController {
                     $cpf = $post_data[Constantes::$FORM_CPF . $indicePessoas];
                     if ($this->getRepositorio()->getPessoaORM()->verificarSeTemCPFCadastrado($cpf)) {
                         $pessoaSelecionada = $this->getRepositorio()->getPessoaORM()->encontrarPorCPF($cpf);
-                        $pessoaSelecionada->setSenha(null);
+                        $pessoaSelecionada->setSenha(null, false);
+                        $pessoaSelecionada->setPrecisaAtualizarDados();
                         $mudarDataDeCriacao = false;
                     } else {
                         $pessoaSelecionada = new Pessoa();
@@ -1133,11 +1134,6 @@ class CadastroController extends CircuitoController {
             Constantes::$FORM => $form,
             Constantes::$FORM_ENDERECO_HIDDEN => Constantes::$FORM_HIDDEN
         ));
-
-        /* Javascript */
-//        $layoutJS = new ViewModel();
-//        $layoutJS->setTemplate(Constantes::$LAYOUT_JS_GRUPO_VALIDACAO);
-//        $view->addChild($layoutJS, Constantes::$LAYOUT_STRING_JS_GRUPO_VALIDACAO);
 
         return $view;
     }
@@ -1210,11 +1206,9 @@ class CadastroController extends CircuitoController {
 
                 $loginORM = new RepositorioORM($this->getDoctrineORMEntityManager());
                 if ($pessoaPesquisada = $loginORM->getPessoaORM()->encontrarPorEmail($email)) {
-                    $resposta = 1;
-//                    $responsabilidadesAtivas = count($pessoaPesquisada->getResponsabilidadesAtivas());
-//                    if ($responsabilidadesAtivas !== 0) {
-//                        $resposta = 1;
-//                    }
+                    if ($pessoaPesquisada->getResponsabilidadesAtivas()) {
+                        $resposta = 1;
+                    }
                 }
                 $dadosDeResposta = array(
                     'resposta' => $resposta,

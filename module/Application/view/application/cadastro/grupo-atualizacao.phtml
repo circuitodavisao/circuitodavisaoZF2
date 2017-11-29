@@ -173,6 +173,10 @@ echo $this->form()->closeTag();
             temErro = true;
             mensagemDeErro = 'Celular é invalido';
         }
+        if (valorCelular < 77777777) {
+            temErro = true;
+            mensagemDeErro = 'Celular é invalido';
+        }
         if (valorDDD.length !== 0 && valorDDD.length !== 2) {
             temErro = true;
             mensagemDeErro = 'DDD é invalido';
@@ -223,6 +227,8 @@ echo $this->form()->closeTag();
     function botaoVoltarCelular() {
         $('#divCodigoVerificador').addClass(hidden);
         $('#divCelular').removeClass(hidden);
+        $('#divBotaoVerificarTelefone').removeClass(hidden);
+        $('#divBotaoTelefoneContinuar').addClass(hidden);
         $('#botaoPasso3')
                 .addClass(btnDefault)
                 .removeClass(btnPrimary);
@@ -277,6 +283,5 @@ $versao = '?v=8.4';
 echo $this
         ->headScript()
         ->prependFile($this->basePath() . '/js/circuito_da_visao/buscar-endereco.js' . $versao)
-        ->prependFile($this->basePath() . '/js/circuito_da_visao/modal-loader.js' . $versao)
 ;
 echo $this->inlineScript();
