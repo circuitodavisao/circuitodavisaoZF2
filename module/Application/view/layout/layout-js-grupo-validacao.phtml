@@ -1,6 +1,14 @@
 <?php
 
 use Application\Controller\Helper\Constantes;
+
+$versao = '?v=0.3';
+
+echo $this
+        ->headScript()
+        ->prependFile($this->basePath() . '/js/circuito_da_visao/tempo-restante.js' . $versao)
+;
+echo $this->inlineScript();
 ?>
 
 <script type="text/javascript">
@@ -276,7 +284,7 @@ use Application\Controller\Helper\Constantes;
 //                                    dadosValidados = false;
 //                                    spanMensagens
 //                                            .addClass(alertDanger)
-//                                            .text('<?php // echo $this->translate(Constantes::$TRADUCAO_NOME_NAO_CONFERE);            ?>')
+//                                            .text('<?php // echo $this->translate(Constantes::$TRADUCAO_NOME_NAO_CONFERE);              ?>')
 //                                            .removeClass(hidden);
 //                                }
 //                            }

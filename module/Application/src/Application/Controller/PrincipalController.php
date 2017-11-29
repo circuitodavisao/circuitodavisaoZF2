@@ -256,6 +256,10 @@ class PrincipalController extends CircuitoController {
         }
     }
 
+    public function chamadaAction() {
+        return new ViewModel();
+    }
+
     /**
      * Controle de funçoes da tela de cadastro
      * @return Json

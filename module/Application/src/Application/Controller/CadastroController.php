@@ -731,7 +731,7 @@ class CadastroController extends CircuitoController {
                                 $eventoCelulaAtual->setTelefone_hospedeiro($validatedData[Constantes::$FORM_DDD_HOSPEDEIRO] . $validatedData[Constantes::$FORM_TELEFONE_HOSPEDEIRO]);
                             }
                             if ($post_data[Constantes::$FORM_CEP_LOGRADOURO] != $eventoCelulaAtual->getCep()) {
-                                $eventoCelulaAtual->setCep($validatedData[Constantes::$FORM_CEP]);
+                                $eventoCelulaAtual->setCep($validatedData[Constantes::$FORM_CEP_LOGRADOURO]);
                             }
                             if ($post_data[(Constantes::$FORM_HIDDEN . Constantes::$FORM_UF)] != $eventoCelulaAtual->getUf()) {
                                 $eventoCelulaAtual->setUf($post_data[(Constantes::$FORM_HIDDEN . Constantes::$FORM_UF)]);
@@ -884,15 +884,14 @@ class CadastroController extends CircuitoController {
      * GET /cadastroEventoConfirmacao
      */
     public function eventoExclusaoConfirmacaoAction() {
+        $sessao = new Container(Constantes::$NOME_APLICACAO);
         CircuitoController::verificandoSessao(new Container(Constantes::$NOME_APLICACAO), $this);
 
         $this->getRepositorio()->iniciarTransacao();
         try {
-
             /* Verificando a se tem algum id na sessão */
-            $sessao = new Container(Constantes::$NOME_APLICACAO);
             $eventoNaSessao = new Evento();
-            if (!empty($sessao->idSessao)) {
+            if ($sessao->idSessao) {
                 $eventoNaSessao = $this->getRepositorio()->getEventoORM()->encontrarPorId($sessao->idSessao);
 
                 /* Persistindo */
@@ -903,20 +902,27 @@ class CadastroController extends CircuitoController {
                     $timeNow = new DateTime();
                     $format = 'N';
                     $diaDaSemana = $timeNow->format($format);
-                    $eventoNaSessao->getDia();
                     if ($diaDaSemana == 7) {
                         $diaDaSemana = 1;
                     } else {
                         $diaDaSemana++;
                     }
-                    if ($diaDaSemana < $eventoNaSessao->getDia()) {
-                        $fatoCelula = $this->getRepositorio()->getFatoCelulaORM()->encontrarPorEventoCelulaId($eventoNaSessao->getEventoCelula()->getId());
-                        $fatoCelula->setDataEHoraDeInativacao();
-                        $this->getRepositorio()->getFatoCelulaORM()->persistir($fatoCelula, false);
+                    if ($eventoNaSessao->getDia() > $diaDaSemana) {
+                        $numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $eventoNaSessao->getGrupoEventoAtivo()->getGrupo());
+                        $periodo = 0;
+                        $arrayPeriodo = Funcoes::montaPeriodo($periodo);
+                        $stringData = $arrayPeriodo[3] . '-' . $arrayPeriodo[2] . '-' . $arrayPeriodo[1];
+                        $dateFormatada = DateTime::createFromFormat('Y-m-d', $stringData);
+                        if ($fatoCiclo = $this->getRepositorio()->getFatoCicloORM()->
+                                encontrarPorNumeroIdentificadorEDataCriacao($numeroIdentificador, $dateFormatada, $this->getRepositorio())) {
+                            $fatoCelula = $this->getRepositorio()->getFatoCelulaORM()->encontrarPorEventoCelulaIdEFatoCiclo($eventoNaSessao->getEventoCelula()->getId(), $fatoCiclo->getId());
+                            $fatoCelula->setDataEHoraDeInativacao();
+                            $this->getRepositorio()->getFatoCelulaORM()->persistir($fatoCelula, false);
+                        }
                     }
-                    /* Inativando fato/-lider caso nao tenha mais celulas */
+                    /* Inativando fato-lider caso nao tenha mais celulas */
                     $grupoDoEvento = $eventoNaSessao->getGrupoEventoAtivo()->getGrupo();
-                    if (!$grupoDoEvento->getGrupoEventoAtivosPorTipo(EventoTipo::tipoCelula)) {
+                    if ($grupoDoEvento->getGrupoEventoAtivosPorTipo(EventoTipo::tipoCelula) === null) {
                         $this->inativarFatoLiderPorGrupo($grupoDoEvento);
                     }
                 }
@@ -943,16 +949,18 @@ class CadastroController extends CircuitoController {
                 $sessao->nomeEventoExcluido = $eventoNaSessao->getNome();
                 unset($sessao->idSessao);
 
+                $this->getRepositorio()->fecharTransacao();
                 $tipoCelula = !empty($eventoNaSessao->verificaSeECelula());
                 $pagina = Constantes::$PAGINA_CULTOS;
                 if ($tipoCelula) {
-                    $pagina = Constantes::$PAGINA_CELULAS;
+                    return $this->redirect()->toRoute('principal', array(
+                                Constantes::$ACTION => Constantes::$ACTION_INDEX,
+                    ));
+                } else {
+                    return $this->redirect()->toRoute(Constantes::$ROUTE_CADASTRO, array(
+                                Constantes::$PAGINA => Constantes::$PAGINA_CELULAS,
+                    ));
                 }
-
-                $this->getRepositorio()->fecharTransacao();
-                return $this->redirect()->toRoute(Constantes::$ROUTE_CADASTRO, array(
-                            Constantes::$PAGINA => Constantes::$PAGINA_CELULAS,
-                ));
             }
         } catch (Exception $exc) {
             $this->getRepositorio()->desfazerTransacao();
@@ -986,8 +994,8 @@ class CadastroController extends CircuitoController {
         $arrayHierarquia = $this->getRepositorio()->getHierarquiaORM()->encontrarTodas($pessoa->getPessoaHierarquiaAtivo()->getHierarquia()->getId());
 
         $arrayDeNumerosUsados = array();
-        if ($grupo->getGrupoPaiFilhoFilhos()) {
-            $filhos = $grupo->getGrupoPaiFilhoFilhos();
+        if ($grupo->getGrupoPaiFilhoFilhosAtivos(1)) {
+            $filhos = $grupo->getGrupoPaiFilhoFilhosAtivos(1);
             foreach ($filhos as $filho) {
                 if ($filho->getGrupoPaiFilhoFilho()->getEntidadeAtiva()->getNumero()) {
                     $numero = $filho->getGrupoPaiFilhoFilho()->getEntidadeAtiva()->getNumero();
@@ -1109,6 +1117,8 @@ class CadastroController extends CircuitoController {
                 $this->getRepositorio()->fecharTransacao();
 
                 for ($indicePessoas = $indicePessoasInicio; $indicePessoas <= $indicePessoasFim; $indicePessoas++) {
+                    $cpf = $post_data[Constantes::$FORM_CPF . $indicePessoas];
+                    $pessoaSelecionada = $this->getRepositorio()->getPessoaORM()->encontrarPorCPF($cpf);
                     /* Enviar Email */
                     $this->enviarEmailParaCompletarOsDados($this->getRepositorio(), $sessao->idPessoa, $tokenDeAgora, $pessoaSelecionada);
                 }

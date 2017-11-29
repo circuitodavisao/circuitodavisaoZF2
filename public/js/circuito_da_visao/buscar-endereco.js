@@ -24,6 +24,9 @@ function submitEnter(myfield, e) {
 
 function buscarEndereco() {
     var cep_logradouro = $('#cep_logradouro').val();
+    cep_logradouro = cep_logradouro.replace('-', '');
+    $('#cep_logradouro').val(cep_logradouro);
+
     $('#endereco').addClass(hidden);
     var spanMensagemDeErro = $('#spanMensagemDeErro');
     var divMensagens = $('#divMensagens');
@@ -41,7 +44,7 @@ function buscarEndereco() {
                 .removeClass(hidden);
         return false;
     }
-    if (!isNumber(cep_logradouro) || cep_logradouro.length !== 8) {
+    if (!(cep_logradouro.length === 8 || cep_logradouro.length === 9)) {
         spanMensagemDeErro
                 .removeClass('alert-success')
                 .addClass('alert-danger')

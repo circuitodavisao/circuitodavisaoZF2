@@ -33,6 +33,7 @@ use Application\View\Helper\DadosEntidade;
 use Application\View\Helper\DivCapslock;
 use Application\View\Helper\DivJavaScript;
 use Application\View\Helper\DivMensagens;
+use Application\View\Helper\DivTempoRestante;
 use Application\View\Helper\FuncaoOnClick;
 use Application\View\Helper\GrupoDadosComplementares;
 use Application\View\Helper\GrupoEstadoCivil;
@@ -44,6 +45,7 @@ use Application\View\Helper\InputExtras;
 use Application\View\Helper\InputFormulario;
 use Application\View\Helper\InputFormularioSimples;
 use Application\View\Helper\LinkLogo;
+use Application\View\Helper\ListagemAulas;
 use Application\View\Helper\ListagemConsolidacaoParaRevisao;
 use Application\View\Helper\ListagemCursos;
 use Application\View\Helper\ListagemDeEventos;
@@ -182,6 +184,9 @@ class Module {
                 'divMensagens' => function($sm) {
                     return new DivMensagens();
                 },
+                'divTempoRestante' => function($sm) {
+                    return new DivTempoRestante();
+                },
                 'botaoSimples' => function($sm) {
                     return new BotaoSimples();
                 },
@@ -232,6 +237,9 @@ class Module {
                 },
                 'listagemDisciplinas' => function($sm) {
                     return new ListagemDisciplinas();
+                },
+                'listagemAulas' => function($sm) {
+                    return new ListagemAulas();
                 },
                 'listagemTurmasInativas' => function($sm) {
                     return new ListagemTurmasInativas();
