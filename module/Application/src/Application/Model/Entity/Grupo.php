@@ -441,7 +441,7 @@ class Grupo extends CircuitoEntity {
                     foreach ($grupoEventosCelulas as $grupoEvento) {
                         $contadorDeAlteracoes[$grupoEvento->getData_criacao()] = $grupoEvento;
                     }
-                    unset($grupoEventosCelulas);
+                    $grupoEventosCelulas = array();
                     foreach ($contadorDeAlteracoes as $grupoEventoCelula) {
                         $grupoEventosCelulas[] = $grupoEventoCelula;
                     }
