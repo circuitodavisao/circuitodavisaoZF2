@@ -25,7 +25,7 @@ class SolicitacaoORM extends CircuitoORM {
                 . " s.id, s.objeto1, s.objeto2, s.numero, s.nome "
                 . "FROM  " . Constantes::$ENTITY_SOLICITACAO . " s "
                 . "WHERE "
-                . "s.data_criacao >= ?1 AND s.data_criacao < ?2";
+                . "s.data_criacao >= ?1 AND s.data_criacao <= ?2";
         try {
             $result = $this->getEntityManager()->createQuery($dql)
                     ->setParameter(1, $dataDeCriacaoInicial)
