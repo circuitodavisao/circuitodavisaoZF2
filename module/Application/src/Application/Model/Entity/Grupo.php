@@ -430,15 +430,15 @@ class Grupo extends CircuitoEntity {
      */
     function getGrupoEventoOrdenadosPorDiaDaSemana() {
         $grupoSelecionado = $this;
-        $grupoEventosCelulas = null;
+        $grupoEventosCelulasTodas = null;
         $grupoEventos = null;
         if ($grupoSelecionado->getEntidadeAtiva()) {
             if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::SUBEQUIPE) {
-                $grupoEventosCelulas = $grupoSelecionado->getGrupoEventoPorTipoEAtivo(EventoTipo::tipoCelula);
+                $grupoEventosCelulasTodas = $grupoSelecionado->getGrupoEventoPorTipoEAtivo(EventoTipo::tipoCelula);
 
                 $contadorDeAlteracoes = array();
-                if ($grupoEventosCelulas) {
-                    foreach ($grupoEventosCelulas as $grupoEvento) {
+                if ($grupoEventosCelulasTodas) {
+                    foreach ($grupoEventosCelulasTodas as $grupoEvento) {
                         $contadorDeAlteracoes[$grupoEvento->getData_criacaoStringPadraoBrasil()] = $grupoEvento;
                     }
                     $grupoEventosCelulas = array();
