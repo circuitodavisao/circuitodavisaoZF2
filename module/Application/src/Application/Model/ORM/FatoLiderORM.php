@@ -55,11 +55,11 @@ class FatoLiderORM extends CircuitoORM {
     public function encontrarFatoLiderPorNumeroIdentificador($numeroIdentificador) {
         $resposta = null;
         try {
-            $pessoa = $this->getEntityManager()
+            $entidade = $this->getEntityManager()
                     ->getRepository($this->getEntity())
                     ->findOneBy(array(Constantes::$ENTITY_FATO_CICLO_NUMERO_IDENTIFICADOR => $numeroIdentificador));
-            if ($pessoa) {
-                $resposta = $pessoa;
+            if ($entidade) {
+                $resposta = $entidade;
             }
             return $resposta;
         } catch (Exception $exc) {

@@ -59,6 +59,7 @@ class DeployController extends CircuitoController {
             if (intval($idPessoa)) {
                 $pessoa = $repositorioORM->getPessoaORM()->encontrarPorId($idPessoa);
                 $dados = array();
+                $dados['data_criacao'] = $pessoa->getData_criacaoStringPadraoBanco();
                 $dados['id'] = $pessoa->getId();
                 $dados['nome'] = $pessoa->getNome();
                 $dados['documento'] = $pessoa->getDocumento();
