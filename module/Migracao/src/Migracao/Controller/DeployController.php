@@ -88,6 +88,7 @@ class DeployController extends CircuitoController {
                         if ($grupoEventoCelula = $grupoResponsavel->getGrupo()->getGrupoEventoPorTipoEAtivo(EventoTipo::tipoCelula)) {
                             foreach ($grupoEventoCelula as $grupoEvento) {
                                 $dados['Celula ' . $grupoEvento->getId() . ' Status'] = $grupoEvento->getEvento()->verificarSeEstaAtivo();
+                                $dados['Celula ' . $grupoEvento->getId() . ' DataCriacao'] = $grupoEvento->getEvento()->getData_criacaoStringPadraoBrasil();
                                 $dados['Celula ' . $grupoEvento->getId() . ' Hospedeiro'] = $grupoEvento->getEvento()->getEventoCelula()->getNome_hospedeiro();
                                 $dados['Celula ' . $grupoEvento->getId() . ' Dia'] = $grupoEvento->getEvento()->getDia();
                                 $dados['Celula ' . $grupoEvento->getId() . ' Hora'] = $grupoEvento->getEvento()->getHora();
