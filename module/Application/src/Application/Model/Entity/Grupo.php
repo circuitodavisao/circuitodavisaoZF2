@@ -436,15 +436,15 @@ class Grupo extends CircuitoEntity {
         if ($grupoSelecionado->getEntidadeAtiva()) {
             if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::SUBEQUIPE) {
                 $grupoEventosCelulas = $grupoSelecionado->getGrupoEventoPorTipoEAtivo(EventoTipo::tipoCelula);
-//                $contadorDeAlteracoes = array();
-//                if ($grupoEventosCelulasTodas) {
-//                    foreach ($grupoEventosCelulasTodas as $grupoEvento) {
-//                        $contadorDeAlteracoes[$grupoEvento->getData_criacaoStringPadraoBrasil()] = $grupoEvento;
-//                    }
-//                    foreach ($contadorDeAlteracoes as $grupoEventoCelula) {
-//                        $grupoEventosCelulas[] = $grupoEventoCelula;
-//                    }
-//                }
+                $contadorDeAlteracoes = array();
+                if ($grupoEventosCelulasTodas) {
+                    foreach ($grupoEventosCelulasTodas as $grupoEvento) {
+                        $contadorDeAlteracoes[$grupoEvento->getData_criacaoStringPadraoBrasil()] = $grupoEvento;
+                    }
+                    foreach ($contadorDeAlteracoes as $grupoEventoCelula) {
+                        $grupoEventosCelulas[] = $grupoEventoCelula;
+                    }
+                }
                 while ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::SUBEQUIPE) {
                     $grupoSelecionado = $grupoSelecionado->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai();
                     if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::EQUIPE) {
