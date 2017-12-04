@@ -21,13 +21,11 @@ class Endereco {
     public static function MontaEnderecoFormulario(Form $formulario) {
         /* CEP ou Logradouro */
         $formulario->add(
-                (new Number())
+                (new Text())
                         ->setName(Constantes::$FORM_CEP_LOGRADOURO)
                         ->setAttributes([
                             Constantes::$FORM_CLASS => Constantes::$FORM_CLASS_FORM_CONTROL,
                             Constantes::$FORM_ID => Constantes::$FORM_CEP_LOGRADOURO,
-                            'onpaste' => 'retrun false',
-                            'ondrop' => 'return false',
                         ])
         );
 

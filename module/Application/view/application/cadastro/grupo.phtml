@@ -1,6 +1,7 @@
 <?php
 
 use Application\Controller\Helper\Constantes;
+use Application\View\Helper\BotaoSimples;
 
 /**
  * Nome: grupo.phtml
@@ -15,6 +16,7 @@ echo $this->templateFormularioTopo($this->tituloDaPagina);
 ?>
 <!-- Inicio panel-body -->
 <div class="panel-body bg-light">
+    <?php echo $this->divTempoRestante(); ?>
     <?php if ($this->mostrarCadastro) { ?>
         <!-- Estado Civil -->
         <?php echo $this->grupoEstadoCivil($form); ?>
@@ -53,7 +55,10 @@ echo $this->templateFormularioTopo($this->tituloDaPagina);
                 </div>
             </div>
             <div id="divBotaoSubmit" class="hidden">
-                <?php echo $this->botaoLink(Constantes::$TRADUCAO_FINALIZAR, '#', 7, $this->funcaoOnClick('botaoSubmeterFormulario(this.form)')); ?>
+                <?php
+                $funcaoOnclick = 'botaoSubmeterFormulario(this.form)';
+                echo $this->botaoSimples(Constantes::$TRADUCAO_FINALIZAR, $this->funcaoOnClick($funcaoOnclick), BotaoSimples::botaoSucesso);
+                ?>
             </div>
         </div>
 
@@ -179,13 +184,13 @@ echo $this->templateFormularioTopo($this->tituloDaPagina);
                     $(\'#divResponsavel\').addClass(\'hidden\');
                 "';
                     $extraResponsavel0 = str_replace('#numero', 0, $extraInserirResponsavel);
-                    echo $this->botaoLink($labelInserirResponsavel, Constantes::$STRING_HASHTAG, 7, $extraResponsavel0);
+                    echo $this->botaoSimples($labelInserirResponsavel, $extraResponsavel0, BotaoSimples::botaoSucesso);
 
                     $extraResponsavel1 = str_replace('#numero', 1, $extraInserirResponsavel);
-                    echo $this->botaoLink($labelInserirResponsavel, Constantes::$STRING_HASHTAG, 7, $extraResponsavel1);
+                    echo $this->botaoSimples($labelInserirResponsavel, $extraResponsavel1, BotaoSimples::botaoSucesso);
 
                     $extraResponsavel2 = str_replace('#numero', 2, $extraInserirResponsavel);
-                    echo $this->botaoLink($labelInserirResponsavel, Constantes::$STRING_HASHTAG, 7, $extraResponsavel2);
+                    echo $this->botaoSimples($labelInserirResponsavel, $extraResponsavel2, BotaoSimples::botaoSucesso);
                     echo '</div>';
 
                     echo '</div>';

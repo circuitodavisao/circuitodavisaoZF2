@@ -136,32 +136,32 @@ function retornaDiaDaSemanaPorExtenso(diaDaSemana) {
     var valorInteiro = parseInt(diaDaSemana);
     switch (valorInteiro) {
         case 1:
-            diaDaSemanaPorExtenso = 'SUNDAY';
+            diaDaSemanaPorExtenso = 'DOMINGO';
             break;
         case 2:
-            diaDaSemanaPorExtenso = 'MONDAY';
+            diaDaSemanaPorExtenso = 'SEGUDA-FEIRA';
             break;
         case 3:
-            diaDaSemanaPorExtenso = 'TUESDAY';
+            diaDaSemanaPorExtenso = 'TERÇA-FEIRA';
             break;
         case 4:
-            diaDaSemanaPorExtenso = 'WEDNESDAY';
+            diaDaSemanaPorExtenso = 'QUARTA-FEIRA';
             break;
         case 5:
-            diaDaSemanaPorExtenso = 'THURSDAY';
+            diaDaSemanaPorExtenso = 'QUINTA-FEIRA';
             break;
         case 6:
-            diaDaSemanaPorExtenso = 'FRIDAY';
+            diaDaSemanaPorExtenso = 'SEXTA-FEIRA';
             break;
         case 7:
-            diaDaSemanaPorExtenso = 'SATURDAY';
+            diaDaSemanaPorExtenso = 'SÁBADO';
             break;
     }
     return diaDaSemanaPorExtenso;
 }
 
 function submeter(form) {
-
+    $('.splash').css('display', 'block');
     form.submit();
 }
 

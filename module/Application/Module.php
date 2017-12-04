@@ -33,6 +33,7 @@ use Application\View\Helper\DadosEntidade;
 use Application\View\Helper\DivCapslock;
 use Application\View\Helper\DivJavaScript;
 use Application\View\Helper\DivMensagens;
+use Application\View\Helper\DivTempoRestante;
 use Application\View\Helper\FuncaoOnClick;
 use Application\View\Helper\GrupoDadosComplementares;
 use Application\View\Helper\GrupoEstadoCivil;
@@ -182,6 +183,9 @@ class Module {
                 },
                 'divMensagens' => function($sm) {
                     return new DivMensagens();
+                },
+                'divTempoRestante' => function($sm) {
+                    return new DivTempoRestante();
                 },
                 'botaoSimples' => function($sm) {
                     return new BotaoSimples();

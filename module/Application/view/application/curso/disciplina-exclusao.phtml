@@ -1,3 +1,4 @@
+
 <?php
 
 use Application\Controller\Helper\Constantes;
@@ -46,25 +47,25 @@ echo $this->templateFormularioTopo($tituloDaPagina, Constantes::$STRING_DIV_CONF
     <div id="divMotivo" class="panel heading-border panel-danger hidden">
 
         <div class="panel-footer text-right" style="height:65px;">
-<?php
-$labelVoltar = $this->translate(Constantes::$TRADUCAO_VOLTAR);
-/* Botões */
-$urlVoltar = Constantes::$ROUTE_CURSO;
-$urlVoltar .= Constantes::$PAGINA_DISCIPLINA_LISTAR;
+            <?php
+            $labelVoltar = $this->translate(Constantes::$TRADUCAO_VOLTAR);
+            /* Botões */
+            $urlVoltar = Constantes::$ROUTE_CURSO;
+            $urlVoltar .= Constantes::$PAGINA_DISCIPLINA_LISTAR;
 
-$labelContinuar = $this->translate(Constantes::$TRADUCAO_CONTINUAR);
-$stringNomeDaFuncaoOnClickContinuarExclusao = '$("#divConfirmacao").toggleClass("' . Constantes::$FORM_HIDDEN . '");' .
-        '$("#divSenha").toggleClass("' . Constantes::$FORM_HIDDEN . '")';
-$stringNomeDaFuncaoOnClickVoltar = 'funcaoCircuito("' .Constantes::$ROUTE_CURSO. Constantes::$PAGINA_DISCIPLINA_LISTAR . '", '.$this->idCurso.')';
-echo $this->botaoLink($this->translate(Constantes::$TRADUCAO_VOLTAR), Constantes::$STRING_HASHTAG, 2, $this->funcaoOnClick($stringNomeDaFuncaoOnClickVoltar));
-echo $this->botaoLink($labelContinuar, Constantes::$STRING_HASHTAG, 0, $this->funcaoOnClick($stringNomeDaFuncaoOnClickContinuarExclusao));
-?>
+            $labelContinuar = $this->translate(Constantes::$TRADUCAO_CONTINUAR);
+            $stringNomeDaFuncaoOnClickContinuarExclusao = '$("#divConfirmacao").toggleClass("' . Constantes::$FORM_HIDDEN . '");' .
+                    '$("#divSenha").toggleClass("' . Constantes::$FORM_HIDDEN . '")';
+            $stringNomeDaFuncaoOnClickVoltar = 'funcaoCircuito("' . Constantes::$ROUTE_CURSO . Constantes::$PAGINA_DISCIPLINA_LISTAR . '", ' . $this->idCurso . ')';
+            echo $this->botaoLink($this->translate(Constantes::$TRADUCAO_VOLTAR), Constantes::$STRING_HASHTAG, 2, $this->funcaoOnClick($stringNomeDaFuncaoOnClickVoltar));
+            echo $this->botaoLink($labelContinuar, Constantes::$STRING_HASHTAG, 0, $this->funcaoOnClick($stringNomeDaFuncaoOnClickContinuarExclusao));
+            ?>
         </div>
     </div>
     <div id="divBotaoVoltar" class="panel-footer text-right" style="height:65px;">
-<?php
-echo $this->botaoLink($this->translate(Constantes::$TRADUCAO_VOLTAR), Constantes::$STRING_HASHTAG, 2, $this->funcaoOnClick($stringNomeDaFuncaoOnClickVoltar));
-?>
+        <?php
+        echo $this->botaoLink($this->translate(Constantes::$TRADUCAO_VOLTAR), Constantes::$STRING_HASHTAG, 2, $this->funcaoOnClick($stringNomeDaFuncaoOnClickVoltar));
+        ?>
     </div>
 </div>
 </div>
@@ -73,7 +74,7 @@ echo $this->botaoLink($this->translate(Constantes::$TRADUCAO_VOLTAR), Constantes
         <div class="section-divider">
             <span><?php echo $this->translate(Constantes::$TRADUCAO_DIGITE_SENHA_EXCUSAO_SENHA); ?></span>
         </div>
-<?php echo $this->divMensagens(); ?>
+        <?php echo $this->divMensagens(); ?>
         <div class="row">
             <div class="col-sm-12 col-xs-12">
                 <div class="section text-center">
@@ -83,14 +84,14 @@ echo $this->botaoLink($this->translate(Constantes::$TRADUCAO_VOLTAR), Constantes
         </div>
     </div>
     <div class="panel-footer text-right" style="height:65px;">
-<?php
-/* Botões */
-$labelConfirmar = $this->translate(Constantes::$TRADUCAO_CONFIRMACAO);
-$stringNomeDaFuncaoOnClickConfimarExclusao = 'validarExclusao(' . $disciplina->getId() . ')';
-
-echo $this->botaoLink($labelVoltar, Constantes::$STRING_HASHTAG, 2, $this->funcaoOnClick($stringNomeDaFuncaoOnClickContinuarExclusao));
-echo $this->botaoLink($labelConfirmar, Constantes::$STRING_HASHTAG, 0, $this->funcaoOnClick($stringNomeDaFuncaoOnClickConfimarExclusao));
-?>
-    </div>
         <?php
-        echo $this->templateFormularioRodape();
+        /* Botões */
+        $labelConfirmar = $this->translate(Constantes::$TRADUCAO_CONFIRMACAO);
+        $stringNomeDaFuncaoOnClickConfimarExclusao = 'validarExclusao(' . $disciplina->getId() . ')';
+
+        echo $this->botaoLink($labelVoltar, Constantes::$STRING_HASHTAG, 2, $this->funcaoOnClick($stringNomeDaFuncaoOnClickContinuarExclusao));
+        echo $this->botaoLink($labelConfirmar, Constantes::$STRING_HASHTAG, 0, $this->funcaoOnClick($stringNomeDaFuncaoOnClickConfimarExclusao));
+        ?>
+    </div>
+    <?php
+    echo $this->templateFormularioRodape();

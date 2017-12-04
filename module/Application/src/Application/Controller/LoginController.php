@@ -8,7 +8,6 @@ use Application\Form\LoginForm;
 use Application\Form\NovaSenhaForm;
 use Application\Form\RecuperarAcessoForm;
 use Application\Form\RecuperarSenhaForm;
-use Application\Model\ORM\RepositorioORM;
 use DateTime;
 use Doctrine\ORM\EntityManager;
 use Exception;
@@ -122,7 +121,7 @@ class LoginController extends CircuitoController {
             return $this->redirect()->toRoute(Constantes::$ROUTE_LOGIN);
         }
 
-        $usuarioTrim = trim($data[Constantes::$INPUT_USUARIO]);
+        $usuarioTrim = strtolower(trim($data[Constantes::$INPUT_USUARIO]));
         $senhaTrim = trim($data[Constantes::$INPUT_SENHA]);
         $adapter = $this->getDoctrineAuthenticationServicer()->getAdapter();
         $adapter->setIdentityValue($usuarioTrim);
@@ -481,6 +480,11 @@ class LoginController extends CircuitoController {
                 $pessoa->setToken_hora(null);
                 /* Salvando nova senha */
                 $this->getRepositorio()->getPessoaORM()->persistir($pessoa, false);
+
+                $Subject = 'Dados de Acesso ao CV';
+                $ToEmail = $pessoa->getEmail();
+                $Content = '<pre>Olá</pre><pre>Seu usuário é: ' . $pessoa->getEmail() . '</pre><pre>Sua Senha é: ' . $senhaNova . '</pre>';
+                Funcoes::enviarEmail($ToEmail, $Subject, $Content);
             } catch (Exception $exc) {
                 echo $exc->getMessage();
             }
@@ -506,7 +510,7 @@ class LoginController extends CircuitoController {
         if ($idPessoa) {
             $pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($idPessoa);
             /* Responsabilidades */
-            $responsabilidadesAtivas = $pessoa->getResponsabilidadesAtivas(true);
+            $responsabilidadesAtivas = $pessoa->getResponsabilidadesAtivas();
             if ($responsabilidadesAtivas) {
                 $view = new ViewModel(array(Constantes::$RESPONSABILIDADES => $responsabilidadesAtivas));
                 return $view;
@@ -623,6 +627,6 @@ class LoginController extends CircuitoController {
      */
     public function getTranslator() {
         return $this->_translator;
-    }  
+    }
 
 }
