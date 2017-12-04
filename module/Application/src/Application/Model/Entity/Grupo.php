@@ -442,7 +442,7 @@ class Grupo extends CircuitoEntity {
                     foreach ($grupoEventosCelulasTodas as $grupoEvento) {
                         echo "<br />grupoEvento: " . $grupoEvento->getData_criacaoStringPadraoBrasil();
                         echo "-Ativo: " . $grupoEvento->verificarSeEstaAtivo();
-                        $contadorDeAlteracoes[] = $grupoEvento;
+                        $contadorDeAlteracoes[$grupoEvento->getEvento()->getId()] = $grupoEvento;
                     }
                     foreach ($contadorDeAlteracoes as $grupoEventoCelula) {
                         $grupoEventosCelulas[] = $grupoEventoCelula;
