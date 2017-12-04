@@ -689,6 +689,7 @@ class CadastroController extends CircuitoController {
                 if ($celulaForm->isValid()) {
                     $sessao = new Container(Constantes::$NOME_APLICACAO);
                     $criarNovaCelula = true;
+                    $naoEhAlteracao = true;
                     $mudarDataDeCadastroParaProximoDomingo = false;
                     $validatedData = $celulaForm->getData();
 
@@ -698,6 +699,7 @@ class CadastroController extends CircuitoController {
 
                     /* ALTERANDO */
                     if (!empty($post_data[Constantes::$FORM_ID])) {
+                        $naoEhAlteracao = false;
                         $criarNovaCelula = false;
                         $eventoCelulaAtual = $this->getRepositorio()->getEventoCelulaORM()->encontrarPorId($post_data[Constantes::$FORM_ID]);
 
@@ -803,16 +805,19 @@ class CadastroController extends CircuitoController {
                         $grupoEvento->setEvento($evento);
                         $this->getRepositorio()->getGrupoEventoORM()->persistir($grupoEvento, $alterarDataDeCriacao);
 
-                        /* Cadastro do fato celula */
-                        /* cadastro fato apenas se for nova celula */
-                        $numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio());
-                        $periodo = 0;
-                        $arrayPeriodo = Funcoes::montaPeriodo($periodo);
-                        $stringData = $arrayPeriodo[3] . '-' . $arrayPeriodo[2] . '-' . $arrayPeriodo[1];
-                        $dateFormatada = DateTime::createFromFormat('Y-m-d', $stringData);
-                        $fatoPeriodo = $this->getRepositorio()->getFatoCicloORM()->
-                                encontrarPorNumeroIdentificadorEDataCriacao($numeroIdentificador, $dateFormatada, $this->getRepositorio());
-                        $this->getRepositorio()->getFatoCelulaORM()->criarFatoCelula($fatoPeriodo, $eventoCelula->getId());
+                        if ($naoEhAlteracao) {
+                            /* Cadastro do fato celula */
+                            /* cadastro fato apenas se for nova celula */
+                            $numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio());
+                            $periodo = 0;
+                            $arrayPeriodo = Funcoes::montaPeriodo($periodo);
+                            $stringData = $arrayPeriodo[3] . '-' . $arrayPeriodo[2] . '-' . $arrayPeriodo[1];
+                            $dateFormatada = DateTime::createFromFormat('Y-m-d', $stringData);
+                            $fatoPeriodo = $this->getRepositorio()->getFatoCicloORM()->
+                                    encontrarPorNumeroIdentificadorEDataCriacao($numeroIdentificador, $dateFormatada, $this->getRepositorio());
+                            $this->getRepositorio()->getFatoCelulaORM()->criarFatoCelula($fatoPeriodo, $eventoCelula->getId());
+                        }
+
 
                         /* caso seja primeira celula, criar fato lider e nao tenha */
                         if (!$this->getRepositorio()->getFatoLiderORM()->encontrarFatoLiderPorNumeroIdentificador($numeroIdentificador)) {
