@@ -4,6 +4,7 @@ namespace Migracao\Controller;
 
 use Application\Controller\CircuitoController;
 use Application\Controller\Helper\Constantes;
+use Application\Model\Entity\EventoTipo;
 use Application\Model\ORM\RepositorioORM;
 use Doctrine\ORM\EntityManager;
 use Zend\View\Model\ViewModel;
@@ -55,39 +56,45 @@ class DeployController extends CircuitoController {
         $resultado = array();
         if ($idPessoa) {
             $repositorioORM = new RepositorioORM($this->getDoctrineORMEntityManager());
-
+            $pessoas = array();
             if (intval($idPessoa)) {
                 $pessoa = $repositorioORM->getPessoaORM()->encontrarPorId($idPessoa);
-                $dados = array();
+                $pessoas[] = $pessoa;
+            } else {
+                $resposta = $repositorioORM->getPessoaORM()->encontrarPorNome($idPessoa);
+                for ($indiceResposta = 0; $indiceResposta < count($resposta); $indiceResposta++) {
+                    $pessoa = $repositorioORM->getPessoaORM()->encontrarPorId($resposta[$indiceResposta]['id']);
+                    $pessoas[] = $pessoa;
+                }
+            }
+
+            $dados = array();
+            foreach ($pessoas as $pessoa) {
                 $dados['data_criacao'] = $pessoa->getData_criacaoStringPadraoBanco();
                 $dados['id'] = $pessoa->getId();
                 $dados['nome'] = $pessoa->getNome();
                 $dados['documento'] = $pessoa->getDocumento();
                 $dados['email'] = $pessoa->getEmail();
                 $dados['senha'] = $pessoa->getSenha();
-                $dados['hierarquia'] = $pessoa->getPessoaHierarquiaAtivo()->getHierarquia()->getNome();
+                if ($pessoa->getPessoaHierarquiaAtivo()) {
+                    $dados['hierarquia'] = $pessoa->getPessoaHierarquiaAtivo()->getHierarquia()->getNome();
+                }
                 if ($grupoResponsaveis = $pessoa->getResponsabilidadesAtivas()) {
                     foreach ($grupoResponsaveis as $grupoResponsavel) {
-                        $dados['GrupoResponsabilidadeGrupoId-' . $grupoResponsavel->getId()] = $grupoResponsavel->getGrupo()->getId();
                         foreach ($grupoResponsavel->getGrupo()->getEntidade() as $entidade) {
-                            $dados['Entidade-' . $grupoResponsavel->getId()] = $entidade->getId();
+                            $dados['Entidade Status'] = $entidade->verificarSeEstaAtivo();
                             $dados['EntidadeInfo-' . $grupoResponsavel->getId()] = $entidade->infoEntidade();
+                        }
+                        if ($grupoEventoCelula = $grupoResponsavel->getGrupo()->getGrupoEventoPorTipoEAtivo(EventoTipo::tipoCelula)) {
+                            foreach ($grupoEventoCelula as $grupoEvento) {
+                                $dados['Celula Status'] = $grupoEvento->getEvento()->verificarSeEstaAtivo();
+                                $dados['Celula id'] = $grupoEvento->getEvento()->getId();
+                                $dados['Celula Hospedeiro'] = $grupoEvento->getEvento()->getEventoCelula()->getNome_hospedeiro();
+                            }
                         }
                     }
                 }
-
                 $resultado[] = $dados;
-            } else {
-                $resposta = $repositorioORM->getPessoaORM()->encontrarPorNome($idPessoa);
-                for ($indiceResposta = 0; $indiceResposta < count($resposta); $indiceResposta++) {
-                    $dados = array();
-                    $dados['id'] = $resposta[$indiceResposta]['id'];
-                    $dados['nome'] = $resposta[$indiceResposta]['nome'];
-                    $dados['documento'] = $resposta[$indiceResposta]['documento'];
-                    $dados['email'] = $resposta[$indiceResposta]['email'];
-                    $dados['senha'] = $resposta[$indiceResposta]['senha'];
-                    $resultado[] = $dados;
-                }
             }
         }
 
