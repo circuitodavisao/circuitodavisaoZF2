@@ -488,10 +488,7 @@ class Constantes {
     public static $PAGINA_CURSO_SALVAR = 'CursoSalvar';
     public static $PAGINA_CURSO_EXCLUIR = 'CursoExcluir';
     public static $PAGINA_CURSO_EXCLUSAO = 'CursoExclusao';
-<<<<<<< HEAD
 
-=======
->>>>>>> iv
     public static $PAGINA_DISCIPLINA_LISTAR = 'DisciplinaListar';
     public static $PAGINA_DISCIPLINA_CADASTRAR = 'DisciplinaForm';
     public static $PAGINA_DISCIPLINA_EDITAR = 'DisciplinaFormEdit';
@@ -501,25 +498,15 @@ class Constantes {
     public static $PAGINA_AULA_LISTAR = 'AulaListar';
     public static $PAGINA_AULA_CADASTRAR = 'AulaForm';
     public static $PAGINA_AULA_EDITAR = 'AulaFormEdit';
-<<<<<<< HEAD
-
-=======
->>>>>>> iv
     public static $PAGINA_AULA_SALVAR = 'AulaSalvar';
     public static $PAGINA_AULA_EXCLUIR = 'AulaExcluir';
     public static $PAGINA_AULA_EXCLUSAO = 'AulaExclusao';
     public static $NOME_ENTIDADE_TURMA = 'turma';
-<<<<<<< HEAD
-
     public static $NOME_ENTIDADE_CURSO = 'curso';
     public static $NOME_ENTIDADE_DISCIPLINA = 'disciplina';
     public static $NOME_ENTIDADE_AULA = 'aula';
 
-=======
-    public static $NOME_ENTIDADE_CURSO = 'curso';
-    public static $NOME_ENTIDADE_DISCIPLINA = 'disciplina';
-    public static $NOME_ENTIDADE_AULA = 'aula';
->>>>>>> iv
+
     /* Fim das páginas relaciondas ao IV */
 
     /* Entidades */
