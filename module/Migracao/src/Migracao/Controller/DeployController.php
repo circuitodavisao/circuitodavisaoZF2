@@ -82,14 +82,13 @@ class DeployController extends CircuitoController {
                 if ($grupoResponsaveis = $pessoa->getResponsabilidadesAtivas()) {
                     foreach ($grupoResponsaveis as $grupoResponsavel) {
                         foreach ($grupoResponsavel->getGrupo()->getEntidade() as $entidade) {
-                            $dados['Entidade Status'] = $entidade->verificarSeEstaAtivo();
-                            $dados['EntidadeInfo-' . $grupoResponsavel->getId()] = $entidade->infoEntidade();
+                            $dados['Entidade-' . $grupoResponsavel->getId() . ' Status'] = $entidade->verificarSeEstaAtivo();
+                            $dados['Entidade-' . $grupoResponsavel->getId()] = $entidade->infoEntidade();
                         }
                         if ($grupoEventoCelula = $grupoResponsavel->getGrupo()->getGrupoEventoPorTipoEAtivo(EventoTipo::tipoCelula)) {
                             foreach ($grupoEventoCelula as $grupoEvento) {
-                                $dados['Celula Status'] = $grupoEvento->getEvento()->verificarSeEstaAtivo();
-                                $dados['Celula id'] = $grupoEvento->getEvento()->getId();
-                                $dados['Celula Hospedeiro'] = $grupoEvento->getEvento()->getEventoCelula()->getNome_hospedeiro();
+                                $dados['Celula ' . $grupoEvento->getId() . ' Status'] = $grupoEvento->getEvento()->verificarSeEstaAtivo();
+                                $dados['Celula ' . $grupoEvento->getId() . ' Hospedeiro'] = $grupoEvento->getEvento()->getEventoCelula()->getNome_hospedeiro();
                             }
                         }
                     }
