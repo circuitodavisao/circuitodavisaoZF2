@@ -432,19 +432,16 @@ class Grupo extends CircuitoEntity {
         $grupoSelecionado = $this;
         $grupoEventosCelulasTodas = null;
         $grupoEventos = null;
+        $grupoEventosCelulas = null;
         if ($grupoSelecionado->getEntidadeAtiva()) {
             if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::SUBEQUIPE) {
                 $grupoEventosCelulasTodas = $grupoSelecionado->getGrupoEventoPorTipoEAtivo(EventoTipo::tipoCelula);
-
                 $contadorDeAlteracoes = array();
                 if ($grupoEventosCelulasTodas) {
                     foreach ($grupoEventosCelulasTodas as $grupoEvento) {
-                        echo "<br />getData_criacaoStringPadraoBrasil: " . $grupoEvento->getData_criacaoStringPadraoBrasil();
                         $contadorDeAlteracoes[$grupoEvento->getData_criacaoStringPadraoBrasil()] = $grupoEvento;
                     }
-                    $grupoEventosCelulas = array();
                     foreach ($contadorDeAlteracoes as $grupoEventoCelula) {
-                        echo "<br />grupoEventoCelula: " . $grupoEventoCelula->getData_criacaoStringPadraoBrasil();
                         $grupoEventosCelulas[] = $grupoEventoCelula;
                     }
                 }
