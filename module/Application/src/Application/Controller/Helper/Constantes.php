@@ -490,6 +490,10 @@ class Constantes {
     public static $PAGINA_CURSO_SALVAR = 'CursoSalvar';
     public static $PAGINA_CURSO_EXCLUIR = 'CursoExcluir';
     public static $PAGINA_CURSO_EXCLUSAO = 'CursoExclusao';
+<<<<<<< HEAD
+
+=======
+>>>>>>> desenvolvimento
     public static $PAGINA_DISCIPLINA_LISTAR = 'DisciplinaListar';
     public static $PAGINA_DISCIPLINA_CADASTRAR = 'DisciplinaForm';
     public static $PAGINA_DISCIPLINA_EDITAR = 'DisciplinaFormEdit';
@@ -506,6 +510,11 @@ class Constantes {
     public static $NOME_ENTIDADE_CURSO = 'curso';
     public static $NOME_ENTIDADE_DISCIPLINA = 'disciplina';
     public static $NOME_ENTIDADE_AULA = 'aula';
+<<<<<<< HEAD
+
+
+=======
+>>>>>>> desenvolvimento
     /* Fim das páginas relaciondas ao IV */
 
     /* Entidades */
