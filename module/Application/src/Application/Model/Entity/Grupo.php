@@ -441,7 +441,7 @@ class Grupo extends CircuitoEntity {
                     foreach ($grupoEventosCelulasTodas as $grupoEvento) {
                         if ($contadorDeAlteracoes[$grupoEvento->getData_criacaoStringPadraoBanco()]) {
                             if ($grupoEvento->getId() > $contadorDeAlteracoes[$grupoEvento->getData_criacaoStringPadraoBanco()]->getId()) {
-                                $contadorDeAlteracoes[$grupoEvento->getData_criacaoStringPadraoBanco()] = $grupoEvento;
+                                $contadorDeAlteracoes[$grupoEvento->getData_criacaoStringPadraoBanco() . '-' . $grupoEvento->getHora_criacao()] = $grupoEvento;
                             }
                         } else {
                             $contadorDeAlteracoes[$grupoEvento->getData_criacaoStringPadraoBanco()] = $grupoEvento;
