@@ -23,42 +23,42 @@ class Grupo extends CircuitoEntity {
     private $grupoCv;
 
     /**
-     * @ORM\OneToMany(targetEntity="Entidade", mappedBy="grupo") 
+     * @ORM\OneToMany(targetEntity="Entidade", mappedBy="grupo")
      */
     protected $entidade;
 
     /**
-     * @ORM\OneToMany(targetEntity="GrupoResponsavel", mappedBy="grupo") 
+     * @ORM\OneToMany(targetEntity="GrupoResponsavel", mappedBy="grupo")
      */
     protected $grupoResponsavel;
 
     /**
-     * @ORM\OneToMany(targetEntity="GrupoAluno", mappedBy="grupo") 
+     * @ORM\OneToMany(targetEntity="GrupoAluno", mappedBy="grupo")
      */
     protected $grupoAluno;
 
     /**
-     * @ORM\OneToMany(targetEntity="GrupoEvento", mappedBy="grupo") 
+     * @ORM\OneToMany(targetEntity="GrupoEvento", mappedBy="grupo")
      */
     protected $grupoEvento;
 
     /**
-     * @ORM\OneToMany(targetEntity="GrupoPessoa", mappedBy="grupo") 
+     * @ORM\OneToMany(targetEntity="GrupoPessoa", mappedBy="grupo")
      */
     protected $grupoPessoa;
 
     /**
-     * @ORM\OneToMany(targetEntity="GrupoAtendimento", mappedBy="grupo") 
+     * @ORM\OneToMany(targetEntity="GrupoAtendimento", mappedBy="grupo")
      */
     protected $grupoAtendimento;
 
     /**
-     * @ORM\OneToMany(targetEntity="GrupoPaiFilho", mappedBy="grupoPaiFilhoPai") 
+     * @ORM\OneToMany(targetEntity="GrupoPaiFilho", mappedBy="grupoPaiFilhoPai")
      */
     protected $grupoPaiFilhoFilhos;
 
     /**
-     * @ORM\OneToMany(targetEntity="GrupoPaiFilho", mappedBy="grupoPaiFilhoFilho") 
+     * @ORM\OneToMany(targetEntity="GrupoPaiFilho", mappedBy="grupoPaiFilhoFilho")
      */
     protected $grupoPaiFilhoPai;
 
@@ -245,6 +245,41 @@ class Grupo extends CircuitoEntity {
                     $dataDoInicioDoPeriodoParaComparar = strtotime($stringComecoDoPeriodo);
                     $dataDoGrupoGrupoPaiFilhoInativadoParaComparar = strtotime($gpf->getData_inativacaoStringPadraoBanco());
                     if ($dataDoGrupoGrupoPaiFilhoInativadoParaComparar >= $dataDoInicioDoPeriodoParaComparar) {
+                        $grupoPaiFilhoFilhosAtivos[] = $gpf;
+                    }
+                }
+            }
+        }
+        return $grupoPaiFilhoFilhosAtivos;
+    }
+
+    /**
+     * Metódo que retorna os filhos no periodo do mês.
+     * @method getGrupoPaiFilhoFilhosPorMes
+     * @param  int $mes
+     * @return Grupo grupos no período do mês inputado.
+     */
+    function getGrupoPaiFilhoFilhosPorMes($mes) {
+        $grupoPaiFilhoFilhosAtivos = null;
+        /* Responsabilidades */
+        $grupoPaiFilhoFilhos = $this->getGrupoPaiFilhoFilhos();
+        if ($grupoPaiFilhoFilhos) {
+            /* Verificar responsabilidades ativas */
+            foreach ($grupoPaiFilhoFilhos as $gpf) {
+                $arrayPeriodo = Funcoes::montaPeriodo($periodo);
+                if ($gpf->verificarSeEstaAtivo()) {
+                    $stringFimDoPeriodo = date('Y'). '-' . $mes . '-' . cal_days_in_month(CAL_GREGORIAN, $mes, date('Y'));
+                    $dataDoFimDoPeriodoParaComparar = strtotime($stringFimDoPeriodo);
+                    $dataDoGrupoPaiFilhoCriacaoParaComparar = strtotime($gpf->getData_criacaoStringPadraoBanco());
+                    if ($dataDoGrupoPaiFilhoCriacaoParaComparar <= $dataDoFimDoPeriodoParaComparar) {
+                        $grupoPaiFilhoFilhosAtivos[] = $gpf;  
+                    }
+                } else {
+                    /* Inativo */
+                    $stringFimDoPeriodo = date('Y'). '-' . $mes . '-' .cal_days_in_month(CAL_GREGORIAN, $mes, date('Y'));
+                    $dataDoFimDoPeriodoParaComparar = strtotime($stringFimDoPeriodo);
+                    $dataDoGrupoGrupoPaiFilhoInativadoParaComparar = strtotime($gpf->getData_inativacaoStringPadraoBanco());
+                    if ($dataDoGrupoGrupoPaiFilhoInativadoParaComparar <= $dataDoFimDoPeriodoParaComparar) {
                         $grupoPaiFilhoFilhosAtivos[] = $gpf;
                     }
                 }
@@ -1017,7 +1052,7 @@ class Grupo extends CircuitoEntity {
     }
 
     /**
-     * Pega os grupos filhos 
+     * Pega os grupos filhos
      * @return GrupoPaiFilho
      */
     function getGrupoPaiFilhoFilhos() {

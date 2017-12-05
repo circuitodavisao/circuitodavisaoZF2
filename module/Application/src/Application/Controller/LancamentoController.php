@@ -476,7 +476,7 @@ class LancamentoController extends CircuitoController {
     }
 
     /**
-     * Abri tela para relatorio de atendimento 
+     * Abri tela para relatorio de atendimento
      * @return ViewModel
      */
     public function atendimentoAction() {
@@ -490,14 +490,15 @@ class LancamentoController extends CircuitoController {
         $periodo = 0;
         if (empty($parametro)) {
             $abaSelecionada = 1;
+            $mes = date('m');
         } else {
-            $periodo = -1;
             $abaSelecionada = $parametro;
+            $mes = date('m') - 1;
         }
 
         $gruposAbaixo = null;
-        if ($grupo->getGrupoPaiFilhoFilhosAtivos($periodo)) {
-            $gruposAbaixo = $grupo->getGrupoPaiFilhoFilhosAtivos($periodo);
+        if ($grupo->getGrupoPaiFilhoFilhosPorMes($mes)) {
+            $gruposAbaixo = $grupo->getGrupoPaiFilhoFilhosPorMes($mes);
         }
 
         $mesSelecionado = Funcoes::mesPorAbaSelecionada($abaSelecionada);
