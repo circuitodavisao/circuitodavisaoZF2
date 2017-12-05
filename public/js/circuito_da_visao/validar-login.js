@@ -25,6 +25,7 @@ function validarLogin() {
                 .removeClass('hidden')
                 .addClass('alert-danger');
     } else {
+        mostrarSplash();
         divMensagens
                 .addClass('hidden');
         $('#LoginForm').submit();

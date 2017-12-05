@@ -13,7 +13,7 @@ function validarUsuario(form) {
                 .removeClass('hidden')
                 .addClass('alert-danger');
     } else {
-
+        mostrarSplash();
         divMensagens
                 .addClass('hidden');
         form.submit();
@@ -54,6 +54,7 @@ function validarEnvioDeEmail(form) {
                 },
                 function (data) {
                     if (parseInt(data.resposta) === 0) {
+                        mostrarSplash();
                         divMensagens
                                 .addClass('hidden');
                         form.submit();
@@ -89,7 +90,7 @@ function validarCPFEDataNascimento(form) {
                 .removeClass('hidden')
                 .addClass('alert-danger');
     } else {
-
+        mostrarSplash();
         divMensagens
                 .addClass('hidden');
         form.submit();

@@ -37,3 +37,7 @@ function mudarPeriodo() {
 
     location.href = novaURL;
 }
+
+function mostrarSplash() {
+    $('.splash').css('display', 'block');
+}

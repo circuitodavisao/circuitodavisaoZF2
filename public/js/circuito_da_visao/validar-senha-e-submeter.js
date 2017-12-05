@@ -17,6 +17,7 @@ function validarSenha(form) {
                 },
                 function (data) {
                     if (data.response) {
+                        mostrarSplash();
                         divMensagens
                                 .addClass('hidden');
                         form.submit();

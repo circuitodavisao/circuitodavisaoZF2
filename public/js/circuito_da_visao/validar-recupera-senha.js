@@ -26,7 +26,7 @@ function validarSenhas(form) {
                 .removeClass('hidden')
                 .addClass('alert-danger');
     } else {
-       
+        mostrarSplash();
         divMensagens
                 .addClass('hidden');
         form.submit();

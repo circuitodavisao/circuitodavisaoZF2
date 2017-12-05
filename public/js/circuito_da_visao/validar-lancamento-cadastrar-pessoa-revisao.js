@@ -1,7 +1,7 @@
 
 function validarLancamentoCadastrarPessoaRevisao(form) {
     var primeiroNome = $('#primeiro-nome').val();
-    var ultimoNome = $('#ultimo-nome').val(); 
+    var ultimoNome = $('#ultimo-nome').val();
     var ddd = $('#ddd').val();
     var telefone = $('#telefone').val();
     var Dia = $('#Dia').val();
@@ -13,7 +13,7 @@ function validarLancamentoCadastrarPessoaRevisao(form) {
     var divMensagens = $('#divMensagens');
     var mensagem = '';
     var mensagemReal = '';
-    
+
     if (primeiroNome.length === 0) {
         temErro = true;
         if (mensagem !== '') {
@@ -37,7 +37,7 @@ function validarLancamentoCadastrarPessoaRevisao(form) {
             mensagem += 'Primeiro Nome pode ter no máximo 15 caracteres';
         }
     }
-    
+
     if (ultimoNome.length === 0) {
         temErro = true;
         if (mensagem !== '') {
@@ -61,7 +61,7 @@ function validarLancamentoCadastrarPessoaRevisao(form) {
             mensagem += 'Ultimo Nome pode ter no máximo 15 caracteres';
         }
     }
-    
+
     if (ddd.length === 0) {
         temErro = true;
         if (mensagem !== '') {
@@ -92,8 +92,8 @@ function validarLancamentoCadastrarPessoaRevisao(form) {
             mensagem += 'Telefone Inválido';
         }
     }
-    
-    
+
+
     if (Dia === '0') {
 
         temErro = true;
@@ -119,17 +119,17 @@ function validarLancamentoCadastrarPessoaRevisao(form) {
             mensagem += ', Ano';
         }
     }
-    
-    if (! $("input[type='radio'][name='nucleoPerfeito']").is(':checked') ){
+
+    if (!$("input[type='radio'][name='nucleoPerfeito']").is(':checked')) {
         temErro = true;
-        if(mensagem == ''){
+        if (mensagem == '') {
             mensagem = 'Sexo';
-        }else{
+        } else {
             mensagem += ', Sexo';
         }
- 
+
     }
-        
+
     if (temErro) {
         mensagemReal = 'Preencha o(s) seguinte(s) campo(s): ' + mensagem;
         divMensagens
@@ -138,7 +138,7 @@ function validarLancamentoCadastrarPessoaRevisao(form) {
                 .removeClass('hidden')
                 .addClass('alert-danger');
     } else {
-      
+        mostrarSplash();
         divMensagens
                 .addClass('hidden');
         form.submit();

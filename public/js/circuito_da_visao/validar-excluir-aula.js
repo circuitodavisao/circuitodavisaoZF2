@@ -22,6 +22,7 @@ function validarExclusao(idAula) {
                 },
                 function (data) {
                     if (data.response) {
+                        mostrarSplash();
                         divMensagens
                                 .addClass('hidden');
                         funcaoCadastro('AulaExcluir', idAula);

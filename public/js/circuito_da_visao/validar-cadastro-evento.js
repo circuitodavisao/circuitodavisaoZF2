@@ -161,7 +161,7 @@ function retornaDiaDaSemanaPorExtenso(diaDaSemana) {
 }
 
 function submeter(form) {
-    $('.splash').css('display', 'block');
+    mostrarSplash();
     form.submit();
 }
 

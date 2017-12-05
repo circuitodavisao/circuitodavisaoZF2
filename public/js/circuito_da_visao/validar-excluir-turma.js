@@ -12,7 +12,7 @@ function validarExclusao(idTurma) {
                 .html('Preencha a senha')
                 .removeClass('alert-success')
                 .removeClass('hidden')
-                .addClass('alert-danger'); 
+                .addClass('alert-danger');
         return false;
     } else {
         $.post(
@@ -22,6 +22,7 @@ function validarExclusao(idTurma) {
                 },
                 function (data) {
                     if (data.response) {
+                        mostrarSplash();
                         divMensagens
                                 .addClass('hidden');
                         funcaoCadastro('TurmaExcluir', idTurma);

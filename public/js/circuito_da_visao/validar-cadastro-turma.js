@@ -4,7 +4,7 @@ function validarLancamentoCadastrarPessoa(form) {
     var ddd = $('#ddd').val();
     var telefone = $('#telefone').val();
     var tipo = $('#tipo').val();
-   
+
     var temErro = false;
     var divMensagens = $('#divMensagens');
     var mensagem = '';
@@ -77,7 +77,7 @@ function validarLancamentoCadastrarPessoa(form) {
                 .removeClass('hidden')
                 .addClass('alert-danger');
     } else {
-
+        mostrarSplash();
         divMensagens
                 .addClass('hidden');
 

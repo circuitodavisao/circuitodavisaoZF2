@@ -284,7 +284,7 @@ echo $this->inlineScript();
 //                                    dadosValidados = false;
 //                                    spanMensagens
 //                                            .addClass(alertDanger)
-//                                            .text('<?php // echo $this->translate(Constantes::$TRADUCAO_NOME_NAO_CONFERE);              ?>')
+//                                            .text('<?php // echo $this->translate(Constantes::$TRADUCAO_NOME_NAO_CONFERE);               ?>')
 //                                            .removeClass(hidden);
 //                                }
 //                            }
@@ -915,7 +915,7 @@ echo $this->inlineScript();
     }
 
     function botaoSubmeterFormulario(form) {
-        $('.splash').css('display', 'block');
+        mostrarSplash();
         form.submit();
     }
 
