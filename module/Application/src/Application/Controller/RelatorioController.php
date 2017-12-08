@@ -369,7 +369,7 @@ class RelatorioController extends CircuitoController {
         $relatorioPassado['membresiaArena'] = $somaPassado[RelatorioController::dimensaoTipoArena] / $diferencaDePeriodos;
         $relatorioPassado['membresiaDomingo'] = $somaPassado[RelatorioController::dimensaoTipoDomingo] / $diferencaDePeriodos;
 
-        if ($relatorioMembresiaPassado['membresiaCulto']) {
+        if ($relatorioPassado['membresiaCulto']) {
             $relatorio['diferencaCulto'] = $relatorio['membresiaCulto'] * 100 / $relatorioPassado['membresiaCulto'] - 100;
             $relatorio['diferencaCultoSeta'] = 'up';
             $relatorio['diferencaCultoFrase'] = 'AUMENTOU';
@@ -378,7 +378,7 @@ class RelatorioController extends CircuitoController {
             $relatorio['diferencaCultoSeta'] = 'down';
             $relatorio['diferencaCultoFrase'] = 'DIMINUIU';
         }
-        if ($relatorioMembresiaPassado['membresiaArena']) {
+        if ($relatorioPassado['membresiaArena']) {
             $relatorio['diferencaArena'] = $relatorio['membresiaArena'] * 100 / $relatorioPassado['membresiaArena'] - 100;
             $relatorio['diferencaArenaSeta'] = 'up';
             $relatorio['diferencaArenaFrase'] = 'AUMENTOU';
@@ -387,7 +387,7 @@ class RelatorioController extends CircuitoController {
             $relatorio['diferencaArenaSeta'] = 'down';
             $relatorio['diferencaArenaFrase'] = 'DIMINUIU';
         }
-        if ($relatorioMembresiaPassado['membresiaDomingo']) {
+        if ($relatorioPassado['membresiaDomingo']) {
             $relatorio['diferencaDomingo'] = $relatorio['membresiaDomingo'] * 100 / $relatorioPassado['membresiaDomingo'] - 100;
             $relatorio['diferencaDomingoSeta'] = 'up';
             $relatorio['diferencaDomingoFrase'] = 'AUMENTOU';
