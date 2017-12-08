@@ -2,104 +2,86 @@
 
 use Application\Controller\RelatorioController;
 ?>
-<!--<section id="content" class="animated fadeIn">
-     Begin .page-heading 
-    <div class="page-heading">
-        <div class="media clearfix">
-            <div class="media-left pr30">
-                <a href="#">
-                    <img width="64px" height="64px" class="media-object img-rounded" src="/img/avatars/profile_avatar.jpg" alt="...">
-                </a>
-            </div>                      
-            <div class="media-body va-m">
-                <h2 class="media-heading">Michael Halls
-                    <small> - </small><button class="btn btn-xs btn-info">Perfil</button>
-                </h2>
-                <p class="lead">Líder de Célula - <b>Classe <span class="label label-success">A</span></b></p>     
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-4">
-            <div class="panel">
-                <div class="panel-heading">
-                    <span class="panel-icon">
-                        <i class="fa fa-star"></i>
-                    </span>
-                    <span class="panel-title"> Período 01/12 - 01/12</span>
-                </div>
-                <div class="panel-body pn">
-                    <table class="table table-condensed mbn">
-                        <tbody>
-                            <tr>
-                                <td>
-                                    <span class="fa fa-users text-warning"></span>
-                                </td>
-                                <td>Membresia</td>
-                                <td>
-                                    <span class="label label-success">38 P</span>
-                                </td>
-                                <td><button onclick="$('#div1').toggleClass('hidden');" class="btn btn-xs btn-primary"><i class="fa fa-caret-down"></i></button></td>
-                            </tr>
-                        </tbody>
-                    </table>
+<!-- Begin: Content -->
+<section id="content" class="table-layout animated fadeIn">
 
-                    <div id="div1" class="row p10 hidden">
-                        <div class="panel">
-                            <div class="panel-body">
-                                <div class="col-sm-4 col-xl-3">
-                                    <div class="panel panel-tile text-center br-a br-grey">
-                                        <div class="panel-body">
-                                            <h1 class="fs30 mt5 mbn">1,426</h1>
-                                            <h6 class="text-system">NEW ORDERS</h6>
-                                        </div>
-                                        <div class="panel-footer br-t p12">
-                                            <span class="fs11">
-                                                <i class="fa fa-arrow-up pr5"></i> 3% INCREASE
-                                                <b>1W AGO</b>
+
+    <!-- begin: .tray-center -->
+    <div class="tray tray-center">
+
+        <?php echo $this->dadosPrincipal(); ?>
+
+        <div class="admin-panels fade-onload">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="panel sort-disable" data-panel-title="false">
+                        <div class="panel-heading">
+                            <span class="panel-icon">
+                                <i class="fa fa-bar-chart"></i>
+                            </span>
+                            <span class="panel-title"><?php echo $this->periodoExtenso; ?></span>
+                        </div>
+                        <div class="panel-body pn">
+                            <table class="table table-condensed mbn">
+                                <tbody>
+                                    <tr>
+                                        <td>Membresia</td>
+                                        <td>M. <?php echo $this->relatorio['membresiaMeta']; ?></td>
+                                        <td>
+                                            <span class="label label-<?php echo $this->relatorio['membresiaPerformanceClass']; ?>">
+                                                <?php echo RelatorioController::formataNumeroRelatorio($this->relatorio['membresia']); ?> Pessoas
                                             </span>
+                                        </td>
+                                        <td><?php echo RelatorioController::formataNumeroRelatorio($this->relatorioEquipe['membresiaPerformance']); ?>%</td>
+                                        <td><button onclick="$('#div1').toggleClass('hidden');" class="btn btn-xs btn-primary"><i class="fa fa-caret-down"></i></button></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <div id="div1" class="row p10 hidden">
+                                <div class="panel">
+                                    <div class="panel-body">
+                                        <div class="col-sm-4 col-xl-3">
+                                            <div class="panel panel-tile text-center br-a br-grey">
+                                                <div class="panel-body">
+                                                    <h1 class="fs30 mt5 mbn"><?php echo $this->relatorio['membresiaCulto']; ?></h1>
+                                                    <h6 class="text-system">CULTO</h6>
+                                                </div>
+                                                <div class="panel-footer br-t p12">
+                                                    <span class="fs11">
+                                                        <i class="fa fa-arrow-<?php echo $this->relatorio['diferencaCultoSeta']; ?> pr5"></i> <?php echo $this->relatorio['diferencaCulto']; ?>% <?php echo $this->relatorio['diferencaCultoFrase']; ?>
+                                                        <b>1 SEMANA ATRÁS</b>
+                                                    </span>
+                                                </div>
+                                            </div>
                                         </div>
-                                    </div>
-                                </div>
-                                <div class="col-sm-4 col-xl-3">
-                                    <div class="panel panel-tile text-center br-a br-grey">
-                                        <div class="panel-body">
-                                            <h1 class="fs30 mt5 mbn">63,262</h1>
-                                            <h6 class="text-success">TOTAL SALES GROSS</h6>
+                                        <div class="col-sm-4 col-xl-3">
+                                            <div class="panel panel-tile text-center br-a br-grey">
+                                                <div class="panel-body">
+                                                    <h1 class="fs30 mt5 mbn"><?php echo $this->relatorio['membresiaArena']; ?></h1>
+                                                    <h6 class="text-system">ARENA</h6>
+                                                </div>
+                                                <div class="panel-footer br-t p12">
+                                                    <span class="fs11">
+                                                        <i class="fa fa-arrow-<?php echo $this->relatorio['diferencaArenaSeta']; ?> pr5"></i> <?php echo $this->relatorio['diferencaArena']; ?>% <?php echo $this->relatorio['diferencaArenaFrase']; ?>
+                                                        <b>1 SEMANA ATRÁS</b>
+                                                    </span>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div class="panel-footer br-t p12">
-                                            <span class="fs11">
-                                                <i class="fa fa-arrow-up pr5"></i> 2.7% INCREASE
-                                                <b>1W AGO</b>
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-sm-4 col-xl-3">
-                                    <div class="panel panel-tile text-center br-a br-grey">
-                                        <div class="panel-body">
-                                            <h1 class="fs30 mt5 mbn">248</h1>
-                                            <h6 class="text-warning">PENDING SHIPMENTS</h6>
-                                        </div>
-                                        <div class="panel-footer br-t p12">
-                                            <span class="fs11">
-                                                <i class="fa fa-arrow-up pr5 text-success"></i> 1% INCREASE
-                                                <b>1W AGO</b>
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-sm-3 col-xl-3 visible-xl">
-                                    <div class="panel panel-tile text-center br-a br-grey">
-                                        <div class="panel-body">
-                                            <h1 class="fs30 mt5 mbn">6,718</h1>
-                                            <h6 class="text-danger">UNIQUE VISITS</h6>
-                                        </div>
-                                        <div class="panel-footer br-t p12">
-                                            <span class="fs11">
-                                                <i class="fa fa-arrow-down pr5 text-danger"></i> 6% DECREASE
-                                                <b>1W AGO</b>
-                                            </span>
+                                        <div class="col-sm-4 col-xl-3">
+                                            <div class="panel panel-tile text-center br-a br-grey">
+                                                <div class="panel-body">
+                                                    <h1 class="fs30 mt5 mbn"><?php echo $this->relatorio['membresiaDomingo']; ?></h1>
+                                                    <h6 class="text-system">DOMINGO</h6>
+                                                </div>
+                                                <div class="panel-footer br-t p12">
+                                                    <span class="fs11">
+                                                        <i class="fa fa-arrow-<?php echo $this->relatorio['diferencaDomingoSeta']; ?> pr5"></i> <?php echo $this->relatorio['diferencaDomingo']; ?>% <?php echo $this->relatorio['diferencaDomingoFrase']; ?>
+                                                        <b>1 SEMANA ATRÁS</b>
+                                                    </span>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -107,142 +89,35 @@ use Application\Controller\RelatorioController;
                         </div>
                     </div>
                 </div>
-            </div>
-
-            <div class="panel">
-                <div class="panel-heading">
-                    <span class="panel-icon">
-                        <i class="fa fa-line-chart"></i>
-                    </span>
-                    <span class="panel-title"> Proximo Nível</span>
-                </div>
-                <div class="panel-body pn">
-
-                    <div class="row p15">
-                        <div class="col-xs-3">
-                            <b>Obreiro</b>
-                        </div>  
-                        <div class="col-xs-9">
-                            <div class="progress">
-                                <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%;">60%</div>
-                            </div>
-                        </div> 
-                    </div>               
-                </div>
+                <!--                <div class="col-md-12">
+                                    <div class="panel" data-panel-title="false">
+                                        <div class="panel-heading">
+                                            <span class="panel-icon">
+                                                <i class="fa fa-line-chart"></i>
+                                            </span>
+                                            <span class="panel-title"> Proximo Nível</span>
+                                        </div>
+                                        <div class="panel-body pn">
+                
+                                            <div class="row p15">
+                                                <div class="col-xs-3">
+                                                    <b>Obreiro</b>
+                                                </div>  
+                                                <div class="col-xs-9">
+                                                    <div class="progress">
+                                                        <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%;">60%</div>
+                                                    </div>
+                                                </div> 
+                                            </div>               
+                                        </div>
+                                    </div>
+                                </div>-->
             </div>
         </div>
-    </div>
+        <h1 class="text-center">Antigo Relatório embaixo <i class="fa fa-arrow-down pr5"></i></h1>
+
+    </div>  
 </section>
-
-<div class="mw800 center-block">
-    <div class="panel">
-        <div class="panel-body" style="background-color: #333;">
-            <div class="row mb10">
-                <div class="col-xs-4 text-center">
-                    <img width="64px" height="64px" src="/img/avatars/2.jpg" alt="..." class="img-rounded">
-                </div>
-                <div class="col-xs-4">
-                    <p style="color: #FFF">OBREIRO "A"</p>
-                </div>
-                <div class="col-xs-4">
-                    <h6>Posição Atual</h6>
-                    <div class="text-center">
-                        <h1 style="font-size: 32px; color: #FFF">#98</h1>
-                    </div>
-                </div>
-            </div>
-            <div class="row mb10">
-                <div class="col-xs-12">
-                    <h1>DIÁCONO - 65%</h1>
-                    Progress Bar                     
-                    <div class="progress mt10">
-                        <div class="progress-bar progress-bar-success" style="width: 35%">
-                            <span class="sr-only">35% Complete (success)</span>
-                        </div>
-                        <div class="progress-bar progress-bar-warning progress-bar-striped" style="width: 20%">
-                            <span class="sr-only">20% Complete (warning)</span>
-                        </div>
-                        <div class="progress-bar progress-bar-danger" style="width: 10%">
-                            <span class="sr-only">10% Complete (danger)</span>
-                        </div>
-                    </div>            
-                    <p>Células</p>
-                    <div class="progress mt10">
-                        <div id="divProgressBar" class="progress-bar progress-bar-success progress-bar-sm" role="progressbar" aria-valuenow="35" aria-valuemin="0" aria-valuemax="100" style="width: 35%;">
-                            35%
-                        </div>
-                    </div>             
-                    <p>Parceiro de Deus</p>
-                    <div class="progress mt10">
-                        <div id="divProgressBar" class="progress-bar progress-bar-warning progress-bar-sm" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: 20%;">
-                            20%
-                        </div>
-                    </div>             
-                    <p>Membresia</p>
-                    <div class="progress mt10">
-                        <div id="divProgressBar" class="progress-bar progress-bar-danger progress-bar-sm" role="progressbar" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100" style="width: 10%;">
-                            10%
-                        </div>
-                    </div>            
-                </div>
-            </div>
-            <div class="row mb10">
-                <div class="col-xs-6">
-                    <h6>Membresia</h6>
-                    <h1 style="font-size: 36px;" class="well btn btn-success" data-toggle="modal" data-target="#myModal">
-                        <i class="fa fa-long-arrow-up" aria-hidden="true"></i> 70%
-                    </h1>
-                </div>
-                <div class="col-xs-6">
-                    <h6>Célula</h6>
-                    <h1 style="font-size: 36px;" class="well btn btn-danger" data-toggle="modal" data-target="#myModal">
-                        <i class="fa fa-long-arrow-down" aria-hidden="true"></i> 20%
-                    </h1>
-                </div>
-            </div>
-            <div class="row mb10">
-                <h6>Conquistas</h6>
-                <div class="col-xs-12 text-center">
-                    <img width="48px" height="48px" src="/img/avatars/1.jpg" alt="..." class="img-circle">
-                    <img width="48px" height="48px" src="/img/avatars/2.jpg" alt="..." class="img-circle">
-                    <img width="48px" height="48px" src="/img/avatars/3.jpg" alt="..." class="img-circle">
-                    <img width="48px" height="48px" src="/img/avatars/4.jpg" alt="..." class="img-circle">
-                    <img width="48px" height="48px" src="/img/avatars/5.jpg" alt="..." class="img-circle">
-                    <span style="font-size: 24px;">...</span>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="myModalLabel">Performance Membresia</h4>
-            </div>
-            <div class="modal-body">
-                Basic Column Chart 
-                <div class="panel" id="pchart1">
-                    <div class="panel-heading">
-                        <span class="panel-icon">
-                            <i class="fa fa-pencil"></i>
-                        </span>
-                        <span class="panel-title"> Basic Column Chart</span>
-                    </div>
-                    <div class="panel-body bg-light dark">
-
-                        <div id="high-column2" style="width: 100%; height: 430px; margin: 0 auto"></div>
-
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>               
-            </div>
-        </div>
-    </div>
-</div>-->
 
 <div class="mw800 center-block">
     <div class="panel">

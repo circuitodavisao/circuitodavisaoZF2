@@ -353,6 +353,37 @@ class RelatorioController extends CircuitoController {
         $relatorio['celulaDeElitePerformance'] = $performanceCelulasDeElite;
         $relatorio['celulaDeElitePerformanceClass'] = RelatorioController::corDaLinhaPelaPerformance($relatorio['celulaDeElitePerformance']);
 
+        /* calculo de diferenca do periodo passado */
+        $relatorioMembresiaPassado = $repositorioORM->getFatoCicloORM()->montarRelatorioPorNumeroIdentificador($numeroIdentificador, $periodoInicial - 1, $tipoRelatorio, $periodoFinal);
+        $diferenca = array();
+        if ($relatorio['diferencaCulto']) {
+            $relatorio['diferencaCulto'] = $relatorioMembresia['membresiaCulto'] * 100 / $relatorioMembresiaPassado['membresiaCulto'] - 100;
+            $relatorio['diferencaCultoSeta'] = 'up';
+            $relatorio['diferencaCultoFrase'] = 'AUMENTOU';
+        } else {
+            $relatorio['diferencaCulto'] = 0;
+            $relatorio['diferencaCultoSeta'] = 'down';
+            $relatorio['diferencaCultoFrase'] = 'DIMINUIU';
+        }
+        if ($relatorio['diferencaArena']) {
+            $relatorio['diferencaArena'] = $relatorioMembresia['membresiaArena'] * 100 / $relatorioMembresiaPassado['membresiaArena'] - 100;
+            $relatorio['diferencaArenaSeta'] = 'up';
+            $relatorio['diferencaArenaFrase'] = 'AUMENTOU';
+        } else {
+            $relatorio['diferencaArena'] = 0;
+            $relatorio['diferencaArenaSeta'] = 'down';
+            $relatorio['diferencaArenaFrase'] = 'DIMINUIU';
+        }
+        if ($relatorio['diferencaDomingo']) {
+            $relatorio['diferencaDomingo'] = $relatorioMembresia['membresiaDomingo'] * 100 / $relatorioMembresiaPassado['membresiaDomingo'] - 100;
+            $relatorio['diferencaDomingoSeta'] = 'up';
+            $relatorio['diferencaDomingoFrase'] = 'AUMENTOU';
+        } else {
+            $relatorio['diferencaDomingo'] = 0;
+            $relatorio['diferencaDomingoSeta'] = 'down';
+            $relatorio['diferencaDomingoFrase'] = 'DIMINUIU';
+        }
+
         return $relatorio;
     }
 

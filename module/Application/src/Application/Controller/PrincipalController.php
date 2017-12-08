@@ -31,6 +31,9 @@ class PrincipalController extends CircuitoController {
         $grupo = $entidade->getGrupo();
         $numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupo);
 
+        $idPessoa = $sessao->idPessoa;
+        $pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($idPessoa);
+
         $tipoRelatorioPessoal = 1;
         $tipoRelatorioEquipe = 2;
         $periodo = -1;
@@ -38,6 +41,7 @@ class PrincipalController extends CircuitoController {
         $relatorioEquipe = RelatorioController::montaRelatorio($this->getRepositorio(), $numeroIdentificador, $periodo, $tipoRelatorioEquipe);
 
         $dados = array();
+        $dados['pessoa'] = $pessoa;
         $arrayPeriodo = Funcoes::montaPeriodo($periodo);
         $dados['periodoExtenso'] = $arrayPeriodo[0];
         $dados['relatorio'] = $relatorio;

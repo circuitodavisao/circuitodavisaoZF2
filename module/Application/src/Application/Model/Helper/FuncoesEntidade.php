@@ -19,13 +19,18 @@ class FuncoesEntidade {
     static public function tagImgComFotoDaPessoa(Pessoa $p, $tamanho = 50, $tipoTamanho = 'px') {
         $resposta = '';
 
-        $imagem = 'placeholder.png';
-        if (!empty($p->getFoto())) {
-            $imagem = $p->getFoto();
-        }
+        $imagem = FuncoesEntidade::nomeDaImagem($p);
         $resposta = '<img src="/img/avatars/' . $imagem . '" class="img-thumbnail" width="' . $tamanho . $tipoTamanho . '"  height="' . $tamanho . $tipoTamanho . '" />&nbsp;';
 
         return $resposta;
+    }
+
+    static public function nomeDaImagem(Pessoa $pessoa) {
+        $imagem = 'placeholder.png';
+        if (!empty($pessoa->getFoto())) {
+            $imagem = $pessoa->getFoto();
+        }
+        return $imagem;
     }
 
 }

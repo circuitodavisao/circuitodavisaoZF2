@@ -60,18 +60,28 @@ class Funcoes {
     public static function enviarEmail($email, $titulo, $mensagem) {
         $mail = new PHPMailer;
         try {
-            $mail->SMTPDebug = 1;
-            $mail->isSMTP();
-            $mail->Charset = 'utf8_decode()';
-            $mail->Host = 'smtp.gmail.com';
-            $mail->SMTPAuth = true;
-            $mail->Username = 'contato@circuitodavisaonovo.com.br';
-            $mail->Password = 'wersdfxcv15';
-            $mail->SMTPSecure = 'tls';
-            $mail->Port = 587;
+//            $mail->SMTPDebug = 1;
+//            $mail->isSMTP();
+//            $mail->Charset = 'utf8_decode()';
+//            $mail->Host = 'smtp.gmail.com';
+//            $mail->SMTPAuth = true;
+//            $mail->Username = 'contato@circuitodavisaonovo.com.br';
+//            $mail->Password = 'wersdfxcv15';
+//            $mail->SMTPSecure = 'tls';
+//            $mail->Port = 587;
 //            $mail->SMTPSecure = 'ssl';
 //            $mail->Port = 465;
-            $mail->From = 'contato@circuitodavisaonovo.com.br';
+            
+//            $mail->SMTPDebug = 1;
+            $mail->isSMTP();
+            $mail->Charset = 'utf8_decode()';
+            $mail->Host = '200.147.36.31';
+            $mail->SMTPAuth = true;
+            $mail->Username = 'leonardo@circuitodavisao.com.br';
+            $mail->Password = 'Leonardo142857';
+//      $mail->SMTPSecure = 'tls';                            
+            $mail->Port = 587;
+            $mail->From = 'leonardo@circuitodavisao.com.br';
             $mail->FromName = utf8_decode('Circuito da Visão');
             $mail->addAddress($email);
             $mail->isHTML(true);
@@ -81,7 +91,7 @@ class Funcoes {
             $mail->send();
         } catch (Exception $exc) {
             echo $mail->ErrorInfo;
-            echo $exc->getTraceAsString();
+            echo $exc->getMessage();
         }
     }
 
