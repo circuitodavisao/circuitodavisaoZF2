@@ -12,34 +12,31 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity 
+ * @ORM\Entity
  * @ORM\Table(name="turma")
  */
-class Turma extends CircuitoEntity { 
+class Turma extends CircuitoEntity {
 
     /**
-     * @ORM\OneToMany(targetEntity="TurmaAluno", mappedBy="pessoa") 
+     * @ORM\OneToMany(targetEntity="TurmaAluno", mappedBy="pessoa")
      */
     protected $turmaAluno;
-    
+
     /** @ORM\Column(type="integer") */
     protected $mes;
-     
+
     /** @ORM\Column(type="integer") */
     protected $ano;
-    
+
     /** @ORM\Column(type="string") */
     protected $observacao;
-    
+
     /** @ORM\Column(type="integer") */
     protected $tipo_turma_id;
-    
+
     public function __construct() {
         $this->turmaAluno = new ArrayCollection();
     }
-
-    /** @ORM\Column(type="string") */
-    protected $hora_inativacao;
 
     function getTurmaAluno() {
         return $this->turmaAluno;

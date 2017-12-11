@@ -25,7 +25,7 @@ function validarExclusao(idTurma) {
                         mostrarSplash();
                         divMensagens
                                 .addClass('hidden');
-                        funcaoCadastro('TurmaExcluir', idTurma);
+                        funcaoCircuito('cursoTurmaExcluir', idTurma);
                     } else {
                         divMensagens
                                 .html('Senha não confere')
@@ -40,4 +40,3 @@ function validarExclusao(idTurma) {
 
 
 }
-   

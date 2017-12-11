@@ -30,6 +30,8 @@ use Application\View\Helper\CabecalhoDeCiclos;
 use Application\View\Helper\CabecalhoDeEventos;
 use Application\View\Helper\CabecalhoDePeriodos;
 use Application\View\Helper\DadosEntidade;
+use Application\View\Helper\DadosPrincipal;
+use Application\View\Helper\DadosProximoNivel;
 use Application\View\Helper\DivCapslock;
 use Application\View\Helper\DivJavaScript;
 use Application\View\Helper\DivMensagens;
@@ -52,6 +54,7 @@ use Application\View\Helper\ListagemDeEventos;
 use Application\View\Helper\ListagemDePessoasComEventos;
 use Application\View\Helper\ListagemDisciplinas;
 use Application\View\Helper\ListagemFichasAtivasRevisao;
+use Application\View\Helper\ListagemPessoasRevisao;
 use Application\View\Helper\ListagemFichasParaRevisao;
 use Application\View\Helper\ListagemLideresTransferencia;
 use Application\View\Helper\ListagemTurmas;
@@ -130,6 +133,12 @@ class Module {
                 'dadosEntidade' => function($sm) {
                     return new DadosEntidade();
                 },
+                'dadosPrincipal' => function($sm) {
+                    return new DadosPrincipal();
+                },
+                'dadosProximoNivel' => function($sm) {
+                    return new DadosProximoNivel();
+                },
                 'alertaEnvioRelatorio' => function($sm) {
                     return new AlertaEnvioRelatorio();
                 },
@@ -147,6 +156,9 @@ class Module {
                 },
                 'listagemFichasAtivasRevisao' => function($sm) {
                     return new ListagemFichasAtivasRevisao();
+                },
+                'listagemPessoasRevisao' => function($sm) {
+                    return new ListagemPessoasRevisao();
                 },
                 'tabelaLancamento' => function($sm) {
                     return new TabelaLancamento();
