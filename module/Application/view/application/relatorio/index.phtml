@@ -73,6 +73,9 @@ $somaQuantidadeCelulasDeElite = 0;
                                 echo '<th>MEM</th>';
                                 echo '<th>%</th>';
                             }
+                            if ($this->tipoRelatorio == 7) {
+                                echo '<th>META</th>';
+                            }
                             if ($this->tipoRelatorio == 2 ||
                                     $this->tipoRelatorio == 7 ||
                                     $this->tipoRelatorio == 8) {
@@ -159,6 +162,7 @@ $somaQuantidadeCelulasDeElite = 0;
                         }
 
                         if ($this->tipoRelatorio == 7) {
+                            echo '<td>' . $this->relatorio['membresiaMeta'] . '</td>';
                             echo '<td>' . $this->relatorio['celula'] . '</td>';
                             echo '<td class = "hidden-xs">' . RelatorioController::formataNumeroRelatorio($this->relatorio['membresiaArena']) . '</td>';
                         }
@@ -175,7 +179,8 @@ $somaQuantidadeCelulasDeElite = 0;
                                 $this->tipoRelatorio == 3 ||
                                 $this->tipoRelatorio == 4 ||
                                 $this->tipoRelatorio == 5 ||
-                                $this->tipoRelatorio == 6) {
+                                $this->tipoRelatorio == 6 ||
+                                $this->tipoRelatorio == 7) {
                             $somaGeralLideres = $this->relatorio['quantidadeLideres'];
                         }
                         if ($this->tipoRelatorio == 1 ||
@@ -203,6 +208,7 @@ $somaQuantidadeCelulasDeElite = 0;
 
                         if ($this->discipulosOrdenado) {
                             $contagemRanking = 1;
+                            $validacaoSemCelula = 0;
                             foreach ($this->discipulosOrdenado as $gpFilhoMembresia) {
                                 $grupoFilho = $gpFilhoMembresia->getGrupoPaiFilhoFilho();
                                 $mostrarDiscipulo = false;
@@ -227,6 +233,27 @@ $somaQuantidadeCelulasDeElite = 0;
                                     }
                                     if ($this->tipoRelatorio == 8) {
                                         $linhaDiscipulo = $relatorioDiscipulo['celulaDeElitePerformanceClass'];
+                                    }
+                                    if ($relatorioDiscipulo['celulaQuantidade'] == 0) {
+                                        if ($this->tipoRelatorio == 1) {
+                                            $colspan = 9;
+                                        }
+                                        if ($this->tipoRelatorio == 2) {
+                                            $colspan = 5;
+                                        }
+                                        if ($this->tipoRelatorio == 3) {
+                                            $colspan = 6;
+                                        }
+                                        if ($this->tipoRelatorio == 4 || $this->tipoRelatorio == 5 || $this->tipoRelatorio == 6 || $this->tipoRelatorio == 7) {
+                                            $colspan = 4;
+                                        }
+
+                                        if ($validacaoSemCelula === 0) {
+                                            echo '<tr class="bg-dark">';
+                                            echo '<td colspan="' . $colspan . '">Discipulos sem células</td>';
+                                            echo '</tr>';
+                                            $validacaoSemCelula++;
+                                        }
                                     }
 
                                     echo '<tr class="' . $linhaDiscipulo . '">';
@@ -280,6 +307,9 @@ $somaQuantidadeCelulasDeElite = 0;
                                         echo '<td>' . $relatorioDiscipulo['celulaDeElite'] . '</td>';
                                         echo '<th>' . RelatorioController::formataNumeroRelatorio($relatorioDiscipulo['celulaDeElitePerformance']) . '%</th>';
                                     }
+                                    if ($this->tipoRelatorio == 7) {
+                                        echo '<td>' . $relatorioDiscipulo['membresiaMeta'] . '</td>';
+                                    }
                                     if ($this->tipoRelatorio == 7 ||
                                             $this->tipoRelatorio == 8) {
                                         echo '<td>' . $relatorioDiscipulo['celula'] . '</td>';
@@ -295,7 +325,8 @@ $somaQuantidadeCelulasDeElite = 0;
                                             $this->tipoRelatorio == 3 ||
                                             $this->tipoRelatorio == 4 ||
                                             $this->tipoRelatorio == 5 ||
-                                            $this->tipoRelatorio == 6) {
+                                            $this->tipoRelatorio == 6 ||
+                                            $this->tipoRelatorio == 7) {
                                         $somaGeralLideres += $relatorioDiscipulo['quantidadeLideres'];
                                     }
                                     if ($this->tipoRelatorio == 1 ||
@@ -328,7 +359,8 @@ $somaQuantidadeCelulasDeElite = 0;
 
                         /* Total */
                         if ($this->tipoRelatorio == 1 ||
-                                $this->tipoRelatorio == 3) {
+                                $this->tipoRelatorio == 3 ||
+                                $this->tipoRelatorio == 7) {
                             $meta = Constantes::$META_LIDER * $somaGeralLideres;
                         }
                         if ($this->tipoRelatorio == 1) {
@@ -397,6 +429,9 @@ $somaQuantidadeCelulasDeElite = 0;
                         if ($this->tipoRelatorio == 8) {
                             echo '<td>' . $somaQuantidadeCelulasDeElite . '</td>';
                             echo '<td>' . RelatorioController::formataNumeroRelatorio($performance) . '%</td>';
+                        }
+                        if ($this->tipoRelatorio == 7) {
+                            echo '<td>' . $meta . '</td>';
                         }
                         if ($this->tipoRelatorio == 7 ||
                                 $this->tipoRelatorio == 8) {

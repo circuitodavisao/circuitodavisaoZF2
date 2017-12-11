@@ -22,6 +22,14 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Hierarquia extends CircuitoEntity {
 
+    const BISPO = 1;
+    const PASTOR = 2;
+    const MISSIONARIO = 3;
+    const DIACONO = 4;
+    const OBREIRO = 5;
+    const LIDER_DE_CELULA = 6;
+    const LIDER_EM_TREINAMENTO = 7;
+
     /**
      * @ORM\OneToMany(targetEntity="PessoaHierarquia", mappedBy="hierarquia") 
      */

@@ -194,7 +194,7 @@ class ListagemDePessoasComEventos extends AbstractHelper {
         $html .= '<tr id="tr_' . $pessoa->getIdGrupoPessoa() . '" ' . $classLinha . '>';
 
         /* TIPO */
-        $html .= '<td class="tdTipo ' . $classLinha2 . '">';
+        $html .= '<td class="tdTipo ' . $classLinha2 . ' hidden-xs">';
         /* Menu dropup Tipo */
         $html .= '<div class="btn-group btn-block dropdown">';
         $html .= '<span class="btn ' . $corBotao . ' btn-xs btn-block dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">';

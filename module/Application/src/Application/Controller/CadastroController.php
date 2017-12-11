@@ -983,10 +983,11 @@ class CadastroController extends CircuitoController {
     public function grupoAction() {
         $sessao = new Container(Constantes::$NOME_APLICACAO);
         unset($sessao->token);
-        $comandoPegaToken = 'curl -k -d "grant_type=client_credentials" -H "Authorization: Basic RU93V3VrcTh3X29yblV5MGVYc1lrZkRnbUhJYTplSEFJam5aclliYjdLNXl1TTc5Nm5RUmhXZzRh" https://apigateway.serpro.gov.br/token';
-        $arrayToken = system($comandoPegaToken);
-        $sessao->token = explode('"', $arrayToken)[13];
-
+        while (!$sessao->token) {
+            $comandoPegaToken = 'curl -k -d "grant_type=client_credentials" -H "Authorization: Basic RU93V3VrcTh3X29yblV5MGVYc1lrZkRnbUhJYTplSEFJam5aclliYjdLNXl1TTc5Nm5RUmhXZzRh" https://apigateway.serpro.gov.br/token';
+            $arrayToken = system($comandoPegaToken);
+            $sessao->token = explode('"', $arrayToken)[13];
+        }
         $idEntidadeAtual = $sessao->idEntidadeAtual;
         $entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
 

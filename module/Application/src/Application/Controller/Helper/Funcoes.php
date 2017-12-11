@@ -3,6 +3,7 @@
 namespace Application\Controller\Helper;
 
 use Application\Model\Entity\EventoTipo;
+use Application\Model\Entity\Hierarquia;
 use Exception;
 use PHPMailer;
 
@@ -71,7 +72,6 @@ class Funcoes {
 //            $mail->Port = 587;
 //            $mail->SMTPSecure = 'ssl';
 //            $mail->Port = 465;
-            
 //            $mail->SMTPDebug = 1;
             $mail->isSMTP();
             $mail->Charset = 'utf8_decode()';
@@ -547,6 +547,35 @@ class Funcoes {
         echo "<pre>";
         var_dump($expression);
         echo "</pre>";
+    }
+
+    public static function metaPorHierarquia($idHierarquia) {
+        $membresia = 0;
+        $celulas = 1;
+        $parceiroDeDeus = 2;
+        switch ($idHierarquia) {
+            case Hierarquia::LIDER_DE_CELULA:
+                $metas[$membresia] = Constantes::$META_LIDER;
+                $metas[$celulas] = 1;
+                break;
+            case Hierarquia::OBREIRO:
+                $metas[$membresia] = Constantes::$META_LIDER * 5;
+                $metas[$celulas] = 10;
+                break;
+            case Hierarquia::DIACONO:
+                $metas[$membresia] = Constantes::$META_LIDER * 10;
+                $metas[$celulas] = 20;
+                break;
+            case Hierarquia::MISSIONARIO:
+                $metas[$membresia] = Constantes::$META_LIDER * 20;
+                $metas[$celulas] = 35;
+                break;
+            case Hierarquia::PASTOR:
+                $metas[$membresia] = Constantes::$META_LIDER * 40;
+                $metas[$celulas] = 70;
+                break;
+        }
+        return $metas;
     }
 
 }
