@@ -36,9 +36,13 @@ class PrincipalController extends CircuitoController {
 
         $tipoRelatorioPessoal = 1;
         $tipoRelatorioEquipe = 2;
-        $periodo = -12;
+        $periodo = -1;
         $relatorio = RelatorioController::montaRelatorio($this->getRepositorio(), $numeroIdentificador, $periodo, $tipoRelatorioPessoal);
         $relatorioEquipe = RelatorioController::montaRelatorio($this->getRepositorio(), $numeroIdentificador, $periodo, $tipoRelatorioEquipe);
+
+        $periodoFinal = $periodo - 4;
+        $relatorioPessoalMedio = RelatorioController::montaRelatorio($this->getRepositorio(), $numeroIdentificador, $periodo, $tipoRelatorioPessoal, $periodoFinal);
+        $relatorioEquipeMedio = RelatorioController::montaRelatorio($this->getRepositorio(), $numeroIdentificador, $periodo, $tipoRelatorioEquipe, $periodoFinal);
 
         $dados = array();
         $dados['pessoa'] = $pessoa;
@@ -46,6 +50,8 @@ class PrincipalController extends CircuitoController {
         $dados['periodoExtenso'] = $arrayPeriodo[0];
         $dados['relatorio'] = $relatorio;
         $dados['relatorioEquipe'] = $relatorioEquipe;
+        $dados['relatorioPessoaMedio'] = $relatorioPessoalMedio;
+        $dados['relatorioEquipeMedio'] = $relatorioEquipeMedio;
         $dados['repositorio'] = $this->getRepositorio();
 
         $grupoPaiFilhoFilhos = $grupo->getGrupoPaiFilhoFilhosAtivos($periodo);

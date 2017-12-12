@@ -305,7 +305,9 @@ class RelatorioController extends CircuitoController {
         if ($periodoFinal !== 0) {
             $diferencaDePeriodos = $periodoFinal - $periodoInicial;
         }
-
+        if ($diferencaDePeriodos < 0) {
+            $diferencaDePeriodos *= -1;
+        }
         $relatorio['membresiaCulto'] = $soma[RelatorioController::dimensaoTipoCulto] / $diferencaDePeriodos;
         $relatorio['membresiaArena'] = $soma[RelatorioController::dimensaoTipoArena] / $diferencaDePeriodos;
         $relatorio['membresiaDomingo'] = $soma[RelatorioController::dimensaoTipoDomingo] / $diferencaDePeriodos;

@@ -3,6 +3,7 @@
 namespace Application\View\Helper;
 
 use Application\Controller\Helper\Funcoes;
+use Application\Controller\RelatorioController;
 use Application\Model\Entity\Hierarquia;
 use Zend\View\Helper\AbstractHelper;
 
@@ -76,7 +77,7 @@ class DadosProximoNivel extends AbstractHelper {
             $html .= '<div class = "progress mt20">';
             $html .= '<div class = "progress-bar progress-bar-info" style = "width: ' . $validacaoMembresia . '%;">M.</div>';
             $html .= '<div class = "progress-bar progress-bar-system" style = "width: ' . $validacaoCulto . '%;">C.</div>';
-            $html .= $validacaoMembresia + $validacaoCulto . '%';
+            $html .= RelatorioController::formataNumeroRelatorio($validacaoMembresia + $validacaoCulto) . '%';
             $html .= '</div>';
             $html .= '</td>';
             $html .= '<td>';
@@ -111,10 +112,10 @@ class DadosProximoNivel extends AbstractHelper {
             $html .= '<div class = "col-xs-3">' . $stringMeta . '</div>';
             $html .= '<div class = "col-xs-6">';
             $html .= '<div class = "progress">';
-            $html .= '<div class = "progress-bar progress-bar-' . $corBarra . '" role = "progressbar" aria-valuenow = "' . $valorBarra . '" aria-valuemin = "0" aria-valuemax = "100" style = "width: ' . $valorBarra . '%;">' . $valorBarra . '%</div>';
+            $html .= '<div class = "progress-bar progress-bar-' . $corBarra . '" role = "progressbar" aria-valuenow = "' . $valorBarra . '" aria-valuemin = "0" aria-valuemax = "100" style = "width: ' . $valorBarra . '%;">' . RelatorioController::formataNumeroRelatorio($valorBarra) . '%</div>';
             $html .= '</div>';
             $html .= '</div>';
-            $html .= '<div class = "col-xs-3">' . $this->getRelatorioEquipe()[$indiceRelatorio] . '/' . $metas[$indice] . '</div>';
+            $html .= '<div class = "col-xs-3">' . RelatorioController::formataNumeroRelatorio($this->getRelatorioEquipe()[$indiceRelatorio]) . '/' . $metas[$indice] . '</div>';
 
             $html .= '</div>';
         }
