@@ -52,7 +52,8 @@ class DadosProximoNivel extends AbstractHelper {
                 $idProximaHierarquia = Hierarquia::BISPO;
                 break;
         }
-        $stringProximaHierarquia = $this->view->repositorio->getHierarquiaORM()->encontrarPorId($idProximaHierarquia)->getNome();
+        $stringProximaHierarquia = 'De ' . $pessoa->getPessoaHierarquiaAtivo()->getHierarquia()->getNome() .
+                ' para ' . $this->view->repositorio->getHierarquiaORM()->encontrarPorId($idProximaHierarquia)->getNome();
         $perfomanceMembresia = $this->getRelatorioEquipe()['membresia'] / $metas[0] * 100;
         if ($perfomanceMembresia > 100) {
             $perfomanceMembresia = 100;
@@ -63,30 +64,45 @@ class DadosProximoNivel extends AbstractHelper {
         }
         $validacaoMembresia = $perfomanceMembresia / 2;
         $validacaoCulto = $perfomanceCelula / 2;
+        $valorBarra = $validacaoMembresia + $validacaoCulto;
+        $corDaBarra = RelatorioController::corDaLinhaPelaPerformance($valorBarra);
 
         $html = '';
-        $html .= '<div class="row">';
-        $html .= '<table class="table table-condensed p5 text-center">';
-        $html .= '<tbody>';
-        $html .= '<tr>';
-        $html .= '<td>' . $stringProximaHierarquia . '</td>';
-
-        if ($pessoa->getPessoaHierarquiaAtivo()->getHierarquia()->getId() !== Hierarquia::PASTOR &&
-                $pessoa->getPessoaHierarquiaAtivo()->getHierarquia()->getId() !== Hierarquia::BISPO) {
-            $html .= '<td class="block-center">';
-            $html .= '<div class = "progress mt20">';
-            $html .= '<div class = "progress-bar progress-bar-info" style = "width: ' . $validacaoMembresia . '%;">M.</div>';
-            $html .= '<div class = "progress-bar progress-bar-system" style = "width: ' . $validacaoCulto . '%;">C.</div>';
-            $html .= RelatorioController::formataNumeroRelatorio($validacaoMembresia + $validacaoCulto) . '%';
-            $html .= '</div>';
-            $html .= '</td>';
-            $html .= '<td>';
-            $html .= '<button onclick = "$(\'#divProximoNivel\').toggleClass(\'hidden\');" class = "btn btn-xs btn-primary"><i class = "fa fa-caret-down"></i></button>';
-            $html .= '</td>';
-        }
-        $html .= '</tr>';
-        $html .= '</tbody>';
-        $html .= '</table>';
+        $html .= '<div class="row m15">';
+        $html .= '<div class="col-xs-12 "onclick="$(\'#divProximoNivel\').toggleClass(\'hidden\');">';
+        $html .= '<h5 class="mb15 text-muted">' . $stringProximaHierarquia . ' <span class="badge badge-info">?</span></h5>';
+        $html .= '<div class="progress progress-bar-sm">';
+        $html .= '<div class="progress-bar progress-bar-' . $corDaBarra . '" role="progressbar" aria-valuenow="' . $valorBarra . '" aria-valuemin="0" aria-valuemax="100" style="width: ' . $valorBarra . '%;">';
+        $html .= '<span class="sr-only">' . RelatorioController::formataNumeroRelatorio($valorBarra) . '%</span>';
+        $html .= '</div>';
+        $html .= '</div>';
+        $html .= '<p>';
+        $html .= '<b class="text-' . $corDaBarra . '">' . RelatorioController::formataNumeroRelatorio($valorBarra) . '%</b>';
+        $html .= '</p>';
+        $html .= '</div>';
+        $html .= '</div>';
+//        $html .= '<div class="row">';
+//        $html .= '<table class="table table-condensed p5 text-center">';
+//        $html .= '<tbody>';
+//        $html .= '<tr>';
+//        $html .= '<td>' . $stringProximaHierarquia . '</td>';
+//
+//        if ($pessoa->getPessoaHierarquiaAtivo()->getHierarquia()->getId() !== Hierarquia::PASTOR &&
+//                $pessoa->getPessoaHierarquiaAtivo()->getHierarquia()->getId() !== Hierarquia::BISPO) {
+//            $html .= '<td class="block-center">';
+//            $html .= '<div class = "progress mt20">';
+//            $html .= '<div class = "progress-bar progress-bar-info" style = "width: ' . $validacaoMembresia . '%;">M.</div>';
+//            $html .= '<div class = "progress-bar progress-bar-system" style = "width: ' . $validacaoCulto . '%;">C.</div>';
+//            $html .= RelatorioController::formataNumeroRelatorio($validacaoMembresia + $validacaoCulto) . '%';
+//            $html .= '</div>';
+//            $html .= '</td>';
+//            $html .= '<td>';
+//            $html .= '<button onclick = "$(\'#divProximoNivel\').toggleClass(\'hidden\');" class = "btn btn-xs btn-primary"><i class = "fa fa-caret-down"></i></button>';
+//            $html .= '</td>';
+//        }
+//        $html .= '</tr>';
+//        $html .= '</tbody>';
+//        $html .= '</table>';
 
         $html .= '<div id = "divProximoNivel" class = "row p10 hidden">';
         $html .= '<div class = "panel">';
@@ -122,7 +138,7 @@ class DadosProximoNivel extends AbstractHelper {
         $html .= '</div>';
 
         $html .= '</div>';
-        
+
         $html .= '</div>';
 
 

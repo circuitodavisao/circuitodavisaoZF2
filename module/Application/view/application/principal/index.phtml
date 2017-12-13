@@ -14,7 +14,7 @@ use Application\Controller\RelatorioController;
         <div class="admin-panels fade-onload">
             <div class="row">
                 <div class="col-md-12">
-                    <div class="panel sort-disable" data-panel-title="false">
+                    <div class="panel" data-panel-title="false">
                         <div class="panel-heading">
                             <span class="panel-icon">
                                 <i class="fa fa-bar-chart"></i>
@@ -58,9 +58,10 @@ use Application\Controller\RelatorioController;
                                             <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3 text-center">
                                                 <div class="panel panel-tile text-center br-a br-grey">
                                                     <div class="panel-body">
-                                                        <h3>Culto - Meta <span id="spanMetaCulto"></span> <span onclick="mostrarModalInformativo(1);" class="badge">?</span></h3>
+                                                        <h3>Meta do Culto</h3>
+                                                        <h4><span id="spanMetaCulto"></span> pessoas <span onclick="mostrarModalInformativo(1);" class="badge badge-info">?</span></h4>
                                                         <canvas id="gaugeCulto" style="width:100%;" class="canvas-preview" ></canvas>
-                                                        <h4 id="labelValorCulto"></h4>
+                                                        <h4><span id="labelValorCulto"></span> pessoas</h4>
                                                     </div>
                                                     <div class="panel-footer br-t p12">
                                                         <span class="fs11">
@@ -73,9 +74,10 @@ use Application\Controller\RelatorioController;
                                             <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3 text-center">
                                                 <div class="panel panel-tile text-center br-a br-grey">
                                                     <div class="panel-body">
-                                                        <h3>Arena - Meta <span id="spanMetaArena"></span> <span onclick="mostrarModalInformativo(2);" class="badge">?</span></h3>
+                                                        <h3>Meta do Arena</h3>
+                                                        <h4><span id="spanMetaArena"></span> pessoas <span onclick="mostrarModalInformativo(2);" class="badge badge-info">?</span></h4>
                                                         <canvas id="gaugeArena" id="gaugeCulto" style="width:100%;" class="canvas-preview"></canvas>
-                                                        <h4 id="labelValorArena"></h4>
+                                                        <h4><span id="labelValorArena"></span> pessoas</h4>
                                                     </div>                                               
                                                     <div class="panel-footer br-t p12">
                                                         <span class="fs11">
@@ -88,9 +90,10 @@ use Application\Controller\RelatorioController;
                                             <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3 text-center">
                                                 <div class="panel panel-tile text-center br-a br-grey">
                                                     <div class="panel-body">
-                                                        <h3>Domingo - Meta <span id="spanMetaDomingo"></span> <span onclick="mostrarModalInformativo(1);" class="badge">?</span></h3>
+                                                        <h3>Meta do Domingo</h3>
+                                                        <h4><span id="spanMetaDomingo"></span> pessoas <span onclick="mostrarModalInformativo(1);" class="badge badge-info">?</span></h4>
                                                         <canvas id="gaugeDomingo" id="gaugeCulto" style="width:100%;" class="canvas-preview"></canvas>
-                                                        <h4 id="labelValorDomingo"></h4>
+                                                        <h4><span id="labelValorDomingo"></span> pessoas</h4>
                                                     </div>
                                                     <div class="panel-footer br-t p12">
                                                         <span class="fs11">
@@ -103,9 +106,10 @@ use Application\Controller\RelatorioController;
                                             <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3 text-center">
                                                 <div class="panel panel-tile text-center br-a br-grey">
                                                     <div class="panel-body">
-                                                        <h3>Membresia - Meta <span id="spanMetaMembresia"></span> <span onclick="mostrarModalInformativo(3);" class="badge">?</span></h3>
+                                                        <h3>Meta da Membresia</h3>
+                                                        <h4><span id="spanMetaMembresia"></span> membresia <span onclick="mostrarModalInformativo(3);" class="badge badge-info">?</span></h4>
                                                         <canvas id="gaugeMembresia" id="gaugeCulto" style="width:100%;" class="canvas-preview"></canvas>
-                                                        <h4 id="labelValorMembresia"></h4>
+                                                        <h4><span id="labelValorMembresia"></span> membresia</h4>
                                                     </div>
                                                     <div class="panel-footer br-t p12">
                                                         <span class="fs11">
