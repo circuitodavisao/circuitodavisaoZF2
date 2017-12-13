@@ -398,6 +398,15 @@ class RelatorioController extends CircuitoController {
             $relatorio['diferencaDomingoSeta'] = 'down';
             $relatorio['diferencaDomingoFrase'] = 'DIMINUIU';
         }
+        if ($relatorioPassado['membresia']) {
+            $relatorio['diferencaMembresia'] = $relatorio['membresia'] * 100 / $relatorioPassado['membresia'] - 100;
+            $relatorio['diferencaMembresiaSeta'] = 'up';
+            $relatorio['diferencaMembresiaFrase'] = 'AUMENTOU';
+        } else {
+            $relatorio['diferencaMembresia'] = 0;
+            $relatorio['diferencaMembresiaSeta'] = 'down';
+            $relatorio['diferencaMembresiaFrase'] = 'DIMINUIU';
+        }
 
         return $relatorio;
     }
@@ -428,8 +437,11 @@ class RelatorioController extends CircuitoController {
         if ($valor >= 70 && $valor < 85) {
             $class = 'warning';
         }
-        if ($valor >= 85) {
+        if ($valor >= 85 && $valor < 100) {
             $class = 'success';
+        }
+        if ($valor >= 100) {
+            $class = 'info';
         }
         return $class;
     }

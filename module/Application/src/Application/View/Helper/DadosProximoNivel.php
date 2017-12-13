@@ -65,7 +65,7 @@ class DadosProximoNivel extends AbstractHelper {
         $validacaoCulto = $perfomanceCelula / 2;
 
         $html = '';
-
+        $html .= '<div class="row">';
         $html .= '<table class="table table-condensed p5 text-center">';
         $html .= '<tbody>';
         $html .= '<tr>';
@@ -121,11 +121,9 @@ class DadosProximoNivel extends AbstractHelper {
         }
         $html .= '</div>';
 
-        $html .= '</div>
-
+        $html .= '</div>';
         
-
-        ';
+        $html .= '</div>';
 
 
         return $html;

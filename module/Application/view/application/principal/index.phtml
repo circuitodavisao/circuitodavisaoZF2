@@ -8,10 +8,9 @@ use Application\Controller\RelatorioController;
 
     <!-- begin: .tray-center -->
     <div class="tray tray-center">
- 
+
         <?php echo $this->dadosPrincipal($this->relatorioPessoaMedio, $this->relatorioEquipeMedio); ?>
 
-        <!--<div class="">-->
         <div class="admin-panels fade-onload">
             <div class="row">
                 <div class="col-md-12">
@@ -23,36 +22,32 @@ use Application\Controller\RelatorioController;
                             <span class="panel-title"><?php echo $this->periodoExtenso; ?></span>
                         </div>
                         <div class="panel-body pn">
-                            <table class="table table-condensed mbn">
-                                <tbody>
-                                    <tr>
-                                        <td>Membresia</td>
-                                        <td>Pessoal <?php echo $this->relatorio['membresiaMeta']; ?></td>
-                                        <td>
-                                            <span class="label label-<?php echo $this->relatorio['membresiaPerformanceClass']; ?>">
-                                                <?php echo RelatorioController::formataNumeroRelatorio($this->relatorio['membresia']); ?>
-                                            </span>
-                                        </td>
-                                        <td><?php echo RelatorioController::formataNumeroRelatorio($this->relatorioEquipe['membresiaPerformance']); ?>%</td>
-                                        <td><button onclick="$('#div1').toggleClass('hidden');" class="btn btn-xs btn-primary"><i class="fa fa-caret-down"></i></button></td>
-                                    </tr>
-                                </tbody>
-                            </table>
-
+                            <?php
+                            echo '<input type="hidden" id="eCasal" value="' . $this->eCasal . '" />';
+                            echo '<input type="hidden" id="valorCulto" value="' . $this->relatorio['membresiaCulto'] . '" />';
+                            echo '<input type="hidden" id="valorArena" value="' . $this->relatorio['membresiaArena'] . '" />';
+                            echo '<input type="hidden" id="valorDomingo" value="' . $this->relatorio['membresiaDomingo'] . '" />';
+                            echo '<input type="hidden" id="valorMembresia" value="' . RelatorioController::formataNumeroRelatorio($this->relatorio['membresia']) . '" />';
+                            ?>
+                            <!-- dados condesados -->
+                            <div class="row m15">
+                                <div class="col-xs-12 " onclick="$('#div1').toggleClass('hidden'); criarGauges();">
+                                    <h4 class="mb15 text-muted">Membresia <span class="badge badge-info">?</span></h4>
+                                    <div class="progress progress-bar-sm">
+                                        <div class="progress-bar progress-bar-<?php echo $this->relatorio['membresiaPerformanceClass']; ?>" role="progressbar" aria-valuenow="<?php echo $this->relatorio['membresiaPerformance']; ?>" aria-valuemin="0" aria-valuemax="100" style="width: <?php echo $this->relatorio['membresiaPerformance']; ?>%;">
+                                            <span class="sr-only"><?php echo RelatorioController::formataNumeroRelatorio($this->relatorio['membresiaPerformance']); ?>%</span>
+                                        </div>
+                                    </div>
+                                    <p>
+                                        <b class="text-<?php echo $this->relatorio['membresiaPerformanceClass']; ?>"><?php echo RelatorioController::formataNumeroRelatorio($this->relatorio['membresiaPerformance']); ?>%</b>
+                                        <span class="pull-right text-<?php echo $this->relatorio['membresiaPerformanceClass']; ?>"><?php echo RelatorioController::formataNumeroRelatorio($this->relatorio['membresia']); ?> de <?php echo $this->relatorio['membresiaMeta']; ?></span>
+                                    </p>
+                                </div>
+                            </div>
+                            <!--Gauges membresia-->
                             <div id="div1" class="row p10 hidden">
                                 <div class="panel">
                                     <div class="panel-body">
-                                        <div class="row">
-                                            <div class="col-xs-4 text-center">
-                                                <h3>Culto</h3>                                                
-                                            </div>
-                                            <div class="col-xs-4 text-center">
-                                                <h3>Arena</h3>
-                                            </div>
-                                            <div class="col-xs-4 text-center">
-                                                <h3>Domingo</h3>
-                                            </div>
-                                        </div>
                                         <?php
                                         $perfomance = array();
                                         $perfomance['culto'] = $this->relatorio['membresiaCulto'] / $this->relatorio['membresiaMeta'] * 100;
@@ -60,63 +55,12 @@ use Application\Controller\RelatorioController;
                                         $perfomance['domingo'] = $this->relatorio['membresiaDomingo'] / $this->relatorio['membresiaMeta'] * 100;
                                         ?>
                                         <div class="row">
-                                            <div class="col-xs-4 text-center">
-                                                <div class="ib">
-                                                    <div class="progress vertical bottom progress-bar-lg mt10 mbn">
-                                                        <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="<?php echo $this->relatorio['membresiaCulto']; ?>" aria-valuemin="0" aria-valuemax="<?php echo $this->relatorio['membresiaMeta']; ?>" style="height: <?php echo $perfomance['culto']; ?>%;"><?php echo $this->relatorio['membresiaCulto']; ?></div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-xs-4 text-center">
-                                                <div class="ib">
-                                                    <div class="progress vertical bottom progress-bar-lg mt10 mbn">
-                                                        <div class="progress-bar progress-bar-system" role="progressbar" aria-valuenow="<?php echo $this->relatorio['membresiaArena']; ?>" aria-valuemin="0" aria-valuemax="<?php echo $this->relatorio['membresiaMeta']; ?>" style="height: <?php echo $perfomance['arena']; ?>%;"><?php echo $this->relatorio['membresiaArena']; ?></div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-xs-4 text-center">
-                                                <div class="ib">
-                                                    <div class="progress vertical bottom progress-bar-lg mt10 mbn">
-                                                        <div class="progress-bar progress-bar-alert" role="progressbar" aria-valuenow="<?php echo $this->relatorio['membresiaDomingo']; ?>" aria-valuemin="0" aria-valuemax="<?php echo $this->relatorio['membresiaMeta']; ?>" style="height: <?php echo $perfomance['domingo']; ?>%;"><?php echo $this->relatorio['membresiaDomingo']; ?></div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row mt10">
-                                            <div class="panel">
-                                                <div class="panel-body pn text-center">
-                                                    <h1>Cálculo da Membresia</h1>
-                                                    <table class="table table-condensed">
-                                                        <tbody>
-                                                            <tr>
-                                                                <td>(Culto/3)</td>
-                                                                <td>+</td>
-                                                                <td>(Arena/2)</td>
-                                                                <td>+</td>
-                                                                <td>Domingo</td>
-                                                                <td>=</td>
-                                                                <td>Memb.</td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td>(<?php echo $this->relatorio['membresiaCulto']; ?>/3)</td>
-                                                                <td>+</td>
-                                                                <td>(<?php echo $this->relatorio['membresiaArena']; ?>/2)</td>
-                                                                <td>+</td>
-                                                                <td><?php echo $this->relatorio['membresiaDomingo']; ?></td>
-                                                                <td>=</td>
-                                                                <td><?php echo RelatorioController::formataNumeroRelatorio($this->relatorio['membresia']); ?></td>
-                                                            </tr>
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row mt10">
-                                            <div class="col-sm-4 col-xl-4">
+                                            <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3 text-center">
                                                 <div class="panel panel-tile text-center br-a br-grey">
                                                     <div class="panel-body">
-                                                        <h1 class="fs30 mt5 mbn"><?php echo $this->relatorio['membresiaCulto']; ?></h1>
-                                                        <h6 class="text-info">CULTO</h6>
+                                                        <h3>Culto - Meta <span id="spanMetaCulto"></span> <span onclick="mostrarModalInformativo(1);" class="badge">?</span></h3>
+                                                        <canvas id="gaugeCulto" style="width:100%;" class="canvas-preview" ></canvas>
+                                                        <h4 id="labelValorCulto"></h4>
                                                     </div>
                                                     <div class="panel-footer br-t p12">
                                                         <span class="fs11">
@@ -126,12 +70,13 @@ use Application\Controller\RelatorioController;
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-sm-4 col-xl-4">
+                                            <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3 text-center">
                                                 <div class="panel panel-tile text-center br-a br-grey">
                                                     <div class="panel-body">
-                                                        <h1 class="fs30 mt5 mbn"><?php echo $this->relatorio['membresiaArena']; ?></h1>
-                                                        <h6 class="text-system">ARENA</h6>
-                                                    </div>
+                                                        <h3>Arena - Meta <span id="spanMetaArena"></span> <span onclick="mostrarModalInformativo(2);" class="badge">?</span></h3>
+                                                        <canvas id="gaugeArena" id="gaugeCulto" style="width:100%;" class="canvas-preview"></canvas>
+                                                        <h4 id="labelValorArena"></h4>
+                                                    </div>                                               
                                                     <div class="panel-footer br-t p12">
                                                         <span class="fs11">
                                                             <i class="fa fa-arrow-<?php echo $this->relatorio['diferencaArenaSeta']; ?> pr5"></i> <?php echo RelatorioController::formataNumeroRelatorio($this->relatorio['diferencaArena']); ?>% <?php echo $this->relatorio['diferencaArenaFrase']; ?>
@@ -140,11 +85,12 @@ use Application\Controller\RelatorioController;
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-sm-4 col-xl-4">
+                                            <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3 text-center">
                                                 <div class="panel panel-tile text-center br-a br-grey">
                                                     <div class="panel-body">
-                                                        <h1 class="fs30 mt5 mbn"><?php echo $this->relatorio['membresiaDomingo']; ?></h1>
-                                                        <h6 class="text-alert">DOMINGO</h6>
+                                                        <h3>Domingo - Meta <span id="spanMetaDomingo"></span> <span onclick="mostrarModalInformativo(1);" class="badge">?</span></h3>
+                                                        <canvas id="gaugeDomingo" id="gaugeCulto" style="width:100%;" class="canvas-preview"></canvas>
+                                                        <h4 id="labelValorDomingo"></h4>
                                                     </div>
                                                     <div class="panel-footer br-t p12">
                                                         <span class="fs11">
@@ -154,9 +100,29 @@ use Application\Controller\RelatorioController;
                                                     </div>
                                                 </div>
                                             </div>
+                                            <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3 text-center">
+                                                <div class="panel panel-tile text-center br-a br-grey">
+                                                    <div class="panel-body">
+                                                        <h3>Membresia - Meta <span id="spanMetaMembresia"></span> <span onclick="mostrarModalInformativo(3);" class="badge">?</span></h3>
+                                                        <canvas id="gaugeMembresia" id="gaugeCulto" style="width:100%;" class="canvas-preview"></canvas>
+                                                        <h4 id="labelValorMembresia"></h4>
+                                                    </div>
+                                                    <div class="panel-footer br-t p12">
+                                                        <span class="fs11">
+                                                            <i class="fa fa-arrow-<?php echo $this->relatorio['diferencaMembresiaSeta']; ?> pr5"></i> <?php echo RelatorioController::formataNumeroRelatorio($this->relatorio['diferencaMembresia']); ?>% <?php echo $this->relatorio['diferencaMembresiaFrase']; ?>
+                                                            <b>1 SEMANA ATRÁS</b>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+                            <!--modalInformativo-->
+                            <div id="modalInformativo" class="popup-basic p25 mfp-with-anim mfp-hide">
+                                <div class="mt20"><span id="spanModalInformativo"></span></div>
+                                <button tittle="Close (Esc)" type="button" class="mfp-close bg-dark">x</button>
                             </div>
                         </div>
                     </div>

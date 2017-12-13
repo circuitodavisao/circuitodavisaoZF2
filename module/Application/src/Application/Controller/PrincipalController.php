@@ -29,6 +29,7 @@ class PrincipalController extends CircuitoController {
         $idEntidadeAtual = $sessao->idEntidadeAtual;
         $entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
         $grupo = $entidade->getGrupo();
+        $eCasal = $grupo->verificaSeECasal();
         $numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupo);
 
         $idPessoa = $sessao->idPessoa;
@@ -46,6 +47,7 @@ class PrincipalController extends CircuitoController {
 
         $dados = array();
         $dados['pessoa'] = $pessoa;
+        $dados['eCasal'] = $eCasal;
         $arrayPeriodo = Funcoes::montaPeriodo($periodo);
         $dados['periodoExtenso'] = $arrayPeriodo[0];
         $dados['relatorio'] = $relatorio;

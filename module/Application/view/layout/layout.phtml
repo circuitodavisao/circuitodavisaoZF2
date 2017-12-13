@@ -52,7 +52,7 @@ use Application\Controller\Helper\Constantes;
         ;
         ?>       
     </head>
-    <body class="external-page external-alt sb-l-c sb-r-c mobile-view">
+    <body class="external-page external-alt sb-l-c sb-r-c">
         <?php echo $this->modalLoader(); ?>
         <!-- Start: Main -->
         <div id="main">
@@ -75,6 +75,7 @@ use Application\Controller\Helper\Constantes;
         <?php
         echo $this
                 ->headScript()
+                ->prependFile($this->basePath() . '/js/circuito_da_visao/gauge.min.js')
                 ->prependFile($this->basePath() . '/js/circuito_da_visao/modal-selecionar-perfil.js' . $versao)
                 ->prependFile($this->basePath() . '/js/circuito_da_visao/funcao-circuito.js' . $versao)
                 ->prependFile($this->basePath() . '/js/circuito_da_visao/funcao-cadastro.js' . $versao)
@@ -139,7 +140,7 @@ use Application\Controller\Helper\Constantes;
                     }
                 });
 
-            });
+            });  
 
             $(window).bind("load", function () {
                 // Remove splash screen after load

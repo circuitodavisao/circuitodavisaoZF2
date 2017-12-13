@@ -168,6 +168,14 @@ class Grupo extends CircuitoEntity {
         return $responsabilidadesAtivas;
     }
 
+    function verificaSeECasal() {
+        $resposta = false;
+        if (count($this->getResponsabilidadesAtivas()) == 2) {
+            $resposta = true;
+        }
+        return $resposta;
+    }
+
     /**
      * Recupera o total de grupo atendimentos ativos no mes e ano
      * @return integer
@@ -268,15 +276,15 @@ class Grupo extends CircuitoEntity {
             foreach ($grupoPaiFilhoFilhos as $gpf) {
                 $arrayPeriodo = Funcoes::montaPeriodo($periodo);
                 if ($gpf->verificarSeEstaAtivo()) {
-                    $stringFimDoPeriodo = date('Y'). '-' . $mes . '-' . cal_days_in_month(CAL_GREGORIAN, $mes, date('Y'));
+                    $stringFimDoPeriodo = date('Y') . '-' . $mes . '-' . cal_days_in_month(CAL_GREGORIAN, $mes, date('Y'));
                     $dataDoFimDoPeriodoParaComparar = strtotime($stringFimDoPeriodo);
                     $dataDoGrupoPaiFilhoCriacaoParaComparar = strtotime($gpf->getData_criacaoStringPadraoBanco());
                     if ($dataDoGrupoPaiFilhoCriacaoParaComparar <= $dataDoFimDoPeriodoParaComparar) {
-                        $grupoPaiFilhoFilhosAtivos[] = $gpf;  
+                        $grupoPaiFilhoFilhosAtivos[] = $gpf;
                     }
                 } else {
                     /* Inativo */
-                    $stringFimDoPeriodo = date('Y'). '-' . $mes . '-' .cal_days_in_month(CAL_GREGORIAN, $mes, date('Y'));
+                    $stringFimDoPeriodo = date('Y') . '-' . $mes . '-' . cal_days_in_month(CAL_GREGORIAN, $mes, date('Y'));
                     $dataDoFimDoPeriodoParaComparar = strtotime($stringFimDoPeriodo);
                     $dataDoGrupoGrupoPaiFilhoInativadoParaComparar = strtotime($gpf->getData_inativacaoStringPadraoBanco());
                     if ($dataDoGrupoGrupoPaiFilhoInativadoParaComparar <= $dataDoFimDoPeriodoParaComparar) {

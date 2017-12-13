@@ -39,18 +39,22 @@ class DadosPrincipal extends AbstractHelper {
         /* Calculo da sua classe */
         $metas = Funcoes::metaPorHierarquia($pessoa->getPessoaHierarquiaAtivo()->getHierarquia()->getId());
 
+        $qualRelatorio;
         if ($pessoa->getPessoaHierarquiaAtivo()->getHierarquia()->getId() === Hierarquia::LIDER_DE_CELULA) {
-            $valorMembresia = $this->getRelatorioPessoal()['membresia'];
-            $valorCelulaQuantidade = $this->getRelatorioPessoal()['celulaQuantidade'];
-            $valorCelulaValor = $this->getRelatorioPessoal()['celula'];
+            $qualRelatorio = $this->getRelatorioPessoal();
         } else {
-            $valorMembresia = $this->getRelatorioEquipe()['membresia'];
-            $valorCelulaQuantidade = $this->getRelatorioEquipe()['celulaQuantidade'];
-            $valorCelulaValor = $this->getRelatorioEquipe()['celula'];
+            $qualRelatorio = $this->getRelatorioEquipe();
         }
+        $valorMembresia = $qualRelatorio['membresia'];
+        $valorCelulaQuantidade = $qualRelatorio['celulaQuantidade'];
+        $valorCelulaValor = $qualRelatorio['celula'];
+        $valorCulto = $qualRelatorio['membresiaCulto'];
+        $valorArena = $qualRelatorio['membresiaArena'];
+        $valorDomingo = $qualRelatorio['membresiaDomingo'];
+
         $perfomanceMembresia = $valorMembresia / $metas[0] * 100;
         $perfomanceCelula = $valorCelulaQuantidade / $metas[1] * 100;
-        $validacaoCelulaDeElite = $valorCelulaValor >= Constantes::$META_CELULA_DE_ELITE;
+        $validacaoCelulaDeElite = $valorCelulaValor >= Constantes::$META_LIDER;
         if ($perfomanceMembresia > 100) {
             $perfomanceMembresia = 100;
         }
@@ -114,11 +118,11 @@ class DadosPrincipal extends AbstractHelper {
         $mensagemModalClasse = '';
         $mensagemModalClasse .= '<h1 class="text-center">Cálculo da Classe</h1>';
         $mensagemModalClasse .= '<p>Média dos ultimos 4 periodos de membresia e células pela meta da sua hierarquia.</p>';
-        $mensagemModalClasse .= '<ul><li>Meta de membresia: 6 vezes numeros de líderes</li>';
+        $mensagemModalClasse .= '<ul><li>Meta de membresia: Eu + 6 vezes o número de líderes</li>';
         $mensagemModalClasse .= '<li>Meta de Célula: 1 célula</li>';
         $fimIndice = 1;
         if ($pessoa->getPessoaHierarquiaAtivo()->getHierarquia()->getId() === Hierarquia::LIDER_DE_CELULA) {
-            $mensagemModalClasse .= '<li>Meta de Célula de Elite: Todas as suas celulas pessoais tem que ser de Elite</li>';
+            $mensagemModalClasse .= '<li>Meta de Célula de Elite: Todas as suas celulas pessoais tem que ser de Elite - 7 Pessoas</li>';
             $fimIndice = 2;
         }
         $mensagemModalClasse .= '</ul>';
@@ -166,7 +170,7 @@ class DadosPrincipal extends AbstractHelper {
         }
 
         $html .= '<div id="modalClassificacao" class="popup-basic p25 mfp-with-anim mfp-hide">';
-        $html .= '<div>' . $mensagemModalClasse . '</div>';
+        $html .= '<div class="mw1000">' . $mensagemModalClasse . '</div>';
         $html .= '<button tittle="Close (Esc)" type="button" class="mfp-close bg-dark">x</button>';
         $html .= '</div>';
 
