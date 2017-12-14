@@ -46,34 +46,7 @@ echo $this->templateFormularioTopo($tituloDaPagina, Constantes::$STRING_DIV_CONF
         </div>
     </div>
     <div id="divMotivo" class="panel heading-border panel-danger hidden">
-        <div class="panel-body bg-light">
-            <div class="section-divider">
-                <span><?php echo $this->translate(Constantes::$TRADUCAO_MOTIVO_EXCLUSAO); ?></span>
-            </div>
-            <div class="row">
-                <div class="col-sm-12 col-xs-12">
-                    <div class="section text-center">
-                        <select class="gui-input">
-                            <option><?php echo $this->translate(Constantes::$TRADUCAO_SELECIONE); ?></option>
-                            <option>SAIU DA IGREJA</option>
-                            <option>OUTRO</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-12 col-xs-12">
-                    <div class="section">
-                        <label class="field prepend-icon">
-                            <textarea class="gui-textarea" id="comment" name="comment" placeholder="<?php echo $this->translate(Constantes::$TRADUCAO_DESCREVA_MOTIVO_EXCLUSAO); ?>"></textarea>
-                            <label for="comment" class="field-icon">
-                                <i class="fa fa-comments"></i>
-                            </label>
-                        </label>
-                    </div>
-                </div>
-            </div>
-        </div> 
+        
         <div class="panel-footer text-right" style="height:65px;">
             <?php
             $labelVoltar = $this->translate(Constantes::$TRADUCAO_VOLTAR);

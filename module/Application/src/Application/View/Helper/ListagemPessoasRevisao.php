@@ -66,12 +66,13 @@ class ListagemPessoasRevisao extends AbstractHelper {
             ;
         } else {
             if ($this->getAmostragem() == null) {
+                $html .= '<div id="painelAlunos">';
                 $html .= $this->view->templateFormularioTopo('Selecione os Alunos que não participaram da turma');
                 $html .= '<div class="panel-menu">';
                 $html .= '<input id="fooFilter" type="text" class="form-control" placeholder="Digite o nome do Aluno">';
                 $html .= '</div>';
                 $html .= '<div class="panel-body bg-light">';
-
+                $html .= '<form method="POST" name="formulario" action="&#x2F;cursoSalvarTurma" id="formulario">';
                 $html .= '<table class="table footable" data-filter="#fooFilter" data-page-navigation=".pagination">';
                 $html .= '<thead>';
                 $html .= '<tr>';
@@ -99,12 +100,15 @@ class ListagemPessoasRevisao extends AbstractHelper {
 
                     $html .= '<td class="text-center">';
 
-                    $html .= $this->view->botaoLink(Constantes::$STRING_ICONE_PLUS . '  ' . $this->view->translate(Constantes::$TRADUCAO_VER_FICHA_REVISIONISTA), Constantes::$STRING_HASHTAG, 4, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClickInserir));
+                    $html .= '<label class="option">
+                              <input type="checkbox" name="alunos" id="'.$pessoa->getNome().'" value="'.$pessoa->getId().'">
+                              <span class="checkbox"></span></label>';
                     $html .= '</td>';
 //                        }
                     $html .= '</tr>';
                 }
                 $html .= '</tbody>';
+
                 $html .= '<tfoot class="footer-menu">
                     <tr>
                       <td colspan="5">
@@ -115,57 +119,23 @@ class ListagemPessoasRevisao extends AbstractHelper {
                     </tr>
                   </tfoot>';
                 $html .= '</table>';
-
+                $html .= '</form>';
                 $html .= '</div>';
                 /* Fim panel-body */
                 $html .= '<div class="panel-footer text-right">';
 
-                $stringNomeDaFuncaoOnClickCadastro = 'funcaoCadastro("' . Constantes::$PAGINA_FICHA_REVISIONISTAS . '", ' . $pessoa->getId() . ')';
-                $html .= $this->view->botaoLink($this->view->translate(Constantes::$TRADUCAO_VOLTAR), Constantes::$STRING_HASHTAG, 0, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClickCadastro));
+                $stringNomeDaFuncaoOnClickVoltar = 'funcaoCircuito("' .Constantes::$ROUTE_CADASTRO.Constantes::$PAGINA_LISTAGEM_REVISAO_TURMA. '", ' . $pessoa->getId() . ')';
+                $html .= $this->view->botaoLink($this->view->translate(Constantes::$TRADUCAO_VOLTAR), Constantes::$STRING_HASHTAG, 2, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClickVoltar));
+                $stringNomeDaFuncaoOnClickProsseguir = 'mostrarResumo()';
+                $html .= $this->view->botaoLink($this->view->translate(Constantes::$TRADUCAO_CONFIRMACAO), Constantes::$STRING_HASHTAG, 0, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClickProsseguir));
+
 
                 /* Fim Botões */
                 $html .= '</div>';
+
                 /* Fim panel-footer */
                 $html .= $this->view->templateFormularioRodape();
-            } else {
-
-                $html .= '<div class="panel-body bg-light">';
-
-                $html .= '<table class="table">';
-                $html .= '<thead>';
-                $html .= '<tr>';
-
-                $html .= '<th class="text-center" colspan=2>';
-                $html .= $this->view->translate(Constantes::$TRADUCAO_FICHAS_ATIVAS_LABEL);
-                $html .= '</th>';
-//                    }
-                $html .= '<th class="text-center"></th>';
-                $html .= '</tr>';
-                $html .= '</thead>';
-                $html .= '<tbody>';
-
-                foreach ($pessoas as $pessoa) {
-                    $html .= '<tr>';
-
-                    $html .= '<td class="text-center">' . $pessoa->getId() . '</td>';
-
-                    $stringNomeDaFuncaoOnClickInserir = 'funcaoCadastro("' . Constantes::$PAGINA_REMOVER_REVISIONISTA_ATIVO . '", ' . $pessoa->getId() . ')';
-
-                    $html .= '<td class="text-center"><span class="visible-lg visible-md">' . $pessoa->getNome() . '</span><span class="visible-sm visible-xs">' . $pessoa->getNomePrimeiroUltimo() . '</span></td>';
-
-                    $html .= '<td class="text-center">';
-
-                    $html .= $this->view->botaoLink(Constantes::$STRING_ICONE_MINUS . '  ' . $this->view->translate(Constantes::$TRADUCAO_REMOVER_REVISIONISTA), Constantes::$STRING_HASHTAG, 4, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClickInserir));
-                    $html .= '</td>';
-//                        }
-                    $html .= '</tr>';
-                }
-                $html .= '</tbody>';
-                $html .= '</table>';
-
                 $html .= '</div>';
-                /* Fim panel-body */
-
             }
         }
 

@@ -1,10 +1,78 @@
 <?php
-
+use Application\Controller\Helper\Constantes;
 /**
  * Nome: selecionar_revisionistas.phtml
  * @author Lucas Filipe de Carvalho Cunha <lucsacarvalho.esw@gmail.com>
  * Descricao: Página de listagem de pessoas para o Revisao
  */
 /* Monta a listagem de eventos baseada no tipo do Evento passado */
-echo $this->listagemPessoasRevisao(); 
+echo $this->listagemPessoasRevisao();
+
+
+?>
+<div class="mw1200 center-block hidden" id="painelExcluidos">
+<div class="admin-form theme-primary">
+<div class="panel-body bg-light">
+    <div class="section-divider">
+        <span>
+            <?php
+            echo "Deseja Realmente remover esses Alunos da Turma?";
+            ?>
+        </span>
+    </div>
+    <div class="panel heading-border panel-danger">
+        <div class="panel-body">
+
+          <div id="alunosExcluidos"></div>
+
+        </div>
+
+
+
+    </div>
+
+
+    <div id="divBotaoVoltar" class="panel-footer text-right" style="height:65px;">
+      <?php
+      $stringNomeDaFuncaoOnClickVoltar = 'mostrarAlunos()';
+      echo $this->botaoLink($this->translate(Constantes::$TRADUCAO_VOLTAR), Constantes::$STRING_HASHTAG, 2, $this->funcaoOnClick($stringNomeDaFuncaoOnClickVoltar));
+      $stringNomeDaFuncaoOnClickProsseguir = '';
+      echo $this->botaoLink($this->translate(Constantes::$TRADUCAO_CONFIRMACAO), Constantes::$STRING_HASHTAG, 0, $this->funcaoOnClick($stringNomeDaFuncaoOnClickProsseguir));
+      ?>
+    </div>
+</div>
+</div>
+</div>
+<script type="application/javascript">
+
+function mostrarMotivos() {
+    $('#divMotivo').toggleClass('hidden');
+    $('#divBotaoVoltar').toggleClass('hidden');
+}
+
+function mostrarResumo(){
+  $('#painelAlunos').toggleClass('hidden');
+  $('#painelExcluidos').toggleClass('hidden');
+  var escolhidos = $('input:checked');
+        if (escolhidos.length > 0) {
+            var contador = '';
+            var selecionados = escolhidos.map(function() {
+            	var produto = {nome: this.name, value: this.value};
+                contador += '<strong>' + this.id + '</strong><br/>';
+                return produto;
+            }).get();
+            $('#alunosExcluidos').html(contador);
+          }else{
+            $('#alunosExcluidos').html("Nenhum aluno foi selecionado!!");
+          }
+}
+function mostrarAlunos(){
+  $('#painelAlunos').toggleClass('hidden');
+  $('#painelExcluidos').toggleClass('hidden');
+}
+
+</script>
+
+<?php
 echo $this->layoutJSEventosValidacao;
+ ?>

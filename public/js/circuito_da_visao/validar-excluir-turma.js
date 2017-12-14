@@ -37,6 +37,4 @@ function validarExclusao(idTurma) {
                 }, 'json');
     }
 
-
-
 }

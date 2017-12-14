@@ -478,12 +478,13 @@ class CursoController extends CircuitoController {
                   $turma = $this->getRepositorio()->getTurmaORM()->encontrarPorId($id);
               } else {
                   $turma = new Turma();
+                  $turma->setTipo_turma_id((int)$idTipo);
               }
 
               $turma->setAno((int)$ano);
               $turma->setMes((int)$mes);
               $turma->setObservacao($observacao);
-              $turma->setTipo_turma_id((int)$idTipo);
+
               if ($id) {
                   $this->getRepositorio()->getTurmaORM()->persistir($turma, false);
               } else {
@@ -534,8 +535,8 @@ class CursoController extends CircuitoController {
       $turma->setDataEHoraDeInativacao();
       $this->getRepositorio()->getTurmaORM()->persistir($turma, false);
 
-      return $this->redirect()->toRoute(Constantes::$ROUTE_CADASTRO, array(
-                  Constantes::$PAGINA => Constantes::$PAGINA_LISTAR_TURMA,
+      return $this->redirect()->toRoute(Constantes::$ROUTE_CURSO, array(
+                  Constantes::$ACTION => Constantes::$PAGINA_LISTAR_TURMA,
       ));
   }
 
@@ -655,5 +656,6 @@ class CursoController extends CircuitoController {
 
       return $view;
   }
+
 
 }
