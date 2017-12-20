@@ -67,12 +67,12 @@ class ListagemPessoasRevisao extends AbstractHelper {
         } else {
             if ($this->getAmostragem() == null) {
                 $html .= '<div id="painelAlunos">';
-                $html .= $this->view->templateFormularioTopo('Selecione os Alunos que não participaram da turma');
+                $html .= $this->view->templateFormularioTopo('Selecione os Alunos que não participarão da turma');
                 $html .= '<div class="panel-menu">';
                 $html .= '<input id="fooFilter" type="text" class="form-control" placeholder="Digite o nome do Aluno">';
                 $html .= '</div>';
                 $html .= '<div class="panel-body bg-light">';
-                $html .= '<form method="POST" name="formulario" action="&#x2F;cursoSalvarTurma" id="formulario">';
+                $html .= '<form method="POST" name="formulario" action="cursoRetirarAlunos" id="formulario">';
                 $html .= '<table class="table footable" data-filter="#fooFilter" data-page-navigation=".pagination">';
                 $html .= '<thead>';
                 $html .= '<tr>';
