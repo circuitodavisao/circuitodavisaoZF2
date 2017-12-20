@@ -8,7 +8,7 @@ use Zend\View\Helper\AbstractHelper;
 
 /**
  * Nome: TemplateFormularioRodape.php
- * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com> 
+ * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com>
  * Descricao: Classe helper view para mostrar a listagem de eventos
  */
 class ListagemDeEventos extends AbstractHelper {
@@ -17,7 +17,7 @@ class ListagemDeEventos extends AbstractHelper {
     private $grupoEventos;
 
     public function __construct() {
-        
+
     }
 
     public function __invoke($titulo, $grupoEventos) {
@@ -267,7 +267,7 @@ class ListagemDeEventos extends AbstractHelper {
 
                     $html .= '<td class="text-center">' . Funcoes::mudarPadraoData($evento->getData(), 1) . '</td>';
 
-                    $stringNomeDaFuncaoOnClickInserir = 'funcaoSelecionarAlunosTurma(' . $this->view->extra . ', ' . $evento->getId() . ')';
+                    $stringNomeDaFuncaoOnClickInserir = 'funcaoCircuito("' . Constantes::$ROUTE_CURSO . 'SelecionarPessoasRevisao", ' . $evento->getId() . ')';
                     $grupoEventoAtivos = $evento->getGrupoEventoAtivos();
                     $texto = '';
                     foreach ($grupoEventoAtivos as $gea) {
@@ -322,6 +322,11 @@ class ListagemDeEventos extends AbstractHelper {
             if ($tipoRevisao) {
                 $stringNomeDaFuncaoOnClickCadastro = 'funcaoCadastro("' . Constantes::$PAGINA_CADASTRO_REVISAO . '", 0)';
                 $html .= $this->view->botaoLink(Constantes::$STRING_ICONE_PLUS . ' ' . $this->view->translate(Constantes::$TRADUCAO_NOVO_REVISAO), Constantes::$STRING_HASHTAG, 0, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClickCadastro));
+            }
+            if ($tipoListarRevisaoTurma) {
+
+                $stringNomeDaFuncaoOnClickVoltar = 'funcaoCircuito("' .Constantes::$ROUTE_CURSO. Constantes::$PAGINA_LISTAR_TURMA . '", 0)';
+                $html .= $this->view->botaoLink($this->view->translate(Constantes::$TRADUCAO_VOLTAR), Constantes::$STRING_HASHTAG, 2, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClickVoltar));
             }
 
             /* Fim Botões */

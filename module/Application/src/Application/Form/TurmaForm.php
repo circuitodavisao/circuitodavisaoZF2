@@ -3,18 +3,19 @@
 namespace Application\Form;
 
 use Application\Controller\Helper\Constantes;
-use Application\Model\Entity\Turma; 
+use Application\Model\Entity\Turma;
 use Zend\Form\Element\Csrf;
 use Zend\Form\Element\Hidden;
 use Zend\Form\Element\Select;
 use Zend\Form\Element\Textarea;
+use Zend\Form\Element\Text;
 use Zend\Form\Form;
 
 /**
  * Nome: TurmaForm.php
  * @author Lucas Carvalho  <lucascarvalho.esw@gmail.com>
- * Descricao: Formulario para cadastrar turmas do instituto de vencedores.            
- *              
+ * Descricao: Formulario para cadastrar turmas do instituto de vencedores.
+ *
  */
 class TurmaForm extends Form {
 
@@ -22,7 +23,7 @@ class TurmaForm extends Form {
      * Construtor
      * @param String $name
      */
-    public function __construct($name = null, Turma $turma = null) { 
+    public function __construct($name = null, $cursos = null,Turma $turma = null) {
         parent::__construct($name);
         /**
          * Configuração do formulário
@@ -47,11 +48,13 @@ class TurmaForm extends Form {
                         ->setName(Constantes::$INPUT_CSRF)
         );
 
-
-        /* Tipo */
-        $arrayTipo = array();
+        $arryTipo = array();
         $arrayTipo[0] = Constantes::$TRADUCAO_TIPO;
-        $arrayTipo[1] = 'Instituto de Vencedores';
+        if(!empty($cursos)){
+            foreach($cursos as $curso){
+                $arrayTipo[$curso->getId()] = $curso->getNome();
+            }
+        }
         $inputSelectTipoTurma = new Select();
         $inputSelectTipoTurma->setName(Constantes::$FORM_INPUT_TIPO);
         $inputSelectTipoTurma->setAttributes(array(
@@ -93,23 +96,23 @@ class TurmaForm extends Form {
         $inputSelectAnoTurma->setValueOptions($arrayAnoTurma);
         $this->add($inputSelectAnoTurma);
 
-        $observacaoTextArea = new Textarea(Constantes::$FORM_OBSERVACAO);
+        $observacaoTextArea = new Text(Constantes::$FORM_OBSERVACAO);
         $observacaoTextArea->setAttributes(array(
             Constantes::$FORM_CLASS => Constantes::$FORM_CLASS_GUI_INPUT,
             Constantes::$FORM_ID => Constantes::$FORM_OBSERVACAO,
         ));
         /* Observacao */
         $this->add($observacaoTextArea);
-        
+
         if(!is_null($turma)){
             $this->get(Constantes::$FORM_ID)->setValue($turma->getId());
             $this->get(Constantes::$FORM_INPUT_MES)->setValue($turma->getMes());
             $this->get(Constantes::$FORM_INPUT_ANO)->setValue($turma->getAno());
             $this->get(Constantes::$FORM_OBSERVACAO)->setValue($turma->getObservacao());
-            $this->get(Constantes::$FORM_INPUT_TIPO)->setValue($turma->getTipo_turma_id()); 
+            $this->get(Constantes::$FORM_INPUT_TIPO)->setValue($turma->getTipo_turma_id());
             $this->get(Constantes::$FORM_INPUT_TIPO)->setAttribute('disabled', 'disabled');
         }
-        
+
     }
 
 }

@@ -6,8 +6,12 @@ use Application\Controller\Helper\Constantes;
 use Application\Form\AulaForm;
 use Application\Form\CursoForm;
 use Application\Form\DisciplinaForm;
+use Application\Form\SelecionarAlunosForm;
+use Application\Form\TurmaForm;
 use Application\Model\Entity\Aula;
 use Application\Model\Entity\Curso;
+use Application\Model\Entity\Turma;
+use Application\Model\Entity\Pessoa;
 use Application\Model\Entity\Disciplina;
 use Application\Model\ORM\RepositorioORM;
 use Exception;
@@ -411,7 +415,7 @@ class CursoController extends CircuitoController {
       $aula = $repositorioORM->getAulaORM()->encontrarPorId($idAula);
       $aula->setDataEHoraDeInativacao();
       $repositorioORM->getDisciplinaORM()->persistir($aula, false);
-      $sessao->idSessao = $aula->getDisciplina_id(); 
+      $sessao->idSessao = $aula->getDisciplina_id();
       return $this->redirect()->toRoute(Constantes::$ROUTE_CURSO, array(
                   Constantes::$ACTION => Constantes::$PAGINA_AULA_LISTAR,
       ));
@@ -443,5 +447,215 @@ class CursoController extends CircuitoController {
       }
       return $response;
   }
+
+  public function turmaFormAction() {
+      $cursos = $this->getRepositorio()->getCursoORM()->buscarTodosRegistrosEntidade();
+      $formCadastroTurma = new TurmaForm('formulario', $cursos);
+
+      $view = new ViewModel(array(
+          'formCadastroTurma' => $formCadastroTurma,
+      ));
+
+      return $view;
+  }
+
+  public function salvarTurmaAction() {
+
+      $request = $this->getRequest();
+      $response = $this->getResponse();
+      if ($request->isPost()) {
+          try {
+              $this->getRepositorio()->iniciarTransacao();
+
+              $dadosPost = $request->getPost();
+              $id = $dadosPost['id'];
+              $idTipo = $dadosPost['Tipo'];
+              $mes = $dadosPost['Mes'];
+              $ano = $dadosPost['Ano'];
+              $observacao = $dadosPost['observacao'];
+
+              if ($id) {
+                  $turma = $this->getRepositorio()->getTurmaORM()->encontrarPorId($id);
+              } else {
+                  $turma = new Turma();
+                  $turma->setTipo_turma_id((int)$idTipo);
+              }
+
+              $turma->setAno((int)$ano);
+              $turma->setMes((int)$mes);
+              $turma->setObservacao($observacao);
+
+              if ($id) {
+                  $this->getRepositorio()->getTurmaORM()->persistir($turma, false);
+              } else {
+                  $this->getRepositorio()->getTurmaORM()->persistir($turma);
+              }
+
+              $this->getRepositorio()->fecharTransacao();
+              return $this->redirect()->toRoute(Constantes::$ROUTE_CURSO, array(
+                          Constantes::$ACTION => Constantes::$PAGINA_LISTAR_TURMA,
+              ));
+          } catch (Exception $exc) {
+              $this->getRepositorio()->desfazerTransacao();
+              echo $exc->getTraceAsString();
+          }
+      }
+  }
+
+  public function listarTurmaAction() {
+
+      $turmas = $this->getRepositorio()->getTurmaORM()->encontrarTodas();
+      $view = new ViewModel(array(
+          'turmas' => $turmas,
+      ));
+
+      return $view;
+  }
+
+  public function turmaFormEditAction() {
+      $sessao = new Container(Constantes::$NOME_APLICACAO);
+
+      $idTurma = $sessao->idSessao;
+      $cursos = $this->getRepositorio()->getCursoORM()->buscarTodosRegistrosEntidade();
+      $turma = $this->getRepositorio()->getTurmaORM()->encontrarPorId($idTurma);
+      $formCadastroTurma = new TurmaForm('formulario', $cursos, $turma);
+
+      $view = new ViewModel(array(
+          'formCadastroTurma' => $formCadastroTurma,
+      ));
+
+      return $view;
+  }
+
+  public function turmaExcluirAction() {
+      $sessao = new Container(Constantes::$NOME_APLICACAO);
+
+      $idTurma = $sessao->idSessao;
+      $turma = $this->getRepositorio()->getTurmaORM()->encontrarPorId($idTurma);
+      $turma->setDataEHoraDeInativacao();
+      $this->getRepositorio()->getTurmaORM()->persistir($turma, false);
+
+      return $this->redirect()->toRoute(Constantes::$ROUTE_CURSO, array(
+                  Constantes::$ACTION => Constantes::$PAGINA_LISTAR_TURMA,
+      ));
+  }
+
+  /**
+   * Tela com formulário de exclusão de turma
+   * GET /cadastroTurmaExclusao
+   */
+  public function turmaExclusaoAction() {
+      /* Verificando a se tem algum id na sessão */
+      $sessao = new Container(Constantes::$NOME_APLICACAO);
+      $extra = null;
+      $idTurma = $sessao->idSessao;
+
+      $entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($sessao->idEntidadeAtual);
+      $turma = $this->getRepositorio()->getTurmaORM()->encontrarPorId($idTurma);
+
+      $view = new ViewModel(array(
+          Constantes::$NOME_ENTIDADE_TURMA => $turma,
+          Constantes::$ENTIDADE => $entidade,
+      ));
+
+      /* Javascript */
+      $layoutJS = new ViewModel();
+      $layoutJS->setTemplate(Constantes::$LAYOUT_JS_EXCLUSAO_TURMA);
+      $view->addChild($layoutJS, Constantes::$LAYOUT_STRING_JS_EXCLUSAO_TURMA);
+
+      return $view;
+  }
+
+  public function listarTurmaInativaAction() {
+
+      $turmas = $this->getRepositorio()->getTurmaORM()->encontrarTodas();
+      $view = new ViewModel(array(
+          'turmas' => $turmas,
+      ));
+
+      return $view;
+  }
+
+  public function turmaSelecionarAlunosAction() {
+      $sessao = new Container(Constantes::$NOME_APLICACAO);
+
+      $idTurma = $sessao->idTurma;
+      $idRevisao = $sessao->idRevisao;
+      $eventoRevisao = $this->getRepositorio()->getEventoORM()->encontrarPorId($idRevisao);
+
+      $pessoas = array();
+      $frequencias = $eventoRevisao->getEventoFrequencia();
+      if (count($frequencias) > 0) {
+          foreach ($frequencias as $f) {
+              $p = null;
+              $pAux = null;
+              $p = $f->getPessoa();
+              $pAux = new Pessoa();
+              $grupoPessoa = $p->getGrupoPessoaAtivo();
+              if ($grupoPessoa != null) {
+                  if ($f->getFrequencia() == 'S') {
+                      $pAux->setNome($p->getNome());
+                      $pessoas[] = $pAux;
+                  }
+              }
+          }
+      }
+      $formSelecionarAlunos = new SelecionarAlunosForm('selecionar-alunos', $idTurma, $pessoas);
+
+      $view = new ViewModel(array(
+          'formSelecionarAlunos' => $formSelecionarAlunos,
+      ));
+
+      return $view;
+  }
+
+  /**
+   * Controle de funçoes da tela de cadastro
+   * @return Json
+   */
+  public function funcoesSelecionarAlunosAction() {
+      $request = $this->getRequest();
+      $response = $this->getResponse();
+      if ($request->isPost()) {
+          try {
+              $post_data = $request->getPost();
+              $idTurma = $post_data['idTurma'];
+              $idRevisao = $post_data['idRevisao'];
+              $sessao = new Container(Constantes::$NOME_APLICACAO);
+
+
+              $sessao->idTurma = $idTurma;
+              $sessao->idRevisao = $idRevisao;
+              $response->setContent(Json::encode(
+                              array(
+                                  'response' => 'true',
+                                  'tipoDeRetorno' => 1,
+                                  'url' => '/cadastroTurmaSelecionarAlunos',
+              )));
+          } catch (Exception $exc) {
+              echo $exc->get();
+          }
+      }
+      return $response;
+  }
+
+  public function selecionarPessoasRevisaoAction() {
+      $sessao = new Container(Constantes::$NOME_APLICACAO);
+
+      $idRevisao = $sessao->idSessao;
+      $idEntidadeAtual = $sessao->idEntidadeAtual;
+      $entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+      $sessao->idRevisao = $idRevisao;
+      $eventoRevisao = $this->getRepositorio()->getEventoORM()->encontrarPorId($idRevisao);
+      $view = new ViewModel(array(
+          Constantes::$ENTIDADE => $entidade,
+          'repositorioORM' => $this->getRepositorio(),
+          'evento' => $eventoRevisao,
+          'entidade' => $entidade,
+      ));
+
+      return $view;
+  }
+
 
 }

@@ -54,6 +54,7 @@ use Application\View\Helper\ListagemDeEventos;
 use Application\View\Helper\ListagemDePessoasComEventos;
 use Application\View\Helper\ListagemDisciplinas;
 use Application\View\Helper\ListagemFichasAtivasRevisao;
+use Application\View\Helper\ListagemPessoasRevisao;
 use Application\View\Helper\ListagemFichasParaRevisao;
 use Application\View\Helper\ListagemLideresTransferencia;
 use Application\View\Helper\ListagemTurmas;
@@ -155,6 +156,9 @@ class Module {
                 },
                 'listagemFichasAtivasRevisao' => function($sm) {
                     return new ListagemFichasAtivasRevisao();
+                },
+                'listagemPessoasRevisao' => function($sm) {
+                    return new ListagemPessoasRevisao();
                 },
                 'tabelaLancamento' => function($sm) {
                     return new TabelaLancamento();

@@ -18,10 +18,10 @@ class TurmaORM extends CircuitoORM {
      * @return Turma[]
      * @throws Exception
      */
-    public function encontrarTodas() { 
+    public function encontrarTodas() {
         $entidades = $this->getEntityManager()->getRepository($this->getEntity())->findAll();
         if (!$entidades) {
-            throw new Exception("Não foi encontrado nenhuma turma"); 
+            return false; 
         }
         return $entidades;
     }
