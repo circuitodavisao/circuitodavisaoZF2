@@ -237,9 +237,9 @@ class IndexController extends CircuitoController {
         $tipoGerarRelatorioDeLider = $this->params()->fromRoute(Constantes::$ID, 0);
         $somenteAtivos = true;
         $grupos = $this->getRepositorio()->getGrupoORM()->encontrarTodos($somenteAtivos);
-        $this->getRepositorio()->iniciarTransacao();
-        $html .= "<br />###### iniciarTransacao ";
-        try { 
+//        $this->getRepositorio()->iniciarTransacao();
+//        $html .= "<br />###### iniciarTransacao ";
+//        try {
             if ($grupos) {
                 $html .= "<br /><br /><br />Tem Grupos ativos!!!";
                 foreach ($grupos as $grupo) {
@@ -298,14 +298,14 @@ class IndexController extends CircuitoController {
                         }
                     }
                 }
-                $this->getRepositorio()->fecharTransacao();
-                $html .= "<br />###### fecharTransacao ";
+//                $this->getRepositorio()->fecharTransacao();
+//                $html .= "<br />###### fecharTransacao ";
             }
-        } catch (Exception $exc) {
-            $html .= "<br />%%%%%%%%%%%%%%%%%%%%%% desfazerTransacao ";
-            $this->getRepositorio()->desfazerTransacao();
-            echo $exc->getTraceAsString();
-        }
+//        } catch (Exception $exc) {
+//            $html .= "<br />%%%%%%%%%%%%%%%%%%%%%% desfazerTransacao ";
+//            $this->getRepositorio()->desfazerTransacao();
+//            echo $exc->getTraceAsString();
+//        }
 
         list($usec, $sec) = explode(' ', microtime());
         $script_end = (float) $sec + (float) $usec;

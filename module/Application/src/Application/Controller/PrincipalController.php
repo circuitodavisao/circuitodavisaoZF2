@@ -37,7 +37,7 @@ class PrincipalController extends CircuitoController {
 
         $tipoRelatorioPessoal = 1;
         $tipoRelatorioEquipe = 2;
-        $periodo = -2;
+        $periodo = -1;
         $quantidadeDeCiclosPassados = 8;
         $relatorio = RelatorioController::montaRelatorio($this->getRepositorio(), $numeroIdentificador, $periodo, $tipoRelatorioPessoal, 0, true, $quantidadeDeCiclosPassados);
         $relatorioEquipe = RelatorioController::montaRelatorio($this->getRepositorio(), $numeroIdentificador, $periodo, $tipoRelatorioEquipe);
