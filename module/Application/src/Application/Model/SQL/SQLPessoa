@@ -72,4 +72,3 @@ CREATE INDEX index_pessoa_documento
   (documento);
 COMMENT ON INDEX index_pessoa_documento
   IS 'Index para recuperar email de acesso atravez do documento';
-

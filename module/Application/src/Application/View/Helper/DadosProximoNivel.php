@@ -50,6 +50,7 @@ class DadosProximoNivel extends AbstractHelper {
                 break;
             case Hierarquia::PASTOR:
                 $idProximaHierarquia = Hierarquia::BISPO;
+                $metas = Funcoes::metaPorHierarquia(Hierarquia::BISPO);
                 break;
         }
         $stringProximaHierarquia = 'De ' . $pessoa->getPessoaHierarquiaAtivo()->getHierarquia()->getNome() .
@@ -58,51 +59,19 @@ class DadosProximoNivel extends AbstractHelper {
         if ($perfomanceMembresia > 100) {
             $perfomanceMembresia = 100;
         }
-        $perfomanceCelula = $this->getRelatorioEquipe()['celulaQuantidade'] / $metas[1] * 100;
-        if ($perfomanceCelula > 100) {
-            $perfomanceCelula = 100;
+        $perfomanceLideres = $this->getRelatorioEquipe()['quantidadeLideres'] / $metas[1] * 100;
+        if ($perfomanceLideres > 100) {
+            $perfomanceLideres = 100;
         }
         $validacaoMembresia = $perfomanceMembresia / 2;
-        $validacaoCulto = $perfomanceCelula / 2;
-        $valorBarra = $validacaoMembresia + $validacaoCulto;
+        $validacaoLideres = $perfomanceLideres / 2;
+        $valorBarra = $validacaoMembresia + $validacaoLideres;
         $corDaBarra = RelatorioController::corDaLinhaPelaPerformance($valorBarra);
 
         $html = '';
-        $html .= '<div class="row m15">';
-        $html .= '<div class="col-xs-12 "onclick="$(\'#divProximoNivel\').toggleClass(\'hidden\');">';
-        $html .= '<h5 class="mb15 text-muted">' . $stringProximaHierarquia . ' <span class="badge badge-info">?</span></h5>';
-        $html .= '<div class="progress progress-bar-sm">';
-        $html .= '<div class="progress-bar progress-bar-' . $corDaBarra . '" role="progressbar" aria-valuenow="' . $valorBarra . '" aria-valuemin="0" aria-valuemax="100" style="width: ' . $valorBarra . '%;">';
-        $html .= '<span class="sr-only">' . RelatorioController::formataNumeroRelatorio($valorBarra) . '%</span>';
-        $html .= '</div>';
-        $html .= '</div>';
-        $html .= '<p>';
-        $html .= '<b class="text-' . $corDaBarra . '">' . RelatorioController::formataNumeroRelatorio($valorBarra) . '%</b>';
-        $html .= '</p>';
-        $html .= '</div>';
-        $html .= '</div>';
-//        $html .= '<div class="row">';
-//        $html .= '<table class="table table-condensed p5 text-center">';
-//        $html .= '<tbody>';
-//        $html .= '<tr>';
-//        $html .= '<td>' . $stringProximaHierarquia . '</td>';
-//
-//        if ($pessoa->getPessoaHierarquiaAtivo()->getHierarquia()->getId() !== Hierarquia::PASTOR &&
-//                $pessoa->getPessoaHierarquiaAtivo()->getHierarquia()->getId() !== Hierarquia::BISPO) {
-//            $html .= '<td class="block-center">';
-//            $html .= '<div class = "progress mt20">';
-//            $html .= '<div class = "progress-bar progress-bar-info" style = "width: ' . $validacaoMembresia . '%;">M.</div>';
-//            $html .= '<div class = "progress-bar progress-bar-system" style = "width: ' . $validacaoCulto . '%;">C.</div>';
-//            $html .= RelatorioController::formataNumeroRelatorio($validacaoMembresia + $validacaoCulto) . '%';
-//            $html .= '</div>';
-//            $html .= '</td>';
-//            $html .= '<td>';
-//            $html .= '<button onclick = "$(\'#divProximoNivel\').toggleClass(\'hidden\');" class = "btn btn-xs btn-primary"><i class = "fa fa-caret-down"></i></button>';
-//            $html .= '</td>';
-//        }
-//        $html .= '</tr>';
-//        $html .= '</tbody>';
-//        $html .= '</table>';
+
+        $html .= $this->view->barraDeProgressoBonita(
+                $stringProximaHierarquia . ' <span class="badge badge-info">?</span>', $corDaBarra, $valorBarra, 'm15', false, 0, 0, $extra = 'onclick="$(\'#divProximoNivel\').toggleClass(\'hidden\');"');
 
         $html .= '<div id = "divProximoNivel" class = "row p10 hidden">';
         $html .= '<div class = "panel">';
@@ -113,27 +82,23 @@ class DadosProximoNivel extends AbstractHelper {
                 case 0:
                     $stringMeta = 'Membresia';
                     $indiceRelatorio = 'membresia';
-                    $corBarra = 'info';
+                    $corDaBarra = 'info';
                     $valorBarra = $perfomanceMembresia;
+                    $alcancado = $this->getRelatorioEquipe()['membresia'];
+                    $meta = $metas[0];
                     break;
                 case 1:
-                    $stringMeta = 'Célula';
-                    $indiceRelatorio = 'celulaQuantidade';
-                    $corBarra = 'system';
-                    $valorBarra = $perfomanceCelula;
+                    $stringMeta = 'Líderes';
+                    $indiceRelatorio = 'quantidadeLideres';
+                    $corDaBarra = 'system';
+                    $valorBarra = $perfomanceLideres;
+                    $alcancado = $this->getRelatorioEquipe()['quantidadeLideres'];
+                    $meta = $metas[1];
                     break;
             }
-            $html .= '<div class = "row">';
 
-            $html .= '<div class = "col-xs-3">' . $stringMeta . '</div>';
-            $html .= '<div class = "col-xs-6">';
-            $html .= '<div class = "progress">';
-            $html .= '<div class = "progress-bar progress-bar-' . $corBarra . '" role = "progressbar" aria-valuenow = "' . $valorBarra . '" aria-valuemin = "0" aria-valuemax = "100" style = "width: ' . $valorBarra . '%;">' . RelatorioController::formataNumeroRelatorio($valorBarra) . '%</div>';
-            $html .= '</div>';
-            $html .= '</div>';
-            $html .= '<div class = "col-xs-3">' . RelatorioController::formataNumeroRelatorio($this->getRelatorioEquipe()[$indiceRelatorio]) . '/' . $metas[$indice] . '</div>';
-
-            $html .= '</div>';
+            $html .= $this->view->barraDeProgressoBonita(
+                    $stringMeta, $corDaBarra, $valorBarra, 'm25', true, $meta, $alcancado);
         }
         $html .= '</div>';
 

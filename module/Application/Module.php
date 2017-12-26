@@ -18,6 +18,7 @@ use Application\View\Helper\AlertaEnvioRelatorio;
 use Application\View\Helper\AtendimentoGruposAbaixo;
 use Application\View\Helper\AtendimentosDoGrupo;
 use Application\View\Helper\BarraDeProgresso;
+use Application\View\Helper\BarraDeProgressoBonita;
 use Application\View\Helper\BlocoDiv;
 use Application\View\Helper\BlocoResponsavel;
 use Application\View\Helper\BotaoLink;
@@ -137,6 +138,9 @@ class Module {
                 },
                 'dadosProximoNivel' => function($sm) {
                     return new DadosProximoNivel();
+                },
+                'barraDeProgressoBonita' => function($sm) {
+                    return new BarraDeProgressoBonita();
                 },
                 'alertaEnvioRelatorio' => function($sm) {
                     return new AlertaEnvioRelatorio();

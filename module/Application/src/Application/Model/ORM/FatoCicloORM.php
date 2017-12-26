@@ -7,7 +7,6 @@ use Application\Controller\Helper\Funcoes;
 use Application\Model\Entity\Dimensao;
 use Application\Model\Entity\Entidade;
 use Application\Model\Entity\FatoCiclo;
-use Application\Model\Entity\Grupo;
 use DateTime;
 use Exception;
 use Zend\Session\Container;
@@ -300,6 +299,44 @@ class FatoCicloORM extends CircuitoORM {
         } catch (Exception $exc) {
             echo $exc->getMessage();
         }
+    }
+
+    public function verificaFrequenciasPorCelulaEPeriodo($periodoInicial, $eventoId, $periodoFinal = 0) {
+        $resultadoPeriodo = Funcoes::montaPeriodo($periodoInicial);
+
+        if ($periodoFinal === 0) {
+            $dataDoPeriodo = $resultadoPeriodo[3] . '-' . $resultadoPeriodo[2] . '-' . $resultadoPeriodo[1];
+            $dataDoInicioFormatada = DateTime::createFromFormat('Y-m-d', $dataDoPeriodo);
+        } else {
+            $resultadoPeriodoFinal = Funcoes::montaPeriodo($periodoFinal);
+            $dataDoPeriodo = $resultadoPeriodoFinal[3] . '-' . $resultadoPeriodoFinal[2] . '-' . $resultadoPeriodoFinal[1];
+            $dataDoInicioFormatada = DateTime::createFromFormat('Y-m-d', $dataDoPeriodo);
+        }
+        $dataDoPeriodoFim = $resultadoPeriodo[6] . '-' . $resultadoPeriodo[5] . '-' . $resultadoPeriodo[4];
+        $dataDoFimFormatada = DateTime::createFromFormat('Y-m-d', $dataDoPeriodoFim);
+        $dqlBase = "SELECT "
+                . "ef.frequencia "
+                . "FROM  " . Constantes::$ENTITY_EVENTO_FREQUENCIA . " ef "
+                . "WHERE "
+                . "ef.evento_id = ?1 AND "
+                . "ef.data_criacao >= ?2 AND ef.data_criacao <= ?3 ";
+
+        $resultados = $this->getEntityManager()->createQuery($dqlBase)
+                ->setParameter(1, (int) $eventoId)
+                ->setParameter(2, $dataDoInicioFormatada)
+                ->setParameter(3, $dataDoFimFormatada)
+                ->getResult();
+
+        $somaResultado = 0;
+        foreach ($resultados as $resultado) {
+            if ($resultado['frequencia'] == 'S') {
+                $somaResultado++;
+            }
+        }
+        if ($periodoFinal !== 0) {
+            $somaResultado /= ($periodoFinal - $periodoInicial) * -1;
+        }
+        return $somaResultado;
     }
 
 }
