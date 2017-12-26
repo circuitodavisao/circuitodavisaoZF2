@@ -239,7 +239,7 @@ class IndexController extends CircuitoController {
         $grupos = $this->getRepositorio()->getGrupoORM()->encontrarTodos($somenteAtivos);
         $this->getRepositorio()->iniciarTransacao();
         $html .= "<br />###### iniciarTransacao ";
-        try {
+        try { 
             if ($grupos) {
                 $html .= "<br /><br /><br />Tem Grupos ativos!!!";
                 foreach ($grupos as $grupo) {
