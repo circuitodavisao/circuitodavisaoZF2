@@ -193,7 +193,7 @@ class IndexController extends CircuitoController {
         $dateFinalFormatada = DateTime::createFromFormat('Y-m-d', $stringFimDoPeriodo);
         $solicitacoesPorData = $this->getRepositorio()->getSolicitacaoORM()->encontrarTodosPorDataDeCriacao($dateInicialFormatada, $dateFinalFormatada);
 
-        $this->getRepositorio()->iniciarTransacao();
+//        $this->getRepositorio()->iniciarTransacao();
         try {
             if ($solicitacoesPorData) {
                 foreach ($solicitacoesPorData as $arraySolicitacao) {
@@ -227,10 +227,10 @@ class IndexController extends CircuitoController {
                         }
                     }
                 }
-                $this->getRepositorio()->fecharTransacao();
+//                $this->getRepositorio()->fecharTransacao();
             }
         } catch (Exception $exc) {
-            $this->getRepositorio()->desfazerTransacao();
+//            $this->getRepositorio()->desfazerTransacao();
             $html .= $exc->getTraceAsString();
         }
 
