@@ -376,6 +376,9 @@ class RelatorioController extends CircuitoController {
             $relatorioPassado['membresiaArena'] = $somaPassado[RelatorioController::dimensaoTipoArena] / $diferencaDePeriodos;
             $relatorioPassado['membresiaDomingo'] = $somaPassado[RelatorioController::dimensaoTipoDomingo] / $diferencaDePeriodos;
             $relatorioPassado['celula'] = $somaPassado[RelatorioController::dimensaoTipoCelula] / $diferencaDePeriodos;
+            $relatorioPassado['membresia'] = RelatorioController::calculaMembresia(
+                            $somaPassado[RelatorioController::dimensaoTipoCulto], $somaPassado[RelatorioController::dimensaoTipoArena], $somaPassado[RelatorioController::dimensaoTipoDomingo]) / $diferencaDePeriodos;
+
 
             if ($relatorioPassado['membresiaCulto']) {
                 $relatorio['diferencaCulto'] = $relatorio['membresiaCulto'] * 100 / $relatorioPassado['membresiaCulto'] - 100;

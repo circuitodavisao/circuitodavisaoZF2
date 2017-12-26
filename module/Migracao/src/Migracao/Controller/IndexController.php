@@ -252,12 +252,12 @@ class IndexController extends CircuitoController {
                     if ($numeroIdentificador) {
                         $fatoCiclo = $this->getRepositorio()->getFatoCicloORM()->encontrarPorNumeroIdentificadorEDataCriacao($numeroIdentificador, $dateFormatada, $this->getRepositorio());
                         $html .= "<br />fatoCiclo " . $fatoCiclo->getId();
-                        $periodo = 0;
-                        $apenasCelulas = true;
-                        $grupoEventoNoPeriodo = $grupo->getGrupoEventoNoPeriodo($periodo, $apenasCelulas);
-                        $quantidadeDeEventosNoCiclo = count($grupoEventoNoPeriodo);
-                        $temCelula = false;
-                        $html .= "<br />quantidadeDeEventosNoCiclo $quantidadeDeEventosNoCiclo";
+//                        $periodo = 0;
+//                        $apenasCelulas = true;
+//                        $grupoEventoNoPeriodo = $grupo->getGrupoEventoNoPeriodo($periodo, $apenasCelulas);
+//                        $quantidadeDeEventosNoCiclo = count($grupoEventoNoPeriodo);
+//                        $temCelula = false;
+//                        $html .= "<br />quantidadeDeEventosNoCiclo $quantidadeDeEventosNoCiclo";
 //                        if ($grupoEventoNoPeriodo > 0) {
 //                            foreach ($grupoEventoNoPeriodo as $grupoEvento) {
 //                                $html .= "<br /><br />verificaSeECelula: " . $grupoEvento->getEvento()->verificaSeECelula();
