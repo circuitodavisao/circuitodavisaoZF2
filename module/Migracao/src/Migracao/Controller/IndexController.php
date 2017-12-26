@@ -176,6 +176,7 @@ class IndexController extends CircuitoController {
         $script_start = (float) $sec + (float) $usec;
         $html = '';
 
+        $html .= 'Teste Deploy Automatico';
         /* rodar toda segunda */
         $dateFormatada = DateTime::createFromFormat('Y-m-d', date('Y-m-d'));
 //        $dateFormatada = DateTime::createFromFormat('Y-m-d', self::DATA_CRIACAO);
@@ -185,8 +186,8 @@ class IndexController extends CircuitoController {
         $arrayPeriodo = Funcoes::montaPeriodo($periodo);
         $stringComecoDoPeriodo = $arrayPeriodo[3] . '-' . $arrayPeriodo[2] . '-' . $arrayPeriodo[1];
         $stringFimDoPeriodo = $arrayPeriodo[6] . '-' . $arrayPeriodo[5] . '-' . $arrayPeriodo[4];
-        echo "<br />stringComecoDoPeriodo$stringComecoDoPeriodo";
-        echo "<br />stringFimDoPeriodo$stringFimDoPeriodo";
+        $html .= "<br />stringComecoDoPeriodo$stringComecoDoPeriodo";
+        $html .= "<br />stringFimDoPeriodo$stringFimDoPeriodo";
         $dateInicialFormatada = DateTime::createFromFormat('Y-m-d', $stringComecoDoPeriodo);
         $dateFinalFormatada = DateTime::createFromFormat('Y-m-d', $stringFimDoPeriodo);
         $solicitacoesPorData = $this->getRepositorio()->getSolicitacaoORM()->encontrarTodosPorDataDeCriacao($dateInicialFormatada, $dateFinalFormatada);
@@ -196,11 +197,11 @@ class IndexController extends CircuitoController {
             if ($solicitacoesPorData) {
                 foreach ($solicitacoesPorData as $arraySolicitacao) {
                     $solicitacao = $this->getRepositorio()->getSolicitacaoORM()->encontrarPorId($arraySolicitacao['id']);
-                    echo "<br />Solicitacao Data: " . $solicitacao->getData_criacaoStringPadraoBrasil();
+                    $html .= "<br />Solicitacao Data: " . $solicitacao->getData_criacaoStringPadraoBrasil();
                     if ($solicitacao->getSolicitacaoSituacaoAtiva()->getSituacao()->getId() === Situacao::ACEITO_AGENDADO) {
                         echo "<br />solicitacao->getSolicitacaoTipo()->getId(): " . $solicitacao->getSolicitacaoTipo()->getId();
                         if ($solicitacao->getSolicitacaoTipo()->getId() === SolicitacaoTipo::TRANSFERIR_LIDER_NA_PROPRIA_EQUIPE) {
-                            echo "<br />SolicitacaoTipo::TRANSFERIR_LIDER_NA_PROPRIA_EQUIPE";
+                            $html .= "<br />SolicitacaoTipo::TRANSFERIR_LIDER_NA_PROPRIA_EQUIPE";
                             $grupoQueSeraSemeado = $this->getRepositorio()->getGrupoORM()->encontrarPorId($arraySolicitacao['objeto1']);
                             $grupoQueRecebera = $this->getRepositorio()->getGrupoORM()->encontrarPorId($arraySolicitacao['objeto2']);
                             if ($solicitacao->getNumero()) {
@@ -211,7 +212,7 @@ class IndexController extends CircuitoController {
                             }
                             $solicitacaoSituacaoAtiva = $solicitacao->getSolicitacaoSituacaoAtiva();
 
-                            echo $this->transferirLider($grupoQueSeraSemeado, $grupoQueRecebera, $extra);
+                            $html .= $this->transferirLider($grupoQueSeraSemeado, $grupoQueRecebera, $extra);
 
                             /* inativar solicitacao situacao ativa */
                             $solicitacaoSituacaoAtiva->setDataEHoraDeInativacao();
@@ -229,7 +230,7 @@ class IndexController extends CircuitoController {
             }
         } catch (Exception $exc) {
             $this->getRepositorio()->desfazerTransacao();
-            echo $exc->getTraceAsString();
+            $html .= $exc->getTraceAsString();
         }
 
         $tipoGerarRelatorioDeLider = $this->params()->fromRoute(Constantes::$ID, 0);
