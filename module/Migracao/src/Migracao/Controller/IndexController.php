@@ -262,7 +262,7 @@ class IndexController extends CircuitoController {
                             foreach ($grupoEventoNoPeriodo as $grupoEvento) {
                                 $html .= "<br /><br />verificaSeECelula: " . $grupoEvento->getEvento()->verificaSeECelula();
                                 $html .= "<br />GrupoEvento->id: " . $grupoEvento->getId();
-                                $html .= "<br />Evento->id: " . $grupoEvento->getEvento->getId();
+                                $html .= "<br />Evento->id: " . $grupoEvento->getEvento()->getId();
                                 $validacaoInativadaNessePeriodo = false;
                                 if (!$grupoEvento->verificarSeEstaAtivo()) {
                                     $html .= "<br />Celula Inativada";
