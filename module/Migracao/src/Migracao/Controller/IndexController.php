@@ -178,8 +178,8 @@ class IndexController extends CircuitoController {
 
         $html .= 'Teste Deploy Automatico';
         /* rodar toda segunda */
-//        $dateFormatada = DateTime::createFromFormat('Y-m-d', date('Y-m-d'));
-        $dateFormatada = DateTime::createFromFormat('Y-m-d', self::DATA_CRIACAO);
+        $dateFormatada = DateTime::createFromFormat('Y-m-d', date('Y-m-d'));
+//        $dateFormatada = DateTime::createFromFormat('Y-m-d', self::DATA_CRIACAO);
         $html .= ' - Dia para gerar: ' . $dateFormatada->format('d/m/Y');
 
         /* buscando solicitações */
@@ -192,10 +192,10 @@ class IndexController extends CircuitoController {
         $dateInicialFormatada = DateTime::createFromFormat('Y-m-d', $stringComecoDoPeriodo);
         $dateFinalFormatada = DateTime::createFromFormat('Y-m-d', $stringFimDoPeriodo);
         $solicitacoesPorData = $this->getRepositorio()->getSolicitacaoORM()->encontrarTodosPorDataDeCriacao($dateInicialFormatada, $dateFinalFormatada);
-
-//        $this->getRepositorio()->iniciarTransacao();
-        try {
-            if ($solicitacoesPorData) {
+        
+        if ($solicitacoesPorData) {
+            $this->getRepositorio()->iniciarTransacao();
+            try {
                 foreach ($solicitacoesPorData as $arraySolicitacao) {
                     $solicitacao = $this->getRepositorio()->getSolicitacaoORM()->encontrarPorId($arraySolicitacao['id']);
                     $html .= "<br />Solicitacao Data: " . $solicitacao->getData_criacaoStringPadraoBrasil();
@@ -227,19 +227,19 @@ class IndexController extends CircuitoController {
                         }
                     }
                 }
-//                $this->getRepositorio()->fecharTransacao();
+                $this->getRepositorio()->fecharTransacao();
+            } catch (Exception $exc) {
+                $this->getRepositorio()->desfazerTransacao();
+                $html .= $exc->getTraceAsString();
             }
-        } catch (Exception $exc) {
-//            $this->getRepositorio()->desfazerTransacao();
-            $html .= $exc->getTraceAsString();
         }
 
         $tipoGerarRelatorioDeLider = $this->params()->fromRoute(Constantes::$ID, 0);
         $somenteAtivos = true;
         $grupos = $this->getRepositorio()->getGrupoORM()->encontrarTodos($somenteAtivos);
-//        $this->getRepositorio()->iniciarTransacao();
-//        $html .= "<br />###### iniciarTransacao ";
-//        try {
+        $this->getRepositorio()->iniciarTransacao();
+        $html .= "<br />###### iniciarTransacao ";
+        try {
             if ($grupos) {
                 $html .= "<br /><br /><br />Tem Grupos ativos!!!";
                 foreach ($grupos as $grupo) {
@@ -252,42 +252,42 @@ class IndexController extends CircuitoController {
                     if ($numeroIdentificador) {
                         $fatoCiclo = $this->getRepositorio()->getFatoCicloORM()->encontrarPorNumeroIdentificadorEDataCriacao($numeroIdentificador, $dateFormatada, $this->getRepositorio());
                         $html .= "<br />fatoCiclo " . $fatoCiclo->getId();
-//                        $periodo = 0;
-//                        $apenasCelulas = true;
-//                        $grupoEventoNoPeriodo = $grupo->getGrupoEventoNoPeriodo($periodo, $apenasCelulas);
-//                        $quantidadeDeEventosNoCiclo = count($grupoEventoNoPeriodo);
-//                        $temCelula = false;
-//                        $html .= "<br />quantidadeDeEventosNoCiclo $quantidadeDeEventosNoCiclo";
-//                        if ($grupoEventoNoPeriodo > 0) {
-//                            foreach ($grupoEventoNoPeriodo as $grupoEvento) {
-//                                $html .= "<br /><br />verificaSeECelula: " . $grupoEvento->getEvento()->verificaSeECelula();
-//                                $html .= "<br />GrupoEvento->id: " . $grupoEvento->getId();
-//                                $html .= "<br />Evento->id: " . $grupoEvento->getEvento()->getId();
-//                                $validacaoInativadaNessePeriodo = false;
-//                                if (!$grupoEvento->verificarSeEstaAtivo()) {
-//                                    $html .= "<br />Celula Inativada";
-//                                    $arrayPeriodo = Funcoes::montaPeriodo($periodo);
-//                                    $stringComecoDoPeriodo = $arrayPeriodo[3] . '-' . $arrayPeriodo[2] . '-' . $arrayPeriodo[1];
-//                                    $dataDoInicioDoPeriodoParaComparar = strtotime($stringComecoDoPeriodo);
-//                                    $dataDeInativacaoParaComparar = strtotime($grupoEvento->getData_inativacaoStringPadraoBanco());
-//
-//                                    $html .= '<br />stringComecoDoPeriodo: ' . $stringComecoDoPeriodo;
-//                                    $html .= '<br />dataDeInativacaoParaComparar: ' . $grupoEvento->getData_inativacaoStringPadraoBanco();
-//                                    $html .= "<br />dataDeInativacaoParaComparar $dataDeInativacaoParaComparar >= dataDoInicioDoPeriodoParaComparar$dataDoInicioDoPeriodoParaComparar";
-//                                    if ($dataDeInativacaoParaComparar >= $dataDoInicioDoPeriodoParaComparar) {
-//                                        $validacaoInativadaNessePeriodo = true;
-//                                        $html .= "<br />validacaoInativadaNessePeriodo: " . $validacaoInativadaNessePeriodo;
-//                                    }
-//                                }
-//
-//                                if ($grupoEvento->getEvento()->verificaSeECelula() && ($grupoEvento->verificarSeEstaAtivo() || $validacaoInativadaNessePeriodo)) {
-//                                    $html .= "<br />EventoCelula: " . $grupoEvento->getEvento()->getEventoCelula()->getId();
-//                                    $this->getRepositorio()->getFatoCelulaORM()->criarFatoCelula($fatoCiclo, $grupoEvento->getEvento()->getEventoCelula()->getId());
-//                                    $html .= "<br />Fato Celula Gerado";
-//                                    $temCelula = true;
-//                                }
-//                            }
-//                        }
+                        $periodo = 0;
+                        $apenasCelulas = true;
+                        $grupoEventoNoPeriodo = $grupo->getGrupoEventoNoPeriodo($periodo, $apenasCelulas);
+                        $quantidadeDeEventosNoCiclo = count($grupoEventoNoPeriodo);
+                        $temCelula = false;
+                        $html .= "<br />quantidadeDeEventosNoCiclo $quantidadeDeEventosNoCiclo";
+                        if ($grupoEventoNoPeriodo > 0) {
+                            foreach ($grupoEventoNoPeriodo as $grupoEvento) {
+                                $html .= "<br /><br />verificaSeECelula: " . $grupoEvento->getEvento()->verificaSeECelula();
+                                $html .= "<br />GrupoEvento->id: " . $grupoEvento->getId();
+                                $html .= "<br />Evento->id: " . $grupoEvento->getEvento()->getId();
+                                $validacaoInativadaNessePeriodo = false;
+                                if (!$grupoEvento->verificarSeEstaAtivo()) {
+                                    $html .= "<br />Celula Inativada";
+                                    $arrayPeriodo = Funcoes::montaPeriodo($periodo);
+                                    $stringComecoDoPeriodo = $arrayPeriodo[3] . '-' . $arrayPeriodo[2] . '-' . $arrayPeriodo[1];
+                                    $dataDoInicioDoPeriodoParaComparar = strtotime($stringComecoDoPeriodo);
+                                    $dataDeInativacaoParaComparar = strtotime($grupoEvento->getData_inativacaoStringPadraoBanco());
+
+                                    $html .= '<br />stringComecoDoPeriodo: ' . $stringComecoDoPeriodo;
+                                    $html .= '<br />dataDeInativacaoParaComparar: ' . $grupoEvento->getData_inativacaoStringPadraoBanco();
+                                    $html .= "<br />dataDeInativacaoParaComparar $dataDeInativacaoParaComparar >= dataDoInicioDoPeriodoParaComparar$dataDoInicioDoPeriodoParaComparar";
+                                    if ($dataDeInativacaoParaComparar >= $dataDoInicioDoPeriodoParaComparar) {
+                                        $validacaoInativadaNessePeriodo = true;
+                                        $html .= "<br />validacaoInativadaNessePeriodo: " . $validacaoInativadaNessePeriodo;
+                                    }
+                                }
+
+                                if ($grupoEvento->getEvento()->verificaSeECelula() && ($grupoEvento->verificarSeEstaAtivo() || $validacaoInativadaNessePeriodo)) {
+                                    $html .= "<br />EventoCelula: " . $grupoEvento->getEvento()->getEventoCelula()->getId();
+                                    $this->getRepositorio()->getFatoCelulaORM()->criarFatoCelula($fatoCiclo, $grupoEvento->getEvento()->getEventoCelula()->getId());
+                                    $html .= "<br />Fato Celula Gerado";
+                                    $temCelula = true;
+                                }
+                            }
+                        }
                         if ($tipoGerarRelatorioDeLider == 1) {
                             $quantidadeLideres = 0;
                             if ($temCelula) {
@@ -298,14 +298,14 @@ class IndexController extends CircuitoController {
                         }
                     }
                 }
-//                $this->getRepositorio()->fecharTransacao();
-//                $html .= "<br />###### fecharTransacao ";
+                $this->getRepositorio()->fecharTransacao();
+                $html .= "<br />###### fecharTransacao ";
             }
-//        } catch (Exception $exc) {
-//            $html .= "<br />%%%%%%%%%%%%%%%%%%%%%% desfazerTransacao ";
-//            $this->getRepositorio()->desfazerTransacao();
-//            echo $exc->getTraceAsString();
-//        }
+        } catch (Exception $exc) {
+            $html .= "<br />%%%%%%%%%%%%%%%%%%%%%% desfazerTransacao ";
+            $this->getRepositorio()->desfazerTransacao();
+            echo $exc->getTraceAsString();
+        }
 
         list($usec, $sec) = explode(' ', microtime());
         $script_end = (float) $sec + (float) $usec;
