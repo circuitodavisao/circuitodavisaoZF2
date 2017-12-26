@@ -178,8 +178,8 @@ class IndexController extends CircuitoController {
 
         $html .= 'Teste Deploy Automatico';
         /* rodar toda segunda */
-        $dateFormatada = DateTime::createFromFormat('Y-m-d', date('Y-m-d'));
-//        $dateFormatada = DateTime::createFromFormat('Y-m-d', self::DATA_CRIACAO);
+//        $dateFormatada = DateTime::createFromFormat('Y-m-d', date('Y-m-d'));
+        $dateFormatada = DateTime::createFromFormat('Y-m-d', self::DATA_CRIACAO);
         $html .= ' - Dia para gerar: ' . $dateFormatada->format('d/m/Y');
 
         /* buscando solicitações */
@@ -238,6 +238,7 @@ class IndexController extends CircuitoController {
         $somenteAtivos = true;
         $grupos = $this->getRepositorio()->getGrupoORM()->encontrarTodos($somenteAtivos);
         $this->getRepositorio()->iniciarTransacao();
+        $html .= "<br />###### iniciarTransacao ";
         try {
             if ($grupos) {
                 $html .= "<br /><br /><br />Tem Grupos ativos!!!";
@@ -259,8 +260,8 @@ class IndexController extends CircuitoController {
                         $html .= "<br />quantidadeDeEventosNoCiclo $quantidadeDeEventosNoCiclo";
                         if ($grupoEventoNoPeriodo > 0) {
                             foreach ($grupoEventoNoPeriodo as $grupoEvento) {
-                                $html .= "<br />verificaSeECelula: " . $grupoEvento->getEvento()->verificaSeECelula();
-                                $html .= "<br /><br /><br />GrupoEvento->id: " . $grupoEvento->getId();
+                                $html .= "<br /><br />verificaSeECelula: " . $grupoEvento->getEvento()->verificaSeECelula();
+                                $html .= "<br />GrupoEvento->id: " . $grupoEvento->getId();
                                 $validacaoInativadaNessePeriodo = false;
                                 if (!$grupoEvento->verificarSeEstaAtivo()) {
                                     $html .= "<br />Celula Inativada";
@@ -281,7 +282,7 @@ class IndexController extends CircuitoController {
                                 if ($grupoEvento->getEvento()->verificaSeECelula() && ($grupoEvento->verificarSeEstaAtivo() || $validacaoInativadaNessePeriodo)) {
                                     $html .= "<br />EventoCelula: " . $grupoEvento->getEvento()->getEventoCelula()->getId();
                                     $this->getRepositorio()->getFatoCelulaORM()->criarFatoCelula($fatoCiclo, $grupoEvento->getEvento()->getEventoCelula()->getId());
-                                    $html .= "<br />Fato Celula ";
+                                    $html .= "<br />Fato Celula Gerado";
                                     $temCelula = true;
                                 }
                             }
@@ -297,8 +298,10 @@ class IndexController extends CircuitoController {
                     }
                 }
                 $this->getRepositorio()->fecharTransacao();
+                $html .= "<br />###### fecharTransacao ";
             }
         } catch (Exception $exc) {
+            $html .= "<br />%%%%%%%%%%%%%%%%%%%%%% desfazerTransacao ";
             $this->getRepositorio()->desfazerTransacao();
             echo $exc->getTraceAsString();
         }
