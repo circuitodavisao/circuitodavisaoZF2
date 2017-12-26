@@ -1957,25 +1957,37 @@ class CadastroController extends CircuitoController {
 
     public function solicitacoesAction() {
         $sessao = new Container(Constantes::$NOME_APLICACAO);
-
-        $idEntidadeAtual = $sessao->idEntidadeAtual;
-        $entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
-        $grupo = $entidade->getGrupo();
-        $solicitacoes = null;
-        foreach ($grupo->getResponsabilidadesAtivas() as $grupoResponsavel) {
-            $pessoa = $grupoResponsavel->getPessoa();
-            if ($pessoa->getSolicitacao()) {
-                foreach ($pessoa->getSolicitacao() as $solicitacao) {
-                    $solicitacoes[] = $solicitacao;
-                }
-            }
-        }
+        $solicitacoes = CadastroController::pegaSolicitacoesDeQuemEstaLogados($sessao, $this->getRepositorio());
         $view = new ViewModel(array(
             'solicitacoes' => $solicitacoes,
             'titulo' => 'Solicitações',
             'repositorio' => $this->getRepositorio(),
         ));
         return $view;
+    }
+
+    public static function pegaSolicitacoesDeQuemEstaLogados($sessao, $repositorio, $somentePendentes = false) {
+        $idEntidadeAtual = $sessao->idEntidadeAtual;
+        $entidade = $repositorio->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+        $grupo = $entidade->getGrupo();
+        $solicitacoes = null;
+        foreach ($grupo->getResponsabilidadesAtivas() as $grupoResponsavel) {
+            $pessoa = $grupoResponsavel->getPessoa();
+            if ($pessoa->getSolicitacao()) {
+                foreach ($pessoa->getSolicitacao() as $solicitacao) {
+                    $adicionar = true;
+                    if ($somentePendentes) {
+                        if ($solicitacao->getSolicitacaoTipo()->getId() !== SolicitacaoTipo::TRANSFERIR_LIDER_NA_PROPRIA_EQUIPE) {
+                            $adicionar = false;
+                        }
+                    }
+                    if ($adicionar) {
+                        $solicitacoes[] = $solicitacao;
+                    }
+                }
+            }
+        }
+        return $solicitacoes;
     }
 
     public function solicitacaoAction() {
@@ -1985,6 +1997,8 @@ class CadastroController extends CircuitoController {
         $entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
         $grupo = $entidade->getGrupo();
         $grupoPaiFilhoFilhos = $grupo->getGrupoPaiFilhoFilhosAtivosReal();
+        /* Verificando se ja tem alguma solicitacao para a pessoa nao deixa ele se solicitado denovo */
+        $solicitacoes = CadastroController::pegaSolicitacoesDeQuemEstaLogados($sessao, $this->getRepositorio(), true);
 
         $solicitacaoTipos = $this->getRepositorio()->getSolicitacaoTipoORM()->encontrarTodos();
         $formSolicitacao = new SolicitacaoForm('formSolicitacao');
@@ -1993,6 +2007,7 @@ class CadastroController extends CircuitoController {
             'grupo' => $grupo,
             'discipulos' => $grupoPaiFilhoFilhos,
             'solicitacaoTipos' => $solicitacaoTipos,
+            'solicitacoes' => $solicitacoes,
             Constantes::$FORM => $formSolicitacao,
             'titulo' => 'Solicitação',
         ));

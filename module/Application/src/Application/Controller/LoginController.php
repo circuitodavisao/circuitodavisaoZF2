@@ -548,7 +548,7 @@ class LoginController extends CircuitoController {
      * GET /preSaida
      */
     public function preSaidaAction() {
-
+        CircuitoController::verificandoSessao(new Container(Constantes::$NOME_APLICACAO), $this);
         /* Helper Controller */
 
         $sessao = new Container(Constantes::$NOME_APLICACAO);

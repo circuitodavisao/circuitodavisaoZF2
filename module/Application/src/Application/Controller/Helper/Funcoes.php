@@ -249,7 +249,7 @@ class Funcoes {
 
         $inicioPeriodoFormatado = str_pad($inicioPeriodo, 2, 0, STR_PAD_LEFT);
         $diaFimPeriodoFormatado = str_pad($diaFimPeriodo, 2, 0, STR_PAD_LEFT);
-        $resposta[0] = $inicioPeriodoFormatado . '/' . $mesAjustado . '&nbsp;-&nbsp;' . $diaFimPeriodoFormatado . '/' . $mesFimPeriodo;
+        $resposta[0] = $inicioPeriodoFormatado . '/' . $mesAjustado . '-' . $diaFimPeriodoFormatado . '/' . $mesFimPeriodo;
         $resposta[1] = $inicioPeriodoFormatado;
         $resposta[2] = $mesAjustado;
         $resposta[3] = $anoAjustado;
@@ -551,28 +551,32 @@ class Funcoes {
 
     public static function metaPorHierarquia($idHierarquia) {
         $membresia = 0;
-        $celulas = 1;
+        $lideres = 1;
         $parceiroDeDeus = 2;
         switch ($idHierarquia) {
             case Hierarquia::LIDER_DE_CELULA:
                 $metas[$membresia] = Constantes::$META_LIDER;
-                $metas[$celulas] = 1;
+                $metas[$lideres] = 1;
                 break;
             case Hierarquia::OBREIRO:
-                $metas[$membresia] = Constantes::$META_LIDER * 5;
-                $metas[$celulas] = 10;
+                $metas[$membresia] = 30;
+                $metas[$lideres] = 10;
                 break;
             case Hierarquia::DIACONO:
-                $metas[$membresia] = Constantes::$META_LIDER * 10;
-                $metas[$celulas] = 20;
+                $metas[$membresia] = 60;
+                $metas[$lideres] = 20;
                 break;
             case Hierarquia::MISSIONARIO:
-                $metas[$membresia] = Constantes::$META_LIDER * 20;
-                $metas[$celulas] = 35;
+                $metas[$membresia] = 120;
+                $metas[$lideres] = 35;
                 break;
             case Hierarquia::PASTOR:
-                $metas[$membresia] = Constantes::$META_LIDER * 40;
-                $metas[$celulas] = 70;
+                $metas[$membresia] = 240;
+                $metas[$lideres] = 70;
+                break;
+            case Hierarquia::BISPO:
+                $metas[$membresia] = 1000;
+                $metas[$lideres] = 180;
                 break;
         }
         return $metas;

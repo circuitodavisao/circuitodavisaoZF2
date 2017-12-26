@@ -22,6 +22,16 @@ class ListagemLideresTransferencia extends AbstractHelper {
         return $this->renderHtml();
     }
 
+    public function verificarSeMostrarONo($grupo, $solicitacoes) {
+        $mostrar = true;
+        foreach ($solicitacoes as $solicitacao) {
+            if ($grupo->getId() == $solicitacao->getObjeto1()) {
+                $mostrar = false;
+            }
+        }
+        return $mostrar;
+    }
+
     public function renderHtml() {
         $html = '';
         $entidade = $this->view->grupo->getEntidadeAtiva();
@@ -30,62 +40,74 @@ class ListagemLideresTransferencia extends AbstractHelper {
         $html .= '<li id="lider_' . $this->view->grupo->getId() . '">' . $informacao;
         foreach ($this->getDiscipulos() as $gpFilho) {
             $grupo = $gpFilho->getGrupoPaiFilhoFilho();
-            $mostrarFolder = false;
-            if ($grupo->getGrupoPaiFilhoFilhosAtivos(0)) {
-                $mostrarFolder = true;
-            }
-            $entidade = $grupo->getEntidadeAtiva();
-            $nomeLideres = $grupo->getNomeLideresAtivos();
-            $informacao = $nomeLideres . ' - ' . $entidade->infoEntidade();
-            $class = '';
-            if ($grupo->getGrupoPaiFilhoFilhosAtivos(0)) {
+            $mostrar = $this->verificarSeMostrarONo($grupo, $this->view->solicitacoes);
+            if ($mostrar) {
+                $mostrarFolder = false;
+                if ($grupo->getGrupoPaiFilhoFilhosAtivos(0)) {
+                    $mostrarFolder = true;
+                }
+                $entidade = $grupo->getEntidadeAtiva();
+                $nomeLideres = $grupo->getNomeLideresAtivos();
+                $informacao = $nomeLideres . ' - ' . $entidade->infoEntidade();
                 $class = '';
-            }
-            $html .= '<li id="' . $grupo->getId() . '" class="' . $class . '">' . $informacao;
-            if ($dispulos144 = $grupo->getGrupoPaiFilhoFilhosAtivos(0)) {
-                $html .= '<ul>';
-                foreach ($dispulos144 as $gpFilho144) {
-                    $grupoFilho144 = $gpFilho144->getGrupoPaiFilhoFilho();
-                    $entidade = $grupoFilho144->getEntidadeAtiva();
-                    $nomeLideres = $grupoFilho144->getNomeLideresAtivos();
-                    $informacao = $nomeLideres . ' - ' . $entidade->infoEntidade();
+                if ($grupo->getGrupoPaiFilhoFilhosAtivos(0)) {
                     $class = '';
-                    if ($grupoFilho144->getGrupoPaiFilhoFilhosAtivos(0)) {
-                        $class = '';
-                    }
-                    $html .= '<li id="' . $grupoFilho144->getId() . '" class="' . $class . '">' . $informacao;
-                    if ($dispulos1728 = $grupoFilho144->getGrupoPaiFilhoFilhosAtivos(0)) {
-                        $html .= '<ul>';
-                        foreach ($dispulos1728 as $gpFilho1728) {
-                            $grupoFilho1728 = $gpFilho1728->getGrupoPaiFilhoFilho();
-                            $entidade = $grupoFilho1728->getEntidadeAtiva();
-                            $nomeLideres = $grupoFilho1728->getNomeLideresAtivos();
+                }
+                $html .= '<li id="' . $grupo->getId() . '" class="' . $class . '">' . $informacao;
+                if ($dispulos144 = $grupo->getGrupoPaiFilhoFilhosAtivos(0)) {
+                    $html .= '<ul>';
+                    foreach ($dispulos144 as $gpFilho144) {
+                        $grupoFilho144 = $gpFilho144->getGrupoPaiFilhoFilho();
+                        $mostrar = $this->verificarSeMostrarONo($grupoFilho144, $this->view->solicitacoes);
+                        if ($mostrar) {
+                            $entidade = $grupoFilho144->getEntidadeAtiva();
+                            $nomeLideres = $grupoFilho144->getNomeLideresAtivos();
                             $informacao = $nomeLideres . ' - ' . $entidade->infoEntidade();
                             $class = '';
-                            if ($grupoFilho1728->getGrupoPaiFilhoFilhosAtivos(0)) {
+                            if ($grupoFilho144->getGrupoPaiFilhoFilhosAtivos(0)) {
                                 $class = '';
                             }
-                            $html .= '<li id="' . $grupoFilho1728->getId() . '" class="' . $class . '">' . $informacao;
-                            if ($dispulos20736 = $grupoFilho1728->getGrupoPaiFilhoFilhosAtivos(0)) {
+                            $html .= '<li id="' . $grupoFilho144->getId() . '" class="' . $class . '">' . $informacao;
+                            if ($dispulos1728 = $grupoFilho144->getGrupoPaiFilhoFilhosAtivos(0)) {
                                 $html .= '<ul>';
-                                foreach ($dispulos20736 as $gpFilho20736) {
-                                    $grupoFilho20736 = $gpFilho20736->getGrupoPaiFilhoFilho();
-                                    $entidade = $grupoFilho20736->getEntidadeAtiva();
-                                    $nomeLideres = $grupoFilho20736->getNomeLideresAtivos();
-                                    $informacao = $nomeLideres . ' - ' . $entidade->infoEntidade();
-                                    $html .= '<li id="' . $grupoFilho20736->getId() . '">' . $informacao;
+                                foreach ($dispulos1728 as $gpFilho1728) {
+                                    $grupoFilho1728 = $gpFilho1728->getGrupoPaiFilhoFilho();
+                                    $mostrar = $this->verificarSeMostrarONo($grupoFilho1728, $this->view->solicitacoes);
+                                    if ($mostrar) {
+                                        $entidade = $grupoFilho1728->getEntidadeAtiva();
+                                        $nomeLideres = $grupoFilho1728->getNomeLideresAtivos();
+                                        $informacao = $nomeLideres . ' - ' . $entidade->infoEntidade();
+                                        $class = '';
+                                        if ($grupoFilho1728->getGrupoPaiFilhoFilhosAtivos(0)) {
+                                            $class = '';
+                                        }
+                                        $html .= '<li id="' . $grupoFilho1728->getId() . '" class="' . $class . '">' . $informacao;
+                                        if ($dispulos20736 = $grupoFilho1728->getGrupoPaiFilhoFilhosAtivos(0)) {
+                                            $html .= '<ul>';
+                                            foreach ($dispulos20736 as $gpFilho20736) {
+                                                $grupoFilho20736 = $gpFilho20736->getGrupoPaiFilhoFilho();
+                                                $mostrar = $this->verificarSeMostrarONo($grupoFilho20736, $this->view->solicitacoes);
+                                                if ($mostrar) {
+                                                    $entidade = $grupoFilho20736->getEntidadeAtiva();
+                                                    $nomeLideres = $grupoFilho20736->getNomeLideresAtivos();
+                                                    $informacao = $nomeLideres . ' - ' . $entidade->infoEntidade();
+                                                    $html .= '<li id="' . $grupoFilho20736->getId() . '">' . $informacao;
+                                                }
+                                            }
+                                            $html .= '</ul>';
+                                        }
+                                    }
+                                    $html .= '</li>';
                                 }
                                 $html .= '</ul>';
                             }
-                            $html .= '</li>';
                         }
-                        $html .= '</ul>';
+                        $html .= '</li>';
                     }
-                    $html .= '</li>';
+                    $html .= '</ul>';
                 }
-                $html .= '</ul>';
+                $html .= '</li>';
             }
-            $html .= '</li>';
         }
         return $html;
     }

@@ -38,8 +38,11 @@ class DadosPrincipal extends AbstractHelper {
 
         /* Calculo da sua classe */
         $metas = Funcoes::metaPorHierarquia($pessoa->getPessoaHierarquiaAtivo()->getHierarquia()->getId());
-
-        $qualRelatorio;
+        $multiplicadorDaMeta = 1;
+        if ($this->view->eCasal) {
+            $multiplicadorDaMeta = 2;
+        }
+        $qualRelatorio = array();
         if ($pessoa->getPessoaHierarquiaAtivo()->getHierarquia()->getId() === Hierarquia::LIDER_DE_CELULA) {
             $qualRelatorio = $this->getRelatorioPessoal();
         } else {
@@ -47,37 +50,44 @@ class DadosPrincipal extends AbstractHelper {
         }
         $valorMembresia = $qualRelatorio['membresia'];
         $valorCelulaQuantidade = $qualRelatorio['celulaQuantidade'];
-        $valorCelulaValor = $qualRelatorio['celula'];
-        $valorCulto = $qualRelatorio['membresiaCulto'];
-        $valorArena = $qualRelatorio['membresiaArena'];
-        $valorDomingo = $qualRelatorio['membresiaDomingo'];
 
-        $perfomanceMembresia = $valorMembresia / $metas[0] * 100;
+        $perfomanceMembresia = $valorMembresia / ($metas[0] * $multiplicadorDaMeta) * 100;
         $perfomanceCelula = $valorCelulaQuantidade / $metas[1] * 100;
-        $validacaoCelulaDeElite = $valorCelulaValor >= Constantes::$META_LIDER;
+
         if ($perfomanceMembresia > 100) {
             $perfomanceMembresia = 100;
         }
         if ($perfomanceCelula > 100) {
             $perfomanceCelula = 100;
         }
+
+        $somaClasse = 0;
+        $contagemDeEventos = 2;
         if ($pessoa->getPessoaHierarquiaAtivo()->getHierarquia()->getId() === Hierarquia::LIDER_DE_CELULA) {
-            if ($validacaoCelulaDeElite) {
+            $validacaoCelulaDeElite = 0;
+            if ($this->view->celulasValores) {
+                foreach ($this->view->celulasValores as $valorCelula) {
+                    if ($valorCelula['valor'] >= Constantes::$META_LIDER) {
+                        $validacaoCelulaDeElite += 100;
+                    }
+                }
+                $validacaoCelulaDeElite /= count($this->view->celulasValores);
+            }
+
+            if ($validacaoCelulaDeElite == 100) {
                 $perfomanceCelulaDeElite = 34;
             } else {
-                $perfomanceCelulaDeElite = 0;
+                if ($validacaoCelulaDeElite == 50) {
+                    $perfomanceCelulaDeElite = 17;
+                } else {
+                    $perfomanceCelulaDeElite = 0;
+                }
             }
-            $validacaoMembresia = $perfomanceMembresia / 3;
-            $validacaoCulto = $perfomanceCelula / 3;
 
-            $somaClasse = $validacaoMembresia + $validacaoCulto + $perfomanceCelulaDeElite;
-        } else {
-            $validacaoMembresia = $perfomanceMembresia / 2;
-            $validacaoCulto = $perfomanceCelula / 2;
-
-            $somaClasse = $validacaoMembresia + $validacaoCulto;
+            $contagemDeEventos += count($this->view->celulasValores);
+            $somaClasse += $perfomanceCelulaDeElite;
         }
-
+        $somaClasse = ($somaClasse + $perfomanceMembresia + $perfomanceCelula) / $contagemDeEventos;
         $classClasse = 'default';
         if ($somaClasse < 50) {
             $classe = 'C';
@@ -106,7 +116,9 @@ class DadosPrincipal extends AbstractHelper {
         $html .= '<h2 class="media-heading">' . $pessoa->getNomePrimeiroUltimo();
 //        $html .= '<small> - </small><button disabled class="btn btn-xs btn-info">Perfil</button>';
         $html .= '</h2>';
-        $html .= '<p class="lead">' . $hierarquia . ' - Classe <span onclick="mostrarModalClasse();" class="label label-' . $classClasse . ' label-sm">' . $classe . '</span></p>';
+        $html .= '<p class="lead">' . $hierarquia;
+        $html .= ' - Classe <span onclick="mostrarModalClasse();" class="label label-' . $classClasse . ' label-sm">' . $classe . '</span>';
+        $html .= '</p>';
         /* media-body va-m */
         $html .= '</div>';
 
@@ -118,14 +130,14 @@ class DadosPrincipal extends AbstractHelper {
         $mensagemModalClasse = '';
         $mensagemModalClasse .= '<h1 class="text-center">Cálculo da Classe</h1>';
         $mensagemModalClasse .= '<p>Média dos ultimos 4 periodos de membresia e células pela meta da sua hierarquia.</p>';
-        $mensagemModalClasse .= '<ul><li>Meta de membresia: Eu + 6 vezes o número de líderes</li>';
-        $mensagemModalClasse .= '<li>Meta de Célula: 1 célula</li>';
+//        $mensagemModalClasse .= '<ul><li>Meta de membresia: Eu + 6 vezes o número de líderes</li>';
+//        $mensagemModalClasse .= '<li>Meta de Célula: 1 célula</li>';
         $fimIndice = 1;
         if ($pessoa->getPessoaHierarquiaAtivo()->getHierarquia()->getId() === Hierarquia::LIDER_DE_CELULA) {
-            $mensagemModalClasse .= '<li>Meta de Célula de Elite: Todas as suas celulas pessoais tem que ser de Elite - 7 Pessoas</li>';
-            $fimIndice = 2;
+//            $mensagemModalClasse .= '<li>Meta de Célula de Elite: Todas as suas celulas pessoais tem que ser de Elite - 7 Pessoas</li>';
+            $fimIndice += count($this->view->celulasValores);
         }
-        $mensagemModalClasse .= '</ul>';
+//        $mensagemModalClasse .= '</ul>';
 
         for ($indice = 0; $indice <= $fimIndice; $indice++) {
             if ($pessoa->getPessoaHierarquiaAtivo()->getHierarquia()->getId() === Hierarquia::LIDER_DE_CELULA) {
@@ -139,33 +151,48 @@ class DadosPrincipal extends AbstractHelper {
                     $indiceRelatorio = 'membresia';
                     $corBarra = 'info';
                     $valorBarra = $perfomanceMembresia;
+                    $valorApresentado = RelatorioController::formataNumeroRelatorio($arrayRelatorio[$indiceRelatorio]);
+                    $labelBarra = RelatorioController::formataNumeroRelatorio($valorBarra) . '%';
+                    $valorMeta = $metas[0] * $multiplicadorDaMeta;
                     break;
                 case 1:
                     $stringMeta = 'Célula';
                     $indiceRelatorio = 'celulaQuantidade';
                     $corBarra = 'system';
                     $valorBarra = $perfomanceCelula;
+                    $valorApresentado = $arrayRelatorio[$indiceRelatorio];
+                    $labelBarra = $valorBarra . '%';
+                    $valorMeta = $metas[1];
                     break;
                 case 2:
-                    $stringMeta = 'Cél. Elite';
-                    $indiceRelatorio = 'celulaQuantidade';
+                    $indiceRelatorio = 0;
+                    $stringMeta = 'Cél. ' . $this->view->celulasValores[$indiceRelatorio]['hospedeiro'];
                     $corBarra = 'success';
-                    $valorBarra = $validacaoCelulaDeElite * 100;
+                    $valorApresentado = $this->view->celulasValores[$indiceRelatorio]['valor'];
+                    $labelBarra = $this->view->celulasValores[$indiceRelatorio]['valor'];
+                    $valorMeta = $metas[0];
+                    $valorBarra = $valorApresentado / $valorMeta * 100;
+                    break;
+                case 3:
+                    $indiceRelatorio = 1;
+                    $stringMeta = 'Cél. ' . $this->view->celulasValores[$indiceRelatorio]['hospedeiro'];
+                    $corBarra = 'success';
+                    $valorApresentado = $this->view->celulasValores[$indiceRelatorio]['valor'];
+                    $labelBarra = $this->view->celulasValores[$indiceRelatorio]['valor'];
+                    $valorMeta = $metas[0];
+                    $valorBarra = $valorApresentado / $valorMeta * 100;
                     break;
             }
 
             $mensagemModalClasse .= '<div class = "row">';
 
-            $mensagemModalClasse .= '<div class = "col-xs-3">' . $stringMeta . '</div>';
-            $mensagemModalClasse .= '<div class = "col-xs-6">';
+            $mensagemModalClasse .= '<div class = "col-xs-4 text-right">' . $stringMeta . '</div>';
+            $mensagemModalClasse .= '<div class = "col-xs-5">';
             $mensagemModalClasse .= '<div class = "progress">';
-            $mensagemModalClasse .= '<div class = "progress-bar progress-bar-' . $corBarra . '" role = "progressbar" aria-valuenow = "' . $valorBarra . '" aria-valuemin = "0" aria-valuemax = "100" style = "width: ' . $valorBarra . '%;">' . RelatorioController::formataNumeroRelatorio($valorBarra) . '%</div>';
+            $mensagemModalClasse .= '<div class = "progress-bar progress-bar-' . $corBarra . '" role="progressbar" aria-valuenow="' . $valorBarra . '" aria-valuemin = "0" aria-valuemax="100" style="width: ' . $valorBarra . '%;">' . $labelBarra . '</div>';
             $mensagemModalClasse .= '</div>';
             $mensagemModalClasse .= '</div>';
-            if ($indice != 2) {
-                $mensagemModalClasse .= '<div class = "col-xs-3">' . RelatorioController::formataNumeroRelatorio($arrayRelatorio[$indiceRelatorio]) . '/' . $metas[$indice] . '</div>';
-            }
-
+            $mensagemModalClasse .= '<div class = "col-xs-3">' . $valorApresentado . '/' . $valorMeta . '</div>';
             $mensagemModalClasse .= '</div>';
         }
 

@@ -37,23 +37,27 @@ class PrincipalController extends CircuitoController {
 
         $tipoRelatorioPessoal = 1;
         $tipoRelatorioEquipe = 2;
-        $periodo = -1;
-        $relatorio = RelatorioController::montaRelatorio($this->getRepositorio(), $numeroIdentificador, $periodo, $tipoRelatorioPessoal);
+        $periodo = -2;
+        $quantidadeDeCiclosPassados = 8;
+        $relatorio = RelatorioController::montaRelatorio($this->getRepositorio(), $numeroIdentificador, $periodo, $tipoRelatorioPessoal, 0, true, $quantidadeDeCiclosPassados);
         $relatorioEquipe = RelatorioController::montaRelatorio($this->getRepositorio(), $numeroIdentificador, $periodo, $tipoRelatorioEquipe);
 
         $periodoFinal = $periodo - 4;
         $relatorioPessoalMedio = RelatorioController::montaRelatorio($this->getRepositorio(), $numeroIdentificador, $periodo, $tipoRelatorioPessoal, $periodoFinal);
         $relatorioEquipeMedio = RelatorioController::montaRelatorio($this->getRepositorio(), $numeroIdentificador, $periodo, $tipoRelatorioEquipe, $periodoFinal);
+        $celulasValores = RelatorioController::saberQuaisdasMinhasCelulasSaoDeElite($this->getRepositorio(), $grupo, $periodo, $periodoFinal);
 
         $dados = array();
         $dados['pessoa'] = $pessoa;
         $dados['eCasal'] = $eCasal;
+        $dados['quantidadeDeCiclosPassados'] = $quantidadeDeCiclosPassados;
         $arrayPeriodo = Funcoes::montaPeriodo($periodo);
         $dados['periodoExtenso'] = $arrayPeriodo[0];
         $dados['relatorio'] = $relatorio;
         $dados['relatorioEquipe'] = $relatorioEquipe;
         $dados['relatorioPessoaMedio'] = $relatorioPessoalMedio;
         $dados['relatorioEquipeMedio'] = $relatorioEquipeMedio;
+        $dados['celulasValores'] = $celulasValores;
         $dados['repositorio'] = $this->getRepositorio();
 
         $grupoPaiFilhoFilhos = $grupo->getGrupoPaiFilhoFilhosAtivos($periodo);

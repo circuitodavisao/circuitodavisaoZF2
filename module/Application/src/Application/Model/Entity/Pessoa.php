@@ -787,7 +787,7 @@ class Pessoa extends CircuitoEntity implements InputFilterAwareInterface {
     function dadosAtualizados() {
         $this->setAtualizar_dados('N');
     }
-    
+
     function setPrecisaAtualizarDados() {
         $this->setAtualizar_dados('S');
     }

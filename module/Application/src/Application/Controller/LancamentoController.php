@@ -195,6 +195,7 @@ class LancamentoController extends CircuitoController {
                     }
                 }
                 $tipoCampo = 0;
+                /* EventoTipo::tipoCulto */
                 if ($evento->getEventoTipo()->getId() === EventoTipo::tipoCulto) {
                     $diaDeSabado = 7;
                     $diaDeDomingo = 1;
@@ -213,6 +214,7 @@ class LancamentoController extends CircuitoController {
                             break;
                     };
                 }
+                /* EventoTipo::tipoCelula */
                 if ($evento->getEventoTipo()->getId() === EventoTipo::tipoCelula) {
                     $tipoCampo = 1;
                     $dimensaoSelecionada = $dimensoes[DimensaoTipo::CELULA];
