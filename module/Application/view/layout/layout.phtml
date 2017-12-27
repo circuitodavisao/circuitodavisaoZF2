@@ -65,6 +65,7 @@ use Application\Controller\Helper\Constantes;
             ?> 
             <section id="content_wrapper" style="margin-top: 50px;">
                 <div id="content">
+                    <button onclick="notifyMe()">Notify me!</button>
                     <?php echo $this->content; ?>
                 </div>
             </section>
@@ -98,6 +99,35 @@ use Application\Controller\Helper\Constantes;
         echo $this->inlineScript();
         ?>
         <script type="text/javascript">
+
+            // request permission on page load
+            document.addEventListener('DOMContentLoaded', function () {
+                if (!Notification) {
+                    alert('Desktop notifications not available in your browser. Try Chromium.');
+                    return;
+                }
+
+                if (Notification.permission !== "granted")
+                    Notification.requestPermission();
+            });
+
+            function notifyMe() {
+                if (Notification.permission !== "granted")
+                    Notification.requestPermission();
+                else {
+                    var notification = new Notification('Notification title', {
+                        icon: 'http://cdn.sstatic.net/stackexchange/img/logos/so/so-icon.png',
+                        body: "Hey there! You've been notified!",
+                    });
+
+                    notification.onclick = function () {
+                        window.open("http://stackoverflow.com/a/13328397/1269037");
+                    };
+
+                }
+
+            }
+
             $('.discipulo12')
                     .css("border-left", "4px solid #4a89dc")
                     .css("pointer-events", "none");
@@ -141,7 +171,7 @@ use Application\Controller\Helper\Constantes;
                     onSave: function () {
                         $(window).trigger('resize');
                     }
-                });                
+                });
 
             });
 
