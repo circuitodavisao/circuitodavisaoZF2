@@ -548,24 +548,26 @@ class LoginController extends CircuitoController {
      * GET /preSaida
      */
     public function preSaidaAction() {
-        CircuitoController::verificandoSessao(new Container(Constantes::$NOME_APLICACAO), $this);
-        /* Helper Controller */
-
         $sessao = new Container(Constantes::$NOME_APLICACAO);
-        $idPessoa = $sessao->idPessoa;
-        if (!$idPessoa) {
-            CircuitoController::direcionandoAoLogin($this);
+        $idPessoa = (int) $sessao->idPessoa;
+        if ($idPessoa > 0) {
+            $pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($idPessoa);
+
+            $view = new ViewModel(array(Constantes::$ENTITY_PESSOA_NOME => $pessoa->getNomePrimeiroUltimo()));
+
+            /* Javascript especifico */
+            $layoutJS = new ViewModel();
+            $layoutJS->setTemplate(Constantes::$TEMPLATE_JS_PRE_SAIDA);
+            $view->addChild($layoutJS, Constantes::$STRING_JS_PRE_SAIDA);
+
+            return $view;
+        } else {
+            /* Fechando a sessão */
+            $sessao = new Container(Constantes::$NOME_APLICACAO);
+            $sessao->getManager()->destroy();
+            /* Redirecionamento */
+            return $this->redirect()->toRoute(Constantes::$ROUTE_LOGIN);
         }
-        $pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($idPessoa);
-
-        $view = new ViewModel(array(Constantes::$ENTITY_PESSOA_NOME => $pessoa->getNomePrimeiroUltimo()));
-
-        /* Javascript especifico */
-        $layoutJS = new ViewModel();
-        $layoutJS->setTemplate(Constantes::$TEMPLATE_JS_PRE_SAIDA);
-        $view->addChild($layoutJS, Constantes::$STRING_JS_PRE_SAIDA);
-
-        return $view;
     }
 
     /**
