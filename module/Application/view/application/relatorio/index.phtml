@@ -255,8 +255,10 @@ $somaQuantidadeCelulasDeElite = 0;
                                             $validacaoSemCelula++;
                                         }
                                     }
-
-                                    echo '<tr class="' . $linhaDiscipulo . '">';
+                                    if($validacaoSemCelula === 1){
+                                        $linhaDiscipulo = 'dark';
+                                    }
+                                    echo '<tr class="bg-' . $linhaDiscipulo . '">';
                                     if ($this->tipoRelatorio != 7) {
                                         echo '<td>' . $contagemRanking . '°</td>';
                                     }

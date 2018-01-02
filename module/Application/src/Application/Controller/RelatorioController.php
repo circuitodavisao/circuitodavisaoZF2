@@ -485,33 +485,43 @@ class RelatorioController extends CircuitoController {
         return number_format((double) $valor, 2, ',', '.');
     }
 
+    const MARGEM_D = 0;
+    const MARGEM_C = 25;
+    const MARGEM_B = 50;
+    const MARGEM_A = 100;
+
     public static function corDaLinhaPelaPerformance($valor, $tipo = 1) {
         $class = '';
-        if ($valor == 0) {
+        if ($valor == RelatorioController::MARGEM_D ||
+                $valor == 'D') {
             $class = 'dark';
             if ($tipo === 2) {
                 $class = 'Vamos começar!';
             }
         }
-        if ($valor < 70 && $valor > 0) {
-            $class = 'warning';
+        if (($valor <= RelatorioController::MARGEM_C && $valor > RelatorioController::MARGEM_D) ||
+                $valor == 'D') {
+            $class = 'danger';
             if ($tipo === 2) {
                 $class = 'Você está quase lá';
             }
         }
-        if ($valor >= 70 && $valor < 85) {
-            $class = 'success';
+        if (($valor <= RelatorioController::MARGEM_B && $valor > RelatorioController::MARGEM_C) ||
+                $valor == 'C') {
+            $class = 'warning';
             if ($tipo === 2) {
                 $class = 'Falta pouco';
             }
         }
-        if ($valor >= 85 && $valor < 100) {
-            $class = 'primary';
+        if (($valor < RelatorioController::MARGEM_A && $valor > RelatorioController::MARGEM_B) ||
+                $valor == 'B') {
+            $class = 'success';
             if ($tipo === 2) {
                 $class = 'Você é um garotão';
             }
         }
-        if ($valor >= 100) {
+        if ($valor >= RelatorioController::MARGEM_A ||
+                $valor == 'A') {
             $class = 'info';
             if ($tipo === 2) {
                 $class = 'Você está acima da média, mas quem é o melhor?';

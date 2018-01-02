@@ -87,20 +87,23 @@ class DadosPrincipal extends AbstractHelper {
             $contagemDeEventos += count($this->view->celulasValores);
             $somaClasse += $perfomanceCelulaDeElite;
         }
-        $somaClasse = ($somaClasse + $perfomanceMembresia + $perfomanceCelula) / $contagemDeEventos;
-        $classClasse = 'default';
-        if ($somaClasse < 50) {
+        if ($pessoa->getPessoaHierarquiaAtivo()->getHierarquia()->getId() !== Hierarquia::LIDER_DE_CELULA) {
+            $somaClasse += $perfomanceCelula;
+        }
+        $somaClasse = ($somaClasse + $perfomanceMembresia) / $contagemDeEventos;
+        if ($somaClasse >= RelatorioController::MARGEM_D && $somaClasse < RelatorioController::MARGEM_C) {
+            $classe = 'D';
+        }
+        if ($somaClasse >= RelatorioController::MARGEM_C && $somaClasse < RelatorioController::MARGEM_B) {
             $classe = 'C';
-            $classClasse = 'danger';
         }
-        if ($somaClasse >= 50 && $somaClasse < 100) {
+        if ($somaClasse >= RelatorioController::MARGEM_B && $somaClasse < RelatorioController::MARGEM_A) {
             $classe = 'B';
-            $classClasse = 'warning';
         }
-        if ($somaClasse >= 100) {
+        if ($somaClasse >= RelatorioController::MARGEM_A) {
             $classe = 'A';
-            $classClasse = 'success';
         }
+        $classClasse = RelatorioController::corDaLinhaPelaPerformance($classe);
 
         $html .= '<div class="page-heading">';
         $html .= '<div class="media clearfix">';
@@ -117,7 +120,7 @@ class DadosPrincipal extends AbstractHelper {
 //        $html .= '<small> - </small><button disabled class="btn btn-xs btn-info">Perfil</button>';
         $html .= '</h2>';
         $html .= '<p class="lead">' . $hierarquia;
-        $html .= ' - Classe <span onclick="mostrarModalClasse();" class="label label-' . $classClasse . ' label-sm">' . $classe . '</span>';
+        $html .= ' - Classe <span onclick="mostrarModalClasse();" ><span class="label label-' . $classClasse . ' label-sm">' . $classe . ' </span>&nbsp;<span class="badge badge-info">?</span></span>';
         $html .= '</p>';
         /* media-body va-m */
         $html .= '</div>';
@@ -183,17 +186,18 @@ class DadosPrincipal extends AbstractHelper {
                     $valorBarra = $valorApresentado / $valorMeta * 100;
                     break;
             }
-
-            $mensagemModalClasse .= '<div class = "row">';
-
-            $mensagemModalClasse .= '<div class = "col-xs-4 text-right">' . $stringMeta . '</div>';
-            $mensagemModalClasse .= '<div class = "col-xs-5">';
-            $mensagemModalClasse .= '<div class = "progress">';
-            $mensagemModalClasse .= '<div class = "progress-bar progress-bar-' . $corBarra . '" role="progressbar" aria-valuenow="' . $valorBarra . '" aria-valuemin = "0" aria-valuemax="100" style="width: ' . $valorBarra . '%;">' . $labelBarra . '</div>';
-            $mensagemModalClasse .= '</div>';
-            $mensagemModalClasse .= '</div>';
-            $mensagemModalClasse .= '<div class = "col-xs-3">' . $valorApresentado . '/' . $valorMeta . '</div>';
-            $mensagemModalClasse .= '</div>';
+            if ($pessoa->getPessoaHierarquiaAtivo()->getHierarquia()->getId() !== Hierarquia::LIDER_DE_CELULA ||
+                    ($pessoa->getPessoaHierarquiaAtivo()->getHierarquia()->getId() === Hierarquia::LIDER_DE_CELULA && $indice !== 1)) {
+                $mensagemModalClasse .= '<div class = "row">';
+                $mensagemModalClasse .= '<div class = "col-xs-4 text-right">' . $stringMeta . '</div>';
+                $mensagemModalClasse .= '<div class = "col-xs-5">';
+                $mensagemModalClasse .= '<div class = "progress">';
+                $mensagemModalClasse .= '<div class = "progress-bar progress-bar-' . $corBarra . '" role="progressbar" aria-valuenow="' . $valorBarra . '" aria-valuemin = "0" aria-valuemax="100" style="width: ' . $valorBarra . '%;">' . $labelBarra . '</div>';
+                $mensagemModalClasse .= '</div>';
+                $mensagemModalClasse .= '</div>';
+                $mensagemModalClasse .= '<div class = "col-xs-3">' . $valorApresentado . '/' . $valorMeta . '</div>';
+                $mensagemModalClasse .= '</div>';
+            }
         }
 
         $html .= '<div id="modalClassificacao" class="popup-basic p25 mfp-with-anim mfp-hide">';

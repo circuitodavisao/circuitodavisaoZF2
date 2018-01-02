@@ -527,7 +527,7 @@ class CadastroController extends CircuitoController {
                     if (!empty($post_data[Constantes::$FORM_ID])) {
                         $criarNovoEvento = false;
                         $eventoAtual = $this->getRepositorio()->getEventoORM()->encontrarPorId($post_data[Constantes::$FORM_ID]);
-                        echo "EventoAtual: " . $eventoAtual->getId();
+                        
                         $grupoEventoAtivos = $eventoAtual->getGrupoEventoAtivos();
                         /* Dia foi alterado */
                         if ($post_data[Constantes::$FORM_DIA_DA_SEMANA] != $eventoAtual->getDia()) {
