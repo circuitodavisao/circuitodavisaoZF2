@@ -259,6 +259,40 @@ class Funcoes {
         return $resposta;
     }
 
+    static public function encontrarNumeroDePeriodosNoMesAtualEAnterior() {
+        $resposta = array();
+        $periodoMesAtualInicial = 0;
+        $periodoMesAtualFinal = Funcoes::encontrarPeriodoDeUmMes(date('m'), -1);
+
+        $mesAnterior = date('m') - 1;
+        if (date('m') == 1) {
+            $mesAnterior = 12;
+        }
+        $periodoMesAnteriorInicial = $periodoMesAtualFinal - 1;
+        $periodoMesAnteriorlFinal = Funcoes::encontrarPeriodoDeUmMes($mesAnterior, $periodoMesAnteriorInicial);
+
+        $resposta['periodoMesAtualInicial'] = $periodoMesAtualInicial;
+        $resposta['periodoMesAtualFinal'] = $periodoMesAtualFinal;
+        $resposta['periodoMesAnteriorInicial'] = $periodoMesAnteriorInicial;
+        $resposta['periodoMesAnteriorlFinal'] = $periodoMesAnteriorlFinal;
+
+        Funcoes::var_dump($resposta);
+        return $resposta;
+    }
+
+    static public function encontrarPeriodoDeUmMes($mesPesquisa, $periodoInicial) {
+        $periodoFinal = $periodoInicial;
+        while (true) {
+            $arrayPeriodo = Funcoes::montaPeriodo($periodoFinal);
+            if ($arrayPeriodo[2] != $mesPesquisa) {
+                break;
+            }
+            $periodoFinal--;
+        }
+
+        return $periodoFinal;
+    }
+
     /**
      * Retorna o total de ciclos do mês
      * @param int $mesSelecionado

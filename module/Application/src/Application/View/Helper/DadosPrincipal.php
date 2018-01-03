@@ -117,9 +117,7 @@ class DadosPrincipal extends AbstractHelper {
         $html .= '</div>';
 
         $html .= '<div class="media-body va-m">';
-        $html .= '<h2 class="media-heading">' . $pessoa->getNomePrimeiroUltimo();
-//        $html .= '<small> - </small><button disabled class="btn btn-xs btn-info">Perfil</button>';
-        $html .= '</h2>';
+        $html .= '<h2 class="media-heading">' . $pessoa->getNomePrimeiroUltimo() . '</h2>';
         $html .= '<p class="lead" style="font-size: 10px;">' . $hierarquia;
         $html .= ' - Classe <span onclick="mostrarModalClasse();" ><span class="label label-' . $classClasse . ' label-sm">' . $classe . ' </span>&nbsp;<span class="badge badge-default">?</span></span>';
         $html .= '</p>';
@@ -138,7 +136,6 @@ class DadosPrincipal extends AbstractHelper {
             $html .= '<span class="label label-xs label-' . $corDaMedalha . '">' . $hierarquia->getSigla() . '</span>';
             $html .= '</li>';
         }
-//        $html .= '<li><span class="badge badge-default">?</span></li>';
         $html .= '</ul>';
         $html .= '</div>';
 
@@ -150,14 +147,11 @@ class DadosPrincipal extends AbstractHelper {
         $mensagemModalClasse = '';
         $mensagemModalClasse .= '<h1 class="text-center">Cálculo da Classe</h1>';
         $mensagemModalClasse .= '<p>Média dos ultimos 4 periodos de membresia e células pela meta da sua hierarquia.</p>';
-//        $mensagemModalClasse .= '<ul><li>Meta de membresia: Eu + 6 vezes o número de líderes</li>';
-//        $mensagemModalClasse .= '<li>Meta de Célula: 1 célula</li>';
+
         $fimIndice = 1;
         if ($pessoa->getPessoaHierarquiaAtivo()->getHierarquia()->getId() === Hierarquia::LIDER_DE_CELULA) {
-//            $mensagemModalClasse .= '<li>Meta de Célula de Elite: Todas as suas celulas pessoais tem que ser de Elite - 7 Pessoas</li>';
             $fimIndice += count($this->view->celulasValores);
         }
-//        $mensagemModalClasse .= '</ul>';
 
         for ($indice = 0; $indice <= $fimIndice; $indice++) {
             if ($pessoa->getPessoaHierarquiaAtivo()->getHierarquia()->getId() === Hierarquia::LIDER_DE_CELULA) {
@@ -169,7 +163,7 @@ class DadosPrincipal extends AbstractHelper {
                 case 0:
                     $stringMeta = 'Membresia';
                     $indiceRelatorio = 'membresia';
-                    $corBarra = 'info';
+                    $corBarra = RelatorioController::corDaLinhaPelaPerformance($perfomanceMembresia);
                     $valorBarra = $perfomanceMembresia;
                     $valorApresentado = RelatorioController::formataNumeroRelatorio($arrayRelatorio[$indiceRelatorio]);
                     $labelBarra = RelatorioController::formataNumeroRelatorio($valorBarra) . '%';
@@ -178,7 +172,7 @@ class DadosPrincipal extends AbstractHelper {
                 case 1:
                     $stringMeta = 'Célula';
                     $indiceRelatorio = 'celulaQuantidade';
-                    $corBarra = 'system';
+                    $corBarra = RelatorioController::corDaLinhaPelaPerformance($perfomanceCelula);
                     $valorBarra = $perfomanceCelula;
                     $valorApresentado = $arrayRelatorio[$indiceRelatorio];
                     $labelBarra = $valorBarra . '%';
@@ -187,20 +181,20 @@ class DadosPrincipal extends AbstractHelper {
                 case 2:
                     $indiceRelatorio = 0;
                     $stringMeta = 'Cél. ' . $this->view->celulasValores[$indiceRelatorio]['hospedeiro'];
-                    $corBarra = 'success';
                     $valorApresentado = $this->view->celulasValores[$indiceRelatorio]['valor'];
                     $labelBarra = $this->view->celulasValores[$indiceRelatorio]['valor'];
                     $valorMeta = $metas[0];
                     $valorBarra = $valorApresentado / $valorMeta * 100;
+                    $corBarra = RelatorioController::corDaLinhaPelaPerformance($valorBarra);
                     break;
                 case 3:
                     $indiceRelatorio = 1;
                     $stringMeta = 'Cél. ' . $this->view->celulasValores[$indiceRelatorio]['hospedeiro'];
-                    $corBarra = 'success';
                     $valorApresentado = $this->view->celulasValores[$indiceRelatorio]['valor'];
                     $labelBarra = $this->view->celulasValores[$indiceRelatorio]['valor'];
                     $valorMeta = $metas[0];
                     $valorBarra = $valorApresentado / $valorMeta * 100;
+                    $corBarra = RelatorioController::corDaLinhaPelaPerformance($valorBarra);
                     break;
             }
             if ($pessoa->getPessoaHierarquiaAtivo()->getHierarquia()->getId() !== Hierarquia::LIDER_DE_CELULA ||
