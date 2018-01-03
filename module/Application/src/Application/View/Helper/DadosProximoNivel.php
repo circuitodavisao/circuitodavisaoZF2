@@ -82,7 +82,7 @@ class DadosProximoNivel extends AbstractHelper {
                 case 0:
                     $stringMeta = 'Membresia';
                     $indiceRelatorio = 'membresia';
-                    $corDaBarra = 'info';
+                    $corDaBarra = RelatorioController::corDaLinhaPelaPerformance($perfomanceMembresia);
                     $valorBarra = $perfomanceMembresia;
                     $alcancado = $this->getRelatorioEquipe()['membresia'];
                     $meta = $metas[0];
@@ -90,7 +90,7 @@ class DadosProximoNivel extends AbstractHelper {
                 case 1:
                     $stringMeta = 'Líderes';
                     $indiceRelatorio = 'quantidadeLideres';
-                    $corDaBarra = 'system';
+                    $corDaBarra = RelatorioController::corDaLinhaPelaPerformance($perfomanceLideres);
                     $valorBarra = $perfomanceLideres;
                     $alcancado = $this->getRelatorioEquipe()['quantidadeLideres'];
                     $meta = $metas[1];

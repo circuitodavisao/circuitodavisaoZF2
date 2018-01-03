@@ -138,7 +138,7 @@ class DadosPrincipal extends AbstractHelper {
             $html .= '<span class="label label-xs label-' . $corDaMedalha . '">' . $hierarquia->getSigla() . '</span>';
             $html .= '</li>';
         }
-        $html .= '<li><span class="badge badge-default">?</span></li>';
+//        $html .= '<li><span class="badge badge-default">?</span></li>';
         $html .= '</ul>';
         $html .= '</div>';
 

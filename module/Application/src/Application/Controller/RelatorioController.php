@@ -486,8 +486,8 @@ class RelatorioController extends CircuitoController {
     }
 
     const MARGEM_D = 0;
-    const MARGEM_C = 25;
-    const MARGEM_B = 50;
+    const MARGEM_C = 50;
+    const MARGEM_B = 75;
     const MARGEM_A = 100;
 
     public static function corDaLinhaPelaPerformance($valor, $tipo = 1) {
@@ -496,35 +496,35 @@ class RelatorioController extends CircuitoController {
                 $valor == 'D') {
             $class = 'dark';
             if ($tipo === 2) {
-                $class = 'Vamos começar!';
+                $class = 'Vamos lá a persistência é o caminho, continue!';
             }
         }
         if (($valor <= RelatorioController::MARGEM_C && $valor > RelatorioController::MARGEM_D) ||
                 $valor == 'D') {
             $class = 'danger';
             if ($tipo === 2) {
-                $class = 'Você está quase lá';
+                $class = 'Vamos lá a persistência é o caminho, continue!';
             }
         }
         if (($valor <= RelatorioController::MARGEM_B && $valor > RelatorioController::MARGEM_C) ||
                 $valor == 'C') {
             $class = 'warning';
             if ($tipo === 2) {
-                $class = 'Falta pouco';
+                $class = 'Muito bom, você está no caminho continue focado!';
             }
         }
         if (($valor < RelatorioController::MARGEM_A && $valor > RelatorioController::MARGEM_B) ||
                 $valor == 'B') {
             $class = 'success';
             if ($tipo === 2) {
-                $class = 'Você é um garotão';
+                $class = 'Parabéns, continue e logo estará entre os melhores';
             }
         }
         if ($valor >= RelatorioController::MARGEM_A ||
                 $valor == 'A') {
             $class = 'info';
             if ($tipo === 2) {
-                $class = 'Você está acima da média, mas quem é o melhor?';
+                $class = 'Excelente, você está entre os melhores!';
             }
         }
         return $class;
