@@ -62,7 +62,7 @@ class DadosPrincipal extends AbstractHelper {
         }
 
         $somaClasse = 0;
-        $contagemDeEventos = 2;
+        $contagemDeEventos = 1;
         if ($pessoa->getPessoaHierarquiaAtivo()->getHierarquia()->getId() === Hierarquia::LIDER_DE_CELULA) {
             $validacaoCelulaDeElite = 0;
             if ($this->view->celulasValores) {
@@ -89,6 +89,7 @@ class DadosPrincipal extends AbstractHelper {
         }
         if ($pessoa->getPessoaHierarquiaAtivo()->getHierarquia()->getId() !== Hierarquia::LIDER_DE_CELULA) {
             $somaClasse += $perfomanceCelula;
+            $contagemDeEventos++;
         }
         $somaClasse = ($somaClasse + $perfomanceMembresia) / $contagemDeEventos;
         if ($somaClasse >= RelatorioController::MARGEM_D && $somaClasse < RelatorioController::MARGEM_C) {
@@ -119,10 +120,26 @@ class DadosPrincipal extends AbstractHelper {
         $html .= '<h2 class="media-heading">' . $pessoa->getNomePrimeiroUltimo();
 //        $html .= '<small> - </small><button disabled class="btn btn-xs btn-info">Perfil</button>';
         $html .= '</h2>';
-        $html .= '<p class="lead">' . $hierarquia;
-        $html .= ' - Classe <span onclick="mostrarModalClasse();" ><span class="label label-' . $classClasse . ' label-sm">' . $classe . ' </span>&nbsp;<span class="badge badge-info">?</span></span>';
+        $html .= '<p class="lead" style="font-size: 10px;">' . $hierarquia;
+        $html .= ' - Classe <span onclick="mostrarModalClasse();" ><span class="label label-' . $classClasse . ' label-sm">' . $classe . ' </span>&nbsp;<span class="badge badge-default">?</span></span>';
         $html .= '</p>';
         /* media-body va-m */
+        $html .= '</div>';
+
+        $html .= '<div class="media-links">';
+        $html .= '<ul class="list-inline list-unstyled">';
+        $minhaHierarquia = $pessoa->getPessoaHierarquiaAtivo()->getHierarquia();
+        foreach ($this->view->hierarquias as $hierarquia) {
+            $corDaMedalha = 'default';
+            if ($hierarquia->getId() >= $minhaHierarquia->getId()) {
+                $corDaMedalha = 'info';
+            }
+            $html .= '<li>';
+            $html .= '<span class="label label-xs label-' . $corDaMedalha . '">' . $hierarquia->getSigla() . '</span>';
+            $html .= '</li>';
+        }
+        $html .= '<li><span class="badge badge-default">?</span></li>';
+        $html .= '</ul>';
         $html .= '</div>';
 
         /* media clearfix */

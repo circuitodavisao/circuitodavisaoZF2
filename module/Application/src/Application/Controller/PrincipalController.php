@@ -47,6 +47,8 @@ class PrincipalController extends CircuitoController {
         $relatorioEquipeMedio = RelatorioController::montaRelatorio($this->getRepositorio(), $numeroIdentificador, $periodo, $tipoRelatorioEquipe, $periodoFinal);
         $celulasValores = RelatorioController::saberQuaisdasMinhasCelulasSaoDeElite($this->getRepositorio(), $grupo, $periodo, $periodoFinal);
 
+        $hierarquias = $this->getRepositorio()->getHierarquiaORM()->encontrarTodas();
+
         $dados = array();
         $dados['pessoa'] = $pessoa;
         $dados['eCasal'] = $eCasal;
@@ -59,6 +61,7 @@ class PrincipalController extends CircuitoController {
         $dados['relatorioEquipeMedio'] = $relatorioEquipeMedio;
         $dados['celulasValores'] = $celulasValores;
         $dados['repositorio'] = $this->getRepositorio();
+        $dados['hierarquias'] = $hierarquias;
 
         $grupoPaiFilhoFilhos = $grupo->getGrupoPaiFilhoFilhosAtivos($periodo);
         if ($grupoPaiFilhoFilhos) {

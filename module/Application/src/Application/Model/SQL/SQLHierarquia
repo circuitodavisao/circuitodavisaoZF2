@@ -6,6 +6,7 @@ CREATE TABLE hierarquia
 (
   id serial NOT NULL, -- Identificador das hierarquia
   nome character varying(30) NOT NULL, -- Nome da hierarquia
+  sigla character(2) NOT NULL, -- Sigla da hierarquia
   data_criacao date NOT NULL DEFAULT ('now'::text)::date, -- Data de criação da hierarquia
   hora_criacao time without time zone NOT NULL DEFAULT ('now'::text)::time with time zone, -- Hora de criação da hierarquia
   data_inativacao date, -- Data de inativação da hierarquia
@@ -21,6 +22,7 @@ COMMENT ON TABLE hierarquia
   IS 'Tabela com as hierarquia';
 COMMENT ON COLUMN hierarquia.id IS 'Identificador das hierarquia';
 COMMENT ON COLUMN hierarquia.nome IS 'Nome da hierarquia';
+COMMENT ON COLUMN hierarquia.sigla IS 'Sigla da hierarquia';
 COMMENT ON COLUMN hierarquia.data_criacao IS 'Data de criação da hierarquia';
 COMMENT ON COLUMN hierarquia.hora_criacao IS 'Hora de criação da hierarquia';
 COMMENT ON COLUMN hierarquia.data_inativacao IS 'Data de inativação da hierarquia';

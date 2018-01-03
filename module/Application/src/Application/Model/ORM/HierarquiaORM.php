@@ -19,7 +19,7 @@ class HierarquiaORM extends CircuitoORM {
      */
     public function encontrarTodas($hieraquiaDaPessoaLogada = 1) {
         $entidades = null;
-        $todasHierarquias = $this->getEntityManager()->getRepository($this->getEntity())->findAll();
+        $todasHierarquias = $this->getEntityManager()->getRepository($this->getEntity())->findBy(array(), array("id" => "DESC"));
         if ($hieraquiaDaPessoaLogada != 1) {
             foreach ($todasHierarquias as $hieraquia) {
                 if ($hieraquia->getId() >= $hieraquiaDaPessoaLogada) {
