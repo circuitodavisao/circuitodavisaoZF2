@@ -50,7 +50,7 @@ echo $this->layoutLoginTop;
         <?php
         echo $this->formHidden($formLogin->get(Constantes::$INPUT_CSRF));
         $funcaoVerificarLogin = $this->funcaoOnClick('validarLogin()');
-        echo $this->botaoSimples(Constantes::$TRADUCAO_ENTRAR, $funcaoVerificarLogin);
+        echo $this->botaoSimples(Constantes::$TRADUCAO_ENTRAR, $funcaoVerificarLogin . ' id="botaoLogar"');
         ?>        
         <label class="switch ib switch-primary-circuito mt10">
             <strong class="active pl15">

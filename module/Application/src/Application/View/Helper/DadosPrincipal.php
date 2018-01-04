@@ -16,16 +16,14 @@ use Zend\View\Helper\AbstractHelper;
  */
 class DadosPrincipal extends AbstractHelper {
 
-    private $relatorioPessoal;
-    private $relatorioEquipe;
+    private $relatorioMedio;
 
     public function __construct() {
         
     }
 
-    public function __invoke($relatorioPessoal, $relatorioEquipe) {
-        $this->setRelatorioPessoal($relatorioPessoal);
-        $this->setRelatorioEquipe($relatorioEquipe);
+    public function __invoke($relatorioMedio) {
+        $this->setRelatorioMedio($relatorioMedio);
         return $this->renderHtml();
     }
 
@@ -36,75 +34,109 @@ class DadosPrincipal extends AbstractHelper {
         $classe = '?';
         $imagem = FuncoesEntidade::nomeDaImagem($pessoa);
 
-        /* Calculo da sua classe */
         $metas = Funcoes::metaPorHierarquia($pessoa->getPessoaHierarquiaAtivo()->getHierarquia()->getId());
         $multiplicadorDaMeta = 1;
         if ($this->view->eCasal) {
             $multiplicadorDaMeta = 2;
         }
-        $qualRelatorio = array();
-        if ($pessoa->getPessoaHierarquiaAtivo()->getHierarquia()->getId() === Hierarquia::LIDER_DE_CELULA) {
-            $qualRelatorio = $this->getRelatorioPessoal();
-        } else {
-            $qualRelatorio = $this->getRelatorioEquipe();
-        }
-        $valorMembresia = $qualRelatorio['membresia'];
-        $valorCelulaQuantidade = $qualRelatorio['celulaQuantidade'];
 
-        $perfomanceMembresia = $valorMembresia / ($metas[0] * $multiplicadorDaMeta) * 100;
-        $perfomanceCelula = $valorCelulaQuantidade / $metas[1] * 100;
+        $mensagemModalClasse = '';
+        $mensagemModalClasse .= '<h1 class="text-center">Cálculo da Classe</h1>';
+        $mensagemModalClasse .= '<p>Média de membresia e células pela meta da sua hierarquia no mês anterior.</p>';
 
-        if ($perfomanceMembresia > 100) {
-            $perfomanceMembresia = 100;
-        }
-        if ($perfomanceCelula > 100) {
-            $perfomanceCelula = 100;
-        }
-
-        $somaClasse = 0;
-        $contagemDeEventos = 1;
-        if ($pessoa->getPessoaHierarquiaAtivo()->getHierarquia()->getId() === Hierarquia::LIDER_DE_CELULA) {
-            $validacaoCelulaDeElite = 0;
-            if ($this->view->celulasValores) {
-                foreach ($this->view->celulasValores as $valorCelula) {
-                    if ($valorCelula['valor'] >= Constantes::$META_LIDER) {
-                        $validacaoCelulaDeElite += 100;
-                    }
-                }
-                $validacaoCelulaDeElite /= count($this->view->celulasValores);
+        for ($indiceDeRelatorios = 1; $indiceDeRelatorios <= 2; $indiceDeRelatorios++) {
+            $nomeRelatorio = '';
+            $atualOuAnterior = '';
+            $mensagemModalClasse .= "<div class='alert alert-info alert-sm'>";
+            if ($indiceDeRelatorios === 2) {
+                $mensagemModalClasse .= Funcoes::mesPorExtenso(date('m'), 1);
+                $atualOuAnterior = 'Atual';
             }
-
-            if ($validacaoCelulaDeElite == 100) {
-                $perfomanceCelulaDeElite = 34;
+            if ($indiceDeRelatorios === 1) {
+                $mesAnterior = date('m') - 1;
+                if (date('m') == 1) {
+                    $mesAnterior = 12;
+                }
+                $mensagemModalClasse .= Funcoes::mesPorExtenso($mesAnterior, 1);
+                $atualOuAnterior = 'Anterior';
+            }
+            if ($pessoa->getPessoaHierarquiaAtivo()->getHierarquia()->getId() === Hierarquia::LIDER_DE_CELULA) {
+                $nomeRelatorio = 'pessoal' . $atualOuAnterior;
             } else {
-                if ($validacaoCelulaDeElite == 50) {
-                    $perfomanceCelulaDeElite = 17;
-                } else {
-                    $perfomanceCelulaDeElite = 0;
-                }
+                $nomeRelatorio = 'equipe' . $atualOuAnterior;
+            }
+            $qualRelatorio = $this->getRelatorioMedio()[$nomeRelatorio];
+            $qualRelatorioCelula = $this->getRelatorioMedio()['celulas' . $atualOuAnterior];
+
+            $fimIndice = 1;
+            if ($pessoa->getPessoaHierarquiaAtivo()->getHierarquia()->getId() === Hierarquia::LIDER_DE_CELULA) {
+                $fimIndice += count($qualRelatorioCelula);
             }
 
-            $contagemDeEventos += count($this->view->celulasValores);
-            $somaClasse += $perfomanceCelulaDeElite;
+            $valorMembresia = $qualRelatorio['membresia'];
+            $valorCelulaQuantidade = $qualRelatorio['celulaQuantidade'];
+
+            $perfomanceMembresia = $valorMembresia / ($metas[0] * $multiplicadorDaMeta) * 100;
+            $perfomanceCelula = $valorCelulaQuantidade / $metas[1] * 100;
+
+            if ($indiceDeRelatorios === 1) {
+                if ($perfomanceMembresia > 100) {
+                    $perfomanceMembresia = 100;
+                }
+                if ($perfomanceCelula > 100) {
+                    $perfomanceCelula = 100;
+                }
+
+                $somaClasse = 0;
+                $contagemDeEventos = 1;
+                if ($pessoa->getPessoaHierarquiaAtivo()->getHierarquia()->getId() === Hierarquia::LIDER_DE_CELULA) {
+                    $validacaoCelulaDeElite = 0;
+                    if ($qualRelatorioCelula) {
+                        foreach ($qualRelatorioCelula as $valorCelula) {
+                            if ($valorCelula['valor'] >= Constantes::$META_LIDER) {
+                                $validacaoCelulaDeElite += 100;
+                            }
+                        }
+                        $validacaoCelulaDeElite /= count($qualRelatorioCelula);
+                    }
+
+                    if ($validacaoCelulaDeElite == 100) {
+                        $perfomanceCelulaDeElite = 34;
+                    } else {
+                        if ($validacaoCelulaDeElite == 50) {
+                            $perfomanceCelulaDeElite = 17;
+                        } else {
+                            $perfomanceCelulaDeElite = 0;
+                        }
+                    }
+
+                    $contagemDeEventos += count($qualRelatorioCelula);
+                    $somaClasse += $perfomanceCelulaDeElite;
+                }
+                if ($pessoa->getPessoaHierarquiaAtivo()->getHierarquia()->getId() !== Hierarquia::LIDER_DE_CELULA) {
+                    $somaClasse += $perfomanceCelula;
+                    $contagemDeEventos++;
+                }
+                $somaClasse = ($somaClasse + $perfomanceMembresia) / $contagemDeEventos;
+                if ($somaClasse >= RelatorioController::MARGEM_D && $somaClasse < RelatorioController::MARGEM_C) {
+                    $classe = 'D';
+                }
+                if ($somaClasse >= RelatorioController::MARGEM_C && $somaClasse < RelatorioController::MARGEM_B) {
+                    $classe = 'C';
+                }
+                if ($somaClasse >= RelatorioController::MARGEM_B && $somaClasse < RelatorioController::MARGEM_A) {
+                    $classe = 'B';
+                }
+                if ($somaClasse >= RelatorioController::MARGEM_A) {
+                    $classe = 'A';
+                }
+                $classClasse = RelatorioController::corDaLinhaPelaPerformance($classe);
+            }
+
+            $mensagemModalClasse .= "</div>";
+
+            $mensagemModalClasse .= $this->montaBarrasDeProgresso($fimIndice, $perfomanceMembresia, $qualRelatorio, $multiplicadorDaMeta, $metas, $qualRelatorioCelula, $perfomanceCelula, $pessoa);
         }
-        if ($pessoa->getPessoaHierarquiaAtivo()->getHierarquia()->getId() !== Hierarquia::LIDER_DE_CELULA) {
-            $somaClasse += $perfomanceCelula;
-            $contagemDeEventos++;
-        }
-        $somaClasse = ($somaClasse + $perfomanceMembresia) / $contagemDeEventos;
-        if ($somaClasse >= RelatorioController::MARGEM_D && $somaClasse < RelatorioController::MARGEM_C) {
-            $classe = 'D';
-        }
-        if ($somaClasse >= RelatorioController::MARGEM_C && $somaClasse < RelatorioController::MARGEM_B) {
-            $classe = 'C';
-        }
-        if ($somaClasse >= RelatorioController::MARGEM_B && $somaClasse < RelatorioController::MARGEM_A) {
-            $classe = 'B';
-        }
-        if ($somaClasse >= RelatorioController::MARGEM_A) {
-            $classe = 'A';
-        }
-        $classClasse = RelatorioController::corDaLinhaPelaPerformance($classe);
 
         $html .= '<div class="page-heading">';
         $html .= '<div class="media clearfix">';
@@ -144,73 +176,7 @@ class DadosPrincipal extends AbstractHelper {
         /* page-heading */
         $html .= '</div>';
 
-        $mensagemModalClasse = '';
-        $mensagemModalClasse .= '<h1 class="text-center">Cálculo da Classe</h1>';
-        $mensagemModalClasse .= '<p>Média dos ultimos 4 periodos de membresia e células pela meta da sua hierarquia.</p>';
-
-        $fimIndice = 1;
-        if ($pessoa->getPessoaHierarquiaAtivo()->getHierarquia()->getId() === Hierarquia::LIDER_DE_CELULA) {
-            $fimIndice += count($this->view->celulasValores);
-        }
-
-        for ($indice = 0; $indice <= $fimIndice; $indice++) {
-            if ($pessoa->getPessoaHierarquiaAtivo()->getHierarquia()->getId() === Hierarquia::LIDER_DE_CELULA) {
-                $arrayRelatorio = $this->getRelatorioPessoal();
-            } else {
-                $arrayRelatorio = $this->getRelatorioEquipe();
-            }
-            switch ($indice) {
-                case 0:
-                    $stringMeta = 'Membresia';
-                    $indiceRelatorio = 'membresia';
-                    $corBarra = RelatorioController::corDaLinhaPelaPerformance($perfomanceMembresia);
-                    $valorBarra = $perfomanceMembresia;
-                    $valorApresentado = RelatorioController::formataNumeroRelatorio($arrayRelatorio[$indiceRelatorio]);
-                    $labelBarra = RelatorioController::formataNumeroRelatorio($valorBarra) . '%';
-                    $valorMeta = $metas[0] * $multiplicadorDaMeta;
-                    break;
-                case 1:
-                    $stringMeta = 'Célula';
-                    $indiceRelatorio = 'celulaQuantidade';
-                    $corBarra = RelatorioController::corDaLinhaPelaPerformance($perfomanceCelula);
-                    $valorBarra = $perfomanceCelula;
-                    $valorApresentado = $arrayRelatorio[$indiceRelatorio];
-                    $labelBarra = $valorBarra . '%';
-                    $valorMeta = $metas[1];
-                    break;
-                case 2:
-                    $indiceRelatorio = 0;
-                    $stringMeta = 'Cél. ' . $this->view->celulasValores[$indiceRelatorio]['hospedeiro'];
-                    $valorApresentado = $this->view->celulasValores[$indiceRelatorio]['valor'];
-                    $labelBarra = $this->view->celulasValores[$indiceRelatorio]['valor'];
-                    $valorMeta = $metas[0];
-                    $valorBarra = $valorApresentado / $valorMeta * 100;
-                    $corBarra = RelatorioController::corDaLinhaPelaPerformance($valorBarra);
-                    break;
-                case 3:
-                    $indiceRelatorio = 1;
-                    $stringMeta = 'Cél. ' . $this->view->celulasValores[$indiceRelatorio]['hospedeiro'];
-                    $valorApresentado = $this->view->celulasValores[$indiceRelatorio]['valor'];
-                    $labelBarra = $this->view->celulasValores[$indiceRelatorio]['valor'];
-                    $valorMeta = $metas[0];
-                    $valorBarra = $valorApresentado / $valorMeta * 100;
-                    $corBarra = RelatorioController::corDaLinhaPelaPerformance($valorBarra);
-                    break;
-            }
-            if ($pessoa->getPessoaHierarquiaAtivo()->getHierarquia()->getId() !== Hierarquia::LIDER_DE_CELULA ||
-                    ($pessoa->getPessoaHierarquiaAtivo()->getHierarquia()->getId() === Hierarquia::LIDER_DE_CELULA && $indice !== 1)) {
-                $mensagemModalClasse .= '<div class = "row">';
-                $mensagemModalClasse .= '<div class = "col-xs-4 text-right">' . $stringMeta . '</div>';
-                $mensagemModalClasse .= '<div class = "col-xs-5">';
-                $mensagemModalClasse .= '<div class = "progress">';
-                $mensagemModalClasse .= '<div class = "progress-bar progress-bar-' . $corBarra . '" role="progressbar" aria-valuenow="' . $valorBarra . '" aria-valuemin = "0" aria-valuemax="100" style="width: ' . $valorBarra . '%;">' . $labelBarra . '</div>';
-                $mensagemModalClasse .= '</div>';
-                $mensagemModalClasse .= '</div>';
-                $mensagemModalClasse .= '<div class = "col-xs-3">' . $valorApresentado . '/' . $valorMeta . '</div>';
-                $mensagemModalClasse .= '</div>';
-            }
-        }
-
+        /* Modal */
         $html .= '<div id="modalClassificacao" class="popup-basic p25 mfp-with-anim mfp-hide">';
         $html .= '<div class="mw1000">' . $mensagemModalClasse . '</div>';
         $html .= '<button tittle="Close (Esc)" type="button" class="mfp-close bg-dark">x</button>';
@@ -219,20 +185,69 @@ class DadosPrincipal extends AbstractHelper {
         return $html;
     }
 
-    function getRelatorioPessoal() {
-        return $this->relatorioPessoal;
+    function montaBarrasDeProgresso($fimIndice, $perfomanceMembresia, $qualRelatorio, $multiplicadorDaMeta, $metas, $qualRelatorioCelula, $perfomanceCelula, $pessoa) {
+        $html = '';
+        for ($indice = 0; $indice <= $fimIndice; $indice++) {
+            switch ($indice) {
+                case 0:
+                    $stringMeta = 'Membresia';
+                    $indiceRelatorio = 'membresia';
+                    $corBarra = RelatorioController::corDaLinhaPelaPerformance($perfomanceMembresia);
+                    $valorBarra = $perfomanceMembresia;
+                    $valorApresentado = RelatorioController::formataNumeroRelatorio($qualRelatorio[$indiceRelatorio]);
+                    $labelBarra = RelatorioController::formataNumeroRelatorio($valorBarra) . '%';
+                    $valorMeta = $metas[0] * $multiplicadorDaMeta;
+                    break;
+                case 1:
+                    $stringMeta = 'Célula';
+                    $indiceRelatorio = 'celulaQuantidade';
+                    $corBarra = RelatorioController::corDaLinhaPelaPerformance($perfomanceCelula);
+                    $valorBarra = $perfomanceCelula;
+                    $valorApresentado = $qualRelatorio[$indiceRelatorio];
+                    $labelBarra = $valorBarra . '%';
+                    $valorMeta = $metas[1];
+                    break;
+                case 2:
+                    $indiceRelatorio = 0;
+                    $stringMeta = 'Cél. ' . $qualRelatorioCelula[$indiceRelatorio]['hospedeiro'];
+                    $valorApresentado = $qualRelatorioCelula[$indiceRelatorio]['valor'];
+                    $labelBarra = $qualRelatorioCelula[$indiceRelatorio]['valor'];
+                    $valorMeta = $metas[0];
+                    $valorBarra = $valorApresentado / $valorMeta * 100;
+                    $corBarra = RelatorioController::corDaLinhaPelaPerformance($valorBarra);
+                    break;
+                case 3:
+                    $indiceRelatorio = 1;
+                    $stringMeta = 'Cél. ' . $qualRelatorioCelula[$indiceRelatorio]['hospedeiro'];
+                    $valorApresentado = $qualRelatorioCelula[$indiceRelatorio]['valor'];
+                    $labelBarra = $qualRelatorioCelula[$indiceRelatorio]['valor'];
+                    $valorMeta = $metas[0];
+                    $valorBarra = $valorApresentado / $valorMeta * 100;
+                    $corBarra = RelatorioController::corDaLinhaPelaPerformance($valorBarra);
+                    break;
+            }
+            if ($pessoa->getPessoaHierarquiaAtivo()->getHierarquia()->getId() !== Hierarquia::LIDER_DE_CELULA ||
+                    ($pessoa->getPessoaHierarquiaAtivo()->getHierarquia()->getId() === Hierarquia::LIDER_DE_CELULA && $indice !== 1)) {
+                $html .= '<div class = "row">';
+                $html .= '<div class = "col-xs-4 text-right">' . $stringMeta . '</div>';
+                $html .= '<div class = "col-xs-5">';
+                $html .= '<div class = "progress">';
+                $html .= '<div class = "progress-bar progress-bar-' . $corBarra . '" role="progressbar" aria-valuenow="' . $valorBarra . '" aria-valuemin = "0" aria-valuemax="100" style="width: ' . $valorBarra . '%;">' . $labelBarra . '</div>';
+                $html .= '</div>';
+                $html .= '</div>';
+                $html .= '<div class = "col-xs-3">' . $valorApresentado . '/' . $valorMeta . '</div>';
+                $html .= '</div>';
+            }
+        }
+        return $html;
     }
 
-    function setRelatorioPessoal($relatorioPessoal) {
-        $this->relatorioPessoal = $relatorioPessoal;
+    function getRelatorioMedio() {
+        return $this->relatorioMedio;
     }
 
-    function getRelatorioEquipe() {
-        return $this->relatorioEquipe;
-    }
-
-    function setRelatorioEquipe($relatorioEquipe) {
-        $this->relatorioEquipe = $relatorioEquipe;
+    function setRelatorioMedio($relatorioMedio) {
+        $this->relatorioMedio = $relatorioMedio;
     }
 
 }

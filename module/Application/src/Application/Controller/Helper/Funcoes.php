@@ -262,13 +262,13 @@ class Funcoes {
     static public function encontrarNumeroDePeriodosNoMesAtualEAnterior() {
         $resposta = array();
         $periodoMesAtualInicial = 0;
-        $periodoMesAtualFinal = Funcoes::encontrarPeriodoDeUmMes(date('m'), -1);
+        $periodoMesAtualFinal = Funcoes::encontrarPeriodoDeUmMes(date('m'), 0);
 
         $mesAnterior = date('m') - 1;
         if (date('m') == 1) {
             $mesAnterior = 12;
         }
-        $periodoMesAnteriorInicial = $periodoMesAtualFinal - 1;
+        $periodoMesAnteriorInicial = $periodoMesAtualFinal == 0 ? ($periodoMesAtualFinal - 1) : $periodoMesAtualFinal;
         $periodoMesAnteriorlFinal = Funcoes::encontrarPeriodoDeUmMes($mesAnterior, $periodoMesAnteriorInicial);
 
         $resposta['periodoMesAtualInicial'] = $periodoMesAtualInicial;
@@ -276,7 +276,6 @@ class Funcoes {
         $resposta['periodoMesAnteriorInicial'] = $periodoMesAnteriorInicial;
         $resposta['periodoMesAnteriorlFinal'] = $periodoMesAnteriorlFinal;
 
-        Funcoes::var_dump($resposta);
         return $resposta;
     }
 
@@ -285,7 +284,12 @@ class Funcoes {
         while (true) {
             $arrayPeriodo = Funcoes::montaPeriodo($periodoFinal);
             if ($arrayPeriodo[2] != $mesPesquisa) {
-                break;
+                if ($arrayPeriodo[5] != $mesPesquisa) {
+                    $periodoFinal++;
+                    break;
+                } else {
+                    break;
+                }
             }
             $periodoFinal--;
         }
