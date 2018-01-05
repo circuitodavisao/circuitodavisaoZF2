@@ -74,7 +74,6 @@ class DadosPrincipal extends AbstractHelper {
             $perfomanceMembresia = $valorMembresia / ($metas[0] * $multiplicadorDaMeta) * 100;
             $perfomanceCelula = $valorCelulaQuantidade / $metas[1] * 100;
 
-
             if ($perfomanceMembresia > 100) {
                 $perfomanceMembresia = 100;
             }
