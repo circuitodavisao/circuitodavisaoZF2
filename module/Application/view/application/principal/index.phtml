@@ -5,8 +5,14 @@ use Application\Controller\RelatorioController;
 ?>
 <!-- Begin: Content -->
 <section id="content" class="table-layout animated fadeIn">
-
-
+    <?php
+    echo '<input type="hidden" id="eCasal" value="' . $this->eCasal . '" />';
+    echo '<input type="hidden" id="valorCulto" value="' . $this->relatorio['membresiaCulto'] . '" />';
+    echo '<input type="hidden" id="valorArena" value="' . $this->relatorio['membresiaArena'] . '" />';
+    echo '<input type="hidden" id="valorDomingo" value="' . $this->relatorio['membresiaDomingo'] . '" />';
+    echo '<input type="hidden" id="valorMembresia" value="' . RelatorioController::formataNumeroRelatorio($this->relatorio['membresia']) . '" />';
+    echo '<input type="hidden" id="valorCelula" value="' . $this->relatorio['celula'] . '" />';
+    ?>
     <!-- begin: .tray-center -->
     <div class="tray tray-center">
         <?php echo $this->dadosPrincipal($this->relatorioMedio); ?>
@@ -221,43 +227,14 @@ use Application\Controller\RelatorioController;
                     </div>
                 </div>
             </div>
+            
+            <!--modalInformativo-->
+            <div id="modalInformativo" class="popup-basic p25 mfp-with-anim mfp-hide">
+                <div class="mt20"><span id="spanModalInformativo"></span></div>
+                <button tittle="Close (Esc)" type="button" class="mfp-close bg-dark">x</button>
+            </div>
 
             <div class="row">
-                <div class="col-md-12">
-                    <div id="p01" class="panel sort-disable" data-panel-title="false">
-                        <div class="panel-heading">                           
-                            <span class="panel-icon">
-                                <i class="fa fa-bar-chart"></i>
-                            </span> 
-                            <span class="panel-title"><?php echo $this->periodoExtenso; ?></span>
-                        </div>
-                        <div class="panel-body pn">
-                            <?php
-                            echo '<input type="hidden" id="eCasal" value="' . $this->eCasal . '" />';
-                            echo '<input type="hidden" id="valorCulto" value="' . $this->relatorio['membresiaCulto'] . '" />';
-                            echo '<input type="hidden" id="valorArena" value="' . $this->relatorio['membresiaArena'] . '" />';
-                            echo '<input type="hidden" id="valorDomingo" value="' . $this->relatorio['membresiaDomingo'] . '" />';
-                            echo '<input type="hidden" id="valorMembresia" value="' . RelatorioController::formataNumeroRelatorio($this->relatorio['membresia']) . '" />';
-                            echo '<input type="hidden" id="valorCelula" value="' . $this->relatorio['celula'] . '" />';
-                            ?>
-                            <!-- dados condesados -->
-                            <?php
-                            echo $this->barraDeProgressoBonita(
-                                    'Membresia Pessoal <span class="badge badge-info">?</span>', $this->relatorio['membresiaPerformanceClass'], $this->relatorio['membresiaPerformance'], 'm15', true, $this->relatorio['membresiaMeta'], $this->relatorio['membresia'], 'onclick="$(\'#divGaugesMembresia\').toggleClass(\'hidden\'); criarGauges(1);"');
-                            ?>
-                            <?php
-                            echo $this->barraDeProgressoBonita(
-                                    'Célula Pessoal <span class="badge badge-info">?</span>', $this->relatorio['celulaPerformanceClass'], $this->relatorio['celulaPerformance'], 'm15', true, $this->relatorio['membresiaMeta'], $this->relatorio['celula'], 'onclick="$(\'#divGaugesCelula\').toggleClass(\'hidden\'); criarGauges(2);"');
-                            ?>
-
-                            <!--modalInformativo-->
-                            <div id="modalInformativo" class="popup-basic p25 mfp-with-anim mfp-hide">
-                                <div class="mt20"><span id="spanModalInformativo"></span></div>
-                                <button tittle="Close (Esc)" type="button" class="mfp-close bg-dark">x</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
                 <!--Próximo Nível-->
                 <div class="col-md-12">
                     <div id="p02" class="panel sort-disable" data-panel-title="false">
