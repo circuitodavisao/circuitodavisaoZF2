@@ -47,19 +47,14 @@ class DadosPrincipal extends AbstractHelper {
         for ($indiceDeRelatorios = 1; $indiceDeRelatorios <= 2; $indiceDeRelatorios++) {
             $nomeRelatorio = '';
             $atualOuAnterior = '';
-            $mensagemModalClasse .= "<div class='alert alert-info alert-sm'>";
+
             if ($indiceDeRelatorios === 2) {
-                $mensagemModalClasse .= Funcoes::mesPorExtenso(date('m'), 1);
                 $atualOuAnterior = 'Atual';
             }
             if ($indiceDeRelatorios === 1) {
-                $mesAnterior = date('m') - 1;
-                if (date('m') == 1) {
-                    $mesAnterior = 12;
-                }
-                $mensagemModalClasse .= Funcoes::mesPorExtenso($mesAnterior, 1);
                 $atualOuAnterior = 'Anterior';
             }
+
             if ($pessoa->getPessoaHierarquiaAtivo()->getHierarquia()->getId() === Hierarquia::LIDER_DE_CELULA) {
                 $nomeRelatorio = 'pessoal' . $atualOuAnterior;
             } else {
@@ -79,63 +74,80 @@ class DadosPrincipal extends AbstractHelper {
             $perfomanceMembresia = $valorMembresia / ($metas[0] * $multiplicadorDaMeta) * 100;
             $perfomanceCelula = $valorCelulaQuantidade / $metas[1] * 100;
 
-            if ($indiceDeRelatorios === 1) {
-                if ($perfomanceMembresia > 100) {
-                    $perfomanceMembresia = 100;
-                }
-                if ($perfomanceCelula > 100) {
-                    $perfomanceCelula = 100;
-                }
 
-                $somaClasse = 0;
-                $contagemDeEventos = 1;
-                if ($pessoa->getPessoaHierarquiaAtivo()->getHierarquia()->getId() === Hierarquia::LIDER_DE_CELULA) {
-                    $validacaoCelulaDeElite = 0;
-                    if ($qualRelatorioCelula) {
-                        foreach ($qualRelatorioCelula as $valorCelula) {
-                            if ($valorCelula['valor'] >= Constantes::$META_LIDER) {
-                                $validacaoCelulaDeElite += 100;
-                            }
-                        }
-                        $validacaoCelulaDeElite /= count($qualRelatorioCelula);
-                    }
-
-                    if ($validacaoCelulaDeElite == 100) {
-                        $perfomanceCelulaDeElite = 34;
-                    } else {
-                        if ($validacaoCelulaDeElite == 50) {
-                            $perfomanceCelulaDeElite = 17;
-                        } else {
-                            $perfomanceCelulaDeElite = 0;
-                        }
-                    }
-
-                    $contagemDeEventos += count($qualRelatorioCelula);
-                    $somaClasse += $perfomanceCelulaDeElite;
-                }
-                if ($pessoa->getPessoaHierarquiaAtivo()->getHierarquia()->getId() !== Hierarquia::LIDER_DE_CELULA) {
-                    $somaClasse += $perfomanceCelula;
-                    $contagemDeEventos++;
-                }
-                $somaClasse = ($somaClasse + $perfomanceMembresia) / $contagemDeEventos;
-                if ($somaClasse >= RelatorioController::MARGEM_D && $somaClasse < RelatorioController::MARGEM_C) {
-                    $classe = 'D';
-                }
-                if ($somaClasse >= RelatorioController::MARGEM_C && $somaClasse < RelatorioController::MARGEM_B) {
-                    $classe = 'C';
-                }
-                if ($somaClasse >= RelatorioController::MARGEM_B && $somaClasse < RelatorioController::MARGEM_A) {
-                    $classe = 'B';
-                }
-                if ($somaClasse >= RelatorioController::MARGEM_A) {
-                    $classe = 'A';
-                }
-                $classClasse = RelatorioController::corDaLinhaPelaPerformance($classe);
+            if ($perfomanceMembresia > 100) {
+                $perfomanceMembresia = 100;
+            }
+            if ($perfomanceCelula > 100) {
+                $perfomanceCelula = 100;
             }
 
-            $mensagemModalClasse .= "</div>";
+            $somaClasse = 0;
+            $contagemDeEventos = 1;
+            if ($pessoa->getPessoaHierarquiaAtivo()->getHierarquia()->getId() === Hierarquia::LIDER_DE_CELULA) {
+                $validacaoCelulaDeElite = 0;
+                if ($qualRelatorioCelula) {
+                    foreach ($qualRelatorioCelula as $valorCelula) {
+                        if ($valorCelula['valor'] >= Constantes::$META_LIDER) {
+                            $validacaoCelulaDeElite += 100;
+                        }
+                    }
+                    $validacaoCelulaDeElite /= count($qualRelatorioCelula);
+                }
 
+                if ($validacaoCelulaDeElite == 100) {
+                    $perfomanceCelulaDeElite = 34;
+                } else {
+                    if ($validacaoCelulaDeElite == 50) {
+                        $perfomanceCelulaDeElite = 17;
+                    } else {
+                        $perfomanceCelulaDeElite = 0;
+                    }
+                }
+
+                $contagemDeEventos += count($qualRelatorioCelula);
+                $somaClasse += $perfomanceCelulaDeElite;
+            }
+            if ($pessoa->getPessoaHierarquiaAtivo()->getHierarquia()->getId() !== Hierarquia::LIDER_DE_CELULA) {
+                $somaClasse += $perfomanceCelula;
+                $contagemDeEventos++;
+            }
+            $somaClasse = ($somaClasse + $perfomanceMembresia) / $contagemDeEventos;
+            if ($somaClasse >= RelatorioController::MARGEM_D && $somaClasse < RelatorioController::MARGEM_C) {
+                $classe = 'D';
+            }
+            if ($somaClasse >= RelatorioController::MARGEM_C && $somaClasse < RelatorioController::MARGEM_B) {
+                $classe = 'C';
+            }
+            if ($somaClasse >= RelatorioController::MARGEM_B && $somaClasse < RelatorioController::MARGEM_A) {
+                $classe = 'B';
+            }
+            if ($somaClasse >= RelatorioController::MARGEM_A) {
+                $classe = 'A';
+            }
+            $classClasse = RelatorioController::corDaLinhaPelaPerformance($classe);
+
+            $mensagemModalClasse .= "<div class='alert alert-info alert-sm'>";
+            if ($indiceDeRelatorios === 2) {
+                $mensagemModalClasse .= Funcoes::mesPorExtenso(date('m'), 1);
+            }
+            if ($indiceDeRelatorios === 1) {
+                $mesAnterior = date('m') - 1;
+                if (date('m') == 1) {
+                    $mesAnterior = 12;
+                }
+                $mensagemModalClasse .= Funcoes::mesPorExtenso($mesAnterior, 1);
+            }
+            $mensagemModalClasse .= ' - Classe <span class="label label-' . $classClasse . ' label-sm">' . $classe . ' </span>';
+            $mensagemModalClasse .= "</div>";
             $mensagemModalClasse .= $this->montaBarrasDeProgresso($fimIndice, $perfomanceMembresia, $qualRelatorio, $multiplicadorDaMeta, $metas, $qualRelatorioCelula, $perfomanceCelula, $pessoa);
+
+
+
+            if ($indiceDeRelatorios === 1) {
+                $classeTela = $classe;
+                $classClasseTela = $classClasse;
+            }
         }
 
         $html .= '<div class="page-heading">';
@@ -151,7 +163,7 @@ class DadosPrincipal extends AbstractHelper {
         $html .= '<div class="media-body va-m">';
         $html .= '<h2 class="media-heading">' . $pessoa->getNomePrimeiroUltimo() . '</h2>';
         $html .= '<p class="lead" style="font-size: 10px;">' . $hierarquia;
-        $html .= ' - Classe <span onclick="mostrarModalClasse();" ><span class="label label-' . $classClasse . ' label-sm">' . $classe . ' </span>&nbsp;<span class="badge badge-default">?</span></span>';
+        $html .= ' - Classe <span onclick="mostrarModalClasse();" ><span class="label label-' . $classClasseTela . ' label-sm">' . $classeTela . ' </span>&nbsp;<span class="badge badge-default">?</span></span>';
         $html .= '</p>';
         /* media-body va-m */
         $html .= '</div>';
