@@ -269,7 +269,7 @@ class Funcoes {
             $mesAnterior = 12;
         }
 
-        $periodoMesAnteriorFinal = $periodoMesAtualFinal - 1;
+        $periodoMesAnteriorFinal = $periodoMesAtualInicial - 1;
         $periodoMesAnteriorInicial = Funcoes::encontrarPeriodoDeUmMes($mesAnterior, $periodoMesAnteriorFinal);
 
         $resposta['periodoMesAtualInicial'] = $periodoMesAtualInicial;
