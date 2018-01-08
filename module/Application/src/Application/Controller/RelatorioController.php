@@ -497,8 +497,8 @@ class RelatorioController extends CircuitoController {
     const MARGEM_A = 100;
 
     public static function corDaLinhaPelaPerformance($valor, $tipo = 1) {
-        $class = '';
-        if ($valor == RelatorioController::MARGEM_D ||
+        $class = 'dark';
+        if ($valor <= RelatorioController::MARGEM_D ||
                 $valor == 'D') {
             $class = 'dark';
             if ($tipo === 2) {
