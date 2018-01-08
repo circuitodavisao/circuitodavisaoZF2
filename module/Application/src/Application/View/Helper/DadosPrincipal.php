@@ -70,6 +70,10 @@ class DadosPrincipal extends AbstractHelper {
 
             $valorMembresia = $qualRelatorio['membresia'];
             $valorCelulaQuantidade = $qualRelatorio['celulaQuantidade'];
+            if ($indiceDeRelatorios === 1) {
+                echo "##valorMembresia$valorMembresia";
+                echo "##valorCelulaQuantidade$valorCelulaQuantidade";
+            }
 
             $perfomanceMembresia = $valorMembresia / ($metas[0] * $multiplicadorDaMeta) * 100;
             $perfomanceCelula = $valorCelulaQuantidade / $metas[1] * 100;

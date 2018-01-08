@@ -481,7 +481,7 @@ class RelatorioController extends CircuitoController {
      * @return integer
      */
     public static function calculaMembresia($valorCulto, $valorArena, $valorDomingo) {
-        return $valorCulto / 3 + $valorArena / 2 + $valorDomingo;
+        return ($valorCulto / 3) + ($valorArena / 2) + $valorDomingo;
     }
 
     public static function formataNumeroRelatorio($valor) {
