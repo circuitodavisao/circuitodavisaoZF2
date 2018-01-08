@@ -227,6 +227,9 @@ class DadosPrincipal extends AbstractHelper {
                     break;
             }
             $labelBarra = RelatorioController::formataNumeroRelatorio($valorBarra);
+            if ($valorBarra > 100) {
+                $valorBarra = 100;
+            }
             if ($pessoa->getPessoaHierarquiaAtivo()->getHierarquia()->getId() !== Hierarquia::LIDER_DE_CELULA ||
                     ($pessoa->getPessoaHierarquiaAtivo()->getHierarquia()->getId() === Hierarquia::LIDER_DE_CELULA && $indice !== 1)) {
                 $html .= '<div class = "row">';
