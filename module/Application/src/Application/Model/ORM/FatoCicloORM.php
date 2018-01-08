@@ -332,7 +332,7 @@ class FatoCicloORM extends CircuitoORM {
         }
         if ($periodoFinal !== 0) {
             $somaResultado = $somaResultado / (($periodoFinal * -1) - ($periodoInicial * -1));
-            echo "$somaResultado = $somaResultado / (($periodoFinal * -1) - ($periodoInicial * -1));";
+            echo "######$somaResultado = $somaResultado / (($periodoFinal * -1) - ($periodoInicial * -1));";
         }
         return $somaResultado;
     }
