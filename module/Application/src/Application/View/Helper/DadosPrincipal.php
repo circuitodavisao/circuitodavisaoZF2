@@ -45,6 +45,8 @@ class DadosPrincipal extends AbstractHelper {
         $mensagemModalClasse .= '<p>Média de membresia e células pela meta da sua hierarquia no mês anterior.</p>';
 
         for ($indiceDeRelatorios = 1; $indiceDeRelatorios <= 2; $indiceDeRelatorios++) {
+            unset($qualRelatorio);
+            unset($qualRelatorioCelula);
             $nomeRelatorio = '';
             $atualOuAnterior = '';
 
