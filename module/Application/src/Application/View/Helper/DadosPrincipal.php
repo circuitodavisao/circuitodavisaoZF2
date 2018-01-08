@@ -211,18 +211,18 @@ class DadosPrincipal extends AbstractHelper {
                     $indiceRelatorio = 0;
                     $stringMeta = 'Cél. ' . $qualRelatorioCelula[$indiceRelatorio]['hospedeiro'];
                     $valorApresentado = $qualRelatorioCelula[$indiceRelatorio]['valor'];
-                    $labelBarra = $qualRelatorioCelula[$indiceRelatorio]['valor'];
+                    $labelBarra = $valorApresentado / $valorMeta * 100;
                     $valorMeta = $metas[0];
-                    $valorBarra = $valorApresentado / $valorMeta * 100;
+                    $valorBarra = $labelBarra;
                     $corBarra = RelatorioController::corDaLinhaPelaPerformance($valorBarra);
                     break;
                 case 3:
                     $indiceRelatorio = 1;
                     $stringMeta = 'Cél. ' . $qualRelatorioCelula[$indiceRelatorio]['hospedeiro'];
                     $valorApresentado = $qualRelatorioCelula[$indiceRelatorio]['valor'];
-                    $labelBarra = $qualRelatorioCelula[$indiceRelatorio]['valor'];
+                    $labelBarra = $valorApresentado / $valorMeta * 100;
                     $valorMeta = $metas[0];
-                    $valorBarra = $valorApresentado / $valorMeta * 100;
+                    $valorBarra = $labelBarra;
                     $corBarra = RelatorioController::corDaLinhaPelaPerformance($valorBarra);
                     break;
             }
