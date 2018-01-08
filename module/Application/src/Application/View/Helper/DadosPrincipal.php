@@ -100,6 +100,7 @@ class DadosPrincipal extends AbstractHelper {
                 $contagemDeEventos++;
             }
             $somaClasse = ($somaClasse + $perfomanceMembresia) / $contagemDeEventos;
+            echo "$somaClasse = ($somaClasse + $perfomanceMembresia) / $contagemDeEventos;";
             if ($somaClasse >= RelatorioController::MARGEM_D && $somaClasse < RelatorioController::MARGEM_C) {
                 $classe = 'D';
             }
