@@ -81,7 +81,8 @@ class DadosPrincipal extends AbstractHelper {
                 $perfomanceCelula = 100;
             }
 
-            $somaClasse = 0;
+            $somaCelulaDeElite = 0;
+            $somaCelulaQuantidade = 0;
             $contagemDeEventos = 1;
             if ($pessoa->getPessoaHierarquiaAtivo()->getHierarquia()->getId() === Hierarquia::LIDER_DE_CELULA) {
                 if ($qualRelatorioCelula) {
@@ -90,19 +91,17 @@ class DadosPrincipal extends AbstractHelper {
                         if ($perfomanceCelulaDeElite > 100) {
                             $perfomanceCelulaDeElite = 100;
                         }
-                        echo "##perfomanceCelulaDeElite$perfomanceCelulaDeElite";
-                        $somaClasse += $perfomanceCelulaDeElite;
+                        $somaCelulaDeElite += $perfomanceCelulaDeElite;
                     }
                     $contagemDeEventos += count($qualRelatorioCelula);
                 }
             }
             if ($pessoa->getPessoaHierarquiaAtivo()->getHierarquia()->getId() !== Hierarquia::LIDER_DE_CELULA) {
-                $somaClasse += $perfomanceCelula;
+                $somaCelulaQuantidade += $perfomanceCelula;
                 $contagemDeEventos++;
             }
-            echo "##perfomanceMembresia$perfomanceMembresia";
-            $somaClasse = ($somaClasse + $perfomanceMembresia) / $contagemDeEventos;
-            echo "$somaClasse = ($somaClasse + $perfomanceMembresia) / $contagemDeEventos;";
+            $somaClasse = ($somaCelulaDeElite + $somaCelulaQuantidade + $perfomanceMembresia) / $contagemDeEventos;
+            echo "$somaClasse = ($somaCelulaDeElite + $somaCelulaQuantidade + $perfomanceMembresia) / $contagemDeEventos;";
             if ($somaClasse >= RelatorioController::MARGEM_D && $somaClasse < RelatorioController::MARGEM_C) {
                 $classe = 'D';
             }
