@@ -323,13 +323,9 @@ class RelatorioController extends CircuitoController {
             $relatorio['membresiaPerformanceFrase'] = RelatorioController::corDaLinhaPelaPerformance($relatorio['membresiaPerformance'], 2);
         }
         if ($relatorio['membresiaPerformance'] == '' || $relatorio['membresiaPerformance'] == 0) {
-            echo "ffff";
             $relatorio['membresiaPerformanceClass'] = RelatorioController::corDaLinhaPelaPerformance(0);
             $relatorio['membresiaPerformanceFrase'] = RelatorioController::corDaLinhaPelaPerformance(0, 2);
         }
-        echo "###" . $relatorio['membresiaPerformance'];
-        echo "-" . $relatorio['membresiaPerformanceClass'] . '###';
-
         $relatorio['quantidadeLideres'] = $quantidadeLideres;
 
         /* Célula */
