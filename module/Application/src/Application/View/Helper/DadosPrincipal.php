@@ -188,36 +188,26 @@ class DadosPrincipal extends AbstractHelper {
         return $html;
     }
 
-    function montaBarrasDeProgresso($fimIndice, $perfomanceMembresia, $qualRelatorio, $multiplicadorDaMeta, $metas, $qualRelatorioCelula, $perfomanceCelula, $pessoa) {
+    function montaBarrasDeProgresso($fimIndice, $qualRelatorio, $multiplicadorDaMeta, $metas, $qualRelatorioCelula, $pessoa) {
         $html = '';
-        echo "%%%%%%perfomanceMembresia$perfomanceMembresia";
-        $perfomanceMembresiaVisual = $perfomanceMembresia;
-        if ($perfomanceMembresia > 100) {
-            $perfomanceMembresiaVisual = 100;
-        }
-
-        $perfomanceCelulaVisual = $perfomanceCelula;
-        if ($perfomanceCelula > 100) {
-            $perfomanceCelulaVisual = 100;
-        }
         for ($indice = 0; $indice <= $fimIndice; $indice++) {
             switch ($indice) {
                 case 0:
                     $stringMeta = 'Membresia';
                     $indiceRelatorio = 'membresia';
-                    $corBarra = RelatorioController::corDaLinhaPelaPerformance($perfomanceMembresia);
-                    $valorBarra = $perfomanceMembresiaVisual;
+                    $corBarra = RelatorioController::corDaLinhaPelaPerformance($qualRelatorio[$indiceRelatorio]);
+                    $valorBarra = $qualRelatorio[$indiceRelatorio] > 100 ? 100 : $qualRelatorio[$indiceRelatorio];
                     $valorApresentado = RelatorioController::formataNumeroRelatorio($qualRelatorio[$indiceRelatorio]);
-                    $labelBarra = $perfomanceMembresia;
+                    $labelBarra = $valorApresentado;
                     $valorMeta = $metas[0] * $multiplicadorDaMeta;
                     break;
                 case 1:
                     $stringMeta = 'Célula';
                     $indiceRelatorio = 'celulaQuantidade';
-                    $corBarra = RelatorioController::corDaLinhaPelaPerformance($perfomanceCelula);
-                    $valorBarra = $perfomanceCelulaVisual;
+                    $corBarra = RelatorioController::corDaLinhaPelaPerformance($qualRelatorio[$indiceRelatorio]);
+                    $valorBarra = $qualRelatorio[$indiceRelatorio] > 100 ? 100 : $qualRelatorio[$indiceRelatorio];
                     $valorApresentado = $qualRelatorio[$indiceRelatorio];
-                    $labelBarra = $perfomanceCelula;
+                    $labelBarra = $valorApresentado;
                     $valorMeta = $metas[1];
                     break;
                 case 2:
@@ -252,7 +242,7 @@ class DadosPrincipal extends AbstractHelper {
                 $html .= '<div class = "progress-bar progress-bar-' . $corBarra . '" role="progressbar" aria-valuenow="' . $valorBarra . '" aria-valuemin = "0" aria-valuemax="100" style="width: ' . $valorBarra . '%;">' . $labelBarra . '%</div>';
                 $html .= '</div>';
                 $html .= '</div>';
-                $html .= '<div class = "col-xs-3">' . $valorApresentado . '/' . $valorMeta . '</div>';
+                $html .= '<div class = "col-xs-3">' . $valorApresentado . ' de ' . $valorMeta . '</div>';
                 $html .= '</div>';
             }
         }
