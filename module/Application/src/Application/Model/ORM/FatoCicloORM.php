@@ -316,7 +316,7 @@ class FatoCicloORM extends CircuitoORM {
                 . "FROM  " . Constantes::$ENTITY_EVENTO_FREQUENCIA . " ef "
                 . "WHERE "
                 . "ef.evento_id = ?1 AND "
-                . "ef.data_criacao >= ?2 AND ef.data_criacao <= ?3 ";
+                . "ef.dia >= ?2 AND ef.dia <= ?3 ";
 
         $resultados = $this->getEntityManager()->createQuery($dqlBase)
                 ->setParameter(1, (int) $eventoId)
@@ -332,7 +332,6 @@ class FatoCicloORM extends CircuitoORM {
         }
         if ($periodoFinal !== 0) {
             $somaResultado = $somaResultado / (($periodoInicial * -1) - ($periodoFinal * -1));
-            echo "######$somaResultado = $somaResultado / (($periodoFinal * -1) - ($periodoInicial * -1));";
         }
         return $somaResultado;
     }
