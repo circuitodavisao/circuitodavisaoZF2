@@ -133,7 +133,7 @@ class DadosPrincipal extends AbstractHelper {
             }
             $mensagemModalClasse .= ' - Classe <span class="label label-' . $classClasse . ' label-sm">' . $classe . ' </span>';
             $mensagemModalClasse .= "</div>";
-            $mensagemModalClasse .= $this->montaBarrasDeProgresso($fimIndice, $perfomanceMembresia, $qualRelatorio, $multiplicadorDaMeta, $metas, $qualRelatorioCelula, $perfomanceCelula, $pessoa);
+            $mensagemModalClasse .= $this->montaBarrasDeProgresso($fimIndice, $qualRelatorio, $multiplicadorDaMeta, $metas, $qualRelatorioCelula, $pessoa);
 
             if ($indiceDeRelatorios === 1) {
                 $classeTela = $classe;
