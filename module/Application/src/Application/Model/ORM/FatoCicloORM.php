@@ -111,6 +111,7 @@ class FatoCicloORM extends CircuitoORM {
                 $dataDoPeriodoInicial = $resultadoPeriodoInicial[3] . '-' . $resultadoPeriodoInicial[2] . '-' . $resultadoPeriodoInicial[1];
                 $stringDatas = "AND fc.data_criacao <= ?2 AND fc.data_criacao >= '$dataDoPeriodoInicial' ";
                 $dqlAjustadaTipoComparacao = str_replace('#data', $stringDatas, $dqlAjustadaTipoComparacao);
+                echo "dqlAjustadaTipoComparacao$dqlAjustadaTipoComparacao";
                 $dataDoPeriodoFormatada = $dataDoPeriodo;
             }
             for ($indice = $dimensaoTipoCelula; $indice <= $dimensaoTipoDomingo; $indice++) {
