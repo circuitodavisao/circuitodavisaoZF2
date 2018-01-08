@@ -71,7 +71,7 @@ class DadosPrincipal extends AbstractHelper {
             $valorMembresia = $qualRelatorio['membresia'];
             $valorCelulaQuantidade = $qualRelatorio['celulaQuantidade'];
             if ($indiceDeRelatorios === 1) {
-                Funcoes::var_dump($qualRelatorio);
+//                Funcoes::var_dump($qualRelatorio);
             }
 
             $perfomanceMembresia = $valorMembresia / ($metas[0] * $multiplicadorDaMeta) * 100;

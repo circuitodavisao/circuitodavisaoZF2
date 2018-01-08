@@ -79,10 +79,10 @@ class FatoCicloORM extends CircuitoORM {
         $dimensaoTipoCelula = 1;
         $dimensaoTipoDomingo = 4;
         $dqlBase = "SELECT "
-                . "AVG(d.lider*1.0) lideres, "
-                . "AVG(d.visitante*1.0) visitantes, "
-                . "AVG(d.consolidacao*1.0) consolidacoes, "
-                . "AVG(d.membro*1.0) membros "
+                . "SUM(d.lider) lideres, "
+                . "SUM(d.visitante) visitantes, "
+                . "SUM(d.consolidacao) consolidacoes, "
+                . "SUM(d.membro) membros "
                 . "FROM  " . Constantes::$ENTITY_FATO_CICLO . " fc "
                 . "JOIN fc.dimensao d "
                 . "WHERE "
