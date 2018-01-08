@@ -118,7 +118,7 @@ class DadosPrincipal extends AbstractHelper {
             if ($somaClasse >= RelatorioController::MARGEM_A) {
                 $classe = 'A';
             }
-            $classClasse = RelatorioController::corDaLinhaPelaPerformance($classe);
+            $classClasse = RelatorioController::corDaLinhaPelaPerformanceClasse($classe);
 
             $mensagemModalClasse .= "<div class='alert alert-info alert-sm'>";
             if ($indiceDeRelatorios === 2) {

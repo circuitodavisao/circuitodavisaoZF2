@@ -502,40 +502,52 @@ class RelatorioController extends CircuitoController {
 
     public static function corDaLinhaPelaPerformance($valor, $tipo = 1) {
         $class = 'dark';
-        if ($valor >= RelatorioController::MARGEM_A ||
-                $valor == 'A') {
+        if ($valor >= RelatorioController::MARGEM_A) {
             $class = 'info';
             if ($tipo === 2) {
                 $class = 'Excelente, você está entre os melhores!';
             }
         }
-        if (($valor < RelatorioController::MARGEM_A && $valor > RelatorioController::MARGEM_B) ||
-                $valor == 'B') {
+        if (($valor < RelatorioController::MARGEM_A && $valor > RelatorioController::MARGEM_B)) {
             $class = 'success';
             if ($tipo === 2) {
                 $class = 'Parabéns, continue e logo estará entre os melhores';
             }
         }
-        if (($valor <= RelatorioController::MARGEM_B && $valor > RelatorioController::MARGEM_C) ||
-                $valor == 'C') {
+        if (($valor <= RelatorioController::MARGEM_B && $valor > RelatorioController::MARGEM_C)) {
             $class = 'warning';
             if ($tipo === 2) {
                 $class = 'Muito bom, você está no caminho continue focado!';
             }
         }
-        if (($valor <= RelatorioController::MARGEM_C && $valor > RelatorioController::MARGEM_D) ||
-                $valor == 'D') {
+        if (($valor <= RelatorioController::MARGEM_C && $valor > RelatorioController::MARGEM_D)) {
             $class = 'danger';
             if ($tipo === 2) {
                 $class = 'Vamos lá a persistência é o caminho, continue!';
             }
         }
-        if ($valor <= RelatorioController::MARGEM_D ||
-                $valor == 'D') {
+        if ($valor <= RelatorioController::MARGEM_D) {
             $class = 'dark';
             if ($tipo === 2) {
                 $class = 'Vamos lá a persistência é o caminho, continue!';
             }
+        }
+        return $class;
+    }
+
+    public static function corDaLinhaPelaPerformanceClasse($valor) {
+        $class = 'dark';
+        if ($valor == 'A') {
+            $class = 'info';
+        }
+        if ($valor == 'B') {
+            $class = 'success';
+        }
+        if ($valor == 'C') {
+            $class = 'warning';
+        }
+        if ($valor == 'D') {
+            $class = 'danger';
         }
         return $class;
     }
