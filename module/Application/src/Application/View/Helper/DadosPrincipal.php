@@ -80,7 +80,6 @@ class DadosPrincipal extends AbstractHelper {
             if ($perfomanceMembresia > 100) {
                 $perfomanceMembresiaVisual = 100;
             }
-            echo "###perfomanceMembresia$perfomanceMembresia";
 
             $perfomanceCelulaVisual = $perfomanceCelula;
             if ($perfomanceCelula > 100) {
@@ -191,6 +190,7 @@ class DadosPrincipal extends AbstractHelper {
 
     function montaBarrasDeProgresso($fimIndice, $perfomanceMembresia, $qualRelatorio, $multiplicadorDaMeta, $metas, $qualRelatorioCelula, $perfomanceCelula, $pessoa) {
         $html = '';
+        echo "$$$perfomanceMembresia$perfomanceMembresia";
         $perfomanceMembresiaVisual = $perfomanceMembresia;
         if ($perfomanceMembresia > 100) {
             $perfomanceMembresiaVisual = 100;
