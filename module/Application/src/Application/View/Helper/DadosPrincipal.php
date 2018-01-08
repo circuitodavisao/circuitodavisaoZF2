@@ -61,6 +61,7 @@ class DadosPrincipal extends AbstractHelper {
                 $nomeRelatorio = 'equipe' . $atualOuAnterior;
             }
             $qualRelatorio = $this->getRelatorioMedio()[$nomeRelatorio];
+            Funcoes::var_dump($qualRelatorio);
             $qualRelatorioCelula = $this->getRelatorioMedio()['celulas' . $atualOuAnterior];
 
             $fimIndice = 1;
@@ -101,7 +102,6 @@ class DadosPrincipal extends AbstractHelper {
                 $contagemDeEventos++;
             }
             $somaClasse = ($somaCelulaDeElite + $somaCelulaQuantidade + $perfomanceMembresia) / $contagemDeEventos;
-            echo "$somaClasse = ($somaCelulaDeElite + $somaCelulaQuantidade + $perfomanceMembresia) / $contagemDeEventos;";
             if ($somaClasse >= RelatorioController::MARGEM_D && $somaClasse < RelatorioController::MARGEM_C) {
                 $classe = 'D';
             }
