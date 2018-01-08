@@ -328,6 +328,9 @@ class RelatorioController extends CircuitoController {
         if ($periodoFinal != 0) {
             $periodoCelula = $periodoFinal;
         }
+        if ($periodoFinal === 0) {
+            $periodoCelula = -1;
+        }
         $relatorioCelula = $repositorioORM->getFatoCicloORM()->montarRelatorioCelulaPorNumeroIdentificador($numeroIdentificador, $periodoCelula, $tipoRelatorio);
         $relatorioCelulaDeElite = $repositorioORM->getFatoCicloORM()->montarRelatorioCelulaDeElitePorNumeroIdentificador($numeroIdentificador, $periodoCelula, $tipoRelatorio);
 
