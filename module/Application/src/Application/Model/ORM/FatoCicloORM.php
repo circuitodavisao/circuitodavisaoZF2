@@ -108,7 +108,7 @@ class FatoCicloORM extends CircuitoORM {
                 $dqlAjustadaTipoComparacao = str_replace('#data', 'AND fc.data_criacao = ?2 ', $dqlAjustadaTipoComparacao);
             } else {
                 $resultadoPeriodoFinal = Funcoes::montaPeriodo($periodoFinal);
-                $dataDoPeriodoFinal = $resultadoPeriodoFinal[4] . '-' . $resultadoPeriodoFinal[5] . '-' . $resultadoPeriodoFinal[6];
+                $dataDoPeriodoFinal = $resultadoPeriodoFinal[6] . '-' . $resultadoPeriodoFinal[5] . '-' . $resultadoPeriodoFinal[4];
                 $stringDatas = "AND fc.data_criacao >= ?2 AND fc.data_criacao <= '$dataDoPeriodoFinal' ";
                 $dqlAjustadaTipoComparacao = str_replace('#data', $stringDatas, $dqlAjustadaTipoComparacao);
                 $dataDoPeriodoFormatada = $dataDoPeriodo;
