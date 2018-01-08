@@ -195,7 +195,7 @@ class DadosPrincipal extends AbstractHelper {
                     $corBarra = RelatorioController::corDaLinhaPelaPerformance($perfomanceMembresia);
                     $valorBarra = $perfomanceMembresia;
                     $valorApresentado = RelatorioController::formataNumeroRelatorio($qualRelatorio[$indiceRelatorio]);
-                    $labelBarra = RelatorioController::formataNumeroRelatorio($valorBarra) . '%';
+                    $labelBarra = $valorBarra;
                     $valorMeta = $metas[0] * $multiplicadorDaMeta;
                     break;
                 case 1:
@@ -204,15 +204,15 @@ class DadosPrincipal extends AbstractHelper {
                     $corBarra = RelatorioController::corDaLinhaPelaPerformance($perfomanceCelula);
                     $valorBarra = $perfomanceCelula;
                     $valorApresentado = $qualRelatorio[$indiceRelatorio];
-                    $labelBarra = $valorBarra . '%';
+                    $labelBarra = $valorBarra;
                     $valorMeta = $metas[1];
                     break;
                 case 2:
                     $indiceRelatorio = 0;
                     $stringMeta = 'Cél. ' . $qualRelatorioCelula[$indiceRelatorio]['hospedeiro'];
                     $valorApresentado = $qualRelatorioCelula[$indiceRelatorio]['valor'];
-                    $labelBarra = $valorApresentado / $valorMeta * 100;
                     $valorMeta = $metas[0];
+                    $labelBarra = $valorApresentado / $valorMeta * 100;
                     $valorBarra = $labelBarra;
                     $corBarra = RelatorioController::corDaLinhaPelaPerformance($valorBarra);
                     break;
@@ -220,19 +220,20 @@ class DadosPrincipal extends AbstractHelper {
                     $indiceRelatorio = 1;
                     $stringMeta = 'Cél. ' . $qualRelatorioCelula[$indiceRelatorio]['hospedeiro'];
                     $valorApresentado = $qualRelatorioCelula[$indiceRelatorio]['valor'];
-                    $labelBarra = $valorApresentado / $valorMeta * 100;
                     $valorMeta = $metas[0];
+                    $labelBarra = $valorApresentado / $valorMeta * 100;
                     $valorBarra = $labelBarra;
                     $corBarra = RelatorioController::corDaLinhaPelaPerformance($valorBarra);
                     break;
             }
+            $labelBarra = RelatorioController::formataNumeroRelatorio($valorBarra);
             if ($pessoa->getPessoaHierarquiaAtivo()->getHierarquia()->getId() !== Hierarquia::LIDER_DE_CELULA ||
                     ($pessoa->getPessoaHierarquiaAtivo()->getHierarquia()->getId() === Hierarquia::LIDER_DE_CELULA && $indice !== 1)) {
                 $html .= '<div class = "row">';
                 $html .= '<div class = "col-xs-4 text-right">' . $stringMeta . '</div>';
                 $html .= '<div class = "col-xs-5">';
                 $html .= '<div class = "progress">';
-                $html .= '<div class = "progress-bar progress-bar-' . $corBarra . '" role="progressbar" aria-valuenow="' . $valorBarra . '" aria-valuemin = "0" aria-valuemax="100" style="width: ' . $valorBarra . '%;">' . $labelBarra . '</div>';
+                $html .= '<div class = "progress-bar progress-bar-' . $corBarra . '" role="progressbar" aria-valuenow="' . $valorBarra . '" aria-valuemin = "0" aria-valuemax="100" style="width: ' . $valorBarra . '%;">' . $labelBarra . '%</div>';
                 $html .= '</div>';
                 $html .= '</div>';
                 $html .= '<div class = "col-xs-3">' . $valorApresentado . '/' . $valorMeta . '</div>';
