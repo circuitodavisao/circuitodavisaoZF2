@@ -310,7 +310,7 @@ class FatoCicloORM extends CircuitoORM {
 
         $dataDoInicioFormatada = DateTime::createFromFormat('Y-m-d', $dataDoPeriodoInicial);
         $dataDoFimFormatada = DateTime::createFromFormat('Y-m-d', $dataDoPeriodoFinal);
-        echo "#####dataDoPeriodoInicial$dataDoPeriodoInicial - dataDoPeriodoFinal$dataDoPeriodoFinal";
+
         $dqlBase = "SELECT "
                 . "ef.frequencia "
                 . "FROM  " . Constantes::$ENTITY_EVENTO_FREQUENCIA . " ef "
@@ -331,7 +331,7 @@ class FatoCicloORM extends CircuitoORM {
             }
         }
         if ($periodoFinal !== 0) {
-            $somaResultado /= ($periodoFinal - $periodoInicial) * -1;
+            $somaResultado = $somaResultado / (($periodoFinal * -1) - ($periodoInicial * -1));
         }
         return $somaResultado;
     }
