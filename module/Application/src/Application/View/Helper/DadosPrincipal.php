@@ -90,6 +90,7 @@ class DadosPrincipal extends AbstractHelper {
                         if ($perfomanceCelulaDeElite > 100) {
                             $perfomanceCelulaDeElite = 100;
                         }
+                        echo "##perfomanceCelulaDeElite$perfomanceCelulaDeElite";
                         $somaClasse += $perfomanceCelulaDeElite;
                     }
                     $contagemDeEventos += count($qualRelatorioCelula);
@@ -99,6 +100,7 @@ class DadosPrincipal extends AbstractHelper {
                 $somaClasse += $perfomanceCelula;
                 $contagemDeEventos++;
             }
+            echo "##perfomanceMembresia$perfomanceMembresia";
             $somaClasse = ($somaClasse + $perfomanceMembresia) / $contagemDeEventos;
             echo "$somaClasse = ($somaClasse + $perfomanceMembresia) / $contagemDeEventos;";
             if ($somaClasse >= RelatorioController::MARGEM_D && $somaClasse < RelatorioController::MARGEM_C) {
