@@ -207,7 +207,7 @@ class DadosPrincipal extends AbstractHelper {
                     $corBarra = RelatorioController::corDaLinhaPelaPerformance($perfomanceCelula);
                     $valorBarra = $perfomanceCelula > 100 ? 100 : $perfomanceCelula;
                     $valorApresentado = RelatorioController::formataNumeroRelatorio($qualRelatorio[$indiceRelatorio]);
-                    $labelBarra = RelatorioController::formataNumeroRelatorio($qualRelatorio[$indiceRelatorio]);
+                    $labelBarra = $perfomanceCelula;
                     $valorMeta = $metas[1];
                     break;
                 case 2:
@@ -229,6 +229,7 @@ class DadosPrincipal extends AbstractHelper {
                     $corBarra = RelatorioController::corDaLinhaPelaPerformance($valorBarra);
                     break;
             }
+            $labelBarra = RelatorioController::formataNumeroRelatorio($labelBarra);
             if ($valorBarra > 100) {
                 $valorBarra = 100;
             }
