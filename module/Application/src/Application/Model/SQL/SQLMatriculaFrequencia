@@ -1,0 +1,44 @@
+
+-- Table: public.matricula_frequencia
+
+-- DROP TABLE public.matricula_frequencia;
+
+CREATE TABLE public.matricula_frequencia
+(
+    id integer NOT NULL DEFAULT nextval('matricula_frequencia_id_seq'::regclass),
+    matricula integer NOT NULL,
+    data_criacao date NOT NULL,
+    hora_criacao time without time zone NOT NULL,
+    data_inativacao date,
+    hora_inativacao time without time zone,
+    CONSTRAINT pk_matricula_frequencia PRIMARY KEY (id)
+)
+WITH (
+    OIDS = FALSE
+)
+TABLESPACE pg_default;
+
+ALTER TABLE public.matricula_frequencia
+    OWNER to postgres;
+COMMENT ON TABLE public.matricula_frequencia
+    IS 'Tabela com as frequencias vidas dos aplicativos';
+
+COMMENT ON COLUMN public.matricula_frequencia.id
+    IS 'Identificação';
+
+COMMENT ON COLUMN public.matricula_frequencia.matricula
+    IS 'Matricula do aluno';
+
+COMMENT ON COLUMN public.matricula_frequencia.data_criacao
+    IS 'Data de criação';
+
+COMMENT ON COLUMN public.matricula_frequencia.hora_criacao
+    IS 'Hora da criação';
+
+COMMENT ON COLUMN public.matricula_frequencia.data_inativacao
+    IS 'Data de inativação';
+
+COMMENT ON COLUMN public.matricula_frequencia.hora_inativacao
+    IS 'Hora de inativação';
+COMMENT ON CONSTRAINT pk_matricula_frequencia ON public.matricula_frequencia
+    IS 'Chave primaria da matricua frequencia vindo dos aplicativos';

@@ -23,10 +23,11 @@ use Application\Controller\RelatorioController;
                     <img src="/img/eve.png" class="img-responsive" />
                 </div>-->
                 <div class="col-xs-12 col-md-12 col-lg-12">
-                    <p class=" well bg-<?php echo $this->relatorio['membresiaPerformanceClass']; ?> text-center"><?php echo $this->relatorio['membresiaPerformanceFrase']; ?></p>
+                    <!--<p class=" well bg-<?php echo $this->relatorio['membresiaPerformanceClass'];  ?> text-center"><?php echo $this->relatorio['membresiaPerformanceFrase']; ?></p>-->
+                    <p class=" well bg-default text-<?php echo $this->relatorio['membresiaPerformanceClass']; ?> text-center"><?php echo $this->relatorio['membresiaPerformanceFrase']; ?></p>
                     <?php
                     echo $this->barraDeProgressoBonita(
-                            'Membresia Pessoal <span class="badge badge-info">?</span>', $this->relatorio['membresiaPerformanceClass'], $this->relatorio['membresiaPerformance'], 'm0', true, $this->relatorio['membresiaMeta'], $this->relatorio['membresia'], 'onclick="$(\'#divGaugesMembresia\').toggleClass(\'hidden\'); criarGauges(1);"');
+                            'Membresia Pessoal <span class="badge">?</span>', $this->relatorio['membresiaPerformanceClass'], $this->relatorio['membresiaPerformance'], 'm0', true, $this->relatorio['membresiaMeta'], $this->relatorio['membresia'], 'onclick="$(\'#divGaugesMembresia\').toggleClass(\'hidden\'); criarGauges(1);"');
                     ?>
                 </div>
             </div>
@@ -195,10 +196,11 @@ use Application\Controller\RelatorioController;
                     <img src="/img/avatars/1.jpg" class="img-responsive" />
                 </div>-->
                 <div class="col-xs-12 col-md-12 col-lg-12">
-                    <p class=" well bg-<?php echo $this->relatorio['celulaPerformanceClass']; ?> text-center"><?php echo $this->relatorio['celulaPerformanceFrase']; ?></p>
+                    <!--<p class=" well bg-<?php echo $this->relatorio['celulaPerformanceClass']; ?> text-center"><?php echo $this->relatorio['celulaPerformanceFrase']; ?></p>-->
+                    <p class=" well bg-default text-<?php echo $this->relatorio['celulaPerformanceClass']; ?> text-center"><?php echo $this->relatorio['celulaPerformanceFrase']; ?></p>
                     <?php
                     echo $this->barraDeProgressoBonita(
-                            'Célula Pessoal <span class="badge badge-info">?</span>', $this->relatorio['celulaPerformanceClass'], $this->relatorio['celulaPerformance'], 'm0', true, $this->relatorio['membresiaMeta'], $this->relatorio['celula'], 'onclick="$(\'#divGaugesCelula\').toggleClass(\'hidden\'); criarGauges(2);"');
+                            'Célula Pessoal <span class="badge">?</span>', $this->relatorio['celulaPerformanceClass'], $this->relatorio['celulaPerformance'], 'm0', true, $this->relatorio['membresiaMeta'], $this->relatorio['celula'], 'onclick="$(\'#divGaugesCelula\').toggleClass(\'hidden\'); criarGauges(2);"');
                     ?>
                 </div>
             </div>
@@ -227,7 +229,7 @@ use Application\Controller\RelatorioController;
                     </div>
                 </div>
             </div>
-            
+
             <!--modalInformativo-->
             <div id="modalInformativo" class="popup-basic p25 mfp-with-anim mfp-hide">
                 <div class="mt20"><span id="spanModalInformativo"></span></div>

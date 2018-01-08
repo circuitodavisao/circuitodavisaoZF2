@@ -1,30 +1,72 @@
--- Table: turma
+-- Table: public.turma
 
--- DROP TABLE turma;
+-- DROP TABLE public.turma;
 
-CREATE TABLE turma
+CREATE TABLE public.turma
 (
-  id serial NOT NULL, -- Identificação da turma
-  data date NOT NULL, -- Data de inicio do revisão de vidas
-  data_criacao date NOT NULL DEFAULT ('now'::text)::date, -- Data de criação da turma
-  hora_criacao time without time zone NOT NULL DEFAULT ('now'::text)::time with time zone, -- Hora de criação da turma
-  data_inativacao date, -- Data de inativação da turma
-  hora_inativacao time without time zone, -- Hora de inativação da turma
-  CONSTRAINT pk_turma PRIMARY KEY (id) -- Chave primaria da turma
+    id integer NOT NULL DEFAULT nextval('turma_id_seq'::regclass),
+    data_criacao date NOT NULL DEFAULT ('now'::text)::date,
+    hora_criacao time without time zone NOT NULL DEFAULT ('now'::text)::time with time zone,
+    data_inativacao date,
+    hora_inativacao time without time zone,
+    mes integer,
+    ano integer,
+    observacao character varying(200) COLLATE pg_catalog."default",
+    grupo_id integer NOT NULL,
+    curso_id integer NOT NULL,
+    CONSTRAINT pk_turma PRIMARY KEY (id),
+    CONSTRAINT fk_turma_curso_id FOREIGN KEY (curso_id)
+        REFERENCES public.curso (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION,
+    CONSTRAINT fk_turma_grupo_id FOREIGN KEY (grupo_id)
+        REFERENCES public.grupo (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
 )
 WITH (
-  OIDS=FALSE
-);
-ALTER TABLE turma
-  OWNER TO postgres;
-COMMENT ON TABLE turma
-  IS 'Tabela com os revisão de vidas ou turma do instituto de vencedores';
-COMMENT ON COLUMN turma.id IS 'Identificação da turma';
-COMMENT ON COLUMN turma.data IS 'Data de inicio do revisão de vidas';
-COMMENT ON COLUMN turma.data_criacao IS 'Data de criação da turma';
-COMMENT ON COLUMN turma.hora_criacao IS 'Hora de criação da turma';
-COMMENT ON COLUMN turma.data_inativacao IS 'Data de inativação da turma';
-COMMENT ON COLUMN turma.hora_inativacao IS 'Hora de inativação da turma';
+    OIDS = FALSE
+)
+TABLESPACE pg_default;
 
-COMMENT ON CONSTRAINT pk_turma ON turma IS 'Chave primaria da turma';
+ALTER TABLE public.turma
+    OWNER to postgres;
+COMMENT ON TABLE public.turma
+    IS 'Tabela com as turma dos cursos';
 
+COMMENT ON COLUMN public.turma.id
+    IS 'Identificação da turma';
+
+COMMENT ON COLUMN public.turma.data_criacao
+    IS 'Data de criação da turma';
+
+COMMENT ON COLUMN public.turma.hora_criacao
+    IS 'Hora de criação da turma';
+
+COMMENT ON COLUMN public.turma.data_inativacao
+    IS 'Data de inativação da turma';
+
+COMMENT ON COLUMN public.turma.hora_inativacao
+    IS 'Hora de inativação da turma';
+
+COMMENT ON COLUMN public.turma.mes
+    IS 'Mês de referência da turma';
+
+COMMENT ON COLUMN public.turma.ano
+    IS 'Ano de referência da turma';
+
+COMMENT ON COLUMN public.turma.observacao
+    IS 'Observação da turma';
+
+COMMENT ON COLUMN public.turma.grupo_id
+    IS 'Identificação do grupo';
+
+COMMENT ON COLUMN public.turma.curso_id
+    IS 'Identificação do curso';
+COMMENT ON CONSTRAINT pk_turma ON public.turma
+    IS 'Chave primaria da turma';
+
+COMMENT ON CONSTRAINT fk_turma_curso_id ON public.turma
+    IS 'Chave estrangeira da turma com o curso';
+COMMENT ON CONSTRAINT fk_turma_grupo_id ON public.turma
+    IS 'Chave estrangeira da turma com a igreja';

@@ -84,28 +84,16 @@ class DadosPrincipal extends AbstractHelper {
             $somaClasse = 0;
             $contagemDeEventos = 1;
             if ($pessoa->getPessoaHierarquiaAtivo()->getHierarquia()->getId() === Hierarquia::LIDER_DE_CELULA) {
-                $validacaoCelulaDeElite = 0;
                 if ($qualRelatorioCelula) {
                     foreach ($qualRelatorioCelula as $valorCelula) {
-                        if ($valorCelula['valor'] >= Constantes::$META_LIDER) {
-                            $validacaoCelulaDeElite += 100;
+                        $perfomanceCelulaDeElite = $valorCelula['valor'] / Constantes::$META_LIDER * 100;
+                        if ($perfomanceCelulaDeElite > 100) {
+                            $perfomanceCelulaDeElite = 100;
                         }
+                        $somaClasse += $perfomanceCelulaDeElite;
                     }
-                    $validacaoCelulaDeElite /= count($qualRelatorioCelula);
+                    $contagemDeEventos += count($qualRelatorioCelula);
                 }
-
-                if ($validacaoCelulaDeElite == 100) {
-                    $perfomanceCelulaDeElite = 34;
-                } else {
-                    if ($validacaoCelulaDeElite == 50) {
-                        $perfomanceCelulaDeElite = 17;
-                    } else {
-                        $perfomanceCelulaDeElite = 0;
-                    }
-                }
-
-                $contagemDeEventos += count($qualRelatorioCelula);
-                $somaClasse += $perfomanceCelulaDeElite;
             }
             if ($pessoa->getPessoaHierarquiaAtivo()->getHierarquia()->getId() !== Hierarquia::LIDER_DE_CELULA) {
                 $somaClasse += $perfomanceCelula;
@@ -141,8 +129,6 @@ class DadosPrincipal extends AbstractHelper {
             $mensagemModalClasse .= "</div>";
             $mensagemModalClasse .= $this->montaBarrasDeProgresso($fimIndice, $perfomanceMembresia, $qualRelatorio, $multiplicadorDaMeta, $metas, $qualRelatorioCelula, $perfomanceCelula, $pessoa);
 
-
-
             if ($indiceDeRelatorios === 1) {
                 $classeTela = $classe;
                 $classClasseTela = $classClasse;
@@ -162,7 +148,7 @@ class DadosPrincipal extends AbstractHelper {
         $html .= '<div class="media-body va-m">';
         $html .= '<h2 class="media-heading">' . $pessoa->getNomePrimeiroUltimo() . '</h2>';
         $html .= '<p class="lead" style="font-size: 10px;">' . $hierarquia;
-        $html .= ' - Classe <span onclick="mostrarModalClasse();" ><span class="label label-' . $classClasseTela . ' label-sm">' . $classeTela . ' </span>&nbsp;<span class="badge badge-default">?</span></span>';
+        $html .= ' - Classe <span onclick="mostrarModalClasse();" ><span class="label label-' . $classClasseTela . ' label-sm">' . $classeTela . ' </span>&nbsp;<span class="badge">?</span></span>';
         $html .= '</p>';
         /* media-body va-m */
         $html .= '</div>';
