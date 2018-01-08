@@ -76,11 +76,14 @@ class DadosPrincipal extends AbstractHelper {
             $perfomanceMembresia = $valorMembresia / ($metas[0] * $multiplicadorDaMeta) * 100;
             $perfomanceCelula = $valorCelulaQuantidade / $metas[1] * 100;
 
+            $perfomanceMembresiaVisual = $perfomanceMembresia;
             if ($perfomanceMembresia > 100) {
-                $perfomanceMembresia = 100;
+                $perfomanceMembresiaVisual = 100;
             }
+
+            $perfomanceCelulaVisual = $perfomanceCelula;
             if ($perfomanceCelula > 100) {
-                $perfomanceCelula = 100;
+                $perfomanceCelulaVisual = 100;
             }
 
             $somaCelulaDeElite = 0;
@@ -99,10 +102,10 @@ class DadosPrincipal extends AbstractHelper {
                 }
             }
             if ($pessoa->getPessoaHierarquiaAtivo()->getHierarquia()->getId() !== Hierarquia::LIDER_DE_CELULA) {
-                $somaCelulaQuantidade += $perfomanceCelula;
+                $somaCelulaQuantidade += $perfomanceCelulaVisual;
                 $contagemDeEventos++;
             }
-            $somaClasse = ($somaCelulaDeElite + $somaCelulaQuantidade + $perfomanceMembresia) / $contagemDeEventos;
+            $somaClasse = ($somaCelulaDeElite + $somaCelulaQuantidade + $perfomanceMembresiaVisual) / $contagemDeEventos;
             if ($somaClasse >= RelatorioController::MARGEM_D && $somaClasse < RelatorioController::MARGEM_C) {
                 $classe = 'D';
             }
@@ -187,13 +190,22 @@ class DadosPrincipal extends AbstractHelper {
 
     function montaBarrasDeProgresso($fimIndice, $perfomanceMembresia, $qualRelatorio, $multiplicadorDaMeta, $metas, $qualRelatorioCelula, $perfomanceCelula, $pessoa) {
         $html = '';
+        $perfomanceMembresiaVisual = $perfomanceMembresia;
+        if ($perfomanceMembresia > 100) {
+            $perfomanceMembresiaVisual = 100;
+        }
+
+        $perfomanceCelulaVisual = $perfomanceCelula;
+        if ($perfomanceCelula > 100) {
+            $perfomanceCelulaVisual = 100;
+        }
         for ($indice = 0; $indice <= $fimIndice; $indice++) {
             switch ($indice) {
                 case 0:
                     $stringMeta = 'Membresia';
                     $indiceRelatorio = 'membresia';
                     $corBarra = RelatorioController::corDaLinhaPelaPerformance($perfomanceMembresia);
-                    $valorBarra = $perfomanceMembresia;
+                    $valorBarra = $perfomanceMembresiaVisual;
                     $valorApresentado = RelatorioController::formataNumeroRelatorio($qualRelatorio[$indiceRelatorio]);
                     $labelBarra = $valorBarra;
                     $valorMeta = $metas[0] * $multiplicadorDaMeta;
@@ -202,7 +214,7 @@ class DadosPrincipal extends AbstractHelper {
                     $stringMeta = 'Célula';
                     $indiceRelatorio = 'celulaQuantidade';
                     $corBarra = RelatorioController::corDaLinhaPelaPerformance($perfomanceCelula);
-                    $valorBarra = $perfomanceCelula;
+                    $valorBarra = $perfomanceCelulaVisual;
                     $valorApresentado = $qualRelatorio[$indiceRelatorio];
                     $labelBarra = $valorBarra;
                     $valorMeta = $metas[1];

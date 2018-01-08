@@ -45,7 +45,6 @@ class PrincipalController extends CircuitoController {
 
         /* encontrando os periodos do mes atual e anterior */
         $arrayPeriodos = Funcoes::encontrarNumeroDePeriodosNoMesAtualEAnterior();
-        Funcoes::var_dump($arrayPeriodos);
         $relatorioMedio = array();
         if ($pessoa->getPessoaHierarquiaAtivo()->getHierarquia()->getId() === Hierarquia::LIDER_DE_CELULA) {
             $relatorioMedio['pessoalAtual'] = RelatorioController::montaRelatorio($this->getRepositorio(), $numeroIdentificador, $arrayPeriodos['periodoMesAtualInicial'], $tipoRelatorioPessoal, $arrayPeriodos['periodoMesAtualFinal']);
