@@ -503,6 +503,7 @@ class RelatorioController extends CircuitoController {
 
     public static function corDaLinhaPelaPerformance($valor, $tipo = 1) {
         $class = 'dark';
+        $valor = (float) $valor;
         if ($valor <= RelatorioController::MARGEM_D ||
                 $valor == 'D') {
             $class = 'dark';
