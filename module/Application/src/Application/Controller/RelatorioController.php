@@ -324,6 +324,7 @@ class RelatorioController extends CircuitoController {
             $relatorio['membresiaPerformanceClass'] = RelatorioController::corDaLinhaPelaPerformance($relatorio['membresiaPerformance']);
             $relatorio['membresiaPerformanceFrase'] = RelatorioController::corDaLinhaPelaPerformance($relatorio['membresiaPerformance'], 2);
         }
+        echo "<br />pemfo: " . $relatorio['membresiaPerformance'];
 
         $relatorio['quantidadeLideres'] = $quantidadeLideres;
 
