@@ -61,7 +61,6 @@ class DadosPrincipal extends AbstractHelper {
                 $nomeRelatorio = 'equipe' . $atualOuAnterior;
             }
             $qualRelatorio = $this->getRelatorioMedio()[$nomeRelatorio];
-            Funcoes::var_dump($qualRelatorio);
             $qualRelatorioCelula = $this->getRelatorioMedio()['celulas' . $atualOuAnterior];
 
             $fimIndice = 1;
