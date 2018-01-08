@@ -302,18 +302,14 @@ class FatoCicloORM extends CircuitoORM {
     }
 
     public function verificaFrequenciasPorCelulaEPeriodo($periodoInicial, $eventoId, $periodoFinal = 0) {
-        $resultadoPeriodo = Funcoes::montaPeriodo($periodoInicial);
+        $resultadoPeriodoInicial = Funcoes::montaPeriodo($periodoInicial);
+        $dataDoPeriodoInicial = $resultadoPeriodoInicial[3] . '-' . $resultadoPeriodoInicial[2] . '-' . $resultadoPeriodoInicial[1];
 
-        if ($periodoFinal === 0) {
-            $dataDoPeriodo = $resultadoPeriodo[3] . '-' . $resultadoPeriodo[2] . '-' . $resultadoPeriodo[1];
-            $dataDoInicioFormatada = DateTime::createFromFormat('Y-m-d', $dataDoPeriodo);
-        } else {
-            $resultadoPeriodoFinal = Funcoes::montaPeriodo($periodoFinal);
-            $dataDoPeriodo = $resultadoPeriodoFinal[3] . '-' . $resultadoPeriodoFinal[2] . '-' . $resultadoPeriodoFinal[1];
-            $dataDoInicioFormatada = DateTime::createFromFormat('Y-m-d', $dataDoPeriodo);
-        }
-        $dataDoPeriodoFim = $resultadoPeriodo[6] . '-' . $resultadoPeriodo[5] . '-' . $resultadoPeriodo[4];
-        $dataDoFimFormatada = DateTime::createFromFormat('Y-m-d', $dataDoPeriodoFim);
+        $resultadoPeriodoFinal = Funcoes::montaPeriodo($periodoFinal);
+        $dataDoPeriodoFinal = $resultadoPeriodoFinal[6] . '-' . $resultadoPeriodoFinal[5] . '-' . $resultadoPeriodoFinal[4];
+
+        $dataDoInicioFormatada = DateTime::createFromFormat('Y-m-d', $dataDoPeriodoInicial);
+        $dataDoFimFormatada = DateTime::createFromFormat('Y-m-d', $dataDoPeriodoFinal);
         $dqlBase = "SELECT "
                 . "ef.frequencia "
                 . "FROM  " . Constantes::$ENTITY_EVENTO_FREQUENCIA . " ef "
