@@ -190,7 +190,7 @@ class DadosPrincipal extends AbstractHelper {
 
     function montaBarrasDeProgresso($fimIndice, $perfomanceMembresia, $qualRelatorio, $multiplicadorDaMeta, $metas, $qualRelatorioCelula, $perfomanceCelula, $pessoa) {
         $html = '';
-        echo "$$$perfomanceMembresia$perfomanceMembresia";
+        echo "%%%%%%perfomanceMembresia$perfomanceMembresia";
         $perfomanceMembresiaVisual = $perfomanceMembresia;
         if ($perfomanceMembresia > 100) {
             $perfomanceMembresiaVisual = 100;
