@@ -60,7 +60,7 @@ class DadosPrincipal extends AbstractHelper {
             $qualRelatorio = $this->getRelatorioMedio()[$nomeRelatorio];
             $qualRelatorioCelula = $this->getRelatorioMedio()['celulas' . $atualOuAnterior];
 
-            $fimIndice = 1;
+            $fimIndice = 0;
             $fimIndice += count($qualRelatorioCelula);
 
             $valorMembresia = $qualRelatorio['membresia'];
