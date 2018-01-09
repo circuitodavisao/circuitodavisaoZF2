@@ -46,15 +46,10 @@ class PrincipalController extends CircuitoController {
         /* encontrando os periodos do mes atual e anterior */
         $arrayPeriodos = Funcoes::encontrarNumeroDePeriodosNoMesAtualEAnterior();
         $relatorioMedio = array();
-        if ($pessoa->getPessoaHierarquiaAtivo()->getHierarquia()->getId() === Hierarquia::LIDER_DE_CELULA) {
-            $relatorioMedio['pessoalAtual'] = RelatorioController::montaRelatorio($this->getRepositorio(), $numeroIdentificador, $arrayPeriodos['periodoMesAtualInicial'], $tipoRelatorioPessoal, $arrayPeriodos['periodoMesAtualFinal']);
-            $relatorioMedio['pessoalAnterior'] = RelatorioController::montaRelatorio($this->getRepositorio(), $numeroIdentificador, $arrayPeriodos['periodoMesAnteriorInicial'], $tipoRelatorioPessoal, $arrayPeriodos['periodoMesAnteriorlFinal']);
-            $relatorioMedio['celulasAtual'] = RelatorioController::saberQuaisdasMinhasCelulasSaoDeElite($this->getRepositorio(), $grupo, $arrayPeriodos['periodoMesAtualInicial'], $arrayPeriodos['periodoMesAtualFinal']);
-            $relatorioMedio['celulasAnterior'] = RelatorioController::saberQuaisdasMinhasCelulasSaoDeElite($this->getRepositorio(), $grupo, $arrayPeriodos['periodoMesAnteriorInicial'], $arrayPeriodos['periodoMesAnteriorlFinal']);
-        } else {
-            $relatorioMedio['equipeAtual'] = RelatorioController::montaRelatorio($this->getRepositorio(), $numeroIdentificador, $arrayPeriodos['periodoMesAtualInicial'], $tipoRelatorioEquipe, $arrayPeriodos['periodoMesAtualFinal']);
-            $relatorioMedio['equipeAnterior'] = RelatorioController::montaRelatorio($this->getRepositorio(), $numeroIdentificador, $arrayPeriodos['periodoMesAnteriorInicial'], $tipoRelatorioEquipe, $arrayPeriodos['periodoMesAnteriorlFinal']);
-        }
+        $relatorioMedio['pessoalAtual'] = RelatorioController::montaRelatorio($this->getRepositorio(), $numeroIdentificador, $arrayPeriodos['periodoMesAtualInicial'], $tipoRelatorioPessoal, $arrayPeriodos['periodoMesAtualFinal']);
+        $relatorioMedio['pessoalAnterior'] = RelatorioController::montaRelatorio($this->getRepositorio(), $numeroIdentificador, $arrayPeriodos['periodoMesAnteriorInicial'], $tipoRelatorioPessoal, $arrayPeriodos['periodoMesAnteriorlFinal']);
+        $relatorioMedio['celulasAtual'] = RelatorioController::saberQuaisdasMinhasCelulasSaoDeElite($this->getRepositorio(), $grupo, $arrayPeriodos['periodoMesAtualInicial'], $arrayPeriodos['periodoMesAtualFinal']);
+        $relatorioMedio['celulasAnterior'] = RelatorioController::saberQuaisdasMinhasCelulasSaoDeElite($this->getRepositorio(), $grupo, $arrayPeriodos['periodoMesAnteriorInicial'], $arrayPeriodos['periodoMesAnteriorlFinal']);
 
         $hierarquias = $this->getRepositorio()->getHierarquiaORM()->encontrarTodas();
 

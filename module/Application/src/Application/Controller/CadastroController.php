@@ -527,7 +527,7 @@ class CadastroController extends CircuitoController {
                     if (!empty($post_data[Constantes::$FORM_ID])) {
                         $criarNovoEvento = false;
                         $eventoAtual = $this->getRepositorio()->getEventoORM()->encontrarPorId($post_data[Constantes::$FORM_ID]);
-                        
+
                         $grupoEventoAtivos = $eventoAtual->getGrupoEventoAtivos();
                         /* Dia foi alterado */
                         if ($post_data[Constantes::$FORM_DIA_DA_SEMANA] != $eventoAtual->getDia()) {
@@ -992,7 +992,7 @@ class CadastroController extends CircuitoController {
         $entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
 
         $grupo = $entidade->getGrupo();
-        $arrayGrupoAlunos = $grupo->getGrupoAlunoAtivos();
+
 //        $mostrarCadastro = false;
 //        if (!empty($arrayGrupoAlunos)) {
         $mostrarCadastro = true;

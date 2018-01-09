@@ -27,164 +27,90 @@ use Application\Controller\RelatorioController;
                             'Membresia Pessoal <span class="badge">?</span>', $this->relatorio['membresiaPerformanceClass'], $this->relatorio['membresiaPerformance'], 'm0', true, $this->relatorio['membresiaMeta'], $this->relatorio['membresia'], 'onclick="$(\'#divGaugesMembresia\').toggleClass(\'hidden\'); criarGauges(1);"');
                     ?>
                 </div>
-            </div>
-            <!--Gauges membresia-->
-            <div id="divGaugesMembresia" class="row p10 hidden">
-                <div class="panel">
-                    <div class="panel-body">
-                        <?php
-                        $perfomance = array();
-                        $perfomance['culto'] = $this->relatorio['membresiaCulto'] / $this->relatorio['membresiaMeta'] * 100;
-                        $perfomance['arena'] = $this->relatorio['membresiaArena'] / $this->relatorio['membresiaMeta'] * 100;
-                        $perfomance['domingo'] = $this->relatorio['membresiaDomingo'] / $this->relatorio['membresiaMeta'] * 100;
-                        ?>
-                        <!--row gauges-->
-                        <div class="row">
-                            <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3 text-center">
-                                <div class="panel panel-tile text-center br-a br-grey">
-                                    <div class="panel-body">
-                                        <h3>Meta do Culto</h3>
-                                        <h4><span id="spanMetaCulto"></span> pessoas <span onclick="mostrarModalInformativo(1);" class="badge badge-info">?</span></h4>
-                                        <canvas id="gaugeCulto" style="width:100%;" class="canvas-preview" ></canvas>
-                                        <h4><span id="labelValorCulto"></span> pessoas</h4>
-                                    </div>
-                                    <div class="panel-footer br-t p12">
-                                        <span class="fs11">
-                                            <i class="fa fa-arrow-<?php echo $this->relatorio['diferencaCultoSeta']; ?> pr5"></i> <?php echo RelatorioController::formataNumeroRelatorio($this->relatorio['diferencaCulto']); ?>% <?php echo $this->relatorio['diferencaCultoFrase']; ?>
-                                            <b>1 SEMANA ATRÁS</b>
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3 text-center">
-                                <div class="panel panel-tile text-center br-a br-grey">
-                                    <div class="panel-body">
-                                        <h3>Meta do Arena</h3>
-                                        <h4><span id="spanMetaArena"></span> pessoas <span onclick="mostrarModalInformativo(2);" class="badge badge-info">?</span></h4>
-                                        <canvas id="gaugeArena" id="gaugeCulto" style="width:100%;" class="canvas-preview"></canvas>
-                                        <h4><span id="labelValorArena"></span> pessoas</h4>
-                                    </div>                                               
-                                    <div class="panel-footer br-t p12">
-                                        <span class="fs11">
-                                            <i class="fa fa-arrow-<?php echo $this->relatorio['diferencaArenaSeta']; ?> pr5"></i> <?php echo RelatorioController::formataNumeroRelatorio($this->relatorio['diferencaArena']); ?>% <?php echo $this->relatorio['diferencaArenaFrase']; ?>
-                                            <b>1 SEMANA ATRÁS</b>
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3 text-center">
-                                <div class="panel panel-tile text-center br-a br-grey">
-                                    <div class="panel-body">
-                                        <h3>Meta do Domingo</h3>
-                                        <h4><span id="spanMetaDomingo"></span> pessoas <span onclick="mostrarModalInformativo(1);" class="badge badge-info">?</span></h4>
-                                        <canvas id="gaugeDomingo" id="gaugeCulto" style="width:100%;" class="canvas-preview"></canvas>
-                                        <h4><span id="labelValorDomingo"></span> pessoas</h4>
-                                    </div>
-                                    <div class="panel-footer br-t p12">
-                                        <span class="fs11">
-                                            <i class="fa fa-arrow-<?php echo $this->relatorio['diferencaDomingoSeta']; ?> pr5"></i> <?php echo RelatorioController::formataNumeroRelatorio($this->relatorio['diferencaDomingo']); ?>% <?php echo $this->relatorio['diferencaDomingoFrase']; ?>
-                                            <b>1 SEMANA ATRÁS</b>
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3 text-center">
-                                <div class="panel panel-tile text-center br-a br-grey">
-                                    <div class="panel-body">
-                                        <h3>Meta da Membresia</h3>
-                                        <h4><span id="spanMetaMembresia"></span> membresia <span onclick="mostrarModalInformativo(3);" class="badge badge-info">?</span></h4>
-                                        <canvas id="gaugeMembresia" id="gaugeCulto" style="width:100%;" class="canvas-preview"></canvas>
-                                        <h4><span id="labelValorMembresia"></span> membresia</h4>
-                                    </div>
-                                    <div class="panel-footer br-t p12">
-                                        <span class="fs11">
-                                            <i class="fa fa-arrow-<?php echo $this->relatorio['diferencaMembresiaSeta']; ?> pr5"></i> <?php echo RelatorioController::formataNumeroRelatorio($this->relatorio['diferencaMembresia']); ?>% <?php echo $this->relatorio['diferencaMembresiaFrase']; ?>
-                                            <b>1 SEMANA ATRÁS</b>
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <!--row chart lines-->
-                        <div class="row m25">
-                            <!-- Chart Column -->
-                            <div class="col-md-12 pln br-r mvn15">
-                                <div id="ecommerce_chart1" style="height: 300px;"></div>
-                            </div>
+                <!--Gauges membresia-->
+                <div class="col-xs-12 col-md-12 col-lg-12">
+                    <div id="divGaugesMembresia" class="row p10 hidden">
+                        <div class="panel">
+                            <div class="panel-body">
+                                <?php
+                                $perfomance = array();
+                                $perfomance['culto'] = $this->relatorio['membresiaCulto'] / $this->relatorio['membresiaMeta'] * 100;
+                                $perfomance['arena'] = $this->relatorio['membresiaArena'] / $this->relatorio['membresiaMeta'] * 100;
+                                $perfomance['domingo'] = $this->relatorio['membresiaDomingo'] / $this->relatorio['membresiaMeta'] * 100;
+                                ?>
+                                <!--row gauges-->
+                                <div class="row">
+                                    <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3 text-center">
+                                        <div class="panel panel-tile text-center br-a br-grey">
+                                            <div class="panel-body">
+                                                <h3>Meta do Culto</h3>
+                                                <h4><span id="spanMetaCulto"></span> pessoas <span onclick="mostrarModalInformativo(1);" class="badge badge-info">?</span></h4>
+                                                <canvas id="gaugeCulto" style="width:100%;" class="canvas-preview" ></canvas>
+                                                <h4><span id="labelValorCulto"></span> pessoas</h4>
+                                            </div>
+                                            <div class="panel-footer br-t p12">
+                                                <span class="fs11">
 
-                            <!-- Multi Text Column -->
-                            <!--                                    <div class="col-md-5">
-                                                                    <h5 class="mt5 mbn ph10 pb5 br-b fw600">Top Referrals
-                                                                        <small class="pull-right fw600 text-primary">View Report </small>
-                                                                    </h5>
-                                                                    <table class="table mbn tc-med-1 tc-bold-last tc-fs13-last">
-                                                                        <thead>
-                                                                            <tr class="hidden">
-                                                                                <th>Source</th>
-                                                                                <th>Count</th>
-                                                                            </tr>
-                                                                        </thead>
-                                                                        <tbody>
-                                                                            <tr>
-                                                                                <td>
-                                                                                    <i class="fa fa-circle text-warning fs8 pr15"></i>
-                                                                                    <span>www.google.com</span>
-                                                                                </td>
-                                                                                <td>1,926</td>
-                                                                            </tr>
-                                                                            <tr>
-                                                                                <td>
-                                                                                    <i class="fa fa-circle text-warning fs8 pr15"></i>
-                                                                                    <span>www.yahoo.com</span>
-                                                                                </td>
-                                                                                <td>1,254</td>
-                                                                            </tr>
-                                                                            <tr>
-                                                                                <td>
-                                                                                    <i class="fa fa-circle text-warning fs8 pr15"></i>
-                                                                                    <span>www.themeforest.com</span>
-                                                                                </td>
-                                                                                <td>783</td>
-                                                                            </tr>
-                                                                        </tbody>
-                                                                    </table>
-                                                                    <h5 class="mt15 mbn ph10 pb5 br-b fw600">Top Search Terms
-                                                                        <small class="pull-right fw600 text-primary">View Report </small>
-                                                                    </h5>
-                                                                    <table class="table mbn tc-med-1 tc-bold-last tc-fs13-last">
-                                                                        <thead>
-                                                                            <tr class="hidden">
-                                                                                <th>Source</th>
-                                                                                <th>Count</th>
-                                                                            </tr>
-                                                                        </thead>
-                                                                        <tbody>
-                                                                            <tr>
-                                                                                <td>
-                                                                                    <i class="fa fa-circle text-warning fs8 pr15"></i>
-                                                                                    <span>admin theme</span>
-                                                                                </td>
-                                                                                <td>988</td>
-                                                                            </tr>
-                                                                            <tr>
-                                                                                <td>
-                                                                                    <i class="fa fa-circle text-warning fs8 pr15"></i>
-                                                                                    <span>admin dashboard</span>
-                                                                                </td>
-                                                                                <td>612</td>
-                                                                            </tr>
-                                                                            <tr>
-                                                                                <td>
-                                                                                    <i class="fa fa-circle text-warning fs8 pr15"></i>
-                                                                                    <span>admin template</span>
-                                                                                </td>
-                                                                                <td>256</td>
-                                                                            </tr>
-                                                                        </tbody>
-                                                                    </table>
-                                                                </div>-->
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3 text-center">
+                                        <div class="panel panel-tile text-center br-a br-grey">
+                                            <div class="panel-body">
+                                                <h3>Meta do Arena</h3>
+                                                <h4><span id="spanMetaArena"></span> pessoas <span onclick="mostrarModalInformativo(2);" class="badge badge-info">?</span></h4>
+                                                <canvas id="gaugeArena" id="gaugeCulto" style="width:100%;" class="canvas-preview"></canvas>
+                                                <h4><span id="labelValorArena"></span> pessoas</h4>
+                                            </div>                                               
+                                            <div class="panel-footer br-t p12">
+                                                <span class="fs11">
+
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3 text-center">
+                                        <div class="panel panel-tile text-center br-a br-grey">
+                                            <div class="panel-body">
+                                                <h3>Meta do Domingo</h3>
+                                                <h4><span id="spanMetaDomingo"></span> pessoas <span onclick="mostrarModalInformativo(1);" class="badge badge-info">?</span></h4>
+                                                <canvas id="gaugeDomingo" id="gaugeCulto" style="width:100%;" class="canvas-preview"></canvas>
+                                                <h4><span id="labelValorDomingo"></span> pessoas</h4>
+                                            </div>
+                                            <div class="panel-footer br-t p12">
+                                                <span class="fs11">
+
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3 text-center">
+                                        <div class="panel panel-tile text-center br-a br-grey">
+                                            <div class="panel-body">
+                                                <h3>Meta da Membresia</h3>
+                                                <h4><span id="spanMetaMembresia"></span> membresia <span onclick="mostrarModalInformativo(3);" class="badge badge-info">?</span></h4>
+                                                <canvas id="gaugeMembresia" id="gaugeCulto" style="width:100%;" class="canvas-preview"></canvas>
+                                                <h4><span id="labelValorMembresia"></span> membresia</h4>
+                                            </div>
+                                            <div class="panel-footer br-t p12">
+                                                <span class="fs11">
+
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--row chart lines-->
+                                <div class="row m25">
+                                    <!-- Chart Column -->
+                                    <div class="col-md-12 pln br-r mvn15">
+
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                    </div>
+                    </div>                    
                 </div>
             </div>
             <!--robo celula-->
@@ -197,25 +123,27 @@ use Application\Controller\RelatorioController;
                             'Célula Pessoal <span class="badge">?</span>', $this->relatorio['celulaPerformanceClass'], $this->relatorio['celulaPerformance'], 'm0', true, $this->relatorio['membresiaMeta'], $this->relatorio['celula'], 'onclick="$(\'#divGaugesCelula\').toggleClass(\'hidden\'); criarGauges(2);"');
                     ?>
                 </div>
-            </div>
-            <!--Gauges celulas-->
-            <div id="divGaugesCelula" class="row p10 hidden">
-                <div class="panel">
-                    <div class="panel-body">
-                        <div class="row">
-                            <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3 text-center">
-                                <div class="panel panel-tile text-center br-a br-grey">
-                                    <div class="panel-body">
-                                        <h3>Meta do Célula</h3>
-                                        <h4><span id="spanMetaCelula"></span> pessoas <span onclick="mostrarModalInformativo(3);" class="badge badge-info">?</span></h4>
-                                        <canvas id="gaugeCelula" style="width:100%;" class="canvas-preview" ></canvas>
-                                        <h4><span id="labelValorCelula"></span> pessoas</h4>
-                                    </div>
-                                    <div class="panel-footer br-t p12">
-                                        <span class="fs11">
-                                            <i class="fa fa-arrow-<?php echo $this->relatorio['diferencaCelulaSeta']; ?> pr5"></i> <?php echo RelatorioController::formataNumeroRelatorio($this->relatorio['diferencaCelula']); ?>% <?php echo $this->relatorio['diferencaCelulaFrase']; ?>
-                                            <b>1 SEMANA ATRÁS</b>
-                                        </span>
+                <!--Gauges celulas-->
+                <div class="col-xs-12 col-md-12 col-lg-12">
+                    <div id="divGaugesCelula" class="row p10 hidden">
+                        <div class="panel">
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3 text-center">
+                                        <div class="panel panel-tile text-center br-a br-grey">
+                                            <div class="panel-body">
+                                                <h3>Meta do Célula</h3>
+                                                <h4><span id="spanMetaCelula"></span> pessoas <span onclick="mostrarModalInformativo(3);" class="badge badge-info">?</span></h4>
+                                                <canvas id="gaugeCelula" style="width:100%;" class="canvas-preview" ></canvas>
+                                                <h4><span id="labelValorCelula"></span> pessoas</h4>
+                                            </div>
+                                            <div class="panel-footer br-t p12">
+                                                <span class="fs11">
+                                                    <i class="fa fa-arrow-<?php echo $this->relatorio['diferencaCelulaSeta']; ?> pr5"></i> <?php echo RelatorioController::formataNumeroRelatorio($this->relatorio['diferencaCelula']); ?>% <?php echo $this->relatorio['diferencaCelulaFrase']; ?>
+                                                    <b>1 SEMANA ATRÁS</b>
+                                                </span>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -229,16 +157,13 @@ use Application\Controller\RelatorioController;
                     <?php echo $this->dadosProximoNivel($this->relatorioEquipe); ?>
                 </div>
             </div>
-
             <!--modalInformativo-->
             <div id="modalInformativo" class="popup-basic p25 mfp-with-anim mfp-hide">
                 <div class="mt20"><span id="spanModalInformativo"></span></div>
                 <button tittle="Close (Esc)" type="button" class="mfp-close bg-dark">x</button>
             </div>
-
         </div>
         <h1 class="text-center">Antigo Relatório embaixo <i class="fa fa-arrow-down pr5"></i></h1>
-
     </div>  
 </section>
 

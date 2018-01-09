@@ -29,12 +29,11 @@ class DadosPrincipal extends AbstractHelper {
 
     public function renderHtml() {
         $html = '';
-        $pessoa = $this->view->pessoa;
-        $hierarquia = $pessoa->getPessoaHierarquiaAtivo()->getHierarquia()->getNome();
+        $pessoa = $this->view->pessoa;        
         $classe = '?';
         $imagem = FuncoesEntidade::nomeDaImagem($pessoa);
 
-        $metas = Funcoes::metaPorHierarquia($pessoa->getPessoaHierarquiaAtivo()->getHierarquia()->getId());
+        $metas = Funcoes::metaPorHierarquia(Hierarquia::LIDER_DE_CELULA);
         $multiplicadorDaMeta = 1;
         if ($this->view->eCasal) {
             $multiplicadorDaMeta = 2;
@@ -57,18 +56,12 @@ class DadosPrincipal extends AbstractHelper {
                 $atualOuAnterior = 'Anterior';
             }
 
-            if ($pessoa->getPessoaHierarquiaAtivo()->getHierarquia()->getId() === Hierarquia::LIDER_DE_CELULA) {
-                $nomeRelatorio = 'pessoal' . $atualOuAnterior;
-            } else {
-                $nomeRelatorio = 'equipe' . $atualOuAnterior;
-            }
+            $nomeRelatorio = 'pessoal' . $atualOuAnterior;
             $qualRelatorio = $this->getRelatorioMedio()[$nomeRelatorio];
             $qualRelatorioCelula = $this->getRelatorioMedio()['celulas' . $atualOuAnterior];
 
             $fimIndice = 1;
-            if ($pessoa->getPessoaHierarquiaAtivo()->getHierarquia()->getId() === Hierarquia::LIDER_DE_CELULA) {
-                $fimIndice += count($qualRelatorioCelula);
-            }
+            $fimIndice += count($qualRelatorioCelula);
 
             $valorMembresia = $qualRelatorio['membresia'];
             $valorCelulaQuantidade = $qualRelatorio['celulaQuantidade'];
@@ -88,34 +81,32 @@ class DadosPrincipal extends AbstractHelper {
 
             $somaCelulaDeElite = 0;
             $somaCelulaQuantidade = 0;
-            $contagemDeEventos = 1;
-            if ($pessoa->getPessoaHierarquiaAtivo()->getHierarquia()->getId() === Hierarquia::LIDER_DE_CELULA) {
-                if ($qualRelatorioCelula) {
-                    foreach ($qualRelatorioCelula as $valorCelula) {
-                        $perfomanceCelulaDeElite = $valorCelula['valor'] / Constantes::$META_LIDER * 100;
-                        if ($perfomanceCelulaDeElite > 100) {
-                            $perfomanceCelulaDeElite = 100;
-                        }
-                        $somaCelulaDeElite += $perfomanceCelulaDeElite;
+
+            $classeMaxima = '100';
+            if ($qualRelatorioCelula) {
+                foreach ($qualRelatorioCelula as $valorCelula) {
+                    $perfomanceCelulaDeElite = $valorCelula['valor'] / Constantes::$META_LIDER * 100;
+                    if ($perfomanceCelulaDeElite > 100) {
+                        $perfomanceCelulaDeElite = 100;
                     }
-                    $contagemDeEventos += count($qualRelatorioCelula);
+                    if ($perfomanceCelulaDeElite < $classeMaxima) {
+                        $classeMaxima = $perfomanceCelulaDeElite;
+                    }
                 }
             }
-            if ($pessoa->getPessoaHierarquiaAtivo()->getHierarquia()->getId() !== Hierarquia::LIDER_DE_CELULA) {
-                $somaCelulaQuantidade += $perfomanceCelulaVisual;
-                $contagemDeEventos++;
+            if ($perfomanceMembresiaVisual < $classeMaxima) {
+                $classeMaxima = $perfomanceMembresiaVisual;
             }
-            $somaClasse = ($somaCelulaDeElite + $somaCelulaQuantidade + $perfomanceMembresiaVisual) / $contagemDeEventos;
-            if ($somaClasse >= RelatorioController::MARGEM_D && $somaClasse < RelatorioController::MARGEM_C) {
+            if ($classeMaxima >= RelatorioController::MARGEM_D && $classeMaxima < RelatorioController::MARGEM_C) {
                 $classe = 'D';
             }
-            if ($somaClasse >= RelatorioController::MARGEM_C && $somaClasse < RelatorioController::MARGEM_B) {
+            if ($classeMaxima >= RelatorioController::MARGEM_C && $classeMaxima < RelatorioController::MARGEM_B) {
                 $classe = 'C';
             }
-            if ($somaClasse >= RelatorioController::MARGEM_B && $somaClasse < RelatorioController::MARGEM_A) {
+            if ($classeMaxima >= RelatorioController::MARGEM_B && $classeMaxima < RelatorioController::MARGEM_A) {
                 $classe = 'B';
             }
-            if ($somaClasse >= RelatorioController::MARGEM_A) {
+            if ($classeMaxima >= RelatorioController::MARGEM_A) {
                 $classe = 'A';
             }
             $classClasse = RelatorioController::corDaLinhaPelaPerformanceClasse($classe);
@@ -153,27 +144,29 @@ class DadosPrincipal extends AbstractHelper {
 
         $html .= '<div class="media-body va-m">';
         $html .= '<h2 class="media-heading">' . $pessoa->getNomePrimeiroUltimo() . '</h2>';
-        $html .= '<p class="lead" style="font-size: 10px;">' . $hierarquia;
-        $html .= ' - Classe <span onclick="mostrarModalClasse();" ><span class="label label-' . $classClasseTela . ' label-sm">' . $classeTela . ' </span>&nbsp;<span class="badge">?</span></span>';
+        $html .= '<p class="lead">';
+        $html .= 'Classe <span onclick="mostrarModalClasse();" ><span class="label label-' . $classClasseTela . ' label-sm">' . $classeTela . ' </span>&nbsp;<span class="badge">?</span></span>';
         $html .= '</p>';
         /* media-body va-m */
         $html .= '</div>';
 
-        $html .= '<div class="media-links">';
-        $html .= '<ul class="list-inline list-unstyled">';
         $minhaHierarquia = $pessoa->getPessoaHierarquiaAtivo()->getHierarquia();
-        foreach ($this->view->hierarquias as $hierarquia) {
-            $corDaMedalha = 'default';
-            if ($hierarquia->getId() >= $minhaHierarquia->getId()) {
-                $corDaMedalha = 'info';
-            }
-            $html .= '<li>';
-            $html .= '<span class="label label-xs label-' . $corDaMedalha . '">' . $hierarquia->getSigla() . '</span>';
-            $html .= '</li>';
-        }
-        $html .= '</ul>';
-        $html .= '</div>';
+        if ($minhaHierarquia->getId() > Hierarquia::LIDER_DE_CELULA) {
+            $html .= '<div class="media-links">';
+            $html .= '<ul class="list-inline list-unstyled">';
 
+            foreach ($this->view->hierarquias as $hierarquia) {
+                $corDaMedalha = 'default';
+                if ($hierarquia->getId() >= $minhaHierarquia->getId()) {
+                    $corDaMedalha = 'info';
+                }
+                $html .= '<li>';
+                $html .= '<span class="label label-xs label-' . $corDaMedalha . '">' . $hierarquia->getSigla() . '</span>';
+                $html .= '</li>';
+            }
+            $html .= '</ul>';
+            $html .= '</div>';
+        }
         /* media clearfix */
         $html .= '</div>';
         /* page-heading */
@@ -202,15 +195,6 @@ class DadosPrincipal extends AbstractHelper {
                     $valorMeta = $metas[0] * $multiplicadorDaMeta;
                     break;
                 case 1:
-                    $stringMeta = 'Célula';
-                    $indiceRelatorio = 'celulaQuantidade';
-                    $corBarra = RelatorioController::corDaLinhaPelaPerformance($perfomanceCelula);
-                    $valorBarra = $perfomanceCelula > 100 ? 100 : $perfomanceCelula;
-                    $valorApresentado = RelatorioController::formataNumeroRelatorio($qualRelatorio[$indiceRelatorio]);
-                    $labelBarra = $perfomanceCelula;
-                    $valorMeta = $metas[1];
-                    break;
-                case 2:
                     $indiceRelatorio = 0;
                     $stringMeta = 'Cél. ' . $qualRelatorioCelula[$indiceRelatorio]['hospedeiro'];
                     $valorApresentado = $qualRelatorioCelula[$indiceRelatorio]['valor'];
@@ -219,7 +203,7 @@ class DadosPrincipal extends AbstractHelper {
                     $valorBarra = $labelBarra;
                     $corBarra = RelatorioController::corDaLinhaPelaPerformance($valorBarra);
                     break;
-                case 3:
+                case 2:
                     $indiceRelatorio = 1;
                     $stringMeta = 'Cél. ' . $qualRelatorioCelula[$indiceRelatorio]['hospedeiro'];
                     $valorApresentado = $qualRelatorioCelula[$indiceRelatorio]['valor'];
@@ -233,18 +217,15 @@ class DadosPrincipal extends AbstractHelper {
             if ($valorBarra > 100) {
                 $valorBarra = 100;
             }
-            if ($pessoa->getPessoaHierarquiaAtivo()->getHierarquia()->getId() !== Hierarquia::LIDER_DE_CELULA ||
-                    ($pessoa->getPessoaHierarquiaAtivo()->getHierarquia()->getId() === Hierarquia::LIDER_DE_CELULA && $indice !== 1)) {
-                $html .= '<div class = "row">';
-                $html .= '<div class = "col-xs-4 text-right">' . $stringMeta . '</div>';
-                $html .= '<div class = "col-xs-5">';
-                $html .= '<div class = "progress">';
-                $html .= '<div class = "progress-bar progress-bar-' . $corBarra . '" role="progressbar" aria-valuenow="' . $valorBarra . '" aria-valuemin = "0" aria-valuemax="100" style="width: ' . $valorBarra . '%;">' . $labelBarra . '%</div>';
-                $html .= '</div>';
-                $html .= '</div>';
-                $html .= '<div class = "col-xs-3">' . $valorApresentado . ' de ' . $valorMeta . '</div>';
-                $html .= '</div>';
-            }
+            $html .= '<div class = "row">';
+            $html .= '<div class = "col-xs-4 text-right">' . $stringMeta . '</div>';
+            $html .= '<div class = "col-xs-5">';
+            $html .= '<div class = "progress">';
+            $html .= '<div class = "progress-bar progress-bar-' . $corBarra . '" role="progressbar" aria-valuenow="' . $valorBarra . '" aria-valuemin = "0" aria-valuemax="100" style="width: ' . $valorBarra . '%;">' . $labelBarra . '%</div>';
+            $html .= '</div>';
+            $html .= '</div>';
+            $html .= '<div class = "col-xs-3">' . $valorApresentado . ' de ' . $valorMeta . '</div>';
+            $html .= '</div>';
         }
         return $html;
     }

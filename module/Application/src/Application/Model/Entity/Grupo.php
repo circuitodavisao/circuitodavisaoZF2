@@ -33,11 +33,6 @@ class Grupo extends CircuitoEntity {
     protected $grupoResponsavel;
 
     /**
-     * @ORM\OneToMany(targetEntity="GrupoAluno", mappedBy="grupo")
-     */
-    protected $grupoAluno;
-
-    /**
      * @ORM\OneToMany(targetEntity="GrupoEvento", mappedBy="grupo")
      */
     protected $grupoEvento;
@@ -70,7 +65,6 @@ class Grupo extends CircuitoEntity {
         $this->grupoAtendimento = new ArrayCollection();
         $this->grupoPaiFilhoFilhos = new ArrayCollection();
         $this->grupoPaiFilhoPai = new ArrayCollection();
-        $this->grupoAluno = new ArrayCollection();
     }
 
     /**
@@ -647,37 +641,6 @@ class Grupo extends CircuitoEntity {
     }
 
     /**
-     * Retorna o grupo aluno
-     * @return GrupoAluno
-     */
-    function getGrupoAlunoAtivos() {
-        $grupoAlunos = null;
-        foreach ($this->getGrupoAluno() as $ga) {
-            if ($ga->verificarSeEstaAtivo()) {
-                $grupoAlunos[] = $ga;
-            }
-        }
-        return $grupoAlunos;
-    }
-
-    /**
-     * Retorna o grupo aluno que não tem cadastro
-     * @return GrupoAluno
-     */
-    function getGrupoAlunoAtivosSemCadastro() {
-        $grupoAlunos = null;
-        foreach ($this->getGrupoAluno() as $ga) {
-            if ($ga->verificarSeEstaAtivo()) {
-                $aluno = $ga->getTurmaAluno()->getPessoa();
-                if (!$aluno->verificarSeTemAlgumaResponsabilidadeAtiva()) {
-                    $grupoAlunos[] = $ga;
-                }
-            }
-        }
-        return $grupoAlunos;
-    }
-
-    /**
      * Verifica se o grupo participa do evento informado
      * @param int $idEvento
      * @return boolean
@@ -1098,14 +1061,6 @@ class Grupo extends CircuitoEntity {
 
     function setGrupoPaiFilhoPai($grupoPaiFilhoPai) {
         $this->grupoPaiFilhoPai = $grupoPaiFilhoPai;
-    }
-
-    function getGrupoAluno() {
-        return $this->grupoAluno;
-    }
-
-    function setGrupoAluno($grupoAluno) {
-        $this->grupoAluno = $grupoAluno;
     }
 
     function getGrupoAtendimento() {
