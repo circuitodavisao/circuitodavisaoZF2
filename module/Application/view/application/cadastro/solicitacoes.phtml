@@ -12,9 +12,9 @@ if ($this->solicitacoes) {
     $html .= '<thead>';
 
     $html .= '<tr>';
-    $html .= '<th>Tipo</th>';
-    $html .= '<th>Solicitado em</th>';
-    $html .= '<th>Por</th>';
+    $html .= '<th class="hidden-xs">Tipo</th>';
+    $html .= '<th class="hidden-xs">Solicitado em</th>';
+    $html .= '<th class="hidden-xs">Por</th>';
     $html .= '<th>O que ou quem?</th>';
     $html .= '<th>Para</th>';
     $html .= '<th>Status</th>';
@@ -26,9 +26,9 @@ if ($this->solicitacoes) {
 
     foreach ($this->solicitacoes as $solicitacao) {
         $html .= '<tr>';
-        $html .= '<td>' . $solicitacao->getSolicitacaoTipo()->getNome() . '</td>';
-        $html .= '<td>' . $solicitacao->getData_criacaoStringPadraoBrasil() . '</td>';
-        $html .= '<td>' . $solicitacao->getPessoa()->getNomePrimeiroUltimo() . '</td>';
+        $html .= '<td class="hidden-xs">' . $solicitacao->getSolicitacaoTipo()->getNome() . '</td>';
+        $html .= '<td class="hidden-xs">' . $solicitacao->getData_criacaoStringPadraoBrasil() . '</td>';
+        $html .= '<td class="hidden-xs">' . $solicitacao->getPessoa()->getNomePrimeiroUltimo() . '</td>';
 
         if ($solicitacao->getSolicitacaoTipo()->getId() === SolicitacaoTipo::TRANSFERIR_LIDER_NA_PROPRIA_EQUIPE) {
             for ($indice = 1; $indice <= 2; $indice++) {
