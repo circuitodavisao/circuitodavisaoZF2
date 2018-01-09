@@ -27,16 +27,7 @@ class TurmaAluno extends CircuitoEntity {
      * @ORM\JoinColumn(name="turma_id", referencedColumnName="id")
      */
     private $turma;
-
-    /**
-     * @ORM\OneToMany(targetEntity="GrupoAluno", mappedBy="grupo") 
-     */
-    protected $grupoAluno;
-
-    public function __construct() {
-        $this->grupoAluno = new ArrayCollection();
-    }
-
+   
     /** @ORM\Column(type="integer") */
     protected $pessoa_id;
 
@@ -85,14 +76,6 @@ class TurmaAluno extends CircuitoEntity {
 
     function setTurma($turma) {
         $this->turma = $turma;
-    }
-
-    function getGrupoAluno() {
-        return $this->grupoAluno;
-    }
-
-    function setGrupoAluno($grupoAluno) {
-        $this->grupoAluno = $grupoAluno;
-    }
+    }   
 
 }
