@@ -67,10 +67,10 @@ class DadosProximoNivel extends AbstractHelper {
         $validacaoLideres = $perfomanceLideres / 2;
         $valorBarra = $validacaoMembresia + $validacaoLideres;
         $corDaBarra = RelatorioController::corDaLinhaPelaPerformance($valorBarra);
-
+        $labelBarra = RelatorioController::corDaLinhaPelaPerformance($valorBarra, 2);
         $html = '';
 
-        $html .= '<p class=" well bg-default text-' . $corDaBarra . ' text-center">' . $valorBarra . '</p>';
+        $html .= '<p class=" well bg-default text-' . $corDaBarra . ' text-center">' . $labelBarra . '</p>';
 
         $html .= $this->view->barraDeProgressoBonita(
                 $stringProximaHierarquia . ' <span class="badge">?</span>', $corDaBarra, $valorBarra, 'm0', false, 0, 0, $extra = 'onclick="$(\'#divProximoNivel\').toggleClass(\'hidden\');"');
