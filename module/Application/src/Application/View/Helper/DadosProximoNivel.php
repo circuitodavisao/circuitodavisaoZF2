@@ -70,7 +70,7 @@ class DadosProximoNivel extends AbstractHelper {
 
         $html = '';
 
-        $html .= '<p class=" well bg-default text-' . $this->getRelatorioEquipe()['membresiaPerformanceClass'] . ' text-center">' . $this->getRelatorioEquipe()['membresiaPerformanceFrase'] . '</p>';
+        $html .= '<p class=" well bg-default text-' . $corDaBarra . ' text-center">' . $valorBarra . '</p>';
 
         $html .= $this->view->barraDeProgressoBonita(
                 $stringProximaHierarquia . ' <span class="badge">?</span>', $corDaBarra, $valorBarra, 'm0', false, 0, 0, $extra = 'onclick="$(\'#divProximoNivel\').toggleClass(\'hidden\');"');
