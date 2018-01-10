@@ -18,6 +18,11 @@ class Grupo extends CircuitoEntity {
     protected $eventos;
 
     /**
+     * @ORM\OneToOne(targetEntity="FatoRanking", mappedBy="grupo")
+     */
+    private $fatoRanking;
+
+    /**
      * @ORM\OneToOne(targetEntity="GrupoCv", mappedBy="grupo")
      */
     private $grupoCv;
@@ -1137,6 +1142,14 @@ class Grupo extends CircuitoEntity {
             $grupoIgreja = null;
         }
         return $grupoIgreja;
+    }
+
+    function getFatoRanking() {
+        return $this->fatoRanking;
+    }
+
+    function setFatoRanking($fatoRanking) {
+        $this->fatoRanking = $fatoRanking;
     }
 
 }

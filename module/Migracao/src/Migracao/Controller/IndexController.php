@@ -5,11 +5,13 @@ namespace Migracao\Controller;
 use Application\Controller\CircuitoController;
 use Application\Controller\Helper\Constantes;
 use Application\Controller\Helper\Funcoes;
+use Application\Controller\RelatorioController;
 use Application\Model\Entity\Entidade;
 use Application\Model\Entity\Evento;
 use Application\Model\Entity\EventoCelula;
 use Application\Model\Entity\EventoTipo;
 use Application\Model\Entity\FatoLider;
+use Application\Model\Entity\FatoRanking;
 use Application\Model\Entity\Grupo;
 use Application\Model\Entity\GrupoCv;
 use Application\Model\Entity\GrupoEvento;
@@ -192,7 +194,7 @@ class IndexController extends CircuitoController {
         $dateInicialFormatada = DateTime::createFromFormat('Y-m-d', $stringComecoDoPeriodo);
         $dateFinalFormatada = DateTime::createFromFormat('Y-m-d', $stringFimDoPeriodo);
         $solicitacoesPorData = $this->getRepositorio()->getSolicitacaoORM()->encontrarTodosPorDataDeCriacao($dateInicialFormatada, $dateFinalFormatada);
-        
+
         if ($solicitacoesPorData) {
             $this->getRepositorio()->iniciarTransacao();
             try {
@@ -417,22 +419,80 @@ class IndexController extends CircuitoController {
         return $html;
     }
 
-    public function testeSerproAction() {
-//        $html = 'Teste Serpro';
-//        $comandoBase64 = 'echo -n "EOwWukq8w_ornUy0eXsYkfDgmHIa:eHAIjnZrYbb7K5yuM796nQRhWg4a" | base64';
-//        $base64 = system($comandoBase64);
-//        echo 'base64' . $base64;
-//        $comandoPegaToken = 'curl -k -d "grant_type=client_credentials" -H "Authorization: Basic RU93V3VrcTh3X29yblV5MGVYc1lrZkRnbUhJYTplSEFJam5aclliYjdLNXl1TTc5Nm5RUmhXZzRh" https://apigateway.serpro.gov.br/token';
-//        $url = 'curl -X GET --header "Accept: application/json" --header "Authorization: Bearer 35afc0b45e873453d574717938add5be" "https://apigateway.serpro.gov.br/consulta-cpf/v1/cpf/04510847130"';
-//        echo '<pre>';
-//        passthru($url);
-//        echo '</pre>';
+    public function rankingAction() {
+        set_time_limit(0);
+        ini_set('memory_limit', '-1');
+        ini_set('max_execution_time', '60');
 
+        list($usec, $sec) = explode(' ', microtime());
+        $script_start = (float) $sec + (float) $usec;
+        $html = '';
 
-        $email = 'falecomleonardopereira@gmail.com';
-        $titulo = 'teste gsuite';
-        $mensagem = 'teste';
-        Funcoes::enviarEmail($email, $titulo, $mensagem);
+        $somenteAtivos = true;
+        $grupos = $this->getRepositorio()->getGrupoORM()->encontrarTodos($somenteAtivos);
+        $this->getRepositorio()->iniciarTransacao();
+        try {
+
+            if ($grupos) {
+                foreach ($grupos as $grupo) {
+                    $numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupo);
+                    if ($numeroIdentificador) {
+                        $tipoRelatorioPessoal = 1;
+                        $periodo = -10;
+                        $relatorioGrupos[$grupo->getId()] = RelatorioController::montaRelatorio($this->getRepositorio(), $numeroIdentificador, $periodo, $tipoRelatorioPessoal);
+                    }
+                }
+
+                $discipulosMembresia = $grupos;
+                $discipulosCelula = $grupos;
+                $discipulosMembresiaOrdenado = RelatorioController::ordenacaoDiscipulos($discipulosMembresia, $relatorioGrupos, RelatorioController::ORDENACAO_TIPO_MEMBRESIA);
+                $discipulosCelulaOrdenado = RelatorioController::ordenacaoDiscipulos($discipulosCelula, $relatorioGrupos, RelatorioController::ORDENACAO_TIPO_CELULA);
+                $contador = 1;
+                foreach ($discipulosMembresiaOrdenado as $grupoOrdenado) {
+                    $relatorioEncontrado = $relatorioGrupos[$grupoOrdenado->getId()];
+                    $fatoRanking = new FatoRanking();
+                    $fatoRanking->setGrupo($grupoOrdenado);
+                    $fatoRanking->setMembresia($relatorioEncontrado['membresia']);
+                    $fatoRanking->setCelula($relatorioEncontrado['celula']);
+                    $fatoRanking->setCulto($relatorioEncontrado['membresiaCulto']);
+                    $fatoRanking->setArena($relatorioEncontrado['membresiaArena']);
+                    $fatoRanking->setDomingo($relatorioEncontrado['membresiaDomingo']);
+                    $fatoRanking->setRanking_membresia($contador);
+                    $rakings[$grupoOrdenado->getId()] = $fatoRanking;
+                    $contador++;
+                }
+                $contador = 1;
+                foreach ($discipulosCelulaOrdenado as $grupoOrdenado) {
+                    $relatorioEncontrado = $relatorioGrupos[$grupoOrdenado->getId()];
+                    $fatoRanking = $rakings[$grupoOrdenado->getId()];
+                    $fatoRanking->setRanking_celula($contador);
+                    $rakings[$grupoOrdenado->getId()] = $fatoRanking;
+                    $contador++;
+                }
+
+                $this->getRepositorio()->getFatoRankingORM()->apagarTodos();
+                foreach ($rakings as $fatoRanking) {
+//                    if ($fatoRanking->getGrupo()->getEntidadeAtiva()) {
+//                        $html .= '<br /><br />Entidade ' . $fatoRanking->getGrupo()->getEntidadeAtiva()->infoEntidade();
+//                    }
+//                    $html .= '<br />Ranking Membresia: ' . $fatoRanking->getRanking_membresia();
+//                    $html .= '<br />Ranking Celula: ' . $fatoRanking->getRanking_celula();
+                    $this->getRepositorio()->getFatoRankingORM()->persistir($fatoRanking);
+                }
+
+                $this->getRepositorio()->fecharTransacao();
+            }
+        } catch (Exception $exc) {
+
+            $this->getRepositorio()->desfazerTransacao();
+            echo $exc->getTraceAsString();
+        }
+
+        list($usec, $sec) = explode(' ', microtime());
+        $script_end = (float) $sec + (float) $usec;
+        $elapsed_time = round($script_end - $script_start, 5);
+
+        $html .= '<br /><br />Elapsed time: ' . $elapsed_time . ' secs. Memory usage: ' . round(((memory_get_peak_usage(true) / 1024) / 1024), 2) . 'Mb';
         return new ViewModel(array('html' => $html));
     }
 

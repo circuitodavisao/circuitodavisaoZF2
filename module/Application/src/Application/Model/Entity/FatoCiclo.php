@@ -32,7 +32,7 @@ class FatoCiclo extends CircuitoEntity {
         $this->fatoCelula = new ArrayCollection();
     }
 
-    /** @ORM\Column(type="integer") */
+    /** @ORM\Column(type="string") */
     protected $numero_identificador;
 
     function getNumero_identificador() {

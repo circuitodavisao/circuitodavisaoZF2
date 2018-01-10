@@ -40,7 +40,7 @@ class PrincipalController extends CircuitoController {
         $tipoRelatorioEquipe = 2;
         $periodo = -1;
         $quantidadeDeCiclosPassados = 8;
-        $relatorio = RelatorioController::montaRelatorio($this->getRepositorio(), $numeroIdentificador, $periodo, $tipoRelatorioPessoal, 0, true, $quantidadeDeCiclosPassados);
+        $relatorio = RelatorioController::montaRelatorio($this->getRepositorio(), $numeroIdentificador, $periodo, $tipoRelatorioPessoal);
         $relatorioEquipe = RelatorioController::montaRelatorio($this->getRepositorio(), $numeroIdentificador, $periodo, $tipoRelatorioEquipe);
 
         /* encontrando os periodos do mes atual e anterior */

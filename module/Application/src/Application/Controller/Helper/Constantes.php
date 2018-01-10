@@ -251,6 +251,7 @@ class Constantes {
     public static $ENTITY_SOLICITACAO_TIPO = 'Application\Model\Entity\SolicitacaoTipo';
     public static $ENTITY_SOLICITACAO_SITUACAO = 'Application\Model\Entity\SolicitacaoSituacao';
     public static $ENTITY_SITUACAO = 'Application\Model\Entity\Situacao';
+    public static $ENTITY_FATO_RANKING = 'Application\Model\Entity\FatoRanking';
     public static $ENTITY_PESSOA_ID = 'pessoa_id';
     public static $ENTITY_DATA_INATIVACAO = 'data_inativacao';
     public static $ENTITY_TIPO_ID = 'tipo_id';

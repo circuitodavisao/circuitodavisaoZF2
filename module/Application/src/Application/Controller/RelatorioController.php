@@ -290,7 +290,7 @@ class RelatorioController extends CircuitoController {
         return $response;
     }
 
-    public static function montaRelatorio($repositorioORM, $numeroIdentificador, $periodoInicial, $tipoRelatorio, $periodoFinal = 0, $calcularDadosPassado = false, $ciclosPassados = 0) {
+    public static function montaRelatorio($repositorioORM, $numeroIdentificador, $periodoInicial, $tipoRelatorio, $periodoFinal = 0) {
         unset($relatorio);
         /* Membresia */
         $relatorioMembresia = $repositorioORM->getFatoCicloORM()->montarRelatorioPorNumeroIdentificador($numeroIdentificador, $periodoInicial, $tipoRelatorio, $periodoFinal);
@@ -368,100 +368,6 @@ class RelatorioController extends CircuitoController {
         $relatorio['celulaDeElite'] = $celulasDeElite;
         $relatorio['celulaDeElitePerformance'] = $performanceCelulasDeElite;
         $relatorio['celulaDeElitePerformanceClass'] = RelatorioController::corDaLinhaPelaPerformance($relatorio['celulaDeElitePerformance']);
-
-        if ($tipoRelatorio === 1) {
-            /* calculo de diferenca do periodo passado */
-            $periodoPassado = $periodoInicial - 1;
-            $relatorioMembresiaPassado = $repositorioORM->getFatoCicloORM()->montarRelatorioPorNumeroIdentificador($numeroIdentificador, $periodoPassado, $tipoRelatorio, $periodoFinal);
-            foreach ($relatorioMembresiaPassado as $key => $value) {
-                $somaPassado[$key] = 0;
-                foreach ($value as $campo) {
-                    foreach ($campo as $keyCampo => $valorCampo) {
-                        $somaPassado[$key] += $valorCampo;
-                    }
-                }
-            }
-            $relatorioPassado = array();
-            $relatorioPassado['membresiaCulto'] = $somaPassado[RelatorioController::dimensaoTipoCulto] / $diferencaDePeriodos;
-            $relatorioPassado['membresiaArena'] = $somaPassado[RelatorioController::dimensaoTipoArena] / $diferencaDePeriodos;
-            $relatorioPassado['membresiaDomingo'] = $somaPassado[RelatorioController::dimensaoTipoDomingo] / $diferencaDePeriodos;
-            $relatorioPassado['celula'] = $somaPassado[RelatorioController::dimensaoTipoCelula] / $diferencaDePeriodos;
-            $relatorioPassado['membresia'] = RelatorioController::calculaMembresia(
-                            $somaPassado[RelatorioController::dimensaoTipoCulto], $somaPassado[RelatorioController::dimensaoTipoArena], $somaPassado[RelatorioController::dimensaoTipoDomingo]) / $diferencaDePeriodos;
-
-
-            if ($relatorioPassado['membresiaCulto']) {
-                $relatorio['diferencaCulto'] = $relatorio['membresiaCulto'] * 100 / $relatorioPassado['membresiaCulto'] - 100;
-                $relatorio['diferencaCultoSeta'] = 'up';
-                $relatorio['diferencaCultoFrase'] = 'AUMENTOU';
-            } else {
-                $relatorio['diferencaCulto'] = 0;
-                $relatorio['diferencaCultoSeta'] = 'down';
-                $relatorio['diferencaCultoFrase'] = 'DIMINUIU';
-            }
-            if ($relatorioPassado['membresiaArena']) {
-                $relatorio['diferencaArena'] = $relatorio['membresiaArena'] * 100 / $relatorioPassado['membresiaArena'] - 100;
-                $relatorio['diferencaArenaSeta'] = 'up';
-                $relatorio['diferencaArenaFrase'] = 'AUMENTOU';
-            } else {
-                $relatorio['diferencaArena'] = 0;
-                $relatorio['diferencaArenaSeta'] = 'down';
-                $relatorio['diferencaArenaFrase'] = 'DIMINUIU';
-            }
-            if ($relatorioPassado['membresiaDomingo']) {
-                $relatorio['diferencaDomingo'] = $relatorio['membresiaDomingo'] * 100 / $relatorioPassado['membresiaDomingo'] - 100;
-                $relatorio['diferencaDomingoSeta'] = 'up';
-                $relatorio['diferencaDomingoFrase'] = 'AUMENTOU';
-            } else {
-                $relatorio['diferencaDomingo'] = 0;
-                $relatorio['diferencaDomingoSeta'] = 'down';
-                $relatorio['diferencaDomingoFrase'] = 'DIMINUIU';
-            }
-            if ($relatorioPassado['membresia']) {
-                $relatorio['diferencaMembresia'] = $relatorio['membresia'] * 100 / $relatorioPassado['membresia'] - 100;
-                $relatorio['diferencaMembresiaSeta'] = 'up';
-                $relatorio['diferencaMembresiaFrase'] = 'AUMENTOU';
-            } else {
-                $relatorio['diferencaMembresia'] = 0;
-                $relatorio['diferencaMembresiaSeta'] = 'down';
-                $relatorio['diferencaMembresiaFrase'] = 'DIMINUIU';
-            }
-            if ($relatorioPassado['celula']) {
-                $relatorio['diferencaCelula'] = $relatorio['celula'] * 100 / $relatorioPassado['celula'] - 100;
-                $relatorio['diferencaCelulaSeta'] = 'up';
-                $relatorio['diferencaCelulaFrase'] = 'AUMENTOU';
-            } else {
-                $relatorio['diferencaCelula'] = 0;
-                $relatorio['diferencaCelulaSeta'] = 'down';
-                $relatorio['diferencaCelulaFrase'] = 'DIMINUIU';
-            }
-        }
-
-        /* Relatorio passados */
-        if ($calcularDadosPassado) {
-            $relatorioMembresiaPassadas = array();
-            for ($indice = (-1 * $ciclosPassados); $indice < 0; $indice++) {
-                $periodoParaUsar = $indice;
-                $relatoriosPassados = $repositorioORM->getFatoCicloORM()->montarRelatorioPorNumeroIdentificador($numeroIdentificador, $periodoParaUsar, $tipoRelatorio);
-                $fatoLider = $repositorioORM->getFatoLiderORM()->encontrarPorNumeroIdentificador($numeroIdentificador, $tipoRelatorio, $periodoParaUsar);
-                $quantidadeLideres = $fatoLider[0]['lideres'];
-                $metasPassadas = Constantes::$META_LIDER * $quantidadeLideres;
-                foreach ($relatoriosPassados as $key => $value) {
-                    $somaPassadoMaisAntigos[$key] = 0;
-                    foreach ($value as $campo) {
-                        foreach ($campo as $keyCampo => $valorCampo) {
-                            $somaPassadoMaisAntigos[$key] += $valorCampo;
-                        }
-                    }
-                }
-                $membresiaAntiga = RelatorioController::calculaMembresia(
-                                $somaPassadoMaisAntigos[RelatorioController::dimensaoTipoCulto], $somaPassadoMaisAntigos[RelatorioController::dimensaoTipoArena], $somaPassadoMaisAntigos[RelatorioController::dimensaoTipoDomingo]);
-
-                $relatorioMembresiaPassadas[$indice]['meta'] = $metasPassadas;
-                $relatorioMembresiaPassadas[$indice]['membresia'] = $membresiaAntiga;
-            }
-            $relatorio['membresiasPassadas'] = $relatorioMembresiaPassadas;
-        }
         return $relatorio;
     }
 
@@ -552,6 +458,9 @@ class RelatorioController extends CircuitoController {
         return $class;
     }
 
+    const ORDENACAO_TIPO_MEMBRESIA = 9;
+    const ORDENACAO_TIPO_CELULA = 10;
+
     public static function ordenacaoDiscipulos($discipulosLocal, $relatorio, $tipo) {
         $campo = '';
         if ($tipo === 1) {
@@ -575,17 +484,29 @@ class RelatorioController extends CircuitoController {
         if ($tipo === 8) {
             $campo = 'celulaDeElitePerformance';
         }
+        if ($tipo === RelatorioController::ORDENACAO_TIPO_MEMBRESIA) {
+            $campo = 'membresia';
+        }
+        if ($tipo === RelatorioController::ORDENACAO_TIPO_CELULA) {
+            $campo = 'celula';
+        }
         $tamanhoArray = count($discipulosLocal);
 
         for ($i = 0; $i < $tamanhoArray; $i++) {
             for ($j = 0; $j < $tamanhoArray; $j++) {
 
                 $discipulo1 = $discipulosLocal[$i];
-                $grupoFilho1 = $discipulo1->getGrupoPaiFilhoFilho();
-                $percentual1 = $relatorio[$grupoFilho1->getId()][$campo];
-
                 $discipulo2 = $discipulosLocal[$j];
-                $grupoFilho2 = $discipulo2->getGrupoPaiFilhoFilho();
+
+                if ($tipo === RelatorioController::ORDENACAO_TIPO_MEMBRESIA ||
+                        $tipo === RelatorioController::ORDENACAO_TIPO_CELULA) {
+                    $grupoFilho1 = $discipulo1;
+                    $grupoFilho2 = $discipulo2;
+                } else {
+                    $grupoFilho1 = $discipulo1->getGrupoPaiFilhoFilho();
+                    $grupoFilho2 = $discipulo2->getGrupoPaiFilhoFilho();
+                }
+                $percentual1 = $relatorio[$grupoFilho1->getId()][$campo];
                 $percentual2 = $relatorio[$grupoFilho2->getId()][$campo];
 
                 if ($percentual1 > $percentual2) {
