@@ -17,6 +17,17 @@ use Application\Controller\RelatorioController;
     <div class="tray tray-center">
         <?php echo $this->dadosPrincipal($this->relatorioMedio); ?>
         <div class="admin-panels fade-onload">
+            <!--ranking-->
+            <div class="row alert alert-default">
+                <div class="bg-info col-xs-6 col-sm-6 col-md-6 col-lg-6 text-center p10">
+                    <h2>Membresia</h2>
+                    <h1 style="font-size: 36px;">#<?php echo $this->grupo->getFatoRanking()->getRanking_membresia(); ?></h1>
+                </div>
+                <div class="bg-info col-xs-6 col-sm-6 col-md-6 col-lg-6 text-center p10">
+                    <h2>Célula</h2>
+                    <h1 style="font-size: 36px;">#<?php echo $this->grupo->getFatoRanking()->getRanking_celula(); ?></h1>
+                </div>
+            </div>
             <!--robo membresia-->
             <div class="row alert alert-default">
                 <div class="col-xs-12 col-md-12 col-lg-12">
