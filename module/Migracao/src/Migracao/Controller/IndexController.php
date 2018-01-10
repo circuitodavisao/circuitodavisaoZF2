@@ -438,7 +438,7 @@ class IndexController extends CircuitoController {
                     $numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupo);
                     if ($numeroIdentificador) {
                         $tipoRelatorioPessoal = 1;
-                        $periodo = -10;
+                        $periodo = -1;
                         $relatorioGrupos[$grupo->getId()] = RelatorioController::montaRelatorio($this->getRepositorio(), $numeroIdentificador, $periodo, $tipoRelatorioPessoal);
                     }
                 }
@@ -472,11 +472,11 @@ class IndexController extends CircuitoController {
 
                 $this->getRepositorio()->getFatoRankingORM()->apagarTodos();
                 foreach ($rakings as $fatoRanking) {
-//                    if ($fatoRanking->getGrupo()->getEntidadeAtiva()) {
-//                        $html .= '<br /><br />Entidade ' . $fatoRanking->getGrupo()->getEntidadeAtiva()->infoEntidade();
-//                    }
-//                    $html .= '<br />Ranking Membresia: ' . $fatoRanking->getRanking_membresia();
-//                    $html .= '<br />Ranking Celula: ' . $fatoRanking->getRanking_celula();
+                    if ($fatoRanking->getGrupo()->getEntidadeAtiva()) {
+                        $html .= '<br /><br />Entidade ' . $fatoRanking->getGrupo()->getEntidadeAtiva()->infoEntidade();
+                    }
+                    $html .= '<br />Ranking Membresia: ' . $fatoRanking->getRanking_membresia();
+                    $html .= '<br />Ranking Celula: ' . $fatoRanking->getRanking_celula();
                     $this->getRepositorio()->getFatoRankingORM()->persistir($fatoRanking);
                 }
 
