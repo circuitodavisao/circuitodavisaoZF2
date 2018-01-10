@@ -64,6 +64,7 @@ class PrincipalController extends CircuitoController {
         $dados['relatorioMedio'] = $relatorioMedio;
         $dados['repositorio'] = $this->getRepositorio();
         $dados['hierarquias'] = $hierarquias;
+        $dados['grupo'] = $grupo;
 
         $grupoPaiFilhoFilhos = $grupo->getGrupoPaiFilhoFilhosAtivos($periodo);
         if ($grupoPaiFilhoFilhos) {
