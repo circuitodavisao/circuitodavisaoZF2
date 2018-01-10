@@ -17,10 +17,10 @@ class Grupo extends CircuitoEntity {
     protected $ciclo;
     protected $eventos;
 
-//    /**
-//     * @ORM\OneToOne(targetEntity="FatoRanking", mappedBy="grupo")
-//     */
-//    private $fatoRanking;
+    /**
+     * @ORM\OneToOne(targetEntity="FatoRanking", mappedBy="grupo")
+     */
+    private $fatoRanking;
 
     /**
      * @ORM\OneToOne(targetEntity="GrupoCv", mappedBy="grupo")
