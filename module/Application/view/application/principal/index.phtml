@@ -18,10 +18,10 @@ use Application\Controller\RelatorioController;
         <?php echo $this->dadosPrincipal($this->relatorioMedio); ?>
         <div class="admin-panels fade-onload">
             <!--robo membresia-->
-            <div class="row alert">
+            <div class="row alert alert-default">
                 <div class="col-xs-12 col-md-12 col-lg-12">
                     <!--<p class=" well bg-<?php echo $this->relatorio['membresiaPerformanceClass']; ?> text-center"><?php echo $this->relatorio['membresiaPerformanceFrase']; ?></p>-->
-                    <p class=" well bg-default text-<?php echo $this->relatorio['membresiaPerformanceClass']; ?> text-center"><?php echo $this->relatorio['membresiaPerformanceFrase']; ?></p>
+                    <p class="well text-<?php echo $this->relatorio['membresiaPerformanceClass']; ?> text-center"><?php echo $this->relatorio['membresiaPerformanceFrase']; ?></p>
                     <?php
                     echo $this->barraDeProgressoBonita(
                             'Membresia Pessoal <span class="badge">?</span>', $this->relatorio['membresiaPerformanceClass'], $this->relatorio['membresiaPerformance'], 'm0', true, $this->relatorio['membresiaMeta'], $this->relatorio['membresia'], 'onclick="$(\'#divGaugesMembresia\').toggleClass(\'hidden\'); criarGauges(1);"');
