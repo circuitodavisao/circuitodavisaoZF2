@@ -156,6 +156,7 @@ use Application\Controller\RelatorioController;
                                                             echo '<td ' . $class . '>';
                                                             echo '<div class="row mt20"><img src="/img/avatars/placeholder.png" class="mw60 img-circle"></div>';
                                                             echo '<div class="row"><canvas id="canvas' . $label . $indiceRanking . '"></canvas></div>';
+                                                            echo '<div class="row">' . RelatorioController::formataNumeroRelatorio($this->membresiaFatoRanking[$indiceRanking]->getMembresia()) . '</div>';
                                                             echo '</td>';
                                                         }
                                                         echo '</tr>';
