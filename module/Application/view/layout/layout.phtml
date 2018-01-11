@@ -99,6 +99,154 @@ use Application\Controller\Helper\Constantes;
         ?>
         <script type="text/javascript">
 
+
+            var Barchart = function (options) {
+                this.options = options;
+                this.canvas = options.canvas;
+                this.ctx = this.canvas.getContext("2d");
+                this.colors = options.colors;
+
+                this.draw = function () {
+                    var maxValue = 0;
+                    for (var categ in this.options.data) {
+                        maxValue = Math.max(maxValue, this.options.data[categ]);
+                    }
+                    var canvasActualHeight = this.canvas.height - this.options.padding * 2;
+                    var canvasActualWidth = this.canvas.width - this.options.padding * 2;
+
+                    //drawing the grid lines
+                    var gridValue = 0;
+                    while (gridValue <= maxValue) {
+                        var gridY = canvasActualHeight * (1 - gridValue / maxValue) + this.options.padding;
+                        drawLine(
+                                this.ctx,
+                                0,
+                                gridY,
+                                this.canvas.width,
+                                gridY,
+                                this.options.gridColor
+                                );
+
+                        //writing grid markers
+                        this.ctx.save();
+                        this.ctx.fillStyle = this.options.gridColor;
+                        this.ctx.font = "bold 10px Arial";
+                        this.ctx.fillText(gridValue, 10, gridY - 2);
+                        this.ctx.restore();
+
+                        gridValue += this.options.gridScale;
+                    }
+
+                    //drawing the bars
+                    var barIndex = 0;
+                    var numberOfBars = Object.keys(this.options.data).length;
+                    var barSize = (canvasActualWidth) / numberOfBars;
+
+                    for (categ in this.options.data) {
+                        var val = this.options.data[categ];
+                        var barHeight = Math.round(canvasActualHeight * val / maxValue);
+                        drawBar(
+                                this.ctx,
+                                this.options.padding + barIndex * barSize,
+                                this.canvas.height - barHeight - this.options.padding,
+                                barSize,
+                                barHeight,
+                                this.colors[barIndex % this.colors.length]
+                                );
+
+                        barIndex++;
+                    }
+
+                }
+            }
+            function drawLine(ctx, startX, startY, endX, endY, color) {
+                ctx.save();
+                ctx.strokeStyle = color;
+                ctx.beginPath();
+                ctx.moveTo(startX, startY);
+                ctx.lineTo(endX, endY);
+                ctx.stroke();
+                ctx.restore();
+            }
+            function drawBar(ctx, upperLeftCornerX, upperLeftCornerY, width, height, color) {
+                ctx.save();
+                ctx.fillStyle = color;
+                ctx.fillRect(upperLeftCornerX, upperLeftCornerY, width, height);
+                ctx.restore();
+            }
+
+            var valorMaximoBarra = 11;
+            var totalFatoRankingMembresia = document.getElementById('totalFatoRankingMembresia');
+            if (totalFatoRankingMembresia) {
+                totalFatoRankingMembresia = parseInt(totalFatoRankingMembresia.value);
+                for (var i = 0; i < totalFatoRankingMembresia; i++) {
+                    var stringElementoValor = 'valorRankingMembresia' + i;
+                    var elementoComValor = document.getElementById(stringElementoValor);
+                    valorBarra = elementoComValor.value;
+                    if (valorBarra === 0) {
+                        valorBarra = 1;
+                    }
+
+                    var idElemento = "canvasMembresia" + i;
+                    var canvasMembresia = document.getElementById(idElemento);
+
+                    if (canvasMembresia) {
+                        if (totalFatoRankingMembresia === 4) {
+                            $("#" + idElemento).outerHeight($(window).height() - $("#" + idElemento).offset().top - Math.abs($("#" + idElemento).outerHeight(true) - $("#" + idElemento).outerHeight()));
+                        }
+                        canvasMembresia.width = 300;
+                        canvasMembresia.height = 300;
+
+                        var ctx = canvasMembresia.getContext("2d");
+
+                        if (valorBarra > valorMaximoBarra) {
+                            valorMaximoBarra = valorBarra;
+                        }
+                        var arrayBar = {
+                            1: valorMaximoBarra,
+                            2: valorBarra,
+                            3: valorMaximoBarra,
+                        };
+
+                        var colunaDeSelecao = 2;
+                        if (totalFatoRankingMembresia === 4) {
+                            colunaDeSelecao = 1;
+                        }
+                        var meuRanking = document.getElementById('meuRankingMembresia').value;
+                        if (meuRanking == 1 || meuRanking == 2) {
+                            if (meuRanking == 1) {
+                                colunaDeSelecao = 4;
+                            }
+                            if (meuRanking == 2) {
+                                colunaDeSelecao = 3;
+                            }
+                        }
+
+                        var corGrid = "#FAFAFA";
+                        var corColunas = [corGrid, "#5BC24C", corGrid]
+                        if (i === colunaDeSelecao) {
+                            colunaDeSelecao = 1;
+                            var corGrid = "#3b3f4f";
+                            var corColunas = [corGrid, "#5BC24C", corGrid]
+                        }
+                        var myBarchart = new Barchart(
+                                {
+                                    canvas: canvasMembresia,
+                                    padding: 10,
+                                    gridScale: 10,
+                                    gridColor: corGrid,
+                                    data: arrayBar,
+                                    colors: corColunas
+                                }
+                        );
+                        myBarchart.draw();
+
+                    }
+                }
+            }
+
+
+
             // request permission on page load
             document.addEventListener('DOMContentLoaded', function () {
                 if (!Notification) {

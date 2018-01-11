@@ -26,4 +26,23 @@ class FatoRankingORM extends CircuitoORM {
         }
     }
 
+    const RANKING_MEMBRESIA = 1;
+    const RANKING_CELULA = 2;
+
+    public function encontrarPorRankingETipo($ranking, $tipo) {
+        if ($tipo === FatoRankingORM::RANKING_MEMBRESIA) {
+            $campo = 'ranking_membresia';
+        }
+        if ($tipo === FatoRankingORM::RANKING_CELULA) {
+            $campo = 'ranking_celula';
+        }
+        $entidades = $this->getEntityManager()
+                ->getRepository($this->getEntity())
+                ->findOneBy(array($campo => $ranking));
+        if (!$entidades) {
+            return false;
+        }
+        return $entidades;
+    }
+
 }
