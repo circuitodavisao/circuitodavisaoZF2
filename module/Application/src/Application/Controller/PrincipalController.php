@@ -7,7 +7,7 @@ use Application\Controller\Helper\Funcoes;
 use Application\Form\NovoEmailForm;
 use Application\Model\Entity\EntidadeTipo;
 use Application\Model\Entity\EventoTipo;
-use Application\Model\Entity\Hierarquia;
+use Application\Model\ORM\FatoRankingORM;
 use Exception;
 use Zend\Json\Json;
 use Zend\Session\Container;
@@ -53,6 +53,72 @@ class PrincipalController extends CircuitoController {
 
         $hierarquias = $this->getRepositorio()->getHierarquiaORM()->encontrarTodas();
 
+        /* Pegando ranking */
+        $valorMembresia = $grupo->getFatoRanking()->getRanking_membresia();
+        $arrayRankingMembresia = array();
+        $isMobile = $this->check_user_agent('mobile');
+
+        if (!$isMobile) {
+            if ($valorMembresia > 3) {
+                $arrayRankingMembresia[4] = $valorMembresia - 2;
+                $arrayRankingMembresia[3] = $valorMembresia - 1;
+                $arrayRankingMembresia[2] = $valorMembresia;
+                $arrayRankingMembresia[1] = $valorMembresia + 1;
+                $arrayRankingMembresia[0] = $valorMembresia + 2;
+            } else {
+                if ($valorMembresia === 1) {
+                    $arrayRankingMembresia[4] = $valorMembresia;
+                    $arrayRankingMembresia[3] = 2;
+                    $arrayRankingMembresia[2] = 3;
+                    $arrayRankingMembresia[1] = 4;
+                    $arrayRankingMembresia[0] = 5;
+                }
+                if ($valorMembresia === 2) {
+                    $arrayRankingMembresia[4] = 1;
+                    $arrayRankingMembresia[3] = $valorMembresia;
+                    $arrayRankingMembresia[2] = 3;
+                    $arrayRankingMembresia[1] = 4;
+                    $arrayRankingMembresia[0] = 5;
+                }
+                if ($valorMembresia === 3) {
+                    $arrayRankingMembresia[4] = 1;
+                    $arrayRankingMembresia[3] = 2;
+                    $arrayRankingMembresia[2] = $valorMembresia;
+                    $arrayRankingMembresia[1] = 4;
+                    $arrayRankingMembresia[0] = 5;
+                }
+            }
+        } else {
+            if ($valorMembresia > 2) {
+                $arrayRankingMembresia[2] = $valorMembresia - 1;
+                $arrayRankingMembresia[1] = $valorMembresia;
+                $arrayRankingMembresia[0] = $valorMembresia + 1;
+            } else {
+                if ($valorMembresia === 1) {
+                    $arrayRankingMembresia[2] = $valorMembresia;
+                    $arrayRankingMembresia[1] = 2;
+                    $arrayRankingMembresia[0] = 3;
+                }
+                if ($valorMembresia === 2) {
+                    $arrayRankingMembresia[2] = 1;
+                    $arrayRankingMembresia[1] = $valorMembresia;
+                    $arrayRankingMembresia[0] = 3;
+                }
+                if ($valorMembresia === 3) {
+                    $arrayRankingMembresia[2] = 1;
+                    $arrayRankingMembresia[1] = 2;
+                    $arrayRankingMembresia[0] = $valorMembresia;
+                }
+            }
+        }
+
+        $arrayMembresiaFatoRanking = array();
+        $totalDeRankings = count($arrayRankingMembresia) - 1;
+        foreach ($arrayRankingMembresia as $valores) {
+            $arrayMembresiaFatoRanking[$totalDeRankings] = $this->getRepositorio()->getFatoRankingORM()->encontrarPorRankingETipo($valores, FatoRankingORM::RANKING_MEMBRESIA);
+            $totalDeRankings--;
+        }
+
         $dados = array();
         $dados['pessoa'] = $pessoa;
         $dados['eCasal'] = $eCasal;
@@ -65,6 +131,7 @@ class PrincipalController extends CircuitoController {
         $dados['repositorio'] = $this->getRepositorio();
         $dados['hierarquias'] = $hierarquias;
         $dados['grupo'] = $grupo;
+        $dados['membresiaFatoRanking'] = $arrayMembresiaFatoRanking;
 
         $grupoPaiFilhoFilhos = $grupo->getGrupoPaiFilhoFilhosAtivos($periodo);
         if ($grupoPaiFilhoFilhos) {
