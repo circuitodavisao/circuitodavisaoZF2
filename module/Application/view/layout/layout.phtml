@@ -183,6 +183,14 @@ use Application\Controller\Helper\Constantes;
                     var stringElementoValor = 'valorRankingMembresia' + i;
                     var elementoComValor = document.getElementById(stringElementoValor);
                     valorBarra = elementoComValor.value;
+                    if (valorBarra > valorMaximoBarra) {
+                        valorMaximoBarra = valorBarra;
+                    }
+                }
+                for (var i = 0; i < totalFatoRankingMembresia; i++) {
+                    var stringElementoValor = 'valorRankingMembresia' + i;
+                    var elementoComValor = document.getElementById(stringElementoValor);
+                    valorBarra = elementoComValor.value;
                     if (valorBarra === 0) {
                         valorBarra = 1;
                     }
@@ -199,9 +207,6 @@ use Application\Controller\Helper\Constantes;
 
                         var ctx = canvasMembresia.getContext("2d");
 
-                        if (valorBarra > valorMaximoBarra) {
-                            valorMaximoBarra = valorBarra;
-                        }
                         var arrayBar = {
                             1: valorMaximoBarra,
                             2: valorBarra,
