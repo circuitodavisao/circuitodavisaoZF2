@@ -58,7 +58,6 @@ if ($sessao->mostrarNotificacao) {
             delay: 10000
         });
     }
-
     function mostrarModalClasse() {
         $.magnificPopup.open({
             removalDelay: 500, //delay removal by X to allow out-animation,
@@ -187,6 +186,7 @@ if ($sessao->mostrarNotificacao) {
     var rodarApenasUmaVezOsGaugesCelula = 1;
     var tipoMembresia = 1;
     var tipoCelula = 2;
+    var valorMaximoBarra = 11;
     function criarGauges(tipo) {
         var valoresGraficos = [3, 6, 3, 7];
         var eCasal = document.getElementById('eCasal').value;
@@ -259,6 +259,12 @@ if ($sessao->mostrarNotificacao) {
             rodarApenasUmaVezOsGaugesMembresia += 1;
 
             gerarGraficoLinhas();
+
+            valorMaximoBarra = 11;
+            var totalFatoRankingMembresia = document.getElementById('totalFatoRankingMembresia');
+            if (totalFatoRankingMembresia) {
+                montarMeuHighChart(tipoRelatorioMembresia, totalFatoRankingMembresia);
+            }
         }
 
         if (tipo === tipoCelula && rodarApenasUmaVezOsGaugesCelula === 1) {
@@ -278,6 +284,12 @@ if ($sessao->mostrarNotificacao) {
             $('#labelValorCelula').html(valorCelula);
             $('#spanMetaCelula').html(valoresGraficos[3]);
             rodarApenasUmaVezOsGaugesCelula += 1;
+
+            valorMaximoBarra = 11;
+            var totalFatoRankingCelula = document.getElementById('totalFatoRankingCelula');
+            if (totalFatoRankingCelula) {
+                montarMeuHighChart(tipoRelatorioCelula, totalFatoRankingCelula);
+            }
         }
     }
 
@@ -409,37 +421,125 @@ if ($sessao->mostrarNotificacao) {
         ctx.restore();
     }
 
-    var valorMaximoBarra = 11;
-    var totalFatoRankingMembresia = document.getElementById('totalFatoRankingMembresia');
-    if (totalFatoRankingMembresia) {
-        totalFatoRankingMembresia = parseInt(totalFatoRankingMembresia.value);
-        for (var i = 0; i < totalFatoRankingMembresia; i++) {
-            var stringElementoValor = 'valorRankingMembresia' + i;
+    var tipoRelatorioMembresia = 1;
+    var tipoRelatorioCelula = 2;
+
+    function montarMeuHighChart(tipo, total) {
+        var nomeRelatorio = '';
+        if (tipo === tipoRelatorioMembresia) {
+            nomeRelatorio = 'Membresia';
+        }
+        if (tipo === tipoRelatorioCelula) {
+            nomeRelatorio = 'Celula';
+        }
+        total = parseInt(total.value);
+        for (var i = 0; i < total; i++) {
+            var stringElementoValor = 'valorRanking' + nomeRelatorio + i;
             var elementoComValor = document.getElementById(stringElementoValor);
             valorBarra = elementoComValor.value;
             if (valorBarra > valorMaximoBarra) {
                 valorMaximoBarra = valorBarra;
             }
         }
-        for (var i = 0; i < totalFatoRankingMembresia; i++) {
-            var stringElementoValor = 'valorRankingMembresia' + i;
+        for (var i = 0; i < total; i++) {
+            var stringElementoValor = 'valorRanking' + nomeRelatorio + i;
+            var elementoComValor = $('#' + stringElementoValor);
+            valorBarra = elementoComValor.val();
+            if (valorBarra === 0) {
+                valorBarra = 1;
+            }
+            valorBarra = parseFloat(valorBarra);
+            var idElemento = "div" + nomeRelatorio + i;
+            var elemento = $('#' + idElemento);
+
+            elemento.highcharts({
+                credits: false,
+                colors: [bgSuccess],
+                chart: {
+                    backgroundColor: 'transparent',
+                    type: 'column',
+                },
+                legend: {
+                    enabled: false
+                },
+                title: {
+                    text: null,
+                },
+                xAxis: {
+                    lineWidth: 0,
+                    tickLength: 6,
+                    title: {
+                        text: null
+                    },
+                    labels: {
+                        enabled: false
+                    }
+                },
+                yAxis: {
+                    max: valorMaximoBarra,
+                    lineWidth: 0,
+                    gridLineWidth: 0,
+                    lineColor: '#EEE',
+                    gridLineColor: '#EEE',
+                    title: {
+                        text: null
+                    },
+                    labels: {
+                        enabled: false,
+                        style: {
+                            fontWeight: '400'
+                        }
+                    }
+                },
+                plotOptions: {
+                    column: {
+                        colorByPoint: true,
+                    }
+                },
+                tooltip: {
+                    enabled: false,
+                },
+                series: [{
+                        name: nomeRelatorio,
+                        data: [valorBarra]
+                    }]
+            });
+        }
+    }
+
+    function montaMinhasBarras(tipo, total) {
+        var nomeRelatorio = '';
+        if (tipo === tipoRelatorioMembresia) {
+            nomeRelatorio = 'Membresia';
+        }
+        if (tipo === tipoRelatorioCelula) {
+            nomeRelatorio = 'Celula';
+        }
+        total = parseInt(total.value);
+        for (var i = 0; i < total; i++) {
+            var stringElementoValor = 'valorRanking' + nomeRelatorio + i;
+            var elementoComValor = document.getElementById(stringElementoValor);
+            valorBarra = elementoComValor.value;
+            if (valorBarra > valorMaximoBarra) {
+                valorMaximoBarra = valorBarra;
+            }
+        }
+        for (var i = 0; i < total; i++) {
+            var stringElementoValor = 'valorRanking' + nomeRelatorio + i;
             var elementoComValor = document.getElementById(stringElementoValor);
             valorBarra = elementoComValor.value;
             if (valorBarra === 0) {
                 valorBarra = 1;
             }
 
-            var idElemento = "canvasMembresia" + i;
-            var canvasMembresia = document.getElementById(idElemento);
+            var idElemento = "canvas" + nomeRelatorio + i;
+            var canvas = document.getElementById(idElemento);
 
-            if (canvasMembresia) {
-                if (totalFatoRankingMembresia === 4) {
-                    $("#" + idElemento).outerHeight($(window).height() - $("#" + idElemento).offset().top - Math.abs($("#" + idElemento).outerHeight(true) - $("#" + idElemento).outerHeight()));
-                }
-                canvasMembresia.width = 300;
-                canvasMembresia.height = 300;
+            if (canvas) {
+                canvas.width = 300;
+                canvas.height = 300;
 
-                var ctx = canvasMembresia.getContext("2d");
+                var ctx = canvas.getContext("2d");
 
                 var arrayBar = {
                     1: valorMaximoBarra,
@@ -451,7 +551,7 @@ if ($sessao->mostrarNotificacao) {
                 if (totalFatoRankingMembresia === 4) {
                     colunaDeSelecao = 1;
                 }
-                var meuRanking = document.getElementById('meuRankingMembresia').value;
+                var meuRanking = document.getElementById('meuRanking' + nomeRelatorio).value;
                 if (meuRanking == 1 || meuRanking == 2) {
                     if (meuRanking == 1) {
                         colunaDeSelecao = 4;
@@ -470,7 +570,7 @@ if ($sessao->mostrarNotificacao) {
                 }
                 var myBarchart = new Barchart(
                         {
-                            canvas: canvasMembresia,
+                            canvas: canvas,
                             padding: 10,
                             gridScale: 10,
                             gridColor: corGrid,

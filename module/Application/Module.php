@@ -55,9 +55,9 @@ use Application\View\Helper\ListagemDeEventos;
 use Application\View\Helper\ListagemDePessoasComEventos;
 use Application\View\Helper\ListagemDisciplinas;
 use Application\View\Helper\ListagemFichasAtivasRevisao;
-use Application\View\Helper\ListagemPessoasRevisao;
 use Application\View\Helper\ListagemFichasParaRevisao;
 use Application\View\Helper\ListagemLideresTransferencia;
+use Application\View\Helper\ListagemPessoasRevisao;
 use Application\View\Helper\ListagemTurmas;
 use Application\View\Helper\ListagemTurmasInativas;
 use Application\View\Helper\MensagemRelatorioEnviado;
@@ -66,6 +66,7 @@ use Application\View\Helper\MenuHierarquia;
 use Application\View\Helper\ModalLoader;
 use Application\View\Helper\ModalMuitosCadastros;
 use Application\View\Helper\ModalMuitosEventos;
+use Application\View\Helper\MontaGraficoDeBarra;
 use Application\View\Helper\MontarEndereco;
 use Application\View\Helper\PassoAPasso;
 use Application\View\Helper\PerfilDropDown;
@@ -319,6 +320,9 @@ class Module {
                 },
                 'cabecalhoDePeriodos' => function ($sm) {
                     return new CabecalhoDePeriodos();
+                },
+                'montaGraficoDeBarra' => function ($sm) {
+                    return new MontaGraficoDeBarra();
                 },
             )
         );

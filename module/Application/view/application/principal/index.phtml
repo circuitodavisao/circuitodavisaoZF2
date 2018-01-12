@@ -2,6 +2,7 @@
 
 use Application\Controller\Helper\Funcoes;
 use Application\Controller\RelatorioController;
+use Application\View\Helper\MontaGraficoDeBarra;
 ?>
 <!-- Begin: Content -->
 <section id="content" class="table-layout animated fadeIn">
@@ -16,7 +17,7 @@ use Application\Controller\RelatorioController;
     <!-- begin: .tray-center -->
     <div class="tray tray-center">
         <?php echo $this->dadosPrincipal($this->relatorioMedio); ?>
-        <div class="admin-panels fade-onload">
+        <div class="admin-panels fade-onload">           
             <!--robo membresia-->
             <div class="row alert alert-default">
                 <div class="col-xs-12 col-md-12 col-lg-12">
@@ -106,87 +107,7 @@ use Application\Controller\RelatorioController;
                                     <div class="col-md-12 text-center">
                                         <div class="panel">
                                             <div class="panel-body">
-                                                <input type="hidden" id="totalFatoRankingMembresia" value="<?php echo count($this->membresiaFatoRanking); ?>" />
-                                                <?php
-                                                foreach ($this->membresiaFatoRanking as $key => $fatoRanking) {
-                                                    $valor = $fatoRanking->getMembresia();
-                                                    if ($valor == 0) {
-                                                        $valor = 1;
-                                                    }
-                                                    echo '<input type="hidden" id="valorRankingMembresia' . $key . '" value="' . $valor . '" />';
-                                                }
-                                                ?>
-                                                <table class="table">
-                                                    <tbody>
-                                                        <?php
-                                                        $totalRanking = count($this->membresiaFatoRanking);
-                                                        $colunaDeSelecao = 2;
-                                                        if ($totalRanking === 3) {
-                                                            $colunaDeSelecao = 1;
-                                                        }
-                                                        $meuRanking = $this->grupo->getFatoRanking()->getRanking_membresia();
-                                                        echo '<input type="hidden" id="meuRankingMembresia" value="' . $meuRanking . '" />';
-                                                        if ($meuRanking == 1 || $meuRanking == 2) {
-                                                            if ($meuRanking == 1) {
-                                                                $colunaDeSelecao = 4;
-                                                            }
-                                                            if ($meuRanking == 2) {
-                                                                $colunaDeSelecao = 3;
-                                                            }
-                                                        }
-                                                        $label = 'Membresia';
-                                                        $corSelecao = 'dark';
-                                                        echo '<tr>';
-                                                        for ($indiceRanking = 0; $indiceRanking < $totalRanking; $indiceRanking++) {
-                                                            $class = '';
-                                                            if ($indiceRanking === $colunaDeSelecao) {
-                                                                $class = 'class="bg-' . $corSelecao . '"';
-                                                            }
-                                                            echo '<td ' . $class . '>';
-                                                            echo '<h1>#' . $this->membresiaFatoRanking[$indiceRanking]->getRanking_membresia() . '</h1>';
-                                                            echo '</td>';
-                                                        }
-                                                        echo '</tr>';
-                                                        echo '<tr>';
-                                                        for ($indiceRanking = 0; $indiceRanking < $totalRanking; $indiceRanking++) {
-                                                            $class = '';
-                                                            if ($indiceRanking === $colunaDeSelecao) {
-                                                                $class = 'class="bg-' . $corSelecao . '"';
-                                                            }
-                                                            echo '<td ' . $class . '>';
-                                                            echo '<div class="row mt20"><img src="/img/avatars/placeholder.png" class="mw60 img-circle"></div>';
-                                                            echo '<div class="row"><canvas id="canvas' . $label . $indiceRanking . '"></canvas></div>';
-                                                            echo '<div class="row">' . RelatorioController::formataNumeroRelatorio($this->membresiaFatoRanking[$indiceRanking]->getMembresia()) . '</div>';
-                                                            echo '</td>';
-                                                        }
-                                                        echo '</tr>';
-                                                        echo '<tr>';
-                                                        for ($indiceRanking = 0; $indiceRanking < $totalRanking; $indiceRanking++) {
-                                                            $grupo = $this->membresiaFatoRanking[$indiceRanking]->getGrupo();
-                                                            $class = '';
-                                                            if ($indiceRanking === $colunaDeSelecao) {
-                                                                $class = 'class="bg-' . $corSelecao . '"';
-                                                            }
-                                                            echo '<td ' . $class . '>';
-                                                            echo $grupo->getNomeLideresAtivos();
-                                                            echo '</td>';
-                                                        }
-                                                        echo '</tr>';
-                                                        echo '<tr>';
-                                                        for ($indiceRanking = 0; $indiceRanking < $totalRanking; $indiceRanking++) {
-                                                            $grupo = $this->membresiaFatoRanking[$indiceRanking]->getGrupo();
-                                                            $class = '';
-                                                            if ($indiceRanking === $colunaDeSelecao) {
-                                                                $class = 'class="bg-' . $corSelecao . '"';
-                                                            }
-                                                            echo '<td ' . $class . '>';
-                                                            echo $grupo->getEntidadeAtiva()->infoEntidade();
-                                                            echo '</td>';
-                                                        }
-                                                        echo '</tr>';
-                                                        ?>
-                                                    </tbody>
-                                                </table>
+                                                <?php echo $this->montaGraficoDeBarra($this->membresiaFatoRanking, MontaGraficoDeBarra::TIPO_RELATORIO_MEMBRESIA); ?>
                                             </div>
                                         </div>
                                     </div>
@@ -200,7 +121,7 @@ use Application\Controller\RelatorioController;
             <div class="row alert alert-default">
                 <div class="col-xs-12 col-md-12 col-lg-12">
                     <!--<p class=" well bg-<?php echo $this->relatorio['celulaPerformanceClass'];
-                                                        ?> text-center"><?php echo $this->relatorio['celulaPerformanceFrase']; ?></p>-->
+                                                ?> text-center"><?php echo $this->relatorio['celulaPerformanceFrase']; ?></p>-->
                     <p class=" well bg-default text-<?php echo $this->relatorio['celulaPerformanceClass']; ?> text-center"><?php echo $this->relatorio['celulaPerformanceFrase']; ?></p>
                     <?php
                     echo $this->barraDeProgressoBonita(
@@ -232,8 +153,18 @@ use Application\Controller\RelatorioController;
                                 </div>
                             </div>
                         </div>
+                        <!--row chart-->
+                        <div class="row">
+                            <div class="col-md-12 text-center">
+                                <div class="panel">
+                                    <div class="panel-body">
+                                        <?php echo $this->montaGraficoDeBarra($this->celulaFatoRanking, MontaGraficoDeBarra::TIPO_RELATORIO_CELULA); ?>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                </div>
+                </div>              
             </div>
             <!--robo proximoNivel-->
             <div class="row alert alert-default">
