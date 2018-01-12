@@ -132,7 +132,7 @@ class DadosPrincipal extends AbstractHelper {
 
             $classClasse = RelatorioController::corDaLinhaPelaPerformanceClasse($classe);
 
-            $mensagemModalClasse .= "<div class='alert alert-info alert-sm'>";
+            $mensagemModalClasse .= "<div class='alert alert-default alert-sm'>";
             if ($indiceDeRelatorios === 1) {
                 $mensagemModalClasse .= '<p><b>Porque sou Classe </b><span class="label label-' . $classClasse . ' label-sm">' . $classe . ' </span></p>';
                 $mensagemModalClasse .= '<p><b>Resposta:</b> ' . $respostaAjustada . '</p>';
