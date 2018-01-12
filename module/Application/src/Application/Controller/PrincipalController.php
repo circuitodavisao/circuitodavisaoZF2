@@ -54,69 +54,85 @@ class PrincipalController extends CircuitoController {
         $hierarquias = $this->getRepositorio()->getHierarquiaORM()->encontrarTodas();
 
         /* Pegando ranking */
-        $valorMembresia = $grupo->getFatoRanking()->getRanking_membresia();
-        $arrayRankingMembresia = array();
+
         $isMobile = $this->check_user_agent('mobile');
 
-        if (!$isMobile) {
-            if ($valorMembresia > 3) {
-                $arrayRankingMembresia[4] = $valorMembresia - 2;
-                $arrayRankingMembresia[3] = $valorMembresia - 1;
-                $arrayRankingMembresia[2] = $valorMembresia;
-                $arrayRankingMembresia[1] = $valorMembresia + 1;
-                $arrayRankingMembresia[0] = $valorMembresia + 2;
+        for ($indiceDeRankings = 1; $indiceDeRankings <= 2; $indiceDeRankings++) {
+            if ($indiceDeRankings === 1) {
+                $valorRanking = $grupo->getFatoRanking()->getRanking_membresia();
+            }
+            if ($indiceDeRankings === 2) {
+                $valorRanking = $grupo->getFatoRanking()->getRanking_celula();
+            }
+            if (!$isMobile) {
+                if ($valorRanking > 3) {
+                    $qualArray[4] = $valorRanking - 2;
+                    $qualArray[3] = $valorRanking - 1;
+                    $qualArray[2] = $valorRanking;
+                    $qualArray[1] = $valorRanking + 1;
+                    $qualArray[0] = $valorRanking + 2;
+                } else {
+                    if ($valorRanking === 1) {
+                        $qualArray[4] = $valorRanking;
+                        $qualArray[3] = 2;
+                        $qualArray[2] = 3;
+                        $qualArray[1] = 4;
+                        $qualArray[0] = 5;
+                    }
+                    if ($valorRanking === 2) {
+                        $qualArray[4] = 1;
+                        $qualArray[3] = $valorRanking;
+                        $qualArray[2] = 3;
+                        $qualArray[1] = 4;
+                        $qualArray[0] = 5;
+                    }
+                    if ($valorRanking === 3) {
+                        $qualArray[4] = 1;
+                        $qualArray[3] = 2;
+                        $qualArray[2] = $valorRanking;
+                        $qualArray[1] = 4;
+                        $qualArray[0] = 5;
+                    }
+                }
             } else {
-                if ($valorMembresia === 1) {
-                    $arrayRankingMembresia[4] = $valorMembresia;
-                    $arrayRankingMembresia[3] = 2;
-                    $arrayRankingMembresia[2] = 3;
-                    $arrayRankingMembresia[1] = 4;
-                    $arrayRankingMembresia[0] = 5;
-                }
-                if ($valorMembresia === 2) {
-                    $arrayRankingMembresia[4] = 1;
-                    $arrayRankingMembresia[3] = $valorMembresia;
-                    $arrayRankingMembresia[2] = 3;
-                    $arrayRankingMembresia[1] = 4;
-                    $arrayRankingMembresia[0] = 5;
-                }
-                if ($valorMembresia === 3) {
-                    $arrayRankingMembresia[4] = 1;
-                    $arrayRankingMembresia[3] = 2;
-                    $arrayRankingMembresia[2] = $valorMembresia;
-                    $arrayRankingMembresia[1] = 4;
-                    $arrayRankingMembresia[0] = 5;
+                if ($valorRanking > 2) {
+                    $qualArray[2] = $valorRanking - 1;
+                    $qualArray[1] = $valorRanking;
+                    $qualArray[0] = $valorRanking + 1;
+                } else {
+                    if ($valorRanking === 1) {
+                        $qualArray[2] = $valorRanking;
+                        $qualArray[1] = 2;
+                        $qualArray[0] = 3;
+                    }
+                    if ($valorRanking === 2) {
+                        $qualArray[2] = 1;
+                        $qualArray[1] = $valorRanking;
+                        $qualArray[0] = 3;
+                    }
+                    if ($valorRanking === 3) {
+                        $qualArray[2] = 1;
+                        $qualArray[1] = 2;
+                        $qualArray[0] = $valorRanking;
+                    }
                 }
             }
-        } else {
-            if ($valorMembresia > 2) {
-                $arrayRankingMembresia[2] = $valorMembresia - 1;
-                $arrayRankingMembresia[1] = $valorMembresia;
-                $arrayRankingMembresia[0] = $valorMembresia + 1;
-            } else {
-                if ($valorMembresia === 1) {
-                    $arrayRankingMembresia[2] = $valorMembresia;
-                    $arrayRankingMembresia[1] = 2;
-                    $arrayRankingMembresia[0] = 3;
-                }
-                if ($valorMembresia === 2) {
-                    $arrayRankingMembresia[2] = 1;
-                    $arrayRankingMembresia[1] = $valorMembresia;
-                    $arrayRankingMembresia[0] = 3;
-                }
-                if ($valorMembresia === 3) {
-                    $arrayRankingMembresia[2] = 1;
-                    $arrayRankingMembresia[1] = 2;
-                    $arrayRankingMembresia[0] = $valorMembresia;
-                }
-            }
-        }
 
-        $arrayMembresiaFatoRanking = array();
-        $totalDeRankings = count($arrayRankingMembresia) - 1;
-        foreach ($arrayRankingMembresia as $valores) {
-            $arrayMembresiaFatoRanking[$totalDeRankings] = $this->getRepositorio()->getFatoRankingORM()->encontrarPorRankingETipo($valores, FatoRankingORM::RANKING_MEMBRESIA);
-            $totalDeRankings--;
+            $totalDeRankings = count($qualArray) - 1;
+            foreach ($qualArray as $valores) {
+                $qualEncontrar = FatoRankingORM::RANKING_MEMBRESIA;
+                if ($indiceDeRankings === 2) {
+                    $qualEncontrar = FatoRankingORM::RANKING_CELULA;
+                }
+                $arrayFinal[$totalDeRankings] = $this->getRepositorio()->getFatoRankingORM()->encontrarPorRankingETipo($valores, $qualEncontrar);
+                $totalDeRankings--;
+            }
+            if ($indiceDeRankings === 1) {
+                $arrayMembresiaFatoRanking = $arrayFinal;
+            }
+            if ($indiceDeRankings === 2) {
+                $arrayCelulaFatoRanking = $arrayFinal;
+            }
         }
 
         $dados = array();
@@ -132,6 +148,7 @@ class PrincipalController extends CircuitoController {
         $dados['hierarquias'] = $hierarquias;
         $dados['grupo'] = $grupo;
         $dados['membresiaFatoRanking'] = $arrayMembresiaFatoRanking;
+        $dados['celulaFatoRanking'] = $arrayCelulaFatoRanking;
 
         $grupoPaiFilhoFilhos = $grupo->getGrupoPaiFilhoFilhosAtivos($periodo);
         if ($grupoPaiFilhoFilhos) {
