@@ -29,7 +29,7 @@ class DadosPrincipal extends AbstractHelper {
 
     public function renderHtml() {
         $html = '';
-        $pessoa = $this->view->pessoa;        
+        $pessoa = $this->view->pessoa;
         $classe = '?';
         $imagem = FuncoesEntidade::nomeDaImagem($pessoa);
 
@@ -39,9 +39,11 @@ class DadosPrincipal extends AbstractHelper {
             $multiplicadorDaMeta = 2;
         }
 
+        $respostaBase = 'Porque a sua eficiência com relação a média de membresia e quantidade de célula do mês de #mes #periodo';
+
         $mensagemModalClasse = '';
-        $mensagemModalClasse .= '<h1 class="text-center">Cálculo da Classe</h1>';
-        $mensagemModalClasse .= '<p>Média de membresia e células pela meta da sua hierarquia no mês anterior.</p>';
+        $mensagemModalClasse .= '<h1 class="text-center"><b>O que é a Classe?</b></h1>';
+        $mensagemModalClasse .= '<p><b>Resposta:</b> É a classificação do resultado do líder baseado na média de membresia e quantidade de pesoas em células do mês anterior.</p>';
 
         for ($indiceDeRelatorios = 1; $indiceDeRelatorios <= 2; $indiceDeRelatorios++) {
             unset($qualRelatorio);
@@ -97,32 +99,48 @@ class DadosPrincipal extends AbstractHelper {
             if ($perfomanceMembresiaVisual < $classeMaxima) {
                 $classeMaxima = $perfomanceMembresiaVisual;
             }
-            if ($classeMaxima >= RelatorioController::MARGEM_D && $classeMaxima < RelatorioController::MARGEM_C) {
-                $classe = 'D';
-            }
-            if ($classeMaxima >= RelatorioController::MARGEM_C && $classeMaxima < RelatorioController::MARGEM_B) {
-                $classe = 'C';
-            }
-            if ($classeMaxima >= RelatorioController::MARGEM_B && $classeMaxima < RelatorioController::MARGEM_A) {
-                $classe = 'B';
-            }
-            if ($classeMaxima >= RelatorioController::MARGEM_A) {
-                $classe = 'A';
-            }
-            $classClasse = RelatorioController::corDaLinhaPelaPerformanceClasse($classe);
 
-            $mensagemModalClasse .= "<div class='alert alert-info alert-sm'>";
             if ($indiceDeRelatorios === 2) {
-                $mensagemModalClasse .= Funcoes::mesPorExtenso(date('m'), 1);
+                $mesPorExtenso = Funcoes::mesPorExtenso(date('m'), 1);
             }
             if ($indiceDeRelatorios === 1) {
                 $mesAnterior = date('m') - 1;
                 if (date('m') == 1) {
                     $mesAnterior = 12;
                 }
-                $mensagemModalClasse .= Funcoes::mesPorExtenso($mesAnterior, 1);
+                $mesPorExtenso = Funcoes::mesPorExtenso($mesAnterior, 1);
             }
-            $mensagemModalClasse .= ' - Classe <span class="label label-' . $classClasse . ' label-sm">' . $classe . ' </span>';
+            $respostaMesAjustado = str_replace('#mes', $mesPorExtenso, $respostaBase);
+
+            if ($classeMaxima >= RelatorioController::MARGEM_D && $classeMaxima < RelatorioController::MARGEM_C) {
+                $classe = 'D';
+                $periodo = 'é menor que 50%';
+            }
+            if ($classeMaxima >= RelatorioController::MARGEM_C && $classeMaxima < RelatorioController::MARGEM_B) {
+                $classe = 'C';
+                $periodo = 'está entre 50% a 74%';
+            }
+            if ($classeMaxima >= RelatorioController::MARGEM_B && $classeMaxima < RelatorioController::MARGEM_A) {
+                $classe = 'B';
+                $periodo = 'está entre 75% a 99%';
+            }
+            if ($classeMaxima >= RelatorioController::MARGEM_A) {
+                $classe = 'A';
+                $periodo = 'é maior que 100%';
+            }
+            $respostaAjustada = str_replace('#periodo', $periodo, $respostaMesAjustado);
+
+            $classClasse = RelatorioController::corDaLinhaPelaPerformanceClasse($classe);
+
+            $mensagemModalClasse .= "<div class='alert alert-info alert-sm'>";
+            if ($indiceDeRelatorios === 1) {
+                $mensagemModalClasse .= '<p><b>Porque sou Classe </b><span class="label label-' . $classClasse . ' label-sm">' . $classe . ' </span></p>';
+                $mensagemModalClasse .= '<p><b>Resposta:</b> ' . $respostaAjustada . '</p>';
+            }
+            if ($indiceDeRelatorios === 2) {
+                $mensagemModalClasse .= '<p><b>Como estou em ' . $mesPorExtenso . '?</b></p>';
+                $mensagemModalClasse .= '<p><b>Resposta:</b> Estima-se que no mês de ' . $mesPorExtenso . ' você provavelmente será <span class="label label-' . $classClasse . ' label-sm">' . $classe . ' </span></p>';
+            }
             $mensagemModalClasse .= "</div>";
             $mensagemModalClasse .= $this->montaBarrasDeProgresso($fimIndice, $qualRelatorio, $multiplicadorDaMeta, $metas, $qualRelatorioCelula, $pessoa, $perfomanceMembresia, $perfomanceCelula);
 
