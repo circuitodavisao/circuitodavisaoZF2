@@ -434,12 +434,18 @@ class IndexController extends CircuitoController {
         try {
 
             if ($grupos) {
+                $arrayPeriodos = Funcoes::encontrarNumeroDePeriodosNoMesAtualEAnterior();
                 foreach ($grupos as $grupo) {
                     $numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupo);
                     if ($numeroIdentificador) {
                         $tipoRelatorioPessoal = 1;
-                        $periodo = -1;
-                        $relatorioGrupos[$grupo->getId()] = RelatorioController::montaRelatorio($this->getRepositorio(), $numeroIdentificador, $periodo, $tipoRelatorioPessoal);
+                        $periodoInicial = $arrayPeriodos['periodoMesAtualInicial'];
+                        $periodoFinal = $arrayPeriodos['periodoMesAtualFinal'] - 1;
+                        if ($periodoInicial == 0 || $periodoInicial == -1) {
+                            $periodoInicial = $arrayPeriodos['periodoMesAnteirorInicial'];
+                            $periodoFinal = $arrayPeriodos['periodoMesAnteirorFinal'];
+                        }
+                        $relatorioGrupos[$grupo->getId()] = RelatorioController::montaRelatorio($this->getRepositorio(), $numeroIdentificador, $periodoInicial, $tipoRelatorioPessoal, $periodoFinal);
                     }
                 }
 
