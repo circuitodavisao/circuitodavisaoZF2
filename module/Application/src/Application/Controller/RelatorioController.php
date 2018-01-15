@@ -308,6 +308,9 @@ class RelatorioController extends CircuitoController {
         if ($periodoFinal !== 0) {
             $diferencaDePeriodos = $periodoFinal - $periodoInicial;
         }
+        if ($periodoInicial < $periodoFinal && $diferencaDePeriodos === 1) {
+            $diferencaDePeriodos++;
+        }
         if ($diferencaDePeriodos < 0) {
             $diferencaDePeriodos *= -1;
         }

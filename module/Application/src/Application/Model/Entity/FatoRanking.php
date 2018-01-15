@@ -33,16 +33,16 @@ class FatoRanking extends CircuitoEntity {
     /** @ORM\Column(type="float") */
     protected $membresia;
 
-    /** @ORM\Column(type="integer") */
+    /** @ORM\Column(type="float") */
     protected $culto;
 
-    /** @ORM\Column(type="integer") */
+    /** @ORM\Column(type="float") */
     protected $arena;
 
-    /** @ORM\Column(type="integer") */
+    /** @ORM\Column(type="float") */
     protected $domingo;
 
-    /** @ORM\Column(type="integer") */
+    /** @ORM\Column(type="float") */
     protected $celula;
 
     function getGrupo() {
