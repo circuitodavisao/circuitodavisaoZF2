@@ -8,11 +8,11 @@ use Application\View\Helper\MontaGraficoDeBarra;
 <section id="content" class="table-layout animated fadeIn">
     <?php
     echo '<input type="hidden" id="eCasal" value="' . $this->eCasal . '" />';
-    echo '<input type="hidden" id="valorCulto" value="' . $this->relatorio['membresiaCulto'] . '" />';
-    echo '<input type="hidden" id="valorArena" value="' . $this->relatorio['membresiaArena'] . '" />';
-    echo '<input type="hidden" id="valorDomingo" value="' . $this->relatorio['membresiaDomingo'] . '" />';
-    echo '<input type="hidden" id="valorMembresia" value="' . RelatorioController::formataNumeroRelatorio($this->relatorio['membresia']) . '" />';
-    echo '<input type="hidden" id="valorCelula" value="' . $this->relatorio['celula'] . '" />';
+    echo '<input type="hidden" id="valorCulto" value="' . $this->relatorioMedio['pessoalAtual']['membresiaCulto'] . '" />';
+    echo '<input type="hidden" id="valorArena" value="' . $this->relatorioMedio['pessoalAtual']['membresiaArena'] . '" />';
+    echo '<input type="hidden" id="valorDomingo" value="' . $this->relatorioMedio['pessoalAtual']['membresiaDomingo'] . '" />';
+    echo '<input type="hidden" id="valorMembresia" value="' . RelatorioController::formataNumeroRelatorio($this->relatorioMedio['pessoalAtual']['membresia']) . '" />';
+    echo '<input type="hidden" id="valorCelula" value="' . $this->relatorioMedio['pessoalAtual']['celula'] . '" />';
     ?>
     <!-- begin: .tray-center -->
     <div class="tray tray-center">
@@ -21,11 +21,10 @@ use Application\View\Helper\MontaGraficoDeBarra;
             <!--robo membresia-->
             <div class="row alert alert-default">
                 <div class="col-xs-12 col-md-12 col-lg-12">
-                    <!--<p class=" well bg-<?php echo $this->relatorio['membresiaPerformanceClass']; ?> text-center"><?php echo $this->relatorio['membresiaPerformanceFrase']; ?></p>-->
-                    <p class="well text-<?php echo $this->relatorio['membresiaPerformanceClass']; ?> text-center"><?php echo $this->relatorio['membresiaPerformanceFrase']; ?></p>
+                    <p class="well text-<?php echo $this->relatorioMedio['pessoalAtual']['membresiaPerformanceClass']; ?> text-center"><?php echo $this->relatorioMedio['pessoalAtual']['membresiaPerformanceFrase']; ?></p>
                     <?php
                     echo $this->barraDeProgressoBonita(
-                            'Membresia Pessoal <span class="badge">?</span>', $this->relatorio['membresiaPerformanceClass'], $this->relatorio['membresiaPerformance'], 'm0', true, $this->relatorio['membresiaMeta'], $this->relatorio['membresia'], 'onclick="$(\'#divGaugesMembresia\').toggleClass(\'hidden\'); criarGauges(1);"');
+                            'Membresia Pessoal <span class="badge">?</span>', $this->relatorioMedio['pessoalAtual']['membresiaPerformanceClass'], $this->relatorioMedio['pessoalAtual']['membresiaPerformance'], 'm0', true, $this->relatorioMedio['pessoalAtual']['membresiaMeta'], $this->relatorioMedio['pessoalAtual']['membresia'], 'onclick="$(\'#divGaugesMembresia\').toggleClass(\'hidden\'); criarGauges(1);"');
                     ?>
                 </div>
                 <!--Gauges membresia-->
@@ -34,10 +33,13 @@ use Application\View\Helper\MontaGraficoDeBarra;
                         <div class="panel">
                             <div class="panel-body">
                                 <?php
+                                $arrayPeriodos = Funcoes::encontrarNumeroDePeriodosNoMesAtualEAnterior();
+                                $indicePeriodosDoMesAtual = $arrayPeriodos['periodoMesAtualInicial'];
+                                $indicePeriodosDoMesAtualFinal = $arrayPeriodos['periodoMesAtualFinal'];
                                 $perfomance = array();
-                                $perfomance['culto'] = $this->relatorio['membresiaCulto'] / $this->relatorio['membresiaMeta'] * 100;
-                                $perfomance['arena'] = $this->relatorio['membresiaArena'] / $this->relatorio['membresiaMeta'] * 100;
-                                $perfomance['domingo'] = $this->relatorio['membresiaDomingo'] / $this->relatorio['membresiaMeta'] * 100;
+                                $perfomance['culto'] = $this->relatorioMedio['pessoalAtual']['membresiaCulto'] / $this->relatorioMedio['pessoalAtual']['membresiaMeta'] * 100;
+                                $perfomance['arena'] = $this->relatorioMedio['pessoalAtual']['membresiaArena'] / $this->relatorioMedio['pessoalAtual']['membresiaMeta'] * 100;
+                                $perfomance['domingo'] = $this->relatorioMedio['pessoalAtual']['membresiaDomingo'] / $this->relatorioMedio['pessoalAtual']['membresiaMeta'] * 100;
                                 ?>
                                 <!--row gauges-->
                                 <div class="row">
@@ -51,7 +53,15 @@ use Application\View\Helper\MontaGraficoDeBarra;
                                             </div>
                                             <div class="panel-footer br-t p12">
                                                 <span class="fs11">
-
+                                                    <?php
+                                                    $indicePeriodosDoMesAtual = $arrayPeriodos['periodoMesAtualInicial'];
+                                                    for ($indicePeriodosDoMesAtual; $indicePeriodosDoMesAtual <= $indicePeriodosDoMesAtualFinal; $indicePeriodosDoMesAtual++) {
+                                                        if ($indicePeriodosDoMesAtual != $arrayPeriodos['periodoMesAtualInicial']) {
+                                                            echo '|';
+                                                        }
+                                                        echo $this->relatorioMesAtual[$indicePeriodosDoMesAtual]['membresiaCulto'];
+                                                    }
+                                                    ?>
                                                 </span>
                                             </div>
                                         </div>
@@ -66,7 +76,15 @@ use Application\View\Helper\MontaGraficoDeBarra;
                                             </div>                                               
                                             <div class="panel-footer br-t p12">
                                                 <span class="fs11">
-
+                                                    <?php
+                                                    $indicePeriodosDoMesAtual = $arrayPeriodos['periodoMesAtualInicial'];
+                                                    for ($indicePeriodosDoMesAtual; $indicePeriodosDoMesAtual <= $indicePeriodosDoMesAtualFinal; $indicePeriodosDoMesAtual++) {
+                                                        if ($indicePeriodosDoMesAtual != $arrayPeriodos['periodoMesAtualInicial']) {
+                                                            echo '|';
+                                                        }
+                                                        echo $this->relatorioMesAtual[$indicePeriodosDoMesAtual]['membresiaArena'];
+                                                    }
+                                                    ?>
                                                 </span>
                                             </div>
                                         </div>
@@ -81,7 +99,15 @@ use Application\View\Helper\MontaGraficoDeBarra;
                                             </div>
                                             <div class="panel-footer br-t p12">
                                                 <span class="fs11">
-
+                                                    <?php
+                                                    $indicePeriodosDoMesAtual = $arrayPeriodos['periodoMesAtualInicial'];
+                                                    for ($indicePeriodosDoMesAtual; $indicePeriodosDoMesAtual <= $indicePeriodosDoMesAtualFinal; $indicePeriodosDoMesAtual++) {
+                                                        if ($indicePeriodosDoMesAtual != $arrayPeriodos['periodoMesAtualInicial']) {
+                                                            echo '|';
+                                                        }
+                                                        echo $this->relatorioMesAtual[$indicePeriodosDoMesAtual]['membresiaDomingo'];
+                                                    }
+                                                    ?>
                                                 </span>
                                             </div>
                                         </div>
@@ -96,7 +122,15 @@ use Application\View\Helper\MontaGraficoDeBarra;
                                             </div>
                                             <div class="panel-footer br-t p12">
                                                 <span class="fs11">
-
+                                                    <?php
+                                                    $indicePeriodosDoMesAtual = $arrayPeriodos['periodoMesAtualInicial'];
+                                                    for ($indicePeriodosDoMesAtual; $indicePeriodosDoMesAtual <= $indicePeriodosDoMesAtualFinal; $indicePeriodosDoMesAtual++) {
+                                                        if ($indicePeriodosDoMesAtual != $arrayPeriodos['periodoMesAtualInicial']) {
+                                                            echo '|';
+                                                        }
+                                                        echo $this->relatorioMesAtual[$indicePeriodosDoMesAtual]['membresia'];
+                                                    }
+                                                    ?>
                                                 </span>
                                             </div>
                                         </div>
@@ -120,12 +154,10 @@ use Application\View\Helper\MontaGraficoDeBarra;
             <!--robo celula-->
             <div class="row alert alert-default">
                 <div class="col-xs-12 col-md-12 col-lg-12">
-                    <!--<p class=" well bg-<?php echo $this->relatorio['celulaPerformanceClass'];
-                                                ?> text-center"><?php echo $this->relatorio['celulaPerformanceFrase']; ?></p>-->
-                    <p class=" well bg-default text-<?php echo $this->relatorio['celulaPerformanceClass']; ?> text-center"><?php echo $this->relatorio['celulaPerformanceFrase']; ?></p>
+                    <p class=" well bg-default text-<?php echo $this->relatorioMedio['pessoalAtual']['celulaPerformanceClass']; ?> text-center"><?php echo $this->relatorioMedio['pessoalAtual']['celulaPerformanceFrase']; ?></p>
                     <?php
                     echo $this->barraDeProgressoBonita(
-                            'Célula Pessoal <span class="badge">?</span>', $this->relatorio['celulaPerformanceClass'], $this->relatorio['celulaPerformance'], 'm0', true, $this->relatorio['membresiaMeta'], $this->relatorio['celula'], 'onclick="$(\'#divGaugesCelula\').toggleClass(\'hidden\'); criarGauges(2);"');
+                            'Célula Pessoal <span class="badge">?</span>', $this->relatorioMedio['pessoalAtual']['celulaPerformanceClass'], $this->relatorioMedio['pessoalAtual']['celulaPerformance'], 'm0', true, $this->relatorioMedio['pessoalAtual']['membresiaMeta'], $this->relatorioMedio['pessoalAtual']['celula'], 'onclick="$(\'#divGaugesCelula\').toggleClass(\'hidden\'); criarGauges(2);"');
                     ?>
                 </div>
                 <!--Gauges celulas-->
@@ -144,8 +176,15 @@ use Application\View\Helper\MontaGraficoDeBarra;
                                             </div>
                                             <div class="panel-footer br-t p12">
                                                 <span class="fs11">
-                                                    <i class="fa fa-arrow-<?php echo $this->relatorio['diferencaCelulaSeta']; ?> pr5"></i> <?php echo RelatorioController::formataNumeroRelatorio($this->relatorio['diferencaCelula']); ?>% <?php echo $this->relatorio['diferencaCelulaFrase']; ?>
-                                                    <b>1 SEMANA ATRÁS</b>
+                                                    <?php
+                                                    $indicePeriodosDoMesAtual = $arrayPeriodos['periodoMesAtualInicial'];
+                                                    for ($indicePeriodosDoMesAtual; $indicePeriodosDoMesAtual <= $indicePeriodosDoMesAtualFinal; $indicePeriodosDoMesAtual++) {
+                                                        if ($indicePeriodosDoMesAtual != $arrayPeriodos['periodoMesAtualInicial']) {
+                                                            echo '|';
+                                                        }
+                                                        echo $this->relatorioMesAtual[$indicePeriodosDoMesAtual]['celula'];
+                                                    }
+                                                    ?>
                                                 </span>
                                             </div>
                                         </div>
@@ -245,39 +284,6 @@ use Application\View\Helper\MontaGraficoDeBarra;
     </div>
     <div class="panel">
         <div class="panel-heading">
-            <span class="panel-title">Pessoal</span>
-        </div>
-        <div class="panel-body pn">
-            <table class="table mbn tc-med-1 tc-bold-last">
-                <tr>
-                    <td></td>
-                    <td>Meta</td>
-                    <td>Valor</td>
-                    <td>Perf.%</td>
-                </tr>
-                <tr class="<?php echo $this->relatorio['membresiaPerformanceClass']; ?>">
-                    <td>Membresia</td>
-                    <td><?php echo $this->relatorio['membresiaMeta']; ?></td>
-                    <td><?php echo RelatorioController::formataNumeroRelatorio($this->relatorio['membresia']); ?></td>
-                    <td><?php echo RelatorioController::formataNumeroRelatorio($this->relatorio['membresiaPerformance']); ?>%</td>
-                </tr>
-                <tr class="<?php echo $this->relatorio['celulaPerformanceClass']; ?>">
-                    <td>Célula</td>
-                    <td><?php echo $this->relatorio['membresiaMeta']; ?></td>
-                    <td><?php echo $this->relatorio['celula']; ?></td>
-                    <td><?php echo RelatorioController::formataNumeroRelatorio($this->relatorio['celulaPerformance']); ?>%</td>
-                </tr>
-                <tr class="<?php echo $this->relatorio['celulaRealizadasPerformanceClass']; ?>">
-                    <td>Cél. Realizadas</td>
-                    <td><?php echo $this->relatorio['celulaQuantidade']; ?></td>
-                    <td><?php echo $this->relatorio['celulaRealizadas']; ?></td>
-                    <td><?php echo RelatorioController::formataNumeroRelatorio($this->relatorio['celulaRealizadasPerformance']); ?>%</td>
-                </tr>
-            </table>
-        </div>
-    </div>
-    <div class="panel">
-        <div class="panel-heading">
             <span class="panel-title">Equipe</span>
         </div>
         <div class="panel-body pn">
@@ -310,41 +316,5 @@ use Application\View\Helper\MontaGraficoDeBarra;
         </div>
     </div>        
 </div>
-<script type="text/javascript">
-
-    // Chart data
-    var seriesData = [{
-            name: 'Meta',
-            data: [<?php
-                for ($i = (-1 * $this->quantidadeDeCiclosPassados); $i <= -1; $i++) {
-                    echo $this->relatorio['membresiasPassadas'][$i]['meta'];
-                    if ($i < ($this->quantidadeDeCiclosPassados - 1)) {
-                        echo ',';
-                    }
-                }
-                ?>]
-        }, {
-            name: 'Meu',
-            data: [<?php
-                for ($i = (-1 * $this->quantidadeDeCiclosPassados); $i <= -1; $i++) {
-                    echo $this->relatorio['membresiasPassadas'][$i]['membresia'];
-                    if ($i < ($this->quantidadeDeCiclosPassados - 1)) {
-                        echo ',';
-                    }
-                }
-                ?>]
-        }
-    ];
-
-    var categorias = [<?php
-                for ($i = (-1 * $this->quantidadeDeCiclosPassados); $i <= -1; $i++) {
-                    $arrayPeriodo = Funcoes::montaPeriodo($i);
-                    echo '"' . $arrayPeriodo[0] . '"';
-                    if ($i < ($this->quantidadeDeCiclosPassados - 1)) {
-                        echo ',';
-                    }
-                }
-                ?>];
-</script>
 <?php
 echo $this->layoutJSPrincipal;

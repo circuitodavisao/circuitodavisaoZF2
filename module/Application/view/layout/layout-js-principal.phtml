@@ -258,8 +258,6 @@ if ($sessao->mostrarNotificacao) {
             $('#spanMetaMembresia').html(valoresGraficos[3]);
             rodarApenasUmaVezOsGaugesMembresia += 1;
 
-            gerarGraficoLinhas();
-
             valorMaximoBarra = 11;
             var totalFatoRankingMembresia = document.getElementById('totalFatoRankingMembresia');
             if (totalFatoRankingMembresia) {
@@ -294,57 +292,6 @@ if ($sessao->mostrarNotificacao) {
     }
 
     var highColors = ['#E63F24', '#27A2CF', '#5BC24C'];
-
-    function gerarGraficoLinhas() {
-        var ecomChart = $('#ecommerce_chart1');
-        ecomChart.highcharts({
-            credits: false,
-            colors: highColors,
-            chart: {
-                backgroundColor: 'transparent',
-                className: '',
-                type: 'line',
-                zoomType: 'x',
-                panning: true,
-                panKey: 'shift',
-                marginTop: 45,
-                marginRight: 1,
-            },
-            title: {
-                text: null
-            },
-            xAxis: {
-                gridLineColor: '#EEE',
-                lineColor: '#EEE',
-                tickColor: '#EEE',
-                categories: categorias
-            },
-            yAxis: {
-                min: 0,
-                tickInterval: 5,
-                gridLineColor: '#EEE',
-                title: {
-                    text: null,
-                }
-            },
-            plotOptions: {
-                spline: {
-                    lineWidth: 3,
-                },
-                area: {
-                    fillOpacity: 0.2
-                }
-            },
-            legend: {
-                enabled: true,
-                floating: false,
-                align: 'right',
-                verticalAlign: 'top',
-                x: -15
-            },
-            series: seriesData
-        });
-    }
 
     var Barchart = function (options) {
         this.options = options;
@@ -504,83 +451,6 @@ if ($sessao->mostrarNotificacao) {
                         data: [valorBarra]
                     }]
             });
-        }
-    }
-
-    function montaMinhasBarras(tipo, total) {
-        var nomeRelatorio = '';
-        if (tipo === tipoRelatorioMembresia) {
-            nomeRelatorio = 'Membresia';
-        }
-        if (tipo === tipoRelatorioCelula) {
-            nomeRelatorio = 'Celula';
-        }
-        total = parseInt(total.value);
-        for (var i = 0; i < total; i++) {
-            var stringElementoValor = 'valorRanking' + nomeRelatorio + i;
-            var elementoComValor = document.getElementById(stringElementoValor);
-            valorBarra = elementoComValor.value;
-            if (valorBarra > valorMaximoBarra) {
-                valorMaximoBarra = valorBarra;
-            }
-        }
-        for (var i = 0; i < total; i++) {
-            var stringElementoValor = 'valorRanking' + nomeRelatorio + i;
-            var elementoComValor = document.getElementById(stringElementoValor);
-            valorBarra = elementoComValor.value;
-            if (valorBarra === 0) {
-                valorBarra = 1;
-            }
-
-            var idElemento = "canvas" + nomeRelatorio + i;
-            var canvas = document.getElementById(idElemento);
-
-            if (canvas) {
-                canvas.width = 300;
-                canvas.height = 300;
-
-                var ctx = canvas.getContext("2d");
-
-                var arrayBar = {
-                    1: valorMaximoBarra,
-                    2: valorBarra,
-                    3: valorMaximoBarra,
-                };
-
-                var colunaDeSelecao = 2;
-                if (totalFatoRankingMembresia === 4) {
-                    colunaDeSelecao = 1;
-                }
-                var meuRanking = document.getElementById('meuRanking' + nomeRelatorio).value;
-                if (meuRanking == 1 || meuRanking == 2) {
-                    if (meuRanking == 1) {
-                        colunaDeSelecao = 4;
-                    }
-                    if (meuRanking == 2) {
-                        colunaDeSelecao = 3;
-                    }
-                }
-
-                var corGrid = "#FAFAFA";
-                var corColunas = [corGrid, "#5BC24C", corGrid]
-                if (i === colunaDeSelecao) {
-                    colunaDeSelecao = 1;
-                    var corGrid = "#3b3f4f";
-                    var corColunas = [corGrid, "#5BC24C", corGrid]
-                }
-                var myBarchart = new Barchart(
-                        {
-                            canvas: canvas,
-                            padding: 10,
-                            gridScale: 10,
-                            gridColor: corGrid,
-                            data: arrayBar,
-                            colors: corColunas
-                        }
-                );
-                myBarchart.draw();
-
-            }
         }
     }
 </script>
