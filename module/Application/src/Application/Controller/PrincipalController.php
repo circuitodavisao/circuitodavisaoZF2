@@ -39,8 +39,7 @@ class PrincipalController extends CircuitoController {
         $tipoRelatorioPessoal = 1;
         $tipoRelatorioEquipe = 2;
         $periodo = -1;
-        $quantidadeDeCiclosPassados = 8;
-        $relatorio = RelatorioController::montaRelatorio($this->getRepositorio(), $numeroIdentificador, $periodo, $tipoRelatorioPessoal);
+//        $relatorio = RelatorioController::montaRelatorio($this->getRepositorio(), $numeroIdentificador, $periodo, $tipoRelatorioPessoal);
         $relatorioEquipe = RelatorioController::montaRelatorio($this->getRepositorio(), $numeroIdentificador, $periodo, $tipoRelatorioEquipe);
 
         /* encontrando os periodos do mes atual e anterior */
@@ -51,10 +50,13 @@ class PrincipalController extends CircuitoController {
         $relatorioMedio['celulasAtual'] = RelatorioController::saberQuaisdasMinhasCelulasSaoDeElite($this->getRepositorio(), $grupo, $arrayPeriodos['periodoMesAtualInicial'], $arrayPeriodos['periodoMesAtualFinal']);
         $relatorioMedio['celulasAnterior'] = RelatorioController::saberQuaisdasMinhasCelulasSaoDeElite($this->getRepositorio(), $grupo, $arrayPeriodos['periodoMesAnteriorInicial'], $arrayPeriodos['periodoMesAnteriorlFinal']);
 
+        $relatorioMesAtual = array();
+        for ($indicePeriodosDoMesAtual = $arrayPeriodos['periodoMesAtualInicial']; $indicePeriodosDoMesAtual <= $arrayPeriodos['periodoMesAtualFinal']; $indicePeriodosDoMesAtual++) {
+            $relatorioMesAtual[$indicePeriodosDoMesAtual] = RelatorioController::montaRelatorio($this->getRepositorio(), $numeroIdentificador, $indicePeriodosDoMesAtual, $tipoRelatorioPessoal);
+        }
         $hierarquias = $this->getRepositorio()->getHierarquiaORM()->encontrarTodas();
 
         /* Pegando ranking */
-
         $isMobile = $this->check_user_agent('mobile');
 
         for ($indiceDeRankings = 1; $indiceDeRankings <= 2; $indiceDeRankings++) {
@@ -138,10 +140,9 @@ class PrincipalController extends CircuitoController {
         $dados = array();
         $dados['pessoa'] = $pessoa;
         $dados['eCasal'] = $eCasal;
-        $dados['quantidadeDeCiclosPassados'] = $quantidadeDeCiclosPassados;
         $arrayPeriodo = Funcoes::montaPeriodo($periodo);
         $dados['periodoExtenso'] = $arrayPeriodo[0];
-        $dados['relatorio'] = $relatorio;
+        $dados['relatorioMesAtual'] = $relatorioMesAtual;
         $dados['relatorioEquipe'] = $relatorioEquipe;
         $dados['relatorioMedio'] = $relatorioMedio;
         $dados['repositorio'] = $this->getRepositorio();
