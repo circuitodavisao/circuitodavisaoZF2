@@ -262,7 +262,7 @@ class Funcoes {
     static public function encontrarNumeroDePeriodosNoMesAtualEAnterior() {
         $resposta = array();
         $periodoMesAtualFinal = 0;
-        $periodoMesAtualInicial = Funcoes::encontrarPeriodoDeUmMes(date('m'), 0);
+        $periodoMesAtualInicial = Funcoes::encontrarPeriodoDeUmMesDadoPeriodoInicial(date('m'), 0);
 
         $mesAnterior = date('m') - 1;
         if (date('m') == 1) {
@@ -270,7 +270,7 @@ class Funcoes {
         }
 
         $periodoMesAnteriorFinal = $periodoMesAtualInicial - 1;
-        $periodoMesAnteriorInicial = Funcoes::encontrarPeriodoDeUmMes($mesAnterior, $periodoMesAnteriorFinal);
+        $periodoMesAnteriorInicial = Funcoes::encontrarPeriodoDeUmMesDadoPeriodoInicial($mesAnterior, $periodoMesAnteriorFinal);
 
         $resposta['periodoMesAtualInicial'] = $periodoMesAtualInicial;
         $resposta['periodoMesAtualFinal'] = $periodoMesAtualFinal;
@@ -280,7 +280,7 @@ class Funcoes {
         return $resposta;
     }
 
-    static public function encontrarPeriodoDeUmMes($mesPesquisa, $periodoInicial) {
+    static public function encontrarPeriodoDeUmMesDadoPeriodoInicial($mesPesquisa, $periodoInicial) {
         $periodoFinal = $periodoInicial;
         while (true) {
             $arrayPeriodo = Funcoes::montaPeriodo($periodoFinal);
@@ -296,6 +296,61 @@ class Funcoes {
         }
 
         return $periodoFinal;
+    }
+
+    static public function encontrarPeriodoDeUmMesDadoQualquerPeriodo($periodo = 0) {
+        $arrayPeriodo = Funcoes::montaPeriodo($periodo);
+        $mesParaVerificar = $arrayPeriodo[5];
+        if ($arrayPeriodo[2] != $arrayPeriodo[5]) {
+            if ($arrayPeriodo[1] > $arrayPeriodo[5]) {
+                $mesParaVerificar = $arrayPeriodo[2];
+            } else {
+                $mesParaVerificar = $arrayPeriodo[5];
+            }
+        }
+        $mesParaVerificarInt = (int) $mesParaVerificar;
+
+        $periodoInicial = $periodo + 6;
+        if ($periodo === 0) {
+            $periodoInicial = 0;
+        }
+
+        $mesAnteriorVerificacao = $mesParaVerificarInt - 1;
+        if ($mesParaVerificarInt == 1) {
+            $mesAnteriorVerificacao = 12;
+        }
+
+        while (true) {
+            $arrayPeriodo = Funcoes::montaPeriodo($periodoInicial);
+            if ($arrayPeriodo[2] == $mesAnteriorVerificacao ||
+                    $arrayPeriodo[5] == $mesAnteriorVerificacao) {
+                if ($arrayPeriodo[5] == $mesAnteriorVerificacao) {
+                    $periodoInicial++;
+                }
+                break;
+            }
+            $periodoInicial--;
+        }
+
+        $periodoFinal = $periodoInicial;
+        while (true) {
+            $arrayPeriodo = Funcoes::montaPeriodo($periodoFinal);
+            if ($arrayPeriodo[5] != $mesParaVerificarInt) {
+                if ($arrayPeriodo[2] != $mesParaVerificarInt) {
+                    $periodoFinal--;
+                }
+                break;
+            }
+            if ($periodoFinal == 0) {
+                break;
+            }
+            $periodoFinal++;
+        }
+
+        $arrayDePeriodos[0] = $periodoInicial;
+        $arrayDePeriodos[1] = $periodoFinal;
+
+        return $arrayDePeriodos;
     }
 
     /**

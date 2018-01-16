@@ -56,17 +56,19 @@ class RelatorioController extends CircuitoController {
         $entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
         $grupo = $entidade->getGrupo();
         $numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio());
-        $periodoInicial = $this->getEvent()->getRouteMatch()->getParam(Constantes::$ID, 0);
-        $periodoFinal = $this->getEvent()->getRouteMatch()->getParam('periodoFinal', 0);
+        $periodoVisto = $this->getEvent()->getRouteMatch()->getParam(Constantes::$ID, 0);
 
         $tipoRelatorioPessoal = 1;
-        $relatorio = RelatorioController::montaRelatorio($this->getRepositorio(), $numeroIdentificador, $periodoInicial, $tipoRelatorioPessoal, $periodoFinal);
+        $arrayPeriodoDoMes = Funcoes::encontrarPeriodoDeUmMesDadoQualquerPeriodo($periodoVisto);
+
+        $relatorio = RelatorioController::montaRelatorio($this->getRepositorio(), $numeroIdentificador, $periodoVisto, $tipoRelatorioPessoal);
+        $relatorioMedio = RelatorioController::montaRelatorio($this->getRepositorio(), $numeroIdentificador, $arrayPeriodoDoMes[0], $tipoRelatorioPessoal, $arrayPeriodoDoMes[1]);
 
         $tipoRelatorio = (int) $this->params()->fromRoute('tipoRelatorio');
 
         $mostrarBotaoPeriodoAnterior = true;
         $mostrarBotaoPeriodoAfrente = true;
-        $arrayPeriodo = Funcoes::montaPeriodo($periodoInicial);
+        $arrayPeriodo = Funcoes::montaPeriodo($periodoVisto);
         $stringComecoDoPeriodo = $arrayPeriodo[3] . '-' . $arrayPeriodo[2] . '-' . $arrayPeriodo[1];
         $dataDoInicioDoPeriodoParaComparar = strtotime($stringComecoDoPeriodo);
         if ($grupo->getGrupoPaiFilhoPaiAtivo()) {
@@ -75,16 +77,20 @@ class RelatorioController extends CircuitoController {
                 $mostrarBotaoPeriodoAnterior = false;
             }
         }
+
+        $mesPorExtenso = Funcoes::mesPorExtenso($arrayPeriodo[2]);
         $dados = array(
             RelatorioController::stringRelatorio => $relatorio,
+            'relatorioMedio' => $relatorioMedio,
             'tipoRelatorio' => $tipoRelatorio,
-            'periodoInicial' => $periodoInicial,
-            'periodoFinal' => $periodoFinal,
+            'periodoVisto' => $periodoVisto,
+            'periodoInicial' => $periodoVisto,
+            'mesPorExtenso' => $mesPorExtenso,
             'mostrarBotaoPeriodoAnterior' => $mostrarBotaoPeriodoAnterior,
             'mostrarBotaoPeriodoAfrente' => $mostrarBotaoPeriodoAfrente,
         );
 
-        $grupoPaiFilhoFilhos = $grupo->getGrupoPaiFilhoFilhosAtivos($periodoInicial);
+        $grupoPaiFilhoFilhos = $grupo->getGrupoPaiFilhoFilhosAtivos($periodoVisto);
         if ($grupoPaiFilhoFilhos) {
             $relatorioDiscipulos = array();
             foreach ($grupoPaiFilhoFilhos as $gpFilho) {
@@ -95,13 +101,15 @@ class RelatorioController extends CircuitoController {
                 }
                 $numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupoFilho, $dataInativacao);
                 $tipoRelatorioSomado = 2;
-                $relatorioDiscipulos[$grupoFilho->getId()] = RelatorioController::montaRelatorio($this->getRepositorio(), $numeroIdentificador, $periodoInicial, $tipoRelatorioSomado);
+                $relatorioDiscipulos[$grupoFilho->getId()] = RelatorioController::montaRelatorio($this->getRepositorio(), $numeroIdentificador, $periodoVisto, $tipoRelatorioSomado);
+                $relatorioDiscipulosMedio[$grupoFilho->getId()] = RelatorioController::montaRelatorio($this->getRepositorio(), $numeroIdentificador, $arrayPeriodoDoMes[0], $tipoRelatorioSomado, $arrayPeriodoDoMes[1]);
             }
 
-            $discipulosOrdenado = RelatorioController::ordenacaoDiscipulos($grupoPaiFilhoFilhos, $relatorioDiscipulos, $tipoRelatorio);
+            $discipulosOrdenado = RelatorioController::ordenacaoDiscipulos($grupoPaiFilhoFilhos, $relatorioDiscipulosMedio, $tipoRelatorio);
 
             $dados['discipulosOrdenado'] = $discipulosOrdenado;
             $dados['discipulosRelatorio'] = $relatorioDiscipulos;
+            $dados['discipulosRelatorioMedio'] = $relatorioDiscipulosMedio;
         }
 
         return new ViewModel($dados);
