@@ -52,8 +52,6 @@ class MontaGraficoDeBarra extends AbstractHelper {
             }
             echo '<input type="hidden" id="valorRanking' . $nomeGrafico . $key . '" value="' . $valor . '" />';
         }
-        $html .= '<table class="table">';
-        $html .= '<tbody>';
 
         $totalRanking = count($this->getRelatorio());
         $colunaDeSelecao = 2;
@@ -68,6 +66,9 @@ class MontaGraficoDeBarra extends AbstractHelper {
         }
 
         $html .= '<input type="hidden" id="meuRanking' . $nomeGrafico . '" value="' . $meuRanking . '" />';
+        
+        $html .= '<table class="table">';
+        $html .= '<tbody>';
         if ($meuRanking == 1 || $meuRanking == 2) {
             if ($meuRanking == 1) {
                 $colunaDeSelecao = 4;

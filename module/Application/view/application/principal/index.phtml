@@ -8,11 +8,10 @@ use Application\View\Helper\MontaGraficoDeBarra;
 <section id="content" class="table-layout animated fadeIn">
     <?php
     echo '<input type="hidden" id="eCasal" value="' . $this->eCasal . '" />';
-    echo '<input type="hidden" id="valorCulto" value="' . $this->relatorioMedio['pessoalAtual']['membresiaCulto'] . '" />';
-    echo '<input type="hidden" id="valorArena" value="' . $this->relatorioMedio['pessoalAtual']['membresiaArena'] . '" />';
-    echo '<input type="hidden" id="valorDomingo" value="' . $this->relatorioMedio['pessoalAtual']['membresiaDomingo'] . '" />';
+    echo '<input type="hidden" id="valorCulto" value="' . RelatorioController::formataNumeroRelatorio($this->relatorioMedio['pessoalAtual']['membresiaCulto']) . '" />';
+    echo '<input type="hidden" id="valorArena" value="' . RelatorioController::formataNumeroRelatorio($this->relatorioMedio['pessoalAtual']['membresiaArena']) . '" />';
+    echo '<input type="hidden" id="valorDomingo" value="' . RelatorioController::formataNumeroRelatorio($this->relatorioMedio['pessoalAtual']['membresiaDomingo']) . '" />';
     echo '<input type="hidden" id="valorMembresia" value="' . RelatorioController::formataNumeroRelatorio($this->relatorioMedio['pessoalAtual']['membresia']) . '" />';
-    echo '<input type="hidden" id="valorCelula" value="' . $this->relatorioMedio['pessoalAtual']['celula'] . '" />';
     ?>
     <!-- begin: .tray-center -->
     <div class="tray tray-center">
@@ -59,7 +58,7 @@ use Application\View\Helper\MontaGraficoDeBarra;
                                                         if ($indicePeriodosDoMesAtual != $arrayPeriodos['periodoMesAtualInicial']) {
                                                             echo ' | ';
                                                         }
-                                                        echo $this->relatorioMesAtual[$indicePeriodosDoMesAtual]['membresiaCulto'];
+                                                        echo RelatorioController::formataNumeroRelatorio($this->relatorioMesAtual[$indicePeriodosDoMesAtual]['membresiaCulto']);
                                                     }
                                                     ?>
                                                 </span>
@@ -82,7 +81,7 @@ use Application\View\Helper\MontaGraficoDeBarra;
                                                         if ($indicePeriodosDoMesAtual != $arrayPeriodos['periodoMesAtualInicial']) {
                                                             echo ' | ';
                                                         }
-                                                        echo $this->relatorioMesAtual[$indicePeriodosDoMesAtual]['membresiaArena'];
+                                                        echo RelatorioController::formataNumeroRelatorio($this->relatorioMesAtual[$indicePeriodosDoMesAtual]['membresiaArena']);
                                                     }
                                                     ?>
                                                 </span>
@@ -105,7 +104,7 @@ use Application\View\Helper\MontaGraficoDeBarra;
                                                         if ($indicePeriodosDoMesAtual != $arrayPeriodos['periodoMesAtualInicial']) {
                                                             echo ' | ';
                                                         }
-                                                        echo $this->relatorioMesAtual[$indicePeriodosDoMesAtual]['membresiaDomingo'];
+                                                        echo RelatorioController::formataNumeroRelatorio($this->relatorioMesAtual[$indicePeriodosDoMesAtual]['membresiaDomingo']);
                                                     }
                                                     ?>
                                                 </span>
@@ -128,7 +127,7 @@ use Application\View\Helper\MontaGraficoDeBarra;
                                                         if ($indicePeriodosDoMesAtual != $arrayPeriodos['periodoMesAtualInicial']) {
                                                             echo ' | ';
                                                         }
-                                                        echo $this->relatorioMesAtual[$indicePeriodosDoMesAtual]['membresia'];
+                                                        echo RelatorioController::formataNumeroRelatorio($this->relatorioMesAtual[$indicePeriodosDoMesAtual]['membresia']);
                                                     }
                                                     ?>
                                                 </span>
@@ -162,36 +161,7 @@ use Application\View\Helper\MontaGraficoDeBarra;
                 </div>
                 <!--Gauges celulas-->
                 <div class="col-xs-12 col-md-12 col-lg-12">
-                    <div id="divGaugesCelula" class="row p10 hidden">
-                        <div class="panel">
-                            <div class="panel-body">
-                                <div class="row">
-                                    <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3 text-center">
-                                        <div class="panel panel-tile text-center br-a br-grey">
-                                            <div class="panel-body">
-                                                <h3>Meta do Célula</h3>
-                                                <h4><span id="spanMetaCelula"></span> pessoas <span onclick="mostrarModalInformativo(3);" class="badge">?</span></h4>
-                                                <canvas id="gaugeCelula" style="width:100%;" class="canvas-preview" ></canvas>
-                                                <h4><span id="labelValorCelula"></span> pessoas</h4>
-                                            </div>
-                                            <div class="panel-footer br-t p12">
-                                                <span class="fs11">
-                                                    <?php
-                                                    $indicePeriodosDoMesAtual = $arrayPeriodos['periodoMesAtualInicial'];
-                                                    for ($indicePeriodosDoMesAtual; $indicePeriodosDoMesAtual <= $indicePeriodosDoMesAtualFinal; $indicePeriodosDoMesAtual++) {
-                                                        if ($indicePeriodosDoMesAtual != $arrayPeriodos['periodoMesAtualInicial']) {
-                                                            echo ' | ';
-                                                        }
-                                                        echo $this->relatorioMesAtual[$indicePeriodosDoMesAtual]['celula'];
-                                                    }
-                                                    ?>
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                    <div id="divGaugesCelula" class="row p10 hidden">                        
                         <!--row chart-->
                         <div class="row">
                             <div class="col-md-12 text-center">
