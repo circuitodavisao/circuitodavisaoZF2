@@ -118,11 +118,11 @@ class DadosPrincipal extends AbstractHelper {
             }
             if ($classeMaxima >= RelatorioController::MARGEM_C && $classeMaxima < RelatorioController::MARGEM_B) {
                 $classe = 'C';
-                $periodo = 'está entre 50% a 74%';
+                $periodo = 'ficou entre 50% a 74%';
             }
             if ($classeMaxima >= RelatorioController::MARGEM_B && $classeMaxima < RelatorioController::MARGEM_A) {
                 $classe = 'B';
-                $periodo = 'está entre 75% a 99%';
+                $periodo = 'ficou entre 75% a 99%';
             }
             if ($classeMaxima >= RelatorioController::MARGEM_A) {
                 $classe = 'A';
@@ -139,7 +139,7 @@ class DadosPrincipal extends AbstractHelper {
             }
             if ($indiceDeRelatorios === 2) {
                 $mensagemModalClasse .= '<p><b>Como estou em ' . $mesPorExtenso . '?</b></p>';
-                $mensagemModalClasse .= '<p><b>Resposta:</b> Estima-se que no mês de ' . $mesPorExtenso . ' você provavelmente será <span class="label label-' . $classClasse . ' label-sm">' . $classe . ' </span></p>';
+                $mensagemModalClasse .= '<p><b>Resposta:</b> Estima-se que no mês de ' . $mesPorExtenso . ' você provavelmente será classe <span class="label label-' . $classClasse . ' label-sm">' . $classe . ' </span></p>';
             }
             $mensagemModalClasse .= "</div>";
             $mensagemModalClasse .= $this->montaBarrasDeProgresso($fimIndice, $qualRelatorio, $multiplicadorDaMeta, $metas, $qualRelatorioCelula, $pessoa, $perfomanceMembresia, $perfomanceCelula);

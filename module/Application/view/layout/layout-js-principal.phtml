@@ -266,22 +266,22 @@ if ($sessao->mostrarNotificacao) {
         }
 
         if (tipo === tipoCelula && rodarApenasUmaVezOsGaugesCelula === 1) {
-            var valorCelula = $('#valorCelula').val()
-            valorMax = valorAcimaDaMeta(valoresGraficos[3]);
-            if (valorCelula > valorMax) {
-                valorMax = valorCelula;
-            }
-            var target = document.getElementById('gaugeCelula'); // your canvas element
-            opts = ajustaOpcoesGaugePorValor(opts, valoresGraficos[3], valorCelula);
-            var gauge = new Gauge(target).setOptions(opts); // create sexy gauge!
-            gauge.maxValue = valorMax; // set max gauge value
-            gauge.setMinValue(0); // Prefer setter over gauge.minValue = 0
-            gauge.animationSpeed = 128; // set animation speed (32 is default value)
-            gauge.set(valorCelula); // set actual value
-            gauge.width = '250px';
-            $('#labelValorCelula').html(valorCelula);
-            $('#spanMetaCelula').html(valoresGraficos[3]);
-            rodarApenasUmaVezOsGaugesCelula += 1;
+//            var valorCelula = $('#valorCelula').val()
+//            valorMax = valorAcimaDaMeta(valoresGraficos[3]);
+//            if (valorCelula > valorMax) {
+//                valorMax = valorCelula;
+//            }
+//            var target = document.getElementById('gaugeCelula'); // your canvas element
+//            opts = ajustaOpcoesGaugePorValor(opts, valoresGraficos[3], valorCelula);
+//            var gauge = new Gauge(target).setOptions(opts); // create sexy gauge!
+//            gauge.maxValue = valorMax; // set max gauge value
+//            gauge.setMinValue(0); // Prefer setter over gauge.minValue = 0
+//            gauge.animationSpeed = 128; // set animation speed (32 is default value)
+//            gauge.set(valorCelula); // set actual value
+//            gauge.width = '250px';
+//            $('#labelValorCelula').html(valorCelula);
+//            $('#spanMetaCelula').html(valoresGraficos[3]);
+//            rodarApenasUmaVezOsGaugesCelula += 1;
 
             valorMaximoBarra = 11;
             var totalFatoRankingCelula = document.getElementById('totalFatoRankingCelula');
