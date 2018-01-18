@@ -16,6 +16,7 @@ $somaGeralLideres = 0;
 $somaQuantidadeCelulas = 0;
 $somaQuantidadeCelulasRealizadas = 0;
 $somaQuantidadeCelulasDeElite = 0;
+$somaDoMes = 0;
 ?>
 <style type="text/css">
     th {
@@ -233,6 +234,15 @@ $somaQuantidadeCelulasDeElite = 0;
                         if ($this->tipoRelatorio == 8) {
                             $somaQuantidadeCelulasDeElite += $this->relatorio['celulaDeElite'];
                         }
+                        if ($this->tipoRelatorio == 1 ||
+                                $this->tipoRelatorio == 3) {
+                            if ($this->tipoRelatorio == 1) {
+                                $somaDoMes += $this->relatorioMedio['membresia'];
+                            }
+                            if ($this->tipoRelatorio == 3) {
+                                $somaDoMes += $this->relatorioMedio['celula'];
+                            }
+                        }
 
                         if ($this->discipulosOrdenado) {
                             $contagemRanking = 1;
@@ -400,6 +410,16 @@ $somaQuantidadeCelulasDeElite = 0;
                                     if ($this->tipoRelatorio == 8) {
                                         $somaQuantidadeCelulasDeElite += $relatorioDiscipulo['celulaDeElite'];
                                     }
+
+                                    if ($this->tipoRelatorio == 1 ||
+                                            $this->tipoRelatorio == 3) {
+                                        if ($this->tipoRelatorio == 1) {
+                                            $somaDoMes += $relatorioDiscipulo['membresia'];
+                                        }
+                                        if ($this->tipoRelatorio == 3) {
+                                            $somaDoMes += $relatorioDiscipulo['celula'];
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -489,12 +509,19 @@ $somaQuantidadeCelulasDeElite = 0;
                         if ($this->tipoRelatorio == 7) {
                             echo '<td>' . RelatorioController::formataNumeroRelatorio($somaGeral[$dimensaoTipoArena]) . '</td>';
                         }
+
                         if ($this->tipoRelatorio == 1 ||
                                 $this->tipoRelatorio == 3) {
                             echo '<td>|</td>';
-                            echo '<td></td>';
+                            if ($this->tipoRelatorio == 1) {
+                                $valor = $this->relatorioMedioSomado['membresiaPerformance'];
+                            }
+                            if ($this->tipoRelatorio == 3) {
+                                $valor = $this->relatorioMedioSomado['celulaPerformance'];
+                            }
+                            echo '<td>' . RelatorioController::formataNumeroRelatorio($valor) . '</td>';
                             echo '<td>|</td>';
-                            echo '<td></td>';
+                            echo '<td>' . RelatorioController::formataNumeroRelatorio($somaDoMes) . '</td>';
                         }
                         echo '</tr>';
                         ?>                     
