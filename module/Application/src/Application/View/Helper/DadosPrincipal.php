@@ -72,7 +72,7 @@ class DadosPrincipal extends AbstractHelper {
                 $fimIndice += count($qualRelatorioCelula);
             }
             if ($this->view->idRelatorio == 2) {
-//                $fimIndice += 1;
+                $fimIndice += 1;
             }
 
 
