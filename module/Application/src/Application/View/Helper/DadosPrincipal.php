@@ -32,8 +32,13 @@ class DadosPrincipal extends AbstractHelper {
         $pessoa = $this->view->pessoa;
         $classe = '?';
         $imagem = FuncoesEntidade::nomeDaImagem($pessoa);
-
-        $metas = Funcoes::metaPorHierarquia(Hierarquia::LIDER_DE_CELULA);
+        if ($this->view->idRelatorio == 1) {
+            $metaDeQuem = Hierarquia::LIDER_DE_CELULA;
+        }
+        if ($this->view->idRelatorio == 2) {
+            $metaDeQuem = $pessoa->getPessoaHierarquiaAtivo()->getHierarquia()->getId();
+        }
+        $metas = Funcoes::metaPorHierarquia($metaDeQuem);
         $multiplicadorDaMeta = 1;
         if ($this->view->eCasal) {
             $multiplicadorDaMeta = 2;
@@ -63,7 +68,13 @@ class DadosPrincipal extends AbstractHelper {
             $qualRelatorioCelula = $this->getRelatorioMedio()['celulas' . $atualOuAnterior];
 
             $fimIndice = 0;
-            $fimIndice += count($qualRelatorioCelula);
+            if ($this->view->idRelatorio == 1) {
+                $fimIndice += count($qualRelatorioCelula);
+            }
+            if ($this->view->idRelatorio == 2) {
+                $fimIndice += 1;
+            }
+
 
             $valorMembresia = $qualRelatorio['membresia'];
             $valorCelulaQuantidade = $qualRelatorio['celulaQuantidade'];
@@ -142,7 +153,7 @@ class DadosPrincipal extends AbstractHelper {
                 $mensagemModalClasse .= '<p><b>Resposta:</b> Estima-se que no mês de ' . $mesPorExtenso . ' você provavelmente será classe <span class="label label-' . $classClasse . ' label-sm">' . $classe . ' </span></p>';
             }
             $mensagemModalClasse .= "</div>";
-            $mensagemModalClasse .= $this->montaBarrasDeProgresso($fimIndice, $qualRelatorio, $multiplicadorDaMeta, $metas, $qualRelatorioCelula, $pessoa, $perfomanceMembresia, $perfomanceCelula);
+            $mensagemModalClasse .= $this->montaBarrasDeProgresso($fimIndice, $qualRelatorio, $multiplicadorDaMeta, $metas, $qualRelatorioCelula, $perfomanceMembresia, $perfomanceCelula, $this->view->idRelatorio);
 
             if ($indiceDeRelatorios === 1) {
                 $classeTela = $classe;
@@ -165,13 +176,32 @@ class DadosPrincipal extends AbstractHelper {
         $html .= '<p class="lead">';
         $html .= 'Classe <span onclick="mostrarModalClasse();" ><span class="label label-' . $classClasseTela . ' label-sm">' . $classeTela . ' </span>&nbsp;<span class="badge">?</span></span>';
         $html .= '</p>';
-        /* media-body va-m */
         $html .= '</div>';
 
+        $html .= '<div class="media-links">';
+
+        for ($indiceIdRelatorio = 1; $indiceIdRelatorio <= 2; $indiceIdRelatorio++) {
+            $checked = '';
+            if ($indiceIdRelatorio == 1) {
+                $label = 'Pessoal';
+                if ($this->view->idRelatorio == 1) {
+                    $checked = 'checked';
+                }
+            }
+            if ($indiceIdRelatorio == 2) {
+                $label = 'Equipe';
+                if ($this->view->idRelatorio == 2) {
+                    $checked = 'checked';
+                }
+            }
+            $html .= ' ' . $label . ' <input type="radio" name="qualRelatorio" onclick=" $(\'.splash\').css(\'display\', \'block\'); location.href=\'/principal/' . $indiceIdRelatorio . '\'" ' . $checked . ' />';
+        }
+
+        $html .= '</div>';
         $minhaHierarquia = $pessoa->getPessoaHierarquiaAtivo()->getHierarquia();
         if ($minhaHierarquia->getId() > Hierarquia::LIDER_DE_CELULA) {
-            $html .= '<div class="media-links">';
-            $html .= '<ul class="list-inline list-unstyled">';
+            $html .= '<div class = "media-links">';
+            $html .= '<ul class = "list-inline list-unstyled">';
 
             foreach ($this->view->hierarquias as $hierarquia) {
                 $corDaMedalha = 'default';
@@ -179,7 +209,7 @@ class DadosPrincipal extends AbstractHelper {
                     $corDaMedalha = 'info';
                 }
                 $html .= '<li>';
-                $html .= '<span class="label label-xs label-' . $corDaMedalha . '">' . $hierarquia->getSigla() . '</span>';
+                $html .= '<span class = "label label-xs label-' . $corDaMedalha . '">' . $hierarquia->getSigla() . '</span>';
                 $html .= '</li>';
             }
             $html .= '</ul>';
@@ -191,17 +221,18 @@ class DadosPrincipal extends AbstractHelper {
         $html .= '</div>';
 
         /* Modal */
-        $html .= '<div id="modalClassificacao" class="popup-basic p25 mfp-with-anim mfp-hide">';
-        $html .= '<div class="mw1000">' . $mensagemModalClasse . '</div>';
-        $html .= '<button tittle="Close (Esc)" type="button" class="mfp-close bg-dark">x</button>';
+        $html .= '<div id = "modalClassificacao" class = "popup-basic p25 mfp-with-anim mfp-hide">';
+        $html .= '<div class = "mw1200">' . $mensagemModalClasse . '</div>';
+        $html .= '<button tittle = "Close (Esc)" type = "button" class = "mfp-close bg-dark">x</button>';
         $html .= '</div>';
 
         return $html;
     }
 
-    function montaBarrasDeProgresso($fimIndice, $qualRelatorio, $multiplicadorDaMeta, $metas, $qualRelatorioCelula, $pessoa, $perfomanceMembresia, $perfomanceCelula) {
+    function montaBarrasDeProgresso($fimIndice, $qualRelatorio, $multiplicadorDaMeta, $metas, $qualRelatorioCelula, $perfomanceMembresia, $perfomanceCelula, $idRelatorio) {
         $html = '';
         for ($indice = 0; $indice <= $fimIndice; $indice++) {
+
             switch ($indice) {
                 case 0:
                     $stringMeta = 'Membresia';
@@ -213,13 +244,24 @@ class DadosPrincipal extends AbstractHelper {
                     $valorMeta = $metas[0] * $multiplicadorDaMeta;
                     break;
                 case 1:
-                    $indiceRelatorio = 0;
-                    $stringMeta = 'Cél. ' . $qualRelatorioCelula[$indiceRelatorio]['hospedeiro'];
-                    $valorApresentado = $qualRelatorioCelula[$indiceRelatorio]['valor'];
-                    $valorMeta = $metas[0];
-                    $labelBarra = $valorApresentado / $valorMeta * 100;
-                    $valorBarra = $labelBarra;
-                    $corBarra = RelatorioController::corDaLinhaPelaPerformance($valorBarra);
+                    if ($idRelatorio == 1) {
+                        $indiceRelatorio = 0;
+                        $stringMeta = 'Cél. ' . $qualRelatorioCelula[$indiceRelatorio]['hospedeiro'];
+                        $valorApresentado = $qualRelatorioCelula[$indiceRelatorio]['valor'];
+                        $valorMeta = $metas[0];
+                        $labelBarra = $valorApresentado / $valorMeta * 100;
+                        $valorBarra = $labelBarra;
+                        $corBarra = RelatorioController::corDaLinhaPelaPerformance($valorBarra);
+                    }
+                    if ($idRelatorio == 2) {
+                        $stringMeta = 'Célula';
+                        $indiceRelatorio = 'celula';
+                        $corBarra = RelatorioController::corDaLinhaPelaPerformance($perfomanceCelula);
+                        $valorBarra = $perfomanceCelula > 100 ? 100 : $perfomanceCelula;
+                        $valorApresentado = $qualRelatorioCelula[$indiceRelatorio];
+                        $labelBarra = $perfomanceCelula;
+                        $valorMeta = $metas[0] * $multiplicadorDaMeta;
+                    }
                     break;
                 case 2:
                     $indiceRelatorio = 1;
@@ -239,11 +281,15 @@ class DadosPrincipal extends AbstractHelper {
             $html .= '<div class = "col-xs-4 text-right">' . $stringMeta . '</div>';
             $html .= '<div class = "col-xs-5">';
             $html .= '<div class = "progress">';
-            $html .= '<div class = "progress-bar progress-bar-' . $corBarra . '" role="progressbar" aria-valuenow="' . $valorBarra . '" aria-valuemin = "0" aria-valuemax="100" style="width: ' . $valorBarra . '%;">' . $labelBarra . '%</div>';
+            $html .= '<div class = "progress-bar progress-bar-' . $corBarra . '" role = "progressbar" aria-valuenow = "' . $valorBarra . '" aria-valuemin = "0" aria-valuemax = "100" style = "width: ' . $valorBarra . '%;">' . $labelBarra . '%</div>';
             $html .= '</div>';
             $html .= '</div>';
             $html .= '<div class = "col-xs-3">' . $valorApresentado . ' de ' . $valorMeta . '</div>';
-            $html .= '</div>';
+            $html .= '</div>
+
+            
+
+            ';
         }
         return $html;
     }

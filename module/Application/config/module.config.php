@@ -23,7 +23,7 @@ return array(
     # definir e gerenciar rotas
     'router' => array(
         'routes' => array(
-            'login' => array( 
+            'login' => array(
                 'type' => 'Segment',
                 'options' => array(
                     'route' => '/[:action][/:id]',
@@ -40,9 +40,10 @@ return array(
             'principal' => array(
                 'type' => 'Segment',
                 'options' => array(
-                    'route' => '/principal[:action]',
+                    'route' => '/principal[:action][/:id]',
                     'constraints' => array(
                         'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                        'id' => '[1-2]',
                     ),
                     'defaults' => array(
                         'controller' => 'Application\Controller\Principal',
