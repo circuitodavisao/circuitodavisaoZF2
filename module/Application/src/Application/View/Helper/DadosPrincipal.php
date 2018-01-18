@@ -72,7 +72,7 @@ class DadosPrincipal extends AbstractHelper {
                 $fimIndice += count($qualRelatorioCelula);
             }
             if ($this->view->idRelatorio == 2) {
-                $fimIndice += 1;
+//                $fimIndice += 1;
             }
 
 
@@ -96,7 +96,7 @@ class DadosPrincipal extends AbstractHelper {
             $somaCelulaQuantidade = 0;
 
             $classeMaxima = '100';
-            if ($qualRelatorioCelula) {
+            if ($this->view->idRelatorio == 1 && $qualRelatorioCelula) {
                 foreach ($qualRelatorioCelula as $valorCelula) {
                     $perfomanceCelulaDeElite = $valorCelula['valor'] / Constantes::$META_LIDER * 100;
                     if ($perfomanceCelulaDeElite > 100) {
