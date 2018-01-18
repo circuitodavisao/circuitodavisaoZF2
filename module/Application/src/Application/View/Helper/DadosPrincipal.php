@@ -43,7 +43,6 @@ class DadosPrincipal extends AbstractHelper {
         if ($this->view->eCasal) {
             $multiplicadorDaMeta = 2;
         }
-
         $respostaBase = 'Porque a sua eficiência com relação a média de membresia e quantidade de célula do mês de #mes #periodo';
 
         $mensagemModalClasse = '';
@@ -75,12 +74,8 @@ class DadosPrincipal extends AbstractHelper {
                 $fimIndice += 1;
             }
 
-
-            $valorMembresia = $qualRelatorio['membresia'];
-            $valorCelula = $qualRelatorio['celula'];
-
-            $perfomanceMembresia = $valorMembresia / ($metas[0] * $multiplicadorDaMeta) * 100;
-            $perfomanceCelula = $valorCelula / $metas[0] * 100;
+            $perfomanceMembresia = $qualRelatorio['membresiaPerformance'];
+            $perfomanceCelula = $qualRelatorio['celulaPerformance'];
 
             $perfomanceMembresiaVisual = $perfomanceMembresia;
             if ($perfomanceMembresia > 100) {
@@ -244,7 +239,12 @@ class DadosPrincipal extends AbstractHelper {
                     $valorBarra = $performance > 100 ? 100 : $performance;
                     $valorApresentado = RelatorioController::formataNumeroRelatorio($qualRelatorio[$indiceRelatorio]);
                     $labelBarra = $performance;
-                    $valorMeta = $metas[0] * $multiplicadorDaMeta;
+                    if ($this->view->idRelatorio == 1) {
+                        $valorMeta = $metas[0] * $multiplicadorDaMeta;
+                    }
+                    if ($this->view->idRelatorio == 2) {
+                        $valorMeta = $qualRelatorio['membresiaMeta'];
+                    }
                     break;
                 case 1:
                     if ($idRelatorio == 1) {
@@ -264,7 +264,12 @@ class DadosPrincipal extends AbstractHelper {
                         $valorBarra = $performance > 100 ? 100 : $performance;
                         $valorApresentado = $qualRelatorio[$indiceRelatorio];
                         $labelBarra = $performance;
-                        $valorMeta = $metas[0] * $multiplicadorDaMeta;
+                        if ($this->view->idRelatorio == 1) {
+                            $valorMeta = $metas[0] * $multiplicadorDaMeta;
+                        }
+                        if ($this->view->idRelatorio == 2) {
+                            $valorMeta = $qualRelatorio['membresiaMeta'];
+                        }
                     }
                     break;
                 case 2:
