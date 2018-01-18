@@ -77,10 +77,10 @@ class DadosPrincipal extends AbstractHelper {
 
 
             $valorMembresia = $qualRelatorio['membresia'];
-            $valorCelulaQuantidade = $qualRelatorio['celula'];
+            $valorCelula = $qualRelatorio['celula'];
 
             $perfomanceMembresia = $valorMembresia / ($metas[0] * $multiplicadorDaMeta) * 100;
-            $perfomanceCelula = $valorCelulaQuantidade / $metas[0] * 100;
+            $perfomanceCelula = $valorCelula / $metas[0] * 100;
 
             $perfomanceMembresiaVisual = $perfomanceMembresia;
             if ($perfomanceMembresia > 100) {
@@ -91,9 +91,6 @@ class DadosPrincipal extends AbstractHelper {
             if ($perfomanceCelula > 100) {
                 $perfomanceCelulaVisual = 100;
             }
-
-            $somaCelulaDeElite = 0;
-            $somaCelulaQuantidade = 0;
 
             $classeMaxima = '100';
             if ($this->view->idRelatorio == 1 && $qualRelatorioCelula) {
@@ -109,6 +106,11 @@ class DadosPrincipal extends AbstractHelper {
             }
             if ($perfomanceMembresiaVisual < $classeMaxima) {
                 $classeMaxima = $perfomanceMembresiaVisual;
+            }
+            if ($this->view->idRelatorio == 2) {
+                if ($perfomanceCelulaVisual < $classeMaxima) {
+                    $classeMaxima = $perfomanceCelulaVisual;
+                }
             }
 
             if ($indiceDeRelatorios === 2) {
@@ -153,7 +155,7 @@ class DadosPrincipal extends AbstractHelper {
                 $mensagemModalClasse .= '<p><b>Resposta:</b> Estima-se que no mês de ' . $mesPorExtenso . ' você provavelmente será classe <span class="label label-' . $classClasse . ' label-sm">' . $classe . ' </span></p>';
             }
             $mensagemModalClasse .= "</div>";
-            $mensagemModalClasse .= $this->montaBarrasDeProgresso($fimIndice, $qualRelatorio, $multiplicadorDaMeta, $metas, $qualRelatorioCelula, $perfomanceMembresia, $perfomanceCelula, $this->view->idRelatorio);
+            $mensagemModalClasse .= $this->montaBarrasDeProgresso($fimIndice, $qualRelatorio, $multiplicadorDaMeta, $metas, $qualRelatorioCelula, $this->view->idRelatorio);
 
             if ($indiceDeRelatorios === 1) {
                 $classeTela = $classe;
@@ -222,14 +224,14 @@ class DadosPrincipal extends AbstractHelper {
 
         /* Modal */
         $html .= '<div id = "modalClassificacao" class = "popup-basic p25 mfp-with-anim mfp-hide">';
-        $html .= '<div class = "mw1200">' . $mensagemModalClasse . '</div>';
+        $html .= '<div >' . $mensagemModalClasse . '</div>';
         $html .= '<button tittle = "Close (Esc)" type = "button" class = "mfp-close bg-dark">x</button>';
         $html .= '</div>';
 
         return $html;
     }
 
-    function montaBarrasDeProgresso($fimIndice, $qualRelatorio, $multiplicadorDaMeta, $metas, $qualRelatorioCelula, $perfomanceMembresia, $perfomanceCelula, $idRelatorio) {
+    function montaBarrasDeProgresso($fimIndice, $qualRelatorio, $multiplicadorDaMeta, $metas, $qualRelatorioCelula, $idRelatorio) {
         $html = '';
         for ($indice = 0; $indice <= $fimIndice; $indice++) {
 
@@ -237,10 +239,11 @@ class DadosPrincipal extends AbstractHelper {
                 case 0:
                     $stringMeta = 'Membresia';
                     $indiceRelatorio = 'membresia';
-                    $corBarra = RelatorioController::corDaLinhaPelaPerformance($perfomanceMembresia);
-                    $valorBarra = $perfomanceMembresia > 100 ? 100 : $perfomanceMembresia;
+                    $performance = $qualRelatorio[$indiceRelatorio . 'Performance'];
+                    $corBarra = RelatorioController::corDaLinhaPelaPerformance($performance);
+                    $valorBarra = $performance > 100 ? 100 : $performance;
                     $valorApresentado = RelatorioController::formataNumeroRelatorio($qualRelatorio[$indiceRelatorio]);
-                    $labelBarra = $perfomanceMembresia;
+                    $labelBarra = $performance;
                     $valorMeta = $metas[0] * $multiplicadorDaMeta;
                     break;
                 case 1:
@@ -256,10 +259,11 @@ class DadosPrincipal extends AbstractHelper {
                     if ($idRelatorio == 2) {
                         $stringMeta = 'Célula';
                         $indiceRelatorio = 'celula';
-                        $corBarra = RelatorioController::corDaLinhaPelaPerformance($perfomanceCelula);
-                        $valorBarra = $perfomanceCelula > 100 ? 100 : $perfomanceCelula;
+                        $performance = $qualRelatorio[$indiceRelatorio . 'Performance'];
+                        $corBarra = RelatorioController::corDaLinhaPelaPerformance($performance);
+                        $valorBarra = $performance > 100 ? 100 : $performance;
                         $valorApresentado = $qualRelatorio[$indiceRelatorio];
-                        $labelBarra = $perfomanceCelula;
+                        $labelBarra = $performance;
                         $valorMeta = $metas[0] * $multiplicadorDaMeta;
                     }
                     break;
