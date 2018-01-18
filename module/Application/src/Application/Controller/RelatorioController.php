@@ -364,7 +364,7 @@ class RelatorioController extends CircuitoController {
         }
         $performanceCelula = 0;
         if ($relatorio['membresiaMeta'] > 0) {
-            $performanceCelula = $soma[RelatorioController::dimensaoTipoCelula] / $relatorio['membresiaMeta'] * 100;
+            $performanceCelula = $soma[RelatorioController::dimensaoTipoCelula] / $diferencaDePeriodos / $relatorio['membresiaMeta'] * 100;
         }
         $performanceCelulasDeElite = 0;
         $celulasDeElite = $relatorioCelulaDeElite[0]['celulaDeElite'];
