@@ -519,7 +519,7 @@ $somaDoMes = 0;
                             if ($this->tipoRelatorio == 3) {
                                 $valor = $this->relatorioMedioSomado['celulaPerformance'];
                             }
-                            echo '<td>' . RelatorioController::formataNumeroRelatorio($valor) . '</td>';
+                            echo '<td>' . RelatorioController::formataNumeroRelatorio($valor) . '%</td>';
                             echo '<td>|</td>';
                             echo '<td>' . RelatorioController::formataNumeroRelatorio($somaDoMes) . '</td>';
                         }
