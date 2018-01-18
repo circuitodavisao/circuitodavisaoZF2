@@ -59,10 +59,12 @@ class RelatorioController extends CircuitoController {
         $periodoVisto = $this->getEvent()->getRouteMatch()->getParam(Constantes::$ID, 0);
 
         $tipoRelatorioPessoal = 1;
+        $tipoRelatorioSomado = 2;
         $arrayPeriodoDoMes = Funcoes::encontrarPeriodoDeUmMesDadoQualquerPeriodo($periodoVisto);
 
         $relatorio = RelatorioController::montaRelatorio($this->getRepositorio(), $numeroIdentificador, $periodoVisto, $tipoRelatorioPessoal);
         $relatorioMedio = RelatorioController::montaRelatorio($this->getRepositorio(), $numeroIdentificador, $arrayPeriodoDoMes[0], $tipoRelatorioPessoal, $arrayPeriodoDoMes[1]);
+        $relatorioMedioSomado = RelatorioController::montaRelatorio($this->getRepositorio(), $numeroIdentificador, $arrayPeriodoDoMes[0], $tipoRelatorioSomado, $arrayPeriodoDoMes[1]);
 
         $tipoRelatorio = (int) $this->params()->fromRoute('tipoRelatorio');
 
@@ -82,6 +84,7 @@ class RelatorioController extends CircuitoController {
         $dados = array(
             RelatorioController::stringRelatorio => $relatorio,
             'relatorioMedio' => $relatorioMedio,
+            'relatorioMedioSomado' => $relatorioMedioSomado,
             'tipoRelatorio' => $tipoRelatorio,
             'periodoVisto' => $periodoVisto,
             'periodoInicial' => $periodoVisto,
@@ -100,7 +103,7 @@ class RelatorioController extends CircuitoController {
                     $dataInativacao = $gpFilho->getData_inativacaoStringPadraoBanco();
                 }
                 $numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupoFilho, $dataInativacao);
-                $tipoRelatorioSomado = 2;
+
                 $relatorioDiscipulos[$grupoFilho->getId()] = RelatorioController::montaRelatorio($this->getRepositorio(), $numeroIdentificador, $periodoVisto, $tipoRelatorioSomado);
                 $relatorioDiscipulosMedio[$grupoFilho->getId()] = RelatorioController::montaRelatorio($this->getRepositorio(), $numeroIdentificador, $arrayPeriodoDoMes[0], $tipoRelatorioSomado, $arrayPeriodoDoMes[1]);
             }
