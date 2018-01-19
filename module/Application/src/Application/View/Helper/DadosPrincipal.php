@@ -235,6 +235,9 @@ class DadosPrincipal extends AbstractHelper {
                     $stringMeta = 'Membresia';
                     $indiceRelatorio = 'membresia';
                     $performance = $qualRelatorio[$indiceRelatorio . 'Performance'];
+                    if ($this->view->idRelatorio == 2) {
+                        $performance = $qualRelatorio[$indiceRelatorio] / $metas[0] * 100;
+                    }
                     $corBarra = RelatorioController::corDaLinhaPelaPerformance($performance);
                     $valorBarra = $performance > 100 ? 100 : $performance;
                     $valorApresentado = RelatorioController::formataNumeroRelatorio($qualRelatorio[$indiceRelatorio]);
@@ -255,6 +258,9 @@ class DadosPrincipal extends AbstractHelper {
                         $stringMeta = 'Célula';
                         $indiceRelatorio = 'celula';
                         $performance = $qualRelatorio[$indiceRelatorio . 'Performance'];
+                        if ($this->view->idRelatorio == 2) {
+                            $performance = $qualRelatorio[$indiceRelatorio] / $metas[0] * 100;
+                        }
                         $corBarra = RelatorioController::corDaLinhaPelaPerformance($performance);
                         $valorBarra = $performance > 100 ? 100 : $performance;
                         $valorApresentado = $qualRelatorio[$indiceRelatorio];
