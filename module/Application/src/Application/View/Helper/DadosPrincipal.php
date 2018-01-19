@@ -239,12 +239,7 @@ class DadosPrincipal extends AbstractHelper {
                     $valorBarra = $performance > 100 ? 100 : $performance;
                     $valorApresentado = RelatorioController::formataNumeroRelatorio($qualRelatorio[$indiceRelatorio]);
                     $labelBarra = $performance;
-                    if ($this->view->idRelatorio == 1) {
-                        $valorMeta = $metas[0] * $multiplicadorDaMeta;
-                    }
-                    if ($this->view->idRelatorio == 2) {
-                        $valorMeta = $qualRelatorio['membresiaMeta'];
-                    }
+                    $valorMeta = $metas[0] * $multiplicadorDaMeta;
                     break;
                 case 1:
                     if ($idRelatorio == 1) {
@@ -264,12 +259,7 @@ class DadosPrincipal extends AbstractHelper {
                         $valorBarra = $performance > 100 ? 100 : $performance;
                         $valorApresentado = $qualRelatorio[$indiceRelatorio];
                         $labelBarra = $performance;
-                        if ($this->view->idRelatorio == 1) {
-                            $valorMeta = $metas[0] * $multiplicadorDaMeta;
-                        }
-                        if ($this->view->idRelatorio == 2) {
-                            $valorMeta = $qualRelatorio['membresiaMeta'];
-                        }
+                        $valorMeta = $metas[0] * $multiplicadorDaMeta;
                     }
                     break;
                 case 2:
