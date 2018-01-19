@@ -77,6 +77,11 @@ class DadosPrincipal extends AbstractHelper {
             $perfomanceMembresia = $qualRelatorio['membresiaPerformance'];
             $perfomanceCelula = $qualRelatorio['celulaPerformance'];
 
+            if ($this->view->idRelatorio == 2) {
+                $perfomanceMembresia = $qualRelatorio['membresia'] / $metas[0] * 100;
+                $perfomanceCelula = $qualRelatorio['celula'] / $metas[0] * 100;
+            }
+
             $perfomanceMembresiaVisual = $perfomanceMembresia;
             if ($perfomanceMembresia > 100) {
                 $perfomanceMembresiaVisual = 100;
