@@ -294,13 +294,13 @@ class DadosPrincipal extends AbstractHelper {
                 $valorBarra = 100;
             }
             $html .= '<div class = "row">';
-            $html .= '<div class = "col-xs-4 text-right">' . $stringMeta . '</div>';
+            $html .= '<div class = "col-xs-4 text-right" style="font-size:10px;">' . $stringMeta . '</div>';
             $html .= '<div class = "col-xs-5">';
             $html .= '<div class = "progress">';
             $html .= '<div class = "progress-bar progress-bar-' . $corBarra . '" role = "progressbar" aria-valuenow = "' . $valorBarra . '" aria-valuemin = "0" aria-valuemax = "100" style = "width: ' . $valorBarra . '%;">' . $labelBarra . '%</div>';
             $html .= '</div>';
             $html .= '</div>';
-            $html .= '<div class = "col-xs-3">' . $valorApresentado . ' de ' . $valorMeta . '</div>';
+            $html .= '<div class = "col-xs-3" style="font-size:10px;">' . $valorApresentado . ' de ' . $valorMeta . '</div>';
             $html .= '</div>
 
             
