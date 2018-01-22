@@ -768,7 +768,6 @@ class CadastroController extends CircuitoController {
                         }
                     }
                     if ($criarNovaCelula) {
-
                         /* Entidade selecionada */
                         $idEntidadeAtual = $sessao->idEntidadeAtual;
                         $entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
@@ -806,9 +805,10 @@ class CadastroController extends CircuitoController {
                         $this->getRepositorio()->getGrupoEventoORM()->persistir($grupoEvento, $alterarDataDeCriacao);
 
                         if ($naoEhAlteracao) {
+                            $numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio());
+
                             /* Cadastro do fato celula */
                             /* cadastro fato apenas se for nova celula */
-                            $numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio());
                             $periodo = 0;
                             $arrayPeriodo = Funcoes::montaPeriodo($periodo);
                             $stringData = $arrayPeriodo[3] . '-' . $arrayPeriodo[2] . '-' . $arrayPeriodo[1];
@@ -816,13 +816,14 @@ class CadastroController extends CircuitoController {
                             $fatoPeriodo = $this->getRepositorio()->getFatoCicloORM()->
                                     encontrarPorNumeroIdentificadorEDataCriacao($numeroIdentificador, $dateFormatada, $this->getRepositorio());
                             $this->getRepositorio()->getFatoCelulaORM()->criarFatoCelula($fatoPeriodo, $eventoCelula->getId());
-                        }
 
-
-                        /* caso seja primeira celula, criar fato lider e nao tenha */
-                        if (!$this->getRepositorio()->getFatoLiderORM()->encontrarFatoLiderPorNumeroIdentificador($numeroIdentificador)) {
-                            $quantidadeLideres = count($entidade->getGrupo()->getResponsabilidadesAtivas());
-                            $this->getRepositorio()->getFatoLiderORM()->criarFatoLider($numeroIdentificador, $quantidadeLideres);
+                            /* caso seja primeira celula, criar fato lider e nao tenha */
+                            if (count($entidade->getGrupo()->getGrupoEventoAtivosPorTipo(EventoTipo::tipoCelula)) === 1) {
+                                if (!$this->getRepositorio()->getFatoLiderORM()->encontrarFatoLiderPorNumeroIdentificador($numeroIdentificador)) {
+                                    $quantidadeLideres = count($entidade->getGrupo()->getResponsabilidadesAtivas());
+                                    $this->getRepositorio()->getFatoLiderORM()->criarFatoLider($numeroIdentificador, $quantidadeLideres);
+                                }
+                            }
                         }
 
                         /* Sessão */

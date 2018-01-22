@@ -75,7 +75,7 @@ class FatoCicloORM extends CircuitoORM {
      * @param int $tipoComparacao
      * @return array
      */
-    public function montarRelatorioPorNumeroIdentificador($numeroIdentificador, $periodoInicial, $tipoComparacao, $periodoFinal = 0) {
+    public function montarRelatorioPorNumeroIdentificador($numeroIdentificador, $periodoInicial, $tipoComparacao, $periodoFinal = null) {
         $dimensaoTipoCelula = 1;
         $dimensaoTipoDomingo = 4;
         $dqlBase = "SELECT "
@@ -104,7 +104,7 @@ class FatoCicloORM extends CircuitoORM {
             $dataDoPeriodo = $resultadoPeriodo[3] . '-' . $resultadoPeriodo[2] . '-' . $resultadoPeriodo[1];
             $dataDoPeriodoFormatada = DateTime::createFromFormat('Y-m-d', $dataDoPeriodo);
 
-            if ($periodoFinal === 0) {
+            if ($periodoFinal) {
                 $dqlAjustadaTipoComparacao = str_replace('#data', 'AND fc.data_criacao = ?2 ', $dqlAjustadaTipoComparacao);
             } else {
                 $resultadoPeriodoFinal = Funcoes::montaPeriodo($periodoFinal);

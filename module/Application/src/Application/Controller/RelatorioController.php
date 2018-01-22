@@ -301,7 +301,7 @@ class RelatorioController extends CircuitoController {
         return $response;
     }
 
-    public static function montaRelatorio($repositorioORM, $numeroIdentificador, $periodoInicial, $tipoRelatorio, $periodoFinal = 0) {
+    public static function montaRelatorio($repositorioORM, $numeroIdentificador, $periodoInicial, $tipoRelatorio, $periodoFinal = null) {
         unset($relatorio);
         /* Membresia */
         $relatorioMembresia = $repositorioORM->getFatoCicloORM()->montarRelatorioPorNumeroIdentificador($numeroIdentificador, $periodoInicial, $tipoRelatorio, $periodoFinal);
@@ -316,7 +316,7 @@ class RelatorioController extends CircuitoController {
             }
         }
         $diferencaDePeriodos = 1;
-        if ($periodoFinal !== 0) {
+        if ($periodoFinal) {
             $diferencaDePeriodos = $periodoFinal - $periodoInicial;
             if ($periodoInicial < $periodoFinal && $diferencaDePeriodos === 1) {
                 $diferencaDePeriodos++;
