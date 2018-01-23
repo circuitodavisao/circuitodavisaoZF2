@@ -21,13 +21,18 @@ class FatoLiderORM extends CircuitoORM {
      * @param integer $tipoComparacao
      * @return String
      */
-    public function encontrarPorNumeroIdentificador($numeroIdentificador, $tipoComparacao, $periodo = 0) {
+    public function encontrarPorNumeroIdentificador($numeroIdentificador, $tipoComparacao, $periodo = 0, $inativo = false) {
         $dqlBase = "SELECT "
                 . "SUM(fl.lideres) lideres "
                 . "FROM  " . Constantes::$ENTITY_FATO_LIDER . " fl "
                 . "WHERE "
                 . "fl.numero_identificador #tipoComparacao ?1 "
-                . "AND ((fl.data_criacao <= ?2 AND fl.data_inativacao IS NULL) OR (fl.data_criacao <= ?2 AND fl.data_inativacao >= ?2)) ";
+                . "AND ((fl.data_criacao <= ?2 AND fl.data_inativacao IS NULL) OR (#inativo)) ";
+        if ($inativo) {
+            $dqlBase = str_replace('#inativo', ' fl.data_criacao <= ?2 AND fl.data_inativacao >= ?2 ', $dqlBase);
+        } else {
+            $dqlBase = str_replace('#inativo', '1 = 2', $dqlBase);
+        }
         try {
             if ($tipoComparacao == 1) {
                 $dqlAjustadaTipoComparacao = str_replace('#tipoComparacao', '=', $dqlBase);

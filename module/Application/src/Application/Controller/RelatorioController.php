@@ -104,8 +104,9 @@ class RelatorioController extends CircuitoController {
                 }
                 $numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupoFilho, $dataInativacao);
 
-                $relatorioDiscipulos[$grupoFilho->getId()] = RelatorioController::montaRelatorio($this->getRepositorio(), $numeroIdentificador, $periodoVisto, $tipoRelatorioSomado);
-                $relatorioDiscipulosMedio[$grupoFilho->getId()] = RelatorioController::montaRelatorio($this->getRepositorio(), $numeroIdentificador, $arrayPeriodoDoMes[0], $tipoRelatorioSomado, $arrayPeriodoDoMes[1]);
+                $mostrarInativos = true;
+                $relatorioDiscipulos[$grupoFilho->getId()] = RelatorioController::montaRelatorio($this->getRepositorio(), $numeroIdentificador, $periodoVisto, $tipoRelatorioSomado, null);
+                $relatorioDiscipulosMedio[$grupoFilho->getId()] = RelatorioController::montaRelatorio($this->getRepositorio(), $numeroIdentificador, $arrayPeriodoDoMes[0], $tipoRelatorioSomado, $arrayPeriodoDoMes[1], $mostrarInativos);
             }
 
             $discipulosOrdenado = RelatorioController::ordenacaoDiscipulos($grupoPaiFilhoFilhos, $relatorioDiscipulosMedio, $tipoRelatorio);
@@ -301,11 +302,11 @@ class RelatorioController extends CircuitoController {
         return $response;
     }
 
-    public static function montaRelatorio($repositorioORM, $numeroIdentificador, $periodoInicial, $tipoRelatorio, $periodoFinal = null) {
+    public static function montaRelatorio($repositorioORM, $numeroIdentificador, $periodoInicial, $tipoRelatorio, $periodoFinal = null, $inativo = false) {
         unset($relatorio);
         /* Membresia */
         $relatorioMembresia = $repositorioORM->getFatoCicloORM()->montarRelatorioPorNumeroIdentificador($numeroIdentificador, $periodoInicial, $tipoRelatorio, $periodoFinal);
-        $fatoLider = $repositorioORM->getFatoLiderORM()->encontrarPorNumeroIdentificador($numeroIdentificador, $tipoRelatorio, $periodoInicial);
+        $fatoLider = $repositorioORM->getFatoLiderORM()->encontrarPorNumeroIdentificador($numeroIdentificador, $tipoRelatorio, $periodoInicial, $inativo);
         $quantidadeLideres = $fatoLider[0]['lideres'];
         foreach ($relatorioMembresia as $key => $value) {
             $soma[$key] = 0;
