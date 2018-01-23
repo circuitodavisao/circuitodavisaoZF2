@@ -335,14 +335,8 @@ class RelatorioController extends CircuitoController {
         $relatorio['quantidadeLideres'] = $quantidadeLideres;
 
         /* Célula */
-        if ($periodoFinal != 0) {
-            $periodoCelula = $periodoFinal;
-        }
-        if ($periodoFinal === 0) {
-            $periodoCelula = -1;
-        }
-        $relatorioCelula = $repositorioORM->getFatoCicloORM()->montarRelatorioCelulaPorNumeroIdentificador($numeroIdentificador, $periodoCelula, $tipoRelatorio);
-        $relatorioCelulaDeElite = $repositorioORM->getFatoCicloORM()->montarRelatorioCelulaDeElitePorNumeroIdentificador($numeroIdentificador, $periodoCelula, $tipoRelatorio);
+        $relatorioCelula = $repositorioORM->getFatoCicloORM()->montarRelatorioCelulaPorNumeroIdentificador($numeroIdentificador, $periodoInicial, $tipoRelatorio);
+        $relatorioCelulaDeElite = $repositorioORM->getFatoCicloORM()->montarRelatorioCelulaDeElitePorNumeroIdentificador($numeroIdentificador, $periodoInicial, $tipoRelatorio);
 
         $quantidadeCelulas = $relatorioCelula[0]['quantidade'];
         $quantidadeCelulasRealizadas = 0;

@@ -71,11 +71,16 @@ $somaMeta = 0;
                             }
                             ?>
                             <th>TIMES</th>
-                            <th>|</th>
-                            <th>LID</th>
-                            <th>MET</th>
-                            <th>|</th>
                             <?php
+                            if ($this->tipoRelatorio == 1 ||
+                                    $this->tipoRelatorio == 3) {
+                                ?>
+                                <th>|</th>
+                                <th>LID</th>
+                                <th>MET</th>
+                                <th>|</th>
+                                <?php
+                            }
                             if ($this->tipoRelatorio == 1) {
                                 echo '<th class="hidden-xs">LID</th>';
                                 echo '<th>MET</th>';
