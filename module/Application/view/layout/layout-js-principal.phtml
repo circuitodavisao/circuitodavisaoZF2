@@ -187,7 +187,14 @@ if ($sessao->mostrarNotificacao) {
     var tipoMembresia = 1;
     var tipoCelula = 2;
     var valorMaximoBarra = 11;
-    function criarGauges(tipo) {
+    function criarGauges(tipo, idRelatorio) {
+        if (idRelatorio == 2) {
+            elementos = document.getElementsByClassName('removerEquipe');
+            var i;
+            for (i = 0; i < elementos.length; i++) {
+              elementos[i].style.display = 'none';
+            }
+        }
         var valoresGraficos = [3, 6, 3, 7];
         var eCasal = document.getElementById('eCasal').value;
         if (parseInt(eCasal) === 1) {
@@ -202,13 +209,18 @@ if ($sessao->mostrarNotificacao) {
                 valorMax = valorCulto;
             }
             var target = document.getElementById('gaugeCulto'); // your canvas element
-            opts = ajustaOpcoesGaugePorValor(opts, valoresGraficos[0], valorCulto);
-            var gauge = new Gauge(target).setOptions(opts); // create sexy gauge!
-            gauge.maxValue = valorMax; // set max gauge value
-            gauge.setMinValue(0); // Prefer setter over gauge.minValue = 0
-            gauge.animationSpeed = 128; // set animation speed (32 is default value)
-            gauge.set(valorCulto); // set actual value
-            gauge.width = '250px';
+            if (idRelatorio == 1) {
+                opts = ajustaOpcoesGaugePorValor(opts, valoresGraficos[0], valorCulto);
+                var gauge = new Gauge(target).setOptions(opts); // create sexy gauge!
+                gauge.maxValue = valorMax; // set max gauge value
+                gauge.setMinValue(0); // Prefer setter over gauge.minValue = 0
+                gauge.animationSpeed = 128; // set animation speed (32 is default value)
+                gauge.set(valorCulto); // set actual value
+                gauge.width = '250px';
+            }
+            if (idRelatorio == 2) {
+                target.style.display = 'none';
+            }
             $('#labelValorCulto').html(valorCulto);
             $('#spanMetaCulto').html(valoresGraficos[0]);
             /* Arena */
@@ -218,12 +230,17 @@ if ($sessao->mostrarNotificacao) {
                 valorMax = valorCulto;
             }
             var target = document.getElementById('gaugeArena'); // your canvas element
-            opts = ajustaOpcoesGaugePorValor(opts, valoresGraficos[1], valorArena);
-            var gauge = new Gauge(target).setOptions(opts); // create sexy gauge!
-            gauge.maxValue = valorMax; // set max gauge value
-            gauge.setMinValue(0); // Prefer setter over gauge.minValue = 0
-            gauge.animationSpeed = 128; // set animation speed (32 is default value)
-            gauge.set(valorArena); // set actual value
+            if (idRelatorio == 1) {
+                opts = ajustaOpcoesGaugePorValor(opts, valoresGraficos[1], valorArena);
+                var gauge = new Gauge(target).setOptions(opts); // create sexy gauge!
+                gauge.maxValue = valorMax; // set max gauge value
+                gauge.setMinValue(0); // Prefer setter over gauge.minValue = 0
+                gauge.animationSpeed = 128; // set animation speed (32 is default value)
+                gauge.set(valorArena); // set actual value
+            }
+            if (idRelatorio == 2) {
+                target.style.display = 'none';
+            }
             $('#labelValorArena').html(valorArena);
             $('#spanMetaArena').html(valoresGraficos[1]);
             /* Domingo */
@@ -233,12 +250,17 @@ if ($sessao->mostrarNotificacao) {
                 valorMax = valorDomingo;
             }
             var target = document.getElementById('gaugeDomingo'); // your canvas element
-            opts = ajustaOpcoesGaugePorValor(opts, valoresGraficos[2], valorDomingo);
-            var gauge = new Gauge(target).setOptions(opts); // create sexy gauge!
-            gauge.maxValue = valorMax; // set max gauge value
-            gauge.setMinValue(0); // Prefer setter over gauge.minValue = 0
-            gauge.animationSpeed = 128; // set animation speed (32 is default value)
-            gauge.set(valorDomingo); // set actual value
+            if (idRelatorio == 1) {
+                opts = ajustaOpcoesGaugePorValor(opts, valoresGraficos[2], valorDomingo);
+                var gauge = new Gauge(target).setOptions(opts); // create sexy gauge!
+                gauge.maxValue = valorMax; // set max gauge value
+                gauge.setMinValue(0); // Prefer setter over gauge.minValue = 0
+                gauge.animationSpeed = 128; // set animation speed (32 is default value)
+                gauge.set(valorDomingo); // set actual value
+            }
+            if (idRelatorio == 2) {
+                target.style.display = 'none';
+            }
             $('#labelValorDomingo').html(valorDomingo);
             $('#spanMetaDomingo').html(valoresGraficos[2]);
             /* Membresia */
@@ -248,12 +270,17 @@ if ($sessao->mostrarNotificacao) {
                 valorMax = valorMembresia;
             }
             var target = document.getElementById('gaugeMembresia'); // your canvas element
-            opts = ajustaOpcoesGaugePorValor(opts, valoresGraficos[3], valorMembresia);
-            var gauge = new Gauge(target).setOptions(opts); // create sexy gauge!
-            gauge.maxValue = valorMax; // set max gauge value
-            gauge.setMinValue(0); // Prefer setter over gauge.minValue = 0
-            gauge.animationSpeed = 128; // set animation speed (32 is default value)
-            gauge.set(valorMembresia); // set actual value
+            if (idRelatorio == 1) {
+                opts = ajustaOpcoesGaugePorValor(opts, valoresGraficos[3], valorMembresia);
+                var gauge = new Gauge(target).setOptions(opts); // create sexy gauge!
+                gauge.maxValue = valorMax; // set max gauge value
+                gauge.setMinValue(0); // Prefer setter over gauge.minValue = 0
+                gauge.animationSpeed = 128; // set animation speed (32 is default value)
+                gauge.set(valorMembresia); // set actual value
+            }
+            if (idRelatorio == 2) {
+                target.style.display = 'none';
+            }
             $('#labelValorMembresia').html(valorMembresia);
             $('#spanMetaMembresia').html(valoresGraficos[3]);
             rodarApenasUmaVezOsGaugesMembresia += 1;

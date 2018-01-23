@@ -93,7 +93,7 @@ class RelatorioController extends CircuitoController {
             'mostrarBotaoPeriodoAfrente' => $mostrarBotaoPeriodoAfrente,
         );
 
-        $grupoPaiFilhoFilhos = $grupo->getGrupoPaiFilhoFilhosAtivos($periodoVisto);
+        $grupoPaiFilhoFilhos = $grupo->getGrupoPaiFilhoFilhosAtivos($arrayPeriodoDoMes[0]);
         if ($grupoPaiFilhoFilhos) {
             $relatorioDiscipulos = array();
             foreach ($grupoPaiFilhoFilhos as $gpFilho) {
@@ -315,16 +315,7 @@ class RelatorioController extends CircuitoController {
                 }
             }
         }
-        $diferencaDePeriodos = 1;
-        if ($periodoFinal) {
-            $diferencaDePeriodos = $periodoFinal - $periodoInicial;
-            if ($periodoInicial < $periodoFinal && $diferencaDePeriodos === 1) {
-                $diferencaDePeriodos++;
-            }
-        }
-        if ($diferencaDePeriodos < 0) {
-            $diferencaDePeriodos *= -1;
-        }
+        $diferencaDePeriodos = self::diferencaDePeriodos($periodoInicial, $periodoFinal);
         $relatorio['membresiaCulto'] = $soma[RelatorioController::dimensaoTipoCulto] / $diferencaDePeriodos;
         $relatorio['membresiaArena'] = $soma[RelatorioController::dimensaoTipoArena] / $diferencaDePeriodos;
         $relatorio['membresiaDomingo'] = $soma[RelatorioController::dimensaoTipoDomingo] / $diferencaDePeriodos;
@@ -388,16 +379,31 @@ class RelatorioController extends CircuitoController {
     public static function saberQuaisdasMinhasCelulasSaoDeElite(RepositorioORM $repositorioORM, Grupo $grupo, $periodoInicial, $periodoFinal) {
         $relatorio = array();
         $grupoEventosCelula = $grupo->getGrupoEventoAtivosPorTipo(EventoTipo::tipoCelula);
+        $diferencaDePeriodos = self::diferencaDePeriodos($periodoInicial, $periodoFinal);
         $contagem = 0;
         foreach ($grupoEventosCelula as $grupoEventoCelula) {
             $eventoId = $grupoEventoCelula->getEvento()->getId();
             $resultado = $repositorioORM->getFatoCicloORM()->verificaFrequenciasPorCelulaEPeriodo($periodoInicial, $eventoId, $periodoFinal);
             $relatorio[$contagem]['eventoId'] = $eventoId;
-            $relatorio[$contagem]['valor'] = $resultado;
+            $relatorio[$contagem]['valor'] = $resultado / $diferencaDePeriodos;
             $relatorio[$contagem]['hospedeiro'] = $grupoEventoCelula->getEvento()->getEventoCelula()->getNome_hospedeiroPrimeiroNome();
             $contagem++;
         }
         return $relatorio;
+    }
+
+    public static function diferencaDePeriodos($periodoInicial, $periodoFinal) {
+        $diferencaDePeriodos = 1;
+        if ($periodoFinal != null || $periodoFinal === 0) {
+            $diferencaDePeriodos = $periodoFinal - $periodoInicial;
+            if ($periodoInicial < $periodoFinal && $diferencaDePeriodos === 1) {
+                $diferencaDePeriodos++;
+            }
+        }
+        if ($diferencaDePeriodos < 0) {
+            $diferencaDePeriodos *= -1;
+        }
+        return $diferencaDePeriodos;
     }
 
     /**

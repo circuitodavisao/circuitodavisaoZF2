@@ -440,11 +440,7 @@ class IndexController extends CircuitoController {
                     if ($numeroIdentificador) {
                         $tipoRelatorioPessoal = 1;
                         $periodoInicial = $arrayPeriodos['periodoMesAtualInicial'];
-                        $periodoFinal = $arrayPeriodos['periodoMesAtualFinal'] - 1;
-                        if ($periodoInicial == 0 || $periodoInicial == -1) {
-                            $periodoInicial = $arrayPeriodos['periodoMesAnteirorInicial'];
-                            $periodoFinal = $arrayPeriodos['periodoMesAnteirorFinal'];
-                        }
+                        $periodoFinal = $arrayPeriodos['periodoMesAtualFinal'];
                         $relatorioGrupos[$grupo->getId()] = RelatorioController::montaRelatorio($this->getRepositorio(), $numeroIdentificador, $periodoInicial, $tipoRelatorioPessoal, $periodoFinal);
                     }
                 }

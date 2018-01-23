@@ -17,6 +17,8 @@ $somaQuantidadeCelulas = 0;
 $somaQuantidadeCelulasRealizadas = 0;
 $somaQuantidadeCelulasDeElite = 0;
 $somaDoMes = 0;
+$somaLideres = 0;
+$somaMeta = 0;
 ?>
 <style type="text/css">
     th {
@@ -33,7 +35,7 @@ $somaDoMes = 0;
                 <table class="text-center table table-condensed bg-light" style="font-size:10px;">
                     <thead>
                         <tr>                   
-                            <th colspan="13" class="text-center"  style="font-size:12px;">
+                            <th colspan="17" class="text-center"  style="font-size:12px;">
                                 <?php
                                 if ($this->tipoRelatorio == 1) {
                                     echo 'Membresia';
@@ -69,6 +71,10 @@ $somaDoMes = 0;
                             }
                             ?>
                             <th>TIMES</th>
+                            <th>|</th>
+                            <th>LID</th>
+                            <th>MET</th>
+                            <th>|</th>
                             <?php
                             if ($this->tipoRelatorio == 1) {
                                 echo '<th class="hidden-xs">LID</th>';
@@ -133,6 +139,15 @@ $somaDoMes = 0;
                             echo '<td></td>';
                         }
                         echo '<td>MEU</td>';
+                        if ($this->tipoRelatorio == 1 ||
+                                $this->tipoRelatorio == 3) {
+                            $quantidadeLideres = $this->relatorioMedio['quantidadeLideres'];
+                            $membresiaMeta = $this->relatorioMedio['membresiaMeta'];
+                            echo '<th>|</th>';
+                            echo '<th>' . $quantidadeLideres . '</th>';
+                            echo '<th>' . $membresiaMeta . '</th>';
+                            echo '<th>|</th>';
+                        }
                         if ($this->tipoRelatorio == 1) {
                             echo '<td class = "hidden-xs">' . $this->relatorio['quantidadeLideres'] . '</td>';
                             echo '<td>' . $this->relatorio['membresiaMeta'] . '</td>';
@@ -242,6 +257,8 @@ $somaDoMes = 0;
                             if ($this->tipoRelatorio == 3) {
                                 $somaDoMes += $this->relatorioMedio['celula'];
                             }
+                            $somaLideres += $quantidadeLideres;
+                            $somaMeta += $membresiaMeta;
                         }
 
                         if ($this->discipulosOrdenado) {
@@ -291,6 +308,7 @@ $somaDoMes = 0;
                                                 $this->tipoRelatorio == 3) {
                                             $colspan += 4;
                                         }
+                                        $colspan += 4;
                                         if ($validacaoSemCelula === 0) {
                                             echo '<tr class="bg-dark">';
                                             echo '<td colspan="' . $colspan . '">Discipulos sem células</td>';
@@ -306,6 +324,15 @@ $somaDoMes = 0;
                                         echo '<td>' . $contagemRanking . '°</td>';
                                     }
                                     echo '<td class="text-left">' . $grupoFilho->getNomeLideresAtivos() . '</td>';
+                                    if ($this->tipoRelatorio == 1 ||
+                                            $this->tipoRelatorio == 3) {
+                                        $quantidadeLideres = $relatorioDiscipuloMedio['quantidadeLideres'];
+                                        $membresiaMeta = $relatorioDiscipuloMedio['membresiaMeta'];
+                                        echo '<th>|</th>';
+                                        echo '<th>' . $quantidadeLideres . '</th>';
+                                        echo '<th>' . $membresiaMeta . '</th>';
+                                        echo '<th>|</th>';
+                                    }
                                     if ($this->tipoRelatorio == 1) {
                                         echo '<td class = "hidden-xs">' . $relatorioDiscipulo['quantidadeLideres'] . '</td>';
                                         echo '<td>' . $relatorioDiscipulo['membresiaMeta'] . '</td>';
@@ -419,6 +446,8 @@ $somaDoMes = 0;
                                         if ($this->tipoRelatorio == 3) {
                                             $somaDoMes += $relatorioDiscipulo['celula'];
                                         }
+                                        $somaLideres += $quantidadeLideres;
+                                        $somaMeta += $membresiaMeta;
                                     }
                                 }
                             }
@@ -452,7 +481,13 @@ $somaDoMes = 0;
                             echo '<td></td>';
                         }
                         echo '<td>TOTAL</td>';
-
+                        if ($this->tipoRelatorio == 1 ||
+                                $this->tipoRelatorio == 3) {
+                            echo '<th>|</th>';
+                            echo '<th>' . $somaLideres . '</th>';
+                            echo '<th>' . $somaMeta . '</th>';
+                            echo '<th>|</th>';
+                        }
                         if ($this->tipoRelatorio == 1) {
                             echo '<td class = "hidden-xs">' . $somaGeralLideres . '</td>';
                             echo '<td>' . $meta . '</td>';

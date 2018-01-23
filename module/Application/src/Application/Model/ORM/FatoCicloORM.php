@@ -104,7 +104,7 @@ class FatoCicloORM extends CircuitoORM {
             $dataDoPeriodo = $resultadoPeriodo[3] . '-' . $resultadoPeriodo[2] . '-' . $resultadoPeriodo[1];
             $dataDoPeriodoFormatada = DateTime::createFromFormat('Y-m-d', $dataDoPeriodo);
 
-            if ($periodoFinal) {
+            if ($periodoFinal === null) {
                 $dqlAjustadaTipoComparacao = str_replace('#data', 'AND fc.data_criacao = ?2 ', $dqlAjustadaTipoComparacao);
             } else {
                 $resultadoPeriodoFinal = Funcoes::montaPeriodo($periodoFinal);
@@ -329,9 +329,6 @@ class FatoCicloORM extends CircuitoORM {
             if ($resultado['frequencia'] == 'S') {
                 $somaResultado++;
             }
-        }
-        if ($periodoFinal !== 0) {
-            $somaResultado = $somaResultado / (($periodoInicial * -1) - ($periodoFinal * -1));
         }
         return $somaResultado;
     }
