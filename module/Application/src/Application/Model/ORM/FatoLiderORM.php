@@ -27,7 +27,7 @@ class FatoLiderORM extends CircuitoORM {
                 . "FROM  " . Constantes::$ENTITY_FATO_LIDER . " fl "
                 . "WHERE "
                 . "fl.numero_identificador #tipoComparacao ?1 "
-                . "AND ((fl.data_criacao <= ?2 AND fl.data_inativacao IS NULL) OR (1 = 2)) ";
+                . "AND ((fl.data_criacao <= ?2 AND fl.data_inativacao IS NULL) OR (fl.data_criacao <= ?2 AND fl.data_inativacao >= ?2)) ";
         try {
             if ($tipoComparacao == 1) {
                 $dqlAjustadaTipoComparacao = str_replace('#tipoComparacao', '=', $dqlBase);

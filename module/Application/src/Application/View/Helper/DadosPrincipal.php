@@ -181,27 +181,28 @@ class DadosPrincipal extends AbstractHelper {
         $html .= '</div>';
 
         $html .= '<div class="media-links">';
-
-        for ($indiceIdRelatorio = 1; $indiceIdRelatorio <= 2; $indiceIdRelatorio++) {
-            $checked = '';
-            if ($indiceIdRelatorio == 1) {
-                $label = 'Pessoal';
-                if ($this->view->idRelatorio == 1) {
-                    $checked = 'checked';
-                }
-            }
-            if ($indiceIdRelatorio == 2) {
-                $label = 'Equipe';
-                if ($this->view->idRelatorio == 2) {
-                    $checked = 'checked';
-                }
-            }
-            $html .= ' ' . $label . ' <input type="radio" name="qualRelatorio" onclick=" $(\'.splash\').css(\'display\', \'block\'); location.href=\'/principal/' . $indiceIdRelatorio . '\'" ' . $checked . ' />';
-        }
-
-        $html .= '</div>';
         $minhaHierarquia = $pessoa->getPessoaHierarquiaAtivo()->getHierarquia();
-        if ($minhaHierarquia->getId() > Hierarquia::LIDER_DE_CELULA) {
+        if ($minhaHierarquia->getId() < Hierarquia::LIDER_DE_CELULA) {
+            for ($indiceIdRelatorio = 1; $indiceIdRelatorio <= 2; $indiceIdRelatorio++) {
+                $checked = '';
+                if ($indiceIdRelatorio == 1) {
+                    $label = 'Pessoal';
+                    if ($this->view->idRelatorio == 1) {
+                        $checked = 'checked';
+                    }
+                }
+                if ($indiceIdRelatorio == 2) {
+                    $label = 'Equipe';
+                    if ($this->view->idRelatorio == 2) {
+                        $checked = 'checked';
+                    }
+                }
+                $html .= ' ' . $label . ' <input type="radio" name="qualRelatorio" onclick=" $(\'.splash\').css(\'display\', \'block\'); location.href=\'/principal/' . $indiceIdRelatorio . '\'" ' . $checked . ' />';
+            }
+        }
+        $html .= '</div>';
+
+        if ($minhaHierarquia->getId() < Hierarquia::LIDER_DE_CELULA) {
             $html .= '<div class = "media-links">';
             $html .= '<ul class = "list-inline list-unstyled">';
 
@@ -256,7 +257,7 @@ class DadosPrincipal extends AbstractHelper {
                     if ($idRelatorio == 1) {
                         $indiceRelatorio = 0;
                         $stringMeta = 'Cél. ' . $qualRelatorioCelula[$indiceRelatorio]['hospedeiro'];
-                        $valorApresentado = $qualRelatorioCelula[$indiceRelatorio]['valor'];
+                        $valorApresentado = RelatorioController::formataNumeroRelatorio($qualRelatorioCelula[$indiceRelatorio]['valor']);
                         $valorMeta = $metas[0];
                         $labelBarra = $valorApresentado / $valorMeta * 100;
                         $valorBarra = $labelBarra;
@@ -271,7 +272,7 @@ class DadosPrincipal extends AbstractHelper {
                         }
                         $corBarra = RelatorioController::corDaLinhaPelaPerformance($performance);
                         $valorBarra = $performance > 100 ? 100 : $performance;
-                        $valorApresentado = $qualRelatorio[$indiceRelatorio];
+                        $valorApresentado = RelatorioController::formataNumeroRelatorio($qualRelatorio[$indiceRelatorio]);
                         $labelBarra = $performance;
                         $valorMeta = $metas[0] * $multiplicadorDaMeta;
                         if ($this->view->idRelatorio == 2) {
@@ -282,7 +283,7 @@ class DadosPrincipal extends AbstractHelper {
                 case 2:
                     $indiceRelatorio = 1;
                     $stringMeta = 'Cél. ' . $qualRelatorioCelula[$indiceRelatorio]['hospedeiro'];
-                    $valorApresentado = $qualRelatorioCelula[$indiceRelatorio]['valor'];
+                    $valorApresentado = RelatorioController::formataNumeroRelatorio($qualRelatorioCelula[$indiceRelatorio]['valor']);
                     $valorMeta = $metas[0];
                     $labelBarra = $valorApresentado / $valorMeta * 100;
                     $valorBarra = $labelBarra;

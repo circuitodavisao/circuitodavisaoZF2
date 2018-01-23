@@ -39,11 +39,12 @@ class PrincipalController extends CircuitoController {
         $tipoRelatorioPessoal = 1;
         $tipoRelatorioEquipe = 2;
         $periodo = -1;
-        $relatorioEquipe = RelatorioController::montaRelatorio($this->getRepositorio(), $numeroIdentificador, $periodo, $tipoRelatorioEquipe);
+        $relatorioEquipe = null;
 
         $idRelatorio = $this->getEvent()->getRouteMatch()->getParam(Constantes::$ID, 1);
         if ($idRelatorio == 1) {
             $qualRelatorio = $tipoRelatorioPessoal;
+            $relatorioEquipe = RelatorioController::montaRelatorio($this->getRepositorio(), $numeroIdentificador, $periodo, $tipoRelatorioEquipe);
         }
         if ($idRelatorio == 2) {
             $qualRelatorio = $tipoRelatorioEquipe;

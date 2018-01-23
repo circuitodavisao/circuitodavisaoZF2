@@ -23,7 +23,12 @@ use Application\View\Helper\MontaGraficoDeBarra;
                     <p class="well text-<?php echo $this->relatorioMedio['pessoalAtual']['membresiaPerformanceClass']; ?> text-center"><?php echo $this->relatorioMedio['pessoalAtual']['membresiaPerformanceFrase']; ?></p>
                     <?php
                     echo $this->barraDeProgressoBonita(
-                            'Membresia <span class="badge">?</span>', $this->relatorioMedio['pessoalAtual']['membresiaPerformanceClass'], $this->relatorioMedio['pessoalAtual']['membresiaPerformance'], 'm0', true, $this->relatorioMedio['pessoalAtual']['membresiaMeta'], $this->relatorioMedio['pessoalAtual']['membresia'], 'onclick="$(\'#divGaugesMembresia\').toggleClass(\'hidden\'); criarGauges(1);"');
+                            'Membresia <span class="badge">?</span>', 
+                            $this->relatorioMedio['pessoalAtual']['membresiaPerformanceClass'], 
+                            $this->relatorioMedio['pessoalAtual']['membresiaPerformance'], 'm0', 
+                            true, $this->relatorioMedio['pessoalAtual']['membresiaMeta'], 
+                            $this->relatorioMedio['pessoalAtual']['membresia'], 
+                            'onclick="$(\'#divGaugesMembresia\').toggleClass(\'hidden\'); criarGauges(1, ' . $this->idRelatorio . ');"');
                     ?>
                 </div>
                 <!--Gauges membresia-->
@@ -33,6 +38,9 @@ use Application\View\Helper\MontaGraficoDeBarra;
                             <div class="panel-body">
                                 <?php
                                 $arrayPeriodos = Funcoes::encontrarNumeroDePeriodosNoMesAtualEAnterior();
+                                if ($arrayPeriodos['periodoMesAtualFinal'] == 0) {
+                                    $arrayPeriodos['periodoMesAtualFinal'] = -1;
+                                }
                                 $indicePeriodosDoMesAtual = $arrayPeriodos['periodoMesAtualInicial'];
                                 $indicePeriodosDoMesAtualFinal = $arrayPeriodos['periodoMesAtualFinal'];
                                 $perfomance = array();
@@ -45,8 +53,8 @@ use Application\View\Helper\MontaGraficoDeBarra;
                                     <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3 text-center">
                                         <div class="panel panel-tile text-center br-a br-grey">
                                             <div class="panel-body">
-                                                <h3>Meta do Culto</h3>
-                                                <h4><span id="spanMetaCulto"></span> pessoas <span onclick="mostrarModalInformativo(1);" class="badge">?</span></h4>
+                                                <h3 class="removerEquipe">Meta do Culto</h3>
+                                                <h4 class="removerEquipe"><span id="spanMetaCulto"></span> pessoas <span onclick="mostrarModalInformativo(1);" class="badge">?</span></h4>
                                                 <canvas id="gaugeCulto" style="width:100%;" class="canvas-preview" ></canvas>
                                                 <h4><span id="labelValorCulto"></span> pessoas</h4>
                                             </div>
@@ -68,8 +76,8 @@ use Application\View\Helper\MontaGraficoDeBarra;
                                     <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3 text-center">
                                         <div class="panel panel-tile text-center br-a br-grey">
                                             <div class="panel-body">
-                                                <h3>Meta do Arena</h3>
-                                                <h4><span id="spanMetaArena"></span> pessoas <span onclick="mostrarModalInformativo(2);" class="badge">?</span></h4>
+                                                <h3 class="removerEquipe">Meta do Arena</h3>
+                                                <h4 class="removerEquipe"><span id="spanMetaArena"></span> pessoas <span onclick="mostrarModalInformativo(2);" class="badge">?</span></h4>
                                                 <canvas id="gaugeArena" id="gaugeCulto" style="width:100%;" class="canvas-preview"></canvas>
                                                 <h4><span id="labelValorArena"></span> pessoas</h4>
                                             </div>                                               
@@ -91,8 +99,8 @@ use Application\View\Helper\MontaGraficoDeBarra;
                                     <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3 text-center">
                                         <div class="panel panel-tile text-center br-a br-grey">
                                             <div class="panel-body">
-                                                <h3>Meta do Domingo</h3>
-                                                <h4><span id="spanMetaDomingo"></span> pessoas <span onclick="mostrarModalInformativo(1);" class="badge">?</span></h4>
+                                                <h3 class="removerEquipe">Meta do Domingo</h3>
+                                                <h4 class="removerEquipe"><span id="spanMetaDomingo"></span> pessoas <span onclick="mostrarModalInformativo(1);" class="badge">?</span></h4>
                                                 <canvas id="gaugeDomingo" id="gaugeCulto" style="width:100%;" class="canvas-preview"></canvas>
                                                 <h4><span id="labelValorDomingo"></span> pessoas</h4>
                                             </div>
@@ -114,8 +122,8 @@ use Application\View\Helper\MontaGraficoDeBarra;
                                     <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3 text-center">
                                         <div class="panel panel-tile text-center br-a br-grey">
                                             <div class="panel-body">
-                                                <h3>Meta da Membresia</h3>
-                                                <h4><span id="spanMetaMembresia"></span> membresia <span onclick="mostrarModalInformativo(3);" class="badge">?</span></h4>
+                                                <h3 class="removerEquipe">Meta da Membresia</h3>
+                                                <h4 class="removerEquipe"><span id="spanMetaMembresia"></span> membresia <span onclick="mostrarModalInformativo(3);" class="badge">?</span></h4>
                                                 <canvas id="gaugeMembresia" id="gaugeCulto" style="width:100%;" class="canvas-preview"></canvas>
                                                 <h4><span id="labelValorMembresia"></span> membresia</h4>
                                             </div>
@@ -135,16 +143,18 @@ use Application\View\Helper\MontaGraficoDeBarra;
                                         </div>
                                     </div>
                                 </div>
-                                <!--row chart-->
-                                <div class="row">
-                                    <div class="col-md-12 text-center">
-                                        <div class="panel">
-                                            <div class="panel-body">
-                                                <?php echo $this->montaGraficoDeBarra($this->membresiaFatoRanking, MontaGraficoDeBarra::TIPO_RELATORIO_MEMBRESIA); ?>
+                                <?php if ($this->idRelatorio == 1) { ?>
+                                    <!--row chart-->
+                                    <div class="row">
+                                        <div class="col-md-12 text-center">
+                                            <div class="panel">
+                                                <div class="panel-body">
+                                                    <?php echo $this->montaGraficoDeBarra($this->membresiaFatoRanking, MontaGraficoDeBarra::TIPO_RELATORIO_MEMBRESIA); ?>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                <?php } ?>
                             </div>
                         </div>
                     </div>                    
@@ -156,31 +166,35 @@ use Application\View\Helper\MontaGraficoDeBarra;
                     <p class=" well bg-default text-<?php echo $this->relatorioMedio['pessoalAtual']['celulaPerformanceClass']; ?> text-center"><?php echo $this->relatorioMedio['pessoalAtual']['celulaPerformanceFrase']; ?></p>
                     <?php
                     echo $this->barraDeProgressoBonita(
-                            'Célula <span class="badge">?</span>', $this->relatorioMedio['pessoalAtual']['celulaPerformanceClass'], $this->relatorioMedio['pessoalAtual']['celulaPerformance'], 'm0', true, $this->relatorioMedio['pessoalAtual']['membresiaMeta'], $this->relatorioMedio['pessoalAtual']['celula'], 'onclick="$(\'#divGaugesCelula\').toggleClass(\'hidden\'); criarGauges(2);"');
+                            'Célula <span class="badge">?</span>', $this->relatorioMedio['pessoalAtual']['celulaPerformanceClass'], $this->relatorioMedio['pessoalAtual']['celulaPerformance'], 'm0', true, $this->relatorioMedio['pessoalAtual']['membresiaMeta'], $this->relatorioMedio['pessoalAtual']['celula'], 'onclick="$(\'#divGaugesCelula\').toggleClass(\'hidden\'); criarGauges(2, ' . $this->idRelatorio . ');"');
                     ?>
                 </div>
                 <!--Gauges celulas-->
                 <div class="col-xs-12 col-md-12 col-lg-12">
-                    <div id="divGaugesCelula" class="row p10 hidden">                        
-                        <!--row chart-->
-                        <div class="row">
-                            <div class="col-md-12 text-center">
-                                <div class="panel">
-                                    <div class="panel-body">
-                                        <?php echo $this->montaGraficoDeBarra($this->celulaFatoRanking, MontaGraficoDeBarra::TIPO_RELATORIO_CELULA); ?>
+                    <div id="divGaugesCelula" class="row p10 hidden">   
+                        <?php if ($this->idRelatorio == 1) { ?>
+                            <!--row chart-->
+                            <div class="row">
+                                <div class="col-md-12 text-center">
+                                    <div class="panel">
+                                        <div class="panel-body">
+                                            <?php echo $this->montaGraficoDeBarra($this->celulaFatoRanking, MontaGraficoDeBarra::TIPO_RELATORIO_CELULA); ?>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        <?php } ?>
                     </div>
                 </div>              
             </div>
-            <!--robo proximoNivel-->
-            <div class="row alert alert-default">
-                <div class="col-xs-12 col-md-12 col-lg-12">
-                    <?php echo $this->dadosProximoNivel($this->relatorioEquipe); ?>
+            <?php if ($this->idRelatorio == 2) { ?>
+                <!--robo proximoNivel-->
+                <div class="row alert alert-default">
+                    <div class="col-xs-12 col-md-12 col-lg-12">
+                        <?php echo $this->dadosProximoNivel($this->relatorioEquipe); ?>
+                    </div>
                 </div>
-            </div>
+            <?php } ?>
             <!--modalInformativo-->
             <div id="modalInformativo" class="popup-basic p25 mfp-with-anim mfp-hide">
                 <div class="mt20"><span id="spanModalInformativo"></span></div>
