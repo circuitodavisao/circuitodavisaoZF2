@@ -109,7 +109,11 @@ class RelatorioController extends CircuitoController {
                 $relatorioDiscipulosMedio[$grupoFilho->getId()] = RelatorioController::montaRelatorio($this->getRepositorio(), $numeroIdentificador, $arrayPeriodoDoMes[0], $tipoRelatorioSomado, $arrayPeriodoDoMes[1], $mostrarInativos);
             }
 
-            $discipulosOrdenado = RelatorioController::ordenacaoDiscipulos($grupoPaiFilhoFilhos, $relatorioDiscipulosMedio, $tipoRelatorio);
+            $relatorioParaOrdenar = $relatorioDiscipulos;
+            if ($tipoRelatorio == 1 || $tipoRelatorio == 3) {
+                $relatorioParaOrdenar = $relatorioDiscipulosMedio;
+            }
+            $discipulosOrdenado = RelatorioController::ordenacaoDiscipulos($grupoPaiFilhoFilhos, $relatorioParaOrdenar, $tipoRelatorio);
 
             $dados['discipulosOrdenado'] = $discipulosOrdenado;
             $dados['discipulosRelatorio'] = $relatorioDiscipulos;

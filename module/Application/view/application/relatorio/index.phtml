@@ -288,15 +288,15 @@ $somaMeta = 0;
                                         $linhaDiscipulo = $relatorioDiscipuloMedio['membresiaPerformanceClass'];
                                     }
                                     if ($this->tipoRelatorio == 2) {
-                                        $linhaDiscipulo = $relatorioDiscipuloMedio['celulaRealizadasPerformanceClass'];
+                                        $linhaDiscipulo = $relatorioDiscipulo['celulaRealizadasPerformanceClass'];
                                     }
                                     if ($this->tipoRelatorio == 3) {
                                         $linhaDiscipulo = $relatorioDiscipuloMedio['celulaPerformanceClass'];
                                     }
                                     if ($this->tipoRelatorio == 8) {
-                                        $linhaDiscipulo = $relatorioDiscipuloMedio['celulaDeElitePerformanceClass'];
+                                        $linhaDiscipulo = $relatorioDiscipulo['celulaDeElitePerformanceClass'];
                                     }
-                                    if ($relatorioDiscipuloMedio['celulaQuantidade'] == 0) {
+                                    if ($relatorioDiscipulo['celulaQuantidade'] == 0) {
                                         if ($this->tipoRelatorio == 1) {
                                             $colspan = 9;
                                         }
@@ -306,7 +306,7 @@ $somaMeta = 0;
                                         if ($this->tipoRelatorio == 3) {
                                             $colspan = 6;
                                         }
-                                        if ($this->tipoRelatorio == 4 || $this->tipoRelatorio == 5 || $this->tipoRelatorio == 6 || $this->tipoRelatorio == 7) {
+                                        if ($this->tipoRelatorio == 4 || $this->tipoRelatorio == 5 || $this->tipoRelatorio == 6 || $this->tipoRelatorio == 7 || $this->tipoRelatorio == 8) {
                                             $colspan = 4;
                                         }
                                         if ($this->tipoRelatorio == 1 ||
