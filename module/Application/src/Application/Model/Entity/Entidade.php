@@ -83,14 +83,7 @@ class Entidade extends CircuitoEntity {
             } else {
                 $resposta = $this->getNome();
             }
-        } else {
-            /* Entidade Inativa */
-            if ($this->getEntidadeTipo()->getId() === Entidade::SUBEQUIPE) {
-                $resposta = $this->getNumero();
-            } else {
-                $resposta = $this->getNome();
-            }
-        }
+        } 
         return $resposta;
     }
 

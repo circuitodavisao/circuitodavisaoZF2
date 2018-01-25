@@ -42,14 +42,19 @@ class LancamentoController extends CircuitoController {
 
         $periodo = $this->getEvent()->getRouteMatch()->getParam(Constantes::$ID, 0);
 
+        if (!$entidade->verificarSeEstaAtivo()) {
+            $periodoVerificar = Funcoes::encontrarPeriodoDeUmMes($entidade->getData_inativacaoMes());
+            if ($periodo > $periodoVerificar) {
+                $periodo = $periodoVerificar;
+            }
+        }
+
         /* Verificando se posso recuar no periodo */
         $mostrarBotaoPeriodoAnterior = true;
         $mostrarBotaoPeriodoAfrente = false;
         $arrayPeriodo = Funcoes::montaPeriodo($periodo);
         $stringComecoDoPeriodo = $arrayPeriodo[3] . '-' . $arrayPeriodo[2] . '-' . $arrayPeriodo[1];
-//        $stringFimDoPeriodo = $arrayPeriodo[6] . '-' . $arrayPeriodo[5] . '-' . $arrayPeriodo[4];
         $dataDoInicioDoPeriodoParaComparar = strtotime($stringComecoDoPeriodo);
-//        $dataDoFimDoPeriodoParaComparar = strtotime($stringFimDoPeriodo);
 
         if ($grupo->getGrupoPaiFilhoPaiAtivo()) {
             $dataDoGrupoPaiFilhoCriacaoParaComparar = strtotime($grupo->getGrupoPaiFilhoPaiAtivo()->getData_criacaoStringPadraoBanco());
@@ -58,21 +63,7 @@ class LancamentoController extends CircuitoController {
             }
         }
 
-        /* Redirecionar ao tentar acessar o que nao deve */
-//        $retornaAoInicioDoLancamento = false;
-//        if ($dataDoGrupoGrupoPaiFilhoCriacaoParaComparar < $dataDoInicioDoPeriodoParaComparar) {
-//            $retornaAoInicioDoLancamento = true;
-//        }
-//        if ($dataDoGrupoGrupoPaiFilhoCriacaoParaComparar > $dataDoFimDoPeriodoParaComparar) {
-//            $retornaAoInicioDoLancamento = true;
-//        }
-//        if ($retornaAoInicioDoLancamento) {
-//            return $this->redirect()->toRoute(Constantes::$ROUTE_LANCAMENTO, array(
-//                        Constantes::$ACTION => 'Arregimentacao',
-//            ));
-//        }
-
-        if ($periodo < 0) {
+        if ($periodo < 0 && $entidade->verificarSeEstaAtivo()) {
             $mostrarBotaoPeriodoAfrente = true;
         }
 
