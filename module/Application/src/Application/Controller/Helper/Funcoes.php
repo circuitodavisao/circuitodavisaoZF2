@@ -298,6 +298,19 @@ class Funcoes {
         return $periodoFinal;
     }
 
+    static public function encontrarPeriodoDeUmMes($mesPesquisa) {
+        $periodoFinal = 0;
+        while (true) {
+            $arrayPeriodo = Funcoes::montaPeriodo($periodoFinal);
+            if ($arrayPeriodo[2] == $mesPesquisa) {
+                break;
+            }
+            $periodoFinal--;
+        }
+
+        return $periodoFinal;
+    }
+
     static public function encontrarPeriodoDeUmMesDadoQualquerPeriodo($periodo = 0) {
         $arrayPeriodo = Funcoes::montaPeriodo($periodo);
         $mesParaVerificar = $arrayPeriodo[5];

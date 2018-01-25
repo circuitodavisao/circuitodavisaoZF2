@@ -29,6 +29,10 @@ class PrincipalController extends CircuitoController {
 
         $idEntidadeAtual = $sessao->idEntidadeAtual;
         $entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+        $mostrarPrincipal = true;
+        if (!$entidade->verificarSeEstaAtivo()) {
+            $mostrarPrincipal = false;
+        }
         $grupo = $entidade->getGrupo();
         $eCasal = $grupo->verificaSeECasal();
         $numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupo);
@@ -158,6 +162,7 @@ class PrincipalController extends CircuitoController {
         $dados['grupo'] = $grupo;
         $dados['membresiaFatoRanking'] = $arrayMembresiaFatoRanking;
         $dados['celulaFatoRanking'] = $arrayCelulaFatoRanking;
+        $dados['mostrarPrincipal'] = $mostrarPrincipal;
 
         $grupoPaiFilhoFilhos = $grupo->getGrupoPaiFilhoFilhosAtivos($periodo);
         if ($grupoPaiFilhoFilhos) {

@@ -107,12 +107,12 @@ class Grupo extends CircuitoEntity {
         $entidadeInativa = null;
 
         foreach ($this->getEntidade() as $entidade) {
-            if ($dataInativacao && $entidade->getData_inativacaoStringPadraoBanco() === $dataInativacao) {
+            if ($entidade->getData_inativacaoStringPadraoBanco() == $dataInativacao) {
                 $entidadeInativa = $entidade;
                 break;
             }
 
-            if (!$dataInativacao && !$entidade->verificarSeEstaAtivo()) {
+            if (!$entidade->verificarSeEstaAtivo()) {
                 $entidadeInativa = $entidade;
                 break;
             }

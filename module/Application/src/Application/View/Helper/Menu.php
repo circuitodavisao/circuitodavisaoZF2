@@ -197,7 +197,7 @@ class Menu extends AbstractHelper {
             $html .= '</ul>';
         } else {
             $html .= '<li>';
-            $html .= '<a href="/cadastroGrupo">';
+            $html .= '<a href="#">';
             $html .= '<span class="fa fa-user-times"></span>';
             $html .= '<span class="sidebar-title">Sem Time</span>';
             $html .= '</a>';
@@ -211,59 +211,61 @@ class Menu extends AbstractHelper {
         $html .= '<li class="sidebar-label pt20">Menu</li>';
 
         /* Menu Cadastro */
-        $html .= '<li>';
-        $html .= '<a class="accordion-toggle" href="#">';
-        $html .= '<span class="fa fa-terminal"></span>';
-        $html .= '<span class="sidebar-title">Cadastro</span>';
-        $html .= '<span class="caret"></span>';
-        $html .= '</a>';
-
-        $html .= '<ul class="nav sub-nav">';
-
-        $html .= '<li>';
-        $html .= '<a href="/cadastroCelulas">';
-        $html .= '<span class="fa fa-users"></span>';
-        $html .= 'Minha Célula';
-        $html .= '</a>';
-        $html .= '</li>';
-
-        if ($this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja) {
+        if ($this->view->entidade->verificarSeEstaAtivo()) {
             $html .= '<li>';
-            $html .= '<a href="#">';
+            $html .= '<a class="accordion-toggle" href="#">';
+            $html .= '<span class="fa fa-terminal"></span>';
+            $html .= '<span class="sidebar-title">Cadastro</span>';
+            $html .= '<span class="caret"></span>';
+            $html .= '</a>';
+
+            $html .= '<ul class="nav sub-nav">';
+
+            $html .= '<li>';
+            $html .= '<a href="/cadastroCelulas">';
             $html .= '<span class="fa fa-users"></span>';
-            $html .= 'Cultos(Manutenção)';
+            $html .= 'Minha Célula';
             $html .= '</a>';
             $html .= '</li>';
-        }
 
-        $html .= '<li>';
-        $html .= '<a href="/cadastroGrupo">';
-        $html .= '<span class="fa fa-users"></span>';
-        $html .= 'Time';
-        $html .= '</a>';
-        $html .= '</li>';
+            if ($this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja) {
+                $html .= '<li>';
+                $html .= '<a href="#">';
+                $html .= '<span class="fa fa-users"></span>';
+                $html .= 'Cultos(Manutenção)';
+                $html .= '</a>';
+                $html .= '</li>';
+            }
 
-        $html .= '<li>';
-        $html .= '<a href="/cadastroRevisionistas">';
-        $html .= '<span class="fa fa-users"></span>';
-        $html .= 'Revisionistas';
-        $html .= '</a>';
-        $html .= '</li>';
-
-        if ($this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::equipe ||
-                $this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja) {
             $html .= '<li>';
-            $html .= '<a href="/cadastroSolicitacoes">';
+            $html .= '<a href="/cadastroGrupo">';
             $html .= '<span class="fa fa-users"></span>';
-            $html .= 'Solicita&ccedil;&otilde;es';
+            $html .= 'Time';
             $html .= '</a>';
             $html .= '</li>';
+
+            $html .= '<li>';
+            $html .= '<a href="/cadastroRevisionistas">';
+            $html .= '<span class="fa fa-users"></span>';
+            $html .= 'Revisionistas';
+            $html .= '</a>';
+            $html .= '</li>';
+
+            if ($this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::equipe ||
+                    $this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja) {
+                $html .= '<li>';
+                $html .= '<a href="/cadastroSolicitacoes">';
+                $html .= '<span class="fa fa-users"></span>';
+                $html .= 'Solicita&ccedil;&otilde;es';
+                $html .= '</a>';
+                $html .= '</li>';
+            }
+
+            $html .= '</ul>';
+
+            $html .= '</li>';
+            /* Fim Menu Cadastro */
         }
-
-        $html .= '</ul>';
-
-        $html .= '</li>';
-        /* Fim Menu Cadastro */
 
         /* Menu Lançamento */
         $html .= '<li>';
