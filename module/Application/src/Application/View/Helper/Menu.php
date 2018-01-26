@@ -118,93 +118,96 @@ class Menu extends AbstractHelper {
         $html .= '</a>';
         $html .= '</li>';
 
-        /* Arvore */
-        $html .= '<li class="sidebar-label pt20">Hierarquia</li>';
 
-        /* Pegar pessoas abaixo */
-        if ($this->view->discipulos) {
-            $html .= '<li>';
-            $html .= '<a class="accordion-toggle" href="#">';
-            $html .= '<span class="fa fa-sitemap"></span>';
-            $html .= '<span class="sidebar-title">Meu Time</span>';
-            $html .= '<span class="caret"></span>';
-            $html .= '</a>';
-            $html .= '<ul class="nav sub-nav">';
-            foreach ($this->view->discipulos as $gpFilho12) {
-                $grupoFilho = $gpFilho12->getGrupoPaiFilhoFilho();
-                $entidadeFilho = $grupoFilho->getEntidadeAtiva();
-                $grupoResponsavel = $grupoFilho->getResponsabilidadesAtivas();
+        if ($this->view->entidade->verificarSeEstaAtivo()) {
+            /* Arvore */
+            $html .= '<li class="sidebar-label pt20">Hierarquia</li>';
 
-                $nomeLideres = Self::montaNomeLideres($grupoResponsavel);
-                $informacaoEntidade = Self::montaInformacaoEntidade($entidadeFilho);
+            /* Pegar pessoas abaixo */
+            if ($this->view->discipulos) {
+                $html .= '<li>';
+                $html .= '<a class="accordion-toggle" href="#">';
+                $html .= '<span class="fa fa-sitemap"></span>';
+                $html .= '<span class="sidebar-title">Meu Time</span>';
+                $html .= '<span class="caret"></span>';
+                $html .= '</a>';
+                $html .= '<ul class="nav sub-nav">';
+                foreach ($this->view->discipulos as $gpFilho12) {
+                    $grupoFilho = $gpFilho12->getGrupoPaiFilhoFilho();
+                    $entidadeFilho = $grupoFilho->getEntidadeAtiva();
+                    $grupoResponsavel = $grupoFilho->getResponsabilidadesAtivas();
 
-                $discipulos144 = $grupoFilho->getGrupoPaiFilhoFilhosAtivos(0);
-                if (count($discipulos144) > 0) {
-                    $html .= $this->view->menuHierarquia($nomeLideres, $informacaoEntidade, 2);
-                    $html .= $this->view->menuHierarquia('', '', 3, $grupoFilho->getId());
-                    foreach ($discipulos144 as $gpFilho144) {
-                        $grupoFilho144 = $gpFilho144->getGrupoPaiFilhoFilho();
-                        $entidadeFilho144 = $grupoFilho144->getEntidadeAtiva();
-                        $grupoResponsavel144 = $grupoFilho144->getResponsabilidadesAtivas();
+                    $nomeLideres = Self::montaNomeLideres($grupoResponsavel);
+                    $informacaoEntidade = Self::montaInformacaoEntidade($entidadeFilho);
 
-                        $nomeLideres144 = Self::montaNomeLideres($grupoResponsavel144);
-                        $informacaoEntidade144 = Self::montaInformacaoEntidade($entidadeFilho144);
+                    $discipulos144 = $grupoFilho->getGrupoPaiFilhoFilhosAtivos(0);
+                    if (count($discipulos144) > 0) {
+                        $html .= $this->view->menuHierarquia($nomeLideres, $informacaoEntidade, 2);
+                        $html .= $this->view->menuHierarquia('', '', 3, $grupoFilho->getId());
+                        foreach ($discipulos144 as $gpFilho144) {
+                            $grupoFilho144 = $gpFilho144->getGrupoPaiFilhoFilho();
+                            $entidadeFilho144 = $grupoFilho144->getEntidadeAtiva();
+                            $grupoResponsavel144 = $grupoFilho144->getResponsabilidadesAtivas();
 
-                        $discipulos1728 = $grupoFilho144->getGrupoPaiFilhoFilhosAtivos(0);
-                        if (count($discipulos1728) > 0) {
-                            $html .= $this->view->menuHierarquia($nomeLideres144, $informacaoEntidade144, 2);
-                            $html .= $this->view->menuHierarquia('', '', 3, $grupoFilho144->getId());
-                            foreach ($discipulos1728 as $gpFilho1728) {
-                                $grupoFilho1728 = $gpFilho1728->getGrupoPaiFilhoFilho();
-                                $entidadeFilho1728 = $grupoFilho1728->getEntidadeAtiva();
-                                $grupoResponsavel1728 = $grupoFilho1728->getResponsabilidadesAtivas();
+                            $nomeLideres144 = Self::montaNomeLideres($grupoResponsavel144);
+                            $informacaoEntidade144 = Self::montaInformacaoEntidade($entidadeFilho144);
 
-                                $nomeLideres1728 = Self::montaNomeLideres($grupoResponsavel1728);
-                                $informacaoEntidade1728 = Self::montaInformacaoEntidade($entidadeFilho1728);
+                            $discipulos1728 = $grupoFilho144->getGrupoPaiFilhoFilhosAtivos(0);
+                            if (count($discipulos1728) > 0) {
+                                $html .= $this->view->menuHierarquia($nomeLideres144, $informacaoEntidade144, 2);
+                                $html .= $this->view->menuHierarquia('', '', 3, $grupoFilho144->getId());
+                                foreach ($discipulos1728 as $gpFilho1728) {
+                                    $grupoFilho1728 = $gpFilho1728->getGrupoPaiFilhoFilho();
+                                    $entidadeFilho1728 = $grupoFilho1728->getEntidadeAtiva();
+                                    $grupoResponsavel1728 = $grupoFilho1728->getResponsabilidadesAtivas();
 
-                                $discipulos20736 = $grupoFilho1728->getGrupoPaiFilhoFilhosAtivos(0);
-                                if (count($discipulos20736) > 0) {
-                                    $html .= $this->view->menuHierarquia($nomeLideres1728, $informacaoEntidade1728, 2);
-                                    $html .= $this->view->menuHierarquia('', '', 3, $grupoFilho1728->getId());
-                                    foreach ($discipulos20736 as $gpFilho20736) {
-                                        $grupoFilho20736 = $gpFilho20736->getGrupoPaiFilhoFilho();
-                                        $entidadeFilho20736 = $grupoFilho20736->getEntidadeAtiva();
-                                        $grupoResponsavel20736 = $grupoFilho20736->getResponsabilidadesAtivas();
+                                    $nomeLideres1728 = Self::montaNomeLideres($grupoResponsavel1728);
+                                    $informacaoEntidade1728 = Self::montaInformacaoEntidade($entidadeFilho1728);
 
-                                        $nomeLideres20736 = Self::montaNomeLideres($grupoResponsavel20736);
-                                        $informacaoEntidade20736 = Self::montaInformacaoEntidade($entidadeFilho20736);
+                                    $discipulos20736 = $grupoFilho1728->getGrupoPaiFilhoFilhosAtivos(0);
+                                    if (count($discipulos20736) > 0) {
+                                        $html .= $this->view->menuHierarquia($nomeLideres1728, $informacaoEntidade1728, 2);
+                                        $html .= $this->view->menuHierarquia('', '', 3, $grupoFilho1728->getId());
+                                        foreach ($discipulos20736 as $gpFilho20736) {
+                                            $grupoFilho20736 = $gpFilho20736->getGrupoPaiFilhoFilho();
+                                            $entidadeFilho20736 = $grupoFilho20736->getEntidadeAtiva();
+                                            $grupoResponsavel20736 = $grupoFilho20736->getResponsabilidadesAtivas();
 
-                                        $html .= $this->view->menuHierarquia($nomeLideres20736, $informacaoEntidade20736, 1, $grupoFilho20736->getId());
+                                            $nomeLideres20736 = Self::montaNomeLideres($grupoResponsavel20736);
+                                            $informacaoEntidade20736 = Self::montaInformacaoEntidade($entidadeFilho20736);
+
+                                            $html .= $this->view->menuHierarquia($nomeLideres20736, $informacaoEntidade20736, 1, $grupoFilho20736->getId());
+                                        }
+                                        $html .= $this->view->menuHierarquia('', '', 4);
+                                    } else {
+                                        $html .= $this->view->menuHierarquia($nomeLideres1728, $informacaoEntidade1728, 1, $grupoFilho1728->getId());
                                     }
-                                    $html .= $this->view->menuHierarquia('', '', 4);
-                                } else {
-                                    $html .= $this->view->menuHierarquia($nomeLideres1728, $informacaoEntidade1728, 1, $grupoFilho1728->getId());
                                 }
+                                $html .= $this->view->menuHierarquia('', '', 4);
+                            } else {
+                                $html .= $this->view->menuHierarquia($nomeLideres144, $informacaoEntidade144, 1, $grupoFilho144->getId());
                             }
-                            $html .= $this->view->menuHierarquia('', '', 4);
-                        } else {
-                            $html .= $this->view->menuHierarquia($nomeLideres144, $informacaoEntidade144, 1, $grupoFilho144->getId());
                         }
+                        $html .= $this->view->menuHierarquia('', '', 4);
+                    } else {
+                        $html .= $this->view->menuHierarquia($nomeLideres, $informacaoEntidade, 1, $grupoFilho->getId());
                     }
-                    $html .= $this->view->menuHierarquia('', '', 4);
-                } else {
-                    $html .= $this->view->menuHierarquia($nomeLideres, $informacaoEntidade, 1, $grupoFilho->getId());
                 }
+
+                $html .= '</ul>';
+                $html .= '</li>';
+                $html .= '</ul>';
+            } else {
+                $html .= '<li>';
+                $html .= '<a href="#">';
+                $html .= '<span class="fa fa-user-times"></span>';
+                $html .= '<span class="sidebar-title">Sem Time</span>';
+                $html .= '</a>';
+                $html .= '</li>';
             }
 
-            $html .= '</ul>';
-            $html .= '</li>';
-            $html .= '</ul>';
-        } else {
-            $html .= '<li>';
-            $html .= '<a href="#">';
-            $html .= '<span class="fa fa-user-times"></span>';
-            $html .= '<span class="sidebar-title">Sem Time</span>';
-            $html .= '</a>';
             $html .= '</li>';
         }
-
-        $html .= '</li>';
 
         /* Start: Sidebar Menu */
         $html .= '<ul class="nav sidebar-menu">';
@@ -363,49 +366,50 @@ class Menu extends AbstractHelper {
         $html .= '</ul>';
 
         $html .= '</li>';
+        if ($this->view->entidade->verificarSeEstaAtivo()) {
+            $html .= '<li class="sidebar-label pt20">Chamada I.V.</li>';
+            $html .= '<li>';
+            $html .= '<a href="/principalChamada">';
+            $html .= '<span class="fa fa-list"></span>';
+            $html .= '<span class="sidebar-title">Chamada I.V.</span>';
+            $html .= '</a>';
+            $html .= '</li>';
 
-        $html .= '<li class="sidebar-label pt20">Chamada I.V.</li>';
-        $html .= '<li>';
-        $html .= '<a href="/principalChamada">';
-        $html .= '<span class="fa fa-list"></span>';
-        $html .= '<span class="sidebar-title">Chamada I.V.</span>';
-        $html .= '</a>';
-        $html .= '</li>';
-
-        $html .= '<li>';
-        $html .= '<a class="accordion-toggle" href="#">';
-        $html .= '<span class="fa fa-print"></span>';
+            $html .= '<li>';
+            $html .= '<a class="accordion-toggle" href="#">';
+            $html .= '<span class="fa fa-print"></span>';
 
 
-        $html .= '<span class="sidebar-title">Imprimir</span>';
-        $html .= '<span class="caret"></span>';
-        $html .= '</a>';
-        $html .= '<ul class="nav sub-nav">';
+            $html .= '<span class="sidebar-title">Imprimir</span>';
+            $html .= '<span class="caret"></span>';
+            $html .= '</a>';
+            $html .= '<ul class="nav sub-nav">';
 
-        $html .= '<li>';
-        $html .= '<a href="/cadastroFichaRevisionistas">';
-        $html .= '<span class="fa fa-terminal"></span>';
-        $html .= 'Fichas Revisao';
-        $html .= '</a>';
-        $html .= '</li>';
+            $html .= '<li>';
+            $html .= '<a href="/cadastroFichaRevisionistas">';
+            $html .= '<span class="fa fa-terminal"></span>';
+            $html .= 'Fichas Revisao';
+            $html .= '</a>';
+            $html .= '</li>';
 
-        $html .= '<li>';
-        $html .= '<a href="#">';
-        $html .= '<span class="fa fa-terminal"></span>';
-        $html .= 'Listagem Revisionistas(Manutenção)';
-        $html .= '</a>';
-        $html .= '</li>';
+            $html .= '<li>';
+            $html .= '<a href="#">';
+            $html .= '<span class="fa fa-terminal"></span>';
+            $html .= 'Listagem Revisionistas(Manutenção)';
+            $html .= '</a>';
+            $html .= '</li>';
 
-        $html .= '</ul>';
-        $html .= '</li>';
+            $html .= '</ul>';
+            $html .= '</li>';
 
-        $html .= '<li>';
-        $html .= '<a class="accordion-toggle" href="#">';
-        $html .= '<span class="fa fa-cogs"></span>';
-        $html .= '<span class="sidebar-title">Adm. (Manutenção)</span>';
-        $html .= '<span class="caret"></span>';
-        $html .= '</a>';
-        $html .= '</li>';
+            $html .= '<li>';
+            $html .= '<a class="accordion-toggle" href="#">';
+            $html .= '<span class="fa fa-cogs"></span>';
+            $html .= '<span class="sidebar-title">Adm. (Manutenção)</span>';
+            $html .= '<span class="caret"></span>';
+            $html .= '</a>';
+            $html .= '</li>';
+        }
 
         $html .= '</ul>';
         // End: Sidebar Menu
