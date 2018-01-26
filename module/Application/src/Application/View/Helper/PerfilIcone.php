@@ -41,6 +41,11 @@ class PerfilIcone extends AbstractHelper {
         $nomeEntidade = $this->getEntidade()->getEntidadeTipo()->getNome();
         $infoEntidade = $this->getEntidade()->infoEntidade();
 
+        $estaAtivo = true;
+        if (!$this->getEntidade()->verificarSeEstaAtivo()) {
+            $estaAtivo = false;
+        }
+
         /* Tamanho da coluna */
         $col = 4;
         switch ($this->getTotalEntidades()) {
@@ -68,7 +73,7 @@ class PerfilIcone extends AbstractHelper {
             $idComposto = $this->getEntidade()->getId() . '_' . $idPai;
             $html .= '<a onclick=\'abrirModal("modal-' . $this->getEntidade()->getId() . '", "' . $idComposto . '", "perfilSelecionado");\' href="#modal-image" data-effect="mfp-fullscale" class="pageload-link">';
 
-            $html .= PerfilIcone::htmlPanel(1, $tipoEntidade, $nomeEntidade, $infoEntidade, $this->getGrupoResponsavelAtivo(), $this->getGrupoPai());
+            $html .= PerfilIcone::htmlPanel(1, $tipoEntidade, $nomeEntidade, $infoEntidade, $this->getGrupoResponsavelAtivo(), $this->getGrupoPai(), $estaAtivo);
 
             /* FIM Link com ativacao do modal */
             $html .= '</a>';
@@ -184,12 +189,16 @@ class PerfilIcone extends AbstractHelper {
      * @param type $tipo
      * @return string
      */
-    public static function htmlPanel($tipo, $tipoId, $nomeEntidade, $infoEntidade, $grupoResponsavelAtivo = true, $grupoPai = null) {
+    public static function htmlPanel($tipo, $tipoId, $nomeEntidade, $infoEntidade, $grupoResponsavelAtivo = true, $grupoPai = null, $estaAtivo = true) {
         $html = '';
         $corDoPanel = PerfilIcone::corDoPanel($tipoId);
         $corDoFooter = PerfilIcone::corDoFooter($tipoId);
         $corDoTexto = PerfilIcone::corDoTexto($tipoId);
 
+        if(!$estaAtivo){
+            $corDoPanel = 'bg-danger';
+            $corDoFooter = 'bg-danger';
+        }
         $hover = '';
         if ($tipo == 1) {
             $hover = 'bg-light-hover';
@@ -273,6 +282,14 @@ class PerfilIcone extends AbstractHelper {
 
     function setGrupoPai($grupoPai) {
         $this->grupoPai = $grupoPai;
+    }
+
+    function getEstaAtivo() {
+        return $this->estaAtivo;
+    }
+
+    function setEstaAtivo($estaAtivo) {
+        $this->estaAtivo = $estaAtivo;
     }
 
 }

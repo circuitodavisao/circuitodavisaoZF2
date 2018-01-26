@@ -58,6 +58,13 @@ class RelatorioController extends CircuitoController {
         $numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio());
         $periodoVisto = $this->getEvent()->getRouteMatch()->getParam(Constantes::$ID, 0);
 
+        if (!$entidade->verificarSeEstaAtivo()) {
+            $periodoVerificar = Funcoes::encontrarPeriodoDeUmMes($entidade->getData_inativacaoMes());
+            if ($periodoVisto > $periodoVerificar) {
+                $periodoVisto = $periodoVerificar;
+            }
+        }
+
         $tipoRelatorioPessoal = 1;
         $tipoRelatorioSomado = 2;
         $arrayPeriodoDoMes = Funcoes::encontrarPeriodoDeUmMesDadoQualquerPeriodo($periodoVisto);
