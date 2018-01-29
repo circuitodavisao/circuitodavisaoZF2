@@ -22,6 +22,7 @@ var stringDivSolicitacaoTipo = '#divSolicitacaoTipo';
 var stringDivObjetos = '#divObjetos';
 var stringDivSelecionarLider = '#divSelecionarLider';
 var stringDivSelecionarNumeracao = '#divSelecionarNumeracao';
+var stringDivSelecionarEquipe = '#divSelecionarEquipe';
 var stringSpanNomeLideres = '#spanNomeLideres';
 var stringSpanCelulaQuantidade = '#spanCelulaQuantidade';
 var stringSpanQuantidadeLideres = '#spanQuantidadeLideres';
@@ -35,6 +36,25 @@ var check;
 var blocoObjeto;
 
 $("#treeLideres").fancytree({
+    checkbox: "radio",
+    selectMode: 1,
+    clickFolderMode: 2,
+    extensions: ["childcounter"],
+    childcounter: {
+        deep: true,
+        hideZeros: true,
+        hideExpanded: true
+    },
+    select: function (event, data) {
+        var node = data.tree.getNodeByKey(data.node.key);
+        $(node.span).closest('li').addClass('hide');
+        if (data.node.isSelected()) {
+            selecionarObjeto(node.key, node.title);
+        }
+        data.node.setSelected(false);
+    }
+});
+$("#treeEquipes").fancytree({
     checkbox: "radio",
     selectMode: 1,
     clickFolderMode: 2,
@@ -69,12 +89,19 @@ function selecionarTipo() {
     $('#divProgress').removeClass(hidden);
     $('#tituloDaPagina').html($('#tituloDaPagina').html() + ' - ' + $('#solicitacaoTipo option:selected').text());
     $('#solicitacaoTipoId').val($('#solicitacaoTipo').val());
+    if (parseInt($('#solicitacaoTipo').val()) === 2) {
+        $('#blocoObjeto3').addClass(hidden);
+    }
 }
 
 function abrirSelecionarObjeto(qualObjeto, idLider) {
     $(stringDivObjetos).addClass(hidden);
     if (qualObjeto != 3) {
-        $(stringDivSelecionarLider).removeClass(hidden);
+        if (qualObjeto == 2 && $('#solicitacaoTipoId').val() == 2) {
+            $(stringDivSelecionarEquipe).removeClass(hidden);
+        } else {
+            $(stringDivSelecionarLider).removeClass(hidden);
+        }
     } else {
         $(stringDivSelecionarNumeracao).removeClass(hidden);
     }
@@ -150,6 +177,9 @@ function selecionarObjeto(id, informacao) {
                     var valorParaAdicionar = 35;
                     if (parseInt(objetoSelecionado) === 3) {
                         valorParaAdicionar = 30;
+                    }
+                    if (parseInt($('#solicitacaoTipo').val()) === 2) {
+                        valorParaAdicionar = 50;
                     }
                     atualizarBarraDeProgresso(valorParaAdicionar);
                     verificarSeMostraOBotaoDeContinuar();

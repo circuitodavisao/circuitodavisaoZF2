@@ -21,6 +21,7 @@ use Application\Model\Entity\Aula;
 use Application\Model\Entity\Curso;
 use Application\Model\Entity\Disciplina;
 use Application\Model\Entity\Entidade;
+use Application\Model\Entity\EntidadeTipo;
 use Application\Model\Entity\Evento;
 use Application\Model\Entity\EventoCelula;
 use Application\Model\Entity\EventoFrequencia;
@@ -2004,6 +2005,15 @@ class CadastroController extends CircuitoController {
         $solicitacaoTipos = $this->getRepositorio()->getSolicitacaoTipoORM()->encontrarTodos();
         $formSolicitacao = new SolicitacaoForm('formSolicitacao');
 
+        /* Pegando equipes da igreja */
+        if ($grupo->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::equipe) {
+            $grupoIgreja = $grupo->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai();
+        }
+        if ($grupo->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::igreja) {
+            $grupoIgreja = $grupo;
+        }
+        $grupoPaiFilhoEquipes = $grupoIgreja->getGrupoPaiFilhoFilhosAtivosReal();
+
         $view = new ViewModel(array(
             'grupo' => $grupo,
             'discipulos' => $grupoPaiFilhoFilhos,
@@ -2011,6 +2021,7 @@ class CadastroController extends CircuitoController {
             'solicitacoes' => $solicitacoes,
             Constantes::$FORM => $formSolicitacao,
             'titulo' => 'Solicitação',
+            'grupoPaiFilhoEquipes' => $grupoPaiFilhoEquipes,
         ));
 
         /* Javascript */
