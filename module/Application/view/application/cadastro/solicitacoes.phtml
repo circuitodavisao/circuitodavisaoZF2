@@ -30,20 +30,23 @@ if ($this->solicitacoes) {
         $html .= '<td class="hidden-xs">' . $solicitacao->getData_criacaoStringPadraoBrasil() . '</td>';
         $html .= '<td class="hidden-xs">' . $solicitacao->getPessoa()->getNomePrimeiroUltimo() . '</td>';
 
+        $html .= '<td>';
+        $objeto = $solicitacao->getObjeto1();
+        $grupo = $this->repositorio->getGrupoORM()->encontrarPorId($objeto);
+        $html .= $grupo->getNomeLideresAtivos();
+        $html .= '</td>';
+        $html .= '<td>';
         if ($solicitacao->getSolicitacaoTipo()->getId() === SolicitacaoTipo::TRANSFERIR_LIDER_NA_PROPRIA_EQUIPE) {
-            for ($indice = 1; $indice <= 2; $indice++) {
-                $html .= '<td>';
-                if ($indice === 1) {
-                    $objeto = $solicitacao->getObjeto1();
-                }
-                if ($indice === 2) {
-                    $objeto = $solicitacao->getObjeto2();
-                }
-                $grupo = $this->repositorio->getGrupoORM()->encontrarPorId($objeto);
-                $html .= $grupo->getNomeLideresAtivos();
-                $html .= '</td>';
-            }
+            $objeto = $solicitacao->getObjeto2();
+            $grupo = $this->repositorio->getGrupoORM()->encontrarPorId($objeto);
+            $html .= $grupo->getNomeLideresAtivos();
         }
+        if ($solicitacao->getSolicitacaoTipo()->getId() === SolicitacaoTipo::TRANSFERIR_LIDER_PARA_OUTRA_EQUIPE) {
+            $objeto = $solicitacao->getObjeto2();
+            $grupo = $this->repositorio->getGrupoORM()->encontrarPorId($objeto);
+            $html .= 'EQUIPE <b>'.$grupo->getEntidadeAtiva()->getNome().'</b>';
+        }
+        $html .= '</td>';
         if ($solicitacao->getSolicitacaoSituacaoAtiva()) {
             $html .= '<td>' . $solicitacao->getSolicitacaoSituacaoAtiva()->getSituacao()->getNome() . '</td>';
         }
