@@ -112,14 +112,6 @@ class ListagemLideresTransferencia extends AbstractHelper {
         return $html;
     }
 
-//<li id = "4.1">Node 4.1 </li>
-//<li id = "4.2" class = " expanded">Folder 1
-//<ul>
-//<li id = "4.3">Node 4.3 </li>
-//<li id = "4.4">Node 4.4 </li>
-//</ul>
-//</li>
-
     function getDiscipulos() {
         return $this->discipulos;
     }

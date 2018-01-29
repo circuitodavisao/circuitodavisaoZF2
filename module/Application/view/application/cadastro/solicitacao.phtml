@@ -59,7 +59,7 @@ echo $this->templateFormularioTopo($this->titulo);
             }
             ?>
             <!-- Bloco objeto -->
-            <div id="blocoObjeto<?php echo $indiceDeObejtos; ?>" class="well col-xs-12 text-left" onClick='<?php // echo $funcaoOnclick;      ?>'>
+            <div id="blocoObjeto<?php echo $indiceDeObejtos; ?>" class="well col-xs-12 text-left" onClick='<?php // echo $funcaoOnclick;           ?>'>
                 <div class="col-md-12">
                     <span id="spanSelecioneObjeto<?php echo $indiceDeObejtos; ?>"><?php echo $stringSelecioneOObjeto; ?></span>    
                     <span id="spanObjeto<?php echo $indiceDeObejtos; ?>"></span>
@@ -99,6 +99,19 @@ echo $this->templateFormularioTopo($this->titulo);
             </ul>
         </div>
     </div> 
+    <!--divSelecionarEquipe-->
+    <div id="divSelecionarEquipe" class="hidden">
+        <div id="treeEquipes" class="fancytree-radio">
+            <ul id="treeData" style="display: none;">
+                <?php
+                foreach ($this->grupoPaiFilhoEquipes as $grupoPaiFilhoEquipe) {
+                    $grupo = $grupoPaiFilhoEquipe->getGrupoPaiFilhoFilho();
+                    echo '<li id="equipe_' . $grupo->getId() . '" >' . $grupo->getEntidadeAtiva()->infoEntidade();
+                }
+                ?>  
+            </ul>
+        </div>
+    </div>
     <!--divSelecionarNumeracao-->
     <div id="divSelecionarNumeracao" class="hidden">
         <div class="section-divider mt20">
