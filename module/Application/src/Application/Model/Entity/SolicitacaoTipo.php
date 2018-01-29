@@ -17,6 +17,7 @@ use Doctrine\ORM\Mapping as ORM;
 class SolicitacaoTipo extends CircuitoEntity {
 
     const TRANSFERIR_LIDER_NA_PROPRIA_EQUIPE = 1;
+    const TRANSFERIR_LIDER_PARA_OUTRA_EQUIPE = 2;
     /**
      * @ORM\OneToMany(targetEntity="Solicitacao", mappedBy="solicitacaoTipo") 
      */
