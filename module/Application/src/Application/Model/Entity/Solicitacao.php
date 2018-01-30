@@ -55,6 +55,9 @@ class Solicitacao extends CircuitoEntity {
     /** @ORM\Column(type="integer") */
     protected $solicitacao_tipo_id;
 
+    /** @ORM\Column(type="integer") */
+    protected $receptor_id;
+
     function getSolicitacaoSituacaoAtiva() {
         $solicitacaoSituacaoAtiva = null;
         foreach ($this->getSolicitacaoSituacao() as $solicitacaoSituacao) {
@@ -136,6 +139,14 @@ class Solicitacao extends CircuitoEntity {
 
     function setNumero($numero) {
         $this->numero = $numero;
+    }
+
+    function getReceptor_id() {
+        return $this->receptor_id;
+    }
+
+    function setReceptor_id($receptor_id) {
+        $this->receptor_id = $receptor_id;
     }
 
 }

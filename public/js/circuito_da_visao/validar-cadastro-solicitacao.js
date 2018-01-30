@@ -181,6 +181,10 @@ function selecionarObjeto(id, informacao) {
                     if (parseInt($('#solicitacaoTipo').val()) === 2) {
                         valorParaAdicionar = 50;
                     }
+                    if ($('#formSolicitacaoReceber')) {
+                        valorParaAdicionar = 50;
+                    }
+
                     atualizarBarraDeProgresso(valorParaAdicionar);
                     verificarSeMostraOBotaoDeContinuar();
 
@@ -288,15 +292,22 @@ function limparObjeto(qualObjeto) {
             if (i === 3) {
                 valorParaRemover = -30;
             }
+            if (parseInt($('#solicitacaoTipo').val()) === 2) {
+                valorParaRemover = -50;
+            }
+            if ($('#formSolicitacaoReceber')) {
+                valorParaRemover = -50;
+            }
             atualizarBarraDeProgresso(valorParaRemover);
         }
         $('#numero').val(0);
     }
     if (parseInt(qualObjeto) === 3) {
         valorParaRemover = -30;
+        if ($('#formSolicitacaoReceber')) {
+            valorParaRemover = -50;
+        }
         atualizarBarraDeProgresso(valorParaRemover);
-
-
     }
 
     verificarSeMostraOBotaoDeContinuar();
