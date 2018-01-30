@@ -1,6 +1,8 @@
 <?php
 
 use Application\Controller\Helper\Constantes;
+use Application\Model\Entity\EntidadeTipo;
+use Application\Model\Entity\Situacao;
 use Application\Model\Entity\SolicitacaoTipo;
 
 $html = '';
@@ -44,12 +46,35 @@ if ($this->solicitacoes) {
         if ($solicitacao->getSolicitacaoTipo()->getId() === SolicitacaoTipo::TRANSFERIR_LIDER_PARA_OUTRA_EQUIPE) {
             $objeto = $solicitacao->getObjeto2();
             $grupo = $this->repositorio->getGrupoORM()->encontrarPorId($objeto);
-            $html .= 'EQUIPE <b>'.$grupo->getEntidadeAtiva()->getNome().'</b>';
+            if ($grupo->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::equipe) {
+                $html .= 'EQUIPE <b>' . $grupo->getEntidadeAtiva()->getNome() . '</b>';
+            }
+            if ($grupo->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::subEquipe) {
+                $html .= 'EQUIPE <b>' . $grupo->getEntidadeAtiva()->infoEntidade() . '</b>';
+            }
         }
         $html .= '</td>';
         if ($solicitacao->getSolicitacaoSituacaoAtiva()) {
             $html .= '<td>' . $solicitacao->getSolicitacaoSituacaoAtiva()->getSituacao()->getNome() . '</td>';
         }
+        if ($solicitacao->getSolicitacaoTipo()->getId() === SolicitacaoTipo::TRANSFERIR_LIDER_PARA_OUTRA_EQUIPE) {
+            if ($this->grupo->getId() == $grupo->getId()) {
+                $stringNomeDaFuncaoOnClick = 'funcaoCircuito("cadastroSolicitacaoReceber", ' . $solicitacao->getId() . ')';
+                $extra = $this->funcaoOnClick($stringNomeDaFuncaoOnClick);
+                $html .= '<td>';
+                $html .= $this->botaoSimples('Receber', $extra);
+                $html .= '</td>';
+            }
+            if ($solicitacao->getSolicitacaoSituacaoAtiva()->getSituacao()->getId() === Situacao::ACEITO_AGENDADO) {
+                $idPessoa = $solicitacao->getReceptor_id();
+                $pessoa = $this->repositorio->getPessoaORM()->encontrarPorId($idPessoa);
+
+                $html .= '<td>';
+                $html .= 'Receptor <b>' . $pessoa->getNomePrimeiroUltimo() . '</b>';
+                $html .= '</td>';
+            }
+        }
+
         $html .= '</tr>';
     }
 

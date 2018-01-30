@@ -16,6 +16,7 @@ use Application\Form\EventoForm;
 use Application\Form\GrupoForm;
 use Application\Form\SelecionarAlunosForm;
 use Application\Form\SolicitacaoForm;
+use Application\Form\SolicitacaoReceberForm;
 use Application\Form\TurmaForm;
 use Application\Model\Entity\Aula;
 use Application\Model\Entity\Curso;
@@ -151,6 +152,16 @@ class CadastroController extends CircuitoController {
         if ($pagina == Constantes::$PAGINA_SOLICITACAO_FINALIZAR) {
             return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
                         Constantes::$ACTION => Constantes::$PAGINA_SOLICITACAO_FINALIZAR,
+            ));
+        }
+        if ($pagina == Constantes::$PAGINA_SOLICITACAO_RECEBER) {
+            return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
+                        Constantes::$ACTION => Constantes::$PAGINA_SOLICITACAO_RECEBER,
+            ));
+        }
+        if ($pagina == Constantes::$PAGINA_SOLICITACAO_RECEBER_FINALIZAR) {
+            return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
+                        Constantes::$ACTION => Constantes::$PAGINA_SOLICITACAO_RECEBER_FINALIZAR,
             ));
         }
         /* Páginas Revisão */
@@ -1960,7 +1971,11 @@ class CadastroController extends CircuitoController {
     public function solicitacoesAction() {
         $sessao = new Container(Constantes::$NOME_APLICACAO);
         $solicitacoes = CadastroController::pegaSolicitacoesDeQuemEstaLogados($sessao, $this->getRepositorio());
+        $idEntidadeAtual = $sessao->idEntidadeAtual;
+        $entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+        $grupo = $entidade->getGrupo();
         $view = new ViewModel(array(
+            'grupo' => $grupo,
             'solicitacoes' => $solicitacoes,
             'titulo' => 'Solicitações',
             'repositorio' => $this->getRepositorio(),
@@ -2085,6 +2100,88 @@ class CadastroController extends CircuitoController {
                     $solicitacaoSituacaoAceito->setSituacao($this->getRepositorio()->getSituacaoORM()->encontrarPorId(Situacao::ACEITO_AGENDADO));
                     $this->getRepositorio()->getSolicitacaoSituacaoORM()->persistir($solicitacaoSituacaoAceito);
                 }
+
+                $this->getRepositorio()->fecharTransacao();
+
+                return $this->redirect()->toRoute(Constantes::$ROUTE_CADASTRO, array(
+                            Constantes::$PAGINA => Constantes::$PAGINA_SOLICITACOES,
+                ));
+            } catch (Exception $exc) {
+                $this->getRepositorio()->desfazerTransacao();
+                echo $exc->getTraceAsString();
+                $this->direcionaErroDeCadastro($exc->getMessage());
+            }
+        }
+    }
+
+    public function solicitacaoReceberAction() {
+        $sessao = new Container(Constantes::$NOME_APLICACAO);
+
+        $idEntidadeAtual = $sessao->idEntidadeAtual;
+        $entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+        $grupo = $entidade->getGrupo();
+        $grupoPaiFilhoFilhos = $grupo->getGrupoPaiFilhoFilhosAtivosReal();
+
+        $form = new SolicitacaoReceberForm('formSolicitacaoReceber');
+
+        $view = new ViewModel(array(
+            'idSolicitacao' => $sessao->idSessao,
+            'grupo' => $grupo,
+            'discipulos' => $grupoPaiFilhoFilhos,
+            Constantes::$FORM => $form,
+            'titulo' => 'Receber Solicitação',
+        ));
+
+        /* Javascript */
+        $layoutJS = new ViewModel();
+        $layoutJS->setTemplate('layout/layout-js-cadastrar-solicitacao');
+        $view->addChild($layoutJS, 'layoutJSCadastrarSolicitacao');
+
+        return $view;
+    }
+
+    public function solicitacaoReceberFinalizarAction() {
+        CircuitoController::verificandoSessao(new Container(Constantes::$NOME_APLICACAO), $this);
+
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            try {
+                $this->getRepositorio()->iniciarTransacao();
+                $post_data = $request->getPost();
+
+                $sessao = new Container(Constantes::$NOME_APLICACAO);
+                $idPessoaAtual = $sessao->idPessoa;
+                $pessoaLogada = $this->getRepositorio()->getPessoaORM()->encontrarPorId($idPessoaAtual);
+
+                $solicitacao = $this->getRepositorio()->getSolicitacaoORM()->encontrarPorId($post_data['idSolicitacao']);
+
+                /* Criando */
+                $solicitacao->setReceptor_id($pessoaLogada->getId());
+
+                $objeto2 = $post_data['objeto2'];
+                $explodeObjeto2 = explode('_', $objeto2);
+                if ($explodeObjeto2[1]) {
+                    $objeto2 = $explodeObjeto2[1];
+                }
+                $solicitacao->setObjeto2($objeto2);
+
+                if ($post_data['numero']) {
+                    $solicitacao->setNumero($post_data['numero']);
+                }
+                if ($post_data['nome']) {
+                    $solicitacao->setNome($post_data['nome']);
+                }
+                $semMudarDataDeCadastro = false;
+                $this->getRepositorio()->getSolicitacaoORM()->persistir($solicitacao, $semMudarDataDeCadastro);
+
+                $solicitacaoSituacaoAtiva = $solicitacao->getSolicitacaoSituacaoAtiva();
+                $solicitacaoSituacaoAtiva->setDataEHoraDeInativacao();
+                $this->getRepositorio()->getSolicitacaoSituacaoORM()->persistir($solicitacaoSituacaoAtiva, false);
+
+                $solicitacaoSituacaoAceito = new SolicitacaoSituacao();
+                $solicitacaoSituacaoAceito->setSolicitacao($solicitacao);
+                $solicitacaoSituacaoAceito->setSituacao($this->getRepositorio()->getSituacaoORM()->encontrarPorId(Situacao::ACEITO_AGENDADO));
+                $this->getRepositorio()->getSolicitacaoSituacaoORM()->persistir($solicitacaoSituacaoAceito);
 
                 $this->getRepositorio()->fecharTransacao();
 
