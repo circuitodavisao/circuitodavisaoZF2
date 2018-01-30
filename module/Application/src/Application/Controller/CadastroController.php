@@ -2028,6 +2028,13 @@ class CadastroController extends CircuitoController {
             $grupoIgreja = $grupo;
         }
         $grupoPaiFilhoEquipes = $grupoIgreja->getGrupoPaiFilhoFilhosAtivosReal();
+        $chaveParaRemover = null;
+        foreach ($grupoPaiFilhoEquipes as $key => $grupoPaiFilhoFilho) {
+            if ($grupoPaiFilhoFilho->getGrupoPaiFilhoFilho()->getId() == $grupo->getId()) {
+                $chaveParaRemover = $key;
+            }
+        }
+        unset($grupoPaiFilhoEquipes[$key]);
 
         $view = new ViewModel(array(
             'grupo' => $grupo,
