@@ -59,7 +59,7 @@ echo $this->templateFormularioTopo($this->titulo);
             }
             ?>
             <!-- Bloco objeto -->
-            <div id="blocoObjeto<?php echo $indiceDeObejtos; ?>" class="well col-xs-12 text-left" onClick='<?php // echo $funcaoOnclick;           ?>'>
+            <div id="blocoObjeto<?php echo $indiceDeObejtos; ?>" class="well col-xs-12 text-left" onClick='<?php // echo $funcaoOnclick;                    ?>'>
                 <div class="col-md-12">
                     <span id="spanSelecioneObjeto<?php echo $indiceDeObejtos; ?>"><?php echo $stringSelecioneOObjeto; ?></span>    
                     <span id="spanObjeto<?php echo $indiceDeObejtos; ?>"></span>
@@ -112,6 +112,45 @@ echo $this->templateFormularioTopo($this->titulo);
             </ul>
         </div>
     </div>
+    <!--divSelecionarHomem-->
+    <div id="divSelecionarHomem" class="hidden">
+        <?php
+        if (count($this->grupoPaiFilhoHomens) === 0) {
+            echo 'Sem homens para casar';
+        } else {
+            ?>
+            <div id="treeHomens" class="fancytree-radio">
+                <ul id="treeData" style="display: none;">
+                    <?php
+                    foreach ($this->grupoPaiFilhoHomens as $grupoPaiFilhoHomem) {
+                        $grupo = $grupoPaiFilhoHomem->getGrupoPaiFilhoFilho();
+                        echo '<li id="' . $grupo->getId() . '" >' . $grupo->getEntidadeAtiva()->infoEntidade() . ' - ' . $grupo->getGrupoResponsavelAtivo()->getPessoa()->getNomePrimeiroUltimo();
+                    }
+                    ?>  
+                </ul>
+            </div>
+        <?php } ?>
+    </div>
+    <!--divSelecionarMulher-->
+    <div id="divSelecionarMulher" class="hidden">
+        <?php
+        if (count($this->grupoPaiFilhoMulheres) === 0) {
+            echo 'Sem mulheres para casar';
+        } else {
+            ?>
+            <div id="treeMulheres" class="fancytree-radio">
+                <ul id="treeData" style="display: none;">
+                    <?php
+                    foreach ($this->grupoPaiFilhoMulheres as $grupoPaiFilhoMulher) {
+                        $grupo = $grupoPaiFilhoMulher->getGrupoPaiFilhoFilho();
+                        echo '<li id="' . $grupo->getId() . '" >' . $grupo->getEntidadeAtiva()->infoEntidade() . ' - ' . $grupo->getGrupoResponsavelAtivo()->getPessoa()->getNomePrimeiroUltimo();
+                    }
+                    ?>  
+                </ul>
+            </div>
+        <?php } ?>
+    </div>
+
     <!--divSelecionarNumeracao-->
     <div id="divSelecionarNumeracao" class="hidden">
         <div class="section-divider mt20">

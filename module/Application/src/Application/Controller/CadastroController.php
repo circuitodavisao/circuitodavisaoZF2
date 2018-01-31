@@ -2036,6 +2036,65 @@ class CadastroController extends CircuitoController {
         }
         unset($grupoPaiFilhoEquipes[$key]);
 
+        $arrayHomens = array();
+        $arrayMulheres = array();
+        foreach ($grupoPaiFilhoFilhos as $grupoPaiFilhoFilho12) {
+            foreach ($solicitacoes as $solicitacao) {
+                
+            }
+
+            $grupo12 = $grupoPaiFilhoFilho12->getGrupoPaiFilhoFilho();
+            if (!$grupo12->verificaSeECasal()) {
+                if ($grupo12->getGrupoResponsavelAtivo()->getPessoa()->getSexo() == 'M') {
+                    $arrayHomens[] = $grupoPaiFilhoFilho12;
+                }
+                if ($grupo12->getGrupoResponsavelAtivo()->getPessoa()->getSexo() == 'F') {
+                    $arrayMulheres[] = $grupoPaiFilhoFilho12;
+                }
+            }
+
+            if ($grupoPaiFilhoFilhos144 = $grupo12->getGrupoPaiFilhoFilhosAtivosReal()) {
+                foreach ($grupoPaiFilhoFilhos144 as $grupoPaiFilhoFilho144) {
+                    $grupo144 = $grupoPaiFilhoFilho144->getGrupoPaiFilhoFilho();
+                    if (!$grupo144->verificaSeECasal()) {
+                        if ($grupo144->getGrupoResponsavelAtivo()->getPessoa()->getSexo() == 'M') {
+                            $arrayHomens[] = $grupoPaiFilhoFilho144;
+                        }
+                        if ($grupo144->getGrupoResponsavelAtivo()->getPessoa()->getSexo() == 'F') {
+                            $arrayMulheres[] = $grupoPaiFilhoFilho144;
+                        }
+                    }
+                    if ($grupoPaiFilhoFilhos1728 = $grupo144->getGrupoPaiFilhoFilhosAtivosReal()) {
+                        foreach ($grupoPaiFilhoFilhos1728 as $grupoPaiFilhoFilho1728) {
+                            $grupo1728 = $grupoPaiFilhoFilho1728->getGrupoPaiFilhoFilho();
+                            if (!$grupo1728->verificaSeECasal()) {
+                                if ($grupo1728->getGrupoResponsavelAtivo()->getPessoa()->getSexo() == 'M') {
+                                    $arrayHomens[] = $grupoPaiFilhoFilho1728;
+                                }
+                                if ($grupo1728->getGrupoResponsavelAtivo()->getPessoa()->getSexo() == 'F') {
+                                    $arrayMulheres[] = $grupoPaiFilhoFilho1728;
+                                }
+                            }
+
+                            if ($grupoPaiFilhoFilhos20736 = $grupo1728->getGrupoPaiFilhoFilhosAtivosReal()) {
+                                foreach ($grupoPaiFilhoFilhos20736 as $grupoPaiFilhoFilho20736) {
+                                    $grupo20736 = $grupoPaiFilhoFilho207368->getGrupoPaiFilhoFilho();
+                                    if (!$grupo20736->verificaSeECasal()) {
+                                        if ($grupo20736->getGrupoResponsavelAtivo()->getPessoa()->getSexo() == 'M') {
+                                            $arrayHomens[] = $grupoPaiFilhoFilho20736;
+                                        }
+                                        if ($grupo20736->getGrupoResponsavelAtivo()->getPessoa()->getSexo() == 'F') {
+                                            $arrayMulheres[] = $grupoPaiFilhoFilho20736;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         $view = new ViewModel(array(
             'grupo' => $grupo,
             'discipulos' => $grupoPaiFilhoFilhos,
@@ -2044,6 +2103,8 @@ class CadastroController extends CircuitoController {
             Constantes::$FORM => $formSolicitacao,
             'titulo' => 'Solicitação',
             'grupoPaiFilhoEquipes' => $grupoPaiFilhoEquipes,
+            'grupoPaiFilhoHomens' => $arrayHomens,
+            'grupoPaiFilhoMulheres' => $arrayMulheres,
         ));
 
         /* Javascript */
@@ -2098,7 +2159,8 @@ class CadastroController extends CircuitoController {
                 $solicitacaoSituacao->setSituacao($this->getRepositorio()->getSituacaoORM()->encontrarPorId(Situacao::PENDENTE_DE_ACEITACAO));
                 $this->getRepositorio()->getSolicitacaoSituacaoORM()->persistir($solicitacaoSituacao);
 
-                if ($solicitacaoTipo->getId() === SolicitacaoTipo::TRANSFERIR_LIDER_NA_PROPRIA_EQUIPE) {
+                if ($solicitacaoTipo->getId() === SolicitacaoTipo::TRANSFERIR_LIDER_NA_PROPRIA_EQUIPE ||
+                        $solicitacaoTipo->getId() === SolicitacaoTipo::UNIR_CASAL) {
                     $solicitacaoSituacao->setDataEHoraDeInativacao();
                     $this->getRepositorio()->getSolicitacaoSituacaoORM()->persistir($solicitacaoSituacao, false);
 
