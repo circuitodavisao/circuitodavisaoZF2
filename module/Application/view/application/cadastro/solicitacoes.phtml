@@ -16,7 +16,7 @@ if ($this->solicitacoes) {
     $html .= '<tr>';
     $html .= '<th class="hidden-xs">Tipo</th>';
     $html .= '<th class="hidden-xs">Solicitado em</th>';
-    $html .= '<th class="hidden-xs">Por</th>';
+//    $html .= '<th class="hidden-xs">Por</th>';
     $html .= '<th>O que ou quem?</th>';
     $html .= '<th>Para</th>';
     $html .= '<th>Status</th>';
@@ -30,7 +30,7 @@ if ($this->solicitacoes) {
         $html .= '<tr>';
         $html .= '<td class="hidden-xs">' . $solicitacao->getSolicitacaoTipo()->getNome() . '</td>';
         $html .= '<td class="hidden-xs">' . $solicitacao->getData_criacaoStringPadraoBrasil() . '</td>';
-        $html .= '<td class="hidden-xs">' . $solicitacao->getPessoa()->getNomePrimeiroUltimo() . '</td>';
+//        $html .= '<td class="hidden-xs">' . $solicitacao->getPessoa()->getNomePrimeiroUltimo() . '</td>';
 
         $html .= '<td>';
         $objeto = $solicitacao->getObjeto1();
@@ -38,7 +38,8 @@ if ($this->solicitacoes) {
         $html .= $grupo->getNomeLideresAtivos();
         $html .= '</td>';
         $html .= '<td>';
-        if ($solicitacao->getSolicitacaoTipo()->getId() === SolicitacaoTipo::TRANSFERIR_LIDER_NA_PROPRIA_EQUIPE) {
+        if ($solicitacao->getSolicitacaoTipo()->getId() === SolicitacaoTipo::TRANSFERIR_LIDER_NA_PROPRIA_EQUIPE ||
+                $solicitacao->getSolicitacaoTipo()->getId() === SolicitacaoTipo::UNIR_CASAL) {
             $objeto = $solicitacao->getObjeto2();
             $grupo = $this->repositorio->getGrupoORM()->encontrarPorId($objeto);
             $html .= $grupo->getNomeLideresAtivos();
@@ -47,10 +48,10 @@ if ($this->solicitacoes) {
             $objeto = $solicitacao->getObjeto2();
             $grupo = $this->repositorio->getGrupoORM()->encontrarPorId($objeto);
             if ($grupo->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::equipe) {
-                $html .= 'EQUIPE <b>' . $grupo->getEntidadeAtiva()->getNome() . '</b>';
+                $html .= '<b>' . $grupo->getEntidadeAtiva()->getNome() . '</b>';
             }
             if ($grupo->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::subEquipe) {
-                $html .= 'EQUIPE <b>' . $grupo->getEntidadeAtiva()->infoEntidade() . '</b>';
+                $html .= '<b>' . $grupo->getEntidadeAtiva()->infoEntidade() . '</b>';
             }
         }
         $html .= '</td>';

@@ -23,6 +23,8 @@ var stringDivObjetos = '#divObjetos';
 var stringDivSelecionarLider = '#divSelecionarLider';
 var stringDivSelecionarNumeracao = '#divSelecionarNumeracao';
 var stringDivSelecionarEquipe = '#divSelecionarEquipe';
+var stringDivSelecionarHomem = '#divSelecionarHomem';
+var stringDivSelecionarMulher = '#divSelecionarMulher';
 var stringSpanNomeLideres = '#spanNomeLideres';
 var stringSpanCelulaQuantidade = '#spanCelulaQuantidade';
 var stringSpanQuantidadeLideres = '#spanQuantidadeLideres';
@@ -35,44 +37,30 @@ var botaoLimpar;
 var check;
 var blocoObjeto;
 
-$("#treeLideres").fancytree({
-    checkbox: "radio",
-    selectMode: 1,
-    clickFolderMode: 2,
-    extensions: ["childcounter"],
-    childcounter: {
-        deep: true,
-        hideZeros: true,
-        hideExpanded: true
-    },
-    select: function (event, data) {
-        var node = data.tree.getNodeByKey(data.node.key);
-        $(node.span).closest('li').addClass('hide');
-        if (data.node.isSelected()) {
-            selecionarObjeto(node.key, node.title);
+
+var arrayNomeArvores = ['treeLideres', 'treeEquipes', 'treeHomens', 'treeMulheres'];
+for (var item in arrayNomeArvores) {
+
+    $('#' + arrayNomeArvores[item]).fancytree({
+        checkbox: "radio",
+        selectMode: 1,
+        clickFolderMode: 2,
+        extensions: ["childcounter"],
+        childcounter: {
+            deep: true,
+            hideZeros: true,
+            hideExpanded: true
+        },
+        select: function (event, data) {
+            var node = data.tree.getNodeByKey(data.node.key);
+            $(node.span).closest('li').addClass('hide');
+            if (data.node.isSelected()) {
+                selecionarObjeto(node.key, node.title);
+            }
+            data.node.setSelected(false);
         }
-        data.node.setSelected(false);
-    }
-});
-$("#treeEquipes").fancytree({
-    checkbox: "radio",
-    selectMode: 1,
-    clickFolderMode: 2,
-    extensions: ["childcounter"],
-    childcounter: {
-        deep: true,
-        hideZeros: true,
-        hideExpanded: true
-    },
-    select: function (event, data) {
-        var node = data.tree.getNodeByKey(data.node.key);
-        $(node.span).closest('li').addClass('hide');
-        if (data.node.isSelected()) {
-            selecionarObjeto(node.key, node.title);
-        }
-        data.node.setSelected(false);
-    }
-});
+    });
+}
 
 function mostrarBotaoContinuar() {
     var divBotaoContinuarSelecionarTipo = $('#divBotaoContinuarSelecionarTipo');
@@ -89,18 +77,31 @@ function selecionarTipo() {
     $('#divProgress').removeClass(hidden);
     $('#tituloDaPagina').html($('#tituloDaPagina').html() + ' - ' + $('#solicitacaoTipo option:selected').text());
     $('#solicitacaoTipoId').val($('#solicitacaoTipo').val());
-    if (parseInt($('#solicitacaoTipo').val()) === 2) {
+    if (parseInt($('#solicitacaoTipo').val()) === 2 || parseInt($('#solicitacaoTipo').val()) === 3) {
         $('#blocoObjeto3').addClass(hidden);
+
+        if (parseInt($('#solicitacaoTipo').val()) === 3) {
+            $('#spanSelecioneObjeto1').html('Selecione o homem');
+            $('#spanSelecioneObjeto2').html('Selecione a mulher');
+        }
+
     }
 }
 
 function abrirSelecionarObjeto(qualObjeto, idLider) {
     $(stringDivObjetos).addClass(hidden);
     if (qualObjeto != 3) {
+        if ($('#solicitacaoTipoId').val() == 1) {
+            $(stringDivSelecionarLider).removeClass(hidden);
+        }
         if (qualObjeto == 2 && $('#solicitacaoTipoId').val() == 2) {
             $(stringDivSelecionarEquipe).removeClass(hidden);
-        } else {
-            $(stringDivSelecionarLider).removeClass(hidden);
+        }
+        if (qualObjeto == 1 && $('#solicitacaoTipoId').val() == 3) {
+            $(stringDivSelecionarHomem).removeClass(hidden);
+        }
+        if (qualObjeto == 2 && $('#solicitacaoTipoId').val() == 3) {
+            $(stringDivSelecionarMulher).removeClass(hidden);
         }
     } else {
         $(stringDivSelecionarNumeracao).removeClass(hidden);
