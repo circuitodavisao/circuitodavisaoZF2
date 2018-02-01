@@ -59,7 +59,7 @@ echo $this->templateFormularioTopo($this->titulo);
             }
             ?>
             <!-- Bloco objeto -->
-            <div id="blocoObjeto<?php echo $indiceDeObejtos; ?>" class="well col-xs-12 text-left" onClick='<?php // echo $funcaoOnclick;                    ?>'>
+            <div id="blocoObjeto<?php echo $indiceDeObejtos; ?>" class="well col-xs-12 text-left" onClick='<?php // echo $funcaoOnclick;                     ?>'>
                 <div class="col-md-12">
                     <span id="spanSelecioneObjeto<?php echo $indiceDeObejtos; ?>"><?php echo $stringSelecioneOObjeto; ?></span>    
                     <span id="spanObjeto<?php echo $indiceDeObejtos; ?>"></span>
@@ -144,6 +144,25 @@ echo $this->templateFormularioTopo($this->titulo);
                     foreach ($this->grupoPaiFilhoMulheres as $grupoPaiFilhoMulher) {
                         $grupo = $grupoPaiFilhoMulher->getGrupoPaiFilhoFilho();
                         echo '<li id="' . $grupo->getId() . '" >' . $grupo->getEntidadeAtiva()->infoEntidade() . ' - ' . $grupo->getGrupoResponsavelAtivo()->getPessoa()->getNomePrimeiroUltimo();
+                    }
+                    ?>  
+                </ul>
+            </div>
+        <?php } ?>
+    </div>
+    <!--divSelecionarMulher-->
+    <div id="divSelecionarCasal" class="hidden">
+        <?php
+        if (count($this->grupoPaiFilhoCasais) === 0) {
+            echo 'Sem casais';
+        } else {
+            ?>
+            <div id="treeCasais" class="fancytree-radio">
+                <ul id="treeData" style="display: none;">
+                    <?php
+                    foreach ($this->grupoPaiFilhoCasais as $grupoPaiFilhoCasais) {
+                        $grupo = $grupoPaiFilhoCasais->getGrupoPaiFilhoFilho();
+                        echo '<li id="' . $grupo->getId() . '" >' . $grupo->getEntidadeAtiva()->infoEntidade() . ' - ' . $grupo->getNomeLideresAtivos();
                     }
                     ?>  
                 </ul>

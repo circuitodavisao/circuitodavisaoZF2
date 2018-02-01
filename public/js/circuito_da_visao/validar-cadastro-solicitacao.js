@@ -25,6 +25,7 @@ var stringDivSelecionarNumeracao = '#divSelecionarNumeracao';
 var stringDivSelecionarEquipe = '#divSelecionarEquipe';
 var stringDivSelecionarHomem = '#divSelecionarHomem';
 var stringDivSelecionarMulher = '#divSelecionarMulher';
+var stringDivSelecionarCasal = '#divSelecionarCasal';
 var stringSpanNomeLideres = '#spanNomeLideres';
 var stringSpanCelulaQuantidade = '#spanCelulaQuantidade';
 var stringSpanQuantidadeLideres = '#spanQuantidadeLideres';
@@ -38,7 +39,7 @@ var check;
 var blocoObjeto;
 
 
-var arrayNomeArvores = ['treeLideres', 'treeEquipes', 'treeHomens', 'treeMulheres'];
+var arrayNomeArvores = ['treeLideres', 'treeEquipes', 'treeHomens', 'treeMulheres', 'treeCasais'];
 for (var item in arrayNomeArvores) {
 
     $('#' + arrayNomeArvores[item]).fancytree({
@@ -77,21 +78,36 @@ function selecionarTipo() {
     $('#divProgress').removeClass(hidden);
     $('#tituloDaPagina').html($('#tituloDaPagina').html() + ' - ' + $('#solicitacaoTipo option:selected').text());
     $('#solicitacaoTipoId').val($('#solicitacaoTipo').val());
-    if (parseInt($('#solicitacaoTipo').val()) === 2 || parseInt($('#solicitacaoTipo').val()) === 3) {
+    if (parseInt($('#solicitacaoTipo').val()) === 2 ||
+            parseInt($('#solicitacaoTipo').val()) === 3 ||
+            parseInt($('#solicitacaoTipo').val()) === 4 ||
+            parseInt($('#solicitacaoTipo').val()) === 5) {
         $('#blocoObjeto3').addClass(hidden);
-
         if (parseInt($('#solicitacaoTipo').val()) === 3) {
             $('#spanSelecioneObjeto1').html('Selecione o homem');
             $('#spanSelecioneObjeto2').html('Selecione a mulher');
         }
-
+        if (parseInt($('#solicitacaoTipo').val()) === 4) {
+            $('#spanSelecioneObjeto1').html('Selecione o casal');
+            $('#blocoObjeto2').addClass(hidden);
+        }
+        if (parseInt($('#solicitacaoTipo').val()) === 5) {
+            $('#spanSelecioneObjeto1').html('Selecione o lider(es) que vão trocar responsabilidades');
+            $('#spanSelecioneObjeto2').html('Selecione o lider(es) que vão trocar responsabilidades');
+        }
     }
 }
 
 function abrirSelecionarObjeto(qualObjeto, idLider) {
     $(stringDivObjetos).addClass(hidden);
     if (qualObjeto != 3) {
-        if ($('#solicitacaoTipoId').val() == 1) {
+        if ($('#solicitacaoTipoId').val() == 1 ||
+                $('#solicitacaoTipoId').val() == 5 ||
+                $("#formSolicitacaoReceber").length) {
+            $(stringDivSelecionarLider).removeClass(hidden);
+        }
+
+        if (qualObjeto == 1 && $('#solicitacaoTipoId').val() == 2) {
             $(stringDivSelecionarLider).removeClass(hidden);
         }
         if (qualObjeto == 2 && $('#solicitacaoTipoId').val() == 2) {
@@ -102,6 +118,9 @@ function abrirSelecionarObjeto(qualObjeto, idLider) {
         }
         if (qualObjeto == 2 && $('#solicitacaoTipoId').val() == 3) {
             $(stringDivSelecionarMulher).removeClass(hidden);
+        }
+        if (qualObjeto == 1 && $('#solicitacaoTipoId').val() == 4) {
+            $(stringDivSelecionarCasal).removeClass(hidden);
         }
     } else {
         $(stringDivSelecionarNumeracao).removeClass(hidden);
@@ -126,6 +145,9 @@ function selecionarObjeto(id, informacao) {
         $(stringDivSelecionarLider).addClass(hidden);
     } else {
         $(stringDivSelecionarNumeracao).addClass(hidden);
+    }
+    if (parseInt($('#solicitacaoTipo').val()) === 4) {
+        $(stringDivSelecionarCasal).addClass(hidden);
     }
     objeto = $(stringSpanObjeto + objetoSelecionado);
     spanNomeLideres = $(stringSpanNomeLideres + objetoSelecionado);
@@ -161,9 +183,18 @@ function selecionarObjeto(id, informacao) {
                     } else {
                         if (parseInt(objetoSelecionado) === 1) {
                             objeto.html('Líderes que serão transferidos');
+                            if ($('#solicitacaoTipoId').val() == 3) {
+                                objeto.html('Homem que será unido');
+                            }
+                            if ($('#solicitacaoTipoId').val() == 4) {
+                                objeto.html('Casal que será separado');
+                            }
                         }
                         if (parseInt(objetoSelecionado) === 2) {
                             objeto.html('Líderes que receberão');
+                            if ($('#solicitacaoTipoId').val() == 3) {
+                                objeto.html('Mulher que será unida');
+                            }
                         }
                         spanNomeLideres.html('Nome dos Líderes: ' + data.nomeLideres);
                         spanCelulaQuantidade.html('Quantidade de Células: ' + data.celulaQuantidade);
@@ -175,17 +206,21 @@ function selecionarObjeto(id, informacao) {
                     check.removeClass(hidden);
 
                     arrayObjetos[objetoSelecionado] = id;
-                    var valorParaAdicionar = 35;
+                    var valorParaAdicionar = 35;                    
                     if (parseInt(objetoSelecionado) === 3) {
                         valorParaAdicionar = 30;
                     }
-                    if (parseInt($('#solicitacaoTipo').val()) === 2) {
+                    if ($("#formSolicitacaoReceber").length) {
                         valorParaAdicionar = 50;
                     }
-                    if ($('#formSolicitacaoReceber')) {
+                    if (parseInt($('#solicitacaoTipo').val()) === 2 ||
+                            parseInt($('#solicitacaoTipo').val()) === 3 ||
+                            parseInt($('#solicitacaoTipo').val()) === 5) {
                         valorParaAdicionar = 50;
                     }
-
+                    if (parseInt($('#solicitacaoTipo').val()) === 4) {
+                        valorParaAdicionar = 100;
+                    }
                     atualizarBarraDeProgresso(valorParaAdicionar);
                     verificarSeMostraOBotaoDeContinuar();
 

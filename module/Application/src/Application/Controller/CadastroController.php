@@ -2038,6 +2038,7 @@ class CadastroController extends CircuitoController {
 
         $arrayHomens = array();
         $arrayMulheres = array();
+        $arrayCasais = array();
         foreach ($grupoPaiFilhoFilhos as $grupoPaiFilhoFilho12) {
             foreach ($solicitacoes as $solicitacao) {
                 
@@ -2051,6 +2052,8 @@ class CadastroController extends CircuitoController {
                 if ($grupo12->getGrupoResponsavelAtivo()->getPessoa()->getSexo() == 'F') {
                     $arrayMulheres[] = $grupoPaiFilhoFilho12;
                 }
+            } else {
+                $arrayCasais[] = $grupoPaiFilhoFilho12;
             }
 
             if ($grupoPaiFilhoFilhos144 = $grupo12->getGrupoPaiFilhoFilhosAtivosReal()) {
@@ -2063,6 +2066,8 @@ class CadastroController extends CircuitoController {
                         if ($grupo144->getGrupoResponsavelAtivo()->getPessoa()->getSexo() == 'F') {
                             $arrayMulheres[] = $grupoPaiFilhoFilho144;
                         }
+                    } else {
+                        $arrayCasais[] = $grupoPaiFilhoFilho144;
                     }
                     if ($grupoPaiFilhoFilhos1728 = $grupo144->getGrupoPaiFilhoFilhosAtivosReal()) {
                         foreach ($grupoPaiFilhoFilhos1728 as $grupoPaiFilhoFilho1728) {
@@ -2074,6 +2079,8 @@ class CadastroController extends CircuitoController {
                                 if ($grupo1728->getGrupoResponsavelAtivo()->getPessoa()->getSexo() == 'F') {
                                     $arrayMulheres[] = $grupoPaiFilhoFilho1728;
                                 }
+                            } else {
+                                $arrayCasais[] = $grupoPaiFilhoFilho1728;
                             }
 
                             if ($grupoPaiFilhoFilhos20736 = $grupo1728->getGrupoPaiFilhoFilhosAtivosReal()) {
@@ -2086,6 +2093,8 @@ class CadastroController extends CircuitoController {
                                         if ($grupo20736->getGrupoResponsavelAtivo()->getPessoa()->getSexo() == 'F') {
                                             $arrayMulheres[] = $grupoPaiFilhoFilho20736;
                                         }
+                                    } else {
+                                        $arrayCasais[] = $grupoPaiFilhoFilho20736;
                                     }
                                 }
                             }
@@ -2105,6 +2114,7 @@ class CadastroController extends CircuitoController {
             'grupoPaiFilhoEquipes' => $grupoPaiFilhoEquipes,
             'grupoPaiFilhoHomens' => $arrayHomens,
             'grupoPaiFilhoMulheres' => $arrayMulheres,
+            'grupoPaiFilhoCasais' => $arrayCasais,
         ));
 
         /* Javascript */
@@ -2139,12 +2149,14 @@ class CadastroController extends CircuitoController {
                 $solicitacao->setSolicitacaoTipo($solicitacaoTipo);
                 $solicitacao->setObjeto1($post_data['objeto1']);
 
-                $objeto2 = $post_data['objeto2'];
-                $explodeObjeto2 = explode('_', $objeto2);
-                if ($explodeObjeto2[1]) {
-                    $objeto2 = $explodeObjeto2[1];
+                if ($solicitacaoTipo->getId() !== SolicitacaoTipo::SEPARAR) {
+                    $objeto2 = $post_data['objeto2'];
+                    $explodeObjeto2 = explode('_', $objeto2);
+                    if ($explodeObjeto2[1]) {
+                        $objeto2 = $explodeObjeto2[1];
+                    }
+                    $solicitacao->setObjeto2($objeto2);
                 }
-                $solicitacao->setObjeto2($objeto2);
 
                 if ($post_data['numero']) {
                     $solicitacao->setNumero($post_data['numero']);
@@ -2160,7 +2172,9 @@ class CadastroController extends CircuitoController {
                 $this->getRepositorio()->getSolicitacaoSituacaoORM()->persistir($solicitacaoSituacao);
 
                 if ($solicitacaoTipo->getId() === SolicitacaoTipo::TRANSFERIR_LIDER_NA_PROPRIA_EQUIPE ||
-                        $solicitacaoTipo->getId() === SolicitacaoTipo::UNIR_CASAL) {
+                        $solicitacaoTipo->getId() === SolicitacaoTipo::UNIR_CASAL ||
+                        $solicitacaoTipo->getId() === SolicitacaoTipo::SEPARAR ||
+                        $solicitacaoTipo->getId() === SolicitacaoTipo::TROCAR_RESPONSABILIDADES) {
                     $solicitacaoSituacao->setDataEHoraDeInativacao();
                     $this->getRepositorio()->getSolicitacaoSituacaoORM()->persistir($solicitacaoSituacao, false);
 

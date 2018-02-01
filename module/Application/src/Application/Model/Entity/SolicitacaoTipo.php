@@ -19,6 +19,8 @@ class SolicitacaoTipo extends CircuitoEntity {
     const TRANSFERIR_LIDER_NA_PROPRIA_EQUIPE = 1;
     const TRANSFERIR_LIDER_PARA_OUTRA_EQUIPE = 2;
     const UNIR_CASAL = 3;
+    const SEPARAR = 4;
+    const TROCAR_RESPONSABILIDADES = 5;
 
     /**
      * @ORM\OneToMany(targetEntity="Solicitacao", mappedBy="solicitacaoTipo") 
