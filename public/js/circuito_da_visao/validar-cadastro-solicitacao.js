@@ -149,6 +149,10 @@ function selecionarObjeto(id, informacao) {
     if (parseInt($('#solicitacaoTipo').val()) === 4) {
         $(stringDivSelecionarCasal).addClass(hidden);
     }
+    if (parseInt($('#solicitacaoTipo').val()) === 3) {
+        $(stringDivSelecionarHomem).addClass(hidden);
+        $(stringDivSelecionarMulher).addClass(hidden);
+    }
     objeto = $(stringSpanObjeto + objetoSelecionado);
     spanNomeLideres = $(stringSpanNomeLideres + objetoSelecionado);
     spanCelulaQuantidade = $(stringSpanCelulaQuantidade + objetoSelecionado);
