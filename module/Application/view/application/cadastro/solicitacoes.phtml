@@ -39,7 +39,8 @@ if ($this->solicitacoes) {
         $html .= '</td>';
         $html .= '<td>';
         if ($solicitacao->getSolicitacaoTipo()->getId() === SolicitacaoTipo::TRANSFERIR_LIDER_NA_PROPRIA_EQUIPE ||
-                $solicitacao->getSolicitacaoTipo()->getId() === SolicitacaoTipo::UNIR_CASAL) {
+                $solicitacao->getSolicitacaoTipo()->getId() === SolicitacaoTipo::UNIR_CASAL ||
+                $solicitacao->getSolicitacaoTipo()->getId() === SolicitacaoTipo::TROCAR_RESPONSABILIDADES) {
             $objeto = $solicitacao->getObjeto2();
             $grupo = $this->repositorio->getGrupoORM()->encontrarPorId($objeto);
             $html .= $grupo->getNomeLideresAtivos();
