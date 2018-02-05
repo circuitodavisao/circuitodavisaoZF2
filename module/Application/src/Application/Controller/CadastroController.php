@@ -942,7 +942,7 @@ class CadastroController extends CircuitoController {
                     }
                     /* Inativando fato-lider caso nao tenha mais celulas */
                     $grupoDoEvento = $eventoNaSessao->getGrupoEventoAtivo()->getGrupo();
-                    if ($grupoDoEvento->getGrupoEventoAtivosPorTipo(EventoTipo::tipoCelula) === null) {
+                    if (count($grupoDoEvento->getGrupoEventoAtivosPorTipo(EventoTipo::tipoCelula)) === 0) {
                         $this->inativarFatoLiderPorGrupo($grupoDoEvento);
                     }
                 }
