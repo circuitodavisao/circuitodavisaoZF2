@@ -2157,6 +2157,24 @@ class CadastroController extends CircuitoController {
                     }
                     $solicitacao->setObjeto2($objeto2);
                 }
+                if ($solicitacaoTipo->getId() === SolicitacaoTipo::SEPARAR) {
+                    $grupoCasal = $this->getRepositorio()->getGrupoORM()->encontrarPorId($solicitacao->getObjeto1());
+                    $grupoResponsaveis = $grupoCasal->getResponsabilidadesAtivas();
+                    if ($post_data['quemVaiSair'] == 1) {
+                        foreach ($grupoResponsaveis as $grupoResponsavel) {
+                            if ($grupoResponsavel->getPessoa()->getSexo() == 'M') {
+                                $objeto2 = $grupoResponsavel->getPessoa()->getId();
+                            }
+                        }
+                    } else {
+                        foreach ($grupoResponsaveis as $grupoResponsavel) {
+                            if ($grupoResponsavel->getPessoa()->getSexo() == 'F') {
+                                $objeto2 = $grupoResponsavel->getPessoa()->getId();
+                            }
+                        }
+                    }
+                    $solicitacao->setObjeto2($objeto2);
+                }
 
                 if ($post_data['numero']) {
                     $solicitacao->setNumero($post_data['numero']);

@@ -32,11 +32,13 @@ if ($this->solicitacoes) {
         $html .= '<td class="hidden-xs">' . $solicitacao->getData_criacaoStringPadraoBrasil() . '</td>';
 //        $html .= '<td class="hidden-xs">' . $solicitacao->getPessoa()->getNomePrimeiroUltimo() . '</td>';
 
+        /* Objeto 1 */
         $html .= '<td>';
         $objeto = $solicitacao->getObjeto1();
         $grupo = $this->repositorio->getGrupoORM()->encontrarPorId($objeto);
         $html .= $grupo->getNomeLideresAtivos();
         $html .= '</td>';
+        /* Objeto 2 */
         $html .= '<td>';
         if ($solicitacao->getSolicitacaoTipo()->getId() === SolicitacaoTipo::TRANSFERIR_LIDER_NA_PROPRIA_EQUIPE ||
                 $solicitacao->getSolicitacaoTipo()->getId() === SolicitacaoTipo::UNIR_CASAL ||
@@ -54,6 +56,11 @@ if ($this->solicitacoes) {
             if ($grupo->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::subEquipe) {
                 $html .= '<b>' . $grupo->getEntidadeAtiva()->infoEntidade() . '</b>';
             }
+        }
+        if ($solicitacao->getSolicitacaoTipo()->getId() === SolicitacaoTipo::SEPARAR) {
+            $objeto = $solicitacao->getObjeto2();
+            $pessoa = $this->repositorio->getPessoaORM()->encontrarPorId($objeto);
+            $html .= 'REMOVER <b>' . $pessoa->getNomePrimeiroUltimo() . '</b>';
         }
         $html .= '</td>';
         if ($solicitacao->getSolicitacaoSituacaoAtiva()) {

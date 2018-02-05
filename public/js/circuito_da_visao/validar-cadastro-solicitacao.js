@@ -26,6 +26,7 @@ var stringDivSelecionarEquipe = '#divSelecionarEquipe';
 var stringDivSelecionarHomem = '#divSelecionarHomem';
 var stringDivSelecionarMulher = '#divSelecionarMulher';
 var stringDivSelecionarCasal = '#divSelecionarCasal';
+var stringDivSelecionarQuemSaira = '#divSelecionarQuemSaira';
 var stringSpanNomeLideres = '#spanNomeLideres';
 var stringSpanCelulaQuantidade = '#spanCelulaQuantidade';
 var stringSpanQuantidadeLideres = '#spanQuantidadeLideres';
@@ -89,7 +90,9 @@ function selecionarTipo() {
         }
         if (parseInt($('#solicitacaoTipo').val()) === 4) {
             $('#spanSelecioneObjeto1').html('Selecione o casal');
+            $('#spanSelecioneObjeto3').html('Selecione quem do casal irá sair');
             $('#blocoObjeto2').addClass(hidden);
+            $('#blocoObjeto3').removeClass(hidden);
         }
         if (parseInt($('#solicitacaoTipo').val()) === 5) {
             $('#spanSelecioneObjeto1').html('Selecione o lider(es) que vão trocar responsabilidades');
@@ -122,8 +125,13 @@ function abrirSelecionarObjeto(qualObjeto, idLider) {
         if (qualObjeto == 1 && $('#solicitacaoTipoId').val() == 4) {
             $(stringDivSelecionarCasal).removeClass(hidden);
         }
+
     } else {
-        $(stringDivSelecionarNumeracao).removeClass(hidden);
+        if (qualObjeto == 3 && $('#solicitacaoTipoId').val() == 4) {
+            $(stringDivSelecionarQuemSaira).removeClass(hidden);
+        } else {
+            $(stringDivSelecionarNumeracao).removeClass(hidden);
+        }
     }
     objetoSelecionado = qualObjeto;
 
@@ -152,6 +160,9 @@ function selecionarObjeto(id, informacao) {
     if (parseInt($('#solicitacaoTipo').val()) === 3) {
         $(stringDivSelecionarHomem).addClass(hidden);
         $(stringDivSelecionarMulher).addClass(hidden);
+    }
+    if (parseInt($('#solicitacaoTipo').val()) === 4) {
+        $(stringDivSelecionarQuemSaira).addClass(hidden);
     }
     objeto = $(stringSpanObjeto + objetoSelecionado);
     spanNomeLideres = $(stringSpanNomeLideres + objetoSelecionado);
@@ -182,7 +193,11 @@ function selecionarObjeto(id, informacao) {
                 if (data.resposta) {
                     spanLoader.addClass(hidden);
                     if (parseInt(objetoSelecionado) === 3) {
-                        informacao = 'Nova numeração: ' + informacao;
+                        if (parseInt($('#solicitacaoTipo').val()) === 4) {
+                            informacao = 'Quem do casal vai sair: ' + informacao;
+                        } else {
+                            informacao = 'Nova numeração: ' + informacao;
+                        }
                         objeto.html(informacao);
                     } else {
                         if (parseInt(objetoSelecionado) === 1) {
@@ -210,7 +225,7 @@ function selecionarObjeto(id, informacao) {
                     check.removeClass(hidden);
 
                     arrayObjetos[objetoSelecionado] = id;
-                    var valorParaAdicionar = 35;                    
+                    var valorParaAdicionar = 35;
                     if (parseInt(objetoSelecionado) === 3) {
                         valorParaAdicionar = 30;
                     }
@@ -219,11 +234,9 @@ function selecionarObjeto(id, informacao) {
                     }
                     if (parseInt($('#solicitacaoTipo').val()) === 2 ||
                             parseInt($('#solicitacaoTipo').val()) === 3 ||
+                            parseInt($('#solicitacaoTipo').val()) === 4 ||
                             parseInt($('#solicitacaoTipo').val()) === 5) {
                         valorParaAdicionar = 50;
-                    }
-                    if (parseInt($('#solicitacaoTipo').val()) === 4) {
-                        valorParaAdicionar = 100;
                     }
                     atualizarBarraDeProgresso(valorParaAdicionar);
                     verificarSeMostraOBotaoDeContinuar();
@@ -286,6 +299,15 @@ function selecionarNumeracao() {
         alert('Selecion uma numeracao');
     } else {
         selecionarObjeto(numero, numero);
+    }
+}
+
+function selecionarQuemSaira() {
+    var valor = $('#quemVaiSair').val();
+    if (parseInt(valor) === 0) {
+        alert('Selecion quem do casal vai sair');
+    } else {
+        selecionarObjeto(valor, valor);
     }
 }
 
