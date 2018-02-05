@@ -384,9 +384,17 @@ $nomePessoaEmail = (string) \filter_input(\INPUT_GET, $stringNomePessoaEmail);
                                                                 <![endif]-->
                                                                     <a href="www.circuitodavisaonovo.com.br/novaSenha/<?php echo $token; ?>"
                                                                        style="background-color:#e9573f;border-radius:5px;color:#ffffff;display:inline-block;font-family:'Cabin', Helvetica, Arial, sans-serif;font-size:14px;font-weight:regular;line-height:45px;text-align:center;text-decoration:none;width:155px;-webkit-text-size-adjust:none;mso-hide:all;">
-                                                                       Continuar o Cadastro
+                                                                        Continuar o Cadastro
                                                                     </a>
                                                                 </div>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="">
+                                                                <p>Caso o botão não funcione copie e cole o link abaixo no navegador</p>
+                                                                <a href="www.circuitodavisaonovo.com.br/novaSenha/<?php echo $token; ?>">
+                                                                    www.circuitodavisaonovo.com.br/novaSenha/<?php echo $token; ?>
+                                                                </a>
                                                             </td>
                                                         </tr>
                                                 </table>

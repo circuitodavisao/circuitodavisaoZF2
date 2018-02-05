@@ -56,32 +56,8 @@ class CabecalhoDePeriodos extends AbstractHelper {
                 $iconeFlechaEsquerda, $funcaoOnclickEsquerda, BotaoSimples::botaoMuitoPequenoImportante, BotaoSimples::posicaoAoCentro);
         $botaoDireito = $this->view->botaoSimples(
                 $iconeFlechaDireita, $funcaoOnclickDireita, BotaoSimples::botaoMuitoPequenoImportante, BotaoSimples::posicaoAoCentro);
-
-        $periodoInicialMontado = Funcoes::montaPeriodo($this->view->periodoInicial);
-        $periodoFinalMontado = Funcoes::montaPeriodo($this->view->periodoFinal);
-
+    
         $html .= '<div class="center-block text-center mb10"> ';
-//        $html .= 'Periodo Inicial ';
-//        $html .= '<select id="periodoInicial" onchange="mudarPeriodo();">';
-//        for ($i = 0; $i > -30; $i--) {
-//            $selected = '';
-//            if ($i == $this->view->periodoInicial) {
-//                $selected = 'selected';
-//            }
-//            $html .= '<option value="' . $i . '" ' . $selected . '>' . Funcoes::montaPeriodo($i)[0] . '</option>';
-//        }
-//        $html .= '</select>';
-//        $html .= Constantes::$NBSP . '-' . Constantes::$NBSP;
-//        $html .= 'Periodo Final ';
-//        $html .= '<select id="periodoFinal" onchange="mudarPeriodo();">';
-//        for ($i = 0; $i > -30; $i--) {
-//            $selected = '';
-//            if ($i == $this->view->periodoFinal) {
-//                $selected = 'selected';
-//            }
-//            $html .= '<option value="' . $i . '" ' . $selected . '>' . Funcoes::montaPeriodo($i)[0] . '</option>';
-//        }
-//        $html .= '</select>';
         if ($this->view->mostrarBotaoPeriodoAnterior) {
             $html .= $botaoEsquerdo;
         }

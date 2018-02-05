@@ -36,7 +36,17 @@ use Application\Controller\Helper\Constantes;
                         /* Grupo da responsabilidades */
                         $grupo = $responsabilidade->getGrupo();
                         if ($grupo->getGrupoPaiFilhoPaiAtivo()) {
-                            foreach ($grupo->getGrupoPaiFilhoPai() as $gpfPai) {
+                            $grupoPais = $grupo->getGrupoPaiFilhoPai();
+
+                            $arrayPais = array();
+                            foreach ($grupoPais as $gpfPai) {
+                                $arrayPais[] = $gpfPai;
+                            }
+                            uksort($arrayPais, function ($a, $b) use ($arrayPais) {
+                                return ($arrayPais[$a]->getId() > $arrayPais[$b]->getId()) ? -1 : 1;
+                            });
+
+                            foreach ($arrayPais as $gpfPai) {
                                 $ativo = true;
                                 $entidadeSelecionada = $grupo->getEntidadeAtiva();
                                 if (!$gpfPai->verificarSeEstaAtivo()) {

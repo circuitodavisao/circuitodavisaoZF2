@@ -81,6 +81,7 @@ class DeployController extends CircuitoController {
                 }
                 if ($grupoResponsaveis = $pessoa->getResponsabilidadesAtivas()) {
                     foreach ($grupoResponsaveis as $grupoResponsavel) {
+                        $dados['Grupo'] = $grupoResponsavel->getGrupo()->getId();
                         foreach ($grupoResponsavel->getGrupo()->getEntidade() as $entidade) {
                             $dados['Entidade-' . $grupoResponsavel->getId() . ' Status'] = $entidade->verificarSeEstaAtivo();
                             $dados['Entidade-' . $grupoResponsavel->getId()] = $entidade->infoEntidade();
@@ -89,9 +90,9 @@ class DeployController extends CircuitoController {
                             foreach ($grupoEventoCelula as $grupoEvento) {
                                 $dados['Celula ' . $grupoEvento->getId() . ' Status'] = $grupoEvento->getEvento()->verificarSeEstaAtivo();
                                 $dados['Celula ' . $grupoEvento->getId() . ' DataCriacao'] = $grupoEvento->getEvento()->getData_criacaoStringPadraoBrasil();
-                                $dados['Celula ' . $grupoEvento->getId() . ' HoraCriacao'] = $grupoEvento->getEvento()->getHora_criacao();  
-                                if($grupoEvento->getEvento()->getData_inativacao()){
-                                $dados['Celula ' . $grupoEvento->getId() . ' DataExclusao'] = $grupoEvento->getEvento()->getData_inativacaoStringPadraoBrasil();
+                                $dados['Celula ' . $grupoEvento->getId() . ' HoraCriacao'] = $grupoEvento->getEvento()->getHora_criacao();
+                                if ($grupoEvento->getEvento()->getData_inativacao()) {
+                                    $dados['Celula ' . $grupoEvento->getId() . ' DataExclusao'] = $grupoEvento->getEvento()->getData_inativacaoStringPadraoBrasil();
                                 }
                                 $dados['Celula ' . $grupoEvento->getId() . ' Hospedeiro'] = $grupoEvento->getEvento()->getEventoCelula()->getNome_hospedeiro();
                                 $dados['Celula ' . $grupoEvento->getId() . ' Dia'] = $grupoEvento->getEvento()->getDia();
