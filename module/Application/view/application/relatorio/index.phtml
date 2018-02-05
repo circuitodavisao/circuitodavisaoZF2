@@ -24,6 +24,9 @@ $somaMeta = 0;
     th {
         text-align: center;
     }
+    .table-condensed>tbody>tr>td, .table-condensed>tbody>tr>th, .table-condensed>tfoot>tr>td, .table-condensed>tfoot>tr>th, .table-condensed>thead>tr>td, .table-condensed>thead>tr>th {
+        padding: 0px;
+    }
 </style>
 <div class="center-block mw800">
     <div class="panel-body bg-light">  
@@ -75,10 +78,10 @@ $somaMeta = 0;
                             if ($this->tipoRelatorio == 1 ||
                                     $this->tipoRelatorio == 3) {
                                 ?>
-                                <th>|</th>
-                                <th>LID</th>
-                                <th>MET</th>
-                                <th>|</th>
+                                <th class="hidden-xs">|</th>
+                                <th class="hidden-xs">LID</th>
+                                <th class="hidden-xs">MET</th>
+                                <th class="hidden-xs">|</th>
                                 <?php
                             }
                             if ($this->tipoRelatorio == 1) {
@@ -148,10 +151,10 @@ $somaMeta = 0;
                                 $this->tipoRelatorio == 3) {
                             $quantidadeLideres = $this->relatorioMedio['quantidadeLideres'];
                             $membresiaMeta = $this->relatorioMedio['membresiaMeta'];
-                            echo '<th>|</th>';
-                            echo '<th>' . $quantidadeLideres . '</th>';
-                            echo '<th>' . $membresiaMeta . '</th>';
-                            echo '<th>|</th>';
+                            echo '<th class="hidden-xs">|</th>';
+                            echo '<th class="hidden-xs">' . $quantidadeLideres . '</th>';
+                            echo '<th class="hidden-xs">' . $membresiaMeta . '</th>';
+                            echo '<th class="hidden-xs">|</th>';
                         }
                         if ($this->tipoRelatorio == 1) {
                             echo '<td class = "hidden-xs">' . $this->relatorio['quantidadeLideres'] . '</td>';
@@ -333,10 +336,10 @@ $somaMeta = 0;
                                             $this->tipoRelatorio == 3) {
                                         $quantidadeLideres = $relatorioDiscipuloMedio['quantidadeLideres'];
                                         $membresiaMeta = $relatorioDiscipuloMedio['membresiaMeta'];
-                                        echo '<th>|</th>';
-                                        echo '<th>' . $quantidadeLideres . '</th>';
-                                        echo '<th>' . $membresiaMeta . '</th>';
-                                        echo '<th>|</th>';
+                                        echo '<th class="hidden-xs">|</th>';
+                                        echo '<th class="hidden-xs">' . $quantidadeLideres . '</th>';
+                                        echo '<th class="hidden-xs">' . $membresiaMeta . '</th>';
+                                        echo '<th class="hidden-xs">|</th>';
                                     }
                                     if ($this->tipoRelatorio == 1) {
                                         echo '<td class = "hidden-xs">' . $relatorioDiscipulo['quantidadeLideres'] . '</td>';
@@ -488,10 +491,10 @@ $somaMeta = 0;
                         echo '<td>TOTAL</td>';
                         if ($this->tipoRelatorio == 1 ||
                                 $this->tipoRelatorio == 3) {
-                            echo '<th>|</th>';
-                            echo '<th>' . $somaLideres . '</th>';
-                            echo '<th>' . $somaMeta . '</th>';
-                            echo '<th>|</th>';
+                            echo '<th class="hidden-xs">|</th>';
+                            echo '<th class="hidden-xs">' . $somaLideres . '</th>';
+                            echo '<th class="hidden-xs">' . $somaMeta . '</th>';
+                            echo '<th class="hidden-xs">|</th>';
                         }
                         if ($this->tipoRelatorio == 1) {
                             echo '<td class = "hidden-xs">' . $somaGeralLideres . '</td>';

@@ -426,7 +426,7 @@ class Grupo extends CircuitoEntity {
             $contador++;
         }
         if ($inativa) {
-            $nomes = $nomes . ' (INATIVO - ' . $dataInativacao . ')';
+            $nomes = $nomes . ' <span class="hidden-xs">(INATIVO - ' . $dataInativacao . ')</span>';
         }
         return $nomes;
     }
