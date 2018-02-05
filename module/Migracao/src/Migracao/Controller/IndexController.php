@@ -224,7 +224,12 @@ class IndexController extends CircuitoController {
                             $html .= $this->unirCasal($grupoHomem, $grupoMulher);
                         }
                         if ($solicitacao->getSolicitacaoTipo()->getId() === SolicitacaoTipo::SEPARAR) {
-                            
+                            echo "<br />SEPARANDO";
+                            $pessoaParaInativar = $this->getRepositorio()->getPessoaORM()->encontrarPorId($arraySolicitacao['objeto2']);
+                            foreach ($pessoaParaInativar->getResponsabilidadesAtivas() as $grupoResponsavel) {
+                                $grupoResponsavel->setDataEHoraDeInativacao(date('Y-m-d', mktime(0, 0, 0, date("m"), date("d") - 1, date("Y"))));
+                                $this->getRepositorio()->getGrupoResponsavelORM()->persistir($grupoResponsavel, false);
+                            }
                         }
                         if ($solicitacao->getSolicitacaoTipo()->getId() === SolicitacaoTipo::TROCAR_RESPONSABILIDADES) {
                             echo "<br />TROCANDO RESPONSABILIDADES";

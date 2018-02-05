@@ -59,7 +59,7 @@ echo $this->templateFormularioTopo($this->titulo);
             }
             ?>
             <!-- Bloco objeto -->
-            <div id="blocoObjeto<?php echo $indiceDeObejtos; ?>" class="well col-xs-12 text-left" onClick='<?php // echo $funcaoOnclick;                     ?>'>
+            <div id="blocoObjeto<?php echo $indiceDeObejtos; ?>" class="well col-xs-12 text-left" onClick='<?php // echo $funcaoOnclick;                       ?>'>
                 <div class="col-md-12">
                     <span id="spanSelecioneObjeto<?php echo $indiceDeObejtos; ?>"><?php echo $stringSelecioneOObjeto; ?></span>    
                     <span id="spanObjeto<?php echo $indiceDeObejtos; ?>"></span>
@@ -150,7 +150,7 @@ echo $this->templateFormularioTopo($this->titulo);
             </div>
         <?php } ?>
     </div>
-    <!--divSelecionarMulher-->
+    <!--divSelecionarCasal-->
     <div id="divSelecionarCasal" class="hidden">
         <?php
         if (count($this->grupoPaiFilhoCasais) === 0) {
@@ -169,7 +169,20 @@ echo $this->templateFormularioTopo($this->titulo);
             </div>
         <?php } ?>
     </div>
-
+    <!--divSelecionarQuemSaira-->
+    <div id="divSelecionarQuemSaira" class="hidden">
+        <div class="section-divider mt20">
+            <span>Selecione quem do casal vai sair</span>
+        </div>
+        <select id="quemVaiSair" name="quemVaiSair" class="mt10 form-control">
+            <option value="0">SELECIONE</option>
+            <option value="1">HOMEM</option>
+            <option value="2">MULHER</option>
+        </select>
+        <button type="button" onClick='selecionarQuemSaira()' style="float: right;" class="mt10 btn ladda-button btn-primary mr5" data-style="zoom-in">
+            <span class="ladda-label">Selecionar</span>
+        </button>
+    </div> 
     <!--divSelecionarNumeracao-->
     <div id="divSelecionarNumeracao" class="hidden">
         <div class="section-divider mt20">
