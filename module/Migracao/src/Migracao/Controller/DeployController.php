@@ -76,6 +76,9 @@ class DeployController extends CircuitoController {
                 $dados['documento'] = $pessoa->getDocumento();
                 $dados['email'] = $pessoa->getEmail();
                 $dados['senha'] = $pessoa->getSenha();
+                $dados['token'] = $pessoa->getToken();
+                $dados['token-data'] = $pessoa->getToken_data();
+                $dados['token-hora'] = $pessoa->getToken_hora();
                 if ($pessoa->getPessoaHierarquiaAtivo()) {
                     $dados['hierarquia'] = $pessoa->getPessoaHierarquiaAtivo()->getHierarquia()->getNome();
                 }
