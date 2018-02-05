@@ -2034,7 +2034,7 @@ class CadastroController extends CircuitoController {
                 $chaveParaRemover = $key;
             }
         }
-        unset($grupoPaiFilhoEquipes[$key]);
+//        unset($grupoPaiFilhoEquipes[$key]);
 
         $arrayHomens = array();
         $arrayMulheres = array();
