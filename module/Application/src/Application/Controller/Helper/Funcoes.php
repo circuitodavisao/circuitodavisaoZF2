@@ -229,11 +229,14 @@ class Funcoes {
 
         $diaDaSemana = date('N', mktime(0, 0, 0, date('m'), date('d'), date('Y')));
 
-        $stringPeriodo = '';
+        $stringPeriodo = '0';
         if ($periodo > 0) {
             $stringPeriodo = '+' . $periodo;
         } else {
             $stringPeriodo = $periodo;
+        }
+        if ($stringPeriodo == '') {
+            $stringPeriodo = '0';
         }
         $tempoUnix = strtotime($stringPeriodo . ' week -' . ($diaDaSemana - 1) . ' days');
         $diaAjustado = date('d', $tempoUnix);
