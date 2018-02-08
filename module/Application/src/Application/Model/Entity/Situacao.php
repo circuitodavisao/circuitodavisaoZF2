@@ -7,7 +7,6 @@ namespace Application\Model\Entity;
  * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com>
  * Descricao: Entidade anotada da tabela situacao 
  */
-
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -17,6 +16,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Situacao extends CircuitoEntity {
 
+    const ATIVO = 1;
     const PENDENTE_DE_ACEITACAO = 2;
     const ACEITO_AGENDADO = 3;
     const RECUSAO = 4;
@@ -25,7 +25,7 @@ class Situacao extends CircuitoEntity {
     /**
      * @ORM\OneToMany(targetEntity="AlunoSituacao", mappedBy="alunoSituacao") 
      */
-    protected $alunoSituacao;
+    protected $turmaPessoaSituacao;
 
     /**
      * @ORM\OneToMany(targetEntity="SolicitacaoSituacao", mappedBy="situacao") 
@@ -33,7 +33,7 @@ class Situacao extends CircuitoEntity {
     protected $solicitacaoSituacao;
 
     public function __construct() {
-        $this->alunoSituacao = new ArrayCollection();
+        $this->turmaPessoaSituacao = new ArrayCollection();
         $this->solicitacaoSituacao = new ArrayCollection();
     }
 
@@ -48,20 +48,20 @@ class Situacao extends CircuitoEntity {
         $this->nome = $nome;
     }
 
-    function getAlunoSituacao() {
-        return $this->alunoSituacao;
-    }
-
-    function setAlunoSituacao($alunoSituacao) {
-        $this->alunoSituacao = $alunoSituacao;
-    }
-
     function getSolicitacaoSituacao() {
         return $this->solicitacaoSituacao;
     }
 
     function setSolicitacaoSituacao($solicitacaoSituacao) {
         $this->solicitacaoSituacao = $solicitacaoSituacao;
+    }
+
+    function getTurmaPessoaSituacao() {
+        return $this->turmaPessoaSituacao;
+    }
+
+    function setTurmaPessoaSituacao($turmaPessoaSituacao) {
+        $this->turmaPessoaSituacao = $turmaPessoaSituacao;
     }
 
 }

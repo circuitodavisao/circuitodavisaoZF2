@@ -17,7 +17,7 @@ use Entidade\Entity\EventoFrequencia;
 use Entidade\Entity\GrupoPessoa;
 use Entidade\Entity\GrupoResponsavel;
 use Entidade\Entity\PessoaHierarquia;
-use Entidade\Entity\TurmaAluno;
+use Entidade\Entity\TurmaPessoa;
 use Exception;
 use Zend\InputFilter\InputFilter;
 use Zend\InputFilter\InputFilterAwareInterface;
@@ -35,9 +35,9 @@ class Pessoa extends CircuitoEntity implements InputFilterAwareInterface {
     protected $grupoResponsavel;
 
     /**
-     * @ORM\OneToMany(targetEntity="TurmaAluno", mappedBy="pessoa") 
+     * @ORM\OneToMany(targetEntity="TurmaPessoa", mappedBy="pessoa") 
      */
-    protected $turmaAluno;
+    protected $turmaPessoa;
 
     /**
      * @ORM\OneToMany(targetEntity="EventoFrequencia", mappedBy="pessoa") 
@@ -65,7 +65,7 @@ class Pessoa extends CircuitoEntity implements InputFilterAwareInterface {
     protected $solicitacao;
 
     public function __construct() {
-        $this->turmaAluno = new ArrayCollection();
+        $this->turmaPessoa = new ArrayCollection();
         $this->grupoResponsavel = new ArrayCollection();
         $this->eventoFrequencia = new ArrayCollection();
         $this->grupoPessoa = new ArrayCollection();
@@ -556,26 +556,6 @@ class Pessoa extends CircuitoEntity implements InputFilterAwareInterface {
         $this->data_revisao = $data_revisao;
     }
 
-    function getTurmaAluno() {
-        return $this->turmaAluno;
-    }
-
-    /**
-     * Retorna a turma aluno ativo
-     * @return TurmaAluno
-     */
-    function getTurmaAlunoAtivo() {
-        $turmaAlunoAtiva = null;
-        foreach ($this->getTurmaAluno() as $ta) {
-            if ($ta->verificarSeEstaAtivo()) {
-                $turmaAlunoAtiva = $ta;
-                break;
-            }
-        }
-
-        return $turmaAlunoAtiva;
-    }
-
     /**
      * Retorna a pessoa hierarquia ativo
      * @return PessoaHierarquia
@@ -619,10 +599,6 @@ class Pessoa extends CircuitoEntity implements InputFilterAwareInterface {
             }
         }
         return $resposta;
-    }
-
-    function setTurmaAluno($turmaAluno) {
-        $this->turmaAluno = $turmaAluno;
     }
 
     /**
@@ -806,6 +782,14 @@ class Pessoa extends CircuitoEntity implements InputFilterAwareInterface {
 
     function setSolicitacao($solicitacao) {
         $this->solicitacao = $solicitacao;
+    }
+
+    function getTurmaPessoa() {
+        return $this->turmaPessoa;
+    }
+
+    function setTurmaPessoa($turmaPessoa) {
+        $this->turmaPessoa = $turmaPessoa;
     }
 
 }

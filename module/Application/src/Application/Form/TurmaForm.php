@@ -56,10 +56,10 @@ class TurmaForm extends Form {
             }
         }
         $inputSelectTipoTurma = new Select();
-        $inputSelectTipoTurma->setName(Constantes::$FORM_INPUT_TIPO);
+        $inputSelectTipoTurma->setName(Constantes::$FORM_ID_CURSO);
         $inputSelectTipoTurma->setAttributes(array(
             Constantes::$FORM_CLASS => Constantes::$FORM_CLASS_FORM_CONTROL,
-            Constantes::$FORM_ID => Constantes::$FORM_INPUT_TIPO,
+            Constantes::$FORM_ID => Constantes::$FORM_ID_CURSO,
         ));
         $inputSelectTipoTurma->setValueOptions($arrayTipo);
         $this->add($inputSelectTipoTurma);
