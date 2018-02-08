@@ -3,27 +3,27 @@
 namespace Application\Model\Entity;
 
 /**
- * Nome: TurmaAluno.php
+ * Nome: TurmaPessoa.php
  * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com>
- * Descricao: Entidade anotada da tabela turma_aluno
+ * Descricao: Entidade anotada da tabela turma_pessoa
  */
-use Doctrine\Common\Collections\ArrayCollection;
+
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity 
- * @ORM\Table(name="turma_aluno")
+ * @ORM\Table(name="turma_pessoa")
  */
-class TurmaAluno extends CircuitoEntity {
+class TurmaPessoa extends CircuitoEntity {
 
     /**
-     * @ORM\ManyToOne(targetEntity="Pessoa", inversedBy="turmaAluno")
+     * @ORM\ManyToOne(targetEntity="Pessoa", inversedBy="turmaPessoa")
      * @ORM\JoinColumn(name="pessoa_id", referencedColumnName="id")
      */
     private $pessoa;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Turma", inversedBy="turmaAluno")
+     * @ORM\ManyToOne(targetEntity="Turma", inversedBy="turmaPessoa")
      * @ORM\JoinColumn(name="turma_id", referencedColumnName="id")
      */
     private $turma;

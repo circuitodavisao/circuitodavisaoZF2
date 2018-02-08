@@ -26,7 +26,7 @@ $form->setAttribute(Constantes::$ACTION, $this->url(Constantes::$ROUTE_CURSO, ar
                         <div class="panel-body bg-light p25">
                             <?php
                             echo $this->divMensagens(); 
-                            echo $this->inputFormularioSimples(Constantes::$TRADUCAO_TIPO, $form->get(Constantes::$FORM_INPUT_TIPO), 12, 2);
+                            echo $this->inputFormularioSimples(Constantes::$TRADUCAO_TIPO, $form->get(Constantes::$FORM_ID_CURSO), 12, 2);
                             echo $this->inputFormularioSimples(Constantes::$TRADUCAO_MES, $form->get(Constantes::$FORM_INPUT_MES), 12, 2);
                             echo $this->inputFormularioSimples(Constantes::$TRADUCAO_ANO, $form->get(Constantes::$FORM_INPUT_ANO), 12, 2);
                             echo $this->inputFormularioSimples(Constantes::$TRADUCAO_OBSERVACAO, $form->get(Constantes::$FORM_OBSERVACAO), 12);

@@ -13,9 +13,8 @@ use Zend\View\Helper\AbstractHelper;
  */
 class ListagemTurmas extends AbstractHelper {
 
-
     public function __construct() {
-
+        
     }
 
     public function __invoke() {
@@ -26,8 +25,8 @@ class ListagemTurmas extends AbstractHelper {
         $html = '';
         $turmas = $this->view->turmas;
         $turmasAtivas = array();
-        foreach($turmas as $turma){
-            if($turma->verificarSeEstaAtivo()){
+        foreach ($turmas as $turma) {
+            if ($turma->verificarSeEstaAtivo()) {
                 $turmasAtivas[] = $turma;
             }
         }
@@ -43,7 +42,7 @@ class ListagemTurmas extends AbstractHelper {
             $html .= '<a href="/cadastroListarTurmaInativa">Turmas Inativas </a>';
             $html .= '</span>';
             $html .= '<div class="text-right">';
-            $stringNomeDaFuncaoOnClickCadastro = 'funcaoCircuito("' .Constantes::$ROUTE_CURSO. Constantes::$PAGINA_CADASTRAR_TURMA . '", 0)';
+            $stringNomeDaFuncaoOnClickCadastro = 'funcaoCircuito("' . Constantes::$ROUTE_CURSO . Constantes::$PAGINA_CADASTRAR_TURMA . '", 0)';
             $html .= $this->view->botaoLink($this->view->translate(Constantes::$TRADUCAO_CADASTRAR), Constantes::$STRING_HASHTAG, 0, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClickCadastro));
             $html .= '</div>';
             /* Fim Botões */
@@ -54,73 +53,72 @@ class ListagemTurmas extends AbstractHelper {
             ;
         } else {
 
-                $html .= $this->view->templateFormularioTopo('Turmas do IV');
-                $html .= '<div class="panel-body bg-light">';
+            $html .= $this->view->templateFormularioTopo('Turmas do IV');
+            $html .= '<div class="panel-body bg-light">';
 
-                $html .= '<table class="table">';
-                $html .= '<thead>';
+            $html .= '<table class="table">';
+            $html .= '<thead>';
+            $html .= '<tr>';
+
+            $html .= '<th class="text-center">';
+            $html .= 'ID';
+            $html .= '</th>';
+            $html .= '<th class="text-center">';
+            $html .= 'Mês';
+            $html .= '</th>';
+            $html .= '<th class="text-center">';
+            $html .= 'Ano';
+            $html .= '</th>';
+            $html .= '<th class="text-center hidden-xs">';
+            $html .= 'Observação';
+            $html .= '</th>';
+//                    }
+            $html .= '<th class="text-center"></th>';
+            $html .= '</tr>';
+            $html .= '</thead>';
+            $html .= '<tbody>';
+
+            foreach ($turmasAtivas as $turma) {
                 $html .= '<tr>';
 
-                $html .= '<th class="text-center">';
-                $html .= 'ID';
-                $html .= '</th>';
-                $html .= '<th class="text-center">';
-                $html .= 'Mês';
-                $html .= '</th>';
-                $html .= '<th class="text-center">';
-                $html .= 'Ano';
-                $html .= '</th>';
-                $html .= '<th class="text-center hidden-xs">';
-                $html .= 'Observação';
-                $html .= '</th>';
-//                    }
-                $html .= '<th class="text-center"></th>';
-                $html .= '</tr>';
-                $html .= '</thead>';
-                $html .= '<tbody>';
+                $html .= '<td class="text-center">' . $turma->getId() . '</td>';
 
-                foreach ($turmasAtivas as $turma) {
-                    $html .= '<tr>';
+                $stringNomeDaFuncaoOnClickInserir = 'funcaoCircuito("' . Constantes::$ROUTE_CURSO . Constantes::$PAGINA_FICHA_REVISAO . '", ' . $turma->getId() . ')';
+                $stringNomeDaFuncaoOnClick = 'funcaoCircuito("' . Constantes::$ROUTE_CURSO . Constantes::$PAGINA_EDITAR_TURMA . '", ' . $turma->getId() . ')';
+                $stringNomeDaFuncaoOnClickExclusao = 'funcaoCircuito("' . Constantes::$ROUTE_CURSO . Constantes::$PAGINA_EXCLUSAO_TURMA . '", ' . $turma->getId() . ')';
+                $stringNomeDaFuncaoOnClickIncluirAlunos = 'funcaoCircuito("' . Constantes::$ROUTE_CURSO . Constantes::$PAGINA_LISTAGEM_REVISAO_TURMA . '",' . $turma->getId() . ')';
 
-                    $html .= '<td class="text-center">' . $turma->getId() . '</td>';
+                $html .= '<td class="text-center">' . Funcoes::mesPorExtenso($turma->getMes(), 1) . '</td>';
+                $html .= '<td class="text-center">' . $turma->getAno() . '</td>';
+                $html .= '<td class="text-center hidden-xs">' . $turma->getObservacao() . '</td>';
 
-                    $stringNomeDaFuncaoOnClickInserir = 'funcaoCircuito("' .Constantes::$ROUTE_CURSO. Constantes::$PAGINA_FICHA_REVISAO . '", ' . $turma->getId() . ')';
-                    $stringNomeDaFuncaoOnClick = 'funcaoCircuito("' .Constantes::$ROUTE_CURSO. Constantes::$PAGINA_EDITAR_TURMA . '", ' . $turma->getId() . ')';
-                    $stringNomeDaFuncaoOnClickExclusao = 'funcaoCircuito("' .Constantes::$ROUTE_CURSO. Constantes::$PAGINA_EXCLUSAO_TURMA . '", ' . $turma->getId() . ')';
-                    $stringNomeDaFuncaoOnClickIncluirAlunos = 'funcaoCircuito("'.Constantes::$ROUTE_CADASTRO.Constantes::$PAGINA_LISTAGEM_REVISAO_TURMA.'",'.$turma->getId().')';
+                $html .= '<td class="text-center">';
 
-                    $html .= '<td class="text-center">' . Funcoes::mesPorExtenso($turma->getMes(),1) . '</td>';
-                    $html .= '<td class="text-center">' . $turma->getAno() . '</td>';
-                    $html .= '<td class="text-center hidden-xs">' . $turma->getObservacao() . '</td>';
-
-                    $html .= '<td class="text-center">';
-
-                    $html .= $this->view->botaoLink(Constantes::$STRING_ICONE_PENCIL, Constantes::$STRING_HASHTAG, 3, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClick));
-                    $html .= $this->view->botaoLink(Constantes::$STRING_ICONE_TIMES, Constantes::$STRING_HASHTAG, 9, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClickExclusao));
-                    $html .= $this->view->botaoLink(Constantes::$STRING_ICONE_PLUS, Constantes::$STRING_HASHTAG, 4, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClickIncluirAlunos));
-                    $html .= '</td>';
+                $html .= $this->view->botaoLink(Constantes::$STRING_ICONE_PENCIL, Constantes::$STRING_HASHTAG, 3, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClick));
+                $html .= $this->view->botaoLink(Constantes::$STRING_ICONE_TIMES, Constantes::$STRING_HASHTAG, 9, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClickExclusao));
+                $html .= $this->view->botaoLink(Constantes::$STRING_ICONE_PLUS, Constantes::$STRING_HASHTAG, 4, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClickIncluirAlunos));
+                $html .= '</td>';
 //                        }
-                    $html .= '</tr>';
-                }
-                $html .= '</tbody>';
-                $html .= '</table>';
+                $html .= '</tr>';
+            }
+            $html .= '</tbody>';
+            $html .= '</table>';
 
-                $html .= '</div>';
-                /* Fim panel-body */
+            $html .= '</div>';
+            /* Fim panel-body */
 
-                $html .= '<div class="panel-footer">';
-                $html .= '<span class="align-bottom">';
-                $html .= '<a href="/cadastroListarTurmaInativa">Turmas Inativas </a>';
-                $html .= '</span>';
-                $html .= '<div class="text-right">';
-                $stringNomeDaFuncaoOnClickCadastro = 'funcaoCircuito("' .Constantes::$ROUTE_CURSO. Constantes::$PAGINA_CADASTRAR_TURMA . '", 0)';
-                $html .= $this->view->botaoLink($this->view->translate(Constantes::$TRADUCAO_CADASTRAR), Constantes::$STRING_HASHTAG, 0, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClickCadastro));
-                $html .= '</div>';
-                /* Fim Botões */
-                $html .= '</div>';
-                /* Fim panel-footer */
-                $html .= $this->view->templateFormularioRodape();
-
+            $html .= '<div class="panel-footer">';
+            $html .= '<span class="align-bottom">';
+            $html .= '<a href="/cadastroListarTurmaInativa">Turmas Inativas </a>';
+            $html .= '</span>';
+            $html .= '<div class="text-right">';
+            $stringNomeDaFuncaoOnClickCadastro = 'funcaoCircuito("' . Constantes::$ROUTE_CURSO . Constantes::$PAGINA_CADASTRAR_TURMA . '", 0)';
+            $html .= $this->view->botaoLink($this->view->translate(Constantes::$TRADUCAO_CADASTRAR), Constantes::$STRING_HASHTAG, 0, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClickCadastro));
+            $html .= '</div>';
+            /* Fim Botões */
+            $html .= '</div>';
+            /* Fim panel-footer */
+            $html .= $this->view->templateFormularioRodape();
         }
 
         return $html;

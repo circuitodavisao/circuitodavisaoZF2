@@ -7,7 +7,6 @@ namespace Application\Model\Entity;
  * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com>
  * Descricao: Entidade anotada da tabela turma
  */
-
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -18,9 +17,9 @@ use Doctrine\ORM\Mapping as ORM;
 class Turma extends CircuitoEntity {
 
     /**
-     * @ORM\OneToMany(targetEntity="TurmaAluno", mappedBy="pessoa")
+     * @ORM\OneToMany(targetEntity="TurmaPessoa", mappedBy="pessoa")
      */
-    protected $turmaAluno;
+    protected $turmaPessoa;
 
     /** @ORM\Column(type="integer") */
     protected $mes;
@@ -32,22 +31,37 @@ class Turma extends CircuitoEntity {
     protected $observacao;
 
     /** @ORM\Column(type="integer") */
-    protected $tipo_turma_id;
+    protected $grupo_id;
+
+    /** @ORM\Column(type="integer") */
+    protected $curso_id;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Curso", inversedBy="turma")
+     * @ORM\JoinColumn(name="curso_id", referencedColumnName="id")
+     */
+    private $curso;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Grupo", inversedBy="turma")
+     * @ORM\JoinColumn(name="grupo_id", referencedColumnName="id")
+     */
+    private $grupo;
 
     public function __construct() {
-        $this->turmaAluno = new ArrayCollection();
+        $this->turmaPessoa = new ArrayCollection();
     }
 
-    function getTurmaAluno() {
-        return $this->turmaAluno;
+    function getTurmaPessoa() {
+        return $this->turmaPessoa;
     }
 
     function getData_revisao() {
         return $this->data_revisao;
     }
 
-    function setTurmaAluno($turmaAluno) {
-        $this->turmaAluno = $turmaAluno;
+    function setTurmaPessoa($turmaPessoa) {
+        $this->turmaPessoa = $turmaPessoa;
     }
 
     function setData_revisao($data_revisao) {
@@ -78,11 +92,36 @@ class Turma extends CircuitoEntity {
         $this->observacao = $observacao;
     }
 
-    function getTipo_turma_id() {
-        return $this->tipo_turma_id;
+    function getCurso() {
+        return $this->curso;
     }
 
-    function setTipo_turma_id($tipo_turma_id) {
-        $this->tipo_turma_id = $tipo_turma_id;
+    function getGrupo() {
+        return $this->grupo;
     }
+
+    function setCurso($curso) {
+        $this->curso = $curso;
+    }
+
+    function setGrupo($grupo) {
+        $this->grupo = $grupo;
+    }
+
+    function getGrupo_id() {
+        return $this->grupo_id;
+    }
+
+    function getCurso_id() {
+        return $this->curso_id;
+    }
+
+    function setGrupo_id($grupo_id) {
+        $this->grupo_id = $grupo_id;
+    }
+
+    function setCurso_id($curso_id) {
+        $this->curso_id = $curso_id;
+    }
+
 }
