@@ -12,8 +12,11 @@ use Application\Model\Entity\Aula;
 use Application\Model\Entity\Curso;
 use Application\Model\Entity\Disciplina;
 use Application\Model\Entity\Pessoa;
+use Application\Model\Entity\Situacao;
 use Application\Model\Entity\Turma;
+use Application\Model\Entity\TurmaAula;
 use Application\Model\Entity\TurmaPessoa;
+use Application\Model\Entity\TurmaPessoaSituacao;
 use Application\Model\ORM\RepositorioORM;
 use Exception;
 use Zend\Json\Json;
@@ -547,7 +550,7 @@ class CursoController extends CircuitoController {
         ));
     }
 
-      public function listarTurmaInativaAction() {
+    public function listarTurmaInativaAction() {
 
         $turmas = $this->getRepositorio()->getTurmaORM()->encontrarTodas();
         $view = new ViewModel(array(
@@ -642,36 +645,48 @@ class CursoController extends CircuitoController {
         $request = $this->getRequest();
         if ($request->isPost()) {
             try {
+                $this->getRepositorio()->iniciarTransacao();
                 $idEvento = $_POST['idEvento'];
                 $evento = $this->getRepositorio()->getEventoORM()->encontrarPorId($idEvento);
-                $frequencias = $this->view->evento->getEventoFrequencia();
+                $frequencias = $evento->getEventoFrequencia();
+                $pessoas = array();
                 if ($frequencias) {
                     foreach ($frequencias as $frequencia) {
                         if ($frequencia->getFrequencia() == 'S') {
+                            $adicionar = true;
                             foreach ($_POST as $key => $value) {
-                                if ($key == 'alunos') {
-                                    if ($frequencia->getPessoa()->getId() != $value) {
-                                        $pessoas[] = $frequencia->getPessoa();
-                                    }
+                                if ($key == 'alunos' && $frequencia->getPessoa()->getId() != $value) {
+                                    $adicionar = false;
                                 }
+                            }
+                            if ($adicionar) {
+                                $pessoas[] = $frequencia->getPessoa();
                             }
                         }
                     }
-                    $idEntidadeAtual = $sessao->idEntidadeAtual;
-                    $entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
-                    $grupo = $entidade->getGrupo();
+                    $turma = $this->getRepositorio()->getTurmaORM()->encontrarPorId($sessao->idTurma);
                     foreach ($pessoas as $pessoa) {
                         $turmaPessoa = new TurmaPessoa();
                         $turmaPessoa->setPessoa($pessoa);
                         $turmaPessoa->setTurma($turma);
+                        $this->getRepositorio()->getTurmaPessoaORM()->persistir($turmaPessoa);
+
+                        $situacao = $this->getRepositorio()->getSituacaoORM()->encontrarPorId(Situacao::ATIVO);
+                        $turmaPessoaSituacao = new TurmaPessoaSituacao();
+                        $turmaPessoaSituacao->setSituacao($situacao);
+                        $turmaPessoaSituacao->setTurma_pessoa($turmaPessoa);
+                        $this->getRepositorio()->getTurmaPessoaSituacaoORM()->persistir($turmaPessoaSituacao);
                     }
+
+                    $this->getRepositorio()->fecharTransacao();
 
                     return $this->redirect()->toRoute(Constantes::$ROUTE_CURSO, array(
                                 Constantes::$ACTION => Constantes::$PAGINA_LISTAR_TURMA,
                     ));
                 }
             } catch (Exception $exc) {
-                echo $exc->get();
+                $this->getRepositorio()->desfazerTransacao();
+                echo $exc->getMessage();
             }
         }
     }
@@ -700,6 +715,68 @@ class CursoController extends CircuitoController {
         $view->addChild($layoutJS, Constantes::$LAYOUT_STRING_JS_EXCLUSAO_TURMA);
 
         return $view;
-    }    
+    }
+
+    public function abrirAulaAction() {
+        $sessao = new Container(Constantes::$NOME_APLICACAO);
+        $idTurma = $sessao->idSessao;
+        $turma = $this->getRepositorio()->getTurmaORM()->encontrarPorId($idTurma);
+
+        $idAulaAtiva = 0;
+        if ($turma->getTurmaAulaAtiva()) {
+            $idAulaAtiva = $turma->getTurmaAulaAtiva()->getAula()->getId();
+        }
+        $opcoes = array();
+        $curso = $turma->getCurso();
+        foreach ($curso->getDisciplina() as $disciplina) {
+            foreach ($disciplina->getAula() as $aula) {
+                $opcoes[$aula->getId()][0] = $disciplina->getNome() . ' - ' . $aula->getNome();
+                $opcoes[$aula->getId()][1] = '';
+                if ($idAulaAtiva == $aula->getId()) {
+                    $opcoes[$aula->getId()][1] = 'selected';
+                }
+            }
+        }
+
+        return new ViewModel(array(
+            'opcoes' => $opcoes,
+        ));
+    }
+
+    public function salvarAulaAction() {
+        $sessao = new Container(Constantes::$NOME_APLICACAO);
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            try {
+                $this->getRepositorio()->iniciarTransacao();
+                $idAula = $_POST['idAula'];
+
+                $idTurma = $sessao->idSessao;
+                $turma = $this->getRepositorio()->getTurmaORM()->encontrarPorId($idTurma);
+
+                if ($turmaAulaAtiva = $turma->getTurmaAulaAtiva()) {
+                    $naoMudarDataDeCriacao = false;
+                    $turmaAulaAtiva->setDataEHoraDeInativacao();
+                    $this->getRepositorio()->getTurmaAulaORM()->persistir($turmaAulaAtiva, $naoMudarDataDeCriacao);
+                }
+
+                if (intval($idAula) !== 0) {
+                    $turmaAula = new TurmaAula();
+                    $turmaAula->setTurma($turma);
+                    $turmaAula->setAula($this->getRepositorio()->getAulaORM()->encontrarPorId($idAula));
+                    $this->getRepositorio()->getTurmaAulaORM()->persistir($turmaAula);
+                }
+
+                $this->getRepositorio()->fecharTransacao();
+
+                return $this->redirect()->toRoute(Constantes::$ROUTE_CURSO, array(
+                            Constantes::$ACTION => Constantes::$PAGINA_LISTAR_TURMA,
+                ));
+            } catch (Exception $exc) {
+                $this->getRepositorio()->desfazerTransacao();
+                echo $exc->getMessage();
+            }
+        }
+    }
 
 }
