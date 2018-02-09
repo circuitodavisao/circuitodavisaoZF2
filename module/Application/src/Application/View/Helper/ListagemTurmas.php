@@ -61,7 +61,7 @@ class ListagemTurmas extends AbstractHelper {
             $html .= '<tr>';
 
             $html .= '<th class="text-center">';
-            $html .= 'ID';
+            $html .= 'Id';
             $html .= '</th>';
             $html .= '<th class="text-center">';
             $html .= 'Mês';
@@ -72,33 +72,46 @@ class ListagemTurmas extends AbstractHelper {
             $html .= '<th class="text-center hidden-xs">';
             $html .= 'Observação';
             $html .= '</th>';
-//                    }
+            $html .= '<th class="text-center hidden-xs">';
+            $html .= 'Alunos';
+            $html .= '</th>';
+            if ($turma->getTurmaAulaAtiva()) {
+                $html .= '<th class="text-center hidden-xs"></th>';
+                $html .= '<th class="text-center hidden-xs">';
+                $html .= 'Aula Aberta';
+                $html .= '</th>';
+            }
             $html .= '<th class="text-center"></th>';
             $html .= '</tr>';
             $html .= '</thead>';
             $html .= '<tbody>';
 
             foreach ($turmasAtivas as $turma) {
-                $html .= '<tr>';
-
-                $html .= '<td class="text-center">' . $turma->getId() . '</td>';
-
-                $stringNomeDaFuncaoOnClickInserir = 'funcaoCircuito("' . Constantes::$ROUTE_CURSO . Constantes::$PAGINA_FICHA_REVISAO . '", ' . $turma->getId() . ')';
                 $stringNomeDaFuncaoOnClick = 'funcaoCircuito("' . Constantes::$ROUTE_CURSO . Constantes::$PAGINA_EDITAR_TURMA . '", ' . $turma->getId() . ')';
                 $stringNomeDaFuncaoOnClickExclusao = 'funcaoCircuito("' . Constantes::$ROUTE_CURSO . Constantes::$PAGINA_EXCLUSAO_TURMA . '", ' . $turma->getId() . ')';
-                $stringNomeDaFuncaoOnClickIncluirAlunos = 'funcaoCircuito("' . Constantes::$ROUTE_CURSO . Constantes::$PAGINA_LISTAGEM_REVISAO_TURMA . '",' . $turma->getId() . ')';
+                $stringNomeDaFuncaoOnClickIncluirAlunos = 'funcaoCircuito("' . Constantes::$ROUTE_CADASTRO . Constantes::$PAGINA_LISTAGEM_REVISAO_TURMA . '",' . $turma->getId() . ')';
+                $stringNomeDaFuncaoOnClickAbrirAula = 'funcaoCircuito("' . Constantes::$ROUTE_CURSO . 'AbrirAula' . '",' . $turma->getId() . ')';
 
+                $html .= '<tr>';
+                $html .= '<td class="text-center">' . $turma->getId() . '</td>';
                 $html .= '<td class="text-center">' . Funcoes::mesPorExtenso($turma->getMes(), 1) . '</td>';
                 $html .= '<td class="text-center">' . $turma->getAno() . '</td>';
                 $html .= '<td class="text-center hidden-xs">' . $turma->getObservacao() . '</td>';
-
+                $html .= '<td class="text-center hidden-xs">' . count($turma->getTurmaPessoa()) . '</td>';
                 $html .= '<td class="text-center">';
-
                 $html .= $this->view->botaoLink(Constantes::$STRING_ICONE_PENCIL, Constantes::$STRING_HASHTAG, 3, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClick));
                 $html .= $this->view->botaoLink(Constantes::$STRING_ICONE_TIMES, Constantes::$STRING_HASHTAG, 9, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClickExclusao));
                 $html .= $this->view->botaoLink(Constantes::$STRING_ICONE_PLUS, Constantes::$STRING_HASHTAG, 4, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClickIncluirAlunos));
+                $html .= $this->view->botaoLink('Abrir Aula', Constantes::$STRING_HASHTAG, 4, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClickAbrirAula));
                 $html .= '</td>';
-//                        }
+
+                if ($turma->getTurmaAulaAtiva()) {
+                    $html .= '<td class="text-center hidden-xs">';
+                    $html .= $turma->getTurmaAulaAtiva()->getAula()->getNome();
+                    $html .= '</td>';
+                }
+
+
                 $html .= '</tr>';
             }
             $html .= '</tbody>';

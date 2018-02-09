@@ -17,9 +17,14 @@ use Doctrine\ORM\Mapping as ORM;
 class Turma extends CircuitoEntity {
 
     /**
-     * @ORM\OneToMany(targetEntity="TurmaPessoa", mappedBy="pessoa")
+     * @ORM\OneToMany(targetEntity="TurmaPessoa", mappedBy="turma")
      */
     protected $turmaPessoa;
+
+    /**
+     * @ORM\OneToMany(targetEntity="TurmaAula", mappedBy="turma")
+     */
+    protected $turmaAula;
 
     /** @ORM\Column(type="integer") */
     protected $mes;
@@ -48,8 +53,20 @@ class Turma extends CircuitoEntity {
      */
     private $grupo;
 
+    public function getTurmaAulaAtiva() {
+        $entidadeAtiva = null;
+        foreach ($this->getTurmaAula() as $entidade) {
+            if ($entidade->verificarSeEstaAtivo()) {
+                $entidadeAtiva = $entidade;
+                break;
+            }
+        }
+        return $entidadeAtiva;
+    }
+
     public function __construct() {
         $this->turmaPessoa = new ArrayCollection();
+        $this->turmaAula = new ArrayCollection();
     }
 
     function getTurmaPessoa() {
@@ -122,6 +139,14 @@ class Turma extends CircuitoEntity {
 
     function setCurso_id($curso_id) {
         $this->curso_id = $curso_id;
+    }
+
+    function getTurmaAula() {
+        return $this->turmaAula;
+    }
+
+    function setTurmaAula($turmaAula) {
+        $this->turmaAula = $turmaAula;
     }
 
 }

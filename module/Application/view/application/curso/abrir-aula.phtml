@@ -1,0 +1,19 @@
+<?php
+
+$html = '';
+$html .= $this->templateFormularioTopo('Abrir Aula');
+$html .= '<form action="/cursoSalvarAula" method="post">';
+$html .= '<div class="panel-body bg-light">';
+$html .= '<select class="form-control" id="idAula" name="idAula">';
+$html .= '<option value="0">SELECIONE</option>';
+foreach ($this->opcoes as $key => $value) {
+    $html .= '<option value="' . $key . '" ' . $value[1] . '>' . $value[0] . '</option>';
+}
+$html .= '</select>';
+$html .= '</div>';
+$html .= '<div class="panel-footer">';
+$html .= $this->botaoSimples('Salvar', $this->funcaoOnClick('this.form.submit()'));
+$html .= '</div>';
+$html .= '</form>';
+$html .= $this->templateFormularioRodape();
+echo $html;

@@ -23,7 +23,7 @@ class Situacao extends CircuitoEntity {
     const CONCLUIDO = 5;
 
     /**
-     * @ORM\OneToMany(targetEntity="AlunoSituacao", mappedBy="alunoSituacao") 
+     * @ORM\OneToMany(targetEntity="TurmaPessoaSituacao", mappedBy="situacao") 
      */
     protected $turmaPessoaSituacao;
 

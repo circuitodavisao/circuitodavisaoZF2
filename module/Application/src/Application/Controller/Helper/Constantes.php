@@ -245,7 +245,9 @@ class Constantes {
     public static $ENTITY_GRUPO = 'Application\Model\Entity\Grupo';
     public static $ENTITY_GRUPO_EVENTO = 'Application\Model\Entity\GrupoEvento';
     public static $ENTITY_GRUPO_ATENDIMENTO = 'Application\Model\Entity\GrupoAtendimento';
-    public static $ENTITY_TURMA_ALUNO = 'Application\Model\Entity\TurmaAluno';
+    public static $ENTITY_TURMA_PESSOA_SITUACAO = 'Application\Model\Entity\TurmaPessoaSituacao';
+    public static $ENTITY_TURMA_AULA = 'Application\Model\Entity\TurmaAula';
+    public static $ENTITY_TURMA_PESSOA = 'Application\Model\Entity\TurmaPessoa';
     public static $ENTITY_TURMA = 'Application\Model\Entity\Turma';
     public static $ENTITY_SOLICITACAO = 'Application\Model\Entity\Solicitacao';
     public static $ENTITY_SOLICITACAO_TIPO = 'Application\Model\Entity\SolicitacaoTipo';

@@ -7,20 +7,12 @@ use Application\Controller\Helper\Correios;
 use Application\Controller\Helper\Funcoes;
 use Application\Form\AtivarFichaForm;
 use Application\Form\AtualizarCadastroForm;
-use Application\Form\AulaForm;
 use Application\Form\CadastrarPessoaRevisaoForm;
 use Application\Form\CelulaForm;
-use Application\Form\CursoForm;
-use Application\Form\DisciplinaForm;
 use Application\Form\EventoForm;
 use Application\Form\GrupoForm;
-use Application\Form\SelecionarAlunosForm;
 use Application\Form\SolicitacaoForm;
 use Application\Form\SolicitacaoReceberForm;
-use Application\Form\TurmaForm;
-use Application\Model\Entity\Aula;
-use Application\Model\Entity\Curso;
-use Application\Model\Entity\Disciplina;
 use Application\Model\Entity\Entidade;
 use Application\Model\Entity\EntidadeTipo;
 use Application\Model\Entity\Evento;
@@ -38,7 +30,6 @@ use Application\Model\Entity\Situacao;
 use Application\Model\Entity\Solicitacao;
 use Application\Model\Entity\SolicitacaoSituacao;
 use Application\Model\Entity\SolicitacaoTipo;
-use Application\Model\Entity\Turma;
 use Application\Model\ORM\RepositorioORM;
 use DateTime;
 use Exception;
@@ -430,7 +421,7 @@ class CadastroController extends CircuitoController {
             $tituloDaPagina = Constantes::$TRADUCAO_LISTAGEM_REVISAO;
             $tipoEvento = 9;
             /* Id da Turma em que os alunos serão selecionados */
-            $extra = $sessao->idSessao;
+            $sessao->idTurma = $sessao->idSessao;
         }
 
 
