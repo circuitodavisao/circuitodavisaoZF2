@@ -93,24 +93,10 @@ return array(
                     ),
                 ),
             ),
-            'instituto' => array(
-                'type' => 'Segment',
-                'options' => array(
-                    'route' => '/instituto[:action[/:id]]',
-                    'constraints' => array(
-                        'action' => '[a-zA-Z]+',
-                        'id' => '[1-2]',
-                    ),
-                    'defaults' => array(
-                        'controller' => 'Application\Controller\Instituto',
-                        'action' => 'index',
-                    ),
-                ),
-            ),
             'curso' => array(
                 'type' => 'Segment',
                 'options' => array(
-                    'route' => '/curso[:action]',
+                    'route' => '/curso[:action][/:id]',
                     'constraints' => array(
                         'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
                     ),

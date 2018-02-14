@@ -16,7 +16,7 @@ use Doctrine\ORM\Mapping as ORM;
 class TurmaPessoaFrequencia extends CircuitoEntity {
 
     /**
-     * @ORM\ManyToOne(targetEntity="TurmaPessoa", inversedBy="turmaPessoaSituacao")
+     * @ORM\ManyToOne(targetEntity="TurmaPessoa", inversedBy="turmaPessoaFrequencia")
      * @ORM\JoinColumn(name="turma_pessoa_id", referencedColumnName="id")
      */
     private $turma_pessoa;

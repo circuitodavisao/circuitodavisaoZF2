@@ -3,6 +3,7 @@
 namespace Application\Controller;
 
 use Application\Controller\Helper\Constantes;
+use Application\Controller\Helper\Funcoes;
 use Application\Form\AulaForm;
 use Application\Form\CursoForm;
 use Application\Form\DisciplinaForm;
@@ -16,8 +17,10 @@ use Application\Model\Entity\Situacao;
 use Application\Model\Entity\Turma;
 use Application\Model\Entity\TurmaAula;
 use Application\Model\Entity\TurmaPessoa;
+use Application\Model\Entity\TurmaPessoaFrequencia;
 use Application\Model\Entity\TurmaPessoaSituacao;
 use Application\Model\ORM\RepositorioORM;
+use DateTime;
 use Exception;
 use Zend\Json\Json;
 use Zend\Session\Container;
@@ -777,25 +780,6 @@ class CursoController extends CircuitoController {
                 echo $exc->getMessage();
             }
         }
-    }
-
-    public function receberFrequenciaAction() {
-        try {
-            $this->getRepositorio()->iniciarTransacao();
-            $tokenDaRota = $this->params()->fromRoute(Constantes::$ID);
-
-//            $this->getRepositorio()->get
-
-            $this->getRepositorio()->fecharTransacao();
-            $response->setContent(Json::encode(
-                            array('response' => 'true',
-                            )
-            ));
-        } catch (Exception $exc) {
-            $this->getRepositorio()->desfazerTransacao();
-            echo $exc->getTraceAsString();
-        }
-        return $response;
-    }
+    }  
 
 }

@@ -28,9 +28,14 @@ class TurmaPessoa extends CircuitoEntity {
     private $turma;
 
     /**
-     * @ORM\OneToMany(targetEntity="TurmaPessoaFrequencia", mappedBy="turmaPessoaFrequencia")
+     * @ORM\OneToMany(targetEntity="TurmaPessoaFrequencia", mappedBy="turmaPessoa")
      */
     protected $turmaPessoaFrequencia;
+
+    /**
+     * @ORM\OneToMany(targetEntity="TurmaPessoaAula", mappedBy="turmaPessoa")
+     */
+    protected $turmaPessoaAula;
 
     /** @ORM\Column(type="integer") */
     protected $pessoa_id;
@@ -40,6 +45,7 @@ class TurmaPessoa extends CircuitoEntity {
 
     public function __construct() {
         $this->turmaPessoaFrequencia = new ArrayCollection();
+        $this->turmaPessoaAula = new ArrayCollection();
     }
 
     /**
@@ -92,6 +98,14 @@ class TurmaPessoa extends CircuitoEntity {
 
     function setTurmaPessoaFrequencia($turmaPessoaFrequencia) {
         $this->turmaPessoaFrequencia = $turmaPessoaFrequencia;
+    }
+
+    function getTurmaPessoaAula() {
+        return $this->turmaPessoaAula;
+    }
+
+    function setTurmaPessoaAula($turmaPessoaAula) {
+        $this->turmaPessoaAula = $turmaPessoaAula;
     }
 
 }
