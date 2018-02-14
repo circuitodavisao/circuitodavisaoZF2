@@ -35,8 +35,14 @@ class Aula extends CircuitoEntity {
      */
     protected $turmaAula;
 
+    /**
+     * @ORM\OneToMany(targetEntity="TurmaPessoaAula", mappedBy="aula")
+     */
+    protected $turmaPessoaAula;
+
     public function __construct() {
         $this->turmaAula = new ArrayCollection();
+        $this->turmaPessoaAula = new ArrayCollection();
     }
 
     function getNome() {
@@ -77,6 +83,14 @@ class Aula extends CircuitoEntity {
 
     function setTurmaAula($turmaAula) {
         $this->turmaAula = $turmaAula;
+    }
+
+    function getTurmaPessoaAula() {
+        return $this->turmaPessoaAula;
+    }
+
+    function setTurmaPessoaAula($turmaPessoaAula) {
+        $this->turmaPessoaAula = $turmaPessoaAula;
     }
 
 }

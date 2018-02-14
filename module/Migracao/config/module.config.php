@@ -25,7 +25,7 @@ return array(
                     'route' => '/migracao[:action][/:id]',
                     'constraints' => array(
                         'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
-                        'id' => '[a-zA-Z0-9]+',
+                        'id' => '[a-zA-Z-0-9_:]+',
                     ),
                     'defaults' => array(
                         'controller' => 'Migracao\Controller\Index',
