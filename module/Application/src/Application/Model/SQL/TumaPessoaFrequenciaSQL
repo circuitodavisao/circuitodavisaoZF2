@@ -1,0 +1,53 @@
+CREATE TABLE public.turma_pessoa_frequencia
+(
+    id serial NOT NULL,
+    data_criacao date NOT NULL,
+    hora_criacao time without time zone NOT NULL,
+    data_inativacao date,
+    hora_inativacao time without time zone,
+    turma_pessoa_id integer NOT NULL,
+    data date NOT NULL,
+    hora time without time zone NOT NULL,
+    CONSTRAINT pk_turma_pessoa_id PRIMARY KEY (id),
+    CONSTRAINT fk_turma_pessoa_frequencia_turma_pessoa_id FOREIGN KEY (turma_pessoa_id)
+        REFERENCES public.turma_pessoa (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+)
+WITH (
+    OIDS = FALSE
+);
+
+ALTER TABLE public.turma_pessoa_frequencia
+    OWNER to postgres;
+COMMENT ON TABLE public.turma_pessoa_frequencia
+    IS 'Frequencia vindo do app';
+
+COMMENT ON COLUMN public.turma_pessoa_frequencia.id
+    IS 'Identificacao';
+
+COMMENT ON COLUMN public.turma_pessoa_frequencia.data_criacao
+    IS 'Data de criação';
+
+COMMENT ON COLUMN public.turma_pessoa_frequencia.hora_criacao
+    IS 'Hora de criação';
+
+COMMENT ON COLUMN public.turma_pessoa_frequencia.data_inativacao
+    IS 'Data de inativação';
+
+COMMENT ON COLUMN public.turma_pessoa_frequencia.hora_inativacao
+    IS 'Hora de inativação';
+
+COMMENT ON COLUMN public.turma_pessoa_frequencia.turma_pessoa_id
+    IS 'identficação da turmapessoa';
+
+COMMENT ON COLUMN public.turma_pessoa_frequencia.data
+    IS 'Data real';
+
+COMMENT ON COLUMN public.turma_pessoa_frequencia.hora
+    IS 'Hora real';
+COMMENT ON CONSTRAINT pk_turma_pessoa_id ON public.turma_pessoa_frequencia
+    IS 'Chave primaria do turma pessoa frequencia';
+
+COMMENT ON CONSTRAINT fk_turma_pessoa_frequencia_turma_pessoa_id ON public.turma_pessoa_frequencia
+    IS 'Chave estrangeira da turma pessoa frequencia com a turma pessoa';

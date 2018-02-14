@@ -26,6 +26,7 @@ class RepositorioORM {
     private $_eventoTipoORM;
     private $_hierarquiaORM;
     private $_turmaPessoaORM;
+    private $_turmaPessoaFrequenciaORM;
     private $_turmaAulaORM;
     private $_pessoaHierarquiaORM;
     private $_grupoResponsavelORM;
@@ -242,6 +243,17 @@ class RepositorioORM {
             $this->_turmaPessoaSituacaoORM = new CircuitoORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_TURMA_PESSOA_SITUACAO);
         }
         return $this->_turmaPessoaSituacaoORM;
+    }
+
+    /**
+     * Metodo public para obter a instancia do TurmaPessoaFrequenciaORM
+     * @return CircuitoORM
+     */
+    public function getTurmaPessoaFrequenciaORM() {
+        if (is_null($this->_turmaPessoaFrequenciaORM)) {
+            $this->_turmaPessoaFrequenciaORM = new CircuitoORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_TURMA_PESSOA_FREQUENCIA);
+        }
+        return $this->_turmaPessoaFrequenciaORM;
     }
 
     /**
