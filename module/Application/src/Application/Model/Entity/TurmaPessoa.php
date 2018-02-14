@@ -7,7 +7,6 @@ namespace Application\Model\Entity;
  * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com>
  * Descricao: Entidade anotada da tabela turma_pessoa
  */
-
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -27,12 +26,21 @@ class TurmaPessoa extends CircuitoEntity {
      * @ORM\JoinColumn(name="turma_id", referencedColumnName="id")
      */
     private $turma;
-   
+
+    /**
+     * @ORM\OneToMany(targetEntity="TurmaPessoaFrequencia", mappedBy="turmaPessoaFrequencia")
+     */
+    protected $turmaPessoaFrequencia;
+
     /** @ORM\Column(type="integer") */
     protected $pessoa_id;
 
     /** @ORM\Column(type="integer") */
     protected $turma_id;
+
+    public function __construct() {
+        $this->turmaPessoaFrequencia = new ArrayCollection();
+    }
 
     /**
      * Retorna a pessoa da associação
@@ -76,6 +84,14 @@ class TurmaPessoa extends CircuitoEntity {
 
     function setTurma($turma) {
         $this->turma = $turma;
-    }   
+    }
+
+    function getTurmaPessoaFrequencia() {
+        return $this->turmaPessoaFrequencia;
+    }
+
+    function setTurmaPessoaFrequencia($turmaPessoaFrequencia) {
+        $this->turmaPessoaFrequencia = $turmaPessoaFrequencia;
+    }
 
 }

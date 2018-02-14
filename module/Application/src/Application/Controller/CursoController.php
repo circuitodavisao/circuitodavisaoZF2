@@ -779,4 +779,23 @@ class CursoController extends CircuitoController {
         }
     }
 
+    public function receberFrequenciaAction() {
+        try {
+            $this->getRepositorio()->iniciarTransacao();
+            $tokenDaRota = $this->params()->fromRoute(Constantes::$ID);
+
+//            $this->getRepositorio()->get
+
+            $this->getRepositorio()->fecharTransacao();
+            $response->setContent(Json::encode(
+                            array('response' => 'true',
+                            )
+            ));
+        } catch (Exception $exc) {
+            $this->getRepositorio()->desfazerTransacao();
+            echo $exc->getTraceAsString();
+        }
+        return $response;
+    }
+
 }
