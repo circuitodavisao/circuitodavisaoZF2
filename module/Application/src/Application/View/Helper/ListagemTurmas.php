@@ -30,10 +30,10 @@ class ListagemTurmas extends AbstractHelper {
                 $turmasAtivas[] = $turma;
             }
         }
-
+        $html .= $this->view->templateFormularioTopo('Turmas');
         /* Sem pessoas cadastrados */
         if (count($turmasAtivas) == 0) {
-            $html .= $this->view->templateFormularioTopo('Turmas');
+
             $html .= '<div class="panel-body bg-light">';
             $html .= '<div class="alert alert-warning"><i class="fa fa-warning pr10" aria-hidden="true"></i>&nbsp;Sem Turmas</div>';
             $html .= '</div>';
@@ -48,38 +48,22 @@ class ListagemTurmas extends AbstractHelper {
             /* Fim Botões */
             $html .= '</div>';
             /* Fim panel-footer */
-            $html .= $this->view->templateFormularioRodape();
-
-            ;
         } else {
-
-            $html .= $this->view->templateFormularioTopo('Turmas do IV');
             $html .= '<div class="panel-body bg-light">';
 
             $html .= '<table class="table">';
             $html .= '<thead>';
             $html .= '<tr>';
 
-            $html .= '<th class="text-center">';
-            $html .= 'Id';
-            $html .= '</th>';
-            $html .= '<th class="text-center">';
-            $html .= 'Mês';
-            $html .= '</th>';
-            $html .= '<th class="text-center">';
-            $html .= 'Ano';
-            $html .= '</th>';
-            $html .= '<th class="text-center hidden-xs">';
-            $html .= 'Observação';
-            $html .= '</th>';
-            $html .= '<th class="text-center hidden-xs">';
-            $html .= 'Alunos';
-            $html .= '</th>';
+            $html .= '<th class="text-center">Id</th>';
+            $html .= '<th class="text-center">Mês</th>';
+            $html .= '<th class="text-center">Ano</th>';
+            $html .= '<th class="text-center">Curso</th>';
+            $html .= '<th class="text-center hidden-xs">Observação</th>';
+            $html .= '<th class="text-center hidden-xs">Alunos</th>';
             if ($turma->getTurmaAulaAtiva()) {
                 $html .= '<th class="text-center hidden-xs"></th>';
-                $html .= '<th class="text-center hidden-xs">';
-                $html .= 'Aula Aberta';
-                $html .= '</th>';
+                $html .= '<th class="text-center hidden-xs">Aula Aberta</th>';
             }
             $html .= '<th class="text-center"></th>';
             $html .= '</tr>';
@@ -96,6 +80,7 @@ class ListagemTurmas extends AbstractHelper {
                 $html .= '<td class="text-center">' . $turma->getId() . '</td>';
                 $html .= '<td class="text-center">' . Funcoes::mesPorExtenso($turma->getMes(), 1) . '</td>';
                 $html .= '<td class="text-center">' . $turma->getAno() . '</td>';
+                $html .= '<td class="text-center">' . $turma->getCurso()->getNome() . '</td>';
                 $html .= '<td class="text-center hidden-xs">' . $turma->getObservacao() . '</td>';
                 $html .= '<td class="text-center hidden-xs">' . count($turma->getTurmaPessoa()) . '</td>';
                 $html .= '<td class="text-center">';
@@ -131,9 +116,8 @@ class ListagemTurmas extends AbstractHelper {
             /* Fim Botões */
             $html .= '</div>';
             /* Fim panel-footer */
-            $html .= $this->view->templateFormularioRodape();
         }
-
+        $html .= $this->view->templateFormularioRodape();
         return $html;
     }
 

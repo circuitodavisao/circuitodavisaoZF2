@@ -25,6 +25,7 @@ class BotaoSimples extends AbstractHelper {
     const botaoMuitoPequenoImportante = 6;
     const botaoMuitoPequenoMenosImportante = 7;
     const botaoPerigoso = 8;
+    const botaoMuitoPequenoPerigoso = 9;
     const posicaoADireita = 1;
     const posicaoAEsquerda = 2;
     const posicaoAoCentro = 3;
@@ -51,7 +52,8 @@ class BotaoSimples extends AbstractHelper {
         if ($this->getTipoBotao() === BotaoSimples::botaoSucesso) {
             $classBotao = 'success';
         }
-        if ($this->getTipoBotao() === BotaoSimples::botaoPerigoso) {
+        if ($this->getTipoBotao() === BotaoSimples::botaoPerigoso ||
+                $this->getTipoBotao() === BotaoSimples::botaoMuitoPequenoPerigoso) {
             $classBotao = 'danger';
         }
         if ($this->getTipoBotao() === BotaoSimples::botaoPequenoImportante) {
@@ -60,8 +62,11 @@ class BotaoSimples extends AbstractHelper {
         if ($this->getTipoBotao() === BotaoSimples::botaoPequenoMenosImportante) {
             $classBotao = 'sm btn-default';
         }
-        if ($this->getTipoBotao() === BotaoSimples::botaoMuitoPequenoImportante) {
+        if ($this->getTipoBotao() === BotaoSimples::botaoMuitoPequenoPerigoso) {
             $classBotao = 'xs btn-' . Constantes::$COR_BOTAO;
+        }
+        if ($this->getTipoBotao() === BotaoSimples::botaoMuitoPequenoPerigoso) {
+            $classBotao = 'xs btn-danger';
         }
         if ($this->getTipoBotao() === BotaoSimples::botaoMuitoPequenoMenosImportante) {
             $classBotao = 'xs btn-default';

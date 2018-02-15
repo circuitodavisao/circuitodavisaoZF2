@@ -367,14 +367,32 @@ class Menu extends AbstractHelper {
 
         $html .= '</li>';
         if ($this->view->entidade->verificarSeEstaAtivo()) {
-
             if ($this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja) {
-                $html .= '<li class="sidebar-label pt20">Cursos</li>';
+                $html .= '<li>';
+                $html .= '<a class="accordion-toggle" href="#">';
+                $html .= '<span class="fa fa-users"></span>';
+                $html .= '<span class="sidebar-title">Cursos</span>';
+                $html .= '<span class="caret"></span>';
+                $html .= '</a>';
+
+                $html .= '<ul class="nav sub-nav">';
+
                 $html .= '<li>';
                 $html .= '<a href="/cursoListarTurma">';
                 $html .= '<span class="fa fa-list"></span>';
                 $html .= '<span class="sidebar-title">Turmas</span>';
                 $html .= '</a>';
+                $html .= '</li>';
+
+                $html .= '<li>';
+                $html .= '<a href="/cursoChamada">';
+                $html .= '<span class="fa fa-list"></span>';
+                $html .= '<span class="sidebar-title">Chamada</span>';
+                $html .= '</a>';
+                $html .= '</li>';
+
+                $html .= '</ul>';
+
                 $html .= '</li>';
             }
 

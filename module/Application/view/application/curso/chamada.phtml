@@ -1,0 +1,73 @@
+<?php
+
+use Application\View\Helper\BotaoSimples;
+
+$html = '';
+$html .= $this->templateFormularioTopo('Chamada');
+$html .= '<div class="panel-body bg-light">';
+
+foreach ($this->turmas as $turma) {
+    $html .= '<table class="table table-bordered table-condensed">';
+
+    $html .= '<thead>';
+    $html .= '<tr>';
+    $html .= '<th class="text-center">' . $turma->getCurso()->getNome() . ' - ' . str_pad($turma->getMes(), 2, 0, STR_PAD_LEFT) . '/' . $turma->getAno() . '</th>';
+    foreach ($turma->getCurso()->getDisciplina() as $disciplina) {
+        $html .= '<th colspan="' . count($disciplina->getAula()) . '" class="text-center">' . $disciplina->getNome() . '</th>';
+    }
+    $html .= '</tr>';
+    $html .= '<tr>';
+    $html .= '<th class="text-center">Aluno</th>';
+    foreach ($turma->getCurso()->getDisciplina() as $disciplina) {
+        foreach ($disciplina->getAula() as $aula) {
+            $html .= '<th class="text-center">' . $aula->getNome() . '</th>';
+        }
+    }
+    $html .= '</tr>';
+
+
+    $html .= '</thead>';
+
+    $html .= '<tbody>';
+    if ($turma->getTurmaPessoa()) {
+        foreach ($turma->getTurmaPessoa() as $turmaPessoa) {
+            $html .= '<tr>';
+            $html .= '<td>' . $turmaPessoa->getPessoa()->getNome() . '</td>';
+            foreach ($turma->getCurso()->getDisciplina() as $disciplina) {
+                foreach ($disciplina->getAula() as $aula) {
+                    $frequencia = false;
+                    $icone = 'fa-thumbs-down';
+                    $corDoBotao = BotaoSimples::botaoMuitoPequenoPerigoso;
+                    $html .= '<td class="text-center">';
+                    if ($turmaPessoa->getTurmaPessoaAula()) {
+                        foreach ($turmaPessoa->getTurmaPessoaAula() as $turmaPessoaAula) {
+                            if ($turmaPessoaAula->getAula()->getId() === $aula->getId()) {
+                                $frequencia = true;
+                                $icone = 'fa-thumbs-up';
+                                $corDoBotao = BotaoSimples::botaoPequenoImportante;
+                            }
+                        }
+                    }
+//                    $idEventoFrequencia = $pessoa->getId() . '_' . $grupoEvento->getEvento()->getId();
+                    $iconeBotao = '<i id="icone_' . $idEventoFrequencia . '" class="fa ' . $icone . '"></i>';
+//                    $idDoBotao = 'id="botao_' . $idEventoFrequencia . '"';
+//                    $parametrosMudarFrequencia = $pessoa->getId() . ',' . $grupoEvento->getEvento()->getId() . ', "' . $diaRealDoEvento . '", ' . $this->view->grupo->getId() . ', ' . $this->view->periodo;
+//                    $funcaoMudarFrequencia = 'mudarFrequencia(' . $parametrosMudarFrequencia . ')';
+                    $funcaoOnclick = $this->funcaoOnClick($funcaoMudarFrequencia);
+                    $extra = $idDoBotao . ' ' . $funcaoOnclick . ' disabled ';
+                    $html .= $this->botaoSimples($iconeBotao, $extra, $corDoBotao, BotaoSimples::posicaoAoCentro);
+                    $html .= '</td>';
+                }
+            }
+            $html .= '</tr>';
+        }
+    }
+
+    $html .= '</tbody>';
+
+    $html .= '</table>';
+}
+
+$html .= $this->templateFormularioRodape();
+
+echo $html;
