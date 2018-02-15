@@ -780,6 +780,14 @@ class CursoController extends CircuitoController {
                 echo $exc->getMessage();
             }
         }
-    }  
+    }
+
+    public function chamadaAction() {
+        $turmas = $this->getRepositorio()->getTurmaORM()->encontrarTodas();
+        $view = new ViewModel(array(
+            'turmas' => $turmas,
+        ));
+        return $view;
+    }
 
 }
