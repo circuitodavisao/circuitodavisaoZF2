@@ -522,13 +522,6 @@ class IndexController extends CircuitoController {
         return $html;
     }
 
-    public function separar($grupo) {
-        $dataParaInativar = date('Y-m-d', mktime(0, 0, 0, date("m"), date("d") - 1, date("Y")));
-        /* GrupoResponsavel */
-        $grupoResponsaveis = $grupo->getResponsabilidadesAtivas();
-        //TODO
-    }
-
     public function trocarResponsabilidades($grupo1, $grupo2) {
         $dataParaInativar = date('Y-m-d', mktime(0, 0, 0, date("m"), date("d") - 1, date("Y")));
         $htmlBr = '<br />';
