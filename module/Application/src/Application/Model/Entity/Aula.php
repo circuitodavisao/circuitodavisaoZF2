@@ -7,6 +7,8 @@ namespace Application\Model\Entity;
  * @author Lucas Filipe de Carvalho Cunha <lucascarvalho.esw@gmail.com>
  * Descricao: Entidade anotada da tabela aula
  */
+
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**

@@ -38,9 +38,9 @@ class ListagemTurmas extends AbstractHelper {
             $html .= '<div class="alert alert-warning"><i class="fa fa-warning pr10" aria-hidden="true"></i>&nbsp;Sem Turmas</div>';
             $html .= '</div>';
             $html .= '<div class="panel-footer">';
-            $html .= '<span class="align-bottom">';
-            $html .= '<a href="/cadastroListarTurmaInativa">Turmas Inativas </a>';
-            $html .= '</span>';
+//            $html .= '<span class="align-bottom">';
+//            $html .= '<a href="/cadastroListarTurmaInativa">Turmas Inativas </a>';
+//            $html .= '</span>';
             $html .= '<div class="text-right">';
             $stringNomeDaFuncaoOnClickCadastro = 'funcaoCircuito("' . Constantes::$ROUTE_CURSO . Constantes::$PAGINA_CADASTRAR_TURMA . '", 0)';
             $html .= $this->view->botaoLink($this->view->translate(Constantes::$TRADUCAO_CADASTRAR), Constantes::$STRING_HASHTAG, 0, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClickCadastro));
@@ -121,9 +121,9 @@ class ListagemTurmas extends AbstractHelper {
             /* Fim panel-body */
 
             $html .= '<div class="panel-footer">';
-            $html .= '<span class="align-bottom">';
-            $html .= '<a href="/cadastroListarTurmaInativa">Turmas Inativas </a>';
-            $html .= '</span>';
+//            $html .= '<span class="align-bottom">';
+//            $html .= '<a href="/cadastroListarTurmaInativa">Turmas Inativas </a>';
+//            $html .= '</span>';
             $html .= '<div class="text-right">';
             $stringNomeDaFuncaoOnClickCadastro = 'funcaoCircuito("' . Constantes::$ROUTE_CURSO . Constantes::$PAGINA_CADASTRAR_TURMA . '", 0)';
             $html .= $this->view->botaoLink($this->view->translate(Constantes::$TRADUCAO_CADASTRAR), Constantes::$STRING_HASHTAG, 0, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClickCadastro));

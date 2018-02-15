@@ -312,7 +312,7 @@ class RelatorioController extends CircuitoController {
         }
         return $response;
     }
-
+ 
     public static function montaRelatorio($repositorioORM, $numeroIdentificador, $periodoInicial, $tipoRelatorio, $periodoFinal = null, $inativo = false) {
         unset($relatorio);
         /* Membresia */
