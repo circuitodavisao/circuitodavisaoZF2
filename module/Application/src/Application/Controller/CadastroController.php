@@ -1985,7 +1985,7 @@ class CadastroController extends CircuitoController {
 
                             if ($grupoPaiFilhoFilhos20736 = $grupo1728->getGrupoPaiFilhoFilhosAtivosReal()) {
                                 foreach ($grupoPaiFilhoFilhos20736 as $grupoPaiFilhoFilho20736) {
-                                    $grupo20736 = $grupoPaiFilhoFilho207368->getGrupoPaiFilhoFilho();
+                                    $grupo20736 = $grupoPaiFilhoFilho20736->getGrupoPaiFilhoFilho();
                                     if (!$grupo20736->verificaSeECasal()) {
                                         if ($grupo20736->getGrupoResponsavelAtivo()->getPessoa()->getSexo() == 'M') {
                                             $arrayHomens[] = $grupoPaiFilhoFilho20736;
