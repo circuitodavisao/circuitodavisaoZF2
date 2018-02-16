@@ -30,12 +30,12 @@ class TurmaPessoa extends CircuitoEntity {
     private $turma;
 
     /**
-     * @ORM\OneToMany(targetEntity="TurmaPessoaFrequencia", mappedBy="turmaPessoa")
+     * @ORM\OneToMany(targetEntity="TurmaPessoaFrequencia", mappedBy="turma_pessoa")
      */
     protected $turmaPessoaFrequencia;
 
     /**
-     * @ORM\OneToMany(targetEntity="TurmaPessoaAula", mappedBy="turmaPessoa")
+     * @ORM\OneToMany(targetEntity="TurmaPessoaAula", mappedBy="turma_pessoa")
      */
     protected $turmaPessoaAula;
 

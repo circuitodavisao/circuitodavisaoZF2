@@ -3,7 +3,6 @@
 namespace Application\Controller;
 
 use Application\Controller\Helper\Constantes;
-use Application\Controller\Helper\Funcoes;
 use Application\Form\AulaForm;
 use Application\Form\CursoForm;
 use Application\Form\DisciplinaForm;
@@ -17,10 +16,8 @@ use Application\Model\Entity\Situacao;
 use Application\Model\Entity\Turma;
 use Application\Model\Entity\TurmaAula;
 use Application\Model\Entity\TurmaPessoa;
-use Application\Model\Entity\TurmaPessoaFrequencia;
 use Application\Model\Entity\TurmaPessoaSituacao;
 use Application\Model\ORM\RepositorioORM;
-use DateTime;
 use Exception;
 use Zend\Json\Json;
 use Zend\Session\Container;
@@ -71,7 +68,7 @@ class CursoController extends CircuitoController {
 
                 $dadosPost = $request->getPost();
                 $id = $dadosPost['id'];
-                $nome = $dadosPost['nome'];
+                $nome = strtoupper($dadosPost['nome']);
                 $sessao = new Container(Constantes::$NOME_APLICACAO);
                 $idPessoaLogada = $sessao->idPessoa;
                 $pessoaLogada = $this->getRepositorio()->getPessoaORM()->encontrarPorId($idPessoaLogada);
@@ -202,7 +199,7 @@ class CursoController extends CircuitoController {
 
                 $dadosPost = $request->getPost();
                 $id = $dadosPost['id'];
-                $nome = $dadosPost['nome'];
+                $nome = strtoupper($dadosPost['nome']);
                 $posicao = $dadosPost['posicao'];
                 $idCurso = $dadosPost['idCurso'];
                 if ($id) {
@@ -340,7 +337,7 @@ class CursoController extends CircuitoController {
 
                 $dadosPost = $request->getPost();
                 $id = $dadosPost['id'];
-                $nome = $dadosPost['nome'];
+                $nome = strtoupper($dadosPost['nome']);
                 $posicao = $dadosPost['posicao'];
                 $idDisciplina = $dadosPost['idDisciplina'];
                 if ($id) {

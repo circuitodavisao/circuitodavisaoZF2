@@ -45,7 +45,7 @@ class BotaoSimples extends AbstractHelper {
     public function renderHtml() {
         $html = '';
         $classBotao = Constantes::$COR_BOTAO;
-        $posicaoBotao = 'pull-right';
+        $posicaoBotao = 'pull-right ml10';
         if ($this->getTipoBotao() === BotaoSimples::botaoMenorImportancia) {
             $classBotao = 'default';
         }
@@ -62,7 +62,7 @@ class BotaoSimples extends AbstractHelper {
         if ($this->getTipoBotao() === BotaoSimples::botaoPequenoMenosImportante) {
             $classBotao = 'sm btn-default';
         }
-        if ($this->getTipoBotao() === BotaoSimples::botaoMuitoPequenoPerigoso) {
+        if ($this->getTipoBotao() === BotaoSimples::botaoMuitoPequenoImportante) {
             $classBotao = 'xs btn-' . Constantes::$COR_BOTAO;
         }
         if ($this->getTipoBotao() === BotaoSimples::botaoMuitoPequenoPerigoso) {
@@ -72,13 +72,13 @@ class BotaoSimples extends AbstractHelper {
             $classBotao = 'xs btn-default';
         }
         if ($this->getPosicao() === BotaoSimples::posicaoAEsquerda) {
-            $posicaoBotao = 'pull-left';
+            $posicaoBotao = 'pull-left ml10';
         }
         if ($this->getPosicao() === BotaoSimples::posicaoAoCentro) {
             $posicaoBotao = '';
         }
 
-        $html .= '<button type="button" ' . $this->getExtra() . ' class="btn ladda-button btn-' . $classBotao . ' ' . $posicaoBotao . ' ml10" data-style="zoom-in">';
+        $html .= '<button type="button" ' . $this->getExtra() . ' class="btn ladda-button btn-' . $classBotao . ' ' . $posicaoBotao . ' " data-style="zoom-in">';
         $html .= '<span class="ladda-label">';
         $html .= $this->view->translate($this->getLabel());
         $html .= '</span>';

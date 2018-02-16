@@ -7,14 +7,13 @@ namespace Application\Model\Entity;
  * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com>
  * Descricao: Entidade anotada da tabela turma_pessoa_aula
  */
-
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity 
  * @ORM\Table(name="turma_pessoa_aula")
  */
-class TurmaPessoaAula extends CircuitoEntity { 
+class TurmaPessoaAula extends CircuitoEntity {
 
     /**
      * @ORM\ManyToOne(targetEntity="TurmaPessoa", inversedBy="turmaPessoaAula")
