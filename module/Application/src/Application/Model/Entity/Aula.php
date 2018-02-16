@@ -40,7 +40,7 @@ class Aula extends CircuitoEntity {
     /**
      * @ORM\OneToMany(targetEntity="TurmaPessoaAula", mappedBy="aula")
      */
-    protected $turmaPessoaAula;
+    protected $turmaPessoaAula; 
 
     public function __construct() {
         $this->turmaAula = new ArrayCollection();
