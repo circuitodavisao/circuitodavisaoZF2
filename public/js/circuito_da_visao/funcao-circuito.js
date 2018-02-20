@@ -41,3 +41,16 @@ function mudarPeriodo() {
 function mostrarSplash() {
     $('.splash').css('display', 'block');
 }
+
+function marcarTodos(check) {
+    var elementos = document.getElementsByTagName('input');
+    if (check.checked == 1) {
+        for (i = 0; i < elementos.length; i++)
+            if (elementos[i].type == "checkbox")
+                elementos[i].checked = 1
+    } else {
+        for (i = 0; i < elementos.length; i++)
+            if (elementos[i].type == "checkbox")
+                elementos[i].checked = 0
+    }
+}
