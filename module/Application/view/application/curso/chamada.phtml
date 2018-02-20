@@ -32,36 +32,40 @@ foreach ($this->turmas as $turma) {
     $html .= '<tbody>';
     if ($turma->getTurmaPessoa()) {
         foreach ($turma->getTurmaPessoa() as $turmaPessoa) {
-            $html .= '<tr>';
-            $html .= '<td>' . str_pad($turmaPessoa->getId(), 8, 0, STR_PAD_LEFT) . '</td>';
-            $html .= '<td>' . $turmaPessoa->getPessoa()->getNome() . '</td>';
-            foreach ($turma->getCurso()->getDisciplina() as $disciplina) {
-                foreach ($disciplina->getAula() as $aula) {
-                    $frequencia = false;
-                    $icone = 'fa-thumbs-down';
-                    $corDoBotao = BotaoSimples::botaoMuitoPequenoPerigoso;
-                    $html .= '<td class="text-center">';
-                    if (count($turmaPessoa->getTurmaPessoaAula()) > 0) {
-                        foreach ($turmaPessoa->getTurmaPessoaAula() as $turmaPessoaAula) {
-                            if ($turmaPessoaAula->getAula()->getId() === $aula->getId()) {
-                                $frequencia = true;
-                                $icone = 'fa-thumbs-up';
-                                $corDoBotao = BotaoSimples::botaoMuitoPequenoImportante;
+            $mostrar = false;
+            foreach ($this->grupoPessoas as $grupoPessoa) {
+                if ($grupoPessoa->getPessoa()->getId() === $turmaPessoa->getPessoa()->getId()) {
+                    $mostrar = true;
+                    break;
+                }
+            }            
+            if ($mostrar) {
+                $html .= '<tr>';
+                $html .= '<td>' . str_pad($turmaPessoa->getId(), 8, 0, STR_PAD_LEFT) . '</td>';
+                $html .= '<td>' . $turmaPessoa->getPessoa()->getNome() . '</td>';
+                foreach ($turma->getCurso()->getDisciplina() as $disciplina) {
+                    foreach ($disciplina->getAula() as $aula) {
+                        $frequencia = false;
+                        $icone = 'fa-thumbs-down';
+                        $corDoBotao = BotaoSimples::botaoMuitoPequenoPerigoso;
+                        $html .= '<td class="text-center">';
+                        if (count($turmaPessoa->getTurmaPessoaAula()) > 0) {
+                            foreach ($turmaPessoa->getTurmaPessoaAula() as $turmaPessoaAula) {
+                                if ($turmaPessoaAula->getAula()->getId() === $aula->getId()) {
+                                    $frequencia = true;
+                                    $icone = 'fa-thumbs-up';
+                                    $corDoBotao = BotaoSimples::botaoMuitoPequenoImportante;
+                                }
                             }
                         }
+                        $iconeBotao = '<i class="fa ' . $icone . '"></i>';
+                        $extra = ' disabled ';
+                        $html .= $this->botaoSimples($iconeBotao, $extra, $corDoBotao, BotaoSimples::posicaoAoCentro);
+                        $html .= '</td>';
                     }
-//                    $idEventoFrequencia = $pessoa->getId() . '_' . $grupoEvento->getEvento()->getId();
-                    $iconeBotao = '<i id="icone_' . $idEventoFrequencia . '" class="fa ' . $icone . '"></i>';
-//                    $idDoBotao = 'id="botao_' . $idEventoFrequencia . '"';
-//                    $parametrosMudarFrequencia = $pessoa->getId() . ',' . $grupoEvento->getEvento()->getId() . ', "' . $diaRealDoEvento . '", ' . $this->view->grupo->getId() . ', ' . $this->view->periodo;
-//                    $funcaoMudarFrequencia = 'mudarFrequencia(' . $parametrosMudarFrequencia . ')';
-                    $funcaoOnclick = $this->funcaoOnClick($funcaoMudarFrequencia);
-                    $extra = $idDoBotao . ' ' . $funcaoOnclick . ' disabled ';
-                    $html .= $this->botaoSimples($iconeBotao, $extra, $corDoBotao, BotaoSimples::posicaoAoCentro);
-                    $html .= '</td>';
                 }
+                $html .= '</tr>';
             }
-            $html .= '</tr>';
         }
     }
 

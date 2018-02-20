@@ -1,0 +1,57 @@
+<?php
+
+use Application\Controller\Helper\Constantes;
+use Application\View\Helper\BotaoSimples;
+
+$form = $this->formulario;
+$form->prepare();
+$form->setAttribute(Constantes::$ACTION, $this->url(Constantes::$ROUTE_CURSO, array(Constantes::$ACTION => 'GerarCarterinha')));
+$html = '';
+$html .= $this->form()->openTag($form);
+$html .= '<div class="mw800 center-block p10">';
+$html .= '<div class="panel heading-border panel-primary">';
+$html .= '<div class="panel-body bg-light">';
+$funcao = $this->funcaoOnClick('this.form.submit()');
+$html .= $this->botaoSimples('Gerar Carterinha', $funcao, '', BotaoSimples::posicaoAoCentro);
+
+foreach ($this->turmas as $turma) {
+    $html .= '<table class="table table-bordered table-condensed">';
+
+    $html .= '<thead>';
+    $html .= '<tr>';
+    $html .= '<th colspan="2" class="text-center">' . $turma->getCurso()->getNome() . ' - ' . str_pad($turma->getMes(), 2, 0, STR_PAD_LEFT) . '/' . $turma->getAno() . '</th>';
+    $html .= '</tr>';
+    $html .= '<tr>';
+    $html .= '<th class="text-center">Matricula</th>';
+    $html .= '<th class="text-center">Aluno</th>';
+    $html .= '<th class="text-center"><input type="checkbox" onclick="marcarTodos(this);"/></th>';
+    $html .= '</tr>';
+
+
+    $html .= '</thead>';
+
+    $html .= '<tbody>';
+    if ($turma->getTurmaPessoa()) {
+        foreach ($turma->getTurmaPessoa() as $turmaPessoa) {
+            $mostrar = true;
+            if ($mostrar) {
+                $html .= '<tr>';
+                $html .= '<td>' . str_pad($turmaPessoa->getId(), 8, 0, STR_PAD_LEFT) . '</td>';
+                $html .= '<td>' . $turmaPessoa->getPessoa()->getNome() . '</td>';
+                $html .= '<td><input type="checkbox" id="aluno' . $turmaPessoa->getId() . '" name="aluno' . $turmaPessoa->getId() . '" value="' . $turmaPessoa->getId() . '"/></td>';
+                $html .= '</tr>';
+            }
+        }
+    }
+
+    $html .= '</tbody>';
+
+    $html .= '</table>';
+}
+$html .= '</div>';
+$html .= '</div>';
+$html .= '</div>';
+$html .= $this->form()->closeTag();
+
+echo $html;
+

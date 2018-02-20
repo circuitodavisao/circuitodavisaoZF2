@@ -7,6 +7,7 @@ use Application\Form\AulaForm;
 use Application\Form\CursoForm;
 use Application\Form\DisciplinaForm;
 use Application\Form\SelecionarAlunosForm;
+use Application\Form\SelecionarCarterinhasForm;
 use Application\Form\TurmaForm;
 use Application\Model\Entity\Aula;
 use Application\Model\Entity\Curso;
@@ -780,10 +781,49 @@ class CursoController extends CircuitoController {
     }
 
     public function chamadaAction() {
+        $sessao = new Container(Constantes::$NOME_APLICACAO);
+        $entidade = CircuitoController::getEntidadeLogada($this->getRepositorio(), $sessao);
+        $grupo = $entidade->getGrupo();
+        $grupoPessoas = $grupo->getGrupoPessoasNoPeriodo(0);
+
         $turmas = $this->getRepositorio()->getTurmaORM()->encontrarTodas();
         $view = new ViewModel(array(
             'turmas' => $turmas,
+            'grupoPessoas' => $grupoPessoas,
         ));
+        return $view;
+    }
+
+    public function selecionarParaCarterinhaAction() {
+        $formulario = new SelecionarCarterinhasForm('SelecionarCarterinhas');
+        $turmas = $this->getRepositorio()->getTurmaORM()->encontrarTodas();
+        $view = new ViewModel(array(
+            'turmas' => $turmas,
+            'formulario' => $formulario,
+        ));
+        return $view;
+    }
+
+    public function gerarCarterinhaAction() {
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            foreach ($_POST as $key => $value) {
+                if (substr($key, 0, 5) == 'aluno') {
+                    $alunosId[] = $value;
+                }
+            }
+        }
+
+        $view = new ViewModel(
+                array(
+            'alunosId' => $alunosId,
+            'repositorio' => $this->getRepositorio(),
+        ));
+        /* Javascript especifico */
+        $layoutJS = new ViewModel();
+        $layoutJS->setTemplate(Constantes::$TEMPLATE_JS_FICHA_REVISAO);
+        $view->addChild($layoutJS, Constantes::$STRING_JS_FICHA_REVISAO);
+        
         return $view;
     }
 
