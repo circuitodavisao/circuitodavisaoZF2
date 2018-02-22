@@ -706,11 +706,15 @@ class IndexController extends CircuitoController {
 
     public function atualizarAntigoAction() {
         $html = '';
-        $arrayGrupoEquipes[] = 2; // blackbelt
+        $arrayGrupoEquipes[] = 2; // blackbelt cv novo
+        $idTipo = 2; // equipe
+        $idPai = 1; // ceilandia
+        $arrayEquipesCVAntigo[] = 1; // id grupo cv antigo
 
+        $contadorDeEquipes = 0;
         foreach ($arrayGrupoEquipes as $idGrupoEquipe) {
             $grupoEquipe = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupoEquipe);
-            $html .= 'Equipe: '.$grupoEquipe->getEntidadeAtiva()->infoEntidade();
+            $html .= 'Equipe: ' . $grupoEquipe->getEntidadeAtiva()->infoEntidade();
             $grupoCv = $grupoEquipe->getGrupoCv();
             $numeroIdentificadorAtual = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupoEquipe);
 
@@ -720,11 +724,34 @@ class IndexController extends CircuitoController {
 
             $contadorDeCiclos = 1;
             for ($indiceArrays = $arrayPeriodoDoMes[0]; $indiceArrays <= $arrayPeriodoDoMes[1]; $indiceArrays++) {
-                $html .= "<br />indiceArrays: $indiceArrays";
                 $relatorio = RelatorioController::montaRelatorio($this->getRepositorio(), $numeroIdentificadorAtual, $indiceArrays, $tipoRelatorioSomado);
-
+                /* Caso seja ciclo um entao gera meta mensal no cv antigo */
+                if ($contadorDeCiclos === 1) {
+                    $sqlIdGrupo = 'SELECT id FROM ursula_grupo_ursula WHERE idTipo = #idTipo AND idGrupo = #idGrupo AND mes = #mes AND ano = #ano AND idPai = #idPai;';
+                    $sqlIdGrupo = str_replace("#idTipo", $idTipo, $sqlIdGrupo);
+                    $sqlIdGrupo = str_replace("#idGrupo", $arrayEquipesCVAntigo[$contadorDeEquipes], $sqlIdGrupo);
+                    $sqlIdGrupo = str_replace("#idPai", $idPai, $sqlIdGrupo);
+                    $sqlIdGrupo = str_replace("#mes", date('n'), $sqlIdGrupo);
+                    $sqlIdGrupo = str_replace("#ano", date('Y'), $sqlIdGrupo);
+                    $html .= "<br />sqlIdGrupo: $sqlIdGrupo";
+                    $queryGrupoAntigo = mysqli_query(IndexController::pegaConexaoStatica(), $sqlIdGrupo);
+                    while ($rowGrupoAntigo = mysqli_fetch_array($queryGrupoAntigo)) {
+                        $idGrupoAntigo = $rowGrupoAntigo['id'];
+                    }
+                    $html .= "<br />idGrupoAntigo: $idGrupoAntigo";
+                    $html .= "<br />quantidadeLideres: " . $relatorio['quantidadeLideres'];
+                    $html .= "<br />celulaQuantidade: " . $relatorio['celulaQuantidade'];
+                    $sqlUpdateGrupo = 'UPDATE ursula_grupo_ursula SET totalLideres = #totalLideres, totalCelulasMultiplicacao = #totalelulasMultiplicacao WHERE id = #idGrupo;';
+                    $sqlUpdateGrupo = str_replace("#totalLideres", $relatorio['quantidadeLideres'], $sqlUpdateGrupo);
+                    $sqlUpdateGrupo = str_replace("#totalelulasMultiplicacao", $relatorio['celulaQuantidade'], $sqlUpdateGrupo);
+                    $sqlUpdateGrupo = str_replace("#idGrupo", $idGrupoAntigo, $sqlUpdateGrupo);
+                    $html .= "<br />sqlUpdateGrupo: $sqlUpdateGrupo";
+                    mysqli_query(IndexController::pegaConexaoStatica(), $sqlUpdateGrupo);
+                }
+                $html .= "<br />indiceArrays: $indiceArrays";
                 $html .= IndexController::atualizarRelatorioPorCiclo($grupoCv->getNumero_identificador(), date('m'), date('Y'), $contadorDeCiclos, $relatorio);
                 $contadorDeCiclos++;
+                $contadorDeEquipes++;
             }
         }
 
