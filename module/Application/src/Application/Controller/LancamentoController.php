@@ -278,10 +278,10 @@ class LancamentoController extends CircuitoController {
                 $this->getRepositorio()->getDimensaoORM()->persistir($dimensaoSelecionada, false);
 
                 /* Atualizar DW circuito antigo */
-                if ($grupoPassado->getGrupoCv()) {
-                    $grupoCv = $grupoPassado->getGrupoCv();
-                    IndexController::mudarFrequencia($grupoCv->getNumero_identificador(), $arrayDataReal[1], $arrayDataReal[0], $tipoCampo, $tipoPessoa, $ciclo, $valorParaSomar);
-                }
+//                if ($grupoPassado->getGrupoCv()) {
+//                    $grupoCv = $grupoPassado->getGrupoCv();
+//                    IndexController::mudarFrequencia($grupoCv->getNumero_identificador(), $arrayDataReal[1], $arrayDataReal[0], $tipoCampo, $tipoPessoa, $ciclo, $valorParaSomar);
+//                }
                 $this->getRepositorio()->fecharTransacao();
                 $response->setContent(Json::encode(
                                 array('response' => 'true',
