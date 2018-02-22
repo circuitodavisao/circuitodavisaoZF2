@@ -54,21 +54,21 @@ echo $this->inlineScript();
         $('#botaoInserirResponsavel2').addClass(hidden);
         $('.alunoM').addClass(hidden);
         $('.alunoF').addClass(hidden);
-        switch (tipo) {
-            case 0:
-                $('.alunoM').removeClass(hidden);
-                $('.alunoF').removeClass(hidden);
-                $('#botaoInserirResponsavel0').removeClass(hidden);
-                break;
-            case 1:
-                $('.alunoM').removeClass(hidden);
-                $('#botaoInserirResponsavel1').removeClass(hidden);
-                break;
-            case 2:
-                $('.alunoF').removeClass(hidden);
-                $('#botaoInserirResponsavel2').removeClass(hidden);
-                break;
-        }
+//        switch (tipo) {
+//            case 0:
+//                $('.alunoM').removeClass(hidden);
+//                $('.alunoF').removeClass(hidden);
+//                $('#botaoInserirResponsavel0').removeClass(hidden);
+//                break;
+//            case 1:
+//                $('.alunoM').removeClass(hidden);
+//                $('#botaoInserirResponsavel1').removeClass(hidden);
+//                break;
+//            case 2:
+//                $('.alunoF').removeClass(hidden);
+//                $('#botaoInserirResponsavel2').removeClass(hidden);
+//                break;
+//        }
         $('#divConfirmacao').addClass(hidden);
         $('#divSelecionarAluno').removeClass(hidden);
         $('#divIncluirResponsavel').removeClass(hidden);
@@ -84,6 +84,7 @@ echo $this->inlineScript();
                 || entidadeTipo === 2
                 || entidadeTipo === 3
                 || entidadeTipo === 4
+                || entidadeTipo === 5
                 || entidadeTipo === 6
                 || entidadeTipo === 7) {
             $('#divSelecionarAluno').addClass(hidden);

@@ -704,6 +704,35 @@ class IndexController extends CircuitoController {
         return new ViewModel(array('html' => $html));
     }
 
+    public function atualizarAntigoAction() {
+        $html = '';
+        $arrayGrupoEquipes[] = 2; // blackbelt
+
+        foreach ($arrayGrupoEquipes as $idGrupoEquipe) {
+            $grupoEquipe = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupoEquipe);
+            $html .= 'Equipe: '.$grupoEquipe->getEntidadeAtiva()->infoEntidade();
+            $grupoCv = $grupoEquipe->getGrupoCv();
+            $numeroIdentificadorAtual = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupoEquipe);
+
+            $tipoRelatorioSomado = 2;
+            $periodoVisto = 0;
+            $arrayPeriodoDoMes = Funcoes::encontrarPeriodoDeUmMesDadoQualquerPeriodo($periodoVisto);
+
+            $contadorDeCiclos = 1;
+            for ($indiceArrays = $arrayPeriodoDoMes[0]; $indiceArrays <= $arrayPeriodoDoMes[1]; $indiceArrays++) {
+                $html .= "<br />indiceArrays: $indiceArrays";
+                $relatorio = RelatorioController::montaRelatorio($this->getRepositorio(), $numeroIdentificadorAtual, $indiceArrays, $tipoRelatorioSomado);
+
+                $html .= IndexController::atualizarRelatorioPorCiclo($grupoCv->getNumero_identificador(), date('m'), date('Y'), $contadorDeCiclos, $relatorio);
+                $contadorDeCiclos++;
+            }
+        }
+
+        return new ViewModel(array(
+            'html' => $html,
+        ));
+    }
+
     public function abreConexao() {
         try {
             if (empty($this->getConexao())) {
@@ -872,6 +901,56 @@ class IndexController extends CircuitoController {
 //        $sqlAtualizarDataEnvio = str_replace("#idFatoGrupo", $fato2->id, $sqlAtualizarDataEnvio);
 //
 //        mysql_query($sqlAtualizarDataEnvio);
+    }
+
+    public static function atualizarRelatorioPorCiclo($numeroIdentificador, $mes, $ano, $ciclo, $relatorio) {
+        $html = '';
+        $dimensoes = IndexController::buscaDimensoesPorIdFatoGrupo($numeroIdentificador, $mes, $ano);
+
+        for ($indiceDimensoes = 1; $indiceDimensoes <= 4; $indiceDimensoes++) {
+            $tabela = "";
+            $idTabela = 0;
+            $campo = "";
+            $campoRelatorio = "";
+            switch ($indiceDimensoes) {
+                case 1:
+                    $tabela = "ursula_dim_celula_ursula";
+                    $idTabela = $dimensoes[1];
+                    $campo = "c";
+                    $campoRelatorio = "celula";
+                    break;
+                case 2:
+                    $tabela = "ursula_dim_culto_ursula";
+                    $idTabela = $dimensoes[2];
+                    $campo = "cu";
+                    $campoRelatorio = "membresiaCulto";
+                    break;
+                case 3:
+                    $tabela = "ursula_dim_arregimentacao_ursula";
+                    $idTabela = $dimensoes[3];
+                    $campo = "a";
+                    $campoRelatorio = "membresiaArena";
+                    break;
+                case 4:
+                    $tabela = "ursula_dim_domingo_ursula";
+                    $idTabela = $dimensoes[4];
+                    $campo = "d";
+                    $campoRelatorio = "membresiaDomingo";
+                    break;
+            }
+            $campo = $campo . $ciclo;
+            $sqlUpdate = "UPDATE #tabela SET #campo = #valor where id = #idTabela";
+
+            $sqlUpdate = str_replace("#tabela", $tabela, $sqlUpdate);
+            $sqlUpdate = str_replace("#campo", $campo, $sqlUpdate);
+            $sqlUpdate = str_replace("#idTabela", $idTabela, $sqlUpdate);
+            $sqlUpdate = str_replace("#valor", $relatorio[$campoRelatorio], $sqlUpdate);
+
+            $html .= "<br />$sqlUpdate";
+
+            mysqli_query(IndexController::pegaConexaoStaticaDW(), $sqlUpdate);
+        }
+        return $html;
     }
 
     public static function mudarCelulasRealizadas($numeroIdentificador, $mes, $ano, $ciclo, $realizada, $realizadaAntesDeMudar, $idTipo = 0, $idEntidade = 0, $idPai = 0) {

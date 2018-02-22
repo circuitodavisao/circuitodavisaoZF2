@@ -83,30 +83,30 @@ echo $this->templateFormularioTopo($this->tituloDaPagina);
                 <span id="spanMensagens" class="quebraDeLinhaDeSpan mt10 alert text-center hidden"></span>
             </div>
 
-            <!-- Selecionar Aluno -->
-            <div id="divSelecionarAluno" class="">
-                <div class="section-divider mt40">
-                    <span><?php echo $this->translate(Constantes::$TRADUCAO_SELECIONE_O_ALUNO); ?></span>
-                </div> 
-                <div class="panel-menu">
-                    <input id="fooFilter" type="text" class="form-control" placeholder="<?php echo $this->translate(Constantes::$TRADUCAO_BUSQUE_O_ALUNO); ?>">
-                </div>
-                <!-- Tabela de Alunos -->
-                <?php echo $this->tabelaDeAlunos($form); ?>
-                <div class="mt10">
-                    <?php
-                    echo '<div id="divBotaoDeSelecionarAluno" class="hidden">';
-                    $labelBotaoContinuar = Constantes::$TRADUCAO_CONTINUAR;
-                    $extraBotaoContinuar = $this->funcaoOnClick('selecionarAluno()');
-                    echo $this->botaoLink($labelBotaoContinuar, Constantes::$STRING_HASHTAG, 7, $extraBotaoContinuar);
-                    echo '</div>';
-
-                    /* Botao Voltar Confirmação */
-                    $labelVoltar = Constantes::$TRADUCAO_VOLTAR;
-                    echo $this->botaoLink($labelVoltar, Constantes::$STRING_HASHTAG, 8, $this->FuncaoOnClick('botaoVoltarSelecionarAluno()'));
-                    ?>
-                </div>
-            </div>
+            <!--             Selecionar Aluno 
+                        <div id="divSelecionarAluno" class="">
+                            <div class="section-divider mt40">
+                                <span><?php // echo $this->translate(Constantes::$TRADUCAO_SELECIONE_O_ALUNO);  ?></span>
+                            </div> 
+                            <div class="panel-menu">
+                                <input id="fooFilter" type="text" class="form-control" placeholder="<?php // echo $this->translate(Constantes::$TRADUCAO_BUSQUE_O_ALUNO);  ?>">
+                            </div>
+                             Tabela de Alunos 
+            <?php // echo $this->tabelaDeAlunos($form); ?>
+                            <div class="mt10">
+            <?php
+//                    echo '<div id="divBotaoDeSelecionarAluno" class="hidden">';
+//                    $labelBotaoContinuar = Constantes::$TRADUCAO_CONTINUAR;
+//                    $extraBotaoContinuar = $this->funcaoOnClick('selecionarAluno()');
+//                    echo $this->botaoLink($labelBotaoContinuar, Constantes::$STRING_HASHTAG, 7, $extraBotaoContinuar);
+//                    echo '</div>';
+//
+//                    /* Botao Voltar Confirmação */
+//                    $labelVoltar = Constantes::$TRADUCAO_VOLTAR;
+//                    echo $this->botaoLink($labelVoltar, Constantes::$STRING_HASHTAG, 8, $this->FuncaoOnClick('botaoVoltarSelecionarAluno()'));
+            ?>
+                            </div>
+                        </div>-->
 
             <!-- Div Dados Pessoais -->
             <div id="divCPFDataNascimento" class="hidden">            
@@ -140,6 +140,7 @@ echo $this->templateFormularioTopo($this->tituloDaPagina);
                     echo '<div id="botaoCPFLiberado" class="quebraDeLinhaDeSpan hidden">';
                     echo $this->botaoSimples($labelBotaoContinuar, $this->funcaoOnClick('mostrarDivEmail(' . $this->tipoEntidade . ')'), 3);
                     echo '</div>';
+                    $labelVoltar = $this->translate(Constantes::$TRADUCAO_VOLTAR);
                     echo $this->botaoSimples($labelVoltar, $this->funcaoOnClick('botaoVoltarDataNascimentoCPF(' . $this->tipoEntidade . ')'), 2);
                     ?>
                 </div>
