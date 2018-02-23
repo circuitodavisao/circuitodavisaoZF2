@@ -594,9 +594,9 @@ class RelatorioController extends CircuitoController {
         $relatorioPessoal = RelatorioController::montaRelatorio($repositorio, $numeroIdentificador, $periodoComecoDoMes, $tipoRelatorioPessoal, $periodoFimDoMes);
         $relatorio['quantidadeLideres'] += $relatorioPessoal['quantidadeLideres'];
         $relatorio['celulaQuantidade'] += $relatorioPessoal['celulaQuantidade'];
-        echo "<br />" . $grupo->getEntidadeAtiva()->infoEntidade();
-        echo " - " . $grupo->getNomeLideresAtivos();
-        echo " - ['quantidadeLideres']: " . $relatorioPessoal['quantidadeLideres'];
+//        echo "<br />" . $grupo->getEntidadeAtiva()->infoEntidade();
+//        echo " - " . $grupo->getNomeLideresAtivos();
+//        echo " - ['quantidadeLideres']: " . $relatorioPessoal['quantidadeLideres'];
 
         $grupoPaiFilhoFilhos = $grupo->getGrupoPaiFilhoFilhosAtivos($periodoComecoDoMes);
         if ($grupoPaiFilhoFilhos) {
@@ -611,9 +611,9 @@ class RelatorioController extends CircuitoController {
                 $relatorio['quantidadeLideres'] += $relatorioDiscipulo['quantidadeLideres'];
                 $relatorio['celulaQuantidade'] += $relatorioDiscipulo['celulaQuantidade'];
 
-                echo "<br />" . $grupoFilho->getEntidadeAtiva()->infoEntidade();
-                echo " - " . $grupoFilho->getNomeLideresAtivos();
-                echo " - ['quantidadeLideres']: " . $relatorioDiscipulo['quantidadeLideres'];
+//                echo "<br />" . $grupoFilho->getEntidadeAtiva()->infoEntidade();
+//                echo " - " . $grupoFilho->getNomeLideresAtivos();
+//                echo " - ['quantidadeLideres']: " . $relatorioDiscipulo['quantidadeLideres'];
             }
         }
         return $relatorio;
