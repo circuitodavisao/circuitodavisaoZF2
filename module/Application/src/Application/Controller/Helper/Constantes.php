@@ -11,7 +11,7 @@ class Constantes {
 
     public static $IP = '158.69.124.139';
     public static $HOST = 'circuitodavisaonovo.com.br';
-    public static $META_LIDER = 7;
+    public static $META_LIDER = 6;
     public static $ID_TIPO_REVISAO = 3;
 
     const QUANTIDADES_DE_EVENTOS_NA_TELA = 4;
