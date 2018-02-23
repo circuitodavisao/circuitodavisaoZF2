@@ -107,8 +107,8 @@ class RelatorioController extends CircuitoController {
 
                 $mostrarInativos = true;
                 $relatorioDiscipulos[$grupoFilho->getId()] = RelatorioController::montaRelatorio($this->getRepositorio(), $numeroIdentificador, $periodoVisto, $tipoRelatorioSomado, null);
-//                $relatorioDiscipulosMedio[$grupoFilho->getId()] = RelatorioController::montaRelatorio($this->getRepositorio(), $numeroIdentificador, $arrayPeriodoDoMes[0], $tipoRelatorioSomado, $arrayPeriodoDoMes[1], $mostrarInativos);
-                $relatorioDiscipulosMedio[$grupoFilho->getId()] = RelatorioController::montarRelatorioSomandoTodoTimeAbaixoNoPeriodo($this->getRepositorio(), $grupoFilho, $arrayPeriodoDoMes[0], $arrayPeriodoDoMes[1]);
+                $relatorioDiscipulosMedio[$grupoFilho->getId()] = RelatorioController::montaRelatorio($this->getRepositorio(), $numeroIdentificador, $arrayPeriodoDoMes[0], $tipoRelatorioSomado, $arrayPeriodoDoMes[1], $mostrarInativos);
+//                $relatorioDiscipulosMedio[$grupoFilho->getId()] = RelatorioController::montarRelatorioSomandoTodoTimeAbaixoNoPeriodo($this->getRepositorio(), $grupoFilho, $arrayPeriodoDoMes[0], $arrayPeriodoDoMes[1]);
             }
 
             $relatorioParaOrdenar = $relatorioDiscipulos;
