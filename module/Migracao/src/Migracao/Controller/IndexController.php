@@ -724,9 +724,12 @@ class IndexController extends CircuitoController {
 
             $contadorDeCiclos = 1;
             for ($indiceArrays = $arrayPeriodoDoMes[0]; $indiceArrays <= $arrayPeriodoDoMes[1]; $indiceArrays++) {
-                $relatorio = RelatorioController::montaRelatorio($this->getRepositorio(), $numeroIdentificadorAtual, $indiceArrays, $tipoRelatorioSomado);
                 /* Caso seja ciclo um entao gera meta mensal no cv antigo */
                 if ($contadorDeCiclos === 1) {
+                    /* Soma o relatorio de todos os grupo s abaixo do periodo */
+                    $relatorioDiscipulos = RelatorioController::montarRelatorioSomandoTodoTimeAbaixoNoPeriodo($this->getRepositorio(), $grupoEquipe, $arrayPeriodoDoMes[0], $arrayPeriodoDoMes[1]);
+                    Funcoes::var_dump($relatorioDiscipulos);
+
                     $sqlIdGrupo = 'SELECT id FROM ursula_grupo_ursula WHERE idTipo = #idTipo AND idGrupo = #idGrupo AND mes = #mes AND ano = #ano AND idPai = #idPai;';
                     $sqlIdGrupo = str_replace("#idTipo", $idTipo, $sqlIdGrupo);
                     $sqlIdGrupo = str_replace("#idGrupo", $arrayEquipesCVAntigo[$contadorDeEquipes], $sqlIdGrupo);
@@ -739,15 +742,16 @@ class IndexController extends CircuitoController {
                         $idGrupoAntigo = $rowGrupoAntigo['id'];
                     }
                     $html .= "<br />idGrupoAntigo: $idGrupoAntigo";
-                    $html .= "<br />quantidadeLideres: " . $relatorio['quantidadeLideres'];
-                    $html .= "<br />celulaQuantidade: " . $relatorio['celulaQuantidade'];
+                    $html .= "<br />quantidadeLideres: " . $relatorioDiscipulos['quantidadeLideres'];
+                    $html .= "<br />celulaQuantidade: " . $relatorioDiscipulos['celulaQuantidade'];
                     $sqlUpdateGrupo = 'UPDATE ursula_grupo_ursula SET totalLideres = #totalLideres, totalCelulasMultiplicacao = #totalelulasMultiplicacao WHERE id = #idGrupo;';
-                    $sqlUpdateGrupo = str_replace("#totalLideres", $relatorio['quantidadeLideres'], $sqlUpdateGrupo);
-                    $sqlUpdateGrupo = str_replace("#totalelulasMultiplicacao", $relatorio['celulaQuantidade'], $sqlUpdateGrupo);
+                    $sqlUpdateGrupo = str_replace("#totalLideres", $relatorioDiscipulos['quantidadeLideres'], $sqlUpdateGrupo);
+                    $sqlUpdateGrupo = str_replace("#totalelulasMultiplicacao", $relatorioDiscipulos['celulaQuantidade'], $sqlUpdateGrupo);
                     $sqlUpdateGrupo = str_replace("#idGrupo", $idGrupoAntigo, $sqlUpdateGrupo);
                     $html .= "<br />sqlUpdateGrupo: $sqlUpdateGrupo";
                     mysqli_query(IndexController::pegaConexaoStatica(), $sqlUpdateGrupo);
                 }
+                $relatorio = RelatorioController::montaRelatorio($this->getRepositorio(), $numeroIdentificadorAtual, $indiceArrays, $tipoRelatorioSomado);
                 $html .= "<br />indiceArrays: $indiceArrays";
                 $html .= IndexController::atualizarRelatorioPorCiclo($grupoCv->getNumero_identificador(), date('m'), date('Y'), $contadorDeCiclos, $relatorio);
                 $contadorDeCiclos++;

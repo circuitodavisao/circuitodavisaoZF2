@@ -312,7 +312,7 @@ class RelatorioController extends CircuitoController {
         }
         return $response;
     }
- 
+
     public static function montaRelatorio($repositorioORM, $numeroIdentificador, $periodoInicial, $tipoRelatorio, $periodoFinal = null, $inativo = false) {
         unset($relatorio);
         /* Membresia */
@@ -409,7 +409,7 @@ class RelatorioController extends CircuitoController {
         if ($diferencaDePeriodos < 0) {
             $diferencaDePeriodos *= -1;
         }
-        if($periodoInicial == -1 && $periodoFinal == 0){
+        if ($periodoInicial == -1 && $periodoFinal == 0) {
             $diferencaDePeriodos = 1;
         }
         return $diferencaDePeriodos;
@@ -588,74 +588,32 @@ class RelatorioController extends CircuitoController {
         return $discipulos;
     }
 
-    public function testeAction() {
-        try {
+    public static function montarRelatorioSomandoTodoTimeAbaixoNoPeriodo($repositorio, $grupo, $periodoComecoDoMes, $periodoFimDoMes) {
+        $relatorio['quantidadeLideres'] = 0;
+        $relatorio['celulaQuantidade'] = 0;
+        $tipoRelatorioSomado = 2;
+        $mostrarInativos = true;
+        $grupoPaiFilhoFilhos = $grupo->getGrupoPaiFilhoFilhosAtivos($periodoComecoDoMes);
+        if ($grupoPaiFilhoFilhos) {
+            foreach ($grupoPaiFilhoFilhos as $gpFilho) {
+                $grupoFilho = $gpFilho->getGrupoPaiFilhoFilho();
+                echo "<br />" . $grupoFilho->getEntidadeAtiva()->infoEntidade();
+                echo "<br />periodoComecoDoMes: " . $periodoComecoDoMes;
+                echo "<br />periodoFimDoMes: " . $periodoFimDoMes;
+                $dataInativacao = null;
+                if ($gpFilho->getData_inativacao()) {
+                    $dataInativacao = $gpFilho->getData_inativacaoStringPadraoBanco();
+                }
+                $numeroIdentificador = $repositorio->getFatoCicloORM()->montarNumeroIdentificador($repositorio, $grupoFilho, $dataInativacao);
+                $relatorioDiscipulo = RelatorioController::montaRelatorio($repositorio, $numeroIdentificador, $periodoComecoDoMes, $tipoRelatorioSomado, $periodoFimDoMes, $mostrarInativos);
+                $relatorio['quantidadeLideres'] += $relatorioDiscipulo['quantidadeLideres'];
+                $relatorio['celulaQuantidade'] += $relatorioDiscipulo['celulaQuantidade'];
 
-            $setarDataEHora = false;
-
-            $pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorEmail('falecomleonardopereira@gmail.com');
-
-            /* Inativando */
-            $grupoResponsavels = $pessoa->getGrupoResponsavel();
-            $gruposAtual = null;
-            foreach ($grupoResponsavels as $gr) {
-                $gr->setDataEHoraDeInativacao();
-                $this->getRepositorio()->getGrupoResponsavelORM()->persistir($gr, $setarDataEHora);
-                $gruposAtual = $gr->getGrupo();
+                echo "<br />relatorioDiscipulo['quantidadeLideres']: " . $relatorioDiscipulo['quantidadeLideres'];
+                echo "<br />relatorioDiscipulo['celulaQuantidade']: " . $relatorioDiscipulo['celulaQuantidade'];
             }
-            $gruposAtual->setDataEHoraDeInativacao();
-            $this->getRepositorio()->getGrupoORM()->persistir($gruposAtual, $setarDataEHora);
-
-            $gpf = $gruposAtual->getGrupoPaiFilhoPai();
-            $gpf->setDataEHoraDeInativacao();
-            $this->getRepositorio()->getGrupoPaiFilhoORM()->persistir($gpf, $setarDataEHora);
-
-            $entidade = $gruposAtual->getEntidadeAtiva();
-            $entidade->setNome('TRANSFERIDA - ' . $entidade->getNome());
-            $this->getRepositorio()->getEntidadeORM()->persistir($entidade, $setarDataEHora);
-
-            /* Cadastrando */
-            $grupoNovo = new Grupo();
-            $this->getRepositorio()->getGrupoORM()->persistir($grupoNovo);
-
-            $novaEntidade = new Entidade();
-            $novaEntidade->setGrupo($grupoNovo);
-            $novaEntidade->setNome('NOVO GRUPO');
-            $novaEntidade->setEntidadeTipo($this->getRepositorio()->getEntidadeTipoORM()->encontrarPorId(EntidadeTipo::subEquipe));
-            $this->getRepositorio()->getEntidadeORM()->persistir($novaEntidade);
-
-            $pessoaPai = $this->getRepositorio()->getPessoaORM()->encontrarPorEmail('rsilverio2012@hotmail.com');
-            $grPai = $pessoaPai->getGrupoResponsavel()[0];
-            $grupoPai = $grPai->getGrupo();
-
-            $grupoPF = new GrupoPaiFilho();
-            $grupoPF->setGrupoPaiFilhoFilho($grupoNovo);
-            $grupoPF->setGrupoPaiFilhoPai($grupoPai);
-            $this->getRepositorio()->getGrupoPaiFilhoORM()->persistir($grupoPF);
-
-            $grupoResponsavelNovo = new GrupoResponsavel();
-            $grupoResponsavelNovo->setGrupo($grupoNovo);
-            $grupoResponsavelNovo->setPessoa($pessoa);
-            $this->getRepositorio()->getGrupoResponsavelORM()->persistir($grupoResponsavelNovo);
-
-            $gpessoas = $gruposAtual->getGrupoPessoa();
-            foreach ($gpessoas as $gp) {
-                $grupoPessoa = new GrupoPessoa();
-                $grupoPessoa->setGrupo($grupoNovo);
-                $grupoPessoa->setPessoa($gp->getPessoa());
-                $grupoPessoa->setGrupoPessoaTipo($gp->getGrupoPessoaTipo());
-                $this->getRepositorio()->getGrupoPessoaORM()->persistir($grupoPessoa);
-            }
-            $geventos = $gruposAtual->getGrupoEventoAtivosPorTipo(GrupoEvento::CELULA);
-            foreach ($geventos as $ge) {
-                $grupoEvento = new GrupoEvento();
-                $grupoEvento->setGrupo($grupoNovo);
-                $grupoEvento->setEvento($ge->getEvento());
-                $this->getRepositorio()->getGrupoEventoORM()->persistir($grupoEvento);
-            }
-        } catch (Exception $exc) {
-            echo $exc->getMessage();
         }
+        return $relatorio;
     }
 
 }
