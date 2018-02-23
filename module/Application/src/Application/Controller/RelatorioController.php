@@ -4,15 +4,9 @@ namespace Application\Controller;
 
 use Application\Controller\Helper\Constantes;
 use Application\Controller\Helper\Funcoes;
-use Application\Model\Entity\Entidade;
-use Application\Model\Entity\EntidadeTipo;
 use Application\Model\Entity\EventoTipo;
 use Application\Model\Entity\Grupo;
-use Application\Model\Entity\GrupoEvento;
-use Application\Model\Entity\GrupoPaiFilho;
-use Application\Model\Entity\GrupoPessoa;
 use Application\Model\Entity\GrupoPessoaTipo;
-use Application\Model\Entity\GrupoResponsavel;
 use Application\Model\Helper\FuncoesEntidade;
 use Application\Model\ORM\RepositorioORM;
 use Doctrine\ORM\EntityManager;
@@ -591,15 +585,23 @@ class RelatorioController extends CircuitoController {
     public static function montarRelatorioSomandoTodoTimeAbaixoNoPeriodo($repositorio, $grupo, $periodoComecoDoMes, $periodoFimDoMes) {
         $relatorio['quantidadeLideres'] = 0;
         $relatorio['celulaQuantidade'] = 0;
+        $tipoRelatorioPessoal = 1;
         $tipoRelatorioSomado = 2;
         $mostrarInativos = true;
+
+        $numeroIdentificador = $repositorio->getFatoCicloORM()->montarNumeroIdentificador($repositorio, $grupo);
+        $relatorioPessoal = RelatorioController::montaRelatorio($repositorio, $numeroIdentificador, $periodoComecoDoMes, $tipoRelatorioPessoal, $periodoFimDoMes);
+        $relatorio['quantidadeLideres'] += $relatorioPessoal['quantidadeLideres'];
+        $relatorio['celulaQuantidade'] += $relatorioPessoal['celulaQuantidade'];
+        echo "<br />" . $grupo->getEntidadeAtiva()->infoEntidade();
+        echo " - ['quantidadeLideres']: " . $relatorioPessoal['quantidadeLideres'];
+        echo " - ['celulaQuantidade']: " . $relatorioPessoal['celulaQuantidade'];
+
         $grupoPaiFilhoFilhos = $grupo->getGrupoPaiFilhoFilhosAtivos($periodoComecoDoMes);
         if ($grupoPaiFilhoFilhos) {
             foreach ($grupoPaiFilhoFilhos as $gpFilho) {
                 $grupoFilho = $gpFilho->getGrupoPaiFilhoFilho();
                 echo "<br />" . $grupoFilho->getEntidadeAtiva()->infoEntidade();
-                echo "<br />periodoComecoDoMes: " . $periodoComecoDoMes;
-                echo "<br />periodoFimDoMes: " . $periodoFimDoMes;
                 $dataInativacao = null;
                 if ($gpFilho->getData_inativacao()) {
                     $dataInativacao = $gpFilho->getData_inativacaoStringPadraoBanco();
@@ -609,8 +611,8 @@ class RelatorioController extends CircuitoController {
                 $relatorio['quantidadeLideres'] += $relatorioDiscipulo['quantidadeLideres'];
                 $relatorio['celulaQuantidade'] += $relatorioDiscipulo['celulaQuantidade'];
 
-                echo "<br />relatorioDiscipulo['quantidadeLideres']: " . $relatorioDiscipulo['quantidadeLideres'];
-                echo "<br />relatorioDiscipulo['celulaQuantidade']: " . $relatorioDiscipulo['celulaQuantidade'];
+                echo " - ['quantidadeLideres']: " . $relatorioDiscipulo['quantidadeLideres'];
+                echo " - ['celulaQuantidade']: " . $relatorioDiscipulo['celulaQuantidade'];
             }
         }
         return $relatorio;
