@@ -65,7 +65,7 @@ $somaMeta = 0;
                 <?php
                 echo $this->cabecalhoDeMeses();
                 ?>
-                <table class="text-center table table-condensed table-hover bg-light" style="font-size:8px;">
+                <table class="text-center table table-condensed table-hover bg-light" style="font-size:10px;">
                     <thead>
                         <tr class="dark">
                             <?php
@@ -143,7 +143,7 @@ $somaMeta = 0;
                                     $classePeriodoAtual = 'bg-primary';
                                 }
                                 if ($this->tipoRelatorio == 1) {
-                                    echo '<th class="' . $classeBase . $classePeriodoAtual . '">LID</th>';
+                                    echo '<th class="hidden-xs ' . $classePeriodoAtual . '">LID</th>';
                                     echo '<th class="' . $classeBase . $classePeriodoAtual . '">MET</th>';
                                     echo '<th class="hidden-xs ' . $classePeriodoAtual . '">CUL</th>';
                                     echo '<th class="hidden-xs ' . $classePeriodoAtual . '">ARE</th>';
@@ -236,7 +236,7 @@ $somaMeta = 0;
                                     $classeBase .= 'hidden-xs';
                                 }
                                 if ($this->tipoRelatorio == 1) {
-                                    echo '<td class="' . $classeBase . '">' . $relatorio[$indiceDeArrays]['quantidadeLideres'] . '</td>';
+                                    echo '<td class="hidden-xs">' . $relatorio[$indiceDeArrays]['quantidadeLideres'] . '</td>';
                                     echo '<td class="' . $classeBase . '">' . $relatorio[$indiceDeArrays]['membresiaMeta'] . '</td>';
                                     echo '<td class="hidden-xs">' . RelatorioController::formataNumeroRelatorio($relatorio[$indiceDeArrays]['membresiaCulto']) . '</td>';
                                     echo '<td class="hidden-xs">' . RelatorioController::formataNumeroRelatorio($relatorio[$indiceDeArrays]['membresiaArena']) . '</td>';
