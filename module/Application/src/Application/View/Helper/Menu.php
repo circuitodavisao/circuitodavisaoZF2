@@ -46,11 +46,6 @@ class Menu extends AbstractHelper {
         $html .= '<ul class="nav navbar-nav navbar-right">';
         $html .= '<li class="dropdown menu-merge">';
         $html .= '<a href="#" class="dropdown-toggle fw600 p15" data-toggle="dropdown">';
-        $nomeEntidade = $this->view->entidade->getEntidadeTipo()->getNome();
-        $infoEntidade = $this->view->entidade->infoEntidade();
-        $html .= '<img src="/img/avatars/' . $stringFoto . '" alt="' . $this->view->pessoa->getNomePrimeiroUltimo() . '" class="mw30 br64">' .
-                Constantes::$NBSP . $nomeEntidade . Constantes::$NBSP . '-' . Constantes::$NBSP . $infoEntidade;
-        $html .= '<span class="pl5">- ' . $this->view->pessoa->getNomePrimeiroUltimo() . '</span>';
         $html .= '<span class="caret caret-tp"></span>';
         $html .= '</a>';
 
@@ -99,7 +94,7 @@ class Menu extends AbstractHelper {
         $html .= '</a>';
         $html .= '<div class="media-body">';
         $html .= '<div class="media-links">';
-        $html .= '<a href="/preSaida">Sair</a>';
+        $html .= '<a href="/preSaida" onClick="mostrarSplash();">Sair</a>';
         $html .= '</div>';
         $html .= '<div class="media-author">' . $this->view->pessoa->getNome() . '</div>';
         $html .= '</div>';
@@ -112,7 +107,7 @@ class Menu extends AbstractHelper {
 
         $html .= '<li class="sidebar-label pt20">Principal</li>';
         $html .= '<li>';
-        $html .= '<a href="/principal">';
+        $html .= '<a href="/principal" onClick="mostrarSplash();">';
         $html .= '<span class="fa fa-home"></span>';
         $html .= '<span class="sidebar-title">Principal</span>';
         $html .= '</a>';
@@ -225,7 +220,7 @@ class Menu extends AbstractHelper {
             $html .= '<ul class="nav sub-nav">';
 
             $html .= '<li>';
-            $html .= '<a href="/cadastroCelulas">';
+            $html .= '<a href="/cadastroCelulas" onClick="mostrarSplash();">';
             $html .= '<span class="fa fa-users"></span>';
             $html .= 'Minha Célula';
             $html .= '</a>';
@@ -233,7 +228,7 @@ class Menu extends AbstractHelper {
 
             if ($this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja) {
                 $html .= '<li>';
-                $html .= '<a href="#">';
+                $html .= '<a href="#" onClick="mostrarSplash();">';
                 $html .= '<span class="fa fa-users"></span>';
                 $html .= 'Cultos(Manutenção)';
                 $html .= '</a>';
@@ -241,14 +236,14 @@ class Menu extends AbstractHelper {
             }
 
             $html .= '<li>';
-            $html .= '<a href="/cadastroGrupo">';
+            $html .= '<a href="/cadastroGrupo" onClick="mostrarSplash();">';
             $html .= '<span class="fa fa-users"></span>';
             $html .= 'Time';
             $html .= '</a>';
             $html .= '</li>';
 
             $html .= '<li>';
-            $html .= '<a href="/cadastroRevisionistas">';
+            $html .= '<a href="/cadastroRevisionistas" onClick="mostrarSplash();">';
             $html .= '<span class="fa fa-users"></span>';
             $html .= 'Revisionistas';
             $html .= '</a>';
@@ -257,7 +252,7 @@ class Menu extends AbstractHelper {
             if ($this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::equipe ||
                     $this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja) {
                 $html .= '<li>';
-                $html .= '<a href="/cadastroSolicitacoes">';
+                $html .= '<a href="/cadastroSolicitacoes" onClick="mostrarSplash();">';
                 $html .= '<span class="fa fa-users"></span>';
                 $html .= 'Solicita&ccedil;&otilde;es';
                 $html .= '</a>';
@@ -279,13 +274,13 @@ class Menu extends AbstractHelper {
         $html .= '</a>';
         $html .= '<ul class="nav sub-nav">';
         $html .= '<li>';
-        $html .= '<a href="/lancamentoArregimentacao">';
+        $html .= '<a href="/lancamentoArregimentacao" onClick="mostrarSplash();">';
         $html .= '<span class="fa fa-terminal"></span>';
         $html .= 'Arregimentação';
         $html .= '</a>';
         $html .= '</li>';
         $html .= '<li>';
-        $html .= '<a href="/lancamentoAtendimento">';
+        $html .= '<a href="/lancamentoAtendimento" onClick="mostrarSplash();">';
         $html .= '<span class="fa fa-users"></span>';
         $html .= 'Atendimento';
         $html .= '</a>';
@@ -293,7 +288,7 @@ class Menu extends AbstractHelper {
 
         if ($this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja) {
             $html .= '<li>';
-            $html .= '<a href="/cadastroAtivarFichas">';
+            $html .= '<a href="/cadastroAtivarFichas" onClick="mostrarSplash();">';
             $html .= '<span class="fa fa-users"></span>';
             $html .= 'Fichas Revisão de Vidas';
             $html .= '</a>';
@@ -342,7 +337,7 @@ class Menu extends AbstractHelper {
                     break;
             }
             $html .= '<li>';
-            $html .= '<a href="/relatorio/' . $indiceMenuRelatorio . '">';
+            $html .= '<a href="/relatorio/' . $indiceMenuRelatorio . '" onClick="mostrarSplash();">';
             $html .= '<span class="fa fa-table"></span>';
             $html .= $label;
             $html .= '</a>';
@@ -350,14 +345,14 @@ class Menu extends AbstractHelper {
         }
 
         $html .= '<li>';
-        $html .= '<a href="/relatorioPessoasFrequentes">';
+        $html .= '<a href="/relatorioPessoasFrequentes" onClick="mostrarSplash();">';
         $html .= '<span class="fa fa-users"></span>';
         $html .= 'Pessoas Frequentes';
         $html .= '</a>';
         $html .= '</li>';
 
         $html .= '<li>';
-        $html .= '<a href="/relatorioAtendimento">';
+        $html .= '<a href="/relatorioAtendimento" onClick="mostrarSplash();">';
         $html .= '<span class="fa fa-users"></span>';
         $html .= 'Atendimento';
         $html .= '</a>';
@@ -378,7 +373,7 @@ class Menu extends AbstractHelper {
             $html .= '<ul class="nav sub-nav">';
 
             $html .= '<li>';
-            $html .= '<a href="/cursoChamada">';
+            $html .= '<a href="/cursoChamada" onClick="mostrarSplash();">';
             $html .= '<span class="fa fa-list"></span>';
             $html .= '<span class="sidebar-title">Chamada</span>';
             $html .= '</a>';
@@ -386,13 +381,13 @@ class Menu extends AbstractHelper {
 
             if ($this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja) {
                 $html .= '<li>';
-                $html .= '<a href="/cursoListarTurma">';
+                $html .= '<a href="/cursoListarTurma" onClick="mostrarSplash();">';
                 $html .= '<span class="fa fa-list"></span>';
                 $html .= '<span class="sidebar-title">Turmas</span>';
                 $html .= '</a>';
                 $html .= '</li>';
                 $html .= '<li>';
-                $html .= '<a href="/cursoSelecionarParaCarterinha">';
+                $html .= '<a href="/cursoSelecionarParaCarterinha" onClick="mostrarSplash();">';
                 $html .= '<span class="fa fa-users"></span>';
                 $html .= '<span class="sidebar-title">Gerar Carterinha</span>';
                 $html .= '</a>';
@@ -415,7 +410,7 @@ class Menu extends AbstractHelper {
             $html .= '<ul class="nav sub-nav">';
 
             $html .= '<li>';
-            $html .= '<a href="/cadastroFichaRevisionistas">';
+            $html .= '<a href="/cadastroFichaRevisionistas" onClick="mostrarSplash();">';
             $html .= '<span class="fa fa-terminal"></span>';
             $html .= 'Fichas Revisao';
             $html .= '</a>';

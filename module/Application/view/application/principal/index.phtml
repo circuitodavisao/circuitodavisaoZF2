@@ -13,11 +13,140 @@ use Application\View\Helper\MontaGraficoDeBarra;
         echo '<input type="hidden" id="valorArena" value="' . RelatorioController::formataNumeroRelatorio($this->relatorioMedio['pessoalAtual']['membresiaArena']) . '" />';
         echo '<input type="hidden" id="valorDomingo" value="' . RelatorioController::formataNumeroRelatorio($this->relatorioMedio['pessoalAtual']['membresiaDomingo']) . '" />';
         echo '<input type="hidden" id="valorMembresia" value="' . RelatorioController::formataNumeroRelatorio($this->relatorioMedio['pessoalAtual']['membresia']) . '" />';
+        $arrayPeriodos = Funcoes::encontrarNumeroDePeriodosNoMesAtualEAnterior();
+        if ($arrayPeriodos['periodoMesAtualFinal'] == 0) {
+            $arrayPeriodos['periodoMesAtualFinal'] = -1;
+        }
+        $indicePeriodosDoMesAtual = $arrayPeriodos['periodoMesAtualInicial'];
+        $indicePeriodosDoMesAtualFinal = $arrayPeriodos['periodoMesAtualFinal'];
         ?>
         <!-- begin: .tray-center -->
         <div class="tray tray-center">
             <?php echo $this->dadosPrincipal($this->relatorioMedio); ?>
-            <div class="admin-panels fade-onload">           
+            <div class="admin-form fade-onload">
+                <?php
+                for ($indiceGrandeNumeros = 1; $indiceGrandeNumeros <= 2; $indiceGrandeNumeros++) {
+                    echo '<div class="row alert alert-default">';
+                    $labelGeral = '';
+                    switch ($indiceGrandeNumeros) {
+                        case 1:
+                            $labelGeral = 'MEMBRESIA';
+                            $class = 'class="col-lg-3 col-md-3 col-sm-6 col-xs-6"';
+                            $numeroIndices = 4;
+                            break;
+                        case 2:
+                            $labelGeral = 'CÉLULA';
+                            $class = 'class="col-lg-4 col-md-4 col-sm-4 col-xs-4"';
+                            $numeroIndices = 3;
+                            break;
+                    }
+                    ?>                   
+                    <div class="row p15">
+                        <div class="alert alert-primary">                              
+                            <?php echo $labelGeral; ?>
+                        </div>
+                        <?php
+                        for ($indice = 1; $indice <= $numeroIndices; $indice++) {
+                            switch ($indice) {
+                                case 1:
+                                    if ($indiceGrandeNumeros === 1) {
+                                        $label = 'PESSOAS CHEIAS DE F&Eacute;';
+                                        $valor = $this->relatorioMedioEquipe['membresiaCulto'];
+                                    }
+                                    if ($indiceGrandeNumeros === 2) {
+                                        $label = 'TOTAL DE CÉLULAS DE MULTIPLIÇÃO';
+                                        $valor = $this->relatorioMedioEquipe['celulaQuantidade'];
+                                    }
+                                    break;
+                                case 2:
+                                    if ($indiceGrandeNumeros === 1) {
+                                        $label = 'PESSOAS APAIXONADAS';
+                                        $valor = $this->relatorioMedioEquipe['membresiaArena'];
+                                    }
+                                    if ($indiceGrandeNumeros === 2) {
+                                        $label = 'PESSOAS FREQUENTE';
+                                        $valor = $this->relatorioMedioEquipe['celula'];
+                                    }
+                                    break;
+                                case 3:
+                                    if ($indiceGrandeNumeros === 1) {
+                                        $label = 'PESSOAS ALIAN&Ccedil;ADAS';
+                                        $valor = $this->relatorioMedioEquipe['membresiaDomingo'];
+                                    }
+                                    if ($indiceGrandeNumeros === 2) {
+                                        $label = 'CÉLULAS REALIZADAS';
+                                        $valor = $this->relatorioMedioEquipe['celulaRealizadas'] / $this->relatorioMedioEquipe['celulaQuantidade'] * 100;
+                                        $valor = RelatorioController::formataNumeroRelatorio($valor) . '%';
+                                    }
+                                    break;
+                                case 4:
+                                    if ($indiceGrandeNumeros === 1) {
+                                        $label = 'MEMBROS ASS&Iacute;DUOS';
+                                        $valor = $this->relatorioMedioEquipe['membresia'];
+                                        $valor = RelatorioController::formataNumeroRelatorio($valor);
+                                    }
+                                    break;
+                            }
+                            ?>
+                            <div <?php echo $class; ?>>
+                                <div class="panel panel-tile text-center br-a br-grey">
+                                    <div class="panel-body" style="padding-bottom: 0px;">
+                                        <h1 class="fs30 mt5 mbn"><?php echo $valor; ?></h1>
+                                        <h6><?php echo $label; ?></h6>                                    
+                                    </div> 
+                                    <div class="panel-footer br-t p12">
+                                        <span class="fs11">
+                                            <?php
+                                            for ($indicePeriodosDoMesAtual = $arrayPeriodos['periodoMesAtualInicial']; $indicePeriodosDoMesAtual <= $indicePeriodosDoMesAtualFinal; $indicePeriodosDoMesAtual++) {
+                                                if ($indicePeriodosDoMesAtual != $arrayPeriodos['periodoMesAtualInicial']) {
+                                                    echo ' | ';
+                                                }
+                                                switch ($indice) {
+                                                    case 1:
+                                                        if ($indiceGrandeNumeros === 1) {
+                                                            $valor = $this->relatorioMesAtualEquipe[$indicePeriodosDoMesAtual]['membresiaCulto'];
+                                                        }
+                                                        if ($indiceGrandeNumeros === 2) {
+                                                            $valor = $this->relatorioMesAtualEquipe[$indicePeriodosDoMesAtual]['celulaQuantidade'];
+                                                        }
+                                                        break;
+                                                    case 2:
+                                                        if ($indiceGrandeNumeros === 1) {
+                                                            $valor = $this->relatorioMesAtualEquipe[$indicePeriodosDoMesAtual]['membresiaArena'];
+                                                        }
+                                                        if ($indiceGrandeNumeros === 2) {
+                                                            $valor = $this->relatorioMesAtualEquipe[$indicePeriodosDoMesAtual]['celula'];
+                                                        }
+                                                        break;
+                                                    case 3:
+                                                        if ($indiceGrandeNumeros === 1) {
+                                                            $valor = $this->relatorioMesAtualEquipe[$indicePeriodosDoMesAtual]['membresiaDomingo'];
+                                                        }
+                                                        if ($indiceGrandeNumeros === 2) {
+                                                            $valor = $this->relatorioMesAtualEquipe[$indicePeriodosDoMesAtual]['celulaRealizadas'] / $this->relatorioMesAtualEquipe[$indicePeriodosDoMesAtual]['celulaQuantidade'] * 100;
+                                                            $valor = RelatorioController::formataNumeroRelatorio($valor) . '%';
+                                                        }
+                                                        break;
+                                                    case 4:
+                                                        if ($indiceGrandeNumeros === 1) {
+                                                            $valor = $this->relatorioMesAtualEquipe[$indicePeriodosDoMesAtual]['membresia'];
+                                                            $valor = RelatorioController::formataNumeroRelatorio($valor);
+                                                        }
+                                                        break;
+                                                }
+                                                echo $valor;
+                                            }
+                                            ?>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        <?php } ?>
+                    </div>
+                    <?php
+                    echo '</div>';
+                }
+                ?>
                 <!--robo membresia-->
                 <div class="row alert alert-default">
                     <div class="col-xs-12 col-md-12 col-lg-12">
@@ -33,12 +162,6 @@ use Application\View\Helper\MontaGraficoDeBarra;
                             <div class="panel">
                                 <div class="panel-body">
                                     <?php
-                                    $arrayPeriodos = Funcoes::encontrarNumeroDePeriodosNoMesAtualEAnterior();
-                                    if ($arrayPeriodos['periodoMesAtualFinal'] == 0) {
-                                        $arrayPeriodos['periodoMesAtualFinal'] = -1;
-                                    }
-                                    $indicePeriodosDoMesAtual = $arrayPeriodos['periodoMesAtualInicial'];
-                                    $indicePeriodosDoMesAtualFinal = $arrayPeriodos['periodoMesAtualFinal'];
                                     $perfomance = array();
                                     $perfomance['culto'] = $this->relatorioMedio['pessoalAtual']['membresiaCulto'] / $this->relatorioMedio['pessoalAtual']['membresiaMeta'] * 100;
                                     $perfomance['arena'] = $this->relatorioMedio['pessoalAtual']['membresiaArena'] / $this->relatorioMedio['pessoalAtual']['membresiaMeta'] * 100;
