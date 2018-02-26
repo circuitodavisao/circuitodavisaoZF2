@@ -242,11 +242,12 @@ class Grupo extends CircuitoEntity {
         /* Responsabilidades */
         $grupoPaiFilhoFilhos = $this->getGrupoPaiFilhoFilhos();
         if ($grupoPaiFilhoFilhos) {
+            $arrayPeriodo = Funcoes::montaPeriodo($periodo);
+            $stringComecoDoPeriodo = $arrayPeriodo[3] . '-' . $arrayPeriodo[2] . '-' . $arrayPeriodo[1];
+            $stringFimDoPeriodo = $arrayPeriodo[6] . '-' . $arrayPeriodo[5] . '-' . $arrayPeriodo[4];
             /* Verificar responsabilidades ativas */
             foreach ($grupoPaiFilhoFilhos as $gpf) {
-                $arrayPeriodo = Funcoes::montaPeriodo($periodo);
                 if ($gpf->verificarSeEstaAtivo()) {
-                    $stringFimDoPeriodo = $arrayPeriodo[6] . '-' . $arrayPeriodo[5] . '-' . $arrayPeriodo[4];
                     $dataDoInicioDoPeriodoParaComparar = strtotime($stringFimDoPeriodo);
                     $dataDoGrupoPaiFilhoCriacaoParaComparar = strtotime($gpf->getData_criacaoStringPadraoBanco());
                     if ($dataDoGrupoPaiFilhoCriacaoParaComparar <= $dataDoInicioDoPeriodoParaComparar) {
@@ -254,7 +255,6 @@ class Grupo extends CircuitoEntity {
                     }
                 } else {
                     /* Inativo */
-                    $stringComecoDoPeriodo = $arrayPeriodo[3] . '-' . $arrayPeriodo[2] . '-' . $arrayPeriodo[1];
                     $dataDoInicioDoPeriodoParaComparar = strtotime($stringComecoDoPeriodo);
                     $dataDoGrupoGrupoPaiFilhoInativadoParaComparar = strtotime($gpf->getData_inativacaoStringPadraoBanco());
                     if ($dataDoGrupoGrupoPaiFilhoInativadoParaComparar >= $dataDoInicioDoPeriodoParaComparar) {

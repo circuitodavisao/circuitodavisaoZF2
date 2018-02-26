@@ -238,7 +238,8 @@ class Funcoes {
         if ($stringPeriodo == '') {
             $stringPeriodo = '0';
         }
-        $tempoUnix = strtotime($stringPeriodo . ' week -' . ($diaDaSemana - 1) . ' days');
+        $stringTempo = $stringPeriodo . ' week -' . ($diaDaSemana - 1) . ' days';
+        $tempoUnix = strtotime($stringTempo);
         $diaAjustado = date('d', $tempoUnix);
         $mesAjustado = date('m', $tempoUnix);
         $anoAjustado = date('Y', $tempoUnix);
@@ -265,7 +266,7 @@ class Funcoes {
     static public function encontrarNumeroDePeriodosNoMesAtualEAnterior() {
         $resposta = array();
         $periodoMesAtualFinal = 0;
-        $periodoMesAtualInicial = Funcoes::encontrarPeriodoDeUmMesDadoPeriodoInicial(date('m'), 0);
+        $periodoMesAtualInicial = Funcoes::encontrarPeriodoDeUmMesDadoQualquerPeriodo()[0];
 
         $mesAnterior = date('m') - 1;
         if (date('m') == 1) {
@@ -325,7 +326,6 @@ class Funcoes {
             }
         }
         $mesParaVerificarInt = (int) $mesParaVerificar;
-
         $periodoInicial = $periodo + 6;
         if ($periodo === 0) {
             $periodoInicial = 0;
@@ -339,7 +339,7 @@ class Funcoes {
         while (true) {
             $arrayPeriodo = Funcoes::montaPeriodo($periodoInicial);
             if ($arrayPeriodo[2] == $mesAnteriorVerificacao ||
-                    $arrayPeriodo[5] == $mesAnteriorVerificacao) {
+                    $arrayPeriodo[5] == $mesAnteriorVerificacao) {                
                 if ($arrayPeriodo[5] == $mesAnteriorVerificacao) {
                     $periodoInicial++;
                 }

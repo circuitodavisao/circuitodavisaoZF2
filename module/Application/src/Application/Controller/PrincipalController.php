@@ -60,10 +60,13 @@ class PrincipalController extends CircuitoController {
         $relatorioMedio['pessoalAnterior'] = RelatorioController::montaRelatorio($this->getRepositorio(), $numeroIdentificador, $arrayPeriodos['periodoMesAnteriorInicial'], $qualRelatorio, $arrayPeriodos['periodoMesAnteriorlFinal']);
         $relatorioMedio['celulasAtual'] = RelatorioController::saberQuaisdasMinhasCelulasSaoDeElite($this->getRepositorio(), $grupo, $arrayPeriodos['periodoMesAtualInicial'], $arrayPeriodos['periodoMesAtualFinal']);
         $relatorioMedio['celulasAnterior'] = RelatorioController::saberQuaisdasMinhasCelulasSaoDeElite($this->getRepositorio(), $grupo, $arrayPeriodos['periodoMesAnteriorInicial'], $arrayPeriodos['periodoMesAnteriorlFinal']);
+        $relatorioMedioEquipe = RelatorioController::montaRelatorio($this->getRepositorio(), $numeroIdentificador, $arrayPeriodos['periodoMesAtualInicial'], $tipoRelatorioEquipe, $arrayPeriodos['periodoMesAtualFinal']);
 
         $relatorioMesAtual = array();
+        $relatorioMesAtualEquipe = array();
         for ($indicePeriodosDoMesAtual = $arrayPeriodos['periodoMesAtualInicial']; $indicePeriodosDoMesAtual <= $arrayPeriodos['periodoMesAtualFinal']; $indicePeriodosDoMesAtual++) {
             $relatorioMesAtual[$indicePeriodosDoMesAtual] = RelatorioController::montaRelatorio($this->getRepositorio(), $numeroIdentificador, $indicePeriodosDoMesAtual, $qualRelatorio);
+            $relatorioMesAtualEquipe[$indicePeriodosDoMesAtual] = RelatorioController::montaRelatorio($this->getRepositorio(), $numeroIdentificador, $indicePeriodosDoMesAtual, $tipoRelatorioEquipe);            
         }
         $hierarquias = $this->getRepositorio()->getHierarquiaORM()->encontrarTodas();
 
@@ -155,8 +158,10 @@ class PrincipalController extends CircuitoController {
         $arrayPeriodo = Funcoes::montaPeriodo($periodo);
         $dados['periodoExtenso'] = $arrayPeriodo[0];
         $dados['relatorioMesAtual'] = $relatorioMesAtual;
+        $dados['relatorioMesAtualEquipe'] = $relatorioMesAtualEquipe;
         $dados['relatorioEquipe'] = $relatorioEquipe;
         $dados['relatorioMedio'] = $relatorioMedio;
+        $dados['relatorioMedioEquipe'] = $relatorioMedioEquipe;
         $dados['repositorio'] = $this->getRepositorio();
         $dados['hierarquias'] = $hierarquias;
         $dados['grupo'] = $grupo;

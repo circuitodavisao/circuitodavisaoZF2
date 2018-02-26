@@ -728,7 +728,6 @@ class IndexController extends CircuitoController {
                 if ($contadorDeCiclos === 1) {
                     /* Soma o relatorio de todos os grupo s abaixo do periodo */
                     $relatorioDiscipulos = RelatorioController::montarRelatorioSomandoTodoTimeAbaixoNoPeriodo($this->getRepositorio(), $grupoEquipe, $arrayPeriodoDoMes[0], $arrayPeriodoDoMes[1]);
-                    Funcoes::var_dump($relatorioDiscipulos);
 
                     $sqlIdGrupo = 'SELECT id FROM ursula_grupo_ursula WHERE idTipo = #idTipo AND idGrupo = #idGrupo AND mes = #mes AND ano = #ano AND idPai = #idPai;';
                     $sqlIdGrupo = str_replace("#idTipo", $idTipo, $sqlIdGrupo);

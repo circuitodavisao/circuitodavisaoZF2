@@ -29,6 +29,7 @@ use Application\View\Helper\BotaoSubmitDesabilitado;
 use Application\View\Helper\CabecalhoDeAtendimentos;
 use Application\View\Helper\CabecalhoDeCiclos;
 use Application\View\Helper\CabecalhoDeEventos;
+use Application\View\Helper\CabecalhoDeMeses;
 use Application\View\Helper\CabecalhoDePeriodos;
 use Application\View\Helper\DadosEntidade;
 use Application\View\Helper\DadosPrincipal;
@@ -320,6 +321,9 @@ class Module {
                 },
                 'cabecalhoDePeriodos' => function ($sm) {
                     return new CabecalhoDePeriodos();
+                },
+                'cabecalhoDeMeses' => function ($sm) {
+                    return new CabecalhoDeMeses();
                 },
                 'montaGraficoDeBarra' => function ($sm) {
                     return new MontaGraficoDeBarra();

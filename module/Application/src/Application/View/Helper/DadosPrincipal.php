@@ -182,24 +182,24 @@ class DadosPrincipal extends AbstractHelper {
 
         $html .= '<div class="media-links">';
         $minhaHierarquia = $pessoa->getPessoaHierarquiaAtivo()->getHierarquia();
-        if ($minhaHierarquia->getId() < Hierarquia::LIDER_DE_CELULA) {
-            for ($indiceIdRelatorio = 1; $indiceIdRelatorio <= 2; $indiceIdRelatorio++) {
-                $checked = '';
-                if ($indiceIdRelatorio == 1) {
-                    $label = 'Pessoal';
-                    if ($this->view->idRelatorio == 1) {
-                        $checked = 'checked';
-                    }
-                }
-                if ($indiceIdRelatorio == 2) {
-                    $label = 'Equipe';
-                    if ($this->view->idRelatorio == 2) {
-                        $checked = 'checked';
-                    }
-                }
-                $html .= ' ' . $label . ' <input type="radio" name="qualRelatorio" onclick=" $(\'.splash\').css(\'display\', \'block\'); location.href=\'/principal/' . $indiceIdRelatorio . '\'" ' . $checked . ' />';
-            }
-        }
+//        if ($minhaHierarquia->getId() < Hierarquia::LIDER_DE_CELULA) {
+//            for ($indiceIdRelatorio = 1; $indiceIdRelatorio <= 2; $indiceIdRelatorio++) {
+//                $checked = '';
+//                if ($indiceIdRelatorio == 1) {
+//                    $label = 'Pessoal';
+//                    if ($this->view->idRelatorio == 1) {
+//                        $checked = 'checked';
+//                    }
+//                }
+//                if ($indiceIdRelatorio == 2) {
+//                    $label = 'Equipe';
+//                    if ($this->view->idRelatorio == 2) {
+//                        $checked = 'checked';
+//                    }
+//                }
+//                $html .= ' ' . $label . ' <input type="radio" name="qualRelatorio" onclick=" $(\'.splash\').css(\'display\', \'block\'); location.href=\'/principal/' . $indiceIdRelatorio . '\'" ' . $checked . ' />';
+//            }
+//        }
         $html .= '</div>';
 
         if ($minhaHierarquia->getId() < Hierarquia::LIDER_DE_CELULA) {
