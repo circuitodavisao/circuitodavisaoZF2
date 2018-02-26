@@ -22,15 +22,17 @@ class CabecalhoDeMeses extends AbstractHelper {
 
     public function renderHtml() {
         $html = '';
+        $url = $this->view->tipoRelatorio . '/' . $this->view->mes . '/' . $this->view->ano;
+        $html .= '<form action="/relatorio/' . $url . '" method="post">';
         $html .= '<div class="row p10">';
-        $html .= '<div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">';
+        $html .= '<div class="col-lg-1 col-md-1 col-sm-1 col-xs-12">';
         $html .= 'Mês';
         $html .= '</div>';
-        $html .= '<div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">';
-        $html .= '<select class="form-control">';
-        for ($indice = 1; $indice <= 11; $indice++) {
+        $html .= '<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">';
+        $html .= '<select name="mes" id="mes" class="form-control">';
+        for ($indice = 1; $indice <= 12; $indice++) {
             $selected = '';
-            if ($this->view->mesSelecionado == $indice) {
+            if ($this->view->mes == $indice) {
                 $selected = 'selected';
             }
 
@@ -38,20 +40,26 @@ class CabecalhoDeMeses extends AbstractHelper {
         }
         $html .= '</select>';
         $html .= '</div>';
-        $html .= '<div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">';
+        $html .= '<div class="col-lg-1 col-md-1 col-sm-1 col-xs-12">';
         $html .= 'Ano';
         $html .= '</div>';
-        $html .= '<div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">';
-        $html .= '<select class="form-control">';
+        $html .= '<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">';
+        $html .= '<select name="ano" id="ano" class="form-control">';
         for ($indice = date('Y'); $indice >= 2017; $indice--) {
-            $html .= '<option value="' . $indice . '">' . $indice . '</option>';
+            $selected = '';
+            if ($this->view->ano == $indice) {
+                $selected = 'selected';
+            }
+            $html .= '<option value="' . $indice . '" ' . $selected . '>' . $indice . '</option>';
         }
         $html .= '</select>';
         $html .= '</div>';
-        $html .= '<div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">';
-        $html .= $this->view->botaoSimples('Filtrar', '');
+        $html .= '<div class="col-lg-2 col-md-2 col-sm-2 col-xs-122">';
+        $html .= $this->view->botaoSimples('Filtrar', $this->view->funcaoOnClick('this.form.submit()'));
         $html .= '</div>';
         $html .= '</div>';
+       
+        $html .= '</form>';
         return $html;
     }
 

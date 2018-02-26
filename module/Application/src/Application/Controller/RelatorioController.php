@@ -49,12 +49,27 @@ class RelatorioController extends CircuitoController {
         $idEntidadeAtual = $sessao->idEntidadeAtual;
         $entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
         $grupo = $entidade->getGrupo();
-
-        $mesSelecionado = date('n');
         $tipoRelatorio = (int) $this->params()->fromRoute('tipoRelatorio');
-        $arrayPeriodoDoMes = Funcoes::encontrarPeriodoDeUmMesDadoQualquerPeriodo(0);
-
-        $relatorio = RelatorioController::relatorioCompleto($this->getRepositorio(), $grupo, $tipoRelatorio);
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $post_data = $request->getPost();
+            $mes = $post_data['mes'];
+            $ano = $post_data['ano'];
+        }
+        if (empty($mes)) {
+            $mes = (int) $this->params()->fromRoute('mes', 0);
+            if ($mes == 0) {
+                $mes = date('m');
+            }
+        }
+        if (empty($ano)) {
+            $ano = (int) $this->params()->fromRoute('ano', 0);
+            if ($ano == 0) {
+                $ano = date('Y');
+            }
+        }
+        $arrayPeriodoDoMes = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mes, $ano);
+        $relatorio = RelatorioController::relatorioCompleto($this->getRepositorio(), $grupo, $tipoRelatorio, $mes, $ano);
 
 //        if (!$entidade->verificarSeEstaAtivo()) {
 //            $periodoVerificar = Funcoes::encontrarPeriodoDeUmMes($entidade->getData_inativacaoMes());
@@ -76,7 +91,8 @@ class RelatorioController extends CircuitoController {
 //        }
 
         $dados = array(
-            'mesSelecionado' => $mesSelecionado,
+            'mes' => $mes,
+            'ano' => $ano,
             'relatorio' => $relatorio,
             'periodoInicial' => $arrayPeriodoDoMes[0],
             'periodoFinal' => $arrayPeriodoDoMes[1],
@@ -273,10 +289,11 @@ class RelatorioController extends CircuitoController {
     const relatorioCelulaRealizadas = 2;
     const relatorioCelulaQuantidade = 3;
 
-    public static function relatorioCompleto($repositorio, $grupo, $tipoRelatorio, $mes = 0) {
+    public static function relatorioCompleto($repositorio, $grupo, $tipoRelatorio, $mes, $ano) {
         $relatorio = array();
         $todosFilhos = array();
-        $arrayPeriodoDoMes = Funcoes::encontrarPeriodoDeUmMesDadoQualquerPeriodo(0);
+        $arrayPeriodoDoMes = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mes, $ano);
+
         $diferencaDePeriodos = self::diferencaDePeriodos($arrayPeriodoDoMes[0], $arrayPeriodoDoMes[1]);
 
         for ($indiceDeArrays = $arrayPeriodoDoMes[0]; $indiceDeArrays <= $arrayPeriodoDoMes[1]; $indiceDeArrays++) {

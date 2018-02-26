@@ -72,7 +72,7 @@ class BotaoSimples extends AbstractHelper {
             $classBotao = 'xs btn-default';
         }
         if ($this->getPosicao() === BotaoSimples::posicaoAEsquerda) {
-            $posicaoBotao = 'pull-left ml10';
+            $posicaoBotao = 'pull-left mr10';
         }
         if ($this->getPosicao() === BotaoSimples::posicaoAoCentro) {
             $posicaoBotao = '';
