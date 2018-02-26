@@ -109,8 +109,8 @@ $somaMeta = 0;
                                 }
                                 $funcaoEsquerda = $this->funcaoOnClick('$(".periodo' . ($indiceDeArrays - 1) . '").removeClass("hidden-xs");$(".periodo' . $indiceDeArrays . '").addClass("hidden-xs");');
                                 $funcaoDireita = $this->funcaoOnClick('$(".periodo' . ($indiceDeArrays + 1) . '").removeClass("hidden-xs");$(".periodo' . $indiceDeArrays . '").addClass("hidden-xs");');
-                                $botaoEsquerda = $this->botaoSimples('<i class="fa fa-arrow-left"></i>', $funcaoEsquerda, BotaoSimples::botaoMuitoPequenoMenosImportante, BotaoSimples::posicaoAEsquerda);
-                                $botaoDireita = $this->botaoSimples('<i class="fa fa-arrow-right"></i>', $funcaoDireita, BotaoSimples::botaoMuitoPequenoMenosImportante, BotaoSimples::posicaoADireita);
+                                $botaoEsquerda = $this->botaoSimples('<i class="fa fa-angle-double-left"></i>', $funcaoEsquerda, BotaoSimples::botaoMuitoPequenoMenosImportante, BotaoSimples::posicaoAEsquerda);
+                                $botaoDireita = $this->botaoSimples('<i class="fa fa-angle-double-right"></i>', $funcaoDireita, BotaoSimples::botaoMuitoPequenoMenosImportante, BotaoSimples::posicaoADireita);
 
                                 echo '<th colspan="' . $colspan . '" class="' . $classeBase . $classePeriodoAtual . '">';
                                 if ($mostrarBotaoEsquerdo) {
@@ -121,9 +121,9 @@ $somaMeta = 0;
                                     echo '<span class="hidden-lg hidden-md hidden-sm">' . $botaoDireita . '</span>';
                                 }
                                 echo '</th>';
-                                echo '<th class="' . $classeBase . '">|</th>';
+                                echo '<th class="hidden-xs">|</th>';
                             }
-                            echo '<th colspan="2"></th>';
+                            echo '<th colspan="2" class="hidden-xs"></th>';
                             ?>                           
                         </tr>
                         <tr class="dark">
@@ -145,10 +145,9 @@ $somaMeta = 0;
                                 if ($this->tipoRelatorio == 1) {
                                     echo '<th class="' . $classeBase . $classePeriodoAtual . '">LID</th>';
                                     echo '<th class="' . $classeBase . $classePeriodoAtual . '">MET</th>';
-
-                                    echo '<th class = "' . $classeBase . $classePeriodoAtual . '">CUL</th>';
-                                    echo '<th class = "' . $classeBase . $classePeriodoAtual . '">ARE</th>';
-                                    echo '<th class = "' . $classeBase . $classePeriodoAtual . '">DOM</th>';
+                                    echo '<th class="hidden-xs ' . $classePeriodoAtual . '">CUL</th>';
+                                    echo '<th class="hidden-xs ' . $classePeriodoAtual . '">ARE</th>';
+                                    echo '<th class="hidden-xs ' . $classePeriodoAtual . '">DOM</th>';
                                     echo '<th class="' . $classeBase . $classePeriodoAtual . '">MEM</th>';
                                     echo '<th class="' . $classeBase . $classePeriodoAtual . '">%</th>';
                                 }
@@ -239,9 +238,9 @@ $somaMeta = 0;
                                 if ($this->tipoRelatorio == 1) {
                                     echo '<td class="' . $classeBase . '">' . $relatorio[$indiceDeArrays]['quantidadeLideres'] . '</td>';
                                     echo '<td class="' . $classeBase . '">' . $relatorio[$indiceDeArrays]['membresiaMeta'] . '</td>';
-                                    echo '<td class="' . $classeBase . '">' . RelatorioController::formataNumeroRelatorio($relatorio[$indiceDeArrays]['membresiaCulto']) . '</td>';
-                                    echo '<td class="' . $classeBase . '">' . RelatorioController::formataNumeroRelatorio($relatorio[$indiceDeArrays]['membresiaArena']) . '</td>';
-                                    echo '<td class="' . $classeBase . '">' . RelatorioController::formataNumeroRelatorio($relatorio[$indiceDeArrays]['membresiaDomingo']) . '</td>';
+                                    echo '<td class="hidden-xs">' . RelatorioController::formataNumeroRelatorio($relatorio[$indiceDeArrays]['membresiaCulto']) . '</td>';
+                                    echo '<td class="hidden-xs">' . RelatorioController::formataNumeroRelatorio($relatorio[$indiceDeArrays]['membresiaArena']) . '</td>';
+                                    echo '<td class="hidden-xs">' . RelatorioController::formataNumeroRelatorio($relatorio[$indiceDeArrays]['membresiaDomingo']) . '</td>';
                                     echo '<td class="' . $classeBase . '">' . RelatorioController::formataNumeroRelatorio($relatorio[$indiceDeArrays]['membresia']) . '</td>';
                                     echo '<td class="' . $classeBase . '">' . RelatorioController::formataNumeroRelatorio($relatorio[$indiceDeArrays]['membresiaPerformance']) . '%</td>';
                                 }
