@@ -302,17 +302,46 @@ class Funcoes {
         return $periodoFinal;
     }
 
-    static public function encontrarPeriodoDeUmMes($mesPesquisa) {
-        $periodoFinal = 0;
-        while (true) {
-            $arrayPeriodo = Funcoes::montaPeriodo($periodoFinal);
-            if ($arrayPeriodo[2] == $mesPesquisa) {
-                break;
-            }
-            $periodoFinal--;
+    static public function encontrarPeriodoDeUmMesPorMesEAno($mes, $ano) {
+        $mesParaVerificarInt = (int) $mes;
+        $periodoInicial = 6;
+
+        $mesAnteriorVerificacao = $mesParaVerificarInt - 1;
+        if ($mesParaVerificarInt == 1) {
+            $mesAnteriorVerificacao = 12;
         }
 
-        return $periodoFinal;
+        while (true) {
+            $arrayPeriodo = Funcoes::montaPeriodo($periodoInicial);
+            if ($arrayPeriodo[2] == $mesAnteriorVerificacao ||
+                    $arrayPeriodo[5] == $mesAnteriorVerificacao) {
+                if ($arrayPeriodo[5] == $mesAnteriorVerificacao) {
+                    $periodoInicial++;
+                }
+                break;
+            }
+            $periodoInicial--;
+        }
+
+        $periodoFinal = $periodoInicial;
+        while (true) {
+            $arrayPeriodo = Funcoes::montaPeriodo($periodoFinal);
+            if ($arrayPeriodo[5] != $mesParaVerificarInt) {
+                if ($arrayPeriodo[2] != $mesParaVerificarInt) {
+                    $periodoFinal--;
+                }
+                break;
+            }
+            if ($periodoFinal == 0) {
+                break;
+            }
+            $periodoFinal++;
+        }
+
+        $arrayDePeriodos[0] = $periodoInicial;
+        $arrayDePeriodos[1] = $periodoFinal;
+
+        return $arrayDePeriodos;
     }
 
     static public function encontrarPeriodoDeUmMesDadoQualquerPeriodo($periodo = 0) {
@@ -339,7 +368,7 @@ class Funcoes {
         while (true) {
             $arrayPeriodo = Funcoes::montaPeriodo($periodoInicial);
             if ($arrayPeriodo[2] == $mesAnteriorVerificacao ||
-                    $arrayPeriodo[5] == $mesAnteriorVerificacao) {                
+                    $arrayPeriodo[5] == $mesAnteriorVerificacao) {
                 if ($arrayPeriodo[5] == $mesAnteriorVerificacao) {
                     $periodoInicial++;
                 }

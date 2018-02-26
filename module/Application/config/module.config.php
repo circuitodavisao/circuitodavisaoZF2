@@ -81,11 +81,12 @@ return array(
             'relatorio' => array(
                 'type' => 'Segment',
                 'options' => array(
-                    'route' => '/relatorio[:action][/:tipoRelatorio][/:id]',
+                    'route' => '/relatorio[:action][/:tipoRelatorio][/:mes/:ano]',
                     'constraints' => array(
                         'action' => '[a-zA-Z]+',
                         'tipoRelatorio' => '[1-8]',
-                        'id' => '[-0-9]+',
+                        'mes' => '[0-9]+',
+                        'ano' => '[0-9]+',
                     ),
                     'defaults' => array(
                         'controller' => 'Application\Controller\Relatorio',
