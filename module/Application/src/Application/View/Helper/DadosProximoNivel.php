@@ -55,11 +55,11 @@ class DadosProximoNivel extends AbstractHelper {
         }
         $stringProximaHierarquia = 'De ' . $pessoa->getPessoaHierarquiaAtivo()->getHierarquia()->getNome() .
                 ' para ' . $this->view->repositorio->getHierarquiaORM()->encontrarPorId($idProximaHierarquia)->getNome();
-        $perfomanceMembresia = $this->getRelatorioEquipe()['membresia'] / $metas[0] * 100;
+        $perfomanceMembresia = $this->getRelatorioEquipe()[(count($this->getRelatorioEquipe()) - 1)]['mediaMembresiaPerformance'] / $metas[0] * 100;
         if ($perfomanceMembresia > 100) {
             $perfomanceMembresia = 100;
         }
-        $perfomanceLideres = $this->getRelatorioEquipe()['quantidadeLideres'] / $metas[1] * 100;
+        $perfomanceLideres = $this->getRelatorioEquipe()[(count($this->getRelatorioEquipe()) - 1)][0]['quantidadeLideres'] / $metas[1] * 100;
         if ($perfomanceLideres > 100) {
             $perfomanceLideres = 100;
         }
@@ -86,7 +86,7 @@ class DadosProximoNivel extends AbstractHelper {
                     $indiceRelatorio = 'membresia';
                     $corDaBarra = RelatorioController::corDaLinhaPelaPerformance($perfomanceMembresia);
                     $valorBarra = $perfomanceMembresia;
-                    $alcancado = $this->getRelatorioEquipe()['membresia'];
+                    $alcancado = $this->getRelatorioEquipe()[(count($this->getRelatorioEquipe()) - 1)]['mediaMembresia'];
                     $meta = $metas[0];
                     break;
                 case 1:
@@ -94,7 +94,7 @@ class DadosProximoNivel extends AbstractHelper {
                     $indiceRelatorio = 'quantidadeLideres';
                     $corDaBarra = RelatorioController::corDaLinhaPelaPerformance($perfomanceLideres);
                     $valorBarra = $perfomanceLideres;
-                    $alcancado = $this->getRelatorioEquipe()['quantidadeLideres'];
+                    $alcancado = $this->getRelatorioEquipe()[(count($this->getRelatorioEquipe()) - 1)][0]['quantidadeLideres'];
                     $meta = $metas[1];
                     break;
             }
