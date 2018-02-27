@@ -29,6 +29,7 @@ class BotaoSimples extends AbstractHelper {
     const posicaoADireita = 1;
     const posicaoAEsquerda = 2;
     const posicaoAoCentro = 3;
+    const larguraMaxima = 4;
 
     public function __construct() {
         
@@ -76,6 +77,9 @@ class BotaoSimples extends AbstractHelper {
         }
         if ($this->getPosicao() === BotaoSimples::posicaoAoCentro) {
             $posicaoBotao = '';
+        }
+        if ($this->getPosicao() === BotaoSimples::larguraMaxima) {
+            $posicaoBotao = 'btn-block';
         }
 
         $html .= '<button type="button" ' . $this->getExtra() . ' class="btn ladda-button btn-' . $classBotao . ' ' . $posicaoBotao . ' " data-style="zoom-in">';

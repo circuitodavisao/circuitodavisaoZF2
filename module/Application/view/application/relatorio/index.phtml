@@ -64,10 +64,38 @@ $somaMeta = 0;
             <div class="panel-body pn">
                 <?php
                 echo $this->cabecalhoDeMeses();
+
+                for ($indiceDeArrays = $this->periodoInicial; $indiceDeArrays <= $this->periodoFinal; $indiceDeArrays++) {
+                    $classeBase = 'periodo' . $indiceDeArrays . ' ';
+                    if ($indiceDeArrays != -1) {
+                        $classeBase .= 'hidden-xs';
+                    }
+                    $mostrarBotaoEsquerdo = true;
+                    if ($indiceDeArrays == $this->periodoInicial) {
+                        $mostrarBotaoEsquerdo = false;
+                    }
+                    $mostrarBotaoDireito = true;
+                    if ($indiceDeArrays == $this->periodoFinal) {
+                        $mostrarBotaoDireito = false;
+                    }
+                    $funcaoEsquerda = $this->funcaoOnClick('$(".periodo' . ($indiceDeArrays - 1) . '").removeClass("hidden-xs");$(".periodo' . $indiceDeArrays . '").addClass("hidden-xs");');
+                    $funcaoDireita = $this->funcaoOnClick('$(".periodo' . ($indiceDeArrays + 1) . '").removeClass("hidden-xs");$(".periodo' . $indiceDeArrays . '").addClass("hidden-xs");');
+                    $botaoEsquerda = $this->botaoSimples('<i class="fa fa-angle-double-left"></i>', $funcaoEsquerda, BotaoSimples::botaoPequenoImportante, BotaoSimples::posicaoAEsquerda);
+                    $botaoDireita = $this->botaoSimples('<i class="fa fa-angle-double-right"></i>', $funcaoDireita, BotaoSimples::botaoPequenoImportante, BotaoSimples::posicaoADireita);
+                    echo '<div class="hidden-lg hidden-md hidden-sm center-block text-center ' . $classeBase . '" style="padding: 9px 12px;"> ';
+                    if ($mostrarBotaoEsquerdo) {
+                        echo '<span class="hidden-lg hidden-md hidden-sm">' . $botaoEsquerda . '</span>';
+                    }
+                    echo Funcoes::montaPeriodo($indiceDeArrays)[0];
+                    if ($mostrarBotaoDireito) {
+                        echo '<span class="hidden-lg hidden-md hidden-sm">' . $botaoDireita . '</span>';
+                    }
+                    echo '</div>';
+                }
                 ?>
-                <table class="text-center table table-condensed table-hover bg-light" style="font-size:10px;">
+                <table class="text-center table table-condensed table-hover bg-light mt10" style="font-size:10px;">
                     <thead>
-                        <tr class="dark">
+                        <tr class="dark hidden-xs">
                             <?php
                             if ($this->tipoRelatorio != 7) {
                                 echo '<th></th>';
@@ -76,12 +104,8 @@ $somaMeta = 0;
                             echo '<th>|</th>';
                             for ($indiceDeArrays = $this->periodoInicial; $indiceDeArrays <= $this->periodoFinal; $indiceDeArrays++) {
                                 $classePeriodoAtual = '';
-                                $classeBase = 'periodo' . $indiceDeArrays . ' ';
                                 if ($indiceDeArrays == -1) {
                                     $classePeriodoAtual = 'bg-primary';
-                                }
-                                if ($indiceDeArrays != -1) {
-                                    $classeBase .= 'hidden-xs';
                                 }
                                 if ($this->tipoRelatorio == 1) {
                                     $colspan = 7;
@@ -99,31 +123,13 @@ $somaMeta = 0;
                                         $this->tipoRelatorio == 6) {
                                     $colspan = 2;
                                 }
-                                $mostrarBotaoEsquerdo = true;
-                                if ($indiceDeArrays == $this->periodoInicial) {
-                                    $mostrarBotaoEsquerdo = false;
-                                }
-                                $mostrarBotaoDireito = true;
-                                if ($indiceDeArrays == $this->periodoFinal) {
-                                    $mostrarBotaoDireito = false;
-                                }
-                                $funcaoEsquerda = $this->funcaoOnClick('$(".periodo' . ($indiceDeArrays - 1) . '").removeClass("hidden-xs");$(".periodo' . $indiceDeArrays . '").addClass("hidden-xs");');
-                                $funcaoDireita = $this->funcaoOnClick('$(".periodo' . ($indiceDeArrays + 1) . '").removeClass("hidden-xs");$(".periodo' . $indiceDeArrays . '").addClass("hidden-xs");');
-                                $botaoEsquerda = $this->botaoSimples('<i class="fa fa-angle-double-left"></i>', $funcaoEsquerda, BotaoSimples::botaoMuitoPequenoMenosImportante, BotaoSimples::posicaoAEsquerda);
-                                $botaoDireita = $this->botaoSimples('<i class="fa fa-angle-double-right"></i>', $funcaoDireita, BotaoSimples::botaoMuitoPequenoMenosImportante, BotaoSimples::posicaoADireita);
 
-                                echo '<th colspan="' . $colspan . '" class="' . $classeBase . $classePeriodoAtual . '">';
-                                if ($mostrarBotaoEsquerdo) {
-                                    echo '<span class="hidden-lg hidden-md hidden-sm">' . $botaoEsquerda . '</span>';
-                                }
+                                echo '<th colspan="' . $colspan . '" class="' . $classePeriodoAtual . '">';
                                 echo Funcoes::montaPeriodo($indiceDeArrays)[0];
-                                if ($mostrarBotaoDireito) {
-                                    echo '<span class="hidden-lg hidden-md hidden-sm">' . $botaoDireita . '</span>';
-                                }
                                 echo '</th>';
-                                echo '<th class="hidden-xs">|</th>';
+                                echo '<th>|</th>';
                             }
-                            echo '<th colspan="2" class="hidden-xs"></th>';
+                            echo '<th colspan="2"></th>';
                             ?>                           
                         </tr>
                         <tr class="dark">
