@@ -54,11 +54,11 @@ class CabecalhoDeMeses extends AbstractHelper {
         }
         $html .= '</select>';
         $html .= '</div>';
-        $html .= '<div class="col-lg-2 col-md-2 col-sm-2 col-xs-122">';
-        $html .= $this->view->botaoSimples('Filtrar', $this->view->funcaoOnClick('this.form.submit()'));
+        $html .= '<div class="col-lg-2 col-md-2 col-sm-2 col-xs-12 mt5">';
+        $html .= $this->view->botaoSimples('Filtrar', $this->view->funcaoOnClick('this.form.submit()'), BotaoSimples::botaoImportante, BotaoSimples::larguraMaxima);
         $html .= '</div>';
         $html .= '</div>';
-       
+
         $html .= '</form>';
         return $html;
     }
