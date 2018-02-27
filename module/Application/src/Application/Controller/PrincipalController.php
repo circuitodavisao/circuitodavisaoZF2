@@ -29,46 +29,19 @@ class PrincipalController extends CircuitoController {
 
         $idEntidadeAtual = $sessao->idEntidadeAtual;
         $entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+        $pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($sessao->idPessoa);
+        $grupo = $entidade->getGrupo();
+
+        $eCasal = $grupo->verificaSeECasal();
+        $arrayPeriodoDoMes = Funcoes::encontrarPeriodoDeUmMesPorMesEAno(date('m'), date('Y'));
+        $relatorio = RelatorioController::relatorioCompleto($this->getRepositorio(), $grupo, RelatorioController::relatorioMembresiaECelula, date('m'), date('Y'));
+
         $mostrarPrincipal = true;
         if (!$entidade->verificarSeEstaAtivo()) {
             $mostrarPrincipal = false;
         }
-        $grupo = $entidade->getGrupo();
-        $eCasal = $grupo->verificaSeECasal();
-        $numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupo);
-
-        $idPessoa = $sessao->idPessoa;
-        $pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($idPessoa);
-
-        $tipoRelatorioPessoal = 1;
-        $tipoRelatorioEquipe = 2;
-        $periodo = -1;
 
         $idRelatorio = $this->getEvent()->getRouteMatch()->getParam(Constantes::$ID, 1);
-        if ($idRelatorio == 1) {
-            $qualRelatorio = $tipoRelatorioPessoal;
-        }
-        if ($idRelatorio == 2) {
-            $qualRelatorio = $tipoRelatorioEquipe;
-        }
-        $relatorioEquipe = RelatorioController::montaRelatorio($this->getRepositorio(), $numeroIdentificador, $periodo, $tipoRelatorioEquipe);
-
-        /* encontrando os periodos do mes atual e anterior */
-        $arrayPeriodos = Funcoes::encontrarNumeroDePeriodosNoMesAtualEAnterior();
-        $relatorioMedio = array();
-        $relatorioMedio['pessoalAtual'] = RelatorioController::montaRelatorio($this->getRepositorio(), $numeroIdentificador, $arrayPeriodos['periodoMesAtualInicial'], $qualRelatorio, $arrayPeriodos['periodoMesAtualFinal']);
-        $relatorioMedio['pessoalAnterior'] = RelatorioController::montaRelatorio($this->getRepositorio(), $numeroIdentificador, $arrayPeriodos['periodoMesAnteriorInicial'], $qualRelatorio, $arrayPeriodos['periodoMesAnteriorlFinal']);
-        $relatorioMedio['celulasAtual'] = RelatorioController::saberQuaisdasMinhasCelulasSaoDeElite($this->getRepositorio(), $grupo, $arrayPeriodos['periodoMesAtualInicial'], $arrayPeriodos['periodoMesAtualFinal']);
-        $relatorioMedio['celulasAnterior'] = RelatorioController::saberQuaisdasMinhasCelulasSaoDeElite($this->getRepositorio(), $grupo, $arrayPeriodos['periodoMesAnteriorInicial'], $arrayPeriodos['periodoMesAnteriorlFinal']);
-        $relatorioMedioEquipe = RelatorioController::montaRelatorio($this->getRepositorio(), $numeroIdentificador, $arrayPeriodos['periodoMesAtualInicial'], $tipoRelatorioEquipe, $arrayPeriodos['periodoMesAtualFinal']);
-
-        $relatorioMesAtual = array();
-        $relatorioMesAtualEquipe = array();
-        for ($indicePeriodosDoMesAtual = $arrayPeriodos['periodoMesAtualInicial']; $indicePeriodosDoMesAtual <= $arrayPeriodos['periodoMesAtualFinal']; $indicePeriodosDoMesAtual++) {
-            $relatorioMesAtual[$indicePeriodosDoMesAtual] = RelatorioController::montaRelatorio($this->getRepositorio(), $numeroIdentificador, $indicePeriodosDoMesAtual, $qualRelatorio);
-            $relatorioMesAtualEquipe[$indicePeriodosDoMesAtual] = RelatorioController::montaRelatorio($this->getRepositorio(), $numeroIdentificador, $indicePeriodosDoMesAtual, $tipoRelatorioEquipe);            
-        }
-        $hierarquias = $this->getRepositorio()->getHierarquiaORM()->encontrarTodas();
 
         /* Pegando ranking */
         $isMobile = $this->check_user_agent('mobile');
@@ -151,24 +124,27 @@ class PrincipalController extends CircuitoController {
             }
         }
 
-        $dados = array();
-        $dados['idRelatorio'] = $idRelatorio;
-        $dados['pessoa'] = $pessoa;
-        $dados['eCasal'] = $eCasal;
-        $arrayPeriodo = Funcoes::montaPeriodo($periodo);
-        $dados['periodoExtenso'] = $arrayPeriodo[0];
-        $dados['relatorioMesAtual'] = $relatorioMesAtual;
-        $dados['relatorioMesAtualEquipe'] = $relatorioMesAtualEquipe;
-        $dados['relatorioEquipe'] = $relatorioEquipe;
-        $dados['relatorioMedio'] = $relatorioMedio;
-        $dados['relatorioMedioEquipe'] = $relatorioMedioEquipe;
-        $dados['repositorio'] = $this->getRepositorio();
-        $dados['hierarquias'] = $hierarquias;
-        $dados['grupo'] = $grupo;
-        $dados['membresiaFatoRanking'] = $arrayMembresiaFatoRanking;
-        $dados['celulaFatoRanking'] = $arrayCelulaFatoRanking;
-        $dados['mostrarPrincipal'] = $mostrarPrincipal;
+        $hierarquias = $this->getRepositorio()->getHierarquiaORM()->encontrarTodas();
 
+        $dados = array(
+            'relatorio' => $relatorio,
+            'periodoInicial' => $arrayPeriodoDoMes[0],
+            'periodoFinal' => $arrayPeriodoDoMes[1],
+            'mostrarPrincipal' => $mostrarPrincipal,
+            'eCasal' => $eCasal,
+            'idRelatorio' => $idRelatorio,
+            'hierarquias' => $hierarquias,
+            'membresiaFatoRanking' => $arrayMembresiaFatoRanking,
+            'celulaFatoRanking' => $arrayCelulaFatoRanking,
+            'grupo' => $grupo,
+            'repositorio' => $this->getRepositorio(),
+            'pessoa' => $pessoa,
+        );
+
+
+        $tipoRelatorioPessoal = 1;
+        $tipoRelatorioEquipe = 2;
+        $periodo = -1;
         $grupoPaiFilhoFilhos = $grupo->getGrupoPaiFilhoFilhosAtivos($periodo);
         if ($grupoPaiFilhoFilhos) {
             $relatorioDiscipulos = array();
@@ -177,8 +153,8 @@ class PrincipalController extends CircuitoController {
             foreach ($grupoPaiFilhoFilhos as $gpFilho) {
                 $grupoFilho = $gpFilho->getGrupoPaiFilhoFilho();
                 $numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupoFilho);
-                $relatorio12 = RelatorioController::montaRelatorio($this->getRepositorio(), $numeroIdentificador, $periodo, $tipoRelatorioEquipe);
-                $relatorio12Pessoal = RelatorioController::montaRelatorio($this->getRepositorio(), $numeroIdentificador, $periodo, $tipoRelatorioPessoal);
+                $relatorio12 = RelatorioController::montaRelatorio($this->getRepositorio(), $numeroIdentificador, $periodo, $tipoRelatorioEquipe, false, RelatorioController::relatorioCelulaRealizadas);
+                $relatorio12Pessoal = RelatorioController::montaRelatorio($this->getRepositorio(), $numeroIdentificador, $periodo, $tipoRelatorioPessoal, false, RelatorioController::relatorioCelulaRealizadas);
                 if ($relatorio12['celulaQuantidade'] > 0) {
                     if ($relatorio12['celulaRealizadas'] < $relatorio12['celulaQuantidade']) {
                         $relatorioDiscipulos[$grupoFilho->getId()] = $relatorio12;
@@ -192,7 +168,7 @@ class PrincipalController extends CircuitoController {
                     foreach ($grupoPaiFilhoFilhos144 as $gpFilho144) {
                         $grupoFilho144 = $gpFilho144->getGrupoPaiFilhoFilho();
                         $numeroIdentificador144 = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupoFilho144);
-                        $relatorio144 = RelatorioController::montaRelatorio($this->getRepositorio(), $numeroIdentificador144, $periodo, $tipoRelatorioEquipe);
+                        $relatorio144 = RelatorioController::montaRelatorio($this->getRepositorio(), $numeroIdentificador144, $periodo, $tipoRelatorioEquipe, false, RelatorioController::relatorioCelulaRealizadas);
                         if ($relatorio144['celulaQuantidade'] > 0) {
                             if ($relatorio144['celulaRealizadas'] < $relatorio144['celulaQuantidade']) {
                                 $relatorioDiscipulos[$grupoFilho144->getId()] = $relatorio144;
