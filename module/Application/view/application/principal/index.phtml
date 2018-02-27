@@ -46,13 +46,13 @@ use Application\View\Helper\MontaGraficoDeBarra;
                         <div class="relatorioPessoal">
                             <?php
                             echo $this->barraDeProgressoBonita(
-                                    'Membresia <span class="badge">?</span>', $this->relatorio[0]['mediaMembresiaPerformanceClass'], $this->relatorio[0]['mediaMembresiaPerformance'], 'm0', true, $this->relatorio[0][-1]['membresiaMeta'], $this->relatorio[0]['mediaMembresia'], '');
+                                    'Membresia', $this->relatorio[0]['mediaMembresiaPerformanceClass'], $this->relatorio[0]['mediaMembresiaPerformance'], 'm0', true, $this->relatorio[0][-1]['membresiaMeta'], $this->relatorio[0]['mediaMembresia'], '');
                             ?>
                         </div>  
                         <div class="relatorioEquipe hidden">
                             <?php
                             echo $this->barraDeProgressoBonita(
-                                    'Membresia <span class="badge">?</span>', $this->relatorio[$totalDeRelatorios]['mediaMembresiaPerformanceClass'], $this->relatorio[$totalDeRelatorios]['mediaMembresiaPerformance'], 'm0', true, $this->relatorio[$totalDeRelatorios][-1]['membresiaMeta'], $this->relatorio[$totalDeRelatorios]['mediaMembresia'], '');
+                                    'Membresia', $this->relatorio[$totalDeRelatorios]['mediaMembresiaPerformanceClass'], $this->relatorio[$totalDeRelatorios]['mediaMembresiaPerformance'], 'm0', true, $this->relatorio[$totalDeRelatorios][-1]['membresiaMeta'], $this->relatorio[$totalDeRelatorios]['mediaMembresia'], '');
                             ?>
                         </div> 
                     </div>
@@ -146,13 +146,13 @@ use Application\View\Helper\MontaGraficoDeBarra;
                         <div class="relatorioPessoal">
                             <?php
                             echo $this->barraDeProgressoBonita(
-                                    'Célula <span class="badge">?</span>', $this->relatorio[0]['mediaCelulaPerformanceClass'], $this->relatorio[0]['mediaCelulaPerformance'], 'm0', true, $this->relatorio[0][-1]['membresiaMeta'], $this->relatorio[0]['mediaCelula'], '');
+                                    'Célula', $this->relatorio[0]['mediaCelulaPerformanceClass'], $this->relatorio[0]['mediaCelulaPerformance'], 'm0', true, $this->relatorio[0][-1]['membresiaMeta'], $this->relatorio[0]['mediaCelula'], '');
                             ?>
                         </div>  
                         <div class="relatorioEquipe hidden">
                             <?php
                             echo $this->barraDeProgressoBonita(
-                                    'Célula <span class="badge">?</span>', $this->relatorio[$totalDeRelatorios]['mediaCelulaPerformanceClass'], $this->relatorio[$totalDeRelatorios]['mediaCelulaPerformance'], 'm0', true, $this->relatorio[0][-1]['membresiaMeta'], $this->relatorio[$totalDeRelatorios]['mediaCelula'], '');
+                                    'Célula', $this->relatorio[$totalDeRelatorios]['mediaCelulaPerformanceClass'], $this->relatorio[$totalDeRelatorios]['mediaCelulaPerformance'], 'm0', true, $this->relatorio[$totalDeRelatorios][-1]['membresiaMeta'], $this->relatorio[$totalDeRelatorios]['mediaCelula'], '');
                             ?>
                         </div>
                     </div>

@@ -55,11 +55,11 @@ class DadosProximoNivel extends AbstractHelper {
         }
         $stringProximaHierarquia = 'De ' . $pessoa->getPessoaHierarquiaAtivo()->getHierarquia()->getNome() .
                 ' para ' . $this->view->repositorio->getHierarquiaORM()->encontrarPorId($idProximaHierarquia)->getNome();
-        $perfomanceMembresia = $this->getRelatorioEquipe()[(count($this->getRelatorioEquipe()) - 1)]['mediaMembresiaPerformance'] / $metas[0] * 100;
+        $perfomanceMembresia = $this->getRelatorioEquipe()[(count($this->getRelatorioEquipe()) - 1)]['mediaMembresia'] / $metas[0] * 100;
         if ($perfomanceMembresia > 100) {
             $perfomanceMembresia = 100;
         }
-        $perfomanceLideres = $this->getRelatorioEquipe()[(count($this->getRelatorioEquipe()) - 1)][0]['quantidadeLideres'] / $metas[1] * 100;
+        $perfomanceLideres = $this->getRelatorioEquipe()[(count($this->getRelatorioEquipe()) - 1)][-1]['quantidadeLideres'] / $metas[1] * 100;
         if ($perfomanceLideres > 100) {
             $perfomanceLideres = 100;
         }
@@ -94,7 +94,7 @@ class DadosProximoNivel extends AbstractHelper {
                     $indiceRelatorio = 'quantidadeLideres';
                     $corDaBarra = RelatorioController::corDaLinhaPelaPerformance($perfomanceLideres);
                     $valorBarra = $perfomanceLideres;
-                    $alcancado = $this->getRelatorioEquipe()[(count($this->getRelatorioEquipe()) - 1)][0]['quantidadeLideres'];
+                    $alcancado = $this->getRelatorioEquipe()[(count($this->getRelatorioEquipe()) - 1)][-1]['quantidadeLideres'];
                     $meta = $metas[1];
                     break;
             }
