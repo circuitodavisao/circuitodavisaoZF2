@@ -22,7 +22,9 @@ class DadosProximoNivel extends AbstractHelper {
 
     public function __invoke($relatorioEquipe) {
         $this->setRelatorioEquipe($relatorioEquipe);
-        return $this->renderHtml();
+        if ($this->view->pessoa->getPessoaHierarquiaAtivo()->getHierarquia()->getId() !== Hierarquia::BISPO) {
+            return $this->renderHtml();
+        }
     }
 
     public function renderHtml() {
