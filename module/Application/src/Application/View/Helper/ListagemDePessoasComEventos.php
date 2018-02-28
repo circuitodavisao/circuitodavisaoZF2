@@ -53,7 +53,7 @@ class ListagemDePessoasComEventos extends AbstractHelper {
         }
 
         $grupoPessoas = $this->view->grupo->getGrupoPessoasNoPeriodo($this->view->periodo);
-        if (count($grupoPessoas) > 0) {
+        if ($grupoPessoas) {
             foreach ($grupoPessoas as $grupoPessoa) {
 //
 //                /* Validação para visitantes inativados nesse mes transformados em consolidacoes */
@@ -116,17 +116,14 @@ class ListagemDePessoasComEventos extends AbstractHelper {
         foreach ($pessoasGrupo as $pg) {
             $valor = 0;
             switch ($pg->getTipo()) {
-                case 'CO':
-                    $valor = 4;
-                    break;
-                case 'LT':
-                    $valor = 3;
-                    break;
-                case 'AL':
-                    $valor = 2;
-                    break;
                 case 'VI':
                     $valor = 1;
+                    break;
+                case 'CO':
+                    $valor = 2;
+                    break;
+                case 'ME':
+                    $valor = 3;
                     break;
             }
             if (!$pg->getAtivo()) {
@@ -339,8 +336,7 @@ class ListagemDePessoasComEventos extends AbstractHelper {
                 $icone = 'fa-thumbs-down';
                 $diaRealDoEvento = ListagemDePessoasComEventos::diaRealDoEvento($diaDaSemanaDoEvento, $this->view->periodo);
                 $eventoFrequencia = $grupoEvento->getEvento()->getEventoFrequencia();
-
-                if (count($eventoFrequencia) > 0) {
+                if ($eventoFrequencia) {
                     $eventosFrequenciaSelecionado = $pessoa->getEventoFrequenciaFiltradoPorEventoEDia(
                             $grupoEvento->getEvento()->getId(), $diaRealDoEvento
                     );

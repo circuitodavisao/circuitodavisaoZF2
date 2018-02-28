@@ -41,90 +41,7 @@ class PrincipalController extends CircuitoController {
             $mostrarPrincipal = false;
         }
 
-        $idRelatorio = $this->getEvent()->getRouteMatch()->getParam(Constantes::$ID, 1);
-
-        /* Pegando ranking */
-        $isMobile = $this->check_user_agent('mobile');
-
-        for ($indiceDeRankings = 1; $indiceDeRankings <= 2; $indiceDeRankings++) {
-            if ($indiceDeRankings === 1) {
-                $valorRanking = $grupo->getFatoRanking()->getRanking_membresia();
-            }
-            if ($indiceDeRankings === 2) {
-                $valorRanking = $grupo->getFatoRanking()->getRanking_celula();
-            }
-            if (!$isMobile) {
-                if ($valorRanking > 3) {
-                    $qualArray[4] = $valorRanking - 2;
-                    $qualArray[3] = $valorRanking - 1;
-                    $qualArray[2] = $valorRanking;
-                    $qualArray[1] = $valorRanking + 1;
-                    $qualArray[0] = $valorRanking + 2;
-                } else {
-                    if ($valorRanking === 1) {
-                        $qualArray[4] = $valorRanking;
-                        $qualArray[3] = 2;
-                        $qualArray[2] = 3;
-                        $qualArray[1] = 4;
-                        $qualArray[0] = 5;
-                    }
-                    if ($valorRanking === 2) {
-                        $qualArray[4] = 1;
-                        $qualArray[3] = $valorRanking;
-                        $qualArray[2] = 3;
-                        $qualArray[1] = 4;
-                        $qualArray[0] = 5;
-                    }
-                    if ($valorRanking === 3) {
-                        $qualArray[4] = 1;
-                        $qualArray[3] = 2;
-                        $qualArray[2] = $valorRanking;
-                        $qualArray[1] = 4;
-                        $qualArray[0] = 5;
-                    }
-                }
-            } else {
-                if ($valorRanking > 2) {
-                    $qualArray[2] = $valorRanking - 1;
-                    $qualArray[1] = $valorRanking;
-                    $qualArray[0] = $valorRanking + 1;
-                } else {
-                    if ($valorRanking === 1) {
-                        $qualArray[2] = $valorRanking;
-                        $qualArray[1] = 2;
-                        $qualArray[0] = 3;
-                    }
-                    if ($valorRanking === 2) {
-                        $qualArray[2] = 1;
-                        $qualArray[1] = $valorRanking;
-                        $qualArray[0] = 3;
-                    }
-                    if ($valorRanking === 3) {
-                        $qualArray[2] = 1;
-                        $qualArray[1] = 2;
-                        $qualArray[0] = $valorRanking;
-                    }
-                }
-            }
-
-            $totalDeRankings = count($qualArray) - 1;
-            foreach ($qualArray as $valores) {
-                $qualEncontrar = FatoRankingORM::RANKING_MEMBRESIA;
-                if ($indiceDeRankings === 2) {
-                    $qualEncontrar = FatoRankingORM::RANKING_CELULA;
-                }
-                $arrayFinal[$totalDeRankings] = $this->getRepositorio()->getFatoRankingORM()->encontrarPorRankingETipo($valores, $qualEncontrar);
-                $totalDeRankings--;
-            }
-            if ($indiceDeRankings === 1) {
-                $arrayMembresiaFatoRanking = $arrayFinal;
-            }
-            if ($indiceDeRankings === 2) {
-                $arrayCelulaFatoRanking = $arrayFinal;
-            }
-        }
-
-        $hierarquias = $this->getRepositorio()->getHierarquiaORM()->encontrarTodas();
+        $idRelatorio = $this->getEvent()->getRouteMatch()->getParam(Constantes::$ID, 1);       
 
         $dados = array(
             'relatorio' => $relatorio,
@@ -133,9 +50,6 @@ class PrincipalController extends CircuitoController {
             'mostrarPrincipal' => $mostrarPrincipal,
             'eCasal' => $eCasal,
             'idRelatorio' => $idRelatorio,
-            'hierarquias' => $hierarquias,
-            'membresiaFatoRanking' => $arrayMembresiaFatoRanking,
-            'celulaFatoRanking' => $arrayCelulaFatoRanking,
             'grupo' => $grupo,
             'repositorio' => $this->getRepositorio(),
             'pessoa' => $pessoa,

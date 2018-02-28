@@ -45,16 +45,8 @@ class Hierarquia extends CircuitoEntity {
     /** @ORM\Column(type="string") */
     protected $sigla;
 
-    function getEntidade() {
-        return $this->entidade;
-    }
-
     function getNome() {
         return $this->nome;
-    }
-
-    function setEntidade($entidade) {
-        $this->entidade = $entidade;
     }
 
     function setNome($nome) {
