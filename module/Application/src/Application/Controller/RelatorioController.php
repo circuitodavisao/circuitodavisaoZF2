@@ -276,7 +276,7 @@ class RelatorioController extends CircuitoController {
         $todosFilhos = array();
         $arrayPeriodoDoMes = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mes, $ano);
         $diferencaDePeriodos = self::diferencaDePeriodos($arrayPeriodoDoMes[0], $arrayPeriodoDoMes[1]);
-        
+
         for ($indiceDeArrays = $arrayPeriodoDoMes[0]; $indiceDeArrays <= $arrayPeriodoDoMes[1]; $indiceDeArrays++) {
             $grupoPaiFilhoFilhos = $grupo->getGrupoPaiFilhoFilhosAtivos($indiceDeArrays);
             if ($grupoPaiFilhoFilhos) {
@@ -301,7 +301,7 @@ class RelatorioController extends CircuitoController {
         $tipoRelatorioSomado = 2;
 
         $relatorioDiscipulos = array();
-        $numeroIdentificador = $repositorio->getFatoCicloORM()->montarNumeroIdentificador($repositorio);
+        $numeroIdentificador = $repositorio->getFatoCicloORM()->montarNumeroIdentificador($repositorio, $grupo);
         $soma = array();
         $somaTotal = array();
         $soma[0][1] = 0;
