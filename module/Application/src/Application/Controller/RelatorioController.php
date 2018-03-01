@@ -798,10 +798,22 @@ class RelatorioController extends CircuitoController {
                     $grupoFilho1 = $discipulo1->getGrupoPaiFilhoFilho();
                     $grupoFilho2 = $discipulo2->getGrupoPaiFilhoFilho();
                 }
-                $percentual1 = $relatorio[$grupoFilho1->getId()][$campo];
-                $percentual2 = $relatorio[$grupoFilho2->getId()][$campo];
 
-                if ($percentual1 > $percentual2) {
+                if ($tipo != 0) {
+                    $percentual1 = $relatorio[$grupoFilho1->getId()][$campo];
+                    $percentual2 = $relatorio[$grupoFilho2->getId()][$campo];
+                } else {
+                    $percentual1 = $grupoFilho1->getEntidadeAtiva()->getNumero();
+                    if ($percentual1 < 0) {
+                        $percentual1 = ($percentual1 * -1) + 100;
+                    }
+                    $percentual2 = $grupoFilho2->getEntidadeAtiva()->getNumero();
+                    if ($percentual2 < 0) {
+                        $percentual2 = ($percentual2 * -1) + 100;
+                    }
+                }
+
+                if (($tipo != 0 && $percentual1 > $percentual2) || ($tipo == 0 && $percentual1 < $percentual2)) {
                     $aux = $discipulo1;
                     $discipulosLocal[$i] = $discipulo2;
                     $discipulosLocal[$j] = $aux;

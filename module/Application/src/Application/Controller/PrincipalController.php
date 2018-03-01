@@ -41,7 +41,7 @@ class PrincipalController extends CircuitoController {
             $mostrarPrincipal = false;
         }
 
-        $idRelatorio = $this->getEvent()->getRouteMatch()->getParam(Constantes::$ID, 1);       
+        $idRelatorio = $this->getEvent()->getRouteMatch()->getParam(Constantes::$ID, 1);
 
         $dados = array(
             'relatorio' => $relatorio,
@@ -61,8 +61,6 @@ class PrincipalController extends CircuitoController {
         $periodo = -1;
         $grupoPaiFilhoFilhos = $grupo->getGrupoPaiFilhoFilhosAtivos($periodo);
         if ($grupoPaiFilhoFilhos) {
-            $relatorioDiscipulos = array();
-            $relatorioDiscipulosPessoal = array();
             $discipulos = array();
             foreach ($grupoPaiFilhoFilhos as $gpFilho) {
                 $grupoFilho = $gpFilho->getGrupoPaiFilhoFilho();
@@ -71,29 +69,11 @@ class PrincipalController extends CircuitoController {
                 $relatorio12Pessoal = RelatorioController::montaRelatorio($this->getRepositorio(), $numeroIdentificador, $periodo, $tipoRelatorioPessoal, false, RelatorioController::relatorioCelulaRealizadas);
                 if ($relatorio12['celulaQuantidade'] > 0) {
                     if ($relatorio12['celulaRealizadas'] < $relatorio12['celulaQuantidade']) {
-                        $relatorioDiscipulos[$grupoFilho->getId()] = $relatorio12;
-                        $relatorioDiscipulosPessoal[$grupoFilho->getId()] = $relatorio12Pessoal;
                         $discipulos[] = $gpFilho;
-                    }
-                }
-
-                $grupoPaiFilhoFilhos144 = $grupoFilho->getGrupoPaiFilhoFilhosAtivos($periodo);
-                if ($grupoPaiFilhoFilhos144) {
-                    foreach ($grupoPaiFilhoFilhos144 as $gpFilho144) {
-                        $grupoFilho144 = $gpFilho144->getGrupoPaiFilhoFilho();
-                        $numeroIdentificador144 = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupoFilho144);
-                        $relatorio144 = RelatorioController::montaRelatorio($this->getRepositorio(), $numeroIdentificador144, $periodo, $tipoRelatorioEquipe, false, RelatorioController::relatorioCelulaRealizadas);
-                        if ($relatorio144['celulaQuantidade'] > 0) {
-                            if ($relatorio144['celulaRealizadas'] < $relatorio144['celulaQuantidade']) {
-                                $relatorioDiscipulos[$grupoFilho144->getId()] = $relatorio144;
-                            }
-                        }
                     }
                 }
             }
             $dados['discipulos'] = $discipulos;
-            $dados['discipulosRelatorio'] = $relatorioDiscipulos;
-            $dados['discipulosRelatorioPessoal'] = $relatorioDiscipulosPessoal;
         }
 
         $view = new ViewModel($dados);
