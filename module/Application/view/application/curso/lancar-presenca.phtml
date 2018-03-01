@@ -1,0 +1,61 @@
+<?php
+
+use Application\View\Helper\BotaoSimples;
+
+echo $this->templateFormularioTopo($this->titulo);
+echo '<div class="panel-body bg-light">';
+echo '<div class="block-center">';
+echo '<div class="row">';
+echo '<div class="col-lg-8 col-md-8 col-md-8 col-xs-8">';
+echo '<input type="number" id="matricula" class="form-control" placeholder="Mátricula"  />';
+echo '</div>';
+echo '<div class="col-lg-4 col-md-4 col-md-4 col-xs-4">';
+echo $this->botaoSimples('Pesquisar', $this->funcaoOnClick('mudarFrequencia()'), BotaoSimples::botaoImportante, BotaoSimples::larguraMaxima);
+echo '</div>';
+echo '</div>';
+echo '<div id="mensagem" class="row alert mt10 hidden"></div>';
+echo '</div>';
+echo $this->templateFormularioRodape();
+?>
+
+<script type="text/javascript">
+    function mudarFrequencia() {
+        var mensagem = $('#mensagem');
+        mensagem.addClass('hidden');
+        var matricula = $('#matricula');
+        if (matricula.val().length != 0) {
+            var now = new Date;
+            var matriculaDataEHora = matricula.val() + '_' 
+                    + now.getFullYear() + "-" + (now.getMonth() + 1) + "-" + now.getDate() + '_' 
+                    + now.getHours() + ':' + now.getMinutes() + ':' + now.getSeconds();
+            $.post(
+                    "/migracaoReceberFrequencia",
+                    {
+                        id: matriculaDataEHora,
+                    },
+                    function (data) {
+
+                        if (data.response) {
+                            mensagem
+                                    .addClass('alert-info')
+                                    .removeClass('alert-danger')
+                                    .removeClass('hidden')
+                                    .html('Frequência regitrada com sucesso!');
+                            matricula.val('');
+                        } else {
+                            mensagem
+                                    .addClass('alert-danger')
+                                    .removeClass('alert-info')
+                                    .removeClass('hidden')
+                                    .html('Frequência NÃO registrada!');
+                        }
+                    }, 'json');
+        } else {
+            mensagem
+                    .addClass('alert-danger')
+                    .removeClass('alert-info')
+                    .removeClass('hidden')
+                    .html('Informe a Mátricula!');
+        }
+    }
+</script>
