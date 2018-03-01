@@ -11,6 +11,7 @@
 namespace Application;
 
 use Application\Controller\Helper\Constantes;
+use Application\Controller\RelatorioController;
 use Application\Model\ORM\RepositorioORM;
 use Application\View\Helper\AbaSelecionada;
 use Application\View\Helper\AbasPanel;
@@ -377,8 +378,9 @@ class Module {
             $discipulos = null;
             if (count($grupo->getGrupoPaiFilhoFilhosAtivos(1)) > 0) {
                 $discipulos = $grupo->getGrupoPaiFilhoFilhosAtivos(1);
-            }
-            $viewModel->discipulos = $discipulos;
+            }            
+            $filhosOrdenado = RelatorioController::ordenacaoDiscipulos($discipulos, null, 0);
+            $viewModel->discipulos = $filhosOrdenado;
         }
 
         $stringHttps = 'https://';
