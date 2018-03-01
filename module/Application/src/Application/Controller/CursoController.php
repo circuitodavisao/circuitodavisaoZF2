@@ -823,8 +823,12 @@ class CursoController extends CircuitoController {
         $layoutJS = new ViewModel();
         $layoutJS->setTemplate(Constantes::$TEMPLATE_JS_FICHA_REVISAO);
         $view->addChild($layoutJS, Constantes::$STRING_JS_FICHA_REVISAO);
-        
+
         return $view;
+    }
+
+    public function lancarPresencaAction() {
+        return new ViewModel(array('titulo' => 'Lançar Presença'));
     }
 
 }

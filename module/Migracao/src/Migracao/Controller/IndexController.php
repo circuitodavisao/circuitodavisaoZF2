@@ -706,7 +706,12 @@ class IndexController extends CircuitoController {
         $response = $this->getResponse();
         try {
             $this->getRepositorio()->iniciarTransacao();
-            $tokenDaRota = $this->params()->fromRoute(Constantes::$ID);
+            $tokenDaRota = $this->params()->fromRoute(Constantes::$ID, 0);
+            if ($tokenDaRota == 0) {
+                $request = $this->getRequest();
+                $post_data = $request->getPost();
+                $tokenDaRota = $post_data[Constantes::$FORM_ID];
+            }
             $explodeToken = explode('_', $tokenDaRota);
 
             $turmaPessoa = $this->getRepositorio()->getTurmaPessoaORM()->encontrarPorid($explodeToken[0]);
