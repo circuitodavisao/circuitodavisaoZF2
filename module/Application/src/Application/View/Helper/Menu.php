@@ -397,7 +397,7 @@ class Menu extends AbstractHelper {
 
                 $html .= '<li>';
                 $html .= '<a class="accordion-toggle" href="#">';
-                $html .= '<span class="fa fa-users"></span>';
+                $html .= '<span class="fa fa-terminal"></span>';
                 $html .= '<span class="sidebar-title">Lançar</span>';
                 $html .= '<span class="caret"></span>';
                 $html .= '</a>';

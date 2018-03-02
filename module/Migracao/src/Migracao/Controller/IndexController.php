@@ -213,7 +213,7 @@ class IndexController extends CircuitoController {
                 }
             }
 //            }
-//            $this->getRepositorio()->fecharTransacao();
+            $this->getRepositorio()->fecharTransacao();
         } catch (Exception $exc) {
             $this->getRepositorio()->desfazerTransacao();
             Funcoes::var_dump($exc->getTraceAsString());
@@ -1400,18 +1400,35 @@ class IndexController extends CircuitoController {
         if ($queryAlunos) {
             while ($rowAlunos = mysqli_fetch_array($queryAlunos)) {
                 $sqlEhLider = 'SELECT id FROM ursula_celula_ursula '
-                        . ' WHERE (idLider1 = ' . $rowAlunos['id'] . ' OR idLider2 = ' . $rowAlunos['id'] . ') '
+                        . ' WHERE (idLider1 = ' . $rowAlunos['id'] . ' OR idLider2 = ' . $rowAlunos['id'] . ' OR idLider1 = 0 OR idLider2 = 0)'
                         . ' AND alterno = "N" '
                         . ' AND tipo = "A" '
                         . ' AND status = "A" '
-                        . ' AND mes = MONTH(CURDATE()) '
-                        . ' AND ano = YEAR(CURDATE());';
+                        . ' AND mes = ' . explode('-', self::DATA_CRIACAO)[1]
+                        . ' AND ano = ' . explode('-', self::DATA_CRIACAO)[0];
 
-//                echo '<br />' . $sqlEhLider;
+//              echo '<br />' . $sqlEhLider;
                 $queryEhLider = mysql_query($sqlEhLider);
                 $ehLider = false;
                 if (mysql_num_rows($queryEhLider) > 0) {
+//                    echo "<br /> FORLPI";
                     $ehLider = true;
+                }
+                if (!$ehLider) {
+                    $sqlEhLider = 'SELECT id FROM ursula_celula_ursula '
+                            . ' WHERE (idLider1 = 0 OR idLider2 = 0 OR idLider1 = ' . $rowAlunos['id'] . ' OR idLider2 = ' . $rowAlunos['id'] . ')'
+                            . ' AND alterno = "N" '
+                            . ' AND tipo = "A" '
+                            . ' AND status = "A" '
+                            . ' AND mes = ' . explode('-', self::DATA_CRIACAO)[1]
+                            . ' AND ano = ' . explode('-', self::DATA_CRIACAO)[0];
+//                  echo '<br />' . $sqlEhLider;
+                    $queryEhLider = mysql_query($sqlEhLider);
+                    $ehLider = false;
+                    if (mysql_num_rows($queryEhLider) > 0) {
+//                        echo "<br /> FORLPI";
+                        $ehLider = true;
+                    }
                 }
                 if (!$ehLider) {
                     $telefone = $rowAlunos['dddCelular'] ? $rowAlunos['dddCelular'] : '61' . $rowAlunos['telefoneCelular'];
