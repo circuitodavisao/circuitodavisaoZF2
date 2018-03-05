@@ -1079,6 +1079,16 @@ class IndexController extends CircuitoController {
                 $sqlUpdateNaoDadas = str_replace("#valor", $valor, $sqlUpdateNaoDadas);
                 $html .= "<br />$sqlUpdateNaoDadas";
                 mysqli_query(IndexController::pegaConexaoStaticaDW(), $sqlUpdateNaoDadas);
+
+                $sqlUpdateElite = "UPDATE #tabela SET #campo = #valor where id = #idTabela;";
+                $campo = 'c' . $ciclo . 'e';
+                $valor = $relatorio['celulaDeElite'];
+                $sqlUpdateElite = str_replace("#tabela", $tabela, $sqlUpdateElite);
+                $sqlUpdateElite = str_replace("#campo", $campo, $sqlUpdateElite);
+                $sqlUpdateElite = str_replace("#idTabela", $idTabela, $sqlUpdateElite);
+                $sqlUpdateElite = str_replace("#valor", $valor, $sqlUpdateElite);
+                $html .= "<br />$sqlUpdateElite";
+                mysqli_query(IndexController::pegaConexaoStaticaDW(), $sqlUpdateElite);
             }
         }
         return $html;
