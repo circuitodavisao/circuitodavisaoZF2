@@ -114,6 +114,7 @@ class IndexController extends CircuitoController {
             $queryEquipes = mysqli_query($this->getConexao(), $urlEquipe);
             while ($rowEquipe = mysqli_fetch_array($queryEquipes)) {
                 $idPerfilEquipe = 15;
+                $codigoEquipe = str_pad($rowEquipe['id'], 6, 0, STR_PAD_LEFT);
                 $numeroIdentificadorEquipe = "$numeroIdentificadorIgreja$codigoEquipe";
                 $informacaoEntidade = $rowEquipe[$stringNome];
                 $grupoEquipe = $this->cadastrarEntidade($rowEquipe[$stringIdResponsavel1], $idPerfilEquipe, $informacaoEntidade, $grupoIgreja, $rowEquipe[$stringIdResponsavel2], $rowEquipe['id'], $numeroIdentificadorEquipe);
@@ -1053,6 +1054,29 @@ class IndexController extends CircuitoController {
             $html .= "<br />$sqlUpdate";
 
             mysqli_query(IndexController::pegaConexaoStaticaDW(), $sqlUpdate);
+
+            /* Celula */
+            if ($indiceDimensoes === 1) {
+                $sqlUpdateQuantidade = "UPDATE #tabela SET #campo = #valor where id = #idTabela;";
+                $campo = 'c' . $ciclo . 'q';
+                $campoRelatorio = "celulaQuantidade";
+                $sqlUpdateQuantidade = str_replace("#tabela", $tabela, $sqlUpdateQuantidade);
+                $sqlUpdateQuantidade = str_replace("#campo", $campo, $sqlUpdateQuantidade);
+                $sqlUpdateQuantidade = str_replace("#idTabela", $idTabela, $sqlUpdateQuantidade);
+                $sqlUpdateQuantidade = str_replace("#valor", $relatorio[$campoRelatorio], $sqlUpdateQuantidade);
+                $html .= "<br />$sqlUpdateQuantidade";
+                mysqli_query(IndexController::pegaConexaoStaticaDW(), $sqlUpdateQuantidade);
+
+                $sqlUpdateNaoDadas = "UPDATE #tabela SET #campo = #valor where id = #idTabela;";
+                $campo = 'c' . $ciclo . 'n';
+                $valor = $relatorio['celulaRealizadas'] - $relatorio['celulaQuantidade'];
+                $sqlUpdateNaoDadas = str_replace("#tabela", $tabela, $sqlUpdateNaoDadas);
+                $sqlUpdateNaoDadas = str_replace("#campo", $campo, $sqlUpdateNaoDadas);
+                $sqlUpdateNaoDadas = str_replace("#idTabela", $idTabela, $sqlUpdateNaoDadas);
+                $sqlUpdateNaoDadas = str_replace("#valor", $valor, $sqlUpdateNaoDadas);
+                $html .= "<br />$sqlUpdateNaoDadas";
+                mysqli_query(IndexController::pegaConexaoStaticaDW(), $sqlUpdateNaoDadas);
+            }
         }
         return $html;
     }
