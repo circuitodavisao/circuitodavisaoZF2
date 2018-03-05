@@ -1070,6 +1070,9 @@ class IndexController extends CircuitoController {
                 $sqlUpdateNaoDadas = "UPDATE #tabela SET #campo = #valor where id = #idTabela;";
                 $campo = 'c' . $ciclo . 'n';
                 $valor = $relatorio['celulaRealizadas'] - $relatorio['celulaQuantidade'];
+                if ($valor < 0) {
+                    $valor *= -1;
+                }
                 $sqlUpdateNaoDadas = str_replace("#tabela", $tabela, $sqlUpdateNaoDadas);
                 $sqlUpdateNaoDadas = str_replace("#campo", $campo, $sqlUpdateNaoDadas);
                 $sqlUpdateNaoDadas = str_replace("#idTabela", $idTabela, $sqlUpdateNaoDadas);
