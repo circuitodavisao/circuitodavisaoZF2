@@ -12,6 +12,7 @@ use Application\Form\TurmaForm;
 use Application\Model\Entity\Aula;
 use Application\Model\Entity\Curso;
 use Application\Model\Entity\Disciplina;
+use Application\Model\Entity\EntidadeTipo;
 use Application\Model\Entity\Pessoa;
 use Application\Model\Entity\Situacao;
 use Application\Model\Entity\Turma;
@@ -785,9 +786,9 @@ class CursoController extends CircuitoController {
         $entidade = CircuitoController::getEntidadeLogada($this->getRepositorio(), $sessao);
         $grupo = $entidade->getGrupo();
         $grupoPessoas = $grupo->getGrupoPessoasNoPeriodo(0);
-
         $turmas = $this->getRepositorio()->getTurmaORM()->encontrarTodas();
         $view = new ViewModel(array(
+            'entidade' => $entidade,
             'turmas' => $turmas,
             'grupoPessoas' => $grupoPessoas,
         ));
@@ -814,17 +815,11 @@ class CursoController extends CircuitoController {
             }
         }
 
-        $view = new ViewModel(
+        return new ViewModel(
                 array(
             'alunosId' => $alunosId,
             'repositorio' => $this->getRepositorio(),
         ));
-        /* Javascript especifico */
-        $layoutJS = new ViewModel();
-        $layoutJS->setTemplate(Constantes::$TEMPLATE_JS_FICHA_REVISAO);
-        $view->addChild($layoutJS, Constantes::$STRING_JS_FICHA_REVISAO);
-
-        return $view;
     }
 
     public function lancarPresencaAction() {

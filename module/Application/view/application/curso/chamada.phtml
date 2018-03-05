@@ -1,5 +1,6 @@
 <?php
 
+use Application\Model\Entity\EntidadeTipo;
 use Application\View\Helper\BotaoSimples;
 
 $html = '';
@@ -33,12 +34,26 @@ foreach ($this->turmas as $turma) {
     if ($turma->getTurmaPessoa()) {
         foreach ($turma->getTurmaPessoa() as $turmaPessoa) {
             $mostrar = false;
-            foreach ($this->grupoPessoas as $grupoPessoa) {
-                if ($grupoPessoa->getPessoa()->getId() === $turmaPessoa->getPessoa()->getId()) {
+            if ($this->entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja ||
+                    $this->entidade->getEntidadeTipo()->getId() === EntidadeTipo::equipe) {
+
+                if ($this->entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja) {
                     $mostrar = true;
-                    break;
                 }
-            }            
+                if ($this->entidade->getEntidadeTipo()->getId() === EntidadeTipo::equipe) {
+                    if ($turmaPessoa->getPessoa()->getGrupoPessoa()[0]->getGrupo()->getEntidadeAtiva()->getGrupoEquipe() === $this->entidade->getId()) {
+                        $mostrar = true;
+                    }
+                }
+            } else {
+                foreach ($this->grupoPessoas as $grupoPessoa) {
+                    if ($grupoPessoa->getPessoa()->getId() === $turmaPessoa->getPessoa()->getId()) {
+                        $mostrar = true;
+                        break;
+                    }
+                }
+            }
+
             if ($mostrar) {
                 $html .= '<tr>';
                 $html .= '<td>' . str_pad($turmaPessoa->getId(), 8, 0, STR_PAD_LEFT) . '</td>';
