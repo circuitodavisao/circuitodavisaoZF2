@@ -30,7 +30,7 @@ class ListagemTurmas extends AbstractHelper {
                 $turmasAtivas[] = $turma;
             }
         }
-        $html .= $this->view->templateFormularioTopo('Turmas');
+        $html .= $this->view->templateFormularioTopo('Turmas', '', 'style="max-width: 100%;"');
         /* Sem pessoas cadastrados */
         if (count($turmasAtivas) == 0) {
 
@@ -71,10 +71,11 @@ class ListagemTurmas extends AbstractHelper {
             $html .= '<tbody>';
 
             foreach ($turmasAtivas as $turma) {
-                $stringNomeDaFuncaoOnClick = 'funcaoCircuito("' . Constantes::$ROUTE_CURSO . Constantes::$PAGINA_EDITAR_TURMA . '", ' . $turma->getId() . ')';
-                $stringNomeDaFuncaoOnClickExclusao = 'funcaoCircuito("' . Constantes::$ROUTE_CURSO . Constantes::$PAGINA_EXCLUSAO_TURMA . '", ' . $turma->getId() . ')';
-                $stringNomeDaFuncaoOnClickIncluirAlunos = 'funcaoCircuito("' . Constantes::$ROUTE_CADASTRO . Constantes::$PAGINA_LISTAGEM_REVISAO_TURMA . '",' . $turma->getId() . ')';
-                $stringNomeDaFuncaoOnClickAbrirAula = 'funcaoCircuito("' . Constantes::$ROUTE_CURSO . 'AbrirAula' . '",' . $turma->getId() . ')';
+                $stringNomeDaFuncaoOnClick = 'mostrarSplash(); funcaoCircuito("' . Constantes::$ROUTE_CURSO . Constantes::$PAGINA_EDITAR_TURMA . '", ' . $turma->getId() . ')';
+                $stringNomeDaFuncaoOnClickExclusao = 'mostrarSplash(); funcaoCircuito("' . Constantes::$ROUTE_CURSO . Constantes::$PAGINA_EXCLUSAO_TURMA . '", ' . $turma->getId() . ')';
+                $stringNomeDaFuncaoOnClickIncluirAlunos = 'mostrarSplash(); funcaoCircuito("' . Constantes::$ROUTE_CADASTRO . Constantes::$PAGINA_LISTAGEM_REVISAO_TURMA . '",' . $turma->getId() . ')';
+                $stringNomeDaFuncaoOnClickReentrada = 'mostrarSplash(); funcaoCircuito("' . Constantes::$ROUTE_CURSO . 'Reentrada' . '",' . $turma->getId() . ')';
+                $stringNomeDaFuncaoOnClickAbrirAula = 'mostrarSplash(); funcaoCircuito("' . Constantes::$ROUTE_CURSO . 'AbrirAula' . '",' . $turma->getId() . ')';
 
                 $html .= '<tr>';
                 $html .= '<td class="text-center">' . $turma->getId() . '</td>';
@@ -86,7 +87,8 @@ class ListagemTurmas extends AbstractHelper {
                 $html .= '<td class="text-center">';
                 $html .= $this->view->botaoLink(Constantes::$STRING_ICONE_PENCIL, Constantes::$STRING_HASHTAG, 3, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClick));
                 $html .= $this->view->botaoLink(Constantes::$STRING_ICONE_TIMES, Constantes::$STRING_HASHTAG, 9, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClickExclusao));
-                $html .= $this->view->botaoLink(Constantes::$STRING_ICONE_PLUS, Constantes::$STRING_HASHTAG, 4, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClickIncluirAlunos));
+                $html .= $this->view->botaoLink('Incluir Aluno Do Revisao', Constantes::$STRING_HASHTAG, 4, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClickIncluirAlunos));
+                $html .= $this->view->botaoLink('Reentrada de Aluno', Constantes::$STRING_HASHTAG, 4, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClickReentrada));
                 $html .= $this->view->botaoLink('Abrir Aula', Constantes::$STRING_HASHTAG, 4, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClickAbrirAula));
                 $html .= '</td>';
 

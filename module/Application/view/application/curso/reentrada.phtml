@@ -1,0 +1,65 @@
+<?php
+
+use Application\Controller\Helper\Constantes;
+
+/**
+ * Nome: cadastrar-pessoa-revisao.phtml
+ * @author Lucas Filipe de Carvalho Cunha <lucascarvalho.esw@gmail.com>
+ * Descricao: Página de cadastro de pessoa para o revisao de vidas.
+ */
+$form = $this->formulario;
+$form->prepare();
+$form->setAttribute(Constantes::$ACTION, $this->url(Constantes::$ROUTE_CADASTRO, array(Constantes::$PAGINA => Constantes::$PAGINA_SALVAR_PESSOA_REVISAO)));
+?>  
+<div class="mw1000 center-block p10">
+    <div class="row ">
+        <div id="content" class="animated fadeIn">
+            <div class="row">
+                <!-- Cadastro de Pessoa -->
+                <div class="admin-form " id="register1" role="tabpanel">
+                    <blockquote class="blockquote-primary">
+                        <p><?php echo $this->translate(Constantes::$TRADUCAO_NOVO_CADASTRO_REVISAO); ?></p>
+                        <small><?php echo $this->translate(Constantes::$TRADUCAO_NOVO_CADASTRO_REVISAO_LABEL); ?></small>
+                    </blockquote>
+                    <div class="panel panel-primary heading-border">
+                        <?php echo $this->form()->openTag($form); ?>
+                        <div class="panel-body bg-light p25">
+                            <?php
+                            echo $this->divMensagens();
+                            echo $this->inputFormularioSimples(Constantes::$TRADUCAO_PRIMEIRO_NOME, $form->get(Constantes::$INPUT_PRIMEIRO_NOME), 6);
+                            echo $this->inputFormularioSimples(Constantes::$TRADUCAO_ULTIMO_NOME, $form->get(Constantes::$INPUT_ULTIMO_NOME), 6);
+                            echo $this->inputFormularioSimples(Constantes::$TRADUCAO_DDD, $form->get(Constantes::$INPUT_DDD), 3);
+                            echo $this->inputFormularioSimples(Constantes::$TRADUCAO_TELEFONE, $form->get(Constantes::$INPUT_TELEFONE), 9);
+                            echo $this->inputFormularioSimples(Constantes::$TRADUCAO_DATA_NASCIMENTO, $form->get(Constantes::$FORM_INPUT_DIA), 4, 2);
+                            echo $this->inputFormularioSimples('&nbsp;', $form->get(Constantes::$FORM_INPUT_MES), 4, 2);
+                            echo $this->inputFormularioSimples('&nbsp;', $form->get(Constantes::$FORM_INPUT_ANO), 4, 2);
+                            echo $this->inputFormularioSimples(Constantes::$TRADUCAO_SEXO, $form->get(Constantes::$INPUT_NUCLEO_PERFEITO), null, 3);
+                            ?> 
+                        </div>
+                        <!-- end .form-body section -->
+                        <div class="panel-footer text-right">
+<?php echo $this->formHidden($form->get(Constantes::$FORM_ID)); ?>
+                            <?php echo $this->formHidden($form->get(Constantes::$INPUT_CSRF)); ?>
+                            <?php
+                            $stringNomeDaFuncaoOnClickCadastro = 'funcaoCadastro("' . Constantes::$PAGINA_REVISIONISTAS . '", 0)';
+                            echo $this->botaoLink($this->translate(Constantes::$TRADUCAO_VOLTAR), Constantes::$STRING_HASHTAG, 2, $this->funcaoOnClick($stringNomeDaFuncaoOnClickCadastro));
+                            ?>
+                            <?php
+                            /* Submit */
+                            $funcaoVerificarCadastroPessoa = $this->funcaoOnClick('validarLancamentoCadastrarPessoaRevisao(this.form)');
+                            echo $this->botaoSimples(Constantes::$TRADUCAO_CADASTRAR, $funcaoVerificarCadastroPessoa);
+                            ?>
+                        </div>
+                        <!-- end .form-footer section -->
+<?php echo $this->form()->closeTag() ?>
+                    </div>
+                    <!-- end .admin-form section -->
+                </div>
+                <!-- end: .admin-form -->
+            </div>
+        </div>
+    </div>
+</div>
+<?php
+/* Layout com javascript para tela de index */
+echo $this->layoutJSCadastrarPessoaRevisao;

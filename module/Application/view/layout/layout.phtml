@@ -63,7 +63,7 @@ use Application\Controller\Helper\Constantes;
                 }
             }
             ?> 
-            <section id="content_wrapper" style="margin-top: 50px;">
+            <section id="content_wrapper">
                 <div id="content">
                     <?php echo $this->content; ?>
                 </div>
@@ -144,6 +144,10 @@ use Application\Controller\Helper\Constantes;
                 });
 
             });
+
+            function mostrarSplash() {
+                $('.splash').css('display', 'block');
+            }
 
             $(window).bind("load", function () {
                 // Remove splash screen after load
