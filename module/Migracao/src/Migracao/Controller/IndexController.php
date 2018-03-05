@@ -822,7 +822,7 @@ class IndexController extends CircuitoController {
                     $sqlUpdateGrupo = str_replace("#totalelulasMultiplicacao", $relatorio[$ultimoRegistro][-1]['celulaQuantidade'], $sqlUpdateGrupo);
                     $sqlUpdateGrupo = str_replace("#idGrupo", $idGrupoAntigo, $sqlUpdateGrupo);
                     $html .= "<br />sqlUpdateGrupo: $sqlUpdateGrupo";
-//                    mysqli_query(IndexController::pegaConexaoStatica(), $sqlUpdateGrupo);
+                    mysqli_query(IndexController::pegaConexaoStatica(), $sqlUpdateGrupo);
                 }
                 $html .= "<br />indiceArrays: $indiceArrays";
                 $html .= IndexController::atualizarRelatorioPorCiclo($grupoCv->getNumero_identificador(), date('m'), date('Y'), $contadorDeCiclos, $relatorio[$ultimoRegistro][$indiceArrays]);
