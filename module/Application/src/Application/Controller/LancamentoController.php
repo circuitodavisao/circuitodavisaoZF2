@@ -160,7 +160,6 @@ class LancamentoController extends CircuitoController {
                 $grupoPassado = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupo);
                 $numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio());
                 $dimensaoSelecionada = null;
-
                 $resultadoPeriodo = Funcoes::montaPeriodo($periodo);
                 $dataDoPeriodo = $resultadoPeriodo[3] . '-' . $resultadoPeriodo[2] . '-' . $resultadoPeriodo[1];
                 $dataDoPeriodoFormatada = DateTime::createFromFormat('Y-m-d', $dataDoPeriodo);
@@ -276,12 +275,7 @@ class LancamentoController extends CircuitoController {
                     $dimensaoSelecionada->setLider($valorDoCampo + $valorParaSomar);
                 }
                 $this->getRepositorio()->getDimensaoORM()->persistir($dimensaoSelecionada, false);
-
-                /* Atualizar DW circuito antigo */
-//                if ($grupoPassado->getGrupoCv()) {
-//                    $grupoCv = $grupoPassado->getGrupoCv();
-//                    IndexController::mudarFrequencia($grupoCv->getNumero_identificador(), $arrayDataReal[1], $arrayDataReal[0], $tipoCampo, $tipoPessoa, $ciclo, $valorParaSomar);
-//                }
+               
                 $this->getRepositorio()->fecharTransacao();
                 $response->setContent(Json::encode(
                                 array('response' => 'true',

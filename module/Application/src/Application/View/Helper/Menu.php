@@ -307,7 +307,7 @@ class Menu extends AbstractHelper {
 
         $html .= '<ul class="nav sub-nav">';
 
-        for ($indiceMenuRelatorio = 1; $indiceMenuRelatorio <= 8; $indiceMenuRelatorio++) {
+        for ($indiceMenuRelatorio = 1; $indiceMenuRelatorio <= 3; $indiceMenuRelatorio++) {
 
             $label = '';
             switch ($indiceMenuRelatorio) {
@@ -344,12 +344,12 @@ class Menu extends AbstractHelper {
             $html .= '</li>';
         }
 
-        $html .= '<li>';
-        $html .= '<a href="/relatorioPessoasFrequentes" onClick="mostrarSplash();">';
-        $html .= '<span class="fa fa-users"></span>';
-        $html .= 'Pessoas Frequentes';
-        $html .= '</a>';
-        $html .= '</li>';
+//        $html .= '<li>';
+//        $html .= '<a href="/relatorioPessoasFrequentes" onClick="mostrarSplash();">';
+//        $html .= '<span class="fa fa-users"></span>';
+//        $html .= 'Pessoas Frequentes';
+//        $html .= '</a>';
+//        $html .= '</li>';
 
         $html .= '<li>';
         $html .= '<a href="/relatorioAtendimento" onClick="mostrarSplash();">';
@@ -373,9 +373,10 @@ class Menu extends AbstractHelper {
             $html .= '<ul class="nav sub-nav">';
 
             $html .= '<li>';
-            $html .= '<a href="/cursoChamada" onClick="mostrarSplash();">';
+//            $html .= '<a href="/cursoChamada" onClick="mostrarSplash();">';
+            $html .= '<a href="#" onClick="">';
             $html .= '<span class="fa fa-list"></span>';
-            $html .= '<span class="sidebar-title">Chamada</span>';
+            $html .= '<span class="sidebar-title">Chamada (Manutenção)</span>';
             $html .= '</a>';
             $html .= '</li>';
 
