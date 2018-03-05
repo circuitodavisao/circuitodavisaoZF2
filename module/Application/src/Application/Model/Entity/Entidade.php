@@ -83,7 +83,30 @@ class Entidade extends CircuitoEntity {
             } else {
                 $resposta = $this->getNome();
             }
-        } 
+        }
+        return $resposta;
+    }
+
+    public function getGrupoEquipe() {
+        $resposta = 0;
+        $grupoSelecionado = $this->getGrupo();
+        if ($this->verificarSeEstaAtivo()) {
+            if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::SUBEQUIPE) {
+                while ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::SUBEQUIPE) {
+                    if ($grupoSelecionado->getGrupoPaiFilhoPaiAtivo()) {
+                        $grupoSelecionado = $grupoSelecionado->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai();
+                        if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::EQUIPE) {
+                            break;
+                        }
+                    } else {
+                        break;
+                    }
+                }
+            }
+            if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::EQUIPE) {
+                $resposta = $grupoSelecionado->getId();
+            }
+        }
         return $resposta;
     }
 
