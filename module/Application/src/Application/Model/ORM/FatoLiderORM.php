@@ -77,12 +77,17 @@ class FatoLiderORM extends CircuitoORM {
      * @param String $numeroIdentificador
      * @param integer $quantidadeDeLideres
      */
-    public function criarFatoLider($numeroIdentificador, $quantidadeDeLideres) {
+    public function criarFatoLider($numeroIdentificador, $quantidadeDeLideres, $dataCriacao = null) {
         $fatoLider = new FatoLider();
+        $alterarDiaDeCriacao = true;
+        if ($dataCriacao) {
+            $fatoLider->setDataEHoraDeCriacao($dataCriacao);
+            $alterarDiaDeCriacao = false;
+        }
         try {
             $fatoLider->setNumero_identificador($numeroIdentificador);
             $fatoLider->setLideres($quantidadeDeLideres);
-            $this->persistir($fatoLider);
+            $this->persistir($fatoLider, $alterarDiaDeCriacao);
         } catch (Exception $exc) {
             echo $exc->getMessage();
         }
