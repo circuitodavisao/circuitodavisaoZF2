@@ -825,6 +825,7 @@ class IndexController extends CircuitoController {
                     mysqli_query(IndexController::pegaConexaoStatica(), $sqlUpdateGrupo);
                 }
                 $html .= "<br />indiceArrays: $indiceArrays";
+                $html .= "<br />getNumero_identificador: " . $grupoCv->getNumero_identificador();
                 $html .= IndexController::atualizarRelatorioPorCiclo($grupoCv->getNumero_identificador(), date('m'), date('Y'), $contadorDeCiclos, $relatorio[$ultimoRegistro][$indiceArrays]);
                 $contadorDeCiclos++;
                 $contadorDeEquipes++;
