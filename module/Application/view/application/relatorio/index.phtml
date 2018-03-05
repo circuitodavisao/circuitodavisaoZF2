@@ -129,7 +129,7 @@ $somaMeta = 0;
                                 echo '</th>';
                                 echo '<th>|</th>';
                             }
-                            echo '<th colspan="2"></th>';
+                            echo '<th></th>';
                             ?>                           
                         </tr>
                         <tr class="dark">
@@ -198,7 +198,7 @@ $somaMeta = 0;
                             if ($this->tipoRelatorio == 1 ||
                                     $this->tipoRelatorio == 2 ||
                                     $this->tipoRelatorio == 3) {
-                                echo '<th colspan="2">MÉDIA MENSAL</th>';
+                                echo '<th>MÉDIA MENSAL</th>';
                             }
                             ?>                           
                         </tr>
@@ -301,18 +301,14 @@ $somaMeta = 0;
                                     $this->tipoRelatorio == 2 ||
                                     $this->tipoRelatorio == 3) {
                                 if ($this->tipoRelatorio == 1) {
-                                    $valorMedio = $relatorio['mediaMembresia'];
                                     $perfomanceMedio = $relatorio['mediaMembresiaPerformance'];
                                 }
                                 if ($this->tipoRelatorio == 2) {
-                                    $valorMedio = $relatorio['mediaCelulaRealizadas'];
                                     $perfomanceMedio = $relatorio['mediaCelulaRealizadasPerformance'];
                                 }
                                 if ($this->tipoRelatorio == 3) {
-                                    $valorMedio = $relatorio['mediaCelula'];
                                     $perfomanceMedio = $relatorio['mediaCelulaPerformance'];
                                 }
-                                echo '<td>' . RelatorioController::formataNumeroRelatorio($valorMedio) . '</td>';
                                 echo '<td>' . RelatorioController::formataNumeroRelatorio($perfomanceMedio) . '%</td>';
                             }
                             echo '</tr>';
