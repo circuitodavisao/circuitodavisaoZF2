@@ -98,7 +98,7 @@ class CadastrarPessoaRevisaoForm extends Form {
                             Constantes::$FORM_STRING_PLACEHOLDER => Constantes::$TRADUCAO_TELEFONE,
                         ])
         );
-        
+
         /* dataDeNascimento0 */
         $this->add(
                 (new Hidden())
@@ -107,9 +107,9 @@ class CadastrarPessoaRevisaoForm extends Form {
                             Constantes::$FORM_ID => Constantes::$INPUT_TIPO,
                         ])
         );
-        
-        
-        
+
+
+
         /* Dia da data de nascimento */
         $arrayDiaDataNascimento = array();
         $arrayDiaDataNascimento[0] = Constantes::$TRADUCAO_DIA;
@@ -176,7 +176,7 @@ class CadastrarPessoaRevisaoForm extends Form {
                                     Constantes::$FORM_STRING_VALUE => 'F',
                                     Constantes::$FORM_STRING_LABEL => ' FEMININO',
                                     Constantes::$FORM_STRING_LABEL_ATRIBUTES => array(Constantes::$FORM_STRING_CLASS => $classOption),
-                                ),   
+                                ),
                             ),
                         ])
         );
@@ -186,20 +186,21 @@ class CadastrarPessoaRevisaoForm extends Form {
                 (new Csrf())
                         ->setName(Constantes::$INPUT_CSRF)
         );
-        
-        $telefoneCelular = substr($pessoa->getTelefone(), 2);
-        $dddTelefone = substr($pessoa->getTelefone(), 0,2);
-        $nomeExplodido = explode(' ', $pessoa->getNome());
-        $ultimo = count($nomeExplodido);
-        $this->get(Constantes::$FORM_ID)->setValue($pessoa->getId()); 
-        $this->get(Constantes::$INPUT_PRIMEIRO_NOME)->setValue($nomeExplodido[0]);
-        
-        if($ultimo > 1){
-            $this->get(Constantes::$INPUT_ULTIMO_NOME)->setValue($nomeExplodido[$ultimo-1]);
+
+        if ($pessoa) {
+            $telefoneCelular = substr($pessoa->getTelefone(), 2);
+            $dddTelefone = substr($pessoa->getTelefone(), 0, 2);
+            $nomeExplodido = explode(' ', $pessoa->getNome());
+            $ultimo = count($nomeExplodido);
+            $this->get(Constantes::$FORM_ID)->setValue($pessoa->getId());
+            $this->get(Constantes::$INPUT_PRIMEIRO_NOME)->setValue($nomeExplodido[0]);
+
+            if ($ultimo > 1) {
+                $this->get(Constantes::$INPUT_ULTIMO_NOME)->setValue($nomeExplodido[$ultimo - 1]);
+            }
+            $this->get(Constantes::$INPUT_TELEFONE)->setValue($telefoneCelular);
+            $this->get(Constantes::$INPUT_DDD)->setValue($dddTelefone);
         }
-        $this->get(Constantes::$INPUT_TELEFONE)->setValue($telefoneCelular);
-        $this->get(Constantes::$INPUT_DDD)->setValue($dddTelefone);    
     }
 
 }
-

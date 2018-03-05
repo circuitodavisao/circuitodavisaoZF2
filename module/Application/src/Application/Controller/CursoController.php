@@ -4,6 +4,7 @@ namespace Application\Controller;
 
 use Application\Controller\Helper\Constantes;
 use Application\Form\AulaForm;
+use Application\Form\CadastrarPessoaRevisaoForm;
 use Application\Form\CursoForm;
 use Application\Form\DisciplinaForm;
 use Application\Form\SelecionarAlunosForm;
@@ -12,7 +13,6 @@ use Application\Form\TurmaForm;
 use Application\Model\Entity\Aula;
 use Application\Model\Entity\Curso;
 use Application\Model\Entity\Disciplina;
-use Application\Model\Entity\EntidadeTipo;
 use Application\Model\Entity\Pessoa;
 use Application\Model\Entity\Situacao;
 use Application\Model\Entity\Turma;
@@ -824,6 +824,14 @@ class CursoController extends CircuitoController {
 
     public function lancarPresencaAction() {
         return new ViewModel(array('titulo' => 'Lançar Presença'));
+    }
+
+    public function reentradaAction() {
+        $formulario = new CadastrarPessoaRevisaoForm('formulario');
+
+        return new ViewModel(array(
+            'formulario' => $formulario,
+        ));
     }
 
 }

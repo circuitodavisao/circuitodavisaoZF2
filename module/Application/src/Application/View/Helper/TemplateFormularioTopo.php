@@ -13,22 +13,24 @@ class TemplateFormularioTopo extends AbstractHelper {
 
     protected $label;
     protected $id;
+    protected $mw;
 
     public function __construct() {
         
     }
 
-    public function __invoke($label, $id = '') {
+    public function __invoke($label, $id = '', $mw = '') {
         $this->setLabel($label);
         $this->setId($id);
+        $this->setMw($mw);
         return $this->renderHtml();
     }
 
     public function renderHtml() {
         $html = '';
-        $html .= '<div class="mw1200 center-block">';
-        $html .= '<div class="admin-form theme-primary">';
-        if($this->getLabel() != ''){
+        $html .= '<div class="center-block">';
+        $html .= '<div class="admin-form theme-primary" ' . $this->getMw() . '>';
+        if ($this->getLabel() != '') {
             $html .= $this->view->tituloDaPagina($this->getLabel());
         }
         $html .= '<div id="' . $this->getId() . '" class="panel heading-border panel-primary">';
@@ -49,6 +51,14 @@ class TemplateFormularioTopo extends AbstractHelper {
 
     function setId($id) {
         $this->id = $id;
+    }
+
+    function getMw() {
+        return $this->mw;
+    }
+
+    function setMw($mw) {
+        $this->mw = $mw;
     }
 
 }
