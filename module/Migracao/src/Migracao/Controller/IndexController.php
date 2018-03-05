@@ -1042,7 +1042,7 @@ class IndexController extends CircuitoController {
                     break;
             }
             $campo = $campo . $ciclo;
-            $sqlUpdate = "UPDATE #tabela SET #campo = #valor where id = #idTabela";
+            $sqlUpdate = "UPDATE #tabela SET #campo = #valor where id = #idTabela;";
 
             $sqlUpdate = str_replace("#tabela", $tabela, $sqlUpdate);
             $sqlUpdate = str_replace("#campo", $campo, $sqlUpdate);
@@ -1051,7 +1051,7 @@ class IndexController extends CircuitoController {
 
             $html .= "<br />$sqlUpdate";
 
-//            mysqli_query(IndexController::pegaConexaoStaticaDW(), $sqlUpdate);
+            mysqli_query(IndexController::pegaConexaoStaticaDW(), $sqlUpdate);
         }
         return $html;
     }
