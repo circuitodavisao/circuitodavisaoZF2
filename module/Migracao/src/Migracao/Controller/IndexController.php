@@ -780,13 +780,13 @@ class IndexController extends CircuitoController {
     public function atualizarAntigoAction() {
         $html = '';
         $arrayGrupoEquipes[] = 2; // blackbelt cv novo
-//        $arrayGrupoEquipes[] = 228; // hunters cv novo
-//        $arrayGrupoEquipes[] = 359; // spartans cv novo
+        $arrayGrupoEquipes[] = 228; // hunters cv novo
+        $arrayGrupoEquipes[] = 359; // spartans cv novo
         $idTipo = 2; // equipe
         $idPai = 1; // ceilandia
         $arrayEquipesCVAntigo[] = 1; // id grupo cv antigo blackbelt
-//        $arrayEquipesCVAntigo[] = 24; // id grupo cv antigo hunters
-//        $arrayEquipesCVAntigo[] = 3749; // id grupo cv antigo spartans
+        $arrayEquipesCVAntigo[] = 24; // id grupo cv antigo hunters
+        $arrayEquipesCVAntigo[] = 3749; // id grupo cv antigo spartans
 
         $contadorDeEquipes = 0;
         foreach ($arrayGrupoEquipes as $idGrupoEquipe) {
