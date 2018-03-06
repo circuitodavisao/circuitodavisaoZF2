@@ -1934,16 +1934,12 @@ class CadastroController extends CircuitoController {
                 $chaveParaRemover = $key;
             }
         }
-//        unset($grupoPaiFilhoEquipes[$key]);
+        unset($grupoPaiFilhoEquipes[$key]);
 
         $arrayHomens = array();
         $arrayMulheres = array();
         $arrayCasais = array();
         foreach ($grupoPaiFilhoFilhos as $grupoPaiFilhoFilho12) {
-            foreach ($solicitacoes as $solicitacao) {
-                
-            }
-
             $grupo12 = $grupoPaiFilhoFilho12->getGrupoPaiFilhoFilho();
             if (!$grupo12->verificaSeECasal()) {
                 if ($grupo12->getGrupoResponsavelAtivo()->getPessoa()->getSexo() == 'M') {
