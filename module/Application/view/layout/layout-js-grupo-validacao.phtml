@@ -30,6 +30,8 @@ echo $this->inlineScript();
     var alertSuccess = 'alert-success';
     var btnDefault = 'btn-default';
     var btnPrimary = 'btn-primary';
+
+    var objetoSelecionado = '';
     function validarEstadoCivil() {
         var valorSelecionado = $('input[name=inputEstadoCivil]:checked').val();
         var estadoCivil = parseInt(valorSelecionado);
@@ -49,6 +51,7 @@ echo $this->inlineScript();
     }
 
     function abrirTelaDeAlunos(tipo, entidadeTipo) {
+        objetoSelecionado = tipo;
         $('#botaoInserirResponsavel0').addClass(hidden);
         $('#botaoInserirResponsavel1').addClass(hidden);
         $('#botaoInserirResponsavel2').addClass(hidden);
@@ -285,7 +288,7 @@ echo $this->inlineScript();
 //                                    dadosValidados = false;
 //                                    spanMensagens
 //                                            .addClass(alertDanger)
-//                                            .text('<?php // echo $this->translate(Constantes::$TRADUCAO_NOME_NAO_CONFERE);               ?>')
+//                                            .text('<?php // echo $this->translate(Constantes::$TRADUCAO_NOME_NAO_CONFERE);                  ?>')
 //                                            .removeClass(hidden);
 //                                }
 //                            }
@@ -512,7 +515,7 @@ echo $this->inlineScript();
 
     function mostrarBotaoDeInserirResponsavel(valorDoSelectHierarquia) {
         valorDoSelectHierarquia = parseInt(valorDoSelectHierarquia);
-        var botaoHierarquiaSelecionada = $('#botaoHierarquiaSelecionada');
+        var botaoHierarquiaSelecionada = $('#botaoInserirResponsavel' + objetoSelecionado);
         if (valorDoSelectHierarquia !== 0) {
             botaoHierarquiaSelecionada.removeClass(hidden);
         }

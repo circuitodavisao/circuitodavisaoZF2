@@ -13,6 +13,8 @@ $form->prepare();
 $form->setAttribute(Constantes::$FORM_ACTION, Constantes::$ROUTE_CADASTRO . Constantes::$PAGINA_GRUPO_FINALIZAR);
 echo $this->form()->openTag($form);
 echo $this->templateFormularioTopo($this->tituloDaPagina);
+
+$labelBotaoContinuar = $this->translate(Constantes::$TRADUCAO_CONTINUAR);
 ?>
 <!-- Inicio panel-body -->
 <div class="panel-body bg-light">
@@ -70,9 +72,9 @@ echo $this->templateFormularioTopo($this->tituloDaPagina);
                 <!-- HelperView Dados -->
                 <div id="divDadosSelecionados" class="alert alert-info hidden">
                     <?php
-                    if ($this->entidadeTipo !== 1 && $this->entidadeTipo !== 2 && $this->entidadeTipo !== 3 && $this->entidadeTipo !== 4) {
-                        echo $this->SpanDadosValidados('Matricula', 'info-circle');
-                    }
+//                    if ($this->entidadeTipo !== 1 && $this->entidadeTipo !== 2 && $this->entidadeTipo !== 3 && $this->entidadeTipo !== 4) {
+//                        echo $this->SpanDadosValidados('Matricula', 'info-circle');
+//                    }
                     echo $this->SpanDadosValidados('Nome', 'user');
                     echo $this->SpanDadosValidados('DataNascimento', 'birthday-cake');
                     echo $this->SpanDadosValidados('CPF', 'info-circle');
@@ -86,10 +88,10 @@ echo $this->templateFormularioTopo($this->tituloDaPagina);
             <!--             Selecionar Aluno 
                         <div id="divSelecionarAluno" class="">
                             <div class="section-divider mt40">
-                                <span><?php // echo $this->translate(Constantes::$TRADUCAO_SELECIONE_O_ALUNO);  ?></span>
+                                <span><?php // echo $this->translate(Constantes::$TRADUCAO_SELECIONE_O_ALUNO);      ?></span>
                             </div> 
                             <div class="panel-menu">
-                                <input id="fooFilter" type="text" class="form-control" placeholder="<?php // echo $this->translate(Constantes::$TRADUCAO_BUSQUE_O_ALUNO);  ?>">
+                                <input id="fooFilter" type="text" class="form-control" placeholder="<?php // echo $this->translate(Constantes::$TRADUCAO_BUSQUE_O_ALUNO);      ?>">
                             </div>
                              Tabela de Alunos 
             <?php // echo $this->tabelaDeAlunos($form); ?>
@@ -175,9 +177,6 @@ echo $this->templateFormularioTopo($this->tituloDaPagina);
                 <!-- Fim Selecionar Hierarquia -->
                 <div class="mt10">
                     <?php
-                    echo '<div id = "botaoHierarquiaSelecionada" class = "quebraDeLinhaDeSpan hidden">';
-
-                    echo '<div id = "botaoInserirResponsavel" class = "">';
                     $labelInserirResponsavel = Constantes::$TRADUCAO_INSERIR;
                     $extraInserirResponsavel = ' id = "botaoInserirResponsavel#numero" onclick = "
                 insereResponsavelNaTelaDeConfimacao(#numero, 0); 
@@ -192,9 +191,6 @@ echo $this->templateFormularioTopo($this->tituloDaPagina);
 
                     $extraResponsavel2 = str_replace('#numero', 2, $extraInserirResponsavel);
                     echo $this->botaoSimples($labelInserirResponsavel, $extraResponsavel2, BotaoSimples::botaoSucesso);
-                    echo '</div>';
-
-                    echo '</div>';
 
                     /* Botao Voltar Email */
                     echo $this->botaoLink($labelVoltar, Constantes::$STRING_HASHTAG, 8, $this->funcaoOnClick('botaoVoltarHierarquia()'));
