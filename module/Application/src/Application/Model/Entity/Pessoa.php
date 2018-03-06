@@ -64,6 +64,11 @@ class Pessoa extends CircuitoEntity implements InputFilterAwareInterface {
      */
     protected $solicitacao;
 
+    /**
+     * @ORM\OneToMany(targetEntity="PessoaCursoAcesso", mappedBy="pessoa") 
+     */
+    protected $pessoaCursoAcesso;
+
     public function __construct() {
         $this->turmaPessoa = new ArrayCollection();
         $this->grupoResponsavel = new ArrayCollection();
@@ -72,6 +77,7 @@ class Pessoa extends CircuitoEntity implements InputFilterAwareInterface {
         $this->pessoaHierarquia = new ArrayCollection();
         $this->curso = new ArrayCollection();
         $this->solicitacao = new ArrayCollection();
+        $this->pessoaCursoAcesso = new ArrayCollection();
         $this->setAtualizar_dados('S');
     }
 
@@ -790,6 +796,14 @@ class Pessoa extends CircuitoEntity implements InputFilterAwareInterface {
 
     function setTurmaPessoa($turmaPessoa) {
         $this->turmaPessoa = $turmaPessoa;
+    }
+
+    function getPessoaCursoAcesso() {
+        return $this->pessoaCursoAcesso;
+    }
+
+    function setPessoaCursoAcesso($pessoaCursoAcesso) {
+        $this->pessoaCursoAcesso = $pessoaCursoAcesso;
     }
 
 }
