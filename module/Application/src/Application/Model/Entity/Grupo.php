@@ -67,6 +67,11 @@ class Grupo extends CircuitoEntity {
      */
     protected $turma;
 
+    /**
+     * @ORM\OneToMany(targetEntity="PessoaCursoAcesso", mappedBy="grupo")
+     */
+    protected $pessoaCursoAcesso;
+
     public function __construct() {
         $this->entidade = new ArrayCollection();
         $this->grupoResponsavel = new ArrayCollection();
@@ -76,6 +81,7 @@ class Grupo extends CircuitoEntity {
         $this->grupoPaiFilhoFilhos = new ArrayCollection();
         $this->grupoPaiFilhoPai = new ArrayCollection();
         $this->turma = new ArrayCollection();
+        $this->pessoaCursoAcesso = new ArrayCollection();
     }
 
     /**
@@ -1164,6 +1170,14 @@ class Grupo extends CircuitoEntity {
 
     function setTurma($turma) {
         $this->turma = $turma;
+    }
+
+    function getPessoaCursoAcesso() {
+        return $this->pessoaCursoAcesso;
+    }
+
+    function setPessoaCursoAcesso($pessoaCursoAcesso) {
+        $this->pessoaCursoAcesso = $pessoaCursoAcesso;
     }
 
 }

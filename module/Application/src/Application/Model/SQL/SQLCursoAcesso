@@ -1,0 +1,27 @@
+-- Table: curso_acesso
+
+-- DROP TABLE curso_acesso;
+
+CREATE TABLE curso_acesso
+(
+  id serial NOT NULL, -- Identificação
+  nome character varying(30) NOT NULL, -- Nome do cursodata_criacao date NOT NULL DEFAULT ('now'::text)::date, -- Data de criação
+  hora_criacao time without time zone NOT NULL DEFAULT ('now'::text)::time with time zone, -- Hora de criação
+  data_inativacao date, -- Data de inativação
+  hora_inativacao time without time zone, -- Hora do inativação
+  CONSTRAINT pk_curso_acesso PRIMARY KEY (id)
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE curso_acesso
+  OWNER TO postgres;
+COMMENT ON TABLE curso_acesso
+  IS 'Tabela com os perfis de acesso';
+COMMENT ON COLUMN curso.id IS 'Identificação';
+COMMENT ON COLUMN curso.nome IS 'Nome do perfil de acesso';
+COMMENT ON COLUMN curso.data_criacao IS 'Data de criação';
+COMMENT ON COLUMN curso.hora_criacao IS 'Hora de criação';
+COMMENT ON COLUMN curso.data_inativacao IS 'Data de inativação';
+COMMENT ON COLUMN curso.hora_inativacao IS 'Hora da inativação';
+

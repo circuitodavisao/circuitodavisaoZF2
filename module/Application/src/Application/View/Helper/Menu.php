@@ -387,6 +387,14 @@ class Menu extends AbstractHelper {
                 $html .= '<span class="sidebar-title">Turmas</span>';
                 $html .= '</a>';
                 $html .= '</li>';
+
+                $html .= '<li>';
+                $html .= '<a href="/cursoUsuarios" onClick="mostrarSplash();">';
+                $html .= '<span class="fa fa-users"></span>';
+                $html .= '<span class="sidebar-title">Usuários</span>';
+                $html .= '</a>';
+                $html .= '</li>';
+
                 $html .= '<li>';
                 $html .= '<a href="/cursoSelecionarParaCarterinha" onClick="mostrarSplash();">';
                 $html .= '<span class="fa fa-users"></span>';

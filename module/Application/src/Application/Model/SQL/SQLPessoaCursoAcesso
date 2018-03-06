@@ -1,0 +1,66 @@
+
+CREATE TABLE public.pessoa_curso_acesso
+(
+    id serial NOT NULL,
+    pessoa_id integer NOT NULL,
+    curso_acesso_id integer NOT NULL,
+    grupo_id integer NOT NULL,
+    data_criacao date NOT NULL,
+    hora_criacao time without time zone NOT NULL,
+    data_inativacao date,
+    hora_inativacao time without time zone,
+    CONSTRAINT pk_pessoa_curso_acesso PRIMARY KEY (id),
+    CONSTRAINT fk_pessoa_curso_acesso_pessoa_id FOREIGN KEY (pessoa_id)
+        REFERENCES public.pessoa (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION,
+    CONSTRAINT fk_pessoa_curso_acesso_curso_acesso_id FOREIGN KEY (curso_acesso_id)
+        REFERENCES public.curso_acesso (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION,
+    CONSTRAINT fk_pessoa_curso_acesso_grupo_id FOREIGN KEY (grupo_id)
+        REFERENCES public.grupo (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION;
+)
+WITH (
+    OIDS = FALSE
+);
+
+ALTER TABLE public.pessoa_curso_acesso
+    OWNER to postgres;
+COMMENT ON TABLE public.pessoa_curso_acesso
+    IS 'Associação da pessoa com os perfis de acesso';
+
+COMMENT ON COLUMN public.pessoa_curso_acesso.id
+    IS 'Identificação';
+
+COMMENT ON COLUMN public.pessoa_curso_acesso.pessoa_id
+    IS 'Identificação da pessoa';
+
+COMMENT ON COLUMN public.pessoa_curso_acesso.grupo_id
+    IS 'Identificação da igreja';
+
+COMMENT ON COLUMN public.pessoa_curso_acesso.curso_acesso_id
+    IS 'Identificação do curso_acesso';
+
+COMMENT ON COLUMN public.pessoa_curso_acesso.data_criacao
+    IS 'Data de criação';
+
+COMMENT ON COLUMN public.pessoa_curso_acesso.hora_criacao
+    IS 'Hora de criação';
+
+COMMENT ON COLUMN public.pessoa_curso_acesso.data_inativacao
+    IS 'Data de inativação';
+
+COMMENT ON COLUMN public.pessoa_curso_acesso.hora_inativacao
+    IS 'Hora de inativação';
+COMMENT ON CONSTRAINT pk_pessoa_curso_acesso ON public.pessoa_curso_acesso
+    IS 'Chave primaria da pessoa com curso acesso';
+
+COMMENT ON CONSTRAINT fk_pessoa_curso_acesso_pessoa_id ON public.pessoa_curso_acesso
+    IS 'Chave estrangeira do pessoa curso acesso com a pessoa';
+COMMENT ON CONSTRAINT fk_pessoa_curso_acesso_curso_acesso_id ON public.pessoa_curso_acesso
+    IS 'Chave estrangeira da pessoa curso acesso com curso acesso';
+COMMENT ON CONSTRAINT fk_pessoa_curso_acesso_grupo_id ON public.pessoa_curso_acesso
+    IS 'Chave estrangeira do acesso a igreja';

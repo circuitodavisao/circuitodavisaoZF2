@@ -1,0 +1,44 @@
+<?php
+
+$html = '';
+$html .= $this->templateFormularioTopo('Usuarios', '', 'style="max-width: 100%;"');
+/* Sem pessoas cadastrados */
+
+$html .= '<div class="panel-body bg-light">';
+if (count($this->usuarios)) {
+    $html .= '<table class="table">';
+    $html .= '<thead>';
+    $html .= '<tr>';
+    $html .= '<th class="text-center">Id</th>';
+    $html .= '<th class="text-center">Pessoa</th>';
+    $html .= '<th class="text-center">Acesso</th>';
+    $html .= '<th class="text-center">Ativo</th>';
+    $html .= '<th class="text-center">Opções</th>';
+    $html .= '</tr>';
+    $html .= '</thead>';
+    $html .= '<tbody>';
+    foreach ($this->usuarios as $usuario) {
+        $html .= '<tr>';
+        $html .= '<td class="text-center">' . $usuario->getId() . '</td>';
+        $html .= '<td class="text-center">' . $usuario->getPessoa()->getNome() . '</td>';
+        $html .= '<td class="text-center">' . $usuario->getCursoAcesso()->getNome() . '</td>';
+        $html .= '<td class="text-center">' . $usuario->getCursoAcesso()->verificarSeEstaAtivo() ? 'Ativo' : 'Inativo' . '</td>';
+        $html .= '<td class="text-center"></td>';
+        $html .= '</tr>';
+    }
+    $html .= '</tbody>';
+    $html .= '</table>';
+} else {
+    $html .= '<div class="alert alert-info">';
+    $html .= 'Sem usuários';
+    $html .= '</div>';
+}
+$html .= '</div>';
+/* Fim panel-body */
+
+$html .= '<div class="panel-footer">';
+$html .= '</div>';
+/* Fim panel-footer */
+
+$html .= $this->templateFormularioRodape();
+echo $html;

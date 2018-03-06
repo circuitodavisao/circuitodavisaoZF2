@@ -907,4 +907,15 @@ class CursoController extends CircuitoController {
         }
     }
 
+    public function usuariosAction() {
+        $sessao = new Container(Constantes::$NOME_APLICACAO);
+        $idEntidadeAtual = $sessao->idEntidadeAtual;
+        $entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+        $grupo = $entidade->getGrupo();
+        $usuarios = $grupo->getPessoaCursoAcesso();
+        return new ViewModel(array(
+            'usuarios' => $usuarios,
+        ));
+    }
+
 }
