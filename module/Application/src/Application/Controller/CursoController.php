@@ -4,15 +4,17 @@ namespace Application\Controller;
 
 use Application\Controller\Helper\Constantes;
 use Application\Form\AulaForm;
-use Application\Form\CadastrarPessoaRevisaoForm;
 use Application\Form\CursoForm;
 use Application\Form\DisciplinaForm;
+use Application\Form\ReentradaDeAlunoForm;
 use Application\Form\SelecionarAlunosForm;
 use Application\Form\SelecionarCarterinhasForm;
 use Application\Form\TurmaForm;
 use Application\Model\Entity\Aula;
 use Application\Model\Entity\Curso;
 use Application\Model\Entity\Disciplina;
+use Application\Model\Entity\GrupoPessoa;
+use Application\Model\Entity\GrupoPessoaTipo;
 use Application\Model\Entity\Pessoa;
 use Application\Model\Entity\Situacao;
 use Application\Model\Entity\Turma;
@@ -827,11 +829,82 @@ class CursoController extends CircuitoController {
     }
 
     public function reentradaAction() {
-        $formulario = new CadastrarPessoaRevisaoForm('formulario');
-
+        $sessao = new Container(Constantes::$NOME_APLICACAO);
+        $arrayLideres = array();
+        $idEntidadeAtual = $sessao->idEntidadeAtual;
+        $entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+        $grupo = $entidade->getGrupo();
+        $grupoPaiFilhoFilhos = $grupo->getGrupoPaiFilhoFilhosAtivosReal();
+        foreach ($grupoPaiFilhoFilhos as $grupoPaiFilhoFilho12) {
+            $grupo12 = $grupoPaiFilhoFilho12->getGrupoPaiFilhoFilho();
+            $arrayLideres [] = $grupo12;
+            if ($grupoPaiFilhoFilhos144 = $grupo12->getGrupoPaiFilhoFilhosAtivosReal()) {
+                foreach ($grupoPaiFilhoFilhos144 as $grupoPaiFilhoFilho144) {
+                    $grupo144 = $grupoPaiFilhoFilho144->getGrupoPaiFilhoFilho();
+                    $arrayLideres [] = $grupo144;
+                    if ($grupoPaiFilhoFilhos1728 = $grupo144->getGrupoPaiFilhoFilhosAtivosReal()) {
+                        foreach ($grupoPaiFilhoFilhos1728 as $grupoPaiFilhoFilho1728) {
+                            $grupo1728 = $grupoPaiFilhoFilho1728->getGrupoPaiFilhoFilho();
+                            $arrayLideres [] = $grupo1728;
+                            if ($grupoPaiFilhoFilhos20736 = $grupo1728->getGrupoPaiFilhoFilhosAtivosReal()) {
+                                foreach ($grupoPaiFilhoFilhos20736 as $grupoPaiFilhoFilho20736) {
+                                    $grupo20736 = $grupoPaiFilhoFilho20736->getGrupoPaiFilhoFilho();
+                                    $arrayLideres [] = $grupo20736;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        $formulario = new ReentradaDeAlunoForm('formulario', $sessao->idSessao, $arrayLideres);
         return new ViewModel(array(
             'formulario' => $formulario,
         ));
+    }
+
+    public function reentradaFinalizarAction() {
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $this->getRepositorio()->iniciarTransacao();
+            try {
+                $post_data = $request->getPost();
+                $pessoa = new Pessoa();
+                $pessoa->setNome($post_data['primeiro-nome'] . ' ' . $post_data['ultimo-nome']);
+                $pessoa->setTelefone($post_data['ddd'] . $post_data['telefone']);
+                $pessoa->setData_nascimento($post_data['Ano'] . '-' . $post_data['Mes'] . '-' . $post_data['Dia']);
+                $pessoa->setSexo($post_data['nucleoPerfeito']);
+                $this->getRepositorio()->getPessoaORM()->persistir($pessoa);
+
+                $grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($post_data['idGrupo']);
+                $grupoPessoaTipo = $this->getRepositorio()->getGrupoPessoaTipoORM()->encontrarPorId(GrupoPessoaTipo::MEMBRO);
+                $grupoPessoa = new GrupoPessoa();
+                $grupoPessoa->setGrupo($grupo);
+                $grupoPessoa->setPessoa($pessoa);
+                $grupoPessoa->setGrupoPessoaTipo($grupoPessoaTipo);
+                $this->getRepositorio()->getGrupoPessoaORM()->persistir($grupoPessoa);
+
+                $turma = $this->getRepositorio()->getTurmaORM()->encontrarPorId($post_data['idTurma']);
+                $turmaPessoa = new TurmaPessoa();
+                $turmaPessoa->setTurma($turma);
+                $turmaPessoa->setPessoa($pessoa);
+                $this->getRepositorio()->getTurmaPessoaORM()->persistir($turmaPessoa);
+
+                $situacao = $this->getRepositorio()->getSituacaoORM()->encontrarPorId(Situacao::ATIVO);
+                $turmaPessoaSituacao = new TurmaPessoaSituacao();
+                $turmaPessoaSituacao->setTurma_pessoa($turmaPessoa);
+                $turmaPessoaSituacao->setSituacao($situacao);
+                $this->getRepositorio()->getTurmaPessoaSituacaoORM()->persistir($turmaPessoaSituacao);
+
+                $this->getRepositorio()->fecharTransacao();
+                return $this->redirect()->toRoute(Constantes::$ROUTE_CURSO, array(
+                            Constantes::$ACTION => Constantes::$PAGINA_LISTAR_TURMA,
+                ));
+            } catch (Exception $exc) {
+                $this->getRepositorio()->desfazerTransacao();
+                echo $exc->getMessage();
+            }
+        }
     }
 
 }

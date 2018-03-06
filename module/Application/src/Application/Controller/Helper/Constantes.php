@@ -75,6 +75,7 @@ class Constantes {
     public static $INPUT_DATA_NASCIMENTO = 'dataNascimento';
     public static $INPUT_TIPO = 'tipo';
     public static $INPUT_LIDERES = 'demo1';
+    public static $INPUT_ID_GRUPO = 'idGrupo';
     public static $INPUT_ALTERAR = 'alterar';
     public static $INDEX = '/';
     public static $ACTION_ESQUECEU_SENHA = 'esqueceuSenha';
@@ -419,6 +420,7 @@ class Constantes {
     public static $INPUT_DDD = 'ddd';
     public static $INPUT_TELEFONE = 'telefone';
     public static $INPUT_NUCLEO_PERFEITO = 'nucleoPerfeito';
+    public static $INPUT_SEXO = 'sexo';
     public static $INPUT_VOLTAR = 'voltar';
     public static $INPUT_CADASTRAR = 'cadastrar';
     public static $CLASS_BTN_DANGER_DARK = 'btn-danger dark';
