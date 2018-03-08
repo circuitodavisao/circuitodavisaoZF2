@@ -5,6 +5,7 @@ namespace Application\Controller;
 use Application\Controller\Helper\Constantes;
 use Application\Form\AulaForm;
 use Application\Form\CursoForm;
+use Application\Form\CursoUsuarioForm;
 use Application\Form\DisciplinaForm;
 use Application\Form\ReentradaDeAlunoForm;
 use Application\Form\SelecionarAlunosForm;
@@ -13,9 +14,11 @@ use Application\Form\TurmaForm;
 use Application\Model\Entity\Aula;
 use Application\Model\Entity\Curso;
 use Application\Model\Entity\Disciplina;
+use Application\Model\Entity\Grupo;
 use Application\Model\Entity\GrupoPessoa;
 use Application\Model\Entity\GrupoPessoaTipo;
 use Application\Model\Entity\Pessoa;
+use Application\Model\Entity\PessoaCursoAcesso;
 use Application\Model\Entity\Situacao;
 use Application\Model\Entity\Turma;
 use Application\Model\Entity\TurmaAula;
@@ -830,34 +833,11 @@ class CursoController extends CircuitoController {
 
     public function reentradaAction() {
         $sessao = new Container(Constantes::$NOME_APLICACAO);
-        $arrayLideres = array();
         $idEntidadeAtual = $sessao->idEntidadeAtual;
         $entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
         $grupo = $entidade->getGrupo();
-        $grupoPaiFilhoFilhos = $grupo->getGrupoPaiFilhoFilhosAtivosReal();
-        foreach ($grupoPaiFilhoFilhos as $grupoPaiFilhoFilho12) {
-            $grupo12 = $grupoPaiFilhoFilho12->getGrupoPaiFilhoFilho();
-            $arrayLideres [] = $grupo12;
-            if ($grupoPaiFilhoFilhos144 = $grupo12->getGrupoPaiFilhoFilhosAtivosReal()) {
-                foreach ($grupoPaiFilhoFilhos144 as $grupoPaiFilhoFilho144) {
-                    $grupo144 = $grupoPaiFilhoFilho144->getGrupoPaiFilhoFilho();
-                    $arrayLideres [] = $grupo144;
-                    if ($grupoPaiFilhoFilhos1728 = $grupo144->getGrupoPaiFilhoFilhosAtivosReal()) {
-                        foreach ($grupoPaiFilhoFilhos1728 as $grupoPaiFilhoFilho1728) {
-                            $grupo1728 = $grupoPaiFilhoFilho1728->getGrupoPaiFilhoFilho();
-                            $arrayLideres [] = $grupo1728;
-                            if ($grupoPaiFilhoFilhos20736 = $grupo1728->getGrupoPaiFilhoFilhosAtivosReal()) {
-                                foreach ($grupoPaiFilhoFilhos20736 as $grupoPaiFilhoFilho20736) {
-                                    $grupo20736 = $grupoPaiFilhoFilho20736->getGrupoPaiFilhoFilho();
-                                    $arrayLideres [] = $grupo20736;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        $formulario = new ReentradaDeAlunoForm('formulario', $sessao->idSessao, $arrayLideres);
+        $lideres = $this->todosLideresAPartirDoGrupo($grupo);
+        $formulario = new ReentradaDeAlunoForm('formulario', $sessao->idSessao, $lideres);
         return new ViewModel(array(
             'formulario' => $formulario,
         ));
@@ -916,6 +896,122 @@ class CursoController extends CircuitoController {
         return new ViewModel(array(
             'usuarios' => $usuarios,
         ));
+    }
+
+    public function usuarioAction() {
+        $sessao = new Container(Constantes::$NOME_APLICACAO);
+        $idEntidadeAtual = $sessao->idEntidadeAtual;
+        $entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+        $grupo = $entidade->getGrupo();
+        $lideres = $this->todosLideresAPartirDoGrupo($grupo, true);
+
+        $cursoAcessos = $this->getRepositorio()->getCursoAcessoORM()->buscarTodosRegistrosEntidade();
+        $formulario = new CursoUsuarioForm('formulario', $cursoAcessos, $lideres);
+        return new ViewModel(array(
+            'formulario' => $formulario,
+        ));
+    }
+
+    public function usuarioFinalizarAction() {
+        $sessao = new Container(Constantes::$NOME_APLICACAO);
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $this->getRepositorio()->iniciarTransacao();
+            try {
+                $idEntidadeAtual = $sessao->idEntidadeAtual;
+                $entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+
+                $post_data = $request->getPost();
+
+                $pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($post_data[Constantes::$INPUT_ID_PESSOA]);
+                $cursoAcesso = $this->getRepositorio()->getCursoAcessoORM()->encontrarPorId($post_data[Constantes::$INPUT_ID_ACESSO]);
+                $grupo = $entidade->getGrupo();
+
+                $pessoaCursoAcesso = new PessoaCursoAcesso();
+                $pessoaCursoAcesso->setPessoa($pessoa);
+                $pessoaCursoAcesso->setGrupo($grupo);
+                $pessoaCursoAcesso->setCursoAcesso($cursoAcesso);
+                $this->getRepositorio()->getPessoaCursoAcessoORM()->persistir($pessoaCursoAcesso);
+
+                $this->getRepositorio()->fecharTransacao();
+                return $this->redirect()->toRoute(Constantes::$ROUTE_CURSO, array(
+                            Constantes::$ACTION => 'Usuarios',
+                ));
+            } catch (Exception $exc) {
+                $this->getRepositorio()->desfazerTransacao();
+                echo $exc->getTraceAsString();
+            }
+        }
+    }
+
+    public function usuarioInativarAction() {
+        $sessao = new Container(Constantes::$NOME_APLICACAO);
+        $this->getRepositorio()->iniciarTransacao();
+        try {
+            $pessoaCursoAcesso = $this->getRepositorio()->getPessoaCursoAcessoORM()->encontrarPorId($sessao->idSessao);
+            $pessoaCursoAcesso->setDataEHoraDeInativacao();
+            $this->getRepositorio()->getPessoaCursoAcessoORM()->persistir($pessoaCursoAcesso, false);
+
+            $this->getRepositorio()->fecharTransacao();
+            return $this->redirect()->toRoute(Constantes::$ROUTE_CURSO, array(
+                        Constantes::$ACTION => 'Usuarios',
+            ));
+        } catch (Exception $exc) {
+            $this->getRepositorio()->desfazerTransacao();
+            echo $exc->getTraceAsString();
+        }
+    }
+
+    public function todosLideresAPartirDoGrupo(Grupo $grupo, $separadosPorLider = false) {
+        $lideres = array();
+        $grupoPaiFilhoFilhos = $grupo->getGrupoPaiFilhoFilhosAtivosReal();
+        foreach ($grupoPaiFilhoFilhos as $grupoPaiFilhoFilho12) {
+            $grupo12 = $grupoPaiFilhoFilho12->getGrupoPaiFilhoFilho();
+            if (!$separadosPorLider) {
+                $lideres [] = $grupo12;
+            } else {
+                foreach ($grupo12->getPessoasAtivas() as $pessoas) {
+                    $lideres [] = $pessoas;
+                }
+            }
+            if ($grupoPaiFilhoFilhos144 = $grupo12->getGrupoPaiFilhoFilhosAtivosReal()) {
+                foreach ($grupoPaiFilhoFilhos144 as $grupoPaiFilhoFilho144) {
+                    $grupo144 = $grupoPaiFilhoFilho144->getGrupoPaiFilhoFilho();
+                    if (!$separadosPorLider) {
+                        $lideres [] = $grupo144;
+                    } else {
+                        foreach ($grupo144->getPessoasAtivas() as $pessoas) {
+                            $lideres [] = $pessoas;
+                        }
+                    }
+                    if ($grupoPaiFilhoFilhos1728 = $grupo144->getGrupoPaiFilhoFilhosAtivosReal()) {
+                        foreach ($grupoPaiFilhoFilhos1728 as $grupoPaiFilhoFilho1728) {
+                            $grupo1728 = $grupoPaiFilhoFilho1728->getGrupoPaiFilhoFilho();
+                            if (!$separadosPorLider) {
+                                $lideres [] = $grupo1728;
+                            } else {
+                                foreach ($grupo1728->getPessoasAtivas() as $pessoas) {
+                                    $lideres [] = $pessoas;
+                                }
+                            }
+                            if ($grupoPaiFilhoFilhos20736 = $grupo1728->getGrupoPaiFilhoFilhosAtivosReal()) {
+                                foreach ($grupoPaiFilhoFilhos20736 as $grupoPaiFilhoFilho20736) {
+                                    $grupo20736 = $grupoPaiFilhoFilho20736->getGrupoPaiFilhoFilho();
+                                    if (!$separadosPorLider) {
+                                        $lideres [] = $grupo20736;
+                                    } else {
+                                        foreach ($grupo20736->getPessoasAtivas() as $pessoas) {
+                                            $lideres [] = $pessoas;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return $lideres;
     }
 
 }

@@ -1,0 +1,85 @@
+<?php
+
+use Application\Controller\Helper\Constantes;
+
+/**
+ * Nome: cadastrar-pessoa-revisao.phtml
+ * @author Lucas Filipe de Carvalho Cunha <lucascarvalho.esw@gmail.com>
+ * Descricao: Página de cadastro de pessoa para o revisao de vidas.
+ */
+$form = $this->formulario;
+$form->prepare();
+$form->setAttribute(Constantes::$ACTION, $this->url(Constantes::$ROUTE_CURSO, array(Constantes::$ACTION => 'UsuarioFinalizar')));
+echo $this->templateFormularioTopo($this->titulo);
+echo $this->form()->openTag($form);
+?>  
+<div class="panel-body bg-light">
+    <?php
+    echo $this->divMensagens();
+    echo $this->inputFormularioSimples('SELECIONE O PERFIL', $form->get(Constantes::$INPUT_ID_ACESSO), null, 2);
+    echo $this->inputFormularioSimples('SELECIONE O LÍDER', $form->get(Constantes::$INPUT_ID_PESSOA), null, 2);
+    ?> 
+</div>
+<!-- end .form-body section -->
+<div class="panel-footer text-right">
+    <?php
+    echo $this->formHidden($form->get(Constantes::$INPUT_CSRF));
+
+    $stringNomeDaFuncaoOnClickCadastro = 'mostrarSplash(); funcaoCircuito("cursoUsuarios", 0)';
+    echo $this->botaoLink($this->translate(Constantes::$TRADUCAO_VOLTAR), Constantes::$STRING_HASHTAG, 2, $this->funcaoOnClick($stringNomeDaFuncaoOnClickCadastro));
+    ?>
+    <?php
+    /* Submit */
+    $funcaoVerificarCadastroPessoa = $this->funcaoOnClick('validar(this.form)');
+    echo $this->botaoSimples(Constantes::$TRADUCAO_CADASTRAR, $funcaoVerificarCadastroPessoa);
+    ?>
+</div>  
+<?php
+echo $this->templateFormularioRodape();
+echo $this->form()->closeTag();
+/* Layout com javascript para tela de index */
+echo $this->layoutJSCadastrarPessoaRevisao;
+?>
+<script type="text/javascript">
+    function validar(form) {
+
+        var idGrupo = $('#idGrupo').val();
+        var idAcesso = $('#idAcesso').val();
+
+        var temErro = false;
+        var divMensagens = $('#divMensagens');
+        var mensagem = '';
+        var mensagemReal = '';
+
+        if (idGrupo === '0') {
+            temErro = true;
+            if (mensagem == '') {
+                mensagem = 'Líder';
+            } else {
+                mensagem += ', Líder';
+            }
+        }
+        if (idAcesso === '0') {
+            temErro = true;
+            if (mensagem == '') {
+                mensagem = 'Perfil de Acesso';
+            } else {
+                mensagem += ', Perfil de Acesso';
+            }
+        }
+
+        if (temErro) {
+            mensagemReal = 'Preencha o(s) seguinte(s) campo(s): ' + mensagem;
+            divMensagens
+                    .html(mensagemReal)
+                    .removeClass('alert-success')
+                    .removeClass('hidden')
+                    .addClass('alert-danger');
+        } else {
+            mostrarSplash();
+            divMensagens
+                    .addClass('hidden');
+            form.submit();
+        }
+    }
+</script>
