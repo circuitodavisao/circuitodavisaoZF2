@@ -76,6 +76,7 @@ class Constantes {
     public static $INPUT_TIPO = 'tipo';
     public static $INPUT_LIDERES = 'demo1';
     public static $INPUT_ID_GRUPO = 'idGrupo';
+    public static $INPUT_ID_ACESSO = 'idAcesso';
     public static $INPUT_ALTERAR = 'alterar';
     public static $INDEX = '/';
     public static $ACTION_ESQUECEU_SENHA = 'esqueceuSenha';
@@ -257,6 +258,8 @@ class Constantes {
     public static $ENTITY_SOLICITACAO_SITUACAO = 'Application\Model\Entity\SolicitacaoSituacao';
     public static $ENTITY_SITUACAO = 'Application\Model\Entity\Situacao';
     public static $ENTITY_FATO_RANKING = 'Application\Model\Entity\FatoRanking';
+    public static $ENTITY_CURSO_ACESSO = 'Application\Model\Entity\CursoAcesso';
+    public static $ENTITY_PESSOA_CURSO_ACESSO = 'Application\Model\Entity\PessoaCursoAcesso';
     public static $ENTITY_PESSOA_ID = 'pessoa_id';
     public static $ENTITY_DATA_INATIVACAO = 'data_inativacao';
     public static $ENTITY_TIPO_ID = 'tipo_id';

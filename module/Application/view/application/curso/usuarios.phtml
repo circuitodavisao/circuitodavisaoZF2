@@ -1,12 +1,15 @@
 <?php
 
+use Application\Controller\Helper\Constantes;
+use Application\View\Helper\BotaoSimples;
+
 $html = '';
 $html .= $this->templateFormularioTopo('Usuarios', '', 'style="max-width: 100%;"');
 /* Sem pessoas cadastrados */
 
 $html .= '<div class="panel-body bg-light">';
 if (count($this->usuarios)) {
-    $html .= '<table class="table">';
+    $html .= '<table class="table text-center">';
     $html .= '<thead>';
     $html .= '<tr>';
     $html .= '<th class="text-center">Id</th>';
@@ -18,12 +21,23 @@ if (count($this->usuarios)) {
     $html .= '</thead>';
     $html .= '<tbody>';
     foreach ($this->usuarios as $usuario) {
+        if ($usuario->verificarSeEstaAtivo()) {
+            $labelAtivo = 'success">Ativo';
+            $funcaoInativar = $this->funcaoOnClick(''
+                    . 'var resposta = confirm("Realmetne deseja inativar?");'
+                    . 'if(resposta){mostrarSplash(); funcaoCircuito("cursoUsuarioInativar", ' . $usuario->getId() . ')}');
+            $botaoInativar = $this->botaoSimples('Inativar', $funcaoInativar, BotaoSimples::botaoPerigoso, BotaoSimples::posicaoAoCentro);
+        } else {
+            $labelAtivo = 'danger">Inativo';
+            $botaoInativar = '';
+        }
+
         $html .= '<tr>';
-        $html .= '<td class="text-center">' . $usuario->getId() . '</td>';
-        $html .= '<td class="text-center">' . $usuario->getPessoa()->getNome() . '</td>';
-        $html .= '<td class="text-center">' . $usuario->getCursoAcesso()->getNome() . '</td>';
-        $html .= '<td class="text-center">' . $usuario->getCursoAcesso()->verificarSeEstaAtivo() ? 'Ativo' : 'Inativo' . '</td>';
-        $html .= '<td class="text-center"></td>';
+        $html .= '<td>' . $usuario->getId() . '</td>';
+        $html .= '<td>' . $usuario->getPessoa()->getNome() . '</td>';
+        $html .= '<td>' . $usuario->getCursoAcesso()->getNome() . '</td>';
+        $html .= '<td><p class="text-' . $labelAtivo . '</p></td>';
+        $html .= '<td>' . $botaoInativar . '</td>';
         $html .= '</tr>';
     }
     $html .= '</tbody>';
@@ -35,8 +49,9 @@ if (count($this->usuarios)) {
 }
 $html .= '</div>';
 /* Fim panel-body */
-
-$html .= '<div class="panel-footer">';
+$html .= '<div class="panel-footer text-right">';
+$stringNomeDaFuncaoOnClickCadastro = 'mostrarSplash(); funcaoCircuito("cursoUsuario", 0)';
+$html .= $this->botaoLink($this->translate(Constantes::$TRADUCAO_CADASTRAR), Constantes::$STRING_HASHTAG, 0, $this->funcaoOnClick($stringNomeDaFuncaoOnClickCadastro));
 $html .= '</div>';
 /* Fim panel-footer */
 

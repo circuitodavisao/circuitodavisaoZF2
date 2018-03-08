@@ -49,6 +49,8 @@ class RepositorioORM {
     private $_solicitacaoSituacaoORM;
     private $_situacaoORM;
     private $_fatoRankingORM;
+    private $_cursoAcessoORM;
+    private $_pessoaCursoAcessoORM;
 
     /**
      * Contrutor
@@ -445,7 +447,7 @@ class RepositorioORM {
     }
 
     /**
-     * Metodo public para obter a instancia do CircuitoORM
+     * Metodo public para obter a instancia do FatoRankingORM
      * @return CircuitoORM
      */
     public function getFatoRankingORM() {
@@ -453,6 +455,28 @@ class RepositorioORM {
             $this->_fatoRankingORM = new FatoRankingORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_FATO_RANKING);
         }
         return $this->_fatoRankingORM;
+    }
+
+    /**
+     * Metodo public para obter a instancia do CircuitoORM
+     * @return CircuitoORM
+     */
+    public function getCursoAcessoORM() {
+        if (is_null($this->_cursoAcessoORM)) {
+            $this->_cursoAcessoORM = new CircuitoORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_CURSO_ACESSO);
+        }
+        return $this->_cursoAcessoORM;
+    }
+
+    /**
+     * Metodo public para obter a instancia do CircuitoORM
+     * @return CircuitoORM
+     */
+    public function getPessoaCursoAcessoORM() {
+        if (is_null($this->_pessoaCursoAcessoORM)) {
+            $this->_pessoaCursoAcessoORM = new CircuitoORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_PESSOA_CURSO_ACESSO);
+        }
+        return $this->_pessoaCursoAcessoORM;
     }
 
     /**
