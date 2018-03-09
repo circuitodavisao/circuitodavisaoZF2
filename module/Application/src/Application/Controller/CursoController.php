@@ -1014,4 +1014,37 @@ class CursoController extends CircuitoController {
         return $lideres;
     }
 
+    public function selecionarReposicoesAction() {
+        $formulario = new SelecionarCarterinhasForm();
+        $turmas = $this->getRepositorio()->getTurmaORM()->encontrarTodas();
+        $view = new ViewModel(array(
+            'turmas' => $turmas,
+            'formulario' => $formulario,
+        ));
+        return $view;
+    }
+
+    public function gerarReposicaoAction() {
+        $request = $this->getRequest();
+        $reposicoes = array();
+        if ($request->isPost()) {
+            foreach ($_POST as $key => $value) {
+                if (substr($key, 0, 4) == 'aula') {
+                    $explodeValor = explode('_', $value);
+                    $aula = $this->getRepositorio()->getAulaORM()->encontrarPorId($explodeValor[0]);
+                    $turmaPessoa = $this->getRepositorio()->getTurmaPessoaORM()->encontrarPorId($explodeValor[1]);
+                    $reposicao['aula'] = $aula->getDisciplina()->getNome() . ' - ' . $aula->getNome();
+                    $reposicao['pessoa'] = $turmaPessoa->getPessoa()->getNome();
+                    $reposicao['equipe'] = $turmaPessoa->getPessoa()->getGrupoPessoaAtivo()->getGrupo()->getEntidadeAtiva()->infoEntidade();
+                    $reposicoes[] = $reposicao;
+                }
+            }
+        }
+
+        return new ViewModel(
+                array(
+            'reposicoes' => $reposicoes,
+        ));
+    }
+
 }

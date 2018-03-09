@@ -17,7 +17,7 @@ class SelecionarCarterinhasForm extends Form {
      * Construtor
      * @param String $name
      */
-    public function __construct($name = null) {
+    public function __construct($name = 'formulario') {
         parent::__construct($name);
         /**
          * Configuração do formulário
