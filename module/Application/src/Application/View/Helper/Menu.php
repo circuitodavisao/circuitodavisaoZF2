@@ -403,6 +403,13 @@ class Menu extends AbstractHelper {
                 $html .= '</li>';
 
                 $html .= '<li>';
+                $html .= '<a href="/cursoSelecionarReposicoes" onClick="mostrarSplash();">';
+                $html .= '<span class="fa fa-list"></span>';
+                $html .= '<span class="sidebar-title">Gerar Reposições</span>';
+                $html .= '</a>';
+                $html .= '</li>';
+
+                $html .= '<li>';
 
                 $html .= '<li>';
                 $html .= '<a class="accordion-toggle" href="#">';
