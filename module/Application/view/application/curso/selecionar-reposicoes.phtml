@@ -31,56 +31,20 @@ foreach ($this->turmas as $turma) {
     $html .= '</thead>';
 
     $html .= '<tbody>';
-    if ($turma->getTurmaPessoa()) {
-        $alunosComReposições = array();
-        $turmaAulaAtiva = $turma->getTurmaAulaAtiva();
-        $faltas = array();
 
-        $teste[] = $turma->getTurmaPessoa()[0];
-        $teste[] = $turma->getTurmaPessoa()[1];
-//        foreach ($turma->getTurmaPessoa() as $turmaPessoa) {    
-        foreach ($teste as $turmaPessoa) {
-            $mostrar = false;
-            $turmaPessoaAulas = $turmaPessoa->getTurmaPessoaAula();
-            $parar = false;
-            foreach ($turma->getCurso()->getDisciplina() as $disciplina) {
-                if (!$parar) {
-                    foreach ($disciplina->getAula() as $aula) {
-                        $naoEncontreiPresencaNaAula = true;
-                        foreach ($turmaPessoaAulas as $turmaPessoaAula) {
-                            if ($turmaPessoaAula->getAula()->getId() === $aula->getId()) {
-                                $naoEncontreiPresencaNaAula = false;
-                            }
-                        }
-                        if ($naoEncontreiPresencaNaAula) {
-                            $mostrar = true;
-                            $faltas[$turmaPessoa->getId()][] = [$aula->getDisciplina()->getNome() . ' Aula ' . $aula->getPosicao(), $aula->getId()];
-                        }
-                        if ($aula->getId() == $turmaAulaAtiva->getAula()->getId()) {
-                            $parar = true;
-                            break;
-                        }
-                    }
-                }
-            }
+    if (count($this->alunosComReposições[$turma->getId()]) > 0) {
+        foreach ($this->alunosComReposições[$turma->getId()] as $turmaPessoa) {
+            $mostrar = true;
             if ($mostrar) {
-                $alunosComReposições[] = $turmaPessoa;
-            }
-        }
-        if (count($alunosComReposições) > 0) {
-            foreach ($alunosComReposições as $turmaPessoa) {
-                $mostrar = true;
-                if ($mostrar) {
-                    $html .= '<tr>';
-                    $html .= '<td>' . str_pad($turmaPessoa->getId(), 8, 0, STR_PAD_LEFT) . '</td>';
-                    $html .= '<td>' . $turmaPessoa->getPessoa()->getNome() . '</td>';
-                    $html .= '<td>';
-                    foreach ($faltas[$turmaPessoa->getId()] as $falta) {
-                        $html .= $falta[0] . ' <input type="checkbox" id="aula' . $falta[1] . '" name="aula' . $falta[1] . '" value="' . $falta[1] . '_' . $turmaPessoa->getId() . '"/> | ';
-                    }
-                    $html .= '</td>';
-                    $html .= '</tr>';
+                $html .= '<tr>';
+                $html .= '<td>' . str_pad($turmaPessoa->getId(), 8, 0, STR_PAD_LEFT) . '</td>';
+                $html .= '<td>' . $turmaPessoa->getPessoa()->getNome() . '</td>';
+                $html .= '<td>';
+                foreach ($this->faltas[$turma->getId()][$turmaPessoa->getId()] as $falta) {
+                    $html .= $falta[0] . ' <input type="checkbox" id="aula' . $falta[1] . '" name="aula' . $falta[1] . '" value="' . $falta[1] . '_' . $turmaPessoa->getId() . '"/> | ';
                 }
+                $html .= '</td>';
+                $html .= '</tr>';
             }
         }
     }

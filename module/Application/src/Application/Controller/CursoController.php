@@ -14,6 +14,7 @@ use Application\Form\TurmaForm;
 use Application\Model\Entity\Aula;
 use Application\Model\Entity\Curso;
 use Application\Model\Entity\Disciplina;
+use Application\Model\Entity\Entidade;
 use Application\Model\Entity\Grupo;
 use Application\Model\Entity\GrupoPessoa;
 use Application\Model\Entity\GrupoPessoaTipo;
@@ -520,8 +521,11 @@ class CursoController extends CircuitoController {
     }
 
     public function listarTurmaAction() {
-
-        $turmas = $this->getRepositorio()->getTurmaORM()->encontrarTodas();
+        $sessao = new Container(Constantes::$NOME_APLICACAO);
+        $idEntidadeAtual = $sessao->idEntidadeAtual;
+        $entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+        $grupo = $entidade->getGrupo();
+        $turmas = $grupo->getTurma();
         $view = new ViewModel(array(
             'turmas' => $turmas,
         ));
@@ -1016,10 +1020,51 @@ class CursoController extends CircuitoController {
 
     public function selecionarReposicoesAction() {
         $formulario = new SelecionarCarterinhasForm();
-        $turmas = $this->getRepositorio()->getTurmaORM()->encontrarTodas();
+        $sessao = new Container(Constantes::$NOME_APLICACAO);
+        $idEntidadeAtual = $sessao->idEntidadeAtual;
+        $entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+        $grupo = $entidade->getGrupo();
+        $turmas = $grupo->getTurma();
+
+        $alunosComReposições = array();
+        $faltas = array();
+        foreach ($turmas as $turma) {
+            $turmaAulaAtiva = $turma->getTurmaAulaAtiva();
+            foreach ($turma->getTurmaPessoa() as $turmaPessoa) {
+                $mostrar = false;
+                $turmaPessoaAulas = $turmaPessoa->getTurmaPessoaAula();
+                $parar = false;
+                foreach ($turma->getCurso()->getDisciplina() as $disciplina) {
+                    if (!$parar) {
+                        foreach ($disciplina->getAula() as $aula) {
+                            $naoEncontreiPresencaNaAula = true;
+                            foreach ($turmaPessoaAulas as $turmaPessoaAula) {
+                                if ($turmaPessoaAula->getAula()->getId() === $aula->getId()) {
+                                    $naoEncontreiPresencaNaAula = false;
+                                }
+                            }
+                            if ($naoEncontreiPresencaNaAula) {
+                                $mostrar = true;
+                                $faltas[$turma->getId()][$turmaPessoa->getId()][] = [$aula->getDisciplina()->getNome() . ' Aula ' . $aula->getPosicao(), $aula->getId()];
+                            }
+                            if ($aula->getId() == $turmaAulaAtiva->getAula()->getId()) {
+                                $parar = true;
+                                break;
+                            }
+                        }
+                    }
+                }
+                if ($mostrar) {
+                    $alunosComReposições[$turma->getId()][] = $turmaPessoa;
+                }
+            }
+        }
+
         $view = new ViewModel(array(
             'turmas' => $turmas,
             'formulario' => $formulario,
+            'alunosComReposições' => $alunosComReposições,
+            'faltas' => $faltas,
         ));
         return $view;
     }
@@ -1045,6 +1090,70 @@ class CursoController extends CircuitoController {
                 array(
             'reposicoes' => $reposicoes,
         ));
+    }
+
+    public function gerarFaltasAction() {
+        $sessao = new Container(Constantes::$NOME_APLICACAO);
+        $idEntidadeAtual = $sessao->idEntidadeAtual;
+        $entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+        $grupo = $entidade->getGrupo();
+        $turmas = $grupo->getTurma();
+        $contadorDeFaltas = array();
+        foreach ($turmas as $turma) {
+            $turmaAulaAtiva = $turma->getTurmaAulaAtiva();
+            foreach ($turma->getTurmaPessoa() as $turmaPessoa) {
+                $nomeEquipeDoTurmaPessoa = CursoController::getNomeDaEquipeDoTurmaPessoa($turmaPessoa);
+                $turmaPessoaAulas = $turmaPessoa->getTurmaPessoaAula();
+                $parar = false;
+                foreach ($turma->getCurso()->getDisciplina() as $disciplina) {
+                    if (!$parar) {
+                        foreach ($disciplina->getAula() as $aula) {
+                            $naoEncontreiPresencaNaAula = true;
+                            foreach ($turmaPessoaAulas as $turmaPessoaAula) {
+                                if ($turmaPessoaAula->getAula()->getId() === $aula->getId()) {
+                                    $naoEncontreiPresencaNaAula = false;
+                                }
+                            }
+                            if ($naoEncontreiPresencaNaAula) {
+                                $contadorDeFaltas[$nomeEquipeDoTurmaPessoa] ++;
+                            }
+                            if ($aula->getId() == $turmaAulaAtiva->getAula()->getId()) {
+                                $parar = true;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        $view = new ViewModel(array(
+            'contadorDeFaltas' => $contadorDeFaltas,
+        ));
+        return $view;
+    }
+
+    static function getNomeDaEquipeDoTurmaPessoa($turmaPessoa) {
+        $resposta = 'IGREJA';
+        if ($turmaPessoa->getPessoa()->getGrupoPessoaAtivo()) {
+            $grupoSelecionado = $turmaPessoa->getPessoa()->getGrupoPessoaAtivo()->getGrupo();
+            if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::SUBEQUIPE) {
+                $numeroSub = '';
+                while ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::SUBEQUIPE) {
+                    if ($grupoSelecionado->getGrupoPaiFilhoPaiAtivo()) {
+                        $grupoSelecionado = $grupoSelecionado->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai();
+                        if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::EQUIPE) {
+                            break;
+                        }
+                    } else {
+                        break;
+                    }
+                }
+                $resposta = $grupoSelecionado->getEntidadeAtiva()->getNome();
+            } else {
+                $resposta = $grupoSelecionado->getEntidadeAtiva()->getNome();
+            }
+        }
+        return $resposta;
     }
 
 }

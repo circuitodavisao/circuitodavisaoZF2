@@ -1,0 +1,34 @@
+<?php
+
+use Application\Controller\Helper\Constantes;
+
+$html .= '<div class="mw1200 center-block p10 mt40">';
+$html .= '<div class="panel heading-border panel-primary">';
+$html .= '<div class="panel-body bg-light">';
+
+$html .= '<table class="table table-bordered table-condensed table-hover">';
+$html .= '<thead>';
+$html .= '<tr><th colspan="3">GERADOR DE FALTAS - ' . date('d/m/Y') . '</th></tr>';
+$html .= '</thead>';
+$html .= '<tbody>';
+$soma = 0;
+foreach ($this->contadorDeFaltas as $key => $value) {
+    $soma += $value;
+    $html .= '<tr>';
+    $html .= '<td>' . $key . '</td>';
+    $html .= '<td>' . $value . '</td>';
+    $html .= '<td>' . number_format($value * Constantes::$VALOR_MULTA, 2, ',', '.') . '</td>';
+    $html .= '</tr>';
+}
+$html .= '<tr>';
+$html .= '<td>TOTAL</td>';
+$html .= '<td>' . $soma . '</td>';
+$html .= '<td>' . number_format($soma * Constantes::$VALOR_MULTA, 2, ',', '.') . '</td>';
+$html .= '</tr>';
+$html .= '</tbody>';
+$html .= '</table>';
+
+$html .= '</div>';
+$html .= '</div>';
+$html .= '</div>';
+echo $html;
