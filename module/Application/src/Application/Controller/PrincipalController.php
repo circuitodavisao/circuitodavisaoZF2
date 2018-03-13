@@ -7,7 +7,6 @@ use Application\Controller\Helper\Funcoes;
 use Application\Form\NovoEmailForm;
 use Application\Model\Entity\EntidadeTipo;
 use Application\Model\Entity\EventoTipo;
-use Application\Model\ORM\FatoRankingORM;
 use Exception;
 use Zend\Json\Json;
 use Zend\Session\Container;
@@ -26,6 +25,7 @@ class PrincipalController extends CircuitoController {
      */
     public function indexAction() {
         $sessao = new Container(Constantes::$NOME_APLICACAO);
+        $sessao->getManager()->getConfig();
 
         $idEntidadeAtual = $sessao->idEntidadeAtual;
         $entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
