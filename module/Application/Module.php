@@ -353,10 +353,12 @@ class Module {
 
     public function onBootstrap(MvcEvent $e) {
         $this->initSession(array(
-            'remember_me_seconds' => 180,
+            'remember_me_seconds' => 1,
             'use_cookies' => true,
             'cookie_httponly' => true,
+            'save_path' => '/tmp',
         ));
+
         $eventManager = $e->getApplication()->getEventManager();
         $moduleRouteListener = new ModuleRouteListener();
         $moduleRouteListener->attach($eventManager);
@@ -378,7 +380,7 @@ class Module {
             $discipulos = null;
             if (count($grupo->getGrupoPaiFilhoFilhosAtivos(1)) > 0) {
                 $discipulos = $grupo->getGrupoPaiFilhoFilhosAtivos(1);
-            }            
+            }
             $filhosOrdenado = RelatorioController::ordenacaoDiscipulos($discipulos, null, 0);
             $viewModel->discipulos = $filhosOrdenado;
         }
