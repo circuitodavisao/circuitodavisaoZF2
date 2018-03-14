@@ -12,7 +12,7 @@ class Constantes {
     public static $IP = '158.69.124.139';
     public static $HOST = 'circuitodavisaonovo.com.br';
     public static $META_LIDER = 6;
-    public static $VALOR_MULTA = 3; 
+    public static $VALOR_MULTA = 3;
     public static $ID_TIPO_REVISAO = 3;
 
     const QUANTIDADES_DE_EVENTOS_NA_TELA = 4;
@@ -77,6 +77,7 @@ class Constantes {
     public static $INPUT_TIPO = 'tipo';
     public static $INPUT_LIDERES = 'demo1';
     public static $INPUT_ID_GRUPO = 'idGrupo';
+    public static $INPUT_ID_TURMA = 'idTurma';
     public static $INPUT_ID_ACESSO = 'idAcesso';
     public static $INPUT_ALTERAR = 'alterar';
     public static $INDEX = '/';
