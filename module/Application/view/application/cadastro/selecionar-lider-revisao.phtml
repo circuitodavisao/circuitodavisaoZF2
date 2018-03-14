@@ -8,32 +8,27 @@ use Application\Controller\Helper\Constantes;
  * Descricao: Página de inscrição de líder com o revisão.
  */
 ?>
-<div class="mw1000 center-block p10">
-    <div class="row ">
-        <div id="content" class="animated fadeIn">
-            <div class="row">
-                <!-- Cadastro de Pessoa -->
-                <div class="admin-form " id="register1" role="tabpanel">
-                <blockquote class="blockquote-primary">
-                        <p><?php echo $this->translate(Constantes::$TRADUCAO_SELECIONAR_LIDER_REVISAO_PRIMEIRO_LABEL); ?></p>
-                        <small><?php echo $this->translate(Constantes::$TRADUCAO_SELECIONAR_LIDER_REVISAO_SEGUNDO_LABEL); ?></small>
-                    </blockquote>
+
+<div class="row mt40">
+    <div id="content" class="animated fadeIn">
+        <div class="row">
+            <!-- Cadastro de Pessoa -->
+            <div class="admin-form " id="register1" role="tabpanel">
                 <div class="panel panel-primary heading-border">
-                        <div class="panel-body bg-light p25">
-                            <?php
-                            echo "TEM CERTEZA QUE DESEJA TRABALHAR COMO LÍDER NO REVISÃO DE VIDAS? ";
-                            ?> 
-                        </div>
-                        <div class="panel-footer text-right">
-                            <?php
-                            
-                            $stringNomeDaFuncaoOnClickCadastro = 'funcaoCadastro("' . Constantes::$PAGINA_LIDERES_REVISAO . '", 0)';
-                            echo $this->botaoLink($this->translate(Constantes::$TRADUCAO_VOLTAR), Constantes::$STRING_HASHTAG, 2, $this->funcaoOnClick($stringNomeDaFuncaoOnClickCadastro));
-                            $stringNomeDaFuncaoOnClickAtivar = $this->funcaoOnClick('funcaoCadastro("' . Constantes::$PAGINA_ATIVAR_LIDERES_REVISAO . '", '.$this->idRevisao.')');
-                            echo $this->botaoSimples(Constantes::$TRADUCAO_ATIVAR, "id ='botaoBuscarFicha'  ".$stringNomeDaFuncaoOnClickAtivar);
-                            ?>
-                        </div>
-                    
+                    <div class="panel-body bg-light p25">
+                        <?php
+                        echo "TEM CERTEZA QUE DESEJA TRABALHAR COMO LÍDER NO REVISÃO DE VIDAS? ";
+                        ?> 
+                    </div>
+                    <div class="panel-footer text-right">
+                        <?php
+                        $stringNomeDaFuncaoOnClickCadastro = 'funcaoCadastro("' . Constantes::$PAGINA_LIDERES_REVISAO . '", 0)';
+                        echo $this->botaoLink($this->translate(Constantes::$TRADUCAO_VOLTAR), Constantes::$STRING_HASHTAG, 2, $this->funcaoOnClick($stringNomeDaFuncaoOnClickCadastro));
+                        $stringNomeDaFuncaoOnClickAtivar = $this->funcaoOnClick('funcaoCadastro("' . Constantes::$PAGINA_ATIVAR_LIDERES_REVISAO . '", ' . $this->idRevisao . ')');
+                        echo $this->botaoSimples(Constantes::$TRADUCAO_ATIVAR, "id ='botaoBuscarFicha'  " . $stringNomeDaFuncaoOnClickAtivar);
+                        ?>
+                    </div>
+
                 </div>
                 <!-- end: .admin-form -->
             </div>

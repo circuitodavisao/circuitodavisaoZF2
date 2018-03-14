@@ -1502,7 +1502,6 @@ class CadastroController extends CircuitoController {
         $pessoaRevisionista = $eventoFrequencia->getPessoa();
         $idRevisao = $eventoFrequencia->getEvento()->getId();
         $eventoRevisao = $this->getRepositorio()->getEventoORM()->encontrarPorId($idRevisao);
-        $grupoPessoaRevisionista = $pessoaRevisionista->getGrupoPessoaAtivo();
         $grupoLider = $grupoPessoaRevisionista->getGrupo();
         $nomeEntidadeLider = $grupoLider->getEntidadeAtiva()->infoEntidade();
         $grupoIgreja = $grupoLider->getGrupoIgreja();
@@ -1799,8 +1798,8 @@ class CadastroController extends CircuitoController {
             $this->getRepositorio()->getEventoFrequenciaORM()->persistir($eventoFrequencia);
             $sessao->idSessao = $eventoFrequencia->getId();
             $this->getRepositorio()->fecharTransacao();
-            return $this->redirect()->toRoute(Constantes::$ROUTE_CADASTRO, array(
-                        Constantes::$PAGINA => Constantes::$PAGINA_FICHA_REVISAO,
+            return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
+                        Constantes::$ACTION => 'LiderRevisao',
             ));
         } catch (Exception $exc) {
             $this->getRepositorio()->desfazerTransacao();
@@ -2191,6 +2190,12 @@ class CadastroController extends CircuitoController {
                 $this->direcionaErroDeCadastro($exc->getMessage());
             }
         }
+    }
+
+    public function liderRevisaoAction() {
+        $sessao = new Container(Constantes::$NOME_APLICACAO);
+
+        return new ViewModel(array('id' => $sessao->idSessao));
     }
 
 }

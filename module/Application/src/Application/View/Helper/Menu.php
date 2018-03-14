@@ -250,6 +250,13 @@ class Menu extends AbstractHelper {
             $html .= '</a>';
             $html .= '</li>';
 
+            $html .= '<li>';
+            $html .= '<a href="/cadastroLideresRevisao" onClick="mostrarSplash();">';
+            $html .= '<span class="fa fa-user"></span>';
+            $html .= 'Trabalhar no Revis&atilde;o de Vidas';
+            $html .= '</a>';
+            $html .= '</li>';
+
             if ($this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::equipe ||
                     $this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja) {
                 $html .= '<li>';
