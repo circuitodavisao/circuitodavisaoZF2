@@ -797,6 +797,12 @@ class IndexController extends CircuitoController {
 
             $mes = date('m');
             $ano = date('Y');
+            $tokenDaRota = $this->params()->fromRoute(Constantes::$ID, 0);
+            if ($tokenDaRota != 0) {
+                $explodeToken = explode('_', $tokenDaRota);
+                $mes = $explodeToken[0];
+                $ano = $explodeToken[1];
+            }
             $arrayPeriodoDoMes = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mes, $ano);
             $relatorio = RelatorioController::relatorioCompleto($this->getRepositorio(), $grupoEquipe, RelatorioController::relatorioMembresiaECelula, $mes, $ano);
             $ultimoRegistro = count($relatorio) - 1;
