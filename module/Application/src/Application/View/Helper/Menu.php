@@ -363,7 +363,6 @@ class Menu extends AbstractHelper {
 
         $html .= '</li>';
         if ($this->view->entidade->verificarSeEstaAtivo()) {
-
             $html .= '<li>';
             $html .= '<a class="accordion-toggle" href="#">';
             $html .= '<span class="fa fa-users"></span>';
@@ -374,15 +373,52 @@ class Menu extends AbstractHelper {
             $html .= '<ul class="nav sub-nav">';
 
             $html .= '<li>';
-//            $html .= '<a href="/cursoChamada" onClick="mostrarSplash();">';
-            $html .= '<a href="#" onClick="">';
+            $html .= '<a href="/cursoChamada" onClick="mostrarSplash();">';
             $html .= '<span class="fa fa-list"></span>';
-            $html .= '<span class="sidebar-title">Chamada (Manutenção)</span>';
+            $html .= '<span class="sidebar-title">Chamada</span>';
             $html .= '</a>';
             $html .= '</li>';
-            if ($this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja ||
-                    $this->view->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::COORDENADOR ||
-                    $this->view->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::SUPERVISOR) {
+
+            $arrayOQueMostrarDosCursos = array();
+            $arrayOQueMostrarDosCursos['reentrada'] = false;
+            $arrayOQueMostrarDosCursos['turmas'] = false;
+            $arrayOQueMostrarDosCursos['usuarios'] = false;
+            $arrayOQueMostrarDosCursos['gerarCarterinhas'] = false;
+            $arrayOQueMostrarDosCursos['gerarReposicoes'] = false;
+            $arrayOQueMostrarDosCursos['gerarFaltas'] = false;
+            $arrayOQueMostrarDosCursos['lancarPresenca'] = false;
+            $arrayOQueMostrarDosCursos['lancarReposicao'] = false;
+            if ($this->view->pessoa->getPessoaCursoAcessoAtivo()) {
+                if ($this->view->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::COORDENADOR) {
+                    $arrayOQueMostrarDosCursos['turmas'] = true;
+                    $arrayOQueMostrarDosCursos['usuarios'] = true;
+                    $arrayOQueMostrarDosCursos['gerarFaltas'] = true;
+                }
+                if ($this->view->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::COORDENADOR ||
+                        $this->view->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::SUPERVISOR) {
+                    $arrayOQueMostrarDosCursos['reentrada'] = true;
+                    $arrayOQueMostrarDosCursos['gerarCarterinhas'] = true;
+                    $arrayOQueMostrarDosCursos['gerarReposicoes'] = true;
+                }
+                if ($this->view->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::COORDENADOR ||
+                        $this->view->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::SUPERVISOR ||
+                        $this->view->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::AUXILIAR) {
+                    $arrayOQueMostrarDosCursos['lancarPresenca'] = true;
+                    $arrayOQueMostrarDosCursos['lancarReposicao'] = true;
+                }
+            } else {
+                if ($this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja) {
+                    $arrayOQueMostrarDosCursos['reentrada'] = true;
+                    $arrayOQueMostrarDosCursos['turmas'] = true;
+                    $arrayOQueMostrarDosCursos['usuarios'] = true;
+                    $arrayOQueMostrarDosCursos['gerarCarterinhas'] = true;
+                    $arrayOQueMostrarDosCursos['gerarReposicoes'] = true;
+                    $arrayOQueMostrarDosCursos['gerarFaltas'] = true;
+                    $arrayOQueMostrarDosCursos['lancarPresenca'] = true;
+                    $arrayOQueMostrarDosCursos['lancarReposicao'] = true;
+                }
+            }
+            if ($arrayOQueMostrarDosCursos['reentrada']) {
                 $html .= '<li>';
                 $html .= '<a href="/cursoReentrada" onClick="mostrarSplash();">';
                 $html .= '<span class="fa fa-user"></span>';
@@ -391,8 +427,7 @@ class Menu extends AbstractHelper {
                 $html .= '</li>';
             }
 
-            if ($this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja ||
-                    $this->view->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::COORDENADOR) {
+            if ($arrayOQueMostrarDosCursos['turmas']) {
                 $html .= '<li>';
                 $html .= '<a href="/cursoListarTurma" onClick="mostrarSplash();">';
                 $html .= '<span class="fa fa-list"></span>';
@@ -400,8 +435,7 @@ class Menu extends AbstractHelper {
                 $html .= '</a>';
                 $html .= '</li>';
             }
-            if ($this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja ||
-                    $this->view->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::COORDENADOR) {
+            if ($arrayOQueMostrarDosCursos['usuarios']) {
                 $html .= '<li>';
                 $html .= '<a href="/cursoUsuarios" onClick="mostrarSplash();">';
                 $html .= '<span class="fa fa-users"></span>';
@@ -409,10 +443,7 @@ class Menu extends AbstractHelper {
                 $html .= '</a>';
                 $html .= '</li>';
             }
-            if ($this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja ||
-                    $this->view->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::COORDENADOR ||
-                    $this->view->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::SUPERVISOR ||
-                    $this->view->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::AUXILIAR) {
+            if ($arrayOQueMostrarDosCursos['gerarCarterinhas']) {
                 $html .= '<li>';
                 $html .= '<a href="/cursoSelecionarParaCarterinha" onClick="mostrarSplash();">';
                 $html .= '<span class="fa fa-users"></span>';
@@ -420,10 +451,7 @@ class Menu extends AbstractHelper {
                 $html .= '</a>';
                 $html .= '</li>';
             }
-            if ($this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja ||
-                    $this->view->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::COORDENADOR ||
-                    $this->view->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::SUPERVISOR ||
-                    $this->view->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::AUXILIAR) {
+            if ($arrayOQueMostrarDosCursos['gerarReposicoes']) {
                 $html .= '<li>';
                 $html .= '<a href="/cursoSelecionarReposicoes" onClick="mostrarSplash();">';
                 $html .= '<span class="fa fa-list"></span>';
@@ -431,8 +459,7 @@ class Menu extends AbstractHelper {
                 $html .= '</a>';
                 $html .= '</li>';
             }
-            if ($this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja ||
-                    $this->view->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::COORDENADOR) {
+            if ($arrayOQueMostrarDosCursos['gerarFaltas']) {
                 $html .= '<li>';
                 $html .= '<a href="/cursoGerarFaltas" onClick="mostrarSplash();">';
                 $html .= '<span class="fa fa-money"></span>';
@@ -443,27 +470,24 @@ class Menu extends AbstractHelper {
             $html .= '<li>';
 
             $html .= '<li>';
-            $html .= '<a class="accordion-toggle" href="#">';
-            $html .= '<span class="fa fa-terminal"></span>';
-            $html .= '<span class="sidebar-title">Lançar</span>';
-            $html .= '<span class="caret"></span>';
-            $html .= '</a>';
+            if ($arrayOQueMostrarDosCursos['lancarPresenca'] ||
+                    $arrayOQueMostrarDosCursos['lancarReposicao']) {
+                $html .= '<a class="accordion-toggle" href="#">';
+                $html .= '<span class="fa fa-terminal"></span>';
+                $html .= '<span class="sidebar-title">Lançar</span>';
+                $html .= '<span class="caret"></span>';
+                $html .= '</a>';
+            }
 
             $html .= '<ul class="nav sub-nav">';
-            if ($this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja ||
-                    $this->view->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::COORDENADOR ||
-                    $this->view->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::SUPERVISOR ||
-                    $this->view->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::AUXILIAR) {
+            if ($arrayOQueMostrarDosCursos['lancarPresenca']) {
                 $html .= '<li>';
                 $html .= '<a href="/cursoLancarPresenca" onClick="mostrarSplash();">';
                 $html .= '<span class="sidebar-title">Presença</span>';
                 $html .= '</a>';
                 $html .= '</li>';
             }
-            if ($this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja ||
-                    $this->view->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::COORDENADOR ||
-                    $this->view->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::SUPERVISOR ||
-                    $this->view->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::AUXILIAR) {
+            if ($arrayOQueMostrarDosCursos['lancarReposicao']) {
                 $html .= '<li>';
                 $html .= '<a href="/cursoLancarPresenca" onClick="mostrarSplash();">';
                 $html .= '<span class="sidebar-title">Reposi&ccedil;&atilde;o</span>';
