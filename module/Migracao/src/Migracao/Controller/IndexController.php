@@ -814,8 +814,8 @@ class IndexController extends CircuitoController {
                     $sqlIdGrupo = str_replace("#idTipo", $idTipo, $sqlIdGrupo);
                     $sqlIdGrupo = str_replace("#idGrupo", $arrayEquipesCVAntigo[$contadorDeEquipes], $sqlIdGrupo);
                     $sqlIdGrupo = str_replace("#idPai", $idPai, $sqlIdGrupo);
-                    $sqlIdGrupo = str_replace("#mes", date('n'), $sqlIdGrupo);
-                    $sqlIdGrupo = str_replace("#ano", date('Y'), $sqlIdGrupo);
+                    $sqlIdGrupo = str_replace("#mes", $mes, $sqlIdGrupo);
+                    $sqlIdGrupo = str_replace("#ano", $ano, $sqlIdGrupo);
                     $html .= "<br />sqlIdGrupo: $sqlIdGrupo";
                     $queryGrupoAntigo = mysqli_query(IndexController::pegaConexaoStatica(), $sqlIdGrupo);
                     while ($rowGrupoAntigo = mysqli_fetch_array($queryGrupoAntigo)) {
@@ -833,7 +833,7 @@ class IndexController extends CircuitoController {
                 }
                 $html .= "<br />indiceArrays: $indiceArrays";
                 $html .= "<br />getNumero_identificador: " . $grupoCv->getNumero_identificador();
-                $html .= IndexController::atualizarRelatorioPorCiclo($grupoCv->getNumero_identificador(), date('m'), date('Y'), $contadorDeCiclos, $relatorio[$ultimoRegistro][$indiceArrays]);
+                $html .= IndexController::atualizarRelatorioPorCiclo($grupoCv->getNumero_identificador(), $mes, $ano, $contadorDeCiclos, $relatorio[$ultimoRegistro][$indiceArrays]);
                 $contadorDeCiclos++;
                 $contadorDeEquipes++;
             }
