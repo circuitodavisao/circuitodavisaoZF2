@@ -3,6 +3,7 @@
 namespace Application\View\Helper;
 
 use Application\Controller\Helper\Constantes;
+use Application\Model\Entity\CursoAcesso;
 use Application\Model\Entity\EntidadeTipo;
 use Entidade\Entity\Pessoa;
 use Zend\View\Helper\AbstractHelper;
@@ -379,104 +380,139 @@ class Menu extends AbstractHelper {
             $html .= '<span class="sidebar-title">Chamada (Manutenção)</span>';
             $html .= '</a>';
             $html .= '</li>';
+            if ($this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja ||
+                    $this->view->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::COORDENADOR ||
+                    $this->view->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::SUPERVISOR) {
+                $html .= '<li>';
+                $html .= '<a href="/cursoReentrada" onClick="mostrarSplash();">';
+                $html .= '<span class="fa fa-user"></span>';
+                $html .= '<span class="sidebar-title">Reentrada de Aluno</span>';
+                $html .= '</a>';
+                $html .= '</li>';
+            }
 
-            if ($this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja) {
+            if ($this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja ||
+                    $this->view->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::COORDENADOR) {
                 $html .= '<li>';
                 $html .= '<a href="/cursoListarTurma" onClick="mostrarSplash();">';
                 $html .= '<span class="fa fa-list"></span>';
                 $html .= '<span class="sidebar-title">Turmas</span>';
                 $html .= '</a>';
                 $html .= '</li>';
-
+            }
+            if ($this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja ||
+                    $this->view->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::COORDENADOR) {
                 $html .= '<li>';
                 $html .= '<a href="/cursoUsuarios" onClick="mostrarSplash();">';
                 $html .= '<span class="fa fa-users"></span>';
                 $html .= '<span class="sidebar-title">Usuários</span>';
                 $html .= '</a>';
                 $html .= '</li>';
-
+            }
+            if ($this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja ||
+                    $this->view->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::COORDENADOR ||
+                    $this->view->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::SUPERVISOR ||
+                    $this->view->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::AUXILIAR) {
                 $html .= '<li>';
                 $html .= '<a href="/cursoSelecionarParaCarterinha" onClick="mostrarSplash();">';
                 $html .= '<span class="fa fa-users"></span>';
                 $html .= '<span class="sidebar-title">Gerar Carterinha</span>';
                 $html .= '</a>';
                 $html .= '</li>';
-
+            }
+            if ($this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja ||
+                    $this->view->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::COORDENADOR ||
+                    $this->view->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::SUPERVISOR ||
+                    $this->view->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::AUXILIAR) {
                 $html .= '<li>';
                 $html .= '<a href="/cursoSelecionarReposicoes" onClick="mostrarSplash();">';
                 $html .= '<span class="fa fa-list"></span>';
                 $html .= '<span class="sidebar-title">Gerar Reposições</span>';
                 $html .= '</a>';
                 $html .= '</li>';
-
+            }
+            if ($this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja ||
+                    $this->view->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::COORDENADOR) {
                 $html .= '<li>';
                 $html .= '<a href="/cursoGerarFaltas" onClick="mostrarSplash();">';
                 $html .= '<span class="fa fa-money"></span>';
                 $html .= '<span class="sidebar-title">Gerar Faltas</span>';
                 $html .= '</a>';
                 $html .= '</li>';
+            }
+            $html .= '<li>';
 
-                $html .= '<li>';
+            $html .= '<li>';
+            $html .= '<a class="accordion-toggle" href="#">';
+            $html .= '<span class="fa fa-terminal"></span>';
+            $html .= '<span class="sidebar-title">Lançar</span>';
+            $html .= '<span class="caret"></span>';
+            $html .= '</a>';
 
-                $html .= '<li>';
-                $html .= '<a class="accordion-toggle" href="#">';
-                $html .= '<span class="fa fa-terminal"></span>';
-                $html .= '<span class="sidebar-title">Lançar</span>';
-                $html .= '<span class="caret"></span>';
-                $html .= '</a>';
-
-                $html .= '<ul class="nav sub-nav">';
-
+            $html .= '<ul class="nav sub-nav">';
+            if ($this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja ||
+                    $this->view->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::COORDENADOR ||
+                    $this->view->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::SUPERVISOR ||
+                    $this->view->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::AUXILIAR) {
                 $html .= '<li>';
                 $html .= '<a href="/cursoLancarPresenca" onClick="mostrarSplash();">';
                 $html .= '<span class="sidebar-title">Presença</span>';
                 $html .= '</a>';
                 $html .= '</li>';
-                $html .= '</ul>';
-
+            }
+            if ($this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja ||
+                    $this->view->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::COORDENADOR ||
+                    $this->view->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::SUPERVISOR ||
+                    $this->view->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::AUXILIAR) {
+                $html .= '<li>';
+                $html .= '<a href="/cursoLancarPresenca" onClick="mostrarSplash();">';
+                $html .= '<span class="sidebar-title">Reposi&ccedil;&atilde;o</span>';
+                $html .= '</a>';
                 $html .= '</li>';
             }
-
             $html .= '</ul>';
-
-            $html .= '</li>';
-
-
-            $html .= '<li>';
-            $html .= '<a class="accordion-toggle" href="#">';
-            $html .= '<span class="fa fa-print"></span>';
-
-
-            $html .= '<span class="sidebar-title">Imprimir</span>';
-            $html .= '<span class="caret"></span>';
-            $html .= '</a>';
-            $html .= '<ul class="nav sub-nav">';
-
-            $html .= '<li>';
-            $html .= '<a href="/cadastroFichaRevisionistas" onClick="mostrarSplash();">';
-            $html .= '<span class="fa fa-terminal"></span>';
-            $html .= 'Fichas Revisao';
-            $html .= '</a>';
-            $html .= '</li>';
-
-            $html .= '<li>';
-            $html .= '<a href="#">';
-            $html .= '<span class="fa fa-terminal"></span>';
-            $html .= 'Listagem Revisionistas(Manutenção)';
-            $html .= '</a>';
-            $html .= '</li>';
-
-            $html .= '</ul>';
-            $html .= '</li>';
-
-            $html .= '<li>';
-            $html .= '<a class="accordion-toggle" href="#">';
-            $html .= '<span class="fa fa-cogs"></span>';
-            $html .= '<span class="sidebar-title">Adm. (Manutenção)</span>';
-            $html .= '<span class="caret"></span>';
-            $html .= '</a>';
             $html .= '</li>';
         }
+
+        $html .= '</ul>';
+
+        $html .= '</li>';
+
+
+        $html .= '<li>';
+        $html .= '<a class="accordion-toggle" href="#">';
+        $html .= '<span class="fa fa-print"></span>';
+
+
+        $html .= '<span class="sidebar-title">Imprimir</span>';
+        $html .= '<span class="caret"></span>';
+        $html .= '</a>';
+        $html .= '<ul class="nav sub-nav">';
+
+        $html .= '<li>';
+        $html .= '<a href="/cadastroFichaRevisionistas" onClick="mostrarSplash();">';
+        $html .= '<span class="fa fa-terminal"></span>';
+        $html .= 'Fichas Revisao';
+        $html .= '</a>';
+        $html .= '</li>';
+
+        $html .= '<li>';
+        $html .= '<a href="#">';
+        $html .= '<span class="fa fa-terminal"></span>';
+        $html .= 'Listagem Revisionistas(Manutenção)';
+        $html .= '</a>';
+        $html .= '</li>';
+
+        $html .= '</ul>';
+        $html .= '</li>';
+
+        $html .= '<li>';
+        $html .= '<a class="accordion-toggle" href="#">';
+        $html .= '<span class="fa fa-cogs"></span>';
+        $html .= '<span class="sidebar-title">Adm. (Manutenção)</span>';
+        $html .= '<span class="caret"></span>';
+        $html .= '</a>';
+        $html .= '</li>';
 
         $html .= '</ul>';
         // End: Sidebar Menu

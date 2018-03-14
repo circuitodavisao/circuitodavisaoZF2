@@ -25,6 +25,7 @@ echo $this->form()->openTag($form);
     echo $this->inputFormularioSimples('&nbsp;', $form->get(Constantes::$FORM_INPUT_MES), 4, 2);
     echo $this->inputFormularioSimples('&nbsp;', $form->get(Constantes::$FORM_INPUT_ANO), 4, 2);
     echo $this->inputFormularioSimples(Constantes::$TRADUCAO_SEXO, $form->get(Constantes::$INPUT_NUCLEO_PERFEITO), null, 3);
+    echo $this->inputFormularioSimples('SELECIONE A TURMA', $form->get(Constantes::$INPUT_ID_TURMA), null, 2);
     echo $this->inputFormularioSimples('SELECIONE O LÍDER', $form->get(Constantes::$INPUT_ID_GRUPO), null, 2);
     ?> 
 </div>

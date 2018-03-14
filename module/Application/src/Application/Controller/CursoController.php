@@ -795,7 +795,7 @@ class CursoController extends CircuitoController {
         $entidade = CircuitoController::getEntidadeLogada($this->getRepositorio(), $sessao);
         $grupo = $entidade->getGrupo();
         $grupoPessoas = $grupo->getGrupoPessoasNoPeriodo(0);
-        $turmas = $this->getRepositorio()->getTurmaORM()->encontrarTodas();
+        $turmas = $grupo->getTurma();
         $view = new ViewModel(array(
             'entidade' => $entidade,
             'turmas' => $turmas,
@@ -805,8 +805,10 @@ class CursoController extends CircuitoController {
     }
 
     public function selecionarParaCarterinhaAction() {
+        $sessao = new Container(Constantes::$NOME_APLICACAO);
+        $entidade = CircuitoController::getEntidadeLogada($this->getRepositorio(), $sessao);
+        $turmas = $entidade->getGrupo()->getTurma();
         $formulario = new SelecionarCarterinhasForm('SelecionarCarterinhas');
-        $turmas = $this->getRepositorio()->getTurmaORM()->encontrarTodas();
         $view = new ViewModel(array(
             'turmas' => $turmas,
             'formulario' => $formulario,
@@ -840,8 +842,9 @@ class CursoController extends CircuitoController {
         $idEntidadeAtual = $sessao->idEntidadeAtual;
         $entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
         $grupo = $entidade->getGrupo();
+        $turmas = $grupo->getTurma();
         $lideres = $this->todosLideresAPartirDoGrupo($grupo);
-        $formulario = new ReentradaDeAlunoForm('formulario', $sessao->idSessao, $lideres);
+        $formulario = new ReentradaDeAlunoForm('formulario', $lideres, $turmas);
         return new ViewModel(array(
             'formulario' => $formulario,
         ));
@@ -882,7 +885,7 @@ class CursoController extends CircuitoController {
 
                 $this->getRepositorio()->fecharTransacao();
                 return $this->redirect()->toRoute(Constantes::$ROUTE_CURSO, array(
-                            Constantes::$ACTION => Constantes::$PAGINA_LISTAR_TURMA,
+                            Constantes::$ACTION => 'Chamada',
                 ));
             } catch (Exception $exc) {
                 $this->getRepositorio()->desfazerTransacao();

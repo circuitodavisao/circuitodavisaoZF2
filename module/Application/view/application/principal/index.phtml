@@ -6,7 +6,7 @@ use Application\View\Helper\MontaGraficoDeBarra;
 ?>
 <!-- Begin: Content -->
 <?php if ($this->mostrarPrincipal) { ?>
-    <section id="content" class="table-layout animated fadeIn">
+    <section id="content" class="mt40 table-layout animated fadeIn">
         <?php
         echo '<input type="hidden" id="eCasal" value="' . $this->eCasal . '" />';
         echo '<input type="hidden" id="valorCulto" value="' . RelatorioController::formataNumeroRelatorio($this->relatorio[0]['mediaMembresiaCulto']) . '" />';
