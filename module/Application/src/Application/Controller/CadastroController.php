@@ -1502,6 +1502,7 @@ class CadastroController extends CircuitoController {
         $pessoaRevisionista = $eventoFrequencia->getPessoa();
         $idRevisao = $eventoFrequencia->getEvento()->getId();
         $eventoRevisao = $this->getRepositorio()->getEventoORM()->encontrarPorId($idRevisao);
+        $grupoPessoaRevisionista = $pessoaRevisionista->getGrupoPessoaAtivo();
         $grupoLider = $grupoPessoaRevisionista->getGrupo();
         $nomeEntidadeLider = $grupoLider->getEntidadeAtiva()->infoEntidade();
         $grupoIgreja = $grupoLider->getGrupoIgreja();
