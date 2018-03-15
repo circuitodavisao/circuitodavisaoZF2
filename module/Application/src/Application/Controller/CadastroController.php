@@ -1715,7 +1715,8 @@ class CadastroController extends CircuitoController {
                     } else {
                         $idAluno = IndexController::cadastrarPessoaRevisionista($pessoaRevisionista->getNome(), substr('' . $pessoaRevisionista->getTelefone() . '', 0, 2), substr('' . $pessoaRevisionista->getTelefone() . '', 2, strlen('' . $pessoaRevisionista->getTelefone() . '')), $pessoaRevisionista->getSexo(), $pessoaRevisionista->getData_nascimento(), $grupoCv->getLider1());
                     }
-                    IndexController::cadastrarPessoaAluno($idAluno, 6711, 'A', 1);
+                    $idRevisaoCVAntigo = 8212;
+                    IndexController::cadastrarPessoaAluno($idAluno, $idRevisaoCVAntigo, 'A', 1);
 
                     /* Fim da migração do Sistema Antigo */
 
