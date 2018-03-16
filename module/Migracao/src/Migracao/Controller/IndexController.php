@@ -846,21 +846,13 @@ class IndexController extends CircuitoController {
 
     public function cadastrarLideresNoCircuitoAntigoAction() {
         $html = '';
-        $html += 'Aqui';
-        $eventos = $this->getRepositorio()->getEventoORM()->buscarTodosRegistrosEntidade();
-        foreach ($eventos as $evento) {
-            $html += 'Evento: ' . $evento->getId();
+        $html += '####';
+        $grupo = $this->getRepositorio()->GrupoORM()->encontrarPorId(1);
+        $ativoSim = 1;
+        $grupoEventoRevisao = $grupo->getGrupoEventoPorTipoEAtivo(EventoTipo::tipoRevisao, $ativoSim);
+        if ($eventoFrequencia = $grupoEventoRevisao->getEvento()->getEventoFrequencia()) {
+            $html += $eventoFrequencia->getId();
         }
-//        $ultimoEvento = $eventos[0];
-//
-//        foreach ($ultimoEvento->getEventoFrequencia() as $eventoFrequencia) {
-//            $html += 'EventoFrequencia: ' . $eventoFrequencia->getId();
-//            if ($grupoResponsabilidades = $eventoFrequencia->getPessoa()->getResponsabilidadesAtivas()) {
-//                $grupo = $grupoResponsabilidades[0]->getGrupo();
-//                $html += '<br />' . $grupo->getEntidadeAtiva()->infoEntidade();
-//            }
-//        }
-
         return new ViewModel(array('html' => $html));
     }
 
