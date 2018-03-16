@@ -850,11 +850,10 @@ class IndexController extends CircuitoController {
         $grupoEventoRevisao = $grupo->getGrupoEventoAtivosPorTipo(EventoTipo::tipoRevisao);
         $lideres = array();
         foreach ($grupoEventoRevisao as $grupoEvento) {
-            echo '<br />grupoEvento ' . $grupoEvento->getId();
             foreach ($grupoEvento->getEvento()->getEventoFrequencia() as $eventoFrequencia) {
                 if ($grupoResponsabilidades = $eventoFrequencia->getPessoa()->getResponsabilidadesAtivas()) {
                     $info = $grupoResponsabilidades[0]->getGrupo()->getEntidadeAtiva()->infoEntidade();
-                    echo '<br />' . $info . '-' . $eventoFrequencia->getPessoa()->getNome();
+                    echo '<br /><br />' . $info . '-' . $eventoFrequencia->getPessoa()->getNome();
                     if ($grupoCV = $grupoResponsabilidades[0]->getGrupo()->getGrupoCV()) {
                         echo '<br />Tem cadastro antigo';
                     }
