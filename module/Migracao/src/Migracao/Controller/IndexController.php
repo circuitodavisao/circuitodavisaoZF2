@@ -844,6 +844,18 @@ class IndexController extends CircuitoController {
         ));
     }
 
+    public function cadastrarLideresNoCircuitoAntigoAction() {
+        $eventos = $this->getRepositorio()->getEventoORM()->buscarTodosRegistrosEntidade('id', 'desc');
+        $ultimoEvento = $eventos[0];
+
+        foreach ($ultimoEvento->getEventoFrequencia() as $eventoFrequencia) {
+            if ($grupoResponsabilidades = $eventoFrequencia->getPessoa()->getResponsabilidadesAtivas()) {
+                $grupo = $grupoResponsabilidades[0]->getGrupo();
+                echo '<br />' . $grupo->getEntidadeAtiva()->infoEntidade();
+            }
+        }
+    }
+
     public function abreConexao() {
         try {
             if (empty($this->getConexao())) {
