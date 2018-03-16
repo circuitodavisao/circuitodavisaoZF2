@@ -849,8 +849,8 @@ class IndexController extends CircuitoController {
         $grupoEventoRevisao = $grupo->getGrupoEventoAtivosPorTipo(EventoTipo::tipoRevisao);
         foreach ($grupoEventoRevisao as $grupoEvento) {
             echo '<br />grupoEvento ' . $grupoEvento->getId();
-            if ($eventoFrequencia = $grupoEvento->getEventoFrequencia()) {
-                echo '<br />$eventoFrequencia ' . $eventoFrequencia->getId();
+            foreach ($grupoEvento->getEvento()->getEventoFrequencia() as $eventoFrequencia) {
+                echo '<br />SeventoFrequencia ' . $eventoFrequencia->getId();
             }
         }
         return new ViewModel();
