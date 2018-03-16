@@ -846,16 +846,19 @@ class IndexController extends CircuitoController {
 
     public function cadastrarLideresNoCircuitoAntigoAction() {
         $html = '';
-        $eventos = $this->getRepositorio()->getEventoORM()->buscarTodosRegistrosEntidade('id', 'desc');
-        $ultimoEvento = $eventos[0];
-
-        foreach ($ultimoEvento->getEventoFrequencia() as $eventoFrequencia) {
-            $html += 'EventoFrequencia: ' . $eventoFrequencia->getId();
-            if ($grupoResponsabilidades = $eventoFrequencia->getPessoa()->getResponsabilidadesAtivas()) {
-                $grupo = $grupoResponsabilidades[0]->getGrupo();
-                $html += '<br />' . $grupo->getEntidadeAtiva()->infoEntidade();
-            }
+        $eventos = $this->getRepositorio()->getEventoORM()->buscarTodosRegistrosEntidade();
+        foreach ($eventos as $evento) {
+            $html += 'Evento: ' . $evento->getId();
         }
+//        $ultimoEvento = $eventos[0];
+//
+//        foreach ($ultimoEvento->getEventoFrequencia() as $eventoFrequencia) {
+//            $html += 'EventoFrequencia: ' . $eventoFrequencia->getId();
+//            if ($grupoResponsabilidades = $eventoFrequencia->getPessoa()->getResponsabilidadesAtivas()) {
+//                $grupo = $grupoResponsabilidades[0]->getGrupo();
+//                $html += '<br />' . $grupo->getEntidadeAtiva()->infoEntidade();
+//            }
+//        }
 
         return new ViewModel(array('html' => $html));
     }
@@ -913,7 +916,7 @@ class IndexController extends CircuitoController {
         return mysqli_insert_id(IndexController::pegaConexaoStatica());
     }
 
-    public static function cadastrarPessoaRevisionista($nome, $ddd, $telefone, $sexo, $dataNascimento, $lider1, $lider2 = null, $idEquipe = 3749) {
+    public static function cadastrarPessoaRevisionista($nome, $ddd, $telefone, $sexo, $dataNascimento, $lider1, $lider2 = null, $idEquipe = 1) {
         if ($lider2) {
             $campos = 'nome, dddCelular, telefoneCelular, sexo, dataNascimento , idLider, idLider2, idEquipe';
             $stringValues = "'$nome', $ddd, $telefone, '$sexo', '$dataNascimento', $lider1, $lider2, $idEquipe";
