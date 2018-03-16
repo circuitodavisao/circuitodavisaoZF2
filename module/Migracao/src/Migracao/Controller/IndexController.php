@@ -852,9 +852,9 @@ class IndexController extends CircuitoController {
         foreach ($grupoEventoRevisao as $grupoEvento) {
             $html += 'grupoEvento ' . $grupoEvento->getId();
         }
-        if ($eventoFrequencia = $grupoEventoRevisao->getEvento()->getEventoFrequencia()) {
-            $html += $eventoFrequencia->getId();
-        }
+//        if ($eventoFrequencia = $grupoEventoRevisao->getEvento()->getEventoFrequencia()) {
+//            $html += $eventoFrequencia->getId();
+//        }
         return new ViewModel(array('html' => $html));
     }
 
