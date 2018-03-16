@@ -845,19 +845,16 @@ class IndexController extends CircuitoController {
     }
 
     public function cadastrarLideresNoCircuitoAntigoAction() {
-        $html = '';
-        $html += '####';
+        echo '####';
         $grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId(1);
         $grupoEventoRevisao = $grupo->getGrupoEventoAtivosPorTipo(EventoTipo::tipoRevisao);
         foreach ($grupoEventoRevisao as $grupoEvento) {
-            $html += 'grupoEvento ' . $grupoEvento->getId();
+            echo 'grupoEvento ' . $grupoEvento->getId();
         }
 ////        if ($eventoFrequencia = $grupoEventoRevisao->getEvento()->getEventoFrequencia()) {
 ////            $html += $eventoFrequencia->getId();
 ////        }
-        return new ViewModel(array(
-            'html' => $html,
-        ));
+        return new ViewModel();
     }
 
     public function abreConexao() {
