@@ -855,7 +855,9 @@ class IndexController extends CircuitoController {
 ////        if ($eventoFrequencia = $grupoEventoRevisao->getEvento()->getEventoFrequencia()) {
 ////            $html += $eventoFrequencia->getId();
 ////        }
-        return new ViewModel(array('html' => $html));
+        return new ViewModel(array(
+            'html' => $html,
+        ));
     }
 
     public function abreConexao() {
