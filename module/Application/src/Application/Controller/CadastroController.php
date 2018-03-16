@@ -1697,13 +1697,6 @@ class CadastroController extends CircuitoController {
                     $eventoFrequencia->setFrequencia('S');
                     $this->getRepositorio()->getEventoFrequenciaORM()->persistir($eventoFrequencia, false);
 
-                    /* Mensagens de retorno */
-                    $sessao = new Container(Constantes::$NOME_APLICACAO);
-                    $sessao->mostrarNotificacao = true;
-                    $sessao->tipoMensagem = Constantes::$TIPO_MENSAGEM_CADASTRAR_REVISIONISTA;
-                    $sessao->textoMensagem = $pessoaRevisionista->getNome();
-//                    $sessao->idSessao = $eventoFrequencia->getId();
-
                     /* Migração Sitema Antigo */
                     $grupoLider = $grupoPessoaRevisionista->getGrupo();
                     $grupoResponsavel = $grupoLider->getResponsabilidadesAtivas();
