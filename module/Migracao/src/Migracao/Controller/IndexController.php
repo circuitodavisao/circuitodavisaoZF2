@@ -963,11 +963,11 @@ class IndexController extends CircuitoController {
     }
 
     public static function cadastrarTurmaLider($idLider, $idTurma, $status) {
-        $campos = 'idAluno, idTurma, status';
+        $campos = 'idLider, idTurma, status';
         $stringValues = "$idLider, $idTurma, '$status'";
 
         $sqlCadastrarTurmaLider = "INSERT INTO ursula_turma_lider_ursula ($campos) VALUES ($stringValues);";
-        echo "$sqlCadastrarTurmaLider";
+        echo "<br />$sqlCadastrarTurmaLider";
         mysqli_query(IndexController::pegaConexaoStatica(), $sqlCadastrarTurmaLider);
 
         return mysqli_insert_id(IndexController::pegaConexaoStatica());
