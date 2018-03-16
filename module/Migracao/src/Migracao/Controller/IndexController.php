@@ -854,6 +854,8 @@ class IndexController extends CircuitoController {
                 echo '<br />' . $grupo->getEntidadeAtiva()->infoEntidade();
             }
         }
+
+        return new ViewModel();
     }
 
     public function abreConexao() {
