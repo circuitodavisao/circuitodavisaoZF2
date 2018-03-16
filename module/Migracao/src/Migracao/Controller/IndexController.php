@@ -850,7 +850,10 @@ class IndexController extends CircuitoController {
         foreach ($grupoEventoRevisao as $grupoEvento) {
             echo '<br />grupoEvento ' . $grupoEvento->getId();
             foreach ($grupoEvento->getEvento()->getEventoFrequencia() as $eventoFrequencia) {
-                echo '<br />SeventoFrequencia ' . $eventoFrequencia->getId();
+                echo '<br />eventoFrequencia ' . $eventoFrequencia->getId();
+                if($grupoResponsabilidades = $eventoFrequencia->getPessoa()->getResponsabilidadesAtivas()){
+                    echo '<br />infoEntidade '.$grupoResponsabilidades[0]->getGrupo()->getEntidadeAtiva()->infoEntidade();
+                }
             }
         }
         return new ViewModel();
