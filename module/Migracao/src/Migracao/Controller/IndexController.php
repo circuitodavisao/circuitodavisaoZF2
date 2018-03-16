@@ -850,6 +850,7 @@ class IndexController extends CircuitoController {
         $ultimoEvento = $eventos[0];
 
         foreach ($ultimoEvento->getEventoFrequencia() as $eventoFrequencia) {
+            $html += 'EventoFrequencia: ' . $eventoFrequencia->getId();
             if ($grupoResponsabilidades = $eventoFrequencia->getPessoa()->getResponsabilidadesAtivas()) {
                 $grupo = $grupoResponsabilidades[0]->getGrupo();
                 $html += '<br />' . $grupo->getEntidadeAtiva()->infoEntidade();
