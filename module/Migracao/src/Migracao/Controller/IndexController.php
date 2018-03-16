@@ -856,6 +856,13 @@ class IndexController extends CircuitoController {
                     echo '<br /><br />' . $info . '-' . $eventoFrequencia->getPessoa()->getNome();
                     if ($grupoCV = $grupoResponsabilidades[0]->getGrupo()->getGrupoCV()) {
                         echo '<br />Tem cadastro antigo';
+                        $idTurma = 8212;
+                        $status = 'A';
+                        IndexController::cadastrarTurmaLider($grupoCV->getLider1(), $idTurma, $status);
+                        if ($lider2 = $grupoCV->getLider2()) {
+                            IndexController::cadastrarTurmaLider($lider2, $idTurma, $status);
+                        }
+                        echo "<br />Cadastrado";
                     }
                     $lideres[substr($info, 0, 1)] ++;
                 }
@@ -951,6 +958,17 @@ class IndexController extends CircuitoController {
         $sqlPessoaAluno = "INSERT INTO ursula_turma_aluno_ursula ($campos) VALUES ($stringValues);";
         echo "$sqlPessoaAluno";
         mysqli_query(IndexController::pegaConexaoStatica(), $sqlPessoaAluno);
+
+        return mysqli_insert_id(IndexController::pegaConexaoStatica());
+    }
+
+    public static function cadastrarTurmaLider($idLider, $idTurma, $status) {
+        $campos = 'idAluno, idTurma, status';
+        $stringValues = "$idLider, $idTurma, '$status'";
+
+        $sqlCadastrarTurmaLider = "INSERT INTO ursula_turma_lider_ursula ($campos) VALUES ($stringValues);";
+        echo "$sqlCadastrarTurmaLider";
+        mysqli_query(IndexController::pegaConexaoStatica(), $sqlCadastrarTurmaLider);
 
         return mysqli_insert_id(IndexController::pegaConexaoStatica());
     }
