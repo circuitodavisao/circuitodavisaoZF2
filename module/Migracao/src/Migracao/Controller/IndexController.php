@@ -849,6 +849,9 @@ class IndexController extends CircuitoController {
         $html += '####';
         $grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId(1);
         $grupoEventoRevisao = $grupo->getGrupoEventoAtivosPorTipo(EventoTipo::tipoRevisao);
+        foreach ($grupoEventoRevisao as $grupoEvento) {
+            $html += 'grupoEvento ' . $grupoEvento->getId();
+        }
         if ($eventoFrequencia = $grupoEventoRevisao->getEvento()->getEventoFrequencia()) {
             $html += $eventoFrequencia->getId();
         }
@@ -908,7 +911,7 @@ class IndexController extends CircuitoController {
         return mysqli_insert_id(IndexController::pegaConexaoStatica());
     }
 
-    public static function cadastrarPessoaRevisionista($nome, $ddd, $telefone, $sexo, $dataNascimento, $lider1, $lider2 = null, $idEquipe = 1) {
+    public static function cadastrarPessoaRevisionista($nome, $ddd, $telefone, $sexo, $dataNascimento, $lider1, $lider2 = null, $idEquipe = 24) {
         if ($lider2) {
             $campos = 'nome, dddCelular, telefoneCelular, sexo, dataNascimento , idLider, idLider2, idEquipe';
             $stringValues = "'$nome', $ddd, $telefone, '$sexo', '$dataNascimento', $lider1, $lider2, $idEquipe";
