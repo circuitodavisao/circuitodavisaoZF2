@@ -911,7 +911,7 @@ class IndexController extends CircuitoController {
         return mysqli_insert_id(IndexController::pegaConexaoStatica());
     }
 
-    public static function cadastrarPessoaRevisionista($nome, $ddd, $telefone, $sexo, $dataNascimento, $lider1, $lider2 = null, $idEquipe = 24) {
+    public static function cadastrarPessoaRevisionista($nome, $ddd, $telefone, $sexo, $dataNascimento, $lider1, $lider2 = null, $idEquipe = 3749) {
         if ($lider2) {
             $campos = 'nome, dddCelular, telefoneCelular, sexo, dataNascimento , idLider, idLider2, idEquipe';
             $stringValues = "'$nome', $ddd, $telefone, '$sexo', '$dataNascimento', $lider1, $lider2, $idEquipe";
