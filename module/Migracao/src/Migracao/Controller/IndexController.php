@@ -845,15 +845,14 @@ class IndexController extends CircuitoController {
     }
 
     public function cadastrarLideresNoCircuitoAntigoAction() {
-        echo '####';
         $grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId(1);
         $grupoEventoRevisao = $grupo->getGrupoEventoAtivosPorTipo(EventoTipo::tipoRevisao);
         foreach ($grupoEventoRevisao as $grupoEvento) {
-            echo 'grupoEvento ' . $grupoEvento->getId();
+            echo '<br />grupoEvento ' . $grupoEvento->getId();
+            if ($eventoFrequencia = $grupoEvento->getEventoFrequencia()) {
+                echo '<br />$eventoFrequencia ' . $eventoFrequencia->getId();
+            }
         }
-////        if ($eventoFrequencia = $grupoEventoRevisao->getEvento()->getEventoFrequencia()) {
-////            $html += $eventoFrequencia->getId();
-////        }
         return new ViewModel();
     }
 
