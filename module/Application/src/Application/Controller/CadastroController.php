@@ -1705,7 +1705,6 @@ class CadastroController extends CircuitoController {
 //                    $sessao->idSessao = $eventoFrequencia->getId();
 
                     /* Migração Sitema Antigo */
-
                     $grupoLider = $grupoPessoaRevisionista->getGrupo();
                     $grupoResponsavel = $grupoLider->getResponsabilidadesAtivas();
                     $numeroLideres = count($grupoResponsavel);
