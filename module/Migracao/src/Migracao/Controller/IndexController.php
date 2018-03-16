@@ -848,8 +848,7 @@ class IndexController extends CircuitoController {
         $html = '';
         $html += '####';
         $grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId(1);
-        $ativoSim = 1;
-        $grupoEventoRevisao = $grupo->getGrupoEventoPorTipoEAtivo(EventoTipo::tipoRevisao, $ativoSim);
+        $grupoEventoRevisao = $grupo->getGrupoEventoAtivosPorTipo(EventoTipo::tipoRevisao);
         if ($eventoFrequencia = $grupoEventoRevisao->getEvento()->getEventoFrequencia()) {
             $html += $eventoFrequencia->getId();
         }
