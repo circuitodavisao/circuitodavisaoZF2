@@ -847,7 +847,7 @@ class IndexController extends CircuitoController {
     public function cadastrarLideresNoCircuitoAntigoAction() {
         $html = '';
         $html += '####';
-        $grupo = $this->getRepositorio()->GrupoORM()->encontrarPorId(1);
+        $grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId(1);
         $ativoSim = 1;
         $grupoEventoRevisao = $grupo->getGrupoEventoPorTipoEAtivo(EventoTipo::tipoRevisao, $ativoSim);
         if ($eventoFrequencia = $grupoEventoRevisao->getEvento()->getEventoFrequencia()) {
