@@ -1139,21 +1139,25 @@ class Grupo extends CircuitoEntity {
      */
     function getGrupoEquipe() {
         $grupoSelecionado = $this;
-        $grupoIgreja = null;
+        $grupoEquipe = null;
         if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::SUBEQUIPE) {
             while ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::SUBEQUIPE) {
-                $grupoSelecionado = $grupoSelecionado->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai();
-                if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::EQUIPE) {
+                if ($grupoSelecionado->getGrupoPaiFilhoPaiAtivo()) {
+                    $grupoSelecionado = $grupoSelecionado->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai();
+                    if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::EQUIPE) {
+                        break;
+                    }
+                } else {
                     break;
                 }
             }
-            $grupoIgreja = $grupoSelecionado;
-        } else if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::EQUIPE) {
-            $grupoIgreja = $grupoSelecionado;
+            $grupoEquipe = $grupoSelecionado;
         } else {
-            $grupoIgreja = null;
+            if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::EQUIPE) {
+                $grupoEquipe = $grupoSelecionado;
+            }
         }
-        return $grupoIgreja;
+        return $grupoEquipe;
     }
 
     function getFatoRanking() {

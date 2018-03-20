@@ -796,10 +796,13 @@ class CursoController extends CircuitoController {
         $grupo = $entidade->getGrupo();
         $grupoPessoas = $grupo->getGrupoPessoasNoPeriodo(0);
         $turmas = $grupo->getTurma();
+        $grupoPaiFilhoFilhos = $grupo->getGrupoPaiFilhoFilhosAtivos(0);
+
         $view = new ViewModel(array(
             'entidade' => $entidade,
             'turmas' => $turmas,
             'grupoPessoas' => $grupoPessoas,
+            'filhos' => $grupoPaiFilhoFilhos,
         ));
         return $view;
     }
