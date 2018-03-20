@@ -83,4 +83,13 @@ class Curso extends CircuitoEntity {
         $this->turma = $turma;
     }
 
+    function getNomeSigla() {
+        $explodeNome = explode(" ", $this->getNome());
+        $sigla = substr($explodeNome[0], 0, 1);
+        if (count($explodeNome) > 1) {
+            $sigla .= '.' . substr($explodeNome[(count($explodeNome) - 1)], 0, 1) . '.';
+        }
+        return $sigla;
+    }
+
 }
