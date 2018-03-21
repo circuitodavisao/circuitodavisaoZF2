@@ -1,8 +1,9 @@
 <?php
 
+use Application\Controller\CursoController;
 use Application\Controller\Helper\Funcoes;
 use Application\Controller\RelatorioController;
-use Application\View\Helper\MontaGraficoDeBarra;
+use Application\View\Helper\BotaoSimples;
 ?>
 <!-- Begin: Content -->
 <?php if ($this->mostrarPrincipal) { ?>
@@ -26,19 +27,69 @@ use Application\View\Helper\MontaGraficoDeBarra;
                               padding-right: 5px;
                               position: relative;
                               top: -7px;">
-                            </span>
+                        </span>
                         <input onclick="$('.relatorioPessoal').toggleClass('hidden'); $('.relatorioEquipe').toggleClass('hidden');" type="checkbox" name="features" id="f1" value="javascript">
                         <label for="f1" data-on="" data-off=""></label>
                         <span class="fa fa-users"></span>
                     </label>   
                 </div>
-                <!--robo proximoNivel-->
+                <?php if (count($this->alunosComFaltas[0]) > 0) { ?>
+                    <!--cursos-->
+                    <div class="row alert alert-info mt10">
+                        <div class="col-xs-12 col-md-12 col-lg-12">
+                            <table class="table table-condensed">
+                                <tbody>
+                                    <tr>
+                                        <td>Cursos</td>
+                                    </tr>
+                                    <?php
+                                    foreach ($this->turmas as $turma) {
+                                        if (count($this->alunosComFaltas[0][$turma->getId()]) > 0) {
+                                            $contadorTurma = 0;
+                                            foreach ($this->alunosComFaltas[0][$turma->getId()] as $turmaPessoa) {
+                                                foreach ($this->alunosComFaltas[1][$turma->getId()][$turmaPessoa->getId()] as $falta) {
+                                                    $contadorTurma++;
+                                                }
+                                            }
+                                            $spanMobile = '<span class="hidden-sm hidden-md hidden-lg">' . $turma->getCurso()->getNomeSigla() . '</span>';
+                                            $spanDesktop = '<span class="hidden-xs">' . $turma->getCurso()->getNome() . '</span>';
+                                            echo '<tr>';
+                                            echo '<td>' . $spanDesktop . $spanMobile . ' - ' . Funcoes::mesPorExtenso($turma->getMes()) . '/' . $turma->getAno() . '</td>';
+                                            echo '<td>Faltas ' . $contadorTurma . '</td>';
+                                            echo '<td>' . $this->botaoSimples('<i class="fa fa-eye" />', $this->funcaoOnClick('$(".turma' . $turma->getId() . '").toggleClass("hidden")'), BotaoSimples::botaoMuitoPequenoImportante, BotaoSimples::posicaoAoCentro) . '</td>';
+                                            echo '</tr>';
+                                            foreach ($this->alunosComFaltas[0][$turma->getId()] as $turmaPessoa) {
+                                                $spanDesktopNome = '<span class="hidden-xs">' . $turmaPessoa->getPessoa()->getNome() . '</span>';
+                                                $spanMobileNome = '<span class="hidden-sm hidden-md hidden-lg">' . $turmaPessoa->getPessoa()->getNomePrimeiroUltimo() . '</span>';
+                                                $nomeEquipe = CursoController::nomeEquipeTurmaPessoa($turmaPessoa);
+                                                echo '<tr class="turma' . $turma->getId() . ' hidden">';
+                                                echo '<td colspan="2"><i class="fa fa-user" /> ' . $spanDesktopNome . $spanMobileNome . '</td>';
+                                                echo '<td>' . $nomeEquipe . '</td>';
+                                                echo '</tr>';
+                                                foreach ($this->alunosComFaltas[1][$turma->getId()][$turmaPessoa->getId()] as $falta) {
+                                                    echo '<tr class="turma' . $turma->getId() . ' hidden">';
+                                                    echo '<td colspan="2" class="text-right"># ' . $falta[0] . '</td>';
+//                                                    echo '<td>' . $this->botaoSimples('<i class="fa fa-file-text" />', '#', BotaoSimples::botaoPequenoImportante, BotaoSimples::posicaoADireita) . '</td>';
+                                                    echo '<td><i class="fa fa-file-text" /></td>';
+                                                    echo '</tr>';
+                                                }
+                                            }
+                                        }
+                                    }
+                                    ?>
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+                <?php } ?>
+                <!--proximoNivel-->
                 <div class="relatorioEquipe hidden row alert alert-default mt10">
                     <div class="col-xs-12 col-md-12 col-lg-12">
                         <?php echo $this->dadosProximoNivel($this->relatorio); ?>
                     </div>
                 </div>
-                <!--robo membresia-->
+                <!--membresia-->
                 <div class="row alert alert-default mt10">
                     <div class="col-xs-12 col-md-12 col-lg-12">
                         <p class="relatorioPessoal well text-<?php echo $this->relatorio[0]['mediaMembresiaPerformanceClass']; ?> text-center"><?php echo $this->relatorio[0]['mediaMembresiaPerformanceFrase']; ?></p>
@@ -60,12 +111,13 @@ use Application\View\Helper\MontaGraficoDeBarra;
                     <div class="col-xs-12 col-md-12 col-lg-12">
                         <div id="divGaugesMembresia" class="row p10">
                             <?php
-                            $class = 'class="col-lg-3 col-md-3 col-sm-6 col-xs-12"';
+                            $class = 'class = "col-lg-3 col-md-3 col-sm-6 col-xs-12"';
                             $numeroIndices = 4;
                             for ($indice = 1; $indice <= $numeroIndices; $indice++) {
                                 switch ($indice) {
                                     case 1:
-                                        $label = 'PESSOAS CHEIAS DE F&Eacute;';
+                                        $label = 'PESSOAS CHEIAS DE F & Eacute;
+                                            ';
                                         $valor[1] = $this->relatorio[0]['mediaMembresiaCulto'];
                                         $valor[2] = $this->relatorio[$totalDeRelatorios]['mediaMembresiaCulto'];
                                         break;
@@ -75,11 +127,13 @@ use Application\View\Helper\MontaGraficoDeBarra;
                                         $valor[2] = $this->relatorio[$totalDeRelatorios]['mediaMembresiaArena'];
                                         break;
                                     case 3:
-                                        $label = 'PESSOAS ALIAN&Ccedil;ADAS';
+                                        $label = 'PESSOAS ALIAN & Ccedil;
+                                            ADAS';
                                         $valor[1] = $this->relatorio[0]['mediaMembresiaDomingo'];
                                         $valor[2] = $this->relatorio[$totalDeRelatorios]['mediaMembresiaDomingo'];
                                         break;
-                                    case 4: $label = 'MEMBROS ASS&Iacute;DUOS';
+                                    case 4: $label = 'MEMBROS ASS & Iacute;
+                                            DUOS';
                                         $valor[1] = $this->relatorio[0]['mediaMembresia'];
                                         $valor[2] = $this->relatorio[$totalDeRelatorios]['mediaMembresia'];
                                         break;
@@ -92,8 +146,8 @@ use Application\View\Helper\MontaGraficoDeBarra;
                                         <div class="panel-body" style="padding-bottom: 0px;">
                                             <h1 class="fs30 mt5 mbn">
                                                 <?php
-                                                echo '<span class="relatorioPessoal">' . $valor[1] . '</span>';
-                                                echo '<span class="relatorioEquipe hidden">' . $valor[2] . '</span>';
+                                                echo '<span class = "relatorioPessoal">' . $valor[1] . '</span>';
+                                                echo '<span class = "relatorioEquipe hidden">' . $valor[2] . '</span>';
                                                 ?>
                                             </h1>
                                             <h6><?php echo $label; ?></h6>                                    
@@ -125,8 +179,8 @@ use Application\View\Helper\MontaGraficoDeBarra;
                                                             $valor[2] = RelatorioController::formataNumeroRelatorio($valor[2]);
                                                             break;
                                                     }
-                                                    echo '<span class="relatorioPessoal" style="font-size: 10px;">' . $valor[1] . '</span>';
-                                                    echo '<span class="relatorioEquipe hidden" style="font-size: 10px;">' . $valor[2] . '</span>';
+                                                    echo '<span class = "relatorioPessoal" style = "font-size: 10px;">' . $valor[1] . '</span>';
+                                                    echo '<span class = "relatorioEquipe hidden" style = "font-size: 10px;">' . $valor[2] . '</span>';
                                                 }
                                                 ?>
                                             </span>
@@ -138,7 +192,7 @@ use Application\View\Helper\MontaGraficoDeBarra;
                         </div>                    
                     </div>
                 </div>
-                <!--robo celula-->
+                <!--celula-->
                 <div class="row alert alert-default mt10">
                     <div class="col-xs-12 col-md-12 col-lg-12">
                         <p class="relatorioPessoal well bg-default text-<?php echo $this->relatorio[0]['mediaCelulaPerformanceClass']; ?> text-center"><?php echo $this->relatorio[0]['mediaCelulaPerformanceFrase']; ?></p>
@@ -160,7 +214,7 @@ use Application\View\Helper\MontaGraficoDeBarra;
                     <div class="col-xs-12 col-md-12 col-lg-12">
                         <div id="divGaugesCelula" class="row p10">   
                             <?php
-                            $class = 'class="col-lg-4 col-md-4 col-sm-4 col-xs-12"';
+                            $class = 'class = "col-lg-4 col-md-4 col-sm-4 col-xs-12"';
                             $numeroIndices = 3;
                             for ($indice = 1; $indice <= $numeroIndices; $indice++) {
                                 switch ($indice) {
@@ -192,8 +246,8 @@ use Application\View\Helper\MontaGraficoDeBarra;
                                         <div class="panel-body" style="padding-bottom: 0px;">
                                             <h1 class="fs30 mt5 mbn">
                                                 <?php
-                                                echo '<span class="relatorioPessoal">' . $valor[1] . '</span>';
-                                                echo '<span class="relatorioEquipe hidden">' . $valor[2] . '</span>';
+                                                echo '<span class = "relatorioPessoal">' . $valor[1] . '</span>';
+                                                echo '<span class = "relatorioEquipe hidden">' . $valor[2] . '</span>';
                                                 ?>
                                             </h1>
                                             <h6><?php echo $label; ?></h6>                                    
@@ -221,8 +275,8 @@ use Application\View\Helper\MontaGraficoDeBarra;
                                                             $valor[2] = RelatorioController::formataNumeroRelatorio($valor[2]) . '%';
                                                             break;
                                                     }
-                                                    echo '<span class="relatorioPessoal" style="font-size: 10px;">' . $valor[1] . '</span>';
-                                                    echo '<span class="relatorioEquipe hidden" style="font-size: 10px;">' . $valor[2] . '</span>';
+                                                    echo '<span class = "relatorioPessoal" style = "font-size: 10px;">' . $valor[1] . '</span>';
+                                                    echo '<span class = "relatorioEquipe hidden" style = "font-size: 10px;">' . $valor[2] . '</span>';
                                                 }
                                                 ?>
                                             </span>
@@ -254,13 +308,13 @@ use Application\View\Helper\MontaGraficoDeBarra;
                                             $relatorioDiscipuloPessoal = $this->discipulosRelatorioPessoal[$grupoFilho->getId()];
                                             $diferenca = $relatorioDiscipulo['celulaQuantidade'] - $relatorioDiscipulo['celulaRealizadas'];
                                             $diferencaPessoal = $relatorioDiscipuloPessoal['celulaQuantidade'] - $relatorioDiscipuloPessoal['celulaRealizadas'];
-                                            $html .= '<tr class="dark">';
+                                            $html .= '<tr class = "dark">';
                                             $html .= '<td>EQUIPE - ' . $nomeLideres . '</td>';
                                             $html .= '<td></td>';
                                             $html .= '</tr>';
                                             if ($diferencaPessoal > 0) {
                                                 $html .= '<tr>';
-                                                $html .= '<td class="text-right">' . $nomeLideres . '</td>';
+                                                $html .= '<td class = "text-right">' . $nomeLideres . '</td>';
                                                 $html .= '<td>' . $diferencaPessoal . '</td>';
                                                 $html .= '</tr>';
                                             }
@@ -273,23 +327,24 @@ use Application\View\Helper\MontaGraficoDeBarra;
                                                     if ($relatorioDiscipulo144) {
                                                         $diferenca144 = $relatorioDiscipulo144['celulaQuantidade'] - $relatorioDiscipulo144['celulaRealizadas'];
                                                         $html .= '<tr>';
-                                                        $html .= '<td class="text-right">' . $nomeLideres144 . '</td>';
+                                                        $html .= '<td class = "text-right">' . $nomeLideres144 . '</td>';
                                                         $html .= '<td>' . $diferenca144 . '</td>';
                                                         $html .= '</tr>';
                                                     }
                                                 }
                                             }
-                                            $html .= '<tr class="">';
-                                            $html .= '<td class="text-right">TOTAL</td>';
+                                            $html .= '<tr class = "">';
+                                            $html .= '<td class = "text-right">TOTAL</td>';
                                             $html .= '<td>' . $diferenca . '</td>';
                                             $html .= '</tr>';
                                             $html .= '<tr>';
-                                            $html .= '<td colspan="2"></td>';
+                                            $html .= '<td colspan = "2"></td>';
                                             $html .= '</tr>';
                                             $totalDeCelulasNaoRealizadas += $diferenca;
                                         }
                                         echo '<tr>';
-                                        echo '<td colspan="3" class="text-center">Celulas <b>N&atilde;o</b> Realizadas: ' . $totalDeCelulasNaoRealizadas . '</td>';
+                                        echo '<td colspan = "3" class = "text-center">Celulas <b > N & atilde;
+                                            o</b> Realizadas: ' . $totalDeCelulasNaoRealizadas . '</td>';
                                         echo '</tr>';
                                         echo $html;
                                     }

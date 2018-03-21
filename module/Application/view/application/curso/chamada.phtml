@@ -1,5 +1,6 @@
 <?php
 
+use Application\Controller\CursoController;
 use Application\Controller\Helper\Constantes;
 use Application\Controller\Helper\Funcoes;
 use Application\Model\Entity\EntidadeTipo;
@@ -102,13 +103,10 @@ foreach ($this->turmas as $turma) {
             }
 
             if ($mostrar) {
-                $nomeEquipe = '';
+                $nomeEquipe = CursoController::nomeEquipeTurmaPessoa($turmaPessoa);
                 $idLinha = 0;
                 if ($turmaPessoa->getPessoa()->getGrupoPessoaAtivo()) {
-                    if ($turmaPessoa->getPessoa()->getGrupoPessoaAtivo()->getGrupo()->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::igreja) {
-                        $nomeEquipe = $turmaPessoa->getPessoa()->getGrupoPessoaAtivo()->getGrupo()->getEntidadeAtiva()->getNome();
-                    } else {
-                        $nomeEquipe = $turmaPessoa->getPessoa()->getGrupoPessoaAtivo()->getGrupo()->getGrupoEquipe()->getEntidadeAtiva()->getNome();
+                    if (!($turmaPessoa->getPessoa()->getGrupoPessoaAtivo()->getGrupo()->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::igreja)) {
                         $idLinha = $turmaPessoa->getPessoa()->getGrupoPessoaAtivo()->getGrupo()->getGrupoEquipe()->getId();
                     }
                 }

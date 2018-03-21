@@ -34,7 +34,7 @@ class PrincipalController extends CircuitoController {
 
         $eCasal = $grupo->verificaSeECasal();
         $arrayPeriodoDoMes = Funcoes::encontrarPeriodoDeUmMesPorMesEAno(date('m'), date('Y'));
-        $relatorio = RelatorioController::relatorioCompleto($this->getRepositorio(), $grupo, RelatorioController::relatorioMembresiaECelula, date('m'), date('Y'));
+//        $relatorio = RelatorioController::relatorioCompleto($this->getRepositorio(), $grupo, RelatorioController::relatorioMembresiaECelula, date('m'), date('Y'));
 
         $mostrarPrincipal = true;
         if (!$entidade->verificarSeEstaAtivo()) {
@@ -42,7 +42,13 @@ class PrincipalController extends CircuitoController {
         }
 
         $idRelatorio = $this->getEvent()->getRouteMatch()->getParam(Constantes::$ID, 1);
-
+        if ($grupo->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::igreja) {
+            $turmas = $grupo->getTurma();
+        } else {
+            $turmas = $grupo->getGrupoIgreja()->getTurma();
+        }
+        $alunosComFaltas = CursoController::pegarAlunosComFaltas($grupo, $turmas);
+        
         $dados = array(
             'relatorio' => $relatorio,
             'periodoInicial' => $arrayPeriodoDoMes[0],
@@ -53,6 +59,8 @@ class PrincipalController extends CircuitoController {
             'grupo' => $grupo,
             'repositorio' => $this->getRepositorio(),
             'pessoa' => $pessoa,
+            'alunosComFaltas' => $alunosComFaltas,
+            'turmas' => $turmas,
         );
 
 

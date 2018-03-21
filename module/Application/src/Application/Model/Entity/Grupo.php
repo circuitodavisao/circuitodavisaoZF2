@@ -1127,8 +1127,6 @@ class Grupo extends CircuitoEntity {
             $grupoIgreja = $grupoSelecionado;
         } else if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::IGREJA) {
             $grupoIgreja = $grupoSelecionado;
-        } else {
-            $grupoIgreja = null;
         }
         return $grupoIgreja;
     }
