@@ -116,7 +116,7 @@ use Application\View\Helper\BotaoSimples;
                             for ($indice = 1; $indice <= $numeroIndices; $indice++) {
                                 switch ($indice) {
                                     case 1:
-                                        $label = 'PESSOAS CHEIAS DE F & Eacute;
+                                        $label = 'PESSOAS CHEIAS DE F&Eacute;
                                             ';
                                         $valor[1] = $this->relatorio[0]['mediaMembresiaCulto'];
                                         $valor[2] = $this->relatorio[$totalDeRelatorios]['mediaMembresiaCulto'];
@@ -127,13 +127,11 @@ use Application\View\Helper\BotaoSimples;
                                         $valor[2] = $this->relatorio[$totalDeRelatorios]['mediaMembresiaArena'];
                                         break;
                                     case 3:
-                                        $label = 'PESSOAS ALIAN & Ccedil;
-                                            ADAS';
+                                        $label = 'PESSOAS ALIAN&Ccedil;ADAS';
                                         $valor[1] = $this->relatorio[0]['mediaMembresiaDomingo'];
                                         $valor[2] = $this->relatorio[$totalDeRelatorios]['mediaMembresiaDomingo'];
                                         break;
-                                    case 4: $label = 'MEMBROS ASS & Iacute;
-                                            DUOS';
+                                    case 4: $label = 'MEMBROS ASS&Iacute;DUOS';
                                         $valor[1] = $this->relatorio[0]['mediaMembresia'];
                                         $valor[2] = $this->relatorio[$totalDeRelatorios]['mediaMembresia'];
                                         break;
@@ -179,8 +177,9 @@ use Application\View\Helper\BotaoSimples;
                                                             $valor[2] = RelatorioController::formataNumeroRelatorio($valor[2]);
                                                             break;
                                                     }
-                                                    echo '<span class = "relatorioPessoal" style = "font-size: 10px;">' . $valor[1] . '</span>';
-                                                    echo '<span class = "relatorioEquipe hidden" style = "font-size: 10px;">' . $valor[2] . '</span>';
+
+                                                    echo '<span class="relatorioPessoal" style="font-size: 10px;">' . $valor[1] . '</span>';
+                                                    echo '<span class="relatorioEquipe hidden" style="font-size: 10px;">' . $valor[2] . '</span>';
                                                 }
                                                 ?>
                                             </span>
@@ -275,8 +274,16 @@ use Application\View\Helper\BotaoSimples;
                                                             $valor[2] = RelatorioController::formataNumeroRelatorio($valor[2]) . '%';
                                                             break;
                                                     }
-                                                    echo '<span class = "relatorioPessoal" style = "font-size: 10px;">' . $valor[1] . '</span>';
-                                                    echo '<span class = "relatorioEquipe hidden" style = "font-size: 10px;">' . $valor[2] . '</span>';
+
+                                                    $botaoModalPessoal = $valor[1];
+                                                    $botaoModalEquipe = $valor[2];
+//                                                    if ($indice === 3) {
+//                                                        $funcaoOnClick = $this->funcaoOnClick('mostrarModalCelulasNaoRealizadas()');
+//                                                        $botaoModalPessoal = $this->botaoSimples($valor[1], $funcaoOnClick, BotaoSimples::botaoMuitoPequenoImportante, BotaoSimples::posicaoAoCentro);
+//                                                        $botaoModalEquipe = $this->botaoSimples($valor[2], $funcaoOnClick, BotaoSimples::botaoMuitoPequenoImportante, BotaoSimples::posicaoAoCentro);
+//                                                    }
+                                                    echo '<span class = "relatorioPessoal" style = "font-size: 10px;">' . $botaoModalPessoal . '</span>';
+                                                    echo '<span class = "relatorioEquipe hidden" style = "font-size: 10px;">' . $botaoModalEquipe . '</span>';
                                                 }
                                                 ?>
                                             </span>
@@ -289,70 +296,31 @@ use Application\View\Helper\BotaoSimples;
                     </div>              
                 </div>               
                 <!--celulas nao realizadas-->
-                <div class="row alert alert-default hidden">
-                    <div class="col-xs-12 col-md-12 col-lg-12">
+                <div  id="modalCelulasNaoRealizadas" class="popup-basic p25 mfp-with-anim mfp-hide">
+                    <div class="mt20">
                         <div class="panel">
                             <div class="panel-heading text-center">
-                                <span class="panel-title"><b><?php echo Funcoes::montaPeriodo(-1)[0]; ?></b></span>
+                                <span class="panel-title"><b></b></span>
                             </div>
-                            <div class="panel-body pn">
+                            <div class="panel-body pn"> 
                                 <table class="table mbn tc-med-1 tc-bold-last">
                                     <?php
-                                    if ($this->discipulos) {
-                                        $html = '';
-                                        $totalDeCelulasNaoRealizadas = 0;
-                                        foreach ($this->discipulos as $gpFilho) {
-                                            $grupoFilho = $gpFilho->getGrupoPaiFilhoFilho();
-                                            $nomeLideres = $grupoFilho->getNomeLideresAtivos();
-                                            $relatorioDiscipulo = $this->discipulosRelatorio[$grupoFilho->getId()];
-                                            $relatorioDiscipuloPessoal = $this->discipulosRelatorioPessoal[$grupoFilho->getId()];
-                                            $diferenca = $relatorioDiscipulo['celulaQuantidade'] - $relatorioDiscipulo['celulaRealizadas'];
-                                            $diferencaPessoal = $relatorioDiscipuloPessoal['celulaQuantidade'] - $relatorioDiscipuloPessoal['celulaRealizadas'];
-                                            $html .= '<tr class = "dark">';
-                                            $html .= '<td>EQUIPE - ' . $nomeLideres . '</td>';
-                                            $html .= '<td></td>';
-                                            $html .= '</tr>';
-                                            if ($diferencaPessoal > 0) {
-                                                $html .= '<tr>';
-                                                $html .= '<td class = "text-right">' . $nomeLideres . '</td>';
-                                                $html .= '<td>' . $diferencaPessoal . '</td>';
-                                                $html .= '</tr>';
-                                            }
-                                            $grupoPaiFilhoFilhos144 = $grupoFilho->getGrupoPaiFilhoFilhosAtivos(-1);
-                                            if ($grupoPaiFilhoFilhos144) {
-                                                foreach ($grupoPaiFilhoFilhos144 as $gpFilho144) {
-                                                    $grupoFilho144 = $gpFilho144->getGrupoPaiFilhoFilho();
-                                                    $nomeLideres144 = $grupoFilho144->getNomeLideresAtivos();
-                                                    $relatorioDiscipulo144 = $this->discipulosRelatorio[$grupoFilho144->getId()];
-                                                    if ($relatorioDiscipulo144) {
-                                                        $diferenca144 = $relatorioDiscipulo144['celulaQuantidade'] - $relatorioDiscipulo144['celulaRealizadas'];
-                                                        $html .= '<tr>';
-                                                        $html .= '<td class = "text-right">' . $nomeLideres144 . '</td>';
-                                                        $html .= '<td>' . $diferenca144 . '</td>';
-                                                        $html .= '</tr>';
-                                                    }
-                                                }
-                                            }
-                                            $html .= '<tr class = "">';
-                                            $html .= '<td class = "text-right">TOTAL</td>';
-                                            $html .= '<td>' . $diferenca . '</td>';
-                                            $html .= '</tr>';
-                                            $html .= '<tr>';
-                                            $html .= '<td colspan = "2"></td>';
-                                            $html .= '</tr>';
-                                            $totalDeCelulasNaoRealizadas += $diferenca;
-                                        }
+                                    foreach ($this->relatorio as $relatorio) {
                                         echo '<tr>';
-                                        echo '<td colspan = "3" class = "text-center">Celulas <b > N & atilde;
-                                            o</b> Realizadas: ' . $totalDeCelulasNaoRealizadas . '</td>';
+                                        echo '<td class="text-left" style="font-size:8px;">' . $relatorio['lideres'] . '</td>';
+                                        for ($indiceDeArrays = $this->periodoInicial; $indiceDeArrays <= $this->periodoFinal; $indiceDeArrays++) {
+                                            echo '<td>' . $relatorio[$indiceDeArrays]['celulaQuantidade'] . '</td>';
+                                            echo '<td>' . $relatorio[$indiceDeArrays]['celulaRealizadas'] . '</td>';
+                                            echo '<td>' . RelatorioController::formataNumeroRelatorio($relatorio[$indiceDeArrays]['celulaRealizadasPerformance']) . '%</td>';
+                                        }
                                         echo '</tr>';
-                                        echo $html;
                                     }
                                     ?>
                                 </table>
                             </div>
                         </div> 
                     </div>
+                    <button tittle="Close (Esc)" type="button" class="mfp-close bg-dark">x</button>
                 </div>
                 <!--modalInformativo-->
                 <div id="modalInformativo" class="popup-basic p25 mfp-with-anim mfp-hide">

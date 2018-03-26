@@ -74,6 +74,22 @@ if ($sessao->mostrarNotificacao) {
             midClick: true // allow opening popup on middle mouse click. Always set it to true if you don't provide alternative source.
         });
     }
+     function mostrarModalCelulasNaoRealizadas() {
+        $.magnificPopup.open({
+            removalDelay: 500, //delay removal by X to allow out-animation,
+            items: {
+                src: "#modalCelulasNaoRealizadas"
+            },
+            modal: true,
+            callbacks: {
+                beforeOpen: function (e) {
+                    var Animation = "mfp-zoomIn";
+                    this.st.mainClass = Animation;
+                }
+            },
+            midClick: true // allow opening popup on middle mouse click. Always set it to true if you don't provide alternative source.
+        });
+    }
     function mostrarModalInformativo(tipo) {
         var textoMetaCultoEDomingo = 'Meta 3 pessoas, você, seu co-líder e seu líder em treinamento, caso casado dobrado!';
         var textoMetaArena = 'Meta 6 pessoas, você, seu co-líder e seu líder em treinamento levando mais 1, caso casado dobrado!';
@@ -192,7 +208,7 @@ if ($sessao->mostrarNotificacao) {
             elementos = document.getElementsByClassName('removerEquipe');
             var i;
             for (i = 0; i < elementos.length; i++) {
-              elementos[i].style.display = 'none';
+                elementos[i].style.display = 'none';
             }
         }
         var valoresGraficos = [3, 6, 3, 7];
@@ -479,5 +495,20 @@ if ($sessao->mostrarNotificacao) {
                     }]
             });
         }
+    }
+
+    function pegarCelulasNaoRealizadasPorPeriodo(periodo, idGrupo) {
+
+        $.post(
+                "/relatorioPegarCelulasNaoRealizadasPorPeriodo",
+                {
+                    periodo: periodo,
+                    idGrupo: idGrupo,
+                },
+                function (data) {
+                    if (data.response) {
+                       
+                    }
+                }, 'json');
     }
 </script>
