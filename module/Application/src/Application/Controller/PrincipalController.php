@@ -34,8 +34,8 @@ class PrincipalController extends CircuitoController {
 
         $eCasal = $grupo->verificaSeECasal();
         $arrayPeriodoDoMes = Funcoes::encontrarPeriodoDeUmMesPorMesEAno(date('m'), date('Y'));
-//        $relatorio = RelatorioController::relatorioCompleto($this->getRepositorio(), $grupo, RelatorioController::relatorioMembresiaECelula, date('m'), date('Y'));
- 
+        $relatorio = RelatorioController::relatorioCompleto($this->getRepositorio(), $grupo, RelatorioController::relatorioMembresiaECelula, date('m'), date('Y'));
+
         $mostrarPrincipal = true;
         if (!$entidade->verificarSeEstaAtivo()) {
             $mostrarPrincipal = false;
@@ -48,7 +48,7 @@ class PrincipalController extends CircuitoController {
             $turmas = $grupo->getGrupoIgreja()->getTurma();
         }
         $alunosComFaltas = CursoController::pegarAlunosComFaltas($grupo, $turmas);
-        
+
         $dados = array(
             'relatorio' => $relatorio,
             'periodoInicial' => $arrayPeriodoDoMes[0],
@@ -62,27 +62,6 @@ class PrincipalController extends CircuitoController {
             'alunosComFaltas' => $alunosComFaltas,
             'turmas' => $turmas,
         );
-
-
-        $tipoRelatorioPessoal = 1;
-        $tipoRelatorioEquipe = 2;
-        $periodo = -1;
-        $grupoPaiFilhoFilhos = $grupo->getGrupoPaiFilhoFilhosAtivos($periodo);
-        if ($grupoPaiFilhoFilhos) {
-            $discipulos = array();
-            foreach ($grupoPaiFilhoFilhos as $gpFilho) {
-                $grupoFilho = $gpFilho->getGrupoPaiFilhoFilho();
-                $numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupoFilho);
-                $relatorio12 = RelatorioController::montaRelatorio($this->getRepositorio(), $numeroIdentificador, $periodo, $tipoRelatorioEquipe, false, RelatorioController::relatorioCelulaRealizadas);
-                $relatorio12Pessoal = RelatorioController::montaRelatorio($this->getRepositorio(), $numeroIdentificador, $periodo, $tipoRelatorioPessoal, false, RelatorioController::relatorioCelulaRealizadas);
-                if ($relatorio12['celulaQuantidade'] > 0) {
-                    if ($relatorio12['celulaRealizadas'] < $relatorio12['celulaQuantidade']) {
-                        $discipulos[] = $gpFilho;
-                    }
-                }
-            }
-            $dados['discipulos'] = $discipulos;
-        }
 
         $view = new ViewModel($dados);
         /* Javascript */
