@@ -3,11 +3,11 @@
 namespace Application\Form;
 
 use Application\Controller\Helper\Constantes;
+use Application\Controller\Helper\Funcoes;
 use Application\Model\Entity\Turma;
 use Zend\Form\Element\Csrf;
 use Zend\Form\Element\Hidden;
 use Zend\Form\Element\Select;
-use Zend\Form\Element\Textarea;
 use Zend\Form\Element\Text;
 use Zend\Form\Form;
 
@@ -23,7 +23,7 @@ class TurmaForm extends Form {
      * Construtor
      * @param String $name
      */
-    public function __construct($name = null, $cursos = null,Turma $turma = null) {
+    public function __construct($name = null, $cursos = null, Turma $turma = null) {
         parent::__construct($name);
         /**
          * Configuração do formulário
@@ -50,8 +50,8 @@ class TurmaForm extends Form {
 
         $arryTipo = array();
         $arrayTipo[0] = Constantes::$TRADUCAO_TIPO;
-        if(!empty($cursos)){
-            foreach($cursos as $curso){
+        if (!empty($cursos)) {
+            foreach ($cursos as $curso) {
                 $arrayTipo[$curso->getId()] = $curso->getNome();
             }
         }
@@ -68,8 +68,7 @@ class TurmaForm extends Form {
         $arrayMesTurma = array();
         $arrayMesTurma[0] = Constantes::$TRADUCAO_MES;
         for ($indiceMesNoAno = 1; $indiceMesNoAno <= 12; $indiceMesNoAno++) {
-            $numeroAjustado = str_pad($indiceMesNoAno, 2, 0, STR_PAD_LEFT);
-            $arrayMesTurma[$indiceMesNoAno] = $numeroAjustado;
+            $arrayMesTurma[$indiceMesNoAno] = Funcoes::mesPorExtenso($indiceMesNoAno, 1);
         }
         $inputSelectMesTurma = new Select();
         $inputSelectMesTurma->setName(Constantes::$FORM_INPUT_MES);
@@ -84,7 +83,7 @@ class TurmaForm extends Form {
         $arrayAnoTurma = array();
         $arrayAnoTurma[0] = Constantes::$TRADUCAO_ANO;
         $anoAtual = date('Y');
-        for ($indiceAno = $anoAtual; $indiceAno >= ($anoAtual - 100); $indiceAno--) {
+        for ($indiceAno = $anoAtual; $indiceAno >= ($anoAtual - 1); $indiceAno--) {
             $arrayAnoTurma[$indiceAno] = $indiceAno;
         }
         $inputSelectAnoTurma = new Select();
@@ -104,7 +103,7 @@ class TurmaForm extends Form {
         /* Observacao */
         $this->add($observacaoTextArea);
 
-        if(!is_null($turma)){
+        if (!is_null($turma)) {
             $this->get(Constantes::$FORM_ID)->setValue($turma->getId());
             $this->get(Constantes::$FORM_INPUT_MES)->setValue($turma->getMes());
             $this->get(Constantes::$FORM_INPUT_ANO)->setValue($turma->getAno());
@@ -112,7 +111,6 @@ class TurmaForm extends Form {
             $this->get(Constantes::$FORM_INPUT_TIPO)->setValue($turma->getTipo_turma_id());
             $this->get(Constantes::$FORM_INPUT_TIPO)->setAttribute('disabled', 'disabled');
         }
-
     }
 
 }

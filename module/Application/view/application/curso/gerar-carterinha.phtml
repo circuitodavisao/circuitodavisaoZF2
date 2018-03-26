@@ -18,16 +18,22 @@ foreach ($this->alunosId as $idTurmaPessoa) {
     $turmaPessoa = $this->repositorio->getTurmaPessoaORM()->encontrarPorId($idTurmaPessoa);
 
     echo '<fieldset style="width: 8cm; height: 5cm; float: ' . $alinhamento . '; font-family: sans-serif; font-size: 10px;">';
-    echo '<img src = "/img/logos/logo_circuito.png" />';
+    echo '<div align="center">';
+    echo '<img style="padding: 10px;" src="/img/logos/logo_circuito.png" />';
+    echo '</div>';
     echo '<hr />';
-    echo '<div align=left>';
+    echo '<div align="left">';
     echo 'Nome: ' . $turmaPessoa->getPessoa()->getNome() . '<br />';
     echo 'Equipe: ' . $turmaPessoa->getPessoa()->getGrupoPessoaAtivo()->getGrupo()->getEntidadeAtiva()->infoEntidade() . '<br />';
     echo 'Revis&atilde;o: ' . Funcoes::mesPorExtenso($turmaPessoa->getTurma()->getMes()) . '/' . $turmaPessoa->getTurma()->getAno() . '<br />';
     echo '</div>';
     echo '<br />';
+
+    echo '<div align="center" style="margin-top: 20px;">';
     echo '<div id="code' . $turmaPessoa->getId() . '"></div>';
     echo '<script type="text/javascript">$("#code' . $turmaPessoa->getId() . '").barcode("' . $turmaPessoa->getId() . '", "code93", {barWidth: 2, barHeight: 40});</script>';
+    echo '</div>';
+
     echo '</fieldset>';
     $cont8++;
     if ($cont8 == 8) {
@@ -35,3 +41,4 @@ foreach ($this->alunosId as $idTurmaPessoa) {
         echo "<div style=\"page-break-before: always\"></div>";
     }
 }
+echo $this->botaoSimples('IMPRIMIR', $this->funcaoOnClick('print()'));

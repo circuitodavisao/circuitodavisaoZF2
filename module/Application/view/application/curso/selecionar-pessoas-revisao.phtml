@@ -8,7 +8,7 @@ use Application\Controller\Helper\Constantes;
  * Descricao: Página de listagem de pessoas para o Revisao
  */
 ?>
-<form id="form" action="cursoCadastrarTurmaPessoa" method="post">
+<form class="mt50" id="form" action="cursoCadastrarTurmaPessoa" method="post">
     <input type="hidden" name="idEvento" id="idEvento" value="<?php echo $this->evento->getId(); ?>" />
     <?php
     /* Monta a listagem de eventos baseada no tipo do Evento passado */
@@ -21,20 +21,20 @@ use Application\Controller\Helper\Constantes;
             <div class="section-divider">
                 <span>
                     <?php
-                    echo "Deseja Realmente remover esses Alunos da Turma?";
+                    echo "Adicionar essas pessoas a turma?";
                     ?>
                 </span>
             </div>
-            <div class="panel heading-border panel-danger">
+            <div class="panel heading-border panel-primary">
                 <div class="panel-body">
-                    <div id="alunosExcluidos"></div>
+                    <div id="pessoasSelecionadas"></div>
                 </div>
             </div>
             <div id="divBotaoVoltar" class="panel-footer text-right" style="height:65px;">
                 <?php
                 $stringNomeDaFuncaoOnClickVoltar = 'mostrarAlunos()';
                 echo $this->botaoLink($this->translate(Constantes::$TRADUCAO_VOLTAR), Constantes::$STRING_HASHTAG, 2, $this->funcaoOnClick($stringNomeDaFuncaoOnClickVoltar));
-                $stringNomeDaFuncaoOnClickProsseguir = 'document.getElementById("form").submit()';
+                $stringNomeDaFuncaoOnClickProsseguir = 'mostrarSplash(); document.getElementById("form").submit()';
                 echo $this->botaoLink($this->translate(Constantes::$TRADUCAO_CONFIRMACAO), Constantes::$STRING_HASHTAG, 0, $this->funcaoOnClick($stringNomeDaFuncaoOnClickProsseguir));
                 ?>
             </div>
@@ -59,9 +59,9 @@ use Application\Controller\Helper\Constantes;
                 contador += '<strong>' + this.id + '</strong><br/>';
                 return produto;
             }).get();
-            $('#alunosExcluidos').html(contador);
+            $('#pessoasSelecionadas').html(contador);
         } else {
-            $('#alunosExcluidos').html("Nenhum aluno foi selecionado!!");
+            $('#pessoasSelecionadas').html("Nenhum aluno foi selecionado!!");
         }
     }
     function mostrarAlunos() {

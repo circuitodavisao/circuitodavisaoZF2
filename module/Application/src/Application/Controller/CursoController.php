@@ -485,7 +485,7 @@ class CursoController extends CircuitoController {
                 $idCurso = $dadosPost['idCurso'];
                 $mes = $dadosPost['Mes'];
                 $ano = $dadosPost['Ano'];
-                $observacao = $dadosPost['observacao'];
+                $observacao = strtoupper($dadosPost['observacao']);
 
                 if ($id) {
                     $turma = $this->getRepositorio()->getTurmaORM()->encontrarPorId($id);
@@ -656,19 +656,20 @@ class CursoController extends CircuitoController {
         $sessao = new Container(Constantes::$NOME_APLICACAO);
         $request = $this->getRequest();
         if ($request->isPost()) {
+            $post = $request->getPost();
             try {
                 $this->getRepositorio()->iniciarTransacao();
-                $idEvento = $_POST['idEvento'];
+                $idEvento = $post['idEvento'];
                 $evento = $this->getRepositorio()->getEventoORM()->encontrarPorId($idEvento);
                 $frequencias = $evento->getEventoFrequencia();
                 $pessoas = array();
                 if ($frequencias) {
                     foreach ($frequencias as $frequencia) {
                         if ($frequencia->getFrequencia() == 'S') {
-                            $adicionar = true;
-                            foreach ($_POST as $key => $value) {
-                                if ($key == 'alunos' && $frequencia->getPessoa()->getId() != $value) {
-                                    $adicionar = false;
+                            $adicionar = false;
+                            foreach ($post as $key => $value) {
+                                if ($key == 'alunos' && $frequencia->getPessoa()->getId() == $value) {
+                                    $adicionar = true;
                                 }
                             }
                             if ($adicionar) {
@@ -829,12 +830,13 @@ class CursoController extends CircuitoController {
                 }
             }
         }
-
-        return new ViewModel(
+        $viewModel = new ViewModel(
                 array(
             'alunosId' => $alunosId,
             'repositorio' => $this->getRepositorio(),
         ));
+        $viewModel->setTerminal(true);
+        return $viewModel;
     }
 
     public function lancarPresencaAction() {
@@ -1083,7 +1085,12 @@ class CursoController extends CircuitoController {
                                     $mostrar = true;
                                     $faltas[$turma->getId()][$turmaPessoa->getId()][] = [$aula->getDisciplina()->getNome() . ' Aula ' . $aula->getPosicao(), $aula->getId()];
                                 }
-                                if ($aula->getId() == $turmaAulaAtiva->getAula()->getId()) {
+                                if ($turmaAulaAtiva) {
+                                    if ($aula->getId() == $turmaAulaAtiva->getAula()->getId()) {
+                                        $parar = true;
+                                        break;
+                                    }
+                                } else {
                                     $parar = true;
                                     break;
                                 }
@@ -1129,11 +1136,13 @@ class CursoController extends CircuitoController {
                 }
             }
         }
-
-        return new ViewModel(
+        $viewModel = new ViewModel(
                 array(
             'reposicoes' => $reposicoes,
         ));
+        $viewModel->setTerminal(true);
+
+        return $viewModel;
     }
 
     public function gerarFaltasAction() {

@@ -1,7 +1,4 @@
 <?php
-
-use Application\Controller\Helper\Funcoes;
-
 echo $this
         ->headScript()
         ->prependFile($this->basePath() . '/js/circuito_da_visao/jquery-barcode.js' . $versao)
@@ -71,3 +68,5 @@ foreach ($this->reposicoes as $reposicao) {
     </div>
     <?php
 }
+echo '<div style="page-break-after: always"></div>';
+echo $this->botaoSimples('IMPRIMIR', $this->funcaoOnClick('print()'));
