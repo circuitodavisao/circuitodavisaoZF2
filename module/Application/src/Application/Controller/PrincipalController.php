@@ -34,7 +34,7 @@ class PrincipalController extends CircuitoController {
 
         $eCasal = $grupo->verificaSeECasal();
         $arrayPeriodoDoMes = Funcoes::encontrarPeriodoDeUmMesPorMesEAno(date('m'), date('Y'));
-        $relatorio = RelatorioController::relatorioCompleto($this->getRepositorio(), $grupo, RelatorioController::relatorioMembresiaECelula, date('m'), date('Y'));
+//        $relatorio = RelatorioController::relatorioCompleto($this->getRepositorio(), $grupo, RelatorioController::relatorioMembresiaECelula, date('m'), date('Y'));
  
         $mostrarPrincipal = true;
         if (!$entidade->verificarSeEstaAtivo()) {

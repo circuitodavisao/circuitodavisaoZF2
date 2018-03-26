@@ -11,7 +11,7 @@ $form = $this->formCadastroTurma;
 $form->prepare();
 $form->setAttribute(Constantes::$ACTION, $this->url(Constantes::$ROUTE_CURSO, array(Constantes::$ACTION => Constantes::$PAGINA_SALVAR_TURMA)));
 ?>
-<div class="mw1000 center-block p10">
+<div class="mw1000 center-block p10 mt40">
     <div class="row ">
         <div id="content" class="animated fadeIn">
             <div class="row">
@@ -24,11 +24,12 @@ $form->setAttribute(Constantes::$ACTION, $this->url(Constantes::$ROUTE_CURSO, ar
                         <?php echo $this->form()->openTag($form); ?>
                         <div class="panel-body bg-light p25">
                             <?php
-                            echo $this->divMensagens(); 
-                            echo $this->inputFormularioSimples(Constantes::$TRADUCAO_TIPO, $form->get(Constantes::$FORM_ID_CURSO), 12, 2);
-                            echo $this->inputFormularioSimples(Constantes::$TRADUCAO_MES, $form->get(Constantes::$FORM_INPUT_MES), 12, 2);
-                            echo $this->inputFormularioSimples(Constantes::$TRADUCAO_ANO, $form->get(Constantes::$FORM_INPUT_ANO), 12, 2);
-                            echo $this->inputFormularioSimples(Constantes::$TRADUCAO_OBSERVACAO, $form->get(Constantes::$FORM_OBSERVACAO), 12);
+                            echo $this->inputFormularioSimples(Constantes::$TRADUCAO_TIPO, $form->get(Constantes::$FORM_ID_CURSO), 6, 2);
+                            echo $this->inputFormularioSimples(Constantes::$TRADUCAO_OBSERVACAO, $form->get(Constantes::$FORM_OBSERVACAO), 6);
+                            echo $this->inputFormularioSimples(Constantes::$TRADUCAO_MES, $form->get(Constantes::$FORM_INPUT_MES), 6, 2);
+                            echo $this->inputFormularioSimples(Constantes::$TRADUCAO_ANO, $form->get(Constantes::$FORM_INPUT_ANO), 6, 2);
+
+                            echo $this->divMensagens();
                             ?>
                         </div>
                         <!-- end .form-body section -->
@@ -36,7 +37,7 @@ $form->setAttribute(Constantes::$ACTION, $this->url(Constantes::$ROUTE_CURSO, ar
                             <?php
                             echo $this->formHidden($form->get(Constantes::$FORM_ID));
                             echo $this->formHidden($form->get(Constantes::$INPUT_CSRF));
-                            $stringNomeDaFuncaoOnClickCadastro = 'funcaoCircuito("' .Constantes::$ROUTE_CURSO. Constantes::$PAGINA_LISTAR_TURMA . '", 0)';
+                            $stringNomeDaFuncaoOnClickCadastro = 'mostrarSplash(); funcaoCircuito("' . Constantes::$ROUTE_CURSO . Constantes::$PAGINA_LISTAR_TURMA . '", 0)';
                             echo $this->botaoLink($this->translate(Constantes::$TRADUCAO_VOLTAR), Constantes::$STRING_HASHTAG, 2, $this->funcaoOnClick($stringNomeDaFuncaoOnClickCadastro));
                             /* Submit */
                             $funcaoVerificarCadastroPessoa = $this->funcaoOnClick('validarLancamentoCadastrarTurma(this.form)');
@@ -44,7 +45,7 @@ $form->setAttribute(Constantes::$ACTION, $this->url(Constantes::$ROUTE_CURSO, ar
                             ?>
                         </div>
                         <!-- end .form-footer section -->
-<?php echo $this->form()->closeTag(); ?>
+                        <?php echo $this->form()->closeTag(); ?>
                     </div>
                     <!-- end .admin-form section -->
                 </div>
@@ -55,8 +56,8 @@ $form->setAttribute(Constantes::$ACTION, $this->url(Constantes::$ROUTE_CURSO, ar
 </div>
 <script type="application/javascript">
 
-function validarLancamentoCadastrarTurma(form) {
-    var tipo = $('#Tipo').val();
+    function validarLancamentoCadastrarTurma(form) {
+    var idCurso = $('#idCurso').val();
     var Mes = $('#Mes').val();
     var Ano = $('#Ano').val();
     var observacao = $('#observacao').val();
@@ -66,45 +67,44 @@ function validarLancamentoCadastrarTurma(form) {
     var mensagem = '';
     var mensagemReal = '';
 
-    if (tipo === '0') {
-
-        temErro = true;
-        if (mensagem == '') {
-            mensagem = 'Tipo';
-        } else {
-            mensagem += ', Tipo';
-        }
+    if (idCurso === '0') {
+    temErro = true;
+    if (mensagem == '') {
+    mensagem = 'Curso';
+    } else {
+    mensagem += ', Curso';
+    }
     }
     if (Mes === '0') {
-        temErro = true;
-        if (mensagem == '') {
-            mensagem = 'Mês';
-        } else {
-            mensagem += ', Mês';
-        }
+    temErro = true;
+    if (mensagem == '') {
+    mensagem = 'Mês';
+    } else {
+    mensagem += ', Mês';
+    }
     }
     if (Ano === '0') {
-        temErro = true;
-        if (mensagem == '') {
-            mensagem = 'Ano';
-        } else {
-            mensagem += ', Ano';
-        }
+    temErro = true;
+    if (mensagem == '') {
+    mensagem = 'Ano';
+    } else {
+    mensagem += ', Ano';
+    }
     }
 
     if (temErro) {
-        mensagemReal = 'Preencha o(s) seguinte(s) campo(s): ' + mensagem;
-        divMensagens
-                .html(mensagemReal)
-                .removeClass('alert-success')
-                .removeClass('hidden')
-                .addClass('alert-danger');
+    mensagemReal = 'Preencha o(s) seguinte(s) campo(s): ' + mensagem;
+    divMensagens
+    .html(mensagemReal)
+    .removeClass('alert-success')
+    .removeClass('hidden')
+    .addClass('alert-danger');
     } else {
-
-        divMensagens
-                .addClass('hidden');
-        form.submit();
+    mostrarSplash(); 
+    divMensagens
+    .addClass('hidden');
+    form.submit();
     }
-}
+    }
 
 </script>

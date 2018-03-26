@@ -453,7 +453,7 @@ class Menu extends AbstractHelper {
             if ($arrayOQueMostrarDosCursos['gerarCarterinhas']) {
                 $html .= '<li>';
                 $html .= '<a href="/cursoSelecionarParaCarterinha" onClick="mostrarSplash();">';
-                $html .= '<span class="fa fa-users"></span>';
+                $html .= '<span class="fa fa-user"></span>';
                 $html .= '<span class="sidebar-title">Gerar Carterinha</span>';
                 $html .= '</a>';
                 $html .= '</li>';
