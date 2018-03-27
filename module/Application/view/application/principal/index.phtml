@@ -2,6 +2,7 @@
 
 use Application\Controller\Helper\Funcoes;
 use Application\Controller\RelatorioController;
+use Application\View\Helper\BotaoSimples;
 ?>
 <!-- Begin: Content -->
 <?php if ($this->mostrarPrincipal) { ?>
@@ -31,13 +32,11 @@ use Application\Controller\RelatorioController;
                         <span class="fa fa-users"></span>
                     </label>   
                 </div>
-                <div class="row">
-                    <div class="panel">
-                        <div class="panel-heading text-center">
-                            <span class="panel-title">Células não realizadas <br /><?php echo Funcoes::montaPeriodo(-1)[0]; ?></span>
-                        </div>
-                        <div class="panel-body pn">
-                            <table class="table table-condensed mbn tc-med-1 tc-bold-last">
+                <!--circuito me ajuda-->
+                <div class="row alert alert-default mt10">
+                    <div class="col-xs-12 col-md-12 col-lg-12">                        
+                        <div class="panel">                        
+                            <div class="panel-body pn">                                
                                 <?php
                                 if ($this->discipulos) {
                                     $html = '';
@@ -49,12 +48,12 @@ use Application\Controller\RelatorioController;
                                         $relatorioDiscipuloPessoal = $this->discipulosRelatorioPessoal[$grupoFilho->getId()];
                                         $diferenca = $relatorioDiscipulo['celulaQuantidade'] - $relatorioDiscipulo['celulaRealizadas'];
                                         $diferencaPessoal = $relatorioDiscipuloPessoal['celulaQuantidade'] - $relatorioDiscipuloPessoal['celulaRealizadas'];
-                                        $html .= '<tr class="dark">';
+                                        $html .= '<tr class="linhaCelulasNaoRealizadas hidden info">';
                                         $html .= '<td>EQUIPE - ' . $nomeLideres . '</td>';
                                         $html .= '<td></td>';
                                         $html .= '</tr>';
                                         if ($diferencaPessoal > 0) {
-                                            $html .= '<tr>';
+                                            $html .= '<tr class="linhaCelulasNaoRealizadas hidden">';
                                             $html .= '<td class="text-right">' . $nomeLideres . '</td>';
                                             $html .= '<td>' . $diferencaPessoal . '</td>';
                                             $html .= '</tr>';
@@ -67,31 +66,43 @@ use Application\Controller\RelatorioController;
                                                 $relatorioDiscipulo144 = $this->discipulosRelatorio[$grupoFilho144->getId()];
                                                 if ($relatorioDiscipulo144) {
                                                     $diferenca144 = $relatorioDiscipulo144['celulaQuantidade'] - $relatorioDiscipulo144['celulaRealizadas'];
-                                                    $html .= '<tr>';
+                                                    $html .= '<tr class="linhaCelulasNaoRealizadas hidden">';
                                                     $html .= '<td class="text-right">' . $nomeLideres144 . '</td>';
                                                     $html .= '<td>' . $diferenca144 . '</td>';
                                                     $html .= '</tr>';
                                                 }
                                             }
                                         }
-                                        $html .= '<tr class="">';
+                                        $html .= '<tr class="linhaCelulasNaoRealizadas hidden primary">';
                                         $html .= '<td class="text-right">TOTAL</td>';
                                         $html .= '<td>' . $diferenca . '</td>';
                                         $html .= '</tr>';
-                                        $html .= '<tr>';
-                                        $html .= '<td colspan="2"></td>';
+                                        $html .= '<tr class="linhaCelulasNaoRealizadas hidden">';
+                                        $html .= '<td colspan="3"></td>';
                                         $html .= '</tr>';
                                         $totalDeCelulasNaoRealizadas += $diferenca;
                                     }
+
+                                    echo '<table class="table table-condensed">';
+                                    echo '<thead>';
+                                    echo '<tr class="info">';
+                                    echo '<th colspan="3" class="text-center">Circuito me Ajuda ' . Funcoes::montaPeriodo(-1)[0] . '</th>';
+                                    echo '</tr>';
+                                    echo '</thead>';
+                                    echo '<tbody>';
                                     echo '<tr>';
-                                    echo '<td colspan="3" class="text-center">Celulas <b>N&atilde;o</b> Realizadas: ' . $totalDeCelulasNaoRealizadas . '</td>';
+                                    echo '<td class="text-center">Celulas <b>N&atilde;o</b> Realizadas: ' . $totalDeCelulasNaoRealizadas . '</td>';
+                                    $funcao = $this->funcaoOnClick('$(".linhaCelulasNaoRealizadas").toggleClass("hidden")');
+                                    echo '<td>' . $this->botaoSimples('<i class="fa fa-eye" />', $funcao, BotaoSimples::botaoMuitoPequenoImportante, BotaoSimples::posicaoAoCentro) . '</td>';
                                     echo '</tr>';
                                     echo $html;
+                                    echo '</tbody>';
+                                    echo '</table>';
                                 }
                                 ?>
-                            </table>
-                        </div>
-                    </div>  
+                            </div>
+                        </div>  
+                    </div>
                 </div>  
                 <!--cursos-->
                 <?php if (count($this->alunosComFaltas[0]) > 0) { ?>
