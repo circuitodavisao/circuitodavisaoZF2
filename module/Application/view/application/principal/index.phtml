@@ -1,9 +1,7 @@
 <?php
 
-use Application\Controller\CursoController;
 use Application\Controller\Helper\Funcoes;
 use Application\Controller\RelatorioController;
-use Application\View\Helper\BotaoSimples;
 ?>
 <!-- Begin: Content -->
 <?php if ($this->mostrarPrincipal) { ?>
@@ -33,55 +31,117 @@ use Application\View\Helper\BotaoSimples;
                         <span class="fa fa-users"></span>
                     </label>   
                 </div>
-                <?php if (count($this->alunosComFaltas[0]) > 0) { ?>
-                    <!--cursos-->
-                    <div class="row alert alert-info mt10">
-                        <div class="col-xs-12 col-md-12 col-lg-12">
-                            <table class="table table-condensed">
-                                <tbody>
-                                    <tr>
-                                        <td>Cursos</td>
-                                    </tr>
-                                    <?php
-                                    foreach ($this->turmas as $turma) {
-                                        if (count($this->alunosComFaltas[0][$turma->getId()]) > 0) {
-                                            $contadorTurma = 0;
-                                            foreach ($this->alunosComFaltas[0][$turma->getId()] as $turmaPessoa) {
-                                                foreach ($this->alunosComFaltas[1][$turma->getId()][$turmaPessoa->getId()] as $falta) {
-                                                    $contadorTurma++;
-                                                }
-                                            }
-                                            $spanMobile = '<span class="hidden-sm hidden-md hidden-lg">' . $turma->getCurso()->getNomeSigla() . '</span>';
-                                            $spanDesktop = '<span class="hidden-xs">' . $turma->getCurso()->getNome() . '</span>';
-                                            echo '<tr>';
-                                            echo '<td>' . $spanDesktop . $spanMobile . ' - ' . Funcoes::mesPorExtenso($turma->getMes()) . '/' . $turma->getAno() . '</td>';
-                                            echo '<td>Faltas ' . $contadorTurma . '</td>';
-                                            echo '<td>' . $this->botaoSimples('<i class="fa fa-eye" />', $this->funcaoOnClick('$(".turma' . $turma->getId() . '").toggleClass("hidden")'), BotaoSimples::botaoMuitoPequenoImportante, BotaoSimples::posicaoAoCentro) . '</td>';
-                                            echo '</tr>';
-                                            foreach ($this->alunosComFaltas[0][$turma->getId()] as $turmaPessoa) {
-                                                $spanDesktopNome = '<span class="hidden-xs">' . $turmaPessoa->getPessoa()->getNome() . '</span>';
-                                                $spanMobileNome = '<span class="hidden-sm hidden-md hidden-lg">' . $turmaPessoa->getPessoa()->getNomePrimeiroUltimo() . '</span>';
-                                                $nomeEquipe = CursoController::nomeEquipeTurmaPessoa($turmaPessoa);
-                                                echo '<tr class="turma' . $turma->getId() . ' hidden">';
-                                                echo '<td colspan="2"><i class="fa fa-user" /> ' . $spanDesktopNome . $spanMobileNome . '</td>';
-                                                echo '<td>' . $nomeEquipe . '</td>';
-                                                echo '</tr>';
-                                                foreach ($this->alunosComFaltas[1][$turma->getId()][$turmaPessoa->getId()] as $falta) {
-                                                    echo '<tr class="turma' . $turma->getId() . ' hidden">';
-                                                    echo '<td colspan="2" class="text-right"># ' . $falta[0] . '</td>';
-//                                                    echo '<td>' . $this->botaoSimples('<i class="fa fa-file-text" />', '#', BotaoSimples::botaoPequenoImportante, BotaoSimples::posicaoADireita) . '</td>';
-                                                    echo '<td><i class="fa fa-file-text" /></td>';
-                                                    echo '</tr>';
+                <div class="row">
+                    <div class="panel">
+                        <div class="panel-heading text-center">
+                            <span class="panel-title">Células não realizadas <br /><?php echo Funcoes::montaPeriodo(-1)[0]; ?></span>
+                        </div>
+                        <div class="panel-body pn">
+                            <table class="table table-condensed mbn tc-med-1 tc-bold-last">
+                                <?php
+                                if ($this->discipulos) {
+                                    $html = '';
+                                    $totalDeCelulasNaoRealizadas = 0;
+                                    foreach ($this->discipulos as $gpFilho) {
+                                        $grupoFilho = $gpFilho->getGrupoPaiFilhoFilho();
+                                        $nomeLideres = $grupoFilho->getNomeLideresAtivos();
+                                        $relatorioDiscipulo = $this->discipulosRelatorio[$grupoFilho->getId()];
+                                        $relatorioDiscipuloPessoal = $this->discipulosRelatorioPessoal[$grupoFilho->getId()];
+                                        $diferenca = $relatorioDiscipulo['celulaQuantidade'] - $relatorioDiscipulo['celulaRealizadas'];
+                                        $diferencaPessoal = $relatorioDiscipuloPessoal['celulaQuantidade'] - $relatorioDiscipuloPessoal['celulaRealizadas'];
+                                        $html .= '<tr class="dark">';
+                                        $html .= '<td>EQUIPE - ' . $nomeLideres . '</td>';
+                                        $html .= '<td></td>';
+                                        $html .= '</tr>';
+                                        if ($diferencaPessoal > 0) {
+                                            $html .= '<tr>';
+                                            $html .= '<td class="text-right">' . $nomeLideres . '</td>';
+                                            $html .= '<td>' . $diferencaPessoal . '</td>';
+                                            $html .= '</tr>';
+                                        }
+                                        $grupoPaiFilhoFilhos144 = $grupoFilho->getGrupoPaiFilhoFilhosAtivos(-1);
+                                        if ($grupoPaiFilhoFilhos144) {
+                                            foreach ($grupoPaiFilhoFilhos144 as $gpFilho144) {
+                                                $grupoFilho144 = $gpFilho144->getGrupoPaiFilhoFilho();
+                                                $nomeLideres144 = $grupoFilho144->getNomeLideresAtivos();
+                                                $relatorioDiscipulo144 = $this->discipulosRelatorio[$grupoFilho144->getId()];
+                                                if ($relatorioDiscipulo144) {
+                                                    $diferenca144 = $relatorioDiscipulo144['celulaQuantidade'] - $relatorioDiscipulo144['celulaRealizadas'];
+                                                    $html .= '<tr>';
+                                                    $html .= '<td class="text-right">' . $nomeLideres144 . '</td>';
+                                                    $html .= '<td>' . $diferenca144 . '</td>';
+                                                    $html .= '</tr>';
                                                 }
                                             }
                                         }
+                                        $html .= '<tr class="">';
+                                        $html .= '<td class="text-right">TOTAL</td>';
+                                        $html .= '<td>' . $diferenca . '</td>';
+                                        $html .= '</tr>';
+                                        $html .= '<tr>';
+                                        $html .= '<td colspan="2"></td>';
+                                        $html .= '</tr>';
+                                        $totalDeCelulasNaoRealizadas += $diferenca;
                                     }
-                                    ?>
-                                </tbody>
+                                    echo '<tr>';
+                                    echo '<td colspan="3" class="text-center">Celulas <b>N&atilde;o</b> Realizadas: ' . $totalDeCelulasNaoRealizadas . '</td>';
+                                    echo '</tr>';
+                                    echo $html;
+                                }
+                                ?>
                             </table>
-
                         </div>
-                    </div>
+                    </div>  
+                </div>  
+                <!--cursos-->
+                <?php if (count($this->alunosComFaltas[0]) > 0) { ?>
+                    <!--                    <div class="row alert alert-info mt10">
+                                            <div class="col-xs-12 col-md-12 col-lg-12">
+                                                <table class="table table-condensed">
+                                                    <tbody>
+                                                        <tr>
+                                                            <td>Cursos</td>
+                                                        </tr>
+                    <?php
+//                                    foreach ($this->turmas as $turma) {
+//                                        if (count($this->alunosComFaltas[0][$turma->getId()]) > 0) {
+//                                            $contadorTurma = 0;
+//                                            foreach ($this->alunosComFaltas[0][$turma->getId()] as $turmaPessoa) {
+//                                                foreach ($this->alunosComFaltas[1][$turma->getId()][$turmaPessoa->getId()] as $falta) {
+//                                                    $contadorTurma++;
+//                                                }
+//                                            }
+//                                            $spanMobile = '<span class="hidden-sm hidden-md hidden-lg">' . $turma->getCurso()->getNomeSigla() . '</span>';
+//                                            $spanDesktop = '<span class="hidden-xs">' . $turma->getCurso()->getNome() . '</span>';
+//                                            echo '<tr>';
+//                                            echo '<td>' . $spanDesktop . $spanMobile . ' - ' . Funcoes::mesPorExtenso($turma->getMes()) . '/' . $turma->getAno() . '</td>';
+//                                            echo '<td>Faltas ' . $contadorTurma . '</td>';
+//                                            echo '<td>' . $this->botaoSimples('<i class="fa fa-eye" />', $this->funcaoOnClick('$(".turma' . $turma->getId() . '").toggleClass("hidden")'), BotaoSimples::botaoMuitoPequenoImportante, BotaoSimples::posicaoAoCentro) . '</td>';
+//                                            echo '</tr>';
+//                                            foreach ($this->alunosComFaltas[0][$turma->getId()] as $turmaPessoa) {
+//                                                $spanDesktopNome = '<span class="hidden-xs">' . $turmaPessoa->getPessoa()->getNome() . '</span>';
+//                                                $spanMobileNome = '<span class="hidden-sm hidden-md hidden-lg">' . $turmaPessoa->getPessoa()->getNomePrimeiroUltimo() . '</span>';
+//                                                $nomeEquipe = CursoController::nomeEquipeTurmaPessoa($turmaPessoa);
+//                                                echo '<tr class="turma' . $turma->getId() . ' hidden">';
+//                                                echo '<td colspan="2"><i class="fa fa-user" /> ' . $spanDesktopNome . $spanMobileNome . '</td>';
+//                                                echo '<td>' . $nomeEquipe . '</td>';
+//                                                echo '</tr>';
+//                                                foreach ($this->alunosComFaltas[1][$turma->getId()][$turmaPessoa->getId()] as $falta) {
+//                                                    echo '<tr class="turma' . $turma->getId() . ' hidden">';
+//                                                    echo '<td colspan="2" class="text-right"># ' . $falta[0] . '</td>';
+////                                                    echo '<td>' . $this->botaoSimples('<i class="fa fa-file-text" />', '#', BotaoSimples::botaoPequenoImportante, BotaoSimples::posicaoADireita) . '</td>';
+//                                                    echo '<td><i class="fa fa-file-text" /></td>';
+//                                                    echo '</tr>';
+//                                                }
+//                                            }
+//                                        }
+//                                    }
+                    ?>
+                                                    </tbody>
+                                                </table>
+                    
+                                            </div>
+                                        </div>-->
                 <?php } ?>
                 <!--proximoNivel-->
                 <div class="relatorioEquipe hidden row alert alert-default mt10">
@@ -294,34 +354,7 @@ use Application\View\Helper\BotaoSimples;
                             ?>
                         </div>
                     </div>              
-                </div>               
-                <!--celulas nao realizadas-->
-                <div  id="modalCelulasNaoRealizadas" class="popup-basic p25 mfp-with-anim mfp-hide">
-                    <div class="mt20">
-                        <div class="panel">
-                            <div class="panel-heading text-center">
-                                <span class="panel-title"><b></b></span>
-                            </div>
-                            <div class="panel-body pn"> 
-                                <table class="table mbn tc-med-1 tc-bold-last">
-                                    <?php
-                                    foreach ($this->relatorio as $relatorio) {
-                                        echo '<tr>';
-                                        echo '<td class="text-left" style="font-size:8px;">' . $relatorio['lideres'] . '</td>';
-                                        for ($indiceDeArrays = $this->periodoInicial; $indiceDeArrays <= $this->periodoFinal; $indiceDeArrays++) {
-                                            echo '<td>' . $relatorio[$indiceDeArrays]['celulaQuantidade'] . '</td>';
-                                            echo '<td>' . $relatorio[$indiceDeArrays]['celulaRealizadas'] . '</td>';
-                                            echo '<td>' . RelatorioController::formataNumeroRelatorio($relatorio[$indiceDeArrays]['celulaRealizadasPerformance']) . '%</td>';
-                                        }
-                                        echo '</tr>';
-                                    }
-                                    ?>
-                                </table>
-                            </div>
-                        </div> 
-                    </div>
-                    <button tittle="Close (Esc)" type="button" class="mfp-close bg-dark">x</button>
-                </div>
+                </div>   
                 <!--modalInformativo-->
                 <div id="modalInformativo" class="popup-basic p25 mfp-with-anim mfp-hide">
                     <div class="mt20"><span id="spanModalInformativo"></span></div>
