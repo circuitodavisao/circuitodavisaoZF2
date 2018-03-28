@@ -10,50 +10,37 @@ use Application\Controller\Helper\Constantes;
 $form = $this->formCadastroTurma;
 $form->prepare();
 $form->setAttribute(Constantes::$ACTION, $this->url(Constantes::$ROUTE_CURSO, array(Constantes::$ACTION => Constantes::$PAGINA_SALVAR_TURMA)));
-?>
-<div class="mw1000 center-block p10 mt40">
-    <div class="row ">
-        <div id="content" class="animated fadeIn">
-            <div class="row">
-                <!-- Cadastro de Pessoa -->
-                <div class="admin-form " id="register1" role="tabpanel">
-                    <blockquote class="blockquote-primary">
-                        <p>Cadastro de Turmas</p>
-                    </blockquote>
-                    <div class="panel panel-primary heading-border">
-                        <?php echo $this->form()->openTag($form); ?>
-                        <div class="panel-body bg-light p25">
-                            <?php
-                            echo $this->inputFormularioSimples(Constantes::$TRADUCAO_TIPO, $form->get(Constantes::$FORM_ID_CURSO), 6, 2);
-                            echo $this->inputFormularioSimples(Constantes::$TRADUCAO_OBSERVACAO, $form->get(Constantes::$FORM_OBSERVACAO), 6);
-                            echo $this->inputFormularioSimples(Constantes::$TRADUCAO_MES, $form->get(Constantes::$FORM_INPUT_MES), 6, 2);
-                            echo $this->inputFormularioSimples(Constantes::$TRADUCAO_ANO, $form->get(Constantes::$FORM_INPUT_ANO), 6, 2);
 
-                            echo $this->divMensagens();
-                            ?>
-                        </div>
-                        <!-- end .form-body section -->
-                        <div class="panel-footer text-right">
-                            <?php
-                            echo $this->formHidden($form->get(Constantes::$FORM_ID));
-                            echo $this->formHidden($form->get(Constantes::$INPUT_CSRF));
-                            $stringNomeDaFuncaoOnClickCadastro = 'mostrarSplash(); funcaoCircuito("' . Constantes::$ROUTE_CURSO . Constantes::$PAGINA_LISTAR_TURMA . '", 0)';
-                            echo $this->botaoLink($this->translate(Constantes::$TRADUCAO_VOLTAR), Constantes::$STRING_HASHTAG, 2, $this->funcaoOnClick($stringNomeDaFuncaoOnClickCadastro));
-                            /* Submit */
-                            $funcaoVerificarCadastroPessoa = $this->funcaoOnClick('validarLancamentoCadastrarTurma(this.form)');
-                            echo $this->botaoSimples(Constantes::$TRADUCAO_CADASTRAR, $funcaoVerificarCadastroPessoa);
-                            ?>
-                        </div>
-                        <!-- end .form-footer section -->
-                        <?php echo $this->form()->closeTag(); ?>
-                    </div>
-                    <!-- end .admin-form section -->
-                </div>
-                <!-- end: .admin-form -->
-            </div>
-        </div>
-    </div>
+echo $this->templateFormularioTopo('Cadastro de Turmas', '', 'style="margin-top: 50px"');
+echo $this->form()->openTag($form);
+?>
+<div class="panel-body bg-light">
+    <?php
+    echo $this->inputFormularioSimples(Constantes::$TRADUCAO_TIPO, $form->get(Constantes::$FORM_ID_CURSO), 6, 2);
+    echo $this->inputFormularioSimples(Constantes::$TRADUCAO_OBSERVACAO, $form->get(Constantes::$FORM_OBSERVACAO), 6);
+    echo $this->inputFormularioSimples(Constantes::$TRADUCAO_MES, $form->get(Constantes::$FORM_INPUT_MES), 6, 2);
+    echo $this->inputFormularioSimples(Constantes::$TRADUCAO_ANO, $form->get(Constantes::$FORM_INPUT_ANO), 6, 2);
+
+    echo $this->divMensagens();
+    ?>
 </div>
+<!-- end .form-body section -->
+<div class="panel-footer">
+    <?php
+    echo $this->formHidden($form->get(Constantes::$FORM_ID));
+    echo $this->formHidden($form->get(Constantes::$INPUT_CSRF));
+    $stringNomeDaFuncaoOnClickCadastro = 'mostrarSplash(); funcaoCircuito("' . Constantes::$ROUTE_CURSO . Constantes::$PAGINA_LISTAR_TURMA . '", 0)';
+    echo $this->botaoLink($this->translate(Constantes::$TRADUCAO_VOLTAR), Constantes::$STRING_HASHTAG, 2, $this->funcaoOnClick($stringNomeDaFuncaoOnClickCadastro));
+    /* Submit */
+    $funcaoVerificarCadastroPessoa = $this->funcaoOnClick('validarLancamentoCadastrarTurma(this.form)');
+    echo $this->botaoSimples(Constantes::$TRADUCAO_CADASTRAR, $funcaoVerificarCadastroPessoa);
+    ?>
+</div>
+<!-- end .form-footer section -->
+<?php
+echo $this->form()->closeTag();
+echo $this->templateFormularioRodape();
+?>
 <script type="application/javascript">
 
     function validarLancamentoCadastrarTurma(form) {

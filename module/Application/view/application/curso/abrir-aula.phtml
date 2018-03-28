@@ -1,5 +1,7 @@
 <?php
 
+use Application\Controller\Helper\Constantes;
+
 $html = '';
 $html .= $this->templateFormularioTopo('Abrir Aula', '', 'style="margin-top: 50px"');
 $html .= '<form action="/cursoSalvarAula" method="post">';
@@ -12,7 +14,9 @@ foreach ($this->opcoes as $key => $value) {
 $html .= '</select>';
 $html .= '</div>';
 $html .= '<div class="panel-footer">';
-$html .= $this->botaoSimples('Salvar', $this->funcaoOnClick('this.form.submit()'));
+$stringNomeDaFuncaoOnClickCadastro = 'mostrarSplash(); funcaoCircuito("' . Constantes::$ROUTE_CURSO . Constantes::$PAGINA_LISTAR_TURMA . '", 0)';
+$html .= $this->botaoLink($this->translate(Constantes::$TRADUCAO_VOLTAR), Constantes::$STRING_HASHTAG, 2, $this->funcaoOnClick($stringNomeDaFuncaoOnClickCadastro));
+$html .= $this->botaoSimples('Salvar', $this->funcaoOnClick('mostrarSplash(); this.form.submit()'));
 $html .= '</div>';
 $html .= '</form>';
 $html .= $this->templateFormularioRodape();

@@ -1,4 +1,9 @@
 <?php
+echo $this->doctype();
+echo '<html lang="pt-BR">';
+echo '<head></head>';
+echo '<body>';
+
 echo $this
         ->headScript()
         ->prependFile($this->basePath() . '/js/circuito_da_visao/jquery-barcode.js' . $versao)
@@ -6,14 +11,20 @@ echo $this
 ;
 echo $this->inlineScript();
 foreach ($this->reposicoes as $reposicao) {
-    $labelAula = $reposicao['aula'];
-    $nomePessoa = $reposicao['pessoa'];
-    $nomeEquipe = $reposicao['equipe'];
 
-    echo "<div id=\"bcTarget$idAulaPresenca\"  class=\"float-right\"></div>";
-    echo "<script type='text/javascript'>$(\"#bcTarget$idAulaPresenca\").barcode('$idAulaPresenca', \"code93\", {barWidth:2, barHeight:40}); </script>";
+    $aula = $this->repositorio->getAulaORM()->encontrarPorId($reposicao['idAula']);
+    $pessoa = $this->repositorio->getPessoaORM()->encontrarPorId($reposicao['idPessoa']);
+    $grupoEquipe = $this->repositorio->getGrupoORM()->encontrarPorId($reposicao['idGrupoEquipe']);
+
+    $labelAula = $aula->getDisciplina()->getNome() . ' - ' . $aula->getNome();
+    $nomePessoa = $pessoa->getNome();
+    $nomeEquipe = $grupoEquipe->getEntidadeAtiva()->getNome();
+
+    $codigoDeBarra = str_pad($reposicao['idTurmaPessoa'], 8, 0, STR_PAD_LEFT) . 9999999999 . str_pad($reposicao['idAula'], 8, 0, STR_PAD_LEFT);
+    echo '<div id="bcTarget' . $codigoDeBarra . '"  class="float-right"></div>';
+    echo '<script type="text/javascript">$("#bcTarget' . $codigoDeBarra . '").barcode("' . $codigoDeBarra . '", "code93", {barWidth:2, barHeight:40}); </script>';
     ?>
-    <div class="text-center mt50">
+    <div align="center">
         <div style='page-break-after: always'></div>
         <p>REPOSI&Ccedil;&Atilde;O DE AULA</p>
         <p>EQUIPE: <?php echo "$nomeEquipe"; ?> - <?php echo $nomePessoa; ?> - DATA: <?php echo date("d/m/Y"); ?></p>
@@ -70,3 +81,6 @@ foreach ($this->reposicoes as $reposicao) {
 }
 echo '<div style="page-break-after: always"></div>';
 echo $this->botaoSimples('IMPRIMIR', $this->funcaoOnClick('print()'));
+
+echo '</body>';
+echo '</html>';

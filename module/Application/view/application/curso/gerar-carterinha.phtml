@@ -23,13 +23,14 @@ foreach ($this->alunosId as $idTurmaPessoa) {
     echo '</div>';
     echo '<hr />';
     echo '<div align="left">';
+    echo 'Curso: ' . $turmaPessoa->getTurma()->getCurso()->getNome() . '<br />';
     echo 'Nome: ' . $turmaPessoa->getPessoa()->getNome() . '<br />';
     echo 'Equipe: ' . $turmaPessoa->getPessoa()->getGrupoPessoaAtivo()->getGrupo()->getEntidadeAtiva()->infoEntidade() . '<br />';
-    echo 'Revis&atilde;o: ' . Funcoes::mesPorExtenso($turmaPessoa->getTurma()->getMes()) . '/' . $turmaPessoa->getTurma()->getAno() . '<br />';
+    echo 'Revis&atilde;o: ' . Funcoes::mesPorExtenso($turmaPessoa->getTurma()->getMes(), 1) . '/' . $turmaPessoa->getTurma()->getAno() . '<br />';
     echo '</div>';
     echo '<br />';
 
-    echo '<div align="center" style="margin-top: 20px;">';
+    echo '<div align="center" style="margin-top: 15px;">';
     echo '<div id="code' . $turmaPessoa->getId() . '"></div>';
     echo '<script type="text/javascript">$("#code' . $turmaPessoa->getId() . '").barcode("' . $turmaPessoa->getId() . '", "code93", {barWidth: 2, barHeight: 40});</script>';
     echo '</div>';

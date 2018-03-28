@@ -33,6 +33,9 @@ class TurmaPessoaAula extends CircuitoEntity {
     /** @ORM\Column(type="integer") */
     protected $aula_id;
 
+    /** @ORM\Column(type="string") */
+    protected $reposicao;
+
     function getTurma_pessoa() {
         return $this->turma_pessoa;
     }
@@ -63,6 +66,14 @@ class TurmaPessoaAula extends CircuitoEntity {
 
     function setAula_id($aula_id) {
         $this->aula_id = $aula_id;
+    }
+
+    function getReposicao() {
+        return $this->reposicao;
+    }
+
+    function setReposicao($reposicao) {
+        $this->reposicao = $reposicao;
     }
 
 }

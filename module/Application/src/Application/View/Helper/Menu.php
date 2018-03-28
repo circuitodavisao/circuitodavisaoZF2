@@ -394,7 +394,6 @@ class Menu extends AbstractHelper {
             $arrayOQueMostrarDosCursos['gerarReposicoes'] = false;
             $arrayOQueMostrarDosCursos['gerarFaltas'] = false;
             $arrayOQueMostrarDosCursos['lancarPresenca'] = false;
-            $arrayOQueMostrarDosCursos['lancarReposicao'] = false;
             if ($this->view->pessoa->getPessoaCursoAcessoAtivo()) {
                 if ($this->view->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::COORDENADOR) {
                     $arrayOQueMostrarDosCursos['turmas'] = true;
@@ -411,7 +410,6 @@ class Menu extends AbstractHelper {
                         $this->view->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::SUPERVISOR ||
                         $this->view->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::AUXILIAR) {
                     $arrayOQueMostrarDosCursos['lancarPresenca'] = true;
-                    $arrayOQueMostrarDosCursos['lancarReposicao'] = true;
                 }
             } else {
                 if ($this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja) {
@@ -422,7 +420,6 @@ class Menu extends AbstractHelper {
                     $arrayOQueMostrarDosCursos['gerarReposicoes'] = true;
                     $arrayOQueMostrarDosCursos['gerarFaltas'] = true;
                     $arrayOQueMostrarDosCursos['lancarPresenca'] = true;
-                    $arrayOQueMostrarDosCursos['lancarReposicao'] = true;
                 }
             }
             if ($arrayOQueMostrarDosCursos['reentrada']) {
@@ -474,34 +471,14 @@ class Menu extends AbstractHelper {
                 $html .= '</a>';
                 $html .= '</li>';
             }
-            $html .= '<li>';
-
-            $html .= '<li>';
-            if ($arrayOQueMostrarDosCursos['lancarPresenca'] ||
-                    $arrayOQueMostrarDosCursos['lancarReposicao']) {
-                $html .= '<a class="accordion-toggle" href="#">';
-                $html .= '<span class="fa fa-terminal"></span>';
-                $html .= '<span class="sidebar-title">Lançar</span>';
-                $html .= '<span class="caret"></span>';
-                $html .= '</a>';
-            }
-
-            $html .= '<ul class="nav sub-nav">';
             if ($arrayOQueMostrarDosCursos['lancarPresenca']) {
                 $html .= '<li>';
                 $html .= '<a href="/cursoLancarPresenca" onClick="mostrarSplash();">';
-                $html .= '<span class="sidebar-title">Presença</span>';
+                $html .= '<span class="fa fa-pencil"></span>';
+                $html .= '<span class="sidebar-title">Lançar Presença/Reposição</span>';
                 $html .= '</a>';
                 $html .= '</li>';
             }
-            if ($arrayOQueMostrarDosCursos['lancarReposicao']) {
-                $html .= '<li>';
-                $html .= '<a href="/cursoLancarPresenca" onClick="mostrarSplash();">';
-                $html .= '<span class="sidebar-title">Reposi&ccedil;&atilde;o</span>';
-                $html .= '</a>';
-                $html .= '</li>';
-            }
-            $html .= '</ul>';
             $html .= '</li>';
         }
 
