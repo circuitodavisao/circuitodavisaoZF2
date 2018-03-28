@@ -14,7 +14,8 @@ use Application\View\Helper\BotaoSimples;
 <?php
 
 $html = '';
-$html .= '<div class="panel heading-border panel-primary mt50">';
+$html .= '<blockquote class="mt50 blockquote-primary"><small>' . $this->translate('Chamada') . '</small></blockquote>';
+$html .= '<div class="panel heading-border panel-primary">';
 $html .= '<div class="panel-body bg-light">';
 
 $html .= '<div class="form-group">';
@@ -22,7 +23,7 @@ $html .= '<label for="selecionaTurma">' . $this->translate('Selecione a Turma') 
 $html .= '<select class="form-control" id="selecionaTurma" onChange="$(\'.table\').addClass(\'hidden\'); $(\'#turma\'+$(\'#selecionaTurma\').val()).removeClass(\'hidden\');">';
 $html .= '<option value="0" >' . $this->translate(Constantes::$TRADUCAO_SELECIONAR) . '</option>';
 foreach ($this->turmas as $turma) {
-    $html .= '<option value="' . $turma->getId() . '" >' . $turma->getCurso()->getNomeSigla() . ' - ' . Funcoes::mesPorExtenso($turma->getMes()) . '/' . $turma->getAno() . '</option>';
+    $html .= '<option value="' . $turma->getId() . '" >' . $turma->getCurso()->getNomeSigla() . ' - ' . Funcoes::mesPorExtenso($turma->getMes(), 1) . '/' . $turma->getAno() . '</option>';
 }
 $html .= '</select>';
 $html .= '</div>';
@@ -123,20 +124,28 @@ foreach ($this->turmas as $turma) {
                         $mostrar = true;
                     }
                     if ($mostrar) {
+                        $aulaAtiva = $turma->getTurmaAulaAtiva()->getAula();
                         foreach ($disciplina->getAula() as $aula) {
-                            $frequencia = false;
-                            $icone = 'fa-clock-o';
-                            $corDoBotao = BotaoSimples::botaoMuitoPequenoImportante;
                             $html .= '<td class="text-center">';
-                            if (count($turmaPessoa->getTurmaPessoaAula()) > 0) {
-                                foreach ($turmaPessoa->getTurmaPessoaAula() as $turmaPessoaAula) {
-                                    if ($turmaPessoaAula->getAula()->getId() === $aula->getId()) {
-                                        $frequencia = true;
-                                        $icone = 'fa-check';
-                                        $corDoBotao = BotaoSimples::botaoMuitoPequenoImportante;
+                            if ($aula->getPosicao() <= $aulaAtiva->getPosicao()) {
+                                $frequencia = false;
+                                $icone = 'fa-times';
+                                $corDoBotao = BotaoSimples::botaoMuitoPequenoPerigoso;
+
+                                if (count($turmaPessoa->getTurmaPessoaAula()) > 0) {
+                                    foreach ($turmaPessoa->getTurmaPessoaAula() as $turmaPessoaAula) {
+                                        if ($turmaPessoaAula->getAula()->getId() === $aula->getId()) {
+                                            $frequencia = true;
+                                            $icone = 'fa-check';
+                                            $corDoBotao = BotaoSimples::botaoMuitoPequenoImportante;
+                                        }
                                     }
                                 }
+                            } else {
+                                $icone = 'fa-clock-o';
+                                $corDoBotao = BotaoSimples::botaoMuitoPequenoImportante;
                             }
+
                             $iconeBotao = '<i class="fa ' . $icone . '"></i>';
                             $extra = ' disabled ';
                             $html .= $this->botaoSimples($iconeBotao, $extra, $corDoBotao, BotaoSimples::posicaoAoCentro);
