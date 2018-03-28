@@ -69,7 +69,7 @@ foreach ($this->turmas as $turma) {
             $mostrar = true;
         }
         if ($mostrar) {
-            foreach ($disciplina->getAula() as $aula) {
+            foreach ($disciplina->getAulaOrdenadasPorPosicao() as $aula) {
                 $html .= '<th class="text-center">A' . $aula->getPosicao() . '</th>';
             }
         }
@@ -125,7 +125,7 @@ foreach ($this->turmas as $turma) {
                     }
                     if ($mostrar) {
                         $aulaAtiva = $turma->getTurmaAulaAtiva()->getAula();
-                        foreach ($disciplina->getAula() as $aula) {
+                        foreach ($disciplina->getAulaOrdenadasPorPosicao() as $aula) {
                             $html .= '<td class="text-center">';
                             if ($aula->getPosicao() <= $aulaAtiva->getPosicao()) {
                                 $frequencia = false;
@@ -137,7 +137,7 @@ foreach ($this->turmas as $turma) {
                                         if ($turmaPessoaAula->getAula()->getId() === $aula->getId()) {
                                             $frequencia = true;
                                             $icone = 'fa-check';
-                                            $corDoBotao = BotaoSimples::botaoMuitoPequenoImportante;
+                                            $corDoBotao = BotaoSimples::botaoMuitoPequenoSucesso;
                                         }
                                     }
                                 }

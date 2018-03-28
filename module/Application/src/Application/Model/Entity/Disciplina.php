@@ -7,7 +7,6 @@ namespace Application\Model\Entity;
  * @author Lucas Filipe de Carvalho Cunha <lucascarvalho.esw@gmail.com>
  * Descricao: Entidade anotada da tabela disciplina
  */
-
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -24,7 +23,7 @@ class Disciplina extends CircuitoEntity {
 
     /** @ORM\Column(type="integer") */
     protected $posicao;
-    
+
     /**
      * @ORM\OneToMany(targetEntity="Aula", mappedBy="disciplina")  
      */
@@ -71,15 +70,27 @@ class Disciplina extends CircuitoEntity {
     function setCurso($curso) {
         $this->curso = $curso;
     }
-    
+
     function getAula() {
         return $this->aula;
+    }
+
+    function getAulaOrdenadasPorPosicao() {
+        $arrayAulaOrdenadasPorPosicao = $this->getAula();
+        if ($aulas = $this->getAula()) {
+            $arrayAulaOrdenadasPorPosicao = array();
+            foreach ($aulas as $aula) {
+                $arrayAulaOrdenadasPorPosicao[] = $aula;
+            }
+            uksort($arrayAulaOrdenadasPorPosicao, function ($a, $b) use ($arrayAulaOrdenadasPorPosicao) {
+                return ($arrayAulaOrdenadasPorPosicao[$a]->getPosicao() < $arrayAulaOrdenadasPorPosicao[$b]->getPosicao()) ? -1 : 1;
+            });
+        }
+        return $arrayAulaOrdenadasPorPosicao;
     }
 
     function setAula($aula) {
         $this->aula = $aula;
     }
-
-
 
 }

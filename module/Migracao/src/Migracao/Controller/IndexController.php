@@ -723,14 +723,28 @@ class IndexController extends CircuitoController {
             }
             $explodeToken = explode('_', $tokenDaRota);
 
-            $turmaPessoa = $this->getRepositorio()->getTurmaPessoaORM()->encontrarPorid($explodeToken[0]);
-            $turmaPessoaFrequencia = new TurmaPessoaFrequencia();
-            $turmaPessoaFrequencia->setTurma_pessoa($turmaPessoa);
-            $turmaPessoaFrequencia->setData(DateTime::createFromFormat('Y-m-d', $explodeToken[1]));
-            $turmaPessoaFrequencia->setHora($explodeToken[2]);
-            $this->getRepositorio()->getTurmaPessoaFrequenciaORM()->persistir($turmaPessoaFrequencia);
+            $explodeMatricula = explode('9999999999', $explodeToken[0]);
+            if (count($explodeMatricula) === 2) {
+                $turmaPessoa = $this->getRepositorio()->getTurmaPessoaORM()->encontrarPorId($explodeMatricula[0]);
+                $aula = $this->getRepositorio()->getAulaORM()->encontrarPorId($explodeMatricula[1]);
+                $turmaPessoaAula = new TurmaPessoaAula();
+                $turmaPessoaAula->setTurma_pessoa($turmaPessoa);
+                $turmaPessoaAula->setAula($aula);
+                $turmaPessoaAula->setReposicao('S');
+                $this->getRepositorio()->getTurmaPessoaAulaORM()->persistir($turmaPessoaAula);
 
-            $resposta = true;
+                $resposta = true;
+            } else {
+                $turmaPessoa = $this->getRepositorio()->getTurmaPessoaORM()->encontrarPorId($explodeToken[0]);
+                $turmaPessoaFrequencia = new TurmaPessoaFrequencia();
+                $turmaPessoaFrequencia->setTurma_pessoa($turmaPessoa);
+                $turmaPessoaFrequencia->setData(DateTime::createFromFormat('Y-m-d', $explodeToken[1]));
+                $turmaPessoaFrequencia->setHora($explodeToken[2]);
+                $this->getRepositorio()->getTurmaPessoaFrequenciaORM()->persistir($turmaPessoaFrequencia);
+
+                $resposta = true;
+            }
+
             $this->getRepositorio()->fecharTransacao();
         } catch (Exception $exc) {
             $this->getRepositorio()->desfazerTransacao();

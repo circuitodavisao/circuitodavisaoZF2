@@ -325,7 +325,7 @@ class CursoController extends CircuitoController {
         $sessao = new Container(Constantes::$NOME_APLICACAO);
         $idDisciplina = $sessao->idSessao;
         $disciplina = $repositorioORM->getDisciplinaORM()->encontrarPorId($idDisciplina);
-        $aulas = $disciplina->getAula();
+        $aulas = $disciplina->getAulaOrdenadasPorPosicao();
         $formCadastroAula = new AulaForm('formulario', $idDisciplina, $aulas);
         $view = new ViewModel(array(
             'formCadastroAula' => $formCadastroAula,
@@ -383,7 +383,7 @@ class CursoController extends CircuitoController {
         $sessao = new Container(Constantes::$NOME_APLICACAO);
         $idAula = $sessao->idSessao;
         $aula = $repositorioORM->getAulaORM()->encontrarPorId($idAula);
-        $aulas = $aula->getDisciplina()->getAula();
+        $aulas = $aula->getDisciplina()->getAulaOrdenadasPorPosicao();
         $formCadastroAula = new AulaForm('formulario', $aula->getDisciplina_id(), $aulas, $aula);
         $view = new ViewModel(array(
             'formCadastroAula' => $formCadastroAula,
@@ -742,7 +742,7 @@ class CursoController extends CircuitoController {
         $opcoes = array();
         $curso = $turma->getCurso();
         foreach ($curso->getDisciplina() as $disciplina) {
-            foreach ($disciplina->getAula() as $aula) {
+            foreach ($disciplina->getAulaOrdenadasPorPosicao() as $aula) {
                 $opcoes[$aula->getId()][0] = $disciplina->getNome() . ' - ' . $aula->getNome();
                 $opcoes[$aula->getId()][1] = '';
                 if ($idAulaAtiva == $aula->getId()) {
@@ -840,7 +840,7 @@ class CursoController extends CircuitoController {
     }
 
     public function lancarPresencaAction() {
-        return new ViewModel(array('titulo' => 'Lançar Presença'));
+        return new ViewModel(array('titulo' => 'Lançar Presença/Reposições'));
     }
 
     public function reentradaAction() {
@@ -1074,7 +1074,7 @@ class CursoController extends CircuitoController {
                     $parar = false;
                     foreach ($turma->getCurso()->getDisciplina() as $disciplina) {
                         if (!$parar) {
-                            foreach ($disciplina->getAula() as $aula) {
+                            foreach ($disciplina->getAulaOrdenadasPorPosicao() as $aula) {
                                 $naoEncontreiPresencaNaAula = true;
                                 foreach ($turmaPessoaAulas as $turmaPessoaAula) {
                                     if ($turmaPessoaAula->getAula()->getId() === $aula->getId()) {
@@ -1129,9 +1129,10 @@ class CursoController extends CircuitoController {
                     $explodeValor = explode('_', $value);
                     $aula = $this->getRepositorio()->getAulaORM()->encontrarPorId($explodeValor[0]);
                     $turmaPessoa = $this->getRepositorio()->getTurmaPessoaORM()->encontrarPorId($explodeValor[1]);
-                    $reposicao['aula'] = $aula->getDisciplina()->getNome() . ' - ' . $aula->getNome();
-                    $reposicao['pessoa'] = $turmaPessoa->getPessoa()->getNome();
-                    $reposicao['equipe'] = $turmaPessoa->getPessoa()->getGrupoPessoaAtivo()->getGrupo()->getEntidadeAtiva()->infoEntidade();
+                    $reposicao['idAula'] = $aula->getId();
+                    $reposicao['idTurmaPessoa'] = $turmaPessoa->getId();
+                    $reposicao['idPessoa'] = $turmaPessoa->getPessoa()->getId();
+                    $reposicao['idGrupoEquipe'] = $turmaPessoa->getPessoa()->getGrupoPessoaAtivo()->getGrupo()->getId();
                     $reposicoes[] = $reposicao;
                 }
             }
@@ -1139,6 +1140,7 @@ class CursoController extends CircuitoController {
         $viewModel = new ViewModel(
                 array(
             'reposicoes' => $reposicoes,
+            'repositorio' => $this->getRepositorio(),
         ));
         $viewModel->setTerminal(true);
 
@@ -1160,7 +1162,7 @@ class CursoController extends CircuitoController {
                 $parar = false;
                 foreach ($turma->getCurso()->getDisciplina() as $disciplina) {
                     if (!$parar) {
-                        foreach ($disciplina->getAula() as $aula) {
+                        foreach ($disciplina->getAulaOrdenadasPorPosicao() as $aula) {
                             $naoEncontreiPresencaNaAula = true;
                             foreach ($turmaPessoaAulas as $turmaPessoaAula) {
                                 if ($turmaPessoaAula->getAula()->getId() === $aula->getId()) {

@@ -43,6 +43,7 @@ class ListagemTurmas extends AbstractHelper {
             $html .= '<th class="text-center">M&ecirc;s/Ano</th>';
             $html .= '<th class="text-center hidden-xs">Observação</th>';
             $html .= '<th class="text-center hidden-xs">Alunos</th>';
+            $html .= '<th class="text-center hidden-xs">Aula Aberta</th>';
             $html .= '<th class="text-center"></th>';
             $html .= '</tr>';
             $html .= '</thead>';
@@ -65,6 +66,15 @@ class ListagemTurmas extends AbstractHelper {
                 $html .= '/' . $turma->getAno() . '</td>';
                 $html .= '<td class="text-center hidden-xs">' . $turma->getObservacao() . '</td>';
                 $html .= '<td class="text-center hidden-xs">' . count($turma->getTurmaPessoa()) . '</td>';
+                $html .= '<td class="text-center hidden-xs">';
+                $nomeAulaAberta = '<span class="label label-';
+                if ($turma->getTurmaAulaAtiva()) {
+                    $nomeAulaAberta .= 'success">'.$turma->getTurmaAulaAtiva()->getAula()->getNome();
+                } else {
+                    $nomeAulaAberta .= 'danger">SEM AULA ABERTA';
+                }
+                $html .= $nomeAulaAberta.'</span>';
+                $html .= '</td>';
                 $html .= '<td class="text-center">';
                 $html .= $this->view->botaoLink(Constantes::$STRING_ICONE_PENCIL, Constantes::$STRING_HASHTAG, 3, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClick));
                 $html .= $this->view->botaoLink(Constantes::$STRING_ICONE_TIMES, Constantes::$STRING_HASHTAG, 9, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClickExclusao));
