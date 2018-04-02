@@ -849,8 +849,8 @@ class IndexController extends CircuitoController {
                 $html .= "<br />getNumero_identificador: " . $grupoCv->getNumero_identificador();
                 $html .= IndexController::atualizarRelatorioPorCiclo($grupoCv->getNumero_identificador(), $mes, $ano, $contadorDeCiclos, $relatorio[$ultimoRegistro][$indiceArrays]);
                 $contadorDeCiclos++;
-                $contadorDeEquipes++;
             }
+            $contadorDeEquipes++;
         }
 
         return new ViewModel(array(
