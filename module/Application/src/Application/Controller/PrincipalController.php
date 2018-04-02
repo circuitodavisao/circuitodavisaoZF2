@@ -36,12 +36,19 @@ class PrincipalController extends CircuitoController {
         $arrayPeriodoDoMes = Funcoes::encontrarPeriodoDeUmMesPorMesEAno(date('m'), date('Y'));
         $relatorio = RelatorioController::relatorioCompleto($this->getRepositorio(), $grupo, RelatorioController::relatorioMembresiaECelula, date('m'), date('Y'));
 
+        $mesAnterior = date('m') - 1;
+        $anoAnterior = date('Y');
+        if (date('m') == 1) {
+            $mesAnterior = 12;
+            $anoAnterior = date('Y') - 1;
+        }
+        $relatorioAnterior = RelatorioController::relatorioCompleto($this->getRepositorio(), $grupo, RelatorioController::relatorioMembresiaECelula, $mesAnterior, $anoAnterior);
+
         $mostrarPrincipal = true;
         if (!$entidade->verificarSeEstaAtivo()) {
             $mostrarPrincipal = false;
         }
 
-        $idRelatorio = $this->getEvent()->getRouteMatch()->getParam(Constantes::$ID, 1);
         if ($grupo->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::igreja) {
             $turmas = $grupo->getTurma();
         } else {
@@ -51,11 +58,11 @@ class PrincipalController extends CircuitoController {
 
         $dados = array(
             'relatorio' => $relatorio,
+            'relatorioAnterior' => $relatorioAnterior,
             'periodoInicial' => $arrayPeriodoDoMes[0],
             'periodoFinal' => $arrayPeriodoDoMes[1],
             'mostrarPrincipal' => $mostrarPrincipal,
             'eCasal' => $eCasal,
-            'idRelatorio' => $idRelatorio,
             'grupo' => $grupo,
             'repositorio' => $this->getRepositorio(),
             'pessoa' => $pessoa,
