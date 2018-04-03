@@ -382,7 +382,7 @@ class Menu extends AbstractHelper {
             $html .= '<li>';
             $html .= '<a href="/cursoChamada" onClick="mostrarSplash();">';
             $html .= '<span class="fa fa-list"></span>';
-            $html .= '<span class="sidebar-title">Chamada</span>';
+            $html .= 'Chamada';
             $html .= '</a>';
             $html .= '</li>';
 
@@ -426,7 +426,7 @@ class Menu extends AbstractHelper {
                 $html .= '<li>';
                 $html .= '<a href="/cursoReentrada" onClick="mostrarSplash();">';
                 $html .= '<span class="fa fa-user"></span>';
-                $html .= '<span class="sidebar-title">Reentrada de Aluno</span>';
+                $html .= 'Reentrada de Aluno';
                 $html .= '</a>';
                 $html .= '</li>';
             }
@@ -435,7 +435,7 @@ class Menu extends AbstractHelper {
                 $html .= '<li>';
                 $html .= '<a href="/cursoListarTurma" onClick="mostrarSplash();">';
                 $html .= '<span class="fa fa-list"></span>';
-                $html .= '<span class="sidebar-title">Turmas</span>';
+                $html .= 'Turmas';
                 $html .= '</a>';
                 $html .= '</li>';
             }
@@ -443,7 +443,7 @@ class Menu extends AbstractHelper {
                 $html .= '<li>';
                 $html .= '<a href="/cursoUsuarios" onClick="mostrarSplash();">';
                 $html .= '<span class="fa fa-users"></span>';
-                $html .= '<span class="sidebar-title">Usuários</span>';
+                $html .= 'Usuários';
                 $html .= '</a>';
                 $html .= '</li>';
             }
@@ -451,7 +451,7 @@ class Menu extends AbstractHelper {
                 $html .= '<li>';
                 $html .= '<a href="/cursoSelecionarParaCarterinha" onClick="mostrarSplash();">';
                 $html .= '<span class="fa fa-user"></span>';
-                $html .= '<span class="sidebar-title">Gerar Carterinha</span>';
+                $html .= 'Gerar Carterinha';
                 $html .= '</a>';
                 $html .= '</li>';
             }
@@ -459,7 +459,7 @@ class Menu extends AbstractHelper {
                 $html .= '<li>';
                 $html .= '<a href="/cursoSelecionarReposicoes" onClick="mostrarSplash();">';
                 $html .= '<span class="fa fa-list"></span>';
-                $html .= '<span class="sidebar-title">Gerar Reposições</span>';
+                $html .= 'Gerar Reposições';
                 $html .= '</a>';
                 $html .= '</li>';
             }
@@ -467,7 +467,7 @@ class Menu extends AbstractHelper {
                 $html .= '<li>';
                 $html .= '<a href="/cursoGerarFaltas" onClick="mostrarSplash();">';
                 $html .= '<span class="fa fa-money"></span>';
-                $html .= '<span class="sidebar-title">Gerar Faltas</span>';
+                $html .= 'Gerar Faltas';
                 $html .= '</a>';
                 $html .= '</li>';
             }
@@ -475,7 +475,7 @@ class Menu extends AbstractHelper {
                 $html .= '<li>';
                 $html .= '<a href="/cursoLancarPresenca" onClick="mostrarSplash();">';
                 $html .= '<span class="fa fa-pencil"></span>';
-                $html .= '<span class="sidebar-title">Lançar Presença/Reposição</span>';
+                $html .= 'Lançar Presença/Reposição';
                 $html .= '</a>';
                 $html .= '</li>';
             }

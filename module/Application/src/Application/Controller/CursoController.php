@@ -752,6 +752,7 @@ class CursoController extends CircuitoController {
         }
 
         return new ViewModel(array(
+            'turma' => $turma,
             'opcoes' => $opcoes,
         ));
     }
@@ -765,6 +766,7 @@ class CursoController extends CircuitoController {
                 $idAula = $_POST['idAula'];
 
                 $idTurma = $sessao->idSessao;
+                $idPessoa = $sessao->idPessoa;
                 $turma = $this->getRepositorio()->getTurmaORM()->encontrarPorId($idTurma);
 
                 if ($turmaAulaAtiva = $turma->getTurmaAulaAtiva()) {
@@ -774,9 +776,11 @@ class CursoController extends CircuitoController {
                 }
 
                 if (intval($idAula) !== 0) {
+                    $pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($idPessoa);
                     $turmaAula = new TurmaAula();
                     $turmaAula->setTurma($turma);
                     $turmaAula->setAula($this->getRepositorio()->getAulaORM()->encontrarPorId($idAula));
+                    $turmaAula->setPessoa($pessoa);
                     $this->getRepositorio()->getTurmaAulaORM()->persistir($turmaAula);
                 }
 

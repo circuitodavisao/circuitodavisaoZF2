@@ -6,6 +6,43 @@ $html = '';
 $html .= $this->templateFormularioTopo('Abrir Aula', '', 'style="margin-top: 50px"');
 $html .= '<form action="/cursoSalvarAula" method="post">';
 $html .= '<div class="panel-body bg-light">';
+
+$html .= '<div class="row">';
+$html .= '<div class="table-responsive">';
+$html .= '<table class="table table-condensed">';
+$html .= '<thead>';
+$html .= '<tr>';
+$html .= '<th>Diciplinas</th>';
+$html .= '<th colspan="6">Aulas - Status</th>';
+$html .= '</tr>';
+$html .= '</thead>';
+$html .= '<tbody>';
+foreach ($this->turma->getCurso()->getDisciplina() as $disciplina) {
+    $html .= '<tr>';
+    $html .= '<td>' . $disciplina->getNome() . '</td>';
+    foreach ($disciplina->getAulaOrdenadasPorPosicao() as $aula) {
+        $icone = 'fa-ban';
+        $cor = 'info';
+        foreach ($this->turma->getTurmaAula() as $turmaAula) {
+            if ($turmaAula->getAula()->getId() === $aula->getId()) {
+                $icone = 'fa-thumbs-up';
+                $cor = 'success';
+                break;
+            }
+        }
+        $label = '<span class="label label-xs label-' . $cor . '">' . $aula->getPosicao() . ' <i class="fa ' . $icone . '"></i></span>';
+        $html .= '<td>' . $label . '</td>';
+    }
+    $html .= '</tr>';
+}
+$html .= '</tbody>';
+$html .= '</table>';
+$html .= '</div>';
+$html .= '</div>';
+
+$html .= '<div class="row mt20">';
+$html .= '<div class="form-group">';
+$html .= '<label class="field-label text-muted fs18 mb10">' . $this->translate('Selecione a Aula') . '</label>';
 $html .= '<select class="form-control" id="idAula" name="idAula">';
 $html .= '<option value="0">SELECIONE</option>';
 foreach ($this->opcoes as $key => $value) {
@@ -13,11 +50,78 @@ foreach ($this->opcoes as $key => $value) {
 }
 $html .= '</select>';
 $html .= '</div>';
+$html .= '</div>';
+
+$html .= '<div class="row">';
+$html .= '<div class="form-group">';
+$html .= '<label class="field-label text-muted fs18 mb10">' . $this->translate('Informe sua Senha') . '</label>';
+$html .= '<input id="senha" type="password" class="form-control" placeholder="' . $this->translate(Constantes::$TRADUCAO_SENHA) . '" />';
+$html .= '</div>';
+$html .= '</div>';
+
+$ultimaAtualizacao = 'Sem Atualiza&ccedil;&atilde;o';
+if ($turmaAulaAtiva = $this->turma->getTurmaAulaAtiva()) {
+    $ultimaAtualizacao = $turmaAulaAtiva->getPessoa()->getNome() . ' - ' . $turmaAulaAtiva->getData_criacaoStringPadraoBrasil() . ' - ' . $turmaAulaAtiva->getHora_criacao();
+}
+$html .= '<div class="row">';
+$html .= '<span class="label label-success col-xs-12 col-sm-12 col-md-12 col-lg-12">' . $this->translate('Ultima Altera&ccedil;&atilde;o: ') . $ultimaAtualizacao . '</span>';
+$html .= '</div>';
+
+$html .= '</div>';
 $html .= '<div class="panel-footer">';
+$html .= $this->divMensagens();
 $stringNomeDaFuncaoOnClickCadastro = 'mostrarSplash(); funcaoCircuito("' . Constantes::$ROUTE_CURSO . Constantes::$PAGINA_LISTAR_TURMA . '", 0)';
 $html .= $this->botaoLink($this->translate(Constantes::$TRADUCAO_VOLTAR), Constantes::$STRING_HASHTAG, 2, $this->funcaoOnClick($stringNomeDaFuncaoOnClickCadastro));
-$html .= $this->botaoSimples('Salvar', $this->funcaoOnClick('mostrarSplash(); this.form.submit()'));
+$html .= $this->botaoSimples('Salvar', $this->funcaoOnClick('validarAula(this.form)'));
 $html .= '</div>';
 $html .= '</form>';
 $html .= $this->templateFormularioRodape();
 echo $html;
+?>
+
+<script type="text/javascript">
+    function validarAula(form) {
+        var idAula = $('#idAula');
+        var inputSenha = $('#senha');
+        var divMensagens = $('#divMensagens');
+        divMensagens.addClass('hidden');
+
+        if (idAula.val() == 0) {
+            divMensagens
+                    .html('Selecione a Aula!')
+                    .removeClass('alert-success')
+                    .removeClass('hidden')
+                    .addClass('alert-danger');
+            return false;
+        }
+        if (inputSenha.val().length === 0) {
+            divMensagens
+                    .html('Preencha a Senha!')
+                    .removeClass('alert-success')
+                    .removeClass('hidden')
+                    .addClass('alert-danger');
+            return false;
+        }
+        $.post(
+                "/validarSenha",
+                {
+                    senha: inputSenha.val()
+                },
+                function (data) {
+                    if (data.response) {                       
+                        divMensagens
+                                .addClass('hidden');
+                        mostrarSplash();
+                        form.submit();
+                    } else {
+                        divMensagens
+                                .html('Senha não confere')
+                                .removeClass('alert-success')
+                                .removeClass('hidden')
+                                .addClass('alert-danger');
+                        return false;
+                    }
+                }
+        , 'json');
+    }
+</script> 
