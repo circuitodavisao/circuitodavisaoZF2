@@ -138,6 +138,10 @@ foreach ($this->turmas as $turma) {
                                             $frequencia = true;
                                             $icone = 'fa-check';
                                             $corDoBotao = BotaoSimples::botaoMuitoPequenoSucesso;
+                                            if ($turmaPessoaAula->getReposicao() == 'S') {
+                                                $icone = 'fa-file';
+                                                $corDoBotao = BotaoSimples::botaoMuitoPequenoWarning;
+                                            }
                                         }
                                     }
                                 }
