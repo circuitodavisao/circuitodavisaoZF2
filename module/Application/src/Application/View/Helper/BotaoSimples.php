@@ -24,6 +24,7 @@ class BotaoSimples extends AbstractHelper {
     const botaoPequenoMenosImportante = 5;
     const botaoMuitoPequenoImportante = 6;
     const botaoMuitoPequenoSucesso = 10;
+    const botaoMuitoPequenoWarning = 11;
     const botaoMuitoPequenoMenosImportante = 7;
     const botaoPerigoso = 8;
     const botaoMuitoPequenoPerigoso = 9;
@@ -69,6 +70,9 @@ class BotaoSimples extends AbstractHelper {
         }
         if ($this->getTipoBotao() === BotaoSimples::botaoMuitoPequenoSucesso) {
             $classBotao = 'xs btn-success';
+        }
+        if ($this->getTipoBotao() === BotaoSimples::botaoMuitoPequenoWarning) {
+            $classBotao = 'xs btn-warning';
         }
         if ($this->getTipoBotao() === BotaoSimples::botaoMuitoPequenoPerigoso) {
             $classBotao = 'xs btn-danger';
