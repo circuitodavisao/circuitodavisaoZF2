@@ -267,7 +267,7 @@ class ListagemDeEventos extends AbstractHelper {
 
                     $html .= '<td class="text-center">' . Funcoes::mudarPadraoData($evento->getData(), 1) . '</td>';
 
-                    $stringNomeDaFuncaoOnClickInserir = 'mostrarSplash(); funcaoCircuito("cadastro' . Constantes::$ROUTE_CURSO . 'SelecionarPessoasRevisao", ' . $evento->getId() . ')';
+                    $stringNomeDaFuncaoOnClickInserir = 'mostrarSplash(); funcaoCircuito("' . Constantes::$ROUTE_CURSO . 'SelecionarPessoasRevisao", ' . $evento->getId() . ')';
                     $grupoEventoAtivos = $evento->getGrupoEventoAtivos();
                     $texto = '';
                     foreach ($grupoEventoAtivos as $gea) {
@@ -325,7 +325,7 @@ class ListagemDeEventos extends AbstractHelper {
             }
             if ($tipoListarRevisaoTurma) {
 
-                $stringNomeDaFuncaoOnClickVoltar = 'mostrarSplash(); funcaoCircuito("cadastro' . Constantes::$ROUTE_CURSO . Constantes::$PAGINA_LISTAR_TURMA . '", 0)';
+                $stringNomeDaFuncaoOnClickVoltar = 'mostrarSplash(); funcaoCircuito("' . Constantes::$ROUTE_CURSO . Constantes::$PAGINA_LISTAR_TURMA . '", 0)';
                 $html .= $this->view->botaoLink($this->view->translate(Constantes::$TRADUCAO_VOLTAR), Constantes::$STRING_HASHTAG, 2, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClickVoltar));
             }
 
