@@ -55,3 +55,5 @@ COMMENT ON CONSTRAINT fk_turma_aula_turma ON public.turma_aula
 COMMENT ON CONSTRAINT fk_turma_aula_aula_id ON public.turma_aula
     IS 'Chave estrangeira da turma aula com a aula';
 
+ALTER TABLE turma_aula ADD COLUMN pessoa_id INTEGER NOT NULL;
+ALTER TABLE turma_aula ADD CONSTRAINT "fk_turma_aula_pessoa_id" FOREIGN KEY (pessoa_id) REFERENCES pessoa(id) ;

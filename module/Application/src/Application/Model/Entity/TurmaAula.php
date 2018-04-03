@@ -7,7 +7,6 @@ namespace Application\Model\Entity;
  * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com>
  * Descricao: Entidade anotada da tabela turma_aula
  */
-
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -28,11 +27,20 @@ class TurmaAula extends CircuitoEntity {
      */
     private $turma;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="Pessoa", inversedBy="turmaAula")
+     * @ORM\JoinColumn(name="pessoa_id", referencedColumnName="id")
+     */
+    private $pessoa;
+
     /** @ORM\Column(type="integer") */
     protected $turma_id;
 
     /** @ORM\Column(type="integer") */
     protected $aula_id;
+
+    /** @ORM\Column(type="integer") */
+    protected $pessoa_id;
 
     function getAula() {
         return $this->aula;
@@ -64,6 +72,22 @@ class TurmaAula extends CircuitoEntity {
 
     function setAula_id($aula_id) {
         $this->aula_id = $aula_id;
+    }
+
+    function getPessoa() {
+        return $this->pessoa;
+    }
+
+    function getPessoa_id() {
+        return $this->pessoa_id;
+    }
+
+    function setPessoa($pessoa) {
+        $this->pessoa = $pessoa;
+    }
+
+    function setPessoa_id($pessoa_id) {
+        $this->pessoa_id = $pessoa_id;
     }
 
 }

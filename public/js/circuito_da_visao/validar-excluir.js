@@ -14,8 +14,7 @@ function validarExclusao(funcao, id) {
                 .removeClass('hidden')
                 .addClass('alert-danger');
         return false;
-    } else {
-        mostrarSplash();
+    } else {        
         $.post(
                 "/validarSenha",
                 {
@@ -23,6 +22,7 @@ function validarExclusao(funcao, id) {
                 },
                 function (data) {
                     if (data.response) {
+                        mostrarSplash();
                         divMensagens
                                 .addClass('hidden');
                         funcaoCircuito(funcao, id);
