@@ -47,6 +47,17 @@ class CircuitoORM {
         return $entidade;
     }
 
+    public function verificarSeExistePorId($id) {
+        $idInteiro = (int) $id;
+
+        $resposta = true;
+        $entidade = $this->getEntityManager()->find($this->getEntity(), $idInteiro);
+        if (!$entidade) {
+            $resposta = false;
+        }
+        return $resposta;
+    }
+
     /**
      * Buscar todos os registros da entidade
      * @return CircuitoEntity
@@ -55,7 +66,7 @@ class CircuitoORM {
     public function buscarTodosRegistrosEntidade($campoOrderBy = null, $sentidoOrderBy = null) {
         if ($campoOrderBy) {
             $entidades = $this->getEntityManager()->getRepository($this->getEntity())->findBy(array(), array("$campoOrderBy" => "$sentidoOrderBy"));
-        }else{
+        } else {
             $entidades = $this->getEntityManager()->getRepository($this->getEntity())->findAll();
         }
         if (!$entidades) {
