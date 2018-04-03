@@ -3,6 +3,7 @@
 namespace Application\Controller;
 
 use Application\Controller\Helper\Constantes;
+use Application\Controller\Helper\Funcoes;
 use Application\Form\AulaForm;
 use Application\Form\CursoForm;
 use Application\Form\CursoUsuarioForm;
@@ -845,6 +846,34 @@ class CursoController extends CircuitoController {
 
     public function lancarPresencaAction() {
         return new ViewModel(array('titulo' => 'Lançar Presença/Reposições'));
+    }
+
+    public function consultarMatriculaAction() {
+        $response = $this->getResponse();
+        try {
+            $idTurmaPessoa = $_POST['id'];
+
+            if ($this->getRepositorio()->getTurmaPessoaORM()->verificarSeExistePorId($idTurmaPessoa)) {
+                $turmaPessoa = $this->getRepositorio()->getTurmaPessoaORM()->encontrarPorId($idTurmaPessoa);
+                $resposta = true;
+                $nomeCurso = $turmaPessoa->getTurma()->getCurso()->getNome();
+                $nomeTurma = Funcoes::mesPorExtenso($turmaPessoa->getTurma()->getMes(), 1) . '/' . $turmaPessoa->getTurma()->getAno();
+                $nomeEquipe = $turmaPessoa->getPessoa()->getGrupoPessoaAtivo()->getGrupo()->getEntidadeAtiva()->infoEntidade();
+                $nomePessoa = $turmaPessoa->getPessoa()->getNome();
+            } else {
+                $resposta = false;
+            }
+            $response->setContent(Json::encode(
+                            array('response' => $resposta,
+                                'curso' => $nomeCurso,
+                                'turma' => $nomeTurma,
+                                'equipe' => $nomeEquipe,
+                                'pessoa' => $nomePessoa,
+            )));
+        } catch (Exception $exc) {
+            echo $exc->getTraceAsString();
+        }
+        return $response;
     }
 
     public function reentradaAction() {
