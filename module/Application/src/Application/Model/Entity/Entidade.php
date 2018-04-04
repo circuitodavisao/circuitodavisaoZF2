@@ -56,7 +56,7 @@ class Entidade extends CircuitoEntity {
     /** @ORM\Column(type="integer") */
     protected $grupo_id;
 
-    public function infoEntidade() {
+    public function infoEntidade($somenteNumero = false) {
         $resposta = '';
         $grupoSelecionado = $this->getGrupo();
         if ($this->verificarSeEstaAtivo()) {
@@ -80,6 +80,9 @@ class Entidade extends CircuitoEntity {
                     }
                 }
                 $resposta = $grupoSelecionado->getEntidadeAtiva()->getNome() . "." . $numeroSub;
+                if ($somenteNumero) {
+                    $resposta = $numeroSub;
+                }
             } else {
                 $resposta = $this->getNome();
             }
