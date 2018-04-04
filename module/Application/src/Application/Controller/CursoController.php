@@ -804,12 +804,13 @@ class CursoController extends CircuitoController {
         $grupoPessoas = $grupo->getGrupoPessoasNoPeriodo(0);
         $turmas = $grupo->getTurma();
         $grupoPaiFilhoFilhos = $grupo->getGrupoPaiFilhoFilhosAtivos(0);
-
+        $situacoes = $this->getRepositorio()->getSituacaoORM()->buscarTodosRegistrosEntidade();
         $view = new ViewModel(array(
             'entidade' => $entidade,
             'turmas' => $turmas,
             'grupoPessoas' => $grupoPessoas,
             'filhos' => $grupoPaiFilhoFilhos,
+            'situacoes' => $situacoes,
         ));
         return $view;
     }

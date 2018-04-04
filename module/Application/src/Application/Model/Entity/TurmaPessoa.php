@@ -7,7 +7,6 @@ namespace Application\Model\Entity;
  * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com>
  * Descricao: Entidade anotada da tabela turma_pessoa
  */
-
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -35,6 +34,11 @@ class TurmaPessoa extends CircuitoEntity {
     protected $turmaPessoaFrequencia;
 
     /**
+     * @ORM\OneToMany(targetEntity="TurmaPessoaSituacao", mappedBy="turma_pessoa")
+     */
+    protected $turmaPessoaSituacao;
+
+    /**
      * @ORM\OneToMany(targetEntity="TurmaPessoaAula", mappedBy="turma_pessoa")
      */
     protected $turmaPessoaAula;
@@ -48,6 +52,7 @@ class TurmaPessoa extends CircuitoEntity {
     public function __construct() {
         $this->turmaPessoaFrequencia = new ArrayCollection();
         $this->turmaPessoaAula = new ArrayCollection();
+        $this->turmaPessoaSituacao = new ArrayCollection();
     }
 
     /**
@@ -108,6 +113,25 @@ class TurmaPessoa extends CircuitoEntity {
 
     function setTurmaPessoaAula($turmaPessoaAula) {
         $this->turmaPessoaAula = $turmaPessoaAula;
+    }
+
+    function getTurmaPessoaSituacao() {
+        return $this->turmaPessoaSituacao;
+    }
+
+    function setTurmaPessoaSituacao($turmaPessoaSituacao) {
+        $this->turmaPessoaSituacao = $turmaPessoaSituacao;
+    }
+
+    public function getTurmaPessoaSituacaoAtiva() {
+        $entidadeAtiva = null;
+        foreach ($this->getTurmaPessoaSituacao() as $entidade) {
+            if ($entidade->verificarSeEstaAtivo()) {
+                $entidadeAtiva = $entidade;
+                break;
+            }
+        }
+        return $entidadeAtiva;
     }
 
 }
