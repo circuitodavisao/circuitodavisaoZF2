@@ -99,11 +99,8 @@ $somaMeta = 0;
                 <thead>
                     <tr class="dark hidden-xs">
                         <?php
-                        if ($this->tipoRelatorio != 7) {
-                            echo '<th></th>';
-                        }
                         echo '<th>Periodos</th>';
-                        
+
                         for ($indiceDeArrays = $this->periodoInicial; $indiceDeArrays <= $this->periodoFinal; $indiceDeArrays++) {
                             $classePeriodoAtual = '';
                             if ($indiceDeArrays == -1) {
@@ -129,18 +126,14 @@ $somaMeta = 0;
                             echo '<th colspan="' . $colspan . '" class="' . $classePeriodoAtual . '">';
                             echo Funcoes::montaPeriodo($indiceDeArrays)[0];
                             echo '</th>';
-                            
                         }
                         echo '<th></th>';
                         ?>                           
                     </tr>
                     <tr class="dark">
                         <?php
-                        if ($this->tipoRelatorio != 7) {
-                            echo '<th>#</th>';
-                        }
                         echo '<th>TIMES</th>';
-                        
+
                         for ($indiceDeArrays = $this->periodoInicial; $indiceDeArrays <= $this->periodoFinal; $indiceDeArrays++) {
                             $classeBase = 'periodo' . $indiceDeArrays . ' ';
                             if ($indiceDeArrays != -1) {
@@ -195,12 +188,11 @@ $somaMeta = 0;
                                     $this->tipoRelatorio == 8) {
                                 echo '<th class="' . $classeBase . $classePeriodoAtual . '">QTD</th>';
                             }
-                            
                         }
                         if ($this->tipoRelatorio == 1 ||
                                 $this->tipoRelatorio == 2 ||
                                 $this->tipoRelatorio == 3) {
-                            echo '<th>MÉDIA %</th>';
+                            echo '<th>%</th>';
                         }
                         ?>                           
                     </tr>
@@ -232,12 +224,11 @@ $somaMeta = 0;
                         if ($this->tipoRelatorio != 7) {
                             $label = '';
                             if ($contagemRanking !== 0 && $contagemRanking !== ($totalDeRelatorios - 1)) {
-                                $label = $contagemRanking;
+                                $label = $contagemRanking . '-';
                             }
-                            echo '<td>' . $label . '</td>';
                         }
-                        echo '<td class="text-left" style="font-size:8px;">' . $relatorio['lideres'] . '</td>';
-                        
+                        echo '<td class="text-left" style="font-size:8px;">' . $label . $relatorio['lideres'] . '</td>';
+
                         for ($indiceDeArrays = $this->periodoInicial; $indiceDeArrays <= $this->periodoFinal; $indiceDeArrays++) {
                             $classeBase = 'periodo' . $indiceDeArrays . ' ';
                             if ($indiceDeArrays != -1) {
@@ -296,7 +287,6 @@ $somaMeta = 0;
                             if ($this->tipoRelatorio == 8) {
                                 echo '<td class="' . $classeBase . '">' . $relatorio[$indiceDeArrays]['celula'] . '</td>';
                             }
-                            
                         }
 
                         if ($this->tipoRelatorio == 1 ||
