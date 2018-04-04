@@ -66,9 +66,57 @@ use Application\View\Helper\BotaoSimples;
                                                 if ($relatorioDiscipulo144) {
                                                     $diferenca144 = $relatorioDiscipulo144['celulaQuantidade'] - $relatorioDiscipulo144['celulaRealizadas'];
                                                     $html .= '<tr class="linhaCelulasNaoRealizadas hidden">';
-                                                    $html .= '<td class="text-right">' . $nomeLideres144 . '</td>';
+                                                    $html .= '<td class="text-right">144-' . $nomeLideres144 . '</td>';
                                                     $html .= '<td>' . $diferenca144 . '</td>';
                                                     $html .= '</tr>';
+                                                }
+
+                                                $grupoPaiFilhoFilhos1728 = $grupoFilho144->getGrupoPaiFilhoFilhosAtivos(-1);
+                                                if ($grupoPaiFilhoFilhos1728) {
+                                                    foreach ($grupoPaiFilhoFilhos1728 as $gpFilho1728) {
+                                                        $grupoFilho1728 = $gpFilho1728->getGrupoPaiFilhoFilho();
+                                                        $nomeLideres1728 = $grupoFilho1728->getNomeLideresAtivos();
+                                                        $relatorioDiscipulo1728 = $this->discipulosRelatorio[$grupoFilho1728->getId()];
+                                                        if ($relatorioDiscipulo1728) {
+                                                            $diferenca1728 = $relatorioDiscipulo1728['celulaQuantidade'] - $relatorioDiscipulo1728['celulaRealizadas'];
+                                                            $html .= '<tr class="linhaCelulasNaoRealizadas hidden">';
+                                                            $html .= '<td class="text-right">1728-' . $nomeLideres1728 . '</td>';
+                                                            $html .= '<td>' . $diferenca1728 . '</td>';
+                                                            $html .= '</tr>';
+                                                        }
+
+                                                        $grupoPaiFilhoFilhos20736 = $grupoFilho1728->getGrupoPaiFilhoFilhosAtivos(-1);
+                                                        if ($grupoPaiFilhoFilhos20736) {
+                                                            foreach ($grupoPaiFilhoFilhos20736 as $gpFilho20736) {
+                                                                $grupoFilho20736 = $gpFilho20736->getGrupoPaiFilhoFilho();
+                                                                $nomeLideres20736 = $grupoFilho20736->getNomeLideresAtivos();
+                                                                $relatorioDiscipulo20736 = $this->discipulosRelatorio[$grupoFilho20736->getId()];
+                                                                if ($relatorioDiscipulo20736) {
+                                                                    $diferenca20736 = $relatorioDiscipulo20736['celulaQuantidade'] - $relatorioDiscipulo20736['celulaRealizadas'];
+                                                                    $html .= '<tr class="linhaCelulasNaoRealizadas hidden">';
+                                                                    $html .= '<td class="text-right">20736-' . $nomeLideres20736 . '</td>';
+                                                                    $html .= '<td>' . $diferenca20736 . '</td>';
+                                                                    $html .= '</tr>';
+                                                                }
+
+                                                                $grupoPaiFilhoFilhos248832 = $grupoFilho20736->getGrupoPaiFilhoFilhosAtivos($periodo);
+                                                                if ($grupoPaiFilhoFilhos248832) {
+                                                                    foreach ($grupoPaiFilhoFilhos248832 as $gpFilho248832) {
+                                                                        $grupoFilho248832 = $gpFilho248832->getGrupoPaiFilhoFilho();
+                                                                        $nomeLideres248832 = $grupoFilho248832->getNomeLideresAtivos();
+                                                                        $relatorioDiscipulo248832 = $this->discipulosRelatorio[$grupoFilho248832->getId()];
+                                                                        if ($relatorioDiscipulo248832) {
+                                                                            $diferenca248832 = $relatorioDiscipulo248832['celulaQuantidade'] - $relatorioDiscipulo248832['celulaRealizadas'];
+                                                                            $html .= '<tr class="linhaCelulasNaoRealizadas hidden">';
+                                                                            $html .= '<td class="text-right">248832-' . $nomeLideres248832 . '</td>';
+                                                                            $html .= '<td>' . $diferenca248832 . '</td>';
+                                                                            $html .= '</tr>';
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    }
                                                 }
                                             }
                                         }
