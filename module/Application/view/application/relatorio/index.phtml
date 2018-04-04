@@ -102,7 +102,7 @@ $somaMeta = 0;
                             for ($indiceDeArrays = $this->periodoInicial; $indiceDeArrays <= $this->periodoFinal; $indiceDeArrays++) {
                                 $classePeriodoAtual = '';
                                 if ($indiceDeArrays == -1) {
-                                    $classePeriodoAtual = 'bg-primary';
+                                    $classePeriodoAtual = 'bg-info';
                                 }
                                 if ($this->tipoRelatorio == 1) {
                                     $colspan = 7;
@@ -139,7 +139,7 @@ $somaMeta = 0;
                                 }
                                 $classePeriodoAtual = '';
                                 if ($indiceDeArrays == -1) {
-                                    $classePeriodoAtual = 'bg-primary';
+                                    $classePeriodoAtual = 'bg-info';
                                 }
                                 if ($this->tipoRelatorio == 1) {
                                     echo '<th class="hidden-xs ' . $classePeriodoAtual . '">LID</th>';
@@ -299,7 +299,7 @@ $somaMeta = 0;
                                 if ($this->tipoRelatorio == 3) {
                                     $perfomanceMedio = $relatorio['mediaCelulaPerformance'];
                                 }
-                                echo '<td>' . RelatorioController::formataNumeroRelatorio($perfomanceMedio) . '%</td>';
+                                echo '<td style="padding-right:5px;">' . RelatorioController::formataNumeroRelatorio($perfomanceMedio) . '%</td>';
                             }
                             echo '</tr>';
                             $contagemRanking++;
