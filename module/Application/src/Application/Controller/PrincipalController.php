@@ -96,10 +96,54 @@ class PrincipalController extends CircuitoController {
                     foreach ($grupoPaiFilhoFilhos144 as $gpFilho144) {
                         $grupoFilho144 = $gpFilho144->getGrupoPaiFilhoFilho();
                         $numeroIdentificador144 = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupoFilho144, false, RelatorioController::relatorioCelulaRealizadas);
-                        $relatorio144 = RelatorioController::montaRelatorio($this->getRepositorio(), $numeroIdentificador144, $periodo, $tipoRelatorioEquipe, false, RelatorioController::relatorioCelulaRealizadas);
+                        $relatorio144 = RelatorioController::montaRelatorio($this->getRepositorio(), $numeroIdentificador144, $periodo, $tipoRelatorioPessoal, false, RelatorioController::relatorioCelulaRealizadas);
                         if ($relatorio144['celulaQuantidade'] > 0) {
                             if ($relatorio144['celulaRealizadas'] < $relatorio144['celulaQuantidade']) {
                                 $relatorioDiscipulos[$grupoFilho144->getId()] = $relatorio144;
+                            }
+                        }
+
+
+
+                        $grupoPaiFilhoFilhos1728 = $grupoFilho144->getGrupoPaiFilhoFilhosAtivos($periodo);
+                        if ($grupoPaiFilhoFilhos1728) {
+                            foreach ($grupoPaiFilhoFilhos1728 as $gpFilho1728) {
+                                $grupoFilho1728 = $gpFilho1728->getGrupoPaiFilhoFilho();
+                                $numeroIdentificador1728 = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupoFilho1728, false, RelatorioController::relatorioCelulaRealizadas);
+                                $relatorio1728 = RelatorioController::montaRelatorio($this->getRepositorio(), $numeroIdentificador1728, $periodo, $tipoRelatorioPessoal, false, RelatorioController::relatorioCelulaRealizadas);
+                                if ($relatorio1728['celulaQuantidade'] > 0) {
+                                    if ($relatorio1728['celulaRealizadas'] < $relatorio1728['celulaQuantidade']) {
+                                        $relatorioDiscipulos[$gpFilho1728->getId()] = $relatorio144;
+                                    }
+                                }
+
+                                $grupoPaiFilhoFilhos20736 = $grupoFilho1728->getGrupoPaiFilhoFilhosAtivos($periodo);
+                                if ($grupoPaiFilhoFilhos20736) {
+                                    foreach ($grupoPaiFilhoFilhos20736 as $gpFilho20736) {
+                                        $grupoFilho20736 = $gpFilho20736->getGrupoPaiFilhoFilho();
+                                        $numeroIdentificador20736 = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupoFilho20736, false, RelatorioController::relatorioCelulaRealizadas);
+                                        $relatorio20736 = RelatorioController::montaRelatorio($this->getRepositorio(), $numeroIdentificador20736, $periodo, $tipoRelatorioPessoal, false, RelatorioController::relatorioCelulaRealizadas);
+                                        if ($relatorio20736['celulaQuantidade'] > 0) {
+                                            if ($relatorio20736['celulaRealizadas'] < $relatorio20736['celulaQuantidade']) {
+                                                $relatorioDiscipulos[$gpFilho20736->getId()] = $relatorio20736;
+                                            }
+                                        }
+
+                                        $grupoPaiFilhoFilhos248832 = $grupoFilho20736->getGrupoPaiFilhoFilhosAtivos($periodo);
+                                        if ($grupoPaiFilhoFilhos248832) {
+                                            foreach ($grupoPaiFilhoFilhos248832 as $gpFilho248832) {
+                                                $grupoFilho248832 = $gpFilho248832->getGrupoPaiFilhoFilho();
+                                                $numeroIdentificador248832 = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupoFilho248832, false, RelatorioController::relatorioCelulaRealizadas);
+                                                $relatorio248832 = RelatorioController::montaRelatorio($this->getRepositorio(), $numeroIdentificador248832, $periodo, $tipoRelatorioPessoal, false, RelatorioController::relatorioCelulaRealizadas);
+                                                if ($relatorio248832['celulaQuantidade'] > 0) {
+                                                    if ($relatorio248832['celulaRealizadas'] < $relatorio248832['celulaQuantidade']) {
+                                                        $relatorioDiscipulos[$gpFilho248832->getId()] = $relatorio248832;
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
                             }
                         }
                     }
