@@ -224,7 +224,7 @@ $somaMeta = 0;
                         if ($this->tipoRelatorio != 7) {
                             $label = '';
                             if ($contagemRanking !== 0 && $contagemRanking !== ($totalDeRelatorios - 1)) {
-                                $label = $contagemRanking . '-';
+                                $label = str_pad($contagemRanking, 2, 0, STR_PAD_LEFT) . '-';
                             }
                         }
                         echo '<td class="text-left" style="font-size:8px;">' . $label . $relatorio['lideres'] . '</td>';
