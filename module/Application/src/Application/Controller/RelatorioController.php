@@ -660,6 +660,7 @@ class RelatorioController extends CircuitoController {
             }
             $relatorio[$contagem]['eventoId'] = $eventoId;
             $relatorio[$contagem]['resposta'] = $resposta;
+            $relatorio[$contagem]['resultado'] = $resultado;
             $relatorio[$contagem]['hospedeiro'] = $grupoEventoCelula->getEvento()->getEventoCelula()->getNome_hospedeiroPrimeiroNome();
             $contagem++;
         }
