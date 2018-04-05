@@ -77,7 +77,6 @@ class PrincipalController extends CircuitoController {
         /* Celulas De Elite */
         $relatorioCelulas = array();
         $relatorioCelulas[$grupo->getId()] = RelatorioController::saberQuaisDasMinhasCelulasSaoDeElitePorPeriodo($this->getRepositorio(), $grupo, $periodo);
-        Funcoes::var_dump($relatorioCelulas[$grupo->getId()]);
         $grupoPaiFilhoFilhos = $grupo->getGrupoPaiFilhoFilhosAtivos($periodo);
         if ($grupoPaiFilhoFilhos) {
             $relatorioDiscipulos = array();
@@ -89,7 +88,7 @@ class PrincipalController extends CircuitoController {
                 $relatorio12 = RelatorioController::montaRelatorio($this->getRepositorio(), $numeroIdentificador, $periodo, $tipoRelatorioEquipe, false, RelatorioController::relatorioCelulaRealizadas);
                 $relatorio12Pessoal = RelatorioController::montaRelatorio($this->getRepositorio(), $numeroIdentificador, $periodo, $tipoRelatorioPessoal, false, RelatorioController::relatorioCelulaRealizadas);
                 if ($relatorio12['celulaQuantidade'] > 0) {
-//                    $relatorioCelulas[$grupoFilho->getId()] = RelatorioController::saberQuaisDasMinhasCelulasSaoDeElitePorPeriodo($this->getRepositorio(), $grupoFilho, $periodo);
+                    $relatorioCelulas[$grupoFilho->getId()] = RelatorioController::saberQuaisDasMinhasCelulasSaoDeElitePorPeriodo($this->getRepositorio(), $grupoFilho, $periodo);
                     if ($relatorio12['celulaRealizadas'] < $relatorio12['celulaQuantidade']) {
                         $relatorioDiscipulos[$grupoFilho->getId()] = $relatorio12;
                         $relatorioDiscipulosPessoal[$grupoFilho->getId()] = $relatorio12Pessoal;
@@ -104,7 +103,7 @@ class PrincipalController extends CircuitoController {
                         $numeroIdentificador144 = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupoFilho144, false, RelatorioController::relatorioCelulaRealizadas);
                         $relatorio144 = RelatorioController::montaRelatorio($this->getRepositorio(), $numeroIdentificador144, $periodo, $tipoRelatorioPessoal, false, RelatorioController::relatorioCelulaRealizadas);
                         if ($relatorio144['celulaQuantidade'] > 0) {
-//                            $relatorioCelulas[$grupoFilho144->getId()] = RelatorioController::saberQuaisDasMinhasCelulasSaoDeElitePorPeriodo($this->getRepositorio(), $grupoFilho144, $periodo);
+                            $relatorioCelulas[$grupoFilho144->getId()] = RelatorioController::saberQuaisDasMinhasCelulasSaoDeElitePorPeriodo($this->getRepositorio(), $grupoFilho144, $periodo);
                             if ($relatorio144['celulaRealizadas'] < $relatorio144['celulaQuantidade']) {
                                 $relatorioDiscipulos[$grupoFilho144->getId()] = $relatorio144;
                             }
@@ -117,7 +116,7 @@ class PrincipalController extends CircuitoController {
                                 $numeroIdentificador1728 = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupoFilho1728, false, RelatorioController::relatorioCelulaRealizadas);
                                 $relatorio1728 = RelatorioController::montaRelatorio($this->getRepositorio(), $numeroIdentificador1728, $periodo, $tipoRelatorioPessoal, false, RelatorioController::relatorioCelulaRealizadas);
                                 if ($relatorio1728['celulaQuantidade'] > 0) {
-//                                    $relatorioCelulas[$grupoFilho1728->getId()] = RelatorioController::saberQuaisDasMinhasCelulasSaoDeElitePorPeriodo($this->getRepositorio(), $grupoFilho1728, $periodo);
+                                    $relatorioCelulas[$grupoFilho1728->getId()] = RelatorioController::saberQuaisDasMinhasCelulasSaoDeElitePorPeriodo($this->getRepositorio(), $grupoFilho1728, $periodo);
                                     if ($relatorio1728['celulaRealizadas'] < $relatorio1728['celulaQuantidade']) {
                                         $relatorioDiscipulos[$gpFilho1728->getId()] = $relatorio144;
                                     }
@@ -130,7 +129,7 @@ class PrincipalController extends CircuitoController {
                                         $numeroIdentificador20736 = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupoFilho20736, false, RelatorioController::relatorioCelulaRealizadas);
                                         $relatorio20736 = RelatorioController::montaRelatorio($this->getRepositorio(), $numeroIdentificador20736, $periodo, $tipoRelatorioPessoal, false, RelatorioController::relatorioCelulaRealizadas);
                                         if ($relatorio20736['celulaQuantidade'] > 0) {
-//                                            $relatorioCelulas[$grupoFilho20736->getId()] = RelatorioController::saberQuaisDasMinhasCelulasSaoDeElitePorPeriodo($this->getRepositorio(), $grupoFilho20736, $periodo);
+                                            $relatorioCelulas[$grupoFilho20736->getId()] = RelatorioController::saberQuaisDasMinhasCelulasSaoDeElitePorPeriodo($this->getRepositorio(), $grupoFilho20736, $periodo);
                                             if ($relatorio20736['celulaRealizadas'] < $relatorio20736['celulaQuantidade']) {
                                                 $relatorioDiscipulos[$gpFilho20736->getId()] = $relatorio20736;
                                             }
@@ -143,7 +142,7 @@ class PrincipalController extends CircuitoController {
                                                 $numeroIdentificador248832 = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupoFilho248832, false, RelatorioController::relatorioCelulaRealizadas);
                                                 $relatorio248832 = RelatorioController::montaRelatorio($this->getRepositorio(), $numeroIdentificador248832, $periodo, $tipoRelatorioPessoal, false, RelatorioController::relatorioCelulaRealizadas);
                                                 if ($relatorio248832['celulaQuantidade'] > 0) {
-//                                                    $relatorioCelulas[$grupoFilho248832->getId()] = RelatorioController::saberQuaisDasMinhasCelulasSaoDeElitePorPeriodo($this->getRepositorio(), $grupoFilho248832, $periodo);
+                                                    $relatorioCelulas[$grupoFilho248832->getId()] = RelatorioController::saberQuaisDasMinhasCelulasSaoDeElitePorPeriodo($this->getRepositorio(), $grupoFilho248832, $periodo);
                                                     if ($relatorio248832['celulaRealizadas'] < $relatorio248832['celulaQuantidade']) {
                                                         $relatorioDiscipulos[$gpFilho248832->getId()] = $relatorio248832;
                                                     }

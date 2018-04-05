@@ -138,6 +138,13 @@ use Application\View\Helper\BotaoSimples;
 
                                     $htmlCelulaDeElite = '';
                                     $totalDeCelulasDeElite = 0;
+                                    $relatorioCelula = $this->relatorioCelulas[$this->grupo->getId()];
+                                    foreach ($relatorioCelula as $relatorio) {
+                                        if ($relatorio['resposta'] == 1) {
+                                            $totalDeCelulasDeElite++;
+                                        }
+                                    }
+
                                     foreach ($this->discipulos as $gpFilho) {
                                         $totalDeCelulasDeElitePorEquipe = 0;
                                         $grupoFilho = $gpFilho->getGrupoPaiFilhoFilho();
