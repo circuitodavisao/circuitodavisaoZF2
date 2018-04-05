@@ -303,10 +303,8 @@ class FatoCicloORM extends CircuitoORM {
 
     public function verificaFrequenciasPorCelulaEPeriodo($periodo, $eventoId) {
         $resultadoPeriodo = Funcoes::montaPeriodo($periodo);
-        $dataDoPeriodoInicial = $resultadoPeriodo[3] . '-' . $resultadoPeriodo[2] . '-' . $resultadoPeriodo[1];
-
-               $dataDoInicioFormatada = DateTime::createFromFormat('Y-m-d', $dataDoPeriodoInicial);
-        
+        $dataDoPeriodo = $resultadoPeriodo[3] . '-' . $resultadoPeriodo[2] . '-' . $resultadoPeriodo[1];
+        $dataFormatada = DateTime::createFromFormat('Y-m-d', $dataDoPeriodo);
         $dqlBase = "SELECT "
                 . "ef.frequencia "
                 . "FROM  " . Constantes::$ENTITY_EVENTO_FREQUENCIA . " ef "
@@ -316,11 +314,12 @@ class FatoCicloORM extends CircuitoORM {
 
         $resultados = $this->getEntityManager()->createQuery($dqlBase)
                 ->setParameter(1, (int) $eventoId)
-                ->setParameter(2, $dataDoInicioFormatada)
+                ->setParameter(2, $dataFormatada)
                 ->getResult();
 
         $somaResultado = 0;
         foreach ($resultados as $resultado) {
+            Funcoes::var_dump($resultado);
             if ($resultado['frequencia'] == 'S') {
                 $somaResultado++;
             }
