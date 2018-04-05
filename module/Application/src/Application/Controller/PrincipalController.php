@@ -77,7 +77,7 @@ class PrincipalController extends CircuitoController {
         /* Celulas De Elite */
         $relatorioCelulas = array();
         $relatorioCelulas[$grupo->getId()] = RelatorioController::saberQuaisDasMinhasCelulasSaoDeElitePorPeriodo($this->getRepositorio(), $grupo, $periodo);
-
+        Funcoes::var_dump($relatorioCelulas[$grupo->getId()]);
         $grupoPaiFilhoFilhos = $grupo->getGrupoPaiFilhoFilhosAtivos($periodo);
         if ($grupoPaiFilhoFilhos) {
             $relatorioDiscipulos = array();
