@@ -154,7 +154,7 @@ use Application\View\Helper\BotaoSimples;
                                         $htmlCelulaDeElite .= '</tr>';
                                         foreach ($relatorioCelula as $relatorio) {
                                             if ($relatorio['resposta'] == 1) {
-                                                $htmlCelulaDeElite .= '<tr class="linhaCelulasDeElite hidden info">';
+                                                $htmlCelulaDeElite .= '<tr class="linhaCelulasDeElite hidden">';
                                                 $htmlCelulaDeElite .= '<td colspan="2">Hospedeiro: ' . $relatorio['hospedeiro'] . ' - Pessoas: ' . $relatorio['resultado'] . '</td>';
                                                 $htmlCelulaDeElite .= '</tr>';
                                             }
@@ -188,7 +188,7 @@ use Application\View\Helper\BotaoSimples;
                                         if ($mostrar) {
                                             foreach ($relatorioCelula as $relatorio) {
                                                 if ($relatorio['resposta'] == 1) {
-                                                    $htmlCelulaDeElite .= '<tr class="linhaCelulasDeElite hidden info">';
+                                                    $htmlCelulaDeElite .= '<tr class="linhaCelulasDeElite hidden">';
                                                     $htmlCelulaDeElite .= '<td colspan="2">Hospedeiro: ' . $relatorio['hospedeiro'] . ' - Pessoas: ' . $relatorio['resultado'] . '</td>';
                                                     $htmlCelulaDeElite .= '</tr>';
                                                 }
