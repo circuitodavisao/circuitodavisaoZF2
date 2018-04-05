@@ -138,10 +138,23 @@ use Application\View\Helper\BotaoSimples;
 
                                     $htmlCelulaDeElite = '';
                                     $totalDeCelulasDeElite = 0;
+
                                     $relatorioCelula = $this->relatorioCelulas[$this->grupo->getId()];
+                                    $mostrar = false;
                                     foreach ($relatorioCelula as $relatorio) {
                                         if ($relatorio['resposta'] == 1) {
+                                            $mostrar = true;
                                             $totalDeCelulasDeElite++;
+                                        }
+                                    }
+                                    if ($mostrar) {
+                                        foreach ($relatorioCelula as $relatorio) {
+                                            if ($relatorio['resposta'] == 1) {
+                                                $htmlCelulaDeElite .= '<tr class="linhaCelulasDeElite hidden">';
+                                                $htmlCelulaDeElite .= '<td>Pessoal</td>';
+                                                $htmlCelulaDeElite .= '<td>Hospedeiro: ' . $relatorio['hospedeiro'] . '</td>';
+                                                $htmlCelulaDeElite .= '</tr>';
+                                            }
                                         }
                                     }
 
