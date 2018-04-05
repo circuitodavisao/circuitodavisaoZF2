@@ -32,6 +32,7 @@ use Application\View\Helper\CabecalhoDeCiclos;
 use Application\View\Helper\CabecalhoDeEventos;
 use Application\View\Helper\CabecalhoDeMeses;
 use Application\View\Helper\CabecalhoDePeriodos;
+use Application\View\Helper\CircuitoMeAjuda;
 use Application\View\Helper\DadosEntidade;
 use Application\View\Helper\DadosPrincipal;
 use Application\View\Helper\DadosProximoNivel;
@@ -328,6 +329,9 @@ class Module {
                 },
                 'montaGraficoDeBarra' => function ($sm) {
                     return new MontaGraficoDeBarra();
+                },
+                'circuitoMeAjuda' => function ($sm) {
+                    return new CircuitoMeAjuda();
                 },
             )
         );
