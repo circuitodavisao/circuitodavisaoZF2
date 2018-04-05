@@ -142,7 +142,7 @@ use Application\View\Helper\BotaoSimples;
                                         $totalDeCelulasDeElitePorEquipe = 0;
                                         $grupoFilho = $gpFilho->getGrupoPaiFilhoFilho();
                                         $nomeLideres = $grupoFilho->getNomeLideresAtivos();
-                                        $relatorioCelula = $this->discipulosRelatorio[$grupoFilho->getId()];
+                                        $relatorioCelula = $this->relatorioCelulas[$grupoFilho->getId()];
                                         foreach ($relatorioCelula as $relatorio) {
                                             if ($relatorio['resposta'] == 1) {
                                                 $totalDeCelulasDeElite++;
