@@ -322,13 +322,13 @@ class FatoCicloORM extends CircuitoORM {
                 ->setParameter(3, $dataDoFimFormatada)
                 ->getResult();
 
-        $somaResultado = 0;
-        Funcoes::var_dump($resultados);
+        $somaResultado = 0;        
         foreach ($resultados as $resultado) {
             if ($resultado['frequencia'] == 'S') {
                 $somaResultado++;
             }
         }
+        Funcoes::var_dump($somaResultado);
         return $somaResultado;
     }
 
