@@ -305,12 +305,13 @@ class FatoCicloORM extends CircuitoORM {
         $resultadoPeriodo = Funcoes::montaPeriodo($periodo);
         $dataDoPeriodo = $resultadoPeriodo[3] . '-' . $resultadoPeriodo[2] . '-' . $resultadoPeriodo[1];
         $dataFormatada = DateTime::createFromFormat('Y-m-d', $dataDoPeriodo);
+        Funcoes::var_dump($dataFormatada);
         $dqlBase = "SELECT "
                 . "ef.frequencia "
                 . "FROM  " . Constantes::$ENTITY_EVENTO_FREQUENCIA . " ef "
                 . "WHERE "
                 . "ef.evento_id = ?1 AND "
-                . "ef.dia = ?2";
+                . "ef.dia = ?2 ";
 
         $resultados = $this->getEntityManager()->createQuery($dqlBase)
                 ->setParameter(1, (int) $eventoId)
@@ -319,7 +320,7 @@ class FatoCicloORM extends CircuitoORM {
 
         $somaResultado = 0;
         Funcoes::var_dump($resultados);
-        foreach ($resultados as $resultado) {            
+        foreach ($resultados as $resultado) {
             if ($resultado['frequencia'] == 'S') {
                 $somaResultado++;
             }
