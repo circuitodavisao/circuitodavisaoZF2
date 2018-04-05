@@ -301,27 +301,22 @@ class FatoCicloORM extends CircuitoORM {
         }
     }
 
-    public function verificaFrequenciasPorCelulaEPeriodo($periodoInicial, $eventoId, $periodoFinal = 0) {
-        $resultadoPeriodoInicial = Funcoes::montaPeriodo($periodoInicial);
-        $dataDoPeriodoInicial = $resultadoPeriodoInicial[3] . '-' . $resultadoPeriodoInicial[2] . '-' . $resultadoPeriodoInicial[1];
+    public function verificaFrequenciasPorCelulaEPeriodo($periodo, $eventoId) {
+        $resultadoPeriodo = Funcoes::montaPeriodo($periodo);
+        $dataDoPeriodoInicial = $resultadoPeriodo[3] . '-' . $resultadoPeriodo[2] . '-' . $resultadoPeriodo[1];
 
-        $resultadoPeriodoFinal = Funcoes::montaPeriodo($periodoFinal);
-        $dataDoPeriodoFinal = $resultadoPeriodoFinal[6] . '-' . $resultadoPeriodoFinal[5] . '-' . $resultadoPeriodoFinal[4];
-
-        $dataDoInicioFormatada = DateTime::createFromFormat('Y-m-d', $dataDoPeriodoInicial);
-        $dataDoFimFormatada = DateTime::createFromFormat('Y-m-d', $dataDoPeriodoFinal);
-
+               $dataDoInicioFormatada = DateTime::createFromFormat('Y-m-d', $dataDoPeriodoInicial);
+        
         $dqlBase = "SELECT "
                 . "ef.frequencia "
                 . "FROM  " . Constantes::$ENTITY_EVENTO_FREQUENCIA . " ef "
                 . "WHERE "
                 . "ef.evento_id = ?1 AND "
-                . "ef.dia >= ?2 AND ef.dia <= ?3 ";
+                . "ef.dia = ?2";
 
         $resultados = $this->getEntityManager()->createQuery($dqlBase)
                 ->setParameter(1, (int) $eventoId)
                 ->setParameter(2, $dataDoInicioFormatada)
-                ->setParameter(3, $dataDoFimFormatada)
                 ->getResult();
 
         $somaResultado = 0;

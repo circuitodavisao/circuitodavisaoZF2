@@ -647,16 +647,19 @@ class RelatorioController extends CircuitoController {
         return $relatorio;
     }
 
-    public static function saberQuaisdasMinhasCelulasSaoDeElite(RepositorioORM $repositorioORM, Grupo $grupo, $periodoInicial, $periodoFinal) {
+    public static function saberQuaisDasMinhasCelulasSaoDeElitePorPeriodo(RepositorioORM $repositorioORM, Grupo $grupo, $periodo) {
         $relatorio = array();
         $grupoEventosCelula = $grupo->getGrupoEventoAtivosPorTipo(EventoTipo::tipoCelula);
-        $diferencaDePeriodos = self::diferencaDePeriodos($periodoInicial, $periodoFinal);
         $contagem = 0;
         foreach ($grupoEventosCelula as $grupoEventoCelula) {
             $eventoId = $grupoEventoCelula->getEvento()->getId();
-            $resultado = $repositorioORM->getFatoCicloORM()->verificaFrequenciasPorCelulaEPeriodo($periodoInicial, $eventoId, $periodoFinal);
+            $resultado = $repositorioORM->getFatoCicloORM()->verificaFrequenciasPorCelulaEPeriodo($periodo, $eventoId);
+            $resposta = 0;
+            if ($resultado >= 7) {
+                $resposta = 1;
+            }
             $relatorio[$contagem]['eventoId'] = $eventoId;
-            $relatorio[$contagem]['valor'] = $resultado / $diferencaDePeriodos;
+            $relatorio[$contagem]['resposta'] = $resposta;
             $relatorio[$contagem]['hospedeiro'] = $grupoEventoCelula->getEvento()->getEventoCelula()->getNome_hospedeiroPrimeiroNome();
             $contagem++;
         }
