@@ -155,7 +155,7 @@ use Application\View\Helper\BotaoSimples;
                                         foreach ($relatorioCelula as $relatorio) {
                                             if ($relatorio['resposta'] == 1) {
                                                 $htmlCelulaDeElite .= '<tr class="linhaCelulasDeElite hidden">';
-                                                $htmlCelulaDeElite .= '<td colspan="2">Hospedeiro: ' . $relatorio['hospedeiro'] . ' - Pessoas: ' . $relatorio['resultado'] . '</td>';
+                                                $htmlCelulaDeElite .= '<td colspan="2">Hosp.: ' . $relatorio['hospedeiro'] . ' - Pessoas: ' . $relatorio['resultado'] . '</td>';
                                                 $htmlCelulaDeElite .= '</tr>';
                                             }
                                         }
@@ -189,7 +189,7 @@ use Application\View\Helper\BotaoSimples;
                                             foreach ($relatorioCelula as $relatorio) {
                                                 if ($relatorio['resposta'] == 1) {
                                                     $htmlCelulaDeElite .= '<tr class="linhaCelulasDeElite hidden">';
-                                                    $htmlCelulaDeElite .= '<td colspan="2">Hospedeiro: ' . $relatorio['hospedeiro'] . ' - Pessoas: ' . $relatorio['resultado'] . '</td>';
+                                                    $htmlCelulaDeElite .= '<td colspan="2">Hosp.: ' . $relatorio['hospedeiro'] . ' - Pessoas: ' . $relatorio['resultado'] . '</td>';
                                                     $htmlCelulaDeElite .= '</tr>';
                                                 }
                                             }
@@ -285,7 +285,7 @@ use Application\View\Helper\BotaoSimples;
                                     echo $html;
 
                                     echo '<tr>';
-                                    echo '<td class="text-center">(Manuten&ccedil;&atilde;o)Celulas de <b>Elite</b>: ' . $totalDeCelulasDeElite . '</td>';
+                                    echo '<td class="text-center">(Manu.)Celulas de <b>Elite</b>: ' . $totalDeCelulasDeElite . '</td>';
                                     $funcaoCelulasDeElite = $this->funcaoOnClick('$(".linhaCelulasDeElite").toggleClass("hidden")');
                                     echo '<td>' . $this->botaoSimples('<i class="fa fa-eye" />', $funcaoCelulasDeElite, BotaoSimples::botaoMuitoPequenoImportante, BotaoSimples::posicaoAoCentro) . '</td>';
                                     echo '</tr>';
