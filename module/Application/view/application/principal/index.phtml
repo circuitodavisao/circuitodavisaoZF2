@@ -250,7 +250,7 @@ use Application\View\Helper\BotaoSimples;
                                     echo $html;
 
                                     echo '<tr>';
-                                    echo '<td class="text-center">Celulas de <b>Elite</b>: ' . $totalDeCelulasDeElite . '</td>';
+                                    echo '<td class="text-center">(Manuten&cdeil;&atilde;o)Celulas de <b>Elite</b>: ' . $totalDeCelulasDeElite . '</td>';
                                     $funcaoCelulasDeElite = $this->funcaoOnClick('$(".linhaCelulasDeElite").toggleClass("hidden")');
                                     echo '<td>' . $this->botaoSimples('<i class="fa fa-eye" />', $funcaoCelulasDeElite, BotaoSimples::botaoMuitoPequenoImportante, BotaoSimples::posicaoAoCentro) . '</td>';
                                     echo '</tr>';
