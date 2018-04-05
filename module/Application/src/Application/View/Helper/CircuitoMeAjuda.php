@@ -20,7 +20,7 @@ class CircuitoMeAjuda extends AbstractHelper {
     }
 
     public function __invoke() {
-        return $this->view->renderHtml();
+        return $this->renderHtml();
     }
 
     public function renderHtml() {
