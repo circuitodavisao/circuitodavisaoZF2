@@ -151,7 +151,7 @@ use Application\View\Helper\BotaoSimples;
                                         foreach ($relatorioCelula as $relatorio) {
                                             if ($relatorio['resposta'] == 1) {
                                                 $htmlCelulaDeElite .= '<tr class="linhaCelulasDeElite hidden info">';
-                                                $htmlCelulaDeElite .= '<td colspan="2">Célula Pessoal - Hospedeiro: ' . $relatorio['hospedeiro'] . '</td>';
+                                                $htmlCelulaDeElite .= '<td colspan="2">Célula Pessoal - Hospedeiro: ' . $relatorio['hospedeiro'] . ' - Pessoas: ' . $relatorio['resultado'] . '</td>';
                                                 $htmlCelulaDeElite .= '</tr>';
                                             }
                                         }
