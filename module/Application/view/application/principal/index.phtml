@@ -138,23 +138,34 @@ use Application\View\Helper\BotaoSimples;
 
                                     $htmlCelulaDeElite = '';
                                     $totalDeCelulasDeElite = 0;
-
+                                    $totalDeCelulasDeElitePorEquipe = 0;
                                     $relatorioCelula = $this->relatorioCelulas[$this->grupo->getId()];
                                     $mostrar = false;
                                     foreach ($relatorioCelula as $relatorio) {
                                         if ($relatorio['resposta'] == 1) {
                                             $mostrar = true;
                                             $totalDeCelulasDeElite++;
+                                            $totalDeCelulasDeElitePorEquipe++;
                                         }
                                     }
                                     if ($mostrar) {
+                                        $htmlCelulaDeElite .= '<tr class="linhaCelulasDeElite hidden info">';
+                                        $htmlCelulaDeElite .= '<td colspan="2">Célula Pessoal</td>';
+                                        $htmlCelulaDeElite .= '</tr>';
                                         foreach ($relatorioCelula as $relatorio) {
                                             if ($relatorio['resposta'] == 1) {
                                                 $htmlCelulaDeElite .= '<tr class="linhaCelulasDeElite hidden info">';
-                                                $htmlCelulaDeElite .= '<td colspan="2">Célula Pessoal - Hospedeiro: ' . $relatorio['hospedeiro'] . ' - Pessoas: ' . $relatorio['resultado'] . '</td>';
+                                                $htmlCelulaDeElite .= '<td colspan="2">Hospedeiro: ' . $relatorio['hospedeiro'] . ' - Pessoas: ' . $relatorio['resultado'] . '</td>';
                                                 $htmlCelulaDeElite .= '</tr>';
                                             }
                                         }
+                                        $htmlCelulaDeElite .= '<tr class="linhaCelulasDeElite hidden primary">';
+                                        $htmlCelulaDeElite .= '<td class="text-right">TOTAL</td>';
+                                        $htmlCelulaDeElite .= '<td>' . $totalDeCelulasDeElitePorEquipe . '</td>';
+                                        $htmlCelulaDeElite .= '</tr>';
+                                        $htmlCelulaDeElite .= '<tr class="linhaCelulasDeElite hidden">';
+                                        $htmlCelulaDeElite .= '<td colspan="2"></td>';
+                                        $htmlCelulaDeElite .= '</tr>';
                                     }
 
                                     foreach ($this->discipulos as $gpFilho) {
