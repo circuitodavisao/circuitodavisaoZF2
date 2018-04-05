@@ -173,8 +173,10 @@ use Application\View\Helper\BotaoSimples;
                                         $grupoFilho = $gpFilho->getGrupoPaiFilhoFilho();
                                         $nomeLideres = $grupoFilho->getNomeLideresAtivos();
                                         $relatorioCelula = $this->relatorioCelulas[$grupoFilho->getId()];
+                                        $mostrar = false;
                                         foreach ($relatorioCelula as $relatorio) {
                                             if ($relatorio['resposta'] == 1) {
+                                                $mostrar = true;
                                                 $totalDeCelulasDeElite++;
                                                 $totalDeCelulasDeElitePorEquipe++;
                                             }
@@ -183,79 +185,82 @@ use Application\View\Helper\BotaoSimples;
                                         $htmlCelulaDeElite .= '<tr class="linhaCelulasDeElite hidden info">';
                                         $htmlCelulaDeElite .= '<td colspan="2">EQUIPE - ' . $nomeLideres . '</td>';
                                         $htmlCelulaDeElite .= '</tr>';
-//                                        if ($diferencaPessoal > 0) {
-//                                            $htmlCelulaDeElite .= '<tr class="linhaCelulasDeElite hidden">';
-//                                            $htmlCelulaDeElite .= '<td>' . $nomeLideres . '</td>';
-//                                            $htmlCelulaDeElite .= '<td>' . $diferencaPessoal . '</td>';
-//                                            $htmlCelulaDeElite .= '</tr>';
-//                                        }
-//                                        $grupoPaiFilhoFilhos144 = $grupoFilho->getGrupoPaiFilhoFilhosAtivos(-1);
-//                                        if ($grupoPaiFilhoFilhos144) {
-//                                            foreach ($grupoPaiFilhoFilhos144 as $gpFilho144) {
-//                                                $grupoFilho144 = $gpFilho144->getGrupoPaiFilhoFilho();
-//                                                $nomeLideres144 = $grupoFilho144->getNomeLideresAtivos();
-//                                                $relatorioDiscipulo144 = $this->discipulosRelatorio[$grupoFilho144->getId()];
-//                                                $numeroSub = $grupoFilho144->getEntidadeAtiva()->infoEntidade(true);
-//                                                if ($relatorioDiscipulo144) {
-//                                                    $diferenca144 = $relatorioDiscipulo144['celulaQuantidade'] - $relatorioDiscipulo144['celulaRealizadas'];
-//                                                    $htmlCelulaDeElite .= '<tr class="linhaCelulasDeElite hidden">';
-//                                                    $htmlCelulaDeElite .= '<td>' . $numeroSub . '-' . $nomeLideres144 . '</td>';
-//                                                    $htmlCelulaDeElite .= '<td>' . $diferenca144 . '</td>';
-//                                                    $htmlCelulaDeElite .= '</tr>';
-//                                                }
-//
-//                                                $grupoPaiFilhoFilhos1728 = $grupoFilho144->getGrupoPaiFilhoFilhosAtivos(-1);
-//                                                if ($grupoPaiFilhoFilhos1728) {
-//                                                    foreach ($grupoPaiFilhoFilhos1728 as $gpFilho1728) {
-//                                                        $grupoFilho1728 = $gpFilho1728->getGrupoPaiFilhoFilho();
-//                                                        $nomeLideres1728 = $grupoFilho1728->getNomeLideresAtivos();
-//                                                        $relatorioDiscipulo1728 = $this->discipulosRelatorio[$grupoFilho1728->getId()];
-//                                                        $numeroSub = $grupoFilho1728->getEntidadeAtiva()->infoEntidade(true);
-//                                                        if ($relatorioDiscipulo1728) {
-//                                                            $diferenca1728 = $relatorioDiscipulo1728['celulaQuantidade'] - $relatorioDiscipulo1728['celulaRealizadas'];
-//                                                            $htmlCelulaDeElite .= '<tr class="linhaCelulasDeElite hidden">';
-//                                                            $htmlCelulaDeElite .= '<td>' . $numeroSub . '-' . $nomeLideres1728 . '</td>';
-//                                                            $htmlCelulaDeElite .= '<td>' . $diferenca1728 . '</td>';
-//                                                            $htmlCelulaDeElite .= '</tr>';
-//                                                        }
-//
-//                                                        $grupoPaiFilhoFilhos20736 = $grupoFilho1728->getGrupoPaiFilhoFilhosAtivos(-1);
-//                                                        if ($grupoPaiFilhoFilhos20736) {
-//                                                            foreach ($grupoPaiFilhoFilhos20736 as $gpFilho20736) {
-//                                                                $grupoFilho20736 = $gpFilho20736->getGrupoPaiFilhoFilho();
-//                                                                $nomeLideres20736 = $grupoFilho20736->getNomeLideresAtivos();
-//                                                                $relatorioDiscipulo20736 = $this->discipulosRelatorio[$grupoFilho20736->getId()];
-//                                                                $numeroSub = $grupoFilho20736->getEntidadeAtiva()->infoEntidade(true);
-//                                                                if ($relatorioDiscipulo20736) {
-//                                                                    $diferenca20736 = $relatorioDiscipulo20736['celulaQuantidade'] - $relatorioDiscipulo20736['celulaRealizadas'];
-//                                                                    $htmlCelulaDeElite .= '<tr class="linhaCelulasDeElite hidden">';
-//                                                                    $htmlCelulaDeElite .= '<td>' . $numeroSub . '-' . $nomeLideres20736 . '</td>';
-//                                                                    $htmlCelulaDeElite .= '<td>' . $diferenca20736 . '</td>';
-//                                                                    $htmlCelulaDeElite .= '</tr>';
-//                                                                }
-//
-//                                                                $grupoPaiFilhoFilhos248832 = $grupoFilho20736->getGrupoPaiFilhoFilhosAtivos($periodo);
-//                                                                if ($grupoPaiFilhoFilhos248832) {
-//                                                                    foreach ($grupoPaiFilhoFilhos248832 as $gpFilho248832) {
-//                                                                        $grupoFilho248832 = $gpFilho248832->getGrupoPaiFilhoFilho();
-//                                                                        $nomeLideres248832 = $grupoFilho248832->getNomeLideresAtivos();
-//                                                                        $relatorioDiscipulo248832 = $this->discipulosRelatorio[$grupoFilho248832->getId()];
-//                                                                        $numeroSub = $grupoFilho248832->getEntidadeAtiva()->infoEntidade(true);
-//                                                                        if ($relatorioDiscipulo248832) {
-//                                                                            $diferenca248832 = $relatorioDiscipulo248832['celulaQuantidade'] - $relatorioDiscipulo248832['celulaRealizadas'];
-//                                                                            $htmlCelulaDeElite .= '<tr class="linhaCelulasDeElite hidden">';
-//                                                                            $htmlCelulaDeElite .= '<td>' . $numeroSub . '-' . $nomeLideres248832 . '</td>';
-//                                                                            $htmlCelulaDeElite .= '<td>' . $diferenca248832 . '</td>';
-//                                                                            $htmlCelulaDeElite .= '</tr>';
-//                                                                        }
-//                                                                    }
-//                                                                }
-//                                                            }
-//                                                        }
-//                                                    }
-//                                                }
-//                                            }
-//                                        }
+                                        if ($mostrar) {
+                                            foreach ($relatorioCelula as $relatorio) {
+                                                if ($relatorio['resposta'] == 1) {
+                                                    $htmlCelulaDeElite .= '<tr class="linhaCelulasDeElite hidden info">';
+                                                    $htmlCelulaDeElite .= '<td colspan="2">Hospedeiro: ' . $relatorio['hospedeiro'] . ' - Pessoas: ' . $relatorio['resultado'] . '</td>';
+                                                    $htmlCelulaDeElite .= '</tr>';
+                                                }
+                                            }
+                                        }
+                                        $grupoPaiFilhoFilhos144 = $grupoFilho->getGrupoPaiFilhoFilhosAtivos(-1);
+                                        if ($grupoPaiFilhoFilhos144) {
+                                            foreach ($grupoPaiFilhoFilhos144 as $gpFilho144) {
+                                                $grupoFilho144 = $gpFilho144->getGrupoPaiFilhoFilho();
+                                                $nomeLideres144 = $grupoFilho144->getNomeLideresAtivos();
+                                                $relatorioDiscipulo144 = $this->discipulosRelatorio[$grupoFilho144->getId()];
+                                                $numeroSub = $grupoFilho144->getEntidadeAtiva()->infoEntidade(true);
+                                                if ($relatorioDiscipulo144) {
+                                                    $diferenca144 = $relatorioDiscipulo144['celulaQuantidade'] - $relatorioDiscipulo144['celulaRealizadas'];
+                                                    $htmlCelulaDeElite .= '<tr class="linhaCelulasDeElite hidden">';
+                                                    $htmlCelulaDeElite .= '<td>' . $numeroSub . '-' . $nomeLideres144 . '</td>';
+                                                    $htmlCelulaDeElite .= '<td>' . $diferenca144 . '</td>';
+                                                    $htmlCelulaDeElite .= '</tr>';
+                                                }
+
+                                                $grupoPaiFilhoFilhos1728 = $grupoFilho144->getGrupoPaiFilhoFilhosAtivos(-1);
+                                                if ($grupoPaiFilhoFilhos1728) {
+                                                    foreach ($grupoPaiFilhoFilhos1728 as $gpFilho1728) {
+                                                        $grupoFilho1728 = $gpFilho1728->getGrupoPaiFilhoFilho();
+                                                        $nomeLideres1728 = $grupoFilho1728->getNomeLideresAtivos();
+                                                        $relatorioDiscipulo1728 = $this->discipulosRelatorio[$grupoFilho1728->getId()];
+                                                        $numeroSub = $grupoFilho1728->getEntidadeAtiva()->infoEntidade(true);
+                                                        if ($relatorioDiscipulo1728) {
+                                                            $diferenca1728 = $relatorioDiscipulo1728['celulaQuantidade'] - $relatorioDiscipulo1728['celulaRealizadas'];
+                                                            $htmlCelulaDeElite .= '<tr class="linhaCelulasDeElite hidden">';
+                                                            $htmlCelulaDeElite .= '<td>' . $numeroSub . '-' . $nomeLideres1728 . '</td>';
+                                                            $htmlCelulaDeElite .= '<td>' . $diferenca1728 . '</td>';
+                                                            $htmlCelulaDeElite .= '</tr>';
+                                                        }
+
+                                                        $grupoPaiFilhoFilhos20736 = $grupoFilho1728->getGrupoPaiFilhoFilhosAtivos(-1);
+                                                        if ($grupoPaiFilhoFilhos20736) {
+                                                            foreach ($grupoPaiFilhoFilhos20736 as $gpFilho20736) {
+                                                                $grupoFilho20736 = $gpFilho20736->getGrupoPaiFilhoFilho();
+                                                                $nomeLideres20736 = $grupoFilho20736->getNomeLideresAtivos();
+                                                                $relatorioDiscipulo20736 = $this->discipulosRelatorio[$grupoFilho20736->getId()];
+                                                                $numeroSub = $grupoFilho20736->getEntidadeAtiva()->infoEntidade(true);
+                                                                if ($relatorioDiscipulo20736) {
+                                                                    $diferenca20736 = $relatorioDiscipulo20736['celulaQuantidade'] - $relatorioDiscipulo20736['celulaRealizadas'];
+                                                                    $htmlCelulaDeElite .= '<tr class="linhaCelulasDeElite hidden">';
+                                                                    $htmlCelulaDeElite .= '<td>' . $numeroSub . '-' . $nomeLideres20736 . '</td>';
+                                                                    $htmlCelulaDeElite .= '<td>' . $diferenca20736 . '</td>';
+                                                                    $htmlCelulaDeElite .= '</tr>';
+                                                                }
+
+                                                                $grupoPaiFilhoFilhos248832 = $grupoFilho20736->getGrupoPaiFilhoFilhosAtivos($periodo);
+                                                                if ($grupoPaiFilhoFilhos248832) {
+                                                                    foreach ($grupoPaiFilhoFilhos248832 as $gpFilho248832) {
+                                                                        $grupoFilho248832 = $gpFilho248832->getGrupoPaiFilhoFilho();
+                                                                        $nomeLideres248832 = $grupoFilho248832->getNomeLideresAtivos();
+                                                                        $relatorioDiscipulo248832 = $this->discipulosRelatorio[$grupoFilho248832->getId()];
+                                                                        $numeroSub = $grupoFilho248832->getEntidadeAtiva()->infoEntidade(true);
+                                                                        if ($relatorioDiscipulo248832) {
+                                                                            $diferenca248832 = $relatorioDiscipulo248832['celulaQuantidade'] - $relatorioDiscipulo248832['celulaRealizadas'];
+                                                                            $htmlCelulaDeElite .= '<tr class="linhaCelulasDeElite hidden">';
+                                                                            $htmlCelulaDeElite .= '<td>' . $numeroSub . '-' . $nomeLideres248832 . '</td>';
+                                                                            $htmlCelulaDeElite .= '<td>' . $diferenca248832 . '</td>';
+                                                                            $htmlCelulaDeElite .= '</tr>';
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
                                         $htmlCelulaDeElite .= '<tr class="linhaCelulasDeElite hidden primary">';
                                         $htmlCelulaDeElite .= '<td class="text-right">TOTAL</td>';
                                         $htmlCelulaDeElite .= '<td>' . $totalDeCelulasDeElitePorEquipe . '</td>';
