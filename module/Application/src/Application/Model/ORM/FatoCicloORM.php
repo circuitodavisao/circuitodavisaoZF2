@@ -318,8 +318,8 @@ class FatoCicloORM extends CircuitoORM {
                 ->getResult();
 
         $somaResultado = 0;
-        foreach ($resultados as $resultado) {
-            Funcoes::var_dump($resultado);
+        Funcoes::var_dump($resultados);
+        foreach ($resultados as $resultado) {            
             if ($resultado['frequencia'] == 'S') {
                 $somaResultado++;
             }
