@@ -342,14 +342,14 @@ use Application\View\Helper\BotaoSimples;
                                     echo '</thead>';
                                     echo '<tbody>';
                                     echo '<tr>';
-                                    echo '<td class="text-center">Celulas <b>N&atilde;o</b> Realizadas: ' . $totalDeCelulasNaoRealizadas . '</td>';
+                                    echo '<td class="text-center">C&eacute;lulas <b>N&atilde;o</b> Realizadas: ' . $totalDeCelulasNaoRealizadas . '</td>';
                                     $funcao = $this->funcaoOnClick('$(".linhaCelulasNaoRealizadas").toggleClass("hidden")');
                                     echo '<td>' . $this->botaoSimples('<i class="fa fa-eye" />', $funcao, BotaoSimples::botaoMuitoPequenoImportante, BotaoSimples::posicaoAoCentro) . '</td>';
                                     echo '</tr>';
                                     echo $html;
 
                                     echo '<tr>';
-                                    echo '<td class="text-center">(Manu.)Celulas de <b>Elite</b>: ' . $totalDeCelulasDeElite . '</td>';
+                                    echo '<td class="text-center">C&eacute;lulas de <b>Elite</b>: ' . $totalDeCelulasDeElite . '</td>';
                                     $funcaoCelulasDeElite = $this->funcaoOnClick('$(".linhaCelulasDeElite").toggleClass("hidden")');
                                     echo '<td>' . $this->botaoSimples('<i class="fa fa-eye" />', $funcaoCelulasDeElite, BotaoSimples::botaoMuitoPequenoImportante, BotaoSimples::posicaoAoCentro) . '</td>';
                                     echo '</tr>';
