@@ -1,0 +1,52 @@
+<?php
+
+use Application\Controller\Helper\Constantes;
+use Application\Model\Helper\FuncoesEntidade;
+
+$pessoa = $this->pessoa;
+$imagem = FuncoesEntidade::tagImgComFotoDaPessoa($pessoa, $tamanho = 256, $tipoTamanho = 'px');
+$tituloDaPagina = 'Meu Perfil';
+$html .= $this->templateFormularioTopo($tituloDaPagina);
+
+$formulario = $this->formulario;
+$formulario->prepare();
+$formulario->setAttribute(Constantes::$ACTION, $this->url(Constantes::$ROUTE_CADASTRO, array(Constantes::$PAGINA => Constantes::$PAGINA_SALVAR_REVISAO)));
+
+$html .= $this->form()->openTag($formulario);
+$html .= '<div class="panel-body bg-light p25 mt30">';
+
+$html .= '<div class="fileupload fileupload-new" data-provides="fileupload">';
+$html .= '<div class="fileupload-preview thumbnail mb20">';
+$html .= $imagem;
+$html .= '</div>';
+$html .= '<div class="row">';
+$html .= '<div class="col-xs-7 pr5">';
+$html .= '</div>';
+$html .= '<div class="col-xs-5">';
+$html .= '<span class="btn btn-system btn-file btn-bloc">'
+        . '<span class="fileupload-new">Selecione</span>'
+        . '<span class="fileupload-exists">Trocar</span>'
+        . '<input type="file" />'
+        . '</span>';
+$html .= '</div>';
+$html .= '</div>';
+$html .= '</div>';
+
+$html .= $this->inputFormularioSimples(Constantes::$TRADUCAO_NOME, $formulario->get(Constantes::$INPUT_NOME), 12);
+$html .= $this->inputFormularioSimples(Constantes::$TRADUCAO_DDD, $formulario->get(Constantes::$INPUT_DDD), 3);
+$html .= $this->inputFormularioSimples(Constantes::$TRADUCAO_TELEFONE, $formulario->get(Constantes::$INPUT_TELEFONE), 9);
+$html .= $this->inputFormularioSimples(Constantes::$TRADUCAO_CPF, $formulario->get(Constantes::$INPUT_CPF), 12);
+$html .= $this->inputFormularioSimples(Constantes::$TRADUCAO_EMAIL, $formulario->get(Constantes::$INPUT_EMAIL), 12);
+$html .= '</div>';
+
+$html .= '<div class="panel-footer text-right">';
+$html .= $this->formHidden($formulario->get(Constantes::$FORM_ID));
+$html .= $this->formHidden($formulario->get(Constantes::$INPUT_CSRF));
+$funcaoVerificarPerfil = $this->funcaoOnClick('validarPerfil(this.form)');
+$html .= $this->botaoLink($this->translate('Salvar'), Constantes::$STRING_HASHTAG, 1, $this->funcaoOnClick($funcaoVerificarPerfil));
+$html .= '</div>';
+
+$html .= $this->form()->closeTag();
+
+$html .= $this->templateFormularioRodape();
+echo $html;

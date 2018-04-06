@@ -6,6 +6,7 @@ use Application\Controller\Helper\Constantes;
 use Application\Controller\Helper\Funcoes;
 use Application\Form\LoginForm;
 use Application\Form\NovaSenhaForm;
+use Application\Form\PerfilForm;
 use Application\Form\RecuperarAcessoForm;
 use Application\Form\RecuperarSenhaForm;
 use DateTime;
@@ -611,6 +612,22 @@ class LoginController extends CircuitoController {
         $layoutJSIndex = new ViewModel();
         $layoutJSIndex->setTemplate(Constantes::$TEMPLATE_JS_NOVA_SENHA_VALIDACAO);
         $view->addChild($layoutJSIndex, Constantes::$STRING_JS_NOVA_SENHA_VALIDACAO);
+
+        return $view;
+    }
+
+    public function perfilAction() {
+        $sessao = new Container(Constantes::$NOME_APLICACAO);
+        $pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($sessao->idPessoa);
+        $hierarquias = $this->getRepositorio()->getHierarquiaORM()->encontrarTodas();
+        $formulario = new PerfilForm('formulario',$pessoa);
+        $dados = array(
+            'pessoa' => $pessoa,
+            'hierarquias' => $hierarquias,
+            'formulario' => $formulario,
+        );
+
+        $view = new ViewModel($dados);
 
         return $view;
     }
