@@ -25,7 +25,6 @@ class PrincipalController extends CircuitoController {
      */
     public function indexAction() {
         $sessao = new Container(Constantes::$NOME_APLICACAO);
-        $sessao->getManager()->getConfig();
 
         $idEntidadeAtual = $sessao->idEntidadeAtual;
         $entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
@@ -56,6 +55,7 @@ class PrincipalController extends CircuitoController {
         }
         $alunosComFaltas = CursoController::pegarAlunosComFaltas($grupo, $turmas);
 
+        $hierarquias = $this->getRepositorio()->getHierarquiaORM()->encontrarTodas();
         $dados = array(
             'relatorio' => $relatorio,
             'relatorioAnterior' => $relatorioAnterior,
@@ -64,6 +64,7 @@ class PrincipalController extends CircuitoController {
             'mostrarPrincipal' => $mostrarPrincipal,
             'eCasal' => $eCasal,
             'grupo' => $grupo,
+            'hierarquias' => $hierarquias,
             'repositorio' => $this->getRepositorio(),
             'pessoa' => $pessoa,
             'alunosComFaltas' => $alunosComFaltas,

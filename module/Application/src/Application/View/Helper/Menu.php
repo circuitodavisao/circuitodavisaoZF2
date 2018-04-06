@@ -95,6 +95,8 @@ class Menu extends AbstractHelper {
         $html .= '</a>';
         $html .= '<div class="media-body">';
         $html .= '<div class="media-links">';
+        $html .= '<a href="/perfil" onClick="mostrarSplash();">Perfil</a>';
+        $html .= ' - ';
         $html .= '<a href="/preSaida" onClick="mostrarSplash();">Sair</a>';
         $html .= '</div>';
         $html .= '<div class="media-author">' . $this->view->pessoa->getNome() . '</div>';
