@@ -51,3 +51,45 @@ $html .= $this->form()->closeTag();
 
 $html .= $this->templateFormularioRodape();
 echo $html;
+
+var $image = $('.img-container > img'),
+        $dataX = $('#dataX'),
+        $dataY = $('#dataY'),
+        $dataHeight = $('#dataHeight'),
+        $dataWidth = $('#dataWidth'),
+        $dataRotate = $('#dataRotate'),
+        options = {
+          aspectRatio: 16 / 9,
+          preview: '.img-preview',
+          crop: function(data) {
+            $dataX.val(Math.round(data.x));
+            $dataY.val(Math.round(data.y));
+            $dataHeight.val(Math.round(data.height));
+            $dataWidth.val(Math.round(data.width));
+            $dataRotate.val(Math.round(data.rotate));
+          }
+        };
+
+      $image.on({
+        'build.cropper': function(e) {
+          console.log(e.type);
+        },
+        'built.cropper': function(e) {
+          console.log(e.type);
+        },
+        'dragstart.cropper': function(e) {
+          console.log(e.type, e.dragType);
+        },
+        'dragmove.cropper': function(e) {
+          console.log(e.type, e.dragType);
+        },
+        'dragend.cropper': function(e) {
+          console.log(e.type, e.dragType);
+        },
+        'zoomin.cropper': function(e) {
+          console.log(e.type);
+        },
+        'zoomout.cropper': function(e) {
+          console.log(e.type);
+        }
+      }).cropper(options);
