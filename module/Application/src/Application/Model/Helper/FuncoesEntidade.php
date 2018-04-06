@@ -20,7 +20,7 @@ class FuncoesEntidade {
         $resposta = '';
 
         $imagem = FuncoesEntidade::nomeDaImagem($p);
-        $resposta = '<img id="' . $id . '" src="/img/avatars/' . $imagem . '" class="img-thumbnail" width="' . $tamanho . $tipoTamanho . '"  height="' . $tamanho . $tipoTamanho . '" />&nbsp;';
+        $resposta = '<img data-holder-rendered="true" id="' . $id . '" src="/img/avatars/' . $imagem . '" class="img-thumbnail" width="' . $tamanho . $tipoTamanho . '"  height="' . $tamanho . $tipoTamanho . '" />&nbsp;';
 
         return $resposta;
     }
