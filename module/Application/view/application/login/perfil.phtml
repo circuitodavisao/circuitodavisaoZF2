@@ -4,7 +4,7 @@ use Application\Controller\Helper\Constantes;
 use Application\Model\Helper\FuncoesEntidade;
 
 $pessoa = $this->pessoa;
-$imagem = FuncoesEntidade::tagImgComFotoDaPessoa($pessoa, $tamanho = 256, $tipoTamanho = 'px');
+$imagem = FuncoesEntidade::tagImgComFotoDaPessoa($pessoa, $tamanho = 256, $tipoTamanho = 'px', $id = 'inputFoto');
 $tituloDaPagina = 'Meu Perfil';
 $html .= $this->templateFormularioTopo($tituloDaPagina);
 
@@ -14,24 +14,6 @@ $formulario->setAttribute(Constantes::$ACTION, $this->url(Constantes::$ROUTE_CAD
 
 $html .= $this->form()->openTag($formulario);
 $html .= '<div class="panel-body bg-light p25 mt30">';
-
-$html .= '<div class="fileupload fileupload-new" data-provides="fileupload">';
-$html .= '<input type="hidden" />';
-$html .= '<div class="fileupload-preview thumbnail mb20 image-container">';
-$html .= $imagem;
-$html .= '</div>';
-$html .= '<div class="row">';
-$html .= '<div class="col-xs-7 pr5">';
-$html .= '</div>';
-$html .= '<div class="col-xs-5">';
-$html .= '<span class="btn btn-system btn-file btn-block">'
-        . '<span class="fileupload-new">Selecione</span>'
-        . '<span class="fileupload-exists">Trocar</span>'
-        . '<input type="file" />'
-        . '</span>';
-$html .= '</div>';
-$html .= '</div>';
-$html .= '</div>';
 
 $html .= $this->inputFormularioSimples(Constantes::$TRADUCAO_NOME, $formulario->get(Constantes::$INPUT_NOME), 12);
 $html .= $this->inputFormularioSimples(Constantes::$TRADUCAO_DDD, $formulario->get(Constantes::$INPUT_DDD), 3);
@@ -51,45 +33,3 @@ $html .= $this->form()->closeTag();
 
 $html .= $this->templateFormularioRodape();
 echo $html;
-
-var $image = $('.img-container > img'),
-        $dataX = $('#dataX'),
-        $dataY = $('#dataY'),
-        $dataHeight = $('#dataHeight'),
-        $dataWidth = $('#dataWidth'),
-        $dataRotate = $('#dataRotate'),
-        options = {
-          aspectRatio: 16 / 9,
-          preview: '.img-preview',
-          crop: function(data) {
-            $dataX.val(Math.round(data.x));
-            $dataY.val(Math.round(data.y));
-            $dataHeight.val(Math.round(data.height));
-            $dataWidth.val(Math.round(data.width));
-            $dataRotate.val(Math.round(data.rotate));
-          }
-        };
-
-      $image.on({
-        'build.cropper': function(e) {
-          console.log(e.type);
-        },
-        'built.cropper': function(e) {
-          console.log(e.type);
-        },
-        'dragstart.cropper': function(e) {
-          console.log(e.type, e.dragType);
-        },
-        'dragmove.cropper': function(e) {
-          console.log(e.type, e.dragType);
-        },
-        'dragend.cropper': function(e) {
-          console.log(e.type, e.dragType);
-        },
-        'zoomin.cropper': function(e) {
-          console.log(e.type);
-        },
-        'zoomout.cropper': function(e) {
-          console.log(e.type);
-        }
-      }).cropper(options);
