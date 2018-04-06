@@ -38,6 +38,7 @@ use Application\Controller\Helper\Constantes;
                 ->headLink(array('rel' => 'apple-touch-icon', 'sizes' => '152x152', 'href' => $this->basePath() . '/img/icons/touch-icon-ipad-retina.png'))
                 ->headLink(array('rel' => 'apple-touch-icon', 'sizes' => '256x256', 'href' => $this->basePath() . '/img/icons/touch-icon-iphone.png'))
                 ->prependStylesheet($this->basePath() . '/css/estilos-circuito/splash.css' . $versao)
+                ->prependStylesheet($this->basePath() . '/vendor/plugins/fileupload/fileupload.js')
                 ->prependStylesheet($this->basePath() . '/vendor/plugins/footable/css/footable.core.min.css')
                 ->prependStylesheet($this->basePath() . '/vendor/plugins/fancytree/skin-win8/ui.fancytree.min.css')
                 ->prependStylesheet($this->basePath() . '/vendor/plugins/ladda/ladda.min.css')
