@@ -31,7 +31,7 @@ class CircuitoMeAjuda extends AbstractHelper {
         $html .= '<div class="panel-body pn">';
 
         if ($this->view->discipulos) {
-
+            $periodo = -1;
             /* Celulas nao realizadas */
             $htmlCelulasNaoRealizadas = '';
             $totalDeCelulasNaoRealizadas = 0;
@@ -51,7 +51,7 @@ class CircuitoMeAjuda extends AbstractHelper {
                     $htmlCelulasNaoRealizadas .= '<td>' . $diferencaPessoal . '</td>';
                     $htmlCelulasNaoRealizadas .= '</tr>';
                 }
-                $grupoPaiFilhoFilhos144 = $grupoFilho->getGrupoPaiFilhoFilhosAtivos(-1);
+                $grupoPaiFilhoFilhos144 = $grupoFilho->getGrupoPaiFilhoFilhosAtivos($periodo);
                 if ($grupoPaiFilhoFilhos144) {
                     foreach ($grupoPaiFilhoFilhos144 as $gpFilho144) {
                         $grupoFilho144 = $gpFilho144->getGrupoPaiFilhoFilho();
@@ -66,7 +66,7 @@ class CircuitoMeAjuda extends AbstractHelper {
                             $htmlCelulasNaoRealizadas .= '</tr>';
                         }
 
-                        $grupoPaiFilhoFilhos1728 = $grupoFilho144->getGrupoPaiFilhoFilhosAtivos(-1);
+                        $grupoPaiFilhoFilhos1728 = $grupoFilho144->getGrupoPaiFilhoFilhosAtivos($periodo);
                         if ($grupoPaiFilhoFilhos1728) {
                             foreach ($grupoPaiFilhoFilhos1728 as $gpFilho1728) {
                                 $grupoFilho1728 = $gpFilho1728->getGrupoPaiFilhoFilho();
@@ -81,7 +81,7 @@ class CircuitoMeAjuda extends AbstractHelper {
                                     $htmlCelulasNaoRealizadas .= '</tr>';
                                 }
 
-                                $grupoPaiFilhoFilhos20736 = $grupoFilho1728->getGrupoPaiFilhoFilhosAtivos(-1);
+                                $grupoPaiFilhoFilhos20736 = $grupoFilho1728->getGrupoPaiFilhoFilhosAtivos($periodo);
                                 if ($grupoPaiFilhoFilhos20736) {
                                     foreach ($grupoPaiFilhoFilhos20736 as $gpFilho20736) {
                                         $grupoFilho20736 = $gpFilho20736->getGrupoPaiFilhoFilho();
