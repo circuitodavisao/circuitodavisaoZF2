@@ -36,6 +36,7 @@ class CircuitoMeAjuda extends AbstractHelper {
             $htmlCelulasNaoRealizadas = '';
             $totalDeCelulasNaoRealizadas = 0;
             foreach ($this->view->discipulos as $gpFilho) {
+                $totalSub = 0;
                 $grupoFilho = $gpFilho->getGrupoPaiFilhoFilho();
                 $nomeLideres = $grupoFilho->getNomeLideresAtivos();
                 $relatorioDiscipulo = $this->view->discipulosRelatorio[$grupoFilho->getId()];
@@ -48,6 +49,7 @@ class CircuitoMeAjuda extends AbstractHelper {
                     $htmlCelulasNaoRealizadas .= '<td>' . $nomeLideres . '</td>';
                     $htmlCelulasNaoRealizadas .= '<td>' . $diferenca . '</td>';
                     $htmlCelulasNaoRealizadas .= '</tr>';
+                    $totalSub += $diferenca;
                 }
                 $grupoPaiFilhoFilhos144 = $grupoFilho->getGrupoPaiFilhoFilhosAtivos($periodo);
                 if ($grupoPaiFilhoFilhos144) {
@@ -62,6 +64,7 @@ class CircuitoMeAjuda extends AbstractHelper {
                             $htmlCelulasNaoRealizadas .= '<td>' . $numeroSub . '-' . $nomeLideres144 . '</td>';
                             $htmlCelulasNaoRealizadas .= '<td>' . $diferenca144 . '</td>';
                             $htmlCelulasNaoRealizadas .= '</tr>';
+                            $totalSub += $diferenca144;
                         }
 
                         $grupoPaiFilhoFilhos1728 = $grupoFilho144->getGrupoPaiFilhoFilhosAtivos($periodo);
@@ -77,6 +80,7 @@ class CircuitoMeAjuda extends AbstractHelper {
                                     $htmlCelulasNaoRealizadas .= '<td>' . $numeroSub . '-' . $nomeLideres1728 . '</td>';
                                     $htmlCelulasNaoRealizadas .= '<td>' . $diferenca1728 . '</td>';
                                     $htmlCelulasNaoRealizadas .= '</tr>';
+                                    $totalSub += $diferenca1728;
                                 }
 
                                 $grupoPaiFilhoFilhos20736 = $grupoFilho1728->getGrupoPaiFilhoFilhosAtivos($periodo);
@@ -92,6 +96,7 @@ class CircuitoMeAjuda extends AbstractHelper {
                                             $htmlCelulasNaoRealizadas .= '<td>' . $numeroSub . '-' . $nomeLideres20736 . '</td>';
                                             $htmlCelulasNaoRealizadas .= '<td>' . $diferenca20736 . '</td>';
                                             $htmlCelulasNaoRealizadas .= '</tr>';
+                                            $totalSub += $diferenca20736;
                                         }
 
                                         $grupoPaiFilhoFilhos248832 = $grupoFilho20736->getGrupoPaiFilhoFilhosAtivos($periodo);
@@ -107,6 +112,7 @@ class CircuitoMeAjuda extends AbstractHelper {
                                                     $htmlCelulasNaoRealizadas .= '<td>' . $numeroSub . '-' . $nomeLideres248832 . '</td>';
                                                     $htmlCelulasNaoRealizadas .= '<td>' . $diferenca248832 . '</td>';
                                                     $htmlCelulasNaoRealizadas .= '</tr>';
+                                                    $totalSub += $diferenca248832;
                                                 }
                                             }
                                         }
@@ -118,12 +124,12 @@ class CircuitoMeAjuda extends AbstractHelper {
                 }
                 $htmlCelulasNaoRealizadas .= '<tr class="linhaCelulasNaoRealizadas hidden primary">';
                 $htmlCelulasNaoRealizadas .= '<td class="text-right">TOTAL</td>';
-                $htmlCelulasNaoRealizadas .= '<td>' . $diferenca . '</td>';
+                $htmlCelulasNaoRealizadas .= '<td>' . $totalSub . '</td>';
                 $htmlCelulasNaoRealizadas .= '</tr>';
                 $htmlCelulasNaoRealizadas .= '<tr class="linhaCelulasNaoRealizadas hidden">';
                 $htmlCelulasNaoRealizadas .= '<td colspan="2"></td>';
                 $htmlCelulasNaoRealizadas .= '</tr>';
-                $totalDeCelulasNaoRealizadas += $diferenca;
+                $totalDeCelulasNaoRealizadas += $totalSub;
             }
 
             $htmlCelulasDeElite = '';
