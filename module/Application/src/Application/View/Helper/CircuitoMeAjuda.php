@@ -58,7 +58,7 @@ class CircuitoMeAjuda extends AbstractHelper {
                         $nomeLideres144 = $grupoFilho144->getNomeLideresAtivos();
                         $relatorioDiscipulo144 = $this->view->discipulosRelatorio[$grupoFilho144->getId()];
                         $numeroSub = $grupoFilho144->getEntidadeAtiva()->infoEntidade(true);
-                        if ($relatorioDiscipulo144) {
+                        if ($relatorioDiscipulo144 && ($relatorioDiscipulo144['celulaQuantidade'] - $relatorioDiscipulo144['celulaRealizadas'] > 0)) {
                             $diferenca144 = $relatorioDiscipulo144['celulaQuantidade'] - $relatorioDiscipulo144['celulaRealizadas'];
                             $htmlCelulasNaoRealizadas .= '<tr class="linhaCelulasNaoRealizadas hidden">';
                             $htmlCelulasNaoRealizadas .= '<td>' . $numeroSub . '-' . $nomeLideres144 . '</td>';
@@ -74,7 +74,7 @@ class CircuitoMeAjuda extends AbstractHelper {
                                 $nomeLideres1728 = $grupoFilho1728->getNomeLideresAtivos();
                                 $relatorioDiscipulo1728 = $this->view->discipulosRelatorio[$grupoFilho1728->getId()];
                                 $numeroSub = $grupoFilho1728->getEntidadeAtiva()->infoEntidade(true);
-                                if ($relatorioDiscipulo1728) {
+                                if ($relatorioDiscipulo1728 && ($relatorioDiscipulo1728['celulaQuantidade'] - $relatorioDiscipulo1728['celulaRealizadas'] > 0)) {
                                     $diferenca1728 = $relatorioDiscipulo1728['celulaQuantidade'] - $relatorioDiscipulo1728['celulaRealizadas'];
                                     $htmlCelulasNaoRealizadas .= '<tr class="linhaCelulasNaoRealizadas hidden">';
                                     $htmlCelulasNaoRealizadas .= '<td>' . $numeroSub . '-' . $nomeLideres1728 . '</td>';
@@ -90,7 +90,7 @@ class CircuitoMeAjuda extends AbstractHelper {
                                         $nomeLideres20736 = $grupoFilho20736->getNomeLideresAtivos();
                                         $relatorioDiscipulo20736 = $this->view->discipulosRelatorio[$grupoFilho20736->getId()];
                                         $numeroSub = $grupoFilho20736->getEntidadeAtiva()->infoEntidade(true);
-                                        if ($relatorioDiscipulo20736) {
+                                        if ($relatorioDiscipulo20736 && ($relatorioDiscipulo20736['celulaQuantidade'] - $relatorioDiscipulo20736['celulaRealizadas'] > 0)) {
                                             $diferenca20736 = $relatorioDiscipulo20736['celulaQuantidade'] - $relatorioDiscipulo20736['celulaRealizadas'];
                                             $htmlCelulasNaoRealizadas .= '<tr class="linhaCelulasNaoRealizadas hidden">';
                                             $htmlCelulasNaoRealizadas .= '<td>' . $numeroSub . '-' . $nomeLideres20736 . '</td>';
@@ -106,7 +106,7 @@ class CircuitoMeAjuda extends AbstractHelper {
                                                 $nomeLideres248832 = $grupoFilho248832->getNomeLideresAtivos();
                                                 $relatorioDiscipulo248832 = $this->view->discipulosRelatorio[$grupoFilho248832->getId()];
                                                 $numeroSub = $grupoFilho248832->getEntidadeAtiva()->infoEntidade(true);
-                                                if ($relatorioDiscipulo248832) {
+                                                if ($relatorioDiscipulo248832 && ($relatorioDiscipulo248832['celulaQuantidade'] - $relatorioDiscipulo248832['celulaRealizadas'] > 0)) {
                                                     $diferenca248832 = $relatorioDiscipulo248832['celulaQuantidade'] - $relatorioDiscipulo248832['celulaRealizadas'];
                                                     $htmlCelulasNaoRealizadas .= '<tr class="linhaCelulasNaoRealizadas hidden">';
                                                     $htmlCelulasNaoRealizadas .= '<td>' . $numeroSub . '-' . $nomeLideres248832 . '</td>';
