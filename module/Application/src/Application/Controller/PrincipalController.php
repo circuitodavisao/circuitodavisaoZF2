@@ -182,7 +182,8 @@ class PrincipalController extends CircuitoController {
 
             $grupoSessao = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idSessao);
             $tenhoDiscipulosAtivos = false;
-            $quantidadeDeDiscipulos = count($grupoSessao->getGrupoPaiFilhoFilhosAtivos());
+            $periodo = 0;
+            $quantidadeDeDiscipulos = count($grupoSessao->getGrupoPaiFilhoFilhosAtivos($periodo));
             if ($quantidadeDeDiscipulos > 0) {
                 $tenhoDiscipulosAtivos = true;
             }
