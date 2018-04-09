@@ -82,6 +82,7 @@ class PrincipalController extends CircuitoController {
             $relatorioDiscipulos = array();
             $discipulos = array();
             foreach ($grupoPaiFilhoFilhos as $gpFilho) {
+                $discipulos[] = $gpFilho;
                 $grupoFilho = $gpFilho->getGrupoPaiFilhoFilho();
                 $numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupoFilho);
                 $relatorio12 = RelatorioController::montaRelatorio($this->getRepositorio(), $numeroIdentificador, $periodo, $tipoRelatorioPessoal, false, RelatorioController::relatorioCelulaRealizadas);
@@ -89,7 +90,6 @@ class PrincipalController extends CircuitoController {
                     $relatorioCelulas[$grupoFilho->getId()] = RelatorioController::saberQuaisDasMinhasCelulasSaoDeElitePorPeriodo($this->getRepositorio(), $grupoFilho, $periodo);
                     if ($relatorio12['celulaRealizadas'] < $relatorio12['celulaQuantidade']) {
                         $relatorioDiscipulos[$grupoFilho->getId()] = $relatorio12;
-                        $discipulos[] = $gpFilho;
                     }
                 }
 
@@ -155,7 +155,6 @@ class PrincipalController extends CircuitoController {
             }
             $dados['discipulos'] = $discipulos;
             $dados['discipulosRelatorio'] = $relatorioDiscipulos;
-            $dados['discipulosRelatorioPessoal'] = $relatorioDiscipulosPessoal;
             $dados['relatorioCelulas'] = $relatorioCelulas;
         }
 
