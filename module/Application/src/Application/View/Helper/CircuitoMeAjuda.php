@@ -39,16 +39,14 @@ class CircuitoMeAjuda extends AbstractHelper {
                 $grupoFilho = $gpFilho->getGrupoPaiFilhoFilho();
                 $nomeLideres = $grupoFilho->getNomeLideresAtivos();
                 $relatorioDiscipulo = $this->view->discipulosRelatorio[$grupoFilho->getId()];
-                $relatorioDiscipuloPessoal = $this->view->discipulosRelatorioPessoal[$grupoFilho->getId()];
                 $diferenca = $relatorioDiscipulo['celulaQuantidade'] - $relatorioDiscipulo['celulaRealizadas'];
-                $diferencaPessoal = $relatorioDiscipuloPessoal['celulaQuantidade'] - $relatorioDiscipuloPessoal['celulaRealizadas'];
                 $htmlCelulasNaoRealizadas .= '<tr class="linhaCelulasNaoRealizadas hidden info">';
                 $htmlCelulasNaoRealizadas .= '<td colspan="2">EQUIPE - ' . $nomeLideres . '</td>';
                 $htmlCelulasNaoRealizadas .= '</tr>';
-                if ($diferencaPessoal > 0) {
+                if ($diferenca > 0) {
                     $htmlCelulasNaoRealizadas .= '<tr class="linhaCelulasNaoRealizadas hidden">';
                     $htmlCelulasNaoRealizadas .= '<td>' . $nomeLideres . '</td>';
-                    $htmlCelulasNaoRealizadas .= '<td>' . $diferencaPessoal . '</td>';
+                    $htmlCelulasNaoRealizadas .= '<td>' . $diferenca . '</td>';
                     $htmlCelulasNaoRealizadas .= '</tr>';
                 }
                 $grupoPaiFilhoFilhos144 = $grupoFilho->getGrupoPaiFilhoFilhosAtivos($periodo);
