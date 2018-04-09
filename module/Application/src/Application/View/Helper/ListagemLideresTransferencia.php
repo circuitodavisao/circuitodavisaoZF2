@@ -44,18 +44,18 @@ class ListagemLideresTransferencia extends AbstractHelper {
             if ($grupo->verificarSeEstaAtivo()) {
                 if ($mostrar) {
                     $mostrarFolder = false;
-                    if ($grupo->getGrupoPaiFilhoFilhosAtivos(0)) {
+                    if ($grupo->getGrupoPaiFilhoFilhosAtivosReal()) {
                         $mostrarFolder = true;
                     }
                     $entidade = $grupo->getEntidadeAtiva();
                     $nomeLideres = $grupo->getNomeLideresAtivos();
                     $informacao = $nomeLideres . ' - ' . $entidade->infoEntidade();
                     $class = '';
-                    if ($grupo->getGrupoPaiFilhoFilhosAtivos(0)) {
+                    if ($grupo->getGrupoPaiFilhoFilhosAtivosReal()) {
                         $class = '';
                     }
                     $html .= '<li id="' . $grupo->getId() . '" class="' . $class . '">' . $informacao;
-                    if ($dispulos144 = $grupo->getGrupoPaiFilhoFilhosAtivos(0)) {
+                    if ($dispulos144 = $grupo->getGrupoPaiFilhoFilhosAtivosReal()) {
                         $html .= '<ul>';
                         foreach ($dispulos144 as $gpFilho144) {
                             $grupoFilho144 = $gpFilho144->getGrupoPaiFilhoFilho();
@@ -66,11 +66,11 @@ class ListagemLideresTransferencia extends AbstractHelper {
                                     $nomeLideres = $grupoFilho144->getNomeLideresAtivos();
                                     $informacao = $nomeLideres . ' - ' . $entidade->infoEntidade();
                                     $class = '';
-                                    if ($grupoFilho144->getGrupoPaiFilhoFilhosAtivos(0)) {
+                                    if ($grupoFilho144->getGrupoPaiFilhoFilhosAtivosReal()) {
                                         $class = '';
                                     }
                                     $html .= '<li id="' . $grupoFilho144->getId() . '" class="' . $class . '">' . $informacao;
-                                    if ($dispulos1728 = $grupoFilho144->getGrupoPaiFilhoFilhosAtivos(0)) {
+                                    if ($dispulos1728 = $grupoFilho144->getGrupoPaiFilhoFilhosAtivosReal()) {
                                         $html .= '<ul>';
                                         foreach ($dispulos1728 as $gpFilho1728) {
                                             $grupoFilho1728 = $gpFilho1728->getGrupoPaiFilhoFilho();
@@ -81,11 +81,11 @@ class ListagemLideresTransferencia extends AbstractHelper {
                                                     $nomeLideres = $grupoFilho1728->getNomeLideresAtivos();
                                                     $informacao = $nomeLideres . ' - ' . $entidade->infoEntidade();
                                                     $class = '';
-                                                    if ($grupoFilho1728->getGrupoPaiFilhoFilhosAtivos(0)) {
+                                                    if ($grupoFilho1728->getGrupoPaiFilhoFilhosAtivosReal()) {
                                                         $class = '';
                                                     }
                                                     $html .= '<li id="' . $grupoFilho1728->getId() . '" class="' . $class . '">' . $informacao;
-                                                    if ($dispulos20736 = $grupoFilho1728->getGrupoPaiFilhoFilhosAtivos(0)) {
+                                                    if ($dispulos20736 = $grupoFilho1728->getGrupoPaiFilhoFilhosAtivosReal()) {
                                                         $html .= '<ul>';
                                                         foreach ($dispulos20736 as $gpFilho20736) {
                                                             $grupoFilho20736 = $gpFilho20736->getGrupoPaiFilhoFilho();
