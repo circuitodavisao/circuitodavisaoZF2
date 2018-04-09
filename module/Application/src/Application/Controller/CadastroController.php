@@ -1934,56 +1934,63 @@ class CadastroController extends CircuitoController {
         $arrayCasais = array();
         foreach ($grupoPaiFilhoFilhos as $grupoPaiFilhoFilho12) {
             $grupo12 = $grupoPaiFilhoFilho12->getGrupoPaiFilhoFilho();
-            if (!$grupo12->verificaSeECasal()) {
-                if ($grupo12->getGrupoResponsavelAtivo()->getPessoa()->getSexo() == 'M') {
-                    $arrayHomens[] = $grupoPaiFilhoFilho12;
+            if ($grupo12->verificarSeEstaAtivo()) {
+                if (!$grupo12->verificaSeECasal()) {
+                    if ($grupo12->getGrupoResponsavelAtivo()->getPessoa()->getSexo() == 'M') {
+                        $arrayHomens[] = $grupoPaiFilhoFilho12;
+                    }
+                    if ($grupo12->getGrupoResponsavelAtivo()->getPessoa()->getSexo() == 'F') {
+                        $arrayMulheres[] = $grupoPaiFilhoFilho12;
+                    }
+                } else {
+                    $arrayCasais[] = $grupoPaiFilhoFilho12;
                 }
-                if ($grupo12->getGrupoResponsavelAtivo()->getPessoa()->getSexo() == 'F') {
-                    $arrayMulheres[] = $grupoPaiFilhoFilho12;
-                }
-            } else {
-                $arrayCasais[] = $grupoPaiFilhoFilho12;
             }
-
             if ($grupoPaiFilhoFilhos144 = $grupo12->getGrupoPaiFilhoFilhosAtivosReal()) {
                 foreach ($grupoPaiFilhoFilhos144 as $grupoPaiFilhoFilho144) {
                     $grupo144 = $grupoPaiFilhoFilho144->getGrupoPaiFilhoFilho();
-                    if (!$grupo144->verificaSeECasal()) {
-                        if ($grupo144->getGrupoResponsavelAtivo()->getPessoa()->getSexo() == 'M') {
-                            $arrayHomens[] = $grupoPaiFilhoFilho144;
+                    if ($grupo144->verificarSeEstaAtivo()) {
+                        if (!$grupo144->verificaSeECasal()) {
+                            if ($grupo144->getGrupoResponsavelAtivo()->getPessoa()->getSexo() == 'M') {
+                                $arrayHomens[] = $grupoPaiFilhoFilho144;
+                            }
+                            if ($grupo144->getGrupoResponsavelAtivo()->getPessoa()->getSexo() == 'F') {
+                                $arrayMulheres[] = $grupoPaiFilhoFilho144;
+                            }
+                        } else {
+                            $arrayCasais[] = $grupoPaiFilhoFilho144;
                         }
-                        if ($grupo144->getGrupoResponsavelAtivo()->getPessoa()->getSexo() == 'F') {
-                            $arrayMulheres[] = $grupoPaiFilhoFilho144;
-                        }
-                    } else {
-                        $arrayCasais[] = $grupoPaiFilhoFilho144;
                     }
                     if ($grupoPaiFilhoFilhos1728 = $grupo144->getGrupoPaiFilhoFilhosAtivosReal()) {
                         foreach ($grupoPaiFilhoFilhos1728 as $grupoPaiFilhoFilho1728) {
                             $grupo1728 = $grupoPaiFilhoFilho1728->getGrupoPaiFilhoFilho();
-                            if (!$grupo1728->verificaSeECasal()) {
-                                if ($grupo1728->getGrupoResponsavelAtivo()->getPessoa()->getSexo() == 'M') {
-                                    $arrayHomens[] = $grupoPaiFilhoFilho1728;
+                            if ($grupo1728->verificarSeEstaAtivo()) {
+                                if (!$grupo1728->verificaSeECasal()) {
+                                    if ($grupo1728->getGrupoResponsavelAtivo()->getPessoa()->getSexo() == 'M') {
+                                        $arrayHomens[] = $grupoPaiFilhoFilho1728;
+                                    }
+                                    if ($grupo1728->getGrupoResponsavelAtivo()->getPessoa()->getSexo() == 'F') {
+                                        $arrayMulheres[] = $grupoPaiFilhoFilho1728;
+                                    }
+                                } else {
+                                    $arrayCasais[] = $grupoPaiFilhoFilho1728;
                                 }
-                                if ($grupo1728->getGrupoResponsavelAtivo()->getPessoa()->getSexo() == 'F') {
-                                    $arrayMulheres[] = $grupoPaiFilhoFilho1728;
-                                }
-                            } else {
-                                $arrayCasais[] = $grupoPaiFilhoFilho1728;
                             }
 
                             if ($grupoPaiFilhoFilhos20736 = $grupo1728->getGrupoPaiFilhoFilhosAtivosReal()) {
                                 foreach ($grupoPaiFilhoFilhos20736 as $grupoPaiFilhoFilho20736) {
                                     $grupo20736 = $grupoPaiFilhoFilho20736->getGrupoPaiFilhoFilho();
-                                    if (!$grupo20736->verificaSeECasal()) {
-                                        if ($grupo20736->getGrupoResponsavelAtivo()->getPessoa()->getSexo() == 'M') {
-                                            $arrayHomens[] = $grupoPaiFilhoFilho20736;
+                                    if ($grupo20736->verificarSeEstaAtivo()) {
+                                        if (!$grupo20736->verificaSeECasal()) {
+                                            if ($grupo20736->getGrupoResponsavelAtivo()->getPessoa()->getSexo() == 'M') {
+                                                $arrayHomens[] = $grupoPaiFilhoFilho20736;
+                                            }
+                                            if ($grupo20736->getGrupoResponsavelAtivo()->getPessoa()->getSexo() == 'F') {
+                                                $arrayMulheres[] = $grupoPaiFilhoFilho20736;
+                                            }
+                                        } else {
+                                            $arrayCasais[] = $grupoPaiFilhoFilho20736;
                                         }
-                                        if ($grupo20736->getGrupoResponsavelAtivo()->getPessoa()->getSexo() == 'F') {
-                                            $arrayMulheres[] = $grupoPaiFilhoFilho20736;
-                                        }
-                                    } else {
-                                        $arrayCasais[] = $grupoPaiFilhoFilho20736;
                                     }
                                 }
                             }
