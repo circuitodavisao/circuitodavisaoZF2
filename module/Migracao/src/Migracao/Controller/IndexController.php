@@ -848,7 +848,7 @@ class IndexController extends CircuitoController {
                 }
                 $html .= "<br />indiceArrays: $indiceArrays";
                 $html .= "<br />getNumero_identificador: " . $grupoCv->getNumero_identificador();
-                $html .= IndexController::atualizarRelatorioPorCiclo($grupoCv->getNumero_identificador(), $mes, $ano, $contadorDeCiclos, $relatorio[$ultimoRegistro][$indiceArrays]);
+                $html .= IndexController::atualizarRelatorioPorCiclo($grupoCv->getNumero_identificador(), $mes, $ano, $contadorDeCiclos, $relatorio[$ultimoRegistro][$indiceArrays], $idTipo = 2, $arrayEquipesCVAntigo[$contadorDeEquipes], $idPai = 1);
                 $contadorDeCiclos++;
             }
             $contadorDeEquipes++;
@@ -1209,7 +1209,7 @@ class IndexController extends CircuitoController {
                 $fatoGrupo = $rowFatoGrupo['id'];
             }
         } else {
-            IndexController::cadastrarFatoGrupo($idTipo, $idEntidade, $mes, $ano, $idPai);
+//            IndexController::cadastrarFatoGrupo($idTipo, $idEntidade, $mes, $ano, $idPai);
         }
 
         return $fatoGrupo;
@@ -1232,7 +1232,7 @@ class IndexController extends CircuitoController {
                 $dimensoes[4] = $rowFatoGrupo['idDimDomingo'];
             }
         } else {
-//            IndexController::cadastrarFatoGrupo($idTipo, $idEntidade, $mes, $ano, $idPai);
+            IndexController::cadastrarFatoGrupo($idTipo, $idEntidade, $mes, $ano, $idPai);
         }
 
         return $dimensoes;
