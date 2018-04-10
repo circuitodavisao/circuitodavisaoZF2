@@ -1071,9 +1071,9 @@ class IndexController extends CircuitoController {
 //        mysql_query($sqlAtualizarDataEnvio);
     }
 
-    public static function atualizarRelatorioPorCiclo($numeroIdentificador, $mes, $ano, $ciclo, $relatorio) {
+    public static function atualizarRelatorioPorCiclo($numeroIdentificador, $mes, $ano, $ciclo, $relatorio, $idTipo = 0, $idEntidade = 0, $idPai = 0) {
         $html = '';
-        $dimensoes = IndexController::buscaDimensoesPorIdFatoGrupo($numeroIdentificador, $mes, $ano);
+        $dimensoes = IndexController::buscaDimensoesPorIdFatoGrupo($numeroIdentificador, $mes, $ano, $idTipo, $idEntidade, $idPai);
 
         for ($indiceDimensoes = 1; $indiceDimensoes <= 4; $indiceDimensoes++) {
             $tabela = "";
