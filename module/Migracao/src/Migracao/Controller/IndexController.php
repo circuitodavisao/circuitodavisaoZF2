@@ -1209,7 +1209,7 @@ class IndexController extends CircuitoController {
                 $fatoGrupo = $rowFatoGrupo['id'];
             }
         } else {
-//            IndexController::cadastrarFatoGrupo($idTipo, $idEntidade, $mes, $ano, $idPai);
+            IndexController::cadastrarFatoGrupo($idTipo, $idEntidade, $mes, $ano, $idPai);
         }
 
         return $fatoGrupo;
@@ -1273,28 +1273,35 @@ class IndexController extends CircuitoController {
 
         echo "$sqlDimCelula<br /><br />";
         mysqli_query(IndexController::pegaConexaoStatica(), $sqlDimCelula);
-        $idDimCelula = mysql_insert_id();
+        $sql = 'SELECT id FROM ursula_dim_celula_ursula ORDER BY id DESC LIMIT 1';
+        $result = mysqli_query(IndexController::pegaConexaoStatica(), $sql);
+        $idDimCelula = mysqli_fetch_array($result)[0]['id'];
 
         echo "$sqlDimCulto<br /><br />";
         mysqli_query(IndexController::pegaConexaoStatica(), $sqlDimCulto);
-        $idDimCulto = mysql_insert_id();
+        $sql = 'SELECT id FROM ursula_dim_culto_ursula ORDER BY id DESC LIMIT 1';
+        $result = mysqli_query(IndexController::pegaConexaoStatica(), $sql);
+        $idDimCulto = mysqli_fetch_array($result)[0]['id'];
 
         echo "$sqlDimArregimentacao<br /><br />";
         mysqli_query(IndexController::pegaConexaoStatica(), $sqlDimArregimentacao);
-        $idDimArregimentacao = mysql_insert_id();
+        $sql = 'SELECT id FROM ursula_dim_arregimentacao_ursula ORDER BY id DESC LIMIT 1';
+        $result = mysqli_query(IndexController::pegaConexaoStatica(), $sql);
+        $idDimArregimentacao = mysqli_fetch_array($result)[0]['id'];
 
         echo "$sqlDimDomingo<br /><br />";
         mysqli_query(IndexController::pegaConexaoStatica(), $sqlDimDomingo);
-        $idDimDomingo = mysql_insert_id();
+        $sql = 'SELECT id FROM ursula_dim_domingo_ursula ORDER BY id DESC LIMIT 1';
+        $result = mysqli_query(IndexController::pegaConexaoStatica(), $sql);
+        $idDimDomingo = mysqli_fetch_array($result)[0]['id'];
 
         $sqlAtualizarFato = 'UPDATE ursula_fato_grupo_ursula SET idDimCelula = #idDimCelula, idDimCulto = #idDimCulto, idDimArregimentacao = #idDimArregimentacao,
-                idDimDomingo = #idDimDomingo, idDimInstituto = #idDimInstituto WHERE idTipo = #idTipo AND idEntidade = #idEntidade AND mes = #mes AND ano = #ano AND idPai = #idPai AND idTipoRelatorio = 1';
+                idDimDomingo = #idDimDomingo WHERE idTipo = #idTipo AND idEntidade = #idEntidade AND mes = #mes AND ano = #ano AND idPai = #idPai AND idTipoRelatorio = 1';
 
         $sqlAtualizarFato = str_replace("#idDimCelula", $idDimCelula, $sqlAtualizarFato);
         $sqlAtualizarFato = str_replace("#idDimArregimentacao", $idDimArregimentacao, $sqlAtualizarFato);
         $sqlAtualizarFato = str_replace("#idDimDomingo", $idDimDomingo, $sqlAtualizarFato);
         $sqlAtualizarFato = str_replace("#idDimCulto", $idDimCulto, $sqlAtualizarFato);
-        $sqlAtualizarFato = str_replace("#idDimInstituto", $idDimCulto, $sqlAtualizarFato);
 
         $sqlAtualizarFato = str_replace("#idTipo", $idTipo, $sqlAtualizarFato);
         $sqlAtualizarFato = str_replace("#idEntidade", $idEntidade, $sqlAtualizarFato);
