@@ -1272,22 +1272,30 @@ class IndexController extends CircuitoController {
         echo "$sqlDimCelula<br /><br />";
         mysqli_query(IndexController::pegaConexaoStaticaDW(), $sqlDimCelula);
         $resultado = mysqli_query(IndexController::pegaConexaoStaticaDW(), 'SELECT id FROM ursula_dim_celula_ursula ORDER BY id DESC LIMIT 1;');
-        $idDimCelula = mysqli_fetch_array($resultado)[0]['id'];
+        while ($row = mysqli_fetch_array($resultado)) {
+            $idDimCelula = $row['id'];
+        }
 
         echo "$sqlDimCulto<br /><br />";
         mysqli_query(IndexController::pegaConexaoStaticaDW(), $sqlDimCulto);
         $resultado = mysqli_query(IndexController::pegaConexaoStaticaDW(), 'SELECT id FROM ursula_dim_culto_ursula ORDER BY id DESC LIMIT 1;');
-        $idDimCulto = mysqli_fetch_array($resultado)[0]['id'];
+        while ($row = mysqli_fetch_array($resultado)) {
+            $idDimCulto = $row['id'];
+        }
 
         echo "$sqlDimArregimentacao<br /><br />";
         mysqli_query(IndexController::pegaConexaoStaticaDW(), $sqlDimArregimentacao);
         $resultado = mysqli_query(IndexController::pegaConexaoStaticaDW(), 'SELECT id FROM ursula_dim_arregimentacao_ursula ORDER BY id DESC LIMIT 1;');
-        $idDimArregimentacao = mysqli_fetch_array($resultado)[0]['id'];
+        while ($row = mysqli_fetch_array($resultado)) {
+            $idDimArregimentacao = $row['id'];
+        }
 
         echo "$sqlDimDomingo<br /><br />";
         mysqli_query(IndexController::pegaConexaoStaticaDW(), $sqlDimDomingo);
         $resultado = mysqli_query(IndexController::pegaConexaoStaticaDW(), 'SELECT id FROM ursula_dim_domingo_ursula ORDER BY id DESC LIMIT 1;');
-        $idDimDomingo = mysqli_fetch_array($resultado)[0]['id'];
+        while ($row = mysqli_fetch_array($resultado)) {
+            $idDimDomingo = $row['id'];
+        }
 
         $sqlAtualizarFato = 'UPDATE ursula_fato_grupo_ursula SET idDimCelula = #idDimCelula, idDimCulto = #idDimCulto, idDimArregimentacao = #idDimArregimentacao,
                 idDimDomingo = #idDimDomingo WHERE idTipo = #idTipo AND idEntidade = #idEntidade AND mes = #mes AND ano = #ano AND idPai = #idPai AND idTipoRelatorio = 1';
