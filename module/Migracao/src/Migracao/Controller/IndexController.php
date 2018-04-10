@@ -822,7 +822,6 @@ class IndexController extends CircuitoController {
             $relatorio = RelatorioController::relatorioCompleto($this->getRepositorio(), $grupoEquipe, RelatorioController::relatorioMembresiaECelula, $mes, $ano);
             $ultimoRegistro = count($relatorio) - 1;
             $contadorDeCiclos = 1;
-            IndexController::buscaIdFatoGrupoPorNumeroIdentificador($grupoCv->getNumero_identificador(), $mes, $ano, $idTipo = 2, $arrayEquipesCVAntigo[$contadorDeEquipes], $idPai = 1);
             for ($indiceArrays = $arrayPeriodoDoMes[0]; $indiceArrays <= $arrayPeriodoDoMes[1]; $indiceArrays++) {
                 /* Caso seja ciclo um entao gera meta mensal no cv antigo */
                 if ($contadorDeCiclos === 1) {
