@@ -1208,7 +1208,7 @@ class IndexController extends CircuitoController {
                 $fatoGrupo = $rowFatoGrupo['id'];
             }
         } else {
-            IndexController::cadastrarFatoGrupo($idTipo, $idEntidade, $mes, $ano, $idPai);
+//            IndexController::cadastrarFatoGrupo($idTipo, $idEntidade, $mes, $ano, $idPai);
         }
 
         return $fatoGrupo;
