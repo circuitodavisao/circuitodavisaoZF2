@@ -1202,6 +1202,7 @@ class IndexController extends CircuitoController {
                         ursula_fato_grupo_ursula
                     WHERE
                         numeroIdentificador = '$numeroIdentificador' AND mes = $mes AND ano = $ano";
+        echo "<br />sqlFatoGrupo: $sqlFatoGrupo";
         $queryFatoGrupo = mysqli_query(IndexController::pegaConexaoStaticaDW(), $sqlFatoGrupo);
         if (mysqli_num_rows($queryFatoGrupo) > 0) {
             while ($rowFatoGrupo = mysqli_fetch_array($queryFatoGrupo)) {
