@@ -91,13 +91,11 @@ class Menu extends AbstractHelper {
         $html .= '<div class="sidebar-widget author-widget">';
         $html .= '<div class="media">';
         $html .= '<a class="media-left" href="#">';
-        $html .= '<img src="/img/avatars/' . $stringFoto . '" class="img-responsive">';
+        $html .= '<img src="/img/fotos/' . $stringFoto . '" class="img-responsive">';
         $html .= '</a>';
         $html .= '<div class="media-body">';
         $html .= '<div class="media-links">';
         $html .= '<a href="/perfil" onClick="mostrarSplash();">Perfil</a>';
-        $html .= ' - ';
-        $html .= '<a href="/preSaida" onClick="mostrarSplash();">Sair</a>';
         $html .= '</div>';
         $html .= '<div class="media-author">' . $this->view->pessoa->getNome() . '</div>';
         $html .= '</div>';
