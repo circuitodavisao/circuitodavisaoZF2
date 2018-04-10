@@ -1287,7 +1287,6 @@ class IndexController extends CircuitoController {
         mysqli_query(IndexController::pegaConexaoStatica(), $sqlDimDomingo);
         $idDimDomingo = mysql_insert_id();
 
-        $this->daoGeral->abreConexao();
         $sqlAtualizarFato = 'UPDATE ursula_fato_grupo_ursula SET idDimCelula = #idDimCelula, idDimCulto = #idDimCulto, idDimArregimentacao = #idDimArregimentacao,
                 idDimDomingo = #idDimDomingo, idDimInstituto = #idDimInstituto WHERE idTipo = #idTipo AND idEntidade = #idEntidade AND mes = #mes AND ano = #ano AND idPai = #idPai AND idTipoRelatorio = 1';
 
