@@ -1239,7 +1239,7 @@ class IndexController extends CircuitoController {
 
     public static function cadastrarFatoGrupo($idTipo, $idEntidade, $mes, $ano, $idPai, $numeroIdentificador) {
         $sql = 'INSERT INTO ursula_fato_grupo_ursula (numeroIdentificador, idTipo, idEntidade, mes, ano, idPai, idTipoRelatorio, dataEnvio, horaEnvio)
-                VALUES (#numeroIdentificador, #idTipo, #idEntidade, #mes, #ano, #idPai, 1, CURDATE(), CURTIME())';
+                VALUES ("#numeroIdentificador", #idTipo, #idEntidade, #mes, #ano, #idPai, 1, CURDATE(), CURTIME())';
         $sql = str_replace("#idTipo", $idTipo, $sql);
         $sql = str_replace("#idEntidade", $idEntidade, $sql);
         $sql = str_replace("#mes", $mes, $sql);
