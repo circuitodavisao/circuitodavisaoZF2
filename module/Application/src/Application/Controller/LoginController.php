@@ -644,10 +644,11 @@ class LoginController extends CircuitoController {
                 $pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($post_data['id']);
                 $pessoa->setFoto($pessoa->getId() . '.jpg');
                 $this->getRepositorio()->getPessoaORM()->persistir($pessoa, $naoAlterarDataDeCriacao = false);
-                
+
                 $diretorioDocumentos = 'public/img/fotos/';
                 $resposta = file_put_contents($diretorioDocumentos . $pessoa->getFoto(), base64_decode(explode(",", $post_data['canvas'])[1]));
 
+                clearstatcache($diretorioDocumentos . $pessoa->getFoto());
                 $this->getRepositorio()->fecharTransacao();
                 $response->setContent(Json::encode(array(
                             'response' => $resposta,
