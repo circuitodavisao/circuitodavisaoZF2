@@ -1232,6 +1232,20 @@ class IndexController extends CircuitoController {
             }
         } else {
             IndexController::cadastrarFatoGrupo($idTipo, $idEntidade, $mes, $ano, $idPai, $numeroIdentificador);
+            $sqlFatoGrupo = "SELECT idDimArregimentacao, idDimDomingo, idDimCulto, idDimCelula
+                    FROM
+                        ursula_fato_grupo_ursula
+                    WHERE
+                        id = $idFatoGrupo;";
+            $queryFatoGrupo = mysqli_query(IndexController::pegaConexaoStaticaDW(), $sqlFatoGrupo);
+            if (mysqli_num_rows($queryFatoGrupo) > 0) {
+                while ($rowFatoGrupo = mysqli_fetch_array($queryFatoGrupo)) {
+                    $dimensoes[1] = $rowFatoGrupo['idDimCelula'];
+                    $dimensoes[2] = $rowFatoGrupo['idDimCulto'];
+                    $dimensoes[3] = $rowFatoGrupo['idDimArregimentacao'];
+                    $dimensoes[4] = $rowFatoGrupo['idDimDomingo'];
+                }
+            }
         }
 
         return $dimensoes;
@@ -1248,7 +1262,7 @@ class IndexController extends CircuitoController {
         $sql = str_replace("#numeroIdentificador", $numeroIdentificador, $sql);
 
         echo "$sql<br /><br />";
-        mysqli_query(IndexController::pegaConexaoStatica(), $sql);
+        mysqli_query(IndexController::pegaConexaoStaticaDW(), $sql);
 
         $sqlDimCelula = "INSERT INTO ursula_dim_celula_ursula (c1, c2, c3, c4, c5, c6, c1l, c2l, c3l, c4l, c5l, c6l, c1v, c2v, c3v, c4v, c5v, c6v, c1c, c2c, c3c, c4c, c5c, c6c, c1m, c2m, c3m, c4m, c5m, c6m, c1n, c2n, c3n, c4n, c5n, c6n, c1e, c2e, c3e, c4e, c5e, c6e, c3c1, c3c2, c3c3, c3c4, c3c5, c3c6, c6c1, c6c2, c6c3, c6c4, c6c5, c6c6, c1q, c2q, c3q, c4q, c5q, c6q) VALUES (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)";
         $sqlDimCulto = "INSERT INTO ursula_dim_culto_ursula (cu1, cu2, cu3, cu4, cu5, cu6, cu1l, cu2l, cu3l, cu4l, cu5l, cu6l, cu1a, cu2a, cu3a, cu4a, cu5a, cu6a, cu1v, cu2v, cu3v, cu4v, cu5v, cu6v, cu1c, cu2c, cu3c, cu4c, cu5c, cu6c, cu1m, cu2m, cu3m, cu4m, cu5m, cu6m) VALUES (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)";
@@ -1256,19 +1270,19 @@ class IndexController extends CircuitoController {
         $sqlDimDomingo = "INSERT INTO ursula_dim_domingo_ursula (d1, d2, d3, d4, d5, d6, d1l, d2l, d3l, d4l, d5l, d6l, d1a, d2a, d3a, d4a, d5a, d6a, d1v, d2v, d3v, d4v, d5v, d6v, d1c, d2c, d3c, d4c, d5c, d6c, d1m, d2m, d3m, d4m, d5m, d6m) VALUES (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)";
 
         echo "$sqlDimCelula<br /><br />";
-        mysqli_query(IndexController::pegaConexaoStatica(), $sqlDimCelula);
+        mysqli_query(IndexController::pegaConexaoStaticaDW(), $sqlDimCelula);
         $idDimCelula = mysql_insert_id();
 
         echo "$sqlDimCulto<br /><br />";
-        mysqli_query(IndexController::pegaConexaoStatica(), $sqlDimCulto);
+        mysqli_query(IndexController::pegaConexaoStaticaDW(), $sqlDimCulto);
         $idDimCulto = mysql_insert_id();
 
         echo "$sqlDimArregimentacao<br /><br />";
-        mysqli_query(IndexController::pegaConexaoStatica(), $sqlDimArregimentacao);
+        mysqli_query(IndexController::pegaConexaoStaticaDW(), $sqlDimArregimentacao);
         $idDimArregimentacao = mysql_insert_id();
 
         echo "$sqlDimDomingo<br /><br />";
-        mysqli_query(IndexController::pegaConexaoStatica(), $sqlDimDomingo);
+        mysqli_query(IndexController::pegaConexaoStaticaDW(), $sqlDimDomingo);
         $idDimDomingo = mysql_insert_id();
 
         $sqlAtualizarFato = 'UPDATE ursula_fato_grupo_ursula SET idDimCelula = #idDimCelula, idDimCulto = #idDimCulto, idDimArregimentacao = #idDimArregimentacao,
@@ -1286,7 +1300,7 @@ class IndexController extends CircuitoController {
         $sqlAtualizarFato = str_replace("#ano", $ano, $sqlAtualizarFato);
         $sqlAtualizarFato = str_replace("#idPai", $idPai, $sqlAtualizarFato);
         echo "$sqlAtualizarFato<br /><br />";
-        mysqli_query(IndexController::pegaConexaoStatica(), $sqlAtualizarFato);
+        mysqli_query(IndexController::pegaConexaoStaticaDW(), $sqlAtualizarFato);
     }
 
     private function buscaPessoaPorId($id, $idPerfil) {
