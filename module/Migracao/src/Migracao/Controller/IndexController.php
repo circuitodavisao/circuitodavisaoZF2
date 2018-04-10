@@ -1233,6 +1233,22 @@ class IndexController extends CircuitoController {
             }
         } else {
             IndexController::cadastrarFatoGrupo($idTipo, $idEntidade, $mes, $ano, $idPai);
+            $idFatoGrupo = IndexController::buscaIdFatoGrupoPorNumeroIdentificador($numeroIdentificador, $mes, $ano, $idTipo, $idEntidade, $idPai);
+            $dimensoes = null;
+            $sqlFatoGrupo = "SELECT idDimArregimentacao, idDimDomingo, idDimCulto, idDimCelula
+                    FROM
+                        ursula_fato_grupo_ursula
+                    WHERE
+                        id = $idFatoGrupo;";
+            $queryFatoGrupo = mysqli_query(IndexController::pegaConexaoStaticaDW(), $sqlFatoGrupo);
+            if (mysqli_num_rows($queryFatoGrupo) > 0) {
+                while ($rowFatoGrupo = mysqli_fetch_array($queryFatoGrupo)) {
+                    $dimensoes[1] = $rowFatoGrupo['idDimCelula'];
+                    $dimensoes[2] = $rowFatoGrupo['idDimCulto'];
+                    $dimensoes[3] = $rowFatoGrupo['idDimArregimentacao'];
+                    $dimensoes[4] = $rowFatoGrupo['idDimDomingo'];
+                }
+            }
         }
 
         return $dimensoes;
