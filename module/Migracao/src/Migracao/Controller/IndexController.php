@@ -848,7 +848,7 @@ class IndexController extends CircuitoController {
                 }
                 $html .= "<br />indiceArrays: $indiceArrays";
                 $html .= "<br />getNumero_identificador: " . $grupoCv->getNumero_identificador();
-                $html .= IndexController::atualizarRelatorioPorCiclo($grupoCv->getNumero_identificador(), $mes, $ano, $contadorDeCiclos, $relatorio[$ultimoRegistro][$indiceArrays]);
+                $html .= IndexController::atualizarRelatorioPorCiclo($grupoCv->getNumero_identificador(), $mes, $ano, $contadorDeCiclos, $relatorio[$ultimoRegistro][$indiceArrays], $idTipo = 2, $arrayEquipesCVAntigo[$contadorDeEquipes], $idPai = 1);
                 $contadorDeCiclos++;
             }
             $contadorDeEquipes++;
@@ -1071,9 +1071,9 @@ class IndexController extends CircuitoController {
 //        mysql_query($sqlAtualizarDataEnvio);
     }
 
-    public static function atualizarRelatorioPorCiclo($numeroIdentificador, $mes, $ano, $ciclo, $relatorio) {
+    public static function atualizarRelatorioPorCiclo($numeroIdentificador, $mes, $ano, $ciclo, $relatorio, $idTipo, $idEntidade, $idPai) {
         $html = '';
-        $dimensoes = IndexController::buscaDimensoesPorIdFatoGrupo($numeroIdentificador, $mes, $ano);
+        $dimensoes = IndexController::buscaDimensoesPorIdFatoGrupo($numeroIdentificador, $mes, $ano, $idTipo, $idEntidade, $idPai);
 
         for ($indiceDimensoes = 1; $indiceDimensoes <= 4; $indiceDimensoes++) {
             $tabela = "";
@@ -1208,7 +1208,7 @@ class IndexController extends CircuitoController {
                 $fatoGrupo = $rowFatoGrupo['id'];
             }
         } else {
-//            IndexController::cadastrarFatoGrupo($idTipo, $idEntidade, $mes, $ano, $idPai);
+            IndexController::cadastrarFatoGrupo($idTipo, $idEntidade, $mes, $ano, $idPai);
         }
 
         return $fatoGrupo;
@@ -1231,20 +1231,21 @@ class IndexController extends CircuitoController {
                 $dimensoes[4] = $rowFatoGrupo['idDimDomingo'];
             }
         } else {
-//            IndexController::cadastrarFatoGrupo($idTipo, $idEntidade, $mes, $ano, $idPai);
+            IndexController::cadastrarFatoGrupo($idTipo, $idEntidade, $mes, $ano, $idPai, $numeroIdentificador);
         }
 
         return $dimensoes;
     }
 
-    public static function cadastrarFatoGrupo($idTipo, $idEntidade, $mes, $ano, $idPai) {
-        $sql = 'INSERT INTO ursula_fato_grupo_ursula (idTipo, idEntidade, mes, ano, idPai, idTipoRelatorio, dataEnvio, horaEnvio)
-                VALUES (#idTipo, #idEntidade, #mes, #ano, #idPai, 1, CURDATE(), CURTIME())';
+    public static function cadastrarFatoGrupo($idTipo, $idEntidade, $mes, $ano, $idPai, $numeroIdentificador) {
+        $sql = 'INSERT INTO ursula_fato_grupo_ursula (numeroIdentificador, idTipo, idEntidade, mes, ano, idPai, idTipoRelatorio, dataEnvio, horaEnvio)
+                VALUES (#numeroIdentificador, #idTipo, #idEntidade, #mes, #ano, #idPai, 1, CURDATE(), CURTIME())';
         $sql = str_replace("#idTipo", $idTipo, $sql);
         $sql = str_replace("#idEntidade", $idEntidade, $sql);
         $sql = str_replace("#mes", $mes, $sql);
         $sql = str_replace("#ano", $ano, $sql);
         $sql = str_replace("#idPai", $idPai, $sql);
+        $sql = str_replace("#numeroIdentificador", $numeroIdentificador, $sql);
 
         echo "$sql<br /><br />";
         mysqli_query(IndexController::pegaConexaoStatica(), $sql);
