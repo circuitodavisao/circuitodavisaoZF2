@@ -1208,7 +1208,7 @@ class IndexController extends CircuitoController {
                 $fatoGrupo = $rowFatoGrupo['id'];
             }
         } else {
-//            IndexController::cadastrarFatoGrupo($idTipo, $idEntidade, $mes, $ano, $idPai);
+            IndexController::cadastrarFatoGrupo($idTipo, $idEntidade, $mes, $ano, $idPai);
         }
 
         return $fatoGrupo;
@@ -1222,7 +1222,6 @@ class IndexController extends CircuitoController {
                         ursula_fato_grupo_ursula
                     WHERE
                         id = $idFatoGrupo;";
-        echo "<br />$sqlFatoGrupo";
         $queryFatoGrupo = mysqli_query(IndexController::pegaConexaoStaticaDW(), $sqlFatoGrupo);
         if (mysqli_num_rows($queryFatoGrupo) > 0) {
             while ($rowFatoGrupo = mysqli_fetch_array($queryFatoGrupo)) {
@@ -1232,7 +1231,7 @@ class IndexController extends CircuitoController {
                 $dimensoes[4] = $rowFatoGrupo['idDimDomingo'];
             }
         } else {
-            IndexController::cadastrarFatoGrupo($idTipo, $idEntidade, $mes, $ano, $idPai);
+//            IndexController::cadastrarFatoGrupo($idTipo, $idEntidade, $mes, $ano, $idPai);
         }
 
         return $dimensoes;
