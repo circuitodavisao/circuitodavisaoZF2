@@ -206,7 +206,7 @@ class DadosPrincipal extends AbstractHelper {
 
         $html .= '<div class="media-left pr30">';
         $html .= '<a href="#">';
-        $html .= '<img width="64px" height="64px" class="media-object img-rounded" src="/img/avatars/' . $imagem . '" alt="...">';
+        $html .= '<img width="64px" height="64px" class="media-object img-rounded" src="/img/fotos/' . $imagem . '" alt="...">';
         $html .= '</a>';
         /* media-left pr30 */
         $html .= '</div>';
