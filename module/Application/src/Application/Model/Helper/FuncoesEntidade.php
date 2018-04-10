@@ -20,15 +20,15 @@ class FuncoesEntidade {
         $resposta = '';
 
         $imagem = FuncoesEntidade::nomeDaImagem($p);
-        $resposta = '<img src="/img/avatars/' . $imagem . '" class="img-thumbnail" width="' . $tamanho . $tipoTamanho . '"  height="' . $tamanho . $tipoTamanho . '" />&nbsp;';
+        $resposta = '<img id="fotoPerfil" src="/img/fotos/' . $imagem . '" class="img-thumbnail" width="' . $tamanho . $tipoTamanho . '"  height="' . $tamanho . $tipoTamanho . '" />&nbsp;';
 
         return $resposta;
     }
 
     static public function nomeDaImagem(Pessoa $pessoa) {
-        $imagem = 'placeholder.png';
-        if (!empty($pessoa->getFoto())) {
-            $imagem = $pessoa->getFoto();
+        $imagem = $pessoa->getFoto();
+        if ($imagem == '') {
+            $imagem = 'placeholder.png';
         }
         return $imagem;
     }

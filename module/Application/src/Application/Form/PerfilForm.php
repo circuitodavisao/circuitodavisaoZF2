@@ -43,6 +43,7 @@ class PerfilForm extends Form {
                         ->setName(Constantes::$ID)
                         ->setAttributes([
                             Constantes::$FORM_STRING_ID => Constantes::$ID,
+                              Constantes::$FORM_STRING_VALUE => $pessoa->getId(),
                         ])
         );
 

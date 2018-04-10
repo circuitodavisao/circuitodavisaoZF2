@@ -13,6 +13,7 @@ use DateTime;
 use Doctrine\ORM\EntityManager;
 use Exception;
 use Zend\Authentication\AuthenticationService;
+use Zend\File\Transfer\Adapter\Http;
 use Zend\Json\Json;
 use Zend\Mvc\I18n\Translator;
 use Zend\Session\Container;
@@ -620,7 +621,7 @@ class LoginController extends CircuitoController {
         $sessao = new Container(Constantes::$NOME_APLICACAO);
         $pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($sessao->idPessoa);
         $hierarquias = $this->getRepositorio()->getHierarquiaORM()->encontrarTodas();
-        $formulario = new PerfilForm('formulario',$pessoa);
+        $formulario = new PerfilForm('formulario', $pessoa);
         $dados = array(
             'pessoa' => $pessoa,
             'hierarquias' => $hierarquias,
@@ -630,6 +631,33 @@ class LoginController extends CircuitoController {
         $view = new ViewModel($dados);
 
         return $view;
+    }
+
+    public function salvarFotoAction() {
+        $request = $this->getRequest();
+        $response = $this->getResponse();
+        if ($request->isPost()) {
+            try {
+                $this->getRepositorio()->iniciarTransacao();
+                $post_data = $request->getPost();
+
+                $pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($post_data['id']);
+                $pessoa->setFoto($pessoa->getId() . '.jpg');
+                $this->getRepositorio()->getPessoaORM()->persistir($pessoa, $naoAlterarDataDeCriacao = false);
+                
+                $diretorioDocumentos = 'public/img/fotos/';
+                $resposta = file_put_contents($diretorioDocumentos . $pessoa->getFoto(), base64_decode(explode(",", $post_data['canvas'])[1]));
+
+                $this->getRepositorio()->fecharTransacao();
+                $response->setContent(Json::encode(array(
+                            'response' => $resposta,
+                )));
+            } catch (Exception $exc) {
+                $this->getRepositorio()->desfazerTransacao();
+                echo $exc->getMessage();
+            }
+        }
+        return $response;
     }
 
     /**

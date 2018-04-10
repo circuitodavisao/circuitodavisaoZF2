@@ -155,7 +155,7 @@ use Application\Controller\Helper\Constantes;
                             $dataWidth = $('#dataWidth'),
                             $dataRotate = $('#dataRotate'),
                             options = {
-                                aspectRatio: 16 / 9,
+                                aspectRatio: 1,
                                 preview: '.img-preview',
                                 crop: function (data) {
                                     $dataX.val(Math.round(data.x));
@@ -166,29 +166,7 @@ use Application\Controller\Helper\Constantes;
                                 }
                             };
 
-                    $image.on({
-                        'build.cropper': function (e) {
-                            console.log(e.type);
-                        },
-                        'built.cropper': function (e) {
-                            console.log(e.type);
-                        },
-                        'dragstart.cropper': function (e) {
-                            console.log(e.type, e.dragType);
-                        },
-                        'dragmove.cropper': function (e) {
-                            console.log(e.type, e.dragType);
-                        },
-                        'dragend.cropper': function (e) {
-                            console.log(e.type, e.dragType);
-                        },
-                        'zoomin.cropper': function (e) {
-                            console.log(e.type);
-                        },
-                        'zoomout.cropper': function (e) {
-                            console.log(e.type);
-                        }
-                    }).cropper(options);
+                    $image.cropper(options);
 
                     // Methods
                     $(document.body).on('click', '[data-method]', function () {
@@ -214,7 +192,23 @@ use Application\Controller\Helper\Constantes;
                             result = $image.cropper(data.method, data.option);
 
                             if (data.method === 'getCroppedCanvas') {
-                                $('#getCroppedCanvasModal').modal().find('.modal-body').html(result);
+                                var id = $('#id').val();
+                                var canvas = result.toDataURL("image/jpeg");
+                                $.post(
+                                        "/salvarFoto",
+                                        {
+                                            canvas: canvas,
+                                            id: id,
+                                        },
+                                        function (data) {
+                                            if (data.response) {
+                                                alert('Foto Salva');
+                                                mostrarSplash();
+                                                location.reload();
+                                            } else {
+                                                alert('Foto não salva');
+                                            }
+                                        }, 'json');
                             }
 
                             if ($.isPlainObject(result) && $target) {
@@ -271,6 +265,9 @@ use Application\Controller\Helper\Constantes;
                                         URL.revokeObjectURL(blobURL); // Revoke when load complete
                                     }).cropper('reset', true).cropper('replace', blobURL);
                                     $inputImage.val('');
+
+                                    $('#fotoCrop').removeClass('hidden');
+                                    $('#fotoPerfil').addClass('hidden');
                                 } else {
                                     showMessage('Please choose an image file.');
                                 }
@@ -279,17 +276,6 @@ use Application\Controller\Helper\Constantes;
                     } else {
                         $inputImage.parent().remove();
                     }
-
-                    // Options
-                    $('.docs-options :checkbox').on('change', function () {
-                        var $this = $(this);
-
-                        options[$this.val()] = $this.prop('checked');
-                        $image.cropper('destroy').cropper(options);
-                    });
-
-                    // Tooltips
-                    $('[data-toggle="tooltip"]').tooltip();
 
                 }());
 
