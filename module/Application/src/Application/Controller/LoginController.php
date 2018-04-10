@@ -648,7 +648,7 @@ class LoginController extends CircuitoController {
                 $diretorioDocumentos = 'public/img/fotos/';
                 $resposta = file_put_contents($diretorioDocumentos . $pessoa->getFoto(), base64_decode(explode(",", $post_data['canvas'])[1]));
 
-                clearstatcache($diretorioDocumentos . $pessoa->getFoto());
+                clearstatcache();
                 $this->getRepositorio()->fecharTransacao();
                 $response->setContent(Json::encode(array(
                             'response' => $resposta,
