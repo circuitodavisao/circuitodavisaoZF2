@@ -1271,28 +1271,31 @@ class IndexController extends CircuitoController {
 
         echo "$sqlDimCelula<br /><br />";
         mysqli_query(IndexController::pegaConexaoStaticaDW(), $sqlDimCelula);
-        $idDimCelula = mysql_insert_id();
+        $resultado = mysqli_query(IndexController::pegaConexaoStaticaDW(), 'SELECT id FROM ursula_dim_celula_ursula ORDER BY id DESC LIMIT 1;');
+        $idDimCelula = mysqli_fetch_array($resultado)[0]['id'];
 
         echo "$sqlDimCulto<br /><br />";
         mysqli_query(IndexController::pegaConexaoStaticaDW(), $sqlDimCulto);
-        $idDimCulto = mysql_insert_id();
+        $resultado = mysqli_query(IndexController::pegaConexaoStaticaDW(), 'SELECT id FROM ursula_dim_culto_ursula ORDER BY id DESC LIMIT 1;');
+        $idDimCulto = mysqli_fetch_array($resultado)[0]['id'];
 
         echo "$sqlDimArregimentacao<br /><br />";
         mysqli_query(IndexController::pegaConexaoStaticaDW(), $sqlDimArregimentacao);
-        $idDimArregimentacao = mysql_insert_id();
+        $resultado = mysqli_query(IndexController::pegaConexaoStaticaDW(), 'SELECT id FROM ursula_dim_arregimentacao_ursula ORDER BY id DESC LIMIT 1;');
+        $idDimArregimentacao = mysqli_fetch_array($resultado)[0]['id'];
 
         echo "$sqlDimDomingo<br /><br />";
         mysqli_query(IndexController::pegaConexaoStaticaDW(), $sqlDimDomingo);
-        $idDimDomingo = mysql_insert_id();
+        $resultado = mysqli_query(IndexController::pegaConexaoStaticaDW(), 'SELECT id FROM ursula_dim_domingo_ursula ORDER BY id DESC LIMIT 1;');
+        $idDimDomingo = mysqli_fetch_array($resultado)[0]['id'];
 
         $sqlAtualizarFato = 'UPDATE ursula_fato_grupo_ursula SET idDimCelula = #idDimCelula, idDimCulto = #idDimCulto, idDimArregimentacao = #idDimArregimentacao,
-                idDimDomingo = #idDimDomingo, idDimInstituto = #idDimInstituto WHERE idTipo = #idTipo AND idEntidade = #idEntidade AND mes = #mes AND ano = #ano AND idPai = #idPai AND idTipoRelatorio = 1';
+                idDimDomingo = #idDimDomingo WHERE idTipo = #idTipo AND idEntidade = #idEntidade AND mes = #mes AND ano = #ano AND idPai = #idPai AND idTipoRelatorio = 1';
 
         $sqlAtualizarFato = str_replace("#idDimCelula", $idDimCelula, $sqlAtualizarFato);
         $sqlAtualizarFato = str_replace("#idDimArregimentacao", $idDimArregimentacao, $sqlAtualizarFato);
         $sqlAtualizarFato = str_replace("#idDimDomingo", $idDimDomingo, $sqlAtualizarFato);
         $sqlAtualizarFato = str_replace("#idDimCulto", $idDimCulto, $sqlAtualizarFato);
-        $sqlAtualizarFato = str_replace("#idDimInstituto", $idDimCulto, $sqlAtualizarFato);
 
         $sqlAtualizarFato = str_replace("#idTipo", $idTipo, $sqlAtualizarFato);
         $sqlAtualizarFato = str_replace("#idEntidade", $idEntidade, $sqlAtualizarFato);
