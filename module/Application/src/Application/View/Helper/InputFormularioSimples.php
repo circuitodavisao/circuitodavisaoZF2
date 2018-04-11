@@ -50,7 +50,7 @@ class InputFormularioSimples extends AbstractHelper {
         if($this->getExtra()){
             $extra = $this->getExtra();
         }
-        $html .= '<div class="form-group col-lg-' . $tamanhoGrid . '">';
+        $html .= '<div class="form-group col-lg-' . $tamanhoGrid . ' col-xs-' . $tamanhoGrid . '">';
         if($this->getLabel() != -1){
             $html .= '<label class="field-label text-muted fs18 mb10">' . $this->view->translate($this->getLabel()) . '</label>';
         }

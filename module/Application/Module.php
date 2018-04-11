@@ -72,6 +72,7 @@ use Application\View\Helper\ModalMuitosEventos;
 use Application\View\Helper\MontaGraficoDeBarra;
 use Application\View\Helper\MontarEndereco;
 use Application\View\Helper\PassoAPasso;
+use Application\View\Helper\Perfil;
 use Application\View\Helper\PerfilDropDown;
 use Application\View\Helper\PerfilIcone;
 use Application\View\Helper\SpanDadosValidados;
@@ -332,6 +333,9 @@ class Module {
                 },
                 'circuitoMeAjuda' => function ($sm) {
                     return new CircuitoMeAjuda();
+                },
+                'perfil' => function ($sm) {
+                    return new Perfil();
                 },
             )
         );

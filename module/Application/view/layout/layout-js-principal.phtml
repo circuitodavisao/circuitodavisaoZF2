@@ -24,6 +24,9 @@ if ($sessao->mostrarNotificacao) {
     if ($sessao->emailEnviado) {
         $mensagemPNotify = 'Email(s) reenviado(s)';
     }
+    if ($sessao->emailAlterado) {
+        $mensagemPNotify = 'Email Alterado';
+    }
     if ($sessao->nomePessoa) {
         $nomePessoa = $sessao->nomePessoa;
     }
@@ -74,7 +77,7 @@ if ($sessao->mostrarNotificacao) {
             midClick: true // allow opening popup on middle mouse click. Always set it to true if you don't provide alternative source.
         });
     }
-     function mostrarModalCelulasNaoRealizadas() {
+    function mostrarModalCelulasNaoRealizadas() {
         $.magnificPopup.open({
             removalDelay: 500, //delay removal by X to allow out-animation,
             items: {
@@ -507,7 +510,7 @@ if ($sessao->mostrarNotificacao) {
                 },
                 function (data) {
                     if (data.response) {
-                       
+
                     }
                 }, 'json');
     }

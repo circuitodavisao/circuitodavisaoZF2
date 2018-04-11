@@ -1,12 +1,24 @@
 <?php
 
 use Application\Controller\Helper\Constantes;
+use Application\Form\PerfilForm;
 use Application\Model\Entity\EntidadeTipo;
 use Application\View\Helper\BotaoSimples;
 
-echo '<div class="mw1000 center-block">';
-echo $this->dadosEntidade();
-echo'</div>';
+echo '<div class="panel panel-primary mw1000 center-block mt40">';
+echo '<div class="panel-heading">';
+echo 'Perfil';
+echo '</div>';
+echo '<div class="panel-body">';
+foreach ($this->responsabilidades as $responsavel) {
+    $pessoa = $responsavel->getPessoa();
+    $formulario = new PerfilForm('formulario', $pessoa);
+    echo '<div class="admin-form col-xs-12 col-sm-12 col-md-6 col-lg-6">';
+    echo $this->perfil($pessoa, $formulario, $naoMostrarOpcoes = false);
+    echo '</div>';
+}
+echo '</div>';
+echo '</div>';
 
 echo '<div class="panel panel-info mw1000 center-block">';
 echo '<div class="panel-heading">';

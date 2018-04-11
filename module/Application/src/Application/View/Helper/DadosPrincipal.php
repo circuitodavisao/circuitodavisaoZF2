@@ -46,7 +46,7 @@ class DadosPrincipal extends AbstractHelper {
         $classClasseTela = 'default';
 
         $pessoa = $this->view->pessoa;
-        $imagem = FuncoesEntidade::nomeDaImagem($pessoa);
+
         $metas[0] = Funcoes::metaPorHierarquia(Hierarquia::LIDER_DE_CELULA);
         $metas[1] = Funcoes::metaPorHierarquia($pessoa->getPessoaHierarquiaAtivo()->getHierarquia()->getId());
         $multiplicadorDaMeta = 1;
@@ -204,9 +204,9 @@ class DadosPrincipal extends AbstractHelper {
         $html .= '<div class="page-heading">';
         $html .= '<div class="media clearfix">';
 
-        $html .= '<div class="media-left pr30">';
-        $html .= '<a href="#">';
-        $html .= '<img width="64px" height="64px" class="media-object img-rounded" src="/img/fotos/' . $imagem . '" alt="...">';
+        $html .= '<div class="media-left pr5">';
+        $html .= '<a href="/perfil" onClick="mostrarSplash();">';
+        $html .= FuncoesEntidade::tagImgComFotoDaPessoa($pessoa, 128);
         $html .= '</a>';
         /* media-left pr30 */
         $html .= '</div>';

@@ -5,6 +5,7 @@ namespace Application\View\Helper;
 use Application\Controller\Helper\Constantes;
 use Application\Model\Entity\CursoAcesso;
 use Application\Model\Entity\EntidadeTipo;
+use Application\Model\Helper\FuncoesEntidade;
 use Entidade\Entity\Pessoa;
 use Zend\View\Helper\AbstractHelper;
 use Zend\View\Helper\Placeholder\Container;
@@ -31,10 +32,6 @@ class Menu extends AbstractHelper {
         $sessao = new Container(Constantes::$NOME_APLICACAO);
         $html = '';
 
-        $stringFoto = $this->view->pessoa->getFoto();
-        if (empty($stringFoto)) {
-            $stringFoto = 'placeholder.png';
-        }
         // Start: Header 
         $html .= '<header class="navbar navbar-fixed-top">';
         $html .= '<div class="navbar-branding">';
@@ -69,6 +66,10 @@ class Menu extends AbstractHelper {
             }
         }
         $html .= '<li class="dropdown-footer">';
+
+        $html .= '<a href="' . $this->view->url(Constantes::$ROUTE_LOGIN) . 'perfil' . '" class="">';
+        $html .= '<span class="fa fa-user pr5"></span>' . $this->view->translate('Perfil') . '</a>';
+
         $html .= '<a href="' . $this->view->url(Constantes::$ROUTE_LOGIN) . Constantes::$URL_PRE_SAIDA . '" class="">';
         $html .= '<span class="fa fa-power-off pr5"></span>' . $this->view->translate(Constantes::$TRADUCAO_SAIR) . '</a>';
         $html .= '</li>';
@@ -91,7 +92,7 @@ class Menu extends AbstractHelper {
         $html .= '<div class="sidebar-widget author-widget">';
         $html .= '<div class="media">';
         $html .= '<a class="media-left" href="#">';
-        $html .= '<img src="/img/fotos/' . $stringFoto . '" class="img-responsive">';
+        $html .= '<img src="/img/fotos/' . FuncoesEntidade::nomeDaImagem($this->view->pessoa) . '" class="img-responsive">';
         $html .= '</a>';
         $html .= '<div class="media-body">';
         $html .= '<div class="media-links">';
