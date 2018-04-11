@@ -335,8 +335,48 @@ class PrincipalController extends CircuitoController {
         }
     }
 
-    public function chamadaAction() {
-        return new ViewModel();
+    public function emailAction() {
+        $sessao = new Container(Constantes::$NOME_APLICACAO);
+        $idSessao = $sessao->idSessao;
+        if ($idSessao) {
+            $form = new NovoEmailForm(Constantes::$FORM, $idSessao);
+            $pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($idSessao);
+            $view = new ViewModel(
+                    array(
+                Constantes::$FORM => $form,
+                'pessoa' => $pessoa,
+            ));
+            $layoutJS = new ViewModel();
+            $layoutJS->setTemplate('layout/layout-js-enviar-email');
+            $view->addChild($layoutJS, 'layoutJSEnviarEmail');
+            unset($sessao->idSessao);
+            return $view;
+        } else {
+            return $this->redirect()->toRoute('principal');
+        }
+    }
+
+    public function emailSalvarAction() {
+        $sessao = new Container(Constantes::$NOME_APLICACAO);
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            try {
+                $this->getRepositorio()->iniciarTransacao();
+                $post_data = $request->getPost();
+                $idPessoa = $post_data[Constantes::$INPUT_ID_PESSOA];
+                $pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($idPessoa);
+                $pessoa->setEmail($post_data[Constantes::$INPUT_EMAIL]);
+                $setarDataEHora = false;
+                $this->getRepositorio()->getPessoaORM()->persistir($pessoa, $setarDataEHora);
+                $sessao->mostrarNotificacao = true;
+                $sessao->emailAlterado = true;
+                $this->getRepositorio()->fecharTransacao();
+                return $this->redirect()->toRoute('principal');
+            } catch (Exception $exc) {
+                $this->getRepositorio()->desfazerTransacao();
+                echo $exc->getMessage();
+            }
+        }
     }
 
     /**

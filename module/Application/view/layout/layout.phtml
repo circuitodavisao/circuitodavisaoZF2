@@ -145,8 +145,7 @@ use Application\Controller\Helper\Constantes;
                         $(window).trigger('resize');
                     }
                 });
-
-                // Cropper Demo
+                
                 (function () {
                     var $image = $('.img-container > img'),
                             $dataX = $('#dataX'),
@@ -192,23 +191,7 @@ use Application\Controller\Helper\Constantes;
                             result = $image.cropper(data.method, data.option);
 
                             if (data.method === 'getCroppedCanvas') {
-                                var id = $('#id').val();
-                                var canvas = result.toDataURL("image/jpeg");
-                                $.post(
-                                        "/salvarFoto",
-                                        {
-                                            canvas: canvas,
-                                            id: id,
-                                        },
-                                        function (data) {
-                                            if (data.response) {
-                                                alert('Foto Salva');
-                                                mostrarSplash();
-                                                location.reload();
-                                            } else {
-                                                alert('Foto não salva');
-                                            }
-                                        }, 'json');
+                               salvarFoto(result);
                             }
 
                             if ($.isPlainObject(result) && $target) {
@@ -220,30 +203,6 @@ use Application\Controller\Helper\Constantes;
                             }
 
                         }
-                    }).on('keydown', function (e) {
-
-                        switch (e.which) {
-                            case 37:
-                                e.preventDefault();
-                                $image.cropper('move', -1, 0);
-                                break;
-
-                            case 38:
-                                e.preventDefault();
-                                $image.cropper('move', 0, -1);
-                                break;
-
-                            case 39:
-                                e.preventDefault();
-                                $image.cropper('move', 1, 0);
-                                break;
-
-                            case 40:
-                                e.preventDefault();
-                                $image.cropper('move', 0, 1);
-                                break;
-                        }
-
                     });
 
                     // Import image
@@ -268,6 +227,7 @@ use Application\Controller\Helper\Constantes;
 
                                     $('#fotoCrop').removeClass('hidden');
                                     $('#fotoPerfil').addClass('hidden');
+                                    $('.alterarFoto').removeClass('hidden');
                                 } else {
                                     showMessage('Please choose an image file.');
                                 }

@@ -622,15 +622,39 @@ class LoginController extends CircuitoController {
         $pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($sessao->idPessoa);
         $hierarquias = $this->getRepositorio()->getHierarquiaORM()->encontrarTodas();
         $formulario = new PerfilForm('formulario', $pessoa);
+        $tituloDaPagina = 'Meu Perfil';
         $dados = array(
             'pessoa' => $pessoa,
             'hierarquias' => $hierarquias,
             'formulario' => $formulario,
+            'tituloDaPagina' => $tituloDaPagina,
         );
 
         $view = new ViewModel($dados);
 
         return $view;
+    }
+
+    public function perfilSalvarAction() {
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+
+            try {
+                $this->getRepositorio()->iniciarTransacao();
+                $post_data = $request->getPost();
+                $pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($post_data['id']);
+                $pessoa->setTelefone($post_data['ddd'] . $post_data['telefone']);
+                $this->getRepositorio()->getPessoaORM()->persistir($pessoa);
+                $this->getRepositorio()->fecharTransacao();
+
+                return $this->redirect()->toRoute('principal');
+            } catch (Exception $exc) {
+                $this->getRepositorio()->desfazerTransacao();
+                echo $exc->getMessage();
+                $this->direcionaErroDeCadastro($exc->getMessage());
+                CircuitoController::direcionandoAoLogin($this);
+            }
+        }
     }
 
     public function salvarFotoAction() {

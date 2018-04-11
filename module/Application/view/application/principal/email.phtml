@@ -1,0 +1,30 @@
+<?php
+
+use Application\Controller\Helper\Constantes;
+
+$form = $this->Form;
+$form->prepare();
+$form->setAttribute(Constantes::$ACTION, $this->url('principal', array(Constantes::$ACTION => 'EmailSalvar')));
+echo $this->form()->openTag($form);
+echo $this->templateFormularioTopo('Alterar Usuário');
+?>
+<div class="panel-body bg-light">
+    <div class="alert alert-info">
+        <p>Pessoa: <?php echo $this->pessoa->getNome(); ?></p>
+        <p>Email: <?php echo $this->pessoa->getEmail(); ?></p>
+    </div>
+    <?php
+    echo $this->divMensagens();
+    echo $this->inputFormularioSimples(Constantes::$TRADUCAO_EMAIL, $form->get(Constantes::$INPUT_EMAIL));
+    echo $this->inputFormularioSimples('Repita o Email', $form->get('repetirEmail'));
+
+    $funcaoValidar = $this->funcaoOnClick('validarEnvioDeEmail(this.form)');
+    echo $this->botaoSimples(Constantes::$TRADUCAO_ALTERAR, $funcaoValidar);
+
+    echo $this->formHidden($form->get(Constantes::$INPUT_ID_PESSOA));
+    echo $this->formHidden($form->get(Constantes::$INPUT_CSRF));
+    ?>
+</div>
+<?php
+echo $this->templateFormularioRodape();
+echo $this->form()->closeTag();

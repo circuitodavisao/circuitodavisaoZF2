@@ -112,6 +112,7 @@ class PerfilForm extends Form {
                             Constantes::$FORM_STRING_ID => Constantes::$INPUT_EMAIL,
                             Constantes::$FORM_STRING_PLACEHOLDER => Constantes::$TRADUCAO_EMAIL,
                             Constantes::$FORM_STRING_VALUE => $pessoa->getEmail(),
+                            'disabled' => 'true',
                         ])
         );
 
