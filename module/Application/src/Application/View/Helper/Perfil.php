@@ -40,7 +40,7 @@ class Perfil extends AbstractHelper {
         $formulario->setAttribute(Constantes::$ACTION, $this->view->url(Constantes::$ROUTE_LOGIN, array(Constantes::$ACTION => 'perfilSalvar')));
 
         $html .= $this->view->form()->openTag($formulario);
-        $html .= '<div class="panel-body bg-light p25 mt30">';
+        $html .= '<div class="panel-body bg-light p5 mt10">';
 
         $html .= '<div class="row">';
         $html .= '<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-center">';
@@ -52,10 +52,10 @@ class Perfil extends AbstractHelper {
         $html .= '</div>';
 
         if ($this->getMostrarOpcoes()) {
-            $html .= '<div class="row mt10">';
+            $html .= '<div class="subirFoto row mt10">';
             $html .= '<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-center">';
             $html .= '<div class="btn-group">            ';
-            $html .= '<label class="btn btn-primary btn-sm btn-upload" style="width: 136px;" for="inputImage" title="Upload image file">';
+            $html .= '<label class="btn btn-primary btn-sm btn-upload" style="width: 204px;" for="inputImage" title="Upload image file">';
             $html .= '<input class="sr-only" id="inputImage" name="file" type="file" accept="image/*">';
             $html .= '<span class="docs-tooltip" data-toggle="tooltip" title="Import image with Blob URLs">';
             $html .= 'Subir Foto <span class="fa fa-upload"></span>';
@@ -68,25 +68,25 @@ class Perfil extends AbstractHelper {
             $html .= '<div class="alterarFoto row mt10 hidden">';
             $html .= '<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-center">';
             $html .= '<div class = "btn-group">';
+            $html .= '<button class = "btn btn-primary btn-sm" data-method = "setDragMode" data-option = "move" type = "button" title = "Drag Mode">';
+            $html .= '<span class = "fa fa-arrows"></span>';
+            $html .= '</button>';
+            $html .= '<button class = "btn btn-primary btn-sm" data-method = "setDragMode" data-option = "crop" type = "button" title = "Crop Mode">';
+            $html .= '<span class = "fa fa-crop"></span>';
+            $html .= '</button>';
             $html .= '<button class = "btn btn-primary btn-sm" data-method = "zoom" data-option = "0.1" type = "button" title = "Zoom In">';
             $html .= '<span class = "docs-tooltip" data-toggle = "tooltip" title = "$().cropper(&quot;zoom&quot;, 0.1)">';
             $html .= '<span class = "fa fa-search-plus"></span>';
             $html .= '</span>';
             $html .= '</button>';
             $html .= '<button class = "btn btn-primary btn-sm" data-method = "zoom" data-option = "-0.1" type = "button" title = "Zoom Out">';
-            $html .= '<span class = "docs-tooltip" data-toggle = "tooltip" title = "$().cropper(&quot;zoom&quot;, -0.1)">';
             $html .= '<span class = "fa fa-search-minus"></span>';
-            $html .= '</span>';
             $html .= '</button>';
             $html .= '<button class = "btn btn-primary btn-sm" data-method = "rotate" data-option = "-45" type = "button" title = "Rotate Left">';
-            $html .= '<span class = "docs-tooltip" data-toggle = "tooltip" title = "$().cropper(&quot;rotate&quot;, -45)">';
             $html .= '<span class = "fa fa-rotate-left"></span>';
-            $html .= '</span>';
             $html .= '</button>';
             $html .= '<button class = "btn btn-primary btn-sm" data-method = "rotate" data-option = "45" type = "button" title = "Rotate Right">';
-            $html .= '<span class = "docs-tooltip" data-toggle = "tooltip" title = "$().cropper(&quot;rotate&quot;, 45)">';
             $html .= '<span class = "fa fa-rotate-right"></span>';
-            $html .= '</span>';
             $html .= '</button>';
             $html .= '</div>';
             $html .= '</div>';
@@ -94,7 +94,7 @@ class Perfil extends AbstractHelper {
 
             $html .= '<div class="alterarFoto row mt10 mb10 hidden">';
             $html .= '<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-center">';
-            $html .= '<button class="btn btn-primary btn-sm" style="width: 136px;" data-method="getCroppedCanvas" type="button">';
+            $html .= '<button class="btn btn-primary btn-sm" style="width: 204px;" data-method="getCroppedCanvas" type="button">';
             $html .= '<span class="docs-tooltip" data-toggle="tooltip" title="Salvar Foto">';
             $html .= 'Salvar Foto <span class="fa fa-save"></span>';
             $html .= '</span>';
@@ -115,12 +115,33 @@ class Perfil extends AbstractHelper {
         $html .= $this->view->inputFormularioSimples(Constantes::$TRADUCAO_DDD, $formulario->get(Constantes::$INPUT_DDD), 3);
         $html .= $this->view->inputFormularioSimples(Constantes::$TRADUCAO_TELEFONE, $formulario->get(Constantes::$INPUT_TELEFONE), 9);
         $html .= $this->view->inputFormularioSimples(Constantes::$TRADUCAO_CPF, $formulario->get(Constantes::$INPUT_CPF), 12);
-        $html .= $this->view->inputFormularioSimples(Constantes::$TRADUCAO_EMAIL, $formulario->get(Constantes::$INPUT_EMAIL), 8);
-        $html .= '<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 text-center mt35">';
+        $html .= $this->view->inputFormularioSimples(Constantes::$TRADUCAO_EMAIL, $formulario->get(Constantes::$INPUT_EMAIL), 7);
+        $html .= '<div class="col-xs-5 col-sm-5 col-md-5 col-lg-5 text-center mt35">';
         $funcaoAlterarEmail = $this->view->funcaoOnClick('mostrarSplash(); funcaoCircuito("principalEmail", ' . $this->getPessoa()->getId() . ')');
-        $html .= $this->view->botaoSimples(Constantes::$TRADUCAO_ALTERAR, $funcaoAlterarEmail);
+        $html .= $this->view->botaoSimples(Constantes::$TRADUCAO_ALTERAR, $funcaoAlterarEmail, BotaoSimples::botaoImportante, BotaoSimples::larguraMaxima);
         $html .= '</div>';
+
+        if (!$this->getMostrarOpcoes()) {
+            $html .= '<div class="col-xs-7 col-sm-7 col-md-7 col-lg-7">';
+        } else {
+            $html .= '<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">';
+        }
+        $html .= '<div class="btn btn-default btn-block" disabled>' . $this->getPessoa()->getPessoaHierarquiaAtivo()->getHierarquia()->getNome() . '</div>';
         $html .= '</div>';
+        if (!$this->getMostrarOpcoes()) {
+            $html .= '<div class="col-xs-5 col-sm-5 col-md-5 col-lg-5">';
+            $funcaoAlterarHierarquia = $this->view->funcaoOnClick('mostrarSplash(); funcaoCircuito("principalHierarquia", ' . $this->getPessoa()->getId() . ')');
+            $html .= $this->view->botaoSimples(Constantes::$TRADUCAO_ALTERAR, $funcaoAlterarHierarquia, BotaoSimples::botaoImportante, BotaoSimples::larguraMaxima);
+            $html .= '</div>';
+        }
+
+        $html .= '<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-center mt10">';
+        $funcaoAlterarSenha = $this->view->funcaoOnClick('mostrarSplash(); funcaoCircuito("principalSenha", ' . $this->getPessoa()->getId() . ')');
+        $html .= $this->view->botaoSimples('Alterar Senha', $funcaoAlterarSenha, BotaoSimples::botaoImportante, BotaoSimples::larguraMaxima);
+        $html .= '</div>';
+
+        $html .= '</div>';
+        /* fim Div panel-body */
 
         if ($this->getMostrarOpcoes()) {
             $html .= '<div class="panel-footer text-right">';

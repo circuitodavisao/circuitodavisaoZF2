@@ -1,0 +1,54 @@
+<?php
+
+use Application\Controller\Helper\Constantes;
+
+$formulario = $this->formulario;
+$formulario->prepare();
+$formulario->setAttribute(Constantes::$ACTION, $this->url('principal', array(Constantes::$ACTION => 'HierarquiaSalvar')));
+echo $this->form()->openTag($formulario);
+echo $this->templateFormularioTopo('Alterar Hierarquia');
+?>
+<div class="panel-body bg-light">
+    <div class="alert alert-info">
+        <p>Pessoa: <?php echo $this->pessoa->getNome(); ?></p>
+        <p>Hierarquia: <?php echo $this->pessoa->getPessoaHierarquiaAtivo()->getHierarquia()->getNome(); ?></p>
+    </div>
+    <?php
+    echo $this->divMensagens();
+    echo $this->inputFormularioSimples('Hierarquia', $formulario->get(Constantes::$FORM_HIERARQUIA), 12, 2);
+    $funcaoValidar = $this->funcaoOnClick('validarHierarquia(this.form)');
+    echo $this->botaoSimples(Constantes::$TRADUCAO_ALTERAR, $funcaoValidar);
+    echo $this->formHidden($formulario->get(Constantes::$INPUT_ID_PESSOA));
+    echo $this->formHidden($formulario->get(Constantes::$INPUT_CSRF));
+    ?>
+</div>
+<?php
+echo $this->templateFormularioRodape();
+echo $this->form()->closeTag();
+?>
+<script type="text/javascript">
+    function validarHierarquia(formulario) {
+        var hierarquia = $('#hierarquia').val();
+
+        var temErro = false;
+        var divMensagens = $('#divMensagens');
+        var mensagem = '';
+
+        if (parseInt(hierarquia) === 0) {
+            temErro = true;
+            mensagem = 'Selecione a Hierarquia';
+        }
+        if (temErro) {
+            divMensagens
+                    .html(mensagem)
+                    .removeClass('alert-success')
+                    .removeClass('hidden')
+                    .addClass('alert-danger');
+        } else {
+            divMensagens
+                    .addClass('hidden');
+            mostrarSplash();
+            formulario.submit();
+        }
+    }
+</script>

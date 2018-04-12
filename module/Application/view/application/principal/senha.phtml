@@ -1,0 +1,32 @@
+<?php
+
+use Application\Controller\Helper\Constantes;
+
+$formulario = $this->formulario;
+$formulario->prepare();
+$formulario->setAttribute(Constantes::$ACTION, $this->url('principal', array(Constantes::$ACTION => 'SenhaSalvar')));
+echo $this->form()->openTag($formulario);
+echo $this->templateFormularioTopo('Alterar Senha');
+?>
+<div class="panel-body bg-light">
+    <div class="alert alert-info">
+        <p>Pessoa: <?php echo $this->pessoa->getNome(); ?></p>
+        <p>Email: <?php echo $this->pessoa->getEmail(); ?></p>
+    </div>
+    <?php
+    $formulario->get(Constantes::$INPUT_SENHA)->setAttribute(Constantes::$FORM_STRING_ONKEYUP, '');
+    $formulario->get(Constantes::$INPUT_REPETIR_SENHA)->setAttribute(Constantes::$FORM_STRING_ONKEYUP, '');
+
+    echo $this->divMensagens();
+    echo $this->inputFormularioSimples(Constantes::$TRADUCAO_SENHA, $formulario->get(Constantes::$INPUT_SENHA));
+    echo $this->inputFormularioSimples(Constantes::$TRADUCAO_REPITA_A_SENHA, $formulario->get(Constantes::$INPUT_REPETIR_SENHA));
+
+    echo $this->formHidden($formulario->get(Constantes::$INPUT_CSRF));
+    echo $this->formHidden($formulario->get(Constantes::$INPUT_ID_PESSOA));
+    $funcaoValidarSenha = $this->funcaoOnClick('validarSenhas(this.form)');
+    echo $this->botaoSimples(Constantes::$TRADUCAO_ALTERAR, $funcaoValidarSenha);
+    ?>
+</div>
+<?php
+echo $this->templateFormularioRodape();
+echo $this->form()->closeTag();

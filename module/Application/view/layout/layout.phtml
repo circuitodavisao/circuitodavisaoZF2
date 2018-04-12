@@ -145,7 +145,7 @@ use Application\Controller\Helper\Constantes;
                         $(window).trigger('resize');
                     }
                 });
-                
+
                 (function () {
                     var $image = $('.img-container > img'),
                             $dataX = $('#dataX'),
@@ -191,7 +191,7 @@ use Application\Controller\Helper\Constantes;
                             result = $image.cropper(data.method, data.option);
 
                             if (data.method === 'getCroppedCanvas') {
-                               salvarFoto(result);
+                                salvarFoto(result);
                             }
 
                             if ($.isPlainObject(result) && $target) {
@@ -227,6 +227,7 @@ use Application\Controller\Helper\Constantes;
 
                                     $('#fotoCrop').removeClass('hidden');
                                     $('#fotoPerfil').addClass('hidden');
+                                    $('.subirFoto').addClass('hidden');
                                     $('.alterarFoto').removeClass('hidden');
                                 } else {
                                     showMessage('Please choose an image file.');

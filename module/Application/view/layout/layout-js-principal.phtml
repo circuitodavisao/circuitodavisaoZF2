@@ -27,6 +27,12 @@ if ($sessao->mostrarNotificacao) {
     if ($sessao->emailAlterado) {
         $mensagemPNotify = 'Email Alterado';
     }
+    if ($sessao->hierarquiaAlterada) {
+        $mensagemPNotify = 'Hierarquia Alterada';
+    }
+    if ($sessao->senhaAlterada) {
+        $mensagemPNotify = 'Senha Alterada e Email Enviado';
+    }
     if ($sessao->nomePessoa) {
         $nomePessoa = $sessao->nomePessoa;
     }
