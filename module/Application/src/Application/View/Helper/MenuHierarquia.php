@@ -63,7 +63,7 @@ class MenuHierarquia extends AbstractHelper {
             $html .= '<li class="" style="height:55px;">';
             $html .= '<a href="#">';
             $extra = 'onclick="funcaoCircuito(\'principalVer\', ' . $this->getGrupoId() . ');"';
-            $html .= $this->view->botaoSimples('Ver Perfil', $extra);
+            $html .= $this->view->botaoSimples('<span class="fa fa-user"></span>', $extra, BotaoSimples::botaoMuitoPequenoImportante);
             $html .= '</a>';
             $html .= '</li>';
         }
@@ -84,7 +84,7 @@ class MenuHierarquia extends AbstractHelper {
             }
             if ($this->getGrupoId()) {
                 $extra1 = 'onclick="funcaoCircuito(\'principalVer\', ' . $this->getGrupoId() . ');"';
-                $html .= $this->view->botaoSimples('Ver Perfil', $extra1, 4);
+                $html .= $this->view->botaoSimples('<span class="fa fa-user"></span>', $extra1, BotaoSimples::botaoMuitoPequenoImportante);
             }
             $html .= $this->getNomeEntidade() . '<br />';
 
