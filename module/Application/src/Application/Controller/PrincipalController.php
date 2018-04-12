@@ -4,9 +4,12 @@ namespace Application\Controller;
 
 use Application\Controller\Helper\Constantes;
 use Application\Controller\Helper\Funcoes;
+use Application\Form\HierarquiaForm;
 use Application\Form\NovoEmailForm;
+use Application\Form\RecuperarSenhaForm;
 use Application\Model\Entity\EntidadeTipo;
 use Application\Model\Entity\EventoTipo;
+use Application\Model\Entity\PessoaHierarquia;
 use Exception;
 use Zend\Json\Json;
 use Zend\Session\Container;
@@ -370,6 +373,112 @@ class PrincipalController extends CircuitoController {
                 $this->getRepositorio()->getPessoaORM()->persistir($pessoa, $setarDataEHora);
                 $sessao->mostrarNotificacao = true;
                 $sessao->emailAlterado = true;
+                $this->getRepositorio()->fecharTransacao();
+                return $this->redirect()->toRoute('principal');
+            } catch (Exception $exc) {
+                $this->getRepositorio()->desfazerTransacao();
+                echo $exc->getMessage();
+            }
+        }
+    }
+
+    public function hierarquiaAction() {
+        $sessao = new Container(Constantes::$NOME_APLICACAO);
+        $idSessao = $sessao->idSessao;
+        if ($idSessao) {
+            $pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($idSessao);
+            $pessoaLogada = $this->getRepositorio()->getPessoaORM()->encontrarPorId($sessao->idPessoa);
+            $hierarquias = $this->getRepositorio()->getHierarquiaORM()->encontrarTodas($pessoaLogada->getPessoaHierarquiaAtivo()->getHierarquia()->getId());
+            $formulario = new HierarquiaForm(Constantes::$FORM, $pessoa, $hierarquias);
+            $view = new ViewModel(
+                    array(
+                'formulario' => $formulario,
+                'pessoa' => $pessoa,
+            ));
+            unset($sessao->idSessao);
+            return $view;
+        } else {
+            return $this->redirect()->toRoute('principal');
+        }
+    }
+
+    public function hierarquiaSalvarAction() {
+        $sessao = new Container(Constantes::$NOME_APLICACAO);
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            try {
+                $this->getRepositorio()->iniciarTransacao();
+                $post_data = $request->getPost();
+                $idPessoa = $post_data[Constantes::$INPUT_ID_PESSOA];
+                $pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($idPessoa);
+                if ($pessoa->getPessoaHierarquiaAtivo()->getHierarquia()->getId() != $post_data[Constantes::$FORM_HIERARQUIA]) {
+                    $setarDataEHora = false;
+                    $pessoaHierarquiaAtivo = $pessoa->getPessoaHierarquiaAtivo();
+                    $pessoaHierarquiaAtivo->setDataEHoraDeInativacao();
+                    $this->getRepositorio()->getPessoaHierarquiaORM()->persistir($pessoaHierarquiaAtivo, $setarDataEHora);
+
+                    $pessoaHierarquia = new PessoaHierarquia();
+                    $pessoaHierarquia->setPessoa($pessoa);
+                    $novaHierarquia = $this->getRepositorio()->getHierarquiaORM()->encontrarPorId($post_data[Constantes::$FORM_HIERARQUIA]);
+                    $pessoaHierarquia->setHierarquia($novaHierarquia);
+                    $this->getRepositorio()->getPessoaHierarquiaORM()->persistir($pessoaHierarquia);
+
+                    $sessao->mostrarNotificacao = true;
+                    $sessao->hierarquiaAlterada = true;
+                }
+                $this->getRepositorio()->fecharTransacao();
+                return $this->redirect()->toRoute('principal');
+            } catch (Exception $exc) {
+                $this->getRepositorio()->desfazerTransacao();
+                echo $exc->getMessage();
+            }
+        }
+    }
+
+    public function senhaAction() {
+        $sessao = new Container(Constantes::$NOME_APLICACAO);
+        $idSessao = $sessao->idSessao;
+        if ($idSessao) {
+            $pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($idSessao);
+            $formulario = new RecuperarSenhaForm(Constantes::$FORM, $pessoa->getId());
+            $view = new ViewModel(
+                    array(
+                'formulario' => $formulario,
+                'pessoa' => $pessoa,
+            ));
+            unset($sessao->idSessao);
+
+            /* Javascript especifico */
+            $layoutJSIndex = new ViewModel();
+            $layoutJSIndex->setTemplate(Constantes::$TEMPLATE_JS_RECUPERAR_SENHA);
+            $view->addChild($layoutJSIndex, Constantes::$STRING_JS_RECUPERAR_SENHA);
+            return $view;
+        } else {
+            return $this->redirect()->toRoute('principal');
+        }
+    }
+
+    public function senhaSalvarAction() {
+        $sessao = new Container(Constantes::$NOME_APLICACAO);
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            try {
+                $this->getRepositorio()->iniciarTransacao();
+                $post_data = $request->getPost();
+                $idPessoa = $post_data[Constantes::$INPUT_ID_PESSOA];
+                $pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($idPessoa);
+                $pessoa->setSenha($post_data[Constantes::$INPUT_SENHA]);
+                $setarDataEHora = false;
+                $this->getRepositorio()->getPessoaORM()->persistir($pessoa, $setarDataEHora);
+
+                $Subject = 'Dados de Acesso ao CV';
+                $ToEmail = $pessoa->getEmail();
+                $Content = '<pre>Olá</pre><pre>Seu usuário é: ' . $pessoa->getEmail() . '</pre><pre>Sua Senha é: ' . $post_data[Constantes::$INPUT_SENHA] . '</pre>';
+                Funcoes::enviarEmail($ToEmail, $Subject, $Content);
+
+                $sessao->mostrarNotificacao = true;
+                $sessao->senhaAlterada = true;
+
                 $this->getRepositorio()->fecharTransacao();
                 return $this->redirect()->toRoute('principal');
             } catch (Exception $exc) {

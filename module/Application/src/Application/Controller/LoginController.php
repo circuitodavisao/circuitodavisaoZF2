@@ -668,7 +668,7 @@ class LoginController extends CircuitoController {
                 $pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($post_data['id']);
                 $valorRandom = LoginController::geraSenha();
 
-                $pessoa->setFoto($pessoa->getId() . $valorRandom . '.jpg');
+                $pessoa->setFoto($pessoa->getId() . '_' . $valorRandom . '.jpg');
                 $this->getRepositorio()->getPessoaORM()->persistir($pessoa, $naoAlterarDataDeCriacao = false);
 
                 $diretorioDocumentos = 'public/img/fotos/';
