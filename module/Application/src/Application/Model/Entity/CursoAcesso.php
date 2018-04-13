@@ -7,7 +7,6 @@ namespace Application\Model\Entity;
  * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com>
  * Descricao: Entidade anotada da tabela curso_Acesso
  */
-
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -20,6 +19,7 @@ class CursoAcesso extends CircuitoEntity {
     const COORDENADOR = 1;
     const SUPERVISOR = 2;
     const AUXILIAR = 3;
+    const FACILITADOR = 4;
 
     /**
      * @ORM\OneToMany(targetEntity="PessoaCursoAcesso", mappedBy="cursoAcesso") 
