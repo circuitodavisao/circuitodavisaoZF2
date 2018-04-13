@@ -402,14 +402,16 @@ class Menu extends AbstractHelper {
                     $arrayOQueMostrarDosCursos['gerarFaltas'] = true;
                 }
                 if ($this->view->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::COORDENADOR ||
-                        $this->view->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::SUPERVISOR) {
+                        $this->view->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::SUPERVISOR ||
+                        $this->view->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::FACILITADOR) {
                     $arrayOQueMostrarDosCursos['reentrada'] = true;
                     $arrayOQueMostrarDosCursos['gerarCarterinhas'] = true;
                     $arrayOQueMostrarDosCursos['gerarReposicoes'] = true;
                 }
                 if ($this->view->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::COORDENADOR ||
                         $this->view->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::SUPERVISOR ||
-                        $this->view->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::AUXILIAR) {
+                        $this->view->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::AUXILIAR ||
+                        $this->view->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::FACILITADOR) {
                     $arrayOQueMostrarDosCursos['lancarPresenca'] = true;
                 }
             } else {

@@ -1189,26 +1189,27 @@ class CursoController extends CircuitoController {
         $turmas = $grupo->getTurma();
         $contadorDeFaltas = array();
         foreach ($turmas as $turma) {
-            $turmaAulaAtiva = $turma->getTurmaAulaAtiva();
-            foreach ($turma->getTurmaPessoa() as $turmaPessoa) {
-                $nomeEquipeDoTurmaPessoa = CursoController::getNomeDaEquipeDoTurmaPessoa($turmaPessoa);
-                $turmaPessoaAulas = $turmaPessoa->getTurmaPessoaAula();
-                $parar = false;
-                foreach ($turma->getCurso()->getDisciplina() as $disciplina) {
-                    if (!$parar) {
-                        foreach ($disciplina->getAulaOrdenadasPorPosicao() as $aula) {
-                            $naoEncontreiPresencaNaAula = true;
-                            foreach ($turmaPessoaAulas as $turmaPessoaAula) {
-                                if ($turmaPessoaAula->getAula()->getId() === $aula->getId()) {
-                                    $naoEncontreiPresencaNaAula = false;
+            if ($turmaAulaAtiva = $turma->getTurmaAulaAtiva()) {
+                foreach ($turma->getTurmaPessoa() as $turmaPessoa) {
+                    $nomeEquipeDoTurmaPessoa = CursoController::getNomeDaEquipeDoTurmaPessoa($turmaPessoa);
+                    $turmaPessoaAulas = $turmaPessoa->getTurmaPessoaAula();
+                    $parar = false;
+                    foreach ($turma->getCurso()->getDisciplina() as $disciplina) {
+                        if (!$parar) {
+                            foreach ($disciplina->getAulaOrdenadasPorPosicao() as $aula) {
+                                $naoEncontreiPresencaNaAula = true;
+                                foreach ($turmaPessoaAulas as $turmaPessoaAula) {
+                                    if ($turmaPessoaAula->getAula()->getId() === $aula->getId()) {
+                                        $naoEncontreiPresencaNaAula = false;
+                                    }
                                 }
-                            }
-                            if ($naoEncontreiPresencaNaAula) {
-                                $contadorDeFaltas[$nomeEquipeDoTurmaPessoa] ++;
-                            }
-                            if ($aula->getId() == $turmaAulaAtiva->getAula()->getId()) {
-                                $parar = true;
-                                break;
+                                if ($naoEncontreiPresencaNaAula) {
+                                    $contadorDeFaltas[$nomeEquipeDoTurmaPessoa] ++;
+                                }
+                                if ($aula->getId() == $turmaAulaAtiva->getAula()->getId()) {
+                                    $parar = true;
+                                    break;
+                                }
                             }
                         }
                     }
