@@ -227,7 +227,8 @@ $somaMeta = 0;
                                     $padding = '5';
                                 }
                             }
-                            echo '<td class="text-left" style="font-size:8px;padding-left:' . $padding . 'px;">' . $label . $relatorio['lideresFotos'] . $relatorio['lideresEntidade'] . '</td>';
+                            echo '<td class="text-left" style="font-size:8px;padding-left:' . $padding . 'px;">' . $label . $relatorio['lideresFotos'] .
+                            '<span class="hidden-xs">' . $relatorio['lideres'] . '</span>' . '</td>';
 
                             for ($indiceDeArrays = $this->periodoInicial; $indiceDeArrays <= $this->periodoFinal; $indiceDeArrays++) {
                                 $classeBase = 'periodo' . $indiceDeArrays . ' ';
