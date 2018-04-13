@@ -8,6 +8,7 @@ namespace Application\Model\Entity;
  * Descricao: Entidade anotada da tabela grupo
  */
 use Application\Controller\Helper\Funcoes;
+use Application\Model\Helper\FuncoesEntidade;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -441,6 +442,15 @@ class Grupo extends CircuitoEntity {
             $nomes = $nomes . ' <span class="hidden-xs">(INATIVO - ' . $dataInativacao . ')</span>';
         }
         return $nomes;
+    }
+
+    function getFotosLideresAtivos() {
+        $pessoas = $this->getPessoasAtivas();
+        $fotos = '';
+        foreach ($pessoas as $pessoa) {
+            $fotos .= FuncoesEntidade::tagImgComFotoDaPessoa($pessoa, $tamanho = 24, 'px', ' style="padding:1px;" ');
+        }
+        return $fotos;
     }
 
     function getNomeLideresInativos() {

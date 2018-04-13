@@ -377,6 +377,7 @@ class RelatorioController extends CircuitoController {
         $relatorio[0]['mediaCelulaRealizadasPerformance'] = $soma[0][6] / $diferencaDePeriodos;
         $relatorio[0]['mediaCelulaQuantidade'] = $soma[0][7] / $diferencaDePeriodos;
         $relatorio[0]['lideres'] = 'MEU';
+        $relatorio[0]['lideresFotos'] = $grupo->getFotosLideresAtivos();
 
         $somaTotal['mediaMembresiaCulto'] = $relatorio[0]['mediaMembresiaCulto'];
         $somaTotal['mediaMembresiaArena'] = $relatorio[0]['mediaMembresiaArena'];
@@ -414,6 +415,7 @@ class RelatorioController extends CircuitoController {
             $relatorio[$contadorFilhos]['mediaCelulaRealizadasPerformance'] = $relatorioDiscipulos[$grupoFilhoOrdenado->getId()]['mediaCelulaRealizadasPerformance'];
             $relatorio[$contadorFilhos]['mediaCelulaRealizadasPerformanceClass'] = RelatorioController::corDaLinhaPelaPerformance($relatorioDiscipulos[$grupoFilhoOrdenado->getId()]['mediaCelulaRealizadasPerformance']);
             $relatorio[$contadorFilhos]['lideres'] = $grupoFilhoOrdenado->getNomeLideresAtivos();
+            $relatorio[$contadorFilhos]['lideresFotos'] = $grupoFilhoOrdenado->getFotosLideresAtivos();
             $contadorFilhos++;
 
             $somaTotal['mediaMembresia'] += $relatorio[$contadorFilhos]['mediaMembresia'];
