@@ -58,6 +58,9 @@ class CircuitoMeAjuda extends AbstractHelper {
                         $nomeLideres144 = $grupoFilho144->getNomeLideresAtivos();
                         $relatorioDiscipulo144 = $this->view->discipulosRelatorio[$grupoFilho144->getId()];
                         $numeroSub = $grupoFilho144->getEntidadeAtiva()->infoEntidade(true);
+                        if ($grupoFilho144->getId() == 361) {// italo
+                            var_dump($relatorioDiscipulo144);
+                        }
                         if ($relatorioDiscipulo144 && ($relatorioDiscipulo144['celulaQuantidade'] - $relatorioDiscipulo144['celulaRealizadas'] > 0)) {
                             $diferenca144 = $relatorioDiscipulo144['celulaQuantidade'] - $relatorioDiscipulo144['celulaRealizadas'];
                             $htmlCelulasNaoRealizadas .= '<tr class="linhaCelulasNaoRealizadas hidden">';
