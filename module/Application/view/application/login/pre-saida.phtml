@@ -41,8 +41,10 @@ use Application\Controller\Helper\Constantes;
                         <p class="lh25 text-muted fs15"><?php echo $this->translate(Constantes::$TRADUCAO_PRE_SAIDA); ?></p>
 
                         <p class="text-right mt20 col-md-12">
+                        <div class="row">
                             <?php echo $this->botaoLink(Constantes::$TRADUCAO_ENTRAR_NOVAMENTE, ($this->url(Constantes::$ROUTE_LOGIN) . Constantes::$URL_PRINCIPAL), 2); ?>
                             <?php echo $this->botaoLink(Constantes::$TRADUCAO_CONTINUAR, ($this->url(Constantes::$ROUTE_LOGIN) . Constantes::$URL_SAIR)); ?>
+                        </div>
                         </p>
 
                     </div>
