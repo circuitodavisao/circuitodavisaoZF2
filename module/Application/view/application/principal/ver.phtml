@@ -5,7 +5,7 @@ use Application\Form\PerfilForm;
 use Application\Model\Entity\EntidadeTipo;
 use Application\View\Helper\BotaoSimples;
 
-echo '<div class="panel panel-primary mw1000 center-block mt40">';
+echo '<div class="panel panel-primary mw1000 center-block mt50">';
 echo '<div class="panel-heading">';
 echo 'Perfil';
 echo '</div>';
@@ -19,15 +19,6 @@ foreach ($this->responsabilidades as $responsavel) {
 }
 echo '</div>';
 echo '</div>';
-
-echo '<div class="panel panel-info mw1000 center-block">';
-echo '<div class="panel-heading">';
-echo 'C&eacute;lula(s)';
-echo '</div>';
-echo '<div class="panel-body">';
-echo $this->listagemDeEventos('', $this->eventos);
-echo'</div>';
-echo'</div>';
 
 echo '<div class="panel panel-danger mw1000 center-block">';
 echo '<div class="panel-heading">';
@@ -62,5 +53,17 @@ if ($this->tenhoDiscipulosAtivos) {
     echo '</div>';
     echo '</div>';
 }
-echo '</div>'; // fim panel-body
+echo '</div>'; 
+echo '</div>'; 
+
+echo '<div class="panel panel-info mw1000 center-block">';
+echo '<div class="panel-heading">';
+echo 'C&eacute;lula(s)';
+echo '</div>';
+echo '<div class="panel-body">';
+echo $this->listagemDeEventos('', $this->eventos);
+echo'</div>';
+echo'</div>';
+
+
 
