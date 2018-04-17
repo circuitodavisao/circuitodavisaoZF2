@@ -141,27 +141,25 @@ class AtendimentoGruposAbaixo extends AbstractHelper {
             $html .= '<thead><tr class="info"><th class="text-center">Coment&aacute;rios ' . count($grupo->getGrupoAtendimentoComentarioAtivos()) . '</th>'
                     . '<th><span class="btn btn-primary btn-xs"><i class="fa fa-eye" onClick="$(\'.comentario_' . $grupo->getId() . '\').toggleClass(\'hidden\');"></i></button></th></tr></thead>';
             $html .= '<tbody>';
-            foreach ($grupo->getGrupoAtendimentoComentario() as $grupoAtendimentoComentario) {
-                if ($grupoAtendimentoComentario->verificarSeEstaAtivo()) {
-                    $html .= '<tr class="hidden comentario_' . $grupo->getId() . '">';
-                    $html .= '<td>';
-                    $html .= '<span class="hidden-xs">' . $grupoAtendimentoComentario->getComentario() . '</span>';
-                    $html .= '<span class="hidden-sm hidden-md hidden-lg">';
-                    if (strlen($grupoAtendimentoComentario->getComentario()) > 20) {
-                        $html .= substr($grupoAtendimentoComentario->getComentario(), 0, 20) . '...';
-                    } else {
-                        $html .= $grupoAtendimentoComentario->getComentario();
-                    }
-                    $html .= '</span>';
-                    $html .= '</td>';
-                    if ($this->getTipo() === AtendimentoGruposAbaixo::tipoLancamento) {
-                        $funcao = $this->view->funcaoOnClick('validarExclusaoComentario(' . $grupoAtendimentoComentario->getId() . ')');
-                        $html .= '<td>';
-                        $html .= $this->view->botaoSimples('<i class="fa fa-times"</i>', $funcao, BotaoSimples::botaoMuitoPequenoPerigoso);
-                        $html .= '</td>';
-                    }
-                    $html .= '</tr>';
+            foreach ($grupo->getGrupoAtendimentoComentarioAtivos() as $grupoAtendimentoComentario) {
+                $html .= '<tr class="hidden comentario_' . $grupo->getId() . '">';
+                $html .= '<td>';
+                $html .= '<span class="hidden-xs">' . $grupoAtendimentoComentario->getComentario() . '</span>';
+                $html .= '<span class="hidden-sm hidden-md hidden-lg">';
+                if (strlen($grupoAtendimentoComentario->getComentario()) > 20) {
+                    $html .= substr($grupoAtendimentoComentario->getComentario(), 0, 20) . '...';
+                } else {
+                    $html .= $grupoAtendimentoComentario->getComentario();
                 }
+                $html .= '</span>';
+                $html .= '</td>';
+                if ($this->getTipo() === AtendimentoGruposAbaixo::tipoLancamento) {
+                    $funcao = $this->view->funcaoOnClick('validarExclusaoComentario(' . $grupoAtendimentoComentario->getId() . ')');
+                    $html .= '<td>';
+                    $html .= $this->view->botaoSimples('<i class="fa fa-times"</i>', $funcao, BotaoSimples::botaoMuitoPequenoPerigoso);
+                    $html .= '</td>';
+                }
+                $html .= '</tr>';
             }
             $html .= '</tbody>';
             $html .= '</table>';
