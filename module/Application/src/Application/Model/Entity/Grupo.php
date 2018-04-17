@@ -1202,6 +1202,16 @@ class Grupo extends CircuitoEntity {
         return $this->grupoAtendimentoComentario;
     }
 
+    function getGrupoAtendimentoComentarioAtivos() {
+        $entidades = array();
+        foreach ($this->getGrupoAtendimentoComentario as $grupoAtendimentoComentario) {
+            if ($grupoAtendimentoComentario->verificarSeEstaAtivo()) {
+                $entidades[] = $grupoAtendimentoComentario;
+            }
+        }
+        return $entidades;
+    }
+
     function setGrupoAtendimentoComentario($grupoAtendimentoComentario) {
         $this->grupoAtendimentoComentario = $grupoAtendimentoComentario;
     }
