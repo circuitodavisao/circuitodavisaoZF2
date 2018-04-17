@@ -75,8 +75,8 @@ class AtendimentoGruposAbaixo extends AbstractHelper {
     public function montarBarraDeProgressoAtendimento($grupo, $discipuloAbaixo = false) {
         $html = '';
 
-        $tamanhoColuna1 = 'col-md-10 col-sm-10 col-xs-7';
-        $tamanhoColuna2 = 'col-md-2 col-sm-2 col-xs-5';
+        $tamanhoColuna1 = 'col-md-8 col-sm-8 col-xs-6';
+        $tamanhoColuna2 = 'col-md-4 col-sm-4 col-xs-6';
         if ($this->getTipo() === AtendimentoGruposAbaixo::tipoRelatorio && !$discipuloAbaixo) {
             $tamanhoColuna1 = 'col-md-10 col-sm-10 col-xs-10';
             $tamanhoColuna2 = 'col-md-2 col-sm-2 col-xs-2" style="padding-left: 0px; padding-top: 20px; vertical-align: middle;';
@@ -86,6 +86,8 @@ class AtendimentoGruposAbaixo extends AbstractHelper {
             $tamanhoColuna2 = '';
         }
 
+        /* Row 1 */
+        $html .= '<div class="row">';
         /* Coluna 1 - Barra */
         $html .= '<div class="' . $tamanhoColuna1 . '">';
 
@@ -112,6 +114,9 @@ class AtendimentoGruposAbaixo extends AbstractHelper {
                 $html .= $this->botaoAtendimento($grupo->getId(), 1);
                 $html .= Constantes::$NBSP;
                 $html .= $this->botaoAtendimento($grupo->getId(), 2, $numeroAtendimentos);
+                $html .= Constantes::$NBSP;
+                $funcao = $this->view->funcaoOnClick('mostrarSplash(); funcaoCircuito("lancamentoAtendimentoComentario","' . $grupo->getId() . '")');
+                $html .= $this->view->botaoSimples('<i class="fa fa-comments"></i>', $funcao, BotaoSimples::botaoMuitoPequenoMenosImportante);
             }
             if ($this->getTipo() === AtendimentoGruposAbaixo::tipoRelatorio) {
                 $html .= '<div id="divBotaoVer' . $grupo->getId() . '">';
@@ -124,6 +129,49 @@ class AtendimentoGruposAbaixo extends AbstractHelper {
             $html .= '</div>';
         }
         /* Fim Coluna 2 */
+        $html .= '</div>';
+        /* Fim Row 1 */
+
+        if (count($grupo->getGrupoAtendimentoComentario()) > 0) {
+            /* Row 2 */
+            $html .= '<div class="row">';
+            $html .= '<div class="panel">';
+            $html .= '<div class="panel-body text-center" style="padding:1px;">';
+            $html .= '<table class="table table-condensed">';
+            $html .= '<thead><tr class="info"><th class="text-center">Tem Coment&aacute;rios</th>'
+                    . '<th><span class="btn btn-primary btn-xs"><i class="fa fa-eye" onClick="$(\'.comentario_' . $grupo->getId() . '\').toggleClass(\'hidden\');"></i></button></th></tr></thead>';
+            $html .= '<tbody>';
+            foreach ($grupo->getGrupoAtendimentoComentario() as $grupoAtendimentoComentario) {
+                if ($grupoAtendimentoComentario->verificarSeEstaAtivo()) {
+                    $html .= '<tr class="hidden comentario_' . $grupo->getId() . '">';
+                    $html .= '<td>';
+                    $html .= '<span class="hidden-xs">' . $grupoAtendimentoComentario->getComentario() . '</span>';
+                    $html .= '<span class="hidden-sm hidden-md hidden-lg">';
+                    if (strlen($grupoAtendimentoComentario->getComentario()) > 20) {
+                        $html .= substr($grupoAtendimentoComentario->getComentario(), 0, 20) . '...';
+                    } else {
+                        $html .= $grupoAtendimentoComentario->getComentario();
+                    }
+                    $html .= '</span>';
+                    $html .= '</td>';
+                    if ($this->getTipo() === AtendimentoGruposAbaixo::tipoLancamento) {
+                        $funcao = $this->view->funcaoOnClick('validarExclusaoComentario(' . $grupoAtendimentoComentario->getId() . ')');
+                        $html .= '<td>';
+                        $html .= $this->view->botaoSimples('<i class="fa fa-times"</i>', $funcao, BotaoSimples::botaoMuitoPequenoPerigoso);
+                        $html .= '</td>';
+                    }
+                    $html .= '</tr>';
+                }
+            }
+            $html .= '</tbody>';
+            $html .= '</table>';
+            $html .= '</div>';
+            $html .= '</div>';
+
+            $html .= '</div>';
+            /* Fim Row 2 */
+        }
+
 
         return $html;
     }
@@ -177,12 +225,12 @@ class AtendimentoGruposAbaixo extends AbstractHelper {
         $disabled = '';
         if ($tipoBotao === AtendimentoGruposAbaixo::tipoLancar) {
             $iconeDoBotao = 'plus';
-            $tipoDoBotao = BotaoSimples::botaoPequenoImportante;
+            $tipoDoBotao = BotaoSimples::botaoMuitoPequenoImportante;
             $disabled = '';
         }
         if ($tipoBotao === AtendimentoGruposAbaixo::tipoRemover) {
             $iconeDoBotao = 'minus';
-            $tipoDoBotao = BotaoSimples::botaoPequenoMenosImportante;
+            $tipoDoBotao = BotaoSimples::botaoMuitoPequenoMenosImportante;
             if ($numeroAtendimentos === 0) {
                 $disabled = 'disabled';
             }

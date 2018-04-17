@@ -94,3 +94,23 @@ function mudarAtendimento(idGrupo, tipo, abaSelecionada) {
                 }
             }, 'json');
 }
+
+function validarExclusaoComentario(idGrupoAtendimentoComentario) {
+    let resposta = confirm('Tem certeza que quer remover esse comentario');
+    if (resposta) {
+        $.post(
+                "/lancamentoAtendimentoComentarioRemover",
+                {
+                    id: idGrupoAtendimentoComentario,
+                },
+                function (data) {
+                    if (data.response) {
+                        mostrarSplash();
+                        location.href = '/lancamentoAtendimento';
+                    }
+                }, 'json');
+
+    } else {
+        return false;
+    }
+}

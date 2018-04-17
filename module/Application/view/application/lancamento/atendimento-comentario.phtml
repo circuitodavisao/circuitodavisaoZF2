@@ -1,0 +1,66 @@
+<?php
+
+use Application\Controller\Helper\Constantes;
+
+/**
+ * Nome: cadastrar-pessoa.phtml
+ * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com> e Sergio Bezerra da Silva <sergio.silva.unb@gmail.com>
+ * Descricao: Página de cadastro de comentario no atendimento
+ */
+$formulario = $this->formulario;
+$formulario->prepare();
+$formulario->setAttribute(Constantes::$ACTION, $this->url(Constantes::$ROUTE_LANCAMENTO, array(Constantes::$ACTION => 'AtendimentoComentarioSalvar')));
+echo $this->form()->openTag($formulario);
+echo $this->templateFormularioTopo('Cadastro de Coment&aacute;rio no Atendimento');
+?>
+<div class="panel-body bg-light">  
+    <?php
+    echo $this->divMensagens();
+    echo $this->inputFormularioSimples('Comet&aacute;rio', $formulario->get('comentario'));
+
+    $funcaoVerificarCadastroPessoa = $this->funcaoOnClick('validarComentario(this.form)');
+    echo $this->botaoSimples(Constantes::$TRADUCAO_CADASTRAR, $funcaoVerificarCadastroPessoa);
+
+    $funcaoVoltar = $this->funcaoOnClick('mostrarSplash(); location.href="/' . Constantes::$ROUTE_LANCAMENTO . 'Atendimento"');
+    echo $this->botaoSimples(Constantes::$TRADUCAO_VOLTAR, $funcaoVoltar, 2);
+
+    echo $this->formHidden($formulario->get(Constantes::$INPUT_CSRF));
+    echo $this->formHidden($formulario->get(Constantes::$FORM_STRING_ID));
+    ?>
+</div>
+<?php
+echo $this->templateFormularioRodape();
+echo $this->form()->closeTag();
+?>
+<script type="text/javascript">
+    document.getElementById('comentario').focus();
+
+    function validarComentario(formulario) {
+        var comentario = $('#comentario').val();
+        var temErro = false;
+        var divMensagens = $('#divMensagens');
+        var mensagem = '';
+
+        if (comentario.length === 0) {
+            temErro = true;
+            if (mensagem !== '') {
+                mensagem += ', ';
+            }
+            mensagem += 'Comentário';
+        }
+
+        if (temErro) {
+            divMensagens
+                    .html('Preenchao seguintes campos corretamente:' + mensagem)
+                    .removeClass('alert-success')
+                    .removeClass('hidden')
+                    .addClass('alert-danger');
+        } else {
+            mostrarSplash();
+            divMensagens
+                    .addClass('hidden');
+
+            formulario.submit();
+        }
+    }
+</script>

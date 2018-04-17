@@ -4,12 +4,14 @@ namespace Application\Controller;
 
 use Application\Controller\Helper\Constantes;
 use Application\Controller\Helper\Funcoes;
+use Application\Form\AtendimentoComentarioForm;
 use Application\Form\CadastrarPessoaForm;
 use Application\Model\Entity\DimensaoTipo;
 use Application\Model\Entity\EventoFrequencia;
 use Application\Model\Entity\EventoTipo;
 use Application\Model\Entity\Grupo;
 use Application\Model\Entity\GrupoAtendimento;
+use Application\Model\Entity\GrupoAtendimentoComentario;
 use Application\Model\Entity\GrupoPessoa;
 use Application\Model\Entity\GrupoPessoaTipo;
 use Application\Model\Entity\Pessoa;
@@ -275,7 +277,7 @@ class LancamentoController extends CircuitoController {
                     $dimensaoSelecionada->setLider($valorDoCampo + $valorParaSomar);
                 }
                 $this->getRepositorio()->getDimensaoORM()->persistir($dimensaoSelecionada, false);
-               
+
                 $this->getRepositorio()->fecharTransacao();
                 $response->setContent(Json::encode(
                                 array('response' => 'true',
@@ -388,8 +390,6 @@ class LancamentoController extends CircuitoController {
                 $nome = $post_data['nome'];
 
                 /* Helper Controller */
-
-
                 $pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($idPessoa);
                 $pessoa->setNome($nome);
                 $this->getRepositorio()->getPessoaORM()->persistir($pessoa);
@@ -591,6 +591,63 @@ class LancamentoController extends CircuitoController {
                                     'progresso' => $progresso,
                                     'corBarraTotal' => $colorBarTotal,
                                     'totalGruposAtendidos' => $explodeProgresso[1],)));
+            } catch (Exception $exc) {
+                $this->getRepositorio()->desfazerTransacao();
+                echo $exc->getTraceAsString();
+            }
+        }
+        return $response;
+    }
+
+    public function atendimentoComentarioAction() {
+        $sessao = new Container(Constantes::$NOME_APLICACAO);
+        $grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($sessao->idSessao);
+        $formulario = new AtendimentoComentarioForm('formulario', $grupo);
+        $dados = array();
+        $dados['grupo'] = $grupo;
+        $dados['formulario'] = $formulario;
+        return new ViewModel($dados);
+    }
+
+    public function atendimentoComentarioSalvarAction() {
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $this->getRepositorio()->iniciarTransacao();
+            try {
+                $post_data = $request->getPost();
+                $grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($post_data[Constantes::$FORM_STRING_ID]);
+
+                $grupoAtendimentoComentario = new GrupoAtendimentoComentario();
+                $grupoAtendimentoComentario->setGrupo($grupo);
+                $grupoAtendimentoComentario->setComentario($post_data['comentario']);
+                $this->getRepositorio()->getGrupoAtendimentoComentarioORM()->persistir($grupoAtendimentoComentario);
+
+                $this->getRepositorio()->fecharTransacao();
+
+                return $this->redirect()->toRoute(Constantes::$ROUTE_LANCAMENTO, array(
+                            Constantes::$ACTION => 'Atendimento',
+                ));
+            } catch (Exception $exc) {
+                $this->getRepositorio()->desfazerTransacao();
+                echo $exc->getMessage();
+            }
+        }
+    }
+
+    public function atendimentoComentarioRemoverAction() {
+        $request = $this->getRequest();
+        $response = $this->getResponse();
+        if ($request->isPost()) {
+            try {
+                $this->getRepositorio()->iniciarTransacao();
+                $post_data = $request->getPost();
+                $id = $post_data['id'];
+                $grupoAtendimentoComentario = $this->getRepositorio()->getGrupoAtendimentoComentarioORM()->encontrarPorId($id);
+                $grupoAtendimentoComentario->setDataEHoraDeInativacao();
+                $this->getRepositorio()->getGrupoAtendimentoComentarioORM()->persistir($grupoAtendimentoComentario, $naoAlterarData = false);
+
+                $this->getRepositorio()->fecharTransacao();
+                $response->setContent(Json::encode(array('response' => 'true')));
             } catch (Exception $exc) {
                 $this->getRepositorio()->desfazerTransacao();
                 echo $exc->getTraceAsString();
