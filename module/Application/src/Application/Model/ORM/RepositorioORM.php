@@ -33,6 +33,7 @@ class RepositorioORM {
     private $_grupoResponsavelORM;
     private $_grupoPaiFilhoORM;
     private $_grupoAtendimentoORM;
+    private $_grupoAtendimentoComentarioORM;
     private $_eventoFrequenciaORM;
     private $_fatoCicloORM;
     private $_fatoCelulaORM;
@@ -191,6 +192,17 @@ class RepositorioORM {
             $this->_grupoAtendimentoORM = new CircuitoORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_GRUPO_ATENDIMENTO);
         }
         return $this->_grupoAtendimentoORM;
+    }
+    
+    /**
+     * Metodo public para obter a instancia do GrupoAtendimentoComentarioORM
+     * @return CircuitoORM
+     */
+    public function getGrupoAtendimentoComentarioORM() {
+        if (is_null($this->_grupoAtendimentoComentarioORM)) {
+            $this->_grupoAtendimentoComentarioORM = new CircuitoORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_GRUPO_ATENDIMENTO_COMENTARIO);
+        }
+        return $this->_grupoAtendimentoComentarioORM;
     }
 
     /**
