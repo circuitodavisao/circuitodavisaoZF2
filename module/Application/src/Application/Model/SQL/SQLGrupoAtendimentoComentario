@@ -1,0 +1,33 @@
+-- Table: grupo_atendimento_comentario
+
+-- DROP TABLE grupo_atendimento_comentario;
+
+CREATE TABLE grupo_atendimento_comentario
+(
+  id serial NOT NULL, -- Identificação dos atendimentos do grupo
+  grupo_id bigint NOT NULL, -- Identificação do grupo
+  comentario character varying(100) NOT NULL, -- Comentário do Atendimento
+  data_criacao date NOT NULL DEFAULT ('now'::text)::date, -- Data de criação da associação
+  hora_criacao time without time zone NOT NULL DEFAULT ('now'::text)::time with time zone, -- Hora de criação da associação
+  data_inativacao date, -- Data de inativação da associação
+  hora_inativacao time without time zone, -- Hora da inativação da associação
+  CONSTRAINT pk_grupo_atendimento_comentario PRIMARY KEY (id),
+  CONSTRAINT fk_grupo_atendimento_comentario_grupo_id FOREIGN KEY (grupo_id)
+      REFERENCES grupo (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE grupo_atendimento_comentario
+  OWNER TO postgres;
+COMMENT ON TABLE grupo_atendimento_comentario
+  IS 'Tabela de atendimentos que o grupo participa';
+COMMENT ON COLUMN grupo_atendimento_comentario.id IS 'Identificação dos atendimentos do grupo';
+COMMENT ON COLUMN grupo_atendimento_comentario.grupo_id IS 'Identificação do grupo';
+COMMENT ON COLUMN grupo_atendimento_comentario.comentario IS 'Comentário do Atendimento';
+COMMENT ON COLUMN grupo_atendimento_comentario.data_criacao IS 'Data de criação da associação';
+COMMENT ON COLUMN grupo_atendimento_comentario.hora_criacao IS 'Hora de criação da associação';
+COMMENT ON COLUMN grupo_atendimento_comentario.data_inativacao IS 'Data de inativação da associação';
+COMMENT ON COLUMN grupo_atendimento_comentario.hora_inativacao IS 'Hora da inativação da associação';
+
