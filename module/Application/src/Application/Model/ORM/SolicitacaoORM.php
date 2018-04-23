@@ -36,5 +36,22 @@ class SolicitacaoORM extends CircuitoORM {
             echo $exc->getMessage();
         }
     }
+    
+     public function encontrarPorObjeto($objecto) {
+        $dql = "SELECT "
+                . " s.id "
+                . "FROM  " . Constantes::$ENTITY_SOLICITACAO . " s "
+                . "WHERE "
+                . "s.objeto1 = ?1 OR s.objeto2 = ?2";
+        try {
+            $result = $this->getEntityManager()->createQuery($dql)
+                    ->setParameter(1, $objecto)
+                    ->setParameter(2, $objecto)
+                    ->getResult();
+            return $result;
+        } catch (Exception $exc) {
+            echo $exc->getMessage();
+        }
+    }
 
 }

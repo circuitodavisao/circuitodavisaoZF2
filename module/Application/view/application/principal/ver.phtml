@@ -29,8 +29,8 @@ echo '<div class="panel-heading">';
 echo 'Inativar';
 echo '</div>';
 echo '<div class="panel-body">';
-if ($this->tenhoDiscipulosAtivos) {
-    echo '<div class="alert alert-warning mt10">Tenho discipulos nao posso inativar!</div>';
+if ($this->naoPodeInativar) {
+    echo '<div class="alert alert-warning mt10">Tenho discipulos nao posso inativar ou solicitações pendentes!</div>';
 } else {
     echo '<div class="panel mt10">';
     echo '<div class="panel-body">';
