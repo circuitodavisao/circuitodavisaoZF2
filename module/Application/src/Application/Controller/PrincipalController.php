@@ -10,6 +10,7 @@ use Application\Form\RecuperarSenhaForm;
 use Application\Model\Entity\EntidadeTipo;
 use Application\Model\Entity\EventoTipo;
 use Application\Model\Entity\PessoaHierarquia;
+use Application\Model\Entity\Situacao;
 use Exception;
 use Zend\Json\Json;
 use Zend\Session\Container;
@@ -203,11 +204,23 @@ class PrincipalController extends CircuitoController {
             $entidadeLogada = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($sessao->idEntidadeAtual);
             $listagemDeEventos = $entidade->getGrupo()->getGrupoEventoAtivosPorTipo(EventoTipo::tipoCelula);
 
+            $tenhoSolicitacaoPendente = false;
+            if ($solicitacoes = $this->getRepositorio()->getSolicitacaoORM()->encontrarPorObjeto($grupoSessao->getId())) {
+                foreach ($solicitacoes as $solicitacaoId) {
+                    $solicitacao = $this->getRepositorio()->getSolicitacaoORM()->encontrarPorId($solicitacaoId['id']);
+                    if ($solicitacao->getSolicitacaoSituacaoAtiva()->getSituacao()->getId() === Situacao::PENDENTE_DE_ACEITACAO ||
+                            $solicitacao->getSolicitacaoSituacaoAtiva()->getSituacao()->getId() === Situacao::ACEITO_AGENDADO) {
+                        $tenhoSolicitacaoPendente = true;
+                    }
+                }
+            }
+
+
             $dados = array();
             $dados['idGrupo'] = $idSessao;
             $dados['entidade'] = $entidade;
             $dados['idEntidadeTipo'] = $entidadeLogada->getTipo_id();
-            $dados['tenhoDiscipulosAtivos'] = $tenhoDiscipulosAtivos;
+            $dados['naoPodeInativar'] = ($tenhoDiscipulosAtivos || $tenhoSolicitacaoPendente);
             $dados['mostrarParaReenviarEmails'] = $mostrarParaReenviarEmails;
             $dados['responsabilidades'] = $grupoSessao->getResponsabilidadesAtivas();
             $dados[Constantes::$LISTAGEM_EVENTOS] = $listagemDeEventos;
