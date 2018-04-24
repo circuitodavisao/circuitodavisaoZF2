@@ -193,7 +193,7 @@ class RepositorioORM {
         }
         return $this->_grupoAtendimentoORM;
     }
-    
+
     /**
      * Metodo public para obter a instancia do GrupoAtendimentoComentarioORM
      * @return CircuitoORM
@@ -361,11 +361,11 @@ class RepositorioORM {
 
     /**
      * Metodo public para obter a instancia do DimensaoTipoORM
-     * @return CircuitoORM
+     * @return GrupoCvORM
      */
     public function getGrupoCvORM() {
         if (is_null($this->_grupoCvORM)) {
-            $this->_grupoCvORM = new CircuitoORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_GRUPO_CV);
+            $this->_grupoCvORM = new GrupoCvORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_GRUPO_CV);
         }
         return $this->_grupoCvORM;
     }

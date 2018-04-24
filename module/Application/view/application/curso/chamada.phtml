@@ -4,6 +4,7 @@ use Application\Controller\CursoController;
 use Application\Controller\Helper\Constantes;
 use Application\Controller\Helper\Funcoes;
 use Application\Model\Entity\EntidadeTipo;
+use Application\Model\Entity\Situacao;
 use Application\View\Helper\BotaoSimples;
 ?>
 <style type="text/css">
@@ -123,8 +124,12 @@ foreach ($this->turmas as $turma) {
                     }
                 }
 
-                $stringSituacao = '<span class="label label-success hidden-xs">' . $turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getNome() . '</span>'
-                        . '<span class="label label-success hidden-sm hidden-md hidden-lg">' . substr($turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getNome(), 0, 1) . '</span>';
+                $corSituacao = 'success';
+                if ($turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getId() === Situacao::ESPECIAL) {
+                    $corSituacao = 'primary';
+                }
+                $stringSituacao = '<span class="label label-' . $corSituacao . ' hidden-xs">' . $turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getNome() . '</span>'
+                        . '<span class="label label-' . $corSituacao . ' hidden-sm hidden-md hidden-lg">' . substr($turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getNome(), 0, 1) . '</span>';
 
                 $html .= '<tr class="linha linhaEquipe0 linhaEquipe' . $idLinha . '">';
                 $html .= '<td class="text-center">' . $stringSituacao . '</td>';
