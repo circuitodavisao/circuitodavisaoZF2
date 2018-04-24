@@ -12,6 +12,12 @@ $html .= '<div class="table-responsive">';
 $html .= '<table class="table table-condensed">';
 $html .= '<thead>';
 $html .= '<tr>';
+$html .= '<th colspan="7">Legenda'
+        . ' - <span class="label label-xs label-danger"><i class="fa fa-ban"></i> Pendente</span>'
+        . ' - <span class="label label-xs label-default"><i class="fa fa-thumbs-up"></i> Aberta</span>'
+        . ' - <span class="label label-xs label-success"><i class="fa fa-check"></i> Encerrada</span></th>';
+$html .= '</tr>';
+$html .= '<tr>';
 $html .= '<th>Diciplinas</th>';
 $html .= '<th colspan="6">Aulas - Status</th>';
 $html .= '</tr>';
@@ -21,16 +27,20 @@ foreach ($this->turma->getCurso()->getDisciplina() as $disciplina) {
     $html .= '<tr>';
     $html .= '<td>' . $disciplina->getNome() . '</td>';
     foreach ($disciplina->getAulaOrdenadasPorPosicao() as $aula) {
-        $icone = 'fa-ban';
-        $cor = 'info';
+        $icone = 'ban';
+        $cor = 'danger';
         foreach ($this->turma->getTurmaAula() as $turmaAula) {
             if ($turmaAula->getAula()->getId() === $aula->getId()) {
-                $icone = 'fa-thumbs-up';
-                $cor = 'success';
+                $icone = 'thumbs-up';
+                $cor = 'default';
                 break;
             }
         }
-        $label = '<span class="label label-xs label-' . $cor . '">' . $aula->getPosicao() . ' <i class="fa ' . $icone . '"></i></span>';
+        if (!$turmaAula->verificarSeEstaAtivo()) {
+            $icone = 'check';
+            $cor = 'success';
+        }
+        $label = '<span class="label label-xs label-' . $cor . '">' . $aula->getPosicao() . ' <i class="fa fa-' . $icone . '"></i></span>';
         $html .= '<td>' . $label . '</td>';
     }
     $html .= '</tr>';
@@ -108,7 +118,7 @@ echo $html;
                     senha: inputSenha.val()
                 },
                 function (data) {
-                    if (data.response) {                       
+                    if (data.response) {
                         divMensagens
                                 .addClass('hidden');
                         mostrarSplash();
