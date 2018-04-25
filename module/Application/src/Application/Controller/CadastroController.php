@@ -1226,8 +1226,7 @@ class CadastroController extends CircuitoController {
                 $post_data = $request->getPost();
                 $email = $post_data[Constantes::$FORM_EMAIL];
 
-                $loginORM = new RepositorioORM($this->getDoctrineORMEntityManager());
-                if ($pessoaPesquisada = $loginORM->getPessoaORM()->encontrarPorEmail($email)) {
+                if ($pessoaPesquisada = $this->getRepositorio()->getPessoaORM()->encontrarPorEmail($email)) {
                     if ($pessoaPesquisada->getResponsabilidadesAtivas()) {
                         $resposta = 1;
                     }
