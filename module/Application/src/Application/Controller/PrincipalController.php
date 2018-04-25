@@ -379,10 +379,18 @@ class PrincipalController extends CircuitoController {
             try {
                 $this->getRepositorio()->iniciarTransacao();
                 $post_data = $request->getPost();
+                $email = $post_data[Constantes::$INPUT_EMAIL];
+                $setarDataEHora = false;
+
+                /* caso algum inativo esteja usando o email remover dele */
+                if ($pessoaPesquisada = $this->getRepositorio()->getPessoaORM()->encontrarPorEmail($email)) {
+                    $pessoaPesquisada->setEmail('');
+                    $this->getRepositorio()->getPessoaORM()->persistir($pessoaPesquisada, $setarDataEHora);
+                }
+
                 $idPessoa = $post_data[Constantes::$INPUT_ID_PESSOA];
                 $pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($idPessoa);
-                $pessoa->setEmail($post_data[Constantes::$INPUT_EMAIL]);
-                $setarDataEHora = false;
+                $pessoa->setEmail($email);
                 $this->getRepositorio()->getPessoaORM()->persistir($pessoa, $setarDataEHora);
                 $sessao->mostrarNotificacao = true;
                 $sessao->emailAlterado = true;
