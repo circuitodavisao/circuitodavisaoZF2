@@ -86,7 +86,7 @@ foreach ($this->turmas as $turma) {
         }
         if ($mostrar) {
             foreach ($disciplina->getAulaOrdenadasPorPosicao() as $aula) {
-                $html .= '<th class="text-center">A' . $aula->getPosicao() . '</th>';
+                $html .= '<td class="text-center">A' . $aula->getPosicao() . '</td>';
             }
         }
     }
