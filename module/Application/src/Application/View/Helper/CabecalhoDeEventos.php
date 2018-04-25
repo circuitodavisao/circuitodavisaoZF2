@@ -28,15 +28,13 @@ class CabecalhoDeEventos extends AbstractHelper {
         $grupoEventoNoPeriodo = $this->view->grupo->getGrupoEventoNoPeriodo($this->view->periodo);
         if (!empty($grupoEventoNoPeriodo)) {
             $html .= '<tr>';
-            $html .= '<th class="tdTipo hidden-xs"></th>';
-            $html .= '<th class="tdNome text-right">';
-//            $html .= 'Totais';
-            $html .= '</th>';
+            $html .= '<td class="tdTipo hidden-xs"></td>';
+            $html .= '<td class="tdNome text-right">Totais</td>';
             foreach ($grupoEventoNoPeriodo as $grupoEvento) {
                 $diaDaSemanaAjustado = Funcoes::diaDaSemanaPorDia($grupoEvento->getEvento()->getDia());
                 $eventoNome = Funcoes::nomeDoEvento($grupoEvento->getEvento()->getTipo_id());
 
-                $html .= '<th class="text-center">';
+                $html .= '<td class="text-center">';
                 $html .= '<div style="font-size:9px; width:100%">'
                         . $this->view->translate($eventoNome)
                         . '</div>';
@@ -82,7 +80,7 @@ class CabecalhoDeEventos extends AbstractHelper {
                 $html .= $contagem;
                 $html .= "</div>";
 
-                $html .= "</th>";
+                $html .= "</td>";
             }
             $html .= '</tr>';
         }

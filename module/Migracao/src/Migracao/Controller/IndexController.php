@@ -967,7 +967,7 @@ class IndexController extends CircuitoController {
                 }
 
                 $queryTurmaAluno = mysqli_query(
-                        $this->getConexao(), 'SELECT * FROM ursula_turma_aluno_ursula WHERE idTurma = ' . $rowTurma['id'] . ' AND status = "A" AND (idSituacao = 1 || idSituacao = 4) LIMIT 10;');
+                        $this->getConexao(), 'SELECT * FROM ursula_turma_aluno_ursula WHERE idTurma = ' . $rowTurma['id'] . ' AND status = "A" AND (idSituacao = 1 || idSituacao = 4);');
                 while ($rowTurmaAluno = mysqli_fetch_array($queryTurmaAluno)) {
                     $queryPessoa = mysqli_query($this->getConexao(), 'SELECT * FROM ursula_pessoa_ursula WHERE id = ' . $rowTurmaAluno['idAluno']);
                     while ($rowPessoa = mysqli_fetch_array($queryPessoa)) {

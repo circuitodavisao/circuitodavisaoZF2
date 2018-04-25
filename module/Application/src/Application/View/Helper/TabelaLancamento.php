@@ -25,7 +25,8 @@ class TabelaLancamento extends AbstractHelper {
         $style = 'style="width:100%;"';
 
         $html = '';
-        $html .= '<table ' . $style . ' class="' . $centerBlock . ' table table-condensed scroll text-center bordas-tabela-principal">';
+        $html .= '<input id="fooFilter" type="text" class="form-control" placeholder="Filtro">';
+        $html .= '<table ' . $style . ' class="' . $centerBlock . ' table table-condensed scroll text-center bordas-tabela-principal footable" data-filter="#fooFilter">';
 
         $html .= '<thead>';
         $html .= $this->view->cabecalhoDeEventos();
