@@ -43,9 +43,13 @@ $html .= '</div>';
 
 $html .= '<div class="form-group">';
 $html .= '<label for="selecionaSituacao">' . $this->translate('Situa&ccedil;&atilde;o') . '</label>';
-$html .= '<select class="form-control" id="selecionaSituacao" onChange="">';
+$html .= '<select class="form-control" id="selecionaSituacao" onChange="$(\'.linha\').addClass(\'hidden\'); $(\'.linhaSituacao\'+$(\'#selecionaSituacao\').val()).removeClass(\'hidden\');">';
+$html .= '<option value="0" >' . $this->translate('Todas') . '</option>';
 foreach ($this->situacoes as $situacao) {
-    $html .= '<option value="' . $situacao->getId() . '" >' . $situacao->getNome() . '</option>';
+    if ($situacao->getId() === Situacao::ATIVO ||
+            $situacao->getId() === Situacao::ESPECIAL) {
+        $html .= '<option value="' . $situacao->getId() . '" >' . $situacao->getNome() . '</option>';
+    }
 }
 $html .= '</select>';
 $html .= '</div>';
@@ -132,8 +136,9 @@ foreach ($this->turmas as $turma) {
                 }
                 $stringSituacao = '<span class="label label-' . $corSituacao . ' hidden-xs">' . $turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getNome() . '</span>'
                         . '<span class="label label-' . $corSituacao . ' hidden-sm hidden-md hidden-lg">' . substr($turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getNome(), 0, 1) . '</span>';
+                $idSituacao = $turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getId();
 
-                $html .= '<tr class="linha linhaEquipe0 linhaEquipe' . $idLinha . '">';
+                $html .= '<tr class="linha linhaEquipe0 linhaEquipe' . $idLinha . ' linhaSituacao0 linhaSituacao' . $idSituacao . '">';
                 $html .= '<td class="text-center">' . $stringSituacao . '</td>';
                 $html .= '<td class="hidden-xs">' . str_pad($turmaPessoa->getId(), 8, 0, STR_PAD_LEFT) . '</td>';
                 $html .= '<td class="hidden-xs">' . $turmaPessoa->getPessoa()->getNome() . '</td>';
