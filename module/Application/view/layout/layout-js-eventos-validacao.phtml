@@ -15,6 +15,7 @@ if ($sessao->tipoMensagem) {
     $traducaoCelula = $this->translate(Constantes::$TRADUCAO_CELULA_);
     $traducaoCulto = $this->translate(Constantes::$TRADUCAO_CULTO_);
     $traducaoRevisao = $this->translate(Constantes::$TRADUCAO_REVISAO);
+    $traducaoDiscipulado = $this->translate(Constantes::$TRADUCAO_DISCIPULADO);
 
     $traducaoCadastrado = $this->translate(Constantes::$TRADUCAO_CADASTRADO);
     $traducaoAlterado = $this->translate(Constantes::$TRADUCAO_ALTERADO);
@@ -50,6 +51,9 @@ if ($sessao->tipoMensagem) {
         case 7:
             $titulo = $traducaoRevisao . $traducaoCadastrado;
             $texto = $traducaoNomeCulto . $sessao->textoMensagem;
+        case Constantes::$TIPO_MENSAGEM_CADASTRAR_DISCIPULADO:
+            $titulo = $traducaoDiscipulado . $traducaoCadastrado;
+            $texto = $sessao->textoMensagem;
     }
     $sessao->tipoMensagem = '';
     $sessao->textoMensagem = '';

@@ -230,7 +230,7 @@ class Menu extends AbstractHelper {
 
             if ($this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja) {
                 $html .= '<li>';
-                $html .= '<a href="#" onClick="mostrarSplash();">';
+                $html .= '<a href="/cadastroCultos" onClick="mostrarSplash();">';
                 $html .= '<span class="fa fa-users"></span>';
                 $html .= 'Cultos(Manutenção)';
                 $html .= '</a>';
@@ -241,6 +241,13 @@ class Menu extends AbstractHelper {
             $html .= '<a href="/cadastroGrupo" onClick="mostrarSplash();">';
             $html .= '<span class="fa fa-users"></span>';
             $html .= 'Time';
+            $html .= '</a>';
+            $html .= '</li>';            
+
+            $html .= '<li>';
+            $html .= '<a href="/cadastroDiscipulados" onClick="mostrarSplash();">';
+            $html .= '<span class="fa fa-users"></span>';
+            $html .= 'Discipulados';
             $html .= '</a>';
             $html .= '</li>';
 

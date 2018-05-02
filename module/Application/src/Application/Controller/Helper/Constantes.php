@@ -450,12 +450,14 @@ class Constantes {
     /* Rotas */
     public static $PAGINA_CELULAS = 'Celulas';
     public static $PAGINA_CULTOS = 'Cultos';
+    public static $PAGINA_DISCIPULADOS = 'Discipulados';
     public static $PAGINA_REVISAO = 'Revisao';
     public static $PAGINA_REVISIONISTAS = 'Revisionistas';
     public static $PAGINA_FICHA_REVISIONISTAS = 'FichaRevisionistas';
     public static $PAGINA_ATIVOS_REVISIONISTAS = 'AtivosRevisionistas';
     public static $PAGINA_CELULA = 'Celula';
     public static $PAGINA_EVENTO_CULTO = 'EventoCulto';
+    public static $PAGINA_EVENTO_DISCIPULADO = 'EventoDiscipulado';
     public static $PAGINA_EVENTO_CELULA = 'EventoCelula';
     public static $PAGINA_EVENTO = 'Evento';
     public static $PAGINA_GRUPO = 'Grupo';
@@ -465,6 +467,7 @@ class Constantes {
     public static $PAGINA_GRUPO_EMAIL_ENVIADO = 'GrupoEmailEnviado';
     public static $PAGINA_EVENTO_CELULA_PERSISTIR = 'EventoCelulaPersistir';
     public static $PAGINA_EVENTO_CULTO_PERSISTIR = 'EventoCultoPersistir';
+    public static $PAGINA_EVENTO_DISCIPULADO_PERSISTIR = 'EventoDiscipuladoPersistir';
     public static $PAGINA_EVENTO_EXCLUSAO = 'EventoExclusao';
     public static $PAGINA_CELULA_EXCLUSAO_CONFIRMACAO = 'CelulaExclusaoConfirmacao';
     public static $PAGINA_EVENTO_EXCLUSAO_CONFIRMACAO = 'EventoExclusaoConfirmacao';
@@ -543,6 +546,7 @@ class Constantes {
     public static $TRADUCAO_CELULA_ = 'Cell ';
     public static $TRADUCAO_CULTO_ = 'Cult ';
     public static $TRADUCAO_REVISAO = 'Revision ';
+    public static $TRADUCAO_DISCIPULADO = 'Discipulado ';
     public static $TRADUCAO_FINALIZAR = 'Finish';
     public static $TRADUCAO_INSERIR = 'Insert';
     public static $TRADUCAO_LIMPAR = 'Clean';
@@ -629,6 +633,7 @@ class Constantes {
     public static $TIPO_MENSAGEM_EXCLUIR_CULTO = 6;
     public static $TIPO_MENSAGEM_CADASTRAR_REVISAO = 7;
     public static $TIPO_MENSAGEM_CADASTRAR_REVISIONISTA = 8;
+    public static $TIPO_MENSAGEM_CADASTRAR_DISCIPULADO = 9;
     /* Inputs */
     public static $INPUT_ESTADO_CIVIL = 'inputEstadoCivil';
 
@@ -773,9 +778,11 @@ class Constantes {
     public static $TRADUCAO_ENTIDADE_REVISIONISTA = 'Entity';
     public static $TRADUCAO_CADASTRO_CELULA = 'Registration Cell';
     public static $TRADUCAO_CADASTRO_CULTO = 'Registration <b class="text-danger">Cult</b>';
+    public static $TRADUCAO_CADASTRO_DISCIPULADO = 'Cadastro de <b class="text-danger">Discipulado</b>';
     public static $TRADUCAO_NOVA = 'New';
     public static $TRADUCAO_NOVA_CELULA = 'New Cell';
     public static $TRADUCAO_NOVO_CULTO = 'New Cult';
+    public static $TRADUCAO_NOVO_DISCIPULADO = 'Novo Discipulado';
     public static $TRADUCAO_NOVO_REVISAO = 'New Revision';
     public static $TRADUCAO_NOVO_REVISIONISTA = 'Select';
     public static $TRADUCAO_SELECIONAR = 'Select';
@@ -783,6 +790,7 @@ class Constantes {
     public static $TRADUCAO_REMOVER_REVISIONISTA = 'Remove';
     public static $TRADUCAO_MULTIPLICACAO = 'Multiplication';
     public static $TRADUCAO_LISTAGEM_CULTOS = 'Listing <b class="text-danger">Cults</b>';
+    public static $TRADUCAO_LISTAGEM_DISCIPULADOS = 'Lista <b class="text-danger">Discipulados</b>';
     public static $TRADUCAO_LISTAGEM_REVISAO = 'Listing <b class="text-danger">Revision of lives</b>';
     public static $TRADUCAO_LISTAGEM_REVISIONISTAS = 'Listing <b class="text-danger">Revision of lives</b>';
     public static $TRADUCAO_LISTAGEM_CELULAS = 'Listing Cells of';

@@ -26,3 +26,4 @@ COMMENT ON COLUMN evento_tipo.hora_criacao IS 'Hora de criação do tipo de even
 COMMENT ON COLUMN evento_tipo.data_inativacao IS 'Data de inativação do tipo de evento';
 COMMENT ON COLUMN evento_tipo.hora_inativacao IS 'Hora de inativação do tipo de evento';
 
+INSERT INTO evento_tipo (id,nome,data_criacao,hora_criacao) VALUES(4,'DISCIPULADO','2018-05-02', '18:00:00');

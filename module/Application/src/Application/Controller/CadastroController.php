@@ -55,12 +55,15 @@ class CadastroController extends CircuitoController {
         $extra = '';
         /* Verificando rota */
         $pagina = $this->getEvent()->getRouteMatch()->getParam(Constantes::$PAGINA, 1);
-        if ($pagina == Constantes::$PAGINA_EVENTO_CULTO || $pagina == Constantes::$PAGINA_EVENTO_CELULA) {
+        if ($pagina == Constantes::$PAGINA_EVENTO_CULTO || $pagina == Constantes::$PAGINA_EVENTO_CELULA || $pagina == Constantes::$PAGINA_EVENTO_DISCIPULADO) {
             if ($pagina == Constantes::$PAGINA_EVENTO_CULTO) {
                 $sessao->pagina = Constantes::$PAGINA_EVENTO_CULTO;
             }
             if ($pagina == Constantes::$PAGINA_EVENTO_CELULA) {
                 $sessao->pagina = Constantes::$PAGINA_EVENTO_CELULA;
+            }
+            if ($pagina == Constantes::$PAGINA_EVENTO_DISCIPULADO) {
+                $sessao->pagina = Constantes::$PAGINA_EVENTO_DISCIPULADO;
             }
             return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
                         Constantes::$ACTION => Constantes::$PAGINA_EVENTO,
@@ -89,6 +92,11 @@ class CadastroController extends CircuitoController {
         if ($pagina == Constantes::$PAGINA_EVENTO_CULTO_PERSISTIR) {
             return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
                         Constantes::$ACTION => Constantes::$PAGINA_EVENTO_CULTO_PERSISTIR,
+            ));
+        }
+        if ($pagina == Constantes::$PAGINA_EVENTO_DISCIPULADO_PERSISTIR) {
+            return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
+                        Constantes::$ACTION => Constantes::$PAGINA_EVENTO_DISCIPULADO_PERSISTIR,
             ));
         }
         if ($pagina == Constantes::$PAGINA_EVENTO_CELULA_PERSISTIR) {
@@ -217,137 +225,7 @@ class CadastroController extends CircuitoController {
             ));
         }
         /* Fim Páginas Revisão */
-        /* Início das páginas relaiconadas ao Iv */
-        if ($pagina == Constantes::$PAGINA_CADASTRAR_TURMA) {
-            return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
-                        Constantes::$ACTION => Constantes::$PAGINA_CADASTRAR_TURMA,
-            ));
-        }
-        if ($pagina == Constantes::$PAGINA_SALVAR_TURMA) {
-            return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
-                        Constantes::$ACTION => Constantes::$PAGINA_SALVAR_TURMA,
-            ));
-        }
-        if ($pagina == Constantes::$PAGINA_EDITAR_TURMA) {
-            return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
-                        Constantes::$ACTION => Constantes::$PAGINA_EDITAR_TURMA,
-            ));
-        }
-        if ($pagina == Constantes::$PAGINA_LISTAR_TURMA) {
-            return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
-                        Constantes::$ACTION => Constantes::$PAGINA_LISTAR_TURMA,
-            ));
-        }
-        if ($pagina == Constantes::$PAGINA_LISTAR_TURMA_INATIVA) {
-            return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
-                        Constantes::$ACTION => Constantes::$PAGINA_LISTAR_TURMA_INATIVA,
-            ));
-        }
-        if ($pagina == Constantes::$PAGINA_EXCLUIR_TURMA) {
-            return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
-                        Constantes::$ACTION => Constantes::$PAGINA_EXCLUIR_TURMA,
-            ));
-        }
-        if ($pagina == Constantes::$PAGINA_EXCLUSAO_TURMA) {
-            return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
-                        Constantes::$ACTION => Constantes::$PAGINA_EXCLUSAO_TURMA,
-            ));
-        }
-        if ($pagina == Constantes::$PAGINA_SELECIONAR_ALUNOS_TURMA) {
-            return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
-                        Constantes::$ACTION => Constantes::$PAGINA_SELECIONAR_ALUNOS_TURMA,
-            ));
-        }
-        if ($pagina == Constantes::$PAGINA_CURSO_LISTAR) {
-            return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
-                        Constantes::$ACTION => Constantes::$PAGINA_CURSO_LISTAR,
-            ));
-        }
-        if ($pagina == Constantes::$PAGINA_CURSO_CADASTRAR) {
-            return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
-                        Constantes::$ACTION => Constantes::$PAGINA_CURSO_CADASTRAR,
-            ));
-        }
-        if ($pagina == Constantes::$PAGINA_CURSO_SALVAR) {
-            return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
-                        Constantes::$ACTION => Constantes::$PAGINA_CURSO_SALVAR,
-            ));
-        }
-        if ($pagina == Constantes::$PAGINA_CURSO_EDITAR) {
-            return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
-                        Constantes::$ACTION => Constantes::$PAGINA_CURSO_EDITAR,
-            ));
-        }
-        if ($pagina == Constantes::$PAGINA_CURSO_EXCLUIR) {
-            return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
-                        Constantes::$ACTION => Constantes::$PAGINA_CURSO_EXCLUIR,
-            ));
-        }
-        if ($pagina == Constantes::$PAGINA_CURSO_EXCLUSAO) {
-            return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
-                        Constantes::$ACTION => Constantes::$PAGINA_CURSO_EXCLUSAO,
-            ));
-        }
-        if ($pagina == Constantes::$PAGINA_DISCIPLINA_LISTAR) {
-            return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
-                        Constantes::$ACTION => Constantes::$PAGINA_DISCIPLINA_LISTAR,
-            ));
-        }
-        if ($pagina == Constantes::$PAGINA_DISCIPLINA_CADASTRAR) {
-            return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
-                        Constantes::$ACTION => Constantes::$PAGINA_DISCIPLINA_CADASTRAR,
-            ));
-        }
-        if ($pagina == Constantes::$PAGINA_DISCIPLINA_SALVAR) {
-            return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
-                        Constantes::$ACTION => Constantes::$PAGINA_DISCIPLINA_SALVAR,
-            ));
-        }
-        if ($pagina == Constantes::$PAGINA_DISCIPLINA_EDITAR) {
-            return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
-                        Constantes::$ACTION => Constantes::$PAGINA_DISCIPLINA_EDITAR,
-            ));
-        }
-        if ($pagina == Constantes::$PAGINA_DISCIPLINA_EXCLUIR) {
-            return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
-                        Constantes::$ACTION => Constantes::$PAGINA_DISCIPLINA_EXCLUIR,
-            ));
-        }
-        if ($pagina == Constantes::$PAGINA_DISCIPLINA_EXCLUSAO) {
-            return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
-                        Constantes::$ACTION => Constantes::$PAGINA_DISCIPLINA_EXCLUSAO,
-            ));
-        }
-        if ($pagina == Constantes::$PAGINA_AULA_LISTAR) {
-            return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
-                        Constantes::$ACTION => Constantes::$PAGINA_AULA_LISTAR,
-            ));
-        }
-        if ($pagina == Constantes::$PAGINA_AULA_CADASTRAR) {
-            return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
-                        Constantes::$ACTION => Constantes::$PAGINA_AULA_CADASTRAR,
-            ));
-        }
-        if ($pagina == Constantes::$PAGINA_AULA_SALVAR) {
-            return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
-                        Constantes::$ACTION => Constantes::$PAGINA_AULA_SALVAR,
-            ));
-        }
-        if ($pagina == Constantes::$PAGINA_DISCIPLINA_EDITAR) {
-            return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
-                        Constantes::$ACTION => Constantes::$PAGINA_DISCIPLINA_EDITAR,
-            ));
-        }
-        if ($pagina == Constantes::$PAGINA_AULA_EXCLUIR) {
-            return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
-                        Constantes::$ACTION => Constantes::$PAGINA_DISCIPLINA_EXCLUIR,
-            ));
-        }
-        if ($pagina == Constantes::$PAGINA_AULA_EXCLUSAO) {
-            return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
-                        Constantes::$ACTION => Constantes::$PAGINA_DISCIPLINA_EXCLUSAO,
-            ));
-        }
+
         /* Funcoes */
         if ($pagina == Constantes::$PAGINA_FUNCOES) {
             return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
@@ -366,9 +244,10 @@ class CadastroController extends CircuitoController {
 
         $extra = '';
         $tipoEvento = 0;
-        $tipoCelula = 1;
-        $tipoCulto = 2;
-        $tipoRevisao = 3;
+        $tipoCelula = EventoTipo::tipoCelula;
+        $tipoCulto = EventoTipo::tipoCulto;
+        $tipoRevisao = EventoTipo::tipoRevisao;
+        $tipoDiscipulado = EventoTipo::tipoDiscipulado;
         if ($pagina == Constantes::$PAGINA_CELULAS) {
             $listagemDeEventos = $grupo->getGrupoEventoAtivosPorTipo($tipoCelula);
             $tituloDaPagina = Constantes::$TRADUCAO_LISTAGEM_CELULAS . ' <b class="text-danger">' . Constantes::$TRADUCAO_MULTIPLICACAO . '</b>';
@@ -423,7 +302,12 @@ class CadastroController extends CircuitoController {
             /* Id da Turma em que os alunos serão selecionados */
             $sessao->idTurma = $sessao->idSessao;
         }
-
+        if ($pagina == Constantes::$PAGINA_DISCIPULADOS) {
+            $listagemDeEventos = $grupo->getGrupoEventoAtivosPorTipo($tipoDiscipulado);
+            $tituloDaPagina = Constantes::$TRADUCAO_LISTAGEM_DISCIPULADOS;
+            $tipoEvento = 10;
+            $extra = $grupo->getId();
+        }
 
         $view = new ViewModel(array(
             Constantes::$LISTAGEM_EVENTOS => $listagemDeEventos,
@@ -478,11 +362,25 @@ class CadastroController extends CircuitoController {
             }
             $form = new CelulaForm(Constantes::$FORM_CELULA, $eventoCelulaNaSessao);
         }
+        if ($sessao->pagina == Constantes::$PAGINA_EVENTO_DISCIPULADO) {
+            /* Verificando a se tem algum id na sessão */
+            $eventoNaSessao = new Evento();
+
+            if (!empty($sessao->idSessao)) {
+                $eventoNaSessao = $this->getRepositorio()->getEventoORM()->encontrarPorId($sessao->idSessao);
+            }
+            $form = new EventoForm(Constantes::$FORM, $eventoNaSessao);
+            $idEntidadeAtual = $sessao->idEntidadeAtual;
+            $entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+            $grupo = $entidade->getGrupo();
+            $extra = $grupo->getGrupoPaiFilhoFilhos();
+        }
 
         $view = new ViewModel(array(
             Constantes::$FORM => $form,
             Constantes::$FORM_ENDERECO_HIDDEN => $enderecoHidden,
             Constantes::$EXTRA => $extra,
+            Constantes::$PAGINA => $sessao->pagina,
         ));
 
         /* Javascript */
@@ -851,6 +749,177 @@ class CadastroController extends CircuitoController {
         }
     }
 
+      public function eventoDiscipuladoPersistirAction() {
+        CircuitoController::verificandoSessao(new Container(Constantes::$NOME_APLICACAO), $this);
+
+        $stringCheckEquipe = 'checkEquipe';
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            /* Repositorios */
+
+            try {
+                $this->getRepositorio()->iniciarTransacao();
+                $post_data = $request->getPost();
+
+                /* Entidades */
+                $evento = new Evento();
+                $eventoForm = new EventoForm(Constantes::$FORM, $evento);
+                $eventoForm->setInputFilter($evento->getInputFilterEventoCulto());
+                $eventoForm->setData($post_data);
+
+                /* validação */
+                if ($eventoForm->isValid()) {
+                    $sessao = new Container(Constantes::$NOME_APLICACAO);
+                    $criarNovoEvento = true;
+                    $mudarDataDeCadastroParaProximoDomingo = false;
+                    $validatedData = $eventoForm->getData();
+
+                    /* Entidades */
+                    $evento = new Evento();
+                    $grupoEvento = new GrupoEvento();
+
+                    /* ALTERANDO */
+                    if (!empty($post_data[Constantes::$FORM_ID])) {
+                        $criarNovoEvento = false;
+                        $eventoAtual = $this->getRepositorio()->getEventoORM()->encontrarPorId($post_data[Constantes::$FORM_ID]);
+
+                        $grupoEventoAtivos = $eventoAtual->getGrupoEventoAtivos();
+                        /* Dia foi alterado */
+                        if ($post_data[Constantes::$FORM_DIA_DA_SEMANA] != $eventoAtual->getDia()) {
+                            /* Persistindo */
+                            /* Inativando o Evento */
+                            $eventoParaInativar = $eventoAtual;
+                            $eventoParaInativar->setDataEHoraDeInativacao();
+                            $this->getRepositorio()->getEventoORM()->persistir($eventoParaInativar, false);
+                            /* Inativando todos Grupo Evento */
+                            foreach ($grupoEventoAtivos as $gea) {
+                                $gea->setDataEHoraDeInativacao();
+                                $this->getRepositorio()->getGrupoEventoORM()->persistir($gea, false);
+                            }
+                            $criarNovoEvento = true;
+                            $mudarDataDeCadastroParaProximoDomingo = true;
+                        } else {
+                            /* Dia não foi alterado */
+
+                            /* Dados exclusivo do Culto */
+                            if ($post_data[(Constantes::$FORM_NOME)] != $eventoAtual->getNome()) {
+                                $eventoAtual->setNome(strtoupper($post_data[(Constantes::$FORM_NOME)]));
+                            }
+                            $eventoAtual->setHora($post_data[(Constantes::$FORM_HORA)] . ':' . $post_data[(Constantes::$FORM_MINUTOS)] . ':00');
+                            $this->getRepositorio()->getEventoORM()->persistir($eventoAtual, false);
+                            /* Sessão */
+                            $sessao->tipoMensagem = Constantes::$TIPO_MENSAGEM_ALTERAR_CULTO;
+                            $sessao->textoMensagem = $eventoAtual->getNome() . ' ' . $eventoAtual->getHoraFormatoHoraMinutoParaListagem();
+                        }
+                        /* Verificando Grupos abaixo ou equipes */
+                        /* Marcação */
+                        foreach ($post_data as $key => $value) {
+                            $stringParaVerificar = substr($key, 0, strlen($stringCheckEquipe));
+                            if (!\strcmp($stringParaVerificar, $stringCheckEquipe)) {
+                                $stringValor = substr($key, strlen($stringParaVerificar));
+                                /* Verificando marcações */
+                                $validacaoMarcado = false;
+                                foreach ($grupoEventoAtivos as $gea) {
+                                    if ($gea->getGrupo()->getId() == $stringValor) {
+                                        $validacaoMarcado = true;
+                                    }
+                                }
+                                /* Equipe esta marcada mas não foi gerada ainda */
+                                if (!$validacaoMarcado) {
+                                    $grupoEquipe = $this->getRepositorio()->getGrupoORM()->encontrarPorId($stringValor);
+                                    $grupoEventoEquipe = new GrupoEvento();
+                                    $grupoEventoEquipe->setDataEHoraDeCriacao();
+                                    $grupoEventoEquipe->setGrupo($grupoEquipe);
+                                    $grupoEventoEquipe->setEvento($eventoAtual);
+                                    $this->getRepositorio()->getGrupoEventoORM()->persistir($grupoEventoEquipe);
+                                }
+                            }
+                        }
+                        /* Desmarcação */
+                        foreach ($grupoEventoAtivos as $grupoEventAtivo) {
+                            $idEntidadeAtual = $sessao->idEntidadeAtual;
+                            $entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+                            $grupo = $entidade->getGrupo();
+                            if ($grupoEventAtivo->getGrupo()->getId() != $grupo->getId()) {
+                                $validacaoMarcado = false;
+                                foreach ($post_data as $key => $value) {
+                                    $stringParaVerificar = substr($key, 0, strlen($stringCheckEquipe));
+                                    if (!\strcmp($stringParaVerificar, $stringCheckEquipe)) {
+                                        $stringValor = substr($key, strlen($stringParaVerificar));
+                                        if ($grupoEventAtivo->getGrupo()->getId() == $stringValor) {
+                                            $validacaoMarcado = true;
+                                        }
+                                    }
+                                }
+                                /* Equipe esta marcada mas não foi gerada ainda */
+                                if (!$validacaoMarcado) {
+                                    $grupoEventAtivo->setDataEHoraDeInativacao();
+                                    $this->getRepositorio()->getGrupoEventoORM()->persistir($grupoEventAtivo, false);
+                                }
+                            }
+                        }
+                    }
+                    if ($criarNovoEvento) {
+                        /* Entidade selecionada */
+                        $idEntidadeAtual = $sessao->idEntidadeAtual;
+                        $entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+
+                        $evento->exchangeArray($eventoForm->getData());
+                        $dataParaCadastro = Funcoes::dataAtual();
+                        if ($mudarDataDeCadastroParaProximoDomingo) {
+                            $dataParaCadastro = Funcoes::proximoDomingo();
+                        }
+                        $evento->setData_criacao($dataParaCadastro);
+                        $evento->setHora_criacao(Funcoes::horaAtual());
+                        $evento->setHora($validatedData[Constantes::$FORM_HORA] . ':' . $validatedData[Constantes::$FORM_MINUTOS]);
+                        $evento->setDia($validatedData[Constantes::$FORM_DIA_DA_SEMANA]);
+                        $evento->setEventoTipo($this->getRepositorio()->getEventoTipoORM()->encontrarPorId(EventoTipo::tipoDiscipulado));
+
+                        $grupoEvento->setData_criacao(Funcoes::dataAtual());
+                        $grupoEvento->setHora_criacao(Funcoes::horaAtual());
+                        $grupoEvento->setGrupo($entidade->getGrupo());
+                        $grupoEvento->setEvento($evento);
+
+                        /* Persistindo */
+                        $this->getRepositorio()->getEventoORM()->persistir($evento);
+                        $this->getRepositorio()->getGrupoEventoORM()->persistir($grupoEvento);
+                        /* Sessão */
+                        $sessao->tipoMensagem = Constantes::$TIPO_MENSAGEM_CADASTRAR_DISCIPULADO;
+                        $sessao->textoMensagem = $evento->getNome();
+                        $sessao->idSessao = $evento->getId();
+
+                        /* Grupos Abaixos ou Equipes */
+                        foreach ($post_data as $key => $value) {
+                            $stringParaVerificar = substr($key, 0, strlen($stringCheckEquipe));
+                            if (!\strcmp($stringParaVerificar, $stringCheckEquipe)) {
+                                $stringValor = substr($key, strlen($stringParaVerificar));
+                                $grupoEquipe = $this->getRepositorio()->getGrupoORM()->encontrarPorId($stringValor);
+                                $grupoEventoEquipe = new GrupoEvento();
+                                $grupoEventoEquipe->setData_criacao(Funcoes::dataAtual());
+                                $grupoEventoEquipe->setHora_criacao(Funcoes::horaAtual());
+                                $grupoEventoEquipe->setGrupo($grupoEquipe);
+                                $grupoEventoEquipe->setEvento($evento);
+                                $this->getRepositorio()->getGrupoEventoORM()->persistir($grupoEventoEquipe);
+                            }
+                        }
+                    }
+                } else {
+                    $this->direcionaErroDeCadastro($eventoForm->getMessages());
+                    CircuitoController::direcionandoAoLogin($this);
+                }
+
+                $this->getRepositorio()->fecharTransacao();
+                return $this->redirect()->toRoute(Constantes::$ROUTE_CADASTRO, array(
+                            Constantes::$PAGINA => Constantes::$PAGINA_DISCIPULADOS,
+                ));
+            } catch (Exception $exc) {
+                $this->getRepositorio()->desfazerTransacao();
+                echo $exc->getMessage();
+                CircuitoController::direcionandoAoLogin($this);
+            }
+        }
+    }
+    
     /**
      * Tela com formulário de exclusão de evento
      * GET /cadastroEventoExclusao
