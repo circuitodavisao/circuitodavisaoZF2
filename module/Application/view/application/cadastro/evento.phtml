@@ -14,14 +14,18 @@ $form = $this->Form;
 $form->prepare();
 $pagina = '';
 $tituloDaPagina = '';
-if ($form instanceof CelulaForm) {
+
+if ($this->pagina == Constantes::$PAGINA_EVENTO_CULTO) {
+    $tituloDaPagina = $this->translate(Constantes::$TRADUCAO_CADASTRO_CULTO);
+    $pagina = Constantes::$PAGINA_EVENTO_CULTO_PERSISTIR;
+}
+if ($this->pagina == Constantes::$PAGINA_EVENTO_CELULA) {
     $tituloDaPagina = $this->translate(Constantes::$TRADUCAO_CADASTRO_CELULA) . ' <b class="text-danger">' . $this->translate(Constantes::$TRADUCAO_MULTIPLICACAO) . '</b>';
     $pagina = Constantes::$PAGINA_EVENTO_CELULA_PERSISTIR;
-} else {
-    if ($form instanceof EventoForm) {
-        $tituloDaPagina = $this->translate(Constantes::$TRADUCAO_CADASTRO_CULTO);
-        $pagina = Constantes::$PAGINA_EVENTO_CULTO_PERSISTIR;
-    }
+}
+if ($this->pagina == Constantes::$PAGINA_EVENTO_DISCIPULADO) {
+    $tituloDaPagina = $this->translate(Constantes::$TRADUCAO_CADASTRO_DISCIPULADO);
+    $pagina = Constantes::$PAGINA_EVENTO_DISCIPULADO_PERSISTIR;
 }
 
 $actionUrl = $this->url(Constantes::$ROUTE_CADASTRO, array(Constantes::$PAGINA => $pagina));

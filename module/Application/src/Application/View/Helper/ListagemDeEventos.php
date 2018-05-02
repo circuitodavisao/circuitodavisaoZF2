@@ -38,6 +38,7 @@ class ListagemDeEventos extends AbstractHelper {
         $tipoLideresRevisao = ($this->view->tipoEvento == 7);
         $tipoAtivacaoFichas = ($this->view->tipoEvento == 8);
         $tipoListarRevisaoTurma = ($this->view->tipoEvento == 9);
+        $tipoListarDiscipulados = ($this->view->tipoEvento == 10);
 
         $html .= $this->view->templateFormularioTopo($this->getTitulo());
         $html .= '<div class="panel-body bg-light">';
@@ -97,6 +98,17 @@ class ListagemDeEventos extends AbstractHelper {
                 $html .= '</th>';
                 $html .= '<th class="text-center">';
                 $html .= $this->view->translate(Constantes::$TRADUCAO_OBSERVACAO);
+                $html .= '</th>';
+            }
+            if ($tipoListarDiscipulados) {
+                $html .= '<th class="text-center">';
+                $html .= $this->view->translate(Constantes::$TRADUCAO_DIA_DA_SEMANA_SIMPLIFICADO) . ' / ' . $this->view->translate(Constantes::$TRADUCAO_HORA);
+                $html .= '</th>';
+                $html .= '<th class="text-center visible-lg visible-md visible-sm">';
+                $html .= $this->view->translate(Constantes::$TRADUCAO_NOME);
+                $html .= '</th>';
+                $html .= '<th class="text-center">';
+                $html .= $this->view->translate(Constantes::$TRADUCAO_EQUIPES);
                 $html .= '</th>';
             }
             $html .= '<th class="text-center"></th>';
@@ -282,6 +294,24 @@ class ListagemDeEventos extends AbstractHelper {
                     $html .= $this->view->botaoLink($this->view->translate(Constantes::$TRADUCAO_NOVO_REVISIONISTA), Constantes::$STRING_HASHTAG, 4, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClickInserir));
                     $html .= '</td>';
                 }
+                if ($tipoListarDiscipulados) {
+                    $html .= '<td class="text-center">' . $this->view->translate($diaDaSemanaAjustado) . '/' . $evento->getHoraFormatoHoraMinutoParaListagem() . '</td>';
+                    $stringNomeDaFuncaoOnClick = 'mostrarSplash(); funcaoCircuito("cadastro' . Constantes::$PAGINA_EVENTO_DISCIPULADO . '", ' . $evento->getId() . ')';
+                    $stringNomeDaFuncaoOnClickExclusao = 'mostrarSplash(); funcaoCircuito("cadastro' . Constantes::$PAGINA_EVENTO_EXCLUSAO . '", ' . $evento->getId() . ')';
+                    $grupoEventoAtivos = $evento->getGrupoEventoAtivos();
+                    $texto = '';
+                    foreach ($grupoEventoAtivos as $gea) {
+                        if ($this->view->extra != $gea->getGrupo()->getId()) {
+                            $texto .= $gea->getGrupo()->getEntidadeAtiva()->infoEntidade() . '<br />';
+                        }
+                    }
+                    $html .= '<td class="text-center visible-lg visible-md visible-sm">' . $evento->getNome() . '</span></td>';
+                    $html .= '<td class="text-center">' . $this->view->BotaoPopover(count($grupoEventoAtivos) - 1, $texto) . '</td>';
+                    $html .= '<td class="text-center">';
+                    $html .= $this->view->botaoLink(Constantes::$STRING_ICONE_PENCIL, Constantes::$STRING_HASHTAG, 3, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClick));
+                    $html .= $this->view->botaoLink(Constantes::$STRING_ICONE_TIMES, Constantes::$STRING_HASHTAG, 4, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClickExclusao));
+                    $html .= '</td>';
+                }
                 $html .= '</tr>';
             }
             $html .= '</tbody>';
@@ -324,9 +354,12 @@ class ListagemDeEventos extends AbstractHelper {
                 $html .= $this->view->botaoLink(Constantes::$STRING_ICONE_PLUS . ' ' . $this->view->translate(Constantes::$TRADUCAO_NOVO_REVISAO), Constantes::$STRING_HASHTAG, 0, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClickCadastro));
             }
             if ($tipoListarRevisaoTurma) {
-
                 $stringNomeDaFuncaoOnClickVoltar = 'mostrarSplash(); funcaoCircuito("' . Constantes::$ROUTE_CURSO . Constantes::$PAGINA_LISTAR_TURMA . '", 0)';
                 $html .= $this->view->botaoLink($this->view->translate(Constantes::$TRADUCAO_VOLTAR), Constantes::$STRING_HASHTAG, 2, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClickVoltar));
+            }
+            if ($tipoListarDiscipulados) {
+                $stringNomeDaFuncaoOnClickCadastro = 'mostrarSplash(); funcaoCircuito("cadastro' . Constantes::$PAGINA_EVENTO_DISCIPULADO . '", 0)';
+                $html .= $this->view->botaoLink(Constantes::$STRING_ICONE_PLUS . ' ' . $this->view->translate(Constantes::$TRADUCAO_NOVO_DISCIPULADO), Constantes::$STRING_HASHTAG, 0, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClickCadastro));
             }
 
             /* Fim Botões */
