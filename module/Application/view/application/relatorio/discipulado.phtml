@@ -1,0 +1,105 @@
+<?php
+
+use Application\Controller\Helper\Funcoes;
+use Application\Model\Helper\FuncoesEntidade;
+?>
+<div class="mw1000 center-block mt50">
+
+
+    <div class="panel">      
+        <div class="panel-body center-block">
+            <h1>Relat&oacute;rio Discipulado</h1>
+            <?php
+            $html = '';
+
+            $mensagemAlertaSemDiscipulos = '<div class="alert alert-warning">'
+                    . '<i class="fa fa-warning pr10" aria-hidden="true"></i>&nbsp;Sem Discipulos cadastrados!'
+                    . '</div>';
+
+            if (count($this->gruposAbaixo) > 0) {
+
+                foreach ($this->gruposAbaixo as $gpFilho) {
+
+                    $html .= '<hr/>';
+                    $grupoFilho = $gpFilho->getGrupoPaiFilhoFilho();
+                    if ($grupoFilho->getResponsabilidadesAtivas()) {
+
+                        $arrayLideres = array();
+                        if ($gruposAbaixo144 = $grupoFilho->getGrupoPaiFilhoFilhosAtivos($periodo = 0)) {
+                            foreach ($gruposAbaixo144 as $gruposPaiFilho144) {
+                                $grupoFilho144 = $gruposPaiFilho144->getGrupoPaiFilhoFilho();
+                                foreach ($grupoFilho144->getResponsabilidadesAtivas() as $grupoResponsavel144) {
+                                    $qualSexo = 0;
+                                    if ($grupoResponsavel144->getPessoa()->getSexo()) {
+                                        $qualSexo = $grupoResponsavel144->getPessoa()->getSexo();
+                                    }
+                                    $arrayLideres[$qualSexo] ++;
+                                }
+                            }
+                        }
+
+                        foreach ($grupoFilho->getResponsabilidadesAtivas() as $grupoResponsavel) {
+                            $pessoa = $grupoResponsavel->getPessoa();
+                            switch ($pessoa->getSexo()) {
+                                case 'M':
+                                    $sexo = 'MASCULINO';
+                                    break;
+                                case 'F':
+                                    $sexo = 'FEMININO';
+                                    break;
+                                default:
+                                    $sexo = '<span class="label label-xs label-danger">SEM SEXO</sexo>';
+                                    break;
+                            }
+                            $html .= '<div class="row mt10">';
+
+                            $html .= '<div class="col-md-3 hidden-xs">';
+                            $html .= FuncoesEntidade::tagImgComFotoDaPessoa($pessoa, 45, '%');
+
+                            $html .= '</div>';
+
+                            $html .= '<div class="col-md-9 col-xs-12">';
+                            $html .= '<p>' . 
+                                    '<span class="hidden-xs">'.$pessoa->getNome().'</span>' .
+                                     '<span class="hidden-sm hidden-md hidden-lg">'.$pessoa->getNomePrimeiroUltimo().'</span>' .
+                                    ' - ' . $sexo . '</p>';
+
+                            if ($valor = $arrayLideres[$grupoResponsavel->getPessoa()->getSexo()]) {
+                                $valorPercentual = number_format($valor / 12 * 100);
+                                $corBarra = \Application\Controller\RelatorioController::corDaLinhaPelaPerformance($valorPercentual);
+                                $html .= '<div class="col-xs-10 col-sm-10 col-md-10 col-xs-10">';
+                                $html .= '<div '
+                                        . 'class="progress-bar progress-bar-' . $corBarra . '" '
+                                        . 'role="progressbar" '
+                                        . 'aria-valuenow="' . $valor . '" '
+                                        . 'aria-valuemin="0" '
+                                        . 'aria-valuemax="12" '
+                                        . 'style="width: ' . $valorPercentual . '%;">' .
+                                        $valor ;
+                                $html .= '</div>';
+                                $html .= '</div>';
+
+                                $html .= '<div class="col-xs-2 col-sm-2 col-md-2 col-xs-2">';
+                                $html .= $valor . '/12';
+                                $html .= '</div>';
+                            }
+                            $html .= '</div>';
+
+                            $html .= '</div>';
+                        }
+
+                        if (count($arrayLideres[0]) > 0) {
+                            $html .= '<div class="row mt10 text-center">';
+                            $html .= '<span class="label label-info">Discipulos sem sexo: ' . $arrayLideres[0] . '</span>';
+                            $html .= '</div>';
+                        }
+                    }
+                }
+            } else {
+                $html .= $mensagemAlertaSemDiscipulos;
+            }
+            echo $html;
+            ?>
+        </div>
+    </div>
+</div>

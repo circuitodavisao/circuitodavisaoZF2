@@ -639,13 +639,13 @@ class LoginController extends CircuitoController {
     public function perfilSalvarAction() {
         $request = $this->getRequest();
         if ($request->isPost()) {
-
             try {
                 $this->getRepositorio()->iniciarTransacao();
                 $post_data = $request->getPost();
                 $pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($post_data['id']);
                 $pessoa->setTelefone($post_data['ddd'] . $post_data['telefone']);
-                $this->getRepositorio()->getPessoaORM()->persistir($pessoa);
+                $pessoa->setSexo($post_data[Constantes::$INPUT_SEXO]);
+                $this->getRepositorio()->getPessoaORM()->persistir($pessoa, $mudarDataDeCadastro = false);
                 $this->getRepositorio()->fecharTransacao();
 
                 return $this->redirect()->toRoute('principal');

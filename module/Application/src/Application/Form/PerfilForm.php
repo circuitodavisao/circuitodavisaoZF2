@@ -6,9 +6,9 @@ use Application\Controller\Helper\Constantes;
 use Application\Model\Entity\Pessoa;
 use Zend\Form\Element\Csrf;
 use Zend\Form\Element\Email;
-use Zend\Form\Element\File;
 use Zend\Form\Element\Hidden;
 use Zend\Form\Element\Number;
+use Zend\Form\Element\Select;
 use Zend\Form\Element\Text;
 use Zend\Form\Form;
 
@@ -43,7 +43,7 @@ class PerfilForm extends Form {
                         ->setName(Constantes::$ID)
                         ->setAttributes([
                             Constantes::$FORM_STRING_ID => Constantes::$ID,
-                              Constantes::$FORM_STRING_VALUE => $pessoa->getId(),
+                            Constantes::$FORM_STRING_VALUE => $pessoa->getId(),
                         ])
         );
 
@@ -115,6 +115,20 @@ class PerfilForm extends Form {
                             'disabled' => 'true',
                         ])
         );
+
+        $arraySexo = array();
+        $arraySexo[0] = Constantes::$TRADUCAO_SELECIONE;
+        $arraySexo['M'] = Constantes::$TRADUCAO_MASCULINO;
+        $arraySexo['F'] = Constantes::$TRADUCAO_FEMININO;
+        $inputSelectSexo = new Select();
+        $inputSelectSexo->setName(Constantes::$INPUT_SEXO);
+        $inputSelectSexo->setAttributes(array(
+            Constantes::$FORM_CLASS => Constantes::$FORM_CLASS_FORM_CONTROL,
+            Constantes::$FORM_ID => Constantes::$INPUT_SEXO,
+        ));
+        $inputSelectSexo->setValueOptions($arraySexo);
+        $inputSelectSexo->setValue($pessoa->getSexo());
+        $this->add($inputSelectSexo);
 
         $this->add(
                 (new Csrf())

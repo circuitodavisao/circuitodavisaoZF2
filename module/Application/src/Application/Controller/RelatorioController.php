@@ -189,6 +189,21 @@ class RelatorioController extends CircuitoController {
         return $view;
     }
 
+    public function discipuladoAction() {
+        $sessao = new Container(Constantes::$NOME_APLICACAO);
+
+        $idEntidadeAtual = $sessao->idEntidadeAtual;
+        $entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+        $grupo = $entidade->getGrupo();
+        $gruposAbaixo = $grupo->getGrupoPaiFilhoFilhosAtivos($periodo = 0);
+
+        $view = new ViewModel(array(
+            Constantes::$GRUPOS_ABAIXO => $gruposAbaixo,
+        ));
+
+        return $view;
+    }
+
     public function liderAction() {
         $idUrl = $this->getEvent()->getRouteMatch()->getParam(Constantes::$ID, 0);
         $entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idUrl);
