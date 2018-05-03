@@ -634,6 +634,8 @@ class Constantes {
     public static $TIPO_MENSAGEM_CADASTRAR_REVISAO = 7;
     public static $TIPO_MENSAGEM_CADASTRAR_REVISIONISTA = 8;
     public static $TIPO_MENSAGEM_CADASTRAR_DISCIPULADO = 9;
+    public static $TIPO_MENSAGEM_ALTERAR_DISCIPULADO = 10;
+    public static $TIPO_MENSAGEM_EXCLUIR_DISCIPULADO = 11;
     /* Inputs */
     public static $INPUT_ESTADO_CIVIL = 'inputEstadoCivil';
 
@@ -823,8 +825,10 @@ class Constantes {
     public static $TRADUCAO_PERGUNTA_EXCLUSAO_DISCIPLINA = 'Really want to delete this discipline?';
     public static $TRADUCAO_PERGUNTA_EXCLUSAO_AULA = 'Really want to delete this lesson?';
     public static $TRADUCAO_PERGUNTA_EXCLUSAO_CULTO = 'Really want to delete this cult?';
+    public static $TRADUCAO_PERGUNTA_EXCLUSAO_DISCIPULADO = 'Realmente quer remover esse discipulado?';
     public static $TRADUCAO_CIENCIA_CADASTRO_CELULA = 'I confirm that the data is correct';
     public static $TRADUCAO_CIENCIA_EXCLUSAO_CULTO = 'I am <span class="text-danger">aware</span> that by <span class="text-danger">excluding cult</span> is the same no longer appear in the <span class="text-danger">launch line</span>!';
+    public static $TRADUCAO_CIENCIA_EXCLUSAO_DISCIPULADO = 'Eu estou <span class="text-danger">ciente</span> que <span class="text-danger">excluindo o discipulado</span> e não terá mais o <span class="text-danger">relatório</span>!';
     public static $TRADUCAO_CIENCIA_EXCLUSAO_CELULA = 'I am <span class="text-danger">aware</span> that by <span class="text-danger">excluding cell</span> is the same no longer appear in the <span class="text-danger">launch line</span>!';
     public static $TRADUCAO_CIENCIA_EXCLUSAO_TURMA = 'I am <span class="text-danger">aware</span> that by <span class="text-danger">excluding class</span> is the same no longer appear! ';
     public static $TRADUCAO_CIENCIA_EXCLUSAO_CURSO = 'I am <span class="text-danger">aware</span> that by <span class="text-danger">excluding course</span> is the same no longer appear! ';

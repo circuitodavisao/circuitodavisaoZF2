@@ -749,7 +749,7 @@ class CadastroController extends CircuitoController {
         }
     }
 
-      public function eventoDiscipuladoPersistirAction() {
+    public function eventoDiscipuladoPersistirAction() {
         CircuitoController::verificandoSessao(new Container(Constantes::$NOME_APLICACAO), $this);
 
         $stringCheckEquipe = 'checkEquipe';
@@ -919,7 +919,7 @@ class CadastroController extends CircuitoController {
             }
         }
     }
-    
+
     /**
      * Tela com formulário de exclusão de evento
      * GET /cadastroEventoExclusao
@@ -1026,6 +1026,10 @@ class CadastroController extends CircuitoController {
                     $sessao->tipoMensagem = Constantes::$TIPO_MENSAGEM_EXCLUIR_CELULA;
                     $sessao->textoMensagem = $celula->getNome_hospedeiro();
                 }
+                if ($eventoNaSessao->getEventoTipo()->getId() === EventoTipo::tipoDiscipulado) {
+                    $sessao->tipoMensagem = Constantes::$TIPO_MENSAGEM_EXCLUIR_DISCIPULADO;
+                    $sessao->textoMensagem = $eventoNaSessao->getNome();
+                }
                 $sessao->nomeEventoExcluido = $eventoNaSessao->getNome();
                 unset($sessao->idSessao);
 
@@ -1037,8 +1041,13 @@ class CadastroController extends CircuitoController {
                                 Constantes::$ACTION => Constantes::$ACTION_INDEX,
                     ));
                 } else {
+                    if ($eventoNaSessao->getEventoTipo()->getId() === EventoTipo::tipoDiscipulado) {
+                        $pagina = Constantes::$PAGINA_DISCIPULADOS;
+                    } else {
+                        $pagina = Constantes::$PAGINA_CULTOS;
+                    }
                     return $this->redirect()->toRoute(Constantes::$ROUTE_CADASTRO, array(
-                                Constantes::$PAGINA => Constantes::$PAGINA_CELULAS,
+                                Constantes::$PAGINA => $pagina,
                     ));
                 }
             }

@@ -54,6 +54,12 @@ if ($sessao->tipoMensagem) {
         case Constantes::$TIPO_MENSAGEM_CADASTRAR_DISCIPULADO:
             $titulo = $traducaoDiscipulado . $traducaoCadastrado;
             $texto = $sessao->textoMensagem;
+        case Constantes::$TIPO_MENSAGEM_ALTERAR_DISCIPULADO:
+            $titulo = $traducaoDiscipulado . $traducaoAlterado;
+            $texto = $sessao->textoMensagem;
+        case Constantes::$TIPO_MENSAGEM_EXCLUIR_DISCIPULADO:
+            $titulo = $traducaoDiscipulado . $traducaoExcluido;
+            $texto = $sessao->textoMensagem;
     }
     $sessao->tipoMensagem = '';
     $sessao->textoMensagem = '';
