@@ -1,6 +1,7 @@
 <?php
 
-use Application\Controller\Helper\Funcoes;
+use Application\Controller\RelatorioController;
+use Application\Model\Entity\EventoTipo;
 use Application\Model\Helper\FuncoesEntidade;
 ?>
 <div class="mw1000 center-block mt50">
@@ -33,7 +34,9 @@ use Application\Model\Helper\FuncoesEntidade;
                                     if ($grupoResponsavel144->getPessoa()->getSexo()) {
                                         $qualSexo = $grupoResponsavel144->getPessoa()->getSexo();
                                     }
-                                    $arrayLideres[$qualSexo] ++;
+                                    if (count($grupoFilho144->getGrupoEventoPorTipoEAtivo(EventoTipo::tipoCelula)) > 0) {
+                                        $arrayLideres[$qualSexo] ++;
+                                    }
                                 }
                             }
                         }
@@ -59,14 +62,14 @@ use Application\Model\Helper\FuncoesEntidade;
                             $html .= '</div>';
 
                             $html .= '<div class="col-md-9 col-xs-12">';
-                            $html .= '<p>' . 
-                                    '<span class="hidden-xs">'.$pessoa->getNome().'</span>' .
-                                     '<span class="hidden-sm hidden-md hidden-lg">'.$pessoa->getNomePrimeiroUltimo().'</span>' .
+                            $html .= '<p>' .
+                                    '<span class="hidden-xs">' . $pessoa->getNome() . '</span>' .
+                                    '<span class="hidden-sm hidden-md hidden-lg">' . $pessoa->getNomePrimeiroUltimo() . '</span>' .
                                     ' - ' . $sexo . '</p>';
 
                             if ($valor = $arrayLideres[$grupoResponsavel->getPessoa()->getSexo()]) {
                                 $valorPercentual = number_format($valor / 12 * 100);
-                                $corBarra = \Application\Controller\RelatorioController::corDaLinhaPelaPerformance($valorPercentual);
+                                $corBarra = RelatorioController::corDaLinhaPelaPerformance($valorPercentual);
                                 $html .= '<div class="col-xs-10 col-sm-10 col-md-10 col-xs-10">';
                                 $html .= '<div '
                                         . 'class="progress-bar progress-bar-' . $corBarra . '" '
@@ -75,7 +78,7 @@ use Application\Model\Helper\FuncoesEntidade;
                                         . 'aria-valuemin="0" '
                                         . 'aria-valuemax="12" '
                                         . 'style="width: ' . $valorPercentual . '%;">' .
-                                        $valor ;
+                                        $valor;
                                 $html .= '</div>';
                                 $html .= '</div>';
 
