@@ -242,7 +242,7 @@ class Menu extends AbstractHelper {
             $html .= '<span class="fa fa-users"></span>';
             $html .= 'Time';
             $html .= '</a>';
-            $html .= '</li>';            
+            $html .= '</li>';
 
             $html .= '<li>';
             $html .= '<a href="/cadastroDiscipulados" onClick="mostrarSplash();">';
@@ -371,6 +371,13 @@ class Menu extends AbstractHelper {
         $html .= '<a href="/relatorioAtendimento" onClick="mostrarSplash();">';
         $html .= '<span class="fa fa-users"></span>';
         $html .= 'Atendimento';
+        $html .= '</a>';
+        $html .= '</li>';
+
+        $html .= '<li>';
+        $html .= '<a href="/relatorioDiscipulado" onClick="mostrarSplash();">';
+        $html .= '<span class="fa fa-users"></span>';
+        $html .= 'Discipulado';
         $html .= '</a>';
         $html .= '</li>';
 
