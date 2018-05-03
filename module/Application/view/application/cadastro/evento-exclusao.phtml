@@ -3,6 +3,7 @@
 use Application\Controller\Helper\Constantes;
 use Application\Controller\Helper\Funcoes;
 use Application\Model\Entity\Evento;
+use Application\Model\Entity\EventoTipo;
 
 $eventoRecebido = $this->evento;
 $tipoCelula = !empty($eventoRecebido->verificaSeECelula());
@@ -22,7 +23,11 @@ echo $this->templateFormularioTopo($tituloDaPagina, Constantes::$STRING_DIV_CONF
                 echo $this->translate(Constantes::$TRADUCAO_PERGUNTA_EXCLUSAO_CELULA);
             } else {
                 if ($eventoRecebido instanceof Evento) {
-                    echo $this->translate(Constantes::$TRADUCAO_PERGUNTA_EXCLUSAO_CULTO);
+                    if ($eventoRecebido->getEventoTipo()->getId() == EventoTipo::tipoDiscipulado) {
+                        echo $this->translate(Constantes::$TRADUCAO_PERGUNTA_EXCLUSAO_DISCIPULADO);
+                    } else {
+                        echo $this->translate(Constantes::$TRADUCAO_PERGUNTA_EXCLUSAO_CULTO);
+                    }
                 }
             }
             ?>
@@ -79,7 +84,11 @@ echo $this->templateFormularioTopo($tituloDaPagina, Constantes::$STRING_DIV_CONF
                         echo $this->translate(Constantes::$TRADUCAO_CIENCIA_EXCLUSAO_CELULA);
                     } else {
                         if ($eventoRecebido instanceof Evento) {
-                            echo $this->translate(Constantes::$TRADUCAO_CIENCIA_EXCLUSAO_CULTO); 
+                            if ($eventoRecebido->getEventoTipo()->getId() == EventoTipo::tipoDiscipulado) {
+                                echo $this->translate(Constantes::$TRADUCAO_CIENCIA_EXCLUSAO_DISCIPULADO);
+                            } else {
+                                echo $this->translate(Constantes::$TRADUCAO_CIENCIA_EXCLUSAO_CULTO);
+                            }
                         }
                     }
                     ?>
@@ -124,7 +133,9 @@ echo $this->templateFormularioTopo($tituloDaPagina, Constantes::$STRING_DIV_CONF
             if ($tipoCelula) {
                 $urlVoltar .= Constantes::$PAGINA_CELULAS;
             } else {
-                if ($eventoRecebido instanceof Evento) {
+                if ($eventoRecebido->getEventoTipo()->getId() == EventoTipo::tipoDiscipulado) {
+                    $urlVoltar .= Constantes::$PAGINA_DISCIPULADOS;
+                } else {
                     $urlVoltar .= Constantes::$PAGINA_CULTOS;
                 }
             }
