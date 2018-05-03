@@ -397,6 +397,8 @@ class Constantes {
     public static $TRADUCAO_NUCLEO_CELULA = 'Perfect Core';
     public static $TRADUCAO_SEXO = 'Gender';
     public static $TRADUCAO_SELECIONE = 'SELECT';
+    public static $TRADUCAO_MASCULINO = 'MASCULINO';
+    public static $TRADUCAO_FEMININO = 'FEMININO';
     public static $TRADUCAO_CADASTRAR = 'Register';
     public static $TRADUCAO_CADASTRAR_PESSOA = 'Register Person';
     public static $TRADUCAO_VALIDACAO_NOME_VAZIO = 'Enter Full Name';

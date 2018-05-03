@@ -390,7 +390,7 @@ class PrincipalController extends CircuitoController {
 
                 $idPessoa = $post_data[Constantes::$INPUT_ID_PESSOA];
                 $pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($idPessoa);
-                $pessoa->setEmail($email);
+                $pessoa->setEmail($email);               
                 $this->getRepositorio()->getPessoaORM()->persistir($pessoa, $setarDataEHora);
                 $sessao->mostrarNotificacao = true;
                 $sessao->emailAlterado = true;
