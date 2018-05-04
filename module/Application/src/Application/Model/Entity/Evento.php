@@ -231,6 +231,14 @@ class Evento extends CircuitoEntity implements InputFilterAwareInterface {
         }
         return $resposta;
     }
+    
+     function verificaSeEDiscipulado() {
+        $resposta = false;
+        if ($this->getTipo_id() == EventoTipo::tipoDiscipulado) {
+            $resposta = true;
+        }
+        return $resposta;
+    }
 
     function getTipo_id() {
         return $this->tipo_id;

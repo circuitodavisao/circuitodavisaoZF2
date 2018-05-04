@@ -655,6 +655,9 @@ class Grupo extends CircuitoEntity {
             if ($tipo === EventoTipo::tipoRevisao && $grupoEvento->getEvento()->verificaSeERevisao()) {
                 $condicaoTipo = true;
             }
+            if ($tipo === EventoTipo::tipoDiscipulado && $grupoEvento->getEvento()->verificaSeEDiscipulado()) {
+                $condicaoTipo = true;
+            }
 
             if ($ativo === 0) {
                 $condicaoAtivo = true;
