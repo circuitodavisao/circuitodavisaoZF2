@@ -33,6 +33,8 @@ if ($sessao->mostrarNotificacao) {
 }
 ?>
 <script type = "text/javascript">
+    document.getElementById('content').style.padding = '2px';    
+    
 <?php if ($mostrarNotificacao) { ?>
         window.onload = modalPNotify;
 <?php } ?>
