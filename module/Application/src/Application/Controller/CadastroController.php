@@ -1350,16 +1350,17 @@ class CadastroController extends CircuitoController {
 
                 $urlBuscaCPFSerpro = 'curl -X GET --header "Accept: application/json" --header "Authorization: Bearer ' . $sessao->token . '" "https://apigateway.serpro.gov.br/consulta-cpf/v1/cpf/' . $cpf . '"';
                 exec($urlBuscaCPFSerpro, $respostaSerpro);
-                $arrayCodigo = explode('"', $respostaSerpro[5]);
-                $arrayNome = explode('"', $respostaSerpro[2]);
-                $arrayDataDeNascimento = explode('"', $respostaSerpro[3]);
+                $objetoJson = (array) json_decode($respostaSerpro[0]);
+
+                $codigo = $objetoJson['situacao']->codigo;
+                $nome = $objetoJson['nome'];
+                $dataDeNascimento = $objetoJson['nascimento'];
 
                 $dados = array();
                 /* Sucesso */
-                if ($arrayCodigo[3] == '0') {
-                    $nomeDaPesquisa = $arrayNome[3];
-                    $dataSemFormato = $arrayDataDeNascimento[3];
-                    $dataDeNascimentoDaPesquisa = substr($dataSemFormato, 0, 2) . '/' . substr($dataSemFormato, 2, 2) . '/' . substr($dataSemFormato, 4);
+                if ($codigo === '0') {
+                    $nomeDaPesquisa = $nome;
+                    $dataDeNascimentoDaPesquisa = substr($dataDeNascimento, 0, 2) . '/' . substr($dataDeNascimento, 2, 2) . '/' . substr($dataDeNascimento, 4);
                     $resposta = $respostaSucesso;
 
                     /* CPF encontrado na receita verificando se tem cadastro no sistema */
