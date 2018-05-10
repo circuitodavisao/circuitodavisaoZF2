@@ -28,7 +28,7 @@ class CabecalhoDeEventos extends AbstractHelper {
         $grupoEventoNoPeriodo = $this->view->grupo->getGrupoEventoNoPeriodo($this->view->periodo);
         if (!empty($grupoEventoNoPeriodo)) {
             $html .= '<tr>';
-            $html .= '<td class="tdTipo hidden-xs"></td>';
+            $html .= '<td class="tdTipo"></td>';
             $html .= '<td class="tdNome text-right">Totais</td>';
             foreach ($grupoEventoNoPeriodo as $grupoEvento) {
                 $diaDaSemanaAjustado = Funcoes::diaDaSemanaPorDia($grupoEvento->getEvento()->getDia());
