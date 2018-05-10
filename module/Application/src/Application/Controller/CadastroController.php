@@ -727,10 +727,12 @@ class CadastroController extends CircuitoController {
                             }
                         }
 
-                        /* Sessão */
-                        $sessao->tipoMensagem = Constantes::$TIPO_MENSAGEM_CADASTRAR_CELULA;
-                        $sessao->textoMensagem = $eventoCelula->getNome_hospedeiro();
-                        $sessao->idSessao = $eventoCelula->getId();
+                        if (!$mudarDataDeCadastroParaProximoDomingo) {
+                            /* Sessão */
+                            $sessao->tipoMensagem = Constantes::$TIPO_MENSAGEM_CADASTRAR_CELULA;
+                            $sessao->textoMensagem = $eventoCelula->getNome_hospedeiro();
+                            $sessao->idSessao = $eventoCelula->getId();
+                        }
                     }
                     $this->getRepositorio()->fecharTransacao();
 

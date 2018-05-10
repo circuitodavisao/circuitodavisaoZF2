@@ -106,9 +106,11 @@ class Perfil extends AbstractHelper {
         if (!$this->getMostrarOpcoes()) {
             $elementoDDD = $formulario->get(Constantes::$INPUT_DDD);
             $elementoTelefone = $formulario->get(Constantes::$INPUT_TELEFONE);
+            $elementoSexo = $formulario->get(Constantes::$INPUT_SEXO);
 
             $elementoDDD->setAttribute('disabled', true);
             $elementoTelefone->setAttribute('disabled', true);
+            $elementoSexo->setAttribute('disabled', true);
         }
 
         $html .= $this->view->inputFormularioSimples(Constantes::$TRADUCAO_NOME, $formulario->get(Constantes::$INPUT_NOME), 12);
