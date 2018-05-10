@@ -1,7 +1,7 @@
 var tempo = new Number();
 // Tempo em segundos
 
-tempo = 180;
+tempo = 300;
 function startCountdown() {
     // Se o tempo não for zerado
     if ((tempo - 1) >= 0) {
