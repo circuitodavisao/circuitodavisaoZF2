@@ -3,6 +3,7 @@
 use Application\Controller\RelatorioController;
 use Application\Model\Entity\EventoTipo;
 use Application\Model\Helper\FuncoesEntidade;
+use Application\View\Helper\BotaoSimples;
 ?>
 <div class="mw1000 center-block mt50">
 
@@ -43,34 +44,27 @@ use Application\Model\Helper\FuncoesEntidade;
 
                         foreach ($grupoFilho->getResponsabilidadesAtivas() as $grupoResponsavel) {
                             $pessoa = $grupoResponsavel->getPessoa();
-                            switch ($pessoa->getSexo()) {
-                                case 'M':
-                                    $sexo = 'MASCULINO';
-                                    break;
-                                case 'F':
-                                    $sexo = 'FEMININO';
-                                    break;
-                                default:
-                                    $sexo = '<span class="label label-xs label-danger">SEM SEXO</sexo>';
-                                    break;
+                            $sexo == '';
+                            if (!$pessoa->getSexo()) {
+                                $sexo = ' - <span class="label label-xs label-danger">SEM SEXO</sexo>';
                             }
+
                             $html .= '<div class="row mt10">';
 
-                            $html .= '<div class="col-md-3 hidden-xs">';
-                            $html .= FuncoesEntidade::tagImgComFotoDaPessoa($pessoa, 45, '%');
+                            $html .= '<div class="col-md-2 hidden-xs">';
+                            $html .= FuncoesEntidade::tagImgComFotoDaPessoa($pessoa, 70, '%');
 
                             $html .= '</div>';
 
-                            $html .= '<div class="col-md-9 col-xs-12">';
-                            $html .= '<p>' .
-                                    '<span class="hidden-xs">' . $pessoa->getNome() . '</span>' .
-                                    '<span class="hidden-sm hidden-md hidden-lg">' . $pessoa->getNomePrimeiroUltimo() . '</span>' .
-                                    ' - ' . $sexo . '</p>';
-
+                            $html .= '<div class="col-md-10 col-xs-12">';
                             if ($valor = $arrayLideres[$grupoResponsavel->getPessoa()->getSexo()]) {
+                                $html .= $valor . ' de 12 discipulos';
                                 $valorPercentual = number_format($valor / 12 * 100);
                                 $corBarra = RelatorioController::corDaLinhaPelaPerformance($valorPercentual);
+                                $html .= '<div class="row">';
+
                                 $html .= '<div class="col-xs-10 col-sm-10 col-md-10 col-xs-10">';
+                                $html .= '<div class="progress progress-bar-xl">';
                                 $html .= '<div '
                                         . 'class="progress-bar progress-bar-' . $corBarra . '" '
                                         . 'role="progressbar" '
@@ -81,11 +75,17 @@ use Application\Model\Helper\FuncoesEntidade;
                                         $valor;
                                 $html .= '</div>';
                                 $html .= '</div>';
+                                $html .= '</div>';
 
                                 $html .= '<div class="col-xs-2 col-sm-2 col-md-2 col-xs-2">';
-                                $html .= $valor . '/12';
+                                $html .= $this->botaoSimples('<i class="fa fa-eye"></i>', '#', BotaoSimples::botaoMuitoPequenoImportante);
+                                $html .= '</div>';
+
                                 $html .= '</div>';
                             }
+
+                            $html .= '<span class="hidden-xs">' . $pessoa->getNome() . '</span>' .
+                                    '<span class="hidden-sm hidden-md hidden-lg">' . $pessoa->getNomePrimeiroUltimo() . '</span>' . $sexo;
                             $html .= '</div>';
 
                             $html .= '</div>';
