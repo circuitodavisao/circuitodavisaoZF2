@@ -67,7 +67,7 @@ class LancamentoController extends CircuitoController {
             }
             $validarCadastroDaEntidade = false;
             $dataDaEntidadeCriacaoParaComparar = strtotime($grupo->getEntidadeAtiva()->getData_criacaoStringPadraoBanco());
-            echo "if ($dataDaEntidadeCriacaoParaComparar < $dataDoInicioDoPeriodoParaComparar) {";
+            echo "if (" . $stringComecoDoPeriodo . " < " . $grupo->getEntidadeAtiva()->getData_criacaoStringPadraoBanco() . ") {";
             if ($dataDaEntidadeCriacaoParaComparar < $dataDoInicioDoPeriodoParaComparar) {
                 $validarCadastroDaEntidade = true;
             }
