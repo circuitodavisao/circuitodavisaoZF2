@@ -60,7 +60,18 @@ class LancamentoController extends CircuitoController {
 
         if ($grupo->getGrupoPaiFilhoPaiAtivo()) {
             $dataDoGrupoPaiFilhoCriacaoParaComparar = strtotime($grupo->getGrupoPaiFilhoPaiAtivo()->getData_criacaoStringPadraoBanco());
+
+            $validarCadastroAntesDoPeriodo = false;
             if ($dataDoGrupoPaiFilhoCriacaoParaComparar < $dataDoInicioDoPeriodoParaComparar) {
+                $validarCadastroAntesDoPeriodo = true;
+            }
+            $validarCadastroDaEntidade = false;
+            $dataDaEntidadeCriacaoParaComparar = strtotime($grupo->getEntidadeAtiva()->getData_criacaoStringPadraoBanco());
+            if ($dataDaEntidadeCriacaoParaComparar < $dataDoInicioDoPeriodoParaComparar) {
+                $validarCadastroDaEntidade = true;
+            }
+            if ($validarCadastroAntesDoPeriodo &&
+                    $validarCadastroDaEntidade) {
                 $mostrarBotaoPeriodoAnterior = true;
             }
         }
