@@ -253,13 +253,7 @@ class LancamentoController extends CircuitoController {
                     $realizadaAntesDeMudar = $fatoCelulaSelecionado->getRealizada();
                     $fatoCelulaSelecionado->setRealizada($realizada);
                     $setarDataEHora = false;
-                    $this->getRepositorio()->getFatoCelulaORM()->persistir($fatoCelulaSelecionado, $setarDataEHora);
-
-                    /* Atualizar DW celulas circuito antigo */
-                    if ($grupoPassado->getGrupoCv()) {
-                        $grupoCv = $grupoPassado->getGrupoCv();
-                        IndexController::mudarCelulasRealizadas($grupoCv->getNumero_identificador(), $arrayDataReal[1], $arrayDataReal[0], $ciclo, $realizada, $realizadaAntesDeMudar);
-                    }
+                    $this->getRepositorio()->getFatoCelulaORM()->persistir($fatoCelulaSelecionado, $setarDataEHora);                  
                 }
                 $tipoPessoa = 0;
                 if ($pessoa->getGrupoPessoaAtivo()) {
