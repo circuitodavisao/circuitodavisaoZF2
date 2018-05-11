@@ -28,3 +28,9 @@ COMMENT ON COLUMN hierarquia.hora_criacao IS 'Hora de criação da hierarquia';
 COMMENT ON COLUMN hierarquia.data_inativacao IS 'Data de inativação da hierarquia';
 COMMENT ON COLUMN hierarquia.hora_inativacao IS 'Hora da inativação';
 
+ALTER TABLE hierarquia ADD COLUMN nome_feminino character varying(30);
+UPDATE hierarquia SET nome_feminino = 'BISPA' WHERE id = 1;
+UPDATE hierarquia SET nome_feminino = 'PASTORA' WHERE id = 2;
+UPDATE hierarquia SET nome_feminino = 'MISSIONARIA' WHERE id = 3;
+UPDATE hierarquia SET nome_feminino = 'DIACONISA' WHERE id = 4;
+UPDATE hierarquia SET nome_feminino = 'OBREIRA' WHERE id = 5;
