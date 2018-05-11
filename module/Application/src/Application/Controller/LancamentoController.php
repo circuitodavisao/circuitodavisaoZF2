@@ -52,7 +52,7 @@ class LancamentoController extends CircuitoController {
         }
 
         /* Verificando se posso recuar no periodo */
-        $mostrarBotaoPeriodoAnterior = true;
+        $mostrarBotaoPeriodoAnterior = false;
         $mostrarBotaoPeriodoAfrente = false;
         $arrayPeriodo = Funcoes::montaPeriodo($periodo);
         $stringComecoDoPeriodo = $arrayPeriodo[3] . '-' . $arrayPeriodo[2] . '-' . $arrayPeriodo[1];
@@ -60,8 +60,8 @@ class LancamentoController extends CircuitoController {
 
         if ($grupo->getGrupoPaiFilhoPaiAtivo()) {
             $dataDoGrupoPaiFilhoCriacaoParaComparar = strtotime($grupo->getGrupoPaiFilhoPaiAtivo()->getData_criacaoStringPadraoBanco());
-            if ($dataDoGrupoPaiFilhoCriacaoParaComparar >= $dataDoInicioDoPeriodoParaComparar) {
-                $mostrarBotaoPeriodoAnterior = false;
+            if ($dataDoGrupoPaiFilhoCriacaoParaComparar < $dataDoInicioDoPeriodoParaComparar) {
+                $mostrarBotaoPeriodoAnterior = true;
             }
         }
 
