@@ -130,8 +130,14 @@ class Perfil extends AbstractHelper {
             $html .= '<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">';
         }
         $html .= '<div class="btn btn-default btn-block" disabled>';
-        $html .= '<span class="hidden-xs">' . $this->getPessoa()->getPessoaHierarquiaAtivo()->getHierarquia()->getNome() . '</span>';
-        $html .= '<span class="hidden-sm hidden-md hidden-lg">' . substr($this->getPessoa()->getPessoaHierarquiaAtivo()->getHierarquia()->getNome(), 0, 12) . ' ...</span>';
+        $nomeHierarquia = $this->getPessoa()->getPessoaHierarquiaAtivo()->getHierarquia()->getNome();
+        if ($this->getPessoa()->getSexo() === 'F') {
+            if ($nomeFeminino = $this->getPessoa()->getPessoaHierarquiaAtivo()->getHierarquia()->getNome_feminino()) {
+                $nomeHierarquia = $nomeFeminino;
+            }
+        }
+        $html .= '<span class="hidden-xs">' . $nomeHierarquia . '</span>';
+        $html .= '<span class="hidden-sm hidden-md hidden-lg">' . substr($nomeHierarquia, 0, 12) . ' ...</span>';
         $html .= '</div>';
 
         $html .= '</div>';

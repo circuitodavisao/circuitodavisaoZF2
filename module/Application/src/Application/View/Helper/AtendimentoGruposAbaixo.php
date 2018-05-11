@@ -14,6 +14,8 @@ use Zend\View\Helper\AbstractHelper;
 class AtendimentoGruposAbaixo extends AbstractHelper {
 
     protected $tipo;
+    protected $mes;
+    protected $ano;
 
     const tipoLancamento = 1;
     const tipoRelatorio = 2;
@@ -29,6 +31,8 @@ class AtendimentoGruposAbaixo extends AbstractHelper {
 
     public function __invoke($tipo = 1) {
         $this->setTipo($tipo);
+        $this->setMes($this->view->mes);
+        $this->setAno($this->view->ano);
         return $this->renderHtml();
     }
 
@@ -132,16 +136,17 @@ class AtendimentoGruposAbaixo extends AbstractHelper {
         $html .= '</div>';
         /* Fim Row 1 */
 
-        if (count($grupo->getGrupoAtendimentoComentarioAtivos()) > 0) {
+        $grupoAtendimentoComentarioAtivos = $grupo->getGrupoAtendimentoComentarioAtivos($this->getMes(), $this->getAno());
+        if (count($grupoAtendimentoComentarioAtivos) > 0) {
             /* Row 2 */
             $html .= '<div class="row">';
             $html .= '<div class="panel">';
             $html .= '<div class="panel-body text-center" style="padding:1px;">';
             $html .= '<table class="table table-condensed">';
-            $html .= '<thead><tr class="info"><th class="text-center">Coment&aacute;rios ' . count($grupo->getGrupoAtendimentoComentarioAtivos()) . '</th>'
+            $html .= '<thead><tr class="info"><th class="text-center">Coment&aacute;rios ' . count($grupoAtendimentoComentarioAtivos) . '</th>'
                     . '<th><span class="btn btn-primary btn-xs"><i class="fa fa-eye" onClick="$(\'.comentario_' . $grupo->getId() . '\').toggleClass(\'hidden\');"></i></button></th></tr></thead>';
             $html .= '<tbody>';
-            foreach ($grupo->getGrupoAtendimentoComentarioAtivos() as $grupoAtendimentoComentario) {
+            foreach ($grupoAtendimentoComentarioAtivos as $grupoAtendimentoComentario) {
                 $html .= '<tr class="hidden comentario_' . $grupo->getId() . '">';
                 $html .= '<td>';
                 $html .= '<span class="hidden-xs">' . $grupoAtendimentoComentario->getComentario() . '</span>';
@@ -297,6 +302,22 @@ class AtendimentoGruposAbaixo extends AbstractHelper {
 
     function setTipo($tipo) {
         $this->tipo = $tipo;
+    }
+
+    function getMes() {
+        return $this->mes;
+    }
+
+    function getAno() {
+        return $this->ano;
+    }
+
+    function setMes($mes) {
+        $this->mes = $mes;
+    }
+
+    function setAno($ano) {
+        $this->ano = $ano;
     }
 
 }

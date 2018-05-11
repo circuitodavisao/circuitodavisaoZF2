@@ -45,6 +45,9 @@ class Hierarquia extends CircuitoEntity {
     /** @ORM\Column(type="string") */
     protected $sigla;
 
+    /** @ORM\Column(type="string") */
+    protected $nome_feminino;
+
     function getNome() {
         return $this->nome;
     }
@@ -67,6 +70,14 @@ class Hierarquia extends CircuitoEntity {
 
     function setPessoaHierarquia($pessoaHierarquia) {
         $this->pessoaHierarquia = $pessoaHierarquia;
+    }
+
+    function getNome_feminino() {
+        return $this->nome_feminino;
+    }
+
+    function setNome_feminino($nome_feminino) {
+        $this->nome_feminino = $nome_feminino;
     }
 
 }
