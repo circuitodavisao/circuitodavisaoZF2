@@ -303,7 +303,7 @@ class CadastroController extends CircuitoController {
             $sessao->idTurma = $sessao->idSessao;
         }
         if ($pagina == Constantes::$PAGINA_DISCIPULADOS) {
-            $listagemDeEventos = $grupo->getGrupoEventoAtivosPorTipo($tipoDiscipulado);
+            $listagemDeEventos = $grupo->getGrupoEventoAtivosPorTipo(EventoTipo::tipoDiscipulado);
             $tituloDaPagina = Constantes::$TRADUCAO_LISTAGEM_DISCIPULADOS;
             $tipoEvento = 10;
             $extra = $grupo->getId();
