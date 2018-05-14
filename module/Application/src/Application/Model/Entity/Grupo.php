@@ -24,6 +24,11 @@ class Grupo extends CircuitoEntity {
     private $fatoRanking;
 
     /**
+     * @ORM\OneToMany(targetEntity="FatoDiscipulado", mappedBy="grupo")
+     */
+    private $fatoDiscipulado;
+
+    /**
      * @ORM\OneToOne(targetEntity="GrupoCv", mappedBy="grupo")
      */
     private $grupoCv;
@@ -89,6 +94,7 @@ class Grupo extends CircuitoEntity {
         $this->grupoPaiFilhoPai = new ArrayCollection();
         $this->turma = new ArrayCollection();
         $this->pessoaCursoAcesso = new ArrayCollection();
+        $this->fatoDiscipulado = new ArrayCollection();
     }
 
     /**
@@ -1205,10 +1211,12 @@ class Grupo extends CircuitoEntity {
         return $this->grupoAtendimentoComentario;
     }
 
-    function getGrupoAtendimentoComentarioAtivos() {
+    function getGrupoAtendimentoComentarioAtivos($mes, $ano) {
         $entidades = array();
         foreach ($this->getGrupoAtendimentoComentario() as $grupoAtendimentoComentario) {
-            if ($grupoAtendimentoComentario->verificarSeEstaAtivo()) {
+            if ($grupoAtendimentoComentario->verificarSeEstaAtivo() &&
+                    $grupoAtendimentoComentario->getData_criacaoMes() == $mes &&
+                    $grupoAtendimentoComentario->getData_criacaoAno() == $ano) {
                 $entidades[] = $grupoAtendimentoComentario;
             }
         }
@@ -1217,6 +1225,14 @@ class Grupo extends CircuitoEntity {
 
     function setGrupoAtendimentoComentario($grupoAtendimentoComentario) {
         $this->grupoAtendimentoComentario = $grupoAtendimentoComentario;
+    }
+
+    function getFatoDiscipulado() {
+        return $this->fatoDiscipulado;
+    }
+
+    function setFatoDiscipulado($fatoDiscipulado) {
+        $this->fatoDiscipulado = $fatoDiscipulado;
     }
 
 }
