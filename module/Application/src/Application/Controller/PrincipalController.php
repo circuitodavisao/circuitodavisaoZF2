@@ -4,6 +4,7 @@ namespace Application\Controller;
 
 use Application\Controller\Helper\Constantes;
 use Application\Controller\Helper\Funcoes;
+use Application\Form\FatoDiscipuladoForm;
 use Application\Form\HierarquiaForm;
 use Application\Form\NovoEmailForm;
 use Application\Form\RecuperarSenhaForm;
@@ -60,6 +61,18 @@ class PrincipalController extends CircuitoController {
         $alunosComFaltas = CursoController::pegarAlunosComFaltas($grupo, $turmas);
 
         $hierarquias = $this->getRepositorio()->getHierarquiaORM()->encontrarTodas();
+
+        /* verificar se participo de discipulado */
+//        if ($grupoEventoDiscipulado = $grupo->getGrupoEventoPorTipoEAtivo(EventoTipo::tipoDiscipulado)) {
+//            $eventoDiscipulado = $grupoEventoDiscipulado->getEvento();
+//
+//            $eventoDiscipulado->getGrupoEvento();
+//
+//            if ($fatoDiscipuloForm = new FatoDiscipuladoForm()) {
+//                
+//            }
+//        }
+
         $dados = array(
             'relatorio' => $relatorio,
             'relatorioAnterior' => $relatorioAnterior,
@@ -390,12 +403,16 @@ class PrincipalController extends CircuitoController {
 
                 $idPessoa = $post_data[Constantes::$INPUT_ID_PESSOA];
                 $pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($idPessoa);
-                $pessoa->setEmail($email);               
+                $pessoa->setEmail($email);
                 $this->getRepositorio()->getPessoaORM()->persistir($pessoa, $setarDataEHora);
                 $sessao->mostrarNotificacao = true;
                 $sessao->emailAlterado = true;
                 $this->getRepositorio()->fecharTransacao();
-                return $this->redirect()->toRoute('principal');
+
+                $sessao->idSessao = $pessoa->getResponsabilidadesAtivas()[0]->getGrupo()->getId();
+                return $this->redirect()->toRoute(Constantes::$ROUTE_PRINCIPAL, array(
+                            Constantes::$ACTION => 'ver',
+                ));
             } catch (Exception $exc) {
                 $this->getRepositorio()->desfazerTransacao();
                 echo $exc->getMessage();
