@@ -634,6 +634,9 @@ class Grupo extends CircuitoEntity {
                 if ($tipo === EventoTipo::tipoRevisao && $grupoEvento->getEvento()->verificaSeERevisao()) {
                     $grupoEventos[] = $grupoEvento;
                 }
+                if ($tipo === EventoTipo::tipoDiscipulado && $grupoEvento->getEvento()->verificaSeERevisao()) {
+                    $grupoEventos[] = $grupoEvento;
+                }
             }
         }
         return $grupoEventos;
