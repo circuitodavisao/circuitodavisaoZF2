@@ -253,7 +253,7 @@ class LancamentoController extends CircuitoController {
                     $realizadaAntesDeMudar = $fatoCelulaSelecionado->getRealizada();
                     $fatoCelulaSelecionado->setRealizada($realizada);
                     $setarDataEHora = false;
-                    $this->getRepositorio()->getFatoCelulaORM()->persistir($fatoCelulaSelecionado, $setarDataEHora);                  
+                    $this->getRepositorio()->getFatoCelulaORM()->persistir($fatoCelulaSelecionado, $setarDataEHora);
                 }
                 $tipoPessoa = 0;
                 if ($pessoa->getGrupoPessoaAtivo()) {
@@ -482,19 +482,17 @@ class LancamentoController extends CircuitoController {
         $periodo = 0;
         if (empty($parametro)) {
             $abaSelecionada = 1;
-            $mes = date('m');
         } else {
             $abaSelecionada = $parametro;
-            $mes = date('m') - 1;
-        }
-
-        $gruposAbaixo = null;
-        if ($grupo->getGrupoPaiFilhoFilhosPorMes($mes)) {
-            $gruposAbaixo = $grupo->getGrupoPaiFilhoFilhosPorMes($mes);
         }
 
         $mesSelecionado = Funcoes::mesPorAbaSelecionada($abaSelecionada);
         $anoSelecionado = Funcoes::anoPorAbaSelecionada($abaSelecionada);
+
+        $gruposAbaixo = null;
+        if ($grupo->getGrupoPaiFilhoFilhosPorMes($mesSelecionado)) {
+            $gruposAbaixo = $grupo->getGrupoPaiFilhoFilhosPorMes($mesSelecionado);
+        }
 
         /* Verificar data de cadastro da responsabilidade */
         $validacaoNesseMes = 0;
