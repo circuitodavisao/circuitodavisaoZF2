@@ -18,15 +18,15 @@ class Grupo extends CircuitoEntity {
     protected $ciclo;
     protected $eventos;
 
-//    /**
-//     * @ORM\OneToOne(targetEntity="FatoRanking", mappedBy="grupo")
-//     */
-//    private $fatoRanking;
+    /**
+     * @ORM\OneToOne(targetEntity="FatoRanking", mappedBy="grupo")
+     */
+    private $fatoRanking;
 
     /**
      * @ORM\OneToMany(targetEntity="FatoDiscipulado", mappedBy="grupo")
      */
-    private $fatoDiscipulado;
+//    private $fatoDiscipulado;
 
     /**
      * @ORM\OneToOne(targetEntity="GrupoCv", mappedBy="grupo")
