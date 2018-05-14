@@ -18,10 +18,10 @@ class Grupo extends CircuitoEntity {
     protected $ciclo;
     protected $eventos;
 
-    /**
-     * @ORM\OneToOne(targetEntity="FatoRanking", mappedBy="grupo")
-     */
-    private $fatoRanking;
+//    /**
+//     * @ORM\OneToOne(targetEntity="FatoRanking", mappedBy="grupo")
+//     */
+//    private $fatoRanking;
 
     /**
      * @ORM\OneToMany(targetEntity="FatoDiscipulado", mappedBy="grupo")
@@ -94,7 +94,7 @@ class Grupo extends CircuitoEntity {
         $this->grupoPaiFilhoPai = new ArrayCollection();
         $this->turma = new ArrayCollection();
         $this->pessoaCursoAcesso = new ArrayCollection();
-        $this->fatoDiscipulado = new ArrayCollection();
+//        $this->fatoDiscipulado = new ArrayCollection();
     }
 
     /**
