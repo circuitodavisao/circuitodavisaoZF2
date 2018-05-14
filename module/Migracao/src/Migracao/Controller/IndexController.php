@@ -7,6 +7,7 @@ use Application\Controller\Helper\Constantes;
 use Application\Controller\Helper\Funcoes;
 use Application\Controller\RelatorioController;
 use Application\Model\Entity\Entidade;
+use Application\Model\Entity\EntidadeTipo;
 use Application\Model\Entity\Evento;
 use Application\Model\Entity\EventoCelula;
 use Application\Model\Entity\EventoTipo;
@@ -467,7 +468,11 @@ class IndexController extends CircuitoController {
             $html .= $htmlBr . 'DataInativacao: ' . $entidadeAtual->getData_inativacaoStringPadraoBanco();
 
             $html .= $htmlBr . $htmlBr . "Criando nova entidade: " . $entidadeNovaInformacao;
-            $entidadeTipo = $this->getRepositorio()->getEntidadeTipoORM()->encontrarPorId(7); //sub equipe
+            $idEntidadeTipo = EntidadeTipo::subEquipe;
+            if ($grupoPaiSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() !== EntidadeTipo::subEquipe) {
+                $idEntidadeTipo = ($grupoPaiSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() + 1);
+            }
+            $entidadeTipo = $this->getRepositorio()->getEntidadeTipoORM()->encontrarPorId($idEntidadeTipo); 
             $entidadeNova = new Entidade();
             $entidadeNova->setGrupo($grupoSelecionado);
             $entidadeNova->setEntidadeTipo($entidadeTipo);

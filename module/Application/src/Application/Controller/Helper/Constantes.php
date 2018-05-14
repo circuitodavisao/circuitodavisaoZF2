@@ -492,6 +492,7 @@ class Constantes {
     public static $CONTROLLER_CADASTRO = 'Application\Controller\Cadastro';
     public static $ROUTE_CADASTRO = 'cadastro';
     public static $ROUTE_CURSO = 'curso';
+    public static $ROUTE_PRINCIPAL = 'principal';
     /* páginas relacionadas ao IV */
     public static $PAGINA_CADASTRAR_TURMA = 'TurmaForm';
     public static $PAGINA_SALVAR_TURMA = 'SalvarTurma';

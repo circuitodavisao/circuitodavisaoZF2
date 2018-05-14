@@ -112,11 +112,20 @@ class Perfil extends AbstractHelper {
             $elementoTelefone->setAttribute('disabled', true);
             $elementoSexo->setAttribute('disabled', true);
         }
-
+        $html .= '<br />';
+        $html .= $this->view->divMensagens();
         $html .= $this->view->inputFormularioSimples(Constantes::$TRADUCAO_NOME, $formulario->get(Constantes::$INPUT_NOME), 12);
         $html .= $this->view->inputFormularioSimples(Constantes::$TRADUCAO_DDD, $formulario->get(Constantes::$INPUT_DDD), 3);
         $html .= $this->view->inputFormularioSimples(Constantes::$TRADUCAO_TELEFONE, $formulario->get(Constantes::$INPUT_TELEFONE), 9);
         $html .= $this->view->inputFormularioSimples(Constantes::$TRADUCAO_SEXO, $formulario->get(Constantes::$INPUT_SEXO), 12, 2);
+
+        if ($this->getMostrarOpcoes()) {
+            $html .= '<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-center mt10">';
+            $funcaoVerificarPerfil = $this->view->funcaoOnClick('validarPerfil(this.form)');
+            $html .= $this->view->botaoLink($this->view->translate('Salvar Dados'), Constantes::$STRING_HASHTAG, 1, $funcaoVerificarPerfil);
+            $html .= '</div>';
+        }
+
         $html .= $this->view->inputFormularioSimples(Constantes::$TRADUCAO_CPF, $formulario->get(Constantes::$INPUT_CPF), 12);
         $html .= $this->view->inputFormularioSimples(Constantes::$TRADUCAO_EMAIL, $formulario->get(Constantes::$INPUT_EMAIL), 7);
         $html .= '<div class="col-xs-5 col-sm-5 col-md-5 col-lg-5 text-center mt35">';
@@ -141,12 +150,6 @@ class Perfil extends AbstractHelper {
         $html .= '</div>';
 
         $html .= '</div>';
-        if (!$this->getMostrarOpcoes()) {
-            $html .= '<div class="col-xs-5 col-sm-5 col-md-5 col-lg-5">';
-            $funcaoAlterarHierarquia = $this->view->funcaoOnClick('mostrarSplash(); funcaoCircuito("principalHierarquia", ' . $this->getPessoa()->getId() . ')');
-            $html .= $this->view->botaoSimples(Constantes::$TRADUCAO_ALTERAR, $funcaoAlterarHierarquia, BotaoSimples::botaoImportante, BotaoSimples::larguraMaxima);
-            $html .= '</div>';
-        }
 
         $html .= '<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-center mt10">';
         $funcaoAlterarSenha = $this->view->funcaoOnClick('mostrarSplash(); funcaoCircuito("principalSenha", ' . $this->getPessoa()->getId() . ')');
@@ -158,11 +161,8 @@ class Perfil extends AbstractHelper {
 
         if ($this->getMostrarOpcoes()) {
             $html .= '<div class="panel-footer text-right">';
-            $html .= $this->view->divMensagens();
             $html .= $this->view->formHidden($formulario->get(Constantes::$FORM_ID));
             $html .= $this->view->formHidden($formulario->get(Constantes::$INPUT_CSRF));
-            $funcaoVerificarPerfil = $this->view->funcaoOnClick('validarPerfil(this.form)');
-            $html .= $this->view->botaoLink($this->view->translate('Salvar Dados'), Constantes::$STRING_HASHTAG, 1, $funcaoVerificarPerfil);
             $html .= '</div>';
         }
 
