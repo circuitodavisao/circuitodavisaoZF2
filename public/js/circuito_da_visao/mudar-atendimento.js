@@ -50,18 +50,21 @@ function mudarAtendimento(idGrupo, tipo, abaSelecionada) {
                     if (numeroAtendimentos == 1) {
                         botaoRemover.removeClass('disabled');
                         botaoRemover.removeAttr('disabled');
-                        progressBarCabecalho.removeClass(corBarraVermelha);
-                        progressBarCabecalho.removeClass(corBarraAmarela);
-                        progressBarCabecalho.removeClass(corBarraVerde);
+
                         progressBar.attr('aria-valuenow', 50)
                                 .addClass(corBarraAmarela)
                                 .html(numeroAtendimentos)
                                 .css('width', '50%');
 
-                        progressBarCabecalho.attr('aria-valuenow', progresso)
-                                .addClass(data.corBarraTotal)
-                                .html(progresso + '%')
-                                .css('width', progresso + '%');
+                        if (parseInt(tipo) === 1) {
+                            progressBarCabecalho.removeClass(corBarraVermelha);
+                            progressBarCabecalho.removeClass(corBarraAmarela);
+                            progressBarCabecalho.removeClass(corBarraVerde);
+                            progressBarCabecalho.attr('aria-valuenow', progresso)
+                                    .addClass(data.corBarraTotal)
+                                    .html(progresso + '%')
+                                    .css('width', progresso + '%');
+                        }
 
                         $('#totalGruposAtendidos').text(data.totalGruposAtendidos);
                     }
