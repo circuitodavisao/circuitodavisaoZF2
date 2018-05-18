@@ -13,10 +13,10 @@ ADD circuitodavisaonovo.com.br.key /etc/apache2/ssl/circuitodavisaonovo.com.br.k
 #RUN chmod 0644 /etc/cron.d/cron
 
 RUN chmod -R 777 /var/www
-RUN a2enmod rewrite
-RUN a2enmod php5
-RUN a2enmod ssl
-RUN service apache2 restart
+#RUN a2enmod rewrite
+#RUN a2enmod php5
+#RUN a2enmod ssl
+#RUN service apache2 restart
 
 # Manually set up the apache environment variables
 ENV APACHE_RUN_USER www-data
