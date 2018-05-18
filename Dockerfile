@@ -1,8 +1,5 @@
 FROM ubuntu:14.04
-
-MAINTAINER Leonardo Pereira Magalhaes: 0.1
-
-RUN apt-get update && apt-get install -y git apache2 php5 php5-intl libapache2-mod-php5 php5-pgsql php5-mysql php5-curl curl && apt-get clean && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y git apache2 php5 php5-intl libapache2-mod-php5 php5-pgsql php5-mysql php5-curl curl
 
 COPY / /var/www/html/
 ADD 000-default.conf /etc/apache2/sites-enabled/000-default.conf
@@ -28,7 +25,7 @@ ENV APACHE_LOG_DIR /var/log/apache2
 ENV APACHE_LOCK_DIR /var/lock/apache2
 ENV APACHE_PID_FILE /var/run/apache2.pid
 
-#EXPOSE 80
-EXPOSE 443
+EXPOSE 80
+#EXPOSE 443
 
-CMD ["/usr/sbin/apache2ctl", "-D", "FOREGROUND"]
+CMD /usr/sbin/apache2ctl -D FOREGROUND
