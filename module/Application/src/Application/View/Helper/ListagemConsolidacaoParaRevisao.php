@@ -138,7 +138,7 @@ class ListagemConsolidacaoParaRevisao extends AbstractHelper {
 
         /* Sem pessoas cadastrados */
         if (count($pessoas) == 0) {
-            $html .= '<div class="alert alert-warning"><i class="fa fa-warning pr10" aria-hidden="true"></i>&nbsp;Sem Pessoas Cadastradas!</div>';
+            $html .= '<div class="alert alert-warning mt50"><i class="fa fa-warning pr10" aria-hidden="true"></i>&nbsp;Sem Pessoas Cadastradas como visitante ou consolidação no lançamento de dados!</div>';
         } else {
 
             $html .= $this->view->templateFormularioTopo('Selecionar pessoa para o revisão');
