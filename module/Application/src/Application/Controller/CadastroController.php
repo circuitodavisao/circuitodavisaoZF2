@@ -1795,11 +1795,40 @@ class CadastroController extends CircuitoController {
                             break;
                     }
 
-                    $grupoCv = $grupoLider->getGrupoCv();
-                    if ($numeroLideres > 1) {
-                        $idAluno = IndexController::cadastrarPessoaRevisionista($idEquipe, $pessoaRevisionista->getNome(), substr('' . $pessoaRevisionista->getTelefone() . '', 0, 2), substr('' . $pessoaRevisionista->getTelefone() . '', 2, strlen('' . $pessoaRevisionista->getTelefone() . '')), $pessoaRevisionista->getSexo(), $pessoaRevisionista->getData_nascimento(), $grupoCv->getLider1(), $grupoCv->getLider2());
+                    $idLider1 = 0;
+                    $idLider2 = 0;
+
+                    if ($grupoLider->getGrupoCv()) {
+                        $grupoCv = $grupoLider->getGrupoCv();
                     } else {
-                        $idAluno = IndexController::cadastrarPessoaRevisionista($idEquipe, $pessoaRevisionista->getNome(), substr('' . $pessoaRevisionista->getTelefone() . '', 0, 2), substr('' . $pessoaRevisionista->getTelefone() . '', 2, strlen('' . $pessoaRevisionista->getTelefone() . '')), $pessoaRevisionista->getSexo(), $pessoaRevisionista->getData_nascimento(), $grupoCv->getLider1());
+                        $grupoCv = $grupoLider->getGrupoEquipe()->getGrupoCv();
+                    }
+                    if ($numeroLideres > 1) {
+                        $idLider1 = $grupoCv->getLider1();
+                        $idLider2 = $grupoCv->getLider2();
+                    } else {
+                        $idLider1 = $grupoCv->getLider1();
+                    }
+
+                    if ($numeroLideres > 1) {
+                        $idAluno = IndexController::cadastrarPessoaRevisionista(
+                                $idEquipe, 
+                                $pessoaRevisionista->getNome(), 
+                                substr('' . $pessoaRevisionista->getTelefone() . '', 0, 2), 
+                                substr('' . $pessoaRevisionista->getTelefone() . '', 2, strlen('' . $pessoaRevisionista->getTelefone() . '')),
+                                $pessoaRevisionista->getSexo(), 
+                                $pessoaRevisionista->getData_nascimento(), 
+                                $idLider1, 
+                                $idLider2);
+                    } else {
+                        $idAluno = IndexController::cadastrarPessoaRevisionista(
+                                $idEquipe, 
+                                $pessoaRevisionista->getNome(), 
+                                substr('' . $pessoaRevisionista->getTelefone() . '', 0, 2), 
+                                substr('' . $pessoaRevisionista->getTelefone() . '', 2, strlen('' . $pessoaRevisionista->getTelefone() . '')), 
+                                $pessoaRevisionista->getSexo(),
+                                $pessoaRevisionista->getData_nascimento(), 
+                                $idLider1);
                     }
 
                     $idRevisaoCVAntigo = 8902;
@@ -1809,9 +1838,9 @@ class CadastroController extends CircuitoController {
                     /* Fim da migração do Sistema Antigo */
 
                     $this->getRepositorio()->fecharTransacao();
-                    return $this->redirect()->toRoute(Constantes::$ROUTE_CADASTRO, array(
-                                Constantes::$PAGINA => Constantes::$PAGINA_ATIVAR_FICHA_REVISAO,
-                    ));
+//                    return $this->redirect()->toRoute(Constantes::$ROUTE_CADASTRO, array(
+//                                Constantes::$PAGINA => Constantes::$PAGINA_ATIVAR_FICHA_REVISAO,
+//                    ));
                 } else {
                     $this->getRepositorio()->desfazerTransacao();
                     return $this->redirect()->toRoute(Constantes::$ROUTE_CADASTRO, array(
