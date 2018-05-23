@@ -1838,9 +1838,9 @@ class CadastroController extends CircuitoController {
                     /* Fim da migração do Sistema Antigo */
 
                     $this->getRepositorio()->fecharTransacao();
-                    return $this->redirect()->toRoute(Constantes::$ROUTE_CADASTRO, array(
-                                Constantes::$PAGINA => Constantes::$PAGINA_ATIVAR_FICHA_REVISAO,
-                    ));
+//                    return $this->redirect()->toRoute(Constantes::$ROUTE_CADASTRO, array(
+//                                Constantes::$PAGINA => Constantes::$PAGINA_ATIVAR_FICHA_REVISAO,
+//                    ));
                 } else {
                     $this->getRepositorio()->desfazerTransacao();
                     return $this->redirect()->toRoute(Constantes::$ROUTE_CADASTRO, array(
