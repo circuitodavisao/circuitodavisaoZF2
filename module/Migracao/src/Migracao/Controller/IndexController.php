@@ -1137,7 +1137,7 @@ class IndexController extends CircuitoController {
     }
 
     public static function cadastrarPessoaRevisionista($idEquipe = 1, $nome, $ddd, $telefone, $sexo, $dataNascimento, $lider1, $lider2 = null) {
-        if ($lider2) {
+        if ($lider2) { 
             $campos = 'nome, dddCelular, telefoneCelular, sexo, dataNascimento , idLider, idLider2, idEquipe';
             $stringValues = "'$nome', $ddd, $telefone, '$sexo', '$dataNascimento', $lider1, $lider2, $idEquipe";
         } else {
