@@ -1812,10 +1812,23 @@ class CadastroController extends CircuitoController {
 
                     if ($numeroLideres > 1) {
                         $idAluno = IndexController::cadastrarPessoaRevisionista(
-                                        $idEquipe, $pessoaRevisionista->getNome(), substr('' . $pessoaRevisionista->getTelefone() . '', 0, 2), substr('' . $pessoaRevisionista->getTelefone() . '', 2, strlen('' . $pessoaRevisionista->getTelefone() . '')), $pessoaRevisionista->getSexo(), $pessoaRevisionista->getData_nascimento(), $idLider1, $idLider2);
+                                        $idEquipe, 
+                                $pessoaRevisionista->getNome(), 
+                                substr('' . $pessoaRevisionista->getTelefone() . '', 0, 2), 
+                                substr('' . $pessoaRevisionista->getTelefone() . '', 2, strlen('' . $pessoaRevisionista->getTelefone() . '')), 
+                                $pessoaRevisionista->getSexo(), 
+                                $pessoaRevisionista->getData_nascimento(), 
+                                $idLider1, 
+                                $idLider2);
                     } else {
                         $idAluno = IndexController::cadastrarPessoaRevisionista(
-                                        $idEquipe, $pessoaRevisionista->getNome(), substr('' . $pessoaRevisionista->getTelefone() . '', 0, 2), substr('' . $pessoaRevisionista->getTelefone() . '', 2, strlen('' . $pessoaRevisionista->getTelefone() . '')), $pessoaRevisionista->getSexo(), $pessoaRevisionista->getData_nascimento(), $idLider1);
+                                        $idEquipe, 
+                                $pessoaRevisionista->getNome(), 
+                                substr('' . $pessoaRevisionista->getTelefone() . '', 0, 2), 
+                                substr('' . $pessoaRevisionista->getTelefone() . '', 2, strlen('' . $pessoaRevisionista->getTelefone() . '')), 
+                                $pessoaRevisionista->getSexo(), 
+                                $pessoaRevisionista->getData_nascimento(), 
+                                $idLider1);
                     }
 
                     $idRevisaoCVAntigo = 8902;
