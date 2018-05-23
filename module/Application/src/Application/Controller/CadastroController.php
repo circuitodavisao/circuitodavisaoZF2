@@ -1833,14 +1833,14 @@ class CadastroController extends CircuitoController {
 
                     $idRevisaoCVAntigo = 8902;
                     $idSituacao = 1;
-                    IndexController::cadastrarPessoaAluno($idAluno, $idRevisaoCVAntigo, 'A', $idSituacao);
+                    echo IndexController::cadastrarPessoaAluno($idAluno, $idRevisaoCVAntigo, 'A', $idSituacao);
 
                     /* Fim da migração do Sistema Antigo */
 
-                    $this->getRepositorio()->fecharTransacao();
-                    return $this->redirect()->toRoute(Constantes::$ROUTE_CADASTRO, array(
-                                Constantes::$PAGINA => Constantes::$PAGINA_ATIVAR_FICHA_REVISAO,
-                    ));
+//                    $this->getRepositorio()->fecharTransacao();
+//                    return $this->redirect()->toRoute(Constantes::$ROUTE_CADASTRO, array(
+//                                Constantes::$PAGINA => Constantes::$PAGINA_ATIVAR_FICHA_REVISAO,
+//                    ));
                 } else {
                     $this->getRepositorio()->desfazerTransacao();
                     return $this->redirect()->toRoute(Constantes::$ROUTE_CADASTRO, array(
