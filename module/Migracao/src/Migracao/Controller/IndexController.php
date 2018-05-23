@@ -472,7 +472,7 @@ class IndexController extends CircuitoController {
             if ($grupoPaiSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() !== EntidadeTipo::subEquipe) {
                 $idEntidadeTipo = ($grupoPaiSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() + 1);
             }
-            $entidadeTipo = $this->getRepositorio()->getEntidadeTipoORM()->encontrarPorId($idEntidadeTipo); 
+            $entidadeTipo = $this->getRepositorio()->getEntidadeTipoORM()->encontrarPorId($idEntidadeTipo);
             $entidadeNova = new Entidade();
             $entidadeNova->setGrupo($grupoSelecionado);
             $entidadeNova->setEntidadeTipo($entidadeTipo);
@@ -1136,7 +1136,7 @@ class IndexController extends CircuitoController {
         return mysqli_insert_id(IndexController::pegaConexaoStatica());
     }
 
-    public static function cadastrarPessoaRevisionista($nome, $ddd, $telefone, $sexo, $dataNascimento, $lider1, $lider2 = null, $idEquipe = 3749) {
+    public static function cadastrarPessoaRevisionista($idEquipe = 1, $nome, $ddd, $telefone, $sexo, $dataNascimento, $lider1, $lider2 = null) {
         if ($lider2) {
             $campos = 'nome, dddCelular, telefoneCelular, sexo, dataNascimento , idLider, idLider2, idEquipe';
             $stringValues = "'$nome', $ddd, $telefone, '$sexo', '$dataNascimento', $lider1, $lider2, $idEquipe";
