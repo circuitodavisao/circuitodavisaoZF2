@@ -253,6 +253,8 @@ class Constantes {
     public static $ENTITY_TURMA_PESSOA_SITUACAO = 'Application\Model\Entity\TurmaPessoaSituacao';
     public static $ENTITY_TURMA_PESSOA_FREQUENCIA = 'Application\Model\Entity\TurmaPessoaFrequencia';
     public static $ENTITY_TURMA_PESSOA_AULA = 'Application\Model\Entity\TurmaPessoaAula';
+    public static $ENTITY_TURMA_PESSOA_VISTO = 'Application\Model\Entity\TurmaPessoaVisto';
+    public static $ENTITY_TURMA_PESSOA_FINANCEIRO = 'Application\Model\Entity\TurmaPessoaFinanceiro';
     public static $ENTITY_TURMA_AULA = 'Application\Model\Entity\TurmaAula';
     public static $ENTITY_TURMA_PESSOA = 'Application\Model\Entity\TurmaPessoa';
     public static $ENTITY_TURMA = 'Application\Model\Entity\Turma';
@@ -387,7 +389,7 @@ class Constantes {
     public static $TRADUCAO_ATIVAR_FICHA = 'Enable Bookmarks of Revision of Life';
     public static $TRADUCAO_SELECIONAR_LIDER_REVISAO_PRIMEIRO_LABEL = 'Enable Leaders in';
     public static $TRADUCAO_SELECIONAR_LIDER_REVISAO_SEGUNDO_LABEL = 'Life Review';
-    public static $TRADUCAO_ATIVAR = 'Enable';
+    public static $TRADUCAO_ATIVAR = 'Ativar';
     public static $TRADUCAO_ATIVAR_FICHA_LABEL = 'Enable Bookmarks';
     public static $TRADUCAO_FICHAS_ATIVAS_LABEL = 'Bookmarks Enables';
     public static $TRADUCAO_NOVO_CADASTRO_REVISAO_LABEL = 'Person at the revision of live';
