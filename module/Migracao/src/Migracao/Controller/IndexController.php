@@ -1165,7 +1165,7 @@ class IndexController extends CircuitoController {
 
         $sqlPessoaAluno = "INSERT INTO ursula_turma_aluno_ursula ($campos) VALUES ($stringValues);";
         echo "$sqlPessoaAluno";
-        mysqli_query(IndexController::pegaConexaoStatica(), $sqlPessoaAluno);
+        echo "Cadastro PessoAluno: " . mysqli_query(IndexController::pegaConexaoStatica(), $sqlPessoaAluno);
 
         return mysqli_insert_id(IndexController::pegaConexaoStatica());
     }
