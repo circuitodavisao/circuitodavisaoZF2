@@ -1149,7 +1149,7 @@ class IndexController extends CircuitoController {
         $sqlPessoaInsert = "INSERT INTO ursula_pessoa_ursula ($campos) VALUES ($stringValues);";
         echo "$sqlPessoaInsert";
         mysqli_query(IndexController::pegaConexaoStatica(), $sqlPessoaInsert);
-        $sqlSelectPessoa = "SELECT id FROM ursula_pessoa_ursula WHERE $camposSelect LIMIT 1 ;";
+        $sqlSelectPessoa = "SELECT id FROM ursula_pessoa_ursula WHERE $camposSelect ORDER BY id DESC LIMIT 1 ;";
         $queryPessoa = mysqli_query(IndexController::pegaConexaoStatica(), $sqlSelectPessoa);
         echo $sqlSelectPessoa;
         $idAluno = 0;
