@@ -48,7 +48,7 @@ class ListagemFichasParaRevisao extends AbstractHelper {
                     if ($this->view->entidade->getGrupo()->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::IGREJA) {
                         $idGrupoIgrejaDoRevisionista = $grupoPessoa->getGrupo()->getGrupoIgreja();
                         $idGrupoIgrejaLogado = $this->view->entidade->getGrupo()->getGrupoIgreja();
-                        if (($idGrupoIgrejaDoRevisionista == $idGrupoIgrejaLogado) && ($f->getFrequencia() == 'N')) {
+                        if (($idGrupoIgrejaDoRevisionista == $idGrupoIgrejaLogado)) {
                             $pAux->setId($f->getId());
                             $pAux->setNome($p->getNome());
                             $pessoas[] = $pAux;
@@ -56,7 +56,7 @@ class ListagemFichasParaRevisao extends AbstractHelper {
                     } else {
                         $idGrupoEquipeDoRevisionista = $grupoPessoa->getGrupo()->getGrupoEquipe();
                         $idGrupoEquipeLogado = $this->view->entidade->getGrupo()->getGrupoEquipe();
-                        if (($idGrupoEquipeDoRevisionista == $idGrupoEquipeLogado) && ($f->getFrequencia() == 'N')) {
+                        if (($idGrupoEquipeDoRevisionista == $idGrupoEquipeLogado)) {
                             $pAux->setId($f->getId());
                             $pAux->setNome($p->getNome());
                             $pAux->setEntidade($grupoPessoa->getGrupo()->getEntidadeAtiva()->infoEntidade());
