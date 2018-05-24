@@ -33,7 +33,7 @@ if (count($pessoas) == 0) {
         }
     }
 
-    $html .= $this->templateFormularioTopo('Listagem de Líderes para o Revisão de Vidas', $id = '', $mw = 'mw500');
+    $html .= $this->templateFormularioTopo('Listagem de Líderes para o Revisão de Vidas', $id = '', $mw = '500mw');
     $html .= '<div class="panel-body bg-light">';
 
     $html .= '<table class="table">';
@@ -57,11 +57,11 @@ if (count($pessoas) == 0) {
     foreach ($pessoas as $pessoa) {
         $html .= '<tr>';
 
-        $html .= '<td class="text-center">' . $pessoa->getId() . '</td>';
+        $html .= '<td>' . $pessoa->getId() . '</td>';
 
-        $html .= '<td class="text-center"><span class="visible-lg visible-md">' . $pessoa->getNome() . '</span><span class="visible-sm visible-xs">' . $pessoa->getNomePrimeiroUltimo() . '</span></td>';
+        $html .= '<td><span class="visible-lg visible-md">' . $pessoa->getNome() . '</span><span class="visible-sm visible-xs">' . $pessoa->getNomePrimeiroUltimo() . '</span></td>';
 
-        $html .= '<td class="text-center">' . $pessoa->getResponsabilidadesAtivas()[0]->getGrupo()->getGrupoEquipe()->getEntidadeAtiva()->getNome() . '</td>';
+        $html .= '<td>' . $pessoa->getResponsabilidadesAtivas()[0]->getGrupo()->getGrupoEquipe()->getEntidadeAtiva()->getNome() . '</td>';
 
         $html .= '</tr>';
     }
