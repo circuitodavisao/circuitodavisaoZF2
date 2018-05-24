@@ -138,6 +138,15 @@ class Pessoa extends CircuitoEntity implements InputFilterAwareInterface {
     protected $ativo;
     protected $matriculaAtual;
     protected $entidade;
+    protected $noRevisao;
+
+    function getNoRevisao() {
+        return $this->noRevisao;
+    }
+
+    function setNoRevisao($noRevisao) {
+        $this->noRevisao = $noRevisao;
+    }
 
     function getEntidade() {
         return $this->entidade;
