@@ -45,7 +45,7 @@ class ListagemFichasParaRevisao extends AbstractHelper {
                 $pAux = new Pessoa();
                 $grupoPessoa = $p->getGrupoPessoaAtivo();
                 if ($grupoPessoa != null) {
-                    if($this->view->entidade->getGrupo()->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::IGREJA){
+                    if ($this->view->entidade->getGrupo()->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::IGREJA) {
                         $idGrupoIgrejaDoRevisionista = $grupoPessoa->getGrupo()->getGrupoIgreja();
                         $idGrupoIgrejaLogado = $this->view->entidade->getGrupo()->getGrupoIgreja();
                         if (($idGrupoIgrejaDoRevisionista == $idGrupoIgrejaLogado) && ($f->getFrequencia() == 'N')) {
@@ -53,13 +53,14 @@ class ListagemFichasParaRevisao extends AbstractHelper {
                             $pAux->setNome($p->getNome());
                             $pessoas[] = $pAux;
                         }
-                    }else{
-                        $idGrupoEquipeDoRevisionista = $grupoPessoa->getGrupo()->getGrupoEquipe(); 
+                    } else {
+                        $idGrupoEquipeDoRevisionista = $grupoPessoa->getGrupo()->getGrupoEquipe();
                         $idGrupoEquipeLogado = $this->view->entidade->getGrupo()->getGrupoEquipe();
                         if (($idGrupoEquipeDoRevisionista == $idGrupoEquipeLogado) && ($f->getFrequencia() == 'N')) {
                             $pAux->setId($f->getId());
                             $pAux->setNome($p->getNome());
-                            $pessoas[] = $pAux; 
+                            $pAux->setEntidade($grupoPessoa->getGrupo()->getEntidadeAtiva()->infoEntidade());
+                            $pessoas[] = $pAux;
                         }
                     }
                 }
@@ -84,6 +85,8 @@ class ListagemFichasParaRevisao extends AbstractHelper {
             $html .= '<th class="text-center">';
             $html .= $this->view->translate(Constantes::$TRADUCAO_NOME_REVISIONISTA);
             $html .= '</th>';
+
+            $html .= '<th class="text-center">Equipe</th>';
 //                    }
             $html .= '<th class="text-center"></th>';
             $html .= '</tr>';
@@ -92,12 +95,14 @@ class ListagemFichasParaRevisao extends AbstractHelper {
 
             foreach ($pessoas as $pessoa) {
                 $html .= '<tr>';
- 
+
                 $html .= '<td class="text-center">' . $pessoa->getId() . '</td>';
 
                 $stringNomeDaFuncaoOnClickInserir = 'funcaoCadastro("' . Constantes::$PAGINA_FICHA_REVISAO . '", ' . $pessoa->getId() . ')';
 
                 $html .= '<td class="text-center"><span class="visible-lg visible-md">' . $pessoa->getNome() . '</span><span class="visible-sm visible-xs">' . $pessoa->getNomePrimeiroUltimo() . '</span></td>';
+
+                $html .= '<td class="text-center">' . $pessoa->getEntidade() . '</td>';
 
                 $html .= '<td class="text-center">';
 

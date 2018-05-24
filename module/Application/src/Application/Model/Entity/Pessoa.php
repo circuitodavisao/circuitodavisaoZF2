@@ -137,6 +137,15 @@ class Pessoa extends CircuitoEntity implements InputFilterAwareInterface {
     protected $idGrupoPessoa;
     protected $ativo;
     protected $matriculaAtual;
+    protected $entidade;
+
+    function getEntidade() {
+        return $this->entidade;
+    }
+
+    function setEntidade($entidade) {
+        $this->entidade = $entidade;
+    }
 
     /**
      * Recupera as Responsabilidades ativas
