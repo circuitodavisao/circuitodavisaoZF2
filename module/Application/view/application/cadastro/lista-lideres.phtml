@@ -10,7 +10,7 @@ if (count($frequencias) > 0) {
     foreach ($frequencias as $frequencia) {
         $pessoa = $frequencia->getPessoa();
         if ($grupoRespossabilidades = $pessoa->getResponsabilidadesAtivas()) {
-            i(!in_array($pessoa, $pessoas)) {
+            if(!in_array($pessoa, $pessoas)) {
                 $pessoas[] = $pessoa;
             }
         }
