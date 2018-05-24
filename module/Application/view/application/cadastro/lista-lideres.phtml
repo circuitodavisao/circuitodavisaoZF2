@@ -21,7 +21,7 @@ if (count($pessoas) == 0) {
     $html .= '<div class="alert alert-warning"><i class="fa fa-warning pr10" aria-hidden="true"></i>&nbsp;Sem Líderes Cadastrados!</div>';
 } else {
 
-    $html .= $this->view->templateFormularioTopo('Listagem de Líderes para o Revisão de Vidas');
+    $html .= $this->templateFormularioTopo('Listagem de Líderes para o Revisão de Vidas');
     $html .= '<div class="panel-body bg-light">';
 
     $html .= '<table class="table">';
@@ -29,10 +29,10 @@ if (count($pessoas) == 0) {
     $html .= '<tr>';
 
     $html .= '<th class="text-center">';
-    $html .= $this->view->translate(Constantes::$TRADUCAO_MATRICULA);
+    $html .= $this->translate(Constantes::$TRADUCAO_MATRICULA);
     $html .= '</th>';
     $html .= '<th class="text-center">';
-    $html .= $this->view->translate(Constantes::$TRADUCAO_NOME);
+    $html .= $this->translate(Constantes::$TRADUCAO_NOME);
     $html .= '</th>';
 
     $html .= '<th class="text-center">Equipe</th>';
@@ -57,15 +57,7 @@ if (count($pessoas) == 0) {
     $html .= '</table>';
 
     $html .= '</div>';
-    /* Fim panel-body */
-    $html .= '<div class="panel-footer text-right">';
-
-    $stringNomeDaFuncaoOnClickCadastro = 'funcaoCadastro("' . Constantes::$PAGINA_FICHA_REVISIONISTAS . '", ' . $pessoa->getId() . ')';
-    $html .= $this->view->botaoLink($this->view->translate(Constantes::$TRADUCAO_VOLTAR), Constantes::$STRING_HASHTAG, 0, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClickCadastro));
-
-    /* Fim Botões */
-    $html .= '</div>';
-    /* Fim panel-footer */
+   
     $html .= $this->templateFormularioRodape();
 }
 
