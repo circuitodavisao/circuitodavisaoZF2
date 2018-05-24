@@ -49,7 +49,7 @@ if (count($pessoas) == 0) {
 
         $html .= '<td class="text-center"><span class="visible-lg visible-md">' . $pessoa->getNome() . '</span><span class="visible-sm visible-xs">' . $pessoa->getNomePrimeiroUltimo() . '</span></td>';
 
-        $html .= '<td class="text-center">' . $pessoa->getResponsabilidadesAtivas()[0]->getGrupo()->getEntidadeAtiva()->infoEntidade() . '</td>';
+        $html .= '<td class="text-center">' . $pessoa->getResponsabilidadesAtivas()[0]->getGrupo()->getGrupoEquipe()->getEntidadeAtiva()->getNome() . '</td>';
 
         $html .= '</tr>';
     }
