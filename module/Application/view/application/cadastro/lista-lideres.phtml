@@ -10,7 +10,13 @@ if (count($frequencias) > 0) {
     foreach ($frequencias as $frequencia) {
         $pessoa = $frequencia->getPessoa();
         if ($grupoRespossabilidades = $pessoa->getResponsabilidadesAtivas()) {
-            if (!in_array($pessoa, $pessoas)) {
+            $jaExiste = false;
+            foreach ($pessoas as $pessoaParaVerificar) {
+                if ($pessoaParaVerificar->getId() === $pessoa->getId()) {
+                    $jaExiste = true;
+                }
+            }
+            if (!$jaExiste) {
                 $pessoas[] = $pessoa;
             }
         }
