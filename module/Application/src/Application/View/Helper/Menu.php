@@ -517,9 +517,16 @@ class Menu extends AbstractHelper {
         $html .= '<li>';
         $html .= '<a href="/cadastroFichaRevisionistas" onClick="mostrarSplash();">';
         $html .= '<span class="fa fa-terminal"></span>';
-        $html .= 'Fichas Revisao';
+        $html .= 'Fichas Revisão';
         $html .= '</a>';
-        $html .= '</li>';    
+        $html .= '</li>';
+
+        $html .= '<li>';
+        $html .= '<a href="/cadastroListagemLideres" onClick="mostrarSplash();">';
+        $html .= '<span class="fa fa-terminal"></span>';
+        $html .= 'Listagem de Líderes';
+        $html .= '</a>'; 
+        $html .= '</li>';
 
         $html .= '</ul>';
         $html .= '</li>';

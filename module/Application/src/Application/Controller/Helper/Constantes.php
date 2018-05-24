@@ -342,6 +342,7 @@ class Constantes {
     public static $PAGINA_ATIVAR_FICHA_REVISAO = 'AtivarFichaRevisao';
     public static $PAGINA_ATIVAR_LIDERES_REVISAO = 'AtivarLideresRevisao';
     public static $PAGINA_LIDERES_REVISAO = 'LideresRevisao';
+    public static $PAGINA_LISTAGEM_LIDERES = 'ListagemLideres';
     public static $PAGINA_CONSULTAR_FICHA = 'ConsultarFicha';
     public static $PAGINA_FUNCOES = 'Funcoes';
     public static $PAGINA_MUDAR_ATENDIMENTO = 'MudarAtendimento';
@@ -483,6 +484,7 @@ class Constantes {
     public static $PAGINA_CADASTRO_REVISAO = 'CadastrarRevisao';
     public static $PAGINA_SELECIONAR_REVISIONISTA = 'SelecionarRevisionista';
     public static $PAGINA_SELECIONAR_FICHA_REVISIONISTA = 'SelecionarFichasRevisionista';
+    public static $PAGINA_LISTA_LIDERES = 'ListaLideres';
     public static $PAGINA_SELECIONAR_FICHA_ATIVAS = 'SelecionarFichasAtivas';
     public static $PAGINA_INSERIR_REVISAO = 'InserirRevisao';
     public static $PAGINA_SALVAR_REVISAO = 'SalvarRevisao';
@@ -800,6 +802,7 @@ class Constantes {
     public static $TRADUCAO_LISTAGEM_DISCIPULADOS = 'Lista <b class="text-danger">Discipulados</b>';
     public static $TRADUCAO_LISTAGEM_REVISAO = 'Listing <b class="text-danger">Revision of lives</b>';
     public static $TRADUCAO_LISTAGEM_REVISIONISTAS = 'Listing <b class="text-danger">Revision of lives</b>';
+    public static $TRADUCAO_LISTAGEM_LIDERES = 'Listagem de <b class="text-danger">Líderes</b>';
     public static $TRADUCAO_LISTAGEM_CELULAS = 'Listing Cells of';
     public static $TRADUCAO_DIA_HORA = 'Day / Hour';
     public static $TRADUCAO_DADOS_DO_HOSPEDEIRO = 'Data from Host';

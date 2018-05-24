@@ -39,6 +39,7 @@ class ListagemDeEventos extends AbstractHelper {
         $tipoAtivacaoFichas = ($this->view->tipoEvento == 8);
         $tipoListarRevisaoTurma = ($this->view->tipoEvento == 9);
         $tipoListarDiscipulados = ($this->view->tipoEvento == 10);
+        $tipoListarLideres = ($this->view->tipoEvento == 11);
 
         $html .= $this->view->templateFormularioTopo($this->getTitulo());
         $html .= '<div class="panel-body bg-light">';
@@ -84,7 +85,7 @@ class ListagemDeEventos extends AbstractHelper {
                 $html .= $this->view->translate(Constantes::$TRADUCAO_IGREJAS);
                 $html .= '</th>';
             }
-            if ($tipoRevisionistas || $tipoFichasRevisionistas || $tipoAtivosRevisionistas || $tipoLideresRevisao) {
+            if ($tipoRevisionistas || $tipoFichasRevisionistas || $tipoAtivosRevisionistas || $tipoLideresRevisao || $tipoListarLideres) {
                 $html .= '<th class="text-center">';
                 $html .= $this->view->translate(Constantes::$TRADUCAO_DATA_SIMPLIFICADO);
                 $html .= '</th>';
@@ -198,11 +199,11 @@ class ListagemDeEventos extends AbstractHelper {
                     $html .= $this->view->botaoLink($this->view->translate(Constantes::$TRADUCAO_NOVO_REVISIONISTA), Constantes::$STRING_HASHTAG, 4, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClickInserir));
                     $html .= '</td>';
                 }
-                if ($tipoFichasRevisionistas) {
+                if ($tipoFichasRevisionistas || $tipoListarLideres) {
 
                     $html .= '<td class="text-center">' . Funcoes::mudarPadraoData($evento->getData(), 1) . '</td>';
 
-                    $stringNomeDaFuncaoOnClickInserir = 'mostrarSplash(); funcaoCircuito("cadastro' . Constantes::$PAGINA_SELECIONAR_FICHA_REVISIONISTA . '", ' . $evento->getId() . ')';
+
                     $grupoEventoAtivos = $evento->getGrupoEventoAtivos();
                     $texto = '';
                     foreach ($grupoEventoAtivos as $gea) {
@@ -213,8 +214,13 @@ class ListagemDeEventos extends AbstractHelper {
                     $html .= '<td class="text-center"><span class="visible-lg visible-md">' . $evento->getNome() . '</span><span class="visible-sm visible-xs">' . $evento->getNomeAjustado() . '</span></td>';
 
                     $html .= '<td class="text-center">';
-
-                    $html .= $this->view->botaoLink($this->view->translate(Constantes::$TRADUCAO_NOVO_REVISIONISTA), Constantes::$STRING_HASHTAG, 4, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClickInserir));
+                    if ($tipoFichasRevisionistas) {
+                        $stringNomeDaFuncaoOnClickInserir = 'mostrarSplash(); funcaoCircuito("cadastro' . Constantes::$PAGINA_SELECIONAR_FICHA_REVISIONISTA . '", ' . $evento->getId() . ')';
+                    }
+                    if ($tipoListarLideres) {
+                        $stringNomeDaFuncaoOnClickInserir = 'mostrarSplash(); funcaoCircuito("cadastro' . Constantes::$PAGINA_LISTA_LIDERES . '", ' . $evento->getId() . ')';
+                    }
+                    $html .= $this->view->botaoLink($this->view->translate(Constantes::$TRADUCAO_SELECIONE), Constantes::$STRING_HASHTAG, 4, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClickInserir));
                     $html .= '</td>';
                 }
                 if ($tipoLideresRevisao) {
