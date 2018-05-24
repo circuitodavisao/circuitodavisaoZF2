@@ -21,7 +21,7 @@ if (count($pessoas) == 0) {
 } else {
     /* Ordenacao */
     for ($indice1 = 0; $indice1 < count($pessoas); $indice1++) {
-        for ($indice2 = 1; $indice2 < count($pessoas); $indice2++) {
+        for ($indice2 = 0; $indice2 < count($pessoas); $indice2++) {
             $pessoa1 = $pessoas[$indice1];
             $pessoa2 = $pessoas[$indice2];
             $relatorio1 = $pessoas[$indice1]->getResponsabilidadesAtivas()[0]->getGrupo()->getGrupoEquipe()->getEntidadeAtiva()->getId();
