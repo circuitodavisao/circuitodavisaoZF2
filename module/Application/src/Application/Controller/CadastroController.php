@@ -189,6 +189,11 @@ class CadastroController extends CircuitoController {
                         Constantes::$ACTION => Constantes::$PAGINA_SELECIONAR_FICHA_REVISIONISTA,
             ));
         }
+        if ($pagina == Constantes::$PAGINA_LISTA_LIDERES) {
+            return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
+                        Constantes::$ACTION => Constantes::$PAGINA_LISTA_LIDERES,
+            ));
+        }
         if ($pagina == Constantes::$PAGINA_CONSULTAR_FICHA) {
             return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
                         Constantes::$ACTION => Constantes::$PAGINA_CONSULTAR_FICHA,
@@ -308,7 +313,12 @@ class CadastroController extends CircuitoController {
             $tipoEvento = 10;
             $extra = $grupo->getId();
         }
-
+        if ($pagina == Constantes::$PAGINA_LISTAGEM_LIDERES) {
+            $listagemDeEventos = $grupo->getGrupoEventoRevisao();
+            $tituloDaPagina = Constantes::$TRADUCAO_LISTAGEM_LIDERES;
+            $tipoEvento = 11;
+            $extra = $grupo->getId();
+        }
         $view = new ViewModel(array(
             Constantes::$LISTAGEM_EVENTOS => $listagemDeEventos,
             Constantes::$TITULO_DA_PAGINA => $tituloDaPagina,
@@ -1619,7 +1629,32 @@ class CadastroController extends CircuitoController {
         $sessao->idRevisao = $idRevisao;
         $eventoRevisao = $this->getRepositorio()->getEventoORM()->encontrarPorId($idRevisao);
         $view = new ViewModel(array(
-            Constantes::$ENTIDADE => $entidade,
+            'repositorioORM' => $this->getRepositorio(),
+            'evento' => $eventoRevisao,
+            'entidade' => $entidade,
+        ));
+
+        /* Javascript */
+        $layoutJS = new ViewModel();
+        $layoutJS->setTemplate(Constantes::$LAYOUT_JS_EVENTOS);
+        $view->addChild($layoutJS, Constantes::$LAYOUT_STRING_JS_EVENTOS);
+
+        $layoutJSValidacao = new ViewModel();
+        $layoutJSValidacao->setTemplate(Constantes::$LAYOUT_JS_EVENTOS_VALIDACAO);
+        $view->addChild($layoutJSValidacao, Constantes::$LAYOUT_STRING_JS_EVENTOS_VALIDACAO);
+
+        return $view;
+    }
+
+    public function listaLideresAction() {
+        $sessao = new Container(Constantes::$NOME_APLICACAO);
+
+        $idRevisao = $sessao->idSessao;
+        $idEntidadeAtual = $sessao->idEntidadeAtual;
+        $entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+        $sessao->idRevisao = $idRevisao;
+        $eventoRevisao = $this->getRepositorio()->getEventoORM()->encontrarPorId($idRevisao);
+        $view = new ViewModel(array(
             'repositorioORM' => $this->getRepositorio(),
             'evento' => $eventoRevisao,
             'entidade' => $entidade,
@@ -1812,23 +1847,10 @@ class CadastroController extends CircuitoController {
 
                     if ($numeroLideres > 1) {
                         $idAluno = IndexController::cadastrarPessoaRevisionista(
-                                        $idEquipe, 
-                                $pessoaRevisionista->getNome(), 
-                                substr('' . $pessoaRevisionista->getTelefone() . '', 0, 2), 
-                                substr('' . $pessoaRevisionista->getTelefone() . '', 2, strlen('' . $pessoaRevisionista->getTelefone() . '')), 
-                                $pessoaRevisionista->getSexo(), 
-                                $pessoaRevisionista->getData_nascimento(), 
-                                $idLider1, 
-                                $idLider2);
+                                        $idEquipe, $pessoaRevisionista->getNome(), substr('' . $pessoaRevisionista->getTelefone() . '', 0, 2), substr('' . $pessoaRevisionista->getTelefone() . '', 2, strlen('' . $pessoaRevisionista->getTelefone() . '')), $pessoaRevisionista->getSexo(), $pessoaRevisionista->getData_nascimento(), $idLider1, $idLider2);
                     } else {
                         $idAluno = IndexController::cadastrarPessoaRevisionista(
-                                        $idEquipe, 
-                                $pessoaRevisionista->getNome(), 
-                                substr('' . $pessoaRevisionista->getTelefone() . '', 0, 2), 
-                                substr('' . $pessoaRevisionista->getTelefone() . '', 2, strlen('' . $pessoaRevisionista->getTelefone() . '')), 
-                                $pessoaRevisionista->getSexo(), 
-                                $pessoaRevisionista->getData_nascimento(), 
-                                $idLider1);
+                                        $idEquipe, $pessoaRevisionista->getNome(), substr('' . $pessoaRevisionista->getTelefone() . '', 0, 2), substr('' . $pessoaRevisionista->getTelefone() . '', 2, strlen('' . $pessoaRevisionista->getTelefone() . '')), $pessoaRevisionista->getSexo(), $pessoaRevisionista->getData_nascimento(), $idLider1);
                     }
 
                     $idRevisaoCVAntigo = 8902;
