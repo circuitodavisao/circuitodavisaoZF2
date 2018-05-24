@@ -48,6 +48,7 @@ if (count($pessoas) == 0) {
     $html .= '</th>';
 
     $html .= '<th class="text-center">Equipe</th>';
+    $html .= '<th class="text-center"></th>';
 
     $html .= '<th class="text-center"></th>';
     $html .= '</tr>';
@@ -62,6 +63,7 @@ if (count($pessoas) == 0) {
         $html .= '<td><span class="visible-lg visible-md">' . $pessoa->getNome() . '</span><span class="visible-sm visible-xs">' . $pessoa->getNomePrimeiroUltimo() . '</span></td>';
 
         $html .= '<td>' . $pessoa->getResponsabilidadesAtivas()[0]->getGrupo()->getGrupoEquipe()->getEntidadeAtiva()->getNome() . '</td>';
+         $html .= '<td>' . $pessoa->getResponsabilidadesAtivas()[0]->getGrupo()->getEntidadeAtiva()->infoEntidade() . '</td>';
 
         $html .= '</tr>';
     }
