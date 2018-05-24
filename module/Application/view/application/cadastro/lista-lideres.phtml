@@ -20,8 +20,8 @@ if (count($pessoas) == 0) {
     $html .= '<div class="alert alert-warning"><i class="fa fa-warning pr10" aria-hidden="true"></i>&nbsp;Sem Líderes Cadastrados!</div>';
 } else {
     /* Ordenacao */
-    for ($indice1 = 0; $indice1 < count($pessoas); $indice1++) {
-        for ($indice2 = 0; $indice2 < count($pessoas); $indice2++) {
+    for ($indice1 = 0; $indice1 <= count($pessoas); $indice1++) {
+        for ($indice2 = 1; $indice2 <= count($pessoas); $indice2++) {
             $pessoa1 = $pessoas[$indice1];
             $pessoa2 = $pessoas[$indice2];
             $relatorio1 = $pessoas[$indice1]->getResponsabilidadesAtivas()[0]->getGrupo()->getGrupoEquipe()->getEntidadeAtiva()->getId();
