@@ -10,18 +10,19 @@ if (count($frequencias) > 0) {
     foreach ($frequencias as $frequencia) {
         $pessoa = $frequencia->getPessoa();
         if ($grupoRespossabilidades = $pessoa->getResponsabilidadesAtivas()) {
-            $jaExiste = false;
-            foreach ($pessoas as $pessoaParaVerificar) {
-                if ($pessoaParaVerificar->getId() === $pessoa->getId()) {
-                    $jaExiste = true;
-                }
-            }
-            if (!$jaExiste) {
+//            $jaExiste = false;
+//            foreach ($pessoas as $pessoaParaVerificar) {
+//                if ($pessoaParaVerificar->getId() === $pessoa->getId()) {
+//                    $jaExiste = true;
+//                }
+//            }
+//            if (!$jaExiste) {
                 $pessoas[] = $pessoa;
-            }
+//            }
         }
     }
 }
+
 
 /* Sem pessoas cadastrados */
 if (count($pessoas) == 0) {
