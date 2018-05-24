@@ -10,19 +10,10 @@ if (count($frequencias) > 0) {
     foreach ($frequencias as $frequencia) {
         $pessoa = $frequencia->getPessoa();
         if ($grupoRespossabilidades = $pessoa->getResponsabilidadesAtivas()) {
-//            $jaExiste = false;
-//            foreach ($pessoas as $pessoaParaVerificar) {
-//                if ($pessoaParaVerificar->getId() === $pessoa->getId()) {
-//                    $jaExiste = true;
-//                }
-//            }
-//            if (!$jaExiste) {
-                $pessoas[] = $pessoa;
-//            }
+            $pessoas[] = $pessoa;
         }
     }
 }
-
 
 /* Sem pessoas cadastrados */
 if (count($pessoas) == 0) {
@@ -35,10 +26,10 @@ if (count($pessoas) == 0) {
             $pessoa2 = $pessoas[$indice2];
             $relatorio1 = $pessoas[$indice1]->getResponsabilidadesAtivas()[0]->getGrupo()->getGrupoEquipe()->getEntidadeAtiva()->getId();
             $relatorio2 = $pessoas[$indice2]->getResponsabilidadesAtivas()[0]->getGrupo()->getGrupoEquipe()->getEntidadeAtiva()->getId();
-            if ($relatorio1 > $relatorio2) {
+            if($relatorio1 > $relatorio2){
                 $pessoas[$indice1] = $pessoa2;
                 $pessoas[$indice2] = $pessoa1;
-            }
+            }            
         }
     }
 
@@ -72,7 +63,7 @@ if (count($pessoas) == 0) {
         $html .= '<td><span class="visible-lg visible-md">' . $pessoa->getNome() . '</span><span class="visible-sm visible-xs">' . $pessoa->getNomePrimeiroUltimo() . '</span></td>';
 
         $html .= '<td>' . $pessoa->getResponsabilidadesAtivas()[0]->getGrupo()->getGrupoEquipe()->getEntidadeAtiva()->getNome() . '</td>';
-        $html .= '<td>' . $pessoa->getResponsabilidadesAtivas()[0]->getGrupo()->getEntidadeAtiva()->infoEntidade() . '</td>';
+         $html .= '<td>' . $pessoa->getResponsabilidadesAtivas()[0]->getGrupo()->getEntidadeAtiva()->infoEntidade() . '</td>';
 
         $html .= '</tr>';
     }
