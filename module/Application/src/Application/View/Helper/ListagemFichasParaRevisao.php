@@ -51,6 +51,9 @@ class ListagemFichasParaRevisao extends AbstractHelper {
                         if (($idGrupoIgrejaDoRevisionista == $idGrupoIgrejaLogado)) {
                             $pAux->setId($f->getId());
                             $pAux->setNome($p->getNome());
+                            if ($f->getFrequencia() == 'S') {
+                                $pAux->setNoRevisao(true);
+                            }
                             $pessoas[] = $pAux;
                         }
                     } else {
@@ -60,6 +63,9 @@ class ListagemFichasParaRevisao extends AbstractHelper {
                             $pAux->setId($f->getId());
                             $pAux->setNome($p->getNome());
                             $pAux->setEntidade($grupoPessoa->getGrupo()->getEntidadeAtiva()->infoEntidade());
+                            if ($f->getFrequencia() == 'S') {
+                                $pAux->setNoRevisao(true);
+                            }
                             $pessoas[] = $pAux;
                         }
                     }
@@ -87,6 +93,7 @@ class ListagemFichasParaRevisao extends AbstractHelper {
             $html .= '</th>';
 
             $html .= '<th class="text-center">Equipe</th>';
+            $html .= '<th class="text-center">Ativo no Revisão</th>';
 //                    }
             $html .= '<th class="text-center"></th>';
             $html .= '</tr>';
@@ -103,6 +110,12 @@ class ListagemFichasParaRevisao extends AbstractHelper {
                 $html .= '<td class="text-center"><span class="visible-lg visible-md">' . $pessoa->getNome() . '</span><span class="visible-sm visible-xs">' . $pessoa->getNomePrimeiroUltimo() . '</span></td>';
 
                 $html .= '<td class="text-center">' . $pessoa->getEntidade() . '</td>';
+
+                $html .= '<td class="text-center">';
+                if($pessoa->getNoRevisao()){
+                     $html .= '<span class="label label-success">ATIVO NO REVIS&Atilde;O</span>';
+                }
+                $html .= '</td>';
 
                 $html .= '<td class="text-center">';
 
