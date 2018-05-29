@@ -479,7 +479,6 @@ class LancamentoController extends CircuitoController {
         $grupo = $entidade->getGrupo();
 
         $parametro = $this->params()->fromRoute(Constantes::$ID);
-        $periodo = 0;
         if (empty($parametro)) {
             $abaSelecionada = 1;
         } else {

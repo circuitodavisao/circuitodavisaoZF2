@@ -159,7 +159,7 @@ class RelatorioController extends CircuitoController {
         }
 
         /* Aba selecionada e ciclo */
-        $parametro = $this->params()->fromRoute(Constantes::$ID);
+        $parametro = $this->params()->fromRoute('tipoRelatorio');
         $periodo = 0;
         if (empty($parametro)) {
             $abaSelecionada = 1;
