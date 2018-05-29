@@ -12,9 +12,6 @@ use Application\Controller\Helper\Constantes;
     <div class="panel">      
         <?php echo $this->abasPanel(Constantes::$ROUTE_LANCAMENTO, 'Atendimento'); ?>
         <div class="panel-body center-block">
-            <div class="row center-block text-center">
-                <?php echo $this->cabecalhoDeAtendimentos($this->gruposAbaixo); ?>     
-            </div>
             <?php echo $this->atendimentoGruposAbaixo(); ?>        
         </div>
     </div>
