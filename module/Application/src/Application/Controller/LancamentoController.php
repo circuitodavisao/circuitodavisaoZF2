@@ -603,8 +603,9 @@ class LancamentoController extends CircuitoController {
 
     public function atendimentoComentarioAction() {
         $sessao = new Container(Constantes::$NOME_APLICACAO);
-        $grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($sessao->idSessao);
-        $formulario = new AtendimentoComentarioForm('formulario', $grupo);
+        $explodeIdSessao = explode(99, $sessao->idSessao);
+        $grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($explodeIdSessao[0]);
+        $formulario = new AtendimentoComentarioForm('formulario', $grupo, $explodeIdSessao[1]);
         $dados = array();
         $dados['grupo'] = $grupo;
         $dados['formulario'] = $formulario;
@@ -622,12 +623,25 @@ class LancamentoController extends CircuitoController {
                 $grupoAtendimentoComentario = new GrupoAtendimentoComentario();
                 $grupoAtendimentoComentario->setGrupo($grupo);
                 $grupoAtendimentoComentario->setComentario($post_data['comentario']);
-                $this->getRepositorio()->getGrupoAtendimentoComentarioORM()->persistir($grupoAtendimentoComentario);
+                if ($post_data['abaSelecionada'] == 2) {
+                    if (date('m') == 1) {
+                        $mesAnterior = 12;
+                        $anoAnteriror = (date('Y') - 1);
+                    } else {
+                        $mesAnterior = (date('m') - 1);
+                        $anoAnteriror = date('Y');
+                    }
+                    $grupoAtendimentoComentario->setDataEHoraDeCriacao("$anoAnteriror-$mesAnterior-01");
+                } else {
+                    $grupoAtendimentoComentario->setDataEHoraDeCriacao();
+                }
+                $this->getRepositorio()->getGrupoAtendimentoComentarioORM()->persistir($grupoAtendimentoComentario, $mudarDataDeCriacao = false);
 
                 $this->getRepositorio()->fecharTransacao();
 
                 return $this->redirect()->toRoute(Constantes::$ROUTE_LANCAMENTO, array(
                             Constantes::$ACTION => 'Atendimento',
+                            Constantes::$ID => $post_data['abaSelecionada'],
                 ));
             } catch (Exception $exc) {
                 $this->getRepositorio()->desfazerTransacao();
