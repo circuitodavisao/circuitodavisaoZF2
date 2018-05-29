@@ -21,11 +21,12 @@ echo $this->templateFormularioTopo('Cadastro de Coment&aacute;rio no Atendimento
     $funcaoVerificarCadastroPessoa = $this->funcaoOnClick('validarComentario(this.form)');
     echo $this->botaoSimples(Constantes::$TRADUCAO_CADASTRAR, $funcaoVerificarCadastroPessoa);
 
-    $funcaoVoltar = $this->funcaoOnClick('mostrarSplash(); location.href="/' . Constantes::$ROUTE_LANCAMENTO . 'Atendimento"');
+    $funcaoVoltar = $this->funcaoOnClick('mostrarSplash(); location.href="/' . Constantes::$ROUTE_LANCAMENTO . 'Atendimento/' . $formulario->get('abaSelecionada')->getValue() . '"');
     echo $this->botaoSimples(Constantes::$TRADUCAO_VOLTAR, $funcaoVoltar, 2);
 
     echo $this->formHidden($formulario->get(Constantes::$INPUT_CSRF));
     echo $this->formHidden($formulario->get(Constantes::$FORM_STRING_ID));
+    echo $this->formHidden($formulario->get('abaSelecionada'));
     ?>
 </div>
 <?php

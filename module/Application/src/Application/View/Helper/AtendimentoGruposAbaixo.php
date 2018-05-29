@@ -119,7 +119,9 @@ class AtendimentoGruposAbaixo extends AbstractHelper {
                 $html .= Constantes::$NBSP;
                 $html .= $this->botaoAtendimento($grupo->getId(), 2, $numeroAtendimentos);
                 $html .= Constantes::$NBSP;
-                $funcao = $this->view->funcaoOnClick('mostrarSplash(); funcaoCircuito("lancamentoAtendimentoComentario","' . $grupo->getId() . '")');
+
+                $idAuxiliar = $grupo->getId() . 99 . $this->view->abaSelecionada;
+                $funcao = $this->view->funcaoOnClick('mostrarSplash(); funcaoCircuito("lancamentoAtendimentoComentario","' . $idAuxiliar . '")');
                 $html .= $this->view->botaoSimples('<i class="fa fa-comments"></i>', $funcao, BotaoSimples::botaoMuitoPequenoMenosImportante);
             }
             if ($this->getTipo() === AtendimentoGruposAbaixo::tipoRelatorio) {
