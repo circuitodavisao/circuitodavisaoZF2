@@ -27,17 +27,12 @@ class CabecalhoDeAtendimentos extends AbstractHelper {
 
     public function renderHtml() {
         $html = '';
-        $totalGruposFilhosAtivos = 0;
-        $totalGruposAtendidos = 0;
 
         if ($this->getGruposAbaixo()) {
             $relatorioAtendimento = Grupo::relatorioDeAtendimentosAbaixo(
                             $this->getGruposAbaixo(), $this->view->mes, $this->view->ano
             );
-
-            /* percentagem da meta, sendo que a meta é 2 atendimentos por mes */
-            $colorBarTotal = LancamentoController::retornaClassBarradeProgressoPeloValor($relatorioAtendimento[0]);
-
+           
             $valorBarraFormatada = 0;
             if ($relatorioAtendimento[0] > 0) {
                 $valorBarraFormatada = number_format($relatorioAtendimento[0], 2, '.', '');
@@ -46,18 +41,6 @@ class CabecalhoDeAtendimentos extends AbstractHelper {
                     . $this->view->translate('of')
                     . ' <span id="totalGruposFilhos">' . $relatorioAtendimento[2] . '</span> '
                     . '<span class="hidden-xs">' . $this->view->translate(Constantes::$TRADUCAO_SUBTITULO_CABECALHO_ATENDIMENTO) . '</span>';
-            $html .= '<div class="progress progress-bar-xl">';
-            $html .= '<div '
-                    . 'id="divProgressBar" '
-                    . 'class="progress-bar ' . $colorBarTotal . '" '
-                    . 'role="progressbar" '
-                    . 'aria-valuenow="' . $valorBarraFormatada . '" '
-                    . 'aria-valuemin="0" '
-                    . 'aria-valuemax="100" '
-                    . 'style="width: ' . $valorBarraFormatada . '%;">'
-                    . $valorBarraFormatada . '%'
-                    . '</div>';
-            $html .= '</div>';
         }
         return $html;
     }
