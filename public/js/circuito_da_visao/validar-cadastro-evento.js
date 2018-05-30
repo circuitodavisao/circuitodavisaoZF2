@@ -8,6 +8,9 @@ function voltarListagemCultos() {
 function voltarListagemCelulas() {
     location.href = "/cadastroCelulas";
 }
+function voltarListagemDiscipulados() {
+    location.href = "/cadastroDiscipulados";
+}
 
 function validarDiaHoraEMinuto() {
     var dia_da_semana = $('#dia_da_semana').val();

@@ -54,6 +54,9 @@ echo $this->templateFormularioTopo($tituloDaPagina);
         if ($form instanceof CelulaForm) {
             $funcaoVoltar = $this->funcaoOnClick('voltarListagemCelulas()');
         }
+        if ($this->pagina == Constantes::$PAGINA_EVENTO_DISCIPULADO) {
+            $funcaoVoltar = $this->funcaoOnClick('voltarListagemDiscipulados()');
+        }
         echo $this->botaoSimples(Constantes::$TRADUCAO_VOLTAR, $funcaoVoltar, 2);
         /* Fim Botoes */
         echo '</div>';
