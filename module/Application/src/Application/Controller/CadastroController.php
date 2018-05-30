@@ -308,7 +308,7 @@ class CadastroController extends CircuitoController {
             $sessao->idTurma = $sessao->idSessao;
         }
         if ($pagina == Constantes::$PAGINA_DISCIPULADOS) {
-            $listagemDeEventos = $grupo->getGrupoEventoAtivosPorTipo(EventoTipo::tipoDiscipulado);
+            $listagemDeEventos = $grupo->getGrupoEventoAtivosPorTipo($tipoDiscipulado);
             $tituloDaPagina = Constantes::$TRADUCAO_LISTAGEM_DISCIPULADOS;
             $tipoEvento = 10;
             $extra = $grupo->getId();
@@ -915,15 +915,14 @@ class CadastroController extends CircuitoController {
                             }
                         }
                     }
+                    $this->getRepositorio()->fecharTransacao();
+                    return $this->redirect()->toRoute(Constantes::$ROUTE_CADASTRO, array(
+                                Constantes::$PAGINA => Constantes::$PAGINA_DISCIPULADOS,
+                    ));
                 } else {
                     $this->direcionaErroDeCadastro($eventoForm->getMessages());
                     CircuitoController::direcionandoAoLogin($this);
                 }
-
-                $this->getRepositorio()->fecharTransacao();
-                return $this->redirect()->toRoute(Constantes::$ROUTE_CADASTRO, array(
-                            Constantes::$PAGINA => Constantes::$PAGINA_DISCIPULADOS,
-                ));
             } catch (Exception $exc) {
                 $this->getRepositorio()->desfazerTransacao();
                 echo $exc->getMessage();

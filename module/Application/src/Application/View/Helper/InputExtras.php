@@ -78,24 +78,27 @@ class InputExtras extends AbstractHelper {
                         $html .= '<div class="row">';
                         foreach ($this->getExtra() as $gpFilho) {
                             $grupoFilho = $gpFilho->getGrupoPaiFilhoFilho();
-                            $entidadeFilho = $grupoFilho->getEntidadeAtiva();
-                            $checked = '';
-                            if ($this->getForm()->get(Constantes::$FORM_ID)->getValue()) {
-                                if ($grupoFilho->verificaSeParticipaDoEvento($this->getForm()->get(Constantes::$FORM_ID)->getValue())) {
-                                    $checked = 'checked';
+                            if ($grupoFilho->verificarSeEstaAtivo()) {
+                                $entidadeFilho = $grupoFilho->getEntidadeAtiva();
+                                $checked = '';
+                                if ($this->getForm()->get(Constantes::$FORM_ID)->getValue()) {
+                                    if ($grupoFilho->verificaSeParticipaDoEvento($this->getForm()->get(Constantes::$FORM_ID)->getValue())) {
+                                        $checked = 'checked';
+                                    }
                                 }
+                                $html .= '<div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">';
+                                $html .= '<div class="section">';
+
+                                $html .= '<label class="option">';
+                                $html .= '<input type="checkbox" name="checkEquipe' . $grupoFilho->getId() . '" value="' . $entidadeFilho->infoEntidade() . '" ' . $checked . '>';
+                                $html .= '<span class="checkbox"></span>';
+
+                                $html .= $grupoFilho->getNomeLideresAtivos() . ' - ' . $entidadeFilho->infoEntidade();
+                                $html .= '</label>';
+
+                                $html .= '</div>';
+                                $html .= '</div>';
                             }
-                            $html .= '<div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">';
-                            $html .= '<div class="section">';
-
-                            $html .= '<label class="option">';
-                            $html .= '<input type="checkbox" name="checkEquipe' . $grupoFilho->getId() . '" value="' . $entidadeFilho->infoEntidade() . '" ' . $checked . '>';
-                            $html .= '<span class="checkbox"></span>';
-                            $html .= $entidadeFilho->infoEntidade();
-                            $html .= '</label>';
-
-                            $html .= '</div>';
-                            $html .= '</div>';
                         }
                     } else {
                         $html .= '<span>Sem equipes cadastradas!</span>';
