@@ -118,7 +118,30 @@ echo $this->templateFormularioTopo($tituloDaPagina);
                 $traducaoDoBotao = Constantes::$TRADUCAO_ALTERAR;
             }
             $funcaoSubmeter = $this->funcaoOnClick('submeter(this.form)');
+
+            echo '<div id="botaoSubmeter" class="hidden">';
             echo $this->botaoSimples($traducaoDoBotao, $funcaoSubmeter, BotaoSimples::botaoSucesso);
+            echo '</div>';
+
+            echo '<div id="divSenha">';
+            echo '<div class="section-divider">';
+            echo '<span>Digite sua senha para continuar</span>';
+            echo '</div>';
+            echo $this->divMensagens();
+            echo '<div class="row">';
+            echo '<div class="col-sm-12 col-xs-12">';
+            echo '<div class="section text-center">';
+            echo '<input id="senha" type="password" class="gui-input" placeholder="' . $this->translate(Constantes::$TRADUCAO_SENHA) . '" />';
+            echo '</div>';
+            echo '<div class="text-right mb10">';
+            $labelConfirmar = $this->translate(Constantes::$TRADUCAO_CONFIRMACAO);
+            $stringNomeDaFuncaoOnClickConfimar = 'validarSenha()';
+            echo $this->botaoLink($labelConfirmar, Constantes::$STRING_HASHTAG, 0, $this->funcaoOnClick($stringNomeDaFuncaoOnClickConfimar));
+            echo '</div>';
+            echo '</div>';
+            echo '</div>';
+            echo '</div>';
+
             $funcaoVoltarNome = $this->funcaoOnClick('voltarPreencherNome()');
             echo $this->botaoSimples(Constantes::$TRADUCAO_VOLTAR, $funcaoVoltarNome, 2);
             ?>  

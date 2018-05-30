@@ -123,6 +123,16 @@ class ListagemDeEventos extends AbstractHelper {
 
                 $html .= '<tr>';
                 if ($tipoCelula) {
+                    /* Verificar se a celula foi alterada recentimente para nao permitir */
+                    $arrayPeriodo = Funcoes::montaPeriodo($periodo = 0);
+                    $stringComecoDoPeriodo = $arrayPeriodo[3] . '-' . $arrayPeriodo[2] . '-' . $arrayPeriodo[1];
+                    $dataDoInicioDoPeriodoParaComparar = strtotime($stringComecoDoPeriodo);
+                    $dataParaComparar = strtotime($evento->getData_criacaoStringPadraoBanco());
+
+                    $validarCadastroDepoisDoComecoDoPeriodo = false;
+                    if ($dataParaComparar > $dataDoInicioDoPeriodoParaComparar) {
+                        $validarCadastroDepoisDoComecoDoPeriodo = true;
+                    }
 
                     $html .= '<td class="text-center">' . $this->view->translate($diaDaSemanaAjustado) . '/' . $evento->getHoraFormatoHoraMinutoParaListagem() . '</td>';
                     $celula = $evento->getEventoCelula();
@@ -134,7 +144,9 @@ class ListagemDeEventos extends AbstractHelper {
                     $html .= '<td class="text-center visible-lg visible-md visible-sm">' . $celula->getLogradouro() . '&nbsp;' . $celula->getComplemento() . '</td>';
                     $html .= '<td class="text-center">';
                     if ($this->view->mostrarOpcoes) {
-                        $html .= $this->view->botaoLink(Constantes::$STRING_ICONE_PENCIL, Constantes::$STRING_HASHTAG, 3, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClick));
+                        if (!$validarCadastroDepoisDoComecoDoPeriodo) {
+                            $html .= $this->view->botaoLink(Constantes::$STRING_ICONE_PENCIL, Constantes::$STRING_HASHTAG, 3, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClick));
+                        }
                     }
                     if ($this->view->mostrarExcluirCelula) {
                         /* Inativar celula */
