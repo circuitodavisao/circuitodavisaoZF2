@@ -149,7 +149,6 @@ class ListagemDeEventos extends AbstractHelper {
                         }
                     }
                     if ($this->view->mostrarExcluirCelula) {
-                        /* Inativar celula */
                         $html .= $this->view->botaoLink(Constantes::$STRING_ICONE_TIMES, Constantes::$STRING_HASHTAG, 4, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClickExclusao));
                     }
                     $html .= '</td>';

@@ -150,7 +150,8 @@ echo $this->templateFormularioTopo($tituloDaPagina, Constantes::$STRING_DIV_CONF
     </div>
     <div id="divBotaoVoltar" class="panel-footer text-right" style="height:65px;">
         <?php
-        echo $this->botaoLink($labelVoltar, $urlVoltar, 2, '');
+        $extra = $this->funcaoOnClick('funcaoCircuito("principalVer", ' . $this->entidade->getGrupo()->getId() . ')');
+        echo $this->botaoSimples($labelVoltar, $extra);
         ?>
     </div>
 </div>
