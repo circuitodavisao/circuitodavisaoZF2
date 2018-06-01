@@ -944,6 +944,9 @@ class CadastroController extends CircuitoController {
         $entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($sessao->idEntidadeAtual);
         if (!empty($sessao->idSessao)) {
             $eventoNaSessao = $this->getRepositorio()->getEventoORM()->encontrarPorId($sessao->idSessao);
+            if ($eventoNaSessao->verificaSeECelula()) {
+                $entidade = $eventoNaSessao->getGrupoEventoAtivos()[0]->getGrupo()->getEntidadeAtiva();
+            }
             if ($eventoNaSessao->getGrupoEventoAtivos() > 1) {
                 $grupo = $entidade->getGrupo();
                 foreach ($eventoNaSessao->getGrupoEventoAtivos() as $eg) {
@@ -1023,6 +1026,7 @@ class CadastroController extends CircuitoController {
                 $this->getRepositorio()->getEventoORM()->persistir($eventoNaSessao, false);
 
                 /* Inativando o Grupo Evento */
+                $grupoSessao = $eventoNaSessao->getGrupoEventoAtivo()->getGrupo();
                 $grupoEventoAtivos = $eventoNaSessao->getGrupoEventoAtivos();
 
                 foreach ($grupoEventoAtivos as $grupoEventoAtivo) {
@@ -1048,8 +1052,9 @@ class CadastroController extends CircuitoController {
                 $tipoCelula = !empty($eventoNaSessao->verificaSeECelula());
                 $pagina = Constantes::$PAGINA_CULTOS;
                 if ($tipoCelula) {
-                    return $this->redirect()->toRoute('principal', array(
-                                Constantes::$ACTION => Constantes::$ACTION_INDEX,
+                    $sessao->idSessao = $grupoSessao->getId();
+                    return $this->redirect()->toRoute(Constantes::$ROUTE_PRINCIPAL, array(
+                                Constantes::$ACTION => 'ver',
                     ));
                 } else {
                     if ($eventoNaSessao->getEventoTipo()->getId() === EventoTipo::tipoDiscipulado) {
