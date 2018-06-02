@@ -249,8 +249,8 @@ class IndexController extends CircuitoController {
 
         $html .= 'Teste Deploy Automatico';
         /* rodar toda segunda */
-//        $dateFormatada = DateTime::createFromFormat('Y-m-d', date('Y-m-d'));
-        $dateFormatada = DateTime::createFromFormat('Y-m-d', self::DATA_CRIACAO);
+        $dateFormatada = DateTime::createFromFormat('Y-m-d', date('Y-m-d'));
+//        $dateFormatada = DateTime::createFromFormat('Y-m-d', self::DATA_CRIACAO);
         $html .= ' - Dia para gerar: ' . $dateFormatada->format('d/m/Y');
 
         /* buscando solicitações */
@@ -389,16 +389,16 @@ class IndexController extends CircuitoController {
                                 }
                             }
 
-                        if ($grupo->getId() !== 1 && $grupo->getGrupoEquipe()->getId() !== 2 &&
-                                $grupo->getGrupoEquipe()->getId() !== 24 &&
-                                $grupo->getGrupoEquipe()->getId() !== 3749) {
-                            $quantidadeLideres = 0;
-                            if ($temCelula) {
-                                $quantidadeLideres = count($grupo->getResponsabilidadesAtivas());
-                            }
-                            $html .= "<br />quantidadeLideres" . $quantidadeLideres;
-                            $this->getRepositorio()->getFatoLiderORM()->criarFatoLider($numeroIdentificador, $quantidadeLideres, self::DATA_CRIACAO);
-                        }
+//                        if ($grupo->getId() !== 1 && $grupo->getGrupoEquipe()->getId() !== 2 &&
+//                                $grupo->getGrupoEquipe()->getId() !== 24 &&
+//                                $grupo->getGrupoEquipe()->getId() !== 3749) {
+//                            $quantidadeLideres = 0;
+//                            if ($temCelula) {
+//                                $quantidadeLideres = count($grupo->getResponsabilidadesAtivas());
+//                            }
+//                            $html .= "<br />quantidadeLideres" . $quantidadeLideres;
+//                            $this->getRepositorio()->getFatoLiderORM()->criarFatoLider($numeroIdentificador, $quantidadeLideres, self::DATA_CRIACAO);
+//                        }
                     }
                 }
             }
