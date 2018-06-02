@@ -50,7 +50,7 @@ class IndexController extends CircuitoController {
     private $entidadeTipoEquipe;
     private $entidadeTipoSub;
 
-    const DATA_CRIACAO = '2018-02-26';
+    const DATA_CRIACAO = '2018-05-28';
 
     /**
      * Contrutor sobrecarregado com os serviços de ORM e Autenticador
@@ -99,7 +99,7 @@ class IndexController extends CircuitoController {
 //                $this->cadastrarPessoasVolateis($row[$stringIdResponsavel1], $grupoIgreja);
 //                $eventosCulto = $this->cadastrarCulto($row[$stringIdResponsavel1], $grupoIgreja);
 //                $this->cadastrarCelulas($row[$stringIdResponsavel1], $grupoIgreja, $row[$stringIdResponsavel2]);
-            $grupoIgreja = $this->getRepositorio()->getGrupoORM()->encontrarPorId(1);
+            $grupoIgreja = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idIreja = 1);
             $grupoEventoNoPeriodo = $grupoIgreja->getGrupoEventoNoPeriodo(0);
 
             $eventosCulto = array();
@@ -113,9 +113,9 @@ class IndexController extends CircuitoController {
                     $eventosCulto[] = $grupoEvento->getEvento();
                 }
             }
-//            $urlEquipe = 'SELECT * FROM ursula_equipe_ursula WHERE (id = 3749) AND ativa = "S" AND idIgreja = 1';
-            $urlEquipe = 'SELECT * FROM ursula_equipe_ursula WHERE (id = 24 OR id = 3749) AND ativa = "S" AND idIgreja = 1';
-//                $urlEquipe = 'SELECT * FROM ursula_equipe_ursula WHERE ativa = "S" AND idIgreja = 14';
+
+            $urlEquipe = 'SELECT * FROM ursula_equipe_ursula WHERE (id <> 1 AND id <> 24 AND id <> 3749) AND ativa = "S" AND idIgreja = 1';
+//                $urlEquipe = 'SELECT * FROM ursula_equipe_ursula WHERE ativa = "S" AND idIgreja = 1';
             $queryEquipes = mysqli_query($this->getConexao(), $urlEquipe);
             while ($rowEquipe = mysqli_fetch_array($queryEquipes)) {
                 $idPerfilEquipe = 15;
@@ -124,7 +124,7 @@ class IndexController extends CircuitoController {
                 $informacaoEntidade = $rowEquipe[$stringNome];
                 $grupoEquipe = $this->cadastrarEntidade($rowEquipe[$stringIdResponsavel1], $idPerfilEquipe, $informacaoEntidade, $grupoIgreja, $rowEquipe[$stringIdResponsavel2], $rowEquipe['id'], $numeroIdentificadorEquipe);
                 $this->cadastrarPessoasVolateis($rowEquipe[$stringIdResponsavel1], $grupoEquipe);
-                $this->cadastrarCultoEquipe($eventosCulto, $rowEquipe['id'], $grupoEquipe);
+//                $this->cadastrarCultoEquipe($eventosCulto, $rowEquipe['id'], $grupoEquipe);
                 $this->cadastrarCelulas($rowEquipe[$stringIdResponsavel1], $grupoEquipe, $rowEquipe[$stringIdResponsavel2]);
                 $urlSub = 'SELECT * FROM ursula_subequipe_ursula WHERE ativa = "S" AND dataInativacao IS NULL AND idSubEquipePai = 0 and idEquipe = ' . $rowEquipe['id'] . ';';
 //                    $urlSub = 'SELECT * FROM ursula_subequipe_ursula WHERE id = 16';
@@ -923,7 +923,7 @@ class IndexController extends CircuitoController {
                 $turma->setCurso($curso);
                 $turma->setMes($rowTurma['mes']);
                 $turma->setAno($rowTurma['ano']);
-                $turma->setObservacao('MIGRACAO 4');
+                $turma->setObservacao('MIGRACAO CV 2');
                 $this->getRepositorio()->getTurmaORM()->persistir($turma);
                 $html .= '<br /><br />TURMA - ' . $turma->getMes() . '/' . $turma->getAno();
 
@@ -972,7 +972,7 @@ class IndexController extends CircuitoController {
                 }
 
                 $queryTurmaAluno = mysqli_query(
-                        $this->getConexao(), 'SELECT * FROM ursula_turma_aluno_ursula WHERE idTurma = ' . $rowTurma['id'] . ' AND status = "A" AND (idSituacao = 1 || idSituacao = 4);');
+                        $this->getConexao(), 'SELECT * FROM ursula_turma_aluno_ursula WHERE idTurma = ' . $rowTurma['id'] . ' AND status = "A" AND (idSituacao = 1 || idSituacao = 2 || idSituacao = 5 || idSituacao = 4) LIMIT 1;');
                 while ($rowTurmaAluno = mysqli_fetch_array($queryTurmaAluno)) {
                     $queryPessoa = mysqli_query($this->getConexao(), 'SELECT * FROM ursula_pessoa_ursula WHERE id = ' . $rowTurmaAluno['idAluno']);
                     while ($rowPessoa = mysqli_fetch_array($queryPessoa)) {
@@ -988,81 +988,96 @@ class IndexController extends CircuitoController {
                             }
                         }
                         if ($grupoCV) {
-                            $grupo = $grupoCV->getGrupo();
+                            if ($rowPessoa['id'] != 11082475) {
+                                $grupo = $grupoCV->getGrupo();
 
-                            $telefone = $rowPessoa['dddCelular'] ? $rowPessoa['dddCelular'] : '61' . $rowPessoa['telefoneCelular'];
-                            if (!is_numeric($telefone)) {
-                                $telefone = '99999999999';
-                            }
+                                $telefone = $rowPessoa['dddCelular'] ? $rowPessoa['dddCelular'] : '61' . $rowPessoa['telefoneCelular'];
+                                if (!is_numeric($telefone)) {
+                                    $telefone = '99999999999';
+                                }
+                                if (strlen($telefone) > 11) {
+                                    $telefone = substr($telefone, 0, 11);
+                                }
 
-                            /* Pessoa */
-                            $pessoaVolatil = new Pessoa();
-                            $pessoaVolatil->setNome($rowPessoa['nome']);
-                            $pessoaVolatil->setTelefone($telefone);
-                            $pessoaVolatil->setTipo($rowPessoa['idClassificacao']);
-                            $this->getRepositorio()->getPessoaORM()->persistir($pessoaVolatil);
-                            $html .= '<br /><br />PESSOA - ' . $pessoaVolatil->getNome();
+                                /* Pessoa */
+                                $pessoaVolatil = new Pessoa();
+                                $pessoaVolatil->setNome($rowPessoa['nome']);
+                                $pessoaVolatil->setTelefone($telefone);
+                                $pessoaVolatil->setTipo($rowPessoa['idClassificacao']);
+                                $this->getRepositorio()->getPessoaORM()->persistir($pessoaVolatil);
+                                $html .= '<br /><br />PESSOA - ' . $pessoaVolatil->getNome();
 
-                            /* grupo pessoa */
-                            $grupoPessoaTipo = $this->getRepositorio()->getGrupoPessoaTipoORM()->encontrarPorId($tipoMembro = 1);
-                            $grupoPessoa = new GrupoPessoa();
-                            $grupoPessoa->setGrupo($grupo);
-                            $grupoPessoa->setPessoa($pessoaVolatil);
-                            $grupoPessoa->setGrupoPessoaTipo($grupoPessoaTipo);
-                            $this->getRepositorio()->getGrupoPessoaORM()->persistir($grupoPessoa);
-                            $html .= '<br />GRUPO PESSOA - ' . $grupoPessoa->getGrupo()->getEntidadeAtiva()->infoEntidade();
+                                /* grupo pessoa */
+                                $grupoPessoaTipo = $this->getRepositorio()->getGrupoPessoaTipoORM()->encontrarPorId($tipoMembro = 1);
+                                $grupoPessoa = new GrupoPessoa();
+                                $grupoPessoa->setGrupo($grupo);
+                                $grupoPessoa->setPessoa($pessoaVolatil);
+                                $grupoPessoa->setGrupoPessoaTipo($grupoPessoaTipo);
+                                $this->getRepositorio()->getGrupoPessoaORM()->persistir($grupoPessoa);
+                                $html .= '<br />GRUPO PESSOA - ' . $grupoPessoa->getGrupo()->getEntidadeAtiva()->infoEntidade();
 
-                            /* turma_pessoa */
-                            $turmaPessoa = new TurmaPessoa();
-                            $turmaPessoa->setPessoa($pessoaVolatil);
-                            $turmaPessoa->setTurma($turma);
-                            $this->getRepositorio()->getTurmaPessoaORM()->persistir($turmaPessoa);
-                            $html .= '<br />TURMA PESSOA ' . $turmaPessoa->getId();
+                                /* turma_pessoa */
+                                $turmaPessoa = new TurmaPessoa();
+                                $turmaPessoa->setPessoa($pessoaVolatil);
+                                $turmaPessoa->setTurma($turma);
+                                $this->getRepositorio()->getTurmaPessoaORM()->persistir($turmaPessoa);
+                                $html .= '<br />TURMA PESSOA ' . $turmaPessoa->getId();
 
-                            /* turma pessoa situacao */
-                            $idSituacao = 1;
-                            if ($rowTurmaAluno['idSituacao'] == 4) {
-                                $idSituacao = 6;
-                            }
-                            $situacao = $this->getRepositorio()->getSituacaoORM()->encontrarPorId($idSituacao);
-                            $turmaPessoaSituacao = new TurmaPessoaSituacao();
-                            $turmaPessoaSituacao->setTurma_pessoa($turmaPessoa);
-                            $turmaPessoaSituacao->setSituacao($situacao);
-                            $this->getRepositorio()->getTurmaPessoaSituacaoORM()->persistir($turmaPessoaSituacao);
-                            $html .= '<br />TURMA PESSOA SITUACAO ' . $turmaPessoaSituacao->getSituacao()->getNome();
+                                /* turma pessoa situacao */
+                                $ativo = 1;
+                                $especial = 6;
+                                $desistente = 7;
+                                $reprovado = 8;
+                                $idSituacao = $ativo;
+                                if ($rowTurmaAluno['idSituacao'] == 4) {
+                                    $idSituacao = $especial;
+                                }
+                                if ($rowTurmaAluno['idSituacao'] == 2) {
+                                    $idSituacao = $desistente;
+                                }
+                                if ($rowTurmaAluno['idSituacao'] == 5) {
+                                    $idSituacao = $reprovado;
+                                }
+                                $situacao = $this->getRepositorio()->getSituacaoORM()->encontrarPorId($idSituacao);
+                                $turmaPessoaSituacao = new TurmaPessoaSituacao();
+                                $turmaPessoaSituacao->setTurma_pessoa($turmaPessoa);
+                                $turmaPessoaSituacao->setSituacao($situacao);
+                                $this->getRepositorio()->getTurmaPessoaSituacaoORM()->persistir($turmaPessoaSituacao);
+                                $html .= '<br />TURMA PESSOA SITUACAO ' . $turmaPessoaSituacao->getSituacao()->getNome();
 
-                            /* turma pessoa aula */
-                            $queryFrequencias = mysqli_query($this->getConexao(), 'SELECT * FROM ursula_aula_presenca_ursula WHERE idAluno = ' . $rowTurmaAluno['idAluno']);
-                            while ($rowFrequencias = mysqli_fetch_array($queryFrequencias)) {
-                                if ($rowFrequencias['presenca'] == 1 || $rowFrequencias['presenca'] == 3) {
-                                    $turmaPessoaAula = new TurmaPessoaAula();
-                                    $turmaPessoaAula->setTurma_pessoa($turmaPessoa);
-                                    $queryAulaDiaFrequencia = mysqli_query($this->getConexao(), 'SELECT * FROM ursula_aula_dia_ursula WHERE id = ' . $rowFrequencias['idAulaDia']);
-                                    while ($rowAulaDiaFrequencia = mysqli_fetch_array($queryAulaDiaFrequencia)) {
-                                        switch ($rowAulaDiaFrequencia['modulo']) {
-                                            case 0:
-                                                $idAula = $rowAulaDiaFrequencia['aula'] + 4;
-                                                break;
-                                            case 1:
-                                                $idAula = $rowAulaDiaFrequencia['aula'] + 8;
-                                                break;
-                                            case 2:
-                                                $idAula = $rowAulaDiaFrequencia['aula'] + 20;
-                                                break;
-                                            case 3:
-                                                $idAula = $rowAulaDiaFrequencia['aula'] + 32;
-                                                break;
+                                /* turma pessoa aula */
+                                $queryFrequencias = mysqli_query($this->getConexao(), 'SELECT * FROM ursula_aula_presenca_ursula WHERE idAluno = ' . $rowTurmaAluno['idAluno']);
+                                while ($rowFrequencias = mysqli_fetch_array($queryFrequencias)) {
+                                    if ($rowFrequencias['presenca'] == 1 || $rowFrequencias['presenca'] == 3) {
+                                        $turmaPessoaAula = new TurmaPessoaAula();
+                                        $turmaPessoaAula->setTurma_pessoa($turmaPessoa);
+                                        $queryAulaDiaFrequencia = mysqli_query($this->getConexao(), 'SELECT * FROM ursula_aula_dia_ursula WHERE id = ' . $rowFrequencias['idAulaDia']);
+                                        while ($rowAulaDiaFrequencia = mysqli_fetch_array($queryAulaDiaFrequencia)) {
+                                            switch ($rowAulaDiaFrequencia['modulo']) {
+                                                case 0:
+                                                    $idAula = $rowAulaDiaFrequencia['aula'] + 4;
+                                                    break;
+                                                case 1:
+                                                    $idAula = $rowAulaDiaFrequencia['aula'] + 8;
+                                                    break;
+                                                case 2:
+                                                    $idAula = $rowAulaDiaFrequencia['aula'] + 20;
+                                                    break;
+                                                case 3:
+                                                    $idAula = $rowAulaDiaFrequencia['aula'] + 32;
+                                                    break;
+                                            }
                                         }
+                                        $aula = $this->getRepositorio()->getAulaORM()->encontrarPorId($idAula);
+                                        $turmaPessoaAula->setAula($aula);
+                                        if ($rowFrequencias['presenca'] == 3) {
+                                            $turmaPessoaAula->setReposicao('S');
+                                        } else {
+                                            $turmaPessoaAula->setReposicao('N');
+                                        }
+                                        $this->getRepositorio()->getTurmaPessoaAulaORM()->persistir($turmaPessoaAula);
+                                        $html .= '<br />TURMA PESSOA AULA ' . $turmaPessoaAula->getAula()->getNome() . ' Reposicao? ' . $turmaPessoaAula->getReposicao();
                                     }
-                                    $aula = $this->getRepositorio()->getAulaORM()->encontrarPorId($idAula);
-                                    $turmaPessoaAula->setAula($aula);
-                                    if ($rowFrequencias['presenca'] == 3) {
-                                        $turmaPessoaAula->setReposicao('S');
-                                    } else {
-                                        $turmaPessoaAula->setReposicao('N');
-                                    }
-                                    $this->getRepositorio()->getTurmaPessoaAulaORM()->persistir($turmaPessoaAula);
-                                    $html .= '<br />TURMA PESSOA AULA ' . $turmaPessoaAula->getAula()->getNome() . ' Reposicao? ' . $turmaPessoaAula->getReposicao();
                                 }
                             }
                         }
@@ -1137,7 +1152,7 @@ class IndexController extends CircuitoController {
     }
 
     public static function cadastrarPessoaRevisionista($idEquipe = 1, $nome, $ddd, $telefone, $sexo, $dataNascimento, $lider1, $lider2 = null) {
-        if ($lider2) { 
+        if ($lider2) {
             $campos = 'nome, dddCelular, telefoneCelular, sexo, dataNascimento , idLider, idLider2, idEquipe';
             $stringValues = "'$nome', $ddd, $telefone, '$sexo', '$dataNascimento', $lider1, $lider2, $idEquipe";
         } else {
@@ -1657,6 +1672,9 @@ class IndexController extends CircuitoController {
             }
             $telefone = $ddd . $rowCelulas['telefoneHospedeiro'];
             $telefone = str_replace('-', '', $telefone);
+            if (strlen($telefone) > 11) {
+                $telefone = substr($telefone, 0, 11);
+            }
             $eventoCelula->setTelefone_hospedeiro($telefone);
             $eventoCelula->setLogradouro($rowCelulas['logradouro']);
             $eventoCelula->setComplemento($rowCelulas['complemento']);
