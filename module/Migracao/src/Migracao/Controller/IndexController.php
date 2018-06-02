@@ -388,19 +388,22 @@ class IndexController extends CircuitoController {
                                     }
                                 }
                             }
-                            if ($tipoGerarRelatorioDeLider == 1) {
-                                $quantidadeLideres = 0;
-                                if ($temCelula) {
-                                    $quantidadeLideres = count($grupo->getResponsabilidadesAtivas());
-                                }
-                                $html .= "<br />quantidadeLideres" . $quantidadeLideres;
-                                $this->getRepositorio()->getFatoLiderORM()->criarFatoLider($numeroIdentificador, $quantidadeLideres, self::DATA_CRIACAO);
+
+                        if ($grupo->getGrupoEquipe()->getId() !== 2 &&
+                                $grupoLider->getGrupoEquipe()->getId() !== 24 &&
+                                $grupoLider->getGrupoEquipe()->getId() !== 3749) {
+                            $quantidadeLideres = 0;
+                            if ($temCelula) {
+                                $quantidadeLideres = count($grupo->getResponsabilidadesAtivas());
                             }
+                            $html .= "<br />quantidadeLideres" . $quantidadeLideres;
+                            $this->getRepositorio()->getFatoLiderORM()->criarFatoLider($numeroIdentificador, $quantidadeLideres, self::DATA_CRIACAO);
                         }
                     }
                 }
-                $this->getRepositorio()->fecharTransacao();
-                $html .= "<br />###### fecharTransacao ";
+            }
+            $this->getRepositorio()->fecharTransacao();
+            $html .= "<br />###### fecharTransacao ";
             }
         } catch (Exception $exc) {
             $html .= "<br />%%%%%%%%%%%%%%%%%%%%%% desfazerTransacao ";
