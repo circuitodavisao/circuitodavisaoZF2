@@ -389,7 +389,7 @@ class IndexController extends CircuitoController {
                                 }
                             }
 
-                        if ($grupo->getGrupoEquipe()->getId() !== 2 &&
+                        if ($grupo->getId() !== 1 && $grupo->getGrupoEquipe()->getId() !== 2 &&
                                 $grupo->getGrupoEquipe()->getId() !== 24 &&
                                 $grupo->getGrupoEquipe()->getId() !== 3749) {
                             $quantidadeLideres = 0;
