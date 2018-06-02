@@ -249,8 +249,8 @@ class IndexController extends CircuitoController {
 
         $html .= 'Teste Deploy Automatico';
         /* rodar toda segunda */
-        $dateFormatada = DateTime::createFromFormat('Y-m-d', date('Y-m-d'));
-//        $dateFormatada = DateTime::createFromFormat('Y-m-d', self::DATA_CRIACAO);
+//        $dateFormatada = DateTime::createFromFormat('Y-m-d', date('Y-m-d'));
+        $dateFormatada = DateTime::createFromFormat('Y-m-d', self::DATA_CRIACAO);
         $html .= ' - Dia para gerar: ' . $dateFormatada->format('d/m/Y');
 
         /* buscando solicitações */
