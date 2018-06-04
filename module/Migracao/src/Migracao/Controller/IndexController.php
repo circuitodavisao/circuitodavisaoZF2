@@ -399,11 +399,53 @@ class IndexController extends CircuitoController {
 //                            $html .= "<br />quantidadeLideres" . $quantidadeLideres;
 //                            $this->getRepositorio()->getFatoLiderORM()->criarFatoLider($numeroIdentificador, $quantidadeLideres, self::DATA_CRIACAO);
 //                        }
+                        }
                     }
                 }
+                $this->getRepositorio()->fecharTransacao();
+                $html .= "<br />###### fecharTransacao ";
             }
-            $this->getRepositorio()->fecharTransacao();
-            $html .= "<br />###### fecharTransacao ";
+        } catch (Exception $exc) {
+            $html .= "<br />%%%%%%%%%%%%%%%%%%%%%% desfazerTransacao ";
+            $this->getRepositorio()->desfazerTransacao();
+            echo $exc->getTraceAsString();
+        }
+
+        list($usec, $sec) = explode(' ', microtime());
+        $script_end = (float) $sec + (float) $usec;
+        $elapsed_time = round($script_end - $script_start, 5);
+
+        $html .= '<br /><br />Elapsed time: ' . $elapsed_time . ' secs. Memory usage: ' . round(((memory_get_peak_usage(true) / 1024) / 1024), 2) . 'Mb';
+        return new ViewModel(array('html' => $html));
+    }
+
+    public function ajustarLideresAction() {
+        set_time_limit(0);
+        ini_set('memory_limit', '-1');
+        ini_set('max_execution_time', '60');
+
+        list($usec, $sec) = explode(' ', microtime());
+        $script_start = (float) $sec + (float) $usec;
+        $html = '';
+
+        $somenteAtivos = true;
+        $grupos = $this->getRepositorio()->getGrupoORM()->encontrarTodos($somenteAtivos);
+        $this->getRepositorio()->iniciarTransacao();
+        $html .= "<br />###### iniciarTransacao ";
+        try {
+            if ($grupos) {
+                $html .= "<br /><br /><br />Tem Grupos ativos!!!";
+                foreach ($grupos as $grupo) {
+                    $numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupo);
+                    if ($fatoLideres = $this->getRepositorio()->getFatoLiderORM()->encontrarVariosFatoLiderPorNumeroIdentificador($numeroIdentificador)) {
+                        if ((count($grupo->getResponsabilidadesAtivas()) === 1 && count($fatoLideres) === 2) ||
+                                (count($grupo->getResponsabilidadesAtivas()) === 2 && count($fatoLideres) === 2)) {
+                            $html .= "<br />Grupo Duplicados";
+                        }
+                    }
+                }
+//                $this->getRepositorio()->fecharTransacao();
+//                $html .= "<br />###### fecharTransacao ";
             }
         } catch (Exception $exc) {
             $html .= "<br />%%%%%%%%%%%%%%%%%%%%%% desfazerTransacao ";
