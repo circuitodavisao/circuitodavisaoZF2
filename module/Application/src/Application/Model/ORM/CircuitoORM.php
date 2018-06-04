@@ -91,6 +91,15 @@ class CircuitoORM {
         }
     }
 
+    public function remover($entidade) {
+        try {
+            $this->getEntityManager()->remove($entidade);
+            $this->getEntityManager()->flush($entidade);
+        } catch (Exception $exc) {
+            echo $exc->getMessage();
+        }
+    }
+
     public function getEntityManager() {
         return $this->_entityManager;
     }

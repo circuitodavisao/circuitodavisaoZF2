@@ -440,10 +440,12 @@ class IndexController extends CircuitoController {
                     if ($fatoLideres = $this->getRepositorio()->getFatoLiderORM()->encontrarVariosFatoLiderPorNumeroIdentificador($numeroIdentificador)) {
                         if ((count($grupo->getResponsabilidadesAtivas()) === 1 && count($fatoLideres) === 2) ||
                                 (count($grupo->getResponsabilidadesAtivas()) === 2 && count($fatoLideres) === 2)) {
-                            $html .= "<br />Grupo Duplicados";
+                            $html .= "<br /><br /><br />Grupo Duplicados";
                             foreach ($fatoLideres as $fatoLider) {
-                                $html .= "<br />Id: " . $fatoLider->getId();
-                                $html .= "<br />Data Criação: " . $fatoLider->getData_criacaoStringPadraoBrasil();
+                                if ($fatoLider->getData_criacaoStringPadraoBrasil() == '28/05/2018') {
+                                    $html .= "<br />Id: " . $fatoLider->getId();
+                                    $html .= "<br />Data Criação: " . $fatoLider->getData_criacaoStringPadraoBrasil();
+                                }
                             }
                         }
                     }
