@@ -253,7 +253,7 @@ $somaMeta = 0;
                                 }
                                 if ($this->tipoRelatorio == 2) {
                                     echo '<td class="' . $classeBase . '">' . $relatorio[$indiceDeArrays]['celulaRealizadas'] . '</td>';
-                                    echo '<td class="' . $classeBase . '">' . ($relatorio[$indiceDeArrays]['celulaRealizadas'] - $relatorio[$indiceDeArrays]['celulaQuantidade']) . '</td>';
+                                    echo '<td class="' . $classeBase . '">' . ($relatorio[$indiceDeArrays]['celulaQuantidade'] - $relatorio[$indiceDeArrays]['celulaRealizadas']) . '</td>';
                                     echo '<td class="' . $classeBase . '">' . RelatorioController::formataNumeroRelatorio($relatorio[$indiceDeArrays]['celulaRealizadasPerformance']) . '%</td>';
                                 }
                                 if ($this->tipoRelatorio == 3) {
