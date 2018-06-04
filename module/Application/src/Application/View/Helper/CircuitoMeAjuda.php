@@ -44,13 +44,13 @@ class CircuitoMeAjuda extends AbstractHelper {
                 $htmlCelulasNaoRealizadas .= '<tr class="linhaCelulasNaoRealizadas hidden info">';
                 $htmlCelulasNaoRealizadas .= '<td colspan="2">EQUIPE - ' . $nomeLideres . '</td>';
                 $htmlCelulasNaoRealizadas .= '</tr>';
-                if ($diferenca > 0) {
+//                if ($diferenca > 0) {
                     $htmlCelulasNaoRealizadas .= '<tr class="linhaCelulasNaoRealizadas hidden">';
                     $htmlCelulasNaoRealizadas .= '<td>' . $nomeLideres . '</td>';
                     $htmlCelulasNaoRealizadas .= '<td>' . $diferenca . '</td>';
                     $htmlCelulasNaoRealizadas .= '</tr>';
                     $totalSub += $diferenca;
-                }
+//                }
                 $grupoPaiFilhoFilhos144 = $grupoFilho->getGrupoPaiFilhoFilhosAtivos($periodo);
                 if ($grupoPaiFilhoFilhos144) {
                     foreach ($grupoPaiFilhoFilhos144 as $gpFilho144) {
