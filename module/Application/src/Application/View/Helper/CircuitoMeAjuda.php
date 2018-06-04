@@ -40,6 +40,10 @@ class CircuitoMeAjuda extends AbstractHelper {
                 $grupoFilho = $gpFilho->getGrupoPaiFilhoFilho();
                 $nomeLideres = $grupoFilho->getNomeLideresAtivos();
                 $relatorioDiscipulo = $this->view->discipulosRelatorio[$grupoFilho->getId()];
+                if($grupoFilho->getId() == 528){
+                    echo "ivan";
+                    Funcoes::var_dump($relatorioDiscipulo);
+                }
                 $diferenca = $relatorioDiscipulo['celulaQuantidade'] - $relatorioDiscipulo['celulaRealizadas'];
                 $htmlCelulasNaoRealizadas .= '<tr class="linhaCelulasNaoRealizadas hidden info">';
                 $htmlCelulasNaoRealizadas .= '<td colspan="2">EQUIPE - ' . $nomeLideres . '</td>';
