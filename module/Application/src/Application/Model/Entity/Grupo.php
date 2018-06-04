@@ -535,9 +535,11 @@ class Grupo extends CircuitoEntity {
                 }
                 $grupoEventos = $grupoSelecionado->getGrupoEventoPorTipoEAtivo(EventoTipo::tipoCulto);
             } else {
+                /* Lider de equipe ou igreja*/
+                $grupoEventos = array();
                 $todosGruposEventos = $grupoSelecionado->getGrupoEventoAtivos();
                 foreach ($todosGruposEventos as $grupoEvento) {
-                    if ($grupoEvento->getEvento()->getEventoTipo()->getId() !== EventoTipo::tipoRevisao ||
+                    if ($grupoEvento->getEvento()->getEventoTipo()->getId() !== EventoTipo::tipoRevisao &&
                             $grupoEvento->getEvento()->getEventoTipo()->getId() !== EventoTipo::tipoDiscipulado) {
                         $grupoEventos[] = $grupoEvento;
                     }
