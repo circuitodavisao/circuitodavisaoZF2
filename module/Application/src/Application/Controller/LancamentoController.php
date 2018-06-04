@@ -245,11 +245,12 @@ class LancamentoController extends CircuitoController {
                     $fatoCelulas = $fatoCicloSelecionado->getFatoCelula();
 
                     $fatoCelulaSelecionado = null;
-                    foreach ($fatoCelulas as $fc) {
-                        if ($fc->getEvento_celula_id() == $eventoCelulaId) {
-                            $fatoCelulaSelecionado = $fc;
+                    foreach ($fatoCelulas as $fatoCelula) {
+                        if ($fatoCelula->getEvento_celula_id() == $eventoCelulaId) {
+                            $fatoCelulaSelecionado = $fatoCelula;
                         }
                     }
+                    echo "eventoCelulaId$eventoCelulaId -- fatoCicloSelecionado{$fatoCicloSelecionado->getId()}";
                     $realizadaAntesDeMudar = $fatoCelulaSelecionado->getRealizada();
                     $fatoCelulaSelecionado->setRealizada($realizada);
                     $setarDataEHora = false;
