@@ -68,9 +68,9 @@ class CircuitoMeAjuda extends AbstractHelper {
                         if ($diferenca144 > 0) {
                             $corLinha = 'danger';
                         }
-                        $htmlCelulasNaoRealizadas .= '<tr class="linhaCelulasNaoRealizadas hidden">';
+                        $htmlCelulasNaoRealizadas .= '<tr class="linhaCelulasNaoRealizadas hidden ' . $corLinha . '">';
                         $htmlCelulasNaoRealizadas .= '<td>' . $numeroSub . '-' . $nomeLideres144 . '</td>';
-                        $htmlCelulasNaoRealizadas .= '<td class="' . $corLinha . '">' . $diferenca144 . '</td>';
+                        $htmlCelulasNaoRealizadas .= '<td>' . $diferenca144 . '</td>';
                         $htmlCelulasNaoRealizadas .= '</tr>';
                         $totalSub += $diferenca144;
 //                        }
@@ -88,9 +88,9 @@ class CircuitoMeAjuda extends AbstractHelper {
                                 if ($diferenca1728 > 0) {
                                     $corLinha = 'danger';
                                 }
-                                $htmlCelulasNaoRealizadas .= '<tr class="linhaCelulasNaoRealizadas hidden">';
+                                $htmlCelulasNaoRealizadas .= '<tr class="linhaCelulasNaoRealizadas hidden ' . $corLinha . '">';
                                 $htmlCelulasNaoRealizadas .= '<td>' . $numeroSub . '-' . $nomeLideres1728 . '</td>';
-                                $htmlCelulasNaoRealizadas .= '<td class="' . $corLinha . '">' . $diferenca1728 . '</td>';
+                                $htmlCelulasNaoRealizadas .= '<td>' . $diferenca1728 . '</td>';
                                 $htmlCelulasNaoRealizadas .= '</tr>';
                                 $totalSub += $diferenca1728;
 //                                }
@@ -108,9 +108,9 @@ class CircuitoMeAjuda extends AbstractHelper {
                                         if ($diferenca20736 > 0) {
                                             $corLinha = 'danger';
                                         }
-                                        $htmlCelulasNaoRealizadas .= '<tr class="linhaCelulasNaoRealizadas hidden">';
+                                        $htmlCelulasNaoRealizadas .= '<tr class="linhaCelulasNaoRealizadas hidden ' . $corLinha . '">';
                                         $htmlCelulasNaoRealizadas .= '<td>' . $numeroSub . '-' . $nomeLideres20736 . '</td>';
-                                        $htmlCelulasNaoRealizadas .= '<td class="' . $corLinha . '">' . $diferenca20736 . '</td>';
+                                        $htmlCelulasNaoRealizadas .= '<td>' . $diferenca20736 . '</td>';
                                         $htmlCelulasNaoRealizadas .= '</tr>';
                                         $totalSub += $diferenca20736;
 //                                        }
@@ -128,9 +128,9 @@ class CircuitoMeAjuda extends AbstractHelper {
                                                 if ($diferenca248832 > 0) {
                                                     $corLinha = 'danger';
                                                 }
-                                                $htmlCelulasNaoRealizadas .= '<tr class="linhaCelulasNaoRealizadas hidden">';
+                                                $htmlCelulasNaoRealizadas .= '<tr class="linhaCelulasNaoRealizadas hidden ' . $corLinha . '">';
                                                 $htmlCelulasNaoRealizadas .= '<td>' . $numeroSub . '-' . $nomeLideres248832 . '</td>';
-                                                $htmlCelulasNaoRealizadas .= '<td class="' . $corLinha . '">' . $diferenca248832 . '</td>';
+                                                $htmlCelulasNaoRealizadas .= '<td>' . $diferenca248832 . '</td>';
                                                 $htmlCelulasNaoRealizadas .= '</tr>';
                                                 $totalSub += $diferenca248832;
 //                                                }
