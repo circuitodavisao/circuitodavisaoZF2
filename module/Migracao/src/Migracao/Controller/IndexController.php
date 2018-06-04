@@ -448,13 +448,15 @@ class IndexController extends CircuitoController {
                                 if ($fatoLider->getData_criacaoStringPadraoBrasil() == '28/05/2018') {
                                     $html .= "<br />Id: " . $fatoLider->getId();
                                     $html .= "<br />Data Criação: " . $fatoLider->getData_criacaoStringPadraoBrasil();
+                                    $html .= "<br />Apagando";
+                                    $this->getRepositorio()->getFatoLiderORM()->remover($fatoLider);
                                 }
                             }
                         }
                     }
                 }
-//                $this->getRepositorio()->fecharTransacao();
-//                $html .= "<br />###### fecharTransacao ";
+                $this->getRepositorio()->fecharTransacao();
+                $html .= "<br />###### fecharTransacao ";
             }
         } catch (Exception $exc) {
             $html .= "<br />%%%%%%%%%%%%%%%%%%%%%% desfazerTransacao ";
