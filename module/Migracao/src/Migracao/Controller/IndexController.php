@@ -441,6 +441,10 @@ class IndexController extends CircuitoController {
                         if ((count($grupo->getResponsabilidadesAtivas()) === 1 && count($fatoLideres) === 2) ||
                                 (count($grupo->getResponsabilidadesAtivas()) === 2 && count($fatoLideres) === 2)) {
                             $html .= "<br />Grupo Duplicados";
+                            foreach ($fatoLideres as $fatoLider) {
+                                $html .= "<br />Id: " . $fatoLider->getId();
+                                $html .= "<br />Data Criação: " . $fatoLider->getData_criacaoStringPadraoBrasil();
+                            }
                         }
                     }
                 }
