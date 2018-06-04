@@ -50,6 +50,9 @@ class ListagemDeEventos extends AbstractHelper {
 
             /* Caso seja evento do tipo Célula */
             if ($tipoCelula) {
+                $html .= '<th class="hidden-xs text-center">';
+                $html .= 'Data de Criação';
+                $html .= '</th>';
                 $html .= '<th class="text-center">';
                 $html .= $this->view->translate(Constantes::$TRADUCAO_DIA_DA_SEMANA_SIMPLIFICADO) . ' / ' . $this->view->translate(Constantes::$TRADUCAO_HORA);
                 $html .= '</th>';
@@ -134,6 +137,9 @@ class ListagemDeEventos extends AbstractHelper {
                         $validarCadastroDepoisDoComecoDoPeriodo = true;
                     }
 
+                    $html .= '<th class="hidden-xs text-center">';
+                    $html .= $evento->getData_criacaoStringPadraoBrasil();
+                    $html .= '</th>';
                     $html .= '<td class="text-center">' . $this->view->translate($diaDaSemanaAjustado) . '/' . $evento->getHoraFormatoHoraMinutoParaListagem() . '</td>';
                     $celula = $evento->getEventoCelula();
                     $stringNomeDaFuncaoOnClick = 'mostrarSplash(); funcaoCircuito("cadastro' . Constantes::$PAGINA_EVENTO_CELULA . '", ' . $celula->getId() . ')';
