@@ -535,7 +535,13 @@ class Grupo extends CircuitoEntity {
                 }
                 $grupoEventos = $grupoSelecionado->getGrupoEventoPorTipoEAtivo(EventoTipo::tipoCulto);
             } else {
-                $grupoEventos = $grupoSelecionado->getGrupoEventoAtivos();
+                $todosGruposEventos = $grupoSelecionado->getGrupoEventoAtivos();
+                foreach ($todosGruposEventos as $grupoEvento) {
+                    if ($grupoEvento->getEvento()->getEventoTipo()->getId() !== EventoTipo::tipoRevisao ||
+                            $grupoEvento->getEvento()->getEventoTipo()->getId() !== EventoTipo::tipoDiscipulado) {
+                        $grupoEventos[] = $grupoEvento;
+                    }
+                }
             }
         }
 
@@ -707,7 +713,6 @@ class Grupo extends CircuitoEntity {
     function getGrupoEventoNoPeriodo($periodo, $apenasCelulas = false) {
         $grupoEventosNoPeriodo = array();
         $grupoEventoOrdenadosPorDiaDaSemana = $this->getGrupoEventoOrdenadosPorDiaDaSemana();
-
         $grupoEventos = $grupoEventoOrdenadosPorDiaDaSemana;
         if ($apenasCelulas) {
             unset($grupoEventos);
