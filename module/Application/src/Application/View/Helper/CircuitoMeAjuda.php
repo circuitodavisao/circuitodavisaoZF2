@@ -30,9 +30,11 @@ class CircuitoMeAjuda extends AbstractHelper {
         $html .= '<div class="panel">';
         $html .= '<div class="panel-body pn">';
 
-        /* Celulas nao realizadas */
+        
         if ($this->view->discipulos) {
             $periodo = -1;
+            
+            /* Celulas nao realizadas */
             $htmlCelulasNaoRealizadas = '';
             $totalDeCelulasNaoRealizadas = 0;
             foreach ($this->view->discipulos as $gpFilho) {
@@ -152,6 +154,8 @@ class CircuitoMeAjuda extends AbstractHelper {
                 $totalDeCelulasNaoRealizadas += $totalSub;
             }
 
+            
+            /* Celulas de Elite */
             $htmlCelulasDeElite = '';
             $totalDeCelulasDeElite = 0;
             $totalDeCelulasDeElitePorEquipe = 0;
@@ -356,6 +360,7 @@ class CircuitoMeAjuda extends AbstractHelper {
             $html .= '</tr>';
             $html .= '</thead>';
             $html .= '<tbody>';
+            
             $html .= '<tr>';
             $html .= '<td class="text-center">C&eacute;lulas <b>N&atilde;o</b> Realizadas: ' . $totalDeCelulasNaoRealizadas . '</td>';
             $funcao = $this->view->funcaoOnClick('$(".linhaCelulasNaoRealizadas").toggleClass("hidden")');
