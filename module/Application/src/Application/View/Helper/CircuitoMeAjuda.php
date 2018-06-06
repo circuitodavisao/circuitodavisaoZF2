@@ -30,11 +30,9 @@ class CircuitoMeAjuda extends AbstractHelper {
         $html .= '<div class="panel">';
         $html .= '<div class="panel-body pn">';
 
-
+        /* Celulas nao realizadas */zz
         if ($this->view->discipulos) {
             $periodo = -1;
-
-            /* Celulas nao realizadas */
             $htmlCelulasNaoRealizadas = '';
             $totalDeCelulasNaoRealizadas = 0;
             foreach ($this->view->discipulos as $gpFilho) {
@@ -46,17 +44,17 @@ class CircuitoMeAjuda extends AbstractHelper {
                 $htmlCelulasNaoRealizadas .= '<tr class="linhaCelulasNaoRealizadas hidden info">';
                 $htmlCelulasNaoRealizadas .= '<td colspan="2">EQUIPE - ' . $nomeLideres . '</td>';
                 $htmlCelulasNaoRealizadas .= '</tr>';
+//                if ($diferenca > 0) {
+                $corLinha = '';
                 if ($diferenca > 0) {
-                    $corLinha = '';
-                    if ($diferenca > 0) {
-                        $corLinha = 'danger';
-                    }
-                    $htmlCelulasNaoRealizadas .= '<tr class="linhaCelulasNaoRealizadas hidden">';
-                    $htmlCelulasNaoRealizadas .= '<td>' . $nomeLideres . '</td>';
-                    $htmlCelulasNaoRealizadas .= '<td class="' . $corLinha . '">' . $diferenca . '</td>';
-                    $htmlCelulasNaoRealizadas .= '</tr>';
-                    $totalSub += $diferenca;
+                    $corLinha = 'danger';
                 }
+                $htmlCelulasNaoRealizadas .= '<tr class="linhaCelulasNaoRealizadas hidden">';
+                $htmlCelulasNaoRealizadas .= '<td>' . $nomeLideres . '</td>';
+                $htmlCelulasNaoRealizadas .= '<td class="' . $corLinha . '">' . $diferenca . '</td>';
+                $htmlCelulasNaoRealizadas .= '</tr>';
+                $totalSub += $diferenca;
+//                }
                 $grupoPaiFilhoFilhos144 = $grupoFilho->getGrupoPaiFilhoFilhosAtivos($periodo);
                 if ($grupoPaiFilhoFilhos144) {
                     foreach ($grupoPaiFilhoFilhos144 as $gpFilho144) {
@@ -64,18 +62,18 @@ class CircuitoMeAjuda extends AbstractHelper {
                         $nomeLideres144 = $grupoFilho144->getNomeLideresAtivos();
                         $relatorioDiscipulo144 = $this->view->discipulosRelatorio[$grupoFilho144->getId()];
                         $numeroSub = $grupoFilho144->getEntidadeAtiva()->infoEntidade(true);
-                        if ($relatorioDiscipulo144 && ($relatorioDiscipulo144['celulaQuantidade'] - $relatorioDiscipulo144['celulaRealizadas'] > 0)) {
-                            $diferenca144 = $relatorioDiscipulo144['celulaQuantidade'] - $relatorioDiscipulo144['celulaRealizadas'];
-                            $corLinha = '';
-                            if ($diferenca144 > 0) {
-                                $corLinha = 'danger';
-                            }
-                            $htmlCelulasNaoRealizadas .= '<tr class="linhaCelulasNaoRealizadas hidden ' . $corLinha . '">';
-                            $htmlCelulasNaoRealizadas .= '<td>' . $numeroSub . '-' . $nomeLideres144 . '</td>';
-                            $htmlCelulasNaoRealizadas .= '<td>' . $diferenca144 . '</td>';
-                            $htmlCelulasNaoRealizadas .= '</tr>';
-                            $totalSub += $diferenca144;
+//                        if ($relatorioDiscipulo144 && ($relatorioDiscipulo144['celulaQuantidade'] - $relatorioDiscipulo144['celulaRealizadas'] > 0)) {
+                        $diferenca144 = $relatorioDiscipulo144['celulaQuantidade'] - $relatorioDiscipulo144['celulaRealizadas'];
+                        $corLinha = '';
+                        if ($diferenca144 > 0) {
+                            $corLinha = 'danger';
                         }
+                        $htmlCelulasNaoRealizadas .= '<tr class="linhaCelulasNaoRealizadas hidden ' . $corLinha . '">';
+                        $htmlCelulasNaoRealizadas .= '<td>' . $numeroSub . '-' . $nomeLideres144 . '</td>';
+                        $htmlCelulasNaoRealizadas .= '<td>' . $diferenca144 . '</td>';
+                        $htmlCelulasNaoRealizadas .= '</tr>';
+                        $totalSub += $diferenca144;
+//                        }
 
                         $grupoPaiFilhoFilhos1728 = $grupoFilho144->getGrupoPaiFilhoFilhosAtivos($periodo);
                         if ($grupoPaiFilhoFilhos1728) {
@@ -84,18 +82,18 @@ class CircuitoMeAjuda extends AbstractHelper {
                                 $nomeLideres1728 = $grupoFilho1728->getNomeLideresAtivos();
                                 $relatorioDiscipulo1728 = $this->view->discipulosRelatorio[$grupoFilho1728->getId()];
                                 $numeroSub = $grupoFilho1728->getEntidadeAtiva()->infoEntidade(true);
-                                if ($relatorioDiscipulo1728 && ($relatorioDiscipulo1728['celulaQuantidade'] - $relatorioDiscipulo1728['celulaRealizadas'] > 0)) {
-                                    $diferenca1728 = $relatorioDiscipulo1728['celulaQuantidade'] - $relatorioDiscipulo1728['celulaRealizadas'];
-                                    $corLinha = '';
-                                    if ($diferenca1728 > 0) {
-                                        $corLinha = 'danger';
-                                    }
-                                    $htmlCelulasNaoRealizadas .= '<tr class="linhaCelulasNaoRealizadas hidden ' . $corLinha . '">';
-                                    $htmlCelulasNaoRealizadas .= '<td>' . $numeroSub . '-' . $nomeLideres1728 . '</td>';
-                                    $htmlCelulasNaoRealizadas .= '<td>' . $diferenca1728 . '</td>';
-                                    $htmlCelulasNaoRealizadas .= '</tr>';
-                                    $totalSub += $diferenca1728;
+//                                if ($relatorioDiscipulo1728 && ($relatorioDiscipulo1728['celulaQuantidade'] - $relatorioDiscipulo1728['celulaRealizadas'] > 0)) {
+                                $diferenca1728 = $relatorioDiscipulo1728['celulaQuantidade'] - $relatorioDiscipulo1728['celulaRealizadas'];
+                                $corLinha = '';
+                                if ($diferenca1728 > 0) {
+                                    $corLinha = 'danger';
                                 }
+                                $htmlCelulasNaoRealizadas .= '<tr class="linhaCelulasNaoRealizadas hidden ' . $corLinha . '">';
+                                $htmlCelulasNaoRealizadas .= '<td>' . $numeroSub . '-' . $nomeLideres1728 . '</td>';
+                                $htmlCelulasNaoRealizadas .= '<td>' . $diferenca1728 . '</td>';
+                                $htmlCelulasNaoRealizadas .= '</tr>';
+                                $totalSub += $diferenca1728;
+//                                }
 
                                 $grupoPaiFilhoFilhos20736 = $grupoFilho1728->getGrupoPaiFilhoFilhosAtivos($periodo);
                                 if ($grupoPaiFilhoFilhos20736) {
@@ -104,18 +102,18 @@ class CircuitoMeAjuda extends AbstractHelper {
                                         $nomeLideres20736 = $grupoFilho20736->getNomeLideresAtivos();
                                         $relatorioDiscipulo20736 = $this->view->discipulosRelatorio[$grupoFilho20736->getId()];
                                         $numeroSub = $grupoFilho20736->getEntidadeAtiva()->infoEntidade(true);
-                                        if ($relatorioDiscipulo20736 && ($relatorioDiscipulo20736['celulaQuantidade'] - $relatorioDiscipulo20736['celulaRealizadas'] > 0)) {
-                                            $diferenca20736 = $relatorioDiscipulo20736['celulaQuantidade'] - $relatorioDiscipulo20736['celulaRealizadas'];
-                                            $corLinha = '';
-                                            if ($diferenca20736 > 0) {
-                                                $corLinha = 'danger';
-                                            }
-                                            $htmlCelulasNaoRealizadas .= '<tr class="linhaCelulasNaoRealizadas hidden ' . $corLinha . '">';
-                                            $htmlCelulasNaoRealizadas .= '<td>' . $numeroSub . '-' . $nomeLideres20736 . '</td>';
-                                            $htmlCelulasNaoRealizadas .= '<td>' . $diferenca20736 . '</td>';
-                                            $htmlCelulasNaoRealizadas .= '</tr>';
-                                            $totalSub += $diferenca20736;
+//                                        if ($relatorioDiscipulo20736 && ($relatorioDiscipulo20736['celulaQuantidade'] - $relatorioDiscipulo20736['celulaRealizadas'] > 0)) {
+                                        $diferenca20736 = $relatorioDiscipulo20736['celulaQuantidade'] - $relatorioDiscipulo20736['celulaRealizadas'];
+                                        $corLinha = '';
+                                        if ($diferenca20736 > 0) {
+                                            $corLinha = 'danger';
                                         }
+                                        $htmlCelulasNaoRealizadas .= '<tr class="linhaCelulasNaoRealizadas hidden ' . $corLinha . '">';
+                                        $htmlCelulasNaoRealizadas .= '<td>' . $numeroSub . '-' . $nomeLideres20736 . '</td>';
+                                        $htmlCelulasNaoRealizadas .= '<td>' . $diferenca20736 . '</td>';
+                                        $htmlCelulasNaoRealizadas .= '</tr>';
+                                        $totalSub += $diferenca20736;
+//                                        }
 
                                         $grupoPaiFilhoFilhos248832 = $grupoFilho20736->getGrupoPaiFilhoFilhosAtivos($periodo);
                                         if ($grupoPaiFilhoFilhos248832) {
@@ -124,18 +122,18 @@ class CircuitoMeAjuda extends AbstractHelper {
                                                 $nomeLideres248832 = $grupoFilho248832->getNomeLideresAtivos();
                                                 $relatorioDiscipulo248832 = $this->view->discipulosRelatorio[$grupoFilho248832->getId()];
                                                 $numeroSub = $grupoFilho248832->getEntidadeAtiva()->infoEntidade(true);
-                                                if ($relatorioDiscipulo248832 && ($relatorioDiscipulo248832['celulaQuantidade'] - $relatorioDiscipulo248832['celulaRealizadas'] > 0)) {
-                                                    $diferenca248832 = $relatorioDiscipulo248832['celulaQuantidade'] - $relatorioDiscipulo248832['celulaRealizadas'];
-                                                    $corLinha = '';
-                                                    if ($diferenca248832 > 0) {
-                                                        $corLinha = 'danger';
-                                                    }
-                                                    $htmlCelulasNaoRealizadas .= '<tr class="linhaCelulasNaoRealizadas hidden ' . $corLinha . '">';
-                                                    $htmlCelulasNaoRealizadas .= '<td>' . $numeroSub . '-' . $nomeLideres248832 . '</td>';
-                                                    $htmlCelulasNaoRealizadas .= '<td>' . $diferenca248832 . '</td>';
-                                                    $htmlCelulasNaoRealizadas .= '</tr>';
-                                                    $totalSub += $diferenca248832;
+//                                                if ($relatorioDiscipulo248832 && ($relatorioDiscipulo248832['celulaQuantidade'] - $relatorioDiscipulo248832['celulaRealizadas'] > 0)) {
+                                                $diferenca248832 = $relatorioDiscipulo248832['celulaQuantidade'] - $relatorioDiscipulo248832['celulaRealizadas'];
+                                                $corLinha = '';
+                                                if ($diferenca248832 > 0) {
+                                                    $corLinha = 'danger';
                                                 }
+                                                $htmlCelulasNaoRealizadas .= '<tr class="linhaCelulasNaoRealizadas hidden ' . $corLinha . '">';
+                                                $htmlCelulasNaoRealizadas .= '<td>' . $numeroSub . '-' . $nomeLideres248832 . '</td>';
+                                                $htmlCelulasNaoRealizadas .= '<td>' . $diferenca248832 . '</td>';
+                                                $htmlCelulasNaoRealizadas .= '</tr>';
+                                                $totalSub += $diferenca248832;
+//                                                }
                                             }
                                         }
                                     }
@@ -154,8 +152,6 @@ class CircuitoMeAjuda extends AbstractHelper {
                 $totalDeCelulasNaoRealizadas += $totalSub;
             }
 
-
-            /* Celulas de Elite */
             $htmlCelulasDeElite = '';
             $totalDeCelulasDeElite = 0;
             $totalDeCelulasDeElitePorEquipe = 0;
@@ -360,7 +356,6 @@ class CircuitoMeAjuda extends AbstractHelper {
             $html .= '</tr>';
             $html .= '</thead>';
             $html .= '<tbody>';
-
             $html .= '<tr>';
             $html .= '<td class="text-center">C&eacute;lulas <b>N&atilde;o</b> Realizadas: ' . $totalDeCelulasNaoRealizadas . '</td>';
             $funcao = $this->view->funcaoOnClick('$(".linhaCelulasNaoRealizadas").toggleClass("hidden")');
