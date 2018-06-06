@@ -394,6 +394,7 @@ class RelatorioController extends CircuitoController {
         $relatorio[0]['lideres'] = 'MEU';
         $relatorio[0]['lideresFotos'] = $grupo->getFotosLideresAtivos();
         $relatorio[0]['lideresEntidade'] = $grupo->getEntidadeAtiva()->infoEntidade();
+        $relatorio[0]['grupo'] = $grupo->getId();
 
         $somaTotal['mediaMembresiaCulto'] = $relatorio[0]['mediaMembresiaCulto'];
         $somaTotal['mediaMembresiaArena'] = $relatorio[0]['mediaMembresiaArena'];
@@ -433,6 +434,7 @@ class RelatorioController extends CircuitoController {
             $relatorio[$contadorFilhos]['lideres'] = $grupoFilhoOrdenado->getNomeLideresAtivos();
             $relatorio[$contadorFilhos]['lideresFotos'] = $grupoFilhoOrdenado->getFotosLideresAtivos();
             $relatorio[$contadorFilhos]['lideresEntidade'] = $grupoFilhoOrdenado->getEntidadeAtiva()->infoEntidade($somenteNumeros = true);
+            $relatorio[$contadorFilhos]['grupo'] = $grupoFilhoOrdenado->getId();
             $contadorFilhos++;
 
             $somaTotal['mediaMembresia'] += $relatorio[$contadorFilhos]['mediaMembresia'];
