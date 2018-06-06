@@ -46,7 +46,7 @@ class PrincipalController extends CircuitoController {
             $mesAnterior = 12;
             $anoAnterior = date('Y') - 1;
         }
-//        $relatorioAnterior = RelatorioController::relatorioCompleto($this->getRepositorio(), $grupo, RelatorioController::relatorioMembresiaECelula, $mesAnterior, $anoAnterior);
+        $relatorioAnterior = RelatorioController::relatorioCompleto($this->getRepositorio(), $grupo, RelatorioController::relatorioMembresiaECelula, $mesAnterior, $anoAnterior);
 
         $mostrarPrincipal = true;
         if (!$entidade->verificarSeEstaAtivo()) {
