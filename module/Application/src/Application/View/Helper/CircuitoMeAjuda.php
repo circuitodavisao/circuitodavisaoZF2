@@ -30,7 +30,7 @@ class CircuitoMeAjuda extends AbstractHelper {
         $html .= '<div class="panel">';
         $html .= '<div class="panel-body pn">';
 
-        /* Celulas nao realizadas */zz
+        /* Celulas nao realizadas */
         if ($this->view->discipulos) {
             $periodo = -1;
             $htmlCelulasNaoRealizadas = '';
