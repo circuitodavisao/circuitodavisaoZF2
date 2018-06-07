@@ -82,11 +82,6 @@ class RelatorioController extends CircuitoController {
 
         $view = new ViewModel($dados);
 
-        /* Javascript especifico */
-        $layoutJS = new ViewModel();
-        $layoutJS->setTemplate(Constantes::$TEMPLATE_JS_RELATORIO);
-        $view->addChild($layoutJS, Constantes::$STRING_JS_RELATORIO);
-
         return $view;
     }
 
