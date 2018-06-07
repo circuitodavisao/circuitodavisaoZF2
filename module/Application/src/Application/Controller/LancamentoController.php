@@ -140,28 +140,8 @@ class LancamentoController extends CircuitoController {
                 $periodo = $post_data['periodo'];
                 $dateFormatada = DateTime::createFromFormat('Y-m-d', $diaRealDoEvento);
 
-                $arrayDataReal = explode('-', $diaRealDoEvento);
-                $ciclo = Funcoes::cicloPorData($arrayDataReal[2], $arrayDataReal[1], $arrayDataReal[0]);
-
                 $pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($idPessoa);
                 $evento = $this->getRepositorio()->getEventoORM()->encontrarPorId($idEvento);
-
-                /* Verificar se a frequencia ja existe */
-                $eventosFiltrado = $pessoa->getEventoFrequenciaFiltradoPorEventoEDia($idEvento, $diaRealDoEvento);
-                if ($eventosFiltrado) {
-                    /* Frequencia existe */
-                    $frequencia = $eventosFiltrado;
-                    $frequencia->setFrequencia($valor);
-                    $this->getRepositorio()->getEventoFrequenciaORM()->persistir($frequencia);
-                } else {
-                    /* Persitir frequencia */
-                    $eventoFrequencia = new EventoFrequencia();
-                    $eventoFrequencia->setPessoa($pessoa);
-                    $eventoFrequencia->setEvento($evento);
-                    $eventoFrequencia->setFrequencia($valor);
-                    $eventoFrequencia->setDia($dateFormatada);
-                    $this->getRepositorio()->getEventoFrequenciaORM()->persistir($eventoFrequencia);
-                }
 
                 $valorParaSomar = 0;
                 if ($valor === 'S') {
@@ -170,7 +150,6 @@ class LancamentoController extends CircuitoController {
                     $valorParaSomar = -1;
                 }
 
-                $grupoPassado = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupo);
                 $numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio());
                 $dimensaoSelecionada = null;
                 $resultadoPeriodo = Funcoes::montaPeriodo($periodo);
@@ -250,7 +229,7 @@ class LancamentoController extends CircuitoController {
                             $fatoCelulaSelecionado = $fatoCelula;
                         }
                     }
-                  
+
                     $realizadaAntesDeMudar = $fatoCelulaSelecionado->getRealizada();
                     $fatoCelulaSelecionado->setRealizada($realizada);
                     $setarDataEHora = false;
@@ -284,7 +263,24 @@ class LancamentoController extends CircuitoController {
                 }
                 $this->getRepositorio()->getDimensaoORM()->persistir($dimensaoSelecionada, false);
 
+                /* Frequencia */
+                $eventosFiltrado = $pessoa->getEventoFrequenciaFiltradoPorEventoEDia($idEvento, $diaRealDoEvento);
+                if ($eventosFiltrado) {
+                    /* Frequencia existe */
+                    $frequencia = $eventosFiltrado;
+                    $frequencia->setFrequencia($valor);
+                } else {
+                    /* Persitir frequencia */
+                    $frequencia = new EventoFrequencia();
+                    $frequencia->setPessoa($pessoa);
+                    $frequencia->setEvento($evento);
+                    $frequencia->setFrequencia($valor);
+                    $frequencia->setDia($dateFormatada);
+                }
+                $this->getRepositorio()->getEventoFrequenciaORM()->persistir($frequencia);
+
                 $this->getRepositorio()->fecharTransacao();
+
                 $response->setContent(Json::encode(
                                 array('response' => 'true',
                                     'idEvento' => $evento->getId())));
