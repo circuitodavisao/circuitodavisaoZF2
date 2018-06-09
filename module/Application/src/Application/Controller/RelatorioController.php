@@ -779,6 +779,7 @@ class RelatorioController extends CircuitoController {
 
     const ORDENACAO_TIPO_MEMBRESIA = 9;
     const ORDENACAO_TIPO_CELULA = 10;
+    const ORDENACAO_TIPO_PERFORMANCE = 11;
 
     public static function ordenacaoDiscipulos($discipulosLocal, $relatorio, $tipo) {
         $campo = '';
@@ -808,6 +809,9 @@ class RelatorioController extends CircuitoController {
         }
         if ($tipo === RelatorioController::ORDENACAO_TIPO_CELULA) {
             $campo = 'celula';
+        }
+        if ($tipo === RelatorioController::ORDENACAO_TIPO_PERFORMANCE) {
+            $campo = 'performance';
         }
         $tamanhoArray = count($discipulosLocal);
 
