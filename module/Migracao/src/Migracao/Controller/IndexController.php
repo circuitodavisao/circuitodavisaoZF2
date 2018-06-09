@@ -6,6 +6,7 @@ use Application\Controller\CircuitoController;
 use Application\Controller\Helper\Constantes;
 use Application\Controller\Helper\Funcoes;
 use Application\Controller\RelatorioController;
+use Application\Model\Entity\Curso;
 use Application\Model\Entity\Entidade;
 use Application\Model\Entity\EntidadeTipo;
 use Application\Model\Entity\Evento;
@@ -972,7 +973,7 @@ class IndexController extends CircuitoController {
             $queryTurma = mysqli_query($this->getConexao(), 'SELECT * FROM ursula_turma_ursula WHERE idIgreja = ' . $idIgreja . ' AND fechada = "N";');
             while ($rowTurma = mysqli_fetch_array($queryTurma)) {
                 /* Turma */
-                $curso = $this->getRepositorio()->getCursoORM()->encontrarPorId($idCursoInstitutoDeVencedores = 2);
+                $curso = $this->getRepositorio()->getCursoORM()->encontrarPorId(Curso::INSTITUTO_DE_VENCEDORES);
                 $grupoIgreja = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupoIgrejaCeilandia = 1);
                 $turma = new Turma();
                 $turma->setGrupo($grupoIgreja);
@@ -1028,7 +1029,7 @@ class IndexController extends CircuitoController {
                 }
 
                 $queryTurmaAluno = mysqli_query(
-                        $this->getConexao(), 'SELECT * FROM ursula_turma_aluno_ursula WHERE idTurma = ' . $rowTurma['id'] . ' AND status = "A" AND (idSituacao = 1 || idSituacao = 2 || idSituacao = 5 || idSituacao = 4) LIMIT 1;');
+                        $this->getConexao(), 'SELECT * FROM ursula_turma_aluno_ursula WHERE idTurma = ' . $rowTurma['id'] . ' AND status = "A" AND (idSituacao = 1 || idSituacao = 2 || idSituacao = 5 || idSituacao = 4) LIMIT 15;');
                 while ($rowTurmaAluno = mysqli_fetch_array($queryTurmaAluno)) {
                     $queryPessoa = mysqli_query($this->getConexao(), 'SELECT * FROM ursula_pessoa_ursula WHERE id = ' . $rowTurmaAluno['idAluno']);
                     while ($rowPessoa = mysqli_fetch_array($queryPessoa)) {

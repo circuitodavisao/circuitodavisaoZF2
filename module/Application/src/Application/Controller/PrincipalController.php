@@ -4,10 +4,11 @@ namespace Application\Controller;
 
 use Application\Controller\Helper\Constantes;
 use Application\Controller\Helper\Funcoes;
-use Application\Form\FatoDiscipuladoForm;
 use Application\Form\HierarquiaForm;
 use Application\Form\NovoEmailForm;
+use Application\Form\NumeracaoForm;
 use Application\Form\RecuperarSenhaForm;
+use Application\Model\Entity\Entidade;
 use Application\Model\Entity\EntidadeTipo;
 use Application\Model\Entity\EventoTipo;
 use Application\Model\Entity\PessoaHierarquia;
@@ -472,6 +473,63 @@ class PrincipalController extends CircuitoController {
 
                 $this->getRepositorio()->fecharTransacao();
                 return $this->redirect()->toRoute('principal');
+            } catch (Exception $exc) {
+                $this->getRepositorio()->desfazerTransacao();
+                echo $exc->getMessage();
+            }
+        }
+    }
+
+    public function numeracaoAction() {
+        $sessao = new Container(Constantes::$NOME_APLICACAO);
+        $idSessao = $sessao->idSessao;
+        if ($idSessao) {
+            $grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idSessao);
+            $formulario = new NumeracaoForm(Constantes::$FORM, $grupo);
+            $view = new ViewModel(
+                    array(
+                'formulario' => $formulario,
+                'grupo' => $grupo,
+            ));
+            unset($sessao->idSessao);
+
+            /* Javascript especifico */
+            $layoutJSIndex = new ViewModel();
+            $layoutJSIndex->setTemplate(Constantes::$TEMPLATE_JS_RECUPERAR_SENHA);
+            $view->addChild($layoutJSIndex, Constantes::$STRING_JS_RECUPERAR_SENHA);
+            return $view;
+        } else {
+            return $this->redirect()->toRoute('principal');
+        }
+    }
+
+    public function numeracaoSalvarAction() {
+        $sessao = new Container(Constantes::$NOME_APLICACAO);
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            try {
+                $this->getRepositorio()->iniciarTransacao();
+                $post_data = $request->getPost();
+                $idGrupo = $post_data[Constantes::$FORM_ID];
+                $grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupo);
+                $numeracao = $post_data[Constantes::$FORM_NUMERACAO];
+
+                $entidade = $grupo->getEntidadeAtiva();
+                if ($numeracao != $entidade->getNumero()) {
+                    $entidade->setDataEHoraDeInativacao();
+                    $setarDataEHora = false;
+                    $this->getRepositorio()->getEntidadeORM()->persistir($entidade, $setarDataEHora);
+                    $entidadeNova = new Entidade();
+                    $entidadeNova->setGrupo($grupo);
+                    $entidadeNova->setNumero($numeracao);
+                    $entidadeNova->setEntidadeTipo($this->getRepositorio()->getEntidadeTipoORM()->encontrarPorId(EntidadeTipo::subEquipe));
+                    $this->getRepositorio()->getEntidadeORM()->persistir($entidadeNova);
+                }
+                $this->getRepositorio()->fecharTransacao();
+                $sessao->idSessao = $idGrupo;
+                return $this->redirect()->toRoute(Constantes::$ROUTE_PRINCIPAL, array(
+                            Constantes::$ACTION => 'ver',
+                ));
             } catch (Exception $exc) {
                 $this->getRepositorio()->desfazerTransacao();
                 echo $exc->getMessage();

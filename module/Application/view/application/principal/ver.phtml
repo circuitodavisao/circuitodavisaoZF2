@@ -66,8 +66,19 @@ echo 'C&eacute;lula(s)';
 echo '</div>';
 echo '<div class="panel-body">';
 echo $this->listagemDeEventos('', $this->eventos);
-echo'</div>';
-echo'</div>';
+echo '</div>';
+echo '</div>';
 
-
-
+if($this->entidade->getEntidadeTipo()->getId() === EntidadeTipo::subEquipe) {
+    $extraAlterarNumeracao = $this->funcaoOnClick('mostrarSplash(); funcaoCircuito("principalNumeracao", ' . $this->idGrupo . ')');
+    $botaoAlterarNumeracao = $this->botaoSimples('Alterar Numeração', $extraAlterarNumeracao, BotaoSimples::botaoImportante, BotaoSimples::posicaoAEsquerda);
+    echo '<div class="panel panel-system mw1000 center-block">';
+    echo '<div class="panel-heading">';
+    echo 'Igreja/Equipe/Sub';
+    echo '</div>';
+    echo '<div class="panel-body">';
+    echo '<div class="col-lg-6 col-md-6 col-sm-6">' . $this->entidade->infoEntidade() . '</div>';
+    echo '<div class="col-lg-6 col-md-6 col-sm-6">' . $botaoAlterarNumeracao . '</div>';
+    echo '</div>';
+    echo '</div>';
+}
