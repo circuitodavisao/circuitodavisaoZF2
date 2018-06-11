@@ -157,7 +157,7 @@ return array(
             'lancamento/lancamento/ficha-revisao' => __DIR__ . '/../view/lancamento/ficha-revisao.phtml',
             'lancamento/lancamento/atendimento' => __DIR__ . '/../view/lancamento/atendimento.phtml',
             'lancamento/lancamento/arregimentacao' => __DIR__ . '/../view/lancamento/arregimentacao.phtml',
-            'lancamento/lancamento/relatorio-enviado' => __DIR__ . '/../view/lancamento/relatorio-enviado.phtml',
+            'lancamento/lancamento/enviar' => __DIR__ . '/../view/lancamento/enviar.phtml',
             'cadastro/cadastro/index' => __DIR__ . '/../view/cadastro/index.phtml',
             'cadastro/cadastro/evento' => __DIR__ . '/../view/cadastro/evento.phtml',
             'cadastro/cadastro/evento-exclusao' => __DIR__ . '/../view/cadastro/evento-exclusao.phtml',

@@ -23,7 +23,7 @@ use Application\View\Helper\BotaoSimples;
                 echo $this->botaoSimples($label, $extra, BotaoSimples::botaoImportante, BotaoSimples::posicaoAoCentro);
 
                 if ($this->periodo == -1) {
-                    $extra = $this->funcaoOnClick('mostrarSplash(); funcaoCircuito("lancamentoRelatorio", ' . $this->periodo . ')');
+                    $extra = $this->funcaoOnClick('mostrarSplash(); funcaoCircuito("lancamentoEnviar", ' . $this->periodo . ')');
                     echo '&nbsp;&nbsp;'.$this->botaoSimples('Enviar Relatório', $extra, BotaoSimples::botaoSucesso, BotaoSimples::posicaoAoCentro);
                 }
                 ?>
