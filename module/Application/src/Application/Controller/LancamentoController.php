@@ -264,12 +264,13 @@ class LancamentoController extends CircuitoController {
             $this->getRepositorio()->fecharTransacao();
         }
 
-        $view = new ViewModel();
-
-        $layoutJS = new ViewModel();
-        $layoutJS->setTemplate(Constantes::$TEMPLATE_JS_LANCAMENTO);
-        $view->addChild($layoutJS, Constantes::$STRING_JS_LANCAMENTO);
-        return $view;
+        return $this->redirect()->toRoute(Constantes::$ROUTE_LANCAMENTO, array(
+                    Constantes::$ACTION => 'relatorioEnviado',
+        ));
+    }
+    
+    public function relatorioEnviadoAction(){
+        return new ViewModel();
     }
 
     /**
