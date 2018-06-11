@@ -6,6 +6,14 @@
 
 
 function mudarFrequencia(idPessoa, idEvento, diaRealDoEvento, idGrupo, periodo) {
+    const mensagemSemConexao = 'Problemas com sua conexão de internet, verifique e acesse novamente!';
+    console.log(navigator);
+    if (!navigator.onLine) {
+        alert(mensagemSemConexao);
+        location.href = '/';
+        return false;
+    }
+
     var faThumbsDown = 'fa-thumbs-down';
     var faThumbsUp = 'fa-thumbs-up';
     var disabled = 'disabled';
@@ -57,9 +65,9 @@ function mudarFrequencia(idPessoa, idEvento, diaRealDoEvento, idGrupo, periodo) 
                     botao.removeClass(disabled);
                     total.html(totalSoma);
                 } else {
-                    alert('Problemas com sua conexão de internet!');
+                    alert(mensagemSemConexao);
                     location.href = '/';
-                    exit;
+                    return false;
                 }
             }, 'json');
 }
