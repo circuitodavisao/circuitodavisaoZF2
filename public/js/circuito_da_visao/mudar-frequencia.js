@@ -34,7 +34,6 @@ function mudarFrequencia(idPessoa, idEvento, diaRealDoEvento, idGrupo, periodo) 
     botao.removeClass(btnSuccess);
     botao.addClass(btnTransicao);
 
-    /* Desabilitar botão ate terminar o processamento */
     botao.addClass(disabled);
     $.post(
             "/lancamentoMudarFrequencia",
