@@ -485,7 +485,8 @@ class PrincipalController extends CircuitoController {
         $idSessao = $sessao->idSessao;
         if ($idSessao) {
             $grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idSessao);
-            $formulario = new NumeracaoForm(Constantes::$FORM, $grupo);
+            $grupoPai = $grupo->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai();
+            $formulario = new NumeracaoForm(Constantes::$FORM, $grupoPai);
             $view = new ViewModel(
                     array(
                 'formulario' => $formulario,
