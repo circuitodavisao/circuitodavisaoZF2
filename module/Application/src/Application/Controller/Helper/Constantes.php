@@ -25,6 +25,7 @@ class Constantes {
     public static $FORM_LOGIN = 'formLogin';
     public static $ROUTE_LOGIN = 'login';
     public static $ACTION_PRINCIPAL = 'principal';
+    public static $ACTION_LANCAMENTO_ARREGIMENTACAO = 'lancamentoArregimentacao';
     public static $ACTION_SELECIONAR_PERFIL = 'selecionarPerfil';
     public static $URL_ESQUECEU_SENHA = 'esqueceuSenha';
     public static $ACTION_INDEX = 'index';
@@ -255,6 +256,7 @@ class Constantes {
     public static $ENTITY_TURMA_PESSOA_AULA = 'Application\Model\Entity\TurmaPessoaAula';
     public static $ENTITY_TURMA_PESSOA_VISTO = 'Application\Model\Entity\TurmaPessoaVisto';
     public static $ENTITY_TURMA_PESSOA_FINANCEIRO = 'Application\Model\Entity\TurmaPessoaFinanceiro';
+    public static $ENTITY_TURMA_PESSOA_AVALIACAO = 'Application\Model\Entity\TurmaPessoaAvaliacao';
     public static $ENTITY_TURMA_AULA = 'Application\Model\Entity\TurmaAula';
     public static $ENTITY_TURMA_PESSOA = 'Application\Model\Entity\TurmaPessoa';
     public static $ENTITY_TURMA = 'Application\Model\Entity\Turma';
@@ -292,6 +294,7 @@ class Constantes {
     public static $VALIDACAO_NESSE_MES = 'validacaoNesseMes';
     public static $VALIDACAO_ENTIDADE_INATIVA = 'validacaoEntidadeInativa';
     public static $TEMPLATE_JS_LANCAMENTO = 'layout/layout-js-lancamento';
+    public static $TEMPLATE_JS_RELATORIO = 'layout/layout-js-relatorio';
     public static $TEMPLATE_JS_LANCAMENTO_ATENDIMENTO = 'layout/layout-js-lancamento-atendimento';
     public static $TEMPLATE_JS_CADASTRAR_PESSOA = 'layout/layout-js-cadastrar-pessoa';
     public static $TEMPLATE_JS_CADASTRAR_PESSOA_VALIDACAO = 'layout/layout-js-cadastrar-pessoa-validacao';
@@ -302,6 +305,7 @@ class Constantes {
     public static $TEMPLATE_JS_LANCAMENTO_MODAL_MUITOS_CADASTROS = 'layout/layout-js-lancamento-modal-muitos-cadastros';
     public static $TEMPLATE_JS_RELATORIO_ATENDIMENTO = 'layout/layout-js-relatorio-atendimento';
     public static $STRING_JS_LANCAMENTO = 'layoutJSLancamento';
+    public static $STRING_JS_RELATORIO = 'layoutJSRelatorio';
     public static $STRING_JS_LANCAMENTO_ATENDIMENTO = 'layoutJSLancamentoAtendimento';
     public static $STRING_JS_CADASTRAR_PESSOA = 'layoutJSCadastrarPessoa';
     public static $STRING_JS_CADASTRAR_PESSOA_VALIDACAO = 'layoutJSCadastrarPessoaValidacao';

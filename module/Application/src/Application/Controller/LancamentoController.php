@@ -124,7 +124,7 @@ class LancamentoController extends CircuitoController {
         return $view;
     }
 
-    public function relatorioAction() {
+    public function enviarAction() {
         $sessao = new Container(Constantes::$NOME_APLICACAO);
 
         $entidade = CircuitoController::getEntidadeLogada($this->getRepositorio(), $sessao);
@@ -264,13 +264,7 @@ class LancamentoController extends CircuitoController {
             $this->getRepositorio()->fecharTransacao();
         }
 
-        return $this->redirect()->toRoute(Constantes::$ROUTE_LANCAMENTO, array(
-                    Constantes::$ACTION => 'relatorioEnviado',
-        ));
-    }
-    
-    public function relatorioEnviadoAction(){
-        return new ViewModel();
+      return new ViewModel();
     }
 
     /**
