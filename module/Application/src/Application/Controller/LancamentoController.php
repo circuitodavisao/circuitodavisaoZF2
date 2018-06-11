@@ -377,6 +377,7 @@ class LancamentoController extends CircuitoController {
                     foreach ($fatoCelulas as $fatoCelula) {
                         echo "fatoCelula" . $fatoCelula->getId();
                         echo "getEvento_celula_id" . $fatoCelula->getEvento_celula_id();
+                        echo "eventoCelulaId" . $eventoCelulaId;
                         if ($fatoCelula->getEvento_celula_id() == $eventoCelulaId) {
                             $fatoCelulaSelecionado = $fatoCelula;
                         }
