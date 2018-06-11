@@ -263,7 +263,13 @@ class LancamentoController extends CircuitoController {
             }
             $this->getRepositorio()->fecharTransacao();
         }
-        return new ViewModel();
+
+        $view = new ViewModel();
+
+        $layoutJS = new ViewModel();
+        $layoutJS->setTemplate(Constantes::$TEMPLATE_JS_LANCAMENTO);
+        $view->addChild($layoutJS, Constantes::$STRING_JS_LANCAMENTO);
+        return $view;
     }
 
     /**
