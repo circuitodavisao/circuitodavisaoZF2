@@ -264,7 +264,7 @@ class LancamentoController extends CircuitoController {
             $this->getRepositorio()->fecharTransacao();
         }
 
-        $view = new ViewModel(array('periodo' => $periodo));
+        $view = new ViewModel();
         return $view;
     }
 
