@@ -263,7 +263,7 @@ class LancamentoController extends CircuitoController {
             $this->getRepositorio()->fecharTransacao();
         }
 
-      return new ViewModel();
+        return new ViewModel();
     }
 
     /**
@@ -371,9 +371,12 @@ class LancamentoController extends CircuitoController {
 
                     $eventoCelulaId = $evento->getEventoCelula()->getId();
                     $fatoCelulas = $fatoCicloSelecionado->getFatoCelula();
+                    echo "fatoCicloSelecionado" . $fatoCicloSelecionado->getId();
 
                     $fatoCelulaSelecionado = null;
                     foreach ($fatoCelulas as $fatoCelula) {
+                        echo "fatoCelula" . $fatoCelula->getId();
+                        echo "getEvento_celula_id" . $fatoCelula->getEvento_celula_id();
                         if ($fatoCelula->getEvento_celula_id() == $eventoCelulaId) {
                             $fatoCelulaSelecionado = $fatoCelula;
                         }
