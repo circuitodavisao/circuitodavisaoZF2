@@ -11,7 +11,7 @@ use Application\View\Helper\BotaoSimples;
         <div class="panel-body center-block" style="padding: 1px;">       
             <?php
             if ($this->periodo == -1) {
-                $extra = $this->funcaoOnClick('mostrarSplash(); funcaoCircuito("lancamentoEnviarRelatorio", ' . $this->periodo . ')');
+                $extra = $this->funcaoOnClick('mostrarSplash(); funcaoCircuito("lancamentoRelatorio", ' . $this->periodo . ')');
                 echo '<div class="row p30">' . $this->botaoSimples('Enviar Relatório', $extra, BotaoSimples::botaoSucesso, BotaoSimples::larguraMaxima) . '</div>';
             }
             echo $this->cabecalhoDePeriodos();
