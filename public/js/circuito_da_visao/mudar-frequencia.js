@@ -56,6 +56,10 @@ function mudarFrequencia(idPessoa, idEvento, diaRealDoEvento, idGrupo, periodo) 
                     }
                     botao.removeClass(disabled);
                     total.html(totalSoma);
+                } else {
+                    alert('Problemas com sua conexão de internet!');
+                    location.href = '/';
+                    exit;
                 }
             }, 'json');
 }

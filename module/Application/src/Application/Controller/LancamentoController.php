@@ -36,9 +36,8 @@ class LancamentoController extends CircuitoController {
      * GET /lancamentoArregimentacao
      */
     public function arregimentacaoAction() {
-        /* Helper Controller */
-
         $sessao = new Container(Constantes::$NOME_APLICACAO);
+
         $entidade = CircuitoController::getEntidadeLogada($this->getRepositorio(), $sessao);
         $grupo = $entidade->getGrupo();
 
@@ -125,9 +124,13 @@ class LancamentoController extends CircuitoController {
     public function mudarFrequenciaAction() {
         $request = $this->getRequest();
         $response = $this->getResponse();
+        $resposta = false;
+        $hostname = 'www.google.com.br';
+        if (!$sock = @fsockopen($hostname, 80, $num, $error, 5)) {
+            $response->setContent(Json::encode(array('response' => $resposta)));
+            return $response;
+        }
         if ($request->isPost()) {
-            /* Helper Controller */
-
             try {
                 $this->getRepositorio()->iniciarTransacao();
 
@@ -136,7 +139,6 @@ class LancamentoController extends CircuitoController {
                 $idPessoa = $post_data['idPessoa'];
                 $idEvento = $post_data['idEvento'];
                 $diaRealDoEvento = $post_data['diaRealDoEvento'];
-                $idGrupo = $post_data['idGrupo'];
                 $periodo = $post_data['periodo'];
                 $dateFormatada = DateTime::createFromFormat('Y-m-d', $diaRealDoEvento);
 
@@ -177,7 +179,6 @@ class LancamentoController extends CircuitoController {
                     }
                 }
                 $tipoCampo = 0;
-                /* EventoTipo::tipoCulto */
                 if ($evento->getEventoTipo()->getId() === EventoTipo::tipoCulto) {
                     $diaDeSabado = 7;
                     $diaDeDomingo = 1;
@@ -196,7 +197,6 @@ class LancamentoController extends CircuitoController {
                             break;
                     };
                 }
-                /* EventoTipo::tipoCelula */
                 if ($evento->getEventoTipo()->getId() === EventoTipo::tipoCelula) {
                     $tipoCampo = 1;
                     $dimensaoSelecionada = $dimensoes[DimensaoTipo::CELULA];
@@ -242,16 +242,25 @@ class LancamentoController extends CircuitoController {
                     switch ($pessoa->getGrupoPessoaAtivo()->getGrupoPessoaTipo()->getId()) {
                         case GrupoPessoaTipo::VISITANTE:
                             $valorDoCampo = $dimensaoSelecionada->getVisitante();
+                            if ($valorDoCampo === 0 && $valorParaSomar === -1) {
+                                $valorParaSomar = 0;
+                            }
                             $dimensaoSelecionada->setVisitante($valorDoCampo + $valorParaSomar);
                             $tipoPessoa = 1;
                             break;
                         case GrupoPessoaTipo::CONSOLIDACAO:
                             $valorDoCampo = $dimensaoSelecionada->getConsolidacao();
+                            if ($valorDoCampo === 0 && $valorParaSomar === -1) {
+                                $valorParaSomar = 0;
+                            }
                             $dimensaoSelecionada->setConsolidacao($valorDoCampo + $valorParaSomar);
                             $tipoPessoa = 2;
                             break;
                         case GrupoPessoaTipo::MEMBRO:
                             $valorDoCampo = $dimensaoSelecionada->getMembro();
+                            if ($valorDoCampo === 0 && $valorParaSomar === -1) {
+                                $valorParaSomar = 0;
+                            }
                             $dimensaoSelecionada->setMembro($valorDoCampo + $valorParaSomar);
                             $tipoPessoa = 3;
                             break;
@@ -259,6 +268,9 @@ class LancamentoController extends CircuitoController {
                 } else {
                     $tipoPessoa = 4;
                     $valorDoCampo = $dimensaoSelecionada->getLider();
+                    if ($valorDoCampo === 0 && $valorParaSomar === -1) {
+                        $valorParaSomar = 0;
+                    }
                     $dimensaoSelecionada->setLider($valorDoCampo + $valorParaSomar);
                 }
                 $this->getRepositorio()->getDimensaoORM()->persistir($dimensaoSelecionada, false);
@@ -278,11 +290,12 @@ class LancamentoController extends CircuitoController {
                     $frequencia->setDia($dateFormatada);
                 }
                 $this->getRepositorio()->getEventoFrequenciaORM()->persistir($frequencia);
-
+                if ($pessoa->getEventoFrequenciaFiltradoPorEventoEDia($idEvento, $diaRealDoEvento)) {
+                    $resposta = true;
+                }
                 $this->getRepositorio()->fecharTransacao();
-
                 $response->setContent(Json::encode(
-                                array('response' => 'true',
+                                array('response' => $resposta,
                                     'idEvento' => $evento->getId())));
             } catch (Exception $exc) {
                 $this->getRepositorio()->desfazerTransacao();
