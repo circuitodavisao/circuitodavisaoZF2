@@ -15,12 +15,12 @@ use Zend\Form\Form;
  */
 class NumeracaoForm extends Form {
 
-    public function __construct($name = null, $grupo = null) {
+    public function __construct($name = null, $grupoPai = null, $grupo = null) {
         parent::__construct($name);
 
         $numeros = array();
-        if ($grupo->getGrupoPaiFilhoFilhosAtivos(1)) {
-            $filhos = $grupo->getGrupoPaiFilhoFilhosAtivos(1);
+        if ($grupoPai->getGrupoPaiFilhoFilhosAtivos(1)) {
+            $filhos = $grupoPai->getGrupoPaiFilhoFilhosAtivos(1);
             foreach ($filhos as $filho) {
                 if ($filho->getGrupoPaiFilhoFilho()->getEntidadeAtiva()->getNumero()) {
                     $numero = $filho->getGrupoPaiFilhoFilho()->getEntidadeAtiva()->getNumero();
