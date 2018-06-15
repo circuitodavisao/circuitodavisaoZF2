@@ -980,7 +980,7 @@ class IndexController extends CircuitoController {
                 $turma->setCurso($curso);
                 $turma->setMes($rowTurma['mes']);
                 $turma->setAno($rowTurma['ano']);
-                $turma->setObservacao('MIGRACAO CV 2');
+                $turma->setObservacao('MIGRACAO CV 3');
                 $this->getRepositorio()->getTurmaORM()->persistir($turma);
                 $html .= '<br /><br />TURMA - ' . $turma->getMes() . '/' . $turma->getAno();
 
@@ -1077,6 +1077,7 @@ class IndexController extends CircuitoController {
                                 $turmaPessoa = new TurmaPessoa();
                                 $turmaPessoa->setPessoa($pessoaVolatil);
                                 $turmaPessoa->setTurma($turma);
+                                $turmaPessoa->setAntigo_id($rowTurmaAluno['idAluno']);
                                 $this->getRepositorio()->getTurmaPessoaORM()->persistir($turmaPessoa);
                                 $html .= '<br />TURMA PESSOA ' . $turmaPessoa->getId();
 

@@ -350,7 +350,7 @@ class ListagemDeEventos extends AbstractHelper {
             if ($tipoRevisao) {
                 $stringTipoEvento = 'Revisões de Vidas';
             }
-            $html .= '<div class="alert alert-warning"><i class="fa fa-warning pr10" aria-hidden="true"></i>&nbsp;Sem ' . $stringTipoEvento . ' cadastrados!</div>';
+            $html .= '<div class="alert alert-warning"><i class="fa fa-warning pr10" aria-hidden="true"></i>&nbsp;Sem ' . $stringTipoEvento . '!</div>';
         }
         $html .= '</div>';
         /* Fim panel-body */

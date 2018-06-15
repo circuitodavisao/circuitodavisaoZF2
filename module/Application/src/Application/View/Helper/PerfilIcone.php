@@ -225,7 +225,7 @@ class PerfilIcone extends AbstractHelper {
         if ($grupoPai) {
             $grupoResponsabilidades = $grupoPai->getResponsabilidadesAtivas();
             $nomeLideres = Menu::montaNomeLideres($grupoResponsabilidades);
-            $html .= '<h3>Discipulo de: ' . $nomeLideres . '</h3>';
+            $html .= '<h3>Discípulo de: ' . $nomeLideres . '</h3>';
         }
 
         $html .= '<i class="fa fa-' . $faIcon . ' text-muted fs40 mt10"></i>';

@@ -42,32 +42,41 @@ class MontarEndereco extends AbstractHelper {
         $html .= '</div>';
 
         $html .= '<div id="endereco" class="' . $this->view->enderecoHidden . '">';
+
         $html .= '<div class="row">';
+
+        $html .= '<div class="col-md-6">';
+        $html .= '<div class="section">';
+        $html .= $this->view->inputCampoEndereco(Constantes::$TRADUCAO_LOGRADOURO, $this->getForm(), Constantes::$FORM_LOGRADOURO, 1);
+        $html .= '</div>';
+        $html .= '</div>';
+
+        $html .= '<div class="col-md-6 col-sm-12">';
+        $html .= '<div class="section">';
+        $html .= $this->view->inputCampoEndereco(Constantes::$TRADUCAO_BAIRRO, $this->getForm(), Constantes::$FORM_BAIRRO, 1);
+        $html .= '</div>';
+        $html .= '</div>';
+
+        $html .= '</div>';
+
+        $html .= '<div class="row">';
+
+        $html .= '<div class="col-md-6">';
+        $html .= '<div class="section">';
+        $html .= $this->view->inputCampoEndereco(Constantes::$TRADUCAO_CIDADE, $this->getForm(), Constantes::$FORM_CIDADE, 1);
+        $html .= '</div>';
+        $html .= '</div>';
 
         $html .= '<div class="col-md-6 col-sm-12">';
         $html .= '<div class="section">';
         $html .= $this->view->inputCampoEndereco(Constantes::$TRADUCAO_UF, $this->getForm(), Constantes::$FORM_UF, 1);
         $html .= '</div>';
         $html .= '</div>';
-        $html .= '<div class="col-md-6 col-sm-12">';
-        $html .= '<div class="section">';
-        $html .= $this->view->inputCampoEndereco(Constantes::$TRADUCAO_BAIRRO, $this->getForm(), Constantes::$FORM_BAIRRO, 1);
+
         $html .= '</div>';
-        $html .= '</div>';
-        $html .= '</div>';
+
         $html .= '<div class="row">';
-        $html .= '<div class="col-md-6">';
-        $html .= '<div class="section">';
-        $html .= $this->view->inputCampoEndereco(Constantes::$TRADUCAO_CIDADE, $this->getForm(), Constantes::$FORM_CIDADE, 1);
-        $html .= '</div>';
-        $html .= '</div>';
-        $html .= '<div class="col-md-6">';
-        $html .= '<div class="section">';
-        $html .= $this->view->inputCampoEndereco(Constantes::$TRADUCAO_LOGRADOURO, $this->getForm(), Constantes::$FORM_LOGRADOURO, 1);
-        $html .= '</div>';
-        $html .= '</div>';
-        $html .= '</div>';
-        $html .= '<div class="row">';
+
         $html .= '<div class="col-md-12">';
         $html .= '<div class="section">';
         $html .= $this->view->inputCampoEndereco(Constantes::$TRADUCAO_COMPLEMENTO, $this->getForm(), Constantes::$FORM_COMPLEMENTO);

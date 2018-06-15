@@ -137,7 +137,7 @@ class Menu extends AbstractHelper {
                     $nomeLideres = Self::montaNomeLideres($grupoResponsavel);
                     $informacaoEntidade = Self::montaInformacaoEntidade($entidadeFilho);
 
-                    $discipulos144 = $grupoFilho->getGrupoPaiFilhoFilhosAtivos(0);
+                    $discipulos144 = $grupoFilho->getGrupoPaiFilhoFilhosAtivos(1);
                     if (count($discipulos144) > 0) {
                         $html .= $this->view->menuHierarquia($nomeLideres, $informacaoEntidade, 2);
                         $html .= $this->view->menuHierarquia('', '', 3, $grupoFilho->getId());
@@ -149,7 +149,7 @@ class Menu extends AbstractHelper {
                             $nomeLideres144 = Self::montaNomeLideres($grupoResponsavel144);
                             $informacaoEntidade144 = Self::montaInformacaoEntidade($entidadeFilho144);
 
-                            $discipulos1728 = $grupoFilho144->getGrupoPaiFilhoFilhosAtivos(0);
+                            $discipulos1728 = $grupoFilho144->getGrupoPaiFilhoFilhosAtivos(1);
                             if (count($discipulos1728) > 0) {
                                 $html .= $this->view->menuHierarquia($nomeLideres144, $informacaoEntidade144, 2);
                                 $html .= $this->view->menuHierarquia('', '', 3, $grupoFilho144->getId());
@@ -161,7 +161,7 @@ class Menu extends AbstractHelper {
                                     $nomeLideres1728 = Self::montaNomeLideres($grupoResponsavel1728);
                                     $informacaoEntidade1728 = Self::montaInformacaoEntidade($entidadeFilho1728);
 
-                                    $discipulos20736 = $grupoFilho1728->getGrupoPaiFilhoFilhosAtivos(0);
+                                    $discipulos20736 = $grupoFilho1728->getGrupoPaiFilhoFilhosAtivos(1);
                                     if (count($discipulos20736) > 0) {
                                         $html .= $this->view->menuHierarquia($nomeLideres1728, $informacaoEntidade1728, 2);
                                         $html .= $this->view->menuHierarquia('', '', 3, $grupoFilho1728->getId());
@@ -244,12 +244,12 @@ class Menu extends AbstractHelper {
             $html .= '</a>';
             $html .= '</li>';
 
-            $html .= '<li>';
-            $html .= '<a href="/cadastroDiscipulados" onClick="mostrarSplash();">';
-            $html .= '<span class="fa fa-users"></span>';
-            $html .= 'Discipulados';
-            $html .= '</a>';
-            $html .= '</li>';
+//            $html .= '<li>';
+//            $html .= '<a href="/cadastroDiscipulados" onClick="mostrarSplash();">';
+//            $html .= '<span class="fa fa-users"></span>';
+//            $html .= 'Discipulados';
+//            $html .= '</a>';
+//            $html .= '</li>';
 
             $html .= '<li>';
             $html .= '<a href="/cadastroRevisionistas" onClick="mostrarSplash();">';
@@ -374,134 +374,130 @@ class Menu extends AbstractHelper {
         $html .= '</a>';
         $html .= '</li>';
 
-        $html .= '<li>';
-        $html .= '<a href="/relatorioDiscipulado" onClick="mostrarSplash();">';
-        $html .= '<span class="fa fa-users"></span>';
-        $html .= 'Discipulado';
-        $html .= '</a>';
-        $html .= '</li>';
+//        $html .= '<li>';
+//        $html .= '<a href="/relatorioDiscipulado" onClick="mostrarSplash();">';
+//        $html .= '<span class="fa fa-users"></span>';
+//        $html .= 'Discipulado';
+//        $html .= '</a>';
+//        $html .= '</li>';
 
         $html .= '</ul>';
 
         $html .= '</li>';
         if ($this->view->entidade->verificarSeEstaAtivo()) {
-            $html .= '<li>';
-            $html .= '<a class="accordion-toggle" href="#">';
-            $html .= '<span class="fa fa-users"></span>';
-            $html .= '<span class="sidebar-title">Cursos</span>';
-            $html .= '<span class="caret"></span>';
-            $html .= '</a>';
+//            $html .= '<li>';
+//            $html .= '<a class="accordion-toggle" href="#">';
+//            $html .= '<span class="fa fa-users"></span>';
+//            $html .= '<span class="sidebar-title">Cursos</span>';
+//            $html .= '<span class="caret"></span>';
+//            $html .= '</a>';
+//
+//            $html .= '<ul class="nav sub-nav">';
 
-            $html .= '<ul class="nav sub-nav">';
-
-            $html .= '<li>';
-            $html .= '<a href="/cursoChamada" onClick="mostrarSplash();">';
-            $html .= '<span class="fa fa-list"></span>';
-            $html .= 'Chamada';
-            $html .= '</a>';
-            $html .= '</li>';
-
-            $arrayOQueMostrarDosCursos = array();
-            $arrayOQueMostrarDosCursos['reentrada'] = false;
-            $arrayOQueMostrarDosCursos['turmas'] = false;
-            $arrayOQueMostrarDosCursos['usuarios'] = false;
-            $arrayOQueMostrarDosCursos['gerarCarterinhas'] = false;
-            $arrayOQueMostrarDosCursos['gerarReposicoes'] = false;
-            $arrayOQueMostrarDosCursos['gerarFaltas'] = false;
-            $arrayOQueMostrarDosCursos['lancarPresenca'] = false;
-            if ($this->view->pessoa->getPessoaCursoAcessoAtivo()) {
-                if ($this->view->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::COORDENADOR) {
-                    $arrayOQueMostrarDosCursos['turmas'] = true;
-                    $arrayOQueMostrarDosCursos['usuarios'] = true;
-                    $arrayOQueMostrarDosCursos['gerarFaltas'] = true;
-                }
-                if ($this->view->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::COORDENADOR ||
-                        $this->view->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::SUPERVISOR ||
-                        $this->view->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::FACILITADOR) {
-                    $arrayOQueMostrarDosCursos['reentrada'] = true;
-                    $arrayOQueMostrarDosCursos['gerarCarterinhas'] = true;
-                    $arrayOQueMostrarDosCursos['gerarReposicoes'] = true;
-                }
-                if ($this->view->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::COORDENADOR ||
-                        $this->view->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::SUPERVISOR ||
-                        $this->view->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::AUXILIAR ||
-                        $this->view->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::FACILITADOR) {
-                    $arrayOQueMostrarDosCursos['lancarPresenca'] = true;
-                }
-            } else {
-                if ($this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja) {
-                    $arrayOQueMostrarDosCursos['reentrada'] = true;
-                    $arrayOQueMostrarDosCursos['turmas'] = true;
-                    $arrayOQueMostrarDosCursos['usuarios'] = true;
-                    $arrayOQueMostrarDosCursos['gerarCarterinhas'] = true;
-                    $arrayOQueMostrarDosCursos['gerarReposicoes'] = true;
-                    $arrayOQueMostrarDosCursos['gerarFaltas'] = true;
-                    $arrayOQueMostrarDosCursos['lancarPresenca'] = true;
-                }
-            }
-            if ($arrayOQueMostrarDosCursos['reentrada']) {
-                $html .= '<li>';
-                $html .= '<a href="/cursoReentrada" onClick="mostrarSplash();">';
-                $html .= '<span class="fa fa-user"></span>';
-                $html .= 'Reentrada de Aluno';
-                $html .= '</a>';
-                $html .= '</li>';
-            }
-
-            if ($arrayOQueMostrarDosCursos['turmas']) {
-                $html .= '<li>';
-                $html .= '<a href="/cursoListarTurma" onClick="mostrarSplash();">';
-                $html .= '<span class="fa fa-list"></span>';
-                $html .= 'Turmas';
-                $html .= '</a>';
-                $html .= '</li>';
-            }
-            if ($arrayOQueMostrarDosCursos['usuarios']) {
-                $html .= '<li>';
-                $html .= '<a href="/cursoUsuarios" onClick="mostrarSplash();">';
-                $html .= '<span class="fa fa-users"></span>';
-                $html .= 'Usuários';
-                $html .= '</a>';
-                $html .= '</li>';
-            }
-            if ($arrayOQueMostrarDosCursos['gerarCarterinhas']) {
-                $html .= '<li>';
-                $html .= '<a href="/cursoSelecionarParaCarterinha" onClick="mostrarSplash();">';
-                $html .= '<span class="fa fa-user"></span>';
-                $html .= 'Gerar Carterinha';
-                $html .= '</a>';
-                $html .= '</li>';
-            }
-            if ($arrayOQueMostrarDosCursos['gerarReposicoes']) {
-                $html .= '<li>';
-                $html .= '<a href="/cursoSelecionarReposicoes" onClick="mostrarSplash();">';
-                $html .= '<span class="fa fa-list"></span>';
-                $html .= 'Gerar Reposições';
-                $html .= '</a>';
-                $html .= '</li>';
-            }
-            if ($arrayOQueMostrarDosCursos['gerarFaltas']) {
-                $html .= '<li>';
-                $html .= '<a href="/cursoGerarFaltas" onClick="mostrarSplash();">';
-                $html .= '<span class="fa fa-money"></span>';
-                $html .= 'Gerar Faltas';
-                $html .= '</a>';
-                $html .= '</li>';
-            }
-            if ($arrayOQueMostrarDosCursos['lancarPresenca']) {
-                $html .= '<li>';
-                $html .= '<a href="/cursoLancarPresenca" onClick="mostrarSplash();">';
-                $html .= '<span class="fa fa-pencil"></span>';
-                $html .= 'Lançar Presença/Reposição';
-                $html .= '</a>';
-                $html .= '</li>';
-            }
-            $html .= '</li>';
+//            $html .= '<li>';
+//            $html .= '<a href="/cursoChamada" onClick="mostrarSplash();">';
+//            $html .= '<span class="fa fa-list"></span>';
+//            $html .= 'Chamada';
+//            $html .= '</a>';
+//            $html .= '</li>';
+//            $arrayOQueMostrarDosCursos = array();
+//            $arrayOQueMostrarDosCursos['reentrada'] = false;
+//            $arrayOQueMostrarDosCursos['turmas'] = false;
+//            $arrayOQueMostrarDosCursos['usuarios'] = false;
+//            $arrayOQueMostrarDosCursos['gerarCarterinhas'] = false;
+//            $arrayOQueMostrarDosCursos['gerarReposicoes'] = false;
+//            $arrayOQueMostrarDosCursos['gerarFaltas'] = false;
+//            $arrayOQueMostrarDosCursos['lancarPresenca'] = false;
+//            if ($this->view->pessoa->getPessoaCursoAcessoAtivo()) {
+//                if ($this->view->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::COORDENADOR) {
+//                    $arrayOQueMostrarDosCursos['turmas'] = true;
+//                    $arrayOQueMostrarDosCursos['usuarios'] = true;
+//                    $arrayOQueMostrarDosCursos['gerarFaltas'] = true;
+//                }
+//                if ($this->view->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::COORDENADOR ||
+//                        $this->view->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::SUPERVISOR ||
+//                        $this->view->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::FACILITADOR) {
+//                    $arrayOQueMostrarDosCursos['reentrada'] = true;
+//                    $arrayOQueMostrarDosCursos['gerarCarterinhas'] = true;
+//                    $arrayOQueMostrarDosCursos['gerarReposicoes'] = true;
+//                }
+//                if ($this->view->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::COORDENADOR ||
+//                        $this->view->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::SUPERVISOR ||
+//                        $this->view->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::AUXILIAR ||
+//                        $this->view->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::FACILITADOR) {
+//                    $arrayOQueMostrarDosCursos['lancarPresenca'] = true;
+//                }
+//            } else {
+//                if ($this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja) {
+//                    $arrayOQueMostrarDosCursos['reentrada'] = true;
+//                    $arrayOQueMostrarDosCursos['turmas'] = true;
+//                    $arrayOQueMostrarDosCursos['usuarios'] = true;
+//                    $arrayOQueMostrarDosCursos['gerarCarterinhas'] = true;
+//                    $arrayOQueMostrarDosCursos['gerarReposicoes'] = true;
+//                    $arrayOQueMostrarDosCursos['gerarFaltas'] = true;
+//                    $arrayOQueMostrarDosCursos['lancarPresenca'] = true;
+//                }
+//            }
+//            if ($arrayOQueMostrarDosCursos['reentrada']) {
+//                $html .= '<li>';
+//                $html .= '<a href="/cursoReentrada" onClick="mostrarSplash();">';
+//                $html .= '<span class="fa fa-user"></span>';
+//                $html .= 'Reentrada de Aluno';
+//                $html .= '</a>';
+//                $html .= '</li>';
+//            }
+//
+//            if ($arrayOQueMostrarDosCursos['turmas']) {
+//                $html .= '<li>';
+//                $html .= '<a href="/cursoListarTurma" onClick="mostrarSplash();">';
+//                $html .= '<span class="fa fa-list"></span>';
+//                $html .= 'Turmas';
+//                $html .= '</a>';
+//                $html .= '</li>';
+//            }
+//            if ($arrayOQueMostrarDosCursos['usuarios']) {
+//                $html .= '<li>';
+//                $html .= '<a href="/cursoUsuarios" onClick="mostrarSplash();">';
+//                $html .= '<span class="fa fa-users"></span>';
+//                $html .= 'Usuários';
+//                $html .= '</a>';
+//                $html .= '</li>';
+//            }
+//            if ($arrayOQueMostrarDosCursos['gerarCarterinhas']) {
+//                $html .= '<li>';
+//                $html .= '<a href="/cursoSelecionarParaCarterinha" onClick="mostrarSplash();">';
+//                $html .= '<span class="fa fa-user"></span>';
+//                $html .= 'Gerar Carterinha';
+//                $html .= '</a>';
+//                $html .= '</li>';
+//            }
+//            if ($arrayOQueMostrarDosCursos['gerarReposicoes']) {
+//                $html .= '<li>';
+//                $html .= '<a href="/cursoSelecionarReposicoes" onClick="mostrarSplash();">';
+//                $html .= '<span class="fa fa-list"></span>';
+//                $html .= 'Gerar Reposições';
+//                $html .= '</a>';
+//                $html .= '</li>';
+//            }
+//            if ($arrayOQueMostrarDosCursos['gerarFaltas']) {
+//                $html .= '<li>';
+//                $html .= '<a href="/cursoGerarFaltas" onClick="mostrarSplash();">';
+//                $html .= '<span class="fa fa-money"></span>';
+//                $html .= 'Gerar Faltas';
+//                $html .= '</a>';
+//                $html .= '</li>';
+//            }
+//            if ($arrayOQueMostrarDosCursos['lancarPresenca']) {
+//                $html .= '<li>';
+//                $html .= '<a href="/cursoLancarPresenca" onClick="mostrarSplash();">';
+//                $html .= '<span class="fa fa-pencil"></span>';
+//                $html .= 'Lançar Presença/Reposição';
+//                $html .= '</a>';
+//                $html .= '</li>';
+//            }
+//            $html .= '</ul>';
+//            $html .= '</li>';
         }
-
-        $html .= '</ul>';
-
-        $html .= '</li>';
 
 
         $html .= '<li>';
@@ -525,19 +521,19 @@ class Menu extends AbstractHelper {
         $html .= '<a href="/cadastroListagemLideres" onClick="mostrarSplash();">';
         $html .= '<span class="fa fa-terminal"></span>';
         $html .= 'Listagem de Líderes';
-        $html .= '</a>'; 
+        $html .= '</a>';
         $html .= '</li>';
 
         $html .= '</ul>';
         $html .= '</li>';
 
-        $html .= '<li>';
-        $html .= '<a class="accordion-toggle" href="#">';
-        $html .= '<span class="fa fa-cogs"></span>';
-        $html .= '<span class="sidebar-title">Adm. (Manutenção)</span>';
-        $html .= '<span class="caret"></span>';
-        $html .= '</a>';
-        $html .= '</li>';
+//        $html .= '<li>';
+//        $html .= '<a class="accordion-toggle" href="#">';
+//        $html .= '<span class="fa fa-cogs"></span>';
+//        $html .= '<span class="sidebar-title">Adm. (Manutenção)</span>';
+//        $html .= '<span class="caret"></span>';
+//        $html .= '</a>';
+//        $html .= '</li>';
 
         $html .= '</ul>';
         // End: Sidebar Menu
