@@ -1,6 +1,7 @@
 ALTER TABLE turma_aula ADD COLUMN pessoa_id INTEGER NOT NULL;
 ALTER TABLE turma_aula ADD CONSTRAINT "fk_turma_aula_pessoa_id" FOREIGN KEY (pessoa_id) REFERENCES pessoa(id) ;
 ALTER TABLE turma_pessoa_aula ADD COLUMN reposicao enumsn NOT NULL DEFAULT 'N';
+ALTER TABLE turma_pessoa ADD COLUMN antigo_id integer;
 
 INSERT INTO situacao (id,nome,data_criacao,hora_criacao) values (6, 'ESPECIAL','2018-04-24','16:50:00');
 INSERT INTO situacao (id,nome,data_criacao,hora_criacao) values (7,'DESISTENTE','2018-05-18','16:03:00');
