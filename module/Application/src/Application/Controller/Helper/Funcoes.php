@@ -302,6 +302,23 @@ class Funcoes {
         return $periodoFinal;
     }
 
+    static public function encontrarPeriodoDadoDataDeInativacao($dataDeInativacao) {
+        $periodo = 0;
+        $dataDeInativacao = strtotime($dataDeInativacao);
+        while (true) {
+            $arrayPeriodo = Funcoes::montaPeriodo($periodo);
+            $dataInicial = $arrayPeriodo[3] . '-' . $arrayPeriodo[2] . '-' . $arrayPeriodo[1];
+            $dataInicial = strtotime("$dataInicial -1 day");
+            if ($dataInicial == $dataDeInativacao) {
+                $periodo--;
+                break;
+            }
+            $periodo--;
+        }
+
+        return $periodo;
+    }
+
     static public function encontrarPeriodoDeUmMesPorMesEAno($mes, $ano) {
         $mesParaVerificarInt = (int) $mes;
         $periodoInicial = 6;

@@ -51,7 +51,7 @@ class LancamentoController extends CircuitoController {
         $periodo = $this->getEvent()->getRouteMatch()->getParam(Constantes::$ID, 0);
 
         if (!$entidade->verificarSeEstaAtivo()) {
-            $periodoVerificar = Funcoes::encontrarPeriodoDeUmMes($entidade->getData_inativacaoMes());
+            $periodoVerificar = Funcoes::encontrarPeriodoDadoDataDeInativacao($entidade->getData_inativacaoStringPadraoBanco());
             if ($periodo > $periodoVerificar) {
                 $periodo = $periodoVerificar;
             }
@@ -371,14 +371,13 @@ class LancamentoController extends CircuitoController {
 
                     $eventoCelulaId = $evento->getEventoCelula()->getId();
                     $fatoCelulas = $fatoCicloSelecionado->getFatoCelula();
-
                     $fatoCelulaSelecionado = null;
                     foreach ($fatoCelulas as $fatoCelula) {
+                        echo "$fatoCelula->getEvento_celula_id() == $eventoCelulaId <br />";
                         if ($fatoCelula->getEvento_celula_id() == $eventoCelulaId) {
                             $fatoCelulaSelecionado = $fatoCelula;
                         }
                     }
-
                     $realizadaAntesDeMudar = $fatoCelulaSelecionado->getRealizada();
                     $fatoCelulaSelecionado->setRealizada($realizada);
                     $setarDataEHora = false;
