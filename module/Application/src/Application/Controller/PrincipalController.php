@@ -148,16 +148,10 @@ class PrincipalController extends CircuitoController {
     public function verAction() {
         $sessao = new Container(Constantes::$NOME_APLICACAO);
         $idSessao = $sessao->idSessao;
-//        unset($sessao->idSessao);
+        unset($sessao->idSessao);
         if ($idSessao) {
 
             $grupoSessao = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idSessao);
-            $tenhoDiscipulosAtivos = false;
-            $periodo = 0;
-            $quantidadeDeDiscipulos = count($grupoSessao->getGrupoPaiFilhoFilhosAtivos($periodo));
-            if ($quantidadeDeDiscipulos > 0) {
-                $tenhoDiscipulosAtivos = true;
-            }
 
             $mostrarParaReenviarEmails = false;
             foreach ($grupoSessao->getResponsabilidadesAtivas() as $grupoResponsavel) {
@@ -171,32 +165,14 @@ class PrincipalController extends CircuitoController {
             $entidadeLogada = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($sessao->idEntidadeAtual);
             $listagemDeEventos = $entidade->getGrupo()->getGrupoEventoAtivosPorTipo(EventoTipo::tipoCelula);
 
-            $tenhoSolicitacaoPendente = false;
-            if ($solicitacoes = $this->getRepositorio()->getSolicitacaoORM()->encontrarPorObjeto($grupoSessao->getId())) {
-                foreach ($solicitacoes as $solicitacaoId) {
-                    $solicitacao = $this->getRepositorio()->getSolicitacaoORM()->encontrarPorId($solicitacaoId['id']);
-                    if ($solicitacao->getSolicitacaoSituacaoAtiva()->getSituacao()->getId() === Situacao::PENDENTE_DE_ACEITACAO ||
-                            $solicitacao->getSolicitacaoSituacaoAtiva()->getSituacao()->getId() === Situacao::ACEITO_AGENDADO) {
-                        $tenhoSolicitacaoPendente = true;
-                    }
-                }
-            }
-
-
             $dados = array();
             $dados['idGrupo'] = $idSessao;
             $dados['entidade'] = $entidade;
             $dados['idEntidadeTipo'] = $entidadeLogada->getTipo_id();
-            $dados['naoPodeInativar'] = ($tenhoDiscipulosAtivos || $tenhoSolicitacaoPendente);
             $dados['mostrarParaReenviarEmails'] = $mostrarParaReenviarEmails;
             $dados['responsabilidades'] = $grupoSessao->getResponsabilidadesAtivas();
             $dados[Constantes::$LISTAGEM_EVENTOS] = $listagemDeEventos;
             $dados[Constantes::$TIPO_EVENTO] = EventoTipo::tipoCelula;
-            $dados['mostrarExcluirCelula'] = false;
-            if ($entidadeLogada->getEntidadeTipo()->getId() === EntidadeTipo::equipe ||
-                    $entidadeLogada->getEntidadeTipo()->getId() === EntidadeTipo::igreja) {
-                $dados['mostrarExcluirCelula'] = true;
-            }
 
             return new ViewModel($dados);
         } else {
@@ -235,37 +211,6 @@ class PrincipalController extends CircuitoController {
             echo $exc->getTraceAsString();
             $this->direcionaErroDeCadastro($exc->getMessage());
             CircuitoController::direcionandoAoLogin($this);
-        }
-    }
-
-    public function grupoExclusaoConfirmacaoAction() {
-        $sessao = new Container(Constantes::$NOME_APLICACAO);
-        $idSessao = $sessao->idSessao;
-        if ($idSessao) {
-            $this->getRepositorio()->iniciarTransacao();
-            try {
-                $grupoSessao = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idSessao);
-
-                $grupoPaiFilhoPai = $grupoSessao->getGrupoPaiFilhoPaiAtivo();
-                $grupoPaiFilhoPai->setDataEHoraDeInativacao();
-                $this->getRepositorio()->getGrupoPaiFilhoORM()->persistir($grupoPaiFilhoPai, false);
-
-                foreach ($grupoSessao->getResponsabilidadesAtivas() as $grupoResponsavel) {
-                    $grupoResponsavel->setDataEHoraDeInativacao();
-                    $this->getRepositorio()->getGrupoResponsavelORM()->persistir($grupoResponsavel, false);
-                }
-                $this->inativarFatoLiderPorGrupo($grupoSessao);
-
-                $this->getRepositorio()->fecharTransacao();
-                unset($sessao->idSessao);
-                $sessao->mostrarNotificacao = true;
-                $sessao->nomePessoa = $grupoSessao->getEntidadeAtiva()->infoEntidade();
-                $sessao->exclusao = true;
-                return $this->redirect()->toRoute('principal');
-            } catch (Exception $exc) {
-                echo $exc->getTraceAsString();
-                $this->getRepositorio()->desfazerTransacao();
-            }
         }
     }
 

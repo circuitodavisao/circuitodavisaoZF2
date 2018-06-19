@@ -26,37 +26,24 @@ echo '</div>';
 
 echo '<div class="panel panel-danger mw1000 center-block">';
 echo '<div class="panel-heading">';
-echo 'Inativar';
+echo 'Reenviar Email de acesso';
 echo '</div>';
 echo '<div class="panel-body">';
-if ($this->naoPodeInativar) {
-    echo '<div class="alert alert-warning mt10">Tenho discipulos nao posso inativar ou solicitações pendentes!</div>';
-} else {
-    echo '<div class="panel mt10">';
-    echo '<div class="panel-body">';
 
-    if ($this->idEntidadeTipo === EntidadeTipo::equipe || $this->idEntidadeTipo === EntidadeTipo::igreja) {
-        $extraBotaoInativar = 'onclick="funcaoCircuito(\'principalGrupoExclusao\', ' . $this->idGrupo . ');"';
-        echo $this->botaoSimples(
-                'Inativar', $extraBotaoInativar, BotaoSimples::botaoPerigoso, BotaoSimples::posicaoAEsquerda);
-    }
-    if ($this->mostrarParaReenviarEmails) {
-        foreach ($this->responsabilidades as $grupoResponsavel) {
-            echo Constantes::$NBSP;
-            $pessoa = $grupoResponsavel->getPessoa();
-            if ($pessoa->getToken()) {
-                $nome = $pessoa->getNomePrimeiro();
-                $extraBotaoEmail = $this->funcaoOnClick('funcaoCircuito("principalNovoEmailParaEnviar", ' . $pessoa->getId() . ')');
-
-                $labelBotao = 'Reenviar Email de acesso: ' . $nome;
-                echo $this->botaoSimples(
-                        $labelBotao, $extraBotaoEmail, BotaoSimples::botaoMenorImportancia, BotaoSimples::posicaoAEsquerda);
-            }
+if ($this->mostrarParaReenviarEmails) {
+    foreach ($this->responsabilidades as $grupoResponsavel) {
+        echo Constantes::$NBSP;
+        $pessoa = $grupoResponsavel->getPessoa();
+        if ($pessoa->getToken()) {
+            $nome = $pessoa->getNomePrimeiro();
+            $extraBotaoEmail = $this->funcaoOnClick('funcaoCircuito("principalNovoEmailParaEnviar", ' . $pessoa->getId() . ')');
+            $labelBotao = 'Reenviar para: ' . $nome;
+            echo $this->botaoSimples(
+                    $labelBotao, $extraBotaoEmail, BotaoSimples::botaoMenorImportancia, BotaoSimples::posicaoAEsquerda);
         }
     }
-    echo '</div>';
-    echo '</div>';
 }
+
 echo '</div>';
 echo '</div>';
 
@@ -69,7 +56,7 @@ echo $this->listagemDeEventos('', $this->eventos);
 echo '</div>';
 echo '</div>';
 
-if($this->entidade->getEntidadeTipo()->getId() === EntidadeTipo::subEquipe) {
+if ($this->entidade->getEntidadeTipo()->getId() === EntidadeTipo::subEquipe) {
     $extraAlterarNumeracao = $this->funcaoOnClick('mostrarSplash(); funcaoCircuito("principalNumeracao", ' . $this->idGrupo . ')');
     $botaoAlterarNumeracao = $this->botaoSimples('Alterar Numeração', $extraAlterarNumeracao, BotaoSimples::botaoImportante, BotaoSimples::posicaoAEsquerda);
     echo '<div class="panel panel-system mw1000 center-block">';
