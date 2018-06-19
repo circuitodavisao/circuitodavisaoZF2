@@ -199,7 +199,12 @@ class LancamentoController extends CircuitoController {
             }
         }
 
-        $numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio());
+        if ($entidade->getData_inativacaoStringPadraoBanco()) {
+            $numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador(
+                    $this->getRepositorio(), $grupo, $entidade->getData_inativacaoStringPadraoBanco());
+        } else {
+            $numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio());
+        }
         $resultadoPeriodo = Funcoes::montaPeriodo($periodo);
         $dataDoPeriodo = $resultadoPeriodo[3] . '-' . $resultadoPeriodo[2] . '-' . $resultadoPeriodo[1];
         $dataDoPeriodoFormatada = DateTime::createFromFormat('Y-m-d', $dataDoPeriodo);
@@ -301,13 +306,24 @@ class LancamentoController extends CircuitoController {
                     $valorParaSomar = -1;
                 }
 
-                $numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio());
+                $sessao = new Container(Constantes::$NOME_APLICACAO);
+                $idEntidadeAtual = $sessao->idEntidadeAtual;
+                $entidadeSelecionada = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+                if ($entidadeSelecionada->getData_inativacaoStringPadraoBanco()) {
+                    $numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador(
+                            $this->getRepositorio(), $entidadeSelecionada->getGrupo(), $entidadeSelecionada->getData_inativacaoStringPadraoBanco());
+                } else {
+                    $numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio());
+                }
+
                 $dimensaoSelecionada = null;
                 $resultadoPeriodo = Funcoes::montaPeriodo($periodo);
                 $dataDoPeriodo = $resultadoPeriodo[3] . '-' . $resultadoPeriodo[2] . '-' . $resultadoPeriodo[1];
                 $dataDoPeriodoFormatada = DateTime::createFromFormat('Y-m-d', $dataDoPeriodo);
                 $fatoCicloSelecionado = $this->getRepositorio()->getFatoCicloORM()->encontrarPorNumeroIdentificadorEDataCriacao(
                         $numeroIdentificador, $dataDoPeriodoFormatada, $this->getRepositorio());
+
+
 
                 if ($fatoCicloSelecionado->getDimensao()) {
                     foreach ($fatoCicloSelecionado->getDimensao() as $dimensao) {
