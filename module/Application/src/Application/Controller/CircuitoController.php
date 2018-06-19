@@ -49,11 +49,11 @@ class CircuitoController extends AbstractActionController {
         }
     }
 
-    public function inativarFatoLiderPorGrupo($grupo) {
+    public function inativarFatoLiderPorGrupo($grupo, $dataParaInativar = null) {
         $numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupo);
         $fatoLiderSelecionado = $this->getRepositorio()->getFatoLiderORM()->encontrarFatoLiderPorNumeroIdentificador($numeroIdentificador);
         if ($fatoLiderSelecionado) {
-            $fatoLiderSelecionado->setDataEHoraDeInativacao();
+            $fatoLiderSelecionado->setDataEHoraDeInativacao($dataParaInativar);
             $this->getRepositorio()->getFatoLiderORM()->persistir($fatoLiderSelecionado, false);
         }
     }

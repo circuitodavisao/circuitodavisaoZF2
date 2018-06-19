@@ -154,9 +154,6 @@ class ListagemDeEventos extends AbstractHelper {
                             $html .= $this->view->botaoLink(Constantes::$STRING_ICONE_PENCIL, Constantes::$STRING_HASHTAG, 3, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClick));
                         }
                     }
-                    if ($this->view->mostrarExcluirCelula) {
-                        $html .= $this->view->botaoLink(Constantes::$STRING_ICONE_TIMES, Constantes::$STRING_HASHTAG, 4, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClickExclusao));
-                    }
                     $html .= '</td>';
                 }
                 if ($tipoCulto) {

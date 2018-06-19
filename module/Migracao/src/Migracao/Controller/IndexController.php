@@ -308,6 +308,11 @@ class IndexController extends CircuitoController {
                             $grupo2 = $this->getRepositorio()->getGrupoORM()->encontrarPorId($arraySolicitacao['objeto2']);
                             $html .= $this->trocarResponsabilidades($grupo1, $grupo2);
                         }
+                        if ($solicitacao->getSolicitacaoTipo()->getId() === SolicitacaoTipo::REMOVER_LIDER) {
+                            $html .= "<br />REMOVENDO LIDER";
+                            $grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($arraySolicitacao['objeto1']);
+                            $html .= $this->removerLider($grupo);
+                        }
 
                         $solicitacaoSituacaoAtiva = $solicitacao->getSolicitacaoSituacaoAtiva();
                         /* inativar solicitacao situacao ativa */
@@ -696,6 +701,28 @@ class IndexController extends CircuitoController {
         }
         $html .= $htmlBr . "######################################### Troca Finalizada";
         return $html;
+    }
+
+    public function removerLider($grupo) {
+        $dataParaInativar = date('Y-m-d', mktime(0, 0, 0, date("m"), date("d") - 1, date("Y")));
+        $this->getRepositorio()->iniciarTransacao();
+        try {
+
+            $grupoPaiFilhoPai = $grupo->getGrupoPaiFilhoPaiAtivo();
+            $grupoPaiFilhoPai->setDataEHoraDeInativacao($dataParaInativar);
+            $this->getRepositorio()->getGrupoPaiFilhoORM()->persistir($grupoPaiFilhoPai, false);
+
+            foreach ($grupo->getResponsabilidadesAtivas() as $grupoResponsavel) {
+                $grupoResponsavel->setDataEHoraDeInativacao($dataParaInativar);
+                $this->getRepositorio()->getGrupoResponsavelORM()->persistir($grupoResponsavel, false);
+            }
+            $this->inativarFatoLiderPorGrupo($grupo, $dataParaInativar);
+
+            $this->getRepositorio()->fecharTransacao();
+        } catch (Exception $exc) {
+            echo $exc->getTraceAsString();
+            $this->getRepositorio()->desfazerTransacao();
+        }
     }
 
     public function rankingAction() {
