@@ -295,70 +295,74 @@ class Menu extends AbstractHelper {
         $html .= 'Arregimentação';
         $html .= '</a>';
         $html .= '</li>';
-        $html .= '<li>';
-        $html .= '<a href="/lancamentoAtendimento" onClick="mostrarSplash();">';
-        $html .= '<span class="fa fa-users"></span>';
-        $html .= 'Atendimento';
-        $html .= '</a>';
-        $html .= '</li>';
-
-        if ($this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja) {
+        if ($this->view->entidade->verificarSeEstaAtivo()) {
             $html .= '<li>';
-            $html .= '<a href="/cadastroAtivarFichas" onClick="mostrarSplash();">';
+            $html .= '<a href="/lancamentoAtendimento" onClick="mostrarSplash();">';
             $html .= '<span class="fa fa-users"></span>';
-            $html .= 'Fichas Revisão de Vidas';
+            $html .= 'Atendimento';
             $html .= '</a>';
             $html .= '</li>';
+
+            if ($this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja) {
+                $html .= '<li>';
+                $html .= '<a href="/cadastroAtivarFichas" onClick="mostrarSplash();">';
+                $html .= '<span class="fa fa-users"></span>';
+                $html .= 'Fichas Revisão de Vidas';
+                $html .= '</a>';
+                $html .= '</li>';
+            }
         }
 
         $html .= '</ul>';
         $html .= '</li>';
 
-        $html .= '<li>';
-        $html .= '<a class="accordion-toggle" href="#">';
-        $html .= '<span class="fa fa-bar-chart"></span>';
-        $html .= '<span class="sidebar-title">Relatórios</span>';
-        $html .= '<span class="caret"></span>';
-        $html .= '</a>';
 
-        $html .= '<ul class="nav sub-nav">';
-
-        for ($indiceMenuRelatorio = 1; $indiceMenuRelatorio <= 3; $indiceMenuRelatorio++) {
-
-            $label = '';
-            switch ($indiceMenuRelatorio) {
-                case 1:
-                    $label = 'Membresia';
-                    break;
-                case 2:
-                    $label = 'C&eacute;lulas Realizadas';
-                    break;
-                case 3:
-                    $label = 'C&eacute;lulas Quantidade';
-                    break;
-                case 4:
-                    $label = 'Culto da Semana';
-                    break;
-                case 5:
-                    $label = 'Arena';
-                    break;
-                case 6:
-                    $label = 'Domingo';
-                    break;
-                case 7:
-                    $label = 'C&eacute;lula/Arena';
-                    break;
-                case 8:
-                    $label = 'C&eacute;lulas de Elite';
-                    break;
-            }
+        if ($this->view->entidade->verificarSeEstaAtivo()) {
             $html .= '<li>';
-            $html .= '<a href="/relatorio/' . $indiceMenuRelatorio . '" onClick="mostrarSplash();">';
-            $html .= '<span class="fa fa-table"></span>';
-            $html .= $label;
+            $html .= '<a class="accordion-toggle" href="#">';
+            $html .= '<span class="fa fa-bar-chart"></span>';
+            $html .= '<span class="sidebar-title">Relatórios</span>';
+            $html .= '<span class="caret"></span>';
             $html .= '</a>';
-            $html .= '</li>';
-        }
+
+            $html .= '<ul class="nav sub-nav">';
+
+            for ($indiceMenuRelatorio = 1; $indiceMenuRelatorio <= 3; $indiceMenuRelatorio++) {
+
+                $label = '';
+                switch ($indiceMenuRelatorio) {
+                    case 1:
+                        $label = 'Membresia';
+                        break;
+                    case 2:
+                        $label = 'C&eacute;lulas Realizadas';
+                        break;
+                    case 3:
+                        $label = 'C&eacute;lulas Quantidade';
+                        break;
+                    case 4:
+                        $label = 'Culto da Semana';
+                        break;
+                    case 5:
+                        $label = 'Arena';
+                        break;
+                    case 6:
+                        $label = 'Domingo';
+                        break;
+                    case 7:
+                        $label = 'C&eacute;lula/Arena';
+                        break;
+                    case 8:
+                        $label = 'C&eacute;lulas de Elite';
+                        break;
+                }
+                $html .= '<li>';
+                $html .= '<a href="/relatorio/' . $indiceMenuRelatorio . '" onClick="mostrarSplash();">';
+                $html .= '<span class="fa fa-table"></span>';
+                $html .= $label;
+                $html .= '</a>';
+                $html .= '</li>';
+            }
 
 //        $html .= '<li>';
 //        $html .= '<a href="/relatorioPessoasFrequentes" onClick="mostrarSplash();">';
@@ -367,12 +371,12 @@ class Menu extends AbstractHelper {
 //        $html .= '</a>';
 //        $html .= '</li>';
 
-        $html .= '<li>';
-        $html .= '<a href="/relatorioAtendimento" onClick="mostrarSplash();">';
-        $html .= '<span class="fa fa-users"></span>';
-        $html .= 'Atendimento';
-        $html .= '</a>';
-        $html .= '</li>';
+            $html .= '<li>';
+            $html .= '<a href="/relatorioAtendimento" onClick="mostrarSplash();">';
+            $html .= '<span class="fa fa-users"></span>';
+            $html .= 'Atendimento';
+            $html .= '</a>';
+            $html .= '</li>';
 
 //        $html .= '<li>';
 //        $html .= '<a href="/relatorioDiscipulado" onClick="mostrarSplash();">';
@@ -381,10 +385,9 @@ class Menu extends AbstractHelper {
 //        $html .= '</a>';
 //        $html .= '</li>';
 
-        $html .= '</ul>';
+            $html .= '</ul>';
 
-        $html .= '</li>';
-        if ($this->view->entidade->verificarSeEstaAtivo()) {
+            $html .= '</li>';
 //            $html .= '<li>';
 //            $html .= '<a class="accordion-toggle" href="#">';
 //            $html .= '<span class="fa fa-users"></span>';
@@ -393,7 +396,6 @@ class Menu extends AbstractHelper {
 //            $html .= '</a>';
 //
 //            $html .= '<ul class="nav sub-nav">';
-
 //            $html .= '<li>';
 //            $html .= '<a href="/cursoChamada" onClick="mostrarSplash();">';
 //            $html .= '<span class="fa fa-list"></span>';
@@ -497,35 +499,34 @@ class Menu extends AbstractHelper {
 //            }
 //            $html .= '</ul>';
 //            $html .= '</li>';
+
+            $html .= '<li>';
+            $html .= '<a class="accordion-toggle" href="#">';
+            $html .= '<span class="fa fa-print"></span>';
+
+
+            $html .= '<span class="sidebar-title">Imprimir</span>';
+            $html .= '<span class="caret"></span>';
+            $html .= '</a>';
+            $html .= '<ul class="nav sub-nav">';
+
+            $html .= '<li>';
+            $html .= '<a href="/cadastroFichaRevisionistas" onClick="mostrarSplash();">';
+            $html .= '<span class="fa fa-terminal"></span>';
+            $html .= 'Fichas Revisão';
+            $html .= '</a>';
+            $html .= '</li>';
+
+            $html .= '<li>';
+            $html .= '<a href="/cadastroListagemLideres" onClick="mostrarSplash();">';
+            $html .= '<span class="fa fa-terminal"></span>';
+            $html .= 'Listagem de Líderes';
+            $html .= '</a>';
+            $html .= '</li>';
+
+            $html .= '</ul>';
+            $html .= '</li>';
         }
-
-
-        $html .= '<li>';
-        $html .= '<a class="accordion-toggle" href="#">';
-        $html .= '<span class="fa fa-print"></span>';
-
-
-        $html .= '<span class="sidebar-title">Imprimir</span>';
-        $html .= '<span class="caret"></span>';
-        $html .= '</a>';
-        $html .= '<ul class="nav sub-nav">';
-
-        $html .= '<li>';
-        $html .= '<a href="/cadastroFichaRevisionistas" onClick="mostrarSplash();">';
-        $html .= '<span class="fa fa-terminal"></span>';
-        $html .= 'Fichas Revisão';
-        $html .= '</a>';
-        $html .= '</li>';
-
-        $html .= '<li>';
-        $html .= '<a href="/cadastroListagemLideres" onClick="mostrarSplash();">';
-        $html .= '<span class="fa fa-terminal"></span>';
-        $html .= 'Listagem de Líderes';
-        $html .= '</a>';
-        $html .= '</li>';
-
-        $html .= '</ul>';
-        $html .= '</li>';
 
 //        $html .= '<li>';
 //        $html .= '<a class="accordion-toggle" href="#">';
