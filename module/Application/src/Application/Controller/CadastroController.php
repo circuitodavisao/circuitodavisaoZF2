@@ -601,7 +601,6 @@ class CadastroController extends CircuitoController {
                     $sessao = new Container(Constantes::$NOME_APLICACAO);
                     $criarNovaCelula = true;
                     $naoEhAlteracao = true;
-                    $mudarDataDeCadastroParaProximoDomingo = false;
                     $validatedData = $celulaForm->getData();
 
                     /* Entidades */
@@ -631,7 +630,6 @@ class CadastroController extends CircuitoController {
                             $this->getRepositorio()->getGrupoEventoORM()->persistir($grupoEventoAtivos[0], false);
                             $this->getRepositorio()->getEventoORM()->persistir($eventoParaInativar, false);
                             $criarNovaCelula = true;
-                            $mudarDataDeCadastroParaProximoDomingo = true;
                         } else {
                             /* Dia não foi alterado */
 
@@ -684,16 +682,14 @@ class CadastroController extends CircuitoController {
                         $entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
 
                         /* Evento */
-                        $alterarDataDeCriacao = true;
-                        if ($mudarDataDeCadastroParaProximoDomingo) {
-                            $alterarDataDeCriacao = false;
-                            $dataParaCriacao = Funcoes::proximaSegunda();
-                            $dataParaCriacaoFormatada = DateTime::createFromFormat('Y-m-d', $dataParaCriacao);
-                            $evento->setData_criacao($dataParaCriacaoFormatada);
-                            $evento->setHora_criacao('00:00:00');
-                            $grupoEvento->setData_criacao($dataParaCriacaoFormatada);
-                            $grupoEvento->setHora_criacao('00:00:00');
-                        }
+                        $alterarDataDeCriacao = false;
+                        $dataParaCriacao = Funcoes::proximaSegunda();
+                        $dataParaCriacaoFormatada = DateTime::createFromFormat('Y-m-d', $dataParaCriacao);
+                        $evento->setData_criacao($dataParaCriacaoFormatada);
+                        $evento->setHora_criacao('00:00:00');
+                        $grupoEvento->setData_criacao($dataParaCriacaoFormatada);
+                        $grupoEvento->setHora_criacao('00:00:00');
+
                         $evento->setHora($validatedData[Constantes::$FORM_HORA] . ':' . $validatedData[Constantes::$FORM_MINUTOS]);
                         $evento->setDia($validatedData[Constantes::$FORM_DIA_DA_SEMANA]);
                         $evento->setEventoTipo($this->getRepositorio()->getEventoTipoORM()->encontrarPorId(EventoTipo::tipoCelula));
@@ -709,7 +705,7 @@ class CadastroController extends CircuitoController {
                         $eventoCelula->setComplemento(strtoupper($post_data[Constantes::$FORM_COMPLEMENTO]));
                         $eventoCelula->setCep($post_data[Constantes::$FORM_CEP_LOGRADOURO]);
                         $eventoCelula->setEvento($evento);
-                        $this->getRepositorio()->getEventoCelulaORM()->persistir($eventoCelula, false);
+                        $this->getRepositorio()->getEventoCelulaORM()->persistir($eventoCelula, $alterarDataDeCriacao);
 
                         $grupoEvento->setGrupo($entidade->getGrupo());
                         $grupoEvento->setEvento($evento);
@@ -1135,10 +1131,11 @@ class CadastroController extends CircuitoController {
 
         $request = $this->getRequest();
         if ($request->isPost()) {
-
             try {
                 $this->getRepositorio()->iniciarTransacao();
                 $post_data = $request->getPost();
+
+                $dataParaCriacao = Funcoes::proximaSegunda();
 
                 $sessao = new Container(Constantes::$NOME_APLICACAO);
                 $idEntidadeAtual = $sessao->idEntidadeAtual;
@@ -1146,7 +1143,8 @@ class CadastroController extends CircuitoController {
 
                 /* Criar Grupo */
                 $grupoNovo = new Grupo();
-                $this->getRepositorio()->getGrupoORM()->persistir($grupoNovo);
+                $grupoNovo->setDataEHoraDeCriacao($dataParaCriacao);
+                $this->getRepositorio()->getGrupoORM()->persistir($grupoNovo, $mudarData = false);
 
                 /* Entidade abaixo do perfil selecionado/logado */
                 $tipoEntidadeAbaixo = Entidade::SUBEQUIPE; // sub equipe por padrao
@@ -1164,7 +1162,8 @@ class CadastroController extends CircuitoController {
                 if ($post_data['nomeEntidade']) {
                     $entidadeNova->setNome($post_data['nomeEntidade']);
                 }
-                $this->getRepositorio()->getEntidadeORM()->persistir($entidadeNova);
+                $entidadeNova->setDataEHoraDeCriacao($dataParaCriacao);
+                $this->getRepositorio()->getEntidadeORM()->persistir($entidadeNova, $mudarData = false);
 
                 $inputEstadoCivil = intval($post_data[Constantes::$INPUT_ESTADO_CIVIL]);
                 /* Alterar dados do aluno */
@@ -1193,6 +1192,7 @@ class CadastroController extends CircuitoController {
                     $pessoaSelecionada->setData_nascimento(Funcoes::mudarPadraoData($post_data[Constantes::$FORM_DATA_NASCIMENTO . $indicePessoas], 0));
                     $tokenDeAgora = $pessoaSelecionada->gerarToken($indicePessoas);
                     $pessoaSelecionada->setToken($tokenDeAgora);
+                    $pessoaSelecionada->setDataEHoraDeCriacao($dataParaCriacao);
                     $this->getRepositorio()->getPessoaORM()->persistir($pessoaSelecionada, $mudarDataDeCriacao);
 
                     /* Apenas para uma nova pessoa, quem ja tem nao muda apenas pelo juridico */
@@ -1203,14 +1203,16 @@ class CadastroController extends CircuitoController {
                         $pessoaHierarquia = new PessoaHierarquia();
                         $pessoaHierarquia->setPessoa($pessoaSelecionada);
                         $pessoaHierarquia->setHierarquia($hierarquia);
-                        $this->getRepositorio()->getPessoaHierarquiaORM()->persistir($pessoaHierarquia);
+                        $pessoaHierarquia->setDataEHoraDeCriacao($dataParaCriacao);
+                        $this->getRepositorio()->getPessoaHierarquiaORM()->persistir($pessoaHierarquia, $mudarData = false);
                     }
 
                     /* Criar Grupo_Responsavel */
                     $grupoResponsavelNovo = new GrupoResponsavel();
                     $grupoResponsavelNovo->setPessoa($pessoaSelecionada);
                     $grupoResponsavelNovo->setGrupo($grupoNovo);
-                    $this->getRepositorio()->getGrupoResponsavelORM()->persistir($grupoResponsavelNovo);
+                    $grupoResponsavelNovo->setDataEHoraDeCriacao($dataParaCriacao);
+                    $this->getRepositorio()->getGrupoResponsavelORM()->persistir($grupoResponsavelNovo, $mudarData = false);
                 }
 
                 /* Criar Grupo_Pai_Filho */
@@ -1218,7 +1220,8 @@ class CadastroController extends CircuitoController {
                 $grupoPaiFilhoNovo = new GrupoPaiFilho();
                 $grupoPaiFilhoNovo->setGrupoPaiFilhoPai($grupoAtualSelecionado);
                 $grupoPaiFilhoNovo->setGrupoPaiFilhoFilho($grupoNovo);
-                $this->getRepositorio()->getGrupoPaiFilhoORM()->persistir($grupoPaiFilhoNovo);
+                $grupoPaiFilhoNovo->setDataEHoraDeCriacao($dataParaCriacao);
+                $this->getRepositorio()->getGrupoPaiFilhoORM()->persistir($grupoPaiFilhoNovo, $mudarData = false);
 
                 $this->getRepositorio()->fecharTransacao();
 
