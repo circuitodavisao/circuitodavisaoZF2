@@ -85,6 +85,99 @@ class RelatorioController extends CircuitoController {
         return $view;
     }
 
+    public function celulasDeEliteAction() {
+        $sessao = new Container(Constantes::$NOME_APLICACAO);
+
+        $idEntidadeAtual = $sessao->idEntidadeAtual;
+        $entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+        $grupo = $entidade->getGrupo();
+
+
+        $dados = array();
+        $relatorioCelulas = array();
+        $somaCelulas = 0;
+        $somaCelulasDeElite = 0;
+        $periodo = -1;
+
+        $relatorio = RelatorioController::saberQuaisDasMinhasCelulasSaoDeElitePorPeriodo($this->getRepositorio(), $grupo, $periodo);
+        $relatorioCelulas[0]['time'] = 'PESSOAL';
+        $relatorioCelulas[0]['celulas'] = $relatorio['celulas'];
+        $relatorioCelulas[0]['elite'] = $relatorio['elite'];
+        $somaCelulas += $relatorio['celulas'];
+        $somaCelulasDeElite += $relatorio['elite'];
+
+        $grupoPaiFilhoFilhos = $grupo->getGrupoPaiFilhoFilhosAtivos($periodo);
+        if ($grupoPaiFilhoFilhos) {
+            $cotagemDeDiscipulos = 1;
+            foreach ($grupoPaiFilhoFilhos as $gpFilho) {
+                $grupoFilho = $gpFilho->getGrupoPaiFilhoFilho();
+                $relatorio = RelatorioController::saberQuaisDasMinhasCelulasSaoDeElitePorPeriodo($this->getRepositorio(), $grupoFilho, $periodo);
+                $relatorioCelulas[$cotagemDeDiscipulos]['time'] = $grupoFilho->getEntidadeAtiva()->infoEntidade() . ' - ' . $grupoFilho->getNomeLideresAtivos();
+                $relatorioCelulas[$cotagemDeDiscipulos]['celulas'] = $relatorio['celulas'];
+                $relatorioCelulas[$cotagemDeDiscipulos]['elite'] = $relatorio['elite'];
+                $somaCelulas += $relatorio['celulas'];
+                $somaCelulasDeElite += $relatorio['elite'];
+
+                $grupoPaiFilhoFilhos144 = $grupoFilho->getGrupoPaiFilhoFilhosAtivos($periodo);
+                if ($grupoPaiFilhoFilhos144) {
+                    foreach ($grupoPaiFilhoFilhos144 as $gpFilho144) {
+                        $grupoFilho144 = $gpFilho144->getGrupoPaiFilhoFilho();
+                        $relatorio = RelatorioController::saberQuaisDasMinhasCelulasSaoDeElitePorPeriodo($this->getRepositorio(), $grupoFilho144, $periodo);
+                        $relatorioCelulas[$cotagemDeDiscipulos]['celulas'] += $relatorio['celulas'];
+                        $relatorioCelulas[$cotagemDeDiscipulos]['elite'] += $relatorio['elite'];
+                        $somaCelulas += $relatorio['celulas'];
+                        $somaCelulasDeElite += $relatorio['elite'];
+
+                        $grupoPaiFilhoFilhos1728 = $grupoFilho144->getGrupoPaiFilhoFilhosAtivos($periodo);
+                        if ($grupoPaiFilhoFilhos1728) {
+                            foreach ($grupoPaiFilhoFilhos1728 as $gpFilho1728) {
+                                $grupoFilho1728 = $gpFilho1728->getGrupoPaiFilhoFilho();
+                                $relatorio = RelatorioController::saberQuaisDasMinhasCelulasSaoDeElitePorPeriodo($this->getRepositorio(), $grupoFilho1728, $periodo);
+                                $relatorioCelulas[$cotagemDeDiscipulos]['celulas'] += $relatorio['celulas'];
+                                $relatorioCelulas[$cotagemDeDiscipulos]['elite'] += $relatorio['elite'];
+                                $somaCelulas += $relatorio['celulas'];
+                                $somaCelulasDeElite += $relatorio['elite'];
+
+                                $grupoPaiFilhoFilhos20736 = $grupoFilho1728->getGrupoPaiFilhoFilhosAtivos($periodo);
+                                if ($grupoPaiFilhoFilhos20736) {
+                                    foreach ($grupoPaiFilhoFilhos20736 as $gpFilho20736) {
+                                        $grupoFilho20736 = $gpFilho20736->getGrupoPaiFilhoFilho();
+                                        $relatorio = RelatorioController::saberQuaisDasMinhasCelulasSaoDeElitePorPeriodo($this->getRepositorio(), $grupoFilho20736, $periodo);
+                                        $relatorioCelulas[$cotagemDeDiscipulos]['celulas'] += $relatorio['celulas'];
+                                        $relatorioCelulas[$cotagemDeDiscipulos]['elite'] += $relatorio['elite'];
+                                        $somaCelulas += $relatorio['celulas'];
+                                        $somaCelulasDeElite += $relatorio['elite'];
+
+                                        $grupoPaiFilhoFilhos248832 = $grupoFilho20736->getGrupoPaiFilhoFilhosAtivos($periodo);
+                                        if ($grupoPaiFilhoFilhos248832) {
+                                            foreach ($grupoPaiFilhoFilhos248832 as $gpFilho248832) {
+                                                $grupoFilho248832 = $gpFilho248832->getGrupoPaiFilhoFilho();
+                                                $relatorio = RelatorioController::saberQuaisDasMinhasCelulasSaoDeElitePorPeriodo($this->getRepositorio(), $grupoFilho248832, $periodo);
+                                                $relatorioCelulas[$cotagemDeDiscipulos]['celulas'] += $relatorio['celulas'];
+                                                $relatorioCelulas[$cotagemDeDiscipulos]['elite'] += $relatorio['elite'];
+                                                $somaCelulas += $relatorio['celulas'];
+                                                $somaCelulasDeElite += $relatorio['elite'];
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                $cotagemDeDiscipulos++;
+            }
+            $relatorioCelulas[$cotagemDeDiscipulos]['time'] = 'TOTAL';
+            $relatorioCelulas[$cotagemDeDiscipulos]['celulas'] = $somaCelulas;
+            $relatorioCelulas[$cotagemDeDiscipulos]['elite'] = $somaCelulasDeElite;
+            $dados['relatorioCelulas'] = $relatorioCelulas;
+        }
+        $dados['periodo'] = $periodo;
+        $view = new ViewModel($dados);
+
+        return $view;
+    }
+
     public function pessoasFrequentesAction() {
         $sessao = new Container(Constantes::$NOME_APLICACAO);
         $html = '';
@@ -674,12 +767,14 @@ class RelatorioController extends CircuitoController {
         $relatorio = array();
         $grupoEventosCelula = $grupo->getGrupoEventoAtivosPorTipo(EventoTipo::tipoCelula);
         $contagem = 0;
+        $contagemCelulasDeElite = 0;
         foreach ($grupoEventosCelula as $grupoEventoCelula) {
             $eventoId = $grupoEventoCelula->getEvento()->getId();
             $resultado = $repositorioORM->getFatoCicloORM()->verificaFrequenciasPorCelulaEPeriodo($periodo, $eventoId);
             $resposta = 0;
             if ($resultado >= 7) {
                 $resposta = 1;
+                $contagemCelulasDeElite++;
             }
             $relatorio[$contagem]['eventoId'] = $eventoId;
             $relatorio[$contagem]['resposta'] = $resposta;
@@ -687,6 +782,9 @@ class RelatorioController extends CircuitoController {
             $relatorio[$contagem]['hospedeiro'] = $grupoEventoCelula->getEvento()->getEventoCelula()->getNome_hospedeiroPrimeiroNome();
             $contagem++;
         }
+
+        $relatorio['celulas'] = count($grupoEventosCelula);
+        $relatorio['elite'] = $contagemCelulasDeElite;
         return $relatorio;
     }
 
