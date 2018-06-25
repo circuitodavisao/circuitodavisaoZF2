@@ -661,9 +661,26 @@ class LancamentoController extends CircuitoController {
         $mesSelecionado = Funcoes::mesPorAbaSelecionada($abaSelecionada);
         $anoSelecionado = Funcoes::anoPorAbaSelecionada($abaSelecionada);
 
-        $gruposAbaixo = null;
-        if ($grupo->getGrupoPaiFilhoFilhosPorMes($mesSelecionado)) {
-            $gruposAbaixo = $grupo->getGrupoPaiFilhoFilhosPorMes($mesSelecionado);
+        $arrayPeriodoDoMes = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mesSelecionado, $anoSelecionado);
+        $todosFilhos = array();
+        for ($indiceDeArrays = $arrayPeriodoDoMes[0]; $indiceDeArrays <= $arrayPeriodoDoMes[1]; $indiceDeArrays++) {
+            $grupoPaiFilhoFilhos = $grupo->getGrupoPaiFilhoFilhosAtivos($indiceDeArrays);
+            if ($grupoPaiFilhoFilhos) {
+                foreach ($grupoPaiFilhoFilhos as $grupoPaiFilhoFilho) {
+                    $adicionar = true;
+                    if (count($todosFilhos) > 0) {
+                        foreach ($todosFilhos as $filho) {
+                            if ($filho->getId() === $grupoPaiFilhoFilho->getId()) {
+                                $adicionar = false;
+                                break;
+                            }
+                        }
+                    }
+                    if ($adicionar) {
+                        $todosFilhos[] = $grupoPaiFilhoFilho;
+                    }
+                }
+            }
         }
 
         /* Verificar data de cadastro da responsabilidade */
@@ -674,7 +691,7 @@ class LancamentoController extends CircuitoController {
         }
 
         $view = new ViewModel(array(
-            Constantes::$GRUPOS_ABAIXO => $gruposAbaixo,
+            Constantes::$GRUPOS_ABAIXO => $todosFilhos,
             Constantes::$MES => $mesSelecionado,
             Constantes::$ANO => $anoSelecionado,
             Constantes::$VALIDACAO_NESSE_MES => $validacaoNesseMes,
