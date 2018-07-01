@@ -22,22 +22,7 @@ class TesteController extends AbstractRestfulController {
     }
 
     public function get($id) {   // Action used for GET requests with resource Id
-        $this->setResponseWithHeader();
-        $pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($id);
-        $grupoPessoas = $pessoa->getResponsabilidadesAtivas()[0]->getGrupo()->getGrupoPessoa();
-        $arrayPessoas = array();
-        foreach ($grupoPessoas as $grupoPessoa) {
-            $pessoaVolatil = $grupoPessoa->getPessoa();
-            if ($grupoPessoa->verificarSeEstaAtivo()) {
-                $arrayPessoas[] = array(
-                    'id' => $pessoaVolatil->getId(),
-                    'nome' => $pessoaVolatil->getNome(),
-                    'telefone' => $pessoaVolatil->getTelefone(),
-                    'tipo' => $grupoPessoa->getGrupoPessoaTipo()->getNome(),
-                );
-            }
-        }
-        return new JsonModel(array("data" => $arrayPessoas));
+        return new JsonModel(array("data" => array('id' => 1, 'name' => 'Mothership', 'band' => 'Led Zeppelin')));
     }
 
     public function create($data) {   // Action used for POST requests
