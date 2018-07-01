@@ -98,7 +98,7 @@ class IndexController extends CircuitoController {
                 $informacaoEntidade = $row[$stringNome];
                 $grupoIgreja = $this->cadastrarEntidade($row[$stringIdResponsavel1], $idPerfilIgreja, $informacaoEntidade, null, $row[$stringIdResponsavel2], $row['id'], $numeroIdentificadorIgreja);
                 $this->cadastrarPessoasVolateis($row[$stringIdResponsavel1], $grupoIgreja);
-                $eventosCulto = $this->cadastrarCulto($row[$stringIdResponsavel1], $grupoIgreja);
+                $eventosCulto = $this->cadastrarCulto($row['id'], $grupoIgreja);
                 $this->cadastrarCelulas($row[$stringIdResponsavel1], $grupoIgreja, $row[$stringIdResponsavel2]);
                 
 //                $grupoEventoNoPeriodo = $grupoIgreja->getGrupoEventoNoPeriodo(0);
