@@ -4,6 +4,7 @@ namespace Application\Controller;
 
 use Application\Controller\Helper\Constantes;
 use Application\Controller\Helper\Funcoes;
+use Application\Form\Acesso666Form;
 use Application\Form\LoginForm;
 use Application\Form\NovaSenhaForm;
 use Application\Form\PerfilForm;
@@ -13,7 +14,6 @@ use DateTime;
 use Doctrine\ORM\EntityManager;
 use Exception;
 use Zend\Authentication\AuthenticationService;
-use Zend\File\Transfer\Adapter\Http;
 use Zend\Json\Json;
 use Zend\Mvc\I18n\Translator;
 use Zend\Session\Container;
@@ -91,6 +91,17 @@ class LoginController extends CircuitoController {
         $layoutJSIndex->setTemplate(Constantes::$TEMPLATE_JS_INDEX);
         $view->addChild($layoutJSIndex, Constantes::$STRING_JS_INDEX);
 
+        return $view;
+    }
+
+    public function acessoSeisAction() {
+        /* Destroi a sessao ao acessar a index */
+        $sessao = new Container(Constantes::$NOME_APLICACAO);
+        $sessao->getManager()->destroy();
+        $formulario = new Acesso666Form('formulario');
+        $view = new ViewModel(array(
+            'formulario' => $formulario,
+        ));
         return $view;
     }
 
@@ -174,6 +185,31 @@ class LoginController extends CircuitoController {
                         Constantes::$INPUT_USUARIO => $usuarioTrim,
                         Constantes::$TIPO => 1,
             ));
+        }
+    }
+
+    public function suporteAction() {
+        $data = $this->getRequest()->getPost();
+        $usuarioTrim = strtolower(trim($data[Constantes::$INPUT_USUARIO]));
+        if ($pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorEmail($usuarioTrim)) {
+            /* Tem responsabilidade(s) */
+            if (count($pessoa->getResponsabilidadesAtivas()) > 0) {
+                /* Registro de sessão */
+                $sessao = new Container(Constantes::$NOME_APLICACAO);
+                $sessao->idPessoa = $pessoa->getId();
+
+                $adapter = $this->getDoctrineAuthenticationServicer()->getAdapter();
+                $adapter->setIdentityValue($usuarioTrim);
+                $adapter->setCredentialValue($pessoa->getSenha());
+                $authenticationResult = $this->getDoctrineAuthenticationServicer()->authenticate();
+                $identity = $authenticationResult->getIdentity();
+                $this->getDoctrineAuthenticationServicer()->getStorage()->write($identity);
+
+                /* Redirecionamento SELECIONAR PERFIL */
+                return $this->forward()->dispatch(Constantes::$CONTROLLER_LOGIN, array(
+                            Constantes::$ACTION => Constantes::$ACTION_SELECIONAR_PERFIL,
+                ));
+            }
         }
     }
 

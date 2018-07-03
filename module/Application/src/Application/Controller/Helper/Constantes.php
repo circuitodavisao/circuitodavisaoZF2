@@ -31,6 +31,7 @@ class Constantes {
     public static $ACTION_INDEX = 'index';
     public static $ACTION = 'action';
     public static $ACTION_LOGAR = 'logar';
+    public static $ACTION_SUPORTE = 'suporte';
     public static $INPUT_EMAIL = 'email';
     public static $INPUT_USUARIO = 'usuario';
     public static $INPUT_SENHA = 'senha';
@@ -192,6 +193,7 @@ class Constantes {
     public static $ENTITY_FATO_CICLO_MES = 'mes';
     public static $ENTITY_FATO_CICLO_ANO = 'ano';
     public static $ENTITY_EVENTO_CELULA_ID = 'evento_celula_id';
+    public static $ENTITY_TURMA_PESSOA_ID_ANTIGO = 'antigo_id';
 
     /* Templates */
     public static $TEMPLATE_SELECIONAR_PERFIL = 'layout/layout-selecionar-perfil';
