@@ -402,7 +402,7 @@ class Menu extends AbstractHelper {
 			$html .= '<span class="caret"></span>';
 			$html .= '</a>';
 
-//            $html .= '<ul class="nav sub-nav">';
+            $html .= '<ul class="nav sub-nav">';
 //            $html .= '<li>';
 //            $html .= '<a href="/cursoChamada" onClick="mostrarSplash();">';
 //            $html .= '<span class="fa fa-list"></span>';
@@ -504,8 +504,8 @@ class Menu extends AbstractHelper {
 //                $html .= '</a>';
 //                $html .= '</li>';
 //            }
-//            $html .= '</ul>';
-//            $html .= '</li>';
+            $html .= '</ul>';
+            $html .= '</li>';
 
             $html .= '<li>';
             $html .= '<a class="accordion-toggle" href="#">';
