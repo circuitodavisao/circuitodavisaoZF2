@@ -28,6 +28,9 @@ class RepositorioORM {
     private $_turmaPessoaORM;
     private $_turmaPessoaFrequenciaORM;
     private $_turmaPessoaAulaORM;
+    private $_turmaPessoaVistoORM;
+    private $_turmaPessoaFinanceiroORM;
+    private $_turmaPessoaAvaliacaoORM;
     private $_turmaAulaORM;
     private $_pessoaHierarquiaORM;
     private $_grupoResponsavelORM;
@@ -244,7 +247,7 @@ class RepositorioORM {
      */
     public function getTurmaPessoaORM() {
         if (is_null($this->_turmaPessoaORM)) {
-            $this->_turmaPessoaORM = new CircuitoORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_TURMA_PESSOA);
+            $this->_turmaPessoaORM = new TurmaPessoaORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_TURMA_PESSOA);
         }
         return $this->_turmaPessoaORM;
     }
@@ -280,6 +283,39 @@ class RepositorioORM {
             $this->_turmaPessoaAulaORM = new CircuitoORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_TURMA_PESSOA_AULA);
         }
         return $this->_turmaPessoaAulaORM;
+    }
+
+    /**
+     * Metodo public para obter a instancia do TurmaPessoaVistoORM
+     * @return CircuitoORM
+     */
+    public function getTurmaPessoaVistoORM() {
+        if (is_null($this->_turmaPessoaVistoORM)) {
+            $this->_turmaPessoaVistoORM = new CircuitoORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_TURMA_PESSOA_VISTO);
+        }
+        return $this->_turmaPessoaVistoORM;
+    }
+
+    /**
+     * Metodo public para obter a instancia do TurmaPessoaFinanceiroORM
+     * @return CircuitoORM
+     */
+    public function getTurmaPessoaFinanceiroORM() {
+        if (is_null($this->_turmaPessoaFinanceiroORM)) {
+            $this->_turmaPessoaFinanceiroORM = new CircuitoORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_TURMA_PESSOA_FINANCEIRO);
+        }
+        return $this->_turmaPessoaFinanceiroORM;
+    }
+
+    /**
+     * Metodo public para obter a instancia do TurmaPessoaAvaliacaoORM
+     * @return CircuitoORM
+     */
+    public function getTurmaPessoaAvaliacaoORM() {
+        if (is_null($this->_turmaPessoaAvaliacaoORM)) {
+            $this->_turmaPessoaAvaliacaoORM = new CircuitoORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_TURMA_PESSOA_AVALIACAO);
+        }
+        return $this->_turmaPessoaAvaliacaoORM;
     }
 
     /**

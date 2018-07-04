@@ -7,7 +7,6 @@ namespace Application\Model\Entity;
  * @author Lucas Filipe de Carvalho Cunha <lucascarvalho.esw@gmail.com>
  * Descricao: Entidade anotada da tabela aula
  */
-
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -40,11 +39,17 @@ class Aula extends CircuitoEntity {
     /**
      * @ORM\OneToMany(targetEntity="TurmaPessoaAula", mappedBy="aula")
      */
-    protected $turmaPessoaAula; 
+    protected $turmaPessoaAula;
+
+    /**
+     * @ORM\OneToMany(targetEntity="TurmaPessoaVisto", mappedBy="aula")
+     */
+    protected $turmaPessoaVisto;
 
     public function __construct() {
         $this->turmaAula = new ArrayCollection();
         $this->turmaPessoaAula = new ArrayCollection();
+        $this->turmaPessoaVisto = new ArrayCollection();
     }
 
     function getNome() {
@@ -93,6 +98,14 @@ class Aula extends CircuitoEntity {
 
     function setTurmaPessoaAula($turmaPessoaAula) {
         $this->turmaPessoaAula = $turmaPessoaAula;
+    }
+
+    function getTurmaPessoaVisto() {
+        return $this->turmaPessoaVisto;
+    }
+
+    function setTurmaPessoaVisto($turmaPessoaVisto) {
+        $this->turmaPessoaVisto = $turmaPessoaVisto;
     }
 
 }

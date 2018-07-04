@@ -1,0 +1,128 @@
+<?php
+
+use Application\Controller\RelatorioController;
+use Application\Model\Entity\Disciplina;
+use Application\Model\Entity\Situacao;
+use Application\View\Helper\BotaoSimples;
+?>
+<style>
+    .table {
+        font-size: 12px;
+    }
+    .table>tbody>tr:hover{
+        font-weight: bold;
+    }
+</style>
+<div class="center-block mt50">
+    <div class="panel">       
+        <div class="panel-body pn">           
+            <div class="p10">
+                <table class="text-center table table-hover table-condensed table-hover bg-light mt15">
+                    <thead>
+                        <tr class="dark">
+                            <th colspan="29" class="text-center">Aproveitamento do Curso Instituto de Vencedores</th>                     
+                        </tr>
+                        <tr class="primary">
+                            <th></th>
+                            <th class="hidden-xs"></th>
+                            <th style="background-color:#FFFFFF;">&nbsp;</th>
+                            <?php
+                            foreach ($this->disciplinas as $disciplina) {
+                                if ($disciplina->getId() !== Disciplina::POS_REVISAO) {
+                                    $classeBase = 'disciplina' . $disciplina->getId();
+                                    $mostrarBotaoEsquerdo = true;
+                                    if ($disciplina->getId() == Disciplina::MODULO_UM) {
+                                        $mostrarBotaoEsquerdo = false;
+                                    }
+                                    $mostrarBotaoDireito = true;
+                                    $funcaoEsquerda = $this->funcaoOnClick('$(".disciplina' . ($disciplina->getId() - 1) . '").removeClass("hidden-xs");$(".disciplina' . $disciplina->getId() . '").addClass("hidden-xs");');
+                                    $funcaoDireita = $this->funcaoOnClick('$(".disciplina' . ($disciplina->getId() + 1) . '").removeClass("hidden-xs");$(".disciplina' . $disciplina->getId() . '").addClass("hidden-xs");');
+                                    if ($disciplina->getId() == Disciplina::MODULO_TRES) {
+                                        $funcaoDireita = $this->funcaoOnClick('$(".total").removeClass("hidden-xs");$(".disciplina' . $disciplina->getId() . '").addClass("hidden-xs");');
+                                    }
+                                    $botaoEsquerda = $this->botaoSimples('<i class="fa fa-angle-double-left"></i>', $funcaoEsquerda, BotaoSimples::botaoPequenoImportante, BotaoSimples::posicaoAoCentro);
+                                    $botaoDireita = $this->botaoSimples('<i class="fa fa-angle-double-right"></i>', $funcaoDireita, BotaoSimples::botaoPequenoImportante, BotaoSimples::posicaoAoCentro);
+                                    echo '<th colspan="6" class="' . $classeBase . ' hidden-xs text-center">';
+                                    if ($mostrarBotaoEsquerdo) {
+                                        echo '<span class="hidden-lg hidden-md hidden-sm">' . $botaoEsquerda . '</span>&nbsp;&nbsp;&nbsp;';
+                                    }
+                                    echo $disciplina->getNome();
+                                    if ($mostrarBotaoDireito) {
+                                        echo '&nbsp;&nbsp;&nbsp;<span class="hidden-lg hidden-md hidden-sm">' . $botaoDireita . '</span>';
+                                    }
+                                    echo '</th>';
+                                    echo '<th class="' . $classeBase . ' hidden-xs" style="background-color:#FFFFFF;">&nbsp;</th>';
+                                }
+                            }
+
+                            $funcaoEsquerda = $this->funcaoOnClick('$(".disciplina' . Disciplina::MODULO_TRES . '").removeClass("hidden-xs");$(".total").addClass("hidden-xs");');
+                            $botaoEsquerda = $this->botaoSimples('<i class="fa fa-angle-double-left"></i>', $funcaoEsquerda, BotaoSimples::botaoPequenoImportante, BotaoSimples::posicaoAoCentro);
+                            echo '<th colspan="5" class="total text-center">';
+                            echo '<span class="hidden-lg hidden-md hidden-sm">' . $botaoEsquerda . '</span>&nbsp;&nbsp;&nbsp;';
+                            echo 'FINAL';
+                            echo '</th>';
+                            ?>   
+                        </tr>
+                        <tr class="primary">
+                            <th>L&iacute;deres</th>
+                            <th class='hidden-xs'></th>
+                            <th style="background-color:#FFFFFF;">&nbsp;</th>
+                            <?php
+                            foreach ($this->disciplinas as $disciplina) {
+                                if ($disciplina->getId() !== Disciplina::POS_REVISAO) {
+                                    echo '<th class="hidden-xs disciplina' . $disciplina->getId() . '"><span class="hidden-xs">Ativo</span><span class="hidden-lg hidden-md hidden-sm">At.</span></th>';
+                                    echo '<th class="hidden-xs disciplina' . $disciplina->getId() . '"><span class="hidden-xs">Especial</span><span class="hidden-lg hidden-md hidden-sm">Es.</span></th>';
+                                    echo '<th class="hidden-xs disciplina' . $disciplina->getId() . '"><span class="hidden-xs">Desistente</span><span class="hidden-lg hidden-md hidden-sm">De.</span></th>';
+                                    echo '<th class="hidden-xs disciplina' . $disciplina->getId() . '"><span class="hidden-xs">Reprovado</span><span class="hidden-lg hidden-md hidden-sm">Re.</span></th>';
+                                    echo '<th class="hidden-xs disciplina' . $disciplina->getId() . '"><span class="hidden-xs">Total</span><span class="hidden-lg hidden-md hidden-sm">To.</span></th>';
+                                    echo '<th class="hidden-xs disciplina' . $disciplina->getId() . '">%</th>';
+                                    echo '<th class="hidden-xs disciplina' . $disciplina->getId() . '" style="background-color:#FFFFFF;">&nbsp;</th>';
+                                }
+                            }
+                            ?>   
+                            <th class="total"><span class="hidden-xs">Ativo</span><span class="hidden-lg hidden-md hidden-sm">At.</span></th>
+                            <th class="total"><span class="hidden-xs">Especial</span><span class="hidden-lg hidden-md hidden-sm">Es.</span></th>
+                            <th class="total"><span class="hidden-xs">Desistente</span><span class="hidden-lg hidden-md hidden-sm">De.</span></th>
+                            <th class="total"><span class="hidden-xs">Reprovado</span><span class="hidden-lg hidden-md hidden-sm">Re.</span></th>
+                            <th class="total"><span class="hidden-xs">Total</span><span class="hidden-lg hidden-md hidden-sm">To.</span></th> 
+                        </tr>
+                    </thead>
+                    <tbody> <?php
+                        $htmlTBody = '';
+                        for ($indiceRelatorio = 0; $indiceRelatorio < count($this->relatorio); $indiceRelatorio++) {
+                            $corLinha = RelatorioController::corDaLinhaPelaPerformance($relatorio[$indiceRelatorio]['performance']);
+                            if ($relatorio[$indiceRelatorio]['lideres'] === 'TOTAL') {
+                                $corLinha = 'dark';
+                            }
+                            $htmlTBody .= '<tr class="' . $corLinha . '">';
+                            $htmlTBody .= '<td class="hidden-xs">' . $relatorio[$indiceRelatorio]['lideres'] . '</td>';
+                            $htmlTBody .= '<td>' . $relatorio[$indiceRelatorio]['entidade'] . '</td>';
+                            $htmlTBody .= '<th style="background-color:#FFFFFF;">&nbsp;</th>';
+                            foreach ($this->disciplinas as $disciplina) {
+                                if ($disciplina->getId() !== Disciplina::POS_REVISAO) {
+                                    $htmlTBody .= '<td class="hidden-xs disciplina' . $disciplina->getId() . '">' . $relatorio[$indiceRelatorio][$disciplina->getId()][Situacao::ATIVO] . '</td>';
+                                    $htmlTBody .= '<td class="hidden-xs disciplina' . $disciplina->getId() . '">' . $relatorio[$indiceRelatorio][$disciplina->getId()][Situacao::ESPECIAL] . '</td>';
+                                    $htmlTBody .= '<td class="hidden-xs disciplina' . $disciplina->getId() . '">' . $relatorio[$indiceRelatorio][$disciplina->getId()][Situacao::DESISTENTE] . '</td>';
+                                    $htmlTBody .= '<td class="hidden-xs disciplina' . $disciplina->getId() . '">' . $relatorio[$indiceRelatorio][$disciplina->getId()][Situacao::REPROVADO_POR_FALTA] . '</td>';
+                                    $htmlTBody .= '<td class="hidden-xs disciplina' . $disciplina->getId() . '">' . $relatorio[$indiceRelatorio][$disciplina->getId()][0] . '</td>';
+                                    $htmlTBody .= '<td class="hidden-xs disciplina' . $disciplina->getId() . '">' . number_format($relatorio[$indiceRelatorio][$disciplina->getId()]['performance'], 2, '.', ',') . '%</td>';
+                                    $htmlTBody .= '<td class="hidden-xs disciplina' . $disciplina->getId() . '" style="background-color:#FFFFFF;">&nbsp;</td>';
+                                }
+                            }
+
+                            $htmlTBody .= '<td class="total">' . $relatorio[$indiceRelatorio]['total'][Situacao::ATIVO] . '</td>';
+                            $htmlTBody .= '<td class="total">' . $relatorio[$indiceRelatorio]['total'][Situacao::ESPECIAL] . '</td>';
+                            $htmlTBody .= '<td class="total">' . $relatorio[$indiceRelatorio]['total'][Situacao::DESISTENTE] . '</td>';
+                            $htmlTBody .= '<td class="total">' . $relatorio[$indiceRelatorio]['total'][Situacao::REPROVADO_POR_FALTA] . '</td>';
+                            $htmlTBody .= '<td class="total">' . number_format($relatorio[$indiceRelatorio]['performance'], 2, '.', ',') . '%</td>';
+                            $htmlTBody .= '</tr>';
+                        }
+
+                        echo $htmlTBody;
+                        ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>    
+</div>

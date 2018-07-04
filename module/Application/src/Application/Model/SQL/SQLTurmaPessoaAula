@@ -1,0 +1,60 @@
+CREATE TABLE public.turma_pessoa_aula
+(
+    id serial NOT NULL,
+    data_criacao date NOT NULL,
+    hora_criacao time without time zone NOT NULL,
+    data_inativacao date,
+    hora_inativacao time without time zone,
+    turma_pessoa_id integer NOT NULL,
+    aula_id integer NOT NULL,
+    CONSTRAINT pk_turma_pessoa_aula_id PRIMARY KEY (id),
+    CONSTRAINT fk_turma_pessoa_aula_turma_pessoa_id FOREIGN KEY (turma_pessoa_id)
+        REFERENCES public.turma_pessoa (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+    CONSTRAINT fk_turma_pessoa_aula_aula_id FOREIGN KEY (aula_id)
+        REFERENCES public.aula (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+)
+WITH (
+    OIDS = FALSE
+);
+
+ALTER TABLE public.turma_pessoa_aula
+    OWNER to postgres;
+COMMENT ON TABLE public.turma_pessoa_aula
+    IS 'Frequencia na aula';
+
+COMMENT ON COLUMN public.turma_pessoa_aula.id
+    IS 'Identificacao';
+
+COMMENT ON COLUMN public.turma_pessoa_aula.data_criacao
+    IS 'Data de criação';
+
+COMMENT ON COLUMN public.turma_pessoa_aula.hora_criacao
+    IS 'Hora de criação';
+
+COMMENT ON COLUMN public.turma_pessoa_aula.data_inativacao
+    IS 'Data de inativação';
+
+COMMENT ON COLUMN public.turma_pessoa_aula.hora_inativacao
+    IS 'Hora de inativação';
+
+COMMENT ON COLUMN public.turma_pessoa_aula.turma_pessoa_id
+    IS 'identficação da turmapessoa';
+
+COMMENT ON COLUMN public.turma_pessoa_aula.aula_id
+    IS 'identficação da aula';
+
+COMMENT ON CONSTRAINT pk_turma_pessoa_id ON public.turma_pessoa_aula
+    IS 'Chave primaria do turma pessoa aula';
+
+COMMENT ON CONSTRAINT fk_turma_pessoa_aula_turma_pessoa_id ON public.turma_pessoa_aula
+    IS 'Chave estrangeira da turma pessoa aula com a turma pessoa';
+
+COMMENT ON CONSTRAINT fk_turma_pessoa_aula_aula_id ON public.turma_pessoa_aula
+    IS 'Chave estrangeira da turma pessoa aula com a aula';
+
+
+ALTER TABLE turma_pessoa_aula ADD COLUMN reposicao enumsn NOT NULL DEFAULT 'N';

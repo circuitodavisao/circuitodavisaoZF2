@@ -18,4 +18,6 @@ COMMENT ON TABLE situacao
 COMMENT ON COLUMN situacao.id IS 'Identificação da situação';
 COMMENT ON COLUMN situacao.nome IS 'Nome da situação do aluno';
 
-INSERT INTO situacao (nome,data_criacao,hora_criacao) values ('ESPECIAL','2018-04-24','16:50:00');
+INSERT INTO situacao (id,nome,data_criacao,hora_criacao) values (6, 'ESPECIAL','2018-04-24','16:50:00');
+INSERT INTO situacao (id,nome,data_criacao,hora_criacao) values (7,'DESISTENTE','2018-05-18','16:03:00');
+INSERT INTO situacao (id,nome,data_criacao,hora_criacao) values (8,'REPROVADO POR FALTAS','2018-05-18','16:03:00');
