@@ -953,7 +953,7 @@ class CursoController extends CircuitoController {
         $idEntidadeAtual = $sessao->idEntidadeAtual;
         $entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
         $grupo = $entidade->getGrupo();
-        $usuarios = $grupo->getPessoaCursoAcesso();
+        $usuarios = $grupo->getGrupoIgreja()->getPessoaCursoAcesso();
         return new ViewModel(array(
             'usuarios' => $usuarios,
         ));
