@@ -34,12 +34,17 @@ $html .= '<label for="selecionaEquipe">' . $this->translate('Selecione a Equipe'
 $html .= '<select class="form-control" id="selecionaEquipe" onChange="$(\'.linha\').addClass(\'hidden\'); $(\'.linhaEquipe\'+$(\'#selecionaEquipe\').val()).removeClass(\'hidden\');">';
 $html .= '<option value="0" >' . $this->translate('Todas') . '</option>';
 foreach ($this->filhos as $grupoPaiFilhoFilho) {
-    $nomeEquipe = $grupoPaiFilhoFilho->getGrupoPaiFilhoFilho()->getEntidadeAtiva()->getNome();
-    $html .= '<option value="' . $grupoPaiFilhoFilho->getGrupoPaiFilhoFilho()->getId() . '" >' . $nomeEquipe . '</option>';
+    if ($this->entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja) {
+        $informacao = $grupoPaiFilhoFilho->getGrupoPaiFilhoFilho()->getEntidadeAtiva()->getNome();
+    }
+    if ($this->entidade->getEntidadeTipo()->getId() === EntidadeTipo::equipe ||
+            $this->entidade->getEntidadeTipo()->getId() === EntidadeTipo::subEquipe) {
+        $informacao = $grupoPaiFilhoFilho->getGrupoPaiFilhoFilho()->getEntidadeAtiva()->getNumero();
+    }
+    $html .= '<option value="' . $grupoPaiFilhoFilho->getGrupoPaiFilhoFilho()->getId() . '" >' . $informacao . '</option>';
 }
 $html .= '</select>';
 $html .= '</div>';
-
 
 $html .= '<div class="form-group">';
 $html .= '<label for="selecionaSituacao">' . $this->translate('Situa&ccedil;&atilde;o') . '</label>';
@@ -47,7 +52,9 @@ $html .= '<select class="form-control" id="selecionaSituacao" onChange="$(\'.lin
 $html .= '<option value="0" >' . $this->translate('Todas') . '</option>';
 foreach ($this->situacoes as $situacao) {
     if ($situacao->getId() === Situacao::ATIVO ||
-            $situacao->getId() === Situacao::ESPECIAL) {
+            $situacao->getId() === Situacao::ESPECIAL ||
+            $situacao->getId() === Situacao::DESISTENTE ||
+            $situacao->getId() === Situacao::REPROVADO_POR_FALTA) {
         $html .= '<option value="' . $situacao->getId() . '" >' . $situacao->getNome() . '</option>';
     }
 }
@@ -108,7 +115,7 @@ foreach ($this->turmas as $turma) {
                     $mostrar = true;
                 }
                 if ($this->entidade->getEntidadeTipo()->getId() === EntidadeTipo::equipe) {
-                    if ($turmaPessoa->getPessoa()->getGrupoPessoa()[0]->getGrupo()->getEntidadeAtiva()->getGrupoEquipe() === $this->entidade->getId()) {
+                    if ($turmaPessoa->getPessoa()->getGrupoPessoa()[0]->getGrupo()->getGrupoEquipe() === $this->entidade->getId()) {
                         $mostrar = true;
                     }
                 }
@@ -130,17 +137,27 @@ foreach ($this->turmas as $turma) {
                     }
                 }
 
-                $corSituacao = 'success';
-                if ($turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getId() === Situacao::ESPECIAL) {
-                    $corSituacao = 'primary';
+                switch ($turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getId()) {
+                    case Situacao::ESPECIAL:
+                        $corSituacao = 'primary';
+                        break;
+                    case Situacao::DESISTENTE:
+                        $corSituacao = 'warning';
+                        break;
+                    case Situacao::REPROVADO_POR_FALTA:
+                        $corSituacao = 'danger';
+                        break;
+                    default:
+                        $corSituacao = 'success';
                 }
+
                 $stringSituacao = '<span class="label label-' . $corSituacao . ' hidden-xs">' . $turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getNome() . '</span>'
                         . '<span class="label label-' . $corSituacao . ' hidden-sm hidden-md hidden-lg">' . substr($turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getNome(), 0, 1) . '</span>';
                 $idSituacao = $turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getId();
 
                 $html .= '<tr class="linha linhaEquipe0 linhaEquipe' . $idLinha . ' linhaSituacao0 linhaSituacao' . $idSituacao . '">';
                 $html .= '<td class="text-center">' . $stringSituacao . '</td>';
-                $html .= '<td class="hidden-xs">' . str_pad($turmaPessoa->getId(), 8, 0, STR_PAD_LEFT) . '</td>';
+                $html .= '<td class="hidden-xs"><a target="_blanck" href="/cursoAluno/' . $turmaPessoa->getId() . '" class="btn btn-xs btn-primary" >' . str_pad($turmaPessoa->getId(), 8, 0, STR_PAD_LEFT) . '</a></td>';
                 $html .= '<td class="hidden-xs">' . $turmaPessoa->getPessoa()->getNome() . '</td>';
                 $html .= '<td class="hidden-sm hidden-md hidden-lg">' . $turmaPessoa->getPessoa()->getNomePrimeiroPrimeiraSiglaUltimo() . '</td>';
                 $html .= '<th class="text-center hidden-xs">' . $nomeEquipe . '</th>';

@@ -1,0 +1,57 @@
+CREATE TABLE public.turma_pessoa_financeiro
+(
+    id serial NOT NULL,
+    data_criacao date NOT NULL,
+    hora_criacao time without time zone NOT NULL,
+    data_inativacao date,
+    hora_inativacao time without time zone,
+    turma_pessoa_id integer NOT NULL,
+    disciplina_id integer NOT NULL,
+    CONSTRAINT pk_turma_pessoa_financeiro_id PRIMARY KEY (id),
+    CONSTRAINT fk_turma_pessoa_financeiro_turma_pessoa_id FOREIGN KEY (turma_pessoa_id)
+        REFERENCES public.turma_pessoa (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION,
+    CONSTRAINT fk_turma_pessoa_financeiro_disciplina_id FOREIGN KEY (disciplina_id)
+        REFERENCES public.disciplina (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+)
+WITH (
+    OIDS = FALSE
+);
+
+ALTER TABLE public.turma_pessoa_financeiro
+    OWNER to postgres;
+COMMENT ON TABLE public.turma_pessoa_financeiro
+    IS 'Visto na aula';
+
+COMMENT ON COLUMN public.turma_pessoa_financeiro.id
+    IS 'Identificacao';
+
+COMMENT ON COLUMN public.turma_pessoa_financeiro.data_criacao
+    IS 'Data de criação';
+
+COMMENT ON COLUMN public.turma_pessoa_financeiro.hora_criacao
+    IS 'Hora de criação';
+
+COMMENT ON COLUMN public.turma_pessoa_financeiro.data_inativacao
+    IS 'Data de inativação';
+
+COMMENT ON COLUMN public.turma_pessoa_financeiro.hora_inativacao
+    IS 'Hora de inativação';
+
+COMMENT ON COLUMN public.turma_pessoa_financeiro.turma_pessoa_id
+    IS 'identficação da turmapessoa';
+
+COMMENT ON COLUMN public.turma_pessoa_financeiro.disciplina_id
+    IS 'identficação da disciplina';
+
+COMMENT ON CONSTRAINT pk_turma_pessoa_financeiro_id ON public.turma_pessoa_financeiro
+    IS 'Chave primaria do turma pessoa financeiro';
+
+COMMENT ON CONSTRAINT fk_turma_pessoa_financeiro_turma_pessoa_id ON public.turma_pessoa_financeiro
+    IS 'Chave estrangeira da turma pessoa financeiro com a turma pessoa';
+
+COMMENT ON CONSTRAINT fk_turma_pessoa_financeiro_disciplina_id ON public.turma_pessoa_financeiro
+    IS 'Chave estrangeira da turma pessoa financeiro com a disciplina';

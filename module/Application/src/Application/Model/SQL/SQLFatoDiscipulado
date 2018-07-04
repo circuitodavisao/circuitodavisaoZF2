@@ -1,0 +1,27 @@
+-- Table: fato_discipulado
+
+-- DROP TABLE fato_discipulado;
+
+CREATE TABLE fato_discipulado
+(
+    id serial NOT NULL,
+    grupo_id integer NOT NULL, 
+    comecou_no_horario enumsn NOT NULL,
+    terminou_no_horario enumsn NOT NULL,
+    teve_lanche enumsn NOT NULL,
+    teve_avisos enumsn NOT NULL,
+    teve_palavra enumsn NOT NULL,
+    data_criacao date NOT NULL,
+    hora_criacao time without time zone NOT NULL,
+    data_inativacao date,
+    hora_inativacao time without time zone,
+    CONSTRAINT pk_fato_discipulado PRIMARY KEY (id),
+    CONSTRAINT fk_fato_discipulado_grupo_id FOREIGN KEY (grupo_id)
+    REFERENCES grupo (id) MATCH SIMPLE
+        ON UPDATE NO ACTION ON DELETE NO ACTION
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE fato_discipulado
+  OWNER TO postgres;

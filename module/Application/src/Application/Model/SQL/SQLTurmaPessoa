@@ -51,3 +51,5 @@ COMMENT ON COLUMN public.turma_pessoa.data_inativacao
 
 COMMENT ON COLUMN public.turma_pessoa.hora_inativacao
     IS 'Hora da inativação da associação';
+
+ALTER TABLE turma_pessoa ADD COLUMN antigo_id integer;

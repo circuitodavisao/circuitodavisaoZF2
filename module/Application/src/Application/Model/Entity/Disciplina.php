@@ -15,6 +15,11 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Disciplina extends CircuitoEntity {
 
+    const POS_REVISAO = 5;
+    const MODULO_UM = 6;
+    const MODULO_DOIS = 7;
+    const MODULO_TRES = 8;
+
     /** @ORM\Column(type="string") */
     protected $nome;
 
@@ -35,8 +40,14 @@ class Disciplina extends CircuitoEntity {
      */
     protected $curso;
 
+    /**
+     * @ORM\OneToMany(targetEntity="TurmaPessoaFinanceiro", mappedBy="disciplina")
+     */
+    protected $turmaPessoaFinanceiro;
+
     public function __construct() {
-        
+        $this->turmaAula = new ArrayCollection();
+        $this->turmaPessoaFinanceiro = new ArrayCollection();
     }
 
     function getNome() {
@@ -91,6 +102,14 @@ class Disciplina extends CircuitoEntity {
 
     function setAula($aula) {
         $this->aula = $aula;
+    }
+
+    function getTurmaPessoaFinanceiro() {
+        return $this->turmaPessoaFinanceiro;
+    }
+
+    function setTurmaPessoaFinanceiro($turmaPessoaFinanceiro) {
+        $this->turmaPessoaFinanceiro = $turmaPessoaFinanceiro;
     }
 
 }

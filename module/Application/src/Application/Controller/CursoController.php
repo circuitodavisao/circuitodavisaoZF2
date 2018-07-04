@@ -26,7 +26,11 @@ use Application\Model\Entity\Situacao;
 use Application\Model\Entity\Turma;
 use Application\Model\Entity\TurmaAula;
 use Application\Model\Entity\TurmaPessoa;
+use Application\Model\Entity\TurmaPessoaAula;
+use Application\Model\Entity\TurmaPessoaAvaliacao;
+use Application\Model\Entity\TurmaPessoaFinanceiro;
 use Application\Model\Entity\TurmaPessoaSituacao;
+use Application\Model\Entity\TurmaPessoaVisto;
 use Application\Model\ORM\RepositorioORM;
 use Exception;
 use Zend\Json\Json;
@@ -527,7 +531,7 @@ class CursoController extends CircuitoController {
         $idEntidadeAtual = $sessao->idEntidadeAtual;
         $entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
         $grupo = $entidade->getGrupo();
-        $turmas = $grupo->getTurma();
+        $turmas = $grupo->getGrupoIgreja()->getTurma();
         $view = new ViewModel(array(
             'turmas' => $turmas,
         ));
@@ -802,7 +806,7 @@ class CursoController extends CircuitoController {
         $entidade = CircuitoController::getEntidadeLogada($this->getRepositorio(), $sessao);
         $grupo = $entidade->getGrupo();
         $grupoPessoas = $grupo->getGrupoPessoasNoPeriodo(0);
-        $turmas = $grupo->getTurma();
+        $turmas = $grupo->getGrupoIgreja()->getTurma();
         $grupoPaiFilhoFilhos = $grupo->getGrupoPaiFilhoFilhosAtivos(0);
         $situacoes = $this->getRepositorio()->getSituacaoORM()->buscarTodosRegistrosEntidade();
         $view = new ViewModel(array(
@@ -836,6 +840,11 @@ class CursoController extends CircuitoController {
                 }
             }
         }
+
+        $idTurmaAluno = $this->getEvent()->getRouteMatch()->getParam(Constantes::$ID, 0);
+        if ($idTurmaAluno !== 0) {
+            $alunosId[] = $idTurmaAluno;
+        }
         $viewModel = new ViewModel(
                 array(
             'alunosId' => $alunosId,
@@ -852,10 +861,15 @@ class CursoController extends CircuitoController {
     public function consultarMatriculaAction() {
         $response = $this->getResponse();
         try {
+            $turmaPessoa = null;
             $idTurmaPessoa = $_POST['id'];
-
-            if ($this->getRepositorio()->getTurmaPessoaORM()->verificarSeExistePorId($idTurmaPessoa)) {
+            if ($this->getRepositorio()->getTurmaPessoaORM()->encontrarPorId($idTurmaPessoa)) {
                 $turmaPessoa = $this->getRepositorio()->getTurmaPessoaORM()->encontrarPorId($idTurmaPessoa);
+            }
+            if ($this->getRepositorio()->getTurmaPessoaORM()->encontrarPorIdAntigo($idTurmaPessoa)) {
+                $turmaPessoa = $this->getRepositorio()->getTurmaPessoaORM()->encontrarPorIdAntigo($idTurmaPessoa);
+            }
+            if ($turmaPessoa) {
                 $resposta = true;
                 $nomeCurso = $turmaPessoa->getTurma()->getCurso()->getNome();
                 $nomeTurma = Funcoes::mesPorExtenso($turmaPessoa->getTurma()->getMes(), 1) . '/' . $turmaPessoa->getTurma()->getAno();
@@ -882,7 +896,7 @@ class CursoController extends CircuitoController {
         $idEntidadeAtual = $sessao->idEntidadeAtual;
         $entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
         $grupo = $entidade->getGrupo();
-        $turmas = $grupo->getTurma();
+        $turmas = $grupo->getGrupoIgreja()->getTurma();
         $lideres = $this->todosLideresAPartirDoGrupo($grupo);
         $formulario = new ReentradaDeAlunoForm('formulario', $lideres, $turmas);
         return new ViewModel(array(
@@ -1067,7 +1081,7 @@ class CursoController extends CircuitoController {
         $idEntidadeAtual = $sessao->idEntidadeAtual;
         $entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
         $grupo = $entidade->getGrupo();
-        $turmas = $grupo->getTurma();
+        $turmas = $grupo->getGrupoIgreja()->getTurma();
         $relatorio = CursoController::pegarAlunosComFaltas($grupo);
         $alunosComReposições = $relatorio[0];
         $faltas = $relatorio[1];
@@ -1083,7 +1097,7 @@ class CursoController extends CircuitoController {
 
     public static function pegarAlunosComFaltas($grupo, $turmas = null) {
         if (!$turmas) {
-            $turmas = $grupo->getTurma();
+            $turmas = $grupo->getGrupoIgreja()->getTurma();
         }
         $alunosComReposições = array();
         $faltas = array();
@@ -1186,7 +1200,7 @@ class CursoController extends CircuitoController {
         $idEntidadeAtual = $sessao->idEntidadeAtual;
         $entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
         $grupo = $entidade->getGrupo();
-        $turmas = $grupo->getTurma();
+        $turmas = $grupo->getGrupoIgreja()->getTurma();
         $contadorDeFaltas = array();
         foreach ($turmas as $turma) {
             if ($turmaAulaAtiva = $turma->getTurmaAulaAtiva()) {
@@ -1244,6 +1258,373 @@ class CursoController extends CircuitoController {
             }
         }
         return $resposta;
+    }
+
+    public function alunoAction() {
+        $idTurmaPessoa = $this->getEvent()->getRouteMatch()->getParam(Constantes::$ID, 0);
+        $turmaPessoa = $this->getRepositorio()->getTurmaPessoaORM()->encontrarPorId($idTurmaPessoa);
+
+        $situacoes = $this->getRepositorio()->getSituacaoORM()->buscarTodosRegistrosEntidade();
+
+        $view = new ViewModel(array(
+            'turmaPessoa' => $turmaPessoa,
+            'situacoes' => $situacoes
+        ));
+        return $view;
+    }
+
+    /**
+     * Alterar situacao do turma pessoa
+     * @return Json
+     */
+    public function mudarSituacaoAction() {
+        $request = $this->getRequest();
+        $response = $this->getResponse();
+        $resposta = false;
+        if ($request->isPost()) {
+            try {
+                $this->getRepositorio()->iniciarTransacao();
+                $post_data = $request->getPost();
+                $idTurmaPessoa = $post_data['idTurmaPessoa'];
+                $idSituacao = (int) $post_data['idSituacao'];
+                $turmaPessoa = $this->getRepositorio()->getTurmaPessoaORM()->encontrarPorId($idTurmaPessoa);
+                if ($turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getId() != $idSituacao) {
+                    $turmaPessoaSituacaoAtiva = $turmaPessoa->getTurmaPessoaSituacaoAtiva();
+                    $turmaPessoaSituacaoAtiva->setDataEHoraDeInativacao();
+                    $this->getRepositorio()->getTurmaPessoaSituacaoORM()->persistir($turmaPessoaSituacaoAtiva, $trocaDataDeCriacao = false);
+
+                    $turmaPessoaSituacaoNova = new TurmaPessoaSituacao();
+                    $turmaPessoaSituacaoNova->setTurma_pessoa($turmaPessoa);
+                    $turmaPessoaSituacaoNova->setSituacao($this->getRepositorio()->getSituacaoORM()->encontrarPorId($idSituacao));
+                    $this->getRepositorio()->getTurmaPessoaSituacaoORM()->persistir($turmaPessoaSituacaoNova);
+                }
+
+                $this->getRepositorio()->fecharTransacao();
+                $resposta = true;
+            } catch (Exception $exc) {
+                $this->getRepositorio()->desfazerTransacao();
+                echo $exc->getTraceAsString();
+            }
+        }
+        $response->setContent(Json::encode(array('response' => $resposta)));
+        return $response;
+    }
+
+    /**
+     * Inativa o turma pessoa
+     * @return Json
+     */
+    public function removerDaTurmaAction() {
+        $request = $this->getRequest();
+        $response = $this->getResponse();
+        $resposta = false;
+        if ($request->isPost()) {
+            try {
+                $this->getRepositorio()->iniciarTransacao();
+                $post_data = $request->getPost();
+                $idTurmaPessoa = $post_data['idTurmaPessoa'];
+                $turmaPessoa = $this->getRepositorio()->getTurmaPessoaORM()->encontrarPorId($idTurmaPessoa);
+                $turmaPessoa->setDataEHoraDeInativacao();
+                $this->getRepositorio()->getTurmaPessoaORM()->persistir($turmaPessoa, $trocaDataDeCriacao = false);
+                $this->getRepositorio()->fecharTransacao();
+                $resposta = true;
+            } catch (Exception $exc) {
+                $this->getRepositorio()->desfazerTransacao();
+                echo $exc->getTraceAsString();
+            }
+        }
+        $response->setContent(Json::encode(array('response' => $resposta)));
+        return $response;
+    }
+
+    /**
+     * Muda a presença,visto ou financeiro de uma turma pessoa
+     * @return Json
+     */
+    public function mudarPresencaOuVistoOuFinanceiroAction() {
+        $request = $this->getRequest();
+        $response = $this->getResponse();
+        if ($request->isPost()) {
+            try {
+                $this->getRepositorio()->iniciarTransacao();
+
+                $post_data = $request->getPost();
+                $valor = $post_data['valor'];
+                $idTurmaPessoa = (int) $post_data['idTurmaPessoa'];
+                $idAulaOuDisciplina = (int) $post_data['idAulaOuDisciplina'];
+                $tipoDeLancamento = (int) $post_data['tipoDeLancamento'];
+
+                $turmaPessoa = $this->getRepositorio()->getTurmaPessoaORM()->encontrarPorId($idTurmaPessoa);
+
+                $tipoDeLancamentoPresenca = 1;
+                $tipoDeLancamentoVisto = 2;
+                $tipoDeLancamentoFinanceiro = 3;
+                $tipoDeLancamentoAvaliacao = 4;
+                if ($tipoDeLancamento === $tipoDeLancamentoPresenca) {
+                    $aulaOuDisciplina = $this->getRepositorio()->getAulaORM()->encontrarPorId($idAulaOuDisciplina);
+                    $turmaPessoaElemento = $turmaPessoa->getTurmaPessoaAulaPorAula($aulaOuDisciplina->getId());
+                    if (!$turmaPessoaElemento) {
+                        $turmaPessoaElemento = new TurmaPessoaAula();
+                        $turmaPessoaElemento->setReposicao('N');
+                    }
+                    $turmaPessoaElemento->setAula($aulaOuDisciplina);
+                }
+                if ($tipoDeLancamento === $tipoDeLancamentoVisto) {
+                    $aulaOuDisciplina = $this->getRepositorio()->getAulaORM()->encontrarPorId($idAulaOuDisciplina);
+                    $turmaPessoaElemento = $turmaPessoa->getTurmaPessoaVistoPorAula($aulaOuDisciplina->getId());
+                    if (!$turmaPessoaElemento) {
+                        $turmaPessoaElemento = new TurmaPessoaVisto();
+                    }
+                    $turmaPessoaElemento->setAula($aulaOuDisciplina);
+                }
+                if ($tipoDeLancamento === $tipoDeLancamentoFinanceiro) {
+                    $aulaOuDisciplina = $this->getRepositorio()->getDisciplinaORM()->encontrarPorId($idAulaOuDisciplina);
+                    $turmaPessoaElemento = $turmaPessoa->getTurmaPessoaFinanceiroPorDisciplina($aulaOuDisciplina->getId());
+                    if (!$turmaPessoaElemento) {
+                        $turmaPessoaElemento = new TurmaPessoaFinanceiro();
+                    }
+                    $turmaPessoaElemento->setDisciplina($aulaOuDisciplina);
+                }
+                if ($tipoDeLancamento === $tipoDeLancamentoAvaliacao) {
+                    $aulaOuDisciplina = $this->getRepositorio()->getDisciplinaORM()->encontrarPorId($idAulaOuDisciplina);
+                    $turmaPessoaElemento = $turmaPessoa->getTurmaPessoaAvaliacaoPorDisciplina($aulaOuDisciplina->getId());
+                    if (!$turmaPessoaElemento) {
+                        $turmaPessoaElemento = new TurmaPessoaAvaliacao();
+                    }
+                    $turmaPessoaElemento->setDisciplina($aulaOuDisciplina);
+                    $qualAvaliacao = (int) $post_data['qualAvaliacao'];
+
+                    switch ($qualAvaliacao) {
+                        case 1:
+                            $turmaPessoaElemento->setAvaliacao1($valor);
+                            break;
+                        case 2:
+                            $turmaPessoaElemento->setAvaliacao2($valor);
+                            break;
+                        case 3:
+                            $turmaPessoaElemento->setExtra($valor);
+                            break;
+                    }
+                }
+                $turmaPessoaElemento->setTurma_pessoa($turmaPessoa);
+
+                if ($tipoDeLancamento !== $tipoDeLancamentoAvaliacao) {
+                    if ($valor === 'S') {
+                        $turmaPessoaElemento->setData_inativacao(null);
+                        $turmaPessoaElemento->setHora_inativacao(null);
+                    } else {
+                        $turmaPessoaElemento->setDataEHoraDeInativacao();
+                    }
+                }
+
+                if ($tipoDeLancamento === $tipoDeLancamentoPresenca) {
+                    $this->getRepositorio()->getTurmaPessoaAulaORM()->persistir($turmaPessoaElemento);
+                }
+                if ($tipoDeLancamento === $tipoDeLancamentoVisto) {
+                    $this->getRepositorio()->getTurmaPessoaVistoORM()->persistir($turmaPessoaElemento);
+                }
+                if ($tipoDeLancamento === $tipoDeLancamentoFinanceiro) {
+                    $this->getRepositorio()->getTurmaPessoaFinanceiroORM()->persistir($turmaPessoaElemento);
+                }
+                if ($tipoDeLancamento === $tipoDeLancamentoAvaliacao) {
+                    $this->getRepositorio()->getTurmaPessoaAvaliacaoORM()->persistir($turmaPessoaElemento);
+                }
+
+                $this->getRepositorio()->fecharTransacao();
+                $response->setContent(Json::encode(array('response' => 'true')));
+            } catch (Exception $exc) {
+                $this->getRepositorio()->desfazerTransacao();
+                echo $exc->getTraceAsString();
+            }
+        }
+        return $response;
+    }
+
+    public function aproveitamentoAction() {
+        $sessao = new Container(Constantes::$NOME_APLICACAO);
+
+        $idEntidadeAtual = $sessao->idEntidadeAtual;
+        $entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+        $grupo = $entidade->getGrupo();
+        $grupoPaiFilhoFilhos = $grupo->getGrupoPaiFilhoFilhosAtivos(0);
+        $turmas = $grupo->getGrupoIgreja()->getTurma();
+        $cursoInstituoDeVencedores = $this->getRepositorio()->getCursoORM()->encontrarPorId(Curso::INSTITUTO_DE_VENCEDORES);
+        $disciplinas = $cursoInstituoDeVencedores->getDisciplina();
+
+        /* Montar relatorio */
+        $relatorio = array();
+        $relatorioDiscipulos = array();
+        $somaGeral = array();
+        $periodoAtual = 0;
+        $grupoIgreja = $grupo->getGrupoIgreja();
+        $grupoPessoasIgreja = $grupoIgreja->getGrupoPessoasNoPeriodo($periodoAtual);
+
+        $relatorio[0]['lideres'] = $grupoIgreja->getNomeLideresAtivos();
+        $relatorio[0]['entidade'] = 'IGREJA';
+        foreach ($turmas as $turma) {
+            if ($turma->getTurmaPessoa()) {
+                foreach ($turma->getTurmaPessoa() as $turmaPessoa) {
+                    foreach ($grupoPessoasIgreja as $grupoPessoaIgreja) {
+                        if ($grupoPessoaIgreja->getPessoa()->getId() === $turmaPessoa->getPessoa()->getId()) {
+                            $relatorio[0][$turma->getTurmaAulaAtiva()->getAula()->getDisciplina()->getId()][0] ++;
+                            $relatorio[0][$turma->getTurmaAulaAtiva()->getAula()->getDisciplina()->getId()][$turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getId()] ++;
+
+                            $somaGeral[$turma->getTurmaAulaAtiva()->getAula()->getDisciplina()->getId()][0] ++;
+                            $somaGeral[$turma->getTurmaAulaAtiva()->getAula()->getDisciplina()->getId()][$turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getId()] ++;
+                        }
+                    }
+                    foreach ($grupoPaiFilhoFilhos as $filho) {
+                        $grupoFilho = $filho->getGrupoPaiFilhoFilho();
+                        if ($turmaPessoa->getPessoa()->getGrupoPessoa()[0]->getGrupo()->getGrupoEquipe()->getEntidadeAtiva()->getId() === $grupoFilho->getEntidadeAtiva()->getId()) {
+                            $relatorioDiscipulos[$grupoFilho->getId()][$turma->getTurmaAulaAtiva()->getAula()->getDisciplina()->getId()][0] ++;
+                            $relatorioDiscipulos[$grupoFilho->getId()][$turma->getTurmaAulaAtiva()->getAula()->getDisciplina()->getId()][$turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getId()] ++;
+                        }
+                    }
+                }
+            }
+        }
+
+        $relatorioDiscipulosDesordenados = array();
+        foreach ($grupoPaiFilhoFilhos as $filho) {
+            $grupoFilho = $filho->getGrupoPaiFilhoFilho();
+
+            $relatorioDiscipulosDesordenados[$grupoFilho->getId()][Disciplina::MODULO_UM][0] = $relatorioDiscipulos[$grupoFilho->getId()][Disciplina::MODULO_UM][0];
+            $relatorioDiscipulosDesordenados[$grupoFilho->getId()][Disciplina::MODULO_UM][Situacao::ATIVO] = $relatorioDiscipulos[$grupoFilho->getId()][Disciplina::MODULO_UM][Situacao::ATIVO];
+            $relatorioDiscipulosDesordenados[$grupoFilho->getId()][Disciplina::MODULO_UM][Situacao::ESPECIAL] = $relatorioDiscipulos[$grupoFilho->getId()][Disciplina::MODULO_UM][Situacao::ESPECIAL];
+            $relatorioDiscipulosDesordenados[$grupoFilho->getId()][Disciplina::MODULO_UM][Situacao::DESISTENTE] = $relatorioDiscipulos[$grupoFilho->getId()][Disciplina::MODULO_UM][Situacao::DESISTENTE];
+            $relatorioDiscipulosDesordenados[$grupoFilho->getId()][Disciplina::MODULO_UM][Situacao::REPROVADO_POR_FALTA] = $relatorioDiscipulos[$grupoFilho->getId()][Disciplina::MODULO_UM][Situacao::REPROVADO_POR_FALTA];
+            $comparador = 0.3;
+            $relatorioDiscipulosDesordenados[$grupoFilho->getId()][Disciplina::MODULO_UM]['performance'] = ($relatorioDiscipulosDesordenados[$grupoFilho->getId()][Disciplina::MODULO_UM][Situacao::ATIVO] + $relatorioDiscipulosDesordenados[$grupoFilho->getId()][Disciplina::MODULO_UM][Situacao::ESPECIAL]) / ($relatorioDiscipulosDesordenados[$grupoFilho->getId()][Disciplina::MODULO_UM][0] * $comparador) * 100;
+
+            $relatorioDiscipulosDesordenados[$grupoFilho->getId()][Disciplina::MODULO_DOIS][0] = $relatorioDiscipulos[$grupoFilho->getId()][Disciplina::MODULO_DOIS][0];
+            $relatorioDiscipulosDesordenados[$grupoFilho->getId()][Disciplina::MODULO_DOIS][Situacao::ATIVO] = $relatorioDiscipulos[$grupoFilho->getId()][Disciplina::MODULO_DOIS][Situacao::ATIVO];
+            $relatorioDiscipulosDesordenados[$grupoFilho->getId()][Disciplina::MODULO_DOIS][Situacao::ESPECIAL] = $relatorioDiscipulos[$grupoFilho->getId()][Disciplina::MODULO_DOIS][Situacao::ESPECIAL];
+            $relatorioDiscipulosDesordenados[$grupoFilho->getId()][Disciplina::MODULO_DOIS][Situacao::DESISTENTE] = $relatorioDiscipulos[$grupoFilho->getId()][Disciplina::MODULO_DOIS][Situacao::DESISTENTE];
+            $relatorioDiscipulosDesordenados[$grupoFilho->getId()][Disciplina::MODULO_DOIS][Situacao::REPROVADO_POR_FALTA] = $relatorioDiscipulos[$grupoFilho->getId()][Disciplina::MODULO_DOIS][Situacao::REPROVADO_POR_FALTA];
+            $comparador = 0.5;
+            $relatorioDiscipulosDesordenados[$grupoFilho->getId()][Disciplina::MODULO_DOIS]['performance'] = ($relatorioDiscipulosDesordenados[$grupoFilho->getId()][Disciplina::MODULO_DOIS][Situacao::ATIVO] + $relatorioDiscipulosDesordenados[$grupoFilho->getId()][Disciplina::MODULO_DOIS][Situacao::ESPECIAL]) / ($relatorioDiscipulosDesordenados[$grupoFilho->getId()][Disciplina::MODULO_DOIS][0] * $comparador) * 100;
+
+            $relatorioDiscipulosDesordenados[$grupoFilho->getId()][Disciplina::MODULO_TRES][0] = $relatorioDiscipulos[$grupoFilho->getId()][Disciplina::MODULO_TRES][0];
+            $relatorioDiscipulosDesordenados[$grupoFilho->getId()][Disciplina::MODULO_TRES][Situacao::ATIVO] = $relatorioDiscipulos[$grupoFilho->getId()][Disciplina::MODULO_TRES][Situacao::ATIVO];
+            $relatorioDiscipulosDesordenados[$grupoFilho->getId()][Disciplina::MODULO_TRES][Situacao::ESPECIAL] = $relatorioDiscipulos[$grupoFilho->getId()][Disciplina::MODULO_TRES][Situacao::ESPECIAL];
+            $relatorioDiscipulosDesordenados[$grupoFilho->getId()][Disciplina::MODULO_TRES][Situacao::DESISTENTE] = $relatorioDiscipulos[$grupoFilho->getId()][Disciplina::MODULO_TRES][Situacao::DESISTENTE];
+            $relatorioDiscipulosDesordenados[$grupoFilho->getId()][Disciplina::MODULO_TRES][Situacao::REPROVADO_POR_FALTA] = $relatorioDiscipulos[$grupoFilho->getId()][Disciplina::MODULO_TRES][Situacao::REPROVADO_POR_FALTA];
+            $comparador = 0.7;
+            $relatorioDiscipulosDesordenados[$grupoFilho->getId()][Disciplina::MODULO_TRES]['performance'] = ($relatorioDiscipulosDesordenados[$grupoFilho->getId()][Disciplina::MODULO_TRES][Situacao::ATIVO] + $relatorioDiscipulosDesordenados[$grupoFilho->getId()][Disciplina::MODULO_TRES][Situacao::ESPECIAL]) / ($relatorioDiscipulosDesordenados[$grupoFilho->getId()][Disciplina::MODULO_TRES][0] * $comparador) * 100;
+
+            $relatorioDiscipulosDesordenados[$grupoFilho->getId()]['total'][0] = $relatorioDiscipulosDesordenados[$grupoFilho->getId()][Disciplina::MODULO_UM][0] + $relatorioDiscipulosDesordenados[$grupoFilho->getId()][Disciplina::MODULO_DOIS][0] + $relatorioDiscipulosDesordenados[$grupoFilho->getId()][Disciplina::MODULO_TRES][0];
+            $relatorioDiscipulosDesordenados[$grupoFilho->getId()]['total'][Situacao::ATIVO] = $relatorioDiscipulosDesordenados[$grupoFilho->getId()][Disciplina::MODULO_UM][Situacao::ATIVO] + $relatorioDiscipulosDesordenados[$grupoFilho->getId()][Disciplina::MODULO_DOIS][Situacao::ATIVO] + $relatorioDiscipulosDesordenados[$grupoFilho->getId()][Disciplina::MODULO_TRES][Situacao::ATIVO];
+            $relatorioDiscipulosDesordenados[$grupoFilho->getId()]['total'][Situacao::ESPECIAL] = $relatorioDiscipulosDesordenados[$grupoFilho->getId()][Disciplina::MODULO_UM][Situacao::ESPECIAL] + $relatorioDiscipulosDesordenados[$grupoFilho->getId()][Disciplina::MODULO_DOIS][Situacao::ESPECIAL] + $relatorioDiscipulosDesordenados[$grupoFilho->getId()][Disciplina::MODULO_TRES][Situacao::ESPECIAL];
+            $relatorioDiscipulosDesordenados[$grupoFilho->getId()]['total'][Situacao::DESISTENTE] = $relatorioDiscipulosDesordenados[$grupoFilho->getId()][Disciplina::MODULO_UM][Situacao::DESISTENTE] + $relatorioDiscipulosDesordenados[$grupoFilho->getId()][Disciplina::MODULO_DOIS][Situacao::DESISTENTE] + $relatorioDiscipulosDesordenados[$grupoFilho->getId()][Disciplina::MODULO_TRES][Situacao::DESISTENTE];
+            $relatorioDiscipulosDesordenados[$grupoFilho->getId()]['total'][Situacao::REPROVADO_POR_FALTA] = $relatorioDiscipulosDesordenados[$grupoFilho->getId()][Disciplina::MODULO_UM][Situacao::REPROVADO_POR_FALTA] + $relatorioDiscipulosDesordenados[$grupoFilho->getId()][Disciplina::MODULO_DOIS][Situacao::REPROVADO_POR_FALTA] + $relatorioDiscipulosDesordenados[$grupoFilho->getId()][Disciplina::MODULO_TRES][Situacao::REPROVADO_POR_FALTA];
+
+            $mediaDasPerformance = ($relatorioDiscipulosDesordenados[$grupoFilho->getId()][Disciplina::MODULO_UM]['performance'] + $relatorioDiscipulosDesordenados[$grupoFilho->getId()][Disciplina::MODULO_DOIS]['performance'] + $relatorioDiscipulosDesordenados[$grupoFilho->getId()][Disciplina::MODULO_TRES]['performance']) / 3;
+            $relatorioDiscipulosDesordenados[$grupoFilho->getId()]['performance'] = $mediaDasPerformance;
+        }
+
+        $discipulosOrdenados = RelatorioController::ordenacaoDiscipulos($grupoPaiFilhoFilhos, $relatorioDiscipulosDesordenados, RelatorioController::ORDENACAO_TIPO_PERFORMANCE);
+
+
+        $contadorDeEquipes = 1;
+        foreach ($discipulosOrdenados as $discipulo) {
+            $grupoFilho = $discipulo->getGrupoPaiFilhoFilho();
+            $relatorio[$contadorDeEquipes]['lideres'] = $grupoFilho->getNomeLideresAtivos();
+            $relatorio[$contadorDeEquipes]['entidade'] = $grupoFilho->GetEntidadeAtiva()->infoEntidade();
+
+            $relatorio[$contadorDeEquipes][Disciplina::MODULO_UM][0] = $relatorioDiscipulosDesordenados[$grupoFilho->getId()][Disciplina::MODULO_UM][0];
+            $relatorio[$contadorDeEquipes][Disciplina::MODULO_UM][Situacao::ATIVO] = $relatorioDiscipulosDesordenados[$grupoFilho->getId()][Disciplina::MODULO_UM][Situacao::ATIVO];
+            $relatorio[$contadorDeEquipes][Disciplina::MODULO_UM][Situacao::ESPECIAL] = $relatorioDiscipulosDesordenados[$grupoFilho->getId()][Disciplina::MODULO_UM][Situacao::ESPECIAL];
+            $relatorio[$contadorDeEquipes][Disciplina::MODULO_UM][Situacao::DESISTENTE] = $relatorioDiscipulosDesordenados[$grupoFilho->getId()][Disciplina::MODULO_UM][Situacao::DESISTENTE];
+            $relatorio[$contadorDeEquipes][Disciplina::MODULO_UM][Situacao::REPROVADO_POR_FALTA] = $relatorioDiscipulosDesordenados[$grupoFilho->getId()][Disciplina::MODULO_UM][Situacao::REPROVADO_POR_FALTA];
+            $relatorio[$contadorDeEquipes][Disciplina::MODULO_UM]['performance'] = $relatorioDiscipulosDesordenados[$grupoFilho->getId()][Disciplina::MODULO_UM]['performance'];
+
+            $relatorio[$contadorDeEquipes][Disciplina::MODULO_DOIS][0] = $relatorioDiscipulosDesordenados[$grupoFilho->getId()][Disciplina::MODULO_DOIS][0];
+            $relatorio[$contadorDeEquipes][Disciplina::MODULO_DOIS][Situacao::ATIVO] = $relatorioDiscipulosDesordenados[$grupoFilho->getId()][Disciplina::MODULO_DOIS][Situacao::ATIVO];
+            $relatorio[$contadorDeEquipes][Disciplina::MODULO_DOIS][Situacao::ESPECIAL] = $relatorioDiscipulosDesordenados[$grupoFilho->getId()][Disciplina::MODULO_DOIS][Situacao::ESPECIAL];
+            $relatorio[$contadorDeEquipes][Disciplina::MODULO_DOIS][Situacao::DESISTENTE] = $relatorioDiscipulosDesordenados[$grupoFilho->getId()][Disciplina::MODULO_DOIS][Situacao::DESISTENTE];
+            $relatorio[$contadorDeEquipes][Disciplina::MODULO_DOIS][Situacao::REPROVADO_POR_FALTA] = $relatorioDiscipulosDesordenados[$grupoFilho->getId()][Disciplina::MODULO_DOIS][Situacao::REPROVADO_POR_FALTA];
+            $relatorio[$contadorDeEquipes][Disciplina::MODULO_DOIS]['performance'] = $relatorioDiscipulosDesordenados[$grupoFilho->getId()][Disciplina::MODULO_DOIS]['performance'];
+
+            $relatorio[$contadorDeEquipes][Disciplina::MODULO_TRES][0] = $relatorioDiscipulosDesordenados[$grupoFilho->getId()][Disciplina::MODULO_TRES][0];
+            $relatorio[$contadorDeEquipes][Disciplina::MODULO_TRES][Situacao::ATIVO] = $relatorioDiscipulosDesordenados[$grupoFilho->getId()][Disciplina::MODULO_TRES][Situacao::ATIVO];
+            $relatorio[$contadorDeEquipes][Disciplina::MODULO_TRES][Situacao::ESPECIAL] = $relatorioDiscipulosDesordenados[$grupoFilho->getId()][Disciplina::MODULO_TRES][Situacao::ESPECIAL];
+            $relatorio[$contadorDeEquipes][Disciplina::MODULO_TRES][Situacao::DESISTENTE] = $relatorioDiscipulosDesordenados[$grupoFilho->getId()][Disciplina::MODULO_TRES][Situacao::DESISTENTE];
+            $relatorio[$contadorDeEquipes][Disciplina::MODULO_TRES][Situacao::REPROVADO_POR_FALTA] = $relatorioDiscipulosDesordenados[$grupoFilho->getId()][Disciplina::MODULO_TRES][Situacao::REPROVADO_POR_FALTA];
+            $relatorio[$contadorDeEquipes][Disciplina::MODULO_TRES]['performance'] = $relatorioDiscipulosDesordenados[$grupoFilho->getId()][Disciplina::MODULO_TRES]['performance'];
+
+            $relatorio[$contadorDeEquipes]['total'][0] = $relatorioDiscipulosDesordenados[$grupoFilho->getId()]['total'][0];
+            $relatorio[$contadorDeEquipes]['total'][Situacao::ATIVO] = $relatorioDiscipulosDesordenados[$grupoFilho->getId()]['total'][Situacao::ATIVO];
+            $relatorio[$contadorDeEquipes]['total'][Situacao::ESPECIAL] = $relatorioDiscipulosDesordenados[$grupoFilho->getId()]['total'][Situacao::ESPECIAL];
+            $relatorio[$contadorDeEquipes]['total'][Situacao::DESISTENTE] = $relatorioDiscipulosDesordenados[$grupoFilho->getId()]['total'][Situacao::DESISTENTE];
+            $relatorio[$contadorDeEquipes]['total'][Situacao::REPROVADO_POR_FALTA] = $relatorioDiscipulosDesordenados[$grupoFilho->getId()]['total'][Situacao::REPROVADO_POR_FALTA];
+            $relatorio[$contadorDeEquipes]['performance'] = $relatorioDiscipulosDesordenados[$grupoFilho->getId()]['performance'];
+
+            $contadorDeEquipes++;
+
+            $somaGeral[Disciplina::MODULO_UM][0] += $relatorioDiscipulosDesordenados[$grupoFilho->getId()][Disciplina::MODULO_UM][0];
+            $somaGeral[Disciplina::MODULO_UM][Situacao::ATIVO] += $relatorioDiscipulosDesordenados[$grupoFilho->getId()][Disciplina::MODULO_UM][Situacao::ATIVO];
+            $somaGeral[Disciplina::MODULO_UM][Situacao::ESPECIAL] += $relatorioDiscipulosDesordenados[$grupoFilho->getId()][Disciplina::MODULO_UM][Situacao::ESPECIAL];
+            $somaGeral[Disciplina::MODULO_UM][Situacao::DESISTENTE] += $relatorioDiscipulosDesordenados[$grupoFilho->getId()][Disciplina::MODULO_UM][Situacao::DESISTENTE];
+            $somaGeral[Disciplina::MODULO_UM][Situacao::REPROVADO_POR_FALTA] += $relatorioDiscipulosDesordenados[$grupoFilho->getId()][Disciplina::MODULO_UM][Situacao::REPROVADO_POR_FALTA];
+
+            $somaGeral[Disciplina::MODULO_DOIS][0] += $relatorioDiscipulosDesordenados[$grupoFilho->getId()][Disciplina::MODULO_DOIS][0];
+            $somaGeral[Disciplina::MODULO_DOIS][Situacao::ATIVO] += $relatorioDiscipulosDesordenados[$grupoFilho->getId()][Disciplina::MODULO_DOIS][Situacao::ATIVO];
+            $somaGeral[Disciplina::MODULO_DOIS][Situacao::ESPECIAL] += $relatorioDiscipulosDesordenados[$grupoFilho->getId()][Disciplina::MODULO_DOIS][Situacao::ESPECIAL];
+            $somaGeral[Disciplina::MODULO_DOIS][Situacao::DESISTENTE] += $relatorioDiscipulosDesordenados[$grupoFilho->getId()][Disciplina::MODULO_DOIS][Situacao::DESISTENTE];
+            $somaGeral[Disciplina::MODULO_DOIS][Situacao::REPROVADO_POR_FALTA] += $relatorioDiscipulosDesordenados[$grupoFilho->getId()][Disciplina::MODULO_DOIS][Situacao::REPROVADO_POR_FALTA];
+
+            $somaGeral[Disciplina::MODULO_TRES][0] += $relatorioDiscipulosDesordenados[$grupoFilho->getId()][Disciplina::MODULO_TRES][0];
+            $somaGeral[Disciplina::MODULO_TRES][Situacao::ATIVO] += $relatorioDiscipulosDesordenados[$grupoFilho->getId()][Disciplina::MODULO_TRES][Situacao::ATIVO];
+            $somaGeral[Disciplina::MODULO_TRES][Situacao::ESPECIAL] += $relatorioDiscipulosDesordenados[$grupoFilho->getId()][Disciplina::MODULO_TRES][Situacao::ESPECIAL];
+            $somaGeral[Disciplina::MODULO_TRES][Situacao::DESISTENTE] += $relatorioDiscipulosDesordenados[$grupoFilho->getId()][Disciplina::MODULO_TRES][Situacao::DESISTENTE];
+            $somaGeral[Disciplina::MODULO_TRES][Situacao::REPROVADO_POR_FALTA] += $relatorioDiscipulosDesordenados[$grupoFilho->getId()][Disciplina::MODULO_TRES][Situacao::REPROVADO_POR_FALTA];
+
+            $somaGeral['total'][0] += $relatorioDiscipulosDesordenados[$grupoFilho->getId()]['total'][0];
+            $somaGeral['total'][Situacao::ATIVO] += $relatorioDiscipulosDesordenados[$grupoFilho->getId()]['total'][Situacao::ATIVO];
+            $somaGeral['total'][Situacao::ESPECIAL] += $relatorioDiscipulosDesordenados[$grupoFilho->getId()]['total'][Situacao::ESPECIAL];
+            $somaGeral['total'][Situacao::DESISTENTE] += $relatorioDiscipulosDesordenados[$grupoFilho->getId()]['total'][Situacao::DESISTENTE];
+            $somaGeral['total'][Situacao::REPROVADO_POR_FALTA] += $relatorioDiscipulosDesordenados[$grupoFilho->getId()]['total'][Situacao::REPROVADO_POR_FALTA];
+        }
+
+        $relatorio[$contadorDeEquipes]['entidade'] = 'TOTAL';
+        $relatorio[$contadorDeEquipes][Disciplina::MODULO_UM][0] = $somaGeral[Disciplina::MODULO_UM][0];
+        $relatorio[$contadorDeEquipes][Disciplina::MODULO_UM][Situacao::ATIVO] = $somaGeral[Disciplina::MODULO_UM][Situacao::ATIVO];
+        $relatorio[$contadorDeEquipes][Disciplina::MODULO_UM][Situacao::ESPECIAL] = $somaGeral[Disciplina::MODULO_UM][Situacao::ESPECIAL];
+        $relatorio[$contadorDeEquipes][Disciplina::MODULO_UM][Situacao::DESISTENTE] = $somaGeral[Disciplina::MODULO_UM][Situacao::DESISTENTE];
+        $relatorio[$contadorDeEquipes][Disciplina::MODULO_UM][Situacao::REPROVADO_POR_FALTA] = $somaGeral[Disciplina::MODULO_UM][Situacao::REPROVADO_POR_FALTA];
+        $comparador = 0.3;
+        $relatorio[$contadorDeEquipes][Disciplina::MODULO_UM]['performance'] = ($relatorio[$contadorDeEquipes][Disciplina::MODULO_UM][Situacao::ATIVO] + $relatorio[$contadorDeEquipes][Disciplina::MODULO_UM][Situacao::ESPECIAL]) / ($relatorio[$contadorDeEquipes][Disciplina::MODULO_UM][0] * $comparador) * 100;
+
+        $relatorio[$contadorDeEquipes][Disciplina::MODULO_DOIS][0] = $somaGeral[Disciplina::MODULO_DOIS][0];
+        $relatorio[$contadorDeEquipes][Disciplina::MODULO_DOIS][Situacao::ATIVO] = $somaGeral[Disciplina::MODULO_DOIS][Situacao::ATIVO];
+        $relatorio[$contadorDeEquipes][Disciplina::MODULO_DOIS][Situacao::ESPECIAL] = $somaGeral[Disciplina::MODULO_DOIS][Situacao::ESPECIAL];
+        $relatorio[$contadorDeEquipes][Disciplina::MODULO_DOIS][Situacao::DESISTENTE] = $somaGeral[Disciplina::MODULO_DOIS][Situacao::DESISTENTE];
+        $relatorio[$contadorDeEquipes][Disciplina::MODULO_DOIS][Situacao::REPROVADO_POR_FALTA] = $somaGeral[Disciplina::MODULO_DOIS][Situacao::REPROVADO_POR_FALTA];
+        $comparador = 0.5;
+        $relatorio[$contadorDeEquipes][Disciplina::MODULO_DOIS]['performance'] = ($relatorio[$contadorDeEquipes][Disciplina::MODULO_DOIS][Situacao::ATIVO] + $relatorio[$contadorDeEquipes][Disciplina::MODULO_DOIS][Situacao::ESPECIAL]) / ($relatorio[$contadorDeEquipes][Disciplina::MODULO_DOIS][0] * $comparador) * 100;
+
+        $relatorio[$contadorDeEquipes][Disciplina::MODULO_TRES][0] = $somaGeral[Disciplina::MODULO_TRES][0];
+        $relatorio[$contadorDeEquipes][Disciplina::MODULO_TRES][Situacao::ATIVO] = $somaGeral[Disciplina::MODULO_TRES][Situacao::ATIVO];
+        $relatorio[$contadorDeEquipes][Disciplina::MODULO_TRES][Situacao::ESPECIAL] = $somaGeral[Disciplina::MODULO_TRES][Situacao::ESPECIAL];
+        $relatorio[$contadorDeEquipes][Disciplina::MODULO_TRES][Situacao::DESISTENTE] = $somaGeral[Disciplina::MODULO_TRES][Situacao::DESISTENTE];
+        $relatorio[$contadorDeEquipes][Disciplina::MODULO_TRES][Situacao::REPROVADO_POR_FALTA] = $somaGeral[Disciplina::MODULO_TRES][Situacao::REPROVADO_POR_FALTA];
+        $comparador = 0.7;
+        $relatorio[$contadorDeEquipes][Disciplina::MODULO_TRES]['performance'] = ($relatorio[$contadorDeEquipes][Disciplina::MODULO_TRES][Situacao::ATIVO] + $relatorio[$contadorDeEquipes][Disciplina::MODULO_TRES][Situacao::ESPECIAL]) / ($relatorio[$contadorDeEquipes][Disciplina::MODULO_TRES][0] * $comparador) * 100;
+
+        $relatorio[$contadorDeEquipes]['total'][0] = $somaGeral['total'][0];
+        $relatorio[$contadorDeEquipes]['total'][Situacao::ATIVO] = $somaGeral['total'][Situacao::ATIVO];
+        $relatorio[$contadorDeEquipes]['total'][Situacao::ESPECIAL] = $somaGeral['total'][Situacao::ESPECIAL];
+        $relatorio[$contadorDeEquipes]['total'][Situacao::DESISTENTE] = $somaGeral['total'][Situacao::DESISTENTE];
+        $relatorio[$contadorDeEquipes]['total'][Situacao::REPROVADO_POR_FALTA] = $somaGeral['total'][Situacao::REPROVADO_POR_FALTA];
+        $relatorio[$contadorDeEquipes]['performance'] = ($relatorio[$contadorDeEquipes][Disciplina::MODULO_UM]['performance'] + $relatorio[$contadorDeEquipes][Disciplina::MODULO_DOIS]['performance'] + $relatorio[$contadorDeEquipes][Disciplina::MODULO_TRES]['performance']) / 3;
+
+        $dados = array(
+            'grupoPaiFilhoFilhos' => $grupoPaiFilhoFilhos,
+            'disciplinas' => $disciplinas,
+            'relatorio' => $relatorio,
+        );
+
+        return new ViewModel($dados);
     }
 
 }

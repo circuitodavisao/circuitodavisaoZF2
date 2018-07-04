@@ -15,6 +15,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="curso")
  */
 class Curso extends CircuitoEntity {
+    const INSTITUTO_DE_VENCEDORES = 2;
 
     /** @ORM\Column(type="string") */
     protected $nome;
