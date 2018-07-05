@@ -964,8 +964,7 @@ class CursoController extends CircuitoController {
         $idEntidadeAtual = $sessao->idEntidadeAtual;
         $entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
         $grupo = $entidade->getGrupo();
-        $lideres = $this->todosLideresAPartirDoGrupo($grupo, true);
-
+        $lideres = $this->todosLideresAPartirDoGrupo($grupo->getGrupoIgreja(), true);
         $cursoAcessos = $this->getRepositorio()->getCursoAcessoORM()->buscarTodosRegistrosEntidade();
         $formulario = new CursoUsuarioForm('formulario', $cursoAcessos, $lideres);
         return new ViewModel(array(
