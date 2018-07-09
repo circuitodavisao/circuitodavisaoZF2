@@ -327,18 +327,22 @@ class Menu extends AbstractHelper {
 
             $html .= '<ul class="nav sub-nav">';
 
-            for ($indiceMenuRelatorio = 1; $indiceMenuRelatorio <= 3; $indiceMenuRelatorio++) {
+            for ($indiceMenuRelatorio = 1; $indiceMenuRelatorio <= 8; $indiceMenuRelatorio++) {
 
                 $label = '';
+                $mostrar = false;
                 switch ($indiceMenuRelatorio) {
                     case 1:
                         $label = 'Membresia';
+                        $mostrar = true;
                         break;
                     case 2:
                         $label = 'C&eacute;lulas Realizadas';
+                        $mostrar = true;
                         break;
                     case 3:
                         $label = 'C&eacute;lulas Quantidade';
+                        $mostrar = true;
                         break;
                     case 4:
                         $label = 'Culto da Semana';
@@ -354,14 +358,17 @@ class Menu extends AbstractHelper {
                         break;
                     case 8:
                         $label = 'C&eacute;lulas de Elite';
+                        $mostrar = true;
                         break;
                 }
-                $html .= '<li>';
-                $html .= '<a href="/relatorio/' . $indiceMenuRelatorio . '" onClick="mostrarSplash();">';
-                $html .= '<span class="fa fa-table"></span>';
-                $html .= $label;
-                $html .= '</a>';
-                $html .= '</li>';
+                if ($mostrar) {
+                    $html .= '<li>';
+                    $html .= '<a href="/relatorio/' . $indiceMenuRelatorio . '" onClick="mostrarSplash();">';
+                    $html .= '<span class="fa fa-table"></span>';
+                    $html .= $label;
+                    $html .= '</a>';
+                    $html .= '</li>';
+                }
             }
 
 //        $html .= '<li>';
@@ -378,13 +385,6 @@ class Menu extends AbstractHelper {
             $html .= '</a>';
             $html .= '</li>';
 
-            $html .= '<li>';
-            $html .= '<a href="/relatorioCelulasDeElite" onClick="mostrarSplash();">';
-            $html .= '<span class="fa fa-users"></span>';
-            $html .= 'C&eacute;lulas de Elite';
-            $html .= '</a>';
-            $html .= '</li>';
-
 //        $html .= '<li>';
 //        $html .= '<a href="/relatorioDiscipulado" onClick="mostrarSplash();">';
 //        $html .= '<span class="fa fa-users"></span>';
@@ -395,12 +395,12 @@ class Menu extends AbstractHelper {
             $html .= '</ul>';
 
             $html .= '</li>';
-			$html .= '<li>';
-			$html .= '<a class="accordion-toggle" href="#">';
-			$html .= '<span class="fa fa-users"></span>';
-			$html .= '<span class="sidebar-title">Cursos</span>';
-			$html .= '<span class="caret"></span>';
-			$html .= '</a>';
+            $html .= '<li>';
+            $html .= '<a class="accordion-toggle" href="#">';
+            $html .= '<span class="fa fa-users"></span>';
+            $html .= '<span class="sidebar-title">Cursos</span>';
+            $html .= '<span class="caret"></span>';
+            $html .= '</a>';
 
             $html .= '<ul class="nav sub-nav">';
 //            $html .= '<li>';
@@ -409,44 +409,44 @@ class Menu extends AbstractHelper {
 //            $html .= 'Chamada';
 //            $html .= '</a>';
 //            $html .= '</li>';
-			$arrayOQueMostrarDosCursos = array();
-			$arrayOQueMostrarDosCursos['reentrada'] = false;
-			$arrayOQueMostrarDosCursos['turmas'] = false;
-			$arrayOQueMostrarDosCursos['usuarios'] = false;
-			$arrayOQueMostrarDosCursos['gerarCarterinhas'] = false;
-			$arrayOQueMostrarDosCursos['gerarReposicoes'] = false;
-			$arrayOQueMostrarDosCursos['gerarFaltas'] = false;
-			$arrayOQueMostrarDosCursos['lancarPresenca'] = false;
-			if ($this->view->pessoa->getPessoaCursoAcessoAtivo()) {
-				if ($this->view->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::COORDENADOR) {
-					$arrayOQueMostrarDosCursos['turmas'] = true;
-					$arrayOQueMostrarDosCursos['usuarios'] = true;
-					$arrayOQueMostrarDosCursos['gerarFaltas'] = true;
-				}
-				if ($this->view->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::COORDENADOR ||
-					$this->view->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::SUPERVISOR ||
-					$this->view->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::FACILITADOR) {
-						$arrayOQueMostrarDosCursos['reentrada'] = true;
-						$arrayOQueMostrarDosCursos['gerarCarterinhas'] = true;
-						$arrayOQueMostrarDosCursos['gerarReposicoes'] = true;
-					}
-				if ($this->view->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::COORDENADOR ||
-					$this->view->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::SUPERVISOR ||
-					$this->view->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::AUXILIAR ||
-					$this->view->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::FACILITADOR) {
-						$arrayOQueMostrarDosCursos['lancarPresenca'] = true;
-					}
-			} else {
-				if ($this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja) {
-					$arrayOQueMostrarDosCursos['reentrada'] = true;
-					$arrayOQueMostrarDosCursos['turmas'] = true;
-					$arrayOQueMostrarDosCursos['usuarios'] = true;
-					$arrayOQueMostrarDosCursos['gerarCarterinhas'] = true;
-					$arrayOQueMostrarDosCursos['gerarReposicoes'] = true;
-					$arrayOQueMostrarDosCursos['gerarFaltas'] = true;
-					$arrayOQueMostrarDosCursos['lancarPresenca'] = true;
-				}
-			}
+            $arrayOQueMostrarDosCursos = array();
+            $arrayOQueMostrarDosCursos['reentrada'] = false;
+            $arrayOQueMostrarDosCursos['turmas'] = false;
+            $arrayOQueMostrarDosCursos['usuarios'] = false;
+            $arrayOQueMostrarDosCursos['gerarCarterinhas'] = false;
+            $arrayOQueMostrarDosCursos['gerarReposicoes'] = false;
+            $arrayOQueMostrarDosCursos['gerarFaltas'] = false;
+            $arrayOQueMostrarDosCursos['lancarPresenca'] = false;
+            if ($this->view->pessoa->getPessoaCursoAcessoAtivo()) {
+                if ($this->view->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::COORDENADOR) {
+                    $arrayOQueMostrarDosCursos['turmas'] = true;
+                    $arrayOQueMostrarDosCursos['usuarios'] = true;
+                    $arrayOQueMostrarDosCursos['gerarFaltas'] = true;
+                }
+                if ($this->view->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::COORDENADOR ||
+                        $this->view->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::SUPERVISOR ||
+                        $this->view->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::FACILITADOR) {
+                    $arrayOQueMostrarDosCursos['reentrada'] = true;
+                    $arrayOQueMostrarDosCursos['gerarCarterinhas'] = true;
+                    $arrayOQueMostrarDosCursos['gerarReposicoes'] = true;
+                }
+                if ($this->view->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::COORDENADOR ||
+                        $this->view->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::SUPERVISOR ||
+                        $this->view->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::AUXILIAR ||
+                        $this->view->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::FACILITADOR) {
+                    $arrayOQueMostrarDosCursos['lancarPresenca'] = true;
+                }
+            } else {
+                if ($this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja) {
+                    $arrayOQueMostrarDosCursos['reentrada'] = true;
+                    $arrayOQueMostrarDosCursos['turmas'] = true;
+                    $arrayOQueMostrarDosCursos['usuarios'] = true;
+                    $arrayOQueMostrarDosCursos['gerarCarterinhas'] = true;
+                    $arrayOQueMostrarDosCursos['gerarReposicoes'] = true;
+                    $arrayOQueMostrarDosCursos['gerarFaltas'] = true;
+                    $arrayOQueMostrarDosCursos['lancarPresenca'] = true;
+                }
+            }
 //            if ($arrayOQueMostrarDosCursos['reentrada']) {
 //                $html .= '<li>';
 //                $html .= '<a href="/cursoReentrada" onClick="mostrarSplash();">';
@@ -464,14 +464,14 @@ class Menu extends AbstractHelper {
 //                $html .= '</a>';
 //                $html .= '</li>';
 //            }
-			if ($arrayOQueMostrarDosCursos['usuarios']) {
-				$html .= '<li>';
-				$html .= '<a href="/cursoUsuarios" onClick="mostrarSplash();">';
-				$html .= '<span class="fa fa-users"></span>';
-				$html .= 'Usuários';
-				$html .= '</a>';
-				$html .= '</li>';
-			}
+            if ($arrayOQueMostrarDosCursos['usuarios']) {
+                $html .= '<li>';
+                $html .= '<a href="/cursoUsuarios" onClick="mostrarSplash();">';
+                $html .= '<span class="fa fa-users"></span>';
+                $html .= 'Usuários';
+                $html .= '</a>';
+                $html .= '</li>';
+            }
 //            if ($arrayOQueMostrarDosCursos['gerarCarterinhas']) {
 //                $html .= '<li>';
 //                $html .= '<a href="/cursoSelecionarParaCarterinha" onClick="mostrarSplash();">';
