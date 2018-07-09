@@ -45,7 +45,7 @@ class CabecalhoDeAtendimentos extends AbstractHelper {
             $html .= '<span id="totalGruposAtendidos">' . $relatorioAtendimento[1] . ' </span> '
                     . $this->view->translate('of')
                     . ' <span id="totalGruposFilhos">' . $relatorioAtendimento[2] . '</span> '
-                    . '<span class="hidden-xs">' . $this->view->translate(Constantes::$TRADUCAO_SUBTITULO_CABECALHO_ATENDIMENTO) . '</span>';
+                    . '<span class="hidden-xs"> time(s) atendido(s).</span>';
             $html .= '<div class="progress progress-bar-xl">';
             $html .= '<div '
                     . 'id="divProgressBar" '
