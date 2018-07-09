@@ -4,6 +4,7 @@ namespace Application\View\Helper;
 
 use Application\Controller\Helper\Constantes;
 use Application\Controller\Helper\Funcoes;
+use Application\Model\Entity\Grupo;
 use Application\Model\Helper\FuncoesEntidade;
 use Zend\View\Helper\AbstractHelper;
 
@@ -45,7 +46,33 @@ class AtendimentoGruposAbaixo extends AbstractHelper {
                 . '</div>';
 
         if (count($this->view->gruposAbaixo) > 0) {
+            /* Ordenação */
+            $discipulos = array();
             foreach ($this->view->gruposAbaixo as $gpFilho) {
+                $discipulos[] = $gpFilho;
+            }
+            if ($this->getTipo() === 2) {
+                $relatorio = array();
+                foreach ($discipulos as $gpFilho) {
+                    $grupoFilho = $gpFilho->getGrupoPaiFilhoFilho();
+                    $relatorioAtendimento = Grupo::relatorioDeAtendimentosAbaixo($grupoFilho->getGrupoPaiFilhoFilhosAtivos(), $this->getMes(), $this->getAno());
+                    $relatorio[$grupoFilho->getId()] = $relatorioAtendimento;
+                }
+                for ($i = 0; $i < count($discipulos); $i++) {
+                    for ($j = 1; $j < count($discipulos); $j++) {
+                        $discipulo1 = $discipulos[$i];
+                        $discipulo2 = $discipulos[$j];
+                        $relatorio1 = $relatorio[$discipulo1->getGrupoPaiFilhoFilho()->getId()];
+                        $relatorio2 = $relatorio[$discipulo2->getGrupoPaiFilhoFilho()->getId()];
+                        if ($relatorio1[0] > $relatorio2[0]) {
+                            $discipulos[$i] = $discipulo2;
+                            $discipulos[$j] = $discipulo1;
+                        }
+                    }
+                }
+            }
+
+            foreach ($discipulos as $gpFilho) {
 
                 $html .= '<hr/>';
                 $grupoFilho = $gpFilho->getGrupoPaiFilhoFilho();
