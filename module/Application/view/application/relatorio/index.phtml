@@ -156,7 +156,8 @@ $somaMeta = 0;
                                     echo '<th class="' . $classeBase . $classePeriodoAtual . '">MEM</th>';
                                     echo '<th class="' . $classeBase . $classePeriodoAtual . '">%</th>';
                                 }
-                                if ($this->tipoRelatorio == 7) {
+                                if ($this->tipoRelatorio == 7 ||
+                                        $this->tipoRelatorio == 8) {
                                     echo '<th class="' . $classeBase . $classePeriodoAtual . '">META</th>';
                                 }
                                 if ($this->tipoRelatorio == 2 ||
@@ -189,14 +190,14 @@ $somaMeta = 0;
                                 }
                                 if ($this->tipoRelatorio == 4 ||
                                         $this->tipoRelatorio == 5 ||
-                                        $this->tipoRelatorio == 6 ||
-                                        $this->tipoRelatorio == 8) {
+                                        $this->tipoRelatorio == 6) {
                                     echo '<th class="' . $classeBase . $classePeriodoAtual . '">QTD</th>';
                                 }
                             }
                             if ($this->tipoRelatorio == 1 ||
                                     $this->tipoRelatorio == 2 ||
-                                    $this->tipoRelatorio == 3) {
+                                    $this->tipoRelatorio == 3 ||
+                                    $this->tipoRelatorio == 8) {
                                 echo '<th>FINAL</th>';
                             }
                             ?>                           
@@ -222,7 +223,7 @@ $somaMeta = 0;
                                     $corLinha = $relatorio['mediaCelulaPerformanceClass'];
                                 }
                                 if ($this->tipoRelatorio == 8) {
-                                    $corLinha = $relatorio['celulaDeElitePerformanceClass'];
+                                    $corLinha = $relatorio['mediaCelulaDeElitePerformanceClass'];
                                 }
                             }
                             echo '<tr class="' . $corLinha . '">';
@@ -263,8 +264,7 @@ $somaMeta = 0;
                                     echo '<td class="' . $classeBase . '">' . RelatorioController::formataNumeroRelatorio($relatorio[$indiceDeArrays]['membresia']) . '</td>';
                                     echo '<td class="' . $classeBase . '">' . RelatorioController::formataNumeroRelatorio($relatorio[$indiceDeArrays]['membresiaPerformance']) . '%</td>';
                                 }
-                                if ($this->tipoRelatorio == 2 ||
-                                        $this->tipoRelatorio == 8) {
+                                if ($this->tipoRelatorio == 2) {
                                     echo '<td class="' . $classeBase . '">' . $relatorio[$indiceDeArrays]['celulaQuantidade'] . '</td>';
                                 }
                                 if ($this->tipoRelatorio == 2) {
@@ -302,17 +302,18 @@ $somaMeta = 0;
                                     echo '<td class="' . $classeBase . '">' . RelatorioController::formataNumeroRelatorio($relatorio[$indiceDeArrays]['membresiaArena']) . '</td>';
                                 }
                                 if ($this->tipoRelatorio == 8) {
-                                    echo '<td class="' . $classeBase . '">' . $relatorio[$indiceDeArrays]['celulaDeElite'] . '</td>';
-                                    echo '<td class="' . $classeBase . '">' . $relatorio[$indiceDeArrays]['celulaDeElitePerformance'] . '%</td>';
-                                }
-                                if ($this->tipoRelatorio == 8) {
-                                    echo '<td class="' . $classeBase . '">' . $relatorio[$indiceDeArrays]['celula'] . '</td>';
+                                    echo '<td class="' . $classeBase . '">' . $relatorio[$indiceDeArrays]['meta'] . '</td>';
+                                    echo '<td class="' . $classeBase . '">' . $relatorio[$indiceDeArrays]['celulas'] . '</td>';
+                                    echo '<td class="' . $classeBase . '">' . $relatorio[$indiceDeArrays]['elite'] . '</td>';
+                                    echo '<td class="' . $classeBase . '">' . RelatorioController::formataNumeroRelatorio($relatorio[$indiceDeArrays]['performance']) . '%</td>';
                                 }
                             }
 
                             if ($this->tipoRelatorio == 1 ||
                                     $this->tipoRelatorio == 2 ||
-                                    $this->tipoRelatorio == 3) {
+                                    $this->tipoRelatorio == 3 ||
+                                    $this->tipoRelatorio == 8) {
+
                                 if ($this->tipoRelatorio == 1) {
                                     $perfomanceMedio = $relatorio['mediaMembresiaPerformance'];
                                 }
@@ -321,6 +322,9 @@ $somaMeta = 0;
                                 }
                                 if ($this->tipoRelatorio == 3) {
                                     $perfomanceMedio = $relatorio['mediaCelulaPerformance'];
+                                }
+                                if ($this->tipoRelatorio == 8) {
+                                    $perfomanceMedio = $relatorio['mediaCelulaDeElitePerformance'];
                                 }
                                 echo '<td style="padding-right:5px;">' . RelatorioController::formataNumeroRelatorio($perfomanceMedio) . '%</td>';
                             }
