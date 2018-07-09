@@ -841,8 +841,8 @@ class RelatorioController extends CircuitoController {
     }
 
     const MARGEM_D = 0;
-    const MARGEM_C = 50;
-    const MARGEM_B = 75;
+    const MARGEM_C = 70;
+    const MARGEM_B = 85;
     const MARGEM_A = 100;
 
     public static function corDaLinhaPelaPerformance($valor, $tipo = 1) {
