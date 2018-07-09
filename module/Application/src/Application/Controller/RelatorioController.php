@@ -78,6 +78,7 @@ class RelatorioController extends CircuitoController {
             'periodoInicial' => $arrayPeriodoDoMes[0],
             'periodoFinal' => $arrayPeriodoDoMes[1],
             'tipoRelatorio' => $tipoRelatorio,
+            'entidade' => $entidade,
         );
 
         $view = new ViewModel($dados);
@@ -262,7 +263,7 @@ class RelatorioController extends CircuitoController {
             $periodo = -1;
             $abaSelecionada = $parametro;
         }
-        
+
         $mesSelecionado = Funcoes::mesPorAbaSelecionada($abaSelecionada);
         $anoSelecionado = Funcoes::anoPorAbaSelecionada($abaSelecionada);
 

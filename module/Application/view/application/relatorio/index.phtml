@@ -2,6 +2,7 @@
 
 use Application\Controller\Helper\Funcoes;
 use Application\Controller\RelatorioController;
+use Application\Model\Entity\EntidadeTipo;
 use Application\View\Helper\BotaoSimples;
 
 $dimensaoTipoCelula = 1;
@@ -233,8 +234,20 @@ $somaMeta = 0;
                                     $padding = '5';
                                 }
                             }
-                            echo '<td class="text-left" style="font-size:8px;padding-left:' . $padding . 'px;">' . $label . '<span class="hidden-xs">' . $relatorio['lideresFotos'] . '</span>' .
-                            $relatorio['lideres'] . '</td>';
+                            echo '<td class="text-left" style="font-size:8px;padding-left:' . $padding . 'px;">' . $label . '<span class="hidden-xs">' . $relatorio['lideresFotos'] . '</span>';
+                            echo $relatorio['lideresEntidade'];
+                            if ($this->entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja) {
+                                echo '<span class="hidden-xs"> - ';
+                            } else {
+                                echo ' - ';
+                            }
+                            echo $relatorio['lideres'];
+                            if ($this->entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja) {
+                                echo'</span>';
+                            }
+
+
+                            echo '</td>';
 
                             for ($indiceDeArrays = $this->periodoInicial; $indiceDeArrays <= $this->periodoFinal; $indiceDeArrays++) {
                                 $classeBase = 'periodo' . $indiceDeArrays . ' ';
