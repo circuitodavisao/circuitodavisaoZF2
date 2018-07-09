@@ -59,7 +59,7 @@ class AtendimentoGruposAbaixo extends AbstractHelper {
                     $relatorio[$grupoFilho->getId()] = $relatorioAtendimento;
                 }
                 for ($i = 0; $i < count($discipulos); $i++) {
-                    for ($j = 1; $j < count($discipulos); $j++) {
+                    for ($j = 0; $j < count($discipulos); $j++) {
                         $discipulo1 = $discipulos[$i];
                         $discipulo2 = $discipulos[$j];
                         $relatorio1 = $relatorio[$discipulo1->getGrupoPaiFilhoFilho()->getId()];
