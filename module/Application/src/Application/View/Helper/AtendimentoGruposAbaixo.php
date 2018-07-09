@@ -41,7 +41,7 @@ class AtendimentoGruposAbaixo extends AbstractHelper {
         $html = '';
 
         $mensagemAlertaSemDiscipulos = '<div class="alert alert-warning">'
-                . '<i class="fa fa-warning pr10" aria-hidden="true"></i>&nbsp;Sem Discipulos cadastrados!'
+                . '<i class="fa fa-warning pr10" aria-hidden="true"></i>&nbsp;Sem Times cadastrados!'
                 . '</div>';
 
         if (count($this->view->gruposAbaixo) > 0) {
