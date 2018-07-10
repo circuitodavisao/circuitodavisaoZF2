@@ -283,11 +283,12 @@ class CircuitoMeAjuda extends AbstractHelper {
         $html .= '</tr>';
         $html .= $htmlCelulasNaoRealizadas;
 
-//        $html .= '<tr>';
+        $html .= '<tr>';
+        $html .= '<td class="text-center">C&eacute;lulas de <b>Elite</b>: (Em Manutenção)</td>';
 //        $html .= '<td class="text-center">C&eacute;lulas de <b>Elite</b>: ' . $totalDeCelulasDeElite . '</td>';
 //        $funcaoCelulasDeElite = $this->view->funcaoOnClick('$(".linhaCelulasDeElite").toggleClass("hidden")');
 //        $html .= '<td>' . $this->view->botaoSimples('<i class="fa fa-eye" />', $funcaoCelulasDeElite, BotaoSimples::botaoMuitoPequenoImportante, BotaoSimples::posicaoAoCentro) . '</td>';
-//        $html .= '</tr>';
+        $html .= '</tr>';
 //        $html .= $htmlCelulasDeElite;
 
         $html .= '</tbody>';
