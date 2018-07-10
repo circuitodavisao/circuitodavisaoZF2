@@ -340,9 +340,7 @@ class RelatorioController extends CircuitoController {
         $tipoRelatorioPessoal = 1;
         $tipoRelatorioSomado = 2;
         $relatorioDiscipulos = array();
-        if ($tipoRelatorio !== RelatorioController::relatorioCelulasDeElite) {
-            $numeroIdentificador = $repositorio->getFatoCicloORM()->montarNumeroIdentificador($repositorio, $grupo);
-        }
+        $numeroIdentificador = $repositorio->getFatoCicloORM()->montarNumeroIdentificador($repositorio, $grupo);
         $soma = array();
         $somaTotal = array();
         $soma[0][1] = 0;
@@ -350,8 +348,10 @@ class RelatorioController extends CircuitoController {
         $soma[0][3] = 0;
         $soma[0][4] = 0;
         for ($indiceDeArrays = $arrayPeriodoDoMes[0]; $indiceDeArrays <= $arrayPeriodoDoMes[1]; $indiceDeArrays++) {
+            
+            $relatorio[0][$indiceDeArrays] = RelatorioController::montaRelatorio($repositorio, $numeroIdentificador, $indiceDeArrays, $tipoRelatorioPessoal, false, $tipoRelatorio);
+            
             if ($tipoRelatorio !== RelatorioController::relatorioCelulasDeElite) {
-                $relatorio[0][$indiceDeArrays] = RelatorioController::montaRelatorio($repositorio, $numeroIdentificador, $indiceDeArrays, $tipoRelatorioPessoal, false, $tipoRelatorio);
                 $soma[0][11] += $relatorio[0][$indiceDeArrays]['membresiaCulto'];
                 $soma[0][12] += $relatorio[0][$indiceDeArrays]['membresiaArena'];
                 $soma[0][13] += $relatorio[0][$indiceDeArrays]['membresiaDomingo'];
@@ -364,17 +364,19 @@ class RelatorioController extends CircuitoController {
                 $soma[0][7] += $relatorio[0][$indiceDeArrays]['celulaQuantidade'];
             } else {
                 $relatorio[0][$indiceDeArrays] = RelatorioController::saberQuaisDasMinhasCelulasSaoDeElitePorPeriodo($repositorio, $grupo, $indiceDeArrays);
+                $relatorio[0][$indiceDeArrays]['celulas'] = $relatorio[0][$indiceDeArrays]['celulaQuantidade'];
                 $soma[0][1] += $relatorio[0][$indiceDeArrays]['performance'];
             }
             foreach ($todosFilhos as $filho) {
                 $grupoFilho = $filho->getGrupoPaiFilhoFilho();
+                $dataInativacao = null;
+                if ($filho->getData_inativacao()) {
+                    $dataInativacao = $filho->getData_inativacaoStringPadraoBanco();
+                }
+                $numeroIdentificadorFilho = $repositorio->getFatoCicloORM()->montarNumeroIdentificador($repositorio, $grupoFilho, $dataInativacao);
+                $relatorioDiscipulos[$grupoFilho->getId()][$indiceDeArrays] = RelatorioController::montaRelatorio($repositorio, $numeroIdentificadorFilho, $indiceDeArrays, $tipoRelatorioSomado, false, $tipoRelatorio);
+
                 if ($tipoRelatorio !== RelatorioController::relatorioCelulasDeElite) {
-                    $dataInativacao = null;
-                    if ($filho->getData_inativacao()) {
-                        $dataInativacao = $filho->getData_inativacaoStringPadraoBanco();
-                    }
-                    $numeroIdentificadorFilho = $repositorio->getFatoCicloORM()->montarNumeroIdentificador($repositorio, $grupoFilho, $dataInativacao);
-                    $relatorioDiscipulos[$grupoFilho->getId()][$indiceDeArrays] = RelatorioController::montaRelatorio($repositorio, $numeroIdentificadorFilho, $indiceDeArrays, $tipoRelatorioSomado, false, $tipoRelatorio);
                     $lideres = RelatorioController::totalLideres($repositorio, $indiceDeArrays, $grupoFilho);
                     $relatorioDiscipulos[$grupoFilho->getId()][$indiceDeArrays]['quantidadeLideres'] = $lideres;
                     $relatorioDiscipulos[$grupoFilho->getId()][$indiceDeArrays]['membresiaMeta'] = $relatorioDiscipulos[$grupoFilho->getId()][$indiceDeArrays]['quantidadeLideres'] * Constantes::$META_LIDER;
@@ -404,18 +406,15 @@ class RelatorioController extends CircuitoController {
                     $soma[$grupoFilho->getId()][5] += $relatorioDiscipulos[$grupoFilho->getId()][$indiceDeArrays]['celulaRealizadas'];
                     $soma[$grupoFilho->getId()][6] += $relatorioDiscipulos[$grupoFilho->getId()][$indiceDeArrays]['celulaRealizadasPerformance'];
                 } else {
-                    $somaCelulas = 0;
                     $somaCelulasDeElite = 0;
 
                     $relatorioCelula = RelatorioController::saberQuaisDasMinhasCelulasSaoDeElitePorPeriodo($repositorio, $grupoFilho, $indiceDeArrays);
-                    $somaCelulas += $relatorioCelula['celulas'];
                     $somaCelulasDeElite += $relatorioCelula['elite'];
                     $grupoPaiFilhoFilhos144 = $grupoFilho->getGrupoPaiFilhoFilhosAtivos($indiceDeArrays);
                     if ($grupoPaiFilhoFilhos144) {
                         foreach ($grupoPaiFilhoFilhos144 as $gpFilho144) {
                             $grupoFilho144 = $gpFilho144->getGrupoPaiFilhoFilho();
                             $relatorioCelula = RelatorioController::saberQuaisDasMinhasCelulasSaoDeElitePorPeriodo($repositorio, $grupoFilho144, $periodo);
-                            $somaCelulas += $relatorioCelula['celulas'];
                             $somaCelulasDeElite += $relatorioCelula['elite'];
 
                             $grupoPaiFilhoFilhos1728 = $grupoFilho144->getGrupoPaiFilhoFilhosAtivos($periodo);
@@ -423,7 +422,6 @@ class RelatorioController extends CircuitoController {
                                 foreach ($grupoPaiFilhoFilhos1728 as $gpFilho1728) {
                                     $grupoFilho1728 = $gpFilho1728->getGrupoPaiFilhoFilho();
                                     $relatorioCelula = RelatorioController::saberQuaisDasMinhasCelulasSaoDeElitePorPeriodo($repositorio, $grupoFilho1728, $periodo);
-                                    $somaCelulas += $relatorioCelula['celulas'];
                                     $somaCelulasDeElite += $relatorioCelula['elite'];
 
                                     $grupoPaiFilhoFilhos20736 = $grupoFilho1728->getGrupoPaiFilhoFilhosAtivos($periodo);
@@ -431,7 +429,6 @@ class RelatorioController extends CircuitoController {
                                         foreach ($grupoPaiFilhoFilhos20736 as $gpFilho20736) {
                                             $grupoFilho20736 = $gpFilho20736->getGrupoPaiFilhoFilho();
                                             $relatorioCelula = RelatorioController::saberQuaisDasMinhasCelulasSaoDeElitePorPeriodo($repositorio, $grupoFilho20736, $periodo);
-                                            $somaCelulas += $relatorioCelula['celulas'];
                                             $somaCelulasDeElite += $relatorioCelula['elite'];
 
                                             $grupoPaiFilhoFilhos248832 = $grupoFilho20736->getGrupoPaiFilhoFilhosAtivos($periodo);
@@ -439,7 +436,6 @@ class RelatorioController extends CircuitoController {
                                                 foreach ($grupoPaiFilhoFilhos248832 as $gpFilho248832) {
                                                     $grupoFilho248832 = $gpFilho248832->getGrupoPaiFilhoFilho();
                                                     $relatorioCelula = RelatorioController::saberQuaisDasMinhasCelulasSaoDeElitePorPeriodo($repositorio, $grupoFilho248832, $periodo);
-                                                    $somaCelulas += $relatorioCelula['celulas'];
                                                     $somaCelulasDeElite += $relatorioCelula['elite'];
                                                 }
                                             }
@@ -449,7 +445,8 @@ class RelatorioController extends CircuitoController {
                             }
                         }
                     }
-                    $relatorioDiscipulos[$grupoFilho->getId()][$indiceDeArrays]['celulas'] = $somaCelulas;
+
+                    $relatorioDiscipulos[$grupoFilho->getId()][$indiceDeArrays]['celulas'] = $relatorioDiscipulos[$grupoFilho->getId()][$indiceDeArrays]['celulaQuantidade'];
                     $relatorioDiscipulos[$grupoFilho->getId()][$indiceDeArrays]['elite'] = $somaCelulasDeElite;
                     if ($relatorioDiscipulos[$grupoFilho->getId()][$indiceDeArrays]['celulas'] > 2) {
                         $relatorioDiscipulos[$grupoFilho->getId()][$indiceDeArrays]['meta'] = $relatorioDiscipulos[$grupoFilho->getId()][$indiceDeArrays]['celulas'] / 2;
@@ -766,7 +763,8 @@ class RelatorioController extends CircuitoController {
         /* Célula */
         if ($qualRelatorio === RelatorioController::relatorioCelulaRealizadas ||
                 $qualRelatorio === RelatorioController::relatorioCelulaQuantidade ||
-                $qualRelatorio === RelatorioController::relatorioMembresiaECelula) {
+                $qualRelatorio === RelatorioController::relatorioMembresiaECelula ||
+                $qualRelatorio === RelatorioController::relatorioCelulasDeElite) {
             $relatorioCelula = $repositorioORM->getFatoCicloORM()->montarRelatorioCelulaPorNumeroIdentificador($numeroIdentificador, $periodoInicial, $tipoRelatorio);
             $relatorioCelulaDeElite = $repositorioORM->getFatoCicloORM()->montarRelatorioCelulaDeElitePorNumeroIdentificador($numeroIdentificador, $periodoInicial, $tipoRelatorio);
 
