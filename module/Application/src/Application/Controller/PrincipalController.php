@@ -85,48 +85,11 @@ class PrincipalController extends CircuitoController {
         $relatorioCelulas[$grupo->getId()] = RelatorioController::saberQuaisDasMinhasCelulasSaoDeElitePorPeriodo($this->getRepositorio(), $grupo, $periodo);
         $grupoPaiFilhoFilhos = $grupo->getGrupoPaiFilhoFilhosAtivos($periodo);
         if ($grupoPaiFilhoFilhos) {
-            $relatorioDiscipulos = array();
             $discipulos = array();
             foreach ($grupoPaiFilhoFilhos as $gpFilho) {
                 $discipulos[] = $gpFilho;
-                $grupoFilho = $gpFilho->getGrupoPaiFilhoFilho();
-                $relatorioCelulas[$grupoFilho->getId()] = RelatorioController::saberQuaisDasMinhasCelulasSaoDeElitePorPeriodo($this->getRepositorio(), $grupoFilho, $periodo);
-
-                $grupoPaiFilhoFilhos144 = $grupoFilho->getGrupoPaiFilhoFilhosAtivos($periodo);
-                if ($grupoPaiFilhoFilhos144) {
-                    foreach ($grupoPaiFilhoFilhos144 as $gpFilho144) {
-                        $grupoFilho144 = $gpFilho144->getGrupoPaiFilhoFilho();
-                        $relatorioCelulas[$grupoFilho144->getId()] = RelatorioController::saberQuaisDasMinhasCelulasSaoDeElitePorPeriodo($this->getRepositorio(), $grupoFilho144, $periodo);
-
-                        $grupoPaiFilhoFilhos1728 = $grupoFilho144->getGrupoPaiFilhoFilhosAtivos($periodo);
-                        if ($grupoPaiFilhoFilhos1728) {
-                            foreach ($grupoPaiFilhoFilhos1728 as $gpFilho1728) {
-                                $grupoFilho1728 = $gpFilho1728->getGrupoPaiFilhoFilho();
-                                $relatorioCelulas[$grupoFilho1728->getId()] = RelatorioController::saberQuaisDasMinhasCelulasSaoDeElitePorPeriodo($this->getRepositorio(), $grupoFilho1728, $periodo);
-
-                                $grupoPaiFilhoFilhos20736 = $grupoFilho1728->getGrupoPaiFilhoFilhosAtivos($periodo);
-                                if ($grupoPaiFilhoFilhos20736) {
-                                    foreach ($grupoPaiFilhoFilhos20736 as $gpFilho20736) {
-                                        $grupoFilho20736 = $gpFilho20736->getGrupoPaiFilhoFilho();
-                                        $relatorioCelulas[$grupoFilho20736->getId()] = RelatorioController::saberQuaisDasMinhasCelulasSaoDeElitePorPeriodo($this->getRepositorio(), $grupoFilho20736, $periodo);
-
-                                        $grupoPaiFilhoFilhos248832 = $grupoFilho20736->getGrupoPaiFilhoFilhosAtivos($periodo);
-                                        if ($grupoPaiFilhoFilhos248832) {
-                                            foreach ($grupoPaiFilhoFilhos248832 as $gpFilho248832) {
-                                                $grupoFilho248832 = $gpFilho248832->getGrupoPaiFilhoFilho();
-                                                $relatorioCelulas[$grupoFilho248832->getId()] = RelatorioController::saberQuaisDasMinhasCelulasSaoDeElitePorPeriodo($this->getRepositorio(), $grupoFilho248832, $periodo);
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
             }
             $dados['discipulos'] = $discipulos;
-            $dados['discipulosRelatorio'] = $relatorioDiscipulos;
-            $dados['relatorioCelulas'] = $relatorioCelulas;
         }
 
         $view = new ViewModel($dados);
