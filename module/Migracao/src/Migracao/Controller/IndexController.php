@@ -100,7 +100,7 @@ class IndexController extends CircuitoController {
                 $this->cadastrarPessoasVolateis($row[$stringIdResponsavel1], $grupoIgreja);
                 $eventosCulto = $this->cadastrarCulto($row['id'], $grupoIgreja);
                 $this->cadastrarCelulas($row[$stringIdResponsavel1], $grupoIgreja, $row[$stringIdResponsavel2]);
-
+                
 //                $grupoEventoNoPeriodo = $grupoIgreja->getGrupoEventoNoPeriodo(0);
 //                $eventosCulto = array();
 //                $cultoTerca = 6;
@@ -304,7 +304,7 @@ class IndexController extends CircuitoController {
                                     if ($grupoEvento->getEvento()->verificaSeECelula() && ($grupoEvento->verificarSeEstaAtivo() || $validacaoInativadaNessePeriodo)) {
                                         $html .= "<br />EventoCelula: " . $grupoEvento->getEvento()->getEventoCelula()->getId();
                                         if ($tipoGerarRelatorioDeLider != 1) {
-//                                            $this->getRepositorio()->getFatoCelulaORM()->criarFatoCelula($fatoCiclo, $grupoEvento->getEvento()->getEventoCelula()->getId());
+                                            $this->getRepositorio()->getFatoCelulaORM()->criarFatoCelula($fatoCiclo, $grupoEvento->getEvento()->getEventoCelula()->getId());
                                         }
                                         $html .= "<br />Fato Celula Gerado";
                                         $temCelula = true;
@@ -312,14 +312,16 @@ class IndexController extends CircuitoController {
                                 }
                             }
 
-                            if ($grupo->getGrupoIgreja()->getId() !== 1) {
-                                $quantidadeLideres = 0;
-                                if ($temCelula) {
-                                    $quantidadeLideres = count($grupo->getResponsabilidadesAtivas());
-                                }
-                                $html .= "<br />quantidadeLideres" . $quantidadeLideres;
-                                $this->getRepositorio()->getFatoLiderORM()->criarFatoLider($numeroIdentificador, $quantidadeLideres, self::DATA_CRIACAO);
-                            }
+//                        if ($grupo->getId() !== 1 && $grupo->getGrupoEquipe()->getId() !== 2 &&
+//                                $grupo->getGrupoEquipe()->getId() !== 24 &&
+//                                $grupo->getGrupoEquipe()->getId() !== 3749) {
+//                            $quantidadeLideres = 0;
+//                            if ($temCelula) {
+//                                $quantidadeLideres = count($grupo->getResponsabilidadesAtivas());
+//                            }
+//                            $html .= "<br />quantidadeLideres" . $quantidadeLideres;
+//                            $this->getRepositorio()->getFatoLiderORM()->criarFatoLider($numeroIdentificador, $quantidadeLideres, self::DATA_CRIACAO);
+//                        }
                         }
                     }
                 }
