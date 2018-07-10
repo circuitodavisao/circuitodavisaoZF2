@@ -989,7 +989,7 @@ class CursoController extends CircuitoController {
 
                 $pessoaCursoAcesso = new PessoaCursoAcesso();
                 $pessoaCursoAcesso->setPessoa($pessoa);
-                $pessoaCursoAcesso->setGrupo($grupo);
+                $pessoaCursoAcesso->setGrupo($grupo->getGrupoIgreja());
                 $pessoaCursoAcesso->setCursoAcesso($cursoAcesso);
                 $this->getRepositorio()->getPessoaCursoAcessoORM()->persistir($pessoaCursoAcesso);
 
