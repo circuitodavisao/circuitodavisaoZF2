@@ -156,8 +156,7 @@ $somaMeta = 0;
                                     echo '<th class="' . $classeBase . $classePeriodoAtual . '">MEM</th>';
                                     echo '<th class="' . $classeBase . $classePeriodoAtual . '">%</th>';
                                 }
-                                if ($this->tipoRelatorio == 7 ||
-                                        $this->tipoRelatorio == 8) {
+                                if ($this->tipoRelatorio == 7) {
                                     echo '<th class="' . $classeBase . $classePeriodoAtual . '">META</th>';
                                 }
                                 if ($this->tipoRelatorio == 2 ||
@@ -185,6 +184,7 @@ $somaMeta = 0;
                                     echo '<th class="' . $classeBase . $classePeriodoAtual . '">ARENA</th>';
                                 }
                                 if ($this->tipoRelatorio == 8) {
+                                    echo '<th class="' . $classeBase . $classePeriodoAtual . '">MET</th>';
                                     echo '<th class="' . $classeBase . $classePeriodoAtual . '">ELITE</th>';
                                     echo '<th class="' . $classeBase . $classePeriodoAtual . '">%</th>';
                                 }
@@ -302,10 +302,10 @@ $somaMeta = 0;
                                     echo '<td class="' . $classeBase . '">' . RelatorioController::formataNumeroRelatorio($relatorio[$indiceDeArrays]['membresiaArena']) . '</td>';
                                 }
                                 if ($this->tipoRelatorio == 8) {
-                                    echo '<td class="' . $classeBase . '">' . $relatorio[$indiceDeArrays]['meta'] . '</td>';
-                                    echo '<td class="' . $classeBase . '">' . $relatorio[$indiceDeArrays]['celulas'] . '</td>';
-                                    echo '<td class="' . $classeBase . '">' . $relatorio[$indiceDeArrays]['elite'] . '</td>';
-                                    echo '<td class="' . $classeBase . '">' . RelatorioController::formataNumeroRelatorio($relatorio[$indiceDeArrays]['performance']) . '%</td>';
+                                    echo '<td class="' . $classeBase . '">' . $relatorio[$indiceDeArrays]['quantidadeLideres'] . '</td>';
+                                    echo '<td class="' . $classeBase . '">' . $relatorio[$indiceDeArrays]['celulaDeEliteMeta'] . '</td>';
+                                    echo '<td class="' . $classeBase . '">' . $relatorio[$indiceDeArrays]['celulaDeElite'] . '</td>';
+                                    echo '<td class="' . $classeBase . '">' . RelatorioController::formataNumeroRelatorio($relatorio[$indiceDeArrays]['celulaDeElitePerformance']) . '%</td>';
                                 }
                             }
 
