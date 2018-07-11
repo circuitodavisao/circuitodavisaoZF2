@@ -766,7 +766,6 @@ class RelatorioController extends CircuitoController {
                 $qualRelatorio === RelatorioController::relatorioMembresiaECelula ||
                 $qualRelatorio === RelatorioController::relatorioCelulasDeElite) {
             $relatorioCelula = $repositorioORM->getFatoCicloORM()->montarRelatorioCelulaPorNumeroIdentificador($numeroIdentificador, $periodoInicial, $tipoRelatorio);
-            $relatorioCelulaDeElite = $repositorioORM->getFatoCicloORM()->montarRelatorioCelulaDeElitePorNumeroIdentificador($numeroIdentificador, $periodoInicial, $tipoRelatorio);
 
             $quantidadeCelulas = $relatorioCelula[0]['quantidade'];
             $quantidadeCelulasRealizadas = 0;
@@ -782,11 +781,6 @@ class RelatorioController extends CircuitoController {
             if ($relatorio['membresiaMeta'] > 0) {
                 $performanceCelula = $soma[RelatorioController::dimensaoTipoCelula] / $relatorio['membresiaMeta'] * 100;
             }
-            $performanceCelulasDeElite = 0;
-            $celulasDeElite = $relatorioCelulaDeElite[0]['celulaDeElite'];
-            if ($celulasDeElite) {
-                $performanceCelulasDeElite = $celulasDeElite / $quantidadeCelulas * 100;
-            }
             $relatorio['celula'] = $soma[RelatorioController::dimensaoTipoCelula];
             $relatorio['celulaPerformance'] = $performanceCelula;
             $relatorio['celulaPerformanceClass'] = RelatorioController::corDaLinhaPelaPerformance($relatorio['celulaPerformance']);
@@ -795,9 +789,6 @@ class RelatorioController extends CircuitoController {
             $relatorio['celulaRealizadas'] = $quantidadeCelulasRealizadas;
             $relatorio['celulaRealizadasPerformance'] = $performanceCelulasRealizadas;
             $relatorio['celulaRealizadasPerformanceClass'] = RelatorioController::corDaLinhaPelaPerformance($relatorio['celulaRealizadasPerformance']);
-            $relatorio['celulaDeElite'] = $celulasDeElite;
-            $relatorio['celulaDeElitePerformance'] = $performanceCelulasDeElite;
-            $relatorio['celulaDeElitePerformanceClass'] = RelatorioController::corDaLinhaPelaPerformance($relatorio['celulaDeElitePerformance']);
         }
         return $relatorio;
     }
