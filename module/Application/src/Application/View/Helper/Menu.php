@@ -357,7 +357,7 @@ class Menu extends AbstractHelper {
                         $label = 'C&eacute;lula/Arena';
                         break;
                     case 8:
-                        $label = 'C&eacute;lulas de Elite(Manutenção)';
+                        $label = 'C&eacute;lulas de Elite';
                         $mostrar = true;
                         break;
                 }

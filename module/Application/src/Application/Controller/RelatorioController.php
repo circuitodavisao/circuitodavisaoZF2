@@ -371,10 +371,10 @@ class RelatorioController extends CircuitoController {
 
             if ($tipoRelatorio === RelatorioController::relatorioCelulasDeElite ||
                     $tipoRelatorio === RelatorioController::relatorioMembresiaECelula) {
-                $dadosCelulasDeLideres = RelatorioController::saberQuaisDasMinhasCelulasSaoDeElitePorPeriodo($repositorio, $grupo, $indiceDeArrays);
-                $relatorio[self::dadosPessoais][$indiceDeArrays]['celulaDeEliteMeta'] = $dadosCelulasDeLideres['meta'];
-                $relatorio[self::dadosPessoais][$indiceDeArrays]['celulaDeElite'] = $dadosCelulasDeLideres['elite'];
-                $relatorio[self::dadosPessoais][$indiceDeArrays]['celulaDeElitePerformance'] = $dadosCelulasDeLideres['performance'];
+                $dadosCelulasDeElite = RelatorioController::saberQuaisDasMinhasCelulasSaoDeElitePorPeriodo($repositorio, $grupo, $indiceDeArrays);
+                $relatorio[self::dadosPessoais][$indiceDeArrays]['celulaDeEliteMeta'] = $dadosCelulasDeElite['meta'];
+                $relatorio[self::dadosPessoais][$indiceDeArrays]['celulaDeElite'] = $dadosCelulasDeElite['elite'];
+                $relatorio[self::dadosPessoais][$indiceDeArrays]['celulaDeElitePerformance'] = $dadosCelulasDeElite['performance'];
                 $soma[self::dadosPessoais][self::celulaDeElitePerformance] += $relatorio[self::dadosPessoais][$indiceDeArrays]['celulaDeElitePerformance'];
             }
             foreach ($todosFilhos as $filho) {
@@ -567,7 +567,7 @@ class RelatorioController extends CircuitoController {
         }
         $somaFinal = array();
         for ($indiceDeArrays = $arrayPeriodoDoMes[0]; $indiceDeArrays <= $arrayPeriodoDoMes[1]; $indiceDeArrays++) {
-            if ($tipoRelatorio === RelatorioController::relatorioMembresia || 
+            if ($tipoRelatorio === RelatorioController::relatorioMembresia ||
                     $tipoRelatorio === RelatorioController::relatorioMembresiaECelula) {
                 $relatorio[$contadorFilhos][$indiceDeArrays]['membresiaPerformance'] = $relatorio[$contadorFilhos][$indiceDeArrays]['membresia'] / $relatorio[$contadorFilhos][$indiceDeArrays]['membresiaMeta'] * 100;
                 $somaFinal['membresiaCulto'] += $relatorio[$contadorFilhos][$indiceDeArrays]['membresiaCulto'];
