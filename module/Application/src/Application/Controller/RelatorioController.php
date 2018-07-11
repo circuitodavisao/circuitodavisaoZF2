@@ -372,9 +372,13 @@ class RelatorioController extends CircuitoController {
             if ($tipoRelatorio === RelatorioController::relatorioCelulasDeElite ||
                     $tipoRelatorio === RelatorioController::relatorioMembresiaECelula) {
                 $dadosCelulasDeElite = RelatorioController::saberQuaisDasMinhasCelulasSaoDeElitePorPeriodo($repositorio, $grupo, $indiceDeArrays);
-                $relatorio[self::dadosPessoais][$indiceDeArrays]['celulaDeEliteMeta'] = $dadosCelulasDeElite['meta'];
+                $meta = 1;
+                if ($relatorio[self::dadosPessoais][$indiceDeArrays]['celulaQuantidade'] > 2) {
+                    $meta = number_format($relatorio[self::dadosPessoais][$indiceDeArrays]['celulaQuantidade'] / 2);
+                }
+                $relatorio[self::dadosPessoais][$indiceDeArrays]['celulaDeEliteMeta'] = $meta;
                 $relatorio[self::dadosPessoais][$indiceDeArrays]['celulaDeElite'] = $dadosCelulasDeElite['elite'];
-                $relatorio[self::dadosPessoais][$indiceDeArrays]['celulaDeElitePerformance'] = $dadosCelulasDeElite['performance'];
+                $relatorio[self::dadosPessoais][$indiceDeArrays]['celulaDeElitePerformance'] = $relatorio[self::dadosPessoais][$indiceDeArrays]['celulaDeElite'] / $relatorio[self::dadosPessoais][$indiceDeArrays]['celulaDeEliteMeta'] * 100;
                 $soma[self::dadosPessoais][self::celulaDeElitePerformance] += $relatorio[self::dadosPessoais][$indiceDeArrays]['celulaDeElitePerformance'];
             }
             foreach ($todosFilhos as $filho) {
@@ -460,12 +464,11 @@ class RelatorioController extends CircuitoController {
                     }
 
                     $relatorioDiscipulos[$grupoFilho->getId()][$indiceDeArrays]['celulaDeElite'] = $somaCelulasDeElite;
+                    $meta = 1;
                     if ($relatorioDiscipulos[$grupoFilho->getId()][$indiceDeArrays]['celulaQuantidade'] > 2) {
-                        $relatorioDiscipulos[$grupoFilho->getId()][$indiceDeArrays]['celulaDeEliteMeta'] = $relatorioDiscipulos[$grupoFilho->getId()][$indiceDeArrays]['celulaQuantidade'] / 2;
-                    } else {
-                        $relatorioDiscipulos[$grupoFilho->getId()][$indiceDeArrays]['celulaDeEliteMeta'] = 1;
+                        $meta = number_format($relatorioDiscipulos[$grupoFilho->getId()][$indiceDeArrays]['celulaQuantidade'] / 2);
                     }
-                    $relatorioDiscipulos[$grupoFilho->getId()][$indiceDeArrays]['celulaDeEliteMeta'] = number_format($relatorioDiscipulos[$grupoFilho->getId()][$indiceDeArrays]['celulaDeEliteMeta']);
+                    $relatorioDiscipulos[$grupoFilho->getId()][$indiceDeArrays]['celulaDeEliteMeta'] = $meta;
                     $relatorioDiscipulos[$grupoFilho->getId()][$indiceDeArrays]['celulaDeElitePerformance'] = $relatorioDiscipulos[$grupoFilho->getId()][$indiceDeArrays]['celulaDeElite'] / $relatorioDiscipulos[$grupoFilho->getId()][$indiceDeArrays]['celulaDeEliteMeta'] * 100;
                     $soma[$grupoFilho->getId()][self::celulaDeElitePerformance] += $relatorioDiscipulos[$grupoFilho->getId()][$indiceDeArrays]['celulaDeElitePerformance'];
                 }
@@ -819,15 +822,7 @@ class RelatorioController extends CircuitoController {
             $contagem++;
         }
 
-        $relatorio['celulas'] = count($grupoEventosCelula);
         $relatorio['elite'] = $contagemCelulasDeElite;
-        if ($relatorio['celulas'] > 2) {
-            $relatorio['meta'] = $relatorio['celulas'] / 2;
-        } else {
-            $relatorio['meta'] = 1;
-        }
-        $relatorio['meta'] = number_format($relatorio['meta']);
-        $relatorio['performance'] = $relatorio['elite'] / $relatorio['meta'] * 100;
         return $relatorio;
     }
 
