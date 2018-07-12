@@ -598,8 +598,9 @@ class RelatorioController extends CircuitoController {
             }
             if ($tipoRelatorio === RelatorioController::relatorioCelulasDeElite ||
                     $tipoRelatorio === RelatorioController::relatorioMembresiaECelula) {
-                $relatorio[$contadorFilhos][$indiceDeArrays]['celulaDeElitePerformance'] = $relatorio[$contadorFilhos][$indiceDeArrays]['elite'] / $relatorio[$contadorFilhos][$indiceDeArrays]['meta'] * 100;
-                $somaFinal['celulaDeElitePerformance'] += $relatorio[$contadorFilhos][$indiceDeArrays]['performance'];
+                $relatorio[$contadorFilhos][$indiceDeArrays]['celulaDeElitePerformance'] = 
+                        $relatorio[$contadorFilhos][$indiceDeArrays]['celulaDeElite'] / $relatorio[$contadorFilhos][$indiceDeArrays]['celulaDeEliteMeta'] * 100;
+                $somaFinal['celulaDeElitePerformance'] += $relatorio[$contadorFilhos][$indiceDeArrays]['celulaDeElitePerformance'];
             }
         }
 
