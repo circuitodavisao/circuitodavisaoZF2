@@ -69,9 +69,7 @@ class PrincipalController extends CircuitoController {
 
     public function dashboardAction($param) {
         $sessao = new Container(Constantes::$NOME_APLICACAO);
-
         $response = $this->getResponse();
-
 
         $idEntidadeAtual = $sessao->idEntidadeAtual;
         $entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
@@ -254,7 +252,7 @@ class PrincipalController extends CircuitoController {
         $indiceUltimoRegistroDoRelatorio = (count($relatorio) - 1);
         /* Circuito me ajuda */
         /* Celulas nao realizadas */
-        $periodo = -1;
+        $periodo = $arrayPeriodoDoMes[1] - 1;
         $htmlCelulasNaoRealizadas = '';
         for ($indiceCelulasNaoRealizadas = 1; $indiceCelulasNaoRealizadas < $indiceUltimoRegistroDoRelatorio; $indiceCelulasNaoRealizadas++) {
             $nomeLideres = $relatorio[$indiceCelulasNaoRealizadas]['lideres'];
@@ -323,9 +321,9 @@ class PrincipalController extends CircuitoController {
         $fraseBarraDeProgressoEquipeMembresia = $relatorio[$totalDeRelatorios]['mediaMembresiaPerformanceFrase'];
 
         $divBarraDeProgressoPessoalMembresia = $barraDeProgressoBonita(
-                'Membresia', $relatorio[0]['mediaMembresiaPerformanceClass'], $relatorio[0]['mediaMembresiaPerformance'], 'm0', true, $relatorio[0][-1]['membresiaMeta'], $relatorio[0]['mediaMembresia'], '');
+                'Membresia', $relatorio[0]['mediaMembresiaPerformanceClass'], $relatorio[0]['mediaMembresiaPerformance'], 'm0', true, $relatorio[0][$arrayPeriodoDoMes[1] - 1]['membresiaMeta'], $relatorio[0]['mediaMembresia'], '');
         $divBarraDeProgressoEquipeMembresia = $barraDeProgressoBonita(
-                'Membresia', $relatorio[$totalDeRelatorios]['mediaMembresiaPerformanceClass'], $relatorio[$totalDeRelatorios]['mediaMembresiaPerformance'], 'm0', true, $relatorio[$totalDeRelatorios][-1]['membresiaMeta'], $relatorio[$totalDeRelatorios]['mediaMembresia'], '');
+                'Membresia', $relatorio[$totalDeRelatorios]['mediaMembresiaPerformanceClass'], $relatorio[$totalDeRelatorios]['mediaMembresiaPerformance'], 'm0', true, $relatorio[$totalDeRelatorios][$arrayPeriodoDoMes[1] - 1]['membresiaMeta'], $relatorio[$totalDeRelatorios]['mediaMembresia'], '');
 
         $htmlDadosMembresia = '';
         $class = 'class = "col-lg-3 col-md-3 col-sm-6 col-xs-12"';
@@ -412,9 +410,9 @@ class PrincipalController extends CircuitoController {
         $fraseBarraDeProgressoEquipeCelula = $relatorio[$totalDeRelatorios]['mediaCelulaPerformanceFrase'];
 
         $divBarraDeProgressoPessoalCelula = $barraDeProgressoBonita(
-                'Celula', $relatorio[0]['mediaCelulaPerformanceClass'], $relatorio[0]['mediaCelulaPerformance'], 'm0', true, $relatorio[0][-1]['membresiaMeta'], $relatorio[0]['mediaCelula'], '');
+                'Celula', $relatorio[0]['mediaCelulaPerformanceClass'], $relatorio[0]['mediaCelulaPerformance'], 'm0', true, $relatorio[0][$arrayPeriodoDoMes[1] - 1]['membresiaMeta'], $relatorio[0]['mediaCelula'], '');
         $divBarraDeProgressoEquipeCelula = $barraDeProgressoBonita(
-                'Celula', $relatorio[$totalDeRelatorios]['mediaCelulaPerformanceClass'], $relatorio[$totalDeRelatorios]['mediaCelulaPerformance'], 'm0', true, $relatorio[$totalDeRelatorios][-1]['membresiaMeta'], $relatorio[$totalDeRelatorios]['mediaCelula'], '');
+                'Celula', $relatorio[$totalDeRelatorios]['mediaCelulaPerformanceClass'], $relatorio[$totalDeRelatorios]['mediaCelulaPerformance'], 'm0', true, $relatorio[$totalDeRelatorios][$arrayPeriodoDoMes[1] - 1]['membresiaMeta'], $relatorio[$totalDeRelatorios]['mediaCelula'], '');
 
         $htmlDadosCelula = '';
         $class = 'class = "col-lg-4 col-md-4 col-sm-4 col-xs-12"';
@@ -594,6 +592,8 @@ class PrincipalController extends CircuitoController {
             'divBarraDeProgressoEquipeCelula' => $divBarraDeProgressoEquipeCelula,
             'divDadosCelula' => $htmlDadosCelula,
             'divDadosProximoNivel' => $htmlDadosProximoNivel,
+            'perioos' => $arrayPeriodoDoMes,
+            'relatorio' => $relatorio[0],
             'response' => $response,
         );
 

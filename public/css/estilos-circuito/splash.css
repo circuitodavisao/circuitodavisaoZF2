@@ -9,13 +9,6 @@
     left: 0;
     right: 0;
 }
-.splash2 {
-    position: fixed;
-    background: white;
-    color: gray;
-    left: 20%;
-    right: 20%;
-}
 .splash-title {
     text-align: center;
     max-width: 500px;
