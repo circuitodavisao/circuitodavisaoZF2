@@ -251,15 +251,15 @@ class PrincipalController extends CircuitoController {
             $mensagemModalClasse .= '</div>';
         }
         /* Fim dados principais */
-
+        $indiceUltimoRegistroDoRelatorio = (count($relatorio) - 1);
         /* Circuito me ajuda */
         /* Celulas nao realizadas */
         $periodo = -1;
         $htmlCelulasNaoRealizadas = '';
-        for ($indiceCelulasNaoRealizadas = 1; $indiceCelulasNaoRealizadas < (count($relatorio) - 1); $indiceCelulasNaoRealizadas++) {
+        for ($indiceCelulasNaoRealizadas = 1; $indiceCelulasNaoRealizadas < $indiceUltimoRegistroDoRelatorio; $indiceCelulasNaoRealizadas++) {
             $nomeLideres = $relatorio[$indiceCelulasNaoRealizadas]['lideres'];
             $celulasNaoRealizadas = $relatorio[$indiceCelulasNaoRealizadas][$periodo]['celulaQuantidade'] - $relatorio[$indiceCelulasNaoRealizadas][$periodo]['celulaRealizadas'];
-
+            echo "<br /> celulasNaoRealizadas$celulasNaoRealizadas";
             if ($celulasNaoRealizadas > 0) {
                 $htmlCelulasNaoRealizadas .= '<tr class="linhaCelulasNaoRealizadas hidden info">';
                 $htmlCelulasNaoRealizadas .= '<td colspan="2">EQUIPE - ' . $nomeLideres . '</td>';
@@ -288,7 +288,7 @@ class PrincipalController extends CircuitoController {
                 $htmlCelulasNaoRealizadas .= '</tr>';
             }
         }
-        $indiceUltimoRegistroDoRelatorio = (count($relatorio) - 1);
+
         $totalDeCelulasNaoRealizadas = $relatorio[$indiceUltimoRegistroDoRelatorio][$periodo]['celulaQuantidade'] - $relatorio[$indiceUltimoRegistroDoRelatorio][$periodo]['celulaRealizadas'];
         /* Fim celulas nao realizadas */
 
@@ -571,31 +571,31 @@ class PrincipalController extends CircuitoController {
         /* fim dados proximo nivel */
 
         $dados = array(
-        'spanNomeDeQuemEstaLogado' => $pessoa->getNomePrimeiroUltimo(),
-        'fotoPerfil' => FuncoesEntidade::nomeDaImagem($pessoa),
-        'divModalDadosPrincipais' => $mensagemModalClasse,
-        'classePessoalCor' => $performance[self::MEMBRESIA][self::PESSOAL][self::CLASSE_COR_MOSTRAGEM],
-        'classePessoalString' => $performance[self::MEMBRESIA][self::PESSOAL][self::CLASSE_STRING_MOSTRAGEM],
-        'classeEquipeCor' => $performance[self::MEMBRESIA][self::EQUIPE][self::CLASSE_COR_MOSTRAGEM],
-        'classeEquipeString' => $performance[self::MEMBRESIA][self::EQUIPE][self::CLASSE_STRING_MOSTRAGEM],
-        'tdValorCelulasNaoRealizadas' => $totalDeCelulasNaoRealizadas,
-        'divTabelaCircuitoMeAjuda' => $htmlTabelaCircuitoMeAjuda,
-        'corBarraDeProgressoPessoalMembresia' => $corBarraDeProgressoPessoalMembresia,
-        'fraseBarraDeProgressoPessoalMembresia' => $fraseBarraDeProgressoPessoalMembresia,
-        'corBarraDeProgressoEquipeMembresia' => $corBarraDeProgressoEquipeMembresia,
-        'fraseBarraDeProgressoEquipeMembresia' => $fraseBarraDeProgressoEquipeMembresia,
-        'divBarraDeProgressoPessoalMembresia' => $divBarraDeProgressoPessoalMembresia,
-        'divBarraDeProgressoEquipeMembresia' => $divBarraDeProgressoEquipeMembresia,
-        'divDadosMembresia' => $htmlDadosMembresia,
-        'corBarraDeProgressoPessoalCelula' => $corBarraDeProgressoPessoalCelula,
-        'fraseBarraDeProgressoPessoalCelula' => $fraseBarraDeProgressoPessoalCelula,
-        'corBarraDeProgressoEquipeCelula' => $corBarraDeProgressoEquipeCelula,
-        'fraseBarraDeProgressoEquipeCelula' => $fraseBarraDeProgressoEquipeCelula,
-        'divBarraDeProgressoPessoalCelula' => $divBarraDeProgressoPessoalCelula,
-        'divBarraDeProgressoEquipeCelula' => $divBarraDeProgressoEquipeCelula,
-        'divDadosCelula' => $htmlDadosCelula,
-        'divDadosProximoNivel' => $htmlDadosProximoNivel,
-        'response' => $response,
+            'spanNomeDeQuemEstaLogado' => $pessoa->getNomePrimeiroUltimo(),
+            'fotoPerfil' => FuncoesEntidade::nomeDaImagem($pessoa),
+            'divModalDadosPrincipais' => $mensagemModalClasse,
+            'classePessoalCor' => $performance[self::MEMBRESIA][self::PESSOAL][self::CLASSE_COR_MOSTRAGEM],
+            'classePessoalString' => $performance[self::MEMBRESIA][self::PESSOAL][self::CLASSE_STRING_MOSTRAGEM],
+            'classeEquipeCor' => $performance[self::MEMBRESIA][self::EQUIPE][self::CLASSE_COR_MOSTRAGEM],
+            'classeEquipeString' => $performance[self::MEMBRESIA][self::EQUIPE][self::CLASSE_STRING_MOSTRAGEM],
+            'tdValorCelulasNaoRealizadas' => $totalDeCelulasNaoRealizadas,
+            'divTabelaCircuitoMeAjuda' => $htmlTabelaCircuitoMeAjuda,
+            'corBarraDeProgressoPessoalMembresia' => $corBarraDeProgressoPessoalMembresia,
+            'fraseBarraDeProgressoPessoalMembresia' => $fraseBarraDeProgressoPessoalMembresia,
+            'corBarraDeProgressoEquipeMembresia' => $corBarraDeProgressoEquipeMembresia,
+            'fraseBarraDeProgressoEquipeMembresia' => $fraseBarraDeProgressoEquipeMembresia,
+            'divBarraDeProgressoPessoalMembresia' => $divBarraDeProgressoPessoalMembresia,
+            'divBarraDeProgressoEquipeMembresia' => $divBarraDeProgressoEquipeMembresia,
+            'divDadosMembresia' => $htmlDadosMembresia,
+            'corBarraDeProgressoPessoalCelula' => $corBarraDeProgressoPessoalCelula,
+            'fraseBarraDeProgressoPessoalCelula' => $fraseBarraDeProgressoPessoalCelula,
+            'corBarraDeProgressoEquipeCelula' => $corBarraDeProgressoEquipeCelula,
+            'fraseBarraDeProgressoEquipeCelula' => $fraseBarraDeProgressoEquipeCelula,
+            'divBarraDeProgressoPessoalCelula' => $divBarraDeProgressoPessoalCelula,
+            'divBarraDeProgressoEquipeCelula' => $divBarraDeProgressoEquipeCelula,
+            'divDadosCelula' => $htmlDadosCelula,
+            'divDadosProximoNivel' => $htmlDadosProximoNivel,
+            'response' => $response,
         );
 
         $response->setContent(Json::encode($dados));
