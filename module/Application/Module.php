@@ -35,7 +35,6 @@ use Application\View\Helper\CabecalhoDePeriodos;
 use Application\View\Helper\CircuitoMeAjuda;
 use Application\View\Helper\DadosEntidade;
 use Application\View\Helper\DadosPrincipal;
-use Application\View\Helper\DadosProximoNivel;
 use Application\View\Helper\DivCapslock;
 use Application\View\Helper\DivJavaScript;
 use Application\View\Helper\DivMensagens;
@@ -141,9 +140,6 @@ class Module {
                 },
                 'dadosPrincipal' => function($sm) {
                     return new DadosPrincipal();
-                },
-                'dadosProximoNivel' => function($sm) {
-                    return new DadosProximoNivel();
                 },
                 'barraDeProgressoBonita' => function($sm) {
                     return new BarraDeProgressoBonita();

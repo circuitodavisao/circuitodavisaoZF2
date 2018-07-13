@@ -16,10 +16,12 @@ class FuncoesEntidade {
      * @param Pessoa $p
      * @return string
      */
-    static public function tagImgComFotoDaPessoa(Pessoa $p, $tamanho = 50, $tipoTamanho = 'px', $extra = '') {
+    static public function tagImgComFotoDaPessoa(Pessoa $pessoa = null, $tamanho = 50, $tipoTamanho = 'px', $extra = '') {
         $resposta = '';
-
-        $imagem = FuncoesEntidade::nomeDaImagem($p);
+        $imagem = '';
+        if ($pessoa) {
+            $imagem = FuncoesEntidade::nomeDaImagem($pessoa);
+        }
         $resposta = '<img ' . $extra . ' id="fotoPerfil" src="/img/fotos/' . $imagem . '" class="img-thumbnail" width="' . $tamanho . $tipoTamanho . '"  height="' . $tamanho . $tipoTamanho . '" />&nbsp;';
 
         return $resposta;

@@ -22,7 +22,7 @@ class ModalLoader extends AbstractHelper {
     public function renderHtml() {
         $html = '';
         $html .= '<!-- Simple splash screen-->';
-        $html .= '<div class="splash">';
+        $html .= '<div id="splash" class="splash">';
         $html .= '<div class="color-line"></div>';
         $html .= '<div class="splash-title">';
         $html .= '<h1>Circuito da Visão</h1>';
