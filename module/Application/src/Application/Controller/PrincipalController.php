@@ -259,7 +259,6 @@ class PrincipalController extends CircuitoController {
         for ($indiceCelulasNaoRealizadas = 1; $indiceCelulasNaoRealizadas < $indiceUltimoRegistroDoRelatorio; $indiceCelulasNaoRealizadas++) {
             $nomeLideres = $relatorio[$indiceCelulasNaoRealizadas]['lideres'];
             $celulasNaoRealizadas = $relatorio[$indiceCelulasNaoRealizadas][$periodo]['celulaQuantidade'] - $relatorio[$indiceCelulasNaoRealizadas][$periodo]['celulaRealizadas'];
-            echo "<br /> celulasNaoRealizadas$celulasNaoRealizadas";
             if ($celulasNaoRealizadas > 0) {
                 $htmlCelulasNaoRealizadas .= '<tr class="linhaCelulasNaoRealizadas hidden info">';
                 $htmlCelulasNaoRealizadas .= '<td colspan="2">EQUIPE - ' . $nomeLideres . '</td>';
