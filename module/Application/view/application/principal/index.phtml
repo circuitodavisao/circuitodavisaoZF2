@@ -1,24 +1,9 @@
 <!-- Begin: Content -->
 <?php if ($this->mostrarPrincipal) { ?>
-    <div id="loader" class="center-block mt50">
-        <?php
-        $html .= '<!-- Simple splash screen-->';
-        $html .= '<div id="dashboardSplash" class="splash2">';
-        $html .= '<div class="color-line"></div>';
-        $html .= '<div class="splash-title">';
-        $html .= '<h1 class="text-primary">Carregando dashboard</h1>';
-        $html .= '<h2 class="text-info">Você pode acessar o menu enquanto isso</h2>';
-        $html .= '<div class="spinner">';
-        $html .= '<div class="rect1"></div>';
-        $html .= '<div class="rect2"></div>';
-        $html .= '<div class="rect3"></div>';
-        $html .= '<div class="rect4"></div>';
-        $html .= '<div class="rect5"></div>';
-        $html .= '</div>';
-        $html .= '</div>';
-        $html .= '</div>';
-        echo $html;
-        ?>
+    <div id="loader" class="text-center mt50">
+        <h1 class="text-primary">Carregando dashboard</h1>
+        <h2 class="text-info">Você pode acessar o menu enquanto isso</h2>
+        <img src="img/loader-grande.gif" />
     </div>
     <section id="divDados" class="mt50 table-layout animated fadeIn hidden">
         <!-- begin: .tray-center -->
