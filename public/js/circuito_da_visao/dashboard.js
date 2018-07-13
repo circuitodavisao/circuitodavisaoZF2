@@ -4,7 +4,6 @@ function buscarDados() {
             {},
             (data) => {
         if (data.response) {
-            console.log(data)
             $('#dashboardSplash').addClass('hidden')
             $('#loader').addClass('hidden')
             $('#divDados').removeClass('hidden')
