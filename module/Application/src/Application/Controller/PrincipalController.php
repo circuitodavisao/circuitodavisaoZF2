@@ -113,10 +113,10 @@ class PrincipalController extends CircuitoController {
         $performance = array();
         for ($indiceDeRelatorios = 1; $indiceDeRelatorios <= 2; $indiceDeRelatorios++) {
             if ($indiceDeRelatorios === 1) {
-                $relatorio = $relatorioAnterior;
+                $relatorioParaUsar = $relatorioAnterior;
             }
             if ($indiceDeRelatorios === 2) {
-                $relatorio = $relatorio;
+                $relatorioParaUsar = $relatorio;
             }
 
             /* Mês de apresentação */
@@ -134,10 +134,10 @@ class PrincipalController extends CircuitoController {
             /* FIM Mês de apresentação */
 
 
-            $performance[self::MEMBRESIA][self::PESSOAL][self::ORIGINAL] = $relatorio[0]['mediaMembresia'];
-            $performance[self::MEMBRESIA][self::PESSOAL][self::ORIGINAL_PERFORMANCE] = $relatorio[0]['mediaMembresia'] / $metas[0][0] * 100;
-            $performance[self::MEMBRESIA][self::EQUIPE][self::ORIGINAL] = $relatorio[(count($relatorio) - 1)]['mediaMembresia'];
-            $performance[self::MEMBRESIA][self::EQUIPE][self::ORIGINAL_PERFORMANCE] = $relatorio[(count($relatorio) - 1)]['mediaMembresia'] / $metas[1][0] * 100;
+            $performance[self::MEMBRESIA][self::PESSOAL][self::ORIGINAL] = $relatorioParaUsar[0]['mediaMembresia'];
+            $performance[self::MEMBRESIA][self::PESSOAL][self::ORIGINAL_PERFORMANCE] = $relatorioParaUsar[0]['mediaMembresia'] / $metas[0][0] * 100;
+            $performance[self::MEMBRESIA][self::EQUIPE][self::ORIGINAL] = $relatorioParaUsar[(count($relatorioParaUsar) - 1)]['mediaMembresia'];
+            $performance[self::MEMBRESIA][self::EQUIPE][self::ORIGINAL_PERFORMANCE] = $relatorioParaUsar[(count($relatorioParaUsar) - 1)]['mediaMembresia'] / $metas[1][0] * 100;
 
             $performance[self::MEMBRESIA][self::PESSOAL][self::VISUAL] = $performance[self::MEMBRESIA][self::PESSOAL][self::ORIGINAL_PERFORMANCE];
             if ($performance[self::MEMBRESIA][self::PESSOAL][self::VISUAL] > 100) {
@@ -252,7 +252,7 @@ class PrincipalController extends CircuitoController {
         $indiceUltimoRegistroDoRelatorio = (count($relatorio) - 1);
         /* Circuito me ajuda */
         /* Celulas nao realizadas */
-        $periodo = $arrayPeriodoDoMes[1] - 1;
+        $periodo = -1;
         $htmlCelulasNaoRealizadas = '';
         for ($indiceCelulasNaoRealizadas = 1; $indiceCelulasNaoRealizadas < $indiceUltimoRegistroDoRelatorio; $indiceCelulasNaoRealizadas++) {
             $nomeLideres = $relatorio[$indiceCelulasNaoRealizadas]['lideres'];
@@ -321,9 +321,9 @@ class PrincipalController extends CircuitoController {
         $fraseBarraDeProgressoEquipeMembresia = $relatorio[$totalDeRelatorios]['mediaMembresiaPerformanceFrase'];
 
         $divBarraDeProgressoPessoalMembresia = $barraDeProgressoBonita(
-                'Membresia', $relatorio[0]['mediaMembresiaPerformanceClass'], $relatorio[0]['mediaMembresiaPerformance'], 'm0', true, $relatorio[0][$arrayPeriodoDoMes[1] - 1]['membresiaMeta'], $relatorio[0]['mediaMembresia'], '');
+                'Membresia', $relatorio[0]['mediaMembresiaPerformanceClass'], $relatorio[0]['mediaMembresiaPerformance'], 'm0', true, $relatorio[0][-1]['membresiaMeta'], $relatorio[0]['mediaMembresia'], '');
         $divBarraDeProgressoEquipeMembresia = $barraDeProgressoBonita(
-                'Membresia', $relatorio[$totalDeRelatorios]['mediaMembresiaPerformanceClass'], $relatorio[$totalDeRelatorios]['mediaMembresiaPerformance'], 'm0', true, $relatorio[$totalDeRelatorios][$arrayPeriodoDoMes[1] - 1]['membresiaMeta'], $relatorio[$totalDeRelatorios]['mediaMembresia'], '');
+                'Membresia', $relatorio[$totalDeRelatorios]['mediaMembresiaPerformanceClass'], $relatorio[$totalDeRelatorios]['mediaMembresiaPerformance'], 'm0', true, $relatorio[$totalDeRelatorios][-1]['membresiaMeta'], $relatorio[$totalDeRelatorios]['mediaMembresia'], '');
 
         $htmlDadosMembresia = '';
         $class = 'class = "col-lg-3 col-md-3 col-sm-6 col-xs-12"';
@@ -410,9 +410,9 @@ class PrincipalController extends CircuitoController {
         $fraseBarraDeProgressoEquipeCelula = $relatorio[$totalDeRelatorios]['mediaCelulaPerformanceFrase'];
 
         $divBarraDeProgressoPessoalCelula = $barraDeProgressoBonita(
-                'Celula', $relatorio[0]['mediaCelulaPerformanceClass'], $relatorio[0]['mediaCelulaPerformance'], 'm0', true, $relatorio[0][$arrayPeriodoDoMes[1] - 1]['membresiaMeta'], $relatorio[0]['mediaCelula'], '');
+                'Celula', $relatorio[0]['mediaCelulaPerformanceClass'], $relatorio[0]['mediaCelulaPerformance'], 'm0', true, $relatorio[0][-1]['membresiaMeta'], $relatorio[0]['mediaCelula'], '');
         $divBarraDeProgressoEquipeCelula = $barraDeProgressoBonita(
-                'Celula', $relatorio[$totalDeRelatorios]['mediaCelulaPerformanceClass'], $relatorio[$totalDeRelatorios]['mediaCelulaPerformance'], 'm0', true, $relatorio[$totalDeRelatorios][$arrayPeriodoDoMes[1] - 1]['membresiaMeta'], $relatorio[$totalDeRelatorios]['mediaCelula'], '');
+                'Celula', $relatorio[$totalDeRelatorios]['mediaCelulaPerformanceClass'], $relatorio[$totalDeRelatorios]['mediaCelulaPerformance'], 'm0', true, $relatorio[$totalDeRelatorios][-1]['membresiaMeta'], $relatorio[$totalDeRelatorios]['mediaCelula'], '');
 
         $htmlDadosCelula = '';
         $class = 'class = "col-lg-4 col-md-4 col-sm-4 col-xs-12"';
