@@ -352,14 +352,14 @@ class Grupo extends CircuitoEntity {
                 }
             }
         }
-//        if (!$grupoPaiFilhoPaiAtivo) {
-//            foreach ($grupoPaiFilhoPais as $gpp) {
-//                if (!$gpp->verificarSeEstaAtivo()) {
-//                    $grupoPaiFilhoPaiAtivo = $gpp;
-//                    break;
-//                }
-//            }
-//        }
+        if (!$grupoPaiFilhoPaiAtivo) {
+            foreach ($grupoPaiFilhoPais as $gpp) {
+                if (!$gpp->verificarSeEstaAtivo()) {
+                    $grupoPaiFilhoPaiAtivo = $gpp;
+                    break;
+                }
+            }
+        }
         return $grupoPaiFilhoPaiAtivo;
     }
 
@@ -535,7 +535,7 @@ class Grupo extends CircuitoEntity {
                 }
                 $grupoEventos = $grupoSelecionado->getGrupoEventoPorTipoEAtivo(EventoTipo::tipoCulto);
             } else {
-                /* Lider de equipe ou igreja*/
+                /* Lider de equipe ou igreja */
                 $grupoEventos = array();
                 $todosGruposEventos = $grupoSelecionado->getGrupoEventoAtivos();
                 foreach ($todosGruposEventos as $grupoEvento) {
