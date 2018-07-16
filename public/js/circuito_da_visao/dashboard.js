@@ -49,7 +49,7 @@ function buscarDados() {
         setTimeout(() => {
             $('#divProgressBar').css('width', i + '%')
             $('#divProgressBar').html(i + '%')
-        }, (i * 100));
+        }, (i * 200));
     }
 }
 
