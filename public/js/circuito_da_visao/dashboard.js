@@ -1,7 +1,7 @@
 function buscarDados() {
     console.log('Começõu busca de dados')
     console.log('idGrupo: ', $('#idGrupo').val())
-    if ($('#idGrupo').val() !== 1 && $('#idGrupo').val() !== 1225) {
+    if ($('#idGrupo').val() !== '1' && $('#idGrupo').val() !== '1225') {
         console.log('Passou para consultar')
         var antes = Date.now();
         $.post(
