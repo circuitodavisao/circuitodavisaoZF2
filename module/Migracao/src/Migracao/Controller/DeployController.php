@@ -93,7 +93,7 @@ class DeployController extends CircuitoController {
                                 $dados['Entidade-' . $grupoResponsavel->getId() . ' Status'] = $entidade->verificarSeEstaAtivo();
                                 $dados['Entidade-' . $grupoResponsavel->getId()] = $entidade->infoEntidade();
                             }
-                            if ($grupoEventoCelula = $grupoResponsavel->getGrupo()->getGrupoEventoPorTipo(EventoTipo::tipoCelula)) {
+                            if ($grupoEventoCelula = $grupoResponsavel->getGrupo()->getGrupoEventoPorTipoEAtivo(EventoTipo::tipoCelula)) {
                                 foreach ($grupoEventoCelula as $grupoEvento) {
                                     $dados['Celula ' . $grupoEvento->getId() . ' Status'] = $grupoEvento->getEvento()->verificarSeEstaAtivo();
                                     $dados['Celula ' . $grupoEvento->getId() . ' DataCriacao'] = $grupoEvento->getEvento()->getData_criacaoStringPadraoBrasil();
