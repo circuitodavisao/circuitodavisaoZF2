@@ -1,4 +1,6 @@
 function buscarDados() {
+
+    var antes = Date.now();
     $.post(
             "/principalDashboard",
             {},
@@ -36,11 +38,14 @@ function buscarDados() {
                 $('#divBarraDeProgressoEquipeCelula').html(data.divBarraDeProgressoEquipeCelula)
                 $('#divDadosCelula').html(data.divDadosCelula)
                 $('#divDadosProximoNivel').html(data.divDadosProximoNivel)
+
+                var duracao = Date.now() - antes;
+                console.log("Tempo de Processamento", "levou " + duracao + "ms")
             }, 500)
         }
     }
     , 'json');
-    
+
     setTimeout(() => {
         $('#divProgressBar').css('width', '25%')
         $('#divProgressBar').html('25%')
