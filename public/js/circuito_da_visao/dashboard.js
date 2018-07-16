@@ -46,12 +46,18 @@ function buscarDados() {
         $('#divProgressBar').css('width', '50%')
         $('#divProgressBar').html('50%')
     }, 2000);
-    let max = 100
-    for (let i = 51; i < max; i++) {
+    
+    for (let i = 51; i < 85; i++) {
         setTimeout(() => {
             $('#divProgressBar').css('width', i + '%')
             $('#divProgressBar').html(i + '%')
         }, (i * 200));
+    }
+    for (let i = 86; i < 100; i++) {
+        setTimeout(() => {
+            $('#divProgressBar').css('width', i + '%')
+            $('#divProgressBar').html(i + '%')
+        }, (i * 400));
     }
 }
 
