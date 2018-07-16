@@ -57,7 +57,7 @@ function buscarDados() {
         setTimeout(() => {
             $('#divProgressBar').css('width', i + '%')
             $('#divProgressBar').html(i + '%')
-        }, (i * 400));
+        }, (i * 250));
     }
 }
 
