@@ -1,4 +1,6 @@
 function buscarDados() {
+    console.log('Começõu busca de dados')
+    console.log('idGrupo: ', $('#idGrupo').val())
     if ($('#idGrupo').val() !== 1 && $('#idGrupo').val() !== 1225) {
         var antes = Date.now();
         $.post(
@@ -6,6 +8,7 @@ function buscarDados() {
                 {},
                 (data) => {
             if (data.response) {
+                console.log('Achou dados')
                 /* Loader */
                 $('#divProgressBar').css('width', '100%')
                 $('#divProgressBar').html('100%')
