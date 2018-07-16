@@ -1,7 +1,7 @@
 <!-- Begin: Content -->
 <?php if ($this->mostrarPrincipal) { ?>
     <div id="loader" class="text-center mt50">
-        <input id="idGrupo" value="<?php echo $this->entidade->getGrupo()->getId(); ?>" />
+        <input id="idGrupo" type="hidden" value="<?php echo $this->entidade->getGrupo()->getId(); ?>" />
         <h1 class="text-primary">Carregando dashboard</h1>
         <div class="progress mt10">
             <div id="divProgressBar"
