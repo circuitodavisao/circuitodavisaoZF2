@@ -43,6 +43,7 @@ class PrincipalController extends CircuitoController {
 
         $dados = array(
             'mostrarPrincipal' => $mostrarPrincipal,
+            'entidade' => $entidade,
         );
 
         $view = new ViewModel($dados);
