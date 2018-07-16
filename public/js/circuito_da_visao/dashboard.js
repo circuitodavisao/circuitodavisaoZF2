@@ -4,7 +4,9 @@ function buscarDados() {
             {},
             (data) => {
         if (data.response) {
-            $('#dashboardSplash').addClass('hidden')
+            /* Loader */
+            $('#divProgressBar').css('width', '100%')
+            $('#divProgressBar').html('100%')
             $('#loader').addClass('hidden')
             $('#divDados').removeClass('hidden')
             /* Dados principais */
