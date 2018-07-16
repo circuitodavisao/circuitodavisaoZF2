@@ -36,10 +36,11 @@ function buscarDados() {
                 $('#divBarraDeProgressoEquipeCelula').html(data.divBarraDeProgressoEquipeCelula)
                 $('#divDadosCelula').html(data.divDadosCelula)
                 $('#divDadosProximoNivel').html(data.divDadosProximoNivel)
-            }, 1000)
+            }, 500)
         }
     }
     , 'json');
+    
     setTimeout(() => {
         $('#divProgressBar').css('width', '25%')
         $('#divProgressBar').html('25%')
