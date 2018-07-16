@@ -36,6 +36,21 @@ function buscarDados() {
         }
     }
     , 'json');
+    setTimeout(() => {
+        $('#divProgressBar').css('width', '25%')
+        $('#divProgressBar').html('25%')
+    }, 1000);
+    setTimeout(() => {
+        $('#divProgressBar').css('width', '50%')
+        $('#divProgressBar').html('50%')
+    }, 2000);
+    let max = 100
+    for (let i = 51; i < max; i++) {
+        setTimeout(() => {
+            $('#divProgressBar').css('width', i + '%')
+            $('#divProgressBar').html(i + '%')
+        }, (i * 100));
+    }
 }
 
 document.addEventListener('DOMContentLoad', buscarDados(), false)
