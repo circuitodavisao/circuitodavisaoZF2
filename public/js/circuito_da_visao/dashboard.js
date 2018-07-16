@@ -9,7 +9,7 @@ function buscarDados() {
                 {},
                 (data) => {
             if (data.response) {
-                console.log('Achou dados')
+                console.log('Achou dados', data)
                 /* Loader */
                 $('#divProgressBar').css('width', '100%')
                 $('#divProgressBar').html('100%')

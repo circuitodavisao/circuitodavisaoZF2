@@ -68,7 +68,7 @@ class PrincipalController extends CircuitoController {
     const CLASSE_STRING = 'classeString';
     const CLASSE_STRING_MOSTRAGEM = 'classeStringMostragem';
 
-    public function dashboardAction($param) {
+    public function dashboardAction() {
         $sessao = new Container(Constantes::$NOME_APLICACAO);
         $response = $this->getResponse();
 
