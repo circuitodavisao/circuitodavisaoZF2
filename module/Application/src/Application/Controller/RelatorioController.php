@@ -86,6 +86,155 @@ class RelatorioController extends CircuitoController {
         return $view;
     }
 
+    public function lideresAction() {
+        opcache_reset();
+        $html = '';
+        $sessao = new Container(Constantes::$NOME_APLICACAO);
+        $idEntidadeAtual = $sessao->idEntidadeAtual;
+        $entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+        $grupo = $entidade->getGrupo();
+        $arrayPeriodoDoMes = Funcoes::encontrarPeriodoDeUmMesPorMesEAno(date('m'), date('Y'));
+
+        $todosFilhos = array();
+        for ($indiceDeArrays = $arrayPeriodoDoMes[0]; $indiceDeArrays <= $arrayPeriodoDoMes[1]; $indiceDeArrays++) {
+            $grupoPaiFilhoFilhos = $grupo->getGrupoPaiFilhoFilhosAtivos($indiceDeArrays);
+            if ($grupoPaiFilhoFilhos) {
+                foreach ($grupoPaiFilhoFilhos as $grupoPaiFilhoFilho) {
+                    $adicionar = true;
+                    if (count($todosFilhos) > 0) {
+                        foreach ($todosFilhos as $filho) {
+                            if ($filho->getId() === $grupoPaiFilhoFilho->getId()) {
+                                $adicionar = false;
+                                break;
+                            }
+                        }
+                    }
+                    if ($adicionar) {
+                        $todosFilhos[] = $grupoPaiFilhoFilho;
+                    }
+                }
+            }
+        }
+
+
+        $html .= '<table class="table table-condensed table-hover bg-light mt15">';
+        $html .= '<thead>';
+        $html .= '<tr>';
+        $html .= '<th colspan="2">Times</th>';
+        $html .= '<th>Data Criação</th>';
+        $html .= '<th>Quantidade</th>';
+        $html .= '<th>Data Inativação</th>';
+        $html .= '</tr>';
+        $html .= '</thead>';
+        $html .= '<tbody>';
+        foreach ($todosFilhos as $filho) {
+            $html .= self::linhaTabelaFatoLider($filho, $this->getRepositorio(), 1);
+            if ($todosLideres1 = self::todosLideresAbaixoNoPeriodo($filho, $arrayPeriodoDoMes)) {
+                foreach ($todosLideres1 as $filho1) {
+                    $html .= self::linhaTabelaFatoLider($filho1, $this->getRepositorio(), 2);
+                    if ($todosLideres2 = self::todosLideresAbaixoNoPeriodo($filho1, $arrayPeriodoDoMes)) {
+                        foreach ($todosLideres2 as $filho2) {
+                            $html .= self::linhaTabelaFatoLider($filho2, $this->getRepositorio(), 3);
+                            if ($todosLideres3 = self::todosLideresAbaixoNoPeriodo($filho2, $arrayPeriodoDoMes)) {
+                                foreach ($todosLideres3 as $filho3) {
+                                    $html .= self::linhaTabelaFatoLider($filho3, $this->getRepositorio(), 4);
+                                    if ($todosLideres4 = self::todosLideresAbaixoNoPeriodo($filho3, $arrayPeriodoDoMes)) {
+                                        foreach ($todosLideres4 as $filho4) {
+                                            $html .= self::linhaTabelaFatoLider($filho4, $this->getRepositorio(), 5);
+                                            if ($todosLideres5 = self::todosLideresAbaixoNoPeriodo($filho4, $arrayPeriodoDoMes)) {
+                                                foreach ($todosLideres5 as $filho5) {
+                                                    $html .= self::linhaTabelaFatoLider($filho5, $this->getRepositorio(), 6);
+                                                    if ($todosLideres6 = self::todosLideresAbaixoNoPeriodo($filho5, $arrayPeriodoDoMes)) {
+                                                        foreach ($todosLideres6 as $filho6) {
+                                                            $html .= self::linhaTabelaFatoLider($filho6, $this->getRepositorio(), 7);
+                                                            if ($todosLideres7 = self::todosLideresAbaixoNoPeriodo($filho6, $arrayPeriodoDoMes)) {
+                                                                foreach ($todosLideres7 as $filho7) {
+                                                                    $html .= self::linhaTabelaFatoLider($filho7, $this->getRepositorio(), 8);
+                                                                    if ($todosLideres8 = self::todosLideresAbaixoNoPeriodo($filho7, $arrayPeriodoDoMes)) {
+                                                                        foreach ($todosLideres8 as $filho8) {
+                                                                            $html .= self::linhaTabelaFatoLider($filho8, $this->getRepositorio(), 9);
+                                                                            if ($todosLideres9 = self::todosLideresAbaixoNoPeriodo($filho8, $arrayPeriodoDoMes)) {
+                                                                                foreach ($todosLideres9 as $filho9) {
+                                                                                    $html .= self::linhaTabelaFatoLider($filho9, $this->getRepositorio(), 10);
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        $html .= '</tbody>';
+        $html .= '</table>';
+        return new ViewModel(array('html' => $html));
+    }
+
+    static function todosLideresAbaixoNoPeriodo($filho, $arrayPeriodoDoMes) {
+        $grupo = $filho->getGrupoPaiFilhoFilho();
+        $todosFilhos = array();
+        for ($indiceDeArrays = $arrayPeriodoDoMes[0]; $indiceDeArrays <= $arrayPeriodoDoMes[1]; $indiceDeArrays++) {
+            $grupoPaiFilhoFilhos = $grupo->getGrupoPaiFilhoFilhosAtivos($indiceDeArrays);
+            if ($grupoPaiFilhoFilhos) {
+                foreach ($grupoPaiFilhoFilhos as $grupoPaiFilhoFilho) {
+                    $adicionar = true;
+                    if (count($todosFilhos) > 0) {
+                        foreach ($todosFilhos as $filho) {
+                            if ($filho->getId() === $grupoPaiFilhoFilho->getId()) {
+                                $adicionar = false;
+                                break;
+                            }
+                        }
+                    }
+                    if ($adicionar) {
+                        $todosFilhos[] = $grupoPaiFilhoFilho;
+                    }
+                }
+            }
+        }
+
+        return $todosFilhos;
+    }
+
+    static function linhaTabelaFatoLider($filho, $repositorio, $tabulacao = 0) {
+        $html = '';
+        $grupoFilho = $filho->getGrupoPaiFilhoFilho();
+        $dataInativacao = null;
+        if ($filho->getData_inativacao()) {
+            $dataInativacao = $filho->getData_inativacaoStringPadraoBanco();
+        }
+        $numeroIdentificadorFilho = $repositorio->getFatoCicloORM()->montarNumeroIdentificador($repositorio, $grupoFilho, $dataInativacao);
+        $fatoLideres = $repositorio->getFatoLiderORM()->encontrarVariosFatoLiderPorNumeroIdentificador($numeroIdentificadorFilho);
+
+        $html .= '<tr>';
+        $html .= '<td>';
+        if ($tabulacao) {
+            for ($i = 1; $i <= $tabulacao; $i++) {
+                $html .= '|----';
+            }
+        }
+        $html .= $grupoFilho->getEntidadeAtiva()->infoEntidade() . '</td>';
+        $html .= '<td>' . $grupoFilho->getNomeLideresAtivos() . '</td>';
+        foreach ($fatoLideres as $fatoLider) {
+            $html .= '<td>' . $fatoLider->getData_criacaoStringPadraoBrasil() . '</td>';
+            $html .= '<td>' . $fatoLider->getLideres() . '</td>';
+            $html .= '<td>' . ($fatoLider->getData_inativacao() ? $fatoLider->getData_inativacaoStringPadraoBrasil() : 'Null') . '</td>';
+        }
+        $html .= '</tr>';
+
+        return $html;
+    }
+
     public function pessoasFrequentesAction() {
         $sessao = new Container(Constantes::$NOME_APLICACAO);
         $html = '';
@@ -622,11 +771,14 @@ class RelatorioController extends CircuitoController {
         return $relatorio;
     }
 
-    public static function totalLideres($repositorioORM, $periodo, $grupo) {
+    public static function totalLideres($repositorioORM, $periodo, $grupo, $mostrarDados = false) {
         $tipoRelatorio = 1; //pessoal
         $somaTotal = 0;
         $numeroIdentificador = $repositorioORM->getFatoCicloORM()->montarNumeroIdentificador($repositorioORM, $grupo);
         $fatoLider = $repositorioORM->getFatoLiderORM()->encontrarPorNumeroIdentificador($numeroIdentificador, $tipoRelatorio, $periodo);
+        if ($mostrarDados) {
+            Funcoes::var_dump($fatoLider);
+        }
         $somaTotal += $fatoLider[0]['lideres'];
 
         $filhos1 = $grupo->getGrupoPaiFilhoFilhosAtivos($periodo);
@@ -635,6 +787,9 @@ class RelatorioController extends CircuitoController {
                 $grupo1 = $grupoPaiFilho1->getGrupoPaiFilhoFilho();
                 $numeroIdentificador1 = $repositorioORM->getFatoCicloORM()->montarNumeroIdentificador($repositorioORM, $grupo1);
                 $fatoLider = $repositorioORM->getFatoLiderORM()->encontrarPorNumeroIdentificador($numeroIdentificador1, $tipoRelatorio, $periodo);
+                if ($mostrarDados) {
+                    Funcoes::var_dump($fatoLider);
+                }
                 $somaTotal += $fatoLider[0]['lideres'];
                 $filhos2 = $grupo1->getGrupoPaiFilhoFilhosAtivos($periodo);
                 if ($filhos2) {
@@ -642,6 +797,9 @@ class RelatorioController extends CircuitoController {
                         $grupo2 = $grupoPaiFilhoFilho2->getGrupoPaiFilhoFilho();
                         $numeroIdentificador2 = $repositorioORM->getFatoCicloORM()->montarNumeroIdentificador($repositorioORM, $grupo2);
                         $fatoLider = $repositorioORM->getFatoLiderORM()->encontrarPorNumeroIdentificador($numeroIdentificador2, $tipoRelatorio, $periodo);
+                        if ($mostrarDados) {
+                            Funcoes::var_dump($fatoLider);
+                        }
                         $somaTotal += $fatoLider[0]['lideres'];
                         $filhos3 = $grupo2->getGrupoPaiFilhoFilhosAtivos($periodo);
                         if ($filhos3) {
@@ -649,6 +807,9 @@ class RelatorioController extends CircuitoController {
                                 $grupo3 = $grupoPaiFilhoFilho3->getGrupoPaiFilhoFilho();
                                 $numeroIdentificador3 = $repositorioORM->getFatoCicloORM()->montarNumeroIdentificador($repositorioORM, $grupo3);
                                 $fatoLider = $repositorioORM->getFatoLiderORM()->encontrarPorNumeroIdentificador($numeroIdentificador3, $tipoRelatorio, $periodo);
+                                if ($mostrarDados) {
+                                    Funcoes::var_dump($fatoLider);
+                                }
                                 $somaTotal += $fatoLider[0]['lideres'];
                                 $filhos4 = $grupo3->getGrupoPaiFilhoFilhosAtivos($periodo);
                                 if ($filhos4) {
@@ -656,6 +817,9 @@ class RelatorioController extends CircuitoController {
                                         $grupo4 = $grupoPaiFilhoFilho4->getGrupoPaiFilhoFilho();
                                         $numeroIdentificador4 = $repositorioORM->getFatoCicloORM()->montarNumeroIdentificador($repositorioORM, $grupo4);
                                         $fatoLider = $repositorioORM->getFatoLiderORM()->encontrarPorNumeroIdentificador($numeroIdentificador4, $tipoRelatorio, $periodo);
+                                        if ($mostrarDados) {
+                                            Funcoes::var_dump($fatoLider);
+                                        }
                                         $somaTotal += $fatoLider[0]['lideres'];
                                         $filhos5 = $grupo4->getGrupoPaiFilhoFilhosAtivos($periodo);
                                         if ($filhos5) {
@@ -663,6 +827,9 @@ class RelatorioController extends CircuitoController {
                                                 $grupo5 = $grupoPaiFilhoFilho5->getGrupoPaiFilhoFilho();
                                                 $numeroIdentificador5 = $repositorioORM->getFatoCicloORM()->montarNumeroIdentificador($repositorioORM, $grupo5);
                                                 $fatoLider = $repositorioORM->getFatoLiderORM()->encontrarPorNumeroIdentificador($numeroIdentificador5, $tipoRelatorio, $periodo);
+                                                if ($mostrarDados) {
+                                                    Funcoes::var_dump($fatoLider);
+                                                }
                                                 $somaTotal += $fatoLider[0]['lideres'];
                                                 $filhos6 = $grupo5->getGrupoPaiFilhoFilhosAtivos($periodo);
                                                 if ($filhos6) {
@@ -670,6 +837,9 @@ class RelatorioController extends CircuitoController {
                                                         $grupo6 = $grupoPaiFilhoFilho6->getGrupoPaiFilhoFilho();
                                                         $numeroIdentificador6 = $repositorioORM->getFatoCicloORM()->montarNumeroIdentificador($repositorioORM, $grupo6);
                                                         $fatoLider = $repositorioORM->getFatoLiderORM()->encontrarPorNumeroIdentificador($numeroIdentificador6, $tipoRelatorio, $periodo);
+                                                        if ($mostrarDados) {
+                                                            Funcoes::var_dump($fatoLider);
+                                                        }
                                                         $somaTotal += $fatoLider[0]['lideres'];
                                                         $filhos7 = $grupo6->getGrupoPaiFilhoFilhosAtivos($periodo);
                                                         if ($filhos7) {
@@ -677,6 +847,9 @@ class RelatorioController extends CircuitoController {
                                                                 $grupo7 = $grupoPaiFilhoFilho7->getGrupoPaiFilhoFilho();
                                                                 $numeroIdentificador7 = $repositorioORM->getFatoCicloORM()->montarNumeroIdentificador($repositorioORM, $grupo7);
                                                                 $fatoLider = $repositorioORM->getFatoLiderORM()->encontrarPorNumeroIdentificador($numeroIdentificador7, $tipoRelatorio, $periodo);
+                                                                if ($mostrarDados) {
+                                                                    Funcoes::var_dump($fatoLider);
+                                                                }
                                                                 $somaTotal += $fatoLider[0]['lideres'];
                                                                 $filhos8 = $grupo7->getGrupoPaiFilhoFilhosAtivos($periodo);
                                                                 if ($filhos8) {
@@ -684,6 +857,9 @@ class RelatorioController extends CircuitoController {
                                                                         $grupo8 = $grupoPaiFilhoFilho8->getGrupoPaiFilhoFilho();
                                                                         $numeroIdentificador8 = $repositorioORM->getFatoCicloORM()->montarNumeroIdentificador($repositorioORM, $grupo8);
                                                                         $fatoLider = $repositorioORM->getFatoLiderORM()->encontrarPorNumeroIdentificador($numeroIdentificador8, $tipoRelatorio, $periodo);
+                                                                        if ($mostrarDados) {
+                                                                            Funcoes::var_dump($fatoLider);
+                                                                        }
                                                                         $somaTotal += $fatoLider[0]['lideres'];
                                                                         $filhos9 = $grupo8->getGrupoPaiFilhoFilhosAtivos($periodo);
                                                                         if ($filhos9) {
@@ -691,6 +867,9 @@ class RelatorioController extends CircuitoController {
                                                                                 $grupo9 = $grupoPaiFilhoFilho9->getGrupoPaiFilhoFilho();
                                                                                 $numeroIdentificador9 = $repositorioORM->getFatoCicloORM()->montarNumeroIdentificador($repositorioORM, $grupo9);
                                                                                 $fatoLider = $repositorioORM->getFatoLiderORM()->encontrarPorNumeroIdentificador($numeroIdentificador9, $tipoRelatorio, $periodo);
+                                                                                if ($mostrarDados) {
+                                                                                    Funcoes::var_dump($fatoLider);
+                                                                                }
                                                                                 $somaTotal += $fatoLider[0]['lideres'];
                                                                                 $filhos10 = $grupo8->getGrupoPaiFilhoFilhosAtivos($periodo);
                                                                                 if ($filhos10) {
@@ -698,6 +877,9 @@ class RelatorioController extends CircuitoController {
                                                                                         $grupo10 = $grupoPaiFilhoFilho10->getGrupoPaiFilhoFilho();
                                                                                         $numeroIdentificador10 = $repositorioORM->getFatoCicloORM()->montarNumeroIdentificador($repositorioORM, $grupo10);
                                                                                         $fatoLider = $repositorioORM->getFatoLiderORM()->encontrarPorNumeroIdentificador($numeroIdentificador10, $tipoRelatorio, $periodo);
+                                                                                        if ($mostrarDados) {
+                                                                                            Funcoes::var_dump($fatoLider);
+                                                                                        }
                                                                                         $somaTotal += $fatoLider[0]['lideres'];
                                                                                     }
                                                                                 }
