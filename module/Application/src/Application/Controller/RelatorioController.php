@@ -389,9 +389,6 @@ class RelatorioController extends CircuitoController {
                 }
                 $numeroIdentificadorFilho = $repositorio->getFatoCicloORM()->montarNumeroIdentificador($repositorio, $grupoFilho, $dataInativacao);
                 $relatorioDiscipulos[$grupoFilho->getId()][$indiceDeArrays] = RelatorioController::montaRelatorio($repositorio, $numeroIdentificadorFilho, $indiceDeArrays, $tipoRelatorioSomado, false, $tipoRelatorio);
-//                $lideres = RelatorioController::totalLideres($repositorio, $indiceDeArrays, $grupoFilho);
-//                $relatorioDiscipulos[$grupoFilho->getId()][$indiceDeArrays]['quantidadeLideres'] = $lideres;
-//                $relatorioDiscipulos[$grupoFilho->getId()][$indiceDeArrays]['membresiaMeta'] = $relatorioDiscipulos[$grupoFilho->getId()][$indiceDeArrays]['quantidadeLideres'] * Constantes::$META_LIDER;
                 if ($tipoRelatorio === RelatorioController::relatorioMembresia ||
                         $tipoRelatorio === RelatorioController::relatorioMembresiaECelula) {
                     if ($relatorioDiscipulos[$grupoFilho->getId()][$indiceDeArrays]['membresiaMeta'] > 0 && $relatorioDiscipulos[$grupoFilho->getId()][$indiceDeArrays]['membresiaMeta'] > 0) {
@@ -729,11 +726,9 @@ class RelatorioController extends CircuitoController {
 
     public static function montaRelatorio($repositorioORM, $numeroIdentificador, $periodoInicial, $tipoRelatorio, $inativo = false, $qualRelatorio = 1) {
         unset($relatorio);
-//        if ($tipoRelatorio === self::tipoPessoa) {
         $fatoLider = $repositorioORM->getFatoLiderORM()->encontrarPorNumeroIdentificador($numeroIdentificador, $tipoRelatorio, $periodoInicial, $inativo);
         $quantidadeLideres = $fatoLider[0]['lideres'];
         $relatorio['quantidadeLideres'] = $quantidadeLideres;
-//        }
         $relatorioLancamento = $repositorioORM->getFatoCicloORM()->montarRelatorioPorNumeroIdentificador($numeroIdentificador, $periodoInicial, $tipoRelatorio);
         foreach ($relatorioLancamento as $key => $value) {
             $soma[$key] = 0;
