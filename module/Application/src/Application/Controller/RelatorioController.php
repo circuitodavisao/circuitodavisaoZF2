@@ -230,6 +230,13 @@ class RelatorioController extends CircuitoController {
             $html .= '<td>' . $fatoLider->getLideres() . '</td>';
             $html .= '<td>' . ($fatoLider->getData_inativacao() ? $fatoLider->getData_inativacaoStringPadraoBrasil() : 'Null') . '</td>';
         }
+        if ($celulas = $grupoFilho->getGrupoEventoPorTipoEAtivo(EventoTipo::tipoCelula, 1)) {
+            $html .= '<td>';
+            foreach ($celulas as $celula) {
+                $html .= '- Celula ' . $celula->getData_criacaoStringPadraoBrasil();
+            }
+            $html .= '</td>';
+        }
         $html .= '</tr>';
 
         return $html;
