@@ -372,7 +372,7 @@ class RelatorioController extends CircuitoController {
             if ($tipoRelatorio === RelatorioController::relatorioCelulasDeElite ||
                     $tipoRelatorio === RelatorioController::relatorioMembresiaECelula) {
                 $dadosCelulasDeElite = RelatorioController::saberQuaisDasMinhasCelulasSaoDeElitePorPeriodo($repositorio, $grupo, $indiceDeArrays);
-                $meta = 1;
+                $meta = $relatorio[self::dadosPessoais][$indiceDeArrays]['celulaQuantidade'];
                 if ($relatorio[self::dadosPessoais][$indiceDeArrays]['celulaQuantidade'] > 2) {
                     $meta = number_format($relatorio[self::dadosPessoais][$indiceDeArrays]['celulaQuantidade'] / 2);
                 }
@@ -598,8 +598,7 @@ class RelatorioController extends CircuitoController {
             }
             if ($tipoRelatorio === RelatorioController::relatorioCelulasDeElite ||
                     $tipoRelatorio === RelatorioController::relatorioMembresiaECelula) {
-                $relatorio[$contadorFilhos][$indiceDeArrays]['celulaDeElitePerformance'] = 
-                        $relatorio[$contadorFilhos][$indiceDeArrays]['celulaDeElite'] / $relatorio[$contadorFilhos][$indiceDeArrays]['celulaDeEliteMeta'] * 100;
+                $relatorio[$contadorFilhos][$indiceDeArrays]['celulaDeElitePerformance'] = $relatorio[$contadorFilhos][$indiceDeArrays]['celulaDeElite'] / $relatorio[$contadorFilhos][$indiceDeArrays]['celulaDeEliteMeta'] * 100;
                 $somaFinal['celulaDeElitePerformance'] += $relatorio[$contadorFilhos][$indiceDeArrays]['celulaDeElitePerformance'];
             }
         }
