@@ -226,7 +226,7 @@ class RelatorioController extends CircuitoController {
         $html .= $grupoFilho->getEntidadeAtiva()->infoEntidade() . '</td>';
         $html .= '<td>' . $grupoFilho->getNomeLideresAtivos() . '</td>';
         foreach ($fatoLideres as $fatoLider) {
-            $html .= '<td>' . $fatoLider->getData_criacaoStringPadraoBrasil() . '</td>';
+            $html .= '<td>id: ' . $fatoLider->getId() . ' - ' . $fatoLider->getData_criacaoStringPadraoBrasil() . '</td>';
             $html .= '<td>' . $fatoLider->getLideres() . '</td>';
             $html .= '<td>' . ($fatoLider->getData_inativacao() ? $fatoLider->getData_inativacaoStringPadraoBrasil() : 'Null') . '</td>';
         }
