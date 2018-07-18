@@ -1,15 +1,11 @@
 function buscarDados() {
-    console.log('Começõu busca de dados')
-    console.log('idGrupo: ', $('#idGrupo').val())
     if ($('#idGrupo').val() !== '1' && $('#idGrupo').val() !== '1225') {
-        console.log('Passou para consultar')
         var antes = Date.now();
         $.post(
                 "/principalDashboard",
                 {},
                 (data) => {
             if (data.response) {
-                console.log('Achou dados', data)
                 /* Loader */
                 $('#divProgressBar').css('width', '100%')
                 $('#divProgressBar').html('100%')
