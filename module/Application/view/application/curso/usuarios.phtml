@@ -35,7 +35,7 @@ if (count($this->usuarios)) {
 
         $html .= '<tr>';
         $html .= '<td>' . $usuario->getId() . '</td>';
-        $html .= '<td>' . $usuario->getData_criacaoStringPadraoBrasil . '</td>';
+        $html .= '<td>' . $usuario->getData_criacaoStringPadraoBrasil() . '</td>';
         $html .= '<td>' . $usuario->getPessoa()->getNome() . '</td>';
         $html .= '<td>' . $usuario->getCursoAcesso()->getNome() . '</td>';
         $html .= '<td><p class="text-' . $labelAtivo . '</p></td>';
