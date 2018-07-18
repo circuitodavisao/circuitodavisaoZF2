@@ -1040,7 +1040,7 @@ class RelatorioController extends CircuitoController {
     public static function corDaLinhaPelaPerformance($valor, $tipo = 1) {
         $class = 'dark';
         if ($valor >= RelatorioController::MARGEM_A) {
-            $class = 'info';
+            $class = 'success';
             if ($tipo === 2) {
                 $class = 'Excelente! você está entre os melhores!';
             }
