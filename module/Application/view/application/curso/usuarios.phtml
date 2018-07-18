@@ -13,6 +13,7 @@ if (count($this->usuarios)) {
     $html .= '<thead>';
     $html .= '<tr>';
     $html .= '<th class="text-center">Id</th>';
+    $html .= '<th class="text-center">Criação</th>';
     $html .= '<th class="text-center">Pessoa</th>';
     $html .= '<th class="text-center">Acesso</th>';
     $html .= '<th class="text-center">Ativo</th>';
@@ -34,6 +35,7 @@ if (count($this->usuarios)) {
 
         $html .= '<tr>';
         $html .= '<td>' . $usuario->getId() . '</td>';
+        $html .= '<td>' . $usuario->getData_criacaoStringPadraoBrasil . '</td>';
         $html .= '<td>' . $usuario->getPessoa()->getNome() . '</td>';
         $html .= '<td>' . $usuario->getCursoAcesso()->getNome() . '</td>';
         $html .= '<td><p class="text-' . $labelAtivo . '</p></td>';
