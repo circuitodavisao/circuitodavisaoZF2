@@ -126,6 +126,7 @@ class LoginController extends CircuitoController {
      * POST /logar
      */
     public function logarAction() {
+        opcache_reset();
         $data = $this->getRequest()->getPost();
 
         /* Post sem email */
@@ -145,16 +146,13 @@ class LoginController extends CircuitoController {
             $identity = $authenticationResult->getIdentity();
             $this->getDoctrineAuthenticationServicer()->getStorage()->write($identity);
 
-            /* Helper Controller */
-
-
             /* Verificar se existe pessoa por email informado */
             $pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorEmail($usuarioTrim);
 
             /* Tem responsabilidade(s) */
+            $sessao = new Container(Constantes::$NOME_APLICACAO);
             if (count($pessoa->getResponsabilidadesAtivas()) > 0) {
                 /* Registro de sessão */
-                $sessao = new Container(Constantes::$NOME_APLICACAO);
                 $sessao->idPessoa = $pessoa->getId();
                 /* Não precisa atualizar dados */
                 if ($pessoa->getAtualizar_dados() === 'N') {
@@ -169,6 +167,17 @@ class LoginController extends CircuitoController {
                     ));
                 }
             } else {
+                if ($pessoa->getEvento_id() !== null) {
+                    $evento = $this->getRepositorio()->getEventoORM()->encontrarPorId($pessoa->getEvento_id());
+                    $idEntidade = $evento->getGrupoEventoAtivo()->getGrupo()->getEntidadeAtiva()->getId();
+                    $sessao->idPessoa = $pessoa->getId();
+                    $sessao->idEntidadeAtual = $idEntidade;
+                    $sessao->naoMostrarMenu = 1;
+                    return $this->redirect()->toRoute(Constantes::$ROUTE_CADASTRO, array(
+                                Constantes::$PAGINA => Constantes::$PAGINA_ATIVAR_FICHAS,
+                    ));
+                }
+
                 /* Login sem responsabilidade(s) */
                 return $this->forward()->dispatch(Constantes::$CONTROLLER_LOGIN, array(
                             Constantes::$ACTION => Constantes::$ACTION_INDEX,

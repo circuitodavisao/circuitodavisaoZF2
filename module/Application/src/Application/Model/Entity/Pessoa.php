@@ -126,6 +126,9 @@ class Pessoa extends CircuitoEntity implements InputFilterAwareInterface {
     /** @ORM\Column(type="string") */
     protected $atualizar_dados;
 
+    /** @ORM\Column(type="integer") */
+    protected $evento_id;
+
     public function exchangeArray($data) {
         $this->nome = (!empty($data['nome']) ? strtoupper($data['nome']) : null);
     }
@@ -139,6 +142,14 @@ class Pessoa extends CircuitoEntity implements InputFilterAwareInterface {
     protected $matriculaAtual;
     protected $entidade;
     protected $noRevisao;
+
+    function getEvento_id() {
+        return $this->evento_id;
+    }
+
+    function setEvento_id($evento_id) {
+        $this->evento_id = $evento_id;
+    }
 
     function getNoRevisao() {
         return $this->noRevisao;
