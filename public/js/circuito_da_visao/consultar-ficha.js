@@ -52,7 +52,7 @@ function consultarFicha() {
                     }
                     
                     botao.html('');
-                    botao.html('Enable');
+                    botao.html('Confirmar');
                     
                 }
             }, 'json');
