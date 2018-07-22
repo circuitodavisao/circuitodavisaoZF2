@@ -23,6 +23,7 @@ use Application\Model\Entity\Grupo;
 use Application\Model\Entity\GrupoEvento;
 use Application\Model\Entity\GrupoPaiFilho;
 use Application\Model\Entity\GrupoPessoa;
+use Application\Model\Entity\GrupoPessoaTipo;
 use Application\Model\Entity\GrupoResponsavel;
 use Application\Model\Entity\Pessoa;
 use Application\Model\Entity\PessoaHierarquia;
@@ -33,7 +34,6 @@ use Application\Model\Entity\SolicitacaoTipo;
 use Application\Model\ORM\RepositorioORM;
 use DateTime;
 use Exception;
-use Migracao\Controller\IndexController;
 use Zend\Json\Json;
 use Zend\Session\Container;
 use Zend\View\Model\ViewModel;
@@ -1812,57 +1812,11 @@ class CadastroController extends CircuitoController {
                 $eventoFrequencia = $this->getRepositorio()->getEventoFrequenciaORM()->encontrarPorIdEventoFrequencia($idEventoFrequencia);
                 if ($eventoFrequencia->getFrequencia() == 'N') {
                     $pessoaRevisionista = $eventoFrequencia->getPessoa();
-                    /* Membro = idTipo 3 */
-                    $grupoPessoaRevisionista = $this->alterarGrupoPessoaTipo(3, $this->getRepositorio(), $pessoaRevisionista);
+                    $this->alterarGrupoPessoaTipo(GrupoPessoaTipo::MEMBRO, $this->getRepositorio(), $pessoaRevisionista);
 
                     /* Ativando a presença do Revisionista  */
                     $eventoFrequencia->setFrequencia('S');
                     $this->getRepositorio()->getEventoFrequenciaORM()->persistir($eventoFrequencia, false);
-
-                    /* Migração Sitema Antigo */
-                    $grupoLider = $grupoPessoaRevisionista->getGrupo();
-                    $grupoResponsavel = $grupoLider->getResponsabilidadesAtivas();
-                    $numeroLideres = count($grupoResponsavel);
-
-                    $idEquipe = 0;
-                    switch ($grupoLider->getGrupoEquipe()->getId()) {
-                        case 2:
-                            $idEquipe = 1;
-                            break;
-                        case 216:
-                            $idEquipe = 24;
-                            break;
-                        case 347:
-                            $idEquipe = 3749;
-                            break;
-                    }
-
-                    $idLider1 = 0;
-                    $idLider2 = 0;
-
-                    if ($grupoLider->getGrupoCv()) {
-                        $grupoCv = $grupoLider->getGrupoCv();
-                    } else {
-                        $grupoCv = $grupoLider->getGrupoEquipe()->getGrupoCv();
-                    }
-                    if ($numeroLideres > 1) {
-                        $idLider1 = $grupoCv->getLider1();
-                        $idLider2 = $grupoCv->getLider2();
-                    } else {
-                        $idLider1 = $grupoCv->getLider1();
-                    }
-
-                    if ($numeroLideres > 1) {
-                        $idAluno = IndexController::cadastrarPessoaRevisionista(
-                                        $idEquipe, $pessoaRevisionista->getNome(), substr('' . $pessoaRevisionista->getTelefone() . '', 0, 2), substr('' . $pessoaRevisionista->getTelefone() . '', 2, strlen('' . $pessoaRevisionista->getTelefone() . '')), $pessoaRevisionista->getSexo(), $pessoaRevisionista->getData_nascimento(), $idLider1, $idLider2);
-                    } else {
-                        $idAluno = IndexController::cadastrarPessoaRevisionista(
-                                        $idEquipe, $pessoaRevisionista->getNome(), substr('' . $pessoaRevisionista->getTelefone() . '', 0, 2), substr('' . $pessoaRevisionista->getTelefone() . '', 2, strlen('' . $pessoaRevisionista->getTelefone() . '')), $pessoaRevisionista->getSexo(), $pessoaRevisionista->getData_nascimento(), $idLider1);
-                    }
-
-                    $idRevisaoCVAntigo = 8902;
-                    $idSituacao = 1;
-                    IndexController::cadastrarPessoaAluno($idAluno, $idRevisaoCVAntigo, 'A', $idSituacao);
 
                     /* Fim da migração do Sistema Antigo */
                     $this->getRepositorio()->fecharTransacao();
