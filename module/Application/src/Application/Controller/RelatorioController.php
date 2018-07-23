@@ -87,7 +87,6 @@ class RelatorioController extends CircuitoController {
     }
 
     public function lideresAction() {
-        opcache_reset();
         $html = '';
         $sessao = new Container(Constantes::$NOME_APLICACAO);
         $idEntidadeAtual = $sessao->idEntidadeAtual;
