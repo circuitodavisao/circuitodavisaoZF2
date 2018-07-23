@@ -11,10 +11,8 @@ use Application\Form\RecuperarSenhaForm;
 use Application\Model\Entity\Entidade;
 use Application\Model\Entity\EntidadeTipo;
 use Application\Model\Entity\EventoTipo;
-use Application\Model\Entity\Hierarquia;
 use Application\Model\Entity\PessoaHierarquia;
-use Application\Model\Helper\FuncoesEntidade;
-use Application\View\Helper\BotaoSimples;
+use Application\Model\Entity\Situacao;
 use Exception;
 use Zend\Json\Json;
 use Zend\Session\Container;
@@ -36,15 +34,63 @@ class PrincipalController extends CircuitoController {
 
         $idEntidadeAtual = $sessao->idEntidadeAtual;
         $entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+        $pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($sessao->idPessoa);
+        $grupo = $entidade->getGrupo();
+
+        $eCasal = $grupo->verificaSeECasal();
+        $arrayPeriodoDoMes = Funcoes::encontrarPeriodoDeUmMesPorMesEAno(date('m'), date('Y'));
+        $relatorio = RelatorioController::relatorioCompleto($this->getRepositorio(), $grupo, RelatorioController::relatorioMembresiaECelula, date('m'), date('Y'));
+
+        $mesAnterior = date('m') - 1;
+        $anoAnterior = date('Y');
+        if (date('m') == 1) {
+            $mesAnterior = 12;
+            $anoAnterior = date('Y') - 1;
+        }
+        $relatorioAnterior = RelatorioController::relatorioCompleto($this->getRepositorio(), $grupo, RelatorioController::relatorioMembresiaECelula, $mesAnterior, $anoAnterior);
+
         $mostrarPrincipal = true;
         if (!$entidade->verificarSeEstaAtivo()) {
             $mostrarPrincipal = false;
         }
 
+        if ($grupo->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::igreja) {
+            $turmas = $grupo->getTurma();
+        } else {
+            $turmas = $grupo->getGrupoIgreja()->getTurma();
+        }
+//        $alunosComFaltas = CursoController::pegarAlunosComFaltas($grupo, $turmas);
+
+        $hierarquias = $this->getRepositorio()->getHierarquiaORM()->encontrarTodas();
+
         $dados = array(
+            'relatorio' => $relatorio,
+            'relatorioAnterior' => $relatorioAnterior,
+            'periodoInicial' => $arrayPeriodoDoMes[0],
+            'periodoFinal' => $arrayPeriodoDoMes[1],
             'mostrarPrincipal' => $mostrarPrincipal,
-            'entidade' => $entidade,
+            'eCasal' => $eCasal,
+            'grupo' => $grupo,
+            'hierarquias' => $hierarquias,
+            'repositorio' => $this->getRepositorio(),
+            'pessoa' => $pessoa,
+//            'alunosComFaltas' => $alunosComFaltas,
+            'turmas' => $turmas,
         );
+
+        $tipoRelatorioPessoal = 1;
+        $periodo = -1;
+
+        $relatorioCelulas = array();
+        $relatorioCelulas[$grupo->getId()] = RelatorioController::saberQuaisDasMinhasCelulasSaoDeElitePorPeriodo($this->getRepositorio(), $grupo, $periodo);
+        $grupoPaiFilhoFilhos = $grupo->getGrupoPaiFilhoFilhosAtivos($periodo);
+        if ($grupoPaiFilhoFilhos) {
+            $discipulos = array();
+            foreach ($grupoPaiFilhoFilhos as $gpFilho) {
+                $discipulos[] = $gpFilho;
+            }
+            $dados['discipulos'] = $discipulos;
+        }
 
         $view = new ViewModel($dados);
         /* Javascript */
@@ -52,558 +98,14 @@ class PrincipalController extends CircuitoController {
         $layoutJS->setTemplate('layout/layout-js-principal');
         $view->addChild($layoutJS, 'layoutJSPrincipal');
 
-        return $view;
-    }
-
-    const MEMBRESIA = 'membresia';
-    const PESSOAL = 'pessoal';
-    const EQUIPE = 'equipe';
-    const ORIGINAL = 'original';
-    const ORIGINAL_PERFORMANCE = 'originalPerformance';
-    const VISUAL = 'visual';
-    const CLASSE_VALOR = 'classeValor';
-    const CLASSE_PERIODO = 'classePeriodo';
-    const CLASSE_COR = 'classeCor';
-    const CLASSE_COR_MOSTRAGEM = 'classeCorMostragem';
-    const CLASSE_STRING = 'classeString';
-    const CLASSE_STRING_MOSTRAGEM = 'classeStringMostragem';
-
-    public function dashboardAction() {
-        $sessao = new Container(Constantes::$NOME_APLICACAO);
-        $response = $this->getResponse();
-        try {
-            $idEntidadeAtual = $sessao->idEntidadeAtual;
-            $entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
-            $pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($sessao->idPessoa);
-            $grupo = $entidade->getGrupo();
-
-            $eCasal = $grupo->verificaSeECasal();
-            $arrayPeriodoDoMes = Funcoes::encontrarPeriodoDeUmMesPorMesEAno(date('m'), date('Y'));
-            $relatorio = RelatorioController::relatorioCompleto($this->getRepositorio(), $grupo, RelatorioController::relatorioMembresiaECelula, date('m'), date('Y'));
-
-            $mesAnterior = date('m') - 1;
-            $anoAnterior = date('Y');
-            if (date('m') == 1) {
-                $mesAnterior = 12;
-                $anoAnterior = date('Y') - 1;
-            }
-            $relatorioAnterior = RelatorioController::relatorioCompleto($this->getRepositorio(), $grupo, RelatorioController::relatorioMembresiaECelula, $mesAnterior, $anoAnterior);
-
-            $mostrarPrincipal = true;
-            if (!$entidade->verificarSeEstaAtivo()) {
-                $mostrarPrincipal = false;
-            }
-
-            /* Dados principais */
-            $metas[0] = Funcoes::metaPorHierarquia(Hierarquia::LIDER_DE_CELULA);
-            $metas[1] = Funcoes::metaPorHierarquia($pessoa->getPessoaHierarquiaAtivo()->getHierarquia()->getId());
-            $multiplicadorDaMeta = 1;
-            if ($eCasal) {
-                $multiplicadorDaMeta = 2;
-            }
-            $metas[0][0] *= $multiplicadorDaMeta;
-            if ($pessoa->getPessoaHierarquiaAtivo()->getHierarquia()->getId() === Hierarquia::LIDER_DE_CELULA) {
-                $metas[1][0] *= $multiplicadorDaMeta;
-            }
-
-            $respostaBase = 'Porque a sua eficiência com relação a média de membresia e quantidade de célula do mês de #mes #periodo';
-
-            $mensagemModalClasse = '';
-            $mensagemModalClasse .= '<h1 class="text-center"><b>O que é a Classe?</b></h1>';
-            $mensagemModalClasse .= '<p><b>Resposta:</b> É a classificação do resultado do líder baseado na média de membresia e quantidade de pesoas em células do mês anterior.</p>';
-            $performance = array();
-            for ($indiceDeRelatorios = 1; $indiceDeRelatorios <= 2; $indiceDeRelatorios++) {
-                if ($indiceDeRelatorios === 1) {
-                    $relatorioParaUsar = $relatorioAnterior;
-                }
-                if ($indiceDeRelatorios === 2) {
-                    $relatorioParaUsar = $relatorio;
-                }
-
-                /* Mês de apresentação */
-                if ($indiceDeRelatorios === 2) {
-                    $mesPorExtenso = Funcoes::mesPorExtenso(date('m'), 1);
-                }
-                if ($indiceDeRelatorios === 1) {
-                    $mesAnterior = date('m') - 1;
-                    if (date('m') == 1) {
-                        $mesAnterior = 12;
-                    }
-                    $mesPorExtenso = Funcoes::mesPorExtenso($mesAnterior, 1);
-                }
-                $respostaMesAjustado = str_replace('#mes', $mesPorExtenso, $respostaBase);
-                /* FIM Mês de apresentação */
-
-
-                $performance[self::MEMBRESIA][self::PESSOAL][self::ORIGINAL] = $relatorioParaUsar[0]['mediaMembresia'];
-                $performance[self::MEMBRESIA][self::PESSOAL][self::ORIGINAL_PERFORMANCE] = $relatorioParaUsar[0]['mediaMembresia'] / $metas[0][0] * 100;
-                $performance[self::MEMBRESIA][self::EQUIPE][self::ORIGINAL] = $relatorioParaUsar[(count($relatorioParaUsar) - 1)]['mediaMembresia'];
-                $performance[self::MEMBRESIA][self::EQUIPE][self::ORIGINAL_PERFORMANCE] = $relatorioParaUsar[(count($relatorioParaUsar) - 1)]['mediaMembresia'] / $metas[1][0] * 100;
-
-                $performance[self::MEMBRESIA][self::PESSOAL][self::VISUAL] = $performance[self::MEMBRESIA][self::PESSOAL][self::ORIGINAL_PERFORMANCE];
-                if ($performance[self::MEMBRESIA][self::PESSOAL][self::VISUAL] > 100) {
-                    $performance[self::MEMBRESIA][self::PESSOAL][self::VISUAL] = 100;
-                }
-                $performance[self::MEMBRESIA][self::EQUIPE][self::VISUAL] = $performance[self::MEMBRESIA][self::EQUIPE][self::ORIGINAL_PERFORMANCE];
-                if ($performance[self::MEMBRESIA][self::EQUIPE][self::VISUAL] > 100) {
-                    $performance[self::MEMBRESIA][self::EQUIPE][self::VISUAL] = 100;
-                }
-
-                $performance[self::MEMBRESIA][self::PESSOAL][self::CLASSE_VALOR] = 100;
-                if ($performance[self::MEMBRESIA][self::PESSOAL][self::VISUAL] < $performance[self::MEMBRESIA][self::PESSOAL][self::CLASSE_VALOR]) {
-                    $performance[self::MEMBRESIA][self::PESSOAL][self::CLASSE_VALOR] = $performance[self::MEMBRESIA][self::PESSOAL][self::VISUAL];
-                }
-                if ($performance[self::MEMBRESIA][self::PESSOAL][self::CLASSE_VALOR] >= RelatorioController::MARGEM_D &&
-                        $performance[self::MEMBRESIA][self::PESSOAL][self::CLASSE_VALOR] < RelatorioController::MARGEM_C) {
-                    $performance[self::MEMBRESIA][self::PESSOAL][self::CLASSE_STRING] = 'D';
-                    $performance[self::MEMBRESIA][self::PESSOAL][self::CLASSE_PERIODO] = 'é menor que 70%';
-                }
-                if ($performance[self::MEMBRESIA][self::PESSOAL][self::CLASSE_VALOR] >= RelatorioController::MARGEM_C &&
-                        $performance[self::MEMBRESIA][self::PESSOAL][self::CLASSE_VALOR] < RelatorioController::MARGEM_B) {
-                    $performance[self::MEMBRESIA][self::PESSOAL][self::CLASSE_STRING] = 'C';
-                    $performance[self::MEMBRESIA][self::PESSOAL][self::CLASSE_PERIODO] = 'ficou entre 70% a 84%';
-                }
-                if ($performance[self::MEMBRESIA][self::PESSOAL][self::CLASSE_VALOR] >= RelatorioController::MARGEM_B &&
-                        $performance[self::MEMBRESIA][self::PESSOAL][self::CLASSE_VALOR] < RelatorioController::MARGEM_A) {
-                    $performance[self::MEMBRESIA][self::PESSOAL][self::CLASSE_STRING] = 'B';
-                    $performance[self::MEMBRESIA][self::PESSOAL][self::CLASSE_PERIODO] = 'ficou entre 85% a 99%';
-                }
-                if ($performance[self::MEMBRESIA][self::PESSOAL][self::CLASSE_VALOR] >= RelatorioController::MARGEM_A) {
-                    $performance[self::MEMBRESIA][self::PESSOAL][self::CLASSE_STRING] = 'A';
-                    $performance[self::MEMBRESIA][self::PESSOAL][self::CLASSE_PERIODO] = 'é maior que 100%';
-                }
-
-                $performance[self::MEMBRESIA][self::EQUIPE][self::CLASSE_VALOR] = 100;
-                if ($performance[self::MEMBRESIA][self::EQUIPE][self::VISUAL] < $performance[self::MEMBRESIA][self::EQUIPE][self::CLASSE_VALOR]) {
-                    $performance[self::MEMBRESIA][self::EQUIPE][self::CLASSE_VALOR] = $performance[self::MEMBRESIA][self::EQUIPE][self::VISUAL];
-                }
-                if ($performance[self::MEMBRESIA][self::EQUIPE][self::CLASSE_VALOR] >= RelatorioController::MARGEM_D &&
-                        $performance[self::MEMBRESIA][self::EQUIPE][self::CLASSE_VALOR] < RelatorioController::MARGEM_C) {
-                    $performance[self::MEMBRESIA][self::EQUIPE][self::CLASSE_STRING] = 'D';
-                    $performance[self::MEMBRESIA][self::EQUIPE][self::CLASSE_PERIODO] = 'é menor que 70%';
-                }
-                if ($performance[self::MEMBRESIA][self::EQUIPE][self::CLASSE_VALOR] >= RelatorioController::MARGEM_C &&
-                        $performance[self::MEMBRESIA][self::EQUIPE][self::CLASSE_VALOR] < RelatorioController::MARGEM_B) {
-                    $performance[self::MEMBRESIA][self::EQUIPE][self::CLASSE_STRING] = 'C';
-                    $performance[self::MEMBRESIA][self::EQUIPE][self::CLASSE_PERIODO] = 'ficou entre 70% a 84%';
-                }
-                if ($performance[self::MEMBRESIA][self::EQUIPE][self::CLASSE_VALOR] >= RelatorioController::MARGEM_B &&
-                        $performance[self::MEMBRESIA][self::EQUIPE][self::CLASSE_VALOR] < RelatorioController::MARGEM_A) {
-                    $performance[self::MEMBRESIA][self::EQUIPE][self::CLASSE_STRING] = 'B';
-                    $performance[self::MEMBRESIA][self::EQUIPE][self::CLASSE_PERIODO] = 'ficou entre 85% a 99%';
-                }
-                if ($performance[self::MEMBRESIA][self::EQUIPE][self::CLASSE_VALOR] >= RelatorioController::MARGEM_A) {
-                    $performance[self::MEMBRESIA][self::EQUIPE][self::CLASSE_STRING] = 'A';
-                    $performance[self::MEMBRESIA][self::EQUIPE][self::CLASSE_PERIODO] = 'é maior que 100%';
-                }
-
-                $respostaAjustada[self::PESSOAL] = str_replace('#periodo', $performance[self::MEMBRESIA][self::PESSOAL][self::CLASSE_PERIODO], $respostaMesAjustado);
-                $respostaAjustada[self::EQUIPE] = str_replace('#periodo', $performance[self::MEMBRESIA][self::EQUIPE][self::CLASSE_PERIODO], $respostaMesAjustado);
-                $performance[self::MEMBRESIA][self::PESSOAL][self::CLASSE_COR] = RelatorioController::corDaLinhaPelaPerformanceClasse($performance[self::MEMBRESIA][self::PESSOAL][self::CLASSE_STRING]);
-                $performance[self::MEMBRESIA][self::EQUIPE][self::CLASSE_COR] = RelatorioController::corDaLinhaPelaPerformanceClasse($performance[self::MEMBRESIA][self::EQUIPE][self::CLASSE_STRING]);
-
-                if ($indiceDeRelatorios === 1) {
-                    $performance[self::MEMBRESIA][self::PESSOAL][self::CLASSE_COR_MOSTRAGEM] = $performance[self::MEMBRESIA][self::PESSOAL][self::CLASSE_COR];
-                    $performance[self::MEMBRESIA][self::PESSOAL][self::CLASSE_STRING_MOSTRAGEM] = $performance[self::MEMBRESIA][self::PESSOAL][self::CLASSE_STRING];
-                    $performance[self::MEMBRESIA][self::EQUIPE][self::CLASSE_COR_MOSTRAGEM] = $performance[self::MEMBRESIA][self::EQUIPE][self::CLASSE_COR];
-                    $performance[self::MEMBRESIA][self::EQUIPE][self::CLASSE_STRING_MOSTRAGEM] = $performance[self::MEMBRESIA][self::EQUIPE][self::CLASSE_STRING];
-                }
-
-                $mensagemModalClasse .= '<div class="alert alert-default alert-sm">';
-                if ($indiceDeRelatorios === 1) {
-                    $mensagemModalClasse .= '<p class="relatorioPessoal"><b>Porque sou Classe </b><span class="label label-' . $performance[self::MEMBRESIA][self::PESSOAL][self::CLASSE_COR] . ' label-sm">' .
-                            $performance[self::MEMBRESIA][self::PESSOAL][self::CLASSE_STRING] . ' </span></p>';
-                    $mensagemModalClasse .= '<p class="relatorioPessoal"><b>Resposta:</b> ' . $respostaAjustada[self::PESSOAL] . '</p>';
-
-                    $mensagemModalClasse .= '<p class="relatorioEquipe hidden"><b>Porque sou Classe </b><span class="label label-' . $performance[self::MEMBRESIA][self::EQUIPE][self::CLASSE_COR] . ' label-sm">' .
-                            $performance[self::MEMBRESIA][self::EQUIPE][self::CLASSE_STRING] . ' </span></p>';
-                    $mensagemModalClasse .= '<p class="relatorioEquipe hidden"><b>Resposta:</b> ' . $respostaAjustada[self::EQUIPE] . '</p>';
-                }
-                if ($indiceDeRelatorios === 2) {
-                    $mensagemModalClasse .= '<p class="relatorioPessoal"><b>Como estou em ' . $mesPorExtenso . '?</b></p>';
-                    $mensagemModalClasse .= '<p class="relatorioPessoal"><b>Resposta:</b> Estima-se que no mês de ' . $mesPorExtenso . ' você provavelmente será classe '
-                            . '<span class="label label-' . $performance[self::MEMBRESIA][self::PESSOAL][self::CLASSE_COR] . ' label-sm">' . $performance[self::MEMBRESIA][self::PESSOAL][self::CLASSE_STRING] . ' </span></p>';
-
-                    $mensagemModalClasse .= '<p class="relatorioEquipe hidden"><b>Como estou em ' . $mesPorExtenso . '?</b></p>';
-                    $mensagemModalClasse .= '<p class="relatorioEquipe hidden"><b>Resposta:</b> Estima-se que no mês de ' . $mesPorExtenso . ' você provavelmente será classe '
-                            . '<span class="label label-' . $performance[self::MEMBRESIA][self::EQUIPE][self::CLASSE_COR] . ' label-sm">' . $performance[self::MEMBRESIA][self::EQUIPE][self::CLASSE_STRING] . ' </span></p>';
-                }
-                $mensagemModalClasse .= '</div>';
-
-                /* Barra Membresia */
-                $mensagemModalClasse .= '<div class="row">';
-                $mensagemModalClasse .= '<div class="col-xs-4 text-right" style="font-size:10px;">Membresia</div>';
-                $mensagemModalClasse .= '<div class="col-xs-5">';
-                $mensagemModalClasse .= '<div class="progress">';
-                $mensagemModalClasse .= '<div class="relatorioPessoal progress-bar progress-bar-' . $performance[self::MEMBRESIA][self::PESSOAL][self::CLASSE_COR] . '" role = "progressbar" '
-                        . 'aria-valuenow="' . $performance[self::MEMBRESIA][self::PESSOAL][self::CLASSE_VALOR] . '" '
-                        . 'aria-valuemin="0" aria-valuemax="100" style="width: ' . $performance[self::MEMBRESIA][self::PESSOAL][self::CLASSE_VALOR] . '%;">' .
-                        number_format($performance[self::MEMBRESIA][self::PESSOAL][self::ORIGINAL_PERFORMANCE], 2, ',', '.') . '%</div>';
-                $mensagemModalClasse .= '<div class="relatorioEquipe hidden progress-bar progress-bar-' . $performance[self::MEMBRESIA][self::EQUIPE][self::CLASSE_COR] . '" role = "progressbar" '
-                        . 'aria-valuenow="' . $performance[self::MEMBRESIA][self::EQUIPE][self::CLASSE_VALOR] . '" '
-                        . 'aria-valuemin="0" aria-valuemax="100" style="width: ' . $performance[self::MEMBRESIA][self::EQUIPE][self::CLASSE_VALOR] . '%;">' .
-                        number_format($performance[self::MEMBRESIA][self::EQUIPE][self::ORIGINAL_PERFORMANCE], 2, ',', '.') . '%</div>';
-                $mensagemModalClasse .= '</div>';
-                $mensagemModalClasse .= '</div>';
-                $mensagemModalClasse .= '<div class="relatorioPessoal col-xs-3" style="font-size:10px;">' . number_format($performance[self::MEMBRESIA][self::PESSOAL][self::ORIGINAL], 2, ',', '.') . ' de ' . $metas[0][0] . '</div>';
-                $mensagemModalClasse .= '<div class="relatorioEquipe hidden col-xs-3" style="font-size:10px;">' . number_format($performance[self::MEMBRESIA][self::EQUIPE][self::ORIGINAL], 2, ',', '.') . ' de ' . $metas[1][0] . '</div>';
-                $mensagemModalClasse .= '</div>';
-            }
-            /* Fim dados principais */
-            $indiceUltimoRegistroDoRelatorio = (count($relatorio) - 1);
-            /* Circuito me ajuda */
-            /* Celulas nao realizadas */
-            $periodo = -1;
-            $htmlCelulasNaoRealizadas = '';
-            for ($indiceCelulasNaoRealizadas = 1; $indiceCelulasNaoRealizadas < $indiceUltimoRegistroDoRelatorio; $indiceCelulasNaoRealizadas++) {
-                $nomeLideres = $relatorio[$indiceCelulasNaoRealizadas]['lideres'];
-                $celulasNaoRealizadas = $relatorio[$indiceCelulasNaoRealizadas][$periodo]['celulaQuantidade'] - $relatorio[$indiceCelulasNaoRealizadas][$periodo]['celulaRealizadas'];
-                if ($celulasNaoRealizadas > 0) {
-                    $htmlCelulasNaoRealizadas .= '<tr class="linhaCelulasNaoRealizadas hidden info">';
-                    $htmlCelulasNaoRealizadas .= '<td colspan="2">EQUIPE - ' . $nomeLideres . '</td>';
-                    $htmlCelulasNaoRealizadas .= '</tr>';
-
-                    $idGrupo = $relatorio[$indiceCelulasNaoRealizadas]['grupo'];
-                    $grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupo);
-                    $relatorio12 = RelatorioController::relatorioCompleto($this->getRepositorio(), $grupo, RelatorioController::relatorioMembresiaECelula, date('m'), date('Y'));
-                    for ($indiceCelulasNaoRealizadas12 = 0; $indiceCelulasNaoRealizadas12 < (count($relatorio12) - 1); $indiceCelulasNaoRealizadas12++) {
-                        $nomeLideres12 = $relatorio12[$indiceCelulasNaoRealizadas12]['lideres'];
-                        $celulasNaoRealizadas12 = $relatorio12[$indiceCelulasNaoRealizadas12][$periodo]['celulaQuantidade'] - $relatorio12[$indiceCelulasNaoRealizadas12][$periodo]['celulaRealizadas'];
-                        if ($celulasNaoRealizadas12 > 0) {
-                            $htmlCelulasNaoRealizadas .= '<tr class="linhaCelulasNaoRealizadas hidden">';
-                            $htmlCelulasNaoRealizadas .= '<td>' . $nomeLideres12 . '</td>';
-                            $htmlCelulasNaoRealizadas .= '<td>' . $celulasNaoRealizadas12 . '</td>';
-                            $htmlCelulasNaoRealizadas .= '</tr>';
-                        }
-                    }
-
-                    $htmlCelulasNaoRealizadas .= '<tr class="linhaCelulasNaoRealizadas hidden primary">';
-                    $htmlCelulasNaoRealizadas .= '<td class="text-right">TOTAL</td>';
-                    $htmlCelulasNaoRealizadas .= '<td>' . $celulasNaoRealizadas . '</td>';
-                    $htmlCelulasNaoRealizadas .= '</tr>';
-                    $htmlCelulasNaoRealizadas .= '<tr class="linhaCelulasNaoRealizadas hidden">';
-                    $htmlCelulasNaoRealizadas .= '<td colspan="2"></td>';
-                    $htmlCelulasNaoRealizadas .= '</tr>';
-                }
-            }
-
-            $totalDeCelulasNaoRealizadas = $relatorio[$indiceUltimoRegistroDoRelatorio][$periodo]['celulaQuantidade'] - $relatorio[$indiceUltimoRegistroDoRelatorio][$periodo]['celulaRealizadas'];
-            /* Fim celulas nao realizadas */
-
-            $funcaoOnClick = $this->getServiceLocator()->get('viewhelpermanager')->get('funcaoOnClick');
-            $botaoSimples = $this->getServiceLocator()->get('viewhelpermanager')->get('botaoSimples');
-            $htmlTabelaCircuitoMeAjuda = '';
-            $htmlTabelaCircuitoMeAjuda .= '<table class="table table-condensed">';
-            $htmlTabelaCircuitoMeAjuda .= '<thead>';
-            $htmlTabelaCircuitoMeAjuda .= '<tr class="info">';
-            $htmlTabelaCircuitoMeAjuda .= '<th colspan="2" class="text-center">Circuito me Ajuda ' . Funcoes::montaPeriodo($periodo = -1)[0] . '</th>';
-            $htmlTabelaCircuitoMeAjuda .= '</tr>';
-            $htmlTabelaCircuitoMeAjuda .= '</thead>';
-            $htmlTabelaCircuitoMeAjuda .= '<tbody>';
-            $htmlTabelaCircuitoMeAjuda .= '<tr>';
-            $htmlTabelaCircuitoMeAjuda .= '<td class="text-center">C&eacute;lulas <b>N&atilde;o</b> Realizadas: ' . $totalDeCelulasNaoRealizadas . '</td>';
-            $funcao = $funcaoOnClick('$(".linhaCelulasNaoRealizadas").toggleClass("hidden")');
-            $htmlTabelaCircuitoMeAjuda .= '<td>' . $botaoSimples('<i class="fa fa-eye" />', $funcao, BotaoSimples::botaoMuitoPequenoImportante, BotaoSimples::posicaoAoCentro) . '</td>';
-            $htmlTabelaCircuitoMeAjuda .= '</tr>';
-            $htmlTabelaCircuitoMeAjuda .= $htmlCelulasNaoRealizadas;
-
-            $htmlTabelaCircuitoMeAjuda .= '</tbody>';
-            $htmlTabelaCircuitoMeAjuda .= '</table>';
-            /* Fim circuito me ajuda */
-
-            /* Barras de progresso */
-            $totalDeRelatorios = count($relatorio) - 1;
-            $barraDeProgressoBonita = $this->getServiceLocator()->get('viewhelpermanager')->get('barraDeProgressoBonita');
-
-            /* Membresia */
-            $corBarraDeProgressoPessoalMembresia = $relatorio[0]['mediaMembresiaPerformanceClass'];
-            $fraseBarraDeProgressoPessoalMembresia = $relatorio[0]['mediaMembresiaPerformanceFrase'];
-            $corBarraDeProgressoEquipeMembresia = $relatorio[$totalDeRelatorios]['mediaMembresiaPerformanceClass'];
-            $fraseBarraDeProgressoEquipeMembresia = $relatorio[$totalDeRelatorios]['mediaMembresiaPerformanceFrase'];
-
-            $divBarraDeProgressoPessoalMembresia = $barraDeProgressoBonita(
-                    'Membresia', $relatorio[0]['mediaMembresiaPerformanceClass'], $relatorio[0]['mediaMembresiaPerformance'], 'm0', true, $relatorio[0][-1]['membresiaMeta'], $relatorio[0]['mediaMembresia'], '');
-            $divBarraDeProgressoEquipeMembresia = $barraDeProgressoBonita(
-                    'Membresia', $relatorio[$totalDeRelatorios]['mediaMembresiaPerformanceClass'], $relatorio[$totalDeRelatorios]['mediaMembresiaPerformance'], 'm0', true, $relatorio[$totalDeRelatorios][-1]['membresiaMeta'], $relatorio[$totalDeRelatorios]['mediaMembresia'], '');
-
-            $htmlDadosMembresia = '';
-            $class = 'class = "col-lg-3 col-md-3 col-sm-6 col-xs-12"';
-            $numeroIndices = 4;
-            for ($indice = 1; $indice <= $numeroIndices; $indice++) {
-                switch ($indice) {
-                    case 1:
-                        $label = 'PESSOAS CHEIAS DE F&Eacute;
-                                            ';
-                        $valor[1] = $relatorio[0]['mediaMembresiaCulto'];
-                        $valor[2] = $relatorio[$totalDeRelatorios]['mediaMembresiaCulto'];
-                        break;
-                    case 2:
-                        $label = 'PESSOAS APAIXONADAS';
-                        $valor[1] = $relatorio[0]['mediaMembresiaArena'];
-                        $valor[2] = $relatorio[$totalDeRelatorios]['mediaMembresiaArena'];
-                        break;
-                    case 3:
-                        $label = 'PESSOAS ALIAN&Ccedil;ADAS';
-                        $valor[1] = $relatorio[0]['mediaMembresiaDomingo'];
-                        $valor[2] = $relatorio[$totalDeRelatorios]['mediaMembresiaDomingo'];
-                        break;
-                    case 4: $label = 'MEMBROS ASS&Iacute;DUOS';
-                        $valor[1] = $relatorio[0]['mediaMembresia'];
-                        $valor[2] = $relatorio[$totalDeRelatorios]['mediaMembresia'];
-                        break;
-                }
-                $valor[1] = RelatorioController::formataNumeroRelatorio($valor[1]);
-                $valor[2] = RelatorioController::formataNumeroRelatorio($valor[2]);
-
-                $htmlDadosMembresia .= '<div ' . $class . '>';
-                $htmlDadosMembresia .= '<div class = "panel panel-tile text-center br-a br-grey">';
-                $htmlDadosMembresia .= '<div class = "panel-body" style = "padding-bottom: 0px;">';
-                $htmlDadosMembresia .= '<h1 class = "fs30 mt5 mbn">';
-
-                $htmlDadosMembresia .= '<span class = "relatorioPessoal">' . $valor[1] . '</span>';
-                $htmlDadosMembresia .= '<span class = "relatorioEquipe hidden">' . $valor[2] . '</span>';
-
-                $htmlDadosMembresia .= ' </h1>';
-                $htmlDadosMembresia .= '<h6>' . $label . '</h6>';
-                $htmlDadosMembresia .= '</div>';
-                $htmlDadosMembresia .= '<div class = "panel-footer br-t p12">';
-                $htmlDadosMembresia .= '<span class = "fs11">';
-
-                for ($indicePeriodosDoMesAtual = $arrayPeriodoDoMes[0]; $indicePeriodosDoMesAtual <= $arrayPeriodoDoMes[1]; $indicePeriodosDoMesAtual++) {
-                    if ($indicePeriodosDoMesAtual != $arrayPeriodoDoMes[0]) {
-                        $htmlDadosMembresia .= ' | ';
-                    }
-                    switch ($indice) {
-                        case 1:
-                            $valor[1] = $relatorio[0][$indicePeriodosDoMesAtual]['membresiaCulto'];
-                            $valor[2] = $relatorio[$totalDeRelatorios][$indicePeriodosDoMesAtual]['membresiaCulto'];
-                            break;
-                        case 2:
-                            $valor[1] = $relatorio[0][$indicePeriodosDoMesAtual]['membresiaArena'];
-                            $valor[2] = $relatorio[$totalDeRelatorios][$indicePeriodosDoMesAtual]['membresiaArena'];
-                            break;
-                        case 3:
-                            $valor[1] = $relatorio[0][$indicePeriodosDoMesAtual]['membresiaDomingo'];
-                            $valor[2] = $relatorio[$totalDeRelatorios][$indicePeriodosDoMesAtual]['membresiaDomingo'];
-                            break;
-                        case 4:
-                            $valor[1] = $relatorio[0][$indicePeriodosDoMesAtual]['membresia'];
-                            $valor[2] = $relatorio[$totalDeRelatorios][$indicePeriodosDoMesAtual]['membresia'];
-                            $valor[1] = RelatorioController::formataNumeroRelatorio($valor[1]);
-                            $valor[2] = RelatorioController::formataNumeroRelatorio($valor[2]);
-                            break;
-                    }
-
-                    $htmlDadosMembresia .= '<span class="relatorioPessoal" style="font-size: 10px;">' . $valor[1] . '</span>';
-                    $htmlDadosMembresia .= '<span class="relatorioEquipe hidden" style="font-size: 10px;">' . $valor[2] . '</span>';
-                }
-
-                $htmlDadosMembresia .= '</span>';
-                $htmlDadosMembresia .= '</div>';
-                $htmlDadosMembresia .= '</div>';
-                $htmlDadosMembresia .= '</div>';
-            }
-            /* Fim membresia */
-            /* Celula */
-            $corBarraDeProgressoPessoalCelula = $relatorio[0]['mediaCelulaPerformanceClass'];
-            $fraseBarraDeProgressoPessoalCelula = $relatorio[0]['mediaCelulaPerformanceFrase'];
-            $corBarraDeProgressoEquipeCelula = $relatorio[$totalDeRelatorios]['mediaCelulaPerformanceClass'];
-            $fraseBarraDeProgressoEquipeCelula = $relatorio[$totalDeRelatorios]['mediaCelulaPerformanceFrase'];
-
-            $divBarraDeProgressoPessoalCelula = $barraDeProgressoBonita(
-                    'Celula', $relatorio[0]['mediaCelulaPerformanceClass'], $relatorio[0]['mediaCelulaPerformance'], 'm0', true, $relatorio[0][-1]['membresiaMeta'], $relatorio[0]['mediaCelula'], '');
-            $divBarraDeProgressoEquipeCelula = $barraDeProgressoBonita(
-                    'Celula', $relatorio[$totalDeRelatorios]['mediaCelulaPerformanceClass'], $relatorio[$totalDeRelatorios]['mediaCelulaPerformance'], 'm0', true, $relatorio[$totalDeRelatorios][-1]['membresiaMeta'], $relatorio[$totalDeRelatorios]['mediaCelula'], '');
-
-            $htmlDadosCelula = '';
-            $class = 'class = "col-lg-4 col-md-4 col-sm-4 col-xs-12"';
-            $numeroIndices = 3;
-            for ($indice = 1; $indice <= $numeroIndices; $indice++) {
-                switch ($indice) {
-                    case 1:
-                        $label = 'TOTAL DE CÉLULAS DE MULTIPLIÇÃO';
-                        $valor[1] = $relatorio[0]['mediaCelulaQuantidade'];
-                        $valor[2] = $relatorio[$totalDeRelatorios]['mediaCelulaQuantidade'];
-                        $valor[1] = RelatorioController::formataNumeroRelatorio($valor[1]);
-                        $valor[2] = RelatorioController::formataNumeroRelatorio($valor[2]);
-                        break;
-                    case 2:
-                        $label = 'PESSOAS FREQUENTE';
-                        $valor[1] = $relatorio[0]['mediaCelula'];
-                        $valor[2] = $relatorio[$totalDeRelatorios]['mediaCelula'];
-                        $valor[1] = RelatorioController::formataNumeroRelatorio($valor[1]);
-                        $valor[2] = RelatorioController::formataNumeroRelatorio($valor[2]);
-                        break;
-                    case 3:
-                        $label = 'CÉLULAS REALIZADAS';
-                        $valor[1] = $relatorio[0]['mediaCelulaRealizadasPerformance'];
-                        $valor[2] = $relatorio[$totalDeRelatorios]['mediaCelulaRealizadasPerformance'];
-                        $valor[1] = RelatorioController::formataNumeroRelatorio($valor[1]) . '%';
-                        $valor[2] = RelatorioController::formataNumeroRelatorio($valor[2]) . '%';
-                        break;
-                }
-                $htmlDadosCelula .= '<div ' . $class . '>';
-                $htmlDadosCelula .= '<div class="panel panel-tile text-center br-a br-grey">';
-                $htmlDadosCelula .= '<div class="panel-body" style="padding-bottom: 0px;">';
-                $htmlDadosCelula .= '<h1 class="fs30 mt5 mbn">';
-
-                $htmlDadosCelula .= '<span class = "relatorioPessoal">' . $valor[1] . '</span>';
-                $htmlDadosCelula .= '<span class = "relatorioEquipe hidden">' . $valor[2] . '</span>';
-
-                $htmlDadosCelula .= '</h1>';
-                $htmlDadosCelula .= '<h6>' . $label . '</h6>';
-                $htmlDadosCelula .= '</div>';
-                $htmlDadosCelula .= '<div class="panel-footer br-t p12">';
-                $htmlDadosCelula .= '<span class="fs11">';
-
-                for ($indicePeriodosDoMesAtual = $arrayPeriodoDoMes[0]; $indicePeriodosDoMesAtual <= $arrayPeriodoDoMes[1]; $indicePeriodosDoMesAtual++) {
-                    if ($indicePeriodosDoMesAtual != $arrayPeriodoDoMes[0]) {
-                        $htmlDadosCelula .= ' | ';
-                    }
-                    switch ($indice) {
-                        case 1:
-                            $valor[1] = $relatorio[0][$indicePeriodosDoMesAtual]['celulaQuantidade'];
-                            $valor[2] = $relatorio[$totalDeRelatorios][$indicePeriodosDoMesAtual]['celulaQuantidade'];
-                            break;
-                        case 2:
-                            $valor[1] = $relatorio[0][$indicePeriodosDoMesAtual]['celula'];
-                            $valor[2] = $relatorio[$totalDeRelatorios][$indicePeriodosDoMesAtual]['celula'];
-                            break;
-                        case 3:
-                            $valor[1] = $relatorio[0][$indicePeriodosDoMesAtual]['celulaRealizadasPerformance'];
-                            $valor[2] = $relatorio[$totalDeRelatorios][$indicePeriodosDoMesAtual]['celulaRealizadasPerformance'];
-                            $valor[1] = RelatorioController::formataNumeroRelatorio($valor[1]) . '%';
-                            $valor[2] = RelatorioController::formataNumeroRelatorio($valor[2]) . '%';
-                            break;
-                    }
-
-                    $htmlDadosCelula .= '<span class = "relatorioPessoal" style = "font-size: 10px;">' . $valor[1] . '</span>';
-                    $htmlDadosCelula .= '<span class = "relatorioEquipe hidden" style = "font-size: 10px;">' . $valor[2] . '</span>';
-                }
-
-                $htmlDadosCelula .= '</span>';
-                $htmlDadosCelula .= '</div>';
-                $htmlDadosCelula .= '</div>';
-                $htmlDadosCelula .= '</div>';
-            }
-            /* fim celula */
-            /* fim barra de progressos */
-
-            /* proximo nivel */
-            $htmlDadosProximoNivel = '';
-            switch ($pessoa->getPessoaHierarquiaAtivo()->getHierarquia()->getId()) {
-                case Hierarquia::LIDER_EM_TREINAMENTO:
-                    $idProximaHierarquia = Hierarquia::LIDER_DE_CELULA;
-                    $metas = Funcoes::metaPorHierarquia(Hierarquia::LIDER_DE_CELULA);
-                    break;
-                case Hierarquia::LIDER_DE_CELULA:
-                    $idProximaHierarquia = Hierarquia::OBREIRO;
-                    $metas = Funcoes::metaPorHierarquia(Hierarquia::OBREIRO);
-                    break;
-                case Hierarquia::OBREIRO:
-                    $idProximaHierarquia = Hierarquia::DIACONO;
-                    $metas = Funcoes::metaPorHierarquia(Hierarquia::DIACONO);
-                    break;
-                case Hierarquia::DIACONO:
-                    $idProximaHierarquia = Hierarquia::MISSIONARIO;
-                    $metas = Funcoes::metaPorHierarquia(Hierarquia::MISSIONARIO);
-                    break;
-                case Hierarquia::MISSIONARIO:
-                    $idProximaHierarquia = Hierarquia::PASTOR;
-                    $metas = Funcoes::metaPorHierarquia(Hierarquia::PASTOR);
-                    break;
-                case Hierarquia::PASTOR:
-                    $idProximaHierarquia = Hierarquia::BISPO;
-                    $metas = Funcoes::metaPorHierarquia(Hierarquia::BISPO);
-                    break;
-            }
-            $stringProximaHierarquia = 'De ' . $pessoa->getPessoaHierarquiaAtivo()->getHierarquia()->getNome() .
-                    ' para ' . $this->getRepositorio()->getHierarquiaORM()->encontrarPorId($idProximaHierarquia)->getNome();
-            $perfomanceMembresia = $relatorio[$totalDeRelatorios]['mediaMembresia'] / $metas[0] * 100;
-            if ($perfomanceMembresia > 100) {
-                $perfomanceMembresia = 100;
-            }
-            $perfomanceLideres = $relatorio[$totalDeRelatorios][-1]['quantidadeLideres'] / $metas[1] * 100;
-            if ($perfomanceLideres > 100) {
-                $perfomanceLideres = 100;
-            }
-            $validacaoMembresia = $perfomanceMembresia / 2;
-            $validacaoLideres = $perfomanceLideres / 2;
-            $valorBarra = $validacaoMembresia + $validacaoLideres;
-            $corDaBarra = RelatorioController::corDaLinhaPelaPerformance($valorBarra);
-            $labelBarra = RelatorioController::corDaLinhaPelaPerformance($valorBarra, 2);
-
-            $htmlDadosProximoNivel .= '<p class=" well bg-default text-' . $corDaBarra . ' text-center">' . $labelBarra . '</p>';
-            $htmlDadosProximoNivel .= $barraDeProgressoBonita(
-                    $stringProximaHierarquia . ' <span class="badge">?</span>', $corDaBarra, $valorBarra, 'm0', false, 0, 0, $extra = 'onclick="$(\'#divProximoNivel\').toggleClass(\'hidden\');"');
-            $htmlDadosProximoNivel .= '<div id = "divProximoNivel" class = "row p10 hidden">';
-            $htmlDadosProximoNivel .= '<div class = "panel">';
-
-            $htmlDadosProximoNivel .= '<div class = "panel-body">';
-            for ($indice = 0; $indice <= 1; $indice++) {
-                switch ($indice) {
-                    case 0:
-                        $stringMeta = 'Membresia';
-                        $indiceRelatorio = 'membresia';
-                        $corDaBarra = RelatorioController::corDaLinhaPelaPerformance($perfomanceMembresia);
-                        $valorBarra = $perfomanceMembresia;
-                        $alcancado = $relatorio[$totalDeRelatorios]['mediaMembresia'];
-                        $meta = $metas[0];
-                        break;
-                    case 1:
-                        $stringMeta = 'Líderes';
-                        $indiceRelatorio = 'quantidadeLideres';
-                        $corDaBarra = RelatorioController::corDaLinhaPelaPerformance($perfomanceLideres);
-                        $valorBarra = $perfomanceLideres;
-                        $alcancado = $relatorio[$totalDeRelatorios][-1]['quantidadeLideres'];
-                        $meta = $metas[1];
-                        break;
-                }
-
-                $htmlDadosProximoNivel .= $barraDeProgressoBonita(
-                        $stringMeta, $corDaBarra, $valorBarra, 'm25', true, $meta, $alcancado);
-            }
-            $htmlDadosProximoNivel .= '</div>';
-            $htmlDadosProximoNivel .= '</div>';
-            $htmlDadosProximoNivel .= '</div>';
-            /* fim dados proximo nivel */
-
-            $dados = array(
-                'spanNomeDeQuemEstaLogado' => $pessoa->getNomePrimeiroUltimo(),
-                'fotoPerfil' => FuncoesEntidade::nomeDaImagem($pessoa),
-                'divModalDadosPrincipais' => $mensagemModalClasse,
-                'classePessoalCor' => $performance[self::MEMBRESIA][self::PESSOAL][self::CLASSE_COR_MOSTRAGEM],
-                'classePessoalString' => $performance[self::MEMBRESIA][self::PESSOAL][self::CLASSE_STRING_MOSTRAGEM],
-                'classeEquipeCor' => $performance[self::MEMBRESIA][self::EQUIPE][self::CLASSE_COR_MOSTRAGEM],
-                'classeEquipeString' => $performance[self::MEMBRESIA][self::EQUIPE][self::CLASSE_STRING_MOSTRAGEM],
-                'tdValorCelulasNaoRealizadas' => $totalDeCelulasNaoRealizadas,
-                'divTabelaCircuitoMeAjuda' => $htmlTabelaCircuitoMeAjuda,
-                'corBarraDeProgressoPessoalMembresia' => $corBarraDeProgressoPessoalMembresia,
-                'fraseBarraDeProgressoPessoalMembresia' => $fraseBarraDeProgressoPessoalMembresia,
-                'corBarraDeProgressoEquipeMembresia' => $corBarraDeProgressoEquipeMembresia,
-                'fraseBarraDeProgressoEquipeMembresia' => $fraseBarraDeProgressoEquipeMembresia,
-                'divBarraDeProgressoPessoalMembresia' => $divBarraDeProgressoPessoalMembresia,
-                'divBarraDeProgressoEquipeMembresia' => $divBarraDeProgressoEquipeMembresia,
-                'divDadosMembresia' => $htmlDadosMembresia,
-                'corBarraDeProgressoPessoalCelula' => $corBarraDeProgressoPessoalCelula,
-                'fraseBarraDeProgressoPessoalCelula' => $fraseBarraDeProgressoPessoalCelula,
-                'corBarraDeProgressoEquipeCelula' => $corBarraDeProgressoEquipeCelula,
-                'fraseBarraDeProgressoEquipeCelula' => $fraseBarraDeProgressoEquipeCelula,
-                'divBarraDeProgressoPessoalCelula' => $divBarraDeProgressoPessoalCelula,
-                'divBarraDeProgressoEquipeCelula' => $divBarraDeProgressoEquipeCelula,
-                'divDadosCelula' => $htmlDadosCelula,
-                'divDadosProximoNivel' => $htmlDadosProximoNivel,
-                'perioos' => $arrayPeriodoDoMes,
-                'relatorio' => $relatorio[0],
-                'response' => $response,
-            );
-
-            $response->setContent(Json::encode($dados));
-        } catch (Exception $exc) {
-            $response->setContent(Json::encode(array('error' => $exc->getTraceAsString())));
+        if ($sessao->jaMostreiANotificacao) {
+            unset($sessao->mostrarNotificacao);
+            unset($sessao->nomePessoa);
+            unset($sessao->exclusao);
+            unset($sessao->jaMostreiANotificacao);
         }
 
-        return $response;
+        return $view;
     }
 
     public function verAction() {
