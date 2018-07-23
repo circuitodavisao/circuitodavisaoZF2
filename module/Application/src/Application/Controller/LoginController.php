@@ -53,7 +53,6 @@ class LoginController extends CircuitoController {
      * GET /
      */
     public function indexAction() {
-        opcache_reset();
         /* Destroi a sessao ao acessar a index */
         $sessao = new Container(Constantes::$NOME_APLICACAO);
         $sessao->getManager()->destroy();
@@ -127,7 +126,6 @@ class LoginController extends CircuitoController {
      * POST /logar
      */
     public function logarAction() {
-        opcache_reset();
         $data = $this->getRequest()->getPost();
 
         /* Post sem email */
