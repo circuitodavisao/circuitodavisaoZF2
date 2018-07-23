@@ -47,8 +47,7 @@ class PrincipalController extends CircuitoController {
             $mesAnterior = 12;
             $anoAnterior = date('Y') - 1;
         }
-        $relatorioAnterior = RelatorioController::relatorioCompleto($this->getRepositorio(), $grupo, RelatorioController::relatorioMembresiaECelula, $mesAnterior, $anoAnterior);
-
+       
         $mostrarPrincipal = true;
         if (!$entidade->verificarSeEstaAtivo()) {
             $mostrarPrincipal = false;
@@ -59,13 +58,11 @@ class PrincipalController extends CircuitoController {
         } else {
             $turmas = $grupo->getGrupoIgreja()->getTurma();
         }
-//        $alunosComFaltas = CursoController::pegarAlunosComFaltas($grupo, $turmas);
 
         $hierarquias = $this->getRepositorio()->getHierarquiaORM()->encontrarTodas();
 
         $dados = array(
             'relatorio' => $relatorio,
-            'relatorioAnterior' => $relatorioAnterior,
             'periodoInicial' => $arrayPeriodoDoMes[0],
             'periodoFinal' => $arrayPeriodoDoMes[1],
             'mostrarPrincipal' => $mostrarPrincipal,
