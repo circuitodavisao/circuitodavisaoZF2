@@ -572,8 +572,7 @@ class RelatorioController extends CircuitoController {
                 $soma[$grupoFilho->getId()][self::celulaPerformance] += $relatorioDiscipulos[$grupoFilho->getId()][$indiceDeArrays]['celulaPerformance'];
                 $soma[$grupoFilho->getId()][self::celulaRealizadas] += $relatorioDiscipulos[$grupoFilho->getId()][$indiceDeArrays]['celulaRealizadas'];
                 $soma[$grupoFilho->getId()][self::celulaRealizadasPerformance] += $relatorioDiscipulos[$grupoFilho->getId()][$indiceDeArrays]['celulaRealizadasPerformance'];
-                if ($tipoRelatorio === RelatorioController::relatorioCelulasDeElite ||
-                        $tipoRelatorio === RelatorioController::relatorioMembresiaECelula) {
+                if ($tipoRelatorio === RelatorioController::relatorioCelulasDeElite) {
                     $somaCelulasDeElite = 0;
 
                     $relatorioCelula = RelatorioController::saberQuaisDasMinhasCelulasSaoDeElitePorPeriodo($repositorio, $grupoFilho, $indiceDeArrays);
@@ -645,8 +644,7 @@ class RelatorioController extends CircuitoController {
         $relatorio[self::dadosPessoais]['mediaMembresiaCulto'] = $soma[self::dadosPessoais][self::membresiaCulto] / $diferencaDePeriodos;
         $relatorio[self::dadosPessoais]['mediaMembresiaArena'] = $soma[self::dadosPessoais][self::membresiaArena] / $diferencaDePeriodos;
         $relatorio[self::dadosPessoais]['mediaMembresiaDomingo'] = $soma[self::dadosPessoais][self::membresiaDomingo] / $diferencaDePeriodos;
-        if ($tipoRelatorio === RelatorioController::relatorioCelulasDeElite ||
-                $tipoRelatorio === RelatorioController::relatorioMembresiaECelula) {
+        if ($tipoRelatorio === RelatorioController::relatorioCelulasDeElite) {
             $relatorio[self::dadosPessoais]['mediaCelulaDeElitePerformance'] = $soma[self::dadosPessoais][self::celulaDeElitePerformance] / $diferencaDePeriodos;
         }
         $relatorio[self::dadosPessoais]['lideres'] = 'MEU';
@@ -669,8 +667,7 @@ class RelatorioController extends CircuitoController {
             $relatorioDiscipulos[$grupoFilho->getId()]['mediaCelulaPerformance'] = $soma[$grupoFilho->getId()][self::celulaPerformance] / $diferencaDePeriodos;
             $relatorioDiscipulos[$grupoFilho->getId()]['mediaCelulaRealizadas'] = $soma[$grupoFilho->getId()][self::celulaRealizadas] / $diferencaDePeriodos;
             $relatorioDiscipulos[$grupoFilho->getId()]['mediaCelulaRealizadasPerformance'] = $soma[$grupoFilho->getId()][self::celulaRealizadasPerformance] / $diferencaDePeriodos;
-            if ($tipoRelatorio === RelatorioController::relatorioCelulasDeElite ||
-                    $tipoRelatorio === RelatorioController::relatorioMembresiaECelula) {
+            if ($tipoRelatorio === RelatorioController::relatorioCelulasDeElite) {
                 $relatorioDiscipulos[$grupoFilho->getId()]['mediaCelulaDeElitePerformance'] = $soma[$grupoFilho->getId()][self::celulaDeElitePerformance] / $diferencaDePeriodos;
                 $relatorioDiscipulos[$grupoFilho->getId()]['mediaCelulaDeElitePerformanceClass'] = RelatorioController::corDaLinhaPelaPerformance($relatorioDiscipulos[$grupoFilho->getId()]['mediaCelulaDeElitePerformance'], 1);
             }
@@ -697,8 +694,7 @@ class RelatorioController extends CircuitoController {
             $relatorio[$contadorFilhos]['mediaCelulaRealizadas'] = $relatorioDiscipulos[$grupoFilhoOrdenado->getId()]['mediaCelulaRealizadas'];
             $relatorio[$contadorFilhos]['mediaCelulaRealizadasPerformance'] = $relatorioDiscipulos[$grupoFilhoOrdenado->getId()]['mediaCelulaRealizadasPerformance'];
             $relatorio[$contadorFilhos]['mediaCelulaRealizadasPerformanceClass'] = RelatorioController::corDaLinhaPelaPerformance($relatorioDiscipulos[$grupoFilhoOrdenado->getId()]['mediaCelulaRealizadasPerformance']);
-            if ($tipoRelatorio === RelatorioController::relatorioCelulasDeElite ||
-                    $tipoRelatorio === RelatorioController::relatorioMembresiaECelula) {
+            if ($tipoRelatorio === RelatorioController::relatorioCelulasDeElite ) {
                 $relatorio[$contadorFilhos]['mediaCelulaDeElitePerformance'] = $relatorioDiscipulos[$grupoFilhoOrdenado->getId()]['mediaCelulaDeElitePerformance'];
                 $relatorio[$contadorFilhos]['mediaCelulaDeElitePerformanceClass'] = $relatorioDiscipulos[$grupoFilhoOrdenado->getId()]['mediaCelulaDeElitePerformanceClass'];
             }
@@ -747,8 +743,7 @@ class RelatorioController extends CircuitoController {
                 $somaFinal['celulaRealizadas'] += $relatorio[$contadorFilhos][$indiceDeArrays]['celulaRealizadas'];
                 $somaFinal['celulaRealizadasPerformance'] += $relatorio[$contadorFilhos][$indiceDeArrays]['celulaRealizadasPerformance'];
             }
-            if ($tipoRelatorio === RelatorioController::relatorioCelulasDeElite ||
-                    $tipoRelatorio === RelatorioController::relatorioMembresiaECelula) {
+            if ($tipoRelatorio === RelatorioController::relatorioCelulasDeElite) {
                 $relatorio[$contadorFilhos][$indiceDeArrays]['celulaDeElitePerformance'] = $relatorio[$contadorFilhos][$indiceDeArrays]['celulaDeElite'] / $relatorio[$contadorFilhos][$indiceDeArrays]['celulaDeEliteMeta'] * 100;
                 $somaFinal['celulaDeElitePerformance'] += $relatorio[$contadorFilhos][$indiceDeArrays]['celulaDeElitePerformance'];
             }
@@ -768,8 +763,7 @@ class RelatorioController extends CircuitoController {
         $relatorio[$contadorFilhos]['mediaCelulaRealizadas'] = $somaFinal['celulaRealizadas'] / $diferencaDePeriodos;
         $relatorio[$contadorFilhos]['mediaCelulaQuantidade'] = $somaFinal['celulaQuantidade'] / $diferencaDePeriodos;
         $relatorio[$contadorFilhos]['mediaCelulaRealizadasPerformance'] = $somaFinal['celulaRealizadasPerformance'] / $diferencaDePeriodos;
-        if ($tipoRelatorio === RelatorioController::relatorioCelulasDeElite ||
-                $tipoRelatorio === RelatorioController::relatorioMembresiaECelula) {
+        if ($tipoRelatorio === RelatorioController::relatorioCelulasDeElite) {
             $relatorio[$contadorFilhos]['mediaCelulaDeElitePerformance'] = $somaFinal['celulaDeElitePerformance'] / $diferencaDePeriodos;
         }
         $relatorio[$contadorFilhos]['lideres'] = 'TOTAL';
