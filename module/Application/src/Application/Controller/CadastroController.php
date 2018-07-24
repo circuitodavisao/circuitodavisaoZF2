@@ -11,6 +11,7 @@ use Application\Form\CadastrarPessoaRevisaoForm;
 use Application\Form\CelulaForm;
 use Application\Form\EventoForm;
 use Application\Form\GrupoForm;
+use Application\Form\SelecionarCrachaForm;
 use Application\Form\SolicitacaoForm;
 use Application\Form\SolicitacaoReceberForm;
 use Application\Model\Entity\Entidade;
@@ -234,6 +235,16 @@ class CadastroController extends CircuitoController {
                         Constantes::$ACTION => Constantes::$PAGINA_ATIVAR_LIDERES_REVISAO,
             ));
         }
+        if ($pagina == Constantes::$PAGINA_SELECIONAR_REVISIONISTA_CRACHA) {
+            return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
+                        Constantes::$ACTION => Constantes::$PAGINA_SELECIONAR_REVISIONISTA_CRACHA,
+            ));
+        }
+        if ($pagina == Constantes::$PAGINA_GERAR_CRACHA) {
+            return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
+                        Constantes::$ACTION => Constantes::$PAGINA_GERAR_CRACHA,
+            ));
+        }
         /* Fim Páginas Revisão */
 
         /* Funcoes */
@@ -322,6 +333,12 @@ class CadastroController extends CircuitoController {
             $listagemDeEventos = $grupo->getGrupoEventoRevisao();
             $tituloDaPagina = Constantes::$TRADUCAO_LISTAGEM_LIDERES;
             $tipoEvento = 11;
+            $extra = $grupo->getId();
+        }
+        if ($pagina == Constantes::$PAGINA_SELECIONAR_REVISAO_CRACHA) {
+            $listagemDeEventos = $grupo->getGrupoEventoRevisao();
+            $tituloDaPagina = 'Selecione os revisionistas para gerar o crachás';
+            $tipoEvento = 12;
             $extra = $grupo->getId();
         }
         $view = new ViewModel(array(
@@ -1707,56 +1724,6 @@ class CadastroController extends CircuitoController {
         return $view;
     }
 
-    public function relatorioFichasRevisaoAction() {
-        $sessao = new Container(Constantes::$NOME_APLICACAO);
-        $idRevisao = $sessao->idSessao;
-        $eventoRevisao = $this->getRepositorio()->getEventoORM()->encontrarPorId($idRevisao);
-        $relatorio = array();
-        $soma = array();
-        if ($eventoFrequencias = $eventoRevisao->getEventoFrequencia()) {
-            foreach ($eventoFrequencias as $eventoFrequencia) {
-                /* Revisionistas */
-                if ($grupoPessoaLider = $eventoFrequencia->getPessoa()->getGrupoPessoaAtivo()) {
-                    $grupoLider = $grupoPessoaLider->getGrupo();
-                    if ($grupoEquipe = $grupoLider->getGrupoEquipe()) {
-                        if ($grupoEquipe->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::EQUIPE) {
-                            if ($eventoFrequencia->getFrequencia() == 'S') {
-                                $relatorio[$grupoEquipe->getEntidadeAtiva()->getNome()]['ativas'] ++;
-                                $soma['ativas'] ++;
-                            }
-                            $relatorio[$grupoEquipe->getEntidadeAtiva()->getNome()]['reservas'] ++;
-                            $soma['reservas'] ++;
-                        } else {
-                            if ($eventoFrequencia->getFrequencia() == 'S') {
-                                $relatorio['IGREJA']['ativas'] ++;
-                                $soma['ativas'] ++;
-                            }
-                            $relatorio['IGREJA']['reservas'] ++;
-                            $soma['reservas'] ++;
-                        }
-                    }
-                } else {
-                    /* Lideres */
-                    if ($grupoEquipe = $grupoLider->getGrupoEquipe()) {
-                        if ($grupoEquipe->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::EQUIPE) {
-                            $relatorio[$grupoEquipe->getEntidadeAtiva()->getNome()]['lideres'] ++;
-                            $soma['lideres'] ++;
-                        } else {
-                            $relatorio['IGREJA']['lideres'] ++;
-                            $soma['lideres'] ++;
-                        }
-                    }
-                }
-            }
-        }
-
-        $relatorio['TOTAL']['ativas'] = $soma['ativas'];
-        $relatorio['TOTAL']['reservas'] = $soma['reservas'];
-        $relatorio['TOTAL']['lideres'] = $soma['lideres'];
-
-        return new ViewModel(array('relatorio' => $relatorio, 'evento' => $eventoRevisao));
-    }
-
     public function selecionarFichasAtivasAction() {
         $sessao = new Container(Constantes::$NOME_APLICACAO);
 
@@ -2357,8 +2324,101 @@ class CadastroController extends CircuitoController {
 
     public function liderRevisaoAction() {
         $sessao = new Container(Constantes::$NOME_APLICACAO);
-
         return new ViewModel(array('id' => $sessao->idSessao));
+    }
+
+    public function relatorioFichasRevisaoAction() {
+        $sessao = new Container(Constantes::$NOME_APLICACAO);
+        $idRevisao = $sessao->idSessao;
+        $eventoRevisao = $this->getRepositorio()->getEventoORM()->encontrarPorId($idRevisao);
+        $relatorio = array();
+        $soma = array();
+        if ($eventoFrequencias = $eventoRevisao->getEventoFrequencia()) {
+            foreach ($eventoFrequencias as $eventoFrequencia) {
+                /* Revisionistas */
+                if ($grupoPessoaLider = $eventoFrequencia->getPessoa()->getGrupoPessoaAtivo()) {
+                    $grupoLider = $grupoPessoaLider->getGrupo();
+                    if ($grupoEquipe = $grupoLider->getGrupoEquipe()) {
+                        if ($grupoEquipe->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::EQUIPE) {
+                            if ($eventoFrequencia->getFrequencia() == 'S') {
+                                $relatorio[$grupoEquipe->getEntidadeAtiva()->getNome()]['ativas'] ++;
+                                $soma['ativas'] ++;
+                            }
+                            $relatorio[$grupoEquipe->getEntidadeAtiva()->getNome()]['reservas'] ++;
+                            $soma['reservas'] ++;
+                        } else {
+                            if ($eventoFrequencia->getFrequencia() == 'S') {
+                                $relatorio['IGREJA']['ativas'] ++;
+                                $soma['ativas'] ++;
+                            }
+                            $relatorio['IGREJA']['reservas'] ++;
+                            $soma['reservas'] ++;
+                        }
+                    }
+                } else {
+                    /* Lideres */
+                    if ($eventoFrequencia->getPessoa()->getResponsabilidadesAtivas()) {
+                        $grupoLider = $eventoFrequencia->getPessoa()->getResponsabilidadesAtivas()[0]->getGrupo();
+                        if ($grupoEquipe = $grupoLider->getGrupoEquipe()) {
+                            if ($grupoEquipe->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::EQUIPE) {
+                                $relatorio[$grupoEquipe->getEntidadeAtiva()->getNome()]['lideres'] ++;
+                                $soma['lideres'] ++;
+                            } else {
+                                $relatorio['IGREJA']['lideres'] ++;
+                                $soma['lideres'] ++;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        $relatorio['TOTAL']['ativas'] = $soma['ativas'];
+        $relatorio['TOTAL']['reservas'] = $soma['reservas'];
+        $relatorio['TOTAL']['lideres'] = $soma['lideres'];
+
+        return new ViewModel(array('relatorio' => $relatorio, 'evento' => $eventoRevisao));
+    }
+
+    public function selecionarRevisionistaCrachaAction() {
+        $sessao = new Container(Constantes::$NOME_APLICACAO);
+        $idRevisao = $sessao->idSessao;
+        $eventoRevisao = $this->getRepositorio()->getEventoORM()->encontrarPorId($idRevisao);
+
+        $relatorio = array();
+        if ($eventoFrequencias = $eventoRevisao->getEventoFrequencia()) {
+            foreach ($eventoFrequencias as $eventoFrequencia) {
+                /* Revisionistas */
+                if ($eventoFrequencia->getPessoa()->getGrupoPessoaAtivo()) {
+                    $relatorio['revisionistas'][] = $eventoFrequencia;
+                } else {
+                    if ($eventoFrequencia->getPessoa()->getResponsabilidadesAtivas()) {
+                        /* Lideres */
+                        $relatorio['lideres'][] = $eventoFrequencia;
+                    }
+                }
+            }
+        }
+
+        $formulario = new SelecionarCrachaForm('SelecionarCracha');
+        return new ViewModel(array('relatorio' => $relatorio, 'formulario' => $formulario));
+    }
+
+    public function gerarCrachaAction() {
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            foreach ($_POST as $key => $value) {
+                if (substr($key, 0, 12) == 'revisionista') {
+                    $lista['revisionistas'][] = $value;
+                }
+                if (substr($key, 0, 5) == 'lider') {
+                    $lista['lideres'][] = $value;
+                }
+            }
+        }
+        $viewModel = new ViewModel(array('lista' => $lista, 'repositorio' => $this->getRepositorio(),));
+        $viewModel->setTerminal(true);
+        return $viewModel;
     }
 
 }
