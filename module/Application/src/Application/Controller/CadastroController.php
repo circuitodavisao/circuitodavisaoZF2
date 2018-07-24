@@ -204,6 +204,11 @@ class CadastroController extends CircuitoController {
                         Constantes::$ACTION => Constantes::$PAGINA_ATIVAR_FICHA_REVISAO,
             ));
         }
+        if ($pagina == Constantes::$PAGINA_RELATORIO_FICHAS_REVISAO) {
+            return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
+                        Constantes::$ACTION => Constantes::$PAGINA_RELATORIO_FICHAS_REVISAO,
+            ));
+        }
         if ($pagina == Constantes::$PAGINA_ATIVAR_RESERVA_REVISAO) {
             return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
                         Constantes::$ACTION => Constantes::$PAGINA_ATIVAR_RESERVA_REVISAO,
@@ -1700,6 +1705,56 @@ class CadastroController extends CircuitoController {
         $view->addChild($layoutJS, Constantes::$STRING_JS_ATIVAR_FICHA_REVISAO);
 
         return $view;
+    }
+
+    public function relatorioFichasRevisaoAction() {
+        $sessao = new Container(Constantes::$NOME_APLICACAO);
+        $idRevisao = $sessao->idSessao;
+        $eventoRevisao = $this->getRepositorio()->getEventoORM()->encontrarPorId($idRevisao);
+        $relatorio = array();
+        $soma = array();
+        if ($eventoFrequencias = $eventoRevisao->getEventoFrequencia()) {
+            foreach ($eventoFrequencias as $eventoFrequencia) {
+                /* Revisionistas */
+                if ($grupoPessoaLider = $eventoFrequencia->getPessoa()->getGrupoPessoaAtivo()) {
+                    $grupoLider = $grupoPessoaLider->getGrupo();
+                    if ($grupoEquipe = $grupoLider->getGrupoEquipe()) {
+                        if ($grupoEquipe->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::EQUIPE) {
+                            if ($eventoFrequencia->getFrequencia() == 'S') {
+                                $relatorio[$grupoEquipe->getEntidadeAtiva()->getNome()]['ativas'] ++;
+                                $soma['ativas'] ++;
+                            }
+                            $relatorio[$grupoEquipe->getEntidadeAtiva()->getNome()]['reservas'] ++;
+                            $soma['reservas'] ++;
+                        } else {
+                            if ($eventoFrequencia->getFrequencia() == 'S') {
+                                $relatorio['IGREJA']['ativas'] ++;
+                                $soma['ativas'] ++;
+                            }
+                            $relatorio['IGREJA']['reservas'] ++;
+                            $soma['reservas'] ++;
+                        }
+                    }
+                } else {
+                    /* Lideres */
+                    if ($grupoEquipe = $grupoLider->getGrupoEquipe()) {
+                        if ($grupoEquipe->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::EQUIPE) {
+                            $relatorio[$grupoEquipe->getEntidadeAtiva()->getNome()]['lideres'] ++;
+                            $soma['lideres'] ++;
+                        } else {
+                            $relatorio['IGREJA']['lideres'] ++;
+                            $soma['lideres'] ++;
+                        }
+                    }
+                }
+            }
+        }
+
+        $relatorio['TOTAL']['ativas'] = $soma['ativas'];
+        $relatorio['TOTAL']['reservas'] = $soma['reservas'];
+        $relatorio['TOTAL']['lideres'] = $soma['lideres'];
+
+        return new ViewModel(array('relatorio' => $relatorio, 'evento' => $eventoRevisao));
     }
 
     public function selecionarFichasAtivasAction() {

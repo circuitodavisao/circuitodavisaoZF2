@@ -1,6 +1,7 @@
 <?php
 
 use Application\Controller\Helper\Constantes;
+use Application\View\Helper\BotaoSimples;
 
 /**
  * Nome: selecionar_revisionistas.phtml
@@ -36,15 +37,16 @@ $form->setAttribute(Constantes::$ACTION, $this->url(Constantes::$ROUTE_CADASTRO,
                         <?php echo $this->formHidden($form->get(Constantes::$INPUT_CSRF)); ?>
                         <!-- end .form-body section -->
                         <div class="panel-footer text-right">
-
-
+                            <?php
+                            $funcaoRelatorio = $this->funcaoOnClick('mostrarSplash(); funcaoCircuito("cadastroRelatorioFichasRevisao",' . $this->evento->getId() . ')');
+                            echo $this->botaoSimples('Relatório', $funcaoRelatorio, BotaoSimples::botaoImportante, BotaoSimples::posicaoAEsquerda);
+                            ?>
                             <span id='botaoLimparCampos' class='hidden'>
                                 <?php
                                 $stringNomeDaFuncaoOnClickLimparCampos = 'limparCampos()';
                                 echo $this->botaoLink($this->translate(Constantes::$TRADUCAO_LIMPAR), Constantes::$STRING_HASHTAG, 2, $this->funcaoOnClick($stringNomeDaFuncaoOnClickLimparCampos));
                                 ?>
                             </span>
-
                             <?php
                             $stringNomeDaFuncaoOnClickCadastro = 'funcaoCadastro("' . Constantes::$PAGINA_ATIVAR_FICHAS . '", 0)';
                             echo $this->botaoLink($this->translate(Constantes::$TRADUCAO_VOLTAR), Constantes::$STRING_HASHTAG, 2, $this->funcaoOnClick($stringNomeDaFuncaoOnClickCadastro));
@@ -52,7 +54,6 @@ $form->setAttribute(Constantes::$ACTION, $this->url(Constantes::$ROUTE_CADASTRO,
                             $funcaoVerificarCadastroPessoa = $this->funcaoOnClick('confirmar(this.form)');
                             echo $this->botaoSimples($this->translate(Constantes::$TRADUCAO_CONFIRMACAO), "id ='botaoBuscarFicha' type='submit' disabled " . $funcaoVerificarCadastroPessoa);
                             ?>
-
                         </div>
                         <!-- end .form-footer section -->
                         <?php echo $this->form()->closeTag() ?>

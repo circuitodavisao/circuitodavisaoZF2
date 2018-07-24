@@ -1185,10 +1185,12 @@ class Grupo extends CircuitoEntity {
                 }
             }
             $grupoEquipe = $grupoSelecionado;
-        } else {
-            if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::EQUIPE) {
-                $grupoEquipe = $grupoSelecionado;
-            }
+        }
+        if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::EQUIPE) {
+            $grupoEquipe = $grupoSelecionado;
+        }
+        if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::IGREJA) {
+            $grupoEquipe = $grupoSelecionado;
         }
         return $grupoEquipe;
     }
