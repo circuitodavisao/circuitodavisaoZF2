@@ -520,28 +520,27 @@ class Menu extends AbstractHelper {
             $html .= '<li>';
             $html .= '<a href="/cadastroFichaRevisionistas" onClick="mostrarSplash();">';
             $html .= '<span class="fa fa-terminal"></span>';
-            $html .= 'Fichas Revisão';
+            $html .= 'Fichas Revisão de Vidas';
             $html .= '</a>';
             $html .= '</li>';
 
             $html .= '<li>';
             $html .= '<a href="/cadastroListagemLideres" onClick="mostrarSplash();">';
             $html .= '<span class="fa fa-terminal"></span>';
-            $html .= 'Listagem de Líderes';
+            $html .= 'Líderes do Revisão de Vidas';
+            $html .= '</a>';
+            $html .= '</li>';
+
+            $html .= '<li>';
+            $html .= '<a href="/cadastroSelecionarRevisaoCracha" onClick="mostrarSplash();">';
+            $html .= '<span class="fa fa-terminal"></span>';
+            $html .= 'Crachás do Revisão de Vidas';
             $html .= '</a>';
             $html .= '</li>';
 
             $html .= '</ul>';
             $html .= '</li>';
         }
-
-//        $html .= '<li>';
-//        $html .= '<a class="accordion-toggle" href="#">';
-//        $html .= '<span class="fa fa-cogs"></span>';
-//        $html .= '<span class="sidebar-title">Adm. (Manutenção)</span>';
-//        $html .= '<span class="caret"></span>';
-//        $html .= '</a>';
-//        $html .= '</li>';
 
         $html .= '</ul>';
         // End: Sidebar Menu
@@ -560,20 +559,20 @@ class Menu extends AbstractHelper {
 
         $html .= '<div id="modals">';
         /* Laço para mostrar a s responsabilidades ativas modal */
-        foreach ($this->view->responsabilidades as $responsabilidade) {
-            /* Grupo da responsabilidades */
-            $grupo = $responsabilidade->getGrupo();
-            foreach ($grupo->getGrupoPaiFilhoPai() as $gpfPai) {
-                $ativo = true;
-                $entidadeSelecionada = $grupo->getEntidadeAtiva();
-                if (!$gpfPai->verificarSeEstaAtivo()) {
-                    $ativo = false;
-                    $entidadeSelecionada = $grupo->getEntidadeInativaPorDataInativacao($gpfPai->getData_inativacaoStringPadraoBanco());
-                }
-                $grupoPai = $gpfPai->getGrupoPaiFilhoPai();
-//                $html .= $this->view->perfilDropDown($entidadeSelecionada, 2, $ativo, $grupoPai);
-            }
-        }
+//        foreach ($this->view->responsabilidades as $responsabilidade) {
+//            /* Grupo da responsabilidades */
+//            $grupo = $responsabilidade->getGrupo();
+//            foreach ($grupo->getGrupoPaiFilhoPai() as $gpfPai) {
+//                $ativo = true;
+//                $entidadeSelecionada = $grupo->getEntidadeAtiva();
+//                if (!$gpfPai->verificarSeEstaAtivo()) {
+//                    $ativo = false;
+//                    $entidadeSelecionada = $grupo->getEntidadeInativaPorDataInativacao($gpfPai->getData_inativacaoStringPadraoBanco());
+//                }
+//                $grupoPai = $gpfPai->getGrupoPaiFilhoPai();
+////                $html .= $this->view->perfilDropDown($entidadeSelecionada, 2, $ativo, $grupoPai);
+//            }
+//        }
         $html .= '</div>';
         return $html;
     }
