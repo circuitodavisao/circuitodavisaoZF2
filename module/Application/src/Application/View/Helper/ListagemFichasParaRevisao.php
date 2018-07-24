@@ -3,10 +3,8 @@
 namespace Application\View\Helper;
 
 use Application\Controller\Helper\Constantes;
-use Application\Controller\Helper\Funcoes;
-use Application\Model\Entity\Entidade;
+use Application\Model\Entity\EntidadeTipo;
 use Application\Model\Entity\Pessoa;
-use Doctrine\Common\Collections\Criteria;
 use Zend\View\Helper\AbstractHelper;
 
 /**
@@ -26,49 +24,25 @@ class ListagemFichasParaRevisao extends AbstractHelper {
 
     public function renderHtml() {
         $html = '';
-        $mesSelecionado = date("m");
-        $anoSelecionado = date("Y");
         $pessoas = array();
-        $pessoasGrupo = array();
         $frequencias = $this->view->evento->getEventoFrequencia();
-//        foreach ($grupo->getResponsabilidadesAtivas() as $gr) {
-//            $p = $gr->getPessoa();
-//            $p->setTipo('LP');
-//            $pessoas[] = $p;
-//        }
         if (count($frequencias) > 0) {
-            foreach ($frequencias as $f) {
-
-                $p = null;
-                $pAux = null;
-                $p = $f->getPessoa();
-                $pAux = new Pessoa();
-                $grupoPessoa = $p->getGrupoPessoaAtivo();
-                if ($grupoPessoa != null) {
-                    if ($this->view->entidade->getGrupo()->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::IGREJA) {
-                        $idGrupoIgrejaDoRevisionista = $grupoPessoa->getGrupo()->getGrupoIgreja();
-                        $idGrupoIgrejaLogado = $this->view->entidade->getGrupo()->getGrupoIgreja();
-                        if (($idGrupoIgrejaDoRevisionista == $idGrupoIgrejaLogado)) {
-                            $pAux->setId($f->getId());
-                            $pAux->setNome($p->getNome());
-                            if ($f->getFrequencia() == 'S') {
-                                $pAux->setNoRevisao(true);
-                            }
-                            $pessoas[] = $pAux;
-                        }
+            foreach ($frequencias as $frequencia) {
+                $revisionista = $frequencia->getPessoa();
+                if ($grupoPessoa = $revisionista->getGrupoPessoaAtivo()) {
+                    $grupoEquipe = $grupoPessoa->getGrupo()->getGrupoEquipe();
+                    $pessoa = new Pessoa();
+                    $pessoa->setId($frequencia->getId());
+                    $pessoa->setNome($revisionista->getNome());
+                    if ($grupoEquipe->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::igreja) {
+                        $pessoa->setEntidade('IGREJA');
                     } else {
-                        $idGrupoEquipeDoRevisionista = $grupoPessoa->getGrupo()->getGrupoEquipe();
-                        $idGrupoEquipeLogado = $this->view->entidade->getGrupo()->getGrupoEquipe();
-                        if (($idGrupoEquipeDoRevisionista == $idGrupoEquipeLogado)) {
-                            $pAux->setId($f->getId());
-                            $pAux->setNome($p->getNome());
-                            $pAux->setEntidade($grupoPessoa->getGrupo()->getEntidadeAtiva()->infoEntidade());
-                            if ($f->getFrequencia() == 'S') {
-                                $pAux->setNoRevisao(true);
-                            }
-                            $pessoas[] = $pAux;
-                        }
+                        $pessoa->setEntidade($grupoPessoa->getGrupo()->getEntidadeAtiva()->infoEntidade());
                     }
+                    if ($frequencia->getFrequencia() == 'S') {
+                        $pessoa->setNoRevisao(true);
+                    }
+                    $pessoas[] = $pessoa;
                 }
             }
         }
@@ -112,8 +86,8 @@ class ListagemFichasParaRevisao extends AbstractHelper {
                 $html .= '<td class="text-center">' . $pessoa->getEntidade() . '</td>';
 
                 $html .= '<td class="text-center">';
-                if($pessoa->getNoRevisao()){
-                     $html .= '<span class="label label-success">ATIVO NO REVIS&Atilde;O</span>';
+                if ($pessoa->getNoRevisao()) {
+                    $html .= '<span class="label label-success">ATIVO NO REVIS&Atilde;O</span>';
                 }
                 $html .= '</td>';
 
