@@ -1,0 +1,59 @@
+<?php
+
+use Application\Controller\Helper\Constantes;
+use Application\View\Helper\BotaoSimples;
+?>
+<style type="text/css">
+    th {
+        text-align: center;
+    }
+</style>
+<div class="mw1000 center-block p10">
+    <div class="row ">
+        <div id="content" class="animated fadeIn">
+            <blockquote class="blockquote-primary">
+                <p>Relatório de Revisao de Vidas</p>
+            </blockquote>
+            <div class="panel panel-primary heading-border">
+                <div class="panel-body bg-light p25">
+                    <table class="text-center table table-condensed table-hover bg-light mt15">
+                        <thead>
+                            <tr class="dark">
+                                <th>Time</th>
+                                <th>Reservas</th>
+                                <th>Ativas</th>
+                                <th>Faltam</th>
+                                <th>Líderes</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                            if ($this->relatorio) {
+                                foreach ($this->relatorio as $key => $relatorio) {
+                                    $classe = '';
+                                    if ($key === 'TOTAL') {
+                                        $classe = 'class="dark"';
+                                    }
+                                    echo '<tr ' . $classe . '>';
+                                    echo '<td>' . $key . '</td>';
+                                    echo '<td>' . $relatorio['reservas'] . '</td>';
+                                    echo '<td>' . $relatorio['ativas'] . '</td>';
+                                    echo '<td>' . ($relatorio['reservas'] - $relatorio['ativas']) . '</td>';
+                                    echo '<td>' . $relatorio['lideres'] . '</td>';
+                                    echo '</tr>';
+                                }
+                            }
+                            ?>
+                        </tbody>
+                    </table>                     
+                </div> 
+                <div class="panel-footer text-right">
+                    <?php
+                    $funcaoVoltar = $this->funcaoOnClick('mostrarSplash(); funcaoCircuito("cadastroAtivarFichaRevisao", ' . $this->evento->getId() . ')');
+                    echo $this->botaoLink(Constantes::$TRADUCAO_VOLTAR, Constantes::$STRING_HASHTAG, 2, $funcaoVoltar);
+                    ?>
+                </div>   
+            </div>
+        </div>
+    </div>
+</div>
