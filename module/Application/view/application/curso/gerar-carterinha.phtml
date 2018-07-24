@@ -1,45 +1,76 @@
 <?php
 
+use Application\Controller\Helper\Constantes;
 use Application\Controller\Helper\Funcoes;
 
-echo $this
-        ->headScript()
-        ->prependFile($this->basePath() . '/js/circuito_da_visao/jquery-barcode.js' . $versao)
-        ->prependFile($this->basePath() . '/vendor/jquery/jquery-1.11.1.min.js')
-;
-echo $this->inlineScript();
-echo "<div style=\"page-break-before: always\"></div>";
-foreach ($this->alunosId as $idTurmaPessoa) {
-    if ($alinhamento == "right") {
-        $alinhamento = "left";
-    } else {
-        $alinhamento = "right";
-    }
-    $turmaPessoa = $this->repositorio->getTurmaPessoaORM()->encontrarPorId($idTurmaPessoa);
+echo $this->doctype();
+?>
 
-    echo '<fieldset style="width: 8cm; height: 5cm; float: ' . $alinhamento . '; font-family: sans-serif; font-size: 10px;">';
-    echo '<div align="center">';
-    echo '<img style="padding: 10px;" src="/img/logos/logo_circuito.png" />';
-    echo '</div>';
-    echo '<hr />';
-    echo '<div align="left">';
-    echo 'Curso: ' . $turmaPessoa->getTurma()->getCurso()->getNome() . '<br />';
-    echo 'Nome: ' . $turmaPessoa->getPessoa()->getNome() . '<br />';
-    echo 'Equipe: ' . $turmaPessoa->getPessoa()->getGrupoPessoaAtivo()->getGrupo()->getEntidadeAtiva()->infoEntidade() . '<br />';
-    echo 'Revis&atilde;o: ' . Funcoes::mesPorExtenso($turmaPessoa->getTurma()->getMes(), 1) . '/' . $turmaPessoa->getTurma()->getAno() . '<br />';
-    echo '</div>';
-    echo '<br />';
-
-    echo '<div align="center" style="margin-top: 15px;">';
-    echo '<div id="code' . $turmaPessoa->getId() . '"></div>';
-    echo '<script type="text/javascript">$("#code' . $turmaPessoa->getId() . '").barcode("' . $turmaPessoa->getId() . '", "code93", {barWidth: 2, barHeight: 40});</script>';
-    echo '</div>';
-
-    echo '</fieldset>';
-    $cont8++;
-    if ($cont8 == 8) {
-        $cont8 = 0;
+<html lang="pt-BR">
+    <head>
+        <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+        <?php
+        $NAME_APPLICATION = $this->translate(Constantes::$TRADUCAO_NOME_APLICACAO);
+        echo $this
+                ->headTitle($NAME_APPLICATION)
+                ->setSeparator(' - ')
+                ->setAutoEscape(false)
+        ;
+        ?> 
+        <!-- Meta Head -->
+        <?php
+        echo $this
+                ->headMeta()
+                ->appendName('viewport', 'width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no')
+                ->appendName('theme-color', '#3498db')
+                ->appendName('google-site-verification', 'b4wOHXCDC8BakDzVfow_NeYwAGGBAEv-sCdKLsDAQUs')
+                ->appendHttpEquiv('X-UA-Compatible', 'IE=edge')
+        ;
+        ?>
+    </head>
+    <body>
+        <?php
+        echo $this
+                ->headScript()
+                ->prependFile($this->basePath() . '/js/circuito_da_visao/jquery-barcode.js' . $versao)
+                ->prependFile($this->basePath() . '/vendor/jquery/jquery-1.11.1.min.js')
+        ;
+        echo $this->inlineScript();
         echo "<div style=\"page-break-before: always\"></div>";
-    }
-}
-echo $this->botaoSimples('IMPRIMIR', $this->funcaoOnClick('print()'));
+        foreach ($this->alunosId as $idTurmaPessoa) {
+            if ($alinhamento == "right") {
+                $alinhamento = "left";
+            } else {
+                $alinhamento = "right";
+            }
+            $turmaPessoa = $this->repositorio->getTurmaPessoaORM()->encontrarPorId($idTurmaPessoa);
+
+            echo '<fieldset style="width: 8cm; height: 5cm; float: ' . $alinhamento . '; font-family: sans-serif; font-size: 10px;">';
+            echo '<div align="center">';
+            echo '<img style="padding: 10px;" src="/img/logos/logo_circuito.png" />';
+            echo '</div>';
+            echo '<hr />';
+            echo '<div align="left">';
+            echo 'Curso: ' . $turmaPessoa->getTurma()->getCurso()->getNome() . '<br />';
+            echo 'Nome: ' . $turmaPessoa->getPessoa()->getNome() . '<br />';
+            echo 'Equipe: ' . $turmaPessoa->getPessoa()->getGrupoPessoaAtivo()->getGrupo()->getEntidadeAtiva()->infoEntidade() . '<br />';
+            echo 'Revis&atilde;o: ' . Funcoes::mesPorExtenso($turmaPessoa->getTurma()->getMes(), 1) . '/' . $turmaPessoa->getTurma()->getAno() . '<br />';
+            echo '</div>';
+            echo '<br />';
+
+            echo '<div align="center" style="margin-top: 15px;">';
+            echo '<div id="code' . $turmaPessoa->getId() . '"></div>';
+            echo '<script type="text/javascript">$("#code' . $turmaPessoa->getId() . '").barcode("' . $turmaPessoa->getId() . '", "code93", {barWidth: 2, barHeight: 40});</script>';
+            echo '</div>';
+
+            echo '</fieldset>';
+            $cont8++;
+            if ($cont8 == 8) {
+                $cont8 = 0;
+                echo "<div style=\"page-break-before: always\"></div>";
+            }
+        }
+        echo $this->botaoSimples('IMPRIMIR', $this->funcaoOnClick('print()'));
+        ?>
+    </body>
+</html>

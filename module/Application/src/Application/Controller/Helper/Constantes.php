@@ -348,6 +348,9 @@ class Constantes {
     public static $PAGINA_ATIVAR_FICHA_REVISAO = 'AtivarFichaRevisao';
     public static $PAGINA_RELATORIO_FICHAS_REVISAO = 'RelatorioFichasRevisao';
     public static $PAGINA_ATIVAR_LIDERES_REVISAO = 'AtivarLideresRevisao';
+    public static $PAGINA_SELECIONAR_REVISAO_CRACHA = 'SelecionarRevisaoCracha';
+    public static $PAGINA_GERAR_CRACHA = 'GerarCracha';
+    public static $PAGINA_SELECIONAR_REVISIONISTA_CRACHA = 'SelecionarRevisionistaCracha';
     public static $PAGINA_LIDERES_REVISAO = 'LideresRevisao';
     public static $PAGINA_LISTAGEM_LIDERES = 'ListagemLideres';
     public static $PAGINA_CONSULTAR_FICHA = 'ConsultarFicha';
