@@ -1,0 +1,99 @@
+<?php
+
+use Application\Controller\Helper\Constantes;
+
+$html = '';
+$homens = array();
+$mulheres = array();
+$frequencias = $this->evento->getEventoFrequencia();
+
+if (count($frequencias) > 0) {
+    foreach ($frequencias as $frequencia) {
+        if ($frequencia->getFrequencia() == 'S') {
+            $pessoa = $frequencia->getPessoa();
+            if ($pessoa->getGrupoPessoaAtivo()) {
+                $jaExiste = false;
+                foreach ($pessoas as $pessoaParaVerificar) {
+                    if ($pessoaParaVerificar->getId() === $pessoa->getId()) {
+                        $jaExiste = true;
+                    }
+                }
+                if (!$jaExiste) {
+                    if ($pessoa->getSexo() == 'M') {
+                        $homens[] = $pessoa;
+                    } else {
+                        $mulheres[] = $pessoa;
+                    }
+                }
+            }
+        }
+    }
+}
+
+$html .= $this->templateFormularioTopo('Listagem de Líderes para o Revisão de Vidas');
+$html .= '<div class="panel-body bg-light mt50">';
+
+if (count($homens) > 0) {
+    $html .= '<h2>Revisionistas Homens</h2>';
+    $html .= '<input id="fooFilterHomem" type="text" class="form-control" placeholder="Filtro">';
+    $html .= '<table class="table table-condensed table-hover bg-light mt15 footable" data-filter="#fooFilterfooFilterHomem">';
+    $html .= '<thead>';
+    $html .= '<tr>';
+    $html .= '<th>';
+    $html .= $this->translate(Constantes::$TRADUCAO_MATRICULA);
+    $html .= '</th>';
+    $html .= '<th>';
+    $html .= $this->translate(Constantes::$TRADUCAO_NOME);
+    $html .= '</th>';
+    $html .= '<th>Time</th>';
+    $html .= '<th>Idade</th>';
+    $html .= '</tr>';
+    $html .= '</thead>';
+    $html .= '<tbody>';
+    foreach ($homens as $homem) {
+        $html .= '<tr>';
+        $html .= '<td>' . $homem->getId() . '</td>';
+        $html .= '<td><span class="visible-lg visible-md">' . $homem->getNome() . '</span><span class="visible-sm visible-xs">' . $homem->getNomePrimeiroUltimo() . '</span></td>';
+        $html .= '<td>' . $homem->getGrupoPessoaAtivo()->getGrupo()->getEntidadeAtiva()->infoEntidade() . '</td>';
+        $html .= '<td>' . $homem->getIdade() . '</td>';
+        $html .= '</tr>';
+    }
+    $html .= '</tbody>';
+    $html .= '</table>';
+} else {
+    $html .= '<div class="alert alert-warning"><i class="fa fa-warning pr10" aria-hidden="true"></i>&nbsp;Sem Homens Cadastrados!</div>';
+}
+
+if (count($homens) > 0) {
+    $html .= '<h2>Revisionistas Mulheres</h2>';
+    $html .= '<input id="fooFilterMulher" type="text" class="form-control" placeholder="Filtro">';
+    $html .= '<table class="table table-condensed table-hover bg-light mt15 footable" data-filter="#fooFilterMulher">';
+    $html .= '<thead>';
+    $html .= '<tr>';
+    $html .= '<th>';
+    $html .= $this->translate(Constantes::$TRADUCAO_MATRICULA);
+    $html .= '</th>';
+    $html .= '<th>';
+    $html .= $this->translate(Constantes::$TRADUCAO_NOME);
+    $html .= '</th>';
+    $html .= '<th>Time</th>';
+    $html .= '<th>Idade</th>';
+    $html .= '</tr>';
+    $html .= '</thead>';
+    $html .= '<tbody>';
+    foreach ($mulheres as $mulher) {
+        $html .= '<tr>';
+        $html .= '<td>' . $mulher->getId() . '</td>';
+        $html .= '<td><span class="visible-lg visible-md">' . $mulher->getNome() . '</span><span class="visible-sm visible-xs">' . $mulher->getNomePrimeiroUltimo() . '</span></td>';
+        $html .= '<td>' . $mulher->getGrupoPessoaAtivo()->getGrupo()->getEntidadeAtiva()->infoEntidade() . '</td>';
+        $html .= '<td>' . $mulher->getIdade() . '</td>';
+        $html .= '</tr>';
+    }
+    $html .= '</tbody>';
+    $html .= '</table>';
+} else {
+    $html .= '<div class="alert alert-warning"><i class="fa fa-warning pr10" aria-hidden="true"></i>&nbsp;Sem Mulheres Cadastradas!</div>';
+}
+$html .= '</div>';
+$html .= $this->templateFormularioRodape();
+echo $html;

@@ -371,12 +371,12 @@ class Menu extends AbstractHelper {
                 }
             }
 
-        $html .= '<li>';
-        $html .= '<a href="/relatorioPessoasFrequentes" onClick="mostrarSplash();">';
-        $html .= '<span class="fa fa-users"></span>';
-        $html .= 'Pessoas Frequentes';
-        $html .= '</a>';
-        $html .= '</li>';
+            $html .= '<li>';
+            $html .= '<a href="/relatorioPessoasFrequentes" onClick="mostrarSplash();">';
+            $html .= '<span class="fa fa-users"></span>';
+            $html .= 'Pessoas Frequentes';
+            $html .= '</a>';
+            $html .= '</li>';
 
             $html .= '<li>';
             $html .= '<a href="/relatorioAtendimento" onClick="mostrarSplash();">';
@@ -385,12 +385,12 @@ class Menu extends AbstractHelper {
             $html .= '</a>';
             $html .= '</li>';
 
-        $html .= '<li>';
-        $html .= '<a href="/relatorioDiscipulado" onClick="mostrarSplash();">';
-        $html .= '<span class="fa fa-users"></span>';
-        $html .= 'Discipulado';
-        $html .= '</a>';
-        $html .= '</li>';
+            $html .= '<li>';
+            $html .= '<a href="/relatorioDiscipulado" onClick="mostrarSplash();">';
+            $html .= '<span class="fa fa-users"></span>';
+            $html .= 'Discipulado';
+            $html .= '</a>';
+            $html .= '</li>';
 
             $html .= '</ul>';
 
@@ -521,6 +521,13 @@ class Menu extends AbstractHelper {
             $html .= '<a href="/cadastroFichaRevisionistas" onClick="mostrarSplash();">';
             $html .= '<span class="fa fa-terminal"></span>';
             $html .= 'Fichas Revisão de Vidas';
+            $html .= '</a>';
+            $html .= '</li>';
+
+            $html .= '<li>';
+            $html .= '<a href="/cadastroListagemRevisionistas" onClick="mostrarSplash();">';
+            $html .= '<span class="fa fa-terminal"></span>';
+            $html .= 'Revisionistas do Revisão de Vidas';
             $html .= '</a>';
             $html .= '</li>';
 
