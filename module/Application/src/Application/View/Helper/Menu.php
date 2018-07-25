@@ -371,12 +371,12 @@ class Menu extends AbstractHelper {
                 }
             }
 
-//        $html .= '<li>';
-//        $html .= '<a href="/relatorioPessoasFrequentes" onClick="mostrarSplash();">';
-//        $html .= '<span class="fa fa-users"></span>';
-//        $html .= 'Pessoas Frequentes';
-//        $html .= '</a>';
-//        $html .= '</li>';
+        $html .= '<li>';
+        $html .= '<a href="/relatorioPessoasFrequentes" onClick="mostrarSplash();">';
+        $html .= '<span class="fa fa-users"></span>';
+        $html .= 'Pessoas Frequentes';
+        $html .= '</a>';
+        $html .= '</li>';
 
             $html .= '<li>';
             $html .= '<a href="/relatorioAtendimento" onClick="mostrarSplash();">';
@@ -385,12 +385,12 @@ class Menu extends AbstractHelper {
             $html .= '</a>';
             $html .= '</li>';
 
-//        $html .= '<li>';
-//        $html .= '<a href="/relatorioDiscipulado" onClick="mostrarSplash();">';
-//        $html .= '<span class="fa fa-users"></span>';
-//        $html .= 'Discipulado';
-//        $html .= '</a>';
-//        $html .= '</li>';
+        $html .= '<li>';
+        $html .= '<a href="/relatorioDiscipulado" onClick="mostrarSplash();">';
+        $html .= '<span class="fa fa-users"></span>';
+        $html .= 'Discipulado';
+        $html .= '</a>';
+        $html .= '</li>';
 
             $html .= '</ul>';
 
@@ -403,12 +403,12 @@ class Menu extends AbstractHelper {
             $html .= '</a>';
 
             $html .= '<ul class="nav sub-nav">';
-//            $html .= '<li>';
-//            $html .= '<a href="/cursoChamada" onClick="mostrarSplash();">';
-//            $html .= '<span class="fa fa-list"></span>';
-//            $html .= 'Chamada';
-//            $html .= '</a>';
-//            $html .= '</li>';
+            $html .= '<li>';
+            $html .= '<a href="/cursoChamada" onClick="mostrarSplash();">';
+            $html .= '<span class="fa fa-list"></span>';
+            $html .= 'Chamada';
+            $html .= '</a>';
+            $html .= '</li>';
             $arrayOQueMostrarDosCursos = array();
             $arrayOQueMostrarDosCursos['reentrada'] = false;
             $arrayOQueMostrarDosCursos['turmas'] = false;
@@ -447,23 +447,23 @@ class Menu extends AbstractHelper {
                     $arrayOQueMostrarDosCursos['lancarPresenca'] = true;
                 }
             }
-//            if ($arrayOQueMostrarDosCursos['reentrada']) {
-//                $html .= '<li>';
-//                $html .= '<a href="/cursoReentrada" onClick="mostrarSplash();">';
-//                $html .= '<span class="fa fa-user"></span>';
-//                $html .= 'Reentrada de Aluno';
-//                $html .= '</a>';
-//                $html .= '</li>';
-//            }
-//
-//            if ($arrayOQueMostrarDosCursos['turmas']) {
-//                $html .= '<li>';
-//                $html .= '<a href="/cursoListarTurma" onClick="mostrarSplash();">';
-//                $html .= '<span class="fa fa-list"></span>';
-//                $html .= 'Turmas';
-//                $html .= '</a>';
-//                $html .= '</li>';
-//            }
+            if ($arrayOQueMostrarDosCursos['reentrada']) {
+                $html .= '<li>';
+                $html .= '<a href="/cursoReentrada" onClick="mostrarSplash();">';
+                $html .= '<span class="fa fa-user"></span>';
+                $html .= 'Reentrada de Aluno';
+                $html .= '</a>';
+                $html .= '</li>';
+            }
+
+            if ($arrayOQueMostrarDosCursos['turmas']) {
+                $html .= '<li>';
+                $html .= '<a href="/cursoListarTurma" onClick="mostrarSplash();">';
+                $html .= '<span class="fa fa-list"></span>';
+                $html .= 'Turmas';
+                $html .= '</a>';
+                $html .= '</li>';
+            }
             if ($arrayOQueMostrarDosCursos['usuarios']) {
                 $html .= '<li>';
                 $html .= '<a href="/cursoUsuarios" onClick="mostrarSplash();">';
@@ -472,38 +472,38 @@ class Menu extends AbstractHelper {
                 $html .= '</a>';
                 $html .= '</li>';
             }
-//            if ($arrayOQueMostrarDosCursos['gerarCarterinhas']) {
-//                $html .= '<li>';
-//                $html .= '<a href="/cursoSelecionarParaCarterinha" onClick="mostrarSplash();">';
-//                $html .= '<span class="fa fa-user"></span>';
-//                $html .= 'Gerar Carterinha';
-//                $html .= '</a>';
-//                $html .= '</li>';
-//            }
-//            if ($arrayOQueMostrarDosCursos['gerarReposicoes']) {
-//                $html .= '<li>';
-//                $html .= '<a href="/cursoSelecionarReposicoes" onClick="mostrarSplash();">';
-//                $html .= '<span class="fa fa-list"></span>';
-//                $html .= 'Gerar Reposições';
-//                $html .= '</a>';
-//                $html .= '</li>';
-//            }
-//            if ($arrayOQueMostrarDosCursos['gerarFaltas']) {
-//                $html .= '<li>';
-//                $html .= '<a href="/cursoGerarFaltas" onClick="mostrarSplash();">';
-//                $html .= '<span class="fa fa-money"></span>';
-//                $html .= 'Gerar Faltas';
-//                $html .= '</a>';
-//                $html .= '</li>';
-//            }
-//            if ($arrayOQueMostrarDosCursos['lancarPresenca']) {
-//                $html .= '<li>';
-//                $html .= '<a href="/cursoLancarPresenca" onClick="mostrarSplash();">';
-//                $html .= '<span class="fa fa-pencil"></span>';
-//                $html .= 'Lançar Presença/Reposição';
-//                $html .= '</a>';
-//                $html .= '</li>';
-//            }
+            if ($arrayOQueMostrarDosCursos['gerarCarterinhas']) {
+                $html .= '<li>';
+                $html .= '<a href="/cursoSelecionarParaCarterinha" onClick="mostrarSplash();">';
+                $html .= '<span class="fa fa-user"></span>';
+                $html .= 'Gerar Carterinha';
+                $html .= '</a>';
+                $html .= '</li>';
+            }
+            if ($arrayOQueMostrarDosCursos['gerarReposicoes']) {
+                $html .= '<li>';
+                $html .= '<a href="/cursoSelecionarReposicoes" onClick="mostrarSplash();">';
+                $html .= '<span class="fa fa-list"></span>';
+                $html .= 'Gerar Reposições';
+                $html .= '</a>';
+                $html .= '</li>';
+            }
+            if ($arrayOQueMostrarDosCursos['gerarFaltas']) {
+                $html .= '<li>';
+                $html .= '<a href="/cursoGerarFaltas" onClick="mostrarSplash();">';
+                $html .= '<span class="fa fa-money"></span>';
+                $html .= 'Gerar Faltas';
+                $html .= '</a>';
+                $html .= '</li>';
+            }
+            if ($arrayOQueMostrarDosCursos['lancarPresenca']) {
+                $html .= '<li>';
+                $html .= '<a href="/cursoLancarPresenca" onClick="mostrarSplash();">';
+                $html .= '<span class="fa fa-pencil"></span>';
+                $html .= 'Lançar Presença/Reposição';
+                $html .= '</a>';
+                $html .= '</li>';
+            }
             $html .= '</ul>';
             $html .= '</li>';
 
