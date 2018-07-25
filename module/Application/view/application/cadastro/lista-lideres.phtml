@@ -8,16 +8,18 @@ $frequencias = $this->evento->getEventoFrequencia();
 
 if (count($frequencias) > 0) {
     foreach ($frequencias as $frequencia) {
-        $pessoa = $frequencia->getPessoa();
-        if ($grupoRespossabilidades = $pessoa->getResponsabilidadesAtivas()) {
-            $jaExiste = false;
-            foreach ($pessoas as $pessoaParaVerificar) {
-                if ($pessoaParaVerificar->getId() === $pessoa->getId()) {
-                    $jaExiste = true;
+        if ($frequencia->getFrequencia() == 'S') {
+            $pessoa = $frequencia->getPessoa();
+            if ($grupoRespossabilidades = $pessoa->getResponsabilidadesAtivas()) {
+                $jaExiste = false;
+                foreach ($pessoas as $pessoaParaVerificar) {
+                    if ($pessoaParaVerificar->getId() === $pessoa->getId()) {
+                        $jaExiste = true;
+                    }
                 }
-            }
-            if (!$jaExiste) {
-                $pessoas[] = $pessoa;
+                if (!$jaExiste) {
+                    $pessoas[] = $pessoa;
+                }
             }
         }
     }
@@ -44,35 +46,26 @@ if (count($pessoas) == 0) {
     $html .= $this->templateFormularioTopo('Listagem de Líderes para o Revisão de Vidas');
     $html .= '<div class="panel-body bg-light">';
 
-    $html .= '<table class="table">';
+    $html .= '<input id="fooFilter" type="text" class="form-control" placeholder="Filtro">';
+    $html .= '<table class="table table-condensed table-hover bg-light mt15 footable" data-filter="#fooFilter">';
     $html .= '<thead>';
     $html .= '<tr>';
 
-    $html .= '<th class="text-center">';
+    $html .= '<th>';
     $html .= $this->translate(Constantes::$TRADUCAO_MATRICULA);
     $html .= '</th>';
-    $html .= '<th class="text-center">';
+    $html .= '<th>';
     $html .= $this->translate(Constantes::$TRADUCAO_NOME);
     $html .= '</th>';
-
-    $html .= '<th class="text-center">Equipe</th>';
-    $html .= '<th class="text-center"></th>';
-
-    $html .= '<th class="text-center"></th>';
+    $html .= '<th>Time</th>';
     $html .= '</tr>';
     $html .= '</thead>';
     $html .= '<tbody>';
-
     foreach ($pessoas as $pessoa) {
         $html .= '<tr>';
-
         $html .= '<td>' . $pessoa->getId() . '</td>';
-
         $html .= '<td><span class="visible-lg visible-md">' . $pessoa->getNome() . '</span><span class="visible-sm visible-xs">' . $pessoa->getNomePrimeiroUltimo() . '</span></td>';
-
-        $html .= '<td>' . $pessoa->getResponsabilidadesAtivas()[0]->getGrupo()->getGrupoEquipe()->getEntidadeAtiva()->getNome() . '</td>';
         $html .= '<td>' . $pessoa->getResponsabilidadesAtivas()[0]->getGrupo()->getEntidadeAtiva()->infoEntidade() . '</td>';
-
         $html .= '</tr>';
     }
     $html .= '</tbody>';
