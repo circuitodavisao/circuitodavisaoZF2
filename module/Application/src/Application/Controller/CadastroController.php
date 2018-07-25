@@ -1772,30 +1772,31 @@ class CadastroController extends CircuitoController {
         $response = $this->getResponse();
 
         if ($request->isPost()) {
-
+            $dados = array();
+            $dados['response'] = true;
             $post_data = $request->getPost();
             $idEventoFrequencia = $post_data['idEventoFrequencia'];
             if ($idEventoFrequencia != null || $idEventoFrequencia == 0) {
-                $eventoFrequencia = $this->getRepositorio()->getEventoFrequenciaORM()->encontrarPorIdEventoFrequencia($idEventoFrequencia);
-                $dados = array();
-                $dados['response'] = true;
-                $dados['status'] = 1;
-                /* Revisionista */
-                if ($grupoPessoaRevisionista = $eventoFrequencia->getPessoa()->getGrupoPessoaAtivo()) {
-                    $dados['label'] = 'Revisionista';
-                    $dados['nomeRevisionista'] = $eventoFrequencia->getPessoa()->getNome();
-                    $dados['nomeEntidadeLider'] = $grupoPessoaRevisionista->getGrupo()->getEntidadeAtiva()->infoEntidade();
-                    $dados['idEventoFrequencia'] = $eventoFrequencia->getId();
-                } else {
-                    /* Lider */
-                    if ($responsabilidadeAtivas = $eventoFrequencia->getPessoa()->getResponsabilidadesAtivas()) {
-                        $dados['label'] = 'Líder';
+                if ($eventoFrequencia = $this->getRepositorio()->getEventoFrequenciaORM()->encontrarPorIdEventoFrequencia($idEventoFrequencia)) {
+                    $dados['status'] = 1;
+                    /* Revisionista */
+                    if ($grupoPessoaRevisionista = $eventoFrequencia->getPessoa()->getGrupoPessoaAtivo()) {
+                        $dados['label'] = 'Revisionista';
                         $dados['nomeRevisionista'] = $eventoFrequencia->getPessoa()->getNome();
-                        $dados['nomeEntidadeLider'] = $responsabilidadeAtivas[0]->getGrupo()->getEntidadeAtiva()->infoEntidade();
+                        $dados['nomeEntidadeLider'] = $grupoPessoaRevisionista->getGrupo()->getEntidadeAtiva()->infoEntidade();
                         $dados['idEventoFrequencia'] = $eventoFrequencia->getId();
+                    } else {
+                        /* Lider */
+                        if ($responsabilidadeAtivas = $eventoFrequencia->getPessoa()->getResponsabilidadesAtivas()) {
+                            $dados['label'] = 'Líder';
+                            $dados['nomeRevisionista'] = $eventoFrequencia->getPessoa()->getNome();
+                            $dados['nomeEntidadeLider'] = $responsabilidadeAtivas[0]->getGrupo()->getEntidadeAtiva()->infoEntidade();
+                            $dados['idEventoFrequencia'] = $eventoFrequencia->getId();
+                        }
                     }
+                } else {
+                    $dados['status'] = 0;
                 }
-
                 $response->setContent(Json::encode($dados));
             } else {
                 $response->setContent(Json::encode(array('response' => 'true', 'status' => 0,)));

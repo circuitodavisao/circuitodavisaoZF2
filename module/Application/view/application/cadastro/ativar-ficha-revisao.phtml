@@ -25,7 +25,7 @@ $form->setAttribute(Constantes::$ACTION, $this->url(Constantes::$ROUTE_CADASTRO,
                                 <?php
                                 echo $this->inputFormularioSimples(Constantes::$TRADUCAO_MATRICULA, $form->get(Constantes::$INPUT_CODIGO), 10);
                                 echo '<div class="col-lg-2 col-md-2 col-sm-2 col-xs-12 mt35">';
-                                $funcaoPesquisar = $this->funcaoOnClick('consultarFicha()');
+                                $funcaoPesquisar = 'onClick="if($(\'#codigo\').val()){consultarFicha();}"';
                                 echo $this->botaoSimples('Pesquisar', $funcaoPesquisar, BotaoSimples::botaoImportante, BotaoSimples::larguraMaxima);
                                 echo '</div>';
                                 ?>
