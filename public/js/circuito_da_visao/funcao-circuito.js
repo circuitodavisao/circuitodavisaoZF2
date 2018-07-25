@@ -5,7 +5,7 @@
  */
 
 
-function funcaoCircuito(funcao, id) {
+function funcaoCircuito(funcao, id, novaJanela = false) {
     var resposta = true;
 
     if (resposta) {
@@ -18,11 +18,15 @@ function funcaoCircuito(funcao, id) {
                 function (data) {
                     if (data.response) {
                         if (data.tipoDeRetorno === 1) {
-                            location.href = data.url;
+                            if (novaJanela) {
+                                window.open(data.url, '_blank');
+                            } else {
+                                location.href = data.url;
+                            }
                         }
                     }
                 }, 'json');
-    }
+}
 }
 
 function mudarPeriodo() {

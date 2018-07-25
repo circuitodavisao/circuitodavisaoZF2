@@ -51,11 +51,10 @@ class ListagemFichasParaRevisao extends AbstractHelper {
         if (count($pessoas) == 0) {
             $html .= '<div class="alert alert-warning"><i class="fa fa-warning pr10" aria-hidden="true"></i>&nbsp;Sem Pessoas Cadastradas!</div>';
         } else {
-
             $html .= $this->view->templateFormularioTopo('Fichas do Revisão de Vidas');
             $html .= '<div class="panel-body bg-light">';
-
-            $html .= '<table class="table">';
+            $html .= '<input id="fooFilter" type="text" class="form-control" placeholder="Filtro">';
+            $html .= '<table class="table table-condensed table-hover bg-light mt15 footable" data-filter="#fooFilter">';
             $html .= '<thead>';
             $html .= '<tr>';
 
@@ -68,34 +67,25 @@ class ListagemFichasParaRevisao extends AbstractHelper {
 
             $html .= '<th class="text-center">Equipe</th>';
             $html .= '<th class="text-center">Ativo no Revisão</th>';
-//                    }
-            $html .= '<th class="text-center"></th>';
+            $html .= '<td></td>';
             $html .= '</tr>';
             $html .= '</thead>';
             $html .= '<tbody>';
-
             foreach ($pessoas as $pessoa) {
                 $html .= '<tr>';
-
                 $html .= '<td class="text-center">' . $pessoa->getId() . '</td>';
 
-                $stringNomeDaFuncaoOnClickInserir = 'funcaoCadastro("' . Constantes::$PAGINA_FICHA_REVISAO . '", ' . $pessoa->getId() . ')';
-
                 $html .= '<td class="text-center"><span class="visible-lg visible-md">' . $pessoa->getNome() . '</span><span class="visible-sm visible-xs">' . $pessoa->getNomePrimeiroUltimo() . '</span></td>';
-
                 $html .= '<td class="text-center">' . $pessoa->getEntidade() . '</td>';
-
                 $html .= '<td class="text-center">';
                 if ($pessoa->getNoRevisao()) {
                     $html .= '<span class="label label-success">ATIVO NO REVIS&Atilde;O</span>';
                 }
                 $html .= '</td>';
-
                 $html .= '<td class="text-center">';
-
-                $html .= $this->view->botaoLink(Constantes::$STRING_ICONE_PLUS . '  ' . $this->view->translate(Constantes::$TRADUCAO_VER_FICHA_REVISIONISTA), Constantes::$STRING_HASHTAG, 4, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClickInserir));
+                $stringNomeDaFuncaoOnClickInserir = 'funcaoCircuito("cadastro' . Constantes::$PAGINA_FICHA_REVISAO . '", ' . $pessoa->getId() . ', true)';
+                $html .= $this->view->botaoLink('Ficha', Constantes::$STRING_HASHTAG, 4, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClickInserir));
                 $html .= '</td>';
-//                        }
                 $html .= '</tr>';
             }
             $html .= '</tbody>';
@@ -105,32 +95,13 @@ class ListagemFichasParaRevisao extends AbstractHelper {
             /* Fim panel-body */
             $html .= '<div class="panel-footer text-right">';
             /* Botões */
-//                if ($tipoCelula) {
-//                    if (count($this->getEventos()) < 2) {
-//                        $stringNomeDaFuncaoOnClickCadastro = 'funcaoCadastro("' . Constantes::$PAGINA_EVENTO_CELULA . '", 0)';
-//                        $html .= $this->view->botaoLink(Constantes::$STRING_ICONE_PLUS . ' ' . $this->view->translate(Constantes::$TRADUCAO_NOVA_CELULA), Constantes::$STRING_HASHTAG, 0, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClickCadastro));
-//                    } else {
-//                        $html .= '<div class="alert alert-micro alert-warning">';
-//                        $html .= '<i class="fa fa-warning pr10" aria-hidden="true"></i>';
-//                        $html .= $this->view->translate(Constantes::$TRADUCAO_NUMERO_MAXIMO_CELULAS);
-//                        $html .= '</div>';
-//                    }
-//                }
-//                if ($tipoCulto) {
-//                    $stringNomeDaFuncaoOnClickCadastro = 'funcaoCadastro("' . Constantes::$PAGINA_EVENTO_CULTO . '", 0)';
-//                    $html .= $this->view->botaoLink(Constantes::$STRING_ICONE_PLUS . ' ' . $this->view->translate(Constantes::$TRADUCAO_NOVO_CULTO), Constantes::$STRING_HASHTAG, 0, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClickCadastro));
-//                }
-//                if ($tipoRevisao) {
-            $stringNomeDaFuncaoOnClickCadastro = 'funcaoCadastro("' . Constantes::$PAGINA_FICHA_REVISIONISTAS . '", ' . $pessoa->getId() . ')';
+            $stringNomeDaFuncaoOnClickCadastro = 'funcaoCircuito("cadastro' . Constantes::$PAGINA_FICHA_REVISIONISTAS . '", ' . $pessoa->getId() . ')';
             $html .= $this->view->botaoLink($this->view->translate(Constantes::$TRADUCAO_VOLTAR), Constantes::$STRING_HASHTAG, 0, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClickCadastro));
-//                }
-
             /* Fim Botões */
             $html .= '</div>';
             /* Fim panel-footer */
             $html .= $this->view->templateFormularioRodape();
         }
-
         return $html;
     }
 
