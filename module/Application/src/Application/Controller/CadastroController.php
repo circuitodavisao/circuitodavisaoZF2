@@ -195,6 +195,11 @@ class CadastroController extends CircuitoController {
                         Constantes::$ACTION => Constantes::$PAGINA_LISTA_LIDERES,
             ));
         }
+        if ($pagina == Constantes::$PAGINA_LISTA_REVISIONISTAS) {
+            return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
+                        Constantes::$ACTION => Constantes::$PAGINA_LISTA_REVISIONISTAS,
+            ));
+        }
         if ($pagina == Constantes::$PAGINA_CONSULTAR_FICHA) {
             return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
                         Constantes::$ACTION => Constantes::$PAGINA_CONSULTAR_FICHA,
@@ -339,6 +344,12 @@ class CadastroController extends CircuitoController {
             $listagemDeEventos = $grupo->getGrupoEventoRevisao();
             $tituloDaPagina = 'Selecione os revisionistas para gerar o crachás';
             $tipoEvento = 12;
+            $extra = $grupo->getId();
+        }
+        if ($pagina == Constantes::$PAGINA_LISTAGEM_REVISIONISTAS) {
+            $listagemDeEventos = $grupo->getGrupoEventoRevisao();
+            $tituloDaPagina = Constantes::$PAGINA_LISTAGEM_REVISIONISTAS;
+            $tipoEvento = 13;
             $extra = $grupo->getId();
         }
         $view = new ViewModel(array(
@@ -1676,6 +1687,32 @@ class CadastroController extends CircuitoController {
     }
 
     public function listaLideresAction() {
+        $sessao = new Container(Constantes::$NOME_APLICACAO);
+
+        $idRevisao = $sessao->idSessao;
+        $idEntidadeAtual = $sessao->idEntidadeAtual;
+        $entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+        $sessao->idRevisao = $idRevisao;
+        $eventoRevisao = $this->getRepositorio()->getEventoORM()->encontrarPorId($idRevisao);
+        $view = new ViewModel(array(
+            'repositorioORM' => $this->getRepositorio(),
+            'evento' => $eventoRevisao,
+            'entidade' => $entidade,
+        ));
+
+        /* Javascript */
+        $layoutJS = new ViewModel();
+        $layoutJS->setTemplate(Constantes::$LAYOUT_JS_EVENTOS);
+        $view->addChild($layoutJS, Constantes::$LAYOUT_STRING_JS_EVENTOS);
+
+        $layoutJSValidacao = new ViewModel();
+        $layoutJSValidacao->setTemplate(Constantes::$LAYOUT_JS_EVENTOS_VALIDACAO);
+        $view->addChild($layoutJSValidacao, Constantes::$LAYOUT_STRING_JS_EVENTOS_VALIDACAO);
+
+        return $view;
+    }
+
+    public function listaRevisionistasAction() {
         $sessao = new Container(Constantes::$NOME_APLICACAO);
 
         $idRevisao = $sessao->idSessao;

@@ -353,6 +353,7 @@ class Constantes {
     public static $PAGINA_SELECIONAR_REVISIONISTA_CRACHA = 'SelecionarRevisionistaCracha';
     public static $PAGINA_LIDERES_REVISAO = 'LideresRevisao';
     public static $PAGINA_LISTAGEM_LIDERES = 'ListagemLideres';
+    public static $PAGINA_LISTAGEM_REVISIONISTAS = 'ListagemRevisionistas';
     public static $PAGINA_CONSULTAR_FICHA = 'ConsultarFicha';
     public static $PAGINA_FUNCOES = 'Funcoes';
     public static $PAGINA_MUDAR_ATENDIMENTO = 'MudarAtendimento';
@@ -495,6 +496,7 @@ class Constantes {
     public static $PAGINA_SELECIONAR_REVISIONISTA = 'SelecionarRevisionista';
     public static $PAGINA_SELECIONAR_FICHA_REVISIONISTA = 'SelecionarFichasRevisionista';
     public static $PAGINA_LISTA_LIDERES = 'ListaLideres';
+    public static $PAGINA_LISTA_REVISIONISTAS = 'ListaRevisionistas';
     public static $PAGINA_SELECIONAR_FICHA_ATIVAS = 'SelecionarFichasAtivas';
     public static $PAGINA_INSERIR_REVISAO = 'InserirRevisao';
     public static $PAGINA_SALVAR_REVISAO = 'SalvarRevisao';

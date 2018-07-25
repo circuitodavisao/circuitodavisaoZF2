@@ -41,6 +41,7 @@ class ListagemDeEventos extends AbstractHelper {
         $tipoListarDiscipulados = ($this->view->tipoEvento == 10);
         $tipoListarLideres = ($this->view->tipoEvento == 11);
         $tipoSelecionarRevisaoCracha = ($this->view->tipoEvento == 12);
+        $tipoListarRevisionistas = ($this->view->tipoEvento == 13);
 
         $html .= $this->view->templateFormularioTopo($this->getTitulo());
         $html .= '<div class="panel-body bg-light">';
@@ -89,7 +90,7 @@ class ListagemDeEventos extends AbstractHelper {
                 $html .= $this->view->translate(Constantes::$TRADUCAO_IGREJAS);
                 $html .= '</th>';
             }
-            if ($tipoRevisionistas || $tipoFichasRevisionistas || $tipoAtivosRevisionistas || $tipoLideresRevisao || $tipoListarLideres || $tipoSelecionarRevisaoCracha) {
+            if ($tipoRevisionistas || $tipoFichasRevisionistas || $tipoAtivosRevisionistas || $tipoLideresRevisao || $tipoListarLideres || $tipoSelecionarRevisaoCracha || $tipoListarRevisionistas) {
                 $html .= '<th class="text-center">';
                 $html .= $this->view->translate(Constantes::$TRADUCAO_DATA_SIMPLIFICADO);
                 $html .= '</th>';
@@ -214,7 +215,7 @@ class ListagemDeEventos extends AbstractHelper {
                     $html .= $this->view->botaoLink($this->view->translate(Constantes::$TRADUCAO_NOVO_REVISIONISTA), Constantes::$STRING_HASHTAG, 4, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClickInserir));
                     $html .= '</td>';
                 }
-                if ($tipoFichasRevisionistas || $tipoListarLideres || $tipoSelecionarRevisaoCracha) {
+                if ($tipoFichasRevisionistas || $tipoListarLideres || $tipoSelecionarRevisaoCracha || $tipoListarRevisionistas) {
 
                     $html .= '<td class="text-center">' . Funcoes::mudarPadraoData($evento->getData(), 1) . '</td>';
 
@@ -237,6 +238,9 @@ class ListagemDeEventos extends AbstractHelper {
                     }
                     if ($tipoSelecionarRevisaoCracha) {
                         $stringNomeDaFuncaoOnClickInserir = 'mostrarSplash(); funcaoCircuito("cadastro' . Constantes::$PAGINA_SELECIONAR_REVISIONISTA_CRACHA . '", ' . $evento->getId() . ')';
+                    }
+                    if ($tipoListarRevisionistas) {
+                        $stringNomeDaFuncaoOnClickInserir = 'mostrarSplash(); funcaoCircuito("cadastro' . Constantes::$PAGINA_LISTA_REVISIONISTAS . '", ' . $evento->getId() . ')';
                     }
                     $html .= $this->view->botaoLink($this->view->translate(Constantes::$TRADUCAO_SELECIONE), Constantes::$STRING_HASHTAG, 4, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClickInserir));
                     $html .= '</td>';
