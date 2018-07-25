@@ -2348,14 +2348,16 @@ class CadastroController extends CircuitoController {
                 } else {
                     /* Lideres */
                     if ($eventoFrequencia->getPessoa()->getResponsabilidadesAtivas()) {
-                        $grupoLider = $eventoFrequencia->getPessoa()->getResponsabilidadesAtivas()[0]->getGrupo();
-                        if ($grupoEquipe = $grupoLider->getGrupoEquipe()) {
-                            if ($grupoEquipe->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::EQUIPE) {
-                                $relatorio[$grupoEquipe->getEntidadeAtiva()->getNome()]['lideres'] ++;
-                                $soma['lideres'] ++;
-                            } else {
-                                $relatorio['IGREJA']['lideres'] ++;
-                                $soma['lideres'] ++;
+                        if ($eventoFrequencia->getFrequencia() == 'S') {
+                            $grupoLider = $eventoFrequencia->getPessoa()->getResponsabilidadesAtivas()[0]->getGrupo();
+                            if ($grupoEquipe = $grupoLider->getGrupoEquipe()) {
+                                if ($grupoEquipe->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::EQUIPE) {
+                                    $relatorio[$grupoEquipe->getEntidadeAtiva()->getNome()]['lideres'] ++;
+                                    $soma['lideres'] ++;
+                                } else {
+                                    $relatorio['IGREJA']['lideres'] ++;
+                                    $soma['lideres'] ++;
+                                }
                             }
                         }
                     }
