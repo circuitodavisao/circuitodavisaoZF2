@@ -43,7 +43,7 @@ function consultarFicha() {
                         botaoLimparCampos.removeClass('hidden');
                     }
                     if (status == 0) {
-                        divMensagens.html("Ficha nao Encontrada!!!");
+                        divMensagens.html("Ficha não Encontrada!!!");
                         divMensagens.removeClass('hidden');
                         divMensagens.removeClass('alert-success');
                         divMensagens.addClass('alert-danger');
