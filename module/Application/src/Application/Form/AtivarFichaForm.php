@@ -55,7 +55,6 @@ class AtivarFichaForm extends Form {
                             Constantes::$FORM_STRING_CLASS => Constantes::$FORM_STRING_CLASS_GUI_INPUT,
                             Constantes::$FORM_STRING_ID => Constantes::$INPUT_CODIGO,
                             Constantes::$FORM_STRING_PLACEHOLDER => Constantes::$TRADUCAO_MATRICULA,
-                            Constantes::$FORM_ONBLUR => 'consultarFicha();',
                         ])
         );
         

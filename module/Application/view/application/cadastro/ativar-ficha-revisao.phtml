@@ -3,11 +3,6 @@
 use Application\Controller\Helper\Constantes;
 use Application\View\Helper\BotaoSimples;
 
-/**
- * Nome: selecionar_revisionistas.phtml
- * @author Lucas Filipe de Carvalho Cunha <lucsacarvalho.esw@gmail.com> 
- * Descricao: Página de listagem de pessoas para o Revisao
- */
 $form = $this->AtivarFichaForm;
 $form->prepare();
 $form->setAttribute(Constantes::$ACTION, $this->url(Constantes::$ROUTE_CADASTRO, array(Constantes::$PAGINA => Constantes::$PAGINA_ATIVAR_RESERVA_REVISAO)));
@@ -28,9 +23,12 @@ $form->setAttribute(Constantes::$ACTION, $this->url(Constantes::$ROUTE_CADASTRO,
                             <?php echo $this->divMensagens(); ?>
                             <div id="inputCodigo">
                                 <?php
-                                echo $this->inputFormularioSimples(Constantes::$TRADUCAO_MATRICULA, $form->get(Constantes::$INPUT_CODIGO), 6);
-                                ?> 
-                                <button class="btn btn-success mt35">Pesquisar</button>
+                                echo $this->inputFormularioSimples(Constantes::$TRADUCAO_MATRICULA, $form->get(Constantes::$INPUT_CODIGO), 10);
+                                echo '<div class="col-lg-2 col-md-2 col-sm-2 col-xs-12 mt35">';
+                                $funcaoPesquisar = $this->funcaoOnClick('consultarFicha()');
+                                echo $this->botaoSimples('Pesquisar', $funcaoPesquisar, BotaoSimples::botaoImportante, BotaoSimples::larguraMaxima);
+                                echo '</div>';
+                                ?>
                             </div>    
                         </div>
                         <?php echo $this->formHidden($form->get(Constantes::$FORM_ID)); ?>
@@ -48,10 +46,10 @@ $form->setAttribute(Constantes::$ACTION, $this->url(Constantes::$ROUTE_CADASTRO,
                                 ?>
                             </span>
                             <?php
-                            $stringNomeDaFuncaoOnClickCadastro = 'funcaoCadastro("' . Constantes::$PAGINA_ATIVAR_FICHAS . '", 0)';
+                            $stringNomeDaFuncaoOnClickCadastro = 'mostrarSplash(); funcaoCadastro("' . Constantes::$PAGINA_ATIVAR_FICHAS . '", 0)';
                             echo $this->botaoLink($this->translate(Constantes::$TRADUCAO_VOLTAR), Constantes::$STRING_HASHTAG, 2, $this->funcaoOnClick($stringNomeDaFuncaoOnClickCadastro));
                             /* Submit */
-                            $funcaoVerificarCadastroPessoa = $this->funcaoOnClick('confirmar(this.form)');
+                            $funcaoVerificarCadastroPessoa = $this->funcaoOnClick('mostrarSplash(); confirmar(this.form)');
                             echo $this->botaoSimples($this->translate(Constantes::$TRADUCAO_CONFIRMACAO), "id ='botaoBuscarFicha' type='submit' disabled " . $funcaoVerificarCadastroPessoa);
                             ?>
                         </div>
@@ -59,7 +57,7 @@ $form->setAttribute(Constantes::$ACTION, $this->url(Constantes::$ROUTE_CADASTRO,
                         <?php echo $this->form()->closeTag() ?>
                     </div>
                     <br />
-                    <?php echo $this->listagemFichasAtivasRevisao(1); ?>
+                    <?php echo $this->listagemFichasAtivasRevisao(); ?>
                     <!-- end .admin-form section -->
                 </div>
                 <!-- end: .admin-form -->
