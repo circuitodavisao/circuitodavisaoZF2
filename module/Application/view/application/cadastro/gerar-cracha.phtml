@@ -41,7 +41,7 @@ echo $this->doctype();
             }
             $eventoFrequencia = $this->repositorio->getEventoFrequenciaORM()->encontrarPorId($revisionista);
 
-            echo '<fieldset style="width: 9cm; height: 5.3cm; float: ' . $alinhamento . '; font-family: sans-serif; font-size: 10px;">';
+            echo '<fieldset style="width: 9cm; height: 5.3cm; font-family: sans-serif; font-size: 10px;">';
             echo '<div align="center">';
             echo '<h2>Revisionista</h2>';
             echo '<h1>' . $eventoFrequencia->getPessoa()->getNome() . '</h1>';
@@ -58,18 +58,18 @@ echo $this->doctype();
 //            $contador++;
 //            if ($contador == 11) {
 //                $contador = 0;
-                echo "<div style=\"page-break-before: always\"></div>";
+            echo "<div style=\"page-break-before: always\"></div>";
 //            }
         }
         $contador = 0;
         foreach ($this->lista['lideres'] as $lider) {
-            if ($alinhamento == "right") {
-                $alinhamento = "left";
-            } else {
-                $alinhamento = "right";
-            }
+//            if ($alinhamento == "right") {
+//                $alinhamento = "left";
+//            } else {
+//                $alinhamento = "right";
+//            }
             $eventoFrequencia = $this->repositorio->getEventoFrequenciaORM()->encontrarPorId($lider);
-            echo '<fieldset style="width: 9cm; height: 5.3cm; float: ' . $alinhamento . '; font-family: sans-serif; font-size: 10px;">';
+            echo '<fieldset style="width: 9cm; height: 5.3cm; font-family: sans-serif; font-size: 10px;">';
             echo '<div align="center">';
             echo '<h2>' . $eventoFrequencia->getPessoa()->getPessoaHierarquiaAtivo()->getHierarquia()->getNome() . '</h2>';
             echo '<h1>' . $eventoFrequencia->getPessoa()->getNome() . '</h1>';
@@ -85,7 +85,7 @@ echo $this->doctype();
 //            $contador++;
 //            if ($contador == 11) {
 //                $contador = 0;
-                echo "<div style=\"page-break-before: always\"></div>";
+            echo "<div style=\"page-break-before: always\"></div>";
 //            }
         }
         ?>
