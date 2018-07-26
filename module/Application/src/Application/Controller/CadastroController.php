@@ -2419,11 +2419,15 @@ class CadastroController extends CircuitoController {
             foreach ($eventoFrequencias as $eventoFrequencia) {
                 /* Revisionistas */
                 if ($eventoFrequencia->getPessoa()->getGrupoPessoaAtivo()) {
-                    $relatorio['revisionistas'][] = $eventoFrequencia;
+                    if ($eventoFrequencias->getFrequencia() == 'S') {
+                        $relatorio['revisionistas'][] = $eventoFrequencia;
+                    }
                 } else {
                     if ($eventoFrequencia->getPessoa()->getResponsabilidadesAtivas()) {
                         /* Lideres */
-                        $relatorio['lideres'][] = $eventoFrequencia;
+                        if ($eventoFrequencias->getFrequencia() == 'S') {
+                            $relatorio['lideres'][] = $eventoFrequencia;
+                        }
                     }
                 }
             }
