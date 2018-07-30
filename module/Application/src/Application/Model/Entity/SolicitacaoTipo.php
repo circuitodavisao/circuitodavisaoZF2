@@ -22,6 +22,7 @@ class SolicitacaoTipo extends CircuitoEntity {
     const SEPARAR = 4;
     const TROCAR_RESPONSABILIDADES = 5;
     const REMOVER_LIDER = 6;
+    const REMOVER_CELULA = 7;
 
     /**
      * @ORM\OneToMany(targetEntity="Solicitacao", mappedBy="solicitacaoTipo") 

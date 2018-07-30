@@ -4,32 +4,29 @@
 
 CREATE TABLE solicitacao
 (
-  id serial NOT NULL, -- Identificação da associação da pessoa com a hierarquia
-  solicitante_id integer NOT NULL, -- Identificação da pessoa solicitante
-  solicitacao_tipo_id integer NOT NULL, -- Tipo da solicitação
-  objeto1 integer NOT NULL, -- Id do objeto que vai ser transferido
-  objeto2 integer, -- Id do objeto para onde vai
-  nome character varying(45), -- Nome para as entidades: igreja, equipes
-  numero integer, -- Número para as entidades: região, coordenação e subs
-  data_criacao date NOT NULL DEFAULT ('now'::text)::date, -- Data de criação da associação pessoa com a hierarquia
-  hora_criacao time without time zone NOT NULL DEFAULT ('now'::text)::time with time zone, -- Hora de criação da associação pessoa com a hierarquia
-  data_inativacao date, -- Data da inativação da associação pessoa com a hierarquia
-  hora_inativacao time without time zone, -- Hora da inativação da associativa pessoa com a hierarquia
-  CONSTRAINT pk_solicitacao PRIMARY KEY (id),
-  CONSTRAINT fk_solicitacao_grupo_id FOREIGN KEY (grupo_id)
-      REFERENCES grupo (id) MATCH SIMPLE
-      ON UPDATE NO ACTION ON DELETE NO ACTION,
-  CONSTRAINT fk_solicitacao_solicitacao_tipo_id FOREIGN KEY (solicitacao_tipo_id)
-      REFERENCES solicitacao_tipo (id) MATCH SIMPLE
-      ON UPDATE NO ACTION ON DELETE NO ACTION
-)
+ id serial NOT NULL, -- Identificação da associação da pessoa com a hierarquia
+ solicitante_id integer NOT NULL, -- Identificação da pessoa solicitante
+ solicitacao_tipo_id integer NOT NULL, -- Tipo da solicitação
+ objeto1 integer NOT NULL, -- Id do objeto que vai ser transferido
+ objeto2 integer, -- Id do objeto para onde vai
+ nome character varying(45), -- Nome para as entidades: igreja, equipes
+ numero integer, -- Número para as entidades: região, coordenação e subs
+ data_criacao date NOT NULL DEFAULT ('now'::text)::date, -- Data de criação da associação pessoa com a hierarquia
+ hora_criacao time without time zone NOT NULL DEFAULT ('now'::text)::time with time zone, -- Hora de criação da associação pessoa com a hierarquia
+ data_inativacao date, -- Data da inativação da associação pessoa com a hierarquia
+ hora_inativacao time without time zone, -- Hora da inativação da associativa pessoa com a hierarquia
+ CONSTRAINT pk_solicitacao PRIMARY KEY (id),
+ CONSTRAINT fk_solicitacao_solicitacao_tipo_id FOREIGN KEY (solicitacao_tipo_id)
+ REFERENCES solicitacao_tipo (id) MATCH SIMPLE
+ ON UPDATE NO ACTION ON DELETE NO ACTION
+ )
 WITH (
-  OIDS=FALSE
-);
+		OIDS=FALSE
+	 );
 ALTER TABLE solicitacao
-  OWNER TO postgres;
+OWNER TO postgres;
 COMMENT ON TABLE solicitacao
-  IS 'Tabela associativa do grupo com a solicitacao';
+IS 'Tabela associativa do grupo com a solicitacao';
 COMMENT ON COLUMN solicitacao.id IS 'Identificação da associação da grupo com a hierarquia';
 COMMENT ON COLUMN solicitacao.solicitante_id IS 'Identificação da pessoa solicitante';
 COMMENT ON COLUMN solicitacao.solicitacao_tipo_id IS 'Identificação da solicitacao tipo';
@@ -37,3 +34,10 @@ COMMENT ON COLUMN solicitacao.data_criacao IS 'Data de criação da associação
 COMMENT ON COLUMN solicitacao.hora_criacao IS 'Hora de criação da associação grupo com a solicitacao';
 COMMENT ON COLUMN solicitacao.data_inativacao IS 'Data da inativação da associação grupo com a solicitacao';
 COMMENT ON COLUMN solicitacao.hora_inativacao IS 'Hora da inativação da associativa grupo com a solicitacao';
+
+ALTER TABLE solicitacao ADD COLUMN receptor_id integer;
+ALTER TABLE solicitacao ADD COLUMN grupo_id integer NOT NULL DEFAULT 1;
+ALTER TABLE solicitacao ADD CONSTRAINT fk_solicitacao_grupo_id FOREIGN KEY (grupo_id) REFERENCES grupo (id) MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION;
+ALTER TABLE solicitacao ADD CONSTRAINT fk_solicitacao_solicitante_id FOREIGN KEY (solicitante_id) REFERENCES pessoa (id) MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION;
+ALTER TABLE solicitacao ADD CONSTRAINT fk_solicitacao_receptor_id FOREIGN KEY (receptor_id) REFERENCES pessoa (id) MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION;
+

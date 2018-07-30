@@ -1,6 +1,6 @@
 <?php
 echo $this->doctype();
-$versao = '?v=1.5.9';
+$versao = '?v=1.6.0';
 
 use Application\Controller\Helper\Constantes;
 ?>
@@ -39,7 +39,6 @@ use Application\Controller\Helper\Constantes;
                 ->headLink(array('rel' => 'apple-touch-icon', 'sizes' => '256x256', 'href' => $this->basePath() . '/img/icons/touch-icon-iphone.png'))
                 ->prependStylesheet($this->basePath() . '/css/estilos-circuito/splash.css' . $versao)
                 ->prependStylesheet($this->basePath() . '/vendor/plugins/footable/css/footable.core.min.css')
-                ->prependStylesheet($this->basePath() . '/vendor/plugins/fancytree/skin-win8/ui.fancytree.min.css')
                 ->prependStylesheet($this->basePath() . '/vendor/plugins/ladda/ladda.min.css')
                 ->prependStylesheet($this->basePath() . '/vendor/plugins/magnific/magnific-popup.css')
                 ->prependStylesheet($this->basePath() . '/vendor/plugins/animate/animate.min.css')
@@ -87,12 +86,8 @@ use Application\Controller\Helper\Constantes;
                 ->prependFile($this->basePath() . '/vendor/plugins/holder/holder.min.js')
                 ->prependFile($this->basePath() . '/vendor/plugins/fileupload/fileupload.js')
                 ->prependFile($this->basePath() . '/vendor/plugins/cropper/cropper.min.js')
-                ->prependFile($this->basePath() . '/vendor/plugins/highcharts/highcharts.js')
                 ->prependFile($this->basePath() . '/vendor/plugins/footable/js/footable.filter.min.js')
                 ->prependFile($this->basePath() . '/vendor/plugins/footable/js/footable.all.min.js')
-                ->prependFile($this->basePath() . '/vendor/plugins/fancytree/extensions/jquery.fancytree.childcounter.js')
-                ->prependFile($this->basePath() . '/vendor/plugins/fancytree/jquery.fancytree-all.min.js')
-                ->prependFile($this->basePath() . '/vendor/plugins/fancytree/skin-win8/ui.fancytree.min.css')
                 ->prependFile($this->basePath() . '/vendor/plugins/ladda/ladda.min.js')
                 ->prependFile($this->basePath() . '/vendor/plugins/magnific/jquery.magnific-popup.js')
                 ->prependFile($this->basePath() . '/vendor/jquery/jquery_ui/jquery-ui.min.js')
@@ -124,8 +119,6 @@ use Application\Controller\Helper\Constantes;
                 Ladda.bind('.ladda-button', {
                     timeout: 1000
                 });
-
-//                localStorage.clear();
 
                 // Init FooTable Examples
                 $('.footable').footable({paginate: false});

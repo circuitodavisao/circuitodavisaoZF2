@@ -17,10 +17,22 @@ use Doctrine\ORM\Mapping as ORM;
 class Solicitacao extends CircuitoEntity {
 
     /**
-     * @ORM\ManyToOne(targetEntity="Pessoa", inversedBy="solicitacao")
+     * @ORM\ManyToOne(targetEntity="Pessoa", inversedBy="solicitante")
      * @ORM\JoinColumn(name="solicitante_id", referencedColumnName="id")
      */
-    private $pessoa;
+    private $solicitante;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Pessoa", inversedBy="receptor")
+     * @ORM\JoinColumn(name="receptor_id", referencedColumnName="id")
+     */
+    private $receptor;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Grupo", inversedBy="solicitacao")
+     * @ORM\JoinColumn(name="grupo_id", referencedColumnName="id")
+     */
+    private $grupo;
 
     /**
      * @ORM\ManyToOne(targetEntity="SolicitacaoTipo", inversedBy="solicitacao")
@@ -57,6 +69,10 @@ class Solicitacao extends CircuitoEntity {
 
     /** @ORM\Column(type="integer") */
     protected $receptor_id;
+	
+    /** @ORM\Column(type="integer") */
+    protected $grupo_id;
+
 
     function getSolicitacaoSituacaoAtiva() {
         $solicitacaoSituacaoAtiva = null;
@@ -101,16 +117,8 @@ class Solicitacao extends CircuitoEntity {
         $this->solicitacao_tipo_id = $solicitacao_tipo_id;
     }
 
-    function getPessoa() {
-        return $this->pessoa;
-    }
-
     function getSolicitante_id() {
         return $this->solicitante_id;
-    }
-
-    function setPessoa($pessoa) {
-        $this->pessoa = $pessoa;
     }
 
     function setSolicitante_id($solicitante_id) {
@@ -124,6 +132,14 @@ class Solicitacao extends CircuitoEntity {
     function setSolicitacaoSituacao($solicitacaoSituacao) {
         $this->solicitacaoSituacao = $solicitacaoSituacao;
     }
+
+	function setGrupo($grupo){
+		$this->grupo = $grupo;
+	}
+
+	function getGrupo(){
+		return $this->grupo;
+	}
 
     function getNome() {
         return $this->nome;
@@ -145,8 +161,31 @@ class Solicitacao extends CircuitoEntity {
         return $this->receptor_id;
     }
 
+    function setGrupo_id($grupo_id) {
+        $this->grupo_id = $grupo_id;
+    }
+
+    function getGrupo_id() {
+        return $this->grupo_id;
+    }
+
     function setReceptor_id($receptor_id) {
         $this->receptor_id = $receptor_id;
     }
 
+	function setSolicitante($solicitante){
+		$this->solicitante = $solicitante;
+	}
+
+	function getSolicitante(){
+		return  $this->solicitante;
+	}
+
+	function setReceptor($receptor){
+		$this->receptor = $receptor;
+	}
+
+	function getReceptor(){
+		return $this->receptor;
+	}
 }

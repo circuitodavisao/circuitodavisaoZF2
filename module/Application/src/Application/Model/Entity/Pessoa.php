@@ -59,10 +59,15 @@ class Pessoa extends CircuitoEntity implements InputFilterAwareInterface {
      */
     protected $curso;
 
-    /**
-     * @ORM\OneToMany(targetEntity="Solicitacao", mappedBy="pessoa") 
+     /**
+     * @ORM\OneToMany(targetEntity="Solicitacao", mappedBy="solicitante") 
      */
-    protected $solicitacao;
+    protected $solicitante;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Solicitacao", mappedBy="receptor") 
+     */
+    protected $receptor;
 
     /**
      * @ORM\OneToMany(targetEntity="PessoaCursoAcesso", mappedBy="pessoa") 
@@ -81,7 +86,8 @@ class Pessoa extends CircuitoEntity implements InputFilterAwareInterface {
         $this->grupoPessoa = new ArrayCollection();
         $this->pessoaHierarquia = new ArrayCollection();
         $this->curso = new ArrayCollection();
-        $this->solicitacao = new ArrayCollection();
+        $this->solicitante = new ArrayCollection();
+        $this->receptor = new ArrayCollection();
         $this->pessoaCursoAcesso = new ArrayCollection();
         $this->turmaAula = new ArrayCollection();
         $this->setAtualizar_dados('S');
@@ -817,13 +823,21 @@ class Pessoa extends CircuitoEntity implements InputFilterAwareInterface {
         $this->curso = $curso;
     }
 
-    function getSolicitacao() {
-        return $this->solicitacao;
+    function getSolicitante() {
+        return $this->solicitante;
     }
 
-    function setSolicitacao($solicitacao) {
-        $this->solicitacao = $solicitacao;
+    function setSolicitante($solicitante) {
+        $this->solicitante = $solicitante;
     }
+
+	function setReceptor($receptor){
+		$this->receptor = $receptor;
+	}
+
+	function getReceptor(){
+		return $this->receptor;
+	}
 
     function getTurmaPessoa() {
         return $this->turmaPessoa;

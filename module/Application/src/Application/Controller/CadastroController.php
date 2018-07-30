@@ -2019,10 +2019,10 @@ class CadastroController extends CircuitoController {
 
     public function solicitacoesAction() {
         $sessao = new Container(Constantes::$NOME_APLICACAO);
-        $solicitacoes = CadastroController::pegaSolicitacoesDeQuemEstaLogados($sessao, $this->getRepositorio());
         $idEntidadeAtual = $sessao->idEntidadeAtual;
         $entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
-        $grupo = $entidade->getGrupo();
+        $grupoIgreja = $entidade->getGrupo()->getGrupoIgreja();
+        $solicitacoes = $grupoIgreja->getSolicitacao();
         $view = new ViewModel(array(
             'grupo' => $grupo,
             'solicitacoes' => $solicitacoes,
@@ -2032,51 +2032,21 @@ class CadastroController extends CircuitoController {
         return $view;
     }
 
-    public static function pegaSolicitacoesDeQuemEstaLogados($sessao, $repositorio, $somentePendentes = false) {
-        $idEntidadeAtual = $sessao->idEntidadeAtual;
-        $entidade = $repositorio->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
-        $grupo = $entidade->getGrupo();
-        $solicitacoes = null;
-        foreach ($grupo->getResponsabilidadesAtivas() as $grupoResponsavel) {
-            $pessoa = $grupoResponsavel->getPessoa();
-            if ($pessoa->getSolicitacao()) {
-                foreach ($pessoa->getSolicitacao() as $solicitacao) {
-                    $adicionar = true;
-                    if ($somentePendentes) {
-                        if ($solicitacao->getSolicitacaoTipo()->getId() !== SolicitacaoTipo::TRANSFERIR_LIDER_NA_PROPRIA_EQUIPE) {
-                            $adicionar = false;
-                        }
-                    }
-                    if ($adicionar) {
-                        $solicitacoes[] = $solicitacao;
-                    }
-                }
-            }
-        }
-        return $solicitacoes;
-    }
-
     public function solicitacaoAction() {
         $sessao = new Container(Constantes::$NOME_APLICACAO);
 
         $idEntidadeAtual = $sessao->idEntidadeAtual;
         $entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
-        $grupo = $entidade->getGrupo();
+		$grupo = $entidade->getGrupo();
+        $grupoIgreja = $grupo->getGrupoIgreja();
         $grupoPaiFilhoFilhos = $grupo->getGrupoPaiFilhoFilhosAtivosReal();
         /* Verificando se ja tem alguma solicitacao para a pessoa nao deixa ele se solicitado denovo */
-        $solicitacoes = CadastroController::pegaSolicitacoesDeQuemEstaLogados($sessao, $this->getRepositorio(), true);
+        $solicitacoes = $grupoIgreja->getSolicitacoesNaoRealizadas();
 
         $solicitacaoTipos = $this->getRepositorio()->getSolicitacaoTipoORM()->encontrarTodos();
         $formSolicitacao = new SolicitacaoForm('formSolicitacao');
 
-        /* Pegando equipes da igreja */
-        if ($grupo->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::equipe) {
-            $grupoIgreja = $grupo->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai();
-        }
-        if ($grupo->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::igreja) {
-            $grupoIgreja = $grupo;
-        }
-        $grupoPaiFilhoEquipes = $grupoIgreja->getGrupoPaiFilhoFilhosAtivosReal();
+       $grupoPaiFilhoEquipes = $grupoIgreja->getGrupoPaiFilhoFilhosAtivosReal();
         $chaveParaRemover = null;
         foreach ($grupoPaiFilhoEquipes as $key => $grupoPaiFilhoFilho) {
             if ($grupoPaiFilhoFilho->getGrupoPaiFilhoFilho()->getId() == $grupo->getId()) {
@@ -2193,11 +2163,13 @@ class CadastroController extends CircuitoController {
                 $sessao = new Container(Constantes::$NOME_APLICACAO);
                 $idPessoaAtual = $sessao->idPessoa;
                 $pessoaLogada = $this->getRepositorio()->getPessoaORM()->encontrarPorId($idPessoaAtual);
+                $grupoIgreja = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($sessao->idEntidadeAtual)->getGrupo()->getGrupoIgreja();
                 $solicitacaoTipo = $this->getRepositorio()->getSolicitacaoTipoORM()->encontrarPorId($post_data['solicitacaoTipoId']);
 
                 /* Criando */
                 $solicitacao = new Solicitacao();
-                $solicitacao->setPessoa($pessoaLogada);
+                $solicitacao->setSolicitante($pessoaLogada);
+				$solicitacao->setGrupo($grupoIgreja);
                 $solicitacao->setSolicitacaoTipo($solicitacaoTipo);
                 $solicitacao->setObjeto1($post_data['objeto1']);
 
@@ -2207,6 +2179,9 @@ class CadastroController extends CircuitoController {
                     if ($explodeObjeto2[1]) {
                         $objeto2 = $explodeObjeto2[1];
                     }
+					if($solicitacaoTipo->getId() === SolicitacaoTipo::REMOVER_LIDER){
+						$objeto2 = 0;
+					}
                     $solicitacao->setObjeto2($objeto2);
                 }
                 if ($solicitacaoTipo->getId() === SolicitacaoTipo::SEPARAR) {
@@ -2245,6 +2220,7 @@ class CadastroController extends CircuitoController {
                         $solicitacaoTipo->getId() === SolicitacaoTipo::UNIR_CASAL ||
                         $solicitacaoTipo->getId() === SolicitacaoTipo::SEPARAR ||
                         $solicitacaoTipo->getId() === SolicitacaoTipo::TROCAR_RESPONSABILIDADES) {
+
                     $solicitacaoSituacao->setDataEHoraDeInativacao();
                     $this->getRepositorio()->getSolicitacaoSituacaoORM()->persistir($solicitacaoSituacao, false);
 
