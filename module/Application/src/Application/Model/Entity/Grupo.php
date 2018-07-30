@@ -78,10 +78,15 @@ class Grupo extends CircuitoEntity {
      */
     protected $turma;
 
-    /**
+     /**
      * @ORM\OneToMany(targetEntity="PessoaCursoAcesso", mappedBy="grupo")
      */
     protected $pessoaCursoAcesso;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Solicitacao", mappedBy="grupo")
+     */
+    protected $solicitacao;
 
     public function __construct() {
         $this->entidade = new ArrayCollection();
@@ -94,6 +99,7 @@ class Grupo extends CircuitoEntity {
         $this->grupoPaiFilhoPai = new ArrayCollection();
         $this->turma = new ArrayCollection();
         $this->pessoaCursoAcesso = new ArrayCollection();
+		$this->solicitacao = new ArrayCollection();
 //        $this->fatoDiscipulado = new ArrayCollection();
     }
 
@@ -1247,4 +1253,22 @@ class Grupo extends CircuitoEntity {
         $this->fatoDiscipulado = $fatoDiscipulado;
     }
 
+	function setSolicitacao($solicitacao){
+		$this->solicitacao = $solicitacao;
+	}
+
+	function getSolicitacao(){
+		return $this->solicitacao;
+	}
+
+	function getSolicitacoesNaoRealizadas(){
+		$solicitacoes = $this->getSolicitacao();
+		$solicitacoesNaoRealizadas = array();
+		foreach($solicitacoes as $solicitacao){
+			if($solicitacao->getSolicitacaoSituacaoAtiva()->getSituacao()->getId() !== Situacao::CONCLUIDO){
+				$solicitacoesNaoRealizadas[] = $solicitacao;
+			}
+		}
+		return $solicitacoesNaoRealizadas;
+	}
 }

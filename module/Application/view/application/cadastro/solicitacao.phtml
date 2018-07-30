@@ -59,7 +59,7 @@ echo $this->templateFormularioTopo($this->titulo);
             }
             ?>
             <!-- Bloco objeto -->
-            <div id="blocoObjeto<?php echo $indiceDeObejtos; ?>" class="well col-xs-12 text-left" onClick='<?php // echo $funcaoOnclick;                       ?>'>
+            <div id="blocoObjeto<?php echo $indiceDeObejtos; ?>" class="well col-xs-12 text-left">
                 <div class="col-md-12">
                     <span id="spanSelecioneObjeto<?php echo $indiceDeObejtos; ?>"><?php echo $stringSelecioneOObjeto; ?></span>    
                     <span id="spanObjeto<?php echo $indiceDeObejtos; ?>"></span>
@@ -93,10 +93,14 @@ echo $this->templateFormularioTopo($this->titulo);
     </div>
     <!--divSelecionarLider-->
     <div id="divSelecionarLider" class="hidden">
-        <div id="treeLideres" class="fancytree-radio">
-            <ul id="treeData" style="display: none;">
-                <?php echo $this->listagemLideresTransferencia($this->discipulos); ?>
-            </ul>
+        <select id="idLider" class="form-control" onChange="mostrarBotaoSelecionarLider();">
+            <option value="0"><?php echo $this->translate(Constantes::$TRADUCAO_SELECIONE); ?></option>
+            <?php echo $this->listagemLideresTransferencia($this->discipulos); ?>
+        </select>
+        <div id="divBotaoSelecionarLider" class="hidden mt10">
+            <?php
+            echo $this->botaoSimples(Constantes::$TRADUCAO_SELECIONAR, $this->funcaoOnClick('selecionarLider()'));
+            ?>
         </div>
     </div> 
     <!--divSelecionarEquipe-->
@@ -210,10 +214,7 @@ echo $this->templateFormularioTopo($this->titulo);
     <div id="divTelaConfirmacao" class="hidden">
         <div class="panel heading-border panel-info">
             <div class="panel-body">
-                <address>
-                    tem isso
-                    va acontecer isso
-                </address>                                  
+                <address id="spanMensagemDeConfirmacao">Confirma a transfêrencia desse líder na sua própria equipe? Somente no próximo período será feito a transfêrencia!</address>                                  
             </div>                 
         </div>
         <div class="row">
