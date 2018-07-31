@@ -42,7 +42,7 @@ class CircuitoORM {
 
         $entidade = $this->getEntityManager()->find($this->getEntity(), $idInteiro);
         if (!$entidade) {
-            throw new Exception("Não foi encontrado a entidade de id = {$idInteiro}");
+			$entidade = null;
         }
         return $entidade;
     }

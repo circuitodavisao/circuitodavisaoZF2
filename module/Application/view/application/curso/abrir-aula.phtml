@@ -13,9 +13,9 @@ $html .= '<table class="table table-condensed">';
 $html .= '<thead>';
 $html .= '<tr>';
 $html .= '<th colspan="7">Legenda'
-        . ' - <span class="label label-xs label-danger"><i class="fa fa-ban"></i> Pendente</span>'
-        . ' - <span class="label label-xs label-default"><i class="fa fa-thumbs-up"></i> Aberta</span>'
-        . ' - <span class="label label-xs label-success"><i class="fa fa-check"></i> Encerrada</span></th>';
+	. ' - <span class="label label-xs label-danger"><i class="fa fa-ban"></i> Pendente</span>'
+	. ' - <span class="label label-xs label-default"><i class="fa fa-thumbs-up"></i> Aberta</span>'
+	. ' - <span class="label label-xs label-success"><i class="fa fa-check"></i> Encerrada</span></th>';
 $html .= '</tr>';
 $html .= '<tr>';
 $html .= '<th>Diciplinas</th>';
@@ -24,26 +24,27 @@ $html .= '</tr>';
 $html .= '</thead>';
 $html .= '<tbody>';
 foreach ($this->turma->getCurso()->getDisciplina() as $disciplina) {
-    $html .= '<tr>';
-    $html .= '<td>' . $disciplina->getNome() . '</td>';
-    foreach ($disciplina->getAulaOrdenadasPorPosicao() as $aula) {
-        $icone = 'ban';
-        $cor = 'danger';
-        foreach ($this->turma->getTurmaAula() as $turmaAula) {
-            if ($turmaAula->getAula()->getId() === $aula->getId()) {
-                $icone = 'thumbs-up';
-                $cor = 'default';
-                break;
-            }
-        }
-        if (!$turmaAula->verificarSeEstaAtivo()) {
-            $icone = 'check';
-            $cor = 'success';
-        }
-        $label = '<span class="label label-xs label-' . $cor . '">' . $aula->getPosicao() . ' <i class="fa fa-' . $icone . '"></i></span>';
-        $html .= '<td>' . $label . '</td>';
-    }
-    $html .= '</tr>';
+	$html .= '<tr>';
+	$html .= '<td>' . $disciplina->getNome() . '</td>';
+	foreach ($disciplina->getAulaOrdenadasPorPosicao() as $aula) {
+		$icone = 'ban';
+		$cor = 'danger';
+		foreach ($this->turma->getTurmaAula() as $turmaAula) {
+			if ($turmaAula->getAula()->getId() === $aula->getId()) {
+				$icone = 'thumbs-up';
+				$cor = 'default';
+				break;
+			}
+			if (!$turmaAula->verificarSeEstaAtivo()) {
+				$icone = 'check';
+				$cor = 'success';
+			}
+		}
+
+		$label = '<span class="label label-xs label-' . $cor . '">' . $aula->getPosicao() . ' <i class="fa fa-' . $icone . '"></i></span>';
+		$html .= '<td>' . $label . '</td>';
+	}
+	$html .= '</tr>';
 }
 $html .= '</tbody>';
 $html .= '</table>';
@@ -56,7 +57,7 @@ $html .= '<label class="field-label text-muted fs18 mb10">' . $this->translate('
 $html .= '<select class="form-control" id="idAula" name="idAula">';
 $html .= '<option value="0">SELECIONE</option>';
 foreach ($this->opcoes as $key => $value) {
-    $html .= '<option value="' . $key . '" ' . $value[1] . '>' . $value[0] . '</option>';
+	$html .= '<option value="' . $key . '" ' . $value[1] . '>' . $value[0] . '</option>';
 }
 $html .= '</select>';
 $html .= '</div>';
@@ -71,7 +72,7 @@ $html .= '</div>';
 
 $ultimaAtualizacao = 'Sem Atualiza&ccedil;&atilde;o';
 if ($turmaAulaAtiva = $this->turma->getTurmaAulaAtiva()) {
-    $ultimaAtualizacao = $turmaAulaAtiva->getPessoa()->getNome() . ' - ' . $turmaAulaAtiva->getData_criacaoStringPadraoBrasil() . ' - ' . $turmaAulaAtiva->getHora_criacao();
+	$ultimaAtualizacao = $turmaAulaAtiva->getPessoa()->getNome() . ' - ' . $turmaAulaAtiva->getData_criacaoStringPadraoBrasil() . ' - ' . $turmaAulaAtiva->getHora_criacao();
 }
 $html .= '<div class="row">';
 $html .= '<span class="label label-success col-xs-12 col-sm-12 col-md-12 col-lg-12">' . $this->translate('Ultima Altera&ccedil;&atilde;o: ') . $ultimaAtualizacao . '</span>';
@@ -90,48 +91,48 @@ echo $html;
 ?>
 
 <script type="text/javascript">
-    function validarAula(form) {
-        var idAula = $('#idAula');
-        var inputSenha = $('#senha');
-        var divMensagens = $('#divMensagens');
-        divMensagens.addClass('hidden');
+function validarAula(form) {
+	var idAula = $('#idAula');
+	var inputSenha = $('#senha');
+	var divMensagens = $('#divMensagens');
+	divMensagens.addClass('hidden');
 
-        if (idAula.val() == 0) {
-            divMensagens
-                    .html('Selecione a Aula!')
-                    .removeClass('alert-success')
-                    .removeClass('hidden')
-                    .addClass('alert-danger');
-            return false;
-        }
-        if (inputSenha.val().length === 0) {
-            divMensagens
-                    .html('Preencha a Senha!')
-                    .removeClass('alert-success')
-                    .removeClass('hidden')
-                    .addClass('alert-danger');
-            return false;
-        }
-        $.post(
-                "/validarSenha",
-                {
-                    senha: inputSenha.val()
-                },
-                function (data) {
-                    if (data.response) {
-                        divMensagens
-                                .addClass('hidden');
-                        mostrarSplash();
-                        form.submit();
-                    } else {
-                        divMensagens
-                                .html('Senha não confere')
-                                .removeClass('alert-success')
-                                .removeClass('hidden')
-                                .addClass('alert-danger');
-                        return false;
-                    }
-                }
-        , 'json');
-    }
+	if (idAula.val() == 0) {
+		divMensagens
+			.html('Selecione a Aula!')
+			.removeClass('alert-success')
+			.removeClass('hidden')
+			.addClass('alert-danger');
+		return false;
+		}
+		if (inputSenha.val().length === 0) {
+			divMensagens
+				.html('Preencha a Senha!')
+				.removeClass('alert-success')
+				.removeClass('hidden')
+				.addClass('alert-danger');
+			return false;
+		}
+		$.post(
+			"/validarSenha",
+		{
+			senha: inputSenha.val()
+				},
+				function (data) {
+					if (data.response) {
+						divMensagens
+							.addClass('hidden');
+						mostrarSplash();
+						form.submit();
+					} else {
+						divMensagens
+							.html('Senha não confere')
+							.removeClass('alert-success')
+							.removeClass('hidden')
+							.addClass('alert-danger');
+						return false;
+					}
+				}
+		, 'json');
+	}
 </script> 
