@@ -1010,6 +1010,7 @@ class IndexController extends CircuitoController {
             $this->getRepositorio()->iniciarTransacao();
 
             $idIgreja = 1; //ceilandia
+			//$idIgreja = 2;
             $queryTurma = mysqli_query($this->getConexao(), 'SELECT * FROM ursula_turma_ursula WHERE idIgreja = ' . $idIgreja . ' AND fechada = "N";');
             while ($rowTurma = mysqli_fetch_array($queryTurma)) {
                 /* Turma */
@@ -1020,7 +1021,7 @@ class IndexController extends CircuitoController {
                 $turma->setCurso($curso);
                 $turma->setMes($rowTurma['mes']);
                 $turma->setAno($rowTurma['ano']);
-                $turma->setObservacao('MIGRACAO CV 3');
+                $turma->setObservacao('MIGRACAO');
                 $this->getRepositorio()->getTurmaORM()->persistir($turma);
                 $html .= '<br /><br />TURMA - ' . $turma->getMes() . '/' . $turma->getAno();
 
@@ -1069,7 +1070,7 @@ class IndexController extends CircuitoController {
                 }
 
                 $queryTurmaAluno = mysqli_query(
-                        $this->getConexao(), 'SELECT * FROM ursula_turma_aluno_ursula WHERE idTurma = ' . $rowTurma['id'] . ' AND status = "A" AND (idSituacao = 1 || idSituacao = 2 || idSituacao = 5 || idSituacao = 4);');
+                        $this->getConexao(), 'SELECT * FROM ursula_turma_aluno_ursula WHERE idTurma = ' . $rowTurma['id'] . ' AND status = "A" AND (idSituacao = 1 || idSituacao = 2 || idSituacao = 5 || idSituacao = 4) ;');
                 while ($rowTurmaAluno = mysqli_fetch_array($queryTurmaAluno)) {
                     $queryPessoa = mysqli_query($this->getConexao(), 'SELECT * FROM ursula_pessoa_ursula WHERE id = ' . $rowTurmaAluno['idAluno']);
                     while ($rowPessoa = mysqli_fetch_array($queryPessoa)) {
@@ -1182,7 +1183,7 @@ class IndexController extends CircuitoController {
                     }
                 }
             }
-//            $this->getRepositorio()->fecharTransacao();
+            $this->getRepositorio()->fecharTransacao();
         } catch (Exception $exc) {
             $this->getRepositorio()->desfazerTransacao();
             Funcoes::var_dump($exc->getMessage());
