@@ -119,7 +119,7 @@ foreach ($this->turmas as $turma) {
 						$mostrar = true;
 					}
 					if ($this->entidade->getEntidadeTipo()->getId() === EntidadeTipo::equipe) {
-						if ($turmaPessoa->getPessoa()->getGrupoPessoa()[0]->getGrupo()->getGrupoEquipe() === $this->entidade->getId()) {
+						if ($turmaPessoa->getPessoa()->getGrupoPessoa()[0]->getGrupo()->getGrupoEquipe()->getEntidadeAtiva()->getId() === $this->entidade->getId()) {
 							$mostrar = true;
 						}
 					}
