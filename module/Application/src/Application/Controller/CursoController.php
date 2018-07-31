@@ -886,7 +886,7 @@ class CursoController extends CircuitoController {
                                 'pessoa' => $nomePessoa,
             )));
         } catch (Exception $exc) {
-            echo $exc->getTraceAsString();
+            echo $exc->getMessage();
         }
         return $response;
     }
