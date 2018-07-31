@@ -119,8 +119,10 @@ foreach ($this->turmas as $turma) {
 						$mostrar = true;
 					}
 					if ($this->entidade->getEntidadeTipo()->getId() === EntidadeTipo::equipe) {
-						if ($turmaPessoa->getPessoa()->getGrupoPessoa()[0]->getGrupo()->getGrupoEquipe() === $this->entidade->getId()) {
-							$mostrar = true;
+						if($turmaPessoa->getPessoa()->getGrupoPessoa()){
+							if ($turmaPessoa->getPessoa()->getGrupoPessoa()[0]->getGrupo()->getGrupoEquipe() === $this->entidade->getId()) {
+								$mostrar = true;
+							}
 						}
 					}
 				} else {
@@ -161,7 +163,8 @@ foreach ($this->turmas as $turma) {
 
 				$html .= '<tr class="linha linhaEquipe0 linhaEquipe' . $idLinha . ' linhaSituacao0 linhaSituacao' . $idSituacao . '">';
 				$html .= '<td class="text-center">' . $stringSituacao . '</td>';
-				$html .= '<td class="hidden-xs"><a target="_blanck" href="/cursoAluno/' . $turmaPessoa->getId() . '" class="btn btn-xs btn-primary" >' . str_pad($turmaPessoa->getId(), 8, 0, STR_PAD_LEFT) . '</a></td>';
+				//				$html .= '<td class="hidden-xs"><a target="_blanck" href="/cursoAluno/' . $turmaPessoa->getId() . '" class="btn btn-xs btn-primary" >' . str_pad($turmaPessoa->getId(), 8, 0, STR_PAD_LEFT) . '</a></td>';
+				$html .= '<td class="hidden-xs">'.$turmaPessoa->getId().'</td>';
 				$html .= '<td class="hidden-xs">' . $turmaPessoa->getPessoa()->getNome() . '</td>';
 				$html .= '<td class="hidden-sm hidden-md hidden-lg">' . $turmaPessoa->getPessoa()->getNomePrimeiroPrimeiraSiglaUltimo() . '</td>';
 				$html .= '<th class="text-center hidden-xs">' . $nomeEquipe . '</th>';
