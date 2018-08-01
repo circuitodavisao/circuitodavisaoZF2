@@ -204,6 +204,24 @@ echo $this->templateFormularioTopo($this->titulo);
             <span class="ladda-label">Selecionar</span>
         </button>
     </div>
+	<!-- divSelecionarMotivo -->
+	<div id="divSelecionarMotivo" class="hidden">
+		<div class="section-divider mt20">
+			<span>Selecione o motivo</span>
+		</div>
+		<select id="motivo" name="motivo" class="form-control" onChange="if($('#motivo').val() != 0){$('#divMotivo').removeClass('hidden')}else{$('#divMotivo').addClass('hidden')}">
+			<option value="0">Saiu da Igreja</option>
+			<option value="outro">Outro</option>
+		</select>
+		<div id="divMotivo" class="hidden mt20"> 
+			<textarea name="textareaMotivo" id="textareaMotivo" rows="4" cols="50" class="form-control"></textarea>
+		</div>
+		<?php
+		echo '<div class="mt20">';
+		echo $this->botaoSimples('Selecionar', $this->funcaoOnClick('selecionarMotivo()'), BotaoSimples::botaoSucesso);
+		echo '</div>';
+		?>
+	</div>
     <!--divBotaoContinuar-->
     <div id="divBotaoContinuar" class="hidden">
         <?php
