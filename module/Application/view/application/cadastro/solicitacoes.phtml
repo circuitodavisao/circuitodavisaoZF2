@@ -4,6 +4,7 @@ use Application\Controller\Helper\Constantes;
 use Application\Model\Entity\EntidadeTipo;
 use Application\Model\Entity\Situacao;
 use Application\Model\Entity\SolicitacaoTipo;
+use Application\Controller\Helper\Funcoes;
 
 $html = '';
 $html .= $this->templateFormularioTopo($this->titulo);
@@ -61,6 +62,11 @@ if ($this->solicitacoes) {
 		}
 		if ($solicitacao->getSolicitacaoTipo()->getId() === SolicitacaoTipo::REMOVER_LIDER) {
 			$html .= 'MOTIVO: <b>' . $solicitacao->getMotivo() . '</b>';
+		}
+		if ($solicitacao->getSolicitacaoTipo()->getId() === SolicitacaoTipo::REMOVER_CELULA) {
+			$objeto = $solicitacao->getObjeto2();
+			$grupoEvento = $this->repositorio->getGrupoEventoORM()->encontrarPorId($objeto);
+			$html .= 'Dia: '.$this->translate(Funcoes::diaDaSemanaPorDia($grupoEvento->getEvento()->getDia(),1)).' Hora: ' . $grupoEvento->getEvento()->getHora() . ' Hospedeiro: '.$grupoEvento->getEvento()->getEventoCelula()->getNome_hospedeiro(). ' Local: ' . $grupoEvento->getEvento()->getEventoCelula()->getLogradouro().' '.$grupoEvento->getEvento()->getEventoCelula()->getComplemento();
 		}
 		$html .= '</td>';
 		if ($solicitacao->getSolicitacaoSituacaoAtiva()) {

@@ -97,6 +97,7 @@ function selecionarTipo() {
 			}
 			if (parseInt($('#solicitacaoTipo').val()) === REMOVER_CELULA) {
 				$('#spanSelecioneObjeto1').html('Selecione o líder para remover a célula');
+				$('#spanMensagemDeConfirmacao').html('Confirma a remoção dessa célula? Somente após autorização do líder da igreja no próximo período será feita a mudança')
 			}
 			$('#blocoObjeto2').addClass(hidden);
 		}
@@ -141,7 +142,11 @@ function abrirSelecionarObjeto(qualObjeto, idLider) {
 			if($('#solicitacaoTipoId').val() == REMOVER_LIDER){
 				$('#divSelecionarMotivo').removeClass(hidden)
 			}else{
-				$(stringDivSelecionarNumeracao).removeClass(hidden);
+				if($('#solicitacaoTipoId').val() == REMOVER_CELULA){
+					$('#divSelecionarCelula').removeClass(hidden)
+				}else{
+					$(stringDivSelecionarNumeracao).removeClass(hidden);
+				}
 			}
 		}
 	}
@@ -170,6 +175,10 @@ function selecionarMotivo(){
 		motivoFinal = textareaMotivo.val()
 	}
 	selecionarObjeto(motivoFinal, 'Motivo: ' + motivoFinal)
+}
+function selecionarCelula() {
+	let idGrupoEvento = $('#idGrupoEvento')
+	selecionarObjeto(idGrupoEvento.val(), $('#idGrupoEvento>option:selected').text())
 }
 
 function selecionarObjeto(id, informacao) {
@@ -204,10 +213,15 @@ function selecionarObjeto(id, informacao) {
 	spanSelecioneOObjeto.addClass(hidden);
 	botaoSelecionar.addClass(hidden);
 
-	if (objetoSelecionado === 3 && parseInt($('#solicitacaoTipo').val()) === REMOVER_LIDER) {
+	if (objetoSelecionado === 3 && (parseInt($('#solicitacaoTipo').val()) === REMOVER_LIDER || parseInt($('#solicitacaoTipo').val()) === REMOVER_CELULA)){
 		objeto.html(informacao);
 		spanLoader.addClass(hidden);
-		$('#divSelecionarMotivo').addClass(hidden);
+		if(parseInt($('#solicitacaoTipo').val()) === REMOVER_LIDER){
+			$('#divSelecionarMotivo').addClass(hidden);
+		}
+		if(parseInt($('#solicitacaoTipo').val()) === REMOVER_CELULA){
+			$('#divSelecionarCelula').addClass(hidden);
+		}
 		valorParaAdicionar = 50;
 		atualizarBarraDeProgresso(valorParaAdicionar);
 		verificarSeMostraOBotaoDeContinuar();
@@ -251,6 +265,13 @@ function selecionarObjeto(id, informacao) {
 							}
 							if ($('#solicitacaoTipoId').val() == REMOVER_CELULA) {
 								objeto.html('Líder que terá a célula removida');
+								if(data.celulas['1']){
+									$('#idGrupoEvento').append('<option value="'+data.celulas['1']['idGrupoEvento']+'">'+data.celulas['1']['nomeHospedeiro']+'</option>')
+								}
+								if(data.celulas['2']){
+									$('#idGrupoEvento').append('<option value="'+data.celulas['2']['idGrupoEvento']+'">'+data.celulas['2']['nomeHospedeiro']+'</option>')
+								}
+								$('#blocoObjeto3').removeClass(hidden)
 							}
 						}
 						if (parseInt(objetoSelecionado) === 2) {
@@ -404,8 +425,10 @@ function limparObjeto(qualObjeto) {
 		if ($('#formSolicitacaoReceber').val()) {
 			valorParaRemover = -50;
 		}
-		if (parseInt($('#solicitacaoTipo').val()) === REMOVER_LIDER) {
+		if (parseInt($('#solicitacaoTipo').val()) === REMOVER_LIDER||parseInt($('#solicitacaoTipo').val()) === REMOVER_CELULA) {
 			valorParaRemover = -50;
+			$('#idGrupoEvento').html('<option value="0">SELECIONE</option>')
+			limparObjeto(3)
 		}
 		atualizarBarraDeProgresso(valorParaRemover);
 		$('#numero').val(0);
@@ -415,7 +438,7 @@ function limparObjeto(qualObjeto) {
 		if ($('#formSolicitacaoReceber').val()) {
 			valorParaRemover = -50;
 		}
-		if (parseInt($('#solicitacaoTipo').val()) === REMOVER_LIDER) {
+		if (parseInt($('#solicitacaoTipo').val()) === REMOVER_LIDER ||parseInt($('#solicitacaoTipo').val()) === REMOVER_CELULA) {
 			valorParaRemover = -50;
 		}
 		atualizarBarraDeProgresso(valorParaRemover);
