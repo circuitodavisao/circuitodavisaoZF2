@@ -2181,6 +2181,11 @@ class CadastroController extends CircuitoController {
                     }
 					if($solicitacaoTipo->getId() === SolicitacaoTipo::REMOVER_LIDER){
 						$objeto2 = 0;
+						$motivoFinal = 'Saiu da igreja';
+						if($post_data['motivo'] == 'outro'){
+							$motivoFinal = $post_data['textareaMotivo'];
+						}
+						$solicitacao->setMotivo($motivoFinal);
 					}
                     $solicitacao->setObjeto2($objeto2);
                 }

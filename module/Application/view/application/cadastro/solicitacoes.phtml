@@ -59,6 +59,9 @@ if ($this->solicitacoes) {
 			$pessoa = $this->repositorio->getPessoaORM()->encontrarPorId($objeto);
 			$html .= 'REMOVER <b>' . $pessoa->getNomePrimeiroUltimo() . '</b>';
 		}
+		if ($solicitacao->getSolicitacaoTipo()->getId() === SolicitacaoTipo::REMOVER_LIDER) {
+			$html .= 'MOTIVO: <b>' . $solicitacao->getMotivo() . '</b>';
+		}
 		$html .= '</td>';
 		if ($solicitacao->getSolicitacaoSituacaoAtiva()) {
 			$html .= '<td>' . $solicitacao->getSolicitacaoSituacaoAtiva()->getSituacao()->getNome() . '</td>';

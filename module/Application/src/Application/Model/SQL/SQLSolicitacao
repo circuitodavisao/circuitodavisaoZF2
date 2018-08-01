@@ -40,4 +40,4 @@ ALTER TABLE solicitacao ADD COLUMN grupo_id integer NOT NULL DEFAULT 1;
 ALTER TABLE solicitacao ADD CONSTRAINT fk_solicitacao_grupo_id FOREIGN KEY (grupo_id) REFERENCES grupo (id) MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION;
 ALTER TABLE solicitacao ADD CONSTRAINT fk_solicitacao_solicitante_id FOREIGN KEY (solicitante_id) REFERENCES pessoa (id) MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION;
 ALTER TABLE solicitacao ADD CONSTRAINT fk_solicitacao_receptor_id FOREIGN KEY (receptor_id) REFERENCES pessoa (id) MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION;
-
+ALTER TABLE solicitacao ADD COLUMN motivo VARCHAR(80);

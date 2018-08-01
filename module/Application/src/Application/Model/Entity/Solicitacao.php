@@ -73,6 +73,8 @@ class Solicitacao extends CircuitoEntity {
     /** @ORM\Column(type="integer") */
     protected $grupo_id;
 
+    /** @ORM\Column(type="string") */
+    protected $motivo;
 
     function getSolicitacaoSituacaoAtiva() {
         $solicitacaoSituacaoAtiva = null;
@@ -187,5 +189,11 @@ class Solicitacao extends CircuitoEntity {
 
 	function getReceptor(){
 		return $this->receptor;
+	}
+	function setMotivo($motivo){
+		$this->motivo = $motivo;
+	}
+	function getMotivo(){
+		return $this->motivo;
 	}
 }
