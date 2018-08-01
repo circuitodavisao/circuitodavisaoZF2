@@ -43,13 +43,7 @@ $html .= '<label for="selecionaEquipe">' . $this->translate('Selecione a Equipe'
 $html .= '<select class="form-control" name="idEquipe" id="selecionaEquipe" >';
 $html .= '<option value="0" >' . $this->translate('Todas') . '</option>';
 foreach ($this->filhos as $grupoPaiFilhoFilho) {
-	if ($this->entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja) {
-		$informacao = $grupoPaiFilhoFilho->getGrupoPaiFilhoFilho()->getEntidadeAtiva()->getNome();
-	}
-	if ($this->entidade->getEntidadeTipo()->getId() === EntidadeTipo::equipe ||
-		$this->entidade->getEntidadeTipo()->getId() === EntidadeTipo::subEquipe) {
-			$informacao = $grupoPaiFilhoFilho->getGrupoPaiFilhoFilho()->getEntidadeAtiva()->getNumero();
-		}
+	$informacao = $grupoPaiFilhoFilho->getGrupoPaiFilhoFilho()->getEntidadeAtiva()->getNome();
 	$selected = '';
 	if($this->postado['idEquipe'] == $grupoPaiFilhoFilho->getGrupoPaiFilhoFilho()->getId()){
 		$selected = 'selected';
