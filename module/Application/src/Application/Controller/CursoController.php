@@ -808,14 +808,26 @@ class CursoController extends CircuitoController {
 		$sessao = new Container(Constantes::$NOME_APLICACAO);
 		$entidade = CircuitoController::getEntidadeLogada($this->getRepositorio(), $sessao);
 		$grupo = $entidade->getGrupo();
-		$grupoPessoas = $grupo->getGrupoPessoasNoPeriodo(0);
 		$turmas = $grupo->getGrupoIgreja()->getTurma();
-		$grupoPaiFilhoFilhos = $grupo->getGrupoPaiFilhoFilhosAtivos(0);
+		$grupoPaiFilhoFilhos = $grupo->getGrupoIgreja()->getGrupoPaiFilhoFilhosAtivos(0);
 		$situacoes = $this->getRepositorio()->getSituacaoORM()->buscarTodosRegistrosEntidade();
+
+		$request = $this->getRequest();
+		$filtrado = false;
+		$postado = array();
+		if($request->isPost()){
+			$filtrado = true;
+			$post = $request->getPost();
+			$postado['idTurma'] = $post['idTurma'];
+			$postado['idEquipe'] = $post['idEquipe'];
+			$postado['idSituacao'] = $post['idSituacao'];
+		}
+
 		$view = new ViewModel(array(
+			'filtrado' => $filtrado,
+			'postado' => $postado,
 			'entidade' => $entidade,
 			'turmas' => $turmas,
-			'grupoPessoas' => $grupoPessoas,
 			'filhos' => $grupoPaiFilhoFilhos,
 			'situacoes' => $situacoes,
 		));

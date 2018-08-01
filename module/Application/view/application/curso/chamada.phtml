@@ -19,23 +19,28 @@ $html .= '<blockquote class="mt50 blockquote-primary"><small>' . $this->translat
 $html .= '<div class="panel heading-border panel-primary">';
 $html .= '<div class="panel-body bg-light">';
 
+$html .= '<form method="post" action="/cursoChamada">';
 $html .= '<div class="form-group">';
 $html .= '<label for="selecionaTurma">' . $this->translate('Selecione a Turma') . '</label>';
-$html .= '<select class="form-control" id="selecionaTurma" onChange="$(\'.table\').addClass(\'hidden\'); $(\'#turma\'+$(\'#selecionaTurma\').val()).removeClass(\'hidden\');">';
+$html .= '<select class="form-control" name="idTurma" id="selecionaTurma" >';
 $html .= '<option value="0" >' . $this->translate(Constantes::$TRADUCAO_SELECIONAR) . '</option>';
 foreach ($this->turmas as $turma) {
 	$nomeDisciplina = 'PÓS REVISÃO';
 	if($turma->getTurmaAulaAtiva()){
 		$nomeDisciplina = $turma->getTurmaAulaAtiva()->getAula()->getDisciplina()->getNome();
 	}
-	$html .= '<option value="' . $turma->getId() . '" >' . $turma->getCurso()->getNomeSigla() . ' - ' . Funcoes::mesPorExtenso($turma->getMes(), 1) . '/' . $turma->getAno() . ' - ' . $nomeDisciplina . '</option>';
+	$selected = '';
+	if($this->postado['idTurma'] == $turma->getId()){
+		$selected = 'selected';
+	}
+	$html .= '<option '.$selected.' value="' . $turma->getId() . '" >' . $turma->getCurso()->getNomeSigla() . ' - ' . Funcoes::mesPorExtenso($turma->getMes(), 1) . '/' . $turma->getAno() . ' - ' . $nomeDisciplina . '</option>';
 }
 $html .= '</select>';
 $html .= '</div>';
 
 $html .= '<div class="form-group">';
 $html .= '<label for="selecionaEquipe">' . $this->translate('Selecione a Equipe') . '</label>';
-$html .= '<select class="form-control" id="selecionaEquipe" onChange="$(\'.linha\').addClass(\'hidden\'); $(\'.linhaEquipe\'+$(\'#selecionaEquipe\').val()).removeClass(\'hidden\');">';
+$html .= '<select class="form-control" name="idEquipe" id="selecionaEquipe" >';
 $html .= '<option value="0" >' . $this->translate('Todas') . '</option>';
 foreach ($this->filhos as $grupoPaiFilhoFilho) {
 	if ($this->entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja) {
@@ -45,176 +50,184 @@ foreach ($this->filhos as $grupoPaiFilhoFilho) {
 		$this->entidade->getEntidadeTipo()->getId() === EntidadeTipo::subEquipe) {
 			$informacao = $grupoPaiFilhoFilho->getGrupoPaiFilhoFilho()->getEntidadeAtiva()->getNumero();
 		}
-	$html .= '<option value="' . $grupoPaiFilhoFilho->getGrupoPaiFilhoFilho()->getId() . '" >' . $informacao . '</option>';
+	$selected = '';
+	if($this->postado['idEquipe'] == $grupoPaiFilhoFilho->getGrupoPaiFilhoFilho()->getId()){
+		$selected = 'selected';
+	}
+	$html .= '<option '.$selected.' value="' . $grupoPaiFilhoFilho->getGrupoPaiFilhoFilho()->getId() . '" >' . $informacao . '</option>';
 }
 $html .= '</select>';
 $html .= '</div>';
 
 $html .= '<div class="form-group">';
 $html .= '<label for="selecionaSituacao">' . $this->translate('Situa&ccedil;&atilde;o') . '</label>';
-$html .= '<select class="form-control" id="selecionaSituacao" onChange="$(\'.linha\').addClass(\'hidden\'); $(\'.linhaSituacao\'+$(\'#selecionaSituacao\').val()).removeClass(\'hidden\');">';
+$html .= '<select class="form-control" name="idSituacao" id="selecionaSituacao" >';
 $html .= '<option value="0" >' . $this->translate('Todas') . '</option>';
 foreach ($this->situacoes as $situacao) {
 	if ($situacao->getId() === Situacao::ATIVO ||
 		$situacao->getId() === Situacao::ESPECIAL ||
 		$situacao->getId() === Situacao::DESISTENTE ||
 		$situacao->getId() === Situacao::REPROVADO_POR_FALTA) {
-			$html .= '<option value="' . $situacao->getId() . '" >' . $situacao->getNome() . '</option>';
+			$selected = '';
+			if($this->postado['idSituacao'] == $situacao->getId()){
+				$selected = 'selected';
+			}
+			$html .= '<option '.$selected.' value="' . $situacao->getId() . '" >' . $situacao->getNome() . '</option>';
 		}
 }
 $html .= '</select>';
 $html .= '</div>';
 
+$html .= $this->botaoSimples('Filtrar', $this->funcaoOnClick('mostrarSplash(); this.form.submit()'), BotaoSimples::botaoSucesso, BotaoSimples::larguraMaxima);
+$html .= '</form>';
 
-foreach ($this->turmas as $turma) {
+if($this->filtrado){
 
-	$html .= '<div class="table-responsive">';
-	$html .= '<table id="turma' . $turma->getId() . '" class="table table-bordered table-condensed footable hidden" data-filter="#fooFilter' . $turma->getId() . '">';
+	foreach ($this->turmas as $turma) {
+		if($turma->getId() == $this->postado['idTurma']){
+			$html .= '<div class="table-responsive">';
+			$html .= '<table id="turma' . $turma->getId() . '" class="table table-bordered table-condensed footable" data-filter="#fooFilter' . $turma->getId() . '">';
 
-	$html .= '<thead>';
-	$html .= '<tr>';
-	$html .= '<th colspan="17"><input id="fooFilter' . $turma->getId() . '" type="text" class="form-control" placeholder="Filtro"></th>';
-	$html .= '</tr>';
-	$html .= '<tr>';
-	$html .= '<th colspan="3" class="text-center hidden-xs">' . $turma->getCurso()->getNome() . ' - ' . Funcoes::mesPorExtenso($turma->getMes()) . '/' . $turma->getAno() . '</th>';
-	$html .= '<th colspan="2" class="text-center hidden-sm hidden-md hidden-lg">' . $turma->getCurso()->getNomeSigla() . ' - ' . Funcoes::mesPorExtenso($turma->getMes()) . '/' . $turma->getAno() . '</th>';
-	foreach ($turma->getCurso()->getDisciplina() as $disciplina) {
-		$mostrar = false;
-		if ($turma->getTurmaAulaAtiva() && $turma->getTurmaAulaAtiva()->getAula()->getDisciplina()->getId() === $disciplina->getId()) {
-			$mostrar = true;
-		}
-		if ($mostrar) {
-			$html .= '<th colspan="' . count($disciplina->getAula()) . '" class="text-center">' . $disciplina->getNome() . '</th>';
-		}
-	}
-	$html .= '</tr>';
-	$html .= '<tr>';
-	$html .= '<th class="text-center">Situa&ccedil;&atilde;o</th>';
-	$html .= '<th class="text-center hidden-xs">Matricula</th>';
-	$html .= '<th class="text-center">Aluno</th>';
-	$html .= '<th class="text-center hidden-xs">Equipe</th>';
-	$html .= '<th class="text-center hidden-sm hidden-md hidden-lg">Eq.</th>';
-	foreach ($turma->getCurso()->getDisciplina() as $disciplina) {
-		$mostrar = false;
-		if ($turma->getTurmaAulaAtiva() && $turma->getTurmaAulaAtiva()->getAula()->getDisciplina()->getId() === $disciplina->getId()) {
-			$mostrar = true;
-		}
-		if ($mostrar) {
-			foreach ($disciplina->getAulaOrdenadasPorPosicao() as $aula) {
-				$html .= '<td class="text-center">A' . $aula->getPosicao() . '</td>';
+			$html .= '<thead>';
+			$html .= '<tr>';
+			$html .= '<th colspan="17"><input id="fooFilter' . $turma->getId() . '" type="text" class="form-control" placeholder="Filtro"></th>';
+			$html .= '</tr>';
+			$html .= '<tr>';
+			$html .= '<th colspan="3" class="text-center hidden-xs">' . $turma->getCurso()->getNome() . ' - ' . Funcoes::mesPorExtenso($turma->getMes()) . '/' . $turma->getAno() . '</th>';
+			$html .= '<th colspan="2" class="text-center hidden-sm hidden-md hidden-lg">' . $turma->getCurso()->getNomeSigla() . ' - ' . Funcoes::mesPorExtenso($turma->getMes()) . '/' . $turma->getAno() . '</th>';
+			foreach ($turma->getCurso()->getDisciplina() as $disciplina) {
+				$mostrar = false;
+				if ($turma->getTurmaAulaAtiva() && $turma->getTurmaAulaAtiva()->getAula()->getDisciplina()->getId() === $disciplina->getId()) {
+					$mostrar = true;
+				}
+				if ($mostrar) {
+					$html .= '<th colspan="' . count($disciplina->getAula()) . '" class="text-center">' . $disciplina->getNome() . '</th>';
+				}
 			}
-		}
-	}
-	$html .= '</tr>';
-	$html .= '</thead>';
-
-	$html .= '<tbody>';
-	if ($turma->getTurmaPessoa()) {
-		foreach ($turma->getTurmaPessoa() as $turmaPessoa) {
-			$mostrar = false;
-			if ($this->entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja ||
-				$this->entidade->getEntidadeTipo()->getId() === EntidadeTipo::equipe) {
-
-					if ($this->entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja) {
-						$mostrar = true;
-					}
-					if ($this->entidade->getEntidadeTipo()->getId() === EntidadeTipo::equipe) {
-						if ($turmaPessoa->getPessoa()->getGrupoPessoa()[0]->getGrupo()->getGrupoEquipe()->getEntidadeAtiva()->getId() === $this->entidade->getId()) {
-							$mostrar = true;
-						}
-					}
-				} else {
-					foreach ($this->grupoPessoas as $grupoPessoa) {
-						if ($grupoPessoa->getPessoa()->getId() === $turmaPessoa->getPessoa()->getId()) {
-							$mostrar = true;
-							break;
-						}
+			$html .= '</tr>';
+			$html .= '<tr>';
+			$html .= '<th class="text-center">Situa&ccedil;&atilde;o</th>';
+			$html .= '<th class="text-center hidden-xs">Matricula</th>';
+			$html .= '<th class="text-center">Aluno</th>';
+			$html .= '<th class="text-center hidden-xs">Equipe</th>';
+			$html .= '<th class="text-center hidden-sm hidden-md hidden-lg">Eq.</th>';
+			foreach ($turma->getCurso()->getDisciplina() as $disciplina) {
+				$mostrar = false;
+				if ($turma->getTurmaAulaAtiva() && $turma->getTurmaAulaAtiva()->getAula()->getDisciplina()->getId() === $disciplina->getId()) {
+					$mostrar = true;
+				}
+				if ($mostrar) {
+					foreach ($disciplina->getAulaOrdenadasPorPosicao() as $aula) {
+						$html .= '<td class="text-center">A' . $aula->getPosicao() . '</td>';
 					}
 				}
+			}
+			$html .= '</tr>';
+			$html .= '</thead>';
 
-			if ($mostrar) {
-				$nomeEquipe = CursoController::nomeEquipeTurmaPessoa($turmaPessoa);
-				$idLinha = 0;
-				if ($turmaPessoa->getPessoa()->getGrupoPessoaAtivo()) {
-					if (!($turmaPessoa->getPessoa()->getGrupoPessoaAtivo()->getGrupo()->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::igreja)) {
-						$idLinha = $turmaPessoa->getPessoa()->getGrupoPessoaAtivo()->getGrupo()->getGrupoEquipe()->getId();
-					}
-				}
-
-				switch ($turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getId()) {
-				case Situacao::ESPECIAL:
-					$corSituacao = 'primary';
-					break;
-				case Situacao::DESISTENTE:
-					$corSituacao = 'warning';
-					break;
-				case Situacao::REPROVADO_POR_FALTA:
-					$corSituacao = 'danger';
-					break;
-				default:
-					$corSituacao = 'success';
-				}
-
-				$stringSituacao = '<span class="label label-' . $corSituacao . ' hidden-xs">' . $turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getNome() . '</span>'
-					. '<span class="label label-' . $corSituacao . ' hidden-sm hidden-md hidden-lg">' . substr($turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getNome(), 0, 1) . '</span>';
-				$idSituacao = $turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getId();
-
-				$html .= '<tr class="linha linhaEquipe0 linhaEquipe' . $idLinha . ' linhaSituacao0 linhaSituacao' . $idSituacao . '">';
-				$html .= '<td class="text-center">' . $stringSituacao . '</td>';
-//				$html .= '<td class="hidden-xs"><a target="_blanck" href="/cursoAluno/' . $turmaPessoa->getId() . '" class="btn btn-xs btn-primary" >' . str_pad($turmaPessoa->getId(), 8, 0, STR_PAD_LEFT) . '</a></td>';
-				$html .= '<td class="hidden-xs">'.$turmaPessoa->getId().'</td>';
-				$html .= '<td class="hidden-xs">' . $turmaPessoa->getPessoa()->getNome() . '</td>';
-				$html .= '<td class="hidden-sm hidden-md hidden-lg">' . $turmaPessoa->getPessoa()->getNomePrimeiroPrimeiraSiglaUltimo() . '</td>';
-				$html .= '<th class="text-center hidden-xs">' . $nomeEquipe . '</th>';
-				$html .= '<th class="text-center hidden-sm hidden-md hidden-lg">' . substr($nomeEquipe, 0, 3) . '.</th>';
-				foreach ($turma->getCurso()->getDisciplina() as $disciplina) {
+			$html .= '<tbody>';
+			if ($turma->getTurmaPessoa()) {
+				foreach ($turma->getTurmaPessoa() as $turmaPessoa) {
 					$mostrar = false;
-					if ($turma->getTurmaAulaAtiva() && $turma->getTurmaAulaAtiva()->getAula()->getDisciplina()->getId() === $disciplina->getId()) {
+					if ($this->postado['idEquipe'] == 0) {
 						$mostrar = true;
+					} else {
+						if ($turmaPessoa->getPessoa()->getGrupoPessoaAtivo()) {
+							if($turmaPessoa->getPessoa()->getGrupoPessoaAtivo()->getGrupo()->getGrupoEquipe()->getId() == $this->postado['idEquipe']){
+								$mostrar = true;
+							}
+						}
 					}
 					if ($mostrar) {
-						$aulaAtiva = $turma->getTurmaAulaAtiva()->getAula();
-						foreach ($disciplina->getAulaOrdenadasPorPosicao() as $aula) {
-							$html .= '<td class="text-center">';
-							if ($aula->getPosicao() <= $aulaAtiva->getPosicao()) {
-								$frequencia = false;
-								$icone = 'fa-times';
-								$corDoBotao = BotaoSimples::botaoMuitoPequenoPerigoso;
+						$nomeEquipe = CursoController::nomeEquipeTurmaPessoa($turmaPessoa);
 
-								if (count($turmaPessoa->getTurmaPessoaAula()) > 0) {
-									foreach ($turmaPessoa->getTurmaPessoaAula() as $turmaPessoaAula) {
-										if ($turmaPessoaAula->getAula()->getId() === $aula->getId()) {
-											$frequencia = true;
-											$icone = 'fa-check';
-											$corDoBotao = BotaoSimples::botaoMuitoPequenoSucesso;
-											if ($turmaPessoaAula->getReposicao() == 'S') {
-												$icone = 'fa-file';
-												$corDoBotao = BotaoSimples::botaoMuitoPequenoWarning;
-											}
-										}
-									}
-								}
-							} else {
-								$icone = 'fa-clock-o';
-								$corDoBotao = BotaoSimples::botaoMuitoPequenoImportante;
+						$mostrarSituacao = false;
+						if($this->postado['idSituacao'] == 0){
+							$mostrarSituacao = true;
+						}else{
+							if($turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getId() == $this->postado['idSituacao']){
+								$mostrarSituacao = true;
+							}
+						}
+
+						if($mostrarSituacao){
+							switch ($turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getId()) {
+							case Situacao::ESPECIAL:
+								$corSituacao = 'primary';
+								break;
+							case Situacao::DESISTENTE:
+								$corSituacao = 'warning';
+								break;
+							case Situacao::REPROVADO_POR_FALTA:
+								$corSituacao = 'danger';
+								break;
+							default:
+								$corSituacao = 'success';
 							}
 
-							$iconeBotao = '<i class="fa ' . $icone . '"></i>';
-							$extra = ' disabled ';
-							$html .= $this->botaoSimples($iconeBotao, $extra, $corDoBotao, BotaoSimples::posicaoAoCentro);
-							$html .= '</td>';
+							$stringSituacao = '<span class="label label-' . $corSituacao . ' hidden-xs">' . $turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getNome() . '</span>'
+								. '<span class="label label-' . $corSituacao . ' hidden-sm hidden-md hidden-lg">' . substr($turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getNome(), 0, 1) . '</span>';
+							$idSituacao = $turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getId();
+
+							$html .= '<tr>';
+							$html .= '<td class="text-center">' . $stringSituacao . '</td>';
+							//				$html .= '<td class="hidden-xs"><a target="_blanck" href="/cursoAluno/' . $turmaPessoa->getId() . '" class="btn btn-xs btn-primary" >' . str_pad($turmaPessoa->getId(), 8, 0, STR_PAD_LEFT) . '</a></td>';
+							$html .= '<td class="hidden-xs">'.$turmaPessoa->getId().'</td>';
+							$html .= '<td class="hidden-xs">' . $turmaPessoa->getPessoa()->getNome() . '</td>';
+							$html .= '<td class="hidden-sm hidden-md hidden-lg">' . $turmaPessoa->getPessoa()->getNomePrimeiroPrimeiraSiglaUltimo() . '</td>';
+							$html .= '<th class="text-center hidden-xs">' . $nomeEquipe . '</th>';
+							$html .= '<th class="text-center hidden-sm hidden-md hidden-lg">' . substr($nomeEquipe, 0, 3) . '.</th>';
+							foreach ($turma->getCurso()->getDisciplina() as $disciplina) {
+								$mostrar = false;
+								if ($turma->getTurmaAulaAtiva() && $turma->getTurmaAulaAtiva()->getAula()->getDisciplina()->getId() === $disciplina->getId()) {
+									$mostrar = true;
+								}
+								if ($mostrar) {
+									$aulaAtiva = $turma->getTurmaAulaAtiva()->getAula();
+									foreach ($disciplina->getAulaOrdenadasPorPosicao() as $aula) {
+										$html .= '<td class="text-center">';
+										if ($aula->getPosicao() <= $aulaAtiva->getPosicao()) {
+											$frequencia = false;
+											$icone = 'fa-times';
+											$corDoBotao = BotaoSimples::botaoMuitoPequenoPerigoso;
+
+											if (count($turmaPessoa->getTurmaPessoaAula()) > 0) {
+												foreach ($turmaPessoa->getTurmaPessoaAula() as $turmaPessoaAula) {
+													if ($turmaPessoaAula->getAula()->getId() === $aula->getId()) {
+														$frequencia = true;
+														$icone = 'fa-check';
+														$corDoBotao = BotaoSimples::botaoMuitoPequenoSucesso;
+														if ($turmaPessoaAula->getReposicao() == 'S') {
+															$icone = 'fa-file';
+															$corDoBotao = BotaoSimples::botaoMuitoPequenoWarning;
+														}
+													}
+												}
+											}
+										} else {
+											$icone = 'fa-clock-o';
+											$corDoBotao = BotaoSimples::botaoMuitoPequenoImportante;
+										}
+
+										$iconeBotao = '<i class="fa ' . $icone . '"></i>';
+										$extra = ' disabled ';
+										$html .= $this->botaoSimples($iconeBotao, $extra, $corDoBotao, BotaoSimples::posicaoAoCentro);
+										$html .= '</td>';
+									}
+								}
+							}
+							$html .= '</tr>';
 						}
 					}
 				}
-				$html .= '</tr>';
 			}
+
+			$html .= '</tbody>';
+
+			$html .= '</table>';
+			$html .= '</div>';
 		}
 	}
-
-	$html .= '</tbody>';
-
-	$html .= '</table>';
-	$html .= '</div>';
 }
 $html .= '</div>';
 $html .= '</div>';
