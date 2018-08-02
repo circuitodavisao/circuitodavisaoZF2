@@ -5,6 +5,7 @@ use Application\Controller\Helper\Constantes;
 use Application\Controller\Helper\Funcoes;
 use Application\Model\Entity\EntidadeTipo;
 use Application\Model\Entity\Situacao;
+use Application\Model\Entity\CursoAcesso;
 use Application\View\Helper\BotaoSimples;
 ?>
 <style type="text/css">
@@ -165,8 +166,13 @@ if($this->filtrado){
 
 							$html .= '<tr>';
 							$html .= '<td class="text-center">' . $stringSituacao . '</td>';
-							//				$html .= '<td class="hidden-xs"><a target="_blanck" href="/cursoAluno/' . $turmaPessoa->getId() . '" class="btn btn-xs btn-primary" >' . str_pad($turmaPessoa->getId(), 8, 0, STR_PAD_LEFT) . '</a></td>';
-							$html .= '<td class="hidden-xs">'.$turmaPessoa->getId().'</td>';
+				if ($this->entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja || $this->pessoa->getPessoaCursoAcessoAtivo() && ($this->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::COORDENADOR ||
+					$this->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::SUPERVISOR ||
+					$this->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::FACILITADOR)) {
+								$html .= '<td class="hidden-xs"><a target="_blanck" href="/cursoAluno/' . $turmaPessoa->getId() . '" class="btn btn-xs btn-primary" >' . str_pad($turmaPessoa->getId(), 8, 0, STR_PAD_LEFT) . '</a></td>';
+							}else{
+								$html .= '<td class="hidden-xs">'.$turmaPessoa->getId().'</td>';
+							}
 							$html .= '<td class="hidden-xs">' . $turmaPessoa->getPessoa()->getNome() . '</td>';
 							$html .= '<td class="hidden-sm hidden-md hidden-lg">' . $turmaPessoa->getPessoa()->getNomePrimeiroPrimeiraSiglaUltimo() . '</td>';
 							$html .= '<th class="text-center hidden-xs">' . $nomeEquipe . '</th>';
