@@ -2400,18 +2400,32 @@ class CadastroController extends CircuitoController {
 		$eventoRevisao = $this->getRepositorio()->getEventoORM()->encontrarPorId($idRevisao);
 
 		$relatorio = array();
+		$quantidadeHomensRevisionistas = 0;
+		$quantidadeMulheresRevisionistas = 0;
+		$quantidadeHomensLideres = 0;
+		$quantidadeMulheresLideres = 0;
 		if ($eventoFrequencias = $eventoRevisao->getEventoFrequencia()) {
 			foreach ($eventoFrequencias as $eventoFrequencia) {
 				/* Revisionistas */
 				if ($eventoFrequencia->getPessoa()->getGrupoPessoaAtivo()) {
 					if ($eventoFrequencia->getFrequencia() == 'S') {
 						$relatorio['revisionistas'][] = $eventoFrequencia;
+						if($eventoFrequencia->getPessoa()->getSexo() == 'M'){
+							$quantidadeHomensRevisionistas++;
+						}else{
+							$quantidadeMulheresRevisionistas++;
+						}
 					}
 				} else {
 					if ($eventoFrequencia->getPessoa()->getResponsabilidadesAtivas()) {
 						/* Lideres */
 						if ($eventoFrequencia->getFrequencia() == 'S') {
 							$relatorio['lideres'][] = $eventoFrequencia;
+							if($eventoFrequencia->getPessoa()->getSexo() == 'M'){
+								$quantidadeHomensLideres++;
+							}else{
+								$quantidadeMulheresLideres++;
+							}
 						}
 					}
 				}
@@ -2419,7 +2433,14 @@ class CadastroController extends CircuitoController {
 		}
 
 		$formulario = new SelecionarCrachaForm('SelecionarCracha');
-		return new ViewModel(array('relatorio' => $relatorio, 'formulario' => $formulario));
+		return new ViewModel(array(
+			'relatorio' => $relatorio, 
+			'formulario' => $formulario,
+			'quantidadeHomensRevisionistas' => $quantidadeHomensRevisionistas,
+			'quantidadeMulheresRevisionistas' => $quantidadeMulheresRevisionistas,
+			'quantidadeHomensLideres' => $quantidadeHomensLideres,
+			'quantidadeMulheresLideres' => $quantidadeMulheresLideres,
+		));
 	}
 
 	public function gerarCrachaAction() {

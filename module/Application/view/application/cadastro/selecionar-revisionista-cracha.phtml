@@ -28,6 +28,8 @@ echo $this->form()->openTag($form);
                     $htmlBotaoGerar .= $this->botaoSimples('Gerar Crachá', $funcao, '', BotaoSimples::posicaoAoCentro);
                     $htmlBotaoGerar .= '</div>';
                     echo $htmlBotaoGerar;
+					echo '<h2>Revisionistas - Homens: '.$this->quantidadeHomensRevisionistas.' - Mulheres: '.$this->quantidadeMulheresRevisionistas.'</h2>';
+					echo '<h2>Líderes - Homens: '.$this->quantidadeHomensLideres.' - Mulheres: '.$this->quantidadeMulheresLideres.'</h2>';
 
                     if ($relatorioRevisionistas = $this->relatorio['revisionistas']) {
                         echo '<table class="text-center table table-condensed table-hover bg-light mt15">';
