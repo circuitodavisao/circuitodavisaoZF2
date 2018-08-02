@@ -35,6 +35,9 @@ if ($this->solicitacoes) {
 		$objeto = $solicitacao->getObjeto1();
 		$grupo = $this->repositorio->getGrupoORM()->encontrarPorId($objeto);
 		$html .= $grupo->getNomeLideresAtivos();
+		if($grupo->getGrupoEquipe()){
+			$html .= $grupo->getGrupoEquipe()->getEntidadeAtiva()->getNome();
+		}
 		$html .= '</td>';
 		/* Objeto 2 */
 		$html .= '<td>';
