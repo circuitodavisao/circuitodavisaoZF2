@@ -33,14 +33,13 @@ foreach ($this->turma->getCurso()->getDisciplina() as $disciplina) {
 			if ($turmaAula->getAula()->getId() === $aula->getId()) {
 				$icone = 'thumbs-up';
 				$cor = 'default';
+				if (!$turmaAula->verificarSeEstaAtivo()) {
+					$icone = 'check';
+					$cor = 'success';
+				}
 				break;
 			}
-			if (!$turmaAula->verificarSeEstaAtivo()) {
-				$icone = 'check';
-				$cor = 'success';
-			}
 		}
-
 		$label = '<span class="label label-xs label-' . $cor . '">' . $aula->getPosicao() . ' <i class="fa fa-' . $icone . '"></i></span>';
 		$html .= '<td>' . $label . '</td>';
 	}
