@@ -36,7 +36,7 @@ if ($this->solicitacoes) {
 		$grupo = $this->repositorio->getGrupoORM()->encontrarPorId($objeto);
 		$html .= $grupo->getNomeLideresAtivos();
 		if($grupo->getGrupoEquipe()){
-			$html .= ' '.$grupo->getGrupoEquipe()->getEntidadeAtiva()->getNome();
+			$html .= ' - '.$grupo->getGrupoEquipe()->getEntidadeAtiva()->getNome();
 		}
 		$html .= '</td>';
 		/* Objeto 2 */
