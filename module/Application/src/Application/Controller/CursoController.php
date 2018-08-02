@@ -811,7 +811,7 @@ class CursoController extends CircuitoController {
 		$turmas = $grupo->getGrupoIgreja()->getTurma();
 		$grupoPaiFilhoFilhos = $grupo->getGrupoIgreja()->getGrupoPaiFilhoFilhosAtivos(0);
 		$situacoes = $this->getRepositorio()->getSituacaoORM()->buscarTodosRegistrosEntidade();
-		$pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($sessao->idPessoaLogada);
+		$pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($sessao->idPessoa);
 
 		$request = $this->getRequest();
 		$filtrado = false;
@@ -828,6 +828,7 @@ class CursoController extends CircuitoController {
 			'filtrado' => $filtrado,
 			'postado' => $postado,
 			'pessoa' => $pessoa,
+			'entidade' => $entidade,
 			'turmas' => $turmas,
 			'filhos' => $grupoPaiFilhoFilhos,
 			'situacoes' => $situacoes,
