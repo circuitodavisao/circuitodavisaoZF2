@@ -811,6 +811,7 @@ class CursoController extends CircuitoController {
 		$turmas = $grupo->getGrupoIgreja()->getTurma();
 		$grupoPaiFilhoFilhos = $grupo->getGrupoIgreja()->getGrupoPaiFilhoFilhosAtivos(0);
 		$situacoes = $this->getRepositorio()->getSituacaoORM()->buscarTodosRegistrosEntidade();
+		$pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($sessao->idPessoaLogada);
 
 		$request = $this->getRequest();
 		$filtrado = false;
@@ -826,7 +827,7 @@ class CursoController extends CircuitoController {
 		$view = new ViewModel(array(
 			'filtrado' => $filtrado,
 			'postado' => $postado,
-			'entidade' => $entidade,
+			'pessoa' => $pessoa,
 			'turmas' => $turmas,
 			'filhos' => $grupoPaiFilhoFilhos,
 			'situacoes' => $situacoes,

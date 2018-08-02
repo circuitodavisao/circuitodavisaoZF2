@@ -869,10 +869,11 @@ class IndexController extends CircuitoController {
             try {
                 $html .= '<br />turmaPessoaFrequenciasAtivas: ' . count($turmaPessoaFrequenciasAtivas);
                 foreach ($turmaPessoaFrequenciasAtivas as $turmaPessoaFrequenciaArray) {
+                        $naoAlterarDataDeCriacao = false;
                     $html .= '<br />$turmaPessoaFrequenciaArray ' . $turmaPessoaFrequenciaArray['id'];
                     $turmaPessoaFrequencia = $this->getRepositorio()->getTurmaPessoaFrequenciaORM()->encontrarPorId($turmaPessoaFrequenciaArray['id']);
                     $turmaPessoaFrequencia->setDataEHoraDeInativacao();
-                    $this->getRepositorio()->getTurmaPessoaFrequenciaORM()->persistir($turmaPessoaFrequencia);
+                    $this->getRepositorio()->getTurmaPessoaFrequenciaORM()->persistir($turmaPessoaFrequencia, $naoAlterarDataDeCriacao);
 
                     $turmaPessoaAula = new TurmaPessoaAula();
                     $turmaPessoaAula->setTurma_pessoa($turmaPessoaFrequencia->getTurma_pessoa());
@@ -886,7 +887,6 @@ class IndexController extends CircuitoController {
                         $turmaPessoaAula->setAula($turmaAula->getAula());
                         $turmaPessoaAula->setData_criacao($turmaPessoaFrequencia->getData());
                         $turmaPessoaAula->setHora_criacao($turmaPessoaFrequencia->getHora());
-                        $naoAlterarDataDeCriacao = false;
                         $this->getRepositorio()->getTurmaPessoaAulaORM()->persistir($turmaPessoaAula, $naoAlterarDataDeCriacao);
                     }
                 }
