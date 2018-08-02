@@ -25,30 +25,30 @@ $botaoGerarCarterinha = $this->botaoSimples(
         str_pad($this->turmaPessoa->getId(), 10, 0, STR_PAD_LEFT) . ' <i class="fa fa-user"></i>', $funcaoGerarCarterinha, BotaoSimples::botaoMuitoPequenoImportante, BotaoSimples::posicaoAEsquerda);
 
 $botaoMudarNome = '';
-$botaoMudarNome .= '<div class="btn-group dropdown">';
+//$botaoMudarNome .= '<div class="btn-group dropdown">';
 
-$botaoMudarNome .= '<a id="menudrop_' . $this->turmaPessoa->getPessoa()->getId() . '" class="tdNome text-left dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">';
-$botaoMudarNome .= '<span class="btn btn-primary btn-xs hidden-lg" id="span_nome_' . $this->turmaPessoa->getPessoa()->getId() . '" >';
-$botaoMudarNome .= $this->turmaPessoa->getPessoa()->getNomeListaDeLancamento(5);
-$botaoMudarNome .= '</span>';
-$botaoMudarNome .= '<span class="btn btn-primary btn-xs  hidden-xs hidden-sm hidden-md" id="span_nome_lg_' . $this->turmaPessoa->getPessoa()->getId() . '" >';
+//$botaoMudarNome .= '<a id="menudrop_' . $this->turmaPessoa->getPessoa()->getId() . '" class="tdNome text-left dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">';
+//$botaoMudarNome .= '<span class="btn btn-primary btn-xs hidden-lg" id="span_nome_' . $this->turmaPessoa->getPessoa()->getId() . '" >';
+//$botaoMudarNome .= $this->turmaPessoa->getPessoa()->getNomeListaDeLancamento(5);
+//$botaoMudarNome .= '</span>';
+//$botaoMudarNome .= '<span class="btn btn-primary btn-xs  hidden-xs hidden-sm hidden-md" id="span_nome_lg_' . $this->turmaPessoa->getPessoa()->getId() . '" >';
 $botaoMudarNome .= $this->turmaPessoa->getPessoa()->getNome();
-$botaoMudarNome .= '</span>';
-$botaoMudarNome .= '</a>';
-$botaoMudarNome .= '<ul class="dropdown-menu sobrepor-elementos modal-edicao-nome">';
-$botaoMudarNome .= '<span class="editable-container editable-inline">';
-$botaoMudarNome .= '<div class="ml10 campo-edicao-nome">';
-$botaoMudarNome .= '<form class="form-inline editableform">';
-$botaoMudarNome .= '<div class="control-group form-group">';
-$botaoMudarNome .= '<div>';
-$botaoMudarNome .= '<div class="input-group">';
-$botaoMudarNome .= '<input type="text" class="form-control" id="nome_' . $this->turmaPessoa->getPessoa()->getId() . '" value="' . $this->turmaPessoa->getPessoa()->getNome() . '" />';
-$botaoMudarNome .= '<span class="input-group-btn">';
-$botaoMudarNome .= '<span onclick="alterarNome(' . $this->turmaPessoa->getPessoa()->getId() . ')" class="btn ladda-button btn-primary" data-style="zoom-in"><span class="ladda-label"><i class="fa fa-check"></i></span></span>';
-$botaoMudarNome .= '</span>';
-$botaoMudarNome .= '</div>';
-$botaoMudarNome .= '</div>';
-$botaoMudarNome .= '</div>';
+//$botaoMudarNome .= '</span>';
+//$botaoMudarNome .= '</a>';
+//$botaoMudarNome .= '<ul class="dropdown-menu sobrepor-elementos modal-edicao-nome">';
+//$botaoMudarNome .= '<span class="editable-container editable-inline">';
+//$botaoMudarNome .= '<div class="ml10 campo-edicao-nome">';
+//$botaoMudarNome .= '<form class="form-inline editableform">';
+//$botaoMudarNome .= '<div class="control-group form-group">';
+//$botaoMudarNome .= '<div>';
+//$botaoMudarNome .= '<div class="input-group">';
+//$botaoMudarNome .= '<input type="text" class="form-control" id="nome_' . $this->turmaPessoa->getPessoa()->getId() . '" value="' . $this->turmaPessoa->getPessoa()->getNome() . '" />';
+//$botaoMudarNome .= '<span class="input-group-btn">';
+//$botaoMudarNome .= '<span onclick="alterarNome(' . $this->turmaPessoa->getPessoa()->getId() . ')" class="btn ladda-button btn-primary" data-style="zoom-in"><span class="ladda-label"><i class="fa fa-check"></i></span></span>';
+//$botaoMudarNome .= '</span>';
+//$botaoMudarNome .= '</div>';
+//$botaoMudarNome .= '</div>';
+//$botaoMudarNome .= '</div>';
 
 $html .= '</div>';
 
