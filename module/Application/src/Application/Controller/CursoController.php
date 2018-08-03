@@ -479,40 +479,31 @@ class CursoController extends CircuitoController {
 
 	public function salvarTurmaAction() {
 		$sessao = new Container(Constantes::$NOME_APLICACAO);
+		$idEntidadeAtual = $sessao->idEntidadeAtual;
+	
 		$request = $this->getRequest();
-		$response = $this->getResponse();
 		if ($request->isPost()) {
 			try {
 				$this->getRepositorio()->iniciarTransacao();
 
 				$dadosPost = $request->getPost();
-				$id = $dadosPost['id'];
 				$idCurso = $dadosPost['idCurso'];
 				$mes = $dadosPost['Mes'];
 				$ano = $dadosPost['Ano'];
 				$observacao = strtoupper($dadosPost['observacao']);
-				if ($id) {
-					$turma = $this->getRepositorio()->getTurmaORM()->encontrarPorId($id);
-				} else {
-					$turma = new Turma();
-				}
 
-				$idEntidadeAtual = $sessao->idEntidadeAtual;
-				$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+				$turma = new Turma();
+				$identidadeatual = $sessao->identidadeatual;
+				$entidade = $this->getrepositorio()->getEntidadeORM()->encontrarporid($idEntidadeAtual);
 				$grupo = $entidade->getGrupo();
-				$curso = $this->getRepositorio()->getCursoORM()->encontrarPorId($idCurso);
+				$curso = $this->getRepositorio()->getCursoORM()->encontrarporid($idCurso);
 
 				$turma->setCurso($curso);
 				$turma->setGrupo($grupo);
 				$turma->setAno((int) $ano);
 				$turma->setMes((int) $mes);
 				$turma->setObservacao($observacao);
-
-				if ($id) {
-					$this->getRepositorio()->getTurmaORM()->persistir($turma, false);
-				} else {
-					$this->getRepositorio()->getTurmaORM()->persistir($turma);
-				}
+				$this->getRepositorio()->getTurmaORM()->persistir($turma);
 
 				$this->getRepositorio()->fecharTransacao();
 				return $this->redirect()->toRoute(Constantes::$ROUTE_CURSO, array(

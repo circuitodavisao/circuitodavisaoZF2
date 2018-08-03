@@ -110,16 +110,14 @@ class Turma extends CircuitoEntity {
         $this->observacao = $observacao;
     }
 
-    function getCurso() {
-        return $this->curso;
-    }
-
+	function setCurso($curso){
+		$this->curso = $curso;
+	}
+	function getCurso(){
+		return $this->curso;
+	}
     function getGrupo() {
         return $this->grupo;
-    }
-
-    function setCurso($curso) {
-        $this->curso = $curso;
     }
 
     function setGrupo($grupo) {
