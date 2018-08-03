@@ -499,7 +499,7 @@ class CursoController extends CircuitoController {
 				$curso = $this->getRepositorio()->getCursoORM()->encontrarporid($idCurso);
 
 				$turma->setCurso($curso);
-				$turma->setGrupo($grupo);
+				$turma->setGrupo($grupo->getGrupoIgreja());
 				$turma->setAno((int) $ano);
 				$turma->setMes((int) $mes);
 				$turma->setObservacao($observacao);
