@@ -2023,9 +2023,15 @@ class CadastroController extends CircuitoController {
 		$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
 		$grupoIgreja = $entidade->getGrupo()->getGrupoIgreja();
 		$solicitacoes = $grupoIgreja->getSolicitacao();
+		$solicitacoesDivididasPorTipo = array();
+		foreach($solicitacoes as $solicitacao){
+			$solicitacoesDivididasPorTipo[$solicitacao->getSolicitacaoTipo()->getId()][] = $solicitacao;
+		}
+		$solicitacoesTipo = $this->getRepositorio()->getSolicitacaoTipoORM()->encontrarTodos();
 		$view = new ViewModel(array(
 			'grupo' => $grupo,
-			'solicitacoes' => $solicitacoes,
+			'solicitacoes' => $solicitacoesDivididasPorTipo,
+			'solicitacoesTipo' => $solicitacoesTipo,
 			'titulo' => 'Solicitações',
 			'repositorio' => $this->getRepositorio(),
 		));

@@ -9,98 +9,78 @@ use Application\Controller\Helper\Funcoes;
 $html = '';
 $html .= $this->templateFormularioTopo($this->titulo);
 $html .= '<div class="panel-body bg-light">';
-if ($this->solicitacoes) {
-	$html .= '<table class="table table-condensed table-hover bg-light mt15 footable" data-filter="#fooFilter">';
+foreach($this->solicitacoesTipo as $solicitacaoTipo){
+	$colspan = 0;
+	$htmlThead = '';
+	$htmlThead .= '<th class="hidden-xs">Solicitado em</th>';
+	switch($solicitacaoTipo->getId()){
+	case SolicitacaoTipo::TRANSFERIR_LIDER_NA_PROPRIA_EQUIPE:
+		$colspan = 6;
+		$htmlThead .= '<th>Time</th>';
+		$htmlThead .= '<th>Quem</th>';
+		$htmlThead .= '<th>Novo Time</th>';
+		$htmlThead .= '<th>Novo Líder</th>';
+		break;
+	case SolicitacaoTipo::REMOVER_LIDER:
+		$colspan = 4;
+		$htmlThead .= '<th>Time</th>';
+		$htmlThead .= '<th>Quem</th>';
+		break;
+	case SolicitacaoTipo::REMOVER_CELULA:
+		$colspan = 5;
+		$htmlThead .= '<th>Time</th>';
+		$htmlThead .= '<th>Quem</th>';
+		$htmlThead .= '<th>Célula</th>';
+	}
+	$htmlThead .= '<th>Status</th>';
+
+	$html .= '<table style="font-size:10px;" class="table table-condensed table-hover bg-light mt15 footable" data-filter="#fooFilter">';
 	$html .= '<thead>';
 
 	$html .= '<tr>';
-	$html .= '<th class="hidden-xs">Tipo</th>';
-	$html .= '<th class="hidden-xs">Solicitado em</th>';
-	$html .= '<th>O que ou quem?</th>';
-	$html .= '<th>Para</th>';
-	$html .= '<th>Status</th>';
+	$html .= '<th colspan="'.$colspan.'">'.$solicitacaoTipo->getNome().'</th>';
+	$html .= '</tr>';
+
+	$html .= '<tr>';
+	$html .= $htmlThead;
 	$html .= '</tr>';
 
 	$html .= '</thead>';
 
 	$html .= '<tbody>';
 
-	foreach ($this->solicitacoes as $solicitacao) {
-		$html .= '<tr>';
-		$html .= '<td class="hidden-xs">' . $solicitacao->getSolicitacaoTipo()->getNome() . '</td>';
-		$html .= '<td class="hidden-xs">' . $solicitacao->getData_criacaoStringPadraoBrasil() . '</td>';
-
-		/* Objeto 1 */
-		$html .= '<td>';
+	foreach ($this->solicitacoes[$solicitacaoTipo->getId()] as $solicitacao) {
 		$objeto = $solicitacao->getObjeto1();
 		$grupo = $this->repositorio->getGrupoORM()->encontrarPorId($objeto);
-		$html .= $grupo->getNomeLideresAtivos();
-		if($grupo->getGrupoEquipe()){
-			$html .= ' - '.$grupo->getGrupoEquipe()->getEntidadeAtiva()->getNome();
-		}
-		$html .= '</td>';
-		/* Objeto 2 */
-		$html .= '<td>';
-		if ($solicitacao->getSolicitacaoTipo()->getId() === SolicitacaoTipo::TRANSFERIR_LIDER_NA_PROPRIA_EQUIPE ||
-			$solicitacao->getSolicitacaoTipo()->getId() === SolicitacaoTipo::UNIR_CASAL ||
-			$solicitacao->getSolicitacaoTipo()->getId() === SolicitacaoTipo::TROCAR_RESPONSABILIDADES) {
-				$objeto = $solicitacao->getObjeto2();
-				$grupo = $this->repositorio->getGrupoORM()->encontrarPorId($objeto);
-				$html .= $grupo->getNomeLideresAtivos();
-			}
-		if ($solicitacao->getSolicitacaoTipo()->getId() === SolicitacaoTipo::TRANSFERIR_LIDER_PARA_OUTRA_EQUIPE) {
-			$objeto = $solicitacao->getObjeto2();
-			$grupo = $this->repositorio->getGrupoORM()->encontrarPorId($objeto);
-			if ($grupo->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::equipe) {
-				$html .= '<b>' . $grupo->getEntidadeAtiva()->getNome() . '</b>';
-			}
-			if ($grupo->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::subEquipe) {
-				$html .= '<b>' . $grupo->getEntidadeAtiva()->infoEntidade() . '</b>';
-			}
-		}
-		if ($solicitacao->getSolicitacaoTipo()->getId() === SolicitacaoTipo::SEPARAR) {
-			$objeto = $solicitacao->getObjeto2();
-			$pessoa = $this->repositorio->getPessoaORM()->encontrarPorId($objeto);
-			$html .= 'REMOVER <b>' . $pessoa->getNomePrimeiroUltimo() . '</b>';
-		}
-		if ($solicitacao->getSolicitacaoTipo()->getId() === SolicitacaoTipo::REMOVER_LIDER) {
-			$html .= 'MOTIVO: <b>' . $solicitacao->getMotivo() . '</b>';
-		}
-		if ($solicitacao->getSolicitacaoTipo()->getId() === SolicitacaoTipo::REMOVER_CELULA) {
+
+		$html .= '<tr>';
+		$htmlTbody = '';
+		$htmlTbody .= '<td class="hidden-xs">'.$solicitacao->getData_criacaoStringPadraoBrasil().'</td>';
+		$htmlTbody .= '<td>'.$grupo->getGrupoEquipe()->getEntidadeAtiva()->getNome().'</td>';
+		$htmlTbody .= '<td>'.$grupo->getNomeLideresAtivos().'</td>';
+
+		switch($solicitacaoTipo->getId()){
+		case SolicitacaoTipo::TRANSFERIR_LIDER_NA_PROPRIA_EQUIPE:
+			$objeto2 = $solicitacao->getObjeto2();
+			$grupo2 = $this->repositorio->getGrupoORM()->encontrarPorId($objeto2);
+
+			$htmlTbody .= '<td>'.$grupo2->getGrupoEquipe()->getEntidadeAtiva()->getNome().'</td>';
+			$htmlTbody .= '<td>'.$grupo2->getNomeLideresAtivos().'</td>';
+
+			break;
+		case SolicitacaoTipo::REMOVER_CELULA:
 			$objeto = $solicitacao->getObjeto2();
 			$grupoEvento = $this->repositorio->getGrupoEventoORM()->encontrarPorId($objeto);
-			$html .= 'Dia: '.$this->translate(Funcoes::diaDaSemanaPorDia($grupoEvento->getEvento()->getDia(),1)).' Hora: ' . $grupoEvento->getEvento()->getHora() . ' Hospedeiro: '.$grupoEvento->getEvento()->getEventoCelula()->getNome_hospedeiro(). ' Local: ' . $grupoEvento->getEvento()->getEventoCelula()->getLogradouro().' '.$grupoEvento->getEvento()->getEventoCelula()->getComplemento();
+			$htmlCelula = 'Dia: '.$this->translate(Funcoes::diaDaSemanaPorDia($grupoEvento->getEvento()->getDia(),1)).' Hora: ' . $grupoEvento->getEvento()->getHora() . ' Hospedeiro: '.$grupoEvento->getEvento()->getEventoCelula()->getNome_hospedeiro(). ' Local: ' . $grupoEvento->getEvento()->getEventoCelula()->getLogradouro().' '.$grupoEvento->getEvento()->getEventoCelula()->getComplemento();
+			$htmlTbody .= '<td>'.$htmlCelula.'</td>';
 		}
-		$html .= '</td>';
-		if ($solicitacao->getSolicitacaoSituacaoAtiva()) {
-			$html .= '<td>' . $solicitacao->getSolicitacaoSituacaoAtiva()->getSituacao()->getNome() . '</td>';
-		}
-		if ($solicitacao->getSolicitacaoTipo()->getId() === SolicitacaoTipo::TRANSFERIR_LIDER_PARA_OUTRA_EQUIPE) {
-			if ($this->grupo->getId() == $grupo->getId()) {
-				$stringNomeDaFuncaoOnClick = 'funcaoCircuito("cadastroSolicitacaoReceber", ' . $solicitacao->getId() . ')';
-				$extra = $this->funcaoOnClick($stringNomeDaFuncaoOnClick);
-				$html .= '<td>';
-				$html .= $this->botaoSimples('Receber', $extra);
-				$html .= '</td>';
-			}
-			if ($solicitacao->getSolicitacaoSituacaoAtiva()->getSituacao()->getId() === Situacao::ACEITO_AGENDADO) {
-				$idPessoa = $solicitacao->getReceptor_id();
-				$pessoa = $this->repositorio->getPessoaORM()->encontrarPorId($idPessoa);
+		$htmlTbody .= '<td>'.$solicitacao->getSolicitacaoSituacaoAtiva()->getSituacao()->getNome().'</td>';
 
-				$html .= '<td>';
-				$html .= 'Receptor <b>' . $pessoa->getNomePrimeiroUltimo() . '</b>';
-				$html .= '</td>';
-			}
-		}
-
+		$html .= $htmlTbody;
 		$html .= '</tr>';
 	}
-
 	$html .= '</tbody>';
-
 	$html .= '</table>';
-} else {
-	$html .= '<div class="alert alert-warning"><i class="fa fa-warning pr10" aria-hidden="true"></i>&nbsp;Sem solicitações!</div>';
 }
 $html .= '</div>';
 
