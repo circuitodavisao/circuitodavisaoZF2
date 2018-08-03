@@ -1178,7 +1178,7 @@ class CursoController extends CircuitoController {
 			if ($turmaPessoa->getPessoa()->getGrupoPessoaAtivo()->getGrupo()->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::igreja) {
 				$nomeEquipe = $turmaPessoa->getPessoa()->getGrupoPessoaAtivo()->getGrupo()->getEntidadeAtiva()->getNome();
 			} else {
-				$nomeEquipe = $turmaPessoa->getPessoa()->getGrupoPessoaAtivo()->getGrupo()->getGrupoEquipe()->getEntidadeAtiva()->getNome();
+				$nomeEquipe = $turmaPessoa->getPessoa()->getGrupoPessoaAtivo()->getGrupo()->getEntidadeAtiva()->infoEntidade();
 			}
 		}
 		return $nomeEquipe;
