@@ -15,26 +15,26 @@ echo $this->templateFormularioTopo('Cadastro de Turmas', '', 'style="margin-top:
 echo $this->form()->openTag($form);
 ?>
 <div class="panel-body bg-light">
-    <?php
-    echo $this->inputFormularioSimples(Constantes::$TRADUCAO_TIPO, $form->get(Constantes::$FORM_ID_CURSO), 6, 2);
-    echo $this->inputFormularioSimples(Constantes::$TRADUCAO_OBSERVACAO, $form->get(Constantes::$FORM_OBSERVACAO), 6);
-    echo $this->inputFormularioSimples(Constantes::$TRADUCAO_MES, $form->get(Constantes::$FORM_INPUT_MES), 6, 2);
-    echo $this->inputFormularioSimples(Constantes::$TRADUCAO_ANO, $form->get(Constantes::$FORM_INPUT_ANO), 6, 2);
+<?php
+echo $this->inputFormularioSimples(Constantes::$TRADUCAO_TIPO, $form->get(Constantes::$FORM_ID_CURSO), 6, 2);
+echo $this->inputFormularioSimples(Constantes::$TRADUCAO_OBSERVACAO, $form->get(Constantes::$FORM_OBSERVACAO), 6);
+echo $this->inputFormularioSimples(Constantes::$TRADUCAO_MES, $form->get(Constantes::$FORM_INPUT_MES), 6, 2);
+echo $this->inputFormularioSimples(Constantes::$TRADUCAO_ANO, $form->get(Constantes::$FORM_INPUT_ANO), 6, 2);
 
-    echo $this->divMensagens();
-    ?>
+echo $this->divMensagens();
+?>
 </div>
 <!-- end .form-body section -->
 <div class="panel-footer">
-    <?php
-    echo $this->formHidden($form->get(Constantes::$FORM_ID));
-    echo $this->formHidden($form->get(Constantes::$INPUT_CSRF));
-    $stringNomeDaFuncaoOnClickCadastro = 'mostrarSplash(); funcaoCircuito("' . Constantes::$ROUTE_CURSO . Constantes::$PAGINA_LISTAR_TURMA . '", 0)';
-    echo $this->botaoLink($this->translate(Constantes::$TRADUCAO_VOLTAR), Constantes::$STRING_HASHTAG, 2, $this->funcaoOnClick($stringNomeDaFuncaoOnClickCadastro));
-    /* Submit */
-    $funcaoVerificarCadastroPessoa = $this->funcaoOnClick('validarLancamentoCadastrarTurma(this.form)');
-    echo $this->botaoSimples(Constantes::$TRADUCAO_CADASTRAR, $funcaoVerificarCadastroPessoa);
-    ?>
+<?php
+echo $this->formHidden($form->get(Constantes::$FORM_ID));
+echo $this->formHidden($form->get(Constantes::$INPUT_CSRF));
+$stringNomeDaFuncaoOnClickCadastro = 'mostrarSplash(); funcaoCircuito("' . Constantes::$ROUTE_CURSO . Constantes::$PAGINA_LISTAR_TURMA . '", 0)';
+echo $this->botaoLink($this->translate(Constantes::$TRADUCAO_VOLTAR), Constantes::$STRING_HASHTAG, 2, $this->funcaoOnClick($stringNomeDaFuncaoOnClickCadastro));
+/* Submit */
+$funcaoVerificarCadastroPessoa = $this->funcaoOnClick('validarLancamentoCadastrarTurma(this.form)');
+echo $this->botaoSimples(Constantes::$TRADUCAO_CADASTRAR, $funcaoVerificarCadastroPessoa);
+?>
 </div>
 <!-- end .form-footer section -->
 <?php
@@ -43,55 +43,55 @@ echo $this->templateFormularioRodape();
 ?>
 <script type="application/javascript">
 
-    function validarLancamentoCadastrarTurma(form) {
-    var idCurso = $('#idCurso').val();
-    var Mes = $('#Mes').val();
-    var Ano = $('#Ano').val();
-    var observacao = $('#observacao').val();
+function validarLancamentoCadastrarTurma(form) {
+	var idCurso = $('#idCurso').val();
+	var Mes = $('#Mes').val();
+	var Ano = $('#Ano').val();
+	var observacao = $('#observacao').val();
 
-    var temErro = false;
-    var divMensagens = $('#divMensagens');
-    var mensagem = '';
-    var mensagemReal = '';
+	var temErro = false;
+	var divMensagens = $('#divMensagens');
+	var mensagem = '';
+	var mensagemReal = '';
 
-    if (idCurso === '0') {
-    temErro = true;
-    if (mensagem == '') {
-    mensagem = 'Curso';
-    } else {
-    mensagem += ', Curso';
-    }
-    }
-    if (Mes === '0') {
-    temErro = true;
-    if (mensagem == '') {
-    mensagem = 'Mês';
-    } else {
-    mensagem += ', Mês';
-    }
-    }
-    if (Ano === '0') {
-    temErro = true;
-    if (mensagem == '') {
-    mensagem = 'Ano';
-    } else {
-    mensagem += ', Ano';
-    }
-    }
+	if (idCurso === '0') {
+		temErro = true;
+		if (mensagem == '') {
+			mensagem = 'Curso';
+	} else {
+		mensagem += ', Curso';
+	}
+	}
+	if (Mes === '0') {
+		temErro = true;
+		if (mensagem == '') {
+			mensagem = 'Mês';
+	} else {
+		mensagem += ', Mês';
+	}
+	}
+	if (Ano === '0') {
+		temErro = true;
+		if (mensagem == '') {
+			mensagem = 'Ano';
+	} else {
+		mensagem += ', Ano';
+	}
+	}
 
-    if (temErro) {
-    mensagemReal = 'Preencha o(s) seguinte(s) campo(s): ' + mensagem;
-    divMensagens
-    .html(mensagemReal)
-    .removeClass('alert-success')
-    .removeClass('hidden')
-    .addClass('alert-danger');
-    } else {
-    mostrarSplash(); 
-    divMensagens
-    .addClass('hidden');
-    form.submit();
-    }
-    }
+	if (temErro) {
+		mensagemReal = 'Preencha o(s) seguinte(s) campo(s): ' + mensagem;
+		divMensagens
+			.html(mensagemReal)
+			.removeClass('alert-success')
+			.removeClass('hidden')
+			.addClass('alert-danger');
+	} else {
+		mostrarSplash(); 
+		divMensagens
+			.addClass('hidden');
+		form.submit();
+	}
+	}
 
 </script>
