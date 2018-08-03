@@ -14,7 +14,6 @@ class Constantes {
     public static $META_LIDER = 6;
     public static $VALOR_MULTA = 3;
     public static $ID_TIPO_REVISAO = 3;
-
     const QUANTIDADES_DE_EVENTOS_NA_TELA = 4;
 
     /* Constates Login */
