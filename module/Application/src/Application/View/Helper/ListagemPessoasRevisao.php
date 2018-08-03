@@ -27,7 +27,7 @@ class ListagemPessoasRevisao extends AbstractHelper {
 		$frequencias = $this->view->evento->getEventoFrequencia();
 		if (($frequencias)) {
 			foreach ($frequencias as $frequencia) {
-				if ($frequencia->getFrequencia() == 'S') {
+				if ($frequencia->getFrequencia() == 'S' && $frequencia->getPessoa()->getGrupoPessoaAtivo()) {
 					$pessoas[] = $frequencia->getPessoa();
 				}
 			}
@@ -42,7 +42,8 @@ class ListagemPessoasRevisao extends AbstractHelper {
 			$html .= '<div id="painelAlunos">';
 			$html .= $this->view->templateFormularioTopo('Selecione os Alunos que participarão da turma');
 			$html .= '<div class="panel-body bg-light">';
-			$html .= '<table class="table">';
+			$html .= '<input id="fooFilter" type="text" class="form-control" placeholder="Filtro">';
+			$html .= '<table class="table table-condensed table-hover bg-light mt15 footable" data-filter="#fooFilter">';
 			$html .= '<thead>';
 			$html .= '<tr>';
 			$html .= '<th class="text-center">';
@@ -51,6 +52,7 @@ class ListagemPessoasRevisao extends AbstractHelper {
 			$html .= '<th class="text-center">';
 			$html .= $this->view->translate(Constantes::$TRADUCAO_NOME_REVISIONISTA);
 			$html .= '</th>';
+			$html .= '<th class="text-center">Time</th>';
 			$html .= '<td class="text-center"><input type="checkbox" onclick="marcarTodos(this);"/></th>';
 			$html .= '</td>';
 			$html .= '</thead>';
@@ -60,6 +62,7 @@ class ListagemPessoasRevisao extends AbstractHelper {
 				$html .= '<tr>';
 				$html .= '<td class="text-center">' . $pessoa->getId() . '</td>';
 				$html .= '<td class="text-center"><span class="visible-lg visible-md">' . $pessoa->getNome() . '</span><span class="visible-sm visible-xs">' . $pessoa->getNomePrimeiroUltimo() . '</span></td>';
+				$html .= '<td class="text-center">'.$pessoa->getGrupoPessoaAtivo()->getGrupo()->getEntidadeAtiva()->infoEntidade().'</td>';
 				$html .= '<td class="text-center"><input type="checkbox" name="aluno'.$pessoa->getId().'" id="' . $pessoa->getNome() . '" value="' . $pessoa->getId() . '"></td>';
 				$html .= '</tr>';
 			}
