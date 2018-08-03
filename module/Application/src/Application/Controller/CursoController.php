@@ -491,7 +491,6 @@ class CursoController extends CircuitoController {
 				$mes = $dadosPost['Mes'];
 				$ano = $dadosPost['Ano'];
 				$observacao = strtoupper($dadosPost['observacao']);
-
 				if ($id) {
 					$turma = $this->getRepositorio()->getTurmaORM()->encontrarPorId($id);
 				} else {
