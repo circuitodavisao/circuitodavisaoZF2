@@ -829,7 +829,7 @@ class CursoController extends CircuitoController {
 	public function selecionarParaCarterinhaAction() {
 		$sessao = new Container(Constantes::$NOME_APLICACAO);
 		$entidade = CircuitoController::getEntidadeLogada($this->getRepositorio(), $sessao);
-		$turmas = $entidade->getGrupo()->getTurma();
+		$turmas = $entidade->getGrupo()->getGrupoIgreja()->getTurma();
 		$formulario = new SelecionarCarterinhasForm('SelecionarCarterinhas');
 		$view = new ViewModel(array(
 			'turmas' => $turmas,
