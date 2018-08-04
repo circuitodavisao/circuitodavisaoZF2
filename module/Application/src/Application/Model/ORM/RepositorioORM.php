@@ -55,6 +55,7 @@ class RepositorioORM {
     private $_fatoRankingORM;
     private $_cursoAcessoORM;
     private $_pessoaCursoAcessoORM;
+	private $_fatoParceiroDeDus;
 
     /**
      * Contrutor
@@ -526,6 +527,17 @@ class RepositorioORM {
         }
         return $this->_pessoaCursoAcessoORM;
     }
+    /**
+     * Metodo public para obter a instancia do CircuitoORM
+     * @return CircuitoORM
+     */
+    public function getFatoParceiroDeDeusORM() {
+        if (is_null($this->_fatoParceiroDeDeus)) {
+            $this->_fatoParceiroDeDeus = new CircuitoORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_FATO_PARCEIRO_DE_DEUS);
+        }
+        return $this->_fatoParceiroDeDeus;
+    }
+
 
     /**
      * Metodo public para obter a instancia EntityManager com acesso ao banco de dados

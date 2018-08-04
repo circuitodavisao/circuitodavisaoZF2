@@ -6,6 +6,7 @@ use Application\Controller\Helper\Constantes;
 use Application\Controller\Helper\Funcoes;
 use Application\Form\AtendimentoComentarioForm;
 use Application\Form\CadastrarPessoaForm;
+use Application\Form\ParceiroDeDeusForm;
 use Application\Model\Entity\DimensaoTipo;
 use Application\Model\Entity\EventoFrequencia;
 use Application\Model\Entity\EventoTipo;
@@ -15,6 +16,7 @@ use Application\Model\Entity\GrupoAtendimentoComentario;
 use Application\Model\Entity\GrupoPessoa;
 use Application\Model\Entity\GrupoPessoaTipo;
 use Application\Model\Entity\Pessoa;
+use Application\Model\Entity\FatoParceiroDeDeus;
 use Application\Model\ORM\RepositorioORM;
 use Application\View\Helper\ListagemDePessoasComEventos;
 use DateTime;
@@ -915,4 +917,53 @@ class LancamentoController extends CircuitoController {
         return $entidade->getGrupo();
     }
 
+	public function parceiroDeDeusAction(){
+		$sessao = new Container(Constantes::$NOME_APLICACAO);
+
+		$idEntidadeAtual = $sessao->idEntidadeAtual;
+		$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+		$grupo = $entidade->getGrupo();
+		$grupoPaiFilhoFilhos = $grupo->getGrupoPaiFilhoFilhosAtivosReal();
+	
+		$formulario = new ParceiroDeDeusForm();
+
+		$dados = array();
+		$dados['formulario'] = $formulario;
+		$dados['grupo'] = $grupo;
+		$dados['discipulos'] = $grupoPaiFilhoFilhos;
+		$dados['solicitacoes'] = null;
+		return new ViewModel($dados);
+	}
+
+	public function parceiroDeDeusFinalizarAction(){
+		$request = $this->getRequest();
+		if($request->isPost()){
+			try{
+				$this->getRepositorio()->iniciarTransacao();
+
+				$dadosPost = $request->getPost();
+				$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($dadosPost['idGrupo']);
+				$numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupo);
+				$grupoEvento = $this->getRepositorio()->getGrupoEventoORM()->encontrarPorId($dadosPost['idGrupoEvento']);
+
+				$fatoParceiroDeDeus = new FatoParceiroDeDeus();
+				$fatoParceiroDeDeus->setNumero_identificador($numeroIdentificador);
+				$fatoParceiroDeDeus->setEvento_id($grupoEvento->getEvento()->getId());
+				$fatoParceiroDeDeus->setIndividual($individualFiltrado);
+				$fatoParceiroDeDeus->setCelula($celulaFiltrado);
+				$this->getRepositorio()->getFatoParceiroDeDeusORM()->persistir($fatoParceiroDeDeus);
+
+				$this->getRepositorio()->fecharTransacao();
+
+				return $this->redirect()->toRoute(Constantes::$ROUTE_LANCAMENTO, array(
+					Constantes::$ACTION => 'ParceiroDeDeusExtrato', 
+				));
+			}catch(Exception $exception){
+				echo $exception.getMessage();
+				$this->getRepositorio()->desfazerTransacao();
+			}
+		}else{
+
+		}
+	}
 }
