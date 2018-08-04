@@ -20,7 +20,7 @@ $html .= '</div>';
 
 foreach ($this->turmas as $turma) {
 	$html .= '<h2>Turma ' . $turma->getCurso()->getNome() . ' - ' . str_pad($turma->getMes(), 2, 0, STR_PAD_LEFT) . '/' . $turma->getAno();
-	$html .= $this->botaoSimples('Ver turma', $this->funcaoOnClick('$("#turma'.$turma->getId().').removeClass("hidden")')) . '</h2>';
+	$html .= $this->botaoSimples('Ver turma', $this->funcaoOnClick('$("#turma'.$turma->getId().'").toggleClass("hidden")')) . '</h2>';
 	$html .= '<table class="table table-bordered table-condensed hidden" id="turma'.$turma->getId().'">';
 
 	$html .= '<thead>';
