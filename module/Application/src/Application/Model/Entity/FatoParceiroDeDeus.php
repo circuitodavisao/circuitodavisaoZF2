@@ -16,25 +16,31 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class FatoParceiroDeDeus extends CircuitoEntity {
 
-    /** @ORM\Column(type="string") */
-    protected $numero_identificador;
+	/** @ORM\Column(type="string") */
+	protected $numero_identificador;
 
-    /** @ORM\Column(type="integer") */
-    protected $evento_id;
-	
-    /** @ORM\Column(type="integer") */
-    protected $individual;
+	/** @ORM\Column(type="integer") */
+	protected $evento_id;
 
-    /** @ORM\Column(type="integer") */
-    protected $celula;
+	/** @ORM\Column(type="decimal") */
+	protected $individual;
 
-    function getNumero_identificador() {
-        return $this->numero_identificador;
-    }
+	/** @ORM\Column(type="decimal") */
+	protected $celula;
 
-    function setNumero_identificador($numero_identificador) {
-        $this->numero_identificador = $numero_identificador;
-    }
+	/** @ORM\Column(type="string") */
+	protected $data;
+
+	private $grupo;
+	private $evento;
+
+	function getNumero_identificador() {
+		return $this->numero_identificador;
+	}
+
+	function setNumero_identificador($numero_identificador) {
+		$this->numero_identificador = $numero_identificador;
+	}
 
 	function setEvento_id($evento_id){
 		$this->evento_id = $evento_id;
@@ -53,5 +59,23 @@ class FatoParceiroDeDeus extends CircuitoEntity {
 	}
 	function getCelula(){
 		return $this->celula;
+	}
+	function setData($data){
+		$this->data = $data;
+	}
+	function getData(){
+		return $this->data;
+	}
+	function setGrupo($grupo){
+		$this->grupo = $grupo;
+	}
+	function getGrupo(){
+		return $this->grupo;
+	}
+	function setEvento($evento){
+		$this->evento = $evento;
+	}
+	function getEvento(){
+		return $this->evento;
 	}
 }

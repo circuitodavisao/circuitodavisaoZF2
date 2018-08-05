@@ -19,117 +19,23 @@ echo $this->divMensagens();
 </select>
 </div>
 <?php
-
 echo $this->inputFormularioSimples('Dia', $formulario->get(Constantes::$FORM_INPUT_DIA), 4, 2);
 echo $this->inputFormularioSimples('Mês', $formulario->get(Constantes::$FORM_INPUT_MES), 4, 2);
 echo $this->inputFormularioSimples('Ano', $formulario->get(Constantes::$FORM_INPUT_ANO), 4, 2);
 
-echo $this->inputFormularioSimples('Valor Individual', $formulario->get('individual'), 4);
-echo $this->inputFormularioSimples('Qual Célula', $formulario->get('idGrupoEvento'), 4, 2);
-echo $this->inputFormularioSimples('Valor Célula', $formulario->get('celula'), 4);
+echo $this->inputFormularioSimples('Valor Individual', $formulario->get('individual'), 12);
+echo $this->inputFormularioSimples('Qual Célula', $formulario->get('idGrupoEvento'), 12, 2);
+echo $this->inputFormularioSimples('Valor Célula', $formulario->get('celula'), 12);
 ?>
 	</div>
-	<div class="panel-footer">
+	<div class="panel-footer text-right">
 <?php
 echo $this->formHidden($formulario->get(Constantes::$INPUT_CSRF));
-$funcao = $this->funcaoOnClick('validar(this.form)');
-echo $this->botaoSimples('Salvar Valores', $funcao);
+$stringNomeDaFuncaoOnClickCadastro = 'validar(this.form)';
+echo $this->botaoLink('Salvar Valores', Constantes::$STRING_HASHTAG, 0, $this->funcaoOnClick($stringNomeDaFuncaoOnClickCadastro));
 ?>        
 	</div>
 </div>
 <?php 
 echo $this->form()->closeTag();
-?>
-<script type="text/javascript">
-function validar(formulario){
-	let mensagemDeErro = '';
-	let temErros = false;
-if(formulario.idGrupo.value == 0){
-	temErros = true
-		if(mensagemDeErro == ''){
-			mensagemDeErro = 'Líder';
-}else{
-	mensagemDeErro += ', Líder';
-}
-}
-	if(formulario.Dia.value == 0){
-		temErros = true
-			if(mensagemDeErro == ''){
-				mensagemDeErro = 'Dia';
-}else{
-	mensagemDeErro += ', Dia';
-}
-}
-if(formulario.Mes.value == 0){
-	temErros = true
-		if(mensagemDeErro == ''){
-			mensagemDeErro = 'Mês';
-}else{
-	mensagemDeErro += ', Mês';
-}
-}
-if(formulario.Ano.value == 0){
-	temErros = true
-		if(mensagemDeErro == ''){
-			mensagemDeErro = 'Ano';
-}else{
-	mensagemDeErro += ', Ano';
-}
-}
 
-if(formulario.individual.value == ''){
-	temErros = true
-		if(mensagemDeErro == ''){
-			mensagemDeErro = 'Valor do individual';
-}else{
-	mensagemDeErro += ', Valor do Individual';
-}
-}
-if(formulario.idGrupoEvento.value == 0){
-	temErros = true
-		if(mensagemDeErro == ''){
-			mensagemDeErro = 'Qual célula';
-}else{
-	mensagemDeErro += ', Qual Célula';
-}
-}
-if(formulario.celula.value == ''){
-	temErros = true
-		if(mensagemDeErro == ''){
-			mensagemDeErro = 'Valor de célula';
-}else{
-	mensagemDeErro += ', Valor de célula';
-}
-}
-if(!temErros){
-	$('#divMEnsagens')
-		.addClass('hidden');
-	mostrarSplash();
-	formulario.submit();
-}else{
-	$('#divMensagens')
-		.html('Preencha os seguintes campos: '+mensagemDeErro)
-		.removeClass('hidden')
-}
-}
-
-function selecionarLider(){
-const idGrupo = $('#idGrupo').val();
-	$.post(
-		"/relatorioBuscarDadosGrupo",
-{
-	idGrupo: idGrupo
-			},
-			function (data) {
-				if (data.resposta) {
-$('#idGrupoEvento').html('<option value="0">Selecione</option>')
-					if(data.celulas['1']){
-						$('#idGrupoEvento').append('<option value="'+data.celulas['1']['idGrupoEvento']+'">'+data.celulas['1']['nomeHospedeiro']+'</option>')
-								}
-								if(data.celulas['2']){
-									$('#idGrupoEvento').append('<option value="'+data.celulas['2']['idGrupoEvento']+'">'+data.celulas['2']['nomeHospedeiro']+'</option>')
-								}
-												}
-			}, 'json')
-}
-</script>

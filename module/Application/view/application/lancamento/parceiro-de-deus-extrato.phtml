@@ -1,0 +1,47 @@
+<?php
+use Application\Controller\Helper\Funcoes;
+use Application\Controller\Helper\Constantes;
+?>
+<div class="panel-body bg-light text-center mt50">
+	<h1>Parceiro de Deus Extrato</h1>
+<?php
+$html = '';
+if($this->fatos){
+	$html .= '<input id="fooFilter" type="text" class="form-control" placeholder="Filtro">';
+	$html .= '<table class="table table-condensed table-hover bg-light mt15 footable" data-filter="#fooFilter">';
+	$html .= '<tbody>';
+	$somaTotal = 0;
+	foreach($this->fatos as $fatoParceiroDeDeus){
+		$total = $fatoParceiroDeDeus->getIndividual() + $fatoParceiroDeDeus->getCelula();
+		$htmlCelula = $this->translate(Funcoes::diaDaSemanaPorDia($fatoParceiroDeDeus->getEvento()->getDia(),1)).'-' . $fatoParceiroDeDeus->getEvento()->getHora() ;
+
+		$html .= '<tr class="text-left">';
+		$html .= '<td>'.Funcoes::mudarPadraoData($fatoParceiroDeDeus->getData(),1).'</td>';
+		$html .= '<td>'.$fatoParceiroDeDeus->getGrupo()->getEntidadeAtiva()->infoEntidade(). ' - ' . $fatoParceiroDeDeus->getGrupo()->getNomeLideresAtivos().'</td>';
+		$html .= '<td>'.number_format($fatoParceiroDeDeus->getIndividual(),2,',','.').'</td>';
+		$html .= '<td>'.$htmlCelula.'</td>';
+		$html .= '<td>'.number_format($fatoParceiroDeDeus->getCelula(),2,',','.').'</td>';
+		$html .= '<td>'.number_format($total,2,',','.').'</td>';
+		$html .= '</tr>';
+
+		$somaTotal += $total;
+	} 
+	$html .= '<tr class="dark text-left">';
+	$html .= '<td colspan="5" class="text-right">Total</td>';
+	$html .= '<td>'.number_format($somaTotal,2,',','.').'</td>';
+	$html .= '</tr>';
+
+	$html .= '</tbody>';
+	$html .= '</table>';
+
+}else{
+	$html .= '<div class="alert alert-warning text-center">Sem lançamentos</div>';
+}
+
+$html .= '<div class="panel-footer text-right">';
+$stringNomeDaFuncaoOnClickCadastro = 'funcaoCircuito("lancamentoParceiroDeDeus", 0)';
+$html .= $this->botaoLink('Lançar', Constantes::$STRING_HASHTAG, 0, $this->funcaoOnClick($stringNomeDaFuncaoOnClickCadastro));
+$html .= '</div>';
+echo $html;
+?>
+</div>

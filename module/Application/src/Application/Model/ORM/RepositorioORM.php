@@ -528,12 +528,12 @@ class RepositorioORM {
         return $this->_pessoaCursoAcessoORM;
     }
     /**
-     * Metodo public para obter a instancia do CircuitoORM
-     * @return CircuitoORM
+     * Metodo public para obter a instancia do FatoParceiroDeDeusORM
+     * @return FatoParceiroDeDeusORM
      */
     public function getFatoParceiroDeDeusORM() {
         if (is_null($this->_fatoParceiroDeDeus)) {
-            $this->_fatoParceiroDeDeus = new CircuitoORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_FATO_PARCEIRO_DE_DEUS);
+            $this->_fatoParceiroDeDeus = new FatoParceiroDeDeusORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_FATO_PARCEIRO_DE_DEUS);
         }
         return $this->_fatoParceiroDeDeus;
     }

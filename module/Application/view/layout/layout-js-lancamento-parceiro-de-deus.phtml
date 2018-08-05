@@ -1,0 +1,10 @@
+<?php
+
+$versao = '?v=1.0.0';
+
+echo $this
+        ->headScript()
+       ->prependFile($this->basePath() . '/js/circuito_da_visao/validar-lancamento-parceiro-de-deus.js' . $versao)
+;
+echo $this->inlineScript();
+

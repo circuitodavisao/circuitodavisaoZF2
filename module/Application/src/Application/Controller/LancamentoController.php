@@ -932,7 +932,15 @@ class LancamentoController extends CircuitoController {
 		$dados['grupo'] = $grupo;
 		$dados['discipulos'] = $grupoPaiFilhoFilhos;
 		$dados['solicitacoes'] = null;
-		return new ViewModel($dados);
+
+		$view = new ViewModel($dados);
+		
+        /* Javascript especifico */
+        $layoutJS = new ViewModel();
+        $layoutJS->setTemplate('layout/layout-js-lancamento-parceiro-de-deus');
+        $view->addChild($layoutJS, 'layoutJsLancamentoParceiroDeDeus');
+
+		return $view;
 	}
 
 	public function parceiroDeDeusFinalizarAction(){
@@ -945,12 +953,16 @@ class LancamentoController extends CircuitoController {
 				$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($dadosPost['idGrupo']);
 				$numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupo);
 				$grupoEvento = $this->getRepositorio()->getGrupoEventoORM()->encontrarPorId($dadosPost['idGrupoEvento']);
+				$individualFiltrado = number_format(str_replace(',','.',$dadosPost['individual']),2,'.','');
+				$celulaFiltrado = number_format(str_replace(',','.',$dadosPost['celula']),2,'.','');
+				$dataLancamento = $dadosPost['Ano'].'-'.$dadosPost['Mes'].'-'.$dadosPost['Dia'];
 
 				$fatoParceiroDeDeus = new FatoParceiroDeDeus();
 				$fatoParceiroDeDeus->setNumero_identificador($numeroIdentificador);
 				$fatoParceiroDeDeus->setEvento_id($grupoEvento->getEvento()->getId());
 				$fatoParceiroDeDeus->setIndividual($individualFiltrado);
 				$fatoParceiroDeDeus->setCelula($celulaFiltrado);
+				$fatoParceiroDeDeus->setData($dataLancamento);
 				$this->getRepositorio()->getFatoParceiroDeDeusORM()->persistir($fatoParceiroDeDeus);
 
 				$this->getRepositorio()->fecharTransacao();
@@ -965,5 +977,26 @@ class LancamentoController extends CircuitoController {
 		}else{
 
 		}
+	}
+
+	public function parceiroDeDeusExtratoAction(){
+		$sessao = new Container(Constantes::$NOME_APLICACAO);
+
+		$idEntidadeAtual = $sessao->idEntidadeAtual;
+		$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+		$grupo = $entidade->getGrupo();
+		$numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupo);
+
+		$fatos = $this->getRepositorio()->getFatoParceiroDeDeusORM()->encontrarFatosPorNumeroIdentificador($numeroIdentificador);
+		if($fatos){
+			foreach($fatos as $fatoParceiroDeDeus){
+				$idGrupo = substr($fatoParceiroDeDeus->getNumero_identificador(), strlen($fatoParceiroDeDeus->getNumero_identificador())-8);
+				$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupo);
+				$fatoParceiroDeDeus->setGrupo($grupo);
+				$evento = $this->getRepositorio()->getEventoORM()->encontrarPorId($fatoParceiroDeDeus->getEvento_id());
+				$fatoParceiroDeDeus->setEvento($evento);
+			}
+		}
+		return new ViewModel(array('fatos' => $fatos));
 	}
 }
