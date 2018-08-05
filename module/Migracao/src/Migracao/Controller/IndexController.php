@@ -1009,13 +1009,13 @@ class IndexController extends CircuitoController {
             $this->abreConexao();
             $this->getRepositorio()->iniciarTransacao();
 
-            $idIgreja = 1; //ceilandia
-			//$idIgreja = 2;
-            $queryTurma = mysqli_query($this->getConexao(), 'SELECT * FROM ursula_turma_ursula WHERE idIgreja = ' . $idIgreja . ' AND fechada = "N";');
+	    $idIgreja = 1; //ceilandia
+	    $idIgreja = 2;
+	    $queryTurma = mysqli_query($this->getConexao(), 'SELECT * FROM ursula_turma_ursula WHERE idIgreja = ' . $idIgreja . ' AND fechada = "N";');
             while ($rowTurma = mysqli_fetch_array($queryTurma)) {
                 /* Turma */
                 $curso = $this->getRepositorio()->getCursoORM()->encontrarPorId(Curso::INSTITUTO_DE_VENCEDORES);
-                $grupoIgreja = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupoIgrejaCeilandia = 1);
+                $grupoIgreja = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupoIgrejaCeilandia = 1225);
                 $turma = new Turma();
                 $turma->setGrupo($grupoIgreja);
                 $turma->setCurso($curso);
