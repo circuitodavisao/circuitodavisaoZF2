@@ -31,6 +31,7 @@ use Application\Model\Entity\TurmaPessoaAvaliacao;
 use Application\Model\Entity\TurmaPessoaFinanceiro;
 use Application\Model\Entity\TurmaPessoaSituacao;
 use Application\Model\Entity\TurmaPessoaVisto;
+use Application\Model\Entity\CursoAcesso;
 use Application\Model\ORM\RepositorioORM;
 use Exception;
 use Zend\Json\Json;
@@ -865,6 +866,10 @@ class CursoController extends CircuitoController {
 		return new ViewModel(array('titulo' => 'Lançar Presença/Reposições'));
 	}
 
+	public function matriculaAction() {
+		return new ViewModel(array('titulo' => 'Consultar Matrícula'));
+	}
+
 	public function consultarMatriculaAction() {
 		$response = $this->getResponse();
 		try {
@@ -1297,16 +1302,38 @@ class CursoController extends CircuitoController {
 	}
 
 	public function alunoAction() {
-		$idTurmaPessoa = $this->getEvent()->getRouteMatch()->getParam(Constantes::$ID, 0);
-		$turmaPessoa = $this->getRepositorio()->getTurmaPessoaORM()->encontrarPorId($idTurmaPessoa);
+		$sessao = new Container(Constantes::$NOME_APLICACAO);
+		$idEntidadeAtual = $sessao->idEntidadeAtual;
+		$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+		$pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($sessao->idPessoa);
 
-		$situacoes = $this->getRepositorio()->getSituacaoORM()->buscarTodosRegistrosEntidade();
+		$possoAcessarIsso = false;
 
-		$view = new ViewModel(array(
-			'turmaPessoa' => $turmaPessoa,
-			'situacoes' => $situacoes
-		));
-		return $view;
+		if($entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
+			$possoAcessarIsso = true;
+		}
+		if($pessoa->getPessoaCursoAcessoAtivo() && ($pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::COORDENADOR ||
+			$pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::SUPERVISOR ||
+			$pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::FACILITADOR)){
+				$possoAcessarIsso = true;
+			}
+
+		if($possoAcessarIsso){
+			$idTurmaPessoa = $this->getEvent()->getRouteMatch()->getParam(Constantes::$ID, 0);
+			$turmaPessoa = $this->getRepositorio()->getTurmaPessoaORM()->encontrarPorId($idTurmaPessoa);
+
+			$situacoes = $this->getRepositorio()->getSituacaoORM()->buscarTodosRegistrosEntidade();
+
+			$view = new ViewModel(array(
+				'turmaPessoa' => $turmaPessoa,
+				'situacoes' => $situacoes
+			));
+			return $view;
+		}else{
+			return $this->redirect()->toRoute(Constantes::$ROUTE_CURSO, array(
+				Constantes::$ACTION => 'chamada',
+			));
+		}
 	}
 
 	/**

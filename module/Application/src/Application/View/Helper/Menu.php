@@ -426,6 +426,7 @@ class Menu extends AbstractHelper {
 			$arrayOQueMostrarDosCursos['gerarReposicoes'] = false;
 			$arrayOQueMostrarDosCursos['gerarFaltas'] = false;
 			$arrayOQueMostrarDosCursos['lancarPresenca'] = false;
+			$arrayOQueMostrarDosCursos['consultarMatricula'] = false;
 			if ($this->view->pessoa->getPessoaCursoAcessoAtivo()) {
 				if ($this->view->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::COORDENADOR) {
 					$arrayOQueMostrarDosCursos['turmas'] = true;
@@ -438,6 +439,7 @@ class Menu extends AbstractHelper {
 						$arrayOQueMostrarDosCursos['reentrada'] = true;
 						$arrayOQueMostrarDosCursos['gerarCarterinhas'] = true;
 						$arrayOQueMostrarDosCursos['gerarReposicoes'] = true;
+						$arrayOQueMostrarDosCursos['consultarMatricula'] = true;
 					}
 				if ($this->view->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::COORDENADOR ||
 					$this->view->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::SUPERVISOR ||
@@ -464,7 +466,14 @@ class Menu extends AbstractHelper {
 				$html .= '</a>';
 				$html .= '</li>';
 			}
-
+			if ($arrayOQueMostrarDosCursos['consultarMatricula']) {
+				$html .= '<li>';
+				$html .= '<a href="/cursoMatricula" onClick="mostrarSplash();">';
+				$html .= '<span class="fa fa-terminal"></span>';
+				$html .= 'Consultar Matrícula';
+				$html .= '</a>';
+				$html .= '</li>';
+			}
 			if ($arrayOQueMostrarDosCursos['turmas']) {
 				$html .= '<li>';
 				$html .= '<a href="/cursoListarTurma" onClick="mostrarSplash();">';
