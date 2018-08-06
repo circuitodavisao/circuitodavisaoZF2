@@ -1,6 +1,7 @@
 <?php
 
 use Application\Controller\Helper\Constantes;
+use Application\Controller\Helper\Funcoes;
 
 $html .= '<div class="mw1200 center-block p10 mt40">';
 $html .= '<div class="panel heading-border panel-primary">';
@@ -12,7 +13,7 @@ $html .= '<tr class="dark"><th colspan="'.(4+(count($this->turmasValidas)*2)).'"
 $html .= '<tr class="dark">';
 $html .= '<th></th>';
 foreach($this->turmasValidas as $turma){
-	$html .= '<th colspan="2">'.$turma->getMes().'/'.$turma->getAno().'</th>';
+	$html .= '<th colspan="2">'.$this->translate(Funcoes::mesPorExtenso($turma->getMes(),1)).'/'.$turma->getAno().' - '. $turma->getTurmaAulaAtiva()->getAula()->getDisciplina()->getNome().'</th>';
 }
 $html .= '<th colspan="2"></th>';
 $html .= '</tr>';
