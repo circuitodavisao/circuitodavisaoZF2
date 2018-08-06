@@ -7,6 +7,7 @@ $html .= '<div class="mw1200 center-block p10 mt40">';
 $html .= '<div class="panel heading-border panel-primary">';
 $html .= '<div class="panel-body bg-light">';
 
+$html .= '<div class="table-responsive">';
 $html .= '<table class="table table-bordered table-condensed table-hover">';
 $html .= '<thead>';
 $html .= '<tr class="dark"><th colspan="'.(4+(count($this->turmasValidas)*2)).'">GERADOR DE FALTAS - ' . date('d/m/Y') . '</th></tr>';
@@ -20,7 +21,7 @@ $html .= '</tr>';
 $html .= '<tr class="dark">';
 $html .= '<th>Time</th>';
 foreach($this->turmasValidas as $turma){
-	$html .= '<th>Quantidade de Faltas</th>';
+	$html .= '<th>Faltas</th>';
 	$html .= '<th>Valor</th>';
 }
 $html .= '<th colspan="2">Total</th>';
@@ -51,6 +52,7 @@ $html .= '</tr>';
 $html .= '</tbody>';
 $html .= '</table>';
 
+$html .= '</div>';
 $html .= '</div>';
 $html .= '</div>';
 $html .= '</div>';
