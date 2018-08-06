@@ -1208,6 +1208,7 @@ class CursoController extends CircuitoController {
 		$grupo = $entidade->getGrupo();
 		$turmas = $grupo->getGrupoIgreja()->getTurma();
 		$contadorDeFaltas = array();
+		$turmasValidas = array();
 		foreach ($turmas as $turma) {
 			if ($turmaAulaAtiva = $turma->getTurmaAulaAtiva()) {
 				foreach ($turma->getTurmaPessoa() as $turmaPessoa) {
@@ -1227,6 +1228,18 @@ class CursoController extends CircuitoController {
 										/* Verificar duas aulas antes da atual aula aberta */
 										$numeroDaAula = $turmaAulaAtiva->getAula()->getPosicao();
 										if($numeroDaAula >= 3){
+
+											$estaNoArray = false;
+											if(count($turmasValidas) > 0){
+												foreach($turmasValidas as $turmaValida){
+													if($turmaValida->getId() === $turma->getId()){
+														$estaNoArray = true;
+													}
+												}
+											}
+											if(!$estaNoArray){
+												$turmasValidas[] = $turma;
+											}
 											foreach ($disciplina->getAulaOrdenadasPorPosicao() as $aula) {
 												if($aula->getPosicao() <= ($numeroDaAula - 2)){
 													$naoEncontreiPresencaNaAula = true;
@@ -1236,7 +1249,7 @@ class CursoController extends CircuitoController {
 														}
 													}
 													if ($naoEncontreiPresencaNaAula) {
-														$contadorDeFaltas[$nomeEquipeDoTurmaPessoa] ++;
+														$contadorDeFaltas[$nomeEquipeDoTurmaPessoa][$turma->getId()] ++;
 													}
 													if ($aula->getId() == $turmaAulaAtiva->getAula()->getId()) {
 														$parar = true;
@@ -1254,6 +1267,7 @@ class CursoController extends CircuitoController {
 		}
 		$view = new ViewModel(array(
 			'contadorDeFaltas' => $contadorDeFaltas,
+			'turmasValidas' => $turmasValidas,
 		));
 		return $view;
 	}

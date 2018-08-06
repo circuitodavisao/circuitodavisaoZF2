@@ -8,25 +8,42 @@ $html .= '<div class="panel-body bg-light">';
 
 $html .= '<table class="table table-bordered table-condensed table-hover">';
 $html .= '<thead>';
-$html .= '<tr class="dark"><th colspan="3">GERADOR DE FALTAS - ' . date('d/m/Y') . '</th></tr>';
+$html .= '<tr class="dark"><th colspan="'.(4+(count($this->turmasValidas)*2)).'">GERADOR DE FALTAS - ' . date('d/m/Y') . '</th></tr>';
+$html .= '<tr class="dark">';
+$html .= '<th></th>';
+foreach($this->turmasValidas as $turma){
+	$html .= '<th colspan="2">'.$turma->getMes().'/'.$turma->getAno().'</th>';
+}
+$html .= '<th colspan="2"></th>';
+$html .= '</tr>';
 $html .= '<tr class="dark">';
 $html .= '<th>Time</th>';
-$html .= '<th>Quantidade de Faltas</th>';
-$html .= '<th>Valor</th>';
+foreach($this->turmasValidas as $turma){
+	$html .= '<th>Quantidade de Faltas</th>';
+	$html .= '<th>Valor</th>';
+}
+$html .= '<th colspan="2">Total</th>';
 $html .= '</tr>';
 $html .= '</thead>';
 $html .= '<tbody>';
 $soma = 0;
 foreach ($this->contadorDeFaltas as $key => $value) {
-	$soma += $value;
+	$somaParcial = 0;
 	$html .= '<tr>';
 	$html .= '<td>' . $key . '</td>';
-	$html .= '<td>' . $value . '</td>';
-	$html .= '<td>' . number_format($value * Constantes::$VALOR_MULTA, 2, ',', '.') . '</td>';
+	foreach($this->turmasValidas as $turma){
+		$quantidadeDeFaltas = $value[$turma->getId()];
+		$soma += $quantidadeDeFaltas;
+		$somaParcial += $quantidadeDeFaltas;
+		$html .= '<td>' . $quantidadeDeFaltas . '</td>';
+		$html .= '<td>' . number_format($quantidadeDeFaltas * Constantes::$VALOR_MULTA, 2, ',', '.') . '</td>';
+	}
+	$html .= '<td>' . $somaParcial . '</td>';
+	$html .= '<td>' . number_format($somaParcial * Constantes::$VALOR_MULTA, 2, ',', '.') . '</td>';
 	$html .= '</tr>';
 }
 $html .= '<tr class="dark">'; 
-$html .= '<td>TOTAL</td>'; 
+$html .= '<td class="text-right" colspan="'.(1+(count($this->turmasValidas)*2)).'">TOTAL</td>'; 
 $html .= '<td>' . $soma . '</td>'; 
 $html .= '<td>' . number_format($soma * Constantes::$VALOR_MULTA, 2, ',', '.') . '</td>';
 $html .= '</tr>';
