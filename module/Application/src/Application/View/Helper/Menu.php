@@ -313,12 +313,12 @@ class Menu extends AbstractHelper {
 			}
 			if ($this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja || 
 				$this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::equipe) {
-//					$html .= '<li>';
-//					$html .= '<a href="/lancamentoParceiroDeDeusExtrato" onClick="mostrarSplash();">';
-//					$html .= '<span class="fa fa-money"></span>';
-//					$html .= 'Parceiro de Deus';
-//					$html .= '</a>';
-//					$html .= '</li>';
+					$html .= '<li>';
+					$html .= '<a href="/lancamentoParceiroDeDeusExtrato" onClick="mostrarSplash();">';
+					$html .= '<span class="fa fa-money"></span>';
+					$html .= 'Parceiro de Deus';
+					$html .= '</a>';
+					$html .= '</li>';
 				}	
 		}
 
