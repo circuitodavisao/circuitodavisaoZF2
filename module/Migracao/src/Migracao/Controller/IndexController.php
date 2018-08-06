@@ -367,7 +367,11 @@ class IndexController extends CircuitoController {
             try {
                 foreach ($solicitacoesPorData as $arraySolicitacao) {
                     $solicitacao = $this->getRepositorio()->getSolicitacaoORM()->encontrarPorId($arraySolicitacao['id']);
+
+                    $html .= "<br /><br /><br />Solicitacao Id: " . $solicitacao->getId();
                     $html .= "<br />Solicitacao Data: " . $solicitacao->getData_criacaoStringPadraoBrasil();
+                    $html .= "<br />Solicitacao Tipo: " . $solicitacao->getSolicitacaoTipo()->getNome();
+                    $html .= "<br />Solicitacao Situacao: " . $solicitacao->getSolicitacaoSituacaoAtiva()->getSituacao()->getNome();
                     if ($solicitacao->getSolicitacaoSituacaoAtiva()->getSituacao()->getId() === Situacao::ACEITO_AGENDADO) {
                         $html .= "<br />solicitacao->getSolicitacaoTipo()->getId(): " . $solicitacao->getSolicitacaoTipo()->getId();
 
@@ -409,6 +413,12 @@ class IndexController extends CircuitoController {
                             $html .= "<br />REMOVENDO LIDER";
                             $grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($arraySolicitacao['objeto1']);
                             $html .= $this->removerLider($grupo);
+                        }
+                        if ($solicitacao->getSolicitacaoTipo()->getId() === SolicitacaoTipo::REMOVER_CELULA) {
+                            $html .= "<br />REMOVENDO CELULA";
+                            $grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($arraySolicitacao['objeto1']);
+                            $grupoEvento = $this->getRepositorio()->getGrupoEventoORM()->encontrarPorId($arraySolicitacao['objeto2']);
+                            $html .= $this->removerCelula($grupo, $grupoEvento);
                         }
 
                         $solicitacaoSituacaoAtiva = $solicitacao->getSolicitacaoSituacaoAtiva();
@@ -494,7 +504,7 @@ class IndexController extends CircuitoController {
     public function transferirLider($grupoQueSeraSemeado, $grupoQueRecebera, $extra) {
         $grupoPaiNovo = $grupoQueRecebera;
         $entidadeNovaInformacao = $extra;
-        $dataParaInativar = date('Y-m-d', mktime(0, 0, 0, date("m"), date("d") - 1, date("Y")));
+        $dataParaInativar = self::getDataParaInativacao();
         $dataParaCriar = date('Y-m-d');
 
         $htmlBr = '<br />';
@@ -598,7 +608,7 @@ class IndexController extends CircuitoController {
     }
 
     public function unirCasal($grupo1, $grupo2) {
-        $dataParaInativar = date('Y-m-d', mktime(0, 0, 0, date("m"), date("d") - 1, date("Y")));
+        $dataParaInativar = self::getDataParaInativacao();
 
         $grupoHomem = $grupo1;
         $htmlBr = '<br />';
@@ -677,7 +687,7 @@ class IndexController extends CircuitoController {
     }
 
     public function trocarResponsabilidades($grupo1, $grupo2) {
-        $dataParaInativar = date('Y-m-d', mktime(0, 0, 0, date("m"), date("d") - 1, date("Y")));
+        $dataParaInativar = self::getDataParaInativacao();
         $htmlBr = '<br />';
         $html = '';
         $html .= $htmlBr . "######################################### Iniciando troca";
@@ -716,27 +726,113 @@ class IndexController extends CircuitoController {
         return $html;
     }
 
-    public function removerLider($grupo) {
-        $dataParaInativar = date('Y-m-d', mktime(0, 0, 0, date("m"), date("d") - 1, date("Y")));
+     public function removerLider($grupo) {
+        $dataParaInativar = self::getDataParaInativacao();
         $this->getRepositorio()->iniciarTransacao();
         try {
 
+			/* grupo pai filho */
             $grupoPaiFilhoPai = $grupo->getGrupoPaiFilhoPaiAtivo();
             $grupoPaiFilhoPai->setDataEHoraDeInativacao($dataParaInativar);
             $this->getRepositorio()->getGrupoPaiFilhoORM()->persistir($grupoPaiFilhoPai, false);
 
+			/* responsabilidades */
             foreach ($grupo->getResponsabilidadesAtivas() as $grupoResponsavel) {
                 $grupoResponsavel->setDataEHoraDeInativacao($dataParaInativar);
                 $this->getRepositorio()->getGrupoResponsavelORM()->persistir($grupoResponsavel, false);
             }
+
+			/* celulas */
+			if($grupoEventoCelulas = $grupo->getGrupoEventoPorTipoEAtivo(EventoTipo::tipoCelula)){
+				foreach($grupoEventoCelulas as $grupoEvento){
+					$grupoEvento->setDataEHoraDeInativacao($dataParaInativar);
+					$this->getRepositorio()->getGrupoEventoORM()->persistir($grupoEvento, false);
+				}	
+			}
+
+			/* Fato lider */
             $this->inativarFatoLiderPorGrupo($grupo, $dataParaInativar);
 
-            $this->getRepositorio()->fecharTransacao();
-        } catch (Exception $exc) {
-            echo $exc->getTraceAsString();
-            $this->getRepositorio()->desfazerTransacao();
-        }
-    }
+			$this->getRepositorio()->fecharTransacao();
+		} catch (Exception $exc) {
+			echo $exc->getTraceAsString();
+			$this->getRepositorio()->desfazerTransacao();
+		}
+	 }
+
+	public function removerCelula($grupo, $grupoEvento) {
+		$dataParaInativar = self::getDataParaInativacao();
+		$this->getRepositorio()->iniciarTransacao();
+		try {
+			/* verificando a quantidade de celulas, caso so se tenha uma então inativar o fato lider */
+			if($grupoEventoCelulas = $grupo->getGrupoEventoPorTipoEAtivo(EventoTipo::tipoCelula)){
+				if(count($grupoEventoCelulas) === 1){
+					/* Fato lider */
+					$this->inativarFatoLiderPorGrupo($grupo, $dataParaInativar);
+				}
+			}
+
+			/* grupo evento */
+			$grupoEvento->setDataEHoraDeInativacao($dataParaInativar);
+			$this->getRepositorio()->getGrupoEventoORM()->persistir($grupoEvento, false);
+
+			$this->getRepositorio()->fecharTransacao();
+		} catch (Exception $exc) {
+			echo $exc->getTraceAsString();
+			$this->getRepositorio()->desfazerTransacao();
+		}
+	}
+
+	static public function getDataParaInativacao(){
+		return date('Y-m-d', mktime(0, 0, 0, date("m"), date("d") - 1, date("Y")));
+	}
+
+	public function aceitarTodasSolicitacoesPendentesAction(){
+		$html = '';
+		/* buscando solicitações */
+		$periodo = -1;
+		$arrayPeriodo = Funcoes::montaPeriodo($periodo);
+		$stringComecoDoPeriodo = $arrayPeriodo[3] . '-' . $arrayPeriodo[2] . '-' . $arrayPeriodo[1];
+		$stringFimDoPeriodo = $arrayPeriodo[6] . '-' . $arrayPeriodo[5] . '-' . $arrayPeriodo[4];
+		$html .= "<br />stringComecoDoPeriodo$stringComecoDoPeriodo";
+		$html .= "<br />stringFimDoPeriodo$stringFimDoPeriodo";
+		$dateInicialFormatada = DateTime::createFromFormat('Y-m-d', $stringComecoDoPeriodo);
+		$dateFinalFormatada = DateTime::createFromFormat('Y-m-d', $stringFimDoPeriodo);
+		$solicitacoesPorData = $this->getRepositorio()->getSolicitacaoORM()->encontrarTodosPorDataDeCriacao($dateInicialFormatada, $dateFinalFormatada);
+
+		if ($solicitacoesPorData) {
+			$this->getRepositorio()->iniciarTransacao();
+			try {
+				foreach ($solicitacoesPorData as $arraySolicitacao) {
+					$solicitacao = $this->getRepositorio()->getSolicitacaoORM()->encontrarPorId($arraySolicitacao['id']);
+
+					$html .= "<br /><br /><br />Solicitacao Id: " . $solicitacao->getId();
+					$html .= "<br />Solicitacao Data: " . $solicitacao->getData_criacaoStringPadraoBrasil();
+					$html .= "<br />Solicitacao Tipo: " . $solicitacao->getSolicitacaoTipo()->getNome();
+					if ($solicitacao->getSolicitacaoSituacaoAtiva()->getSituacao()->getId() === Situacao::PENDENTE_DE_ACEITACAO) {
+						
+                        $solicitacaoSituacaoAtiva = $solicitacao->getSolicitacaoSituacaoAtiva();
+                        /* inativar solicitacao situacao ativa */
+                        $solicitacaoSituacaoAtiva->setDataEHoraDeInativacao();
+                        $this->getRepositorio()->getSolicitacaoSituacaoORM()->persistir($solicitacaoSituacaoAtiva, false);
+
+                        /* Nova solicitacao situacao */
+                        $solicitacaoSituacao = new SolicitacaoSituacao();
+                        $solicitacaoSituacao->setSolicitacao($solicitacao);
+                        $solicitacaoSituacao->setSituacao($this->getRepositorio()->getSituacaoORM()->encontrarPorId(Situacao::ACEITO_AGENDADO));
+                        $this->getRepositorio()->getSolicitacaoSituacaoORM()->persistir($solicitacaoSituacao);
+					}
+				}
+				$this->getRepositorio()->fecharTransacao();
+			}catch (Exception $exc) {
+				echo $exc->getTraceAsString();
+				$this->getRepositorio()->desfazerTransacao();
+			}
+
+		}
+
+		return new ViewModel(array('html' => $html));
+	}
 
     public function rankingAction() {
         set_time_limit(0);
