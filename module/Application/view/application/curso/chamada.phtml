@@ -186,7 +186,7 @@ if($this->filtrado){
 									$aulaAtiva = $turma->getTurmaAulaAtiva()->getAula();
 									foreach ($disciplina->getAulaOrdenadasPorPosicao() as $aula) {
 										$html .= '<td class="text-center">';
-										if ($aula->getPosicao() <= $aulaAtiva->getPosicao()) {
+										if ($aula->getPosicao() <= ($aulaAtiva->getPosicao() - 1)) {
 											$frequencia = false;
 											$icone = 'fa-times';
 											$corDoBotao = BotaoSimples::botaoMuitoPequenoPerigoso;

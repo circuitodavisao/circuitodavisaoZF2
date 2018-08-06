@@ -8,21 +8,26 @@ $html .= '<div class="panel-body bg-light">';
 
 $html .= '<table class="table table-bordered table-condensed table-hover">';
 $html .= '<thead>';
-$html .= '<tr><th colspan="3">GERADOR DE FALTAS - ' . date('d/m/Y') . '</th></tr>';
+$html .= '<tr class="dark"><th colspan="3">GERADOR DE FALTAS - ' . date('d/m/Y') . '</th></tr>';
+$html .= '<tr class="dark">';
+$html .= '<th>Time</th>';
+$html .= '<th>Quantidade de Faltas</th>';
+$html .= '<th>Valor</th>';
+$html .= '</tr>';
 $html .= '</thead>';
 $html .= '<tbody>';
 $soma = 0;
 foreach ($this->contadorDeFaltas as $key => $value) {
-    $soma += $value;
-    $html .= '<tr>';
-    $html .= '<td>' . $key . '</td>';
-    $html .= '<td>' . $value . '</td>';
-    $html .= '<td>' . number_format($value * Constantes::$VALOR_MULTA, 2, ',', '.') . '</td>';
-    $html .= '</tr>';
+	$soma += $value;
+	$html .= '<tr>';
+	$html .= '<td>' . $key . '</td>';
+	$html .= '<td>' . $value . '</td>';
+	$html .= '<td>' . number_format($value * Constantes::$VALOR_MULTA, 2, ',', '.') . '</td>';
+	$html .= '</tr>';
 }
-$html .= '<tr>';
-$html .= '<td>TOTAL</td>';
-$html .= '<td>' . $soma . '</td>';
+$html .= '<tr class="dark">'; 
+$html .= '<td>TOTAL</td>'; 
+$html .= '<td>' . $soma . '</td>'; 
 $html .= '<td>' . number_format($soma * Constantes::$VALOR_MULTA, 2, ',', '.') . '</td>';
 $html .= '</tr>';
 $html .= '</tbody>';
