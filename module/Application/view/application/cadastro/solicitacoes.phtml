@@ -71,7 +71,7 @@ foreach($this->solicitacoesTipo as $solicitacaoTipo){
 		case SolicitacaoTipo::REMOVER_CELULA:
 			$objeto = $solicitacao->getObjeto2();
 			$grupoEvento = $this->repositorio->getGrupoEventoORM()->encontrarPorId($objeto);
-			$htmlCelula = 'Dia: '.$this->translate(Funcoes::diaDaSemanaPorDia($grupoEvento->getEvento()->getDia(),1)).' Hora: ' . $grupoEvento->getEvento()->getHora() . ' Hospedeiro: '.$grupoEvento->getEvento()->getEventoCelula()->getNome_hospedeiro(). ' Local: ' . $grupoEvento->getEvento()->getEventoCelula()->getLogradouro().' '.$grupoEvento->getEvento()->getEventoCelula()->getComplemento();
+			$htmlCelula = $this->translate(Funcoes::diaDaSemanaPorDia($grupoEvento->getEvento()->getDia(),1)).' - ' . $grupoEvento->getEvento()->getHora() . ' - Hospedeiro: '.$grupoEvento->getEvento()->getEventoCelula()->getNome_hospedeiro(). ' Local: ' . $grupoEvento->getEvento()->getEventoCelula()->getLogradouro().' '.$grupoEvento->getEvento()->getEventoCelula()->getComplemento();
 			$htmlTbody .= '<td>'.$htmlCelula.'</td>';
 		}
 		$htmlTbody .= '<td>'.$solicitacao->getSolicitacaoSituacaoAtiva()->getSituacao()->getNome().'</td>';
