@@ -1,0 +1,70 @@
+<?php
+
+use Application\View\Helper\BotaoSimples;
+
+echo $this->templateFormularioTopo($this->titulo);
+echo '<div class="panel-body bg-light">';
+echo '<div class="block-center">';
+echo '<div class="row">';
+echo '<div class="col-lg-8 col-md-8 col-md-8 col-xs-8">';
+echo '<input type="number" id="matricula" class="form-control" placeholder="Mátricula"  />';
+echo '</div>';
+echo '<div class="col-lg-4 col-md-4 col-md-4 col-xs-4">';
+echo $this->botaoSimples('Pesquisar', $this->funcaoOnClick('verificarMatricula()'), BotaoSimples::botaoImportante, BotaoSimples::larguraMaxima);
+echo '</div>';
+echo '</div>';
+echo '<div id="mensagem" class="row alert mt10 hidden"></div>';
+echo '</div>';
+echo '<div id="botaoLancar" class="col-lg-12 col-md-12 col-md-12 col-xs-12 hidden">';
+echo '<input type="hidden" id="matriculaConsultada" />';
+echo $this->botaoSimples('Tudo sobre o aluno', 'id="botaoAluno"', BotaoSimples::botaoImportante, BotaoSimples::larguraMaxima);
+echo '</div>';
+echo $this->templateFormularioRodape();
+?>
+
+<script type="text/javascript">
+function verificarMatricula() {
+	var mensagem = $('#mensagem');
+	var botaoLancar = $('#botaoLancar');
+	mensagem.addClass('hidden');
+	botaoLancar.addClass('hidden');
+	var idTurmaPessoa = $('#matricula');
+	if (idTurmaPessoa.val().length != 0) {
+		$.post(
+			"/cursoConsultarMatricula",
+	{
+		id: idTurmaPessoa.val(),
+					},
+					function (data) {
+						if (data.response) {
+							var informacaoAluno = '<p>Curso: ' + data.curso +
+								'</p><p>Turma: ' + data.turma +
+								'</p><p>Equipe: ' + data.equipe +
+								'</p><p>Aluno: ' + data.pessoa +
+								'</p><p>Matrícula: ' + idTurmaPessoa.val() + '</p>';
+							mensagem
+								.addClass('alert-info')
+								.removeClass('alert-danger')
+								.removeClass('hidden')
+								.html(informacaoAluno);
+							$('#matriculaConsultada').val(idTurmaPessoa.val());
+							$('#botaoAluno').attr('onClick','location.href=\'cursoAluno/'+idTurmaPessoa.val()+'\'')
+							botaoLancar.removeClass('hidden');
+							idTurmaPessoa.val('');
+						} else {
+							mensagem
+								.addClass('alert-danger')
+								.removeClass('alert-info')
+								.removeClass('hidden')
+								.html('Matrícula NÃO encontrada!');
+						}
+					}, 'json');
+		} else {
+			mensagem
+				.addClass('alert-danger')
+				.removeClass('alert-info')
+				.removeClass('hidden')
+				.html('Informe a Mátricula!');
+		}
+	}
+</script>
