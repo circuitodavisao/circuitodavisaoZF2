@@ -1316,12 +1316,12 @@ class IndexController extends CircuitoController {
             $this->getRepositorio()->iniciarTransacao();
 
 	    $idIgreja = 1; //ceilandia
-	    $idIgreja = 2;
+//	    $idIgreja = 2;
 	    $queryTurma = mysqli_query($this->getConexao(), 'SELECT * FROM ursula_turma_ursula WHERE idIgreja = ' . $idIgreja . ' AND fechada = "N";');
             while ($rowTurma = mysqli_fetch_array($queryTurma)) {
                 /* Turma */
                 $curso = $this->getRepositorio()->getCursoORM()->encontrarPorId(Curso::INSTITUTO_DE_VENCEDORES);
-                $grupoIgreja = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupoIgrejaCeilandia = 1225);
+                $grupoIgreja = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupoIgrejaCeilandia = 1);
 
                 $queryTurmaAluno = mysqli_query(
                         $this->getConexao(), 'SELECT * FROM ursula_turma_aluno_ursula WHERE idTurma = ' . $rowTurma['id'] . ' AND status = "A" AND (idSituacao = 1 || idSituacao = 2 || idSituacao = 5 || idSituacao = 4) ;');
