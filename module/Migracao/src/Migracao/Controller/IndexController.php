@@ -29,6 +29,9 @@ use Application\Model\Entity\Turma;
 use Application\Model\Entity\TurmaAula;
 use Application\Model\Entity\TurmaPessoa;
 use Application\Model\Entity\TurmaPessoaAula;
+use Application\Model\Entity\TurmaPessoaVisto;
+use Application\Model\Entity\TurmaPessoaAvaliacao;
+use Application\Model\Entity\TurmaPessoaFinanceiro;
 use Application\Model\Entity\TurmaPessoaFrequencia;
 use Application\Model\Entity\TurmaPessoaSituacao;
 use Application\Model\ORM\RepositorioORM;
@@ -1298,6 +1301,143 @@ class IndexController extends CircuitoController {
         $html .= '<br /><br />Elapsed time: ' . $elapsed_time . ' secs. Memory usage: ' . round(((memory_get_peak_usage(true) / 1024) / 1024), 2) . 'Mb';
         return new ViewModel(array('html' => $html));
     }
+
+	public function alunosHistoricoAction(){
+        set_time_limit(0);
+        ini_set('memory_limit', '-1');
+        ini_set('max_execution_time', '60');
+
+        list($usec, $sec) = explode(' ', microtime());
+        $script_start = (float) $sec + (float) $usec;
+        $html = '';
+
+        try {
+            $this->abreConexao();
+            $this->getRepositorio()->iniciarTransacao();
+
+	    $idIgreja = 1; //ceilandia
+	    $idIgreja = 2;
+	    $queryTurma = mysqli_query($this->getConexao(), 'SELECT * FROM ursula_turma_ursula WHERE idIgreja = ' . $idIgreja . ' AND fechada = "N";');
+            while ($rowTurma = mysqli_fetch_array($queryTurma)) {
+                /* Turma */
+                $curso = $this->getRepositorio()->getCursoORM()->encontrarPorId(Curso::INSTITUTO_DE_VENCEDORES);
+                $grupoIgreja = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupoIgrejaCeilandia = 1225);
+
+                $queryTurmaAluno = mysqli_query(
+                        $this->getConexao(), 'SELECT * FROM ursula_turma_aluno_ursula WHERE idTurma = ' . $rowTurma['id'] . ' AND status = "A" AND (idSituacao = 1 || idSituacao = 2 || idSituacao = 5 || idSituacao = 4) LIMIT 5;');
+				while ($rowTurmaAluno = mysqli_fetch_array($queryTurmaAluno)) {
+					$queryPessoa = mysqli_query($this->getConexao(), 'SELECT * FROM ursula_pessoa_ursula WHERE id = ' . $rowTurmaAluno['idAluno']);
+
+                    while ($rowPessoa = mysqli_fetch_array($queryPessoa)) {
+                        $lider1 = $rowPessoa['idLider'];
+                        $grupoCV = null;
+                        if ($grupoCV = $this->getRepositorio()->getGrupoCvORM()->encontrarLider1($lider1)) {
+                            
+                        } else {
+                            if ($idLider2 = $rowPessoa['idLider2']) {
+                                if ($grupoCV = $this->getRepositorio()->getGrupoCvORM()->encontrarLider1($idLider2)) {
+                                    
+                                }
+                            }
+                        }
+                        if ($grupoCV) {
+							if ($rowPessoa['id'] != 11082475) {
+								$turmaPessoa = $this->getRepositorio()->getTurmaPessoaORM()->encontrarporidAntigo($rowTurmaAluno['idAluno']);
+								$html .= '<br /><br />TURMA PESSOA: '.$turmaPessoa->getId();
+
+								/* turma pessoa pedagogico */
+								$queryFrequencias = mysqli_query($this->getConexao(), 'SELECT * FROM ursula_aula_visto_ursula WHERE idAluno = ' . $rowTurmaAluno['idAluno']);
+								while ($rowFrequencias = mysqli_fetch_array($queryFrequencias)) {
+									if ($rowFrequencias['visto'] == 'S') {
+                                        $turmaPessoaVisto = new TurmaPessoaVisto();
+                                        $turmaPessoaVisto->setTurma_pessoa($turmaPessoa);
+                                        $queryAulaDiaFrequencia = mysqli_query($this->getConexao(), 'SELECT * FROM ursula_aula_dia_ursula WHERE id = ' . $rowFrequencias['idAulaDia']);
+                                        while ($rowAulaDiaFrequencia = mysqli_fetch_array($queryAulaDiaFrequencia)) {
+                                            switch ($rowAulaDiaFrequencia['modulo']) {
+                                                case 0:
+                                                    $idAula = $rowAulaDiaFrequencia['aula'] + 4;
+                                                    break;
+                                                case 1:
+                                                    $idAula = $rowAulaDiaFrequencia['aula'] + 8;
+                                                    break;
+                                                case 2:
+                                                    $idAula = $rowAulaDiaFrequencia['aula'] + 20;
+                                                    break;
+                                                case 3:
+                                                    $idAula = $rowAulaDiaFrequencia['aula'] + 32;
+                                                    break;
+                                            }
+                                        }
+                                        $aula = $this->getRepositorio()->getAulaORM()->encontrarPorId($idAula);
+                                        $turmaPessoaVisto->setAula($aula);
+                                       $this->getRepositorio()->getTurmaPessoaVistoORM()->persistir($turmaPessoaVisto);
+                                        $html .= '<br />TURMA PESSOA VISTO ' . $turmaPessoaVisto->getAula()->getNome();
+                                    }
+                                }
+
+								/* turma pessoa avaliacao */
+								$queryPedagogico = mysqli_query($this->getConexao(), 'SELECT * FROM ursula_aluno_avaliacao_pedagogica_ursula WHERE idAluno = ' . $rowTurmaAluno['idAluno']);
+								while ($rowPedagogico = mysqli_fetch_array($queryPedagogico)) {
+
+									for($indicePedagogico = 1; $indicePedagogico <= 3; $indicePedagogico++){
+										if($rowPedagogico['livro1M'.$indicePedagogico] || $rowPedagogico['livro2M'.$indicePedagogico] || $rowPedagogico['complementarM'.$indicePedagogico]){
+											$turmaPessoaAvaliacao = new TurmaPessoaAvaliacao();
+											$turmaPessoaAvaliacao->setTurma_pessoa($turmaPessoa);
+
+											$disciplina = $this->getRepositorio()->getDisciplinaORM()->encontrarPorId($indicePedagogico+5);
+											$turmaPessoaAvaliacao->setDisciplina($disciplina);
+											if($livro1 = $rowPedagogico['livro1M'.$indicePedagogico]){
+												$turmaPessoaAvaliacao->setAvaliacao1($livro1);
+											}
+											if($livro2 = $rowPedagogico['livro2M'.$indicePedagogico]){
+												$turmaPessoaAvaliacao->setAvaliacao2($livro2);
+											}
+											if($extra = $rowPedagogico['complementarM'.$indicePedagogico]){
+												$turmaPessoaAvaliacao->setExtra($extra);
+											}
+
+											$this->getRepositorio()->getTurmaPessoaAvaliacaoORM()->persistir($turmaPessoaAvaliacao);
+											$html .= '<br /> TURMA PESSOA AVALIACAO '.$turmaPessoaAvaliacao->getExtra();
+										}
+									}
+								}	
+
+
+								$queryFinanceiro = mysqli_query($this->getConexao(), 'SELECT * FROM ursula_financeiro_aluno_ursula WHERE idAluno = ' . $rowTurmaAluno['idAluno']);
+								while ($rowFinanceiro = mysqli_fetch_array($queryFinanceiro)) {
+
+									for($indiceFinanceiro = 1; $indiceFinanceiro <= 3; $indiceFinanceiro++){
+										if($rowFinanceiro['matricula'.$indiceFinanceiro]){
+											$turmaPessoaFinanceiro = new TurmaPessoaFinanceiro();
+											$turmaPessoaFinanceiro->setTurma_pessoa($turmaPessoa);
+
+											$disciplina = $this->getRepositorio()->getDisciplinaORM()->encontrarPorId($indiceFinanceiro+5);
+											$turmaPessoaFinanceiro->setDisciplina($disciplina);
+											$this->getRepositorio()->getTurmaPessoaFinanceiroORM()->persistir($turmaPessoaFinanceiro);
+											$html .= '<br /> TURMA PESSOA FINANCEIRO '.$turmaPessoaFinanceiro->getId();
+										}
+									}
+								}	
+    
+                            }
+                        }
+                    }
+                }
+            }
+            $this->getRepositorio()->fecharTransacao();
+        } catch (Exception $exc) {
+            $this->getRepositorio()->desfazerTransacao();
+            echo $exc->getMessage();
+        }
+
+        list($usec, $sec) = explode(' ', microtime());
+        $script_end = (float) $sec + (float) $usec;
+        $elapsed_time = round($script_end - $script_start, 5);
+
+        $html .= '<br /><br />Elapsed time: ' . $elapsed_time . ' secs. Memory usage: ' . round(((memory_get_peak_usage(true) / 1024) / 1024), 2) . 'Mb';
+        return new ViewModel(array('html' => $html));
+ 
+	}
 
     public function abreConexao() {
         try {

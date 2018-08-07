@@ -42,7 +42,7 @@ $html .= '</div>';
 $html .= '<div class="form-group">';
 $html .= '<label for="selecionaEquipe">' . $this->translate('Selecione a Equipe') . '</label>';
 $html .= '<select class="form-control" name="idEquipe" id="selecionaEquipe" >';
-if($this->pessoa->getPessoaCursoAcessoAtivo()){
+if($this->pessoa->getPessoaCursoAcessoAtivo() || $this->entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
 	$html .= '<option value="0" >' . $this->translate('Todas') . '</option>';
 	foreach ($this->filhos as $grupoPaiFilhoFilho) {
 		$informacao = $grupoPaiFilhoFilho->getGrupoPaiFilhoFilho()->getEntidadeAtiva()->getNome();
