@@ -3,6 +3,7 @@
 namespace Application\Form;
 
 use Application\Controller\Helper\Constantes;
+use Application\Controller\Helper\Funcoes;
 use Zend\Form\Element\Select;
 
 /**
@@ -37,10 +38,12 @@ class ReentradaDeAlunoForm extends CadastrarPessoaRevisaoForm {
         }
         if ($turmas) {
             $array = array();
-            $array[0] = Constantes::$TRADUCAO_SELECIONE;
-            foreach ($turmas as $turma) {
-                $array[$turma->getId()] = $turma->getCurso()->getNome() . ' - ' . str_pad($turma->getMes(), 2, 0, STR_PAD_LEFT) . '/' . $turma->getAno();
-            }
+			$array[0] = Constantes::$TRADUCAO_SELECIONE;
+			foreach ($turmas as $turma) {
+				if($turma->getTurmaAulaAtiva()){
+					$array[$turma->getId()] = $turma->getCurso()->getNome() . ' - ' . Funcoes::mesPorExtenso($turma->getMes(), 1) . '/' . $turma->getAno() . ' - ' . $turma->getTurmaAulaAtiva()->getAula()->getDisciplina()->getNome();
+				}
+			}
 
             $inputSelectHierarquia = new Select();
             $inputSelectHierarquia->setName(Constantes::$INPUT_ID_TURMA);

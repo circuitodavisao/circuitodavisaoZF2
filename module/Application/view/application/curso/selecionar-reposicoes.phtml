@@ -19,45 +19,46 @@ $html .= $this->botaoSimples('Gerar Reposi&ccedil;&atilde;o', $funcao, '', Botao
 $html .= '</div>';
 
 foreach ($this->turmas as $turma) {
-    $html .= '<table class="table table-bordered table-condensed">';
+	if($turma->getTurmaAulaAtiva()){
+		$html .= '<table class="table table-bordered table-condensed">';
 
-    $html .= '<thead>';
-    $html .= '<tr>';
-    $html .= '<th colspan="3" class="text-center">' . $turma->getCurso()->getNome() . ' - ' . str_pad($turma->getMes(), 2, 0, STR_PAD_LEFT) . '/' . $turma->getAno() . '</th>';
-    $html .= '</tr>';
-    $html .= '<tr>';
-    $html .= '<th class="text-center">Matricula</th>';
-    $html .= '<th class="text-center">Aluno</th>';
-    $html .= '<th class="text-center">Marcar Todos <input type="checkbox" onclick="marcarTodos(this);"/></th>';
-    $html .= '</tr>';
+		$html .= '<thead>';
+		$html .= '<tr>';
+		$html .= '<th colspan="3" class="text-center">' . $turma->getCurso()->getNome() . ' - ' . str_pad($turma->getMes(), 2, 0, STR_PAD_LEFT) . '/' . $turma->getAno() . '</th>';
+		$html .= '</tr>';
+		$html .= '<tr>';
+		$html .= '<th class="text-center">Matricula</th>';
+		$html .= '<th class="text-center">Aluno</th>';
+		$html .= '<th class="text-center">Marcar Todos <input type="checkbox" onclick="marcarTodos(this);"/></th>';
+		$html .= '</tr>';
 
 
-    $html .= '</thead>';
+		$html .= '</thead>';
 
-    $html .= '<tbody>';
+		$html .= '<tbody>';
 
-    if (count($this->alunosComReposições[$turma->getId()]) > 0) {
-        foreach ($this->alunosComReposições[$turma->getId()] as $turmaPessoa) {
-            $mostrar = true;
-            if ($mostrar) {
-                $html .= '<tr>';
-                $html .= '<td>' . str_pad($turmaPessoa->getId(), 8, 0, STR_PAD_LEFT) . '</td>';
-                $html .= '<td>' . $turmaPessoa->getPessoa()->getNome() . '</td>';
-                $html .= '<td>';
-                foreach ($this->faltas[$turma->getId()][$turmaPessoa->getId()] as $falta) {
-                    $html .= $falta[0] . ' <input type="checkbox" id="aula' . $falta[1] . '" name="aula' . $falta[1] . '" value="' . $falta[1] . '_' . $turmaPessoa->getId() . '"/> | ';
-                }
-                $html .= '</td>';
-                $html .= '</tr>';
-            }
-        }
-    }
+		if (count($this->alunosComReposições[$turma->getId()]) > 0) {
+			foreach ($this->alunosComReposições[$turma->getId()] as $turmaPessoa) {
+				$mostrar = true;
+				if ($mostrar) {
+					$html .= '<tr>';
+					$html .= '<td>' . str_pad($turmaPessoa->getId(), 8, 0, STR_PAD_LEFT) . '</td>';
+					$html .= '<td>' . $turmaPessoa->getPessoa()->getNome() . '</td>';
+					$html .= '<td>';
+					foreach ($this->faltas[$turma->getId()][$turmaPessoa->getId()] as $falta) {
+						$html .= $falta[0] . ' <input type="checkbox" id="aula' . $falta[1] . '" name="aula' . $falta[1] . '" value="' . $falta[1] . '_' . $turmaPessoa->getId() . '"/> | ';
+					}
+					$html .= '</td>';
+					$html .= '</tr>';
+				}
+			}
+		}
 
-    $html .= '</tbody>';
+		$html .= '</tbody>';
 
-    $html .= '</table>';
+		$html .= '</table>';
+	}
 }
-
 $html .= '<div class="text-center mt20">';
 $html .= $this->botaoSimples('Gerar Reposi&ccedil;&atilde;o', $funcao, '', BotaoSimples::posicaoAoCentro);
 $html .= '</div>';

@@ -51,19 +51,19 @@ echo $this->layoutJSCadastrarPessoaRevisao;
 ?>
 <script type="text/javascript">
     function validar(form) {
-        var primeiroNome = $('#primeiro-nome').val();
-        var ultimoNome = $('#ultimo-nome').val();
-        var ddd = $('#ddd').val();
-        var telefone = $('#telefone').val();
-        var Dia = $('#Dia').val();
-        var Mes = $('#Mes').val();
-        var Ano = $('#Ano').val();
-        var idGrupo = $('#idGrupo').val();
+        let primeiroNome = $('#primeiro-nome').val();
+        let ultimoNome = $('#ultimo-nome').val();
+        let ddd = $('#ddd').val();
+        let telefone = $('#telefone').val();
+        let Dia = $('#Dia').val();
+        let Mes = $('#Mes').val();
+        let Ano = $('#Ano').val();
+        let idGrupo = $('#idGrupo').val();
 
-        var temErro = false;
-        var divMensagens = $('#divMensagens');
-        var mensagem = '';
-        var mensagemReal = '';
+        let temErro = false;
+        let divMensagens = $('#divMensagens');
+        let mensagem = '';
+        let mensagemReal = '';
 
         if (primeiroNome.length === 0) {
             temErro = true;
@@ -72,7 +72,7 @@ echo $this->layoutJSCadastrarPessoaRevisao;
             }
             mensagem += 'Primeiro Nome';
         } else {
-            var reg = /^[A-Za-záàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ ]+$/;
+            let reg = /^[A-Za-záàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ ]+$/;
             if (!reg.exec(primeiroNome)) {
                 temErro = true;
                 if (mensagem !== '') {
@@ -96,7 +96,7 @@ echo $this->layoutJSCadastrarPessoaRevisao;
             }
             mensagem += 'Ultimo Nome';
         } else {
-            var reg = /^[A-Za-záàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ ]+$/;
+            let reg = /^[A-Za-záàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ ]+$/;
             if (!reg.exec(ultimoNome)) {
                 temErro = true;
                 if (mensagem !== '') {

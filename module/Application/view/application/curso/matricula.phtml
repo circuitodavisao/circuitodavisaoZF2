@@ -41,14 +41,14 @@ function verificarMatricula() {
 								'</p><p>Turma: ' + data.turma +
 								'</p><p>Equipe: ' + data.equipe +
 								'</p><p>Aluno: ' + data.pessoa +
-								'</p><p>Matrícula: ' + idTurmaPessoa.val() + '</p>';
+								'</p><p>Matrícula: ' + data.idTurmaPessoa + '</p>';
 							mensagem
 								.addClass('alert-info')
 								.removeClass('alert-danger')
 								.removeClass('hidden')
 								.html(informacaoAluno);
 							$('#matriculaConsultada').val(idTurmaPessoa.val());
-							$('#botaoAluno').attr('onClick','location.href=\'cursoAluno/'+idTurmaPessoa.val()+'\'')
+							$('#botaoAluno').attr('onClick','location.href=\'cursoAluno/'+data.idTurmaPessoa+'\'')
 							botaoLancar.removeClass('hidden');
 							idTurmaPessoa.val('');
 						} else {
