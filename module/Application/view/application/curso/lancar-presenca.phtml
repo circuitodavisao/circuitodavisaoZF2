@@ -44,15 +44,21 @@ document.getElementById('matricula').focus()
 								'</p><p>Equipe: ' + data.equipe +
 								'</p><p>Aluno: ' + data.pessoa +
 								'</p><p>Matrícula: ' + idTurmaPessoa.val() + '</p>';
+						$('#matriculaConsultada').val(idTurmaPessoa.val());
+								if(data.temAulaAtiva){
+							idTurmaPessoa.val('');
+							botaoLancar.removeClass('hidden');
+								informacaoAluno += '<p>Aula: ' + data.nomeAula+ '</p>';
+								}else{
+								informacaoAluno += '<p class="alert alert-danger">SEM AULA ABERTA</p>';
+								}
 							mensagem
 								.addClass('alert-info')
 								.removeClass('alert-danger')
 								.removeClass('hidden')
 								.html(informacaoAluno);
-							$('#matriculaConsultada').val(idTurmaPessoa.val());
-							idTurmaPessoa.val('');
-							botaoLancar.removeClass('hidden');
-						} else {
+	
+				} else {
 							mensagem
 								.addClass('alert-danger')
 								.removeClass('alert-info')
@@ -96,6 +102,7 @@ document.getElementById('matricula').focus()
 									.html('Frequência registrada com sucesso!');
 								matricula.val('');
 								botaoLancar.addClass('hidden');
+								matricula.focus()
 						} else {
 							mensagem
 								.addClass('alert-danger')

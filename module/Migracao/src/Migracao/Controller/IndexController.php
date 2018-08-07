@@ -948,8 +948,14 @@ class IndexController extends CircuitoController {
                 $resposta = true;
             }
 
-            $this->getRepositorio()->fecharTransacao();
-        } catch (Exception $exc) {
+			$turmaPessoaAula = new TurmaPessoaAula();
+			$turmaPessoaAula->setAula($turmaPessoa->getTurma()->getTurmaAulaAtiva()->getAula());
+			$turmaPessoaAula->setTurma_pessoa($turmaPessoa);
+			$turmaPessoaAula->setReposicao('N');
+			$this->getRepositorio()->getTurmaPessoaAulaORM()->persistir($turmaPessoaAula);
+
+			$this->getRepositorio()->fecharTransacao();
+		} catch (Exception $exc) {
             $this->getRepositorio()->desfazerTransacao();
             echo $exc->getTraceAsString();
         }
