@@ -881,6 +881,7 @@ class CursoController extends CircuitoController {
 		try {
 			$turmaPessoa = null;
 			$idTurmaPessoa = $_POST['id'];
+			$idParaRetornar = null;
 			if ($this->getRepositorio()->getTurmaPessoaORM()->encontrarPorId($idTurmaPessoa)) {
 				$turmaPessoa = $this->getRepositorio()->getTurmaPessoaORM()->encontrarPorId($idTurmaPessoa);
 			}
@@ -893,6 +894,13 @@ class CursoController extends CircuitoController {
 				$nomeTurma = Funcoes::mesPorExtenso($turmaPessoa->getTurma()->getMes(), 1) . '/' . $turmaPessoa->getTurma()->getAno();
 				$nomeEquipe = $turmaPessoa->getPessoa()->getGrupoPessoaAtivo()->getGrupo()->getEntidadeAtiva()->infoEntidade();
 				$nomePessoa = $turmaPessoa->getPessoa()->getNome();
+
+				$temAulaAtiva = false;
+				if($turmaAulaAtiva = $turmaPessoa->getTurma()->getTurmaAulaAtiva()){
+					$temAulaAtiva = true;
+					$nomeAula = $turmaAulaAtiva->getAula()->getDisciplina()->getNome().' Aula: '.$turmaAulaAtiva->getAula()->getPosicao();
+				}
+				$idParaRetornar = $turmaPessoa->getId();	
 			} else {
 				$resposta = false;
 			}
@@ -902,7 +910,9 @@ class CursoController extends CircuitoController {
 				'turma' => $nomeTurma,
 				'equipe' => $nomeEquipe,
 				'pessoa' => $nomePessoa,
-				'idTurmaPessoa' => $turmaPessoa->getId(),
+				'idTurmaPessoa' => $idParaRetornar,
+				'temAulaAtiva' => $temAulaAtiva,
+				'nomeAula' => $nomeAula,
 			)));
 		} catch (Exception $exc) {
 			echo $exc->getMessage();
