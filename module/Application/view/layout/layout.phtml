@@ -238,7 +238,9 @@ use Application\Controller\Helper\Constantes;
             function mostrarSplash() {
                 $('#splash').css('display', 'block');
             }
-
+            function esconderSplash() {
+                $('#splash').css('display', 'none');
+            }
             $(window).bind("load", function () {
                 // Remove splash screen after load
                 $('#splash').css('display', 'none');
