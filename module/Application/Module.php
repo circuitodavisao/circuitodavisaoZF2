@@ -14,6 +14,7 @@ use Application\Controller\Helper\Constantes;
 use Application\Controller\RelatorioController;
 use Application\Model\ORM\RepositorioORM;
 use Application\View\Helper\AbaSelecionada;
+use Application\View\Helper\FiltroCursos;
 use Application\View\Helper\AbasPanel;
 use Application\View\Helper\AlertaEnvioRelatorio;
 use Application\View\Helper\AtendimentoGruposAbaixo;
@@ -168,6 +169,9 @@ class Module {
                 },
                 'listagemPessoasRevisao' => function($sm) {
                     return new ListagemPessoasRevisao();
+                },
+                'filtroCursos' => function($sm) {
+                    return new FiltroCursos();
                 },
                 'tabelaLancamento' => function($sm) {
                     return new TabelaLancamento();

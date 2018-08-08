@@ -1,64 +1,116 @@
 <?php
 
 use Application\Controller\Helper\Constantes;
+use Application\Controller\Helper\Funcoes;
+use Application\Controller\CursoController;
+use Application\Model\Entity\Situacao;
 use Application\View\Helper\BotaoSimples;
+use Application\View\Helper\FiltroCursos;
+
+$html = '';
+$html .= '<blockquote class="mt50 blockquote-primary"><small>' . $this->translate('Gerar Carterinhas') . '</small></blockquote>';
+$html .= '<div class="panel heading-border panel-primary">';
+$html .= '<div class="panel-body bg-light">';
+
+$html .= $this->filtroCursos("cursoSelecionarParaCarterinha");
 
 $form = $this->formulario;
 $form->prepare();
 $form->setAttribute(Constantes::$ACTION, $this->url(Constantes::$ROUTE_CURSO, array(Constantes::$ACTION => 'GerarCarterinha')));
 $form->setAttribute('target', '_blanck');
-$html = '';
 $html .= $this->form()->openTag($form);
-$html .= '<div class="mw800 center-block p10 mt40">';
-$html .= '<div class="panel heading-border panel-primary">';
-$html .= '<div class="panel-body bg-light">';
 
-$html .= '<div class="text-center m20">';
-$funcao = $this->funcaoOnClick('this.form.submit()');
-$html .= $this->botaoSimples('Gerar Carterinha', $funcao, '', BotaoSimples::posicaoAoCentro);
-$html .= '</div>';
+if($this->filtrado){
+	$html .= '<div class="text-center m20">';
+	$funcao = $this->funcaoOnClick('this.form.submit()');
+	$html .= $this->botaoSimples('Gerar Carterinha', $funcao, '', BotaoSimples::posicaoAoCentro);
+	$html .= '</div>';
 
-foreach ($this->turmas as $turma) {
-	$html .= '<h2>Turma ' . $turma->getCurso()->getNome() . ' - ' . str_pad($turma->getMes(), 2, 0, STR_PAD_LEFT) . '/' . $turma->getAno();
-	$html .= $this->botaoSimples('Ver turma', $this->funcaoOnClick('$("#turma'.$turma->getId().'").toggleClass("hidden")')) . '</h2>';
-	$html .= '<table class="table table-bordered table-condensed hidden" id="turma'.$turma->getId().'">';
+	$html .= '<input id="fooFilter" type="text" class="form-control mt20" placeholder="Filtro">';
+	foreach ($this->turmas as $turma) {
+		if($this->postado['idTurma'] == 0 || $turma->getId() == $this->postado['idTurma']){
+			$html .= '<div class="table-responsive">';
+			$html .= '<table  class="table table-bordered table-condensed footable" data-filter="#fooFilter">';
 
-	$html .= '<thead>';
-	$html .= '<tr>';
-	$html .= '<th colspan="3" class="text-center">' . $turma->getCurso()->getNome() . ' - ' . str_pad($turma->getMes(), 2, 0, STR_PAD_LEFT) . '/' . $turma->getAno() . '</th>';
-	$html .= '</tr>';
-	$html .= '<tr>';
-	$html .= '<th class="text-center">Matricula</th>';
-	$html .= '<th class="text-center">Aluno</th>';
-	$html .= '</tr>';
-
-
-	$html .= '</thead>';
-
-	$html .= '<tbody>';
-	if ($turma->getTurmaPessoa()) {
-		foreach ($turma->getTurmaPessoa() as $turmaPessoa) {
-			$mostrar = true;
-			if ($mostrar) {
-				$html .= '<tr>';
-				$html .= '<td>' . str_pad($turmaPessoa->getId(), 8, 0, STR_PAD_LEFT) . '</td>';
-				$html .= '<td>' . $turmaPessoa->getPessoa()->getNome() . '</td>';
-				$html .= '<td class="text-center"><input type="checkbox" id="aluno' . $turmaPessoa->getId() . '" name="aluno' . $turmaPessoa->getId() . '" value="' . $turmaPessoa->getId() . '"/></td>';
-				$html .= '</tr>';
+			$html .= '<thead>';
+			$html .= '<tr>';
+			$html .= '<th colspan="3" class="text-center">' . $turma->getCurso()->getNome() . ' - ' . Funcoes::mesPorExtenso($turma->getMes()) . '/' . $turma->getAno() . '</th>';
+			foreach ($turma->getCurso()->getDisciplina() as $disciplina) {
+				$mostrar = false;
+				if ($turma->getTurmaAulaAtiva() && $turma->getTurmaAulaAtiva()->getAula()->getDisciplina()->getId() === $disciplina->getId()) {
+					$mostrar = true;
+				}
+				if ($mostrar) {
+					$html .= '<th colspan="2" class="text-center">' . $disciplina->getNome() . '</th>';
+				}
 			}
+			$html .= '</tr>';
+			$html .= '<tr>';
+			$html .= '<th class="text-center">Situa&ccedil;&atilde;o</th>';
+			$html .= '<th class="text-center">Matricula</th>';
+			$html .= '<th class="text-center">Aluno</th>';
+			$html .= '<th class="text-center">Equipe</th>';
+			$html .= '<td class="text-center"><input type="checkbox" onClick="marcarTodos(this);" /></td>';
+			$html .= '</tr>';
+			$html .= '</thead>';
+
+			$html .= '<tbody>';
+			if ($turma->getTurmaPessoa()) {
+				foreach ($turma->getTurmaPessoa() as $turmaPessoa) {
+					$mostrar = false;
+					if ($this->postado['idEquipe'] == 0) {
+						$mostrar = true;
+					} else {
+						if ($turmaPessoa->getPessoa()->getGrupoPessoaAtivo()) {
+							if($turmaPessoa->getPessoa()->getGrupoPessoaAtivo()->getGrupo()->getGrupoEquipe()->getId() == $this->postado['idEquipe']){
+								$mostrar = true;
+							}
+						}
+					}
+					if ($mostrar) {
+						$nomeEquipe = CursoController::nomeEquipeTurmaPessoa($turmaPessoa);
+
+						$mostrarSituacao = false;
+						switch ($turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getId()) {
+						case Situacao::ESPECIAL:
+							$corSituacao = 'primary';
+							$mostrarSituacao = true;
+							break;
+						case Situacao::DESISTENTE:
+							$mostrarSituacao = false;
+							break;
+						case Situacao::REPROVADO_POR_FALTA:
+							$mostrarSituacao = false;
+							break;
+						default:
+							$corSituacao = 'success';
+							$mostrarSituacao = true;
+						}
+
+						if($mostrarSituacao){
+							$stringSituacao = '<span class="label label-' . $corSituacao . '">' . $turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getNome() . '</span>';
+							$idSituacao = $turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getId();
+
+							$html .= '<tr class="'.$corSituacao.'">';
+							$html .= '<td class="text-center">' . $stringSituacao . '</td>';
+							$html .= '<td><span class="label label-default">'.$turmaPessoa->getId().'</span></td>';
+							$html .= '<td>'. $turmaPessoa->getPessoa()->getNome() . '</td>';
+							$html .= '<td class="text-center">' . $nomeEquipe . '</td>';
+							$html .= '<td class="text-center"><input type="checkbox" id="aluno' . $turmaPessoa->getId() . '" name="aluno' . $turmaPessoa->getId() . '" value="' . $turmaPessoa->getId() . '"/></td>';
+							$html .= '</tr>';
+						}
+					}
+				}
+			}
+			$html .= '</tbody>';
+			$html .= '</table>';
+			$html .= '</div>';
 		}
 	}
-
-	$html .= '</tbody>';
-
-	$html .= '</table>';
+	$html .= '<div class="text-center mt20">';
+	$html .= $this->botaoSimples('Gerar Carterinha', $funcao, '', BotaoSimples::posicaoAoCentro);
+	$html .= '</div>';
 }
-
-$html .= '<div class="text-center mt20">';
-$html .= $this->botaoSimples('Gerar Carterinha', $funcao, '', BotaoSimples::posicaoAoCentro);
-$html .= '</div>';
-
-$html .= '</div>';
 $html .= '</div>';
 $html .= '</div>';
 

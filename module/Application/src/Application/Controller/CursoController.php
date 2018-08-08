@@ -836,10 +836,28 @@ class CursoController extends CircuitoController {
 	public function selecionarParaCarterinhaAction() {
 		$sessao = new Container(Constantes::$NOME_APLICACAO);
 		$entidade = CircuitoController::getEntidadeLogada($this->getRepositorio(), $sessao);
+		$grupo = $entidade->getGrupo();
 		$turmas = $entidade->getGrupo()->getGrupoIgreja()->getTurma();
 		$formulario = new SelecionarCarterinhasForm('SelecionarCarterinhas');
+
+		$grupoPaiFilhoFilhos = $grupo->getGrupoIgreja()->getGrupoPaiFilhoFilhosAtivos(0);
+
+		$request = $this->getRequest();
+		$filtrado = false;
+		$postado = array();
+
+		if($request->isPost()){
+			$filtrado = true;
+			$post = $request->getPost();
+			$postado['idTurma'] = $post['idTurma'];
+			$postado['idEquipe'] = $post['idEquipe'];
+		}
+
 		$view = new ViewModel(array(
 			'turmas' => $turmas,
+			'filtrado' => $filtrado,
+			'postado' => $postado,
+			'filhos' => $grupoPaiFilhoFilhos,
 			'formulario' => $formulario,
 		));
 		return $view;
@@ -1104,26 +1122,54 @@ class CursoController extends CircuitoController {
 	}
 
 	public function selecionarReposicoesAction() {
-		$formulario = new SelecionarCarterinhasForm();
 		$sessao = new Container(Constantes::$NOME_APLICACAO);
-		$idEntidadeAtual = $sessao->idEntidadeAtual;
-		$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+		$entidade = CircuitoController::getEntidadeLogada($this->getRepositorio(), $sessao);
 		$grupo = $entidade->getGrupo();
-		$turmas = $grupo->getGrupoIgreja()->getTurma();
-		$relatorio = CursoController::pegarAlunosComFaltas($grupo->getGrupoIgreja());
+		$turmas = $entidade->getGrupo()->getGrupoIgreja()->getTurma();
+		$formulario = new SelecionarCarterinhasForm();
+
+		$request = $this->getRequest();
+		$filtrado = false;
+		$postado = array();
+
+		$turmasFiltradas = $turmas;
+		if($request->isPost()){
+			$filtrado = true;
+			$post = $request->getPost();
+			$postado['idTurma'] = $post['idTurma'];
+			$postado['idEquipe'] = $post['idEquipe'];
+
+			if($postado['idTurma'] == 0){
+				$turmasFiltradas = $turmas;
+			}else{
+				foreach($turmas as $turma){
+					if($turma->getId() == $postado['idTurma']){
+						$turmasFiltradas[] = $turma;
+					}
+				}
+			}
+		}
+
+		$grupoPaiFilhoFilhos = $grupo->getGrupoIgreja()->getGrupoPaiFilhoFilhosAtivos(0);
+		$relatorio = CursoController::pegarAlunosComFaltas($grupo->getGrupoIgreja(), $turmasFiltradas, $postado['idEquipe']);
 		$alunosComReposições = $relatorio[0];
 		$faltas = $relatorio[1];
 
 		$view = new ViewModel(array(
 			'turmas' => $turmas,
-			'formulario' => $formulario,
+			'turmasFiltradas' => $turmasFiltradas,
+			'filtrado' => $filtrado,
+			'postado' => $postado,
+			'filhos' => $grupoPaiFilhoFilhos,
 			'alunosComReposições' => $alunosComReposições,
 			'faltas' => $faltas,
+			'formulario' => $formulario,
 		));
+
 		return $view;
 	}
 
-	public static function pegarAlunosComFaltas($grupo, $turmas = null) {
+	public static function pegarAlunosComFaltas($grupo, $turmas = null, $idEquipe) {
 		if (!$turmas) {
 			$turmas = $grupo->getGrupoIgreja()->getTurma();
 		}
@@ -1135,8 +1181,15 @@ class CursoController extends CircuitoController {
 				$verificarAluno = false;
 				if ($turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getId() === Situacao::ATIVO ||
 					$turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getId() === Situacao::ESPECIAL)	{
-						$verificarAluno = true;
+						if($idEquipe == 0){
+							$verificarAluno = true;
+						}else{
+							if($turmaPessoa->getPessoa()->getGrupoPessoaAtivo() && $turmaPessoa->getPessoa()->getGrupoPessoaAtivo()->getGrupo()->getGrupoEquipe()->getId() == $idEquipe){
+								$verificarAluno = true;
+							}
+						}
 					}	
+
 				if ($verificarAluno) {
 					$mostrar = false;
 					$turmaPessoaAulas = $turmaPessoa->getTurmaPessoaAula();
