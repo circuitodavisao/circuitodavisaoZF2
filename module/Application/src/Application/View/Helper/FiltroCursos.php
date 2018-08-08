@@ -55,7 +55,7 @@ class FiltroCursos extends AbstractHelper {
 
 		if($urlFiltro === 'cursoChamada'){
 			$html .= '<div class="form-group">';
-			$html .= '<label for="selecionarSub">' . $this->view->translate('Sub Equipe') . '</label>';
+			$html .= '<label for="selecionarSub">' . $this->view->translate('Sub Equipe') . '<img src="img/loader.gif" id="loaderSub" class="hidden" /></label>';
 			$html .= '<select class="form-control" name="idSub" id="selecionarSub" >';
 			$html .= '<option value="0" >' . $this->view->translate('Todas') . '</option>';
 			if($this->view->subs){
