@@ -193,14 +193,20 @@ echo $html;
 <script type="text/javascript">
 
 function selecionarEquipe(){
+	$('#loaderSub').removeClass('hidden')
 	let idEquipe = $('#selecionaEquipe').val()
+	if(idEquipe != 0){
 		$.post(
 			"/cursoBuscarSubs",
-{ id: idEquipe, },
-function (data) {
-	$('#selecionarSub').html('<option value="0">Todas</option>')
-		data.filhos.map((filho) => $('#selecionarSub').append('<option value="'+filho.id+'">'+filho.informacao+'</option>'))
-		}, 'json');
+			{ id: idEquipe, },
+			function (data) {
+				$('#loaderSub').addClass('hidden')
+				$('#selecionarSub').html('<option value="0">Todas</option>')
+				data.filhos.map((filho) => $('#selecionarSub').append('<option value="'+filho.id+'">'+filho.informacao+'</option>'))
+			}, 'json');
+	}else{
+		$('#loaderSub').addClass('hidden')
+	}
 }
 
 </script>
