@@ -23,9 +23,11 @@ if($this->filtrado){
 	$html .= $this->botaoSimples('Gerar Reposi&ccedil;&atilde;o', $funcao, '', BotaoSimples::posicaoAoCentro);
 	$html .= '</div>';
 
+	$html .= '<input id="fooFilter" type="text" class="form-control mt20" placeholder="Filtro">';
 	foreach ($this->turmasFiltradas as $turma) {
 		if($turma->getTurmaAulaAtiva()){
-			$html .= '<table class="table table-bordered table-condensed">';
+
+			$html .= '<table  class="table table-bordered table-condensed footable" data-filter="#fooFilter">';
 
 			$html .= '<thead>';
 			$html .= '<tr>';
@@ -35,7 +37,7 @@ if($this->filtrado){
 			$html .= '<th class="text-center">Matricula</th>';
 			$html .= '<th class="text-center">Aluno</th>';
 			$html .= '<th class="text-center">Time</th>';
-			$html .= '<th class="text-center">Marcar Todos <input type="checkbox" onclick="marcarTodos(this);"/></th>';
+			$html .= '<td>Marcar Todos <input type="checkbox" onclick="marcarTodos(this);"/></td>';
 			$html .= '</tr>';
 
 			$html .= '</thead>';
