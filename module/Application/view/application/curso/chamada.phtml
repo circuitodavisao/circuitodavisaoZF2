@@ -92,76 +92,86 @@ if($this->filtrado){
 						}
 
 						if($mostrarSituacao){
-							switch ($turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getId()) {
-							case Situacao::ESPECIAL:
-								$corSituacao = 'primary';
-								break;
-							case Situacao::DESISTENTE:
-								$corSituacao = 'warning';
-								break;
-							case Situacao::REPROVADO_POR_FALTA:
-								$corSituacao = 'danger';
-								break;
-							default:
-								$corSituacao = 'success';
-							}
 
-							$stringSituacao = '<span class="label label-' . $corSituacao . '">' . $turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getNome() . '</span>';
-							$idSituacao = $turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getId();
+							$mostrarSub = false;
+							if($this->postado['idSub'] == 0){
+								$mostrarSub = true;
+							}else{
+								$mostrarSub = CursoController::verificarSeParticipaDeUmaSub($turmaPessoa, $this->postado['idSub']);
+							}	
+							if($mostrarSub){
 
-							$html .= '<tr class="'.$corSituacao.'">';
-							$html .= '<td class="text-center">' . $stringSituacao . '</td>';
-							if ($this->entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja || $this->pessoa->getPessoaCursoAcessoAtivo() && ($this->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::COORDENADOR ||
-								$this->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::SUPERVISOR ||
-								$this->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::FACILITADOR)) {
-									$html .= '<td><a target="_blanck" href="/cursoAluno/' . $turmaPessoa->getId() . '" class="btn btn-xs btn-primary" >' . str_pad($turmaPessoa->getId(), 8, 0, STR_PAD_LEFT) . '</a></td>';
-								}else{
-									$html .= '<td class="label label-default">'.$turmaPessoa->getId().'</td>';
+								switch ($turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getId()) {
+								case Situacao::ESPECIAL:
+									$corSituacao = 'primary';
+									break;
+								case Situacao::DESISTENTE:
+									$corSituacao = 'warning';
+									break;
+								case Situacao::REPROVADO_POR_FALTA:
+									$corSituacao = 'danger';
+									break;
+								default:
+									$corSituacao = 'success';
 								}
-							$html .= '<td>'. $turmaPessoa->getPessoa()->getNome() . '</td>';
-							$html .= '<th class="text-center">' . $nomeEquipe . '</th>';
-							if($this->postado['mostrarAulas'] == 1){
-								foreach ($turma->getCurso()->getDisciplina() as $disciplina) {
-									$mostrar = false;
-									if ($turma->getTurmaAulaAtiva() && $turma->getTurmaAulaAtiva()->getAula()->getDisciplina()->getId() === $disciplina->getId()) {
-										$mostrar = true;
-									}
-									if ($mostrar) {
-										$aulaAtiva = $turma->getTurmaAulaAtiva()->getAula();
-										foreach ($disciplina->getAulaOrdenadasPorPosicao() as $aula) {
-											$html .= '<td class="text-center">';
-											if ($aula->getPosicao() <= ($aulaAtiva->getPosicao() - 1)) {
-												$frequencia = false;
-												$icone = 'fa-times';
-												$corDoBotao = BotaoSimples::botaoMuitoPequenoPerigoso;
 
-												if (count($turmaPessoa->getTurmaPessoaAula()) > 0) {
-													foreach ($turmaPessoa->getTurmaPessoaAula() as $turmaPessoaAula) {
-														if ($turmaPessoaAula->getAula()->getId() === $aula->getId()) {
-															$frequencia = true;
-															$icone = 'fa-check';
-															$corDoBotao = BotaoSimples::botaoMuitoPequenoSucesso;
-															if ($turmaPessoaAula->getReposicao() == 'S') {
-																$icone = 'fa-file';
-																$corDoBotao = BotaoSimples::botaoMuitoPequenoWarning;
+								$stringSituacao = '<span class="label label-' . $corSituacao . '">' . $turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getNome() . '</span>';
+								$idSituacao = $turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getId();
+
+								$html .= '<tr class="'.$corSituacao.'">';
+								$html .= '<td class="text-center">' . $stringSituacao . '</td>';
+								if ($this->entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja || $this->pessoa->getPessoaCursoAcessoAtivo() && ($this->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::COORDENADOR ||
+									$this->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::SUPERVISOR ||
+									$this->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::FACILITADOR)) {
+										$html .= '<td><a target="_blanck" href="/cursoAluno/' . $turmaPessoa->getId() . '" class="btn btn-xs btn-primary" >' . str_pad($turmaPessoa->getId(), 8, 0, STR_PAD_LEFT) . '</a></td>';
+									}else{
+										$html .= '<td class="label label-default">'.$turmaPessoa->getId().'</td>';
+									}
+								$html .= '<td>'. $turmaPessoa->getPessoa()->getNome() . '</td>';
+								$html .= '<th class="text-center">' . $nomeEquipe . '</th>';
+								if($this->postado['mostrarAulas'] == 1){
+									foreach ($turma->getCurso()->getDisciplina() as $disciplina) {
+										$mostrar = false;
+										if ($turma->getTurmaAulaAtiva() && $turma->getTurmaAulaAtiva()->getAula()->getDisciplina()->getId() === $disciplina->getId()) {
+											$mostrar = true;
+										}
+										if ($mostrar) {
+											$aulaAtiva = $turma->getTurmaAulaAtiva()->getAula();
+											foreach ($disciplina->getAulaOrdenadasPorPosicao() as $aula) {
+												$html .= '<td class="text-center">';
+												if ($aula->getPosicao() <= ($aulaAtiva->getPosicao() - 1)) {
+													$frequencia = false;
+													$icone = 'fa-times';
+													$corDoBotao = BotaoSimples::botaoMuitoPequenoPerigoso;
+
+													if (count($turmaPessoa->getTurmaPessoaAula()) > 0) {
+														foreach ($turmaPessoa->getTurmaPessoaAula() as $turmaPessoaAula) {
+															if ($turmaPessoaAula->getAula()->getId() === $aula->getId()) {
+																$frequencia = true;
+																$icone = 'fa-check';
+																$corDoBotao = BotaoSimples::botaoMuitoPequenoSucesso;
+																if ($turmaPessoaAula->getReposicao() == 'S') {
+																	$icone = 'fa-file';
+																	$corDoBotao = BotaoSimples::botaoMuitoPequenoWarning;
+																}
 															}
 														}
 													}
+												} else {
+													$icone = 'fa-clock-o';
+													$corDoBotao = BotaoSimples::botaoMuitoPequenoImportante;
 												}
-											} else {
-												$icone = 'fa-clock-o';
-												$corDoBotao = BotaoSimples::botaoMuitoPequenoImportante;
-											}
 
-											$iconeBotao = '<i class="fa ' . $icone . '"></i>';
-											$extra = ' disabled ';
-											$html .= $this->botaoSimples($iconeBotao, $extra, $corDoBotao, BotaoSimples::posicaoAoCentro);
-											$html .= '</td>';
+												$iconeBotao = '<i class="fa ' . $icone . '"></i>';
+												$extra = ' disabled ';
+												$html .= $this->botaoSimples($iconeBotao, $extra, $corDoBotao, BotaoSimples::posicaoAoCentro);
+												$html .= '</td>';
+											}
 										}
 									}
 								}
+								$html .= '</tr>';
 							}
-							$html .= '</tr>';
 						}
 					}
 				}
@@ -178,3 +188,19 @@ $html .= '</div>';
 $html .= '</div>';
 
 echo $html;
+
+?>
+<script type="text/javascript">
+
+function selecionarEquipe(){
+	let idEquipe = $('#selecionaEquipe').val()
+		$.post(
+			"/cursoBuscarSubs",
+{ id: idEquipe, },
+function (data) {
+	$('#selecionarSub').html('<option value="0">Todas</option>')
+		data.filhos.map((filho) => $('#selecionarSub').append('<option value="'+filho.id+'">'+filho.informacao+'</option>'))
+		}, 'json');
+}
+
+</script>
