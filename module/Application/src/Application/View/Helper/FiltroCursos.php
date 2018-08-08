@@ -40,7 +40,7 @@ class FiltroCursos extends AbstractHelper {
 
 		$html .= '<div class="form-group">';
 		$html .= '<label for="selecionaEquipe">' . $this->view->translate('Selecione a Equipe') . '</label>';
-		$html .= '<select class="form-control" name="idEquipe" id="selecionaEquipe" >';
+		$html .= '<select class="form-control" name="idEquipe" id="selecionaEquipe" onChange="selecionarEquipe()">';
 		$html .= '<option value="0" >' . $this->view->translate('Todas') . '</option>';
 		foreach ($this->view->filhos as $grupoPaiFilhoFilho) {
 			$informacao = $grupoPaiFilhoFilho->getGrupoPaiFilhoFilho()->getEntidadeAtiva()->getNome();
@@ -54,6 +54,22 @@ class FiltroCursos extends AbstractHelper {
 		$html .= '</div>';
 
 		if($urlFiltro === 'cursoChamada'){
+			$html .= '<div class="form-group">';
+			$html .= '<label for="selecionarSub">' . $this->view->translate('Sub Equipe') . '</label>';
+			$html .= '<select class="form-control" name="idSub" id="selecionarSub" >';
+			$html .= '<option value="0" >' . $this->view->translate('Todas') . '</option>';
+			if($this->view->subs){
+				foreach($this->view->subs as $sub){
+					$selected = '';
+					if($this->view->postado['idSub'] == $sub['id']){
+						$selected = 'selected';
+					}
+					$html .= '<option value="'.$sub['id'].'" ' . $selected . '>' . $sub['informacao'] . '</option>';
+				}
+			}
+			$html .= '</select>';
+			$html .= '</div>';
+
 			$html .= '<div class="form-group">';
 			$html .= '<label for="selecionaSituacao">' . $this->view->translate('Situa&ccedil;&atilde;o') . '</label>';
 			$html .= '<select class="form-control" name="idSituacao" id="selecionaSituacao" >';

@@ -807,6 +807,7 @@ class CursoController extends CircuitoController {
 		$request = $this->getRequest();
 		$filtrado = false;
 		$postado = array();
+		$subs = null;
 
 		if($request->isPost()){
 			$filtrado = true;
@@ -815,6 +816,21 @@ class CursoController extends CircuitoController {
 			$postado['idEquipe'] = $post['idEquipe'];
 			$postado['idSituacao'] = $post['idSituacao'];
 			$postado['mostrarAulas'] = $post['mostrarAulas'];
+			$postado['idSub'] = $post['idSub'];
+
+			if($postado['idEquipe'] != 0){
+				$grupoEquipe = $this->getRepositorio()->getGrupoORM()->encontrarPorId($postado['idEquipe']);
+				$grupoPaiFilhoFilhosEquipe = $grupoEquipe->getGrupoPaiFilhoFilhosAtivos(0);
+
+				$filhos = array();
+				foreach($grupoPaiFilhoFilhosEquipe as $grupoPaiFilho){
+					$grupoFilho = $grupoPaiFilho->getGrupoPaiFilhoFilho();
+					$dados = array();
+					$dados['id'] = $grupoFilho->getId();
+					$dados['informacao'] = $grupoFilho->getEntidadeAtiva()->infoEntidade() . ' - ' . $grupoFilho->getNomeLideresAtivos();	
+					$filhos[] =  $dados;
+				}
+			}
 		}
 
 		if(!$pessoa->getPessoaCursoAcessoAtivo()){
@@ -829,8 +845,36 @@ class CursoController extends CircuitoController {
 			'turmas' => $turmas,
 			'filhos' => $grupoPaiFilhoFilhos,
 			'situacoes' => $situacoes,
+			'subs' => $filhos,
 		));
 		return $view;
+	}
+
+	public function buscarSubsAction(){
+		$response = $this->getResponse();
+		try {
+			$idEquipe = $_POST['id'];
+			$grupoEquipe = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idEquipe);
+			$grupoPaiFilhoFilhos = $grupoEquipe->getGrupoPaiFilhoFilhosAtivos(0);
+
+			$filhos = array();
+			foreach($grupoPaiFilhoFilhos as $grupoPaiFilho){
+				$grupoFilho = $grupoPaiFilho->getGrupoPaiFilhoFilho();
+				$dados = array();
+				$dados['id'] = $grupoFilho->getId();
+				$dados['informacao'] = $grupoFilho->getEntidadeAtiva()->infoEntidade() . ' - ' . $grupoFilho->getNomeLideresAtivos();	
+				$filhos[] =  $dados;
+			}
+
+			$resposta = true;
+			$response->setContent(Json::encode(
+				array('response' => $resposta,
+				'filhos' => $filhos,
+			)));
+		} catch (Exception $exc) {
+			echo $exc->getMessage();
+		}
+		return $response;
 	}
 
 	public function selecionarParaCarterinhaAction() {
@@ -1243,6 +1287,27 @@ class CursoController extends CircuitoController {
 			}
 		}
 		return $nomeEquipe;
+	}
+
+	public static function verificarSeParticipaDeUmaSub($turmaPessoa, $idGrupo){
+		$participaDaSub = false;
+
+		if ($grupoSelecionado = $turmaPessoa->getPessoa()->getGrupoPessoaAtivo()) {
+			if ($grupoSelecionado->getGrupo()->getEntidadeAtiva()->getEntidadeTipo()->getId() !== EntidadeTipo::igreja &&
+				$grupoSelecionado->getGrupo()->getEntidadeAtiva()->getEntidadeTipo()->getId() !== EntidadeTipo::equipe) {
+					$grupoSelecionado = $grupoSelecionado->getGrupo();	
+					while($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() !== EntidadeTipo::equipe){
+
+						if($grupoSelecionado->getId() == $idGrupo){
+							$participaDaSub = true;
+							break;
+						}
+						$grupoSelecionado = $grupoSelecionado->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai();
+					}
+
+				} 
+		}
+		return $participaDaSub;
 	}
 
 	public function gerarReposicaoAction() {
