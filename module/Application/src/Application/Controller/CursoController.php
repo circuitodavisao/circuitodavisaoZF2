@@ -1132,7 +1132,6 @@ class CursoController extends CircuitoController {
 		$filtrado = false;
 		$postado = array();
 
-		$turmasFiltradas = $turmas;
 		if($request->isPost()){
 			$filtrado = true;
 			$post = $request->getPost();
@@ -1148,6 +1147,8 @@ class CursoController extends CircuitoController {
 					}
 				}
 			}
+		}else{
+			$turmasFiltradas = $turmas;
 		}
 
 		$grupoPaiFilhoFilhos = $grupo->getGrupoIgreja()->getGrupoPaiFilhoFilhosAtivos(0);
