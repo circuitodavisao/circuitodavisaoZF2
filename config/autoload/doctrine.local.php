@@ -23,10 +23,10 @@ return array(
         ),
         'configuration' => array(
             'orm_default' => array(
-                'metadata_cache' => 'array',
-                'query_cache' => 'array',
-                'result_cache' => 'array',
-                'hydration_cache' => 'array',
+                'metadata_cache' => 'minha_memcache',
+                'query_cache' => 'minha_memcache',
+                'result_cache' => 'minha_memcache',
+                'hydration_cache' => 'minha_memcache',
                 'generate_proxies' => true,
                 'proxy_dir' => 'data/DoctrineORMModule/Proxy',
                 'proxy_namespace' => 'DoctrineORMModule\Proxy',
