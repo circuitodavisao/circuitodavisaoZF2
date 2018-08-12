@@ -930,6 +930,7 @@ class IndexController extends CircuitoController {
             $explodeToken = explode('_', $tokenDaRota);
 
             $explodeMatricula = explode('9999999999', $explodeToken[0]);
+		$turmaPessoa = null;
             if (count($explodeMatricula) === 2) {
                 $turmaPessoa = $this->getRepositorio()->getTurmaPessoaORM()->encontrarPorId($explodeMatricula[0]);
                 $aula = $this->getRepositorio()->getAulaORM()->encontrarPorId($explodeMatricula[1]);
@@ -941,7 +942,7 @@ class IndexController extends CircuitoController {
 
                 $resposta = true;
             } else {
-                $turmaPessoa = $this->getRepositorio()->getTurmaPessoaORM()->encontrarPorId($explodeToken[0]);
+                $turmaPessoa = $this->getRepositorio()->getTurmaPessoaORM()->encontrarPorIdAntigo($explodeToken[0]);
                 $turmaPessoaFrequencia = new TurmaPessoaFrequencia();
                 $turmaPessoaFrequencia->setTurma_pessoa($turmaPessoa);
                 $turmaPessoaFrequencia->setData(DateTime::createFromFormat('Y-m-d', $explodeToken[1]));
@@ -951,13 +952,14 @@ class IndexController extends CircuitoController {
                 $resposta = true;
             }
 
+		if($turmaPessoa){
 			$turmaPessoaAula = new TurmaPessoaAula();
 			$turmaPessoaAula->setAula($turmaPessoa->getTurma()->getTurmaAulaAtiva()->getAula());
 			$turmaPessoaAula->setTurma_pessoa($turmaPessoa);
 			$turmaPessoaAula->setReposicao('N');
 			$this->getRepositorio()->getTurmaPessoaAulaORM()->persistir($turmaPessoaAula);
-
 			$this->getRepositorio()->fecharTransacao();
+		}
 		} catch (Exception $exc) {
             $this->getRepositorio()->desfazerTransacao();
             echo $exc->getTraceAsString();
