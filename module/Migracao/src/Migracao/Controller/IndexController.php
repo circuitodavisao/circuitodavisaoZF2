@@ -942,7 +942,11 @@ class IndexController extends CircuitoController {
 
                 $resposta = true;
             } else {
+                $turmaPessoa = $this->getRepositorio()->getTurmaPessoaORM()->encontrarPorId($explodeToken[0]);
+		if($turmaPessoa === null){
+
                 $turmaPessoa = $this->getRepositorio()->getTurmaPessoaORM()->encontrarPorIdAntigo($explodeToken[0]);
+		}
                 $turmaPessoaFrequencia = new TurmaPessoaFrequencia();
                 $turmaPessoaFrequencia->setTurma_pessoa($turmaPessoa);
                 $turmaPessoaFrequencia->setData(DateTime::createFromFormat('Y-m-d', $explodeToken[1]));
@@ -958,8 +962,10 @@ class IndexController extends CircuitoController {
 			$turmaPessoaAula->setTurma_pessoa($turmaPessoa);
 			$turmaPessoaAula->setReposicao('N');
 			$this->getRepositorio()->getTurmaPessoaAulaORM()->persistir($turmaPessoaAula);
-			$this->getRepositorio()->fecharTransacao();
+		}else{
+			$resposta = false;
 		}
+			$this->getRepositorio()->fecharTransacao();
 		} catch (Exception $exc) {
             $this->getRepositorio()->desfazerTransacao();
             echo $exc->getTraceAsString();
