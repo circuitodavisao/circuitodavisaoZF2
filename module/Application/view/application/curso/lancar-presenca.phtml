@@ -44,9 +44,7 @@ document.getElementById('matricula').focus()
 								'</p><p>Equipe: ' + data.equipe +
 								'</p><p>Aluno: ' + data.pessoa +
 								'</p><p>Matrícula: ' + idTurmaPessoa.val() + '</p>';
-						$('#matriculaConsultada').val(idTurmaPessoa.val());
 								if(data.temAulaAtiva){
-							idTurmaPessoa.val('');
 							botaoLancar.removeClass('hidden');
 								informacaoAluno += '<p>Aula: ' + data.nomeAula+ '</p>';
 								}else{
@@ -78,7 +76,7 @@ document.getElementById('matricula').focus()
 	function mudarFrequencia() {
 		let mensagem = $('#mensagem');
 		mensagem.addClass('hidden');
-		let matricula = $('#matriculaConsultada');
+		let matricula = $('#matricula');
 		let botaoLancar = $('#botaoLancar');
 		if (matricula.val().length != 0) {
 			let now = new Date;
@@ -92,7 +90,6 @@ document.getElementById('matricula').focus()
 			id: matriculaDataEHora,
 					},
 					function (data) {
-						$('#matricula').focus()
 							esconderSplash()
 							if (data.response) {
 								mensagem
