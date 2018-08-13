@@ -28,13 +28,13 @@ sudo apt-get install docker-ce
 # instalando sistema
 sudo docker rm cv
 sudo docker rm bdpg
-sudo docker run --name bdpg -e POSTGRES_PASSWORD=qwaszx159753 -e POSTGRES_DB=postgres -e POSTGRES_USER=postgres -d postgres
+sudo docker run --name bdpg -e POSTGRES_PASSWORD=qwaszx159753 -e POSTGRES_DB=postgres -e POSTGRES_USER=postgres -d -v /home/circuitodavisaoZF2/my-postgres.conf:/etc/postgresql/postgresql.conf postgres -c 'config_file=/etc/postgresql/postgresql.conf'
 
-sudo cd /home/developer/Documents/circuitodavisaoZF2
+sudo cd /home/circuitodavisaoZF2
 
-sudo docker build -t cv:0.5 .
-sudo docker run -d --name cv --link bdpg:postgres -p 443:443 -v /home/developer/Documents/circuitodavisaoZF2:/var/www/html cv:0.5
+sudo docker build -t cv:0.1 .
+sudo docker run -d --name cv --link bdpg:postgres -p 443:443 -v /home/circuitodavisaoZF2:/var/www/html cv:0.1
 
 # instalando o banco de dados
 
-sudo docker exec -i bdpg psql -U postgres < /home/developer/Documents/circuitodavisaoZF2/dump/dump.sql
+sudo docker exec -i bdpg psql -U postgres < /home/circuitodavisaoZF2/dump/dump.sql

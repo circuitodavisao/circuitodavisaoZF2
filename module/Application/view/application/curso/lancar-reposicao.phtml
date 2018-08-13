@@ -7,20 +7,22 @@ echo '<div class="panel-body bg-light">';
 echo '<div class="block-center">';
 echo '<div class="row">';
 echo '<div class="col-lg-8 col-md-8 col-md-8 col-xs-8">';
-echo '<input type="number" id="matricula" class="form-control" placeholder="Mátricula" onBlur="verificarMatricula()"/>';
+echo '<input type="number" id="matricula" class="form-control" placeholder="Reposição" onBlur="verificarMatricula(true)"/>';
 echo '</div>';
 echo '<div class="col-lg-4 col-md-4 col-md-4 col-xs-4">';
-echo $this->botaoSimples('Pesquisar', $this->funcaoOnClick('verificarMatricula()'), BotaoSimples::botaoImportante, BotaoSimples::larguraMaxima);
+echo $this->botaoSimples('Pesquisar', $this->funcaoOnClick('verificarMatricula(true)'), BotaoSimples::botaoImportante, BotaoSimples::larguraMaxima);
 echo '</div>';
 echo '</div>';
 echo '<div id="mensagem" class="row alert mt10 hidden"></div>';
 echo '</div>';
 echo '<div id="botaoLancar" class="col-lg-12 col-md-12 col-md-12 col-xs-12 hidden">';
-echo $this->botaoSimples('Lan&ccedil;ar', $this->funcaoOnClick('lancarPresenca()'), BotaoSimples::botaoImportante, BotaoSimples::larguraMaxima);
+echo '<input type="hidden" id="matriculaConsultada" />';
+echo $this->botaoSimples('Lan&ccedil;ar Reposição', $this->funcaoOnClick('lancarReposicao()'), BotaoSimples::botaoImportante, BotaoSimples::larguraMaxima);
 echo '</div>';
 echo $this->templateFormularioRodape();
 
-$versao = '?v=3.1';
+
+$versao = '?v=2.5';
 echo $this
 	->headScript()
 	->prependFile($this->basePath() . '/js/circuito_da_visao/aluno.js' . $versao)

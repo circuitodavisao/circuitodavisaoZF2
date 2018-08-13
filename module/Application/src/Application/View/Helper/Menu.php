@@ -439,7 +439,14 @@ class Menu extends AbstractHelper {
 				$html .= '<li>';
 				$html .= '<a href="/cursoLancarPresenca" onClick="mostrarSplash();">';
 				$html .= '<span class="fa fa-pencil"></span>';
-				$html .= 'Lançar Presença/Reposição';
+				$html .= 'Lançar Presença';
+				$html .= '</a>';
+				$html .= '</li>';
+
+				$html .= '<li>';
+				$html .= '<a href="/cursoLancarReposicao" onClick="mostrarSplash();">';
+				$html .= '<span class="fa fa-pencil"></span>';
+				$html .= 'Lançar Reposição';
 				$html .= '</a>';
 				$html .= '</li>';
 			}

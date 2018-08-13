@@ -481,7 +481,7 @@ class CursoController extends CircuitoController {
 	public function salvarTurmaAction() {
 		$sessao = new Container(Constantes::$NOME_APLICACAO);
 		$idEntidadeAtual = $sessao->idEntidadeAtual;
-	
+
 		$request = $this->getRequest();
 		if ($request->isPost()) {
 			try {
@@ -931,7 +931,11 @@ class CursoController extends CircuitoController {
 	}
 
 	public function lancarPresencaAction() {
-		return new ViewModel(array('titulo' => 'Lançar Presença/Reposições'));
+		return new ViewModel(array('titulo' => 'Lançar Presença'));
+	}
+
+	public function lancarReposicaoAction() {
+		return new ViewModel(array('titulo' => 'Lançar Reposição'));
 	}
 
 	public function matriculaAction() {
@@ -944,6 +948,9 @@ class CursoController extends CircuitoController {
 			$turmaPessoa = null;
 			$idTurmaPessoa = $_POST['id'];
 			$idParaRetornar = null;
+			$temAulaAtiva = false;
+
+			$turmaPessoa = $this->getRepositorio()->getTurmaPessoaORM()->encontrarPorId($explodeMatricula[0]);
 			if ($this->getRepositorio()->getTurmaPessoaORM()->encontrarPorId($idTurmaPessoa)) {
 				$turmaPessoa = $this->getRepositorio()->getTurmaPessoaORM()->encontrarPorId($idTurmaPessoa);
 			}
@@ -957,7 +964,6 @@ class CursoController extends CircuitoController {
 				$nomeEquipe = $turmaPessoa->getPessoa()->getGrupoPessoaAtivo()->getGrupo()->getEntidadeAtiva()->infoEntidade();
 				$nomePessoa = $turmaPessoa->getPessoa()->getNome();
 
-				$temAulaAtiva = false;
 				if($turmaAulaAtiva = $turmaPessoa->getTurma()->getTurmaAulaAtiva()){
 					$temAulaAtiva = true;
 					$nomeAula = $turmaAulaAtiva->getAula()->getDisciplina()->getNome().' Aula: '.$turmaAulaAtiva->getAula()->getPosicao();
@@ -981,6 +987,116 @@ class CursoController extends CircuitoController {
 		}
 		return $response;
 	}
+
+	public function consultarReposicaoAction() {
+		$response = $this->getResponse();
+		try {
+			$turmaPessoa = null;
+			$id = $_POST['id'];
+			$explodeMatricula = explode('9999999999',$id);
+			if (count($explodeMatricula) === 2) {
+				$turmaPessoa = $this->getRepositorio()->getTurmaPessoaORM()->encontrarPorId($explodeMatricula[0]);
+				if($turmaPessoa === null){
+					$turmaPessoa = $this->getRepositorio()->getTurmaPessoaORM()->encontrarPorIdAntigo($explodeToken[0]);
+				}
+				$aula = $this->getRepositorio()->getAulaORM()->encontrarPorId($explodeMatricula[1]);
+				$resposta = true;
+				$nomeCurso = $turmaPessoa->getturma()->getcurso()->getnome();
+				$nomeTurma = funcoes::mesporextenso($turmaPessoa->getturma()->getmes(), 1) . '/' . $turmaPessoa->getturma()->getano();
+				$nomeEquipe = $turmaPessoa->getpessoa()->getgrupopessoaativo()->getgrupo()->getentidadeativa()->infoentidade();
+				$nomePessoa = $turmaPessoa->getpessoa()->getnome();
+				$nomeAula = $aula->getDisciplina()->getNome().' Aula: '.$aula->getPosicao();
+			} else {
+				$resposta = false;
+			}
+			$response->setContent(Json::encode(
+				array('response' => $resposta,
+				'curso' => $nomeCurso,
+				'turma' => $nomeTurma,
+				'equipe' => $nomeEquipe,
+				'pessoa' => $nomePessoa,
+				'nomeAula' => $nomeAula,
+			)));
+		} catch (Exception $exc) {
+			echo $exc->getMessage();
+		}
+		return $response;
+	}
+
+
+	public function lancarPresencaFinalizarAction() {
+		$resposta = false;
+		$response = $this->getResponse();
+		try {
+			if($this->getRequest()->isPost()){
+				$this->getRepositorio()->iniciarTransacao();
+				$idTurmaPessoa = $this->getRequest()->getPost()['id'];
+				$turmaPessoa = $this->getRepositorio()->getTurmaPessoaORM()->encontrarPorId($idTurmaPessoa);
+				if($turmaPessoa === null){
+					$turmaPessoa = $this->getRepositorio()->getTurmaPessoaORM()->encontrarPorIdAntigo($idTurmaPessoa);
+				}
+				if($turmaPessoa){
+					$aula = $turmaPessoa->getTurma()->getTurmaAulaAtiva()->getAula();
+					$turmaPessoaAula = $turmaPessoa->getTurmaPessoaAulaPorAula($aula->getId());
+					if (!$turmaPessoaAula) {
+						$turmaPessoaAula = new TurmaPessoaAula();
+						$turmaPessoaAula->setAula($aula);
+						$turmaPessoaAula->setTurma_pessoa($turmaPessoa);
+						$turmaPessoaAula->setReposicao('N');
+					}
+					$turmaPessoaAula->setData_inativacao(null);
+					$turmaPessoaAula->setHora_inativacao(null);
+					$this->getRepositorio()->getTurmaPessoaAulaORM()->persistir($turmaPessoaAula);
+					$resposta = true;
+					$this->getRepositorio()->fecharTransacao();
+				}
+			}			
+		} catch (Exception $exc) {
+			$this->getRepositorio()->desfazerTransacao();
+			echo $exc->getTraceAsString();
+		}
+		$response->setContent(Json::encode(array('response' => $resposta,)));
+		return $response;
+	}
+
+	public function lancarReposicaoFinalizarAction() {
+		$resposta = false;
+		$response = $this->getResponse();
+		try {
+			if($this->getRequest()->isPost()){
+				$this->getRepositorio()->iniciarTransacao();
+				$id = $this->getRequest()->getPost()['id'];
+				$explodeMatricula = explode('9999999999',$id);
+				if (count($explodeMatricula) === 2) {
+					$turmaPessoa = $this->getRepositorio()->getTurmaPessoaORM()->encontrarPorId($explodeMatricula[0]);
+					if($turmaPessoa === null){
+						$turmaPessoa = $this->getRepositorio()->getTurmaPessoaORM()->encontrarPorIdAntigo($explodeToken[0]);
+					}
+					$aula = $this->getRepositorio()->getAulaORM()->encontrarPorId($explodeMatricula[1]);
+					if($turmaPessoa){
+						$turmaPessoaAula = $turmaPessoa->getTurmaPessoaAulaPorAula($aula->getId());
+						if (!$turmaPessoaAula) {
+							$turmaPessoaAula = new TurmaPessoaAula();
+							$turmaPessoaAula->setAula($aula);
+							$turmaPessoaAula->setTurma_pessoa($turmaPessoa);
+						}
+						$turmaPessoaAula->setData_inativacao(null);
+						$turmaPessoaAula->setHora_inativacao(null);
+						$turmaPessoaAula->setReposicao('S');
+						$this->getRepositorio()->getTurmaPessoaAulaORM()->persistir($turmaPessoaAula);
+						$resposta = true;
+						$this->getRepositorio()->fecharTransacao();
+					}
+				}	
+			}			
+		} catch (Exception $exc) {
+			$this->getRepositorio()->desfazerTransacao();
+			echo $exc->getTraceAsString();
+		}
+		$response->setContent(Json::encode(array('response' => $resposta,)));
+		return $response;
+	}
+
 
 	public function reentradaAction() {
 		$sessao = new Container(Constantes::$NOME_APLICACAO);
@@ -1351,46 +1467,45 @@ class CursoController extends CircuitoController {
 					/* Alunos ativos ou especiais */
 					if($turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getId() === Situacao::ATIVO){
 
-							$nomeEquipeDoTurmaPessoa = CursoController::getNomeDaEquipeDoTurmaPessoa($turmaPessoa);
-							$turmaPessoaAulas = $turmaPessoa->getTurmaPessoaAula();
-							$parar = false;
-							foreach ($turma->getCurso()->getDisciplina() as $disciplina) {
-								$mostrar = false;
-								if ($turma->getTurmaAulaAtiva() && $turma->getTurmaAulaAtiva()->getAula()->getDisciplina()->getId() === $disciplina->getId()) {
-									$mostrar = true;
-								}
-								if ($mostrar) {
-									if (!$parar) {
-										/* Verificar duas aulas antes da atual aula aberta */
-										$numeroDaAula = $turmaAulaAtiva->getAula()->getPosicao();
-										if($numeroDaAula >= 3){
+						$nomeEquipeDoTurmaPessoa = CursoController::getNomeDaEquipeDoTurmaPessoa($turmaPessoa);
+						$turmaPessoaAulas = $turmaPessoa->getTurmaPessoaAula();
+						$parar = false;
+						foreach ($turma->getCurso()->getDisciplina() as $disciplina) {
+							$mostrar = false;
+							if ($turma->getTurmaAulaAtiva() && $turma->getTurmaAulaAtiva()->getAula()->getDisciplina()->getId() === $disciplina->getId()) {
+								$mostrar = true;
+							}
+							if ($mostrar) {
+								if (!$parar) {
+									/* Verificar duas aulas antes da atual aula aberta */
+									$numeroDaAula = $turmaAulaAtiva->getAula()->getPosicao();
+									if($numeroDaAula >= 3){
 
-											$estaNoArray = false;
-											if(count($turmasValidas) > 0){
-												foreach($turmasValidas as $turmaValida){
-													if($turmaValida->getId() === $turma->getId()){
-														$estaNoArray = true;
-													}
+										$estaNoArray = false;
+										if(count($turmasValidas) > 0){
+											foreach($turmasValidas as $turmaValida){
+												if($turmaValida->getId() === $turma->getId()){
+													$estaNoArray = true;
 												}
 											}
-											if(!$estaNoArray){
-												$turmasValidas[] = $turma;
-											}
-											foreach ($disciplina->getAulaOrdenadasPorPosicao() as $aula) {
-												if($aula->getPosicao() <= ($numeroDaAula - 2)){
-													$naoEncontreiPresencaNaAula = true;
-													foreach ($turmaPessoaAulas as $turmaPessoaAula) {
-														if ($turmaPessoaAula->verificarSeEstaAtivo() && $turmaPessoaAula->getAula()->getId() === $aula->getId()) {
-															$naoEncontreiPresencaNaAula = false;
-														}
+										}
+										if(!$estaNoArray){
+											$turmasValidas[] = $turma;
+										}
+										foreach ($disciplina->getAulaOrdenadasPorPosicao() as $aula) {
+											if($aula->getPosicao() <= ($numeroDaAula - 2)){
+												$naoEncontreiPresencaNaAula = true;
+												foreach ($turmaPessoaAulas as $turmaPessoaAula) {
+													if ($turmaPessoaAula->verificarSeEstaAtivo() && $turmaPessoaAula->getAula()->getId() === $aula->getId()) {
+														$naoEncontreiPresencaNaAula = false;
 													}
-													if ($naoEncontreiPresencaNaAula) {
-														$contadorDeFaltas[$nomeEquipeDoTurmaPessoa][$turma->getId()] ++;
-													}
-													if ($aula->getId() == $turmaAulaAtiva->getAula()->getId()) {
-														$parar = true;
-														break;
-													}
+												}
+												if ($naoEncontreiPresencaNaAula) {
+													$contadorDeFaltas[$nomeEquipeDoTurmaPessoa][$turma->getId()] ++;
+												}
+												if ($aula->getId() == $turmaAulaAtiva->getAula()->getId()) {
+													$parar = true;
+													break;
 												}
 											}
 										}
@@ -1398,6 +1513,7 @@ class CursoController extends CircuitoController {
 								}
 							}
 						}
+					}
 				}
 			}
 		}
