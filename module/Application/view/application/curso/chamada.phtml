@@ -70,12 +70,15 @@ if($this->filtrado){
 			if ($turma->getTurmaPessoa()) {
 				foreach ($turma->getTurmaPessoa() as $turmaPessoa) {
 					$mostrar = false;
-					if ($this->postado['idEquipe'] == 0) {
-						$mostrar = true;
-					} else {
-						if ($turmaPessoa->getPessoa()->getGrupoPessoaAtivo()) {
-							if($turmaPessoa->getPessoa()->getGrupoPessoaAtivo()->getGrupo()->getGrupoEquipe()->getId() == $this->postado['idEquipe']){
-								$mostrar = true;
+
+					if($turmaPessoa->verificarSeEstaAtivo()){
+						if ($this->postado['idEquipe'] == 0) {
+							$mostrar = true;
+						} else {
+							if ($turmaPessoa->getPessoa()->getGrupoPessoaAtivo()) {
+								if($turmaPessoa->getPessoa()->getGrupoPessoaAtivo()->getGrupo()->getGrupoEquipe()->getId() == $this->postado['idEquipe']){
+									$mostrar = true;
+								}
 							}
 						}
 					}
