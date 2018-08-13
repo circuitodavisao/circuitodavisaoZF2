@@ -79,3 +79,45 @@ function mudarPresencaOuVistoOuFinanceiro(idTurmaPessoa, idAulaOuDisciplina, tip
                 }
             }, 'json');
 }
+function acessarMatricula() {
+	var mensagem = $('#mensagem');
+	var botaoLancar = $('#botaoLancar');
+	mensagem.addClass('hidden');
+	botaoLancar.addClass('hidden');
+	var idTurmaPessoa = $('#matricula');
+	if (idTurmaPessoa.val().length != 0) {
+		$.post(
+			"/cursoConsultarMatricula",
+	{
+		id: idTurmaPessoa.val(),
+					},
+					function (data) {
+						if (data.response) {
+							var informacaoAluno = '<p>Curso: ' + data.curso +
+								'</p><p>Turma: ' + data.turma +
+								'</p><p>Equipe: ' + data.equipe +
+								'</p><p>Aluno: ' + data.pessoa +
+								'</p><p>Matrícula: ' + data.idTurmaPessoa + '</p>';
+							mensagem
+								.addClass('alert-info')
+								.removeClass('alert-danger')
+								.removeClass('hidden')
+								.html(informacaoAluno);
+							location.href="/cursoAluno/"+idTurmaPessoa.val()
+						} else {
+							mensagem
+								.addClass('alert-danger')
+								.removeClass('alert-info')
+								.removeClass('hidden')
+								.html('Matrícula NÃO encontrada!');
+						}
+					}, 'json');
+		} else {
+			mensagem
+				.addClass('alert-danger')
+				.removeClass('alert-info')
+				.removeClass('hidden')
+				.html('Informe a Mátricula!');
+		}
+	}
+
