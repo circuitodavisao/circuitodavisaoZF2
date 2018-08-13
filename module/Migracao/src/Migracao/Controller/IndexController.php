@@ -916,104 +916,7 @@ class IndexController extends CircuitoController {
         return new ViewModel(array('html' => $html));
     }
 
-    public function receberFrequenciaAction() {
-        $resposta = false;
-        $response = $this->getResponse();
-        try {
-			$this->getRepositorio()->iniciarTransacao();
-			$tokenDaRota = $this->params()->fromRoute(Constantes::$ID, 0);
-			if ($tokenDaRota == 0) {
-				$request = $this->getRequest();
-				$post_data = $request->getPost();
-				$tokenDaRota = $post_data[Constantes::$FORM_ID];
-			}
-			$explodeToken = explode('_', $tokenDaRota);
-
-			$explodeMatricula = explode('9999999999', $explodeToken[0]);
-			$turmaPessoa = null;
-			if (count($explodeMatricula) === 2) {
-				$turmaPessoa = $this->getRepositorio()->getTurmaPessoaORM()->encontrarPorId($explodeMatricula[0]);
-				if($turmaPessoa === null){
-					$turmaPessoa = $this->getRepositorio()->getTurmaPessoaORM()->encontrarPorIdAntigo($explodeToken[0]);
-				}
-				$aula = $this->getRepositorio()->getAulaORM()->encontrarPorId($explodeMatricula[1]);
-				$turmaPessoaAula = new TurmaPessoaAula();
-				$turmaPessoaAula->setTurma_pessoa($turmaPessoa);
-				$turmaPessoaAula->setAula($aula);
-				$turmaPessoaAula->setReposicao('S');
-				$this->getRepositorio()->getTurmaPessoaAulaORM()->persistir($turmaPessoaAula);
-
-				$resposta = true;
-			} else {
-				$turmaPessoa = $this->getRepositorio()->getTurmaPessoaORM()->encontrarPorId($explodeToken[0]);
-				if($turmaPessoa === null){
-					$turmaPessoa = $this->getRepositorio()->getTurmaPessoaORM()->encontrarPorIdAntigo($explodeToken[0]);
-				}
-				$turmaPessoaFrequencia = new TurmaPessoaFrequencia();
-				$turmaPessoaFrequencia->setTurma_pessoa($turmaPessoa);
-				$turmaPessoaFrequencia->setData(DateTime::createFromFormat('Y-m-d', $explodeToken[1]));
-				$turmaPessoaFrequencia->setHora($explodeToken[2]);
-				$this->getRepositorio()->getTurmaPessoaFrequenciaORM()->persistir($turmaPessoaFrequencia);
-
-				$resposta = true;
-			}
-
-			if($turmaPessoa){
-				$turmaPessoaAula = new TurmaPessoaAula();
-				$turmaPessoaAula->setAula($turmaPessoa->getTurma()->getTurmaAulaAtiva()->getAula());
-				$turmaPessoaAula->setTurma_pessoa($turmaPessoa);
-				$turmaPessoaAula->setReposicao('N');
-				$this->getRepositorio()->getTurmaPessoaAulaORM()->persistir($turmaPessoaAula);
-			}else{
-				$resposta = false;
-			}
-			$this->getRepositorio()->fecharTransacao();
-		} catch (Exception $exc) {
-            $this->getRepositorio()->desfazerTransacao();
-            echo $exc->getTraceAsString();
-        }
-        $response->setContent(Json::encode(array('response' => $resposta,)));
-        return $response;
-    }
-
-    public function gerarPresencaAction() {
-        $html = '';
-        $turmaPessoaFrequenciasAtivas = $this->getRepositorio()->getTurmaPessoaFrequenciaORM()->encontrarTodosAtivos();
-        if ($turmaPessoaFrequenciasAtivas) {
-            $this->getRepositorio()->iniciarTransacao();
-            try {
-                $html .= '<br />turmaPessoaFrequenciasAtivas: ' . count($turmaPessoaFrequenciasAtivas);
-                foreach ($turmaPessoaFrequenciasAtivas as $turmaPessoaFrequenciaArray) {
-                        $naoAlterarDataDeCriacao = false;
-                    $html .= '<br />$turmaPessoaFrequenciaArray ' . $turmaPessoaFrequenciaArray['id'];
-                    $turmaPessoaFrequencia = $this->getRepositorio()->getTurmaPessoaFrequenciaORM()->encontrarPorId($turmaPessoaFrequenciaArray['id']);
-                    $turmaPessoaFrequencia->setDataEHoraDeInativacao();
-                    $this->getRepositorio()->getTurmaPessoaFrequenciaORM()->persistir($turmaPessoaFrequencia, $naoAlterarDataDeCriacao);
-
-                    $turmaPessoaAula = new TurmaPessoaAula();
-                    $turmaPessoaAula->setTurma_pessoa($turmaPessoaFrequencia->getTurma_pessoa());
-
-                    /* pegar aula aberta no periodo */
-                    $turmaAulaArray = $this->getRepositorio()->getTurmaAulaORM()->encontrarTodosPorTurmaEData(
-                            $turmaPessoaFrequencia->getTurma_pessoa()->getTurma()->getId(), $turmaPessoaFrequencia->getData());
-                    if ($turmaAulaArray[0]) {
-                        $turmaAula = $this->getRepositorio()->getTurmaAulaORM()->encontrarPorId($turmaAulaArray[0]['id']);
-                        $html .= ' - turmaAula Aberta: ' . $turmaAula->getId();
-                        $turmaPessoaAula->setAula($turmaAula->getAula());
-                        $turmaPessoaAula->setData_criacao($turmaPessoaFrequencia->getData());
-                        $turmaPessoaAula->setHora_criacao($turmaPessoaFrequencia->getHora());
-						$turmaPessoaAula->setReposicao('N');
-                        $this->getRepositorio()->getTurmaPessoaAulaORM()->persistir($turmaPessoaAula, $naoAlterarDataDeCriacao);
-                    }
-                }
-                $this->getRepositorio()->fecharTransacao();
-            } catch (Exception $exc) {
-                $this->getRepositorio()->desfazerTransacao();
-                $exc->getMessage();
-            }
-        }
-        return new ViewModel(array('html' => $html));
-    }
+    
 
     public function atualizarAntigoAction() {
         $html = '';
@@ -2338,5 +2241,9 @@ class IndexController extends CircuitoController {
         }
         return $this->repositorio;
     }
+
+	function infoAction(){
+		return new ViewModel();
+	}
 
 }
