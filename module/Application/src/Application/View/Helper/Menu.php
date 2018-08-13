@@ -121,23 +121,12 @@ class Menu extends AbstractHelper {
 			$html .= '<li class="sidebar-label pt20">Hierarquia</li>';
 
 			/* Pegar pessoas abaixo */
-			if ($this->view->discipulos) {
 				$html .= '<li>';
 				$html .= '<a href="/principalTime" onClick="mostrarSplash();">';
 				$html .= '<span class="fa fa-sitemap"></span>';
 				$html .= '<span class="sidebar-title">Meu Time(Manutenção)</span>';
 				$html .= '</a>';
 				$html .= '</li>';
-			} else {
-				$html .= '<li>';
-				$html .= '<a href="#">';
-				$html .= '<span class="fa fa-user-times"></span>';
-				$html .= '<span class="sidebar-title">Sem Time</span>';
-				$html .= '</a>';
-				$html .= '</li>';
-			}
-
-			$html .= '</li>';
 		}
 
 		/* Start: Sidebar Menu */

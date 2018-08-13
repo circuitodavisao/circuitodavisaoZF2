@@ -96,12 +96,10 @@ class Module {
 
     public function getAutoloaderConfig() {
         return array(
-            'Zend\Loader\StandardAutoloader' => array(
-                'namespaces' => array(
-                    __NAMESPACE__ => __DIR__ . '/src/' . __NAMESPACE__,
-                ),
-            ),
-        );
+			'Zend\Loader\ClassMapAutoloader' => array(
+				__DIR__ . '/autoload_classmap.php',
+			),
+       );
     }
 
     public function getViewHelperConfig() {
@@ -385,16 +383,8 @@ class Module {
             $repositorioORM = new RepositorioORM($serviceManager->get('Doctrine\ORM\EntityManager'));
             $pessoa = $repositorioORM->getPessoaORM()->encontrarPorId($sessao->idPessoa);
             $viewModel->pessoa = $pessoa;
-            $viewModel->responsabilidades = $pessoa->getResponsabilidadesAtivas();
             $entidade = $repositorioORM->getEntidadeORM()->encontrarPorId($sessao->idEntidadeAtual);
-            $grupo = $entidade->getGrupo();
             $viewModel->entidade = $entidade;
-            $discipulos = null;
-            if (count($grupo->getGrupoPaiFilhoFilhosAtivos(1)) > 0) {
-                $discipulos = $grupo->getGrupoPaiFilhoFilhosAtivos(1);
-            }
-            $filhosOrdenado = RelatorioController::ordenacaoDiscipulos($discipulos, null, 0);
-            $viewModel->discipulos = $filhosOrdenado;
         }
 
         $stringHttps = 'https://';
