@@ -58,6 +58,9 @@ if($this->filtrado){
 					}
 					if ($mostrar) {
 						foreach ($disciplina->getAulaOrdenadasPorPosicao() as $aula) {
+							if($turma->getTurmaAulaAtiva()->getAula()->getId() === $aula->getId()){
+								break;
+							}
 							$html .= '<td class="text-center">A' . $aula->getPosicao() . '</td>';
 						}
 					}
@@ -86,7 +89,8 @@ if($this->filtrado){
 						$nomeEquipe = CursoController::nomeEquipeTurmaPessoa($turmaPessoa);
 
 						$mostrarSituacao = false;
-						if($this->postado['idSituacao'] == 0){
+						if($this->postado['idSituacao'] == 0 && ($turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getId() === Situacao::ATIVO || 
+						$turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getId() === Situacao::ESPECIAL)){
 							$mostrarSituacao = true;
 						}else{
 							if($turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getId() == $this->postado['idSituacao']){
@@ -128,7 +132,7 @@ if($this->filtrado){
 									$this->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::FACILITADOR)) {
 										$html .= '<td><a target="_blanck" href="/cursoAluno/' . $turmaPessoa->getId() . '" class="btn btn-xs btn-primary" >' . str_pad($turmaPessoa->getId(), 8, 0, STR_PAD_LEFT) . '</a></td>';
 									}else{
-										$html .= '<td class="label label-default">'.$turmaPessoa->getId().'</td>';
+										$html .= '<td><span class="label label-default">'.$turmaPessoa->getId().'</span></td>';
 									}
 								$html .= '<td>'. $turmaPessoa->getPessoa()->getNome() . '</td>';
 								$html .= '<th class="text-center">' . $nomeEquipe . '</th>';
@@ -141,6 +145,10 @@ if($this->filtrado){
 										if ($mostrar) {
 											$aulaAtiva = $turma->getTurmaAulaAtiva()->getAula();
 											foreach ($disciplina->getAulaOrdenadasPorPosicao() as $aula) {
+												if($turma->getTurmaAulaAtiva()->getAula()->getId() === $aula->getId()){
+													break;
+												}
+
 												$html .= '<td class="text-center">';
 												if ($aula->getPosicao() <= ($aulaAtiva->getPosicao() - 1)) {
 													$frequencia = false;
