@@ -18,12 +18,12 @@ use Doctrine\ORM\Mapping as ORM;
 class Turma extends CircuitoEntity {
 
     /**
-     * @ORM\OneToMany(targetEntity="TurmaPessoa", mappedBy="turma")
+     * @ORM\OneToMany(targetEntity="TurmaPessoa", mappedBy="turma", fetch="EXTRA_LAZY")
      */
     protected $turmaPessoa;
 
     /**
-     * @ORM\OneToMany(targetEntity="TurmaAula", mappedBy="turma")
+     * @ORM\OneToMany(targetEntity="TurmaAula", mappedBy="turma", fetch="EXTRA_LAZY")
      */
     protected $turmaAula;
 

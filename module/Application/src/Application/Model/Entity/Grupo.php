@@ -19,72 +19,72 @@ class Grupo extends CircuitoEntity {
     protected $eventos;
 
     /**
-     * @ORM\OneToOne(targetEntity="FatoRanking", mappedBy="grupo")
+     * @ORM\OneToOne(targetEntity="FatoRanking", mappedBy="grupo", fetch="EXTRA_LAZY")
      */
     private $fatoRanking;
 
     /**
-     * @ORM\OneToMany(targetEntity="FatoDiscipulado", mappedBy="grupo")
+     * @ORM\OneToMany(targetEntity="FatoDiscipulado", mappedBy="grupo", fetch="EXTRA_LAZY")
      */
 //    private $fatoDiscipulado;
 
     /**
-     * @ORM\OneToOne(targetEntity="GrupoCv", mappedBy="grupo")
+     * @ORM\OneToOne(targetEntity="GrupoCv", mappedBy="grupo", fetch="EXTRA_LAZY")
      */
     private $grupoCv;
 
     /**
-     * @ORM\OneToMany(targetEntity="Entidade", mappedBy="grupo")
+     * @ORM\OneToMany(targetEntity="Entidade", mappedBy="grupo", fetch="EXTRA_LAZY")
      */
     protected $entidade;
 
     /**
-     * @ORM\OneToMany(targetEntity="GrupoResponsavel", mappedBy="grupo")
+     * @ORM\OneToMany(targetEntity="GrupoResponsavel", mappedBy="grupo", fetch="EXTRA_LAZY")
      */
     protected $grupoResponsavel;
 
     /**
-     * @ORM\OneToMany(targetEntity="GrupoEvento", mappedBy="grupo")
+     * @ORM\OneToMany(targetEntity="GrupoEvento", mappedBy="grupo", fetch="EXTRA_LAZY")
      */
     protected $grupoEvento;
 
     /**
-     * @ORM\OneToMany(targetEntity="GrupoPessoa", mappedBy="grupo")
+     * @ORM\OneToMany(targetEntity="GrupoPessoa", mappedBy="grupo", fetch="EXTRA_LAZY")
      */
     protected $grupoPessoa;
 
     /**
-     * @ORM\OneToMany(targetEntity="GrupoAtendimento", mappedBy="grupo")
+     * @ORM\OneToMany(targetEntity="GrupoAtendimento", mappedBy="grupo", fetch="EXTRA_LAZY")
      */
     protected $grupoAtendimento;
 
     /**
-     * @ORM\OneToMany(targetEntity="GrupoAtendimentoComentario", mappedBy="grupo")
+     * @ORM\OneToMany(targetEntity="GrupoAtendimentoComentario", mappedBy="grupo", fetch="EXTRA_LAZY")
      */
     protected $grupoAtendimentoComentario;
 
     /**
-     * @ORM\OneToMany(targetEntity="GrupoPaiFilho", mappedBy="grupoPaiFilhoPai")
+     * @ORM\OneToMany(targetEntity="GrupoPaiFilho", mappedBy="grupoPaiFilhoPai", fetch="EXTRA_LAZY")
      */
     protected $grupoPaiFilhoFilhos;
 
     /**
-     * @ORM\OneToMany(targetEntity="GrupoPaiFilho", mappedBy="grupoPaiFilhoFilho")
+     * @ORM\OneToMany(targetEntity="GrupoPaiFilho", mappedBy="grupoPaiFilhoFilho", fetch="EXTRA_LAZY")
      */
     protected $grupoPaiFilhoPai;
 
     /**
-     * @ORM\OneToMany(targetEntity="Turma", mappedBy="grupo")
+     * @ORM\OneToMany(targetEntity="Turma", mappedBy="grupo", fetch="EXTRA_LAZY")
      */
     protected $turma;
 
      /**
-     * @ORM\OneToMany(targetEntity="PessoaCursoAcesso", mappedBy="grupo")
+     * @ORM\OneToMany(targetEntity="PessoaCursoAcesso", mappedBy="grupo", fetch="EXTRA_LAZY")
      */
     protected $pessoaCursoAcesso;
 
     /**
-     * @ORM\OneToMany(targetEntity="Solicitacao", mappedBy="grupo")
+     * @ORM\OneToMany(targetEntity="Solicitacao", mappedBy="grupo", fetch="EXTRA_LAZY")
      */
     protected $solicitacao;
 
