@@ -83,7 +83,7 @@ $html = '';
 $html .= '<div class="row mt50">';
 
 if($turmaPessoa->getTurma()->getTurmaAulaAtiva()){
-	$html .= '<div class="row mt10 alert alert-info text-center">' . $turmaPessoa->getTurma()->getTurmaAulaAtiva()->getAula()->getDisciplina()->getNome() . '</div>';
+	$html .= '<div class="row mt10 alert alert-info text-center">' . $turmaPessoa->getTurma()->getTurmaAulaAtiva()->getAula()->getDisciplina()->getNome() . ' - Aula ' . $turmaPessoa->getTurma()->getTurmaAulaAtiva()->getAula()->getPosicao() . '</div>';
 }
 $html .= '<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">';
 
