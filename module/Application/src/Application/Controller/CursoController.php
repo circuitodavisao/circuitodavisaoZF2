@@ -959,9 +959,7 @@ class CursoController extends CircuitoController {
 			}
 			if ($turmaPessoa) {
 				$resposta = true;
-				$nomeCurso = $turmaPessoa->getTurma()->getCurso()->getNome();
 				$nomeTurma = Funcoes::mesPorExtenso($turmaPessoa->getTurma()->getMes(), 1) . '/' . $turmaPessoa->getTurma()->getAno();
-				$nomeEquipe = $turmaPessoa->getPessoa()->getGrupoPessoaAtivo()->getGrupo()->getEntidadeAtiva()->infoEntidade();
 				$nomePessoa = $turmaPessoa->getPessoa()->getNome();
 
 				if($turmaAulaAtiva = $turmaPessoa->getTurma()->getTurmaAulaAtiva()){
@@ -974,9 +972,7 @@ class CursoController extends CircuitoController {
 			}
 			$response->setContent(Json::encode(
 				array('response' => $resposta,
-				'curso' => $nomeCurso,
 				'turma' => $nomeTurma,
-				'equipe' => $nomeEquipe,
 				'pessoa' => $nomePessoa,
 				'idTurmaPessoa' => $idParaRetornar,
 				'temAulaAtiva' => $temAulaAtiva,
@@ -1001,9 +997,7 @@ class CursoController extends CircuitoController {
 				}
 				$aula = $this->getRepositorio()->getAulaORM()->encontrarPorId($explodeMatricula[1]);
 				$resposta = true;
-				$nomeCurso = $turmaPessoa->getturma()->getcurso()->getnome();
 				$nomeTurma = funcoes::mesporextenso($turmaPessoa->getturma()->getmes(), 1) . '/' . $turmaPessoa->getturma()->getano();
-				$nomeEquipe = $turmaPessoa->getpessoa()->getgrupopessoaativo()->getgrupo()->getentidadeativa()->infoentidade();
 				$nomePessoa = $turmaPessoa->getpessoa()->getnome();
 				$nomeAula = $aula->getDisciplina()->getNome().' Aula: '.$aula->getPosicao();
 			} else {
