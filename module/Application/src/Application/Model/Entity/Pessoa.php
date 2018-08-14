@@ -30,52 +30,52 @@ class Pessoa extends CircuitoEntity implements InputFilterAwareInterface {
     protected $inputFilterPessoaFrequencia;
 
     /**
-     * @ORM\OneToMany(targetEntity="GrupoResponsavel", mappedBy="pessoa") 
+     * @ORM\OneToMany(targetEntity="GrupoResponsavel", mappedBy="pessoa", fetch="EXTRA_LAZY") 
      */
     protected $grupoResponsavel;
 
     /**
-     * @ORM\OneToMany(targetEntity="TurmaPessoa", mappedBy="pessoa") 
+     * @ORM\OneToMany(targetEntity="TurmaPessoa", mappedBy="pessoa", fetch="EXTRA_LAZY") 
      */
     protected $turmaPessoa;
 
     /**
-     * @ORM\OneToMany(targetEntity="EventoFrequencia", mappedBy="pessoa") 
+     * @ORM\OneToMany(targetEntity="EventoFrequencia", mappedBy="pessoa", fetch="EXTRA_LAZY") 
      */
     protected $eventoFrequencia;
 
     /**
-     * @ORM\OneToMany(targetEntity="GrupoPessoa", mappedBy="pessoa") 
+     * @ORM\OneToMany(targetEntity="GrupoPessoa", mappedBy="pessoa", fetch="EXTRA_LAZY") 
      */
     protected $grupoPessoa;
 
     /**
-     * @ORM\OneToMany(targetEntity="PessoaHierarquia", mappedBy="pessoa") 
+     * @ORM\OneToMany(targetEntity="PessoaHierarquia", mappedBy="pessoa", fetch="EXTRA_LAZY") 
      */
     protected $pessoaHierarquia;
 
     /**
-     * @ORM\OneToMany(targetEntity="Curso", mappedBy="pessoa") 
+     * @ORM\OneToMany(targetEntity="Curso", mappedBy="pessoa", fetch="EXTRA_LAZY") 
      */
     protected $curso;
 
      /**
-     * @ORM\OneToMany(targetEntity="Solicitacao", mappedBy="solicitante") 
+     * @ORM\OneToMany(targetEntity="Solicitacao", mappedBy="solicitante", fetch="EXTRA_LAZY") 
      */
     protected $solicitante;
 
     /**
-     * @ORM\OneToMany(targetEntity="Solicitacao", mappedBy="receptor") 
+     * @ORM\OneToMany(targetEntity="Solicitacao", mappedBy="receptor", fetch="EXTRA_LAZY") 
      */
     protected $receptor;
 
     /**
-     * @ORM\OneToMany(targetEntity="PessoaCursoAcesso", mappedBy="pessoa") 
+     * @ORM\OneToMany(targetEntity="PessoaCursoAcesso", mappedBy="pessoa", fetch="EXTRA_LAZY") 
      */
     protected $pessoaCursoAcesso;
 
     /**
-     * @ORM\OneToMany(targetEntity="TurmaAula", mappedBy="pessoa") 
+     * @ORM\OneToMany(targetEntity="TurmaAula", mappedBy="pessoa", fetch="EXTRA_LAZY") 
      */
     protected $turmaAula;
 
