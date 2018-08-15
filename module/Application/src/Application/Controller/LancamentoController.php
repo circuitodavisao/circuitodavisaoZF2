@@ -988,15 +988,41 @@ class LancamentoController extends CircuitoController {
 		$numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupo);
 
 		$fatos = $this->getRepositorio()->getFatoParceiroDeDeusORM()->encontrarFatosPorNumeroIdentificador($numeroIdentificador);
+		$fatosAtivos = array();
 		if($fatos){
 			foreach($fatos as $fatoParceiroDeDeus){
-				$idGrupo = substr($fatoParceiroDeDeus->getNumero_identificador(), strlen($fatoParceiroDeDeus->getNumero_identificador())-8);
-				$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupo);
-				$fatoParceiroDeDeus->setGrupo($grupo);
-				$evento = $this->getRepositorio()->getEventoORM()->encontrarPorId($fatoParceiroDeDeus->getEvento_id());
-				$fatoParceiroDeDeus->setEvento($evento);
+				if($fatoParceiroDeDeus->verificarSeEstaAtivo()){
+					$idGrupo = substr($fatoParceiroDeDeus->getNumero_identificador(), strlen($fatoParceiroDeDeus->getNumero_identificador())-8);
+					$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupo);
+					$fatoParceiroDeDeus->setGrupo($grupo);
+					$evento = $this->getRepositorio()->getEventoORM()->encontrarPorId($fatoParceiroDeDeus->getEvento_id());
+					$fatoParceiroDeDeus->setEvento($evento);
+					$fatosAtivos[] = $fatoParceiroDeDeus;
+				}
 			}
 		}
-		return new ViewModel(array('fatos' => $fatos));
+		return new ViewModel(array('fatos' => $fatosAtivos));
+	}
+
+	public function parceiroDeDeusExcluirAction(){
+		$sessao = new Container(Constantes::$NOME_APLICACAO);
+		try{
+			$this->getRepositorio()->iniciarTransacao();
+
+			$idSessao = $sessao->idSessao;
+			$fatoParceiroDeDeus = $this->getRepositorio()->getFatoParceiroDeDeusORM()->encontrarPorId($idSessao);
+			$fatoParceiroDeDeus->setDataEHoraDeInativacao();
+			$this->getRepositorio()->getFatoParceiroDeDeusORM()->persistir($fatoParceiroDeDeus, $mudarDataDeCriacao = false);
+
+			$this->getRepositorio()->fecharTransacao();
+
+			return $this->redirect()->toRoute(Constantes::$ROUTE_LANCAMENTO, array(
+				Constantes::$ACTION => 'ParceiroDeDeusExtrato', 
+			));
+		}catch(Exception $exception){
+			echo $exception.getMessage();
+			$this->getRepositorio()->desfazerTransacao();
+		}
+
 	}
 }
