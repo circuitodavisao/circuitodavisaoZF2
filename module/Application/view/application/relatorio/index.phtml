@@ -61,6 +61,9 @@ $somaMeta = 0;
             if ($this->tipoRelatorio == 8) {
                 $label = 'C&eacute;lula de Elite';
             }
+            if ($this->tipoRelatorio == 9) {
+                $label = 'Parceiro de Deus Consolidado';
+            }
             echo $label;
             ?>
         </div>
@@ -192,12 +195,17 @@ $somaMeta = 0;
                                         $this->tipoRelatorio == 5 ||
                                         $this->tipoRelatorio == 6) {
                                     echo '<th class="' . $classeBase . $classePeriodoAtual . '">QTD</th>';
-                                }
+										}
+								if ($this->tipoRelatorio == 9) {
+									echo '<th class="' . $classeBase . $classePeriodoAtual . '">Valor</th>';
+								}
+ 
                             }
                             if ($this->tipoRelatorio == 1 ||
                                     $this->tipoRelatorio == 2 ||
                                     $this->tipoRelatorio == 3 ||
-                                    $this->tipoRelatorio == 8) {
+                                    $this->tipoRelatorio == 8 ||
+                                    $this->tipoRelatorio == 9) {
                                 echo '<th>FINAL</th>';
                             }
                             ?>                           
@@ -246,8 +254,6 @@ $somaMeta = 0;
                             if ($this->entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja) {
                                 echo'</span>';
                             }
-
-
                             echo '</td>';
 
                             for ($indiceDeArrays = $this->periodoInicial; $indiceDeArrays <= $this->periodoFinal; $indiceDeArrays++) {
@@ -306,28 +312,34 @@ $somaMeta = 0;
                                     echo '<td class="' . $classeBase . '">' . $relatorio[$indiceDeArrays]['celulaDeEliteMeta'] . '</td>';
                                     echo '<td class="' . $classeBase . '">' . $relatorio[$indiceDeArrays]['celulaDeElite'] . '</td>';
                                     echo '<td class="' . $classeBase . '">' . RelatorioController::formataNumeroRelatorio($relatorio[$indiceDeArrays]['celulaDeElitePerformance']) . '%</td>';
+								}   
+							   	if ($this->tipoRelatorio == 9) {
+                                    echo '<td class="' . $classeBase . '">' . RelatorioController::formataNumeroRelatorio($relatorio[$indiceDeArrays]['valor']) . '</td>';
                                 }
-                            }
 
-                            if ($this->tipoRelatorio == 1 ||
-                                    $this->tipoRelatorio == 2 ||
-                                    $this->tipoRelatorio == 3 ||
-                                    $this->tipoRelatorio == 8) {
-
-                                if ($this->tipoRelatorio == 1) {
-                                    $perfomanceMedio = $relatorio['mediaMembresiaPerformance'];
-                                }
-                                if ($this->tipoRelatorio == 2) {
-                                    $perfomanceMedio = $relatorio['mediaCelulaRealizadasPerformance'];
-                                }
-                                if ($this->tipoRelatorio == 3) {
-                                    $perfomanceMedio = $relatorio['mediaCelulaPerformance'];
-                                }
-                                if ($this->tipoRelatorio == 8) {
-                                    $perfomanceMedio = $relatorio['mediaCelulaDeElitePerformance'];
-                                }
-                                echo '<td style="padding-right:5px;">' . RelatorioController::formataNumeroRelatorio($perfomanceMedio) . '%</td>';
                             }
+							if ($this->tipoRelatorio == 1 ||
+								$this->tipoRelatorio == 2 ||
+								$this->tipoRelatorio == 3 ||
+								$this->tipoRelatorio == 8) {
+
+									if ($this->tipoRelatorio == 1) {
+										$perfomanceMedio = $relatorio['mediaMembresiaPerformance'];
+									}
+									if ($this->tipoRelatorio == 2) {
+										$perfomanceMedio = $relatorio['mediaCelulaRealizadasPerformance'];
+									}
+									if ($this->tipoRelatorio == 3) {
+										$perfomanceMedio = $relatorio['mediaCelulaPerformance'];
+									}
+									if ($this->tipoRelatorio == 8) {
+										$perfomanceMedio = $relatorio['mediaCelulaDeElitePerformance'];
+									}
+									echo '<td style="padding-right:5px;">' . RelatorioController::formataNumeroRelatorio($perfomanceMedio) . '%</td>';
+								}
+							if ($this->tipoRelatorio == 9) {
+								echo '<td style="padding-right:5px;">' . RelatorioController::formataNumeroRelatorio($relatorio['somaValor']) . '</td>';
+							}
                             echo '</tr>';
                             $contagemRanking++;
                         }

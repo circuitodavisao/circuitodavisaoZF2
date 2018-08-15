@@ -325,7 +325,7 @@ class Menu extends AbstractHelper {
 
 			$html .= '<ul class="nav sub-nav">';
 
-			for ($indiceMenuRelatorio = 1; $indiceMenuRelatorio <= 8; $indiceMenuRelatorio++) {
+			for ($indiceMenuRelatorio = 1; $indiceMenuRelatorio <= 9; $indiceMenuRelatorio++) {
 
 				$label = '';
 				$mostrar = false;
@@ -356,6 +356,10 @@ class Menu extends AbstractHelper {
 					break;
 				case 8:
 					$label = 'C&eacute;lulas de Elite';
+					$mostrar = true;
+					break;
+				case 9:
+					$label = 'Parceiro de Deus Consolidado';
 					$mostrar = true;
 					break;
 				}
