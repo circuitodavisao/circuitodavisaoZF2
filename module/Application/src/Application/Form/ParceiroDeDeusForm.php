@@ -31,6 +31,7 @@ class ParceiroDeDeusForm extends Form {
             Constantes::$FORM_ID => Constantes::$FORM_INPUT_DIA,
         ));
         $inputSelectDiaData->setValueOptions($arrayDiaData);
+		$inputSelectDiaData->setValue(date('d'));
         $this->add($inputSelectDiaData);
 
         $arrayMesData = array();
@@ -46,6 +47,7 @@ class ParceiroDeDeusForm extends Form {
             Constantes::$FORM_ID => Constantes::$FORM_INPUT_MES,
         ));
         $inputSelectMesData->setValueOptions($arrayMesData);
+		$inputSelectMesData->setValue(date('m'));
         $this->add($inputSelectMesData);
 
         $arrayAnoData = array();
@@ -61,6 +63,7 @@ class ParceiroDeDeusForm extends Form {
             Constantes::$FORM_ID => Constantes::$FORM_INPUT_ANO,
         ));
         $inputSelectAnoData->setValueOptions($arrayAnoData);
+		$inputSelectAnoData->setValue(date('Y'));
         $this->add($inputSelectAnoData);
 
         $this->add(
