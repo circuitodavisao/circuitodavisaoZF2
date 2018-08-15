@@ -385,7 +385,14 @@ class Module {
             $viewModel->pessoa = $pessoa;
             $entidade = $repositorioORM->getEntidadeORM()->encontrarPorId($sessao->idEntidadeAtual);
             $viewModel->entidade = $entidade;
-        }
+			$grupo = $entidade->getGrupo();
+			$discipulos = null;
+			if (count($grupo->getGrupoPaiFilhoFilhosAtivos(1)) > 0) {
+				$discipulos = $grupo->getGrupoPaiFilhoFilhosAtivos(1);
+			}
+			$filhosOrdenado = RelatorioController::ordenacaoDiscipulos($discipulos, null, 0);
+			$viewModel->discipulos = $filhosOrdenado;
+		}
 
         $stringHttps = 'https://';
         $stringUrl = 'circuitodavisaonovo.com.br';
