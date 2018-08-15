@@ -55,7 +55,7 @@ class RepositorioORM {
     private $_fatoRankingORM;
     private $_cursoAcessoORM;
     private $_pessoaCursoAcessoORM;
-	private $_fatoParceiroDeDus;
+	private $_fatoParceiroDeDeus;
 
     /**
      * Contrutor
