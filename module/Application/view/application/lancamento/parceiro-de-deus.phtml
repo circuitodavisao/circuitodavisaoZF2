@@ -1,6 +1,7 @@
 <?php
 
 use Application\Controller\Helper\Constantes;
+use Application\View\Helper\BotaoSimples;
 $formulario = $this->formulario;
 $formulario->prepare();
 $formulario->setAttribute(Constantes::$ACTION, $this->url(Constantes::$ROUTE_LANCAMENTO, array(Constantes::$ACTION => 'parceiroDeDeusFinalizar')));
@@ -27,15 +28,43 @@ echo $this->inputFormularioSimples('Valor Individual', $formulario->get('individ
 echo $this->inputFormularioSimples('Qual Célula', $formulario->get('idGrupoEvento'), 12, 2);
 echo $this->inputFormularioSimples('Valor Célula', $formulario->get('celula'), 12);
 ?>
-	</div>
-	<div class="panel-footer text-right">
+
+<div>TOTAL: <span id="total">0.00</span></div>
+
+</div>
+<div class="panel-footer text-right">
 <?php
 echo $this->formHidden($formulario->get(Constantes::$INPUT_CSRF));
 $stringNomeDaFuncaoOnClickCadastro = 'validar(this.form)';
 echo $this->botaoLink('Salvar Valores', Constantes::$STRING_HASHTAG, 0, $this->funcaoOnClick($stringNomeDaFuncaoOnClickCadastro));
+$funcaoVoltar = $this->funcaoOnClick('location.href="/lancamentoParceiroDeDeusExtrato"');
+echo $this->botaoSimples('Voltar', $funcaoVoltar, BotaoSimples::botaoMenorImportancia, BotaoSimples::posicaoAEsquerda);
 ?>        
 	</div>
 </div>
 <?php 
 echo $this->form()->closeTag();
+?>
+<script>
+function atualizarTotal(){
+	let valorIndividual = $('#individual').val()
+	let valorCelula = $('#celula').val()
+	if(valorIndividual == ''){
+		valorIndividual = '0'
+	}
+	if(valorCelula == ''){
+		valorCelula = '0'
+	}
 
+	valorIndividual = valorIndividual.replace(',','.')
+	valorIndividual = parseFloat(valorIndividual)
+
+	valorCelula = valorCelula.replace(',','.')
+	valorCelula = parseFloat(valorCelula)
+
+	let soma = valorIndividual + valorCelula
+	console.log('Individual', valorIndividual)
+	console.log('Celula', valorCelula)
+	$('#total').html(soma.toFixed(2))
+}
+</script>

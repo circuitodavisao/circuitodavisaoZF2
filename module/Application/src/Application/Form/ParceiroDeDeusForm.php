@@ -73,7 +73,7 @@ class ParceiroDeDeusForm extends Form {
                             Constantes::$FORM_CLASS => Constantes::$FORM_CLASS_FORM_CONTROL,
                             Constantes::$FORM_ID => 'individual',
                             Constantes::$FORM_PLACEHOLDER => 'Individual',
-							'value'=>0,
+							'onKeyUp' => 'atualizarTotal()',
                         ])
         );
 
@@ -84,7 +84,7 @@ class ParceiroDeDeusForm extends Form {
                             Constantes::$FORM_CLASS => Constantes::$FORM_CLASS_FORM_CONTROL,
                             Constantes::$FORM_ID => 'celula',
                             Constantes::$FORM_PLACEHOLDER => 'Célula',
-							'value'=>0,
+							'onKeyUp' => 'atualizarTotal()',
                         ])
         );
 

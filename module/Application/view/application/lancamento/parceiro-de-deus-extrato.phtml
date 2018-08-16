@@ -9,6 +9,8 @@ use Application\View\Helper\BotaoSimples;
 $html = '';
 if($this->fatos){
 	$html .= '<input id="fooFilter" type="text" class="form-control" placeholder="Filtro">';
+
+	$html .= '<div class="table-responsive">';
 	$html .= '<table class="table table-condensed table-hover bg-light mt15 footable" data-filter="#fooFilter">';
 	$html .= '<thead>';
 	$html .= '<tr class="text-left">';
@@ -49,6 +51,7 @@ if($this->fatos){
 
 	$html .= '</tbody>';
 	$html .= '</table>';
+	$html .= '</div>';
 
 }else{
 	$html .= '<div class="alert alert-warning text-center">Sem lançamentos</div>';
