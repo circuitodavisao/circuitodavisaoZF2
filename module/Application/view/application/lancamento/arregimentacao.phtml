@@ -3,12 +3,12 @@
 use Application\Controller\Helper\Constantes;
 use Application\View\Helper\BotaoSimples;
 ?>
-<div class="mw1000 center-block">    
+<div class="mw1000 center-block">
     <div id='panelLancamento' class="panel mw1000 mt50">
         <div class="panel-heading">
-            Lan&ccedil;amento de Arregimenta&ccedil;&atilde;o            
-        </div>      
-        <div class="panel-body center-block" style="padding: 1px;">       
+            Lan&ccedil;amento de Arregimenta&ccedil;&atilde;o
+        </div>
+        <div class="panel-body center-block" style="padding: 1px;">
             <?php
             echo $this->cabecalhoDePeriodos();
             echo $this->tabelaLancamento();
@@ -22,14 +22,14 @@ use Application\View\Helper\BotaoSimples;
 
                 echo $this->botaoSimples($label, $extra, BotaoSimples::botaoImportante, BotaoSimples::posicaoAoCentro);
 
-                if ($this->periodo == -1) {
+                if ($this->periodo == -1 || $this->periodo == 0) {
                     $extra = $this->funcaoOnClick('mostrarSplash(); funcaoCircuito("lancamentoEnviar", ' . $this->periodo . ')');
                     echo '&nbsp;&nbsp;'.$this->botaoSimples('Enviar Relatório', $extra, BotaoSimples::botaoSucesso, BotaoSimples::posicaoAoCentro);
                 }
                 ?>
             </div>
         </div>
-    </div> 
+    </div>
 </div>
 <!-- MODAL PARA MUITOS ELEMENTOS -->
 <?php
