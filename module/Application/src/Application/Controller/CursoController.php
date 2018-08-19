@@ -876,6 +876,107 @@ class CursoController extends CircuitoController {
 		}
 		return $response;
 	}
+	public function buscarSubsCompletoAction(){
+		$response = $this->getResponse();
+		try {
+			$idEquipe = $_POST['id'];
+			$periodo = 0;
+			$filhos = array();
+			$grupoEquipe = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idEquipe);
+			$grupoPaiFilhoFilhos = $grupoEquipe->getGrupoPaiFilhoFilhosAtivos($periodo);
+
+			if($grupoResponsabilidades = $grupoEquipe->getResponsabilidadesAtivas()){
+				foreach($grupoResponsabilidades as $grupoResponsabilidade){
+					$dados = array();
+					$dados['id'] = $grupoResponsabilidade->getGrupo()->getId() . '_' .$grupoResponsabilidade->getPessoa()->getId();
+					$dados['informacao'] = $grupoEquipe->getEntidadeAtiva()->infoEntidade() . ' - ' . $grupoResponsabilidade->getPessoa()->getNome(); 	
+					$filhos[] =  $dados;
+				}
+			}
+
+			foreach($grupoPaiFilhoFilhos as $grupoPaiFilho){
+				$grupoFilho = $grupoPaiFilho->getGrupoPaiFilhoFilho();
+				if($grupoResponsabilidades = $grupoFilho->getResponsabilidadesAtivas()){
+					foreach($grupoResponsabilidades as $grupoResponsabilidade){
+						$dados = array();
+						$dados['id'] = $grupoResponsabilidade->getGrupo()->getId() . '_' .$grupoResponsabilidade->getPessoa()->getId();
+						$dados['informacao'] = $grupoFilho->getEntidadeAtiva()->infoEntidade() . ' - ' . $grupoResponsabilidade->getPessoa()->getNome(); 	
+						$filhos[] =  $dados;
+					}
+				}
+
+				if($filhos2 = $grupoFilho->getGrupoPaiFilhoFilhosAtivos($periodo)){
+					foreach($filhos2 as $filho2){
+						$grupoFilho2 = $filho2->getGrupoPaiFilhoFilho();
+						if($grupoResponsabilidades = $grupoFilho2->getResponsabilidadesAtivas()){
+							foreach($grupoResponsabilidades as $grupoResponsabilidade){
+								$dados = array();
+								$dados['id'] = $grupoResponsabilidade->getGrupo()->getId() . '_' .$grupoResponsabilidade->getPessoa()->getId();
+								$dados['informacao'] = $grupoFilho2->getEntidadeAtiva()->infoEntidade() . ' - ' . $grupoResponsabilidade->getPessoa()->getNome(); 	
+								$filhos[] =  $dados;
+							}
+						}
+
+
+						if($filhos3 = $grupoFilho2->getGrupoPaiFilhoFilhosAtivos($periodo)){
+							foreach($filhos3 as $filho3){
+								$grupoFilho3 = $filho3->getGrupoPaiFilhoFilho();
+
+								if($grupoResponsabilidades = $grupoFilho3->getResponsabilidadesAtivas()){
+									foreach($grupoResponsabilidades as $grupoResponsabilidade){
+										$dados = array();
+										$dados['id'] = $grupoResponsabilidade->getGrupo()->getId() . '_' .$grupoResponsabilidade->getPessoa()->getId();
+										$dados['informacao'] = $grupoFilho3->getEntidadeAtiva()->infoEntidade() . ' - ' . $grupoResponsabilidade->getPessoa()->getNome(); 	
+										$filhos[] =  $dados;
+									}
+								}
+
+
+								if($filhos4 = $filhos3->getGrupoPaiFilhoFilhosAtivos($periodo)){
+									foreach($filhos4 as $filho4){
+										$grupoFilho4 = $filho4->getGrupoPaiFilhoFilho();
+
+										if($grupoResponsabilidades = $grupoFilho4->getResponsabilidadesAtivas()){
+											foreach($grupoResponsabilidades as $grupoResponsabilidade){
+												$dados = array();
+												$dados['id'] = $grupoResponsabilidade->getGrupo()->getId() . '_' .$grupoResponsabilidade->getPessoa()->getId();
+												$dados['informacao'] = $grupoFilho4->getEntidadeAtiva()->infoEntidade() . ' - ' . $grupoResponsabilidade->getPessoa()->getNome(); 	
+												$filhos[] =  $dados;
+											}
+										}
+										if($filhos5 = $filhos4->getGrupoPaiFilhoFilhosAtivos($periodo)){
+											foreach($filhos5 as $filho5){
+												$grupoFilho5 = $filho5->getGrupoPaiFilhoFilho();
+												if($grupoResponsabilidades = $grupoFilho5->getResponsabilidadesAtivas()){
+													foreach($grupoResponsabilidades as $grupoResponsabilidade){
+														$dados = array();
+														$dados['id'] = $grupoResponsabilidade->getGrupo()->getId() . '_' .$grupoResponsabilidade->getPessoa()->getId();
+														$dados['informacao'] = $grupoFilho5->getEntidadeAtiva()->infoEntidade() . ' - ' . $grupoResponsabilidade->getPessoa()->getNome(); 	
+														$filhos[] =  $dados;
+													}
+												}
+
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+
+			$resposta = true;
+			$response->setContent(Json::encode(
+				array('response' => $resposta,
+				'filhos' => $filhos,
+			)));
+		} catch (Exception $exc) {
+			echo $exc->getMessage();
+		}
+		return $response;
+	}
+
 
 	public function selecionarParaCarterinhaAction() {
 		$sessao = new Container(Constantes::$NOME_APLICACAO);

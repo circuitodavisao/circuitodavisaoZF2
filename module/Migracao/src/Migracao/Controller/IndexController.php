@@ -2246,4 +2246,27 @@ class IndexController extends CircuitoController {
 		return new ViewModel();
 	}
 
+	function ajustarAction(){
+		$fatosParceiroDeDeus = $this->getRepositorio()->getFatoParceiroDeDeusORM()->buscarTodosRegistrosEntidade();
+
+		try{
+			$this->getRepositorio()->iniciarTransacao();
+			foreach($fatosParceiroDeDeus as $fatoParceiroDeDeus){
+				$numeroIdentificador = $fatoParceiroDeDeus->getNumero_identificador();
+				$idGrupo = substr($numeroIdentificador, (strlen($numeroIdentificador) - 8));
+				$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupo);
+
+				$grupoResponsabilidades = $grupo->getResponsabilidadesAtivas();
+				$fatoParceiroDeDeus->setPessoa_id($grupoResponsabilidades[0]->getPessoa()->getId());
+
+				$this->getRepositorio()->getFatoParceiroDeDeusORM()->persistir($fatoParceiroDeDeus);
+			}
+			$this->getRepositorio()->fecharTransacao();
+		}catch(Exception $e){
+			$this->getRepositorio()->desfazerTransacao();
+			echo $e->getMessage();
+		}
+		return new ViewModel();
+	}
+
 }

@@ -16,8 +16,8 @@ if($this->fatos){
 	$html .= '<tr class="text-left">';
 	$html .= '<th>Data</th>';
 	$html .= '<th>Time</th>';
+	$html .= '<th>Pessoa</th>';
 	$html .= '<th>Valor Individual</th>';
-	$html .= '<th>Célula</th>';
 	$html .= '<th>Valor Célula</th>';
 	$html .= '<th>Sub Total</th>';
 	$html .= '<td></td>';
@@ -27,15 +27,14 @@ if($this->fatos){
 	$somaTotal = 0;
 	foreach($this->fatos as $fatoParceiroDeDeus){
 		$total = $fatoParceiroDeDeus->getIndividual() + $fatoParceiroDeDeus->getCelula();
-		$htmlCelula = $this->translate(Funcoes::diaDaSemanaPorDia($fatoParceiroDeDeus->getEvento()->getDia(),1)).'-' . $fatoParceiroDeDeus->getEvento()->getHora() ;
 		$funcaoExcluir = $this->funcaoOnClick('validarExclusao('.$fatoParceiroDeDeus->getId().')');
 		$botaoExcluir = $this->botaoSimples('<i class="fa fa-times"></i>', $funcaoExcluir, BotaoSimples::botaoMuitoPequenoPerigoso); 
 
 		$html .= '<tr class="text-left">';
 		$html .= '<td>'.Funcoes::mudarPadraoData($fatoParceiroDeDeus->getData(),1).'</td>';
 		$html .= '<td>'.$fatoParceiroDeDeus->getGrupo()->getEntidadeAtiva()->infoEntidade(). ' - ' . $fatoParceiroDeDeus->getGrupo()->getNomeLideresAtivos().'</td>';
+		$html .= '<td>'.$fatoParceiroDeDeus->getPessoa()->getNome().'</td>';
 		$html .= '<td>'.number_format($fatoParceiroDeDeus->getIndividual(),2,',','.').'</td>';
-		$html .= '<td>'.$htmlCelula.'</td>';
 		$html .= '<td>'.number_format($fatoParceiroDeDeus->getCelula(),2,',','.').'</td>';
 		$html .= '<td>'.number_format($total,2,',','.').'</td>';
 		$html .= '<td>' . $botaoExcluir . '</td>';
