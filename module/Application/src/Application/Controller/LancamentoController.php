@@ -931,7 +931,6 @@ class LancamentoController extends CircuitoController {
 		$dados['formulario'] = $formulario;
 		$dados['grupo'] = $grupo;
 		$dados['discipulos'] = $grupoPaiFilhoFilhos;
-		$dados['solicitacoes'] = null;
 
 		$view = new ViewModel($dados);
 		
@@ -950,16 +949,18 @@ class LancamentoController extends CircuitoController {
 				$this->getRepositorio()->iniciarTransacao();
 
 				$dadosPost = $request->getPost();
-				$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($dadosPost['idGrupo']);
+				$idGrupoEPessoa = $dadosPost['idPessoa'];
+				$explodeId = explode('_', $idGrupoEPessoa);
+				$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($explodeId[0]);
 				$numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupo);
-				$grupoEvento = $this->getRepositorio()->getGrupoEventoORM()->encontrarPorId($dadosPost['idGrupoEvento']);
 				$individualFiltrado = number_format(str_replace(',','.',$dadosPost['individual']),2,'.','');
 				$celulaFiltrado = number_format(str_replace(',','.',$dadosPost['celula']),2,'.','');
 				$dataLancamento = $dadosPost['Ano'].'-'.$dadosPost['Mes'].'-'.$dadosPost['Dia'];
 
 				$fatoParceiroDeDeus = new FatoParceiroDeDeus();
 				$fatoParceiroDeDeus->setNumero_identificador($numeroIdentificador);
-				$fatoParceiroDeDeus->setEvento_id($grupoEvento->getEvento()->getId());
+				$fatoParceiroDeDeus->setEvento_id(0);
+				$fatoParceiroDeDeus->setPessoa_id($explodeId[1]);
 				$fatoParceiroDeDeus->setIndividual($individualFiltrado);
 				$fatoParceiroDeDeus->setCelula($celulaFiltrado);
 				$fatoParceiroDeDeus->setData($dataLancamento);
@@ -995,8 +996,8 @@ class LancamentoController extends CircuitoController {
 					$idGrupo = substr($fatoParceiroDeDeus->getNumero_identificador(), strlen($fatoParceiroDeDeus->getNumero_identificador())-8);
 					$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupo);
 					$fatoParceiroDeDeus->setGrupo($grupo);
-					$evento = $this->getRepositorio()->getEventoORM()->encontrarPorId($fatoParceiroDeDeus->getEvento_id());
-					$fatoParceiroDeDeus->setEvento($evento);
+					$pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($fatoParceiroDeDeus->getPessoa_id());
+					$fatoParceiroDeDeus->setPessoa($pessoa);
 					$fatosAtivos[] = $fatoParceiroDeDeus;
 				}
 			}
