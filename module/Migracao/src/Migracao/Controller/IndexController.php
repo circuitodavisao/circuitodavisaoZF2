@@ -2263,8 +2263,10 @@ class IndexController extends CircuitoController {
 				$this->getRepositorio()->getFatoParceiroDeDeusORM()->persistir($fatoParceiroDeDeus);
 			}
 			$this->getRepositorio()->fecharTransacao();
+			echo '<br /> foiiii';
 		}catch(Exception $e){
 			$this->getRepositorio()->desfazerTransacao();
+			echo "nao foi naooooo";
 			echo $e->getMessage();
 		}
 		return new ViewModel();
