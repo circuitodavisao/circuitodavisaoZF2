@@ -2257,6 +2257,7 @@ class IndexController extends CircuitoController {
 
 			$grupoResponsabilidades = $grupo->getResponsabilidadesAtivas();
 			$fatoParceiroDeDeus->setPessoa_id($grupoResponsabilidades[0]->getPessoa()->getId());
+			$fatoParceiroDeDeus->setEvento_id(0);
 
 			Funcoes::var_dump($fatoParceiroDeDeus);
 			$this->getRepositorio()->getFatoParceiroDeDeusORM()->persistir($fatoParceiroDeDeus, false);
