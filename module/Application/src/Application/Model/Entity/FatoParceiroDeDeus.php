@@ -16,6 +16,12 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class FatoParceiroDeDeus extends CircuitoEntity {
 
+    /**
+     * @ORM\ManyToOne(targetEntity="Pessoa", inversedBy="fatoParceiroDeDeus")
+     * @ORM\JoinColumn(name="pessoa_id", referencedColumnName="id")
+     */
+    private $pessoa;
+
 	/** @ORM\Column(type="string") */
 	protected $numero_identificador;
 
@@ -35,7 +41,6 @@ class FatoParceiroDeDeus extends CircuitoEntity {
 	protected $data;
 
 	private $grupo;
-	private $pessoa;
 
 	function getNumero_identificador() {
 		return $this->numero_identificador;

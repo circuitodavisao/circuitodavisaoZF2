@@ -2268,7 +2268,7 @@ class IndexController extends CircuitoController {
 				$novoFato->setNumero_identificador($numeroIdentificador);
 				$novoFato->setIndividual($fatoParceiroDeDeus->getIndividual());
 				$novoFato->setCelula($fatoParceiroDeDeus->getCelula());
-				$novoFato->setPessoa_id($grupoResponsabilidades[0]->getPessoa()->getId());
+				$novoFato->setPessoa($grupoResponsabilidades[0]->getPessoa());
 				$novoFato->setData($fatoParceiroDeDeus->getData());
 
 				$this->getRepositorio()->getFatoParceiroDeDeusORM()->persistir($novoFato);
