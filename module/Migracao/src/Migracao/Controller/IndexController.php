@@ -2259,7 +2259,7 @@ class IndexController extends CircuitoController {
 			$fatoParceiroDeDeus->setPessoa_id($grupoResponsabilidades[0]->getPessoa()->getId());
 
 			echo "<br /> Fato pessoa: ".$fatoParceiroDeDeus->getPessoa_id();
-			$this->getRepositorio()->getFatoParceiroDeDeusORM()->persistir($fatoParceiroDeDeus);
+			$this->getRepositorio()->getFatoParceiroDeDeusORM()->persistir($fatoParceiroDeDeus, false);
 		}
 		$this->getRepositorio()->fecharTransacao();
 		return new ViewModel();
