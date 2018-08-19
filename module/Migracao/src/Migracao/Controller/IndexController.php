@@ -2259,7 +2259,7 @@ class IndexController extends CircuitoController {
 				$grupoResponsabilidades = $grupo->getResponsabilidadesAtivas();
 				$fatoParceiroDeDeus->setPessoa_id($grupoResponsabilidades[0]->getPessoa()->getId());
 
-				echo "<br /> pessoa: ".$grupoResponsabilidades[0]->getPessoa()->getId();
+				echo "<br /> Fato pessoa: ".$fatoParceiroDeDeus->getPessoa_id();
 				$this->getRepositorio()->getFatoParceiroDeDeusORM()->persistir($fatoParceiroDeDeus);
 			}
 			$this->getRepositorio()->fecharTransacao();
