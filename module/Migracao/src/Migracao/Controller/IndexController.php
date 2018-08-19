@@ -2256,7 +2256,7 @@ class IndexController extends CircuitoController {
 			$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupo);
 
 			$grupoResponsabilidades = $grupo->getResponsabilidadesAtivas();
-			$fatoParceiroDeDeus->setPessoa_id($grupoResponsabilidades[0]->getPessoa()->getId());
+			$fatoParceiroDeDeus->setPessoa_id(intval($grupoResponsabilidades[0]->getPessoa()->getId()));
 			$fatoParceiroDeDeus->setEvento_id(0);
 
 			Funcoes::var_dump($fatoParceiroDeDeus);
