@@ -956,11 +956,12 @@ class LancamentoController extends CircuitoController {
 				$individualFiltrado = number_format(str_replace(',','.',$dadosPost['individual']),2,'.','');
 				$celulaFiltrado = number_format(str_replace(',','.',$dadosPost['celula']),2,'.','');
 				$dataLancamento = $dadosPost['Ano'].'-'.$dadosPost['Mes'].'-'.$dadosPost['Dia'];
-
+				$pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($explodeId[1]);
+				
 				$fatoParceiroDeDeus = new FatoParceiroDeDeus();
 				$fatoParceiroDeDeus->setNumero_identificador($numeroIdentificador);
 				$fatoParceiroDeDeus->setEvento_id(0);
-				$fatoParceiroDeDeus->setPessoa_id($explodeId[1]);
+				$fatoParceiroDeDeus->setPessoa($pessoa);
 				$fatoParceiroDeDeus->setIndividual($individualFiltrado);
 				$fatoParceiroDeDeus->setCelula($celulaFiltrado);
 				$fatoParceiroDeDeus->setData($dataLancamento);
@@ -996,8 +997,6 @@ class LancamentoController extends CircuitoController {
 					$idGrupo = substr($fatoParceiroDeDeus->getNumero_identificador(), strlen($fatoParceiroDeDeus->getNumero_identificador())-8);
 					$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupo);
 					$fatoParceiroDeDeus->setGrupo($grupo);
-					$pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($fatoParceiroDeDeus->getPessoa_id());
-					$fatoParceiroDeDeus->setPessoa($pessoa);
 					$fatosAtivos[] = $fatoParceiroDeDeus;
 				}
 			}
