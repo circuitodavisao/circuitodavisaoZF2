@@ -2253,14 +2253,13 @@ class IndexController extends CircuitoController {
 			$this->getRepositorio()->iniciarTransacao();
 			foreach($fatosParceiroDeDeus as $fatoParceiroDeDeus){
 				$numeroIdentificador = $fatoParceiroDeDeus->getNumero_identificador();
-				echo "<br />Numero: $numeroIdentificador";
 				$idGrupo = substr($numeroIdentificador, (strlen($numeroIdentificador) - 8));
 				$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupo);
 
 				$grupoResponsabilidades = $grupo->getResponsabilidadesAtivas();
 				$fatoParceiroDeDeus->setPessoa_id($grupoResponsabilidades[0]->getPessoa()->getId());
 
-				Funcoes:var_dump($fatoParceiroDeDeus);
+				echo "<br /> pessoa: ".$grupoResponsabilidades[0]->getPessoa()->getId();
 				$this->getRepositorio()->getFatoParceiroDeDeusORM()->persistir($fatoParceiroDeDeus);
 			}
 			$this->getRepositorio()->fecharTransacao();
