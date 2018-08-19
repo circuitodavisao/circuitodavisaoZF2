@@ -34,6 +34,7 @@ use Application\Model\Entity\TurmaPessoaAvaliacao;
 use Application\Model\Entity\TurmaPessoaFinanceiro;
 use Application\Model\Entity\TurmaPessoaFrequencia;
 use Application\Model\Entity\TurmaPessoaSituacao;
+use Application\Model\Entity\FatoParceiroDeDeus;
 use Application\Model\ORM\RepositorioORM;
 use DateTime;
 use Doctrine\ORM\EntityManager;
@@ -2251,16 +2252,27 @@ class IndexController extends CircuitoController {
 
 		$this->getRepositorio()->iniciarTransacao();
 		foreach($fatosParceiroDeDeus as $fatoParceiroDeDeus){
-			$numeroIdentificador = $fatoParceiroDeDeus->getNumero_identificador();
-			$idGrupo = substr($numeroIdentificador, (strlen($numeroIdentificador) - 8));
-			$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupo);
+			if($fatoParceiroDeDeus->verificarSeEstaAtivo()){
+				$numeroIdentificador = $fatoParceiroDeDeus->getNumero_identificador();
+				$idGrupo = substr($numeroIdentificador, (strlen($numeroIdentificador) - 8));
+				$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupo);
 
-			$grupoResponsabilidades = $grupo->getResponsabilidadesAtivas();
-			$fatoParceiroDeDeus->setPessoa_id(intval($grupoResponsabilidades[0]->getPessoa()->getId()));
-			$fatoParceiroDeDeus->setEvento_id(0);
+				$grupoResponsabilidades = $grupo->getResponsabilidadesAtivas();
+				$fatoParceiroDeDeus->setPessoa_id(intval($grupoResponsabilidades[0]->getPessoa()->getId()));
+				$fatoParceiroDeDeus->setEvento_id(0);
 
-			Funcoes::var_dump($fatoParceiroDeDeus);
-			$this->getRepositorio()->getFatoParceiroDeDeusORM()->persistir($fatoParceiroDeDeus, false);
+				$fatoParceiroDeDeus->setDataEHoraDeInativacao();
+				$this->getRepositorio()->getFatoParceiroDeDeusORM()->persistir($fatoParceiroDeDeus, false);
+
+				$novoFato = new FatoParceiroDeDeus();
+				$novoFato->setNumero_identificador($numeroIdentificador);
+				$novoFato->setIndividual($fatoParceiroDeDeus->getIndividual());
+				$novoFato->setCelula($fatoParceiroDeDeus->getCelula());
+				$novoFato->setPessoa_id($grupoResponsabilidades[0]->getPessoa()->getId());
+				$novoFato->setData($fatoParceiroDeDeus->getData());
+
+				$this->getRepositorio()->getFatoParceiroDeDeusORM()->persistir($novoFato);
+			}
 		}
 		$this->getRepositorio()->fecharTransacao();
 		return new ViewModel();
