@@ -2249,26 +2249,19 @@ class IndexController extends CircuitoController {
 	function ajustarAction(){
 		$fatosParceiroDeDeus = $this->getRepositorio()->getFatoParceiroDeDeusORM()->buscarTodosRegistrosEntidade();
 
-		try{
-			$this->getRepositorio()->iniciarTransacao();
-			foreach($fatosParceiroDeDeus as $fatoParceiroDeDeus){
-				$numeroIdentificador = $fatoParceiroDeDeus->getNumero_identificador();
-				$idGrupo = substr($numeroIdentificador, (strlen($numeroIdentificador) - 8));
-				$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupo);
+		$this->getRepositorio()->iniciarTransacao();
+		foreach($fatosParceiroDeDeus as $fatoParceiroDeDeus){
+			$numeroIdentificador = $fatoParceiroDeDeus->getNumero_identificador();
+			$idGrupo = substr($numeroIdentificador, (strlen($numeroIdentificador) - 8));
+			$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupo);
 
-				$grupoResponsabilidades = $grupo->getResponsabilidadesAtivas();
-				$fatoParceiroDeDeus->setPessoa_id($grupoResponsabilidades[0]->getPessoa()->getId());
+			$grupoResponsabilidades = $grupo->getResponsabilidadesAtivas();
+			$fatoParceiroDeDeus->setPessoa_id($grupoResponsabilidades[0]->getPessoa()->getId());
 
-				echo "<br /> Fato pessoa: ".$fatoParceiroDeDeus->getPessoa_id();
-				$this->getRepositorio()->getFatoParceiroDeDeusORM()->persistir($fatoParceiroDeDeus);
-			}
-			$this->getRepositorio()->fecharTransacao();
-			echo '<br /> foiiii';
-		}catch(Exception $e){
-			$this->getRepositorio()->desfazerTransacao();
-			echo "nao foi naooooo";
-			echo $e->getMessage();
+			echo "<br /> Fato pessoa: ".$fatoParceiroDeDeus->getPessoa_id();
+			$this->getRepositorio()->getFatoParceiroDeDeusORM()->persistir($fatoParceiroDeDeus);
 		}
+		$this->getRepositorio()->fecharTransacao();
 		return new ViewModel();
 	}
 
