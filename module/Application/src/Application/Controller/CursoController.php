@@ -1090,19 +1090,15 @@ class CursoController extends CircuitoController {
 		try {
 			$turmaPessoa = null;
 			$id = $_POST['id'];
-			$explodeMatricula = explode('9999999999',$id);
-			if (count($explodeMatricula) === 2) {
-				$turmaPessoa = $this->getRepositorio()->getTurmaPessoaORM()->encontrarPorId($explodeMatricula[0]);
-				if($turmaPessoa === null){
-					$turmaPessoa = $this->getRepositorio()->getTurmaPessoaORM()->encontrarPorIdAntigo($explodeToken[0]);
-				}
-				$aula = $this->getRepositorio()->getAulaORM()->encontrarPorId($explodeMatricula[1]);
+			$idTurmaAluno = substr($id,0,10);
+			$idAula = substr($id,10);
+
+			if($turmaPessoa = $this->getRepositorio()->getTurmaPessoaORM()->encontrarPorId($idTurmaAluno)){
+				$aula = $this->getRepositorio()->getAulaORM()->encontrarPorId($idAula);
 				$resposta = true;
 				$nomeTurma = funcoes::mesporextenso($turmaPessoa->getturma()->getmes(), 1) . '/' . $turmaPessoa->getturma()->getano();
 				$nomePessoa = $turmaPessoa->getpessoa()->getnome();
 				$nomeAula = $aula->getDisciplina()->getNome().' Aula: '.$aula->getPosicao();
-			} else {
-				$resposta = false;
 			}
 			$response->setContent(Json::encode(
 				array('response' => $resposta,
@@ -1161,28 +1157,25 @@ class CursoController extends CircuitoController {
 			if($this->getRequest()->isPost()){
 				$this->getRepositorio()->iniciarTransacao();
 				$id = $this->getRequest()->getPost()['id'];
-				$explodeMatricula = explode('9999999999',$id);
-				if (count($explodeMatricula) === 2) {
-					$turmaPessoa = $this->getRepositorio()->getTurmaPessoaORM()->encontrarPorId($explodeMatricula[0]);
-					if($turmaPessoa === null){
-						$turmaPessoa = $this->getRepositorio()->getTurmaPessoaORM()->encontrarPorIdAntigo($explodeToken[0]);
+
+				$idTurmaAluno = substr($id,0,10);
+				$idAula = substr($id,10);
+
+				if($turmaPessoa = $this->getRepositorio()->getTurmaPessoaORM()->encontrarPorId($idTurmaAluno)){
+					$aula = $this->getRepositorio()->getAulaORM()->encontrarPorId($idAula);
+					$turmaPessoaAula = $turmaPessoa->getTurmaPessoaAulaPorAula($aula->getId());
+					if (!$turmaPessoaAula) {
+						$turmaPessoaAula = new TurmaPessoaAula();
+						$turmaPessoaAula->setAula($aula);
+						$turmaPessoaAula->setTurma_pessoa($turmaPessoa);
 					}
-					$aula = $this->getRepositorio()->getAulaORM()->encontrarPorId($explodeMatricula[1]);
-					if($turmaPessoa){
-						$turmaPessoaAula = $turmaPessoa->getTurmaPessoaAulaPorAula($aula->getId());
-						if (!$turmaPessoaAula) {
-							$turmaPessoaAula = new TurmaPessoaAula();
-							$turmaPessoaAula->setAula($aula);
-							$turmaPessoaAula->setTurma_pessoa($turmaPessoa);
-						}
-						$turmaPessoaAula->setData_inativacao(null);
-						$turmaPessoaAula->setHora_inativacao(null);
-						$turmaPessoaAula->setReposicao('S');
-						$this->getRepositorio()->getTurmaPessoaAulaORM()->persistir($turmaPessoaAula);
-						$resposta = true;
-						$this->getRepositorio()->fecharTransacao();
-					}
-				}	
+					$turmaPessoaAula->setData_inativacao(null);
+					$turmaPessoaAula->setHora_inativacao(null);
+					$turmaPessoaAula->setReposicao('S');
+					$this->getRepositorio()->getTurmaPessoaAulaORM()->persistir($turmaPessoaAula);
+					$resposta = true;
+					$this->getRepositorio()->fecharTransacao();
+				}
 			}			
 		} catch (Exception $exc) {
 			$this->getRepositorio()->desfazerTransacao();

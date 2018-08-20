@@ -43,7 +43,7 @@ foreach ($this->reposicoes as $reposicao) {
 	$nomePessoa = $pessoa->getNome();
 	$nomeEquipe = $grupoEquipe->getEntidadeAtiva()->getNome();
 
-	$codigoDeBarra = str_pad($reposicao['idTurmaPessoa'], 8, 0, STR_PAD_LEFT) . 9999999999 . str_pad($reposicao['idAula'], 8, 0, STR_PAD_LEFT);
+	$codigoDeBarra = str_pad($reposicao['idTurmaPessoa'], 10, 0, STR_PAD_LEFT) . str_pad($reposicao['idAula'], 10, 0, STR_PAD_LEFT);
 	echo '<div id="bcTarget' . $codigoDeBarra . '"  class="float-right"></div>';
 	echo '<script type="text/javascript">$("#bcTarget' . $codigoDeBarra . '").barcode("' . $codigoDeBarra . '", "code93", {barWidth:2, barHeight:40}); </script>';
 ?>
