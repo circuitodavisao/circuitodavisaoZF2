@@ -95,29 +95,29 @@ class RelatorioController extends CircuitoController {
 		$arrayPeriodoDoMes = Funcoes::encontrarPeriodoDeUmMesPorMesEAno(date('m'), date('Y'));
 
 		$todosFilhos = array();
-	//	for ($indiceDeArrays = $arrayPeriodoDoMes[0]; $indiceDeArrays <= $arrayPeriodoDoMes[1]; $indiceDeArrays++) {
+		//	for ($indiceDeArrays = $arrayPeriodoDoMes[0]; $indiceDeArrays <= $arrayPeriodoDoMes[1]; $indiceDeArrays++) {
 		$indiceDeArrays = 0;
-			$grupoPaiFilhoFilhos = $grupo->getGrupoPaiFilhoFilhosAtivos($indiceDeArrays);
-			if ($grupoPaiFilhoFilhos) {
-				foreach ($grupoPaiFilhoFilhos as $grupoPaiFilhoFilho) {
-					$adicionar = true;
-					if (count($todosFilhos) > 0) {
-						foreach ($todosFilhos as $filho) {
-							if ($filho->getId() === $grupoPaiFilhoFilho->getId()) {
-								$adicionar = false;
-								break;
-							}
+		$grupoPaiFilhoFilhos = $grupo->getGrupoPaiFilhoFilhosAtivos($indiceDeArrays);
+		if ($grupoPaiFilhoFilhos) {
+			foreach ($grupoPaiFilhoFilhos as $grupoPaiFilhoFilho) {
+				$adicionar = true;
+				if (count($todosFilhos) > 0) {
+					foreach ($todosFilhos as $filho) {
+						if ($filho->getId() === $grupoPaiFilhoFilho->getId()) {
+							$adicionar = false;
+							break;
 						}
 					}
-					if ($adicionar) {
-						$todosFilhos[] = $grupoPaiFilhoFilho;
-					}
+				}
+				if ($adicionar) {
+					$todosFilhos[] = $grupoPaiFilhoFilho;
 				}
 			}
-	//	}
+		}
+		//	}
 
 
-			$quantidade = 0;
+		$quantidade = 0;
 		$html .= '<table class="table table-condensed table-hover bg-light mt15">';
 		$html .= '<thead>';
 		$html .= '<tr>';
@@ -129,34 +129,54 @@ class RelatorioController extends CircuitoController {
 		$html .= '</thead>';
 		$html .= '<tbody>';
 		foreach ($todosFilhos as $filho) {
-			$html .= self::linhaTabelaFatoLider($filho, $this->getRepositorio(), 1, $quantidade);
+			$dados = self::linhaTabelaFatoLider($filho, $this->getRepositorio(), 1, $quantidade);
+			$html .= $dados['html'];
+			$quantidade = $dados['quantidade'];
 			if ($todosLideres1 = self::todosLideresAbaixoNoPeriodo($filho, $arrayPeriodoDoMes)) {
 				foreach ($todosLideres1 as $filho1) {
-					$html .= self::linhaTabelaFatoLider($filho1, $this->getRepositorio(), 2, $quantidade);
+					$dados = self::linhaTabelaFatoLider($filho1, $this->getRepositorio(), 2, $quantidade);
+					$html .= $dados['html'];
+					$quantidade = $dados['quantidade'];
 					if ($todosLideres2 = self::todosLideresAbaixoNoPeriodo($filho1, $arrayPeriodoDoMes)) {
 						foreach ($todosLideres2 as $filho2) {
-							$html .= self::linhaTabelaFatoLider($filho2, $this->getRepositorio(), 3, $quantidade);
+							$dados = self::linhaTabelaFatoLider($filho2, $this->getRepositorio(), 3, $quantidade);
+							$html .= $dados['html'];
+							$quantidade = $dados['quantidade'];
 							if ($todosLideres3 = self::todosLideresAbaixoNoPeriodo($filho2, $arrayPeriodoDoMes)) {
 								foreach ($todosLideres3 as $filho3) {
-									$html .= self::linhaTabelaFatoLider($filho3, $this->getRepositorio(), 4, $quantidade);
+									$dados = self::linhaTabelaFatoLider($filho3, $this->getRepositorio(), 4, $quantidade);
+									$html .= $dados['html'];
+									$quantidade = $dados['quantidade'];
 									if ($todosLideres4 = self::todosLideresAbaixoNoPeriodo($filho3, $arrayPeriodoDoMes)) {
 										foreach ($todosLideres4 as $filho4) {
-											$html .= self::linhaTabelaFatoLider($filho4, $this->getRepositorio(), 5, $quantidade);
+											$dados = self::linhaTabelaFatoLider($filho4, $this->getRepositorio(), 5, $quantidade);
+											$html .= $dados['html'];
+											$quantidade = $dados['quantidade'];
 											if ($todosLideres5 = self::todosLideresAbaixoNoPeriodo($filho4, $arrayPeriodoDoMes)) {
 												foreach ($todosLideres5 as $filho5) {
-													$html .= self::linhaTabelaFatoLider($filho5, $this->getRepositorio(), 6, $quantidade);
+													$dados = self::linhaTabelaFatoLider($filho5, $this->getRepositorio(), 6, $quantidade);
+													$html .= $dados['html'];
+													$quantidade = $dados['quantidade'];
 													if ($todosLideres6 = self::todosLideresAbaixoNoPeriodo($filho5, $arrayPeriodoDoMes)) {
 														foreach ($todosLideres6 as $filho6) {
-															$html .= self::linhaTabelaFatoLider($filho6, $this->getRepositorio(), 7, $quantidade);
+															$dados = self::linhaTabelaFatoLider($filho6, $this->getRepositorio(), 7, $quantidade);
+															$html .= $dados['html'];
+															$quantidade = $dados['quantidade'];
 															if ($todosLideres7 = self::todosLideresAbaixoNoPeriodo($filho6, $arrayPeriodoDoMes)) {
 																foreach ($todosLideres7 as $filho7) {
-																	$html .= self::linhaTabelaFatoLider($filho7, $this->getRepositorio(), 8, $quantidade);
+																	$dados = self::linhaTabelaFatoLider($filho7, $this->getRepositorio(), 8, $quantidade);
+																	$html .= $dados['html'];
+																	$quantidade = $dados['quantidade'];
 																	if ($todosLideres8 = self::todosLideresAbaixoNoPeriodo($filho7, $arrayPeriodoDoMes)) {
 																		foreach ($todosLideres8 as $filho8) {
-																			$html .= self::linhaTabelaFatoLider($filho8, $this->getRepositorio(), 9, $quantidade);
+																			$dados = self::linhaTabelaFatoLider($filho8, $this->getRepositorio(), 9, $quantidade);
+																			$html .= $dados['html'];
+																			$quantidade = $dados['quantidade'];
 																			if ($todosLideres9 = self::todosLideresAbaixoNoPeriodo($filho8, $arrayPeriodoDoMes)) {
 																				foreach ($todosLideres9 as $filho9) {
-																					$html .= self::linhaTabelaFatoLider($filho9, $this->getRepositorio(), 10, $quantidade);
+																					$dados = self::linhaTabelaFatoLider($filho9, $this->getRepositorio(), 10, $quantidade);
+																					$html .= $dados['html'];
+																					$quantidade = $dados['quantidade'];
 																				}
 																			}
 																		}
@@ -242,7 +262,10 @@ class RelatorioController extends CircuitoController {
 		}
 		$html .= '</tr>';
 
-		return $html;
+		$dados = array();
+		$dados['html'] = $html;
+		$dados['quantidade'] = $quantidade;
+		return $dados;
 	}
 
 	public function pessoasFrequentesAction() {
