@@ -13,6 +13,8 @@ $htmlBody .= '<div class="form-group col-lg-12 col-md-12 col-sm-12 col-xs-12">';
 $htmlBody .= '<label for="selecionaEquipe">' . $this->translate('Selecione o Time') . '</label>';
 $htmlBody .= '<select class="form-control" name="idEquipe" id="selecionaEquipe" onChange="selecionarEquipe()">';
 $htmlBody .= '<option value="0" >' . $this->translate(Constantes::$TRADUCAO_SELECIONE) . '</option>';
+$informacao = $this->grupo->getEntidadeAtiva()->infoEntidade() . ' - ' . $this->grupo->getNomeLideresAtivos();
+$htmlBody .= '<option value="' . $this->grupo->getId() . '" >' . $informacao . '</option>';
 foreach ($this->discipulos as $grupoPaiFilhoFilho) {
 	$informacao = $grupoPaiFilhoFilho->getGrupoPaiFilhoFilho()->getEntidadeAtiva()->infoEntidade() . ' - ' . $grupoPaiFilhoFilho->getGrupoPaiFilhoFilho()->getNomeLideresAtivos();
 	$htmlBody .= '<option value="' . $grupoPaiFilhoFilho->getGrupoPaiFilhoFilho()->getId() . '" >' . $informacao . '</option>';
