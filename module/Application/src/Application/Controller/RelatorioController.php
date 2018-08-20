@@ -95,8 +95,8 @@ class RelatorioController extends CircuitoController {
 		$arrayPeriodoDoMes = Funcoes::encontrarPeriodoDeUmMesPorMesEAno(date('m'), date('Y'));
 
 		$todosFilhos = array();
-		//	for ($indiceDeArrays = $arrayPeriodoDoMes[0]; $indiceDeArrays <= $arrayPeriodoDoMes[1]; $indiceDeArrays++) {
-		$indiceDeArrays = -1;
+			for ($indiceDeArrays = $arrayPeriodoDoMes[0]; $indiceDeArrays <= $arrayPeriodoDoMes[1]; $indiceDeArrays++) {
+//		$indiceDeArrays = -1;
 		$grupoPaiFilhoFilhos = $grupo->getGrupoPaiFilhoFilhosAtivos($indiceDeArrays);
 		if ($grupoPaiFilhoFilhos) {
 			foreach ($grupoPaiFilhoFilhos as $grupoPaiFilhoFilho) {
@@ -114,7 +114,7 @@ class RelatorioController extends CircuitoController {
 				}
 			}
 		}
-		//	}
+			}
 
 
 		$quantidade = 0;
