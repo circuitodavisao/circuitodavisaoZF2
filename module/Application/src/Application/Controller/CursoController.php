@@ -932,7 +932,7 @@ class CursoController extends CircuitoController {
 								}
 
 
-								if($filhos4 = $filhos3->getGrupoPaiFilhoFilhosAtivos($periodo)){
+								if($filhos4 = $grupoFilho3->getGrupoPaiFilhoFilhosAtivos($periodo)){
 									foreach($filhos4 as $filho4){
 										$grupoFilho4 = $filho4->getGrupoPaiFilhoFilho();
 
@@ -944,7 +944,7 @@ class CursoController extends CircuitoController {
 												$filhos[] =  $dados;
 											}
 										}
-										if($filhos5 = $filhos4->getGrupoPaiFilhoFilhosAtivos($periodo)){
+										if($filhos5 = $grupoFilho4->getGrupoPaiFilhoFilhosAtivos($periodo)){
 											foreach($filhos5 as $filho5){
 												$grupoFilho5 = $filho5->getGrupoPaiFilhoFilho();
 												if($grupoResponsabilidades = $grupoFilho5->getResponsabilidadesAtivas()){
