@@ -95,7 +95,8 @@ class RelatorioController extends CircuitoController {
 		$arrayPeriodoDoMes = Funcoes::encontrarPeriodoDeUmMesPorMesEAno(date('m'), date('Y'));
 
 		$todosFilhos = array();
-		for ($indiceDeArrays = $arrayPeriodoDoMes[0]; $indiceDeArrays <= $arrayPeriodoDoMes[1]; $indiceDeArrays++) {
+	//	for ($indiceDeArrays = $arrayPeriodoDoMes[0]; $indiceDeArrays <= $arrayPeriodoDoMes[1]; $indiceDeArrays++) {
+		$indiceDeArrays = 0;
 			$grupoPaiFilhoFilhos = $grupo->getGrupoPaiFilhoFilhosAtivos($indiceDeArrays);
 			if ($grupoPaiFilhoFilhos) {
 				foreach ($grupoPaiFilhoFilhos as $grupoPaiFilhoFilho) {
@@ -113,9 +114,10 @@ class RelatorioController extends CircuitoController {
 					}
 				}
 			}
-		}
+	//	}
 
 
+			$quantidade = 0;
 		$html .= '<table class="table table-condensed table-hover bg-light mt15">';
 		$html .= '<thead>';
 		$html .= '<tr>';
@@ -127,34 +129,34 @@ class RelatorioController extends CircuitoController {
 		$html .= '</thead>';
 		$html .= '<tbody>';
 		foreach ($todosFilhos as $filho) {
-			$html .= self::linhaTabelaFatoLider($filho, $this->getRepositorio(), 1);
+			$html .= self::linhaTabelaFatoLider($filho, $this->getRepositorio(), 1, $quantidade);
 			if ($todosLideres1 = self::todosLideresAbaixoNoPeriodo($filho, $arrayPeriodoDoMes)) {
 				foreach ($todosLideres1 as $filho1) {
-					$html .= self::linhaTabelaFatoLider($filho1, $this->getRepositorio(), 2);
+					$html .= self::linhaTabelaFatoLider($filho1, $this->getRepositorio(), 2, $quantidade);
 					if ($todosLideres2 = self::todosLideresAbaixoNoPeriodo($filho1, $arrayPeriodoDoMes)) {
 						foreach ($todosLideres2 as $filho2) {
-							$html .= self::linhaTabelaFatoLider($filho2, $this->getRepositorio(), 3);
+							$html .= self::linhaTabelaFatoLider($filho2, $this->getRepositorio(), 3, $quantidade);
 							if ($todosLideres3 = self::todosLideresAbaixoNoPeriodo($filho2, $arrayPeriodoDoMes)) {
 								foreach ($todosLideres3 as $filho3) {
-									$html .= self::linhaTabelaFatoLider($filho3, $this->getRepositorio(), 4);
+									$html .= self::linhaTabelaFatoLider($filho3, $this->getRepositorio(), 4, $quantidade);
 									if ($todosLideres4 = self::todosLideresAbaixoNoPeriodo($filho3, $arrayPeriodoDoMes)) {
 										foreach ($todosLideres4 as $filho4) {
-											$html .= self::linhaTabelaFatoLider($filho4, $this->getRepositorio(), 5);
+											$html .= self::linhaTabelaFatoLider($filho4, $this->getRepositorio(), 5, $quantidade);
 											if ($todosLideres5 = self::todosLideresAbaixoNoPeriodo($filho4, $arrayPeriodoDoMes)) {
 												foreach ($todosLideres5 as $filho5) {
-													$html .= self::linhaTabelaFatoLider($filho5, $this->getRepositorio(), 6);
+													$html .= self::linhaTabelaFatoLider($filho5, $this->getRepositorio(), 6, $quantidade);
 													if ($todosLideres6 = self::todosLideresAbaixoNoPeriodo($filho5, $arrayPeriodoDoMes)) {
 														foreach ($todosLideres6 as $filho6) {
-															$html .= self::linhaTabelaFatoLider($filho6, $this->getRepositorio(), 7);
+															$html .= self::linhaTabelaFatoLider($filho6, $this->getRepositorio(), 7, $quantidade);
 															if ($todosLideres7 = self::todosLideresAbaixoNoPeriodo($filho6, $arrayPeriodoDoMes)) {
 																foreach ($todosLideres7 as $filho7) {
-																	$html .= self::linhaTabelaFatoLider($filho7, $this->getRepositorio(), 8);
+																	$html .= self::linhaTabelaFatoLider($filho7, $this->getRepositorio(), 8, $quantidade);
 																	if ($todosLideres8 = self::todosLideresAbaixoNoPeriodo($filho7, $arrayPeriodoDoMes)) {
 																		foreach ($todosLideres8 as $filho8) {
-																			$html .= self::linhaTabelaFatoLider($filho8, $this->getRepositorio(), 9);
+																			$html .= self::linhaTabelaFatoLider($filho8, $this->getRepositorio(), 9, $quantidade);
 																			if ($todosLideres9 = self::todosLideresAbaixoNoPeriodo($filho8, $arrayPeriodoDoMes)) {
 																				foreach ($todosLideres9 as $filho9) {
-																					$html .= self::linhaTabelaFatoLider($filho9, $this->getRepositorio(), 10);
+																					$html .= self::linhaTabelaFatoLider($filho9, $this->getRepositorio(), 10, $quantidade);
 																				}
 																			}
 																		}
@@ -205,7 +207,7 @@ class RelatorioController extends CircuitoController {
 		return $todosFilhos;
 	}
 
-	static function linhaTabelaFatoLider($filho, $repositorio, $tabulacao = 0) {
+	static function linhaTabelaFatoLider($filho, $repositorio, $tabulacao = 0, $quantidade) {
 		$html = '';
 		$grupoFilho = $filho->getGrupoPaiFilhoFilho();
 		$dataInativacao = null;
@@ -228,6 +230,7 @@ class RelatorioController extends CircuitoController {
 			$html .= '<td>id: ' . $fatoLider->getId() . ' - ' . $fatoLider->getData_criacaoStringPadraoBrasil() . '</td>';
 			$html .= '<td>' . $fatoLider->getLideres() . '</td>';
 			$html .= '<td>' . ($fatoLider->getData_inativacao() ? $fatoLider->getData_inativacaoStringPadraoBrasil() : 'Null') . '</td>';
+			$quantidade += $fatoLider->getLideres();
 		}
 		if ($celulas = $grupoFilho->getGrupoEventoPorTipoEAtivo(EventoTipo::tipoCelula, 1)) {
 			$html .= '<td>';
