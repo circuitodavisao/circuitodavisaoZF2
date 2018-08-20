@@ -960,7 +960,6 @@ class LancamentoController extends CircuitoController {
 				
 				$fatoParceiroDeDeus = new FatoParceiroDeDeus();
 				$fatoParceiroDeDeus->setNumero_identificador($numeroIdentificador);
-				$fatoParceiroDeDeus->setEvento_id(0);
 				$fatoParceiroDeDeus->setPessoa($pessoa);
 				$fatoParceiroDeDeus->setIndividual($individualFiltrado);
 				$fatoParceiroDeDeus->setCelula($celulaFiltrado);
