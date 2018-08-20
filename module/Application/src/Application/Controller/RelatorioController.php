@@ -96,7 +96,7 @@ class RelatorioController extends CircuitoController {
 
 		$todosFilhos = array();
 		//	for ($indiceDeArrays = $arrayPeriodoDoMes[0]; $indiceDeArrays <= $arrayPeriodoDoMes[1]; $indiceDeArrays++) {
-		$indiceDeArrays = 0;
+		$indiceDeArrays = -1;
 		$grupoPaiFilhoFilhos = $grupo->getGrupoPaiFilhoFilhosAtivos($indiceDeArrays);
 		if ($grupoPaiFilhoFilhos) {
 			foreach ($grupoPaiFilhoFilhos as $grupoPaiFilhoFilho) {
