@@ -178,6 +178,7 @@ class RelatorioController extends CircuitoController {
 		}
 		$html .= '</tbody>';
 		$html .= '</table>';
+		$html .= '<h1>Quantidade: '.$quantidade.'</h1>';
 		return new ViewModel(array('html' => $html));
 	}
 
