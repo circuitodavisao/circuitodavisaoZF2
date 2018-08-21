@@ -26,31 +26,27 @@ class FatoLiderORM extends CircuitoORM {
                 . "SUM(fl.lideres) lideres "
                 . "FROM  " . Constantes::$ENTITY_FATO_LIDER . " fl "
                 . "WHERE "
-                . "fl.numero_identificador #tipoComparacao ?1 "
-                . "AND ((fl.data_criacao <= ?2 AND fl.data_inativacao IS NULL) OR (#inativo)) ";
-        if ($inativo) {
-            $dqlBase = str_replace('#inativo', ' fl.data_criacao <= ?2 AND fl.data_inativacao >= ?2 ', $dqlBase);
-        } else {
-            $dqlBase = str_replace('#inativo', '1 = 2', $dqlBase);
-        }
-        try {
-            if ($tipoComparacao == 1) {
-                $dqlAjustadaTipoComparacao = str_replace('#tipoComparacao', '=', $dqlBase);
-            }
-            if ($tipoComparacao == 2) {
-                $dqlAjustadaTipoComparacao = str_replace('#tipoComparacao', 'LIKE', $dqlBase);
-                $numeroIdentificador .= '%';
-            }
-            $resultadoPeriodo = Funcoes::montaPeriodo($periodo);
-            $dataDoPeriodo = $resultadoPeriodo[3] . '-' . $resultadoPeriodo[2] . '-' . $resultadoPeriodo[1];
-            $dataDoPeriodoFormatada = DateTime::createFromFormat('Y-m-d', $dataDoPeriodo);
-            $result = $this->getEntityManager()->createQuery($dqlAjustadaTipoComparacao)
-                    ->setParameter(1, $numeroIdentificador)
-                    ->setParameter(2, $dataDoPeriodoFormatada)
+				. "fl.numero_identificador #tipoComparacao ?1 "
+				. "AND ((fl.data_criacao <= ?2 AND fl.data_inativacao IS NULL) OR (#inativo)) ";
+
+		$resultadoPeriodo = Funcoes::montaPeriodo($periodo);
+		$dataDoPeriodo = $resultadoPeriodo[3] . '-' . $resultadoPeriodo[2] . '-' . $resultadoPeriodo[1];
+		$dataDoPeriodoFormatada = DateTime::createFromFormat('Y-m-d', $dataDoPeriodo);
+
+		$dataDoPeriodoFinal = $resultadoPeriodo[6] . '-' . $resultadoPeriodo[5] . '-' . $resultadoPeriodo[4];
+		$dqlBase = str_replace('#inativo', ' fl.data_criacao <= ?2 AND fl.data_inativacao >= \'' . $dataDoPeriodoFinal . '\' ', $dqlBase);
+		try {
+			if ($tipoComparacao == 1) {
+				$dqlAjustadaTipoComparacao = str_replace('#tipoComparacao', '=', $dqlBase);
+			}
+			if ($tipoComparacao == 2) {
+				$dqlAjustadaTipoComparacao = str_replace('#tipoComparacao', 'LIKE', $dqlBase);
+				$numeroIdentificador .= '%';
+			}
+			$result = $this->getEntityManager()->createQuery($dqlAjustadaTipoComparacao)
+				->setParameter(1, $numeroIdentificador)
+				->setParameter(2, $dataDoPeriodoFormatada)
                     ->getResult();
-//            echo "<pre>";
-//            var_dump($result);
-//            echo "</pre>";
             return $result;
         } catch (Exception $exc) {
             echo $exc->getMessage();

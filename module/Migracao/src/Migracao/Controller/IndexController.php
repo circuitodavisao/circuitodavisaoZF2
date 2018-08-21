@@ -2248,34 +2248,42 @@ class IndexController extends CircuitoController {
 	}
 
 	function ajustarAction(){
-		$fatosParceiroDeDeus = $this->getRepositorio()->getFatoParceiroDeDeusORM()->buscarTodosRegistrosEntidade();
+		$html = '';
+		$fatosLideres = $this->getRepositorio()->getFatoLiderORM()->buscarTodosRegistrosEntidade();
+		foreach($fatosLideres as $fatoLider){
+			if($fatoLider->verificarSeEstaAtivo()){
+				if($grupo = $this->getRepositorio()->getGrupoORM()->encontrarporid(substr($fatoLider->getNumero_identificador(), strlen($fatoLider->getNumero_identificador())-8))){
+					if($gruposPaiFilhoPai = $grupo->getGrupoPaiFilhoPai()){
+						if($fatoLider->getLideres() > 0){
+							$paiAtivo = false;
+							$dataInativacao = '';
+							foreach($gruposPaiFilhoPai as $grupoPaiFilhoPai){
+								if($grupoPaiFilhoPai->verificarSeEstaAtivo()){
+									$paiAtivo = true;
+								}else{
+									$dataInativacao = $grupoPaiFilhoPai->getData_inativacaoStringPadraoBanco();
+								}
+							}
 
-		$this->getRepositorio()->iniciarTransacao();
-		foreach($fatosParceiroDeDeus as $fatoParceiroDeDeus){
-			if($fatoParceiroDeDeus->verificarSeEstaAtivo()){
-				$numeroIdentificador = $fatoParceiroDeDeus->getNumero_identificador();
-				$idGrupo = substr($numeroIdentificador, (strlen($numeroIdentificador) - 8));
-				$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupo);
-
-				$grupoResponsabilidades = $grupo->getResponsabilidadesAtivas();
-				$fatoParceiroDeDeus->setPessoa_id(intval($grupoResponsabilidades[0]->getPessoa()->getId()));
-				$fatoParceiroDeDeus->setEvento_id(0);
-
-				$fatoParceiroDeDeus->setDataEHoraDeInativacao();
-				$this->getRepositorio()->getFatoParceiroDeDeusORM()->persistir($fatoParceiroDeDeus, false);
-
-				$novoFato = new FatoParceiroDeDeus();
-				$novoFato->setNumero_identificador($numeroIdentificador);
-				$novoFato->setIndividual($fatoParceiroDeDeus->getIndividual());
-				$novoFato->setCelula($fatoParceiroDeDeus->getCelula());
-				$novoFato->setPessoa($grupoResponsabilidades[0]->getPessoa());
-				$novoFato->setData($fatoParceiroDeDeus->getData());
-
-				$this->getRepositorio()->getFatoParceiroDeDeusORM()->persistir($novoFato);
+							if(!$paiAtivo){
+								$html .= '<br /><br />';
+								$html .= '<br />Lider não ativo';
+								$html .= '<br />Id: ' . $fatoLider->getId();
+								$html .= '<br />Numero: ' . $fatoLider->getNumero_identificador();
+								$html .= '<br />Lideres: ' . $fatoLider->getLideres();
+								$html .= '<br />Grupo: ' . $grupo->getId();
+								$html .= '<br />Entidade: ' . $grupo->getEntidadeAtiva()->infoEntidade();
+								$html .= '<br /><span class="label label-danger">Não Ativo</span>';
+								$html .= '<br />DataInativacao: ' . $dataInativacao;
+								$fatoLider->setDataEHoraDeInativacao($dataInativacao);
+								$this->getRepositorio()->getFatoLiderORM()->persistir($fatoLider);
+							}
+						}
+					}
+				}
 			}
 		}
-		$this->getRepositorio()->fecharTransacao();
-		return new ViewModel();
+		return new ViewModel(array('html' => $html));
 	}
 
 }
