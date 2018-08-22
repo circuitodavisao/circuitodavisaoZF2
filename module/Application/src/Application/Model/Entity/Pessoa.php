@@ -18,6 +18,7 @@ use Entidade\Entity\GrupoPessoa;
 use Entidade\Entity\GrupoResponsavel;
 use Entidade\Entity\PessoaHierarquia;
 use Entidade\Entity\TurmaPessoa;
+use Entidade\Entity\FatoFinanceiro;
 use Exception;
 use Zend\InputFilter\InputFilter;
 use Zend\InputFilter\InputFilterAwareInterface;
@@ -84,6 +85,11 @@ class Pessoa extends CircuitoEntity implements InputFilterAwareInterface {
      */
     protected $fatoParceiroDeDeus;
 
+    /**
+     * @ORM\OneToMany(targetEntity="FatoFinanceiro", mappedBy="pessoa", fetch="EXTRA_LAZY") 
+     */
+    protected $fatoFinanceiro;
+
     public function __construct() {
         $this->turmaPessoa = new ArrayCollection();
         $this->grupoResponsavel = new ArrayCollection();
@@ -96,7 +102,8 @@ class Pessoa extends CircuitoEntity implements InputFilterAwareInterface {
         $this->pessoaCursoAcesso = new ArrayCollection();
         $this->turmaAula = new ArrayCollection();
         $this->fatoParceiroDeDeus = new ArrayCollection();
-        $this->setAtualizar_dados('S');
+        $this->fatoFinanceiro = new ArrayCollection();
+	    $this->setAtualizar_dados('S');
     }
 
     /** @ORM\Column(type="string") */
@@ -886,6 +893,14 @@ class Pessoa extends CircuitoEntity implements InputFilterAwareInterface {
 
 	function setFatoParceiroDeDeus($fatoParceiroDeDeus){
 		$this->fatoParceiroDeDeus = $fatoParceiroDeDeus;
+	}
+
+	function getFatoFinanceiro(){
+		return $this->fatoFinanceiro;
+	}
+
+	function setFatoFinanceiro($fatoFinanceiro){
+		$this->fatoFinanceiro = $fatoFinanceiro;
 	}
 
 }
