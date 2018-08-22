@@ -41,6 +41,8 @@ return array(
     'Application\Model\Entity\Pessoa'                            => __DIR__ . '/src/Application/Model/Entity/Pessoa.php',
     'Application\Model\Entity\Solicitacao'                       => __DIR__ . '/src/Application/Model/Entity/Solicitacao.php',
     'Application\Model\Entity\Evento'                            => __DIR__ . '/src/Application/Model/Entity/Evento.php',
+    'Application\Model\Entity\FatoFinanceiroTipo'                => __DIR__ . '/src/Application/Model/Entity/FatoFinanceiroTipo.php',
+    'Application\Model\Entity\FatoFinanceiro'                    => __DIR__ . '/src/Application/Model/Entity/FatoFinanceiro.php',
     'Application\Model\Entity\PessoaHierarquia'                  => __DIR__ . '/src/Application/Model/Entity/PessoaHierarquia.php',
     'Application\Model\Entity\TurmaAula'                         => __DIR__ . '/src/Application/Model/Entity/TurmaAula.php',
     'Application\Model\Entity\Curso'                             => __DIR__ . '/src/Application/Model/Entity/Curso.php',

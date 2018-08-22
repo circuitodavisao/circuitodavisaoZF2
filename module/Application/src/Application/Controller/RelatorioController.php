@@ -557,7 +557,7 @@ class RelatorioController extends CircuitoController {
 		for ($indiceDeArrays = $arrayPeriodoDoMes[0]; $indiceDeArrays <= $arrayPeriodoDoMes[1]; $indiceDeArrays++) {
 			if($tipoRelatorio === self::relatorioParceiroDeDeus){
 				$relatorio[self::dadosPessoais][$indiceDeArrays] 
-					= $repositorio->getFatoParceiroDeDeusORM()->fatosPorNumeroIdentificador($numeroIdentificador,$indiceDeArrays,date('m'),date('Y'), $tipoRelatorioPessoal);
+					= $repositorio->getFatoFinanceiroORM()->fatosPorNumeroIdentificador($numeroIdentificador,$indiceDeArrays,date('m'),date('Y'), $tipoRelatorioPessoal);
 				$soma[self::dadosPessoais][self::parceiroDeDeusValor] += $relatorio[self::dadosPessoais][$indiceDeArrays]['valor'];
 			}else{
 				$relatorio[self::dadosPessoais][$indiceDeArrays] 
@@ -598,10 +598,14 @@ class RelatorioController extends CircuitoController {
 
 				if($tipoRelatorio === self::relatorioParceiroDeDeus){
 					$relatorioDiscipulos[$grupoFilho->getId()][$indiceDeArrays] 
-						= $repositorio->getFatoParceiroDeDeusORM()->fatosPorNumeroIdentificador($numeroIdentificadorFilho,$indiceDeArrays,date('m'),date('Y'), $tipoRelatorioSomado);
+						= $repositorio->getFatoFinanceiroORM()->fatosPorNumeroIdentificador($numeroIdentificadorFilho,$indiceDeArrays,date('m'),date('Y'), $tipoRelatorioSomado);
 					$soma[$grupoFilho->getId()][self::parceiroDeDeusValor] += $relatorioDiscipulos[$grupoFilho->getId()][$indiceDeArrays]['valor'];
 				}else{
-					$relatorioDiscipulos[$grupoFilho->getId()][$indiceDeArrays] = RelatorioController::montaRelatorio($repositorio, $numeroIdentificadorFilho, $indiceDeArrays, $tipoRelatorioSomado, false, $tipoRelatorio);
+					$estaInativo = false;
+					if(!$filho->verificarSeEstaAtivo()){
+						$estaInativo = true;
+					}
+					$relatorioDiscipulos[$grupoFilho->getId()][$indiceDeArrays] = RelatorioController::montaRelatorio($repositorio, $numeroIdentificadorFilho, $indiceDeArrays, $tipoRelatorioSomado, $estaInativo, $tipoRelatorio);
 					if ($tipoRelatorio === RelatorioController::relatorioMembresia ||
 						$tipoRelatorio === RelatorioController::relatorioMembresiaECelula) {
 							if ($relatorioDiscipulos[$grupoFilho->getId()][$indiceDeArrays]['membresiaMeta'] > 0 && $relatorioDiscipulos[$grupoFilho->getId()][$indiceDeArrays]['membresiaMeta'] > 0) {

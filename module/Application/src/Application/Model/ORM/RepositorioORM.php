@@ -56,6 +56,8 @@ class RepositorioORM {
     private $_cursoAcessoORM;
     private $_pessoaCursoAcessoORM;
 	private $_fatoParceiroDeDeus;
+	private $_fatoFinanceiro;
+	private $_fatoFinanceiroTipo;
 
     /**
      * Contrutor
@@ -538,6 +540,27 @@ class RepositorioORM {
         return $this->_fatoParceiroDeDeus;
     }
 
+    /**
+     * Metodo public para obter a instancia do FatoFinanceiro
+     * @return CircuitoORM
+     */
+    public function getFatoFinanceiroORM() {
+        if (is_null($this->_fatoFinanceiro)) {
+			$this->_fatoFinanceiro = new FatoFinanceiroORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_FATO_FINANCEIRO);
+        }
+        return $this->_fatoFinanceiro;
+    }
+
+    /**
+     * Metodo public para obter a instancia do FatoFinanceiroTipo
+     * @return CircuitoORM
+     */
+    public function getFatoFinanceiroTipoORM() {
+        if (is_null($this->_fatoFinanceiroTipo)) {
+			$this->_fatoFinanceiroTipo = new CircuitoORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_FATO_FINANCEIRO_TIPO);
+        }
+        return $this->_fatoFinanceiroTipo;
+    }
 
     /**
      * Metodo public para obter a instancia EntityManager com acesso ao banco de dados

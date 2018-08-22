@@ -35,6 +35,8 @@ use Application\Model\Entity\TurmaPessoaFinanceiro;
 use Application\Model\Entity\TurmaPessoaFrequencia;
 use Application\Model\Entity\TurmaPessoaSituacao;
 use Application\Model\Entity\FatoParceiroDeDeus;
+use Application\Model\Entity\FatoFinanceiro;
+use Application\Model\Entity\FatoFinanceiroTipo;
 use Application\Model\ORM\RepositorioORM;
 use DateTime;
 use Doctrine\ORM\EntityManager;
@@ -2249,36 +2251,37 @@ class IndexController extends CircuitoController {
 
 	function ajustarAction(){
 		$html = '';
-		$fatosLideres = $this->getRepositorio()->getFatoLiderORM()->buscarTodosRegistrosEntidade();
-		foreach($fatosLideres as $fatoLider){
-			if($fatoLider->verificarSeEstaAtivo()){
-				if($grupo = $this->getRepositorio()->getGrupoORM()->encontrarporid(substr($fatoLider->getNumero_identificador(), strlen($fatoLider->getNumero_identificador())-8))){
-					if($gruposPaiFilhoPai = $grupo->getGrupoPaiFilhoPai()){
-						if($fatoLider->getLideres() > 0){
-							$paiAtivo = false;
-							$dataInativacao = '';
-							foreach($gruposPaiFilhoPai as $grupoPaiFilhoPai){
-								if($grupoPaiFilhoPai->verificarSeEstaAtivo()){
-									$paiAtivo = true;
-								}else{
-									$dataInativacao = $grupoPaiFilhoPai->getData_inativacaoStringPadraoBanco();
-								}
-							}
+		$fatos = $this->getRepositorio()->getFatoParceiroDeDeusORM()->buscarTodosRegistrosEntidade();
+		foreach($fatos as $fatoParceiroDeDeus){
+			if($fatoParceiroDeDeus->verificarSeEstaAtivo()){
+				if($grupo = $this->getRepositorio()->getGrupoORM()->encontrarporid(substr($fatoParceiroDeDeus->getNumero_identificador(), strlen($fatoParceiroDeDeus->getNumero_identificador())-8))){
+					$html .= '<br /><br />';
+					$html .= '<br />Id: ' . $fatoParceiroDeDeus->getId();
+					$html .= '<br />Numero: ' . $fatoParceiroDeDeus->getNumero_identificador();
+					$html .= '<br />Grupo: ' . $grupo->getId();
+					$html .= '<br />Entidade: ' . $grupo->getEntidadeAtiva()->infoEntidade();
+					$fatoParceiroDeDeus->setDataEHoraDeInativacao();
+					$this->getRepositorio()->getFatoParceiroDeDeusORM()->persistir($fatoParceiroDeDeus);
 
-							if(!$paiAtivo){
-								$html .= '<br /><br />';
-								$html .= '<br />Lider não ativo';
-								$html .= '<br />Id: ' . $fatoLider->getId();
-								$html .= '<br />Numero: ' . $fatoLider->getNumero_identificador();
-								$html .= '<br />Lideres: ' . $fatoLider->getLideres();
-								$html .= '<br />Grupo: ' . $grupo->getId();
-								$html .= '<br />Entidade: ' . $grupo->getEntidadeAtiva()->infoEntidade();
-								$html .= '<br /><span class="label label-danger">Não Ativo</span>';
-								$html .= '<br />DataInativacao: ' . $dataInativacao;
-								$fatoLider->setDataEHoraDeInativacao($dataInativacao);
-								$this->getRepositorio()->getFatoLiderORM()->persistir($fatoLider);
-							}
-						}
+					if($fatoParceiroDeDeus->getIndividual() > 0){
+						$fatoFinanceiroTipo = $this->getRepositorio()->getFatoFinanceiroTipoORM()->encontrarPorId(FatoFinanceiroTipo::parceiroDeDeusIndividual);
+						$fatoFinanceiro = new FatoFinanceiro();
+						$fatoFinanceiro->setNumero_identificador($fatoParceiroDeDeus->getNumero_identificador());
+						$fatoFinanceiro->setPessoa($grupo->getResponsabilidadesAtivas()[0]->getPessoa());
+						$fatoFinanceiro->setFatoFinanceiroTipo($fatoFinanceiroTipo);
+						$fatoFinanceiro->setValor($fatoParceiroDeDeus->getIndividual());
+						$fatoFinanceiro->setData($fatoParceiroDeDeus->getData());
+						$this->getRepositorio()->getFatoFinanceiroORM()->persistir($fatoFinanceiro);	
+					}
+					if($fatoParceiroDeDeus->getCelula() > 0){
+						$fatoFinanceiroTipo = $this->getRepositorio()->getFatoFinanceiroTipoORM()->encontrarPorId(FatoFinanceiroTipo::parceiroDeDeusCelula);
+						$fatoFinanceiro = new FatoFinanceiro();
+						$fatoFinanceiro->setNumero_identificador($fatoParceiroDeDeus->getNumero_identificador());
+						$fatoFinanceiro->setPessoa($grupo->getResponsabilidadesAtivas()[0]->getPessoa());
+						$fatoFinanceiro->setFatoFinanceiroTipo($fatoFinanceiroTipo);
+						$fatoFinanceiro->setValor($fatoParceiroDeDeus->getCelula());
+						$fatoFinanceiro->setData($fatoParceiroDeDeus->getData());
+						$this->getRepositorio()->getFatoFinanceiroORM()->persistir($fatoFinanceiro);	
 					}
 				}
 			}
