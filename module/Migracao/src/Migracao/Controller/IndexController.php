@@ -2289,4 +2289,65 @@ class IndexController extends CircuitoController {
 		return new ViewModel(array('html' => $html));
 	}
 
+	function reprovarAlunosAction(){
+		$html = '';
+
+		$turmas = $this->getRepositorio()->getTurmaORM()->buscarTodosRegistrosEntidade();
+		$turmasDoIV = array();
+		foreach($turmas as $turma){
+			if($turma->getCurso()->getId() === Curso::INSTITUTO_DE_VENCEDORES){
+				$turmasDoIV[] = $turma;
+			}
+		}
+
+		foreach($turmasDoIV as $turma){
+			if($turmaAulaAtiva = $turma->getTurmaAulaAtiva()){
+				if($turmaPessoas = $turma->getTurmaPessoa()){
+					foreach($turmaPessoas as $turmaPessoa){
+						if($turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getId() === Situacao::ATIVO){
+							$contagemDeFaltas = 0;
+							foreach($turmaAulaAtiva->getAula()->getDisciplina()->getAulaOrdenadasPorPosicao() as $aula){
+								if($aula->getPosicao() < $turmaAulaAtiva->getAula()->getPosicao()){
+									$encontrei = false;
+									if($turmaPessoaAulas = $turmaPessoa->getTurmaPessoaAula()){
+										foreach($turmaPessoaAulas as $turmaPessoaAula){
+											if($turmaPessoaAula->getAula()->getId() === $aula->getId()){
+												$encontrei = true;
+												break;
+											}
+										}
+
+									}
+									if(!$encontrei){
+										$contagemDeFaltas++;
+									}else{
+										if(!$turmaPessoaAula->verificarSeEstaAtivo()){
+											$contagemDeFaltas++;
+										}else{
+											if($turmaPessoaAula->getReposicao() == 'S'){
+												$contagemDeFaltas++;
+											}
+										}
+									}
+								}
+							}
+							if($contagemDeFaltas >= 4){
+								$html .= '<br /><span class="label label-danger">Reprovar</span>';
+								$turmaPessoaSituacaoAtiva = $turmaPessoa->getTurmaPessoaSituacaoAtiva();
+								$turmaPessoaSituacaoAtiva->setDataEHoraDeInativacao();
+								$this->getRepositorio()->getTurmaPessoaSituacaoORM()->persistir($turmaPessoaSituacaoAtiva, $mudatDataDeCriacao = false);
+
+								$turmaPessoaSituacao = new TurmaPessoaSituacao();
+								$turmaPessoaSituacao->setTurma_pessoa($turmaPessoa);
+								$turmaPessoaSituacao->setSituacao($this->getRepositorio()->getSituacaoORM()->encontrarPorId(Situacao::REPROVADO_POR_FALTA));
+								$this->getRepositorio()->getTurmaPessoaSituacaoORM()->persistir($turmaPessoaSituacao);
+							}
+						}
+					}
+				}
+			}
+		}
+		return new ViewModel(array('html' => $html));
+	}
+
 }
