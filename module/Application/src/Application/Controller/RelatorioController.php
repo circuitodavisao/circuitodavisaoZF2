@@ -1050,31 +1050,31 @@ class RelatorioController extends CircuitoController {
 		if ($valor >= RelatorioController::MARGEM_A) {
 			$class = 'success';
 			if ($tipo === 2) {
-				$class = 'Excelente! você está entre os melhores!';
+				$class = 'Excelente! Você está entre os melhores!';
 			}
 		}
 		if (($valor < RelatorioController::MARGEM_A && $valor >= RelatorioController::MARGEM_B)) {
 			$class = 'success';
 			if ($tipo === 2) {
-				$class = 'Parabéns! Continue e logo estará entre os melhores';
+				$class = 'Parabéns! Continue e logo estará entre os melhores!';
 			}
 		}
 		if (($valor < RelatorioController::MARGEM_B && $valor >= RelatorioController::MARGEM_C)) {
 			$class = 'warning';
 			if ($tipo === 2) {
-				$class = 'Muito bom! Você está no caminho continue focado!';
+				$class = 'Muito bom! Você está no caminho, continue focado!';
 			}
 		}
 		if (($valor < RelatorioController::MARGEM_C && $valor >= RelatorioController::MARGEM_D)) {
 			$class = 'danger';
 			if ($tipo === 2) {
-				$class = 'Vamos lá a persistência é o caminho, continue!';
+				$class = 'Vamos lá! A persistência é o caminho, continue!';
 			}
 		}
 		if ($valor <= RelatorioController::MARGEM_D) {
 			$class = 'dark';
 			if ($tipo === 2) {
-				$class = 'Vamos lá a persistência é o caminho, continue!';
+				$class = 'Vamos lá! A persistência é o caminho, continue!';
 			}
 		}
 		return $class;

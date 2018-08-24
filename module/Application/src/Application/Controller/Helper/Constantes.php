@@ -95,7 +95,7 @@ class Constantes {
     public static $TRADUCAO_ESQUECI_MEU_USUARIO = ' I know my password, but I do not remember my login.';
     public static $TRADUCAO_ENVIAR_EMAIL = 'Send email';
     public static $TRADUCAO_VERIFICAR_USUARIO = 'Check User';
-    public static $TRADUCAO_PERGUNTA_ESQUECI_SENHA = 'Because you can not enter the View of the Circuit?';
+    public static $TRADUCAO_PERGUNTA_ESQUECI_SENHA = 'Why you can not enter the View of the Circuit?';
     public static $TRADUCAO_TITULO_ESQUECI_MINHA_SENHA = 'We can help you reset your password. First, enter your email and follow the instructions.';
     public static $TRADUCAO_INFORME_2_DIGITO_CPF_DATA_NASCIMENTO = 'Tell us what the last 2 digits of your <b>Social Security number</b> and <b>date of birth</b>.';
     public static $TRADUCAO_SOLICITACAO_ENVIADA_AS = 'request sent at';
@@ -354,6 +354,7 @@ class Constantes {
     public static $PAGINA_LIDERES_REVISAO = 'LideresRevisao';
     public static $PAGINA_LISTAGEM_LIDERES = 'ListagemLideres';
     public static $PAGINA_LISTAGEM_REVISIONISTAS = 'ListagemRevisionistas';
+    public static $PAGINA_LISTAGEM_REVISIONISTAS_TITULO = 'Listagem de Revisionistas';
     public static $PAGINA_CONSULTAR_FICHA = 'ConsultarFicha';
     public static $PAGINA_FUNCOES = 'Funcoes';
     public static $PAGINA_MUDAR_ATENDIMENTO = 'MudarAtendimento';

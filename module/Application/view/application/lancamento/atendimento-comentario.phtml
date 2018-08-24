@@ -13,10 +13,10 @@ $formulario->setAttribute(Constantes::$ACTION, $this->url(Constantes::$ROUTE_LAN
 echo $this->form()->openTag($formulario);
 echo $this->templateFormularioTopo('Cadastro de Coment&aacute;rio no Atendimento');
 ?>
-<div class="panel-body bg-light">  
+<div class="panel-body bg-light">
     <?php
     echo $this->divMensagens();
-    echo $this->inputFormularioSimples('Comet&aacute;rio', $formulario->get('comentario'));
+    echo $this->inputFormularioSimples('Coment&aacute;rio', $formulario->get('comentario'));
 
     $funcaoVerificarCadastroPessoa = $this->funcaoOnClick('validarComentario(this.form)');
     echo $this->botaoSimples(Constantes::$TRADUCAO_CADASTRAR, $funcaoVerificarCadastroPessoa);
@@ -52,7 +52,7 @@ echo $this->form()->closeTag();
 
         if (temErro) {
             divMensagens
-                    .html('Preenchao seguintes campos corretamente:' + mensagem)
+                    .html('Preencha os seguintes campos corretamente: ' + mensagem)
                     .removeClass('alert-success')
                     .removeClass('hidden')
                     .addClass('alert-danger');

@@ -348,7 +348,7 @@ class CadastroController extends CircuitoController {
 		}
 		if ($pagina == Constantes::$PAGINA_LISTAGEM_REVISIONISTAS) {
 			$listagemDeEventos = $grupo->getGrupoEventoRevisao();
-			$tituloDaPagina = Constantes::$PAGINA_LISTAGEM_REVISIONISTAS;
+			$tituloDaPagina = Constantes::$PAGINA_LISTAGEM_REVISIONISTAS_TITULO;
 			$tipoEvento = 13;
 			$extra = $grupo->getId();
 		}
@@ -2440,7 +2440,7 @@ class CadastroController extends CircuitoController {
 
 		$formulario = new SelecionarCrachaForm('SelecionarCracha');
 		return new ViewModel(array(
-			'relatorio' => $relatorio, 
+			'relatorio' => $relatorio,
 			'formulario' => $formulario,
 			'quantidadeHomensRevisionistas' => $quantidadeHomensRevisionistas,
 			'quantidadeMulheresRevisionistas' => $quantidadeMulheresRevisionistas,
