@@ -46,7 +46,7 @@ if($this->filtrado){
 			$html .= '</tr>';
 			$html .= '<tr>';
 			$html .= '<th class="text-center">Situa&ccedil;&atilde;o</th>';
-			$html .= '<th class="text-center">Matricula</th>';
+			$html .= '<th class="text-center">Matrícula</th>';
 			$html .= '<th class="text-center">Aluno</th>';
 			$html .= '<th class="text-center">Equipe</th>';
 
@@ -89,7 +89,7 @@ if($this->filtrado){
 						$nomeEquipe = CursoController::nomeEquipeTurmaPessoa($turmaPessoa);
 
 						$mostrarSituacao = false;
-						if($this->postado['idSituacao'] == 0 && ($turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getId() === Situacao::ATIVO || 
+						if($this->postado['idSituacao'] == 0 && ($turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getId() === Situacao::ATIVO ||
 						$turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getId() === Situacao::ESPECIAL)){
 							$mostrarSituacao = true;
 						}else{
@@ -105,7 +105,7 @@ if($this->filtrado){
 								$mostrarSub = true;
 							}else{
 								$mostrarSub = CursoController::verificarSeParticipaDeUmaSub($turmaPessoa, $this->postado['idSub']);
-							}	
+							}
 							if($mostrarSub){
 
 								switch ($turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getId()) {

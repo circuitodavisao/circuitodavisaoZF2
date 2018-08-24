@@ -12,7 +12,7 @@ $form->prepare();
 $form->setAttribute(Constantes::$ACTION, $this->url(Constantes::$ROUTE_CURSO, array(Constantes::$ACTION => 'ReentradaFinalizar')));
 echo $this->templateFormularioTopo($this->titulo);
 echo $this->form()->openTag($form);
-?>  
+?>
 <div class="panel-body bg-light">
     <?php
     echo $this->divMensagens();
@@ -27,7 +27,7 @@ echo $this->form()->openTag($form);
     echo $this->inputFormularioSimples(Constantes::$TRADUCAO_SEXO, $form->get(Constantes::$INPUT_NUCLEO_PERFEITO), null, 3);
     echo $this->inputFormularioSimples('SELECIONE A TURMA', $form->get(Constantes::$INPUT_ID_TURMA), null, 2);
     echo $this->inputFormularioSimples('SELECIONE O LÍDER', $form->get(Constantes::$INPUT_ID_GRUPO), null, 2);
-    ?> 
+    ?>
 </div>
 <!-- end .form-body section -->
 <div class="panel-footer text-right">
@@ -42,7 +42,7 @@ echo $this->form()->openTag($form);
     $funcaoVerificarCadastroPessoa = $this->funcaoOnClick('validar(this.form)');
     echo $this->botaoSimples(Constantes::$TRADUCAO_CADASTRAR, $funcaoVerificarCadastroPessoa);
     ?>
-</div> 
+</div>
 <?php
 echo $this->templateFormularioRodape();
 echo $this->form()->closeTag();
@@ -94,7 +94,7 @@ echo $this->layoutJSCadastrarPessoaRevisao;
             if (mensagem !== '') {
                 mensagem += ', ';
             }
-            mensagem += 'Ultimo Nome';
+            mensagem += 'Último Nome';
         } else {
             let reg = /^[A-Za-záàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ ]+$/;
             if (!reg.exec(ultimoNome)) {
@@ -102,14 +102,14 @@ echo $this->layoutJSCadastrarPessoaRevisao;
                 if (mensagem !== '') {
                     mensagem += ', ';
                 }
-                mensagem += 'Ultimo Nome Inválido';
+                mensagem += 'Último Nome Inválido';
             }
             if (ultimoNome.length > 15) {
                 temErro = true;
                 if (mensagem !== '') {
                     mensagem += ', ';
                 }
-                mensagem += 'Ultimo Nome pode ter no máximo 15 caracteres';
+                mensagem += 'Último Nome pode ter no máximo 15 caracteres';
             }
         }
 

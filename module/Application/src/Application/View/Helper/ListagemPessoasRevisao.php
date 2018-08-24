@@ -40,7 +40,7 @@ class ListagemPessoasRevisao extends AbstractHelper {
 			$html .= '</div>';
 		} else {
 			$html .= '<div id="painelAlunos">';
-			$html .= $this->view->templateFormularioTopo('Selecione os Alunos que participarão da turma');
+			$html .= $this->view->templateFormularioTopo('Selecione os alunos que participarão da turma');
 			$html .= '<div class="panel-body bg-light">';
 			$html .= '<input id="fooFilter" type="text" class="form-control" placeholder="Filtro">';
 			$html .= '<table class="table table-condensed table-hover bg-light mt15 footable" data-filter="#fooFilter">';

@@ -87,7 +87,7 @@ $html .= '<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">';
 $html .= '<div class="panel panel-default">';
 $html .= '<div class="panel-heading" style="padding: 0px 8px;">Nova Consulta</div>';
 $html .= '<div class="panel-body">';
-$html .= '<input type="number" id="matricula" class="mb10 form-control" placeholder="Mátricula"  />';
+$html .= '<input type="number" id="matricula" class="mb10 form-control" placeholder="Matrícula"  />';
 $html .=  $this->botaoSimples('Pesquisar', $this->funcaoOnClick('acessarMatricula()'), BotaoSimples::botaoImportante, BotaoSimples::larguraMaxima);
 $html .= '</div>';
 $html .= '</div>';
@@ -99,10 +99,10 @@ $html .= '<div class="table-responsive">';
 $html .= '<table class="table table-condesed">';
 $html .= '<tbody>';
 if ($this->turmaPessoa->verificarSeEstaAtivo()) {
-	$html .= '<tr><td>Matricula</td><td>' . $botaoGerarCarterinha . '</td></tr>';
+	$html .= '<tr><td>Matrícula</td><td>' . $botaoGerarCarterinha . '</td></tr>';
 	$html .= '<tr><td>Nome</td><td>' . $botaoMudarNome . '</td></tr>';
 } else {
-	$html .= '<tr><td>Matricula</td><td>' . str_pad($this->turmaPessoa->getId(), 10, 0, STR_PAD_LEFT) . '</td></tr>';
+	$html .= '<tr><td>Matrícula</td><td>' . str_pad($this->turmaPessoa->getId(), 10, 0, STR_PAD_LEFT) . '</td></tr>';
 	$html .= '<tr><td>Nome</td><td>' . $this->turmaPessoa->getPessoa()->getNome() . '</td></tr>';
 }
 $html .= '<tr><td>Equipe</td><td>' . CursoController::nomeEquipeTurmaPessoa($this->turmaPessoa) . '</td></tr>';

@@ -14,7 +14,7 @@ echo $this
 	->setSeparator(' - ')
 	->setAutoEscape(false)
 	;
-?> 
+?>
 		<!-- Meta Head -->
 <?php
 echo $this
@@ -30,7 +30,7 @@ echo $this
 <div align="center">
 <filedset style="width: 500px">
 <legend>Recibo de Pagamento</legend>
-<p>Matricula: <?php echo $this->turmaPessoa->getId(); ?></p>
+<p>Matrícula: <?php echo $this->turmaPessoa->getId(); ?></p>
 <p>Aluno: <?php echo $this->turmaPessoa->getPessoa()->getNome(); ?></p>
 <p>Time: <?php echo $this->turmaPessoa->getPessoa()->getGrupoPessoaAtivo()->getGrupo()->getEntidadeAtiva()->infoEntidade(); ?></p>
 <p>Referente a: <?php echo $this->disciplina->getNome(); ?></p>
@@ -41,7 +41,7 @@ echo $this
 <hr />
 <filedset style="width: 500px">
 <legend>Recibo de Pagamento</legend>
-<p>Matricula: <?php echo $this->turmaPessoa->getId(); ?></p>
+<p>Matrícula: <?php echo $this->turmaPessoa->getId(); ?></p>
 <p>Aluno: <?php echo $this->turmaPessoa->getPessoa()->getNome(); ?></p>
 <p>Time: <?php echo $this->turmaPessoa->getPessoa()->getGrupoPessoaAtivo()->getGrupo()->getEntidadeAtiva()->infoEntidade(); ?></p>
 <p>Referente a: <?php echo $this->disciplina->getNome(); ?></p>
