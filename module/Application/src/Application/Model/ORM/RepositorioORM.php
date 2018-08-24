@@ -279,11 +279,11 @@ class RepositorioORM {
 
     /**
      * Metodo public para obter a instancia do TurmaPessoaAulaORM
-     * @return CircuitoORM
+     * @return TurmaPessoaAulaORM
      */
     public function getTurmaPessoaAulaORM() {
         if (is_null($this->_turmaPessoaAulaORM)) {
-            $this->_turmaPessoaAulaORM = new CircuitoORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_TURMA_PESSOA_AULA);
+            $this->_turmaPessoaAulaORM = new TurmaPessoaAulaORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_TURMA_PESSOA_AULA);
         }
         return $this->_turmaPessoaAulaORM;
     }
