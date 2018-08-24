@@ -808,6 +808,7 @@ class CursoController extends CircuitoController {
 		$filtrado = false;
 		$postado = array();
 		$subs = null;
+		$filhos = array();
 
 		if($request->isPost()){
 			$filtrado = true;
@@ -822,7 +823,6 @@ class CursoController extends CircuitoController {
 				$grupoEquipe = $this->getRepositorio()->getGrupoORM()->encontrarPorId($postado['idEquipe']);
 				$grupoPaiFilhoFilhosEquipe = $grupoEquipe->getGrupoPaiFilhoFilhosAtivos(0);
 
-				$filhos = array();
 				foreach($grupoPaiFilhoFilhosEquipe as $grupoPaiFilho){
 					$grupoFilho = $grupoPaiFilho->getGrupoPaiFilhoFilho();
 					$dados = array();
@@ -846,6 +846,7 @@ class CursoController extends CircuitoController {
 			'filhos' => $grupoPaiFilhoFilhos,
 			'situacoes' => $situacoes,
 			'subs' => $filhos,
+			'repositorio' => $this->getRepositorio(),
 		));
 		return $view;
 	}
@@ -982,7 +983,6 @@ class CursoController extends CircuitoController {
 		$sessao = new Container(Constantes::$NOME_APLICACAO);
 		$entidade = CircuitoController::getEntidadeLogada($this->getRepositorio(), $sessao);
 		$grupo = $entidade->getGrupo();
-		$turmas = $entidade->getGrupo()->getGrupoIgreja()->getTurma();
 		$formulario = new SelecionarCarterinhasForm('SelecionarCarterinhas');
 
 		$grupoPaiFilhoFilhos = $grupo->getGrupoIgreja()->getGrupoPaiFilhoFilhosAtivos(0);
@@ -996,6 +996,9 @@ class CursoController extends CircuitoController {
 			$post = $request->getPost();
 			$postado['idTurma'] = $post['idTurma'];
 			$postado['idEquipe'] = $post['idEquipe'];
+			$turmas[] = $this->getRepositorio()->getTurmaORM()->encontrarPorId($postado['idTurma']);
+		}else{
+			$turmas = $entidade->getGrupo()->getGrupoIgreja()->getTurma();
 		}
 
 		$view = new ViewModel(array(
@@ -1481,14 +1484,17 @@ class CursoController extends CircuitoController {
 		return $relatorio;
 	}
 
-	public static function nomeEquipeTurmaPessoa($turmaPessoa) {
+	public static function nomeEquipeTurmaPessoa($turmaPessoa, $grupoPessoa = null) {
 		$nomeEquipe = '';
-		if ($turmaPessoa->getPessoa()->getGrupoPessoaAtivo()) {
-			if ($turmaPessoa->getPessoa()->getGrupoPessoaAtivo()->getGrupo()->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::igreja) {
-				$nomeEquipe = $turmaPessoa->getPessoa()->getGrupoPessoaAtivo()->getGrupo()->getEntidadeAtiva()->getNome();
-			} else {
-				$nomeEquipe = $turmaPessoa->getPessoa()->getGrupoPessoaAtivo()->getGrupo()->getEntidadeAtiva()->infoEntidade();
-			}
+		$grupoPessoaAtivo = null;
+		if($grupoPessoa === null){
+			$grupoPessoaAtivo = $turmaPessoa->getPessoa()->getGrupoPessoaAtivo();
+		}else{
+			$grupoPessoaAtivo = $grupoPessoa;
+		}
+
+		if($grupoPessoaAtivo){
+			$nomeEquipe = $grupoPessoaAtivo->getGrupo()->getEntidadeAtiva()->infoEntidade();
 		}
 		return $nomeEquipe;
 	}
