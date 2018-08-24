@@ -69,8 +69,7 @@ class ListagemTurmas extends AbstractHelper {
 				$html .= '<td class="text-center hidden-xs">';
 				$nomeAulaAberta = '<span class="label label-';
 				if ($turma->getTurmaAulaAtiva()) {
-					$nomeAulaAberta .= 'success">'.$turma->getTurmaAulaAtiva()->getAula()->getNome();
-				} else {
+					$nomeAulaAberta .= 'success">'.$turma->getTurmaAulaAtiva()->getAula()->getDisciplina()->getNome() . ' - AULA ' . $turma->getTurmaAulaAtiva()->getAula()->getPosicao();				} else {
 					$nomeAulaAberta .= 'danger">SEM AULA ABERTA';
 				}
 				$html .= $nomeAulaAberta.'</span>';

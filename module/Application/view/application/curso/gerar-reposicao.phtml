@@ -39,24 +39,20 @@ foreach ($this->reposicoes as $reposicao) {
 	$pessoa = $this->repositorio->getPessoaORM()->encontrarPorId($reposicao['idPessoa']);
 	$grupoEquipe = $this->repositorio->getGrupoORM()->encontrarPorId($reposicao['idGrupoEquipe']);
 
-	$labelAula = $aula->getDisciplina()->getNome() . ' - ' . $aula->getNome();
+	$labelAula = $aula->getDisciplina()->getNome() . ' - AULA ' . $aula->getPosicao() . ' - ' . $aula->getNome();
 	$nomePessoa = $pessoa->getNome();
-	$nomeEquipe = $grupoEquipe->getEntidadeAtiva()->getNome();
+	$nomeEquipe = $grupoEquipe->getEntidadeAtiva()->infoEntidade();
 
 	$codigoDeBarra = str_pad($reposicao['idTurmaPessoa'], 10, 0, STR_PAD_LEFT) . str_pad($reposicao['idAula'], 10, 0, STR_PAD_LEFT);
 	echo '<div id="bcTarget' . $codigoDeBarra . '"  class="float-right"></div>';
 	echo '<script type="text/javascript">$("#bcTarget' . $codigoDeBarra . '").barcode("' . $codigoDeBarra . '", "code93", {barWidth:2, barHeight:40}); </script>';
 ?>
 			<div align="center">
-				<p>REPOSI&Ccedil;&Atilde;O DE AULA</p>
+				<p>REPOSI&Ccedil;&Atilde;O DE AULA - MATRÍCULA: <?php echo $reposicao['idTurmaPessoa']; ?></p>
 				<p>EQUIPE: <?php echo "$nomeEquipe"; ?> - <?php echo $nomePessoa; ?> - DATA: <?php echo date("d/m/Y"); ?></p>
 				<p><?php echo $labelAula; ?></p>
 				<div>
 					<fieldset>
-						_______________________________________________________________________________________________<br />
-						_______________________________________________________________________________________________<br />
-						_______________________________________________________________________________________________<br />
-						_______________________________________________________________________________________________<br />
 						_______________________________________________________________________________________________<br />
 						_______________________________________________________________________________________________<br />
 						_______________________________________________________________________________________________<br />
@@ -87,7 +83,7 @@ foreach ($this->reposicoes as $reposicao) {
 				<p>__________________________________________<br />ASSINATURA ALUNO</p>
 				<br />
 				<fieldset>
-					<p>COMPROVANTE DE ENTREGA - VIA L&Iacute;DER</p>           
+					<p>COMPROVANTE DE ENTREGA - VIA L&Iacute;DER - MATRÍCULA: <?php echo $reposicao['idTurmaPessoa']; ?></p>
 					<p>EQUIPE: <?php echo "$nomeEquipe"; ?> - <?php echo $nomePessoa; ?> - DATA: <?php echo date("d/m/Y"); ?></p>
 					<p><?php echo $labelAula; ?></p> 
 					<p>RECEBIDO POR:_________________________________________</p>

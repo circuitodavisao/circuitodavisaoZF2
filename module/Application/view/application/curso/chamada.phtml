@@ -135,9 +135,9 @@ if($this->filtrado){
 									($this->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::COORDENADOR ||
 									$this->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::SUPERVISOR ||
 									$this->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::FACILITADOR)) {
-										$html .= '<td><a target="_blanck" href="/cursoAluno/' . $turmaPessoa->getId() . '" class="btn btn-xs btn-primary" >' . str_pad($turmaPessoa->getId(), 8, 0, STR_PAD_LEFT) . '</a></td>';
+										$html .= '<td class="text-center"><a target="_blanck" href="/cursoAluno/' . $turmaPessoa->getId() . '" class="btn btn-xs btn-primary" >' . $turmaPessoa->getId(). '</a></td>';
 									}else{
-										$html .= '<td><span class="label label-default">'.$turmaPessoa->getId().'</span></td>';
+										$html .= '<td class="text-center"><span class="label label-default">'.$turmaPessoa->getId().'</span></td>';
 									}
 								$html .= '<td>'. $turmaPessoa->getPessoa()->getNome() . '</td>';
 								$html .= '<th class="text-center">' . $nomeEquipe . '</th>';

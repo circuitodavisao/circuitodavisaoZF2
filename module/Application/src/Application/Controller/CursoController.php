@@ -1667,7 +1667,9 @@ class CursoController extends CircuitoController {
 
 			$view = new ViewModel(array(
 				'turmaPessoa' => $turmaPessoa,
-				'situacoes' => $situacoes
+				'situacoes' => $situacoes,
+				'pessoa' => $pessoa,
+				'entidade' => $entidade,
 			));
 			return $view;
 		}else{
