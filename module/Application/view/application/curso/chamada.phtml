@@ -88,6 +88,9 @@ if($this->filtrado){
 							}
 						}
 					}
+					if(!turmaPessoa->verificarSeEstaAtivo()){
+						$mostrar = false;
+					}
 					if ($mostrar) {
 						$nomeEquipe = CursoController::nomeEquipeTurmaPessoa($turmaPessoa, $grupoPessoaAtivo);
 
