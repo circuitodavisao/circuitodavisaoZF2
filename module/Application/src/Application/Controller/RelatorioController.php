@@ -798,7 +798,6 @@ class RelatorioController extends CircuitoController {
 				}
 
 				/* gambiara da sede */
-
 				if($grupo->getId() === 1225){
 					switch($grupoFilho->getId()){
 					case 1226://invictus
@@ -847,21 +846,19 @@ class RelatorioController extends CircuitoController {
 						$valorMeta = 600;
 						break;
 					case 2362://turbo 18 
-						$valorMeta = 0;
+						$valorMeta = 3750;
 						break;
 					case 2447://turbo 17
-						$valorMeta = 0;
+						$valorMeta = 3750;
 						break;
 					case 2507:// invictus 3
-						$valorMeta = 0;
+						$valorMeta = 1750;
 						break;
 					}
 				}
 
-					$relatorioDiscipulos[$grupoFilho->getId()]['parceiroDeDeusMeta'] = $valorMeta;
-					$relatorioDiscipulos[$grupoFilho->getId()]['parceiroDeDeusPerformance'] = $relatorioDiscipulos[$grupoFilho->getId()]['somaValor'] /	$relatorioDiscipulos[$grupoFilho->getId()]['parceiroDeDeusMeta'] * 100;
-
-
+				$relatorioDiscipulos[$grupoFilho->getId()]['parceiroDeDeusMeta'] = $valorMeta;
+				$relatorioDiscipulos[$grupoFilho->getId()]['parceiroDeDeusPerformance'] = $relatorioDiscipulos[$grupoFilho->getId()]['somaValor'] /	$relatorioDiscipulos[$grupoFilho->getId()]['parceiroDeDeusMeta'] * 100;
 			}
 		}
 
