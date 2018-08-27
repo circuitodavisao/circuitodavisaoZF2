@@ -7,6 +7,8 @@ use Application\Controller\Helper\Funcoes;
 use Application\Model\Entity\EventoTipo;
 use Application\Model\Entity\Grupo;
 use Application\Model\Entity\GrupoPessoaTipo;
+use Application\Model\Entity\Curso;
+use Application\Model\Entity\EntidadeTipo;
 use Application\Model\Helper\FuncoesEntidade;
 use Application\Model\ORM\RepositorioORM;
 use Doctrine\ORM\EntityManager;
@@ -430,18 +432,26 @@ class RelatorioController extends CircuitoController {
 		$idEntidadeAtual = $sessao->idEntidadeAtual;
 		$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
 		$grupoIgreja = $entidade->getGrupo()->getGrupoIgreja();
-	
 
+		$turmasInstitutoDeVencedores = null;
 		$relatorio = array();
 		if($turmas = $grupoIgreja->getTurma()){
-
 			foreach($turmas as $turma){
-				if($turma->verificarSeEstaAtivo()){
+				if($turma->verificarSeEstaAtivo() && $turma->getCurso()->getId() === Curso::INSTITUTO_DE_VENCEDORES){
+					$turmasInstitutoDeVencedores[] = $turma;
 					if($turmaPessoas = $turma->getTurmaPessoa()){
 						foreach($turmaPessoas as $turmaPessoa){
 							if($turmaPessoa->verificarSeEstaAtivo()){
 								if($grupoPessoa = $turmaPessoa->getPessoa()->getGrupoPessoaAtivo()){
+									if($entidade->GetEntidadeTipo()->getId() === EntidadeTipo::igreja){
 									$relatorio[$grupoPessoa->getGrupo()->getGrupoEquipe()->getEntidadeAtiva()->getNome()][$turma->getId()][$turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getNome()]++;
+									}
+									if($entidade->GetEntidadeTipo()->getId() === EntidadeTipo::equipe){
+										if($grupoPessoa->getGrupo()->getGrupoEquipe()->getId() === $entidade->getGrupo()->getid()){
+											$informacao = $grupoPessoa->getGrupo()->getGrupoSubEquipe()->getEntidadeAtiva()->infoEntidade() . ' - ' . $grupoPessoa->getGrupo()->getGrupoSubEquipe()->getNomeLideresAtivos();
+										$relatorio[$informacao][$turma->getId()][$turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getNome()]++;
+										}
+									}
 								}								
 							}
 						}
@@ -449,7 +459,10 @@ class RelatorioController extends CircuitoController {
 				}
 			}
 		}
-		return new ViewModel(array('relatorio'=>$relatorio));
+		return new ViewModel(array(
+			'relatorio'=>$relatorio,
+			'turmas' => $turmasInstitutoDeVencedores,
+		));
 	}
 
 	public function buscarDadosGrupoAction() {
