@@ -600,6 +600,7 @@ class RelatorioController extends CircuitoController {
 					$relatorioDiscipulos[$grupoFilho->getId()][$indiceDeArrays] 
 						= $repositorio->getFatoFinanceiroORM()->fatosPorNumeroIdentificador($numeroIdentificadorFilho,$indiceDeArrays,date('m'),date('Y'), $tipoRelatorioSomado);
 					$soma[$grupoFilho->getId()][self::parceiroDeDeusValor] += $relatorioDiscipulos[$grupoFilho->getId()][$indiceDeArrays]['valor'];
+
 				}else{
 					$estaInativo = false;
 					if(!$filho->verificarSeEstaAtivo()){
@@ -711,11 +712,6 @@ class RelatorioController extends CircuitoController {
 			if ($tipoRelatorio === RelatorioController::relatorioCelulasDeElite) {
 				$relatorio[self::dadosPessoais]['mediaCelulaDeElitePerformance'] = $soma[self::dadosPessoais][self::celulaDeElitePerformance] / $diferencaDePeriodos;
 			}
-			$relatorio[self::dadosPessoais]['lideres'] = 'MEU';
-			$relatorio[self::dadosPessoais]['lideresFotos'] = $grupo->getFotosLideresAtivos();
-			$relatorio[self::dadosPessoais]['lideresEntidade'] = $grupo->getEntidadeAtiva()->infoEntidade();
-			$relatorio[self::dadosPessoais]['grupo'] = $grupo->getId();
-
 			$somaTotal['mediaMembresiaCulto'] = $relatorio[self::dadosPessoais]['mediaMembresiaCulto'];
 			$somaTotal['mediaMembresiaArena'] = $relatorio[self::dadosPessoais]['mediaMembresiaArena'];
 			$somaTotal['mediaMembresiaDomingo'] = $relatorio[self::dadosPessoais]['mediaMembresiaDomingo'];
@@ -724,7 +720,16 @@ class RelatorioController extends CircuitoController {
 			$somaTotal['mediaCelulaRealizadas'] += $relatorio[self::dadosPessoais]['mediaCelulaRealizadas'];
 		}else{
 			$relatorio[self::dadosPessoais]['somaValor'] = $soma[self::dadosPessoais][self::parceiroDeDeusValor];
+			if($grupo->getId() === 1 || $grupo->getId() === 1225){
+				$relatorio[self::dadosPessoais]['parceiroDeDeusMeta'] = 0;
+			}
+			$somaTotal['parceiroDeDeusMeta'] = 0;
 		}
+		$relatorio[self::dadosPessoais]['lideres'] = 'MEU';
+		$relatorio[self::dadosPessoais]['lideresFotos'] = $grupo->getFotosLideresAtivos();
+		$relatorio[self::dadosPessoais]['lideresEntidade'] = $grupo->getEntidadeAtiva()->infoEntidade();
+		$relatorio[self::dadosPessoais]['grupo'] = $grupo->getId();
+
 		foreach ($todosFilhos as $filho) {
 			$grupoFilho = $filho->getGrupoPaiFilhoFilho();
 			if($tipoRelatorio !== self::relatorioParceiroDeDeus){
@@ -740,6 +745,123 @@ class RelatorioController extends CircuitoController {
 				}
 			}else{
 				$relatorioDiscipulos[$grupoFilho->getId()]['somaValor'] += $soma[$grupoFilho->getId()][self::parceiroDeDeusValor];
+				/* Gambiara da ceilandia */
+				if($grupo->getId() === 1){
+					$valorMeta = 0;
+					switch($grupoFilho->getId()){
+					case 2: // bkb
+						$valorMeta = 6340;
+						break;
+					case 216: // hunters
+						$valorMeta = 4500;
+						break;
+					case 347: // spartans
+						$valorMeta = 3621;
+						break;
+					case 529:// falcons
+						$valorMeta = 9181;
+						break;
+					case 713://galatas
+						$valorMeta = 2500;
+						break;
+					case 757:// power
+						$valorMeta = 2500;
+						break;
+					case 794: // fire
+						$valorMeta = 1926;
+						break;
+					case 830: // fight
+						$valorMeta = 6708;
+						break;
+					case 1024://titans
+						$valorMeta = 1870;
+						break;
+					case 1049://bonde
+						$valorMeta = 2000;
+						break;
+					case 1085: //save
+						$valorMeta = 500;
+						break;
+					case 1093://sucesso
+						$valorMeta = 0;
+						break;
+					case 1103: // falcons 2
+						$valorMeta = 2000;
+						break;
+					case 1142: // figth 5
+						$valorMeta = 2000;
+						break;
+					case 1199: // yuri e sarah
+						$valorMeta = 0;
+						break;
+					}
+				}
+
+				/* gambiara da sede */
+
+				if($grupo->getId() === 1225){
+					switch($grupoFilho->getId()){
+					case 1226://invictus
+						$valorMeta = 7900;
+						break;
+					case 1398://profetas
+						$valorMeta = 23224;
+						break;
+					case 1543:// leoes
+						$valorMeta = 5200;
+						break;
+					case 1683://turbo
+						$valorMeta = 14500;
+						break;
+					case 1846://onda
+						$valorMeta = 4500;
+						break;
+					case 1982://doc
+						$valorMeta = 1000;
+						break;
+					case 1996://plenos
+						$valorMeta = 4240;
+						break;
+					case 2039://conexao
+						$valorMeta = 0;
+						break;
+					case 2054://atos
+						$valorMeta = 4500;
+						break;
+					case 2151://rocks
+						$valorMeta = 2180;
+						break;
+					case 2193://combate
+						$valorMeta = 3500;
+						break;
+					case 2239://a liga
+						$valorMeta = 1550;
+						break;
+					case 2267://life
+						$valorMeta = 3150;
+						break;
+					case 2293://demalso
+						$valorMeta = 0;
+						break;
+					case 2294:// swat
+						$valorMeta = 600;
+						break;
+					case 2362://turbo 18 
+						$valorMeta = 0;
+						break;
+					case 2447://turbo 17
+						$valorMeta = 0;
+						break;
+					case 2507:// invictus 3
+						$valorMeta = 0;
+						break;
+					}
+				}
+
+					$relatorioDiscipulos[$grupoFilho->getId()]['parceiroDeDeusMeta'] = $valorMeta;
+					$relatorioDiscipulos[$grupoFilho->getId()]['parceiroDeDeusPerformance'] = $relatorioDiscipulos[$grupoFilho->getId()]['somaValor'] /	$relatorioDiscipulos[$grupoFilho->getId()]['parceiroDeDeusMeta'] * 100;
+
+
 			}
 		}
 
@@ -770,6 +892,10 @@ class RelatorioController extends CircuitoController {
 				}
 			}else{
 				$relatorio[$contadorFilhos]['somaValor'] = $relatorioDiscipulos[$grupoFilhoOrdenado->getId()]['somaValor'];
+				$relatorio[$contadorFilhos]['parceiroDeDeusMeta'] = $relatorioDiscipulos[$grupoFilhoOrdenado->getId()]['parceiroDeDeusMeta'];
+				$relatorio[$contadorFilhos]['parceiroDeDeusPerformance'] = $relatorioDiscipulos[$grupoFilhoOrdenado->getId()]['parceiroDeDeusPerformance'];
+				$relatorio[$contadorFilhos]['parceiroDeDeusPerformanceClass'] = RelatorioController::corDaLinhaPelaPerformance($relatorioDiscipulos[$grupoFilhoOrdenado->getId()]['parceiroDeDeusPerformance']);
+				$somaTotal['parceiroDeDeusMeta'] += $relatorio[$contadorFilhos]['parceiroDeDeusMeta'];
 			}
 
 			$relatorio[$contadorFilhos]['lideres'] = $grupoFilhoOrdenado->getNomeLideresAtivos();
@@ -847,6 +973,8 @@ class RelatorioController extends CircuitoController {
 			}
 		}else{
 			$relatorio[$contadorFilhos]['somaValor'] = $somaFinal['somaValor'];
+			$relatorio[$contadorFilhos]['parceiroDeDeusMeta'] = $somaTotal['parceiroDeDeusMeta'];
+			$relatorio[$contadorFilhos]['parceiroDeDeusPerformance'] = $relatorio[$contadorFilhos]['somaValor'] / $relatorio[$contadorFilhos]['parceiroDeDeusMeta'] * 100;
 		}
 		$relatorio[$contadorFilhos]['lideres'] = 'TOTAL';
 
@@ -1164,10 +1292,6 @@ class RelatorioController extends CircuitoController {
 		return $class;
 	}
 
-	const ORDENACAO_TIPO_MEMBRESIA = 9;
-	const ORDENACAO_TIPO_CELULA = 10;
-	const ORDENACAO_TIPO_PERFORMANCE = 11;
-
 	public static function ordenacaoDiscipulos($discipulosLocal, $relatorio, $tipo) {
 		$campo = '';
 		if ($tipo === 1) {
@@ -1191,14 +1315,8 @@ class RelatorioController extends CircuitoController {
 		if ($tipo === 8) {
 			$campo = 'mediaCelulaDeElitePerformance';
 		}
-		if ($tipo === RelatorioController::ORDENACAO_TIPO_MEMBRESIA) {
-			$campo = 'membresia';
-		}
-		if ($tipo === RelatorioController::ORDENACAO_TIPO_CELULA) {
-			$campo = 'celula';
-		}
-		if ($tipo === RelatorioController::ORDENACAO_TIPO_PERFORMANCE) {
-			$campo = 'performance';
+		if ($tipo === 9) {
+			$campo = 'parceiroDeDeusPerformance';
 		}
 		$tamanhoArray = count($discipulosLocal);
 
@@ -1208,14 +1326,8 @@ class RelatorioController extends CircuitoController {
 				$discipulo1 = $discipulosLocal[$i];
 				$discipulo2 = $discipulosLocal[$j];
 
-				if ($tipo === RelatorioController::ORDENACAO_TIPO_MEMBRESIA ||
-					$tipo === RelatorioController::ORDENACAO_TIPO_CELULA) {
-						$grupoFilho1 = $discipulo1;
-						$grupoFilho2 = $discipulo2;
-					} else {
-						$grupoFilho1 = $discipulo1->getGrupoPaiFilhoFilho();
-						$grupoFilho2 = $discipulo2->getGrupoPaiFilhoFilho();
-					}
+				$grupoFilho1 = $discipulo1->getGrupoPaiFilhoFilho();
+				$grupoFilho2 = $discipulo2->getGrupoPaiFilhoFilho();
 
 				if ($tipo != 0) {
 					$percentual1 = $relatorio[$grupoFilho1->getId()][$campo];

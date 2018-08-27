@@ -105,7 +105,6 @@ $somaMeta = 0;
                         <tr class="dark hidden-xs">
                             <?php
                             echo '<th>Periodos</th>';
-
                             for ($indiceDeArrays = $this->periodoInicial; $indiceDeArrays <= $this->periodoFinal; $indiceDeArrays++) {
                                 $classePeriodoAtual = '';
                                 if ($indiceDeArrays == -1) {
@@ -134,6 +133,9 @@ $somaMeta = 0;
                                 echo Funcoes::montaPeriodo($indiceDeArrays)[0];
                                 echo '</th>';
                             }
+							if($this->tipoRelatorio == 9 && ($this->entidade->getGrupo()->getId() === 1 || $this->entidade->getGrupo()->getId() === 1225)){
+	                            echo '<th colspan="2"></th>';
+							}
                             echo '<th></th>';
                             ?>                           
                         </tr>
@@ -197,10 +199,13 @@ $somaMeta = 0;
                                     echo '<th class="' . $classeBase . $classePeriodoAtual . '">QTD</th>';
 										}
 								if ($this->tipoRelatorio == 9) {
-									echo '<th class="' . $classeBase . $classePeriodoAtual . '">Valor</th>';
+								echo '<th class="' . $classeBase . $classePeriodoAtual . '">Valor</th>';
 								}
  
-                            }
+							}
+							if($this->tipoRelatorio == 9 && ($this->entidade->getGrupo()->getId() === 1 || $this->entidade->getGrupo()->getId() === 1225)){
+								echo '<th class="' . $classeBase . '">Meta</th>';
+							}
                             if ($this->tipoRelatorio == 1 ||
                                     $this->tipoRelatorio == 2 ||
                                     $this->tipoRelatorio == 3 ||
@@ -208,6 +213,9 @@ $somaMeta = 0;
                                     $this->tipoRelatorio == 9) {
                                 echo '<th>FINAL</th>';
                             }
+							if($this->tipoRelatorio == 9 && ($this->entidade->getGrupo()->getId() === 1 || $this->entidade->getGrupo()->getId() === 1225)){
+								echo '<th class="' . $classeBase . '">%</th>';
+							}
                             ?>                           
                         </tr>
                     </thead>
@@ -233,6 +241,9 @@ $somaMeta = 0;
                                 if ($this->tipoRelatorio == 8) {
                                     $corLinha = $relatorio['mediaCelulaDeElitePerformanceClass'];
                                 }
+								if ($this->tipoRelatorio == 9) {
+									$corLinha = $relatorio['parceiroDeDeusPerformanceClass'];
+								}
                             }
                             echo '<tr class="' . $corLinha . '">';
                             if ($this->tipoRelatorio != 7) {
@@ -338,7 +349,13 @@ $somaMeta = 0;
 									echo '<td style="padding-right:5px;">' . RelatorioController::formataNumeroRelatorio($perfomanceMedio) . '%</td>';
 								}
 							if ($this->tipoRelatorio == 9) {
+								if($this->entidade->getGrupo()->getId() === 1 || $this->entidade->getGrupo()->getId() === 1225){
+									echo '<td class="' . $classeBase . '">'. RelatorioController::formataNumeroRelatorio($relatorio['parceiroDeDeusMeta']). '</td>';
+								}
 								echo '<td style="padding-right:5px;">' . RelatorioController::formataNumeroRelatorio($relatorio['somaValor']) . '</td>';
+								if($this->tipoRelatorio == 9 && ($this->entidade->getGrupo()->getId() === 1 || $this->entidade->getGrupo()->getId() === 1225)){
+									echo '<td class="' . $classeBase . '">' . RelatorioController::formataNumeroRelatorio($relatorio['parceiroDeDeusPerformance']) . '%<td>';
+								}
 							}
                             echo '</tr>';
                             $contagemRanking++;
