@@ -424,6 +424,34 @@ class RelatorioController extends CircuitoController {
 		return $response;
 	}
 
+	public function institutoAction(){
+		$sessao = new Container(Constantes::$NOME_APLICACAO);
+
+		$idEntidadeAtual = $sessao->idEntidadeAtual;
+		$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+		$grupoIgreja = $entidade->getGrupo()->getGrupoIgreja();
+	
+
+		$relatorio = array();
+		if($turmas = $grupoIgreja->getTurma()){
+
+			foreach($turmas as $turma){
+				if($turma->verificarSeEstaAtivo()){
+					if($turmaPessoas = $turma->getTurmaPessoa()){
+						foreach($turmaPessoas as $turmaPessoa){
+							if($turmaPessoa->verificarSeEstaAtivo()){
+								if($grupoPessoa = $turmaPessoa->getPessoa()->getGrupoPessoaAtivo()){
+									$relatorio[$grupoPessoa->getGrupo()->getGrupoEquipe()->getEntidadeAtiva()->getNome()][$turma->getId()][$turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getNome()]++;
+								}								
+							}
+						}
+					}
+				}
+			}
+		}
+		return new ViewModel(array('relatorio'=>$relatorio));
+	}
+
 	public function buscarDadosGrupoAction() {
 		$request = $this->getRequest();
 		$response = $this->getResponse();
