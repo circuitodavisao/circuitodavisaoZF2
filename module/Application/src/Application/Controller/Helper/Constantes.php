@@ -90,6 +90,7 @@ class Constantes {
     public static $TRADUCAO_PRIMEIRO_NOME = 'First Name';
     public static $TRADUCAO_ULTIMO_NOME = 'Last Name';
     public static $TRADUCAO_CONTINUAR = 'Continue';
+    public static $ENCERRAR_AGORA = 'Logout now';
     public static $TRADUCAO_CAPTCHA_LABEL = 'Please verify you are human';
     public static $TRADUCAO_ESQUECI_MINHA_SENHA = ' Because I forgot my password.';
     public static $TRADUCAO_ESQUECI_MEU_USUARIO = ' I know my password, but I do not remember my login.';
@@ -140,7 +141,7 @@ class Constantes {
     public static $TRADUCAO_SESSAO_ATIVA = 'You need to log out to continue.';
     public static $TRADUCAO_PRECISA_DESLOGAR = 'You need to log out before registering a password for a new user';
     public static $TRADUCAO_OLA = 'Hello';
-    public static $TRADUCAO_PRE_SAIDA = 'Use the LOGOUT option <a href="/">CircuitoDaVisão.com.br</a> when using a device that is not of particular use. The <a href="/">CircuitoDaVisão.com.br</a> home page will be opened in 30 seconds.';
+    public static $TRADUCAO_PRE_SAIDA = 'Use the LOGOUT option CircuitoDaVisão.com.br when using a device that is not of particular use. The session will be closed in 30 seconds.';
     public static $TRADUCAO_ENTRAR_NOVAMENTE = 'Reenter';
 
     /* Forms */
