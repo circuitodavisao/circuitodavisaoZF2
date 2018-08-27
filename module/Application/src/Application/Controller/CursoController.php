@@ -1558,8 +1558,8 @@ class CursoController extends CircuitoController {
 		foreach ($turmas as $turma) {
 			if ($turmaAulaAtiva = $turma->getTurmaAulaAtiva()) {
 				foreach ($turma->getTurmaPessoa() as $turmaPessoa) {
-					/* Alunos ativos ou especiais */
-					if($turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getId() === Situacao::ATIVO){
+					/* Alunos ativos */
+					if($turmaPessoa->verificarSeEstaAtivo() && $turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getId() === Situacao::ATIVO){
 
 						$nomeEquipeDoTurmaPessoa = CursoController::getNomeDaEquipeDoTurmaPessoa($turmaPessoa);
 						$turmaPessoaAulas = $turmaPessoa->getTurmaPessoaAula();
