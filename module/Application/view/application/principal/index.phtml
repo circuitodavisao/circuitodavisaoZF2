@@ -306,11 +306,13 @@ use Application\View\Helper\BotaoSimples;
     </section>
     <?php
 } else {
-    ?>
-    <div class="panel-body bg-light text-center mt50">
-        <h1><span class = "text-danger">Perfil de acesso inativado!</span></h1> 
-        <p>Para lançar arregimentação: Menu > Lançar > Arregimentação</p>
-    </div>
-    <?php
+	echo '<div class="panel-body bg-light text-center mt50">';
+	if($this->grupo->getId() !== 1 && $this->grupo->getId() !== 1225){
+		echo '<h1><span class = "text-danger">Perfil de acesso inativado!</span></h1>';
+		echo '<p>Para lançar arregimentação: Menu > Lançar > Arregimentação</p>';
+	}else{
+		echo '<h1>Dashboard em manutenção</h1>';
+	}
+	echo '</div>';
 }
 echo $this->layoutJSPrincipal;
