@@ -387,11 +387,14 @@ class Module {
             $viewModel->entidade = $entidade;
 			$grupo = $entidade->getGrupo();
 			$discipulos = null;
-			if (count($grupo->getGrupoPaiFilhoFilhosAtivos(1)) > 0) {
-				$discipulos = $grupo->getGrupoPaiFilhoFilhosAtivos(1);
+
+			if($grupo->getId() !== 1 && $grupo->getId() !== 1225){
+				if (count($grupo->getGrupoPaiFilhoFilhosAtivos(1)) > 0) {
+					$discipulos = $grupo->getGrupoPaiFilhoFilhosAtivos(1);
+				}
+				$filhosOrdenado = RelatorioController::ordenacaoDiscipulos($discipulos, null, 0);
+				$viewModel->discipulos = $filhosOrdenado;
 			}
-			$filhosOrdenado = RelatorioController::ordenacaoDiscipulos($discipulos, null, 0);
-			$viewModel->discipulos = $filhosOrdenado;
 		}
 
         $stringHttps = 'https://';
@@ -428,7 +431,6 @@ class Module {
             'migracao',
             'deploy',
             'api',
-            'apiteste',
         );
         if (!isset($matchedRoute) || in_array($matchedRoute->getMatchedRouteName(), $allowedRoutesConfig)) {
 // no auth check required
