@@ -63,7 +63,7 @@ echo '<th class="hidden-xs colunaEspacamento">&nbsp;</th>';
 $contadorDeTurmas = 0;
 foreach($this->turmas as $turma){
 	echo '<th class="hidden-xs turma'.$contadorDeTurmas.'" colspan="5">'.$turma->getTurmaAulaAtiva()->getAula()->getDisciplina()->getNome() . ' - ' . Funcoes::mesPorExtenso($turma->getMes(), 1).'/'.$turma->getAno() . '</th>';
-	echo '<th class="hidden-xs colunaEspacamento turma'.$contadorDeTurmas.'">&nbsp;</th>';
+	echo '<th class="hidden-xs colunaEspacamento">&nbsp;</th>';
 	$contadorDeTurmas++;
 }
 echo '<th colspan="4" class="turma'.$contadorDeTurmas.'">TOTAL</th>';
