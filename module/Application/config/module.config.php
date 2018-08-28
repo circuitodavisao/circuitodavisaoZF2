@@ -84,7 +84,7 @@ return array(
                     'route' => '/relatorio[:action][/:tipoRelatorio][/:mes/:ano]',
                     'constraints' => array(
                         'action' => '[a-zA-Z]+',
-                        'tipoRelatorio' => '[1-8]',
+                        'tipoRelatorio' => '[1-9]',
                         'mes' => '[0-9]+',
                         'ano' => '[0-9]+',
                     ),

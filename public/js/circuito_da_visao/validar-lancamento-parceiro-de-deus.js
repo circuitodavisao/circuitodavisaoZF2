@@ -1,7 +1,7 @@
 function validar(formulario){
 	let mensagemDeErro = '';
 	let temErros = false;
-	if(formulario.idGrupo.value == 0){
+	if(formulario.idPessoa.value == 0){
 		temErros = true
 		if(mensagemDeErro == ''){
 			mensagemDeErro = 'Líder';
@@ -34,7 +34,7 @@ function validar(formulario){
 		}
 	}
 
-	if(formulario.individual.value == ''){
+	if(formulario.individual.value == '' || isNaN(formulario.individual.value.replace(',','.'))){
 		temErros = true
 		if(mensagemDeErro == ''){
 			mensagemDeErro = 'Valor do individual';
@@ -42,15 +42,7 @@ function validar(formulario){
 			mensagemDeErro += ', Valor do Individual';
 		}
 	}
-	if(formulario.idGrupoEvento.value == 0){
-		temErros = true
-		if(mensagemDeErro == ''){
-			mensagemDeErro = 'Qual célula';
-		}else{
-			mensagemDeErro += ', Qual Célula';
-		}
-	}
-	if(formulario.celula.value == ''){
+	if(formulario.celula.value == '' || isNaN(formulario.celula.value.replace(',','.'))){
 		temErros = true
 		if(mensagemDeErro == ''){
 			mensagemDeErro = 'Valor de célula';
@@ -90,3 +82,41 @@ function selecionarLider(){
 		}, 'json')
 }
 
+function atualizarTotal(){
+	let valorIndividual = $('#individual').val()
+	let valorCelula = $('#celula').val()
+	if(valorIndividual == ''){
+		valorIndividual = '0'
+	}
+	if(valorCelula == ''){
+		valorCelula = '0'
+	}
+
+	valorIndividual = valorIndividual.replace(',','.')
+	valorIndividual = parseFloat(valorIndividual)
+
+	valorCelula = valorCelula.replace(',','.')
+	valorCelula = parseFloat(valorCelula)
+
+	let soma = valorIndividual + valorCelula
+	console.log('Individual', valorIndividual)
+	console.log('Celula', valorCelula)
+	$('#total').html(soma.toFixed(2))
+}
+
+function selecionarEquipe(){
+	$('#loaderSub').removeClass('hidden')
+	let idEquipe = $('#selecionaEquipe').val()
+	if(idEquipe != 0){
+		$.post(
+			"/cursoBuscarSubsCompleto",
+			{ id: idEquipe, },
+			function (data) {
+				$('#loaderSub').addClass('hidden')
+				$('#selecionarSub').html('<option value="0">SELECIONE</option>')
+				data.filhos.map((filho) => $('#selecionarSub').append('<option value="'+filho.id+'">'+filho.informacao+'</option>'))
+			}, 'json');
+	}else{
+		$('#loaderSub').addClass('hidden')
+	}
+}

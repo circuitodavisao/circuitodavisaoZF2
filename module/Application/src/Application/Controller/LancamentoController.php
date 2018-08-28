@@ -17,6 +17,8 @@ use Application\Model\Entity\GrupoPessoa;
 use Application\Model\Entity\GrupoPessoaTipo;
 use Application\Model\Entity\Pessoa;
 use Application\Model\Entity\FatoParceiroDeDeus;
+use Application\Model\Entity\FatoFinanceiro;
+use Application\Model\Entity\FatoFinanceiroTipo;
 use Application\Model\ORM\RepositorioORM;
 use Application\View\Helper\ListagemDePessoasComEventos;
 use DateTime;
@@ -931,7 +933,6 @@ class LancamentoController extends CircuitoController {
 		$dados['formulario'] = $formulario;
 		$dados['grupo'] = $grupo;
 		$dados['discipulos'] = $grupoPaiFilhoFilhos;
-		$dados['solicitacoes'] = null;
 
 		$view = new ViewModel($dados);
 		
@@ -950,28 +951,43 @@ class LancamentoController extends CircuitoController {
 				$this->getRepositorio()->iniciarTransacao();
 
 				$dadosPost = $request->getPost();
-				$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($dadosPost['idGrupo']);
+				$idGrupoEPessoa = $dadosPost['idPessoa'];
+				$explodeId = explode('_', $idGrupoEPessoa);
+				$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($explodeId[0]);
 				$numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupo);
-				$grupoEvento = $this->getRepositorio()->getGrupoEventoORM()->encontrarPorId($dadosPost['idGrupoEvento']);
 				$individualFiltrado = number_format(str_replace(',','.',$dadosPost['individual']),2,'.','');
 				$celulaFiltrado = number_format(str_replace(',','.',$dadosPost['celula']),2,'.','');
 				$dataLancamento = $dadosPost['Ano'].'-'.$dadosPost['Mes'].'-'.$dadosPost['Dia'];
+				$pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($explodeId[1]);
 
-				$fatoParceiroDeDeus = new FatoParceiroDeDeus();
-				$fatoParceiroDeDeus->setNumero_identificador($numeroIdentificador);
-				$fatoParceiroDeDeus->setEvento_id($grupoEvento->getEvento()->getId());
-				$fatoParceiroDeDeus->setIndividual($individualFiltrado);
-				$fatoParceiroDeDeus->setCelula($celulaFiltrado);
-				$fatoParceiroDeDeus->setData($dataLancamento);
-				$this->getRepositorio()->getFatoParceiroDeDeusORM()->persistir($fatoParceiroDeDeus);
+				if($individualFiltrado > 0){
+					$fatoFinanceiroTipo = $this->getRepositorio()->getFatoFinanceiroTipoORM()->encontrarPorId(FatoFinanceiroTipo::parceiroDeDeusIndividual);
+					$fatoFinanceiro = new FatoFinanceiro();
+					$fatoFinanceiro->setNumero_identificador($numeroIdentificador);
+					$fatoFinanceiro->setPessoa($pessoa);
+					$fatoFinanceiro->setFatoFinanceiroTipo($fatoFinanceiroTipo);
+					$fatoFinanceiro->setValor($individualFiltrado);
+					$fatoFinanceiro->setData($dataLancamento);
+					$this->getRepositorio()->getFatoFinanceiroORM()->persistir($fatoFinanceiro);	
+				}
+
+				if($celulaFiltrado > 0){
+					$fatoFinanceiroTipo = $this->getRepositorio()->getFatoFinanceiroTipoORM()->encontrarPorId(FatoFinanceiroTipo::parceiroDeDeusCelula);
+					$fatoFinanceiro = new FatoFinanceiro();
+					$fatoFinanceiro->setNumero_identificador($numeroIdentificador);
+					$fatoFinanceiro->setPessoa($pessoa);
+					$fatoFinanceiro->setFatoFinanceiroTipo($fatoFinanceiroTipo);
+					$fatoFinanceiro->setValor($celulaFiltrado);
+					$fatoFinanceiro->setData($dataLancamento);
+					$this->getRepositorio()->getFatoFinanceiroORM()->persistir($fatoFinanceiro);	
+				}
 
 				$this->getRepositorio()->fecharTransacao();
-
 				return $this->redirect()->toRoute(Constantes::$ROUTE_LANCAMENTO, array(
 					Constantes::$ACTION => 'ParceiroDeDeusExtrato', 
 				));
 			}catch(Exception $exception){
-				echo $exception.getMessage();
+				echo $exception->getTraceAsString();
 				$this->getRepositorio()->desfazerTransacao();
 			}
 		}else{
@@ -987,16 +1003,40 @@ class LancamentoController extends CircuitoController {
 		$grupo = $entidade->getGrupo();
 		$numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupo);
 
-		$fatos = $this->getRepositorio()->getFatoParceiroDeDeusORM()->encontrarFatosPorNumeroIdentificador($numeroIdentificador);
+		$fatos = $this->getRepositorio()->getFatoFinanceiroORM()->encontrarFatosPorNumeroIdentificador($numeroIdentificador);
+		$fatosAtivos = array();
 		if($fatos){
-			foreach($fatos as $fatoParceiroDeDeus){
-				$idGrupo = substr($fatoParceiroDeDeus->getNumero_identificador(), strlen($fatoParceiroDeDeus->getNumero_identificador())-8);
-				$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupo);
-				$fatoParceiroDeDeus->setGrupo($grupo);
-				$evento = $this->getRepositorio()->getEventoORM()->encontrarPorId($fatoParceiroDeDeus->getEvento_id());
-				$fatoParceiroDeDeus->setEvento($evento);
+			foreach($fatos as $fatoFinanceiro){
+				if($fatoFinanceiro->verificarSeEstaAtivo()){
+					$idGrupo = substr($fatoFinanceiro->getNumero_identificador(), strlen($fatoFinanceiro->getNumero_identificador())-8);
+					$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupo);
+					$fatoFinanceiro->setGrupo($grupo);
+					$fatosAtivos[] = $fatoFinanceiro;
+				}
 			}
 		}
-		return new ViewModel(array('fatos' => $fatos));
+		return new ViewModel(array('fatos' => $fatosAtivos));
+	}
+
+	public function parceiroDeDeusExcluirAction(){
+		$sessao = new Container(Constantes::$NOME_APLICACAO);
+		try{
+			$this->getRepositorio()->iniciarTransacao();
+
+			$idSessao = $sessao->idSessao;
+			$fatoFinanceiro = $this->getRepositorio()->getFatoFinanceiroORM()->encontrarPorId($idSessao);
+			$fatoFinanceiro->setDataEHoraDeInativacao();
+			$this->getRepositorio()->getFatoFinanceiroORM()->persistir($fatoFinanceiro, $mudarDataDeCriacao = false);
+
+			$this->getRepositorio()->fecharTransacao();
+
+			return $this->redirect()->toRoute(Constantes::$ROUTE_LANCAMENTO, array(
+				Constantes::$ACTION => 'ParceiroDeDeusExtrato', 
+			));
+		}catch(Exception $exception){
+			echo $exception.getMessage();
+			$this->getRepositorio()->desfazerTransacao();
+		}
+
 	}
 }

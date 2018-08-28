@@ -808,6 +808,7 @@ class CursoController extends CircuitoController {
 		$filtrado = false;
 		$postado = array();
 		$subs = null;
+		$filhos = array();
 
 		if($request->isPost()){
 			$filtrado = true;
@@ -822,7 +823,6 @@ class CursoController extends CircuitoController {
 				$grupoEquipe = $this->getRepositorio()->getGrupoORM()->encontrarPorId($postado['idEquipe']);
 				$grupoPaiFilhoFilhosEquipe = $grupoEquipe->getGrupoPaiFilhoFilhosAtivos(0);
 
-				$filhos = array();
 				foreach($grupoPaiFilhoFilhosEquipe as $grupoPaiFilho){
 					$grupoFilho = $grupoPaiFilho->getGrupoPaiFilhoFilho();
 					$dados = array();
@@ -846,6 +846,7 @@ class CursoController extends CircuitoController {
 			'filhos' => $grupoPaiFilhoFilhos,
 			'situacoes' => $situacoes,
 			'subs' => $filhos,
+			'repositorio' => $this->getRepositorio(),
 		));
 		return $view;
 	}
@@ -876,12 +877,112 @@ class CursoController extends CircuitoController {
 		}
 		return $response;
 	}
+	public function buscarSubsCompletoAction(){
+		$response = $this->getResponse();
+		try {
+			$idEquipe = $_POST['id'];
+			$periodo = 0;
+			$filhos = array();
+			$grupoEquipe = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idEquipe);
+			$grupoPaiFilhoFilhos = $grupoEquipe->getGrupoPaiFilhoFilhosAtivos($periodo);
+
+			if($grupoResponsabilidades = $grupoEquipe->getResponsabilidadesAtivas()){
+				foreach($grupoResponsabilidades as $grupoResponsabilidade){
+					$dados = array();
+					$dados['id'] = $grupoResponsabilidade->getGrupo()->getId() . '_' .$grupoResponsabilidade->getPessoa()->getId();
+					$dados['informacao'] = $grupoEquipe->getEntidadeAtiva()->infoEntidade() . ' - ' . $grupoResponsabilidade->getPessoa()->getNome(); 	
+					$filhos[] =  $dados;
+				}
+			}
+
+			foreach($grupoPaiFilhoFilhos as $grupoPaiFilho){
+				$grupoFilho = $grupoPaiFilho->getGrupoPaiFilhoFilho();
+				if($grupoResponsabilidades = $grupoFilho->getResponsabilidadesAtivas()){
+					foreach($grupoResponsabilidades as $grupoResponsabilidade){
+						$dados = array();
+						$dados['id'] = $grupoResponsabilidade->getGrupo()->getId() . '_' .$grupoResponsabilidade->getPessoa()->getId();
+						$dados['informacao'] = $grupoFilho->getEntidadeAtiva()->infoEntidade() . ' - ' . $grupoResponsabilidade->getPessoa()->getNome(); 	
+						$filhos[] =  $dados;
+					}
+				}
+
+				if($filhos2 = $grupoFilho->getGrupoPaiFilhoFilhosAtivos($periodo)){
+					foreach($filhos2 as $filho2){
+						$grupoFilho2 = $filho2->getGrupoPaiFilhoFilho();
+						if($grupoResponsabilidades = $grupoFilho2->getResponsabilidadesAtivas()){
+							foreach($grupoResponsabilidades as $grupoResponsabilidade){
+								$dados = array();
+								$dados['id'] = $grupoResponsabilidade->getGrupo()->getId() . '_' .$grupoResponsabilidade->getPessoa()->getId();
+								$dados['informacao'] = $grupoFilho2->getEntidadeAtiva()->infoEntidade() . ' - ' . $grupoResponsabilidade->getPessoa()->getNome(); 	
+								$filhos[] =  $dados;
+							}
+						}
+
+
+						if($filhos3 = $grupoFilho2->getGrupoPaiFilhoFilhosAtivos($periodo)){
+							foreach($filhos3 as $filho3){
+								$grupoFilho3 = $filho3->getGrupoPaiFilhoFilho();
+
+								if($grupoResponsabilidades = $grupoFilho3->getResponsabilidadesAtivas()){
+									foreach($grupoResponsabilidades as $grupoResponsabilidade){
+										$dados = array();
+										$dados['id'] = $grupoResponsabilidade->getGrupo()->getId() . '_' .$grupoResponsabilidade->getPessoa()->getId();
+										$dados['informacao'] = $grupoFilho3->getEntidadeAtiva()->infoEntidade() . ' - ' . $grupoResponsabilidade->getPessoa()->getNome(); 	
+										$filhos[] =  $dados;
+									}
+								}
+
+
+								if($filhos4 = $grupoFilho3->getGrupoPaiFilhoFilhosAtivos($periodo)){
+									foreach($filhos4 as $filho4){
+										$grupoFilho4 = $filho4->getGrupoPaiFilhoFilho();
+
+										if($grupoResponsabilidades = $grupoFilho4->getResponsabilidadesAtivas()){
+											foreach($grupoResponsabilidades as $grupoResponsabilidade){
+												$dados = array();
+												$dados['id'] = $grupoResponsabilidade->getGrupo()->getId() . '_' .$grupoResponsabilidade->getPessoa()->getId();
+												$dados['informacao'] = $grupoFilho4->getEntidadeAtiva()->infoEntidade() . ' - ' . $grupoResponsabilidade->getPessoa()->getNome(); 	
+												$filhos[] =  $dados;
+											}
+										}
+										if($filhos5 = $grupoFilho4->getGrupoPaiFilhoFilhosAtivos($periodo)){
+											foreach($filhos5 as $filho5){
+												$grupoFilho5 = $filho5->getGrupoPaiFilhoFilho();
+												if($grupoResponsabilidades = $grupoFilho5->getResponsabilidadesAtivas()){
+													foreach($grupoResponsabilidades as $grupoResponsabilidade){
+														$dados = array();
+														$dados['id'] = $grupoResponsabilidade->getGrupo()->getId() . '_' .$grupoResponsabilidade->getPessoa()->getId();
+														$dados['informacao'] = $grupoFilho5->getEntidadeAtiva()->infoEntidade() . ' - ' . $grupoResponsabilidade->getPessoa()->getNome(); 	
+														$filhos[] =  $dados;
+													}
+												}
+
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+
+			$resposta = true;
+			$response->setContent(Json::encode(
+				array('response' => $resposta,
+				'filhos' => $filhos,
+			)));
+		} catch (Exception $exc) {
+			echo $exc->getMessage();
+		}
+		return $response;
+	}
+
 
 	public function selecionarParaCarterinhaAction() {
 		$sessao = new Container(Constantes::$NOME_APLICACAO);
 		$entidade = CircuitoController::getEntidadeLogada($this->getRepositorio(), $sessao);
 		$grupo = $entidade->getGrupo();
-		$turmas = $entidade->getGrupo()->getGrupoIgreja()->getTurma();
 		$formulario = new SelecionarCarterinhasForm('SelecionarCarterinhas');
 
 		$grupoPaiFilhoFilhos = $grupo->getGrupoIgreja()->getGrupoPaiFilhoFilhosAtivos(0);
@@ -895,6 +996,9 @@ class CursoController extends CircuitoController {
 			$post = $request->getPost();
 			$postado['idTurma'] = $post['idTurma'];
 			$postado['idEquipe'] = $post['idEquipe'];
+			$turmas[] = $this->getRepositorio()->getTurmaORM()->encontrarPorId($postado['idTurma']);
+		}else{
+			$turmas = $entidade->getGrupo()->getGrupoIgreja()->getTurma();
 		}
 
 		$view = new ViewModel(array(
@@ -959,9 +1063,7 @@ class CursoController extends CircuitoController {
 			}
 			if ($turmaPessoa) {
 				$resposta = true;
-				$nomeCurso = $turmaPessoa->getTurma()->getCurso()->getNome();
 				$nomeTurma = Funcoes::mesPorExtenso($turmaPessoa->getTurma()->getMes(), 1) . '/' . $turmaPessoa->getTurma()->getAno();
-				$nomeEquipe = $turmaPessoa->getPessoa()->getGrupoPessoaAtivo()->getGrupo()->getEntidadeAtiva()->infoEntidade();
 				$nomePessoa = $turmaPessoa->getPessoa()->getNome();
 
 				if($turmaAulaAtiva = $turmaPessoa->getTurma()->getTurmaAulaAtiva()){
@@ -974,9 +1076,7 @@ class CursoController extends CircuitoController {
 			}
 			$response->setContent(Json::encode(
 				array('response' => $resposta,
-				'curso' => $nomeCurso,
 				'turma' => $nomeTurma,
-				'equipe' => $nomeEquipe,
 				'pessoa' => $nomePessoa,
 				'idTurmaPessoa' => $idParaRetornar,
 				'temAulaAtiva' => $temAulaAtiva,
@@ -993,21 +1093,15 @@ class CursoController extends CircuitoController {
 		try {
 			$turmaPessoa = null;
 			$id = $_POST['id'];
-			$explodeMatricula = explode('9999999999',$id);
-			if (count($explodeMatricula) === 2) {
-				$turmaPessoa = $this->getRepositorio()->getTurmaPessoaORM()->encontrarPorId($explodeMatricula[0]);
-				if($turmaPessoa === null){
-					$turmaPessoa = $this->getRepositorio()->getTurmaPessoaORM()->encontrarPorIdAntigo($explodeToken[0]);
-				}
-				$aula = $this->getRepositorio()->getAulaORM()->encontrarPorId($explodeMatricula[1]);
+			$idTurmaAluno = substr($id,0,10);
+			$idAula = substr($id,10);
+
+			if($turmaPessoa = $this->getRepositorio()->getTurmaPessoaORM()->encontrarPorId($idTurmaAluno)){
+				$aula = $this->getRepositorio()->getAulaORM()->encontrarPorId($idAula);
 				$resposta = true;
-				$nomeCurso = $turmaPessoa->getturma()->getcurso()->getnome();
 				$nomeTurma = funcoes::mesporextenso($turmaPessoa->getturma()->getmes(), 1) . '/' . $turmaPessoa->getturma()->getano();
-				$nomeEquipe = $turmaPessoa->getpessoa()->getgrupopessoaativo()->getgrupo()->getentidadeativa()->infoentidade();
 				$nomePessoa = $turmaPessoa->getpessoa()->getnome();
 				$nomeAula = $aula->getDisciplina()->getNome().' Aula: '.$aula->getPosicao();
-			} else {
-				$resposta = false;
 			}
 			$response->setContent(Json::encode(
 				array('response' => $resposta,
@@ -1066,28 +1160,25 @@ class CursoController extends CircuitoController {
 			if($this->getRequest()->isPost()){
 				$this->getRepositorio()->iniciarTransacao();
 				$id = $this->getRequest()->getPost()['id'];
-				$explodeMatricula = explode('9999999999',$id);
-				if (count($explodeMatricula) === 2) {
-					$turmaPessoa = $this->getRepositorio()->getTurmaPessoaORM()->encontrarPorId($explodeMatricula[0]);
-					if($turmaPessoa === null){
-						$turmaPessoa = $this->getRepositorio()->getTurmaPessoaORM()->encontrarPorIdAntigo($explodeToken[0]);
+
+				$idTurmaAluno = substr($id,0,10);
+				$idAula = substr($id,10);
+
+				if($turmaPessoa = $this->getRepositorio()->getTurmaPessoaORM()->encontrarPorId($idTurmaAluno)){
+					$aula = $this->getRepositorio()->getAulaORM()->encontrarPorId($idAula);
+					$turmaPessoaAula = $turmaPessoa->getTurmaPessoaAulaPorAula($aula->getId());
+					if (!$turmaPessoaAula) {
+						$turmaPessoaAula = new TurmaPessoaAula();
+						$turmaPessoaAula->setAula($aula);
+						$turmaPessoaAula->setTurma_pessoa($turmaPessoa);
 					}
-					$aula = $this->getRepositorio()->getAulaORM()->encontrarPorId($explodeMatricula[1]);
-					if($turmaPessoa){
-						$turmaPessoaAula = $turmaPessoa->getTurmaPessoaAulaPorAula($aula->getId());
-						if (!$turmaPessoaAula) {
-							$turmaPessoaAula = new TurmaPessoaAula();
-							$turmaPessoaAula->setAula($aula);
-							$turmaPessoaAula->setTurma_pessoa($turmaPessoa);
-						}
-						$turmaPessoaAula->setData_inativacao(null);
-						$turmaPessoaAula->setHora_inativacao(null);
-						$turmaPessoaAula->setReposicao('S');
-						$this->getRepositorio()->getTurmaPessoaAulaORM()->persistir($turmaPessoaAula);
-						$resposta = true;
-						$this->getRepositorio()->fecharTransacao();
-					}
-				}	
+					$turmaPessoaAula->setData_inativacao(null);
+					$turmaPessoaAula->setHora_inativacao(null);
+					$turmaPessoaAula->setReposicao('S');
+					$this->getRepositorio()->getTurmaPessoaAulaORM()->persistir($turmaPessoaAula);
+					$resposta = true;
+					$this->getRepositorio()->fecharTransacao();
+				}
 			}			
 		} catch (Exception $exc) {
 			$this->getRepositorio()->desfazerTransacao();
@@ -1393,14 +1484,17 @@ class CursoController extends CircuitoController {
 		return $relatorio;
 	}
 
-	public static function nomeEquipeTurmaPessoa($turmaPessoa) {
+	public static function nomeEquipeTurmaPessoa($turmaPessoa, $grupoPessoa = null) {
 		$nomeEquipe = '';
-		if ($turmaPessoa->getPessoa()->getGrupoPessoaAtivo()) {
-			if ($turmaPessoa->getPessoa()->getGrupoPessoaAtivo()->getGrupo()->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::igreja) {
-				$nomeEquipe = $turmaPessoa->getPessoa()->getGrupoPessoaAtivo()->getGrupo()->getEntidadeAtiva()->getNome();
-			} else {
-				$nomeEquipe = $turmaPessoa->getPessoa()->getGrupoPessoaAtivo()->getGrupo()->getEntidadeAtiva()->infoEntidade();
-			}
+		$grupoPessoaAtivo = null;
+		if($grupoPessoa === null){
+			$grupoPessoaAtivo = $turmaPessoa->getPessoa()->getGrupoPessoaAtivo();
+		}else{
+			$grupoPessoaAtivo = $grupoPessoa;
+		}
+
+		if($grupoPessoaAtivo){
+			$nomeEquipe = $grupoPessoaAtivo->getGrupo()->getEntidadeAtiva()->infoEntidade();
 		}
 		return $nomeEquipe;
 	}
@@ -1464,8 +1558,8 @@ class CursoController extends CircuitoController {
 		foreach ($turmas as $turma) {
 			if ($turmaAulaAtiva = $turma->getTurmaAulaAtiva()) {
 				foreach ($turma->getTurmaPessoa() as $turmaPessoa) {
-					/* Alunos ativos ou especiais */
-					if($turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getId() === Situacao::ATIVO){
+					/* Alunos ativos */
+					if($turmaPessoa->verificarSeEstaAtivo() && $turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getId() === Situacao::ATIVO){
 
 						$nomeEquipeDoTurmaPessoa = CursoController::getNomeDaEquipeDoTurmaPessoa($turmaPessoa);
 						$turmaPessoaAulas = $turmaPessoa->getTurmaPessoaAula();
@@ -1573,7 +1667,9 @@ class CursoController extends CircuitoController {
 
 			$view = new ViewModel(array(
 				'turmaPessoa' => $turmaPessoa,
-				'situacoes' => $situacoes
+				'situacoes' => $situacoes,
+				'pessoa' => $pessoa,
+				'entidade' => $entidade,
 			));
 			return $view;
 		}else{

@@ -3,39 +3,42 @@
 namespace Application\Model\Entity;
 
 /**
- * Nome: FatoParceiroDeDeus.php
+ * Nome: FatoFinanceiro.php
  * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com>
- * Descricao: Entidade anotada da tabela fato_parceiro_de_deus
+ * Descricao: Entidade anotada da tabela fato_financeiro
  */
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity 
- * @ORM\Table(name="fato_parceiro_de_deus")
+ * @ORM\Table(name="fato_financeiro")
  */
-class FatoParceiroDeDeus extends CircuitoEntity {
+class FatoFinanceiro extends CircuitoEntity {
 
     /**
-     * @ORM\ManyToOne(targetEntity="Pessoa", inversedBy="fatoParceiroDeDeus")
+     * @ORM\ManyToOne(targetEntity="Pessoa", inversedBy="fatoFinanceiro")
      * @ORM\JoinColumn(name="pessoa_id", referencedColumnName="id")
      */
     private $pessoa;
+
+	/**
+	 * @ORM\ManyToOne(targetEntity="FatoFinanceiroTipo", inversedBy="fatoFinanceiro")
+	 * @ORM\JoinColumn(name="fato_financeiro_tipo_id", referencedColumnName="id")
+	 */
+	private $fatoFinanceiroTipo;
 
 	/** @ORM\Column(type="string") */
 	protected $numero_identificador;
 
 	/** @ORM\Column(type="integer") */
-	protected $evento_id;
-
-	/** @ORM\Column(type="integer") */
 	protected $pessoa_id;
 
-	/** @ORM\Column(type="decimal") */
-	protected $individual;
+	/** @ORM\Column(type="integer") */
+	protected $fato_financeiro_tipo_id;
 
 	/** @ORM\Column(type="decimal") */
-	protected $celula;
+	protected $valor;
 
 	/** @ORM\Column(type="string") */
 	protected $data;
@@ -50,46 +53,59 @@ class FatoParceiroDeDeus extends CircuitoEntity {
 		$this->numero_identificador = $numero_identificador;
 	}
 
-	function setEvento_id($evento_id){
-		$this->evento_id = $evento_id;
+	function setValor($valor){
+		$this->valor = $valor;
 	}
-	function getEvento_id(){
-		return $this->evento_id;
+
+	function getValor(){
+		return $this->valor;
 	}
-	function setIndividual($individual){
-		$this->individual = $individual;
-	}
-	function getIndividual(){
-		return $this->individual;
-	}
-	function setCelula($celula){
-		$this->celula = $celula;
-	}
-	function getCelula(){
-		return $this->celula;
-	}
+
 	function setData($data){
 		$this->data = $data;
 	}
+	
 	function getData(){
 		return $this->data;
 	}
+
 	function setGrupo($grupo){
 		$this->grupo = $grupo;
 	}
+
 	function getGrupo(){
 		return $this->grupo;
 	}
+
 	function setPessoa($pessoa){
 		$this->pessoa = $pessoa;
 	}
+
 	function getPessoa(){
 		return $this->pessoa;
 	}
+
 	function setPessoa_id($pessoa_id){
 		$this->pessoa_id = $pessoa_id;
 	}
+
 	function getPessoa_id(){
 		return $this->pessoa_id;
+	}
+
+	function setFato_financeiro_tipo_id($fato_financeiro_tipo_id){
+		$this->fato_financeiro_tipo_id = $fato_financeiro_tipo_id;
+	}
+
+	function getFato_financeiro_tipo_id(){
+		return $this->fato_financeiro_tipo_id;
+	}
+
+	function setFatoFinanceiroTipo($fatoFinanceiroTipo){
+		$this->fatoFinanceiroTipo = $fatoFinanceiroTipo;
+	}
+
+	function getFatoFinanceiroTipo(){
+		return $this->fatoFinanceiroTipo;
 	}
 }
