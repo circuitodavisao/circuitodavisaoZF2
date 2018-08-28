@@ -80,7 +80,7 @@ foreach($this->turmas as $turma){
 	echo '<th class="hidden-xs turma'.$contadorDeTurmas.'">META</th>';
 	echo '<th class="hidden-xs turma'.$contadorDeTurmas.'">ATIVOS</th>';
 	echo '<th class="hidden-xs turma'.$contadorDeTurmas.'">%</th>';
-	echo '<th class="hidden-xs colunaEspacamento turma'.$contadorDeTurmas.'">&nbsp;</th>';
+	echo '<th class="hidden-xs colunaEspacamento">&nbsp;</th>';
 	$contadorDeTurmas++;
 }
 echo '<th class="turma'.$contadorDeTurmas.'">TOTAL</th>';
@@ -174,7 +174,7 @@ foreach($chaves as $chave){
 		$htmlTime .= '<td class="hidden-xs turma'.$contadorDeTurmas.' '.$corPerformance.'">' . $relatorioTime[$turma->getId()]['metaCalCulada'] . '</td>';
 		$htmlTime .= '<td class="hidden-xs turma'.$contadorDeTurmas.' '.$corPerformance.'">' . $relatorioTime[$turma->getId()]['ativos'] . '</td>';
 		$htmlTime .= '<td class="hidden-xs turma'.$contadorDeTurmas.' '.$corPerformance.'">' . RelatorioController::formataNumeroRelatorio($relatorioTime[$turma->getId()]['performance']) . '%</td>';
-		$htmlTime .= '<td class="hidden-xs colunaEspacamento turma'.$contadorDeTurmas.'">&nbsp;</td>';
+		$htmlTime .= '<td class="hidden-xs colunaEspacamento">&nbsp;</td>';
 		$contadorDeTurmas++;
 	}
 
@@ -207,7 +207,7 @@ foreach($this->turmas as $turma){
 	$htmlTime .= '<td class="hidden-xs turma'.$contadorDeTurmas.'">' . $relatorioFinal[$turma->getId()]['metaCalCulada'] . '</td>';
 	$htmlTime .= '<td class="hidden-xs turma'.$contadorDeTurmas.'">' . $relatorioFinal[$turma->getId()]['ativos'] . '</td>';
 	$htmlTime .= '<td class="hidden-xs turma'.$contadorDeTurmas.'">' . RelatorioController::formataNumeroRelatorio($performance) . '%</td>';
-	$htmlTime .= '<td class="hidden-xs colunaEspacamento turma'.$contadorDeTurmas.'">&nbsp;</td>';
+	$htmlTime .= '<td class="hidden-xs colunaEspacamento">&nbsp;</td>';
 
 	$somaPerformancesFinal += $performance;
 	$contadorDeTurmas++;
