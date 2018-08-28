@@ -1450,6 +1450,16 @@ class CursoController extends CircuitoController {
 						if($turmaAulaAtiva && $turmaAulaAtiva->getAula()->getDisciplina()->getId() === $disciplina->getId()){
 							if (!$parar) {
 								foreach ($disciplina->getAulaOrdenadasPorPosicao() as $aula) {
+									if ($turmaAulaAtiva) {
+										if ($aula->getPosicao() === $turmaAulaAtiva->getAula()->getPosicao()) {
+											$parar = true;
+											break;
+										}
+									} else {
+										$parar = true;
+										break;
+									}
+	
 									$naoEncontreiPresencaNaAula = true;
 									foreach ($turmaPessoaAulas as $turmaPessoaAula) {
 										if ($turmaPessoaAula->getAula()->getId() === $aula->getId()) {
@@ -1460,16 +1470,7 @@ class CursoController extends CircuitoController {
 										$mostrar = true;
 										$faltas[$turma->getId()][$turmaPessoa->getId()][] = ['Aula ' . $aula->getPosicao(), $aula->getId()];
 									}
-									if ($turmaAulaAtiva) {
-										if ($aula->getId() == $turmaAulaAtiva->getAula()->getId()) {
-											$parar = true;
-											break;
-										}
-									} else {
-										$parar = true;
-										break;
-									}
-								}
+							}
 							}
 						}
 					}
