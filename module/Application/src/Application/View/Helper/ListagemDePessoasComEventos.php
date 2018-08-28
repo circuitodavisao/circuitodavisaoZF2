@@ -55,18 +55,6 @@ class ListagemDePessoasComEventos extends AbstractHelper {
         $grupoPessoas = $this->view->grupo->getGrupoPessoasNoPeriodo($this->view->periodo);
         if ($grupoPessoas) {
             foreach ($grupoPessoas as $grupoPessoa) {
-//
-//                /* Validação para visitantes inativados nesse mes transformados em consolidacoes */
-//                $adicionarVisitante = true;
-//                $grupoPessoaTipo = $gp->getGrupoPessoaTipo();
-//                if (!$gp->verificarSeEstaAtivo() && $grupoPessoaTipo->getId() == 1) {
-//                    $resposta = $this->view->repositorioORM->getGrupoPessoaORM()->encontrarPorIdPessoaAtivoETipo($gp->getPessoa_id(), null, 2); /* Consolidacao */
-//                    if (!empty($resposta)) {
-//                        $adicionarVisitante = false;
-//                    }
-//                }
-//                /* Fim validacao */
-//
                 $pessoa = $grupoPessoa->getPessoa();
                 if (empty($grupoPessoa->getNucleo_perfeito())) {
                     $pessoa->setTipo($grupoPessoa->getGrupoPessoaTipo()->getNomeSimplificado());
@@ -78,36 +66,12 @@ class ListagemDePessoasComEventos extends AbstractHelper {
                         $pessoa->setTipo('LT');
                     }
                 }
-//                $p->setTransferido($gp->getTransferido(), $gp->getData_criacao(), $gp->getData_inativacao());
                 $pessoa->setIdGrupoPessoa($grupoPessoa->getId());
                 $pessoa->setAtivo($grupoPessoa->verificarSeEstaAtivo());
                 if (!$pessoa->getAtivo()) {
                     $pessoa->setDataInativacao($grupoPessoa->getData_inativacaoStringPadraoBanco());
                 }
-//                $adicionar = true;
-//                /* Validacao de tranferencia */
-//                if ($p->verificarSeFoiTransferido($mesSelecionado, $anoSelecionado)) {
-//                    $adicionar = false;
-//
-//                    /* Condição para data de cadastro */
-//                    $primeiroDiaCiclo = Funcoes::periodoCicloMesAno($this->view->cicloSelecionado, $mesSelecionado, $anoSelecionado, '', 1);
-//                    $ultimoDiaCiclo = Funcoes::periodoCicloMesAno($this->view->cicloSelecionado, $mesSelecionado, $anoSelecionado, '', 2);
-//                    $mesAtual = date('m'); /* Mes com zero */
-//                    $anoAtual = date('Y');
-//
-//                    if ($p->getDataTransferidoAno() <= $anoAtual) {
-//                        if ($p->getDataTransferidoAno() == $anoAtual) {
-//                            if ($p->getDataTransferidoMes() <= $mesAtual) {
-//                                $adicionar = true;
-//                            }
-//                        } else {
-//                            $adicionar = true;
-//                        }
-//                    }
-//                }
-//                if ($adicionar && $adicionarVisitante) {
                 $pessoasGrupo[] = $pessoa;
-//                }
             }
         }
 
@@ -128,9 +92,6 @@ class ListagemDePessoasComEventos extends AbstractHelper {
             }
             if (!$pg->getAtivo()) {
                 $valor = -2;
-//                if (!$pg->verificarSeFoiTransferido($mesSelecionado, $anoSelecionado)) {
-//                    $valor = -1;
-//                }
             }
             $valores[$pg->getId()] = $valor;
         }
@@ -181,13 +142,6 @@ class ListagemDePessoasComEventos extends AbstractHelper {
                 }
             }
         }
-//                if ($pessoa->verificarSeFoiTransferido($mesSelecionado, $anoSelecionado)) {
-//                    $classLinha = 'class="row-dark default"';
-//                    $corBotao = 'btn-default';
-//                    $base = ' text-muted" data-toggle="tooltip" data-placement="center" title data-original-title="Transferido"';
-//                    $corTextoTagsExtrasXs = 'class="hidden-lg' . $base;
-//                    $corTextoTagsExtrasLg = 'class="hidden-xs hidden-sm hidden-md' . $base;
-//                }
         $html .= '<tr id="tr_' . $pessoa->getIdGrupoPessoa() . '" ' . $classLinha . '>';
 
         /* TIPO */
@@ -227,8 +181,7 @@ class ListagemDePessoasComEventos extends AbstractHelper {
         if ($this->view->quantidadeDeEventosNoCiclo < 4) {
             $empuraColunas = 'col-xs-10 col-sm-10 col-md-10';
         }
-
-        $validacaoPossoAlterarNome = $pessoa->getTipo() != 'LP' && $pessoa->getAtivo() && !$pessoa->verificaSeParticipouDoRevisao();
+        $validacaoPossoAlterarNome = ($pessoa->getTipo() != 'LP' && $pessoa->getAtivo() && !$pessoa->verificaSeParticipouDoRevisao() && !$pessoa->verificarSeEhAluno());
         /* NOME */
         $html .= '<td class="text-left ' . $empuraColunas . '">&nbsp;';
         /* Menu dropup Nome */
@@ -238,7 +191,9 @@ class ListagemDePessoasComEventos extends AbstractHelper {
         }
         /* nome */
         /* Indicação de que eh aluno */
-//                $html .= '<i class="fa fa-graduation-cap" aria-hidden="true"></i>&nbsp;';
+		if($pessoa->getTipo() != 'LP' && $pessoa->verificarSeEhAluno()){
+				$html .= '<i class="fa fa-graduation-cap" aria-hidden="true"></i>&nbsp;';
+				}
         $html .= '<span id="span_nome_' . $pessoa->getId() . '" ' . $corTextoTagsExtrasXs . '>';
         $html .= $pessoa->getNomeListaDeLancamento(5);
         $html .= '</span>';
@@ -365,12 +320,6 @@ class ListagemDePessoasComEventos extends AbstractHelper {
                 if ($icone === $iconeRelogio) {
                     $html .= '<i class = "fa fa-clock-o"></i>';
                 }
-//                if ($icone == 2) {
-//                    $html .= '<i class = "fa fa-random"></i>';
-//                }
-//                if ($icone == 3) {
-//                    $html .= '<i class = "fa fa-ban"></i>';
-//                }
                 $html .= '</button>';
             }
             $html .= '</div>';
