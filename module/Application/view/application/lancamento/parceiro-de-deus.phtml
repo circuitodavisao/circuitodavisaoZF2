@@ -1,41 +1,66 @@
 <?php
 
 use Application\Controller\Helper\Constantes;
+use Application\View\Helper\BotaoSimples;
 $formulario = $this->formulario;
 $formulario->prepare();
 $formulario->setAttribute(Constantes::$ACTION, $this->url(Constantes::$ROUTE_LANCAMENTO, array(Constantes::$ACTION => 'parceiroDeDeusFinalizar')));
-echo $this->form()->openTag($formulario); 
-?>
-<div class="panel-body bg-light text-center mt50">
-	<h1>Parceiro de Deus</h1>
-<?php 
-echo $this->divMensagens();
-?>
-	<div class="form-group col-lg-12 col-md-12 col-sm-12 col-xs-12">
-<label class="field-label text-muted fs18 mb10">Selecione o líder</label>
-	<select id="idGrupo" name="idGrupo" class="form-control" onChange="selecionarLider();">
-	<option value="0"><?php echo $this->translate(Constantes::$TRADUCAO_SELECIONE); ?></option>
-	<?php echo $this->listagemLideresTransferencia($this->discipulos); ?>
-</select>
-</div>
-<?php
-echo $this->inputFormularioSimples('Dia', $formulario->get(Constantes::$FORM_INPUT_DIA), 4, 2);
-echo $this->inputFormularioSimples('Mês', $formulario->get(Constantes::$FORM_INPUT_MES), 4, 2);
-echo $this->inputFormularioSimples('Ano', $formulario->get(Constantes::$FORM_INPUT_ANO), 4, 2);
 
-echo $this->inputFormularioSimples('Valor Individual', $formulario->get('individual'), 12);
-echo $this->inputFormularioSimples('Qual Célula', $formulario->get('idGrupoEvento'), 12, 2);
-echo $this->inputFormularioSimples('Valor Célula', $formulario->get('celula'), 12);
-?>
-	</div>
-	<div class="panel-footer text-right">
-<?php
-echo $this->formHidden($formulario->get(Constantes::$INPUT_CSRF));
+$htmlBody = '';
+$htmlBody .= '<h1>Parceiro de Deus</h1>';
+$htmlBody .=  $this->divMensagens();
+$htmlBody .= '<div class="form-group col-lg-12 col-md-12 col-sm-12 col-xs-12">';
+$htmlBody .= '<label for="selecionaEquipe">' . $this->translate('Selecione o Time') . '</label>';
+$htmlBody .= '<select class="form-control" name="idEquipe" id="selecionaEquipe" onChange="selecionarEquipe()">';
+$htmlBody .= '<option value="0" >' . $this->translate(Constantes::$TRADUCAO_SELECIONE) . '</option>';
+$informacao = $this->grupo->getEntidadeAtiva()->infoEntidade() . ' - ' . $this->grupo->getNomeLideresAtivos();
+$htmlBody .= '<option value="' . $this->grupo->getId() . '" >' . $informacao . '</option>';
+foreach ($this->discipulos as $grupoPaiFilhoFilho) {
+	$informacao = $grupoPaiFilhoFilho->getGrupoPaiFilhoFilho()->getEntidadeAtiva()->infoEntidade() . ' - ' . $grupoPaiFilhoFilho->getGrupoPaiFilhoFilho()->getNomeLideresAtivos();
+	$htmlBody .= '<option value="' . $grupoPaiFilhoFilho->getGrupoPaiFilhoFilho()->getId() . '" >' . $informacao . '</option>';
+}
+$htmlBody .= '</select>';
+$htmlBody .= '</div>';
+$htmlBody .= '<div class="form-group col-lg-12 col-md-12 col-sm-12 col-xs-12">';
+$htmlBody .= '<label for="selecionarSub">' . $this->translate('Qual Líder') . '<img src="img/loader.gif" id="loaderSub" class="hidden" /></label>';
+$htmlBody .= '<select class="form-control" name="idPessoa" id="selecionarSub" >';
+$htmlBody .= '<option value="0" >' . $this->translate(Constantes::$TRADUCAO_SELECIONE) . '</option>';
+$htmlBody .= '</select>';
+$htmlBody .= '</div>';
+$htmlBody .=  $this->inputFormularioSimples('Dia', $formulario->get(Constantes::$FORM_INPUT_DIA), 4, 2);
+$htmlBody .=  $this->inputFormularioSimples('Mês', $formulario->get(Constantes::$FORM_INPUT_MES), 4, 2);
+$htmlBody .=  $this->inputFormularioSimples('Ano', $formulario->get(Constantes::$FORM_INPUT_ANO), 4, 2);
+
+$htmlBody .=  $this->inputFormularioSimples('Valor Individual', $formulario->get('individual'), 12);
+$htmlBody .=  $this->inputFormularioSimples('Valor Célula', $formulario->get('celula'), 12);
+$htmlBody .= '<div>TOTAL: <span id="total">0.00</span></div>';
+
+$htmlFooter = '';
+$htmlFooter .=  $this->formHidden($formulario->get(Constantes::$INPUT_CSRF));
 $stringNomeDaFuncaoOnClickCadastro = 'validar(this.form)';
-echo $this->botaoLink('Salvar Valores', Constantes::$STRING_HASHTAG, 0, $this->funcaoOnClick($stringNomeDaFuncaoOnClickCadastro));
-?>        
-	</div>
-</div>
-<?php 
-echo $this->form()->closeTag();
+$htmlFooter .=  $this->botaoLink('Lançar', Constantes::$STRING_HASHTAG, 0, $this->funcaoOnClick($stringNomeDaFuncaoOnClickCadastro));
+$funcaoVoltar = $this->funcaoOnClick('location.href="/lancamentoParceiroDeDeusExtrato"');
+$htmlFooter .=  $this->botaoSimples('Voltar', $funcaoVoltar, BotaoSimples::botaoMenorImportancia, BotaoSimples::posicaoAEsquerda);
 
+$tamanho = 600;
+$html = '';
+$html .= $this->form()->openTag($formulario); 
+$html .= '<div align="center">';
+$html .= '<div class="panel mw'.$tamanho.'">';
+
+$html .= '<div class="panel-body bg-light text-center mt50">';
+$html .= $htmlBody;
+$html .= '</div>';
+
+$html .= '<div class="panel-footer text-right">';
+$html .= $htmlFooter;
+$html .= '</div>';
+
+$html .= '</div>';
+$html .= '</div>';
+$html .= $this->form()->closeTag();
+echo $html;
+?>
+<script type="text/javascript">
+
+</script>

@@ -7,15 +7,15 @@ use Application\Controller\Helper\Funcoes;
 use Application\Model\ORM\CircuitoORM;
 use DateTime;
 
-class FatoParceiroDeDeusORM extends CircuitoORM {
+class FatoFinanceiroORM extends CircuitoORM {
 
 	public function encontrarFatosPorNumeroIdentificador($numeroIdentificador) {
 		$fatos = null;
 		try {
-			$dql = "SELECT fpd "
-				. "FROM  " . Constantes::$ENTITY_FATO_PARCEIRO_DE_DEUS . " fpd "
+			$dql = "SELECT ff "
+				. "FROM  " . Constantes::$ENTITY_FATO_FINANCEIRO . " ff "
 				. "WHERE "
-				. "fpd.numero_identificador LIKE ?1 ";
+				. "ff.numero_identificador LIKE ?1 ";
 
 			$numeroAjustado = $numeroIdentificador . '%';
 			$fatos = $this->getEntityManager()->createQuery($dql)
@@ -31,12 +31,12 @@ class FatoParceiroDeDeusORM extends CircuitoORM {
 		$resultadoPeriodo = Funcoes::montaPeriodo($periodo);
 
 		$dqlBase = "SELECT "
-			. "SUM(fpd.individual) + SUM(fpd.celula) valor "
-			. "FROM  " . Constantes::$ENTITY_FATO_PARCEIRO_DE_DEUS . " fpd "
+			. "SUM(ff.valor) valor "
+			. "FROM  " . Constantes::$ENTITY_FATO_FINANCEIRO . " ff "
                 . "WHERE "
-                . " fpd.numero_identificador #tipoComparacao ?1 "
-                . "AND fpd.data_inativacao is null "
-                . "AND fpd.data >= ?2 AND fpd.data <= ?3 ";
+                . " ff.numero_identificador #tipoComparacao ?1 "
+                . "AND ff.data_inativacao is null "
+                . "AND ff.data >= ?2 AND ff.data <= ?3 ";
         try {
             if ($tipoComparacao == 1) {
 				$dqlAjustadaTipoComparacao = str_replace('#tipoComparacao', '=', $dqlBase);
@@ -66,7 +66,6 @@ class FatoParceiroDeDeusORM extends CircuitoORM {
 				->setParameter(2, $dataInicialFormatada)
 				->setParameter(3, $dataFinalFormatada)
 				->getResult();
-			//Funcoes::var_dump($result);
 
 			return $result[0];
 		} catch (Exception $exc) {
