@@ -34,6 +34,9 @@ use Application\Model\Entity\TurmaPessoaAvaliacao;
 use Application\Model\Entity\TurmaPessoaFinanceiro;
 use Application\Model\Entity\TurmaPessoaFrequencia;
 use Application\Model\Entity\TurmaPessoaSituacao;
+use Application\Model\Entity\FatoParceiroDeDeus;
+use Application\Model\Entity\FatoFinanceiro;
+use Application\Model\Entity\FatoFinanceiroTipo;
 use Application\Model\ORM\RepositorioORM;
 use DateTime;
 use Doctrine\ORM\EntityManager;
@@ -2244,6 +2247,107 @@ class IndexController extends CircuitoController {
 
 	function infoAction(){
 		return new ViewModel();
+	}
+
+	function ajustarAction(){
+		$html = '';
+		$fatos = $this->getRepositorio()->getFatoParceiroDeDeusORM()->buscarTodosRegistrosEntidade();
+		foreach($fatos as $fatoParceiroDeDeus){
+			if($fatoParceiroDeDeus->verificarSeEstaAtivo()){
+				if($grupo = $this->getRepositorio()->getGrupoORM()->encontrarporid(substr($fatoParceiroDeDeus->getNumero_identificador(), strlen($fatoParceiroDeDeus->getNumero_identificador())-8))){
+					$html .= '<br /><br />';
+					$html .= '<br />Id: ' . $fatoParceiroDeDeus->getId();
+					$html .= '<br />Numero: ' . $fatoParceiroDeDeus->getNumero_identificador();
+					$html .= '<br />Grupo: ' . $grupo->getId();
+					$html .= '<br />Entidade: ' . $grupo->getEntidadeAtiva()->infoEntidade();
+					$fatoParceiroDeDeus->setDataEHoraDeInativacao();
+					$this->getRepositorio()->getFatoParceiroDeDeusORM()->persistir($fatoParceiroDeDeus);
+
+					if($fatoParceiroDeDeus->getIndividual() > 0){
+						$fatoFinanceiroTipo = $this->getRepositorio()->getFatoFinanceiroTipoORM()->encontrarPorId(FatoFinanceiroTipo::parceiroDeDeusIndividual);
+						$fatoFinanceiro = new FatoFinanceiro();
+						$fatoFinanceiro->setNumero_identificador($fatoParceiroDeDeus->getNumero_identificador());
+						$fatoFinanceiro->setPessoa($grupo->getResponsabilidadesAtivas()[0]->getPessoa());
+						$fatoFinanceiro->setFatoFinanceiroTipo($fatoFinanceiroTipo);
+						$fatoFinanceiro->setValor($fatoParceiroDeDeus->getIndividual());
+						$fatoFinanceiro->setData($fatoParceiroDeDeus->getData());
+						$this->getRepositorio()->getFatoFinanceiroORM()->persistir($fatoFinanceiro);	
+					}
+					if($fatoParceiroDeDeus->getCelula() > 0){
+						$fatoFinanceiroTipo = $this->getRepositorio()->getFatoFinanceiroTipoORM()->encontrarPorId(FatoFinanceiroTipo::parceiroDeDeusCelula);
+						$fatoFinanceiro = new FatoFinanceiro();
+						$fatoFinanceiro->setNumero_identificador($fatoParceiroDeDeus->getNumero_identificador());
+						$fatoFinanceiro->setPessoa($grupo->getResponsabilidadesAtivas()[0]->getPessoa());
+						$fatoFinanceiro->setFatoFinanceiroTipo($fatoFinanceiroTipo);
+						$fatoFinanceiro->setValor($fatoParceiroDeDeus->getCelula());
+						$fatoFinanceiro->setData($fatoParceiroDeDeus->getData());
+						$this->getRepositorio()->getFatoFinanceiroORM()->persistir($fatoFinanceiro);	
+					}
+				}
+			}
+		}
+		return new ViewModel(array('html' => $html));
+	}
+
+	function reprovarAlunosAction(){
+		$html = '';
+
+		$turmas = $this->getRepositorio()->getTurmaORM()->buscarTodosRegistrosEntidade();
+		$turmasDoIV = array();
+		foreach($turmas as $turma){
+			if($turma->getCurso()->getId() === Curso::INSTITUTO_DE_VENCEDORES){
+				$turmasDoIV[] = $turma;
+			}
+		}
+
+		foreach($turmasDoIV as $turma){
+			if($turmaAulaAtiva = $turma->getTurmaAulaAtiva()){
+				if($turmaPessoas = $turma->getTurmaPessoa()){
+					foreach($turmaPessoas as $turmaPessoa){
+						if($turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getId() === Situacao::ATIVO){
+							$contagemDeFaltas = 0;
+							foreach($turmaAulaAtiva->getAula()->getDisciplina()->getAulaOrdenadasPorPosicao() as $aula){
+								if($aula->getPosicao() < $turmaAulaAtiva->getAula()->getPosicao()){
+									$encontrei = false;
+									if($turmaPessoaAulas = $turmaPessoa->getTurmaPessoaAula()){
+										foreach($turmaPessoaAulas as $turmaPessoaAula){
+											if($turmaPessoaAula->getAula()->getId() === $aula->getId()){
+												$encontrei = true;
+												break;
+											}
+										}
+
+									}
+									if(!$encontrei){
+										$contagemDeFaltas++;
+									}else{
+										if(!$turmaPessoaAula->verificarSeEstaAtivo()){
+											$contagemDeFaltas++;
+										}else{
+											if($turmaPessoaAula->getReposicao() == 'S'){
+												$contagemDeFaltas++;
+											}
+										}
+									}
+								}
+							}
+							if($contagemDeFaltas >= 4){
+								$html .= '<br /><span class="label label-danger">Reprovar</span>';
+								$turmaPessoaSituacaoAtiva = $turmaPessoa->getTurmaPessoaSituacaoAtiva();
+								$turmaPessoaSituacaoAtiva->setDataEHoraDeInativacao();
+								$this->getRepositorio()->getTurmaPessoaSituacaoORM()->persistir($turmaPessoaSituacaoAtiva, $mudatDataDeCriacao = false);
+
+								$turmaPessoaSituacao = new TurmaPessoaSituacao();
+								$turmaPessoaSituacao->setTurma_pessoa($turmaPessoa);
+								$turmaPessoaSituacao->setSituacao($this->getRepositorio()->getSituacaoORM()->encontrarPorId(Situacao::REPROVADO_POR_FALTA));
+								$this->getRepositorio()->getTurmaPessoaSituacaoORM()->persistir($turmaPessoaSituacao);
+							}
+						}
+					}
+				}
+			}
+		}
+		return new ViewModel(array('html' => $html));
 	}
 
 }

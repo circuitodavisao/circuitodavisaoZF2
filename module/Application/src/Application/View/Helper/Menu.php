@@ -119,14 +119,28 @@ class Menu extends AbstractHelper {
 		if ($this->view->entidade->verificarSeEstaAtivo()) {
 			/* Arvore */
 			$html .= '<li class="sidebar-label pt20">Hierarquia</li>';
-
-			/* Pegar pessoas abaixo */
+			if ($this->view->discipulos) {
 				$html .= '<li>';
-				$html .= '<a href="/principalTime" onClick="mostrarSplash();">';
+				$html .= '<a class="accordion-toggle" href="#">';
 				$html .= '<span class="fa fa-sitemap"></span>';
-				$html .= '<span class="sidebar-title">Meu Time(Manutenção)</span>';
+				$html .= '<span class="sidebar-title">Meu Time</span>';
+				$html .= '<span class="caret"></span>';
+				$html .= '</a>';
+
+				$html .= '<ul class="nav sub-nav">';
+
+				$html .= '</ul>';
+
+				$html .= '</li>';
+			} else {
+				$html .= '<li>';
+				$html .= '<a href="#">';
+				$html .= '<span class="fa fa-user-times"></span>';
+				$html .= '<span class="sidebar-title">Sem Time</span>';
 				$html .= '</a>';
 				$html .= '</li>';
+			}
+			$html .= '</li>';
 		}
 
 		/* Start: Sidebar Menu */
@@ -259,7 +273,7 @@ class Menu extends AbstractHelper {
 
 			$html .= '<ul class="nav sub-nav">';
 
-			for ($indiceMenuRelatorio = 1; $indiceMenuRelatorio <= 8; $indiceMenuRelatorio++) {
+			for ($indiceMenuRelatorio = 1; $indiceMenuRelatorio <= 9; $indiceMenuRelatorio++) {
 
 				$label = '';
 				$mostrar = false;
@@ -290,6 +304,10 @@ class Menu extends AbstractHelper {
 					break;
 				case 8:
 					$label = 'C&eacute;lulas de Elite';
+					$mostrar = true;
+					break;
+				case 9:
+					$label = 'Parceiro de Deus Consolidado';
 					$mostrar = true;
 					break;
 				}
@@ -323,6 +341,17 @@ class Menu extends AbstractHelper {
 //			$html .= 'Discipulado';
 //			$html .= '</a>';
 //			$html .= '</li>';
+
+			if ($this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja || 
+				$this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::equipe) {
+
+					$html .= '<li>';
+					$html .= '<a href="/relatorioInstituto" onClick="mostrarSplash();">';
+					$html .= '<span class="fa fa-users"></span>';
+					$html .= 'Aproveitamento Instituto de Vencedores';
+					$html .= '</a>';
+					$html .= '</li>';
+				}
 
 			$html .= '</ul>';
 

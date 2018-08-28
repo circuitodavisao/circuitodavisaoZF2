@@ -70,40 +70,46 @@ if($this->filtrado){
 			$html .= '</thead>';
 
 			$html .= '<tbody>';
-			if ($turma->getTurmaPessoa()) {
-				foreach ($turma->getTurmaPessoa() as $turmaPessoa) {
+			if($this->postado['idTurma'] != 0){
+				$turmaPessoas = $this->repositorio->getTurmaPessoaORM()->encontrarPorTurma($this->postado['idTurma']);
+			}else{
+				$turmaPessoas = $turma->getTurmaPessoa();
+			}
+			if ($turmaPessoas) {
+				foreach ($turmaPessoas as $turmaPessoa) {
 					$mostrar = false;
-
-					if($turmaPessoa->verificarSeEstaAtivo()){
-						if ($this->postado['idEquipe'] == 0) {
-							$mostrar = true;
-						} else {
-							if ($turmaPessoa->getPessoa()->getGrupoPessoaAtivo()) {
-								if($turmaPessoa->getPessoa()->getGrupoPessoaAtivo()->getGrupo()->getGrupoEquipe()->getId() == $this->postado['idEquipe']){
-									$mostrar = true;
-								}
+					$grupoPessoaAtivo = null;
+					if ($this->postado['idEquipe'] == 0) {
+						$mostrar = true;
+					} else {
+						if ($grupoPessoaAtivo = $turmaPessoa->getPessoa()->getGrupoPessoaAtivo()) {
+							if($grupoPessoaAtivo->getGrupo()->getGrupoEquipe()->getId() == $this->postado['idEquipe']){
+								$mostrar = true;
 							}
 						}
 					}
+					if(!$turmaPessoa->verificarSeEstaAtivo()){
+						$mostrar = false;
+					}
 					if ($mostrar) {
-						$nomeEquipe = CursoController::nomeEquipeTurmaPessoa($turmaPessoa);
+						$nomeEquipe = CursoController::nomeEquipeTurmaPessoa($turmaPessoa, $grupoPessoaAtivo);
 
 						$mostrarSituacao = false;
-						if($this->postado['idSituacao'] == 0 && ($turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getId() === Situacao::ATIVO ||
-						$turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getId() === Situacao::ESPECIAL)){
-							$mostrarSituacao = true;
-						}else{
-							if($turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getId() == $this->postado['idSituacao']){
+						if($this->postado['idSituacao'] == 0 && ($turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getId() === Situacao::ATIVO || 
+							$turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getId() === Situacao::ESPECIAL)){
 								$mostrarSituacao = true;
+							}else{
+								if($turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getId() == $this->postado['idSituacao']){
+									$mostrarSituacao = true;
+								}
 							}
-						}
 
 						if($mostrarSituacao){
 
 							$mostrarSub = false;
-							if($this->postado['idSub'] == 0){
-								$mostrarSub = true;
-							}else{
+						if($this->postado['idSub'] == 0){
+						$mostrarSub = true;
+						}else{
 								$mostrarSub = CursoController::verificarSeParticipaDeUmaSub($turmaPessoa, $this->postado['idSub']);
 							}
 							if($mostrarSub){
@@ -127,12 +133,14 @@ if($this->filtrado){
 
 								$html .= '<tr class="'.$corSituacao.'">';
 								$html .= '<td class="text-center">' . $stringSituacao . '</td>';
-								if ($this->entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja || $this->pessoa->getPessoaCursoAcessoAtivo() && ($this->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::COORDENADOR ||
+								if ($this->entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja || 
+									$this->pessoa->getPessoaCursoAcessoAtivo() && 
+									($this->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::COORDENADOR ||
 									$this->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::SUPERVISOR ||
 									$this->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::FACILITADOR)) {
-										$html .= '<td><a target="_blanck" href="/cursoAluno/' . $turmaPessoa->getId() . '" class="btn btn-xs btn-primary" >' . str_pad($turmaPessoa->getId(), 8, 0, STR_PAD_LEFT) . '</a></td>';
+										$html .= '<td class="text-center"><a target="_blanck" href="/cursoAluno/' . $turmaPessoa->getId() . '" class="btn btn-xs btn-primary" >' . $turmaPessoa->getId(). '</a></td>';
 									}else{
-										$html .= '<td><span class="label label-default">'.$turmaPessoa->getId().'</span></td>';
+										$html .= '<td class="text-center"><span class="label label-default">'.$turmaPessoa->getId().'</span></td>';
 									}
 								$html .= '<td>'. $turmaPessoa->getPessoa()->getNome() . '</td>';
 								$html .= '<th class="text-center">' . $nomeEquipe . '</th>';
@@ -149,25 +157,23 @@ if($this->filtrado){
 													break;
 												}
 
-												$html .= '<td class="text-center">';
+											$html .= '<td class="text-center">';
 												if ($aula->getPosicao() <= ($aulaAtiva->getPosicao() - 1)) {
 													$frequencia = false;
 													$icone = 'fa-times';
 													$corDoBotao = BotaoSimples::botaoMuitoPequenoPerigoso;
 
-													if (count($turmaPessoa->getTurmaPessoaAula()) > 0) {
-														foreach ($turmaPessoa->getTurmaPessoaAula() as $turmaPessoaAula) {
-															if ($turmaPessoaAula->getAula()->getId() === $aula->getId()) {
-																$frequencia = true;
-																$icone = 'fa-check';
-																$corDoBotao = BotaoSimples::botaoMuitoPequenoSucesso;
-																if ($turmaPessoaAula->getReposicao() == 'S') {
-																	$icone = 'fa-file';
-																	$corDoBotao = BotaoSimples::botaoMuitoPequenoWarning;
-																}
+													if($turmaPessoaAula = $this->repositorio->getTurmaPessoaAulaORM()->encontrarPorTurmaPessoaEAula($turmaPessoa->getId(), $aula->getId())){
+														if($turmaPessoaAula->verificarSeEstaAtivo()){
+															$frequencia = true;
+															$icone = 'fa-check';
+															$corDoBotao = BotaoSimples::botaoMuitoPequenoSucesso;
+															if ($turmaPessoaAula->getReposicao() == 'S') {
+																$icone = 'fa-file';
+																$corDoBotao = BotaoSimples::botaoMuitoPequenoWarning;
 															}
 														}
-													}
+													}	
 												} else {
 													$icone = 'fa-clock-o';
 													$corDoBotao = BotaoSimples::botaoMuitoPequenoImportante;

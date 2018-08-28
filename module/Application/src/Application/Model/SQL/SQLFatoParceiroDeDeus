@@ -46,3 +46,5 @@ CREATE INDEX index_fato_parceiro_de_deus_numero_identificador
 COMMENT ON INDEX index_fato_parceiro_de_deus_numero_identificador
   IS 'Index do número identificador do grupo';
 
+ALTER TABLE fato_parceiro_de_deus ADD COLUMN pessoa_id integer;
+ALTER TABLE fato_parceiro_de_deus ALTER COLUMN evento DROP NOT NULL;

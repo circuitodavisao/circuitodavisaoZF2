@@ -1,6 +1,7 @@
 <?php
 use Application\Controller\Helper\Funcoes;
 use Application\Controller\Helper\Constantes;
+use Application\View\Helper\BotaoSimples;
 ?>
 <div class="panel-body bg-light text-center mt50">
 	<h1>Parceiro de Deus Extrato</h1>
@@ -8,31 +9,45 @@ use Application\Controller\Helper\Constantes;
 $html = '';
 if($this->fatos){
 	$html .= '<input id="fooFilter" type="text" class="form-control" placeholder="Filtro">';
+
+	$html .= '<div class="table-responsive">';
 	$html .= '<table class="table table-condensed table-hover bg-light mt15 footable" data-filter="#fooFilter">';
+	$html .= '<thead>';
+	$html .= '<tr class="text-left">';
+	$html .= '<th>Data</th>';
+	$html .= '<th>Time</th>';
+	$html .= '<th>Pessoa</th>';
+	$html .= '<th>Valor</th>';
+	$html .= '<th>Tipo</th>';
+	$html .= '<td></td>';
+	$html .= '</tr>';
+	$html .= '</thead>';
 	$html .= '<tbody>';
 	$somaTotal = 0;
-	foreach($this->fatos as $fatoParceiroDeDeus){
-		$total = $fatoParceiroDeDeus->getIndividual() + $fatoParceiroDeDeus->getCelula();
-		$htmlCelula = $this->translate(Funcoes::diaDaSemanaPorDia($fatoParceiroDeDeus->getEvento()->getDia(),1)).'-' . $fatoParceiroDeDeus->getEvento()->getHora() ;
+	foreach($this->fatos as $fatoFinanceiro){
+		$funcaoExcluir = $this->funcaoOnClick('mostrarSplash(); validarExclusao('.$fatoFinanceiro->getId().')');
+		$botaoExcluir = $this->botaoSimples('<i class="fa fa-times"></i>', $funcaoExcluir, BotaoSimples::botaoMuitoPequenoPerigoso); 
 
 		$html .= '<tr class="text-left">';
-		$html .= '<td>'.Funcoes::mudarPadraoData($fatoParceiroDeDeus->getData(),1).'</td>';
-		$html .= '<td>'.$fatoParceiroDeDeus->getGrupo()->getEntidadeAtiva()->infoEntidade(). ' - ' . $fatoParceiroDeDeus->getGrupo()->getNomeLideresAtivos().'</td>';
-		$html .= '<td>'.number_format($fatoParceiroDeDeus->getIndividual(),2,',','.').'</td>';
-		$html .= '<td>'.$htmlCelula.'</td>';
-		$html .= '<td>'.number_format($fatoParceiroDeDeus->getCelula(),2,',','.').'</td>';
-		$html .= '<td>'.number_format($total,2,',','.').'</td>';
+		$html .= '<td>'.Funcoes::mudarPadraoData($fatoFinanceiro->getData(),1).'</td>';
+		$html .= '<td>'.$fatoFinanceiro->getGrupo()->getEntidadeAtiva()->infoEntidade();
+		$html .= '<td>'.$fatoFinanceiro->getPessoa()->getNome().'</td>';
+		$html .= '<td>'.number_format($fatoFinanceiro->getValor(),2,',','.').'</td>';
+		$html .= '<td>'.$fatoFinanceiro->getFatoFinanceiroTipo()->getNome().'</td>';
+		$html .= '<td>' . $botaoExcluir . '</td>';
 		$html .= '</tr>';
 
-		$somaTotal += $total;
+		$somaTotal += $fatoFinanceiro->getValor();
 	} 
 	$html .= '<tr class="dark text-left">';
 	$html .= '<td colspan="5" class="text-right">Total</td>';
 	$html .= '<td>'.number_format($somaTotal,2,',','.').'</td>';
+	$html .= '<td></td>';
 	$html .= '</tr>';
 
 	$html .= '</tbody>';
 	$html .= '</table>';
+	$html .= '</div>';
 
 }else{
 	$html .= '<div class="alert alert-warning text-center">Sem lançamentos</div>';
@@ -45,3 +60,11 @@ $html .= '</div>';
 echo $html;
 ?>
 </div>
+<script type="text/javascript">
+function validarExclusao(idFatoParceiroDeDeus){
+	let resposta = confirm('Realmente quer excluir esse lançamento?')
+	if(resposta){
+		funcaoCircuito('lancamentoParceiroDeDeusExcluir', idFatoParceiroDeDeus)
+	}
+}
+</script>

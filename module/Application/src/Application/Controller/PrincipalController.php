@@ -37,29 +37,31 @@ class PrincipalController extends CircuitoController {
         $pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($sessao->idPessoa);
         $grupo = $entidade->getGrupo();
 
-        $eCasal = $grupo->verificaSeECasal();
-        $arrayPeriodoDoMes = Funcoes::encontrarPeriodoDeUmMesPorMesEAno(date('m'), date('Y'));
-        $relatorio = RelatorioController::relatorioCompleto($this->getRepositorio(), $grupo, RelatorioController::relatorioMembresiaECelula, date('m'), date('Y'));
+		if($grupo->getId() !== 1 && $grupo->getId() !== 1225){
+			$eCasal = $grupo->verificaSeECasal();
+			$arrayPeriodoDoMes = Funcoes::encontrarPeriodoDeUmMesPorMesEAno(date('m'), date('Y'));
+			$relatorio = RelatorioController::relatorioCompleto($this->getRepositorio(), $grupo, RelatorioController::relatorioMembresiaECelula, date('m'), date('Y'));
 
-        $mesAnterior = date('m') - 1;
-        $anoAnterior = date('Y');
-        if (date('m') == 1) {
-            $mesAnterior = 12;
-            $anoAnterior = date('Y') - 1;
-        }
-       
-        $mostrarPrincipal = true;
-        if (!$entidade->verificarSeEstaAtivo()) {
-            $mostrarPrincipal = false;
-        }
+			$mesAnterior = date('m') - 1;
+			$anoAnterior = date('Y');
+			if (date('m') == 1) {
+				$mesAnterior = 12;
+				$anoAnterior = date('Y') - 1;
+			}
 
-        if ($grupo->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::igreja) {
-            $turmas = $grupo->getTurma();
-        } else {
-            $turmas = $grupo->getGrupoIgreja()->getTurma();
-        }
+			$mostrarPrincipal = true;
+			if (!$entidade->verificarSeEstaAtivo()) {
+				$mostrarPrincipal = false;
+			}
 
-        $hierarquias = $this->getRepositorio()->getHierarquiaORM()->encontrarTodas();
+			if ($grupo->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::igreja) {
+				$turmas = $grupo->getTurma();
+			} else {
+				$turmas = $grupo->getGrupoIgreja()->getTurma();
+			}
+
+			$hierarquias = $this->getRepositorio()->getHierarquiaORM()->encontrarTodas();
+		}
 
         $dados = array(
             'relatorio' => $relatorio,
@@ -71,7 +73,6 @@ class PrincipalController extends CircuitoController {
             'hierarquias' => $hierarquias,
             'repositorio' => $this->getRepositorio(),
             'pessoa' => $pessoa,
-//            'alunosComFaltas' => $alunosComFaltas,
             'turmas' => $turmas,
         );
 
