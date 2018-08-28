@@ -136,6 +136,10 @@ $somaMeta = 0;
 							if($this->tipoRelatorio == 9 && ($this->entidade->getGrupo()->getId() === 1 || $this->entidade->getGrupo()->getId() === 1225)){
 	                            echo '<th colspan="2"></th>';
 							}
+                            if ($this->tipoRelatorio == 1 ||
+                                    $this->tipoRelatorio == 3) {
+                                echo '<th></th>';
+                            }
                             echo '<th></th>';
                             ?>
                         </tr>
@@ -206,6 +210,10 @@ $somaMeta = 0;
 							if($this->tipoRelatorio == 9 && ($this->entidade->getGrupo()->getId() === 1 || $this->entidade->getGrupo()->getId() === 1225)){
 								echo '<th class="' . $classeBase . '">Meta</th>';
 							}
+                            if ($this->tipoRelatorio == 1 ||
+                                    $this->tipoRelatorio == 3) {
+                                echo '<th>MÉDIA</th>';
+                            }
                             if ($this->tipoRelatorio == 1 ||
                                     $this->tipoRelatorio == 2 ||
                                     $this->tipoRelatorio == 3 ||
@@ -329,6 +337,12 @@ $somaMeta = 0;
                                 }
 
                             }
+							if ($this->tipoRelatorio == 1){
+									echo '<th>'. RelatorioController::formataNumeroRelatorio($relatorio['mediaMembresia']) . '</th>';
+								}
+							if($this->tipoRelatorio == 3) {
+									echo '<th>'. RelatorioController::formataNumeroRelatorio($relatorio['mediaCelula']) . '</th>';
+								}
 							if ($this->tipoRelatorio == 1 ||
 								$this->tipoRelatorio == 2 ||
 								$this->tipoRelatorio == 3 ||
