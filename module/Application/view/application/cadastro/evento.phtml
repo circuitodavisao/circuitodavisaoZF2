@@ -80,8 +80,8 @@ echo $this->templateFormularioTopo($tituloDaPagina);
         if ($form instanceof CelulaForm) {
             echo '</div>';
         }
-        ?> 
-        <div id="divConfirmacao" class="hidden">         
+        ?>
+        <div id="divConfirmacao" class="hidden">
             <address>
                 <div><strong><?php echo $this->translate(Constantes::$TRADUCAO_DIA_DA_SEMANA_SIMPLIFICADO) . ' / ' . $this->translate(Constantes::$TRADUCAO_HORA); ?></strong></div>
                 <div><span id="spanDiaHora"></span></div>
@@ -91,12 +91,13 @@ echo $this->templateFormularioTopo($tituloDaPagina);
                     <div><strong><?php echo $this->translate(Constantes::$TRADUCAO_HOSPEDEIRO); ?></strong></div>
                     <div><span id="spanNome"></span></div>
                     <div><span id="spanTelefone"></span></div>
-                </address>                     
+                </address>
                 <address>
                     <div><strong><?php echo $this->translate(Constantes::$TRADUCAO_ENDERECO); ?></strong></div>
                     <div><span id="spanLogradouroComplemento"></span></div>
-                    <div><span id="spanEndereco"></span></div>                  
+                    <div><span id="spanEndereco"></span></div>
                 </address>
+                <div class="alert alert-danger text-center" role="alert">A sua célula só estará disponível para lançamento a partir no próximo período!</div>                   
                 <?php
             } else {
                 if ($form instanceof EventoForm) {
@@ -104,11 +105,11 @@ echo $this->templateFormularioTopo($tituloDaPagina);
                     <address>
                         <div><strong>Nome</strong></div>
                         <div><span id="spanNome"></span></div>
-                    </address>   
+                    </address>
                     <address>
                         <div><strong>Equipe(s)</strong></div>
                         <div><span id="spanEquipes"></span></div>
-                    </address>   
+                    </address>
                     <?php
                 }
             }
@@ -144,7 +145,7 @@ echo $this->templateFormularioTopo($tituloDaPagina);
 
             $funcaoVoltarNome = $this->funcaoOnClick('voltarPreencherNome()');
             echo $this->botaoSimples(Constantes::$TRADUCAO_VOLTAR, $funcaoVoltarNome, 2);
-            ?>  
+            ?>
         </div>
     </div>
     <!-- Fim panel-body -->
