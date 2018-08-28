@@ -87,9 +87,7 @@ function acessarMatricula() {
 			},
 			function (data) {
 				if (data.response) {
-					var informacaoAluno = '<p>Curso: ' + data.curso +
-						'</p><p>Turma: ' + data.turma +
-						'</p><p>Equipe: ' + data.equipe +
+					var informacaoAluno = '<p>Turma: ' + data.turma +
 						'</p><p>Aluno: ' + data.pessoa +
 						'</p><p>Matrícula: ' + data.idTurmaPessoa + '</p>';
 					mensagem
@@ -135,9 +133,7 @@ function verificarMatricula(reposicao = false) {
 			},
 			function (data) {
 				if (data.response) {
-					let informacaoAluno = '<p>Curso: ' + data.curso +
-						'</p><p>Turma: ' + data.turma +
-						'</p><p>Equipe: ' + data.equipe +
+					let informacaoAluno = '<p>Turma: ' + data.turma +
 						'</p><p>Aluno: ' + data.pessoa +
 						'</p><p>Matrícula: ' + idTurmaPessoa.val() + '</p>';
 					if(data.temAulaAtiva || reposicao){

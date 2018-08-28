@@ -26,12 +26,12 @@ class Situacao extends CircuitoEntity {
     const REPROVADO_POR_FALTA = 8;
 
     /**
-     * @ORM\OneToMany(targetEntity="TurmaPessoaSituacao", mappedBy="situacao") 
+     * @ORM\OneToMany(targetEntity="TurmaPessoaSituacao", mappedBy="situacao", fetch="EXTRA_LAZY") 
      */
     protected $turmaPessoaSituacao;
 
     /**
-     * @ORM\OneToMany(targetEntity="SolicitacaoSituacao", mappedBy="situacao") 
+     * @ORM\OneToMany(targetEntity="SolicitacaoSituacao", mappedBy="situacao", fetch="EXTRA_LAZY") 
      */
     protected $solicitacaoSituacao;
 

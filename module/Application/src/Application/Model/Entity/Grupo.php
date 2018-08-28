@@ -441,7 +441,7 @@ class Grupo extends CircuitoEntity {
         $contador = 1;
         $inativa = false;
 
-        if (!$pessoas) {
+        if (!$pessoas || !$this->getGrupoPaiFilhoPaiAtivo()) {
             $inativa = true;
             $pessoas = $this->getPessoasInativas();
             $dataInativacao = $pessoas[0]->getGrupoResponsavel()[0]->getData_inativacaoStringPadraoBrasil();
@@ -1175,7 +1175,7 @@ class Grupo extends CircuitoEntity {
 
     /**
      * Retorna o grupo equipe do Grupo
-     * @return GrupoEvento
+     * @return Grupo
      */
     function getGrupoEquipe() {
         $grupoSelecionado = $this;
@@ -1201,6 +1201,34 @@ class Grupo extends CircuitoEntity {
         }
         return $grupoEquipe;
     }
+
+    function getGrupoSubEquipe() {
+		$grupoSelecionado = $this;
+		$grupoSubEquipe = null;
+		if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::EQUIPE) {
+			$grupoSubEquipe = $grupoSelecionado;
+		}
+		if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::IGREJA) {
+			$grupoSubEquipe = $grupoSelecionado;
+		}
+
+		if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::SUBEQUIPE) {
+			while ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::SUBEQUIPE) {
+				if ($grupoSelecionado->getGrupoPaiFilhoPaiAtivo()) {
+					$grupoSubEquipe = $grupoSelecionado;
+					$grupoSelecionado = $grupoSelecionado->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai();
+					if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::EQUIPE) {
+						break;
+					}
+				} else {
+					break;
+				}
+			}
+			$grupoEquipe = $grupoSelecionado;
+		}
+		return $grupoSubEquipe;
+    }
+
 
     function getFatoRanking() {
         return $this->fatoRanking;
