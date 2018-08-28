@@ -1270,7 +1270,7 @@ class RelatorioController extends CircuitoController {
 	}
 
 	public static function formataNumeroRelatorio($valor) {
-		return number_format((double) $valor, 2, ',', '.');
+		return number_format((double) $valor, 0, '', '');
 	}
 
 	const MARGEM_D = 0;
