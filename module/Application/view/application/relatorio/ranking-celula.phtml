@@ -30,7 +30,7 @@ if($this->fatos && $this->filtrado){
 
 		echo '<div class="panel p10 '. $class . '">';
 		echo '<div class="panel-heading">';
-		echo '<i class="fa fa-star"></i> ' . $contagemRanking . ' - ' . $lideres . ' - ' . $infoEntidade . ' - <span style="font-size: 24px">' . $fato->getValor() . ' PESSOAS</span>';
+		echo '<i class="fa fa-star"></i> ' . $contagemRanking . ' - ' . $lideres ;
 		echo '</div>';
 		echo '<div class="panel-body p5">';
 
@@ -38,6 +38,8 @@ if($this->fatos && $this->filtrado){
 		echo $fotos;
 		echo '</div>';
 		echo '<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">';
+		echo "<h3 class='label label-lg label-success'>{$fato->getValor()} PESSOAS</h3>";
+		echo "<h4>$infoEntidade</h4>";
 		echo "<h4>Célula: $celulaDia</h4>";
 		echo "<h5>$celulaHospedeiro</h5>";
 		echo "<h5>$celulaLocal</h5>";
