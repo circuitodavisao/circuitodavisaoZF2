@@ -463,11 +463,11 @@ class Grupo extends CircuitoEntity {
         return $nomes;
     }
 
-    function getFotosLideresAtivos() {
+    function getFotosLideresAtivos($tamanho = 24) {
         $pessoas = $this->getPessoasAtivas();
         $fotos = '';
         foreach ($pessoas as $pessoa) {
-            $fotos .= FuncoesEntidade::tagImgComFotoDaPessoa($pessoa, $tamanho = 24, 'px', ' style="padding:1px;" ');
+            $fotos .= FuncoesEntidade::tagImgComFotoDaPessoa($pessoa, $tamanho, 'px', ' style="padding:1px;" ');
         }
         return $fotos;
     }

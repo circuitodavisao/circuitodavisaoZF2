@@ -1,0 +1,47 @@
+-- Table: fato_ranking_celula
+
+DROP TABLE fato_ranking_celula;
+
+CREATE TABLE fato_ranking_celula
+(
+  id serial NOT NULL, -- Identificação do fato lider
+  grupo_id integer NOT NULL, -- Identificação do grupo da igreja
+  grupo_equipe_id integer NOT NULL, -- Identificação do grupo da equipe
+  grupo_evento_id integer NOT NULL, -- Identificação do grupo evento da celula
+  valor integer NOT NULL, -- Valor medio arredondado 
+  mes integer NOT NULL, -- Mês do ranking
+  ano integer NOT NULL, -- Ano do ranking
+  data_criacao date NOT NULL DEFAULT ('now'::text)::date, -- Data de criação do relatório
+  hora_criacao time without time zone NOT NULL DEFAULT ('now'::text)::time with time zone, -- Hora de criação do relatório
+  data_inativacao date, -- Data de inativação do relatório
+  hora_inativacao time without time zone, -- Hora de inativação do relatório
+  CONSTRAINT pk_fato_ranking_celula PRIMARY KEY (id)
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE fato_ranking_celula
+  OWNER TO postgres;
+COMMENT ON TABLE fato_ranking_celula
+  IS 'Tabela com a quantidade de lideres por número identificador';
+COMMENT ON COLUMN fato_ranking_celula.id IS 'Identificação do fato ranking celula';
+COMMENT ON COLUMN fato_ranking_celula.grupo_id IS 'Identificação do grupo da igreja';
+COMMENT ON COLUMN fato_ranking_celula.grupo_equipe_id IS 'Identificação do grupo da equipe';
+COMMENT ON COLUMN fato_ranking_celula.grupo_evento_id IS 'Identificação do grupo evendo da celula';
+COMMENT ON COLUMN fato_ranking_celula.mes IS 'Mês do ranking';
+COMMENT ON COLUMN fato_ranking_celula.ano IS 'Ano do ranking';
+COMMENT ON COLUMN fato_ranking_celula.data_criacao IS 'Data de criação do relatório';
+COMMENT ON COLUMN fato_ranking_celula.hora_criacao IS 'Hora de criação do relatório';
+COMMENT ON COLUMN fato_ranking_celula.data_inativacao IS 'Data de inativação do relatório';
+COMMENT ON COLUMN fato_ranking_celula.hora_inativacao IS 'Hora de inativação do relatório';
+
+-- Index: index_fato_ranking_celula_grupo_id
+
+-- DROP INDEX index_fato_ranking_celula_grupo_id;
+
+CREATE INDEX index_fato_ranking_celula_grupo_id
+  ON fato_ranking_celula
+  USING btree
+  (grupo_id COLLATE pg_catalog."default");
+COMMENT ON INDEX index_fato_ranking_celula_grupo_id
+  IS 'Index do grupo  da igreja';

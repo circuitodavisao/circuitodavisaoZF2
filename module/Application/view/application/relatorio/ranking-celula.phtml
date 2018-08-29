@@ -1,0 +1,54 @@
+<?php
+
+use Application\Controller\Helper\Constantes;
+use Application\Controller\Helper\Funcoes;
+?>
+<div class="center-block mt50">
+	<div class="panel">
+		<div class="panel-heading text-center">Ranking Célula</div>
+		<div class="panel-body pn">
+<?php
+echo '<form action="/relatorioRankingCelula" method="post">';
+echo $this->cabecalhoDeMeses();
+echo '</form>';
+
+if($this->fatos && $this->filtrado){
+	$contagemRanking = 1;
+	foreach($this->fatos as $fato){
+		$class = '';
+		if($contagemRanking < 11){
+			$class="panel-success";
+		}
+		$grupoEvento = $this->repositorio->getGrupoEventoORM()->encontrarPorId($fato->getGrupo_evento_id());
+		$infoEntidade = $grupoEvento->getGrupo()->getEntidadeAtiva()->infoEntidade();
+		$lideres = $grupoEvento->getGrupo()->getNomeLideresAtivos();
+		$evento = $grupoEvento->getEvento();
+		$celulaDia = $this->translate(Funcoes::diaDaSemanaPorDia($grupoEvento->getEvento()->getDia(),1)).' - ' . $grupoEvento->getEvento()->getHora();
+		$celulaHospedeiro = 'Hospedeiro: '.$grupoEvento->getEvento()->getEventoCelula()->getNome_hospedeiro();
+		$celulaLocal = 'Local: ' . $grupoEvento->getEvento()->getEventoCelula()->getLogradouro().' '.$grupoEvento->getEvento()->getEventoCelula()->getComplemento();
+		$fotos = $grupoEvento->getGrupo()->getFotosLideresAtivos(128);
+
+		echo '<div class="panel p10 '. $class . '">';
+		echo '<div class="panel-heading">';
+		echo '<i class="fa fa-star"></i> ' . $contagemRanking . ' - ' . $lideres . ' - ' . $infoEntidade . ' - <span style="font-size: 24px">' . $fato->getValor() . ' PESSOAS</span>';
+		echo '</div>';
+		echo '<div class="panel-body p5">';
+
+		echo '<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">';
+		echo $fotos;
+		echo '</div>';
+		echo '<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">';
+		echo "<h4>Célula: $celulaDia</h4>";
+		echo "<h5>$celulaHospedeiro</h5>";
+		echo "<h5>$celulaLocal</h5>";
+		echo '</div>';
+
+		echo '</div>';
+		echo '</div>';
+		$contagemRanking++;
+	}
+}
+?>
+		</div>
+	</div>
+</div>

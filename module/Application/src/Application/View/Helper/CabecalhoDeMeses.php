@@ -23,7 +23,6 @@ class CabecalhoDeMeses extends AbstractHelper {
     public function renderHtml() {
         $html = '';
         $url = $this->view->tipoRelatorio . '/' . $this->view->mes . '/' . $this->view->ano;
-        $html .= '<form action="/relatorio/' . $url . '" method="post">';
         $html .= '<div class="row p10">';
         $html .= '<div class="col-lg-1 col-md-1 col-sm-1 col-xs-12">';
         $html .= 'Mês';
@@ -59,7 +58,6 @@ class CabecalhoDeMeses extends AbstractHelper {
         $html .= '</div>';
         $html .= '</div>';
 
-        $html .= '</form>';
         return $html;
     }
 

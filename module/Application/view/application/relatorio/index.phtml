@@ -69,7 +69,10 @@ $somaMeta = 0;
         </div>
         <div class="panel-body pn">
             <?php
-            echo $this->cabecalhoDeMeses();
+
+			echo '<form action="/relatorio/' . $url . '" method="post">';
+			echo $this->cabecalhoDeMeses();
+			echo '</form>';
 
             for ($indiceDeArrays = $this->periodoInicial; $indiceDeArrays <= $this->periodoFinal; $indiceDeArrays++) {
                 $classeBase = 'periodo' . $indiceDeArrays . ' ';
