@@ -1567,4 +1567,32 @@ class RelatorioController extends CircuitoController {
 
 		return new ViewModel(array('html' => $html));
 	}
+
+	public function rankingCelulaAction(){
+		$request = $this->getRequest();
+		$dados = array();
+		if($request->isPost()){
+			$sessao = new Container(Constantes::$NOME_APLICACAO);
+
+			$idEntidadeAtual = $sessao->idEntidadeAtual;
+			$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+			$grupoIgreja = $entidade->getGrupo()->getGrupoIgreja();
+
+			$postDados = $request->getPost();
+
+			$mes = $postDados['mes'];
+			$ano = $postDados['ano'];
+			$fatosRankingCelula = $this->getRepositorio()->getFatoRankingCelulaORM()->encontrarPorIdGrupoIgreja($grupoIgreja->getId(), $mes, $ano);
+
+			$dados['fatos'] = $fatosRankingCelula;
+			$dados['repositorio'] = $this->getRepositorio();
+			$dados['filtrado'] = true;
+		}else{
+			$mes = date('m');
+			$ano = date('Y');
+		}
+		$dados['mes'] = $mes;
+		$dados['ano'] = $ano;
+		return new ViewModel($dados);
+	}
 }

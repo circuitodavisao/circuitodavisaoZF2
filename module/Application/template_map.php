@@ -81,6 +81,8 @@ return array(
     'application/relatorio/pessoas-frequentes'            => __DIR__ . '/view/application/relatorio/pessoas-frequentes.phtml',
     'application/relatorio/index'                         => __DIR__ . '/view/application/relatorio/index.phtml',
     'application/relatorio/lideres'                       => __DIR__ . '/view/application/relatorio/lideres.phtml',
+    'application/relatorio/ranking-celula'                => __DIR__ . '/view/application/relatorio/ranking-celula.phtml',
+    'application/relatorio/instituto'                     => __DIR__ . '/view/application/relatorio/instituto.phtml',
     'application/curso/selecionar-pessoas-revisao'        => __DIR__ . '/view/application/curso/selecionar-pessoas-revisao.phtml',
     'application/curso/recibo-financeiro'                 => __DIR__ . '/view/application/curso/recibo-financeiro.phtml',
     'application/curso/usuarios'                          => __DIR__ . '/view/application/curso/usuarios.phtml',
