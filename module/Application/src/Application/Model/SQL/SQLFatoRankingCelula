@@ -9,6 +9,12 @@ CREATE TABLE fato_ranking_celula
   grupo_equipe_id integer NOT NULL, -- Identificação do grupo da equipe
   grupo_evento_id integer NOT NULL, -- Identificação do grupo evento da celula
   valor integer NOT NULL, -- Valor medio arredondado 
+  p1 integer NOT NULL DEFAULT 0, -- Valor do periodo 1
+  p2 integer NOT NULL DEFAULT 0, -- Valor do periodo 2
+  p3 integer NOT NULL DEFAULT 0, -- Valor do periodo 3
+  p4 integer NOT NULL DEFAULT 0, -- Valor do periodo 4
+  p5 integer NOT NULL DEFAULT 0, -- Valor do periodo 5
+  p6 integer NOT NULL DEFAULT 0, -- Valor do periodo 6
   mes integer NOT NULL, -- Mês do ranking
   ano integer NOT NULL, -- Ano do ranking
   data_criacao date NOT NULL DEFAULT ('now'::text)::date, -- Data de criação do relatório
@@ -28,6 +34,13 @@ COMMENT ON COLUMN fato_ranking_celula.id IS 'Identificação do fato ranking cel
 COMMENT ON COLUMN fato_ranking_celula.grupo_id IS 'Identificação do grupo da igreja';
 COMMENT ON COLUMN fato_ranking_celula.grupo_equipe_id IS 'Identificação do grupo da equipe';
 COMMENT ON COLUMN fato_ranking_celula.grupo_evento_id IS 'Identificação do grupo evendo da celula';
+COMMENT ON COLUMN fato_ranking_celula.valor IS 'Valor medio arredondado';
+COMMENT ON COLUMN fato_ranking_celula.p1 IS 'Valor do perioro 1';
+COMMENT ON COLUMN fato_ranking_celula.p2 IS 'Valor do perioro 2';
+COMMENT ON COLUMN fato_ranking_celula.p3 IS 'Valor do perioro 3';
+COMMENT ON COLUMN fato_ranking_celula.p4 IS 'Valor do perioro 4';
+COMMENT ON COLUMN fato_ranking_celula.p5 IS 'Valor do perioro 5';
+COMMENT ON COLUMN fato_ranking_celula.p6 IS 'Valor do perioro 6';
 COMMENT ON COLUMN fato_ranking_celula.mes IS 'Mês do ranking';
 COMMENT ON COLUMN fato_ranking_celula.ano IS 'Ano do ranking';
 COMMENT ON COLUMN fato_ranking_celula.data_criacao IS 'Data de criação do relatório';

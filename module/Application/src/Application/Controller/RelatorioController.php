@@ -563,12 +563,13 @@ class RelatorioController extends CircuitoController {
 	const dadosPessoais = 0;
 	const parceiroDeDeusValor = 12;
 
-	public static function relatorioCompleto($repositorio, $grupo, $tipoRelatorio, $mes, $ano) {
+	public static function relatorioCompleto($repositorio, $grupo, $tipoRelatorio, $mes, $ano, $tudo = true) {
 		$relatorio = array();
 		$todosFilhos = array();
 		$arrayPeriodoDoMes = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mes, $ano);
 		$diferencaDePeriodos = self::diferencaDePeriodos($arrayPeriodoDoMes[0], $arrayPeriodoDoMes[1]);
 
+		if($tudo){
 		for ($indiceDeArrays = $arrayPeriodoDoMes[0]; $indiceDeArrays <= $arrayPeriodoDoMes[1]; $indiceDeArrays++) {
 			$grupoPaiFilhoFilhos = $grupo->getGrupoPaiFilhoFilhosAtivos($indiceDeArrays);
 			if ($grupoPaiFilhoFilhos) {
@@ -588,7 +589,7 @@ class RelatorioController extends CircuitoController {
 				}
 			}
 		}
-
+		}
 		$tipoRelatorioPessoal = 1;
 		$tipoRelatorioSomado = 2;
 		$relatorioDiscipulos = array();
@@ -1593,6 +1594,11 @@ class RelatorioController extends CircuitoController {
 		}
 		$dados['mes'] = $mes;
 		$dados['ano'] = $ano;
+
+		$arrayPeriodoDoMes = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mes, $ano);
+		$dados['periodoInicial'] = $arrayPeriodoDoMes[0];
+		$dados['periodoFinal'] = $arrayPeriodoDoMes[1];
+
 		return new ViewModel($dados);
 	}
 }
