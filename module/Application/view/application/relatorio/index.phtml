@@ -70,6 +70,7 @@ $somaMeta = 0;
         <div class="panel-body pn">
             <?php
 
+        	$url = $this->tipoRelatorio . '/' . $this->mes . '/' . $this->ano;
 			echo '<form action="/relatorio/' . $url . '" method="post">';
 			echo $this->cabecalhoDeMeses();
 			echo '</form>';
