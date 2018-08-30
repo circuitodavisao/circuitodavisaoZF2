@@ -406,6 +406,13 @@ class Menu extends AbstractHelper {
 					$html .= '</li>';
 				}
 
+			$html .= '<li>';
+			$html .= '<a href="/relatorioRankingCelula" onClick="mostrarSplash();">';
+			$html .= '<span class="fa fa-users"></span>';
+			$html .= 'Ranking Célula';
+			$html .= '</a>';
+			$html .= '</li>';
+
 			$html .= '</ul>';
 
 			$html .= '</li>';
