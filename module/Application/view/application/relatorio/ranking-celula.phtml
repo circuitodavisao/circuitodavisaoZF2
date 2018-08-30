@@ -18,7 +18,6 @@ echo '<thead>';
 echo '<tr>';
 echo '<th></th>';
 echo '<th class="text-center">Quem</th>';
-echo '<th class="text-center">Time</th>';
 echo '<th class="text-center">Célula</th>';
 $contadorDePeriodos = 1;
 for ($indiceDeArrays = $this->periodoInicial; $indiceDeArrays <= $this->periodoFinal; $indiceDeArrays++) {
@@ -42,8 +41,7 @@ if($this->fatos && $this->filtrado){
 
 		echo '<tr>';
 		echo '<td>'.$contagemRanking.'</td>';
-		echo '<td>'.$lideres.'</td>';
-		echo '<td>'.$infoEntidade.'</td>';
+		echo '<td>'.$lideres.'-'.$infoEntidade.'</td>';
 		echo '<td>'.$celulaDia.'</td>';
 		$contadorDePeriodos = 1;
 		for ($indiceDeArrays = $this->periodoInicial; $indiceDeArrays <= $this->periodoFinal; $indiceDeArrays++) {
