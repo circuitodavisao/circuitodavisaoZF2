@@ -17,15 +17,15 @@ echo '<table class="text-center table table-condensed table-hover bg-light mt15"
 echo '<thead>';
 echo '<tr>';
 echo '<th></th>';
-echo '<th>Quem</th>';
-echo '<th>Time</th>';
-echo '<th>Célula</th>';
+echo '<th class="text-center">Quem</th>';
+echo '<th class="text-center">Time</th>';
+echo '<th class="text-center">Célula</th>';
 $contadorDePeriodos = 1;
 for ($indiceDeArrays = $this->periodoInicial; $indiceDeArrays <= $this->periodoFinal; $indiceDeArrays++) {
 	echo '<th class="text-center">P'.$contadorDePeriodos.'</th>';
 	$contadorDePeriodos++;
 }
-echo '<th>Média</th>';
+echo '<th class="text-center">Média</th>';
 echo '</tr>';
 echo '</thead>';
 
