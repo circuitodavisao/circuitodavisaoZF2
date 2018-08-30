@@ -37,4 +37,28 @@ class FatoRankingCelulaORM extends CircuitoORM {
             echo $exc->getMessage();
         }
     }
+
+   public function encontrarPorIdGrupoEquipe($idGrupoEquipe, $mes, $ano) {
+        $dqlBase = "SELECT "
+                . "frc "
+                . "FROM  " . Constantes::$ENTITY_FATO_RANKING_CELULA . " frc "
+                . "WHERE "
+				. "frc.grupo_equipe_id = ?1 "
+				. "AND frc.mes = ?2 "
+				. "AND frc.ano = ?3 "
+				. "ORDER BY frc.id ASC";
+
+		try {
+			$result = $this->getEntityManager()->createQuery($dqlBase)
+				->setParameter(1, $idGrupoEquipe)
+				->setParameter(2, $mes)
+				->setParameter(3, $ano)
+                    ->getResult();
+
+            return $result;
+        } catch (Exception $exc) {
+            echo $exc->getMessage();
+        }
+    }
+
 }

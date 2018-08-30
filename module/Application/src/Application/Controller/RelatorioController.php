@@ -1577,14 +1577,22 @@ class RelatorioController extends CircuitoController {
 
 			$idEntidadeAtual = $sessao->idEntidadeAtual;
 			$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
-			$grupoIgreja = $entidade->getGrupo()->getGrupoIgreja();
 
 			$postDados = $request->getPost();
 
 			$mes = $postDados['mes'];
 			$ano = $postDados['ano'];
-			$fatosRankingCelula = $this->getRepositorio()->getFatoRankingCelulaORM()->encontrarPorIdGrupoIgreja($grupoIgreja->getId(), $mes, $ano);
 
+			if($entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
+				$grupoIgreja = $entidade->getGrupo()->getGrupoIgreja();
+				$fatosRankingCelula = $this->getRepositorio()->getFatoRankingCelulaORM()->encontrarPorIdGrupoIgreja($grupoIgreja->getId(), $mes, $ano);
+			}
+
+			if($entidade->getEntidadeTipo()->getId() === EntidadeTipo::equipe ||
+				$entidade->getEntidadeTipo()->getId() === EntidadeTipo::subEquipe){
+					$grupoEquipe = $entidade->getGrupo()->getGrupoEquipe();
+					$fatosRankingCelula = $this->getRepositorio()->getFatoRankingCelulaORM()->encontrarPorIdGrupoEquipe($grupoEquipe->getId(), $mes, $ano);
+				}
 			$dados['fatos'] = $fatosRankingCelula;
 			$dados['repositorio'] = $this->getRepositorio();
 			$dados['filtrado'] = true;
