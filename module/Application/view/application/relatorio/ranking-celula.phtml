@@ -3,7 +3,7 @@
 use Application\Controller\Helper\Constantes;
 use Application\Controller\Helper\Funcoes;
 ?>
-<div class="center-block mt50">
+<div class="center-block mt50 mw600">
 	<div class="panel">
 		<div class="panel-heading text-center">Ranking Célula</div>
 		<div class="panel-body pn">
@@ -39,10 +39,47 @@ if($this->fatos && $this->filtrado){
 		echo '</div>';
 		echo '<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">';
 		echo "<h3 class='label label-lg label-success'>{$fato->getValor()} PESSOAS</h3>";
+
+		echo '<table class="text-center table table-condensed table-hover bg-light mt15" style="font-size:8px;">';
+
+		echo '<thead>';
+		echo '<tr>';
+		$contadorDePeriodos = 1;
+		for ($indiceDeArrays = $this->periodoInicial; $indiceDeArrays <= $this->periodoFinal; $indiceDeArrays++) {
+			echo '<th class="text-center">P'.$contadorDePeriodos.'</th>';
+			$contadorDePeriodos++;
+		}
+		echo '</tr>';
+		echo '</thead>';
+
+		echo '<tbody>';
+		echo '<tr>';
+		$contadorDePeriodos = 1;
+		for ($indiceDeArrays = $this->periodoInicial; $indiceDeArrays <= $this->periodoFinal; $indiceDeArrays++) {
+			$valor = 0;
+			switch($contadorDePeriodos){
+				case 1: $valor = $fato->getP1(); break;
+				case 2: $valor = $fato->getP2(); break;
+				case 3: $valor = $fato->getP3(); break;
+				case 4: $valor = $fato->getP4(); break;
+				case 5: $valor = $fato->getP5(); break;
+				case 6: $valor = $fato->getP6(); break;
+			}
+			echo '<td>';
+			echo $valor;
+			echo '</td>';
+			$contadorDePeriodos++;
+		}
+		echo '</tr>';
+		echo '</tbody>';
+	
+		echo '</table>';
+
 		echo "<h4>$infoEntidade</h4>";
 		echo "<h4>Célula: $celulaDia</h4>";
 		echo "<h5>$celulaHospedeiro</h5>";
 		echo "<h5>$celulaLocal</h5>";
+
 		echo '</div>';
 
 		echo '</div>';

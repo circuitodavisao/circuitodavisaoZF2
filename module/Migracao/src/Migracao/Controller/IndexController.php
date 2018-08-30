@@ -2355,8 +2355,8 @@ class IndexController extends CircuitoController {
 		set_time_limit(0);
 		$html = '';
 		$relatorios = array();
-//		$grupoIgrejas = $this->getRepositorio()->getGrupoORM()->pegarTodasIgrejas();
-        $idGrupoIgreja = $this->params()->fromRoute(Constantes::$ID, 1);
+		//		$grupoIgrejas = $this->getRepositorio()->getGrupoORM()->pegarTodasIgrejas();
+		$idGrupoIgreja = $this->params()->fromRoute(Constantes::$ID, 1);
 		$grupoIgrejas[] = ['id' => $idGrupoIgreja];
 
 		foreach($grupoIgrejas as $grupoIgreja){
@@ -2364,7 +2364,14 @@ class IndexController extends CircuitoController {
 			$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupoIgreja);
 			$relatorioCelulas =	self::pegarMediaPorCelula($this->getRepositorio(), $grupo);
 			foreach($relatorioCelulas as $chave => $valor){
-				$dados = array('idGrupoIgreja'=>$idGrupoIgreja,'idGrupoEquipe'=>0, 'idGrupo'=>$grupo->getId(), 'idGrupoEvento' => $chave, 'valor' => $valor);
+				$dados = array(
+					'idGrupoIgreja'=>$idGrupoIgreja,
+					'idGrupoEquipe'=>0,
+					'idGrupo'=>$grupo->getId(), 
+					'idGrupoEvento' => $chave, 
+					'valor' => $valor['valor'],
+					'periodos' => $valor['periodos'],
+				);
 				$relatorios[] = $dados;
 			}
 
@@ -2375,7 +2382,15 @@ class IndexController extends CircuitoController {
 					$grupoFilho144 = $gpFilho144->getGrupoPaiFilhoFilho();
 					$relatorioCelulas =	self::pegarMediaPorCelula($this->getRepositorio(), $grupoFilho144);
 					foreach($relatorioCelulas as $chave => $valor){
-						$dados = array('idGrupoIgreja'=>$idGrupoIgreja,'idGrupoEquipe'=>$grupoFilho144->getId(), 'idGrupo'=>$grupoFilho144->getId(), 'idGrupoEvento' => $chave, 'valor' => $valor);
+						$dados = array(
+							'idGrupoIgreja'=>$idGrupoIgreja,
+							'idGrupoEquipe'=>$grupoFilho144->getId(),
+							'idGrupo'=>$grupo->getId(), 
+							'idGrupoEvento' => $chave, 
+							'valor' => $valor['valor'],
+							'periodos' => $valor['periodos'],
+						);
+
 						$relatorios[] = $dados;
 					}
 
@@ -2385,7 +2400,14 @@ class IndexController extends CircuitoController {
 							$grupoFilho1728 = $gpFilho1728->getGrupoPaiFilhoFilho();
 							$relatorioCelulas =	self::pegarMediaPorCelula($this->getRepositorio(), $grupoFilho1728);
 							foreach($relatorioCelulas as $chave => $valor){
-								$dados = array('idGrupoIgreja'=>$idGrupoIgreja,'idGrupoEquipe'=>$grupoFilho144->getId(), 'idGrupo'=>$grupoFilho1728->getId(), 'idGrupoEvento' => $chave, 'valor' => $valor);
+								$dados = array(
+									'idGrupoIgreja'=>$idGrupoIgreja,
+									'idGrupoEquipe'=>$grupoFilho144->getId(),
+									'idGrupo'=>$grupo->getId(), 
+									'idGrupoEvento' => $chave, 
+									'valor' => $valor['valor'],
+									'periodos' => $valor['periodos'],
+								);
 								$relatorios[] = $dados;
 							}				
 
@@ -2395,7 +2417,14 @@ class IndexController extends CircuitoController {
 									$grupoFilho20736 = $gpFilho20736->getGrupoPaiFilhoFilho();
 									$relatorioCelulas =	self::pegarMediaPorCelula($this->getRepositorio(), $grupoFilho20736);
 									foreach($relatorioCelulas as $chave => $valor){
-										$dados = array('idGrupoIgreja'=>$idGrupoIgreja,'idGrupoEquipe'=>$grupoFilho144->getId(), 'idGrupo'=>$grupoFilho20736->getId(), 'idGrupoEvento' => $chave, 'valor' => $valor);
+										$dados = array(
+											'idGrupoIgreja'=>$idGrupoIgreja,
+											'idGrupoEquipe'=>$grupoFilho144->getId(),
+											'idGrupo'=>$grupo->getId(), 
+											'idGrupoEvento' => $chave, 
+											'valor' => $valor['valor'],
+											'periodos' => $valor['periodos'],
+										);
 										$relatorios[] = $dados;
 
 										$grupoPaiFilhoFilhos248832 = $grupoFilho20736->getGrupoPaiFilhoFilhosAtivos($periodoAfrente);
@@ -2404,7 +2433,14 @@ class IndexController extends CircuitoController {
 												$grupoFilho248832 = $gpFilho248832->getGrupoPaiFilhoFilho();
 												$relatorioCelulas =	self::pegarMediaPorCelula($this->getRepositorio(), $grupoFilho248832);
 												foreach($relatorioCelulas as $chave => $valor){
-													$dados = array('idGrupoIgreja'=>$idGrupoIgreja,'idGrupoEquipe'=>$grupoFilho144->getId(), 'idGrupo'=>$grupoFilho248832->getId(), 'idGrupoEvento' => $chave, 'valor' => $valor);
+													$dados = array(
+														'idGrupoIgreja'=>$idGrupoIgreja,
+														'idGrupoEquipe'=>$grupoFilho144->getId(),
+														'idGrupo'=>$grupo->getId(), 
+														'idGrupoEvento' => $chave, 
+														'valor' => $valor['valor'],
+														'periodos' => $valor['periodos'],
+													);
 													$relatorios[] = $dados;
 												}	
 											}
@@ -2454,6 +2490,12 @@ class IndexController extends CircuitoController {
 				$fatoRankingCelula->setValor(number_format($relatorio['valor']));
 				$fatoRankingCelula->setMes(date('m'));
 				$fatoRankingCelula->setAno(date('Y'));
+				$fatoRankingCelula->setP1($relatorio['periodos'][1]);
+				$fatoRankingCelula->setP2($relatorio['periodos'][2]);
+				$fatoRankingCelula->setP3($relatorio['periodos'][3]);
+				$fatoRankingCelula->setP4($relatorio['periodos'][4]);
+				$fatoRankingCelula->setP5($relatorio['periodos'][5]);
+				$fatoRankingCelula->setP6($relatorio['periodos'][6]);
 				$this->getRepositorio()->getFatoRankingCelulaORM()->persistir($fatoRankingCelula);
 			}
 			$this->getRepositorio()->fecharTransacao();
@@ -2472,13 +2514,18 @@ class IndexController extends CircuitoController {
 
 		foreach ($grupoEventosCelula as $grupoEventoCelula) {
 			$soma = 0;
+			$arrayPeriodos = array();
+			$contadorDePeriodos = 1;
 			for ($indiceDeArrays = $arrayPeriodoDoMes[0]; $indiceDeArrays <= $arrayPeriodoDoMes[1]; $indiceDeArrays++) {
 				$eventoId = $grupoEventoCelula->getEvento()->getId();
 				$resultado = $repositorioORM->getFatoCicloORM()->verificaFrequenciasPorCelulaEPeriodo($indiceDeArrays, $eventoId);
+				$arrayPeriodos[$contadorDePeriodos] = $resultado;
 				$soma += $resultado;
+				$contadorDePeriodos++;
 			}
 			$media = $soma / $diferencaDePeriodos;
-			$relatorio[$grupoEventoCelula->getId()] = $media;
+			$relatorio[$grupoEventoCelula->getId()]['valor'] = $media;
+			$relatorio[$grupoEventoCelula->getId()]['periodos'] = $arrayPeriodos;
 		}
 		return $relatorio;
 	}
