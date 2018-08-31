@@ -224,6 +224,7 @@ class ListagemDePessoasComEventos extends AbstractHelper {
         }
         /* Fim Menu dropup */
         $html .= '</td>';
+		$html .= '<td class="hidden-xs">'.$pessoa->getTelefone().'</td>';
         foreach ($grupoEventoNoPeriodo as $grupoEvento) {
             switch ($this->view->quantidadeDeEventosNoCiclo) {
                 case 1:
