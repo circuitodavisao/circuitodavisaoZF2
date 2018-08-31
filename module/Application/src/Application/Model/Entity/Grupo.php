@@ -1291,13 +1291,25 @@ class Grupo extends CircuitoEntity {
 	}
 
 	function getSolicitacoesNaoRealizadas(){
-		$solicitacoes = $this->getSolicitacao();
+		$solicitacoes = $this->getSolicitacoesAtivas();
 		$solicitacoesNaoRealizadas = array();
-		foreach($solicitacoes as $solicitacao){
-			if($solicitacao->getSolicitacaoSituacaoAtiva()->getSituacao()->getId() !== Situacao::CONCLUIDO){
-				$solicitacoesNaoRealizadas[] = $solicitacao;
+		if($solicitacoes){
+			foreach($solicitacoes as $solicitacao){
+				if($solicitacao->getSolicitacaoSituacaoAtiva()->getSituacao()->getId() !== Situacao::CONCLUIDO){
+					$solicitacoesNaoRealizadas[] = $solicitacao;
+				}
 			}
 		}
 		return $solicitacoesNaoRealizadas;
+	}
+
+	function getSolicitacoesAtivas() {
+		$entidades = null; 
+		foreach ($this->getSolicitacao() as $solicitacao) {
+			if ($solicitacao->verificarSeEstaAtivo()) {
+				$entidades[] = $solicitacao;
+			}
+		}
+		return $entidades;
 	}
 }
