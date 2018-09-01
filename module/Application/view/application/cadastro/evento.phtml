@@ -97,7 +97,7 @@ echo $this->templateFormularioTopo($tituloDaPagina);
                     <div><span id="spanLogradouroComplemento"></span></div>
                     <div><span id="spanEndereco"></span></div>
                 </address>
-                <div class="alert alert-danger text-center" role="alert">A sua célula só estará disponível para lançamento a partir no próximo período!</div>                   
+                <div class="alert alert-warning text-center" role="alert">A sua célula só estará disponível para lançamento a partir no próximo período!</div>
                 <?php
             } else {
                 if ($form instanceof EventoForm) {
@@ -135,16 +135,19 @@ echo $this->templateFormularioTopo($tituloDaPagina);
             echo '<input id="senha" type="password" class="gui-input" placeholder="' . $this->translate(Constantes::$TRADUCAO_SENHA) . '" />';
             echo '</div>';
             echo '<div class="text-right mb10">';
+
             $labelConfirmar = $this->translate(Constantes::$TRADUCAO_CONFIRMACAO);
             $stringNomeDaFuncaoOnClickConfimar = 'validarSenha()';
-            echo $this->botaoLink($labelConfirmar, Constantes::$STRING_HASHTAG, 0, $this->funcaoOnClick($stringNomeDaFuncaoOnClickConfimar));
+            echo $this->botaoLink($labelConfirmar, Constantes::$STRING_HASHTAG, 10, $this->funcaoOnClick($stringNomeDaFuncaoOnClickConfimar));
+            $funcaoVoltarNome = $this->funcaoOnClick('voltarPreencherNome()');
+            echo $this->botaoSimples(Constantes::$TRADUCAO_VOLTAR, $funcaoVoltarNome, 2);
+
             echo '</div>';
             echo '</div>';
             echo '</div>';
             echo '</div>';
 
-            $funcaoVoltarNome = $this->funcaoOnClick('voltarPreencherNome()');
-            echo $this->botaoSimples(Constantes::$TRADUCAO_VOLTAR, $funcaoVoltarNome, 2);
+
             ?>
         </div>
     </div>
