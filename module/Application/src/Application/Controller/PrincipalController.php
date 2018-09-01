@@ -471,4 +471,33 @@ class PrincipalController extends CircuitoController {
         return $response;
     }
 
+    public function suporteAction() {
+      return new ViewModel();
+    }
+
+    public function suporteFinalizarAction() {
+      $sessao = new Container(Constantes::$NOME_APLICACAO);
+      $pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($sessao->idPessoa);
+      $request = $this->getRequest();
+      $dadosPost = $request->getPost();
+      $tipo = $dadosPost['tipo'];
+      $prioridade = $dadosPost['prioridade'];
+      $descricao = $dadosPost['descricao'];
+      $login = $pessoa->getEmail();
+      $Subject = $dadosPost['assunto'].' :: '.$pessoa->getNomePrimeiroUltimo().' ID('.$sessao->idPessoa.')';
+  		$ToEmail = 'support@circuitodavisao.zendesk.com';
+      $Content = 'Tipo: '.$tipo.'
+                  Prioridade: '.$prioridade.'
+                  Login: '.$login.'
+                  Descricao: '.$descricao;
+  		Funcoes::enviarEmail($ToEmail, $Subject, $Content);
+      return $this->redirect()->toRoute('principal', array(
+				Constantes::$ACTION => 'suporteFinalizado',
+			));
+  	}
+
+    public function suporteFinalizadoAction() {
+      return new ViewModel();
+    }
+
 }

@@ -39,6 +39,8 @@ return array(
     'layout/layout-js-cadastrar-turma'                    => __DIR__ . '/view/layout/layout-js-cadastrar-turma.phtml',
     'application/principal/grupo-exclusao'                => __DIR__ . '/view/application/principal/grupo-exclusao.phtml',
     'application/principal/email'                         => __DIR__ . '/view/application/principal/email.phtml',
+    'application/principal/suporte'                       => __DIR__ . '/view/application/principal/suporte.phtml',
+    'application/principal/suporteFinalizado'             => __DIR__ . '/view/application/principal/suporteFinalizado.phtml',
     'application/principal/ver'                           => __DIR__ . '/view/application/principal/ver.phtml',
     'application/principal/senha'                         => __DIR__ . '/view/application/principal/senha.phtml',
     'application/principal/hierarquia'                    => __DIR__ . '/view/application/principal/hierarquia.phtml',

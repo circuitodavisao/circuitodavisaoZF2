@@ -32,7 +32,7 @@ class Menu extends AbstractHelper {
 		$sessao = new Container(Constantes::$NOME_APLICACAO);
 		$html = '';
 
-		// Start: Header 
+		// Start: Header
 		$html .= '<header class="navbar navbar-fixed-top">';
 		$html .= '<div class="navbar-branding">';
 		$html .= '<a class="navbar-brand" href="#" style="padding-top: 22px;">';
@@ -77,8 +77,8 @@ class Menu extends AbstractHelper {
 		$html .= '</li>';
 		$html .= '</ul>';
 		$html .= '</header>';
-		// End: Header 
-		// 
+		// End: Header
+		//
 		// Start: Sidebar
 		$html .= '<aside id="sidebar_left" class="nano nano-light affix">';
 
@@ -88,7 +88,7 @@ class Menu extends AbstractHelper {
 		// Start: Sidebar Header
 		$html .= '<header class="sidebar-header">';
 
-		// Sidebar Widget - Author 
+		// Sidebar Widget - Author
 		$html .= '<div class="sidebar-widget author-widget">';
 		$html .= '<div class="media">';
 		$html .= '<a class="media-left" href="#">';
@@ -301,7 +301,7 @@ class Menu extends AbstractHelper {
 				$html .= '</a>';
 				$html .= '</li>';
 			}
-			if ($this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja || 
+			if ($this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja ||
 				$this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::equipe) {
 					$html .= '<li>';
 					$html .= '<a href="/lancamentoParceiroDeDeusExtrato" onClick="mostrarSplash();">';
@@ -309,7 +309,7 @@ class Menu extends AbstractHelper {
 					$html .= 'Parceiro de Deus';
 					$html .= '</a>';
 					$html .= '</li>';
-				}	
+				}
 		}
 
 		$html .= '</ul>';
@@ -395,7 +395,7 @@ class Menu extends AbstractHelper {
 //			$html .= '</a>';
 //			$html .= '</li>';
 
-			if ($this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja || 
+			if ($this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja ||
 				$this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::equipe) {
 
 					$html .= '<li>';
@@ -585,7 +585,15 @@ class Menu extends AbstractHelper {
 			$html .= '</ul>';
 			$html .= '</li>';
 		}
-
+		if ($this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja || $this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::equipe) {
+			$html .= '<li class="sidebar-label pt20">Suporte</li>';
+			$html .= '<li>';
+			$html .= '<a href="/principalSuporte" onClick="mostrarSplash();">';
+			$html .= '<span class="fa fa-envelope"></span>';
+			$html .= '<span class="sidebar-title">Suporte</span>';
+			$html .= '</a>';
+			$html .= '</li>';
+		}
 		$html .= '</ul>';
 		// End: Sidebar Menu
 		// Start: Sidebar Collapse Button
