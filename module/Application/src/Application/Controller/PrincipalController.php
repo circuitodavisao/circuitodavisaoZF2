@@ -483,14 +483,15 @@ class PrincipalController extends CircuitoController {
       $tipo = $dadosPost['tipo'];
       $prioridade = $dadosPost['prioridade'];
       $descricao = $dadosPost['descricao'];
-      $login = $pessoa->getEmail();
-      $Subject = $dadosPost['assunto'].' :: '.$pessoa->getNomePrimeiroUltimo().' ID('.$sessao->idPessoa.')';
+      $remetente['nome'] = $pessoa->getNomePrimeiroUltimo();
+      $remetente['email'] = $pessoa->getEmail();
+      $Subject = $dadosPost['assunto'].' :: '.$remetente['nome'].' ID('.$sessao->idPessoa.')';
   		$ToEmail = 'support@circuitodavisao.zendesk.com';
       $Content = 'Tipo: '.$tipo.'
                   Prioridade: '.$prioridade.'
-                  Login: '.$login.'
+                  Login: '.$remetente['email'].'
                   Descricao: '.$descricao;
-  		Funcoes::enviarEmail($ToEmail, $Subject, $Content);
+  		Funcoes::enviarEmail($ToEmail, $Subject, $Content, $remetente);
       return $this->redirect()->toRoute('principal', array(
 				Constantes::$ACTION => 'suporteFinalizado',
 			));
