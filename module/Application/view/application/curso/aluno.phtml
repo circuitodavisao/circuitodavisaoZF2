@@ -69,7 +69,10 @@ foreach ($this->situacoes as $situacao) {
 		}
 }
 $selectMudarSituacao .= '</select>';
-if ($turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getId() === Situacao::ATIVO ||
+if (
+	$turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getId() === Situacao::ATIVO ||
+	$turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getId() === Situacao::DESISTENTE ||
+	$turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getId() === Situacao::REPROVADO_POR_FALTA ||
 	$turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getId() === Situacao::ESPECIAL) {
 		$botaoMudarSituacao = $this->botaoSimples($turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getNome() . ' <i class="fa fa-pencil"></i>', ' id="botaoSituacao" ' . $this->funcaoOnClick('$("#selectMudarSituacao").removeClass("hidden"); $("#botaoSituacao").addClass("hidden")'), BotaoSimples::botaoMuitoPequenoMenosImportante, BotaoSimples::posicaoAEsquerda);
 		$botaoMudarSituacao .= $selectMudarSituacao;
