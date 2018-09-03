@@ -1239,7 +1239,14 @@ class Grupo extends CircuitoEntity {
     }
 
     function getTurma() {
-        return $this->turma;
+		$turmas = $this->turma;
+		$turmasAtivas = array();
+		foreach($tumas as $turma){
+			if($turma->verificarSeEstaAtivo()){
+				$turmasAtivas[] = $turma;
+			}
+		}
+        return $turmasAtivas;
     }
 
     function setTurma($turma) {
