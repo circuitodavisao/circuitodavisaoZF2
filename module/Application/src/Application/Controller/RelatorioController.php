@@ -9,6 +9,7 @@ use Application\Model\Entity\Grupo;
 use Application\Model\Entity\GrupoPessoaTipo;
 use Application\Model\Entity\Curso;
 use Application\Model\Entity\EntidadeTipo;
+use Application\Model\Entity\Situacao;
 use Application\Model\Helper\FuncoesEntidade;
 use Application\Model\ORM\RepositorioORM;
 use Doctrine\ORM\EntityManager;
@@ -475,9 +476,8 @@ class RelatorioController extends CircuitoController {
 				$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupo);
 				$numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupo);
 				$tipoRelatorioEquipe = 2;
-				$periodoInicial = 0;
+				$periodoInicial = -8;
 				$relatorio = RelatorioController::montaRelatorio($this->getRepositorio(), $numeroIdentificador, $periodoInicial, $tipoRelatorioEquipe, false, RelatorioController::relatorioCelulaQuantidade);
-
 				$grupoResponsabilidades = $grupo->getResponsabilidadesAtivas();
 				$fotos = '';
 				foreach ($grupoResponsabilidades as $grupoResponsabilidade) {
@@ -490,6 +490,22 @@ class RelatorioController extends CircuitoController {
 				$dados['celulaQuantidade'] = $relatorio['celulaQuantidade'];
 				$dados['quantidadeLideres'] = $relatorio['quantidadeLideres'];
 				$dados['resposta'] = $resposta;
+
+				if($grupoPaiFilhoFilhos = $grupo->getGrupoPaiFilhoFilhosAtivos($indiceDeArrays = 1)){
+					$dados['temDiscipulos'] = true;
+				}
+				if($solicitacoesDoObjeto = $this->getRepositorio()->getSolicitacaoORM()->encontrarSolicitacoesPorObjeto1($grupo->getId())){
+					$temSolicitacaoPendente = false;
+					foreach($solicitacoesDoObjeto as $solicitacao){
+						$idSituacao = $solicitacao->getSolicitacaoSituacaoAtiva()->getSituacao()->getId();
+						if($idSituacao !== Situacao::CONCLUIDO){
+							$temSolicitacaoPendente = true;
+						}						
+					}
+					if($temSolicitacaoPendente){
+						$dados['temSolicitacaoPendente'] = true;
+					}
+				}
 
 				/* se tem celula adiciona os dados */
 				if($grupoEventoCelula = $grupo->getGrupoEventoPorTipoEAtivo(EventoTipo::tipoCelula)){
@@ -599,7 +615,7 @@ class RelatorioController extends CircuitoController {
 		for ($indiceDeArrays = $arrayPeriodoDoMes[0]; $indiceDeArrays <= $arrayPeriodoDoMes[1]; $indiceDeArrays++) {
 			if($tipoRelatorio === self::relatorioParceiroDeDeus){
 				$relatorio[self::dadosPessoais][$indiceDeArrays] 
-					= $repositorio->getFatoFinanceiroORM()->fatosPorNumeroIdentificador($numeroIdentificador,$indiceDeArrays,date('m'),date('Y'), $tipoRelatorioPessoal);
+					= $repositorio->getFatoFinanceiroORM()->fatosPorNumeroIdentificador($numeroIdentificador,$indiceDeArrays, $mes, $ano, $tipoRelatorioPessoal);
 				$soma[self::dadosPessoais][self::parceiroDeDeusValor] += $relatorio[self::dadosPessoais][$indiceDeArrays]['valor'];
 			}else{
 				$relatorio[self::dadosPessoais][$indiceDeArrays] 
@@ -640,7 +656,7 @@ class RelatorioController extends CircuitoController {
 
 				if($tipoRelatorio === self::relatorioParceiroDeDeus){
 					$relatorioDiscipulos[$grupoFilho->getId()][$indiceDeArrays] 
-						= $repositorio->getFatoFinanceiroORM()->fatosPorNumeroIdentificador($numeroIdentificadorFilho,$indiceDeArrays,date('m'),date('Y'), $tipoRelatorioSomado);
+						= $repositorio->getFatoFinanceiroORM()->fatosPorNumeroIdentificador($numeroIdentificadorFilho,$indiceDeArrays, $mes, $ano, $tipoRelatorioSomado);
 					$soma[$grupoFilho->getId()][self::parceiroDeDeusValor] += $relatorioDiscipulos[$grupoFilho->getId()][$indiceDeArrays]['valor'];
 
 				}else{
