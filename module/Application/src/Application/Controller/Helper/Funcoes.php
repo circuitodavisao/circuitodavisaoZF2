@@ -241,7 +241,8 @@ class Funcoes {
         if ($stringPeriodo == '') {
             $stringPeriodo = '0';
         }
-        $stringTempo = $stringPeriodo . ' week -' . ($diaDaSemana - 1) . ' days';
+		$dia = $diaDaSemana - 1 ;
+		$stringTempo = $stringPeriodo . ' week -' . $dia . ' days';
         $tempoUnix = strtotime($stringTempo);
         $diaAjustado = date('d', $tempoUnix);
         $mesAjustado = date('m', $tempoUnix);
