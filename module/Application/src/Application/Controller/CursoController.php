@@ -1557,50 +1557,52 @@ class CursoController extends CircuitoController {
 		$contadorDeFaltas = array();
 		$turmasValidas = array();
 		foreach ($turmas as $turma) {
-			if ($turmaAulaAtiva = $turma->getTurmaAulaAtiva()) {
-				foreach ($turma->getTurmaPessoa() as $turmaPessoa) {
-					/* Alunos ativos */
-					if($turmaPessoa->verificarSeEstaAtivo() && $turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getId() === Situacao::ATIVO){
+			if($turma->verificarSeEstaAtivo()){
+				if ($turmaAulaAtiva = $turma->getTurmaAulaAtiva()) {
+					foreach ($turma->getTurmaPessoa() as $turmaPessoa) {
+						/* Alunos ativos */
+						if($turmaPessoa->verificarSeEstaAtivo() && $turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getId() === Situacao::ATIVO){
 
-						$nomeEquipeDoTurmaPessoa = CursoController::getNomeDaEquipeDoTurmaPessoa($turmaPessoa);
-						$turmaPessoaAulas = $turmaPessoa->getTurmaPessoaAula();
-						$parar = false;
-						foreach ($turma->getCurso()->getDisciplina() as $disciplina) {
-							$mostrar = false;
-							if ($turma->getTurmaAulaAtiva() && $turma->getTurmaAulaAtiva()->getAula()->getDisciplina()->getId() === $disciplina->getId()) {
-								$mostrar = true;
-							}
-							if ($mostrar) {
-								if (!$parar) {
-									/* Verificar duas aulas antes da atual aula aberta */
-									$numeroDaAula = $turmaAulaAtiva->getAula()->getPosicao();
-									if($numeroDaAula >= 3){
+							$nomeEquipeDoTurmaPessoa = CursoController::getNomeDaEquipeDoTurmaPessoa($turmaPessoa);
+							$turmaPessoaAulas = $turmaPessoa->getTurmaPessoaAula();
+							$parar = false;
+							foreach ($turma->getCurso()->getDisciplina() as $disciplina) {
+								$mostrar = false;
+								if ($turma->getTurmaAulaAtiva() && $turma->getTurmaAulaAtiva()->getAula()->getDisciplina()->getId() === $disciplina->getId()) {
+									$mostrar = true;
+								}
+								if ($mostrar) {
+									if (!$parar) {
+										/* Verificar duas aulas antes da atual aula aberta */
+										$numeroDaAula = $turmaAulaAtiva->getAula()->getPosicao();
+										if($numeroDaAula >= 3){
 
-										$estaNoArray = false;
-										if(count($turmasValidas) > 0){
-											foreach($turmasValidas as $turmaValida){
-												if($turmaValida->getId() === $turma->getId()){
-													$estaNoArray = true;
-												}
-											}
-										}
-										if(!$estaNoArray){
-											$turmasValidas[] = $turma;
-										}
-										foreach ($disciplina->getAulaOrdenadasPorPosicao() as $aula) {
-											if($aula->getPosicao() <= ($numeroDaAula - 2)){
-												$naoEncontreiPresencaNaAula = true;
-												foreach ($turmaPessoaAulas as $turmaPessoaAula) {
-													if ($turmaPessoaAula->verificarSeEstaAtivo() && $turmaPessoaAula->getAula()->getId() === $aula->getId()) {
-														$naoEncontreiPresencaNaAula = false;
+											$estaNoArray = false;
+											if(count($turmasValidas) > 0){
+												foreach($turmasValidas as $turmaValida){
+													if($turmaValida->getId() === $turma->getId()){
+														$estaNoArray = true;
 													}
 												}
-												if ($naoEncontreiPresencaNaAula) {
-													$contadorDeFaltas[$nomeEquipeDoTurmaPessoa][$turma->getId()] ++;
-												}
-												if ($aula->getId() == $turmaAulaAtiva->getAula()->getId()) {
-													$parar = true;
-													break;
+											}
+											if(!$estaNoArray){
+												$turmasValidas[] = $turma;
+											}
+											foreach ($disciplina->getAulaOrdenadasPorPosicao() as $aula) {
+												if($aula->getPosicao() <= ($numeroDaAula - 2)){
+													$naoEncontreiPresencaNaAula = true;
+													foreach ($turmaPessoaAulas as $turmaPessoaAula) {
+														if ($turmaPessoaAula->verificarSeEstaAtivo() && $turmaPessoaAula->getAula()->getId() === $aula->getId()) {
+															$naoEncontreiPresencaNaAula = false;
+														}
+													}
+													if ($naoEncontreiPresencaNaAula) {
+														$contadorDeFaltas[$nomeEquipeDoTurmaPessoa][$turma->getId()] ++;
+													}
+													if ($aula->getId() == $turmaAulaAtiva->getAula()->getId()) {
+														$parar = true;
+														break;
+													}
 												}
 											}
 										}
