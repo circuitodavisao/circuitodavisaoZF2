@@ -799,8 +799,8 @@ class IndexController extends CircuitoController {
 		/* buscando solicitações */
 		$periodo = -1;
 		$arrayPeriodo = Funcoes::montaPeriodo($periodo);
-		$stringComecoDoPeriodo = $arrayPeriodo[3] . '-' . $arrayPeriodo[2] . '-' . $arrayPeriodo[1];
-		$stringFimDoPeriodo = $arrayPeriodo[6] . '-' . $arrayPeriodo[5] . '-' . $arrayPeriodo[4];
+		$stringComecoDoPeriodo = '2018-08-01';
+		$stringFimDoPeriodo = '2018-08-31';
 		$html .= "<br />stringComecoDoPeriodo$stringComecoDoPeriodo";
 		$html .= "<br />stringFimDoPeriodo$stringFimDoPeriodo";
 		$dateInicialFormatada = DateTime::createFromFormat('Y-m-d', $stringComecoDoPeriodo);
@@ -813,13 +813,13 @@ class IndexController extends CircuitoController {
 				foreach ($solicitacoesPorData as $arraySolicitacao) {
 					$solicitacao = $this->getRepositorio()->getSolicitacaoORM()->encontrarPorId($arraySolicitacao['id']);
 
-					$html .= "<br /><br /><br />Solicitacao Id: " . $solicitacao->getId();
-					$html .= "<br />Solicitacao Data: " . $solicitacao->getData_criacaoStringPadraoBrasil();
-					$html .= "<br />Solicitacao Tipo: " . $solicitacao->getSolicitacaoTipo()->getNome();
 					if ($solicitacao->getSolicitacaoSituacaoAtiva()->getSituacao()->getId() === Situacao::PENDENTE_DE_ACEITACAO) {
-						
-                        $solicitacaoSituacaoAtiva = $solicitacao->getSolicitacaoSituacaoAtiva();
-                        /* inativar solicitacao situacao ativa */
+						$html .= "<br /><br /><br />Solicitacao Id: " . $solicitacao->getId();
+						$html .= "<br />Solicitacao Data: " . $solicitacao->getData_criacaoStringPadraoBrasil();
+						$html .= "<br />Solicitacao Tipo: " . $solicitacao->getSolicitacaoTipo()->getNome();
+						$html .= "<br />Situacao: " . $solicitacao->getSolicitacaoSituacaoAtiva()->getSituacao()->getNome();
+						$solicitacaoSituacaoAtiva = $solicitacao->getSolicitacaoSituacaoAtiva();
+						/* inativar solicitacao situacao ativa */
                         $solicitacaoSituacaoAtiva->setDataEHoraDeInativacao();
                         $this->getRepositorio()->getSolicitacaoSituacaoORM()->persistir($solicitacaoSituacaoAtiva, false);
 
