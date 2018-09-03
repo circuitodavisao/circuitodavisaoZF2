@@ -1240,7 +1240,7 @@ class Grupo extends CircuitoEntity {
 
     function getTurma() {
 		$turmas = $this->turma;
-		$turmasAtivas = array();
+		$turmasAtivas = null;
 		foreach($tumas as $turma){
 			if($turma->verificarSeEstaAtivo()){
 				$turmasAtivas[] = $turma;
