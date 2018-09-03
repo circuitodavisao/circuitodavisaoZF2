@@ -30,9 +30,6 @@ class ListagemDePessoasComEventos extends AbstractHelper {
 
 		$this->arrayPeriodo = Funcoes::montaPeriodo($this->view->periodo);
 		$pessoas = $this->montaListagemDePessoas();
-		if($this->view->grupo->getId() === 1634){
-			$pessoas = null;
-		}
 
         $grupoEventoNoPeriodo = $this->view->grupo->getGrupoEventoNoPeriodo($this->view->periodo);
         if (count($grupoEventoNoPeriodo) == 0) {
