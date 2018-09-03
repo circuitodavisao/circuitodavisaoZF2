@@ -357,7 +357,7 @@ class Menu extends AbstractHelper {
 					break;
 				case 8:
 					$label = 'C&eacute;lulas de Elite';
-					$mostrar = true;
+					$mostrar = false;
 					break;
 				case 9:
 					$label = 'Parceiro de Deus Consolidado';
