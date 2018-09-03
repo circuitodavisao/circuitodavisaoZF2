@@ -15,6 +15,7 @@ use Zend\View\Helper\AbstractHelper;
 class ListagemDePessoasComEventos extends AbstractHelper {
 
     private $diaDeSemanaHoje;
+	private $arrayPeriodo;
 
     public function __construct() {
         
@@ -27,7 +28,11 @@ class ListagemDePessoasComEventos extends AbstractHelper {
     public function renderHtml() {
         $html = '';
 
-        $pessoas = $this->montaListagemDePessoas();
+		$this->arrayPeriodo = Funcoes::montaPeriodo($this->view->periodo);
+		$pessoas = $this->montaListagemDePessoas();
+		if($this->view->grupo->getId() === 1634){
+			$pessoas = null;
+		}
 
         $grupoEventoNoPeriodo = $this->view->grupo->getGrupoEventoNoPeriodo($this->view->periodo);
         if (count($grupoEventoNoPeriodo) == 0) {
@@ -126,10 +131,9 @@ class ListagemDePessoasComEventos extends AbstractHelper {
         if ($pessoa->getTipo() != 'LP' && !$pessoa->getAtivo()) {
             if ($pessoa->getDataInativacao()) {
                 /* Verificando em qual periodo foi inativado */
-                $arrayPeriodo = Funcoes::montaPeriodo($this->view->periodo);
-                $stringPeriodo = $arrayPeriodo[3] . '-' . $arrayPeriodo[2] . '-' . $arrayPeriodo[1];
+                $stringPeriodo = $this->arrayPeriodo[3] . '-' . $this->arrayPeriodo[2] . '-' . $this->arrayPeriodo[1];
                 $dataDoInicioDoPeriodoParaComparar = strtotime($stringPeriodo);
-                $stringPeriodoFim = $arrayPeriodo[6] . '-' . $arrayPeriodo[5] . '-' . $arrayPeriodo[4];
+                $stringPeriodoFim = $this->arrayPeriodo[6] . '-' . $this->arrayPeriodo[5] . '-' . $this->arrayPeriodo[4];
                 $dataDoFimDoPeriodoParaComparar = strtotime($stringPeriodoFim);
                 $dataDeInativacaoDaPessoaParaComparar = strtotime($pessoa->getDataInativacao());
                 if ($dataDeInativacaoDaPessoaParaComparar >= $dataDoInicioDoPeriodoParaComparar && $dataDeInativacaoDaPessoaParaComparar <= $dataDoFimDoPeriodoParaComparar) {
@@ -265,8 +269,8 @@ class ListagemDePessoasComEventos extends AbstractHelper {
             /* Validação Evento mostrar ou não */
             $mostrarParaLancar = false;
             if ($this->view->periodo < 0) {
-                $arrayPeriodo = Funcoes::montaPeriodo($this->view->periodo);
-                $stringComecoDoPeriodo = $arrayPeriodo[3] . '-' . $arrayPeriodo[2] . '-' . $arrayPeriodo[1];
+				$arrayPeriodo = $this->arrayPeriodo;
+				$stringComecoDoPeriodo = $arrayPeriodo[3] . '-' . $arrayPeriodo[2] . '-' . $arrayPeriodo[1];
                 $dataDoInicioDoPeriodoParaComparar = strtotime($stringComecoDoPeriodo);
                 $dataDoGrupoEventoParaComparar = strtotime($grupoEvento->getData_criacaoStringPadraoBanco());
 
