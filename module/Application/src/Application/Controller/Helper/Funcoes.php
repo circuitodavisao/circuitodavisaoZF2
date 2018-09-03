@@ -243,7 +243,6 @@ class Funcoes {
         }
 		$dia = $diaDaSemana - 1 ;
 		$stringTempo = $stringPeriodo . ' week -' . $dia . ' days';
-		echo 'stringTempo: '.$stringTempo;
         $tempoUnix = strtotime($stringTempo);
         $diaAjustado = date('d', $tempoUnix);
         $mesAjustado = date('m', $tempoUnix);
