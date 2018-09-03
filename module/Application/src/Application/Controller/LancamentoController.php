@@ -19,6 +19,7 @@ use Application\Model\Entity\Pessoa;
 use Application\Model\Entity\FatoParceiroDeDeus;
 use Application\Model\Entity\FatoFinanceiro;
 use Application\Model\Entity\FatoFinanceiroTipo;
+use Application\Model\Entity\EntidadeTipo;
 use Application\Model\ORM\RepositorioORM;
 use Application\View\Helper\ListagemDePessoasComEventos;
 use DateTime;
