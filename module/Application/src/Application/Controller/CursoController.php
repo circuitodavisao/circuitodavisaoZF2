@@ -1289,13 +1289,17 @@ class CursoController extends CircuitoController {
 
 				$this->getRepositorio()->fecharTransacao();
 				return $this->redirect()->toRoute(Constantes::$ROUTE_CURSO, array(
-					Constantes::$ACTION => 'Chamada',
+					Constantes::$ACTION => 'ReentradaFinalizado',
 				));
 			} catch (Exception $exc) {
 				$this->getRepositorio()->desfazerTransacao();
 				echo $exc->getMessage();
 			}
 		}
+	}
+
+	public function reentradaFinalizadoAction(){
+		return new ViewModel();
 	}
 
 	public function usuariosAction() {
