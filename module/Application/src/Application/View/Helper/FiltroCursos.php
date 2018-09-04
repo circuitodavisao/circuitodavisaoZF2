@@ -53,7 +53,7 @@ class FiltroCursos extends AbstractHelper {
 		$html .= '</select>';
 		$html .= '</div>';
 
-		if($urlFiltro === 'cursoChamada'){
+		if($urlFiltro === 'cursoChamada' || $urlFiltro === 'cursoListagem'){
 			$html .= '<div class="form-group">';
 			$html .= '<label for="selecionarSub">' . $this->view->translate('Sub Equipe') . '<img src="img/loader.gif" id="loaderSub" class="hidden" /></label>';
 			$html .= '<select class="form-control" name="idSub" id="selecionarSub" >';
