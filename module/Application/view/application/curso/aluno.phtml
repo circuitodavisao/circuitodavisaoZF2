@@ -119,7 +119,9 @@ if ($this->turmaPessoa->verificarSeEstaAtivo()) {
 
 	if ($this->entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja || 
 		$this->pessoa->getPessoaCursoAcessoAtivo() && 
-		($this->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::COORDENADOR ||
+		(
+			$this->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::COORDENADOR ||
+			$this->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::FACILITADOR ||
 		$this->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::SUPERVISOR)){
 			$html .= '<tr><td>Situa&ccedil;&atilde;o</td><td>' . $botaoMudarSituacao . '</td></tr>';
 		}	
