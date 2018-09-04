@@ -479,10 +479,16 @@ class PrincipalController extends CircuitoController {
       $sessao = new Container(Constantes::$NOME_APLICACAO);
       $pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($sessao->idPessoa);
       $request = $this->getRequest();
-      $dadosPost = $request->getPost();
+      $dadosPost = array_merge_recursive(
+           $request->getPost()->toArray(),
+           $request->getFiles()->toArray()
+       );
       $tipo = $dadosPost['tipo'];
       $prioridade = $dadosPost['prioridade'];
       $descricao = $dadosPost['descricao'];
+
+      error_log(print_r($dadosPost, true));
+      $anexo = $dadosPost['imagem'];
       $remetente['nome'] = $pessoa->getNomePrimeiroUltimo();
       $remetente['email'] = $pessoa->getEmail();
       $Subject = $dadosPost['assunto'].' :: '.$remetente['nome'].' ID('.$sessao->idPessoa.')';
@@ -491,9 +497,9 @@ class PrincipalController extends CircuitoController {
                   Prioridade: '.$prioridade.'
                   Login: '.$remetente['email'].'
                   Descricao: '.$descricao;
-  		Funcoes::enviarEmail($ToEmail, $Subject, $Content, $remetente);
+  		Funcoes::enviarEmail($ToEmail, $Subject, $Content, $remetente, $anexo);
       return $this->redirect()->toRoute('principal', array(
-				Constantes::$ACTION => 'suporteFinalizado',
+			Constantes::$ACTION => 'suporteFinalizado',
 			));
   	}
 
