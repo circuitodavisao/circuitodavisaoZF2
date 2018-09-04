@@ -851,6 +851,58 @@ class CursoController extends CircuitoController {
 		return $view;
 	}
 
+	public function listagemAction() {
+		$sessao = new Container(Constantes::$NOME_APLICACAO);
+		$entidade = CircuitoController::getEntidadeLogada($this->getRepositorio(), $sessao);
+		$grupo = $entidade->getGrupo();
+		$turmas = $grupo->getGrupoIgreja()->getTurma();
+		$grupoPaiFilhoFilhos = $grupo->getGrupoIgreja()->getGrupoPaiFilhoFilhosAtivos(0);
+		$situacoes = $this->getRepositorio()->getSituacaoORM()->buscarTodosRegistrosEntidade();
+		$pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($sessao->idPessoa);
+
+		$request = $this->getRequest();
+		$filtrado = false;
+		$postado = array();
+		$subs = null;
+		$filhos = array();
+
+		if($request->isPost()){
+			$filtrado = true;
+			$post = $request->getPost();
+			$postado['idTurma'] = $post['idTurma'];
+			$postado['idEquipe'] = $post['idEquipe'];
+			$postado['idSituacao'] = $post['idSituacao'];
+			$postado['mostrarAulas'] = $post['mostrarAulas'];
+			$postado['idSub'] = $post['idSub'];
+
+			if($postado['idEquipe'] != 0){
+				$grupoEquipe = $this->getRepositorio()->getGrupoORM()->encontrarPorId($postado['idEquipe']);
+				$grupoPaiFilhoFilhosEquipe = $grupoEquipe->getGrupoPaiFilhoFilhosAtivos(0);
+
+				foreach($grupoPaiFilhoFilhosEquipe as $grupoPaiFilho){
+					$grupoFilho = $grupoPaiFilho->getGrupoPaiFilhoFilho();
+					$dados = array();
+					$dados['id'] = $grupoFilho->getId();
+					$dados['informacao'] = $grupoFilho->getEntidadeAtiva()->infoEntidade() . ' - ' . $grupoFilho->getNomeLideresAtivos();	
+					$filhos[] =  $dados;
+				}
+			}
+		}
+
+		$view = new ViewModel(array(
+			'filtrado' => $filtrado,
+			'postado' => $postado,
+			'pessoa' => $pessoa,
+			'entidade' => $entidade,
+			'turmas' => $turmas,
+			'filhos' => $grupoPaiFilhoFilhos,
+			'situacoes' => $situacoes,
+			'subs' => $filhos,
+			'repositorio' => $this->getRepositorio(),
+		));
+		return $view;
+	}
+
 	public function buscarSubsAction(){
 		$response = $this->getResponse();
 		try {
@@ -1557,7 +1609,6 @@ class CursoController extends CircuitoController {
 		$contadorDeFaltas = array();
 		$turmasValidas = array();
 		foreach ($turmas as $turma) {
-			if($turma->verificarSeEstaAtivo()){
 				if ($turmaAulaAtiva = $turma->getTurmaAulaAtiva()) {
 					foreach ($turma->getTurmaPessoa() as $turmaPessoa) {
 						/* Alunos ativos */
@@ -1612,7 +1663,6 @@ class CursoController extends CircuitoController {
 						}
 					}
 				}
-			}
 		}
 		$view = new ViewModel(array(
 			'contadorDeFaltas' => $contadorDeFaltas,

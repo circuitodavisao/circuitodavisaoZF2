@@ -439,11 +439,13 @@ class Menu extends AbstractHelper {
 			$arrayOQueMostrarDosCursos['gerarFaltas'] = false;
 			$arrayOQueMostrarDosCursos['lancarPresenca'] = false;
 			$arrayOQueMostrarDosCursos['consultarMatricula'] = false;
+			$arrayOQueMostrarDosCursos['listagem'] = false;
 			if ($this->view->pessoa->getPessoaCursoAcessoAtivo()) {
 				if ($this->view->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::COORDENADOR) {
 					$arrayOQueMostrarDosCursos['turmas'] = true;
 					$arrayOQueMostrarDosCursos['usuarios'] = true;
 					$arrayOQueMostrarDosCursos['gerarFaltas'] = true;
+					$arrayOQueMostrarDosCursos['listagem'] = true;
 				}
 				if ($this->view->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::COORDENADOR ||
 					$this->view->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::SUPERVISOR ||
@@ -468,7 +470,16 @@ class Menu extends AbstractHelper {
 					$arrayOQueMostrarDosCursos['gerarReposicoes'] = true;
 					$arrayOQueMostrarDosCursos['gerarFaltas'] = true;
 					$arrayOQueMostrarDosCursos['lancarPresenca'] = true;
+					$arrayOQueMostrarDosCursos['listagem'] = true;
 				}
+			}
+			if ($arrayOQueMostrarDosCursos['listagem']) {
+				$html .= '<li>';
+				$html .= '<a href="/cursoListagem" onClick="mostrarSplash();">';
+				$html .= '<span class="fa fa-user"></span>';
+				$html .= 'Listagem de telefones';
+				$html .= '</a>';
+				$html .= '</li>';
 			}
 			if ($arrayOQueMostrarDosCursos['reentrada']) {
 				$html .= '<li>';
