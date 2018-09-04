@@ -122,6 +122,7 @@ return array(
     'application/curso/gerar-reposicao'                   => __DIR__ . '/view/application/curso/gerar-reposicao.phtml',
     'application/curso/disciplina-form-edit'              => __DIR__ . '/view/application/curso/disciplina-form-edit.phtml',
     'application/curso/disciplina-exclusao'               => __DIR__ . '/view/application/curso/disciplina-exclusao.phtml',
+    'application/curso/reentrada-finalizado'              => __DIR__ . '/view/application/curso/reentrada-finalizado.phtml',
     'application/curso/lancar-presenca'                   => __DIR__ . '/view/application/curso/lancar-presenca.phtml',
     'application/login/nova-senha'                        => __DIR__ . '/view/application/login/nova-senha.phtml',
     'application/login/recuperar-acesso'                  => __DIR__ . '/view/application/login/recuperar-acesso.phtml',
