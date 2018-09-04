@@ -87,22 +87,24 @@ class FiltroCursos extends AbstractHelper {
 			$html .= '</select>';
 			$html .= '</div>';
 
-			if($this->view->pessoa->getPessoaCursoAcessoAtivo()){
-				$selectedNao = '';
-				$selectedSim = '';
-				if($this->view->postado['mostrarAulas'] == 0){
-					$selectedNao = 'selected';
+			if($urlFiltro === 'cursoChamada'){
+				if($this->view->pessoa->getPessoaCursoAcessoAtivo()){
+					$selectedNao = '';
+					$selectedSim = '';
+					if($this->view->postado['mostrarAulas'] == 0){
+						$selectedNao = 'selected';
+					}
+					if($this->view->postado['mostrarAulas'] == 1){
+						$selectedSim = 'selected';
+					}
+					$html .= '<div class="form-group">';
+					$html .= '<label for="">' . $this->view->translate('Mostrar Todas aulas') . '</label>';
+					$html .= '<select class="form-control" name="mostrarAulas" id="mostrarAulas" >';
+					$html .= '<option value="0" '.$selectedNao.'>Não (Carrega mais rápido)</option>';
+					$html .= '<option value="1" '.$selectedSim.'>Sim (Aumentará o tempo de carregamento)</option>';
+					$html .= '</select>';
+					$html .= '</div>';
 				}
-				if($this->view->postado['mostrarAulas'] == 1){
-					$selectedSim = 'selected';
-				}
-				$html .= '<div class="form-group">';
-				$html .= '<label for="">' . $this->view->translate('Mostrar Todas aulas') . '</label>';
-				$html .= '<select class="form-control" name="mostrarAulas" id="mostrarAulas" >';
-				$html .= '<option value="0" '.$selectedNao.'>Não (Carrega mais rápido)</option>';
-				$html .= '<option value="1" '.$selectedSim.'>Sim (Aumentará o tempo de carregamento)</option>';
-				$html .= '</select>';
-				$html .= '</div>';
 			}
 		}
 
