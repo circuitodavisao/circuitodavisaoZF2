@@ -530,6 +530,25 @@ class CursoController extends CircuitoController {
 		return $view;
 	}
 
+	public function fecharTurmaAction(){
+		$sessao = new Container(Constantes::$NOME_APLICACAO);
+		$turma = $this->getRepositorio()->getTurmaORM()->encontrarPorId($sessao->idSessao);
+
+		$this->getRepositorio()->iniciarTransacao();
+		try{
+			$turma->setDataEHoraDeInativacao();
+			$this->getRepositorio()->getTurmaORM()->persistir($turma, $naoMudarDataDeCriacao = false);
+			$this->getRepositorio()->fecharTransacao();
+
+			return $this->redirect()->toRoute(Constantes::$ROUTE_CURSO, array(
+				Constantes::$ACTION => Constantes::$PAGINA_LISTAR_TURMA,
+			));
+		} catch(Exception $exc){
+			$this->getRepositorio()->desfazerTransacao();
+			echo $exc->getMessage();
+		}
+	}
+
 	public function turmaFormEditAction() {
 		$sessao = new Container(Constantes::$NOME_APLICACAO);
 
