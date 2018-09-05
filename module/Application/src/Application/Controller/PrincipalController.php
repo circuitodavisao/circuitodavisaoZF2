@@ -13,6 +13,8 @@ use Application\Model\Entity\EntidadeTipo;
 use Application\Model\Entity\EventoTipo;
 use Application\Model\Entity\PessoaHierarquia;
 use Application\Model\Entity\Situacao;
+use Application\Model\Entity\Curso;
+use Application\Controller\RelatorioController;
 use Exception;
 use Zend\Json\Json;
 use Zend\Session\Container;
@@ -31,56 +33,48 @@ class PrincipalController extends CircuitoController {
      */
     public function indexAction() {
         $sessao = new Container(Constantes::$NOME_APLICACAO);
+		$mostrarPrincipal = true;
 
-        $idEntidadeAtual = $sessao->idEntidadeAtual;
-        $entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
-        $pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($sessao->idPessoa);
-        $grupo = $entidade->getGrupo();
+		/* dados pessoa logada */
+		$idEntidadeAtual = $sessao->idEntidadeAtual;
+		$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+		$pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($sessao->idPessoa);
+		$grupo = $entidade->getGrupo();
+		$grupoLogado = $grupo;
+		$pessoaLogada = $pessoa;
 
-		if($grupo->getId() !== 1 && $grupo->getId() !== 1225){
-			$eCasal = $grupo->verificaSeECasal();
-			$arrayPeriodoDoMes = Funcoes::encontrarPeriodoDeUmMesPorMesEAno(date('m'), date('Y'));
-			$relatorio = RelatorioController::relatorioCompleto($this->getRepositorio(), $grupo, RelatorioController::relatorioMembresiaECelula, date('m'), date('Y'));
-
-			$mesAnterior = date('m') - 1;
-			$anoAnterior = date('Y');
-			if (date('m') == 1) {
-				$mesAnterior = 12;
-				$anoAnterior = date('Y') - 1;
-			}
-
-			$mostrarPrincipal = true;
-			if (!$entidade->verificarSeEstaAtivo()) {
-				$mostrarPrincipal = false;
-			}
-
-			if ($grupo->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::igreja) {
-				$turmas = $grupo->getTurma();
-			} else {
-				$turmas = $grupo->getGrupoIgreja()->getTurma();
-			}
-
-			$hierarquias = $this->getRepositorio()->getHierarquiaORM()->encontrarTodas();
+		if (!$entidade->verificarSeEstaAtivo()) {
+			$mostrarPrincipal = false;
 		}
 
-        $dados = array(
-            'relatorio' => $relatorio,
-            'periodoInicial' => $arrayPeriodoDoMes[0],
-            'periodoFinal' => $arrayPeriodoDoMes[1],
-            'mostrarPrincipal' => $mostrarPrincipal,
-            'eCasal' => $eCasal,
-            'grupo' => $grupo,
-            'hierarquias' => $hierarquias,
-            'repositorio' => $this->getRepositorio(),
-            'pessoa' => $pessoa,
-            'turmas' => $turmas,
-        );
+		if($sessao->idSessao > 0){
+			$pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($sessao->idSessao);
+			$grupo = $pessoa->getResponsabilidadesAtivas()[0]->getGrupo();
+			$entidade = $grupo->getEntidadeAtiva();
+			unset($sessao->idSessao);
+		}
 
-        $tipoRelatorioPessoal = 1;
-        $periodo = -1;
+		$mes = date('m');
+		$ano = date('Y');
 
-        $relatorioCelulas = array();
-        $relatorioCelulas[$grupo->getId()] = RelatorioController::saberQuaisDasMinhasCelulasSaoDeElitePorPeriodo($this->getRepositorio(), $grupo, $periodo);
+		$relatorio = RelatorioController::relatorioCompleto($this->getRepositorio(), $grupo, RelatorioController::relatorioMembresiaECelula, $mes, $ano, $tudo = false, $somado = true);
+		$relatorioParceiro = RelatorioController::relatorioCompleto($this->getRepositorio(), $grupo, RelatorioController::relatorioParceiroDeDeus, $mes, $ano, $tudo = false, $somado = true);
+
+		$arrayPeriodoDoMes = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mes, $ano);
+		$dados = array(
+			'relatorio' => $relatorio,
+			'relatorioParceiro' => $relatorioParceiro,
+			'periodoInicial' => $arrayPeriodoDoMes[0],
+			'periodoFinal' => $arrayPeriodoDoMes[1],
+			'mostrarPrincipal' => $mostrarPrincipal,
+			'grupo' => $grupo,
+			'grupoLogado' => $grupoLogado,
+			'pessoaLogada' => $pessoaLogada,
+			'entidade' => $entidade,
+			'repositorio' => $this->getRepositorio(),
+			'pessoa' => $pessoa,
+		);
+
         $grupoPaiFilhoFilhos = $grupo->getGrupoPaiFilhoFilhosAtivos($periodo);
         if ($grupoPaiFilhoFilhos) {
             $discipulos = array();
@@ -96,14 +90,7 @@ class PrincipalController extends CircuitoController {
         $layoutJS->setTemplate('layout/layout-js-principal');
         $view->addChild($layoutJS, 'layoutJSPrincipal');
 
-        if ($sessao->jaMostreiANotificacao) {
-            unset($sessao->mostrarNotificacao);
-            unset($sessao->nomePessoa);
-            unset($sessao->exclusao);
-            unset($sessao->jaMostreiANotificacao);
-        }
-
-        return $view;
+           return $view;
     }
 
     public function verAction() {

@@ -52,6 +52,14 @@ class RelatorioController extends CircuitoController {
 		$idEntidadeAtual = $sessao->idEntidadeAtual;
 		$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
 		$grupo = $entidade->getGrupo();
+		$pessoaLogada = $this->getRepositorio()->getPessoaORM()->encontrarPorId($sessao->idPessoa);
+		$grupoLogado = $grupo;
+
+		if($sessao->idSessao > 0){
+			$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($sessao->idSessao);
+			unset($sessao->idSessao);
+		}
+
 		$tipoRelatorio = (int) $this->params()->fromRoute('tipoRelatorio');
 		$request = $this->getRequest();
 		if ($request->isPost()) {
@@ -82,6 +90,10 @@ class RelatorioController extends CircuitoController {
 			'periodoFinal' => $arrayPeriodoDoMes[1],
 			'tipoRelatorio' => $tipoRelatorio,
 			'entidade' => $entidade,
+			'grupo' => $grupo,
+			'grupoLogado' => $grupoLogado,
+			'repositorio' => $this->getRepositorio(),
+			'pessoaLogada' => $pessoaLogada,
 		);
 
 		$view = new ViewModel($dados);
@@ -579,32 +591,32 @@ class RelatorioController extends CircuitoController {
 	const dadosPessoais = 0;
 	const parceiroDeDeusValor = 12;
 
-	public static function relatorioCompleto($repositorio, $grupo, $tipoRelatorio, $mes, $ano, $tudo = true) {
+	public static function relatorioCompleto($repositorio, $grupo, $tipoRelatorio, $mes, $ano, $tudo = true, $somado = false) {
 		$relatorio = array();
 		$todosFilhos = array();
 		$arrayPeriodoDoMes = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mes, $ano);
 		$diferencaDePeriodos = self::diferencaDePeriodos($arrayPeriodoDoMes[0], $arrayPeriodoDoMes[1]);
 
 		if($tudo){
-		for ($indiceDeArrays = $arrayPeriodoDoMes[0]; $indiceDeArrays <= $arrayPeriodoDoMes[1]; $indiceDeArrays++) {
-			$grupoPaiFilhoFilhos = $grupo->getGrupoPaiFilhoFilhosAtivos($indiceDeArrays);
-			if ($grupoPaiFilhoFilhos) {
-				foreach ($grupoPaiFilhoFilhos as $grupoPaiFilhoFilho) {
-					$adicionar = true;
-					if (count($todosFilhos) > 0) {
-						foreach ($todosFilhos as $filho) {
-							if ($filho->getId() === $grupoPaiFilhoFilho->getId()) {
-								$adicionar = false;
-								break;
+			for ($indiceDeArrays = $arrayPeriodoDoMes[0]; $indiceDeArrays <= $arrayPeriodoDoMes[1]; $indiceDeArrays++) {
+				$grupoPaiFilhoFilhos = $grupo->getGrupoPaiFilhoFilhosAtivos($indiceDeArrays);
+				if ($grupoPaiFilhoFilhos) {
+					foreach ($grupoPaiFilhoFilhos as $grupoPaiFilhoFilho) {
+						$adicionar = true;
+						if (count($todosFilhos) > 0) {
+							foreach ($todosFilhos as $filho) {
+								if ($filho->getId() === $grupoPaiFilhoFilho->getId()) {
+									$adicionar = false;
+									break;
+								}
 							}
 						}
-					}
-					if ($adicionar) {
-						$todosFilhos[] = $grupoPaiFilhoFilho;
+						if ($adicionar) {
+							$todosFilhos[] = $grupoPaiFilhoFilho;
+						}
 					}
 				}
 			}
-		}
 		}
 		$tipoRelatorioPessoal = 1;
 		$tipoRelatorioSomado = 2;
@@ -618,8 +630,12 @@ class RelatorioController extends CircuitoController {
 					= $repositorio->getFatoFinanceiroORM()->fatosPorNumeroIdentificador($numeroIdentificador,$indiceDeArrays, $mes, $ano, $tipoRelatorioPessoal);
 				$soma[self::dadosPessoais][self::parceiroDeDeusValor] += $relatorio[self::dadosPessoais][$indiceDeArrays]['valor'];
 			}else{
+				$qualRelatorioParaUsar = $tipoRelatorioPessoal;
+				if($somado){
+					$qualRelatorioParaUsar = $tipoRelatorioSomado;
+				}
 				$relatorio[self::dadosPessoais][$indiceDeArrays] 
-					= RelatorioController::montaRelatorio($repositorio, $numeroIdentificador, $indiceDeArrays, $tipoRelatorioPessoal, false, $tipoRelatorio);
+					= RelatorioController::montaRelatorio($repositorio, $numeroIdentificador, $indiceDeArrays, $qualRelatorioParaUsar, false, $tipoRelatorio);
 				$soma[self::dadosPessoais][self::membresia] += $relatorio[self::dadosPessoais][$indiceDeArrays]['membresia'];
 				$soma[self::dadosPessoais][self::membresiaPerformance] += $relatorio[self::dadosPessoais][$indiceDeArrays]['membresiaPerformance'];
 				$soma[self::dadosPessoais][self::celula] += $relatorio[self::dadosPessoais][$indiceDeArrays]['celula'];

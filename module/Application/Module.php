@@ -14,6 +14,7 @@ use Application\Controller\Helper\Constantes;
 use Application\Controller\RelatorioController;
 use Application\Model\ORM\RepositorioORM;
 use Application\View\Helper\AbaSelecionada;
+use Application\View\Helper\Sitemap;
 use Application\View\Helper\FiltroCursos;
 use Application\View\Helper\AbasPanel;
 use Application\View\Helper\AlertaEnvioRelatorio;
@@ -337,8 +338,11 @@ class Module {
                     return new CircuitoMeAjuda();
                 },
                 'perfil' => function ($sm) {
-                    return new Perfil();
-                },
+					return new Perfil();
+				},
+				'sitemap' => function ($sm) {
+					return new Sitemap();
+				},
             )
         );
     }
@@ -379,22 +383,11 @@ class Module {
         $sessao = new Container(Constantes::$NOME_APLICACAO);
         if (!empty($sessao->idEntidadeAtual)) {
             $serviceManager = $e->getApplication()->getServiceManager();
-
             $repositorioORM = new RepositorioORM($serviceManager->get('Doctrine\ORM\EntityManager'));
             $pessoa = $repositorioORM->getPessoaORM()->encontrarPorId($sessao->idPessoa);
             $viewModel->pessoa = $pessoa;
             $entidade = $repositorioORM->getEntidadeORM()->encontrarPorId($sessao->idEntidadeAtual);
             $viewModel->entidade = $entidade;
-			$grupo = $entidade->getGrupo();
-			$discipulos = null;
-
-			if($grupo->getId() !== 1 && $grupo->getId() !== 1225){
-				if (count($grupo->getGrupoPaiFilhoFilhosAtivos(1)) > 0) {
-					$discipulos = $grupo->getGrupoPaiFilhoFilhosAtivos(1);
-				}
-				$filhosOrdenado = RelatorioController::ordenacaoDiscipulos($discipulos, null, 0);
-				$viewModel->discipulos = $filhosOrdenado;
-			}
 		}
 
         $stringHttps = 'https://';
