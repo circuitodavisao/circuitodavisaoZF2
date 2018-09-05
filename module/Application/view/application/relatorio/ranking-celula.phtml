@@ -1,0 +1,69 @@
+<?php
+
+use Application\Controller\Helper\Constantes;
+use Application\Controller\Helper\Funcoes;
+?>
+<div class="center-block mt50 mw600">
+	<div class="panel">
+		<div class="panel-heading text-center">Ranking Célula</div>
+		<div class="panel-body pn">
+<?php
+echo '<form action="/relatorioRankingCelula" method="post">';
+echo $this->cabecalhoDeMeses();
+echo '</form>';
+
+echo '<div class="table-responsive">';
+echo '<table class="text-center table table-condensed table-hover bg-light mt15" style="font-size:8px;">';
+echo '<thead>';
+echo '<tr>';
+echo '<th></th>';
+echo '<th class="text-center">Quem</th>';
+echo '<th class="text-center">Célula</th>';
+$contadorDePeriodos = 1;
+for ($indiceDeArrays = $this->periodoInicial; $indiceDeArrays <= $this->periodoFinal; $indiceDeArrays++) {
+	echo '<th class="text-center">P'.$contadorDePeriodos.'</th>';
+	$contadorDePeriodos++;
+}
+echo '<th class="text-center">Média</th>';
+echo '</tr>';
+echo '</thead>';
+
+
+echo '<tbody>';
+if($this->fatos && $this->filtrado){
+	$contagemRanking = 1;
+	foreach($this->fatos as $fato){
+		$grupoEvento = $this->repositorio->getGrupoEventoORM()->encontrarPorId($fato->getGrupo_evento_id());
+		$infoEntidade = $grupoEvento->getGrupo()->getEntidadeAtiva()->infoEntidade();
+		$lideres = $grupoEvento->getGrupo()->getNomeLideresAtivos();
+		$evento = $grupoEvento->getEvento();
+		$celulaDia = $this->translate(Funcoes::diaDaSemanaPorDia($grupoEvento->getEvento()->getDia())).' - ' . substr($grupoEvento->getEvento()->getHora(),0,5);
+
+		echo '<tr>';
+		echo '<td>'.$contagemRanking.'</td>';
+		echo '<td>'.$lideres.'-'.$infoEntidade.'</td>';
+		echo '<td>'.$celulaDia.'</td>';
+		$contadorDePeriodos = 1;
+		for ($indiceDeArrays = $this->periodoInicial; $indiceDeArrays <= $this->periodoFinal; $indiceDeArrays++) {
+			$valor = 0;
+			switch($contadorDePeriodos){
+			case 1: $valor = $fato->getP1(); break;
+			case 2: $valor = $fato->getP2(); break;
+			case 3: $valor = $fato->getP3(); break;
+			case 4: $valor = $fato->getP4(); break;
+			case 5: $valor = $fato->getP5(); break;
+			case 6: $valor = $fato->getP6(); break;
+			}
+			echo '<td>';
+			echo $valor;
+			echo '</td>';
+			$contadorDePeriodos++;
+		}
+		echo '<td>'.$fato->getValor().'</td>';
+		echo '</tr>';
+		$contagemRanking++;
+	}
+}
+echo '</tbody>';
+echo '</table>';
+echo '</div>';

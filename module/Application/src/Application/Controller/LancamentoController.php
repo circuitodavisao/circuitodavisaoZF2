@@ -19,6 +19,7 @@ use Application\Model\Entity\Pessoa;
 use Application\Model\Entity\FatoParceiroDeDeus;
 use Application\Model\Entity\FatoFinanceiro;
 use Application\Model\Entity\FatoFinanceiroTipo;
+use Application\Model\Entity\EntidadeTipo;
 use Application\Model\ORM\RepositorioORM;
 use Application\View\Helper\ListagemDePessoasComEventos;
 use DateTime;
@@ -61,14 +62,14 @@ class LancamentoController extends CircuitoController {
             }
         }
 
-        /* Verificando se posso recuar no periodo */
-        $mostrarBotaoPeriodoAnterior = false;
-        $mostrarBotaoPeriodoAfrente = false;
-        $arrayPeriodo = Funcoes::montaPeriodo($periodo);
-        $stringComecoDoPeriodo = $arrayPeriodo[3] . '-' . $arrayPeriodo[2] . '-' . $arrayPeriodo[1];
-        $dataDoInicioDoPeriodoParaComparar = strtotime($stringComecoDoPeriodo);
+		if ($grupo->getGrupoPaiFilhoPaiAtivo()) {
+			/* Verificando se posso recuar no periodo */
+			$mostrarBotaoPeriodoAnterior = false;
+			$mostrarBotaoPeriodoAfrente = false;
+			$arrayPeriodo = Funcoes::montaPeriodo($periodo);
+			$stringComecoDoPeriodo = $arrayPeriodo[3] . '-' . $arrayPeriodo[2] . '-' . $arrayPeriodo[1];
+			$dataDoInicioDoPeriodoParaComparar = strtotime($stringComecoDoPeriodo);
 
-        if ($grupo->getGrupoPaiFilhoPaiAtivo()) {
             $dataDoGrupoPaiFilhoCriacaoParaComparar = strtotime($grupo->getGrupoPaiFilhoPaiAtivo()->getData_criacaoStringPadraoBanco());
 
             $validarCadastroAntesDoPeriodo = false;
@@ -89,14 +90,7 @@ class LancamentoController extends CircuitoController {
             $mostrarBotaoPeriodoAfrente = true;
         }
 
-        $grupoEventoNoPeriodo = $grupo->getGrupoEventoNoPeriodo($periodo);
-
-        $contagemDePessoasCadastradas = count($grupo->getGrupoPessoasNoPeriodo($periodo));
         $validacaoPessoasCadastradas = 0;
-        if ($contagemDePessoasCadastradas > Constantes::$QUANTIDADE_MAXIMA_PESSOAS_NO_LANÇAMENTO) {
-            $validacaoPessoasCadastradas = 1;
-        }
-
         $view = new ViewModel(
                 array(
             Constantes::$REPOSITORIO_ORM => $this->getRepositorio(),
@@ -925,23 +919,34 @@ class LancamentoController extends CircuitoController {
 		$idEntidadeAtual = $sessao->idEntidadeAtual;
 		$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
 		$grupo = $entidade->getGrupo();
-		$grupoPaiFilhoFilhos = $grupo->getGrupoPaiFilhoFilhosAtivosReal();
-	
-		$formulario = new ParceiroDeDeusForm();
+		$possoAcessarIsso = false;
+		if($entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja
+			|| $entidade->getEntidadeTipo()->getId() === EntidadeTipo::equipe){
+				$possoAcessarIsso = true;
+			}
+		if($possoAcessarIsso){
+			$grupoPaiFilhoFilhos = $grupo->getGrupoPaiFilhoFilhosAtivosReal();
 
-		$dados = array();
-		$dados['formulario'] = $formulario;
-		$dados['grupo'] = $grupo;
-		$dados['discipulos'] = $grupoPaiFilhoFilhos;
+			$formulario = new ParceiroDeDeusForm();
 
-		$view = new ViewModel($dados);
-		
-        /* Javascript especifico */
-        $layoutJS = new ViewModel();
-        $layoutJS->setTemplate('layout/layout-js-lancamento-parceiro-de-deus');
-        $view->addChild($layoutJS, 'layoutJsLancamentoParceiroDeDeus');
+			$dados = array();
+			$dados['formulario'] = $formulario;
+			$dados['grupo'] = $grupo;
+			$dados['discipulos'] = $grupoPaiFilhoFilhos;
 
-		return $view;
+			$view = new ViewModel($dados);
+
+			/* Javascript especifico */
+			$layoutJS = new ViewModel();
+			$layoutJS->setTemplate('layout/layout-js-lancamento-parceiro-de-deus');
+			$view->addChild($layoutJS, 'layoutJsLancamentoParceiroDeDeus');
+
+			return $view;
+		}else{
+			return $this->redirect()->toRoute(Constantes::$ROUTE_PRINCIPAL, array(
+				Constantes::$ACTION => 'semAcesso',
+			));
+		}
 	}
 
 	public function parceiroDeDeusFinalizarAction(){
@@ -1000,22 +1005,34 @@ class LancamentoController extends CircuitoController {
 
 		$idEntidadeAtual = $sessao->idEntidadeAtual;
 		$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
-		$grupo = $entidade->getGrupo();
-		$numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupo);
 
-		$fatos = $this->getRepositorio()->getFatoFinanceiroORM()->encontrarFatosPorNumeroIdentificador($numeroIdentificador);
-		$fatosAtivos = array();
-		if($fatos){
-			foreach($fatos as $fatoFinanceiro){
-				if($fatoFinanceiro->verificarSeEstaAtivo()){
-					$idGrupo = substr($fatoFinanceiro->getNumero_identificador(), strlen($fatoFinanceiro->getNumero_identificador())-8);
-					$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupo);
-					$fatoFinanceiro->setGrupo($grupo);
-					$fatosAtivos[] = $fatoFinanceiro;
+		$possoAcessarIsso = false;
+		if($entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja
+		 || $entidade->getEntidadeTipo()->getId() === EntidadeTipo::equipe){
+			$possoAcessarIsso = true;
+		}
+		if($possoAcessarIsso){
+			$grupo = $entidade->getGrupo();
+			$numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupo);
+
+			$fatos = $this->getRepositorio()->getFatoFinanceiroORM()->encontrarFatosPorNumeroIdentificador($numeroIdentificador);
+			$fatosAtivos = array();
+			if($fatos){
+				foreach($fatos as $fatoFinanceiro){
+					if($fatoFinanceiro->verificarSeEstaAtivo()){
+						$idGrupo = substr($fatoFinanceiro->getNumero_identificador(), strlen($fatoFinanceiro->getNumero_identificador())-8);
+						$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupo);
+						$fatoFinanceiro->setGrupo($grupo);
+						$fatosAtivos[] = $fatoFinanceiro;
+					}
 				}
 			}
+			return new ViewModel(array('fatos' => $fatosAtivos));
+		}else{
+			return $this->redirect()->toRoute(Constantes::$ROUTE_PRINCIPAL, array(
+				Constantes::$ACTION => 'semAcesso',
+			));
 		}
-		return new ViewModel(array('fatos' => $fatosAtivos));
 	}
 
 	public function parceiroDeDeusExcluirAction(){

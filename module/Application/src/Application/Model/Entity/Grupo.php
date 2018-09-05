@@ -463,11 +463,11 @@ class Grupo extends CircuitoEntity {
         return $nomes;
     }
 
-    function getFotosLideresAtivos() {
+    function getFotosLideresAtivos($tamanho = 24) {
         $pessoas = $this->getPessoasAtivas();
         $fotos = '';
         foreach ($pessoas as $pessoa) {
-            $fotos .= FuncoesEntidade::tagImgComFotoDaPessoa($pessoa, $tamanho = 24, 'px', ' style="padding:1px;" ');
+            $fotos .= FuncoesEntidade::tagImgComFotoDaPessoa($pessoa, $tamanho, 'px', ' style="padding:1px;" ');
         }
         return $fotos;
     }
@@ -1239,7 +1239,14 @@ class Grupo extends CircuitoEntity {
     }
 
     function getTurma() {
-        return $this->turma;
+		$turmas = $this->turma;
+		$turmasAtivas = array();
+		foreach($turmas as $turma){
+			if($turma->verificarSeEstaAtivo()){
+				$turmasAtivas[] = $turma;
+			}
+		}
+        return $turmasAtivas;
     }
 
     function setTurma($turma) {
@@ -1291,13 +1298,25 @@ class Grupo extends CircuitoEntity {
 	}
 
 	function getSolicitacoesNaoRealizadas(){
-		$solicitacoes = $this->getSolicitacao();
+		$solicitacoes = $this->getSolicitacoesAtivas();
 		$solicitacoesNaoRealizadas = array();
-		foreach($solicitacoes as $solicitacao){
-			if($solicitacao->getSolicitacaoSituacaoAtiva()->getSituacao()->getId() !== Situacao::CONCLUIDO){
-				$solicitacoesNaoRealizadas[] = $solicitacao;
+		if($solicitacoes){
+			foreach($solicitacoes as $solicitacao){
+				if($solicitacao->getSolicitacaoSituacaoAtiva()->getSituacao()->getId() !== Situacao::CONCLUIDO){
+					$solicitacoesNaoRealizadas[] = $solicitacao;
+				}
 			}
 		}
 		return $solicitacoesNaoRealizadas;
+	}
+
+	function getSolicitacoesAtivas() {
+		$entidades = null; 
+		foreach ($this->getSolicitacao() as $solicitacao) {
+			if ($solicitacao->verificarSeEstaAtivo()) {
+				$entidades[] = $solicitacao;
+			}
+		}
+		return $entidades;
 	}
 }

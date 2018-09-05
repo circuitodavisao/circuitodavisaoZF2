@@ -637,12 +637,23 @@ class Pessoa extends CircuitoEntity implements InputFilterAwareInterface {
      */
     function getGrupoPessoaAtivo() {
         $grupoPessoaAtiva = null;
+		$ultimoGrupoPessoa = null;
         foreach ($this->getGrupoPessoa() as $grupoPessoa) {
             if ($grupoPessoa->verificarSeEstaAtivo()) {
                 $grupoPessoaAtiva = $grupoPessoa;
                 break;
             }
+			if($ultimoGrupoPessoa === null){
+				$ultimoGrupoPessoa = $grupoPessoa;
+			}else{
+				if($grupoPessoa->getId() > $ultimoGrupoPessoa->getId()){
+					$ultimoGrupoPessoa = $grupoPessoa;
+				}
+			}
         }
+		if($grupoPessoaAtiva === null){
+			$grupoPessoaAtiva = $ultimoGrupoPessoa;
+		}
         return $grupoPessoaAtiva;
     }
 
@@ -660,6 +671,18 @@ class Pessoa extends CircuitoEntity implements InputFilterAwareInterface {
         }
         return $resposta;
     }
+
+	function verificarSeEhAluno(){
+		$resposta = false;
+		if($turmaPessoas = $this->getTurmaPessoa()){
+			foreach($turmaPessoas as $turmaPessoa){
+				if($turmaPessoa->verificarSeEstaAtivo()){
+					$resposta = true;
+				}
+			}
+		}
+		return $resposta;
+	}
 
     /**
      * Retorna o GrupoPessoa
