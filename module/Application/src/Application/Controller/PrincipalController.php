@@ -505,4 +505,8 @@ class PrincipalController extends CircuitoController {
       return new ViewModel();
     }
 
+	public function semAcessoAction(){
+		return new ViewModel();
+	}
+
 }
