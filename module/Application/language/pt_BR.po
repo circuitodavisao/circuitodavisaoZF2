@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: ZendSkeletonApplication\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-07-05 22:17-0700\n"
-"PO-Revision-Date: 2017-12-14 11:59-0200\n"
+"PO-Revision-Date: 2018-08-27 10:41-0300\n"
 "Last-Translator: Diogo Melo <dmelo87@gmail.com>\n"
 "Language-Team: ZF Contibutors <zf-devteam@zend.com>\n"
 "Language: pt\n"
@@ -12,7 +12,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Poedit-KeywordsList: translate\n"
 "X-Poedit-Basepath: .\n"
-"X-Generator: Poedit 2.0.3\n"
+"X-Generator: Poedit 1.5.4\n"
 "X-Poedit-SearchPath-0: ..\n"
 
 # ############
@@ -50,7 +50,9 @@ msgstr "Problema de acesso?"
 
 # Falha de login
 msgid "The informed login details do not match an account in our records."
-msgstr "Os dados de login informados n&atilde;o correspondem a uma conta em nossos registros."
+msgstr ""
+"Os dados de login informados n&atilde;o correspondem a uma conta em nossos "
+"registros."
 
 #: ../view/login/index/index.phtml:42
 msgid "Caps Lock is on."
@@ -60,8 +62,8 @@ msgstr "Caps Lock est&aacute; ativado."
 # ## ESQUECI SENHA ###
 # ####################
 #: ../view/login/index/esqueceu-senha.phtml:33
-msgid "Because you can not enter the View of the Circuit?"
-msgstr "Por que você não consegue entrar no CircuitoDaVisao.com.br?"
+msgid "Why you can not enter the View of the Circuit?"
+msgstr "Porque você não consegue entrar no CircuitoDaVisao.com.br?"
 
 #: ../view/login/index/esqueceu-senha.phtml:57
 msgid "Back"
@@ -73,15 +75,19 @@ msgstr "Continuar"
 
 #: ../view/login/index/esqueceu-senha.phtml:41
 msgid " Because I forgot my password."
-msgstr " Por que esqueci minha senha."
+msgstr " Porque esqueci minha senha."
 
 #: ../view/login/index/esqueceu-senha.phtml:44
 msgid " I know my password, but I do not remember my login."
 msgstr " Eu sei a minha senha, mas não lembro o meu login."
 
 #: ../view/login/index/esqueceu-senha.phtml:44
-msgid "We can help you reset your password. First, enter your email and follow the instructions."
-msgstr "Podemos ajudá-lo a redefinir sua senha. Primeiro, insira seu email e siga as instruções a seguir."
+msgid ""
+"We can help you reset your password. First, enter your email and follow the "
+"instructions."
+msgstr ""
+"Podemos ajudá-lo a redefinir sua senha. Primeiro, insira seu email e siga as "
+"instruções a seguir."
 
 #: ../view/login/index/esqueceu-senha.phtml:42
 msgid "Send email"
@@ -96,8 +102,12 @@ msgid "Please verify you are human"
 msgstr "Por favor verificar que você é humano"
 
 #: ../view/login/index/esqueceu-senha.phtml:96
-msgid "Tell us what the last 2 digits of your <b>Social Security number</b> and <b>date of birth</b>."
-msgstr "Nos diga quais são os <b>2 últimos dígitos do seu CPF</b> XXX.XXX.XXX-<b>XX</b> e <b>data de nascimento</b>."
+msgid ""
+"Tell us what the last 2 digits of your <b>Social Security number</b> and "
+"<b>date of birth</b>."
+msgstr ""
+"Nos diga quais são os <b>2 últimos dígitos do seu CPF</b> XXX.XXX.XXX-<b>XX</"
+"b> e <b>data de nascimento</b>."
 
 #: ../view/login/index/recuperar-acesso.phtml:36
 msgid "request sent at"
@@ -152,8 +162,12 @@ msgid "At least 6 characters"
 msgstr "No mínimo 6 caractéres"
 
 #: ../view/login/index/recuperar-senha.phtml:25
-msgid "Your password must contain at least <strong> a </ strong> letter and <strong> one </ strong> number."
-msgstr "Sua senha deve conter no mínimo <strong>uma</strong> letra e <strong>um</strong> número."
+msgid ""
+"Your password must contain at least <strong> a </ strong> letter and "
+"<strong> one </ strong> number."
+msgstr ""
+"Sua senha deve conter no mínimo <strong>uma</strong> letra e <strong>um</"
+"strong> número."
 
 #: ../view/login/index/alterar-senha.phtml:18
 msgid "Your password has been changed successfully!"
@@ -164,8 +178,22 @@ msgid "To access"
 msgstr "Acessar o Circuito da Visão"
 
 #: Email de recuperacao senha MENSAGEM NOVO 2
-msgid "<pre>Hello #email</pre><pre>We received a request to reset the password for your account CircuitoDaVisão.com.br . To reset your password, use the links below:</pre><pre>Reset your password using a Web browser:</pre><pre><a href=\"https://circuitodavisaonovo.com.br/recuperarSenha/#id\">https://circuitodavisaonovo.com.br/recuperarSenha/#id</a></pre><pre>If you did not request a password reset, you can ignore this message and your password will not change.</pre>"
-msgstr "<pre>Olá #email</pre><pre>Recebemos uma solicitação de redefinição da senha para sua conta do CircuitoDaVisão.com.br . Para redefinir sua senha, use o link abaixo:</pre><pre>Redefinir sua senha usando um navegador da Web:</pre><pre><a href=\"https://circuitodavisaonovo.com.br/recuperarSenha/#id\">https://circuitodavisaonovo.com.br/recuperarSenha/#id</a></pre><pre>Se você não solicitou uma redefinição de senha, voce pode ignorar esta mensagem e a sua senha não será alterada.</pre>"
+msgid ""
+"<pre>Hello #email</pre><pre>We received a request to reset the password for "
+"your account CircuitoDaVisão.com.br . To reset your password, use the links "
+"below:</pre><pre>Reset your password using a Web browser:</pre><pre><a href="
+"\"https://circuitodavisaonovo.com.br/recuperarSenha/#id\">https://"
+"circuitodavisaonovo.com.br/recuperarSenha/#id</a></pre><pre>If you did not "
+"request a password reset, you can ignore this message and your password will "
+"not change.</pre>"
+msgstr ""
+"<pre>Olá #email</pre><pre>Recebemos uma solicitação de redefinição da senha "
+"para sua conta do CircuitoDaVisão.com.br . Para redefinir sua senha, use o "
+"link abaixo:</pre><pre>Redefinir sua senha usando um navegador da Web:</"
+"pre><pre><a href=\"https://circuitodavisaonovo.com.br/recuperarSenha/#id"
+"\">https://circuitodavisaonovo.com.br/recuperarSenha/#id</a></pre><pre>Se "
+"você não solicitou uma redefinição de senha, voce pode ignorar esta mensagem "
+"e a sua senha não será alterada.</pre>"
 
 # ########################
 # ## SELECIONAR PERFIL ###
@@ -190,12 +218,21 @@ msgid "Hello"
 msgstr "Olá"
 
 #: ../view/login/index/pre-saida.phtml:36
-msgid "Use the LOGOUT option <a href=\"/\">CircuitoDaVisão.com.br</a> when using a device that is not of particular use. The <a href=\"/\">CircuitoDaVisão.com.br</a> home page will be opened in 30 seconds."
-msgstr "Use a opção SAIR do <a href=\"/\">CircuitoDaVisão.com.br</a> sempre que utilizar um dispositivo que não seja de uso particular. A página inicial do <a href=\"/\">CircuitoDaVisão.com.br</a> será aberta em 30 segundos."
+msgid ""
+"Use the LOGOUT option CircuitoDaVisão.com.br when using a device that is not "
+"of particular use. The session will be closed in 30 seconds."
+msgstr ""
+"Use a opção SAIR do <a href=\"/\">CircuitoDaVisão.com.br</a> sempre que "
+"utilizar um dispositivo que não seja de uso particular. A sessão será "
+"encerrada em 30 segundos."
 
 #: ../view/login/index/pre-saida.phtml:38
 msgid "Reenter"
 msgstr "Entrar Novamente"
+
+#: ../view/login/index/pre-saida.phtml:46
+msgid "Logout now"
+msgstr "Encerrar agora"
 
 # ############
 # ## GERAL ###
@@ -242,8 +279,11 @@ msgid "The requested controller was unable to dispatch the request."
 msgstr "O controlador requisitado não foi capaz de despachar a requisição."
 
 #: ../view/error/404.phtml:13
-msgid "The requested controller could not be mapped to an existing controller class."
-msgstr "O controlador requisitados não pode ser mapeado a uma classe de controlador existente."
+msgid ""
+"The requested controller could not be mapped to an existing controller class."
+msgstr ""
+"O controlador requisitados não pode ser mapeado a uma classe de controlador "
+"existente."
 
 #: ../view/error/404.phtml:16
 msgid "The requested controller was not dispatchable."
@@ -385,8 +425,12 @@ msgid "Register Person"
 msgstr "Cadastrar Pessoa"
 
 #: Lancamento/view/lancamento/index.phtml:27
-msgid "<h3>ROTATE THE CELLULAR</h3><span>Turn your phone to landscape to view all your events.</span>"
-msgstr "<h3>GIRE O CELULAR</h3><span>Mude a orientação do seu celular para paisagem para ver todos os eventos.</span>"
+msgid ""
+"<h3>ROTATE THE CELLULAR</h3><span>Turn your phone to landscape to view all "
+"your events.</span>"
+msgstr ""
+"<h3>GIRE O CELULAR</h3><span>Mude a orientação do seu celular para paisagem "
+"para ver todos os eventos.</span>"
 
 #: Lancamento/view/lancamento/index.phtml:16
 msgid "Cult"
@@ -402,7 +446,7 @@ msgstr "Lançamento de <span class=\"text-primary\">Atendimento</span>"
 
 #: Lancamento/view/lancamento/atendimento.phtml:14
 msgid "disciples were attended to."
-msgstr "discipulo(s) foi(ram) atendido(s)."
+msgstr "discípulo(s) foi(ram) atendido(s)."
 
 #: Lancamento/view/lancamento/atendimento.phtml:14
 msgid "of"
@@ -476,8 +520,12 @@ msgid "Minutes"
 msgstr "Minutos"
 
 #: Cadastro/view/cadastro/evento.phtml:47
-msgid " - Do not know your ZIP code <u><a target=\"_blank\" href=\"http://www.buscacep.correios.com.br/sistemas/buscacep/\">Click Here</a></u>"
-msgstr " - Não sabe seu CEP <u><a target=\"_blank\" href=\"http://www.buscacep.correios.com.br/sistemas/buscacep/\">Clique Aqui</a></u>"
+msgid ""
+" - Do not know your ZIP code <u><a target=\"_blank\" href=\"http://www."
+"buscacep.correios.com.br/sistemas/buscacep/\">Click Here</a></u>"
+msgstr ""
+" - Não sabe seu CEP <u><a target=\"_blank\" href=\"http://www.buscacep."
+"correios.com.br/sistemas/buscacep/\">Clique Aqui</a></u>"
 
 #: Cadastro/view/cadastro/evento.phtml:47
 msgid "Data from Host"
@@ -559,8 +607,10 @@ msgid "Change"
 msgstr "Alterar"
 
 #: Cadastro/view/cadastro/evento-exclusao.phtml:15
-msgid "Confirmation <strong><span class=\"text-danger\">Exclusion</span></strong>"
-msgstr "Confirmação de <strong><span class=\"text-danger\">Exclusão</span></strong>"
+msgid ""
+"Confirmation <strong><span class=\"text-danger\">Exclusion</span></strong>"
+msgstr ""
+"Confirmação de <strong><span class=\"text-danger\">Exclusão</span></strong>"
 
 #: Cadastro/view/cadastro/evento-exclusao.phtml:15
 msgid "Really want to delete this cell?"
@@ -571,12 +621,24 @@ msgid "Really want to delete this cult?"
 msgstr "Realmente deseja excluir essa culto?"
 
 #: Cadastro/view/cadastro/evento-exclusao.phtml:15
-msgid "I am <span class=\"text-danger\">aware</span> that by <span class=\"text-danger\">excluding cult</span> is the same no longer appear in the <span class=\"text-danger\">launch line</span>!"
-msgstr "Eu <span class=\"text-danger\">concordo</span> que <span class=\"text-danger\">excluindo o culto</span> o mesmo não aparecerá mais na minha <span class=\"text-danger\">linha de lançamento</span> e equipes!"
+msgid ""
+"I am <span class=\"text-danger\">aware</span> that by <span class=\"text-"
+"danger\">excluding cult</span> is the same no longer appear in the <span "
+"class=\"text-danger\">launch line</span>!"
+msgstr ""
+"Eu <span class=\"text-danger\">concordo</span> que <span class=\"text-danger"
+"\">excluindo o culto</span> o mesmo não aparecerá mais na minha <span class="
+"\"text-danger\">linha de lançamento</span> e equipes!"
 
 #: Cadastro/view/cadastro/evento-exclusao.phtml:15
-msgid "I am <span class=\"text-danger\">aware</span> that by <span class=\"text-danger\">excluding cell</span> is the same no longer appear in the <span class=\"text-danger\">launch line</span>!"
-msgstr "Eu <span class=\"text-danger\">concordo</span> que <span class=\"text-danger\">excluindo a célula</span> a mesma não aparecerá mais na minha <span class=\"text-danger\">linha de lançamento</span> e equipes!"
+msgid ""
+"I am <span class=\"text-danger\">aware</span> that by <span class=\"text-"
+"danger\">excluding cell</span> is the same no longer appear in the <span "
+"class=\"text-danger\">launch line</span>!"
+msgstr ""
+"Eu <span class=\"text-danger\">concordo</span> que <span class=\"text-danger"
+"\">excluindo a célula</span> a mesma não aparecerá mais na minha <span class="
+"\"text-danger\">linha de lançamento</span> e equipes!"
 
 #: Cadastro/view/cadastro/evento-exclusao.phtml:95
 msgid "What reason for exclusion?"
@@ -608,7 +670,7 @@ msgstr "Excluido"
 
 #: Cadastro/view/cadastro/evento.phtml:*
 msgid "Host: "
-msgstr "Hospederio: "
+msgstr "Hospedeiro: "
 
 #: Cadastro/view/cadastro/evento.phtml:*
 msgid "Name: "
@@ -647,11 +709,11 @@ msgstr " Sozinho"
 
 #: Cadastro/view/cadastro/grupo.phtml:21
 msgid " With the Spouse"
-msgstr " Com conjugê"
+msgstr " Com cônjuge"
 
 #: Cadastro/view/cadastro/grupo.phtml:25
 msgid "Enter the Responsible(s) and the complementary data"
-msgstr "Entre com o(s) responsavel(eis) e dados complemtares"
+msgstr "Entre com o(s) responsavel(eis) e dados complementares"
 
 #: Cadastro/view/cadastro/grupo.phtml:30
 msgid "Enter the data of the Responsible"
@@ -731,7 +793,7 @@ msgstr "Preenchar a Data de nascimento e CPF corretamente"
 
 #: Cadastro/view/cadastro/grupo.phtml:131
 msgid "CPF is invalid"
-msgstr "CPF invalido"
+msgstr "CPF inválido"
 
 #: Cadastro/view/cadastro/grupo.phtml:131
 msgid "Name of the CPF does not match with the student"
@@ -774,8 +836,12 @@ msgid "CPF does not exist"
 msgstr "CPF não existe"
 
 #: Cadastro/view/cadastro/grupo.phtml:131
-msgid ", To link a new responsibility to this user click on the menu:<p><code>Register -> New Responsibility</code></p>"
-msgstr ", Para vincular uma nova responsabilidade a esse usuário clique no menu:<p><code>Cadastrar -> Nova Responsabilidade</code></p>"
+msgid ""
+", To link a new responsibility to this user click on the menu:"
+"<p><code>Register -> New Responsibility</code></p>"
+msgstr ""
+", Para vincular uma nova responsabilidade a esse usuário clique no menu:"
+"<p><code>Cadastrar -> Nova Responsabilidade</code></p>"
 
 #: Cadastro/view/cadastro/grupo.phtml:131
 msgid ". Click Continue"
@@ -799,7 +865,7 @@ msgstr "Email é inválido"
 
 #: Cadastro/view/cadastro/grupo.phtml:152
 msgid "Email already used by the spouse"
-msgstr "Email já está sendo utilizado pelo seu conjugê"
+msgstr "Email já está sendo utilizado pelo seu cônjuge"
 
 #: Cadastro/view/cadastro/grupo.phtml:152
 msgid "Fill in and repeat Email"
@@ -847,11 +913,15 @@ msgstr "Numeração: "
 
 #: Cadastro/view/cadastro/grupo-finalizar.phtml:8
 msgid "Registration completed successfully"
-msgstr "Cadastro concluído com sucesso"
+msgstr "Cadastro concluído com sucesso!"
 
 #: Cadastro/view/cadastro/grupo-finalizar.phtml:9
-msgid "<small>But <strong>IS NOT ON</strong> in a few minutes users will receive an email with the activation instructions.</small>"
-msgstr "<small>Mas <strong>NÃO ESTÁ TERMINADO</strong> em pouco minutos o(s) usuário(s) vão receber um email com a instruções de ativação.</small>"
+msgid ""
+"<small>But <strong>IS NOT ON</strong> in a few minutes users will receive an "
+"email with the activation instructions.</small>"
+msgstr ""
+"<small>Mas <strong>NÃO ESTÁ TERMINADO!</strong> Em pouco minutos o(s) "
+"usuário(s) vão receber um email com as instruções de ativação.</small>"
 
 #: Cadastro/view/cadastro/grupo-finalizar.phtml:15
 msgid "Ready"
@@ -863,7 +933,8 @@ msgstr "Você precisa deslogar para continuar."
 
 #: Cadastro/view/login/precisa-deslogar.phtml
 msgid "You need to log out before registering a password for a new user"
-msgstr "Você presisa deslogar antes de cadastrar uma senha para um novo usuário"
+msgstr ""
+"Você presisa deslogar antes de cadastrar uma senha para um novo usuário"
 
 #: Cadastro/view/cadastro/cadastro-atualizacao.phtml
 msgid "Phone is invalid"
@@ -895,7 +966,7 @@ msgstr "Preencha o Código verificador"
 
 #: Cadastro/view/cadastro/cadastro-atualizacao.phtml
 msgid "Code Released click finish."
-msgstr "Código Liberado clique em finalizar."
+msgstr "Código Liberado, clique em finalizar."
 
 #: Cadastro/view/cadastro/cadastro-atualizacao.phtml
 msgid "Listing <b class=\"text-danger\">Revision of lives</b>"
@@ -903,7 +974,7 @@ msgstr "Lista de <b class=\"text-danger\">Revisão de Vidas</b>"
 
 #: Cadastro/view/cadastro/cadastro-pessoa-revisao.phtml
 msgid "New Person in Revision of Life"
-msgstr "Novo Pessoa no Revisão de Vida"
+msgstr "Nova Pessoa no Revisão de Vidas"
 
 #: Cadastro/view/cadastro/cadastro-pessoa-revisao.phtml
 msgid "Person at the revision of live"
@@ -927,7 +998,7 @@ msgstr "Primeiro Nome"
 
 #: Cadastro/view/cadastro/cadastro-pessoa-revisao.phtml
 msgid "Last Name"
-msgstr "Ultímo Nome"
+msgstr "Último Nome"
 
 #: Cadastro/view/cadastro/ativar-ficha-revisao.phtml
 msgid "Enable"
@@ -966,12 +1037,20 @@ msgid "Really want to delete this course?"
 msgstr "Deseja realmente excluir o curso"
 
 #: Cadastro/view/cadastro/ativar-ficha-revisao.phtml
-msgid "I am <span class=\"text-danger\">aware</span> that by <span class=\"text-danger\">excluding course</span> is the same no longer appear! "
-msgstr "Estou ciente<span class=\"text-danger\">ciente</span> de que <span class=\"text-danger\"> excluindo o curso </span> o mesmo não aparecerá mais! "
+msgid ""
+"I am <span class=\"text-danger\">aware</span> that by <span class=\"text-"
+"danger\">excluding course</span> is the same no longer appear! "
+msgstr ""
+"Estou ciente<span class=\"text-danger\">ciente</span> de que <span class="
+"\"text-danger\"> excluindo o curso </span> o mesmo não aparecerá mais! "
 
 #: Cadastro/view/cadastro/ativar-ficha-revisao.phtml
-msgid "I am <span class=\"text-danger\">aware</span> that by <span class=\"text-danger\">excluding discipline</span> is the same no longer appear! "
-msgstr "Estou <span class=\"text-danger\">ciente</span> de que <span class=\"text-danger\"> excluindo a disciplina </span> a mesmo não aparecerá mais! "
+msgid ""
+"I am <span class=\"text-danger\">aware</span> that by <span class=\"text-"
+"danger\">excluding discipline</span> is the same no longer appear! "
+msgstr ""
+"Estou <span class=\"text-danger\">ciente</span> de que <span class=\"text-"
+"danger\"> excluindo a disciplina </span> a mesmo não aparecerá mais! "
 
 #: Cadastro/view/cadastro/ativar-ficha-revisao.phtml
 msgid "Position"
@@ -986,8 +1065,12 @@ msgid "Really want to delete this lesson?"
 msgstr "Deseja realmente excluir a aula"
 
 #: Cadastro/view/cadastro/aula-exclusao.phtml
-msgid "I am <span class=\"text-danger\">aware</span> that by <span class=\"text-danger\">excluding lesson</span> is the same no longer appear! "
-msgstr "Estou <span class=\"text-danger\">ciente</span> de que <span class=\"text-danger\"> excluindo a aula </span> a mesmo não aparecerá mais! "
+msgid ""
+"I am <span class=\"text-danger\">aware</span> that by <span class=\"text-"
+"danger\">excluding lesson</span> is the same no longer appear! "
+msgstr ""
+"Estou <span class=\"text-danger\">ciente</span> de que <span class=\"text-"
+"danger\"> excluindo a aula </span> a mesmo não aparecerá mais! "
 
 #: Cadastro/view/curso/selecionar-pessoas-revisao.phtml
 msgid "Observation"
@@ -998,5 +1081,9 @@ msgid "Really want to delete this class?"
 msgstr "Deseja realmente excluir a turma?"
 
 #: Cadastro/view/cadastro/turma-exclusao.phtml
-msgid "I am <span class=\"text-danger\">aware</span> that by <span class=\"text-danger\">excluding class</span> is the same no longer appear! "
-msgstr "Estou <span class=\"text-danger\">ciente</span> de que <span class=\"text-danger\"> excluindo a turma </span> a mesma não aparecerá mais! "
+msgid ""
+"I am <span class=\"text-danger\">aware</span> that by <span class=\"text-"
+"danger\">excluding class</span> is the same no longer appear! "
+msgstr ""
+"Estou <span class=\"text-danger\">ciente</span> de que <span class=\"text-"
+"danger\"> excluindo a turma </span> a mesma não aparecerá mais! "

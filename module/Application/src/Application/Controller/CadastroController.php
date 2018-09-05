@@ -32,6 +32,7 @@ use Application\Model\Entity\Situacao;
 use Application\Model\Entity\Solicitacao;
 use Application\Model\Entity\SolicitacaoSituacao;
 use Application\Model\Entity\SolicitacaoTipo;
+use Application\Model\Entity\FatoLider;
 use Application\Model\ORM\RepositorioORM;
 use DateTime;
 use Exception;
@@ -348,7 +349,7 @@ class CadastroController extends CircuitoController {
 		}
 		if ($pagina == Constantes::$PAGINA_LISTAGEM_REVISIONISTAS) {
 			$listagemDeEventos = $grupo->getGrupoEventoRevisao();
-			$tituloDaPagina = Constantes::$PAGINA_LISTAGEM_REVISIONISTAS;
+			$tituloDaPagina = Constantes::$PAGINA_LISTAGEM_REVISIONISTAS_TITULO;
 			$tipoEvento = 13;
 			$extra = $grupo->getId();
 		}
@@ -614,8 +615,6 @@ class CadastroController extends CircuitoController {
 	 * POST /eventoCelulaPersistir
 	 */
 	public function eventoCelulaPersistirAction() {
-		CircuitoController::verificandoSessao(new Container(Constantes::$NOME_APLICACAO), $this);
-
 		$request = $this->getRequest();
 		if ($request->isPost()) {
 			$eventoCelula = new EventoCelula();
@@ -747,30 +746,17 @@ class CadastroController extends CircuitoController {
 						if ($naoEhAlteracao) {
 							$numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio());
 
-							/* Cadastro do fato celula */
-							/* cadastro fato apenas se for nova celula */
-							$periodo = 0;
-							$arrayPeriodo = Funcoes::montaPeriodo($periodo);
-							$stringData = $arrayPeriodo[3] . '-' . $arrayPeriodo[2] . '-' . $arrayPeriodo[1];
-							$dateFormatada = DateTime::createFromFormat('Y-m-d', $stringData);
-							$fatoPeriodo = $this->getRepositorio()->getFatoCicloORM()->
-								encontrarPorNumeroIdentificadorEDataCriacao($numeroIdentificador, $dateFormatada, $this->getRepositorio());
-							$this->getRepositorio()->getFatoCelulaORM()->criarFatoCelula($fatoPeriodo, $eventoCelula->getId());
-
-							/* caso seja primeira celula, criar fato lider e nao tenha */
-							if (count($entidade->getGrupo()->getGrupoEventoAtivosPorTipo(EventoTipo::tipoCelula)) === 1) {
-								if (!$this->getRepositorio()->getFatoLiderORM()->encontrarFatoLiderPorNumeroIdentificador($numeroIdentificador)) {
-									$quantidadeLideres = count($entidade->getGrupo()->getResponsabilidadesAtivas());
-									$this->getRepositorio()->getFatoLiderORM()->criarFatoLider($numeroIdentificador, $quantidadeLideres);
-								}
+							if ($fatoLider = $this->getRepositorio()->getFatoLiderORM()->encontrarFatoLiderPorNumeroIdentificador($numeroIdentificador)) {
+								$fatoLider->setDataEHoraDeInativacao(Funcoes::proximoDomingo());
+								$this->getRepositorio()->getFatoLiderORM()->persistir($fatoLider, $alterarDataDeCriacao);
 							}
-						}
 
-						if (!$mudarDataDeCadastroParaProximoDomingo) {
-							/* Sessão */
-							$sessao->tipoMensagem = Constantes::$TIPO_MENSAGEM_CADASTRAR_CELULA;
-							$sessao->textoMensagem = $eventoCelula->getNome_hospedeiro();
-							$sessao->idSessao = $eventoCelula->getId();
+							$quantidadeLideres = count($entidade->getGrupo()->getResponsabilidadesAtivas());
+							$fatoLider = new FatoLider();
+							$fatoLider->setLideres($quantidadeLideres);
+							$fatoLider->setNumero_identificador($numeroIdentificador);
+							$fatoLider->setDataEHoraDeCriacao(Funcoes::proximaSegunda());
+							$this->getRepositorio()->getFatoLiderORM()->persistir($fatoLider, $alterarDataDeCriacao);
 						}
 					}
 					$this->getRepositorio()->fecharTransacao();
@@ -2025,7 +2011,17 @@ class CadastroController extends CircuitoController {
 		$solicitacoes = $grupoIgreja->getSolicitacao();
 		$solicitacoesDivididasPorTipo = array();
 		foreach($solicitacoes as $solicitacao){
-			$solicitacoesDivididasPorTipo[$solicitacao->getSolicitacaoTipo()->getId()][] = $solicitacao;
+			$adicionar = true;
+			if($entidade->getEntidadeTipo()->getId() === EntidadeTipo::equipe){
+				$objeto = $solicitacao->getObjeto1();
+				$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($objeto);
+				if($entidade->getGrupo()->getId() !== $grupo->getGrupoEquipe()->getId()){
+					$adicionar = false;	
+				}
+			}
+			if($adicionar){
+				$solicitacoesDivididasPorTipo[$solicitacao->getSolicitacaoTipo()->getId()][] = $solicitacao;
+			}
 		}
 		$solicitacoesTipo = $this->getRepositorio()->getSolicitacaoTipoORM()->encontrarTodos();
 		$view = new ViewModel(array(
@@ -2440,7 +2436,7 @@ class CadastroController extends CircuitoController {
 
 		$formulario = new SelecionarCrachaForm('SelecionarCracha');
 		return new ViewModel(array(
-			'relatorio' => $relatorio, 
+			'relatorio' => $relatorio,
 			'formulario' => $formulario,
 			'quantidadeHomensRevisionistas' => $quantidadeHomensRevisionistas,
 			'quantidadeMulheresRevisionistas' => $quantidadeMulheresRevisionistas,

@@ -39,7 +39,7 @@ echo $this->botaoSimples(Constantes::$TRADUCAO_CONTINUAR, $this->funcaoOnClick('
 				0%
 			</div>
 		</div>
-	</div>  
+	</div>
 	<!--divObjetos-->
 	<div id="divObjetos" class="hidden">
 <?php
@@ -47,11 +47,11 @@ for ($indiceDeObejtos = 1; $indiceDeObejtos <= 3; $indiceDeObejtos++) {
 	$funcaoOnclick = 'abrirSelecionarObjeto(' . $indiceDeObejtos . ', ' . $this->grupo->getId() . ')';
 	$mostrarBotaoAdicionar = '';
 	if ($indiceDeObejtos === 1) {
-		$stringSelecioneOObjeto = 'Selecione o Lider que será transferido';
+		$stringSelecioneOObjeto = 'Selecione o líder que será transferido';
 	}
 	if ($indiceDeObejtos === 2) {
 		$mostrarBotaoAdicionar = 'hidden';
-		$stringSelecioneOObjeto = 'Selecione o Lider que receberá a transfêrencia';
+		$stringSelecioneOObjeto = 'Selecione o líder que receberá a transfêrencia';
 	}
 	if ($indiceDeObejtos === 3) {
 		$mostrarBotaoAdicionar = 'hidden';
@@ -61,9 +61,9 @@ for ($indiceDeObejtos = 1; $indiceDeObejtos <= 3; $indiceDeObejtos++) {
 			<!-- Bloco objeto -->
 			<div id="blocoObjeto<?php echo $indiceDeObejtos; ?>" class="well col-xs-12 text-left">
 				<div class="col-md-12">
-					<span id="spanSelecioneObjeto<?php echo $indiceDeObejtos; ?>"><?php echo $stringSelecioneOObjeto; ?></span>    
+					<span id="spanSelecioneObjeto<?php echo $indiceDeObejtos; ?>"><?php echo $stringSelecioneOObjeto; ?></span>
 					<span id="spanObjeto<?php echo $indiceDeObejtos; ?>"></span>
-					<span class="hidden" id="spanLoader<?php echo $indiceDeObejtos; ?>">Carregando <img src="/img/loader.gif" /></span>  
+					<span class="hidden" id="spanLoader<?php echo $indiceDeObejtos; ?>">Carregando <img src="/img/loader.gif" /></span>
 				</div>
 				<div class="col-md-6">
 					<span id="spanFotos<?php echo $indiceDeObejtos; ?>"></span>
@@ -102,7 +102,7 @@ for ($indiceDeObejtos = 1; $indiceDeObejtos <= 3; $indiceDeObejtos++) {
 echo $this->botaoSimples(Constantes::$TRADUCAO_SELECIONAR, $this->funcaoOnClick('selecionarLider()'));
 ?>
 	</div>
-	</div> 
+	</div>
 	<!--divSelecionarEquipe-->
 	<div id="divSelecionarEquipe" class="hidden">
 	<div id="treeEquipes" class="fancytree-radio">
@@ -112,7 +112,7 @@ foreach ($this->grupoPaiFilhoEquipes as $grupoPaiFilhoEquipe) {
 	$grupo = $grupoPaiFilhoEquipe->getGrupoPaiFilhoFilho();
 	echo '<li id="equipe_' . $grupo->getId() . '" >' . $grupo->getEntidadeAtiva()->infoEntidade();
 }
-?>  
+?>
 	</ul>
 	</div>
 	</div>
@@ -130,7 +130,7 @@ if (count($this->grupoPaiFilhoHomens) === 0) {
 		$grupo = $grupoPaiFilhoHomem->getGrupoPaiFilhoFilho();
 		echo '<li id="' . $grupo->getId() . '" >' . $grupo->getEntidadeAtiva()->infoEntidade() . ' - ' . $grupo->getGrupoResponsavelAtivo()->getPessoa()->getNomePrimeiroUltimo();
 }
-?>  
+?>
 	</ul>
 	</div>
 	<?php } ?>
@@ -149,7 +149,7 @@ if (count($this->grupoPaiFilhoMulheres) === 0) {
 		$grupo = $grupoPaiFilhoMulher->getGrupoPaiFilhoFilho();
 		echo '<li id="' . $grupo->getId() . '" >' . $grupo->getEntidadeAtiva()->infoEntidade() . ' - ' . $grupo->getGrupoResponsavelAtivo()->getPessoa()->getNomePrimeiroUltimo();
 }
-?>  
+?>
 	</ul>
 	</div>
 	<?php } ?>
@@ -168,7 +168,7 @@ if (count($this->grupoPaiFilhoCasais) === 0) {
 		$grupo = $grupoPaiFilhoCasais->getGrupoPaiFilhoFilho();
 		echo '<li id="' . $grupo->getId() . '" >' . $grupo->getEntidadeAtiva()->infoEntidade() . ' - ' . $grupo->getNomeLideresAtivos();
 }
-?>  
+?>
 	</ul>
 	</div>
 	<?php } ?>
@@ -186,7 +186,7 @@ if (count($this->grupoPaiFilhoCasais) === 0) {
 	<button type="button" onClick='selecionarQuemSaira()' style="float: right;" class="mt10 btn ladda-button btn-primary mr5" data-style="zoom-in">
 	<span class="ladda-label">Selecionar</span>
 	</button>
-	</div> 
+	</div>
 	<!--divSelecionarNumeracao-->
 	<div id="divSelecionarNumeracao" class="hidden">
 	<div class="section-divider mt20">
@@ -213,7 +213,7 @@ for ($indiceNumeracao = 1; $indiceNumeracao <= 24; $indiceNumeracao++) {
 	<option value="0">Saiu da Igreja</option>
 	<option value="outro">Outro</option>
 	</select>
-	<div id="divMotivo" class="hidden mt20"> 
+	<div id="divMotivo" class="hidden mt20">
 	<textarea name="textareaMotivo" id="textareaMotivo" rows="4" cols="50" class="form-control"></textarea>
 	</div>
 <?php
@@ -246,8 +246,8 @@ echo $this->botaoSimples(Constantes::$TRADUCAO_CONTINUAR, $this->funcaoOnClick('
 	<div id="divTelaConfirmacao" class="hidden">
 	<div class="panel heading-border panel-info">
 	<div class="panel-body">
-	<address id="spanMensagemDeConfirmacao">Confirma a transfêrencia desse líder na sua própria equipe? Somente no próximo período será feito a transfêrencia!</address>                                  
-	</div>                 
+	<address id="spanMensagemDeConfirmacao">Confirma a transfêrencia desse líder na sua própria equipe? Somente no próximo período será feito a transfêrencia!</address>
+	</div>
 	</div>
 	<div class="row">
 	<div class="col-sm-12 col-xs-12">
@@ -256,7 +256,7 @@ echo $this->botaoSimples(Constantes::$TRADUCAO_CONTINUAR, $this->funcaoOnClick('
 	<input type="checkbox" name="checked" value="checked" onclick="pedirSenha();">
 	<span class="checkbox"></span>
 	Confirmo isso
-	</label> 
+	</label>
 	</div>
 	</div>
 	</div>
@@ -268,7 +268,7 @@ echo $this->botaoSimples($labelVoltar, $this->funcaoOnClick($stringNomeDaFuncaoO
 	<!--divSenha-->
 	<div id="divSenha" class="hidden">
 	<div class="">
-	<div class="section-divider"> 
+	<div class="section-divider">
 	<span>Confirma essa solicitação?</span>
 	</div>
 	<?php echo $this->divMensagens(); ?>
@@ -288,8 +288,8 @@ $stringNomeDaFuncaoOnClickVoltarConfirmacao = 'continuarParaConfimacao()';
 $stringNomeDaFuncaoOnClickConfimarSolicitacao = 'validarSenha(this.form)';
 echo $this->botaoSimples($labelConfirmar, $this->funcaoOnClick($stringNomeDaFuncaoOnClickConfimarSolicitacao), BotaoSimples::botaoPerigoso);
 echo $this->botaoSimples($labelVoltar, $this->funcaoOnClick($stringNomeDaFuncaoOnClickVoltarConfirmacao), BotaoSimples::botaoMenorImportancia);
-?>      
-	</div>    
+?>
+	</div>
 	</div>
 	</div>
 <?php

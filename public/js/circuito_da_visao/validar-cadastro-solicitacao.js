@@ -371,7 +371,7 @@ function selecionarObjeto(id, informacao) {
 function selecionarNumeracao() {
 	let numero = $('#numero').val();
 	if (parseInt(numero) === 0) {
-		alert('Selecion uma numeracao');
+		alert('Selecione uma numeração');
 	} else {
 		selecionarObjeto(numero, numero);
 	}

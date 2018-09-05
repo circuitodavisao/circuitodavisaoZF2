@@ -18,7 +18,7 @@ class InputExtras extends AbstractHelper {
     protected $extra;
 
     public function __construct() {
-        
+
     }
 
     public function __invoke($form, $extra = null) {
@@ -73,7 +73,7 @@ class InputExtras extends AbstractHelper {
                 if ($this->getExtra()) {
                     $html .= '<div class="section-divider mv40">';
                     if (count($this->getExtra())) {
-                        $html .= '<span>' . $this->view->translate('Selecione as equipes que participaram desse culto') . '</span>';
+                        $html .= '<span>' . $this->view->translate('Selecione as equipes que participarão desse culto') . '</span>';
                         $html .= '</div>';
                         $html .= '<div class="row">';
                         foreach ($this->getExtra() as $gpFilho) {

@@ -72,7 +72,7 @@ function validarLancamentoCadastrarPessoa(form) {
 
     if (temErro) {
         divMensagens
-                .html('Preenchao seguintes campos corretamente:' + mensagem)
+                .html('Preencha os seguintes campos corretamente: ' + mensagem)
                 .removeClass('alert-success')
                 .removeClass('hidden')
                 .addClass('alert-danger');
