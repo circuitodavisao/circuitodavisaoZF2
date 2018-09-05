@@ -485,9 +485,7 @@ class PrincipalController extends CircuitoController {
        );
       $tipo = $dadosPost['tipo'];
       $prioridade = $dadosPost['prioridade'];
-      $descricao = $dadosPost['descricao'];
-
-      error_log(print_r($dadosPost, true));
+      $descricao = $dadosPost['descricao'];      
       $anexo = $dadosPost['imagem'];
       $remetente['nome'] = $pessoa->getNomePrimeiroUltimo();
       $remetente['email'] = $pessoa->getEmail();
