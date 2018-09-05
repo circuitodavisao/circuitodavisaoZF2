@@ -5,6 +5,8 @@ use Application\Controller\Helper\Funcoes;
 use Application\Model\Entity\Curso;
 use Application\Model\Entity\Disciplina;
 use Application\Model\Entity\Situacao;
+use Application\Model\Entity\EntidadeTipo;
+use Application\Model\Entity\CursoAcesso;
 use Application\View\Helper\BotaoSimples;
 
 $ehTurmaDoInstitutoDeVencedores = $this->turmaPessoa->getTurma()->getCurso()->getId() === Curso::INSTITUTO_DE_VENCEDORES;
@@ -22,7 +24,7 @@ $urlGerarCarterinha = '/cursoGerarCarterinha/' . $this->turmaPessoa->getId();
 $funcaoGerarCarterinha = $this->funcaoOnClick('window.open("' . $urlGerarCarterinha . '","_blanck")');
 
 $botaoGerarCarterinha = $this->botaoSimples(
-	str_pad($this->turmaPessoa->getId(), 10, 0, STR_PAD_LEFT) . ' <i class="fa fa-user"></i>', $funcaoGerarCarterinha, BotaoSimples::botaoMuitoPequenoImportante, BotaoSimples::posicaoAEsquerda);
+	$this->turmaPessoa->getId(). ' <i class="fa fa-user"></i>', $funcaoGerarCarterinha, BotaoSimples::botaoMuitoPequenoImportante, BotaoSimples::posicaoAEsquerda);
 
 $botaoMudarNome = '';
 $botaoMudarNome .= '<div class="btn-group dropdown">';
@@ -67,7 +69,10 @@ foreach ($this->situacoes as $situacao) {
 		}
 }
 $selectMudarSituacao .= '</select>';
-if ($turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getId() === Situacao::ATIVO ||
+if (
+	$turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getId() === Situacao::ATIVO ||
+	$turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getId() === Situacao::DESISTENTE ||
+	$turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getId() === Situacao::REPROVADO_POR_FALTA ||
 	$turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getId() === Situacao::ESPECIAL) {
 		$botaoMudarSituacao = $this->botaoSimples($turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getNome() . ' <i class="fa fa-pencil"></i>', ' id="botaoSituacao" ' . $this->funcaoOnClick('$("#selectMudarSituacao").removeClass("hidden"); $("#botaoSituacao").addClass("hidden")'), BotaoSimples::botaoMuitoPequenoMenosImportante, BotaoSimples::posicaoAEsquerda);
 		$botaoMudarSituacao .= $selectMudarSituacao;
@@ -90,7 +95,7 @@ $html .= '<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">';
 $html .= '<div class="panel panel-default">';
 $html .= '<div class="panel-heading" style="padding: 0px 8px;">Nova Consulta</div>';
 $html .= '<div class="panel-body">';
-$html .= '<input type="number" id="matricula" class="mb10 form-control" placeholder="Mátricula"  />';
+$html .= '<input type="number" id="matricula" class="mb10 form-control" placeholder="Matrícula"  />';
 $html .=  $this->botaoSimples('Pesquisar', $this->funcaoOnClick('acessarMatricula()'), BotaoSimples::botaoImportante, BotaoSimples::larguraMaxima);
 $html .= '</div>';
 $html .= '</div>';
@@ -102,17 +107,31 @@ $html .= '<div class="table-responsive">';
 $html .= '<table class="table table-condesed">';
 $html .= '<tbody>';
 if ($this->turmaPessoa->verificarSeEstaAtivo()) {
-	$html .= '<tr><td>Matricula</td><td>' . $botaoGerarCarterinha . '</td></tr>';
+	$html .= '<tr><td>Matrícula</td><td>' . $botaoGerarCarterinha . '</td></tr>';
 	$html .= '<tr><td>Nome</td><td>' . $botaoMudarNome . '</td></tr>';
 } else {
-	$html .= '<tr><td>Matricula</td><td>' . str_pad($this->turmaPessoa->getId(), 10, 0, STR_PAD_LEFT) . '</td></tr>';
+	$html .= '<tr><td>Matricula</td><td>' . $this->turmaPessoa->getId(). '</td></tr>';
 	$html .= '<tr><td>Nome</td><td>' . $this->turmaPessoa->getPessoa()->getNome() . '</td></tr>';
 }
 $html .= '<tr><td>Equipe</td><td>' . CursoController::nomeEquipeTurmaPessoa($this->turmaPessoa) . '</td></tr>';
 if ($this->turmaPessoa->verificarSeEstaAtivo()) {
 	$html .= '<tr><td>Curso</td><td>' . $this->turmaPessoa->getTurma()->getCurso()->getNome() . ' - ' . Funcoes::mesPorExtenso($this->turmaPessoa->getTurma()->getMes()) . '/' . $this->turmaPessoa->getTurma()->getAno() . '</td></tr>';
-	$html .= '<tr><td>Situa&ccedil;&atilde;o</td><td>' . $botaoMudarSituacao . '</td></tr>';
-	$html .= '<tr><td>Remover</td><td>' . $botaoRemoverDaTurma . '</td></tr>';
+
+	if ($this->entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja || 
+		$this->pessoa->getPessoaCursoAcessoAtivo() && 
+		(
+			$this->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::COORDENADOR ||
+			$this->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::FACILITADOR ||
+		$this->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::SUPERVISOR)){
+			$html .= '<tr><td>Situa&ccedil;&atilde;o</td><td>' . $botaoMudarSituacao . '</td></tr>';
+		}	
+
+	if ($this->entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja || 
+		$this->pessoa->getPessoaCursoAcessoAtivo() && 
+		($this->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::COORDENADOR)){
+			$html .= '<tr><td>Remover</td><td>' . $botaoRemoverDaTurma . '</td></tr>';
+		}	
+
 } else {
 	$html .= '<tr><td colspan="2" class="text-center"><span class="label label-danger">Aluno Removido da turma</span></td></tr>';
 }
@@ -363,7 +382,7 @@ $html .= '</div>'; /* Fim col-lg-7 col-md-7 col-sm-7 col-xs-12 */
 $html .= '</div>'; /* Fim row */
 echo $html;
 
-$versao = '?v=1.1.8';
+$versao = '?v=1.1.9';
 
 echo $this
 	->headScript()

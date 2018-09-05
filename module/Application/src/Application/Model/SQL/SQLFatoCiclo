@@ -33,7 +33,6 @@ COMMENT ON COLUMN fato_ciclo.data_inativacao IS 'Data de inativação';
 COMMENT ON COLUMN fato_ciclo.hora_inativacao IS 'Hora de inativação do fato';
 COMMENT ON COLUMN fato_ciclo.hora_criacao IS 'Hora de criação do fato';
 
-
 -- Index: index_fato_ciclo_numero_identificador
 
 -- DROP INDEX index_fato_ciclo_numero_identificador;

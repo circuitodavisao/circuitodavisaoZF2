@@ -54,6 +54,7 @@ class ListagemTurmas extends AbstractHelper {
 				$stringNomeDaFuncaoOnClickExclusao = 'mostrarSplash(); funcaoCircuito("' . Constantes::$ROUTE_CURSO . Constantes::$PAGINA_EXCLUSAO_TURMA . '", ' . $turma->getId() . ')';
 				$stringNomeDaFuncaoOnClickIncluirAlunos = 'mostrarSplash(); funcaoCircuito("' . Constantes::$ROUTE_CADASTRO . Constantes::$PAGINA_LISTAGEM_REVISAO_TURMA . '",' . $turma->getId() . ')';
 				$stringNomeDaFuncaoOnClickAbrirAula = 'mostrarSplash(); funcaoCircuito("' . Constantes::$ROUTE_CURSO . 'AbrirAula' . '",' . $turma->getId() . ')';
+				$stringNomeDaFuncaoOnClickFecharTurma = 'let resposta = confirm("confirma exclusao?"); if(resposta){ mostrarSplash(); funcaoCircuito("' . Constantes::$ROUTE_CURSO . 'FecharTurma' . '",' . $turma->getId() . ')}';
 
 				$html .= '<tr>';
 				$html .= '<td class="text-center">';
@@ -69,8 +70,7 @@ class ListagemTurmas extends AbstractHelper {
 				$html .= '<td class="text-center hidden-xs">';
 				$nomeAulaAberta = '<span class="label label-';
 				if ($turma->getTurmaAulaAtiva()) {
-					$nomeAulaAberta .= 'success">'.$turma->getTurmaAulaAtiva()->getAula()->getNome();
-				} else {
+					$nomeAulaAberta .= 'success">'.$turma->getTurmaAulaAtiva()->getAula()->getDisciplina()->getNome() . ' - AULA ' . $turma->getTurmaAulaAtiva()->getAula()->getPosicao();				} else {
 					$nomeAulaAberta .= 'danger">SEM AULA ABERTA';
 				}
 				$html .= $nomeAulaAberta.'</span>';
@@ -80,6 +80,7 @@ class ListagemTurmas extends AbstractHelper {
 					$html .= $this->view->botaoLink('<i class="fa fa-user-plus" ></i>', Constantes::$STRING_HASHTAG, 4, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClickIncluirAlunos));
 				}
 				$html .= $this->view->botaoLink('<i class="fa fa-font" ></i>', Constantes::$STRING_HASHTAG, 4, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClickAbrirAula));
+				$html .= $this->view->botaoLink('<i class="fa fa-times" ></i>', Constantes::$STRING_HASHTAG, 9, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClickFecharTurma));
 				$html .= '</td>';
 				$html .= '</tr>';
 			}

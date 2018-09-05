@@ -4,6 +4,8 @@ namespace Application\Model\ORM;
 
 use Application\Model\Entity\Grupo;
 use Application\Model\ORM\CircuitoORM;
+use Application\Controller\Helper\Constantes;
+use Application\Controller\Helper\Funcoes;
 use Exception;
 
 /**
@@ -34,5 +36,22 @@ class GrupoORM extends CircuitoORM {
         }
         return $entidades;
     }
+
+	public function pegarTodasIgrejas(){
+        $dqlBase = "SELECT g.id "
+                . "FROM  " . Constantes::$ENTITY_GRUPO . " g "
+                . "JOIN g.entidade e "
+                . "WHERE "
+                . "e.tipo_id = 5 "
+                . "AND g.data_inativacao is null "
+                . "AND e.data_inativacao is null ";
+         try {
+            $result = $this->getEntityManager()->createQuery($dqlBase)
+                    ->getResult();
+            return $result;
+        } catch (Exception $exc) {
+            echo $exc->getMessage();
+        }
+	}
 
 }

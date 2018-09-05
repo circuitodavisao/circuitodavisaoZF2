@@ -56,6 +56,9 @@ class RepositorioORM {
     private $_cursoAcessoORM;
     private $_pessoaCursoAcessoORM;
 	private $_fatoParceiroDeDeus;
+	private $_fatoFinanceiro;
+	private $_fatoFinanceiroTipo;
+	private $_fatoRankingCelula;
 
     /**
      * Contrutor
@@ -277,11 +280,11 @@ class RepositorioORM {
 
     /**
      * Metodo public para obter a instancia do TurmaPessoaAulaORM
-     * @return CircuitoORM
+     * @return TurmaPessoaAulaORM
      */
     public function getTurmaPessoaAulaORM() {
         if (is_null($this->_turmaPessoaAulaORM)) {
-            $this->_turmaPessoaAulaORM = new CircuitoORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_TURMA_PESSOA_AULA);
+            $this->_turmaPessoaAulaORM = new TurmaPessoaAulaORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_TURMA_PESSOA_AULA);
         }
         return $this->_turmaPessoaAulaORM;
     }
@@ -538,6 +541,38 @@ class RepositorioORM {
         return $this->_fatoParceiroDeDeus;
     }
 
+    /**
+     * Metodo public para obter a instancia do FatoFinanceiro
+     * @return CircuitoORM
+     */
+    public function getFatoFinanceiroORM() {
+        if (is_null($this->_fatoFinanceiro)) {
+			$this->_fatoFinanceiro = new FatoFinanceiroORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_FATO_FINANCEIRO);
+        }
+        return $this->_fatoFinanceiro;
+    }
+
+     /**
+     * Metodo public para obter a instancia do FatoFinanceiroTipo
+     * @return CircuitoORM
+     */
+    public function getFatoFinanceiroTipoORM() {
+        if (is_null($this->_fatoFinanceiroTipo)) {
+			$this->_fatoFinanceiroTipo = new CircuitoORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_FATO_FINANCEIRO_TIPO);
+        }
+        return $this->_fatoFinanceiroTipo;
+    }
+
+    /**
+     * Metodo public para obter a instancia do FatoRankingCelula
+     * @return FatoRankingCelulaORM
+     */
+    public function getFatoRankingCelulaORM() {
+        if (is_null($this->_fatoRankingCelulaORM)) {
+			$this->_fatoRankingCelulaORM = new FatoRankingCelulaORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_FATO_RANKING_CELULA);
+        }
+        return $this->_fatoRankingCelulaORM;
+    }
 
     /**
      * Metodo public para obter a instancia EntityManager com acesso ao banco de dados

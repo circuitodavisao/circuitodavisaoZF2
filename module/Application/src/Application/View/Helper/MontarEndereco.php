@@ -16,7 +16,7 @@ class MontarEndereco extends AbstractHelper {
     private $form;
 
     public function __construct() {
-        
+
     }
 
     public function __invoke($form) {
@@ -33,7 +33,7 @@ class MontarEndereco extends AbstractHelper {
         $html .= '</div>';
         $html .= '</div>';
         $html .= '</div>';
-        $html .= '<div id="divBotaoBuscarCep" class="row">';
+        $html .= '<div id="divBotaoBuscarCep" class="">';
         $html .= $this->view->botaoSimples(Constantes::$TRADUCAO_BUSCAR_CEP_LOGRADOURO, $this->view->funcaoOnClick(Constantes::$FORM_FUNCAO_BUSCAR_CEP));
         if ($this->getForm() instanceof CelulaForm && $this->getForm()->get(Constantes::$FORM_ID)->getValue() === '') {
             $funcaoVoltar = $this->view->funcaoOnClick('voltarSelecionarDiaHoraEMinuto()');
@@ -82,13 +82,14 @@ class MontarEndereco extends AbstractHelper {
         $html .= $this->view->inputCampoEndereco(Constantes::$TRADUCAO_COMPLEMENTO, $this->getForm(), Constantes::$FORM_COMPLEMENTO);
         $html .= '</div>';
         $html .= '</div>';
+
+        $html .= '</div>';
         if ($this->getForm() instanceof CelulaForm) {
             $funcaoContinuar = $this->view->funcaoOnClick('abrirDadosHospedeiro()');
             $html .= $this->view->botaoSimples(Constantes::$TRADUCAO_CONTINUAR, $funcaoContinuar);
             $funcaoVoltar2 = $this->view->funcaoOnClick('voltarSelecionarDiaHoraEMinuto()');
             $html .= $this->view->botaoSimples(Constantes::$TRADUCAO_VOLTAR, $funcaoVoltar2, 2);
         }
-        $html .= '</div>';
         $html .= '</div>';
         return $html;
     }

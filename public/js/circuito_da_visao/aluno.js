@@ -1,4 +1,5 @@
 function mudarSituacao(select, idTurmaPessoa) {
+	const classHidden = 'hidden';
 	let idSituacao = select.value;
 	$.post(
 		"/cursoMudarSituacao",
@@ -15,6 +16,7 @@ function mudarSituacao(select, idTurmaPessoa) {
 }
 
 function removerDaTurma(idTurmaPessoa) {
+	const classHidden = 'hidden';
 	let resposta = confirm('Realmente quer remover essa pessoa da turma?');
 	if (resposta) {
 		$.post(

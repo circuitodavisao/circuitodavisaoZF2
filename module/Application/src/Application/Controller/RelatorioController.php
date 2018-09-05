@@ -7,6 +7,9 @@ use Application\Controller\Helper\Funcoes;
 use Application\Model\Entity\EventoTipo;
 use Application\Model\Entity\Grupo;
 use Application\Model\Entity\GrupoPessoaTipo;
+use Application\Model\Entity\Curso;
+use Application\Model\Entity\EntidadeTipo;
+use Application\Model\Entity\Situacao;
 use Application\Model\Helper\FuncoesEntidade;
 use Application\Model\ORM\RepositorioORM;
 use Doctrine\ORM\EntityManager;
@@ -95,27 +98,29 @@ class RelatorioController extends CircuitoController {
 		$arrayPeriodoDoMes = Funcoes::encontrarPeriodoDeUmMesPorMesEAno(date('m'), date('Y'));
 
 		$todosFilhos = array();
-		for ($indiceDeArrays = $arrayPeriodoDoMes[0]; $indiceDeArrays <= $arrayPeriodoDoMes[1]; $indiceDeArrays++) {
-			$grupoPaiFilhoFilhos = $grupo->getGrupoPaiFilhoFilhosAtivos($indiceDeArrays);
-			if ($grupoPaiFilhoFilhos) {
-				foreach ($grupoPaiFilhoFilhos as $grupoPaiFilhoFilho) {
-					$adicionar = true;
-					if (count($todosFilhos) > 0) {
-						foreach ($todosFilhos as $filho) {
-							if ($filho->getId() === $grupoPaiFilhoFilho->getId()) {
-								$adicionar = false;
-								break;
-							}
+			for ($indiceDeArrays = $arrayPeriodoDoMes[0]; $indiceDeArrays <= $arrayPeriodoDoMes[1]; $indiceDeArrays++) {
+//		$indiceDeArrays = -1;
+		$grupoPaiFilhoFilhos = $grupo->getGrupoPaiFilhoFilhosAtivos($indiceDeArrays);
+		if ($grupoPaiFilhoFilhos) {
+			foreach ($grupoPaiFilhoFilhos as $grupoPaiFilhoFilho) {
+				$adicionar = true;
+				if (count($todosFilhos) > 0) {
+					foreach ($todosFilhos as $filho) {
+						if ($filho->getId() === $grupoPaiFilhoFilho->getId()) {
+							$adicionar = false;
+							break;
 						}
 					}
-					if ($adicionar) {
-						$todosFilhos[] = $grupoPaiFilhoFilho;
-					}
+				}
+				if ($adicionar) {
+					$todosFilhos[] = $grupoPaiFilhoFilho;
 				}
 			}
 		}
+			}
 
 
+		$quantidade = 0;
 		$html .= '<table class="table table-condensed table-hover bg-light mt15">';
 		$html .= '<thead>';
 		$html .= '<tr>';
@@ -127,34 +132,54 @@ class RelatorioController extends CircuitoController {
 		$html .= '</thead>';
 		$html .= '<tbody>';
 		foreach ($todosFilhos as $filho) {
-			$html .= self::linhaTabelaFatoLider($filho, $this->getRepositorio(), 1);
+			$dados = self::linhaTabelaFatoLider($filho, $this->getRepositorio(), 1, $quantidade);
+			$html .= $dados['html'];
+			$quantidade = $dados['quantidade'];
 			if ($todosLideres1 = self::todosLideresAbaixoNoPeriodo($filho, $arrayPeriodoDoMes)) {
 				foreach ($todosLideres1 as $filho1) {
-					$html .= self::linhaTabelaFatoLider($filho1, $this->getRepositorio(), 2);
+					$dados = self::linhaTabelaFatoLider($filho1, $this->getRepositorio(), 2, $quantidade);
+					$html .= $dados['html'];
+					$quantidade = $dados['quantidade'];
 					if ($todosLideres2 = self::todosLideresAbaixoNoPeriodo($filho1, $arrayPeriodoDoMes)) {
 						foreach ($todosLideres2 as $filho2) {
-							$html .= self::linhaTabelaFatoLider($filho2, $this->getRepositorio(), 3);
+							$dados = self::linhaTabelaFatoLider($filho2, $this->getRepositorio(), 3, $quantidade);
+							$html .= $dados['html'];
+							$quantidade = $dados['quantidade'];
 							if ($todosLideres3 = self::todosLideresAbaixoNoPeriodo($filho2, $arrayPeriodoDoMes)) {
 								foreach ($todosLideres3 as $filho3) {
-									$html .= self::linhaTabelaFatoLider($filho3, $this->getRepositorio(), 4);
+									$dados = self::linhaTabelaFatoLider($filho3, $this->getRepositorio(), 4, $quantidade);
+									$html .= $dados['html'];
+									$quantidade = $dados['quantidade'];
 									if ($todosLideres4 = self::todosLideresAbaixoNoPeriodo($filho3, $arrayPeriodoDoMes)) {
 										foreach ($todosLideres4 as $filho4) {
-											$html .= self::linhaTabelaFatoLider($filho4, $this->getRepositorio(), 5);
+											$dados = self::linhaTabelaFatoLider($filho4, $this->getRepositorio(), 5, $quantidade);
+											$html .= $dados['html'];
+											$quantidade = $dados['quantidade'];
 											if ($todosLideres5 = self::todosLideresAbaixoNoPeriodo($filho4, $arrayPeriodoDoMes)) {
 												foreach ($todosLideres5 as $filho5) {
-													$html .= self::linhaTabelaFatoLider($filho5, $this->getRepositorio(), 6);
+													$dados = self::linhaTabelaFatoLider($filho5, $this->getRepositorio(), 6, $quantidade);
+													$html .= $dados['html'];
+													$quantidade = $dados['quantidade'];
 													if ($todosLideres6 = self::todosLideresAbaixoNoPeriodo($filho5, $arrayPeriodoDoMes)) {
 														foreach ($todosLideres6 as $filho6) {
-															$html .= self::linhaTabelaFatoLider($filho6, $this->getRepositorio(), 7);
+															$dados = self::linhaTabelaFatoLider($filho6, $this->getRepositorio(), 7, $quantidade);
+															$html .= $dados['html'];
+															$quantidade = $dados['quantidade'];
 															if ($todosLideres7 = self::todosLideresAbaixoNoPeriodo($filho6, $arrayPeriodoDoMes)) {
 																foreach ($todosLideres7 as $filho7) {
-																	$html .= self::linhaTabelaFatoLider($filho7, $this->getRepositorio(), 8);
+																	$dados = self::linhaTabelaFatoLider($filho7, $this->getRepositorio(), 8, $quantidade);
+																	$html .= $dados['html'];
+																	$quantidade = $dados['quantidade'];
 																	if ($todosLideres8 = self::todosLideresAbaixoNoPeriodo($filho7, $arrayPeriodoDoMes)) {
 																		foreach ($todosLideres8 as $filho8) {
-																			$html .= self::linhaTabelaFatoLider($filho8, $this->getRepositorio(), 9);
+																			$dados = self::linhaTabelaFatoLider($filho8, $this->getRepositorio(), 9, $quantidade);
+																			$html .= $dados['html'];
+																			$quantidade = $dados['quantidade'];
 																			if ($todosLideres9 = self::todosLideresAbaixoNoPeriodo($filho8, $arrayPeriodoDoMes)) {
 																				foreach ($todosLideres9 as $filho9) {
-																					$html .= self::linhaTabelaFatoLider($filho9, $this->getRepositorio(), 10);
+																					$dados = self::linhaTabelaFatoLider($filho9, $this->getRepositorio(), 10, $quantidade);
+																					$html .= $dados['html'];
+																					$quantidade = $dados['quantidade'];
 																				}
 																			}
 																		}
@@ -176,6 +201,7 @@ class RelatorioController extends CircuitoController {
 		}
 		$html .= '</tbody>';
 		$html .= '</table>';
+		$html .= '<h1>Quantidade: '.$quantidade.'</h1>';
 		return new ViewModel(array('html' => $html));
 	}
 
@@ -205,7 +231,7 @@ class RelatorioController extends CircuitoController {
 		return $todosFilhos;
 	}
 
-	static function linhaTabelaFatoLider($filho, $repositorio, $tabulacao = 0) {
+	static function linhaTabelaFatoLider($filho, $repositorio, $tabulacao = 0, $quantidade) {
 		$html = '';
 		$grupoFilho = $filho->getGrupoPaiFilhoFilho();
 		$dataInativacao = null;
@@ -228,6 +254,7 @@ class RelatorioController extends CircuitoController {
 			$html .= '<td>id: ' . $fatoLider->getId() . ' - ' . $fatoLider->getData_criacaoStringPadraoBrasil() . '</td>';
 			$html .= '<td>' . $fatoLider->getLideres() . '</td>';
 			$html .= '<td>' . ($fatoLider->getData_inativacao() ? $fatoLider->getData_inativacaoStringPadraoBrasil() : 'Null') . '</td>';
+			$quantidade += $fatoLider->getLideres();
 		}
 		if ($celulas = $grupoFilho->getGrupoEventoPorTipoEAtivo(EventoTipo::tipoCelula, 1)) {
 			$html .= '<td>';
@@ -238,7 +265,10 @@ class RelatorioController extends CircuitoController {
 		}
 		$html .= '</tr>';
 
-		return $html;
+		$dados = array();
+		$dados['html'] = $html;
+		$dados['quantidade'] = $quantidade;
+		return $dados;
 	}
 
 	public function pessoasFrequentesAction() {
@@ -397,6 +427,45 @@ class RelatorioController extends CircuitoController {
 		return $response;
 	}
 
+	public function institutoAction(){
+		$sessao = new Container(Constantes::$NOME_APLICACAO);
+
+		$idEntidadeAtual = $sessao->idEntidadeAtual;
+		$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+		$grupoIgreja = $entidade->getGrupo()->getGrupoIgreja();
+
+		$turmasInstitutoDeVencedores = null;
+		$relatorio = array();
+		if($turmas = $grupoIgreja->getTurma()){
+			foreach($turmas as $turma){
+				if($turma->verificarSeEstaAtivo() && $turma->getCurso()->getId() === Curso::INSTITUTO_DE_VENCEDORES){
+					$turmasInstitutoDeVencedores[] = $turma;
+					if($turmaPessoas = $turma->getTurmaPessoa()){
+						foreach($turmaPessoas as $turmaPessoa){
+							if($turmaPessoa->verificarSeEstaAtivo()){
+								if($grupoPessoa = $turmaPessoa->getPessoa()->getGrupoPessoaAtivo()){
+									if($entidade->GetEntidadeTipo()->getId() === EntidadeTipo::igreja){
+									$relatorio[$grupoPessoa->getGrupo()->getGrupoEquipe()->getEntidadeAtiva()->getNome()][$turma->getId()][$turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getNome()]++;
+									}
+									if($entidade->GetEntidadeTipo()->getId() === EntidadeTipo::equipe){
+										if($grupoPessoa->getGrupo()->getGrupoEquipe()->getId() === $entidade->getGrupo()->getid()){
+											$informacao = $grupoPessoa->getGrupo()->getGrupoSubEquipe()->getEntidadeAtiva()->infoEntidade() . ' - ' . $grupoPessoa->getGrupo()->getGrupoSubEquipe()->getNomeLideresAtivos();
+										$relatorio[$informacao][$turma->getId()][$turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getNome()]++;
+										}
+									}
+								}								
+							}
+						}
+					}
+				}
+			}
+		}
+		return new ViewModel(array(
+			'relatorio'=>$relatorio,
+			'turmas' => $turmasInstitutoDeVencedores,
+		));
+	}
+
 	public function buscarDadosGrupoAction() {
 		$request = $this->getRequest();
 		$response = $this->getResponse();
@@ -407,9 +476,8 @@ class RelatorioController extends CircuitoController {
 				$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupo);
 				$numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupo);
 				$tipoRelatorioEquipe = 2;
-				$periodoInicial = 0;
+				$periodoInicial = -8;
 				$relatorio = RelatorioController::montaRelatorio($this->getRepositorio(), $numeroIdentificador, $periodoInicial, $tipoRelatorioEquipe, false, RelatorioController::relatorioCelulaQuantidade);
-
 				$grupoResponsabilidades = $grupo->getResponsabilidadesAtivas();
 				$fotos = '';
 				foreach ($grupoResponsabilidades as $grupoResponsabilidade) {
@@ -422,6 +490,22 @@ class RelatorioController extends CircuitoController {
 				$dados['celulaQuantidade'] = $relatorio['celulaQuantidade'];
 				$dados['quantidadeLideres'] = $relatorio['quantidadeLideres'];
 				$dados['resposta'] = $resposta;
+
+				if($grupoPaiFilhoFilhos = $grupo->getGrupoPaiFilhoFilhosAtivos($indiceDeArrays = 1)){
+					$dados['temDiscipulos'] = true;
+				}
+				if($solicitacoesDoObjeto = $this->getRepositorio()->getSolicitacaoORM()->encontrarSolicitacoesPorObjeto1($grupo->getId())){
+					$temSolicitacaoPendente = false;
+					foreach($solicitacoesDoObjeto as $solicitacao){
+						$idSituacao = $solicitacao->getSolicitacaoSituacaoAtiva()->getSituacao()->getId();
+						if($idSituacao !== Situacao::CONCLUIDO){
+							$temSolicitacaoPendente = true;
+						}						
+					}
+					if($temSolicitacaoPendente){
+						$dados['temSolicitacaoPendente'] = true;
+					}
+				}
 
 				/* se tem celula adiciona os dados */
 				if($grupoEventoCelula = $grupo->getGrupoEventoPorTipoEAtivo(EventoTipo::tipoCelula)){
@@ -495,12 +579,13 @@ class RelatorioController extends CircuitoController {
 	const dadosPessoais = 0;
 	const parceiroDeDeusValor = 12;
 
-	public static function relatorioCompleto($repositorio, $grupo, $tipoRelatorio, $mes, $ano) {
+	public static function relatorioCompleto($repositorio, $grupo, $tipoRelatorio, $mes, $ano, $tudo = true) {
 		$relatorio = array();
 		$todosFilhos = array();
 		$arrayPeriodoDoMes = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mes, $ano);
 		$diferencaDePeriodos = self::diferencaDePeriodos($arrayPeriodoDoMes[0], $arrayPeriodoDoMes[1]);
 
+		if($tudo){
 		for ($indiceDeArrays = $arrayPeriodoDoMes[0]; $indiceDeArrays <= $arrayPeriodoDoMes[1]; $indiceDeArrays++) {
 			$grupoPaiFilhoFilhos = $grupo->getGrupoPaiFilhoFilhosAtivos($indiceDeArrays);
 			if ($grupoPaiFilhoFilhos) {
@@ -520,7 +605,7 @@ class RelatorioController extends CircuitoController {
 				}
 			}
 		}
-
+		}
 		$tipoRelatorioPessoal = 1;
 		$tipoRelatorioSomado = 2;
 		$relatorioDiscipulos = array();
@@ -530,7 +615,7 @@ class RelatorioController extends CircuitoController {
 		for ($indiceDeArrays = $arrayPeriodoDoMes[0]; $indiceDeArrays <= $arrayPeriodoDoMes[1]; $indiceDeArrays++) {
 			if($tipoRelatorio === self::relatorioParceiroDeDeus){
 				$relatorio[self::dadosPessoais][$indiceDeArrays] 
-					= $repositorio->getFatoParceiroDeDeusORM()->fatosPorNumeroIdentificador($numeroIdentificador,$indiceDeArrays,date('m'),date('Y'), $tipoRelatorioPessoal);
+					= $repositorio->getFatoFinanceiroORM()->fatosPorNumeroIdentificador($numeroIdentificador,$indiceDeArrays, $mes, $ano, $tipoRelatorioPessoal);
 				$soma[self::dadosPessoais][self::parceiroDeDeusValor] += $relatorio[self::dadosPessoais][$indiceDeArrays]['valor'];
 			}else{
 				$relatorio[self::dadosPessoais][$indiceDeArrays] 
@@ -571,10 +656,15 @@ class RelatorioController extends CircuitoController {
 
 				if($tipoRelatorio === self::relatorioParceiroDeDeus){
 					$relatorioDiscipulos[$grupoFilho->getId()][$indiceDeArrays] 
-						= $repositorio->getFatoParceiroDeDeusORM()->fatosPorNumeroIdentificador($numeroIdentificadorFilho,$indiceDeArrays,date('m'),date('Y'), $tipoRelatorioSomado);
+						= $repositorio->getFatoFinanceiroORM()->fatosPorNumeroIdentificador($numeroIdentificadorFilho,$indiceDeArrays, $mes, $ano, $tipoRelatorioSomado);
 					$soma[$grupoFilho->getId()][self::parceiroDeDeusValor] += $relatorioDiscipulos[$grupoFilho->getId()][$indiceDeArrays]['valor'];
+
 				}else{
-					$relatorioDiscipulos[$grupoFilho->getId()][$indiceDeArrays] = RelatorioController::montaRelatorio($repositorio, $numeroIdentificadorFilho, $indiceDeArrays, $tipoRelatorioSomado, false, $tipoRelatorio);
+					$estaInativo = false;
+					if(!$filho->verificarSeEstaAtivo()){
+						$estaInativo = true;
+					}
+					$relatorioDiscipulos[$grupoFilho->getId()][$indiceDeArrays] = RelatorioController::montaRelatorio($repositorio, $numeroIdentificadorFilho, $indiceDeArrays, $tipoRelatorioSomado, $estaInativo, $tipoRelatorio);
 					if ($tipoRelatorio === RelatorioController::relatorioMembresia ||
 						$tipoRelatorio === RelatorioController::relatorioMembresiaECelula) {
 							if ($relatorioDiscipulos[$grupoFilho->getId()][$indiceDeArrays]['membresiaMeta'] > 0 && $relatorioDiscipulos[$grupoFilho->getId()][$indiceDeArrays]['membresiaMeta'] > 0) {
@@ -680,11 +770,6 @@ class RelatorioController extends CircuitoController {
 			if ($tipoRelatorio === RelatorioController::relatorioCelulasDeElite) {
 				$relatorio[self::dadosPessoais]['mediaCelulaDeElitePerformance'] = $soma[self::dadosPessoais][self::celulaDeElitePerformance] / $diferencaDePeriodos;
 			}
-			$relatorio[self::dadosPessoais]['lideres'] = 'MEU';
-			$relatorio[self::dadosPessoais]['lideresFotos'] = $grupo->getFotosLideresAtivos();
-			$relatorio[self::dadosPessoais]['lideresEntidade'] = $grupo->getEntidadeAtiva()->infoEntidade();
-			$relatorio[self::dadosPessoais]['grupo'] = $grupo->getId();
-
 			$somaTotal['mediaMembresiaCulto'] = $relatorio[self::dadosPessoais]['mediaMembresiaCulto'];
 			$somaTotal['mediaMembresiaArena'] = $relatorio[self::dadosPessoais]['mediaMembresiaArena'];
 			$somaTotal['mediaMembresiaDomingo'] = $relatorio[self::dadosPessoais]['mediaMembresiaDomingo'];
@@ -693,7 +778,16 @@ class RelatorioController extends CircuitoController {
 			$somaTotal['mediaCelulaRealizadas'] += $relatorio[self::dadosPessoais]['mediaCelulaRealizadas'];
 		}else{
 			$relatorio[self::dadosPessoais]['somaValor'] = $soma[self::dadosPessoais][self::parceiroDeDeusValor];
+			if($grupo->getId() === 1 || $grupo->getId() === 1225){
+				$relatorio[self::dadosPessoais]['parceiroDeDeusMeta'] = 0;
+			}
+			$somaTotal['parceiroDeDeusMeta'] = 0;
 		}
+		$relatorio[self::dadosPessoais]['lideres'] = 'MEU';
+		$relatorio[self::dadosPessoais]['lideresFotos'] = $grupo->getFotosLideresAtivos();
+		$relatorio[self::dadosPessoais]['lideresEntidade'] = $grupo->getEntidadeAtiva()->infoEntidade();
+		$relatorio[self::dadosPessoais]['grupo'] = $grupo->getId();
+
 		foreach ($todosFilhos as $filho) {
 			$grupoFilho = $filho->getGrupoPaiFilhoFilho();
 			if($tipoRelatorio !== self::relatorioParceiroDeDeus){
@@ -709,6 +803,120 @@ class RelatorioController extends CircuitoController {
 				}
 			}else{
 				$relatorioDiscipulos[$grupoFilho->getId()]['somaValor'] += $soma[$grupoFilho->getId()][self::parceiroDeDeusValor];
+				/* Gambiara da ceilandia */
+				if($grupo->getId() === 1){
+					$valorMeta = 0;
+					switch($grupoFilho->getId()){
+					case 2: // bkb
+						$valorMeta = 6340;
+						break;
+					case 216: // hunters
+						$valorMeta = 4500;
+						break;
+					case 347: // spartans
+						$valorMeta = 3621;
+						break;
+					case 529:// falcons
+						$valorMeta = 9181;
+						break;
+					case 713://galatas
+						$valorMeta = 2500;
+						break;
+					case 757:// power
+						$valorMeta = 2500;
+						break;
+					case 794: // fire
+						$valorMeta = 1926;
+						break;
+					case 830: // fight
+						$valorMeta = 6708;
+						break;
+					case 1024://titans
+						$valorMeta = 1870;
+						break;
+					case 1049://bonde
+						$valorMeta = 2000;
+						break;
+					case 1085: //save
+						$valorMeta = 500;
+						break;
+					case 1093://sucesso
+						$valorMeta = 0;
+						break;
+					case 1103: // falcons 2
+						$valorMeta = 2000;
+						break;
+					case 1142: // figth 5
+						$valorMeta = 2000;
+						break;
+					case 1199: // yuri e sarah
+						$valorMeta = 0;
+						break;
+					}
+				}
+
+				/* gambiara da sede */
+				if($grupo->getId() === 1225){
+					switch($grupoFilho->getId()){
+					case 1226://invictus
+						$valorMeta = 7900;
+						break;
+					case 1398://profetas
+						$valorMeta = 23224;
+						break;
+					case 1543:// leoes
+						$valorMeta = 5200;
+						break;
+					case 1683://turbo
+						$valorMeta = 14500;
+						break;
+					case 1846://onda
+						$valorMeta = 4500;
+						break;
+					case 1982://doc
+						$valorMeta = 1000;
+						break;
+					case 1996://plenos
+						$valorMeta = 4240;
+						break;
+					case 2039://conexao
+						$valorMeta = 0;
+						break;
+					case 2054://atos
+						$valorMeta = 4500;
+						break;
+					case 2151://rocks
+						$valorMeta = 2180;
+						break;
+					case 2193://combate
+						$valorMeta = 3500;
+						break;
+					case 2239://a liga
+						$valorMeta = 1550;
+						break;
+					case 2267://life
+						$valorMeta = 3150;
+						break;
+					case 2293://demalso
+						$valorMeta = 0;
+						break;
+					case 2294:// swat
+						$valorMeta = 600;
+						break;
+					case 2362://turbo 18 
+						$valorMeta = 3750;
+						break;
+					case 2447://turbo 17
+						$valorMeta = 3750;
+						break;
+					case 2507:// invictus 3
+						$valorMeta = 1750;
+						break;
+					}
+				}
+
+				$relatorioDiscipulos[$grupoFilho->getId()]['parceiroDeDeusMeta'] = $valorMeta;
+				$relatorioDiscipulos[$grupoFilho->getId()]['parceiroDeDeusPerformance'] = $relatorioDiscipulos[$grupoFilho->getId()]['somaValor'] /	$relatorioDiscipulos[$grupoFilho->getId()]['parceiroDeDeusMeta'] * 100;
 			}
 		}
 
@@ -739,6 +947,10 @@ class RelatorioController extends CircuitoController {
 				}
 			}else{
 				$relatorio[$contadorFilhos]['somaValor'] = $relatorioDiscipulos[$grupoFilhoOrdenado->getId()]['somaValor'];
+				$relatorio[$contadorFilhos]['parceiroDeDeusMeta'] = $relatorioDiscipulos[$grupoFilhoOrdenado->getId()]['parceiroDeDeusMeta'];
+				$relatorio[$contadorFilhos]['parceiroDeDeusPerformance'] = $relatorioDiscipulos[$grupoFilhoOrdenado->getId()]['parceiroDeDeusPerformance'];
+				$relatorio[$contadorFilhos]['parceiroDeDeusPerformanceClass'] = RelatorioController::corDaLinhaPelaPerformance($relatorioDiscipulos[$grupoFilhoOrdenado->getId()]['parceiroDeDeusPerformance']);
+				$somaTotal['parceiroDeDeusMeta'] += $relatorio[$contadorFilhos]['parceiroDeDeusMeta'];
 			}
 
 			$relatorio[$contadorFilhos]['lideres'] = $grupoFilhoOrdenado->getNomeLideresAtivos();
@@ -816,6 +1028,8 @@ class RelatorioController extends CircuitoController {
 			}
 		}else{
 			$relatorio[$contadorFilhos]['somaValor'] = $somaFinal['somaValor'];
+			$relatorio[$contadorFilhos]['parceiroDeDeusMeta'] = $somaTotal['parceiroDeDeusMeta'];
+			$relatorio[$contadorFilhos]['parceiroDeDeusPerformance'] = $relatorio[$contadorFilhos]['somaValor'] / $relatorio[$contadorFilhos]['parceiroDeDeusMeta'] * 100;
 		}
 		$relatorio[$contadorFilhos]['lideres'] = 'TOTAL';
 
@@ -1073,7 +1287,7 @@ class RelatorioController extends CircuitoController {
 	}
 
 	public static function formataNumeroRelatorio($valor) {
-		return number_format((double) $valor, 2, ',', '.');
+		return number_format((double) $valor, 0, '', '');
 	}
 
 	const MARGEM_D = 0;
@@ -1086,31 +1300,31 @@ class RelatorioController extends CircuitoController {
 		if ($valor >= RelatorioController::MARGEM_A) {
 			$class = 'success';
 			if ($tipo === 2) {
-				$class = 'Excelente! você está entre os melhores!';
+				$class = 'Excelente! Você está entre os melhores!';
 			}
 		}
 		if (($valor < RelatorioController::MARGEM_A && $valor >= RelatorioController::MARGEM_B)) {
 			$class = 'success';
 			if ($tipo === 2) {
-				$class = 'Parabéns! Continue e logo estará entre os melhores';
+				$class = 'Parabéns! Continue e logo estará entre os melhores!';
 			}
 		}
 		if (($valor < RelatorioController::MARGEM_B && $valor >= RelatorioController::MARGEM_C)) {
 			$class = 'warning';
 			if ($tipo === 2) {
-				$class = 'Muito bom! Você está no caminho continue focado!';
+				$class = 'Muito bom! Você está no caminho, continue focado!';
 			}
 		}
 		if (($valor < RelatorioController::MARGEM_C && $valor >= RelatorioController::MARGEM_D)) {
 			$class = 'danger';
 			if ($tipo === 2) {
-				$class = 'Vamos lá a persistência é o caminho, continue!';
+				$class = 'Vamos lá! A persistência é o caminho, continue!';
 			}
 		}
 		if ($valor <= RelatorioController::MARGEM_D) {
 			$class = 'dark';
 			if ($tipo === 2) {
-				$class = 'Vamos lá a persistência é o caminho, continue!';
+				$class = 'Vamos lá! A persistência é o caminho, continue!';
 			}
 		}
 		return $class;
@@ -1132,10 +1346,6 @@ class RelatorioController extends CircuitoController {
 		}
 		return $class;
 	}
-
-	const ORDENACAO_TIPO_MEMBRESIA = 9;
-	const ORDENACAO_TIPO_CELULA = 10;
-	const ORDENACAO_TIPO_PERFORMANCE = 11;
 
 	public static function ordenacaoDiscipulos($discipulosLocal, $relatorio, $tipo) {
 		$campo = '';
@@ -1160,14 +1370,8 @@ class RelatorioController extends CircuitoController {
 		if ($tipo === 8) {
 			$campo = 'mediaCelulaDeElitePerformance';
 		}
-		if ($tipo === RelatorioController::ORDENACAO_TIPO_MEMBRESIA) {
-			$campo = 'membresia';
-		}
-		if ($tipo === RelatorioController::ORDENACAO_TIPO_CELULA) {
-			$campo = 'celula';
-		}
-		if ($tipo === RelatorioController::ORDENACAO_TIPO_PERFORMANCE) {
-			$campo = 'performance';
+		if ($tipo === 9) {
+			$campo = 'parceiroDeDeusPerformance';
 		}
 		$tamanhoArray = count($discipulosLocal);
 
@@ -1177,14 +1381,8 @@ class RelatorioController extends CircuitoController {
 				$discipulo1 = $discipulosLocal[$i];
 				$discipulo2 = $discipulosLocal[$j];
 
-				if ($tipo === RelatorioController::ORDENACAO_TIPO_MEMBRESIA ||
-					$tipo === RelatorioController::ORDENACAO_TIPO_CELULA) {
-						$grupoFilho1 = $discipulo1;
-						$grupoFilho2 = $discipulo2;
-					} else {
-						$grupoFilho1 = $discipulo1->getGrupoPaiFilhoFilho();
-						$grupoFilho2 = $discipulo2->getGrupoPaiFilhoFilho();
-					}
+				$grupoFilho1 = $discipulo1->getGrupoPaiFilhoFilho();
+				$grupoFilho2 = $discipulo2->getGrupoPaiFilhoFilho();
 
 				if ($tipo != 0) {
 					$percentual1 = $relatorio[$grupoFilho1->getId()][$campo];
@@ -1385,5 +1583,46 @@ class RelatorioController extends CircuitoController {
 		}
 
 		return new ViewModel(array('html' => $html));
+	}
+
+	public function rankingCelulaAction(){
+		$request = $this->getRequest();
+		$dados = array();
+		if($request->isPost()){
+			$sessao = new Container(Constantes::$NOME_APLICACAO);
+
+			$idEntidadeAtual = $sessao->idEntidadeAtual;
+			$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+
+			$postDados = $request->getPost();
+
+			$mes = $postDados['mes'];
+			$ano = $postDados['ano'];
+
+			if($entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
+				$grupoIgreja = $entidade->getGrupo()->getGrupoIgreja();
+				$fatosRankingCelula = $this->getRepositorio()->getFatoRankingCelulaORM()->encontrarPorIdGrupoIgreja($grupoIgreja->getId(), $mes, $ano);
+			}
+
+			if($entidade->getEntidadeTipo()->getId() === EntidadeTipo::equipe ||
+				$entidade->getEntidadeTipo()->getId() === EntidadeTipo::subEquipe){
+					$grupoEquipe = $entidade->getGrupo()->getGrupoEquipe();
+					$fatosRankingCelula = $this->getRepositorio()->getFatoRankingCelulaORM()->encontrarPorIdGrupoEquipe($grupoEquipe->getId(), $mes, $ano);
+				}
+			$dados['fatos'] = $fatosRankingCelula;
+			$dados['repositorio'] = $this->getRepositorio();
+			$dados['filtrado'] = true;
+		}else{
+			$mes = date('m');
+			$ano = date('Y');
+		}
+		$dados['mes'] = $mes;
+		$dados['ano'] = $ano;
+
+		$arrayPeriodoDoMes = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mes, $ano);
+		$dados['periodoInicial'] = $arrayPeriodoDoMes[0];
+		$dados['periodoFinal'] = $arrayPeriodoDoMes[1];
+
+		return new ViewModel($dados);
 	}
 }

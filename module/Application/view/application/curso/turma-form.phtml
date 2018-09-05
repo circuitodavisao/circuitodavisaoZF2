@@ -16,12 +16,12 @@ echo $this->form()->openTag($form);
 ?>
 <div class="panel-body bg-light">
 <?php
+echo $this->divMensagens();
 echo $this->inputFormularioSimples(Constantes::$TRADUCAO_TIPO, $form->get(Constantes::$FORM_ID_CURSO), 12, 2);
 echo $this->inputFormularioSimples(Constantes::$TRADUCAO_OBSERVACAO, $form->get(Constantes::$FORM_OBSERVACAO), 12);
 echo $this->inputFormularioSimples(Constantes::$TRADUCAO_MES, $form->get(Constantes::$FORM_INPUT_MES), 12, 2);
 echo $this->inputFormularioSimples(Constantes::$TRADUCAO_ANO, $form->get(Constantes::$FORM_INPUT_ANO), 12, 2);
 
-echo $this->divMensagens();
 ?>
 </div>
 <!-- end .form-body section -->
@@ -86,7 +86,7 @@ function validarLancamentoCadastrarTurma(form) {
 			.removeClass('hidden')
 			.addClass('alert-danger');
 	} else {
-		mostrarSplash(); 
+		mostrarSplash();
 		divMensagens
 			.addClass('hidden');
 		form.submit();
