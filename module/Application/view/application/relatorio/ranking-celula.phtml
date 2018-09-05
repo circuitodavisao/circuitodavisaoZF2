@@ -28,7 +28,7 @@ echo '<th class="text-center">Média</th>';
 echo '</tr>';
 echo '</thead>';
 
-
+$classeCor = '';
 echo '<tbody>';
 if($this->fatos && $this->filtrado){
 	$contagemRanking = 1;
@@ -39,7 +39,16 @@ if($this->fatos && $this->filtrado){
 		$evento = $grupoEvento->getEvento();
 		$celulaDia = $this->translate(Funcoes::diaDaSemanaPorDia($grupoEvento->getEvento()->getDia())).' - ' . substr($grupoEvento->getEvento()->getHora(),0,5);
 
-		echo '<tr>';
+		if($fato->getValor() > 6){
+			$classeCor = 'success';
+		} elseif ($fato->getValor() >= 4 && $fato->getValor() <= 6) {
+			$classeCor = 'warning';
+		} elseif($fato->getValor() >= 1 && $fato->getValor() <= 3) {
+			$classeCor = 'danger';
+		} else {
+			$classeCor = 'dark';
+		}
+		echo '<tr class="'.$classeCor.'">';
 		echo '<td>'.$contagemRanking.'</td>';
 		echo '<td>'.$lideres.'-'.$infoEntidade.'</td>';
 		echo '<td>'.$celulaDia.'</td>';

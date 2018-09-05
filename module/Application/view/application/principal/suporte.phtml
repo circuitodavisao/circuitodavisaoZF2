@@ -5,7 +5,7 @@ use Application\View\Helper\BotaoSimples;
 $htmlBody = '';
 $htmlBody .= '<h1>Ticket de Suporte</h1>';
 $htmlBody .=  $this->divMensagens();
-$htmlBody .= '<form action="/principalSuporteFinalizar" name="formSuporte" method="post">';
+$htmlBody .= '<form action="/principalSuporteFinalizar" name="formSuporte" method="post" enctype="multipart/form-data">';
 $htmlBody .= '<div class="form-group col-lg-12 col-md-12 col-sm-12 col-xs-12">';
 $htmlBody .= '<label for="assunto">' . $this->translate('Assunto') . '<img src="img/loader.gif" id="loaderSub" class="hidden" /></label>';
 $htmlBody .= '<input class="form-control" name="assunto" id="assunto" />';
@@ -37,10 +37,23 @@ $htmlBody .= '<div class="form-group col-lg-12 col-md-12 col-sm-12 col-xs-12">';
 $htmlBody .= '<label for="descricao">' . $this->translate('Descrição') . '<img src="img/loader.gif" id="loaderSub" class="hidden" /></label>';
 $htmlBody .= '<textarea rows="10" type="text" class="form-control" name="descricao" id="descricao"></textarea>';
 $htmlBody .= '</div>';
-$htmlBody .= '</form>';
 
+$htmlBody .= '<div class="form-group col-lg-12 col-md-12 col-sm-12 col-xs-12">';
 $funcaoSubmeter = $this->funcaoOnClick('validarSuporte()');
-$htmlFooter = $this->botaoSimples('Enviar', $funcaoSubmeter);
+$htmlBody .= $this->botaoSimples('Enviar', $funcaoSubmeter);
+$htmlBody .= '<div class="input-group">';
+$htmlBody .= '<input type="text" onclick="document.getElementById(\'imagem\').click();" id="teste" class="form-control" placeholder="Selecione um Arquivo">';
+$htmlBody .= '<div class="input-group-btn">';
+$htmlBody .= '<label class="btn btn-default btn-file">';
+$htmlBody .= '<i class="fa fa-upload"></i>';
+$htmlBody .='<input id="imagem" name="imagem" type="file" style="display: none;" onChange="document.getElementById(\'teste\').value = this.value.substring(12);">';
+$htmlBody .= '</label>';
+$htmlBody .= '</button>';
+$htmlBody .= '</div>';
+$htmlBody .= '</div>';
+$htmlBody .= '</div>';
+
+$htmlBody .= '</form>';
 
 $tamanho = 600;
 $html = '';
@@ -50,9 +63,6 @@ $html .= '<div class="panel mw'.$tamanho.'">';
 
 $html .= '<div class="panel-body bg-light text-center mt50">';
 $html .= $htmlBody;
-$html .= '<div class="mr10">';
-$html .= $htmlFooter;
-$html .= '</div>';
 $html .= '</div>';
 
 
@@ -63,6 +73,8 @@ $html .= '</div>';
 echo $html;
 ?>
 <script type="text/javascript">
+
+
 function validarSuporte(){
 	let mensagemDeErro = '';
 	let temErros = false;
@@ -74,7 +86,7 @@ function validarSuporte(){
 			mensagemDeErro += ', Assunto';
 		}
 	}
-	
+
 	if(formSuporte.tipo.value == 0){
 		temErros = true
 		if(mensagemDeErro == ''){
