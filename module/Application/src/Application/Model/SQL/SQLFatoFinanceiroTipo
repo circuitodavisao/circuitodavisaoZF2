@@ -1,0 +1,28 @@
+-- Table: fato_financeiro_tipo
+
+-- DROP TABLE fato_financeiro_tipo;
+
+CREATE TABLE fato_financeiro_tipo
+(
+  id serial NOT NULL, -- Identificação do tipo de fato financeiro
+  nome character varying(45) NOT NULL, -- Nome da fato financeiro
+  data_criacao date NOT NULL DEFAULT ('now'::text)::date, -- Data de criação do tipo da fato financeiro
+  hora_criacao time without time zone NOT NULL DEFAULT ('now'::text)::time with time zone, -- Hora de criação do tipo da fato financeiro
+  data_inativacao date, -- Data de inativação do tipo da fato financeiro
+  hora_inativacao time without time zone, -- Hora inativação do tipo da fato financeiro
+  CONSTRAINT pk_fato_financeiro_tipo PRIMARY KEY (id)
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE fato_financeiro_tipo
+  OWNER TO postgres;
+COMMENT ON TABLE fato_financeiro_tipo
+  IS 'Tabela com os tipo de  fato financeiros';
+COMMENT ON COLUMN fato_financeiro_tipo.id IS 'Identificação do tipo de fato financeiro';
+COMMENT ON COLUMN fato_financeiro_tipo.nome IS 'Nome da  fato financeiro';
+COMMENT ON COLUMN fato_financeiro_tipo.data_criacao IS 'Data de criação do tipo da fato financeiro';
+COMMENT ON COLUMN fato_financeiro_tipo.hora_criacao IS 'Hora de criação do tipo da fato financeiro';
+COMMENT ON COLUMN fato_financeiro_tipo.data_inativacao IS 'Data de inativação do tipo da fato financeiro';
+COMMENT ON COLUMN fato_financeiro_tipo.hora_inativacao IS 'Hora inativação do tipo da fato financeiro';
+

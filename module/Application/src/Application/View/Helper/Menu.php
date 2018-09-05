@@ -32,7 +32,7 @@ class Menu extends AbstractHelper {
 		$sessao = new Container(Constantes::$NOME_APLICACAO);
 		$html = '';
 
-		// Start: Header 
+		// Start: Header
 		$html .= '<header class="navbar navbar-fixed-top">';
 		$html .= '<div class="navbar-branding">';
 		$html .= '<a class="navbar-brand" href="#" style="padding-top: 22px;">';
@@ -77,8 +77,8 @@ class Menu extends AbstractHelper {
 		$html .= '</li>';
 		$html .= '</ul>';
 		$html .= '</header>';
-		// End: Header 
-		// 
+		// End: Header
+		//
 		// Start: Sidebar
 		$html .= '<aside id="sidebar_left" class="nano nano-light affix">';
 
@@ -88,7 +88,7 @@ class Menu extends AbstractHelper {
 		// Start: Sidebar Header
 		$html .= '<header class="sidebar-header">';
 
-		// Sidebar Widget - Author 
+		// Sidebar Widget - Author
 		$html .= '<div class="sidebar-widget author-widget">';
 		$html .= '<div class="media">';
 		$html .= '<a class="media-left" href="#">';
@@ -181,6 +181,7 @@ class Menu extends AbstractHelper {
 						$html .= $this->view->menuHierarquia($nomeLideres, $informacaoEntidade, 1, $grupoFilho->getId());
 					}
 				}
+				
 				$html .= '</ul>';
 
 				$html .= '</li>';
@@ -300,7 +301,7 @@ class Menu extends AbstractHelper {
 				$html .= '</a>';
 				$html .= '</li>';
 			}
-			if ($this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja || 
+			if ($this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja ||
 				$this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::equipe) {
 					$html .= '<li>';
 					$html .= '<a href="/lancamentoParceiroDeDeusExtrato" onClick="mostrarSplash();">';
@@ -308,7 +309,7 @@ class Menu extends AbstractHelper {
 					$html .= 'Parceiro de Deus';
 					$html .= '</a>';
 					$html .= '</li>';
-				}	
+				}
 		}
 
 		$html .= '</ul>';
@@ -356,7 +357,7 @@ class Menu extends AbstractHelper {
 					break;
 				case 8:
 					$label = 'C&eacute;lulas de Elite';
-					$mostrar = true;
+					$mostrar = false;
 					break;
 				case 9:
 					$label = 'Parceiro de Deus Consolidado';
@@ -394,6 +395,24 @@ class Menu extends AbstractHelper {
 //			$html .= '</a>';
 //			$html .= '</li>';
 
+			if ($this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja ||
+				$this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::equipe) {
+
+					$html .= '<li>';
+					$html .= '<a href="/relatorioInstituto" onClick="mostrarSplash();">';
+					$html .= '<span class="fa fa-users"></span>';
+					$html .= 'Aproveitamento Instituto de Vencedores';
+					$html .= '</a>';
+					$html .= '</li>';
+				}
+
+			$html .= '<li>';
+			$html .= '<a href="/relatorioRankingCelula" onClick="mostrarSplash();">';
+			$html .= '<span class="fa fa-users"></span>';
+			$html .= 'Ranking Célula';
+			$html .= '</a>';
+			$html .= '</li>';
+
 			$html .= '</ul>';
 
 			$html .= '</li>';
@@ -420,11 +439,13 @@ class Menu extends AbstractHelper {
 			$arrayOQueMostrarDosCursos['gerarFaltas'] = false;
 			$arrayOQueMostrarDosCursos['lancarPresenca'] = false;
 			$arrayOQueMostrarDosCursos['consultarMatricula'] = false;
+			$arrayOQueMostrarDosCursos['listagem'] = false;
 			if ($this->view->pessoa->getPessoaCursoAcessoAtivo()) {
 				if ($this->view->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::COORDENADOR) {
 					$arrayOQueMostrarDosCursos['turmas'] = true;
 					$arrayOQueMostrarDosCursos['usuarios'] = true;
 					$arrayOQueMostrarDosCursos['gerarFaltas'] = true;
+					$arrayOQueMostrarDosCursos['listagem'] = true;
 				}
 				if ($this->view->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::COORDENADOR ||
 					$this->view->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::SUPERVISOR ||
@@ -449,7 +470,16 @@ class Menu extends AbstractHelper {
 					$arrayOQueMostrarDosCursos['gerarReposicoes'] = true;
 					$arrayOQueMostrarDosCursos['gerarFaltas'] = true;
 					$arrayOQueMostrarDosCursos['lancarPresenca'] = true;
+					$arrayOQueMostrarDosCursos['listagem'] = true;
 				}
+			}
+			if ($arrayOQueMostrarDosCursos['listagem']) {
+				$html .= '<li>';
+				$html .= '<a href="/cursoListagem" onClick="mostrarSplash();">';
+				$html .= '<span class="fa fa-user"></span>';
+				$html .= 'Listagem de telefones';
+				$html .= '</a>';
+				$html .= '</li>';
 			}
 			if ($arrayOQueMostrarDosCursos['reentrada']) {
 				$html .= '<li>';
@@ -566,7 +596,15 @@ class Menu extends AbstractHelper {
 			$html .= '</ul>';
 			$html .= '</li>';
 		}
-
+		if ($this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja || $this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::equipe) {
+			$html .= '<li class="sidebar-label pt20">Suporte</li>';
+			$html .= '<li>';
+			$html .= '<a href="/principalSuporte" onClick="mostrarSplash();">';
+			$html .= '<span class="fa fa-envelope"></span>';
+			$html .= '<span class="sidebar-title">Suporte</span>';
+			$html .= '</a>';
+			$html .= '</li>';
+		}
 		$html .= '</ul>';
 		// End: Sidebar Menu
 		// Start: Sidebar Collapse Button

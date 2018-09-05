@@ -81,7 +81,7 @@ class TurmaPessoa extends CircuitoEntity {
     private $turma;
 
     /**
-     * @ORM\OneToMany(targetEntity="TurmaPessoaFrequencia", mappedBy="turma_pessoa")
+     * @ORM\OneToMany(targetEntity="TurmaPessoaFrequencia", mappedBy="turma_pessoa", fetch="EXTRA_LAZY"))
      */
     protected $turmaPessoaFrequencia;
 
@@ -91,22 +91,22 @@ class TurmaPessoa extends CircuitoEntity {
     protected $turmaPessoaSituacao;
 
     /**
-     * @ORM\OneToMany(targetEntity="TurmaPessoaAula", mappedBy="turma_pessoa")
+     * @ORM\OneToMany(targetEntity="TurmaPessoaAula", mappedBy="turma_pessoa", fetch="EXTRA_LAZY"))
      */
     protected $turmaPessoaAula;
 
     /**
-     * @ORM\OneToMany(targetEntity="TurmaPessoaVisto", mappedBy="turma_pessoa")
+     * @ORM\OneToMany(targetEntity="TurmaPessoaVisto", mappedBy="turma_pessoa", fetch="EXTRA_LAZY"))
      */
     protected $turmaPessoaVisto;
 
     /**
-     * @ORM\OneToMany(targetEntity="TurmaPessoaFinanceiro", mappedBy="turma_pessoa")
+     * @ORM\OneToMany(targetEntity="TurmaPessoaFinanceiro", mappedBy="turma_pessoa", fetch="EXTRA_LAZY"))
      */
     protected $turmaPessoaFinanceiro;
 
     /**
-     * @ORM\OneToMany(targetEntity="TurmaPessoaAvaliacao", mappedBy="turma_pessoa")
+     * @ORM\OneToMany(targetEntity="TurmaPessoaAvaliacao", mappedBy="turma_pessoa", fetch="EXTRA_LAZY"))
      */
     protected $turmaPessoaAvaliacao;
 

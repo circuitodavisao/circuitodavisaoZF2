@@ -24,4 +24,22 @@ class TurmaPessoaORM extends CircuitoORM {
         }
     }
 
+    public function encontrarPorTurma($idTurma) {
+        try {
+            $dql = "SELECT tp "
+                    . "FROM  " . Constantes::$ENTITY_TURMA_PESSOA . " tp "
+                    . "WHERE "
+                    . "tp.turma_id = ?1 "
+                    . "AND tp.data_inativacao IS NULL ";
+
+            $resultado = $this->getEntityManager()->createQuery($dql)
+                    ->setParameter(1, (int) $idTurma)
+                    ->getResult();
+            return $resultado;
+        } catch (Exception $exc) {
+            echo $exc->getMessage();
+        }
+    }
+
+
 }

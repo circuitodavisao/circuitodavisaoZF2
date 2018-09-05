@@ -74,7 +74,7 @@ if ($turmaAulaAtiva = $this->turma->getTurmaAulaAtiva()) {
 	$ultimaAtualizacao = $turmaAulaAtiva->getPessoa()->getNome() . ' - ' . $turmaAulaAtiva->getData_criacaoStringPadraoBrasil() . ' - ' . $turmaAulaAtiva->getHora_criacao();
 }
 $html .= '<div class="row">';
-$html .= '<span class="label label-success col-xs-12 col-sm-12 col-md-12 col-lg-12">' . $this->translate('Ultima Altera&ccedil;&atilde;o: ') . $ultimaAtualizacao . '</span>';
+$html .= '<span class="label label-success col-xs-12 col-sm-12 col-md-12 col-lg-12">' . $this->translate('Última Altera&ccedil;&atilde;o: ') . $ultimaAtualizacao . '</span>';
 $html .= '</div>';
 
 $html .= '</div>';
@@ -134,4 +134,4 @@ function validarAula(form) {
 				}
 		, 'json');
 	}
-</script> 
+</script>

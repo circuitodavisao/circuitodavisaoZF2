@@ -90,12 +90,13 @@ class Constantes {
     public static $TRADUCAO_PRIMEIRO_NOME = 'First Name';
     public static $TRADUCAO_ULTIMO_NOME = 'Last Name';
     public static $TRADUCAO_CONTINUAR = 'Continue';
+    public static $ENCERRAR_AGORA = 'Logout now';
     public static $TRADUCAO_CAPTCHA_LABEL = 'Please verify you are human';
     public static $TRADUCAO_ESQUECI_MINHA_SENHA = ' Because I forgot my password.';
     public static $TRADUCAO_ESQUECI_MEU_USUARIO = ' I know my password, but I do not remember my login.';
     public static $TRADUCAO_ENVIAR_EMAIL = 'Send email';
     public static $TRADUCAO_VERIFICAR_USUARIO = 'Check User';
-    public static $TRADUCAO_PERGUNTA_ESQUECI_SENHA = 'Because you can not enter the View of the Circuit?';
+    public static $TRADUCAO_PERGUNTA_ESQUECI_SENHA = 'Why you can not enter the View of the Circuit?';
     public static $TRADUCAO_TITULO_ESQUECI_MINHA_SENHA = 'We can help you reset your password. First, enter your email and follow the instructions.';
     public static $TRADUCAO_INFORME_2_DIGITO_CPF_DATA_NASCIMENTO = 'Tell us what the last 2 digits of your <b>Social Security number</b> and <b>date of birth</b>.';
     public static $TRADUCAO_SOLICITACAO_ENVIADA_AS = 'request sent at';
@@ -140,7 +141,7 @@ class Constantes {
     public static $TRADUCAO_SESSAO_ATIVA = 'You need to log out to continue.';
     public static $TRADUCAO_PRECISA_DESLOGAR = 'You need to log out before registering a password for a new user';
     public static $TRADUCAO_OLA = 'Hello';
-    public static $TRADUCAO_PRE_SAIDA = 'Use the LOGOUT option <a href="/">CircuitoDaVisão.com.br</a> when using a device that is not of particular use. The <a href="/">CircuitoDaVisão.com.br</a> home page will be opened in 30 seconds.';
+    public static $TRADUCAO_PRE_SAIDA = 'Use the LOGOUT option CircuitoDaVisão.com.br when using a device that is not of particular use. The session will be closed in 30 seconds.';
     public static $TRADUCAO_ENTRAR_NOVAMENTE = 'Reenter';
 
     /* Forms */
@@ -178,6 +179,9 @@ class Constantes {
     public static $ENTITY_ENTIDADE = 'Application\Model\Entity\Entidade';
     public static $ENTITY_ENTIDADE_TIPO = 'Application\Model\Entity\EntidadeTipo';
     public static $ENTITY_FATO_PARCEIRO_DE_DEUS = 'Application\Model\Entity\FatoParceiroDeDeus';
+    public static $ENTITY_FATO_FINANCEIRO = 'Application\Model\Entity\FatoFinanceiro';
+    public static $ENTITY_FATO_FINANCEIRO_TIPO = 'Application\Model\Entity\FatoFinanceiroTipo';
+    public static $ENTITY_FATO_RANKING_CELULA = 'Application\Model\Entity\FatoRankingCelula';
     public static $ENTITY_PESSOA_EMAIL = 'email';
     public static $ENTITY_PESSOA_DOCUMENTO = 'documento';
     public static $ENTITY_PESSOA_DATA_NASCIMENTO = 'data_nascimento';
@@ -354,6 +358,7 @@ class Constantes {
     public static $PAGINA_LIDERES_REVISAO = 'LideresRevisao';
     public static $PAGINA_LISTAGEM_LIDERES = 'ListagemLideres';
     public static $PAGINA_LISTAGEM_REVISIONISTAS = 'ListagemRevisionistas';
+    public static $PAGINA_LISTAGEM_REVISIONISTAS_TITULO = 'Listagem de Revisionistas';
     public static $PAGINA_CONSULTAR_FICHA = 'ConsultarFicha';
     public static $PAGINA_FUNCOES = 'Funcoes';
     public static $PAGINA_MUDAR_ATENDIMENTO = 'MudarAtendimento';

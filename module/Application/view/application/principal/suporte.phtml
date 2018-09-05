@@ -1,0 +1,116 @@
+<?php
+
+use Application\Controller\Helper\Constantes;
+use Application\View\Helper\BotaoSimples;
+$htmlBody = '';
+$htmlBody .= '<h1>Ticket de Suporte</h1>';
+$htmlBody .=  $this->divMensagens();
+$htmlBody .= '<form action="/principalSuporteFinalizar" name="formSuporte" method="post">';
+$htmlBody .= '<div class="form-group col-lg-12 col-md-12 col-sm-12 col-xs-12">';
+$htmlBody .= '<label for="assunto">' . $this->translate('Assunto') . '<img src="img/loader.gif" id="loaderSub" class="hidden" /></label>';
+$htmlBody .= '<input class="form-control" name="assunto" id="assunto" />';
+$htmlBody .= '</div>';
+
+$htmlBody .= '<div class="form-group col-lg-12 col-md-12 col-sm-12 col-xs-12">';
+$htmlBody .= '<label for="tipo">' . $this->translate('Tipo') . '<img src="img/loader.gif" id="loaderSub" class="hidden" /></label>';
+$htmlBody .= '<select class="form-control" name="tipo" id="tipo" >';
+$htmlBody .= '<option value="0" >' . $this->translate(Constantes::$TRADUCAO_SELECIONE) . '</option>';
+$htmlBody .= '<option value="PERGUNTA" >' . $this->translate('PERGUNTA') . '</option>';
+$htmlBody .= '<option value="INCIDENTE" >' . $this->translate('INCIDENTE') . '</option>';
+$htmlBody .= '<option value="PROBLEMA" >' . $this->translate('PROBLEMA') . '</option>';
+$htmlBody .= '<option value="TAREFA" >' . $this->translate('TAREFA') . '</option>';
+$htmlBody .= '</select>';
+$htmlBody .= '</div>';
+
+$htmlBody .= '<div class="form-group col-lg-12 col-md-12 col-sm-12 col-xs-12">';
+$htmlBody .= '<label for="prioridade">' . $this->translate('Prioridade') . '<img src="img/loader.gif" id="loaderSub" class="hidden" /></label>';
+$htmlBody .= '<select class="form-control" name="prioridade" id="prioridade" >';
+$htmlBody .= '<option value="0" >' . $this->translate(Constantes::$TRADUCAO_SELECIONE) . '</option>';
+$htmlBody .= '<option value="BAIXA" >' . $this->translate('BAIXA') . '</option>';
+$htmlBody .= '<option value="NORMAL" >' . $this->translate('NORMAL') . '</option>';
+$htmlBody .= '<option value="ALTA" >' . $this->translate('ALTA') . '</option>';
+$htmlBody .= '<option value="URGENTE" >' . $this->translate('URGENTE') . '</option>';
+$htmlBody .= '</select>';
+$htmlBody .= '</div>';
+
+$htmlBody .= '<div class="form-group col-lg-12 col-md-12 col-sm-12 col-xs-12">';
+$htmlBody .= '<label for="descricao">' . $this->translate('Descrição') . '<img src="img/loader.gif" id="loaderSub" class="hidden" /></label>';
+$htmlBody .= '<textarea rows="10" type="text" class="form-control" name="descricao" id="descricao"></textarea>';
+$htmlBody .= '</div>';
+$htmlBody .= '</form>';
+
+$funcaoSubmeter = $this->funcaoOnClick('validarSuporte()');
+$htmlFooter = $this->botaoSimples('Enviar', $funcaoSubmeter);
+
+$tamanho = 600;
+$html = '';
+
+$html .= '<div align="center">';
+$html .= '<div class="panel mw'.$tamanho.'">';
+
+$html .= '<div class="panel-body bg-light text-center mt50">';
+$html .= $htmlBody;
+$html .= '<div class="mr10">';
+$html .= $htmlFooter;
+$html .= '</div>';
+$html .= '</div>';
+
+
+$html .= '</div>';
+$html .= '</div>';
+
+
+echo $html;
+?>
+<script type="text/javascript">
+function validarSuporte(){
+	let mensagemDeErro = '';
+	let temErros = false;
+	if(formSuporte.assunto.value == ""){
+		temErros = true
+		if(mensagemDeErro == ''){
+			mensagemDeErro = 'Assunto';
+		}else{
+			mensagemDeErro += ', Assunto';
+		}
+	}
+	
+	if(formSuporte.tipo.value == 0){
+		temErros = true
+		if(mensagemDeErro == ''){
+			mensagemDeErro = 'Tipo';
+		}else{
+			mensagemDeErro += ', Tipo';
+		}
+	}
+
+	if(formSuporte.prioridade.value == 0){
+		temErros = true
+		if(mensagemDeErro == ''){
+			mensagemDeErro = 'Prioridade';
+		}else{
+			mensagemDeErro += ', Prioridade';
+		}
+	}
+
+	if(formSuporte.descricao.value == ""){
+		temErros = true
+		if(mensagemDeErro == ''){
+			mensagemDeErro = 'Descricão';
+		}else{
+			mensagemDeErro += ', Descrição';
+		}
+	}
+
+	if(!temErros){
+		$('#divMEnsagens')
+			.addClass('hidden');
+		mostrarSplash();
+		formSuporte.submit();
+	}else{
+		$('#divMensagens')
+			.html('Preencha os seguintes campos: '+mensagemDeErro)
+			.removeClass('hidden')
+	}
+}
+</script>

@@ -18,7 +18,7 @@ class BotaoLink extends AbstractHelper {
     protected $extra;
 
     public function __construct() {
-        
+
     }
 
     public function __invoke($label, $link, $tipo = 0, $extra = '') {
@@ -34,6 +34,7 @@ class BotaoLink extends AbstractHelper {
         $classCor = Constantes::$COR_BOTAO;
         $margenRight = 'mr10';
         $float = '';
+        $ClassePosicaoBotao = '';
         if ($this->getTipo() == 2 || $this->getTipo() == 3 || $this->getTipo() == 6 || $this->getTipo() == 8) {// tipo de menor importancia
             $classCor = 'default dark';
         }
@@ -49,7 +50,12 @@ class BotaoLink extends AbstractHelper {
         if ($this->getTipo() == 5 || $this->getTipo() == 6 || $this->getTipo() == 7 || $this->getTipo() == 8) {// float direita
             $float = 'style="float: right;"';
         }
-        $html .= '<button type="button" ' . $this->getExtra() . ' ' . $float . ' onclick=\'location.href="' . $this->getLink() . '";\' class="btn ladda-button btn-' . $classCor . ' ' . $tamanho . ' ' . $margenRight . '" data-style="zoom-in">'
+        if ($this->getTipo() == 10){
+            $ClassePosicaoBotao = 'pull-right ml10';
+            $margenRight = '';
+        }
+
+        $html .= '<button type="button" ' . $this->getExtra() . ' ' . $float . ' onclick=\'location.href="' . $this->getLink() . '";\' class="btn ladda-button btn-' . $classCor . ' ' . $tamanho . ' ' . $margenRight . ' ' . $ClassePosicaoBotao . '" data-style="zoom-in">'
                 . '<span class="ladda-label">' . $this->view->translate($this->getLabel()) . '</span>'
                 . '</button>';
         return $html;

@@ -16,11 +16,20 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class FatoParceiroDeDeus extends CircuitoEntity {
 
+    /**
+     * @ORM\ManyToOne(targetEntity="Pessoa", inversedBy="fatoParceiroDeDeus")
+     * @ORM\JoinColumn(name="pessoa_id", referencedColumnName="id")
+     */
+    private $pessoa;
+
 	/** @ORM\Column(type="string") */
 	protected $numero_identificador;
 
 	/** @ORM\Column(type="integer") */
 	protected $evento_id;
+
+	/** @ORM\Column(type="integer") */
+	protected $pessoa_id;
 
 	/** @ORM\Column(type="decimal") */
 	protected $individual;
@@ -32,7 +41,6 @@ class FatoParceiroDeDeus extends CircuitoEntity {
 	protected $data;
 
 	private $grupo;
-	private $evento;
 
 	function getNumero_identificador() {
 		return $this->numero_identificador;
@@ -72,10 +80,16 @@ class FatoParceiroDeDeus extends CircuitoEntity {
 	function getGrupo(){
 		return $this->grupo;
 	}
-	function setEvento($evento){
-		$this->evento = $evento;
+	function setPessoa($pessoa){
+		$this->pessoa = $pessoa;
 	}
-	function getEvento(){
-		return $this->evento;
+	function getPessoa(){
+		return $this->pessoa;
+	}
+	function setPessoa_id($pessoa_id){
+		$this->pessoa_id = $pessoa_id;
+	}
+	function getPessoa_id(){
+		return $this->pessoa_id;
 	}
 }
