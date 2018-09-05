@@ -69,7 +69,10 @@ foreach ($this->situacoes as $situacao) {
 		}
 }
 $selectMudarSituacao .= '</select>';
-if ($turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getId() === Situacao::ATIVO ||
+if (
+	$turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getId() === Situacao::ATIVO ||
+	$turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getId() === Situacao::DESISTENTE ||
+	$turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getId() === Situacao::REPROVADO_POR_FALTA ||
 	$turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getId() === Situacao::ESPECIAL) {
 		$botaoMudarSituacao = $this->botaoSimples($turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getNome() . ' <i class="fa fa-pencil"></i>', ' id="botaoSituacao" ' . $this->funcaoOnClick('$("#selectMudarSituacao").removeClass("hidden"); $("#botaoSituacao").addClass("hidden")'), BotaoSimples::botaoMuitoPequenoMenosImportante, BotaoSimples::posicaoAEsquerda);
 		$botaoMudarSituacao .= $selectMudarSituacao;
@@ -116,7 +119,9 @@ if ($this->turmaPessoa->verificarSeEstaAtivo()) {
 
 	if ($this->entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja || 
 		$this->pessoa->getPessoaCursoAcessoAtivo() && 
-		($this->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::COORDENADOR ||
+		(
+			$this->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::COORDENADOR ||
+			$this->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::FACILITADOR ||
 		$this->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::SUPERVISOR)){
 			$html .= '<tr><td>Situa&ccedil;&atilde;o</td><td>' . $botaoMudarSituacao . '</td></tr>';
 		}	
@@ -377,7 +382,7 @@ $html .= '</div>'; /* Fim col-lg-7 col-md-7 col-sm-7 col-xs-12 */
 $html .= '</div>'; /* Fim row */
 echo $html;
 
-$versao = '?v=1.1.8';
+$versao = '?v=1.1.9';
 
 echo $this
 	->headScript()

@@ -7,7 +7,8 @@ use Application\Model\Entity\SolicitacaoTipo;
 use Application\Controller\Helper\Funcoes;
 
 $html = '';
-$html .= $this->templateFormularioTopo($this->titulo);
+$html .= '<div class="panel mt50">';
+$html .= '<div class="panel-heading text-center">Solicitações</div>';
 $html .= '<div class="panel-body bg-light">';
 foreach($this->solicitacoesTipo as $solicitacaoTipo){
 	$colspan = 0;
@@ -16,19 +17,19 @@ foreach($this->solicitacoesTipo as $solicitacaoTipo){
 	switch($solicitacaoTipo->getId()){
 	case SolicitacaoTipo::TRANSFERIR_LIDER_NA_PROPRIA_EQUIPE:
 		$colspan = 6;
-		$htmlThead .= '<th>Time</th>';
+		$htmlThead .= '<th class="hidden-xs">Time</th>';
 		$htmlThead .= '<th>Quem</th>';
 		$htmlThead .= '<th>Novo Time</th>';
-		$htmlThead .= '<th>Novo Líder</th>';
+		$htmlThead .= '<th class="hidden-xs">Novo Líder</th>';
 		break;
 	case SolicitacaoTipo::REMOVER_LIDER:
 		$colspan = 4;
-		$htmlThead .= '<th>Time</th>';
+		$htmlThead .= '<th class="hidden-xs">Time</th>';
 		$htmlThead .= '<th>Quem</th>';
 		break;
 	case SolicitacaoTipo::REMOVER_CELULA:
 		$colspan = 5;
-		$htmlThead .= '<th>Time</th>';
+		$htmlThead .= '<th class="hidden-xs">Time</th>';
 		$htmlThead .= '<th>Quem</th>';
 		$htmlThead .= '<th>Célula</th>';
 	}
@@ -56,7 +57,7 @@ foreach($this->solicitacoesTipo as $solicitacaoTipo){
 		$html .= '<tr>';
 		$htmlTbody = '';
 		$htmlTbody .= '<td class="hidden-xs">'.$solicitacao->getData_criacaoStringPadraoBrasil().'</td>';
-		$htmlTbody .= '<td>'.$grupo->getGrupoEquipe()->getEntidadeAtiva()->getNome().'</td>';
+		$htmlTbody .= '<td class="hidden-xs">'.$grupo->getGrupoEquipe()->getEntidadeAtiva()->getNome().'</td>';
 		$htmlTbody .= '<td>'.$grupo->getNomeLideresAtivos().'</td>';
 
 		switch($solicitacaoTipo->getId()){
@@ -65,16 +66,24 @@ foreach($this->solicitacoesTipo as $solicitacaoTipo){
 			$grupo2 = $this->repositorio->getGrupoORM()->encontrarPorId($objeto2);
 
 			$htmlTbody .= '<td>'.$grupo2->getGrupoEquipe()->getEntidadeAtiva()->getNome().'</td>';
-			$htmlTbody .= '<td>'.$grupo2->getNomeLideresAtivos().'</td>';
+			$htmlTbody .= '<td class="hidden-xs">'.$grupo2->getNomeLideresAtivos().'</td>';
 
 			break;
 		case SolicitacaoTipo::REMOVER_CELULA:
 			$objeto = $solicitacao->getObjeto2();
 			$grupoEvento = $this->repositorio->getGrupoEventoORM()->encontrarPorId($objeto);
-			$htmlCelula = $this->translate(Funcoes::diaDaSemanaPorDia($grupoEvento->getEvento()->getDia(),1)).' - ' . $grupoEvento->getEvento()->getHora() . ' - Hospedeiro: '.$grupoEvento->getEvento()->getEventoCelula()->getNome_hospedeiro(). ' Local: ' . $grupoEvento->getEvento()->getEventoCelula()->getLogradouro().' '.$grupoEvento->getEvento()->getEventoCelula()->getComplemento();
+			$htmlCelula = $this->translate(Funcoes::diaDaSemanaPorDia($grupoEvento->getEvento()->getDia())).' - ' . substr($grupoEvento->getEvento()->getHora(),0,5);
 			$htmlTbody .= '<td>'.$htmlCelula.'</td>';
 		}
-		$htmlTbody .= '<td>'.$solicitacao->getSolicitacaoSituacaoAtiva()->getSituacao()->getNome().'</td>';
+
+		$corSituacao = 'default';
+		switch($solicitacao->getSolicitacaoSituacaoAtiva()->getSituacao()->getId()){
+		case Situacao::ACEITO_AGENDADO: $corSituacao = 'info'; break;
+		case Situacao::PENDENTE_DE_ACEITACAO: $corSituacao = 'warning'; break;
+		case Situacao::RECUSAO: $corSituacao = 'danger'; break;
+		case Situacao::CONCLUIDO: $corSituacao = 'success'; break;
+		}
+		$htmlTbody .= '<td><span class="label label-'.$corSituacao.'">'.$solicitacao->getSolicitacaoSituacaoAtiva()->getSituacao()->getNome().'</span></td>';
 
 		$html .= $htmlTbody;
 		$html .= '</tr>';
@@ -88,7 +97,5 @@ $html .= '<div class="panel-footer text-right">';
 $stringNomeDaFuncaoOnClickCadastro = 'funcaoCircuito("cadastroSolicitacao", 0)';
 $html .= $this->botaoLink($this->translate(Constantes::$TRADUCAO_CADASTRAR), Constantes::$STRING_HASHTAG, 0, $this->funcaoOnClick($stringNomeDaFuncaoOnClickCadastro));
 $html .= '</div>';
-
-$html .= $this->templateFormularioRodape();
+$html .= '</div>';
 echo $html;
-

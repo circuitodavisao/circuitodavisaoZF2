@@ -9,6 +9,7 @@ use Application\Model\Entity\Grupo;
 use Application\Model\Entity\GrupoPessoaTipo;
 use Application\Model\Entity\Curso;
 use Application\Model\Entity\EntidadeTipo;
+use Application\Model\Entity\Situacao;
 use Application\Model\Helper\FuncoesEntidade;
 use Application\Model\ORM\RepositorioORM;
 use Doctrine\ORM\EntityManager;
@@ -475,9 +476,8 @@ class RelatorioController extends CircuitoController {
 				$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupo);
 				$numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupo);
 				$tipoRelatorioEquipe = 2;
-				$periodoInicial = 0;
+				$periodoInicial = -8;
 				$relatorio = RelatorioController::montaRelatorio($this->getRepositorio(), $numeroIdentificador, $periodoInicial, $tipoRelatorioEquipe, false, RelatorioController::relatorioCelulaQuantidade);
-
 				$grupoResponsabilidades = $grupo->getResponsabilidadesAtivas();
 				$fotos = '';
 				foreach ($grupoResponsabilidades as $grupoResponsabilidade) {
@@ -490,6 +490,22 @@ class RelatorioController extends CircuitoController {
 				$dados['celulaQuantidade'] = $relatorio['celulaQuantidade'];
 				$dados['quantidadeLideres'] = $relatorio['quantidadeLideres'];
 				$dados['resposta'] = $resposta;
+
+				if($grupoPaiFilhoFilhos = $grupo->getGrupoPaiFilhoFilhosAtivos($indiceDeArrays = 1)){
+					$dados['temDiscipulos'] = true;
+				}
+				if($solicitacoesDoObjeto = $this->getRepositorio()->getSolicitacaoORM()->encontrarSolicitacoesPorObjeto1($grupo->getId())){
+					$temSolicitacaoPendente = false;
+					foreach($solicitacoesDoObjeto as $solicitacao){
+						$idSituacao = $solicitacao->getSolicitacaoSituacaoAtiva()->getSituacao()->getId();
+						if($idSituacao !== Situacao::CONCLUIDO){
+							$temSolicitacaoPendente = true;
+						}						
+					}
+					if($temSolicitacaoPendente){
+						$dados['temSolicitacaoPendente'] = true;
+					}
+				}
 
 				/* se tem celula adiciona os dados */
 				if($grupoEventoCelula = $grupo->getGrupoEventoPorTipoEAtivo(EventoTipo::tipoCelula)){
@@ -563,12 +579,13 @@ class RelatorioController extends CircuitoController {
 	const dadosPessoais = 0;
 	const parceiroDeDeusValor = 12;
 
-	public static function relatorioCompleto($repositorio, $grupo, $tipoRelatorio, $mes, $ano) {
+	public static function relatorioCompleto($repositorio, $grupo, $tipoRelatorio, $mes, $ano, $tudo = true) {
 		$relatorio = array();
 		$todosFilhos = array();
 		$arrayPeriodoDoMes = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mes, $ano);
 		$diferencaDePeriodos = self::diferencaDePeriodos($arrayPeriodoDoMes[0], $arrayPeriodoDoMes[1]);
 
+		if($tudo){
 		for ($indiceDeArrays = $arrayPeriodoDoMes[0]; $indiceDeArrays <= $arrayPeriodoDoMes[1]; $indiceDeArrays++) {
 			$grupoPaiFilhoFilhos = $grupo->getGrupoPaiFilhoFilhosAtivos($indiceDeArrays);
 			if ($grupoPaiFilhoFilhos) {
@@ -588,7 +605,7 @@ class RelatorioController extends CircuitoController {
 				}
 			}
 		}
-
+		}
 		$tipoRelatorioPessoal = 1;
 		$tipoRelatorioSomado = 2;
 		$relatorioDiscipulos = array();
@@ -598,7 +615,7 @@ class RelatorioController extends CircuitoController {
 		for ($indiceDeArrays = $arrayPeriodoDoMes[0]; $indiceDeArrays <= $arrayPeriodoDoMes[1]; $indiceDeArrays++) {
 			if($tipoRelatorio === self::relatorioParceiroDeDeus){
 				$relatorio[self::dadosPessoais][$indiceDeArrays] 
-					= $repositorio->getFatoFinanceiroORM()->fatosPorNumeroIdentificador($numeroIdentificador,$indiceDeArrays,date('m'),date('Y'), $tipoRelatorioPessoal);
+					= $repositorio->getFatoFinanceiroORM()->fatosPorNumeroIdentificador($numeroIdentificador,$indiceDeArrays, $mes, $ano, $tipoRelatorioPessoal);
 				$soma[self::dadosPessoais][self::parceiroDeDeusValor] += $relatorio[self::dadosPessoais][$indiceDeArrays]['valor'];
 			}else{
 				$relatorio[self::dadosPessoais][$indiceDeArrays] 
@@ -639,7 +656,7 @@ class RelatorioController extends CircuitoController {
 
 				if($tipoRelatorio === self::relatorioParceiroDeDeus){
 					$relatorioDiscipulos[$grupoFilho->getId()][$indiceDeArrays] 
-						= $repositorio->getFatoFinanceiroORM()->fatosPorNumeroIdentificador($numeroIdentificadorFilho,$indiceDeArrays,date('m'),date('Y'), $tipoRelatorioSomado);
+						= $repositorio->getFatoFinanceiroORM()->fatosPorNumeroIdentificador($numeroIdentificadorFilho,$indiceDeArrays, $mes, $ano, $tipoRelatorioSomado);
 					$soma[$grupoFilho->getId()][self::parceiroDeDeusValor] += $relatorioDiscipulos[$grupoFilho->getId()][$indiceDeArrays]['valor'];
 
 				}else{
@@ -1270,7 +1287,7 @@ class RelatorioController extends CircuitoController {
 	}
 
 	public static function formataNumeroRelatorio($valor) {
-		return number_format((double) $valor, 2, ',', '.');
+		return number_format((double) $valor, 0, '', '');
 	}
 
 	const MARGEM_D = 0;
@@ -1566,5 +1583,46 @@ class RelatorioController extends CircuitoController {
 		}
 
 		return new ViewModel(array('html' => $html));
+	}
+
+	public function rankingCelulaAction(){
+		$request = $this->getRequest();
+		$dados = array();
+		if($request->isPost()){
+			$sessao = new Container(Constantes::$NOME_APLICACAO);
+
+			$idEntidadeAtual = $sessao->idEntidadeAtual;
+			$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+
+			$postDados = $request->getPost();
+
+			$mes = $postDados['mes'];
+			$ano = $postDados['ano'];
+
+			if($entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
+				$grupoIgreja = $entidade->getGrupo()->getGrupoIgreja();
+				$fatosRankingCelula = $this->getRepositorio()->getFatoRankingCelulaORM()->encontrarPorIdGrupoIgreja($grupoIgreja->getId(), $mes, $ano);
+			}
+
+			if($entidade->getEntidadeTipo()->getId() === EntidadeTipo::equipe ||
+				$entidade->getEntidadeTipo()->getId() === EntidadeTipo::subEquipe){
+					$grupoEquipe = $entidade->getGrupo()->getGrupoEquipe();
+					$fatosRankingCelula = $this->getRepositorio()->getFatoRankingCelulaORM()->encontrarPorIdGrupoEquipe($grupoEquipe->getId(), $mes, $ano);
+				}
+			$dados['fatos'] = $fatosRankingCelula;
+			$dados['repositorio'] = $this->getRepositorio();
+			$dados['filtrado'] = true;
+		}else{
+			$mes = date('m');
+			$ano = date('Y');
+		}
+		$dados['mes'] = $mes;
+		$dados['ano'] = $ano;
+
+		$arrayPeriodoDoMes = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mes, $ano);
+		$dados['periodoInicial'] = $arrayPeriodoDoMes[0];
+		$dados['periodoFinal'] = $arrayPeriodoDoMes[1];
+
+		return new ViewModel($dados);
 	}
 }
