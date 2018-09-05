@@ -172,6 +172,7 @@ return array(
     'Application\View\Helper\BotaoPopover'                       => __DIR__ . '/src/Application/View/Helper/BotaoPopover.php',
     'Application\View\Helper\MontaGraficoDeBarra'                => __DIR__ . '/src/Application/View/Helper/MontaGraficoDeBarra.php',
     'Application\View\Helper\ListagemCursos'                     => __DIR__ . '/src/Application/View/Helper/ListagemCursos.php',
+    'Application\View\Helper\Sitemap'                            => __DIR__ . '/src/Application/View/Helper/Sitemap.php',
     'Application\View\Helper\BarraDeProgresso'                   => __DIR__ . '/src/Application/View/Helper/BarraDeProgresso.php',
     'Application\View\Helper\DivJavaScript'                      => __DIR__ . '/src/Application/View/Helper/DivJavaScript.php',
     'Application\View\Helper\ListagemDisciplinas'                => __DIR__ . '/src/Application/View/Helper/ListagemDisciplinas.php',

@@ -69,8 +69,12 @@ $somaMeta = 0;
         </div>
         <div class="panel-body pn">
             <?php
-
         	$url = $this->tipoRelatorio . '/' . $this->mes . '/' . $this->ano;
+
+			echo '<div class="alert alert-default">';
+			echo $this->sitemap('relatorio/'.$url);
+			echo '</div>';
+
 			echo '<form action="/relatorio/' . $url . '" method="post">';
 			echo $this->cabecalhoDeMeses();
 			echo '</form>';
@@ -268,12 +272,15 @@ $somaMeta = 0;
                             }
                             echo '<td class="text-left" style="font-size:8px;padding-left:' . $padding . 'px;">' . $label . '<span class="hidden-xs">' . $relatorio['lideresFotos'] . '</span>';
                             echo $relatorio['lideresEntidade'];
-                            if ($this->entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja) {
-                                echo '<span class="hidden-xs"> - ';
-                            } else {
-                                echo ' - ';
-                            }
-                            echo $relatorio['lideres'];
+							
+							if($contagemRanking !== 0 && $relatorio['lideres'] != 'TOTAL'){
+								$funcaoOnClickPessoal = 'mostrarSplash(); funcaoCircuito("relatorio/'.$url.'",'.$relatorio['grupo'].')';
+								$linkDeQuemEstaLogado = '<a href="#" '.$this->funcaoOnclick($funcaoOnClickPessoal).'>'.$relatorio['lideres'].'</a>';
+								echo $linkDeQuemEstaLogado;
+							}
+							if($relatorio['lideres'] == 'TOTAL'){
+								echo $relatorio['lideres'];
+							}
                             if ($this->entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja) {
                                 echo'</span>';
                             }
@@ -297,9 +304,12 @@ $somaMeta = 0;
                                     echo '<td class="' . $classeBase . '">' . $relatorio[$indiceDeArrays]['celulaQuantidade'] . '</td>';
                                 }
                                 if ($this->tipoRelatorio == 2) {
+									$performance = RelatorioController::formataNumeroRelatorio($relatorio[$indiceDeArrays]['celulaRealizadasPerformance']);
+									$diferenca = ($relatorio[$indiceDeArrays]['celulaQuantidade'] - $relatorio[$indiceDeArrays]['celulaRealizadas']);
+									$botaoCelulasNaoRealizadas = $this->botaoSimples($diferenca, $funcaoAbrirModal, BotaoSimples::botaoMuitoPequenoImportante, BotaoSimples::posicaoAoCentro);
                                     echo '<td class="' . $classeBase . '">' . $relatorio[$indiceDeArrays]['celulaRealizadas'] . '</td>';
-                                    echo '<td class="' . $classeBase . '">' . ($relatorio[$indiceDeArrays]['celulaQuantidade'] - $relatorio[$indiceDeArrays]['celulaRealizadas']) . '</td>';
-                                    echo '<td class="' . $classeBase . '">' . RelatorioController::formataNumeroRelatorio($relatorio[$indiceDeArrays]['celulaRealizadasPerformance']) . '%</td>';
+                                    echo '<td class="' . $classeBase . '">' . $diferenca  . '</td>';
+                                    echo '<td class="' . $classeBase . '">' . $performance . '%</td>';
                                 }
                                 if ($this->tipoRelatorio == 3) {
                                     echo '<td class="' . $classeBase . '"">' . $relatorio[$indiceDeArrays]['quantidadeLideres'] . '</td>';
