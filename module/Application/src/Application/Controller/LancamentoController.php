@@ -49,6 +49,7 @@ class LancamentoController extends CircuitoController {
      */
     public function arregimentacaoAction() {
         $sessao = new Container(Constantes::$NOME_APLICACAO);
+		$mostrar= true;
 
         $entidade = CircuitoController::getEntidadeLogada($this->getRepositorio(), $sessao);
         $grupo = $entidade->getGrupo();
@@ -56,7 +57,9 @@ class LancamentoController extends CircuitoController {
         $periodo = $this->getEvent()->getRouteMatch()->getParam(Constantes::$ID, 0);
 
         if (!$entidade->verificarSeEstaAtivo()) {
-            $periodoVerificar = Funcoes::encontrarPeriodoDadoDataDeInativacao($entidade->getData_inativacaoStringPadraoBanco());
+			$mostrar = false;
+			echo 'data inativacao: '.$entidade->getData_inativacaoStringPadraoBanco();
+			$periodoVerificar = Funcoes::encontrarPeriodoDadoDataDeInativacao($entidade->getData_inativacaoStringPadraoBanco());
             if ($periodo > $periodoVerificar) {
                 $periodo = $periodoVerificar;
             }
@@ -90,7 +93,7 @@ class LancamentoController extends CircuitoController {
             $mostrarBotaoPeriodoAfrente = true;
         }
 
-        $validacaoPessoasCadastradas = 0;
+		$validacaoPessoasCadastradas = 0;
         $view = new ViewModel(
                 array(
             Constantes::$REPOSITORIO_ORM => $this->getRepositorio(),
@@ -99,6 +102,7 @@ class LancamentoController extends CircuitoController {
             Constantes::$VALIDACAO => $validacaoPessoasCadastradas,
             'mostrarBotaoPeriodoAnterior' => $mostrarBotaoPeriodoAnterior,
             'mostrarBotaoPeriodoAfrente' => $mostrarBotaoPeriodoAfrente,
+			'mostrar' => $mostrar,
                 )
         );
 
