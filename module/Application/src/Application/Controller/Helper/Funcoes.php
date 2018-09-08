@@ -316,7 +316,6 @@ class Funcoes {
         while (true) {
             $arrayPeriodo = Funcoes::montaPeriodo($periodo);
             $dataInicial = $arrayPeriodo[6] . '-' . $arrayPeriodo[5] . '-' . $arrayPeriodo[4];
-			echo 'DataInicial: '.$dataInicial;
             $dataInicial = strtotime("$dataInicial -1 day");
             if ($dataInicial == $dataDeInativacao) {
                 $periodo--;
