@@ -58,7 +58,7 @@ class Funcoes {
      * @param String $titulo
      * @param String $mensagem
      */
-    public static function enviarEmail($email, $titulo, $mensagem, $remetente = null) {
+    public static function enviarEmail($email, $titulo, $mensagem, $remetente = null, $imagem = null) {
         $mail = new PHPMailer;
         try {
 //            $mail->SMTPDebug = 1;
@@ -75,6 +75,9 @@ class Funcoes {
 //            $mail->SMTPDebug = 1;
             if($remetente){
               $mail->addReplyTo($remetente['email'], $remetente['nome']);
+            }
+            if($imagem){
+              $mail->addAttachment($imagem['tmp_name'], $imagem['name'], 'base64', $imagem['type']);
             }
             $mail->isSMTP();
             $mail->Charset = 'utf8_decode()';
