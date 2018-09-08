@@ -312,24 +312,15 @@ class Funcoes {
     static public function encontrarPeriodoDadoDataDeInativacao($dataDeInativacao) {
         $periodo = 0;
         $dataDeInativacao = strtotime($dataDeInativacao);
-		$contador = 0;
         while (true) {
             $arrayPeriodo = Funcoes::montaPeriodo($periodo);
-            $dataInicial = $arrayPeriodo[6] . '-' . $arrayPeriodo[5] . '-' . $arrayPeriodo[4];
-            $dataInicial = strtotime("$dataInicial -1 day");
-            if ($dataInicial == $dataDeInativacao) {
-                $periodo--;
+            $data = $arrayPeriodo[6] . '-' . $arrayPeriodo[5] . '-' . $arrayPeriodo[4];
+            $data = strtotime($data);
+            if ($data == $dataDeInativacao) {
                 break;
             }
             $periodo--;
-
-			$contador++;
-
-			if($contador === 20){
-				break;
-			}
         }
-
         return $periodo;
     }
 
