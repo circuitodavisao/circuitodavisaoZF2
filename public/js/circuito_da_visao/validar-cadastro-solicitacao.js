@@ -92,7 +92,7 @@ function selecionarTipo() {
 
 			if (parseInt($('#solicitacaoTipo').val()) === REMOVER_LIDER) {
 				$('#spanSelecioneObjeto1').html('Selecione o líder para remover');
-				$('.comDiscipulos').addClass(hidden);
+//				$('.comDiscipulos').addClass(hidden);
 				$('#spanMensagemDeConfirmacao').html('Confirma a remoção desse líder? Somente após autorização do líder da igreja no próximo período será feita a mudança')
 			}
 			if (parseInt($('#solicitacaoTipo').val()) === REMOVER_CELULA) {
@@ -138,16 +138,21 @@ function abrirSelecionarObjeto(qualObjeto, idLider) {
 	} else {
 		if ($('#solicitacaoTipoId').val() == SEPARAR) {
 			$(stringDivSelecionarQuemSaira).removeClass(hidden);
-		} else {
-			if($('#solicitacaoTipoId').val() == REMOVER_LIDER){
-				$('#divSelecionarMotivo').removeClass(hidden)
-			}else{
-				if($('#solicitacaoTipoId').val() == REMOVER_CELULA){
-					$('#divSelecionarCelula').removeClass(hidden)
-				}else{
-					$(stringDivSelecionarNumeracao).removeClass(hidden);
-				}
-			}
+		} 
+		if($('#solicitacaoTipoId').val() == REMOVER_LIDER){
+			$('#divSelecionarMotivo').removeClass(hidden)
+		}
+		if($('#solicitacaoTipoId').val() == REMOVER_CELULA){
+			$('#divSelecionarCelula').removeClass(hidden)
+		}
+		if($('#solicitacaoTipoId').val() == TRANSFERIR_LIDER_NA_PROPRIA_EQUIPE){
+			$(stringDivSelecionarNumeracao).removeClass(hidden);
+		}
+		if($('#solicitacaoTipoId').val() == TRANSFERIR_LIDER_PARA_OUTRA_EQUIPE){
+			$('#divSelecionarEquipe').removeClass(hidden);
+		}
+		if($('#idSolicitacaoTipo').val() >0){
+			$(stringDivSelecionarNumeracao).removeClass(hidden);
 		}
 	}
 	objetoSelecionado = qualObjeto;
@@ -162,9 +167,23 @@ function mostrarBotaoSelecionarLider() {
 	}
 }
 
+function mostrarBotaoSelecionarEquipe() {
+	let divBotaoSelecionarEquipe = $('#divBotaoSelecionarEquipe');
+	if (parseInt($('#idEquipe').val()) === 0) {
+		divBotaoSelecionarEquipe.addClass(hidden);
+	} else {
+		divBotaoSelecionarEquipe.removeClass(hidden);
+	}
+}
+
 function selecionarLider() {
 	let idLider = $('#idLider')
 	selecionarObjeto(idLider.val(), $('#idLider>option:selected').text())
+}
+
+function selecionarEquipe() {
+	let idEquipe = $('#idEquipe')
+	selecionarObjeto(idEquipe.val(), $('#idEquipe>option:selected').text())
 }
 
 function selecionarMotivo(){
@@ -187,6 +206,10 @@ function selecionarObjeto(id, informacao) {
 		$(stringDivSelecionarLider).addClass(hidden);
 	} else {
 		$(stringDivSelecionarNumeracao).addClass(hidden);
+		$('#divSelecionarEquipe').addClass(hidden);
+	}
+	if (parseInt(objetoSelecionado) === 2 && parseInt($('#solicitacaoTipo').val()) === TRANSFERIR_LIDER_PARA_OUTRA_EQUIPE) {
+		$(stringDivSelecionarEquipe).addClass(hidden);
 	}
 	if (parseInt($('#solicitacaoTipo').val()) === SEPARAR) {
 		$(stringDivSelecionarCasal).addClass(hidden);
@@ -227,8 +250,8 @@ function selecionarObjeto(id, informacao) {
 		verificarSeMostraOBotaoDeContinuar();
 		botaoLimpar.removeClass(hidden);
 		check.removeClass(hidden);
+		$('#spanObjeto3').removeClass(hidden)
 	}else{
-
 		/* buscar dados do grupo */
 		let idGrupo = id;
 		let splitId = id.split('_')
@@ -250,6 +273,10 @@ function selecionarObjeto(id, informacao) {
 							informacao = 'Nova numeração: ' + informacao;
 						}
 						objeto.html(informacao);
+						$('#spanObjeto3').removeClass(hidden)
+						if($('#idSolicitacaoTipo').val() > 0){
+
+						}
 					} else {
 						if (parseInt(objetoSelecionado) === 1) {
 							objeto.html('Líderes que serão transferidos');
@@ -261,23 +288,29 @@ function selecionarObjeto(id, informacao) {
 							}
 							if ($('#solicitacaoTipoId').val() == REMOVER_LIDER) {
 								objeto.html('Líder que será removido');
+								$('#blocoObjeto2').addClass(hidden)
 								$('#blocoObjeto3').removeClass(hidden)
 							}
 							if ($('#solicitacaoTipoId').val() == REMOVER_CELULA) {
 								objeto.html('Líder que terá a célula removida');
-								if(data.celulas['1']){
-									$('#idGrupoEvento').append('<option value="'+data.celulas['1']['idGrupoEvento']+'">'+data.celulas['1']['nomeHospedeiro']+'</option>')
+								if(data.celulaQuantidade > 0){
+									if(data.celulas['1']){
+										$('#idGrupoEvento').append('<option value="'+data.celulas['1']['idGrupoEvento']+'">'+data.celulas['1']['nomeHospedeiro']+'</option>')
+									}
+									if(data.celulas['2']){
+										$('#idGrupoEvento').append('<option value="'+data.celulas['2']['idGrupoEvento']+'">'+data.celulas['2']['nomeHospedeiro']+'</option>')
+									}
+									$('#blocoObjeto3').removeClass(hidden)
 								}
-								if(data.celulas['2']){
-									$('#idGrupoEvento').append('<option value="'+data.celulas['2']['idGrupoEvento']+'">'+data.celulas['2']['nomeHospedeiro']+'</option>')
-								}
-								$('#blocoObjeto3').removeClass(hidden)
 							}
 						}
 						if (parseInt(objetoSelecionado) === 2) {
 							objeto.html('Líderes que receberão');
 							if ($('#solicitacaoTipoId').val() == UNIR_CASAL) {
 								objeto.html('Mulher que será unida');
+							}
+							if($('#idSolicitacaoTipo').val() > 0){
+								$('#blocoObjeto3').removeClass(hidden)
 							}
 						}
 						spanNomeLideres.html('Nome dos Líderes: ' + data.nomeLideres);
@@ -311,7 +344,11 @@ function selecionarObjeto(id, informacao) {
 					if (objetoSelecionado != 3) {
 						$('#objeto' + objetoSelecionado).val(id);
 					} else {
-						$('#numeracao').val(id);
+						if ($('#solicitacaoTipoId').val() == TRANSFERIR_LIDER_PARA_OUTRA_EQUIPE) {
+							$('#objeto2').val(id);
+						}else{
+							$('#numeracao').val(id);
+						}
 					}
 
 					if (parseInt(objetoSelecionado) === 1) {
@@ -363,6 +400,58 @@ function selecionarObjeto(id, informacao) {
 						$('#idLider').val(0)
 						$('#divBotaoSelecionarLider').addClass(hidden)
 					}
+
+					/* Nao posso deixar selecionar alguem que esta com solicitacao pendente */
+					if ((
+						parseInt($('#solicitacaoTipo').val()) === TRANSFERIR_LIDER_PARA_OUTRA_EQUIPE ||
+						parseInt($('#solicitacaoTipo').val()) === REMOVER_LIDER ||
+						parseInt($('#solicitacaoTipo').val()) === REMOVER_CELULA ||
+						parseInt($('#solicitacaoTipo').val()) === TRANSFERIR_LIDER_NA_PROPRIA_EQUIPE) && objetoSelecionado == 1) {
+						if(data.temSolicitacaoPendente){
+							$(stringSpanSelecioneObjeto + 3).addClass(hidden)
+							$(stringSpanObjeto + 3).html('<div class="alert alert-danger">Não é possível selecionar esse time, pois tem alguma solicitação não encerrada</div>')
+							$(stringSpanObjeto + 3).removeClass(hidden)
+							$('#blocoObjeto2').addClass(hidden)
+							$('#blocoObjeto3').removeClass(hidden)
+							$('#divBotaoSelecionar3').addClass(hidden)
+						}else{
+							if (
+								(
+									parseInt($('#solicitacaoTipo').val()) === TRANSFERIR_LIDER_NA_PROPRIA_EQUIPE ||
+									parseInt($('#solicitacaoTipo').val()) === TRANSFERIR_LIDER_PARA_OUTRA_EQUIPE ||
+									parseInt($('#solicitacaoTipo').val()) === REMOVER_CELULA ||
+									parseInt($('#solicitacaoTipo').val()) === REMOVER_LIDER 
+								) && objetoSelecionado == 1) {
+								$(stringSpanObjeto + 3).addClass(hidden)
+								$(stringSpanSelecioneObjeto + 3).removeClass(hidden)
+								if(parseInt($('#solicitacaoTipo').val()) === TRANSFERIR_LIDER_NA_PROPRIA_EQUIPE){
+									$('#blocoObjeto2').removeClass(hidden)
+								}
+								$('#blocoObjeto3').removeClass(hidden)
+								$('#spanObjeto3').addClass(hidden)
+								$('#spanSelecioneObjeto3').removeClass(hidden)
+								$('#spanObjeto3').addClass(hidden)
+
+								if ($('#solicitacaoTipoId').val() == REMOVER_CELULA) {
+									if(data.celulaQuantidade == 0){
+										$(stringSpanSelecioneObjeto + 3).addClass(hidden)
+										$(stringSpanObjeto + 3).html('<div class="alert alert-danger">Time não possui células</div>')
+										$(stringDivBotaoSelecionar + 3).addClass(hidden)
+										$('#spanSelecioneObjeto3').addClass(hidden)
+										$('#spanObjeto3').removeClass(hidden)
+									}else{
+										$('#blocoObjeto3').removeClass(hidden)
+										$('#spanObjeto3').addClass(hidden)
+										$('#spanSelecioneObjeto3').removeClass(hidden)
+										$('#spanObjeto3').addClass(hidden)
+									}
+								}
+							}
+						}
+					}
+					if ($('#solicitacaoTipoId').val() == TRANSFERIR_LIDER_PARA_OUTRA_EQUIPE) {
+						$('#blocoObjeto2').addClass(hidden)
+					}
 				}
 			}, 'json')
 	}
@@ -408,6 +497,7 @@ function limparObjeto(qualObjeto) {
 	check.addClass(hidden);
 	if (qualObjeto === 3) {
 		$('#numero').val(0);
+		$('#idEquipe').val(0)
 	}
 
 	let valorParaRemover;
@@ -419,28 +509,59 @@ function limparObjeto(qualObjeto) {
 			$('#divBotaoSelecionarLider').addClass(hidden);
 		}
 		valorParaRemover = -35;
-		if (parseInt($('#solicitacaoTipo').val()) === TRANSFERIR_LIDER_PARA_OUTRA_EQUIPE) {
-			valorParaRemover = -50;
-		}
 		if ($('#formSolicitacaoReceber').val()) {
 			valorParaRemover = -50;
 		}
-		if (parseInt($('#solicitacaoTipo').val()) === REMOVER_LIDER||parseInt($('#solicitacaoTipo').val()) === REMOVER_CELULA) {
+		if (parseInt($('#solicitacaoTipo').val()) === REMOVER_LIDER ||
+			parseInt($('#solicitacaoTipo').val()) === REMOVER_CELULA ||
+			parseInt($('#solicitacaoTipo').val()) === TRANSFERIR_LIDER_PARA_OUTRA_EQUIPE) {
 			valorParaRemover = -50;
 			$('#idGrupoEvento').html('<option value="0">SELECIONE</option>')
-			limparObjeto(3)
+			$('#blocoObjeto3').addClass(hidden)
+		}
+		if (parseInt($('#solicitacaoTipo').val()) === TRANSFERIR_LIDER_NA_PROPRIA_EQUIPE) {
+			$('#blocoObjeto3').addClass(hidden)
+		}
+		if(qualObjeto === 2 && $('#idSolicitacaoTipo').val() > 0){
+			$('#idLider').val(0)
+			valorParaRemover = -50
 		}
 		atualizarBarraDeProgresso(valorParaRemover);
 		$('#numero').val(0);
+
+		$('#spanFotos'+qualObjeto).html('')
+		$('#spanNomeLideres'+qualObjeto).html('')
+		$('#spanCelulaQuantidade'+qualObjeto).html('')
+		$('#spanQuantidadeLideres'+qualObjeto).html('')
+	}
+	if (qualObjeto === 1) {
+		$('#divBotaoSelecionar2').addClass(hidden)
+		$('#spanFotos2').html('')
+		$('#spanNomeLideres2').html('')
+		$('#spanCelulaQuantidade2').html('')
+		$('#spanQuantidadeLideres2').html('')
+		$('#spanObjeto3').html('')
+		$('#blocoObjeto2').addClass(hidden)
+		$('#blocoObjeto3').addClass(hidden)
+		$('#divCheckDadosInseridos2').addClass(hidden)
+		$('#divCheckDadosInseridos3').addClass(hidden)
+		$('#divBotaoLimpar2').addClass(hidden)
+		$('#divBotaoLimpar3').addClass(hidden)
+		$('#idEquipe').val(0)
+ 		let valorDaBarra = pegaValorBarraDeProgresso()
+		atualizarBarraDeProgresso(parseInt(valorDaBarra) * -1)
 	}
 	if (qualObjeto === 3) {
 		valorParaRemover = -30;
 		if ($('#formSolicitacaoReceber').val()) {
 			valorParaRemover = -50;
 		}
-		if (parseInt($('#solicitacaoTipo').val()) === REMOVER_LIDER ||parseInt($('#solicitacaoTipo').val()) === REMOVER_CELULA) {
+		if (parseInt($('#solicitacaoTipo').val()) === TRANSFERIR_LIDER_PARA_OUTRA_EQUIPE || 
+			parseInt($('#solicitacaoTipo').val()) === REMOVER_LIDER || 
+			parseInt($('#solicitacaoTipo').val()) === REMOVER_CELULA) {
 			valorParaRemover = -50;
 		}
+
 		atualizarBarraDeProgresso(valorParaRemover);
 	}
 	verificarSeMostraOBotaoDeContinuar();

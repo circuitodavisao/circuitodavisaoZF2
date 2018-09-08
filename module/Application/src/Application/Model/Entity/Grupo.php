@@ -1173,6 +1173,37 @@ class Grupo extends CircuitoEntity {
         return $grupoIgreja;
     }
 
+    function contadorDeOndeEstouNaHierarquia() {
+        $grupoSelecionado = $this;
+        $grupoIgreja = null;
+		$contador = 0;
+        if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::SUBEQUIPE) {
+            while ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::SUBEQUIPE ||
+            $grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::EQUIPE) {
+				$contador++;
+				$grupoSelecionado = $grupoSelecionado->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai();
+                if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::IGREJA) {
+                    break;
+                }
+            }
+            $grupoIgreja = $grupoSelecionado;
+		} 
+	   	if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::EQUIPE) {
+            while ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::EQUIPE) {
+				$contador++;
+                $grupoSelecionado = $grupoSelecionado->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai();
+                if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::IGREJA) {
+                    break;
+                }
+            }
+            $grupoIgreja = $grupoSelecionado;
+		} 
+	   	if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::IGREJA) {
+			$contador++;
+		}
+        return $contador;
+    }
+
     /**
      * Retorna o grupo equipe do Grupo
      * @return Grupo
