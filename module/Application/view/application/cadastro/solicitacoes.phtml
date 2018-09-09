@@ -5,6 +5,7 @@ use Application\Model\Entity\EntidadeTipo;
 use Application\Model\Entity\Situacao;
 use Application\Model\Entity\SolicitacaoTipo;
 use Application\Controller\Helper\Funcoes;
+use Application\View\Helper\BotaoSimples;
 
 $html = '';
 $html .= '<div class="panel mt50">';
@@ -13,6 +14,7 @@ $html .= '<div class="panel-body bg-light">';
 foreach($this->solicitacoesTipo as $solicitacaoTipo){
 	$colspan = 0;
 	$htmlThead = '';
+	$htmlThead .= '<th class="hidden-xs">#</th>';
 	$htmlThead .= '<th class="hidden-xs">Solicitado em</th>';
 	switch($solicitacaoTipo->getId()){
 	case SolicitacaoTipo::TRANSFERIR_LIDER_NA_PROPRIA_EQUIPE:
@@ -32,6 +34,20 @@ foreach($this->solicitacoesTipo as $solicitacaoTipo){
 		$htmlThead .= '<th class="hidden-xs">Time</th>';
 		$htmlThead .= '<th>Quem</th>';
 		$htmlThead .= '<th>Célula</th>';
+		break;
+	case SolicitacaoTipo::TRANSFERIR_LIDER_PARA_OUTRA_EQUIPE:
+		$colspan = 6;
+		$htmlThead .= '<th class="hidden-xs">Time</th>';
+		$htmlThead .= '<th>Quem</th>';
+		$htmlThead .= '<th>Novo Time</th>';
+		$htmlThead .= '<th class="hidden-xs">Novo Líder</th>';
+		break;
+	case SolicitacaoTipo::UNIR_CASAL:
+		$colspan = 5;
+		$htmlThead .= '<th class="hidden-xs">Time</th>';
+		$htmlThead .= '<th>Homem</th>';
+		$htmlThead .= '<th>Mulher</th>';
+		break;
 	}
 	$htmlThead .= '<th>Status</th>';
 
@@ -56,6 +72,7 @@ foreach($this->solicitacoesTipo as $solicitacaoTipo){
 
 		$html .= '<tr>';
 		$htmlTbody = '';
+		$htmlTbody .= '<td class="hidden-xs">'.$solicitacao->getId().'</td>';
 		$htmlTbody .= '<td class="hidden-xs">'.$solicitacao->getData_criacaoStringPadraoBrasil().'</td>';
 		$htmlTbody .= '<td class="hidden-xs">'.$grupo->getGrupoEquipe()->getEntidadeAtiva()->getNome().'</td>';
 		$htmlTbody .= '<td>'.$grupo->getNomeLideresAtivos().'</td>';
@@ -67,13 +84,25 @@ foreach($this->solicitacoesTipo as $solicitacaoTipo){
 
 			$htmlTbody .= '<td>'.$grupo2->getGrupoEquipe()->getEntidadeAtiva()->getNome().'</td>';
 			$htmlTbody .= '<td class="hidden-xs">'.$grupo2->getNomeLideresAtivos().'</td>';
-
 			break;
 		case SolicitacaoTipo::REMOVER_CELULA:
 			$objeto = $solicitacao->getObjeto2();
 			$grupoEvento = $this->repositorio->getGrupoEventoORM()->encontrarPorId($objeto);
 			$htmlCelula = $this->translate(Funcoes::diaDaSemanaPorDia($grupoEvento->getEvento()->getDia())).' - ' . substr($grupoEvento->getEvento()->getHora(),0,5);
 			$htmlTbody .= '<td>'.$htmlCelula.'</td>';
+			break;
+		case SolicitacaoTipo::TRANSFERIR_LIDER_PARA_OUTRA_EQUIPE:
+			$objeto2 = $solicitacao->getObjeto2();
+			$grupo2 = $this->repositorio->getGrupoORM()->encontrarPorId($objeto2);
+
+			$htmlTbody .= '<td>'.$grupo2->getGrupoEquipe()->getEntidadeAtiva()->getNome().'</td>';
+			$htmlTbody .= '<td class="hidden-xs">'.$grupo2->getNomeLideresAtivos().'</td>';
+			break;
+		case SolicitacaoTipo::UNIR_CASAL:
+			$objeto2 = $solicitacao->getObjeto2();
+			$grupo2 = $this->repositorio->getGrupoORM()->encontrarPorId($objeto2);
+			$htmlTbody .= '<td>'.$grupo2->getNomeLideresAtivos().'</td>';
+			break;
 		}
 
 		$corSituacao = 'default';
@@ -84,6 +113,13 @@ foreach($this->solicitacoesTipo as $solicitacaoTipo){
 		case Situacao::CONCLUIDO: $corSituacao = 'success'; break;
 		}
 		$htmlTbody .= '<td><span class="label label-'.$corSituacao.'">'.$solicitacao->getSolicitacaoSituacaoAtiva()->getSituacao()->getNome().'</span></td>';
+		if($solicitacao->getSolicitacaoSituacaoAtiva()->getSituacao()->getId() === Situacao::PENDENTE_DE_ACEITACAO && $solicitacaoTipo->getId() === SolicitacaoTipo::TRANSFERIR_LIDER_PARA_OUTRA_EQUIPE){
+			$stringNomeDaFuncaoOnClick = 'funcaoCircuito("cadastroSolicitacaoReceber", ' . $solicitacao->getId() . ')';
+			$extra = $this->funcaoOnClick($stringNomeDaFuncaoOnClick);
+			$htmlTbody .= '<td>';
+			$htmlTbody .= $this->botaoSimples('Receber', $extra, BotaoSimples::botaoMuitoPequenoImportante);
+			$htmlTbody .= '</td>';
+		}
 
 		$html .= $htmlTbody;
 		$html .= '</tr>';
