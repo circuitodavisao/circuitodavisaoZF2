@@ -547,6 +547,9 @@ class Pessoa extends CircuitoEntity implements InputFilterAwareInterface {
      * @return String
      */
     function getFoto() {
+		if($this->foto === null){
+			$this->foto = 'placeholder.png';
+		}
         return $this->foto;
     }
 
