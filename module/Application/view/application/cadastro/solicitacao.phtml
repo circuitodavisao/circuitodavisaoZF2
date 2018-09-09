@@ -9,8 +9,10 @@ $form = $this->Form;
 $form->prepare();
 $form->setAttribute(Constantes::$FORM_ACTION, Constantes::$ROUTE_CADASTRO . 'SolicitacaoFinalizar');
 echo $this->form()->openTag($form);
-echo $this->templateFormularioTopo($this->titulo);
 ?>
+<div align="center">
+<div class="panel mt50 mw600">
+<div class="panel-heading text-center"><?php echo $this->titulo; ?></div>
 <div class="panel-body bg-light">
 	<!--divSolicitacaoTipo-->
 	<div id="divSolicitacaoTipo">
@@ -96,24 +98,28 @@ for ($indiceDeObejtos = 1; $indiceDeObejtos <= 3; $indiceDeObejtos++) {
 	<select id="idLider" class="form-control" onChange="mostrarBotaoSelecionarLider();">
 	<option value="0"><?php echo $this->translate(Constantes::$TRADUCAO_SELECIONE); ?></option>
 	<?php echo $this->listagemLideresTransferencia($this->discipulos); ?>
-</select>
+	</select>
 	<div id="divBotaoSelecionarLider" class="hidden mt10">
-<?php
-echo $this->botaoSimples(Constantes::$TRADUCAO_SELECIONAR, $this->funcaoOnClick('selecionarLider()'));
-?>
+	<?php
+		echo $this->botaoSimples(Constantes::$TRADUCAO_SELECIONAR, $this->funcaoOnClick('selecionarLider()'));
+	?>
 	</div>
 	</div>
 	<!--divSelecionarEquipe-->
 	<div id="divSelecionarEquipe" class="hidden">
-	<div id="treeEquipes" class="fancytree-radio">
-	<ul id="treeData" style="display: none;">
-<?php
-foreach ($this->grupoPaiFilhoEquipes as $grupoPaiFilhoEquipe) {
-	$grupo = $grupoPaiFilhoEquipe->getGrupoPaiFilhoFilho();
-	echo '<li id="equipe_' . $grupo->getId() . '" >' . $grupo->getEntidadeAtiva()->infoEntidade();
-}
-?>
-	</ul>
+	<select id="idEquipe" class="form-control" onChange="mostrarBotaoSelecionarEquipe();">
+		<option value="0">SELECIONE</option>
+	<?php
+		foreach ($this->grupoPaiFilhoEquipes as $grupoPaiFilhoEquipe) {
+			$grupo = $grupoPaiFilhoEquipe->getGrupoPaiFilhoFilho();
+			echo '<option value="' . $grupo->getId() . '" >' . $grupo->getEntidadeAtiva()->infoEntidade() . '</option>';
+		}
+	?>
+	</select>
+	<div id="divBotaoSelecionarEquipe" class="hidden mt10">
+	<?php
+		echo $this->botaoSimples(Constantes::$TRADUCAO_SELECIONAR, $this->funcaoOnClick('selecionarEquipe()'));
+	?>
 	</div>
 	</div>
 	<!--divSelecionarHomem-->
@@ -123,18 +129,22 @@ if (count($this->grupoPaiFilhoHomens) === 0) {
 	echo 'Sem homens para casar';
 } else {
 ?>
-	<div id="treeHomens" class="fancytree-radio">
-	<ul id="treeData" style="display: none;">
+	<select id="idHomem" class="form-control" onChange="mostrarBotaoSelecionarHomem();">
+		<option value="0">SELECIONE</option>
 <?php
 	foreach ($this->grupoPaiFilhoHomens as $grupoPaiFilhoHomem) {
-		$grupo = $grupoPaiFilhoHomem->getGrupoPaiFilhoFilho();
-		echo '<li id="' . $grupo->getId() . '" >' . $grupo->getEntidadeAtiva()->infoEntidade() . ' - ' . $grupo->getGrupoResponsavelAtivo()->getPessoa()->getNomePrimeiroUltimo();
+		$grupo = $grupoPaiFilhoHomem['grupo']->getGrupoPaiFilhoFilho();
+		echo '<option id="homem'.$grupo->getId().'" class="'.$grupoPaiFilhoHomem['hierarquia'].'" value="' . $grupo->getId() . '" >' . $grupo->getEntidadeAtiva()->infoEntidade() . ' - ' . $grupo->getGrupoResponsavelAtivo()->getPessoa()->getNomePrimeiroUltimo().'</option>';
 }
 ?>
-	</ul>
+	</select>
+	<div id="divBotaoSelecionarHomem" class="hidden mt10">
+	<?php
+		echo $this->botaoSimples(Constantes::$TRADUCAO_SELECIONAR, $this->funcaoOnClick('selecionarHomem()'));
+	?>
+	</div>
 	</div>
 	<?php } ?>
-	</div>
 	<!--divSelecionarMulher-->
 	<div id="divSelecionarMulher" class="hidden">
 <?php
@@ -142,38 +152,23 @@ if (count($this->grupoPaiFilhoMulheres) === 0) {
 	echo 'Sem mulheres para casar';
 } else {
 ?>
-	<div id="treeMulheres" class="fancytree-radio">
-	<ul id="treeData" style="display: none;">
+	<select id="idMulher" class="form-control" onChange="mostrarBotaoSelecionarMulher();">
+		<option value="0">SELECIONE</option>
 <?php
 	foreach ($this->grupoPaiFilhoMulheres as $grupoPaiFilhoMulher) {
-		$grupo = $grupoPaiFilhoMulher->getGrupoPaiFilhoFilho();
-		echo '<li id="' . $grupo->getId() . '" >' . $grupo->getEntidadeAtiva()->infoEntidade() . ' - ' . $grupo->getGrupoResponsavelAtivo()->getPessoa()->getNomePrimeiroUltimo();
+		$grupo = $grupoPaiFilhoMulher['grupo']->getGrupoPaiFilhoFilho();
+		echo '<option class="mulheres '.$grupoPaiFilhoMulher['hierarquia'].'" value="' . $grupo->getId() . '" >' . $grupo->getEntidadeAtiva()->infoEntidade() . ' - ' . $grupo->getGrupoResponsavelAtivo()->getPessoa()->getNomePrimeiroUltimo().'</option>';
 }
 ?>
-	</ul>
+	</select>
+	<div id="divBotaoSelecionarMulher" class="hidden mt10">
+	<?php
+		echo $this->botaoSimples(Constantes::$TRADUCAO_SELECIONAR, $this->funcaoOnClick('selecionarMulher()'));
+	?>
 	</div>
 	<?php } ?>
 	</div>
-	<!--divSelecionarCasal-->
-	<div id="divSelecionarCasal" class="hidden">
-<?php
-if (count($this->grupoPaiFilhoCasais) === 0) {
-	echo 'Sem casais';
-} else {
-?>
-	<div id="treeCasais" class="fancytree-radio">
-	<ul id="treeData" style="display: none;">
-<?php
-	foreach ($this->grupoPaiFilhoCasais as $grupoPaiFilhoCasais) {
-		$grupo = $grupoPaiFilhoCasais->getGrupoPaiFilhoFilho();
-		echo '<li id="' . $grupo->getId() . '" >' . $grupo->getEntidadeAtiva()->infoEntidade() . ' - ' . $grupo->getNomeLideresAtivos();
-}
-?>
-	</ul>
-	</div>
-	<?php } ?>
-	</div>
-	<!--divSelecionarQuemSaira-->
+<!--divSelecionarQuemSaira-->
 	<div id="divSelecionarQuemSaira" class="hidden">
 	<div class="section-divider mt20">
 	<span>Selecione quem do casal vai sair</span>
@@ -274,8 +269,8 @@ echo $this->botaoSimples($labelVoltar, $this->funcaoOnClick($stringNomeDaFuncaoO
 	<?php echo $this->divMensagens(); ?>
 <div class="row">
 	<div class="col-sm-12 col-xs-12">
-	<div class="section text-center">
-	<input id="senha" type="password" class="gui-input" placeholder="<?php echo $this->translate(Constantes::$TRADUCAO_SENHA); ?>" />
+	<div class="section text-center mb10">
+	<input id="senha" type="password" class="form-control" placeholder="<?php echo $this->translate(Constantes::$TRADUCAO_SENHA); ?>" />
 	</div>
 	</div>
 	</div>
@@ -289,6 +284,7 @@ $stringNomeDaFuncaoOnClickConfimarSolicitacao = 'validarSenha(this.form)';
 echo $this->botaoSimples($labelConfirmar, $this->funcaoOnClick($stringNomeDaFuncaoOnClickConfimarSolicitacao), BotaoSimples::botaoPerigoso);
 echo $this->botaoSimples($labelVoltar, $this->funcaoOnClick($stringNomeDaFuncaoOnClickVoltarConfirmacao), BotaoSimples::botaoMenorImportancia);
 ?>
+	</div>
 	</div>
 	</div>
 	</div>

@@ -363,8 +363,8 @@ class IndexController extends CircuitoController {
         $arrayPeriodo = Funcoes::montaPeriodo($periodo);
 //        $stringComecoDoPeriodo = $arrayPeriodo[3] . '-' . $arrayPeriodo[2] . '-' . $arrayPeriodo[1];
 //        $stringFimDoPeriodo = $arrayPeriodo[6] . '-' . $arrayPeriodo[5] . '-' . $arrayPeriodo[4];
-		$stringComecoDoPeriodo = '2018-09-06';
-		$stringFimDoPeriodo = '2018-09-06';
+		$stringComecoDoPeriodo = '2018-09-09';
+		$stringFimDoPeriodo = '2018-09-09';
 		$html .= "<br />stringComecoDoPeriodo$stringComecoDoPeriodo";
 		$html .= "<br />stringFimDoPeriodo$stringFimDoPeriodo";
         $dateInicialFormatada = DateTime::createFromFormat('Y-m-d', $stringComecoDoPeriodo);
@@ -376,8 +376,11 @@ class IndexController extends CircuitoController {
 			/* Ordenando solicitações */
 			$solicitacoesPorHierarquia = array();
 			foreach ($solicitacoesPorData as $arraySolicitacao) {
-				$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($arraySolicitacao['objeto1']);
-				$solicitacoesPorHierarquia[$grupo->contadorDeOndeEstouNaHierarquia()][] = $arraySolicitacao;
+				$solicitacao = $this->getRepositorio()->getSolicitacaoORM()->encontrarPorId($arraySolicitacao['id']);
+				if($solicitacao->getSolicitacaoSituacaoAtiva()->getSituacao()->getId() === Situacao::ACEITO_AGENDADO){
+					$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($arraySolicitacao['objeto1']);
+					$solicitacoesPorHierarquia[$grupo->contadorDeOndeEstouNaHierarquia()][] = $arraySolicitacao;
+				}
 			}
 
 			$this->getRepositorio()->iniciarTransacao();
@@ -394,8 +397,8 @@ class IndexController extends CircuitoController {
 								if ($idSolicitacaoTipo === SolicitacaoTipo::TRANSFERIR_LIDER_NA_PROPRIA_EQUIPE ||
 									$idSolicitacaoTipo === SolicitacaoTipo::TRANSFERIR_LIDER_PARA_OUTRA_EQUIPE) {
 										$html .= "<br />SolicitacaoTipo::TRANSFERIR_LIDER_NA_PROPRIA_EQUIPE";
-										$grupoQueSeraSemeado = $this->getRepositorio()->getGrupoORM()->encontrarPorId($solicitacao['objeto1']);
-										$grupoQueRecebera = $this->getRepositorio()->getGrupoORM()->encontrarPorId($solicitacao['objeto2']);
+										$grupoQueSeraSemeado = $this->getRepositorio()->getGrupoORM()->encontrarPorId($solicitacao->getObjeto1());
+										$grupoQueRecebera = $this->getRepositorio()->getGrupoORM()->encontrarPorId($solicitacao->getObjeto2());
 										if ($solicitacao->getNumero()) {
 											$extra = (int) $solicitacao->getNumero();
 										}
@@ -404,13 +407,12 @@ class IndexController extends CircuitoController {
 										}
 										$html .= $this->transferirLider($grupoQueSeraSemeado, $grupoQueRecebera, $extra);
 									}
-
-//								if ($idSolicitacaoTipo == SolicitacaoTipo::UNIR_CASAL) {
-//									$html .= "<br />UNINDO CASAL ";
-//									$grupoHomem = $this->getRepositorio()->getGrupoORM()->encontrarPorId($solicitacao->getObjeto1());
-//									$grupoMulher = $this->getRepositorio()->getGrupoORM()->encontrarPorId($solicitacao->getObjeto2());
-//									$html .= $this->unirCasal($grupoHomem, $grupoMulher);
-//								}
+								if ($idSolicitacaoTipo == SolicitacaoTipo::UNIR_CASAL) {
+									$html .= "<br />UNINDO CASAL ";
+									$grupoHomem = $this->getRepositorio()->getGrupoORM()->encontrarPorId($solicitacao->getObjeto1());
+									$grupoMulher = $this->getRepositorio()->getGrupoORM()->encontrarPorId($solicitacao->getObjeto2());
+									$html .= $this->unirCasal($grupoHomem, $grupoMulher);
+								}
 //								if ($idSolicitacaoTipo == SolicitacaoTipo::SEPARAR) {
 //									$html .= "<br />SEPARANDO";
 //									$pessoaParaInativar = $this->getRepositorio()->getPessoaORM()->encontrarPorId($solicitacao->getObjeto2());
@@ -425,7 +427,6 @@ class IndexController extends CircuitoController {
 //									$grupo2 = $this->getRepositorio()->getGrupoORM()->encontrarPorId($solicitacao->getObjeto2());
 //									$html .= $this->trocarResponsabilidades($grupo1, $grupo2);
 //								}
-								
 								if ($idSolicitacaoTipo == SolicitacaoTipo::REMOVER_LIDER) {
 									/* remover todos lideres abaixo */
 									$html .= "<br />REMOVENDO LIDER";
@@ -438,7 +439,6 @@ class IndexController extends CircuitoController {
 									$grupoEvento = $this->getRepositorio()->getGrupoEventoORM()->encontrarPorId($solicitacao->getObjeto2());
 									$html .= $this->removerCelula($grupo, $grupoEvento);
 								}
-
 								$solicitacaoSituacaoAtiva = $solicitacao->getSolicitacaoSituacaoAtiva();
 								/* inativar solicitacao situacao ativa */
 								$solicitacaoSituacaoAtiva->setDataEHoraDeInativacao();
@@ -630,81 +630,95 @@ class IndexController extends CircuitoController {
     }
 
     public function unirCasal($grupo1, $grupo2) {
-        $dataParaInativar = self::getDataParaInativacao();
+		$html = '';
+		$dataParaInativar = self::getDataParaInativacao();
+		$pessoaHomem = $grupo1->getPessoasAtivas()[0];
+		$pessoaMulher = $grupo2->getPessoasAtivas()[0];
+		$eventoCelulasHomem = $grupo1->getGrupoEventoPorTipoEAtivo(EventoTipo::tipoCelula);
+		$eventoCelulasMulher = $grupo2->getGrupoEventoPorTipoEAtivo(EventoTipo::tipoCelula);
+		$discipulosHomem = $grupo1->getGrupoPaiFilhoFilhosAtivos(1);
+		$discipulosMulher = $grupo2->getGrupoPaiFilhoFilhosAtivos(1);
 
-        $grupoHomem = $grupo1;
-        $htmlBr = '<br />';
-        $html = '';
-        $html .= $htmlBr . "######################################### Iniciando uniao";
+		$grupoPaiFilhoPai = $grupo1->getGrupoPaiFilhoPaiAtivo();
+		$grupoPai = $grupoPaiFilhoPai->getGrupoPaiFilhoPai();
+		/* novo grupo */
+		$grupoNovo = new Grupo();
+		$this->getRepositorio()->getGrupoORM()->persistir($grupoNovo);
+		/* entidade nova */
+		$entidade = new Entidade();
+		$entidade->setGrupo($grupoNovo);
+		if($grupo1->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::subEquipe){
+			$entidade->setNumero($grupo1->getEntidadeAtiva()->getNumero());
+		}
+		if($grupo1->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::equipe){
+			$entidade->setNome($grupo1->getEntidadeAtiva()->getNome());
+		}
+		$entidade->setEntidadeTipo($grupo1->getEntidadeAtiva()->getEntidadeTipo());
+		$this->getRepositorio()->getEntidadeORM()->persistir($entidade);
+		/* grupo pai filho novo */
+		$grupoPaiFilhoNovo = new GrupoPaiFilho();
+		$grupoPaiFilhoNovo->setGrupoPaiFilhoPai($grupoPai);
+		$grupoPaiFilhoNovo->setGrupoPaiFilhoFilho($grupoNovo);
+		$this->getRepositorio()->getGrupoPaiFilhoORM()->persistir($grupoPaiFilhoNovo);
+		/* grupo responsabilidades */
+		/* homem */
+		$grupoResponsavelHomem = new GrupoResponsavel();
+		$grupoResponsavelHomem->setGrupo($grupoNovo);
+		$grupoResponsavelHomem->setPessoa($pessoaHomem);
+		$this->getRepositorio()->getGrupoResponsavelORM()->persistir($grupoResponsavelHomem);
+		/* mulher */
+		$grupoResponsavelMulher = new GrupoResponsavel();
+		$grupoResponsavelMulher->setGrupo($grupoNovo);
+		$grupoResponsavelMulher->setPessoa($pessoaMulher);
+		$this->getRepositorio()->getGrupoResponsavelORM()->persistir($grupoResponsavelMulher);
+		/* grupo evento */
+		/* celulas homem */
+		if($grupoEventoCelulasHomem){
+			foreach($grupoEventoCelulasHomem as $grupoEventoHomem){
+				$grupoEvento = new GrupoEvento();
+				$grupoEvento->setGrupo($grupoNovo);
+				$grupoEvento->setEvento($grupoEventoHomem->getEvento());
+				$this->getRepositorio()->getGrupoEventoORM()->persistir($grupoEvento);
+			}
+		}
+		/* celulas mulher */
+		if($grupoEventoCelulasMulher){
+			foreach($grupoEventoCelulasMulher as $grupoEventoMulher){
+				$grupoEvento = new GrupoEvento();
+				$grupoEvento->setGrupo($grupoNovo);
+				$grupoEvento->setEvento($grupoEventoMulher->getEvento());
+				$this->getRepositorio()->getGrupoEventoORM()->persistir($grupoEvento);
+			}
+		}
+		/* discipulos abaixos */
+		/* discipulos homem */
+		if($discipulosHomem){
+			foreach($discipulosHomem as $grupoPaiFilhoFilhoHomem){
+				$grupoPaiFilhoFilhoHomem->setDataEHoraDeInativacao($dataParaInativar);
+				$this->getRepositorio()->getGrupoPaiFilhoORM()->persistir($grupoPaiFilhoFilhoHomem);
 
-        /* Grupo Mulher */
-        $html .= $htmlBr . $htmlBr . "Grupo vindo: " . $grupo2->getId();
-        $grupoMulher = $grupo2;
-        $numeroIdentificadorAtual = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupoMulher);
-        $entidadeAtual = $grupoMulher->getEntidadeAtiva();
-        $html .= $htmlBr . $entidadeAtual->infoEntidade();
-        $html .= $htmlBr . 'numeroIdentificadorAtual: ' . $numeroIdentificadorAtual;
-        $html .= $htmlBr . 'nome lideres: ' . $grupoMulher->getNomeLideresAtivos();
+				$grupoPaiFilho = new GrupoPaiFilho();
+				$grupoPaiFilho->setGrupoPaiFilhoPai($grupoNovo);
+				$grupoPaiFilho->setGrupoPaiFilhoFilho($grupoPaiFilhoFilhoHomem->getGrupoPaiFilhoFilho());
+				$this->getRepositorio()->getGrupoPaiFilhoORM()->persistir($grupoPaiFilho);
+			}
+		}
+		/* discipulos mulher */
+		if($discipulosMulher){
+			foreach($discipulosMulher as $grupoPaiFilhoFilhoMulher){
+				$grupoPaiFilhoFilhoMulher->setDataEHoraDeInativacao($dataParaInativar);
+				$this->getRepositorio()->getGrupoPaiFilhoORM()->persistir($grupoPaiFilhoFilhoMulher);
 
-        /* Inativando */
-        /* GrupoPaiFilho */
-        $grupoPaiFilhoPaiAtivo = $grupoMulher->getGrupoPaiFilhoPaiAtivo();
-        $grupoPaiAtivo = $grupoPaiFilhoPaiAtivo->getGrupoPaiFilhoPai();
-        $html .= $htmlBr . $htmlBr . "Inativando grupo pai filho atual: " . $grupoPaiFilhoPaiAtivo->getId();
-        $html .= $htmlBr . "grupo pai atual: " . $grupoPaiAtivo->getId();
-        $html .= $htmlBr . $grupoPaiAtivo->getEntidadeAtiva()->infoEntidade();
-        $grupoPaiFilhoPaiAtivo->setDataEHoraDeInativacao($dataParaInativar);
-        $html .= $htmlBr . 'DataInativacao: ' . $grupoPaiFilhoPaiAtivo->getData_inativacaoStringPadraoBanco();
-        $this->getRepositorio()->getGrupoPaiFilhoORM()->persistir($grupoPaiFilhoPaiAtivo, false);
+				$grupoPaiFilho = new GrupoPaiFilho();
+				$grupoPaiFilho->setGrupoPaiFilhoPai($grupoNovo);
+				$grupoPaiFilho->setGrupoPaiFilhoFilho($grupoPaiFilhoFilhoMulher->getGrupoPaiFilhoFilho());
+				$this->getRepositorio()->getGrupoPaiFilhoORM()->persistir($grupoPaiFilho);
+			}
+		}
 
-        /* GrupoResponsavel */
-        $grupoResponsavelAtivo = $grupoMulher->getGrupoResponsavelAtivo();
-        $pessoaMulher = $grupoResponsavelAtivo->getPessoa();
-        $html .= $htmlBr . $htmlBr . "Inativando grupo responsavel atual: " . $grupoResponsavelAtivo->getId();
-        $grupoResponsavelAtivo->setDataEHoraDeInativacao($dataParaInativar);
-        $html .= $htmlBr . 'DataInativacao: ' . $grupoResponsavelAtivo->getData_inativacaoStringPadraoBanco();
-        $this->getRepositorio()->getGrupoResponsavelORM()->persistir($grupoResponsavelAtivo, false);
-
-        /* GrupoResponsavelNovoDaMulher */
-        $grupoResponsavelComOGrupoDoHomem = new GrupoResponsavel();
-        $grupoResponsavelComOGrupoDoHomem->setGrupo($grupoHomem);
-        $grupoResponsavelComOGrupoDoHomem->setPessoa($pessoaMulher);
-        $this->getRepositorio()->getGrupoResponsavelORM()->persistir($grupoResponsavelComOGrupoDoHomem);
-
-        /* GrupoEvento */
-        $grupoEventos = $grupoMulher->getGrupoEventoAtivosPorTipo(EventoTipo::tipoCelula);
-        $html .= $htmlBr . $htmlBr . "Inativando grupo evento";
-        foreach ($grupoEventos as $grupoEvento) {
-            $grupoEvento->setDataEHoraDeInativacao($dataParaInativar);
-            $html .= $htmlBr . 'DataInativacao: ' . $grupoEvento->getData_inativacaoStringPadraoBanco();
-            $this->getRepositorio()->getGrupoEventoORM()->persistir($grupoEvento, false);
-
-            /* GrupoEventoNoGrupoDoHomem */
-            $eventoCelula = $grupoEvento->getEvento();
-            $grupoEventoNovo = new GrupoEvento();
-            $grupoEventoNovo->setGrupo($grupoHomem);
-            $grupoEventoNovo->setEvento($eventoCelula);
-            $this->getRepositorio()->getGrupoEventoORM()->persistir($grupoEventoNovo);
-        }
-
-        /* GrupoPessoa */
-        $grupoPessoas = $grupoMulher->getGrupoPessoasNoPeriodo(0);
-        $html .= $htmlBr . $htmlBr . "Inativando grupo pessoa";
-        foreach ($grupoPessoas as $grupoPessoa) {
-            $grupoPessoa->setDataEHoraDeInativacao($dataParaInativar);
-            $html .= $htmlBr . 'DataInativacao: ' . $grupoPessoa->getData_inativacaoStringPadraoBanco();
-            $this->getRepositorio()->getGrupoPessoaORM()->persistir($grupoPessoa, false);
-
-            /* GrupoPessoaNoGrupoDoHomem */
-            $pessoaLinhaDeLancamento = $grupoPessoa->getPessoa();
-            $grupoPessoaTipo = $grupoPessoa->getGrupoPessoaTipo();
-            $grupoPessoaNovo = new GrupoPessoa();
-            $grupoPessoaNovo->setGrupo($grupoHomem);
-            $grupoPessoaNovo->setPessoa($pessoaLinhaDeLancamento);
-            $grupoPessoaNovo->setGrupoPessoaTipo($grupoPessoaTipo);
-            $this->getRepositorio()->getGrupoEventoORM()->persistir($grupoPessoaNovo);
-        }
-
+		/* inativando lideres */
+		self::inativarEntidadeDoLider($grupo1);
+		self::inativarEntidadeDoLider($grupo2);
         return $html;
     }
 
@@ -823,6 +837,11 @@ class IndexController extends CircuitoController {
 
 	function inativarEntidadeDoLider($grupo){
         $dataParaInativar = self::getDataParaInativacao();
+		/* entidade */
+        $entidadeAtual = $grupo->getEntidadeAtiva();
+		$entidadeAtual->setDataEHoraDeInativacao($dataParaInativar);
+		$this->getRepositorio()->getEntidadeORM()->persistir($entidadeAtual, false);
+
 		/* grupo pai filho */
 		$grupoPaiFilhoPai = $grupo->getGrupoPaiFilhoPaiAtivo();
 		$grupoPaiFilhoPai->setDataEHoraDeInativacao($dataParaInativar);

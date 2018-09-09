@@ -88,16 +88,19 @@ function selecionarTipo() {
 			$('#spanSelecioneObjeto2').html('Selecione o lider(es) que vão trocar responsabilidades');
 		}
 		if (parseInt($('#solicitacaoTipo').val()) === REMOVER_LIDER ||
+			parseInt($('#solicitacaoTipo').val()) === UNIR_CASAL ||
 			parseInt($('#solicitacaoTipo').val()) === REMOVER_CELULA) {
 
 			if (parseInt($('#solicitacaoTipo').val()) === REMOVER_LIDER) {
 				$('#spanSelecioneObjeto1').html('Selecione o líder para remover');
-//				$('.comDiscipulos').addClass(hidden);
 				$('#spanMensagemDeConfirmacao').html('Confirma a remoção desse líder? Somente após autorização do líder da igreja no próximo período será feita a mudança')
 			}
 			if (parseInt($('#solicitacaoTipo').val()) === REMOVER_CELULA) {
 				$('#spanSelecioneObjeto1').html('Selecione o líder para remover a célula');
 				$('#spanMensagemDeConfirmacao').html('Confirma a remoção dessa célula? Somente após autorização do líder da igreja no próximo período será feita a mudança')
+			}
+			if (parseInt($('#solicitacaoTipo').val()) === UNIR_CASAL) {
+				$('#spanMensagemDeConfirmacao').html('Confirma a união desse casal? Eles serão inativados e será criado um novo time, somente no próximo período será feita a mudança')
 			}
 			$('#blocoObjeto2').addClass(hidden);
 		}
@@ -176,6 +179,24 @@ function mostrarBotaoSelecionarEquipe() {
 	}
 }
 
+function mostrarBotaoSelecionarHomem() {
+	let divBotaoSelecionarHomem = $('#divBotaoSelecionarHomem');
+	if (parseInt($('#idHomem').val()) === 0) {
+		$('#divBotaoSelecionarHomem').addClass(hidden);
+	} else {
+		$('#divBotaoSelecionarHomem').removeClass(hidden);
+	}
+}
+
+function mostrarBotaoSelecionarMulher() {
+	let divBotaoSelecionarMulher = $('#divBotaoSelecionarMulher');
+	if (parseInt($('#idMulher').val()) === 0) {
+		$('#divBotaoSelecionarMulher').addClass(hidden);
+	} else {
+		$('#divBotaoSelecionarMulher').removeClass(hidden);
+	}
+}
+
 function selecionarLider() {
 	let idLider = $('#idLider')
 	selecionarObjeto(idLider.val(), $('#idLider>option:selected').text())
@@ -184,6 +205,16 @@ function selecionarLider() {
 function selecionarEquipe() {
 	let idEquipe = $('#idEquipe')
 	selecionarObjeto(idEquipe.val(), $('#idEquipe>option:selected').text())
+}
+
+function selecionarHomem() {
+	let idHomem = $('#idHomem')
+	selecionarObjeto(idHomem.val(), $('#idHomem>option:selected').text())
+}
+
+function selecionarMulher() {
+	let idMulher = $('#idMulher')
+	selecionarObjeto(idMulher.val(), $('#idMulher>option:selected').text())
 }
 
 function selecionarMotivo(){
@@ -396,7 +427,7 @@ function selecionarObjeto(id, informacao) {
 					/* Escondendo lideres abaixo quando selecionar um lider para transferir */
 					if (parseInt($('#solicitacaoTipo').val()) === TRANSFERIR_LIDER_PARA_OUTRA_EQUIPE ||
 						parseInt($('#solicitacaoTipo').val()) === TRANSFERIR_LIDER_NA_PROPRIA_EQUIPE) {
-						$('.grupo' + id).addClass(hidden)
+						$('.grupo' + id).attr('disabled','disabled')
 						$('#idLider').val(0)
 						$('#divBotaoSelecionarLider').addClass(hidden)
 					}
@@ -406,6 +437,7 @@ function selecionarObjeto(id, informacao) {
 						parseInt($('#solicitacaoTipo').val()) === TRANSFERIR_LIDER_PARA_OUTRA_EQUIPE ||
 						parseInt($('#solicitacaoTipo').val()) === REMOVER_LIDER ||
 						parseInt($('#solicitacaoTipo').val()) === REMOVER_CELULA ||
+						parseInt($('#solicitacaoTipo').val()) === UNIR_CASAL ||
 						parseInt($('#solicitacaoTipo').val()) === TRANSFERIR_LIDER_NA_PROPRIA_EQUIPE) && objetoSelecionado == 1) {
 						if(data.temSolicitacaoPendente){
 							$(stringSpanSelecioneObjeto + 3).addClass(hidden)
@@ -420,6 +452,7 @@ function selecionarObjeto(id, informacao) {
 									parseInt($('#solicitacaoTipo').val()) === TRANSFERIR_LIDER_NA_PROPRIA_EQUIPE ||
 									parseInt($('#solicitacaoTipo').val()) === TRANSFERIR_LIDER_PARA_OUTRA_EQUIPE ||
 									parseInt($('#solicitacaoTipo').val()) === REMOVER_CELULA ||
+									parseInt($('#solicitacaoTipo').val()) === UNIR_CASAL ||
 									parseInt($('#solicitacaoTipo').val()) === REMOVER_LIDER 
 								) && objetoSelecionado == 1) {
 								$(stringSpanObjeto + 3).addClass(hidden)
@@ -446,11 +479,20 @@ function selecionarObjeto(id, informacao) {
 										$('#spanObjeto3').addClass(hidden)
 									}
 								}
+								if ($('#solicitacaoTipoId').val() == UNIR_CASAL) {
+									$('#blocoObjeto2').removeClass(hidden)
+									$('#blocoObjeto3').addClass(hidden)
+								}
 							}
 						}
 					}
 					if ($('#solicitacaoTipoId').val() == TRANSFERIR_LIDER_PARA_OUTRA_EQUIPE) {
 						$('#blocoObjeto2').addClass(hidden)
+					}
+					if (parseInt($('#solicitacaoTipo').val()) === UNIR_CASAL && objetoSelecionado == 1) {
+						$('.mulheres').attr('disabled','disabled')
+						let grupoParaMostrar = $('#homem'+id).attr('class');
+						$('.'+grupoParaMostrar).removeAttr('disabled')
 					}
 				}
 			}, 'json')
@@ -503,7 +545,10 @@ function limparObjeto(qualObjeto) {
 	let valorParaRemover;
 	if (qualObjeto === 1 || qualObjeto === 2) {
 		/* Reaparecer lideres */
-		$('.grupo' + $('#objeto' + qualObjeto).val()).removeClass(hidden)
+		$('.grupo' + $('#objeto' + qualObjeto).val()).removeAttr('disabled')
+		if(qualObjeto === 1){
+			$('.lider').removeAttr('disabled')
+		}
 		if (qualObjeto === 1) {
 			$('#idLider').val(0);
 			$('#divBotaoSelecionarLider').addClass(hidden);
@@ -518,6 +563,9 @@ function limparObjeto(qualObjeto) {
 			valorParaRemover = -50;
 			$('#idGrupoEvento').html('<option value="0">SELECIONE</option>')
 			$('#blocoObjeto3').addClass(hidden)
+		}
+		if (parseInt($('#solicitacaoTipo').val()) === UNIR_CASAL){
+			valorParaRemover = -50;
 		}
 		if (parseInt($('#solicitacaoTipo').val()) === TRANSFERIR_LIDER_NA_PROPRIA_EQUIPE) {
 			$('#blocoObjeto3').addClass(hidden)
@@ -548,6 +596,10 @@ function limparObjeto(qualObjeto) {
 		$('#divBotaoLimpar2').addClass(hidden)
 		$('#divBotaoLimpar3').addClass(hidden)
 		$('#idEquipe').val(0)
+		$('#idHomem').val(0)
+		$('#idMulher').val(0)
+		$('#divBotaoSelecionarHomem').addClass(hidden)
+		$('#divBotaoSelecionarMulher').addClass(hidden)
  		let valorDaBarra = pegaValorBarraDeProgresso()
 		atualizarBarraDeProgresso(parseInt(valorDaBarra) * -1)
 	}

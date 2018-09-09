@@ -63,7 +63,7 @@ class Entidade extends CircuitoEntity {
             if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::SUBEQUIPE) {
                 $numeroSub = '';
                 $contagemHierarquica = 0;
-                while ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::SUBEQUIPE) {
+                while ($grupoSelecionado->getEntidadeAtiva() && $grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::SUBEQUIPE) {
                     if ($contagemHierarquica == 0) {
                         $numeroSub = $grupoSelecionado->getEntidadeAtiva()->getNumero();
                     } else {
@@ -72,14 +72,16 @@ class Entidade extends CircuitoEntity {
                     $contagemHierarquica++;
                     if ($grupoSelecionado->getGrupoPaiFilhoPaiAtivo()) {
                         $grupoSelecionado = $grupoSelecionado->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai();
-                        if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::EQUIPE) {
+                        if ($grupoSelecionado->getEntidadeAtiva() && $grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::EQUIPE) {
                             break;
                         }
                     } else {
                         break;
                     }
                 }
-                $resposta = $grupoSelecionado->getEntidadeAtiva()->getNome() . "." . $numeroSub;
+				if($grupoSelecionado->getEntidadeAtiva()){
+					$resposta = $grupoSelecionado->getEntidadeAtiva()->getNome() . "." . $numeroSub;
+				}
                 if ($somenteNumero) {
                     $resposta = $numeroSub;
                 }
