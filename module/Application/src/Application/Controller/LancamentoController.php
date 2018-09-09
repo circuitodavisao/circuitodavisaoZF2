@@ -90,7 +90,13 @@ class LancamentoController extends CircuitoController {
             $mostrarBotaoPeriodoAfrente = true;
         }
 
+		$grupoEventoNoPeriodo = $grupo->getGrupoEventoNoPeriodo($periodo);
+		$contagemDePessoasCadastradas = count($grupo->getGrupoPessoasNoPeriodo($periodo));
 		$validacaoPessoasCadastradas = 0;
+		if ($contagemDePessoasCadastradas > Constantes::$QUANTIDADE_MAXIMA_PESSOAS_NO_LANÇAMENTO) {
+			$validacaoPessoasCadastradas = 1;
+		}
+
         $view = new ViewModel(
                 array(
             Constantes::$REPOSITORIO_ORM => $this->getRepositorio(),
