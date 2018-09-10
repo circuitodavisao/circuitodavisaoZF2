@@ -12,7 +12,7 @@ use Application\Controller\RelatorioController;
 		background-color: #fff;
 	}
 </style>
-<div class="center-block mt50">
+<div class="center-block">
 	<div class="panel">
 		<div class="panel-heading text-center">Aproveitamento Instituto</div>
 		<div class="panel-body pn">
@@ -160,7 +160,7 @@ for ($i = 0; $i < $tamanhoArray; $i++) {
 
 $htmlTime = '';
 foreach($chaves as $chave){
-	$relatorioTime = $relatorioPronto[$chave];						
+	$relatorioTime = $relatorioPronto[$chave];
 	$corPerformanceGeral = RelatorioController::corDaLinhaPelaPerformance($relatorioTime['performanceFinal']);
 	$htmlTime .= '<tr>';
 	$htmlTime .= '<td class="'.$corPerformanceGeral.'">' . $chave . '</td>';
@@ -227,4 +227,3 @@ echo $htmlTime;
 		</div>
 	</div>
 </div>
-
