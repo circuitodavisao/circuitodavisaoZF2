@@ -68,26 +68,6 @@ class Menu extends AbstractHelper {
 		// Start: Sidebar Left Content
 		$html .= '<div class="sidebar-left-content nano-content">';
 
-		// Start: Sidebar Header
-		$html .= '<header class="sidebar-header">';
-
-		// Sidebar Widget - Author
-		$html .= '<div class="sidebar-widget author-widget">';
-		$html .= '<div class="media">';
-		$html .= '<a class="media-left" href="#">';
-		$html .= '<img src="/img/fotos/' . FuncoesEntidade::nomeDaImagem($this->view->pessoa) . '" class="img-responsive">';
-		$html .= '</a>';
-		$html .= '<div class="media-body">';
-		$html .= '<div class="media-links">';
-		$html .= '<a href="/perfil" onClick="mostrarSplash();">Perfil</a>';
-		$html .= '</div>';
-		$html .= '<div class="media-author">' . $this->view->pessoa->getNome() . '</div>';
-		$html .= '</div>';
-		$html .= '</div>';
-		$html .= '</div>';
-
-		$html .= '</header>';
-
 		$html .= '<ul class="nav sidebar-menu">';
 
 		$html .= '<li class="sidebar-label pt20">Principal</li>';
@@ -522,23 +502,6 @@ class Menu extends AbstractHelper {
 
 		$html .= '</aside>';
 
-		$html .= '<div id="modals">';
-		/* Laço para mostrar a s responsabilidades ativas modal */
-		//        foreach ($this->view->responsabilidades as $responsabilidade) {
-		//            /* Grupo da responsabilidades */
-		//            $grupo = $responsabilidade->getGrupo();
-		//            foreach ($grupo->getGrupoPaiFilhoPai() as $gpfPai) {
-		//                $ativo = true;
-		//                $entidadeSelecionada = $grupo->getEntidadeAtiva();
-		//                if (!$gpfPai->verificarSeEstaAtivo()) {
-		//                    $ativo = false;
-		//                    $entidadeSelecionada = $grupo->getEntidadeInativaPorDataInativacao($gpfPai->getData_inativacaoStringPadraoBanco());
-		//                }
-		//                $grupoPai = $gpfPai->getGrupoPaiFilhoPai();
-		////                $html .= $this->view->perfilDropDown($entidadeSelecionada, 2, $ativo, $grupoPai);
-		//            }
-		//        }
-		$html .= '</div>';
 		return $html;
 	}
 
