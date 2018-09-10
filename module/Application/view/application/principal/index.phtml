@@ -24,8 +24,13 @@ if ($this->mostrarPrincipal) {
 <h4><?php echo $this->pessoa->getNomePrimeiroUltimo(); ?></h4>
 <small><?php echo $this->entidade->infoEntidade(); ?></small>
 <p class="mt10"><?php
-$funcaoOnClick = 'funcaoCircuito("principalVer", '.$grupo->getId().')';   
-echo $this->botaoSimples('<i class="fa fa-cog"></i>', $this->funcaoOnClick($funcaoOnClick), BotaoSimples::botaoMuitoPequenoImportante, BotaoSimples::posicaoAEsquerda); ?></p>
+	if($this->pessoaLogada->getId() === $this->pessoa->getId()){
+		$funcaoOnClickPerfil = 'location.href="/perfil"';
+		echo $this->botaoSimples('<i class="fa fa-user"></i> Perfil', $this->funcaoOnClick($funcaoOnClickPerfil), BotaoSimples::botaoMuitoPequenoImportante, BotaoSimples::posicaoAEsquerda);
+	}
+	$funcaoOnClick = 'funcaoCircuito("principalVer", '.$grupo->getId().')';   
+	echo $this->botaoSimples('<i class="fa fa-cog"></i>', $this->funcaoOnClick($funcaoOnClick), BotaoSimples::botaoMuitoPequenoImportante, BotaoSimples::posicaoAEsquerda); ?>
+</p>
 </div>
 </div>
 
