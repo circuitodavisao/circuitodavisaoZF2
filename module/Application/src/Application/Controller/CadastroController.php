@@ -2004,6 +2004,8 @@ class CadastroController extends CircuitoController {
 	}
 
 	public function solicitacoesAction() {
+		self::validarSeSouIgrejaOuEquipe();
+
 		$sessao = new Container(Constantes::$NOME_APLICACAO);
 		$idEntidadeAtual = $sessao->idEntidadeAtual;
 		$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
@@ -2037,6 +2039,8 @@ class CadastroController extends CircuitoController {
 	}
 
 	public function solicitacaoAction() {
+		self::validarSeSouIgrejaOuEquipe();
+
 		$sessao = new Container(Constantes::$NOME_APLICACAO);
 
 		$idEntidadeAtual = $sessao->idEntidadeAtual;
@@ -2179,6 +2183,7 @@ class CadastroController extends CircuitoController {
 	 * POST /cadastroSolicitacaoFinalizar
 	 */
 	public function solicitacaoFinalizarAction() {
+		self::validarSeSouIgrejaOuEquipe();
 		CircuitoController::verificandoSessao(new Container(Constantes::$NOME_APLICACAO), $this);
 		$request = $this->getRequest();
 		if ($request->isPost()) {
@@ -2296,6 +2301,7 @@ class CadastroController extends CircuitoController {
 	}
 
 	public function solicitacaoReceberAction() {
+		self::validarSeSouIgrejaOuEquipe();
 		$sessao = new Container(Constantes::$NOME_APLICACAO);
 
 		$idEntidadeAtual = $sessao->idEntidadeAtual;
@@ -2324,6 +2330,7 @@ class CadastroController extends CircuitoController {
 	}
 
 	public function solicitacaoReceberFinalizarAction() {
+		self::validarSeSouIgrejaOuEquipe();
 		CircuitoController::verificandoSessao(new Container(Constantes::$NOME_APLICACAO), $this);
 
 		$request = $this->getRequest();
