@@ -10,7 +10,7 @@ use Application\Controller\Helper\Constantes;
 $form = $this->CadastrarPessoaRevisaoForm;
 $form->prepare();
 $form->setAttribute(Constantes::$ACTION, $this->url(Constantes::$ROUTE_CADASTRO, array(Constantes::$PAGINA => Constantes::$PAGINA_SALVAR_PESSOA_REVISAO)));
-?>  
+?>
 <div class="mw1000 center-block p10">
     <div class="row ">
         <div id="content" class="animated fadeIn">
@@ -34,7 +34,7 @@ $form->setAttribute(Constantes::$ACTION, $this->url(Constantes::$ROUTE_CADASTRO,
                             echo $this->inputFormularioSimples('&nbsp;', $form->get(Constantes::$FORM_INPUT_MES), 4, 2);
                             echo $this->inputFormularioSimples('&nbsp;', $form->get(Constantes::$FORM_INPUT_ANO), 4, 2);
                             echo $this->inputFormularioSimples(Constantes::$TRADUCAO_SEXO, $form->get(Constantes::$INPUT_NUCLEO_PERFEITO), null, 3);
-                            ?> 
+                            ?>
                         </div>
                         <!-- end .form-body section -->
                         <div class="panel-footer text-right">
