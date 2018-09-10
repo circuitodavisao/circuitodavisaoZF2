@@ -19,32 +19,26 @@ foreach($this->solicitacoesTipo as $solicitacaoTipo){
 	switch($solicitacaoTipo->getId()){
 	case SolicitacaoTipo::TRANSFERIR_LIDER_NA_PROPRIA_EQUIPE:
 		$colspan = 6;
-		$htmlThead .= '<th class="hidden-xs">Time</th>';
 		$htmlThead .= '<th>Quem</th>';
-		$htmlThead .= '<th>Novo Time</th>';
 		$htmlThead .= '<th class="hidden-xs">Novo Líder</th>';
 		break;
 	case SolicitacaoTipo::REMOVER_LIDER:
 		$colspan = 4;
-		$htmlThead .= '<th class="hidden-xs">Time</th>';
 		$htmlThead .= '<th>Quem</th>';
 		break;
 	case SolicitacaoTipo::REMOVER_CELULA:
 		$colspan = 5;
-		$htmlThead .= '<th class="hidden-xs">Time</th>';
 		$htmlThead .= '<th>Quem</th>';
 		$htmlThead .= '<th>Célula</th>';
 		break;
 	case SolicitacaoTipo::TRANSFERIR_LIDER_PARA_OUTRA_EQUIPE:
 		$colspan = 6;
-		$htmlThead .= '<th class="hidden-xs">Time</th>';
 		$htmlThead .= '<th>Quem</th>';
 		$htmlThead .= '<th>Novo Time</th>';
 		$htmlThead .= '<th class="hidden-xs">Novo Líder</th>';
 		break;
 	case SolicitacaoTipo::UNIR_CASAL:
 		$colspan = 5;
-		$htmlThead .= '<th class="hidden-xs">Time</th>';
 		$htmlThead .= '<th>Homem</th>';
 		$htmlThead .= '<th>Mulher</th>';
 		break;
@@ -76,7 +70,6 @@ foreach($this->solicitacoesTipo as $solicitacaoTipo){
 			if($solicitacaoTipo->getId() !== SolicitacaoTipo::UNIR_CASAL){
 				$objeto = $solicitacao->getObjeto1();
 				$grupo = $this->repositorio->getGrupoORM()->encontrarPorId($objeto);
-				$htmlTbody .= '<td class="hidden-xs">'.$grupo->getGrupoEquipe()->getEntidadeAtiva()->getNome().'</td>';
 				$htmlTbody .= '<td>'.$grupo->getNomeLideresAtivos().'</td>';
 
 				switch($solicitacaoTipo->getId()){
@@ -84,7 +77,6 @@ foreach($this->solicitacoesTipo as $solicitacaoTipo){
 					$objeto2 = $solicitacao->getObjeto2();
 					$grupo2 = $this->repositorio->getGrupoORM()->encontrarPorId($objeto2);
 
-					$htmlTbody .= '<td>'.$grupo2->getGrupoEquipe()->getEntidadeAtiva()->getNome().'</td>';
 					$htmlTbody .= '<td class="hidden-xs">'.$grupo2->getNomeLideresAtivos().'</td>';
 					break;
 				case SolicitacaoTipo::REMOVER_CELULA:
@@ -97,7 +89,6 @@ foreach($this->solicitacoesTipo as $solicitacaoTipo){
 					$objeto2 = $solicitacao->getObjeto2();
 					$grupo2 = $this->repositorio->getGrupoORM()->encontrarPorId($objeto2);
 
-					$htmlTbody .= '<td>'.$grupo2->getGrupoEquipe()->getEntidadeAtiva()->getNome().'</td>';
 					$htmlTbody .= '<td class="hidden-xs">'.$grupo2->getNomeLideresAtivos().'</td>';
 					break;
 				}
@@ -107,11 +98,9 @@ foreach($this->solicitacoesTipo as $solicitacaoTipo){
 					$grupo = $this->repositorio->getGrupoORM()->encontrarPorId($objeto);
 					$objeto2 = $solicitacao->getObjeto2();
 					$grupo2 = $this->repositorio->getGrupoORM()->encontrarPorId($objeto2);
-					$htmlTbody .= '<td class="hidden-xs">'.$grupo->getGrupoEquipe()->getEntidadeAtiva()->getNome().'</td>';
 					$htmlTbody .= '<td>'.$grupo->getNomeLideresAtivos().'</td>';
 					$htmlTbody .= '<td>'.$grupo2->getNomeLideresAtivos().'</td>';
 				}else{
-					$htmlTbody .= '<td class="hidden-xs"></td>';
 					$htmlTbody .= '<td></td>';
 					$htmlTbody .= '<td></td>';
 				}
