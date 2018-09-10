@@ -1637,7 +1637,6 @@ class CursoController extends CircuitoController {
 						/* Alunos ativos */
 						if($turmaPessoa->verificarSeEstaAtivo() && $turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getId() === Situacao::ATIVO){
 
-							$nomeEquipeDoTurmaPessoa = CursoController::getNomeDaEquipeDoTurmaPessoa($turmaPessoa);
 							$turmaPessoaAulas = $turmaPessoa->getTurmaPessoaAula();
 							$parar = false;
 							foreach ($turma->getCurso()->getDisciplina() as $disciplina) {
@@ -1671,6 +1670,7 @@ class CursoController extends CircuitoController {
 														}
 													}
 													if ($naoEncontreiPresencaNaAula) {
+														$nomeEquipeDoTurmaPessoa = CursoController::getNomeDaEquipeDoTurmaPessoa($turmaPessoa);
 														$contadorDeFaltas[$nomeEquipeDoTurmaPessoa][$turma->getId()] ++;
 													}
 													if ($aula->getId() == $turmaAulaAtiva->getAula()->getId()) {
@@ -1698,21 +1698,23 @@ class CursoController extends CircuitoController {
 		$resposta = 'IGREJA';
 		if ($turmaPessoa->getPessoa()->getGrupoPessoaAtivo()) {
 			$grupoSelecionado = $turmaPessoa->getPessoa()->getGrupoPessoaAtivo()->getGrupo();
-			if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::SUBEQUIPE) {
-				$numeroSub = '';
-				while ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::SUBEQUIPE) {
-					if ($grupoSelecionado->getGrupoPaiFilhoPaiAtivo()) {
-						$grupoSelecionado = $grupoSelecionado->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai();
-						if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::EQUIPE) {
+			if($grupoSelecionado->getEntidadeAtiva()){
+				if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::SUBEQUIPE) {
+					$numeroSub = '';
+					while ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::SUBEQUIPE) {
+						if ($grupoSelecionado->getGrupoPaiFilhoPaiAtivo()) {
+							$grupoSelecionado = $grupoSelecionado->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai();
+							if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::EQUIPE) {
+								break;
+							}
+						} else {
 							break;
 						}
-					} else {
-						break;
 					}
+					$resposta = $grupoSelecionado->getEntidadeAtiva()->getNome();
+				} else {
+					$resposta = $grupoSelecionado->getEntidadeAtiva()->getNome();
 				}
-				$resposta = $grupoSelecionado->getEntidadeAtiva()->getNome();
-			} else {
-				$resposta = $grupoSelecionado->getEntidadeAtiva()->getNome();
 			}
 		}
 		return $resposta;
