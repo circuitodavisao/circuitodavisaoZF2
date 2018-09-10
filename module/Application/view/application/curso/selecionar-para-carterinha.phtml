@@ -8,7 +8,7 @@ use Application\View\Helper\BotaoSimples;
 use Application\View\Helper\FiltroCursos;
 
 $html = '';
-$html .= '<blockquote class="mt50 blockquote-primary"><small>' . $this->translate('Gerar Carterinhas') . '</small></blockquote>';
+$html .= '<blockquote class="blockquote-primary"><small>' . $this->translate('Gerar Carterinhas') . '</small></blockquote>';
 $html .= '<div class="panel heading-border panel-primary">';
 $html .= '<div class="panel-body bg-light">';
 
@@ -117,4 +117,3 @@ $html .= '</div>';
 $html .= $this->form()->closeTag();
 
 echo $html;
-
