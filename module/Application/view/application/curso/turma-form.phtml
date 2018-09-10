@@ -11,7 +11,7 @@ $form = $this->formCadastroTurma;
 $form->prepare();
 $form->setAttribute(Constantes::$ACTION, $this->url(Constantes::$ROUTE_CURSO, array(Constantes::$ACTION => Constantes::$PAGINA_SALVAR_TURMA)));
 
-echo $this->templateFormularioTopo('Cadastro de Turmas', '', 'style="margin-top: 50px"');
+echo $this->templateFormularioTopo('Cadastro de Turmas', '', 'style="margin-top: 0px"');
 echo $this->form()->openTag($form);
 ?>
 <div class="panel-body bg-light">

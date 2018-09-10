@@ -5,7 +5,7 @@ use Application\Controller\CursoController;
 use Application\View\Helper\BotaoSimples;
 
 $html = '';
-$html .= '<blockquote class="mt50 blockquote-primary"><small>' . $this->translate('Gerar Reposições') . '</small></blockquote>';
+$html .= '<blockquote class="blockquote-primary"><small>' . $this->translate('Gerar Reposições') . '</small></blockquote>';
 $html .= '<div class="panel heading-border panel-primary">';
 $html .= '<div class="panel-body bg-light">';
 
@@ -74,4 +74,3 @@ if($this->filtrado){
 	$html .= $this->form()->closeTag();
 }
 echo $html;
-
