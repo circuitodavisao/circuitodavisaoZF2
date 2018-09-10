@@ -33,7 +33,7 @@ $somaMeta = 0;
         font-weight: bold;
     }
 </style>
-<div class="center-block mt50">
+<div class="center-block">
     <div class="panel">
         <div class="panel-heading text-center">
             <?php
@@ -213,7 +213,7 @@ $somaMeta = 0;
 								if ($this->tipoRelatorio == 9) {
 								echo '<th class="' . $classeBase . $classePeriodoAtual . '">Semanal</th>';
 								}
- 
+
 							}
 							if($this->tipoRelatorio == 9 && ($this->entidade->getGrupo()->getId() === 1 || $this->entidade->getGrupo()->getId() === 1225)){
 								echo '<th class="' . $classeBase . '">Meta</th>';
@@ -232,7 +232,7 @@ $somaMeta = 0;
 							if($this->tipoRelatorio == 9 && ($this->entidade->getGrupo()->getId() === 1 || $this->entidade->getGrupo()->getId() === 1225)){
 								echo '<th class="' . $classeBase . '">%</th>';
 							}
-                            ?>                           
+                            ?>
                         </tr>
                     </thead>
                     <tbody>
@@ -272,7 +272,7 @@ $somaMeta = 0;
                             }
                             echo '<td class="text-left" style="font-size:8px;padding-left:' . $padding . 'px;">' . $label . '<span class="hidden-xs">' . $relatorio['lideresFotos'] . '</span>';
                             echo $relatorio['lideresEntidade'];
-							
+
 							if($contagemRanking !== 0 && $relatorio['lideres'] != 'TOTAL'){
 								$funcaoOnClickPessoal = 'mostrarSplash(); funcaoCircuito("relatorio/'.$url.'",'.$relatorio['grupo'].')';
 								$linkDeQuemEstaLogado = '<a href="#" '.$this->funcaoOnclick($funcaoOnClickPessoal).'>'.$relatorio['lideres'].'</a>';
@@ -345,7 +345,7 @@ $somaMeta = 0;
                                     echo '<td class="' . $classeBase . '">' . $relatorio[$indiceDeArrays]['celulaDeEliteMeta'] . '</td>';
                                     echo '<td class="' . $classeBase . '">' . $relatorio[$indiceDeArrays]['celulaDeElite'] . '</td>';
                                     echo '<td class="' . $classeBase . '">' . RelatorioController::formataNumeroRelatorio($relatorio[$indiceDeArrays]['celulaDeElitePerformance']) . '%</td>';
-								}   
+								}
 							   	if ($this->tipoRelatorio == 9) {
                                     echo '<td class="' . $classeBase . '">' . RelatorioController::formataNumeroRelatorio($relatorio[$indiceDeArrays]['valor']) . '</td>';
                                 }
@@ -393,5 +393,5 @@ $somaMeta = 0;
                 </table>
             </div>
         </div>
-    </div>    
+    </div>
 </div>
