@@ -3,7 +3,7 @@ use Application\Controller\Helper\Funcoes;
 use Application\Controller\Helper\Constantes;
 use Application\View\Helper\BotaoSimples;
 ?>
-<div class="panel-body bg-light text-center mt50">
+<div class="panel-body bg-light text-center">
 	<h1>Parceiro de Deus Extrato</h1>
 <?php
 $html = '';
@@ -26,7 +26,7 @@ if($this->fatos){
 	$somaTotal = 0;
 	foreach($this->fatos as $fatoFinanceiro){
 		$funcaoExcluir = $this->funcaoOnClick('mostrarSplash(); validarExclusao('.$fatoFinanceiro->getId().')');
-		$botaoExcluir = $this->botaoSimples('<i class="fa fa-times"></i>', $funcaoExcluir, BotaoSimples::botaoMuitoPequenoPerigoso); 
+		$botaoExcluir = $this->botaoSimples('<i class="fa fa-times"></i>', $funcaoExcluir, BotaoSimples::botaoMuitoPequenoPerigoso);
 
 		$html .= '<tr class="text-left">';
 		$html .= '<td>'.Funcoes::mudarPadraoData($fatoFinanceiro->getData(),1).'</td>';
@@ -38,7 +38,7 @@ if($this->fatos){
 		$html .= '</tr>';
 
 		$somaTotal += $fatoFinanceiro->getValor();
-	} 
+	}
 	$html .= '<tr class="dark text-left">';
 	$html .= '<td colspan="5" class="text-right">Total</td>';
 	$html .= '<td>'.number_format($somaTotal,2,',','.').'</td>';
