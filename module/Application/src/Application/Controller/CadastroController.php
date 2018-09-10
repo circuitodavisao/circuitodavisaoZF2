@@ -2184,10 +2184,18 @@ class CadastroController extends CircuitoController {
 		if ($request->isPost()) {
 			$post_data = $request->getPost();
 			/* validar se ja tem solicitacao */
-			if($this->getRepositorio()->getSolicitacaoORM()->encontrarSolicitacoesPorObjeto1($post_data['objeto1'])){
-				return $this->redirect()->toRoute(Constantes::$ROUTE_PRINCIPAL, array(
-					Constantes::$ACTION => 'semAcesso',
-				));
+			if($solicitacoesParaVerificar = $this->getRepositorio()->getSolicitacaoORM()->encontrarSolicitacoesPorObjeto1($post_data['objeto1'])){
+				$temSolicitacoesPendentes = false;
+				foreach($solicitacoesParaVerificar as $solicitacaoParaVerificar){
+					if($solicitacaoParaVerificar->getSolicitacaoSituacaoAtiva()->getSituacao()->getId() !== Situacao::CONCLUIDO){
+						$temSolicitacoesPendentes = true;
+					}
+				}
+				if($temSolicitacoesPendentes){
+					return $this->redirect()->toRoute(Constantes::$ROUTE_PRINCIPAL, array(
+						Constantes::$ACTION => 'semAcesso',
+					));
+				}
 			}
 			try {
 				$this->getRepositorio()->iniciarTransacao();
