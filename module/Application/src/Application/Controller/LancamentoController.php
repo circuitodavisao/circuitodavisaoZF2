@@ -920,42 +920,34 @@ class LancamentoController extends CircuitoController {
     }
 
 	public function parceiroDeDeusAction(){
-		$sessao = new Container(Constantes::$NOME_APLICACAO);
+		self::validarSeSouIgrejaOuEquipe();
 
+		$sessao = new Container(Constantes::$NOME_APLICACAO);
 		$idEntidadeAtual = $sessao->idEntidadeAtual;
 		$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
 		$grupo = $entidade->getGrupo();
-		$possoAcessarIsso = false;
-		if($entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja
-			|| $entidade->getEntidadeTipo()->getId() === EntidadeTipo::equipe){
-				$possoAcessarIsso = true;
-			}
-		if($possoAcessarIsso){
-			$grupoPaiFilhoFilhos = $grupo->getGrupoPaiFilhoFilhosAtivosReal();
+		$grupoPaiFilhoFilhos = $grupo->getGrupoPaiFilhoFilhosAtivosReal();
 
-			$formulario = new ParceiroDeDeusForm();
+		$formulario = new ParceiroDeDeusForm();
 
-			$dados = array();
-			$dados['formulario'] = $formulario;
-			$dados['grupo'] = $grupo;
-			$dados['discipulos'] = $grupoPaiFilhoFilhos;
+		$dados = array();
+		$dados['formulario'] = $formulario;
+		$dados['grupo'] = $grupo;
+		$dados['discipulos'] = $grupoPaiFilhoFilhos;
 
-			$view = new ViewModel($dados);
+		$view = new ViewModel($dados);
 
-			/* Javascript especifico */
-			$layoutJS = new ViewModel();
-			$layoutJS->setTemplate('layout/layout-js-lancamento-parceiro-de-deus');
-			$view->addChild($layoutJS, 'layoutJsLancamentoParceiroDeDeus');
+		/* Javascript especifico */
+		$layoutJS = new ViewModel();
+		$layoutJS->setTemplate('layout/layout-js-lancamento-parceiro-de-deus');
+		$view->addChild($layoutJS, 'layoutJsLancamentoParceiroDeDeus');
 
-			return $view;
-		}else{
-			return $this->redirect()->toRoute(Constantes::$ROUTE_PRINCIPAL, array(
-				Constantes::$ACTION => 'semAcesso',
-			));
-		}
+		return $view;
 	}
 
 	public function parceiroDeDeusFinalizarAction(){
+		self::validarSeSouIgrejaOuEquipe();
+
 		$request = $this->getRequest();
 		if($request->isPost()){
 			try{
@@ -1007,41 +999,34 @@ class LancamentoController extends CircuitoController {
 	}
 
 	public function parceiroDeDeusExtratoAction(){
+		self::validarSeSouIgrejaOuEquipe();
+
 		$sessao = new Container(Constantes::$NOME_APLICACAO);
 
 		$idEntidadeAtual = $sessao->idEntidadeAtual;
 		$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
 
-		$possoAcessarIsso = false;
-		if($entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja
-		 || $entidade->getEntidadeTipo()->getId() === EntidadeTipo::equipe){
-			$possoAcessarIsso = true;
-		}
-		if($possoAcessarIsso){
-			$grupo = $entidade->getGrupo();
-			$numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupo);
+		$grupo = $entidade->getGrupo();
+		$numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupo);
 
-			$fatos = $this->getRepositorio()->getFatoFinanceiroORM()->encontrarFatosPorNumeroIdentificador($numeroIdentificador);
-			$fatosAtivos = array();
-			if($fatos){
-				foreach($fatos as $fatoFinanceiro){
-					if($fatoFinanceiro->verificarSeEstaAtivo()){
-						$idGrupo = substr($fatoFinanceiro->getNumero_identificador(), strlen($fatoFinanceiro->getNumero_identificador())-8);
-						$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupo);
-						$fatoFinanceiro->setGrupo($grupo);
-						$fatosAtivos[] = $fatoFinanceiro;
-					}
+		$fatos = $this->getRepositorio()->getFatoFinanceiroORM()->encontrarFatosPorNumeroIdentificador($numeroIdentificador);
+		$fatosAtivos = array();
+		if($fatos){
+			foreach($fatos as $fatoFinanceiro){
+				if($fatoFinanceiro->verificarSeEstaAtivo()){
+					$idGrupo = substr($fatoFinanceiro->getNumero_identificador(), strlen($fatoFinanceiro->getNumero_identificador())-8);
+					$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupo);
+					$fatoFinanceiro->setGrupo($grupo);
+					$fatosAtivos[] = $fatoFinanceiro;
 				}
 			}
-			return new ViewModel(array('fatos' => $fatosAtivos));
-		}else{
-			return $this->redirect()->toRoute(Constantes::$ROUTE_PRINCIPAL, array(
-				Constantes::$ACTION => 'semAcesso',
-			));
 		}
+		return new ViewModel(array('fatos' => $fatosAtivos));
 	}
 
 	public function parceiroDeDeusExcluirAction(){
+		self::validarSeSouIgrejaOuEquipe();
+
 		$sessao = new Container(Constantes::$NOME_APLICACAO);
 		try{
 			$this->getRepositorio()->iniciarTransacao();
