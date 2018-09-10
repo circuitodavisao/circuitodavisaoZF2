@@ -23,16 +23,15 @@ class CircuitoMeAjuda extends AbstractHelper {
 
     public function renderHtml() {
         $html = '';
-        $html .= '<div class="row alert alert-default mt10">';
         $html .= '<div class="col-xs-12 col-md-12 col-lg-12">';
         $html .= '<div class="panel">';
         $html .= '<div class="panel-body pn">';
 
         /* Celulas nao realizadas */
-        if ($this->view->relatorio) {
+        if ($this->view->relatorioCelulasNaoRealizadas) {
 
             $periodo = -1;
-            $relatorio = $this->view->relatorio;
+            $relatorio = $this->view->relatorioCelulasNaoRealizadas;
             $htmlCelulasNaoRealizadas = '';
             for ($indiceCelulasNaoRealizadas = 1; $indiceCelulasNaoRealizadas < (count($relatorio) - 1); $indiceCelulasNaoRealizadas++) {
                 $nomeLideres = $relatorio[$indiceCelulasNaoRealizadas]['lideres'];
@@ -44,11 +43,12 @@ class CircuitoMeAjuda extends AbstractHelper {
                     $htmlCelulasNaoRealizadas .= '</tr>';
 
                     $idGrupo = $relatorio[$indiceCelulasNaoRealizadas]['grupo'];
-                    $grupo = $this->view->repositorio->getGrupoORM()->encontrarPorId($idGrupo);
-                    $relatorio12 = RelatorioController::relatorioCompleto($this->view->repositorio, $grupo, RelatorioController::relatorioMembresiaECelula, date('m'), date('Y'));
-                    for ($indiceCelulasNaoRealizadas12 = 0; $indiceCelulasNaoRealizadas12 < (count($relatorio12) - 1); $indiceCelulasNaoRealizadas12++) {
-                        $nomeLideres12 = $relatorio12[$indiceCelulasNaoRealizadas12]['lideres'];
-                        $celulasNaoRealizadas12 = $relatorio12[$indiceCelulasNaoRealizadas12][$periodo]['celulaQuantidade'] - $relatorio12[$indiceCelulasNaoRealizadas12][$periodo]['celulaRealizadas'];
+					$grupo = $this->view->repositorio->getGrupoORM()->encontrarPorId($idGrupo);
+					$relatorio12 = RelatorioController::relatorioCompleto($this->view->repositorio, $grupo, RelatorioController::relatorioCelulaRealizadas, $mes = date('m'), $ano = date('Y'), $tudo = true, $somado = false, $periodo = -1);
+					for ($indiceCelulasNaoRealizadas12 = 0; $indiceCelulasNaoRealizadas12 < (count($relatorio12) - 1); $indiceCelulasNaoRealizadas12++) {
+						$nomeLideres12 = $relatorio12[$indiceCelulasNaoRealizadas]['lideres'];
+						$celulasNaoRealizadas12 = 
+							$relatorio12[$indiceCelulasNaoRealizadas12][$periodo]['celulaQuantidade'] - $relatorio12[$indiceCelulasNaoRealizadas12][$periodo]['celulaRealizadas'];
                         if ($celulasNaoRealizadas12 > 0) {
                             $htmlCelulasNaoRealizadas .= '<tr class="linhaCelulasNaoRealizadas hidden">';
                             $htmlCelulasNaoRealizadas .= '<td>' . $nomeLideres12 . '</td>';
@@ -68,20 +68,15 @@ class CircuitoMeAjuda extends AbstractHelper {
             }
             $indiceUltimoRegistroDoRelatorio = (count($relatorio) - 1);
             $totalDeCelulasNaoRealizadas = $relatorio[$indiceUltimoRegistroDoRelatorio][$periodo]['celulaQuantidade'] - $relatorio[$indiceUltimoRegistroDoRelatorio][$periodo]['celulaRealizadas'];
-        }
+      }
 
         $html .= '<table class="table table-condensed">';
-        $html .= '<thead>';
-        $html .= '<tr class="info">';
-        $html .= '<th colspan="2" class="text-center">Circuito me Ajuda ' . Funcoes::montaPeriodo($periodo)[0] . '</th>';
-        $html .= '</tr>';
-        $html .= '</thead>';
         $html .= '<tbody>';
-        $html .= '<tr>';
-        $html .= '<td class="text-center">C&eacute;lulas <b>N&atilde;o</b> Realizadas: ' . $totalDeCelulasNaoRealizadas . '</td>';
-        $funcao = $this->view->funcaoOnClick('$(".linhaCelulasNaoRealizadas").toggleClass("hidden")');
-        $html .= '<td>' . $this->view->botaoSimples('<i class="fa fa-eye" />', $funcao, BotaoSimples::botaoMuitoPequenoImportante, BotaoSimples::posicaoAoCentro) . '</td>';
-        $html .= '</tr>';
+		$html .= '<tr>';
+		$html .= '<td class="text-center">C&eacute;lulas <b>N&atilde;o</b> Realizadas: ' . $totalDeCelulasNaoRealizadas . '</td>';
+		$funcao = $this->view->funcaoOnClick('$(".linhaCelulasNaoRealizadas").toggleClass("hidden")');
+		$html .= '<td>' . $this->view->botaoSimples('<i class="fa fa-eye" />', $funcao, BotaoSimples::botaoMuitoPequenoImportante, BotaoSimples::posicaoAoCentro) . '</td>';
+		$html .= '</tr>';
         $html .= $htmlCelulasNaoRealizadas;      
 
         $html .= '</tbody>';
@@ -90,13 +85,7 @@ class CircuitoMeAjuda extends AbstractHelper {
         $html .= '</div>';
         $html .= '</div>';
         $html .= '</div>';
-        $html .= '</div>';
 
         return $html;
     }
-
-    static public function functionName($param) {
-        
-    }
-
 }
