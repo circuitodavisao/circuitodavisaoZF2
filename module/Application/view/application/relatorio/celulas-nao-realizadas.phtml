@@ -1,0 +1,45 @@
+<?php
+
+use Application\Controller\Helper\Constantes;
+use Application\Controller\Helper\Funcoes;
+?>
+<style type="text/css">
+	th, p {
+		text-align: center;
+	}
+	table {
+		font-size: 10px;
+	}
+</style>
+<div class="center-block mw600">
+	<div class="panel">
+	<div class="panel-heading text-center">Células não realizadas</div>
+		<div class="panel-body pn p10">
+			<p>Período <?php echo Funcoes::montaPeriodo($this->periodo)[0]; ?></p>	
+<?php
+echo '<table class="text-center table table-condensed table-hover bg-light mt15" >';
+echo '<thead>';
+echo '<tr>';
+echo '<th>Time</th>';
+echo '<th>Quem</th>';
+echo '<th>Célula</th>';
+echo '</tr>';
+echo '</thead>';
+echo '<tbody>';
+if($this->relatorio){
+	foreach($this->relatorio as $relatorio){
+		$grupoEvento = $this->repositorio->getGrupoEventoORM()->encontrarPorId($relatorio['idGrupoEvento']);
+		$infoEntidade = $grupoEvento->getGrupo()->getEntidadeAtiva()->infoEntidade($somenteNumeros = true);
+		$lideres = $grupoEvento->getGrupo()->getNomeLideresAtivos();
+		$evento = $grupoEvento->getEvento();
+		$celulaDia = $this->translate(Funcoes::diaDaSemanaPorDia($grupoEvento->getEvento()->getDia())).' - ' . substr($grupoEvento->getEvento()->getHora(),0,5);
+
+		echo '<tr>';
+		echo '<td>'.$infoEntidade.'</td>';
+		echo '<td>'.$lideres.'</td>';
+		echo '<td>'.$celulaDia.'</td>';
+		echo '</tr>';
+	}
+}
+echo '</tbody>';
+echo '</table>';
