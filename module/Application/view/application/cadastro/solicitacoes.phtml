@@ -93,17 +93,13 @@ foreach($this->solicitacoesTipo as $solicitacaoTipo){
 					break;
 				}
 			}else{
-				if($solicitacao->getSolicitacaoSituacaoAtiva()->getSituacao()->getId() !== Situacao::CONCLUIDO){
-					$objeto = $solicitacao->getObjeto1();
-					$grupo = $this->repositorio->getGrupoORM()->encontrarPorId($objeto);
-					$objeto2 = $solicitacao->getObjeto2();
-					$grupo2 = $this->repositorio->getGrupoORM()->encontrarPorId($objeto2);
-					$htmlTbody .= '<td>'.$grupo->getNomeLideresAtivos().'</td>';
-					$htmlTbody .= '<td>'.$grupo2->getNomeLideresAtivos().'</td>';
-				}else{
-					$htmlTbody .= '<td></td>';
-					$htmlTbody .= '<td></td>';
-				}
+				$objeto = $solicitacao->getObjeto1();
+				$grupo = $this->repositorio->getGrupoORM()->encontrarPorId($objeto);
+				$objeto2 = $solicitacao->getObjeto2();
+				$grupo2 = $this->repositorio->getGrupoORM()->encontrarPorId($objeto2);
+
+				$htmlTbody .= '<td>'.$grupo->getNomeLideresAtivos().'</td>';
+				$htmlTbody .= '<td>'.$grupo2->getNomeLideresAtivos().'</td>';
 			}
 
 			$corSituacao = 'default';
