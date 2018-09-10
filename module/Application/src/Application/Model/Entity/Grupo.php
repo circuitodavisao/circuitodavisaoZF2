@@ -124,14 +124,22 @@ class Grupo extends CircuitoEntity {
                 break;
             }
         }
-//        if (!$entidadeAtiva) {
-//            foreach ($this->getEntidade() as $entidade) {
-//                if (!$entidade->verificarSeEstaAtivo()) {
-//                    $entidadeAtiva = $entidade;
-//                    break;
-//                }
-//            }
-//        }
+        if ($entidadeAtiva === null) {
+			$ultimaEntidade = null;
+            foreach ($this->getEntidade() as $entidade) {
+                if (!$entidade->verificarSeEstaAtivo()) {
+					if($ultimaEntidade === null){
+						$ultimaEntidade = $entidade;
+					}
+					if($entidade->getId() > $ultimaEntidade->getId()){
+						$ultimaEntidade = $entidade;
+					}
+                }
+            }
+			if($ultimaEntidade){
+				$entidadeAtiva = $ultimaEntidade;
+			}
+        }
         return $entidadeAtiva;
     }
 

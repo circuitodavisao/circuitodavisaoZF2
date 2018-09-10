@@ -1568,9 +1568,10 @@ class CursoController extends CircuitoController {
 		}else{
 			$grupoPessoaAtivo = $grupoPessoa;
 		}
-
 		if($grupoPessoaAtivo){
-			$nomeEquipe = $grupoPessoaAtivo->getGrupo()->getEntidadeAtiva()->infoEntidade();
+			if($grupoPessoaAtivo->getGrupo()->getEntidadeAtiva()){
+				$nomeEquipe = $grupoPessoaAtivo->getGrupo()->getEntidadeAtiva()->infoEntidade();
+			}
 		}
 		return $nomeEquipe;
 	}
