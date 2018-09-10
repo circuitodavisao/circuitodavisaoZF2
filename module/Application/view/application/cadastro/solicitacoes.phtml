@@ -68,6 +68,7 @@ foreach($this->solicitacoesTipo as $solicitacaoTipo){
 
 	foreach ($this->solicitacoes[$solicitacaoTipo->getId()] as $solicitacao) {
 		if($solicitacao->getSolicitacaoSituacaoAtiva()->getSituacao()->getId() !== Situacao::CONCLUIDO){
+
 			$objeto = $solicitacao->getObjeto1();
 			$grupo = $this->repositorio->getGrupoORM()->encontrarPorId($objeto);
 
