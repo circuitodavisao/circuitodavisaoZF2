@@ -2013,18 +2013,20 @@ class CadastroController extends CircuitoController {
 		$solicitacoes = $grupoIgreja->getSolicitacao();
 		$solicitacoesDivididasPorTipo = array();
 		foreach($solicitacoes as $solicitacao){
-			$adicionar = true;
-			if($entidade->getEntidadeTipo()->getId() === EntidadeTipo::equipe){
-				$objeto = $solicitacao->getObjeto1();
-				$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($objeto);
-				if($grupo->getGrupoEquipe()){
-					if($entidade->getGrupo()->getId() !== $grupo->getGrupoEquipe()->getId()){
-						$adicionar = false;	
+			if($solicitacao->getSolicitacaoSituacaoAtiva()->getSituacao()->getId() !== Situacao::CONCLUIDO){
+				$adicionar = true;
+				if($entidade->getEntidadeTipo()->getId() === EntidadeTipo::equipe){
+					$objeto = $solicitacao->getObjeto1();
+					$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($objeto);
+					if($grupo->getGrupoEquipe()){
+						if($entidade->getGrupo()->getId() !== $grupo->getGrupoEquipe()->getId()){
+							$adicionar = false;	
+						}
 					}
 				}
-			}
-			if($adicionar){
-				$solicitacoesDivididasPorTipo[$solicitacao->getSolicitacaoTipo()->getId()][] = $solicitacao;
+				if($adicionar){
+					$solicitacoesDivididasPorTipo[$solicitacao->getSolicitacaoTipo()->getId()][] = $solicitacao;
+				}
 			}
 		}
 		$solicitacoesTipo = $this->getRepositorio()->getSolicitacaoTipoORM()->encontrarTodos();
