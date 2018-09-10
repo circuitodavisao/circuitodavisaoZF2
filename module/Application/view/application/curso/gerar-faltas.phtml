@@ -3,7 +3,7 @@
 use Application\Controller\Helper\Constantes;
 use Application\Controller\Helper\Funcoes;
 
-$html .= '<div class="mw1200 center-block p10 mt40">';
+$html .= '<div class="mw1200 center-block p10">';
 $html .= '<div class="panel heading-border panel-primary">';
 $html .= '<div class="panel-body bg-light">';
 
@@ -44,9 +44,9 @@ foreach ($this->contadorDeFaltas as $key => $value) {
 	$html .= '<td>' . number_format($somaParcial * Constantes::$VALOR_MULTA, 2, ',', '.') . '</td>';
 	$html .= '</tr>';
 }
-$html .= '<tr class="dark">'; 
-$html .= '<td class="text-right" colspan="'.(1+(count($this->turmasValidas)*2)).'">TOTAL</td>'; 
-$html .= '<td>' . $soma . '</td>'; 
+$html .= '<tr class="dark">';
+$html .= '<td class="text-right" colspan="'.(1+(count($this->turmasValidas)*2)).'">TOTAL</td>';
+$html .= '<td>' . $soma . '</td>';
 $html .= '<td>' . number_format($soma * Constantes::$VALOR_MULTA, 2, ',', '.') . '</td>';
 $html .= '</tr>';
 $html .= '</tbody>';

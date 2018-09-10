@@ -85,7 +85,7 @@ $funcaoRemoverDaTurma = $this->funcaoOnClick('removerDaTurma(' . $this->turmaPes
 $botaoRemoverDaTurma = $this->botaoSimples('Remover da Turma <i class="fa fa-user-times"></i>', $funcaoRemoverDaTurma, BotaoSimples::botaoMuitoPequenoPerigoso, BotaoSimples::posicaoAEsquerda);
 
 $html = '';
-$html .= '<div class="row mt50">';
+$html .= '<div class="row">';
 
 if($turmaPessoa->getTurma()->getTurmaAulaAtiva()){
 	$html .= '<div class="row mt10 alert alert-info text-center">' . $turmaPessoa->getTurma()->getTurmaAulaAtiva()->getAula()->getDisciplina()->getNome() . ' - Aula ' . $turmaPessoa->getTurma()->getTurmaAulaAtiva()->getAula()->getPosicao() . '</div>';
@@ -117,20 +117,20 @@ $html .= '<tr><td>Equipe</td><td>' . CursoController::nomeEquipeTurmaPessoa($thi
 if ($this->turmaPessoa->verificarSeEstaAtivo()) {
 	$html .= '<tr><td>Curso</td><td>' . $this->turmaPessoa->getTurma()->getCurso()->getNome() . ' - ' . Funcoes::mesPorExtenso($this->turmaPessoa->getTurma()->getMes()) . '/' . $this->turmaPessoa->getTurma()->getAno() . '</td></tr>';
 
-	if ($this->entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja || 
-		$this->pessoa->getPessoaCursoAcessoAtivo() && 
+	if ($this->entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja ||
+		$this->pessoa->getPessoaCursoAcessoAtivo() &&
 		(
 			$this->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::COORDENADOR ||
 			$this->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::FACILITADOR ||
 		$this->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::SUPERVISOR)){
 			$html .= '<tr><td>Situa&ccedil;&atilde;o</td><td>' . $botaoMudarSituacao . '</td></tr>';
-		}	
+		}
 
-	if ($this->entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja || 
-		$this->pessoa->getPessoaCursoAcessoAtivo() && 
+	if ($this->entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja ||
+		$this->pessoa->getPessoaCursoAcessoAtivo() &&
 		($this->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::COORDENADOR)){
 			$html .= '<tr><td>Remover</td><td>' . $botaoRemoverDaTurma . '</td></tr>';
-		}	
+		}
 
 } else {
 	$html .= '<tr><td colspan="2" class="text-center"><span class="label label-danger">Aluno Removido da turma</span></td></tr>';

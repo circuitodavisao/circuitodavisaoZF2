@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 use Application\View\Helper\BotaoSimples;
 use Application\Controller\Helper\Funcoes;
@@ -6,7 +6,7 @@ use Application\Controller\RelatorioController;
 use Application\Model\Entity\FuncoesEntidade;
 use Application\Model\Entity\EntidadeTipo;
 
-if ($this->mostrarPrincipal) { 
+if ($this->mostrarPrincipal) {
 	$fotos = $this->grupo->getFotosLideresAtivos(128);
 ?>
 
@@ -27,7 +27,7 @@ if ($this->mostrarPrincipal) {
 		$funcaoOnClickPerfil = 'location.href="/perfil"';
 		echo $this->botaoSimples('<i class="fa fa-user"></i> Perfil', $this->funcaoOnClick($funcaoOnClickPerfil), BotaoSimples::botaoMuitoPequenoImportante, BotaoSimples::posicaoAEsquerda);
 	}
-	$funcaoOnClick = 'funcaoCircuito("principalVer", '.$grupo->getId().')';   
+	$funcaoOnClick = 'funcaoCircuito("principalVer", '.$grupo->getId().')';
 	echo $this->botaoSimples('<i class="fa fa-cog"></i>', $this->funcaoOnClick($funcaoOnClick), BotaoSimples::botaoMuitoPequenoImportante, BotaoSimples::posicaoAEsquerda); ?>
 </p>
 </div>
@@ -50,19 +50,19 @@ Período Atual <?php echo Funcoes::montaPeriodo($this->periodoFinal)[0]; ?>
 		$valor = 0;
 		$label = '';
 		switch($indiceNumeroGrandes){
-		case 1: 
+		case 1:
 			$valor = $this->relatorio[0][$this->periodoFinal]['celulaQuantidade'];
 			$label = 'Célula(s)';
 			break;
-		case 2: 
+		case 2:
 			$valor = $this->relatorio[0][$this->periodoFinal]['quantidadeLideres'];
 			$label = 'Líder(es)';
 			break;
-		case 3: 
+		case 3:
 			$valor = number_format($this->relatorio[0][$this->periodoFinal]['membresia']);
 			$label = 'Membresia';
 			break;
-		case 4: 
+		case 4:
 			$valor = 'R$ '.number_format($this->relatorioParceiro[0]['somaValor'],2,',','.');
 			$label = 'Parceiro de Deus';
 			break;
@@ -132,8 +132,8 @@ for ($indice = 1; $indice <= $numeroIndices; $indice++) {
 	echo '<span class = "relatorioPessoal">' . $valor . '</span>';
 ?>
 											</h1>
-											<h6><?php echo $label; ?></h6>                                    
-										</div> 
+											<h6><?php echo $label; ?></h6>
+										</div>
 										<div class="panel-footer br-t p12">
 											<span class="fs11">
 <?php
@@ -220,8 +220,8 @@ for ($indice = 1; $indice <= $numeroIndices; $indice++) {
 	echo '<span class = "relatorioPessoal">' . $valor . '</span>';
 ?>
 											</h1>
-											<h6><?php echo $label; ?></h6>                                    
-										</div> 
+											<h6><?php echo $label; ?></h6>
+										</div>
 										<div class="panel-footer br-t p12">
 											<span class="fs11">
 <?php
@@ -310,7 +310,7 @@ for ($indice = 1; $indice <= $numeroIndices; $indice++) {
 <?php
 	}
 } else {
-	echo '<div class="panel-body bg-light text-center mt50">';
+	echo '<div class="panel-body bg-light text-center">';
 	if($this->grupo->getId() !== 1 && $this->grupo->getId() !== 1225){
 		echo '<h1><span class = "text-danger">Perfil de acesso inativado!</span></h1>';
 		echo '<p>Para lançar arregimentação: Menu > Lançar > Arregimentação</p>';

@@ -16,7 +16,7 @@ class TemplateFormularioTopo extends AbstractHelper {
     protected $mw;
 
     public function __construct() {
-        
+
     }
 
     public function __invoke($label, $id = '', $mw = '') {
@@ -28,7 +28,7 @@ class TemplateFormularioTopo extends AbstractHelper {
 
     public function renderHtml() {
         $html = '';
-        $html .= '<div class="center-block mt50">';
+        $html .= '<div class="center-block">';
         $html .= '<div class="admin-form theme-primary" ' . $this->getMw() . '>';
         if ($this->getLabel() != '') {
             $html .= $this->view->tituloDaPagina($this->getLabel());
