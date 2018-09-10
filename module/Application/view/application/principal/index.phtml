@@ -8,10 +8,9 @@ use Application\Model\Entity\EntidadeTipo;
 
 if ($this->mostrarPrincipal) {
 	$fotos = $this->grupo->getFotosLideresAtivos(128);
+
+	echo $this->sitemap('principal'); 
 ?>
-
-<?php echo $this->sitemap('principal'); ?>
-
 <div class="panel mt10">
 <div class="panel-body ">
 
