@@ -17,7 +17,7 @@ use Application\View\Helper\FiltroCurso;
 <?php
 
 $html = '';
-$html .= '<blockquote class="mt50 blockquote-primary"><small>' . $this->translate('Chamada') . '</small></blockquote>';
+$html .= '<blockquote class="blockquote-primary"><small>' . $this->translate('Chamada') . '</small></blockquote>';
 $html .= '<div class="panel heading-border panel-primary">';
 $html .= '<div class="panel-body bg-light">';
 
@@ -95,7 +95,7 @@ if($this->filtrado){
 						$nomeEquipe = CursoController::nomeEquipeTurmaPessoa($turmaPessoa, $grupoPessoaAtivo);
 
 						$mostrarSituacao = false;
-						if($this->postado['idSituacao'] == 0 && ($turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getId() === Situacao::ATIVO || 
+						if($this->postado['idSituacao'] == 0 && ($turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getId() === Situacao::ATIVO ||
 							$turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getId() === Situacao::ESPECIAL)){
 								$mostrarSituacao = true;
 							}else{
@@ -133,8 +133,8 @@ if($this->filtrado){
 
 								$html .= '<tr class="'.$corSituacao.'">';
 								$html .= '<td class="text-center">' . $stringSituacao . '</td>';
-								if ($this->entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja || 
-									$this->pessoa->getPessoaCursoAcessoAtivo() && 
+								if ($this->entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja ||
+									$this->pessoa->getPessoaCursoAcessoAtivo() &&
 									($this->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::COORDENADOR ||
 									$this->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::SUPERVISOR ||
 									$this->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::FACILITADOR)) {
@@ -173,7 +173,7 @@ if($this->filtrado){
 																$corDoBotao = BotaoSimples::botaoMuitoPequenoWarning;
 															}
 														}
-													}	
+													}
 												} else {
 													$icone = 'fa-clock-o';
 													$corDoBotao = BotaoSimples::botaoMuitoPequenoImportante;
