@@ -1662,7 +1662,9 @@ class RelatorioController extends CircuitoController {
 				'idGrupoEvento' => $chave, 
 				'realizada' => $valor['realizada'],
 			);
-			$relatorios[] = $dados;
+			if(!$dados['realizada']){
+				$relatorios[] = $dados;
+			}
 		}
 
 		$periodoAfrente = 1;
@@ -1685,7 +1687,9 @@ class RelatorioController extends CircuitoController {
 						'idGrupoEvento' => $chave, 
 						'realizada' => $valor['realizada'],
 					);
-					$relatorios[] = $dados;
+					if(!$dados['realizada']){
+						$relatorios[] = $dados;
+					}
 				}
 
 				$grupoPaiFilhoFilhos1728 = $grupoFilho144->getGrupoPaiFilhoFilhosAtivos($periodoAfrente);
@@ -1699,7 +1703,9 @@ class RelatorioController extends CircuitoController {
 								'idGrupoEvento' => $chave, 
 								'realizada' => $valor['realizada'],
 							);
-							$relatorios[] = $dados;
+							if(!$dados['realizada']){
+								$relatorios[] = $dados;
+							}
 						}				
 
 						$grupoPaiFilhoFilhos20736 = $grupoFilho1728->getGrupoPaiFilhoFilhosAtivos($periodoAfrente);
@@ -1713,7 +1719,9 @@ class RelatorioController extends CircuitoController {
 										'idGrupoEvento' => $chave, 
 										'realizada' => $valor['realizada'],
 									);
-									$relatorios[] = $dados;
+									if(!$dados['realizada']){
+										$relatorios[] = $dados;
+									}
 
 									$grupoPaiFilhoFilhos248832 = $grupoFilho20736->getGrupoPaiFilhoFilhosAtivos($periodoAfrente);
 									if ($grupoPaiFilhoFilhos248832) {
@@ -1726,7 +1734,9 @@ class RelatorioController extends CircuitoController {
 													'idGrupoEvento' => $chave, 
 													'realizada' => $valor['realizada'],
 												);
-												$relatorios[] = $dados;
+												if(!$dados['realizada']){
+													$relatorios[] = $dados;
+												}
 											}	
 										}
 									}
