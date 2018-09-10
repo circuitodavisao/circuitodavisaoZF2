@@ -973,10 +973,8 @@ class RelatorioController extends CircuitoController {
 			}
 
 			$relatorio[$contadorFilhos]['lideres'] = $grupoFilhoOrdenado->getNomeLideresAtivos();
-			if($grupoFilhoOrdenado->getEntidadeAtiva(){
-				$relatorio[$contadorFilhos]['lideresFotos'] = $grupoFilhoOrdenado->getFotosLideresAtivos();
-				$relatorio[$contadorFilhos]['lideresEntidade'] = $grupoFilhoOrdenado->getEntidadeAtiva()->infoEntidade($somenteNumeros = true);
-			}
+//				$relatorio[$contadorFilhos]['lideresFotos'] = $grupoFilhoOrdenado->getFotosLideresAtivos();
+//				$relatorio[$contadorFilhos]['lideresEntidade'] = $grupoFilhoOrdenado->getEntidadeAtiva()->infoEntidade($somenteNumeros = true);
 			$relatorio[$contadorFilhos]['grupo'] = $grupoFilhoOrdenado->getId();
 
 			$contadorFilhos++;
