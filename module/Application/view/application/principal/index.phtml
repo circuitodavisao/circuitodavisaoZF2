@@ -39,7 +39,10 @@ if ($this->mostrarPrincipal) {
 <!-- fim panel meus dados -->
 
 <div class="alert alert-default text-center">
-Preíodo Atual <?php echo Funcoes::montaPeriodo($this->periodoFinal)[0]; ?>
+Período Atual <?php echo Funcoes::montaPeriodo($this->periodoFinal)[0]; ?>
+</div>
+<div class="row mb10">
+<?php echo $this->circuitoMeAjuda(); ?>
 </div>
 <div class="row mb10">
 <?php
