@@ -895,8 +895,8 @@ class IndexController extends CircuitoController {
 		/* buscando solicitações */
 		$periodo = -1;
 		$arrayPeriodo = Funcoes::montaPeriodo($periodo);
-		$stringComecoDoPeriodo = '2018-08-01';
-		$stringFimDoPeriodo = '2018-08-31';
+		$stringComecoDoPeriodo = '2018-09-01';
+		$stringFimDoPeriodo = '2018-09-30';
 		$html .= "<br />stringComecoDoPeriodo$stringComecoDoPeriodo";
 		$html .= "<br />stringFimDoPeriodo$stringFimDoPeriodo";
 		$dateInicialFormatada = DateTime::createFromFormat('Y-m-d', $stringComecoDoPeriodo);
@@ -2602,6 +2602,7 @@ class IndexController extends CircuitoController {
 
 		return new ViewModel(array('html' => $html));
 	}
+
 	public static function pegarMediaPorCelula(RepositorioORM $repositorioORM, Grupo $grupo) {
 		$relatorio = array();
 		$grupoEventosCelula = $grupo->getGrupoEventoAtivosPorTipo(EventoTipo::tipoCelula);
