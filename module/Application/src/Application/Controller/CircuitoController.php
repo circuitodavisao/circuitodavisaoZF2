@@ -4,8 +4,10 @@ namespace Application\Controller;
 
 use Application\Controller\Helper\Constantes;
 use Application\Model\ORM\RepositorioORM;
+use Application\Model\Entity\EntidadeTipo;
 use Doctrine\ORM\EntityManager;
 use Zend\Mvc\Controller\AbstractActionController;
+use Zend\Session\Container;
 
 /**
  * Nome: CircuitoController.php
@@ -127,5 +129,18 @@ class CircuitoController extends AbstractActionController {
         }
         return false;
     }
+
+	public function validarSeSouIgrejaOuEquipe(){
+		$sessao = new Container(Constantes::$NOME_APLICACAO);
+
+		$idEntidadeAtual = $sessao->idEntidadeAtual;
+		$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+		if($entidade->getEntidadeTipo()->getId() !== EntidadeTipo::igreja
+			&&  $entidade->getEntidadeTipo()->getId() !== EntidadeTipo::equipe){
+				return $this->redirect()->toRoute(Constantes::$ROUTE_PRINCIPAL, array(
+					Constantes::$ACTION => 'semAcesso',
+				));
+			}
+	}
 
 }
