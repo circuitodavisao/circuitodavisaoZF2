@@ -457,7 +457,9 @@ class RelatorioController extends CircuitoController {
 							if($turmaPessoa->verificarSeEstaAtivo()){
 								if($grupoPessoa = $turmaPessoa->getPessoa()->getGrupoPessoaAtivo()){
 									if($entidade->GetEntidadeTipo()->getId() === EntidadeTipo::igreja){
-									$relatorio[$grupoPessoa->getGrupo()->getGrupoEquipe()->getEntidadeAtiva()->getNome()][$turma->getId()][$turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getNome()]++;
+										if($grupoPessoa->getGrupo()->getGrupoEquipe() && $grupoPessoa->getGrupo()->getGrupoEquipe()->getEntidadeAtiva()){
+										$relatorio[$grupoPessoa->getGrupo()->getGrupoEquipe()->getEntidadeAtiva()->getNome()][$turma->getId()][$turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getNome()]++;
+										}
 									}
 									if($entidade->GetEntidadeTipo()->getId() === EntidadeTipo::equipe){
 										if($grupoPessoa->getGrupo()->getGrupoEquipe()->getId() === $entidade->getGrupo()->getid()){
@@ -973,8 +975,10 @@ class RelatorioController extends CircuitoController {
 			}
 
 			$relatorio[$contadorFilhos]['lideres'] = $grupoFilhoOrdenado->getNomeLideresAtivos();
-//				$relatorio[$contadorFilhos]['lideresFotos'] = $grupoFilhoOrdenado->getFotosLideresAtivos();
-//				$relatorio[$contadorFilhos]['lideresEntidade'] = $grupoFilhoOrdenado->getEntidadeAtiva()->infoEntidade($somenteNumeros = true);
+			if($grupoFilhoOrdenado->getEntidadeAtiva()){
+				$relatorio[$contadorFilhos]['lideresFotos'] = $grupoFilhoOrdenado->getFotosLideresAtivos();
+				$relatorio[$contadorFilhos]['lideresEntidade'] = $grupoFilhoOrdenado->getEntidadeAtiva()->infoEntidade($somenteNumeros = true);
+			}
 			$relatorio[$contadorFilhos]['grupo'] = $grupoFilhoOrdenado->getId();
 
 			$contadorFilhos++;

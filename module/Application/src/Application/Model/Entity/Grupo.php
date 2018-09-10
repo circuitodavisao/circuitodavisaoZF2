@@ -1213,11 +1213,13 @@ class Grupo extends CircuitoEntity {
         $grupoEquipe = null;
 		if($grupoSelecionado->getEntidadeAtiva()){
 			if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::SUBEQUIPE) {
-				while ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::SUBEQUIPE) {
+				while ($grupoSelecionado->getEntidadeAtiva() && $grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::SUBEQUIPE) {
 					if ($grupoSelecionado->getGrupoPaiFilhoPaiAtivo()) {
 						$grupoSelecionado = $grupoSelecionado->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai();
-						if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::EQUIPE) {
-							break;
+						if($grupoSelecionado->getEntidadeAtiva()){
+							if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::EQUIPE) {
+								break;
+							}
 						}
 					} else {
 						break;
@@ -1225,11 +1227,13 @@ class Grupo extends CircuitoEntity {
 				}
 				$grupoEquipe = $grupoSelecionado;
 			}
-			if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::EQUIPE) {
-				$grupoEquipe = $grupoSelecionado;
-			}
-			if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::IGREJA) {
-				$grupoEquipe = $grupoSelecionado;
+			if($grupoSelecionado->getEntidadeAtiva()){
+				if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::EQUIPE) {
+					$grupoEquipe = $grupoSelecionado;
+				}
+				if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::IGREJA) {
+					$grupoEquipe = $grupoSelecionado;
+				}
 			}
 		}
         return $grupoEquipe;
