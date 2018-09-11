@@ -108,6 +108,24 @@ class FiltroCursos extends AbstractHelper {
 			}
 		}
 
+		if($urlFiltro === 'cursoSelecionarReposicoes'){
+			$selectedNao = '';
+			$selectedSim = '';
+			if($this->view->postado['somenteUltimaAula'] == 0){
+				$selectedNao = 'selected';
+			}
+			if($this->view->postado['somenteUltimaAula'] == 1){
+				$selectedSim = 'selected';
+			}
+			$html .= '<div class="form-group">';
+			$html .= '<label for="">' . $this->view->translate('Somente última aula') . '</label>';
+			$html .= '<select class="form-control" name="somenteUltimaAula" id="somenteUltimaAula" >';
+			$html .= '<option value="0" '.$selectedNao.'>Não</option>';
+			$html .= '<option value="1" '.$selectedSim.'>Sim</option>';
+			$html .= '</select>';
+			$html .= '</div>';
+		}
+
 		$html .= $this->view->botaoSimples('Filtrar', $this->view->funcaoOnClick('mostrarSplash(); this.form.submit()'), BotaoSimples::botaoSucesso, BotaoSimples::larguraMaxima);
 		$html .= '</form>';
 

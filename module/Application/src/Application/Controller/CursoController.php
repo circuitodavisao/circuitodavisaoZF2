@@ -1463,6 +1463,7 @@ class CursoController extends CircuitoController {
 			$post = $request->getPost();
 			$postado['idTurma'] = $post['idTurma'];
 			$postado['idEquipe'] = $post['idEquipe'];
+			$postado['somenteUltimaAula'] = $post['somenteUltimaAula'];
 
 			if($postado['idTurma'] == 0){
 				$turmasFiltradas = $turmas;
@@ -1478,7 +1479,7 @@ class CursoController extends CircuitoController {
 		}
 
 		$grupoPaiFilhoFilhos = $grupo->getGrupoIgreja()->getGrupoPaiFilhoFilhosAtivos(0);
-		$relatorio = CursoController::pegarAlunosComFaltas($grupo->getGrupoIgreja(), $turmasFiltradas, $postado['idEquipe']);
+		$relatorio = CursoController::pegarAlunosComFaltas($grupo->getGrupoIgreja(), $turmasFiltradas, $postado['idEquipe'], $postado['somenteUltimaAula']);
 		$alunosComReposições = $relatorio[0];
 		$faltas = $relatorio[1];
 
@@ -1496,7 +1497,7 @@ class CursoController extends CircuitoController {
 		return $view;
 	}
 
-	public static function pegarAlunosComFaltas($grupo, $turmas = null, $idEquipe) {
+	public static function pegarAlunosComFaltas($grupo, $turmas = null, $idEquipe, $somenteUltimaAula = 0) {
 		if (!$turmas) {
 			$turmas = $grupo->getGrupoIgreja()->getTurma();
 		}
@@ -1542,8 +1543,17 @@ class CursoController extends CircuitoController {
 										}
 									}
 									if ($naoEncontreiPresencaNaAula) {
-										$mostrar = true;
-										$faltas[$turma->getId()][$turmaPessoa->getId()][] = ['Aula ' . $aula->getPosicao(), $aula->getId()];
+										$adicionar = false;
+										if(
+											($somenteUltimaAula == '' || $somenteUltimaAula == 0)
+											|| ($somenteUltimaAula == 1 && $aula->getPosicao() == $turmaAulaAtiva->getAula()->getPosicao()-1)
+										){
+											$adicionar = true;
+										}
+										if($adicionar){
+											$mostrar = true;
+											$faltas[$turma->getId()][$turmaPessoa->getId()][] = ['Aula ' . $aula->getPosicao(), $aula->getId()];
+										}
 									}
 							}
 							}
