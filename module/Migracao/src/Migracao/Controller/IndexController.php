@@ -361,8 +361,8 @@ class IndexController extends CircuitoController {
         /* buscando solicitações */
         $periodo = -1;
         $arrayPeriodo = Funcoes::montaPeriodo($periodo);
-        $stringComecoDoPeriodo = $arrayPeriodo[3] . '-' . $arrayPeriodo[2] . '-' . $arrayPeriodo[1];
-        $stringFimDoPeriodo = $arrayPeriodo[6] . '-' . $arrayPeriodo[5] . '-' . $arrayPeriodo[4];
+       $stringComecoDoPeriodo = $arrayPeriodo[3] . '-' . $arrayPeriodo[2] . '-' . $arrayPeriodo[1];
+		$stringFimDoPeriodo = $arrayPeriodo[6] . '-' . $arrayPeriodo[5] . '-' . $arrayPeriodo[4];
 		$html .= "<br />stringComecoDoPeriodo$stringComecoDoPeriodo";
 		$html .= "<br />stringFimDoPeriodo$stringFimDoPeriodo";
         $dateInicialFormatada = DateTime::createFromFormat('Y-m-d', $stringComecoDoPeriodo);
@@ -636,6 +636,8 @@ class IndexController extends CircuitoController {
 		$eventoCelulasMulher = $grupo2->getGrupoEventoPorTipoEAtivo(EventoTipo::tipoCelula);
 		$discipulosHomem = $grupo1->getGrupoPaiFilhoFilhosAtivos(1);
 		$discipulosMulher = $grupo2->getGrupoPaiFilhoFilhosAtivos(1);
+		$linhaDeLancamentoHomem = $grupo1->getGrupoPessoasNoPeriodo(-1);
+		$linhaDeLancamentoMulher = $grupo2->getGrupoPessoasNoPeriodo(-1);
 
 		$grupoPaiFilhoPai = $grupo1->getGrupoPaiFilhoPaiAtivo();
 		$grupoPai = $grupoPaiFilhoPai->getGrupoPaiFilhoPai();
@@ -711,6 +713,29 @@ class IndexController extends CircuitoController {
 				$grupoPaiFilho->setGrupoPaiFilhoPai($grupoNovo);
 				$grupoPaiFilho->setGrupoPaiFilhoFilho($grupoPaiFilhoFilhoMulher->getGrupoPaiFilhoFilho());
 				$this->getRepositorio()->getGrupoPaiFilhoORM()->persistir($grupoPaiFilho);
+			}
+		}
+		/* linha de lançamento */
+		/* linha lancamento homem */
+		if($linhaDeLancamentoHomem){
+			foreach($linhaDeLancamentoHomem as $grupoPessoa){
+				$grupoPessoa->setDataEHoraDeInativacao($dataParaInativar);
+				$grupoPessoaHomem = new GrupoPessoa();
+				$grupoPessoaHomem->setGrupo($grupoNovo);
+				$grupoPessoaHomem->setPessoa($grupoPessoa->getPessoa());
+				$grupoPessoaHomem->setGrupoPessoaTipo($grupoPessoa->getGrupoPessoaTipo());
+				$this->getRepositorio()->getGrupoPessoaORM()->persistir($grupoPessoaHomem);
+			}
+		}
+		/* linha lancamento mulher */
+		if($linhaDeLancamentoMulher){
+			foreach($linhaDeLancamentoMulher as $grupoPessoa){
+				$grupoPessoa->setDataEHoraDeInativacao($dataParaInativar);
+				$grupoPessoaMulher = new GrupoPessoa();
+				$grupoPessoaMulher->setGrupo($grupoNovo);
+				$grupoPessoaMulher->setPessoa($grupoPessoa->getPessoa());
+				$grupoPessoaMulher->setGrupoPessoaTipo($grupoPessoa->getGrupoPessoaTipo());
+				$this->getRepositorio()->getGrupoPessoaORM()->persistir($grupoPessoaMulher);
 			}
 		}
 
