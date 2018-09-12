@@ -37,7 +37,7 @@ class ListagemDePessoasComEventos extends AbstractHelper {
         } else {
             $this->setDiaDeSemanaHoje(date('N'));
             foreach ($pessoas as $pessoa) {
-                $html .= $this->montaLinhaDaPessoa($pessoa, $grupoEventoNoPeriodo);
+               $html .= $this->montaLinhaDaPessoa($pessoa, $grupoEventoNoPeriodo);
             }
         }
         return $html;
@@ -225,7 +225,34 @@ class ListagemDePessoasComEventos extends AbstractHelper {
         }
         /* Fim Menu dropup */
         $html .= '</td>';
-		$html .= '<td class="hidden-xs">'.$pessoa->getTelefone().'</td>';
+
+		/* Telefone */
+		$html .= '<td class="hidden-xs">';
+		$html .= '<div class="btn-group dropdown">';
+		$html .= '<a id="menudrop_telefone_' . $pessoa->getId() . '" class="text-left dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">';
+        $html .= '<span id="span_telefone_' . $pessoa->getId() . '">';
+		$html .= $pessoa->getTelefone();
+        $html .= '</span>';
+ 	    $html .= '</a>';
+		$html .= '<ul class="dropdown-menu sobrepor-elementos modal-edicao-nome">';
+		$html .= '<span class="editable-container editable-inline">';
+		$html .= '<div class="ml10 campo-edicao-nome">';
+		$html .= '<form class="form-inline editableform">';
+		$html .= '<div class="control-group form-group">';
+		$html .= '<div>';
+		$html .= '<div class="input-group">';
+		$html .= '<input type="number" class="form-control" id="telefone_' . $pessoa->getId() . '" value="' . $pessoa->getTelefone() . '" />';
+		$html .= '<span class="input-group-btn">';
+		$html .= '<span onclick="alterarTelefone(' . $pessoa->getId() . ')" class="btn ladda-button btn-primary" data-style="zoom-in"><span class="ladda-label"><i class="fa fa-check"></i></span></span>';
+		$html .= '</span>';
+		$html .= '</div>';
+		$html .= '</div>';
+		$html .= '</div>';
+
+		$html .= '</div>';
+		/* Fim Menu dropup */
+		$html .= '</td>';
+
         foreach ($grupoEventoNoPeriodo as $grupoEvento) {
             switch ($this->view->quantidadeDeEventosNoCiclo) {
                 case 1:

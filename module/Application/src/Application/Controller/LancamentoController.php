@@ -590,6 +590,38 @@ class LancamentoController extends CircuitoController {
     }
 
     /**
+     * Alterar telefone de uma pessoa
+     * @return Json
+     */
+    public function alterarTelefoneAction() {
+        $request = $this->getRequest();
+        $response = $this->getResponse();
+        if ($request->isPost()) {
+            try {
+                $post_data = $request->getPost();
+                $idPessoa = $post_data['idPessoa'];
+                $telefone = $post_data['telefone'];
+
+                /* Helper Controller */
+                $pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($idPessoa);
+                $pessoa->setTelefone($telefone);
+                $this->getRepositorio()->getPessoaORM()->persistir($pessoa);
+
+                $response->setContent(Json::encode(
+                                array(
+                                    'response' => 'true',
+                                    'telefone' => $pessoa->getTelefone(),
+                )));
+            } catch (Exception $exc) {
+                echo $exc->getTraceAsString();
+            }
+        }
+        return $response;
+    }
+
+ 
+
+    /**
      * Remover pessoa da listagem
      * @return Json
      */
