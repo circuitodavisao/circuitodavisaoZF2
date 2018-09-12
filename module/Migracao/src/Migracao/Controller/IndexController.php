@@ -361,8 +361,10 @@ class IndexController extends CircuitoController {
         /* buscando solicitações */
         $periodo = -1;
         $arrayPeriodo = Funcoes::montaPeriodo($periodo);
-       $stringComecoDoPeriodo = $arrayPeriodo[3] . '-' . $arrayPeriodo[2] . '-' . $arrayPeriodo[1];
+		$stringComecoDoPeriodo = $arrayPeriodo[3] . '-' . $arrayPeriodo[2] . '-' . $arrayPeriodo[1];
+		$stringComecoDoPeriodo = '2018-09-12';
 		$stringFimDoPeriodo = $arrayPeriodo[6] . '-' . $arrayPeriodo[5] . '-' . $arrayPeriodo[4];
+		$stringFimDoPeriodo = '2018-09-12';
 		$html .= "<br />stringComecoDoPeriodo$stringComecoDoPeriodo";
 		$html .= "<br />stringFimDoPeriodo$stringFimDoPeriodo";
         $dateInicialFormatada = DateTime::createFromFormat('Y-m-d', $stringComecoDoPeriodo);
@@ -376,7 +378,13 @@ class IndexController extends CircuitoController {
 			foreach ($solicitacoesPorData as $arraySolicitacao) {
 				$solicitacao = $this->getRepositorio()->getSolicitacaoORM()->encontrarPorId($arraySolicitacao['id']);
 				if($solicitacao->getSolicitacaoSituacaoAtiva()->getSituacao()->getId() === Situacao::ACEITO_AGENDADO){
-					$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($arraySolicitacao['objeto1']);
+					$idGrupoParaVerificar = 0;
+					if($solicitacao->getSolicitacaoTipo()->getId() !== SolicitacaoTipo::TRANSFERIR_ALUNO){
+						$idGrupoParaVerificar = $arraySolicitacao['objeto1'];
+					}else{
+						$idGrupoParaVerificar = $arraySolicitacao['objeto2'];
+					}
+					$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupoParaVerificar);
 					$solicitacoesPorHierarquia[$grupo->contadorDeOndeEstouNaHierarquia()][] = $arraySolicitacao;
 				}
 			}
@@ -436,6 +444,12 @@ class IndexController extends CircuitoController {
 									$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($solicitacao->getObjeto1());
 									$grupoEvento = $this->getRepositorio()->getGrupoEventoORM()->encontrarPorId($solicitacao->getObjeto2());
 									$html .= $this->removerCelula($grupo, $grupoEvento);
+								}
+								if ($idSolicitacaoTipo == SolicitacaoTipo::TRANSFERIR_ALUNO) {
+									$html .= "<br />TRANSFERIR ALUNO";
+									$turmaPessoa = $this->getRepositorio()->getTurmaPessoaORM()->encontrarPorId($solicitacao->getObjeto1());
+									$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($solicitacao->getObjeto2());
+									$html .= $this->transferirAluno($turmaPessoa, $grupo);
 								}
 								$solicitacaoSituacaoAtiva = $solicitacao->getSolicitacaoSituacaoAtiva();
 								/* inativar solicitacao situacao ativa */
@@ -910,6 +924,29 @@ class IndexController extends CircuitoController {
 			$this->getRepositorio()->desfazerTransacao();
 		}
 	}
+
+	public function transferirAluno($turmaPessoa, $grupo) {
+		$dataParaInativar = self::getDataParaInativacao();
+		$this->getRepositorio()->iniciarTransacao();
+		try {
+			if($grupoPessoaAtivo = $turmaPessoa->getPessoa()->getGrupoPessoaAtivo()){
+				$grupoPessoaAtivo->setDataEHoraDeInativacao($dataParaInativar);
+				$this->getRepositorio()->getGrupoPessoaORM()->persistir($grupoPessoaAtivo);
+
+				$grupoPessoaNovo = new GrupoPessoa();
+				$grupoPessoaNovo->setGrupo($grupo);
+				$grupoPessoaNovo->setPessoa($turmaPessoa->getPessoa());
+				$grupoPessoaNovo->setGrupoPessoaTipo($grupoPessoaAtivo->getGrupoPessoaTipo());
+				$this->getRepositorio()->getGrupoPessoaORM()->persistir($grupoPessoaNovo);
+			}
+			$this->getRepositorio()->fecharTransacao();
+		} catch (Exception $exc) {
+			echo $exc->getTraceAsString();
+			$this->getRepositorio()->desfazerTransacao();
+		}
+	}
+
+
 
 	static public function getDataParaInativacao(){
 		return date('Y-m-d', mktime(0, 0, 0, date("m"), date("d") - 1, date("Y")));
@@ -2373,41 +2410,44 @@ class IndexController extends CircuitoController {
 
 	function ajustarAction(){
 		$html = '';
-		$fatos = $this->getRepositorio()->getFatoParceiroDeDeusORM()->buscarTodosRegistrosEntidade();
-		foreach($fatos as $fatoParceiroDeDeus){
-			if($fatoParceiroDeDeus->verificarSeEstaAtivo()){
-				if($grupo = $this->getRepositorio()->getGrupoORM()->encontrarporid(substr($fatoParceiroDeDeus->getNumero_identificador(), strlen($fatoParceiroDeDeus->getNumero_identificador())-8))){
-					$html .= '<br /><br />';
-					$html .= '<br />Id: ' . $fatoParceiroDeDeus->getId();
-					$html .= '<br />Numero: ' . $fatoParceiroDeDeus->getNumero_identificador();
-					$html .= '<br />Grupo: ' . $grupo->getId();
-					$html .= '<br />Entidade: ' . $grupo->getEntidadeAtiva()->infoEntidade();
-					$fatoParceiroDeDeus->setDataEHoraDeInativacao();
-					$this->getRepositorio()->getFatoParceiroDeDeusORM()->persistir($fatoParceiroDeDeus);
 
-					if($fatoParceiroDeDeus->getIndividual() > 0){
-						$fatoFinanceiroTipo = $this->getRepositorio()->getFatoFinanceiroTipoORM()->encontrarPorId(FatoFinanceiroTipo::parceiroDeDeusIndividual);
-						$fatoFinanceiro = new FatoFinanceiro();
-						$fatoFinanceiro->setNumero_identificador($fatoParceiroDeDeus->getNumero_identificador());
-						$fatoFinanceiro->setPessoa($grupo->getResponsabilidadesAtivas()[0]->getPessoa());
-						$fatoFinanceiro->setFatoFinanceiroTipo($fatoFinanceiroTipo);
-						$fatoFinanceiro->setValor($fatoParceiroDeDeus->getIndividual());
-						$fatoFinanceiro->setData($fatoParceiroDeDeus->getData());
-						$this->getRepositorio()->getFatoFinanceiroORM()->persistir($fatoFinanceiro);	
-					}
-					if($fatoParceiroDeDeus->getCelula() > 0){
-						$fatoFinanceiroTipo = $this->getRepositorio()->getFatoFinanceiroTipoORM()->encontrarPorId(FatoFinanceiroTipo::parceiroDeDeusCelula);
-						$fatoFinanceiro = new FatoFinanceiro();
-						$fatoFinanceiro->setNumero_identificador($fatoParceiroDeDeus->getNumero_identificador());
-						$fatoFinanceiro->setPessoa($grupo->getResponsabilidadesAtivas()[0]->getPessoa());
-						$fatoFinanceiro->setFatoFinanceiroTipo($fatoFinanceiroTipo);
-						$fatoFinanceiro->setValor($fatoParceiroDeDeus->getCelula());
-						$fatoFinanceiro->setData($fatoParceiroDeDeus->getData());
-						$this->getRepositorio()->getFatoFinanceiroORM()->persistir($fatoFinanceiro);	
-					}
+		$solicitacaoTipo = $this->getRepositorio()->getSolicitacaoTipoORM()->encontrarPorId(SolicitacaoTipo::UNIR_CASAL);
+		$solicitacoes = $this->getRepositorio()->getSolicitacaoORM()->encontrarSolicitacoesPorSolicitacaoTipo($solicitacaoTipo->getId());
+
+		foreach($solicitacoes as $solicitacao){
+			/* pegando grupos inativados e grupo pessoa */
+			$grupo1 = $this->getRepositorio()->getGrupoORM()->encontrarPorId($solicitacao->getObjeto1());
+			$grupo2 = $this->getRepositorio()->getGrupoORM()->encontrarPorId($solicitacao->getObjeto2());
+			$linhaDeLancamentoHomem = $grupo1->getGrupoPessoasNoPeriodo(-1);
+			$linhaDeLancamentoMulher = $grupo2->getGrupoPessoasNoPeriodo(-1);
+
+			$pessoa = $grupo1->getGrupoResponsavel()[0]->getPessoa();
+			$grupoAtual = $pessoa->getResponsabilidadesAtivas()[0]->getGrupo();
+
+			/* linha lancamento homem */
+			if($linhaDeLancamentoHomem){
+				foreach($linhaDeLancamentoHomem as $grupoPessoa){
+					$grupoPessoa->setDataEHoraDeInativacao($dataParaInativar);
+					$grupoPessoaHomem = new GrupoPessoa();
+					$grupoPessoaHomem->setGrupo($grupoAtual);
+					$grupoPessoaHomem->setPessoa($grupoPessoa->getPessoa());
+					$grupoPessoaHomem->setGrupoPessoaTipo($grupoPessoa->getGrupoPessoaTipo());
+					$this->getRepositorio()->getGrupoPessoaORM()->persistir($grupoPessoaHomem);
+				}
+			}
+			/* linha lancamento mulher */
+			if($linhaDeLancamentoMulher){
+				foreach($linhaDeLancamentoMulher as $grupoPessoa){
+					$grupoPessoa->setDataEHoraDeInativacao($dataParaInativar);
+					$grupoPessoaMulher = new GrupoPessoa();
+					$grupoPessoaMulher->setGrupo($grupoAtual);
+					$grupoPessoaMulher->setPessoa($grupoPessoa->getPessoa());
+					$grupoPessoaMulher->setGrupoPessoaTipo($grupoPessoa->getGrupoPessoaTipo());
+					$this->getRepositorio()->getGrupoPessoaORM()->persistir($grupoPessoaMulher);
 				}
 			}
 		}
+
 		return new ViewModel(array('html' => $html));
 	}
 
