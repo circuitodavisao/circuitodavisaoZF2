@@ -88,5 +88,24 @@ class SolicitacaoORM extends CircuitoORM {
 
 	}
 
+	public function encontrarSolicitacoesPorSolicitacaoTipo($idSolicitacaoTipo){
+		$dql = "SELECT "
+			. " s "
+			. "FROM  " . Constantes::$ENTITY_SOLICITACAO . " s "
+			. "WHERE "
+			. "s.solicitacao_tipo_id = ?1 ";
+		try {
+			$result = $this->getEntityManager()->createQuery($dql)
+				->setParameter(1, $idSolicitacaoTipo)
+				->getResult();
+			return $result;
+		} catch (Exception $exc) {
+			echo $exc->getMessage();
+        }
+
+	}
+
+
+
 
 }
