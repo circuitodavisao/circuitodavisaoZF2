@@ -31,3 +31,27 @@ function alterarNome(idPessoa) {
                 }, 'json');
     }
 }
+
+function alterarTelefone(idPessoa) {
+    var input = $('#telefone_' + idPessoa);
+    var spanTelefone = $('#span_telefone_' + idPessoa);
+    var dropDown = $('#menudrop_telefone_' + idPessoa);
+
+    if (input.val().length != 11){
+        alert('Telefone inválido');
+    } else {
+        $.post(
+                "/lancamentoAlterarTelefone",
+                {
+                    idPessoa: idPessoa,
+                    telefone: input.val()
+                },
+                function (data) {
+                    if (data.response) {
+                        spanTelefone.html(data.telefone);
+                        input.val(data.telefone);
+                        dropDown.dropdown('toggle');
+                    }
+                }, 'json');
+    }
+}
