@@ -153,6 +153,7 @@ if (count($this->grupoPaiFilhoMulheres) === 0) {
 	echo 'Sem mulheres para casar';
 } else {
 ?>
+	<h2>Somente aparecerá para unir mulheres discípulas do mesmo líder</h2>
 	<select id="idMulher" class="form-control" onChange="mostrarBotaoSelecionarMulher();">
 		<option value="0">SELECIONE</option>
 <?php
@@ -195,6 +196,19 @@ if (count($this->alunos) === 0) {
 	<?php } ?>
 	</div>
 
+
+	<!--divSelecionarLideresIgreja-->
+	<div id="divSelecionarLiderIgreja" class="hidden">
+	<select id="idLiderIgreja" class="form-control" onChange="mostrarBotaoSelecionarLiderIgreja();">
+	<option value="0"><?php echo $this->translate(Constantes::$TRADUCAO_SELECIONE); ?></option>
+	<?php echo $this->listagemLideresTransferencia($this->discipulosIgreja); ?>
+	</select>
+	<div id="divBotaoSelecionarLiderIgreja" class="hidden mt10">
+	<?php
+		echo $this->botaoSimples(Constantes::$TRADUCAO_SELECIONAR, $this->funcaoOnClick('selecionarLiderIgreja()'));
+	?>
+	</div>
+	</div>
 
 <!--divSelecionarQuemSaira-->
 	<div id="divSelecionarQuemSaira" class="hidden">

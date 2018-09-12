@@ -2059,6 +2059,7 @@ class CadastroController extends CircuitoController {
 		$formSolicitacao = new SolicitacaoForm('formSolicitacao');
 
 		$grupoPaiFilhoEquipes = $grupoIgreja->getGrupoPaiFilhoFilhosAtivosReal();
+		$discipulosIgreja = $grupoPaiFilhoEquipes;
 		$chaveParaRemover = null;
 		foreach ($grupoPaiFilhoEquipes as $key => $grupoPaiFilhoFilho) {
 			if ($grupoPaiFilhoFilho->getGrupoPaiFilhoFilho()->getId() == $grupo->getId()) {
@@ -2191,6 +2192,7 @@ class CadastroController extends CircuitoController {
 		$view = new ViewModel(array(
 			'grupo' => $grupo,
 			'discipulos' => $grupoPaiFilhoFilhos,
+			'discipulosIgreja' => $discipulosIgreja,
 			'solicitacaoTipos' => $solicitacaoTipos,
 			Constantes::$FORM => $formSolicitacao,
 			'titulo' => 'Solicitação',
