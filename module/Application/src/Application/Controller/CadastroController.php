@@ -33,6 +33,7 @@ use Application\Model\Entity\Solicitacao;
 use Application\Model\Entity\SolicitacaoSituacao;
 use Application\Model\Entity\SolicitacaoTipo;
 use Application\Model\Entity\FatoLider;
+use Application\Model\Entity\CursoAcesso;
 use Application\Model\ORM\RepositorioORM;
 use DateTime;
 use Exception;
@@ -2014,14 +2015,17 @@ class CadastroController extends CircuitoController {
 		$solicitacoesDivididasPorTipo = array();
 		foreach($solicitacoes as $solicitacao){
 			$adicionar = true;
-			if($entidade->getEntidadeTipo()->getId() === EntidadeTipo::equipe){
-				$objeto = $solicitacao->getObjeto1();
-				$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($objeto);
-				if($grupo->getGrupoEquipe()){
-					if($entidade->getGrupo()->getId() !== $grupo->getGrupoEquipe()->getId()){
-						$adicionar = false;	
+			if($solicitacao->getSolicitacaoTipo()->getId() !== SolicitacaoTipo::TRANSFERIR_ALUNO){
+				if($entidade->getEntidadeTipo()->getId() === EntidadeTipo::equipe){
+					$objeto = $solicitacao->getObjeto1();
+					$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($objeto);
+					if($grupo->getGrupoEquipe()){
+						if($entidade->getGrupo()->getId() !== $grupo->getGrupoEquipe()->getId()){
+							$adicionar = false;	
+						}
 					}
 				}
+
 			}
 			if($adicionar){
 				$solicitacoesDivididasPorTipo[$solicitacao->getSolicitacaoTipo()->getId()][] = $solicitacao;
@@ -2043,8 +2047,8 @@ class CadastroController extends CircuitoController {
 
 		$sessao = new Container(Constantes::$NOME_APLICACAO);
 
-		$idEntidadeAtual = $sessao->idEntidadeAtual;
-		$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+		$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($sessao->idEntidadeAtual);
+		$pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($sessao->idPessoa);
 		$grupo = $entidade->getGrupo();
 		$grupoIgreja = $grupo->getGrupoIgreja();
 		$grupoPaiFilhoFilhos = $grupo->getGrupoPaiFilhoFilhosAtivosReal();
@@ -2157,6 +2161,32 @@ class CadastroController extends CircuitoController {
 				}
 			}
 		}
+		/* alunos */
+		$turmas = $grupoIgreja->getTurma();
+		$todosAlunos = false;
+		if($entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja || 
+			($pessoa->getPessoaCursoAcessoAtivo() && $pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::COORDENADOR)){
+				$todosAlunos = true;
+			}
+		$alunos = array();
+		foreach($turmas as $turma){
+			foreach($turma->getTurmaPessoa() as $turmaPessoa){
+				if($turmaPessoa->verificarSeEstaAtivo() && 
+					($turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getId() === Situacao::ATIVO ||
+					$turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getId() === Situacao::ESPECIAL)
+				){
+					if($todosAlunos){
+						$alunos[] = $turmaPessoa;
+					}else{
+						if ($grupoPessoaAtivo = $turmaPessoa->getPessoa()->getGrupoPessoaAtivo()) {
+							if($grupoPessoaAtivo->getGrupo()->getGrupoEquipe()->getId() === $entidade->getGrupo()->getId()){
+								$alunos[] = $turmaPessoa;
+							}
+						}
+					}
+				}
+			}
+		}
 
 		$view = new ViewModel(array(
 			'grupo' => $grupo,
@@ -2168,6 +2198,7 @@ class CadastroController extends CircuitoController {
 			'grupoPaiFilhoHomens' => $arrayHomens,
 			'grupoPaiFilhoMulheres' => $arrayMulheres,
 			'grupoPaiFilhoCasais' => $arrayCasais,
+			'alunos' => $alunos,
 		));
 
 		/* Javascript */
@@ -2276,6 +2307,7 @@ class CadastroController extends CircuitoController {
 					$solicitacaoTipo->getId() === SolicitacaoTipo::TRANSFERIR_LIDER_PARA_OUTRA_EQUIPE ||
 					$solicitacaoTipo->getId() === SolicitacaoTipo::UNIR_CASAL ||
 					$solicitacaoTipo->getId() === SolicitacaoTipo::SEPARAR ||
+					$solicitacaoTipo->getId() === SolicitacaoTipo::TRANSFERIR_ALUNO ||
 					$solicitacaoTipo->getId() === SolicitacaoTipo::TROCAR_RESPONSABILIDADES)) {
 
 						$solicitacaoSituacao->setDataEHoraDeInativacao();

@@ -67,7 +67,8 @@ foreach($this->solicitacoesTipo as $solicitacaoTipo){
 			$htmlTbody .= '<td class="hidden-xs">'.$solicitacao->getId().'</td>';
 			$htmlTbody .= '<td class="hidden-xs">'.$solicitacao->getData_criacaoStringPadraoBrasil().'</td>';
 
-			if($solicitacaoTipo->getId() !== SolicitacaoTipo::UNIR_CASAL){
+			if($solicitacaoTipo->getId() !== SolicitacaoTipo::UNIR_CASAL
+			&& $solicitacaoTipo->getId() !== SolicitacaoTipo::TRANSFERIR_ALUNO){
 				$objeto = $solicitacao->getObjeto1();
 				$grupo = $this->repositorio->getGrupoORM()->encontrarPorId($objeto);
 				$htmlTbody .= '<td>'.$grupo->getNomeLideresAtivos().'</td>';
@@ -93,13 +94,24 @@ foreach($this->solicitacoesTipo as $solicitacaoTipo){
 					break;
 				}
 			}else{
-				$objeto = $solicitacao->getObjeto1();
-				$grupo = $this->repositorio->getGrupoORM()->encontrarPorId($objeto);
-				$objeto2 = $solicitacao->getObjeto2();
-				$grupo2 = $this->repositorio->getGrupoORM()->encontrarPorId($objeto2);
+				if($solicitacaoTipo->getId() === SolicitacaoTipo::UNIR_CASAL){
+					$objeto = $solicitacao->getObjeto1();
+					$grupo = $this->repositorio->getGrupoORM()->encontrarPorId($objeto);
+					$objeto2 = $solicitacao->getObjeto2();
+					$grupo2 = $this->repositorio->getGrupoORM()->encontrarPorId($objeto2);
 
-				$htmlTbody .= '<td>'.$grupo->getNomeLideresAtivos().'</td>';
-				$htmlTbody .= '<td>'.$grupo2->getNomeLideresAtivos().'</td>';
+					$htmlTbody .= '<td>'.$grupo->getNomeLideresAtivos().'</td>';
+					$htmlTbody .= '<td>'.$grupo2->getNomeLideresAtivos().'</td>';
+				}
+				if($solicitacaoTipo->getId() === SolicitacaoTipo::TRANSFERIR_ALUNO){
+					$objeto = $solicitacao->getObjeto1();
+					$turmaPessoa = $this->repositorio->getTurmaPessoaORM()->encontrarPorId($objeto);
+					$objeto2 = $solicitacao->getObjeto2();
+					$grupo2 = $this->repositorio->getGrupoORM()->encontrarPorId($objeto2);
+
+					$htmlTbody .= '<td>'.$turmaPessoa->getPEssoa()->getNome().'</td>';
+					$htmlTbody .= '<td>'.$grupo2->getNomeLideresAtivos().'</td>';
+				}
 			}
 
 			$corSituacao = 'default';
@@ -119,7 +131,7 @@ foreach($this->solicitacoesTipo as $solicitacaoTipo){
 $html .= '</div>';
 
 $html .= '<div class="panel-footer text-right">';
-$stringNomeDaFuncaoOnClickCadastro = 'funcaoCircuito("cadastroSolicitacao", 0)';
+$stringNomeDaFuncaoOnClickCadastro = 'mostrarSplash(); funcaoCircuito("cadastroSolicitacao", 0)';
 $html .= $this->botaoLink($this->translate(Constantes::$TRADUCAO_CADASTRAR), Constantes::$STRING_HASHTAG, 0, $this->funcaoOnClick($stringNomeDaFuncaoOnClickCadastro));
 $html .= '</div>';
 $html .= '</div>';

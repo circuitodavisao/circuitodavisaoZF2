@@ -1,6 +1,7 @@
 <?php
 
 use Application\Controller\Helper\Constantes;
+use Application\Controller\CursoController;
 use Application\View\Helper\BotaoSimples;
 
 $labelVoltar = $this->translate(Constantes::$TRADUCAO_VOLTAR);
@@ -168,6 +169,33 @@ if (count($this->grupoPaiFilhoMulheres) === 0) {
 	</div>
 	<?php } ?>
 	</div>
+	<!--divSelecionarAluno-->
+	<div id="divSelecionarAluno" class="hidden">
+<?php
+if (count($this->alunos) === 0) {
+	echo 'Sem alunos para transferir';
+} else {
+?>
+	<select id="idAluno" class="form-control" onChange="mostrarBotaoSelecionarAluno();">
+		<option value="0">SELECIONE</option>
+<?php
+	foreach ($this->alunos as $aluno) {
+		$grupoPessoaAtivo = $aluno->getPessoa()->getGrupoPessoaAtivo();
+		$pessoa = $aluno->getPessoa();
+		$nomeEquipe = CursoController::nomeEquipeTurmaPessoa($aluno, $grupoPessoaAtivo);
+		echo '<option  value="' . $aluno->getId() . '" >' . $aluno->getId() . ' - ' . $nomeEquipe . ' - '.  $pessoa->getNome() . '</option>';
+}
+?>
+	</select>
+	<div id="divBotaoSelecionarAluno" class="hidden mt10">
+	<?php
+		echo $this->botaoSimples(Constantes::$TRADUCAO_SELECIONAR, $this->funcaoOnClick('selecionarAluno()'));
+	?>
+	</div>
+	<?php } ?>
+	</div>
+
+
 <!--divSelecionarQuemSaira-->
 	<div id="divSelecionarQuemSaira" class="hidden">
 	<div class="section-divider mt20">
