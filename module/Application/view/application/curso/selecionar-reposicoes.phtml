@@ -53,7 +53,7 @@ if($this->filtrado){
 						$html .= '<td>' . $nomeEquipe. '</td>';
 						$html .= '<td>';
 						foreach ($this->faltas[$turma->getId()][$turmaPessoa->getId()] as $falta) {
-							$html .= $falta[0] . ' <input type="checkbox" id="aula' . $falta[1] . '" name="aula' . $falta[1] . '" value="' . $falta[1] . '_' . $turmaPessoa->getId() . '"/> | ';
+							$html .= $falta[0] . ' <input type="checkbox" id="aula' . $falta[1] . '_' . $turmaPessoa->GetId() . '" name="aula' . $falta[1] . '_' . $turmaPessoa->getId() . '" value="' . $falta[1] . '_' . $turmaPessoa->getId() . '"/> | ';
 						}
 						$html .= '</td>';
 						$html .= '</tr>';
