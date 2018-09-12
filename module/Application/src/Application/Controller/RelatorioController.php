@@ -601,7 +601,7 @@ class RelatorioController extends CircuitoController {
 			$arrayPeriodoDoMes[0] = $periodo;
 			$arrayPeriodoDoMes[1] = $periodo;
 		}
-		$diferencaDePeriodos = self::diferencaDePeriodos($arrayPeriodoDoMes[0], $arrayPeriodoDoMes[1]);
+		$diferencaDePeriodos = self::diferencaDePeriodos($arrayPeriodoDoMes[0], $arrayPeriodoDoMes[1], $mes, $ano);
 		if($tudo){
 			for ($indiceDeArrays = $arrayPeriodoDoMes[0]; $indiceDeArrays <= $arrayPeriodoDoMes[1]; $indiceDeArrays++) {
 				$grupoPaiFilhoFilhos = $grupo->getGrupoPaiFilhoFilhosAtivos($indiceDeArrays);
@@ -1283,7 +1283,7 @@ class RelatorioController extends CircuitoController {
 		return $relatorio;
 	}
 
-	public static function diferencaDePeriodos($periodoInicial, $periodoFinal) {
+	public static function diferencaDePeriodos($periodoInicial, $periodoFinal, $mes = null, $ano = null){
 		$diferencaDePeriodos = 1;
 		if ($periodoInicial < 0) {
 			$periodoInicial *= -1;
@@ -1295,6 +1295,19 @@ class RelatorioController extends CircuitoController {
 			$periodoFinal = 0;
 		}
 		$diferencaDePeriodos = $periodoInicial + $periodoFinal;
+
+		if($mes === null){
+			$mes = date('m');
+		}
+		if($ano === null){
+			$ano = date('Y');
+		}
+		if(
+			($ano == date('Y') && $mes != date('m')) ||
+			$ano != date('Y')
+		){
+			$diferencaDePeriodos++;	
+		}
 		return $diferencaDePeriodos;
 	}
 
