@@ -231,7 +231,11 @@ class ListagemDePessoasComEventos extends AbstractHelper {
 		$html .= '<div class="btn-group dropdown">';
 		$html .= '<a id="menudrop_telefone_' . $pessoa->getId() . '" class="text-left dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">';
         $html .= '<span id="span_telefone_' . $pessoa->getId() . '">';
-		$html .= $pessoa->getTelefone();
+		if($pessoa->getTelefone()){
+			$html .= $pessoa->getTelefone();
+		}else{
+        	$html .= 'SEM TELEFONE';
+		}
         $html .= '</span>';
  	    $html .= '</a>';
 		$html .= '<ul class="dropdown-menu sobrepor-elementos modal-edicao-nome">';
