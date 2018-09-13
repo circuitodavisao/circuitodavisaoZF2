@@ -276,6 +276,12 @@ for ($indice = 1; $indice <= $numeroIndices; $indice++) {
 			$grupoFilho = $discipulo->getGrupoPaiFilhoFilho();
 			foreach($grupoFilho->getPessoasAtivas() as $pessoa){
 				$funcaoOnClick = 'mostrarSplash(); funcaoCircuito("principal", '.$pessoa->getId().')';
+				$nomeHierarquia = $pessoa->getPessoaHierarquiaAtivo()->getHierarquia()->getNome();
+				if ($pessoa->getSexo() === 'F') {
+					if ($nomeFeminino = $pessoa->getPessoaHierarquiaAtivo()->getHierarquia()->getNome_feminino()) {
+						$nomeHierarquia = $nomeFeminino;
+					}
+				}
 				if($contadorDeDiscipulosPorLinha === 0){
 					echo '<div class="row">';
 				}
@@ -284,7 +290,7 @@ for ($indice = 1; $indice <= $numeroIndices; $indice++) {
 				echo '<div class="caption">';
 				echo '<h5>'.$pessoa->getNomePrimeiro();
 				echo '<br />';
-				echo '<small>'.$pessoa->getPessoaHierarquiaAtivo()->getHierarquia()->getNome().'</small>';
+				echo '<small>'.$nomeHierarquia. '<small>';
 				echo '</h5>';
 				echo '</div>';
 				echo '</div>';

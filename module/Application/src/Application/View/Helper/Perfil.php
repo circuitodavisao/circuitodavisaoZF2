@@ -151,6 +151,13 @@ class Perfil extends AbstractHelper {
 
         $html .= '</div>';
 
+		if (!$this->getMostrarOpcoes()) {
+			$html .= '<div class="col-xs-5 col-sm-5 col-md-5 col-lg-5">';
+			$funcaoAlterarHierarquia = $this->view->funcaoOnClick('mostrarSplash(); funcaoCircuito("principalHierarquia", ' . $this->getPessoa()->getId() . ')');
+			$html .= $this->view->botaoSimples(Constantes::$TRADUCAO_ALTERAR, $funcaoAlterarHierarquia, BotaoSimples::botaoImportante, BotaoSimples::larguraMaxima);
+			$html .= '</div>';
+		}
+
         $html .= '<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-center mt10">';
         $funcaoAlterarSenha = $this->view->funcaoOnClick('mostrarSplash(); funcaoCircuito("principalSenha", ' . $this->getPessoa()->getId() . ')');
         $html .= $this->view->botaoSimples('Alterar Senha', $funcaoAlterarSenha, BotaoSimples::botaoImportante, BotaoSimples::larguraMaxima);
