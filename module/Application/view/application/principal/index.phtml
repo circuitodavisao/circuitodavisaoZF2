@@ -9,7 +9,7 @@ use Application\Model\Entity\EntidadeTipo;
 if ($this->mostrarPrincipal) {
 	$fotos = $this->grupo->getFotosLideresAtivos(128);
 
-	echo $this->sitemap('principal'); 
+	echo $this->sitemap('principal');
 ?>
 <div class="panel mt10">
 <div class="panel-body ">
@@ -25,9 +25,9 @@ if ($this->mostrarPrincipal) {
 	if($this->pessoaLogada->getId() === $this->pessoa->getId()){
 		$funcaoOnClickPerfil = 'location.href="/perfil"';
 		echo $this->botaoSimples('<i class="fa fa-user"></i> Perfil', $this->funcaoOnClick($funcaoOnClickPerfil), BotaoSimples::botaoMuitoPequenoImportante, BotaoSimples::posicaoAEsquerda);
-	}
+	} else {
 	$funcaoOnClick = 'funcaoCircuito("principalVer", '.$grupo->getId().')';
-	echo $this->botaoSimples('<i class="fa fa-cog"></i>', $this->funcaoOnClick($funcaoOnClick), BotaoSimples::botaoMuitoPequenoImportante, BotaoSimples::posicaoAEsquerda); ?>
+	echo $this->botaoSimples('<i class="fa fa-cog"></i>', $this->funcaoOnClick($funcaoOnClick), BotaoSimples::botaoMuitoPequenoImportante, BotaoSimples::posicaoAEsquerda); }	?>
 </p>
 </div>
 </div>
