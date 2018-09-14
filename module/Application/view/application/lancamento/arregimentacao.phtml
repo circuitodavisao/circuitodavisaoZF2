@@ -17,15 +17,19 @@ use Application\View\Helper\BotaoSimples;
         <div class="panel-footer text-center">
             <div class="row">
                 <?php
-                $label = $this->translate(Constantes::$TRADUCAO_CADASTRAR_PESSOA);
-                $extra = $this->funcaoOnClick('verificarMuitosCadastros(' . 0 . ', ' . $this->periodo . ')');
+				if($this->possoAlterar){
+					$label = $this->translate(Constantes::$TRADUCAO_CADASTRAR_PESSOA);
+					$extra = $this->funcaoOnClick('verificarMuitosCadastros(' . 0 . ', ' . $this->periodo . ')');
 
-                echo $this->botaoSimples($label, $extra, BotaoSimples::botaoImportante, BotaoSimples::posicaoAoCentro);
+					echo $this->botaoSimples($label, $extra, BotaoSimples::botaoImportante, BotaoSimples::posicaoAoCentro);
 
-                if ($this->periodo == -1 || $this->periodo == 0) {
-                    $extra = $this->funcaoOnClick('mostrarSplash(); funcaoCircuito("lancamentoEnviar", ' . $this->periodo . ')');
-                    echo '&nbsp;&nbsp;'.$this->botaoSimples('Enviar Relatório', $extra, BotaoSimples::botaoSucesso, BotaoSimples::posicaoAoCentro);
-                }
+					$periodoAtual = 0;
+					$periodoAnterior = -1;
+					if ($this->periodo == $periodoAnterior || $this->periodo == $periodoAtual) {
+						$extra = $this->funcaoOnClick('mostrarSplash(); funcaoCircuito("lancamentoEnviar", ' . $this->periodo . ')');
+						echo '&nbsp;&nbsp;'.$this->botaoSimples('Enviar Relatório', $extra, BotaoSimples::botaoSucesso, BotaoSimples::posicaoAoCentro);
+					}
+				}
                 ?>
             </div>
         </div>
