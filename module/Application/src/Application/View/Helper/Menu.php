@@ -162,7 +162,7 @@ class Menu extends AbstractHelper {
 		$html .= '</a>';
 		$html .= '<ul class="nav sub-nav">';
 		$html .= '<li>';
-		$html .= '<a href="/lancamentoArregimentacao" onClick="mostrarSplash();">';
+		$html .= '<a href="#" onClick="mostrarSplash(); funcaoCircuito(\'lancamentoArregimentacao\', 0);">';
 		$html .= '<span class="fa fa-terminal"></span>';
 		$html .= 'Arregimentação';
 		$html .= '</a>';
