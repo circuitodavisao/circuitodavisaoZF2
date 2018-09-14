@@ -187,7 +187,7 @@ class ListagemDePessoasComEventos extends AbstractHelper {
         $html .= '<td class="text-left ' . $empuraColunas . '">&nbsp;';
         /* Menu dropup Nome */
         $html .= '<div class="btn-group dropdown">';
-        if ($validacaoPossoAlterarNome) {
+        if ($validacaoPossoAlterarNome && $this->view->possoAlterar) {
             $html .= '<a id="menudrop_' . $pessoa->getId() . '" class="tdNome text-left dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">';
         }
         /* nome */
@@ -204,7 +204,7 @@ class ListagemDePessoasComEventos extends AbstractHelper {
         /* fim nome */
 
         /* Alteracao de nome */
-        if ($validacaoPossoAlterarNome) {
+        if ($validacaoPossoAlterarNome && $this->view->possoAlterar) {
             $html .= '</a>';
             $html .= '<ul class="dropdown-menu sobrepor-elementos modal-edicao-nome">';
             $html .= '<span class="editable-container editable-inline">';
@@ -228,15 +228,19 @@ class ListagemDePessoasComEventos extends AbstractHelper {
 
 		/* Telefone */
 		$html .= '<td class="hidden-xs">';
+		if($pessoa->getTelefone()){
+			$telefone = $pessoa->getTelefone();
+		}else{
+        	$telefone = 'SEM TELEFONE';
+		}
+ 
+
+		if($this->view->possoAlterar){
 		$html .= '<div class="btn-group dropdown">';
 		$html .= '<a id="menudrop_telefone_' . $pessoa->getId() . '" class="text-left dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">';
         $html .= '<span id="span_telefone_' . $pessoa->getId() . '">';
-		if($pessoa->getTelefone()){
-			$html .= $pessoa->getTelefone();
-		}else{
-        	$html .= 'SEM TELEFONE';
-		}
-        $html .= '</span>';
+	    $html .= '</span>';
+		$html .= $telefone;
  	    $html .= '</a>';
 		$html .= '<ul class="dropdown-menu sobrepor-elementos modal-edicao-nome">';
 		$html .= '<span class="editable-container editable-inline">';
@@ -255,6 +259,9 @@ class ListagemDePessoasComEventos extends AbstractHelper {
 
 		$html .= '</div>';
 		/* Fim Menu dropup */
+		}else{
+			$html .= $telefone;
+		}
 		$html .= '</td>';
 
         foreach ($grupoEventoNoPeriodo as $grupoEvento) {
@@ -344,7 +351,10 @@ class ListagemDePessoasComEventos extends AbstractHelper {
                 $funcaoMudarFrequencia = 'mudarFrequencia(' . $parametrosMudarFrequencia . ')';
                 $funcaoOnclick = $this->view->funcaoOnClick($funcaoMudarFrequencia);
                 $extra = $idDoBotao . ' ' . $funcaoOnclick;
-                $html .= $this->view->botaoSimples($iconeBotao, $extra, $corDoBotao, BotaoSimples::posicaoAoCentro);
+				if(!$this->view->possoAlterar){
+					$extra .= ' disabled';
+				}
+				$html .= $this->view->botaoSimples($iconeBotao, $extra, $corDoBotao, BotaoSimples::posicaoAoCentro);
             } else {/* Eventos futuro */
                 $icone = 1;
                 $iconeRelogio = 1;
