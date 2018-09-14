@@ -20,7 +20,7 @@ class Perfil extends AbstractHelper {
     private $mostrarOpcoes;
 
     public function __construct() {
-        
+
     }
 
     public function __invoke(Pessoa $pessoa, Form $formulario, $mostrarOpcoes = true) {
@@ -120,23 +120,33 @@ class Perfil extends AbstractHelper {
         $html .= $this->view->inputFormularioSimples(Constantes::$TRADUCAO_SEXO, $formulario->get(Constantes::$INPUT_SEXO), 12, 2);
 
         if ($this->getMostrarOpcoes()) {
-            $html .= '<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-center mt10">';
             $funcaoVerificarPerfil = $this->view->funcaoOnClick('validarPerfil(this.form)');
+            $html .= '<div class="form-group col-xs-12 col-sm-12 col-md-12 col-lg-12 text-center mt10">';
             $html .= $this->view->botaoLink($this->view->translate('Salvar Dados'), Constantes::$STRING_HASHTAG, 1, $funcaoVerificarPerfil);
             $html .= '</div>';
         }
 
         $html .= $this->view->inputFormularioSimples(Constantes::$TRADUCAO_CPF, $formulario->get(Constantes::$INPUT_CPF), 12);
         $html .= $this->view->inputFormularioSimples(Constantes::$TRADUCAO_EMAIL, $formulario->get(Constantes::$INPUT_EMAIL), 7);
-        $html .= '<div class="col-xs-5 col-sm-5 col-md-5 col-lg-5 text-center mt35">';
+        $html .= '<div class="form-group col-xs-5 col-sm-5 col-md-5 col-lg-5 text-center mt35">';
         $funcaoAlterarEmail = $this->view->funcaoOnClick('mostrarSplash(); funcaoCircuito("principalEmail", ' . $this->getPessoa()->getId() . ')');
         $html .= $this->view->botaoSimples(Constantes::$TRADUCAO_ALTERAR, $funcaoAlterarEmail, BotaoSimples::botaoImportante, BotaoSimples::larguraMaxima);
         $html .= '</div>';
 
+        $html .= '<div class="form-group col-xs-7 col-sm-7 col-md-7 col-lg-7 text-center">';
+        $html .= '<div class="btn btn-default btn-block" disabled>';
+        $html .= '********';
+        $html .= '</div>';
+        $html .= '</div>';
+        $funcaoAlterarSenha = $this->view->funcaoOnClick('mostrarSplash(); funcaoCircuito("principalSenha", ' . $this->getPessoa()->getId() . ')');
+        $html .= '<div class="form-group col-xs-5 col-sm-5 col-md-5 col-lg-5 text-center">';
+        $html .= $this->view->botaoSimples('Alterar Senha', $funcaoAlterarSenha, BotaoSimples::botaoImportante, BotaoSimples::larguraMaxima);
+        $html .= '</div>';
+
         if (!$this->getMostrarOpcoes()) {
-            $html .= '<div class="col-xs-7 col-sm-7 col-md-7 col-lg-7">';
+            $html .= '<div class="form-group col-xs-7 col-sm-7 col-md-7 col-lg-7">';
         } else {
-            $html .= '<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">';
+            $html .= '<div class="form-group col-xs-12 col-sm-12 col-md-12 col-lg-12">';
         }
         $html .= '<div class="btn btn-default btn-block" disabled>';
         $nomeHierarquia = $this->getPessoa()->getPessoaHierarquiaAtivo()->getHierarquia()->getNome();
@@ -145,22 +155,23 @@ class Perfil extends AbstractHelper {
                 $nomeHierarquia = $nomeFeminino;
             }
         }
+
         $html .= '<span class="hidden-xs">' . $nomeHierarquia . '</span>';
         $html .= '<span class="hidden-sm hidden-md hidden-lg">' . substr($nomeHierarquia, 0, 12) . ' ...</span>';
         $html .= '</div>';
 
         $html .= '</div>';
 
-		if (!$this->getMostrarOpcoes()) {
-			$html .= '<div class="col-xs-5 col-sm-5 col-md-5 col-lg-5">';
-			$funcaoAlterarHierarquia = $this->view->funcaoOnClick('mostrarSplash(); funcaoCircuito("principalHierarquia", ' . $this->getPessoa()->getId() . ')');
-			$html .= $this->view->botaoSimples(Constantes::$TRADUCAO_ALTERAR, $funcaoAlterarHierarquia, BotaoSimples::botaoImportante, BotaoSimples::larguraMaxima);
-			$html .= '</div>';
-		}
+    		if (!$this->getMostrarOpcoes()) {
+    			$html .= '<div class="col-xs-5 col-sm-5 col-md-5 col-lg-5">';
+    			$funcaoAlterarHierarquia = $this->view->funcaoOnClick('mostrarSplash(); funcaoCircuito("principalHierarquia", ' . $this->getPessoa()->getId() . ')');
+    			$html .= $this->view->botaoSimples(Constantes::$TRADUCAO_ALTERAR, $funcaoAlterarHierarquia, BotaoSimples::botaoImportante, BotaoSimples::larguraMaxima);
+    			$html .= '</div>';
+    		}
 
-        $html .= '<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-center mt10">';
-        $funcaoAlterarSenha = $this->view->funcaoOnClick('mostrarSplash(); funcaoCircuito("principalSenha", ' . $this->getPessoa()->getId() . ')');
-        $html .= $this->view->botaoSimples('Alterar Senha', $funcaoAlterarSenha, BotaoSimples::botaoImportante, BotaoSimples::larguraMaxima);
+        $html .= '<div class="form-group col-xs-12 col-sm-12 col-md-12 col-lg-12">';
+        $extraVerLancamento = $this->view->funcaoOnClick('mostrarSplash(); funcaoCircuito("lancamentoArregimentacao", ' . $this->view->idGrupo . ')');
+      	$html .= $botaoVerTelaDeLancamento = $this->view->botaoSimples('Tela de lançamento de Dados', $extraVerLancamento, BotaoSimples::botaoImportante, BotaoSimples::larguraMaxima);
         $html .= '</div>';
 
         $html .= '</div>';
