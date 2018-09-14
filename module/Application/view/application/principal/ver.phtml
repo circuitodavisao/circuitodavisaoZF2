@@ -24,15 +24,13 @@ foreach ($this->responsabilidades as $responsavel) {
 echo '</div>';
 echo '</div>';
 
+if ($this->mostrarParaReenviarEmails) {
 echo '<div class="panel panel-danger mw1000 center-block">';
 echo '<div class="panel-heading">';
 echo 'Reenviar Email de acesso';
 echo '</div>';
 echo '<div class="panel-body">';
-
-if ($this->mostrarParaReenviarEmails) {
     foreach ($this->responsabilidades as $grupoResponsavel) {
-        echo Constantes::$NBSP;
         $pessoa = $grupoResponsavel->getPessoa();
         if ($pessoa->getToken()) {
             $nome = $pessoa->getNomePrimeiro();
@@ -42,12 +40,11 @@ if ($this->mostrarParaReenviarEmails) {
                     $labelBotao, $extraBotaoEmail, BotaoSimples::botaoMenorImportancia, BotaoSimples::posicaoAEsquerda);
         }
     }
+echo '</div>';
+echo '</div>';
 }
 
-echo '</div>';
-echo '</div>';
-
-echo '<div class="panel panel-info mw1000 center-block">';
+echo '<div class="panel panel-primary mw1000 center-block">';
 echo '<div class="panel-heading">';
 echo 'C&eacute;lula(s)';
 echo '</div>';
@@ -56,21 +53,23 @@ echo $this->listagemDeEventos('', $this->eventos);
 echo '</div>';
 echo '</div>';
 
-echo '<div class="panel panel-system mw1000 center-block">';
+if ($this->entidade->getEntidadeTipo()->getId() === EntidadeTipo::subEquipe) {
+echo '<div class="panel panel-primary mw1000 center-block">';
 echo '<div class="panel-heading">';
 echo 'Time';
 echo '</div>';
-echo '<div class="panel-body">';
-if ($this->entidade->getEntidadeTipo()->getId() === EntidadeTipo::subEquipe) {
-	$extraAlterarNumeracao = $this->funcaoOnClick('mostrarSplash(); funcaoCircuito("principalNumeracao", ' . $this->idGrupo . ')');
-	$botaoAlterarNumeracao = $this->botaoSimples('Alterar Numeração', $extraAlterarNumeracao, BotaoSimples::botaoImportante, BotaoSimples::posicaoAEsquerda);
-	echo '<div class="col-lg-6 col-md-6 col-sm-6">' . $this->entidade->infoEntidade() . '</div>';
-	echo '<div class="col-lg-6 col-md-6 col-sm-6">' . $botaoAlterarNumeracao . '</div>';
+
+echo '<div class="panel-body center-block">';
+$extraAlterarNumeracao = $this->funcaoOnClick('mostrarSplash(); funcaoCircuito("principalNumeracao", ' . $this->idGrupo . ')');
+$botaoAlterarNumeracao = $this->botaoSimples('Alterar Numeração', $extraAlterarNumeracao, BotaoSimples::botaoImportante, BotaoSimples::larguraMaxima);
+
+echo '<div class="col-lg-6 col-md-6 col-sm-6">';
+echo '<div class="btn btn-default btn-block" disabled>'.$this->entidade->infoEntidade().'</div>';
+echo '</div>';
+echo '<div class="col-lg-6 col-md-6 col-sm-6">';
+echo $botaoAlterarNumeracao;
+echo '</div>';
+
+echo '</div>';
+echo '</div>';
 }
-	$extraVerLancamento = $this->funcaoOnClick('mostrarSplash(); funcaoCircuito("lancamentoArregimentacao", ' . $this->idGrupo . ')');
-	$botaoVerTelaDeLancamento = $this->botaoSimples('Tela de lançamneto de Dados', $extraVerLancamento, BotaoSimples::botaoImportante, BotaoSimples::posicaoAEsquerda);
-	echo '<div class="col-lg-6 col-md-6 col-sm-6">' . $botaoVerTelaDeLancamento . '</div>';
-
-echo '</div>';
-echo '</div>';
-
