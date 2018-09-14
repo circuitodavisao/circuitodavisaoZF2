@@ -51,7 +51,14 @@ class LancamentoController extends CircuitoController {
         $sessao = new Container(Constantes::$NOME_APLICACAO);
 
         $entidade = CircuitoController::getEntidadeLogada($this->getRepositorio(), $sessao);
-        $grupo = $entidade->getGrupo();
+
+		$possoAlterar = true;
+		if($sessao->idSessao > 0){
+			$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($sessao->idSessao);
+			$possoAlterar = false;
+		}else{
+			$grupo = $entidade->getGrupo();
+		}
 
         $periodo = $this->getEvent()->getRouteMatch()->getParam(Constantes::$ID, 0);
 
@@ -105,6 +112,7 @@ class LancamentoController extends CircuitoController {
             Constantes::$VALIDACAO => $validacaoPessoasCadastradas,
             'mostrarBotaoPeriodoAnterior' => $mostrarBotaoPeriodoAnterior,
             'mostrarBotaoPeriodoAfrente' => $mostrarBotaoPeriodoAfrente,
+            'possoAlterar' => $possoAlterar,
                 )
         );
 
