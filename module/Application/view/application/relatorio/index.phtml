@@ -107,6 +107,9 @@ $somaMeta = 0;
                 echo '</div>';
             }
             ?>
+			<div class="p10">
+			<div class="alert alert-info"><i class="fa fa-retweet"></i> - Cadastrado/Transferido/Unido/Removido</div>
+			</div>
             <div class="p10">
                 <table class="text-center table table-condensed table-hover bg-light mt15" style="font-size:8px;">
                     <thead>
@@ -239,39 +242,39 @@ $somaMeta = 0;
                         <?php
                         $contagemRanking = 0;
                         $totalDeRelatorios = count($this->relatorio);
-                        foreach ($this->relatorio as $relatorio) {
-                            $corLinha = '';
-                            if ($relatorio['lideres'] == 'TOTAL') {
-                                $corLinha = 'dark';
-                            }
-                            if ($contagemRanking !== 0 && $contagemRanking !== ($totalDeRelatorios - 1)) {
-                                if ($this->tipoRelatorio == 1) {
-                                    $corLinha = $relatorio['mediaMembresiaPerformanceClass'];
-                                }
-                                if ($this->tipoRelatorio == 2) {
-                                    $corLinha = $relatorio['mediaCelulaRealizadasPerformanceClass'];
-                                }
-                                if ($this->tipoRelatorio == 3) {
-                                    $corLinha = $relatorio['mediaCelulaPerformanceClass'];
-                                }
-                                if ($this->tipoRelatorio == 8) {
-                                    $corLinha = $relatorio['mediaCelulaDeElitePerformanceClass'];
-                                }
+						foreach ($this->relatorio as $relatorio) {
+							$corLinha = '';
+							if ($relatorio['lideres'] == 'TOTAL') {
+								$corLinha = 'dark';
+							}
+							if ($contagemRanking !== 0 && $contagemRanking !== ($totalDeRelatorios - 1)) {
+								if ($this->tipoRelatorio == 1) {
+									$corLinha = $relatorio['mediaMembresiaPerformanceClass'];
+								}
+								if ($this->tipoRelatorio == 2) {
+									$corLinha = $relatorio['mediaCelulaRealizadasPerformanceClass'];
+								}
+								if ($this->tipoRelatorio == 3) {
+									$corLinha = $relatorio['mediaCelulaPerformanceClass'];
+								}
+								if ($this->tipoRelatorio == 8) {
+									$corLinha = $relatorio['mediaCelulaDeElitePerformanceClass'];
+								}
 								if ($this->tipoRelatorio == 9) {
 									$corLinha = $relatorio['parceiroDeDeusPerformanceClass'];
 								}
-                            }
-                            echo '<tr class="' . $corLinha . '">';
-                            if ($this->tipoRelatorio != 7) {
-                                $label = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
-                                $padding = '6';
-                                if ($contagemRanking !== 0 && $contagemRanking !== ($totalDeRelatorios - 1)) {
-                                    $label = str_pad($contagemRanking, 2, 0, STR_PAD_LEFT) . '-';
-                                    $padding = '5';
-                                }
-                            }
-                            echo '<td class="text-left" style="font-size:8px;padding-left:' . $padding . 'px;">' . $label . '<span class="hidden-xs">' . $relatorio['lideresFotos'] . '</span>';
-                            echo $relatorio['lideresEntidade'];
+							}
+							echo '<tr class="' . $corLinha . '">';
+							if ($this->tipoRelatorio != 7) {
+								$label = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+								$padding = '6';
+								if ($contagemRanking !== 0 && $contagemRanking !== ($totalDeRelatorios - 1)) {
+									$label = str_pad($contagemRanking, 2, 0, STR_PAD_LEFT) . '-';
+									$padding = '5';
+								}
+							}
+							echo '<td class="text-left" style="font-size:8px;padding-left:' . $padding . 'px;">' . $label . '<span class="hidden-xs">' . $relatorio['lideresFotos'] . '</span>';
+							echo $relatorio['lideresEntidade'];
 
 							if($contagemRanking !== 0 && $relatorio['lideres'] != 'TOTAL'){
 								$funcaoOnClickPessoal = 'mostrarSplash(); funcaoCircuito("relatorio/'.$url.'",'.$relatorio['grupo'].')';
@@ -281,82 +284,126 @@ $somaMeta = 0;
 							if($relatorio['lideres'] == 'TOTAL'){
 								echo $relatorio['lideres'];
 							}
-                            if ($this->entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja) {
-                                echo'</span>';
-                            }
-                            echo '</td>';
+							if ($this->entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja) {
+								echo'</span>';
+							}
+							echo '</td>';
 
-                            for ($indiceDeArrays = $this->periodoInicial; $indiceDeArrays <= $this->periodoFinal; $indiceDeArrays++) {
-                                $classeBase = 'periodo' . $indiceDeArrays . ' ';
-                                if ($indiceDeArrays != -1) {
-                                    $classeBase .= 'hidden-xs';
-                                }
-                                if ($this->tipoRelatorio == 1) {
-                                    echo '<td class="hidden-xs">' . $relatorio[$indiceDeArrays]['quantidadeLideres'] . '</td>';
-                                    echo '<td class="' . $classeBase . '">' . $relatorio[$indiceDeArrays]['membresiaMeta'] . '</td>';
-                                    echo '<td class="' . $classeBase . '">' . $relatorio[$indiceDeArrays]['membresiaCulto'] . '</td>';
-                                    echo '<td class="' . $classeBase . '">' . $relatorio[$indiceDeArrays]['membresiaArena'] . '</td>';
-                                    echo '<td class="' . $classeBase . '">' . $relatorio[$indiceDeArrays]['membresiaDomingo'] . '</td>';
-                                    echo '<td class="' . $classeBase . '">' . RelatorioController::formataNumeroRelatorio($relatorio[$indiceDeArrays]['membresia']) . '</td>';
-                                    echo '<td class="' . $classeBase . '">' . RelatorioController::formataNumeroRelatorio($relatorio[$indiceDeArrays]['membresiaPerformance']) . '%</td>';
-                                }
-                                if ($this->tipoRelatorio == 2) {
-                                    echo '<td class="' . $classeBase . '">' . $relatorio[$indiceDeArrays]['celulaQuantidade'] . '</td>';
-                                }
-                                if ($this->tipoRelatorio == 2) {
+							for ($indiceDeArrays = $this->periodoInicial; $indiceDeArrays <= $this->periodoFinal; $indiceDeArrays++) {
+								$classeBase = 'periodo' . $indiceDeArrays . ' ';
+								if ($indiceDeArrays != -1) {
+									$classeBase .= 'hidden-xs';
+								}
+								if ($this->tipoRelatorio == 1) {
+									if($contagemRanking === 0 || $relatorio['lideres'] == 'TOTAL' || $relatorio[$indiceDeArrays]['mostrar']){
+										echo '<td class="hidden-xs">' . $relatorio[$indiceDeArrays]['quantidadeLideres'] . '</td>';
+										echo '<td class="' . $classeBase . '">' . $relatorio[$indiceDeArrays]['membresiaMeta'] . '</td>';
+										echo '<td class="' . $classeBase . '">' . $relatorio[$indiceDeArrays]['membresiaCulto'] . '</td>';
+										echo '<td class="' . $classeBase . '">' . $relatorio[$indiceDeArrays]['membresiaArena'] . '</td>';
+										echo '<td class="' . $classeBase . '">' . $relatorio[$indiceDeArrays]['membresiaDomingo'] . '</td>';
+										echo '<td class="' . $classeBase . '">' . RelatorioController::formataNumeroRelatorio($relatorio[$indiceDeArrays]['membresia']) . '</td>';
+										echo '<td class="' . $classeBase . '">' . RelatorioController::formataNumeroRelatorio($relatorio[$indiceDeArrays]['membresiaPerformance']) . '%</td>';
+									}else{
+										echo '<td class="hidden-xs"><i class="fa fa-retweet"></i></td>';
+										for($i = 1;$i <= 6;$i++){
+											echo '<td class="' . $classeBase . '"><i class="fa fa-retweet"></i></td>';
+										}
+									}
+								}
+								if ($this->tipoRelatorio == 2) {
+									if($contagemRanking === 0 || $relatorio['lideres'] == 'TOTAL' || $relatorio[$indiceDeArrays]['mostrar']){
+										echo '<td class="' . $classeBase . '">' . $relatorio[$indiceDeArrays]['celulaQuantidade'] . '</td>';
+									}else{
+										echo '<td class="' . $classeBase . '"><i class="fa fa-retweet"></i></td>';
+									}
+								}
+								if ($this->tipoRelatorio == 2) {
 									$performance = RelatorioController::formataNumeroRelatorio($relatorio[$indiceDeArrays]['celulaRealizadasPerformance']);
 									$diferenca = ($relatorio[$indiceDeArrays]['celulaQuantidade'] - $relatorio[$indiceDeArrays]['celulaRealizadas']);
 									$botaoCelulasNaoRealizadas = $this->botaoSimples($diferenca, $funcaoAbrirModal, BotaoSimples::botaoMuitoPequenoImportante, BotaoSimples::posicaoAoCentro);
-                                    echo '<td class="' . $classeBase . '">' . $relatorio[$indiceDeArrays]['celulaRealizadas'] . '</td>';
-                                    echo '<td class="' . $classeBase . '">' . $diferenca  . '</td>';
-                                    echo '<td class="' . $classeBase . '">' . $performance . '%</td>';
-                                }
-                                if ($this->tipoRelatorio == 3) {
-                                    echo '<td class="' . $classeBase . '"">' . $relatorio[$indiceDeArrays]['quantidadeLideres'] . '</td>';
-                                    echo '<td class="' . $classeBase . '">' . $relatorio[$indiceDeArrays]['membresiaMeta'] . '</td>';
-                                    echo '<td class="' . $classeBase . '">' . $relatorio[$indiceDeArrays]['celula'] . '</td>';
-                                    echo '<td class="' . $classeBase . '">' . RelatorioController::formataNumeroRelatorio($relatorio[$indiceDeArrays]['celulaPerformance']) . '%</td>';
-                                }
-                                if ($this->tipoRelatorio == 4 ||
-                                        $this->tipoRelatorio == 5 ||
-                                        $this->tipoRelatorio == 6) {
-                                    $quantidade = 0;
-                                    switch ($this->tipoRelatorio) {
-                                        case 4:
-                                            $quantidade = $relatorio[$indiceDeArrays]['membresiaCulto'];
-                                            break;
-                                        case 5:
-                                            $quantidade = $relatorio[$indiceDeArrays]['membresiaArena'];
-                                            break;
-                                        case 6:
-                                            $quantidade = $relatorio[$indiceDeArrays]['membresiaDomingo'];
-                                            break;
-                                    }
-                                    echo '<td class="' . $classeBase . '">' . $relatorio[$indiceDeArrays]['quantidadeLideres'] . '</td>';
-                                    echo '<td class="' . $classeBase . '">' . RelatorioController::formataNumeroRelatorio($quantidade) . '</td>';
-                                }
-                                if ($this->tipoRelatorio == 7) {
-                                    echo '<td class="' . $classeBase . '">' . $relatorio[$indiceDeArrays]['membresiaMeta'] . '</td>';
-                                    echo '<td class="' . $classeBase . '">' . $relatorio[$indiceDeArrays]['celula'] . '</td>';
-                                    echo '<td class="' . $classeBase . '">' . RelatorioController::formataNumeroRelatorio($relatorio[$indiceDeArrays]['membresiaArena']) . '</td>';
-                                }
-                                if ($this->tipoRelatorio == 8) {
-                                    echo '<td class="' . $classeBase . '">' . $relatorio[$indiceDeArrays]['celulaQuantidade'] . '</td>';
-                                    echo '<td class="' . $classeBase . '">' . $relatorio[$indiceDeArrays]['celulaDeEliteMeta'] . '</td>';
-                                    echo '<td class="' . $classeBase . '">' . $relatorio[$indiceDeArrays]['celulaDeElite'] . '</td>';
-                                    echo '<td class="' . $classeBase . '">' . RelatorioController::formataNumeroRelatorio($relatorio[$indiceDeArrays]['celulaDeElitePerformance']) . '%</td>';
+									if($contagemRanking === 0 || $relatorio['lideres'] == 'TOTAL' || $relatorio[$indiceDeArrays]['mostrar']){
+										echo '<td class="' . $classeBase . '">' . $relatorio[$indiceDeArrays]['celulaRealizadas'] . '</td>';
+										echo '<td class="' . $classeBase . '">' . $diferenca  . '</td>';
+										echo '<td class="' . $classeBase . '">' . $performance . '%</td>';
+									}else{
+										for($i = 1;$i <= 3;$i++){
+											echo '<td class="' . $classeBase . '"><i class="fa fa-retweet"></i></td>';
+										}
+									}
 								}
-							   	if ($this->tipoRelatorio == 9) {
-                                    echo '<td class="' . $classeBase . '">' . RelatorioController::formataNumeroRelatorio($relatorio[$indiceDeArrays]['valor']) . '</td>';
-                                }
-
-                            }
+								if ($this->tipoRelatorio == 3) {
+									if($contagemRanking === 0 || $relatorio['lideres'] == 'TOTAL' || $relatorio[$indiceDeArrays]['mostrar']){
+										echo '<td class="' . $classeBase . '"">' . $relatorio[$indiceDeArrays]['quantidadeLideres'] . '</td>';
+										echo '<td class="' . $classeBase . '">' . $relatorio[$indiceDeArrays]['membresiaMeta'] . '</td>';
+										echo '<td class="' . $classeBase . '">' . $relatorio[$indiceDeArrays]['celula'] . '</td>';
+										echo '<td class="' . $classeBase . '">' . RelatorioController::formataNumeroRelatorio($relatorio[$indiceDeArrays]['celulaPerformance']) . '%</td>';
+									}else{
+										for($i = 1;$i <= 4;$i++){
+											echo '<td class="' . $classeBase . '"><i class="fa fa-retweet"></i></td>';
+										}
+									}
+								}
+								if ($this->tipoRelatorio == 4 ||
+									$this->tipoRelatorio == 5 ||
+									$this->tipoRelatorio == 6) {
+										$quantidade = 0;
+										switch ($this->tipoRelatorio) {
+										case 4:
+											$quantidade = $relatorio[$indiceDeArrays]['membresiaCulto'];
+											break;
+										case 5:
+											$quantidade = $relatorio[$indiceDeArrays]['membresiaArena'];
+											break;
+										case 6:
+											$quantidade = $relatorio[$indiceDeArrays]['membresiaDomingo'];
+											break;
+										}
+										if($contagemRanking === 0 || $relatorio['lideres'] == 'TOTAL' || $relatorio[$indiceDeArrays]['mostrar']){
+											echo '<td class="' . $classeBase . '">' . $relatorio[$indiceDeArrays]['quantidadeLideres'] . '</td>';
+											echo '<td class="' . $classeBase . '">' . RelatorioController::formataNumeroRelatorio($quantidade) . '</td>';
+										}else{
+											for($i = 1;$i <= 2;$i++){
+												echo '<td class="' . $classeBase . '"><i class="fa fa-retweet"></i></td>';
+											}
+										}
+									}
+								if ($this->tipoRelatorio == 7) {
+									if($contagemRanking === 0 || $relatorio['lideres'] == 'TOTAL' || $relatorio[$indiceDeArrays]['mostrar']){
+										echo '<td class="' . $classeBase . '">' . $relatorio[$indiceDeArrays]['membresiaMeta'] . '</td>';
+										echo '<td class="' . $classeBase . '">' . $relatorio[$indiceDeArrays]['celula'] . '</td>';
+										echo '<td class="' . $classeBase . '">' . RelatorioController::formataNumeroRelatorio($relatorio[$indiceDeArrays]['membresiaArena']) . '</td>';
+									}else{
+										for($i = 1;$i <= 3;$i++){
+											echo '<td class="' . $classeBase . '"><i class="fa fa-retweet"></i></td>';
+										}
+									}
+								}
+								if ($this->tipoRelatorio == 8) {
+									if($contagemRanking === 0 || $relatorio['lideres'] == 'TOTAL' || $relatorio[$indiceDeArrays]['mostrar']){
+										echo '<td class="' . $classeBase . '">' . $relatorio[$indiceDeArrays]['celulaQuantidade'] . '</td>';
+										echo '<td class="' . $classeBase . '">' . $relatorio[$indiceDeArrays]['celulaDeEliteMeta'] . '</td>';
+										echo '<td class="' . $classeBase . '">' . $relatorio[$indiceDeArrays]['celulaDeElite'] . '</td>';
+										echo '<td class="' . $classeBase . '">' . RelatorioController::formataNumeroRelatorio($relatorio[$indiceDeArrays]['celulaDeElitePerformance']) . '%</td>';
+									}else{
+										for($i = 1;$i <= 4;$i++){
+											echo '<td class="' . $classeBase . '"><i class="fa fa-retweet"></i></td>';
+										}
+									}
+								}
+								if ($this->tipoRelatorio == 9) {
+									if($contagemRanking === 0 || $relatorio['lideres'] == 'TOTAL' || $relatorio[$indiceDeArrays]['mostrar']){
+										echo '<td class="' . $classeBase . '">' . RelatorioController::formataNumeroRelatorio($relatorio[$indiceDeArrays]['valor']) . '</td>';
+									}else{
+										echo '<td class="' . $classeBase . '"><i class="fa fa-retweet"></i></td>';
+									}
+								}
+							}
 							if ($this->tipoRelatorio == 1){
-									echo '<th>'. RelatorioController::formataNumeroRelatorio($relatorio['mediaMembresia']) . '</th>';
-								}
+								echo '<th>'. RelatorioController::formataNumeroRelatorio($relatorio['mediaMembresia']) . '</th>';
+							}
 							if($this->tipoRelatorio == 3) {
-									echo '<th>'. RelatorioController::formataNumeroRelatorio($relatorio['mediaCelula']) . '</th>';
-								}
+								echo '<th>'. RelatorioController::formataNumeroRelatorio($relatorio['mediaCelula']) . '</th>';
+							}
 							if ($this->tipoRelatorio == 1 ||
 								$this->tipoRelatorio == 2 ||
 								$this->tipoRelatorio == 3 ||
@@ -385,9 +432,9 @@ $somaMeta = 0;
 									echo '<td class="' . $classeBase . '">' . RelatorioController::formataNumeroRelatorio($relatorio['parceiroDeDeusPerformance']) . '%<td>';
 								}
 							}
-                            echo '</tr>';
-                            $contagemRanking++;
-                        }
+							echo '</tr>';
+							$contagemRanking++;
+						}
                         ?>
                     </tbody>
                 </table>
