@@ -279,7 +279,7 @@ $somaMeta = 0;
 							if($contagemRanking !== 0 && $relatorio['lideres'] != 'TOTAL'){
 								$funcaoOnClickPessoal = 'mostrarSplash(); funcaoCircuito("relatorio/'.$url.'",'.$relatorio['grupo'].')';
 								$linkDeQuemEstaLogado = '<a href="#" '.$this->funcaoOnclick($funcaoOnClickPessoal).'>'.$relatorio['lideres'].'</a>';
-								echo $linkDeQuemEstaLogado;
+								echo ' '.$linkDeQuemEstaLogado;
 							}
 							if($relatorio['lideres'] == 'TOTAL'){
 								echo $relatorio['lideres'];
