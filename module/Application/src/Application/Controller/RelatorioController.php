@@ -1821,16 +1821,23 @@ class RelatorioController extends CircuitoController {
 
 	public static function pegarCelulasNaoRealizadasNoPeriodo(RepositorioORM $repositorioORM, Grupo $grupo, $periodo) {
 		$relatorio = array();
-		$grupoEventosCelula = $grupo->getGrupoEventoAtivosPorTipo(EventoTipo::tipoCelula);
-
+		$grupoEventosCelula = $grupo->getGrupoEventoCelula();
+		$arrayPeriodo = Funcoes::montaPeriodo($periodo);
+		$dataInicio = $arrayPeriodo[3].'-'.$arrayPeriodo[2].'-'.$arrayPeriodo[1];
 		foreach ($grupoEventosCelula as $grupoEventoCelula) {
-			$eventoId = $grupoEventoCelula->getEvento()->getId();
-			$resultado = $repositorioORM->getFatoCicloORM()->verificaFrequenciasPorCelulaEPeriodo($periodo, $eventoId);
-			$realizada = false;
-			if($resultado > 0){
-				$realizada = true;
+			if(
+				($grupoEventoCelula->getData_criacaoStringPadraoBanco() <= $dataInicio && $grupoEventoCelula->verificarSeEstaAtivo()) ||
+				(!$grupoEventoCelula->verificarSeEstaAtivo() && $grupoEventoCelula->getData_inativacaoStringPadraoBanco >= $dataInicio)
+			){
+				$eventoId = $grupoEventoCelula->getEvento()->getId();
+				$resultado = $repositorioORM->getFatoCicloORM()->verificaFrequenciasPorCelulaEPeriodo($periodo, $eventoId);
+				$realizada = false;
+				if($resultado > 0){
+					$realizada = true;
+				}
+				$relatorio[$grupoEventoCelula->getId()]['realizada'] = $realizada;
 			}
-			$relatorio[$grupoEventoCelula->getId()]['realizada'] = $realizada;
+
 		}
 		return $relatorio;
 	}
