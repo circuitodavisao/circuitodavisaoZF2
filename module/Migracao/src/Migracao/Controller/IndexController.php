@@ -2625,7 +2625,10 @@ class IndexController extends CircuitoController {
 				$fatoCiclo = $this->getRepositorio()->getFatoCicloORM()->encontrarPorNumeroIdentificadorEDataCriacao($numeroIdentificador, $dateFormatada, $this->getRepositorio());
 				if($grupoEventoCelulasHomem){
 					foreach($grupoEventoCelulasHomem as $grupoEventoHomem){
-						if(!$grupoEventoHomem->verificarSeEstaAtivo() && $grupoEventoHomem->getData_inativacaoStringPadraoBanco() == $dataParaInativar){
+						if(
+							!$grupoEventoHomem->verificarSeEstaAtivo() && 
+							$grupoEventoHomem->getData_inativacaoStringPadraoBanco() == $dataParaInativar
+						){
 							$grupoEvento = new GrupoEvento();
 							$grupoEvento->setGrupo($grupoAtual);
 							$grupoEvento->setEvento($grupoEventoHomem->getEvento());
@@ -2644,7 +2647,10 @@ class IndexController extends CircuitoController {
 				/* celulas mulher */
 				if($grupoEventoCelulasMulher){
 					foreach($grupoEventoCelulasMulher as $grupoEventoMulher){
-						if(!$grupoEventoMulher->verificarSeEstaAtivo() && $grupoEventoMulher->getData_inativacaoStringPadraoBanco() == $dataParaInativar){
+						if(
+							!$grupoEventoMulher->verificarSeEstaAtivo() && 
+							$grupoEventoMulher->getData_inativacaoStringPadraoBanco() == $dataParaInativar
+						){
 							$grupoEvento = new GrupoEvento();
 							$grupoEvento->setGrupo($grupoAtual);
 							$grupoEvento->setEvento($grupoEventoMulher->getEvento());
