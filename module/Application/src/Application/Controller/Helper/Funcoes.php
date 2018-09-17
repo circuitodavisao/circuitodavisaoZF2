@@ -360,9 +360,9 @@ class Funcoes {
             $periodoFinal++;
         }
 
-//        if ($periodoFinal == 0) {
-//            $periodoFinal = -1;
-//        }
+        if ($periodoFinal == 0) {
+            $periodoFinal = -1;
+        }
         $arrayDePeriodos[0] = $periodoInicial;
         $arrayDePeriodos[1] = $periodoFinal;
 
