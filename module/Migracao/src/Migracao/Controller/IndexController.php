@@ -404,6 +404,7 @@ class IndexController extends CircuitoController {
 										$html .= "<br />SolicitacaoTipo::TRANSFERIR_LIDER_NA_PROPRIA_EQUIPE";
 										$grupoQueSeraSemeado = $this->getRepositorio()->getGrupoORM()->encontrarPorId($solicitacao->getObjeto1());
 										$grupoQueRecebera = $this->getRepositorio()->getGrupoORM()->encontrarPorId($solicitacao->getObjeto2());
+										$extra = '';
 										if ($solicitacao->getNumero()) {
 											$extra = (int) $solicitacao->getNumero();
 										}
@@ -466,7 +467,7 @@ class IndexController extends CircuitoController {
 						$html .= '<br />Sem';
 					}
 				}
-                $this->getRepositorio()->fecharTransacao();
+    //            $this->getRepositorio()->fecharTransacao();
 			} catch (Exception $exc) {
                 $this->getRepositorio()->desfazerTransacao();
                 $html .= $exc->getTraceAsString();
@@ -642,7 +643,7 @@ class IndexController extends CircuitoController {
 
     public function unirCasal($grupo1, $grupo2) {
 		$html = '';
-		$periodoAnterior = -1;
+		$periodoAnterior = 0;
 		$dataParaInativar = self::getDataParaInativacao();
 		$pessoaHomem = $grupo1->getPessoasAtivas()[0];
 		$pessoaMulher = $grupo2->getPessoasAtivas()[0];
@@ -726,28 +727,19 @@ class IndexController extends CircuitoController {
 			$this->getRepositorio()->getFatoLiderORM()->persistir($fatoLiderMulher, false);
 		}
 		$numeroIdentificadorLider = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupoPai);
-
 		$numeroIdentificadorOriginal = $numeroIdentificadorLider . str_pad($grupoNovo->getId(), 8, 0, STR_PAD_LEFT);
 		$fatoLiderNovo = new FatoLider();
-		$fatoLiderNovo->setLideres(($fatoLiderHomem->getLideres()+$fatoLiderMulher->getLideres()));
+		$fatoLiderNovo->setLideres($totalDeLideres);
 		$fatoLiderNovo->setNumero_identificador($numeroIdentificadorOriginal);
 		$this->getRepositorio()->getFatoLiderORM()->persistir($fatoLiderNovo);
 	
 		/* discipulos homem */
 		if($discipulosHomem){
 			foreach($discipulosHomem as $grupoPaiFilhoFilhoHomem){
-				$grupoPaiFilho = new GrupoPaiFilho();
-				$grupoPaiFilho->setGrupoPaiFilhoPai($grupoNovo);
-				$grupoPaiFilho->setGrupoPaiFilhoFilho($grupoPaiFilhoFilhoHomem->getGrupoPaiFilhoFilho());
-				$this->getRepositorio()->getGrupoPaiFilhoORM()->persistir($grupoPaiFilho);
-
 				$numeroIdentificadorNovo = self::inativarECriarFatoLider($numeroIdentificadorOriginal, $grupoPaiFilhoFilhoHomem->getGrupoPaiFilhoFilho());
-				$grupoPaiFilhoFilhoHomem->setDataEHoraDeInativacao($dataParaInativar);
-				$this->getRepositorio()->getGrupoPaiFilhoORM()->persistir($grupoPaiFilhoFilhoHomem);
-
 				if($grupoPaiFilhoFilhos = $grupoPaiFilhoFilhoHomem->getGrupoPaiFilhoFilho()->getGrupoPaiFilhoFilhosAtivos($periodoAnterior)){
 					foreach($grupoPaiFilhoFilhos as $grupoPaiFilho){
-						$grupo1h = $grupoPaiFilho->getGrupoPaiFilhoFilho();
+							$grupo1h = $grupoPaiFilho->getGrupoPaiFilhoFilho();
 						$numeroIdentificadorNovo = self::inativarECriarFatoLider($numeroIdentificadorNovo, $grupo1h);
 						if($grupoPaiFilhoFilhos1 = $grupo1h->getGrupoPaiFilhoFilhosAtivos($periodoAnterior)){
 							foreach($grupoPaiFilhoFilhos1 as $grupoPaiFilho1){
@@ -805,19 +797,18 @@ class IndexController extends CircuitoController {
 						}
 					}
 				}
+				$grupoPaiFilho = new GrupoPaiFilho();
+				$grupoPaiFilho->setGrupoPaiFilhoPai($grupoNovo);
+				$grupoPaiFilho->setGrupoPaiFilhoFilho($grupoPaiFilhoFilhoHomem->getGrupoPaiFilhoFilho());
+				$this->getRepositorio()->getGrupoPaiFilhoORM()->persistir($grupoPaiFilho);
+
+				$grupoPaiFilhoFilhoHomem->setDataEHoraDeInativacao($dataParaInativar);
+				$this->getRepositorio()->getGrupoPaiFilhoORM()->persistir($grupoPaiFilhoFilhoHomem);
 			}
 		}
 		/* discipulos mulher */
 		if($discipulosMulher){
 			foreach($discipulosMulher as $grupoPaiFilhoFilhoMulher){
-				$grupoPaiFilhoFilhoMulher->setDataEHoraDeInativacao($dataParaInativar);
-				$this->getRepositorio()->getGrupoPaiFilhoORM()->persistir($grupoPaiFilhoFilhoMulher);
-
-				$grupoPaiFilho = new GrupoPaiFilho();
-				$grupoPaiFilho->setGrupoPaiFilhoPai($grupoNovo);
-				$grupoPaiFilho->setGrupoPaiFilhoFilho($grupoPaiFilhoFilhoMulher->getGrupoPaiFilhoFilho());
-				$this->getRepositorio()->getGrupoPaiFilhoORM()->persistir($grupoPaiFilho);
-
 				if($grupoPaiFilhoFilhos = $grupoPaiFilhoFilhoMulher->getGrupoPaiFilhoFilho()->getGrupoPaiFilhoFilhosAtivos($periodoAnterior)){
 					foreach($grupoPaiFilhoFilhos as $grupoPaiFilho){
 						$grupo1h = $grupoPaiFilho->getGrupoPaiFilhoFilho();
@@ -878,6 +869,13 @@ class IndexController extends CircuitoController {
 						}
 					}
 				}
+				$grupoPaiFilho = new GrupoPaiFilho();
+				$grupoPaiFilho->setGrupoPaiFilhoPai($grupoNovo);
+				$grupoPaiFilho->setGrupoPaiFilhoFilho($grupoPaiFilhoFilhoMulher->getGrupoPaiFilhoFilho());
+				$this->getRepositorio()->getGrupoPaiFilhoORM()->persistir($grupoPaiFilho);
+
+				$grupoPaiFilhoFilhoMulher->setDataEHoraDeInativacao($dataParaInativar);
+				$this->getRepositorio()->getGrupoPaiFilhoORM()->persistir($grupoPaiFilhoFilhoMulher);
 			}
 		}
 
