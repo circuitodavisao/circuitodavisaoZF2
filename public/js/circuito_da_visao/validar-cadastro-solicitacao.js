@@ -66,7 +66,7 @@ function selecionarTipo() {
 	$('#tituloDaPagina').html($('#tituloDaPagina').html() + ' - ' + $('#solicitacaoTipo option:selected').text());
 	$('#solicitacaoTipoId').val($('#solicitacaoTipo').val());
 
-	$('.grupoLogado').addClass(hidden);
+	$('.grupoLogado').attr('disabled','disabled');
 
 	if (parseInt($('#solicitacaoTipo').val()) === TRANSFERIR_LIDER_PARA_OUTRA_EQUIPE ||
 		parseInt($('#solicitacaoTipo').val()) === UNIR_CASAL ||
@@ -104,6 +104,7 @@ function selecionarTipo() {
 				$('#spanMensagemDeConfirmacao').html('Confirma a remoção desse líder? Somente após autorização do líder da igreja no próximo período será feita a mudança')
 			}
 			if (parseInt($('#solicitacaoTipo').val()) === REMOVER_CELULA) {
+				$('.grupoLogado').removeAttr('disabled');
 				$('#spanSelecioneObjeto1').html('Selecione o líder para remover a célula');
 				$('#spanMensagemDeConfirmacao').html('Confirma a remoção dessa célula? Somente após autorização do líder da igreja no próximo período será feita a mudança')
 			}

@@ -38,16 +38,14 @@ class ListagemLideresTransferencia extends AbstractHelper {
 		$entidade = $this->view->grupo->getEntidadeAtiva();
 		$nomeLideres = $this->view->grupo->getNomeLideresAtivos();
 		$informacao = $entidade->infoEntidade() . ' - ' . $nomeLideres;
-		if($this->view->naoMostrarQuemEstaLogado){
-			$html .= '<option class="grupoLogado ' . $classe . '" value="' . $this->view->grupo->getId() . '">' . $informacao . '</option>';
-		}
+		$html .= '<option class="grupoLogado" value="' . $this->view->grupo->getId() . '">' . $informacao . '</option>';
 		foreach ($this->getDiscipulos() as $gpFilho) {
 			$grupo = $gpFilho->getGrupoPaiFilhoFilho();
 			$entidade = $grupo->getEntidadeAtiva();
 			$nomeLideres = $grupo->getNomeLideresAtivos();
 			$informacao = $entidade->infoEntidade() . ' - ' . $nomeLideres;
 			$dispulos144 = $grupo->getGrupoPaiFilhoFilhosAtivos(1);
-			$html .= '<option class="lider  grupo' . $grupo->getId() . '" value="' . $grupo->getId() . '">' . $informacao . '</option>';
+			$html .= '<option class="lider grupo' . $grupo->getId() . '" value="' . $grupo->getId() . '">' . $informacao . '</option>';
 			if ($dispulos144) {
 				foreach ($dispulos144 as $gpFilho144) {
 					$grupoFilho144 = $gpFilho144->getGrupoPaiFilhoFilho();
