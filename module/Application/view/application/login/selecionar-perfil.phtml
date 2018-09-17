@@ -33,33 +33,39 @@ use Application\Controller\Helper\Constantes;
                     <?php
                     /* Laço para mostrar as responsabilidades ativas */
                     foreach ($this->responsabilidades as $responsabilidade) {
-                        /* Grupo da responsabilidades */
-                        $grupo = $responsabilidade->getGrupo();
-                        if ($grupo->getGrupoPaiFilhoPaiAtivo()) {
-                            $grupoPais = $grupo->getGrupoPaiFilhoPai();
+						if($responsabilidade->verificarSeEstaAtivo()){
+							/* Grupo da responsabilidades */
+							$grupo = $responsabilidade->getGrupo();
+							if ($grupo->getGrupoPaiFilhoPaiAtivo()) {
+								$grupoPais = $grupo->getGrupoPaiFilhoPai();
 
-                            $arrayPais = array();
-                            foreach ($grupoPais as $gpfPai) {
-                                $arrayPais[] = $gpfPai;
-                            }
-                            uksort($arrayPais, function ($a, $b) use ($arrayPais) {
-                                return ($arrayPais[$a]->getId() > $arrayPais[$b]->getId()) ? -1 : 1;
-                            });
+								$arrayPais = array();
+								foreach ($grupoPais as $gpfPai) {
+									$arrayPais[] = $gpfPai;
+								}
+								uksort($arrayPais, function ($a, $b) use ($arrayPais) {
+									return ($arrayPais[$a]->getId() > $arrayPais[$b]->getId()) ? -1 : 1;
+								});
 
-                            foreach ($arrayPais as $gpfPai) {
-                                $ativo = true;
-                                $entidadeSelecionada = $grupo->getEntidadeAtiva();
-                                if (!$gpfPai->verificarSeEstaAtivo()) {
-                                    $ativo = false;
-                                    $entidadeSelecionada = $grupo->getEntidadeInativaPorDataInativacao($gpfPai->getData_inativacaoStringPadraoBanco());
-                                }
-                                $grupoPai = $gpfPai->getGrupoPaiFilhoPai();
-                                echo $this->perfilIcone($entidadeSelecionada, count($this->responsabilidades), $ativo, $grupoPai);
-                            }
-                        } else {
-                            $entidadeSelecionada = $grupo->getEntidadeAtiva();
-                            echo $this->perfilIcone($entidadeSelecionada, count($this->responsabilidades));
-                        }
+								foreach ($arrayPais as $gpfPai) {
+									$ativo = true;
+									$entidadeSelecionada = $grupo->getEntidadeAtiva();
+									if (!$gpfPai->verificarSeEstaAtivo()) {
+										$ativo = false;
+										$entidadeSelecionada = $grupo->getEntidadeInativaPorDataInativacao($gpfPai->getData_inativacaoStringPadraoBanco());
+									}
+									$grupoPai = $gpfPai->getGrupoPaiFilhoPai();
+									echo $this->perfilIcone($entidadeSelecionada, count($this->responsabilidades), $ativo, $grupoPai);
+								}
+							} else {
+								$entidadeSelecionada = $grupo->getEntidadeAtiva();
+								echo $this->perfilIcone($entidadeSelecionada, count($this->responsabilidades));
+							}
+						}else{
+							$grupo = $responsabilidade->getGrupo();
+							$entidadeSelecionada = $grupo->getEntidadeAtiva();
+							echo $this->perfilIcone($entidadeSelecionada, count($this->responsabilidades));
+						}
                     }
                     ?>
                 </div>
