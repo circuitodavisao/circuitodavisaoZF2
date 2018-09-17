@@ -1,0 +1,44 @@
+<?php
+
+use Application\Controller\Helper\Constantes;
+use Application\Model\Entity\EntidadeTipo;
+use Application\Model\Entity\Situacao;
+use Application\Model\Entity\SolicitacaoTipo;
+use Application\Controller\Helper\Funcoes;
+
+?>
+<div class="center-block mw600">
+	<div class="panel">
+		<div class="panel-heading text-center">Exclusão de Células</div>
+		<div class="panel-body pn">
+<?php
+echo '<form action="/relatorioExclusaoCelulas" method="post">';
+echo $this->cabecalhoDeMeses();
+echo '</form>';
+
+echo '<div class="table-responsive">';
+echo '<table class="text-center table table-condensed table-hover bg-light mt15" style="font-size:8px;">';
+echo '<thead>';
+echo '<tr>';
+echo '<th class="text-center">Equipe</th>';
+echo '<th class="text-center">Quantidade</th>';
+echo '</tr>';
+echo '</thead>';
+echo '<tbody>';
+if($arrayDeEquipesECelulasExcluidas = $this->relatorioCelulasExcluidas){
+	$totalDeCelulasIgreja = 0;
+	foreach ($arrayDeEquipesECelulasExcluidas as $equipe => $celulasExcluidas) {
+		echo '<tr>';
+		echo '<td>'.$equipe.'</td>';
+		echo '<td>'.$celulasExcluidas.'</td>';
+		echo '</tr>';
+		$totalDeCelulasIgreja += $celulasExcluidas;
+	}
+	echo '<tr>';
+	echo '<td><b>TOTAL</b></td>';
+	echo '<td><b>'.$totalDeCelulasIgreja.'</b></td>';
+	echo '</tr>';
+}
+echo '</tbody>';
+echo '</table>';
+echo '</div>';
