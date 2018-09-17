@@ -2,6 +2,7 @@
 
 use Application\Controller\Helper\Constantes;
 use Application\Controller\Helper\Funcoes;
+
 ?>
 <style type="text/css">
 	th, p {
@@ -28,7 +29,8 @@ echo '</thead>';
 echo '<tbody>';
 if($this->relatorio){
 	foreach($this->relatorio as $relatorio){
-		$grupoEvento = $this->repositorio->getGrupoEventoORM()->encontrarPorId($relatorio['idGrupoEvento']);
+		$eventoCelula = $this->repositorio->getEventoCelulaORM()->encontrarPorId($relatorio['evento_celula_id']);
+		$grupoEvento = $eventoCelula->getEvento()->getGrupoEventoAtivo();
 		$infoEntidade = $grupoEvento->getGrupo()->getEntidadeAtiva()->infoEntidade($somenteNumeros = true);
 		$lideres = $grupoEvento->getGrupo()->getNomeLideresAtivos();
 		$evento = $grupoEvento->getEvento();
