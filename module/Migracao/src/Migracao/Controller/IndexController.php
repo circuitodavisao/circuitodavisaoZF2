@@ -467,7 +467,7 @@ class IndexController extends CircuitoController {
 						$html .= '<br />Sem';
 					}
 				}
-    //            $this->getRepositorio()->fecharTransacao();
+				$this->getRepositorio()->fecharTransacao();
 			} catch (Exception $exc) {
                 $this->getRepositorio()->desfazerTransacao();
                 $html .= $exc->getTraceAsString();
