@@ -2604,65 +2604,31 @@ class IndexController extends CircuitoController {
 		$html = '';
 		$this->getRepositorio()->iniciarTransacao();
 		try{
-			$dataParaInativar = '2018-09-09';
-			$dataParaCriar = '2018-09-10';
-
-			$solicitacoes = $this->getRepositorio()->getSolicitacaoORM()->encontrarSolicitacoesPorSolicitacaoTipo(SolicitacaoTipo::UNIR_CASAL);
-
-			foreach($solicitacoes as $solicitacao){
-				/* pegando grupos inativados e grupo pessoa */
-				$grupo1 = $this->getRepositorio()->getGrupoORM()->encontrarPorId($solicitacao->getObjeto1());
-				$grupo2 = $this->getRepositorio()->getGrupoORM()->encontrarPorId($solicitacao->getObjeto2());
-
-				$pessoa = $grupo1->getGrupoResponsavel()[0]->getPessoa();
-				$grupoAtual = $pessoa->getResponsabilidadesAtivas()[0]->getGrupo();
-				$numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupoAtual);
-
-				$grupoEventoCelulasHomem = $grupo1->getGrupoEventoPorTipoEAtivo(EventoTipo::tipoCelula, 2);
-				$grupoEventoCelulasMulher = $grupo2->getGrupoEventoPorTipoEAtivo(EventoTipo::tipoCelula, 2);
-				
-				$dateFormatada = DateTime::createFromFormat('Y-m-d', $dataParaCriar);
-				$fatoCiclo = $this->getRepositorio()->getFatoCicloORM()->encontrarPorNumeroIdentificadorEDataCriacao($numeroIdentificador, $dateFormatada, $this->getRepositorio());
-				if($grupoEventoCelulasHomem){
-					foreach($grupoEventoCelulasHomem as $grupoEventoHomem){
-						if(
-							!$grupoEventoHomem->verificarSeEstaAtivo() && 
-							$grupoEventoHomem->getData_inativacaoStringPadraoBanco() == $dataParaInativar
-						){
-							$grupoEvento = new GrupoEvento();
-							$grupoEvento->setGrupo($grupoAtual);
-							$grupoEvento->setEvento($grupoEventoHomem->getEvento());
-							$grupoEvento->setDataEHoraDeCriacao($dataParaCriar);
-							$this->getRepositorio()->getGrupoEventoORM()->persistir($grupoEvento, false);
-
-							$fatoCelula = new FatoCelula();
-							$fatoCelula->setFatoCiclo($fatoCiclo);
-							$fatoCelula->setRealizada(0);
-							$fatoCelula->setEvento_celula_id($grupoEvento->getEvento()->getEventoCelula()->getId());
-							$fatoCelula->setDataEHoraDeCriacao($dataParaCriar);
-							$this->getRepositorio()->getFatoCelulaORM()->persistir($fatoCelula, false);
+			$turmaPessoas = $this->getRepositorio()->getTurmaPessoaORM()->buscarTodosRegistrosEntidade();
+			foreach($turmaPessoas as $turmaPessoa){
+				if($turmaPessoa->verificarSeEstaAtivo()){
+					if($grupoPessoas = $turmaPessoa->getPessoa()->getGrupoPessoa()){
+						$quantidadeDeAtivos = 0;
+						$grupoPessoaMaisNovo = null;
+						foreach($grupoPessoas as $grupoPessoa){
+							if($grupoPessoa->verificarSeEstaAtivo()){
+								if($grupoPessoaMaisNovo === null){
+									$grupoPessoaMaisNovo = $grupoPessoa;
+								}else{
+									if($grupoPessoa->getId() < $grupoPessoaMaisNovo->getId()){
+										$grupoPessoaMaisNovo = $grupoPessoa;
+									}
+								}
+								$quantidadeDeAtivos++;
+							}
 						}
-					}
-				}
-				/* celulas mulher */
-				if($grupoEventoCelulasMulher){
-					foreach($grupoEventoCelulasMulher as $grupoEventoMulher){
-						if(
-							!$grupoEventoMulher->verificarSeEstaAtivo() && 
-							$grupoEventoMulher->getData_inativacaoStringPadraoBanco() == $dataParaInativar
-						){
-							$grupoEvento = new GrupoEvento();
-							$grupoEvento->setGrupo($grupoAtual);
-							$grupoEvento->setEvento($grupoEventoMulher->getEvento());
-							$grupoEvento->setDataEHoraDeCriacao($dataParaCriar);
-							$this->getRepositorio()->getGrupoEventoORM()->persistir($grupoEvento, false);
 
-							$fatoCelula = new FatoCelula();
-							$fatoCelula->setFatoCiclo($fatoCiclo);
-							$fatoCelula->setRealizada(0);
-							$fatoCelula->setEvento_celula_id($grupoEvento->getEvento()->getEventoCelula()->getId());
-							$fatoCelula->setDataEHoraDeCriacao($dataParaCriar);
-							$this->getRepositorio()->getFatoCelulaORM()->persistir($fatoCelula, false);
+						if($quantidadeDeAtivos > 1){
+							echo '<br />Quantidade: '.$quantidadeDeAtivos;
+							if($grupoPessoaMaisNovo){
+								$grupoPessoaMaisNovo->setDataEHoraDeInativacao();
+								$this->getRepositorio()->getGrupoPessoaORM()->persistir($grupoPessoaMaisNovo, false);
+							}
 						}
 					}
 				}
