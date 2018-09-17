@@ -30,11 +30,11 @@ echo '<tbody>';
 if($this->relatorio){
 	foreach($this->relatorio as $relatorio){
 		$eventoCelula = $this->repositorio->getEventoCelulaORM()->encontrarPorId($relatorio['evento_celula_id']);
-		$grupoEvento = $eventoCelula->getEvento()->getGrupoEventoAtivo();
-		$infoEntidade = $grupoEvento->getGrupo()->getEntidadeAtiva()->infoEntidade($somenteNumeros = true);
-		$lideres = $grupoEvento->getGrupo()->getNomeLideresAtivos();
-		$evento = $grupoEvento->getEvento();
-		$celulaDia = $this->translate(Funcoes::diaDaSemanaPorDia($grupoEvento->getEvento()->getDia())).' - ' . substr($grupoEvento->getEvento()->getHora(),0,5);
+		$grupo = $this->repositorio->getGrupoORM()->encontrarPorId(substr($relatorio['numero_identificador'], (count($relatorio['numero_identificador'])-8)));
+
+		$infoEntidade = $grupo->getEntidadeAtiva()->infoEntidade($somenteNumeros = true);
+		$lideres = $grupo->getNomeLideresAtivos();
+		$celulaDia = $this->translate(Funcoes::diaDaSemanaPorDia($eventoCelula->getEvento()->getDia())).' - ' . substr($eventoCelula->getEvento()->getHora(),0,5);
 
 		echo '<tr>';
 		echo '<td>'.$infoEntidade.'</td>';
