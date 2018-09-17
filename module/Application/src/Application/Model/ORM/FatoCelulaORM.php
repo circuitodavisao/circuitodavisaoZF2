@@ -69,4 +69,25 @@ class FatoCelulaORM extends CircuitoORM {
         return $entidade;
     }
 
+	public function encontrarPorNumeroIdentificadorEDataCriacao($numeroIdentificador, $dia) {
+		try {
+			$dql = "SELECT fc.numero_identificador, c.evento_celula_id "
+				. "FROM  " . Constantes::$ENTITY_FATO_CICLO . " fc "
+				. "JOIN fc.fatoCelula c "
+				. "WHERE "
+				. "fc.numero_identificador LIKE ?1 AND fc.data_criacao = ?2 AND c.realizada = 0 ";
+
+			$numeroIdentificador .= '%';
+			$result = $this->getEntityManager()->createQuery($dql)
+				->setParameter(1, $numeroIdentificador)
+				->setParameter(2, $dia)
+				->getResult();
+
+
+			return $result;
+		} catch (Exception $exc) {
+			echo $exc->getMessage();
+		}
+	}
+
 }

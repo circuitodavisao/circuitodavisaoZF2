@@ -17,6 +17,7 @@ use Exception;
 use Zend\Json\Json;
 use Zend\Session\Container;
 use Zend\View\Model\ViewModel;
+use DateTime;
 
 /**
  * Nome: RelatorioController.php
@@ -1699,148 +1700,20 @@ class RelatorioController extends CircuitoController {
 		$idEntidadeAtual = $sessao->idEntidadeAtual;
 		$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
 		$grupo = $entidade->getGrupo();
-
+		$numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupo);
 		$periodo = -1;
-		$relatorios = array();
+		$arrayPeriodo = Funcoes::montaPeriodo($periodo);
+		$inicioPeriodo = $arrayPeriodo[3].'-'.$arrayPeriodo[2].'-'.$arrayPeriodo[1];
+        $dateFormatada = DateTime::createFromFormat('Y-m-d', $inicioPeriodo);
 
-		$relatorioCelulas =	self::pegarCelulasNaoRealizadasNoPeriodo($this->getRepositorio(), $grupo, $periodo);
-		foreach($relatorioCelulas as $chave => $valor){
-			$dados = array(
-				'idGrupoEquipe' => 0,
-				'idGrupoEvento' => $chave, 
-				'realizada' => $valor['realizada'],
-			);
-			if(!$dados['realizada']){
-				$relatorios[] = $dados;
-			}
-		}
-
-		$periodoAfrente = 1;
-		$grupoPaiFilhoFilhos144 = $grupo->getGrupoPaiFilhoFilhosAtivos($periodoAfrente);
-		if ($grupoPaiFilhoFilhos144) {
-			foreach ($grupoPaiFilhoFilhos144 as $gpFilho144) {
-				$grupoFilho144 = $gpFilho144->getGrupoPaiFilhoFilho();
-				$valorSub = 0;
-				if($grupo->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
-					$valorSub = $grupoFilho144->getEntidadeAtiva()->getNome();
-				}
-				if($grupo->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::equipe ||
-					$grupo->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::subEquipe){
-						$valorSub = $grupoFilho144->getEntidadeAtiva()->getNumero();
-					}
-				$relatorioCelulas =	self::pegarCelulasNaoRealizadasNoPeriodo($this->getRepositorio(), $grupoFilho144, $periodo);
-				foreach($relatorioCelulas as $chave => $valor){
-					$dados = array(
-						'idGrupoEquipe' => $valorSub,
-						'idGrupoEvento' => $chave, 
-						'realizada' => $valor['realizada'],
-					);
-					if(!$dados['realizada']){
-						$relatorios[] = $dados;
-					}
-				}
-
-				$grupoPaiFilhoFilhos1728 = $grupoFilho144->getGrupoPaiFilhoFilhosAtivos($periodoAfrente);
-				if ($grupoPaiFilhoFilhos1728) {
-					foreach ($grupoPaiFilhoFilhos1728 as $gpFilho1728) {
-						$grupoFilho1728 = $gpFilho1728->getGrupoPaiFilhoFilho();
-						$relatorioCelulas =	self::pegarCelulasNaoRealizadasNoPeriodo($this->getRepositorio(), $grupoFilho1728, $periodo);
-						foreach($relatorioCelulas as $chave => $valor){
-							$dados = array(
-								'idGrupoEquipe' => $valorSub,
-								'idGrupoEvento' => $chave, 
-								'realizada' => $valor['realizada'],
-							);
-							if(!$dados['realizada']){
-								$relatorios[] = $dados;
-							}
-						}				
-
-						$grupoPaiFilhoFilhos20736 = $grupoFilho1728->getGrupoPaiFilhoFilhosAtivos($periodoAfrente);
-						if ($grupoPaiFilhoFilhos20736) {
-							foreach ($grupoPaiFilhoFilhos20736 as $gpFilho20736) {
-								$grupoFilho20736 = $gpFilho20736->getGrupoPaiFilhoFilho();
-								$relatorioCelulas =	self::pegarCelulasNaoRealizadasNoPeriodo($this->getRepositorio(), $grupoFilho20736, $periodo);
-								foreach($relatorioCelulas as $chave => $valor){
-									$dados = array(
-										'idGrupoEquipe' => $valorSub,
-										'idGrupoEvento' => $chave, 
-										'realizada' => $valor['realizada'],
-									);
-									if(!$dados['realizada']){
-										$relatorios[] = $dados;
-									}
-
-									$grupoPaiFilhoFilhos248832 = $grupoFilho20736->getGrupoPaiFilhoFilhosAtivos($periodoAfrente);
-									if ($grupoPaiFilhoFilhos248832) {
-										foreach ($grupoPaiFilhoFilhos248832 as $gpFilho248832) {
-											$grupoFilho248832 = $gpFilho248832->getGrupoPaiFilhoFilho();
-											$relatorioCelulas =	self::pegarCelulasNaoRealizadasNoPeriodo($this->getRepositorio(), $grupoFilho248832, $periodo);
-											foreach($relatorioCelulas as $chave => $valor){
-												$dados = array(
-													'idGrupoEquipe' => $valorSub,
-													'idGrupoEvento' => $chave, 
-													'realizada' => $valor['realizada'],
-												);
-												if(!$dados['realizada']){
-													$relatorios[] = $dados;
-												}
-											}	
-										}
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-
-		$tamanhoDoArray = count($relatorios);
-
-		for($i = 0; $i < $tamanhoDoArray; $i++){
-			for($j = 0; $j < $tamanhoDoArray; $j++){
-				$posicao1 = $relatorios[$i];
-				$posicao2 = $relatorios[$j];
-
-				if($posicao1['idGrupoEquipe'] < $posicao2['idGrupoEquipe']){
-					$auxiliar = $posicao1;
-					$relatorios[$i] = $posicao2;
-					$relatorios[$j] = $auxiliar;
-				}
-			}
-		}
+		$relatorio = $this->getRepositorio()->getFatoCelulaORM()->encontrarPorNumeroIdentificadorEDataCriacao($numeroIdentificador, $dateFormatada);
 
 		return new ViewModel(
 			array(
-				'relatorio' => $relatorios,
+				'relatorio' => $relatorio,
 				'repositorio' => $this->getRepositorio(),
 				'periodo' => $periodo,
 			));
 	}
-
-	public static function pegarCelulasNaoRealizadasNoPeriodo(RepositorioORM $repositorioORM, Grupo $grupo, $periodo) {
-		$relatorio = array();
-		$grupoEventosCelula = $grupo->getGrupoEventoCelula();
-		$arrayPeriodo = Funcoes::montaPeriodo($periodo);
-		$dataInicio = $arrayPeriodo[3].'-'.$arrayPeriodo[2].'-'.$arrayPeriodo[1];
-		foreach ($grupoEventosCelula as $grupoEventoCelula) {
-			if(
-				($grupoEventoCelula->getData_criacaoStringPadraoBanco() <= $dataInicio && $grupoEventoCelula->verificarSeEstaAtivo()) ||
-				(!$grupoEventoCelula->verificarSeEstaAtivo() && $grupoEventoCelula->getData_inativacaoStringPadraoBanco >= $dataInicio)
-			){
-				$eventoId = $grupoEventoCelula->getEvento()->getId();
-				$resultado = $repositorioORM->getFatoCicloORM()->verificaFrequenciasPorCelulaEPeriodo($periodo, $eventoId);
-				$realizada = false;
-				if($resultado > 0){
-					$realizada = true;
-				}
-				$relatorio[$grupoEventoCelula->getId()]['realizada'] = $realizada;
-			}
-
-		}
-		return $relatorio;
-	}
-
 
 }
