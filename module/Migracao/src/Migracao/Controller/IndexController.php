@@ -2661,7 +2661,7 @@ class IndexController extends CircuitoController {
 					}
 				}
 			}
-			//$this->getRepositorio()->fecharTransacao();
+			$this->getRepositorio()->fecharTransacao();
 		}catch(Exception $e){
 			$html .= 'Error: '.$e->getMessage();
 			$this->getRepositorio()->desfazerTransacao();
