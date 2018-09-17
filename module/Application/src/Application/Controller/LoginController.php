@@ -557,7 +557,7 @@ class LoginController extends CircuitoController {
         if ($idPessoa) {
             $pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($idPessoa);
             /* Responsabilidades */
-            $responsabilidadesAtivas = $pessoa->getResponsabilidadesAtivas();
+            $responsabilidadesAtivas = $pessoa->getResponsabilidadesAtivas($todas = true);
             if ($responsabilidadesAtivas) {
                 $view = new ViewModel(array(Constantes::$RESPONSABILIDADES => $responsabilidadesAtivas));
                 return $view;
