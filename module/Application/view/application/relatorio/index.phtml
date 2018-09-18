@@ -391,11 +391,7 @@ $somaMeta = 0;
 									}
 								}
 								if ($this->tipoRelatorio == 9) {
-									if($contagemRanking === 0 || $relatorio['lideres'] == 'TOTAL' || $relatorio[$indiceDeArrays]['mostrar']){
-										echo '<td class="' . $classeBase . '">' . RelatorioController::formataNumeroRelatorio($relatorio[$indiceDeArrays]['valor']) . '</td>';
-									}else{
-										echo '<td class="' . $classeBase . '"><i class="fa fa-retweet"></i></td>';
-									}
+									echo '<td class="' . $classeBase . '">' . RelatorioController::formataNumeroRelatorio($relatorio[$indiceDeArrays]['valor']) . '</td>';
 								}
 							}
 							if ($this->tipoRelatorio == 1){
