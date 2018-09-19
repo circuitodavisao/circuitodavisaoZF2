@@ -1848,36 +1848,69 @@ class RelatorioController extends CircuitoController {
 			$postDados = $request->getPost();
 			$mes = $postDados['mes'];
 			$ano = $postDados['ano'];
-
+		}else{
+			$mes = date('m');
+			$ano = date('Y');
+		}
+			$arrayPeriodoDoMes = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mes, $ano);
+			$periodoInicial = $arrayPeriodoDoMes[0];
+			$periodoFinal = $arrayPeriodoDoMes[1];
 			$relatorioCelulasExcluidas = array();
+			$totalCiclo = array();
+			$totalGeral = 0;
 			foreach ($solicitacoes as $solicitacao) {
 				$solicitacaoSituacaoAtiva = $solicitacao->getSolicitacaoSituacaoAtiva();
 				$mesDaSolicitacao = $solicitacaoSituacaoAtiva->getData_criacaoMes();
 				$diaDaSolicitacao = $solicitacaoSituacaoAtiva->getData_criacaoDia();
 				$anoDaSolicitacao = $solicitacaoSituacaoAtiva->getData_criacaoAno();
 				$dataAjustadaDaSolicitacao = date('Y-m-d', mktime(0, 0, 0, $mesDaSolicitacao, $diaDaSolicitacao - 1, $anoDaSolicitacao));
-				if($solicitacaoSituacaoAtiva->getSituacao()->getId() === Situacao::CONCLUIDO && $mesDaSolicitacao == $mes && $anoDaSolicitacao == $ano){
-					$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($solicitacao->getObjeto1());
-					$nomeDaEquipe = $grupo->getGrupoEquipe()->getEntidadeAtiva()->getNome();
-					if($solicitacao->getSolicitacaoTipo()->getId() === SolicitacaoTipo::REMOVER_CELULA){
-					$relatorioCelulasExcluidas[$nomeDaEquipe]++;
-					}
-					if($solicitacao->getSolicitacaoTipo()->getId() === SolicitacaoTipo::REMOVER_LIDER){
-						if($grupoEventoCelulasInativas = $grupo->getGrupoEventoPorTipoEAtivo(EventoTipo::tipoCelula, $ativo = 2)){
-							foreach ($grupoEventoCelulasInativas as $celulasInativas) {
-								if($celulasInativas->getData_inativacaoStringPadraoBanco() == $dataAjustadaDaSolicitacao){
-									$relatorioCelulasExcluidas[$nomeDaEquipe]++;
+				for ($indiceDeArrays = $periodoInicial; $indiceDeArrays <= $periodoFinal; $indiceDeArrays++) {
+					$arrayPeriodo = Funcoes::montaPeriodo($indiceDeArrays);
+					$dataFimPeriodo = $arrayPeriodo[6].'-'.$arrayPeriodo[5].'-'.$arrayPeriodo[4];
+					$dataInicioPeriodo = $arrayPeriodo[3].'-'.$arrayPeriodo[2].'-'.$arrayPeriodo[1];
+					if($solicitacaoSituacaoAtiva->getSituacao()->getId() === Situacao::CONCLUIDO && $dataAjustadaDaSolicitacao >= $dataInicioPeriodo && $dataAjustadaDaSolicitacao <= $dataFimPeriodo){
+						$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($solicitacao->getObjeto1());
+						$nomeDaEquipe = $grupo->getGrupoEquipe()->getEntidadeAtiva()->getNome();
+						if($solicitacao->getSolicitacaoTipo()->getId() === SolicitacaoTipo::REMOVER_CELULA){
+							$relatorioCelulasExcluidas[$nomeDaEquipe][$indiceDeArrays]++;
+							$relatorioCelulasExcluidas[$nomeDaEquipe]['fotoDaEquipe'] = $grupo->getGrupoEquipe()->getFotosLideresAtivos();
+							$relatorioCelulasExcluidas[$nomeDaEquipe]['total'] ++;
+							$totalCiclo[$indiceDeArrays]++;
+							$totalGeral++;
+
+						}
+						if($solicitacao->getSolicitacaoTipo()->getId() === SolicitacaoTipo::REMOVER_LIDER){
+							if($grupoEventoCelulasInativas = $grupo->getGrupoEventoPorTipoEAtivo(EventoTipo::tipoCelula, $ativo = 2)){
+								foreach ($grupoEventoCelulasInativas as $celulasInativas) {
+									if($celulasInativas->getData_inativacaoStringPadraoBanco() == $dataAjustadaDaSolicitacao){
+										$relatorioCelulasExcluidas[$nomeDaEquipe][$indiceDeArrays]++;
+									  $relatorioCelulasExcluidas[$nomeDaEquipe]['fotoDaEquipe'] = $grupo->getGrupoEquipe()->getFotosLideresAtivos();
+										$relatorioCelulasExcluidas[$nomeDaEquipe]['total'] ++;
+										$totalCiclo[$indiceDeArrays]++;
+										$totalGeral++;
+									}
 								}
 							}
 						}
 					}
+
 				}
 			}
-			$dados['relatorioCelulasExcluidas'] = $relatorioCelulasExcluidas;			
-		}else{
-			$mes = date('m');
-			$ano = date('Y');
-		}
+			uksort($relatorioCelulasExcluidas, function ($ak, $bk) use ($relatorioCelulasExcluidas) {
+			    $a = $relatorioCelulasExcluidas[$ak];
+			    $b = $relatorioCelulasExcluidas[$bk];
+			    if ($a['total'] === $b['total']) return $ak - $bk;
+			    return $a['total'] < $b['total'] ? 1 : -1;
+			});
+
+			$relatorioCelulasExcluidas['TOTAL']['total'] = $totalGeral;
+			for ($indiceDeArrays = $periodoInicial; $indiceDeArrays <= $periodoFinal; $indiceDeArrays++) {
+					$relatorioCelulasExcluidas['TOTAL'][$indiceDeArrays] = $totalCiclo[$indiceDeArrays];
+			}
+			$dados['relatorioCelulasExcluidas'] = $relatorioCelulasExcluidas;
+			$dados['periodoInicial'] = $periodoInicial;
+			$dados['periodoFinal'] = $periodoFinal;			
+
 		$dados['mes'] = $mes;
 		$dados['ano'] = $ano;
 		return new ViewModel($dados);
