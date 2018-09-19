@@ -746,12 +746,10 @@ class CadastroController extends CircuitoController {
 
 						if ($naoEhAlteracao) {
 							$numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio());
-
 							if ($fatoLider = $this->getRepositorio()->getFatoLiderORM()->encontrarFatoLiderPorNumeroIdentificador($numeroIdentificador)) {
 								$fatoLider->setDataEHoraDeInativacao(Funcoes::proximoDomingo());
 								$this->getRepositorio()->getFatoLiderORM()->persistir($fatoLider, $alterarDataDeCriacao);
 							}
-
 							$quantidadeLideres = count($entidade->getGrupo()->getResponsabilidadesAtivas());
 							$fatoLider = new FatoLider();
 							$fatoLider->setLideres($quantidadeLideres);

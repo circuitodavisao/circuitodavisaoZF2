@@ -526,13 +526,15 @@ class RelatorioController extends CircuitoController {
 				if($grupoEventoCelula = $grupo->getGrupoEventoPorTipoEAtivo(EventoTipo::tipoCelula)){
 					$contadorDeCelulas = 1;
 					foreach($grupoEventoCelula as $grupoEvento)	{
-						$dados['celulas'][$contadorDeCelulas]['idGrupoEvento'] = $grupoEvento->getId();
+						if($grupoEvento->verificarSeEstaAtivo()){
+							$dados['celulas'][$contadorDeCelulas]['idGrupoEvento'] = $grupoEvento->getId();
 
-						$viewHelperManager = $this->getServiceLocator()->get('ViewHelperManager');
-						$tradutor = $viewHelperManager->get('translate');
+							$viewHelperManager = $this->getServiceLocator()->get('ViewHelperManager');
+							$tradutor = $viewHelperManager->get('translate');
 
-						$dados['celulas'][$contadorDeCelulas]['nomeHospedeiro'] ='Dia: '.$tradutor(Funcoes::diaDaSemanaPorDia($grupoEvento->getEvento()->getDia(),1)).' Hora: '.$grupoEvento->getEvento()->getHora(). ' Hospedeiro: '.$grupoEvento->getEvento()->getEventoCelula()->getNome_hospedeiro(). ' Local: ' . $grupoEvento->getEvento()->getEventoCelula()->getLogradouro().' '.$grupoEvento->getEvento()->getEventoCelula()->getComplemento();
-						$contadorDeCelulas++;
+							$dados['celulas'][$contadorDeCelulas]['nomeHospedeiro'] ='Dia: '.$tradutor(Funcoes::diaDaSemanaPorDia($grupoEvento->getEvento()->getDia(),1)).' Hora: '.$grupoEvento->getEvento()->getHora(). ' Hospedeiro: '.$grupoEvento->getEvento()->getEventoCelula()->getNome_hospedeiro(). ' Local: ' . $grupoEvento->getEvento()->getEventoCelula()->getLogradouro().' '.$grupoEvento->getEvento()->getEventoCelula()->getComplemento();
+							$contadorDeCelulas++;
+						}
 					}
 				}
 
