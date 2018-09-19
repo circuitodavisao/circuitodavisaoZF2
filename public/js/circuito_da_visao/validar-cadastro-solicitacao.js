@@ -368,7 +368,8 @@ function selecionarObjeto(id, informacao) {
 								}
 								if ($('#solicitacaoTipoId').val() == REMOVER_CELULA) {
 									objeto.html('Líder que terá a célula removida');
-									if(data.celulaQuantidade > 0){
+									console.log('Quantas celulas: ', data.celulas)
+									if(data.celulas['1']){
 										if(data.celulas['1']){
 											$('#idGrupoEvento').append('<option value="'+data.celulas['1']['idGrupoEvento']+'">'+data.celulas['1']['nomeHospedeiro']+'</option>')
 										}
@@ -510,17 +511,17 @@ function selecionarObjeto(id, informacao) {
 									$('#spanObjeto3').addClass(hidden)
 
 									if ($('#solicitacaoTipoId').val() == REMOVER_CELULA) {
-										if(data.celulaQuantidade == 0){
+										if(data.celula['1']){
+											$('#blocoObjeto3').removeClass(hidden)
+											$('#spanObjeto3').addClass(hidden)
+											$('#spanSelecioneObjeto3').removeClass(hidden)
+											$('#spanObjeto3').addClass(hidden)
+										}else{
 											$(stringSpanSelecioneObjeto + 3).addClass(hidden)
 											$(stringSpanObjeto + 3).html('<div class="alert alert-danger">Time não possui células</div>')
 											$(stringDivBotaoSelecionar + 3).addClass(hidden)
 											$('#spanSelecioneObjeto3').addClass(hidden)
 											$('#spanObjeto3').removeClass(hidden)
-										}else{
-											$('#blocoObjeto3').removeClass(hidden)
-											$('#spanObjeto3').addClass(hidden)
-											$('#spanSelecioneObjeto3').removeClass(hidden)
-											$('#spanObjeto3').addClass(hidden)
 										}
 									}
 									if ($('#solicitacaoTipoId').val() == UNIR_CASAL) {

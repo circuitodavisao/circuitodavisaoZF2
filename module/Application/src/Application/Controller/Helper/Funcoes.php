@@ -361,7 +361,7 @@ class Funcoes {
         }
 
         if ($periodoFinal == 0) {
-            $periodoFinal = -1;
+           $periodoFinal = -1;
         }
         $arrayDePeriodos[0] = $periodoInicial;
         $arrayDePeriodos[1] = $periodoFinal;
