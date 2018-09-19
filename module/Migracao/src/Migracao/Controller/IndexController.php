@@ -2669,10 +2669,19 @@ class IndexController extends CircuitoController {
 					}
 				}
 				$temFatoLider = false;
+				$fatoParaInativar = null;
 				if($fatoLider = $this->getRepositorio()->getFatoLiderORM()->encontrarFatoLiderPorNumeroIdentificador($numeroIdentificador)){
-					$temFatoLider = true;
+					$fatoParaInativar = $fatoLider;	
+					if($fatoLider->getLideres() > 0){
+						$temFatoLider = true;
+					}
 				}
 				if($temCelulaAtiva && !$temFatoLider){
+					if($fatoParaInativar){
+						$html .= 'Grupo: '.$grupo->getId();
+						$fatoParaInativar->setDataEHoraDeInativacao($fatoParaInativar->getData_criacaoStringPadraoBanco());
+						$this->getRepositorio()->getFatoLiderORM()->persistir($fatoParaInativar, false);
+					}
 					$fatoLider = new FatoLider();
 					$fatoLider->setNumero_identificador($numeroIdentificador);
 					$fatoLider->setLideres(count($gruposResponsavel));
