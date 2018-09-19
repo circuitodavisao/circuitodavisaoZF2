@@ -87,6 +87,7 @@ return array(
     'application/relatorio/ranking-celula'                => __DIR__ . '/view/application/relatorio/ranking-celula.phtml',
     'application/relatorio/celulas-nao-realizadas'        => __DIR__ . '/view/application/relatorio/celulas-nao-realizadas.phtml',
     'application/relatorio/instituto'                     => __DIR__ . '/view/application/relatorio/instituto.phtml',
+    'application/relatorio/exclusao-celulas'              => __DIR__ . '/view/application/relatorio/exclusao-celulas.phtml',
     'application/curso/selecionar-pessoas-revisao'        => __DIR__ . '/view/application/curso/selecionar-pessoas-revisao.phtml',
     'application/curso/listagem'                          => __DIR__ . '/view/application/curso/listagem.phtml',
     'application/curso/recibo-financeiro'                 => __DIR__ . '/view/application/curso/recibo-financeiro.phtml',
