@@ -2653,67 +2653,40 @@ class IndexController extends CircuitoController {
 		$this->getRepositorio()->iniciarTransacao();
 		try{
 			$grupos = $this->getRepositorio()->getGrupoORM()->buscarTodosRegistrosEntidade();
+			$relatorio = array();
 			foreach($grupos as $grupo){
-				if($gruposResponsavel = $grupo->getResponsabilidadesAtivas()){
-				}
-				$numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupo);
-
 				$temCelulaAtiva = false;
-				$dataParaCriar = null;
+				$grupoEventoParaUsar = null;
 				if($grupoEventoCelulas = $grupo->getGrupoEventoPorTipoEAtivo(EventoTipo::tipoCelula)){
 					foreach($grupoEventoCelulas as $grupoEvento){
 						if($grupoEvento->verificarSeEstaAtivo()){
 							$temCelulaAtiva = true;
-							$dataParaCriar = $grupoEvento->getData_criacaoStringPadraoBanco();
-						}
-					}
-				}
-				$temFatoLider = false;
-				$fatoParaInativar = null;
-				if($fatoLider = $this->getRepositorio()->getFatoLiderORM()->encontrarFatoLiderPorNumeroIdentificador($numeroIdentificador)){
-					$fatoParaInativar = $fatoLider;	
-					if($fatoLider->getLideres() > 0){
-						$temFatoLider = true;
-					}
-				}
-				if($temCelulaAtiva && !$temFatoLider){
-					if($fatoParaInativar){
-						$html .= 'Grupo: '.$grupo->getId();
-						$fatoParaInativar->setDataEHoraDeInativacao($fatoParaInativar->getData_criacaoStringPadraoBanco());
-						$this->getRepositorio()->getFatoLiderORM()->persistir($fatoParaInativar, false);
-					}
-					$fatoLider = new FatoLider();
-					$fatoLider->setNumero_identificador($numeroIdentificador);
-					$fatoLider->setLideres(count($gruposResponsavel));
-					$fatoLider->setDataEHoraDeCriacao($dataParaCriar);
-					$this->getRepositorio()->getFatoLiderORM()->persistir($fatoLider, false);
-				}
-
-				$numeroParaUsar = str_pad($grupo->getId(), 8, 0, STR_PAD_LEFT);
-				if($fatosLider = $this->getRepositorio()->getFatoLiderORM()->encontrarFatoLiderPorNumeroGrupo($numeroParaUsar)){
-					$contadorDeFatosAtivos = 0;
-					$fatoParaManter = null;
-					foreach($fatosLider as $fatoLider){
-						if($fatoLider->verificarSeEstaAtivo()){
-							if($fatoParaManter === null){
-								$fatoParaManter = $fatoLider;
+							if($grupoEventoParaUsar === null){
+								$grupoEventoParaUsar = $grupoEvento;
 							}else{
-								if($fatoLider->getId() > $fatoParaManter->getId()){
-									$fatoParaManter = $fatoLider;
+								if($grupoEvento->getId() < $grupoEventoParaUsar->getId()){
+									$grupoEventoParaUsar = $grupoEvento;
 								}
 							}
-							$contadorDeFatosAtivos++;
 						}
 					}
-					if($contadorDeFatosAtivos > 1){
-						foreach($fatosLider as $fatoLider){
-							if($fatoLider->verificarSeEstaAtivo()){
-								if($fatoLider->getId() !== $fatoParaManter->getId()){
-									$fatoLider->setDataEHoraDeInativacao($fatoLider->getData_criacaoStringPadraoBanco());
-									$this->getRepositorio()->getFatoLiderORM()->persistir($fatoLider, false);
-								}
-							}
-						}
+				}
+				$temGrupoPaiFilhoPaiAtivo = false;
+				if($grupo->getGrupoPaiFilhoPaiAtivo()){
+					$temGrupoPaiFilhoPaiAtivo = true;
+				}
+				if($temCelulaAtiva && $temGrupoPaiFilhoPaiAtivo){
+					$numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(),$grupo);
+					$gruposResponsavel = $grupo->getResponsabilidadesAtivas();
+					if(count($gruposResponsavel) > 0){
+						$numeroDeLideres = count($gruposResponsavel);
+						$relatorio[substr($numeroIdentificador,0,16)] += $numeroDeLideres;
+						$relatorio[substr($numeroIdentificador,0,8)] += $numeroDeLideres;
+						$fatoLider = new FatoLider();
+						$fatoLider->setNumero_identificador($numeroIdentificador);
+						$fatoLider->setLideres($numeroDeLideres);
+						$fatoLider->setDataEHoraDeCriacao($grupoEventoParaUsar->getData_criacaoStringPadraoBanco());
+						$this->getRepositorio()->getFatoLiderORM()->persistir($fatoLider, false);
 					}
 				}
 			}
@@ -2722,7 +2695,7 @@ class IndexController extends CircuitoController {
 			$html .= 'Error: '.$e->getMessage();
 			$this->getRepositorio()->desfazerTransacao();
 		}
-		return new ViewModel(array('html' => $html));
+		return new ViewModel(array('html' => $html, 'relatorio' => $relatorio));
 	}
 
 	function reprovarAlunosAction(){
