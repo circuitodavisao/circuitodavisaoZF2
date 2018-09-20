@@ -535,140 +535,43 @@ class IndexController extends CircuitoController {
         return new ViewModel(array('html' => $html));
     }
 
-    public function transferirLider($grupoQueSeraSemeado, $grupoQueRecebera, $extra) {
-        $grupoPaiNovo = $grupoQueRecebera;
-        $entidadeNovaInformacao = $extra;
-        $dataParaInativar = self::getDataParaInativacao();
-        $dataParaCriar = date('Y-m-d');
-
-        $htmlBr = '<br />';
-        $html = '';
-        $html .= $htmlBr . "######################################### Iniciando transferencia";
-
-        /* Grupo Selecionado */
-        $html .= $htmlBr . $htmlBr . "Grupo selecionado: " . $grupoQueSeraSemeado->getId();
-        $grupoSelecionado = $grupoQueSeraSemeado;
-        $numeroIdentificadorAtual = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupoSelecionado);
-        $entidadeAtual = $grupoSelecionado->getEntidadeAtiva();
-        $html .= $htmlBr . $entidadeAtual->infoEntidade();
-        $html .= $htmlBr . 'numeroIdentificadorAtual: ' . $numeroIdentificadorAtual;
-        $html .= $htmlBr . 'nome lideres: ' . $grupoSelecionado->getNomeLideresAtivos();
-
-        /* Inativando */
-        $grupoPaiFilhoPaiAtivo = $grupoSelecionado->getGrupoPaiFilhoPaiAtivo();
-        $grupoPaiAtivo = $grupoPaiFilhoPaiAtivo->getGrupoPaiFilhoPai();
-        $html .= $htmlBr . $htmlBr . "Inativando grupo pai filho atual: " . $grupoPaiFilhoPaiAtivo->getId();
-        $html .= $htmlBr . "grupo pai atual: " . $grupoPaiAtivo->getId();
-        $html .= $htmlBr . $grupoPaiAtivo->getEntidadeAtiva()->infoEntidade();
-        $grupoPaiFilhoPaiAtivo->setDataEHoraDeInativacao($dataParaInativar);
-        $html .= $htmlBr . 'DataInativacao: ' . $grupoPaiFilhoPaiAtivo->getData_inativacaoStringPadraoBanco();
-
-        if ($grupoPaiAtivo->getId() === $grupoPaiNovo->getId()) {
-            $html .= $htmlBr . $htmlBr . $htmlBr . 'Pessoa ja transfereida para esse pai';
-        } else {
-            /* Pai novo */
-            $html .= $htmlBr . $htmlBr . "Criando novo grupo pai filho com: " . $grupoPaiNovo->getId();
-            $grupoPaiSelecionado = $grupoPaiNovo;
-            $numeroIdentificadorPaiNovo = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupoPaiSelecionado);
-            $html .= $htmlBr . 'Pai novo';
-            $html .= $htmlBr . $grupoPaiSelecionado->getEntidadeAtiva()->infoEntidade();
-            $html .= $htmlBr . 'nome lideres: ' . $grupoPaiSelecionado->getNomeLideresAtivos();
-            $html .= $htmlBr . 'NumeroIdentificadorPaiNovo: ' . $numeroIdentificadorPaiNovo;
-            $grupoPaiFilhoNovo = new GrupoPaiFilho();
-            $grupoPaiFilhoNovo->setGrupoPaiFilhoPai($grupoPaiSelecionado);
-            $grupoPaiFilhoNovo->setGrupoPaiFilhoFilho($grupoSelecionado);
-            $grupoPaiFilhoNovo->setDataEHoraDeCriacao($dataParaCriar);
-            $html .= $htmlBr . 'DataCriacao: ' . $grupoPaiFilhoNovo->getData_criacaoStringPadraoBanco();
-
-            $html .= $htmlBr . $htmlBr . "Inativando entidade atual";
-            $html .= $htmlBr . 'idEntidade: ' . $entidadeAtual->getId();
-            $html .= $htmlBr . $entidadeAtual->infoEntidade();
-            $entidadeAtual->setDataEHoraDeInativacao($dataParaInativar);
-            $html .= $htmlBr . 'DataInativacao: ' . $entidadeAtual->getData_inativacaoStringPadraoBanco();
-
-            $html .= $htmlBr . $htmlBr . "Criando nova entidade: " . $entidadeNovaInformacao;
-            $idEntidadeTipo = EntidadeTipo::subEquipe;
-            if ($grupoPaiSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() !== EntidadeTipo::subEquipe) {
-                $idEntidadeTipo = ($grupoPaiSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() + 1);
-            }
-            $entidadeTipo = $this->getRepositorio()->getEntidadeTipoORM()->encontrarPorId($idEntidadeTipo);
-            $entidadeNova = new Entidade();
-            $entidadeNova->setGrupo($grupoSelecionado);
-            $entidadeNova->setEntidadeTipo($entidadeTipo);
-            if ($entidadeNovaInformacao instanceof int) {
-                $entidadeNova->setNumero($entidadeNovaInformacao);
-            }
-            if ($entidadeNovaInformacao instanceof string) {
-                $entidadeNova->setNome($entidadeNovaInformacao);
-            }
-            $entidadeNova->setDataEHoraDeCriacao($dataParaCriar);
-            $html .= $htmlBr . 'DataCriacao: ' . $entidadeNova->getData_criacaoStringPadraoBanco();
-
-            $html .= $htmlBr . $htmlBr . "Inativando fato_lider";
-			$numeroIdentificadorOriginal = $numeroIdentificadorPaiNovo . str_pad($grupoSelecionado->getId(), 8, 0, STR_PAD_LEFT);
-			$fatoLiderAtual = $this->getRepositorio()->getFatoLiderORM()->encontrarFatoLiderPorNumeroIdentificador($numeroIdentificadorAtual);
-            if ($fatoLiderAtual) {
-                $html .= $htmlBr . "FatoLiderId: " . $fatoLiderAtual->getId();
-                $fatoLiderAtual->setDataEHoraDeInativacao($dataParaInativar);
-                $html .= $htmlBr . 'DataInativacao: ' . $fatoLiderAtual->getData_inativacaoStringPadraoBanco();
-
-                $html .= $htmlBr . $htmlBr . "Criando novo fato_lider";
-                $fatoLiderNovo = new FatoLider();
-                $fatoLiderNovo->setLideres($fatoLiderAtual->getLideres());
-                $fatoLiderNovo->setNumero_identificador($numeroIdentificadorOriginal);
-                $fatoLiderNovo->setDataEHoraDeCriacao($dataParaCriar);
-                $html .= $htmlBr . 'numeroIdentificadorNovo: ' . $numeroIdentificadorOriginal;
-                $html .= $htmlBr . 'DataCriacao: ' . $fatoLiderNovo->getData_criacaoStringPadraoBanco();
-
-                /* So cria fato lider caso seja um lider transferido */
-                $this->getRepositorio()->getFatoLiderORM()->persistir($fatoLiderAtual, false);
-                $this->getRepositorio()->getFatoLiderORM()->persistir($fatoLiderNovo, false);
-            }
-			$periodoAnterior = 0;
-			if($discipulos = $grupoSelecionado->getGrupoPaiFilhoFilhosAtivos($periodoAnterior)){
-				foreach($discipulos as $grupoPaiFilhoFilho){
-					$numeroIdentificadorNovo = self::inativarECriarFatoLider($numeroIdentificadorOriginal, $grupoPaiFilhoFilho->getGrupoPaiFilhoFilho());
-					if($grupoPaiFilhoFilhos = $grupoPaiFilhoFilho->getGrupoPaiFilhoFilho()->getGrupoPaiFilhoFilhosAtivos($periodoAnterior)){
-						foreach($grupoPaiFilhoFilhos as $grupoPaiFilho){
-							$grupo1h = $grupoPaiFilho->getGrupoPaiFilhoFilho();
-							$numeroIdentificadorNovo = self::inativarECriarFatoLider($numeroIdentificadorNovo, $grupo1h);
-							if($grupoPaiFilhoFilhos1 = $grupo1h->getGrupoPaiFilhoFilhosAtivos($periodoAnterior)){
-								foreach($grupoPaiFilhoFilhos1 as $grupoPaiFilho1){
-									$grupo2h = $grupoPaiFilho1->getGrupoPaiFilhoFilho();
-									$numeroIdentificadorNovo = self::inativarECriarFatoLider($numeroIdentificadorNovo, $grupo2h);
-									if($grupoPaiFilhoFilhos2 = $grupo2h->getGrupoPaiFilhoFilhosAtivos($periodoAnterior)){
-										foreach($grupoPaiFilhoFilhos2 as $grupoPaiFilho2){
-											$grupo3h = $grupoPaiFilho2->getGrupoPaiFilhoFilho();
-											$numeroIdentificadorNovo = self::inativarECriarFatoLider($numeroIdentificadorNovo, $grupo3h);
-											if($grupoPaiFilhoFilhos3 = $grupo3h->getGrupoPaiFilhoFilhosAtivos($periodoAnterior)){
-												foreach($grupoPaiFilhoFilhos3 as $grupoPaiFilho3){
-													$grupo4h = $grupoPaiFilho3->getGrupoPaiFilhoFilho();
-													$numeroIdentificadorNovo = self::inativarECriarFatoLider($numeroIdentificadorNovo, $grupo4h);
-													if($grupoPaiFilhoFilhos4 = $grupo4h->getGrupoPaiFilhoFilhosAtivos($periodoAnterior)){
-														foreach($grupoPaiFilhoFilhos4 as $grupoPaiFilho4){
-															$grupo5h = $grupoPaiFilho4->getGrupoPaiFilhoFilho();
-															$numeroIdentificadorNovo = self::inativarECriarFatoLider($numeroIdentificadorNovo, $grupo5h);
-															if($grupoPaiFilhoFilhos5 = $grupo5h->getGrupoPaiFilhoFilhosAtivos($periodoAnterior)){
-																foreach($grupoPaiFilhoFilhos5 as $grupoPaiFilho5){
-																	$grupo6h = $grupoPaiFilho5->getGrupoPaiFilhoFilho();
-																	$numeroIdentificadorNovo = self::inativarECriarFatoLider($numeroIdentificadorNovo, $grupo6h);
-																	if($grupoPaiFilhoFilhos6 = $grupo6h->getGrupoPaiFilhoFilhosAtivos($periodoAnterior)){
-																		foreach($grupoPaiFilhoFilhos6 as $grupoPaiFilho6){
-																			$grupo7h = $grupoPaiFilho6->getGrupoPaiFilhoFilho();
-																			$numeroIdentificadorNovo = self::inativarECriarFatoLider($numeroIdentificadorNovo, $grupo7h);
-																			if($grupoPaiFilhoFilhos7 = $grupo7h->getGrupoPaiFilhoFilhosAtivos($periodoAnterior)){
-																				foreach($grupoPaiFilhoFilhos7 as $grupoPaiFilho7){
-																					$grupo8h = $grupoPaiFilho7->getGrupoPaiFilhoFilho();
-																					$numeroIdentificadorNovo = self::inativarECriarFatoLider($numeroIdentificadorNovo, $grupo8h);
-																					if($grupoPaiFilhoFilhos8 = $grupo8h->getGrupoPaiFilhoFilhosAtivos($periodoAnterior)){
-																						foreach($grupoPaiFilhoFilhos8 as $grupoPaiFilho8){
-																							$grupo9h = $grupoPaiFilho8->getGrupoPaiFilhoFilho();
-																							$numeroIdentificadorNovo = self::inativarECriarFatoLider($numeroIdentificadorNovo, $grupo9h);
-																							if($grupoPaiFilhoFilhos9 = $grupo9h->getGrupoPaiFilhoFilhosAtivos($periodoAnterior)){
-																								foreach($grupoPaiFilhoFilhos9 as $grupoPaiFilho9){
-																									$grupo10h = $grupoPaiFilho9->getGrupoPaiFilhoFilho();
-																									$numeroIdentificadorNovo = self::inativarECriarFatoLider($numeroIdentificadorNovo, $grupo10h);
-																								}
+	public function transferirLider($grupoQueSeraSemeado, $grupoQueRecebera, $extra) {
+		$periodo = 0;
+		$numeroIdentificadorLider = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupoQueRecebera);
+		$resultado = self::criarNo($grupoQueSeraSemeado, $grupoQueRecebera, $numeroIdentificadorLider, $extra);
+		if($discipulos = $grupoQueSeraSemeado->getGrupoPaiFilhoFilhosAtivos($periodo)){
+			foreach($discipulos as $discipulo){
+				$resultado1 = self::criarNo($discipulo->getGrupoPaiFilhoFilho(), $resultado[0], $resultado[1]);
+				if($discipulos1 = $discipulo->getGrupoPaiFilhoFilho()->getGrupoPaiFilhoFilhosAtivos($periodo)){
+					foreach($discipulos1 as $discipulo1){
+						$resultado2 = self::criarNo($discipulo1->getGrupoPaiFilhoFilho(), $resultado1[0], $resultado1[1]);
+						if($discipulos2 = $discipulo1->getGrupoPaiFilhoFilho()->getGrupoPaiFilhoFilhosAtivos($periodo)){
+							foreach($discipulos2 as $discipulo2){
+								$resultado3 = self::criarNo($discipulo2->getGrupoPaiFilhoFilho(), $resultado2[0], $resultado2[1]);
+								if($discipulos3 = $discipulo2->getGrupoPaiFilhoFilho()->getGrupoPaiFilhoFilhosAtivos($periodo)){
+									foreach($discipulos3 as $discipulo3){
+										$resultado4 = self::criarNo($discipulo3->getGrupoPaiFilhoFilho(), $resultado3[0], $resultado3[1]);
+										if($discipulos4 = $discipulo3->getGrupoPaiFilhoFilho()->getGrupoPaiFilhoFilhosAtivos($periodo)){
+											foreach($discipulos4 as $discipulo4){
+												$resultado5 = self::criarNo($discipulo4->getGrupoPaiFilhoFilho(), $resultado4[0], $resultado4[1]);
+												if($discipulos5 = $discipulo4->getGrupoPaiFilhoFilho()->getGrupoPaiFilhoFilhosAtivos($periodo)){
+													foreach($discipulos5 as $discipulo5){
+														$resultado6 = self::criarNo($discipulo5->getGrupoPaiFilhoFilho(), $resultado5[0], $resultado5[1]);
+														if($discipulos6 = $discipulo5->getGrupoPaiFilhoFilho()->getGrupoPaiFilhoFilhosAtivos($periodo)){
+															foreach($discipulos6 as $discipulo6){
+																$resultado7 = self::criarNo($discipulo6->getGrupoPaiFilhoFilho(), $resultado6[0], $resultado6[1]);
+																if($discipulos7 = $discipulo6->getGrupoPaiFilhoFilho()->getGrupoPaiFilhoFilhosAtivos($periodo)){
+																	foreach($discipulos7 as $discipulo7){
+																		$resultado8 = self::criarNo($discipulo7->getGrupoPaiFilhoFilho(), $resultado7[0], $resultado7[1]);
+																		if($discipulos8 = $discipulo7->getGrupoPaiFilhoFilho()->getGrupoPaiFilhoFilhosAtivos($periodo)){
+																			foreach($discipulos8 as $discipulo8){
+																				$resultado9 = self::criarNo($discipulo8->getGrupoPaiFilhoFilho(), $resultado8[0], $resultado8[1]);
+																				if($discipulos9 = $discipulo8->getGrupoPaiFilhoFilho()->getGrupoPaiFilhoFilhosAtivos($periodo)){
+																					foreach($discipulos9 as $discipulo9){
+																						$resultado10 = self::criarNo($discipulo9->getGrupoPaiFilhoFilho(), $resultado9[0], $resultado9[1]);
+																						if($discipulos10 = $discipulo9->getGrupoPaiFilhoFilho()->getGrupoPaiFilhoFilhosAtivos($periodo)){
+																							foreach($discipulos10 as $discipulo10){
+																								self::criarNo($discipulo10->getGrupoPaiFilhoFilho(), $resultado10[0], $resultado10[1]);
 																							}
 																						}
 																					}
@@ -690,23 +593,82 @@ class IndexController extends CircuitoController {
 					}
 				}
 			}
+		}
+	}
 
-            $html .= $htmlBr . $htmlBr . $htmlBr . 'Gerando';
-            $this->getRepositorio()->getGrupoPaiFilhoORM()->persistir($grupoPaiFilhoPaiAtivo, false);
-            $this->getRepositorio()->getGrupoPaiFilhoORM()->persistir($grupoPaiFilhoNovo, false);
-            $this->getRepositorio()->getEntidadeORM()->persistir($entidadeAtual, false);
-            $this->getRepositorio()->getEntidadeORM()->persistir($entidadeNova, false);
-            $html .= $htmlBr . 'Gerados!';
+	public function criarNo($grupoQueSeraSemeado, $grupoQueRecebera, $numeroIdentificadorLider, $extra = null){
+		/* novo grupo */
+		$grupoNovo = new Grupo();
+		$this->getRepositorio()->getGrupoORM()->persistir($grupoNovo);
+		/* entidade nova */
+		$entidade = new Entidade();
+		$entidade->setGrupo($grupoNovo);
+		if($extra){
+			if(is_numeric($extra)){
+				$entidade->setNumero($extra);
+			}else{
+				$entidade->setNome($extra);
+			}
+		}else{
+			if($grupoQueSeraSemeado->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::subEquipe){
+				$entidade->setNumero($grupoQueSeraSemeado->getEntidadeAtiva()->getNumero());
+			}
+			if($grupoQueSeraSemeado->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::equipe){
+				$entidade->setNome($grupoQueSeraSemeado->getEntidadeAtiva()->getNome());
+			}
+		}
+		$entidade->setEntidadeTipo($grupoQueSeraSemeado->getEntidadeAtiva()->getEntidadeTipo());
+		$this->getRepositorio()->getEntidadeORM()->persistir($entidade);
+		/* grupo pai filho novo */
+		$grupoPaiFilhoNovo = new GrupoPaiFilho();
+		$grupoPaiFilhoNovo->setGrupoPaiFilhoPai($grupoQueRecebera);
+		$grupoPaiFilhoNovo->setGrupoPaiFilhoFilho($grupoNovo);
+		$this->getRepositorio()->getGrupoPaiFilhoORM()->persistir($grupoPaiFilhoNovo);
+		/* grupo responsabilidades */
+		$totalDeLideres = 0;
+		if($grupoResponsaveis = $grupoQueSeraSemeado->getResponsabilidadesAtivas()){
+			foreach($grupoResponsaveis as $grupoResponsavel){
+				$grupoResponsavelNovo = new GrupoResponsavel();
+				$grupoResponsavelNovo->setGrupo($grupoNovo);
+				$grupoResponsavelNovo->setPessoa($grupoResponsavel->getPessoa());
+				$this->getRepositorio()->getGrupoResponsavelORM()->persistir($grupoResponsavelNovo);
+				$totalDeLideres++;
+			}
+		}
+		/* grupo evento */
+		/* celulas */
+		$temAlgumaCelula = false;
+		if($grupoEventoCelulas = $grupoQueSeraSemeado->getGrupoEventoPorTipoEAtivo(EventoTipo::tipoCelula)){
+			$temAlgumaCelula = true;
+			foreach($grupoEventoCelulas as $grupoEventoCelula){
+				$grupoEventoNovo = new GrupoEvento();
+				$grupoEventoNovo->setGrupo($grupoNovo);
+				$grupoEventoNovo->setEvento($grupoEventoCelula->getEvento());
+				$this->getRepositorio()->getGrupoEventoORM()->persistir($grupoEventoNovo);
+			}
+		}
+		if($linhaDeLancamento = $grupoQueSeraSemeado->getGrupoPessoasNoPeriodo()){
+			foreach($linhaDeLancamento as $grupoPessoa){
+				$grupoPessoaNovo = new GrupoPessoa();
+				$grupoPessoaNovo->setGrupo($grupoNovo);
+				$grupoPessoaNovo->setPessoa($grupoPessoa->getPessoa());
+				$grupoPessoaNovo->setGrupoPessoaTipo($grupoPessoa->getGrupoPessoaTipo());
+				$this->getRepositorio()->getGrupoPessoaORM()->persistir($grupoPessoaNovo);
+			}
+		}
+		$numeroIdentificadorNovo = $numeroIdentificadorLider . str_pad($grupoNovo->getId(), 8, 0, STR_PAD_LEFT);
+		$fatoLiderNovo = new FatoLider();
+		$fatoLiderNovo->setLideres($totalDeLideres);
+		$fatoLiderNovo->setNumero_identificador($numeroIdentificadorNovo);
+		$this->getRepositorio()->getFatoLiderORM()->persistir($fatoLiderNovo);
 
-            $html .= $htmlBr . '### Id Grupo Pai Filho Novo: ' . $grupoPaiFilhoNovo->getId();
-            $html .= $htmlBr . '### PAI Grupo Pai Filho Novo: ' . $grupoPaiFilhoNovo->getGrupoPaiFilhoPai()->getId();
-            $html .= $htmlBr . '### FILHO Grupo Pai Filho Novo: ' . $grupoPaiFilhoNovo->getGrupoPaiFilhoFilho()->getId();
+		self::inativarEntidadeDoLider($grupoQueSeraSemeado);
 
-            $html .= $htmlBr . $htmlBr . "Precisa reenviar o relatorio";
-        }
-
-        return $html;
-    }
+		$resultado = array();
+		$resultado[0] = $grupoNovo;
+		$resultado[1] = $numeroIdentificadorNovo;
+		return $resultado;
+	}
 
     public function unirCasal($grupo1, $grupo2) {
 		$html = '';
@@ -723,6 +685,7 @@ class IndexController extends CircuitoController {
 
 		$grupoPaiFilhoPai = $grupo1->getGrupoPaiFilhoPaiAtivo();
 		$grupoPai = $grupoPaiFilhoPai->getGrupoPaiFilhoPai();
+
 		/* novo grupo */
 		$grupoNovo = new Grupo();
 		$this->getRepositorio()->getGrupoORM()->persistir($grupoNovo);
@@ -802,48 +765,38 @@ class IndexController extends CircuitoController {
 	
 		/* discipulos homem */
 		if($discipulosHomem){
-			foreach($discipulosHomem as $grupoPaiFilhoFilhoHomem){
-				$numeroIdentificadorNovo = self::inativarECriarFatoLider($numeroIdentificadorOriginal, $grupoPaiFilhoFilhoHomem->getGrupoPaiFilhoFilho());
-				if($grupoPaiFilhoFilhos = $grupoPaiFilhoFilhoHomem->getGrupoPaiFilhoFilho()->getGrupoPaiFilhoFilhosAtivos($periodoAnterior)){
-					foreach($grupoPaiFilhoFilhos as $grupoPaiFilho){
-							$grupo1h = $grupoPaiFilho->getGrupoPaiFilhoFilho();
-						$numeroIdentificadorNovo = self::inativarECriarFatoLider($numeroIdentificadorNovo, $grupo1h);
-						if($grupoPaiFilhoFilhos1 = $grupo1h->getGrupoPaiFilhoFilhosAtivos($periodoAnterior)){
-							foreach($grupoPaiFilhoFilhos1 as $grupoPaiFilho1){
-								$grupo2h = $grupoPaiFilho1->getGrupoPaiFilhoFilho();
-								$numeroIdentificadorNovo = self::inativarECriarFatoLider($numeroIdentificadorNovo, $grupo2h);
-								if($grupoPaiFilhoFilhos2 = $grupo2h->getGrupoPaiFilhoFilhosAtivos($periodoAnterior)){
-									foreach($grupoPaiFilhoFilhos2 as $grupoPaiFilho2){
-										$grupo3h = $grupoPaiFilho2->getGrupoPaiFilhoFilho();
-										$numeroIdentificadorNovo = self::inativarECriarFatoLider($numeroIdentificadorNovo, $grupo3h);
-										if($grupoPaiFilhoFilhos3 = $grupo3h->getGrupoPaiFilhoFilhosAtivos($periodoAnterior)){
-											foreach($grupoPaiFilhoFilhos3 as $grupoPaiFilho3){
-												$grupo4h = $grupoPaiFilho3->getGrupoPaiFilhoFilho();
-												$numeroIdentificadorNovo = self::inativarECriarFatoLider($numeroIdentificadorNovo, $grupo4h);
-												if($grupoPaiFilhoFilhos4 = $grupo4h->getGrupoPaiFilhoFilhosAtivos($periodoAnterior)){
-													foreach($grupoPaiFilhoFilhos4 as $grupoPaiFilho4){
-														$grupo5h = $grupoPaiFilho4->getGrupoPaiFilhoFilho();
-														$numeroIdentificadorNovo = self::inativarECriarFatoLider($numeroIdentificadorNovo, $grupo5h);
-														if($grupoPaiFilhoFilhos5 = $grupo5h->getGrupoPaiFilhoFilhosAtivos($periodoAnterior)){
-															foreach($grupoPaiFilhoFilhos5 as $grupoPaiFilho5){
-																$grupo6h = $grupoPaiFilho5->getGrupoPaiFilhoFilho();
-																$numeroIdentificadorNovo = self::inativarECriarFatoLider($numeroIdentificadorNovo, $grupo6h);
-																if($grupoPaiFilhoFilhos6 = $grupo6h->getGrupoPaiFilhoFilhosAtivos($periodoAnterior)){
-																	foreach($grupoPaiFilhoFilhos6 as $grupoPaiFilho6){
-																		$grupo7h = $grupoPaiFilho6->getGrupoPaiFilhoFilho();
-																		$numeroIdentificadorNovo = self::inativarECriarFatoLider($numeroIdentificadorNovo, $grupo7h);
-																		if($grupoPaiFilhoFilhos7 = $grupo7h->getGrupoPaiFilhoFilhosAtivos($periodoAnterior)){
-																			foreach($grupoPaiFilhoFilhos7 as $grupoPaiFilho7){
-																				$grupo8h = $grupoPaiFilho7->getGrupoPaiFilhoFilho();
-																				$numeroIdentificadorNovo = self::inativarECriarFatoLider($numeroIdentificadorNovo, $grupo8h);
-																				if($grupoPaiFilhoFilhos8 = $grupo8h->getGrupoPaiFilhoFilhosAtivos($periodoAnterior)){
-																					foreach($grupoPaiFilhoFilhos8 as $grupoPaiFilho8){
-																						$grupo9h = $grupoPaiFilho8->getGrupoPaiFilhoFilho();
-																						$numeroIdentificadorNovo = self::inativarECriarFatoLider($numeroIdentificadorNovo, $grupo9h);
-																						if($grupoPaiFilhoFilhos9 = $grupo9h->getGrupoPaiFilhoFilhosAtivos($periodoAnterior)){
-																							foreach($grupoPaiFilhoFilhos9 as $grupoPaiFilho9){
-																								$grupo10h = $grupoPaiFilho9->getGrupoPaiFilhoFilho();
-																								$numeroIdentificadorNovo = self::inativarECriarFatoLider($numeroIdentificadorNovo, $grupo10h);
+			foreach($discipulosHomem as $discipuloHomem){
+				$resultado1 = self::criarNo($discipuloHomem->getGrupoPaiFilhoFilho(), $grupoNovo, $numeroIdentificadorOriginal);
+				if($discipulos1 = $discipuloHomem->getGrupoPaiFilhoFilho()->getGrupoPaiFilhoFilhosAtivos($periodo)){
+					foreach($discipulos1 as $discipulo1){
+						$resultado2 = self::criarNo($discipulo1->getGrupoPaiFilhoFilho(), $resultado1[0], $resultado1[1]);
+						if($discipulos2 = $discipulo1->getGrupoPaiFilhoFilho()->getGrupoPaiFilhoFilhosAtivos($periodo)){
+							foreach($discipulos2 as $discipulo2){
+								$resultado3 = self::criarNo($discipulo2->getGrupoPaiFilhoFilho(), $resultado2[0], $resultado2[1]);
+								if($discipulos3 = $discipulo2->getGrupoPaiFilhoFilho()->getGrupoPaiFilhoFilhosAtivos($periodo)){
+									foreach($discipulos3 as $discipulo3){
+										$resultado4 = self::criarNo($discipulo3->getGrupoPaiFilhoFilho(), $resultado3[0], $resultado3[1]);
+										if($discipulos4 = $discipulo3->getGrupoPaiFilhoFilho()->getGrupoPaiFilhoFilhosAtivos($periodo)){
+											foreach($discipulos4 as $discipulo4){
+												$resultado5 = self::criarNo($discipulo4->getGrupoPaiFilhoFilho(), $resultado4[0], $resultado4[1]);
+												if($discipulos5 = $discipulo4->getGrupoPaiFilhoFilho()->getGrupoPaiFilhoFilhosAtivos($periodo)){
+													foreach($discipulos5 as $discipulo5){
+														$resultado6 = self::criarNo($discipulo5->getGrupoPaiFilhoFilho(), $resultado5[0], $resultado5[1]);
+														if($discipulos6 = $discipulo5->getGrupoPaiFilhoFilho()->getGrupoPaiFilhoFilhosAtivos($periodo)){
+															foreach($discipulos6 as $discipulo6){
+																$resultado7 = self::criarNo($discipulo6->getGrupoPaiFilhoFilho(), $resultado6[0], $resultado6[1]);
+																if($discipulos7 = $discipulo6->getGrupoPaiFilhoFilho()->getGrupoPaiFilhoFilhosAtivos($periodo)){
+																	foreach($discipulos7 as $discipulo7){
+																		$resultado8 = self::criarNo($discipulo7->getGrupoPaiFilhoFilho(), $resultado7[0], $resultado7[1]);
+																		if($discipulos8 = $discipulo7->getGrupoPaiFilhoFilho()->getGrupoPaiFilhoFilhosAtivos($periodo)){
+																			foreach($discipulos8 as $discipulo8){
+																				$resultado9 = self::criarNo($discipulo8->getGrupoPaiFilhoFilho(), $resultado8[0], $resultado8[1]);
+																				if($discipulos9 = $discipulo8->getGrupoPaiFilhoFilho()->getGrupoPaiFilhoFilhosAtivos($periodo)){
+																					foreach($discipulos9 as $discipulo9){
+																						$resultado10 = self::criarNo($discipulo9->getGrupoPaiFilhoFilho(), $resultado9[0], $resultado9[1]);
+																						if($discipulos10 = $discipulo9->getGrupoPaiFilhoFilho()->getGrupoPaiFilhoFilhosAtivos($periodo)){
+																							foreach($discipulos10 as $discipulo10){
+																								self::criarNo($discipulo10->getGrupoPaiFilhoFilho(), $resultado10[0], $resultado10[1]);
 																							}
 																						}
 																					}
@@ -864,58 +817,42 @@ class IndexController extends CircuitoController {
 						}
 					}
 				}
-				$grupoPaiFilho = new GrupoPaiFilho();
-				$grupoPaiFilho->setGrupoPaiFilhoPai($grupoNovo);
-				$grupoPaiFilho->setGrupoPaiFilhoFilho($grupoPaiFilhoFilhoHomem->getGrupoPaiFilhoFilho());
-				$this->getRepositorio()->getGrupoPaiFilhoORM()->persistir($grupoPaiFilho);
-
-				$grupoPaiFilhoFilhoHomem->setDataEHoraDeInativacao($dataParaInativar);
-				$this->getRepositorio()->getGrupoPaiFilhoORM()->persistir($grupoPaiFilhoFilhoHomem);
 			}
 		}
 		/* discipulos mulher */
 		if($discipulosMulher){
-			foreach($discipulosMulher as $grupoPaiFilhoFilhoMulher){
-				if($grupoPaiFilhoFilhos = $grupoPaiFilhoFilhoMulher->getGrupoPaiFilhoFilho()->getGrupoPaiFilhoFilhosAtivos($periodoAnterior)){
-					foreach($grupoPaiFilhoFilhos as $grupoPaiFilho){
-						$grupo1h = $grupoPaiFilho->getGrupoPaiFilhoFilho();
-						$numeroIdentificadorNovo = self::inativarECriarFatoLider($numeroIdentificadorNovo, $grupo1h);
-						if($grupoPaiFilhoFilhos1 = $grupo1h->getGrupoPaiFilhoFilhosAtivos($periodoAnterior)){
-							foreach($grupoPaiFilhoFilhos1 as $grupoPaiFilho1){
-								$grupo2h = $grupoPaiFilho1->getGrupoPaiFilhoFilho();
-								$numeroIdentificadorNovo = self::inativarECriarFatoLider($numeroIdentificadorNovo, $grupo2h);
-								if($grupoPaiFilhoFilhos2 = $grupo2h->getGrupoPaiFilhoFilhosAtivos($periodoAnterior)){
-									foreach($grupoPaiFilhoFilhos2 as $grupoPaiFilho2){
-										$grupo3h = $grupoPaiFilho2->getGrupoPaiFilhoFilho();
-										$numeroIdentificadorNovo = self::inativarECriarFatoLider($numeroIdentificadorNovo, $grupo3h);
-										if($grupoPaiFilhoFilhos3 = $grupo3h->getGrupoPaiFilhoFilhosAtivos($periodoAnterior)){
-											foreach($grupoPaiFilhoFilhos3 as $grupoPaiFilho3){
-												$grupo4h = $grupoPaiFilho3->getGrupoPaiFilhoFilho();
-												$numeroIdentificadorNovo = self::inativarECriarFatoLider($numeroIdentificadorNovo, $grupo4h);
-												if($grupoPaiFilhoFilhos4 = $grupo4h->getGrupoPaiFilhoFilhosAtivos($periodoAnterior)){
-													foreach($grupoPaiFilhoFilhos4 as $grupoPaiFilho4){
-														$grupo5h = $grupoPaiFilho4->getGrupoPaiFilhoFilho();
-														$numeroIdentificadorNovo = self::inativarECriarFatoLider($numeroIdentificadorNovo, $grupo5h);
-														if($grupoPaiFilhoFilhos5 = $grupo5h->getGrupoPaiFilhoFilhosAtivos($periodoAnterior)){
-															foreach($grupoPaiFilhoFilhos5 as $grupoPaiFilho5){
-																$grupo6h = $grupoPaiFilho5->getGrupoPaiFilhoFilho();
-																$numeroIdentificadorNovo = self::inativarECriarFatoLider($numeroIdentificadorNovo, $grupo6h);
-																if($grupoPaiFilhoFilhos6 = $grupo6h->getGrupoPaiFilhoFilhosAtivos($periodoAnterior)){
-																	foreach($grupoPaiFilhoFilhos6 as $grupoPaiFilho6){
-																		$grupo7h = $grupoPaiFilho6->getGrupoPaiFilhoFilho();
-																		$numeroIdentificadorNovo = self::inativarECriarFatoLider($numeroIdentificadorNovo, $grupo7h);
-																		if($grupoPaiFilhoFilhos7 = $grupo7h->getGrupoPaiFilhoFilhosAtivos($periodoAnterior)){
-																			foreach($grupoPaiFilhoFilhos7 as $grupoPaiFilho7){
-																				$grupo8h = $grupoPaiFilho7->getGrupoPaiFilhoFilho();
-																				$numeroIdentificadorNovo = self::inativarECriarFatoLider($numeroIdentificadorNovo, $grupo8h);
-																				if($grupoPaiFilhoFilhos8 = $grupo8h->getGrupoPaiFilhoFilhosAtivos($periodoAnterior)){
-																					foreach($grupoPaiFilhoFilhos8 as $grupoPaiFilho8){
-																						$grupo9h = $grupoPaiFilho8->getGrupoPaiFilhoFilho();
-																						$numeroIdentificadorNovo = self::inativarECriarFatoLider($numeroIdentificadorNovo, $grupo9h);
-																						if($grupoPaiFilhoFilhos9 = $grupo9h->getGrupoPaiFilhoFilhosAtivos($periodoAnterior)){
-																							foreach($grupoPaiFilhoFilhos9 as $grupoPaiFilho9){
-																								$grupo10h = $grupoPaiFilho9->getGrupoPaiFilhoFilho();
-																								$numeroIdentificadorNovo = self::inativarECriarFatoLider($numeroIdentificadorNovo, $grupo10h);
+			foreach($discipulosMulher as $discipuloMulher){
+				$resultado1 = self::criarNo($discipuloMulher->getGrupoPaiFilhoFilho(), $grupoNovo, $numeroIdentificadorOriginal);
+				if($discipulos1 = $discipuloMulher->getGrupoPaiFilhoFilho()->getGrupoPaiFilhoFilhosAtivos($periodo)){
+					foreach($discipulos1 as $discipulo1){
+						$resultado2 = self::criarNo($discipulo1->getGrupoPaiFilhoFilho(), $resultado1[0], $resultado1[1]);
+						if($discipulos2 = $discipulo1->getGrupoPaiFilhoFilho()->getGrupoPaiFilhoFilhosAtivos($periodo)){
+							foreach($discipulos2 as $discipulo2){
+								$resultado3 = self::criarNo($discipulo2->getGrupoPaiFilhoFilho(), $resultado2[0], $resultado2[1]);
+								if($discipulos3 = $discipulo2->getGrupoPaiFilhoFilho()->getGrupoPaiFilhoFilhosAtivos($periodo)){
+									foreach($discipulos3 as $discipulo3){
+										$resultado4 = self::criarNo($discipulo3->getGrupoPaiFilhoFilho(), $resultado3[0], $resultado3[1]);
+										if($discipulos4 = $discipulo3->getGrupoPaiFilhoFilho()->getGrupoPaiFilhoFilhosAtivos($periodo)){
+											foreach($discipulos4 as $discipulo4){
+												$resultado5 = self::criarNo($discipulo4->getGrupoPaiFilhoFilho(), $resultado4[0], $resultado4[1]);
+												if($discipulos5 = $discipulo4->getGrupoPaiFilhoFilho()->getGrupoPaiFilhoFilhosAtivos($periodo)){
+													foreach($discipulos5 as $discipulo5){
+														$resultado6 = self::criarNo($discipulo5->getGrupoPaiFilhoFilho(), $resultado5[0], $resultado5[1]);
+														if($discipulos6 = $discipulo5->getGrupoPaiFilhoFilho()->getGrupoPaiFilhoFilhosAtivos($periodo)){
+															foreach($discipulos6 as $discipulo6){
+																$resultado7 = self::criarNo($discipulo6->getGrupoPaiFilhoFilho(), $resultado6[0], $resultado6[1]);
+																if($discipulos7 = $discipulo6->getGrupoPaiFilhoFilho()->getGrupoPaiFilhoFilhosAtivos($periodo)){
+																	foreach($discipulos7 as $discipulo7){
+																		$resultado8 = self::criarNo($discipulo7->getGrupoPaiFilhoFilho(), $resultado7[0], $resultado7[1]);
+																		if($discipulos8 = $discipulo7->getGrupoPaiFilhoFilho()->getGrupoPaiFilhoFilhosAtivos($periodo)){
+																			foreach($discipulos8 as $discipulo8){
+																				$resultado9 = self::criarNo($discipulo8->getGrupoPaiFilhoFilho(), $resultado8[0], $resultado8[1]);
+																				if($discipulos9 = $discipulo8->getGrupoPaiFilhoFilho()->getGrupoPaiFilhoFilhosAtivos($periodo)){
+																					foreach($discipulos9 as $discipulo9){
+																						$resultado10 = self::criarNo($discipulo9->getGrupoPaiFilhoFilho(), $resultado9[0], $resultado9[1]);
+																						if($discipulos10 = $discipulo9->getGrupoPaiFilhoFilho()->getGrupoPaiFilhoFilhosAtivos($periodo)){
+																							foreach($discipulos10 as $discipulo10){
+																								self::criarNo($discipulo10->getGrupoPaiFilhoFilho(), $resultado10[0], $resultado10[1]);
 																							}
 																						}
 																					}
@@ -936,13 +873,6 @@ class IndexController extends CircuitoController {
 						}
 					}
 				}
-				$grupoPaiFilho = new GrupoPaiFilho();
-				$grupoPaiFilho->setGrupoPaiFilhoPai($grupoNovo);
-				$grupoPaiFilho->setGrupoPaiFilhoFilho($grupoPaiFilhoFilhoMulher->getGrupoPaiFilhoFilho());
-				$this->getRepositorio()->getGrupoPaiFilhoORM()->persistir($grupoPaiFilho);
-
-				$grupoPaiFilhoFilhoMulher->setDataEHoraDeInativacao($dataParaInativar);
-				$this->getRepositorio()->getGrupoPaiFilhoORM()->persistir($grupoPaiFilhoFilhoMulher);
 			}
 		}
 
