@@ -101,11 +101,9 @@ class ListagemDePessoasComEventos extends AbstractHelper {
         $res = array();
         for ($i = 0; $i < count($pessoasGrupo); $i++) {
             for ($j = 0; $j < count($pessoasGrupo); $j++) {
-                $pA[1] = $pessoasGrupo[$i];
-                $pA[2] = $pessoasGrupo[$j];
-                $res[1] = $valores[$pA[1]->getId()];
-                $res[2] = $valores[$pA[2]->getId()];
-                if ($res[1] > $res[2]) {
+					$pA[1] = $pessoasGrupo[$i];
+					$pA[2] = $pessoasGrupo[$j];
+                if ($pA[1]->getNome() < $pA[2]->getNome()) {
                     $pessoasGrupo[$i] = $pA[2];
                     $pessoasGrupo[$j] = $pA[1];
                 }
@@ -143,157 +141,105 @@ class ListagemDePessoasComEventos extends AbstractHelper {
                 }
             }
         }
-        $html .= '<tr id="tr_' . $pessoa->getIdGrupoPessoa() . '" ' . $classLinha . '>';
+		$html .= '<div id="panel_'.$pessoa->getId().'" name="'.$pessoa->getNome().'" class="panel pessoa" style="margin-bottom: 5px">';
+		$html .= '<div class="panel-body p5">';
 
-        /* TIPO */
-        $html .= '<td class="tdTipo ' . $classLinha2 . '">';
-        /* Menu dropup Tipo */
-        $html .= '<div class="btn-group btn-block btn-xs dropdown">';
-        $html .= '<span class="btn ' . $corBotao . ' btn-xs btn-block dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">';
-        $html .= $pessoa->getTipo();
-        $html .= '<span class="sr-only"></span>';
-        $html .= '</span>';
+		$html .= '<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">';
+		$html .= '<div class="row btn-default p5">';
 
-        if ($this->view->periodo == 0 && $pessoa->getTipo() != 'LP' && $pessoa->getAtivo()) {
-            $html .= '<ul class="dropdown-menu sobrepor-elementos" style="min-width: 43px;">';
-            $html .= '<span class="editable-container editable-inline">';
-            $html .= '<div class="definicao-altura-30">';
+		$html .= '<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6" style="padding-top: 0px">';
+        $html .= '<span class="label label-dark">'.$pessoa->getTipo() . '</span> ';
 
-            $html .= '<div class="control-group form-group">';
+		$validacaoPossoAlterarNome = ($pessoa->getTipo() != 'LP' && $pessoa->getAtivo() && !$pessoa->verificaSeParticipouDoRevisao() && !$pessoa->verificarSeEhAluno());
 
-            /* Remover Pessoa */
-            $html .= '<span class="input-group-btn">';
-            $html .= '<span onclick="funcaoPessoa(\'' . Constantes::$ROUTE_REMOVER_PESSOA . '\', ' . $pessoa->getIdGrupoPessoa() . ');" '
-                    . 'class="btn ladda-button btn-sm" style="margin-left:5px;"><i class="fa fa-trash-o"></i></span>';
-            $html .= '</span>';
 
-            $html .= '</div>';
-
-            $html .= '</div>';
-            $html .= '</span>';
-            $html .= '</ul>';
-        }
-
-        /* Fim Menu dropup */
-
-        $html .= '</td>';
-
-        $empuraColunas = '';
-        if ($this->view->quantidadeDeEventosNoCiclo < 4) {
-            $empuraColunas = 'col-xs-10 col-sm-10 col-md-10';
-        }
-        $validacaoPossoAlterarNome = ($pessoa->getTipo() != 'LP' && $pessoa->getAtivo() && !$pessoa->verificaSeParticipouDoRevisao() && !$pessoa->verificarSeEhAluno());
-        /* NOME */
-        $html .= '<td class="text-left ' . $empuraColunas . '">&nbsp;';
-        /* Menu dropup Nome */
-        $html .= '<div class="btn-group dropdown">';
-        if ($validacaoPossoAlterarNome && $this->view->possoAlterar) {
-            $html .= '<a id="menudrop_' . $pessoa->getId() . '" class="tdNome text-left dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">';
-        }
-        /* nome */
-        /* Indicação de que eh aluno */
-		if($pessoa->getTipo() != 'LP' && $pessoa->verificarSeEhAluno()){
-				$html .= '<i class="fa fa-graduation-cap" aria-hidden="true"></i>&nbsp;';
-				}
-        $html .= '<span id="span_nome_' . $pessoa->getId() . '" ' . $corTextoTagsExtrasXs . '>';
-        $html .= $pessoa->getNomeListaDeLancamento(5);
-        $html .= '</span>';
-        $html .= '<span id="span_nome_lg_' . $pessoa->getId() . '"' . $corTextoTagsExtrasLg . '>';
-        $html .= $pessoa->getNome();
-        $html .= '</span>';
-        /* fim nome */
-
-        /* Alteracao de nome */
-        if ($validacaoPossoAlterarNome && $this->view->possoAlterar) {
-            $html .= '</a>';
-            $html .= '<ul class="dropdown-menu sobrepor-elementos modal-edicao-nome">';
-            $html .= '<span class="editable-container editable-inline">';
-            $html .= '<div class="ml10 campo-edicao-nome">';
-            $html .= '<form class="form-inline editableform">';
-            $html .= '<div class="control-group form-group">';
-            $html .= '<div>';
-            $html .= '<div class="input-group">';
-            $html .= '<input type="text" class="form-control" id="nome_' . $pessoa->getId() . '" value="' . $pessoa->getNome() . '" />';
-            $html .= '<span class="input-group-btn">';
-            $html .= '<span onclick="alterarNome(' . $pessoa->getId() . ')" class="btn ladda-button btn-primary" data-style="zoom-in"><span class="ladda-label"><i class="fa fa-check"></i></span></span>';
-            $html .= '</span>';
-            $html .= '</div>';
-            $html .= '</div>';
-            $html .= '</div>';
-
-            $html .= '</div>';
-        }
-        /* Fim Menu dropup */
-        $html .= '</td>';
-
-		/* Telefone */
-		$html .= '<td class="hidden-xs">';
+		if ($validacaoPossoAlterarNome && $this->view->possoAlterar) {
+			$html .= '<a id="menudrop_' . $pessoa->getId() . '" class="tdNome text-left dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">';
+		}
+		$html .= '<span id="span_nome_' . $pessoa->getId() . '" ' . $corTextoTagsExtrasXs . '>';
+		$html .= $pessoa->getNomeListaDeLancamento(5);
+		$html .= '</span>';
+		$html .= '<span id="span_nome_lg_' . $pessoa->getId() . '"' . $corTextoTagsExtrasLg . '>';
+		$html .= $pessoa->getNome();
+		$html .= '</span>';
+		if ($validacaoPossoAlterarNome && $this->view->possoAlterar) {
+			$html .= '</a>';
+			$html .= '<ul class="dropdown-menu sobrepor-elementos modal-edicao-nome">';
+			$html .= '<span class="editable-container editable-inline">';
+			$html .= '<div class="ml10 campo-edicao-nome">';
+			$html .= '<form class="form-inline editableform">';
+			$html .= '<div class="control-group form-group">';
+			$html .= '<div>';
+			$html .= '<div class="input-group">';
+			$html .= '<input type="text" class="form-control" id="nome_' . $pessoa->getId() . '" value="' . $pessoa->getNome() . '" />';
+			$html .= '<span class="input-group-btn">';
+			$html .= '<span onclick="alterarNome(' . $pessoa->getId() . ')" class="btn ladda-button btn-primary" data-style="zoom-in"><span class="ladda-label"><i class="fa fa-check"></i></span></span>';
+			$html .= '</span>';
+			$html .= '</div>';
+			$html .= '</div>';
+			$html .= '</div>';
+			$html .= '</div>';
+		}
+		$html .= '</div>';
+		/* Col 6 */
+		$html .= '<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6" style="padding-top: 0px">';
 		if($pessoa->getTelefone()){
-			$telefone = $pessoa->getTelefone();
+			$telefone = '<a id="linkWhatsapp_'.$pessoa->getId().'" class="btn btn-dark btn-xs" href="https://api.whatsapp.com/send?phone=55'.$pessoa->getTelefone().'"><i class="fa fa-whatsapp"></i> Enviar Mensagem</a>';
 		}else{
         	$telefone = 'SEM TELEFONE';
 		}
- 
-
-		if($this->view->possoAlterar){
-		$html .= '<div class="btn-group dropdown">';
-		$html .= '<a id="menudrop_telefone_' . $pessoa->getId() . '" class="text-left dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">';
-        $html .= '<span id="span_telefone_' . $pessoa->getId() . '">';
-	    $html .= '</span>';
 		$html .= $telefone;
- 	    $html .= '</a>';
-		$html .= '<ul class="dropdown-menu sobrepor-elementos modal-edicao-nome">';
-		$html .= '<span class="editable-container editable-inline">';
-		$html .= '<div class="ml10 campo-edicao-nome">';
-		$html .= '<form class="form-inline editableform">';
-		$html .= '<div class="control-group form-group">';
-		$html .= '<div>';
-		$html .= '<div class="input-group">';
-		$html .= '<input type="number" class="form-control" id="telefone_' . $pessoa->getId() . '" value="' . $pessoa->getTelefone() . '" />';
-		$html .= '<span class="input-group-btn">';
-		$html .= '<span onclick="alterarTelefone(' . $pessoa->getId() . ')" class="btn ladda-button btn-primary" data-style="zoom-in"><span class="ladda-label"><i class="fa fa-check"></i></span></span>';
-		$html .= '</span>';
 		$html .= '</div>';
-		$html .= '</div>';
-		$html .= '</div>';
+		/* Col 6 */
 
 		$html .= '</div>';
-		/* Fim Menu dropup */
+		/* Row */
+
+		$html .= '<div class="row btn-default p5">';
+		$html .= '<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6" style="padding-top: 0px">';
+		if($pessoa->getTelefone()){
+			$telefone = $pessoa->getTelefone();
+		}else{
+			$telefone = 'SEM TELEFONE';
+		}
+		if($this->view->possoAlterar){
+			$html .= '<div class="btn-group dropdown">';
+			$html .= '<a id="menudrop_telefone_' . $pessoa->getId() . '" class="text-left dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">';
+			$html .= '<span id="span_telefone_' . $pessoa->getId() . '">';
+			$html .= $telefone;
+			$html .= '</span>';
+			$html .= '</a>';
+			$html .= '<ul class="dropdown-menu sobrepor-elementos modal-edicao-nome">';
+			$html .= '<span class="editable-container editable-inline">';
+			$html .= '<div class="ml10 campo-edicao-nome">';
+			$html .= '<form class="form-inline editableform">';
+			$html .= '<div class="control-group form-group">';
+			$html .= '<div>';
+			$html .= '<div class="input-group">';
+			$html .= '<input type="number" class="form-control" id="telefone_' . $pessoa->getId() . '" value="' . $pessoa->getTelefone() . '" />';
+			$html .= '<span class="input-group-btn">';
+			$html .= '<span onclick="alterarTelefone('.$pessoa->getId().')" class="btn ladda-button btn-primary" data-style="zoom-in"><span class="ladda-label"><i class="fa fa-check"></i></span></span>';
+			$html .= '</span>';
+			$html .= '</div>';
+			$html .= '</div>';
+			$html .= '</div>';
+			$html .= '</div>';
+			$html .= '</div>';
+			/* Fim Menu dropup */
 		}else{
 			$html .= $telefone;
 		}
-		$html .= '</td>';
+		$html .= '</div>';
+		/* Col 6 */
+		$html .= '</div>';
+		/* Row */
 
+		$html .= '</div>';
+		$html .= '<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">';
+		$html .= '<div class="row">';
+
+		$numeroDeEvento = count($grupoEventoNoPeriodo);
         foreach ($grupoEventoNoPeriodo as $grupoEvento) {
-            switch ($this->view->quantidadeDeEventosNoCiclo) {
-                case 1:
-                    $style = 'style="width:100%;"';
-                    break;
-                case 2:
-                    $style = 'style="width:50%;"';
-                    break;
-                case 3:
-                    $style = 'style="width:33%;"';
-                    break;
-                case 4:
-                    $style = 'style="width:25%;"';
-                    break;
-                case 5:
-                    $style = 'style="width:20%;"';
-                    break;
-                case 6:
-                    $style = 'style="width:18%;"';
-                    break;
-                case 7:
-                    $style = 'style="width:15%;"';
-                    break;
-                case 8:
-                    $style = 'style="width:12%;"';
-                    break;
-                default:
-                    $style = 'style="width:20%;"';
-                    break;
-            }
 
             $diaDaSemanaDoEvento = (int) $grupoEvento->getEvento()->getDia();
             if ($diaDaSemanaDoEvento === 1) {
@@ -319,14 +265,39 @@ class ListagemDePessoasComEventos extends AbstractHelper {
                 if ($diaDaSemanaDoEvento <= $this->getDiaDeSemanaHoje()) {
                     $mostrarParaLancar = true;
                 }
-            }
-            if ($this->view->periodo < 0) {
-                $mostrarParaLancar = true;
-            }
-            $html .= '<td ' . $style . ' class="text-center">';
-            $html .= '<div class="btn-group">';
+			}
+			if ($this->view->periodo < 0) {
+				$mostrarParaLancar = true;
+			}
+			$espacamento = 'col-lg-4 col-md-4 col-sm-4 col-xs-4'; 
+			$tamanhoBotao = BotaoSimples::larguraMaxima;
+			$tamanhoBotaoInativo = 'btn-block';
+			if($numeroDeEvento === 1){
+				$espacamento = 'col-lg-12 col-md-12 col-sm-12 col-xs-12'; 
+			}
+			if($numeroDeEvento === 2){
+				$espacamento = 'col-lg-6 col-md-6 col-sm-6 col-xs-6'; 
+			}
+			if($numeroDeEvento === 3){
+				$espacamento = 'col-lg-4 col-md-4 col-sm-4 col-xs-4'; 
+			}
+			if($numeroDeEvento === 4){
+				//$espacamento = 'col-lg-3 col-md-3 col-sm-3 col-xs-3'; 
+			}
+			if($numeroDeEvento > 4){
+				//$tamanhoBotao = BotaoSimples::posicaoAoCentro;
+				//$tamanhoBotaoInativo = '';
+			}
 
-            if ($mostrarParaLancar) {
+			$html .= '<div ' . $style . ' class="text-center '.$espacamento.' mb5" style="padding-top: 0px">';
+			$html .= '<p>';
+                $eventoNome = Funcoes::nomeDoEvento($grupoEvento->getEvento()->getTipo_id());
+			$diaDaSemanaAjustado = Funcoes::diaDaSemanaPorDia($grupoEvento->getEvento()->getDia());
+			$html .= $this->view->translate($eventoNome). ' ';
+			$html .= $this->view->translate($diaDaSemanaAjustado);
+			$html .= $grupoEvento->getEvento()->getHoraFormatoHoraMinuto();
+			$html .= '</p>';
+			if ($mostrarParaLancar) {
                 $corDoBotao = BotaoSimples::botaoPequenoMenosImportante;
                 $icone = 'fa-thumbs-down';
                 $diaRealDoEvento = ListagemDePessoasComEventos::diaRealDoEvento($diaDaSemanaDoEvento, $this->view->periodo);
@@ -354,22 +325,24 @@ class ListagemDePessoasComEventos extends AbstractHelper {
 				if(!$this->view->possoAlterar){
 					$extra .= ' disabled';
 				}
-				$html .= $this->view->botaoSimples($iconeBotao, $extra, $corDoBotao, BotaoSimples::posicaoAoCentro);
+				$html .= $this->view->botaoSimples($iconeBotao, $extra, $corDoBotao, $tamanhoBotao);
             } else {/* Eventos futuro */
                 $icone = 1;
                 $iconeRelogio = 1;
 
-                $html .= '<button type = "button" class = "btn btn-sm disabled">';
+                $html .= '<button type="button" class="btn btn-sm disabled '.$tamanhoBotaoInativo.'">';
                 if ($icone === $iconeRelogio) {
                     $html .= '<i class = "fa fa-clock-o"></i>';
                 }
                 $html .= '</button>';
             }
             $html .= '</div>';
-            $html .= '</td>';
         }
-        $html .= '</tr>';
+		$html .= '</div>';
+		$html .= '</div>';
 
+		$html .= '</div>';
+		$html .= '</div>';
         return $html;
     }
 
