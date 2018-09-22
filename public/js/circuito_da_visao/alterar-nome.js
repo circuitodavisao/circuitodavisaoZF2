@@ -6,12 +6,12 @@
 
 
 function alterarNome(idPessoa) {
-    var inputNome = $('#nome_' + idPessoa);
-    var spanNome = $('#span_nome_' + idPessoa);
-    var spanNomeLg = $('#span_nome_lg_' + idPessoa);
-    var dropDown = $('#menudrop_' + idPessoa);
+    let inputNome = $('#nome_' + idPessoa);
+    let spanNome = $('#span_nome_' + idPessoa);
+    let spanNomeLg = $('#span_nome_lg_' + idPessoa);
+    let dropDown = $('#menudrop_' + idPessoa);
 
-    var reg = /^[A-Za-záàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ ]+$/;
+    let reg = /^[A-Za-záàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ ]+$/;
     if (!reg.exec(inputNome.val())) {
         alert('Nome inválido');
     } else {
@@ -33,9 +33,10 @@ function alterarNome(idPessoa) {
 }
 
 function alterarTelefone(idPessoa) {
-    var input = $('#telefone_' + idPessoa);
-    var spanTelefone = $('#span_telefone_' + idPessoa);
-    var dropDown = $('#menudrop_telefone_' + idPessoa);
+    let input = $('#telefone_' + idPessoa);
+    let spanTelefone = $('#span_telefone_' + idPessoa);
+    let dropDown = $('#menudrop_telefone_' + idPessoa);
+    let linkWhatsapp = $('#linkWhatsapp_' + idPessoa);
 
     if (input.val().length != 11){
         alert('Telefone inválido');
@@ -51,7 +52,21 @@ function alterarTelefone(idPessoa) {
                         spanTelefone.html(data.telefone);
                         input.val(data.telefone);
                         dropDown.dropdown('toggle');
+                        linkWhatsapp.attr('href', 'https://api.whatsapp.com/send?phone=55'+data.telefone);
                     }
                 }, 'json');
     }
+}
+
+function filtrar(){
+	let elementoFiltro = document.getElementById('filtro')
+	let elementos = document.getElementsByClassName('pessoa') 
+
+	for(let elemento of elementos){
+		if(!elemento.getAttribute('name').includes(elementoFiltro.value.toUpperCase())){
+			elemento.classList.add('hidden')
+		}else{
+			elemento.classList.remove('hidden')
+		}
+	}
 }

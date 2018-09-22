@@ -12,32 +12,31 @@ use Zend\View\Helper\AbstractHelper;
  */
 class TabelaLancamento extends AbstractHelper {
 
-    public function __construct() {
-        
-    }
+	public function __construct() {
 
-    public function __invoke() {
-        return $this->renderHtml();
-    }
+	}
 
-    public function renderHtml() {
-        $centerBlock = Constantes::$CLASS_CENTER_BLOCk;
-        $style = 'style="width:100%;"';
+	public function __invoke() {
+		return $this->renderHtml();
+	}
 
-        $html = '';
-        $html .= '<input id="fooFilter" type="text" class="form-control" placeholder="Filtro">';
-        $html .= '<table ' . $style . ' class="' . $centerBlock . ' table table-condensed scroll text-center bordas-tabela-principal footable" data-filter="#fooFilter">';
-
-        $html .= '<thead>';
-        $html .= $this->view->cabecalhoDeEventos();
-        $html .= '</thead>';
-
-        $html .= '<tbody>';
-        $html .= $this->view->ListagemDePessoasComEventos();
-        $html .= '</tbody>';
-
-        $html .= '</table>';
-        return $html;
-    }
-
+	public function renderHtml() {
+		$centerBlock = Constantes::$CLASS_CENTER_BLOCk;
+		$style = 'style="width:100%;"';
+		$html = '';
+		$html .= '<div class="panel bg-info" style="margin-bottom: 5px">';
+		$html .= '<div class="panel-body p5">';
+		$html .= '<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">';
+		$html .= '<input id="filtro" type="text" class="form-control" placeholder="Filtro" onKeyUp="filtrar();" />';
+		$html .= '</div>';
+		$html .= '<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">';
+		$html .= '<div class="row">';
+		$html .= $this->view->cabecalhoDeEventos();
+		$html .= '</div>';
+		$html .= '</div>';
+		$html .= '</div>';
+		$html .= '</div>';
+		$html .= $this->view->ListagemDePessoasComEventos();
+		return $html;
+	}
 }

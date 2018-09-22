@@ -121,10 +121,6 @@ class LancamentoController extends CircuitoController {
         $layoutJS->setTemplate(Constantes::$TEMPLATE_JS_LANCAMENTO);
         $view->addChild($layoutJS, Constantes::$STRING_JS_LANCAMENTO);
 
-        $layoutJS2 = new ViewModel(array(Constantes::$QUANTIDADE_EVENTOS_CICLOS => count($grupoEventoNoPeriodo),));
-        $layoutJS2->setTemplate(Constantes::$TEMPLATE_JS_LANCAMENTO_MODAL_EVENTOS);
-        $view->addChild($layoutJS2, Constantes::$STRING_JS_LANCAMENTO_MODAL_EVENTOS);
-
         if ($sessao->jaMostreiANotificacao) {
             unset($sessao->mostrarNotificacao);
             unset($sessao->nomePessoa);
@@ -280,7 +276,7 @@ class LancamentoController extends CircuitoController {
             $this->getRepositorio()->fecharTransacao();
         }
 
-        return new ViewModel();
+        return new ViewModel(array('periodo'=>$periodo));
     }
 
     /**
