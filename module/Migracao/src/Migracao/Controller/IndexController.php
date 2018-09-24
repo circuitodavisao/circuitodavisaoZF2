@@ -2973,7 +2973,7 @@ class IndexController extends CircuitoController {
 		try{
 			if($turmas = $this->getRepositorio()->getTurmaORM()->buscarTodosRegistrosEntidade()){
 				foreach($turmas as $turma){
-					if($turma->verificarSeEstaAtivo() && $turma->getGrupo()->getId() === 1){
+					if($turma->verificarSeEstaAtivo()){
 						if($turmaPessoas = $turma->getTurmaPessoa()){
 							foreach($turmaPessoas as $turmaPessoa){
 								$numeroIdentificador = 
