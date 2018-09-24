@@ -1,0 +1,79 @@
+<?php
+
+use Application\Controller\Helper\Constantes;
+use Application\Controller\Helper\Funcoes;
+use Application\Controller\RelatorioController;
+
+$titulo = 'Alunos que ainda não foram a aula';
+if($this->tipoRelatorio === RelatorioController::relatorioAlunosComFaltas){
+	$titulo = 'Alunos que estão quase reprovando';
+}
+?>
+<style type="text/css">
+	th, p {
+		text-align: center;
+	}
+	table {
+		font-size: 10px;
+	}
+</style>
+<div class="center-block mw600">
+	<div class="panel">
+	<div class="panel-heading text-center"><?php echo $titulo; ?></div>
+			<div class="panel-body pn p10">
+			<?php 
+			if($this->tipoRelatorio === RelatorioController::relatorioAlunosComFaltas){
+				echo '<div class="alert alert-info alert-xs">Legenda: F. - Faltas</div>';
+			}
+			if($this->turmas){
+				foreach($this->turmas as $turma){
+					if($turma->getTurmaAulaAtiva()){
+						$modulo = $turma->getTurmaAulaAtiva()->getAula()->getDisciplina()->getNome();
+						$aula = $turma->getTurmaAulaAtiva()->getAula()->getPosicao();
+						$label = $modulo.' - ' . Funcoes::mesPorExtenso($turma->getMes()) . '/' . $turma->getAno() . ' - AULA '.$aula;
+						echo '<div class="panel">';
+						echo '<div class="panel-heading text-center">'.$label.'</div>';
+						echo '<div class="panel-body pn p10">';
+	
+						if($relatorioTurma = $this->relatorio[$turma->getId()]){
+							echo '<table  class="table table-bordered table-condensed footable" data-filter="#fooFilter">';
+							echo '<thead>';
+							echo '<tr class="dark">';
+							echo '<th class="hidden-xs">Matrícula</th>';
+							echo '<th>Nome</th>';
+							echo '<th>Time</th>';
+							if($this->tipoRelatorio === RelatorioController::relatorioAlunosComFaltas){
+								echo '<th>F.</th>';
+							}
+							echo '<th class="hidden-xs">Telefone</th>';
+							echo '<td></td>';
+						echo '</tr>';
+							echo '</thead>';
+							echo '<tbody>';
+							foreach($relatorioTurma as $relatorio){
+								echo '<tr>';
+								echo '<td class="hidden-xs">'.$relatorio['matricula'].'</td>';
+								echo '<td>'.$relatorio['nome'].'</td>';
+								echo '<td>'.$relatorio['time'].'</td>';
+								if($this->tipoRelatorio === RelatorioController::relatorioAlunosComFaltas){
+									echo '<td class="text-center">'.$relatorio['faltas'].'</td>';
+								}
+								echo '<td class="hidden-xs">'.$relatorio['telefone'].'</td>';
+								echo '<td class="text-center">'.$relatorio['mensagem'].'</td>';
+							echo '</tr>';
+							}
+							echo '</tbody>';
+							echo '</table>';
+						}else{
+							echo '<div class="alert alert-warning">Sem alunos para mostrar</div>';
+						}
+						echo '</div>';
+						echo '</div>';
+					}
+				}
+			}
+			?>
+			</div>
+	</div>
+</div>
+

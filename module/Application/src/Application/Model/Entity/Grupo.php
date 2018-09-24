@@ -1287,7 +1287,7 @@ class Grupo extends CircuitoEntity {
 		$turmas = $this->turma;
 		$turmasAtivas = array();
 		foreach($turmas as $turma){
-			if($turma->verificarSeEstaAtivo()){
+			if($turma->verificarSeEstaAtivo() && $turma->getCurso()->getId() === Curso::INSTITUTO_DE_VENCEDORES){
 				$turmasAtivas[] = $turma;
 			}
 		}

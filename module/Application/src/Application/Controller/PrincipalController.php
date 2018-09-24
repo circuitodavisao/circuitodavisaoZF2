@@ -61,6 +61,15 @@ class PrincipalController extends CircuitoController {
 		$relatorioParceiro = RelatorioController::relatorioCompleto($this->getRepositorio(), $grupo, RelatorioController::relatorioParceiroDeDeus, $mes, $ano, $tudo = false, $somado = true);
 
 		$arrayPeriodoDoMes = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mes, $ano);
+
+		$turmas = $grupo->getGrupoIgreja()->getTurma();
+		$numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupo);
+		$relatorioCursosDesordenados = $this->getRepositorio()->getFatoCursoORM()->encontrarFatoCursoPorNumeroIdentificador($numeroIdentificador);
+		$relatorioCursos = array();
+		foreach($relatorioCursosDesordenados as $fatoCurso){
+			$relatorioCursos[$fatoCurso->getTurma_id()][$fatoCurso->getSituacao_id()]++;
+			$relatorioCursos['total'][$fatoCurso->getSituacao_id()]++;
+		}
 		$dados = array(
 			'relatorio' => $relatorio,
 			'relatorioParceiro' => $relatorioParceiro,
@@ -74,6 +83,8 @@ class PrincipalController extends CircuitoController {
 			'repositorio' => $this->getRepositorio(),
 			'pessoa' => $pessoa,
 			'relatorioCelulasNaoRealizadas' => $relatorioCelulasNaoRealizadas,
+			'turmas' => $turmas,
+			'relatorioCursos' => $relatorioCursos,
 		);
 
         $grupoPaiFilhoFilhos = $grupo->getGrupoPaiFilhoFilhosAtivos($periodo);

@@ -1,0 +1,46 @@
+-- Table: fato_curso
+
+-- DROP TABLE fato_curso;
+
+CREATE TABLE fato_curso
+(
+  id serial NOT NULL, -- Identificação do fato lider
+  numero_identificador character varying(64) NOT NULL, -- Número identificador do grupo
+  turma_pessoa_id integer NOT NULL DEFAULT 0, -- Identificação da matricula do aluno
+  turma_id integer NOT NULL DEFAULT 0, -- Identificação da turma
+  situacao_id integer NOT NULL DEFAULT 0, -- Identificação da situação
+  data_criacao date NOT NULL DEFAULT ('now'::text)::date, -- Data de criação do relatório
+  hora_criacao time without time zone NOT NULL DEFAULT ('now'::text)::time with time zone, -- Hora de criação do relatório
+  data_inativacao date, -- Data de inativação do relatório
+  hora_inativacao time without time zone, -- Hora de inativação do relatório
+  CONSTRAINT pk_fato_curso PRIMARY KEY (id)
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE fato_curso
+  OWNER TO postgres;
+COMMENT ON TABLE fato_curso
+  IS 'Tabela com a quantidade de lideres por número identificador';
+COMMENT ON COLUMN fato_curso.id IS 'Identificação do fato lider';
+COMMENT ON COLUMN fato_curso.numero_identificador IS 'Número identificador do grupo';
+COMMENT ON COLUMN fato_curso.turma_pessoa_id IS 'Identificação da matricula do aluno';
+COMMENT ON COLUMN fato_curso.turma_id IS 'Identificação da turma';
+COMMENT ON COLUMN fato_curso.situacao_id IS 'Identificação da Situação';
+COMMENT ON COLUMN fato_curso.data_criacao IS 'Data de criação do relatório';
+COMMENT ON COLUMN fato_curso.hora_criacao IS 'Hora de criação do relatório';
+COMMENT ON COLUMN fato_curso.data_inativacao IS 'Data de inativação do relatório';
+COMMENT ON COLUMN fato_curso.hora_inativacao IS 'Hora de inativação do relatório';
+
+
+-- Index: index_fato_curso_numero_identificador
+
+-- DROP INDEX index_fato_curso_numero_identificador;
+
+CREATE INDEX index_fato_curso_numero_identificador
+  ON fato_curso
+  USING btree
+  (numero_identificador COLLATE pg_catalog."default");
+COMMENT ON INDEX index_fato_curso_numero_identificador
+  IS 'Index do número identificador do grupo';
+

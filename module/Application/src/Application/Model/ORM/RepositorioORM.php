@@ -59,6 +59,7 @@ class RepositorioORM {
 	private $_fatoFinanceiro;
 	private $_fatoFinanceiroTipo;
 	private $_fatoRankingCelula;
+	private $_fatoCursoORM;
 
     /**
      * Contrutor
@@ -574,6 +575,17 @@ class RepositorioORM {
         return $this->_fatoRankingCelulaORM;
     }
 
+    /**
+     * Metodo public para obter a instancia do FatoCurso
+     * @return FatoCursoORM
+     */
+    public function getFatoCursoORM() {
+        if (is_null($this->_fatoCursoORM)) {
+			$this->_fatoCursoORM = new FatoCursoORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_FATO_CURSO);
+        }
+        return $this->_fatoCursoORM;
+    }
+ 
     /**
      * Metodo public para obter a instancia EntityManager com acesso ao banco de dados
      * @return EntityManager
