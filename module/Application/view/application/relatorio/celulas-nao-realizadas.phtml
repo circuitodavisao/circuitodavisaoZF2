@@ -18,12 +18,13 @@ use Application\Controller\Helper\Funcoes;
 		<div class="panel-body pn p10">
 			<p>Período <?php echo Funcoes::montaPeriodo($this->periodo)[0]; ?></p>	
 <?php
-echo '<table class="text-center table table-condensed table-hover bg-light mt15" >';
+echo '<table class="text-center table table-bordered table-condensed table-hover bg-light mt15" >';
 echo '<thead>';
-echo '<tr>';
+echo '<tr class="dark">';
 echo '<th>Time</th>';
 echo '<th>Quem</th>';
-echo '<th>Célula</th>';
+echo '<th></th>';
+echo '<th class="hidden-xs">Célula</th>';
 echo '</tr>';
 echo '</thead>';
 echo '<tbody>';
@@ -34,12 +35,14 @@ if($this->relatorio){
 
 		$infoEntidade = $grupo->getEntidadeAtiva()->infoEntidade($somenteNumeros = true);
 		$lideres = $grupo->getNomeLideresAtivos();
+		$linkWhatsapp = $grupo->getLinksWhatsapp();
 		$celulaDia = $this->translate(Funcoes::diaDaSemanaPorDia($eventoCelula->getEvento()->getDia())).' - ' . substr($eventoCelula->getEvento()->getHora(),0,5);
 
 		echo '<tr>';
 		echo '<td>'.$infoEntidade.'</td>';
 		echo '<td>'.$lideres.'</td>';
-		echo '<td>'.$celulaDia.'</td>';
+		echo '<td>'.$linkWhatsapp.'</td>';
+		echo '<td class="hidden-xs">'.$celulaDia.'</td>';
 		echo '</tr>';
 	}
 }
