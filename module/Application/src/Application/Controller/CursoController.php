@@ -32,6 +32,7 @@ use Application\Model\Entity\TurmaPessoaFinanceiro;
 use Application\Model\Entity\TurmaPessoaSituacao;
 use Application\Model\Entity\TurmaPessoaVisto;
 use Application\Model\Entity\CursoAcesso;
+use Application\Model\Entity\FatoCurso;
 use Application\Model\ORM\RepositorioORM;
 use Exception;
 use Zend\Json\Json;
@@ -707,6 +708,15 @@ class CursoController extends CircuitoController {
 						$turmaPessoaSituacao->setSituacao($situacao);
 						$turmaPessoaSituacao->setTurma_pessoa($turmaPessoa);
 						$this->getRepositorio()->getTurmaPessoaSituacaoORM()->persistir($turmaPessoaSituacao);
+
+						$numeroIdentificador = 
+							$this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $pessoa->getGrupoPessoaAtivo()->getGrupo());
+						$fatoCurso = new FatoCurso();
+						$fatoCurso->setNumero_identificador($numeroIdentificador);
+						$fatoCurso->setTurma_pessoa_id($turmaPessoa->getId());
+						$fatoCurso->setTurma_id($turma->getId());
+						$fatoCurso->setSituacao_id(Situacao::ATIVO);
+						$this->getRepositorio()->getFatoCursoORM()->persistir($fatoCurso);
 					}
 
 					$this->getRepositorio()->fecharTransacao();
@@ -1306,6 +1316,15 @@ class CursoController extends CircuitoController {
 				$turmaPessoaSituacao->setSituacao($situacao);
 				$this->getRepositorio()->getTurmaPessoaSituacaoORM()->persistir($turmaPessoaSituacao);
 
+				$numeroIdentificador = 
+					$this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupo);
+				$fatoCurso = new FatoCurso();
+				$fatoCurso->setNumero_identificador($numeroIdentificador);
+				$fatoCurso->setTurma_pessoa_id($turmaPessoa->getId());
+				$fatoCurso->setTurma_id($turma->getId());
+				$fatoCurso->setSituacao_id(Situacao::ATIVO);
+				$this->getRepositorio()->getFatoCursoORM()->persistir($fatoCurso);
+
 				$this->getRepositorio()->fecharTransacao();
 				return $this->redirect()->toRoute(Constantes::$ROUTE_CURSO, array(
 					Constantes::$ACTION => 'ReentradaFinalizado',
@@ -1821,6 +1840,16 @@ class CursoController extends CircuitoController {
 				$turmaPessoa = $this->getRepositorio()->getTurmaPessoaORM()->encontrarPorId($idTurmaPessoa);
 				$turmaPessoa->setDataEHoraDeInativacao();
 				$this->getRepositorio()->getTurmaPessoaORM()->persistir($turmaPessoa, $trocaDataDeCriacao = false);
+
+				if($fatosCurso = $this->getRepositorio()->getFatoCursoORM()->encontrarFatoCursoPorTurmaPessoa($turmaPessoa->getId())){
+					foreach($fatosCurso as $fatoCurso){
+						if($fatoCurso->verificarSeEstaAtivo()){
+							$fatoCurso->setDataEHoraDeInativacao();
+							$this->getRepositorio()->getFatoCursoORM()->persistir($fatoCurso, $trocarDataDeCriacao = false);
+						}
+					}
+				}
+
 				$this->getRepositorio()->fecharTransacao();
 				$resposta = true;
 			} catch (Exception $exc) {
