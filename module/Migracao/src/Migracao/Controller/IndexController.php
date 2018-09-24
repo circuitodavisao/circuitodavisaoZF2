@@ -2977,14 +2977,16 @@ class IndexController extends CircuitoController {
 					if($turma->verificarSeEstaAtivo() && $turma->getGrupo()->getId() == $idGrupoIgreja){
 						if($turmaPessoas = $turma->getTurmaPessoa()){
 							foreach($turmaPessoas as $turmaPessoa){
-								$numeroIdentificador = 
-									$this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $turmaPessoa->getPessoa()->getGrupoPessoaAtivo()->getGrupo());
-								$fatoCurso = new FatoCurso();
-								$fatoCurso->setNumero_identificador($numeroIdentificador);
-								$fatoCurso->setTurma_pessoa_id($turmaPessoa->getId());
-								$fatoCurso->setTurma_id($turmaPessoa->getTurma()->getId());
-								$fatoCurso->setSituacao_id($turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getId());
-								$this->getRepositorio()->getFatoCursoORM()->persistir($fatoCurso);
+								if($turmaPessoa->verificarSeEstaAtivo()){
+									$numeroIdentificador = 
+										$this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $turmaPessoa->getPessoa()->getGrupoPessoaAtivo()->getGrupo());
+									$fatoCurso = new FatoCurso();
+									$fatoCurso->setNumero_identificador($numeroIdentificador);
+									$fatoCurso->setTurma_pessoa_id($turmaPessoa->getId());
+									$fatoCurso->setTurma_id($turmaPessoa->getTurma()->getId());
+									$fatoCurso->setSituacao_id($turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getId());
+									$this->getRepositorio()->getFatoCursoORM()->persistir($fatoCurso);
+								}
 							}
 						}
 					}
