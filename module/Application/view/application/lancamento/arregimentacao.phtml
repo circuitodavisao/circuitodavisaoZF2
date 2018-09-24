@@ -30,7 +30,7 @@ use Doctrine\Common\Collections\Criteria;
                 <?php
 				if($this->possoAlterar){
 					$label = $this->translate(Constantes::$TRADUCAO_CADASTRAR_PESSOA);
-					$extra = $this->funcaoOnClick('verificarMuitosCadastros(' . 0 . ', ' . $this->periodo . ')');
+					$extra = $this->funcaoOnClick('location.href="/lancamentoCadastrarPessoa/' . $this->periodo . '"');
 					echo $this->botaoSimples($label, $extra, BotaoSimples::botaoImportante, BotaoSimples::posicaoAoCentro);
 
 					$extra = $this->funcaoOnClick('mostrarSplash(); funcaoCircuito("lancamentoEnviar", ' . $this->periodo . ')');
