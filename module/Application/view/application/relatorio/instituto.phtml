@@ -2,6 +2,7 @@
 use Application\Controller\Helper\Funcoes;
 use Application\View\Helper\BotaoSimples;
 use Application\Controller\RelatorioController;
+
 ?>
 <style type="text/css">
 	th {
@@ -38,7 +39,11 @@ foreach($this->turmas as $turma){
 	if ($mostrarBotaoEsquerdo) {
 		echo '<span class="hidden-lg hidden-md hidden-sm">' . $botaoEsquerda . '</span>';
 	}
-	echo $turma->getTurmaAulaAtiva()->getAula()->getDisciplina()->getNome() . ' - ' . Funcoes::mesPorExtenso($turma->getMes(), 1).'/'.$turma->getAno();
+	$modulo = '';
+	if($turma->getTurmaAulaAtiva()){
+		$modulo = $turma->getTurmaAulaAtiva()->getAula()->getDisciplina()->getNome();
+	}
+	echo $modulo . ' - ' . Funcoes::mesPorExtenso($turma->getMes(), 1).'/'.$turma->getAno();
 	if ($mostrarBotaoDireito) {
 		echo '<span class="hidden-lg hidden-md hidden-sm">' . $botaoDireita . '</span>';
 	}
@@ -62,7 +67,11 @@ echo '</div>';
 echo '<th class="hidden-xs colunaEspacamento">&nbsp;</th>';
 $contadorDeTurmas = 0;
 foreach($this->turmas as $turma){
-	echo '<th class="hidden-xs turma'.$contadorDeTurmas.'" colspan="5">'.$turma->getTurmaAulaAtiva()->getAula()->getDisciplina()->getNome() . ' - ' . Funcoes::mesPorExtenso($turma->getMes(), 1).'/'.$turma->getAno() . '</th>';
+	$modulo = '';
+	if($turma->getTurmaAulaAtiva()){
+		$modulo = $turma->getTurmaAulaAtiva()->getAula()->getDisciplina()->getNome();
+	}
+	echo '<th class="hidden-xs turma'.$contadorDeTurmas.'" colspan="5">'.$modulo . ' - ' . Funcoes::mesPorExtenso($turma->getMes(), 1).'/'.$turma->getAno() . '</th>';
 	echo '<th class="hidden-xs colunaEspacamento">&nbsp;</th>';
 	$contadorDeTurmas++;
 }
@@ -92,15 +101,108 @@ echo '<th class="turma'.$contadorDeTurmas.'">%</th>';
 					</thead>
 					<tbody>
 <?php
-$relatorioPronto = array();
-$chaves = array();
-foreach($this->relatorio as $chave => $relatorio){
-	$chaves[] = $chave;
-	$soma = array();
-	$relatorioTime = array();
+if($this->relatorio){
+	$relatorioPronto = array();
+	$chaves = array();
+	foreach($this->relatorio as $chave => $relatorio){
+		$chaves[] = $chave;
+		$soma = array();
+		$relatorioTime = array();
+		foreach($this->turmas as $turma){
+			$total = $relatorio[$turma->getId()]['ATIVO'] + $relatorio[$turma->getId()]['DESISTENTE'] + $relatorio[$turma->getId()]['REPROVADO POR FALTAS'] + $relatorio[$turma->getId()]['ESPECIAL'];
+			$outros = $relatorio[$turma->getId()]['DESISTENTE'] + $relatorio[$turma->getId()]['REPROVADO POR FALTAS'];
+			$meta = 0;
+			switch($turma->getTurmaAulaAtiva()->getAula()->getDisciplina()->getId()){
+			case 5: $meta = 70; break;
+			case 6: $meta = 70; break;
+			case 7: $meta = 50; break;
+			case 8: $meta = 30; break;
+			}
+			$metaCalculada = number_format($meta / 100 * $total);
+			$ativos = $relatorio[$turma->getId()]['ATIVO'] + $relatorio[$turma->getId()]['ESPECIAL'];
+			$performance = $ativos / $metaCalculada * 100;
+
+			$soma['total'] += $total;
+			$soma['outros'] += $outros;
+			$soma['ativos'] += $ativos;
+			$soma['performances'] += $performance;
+
+			$relatorioTime[$turma->getId()]['total'] = $total;
+			$relatorioTime[$turma->getId()]['outros'] = $outros;
+			$relatorioTime[$turma->getId()]['metaCalCulada'] = $metaCalculada;
+			$relatorioTime[$turma->getId()]['ativos'] = $ativos;
+			$relatorioTime[$turma->getId()]['performance'] = $performance;
+
+			$relatorioFinal[$turma->getId()]['total'] += $total;
+			$relatorioFinal[$turma->getId()]['outros'] += $outros;
+			$relatorioFinal[$turma->getId()]['metaCalCulada'] += $metaCalculada;
+			$relatorioFinal[$turma->getId()]['ativos'] += $ativos;
+		}
+
+		$performanceFinal = $soma['performances'] / count($this->turmas);
+		$relatorioTime['total'] = $soma['total'];
+		$relatorioTime['outros'] = $soma['outros'];
+		$relatorioTime['ativos'] = $soma['ativos'];
+		$relatorioTime['performanceFinal'] = $performanceFinal;
+		$relatorioPronto[$chave] = $relatorioTime;
+
+		$relatorioFinal['total'] += $soma['total'];
+		$relatorioFinal['outros'] += $soma['outros'];
+		$relatorioFinal['ativos'] += $soma['ativos'];
+	}
+
+
+	$tamanhoArray = count($chaves);
+
+	for ($i = 0; $i < $tamanhoArray; $i++) {
+		for ($j = 0; $j < $tamanhoArray; $j++) {
+
+			$chave1 = $chaves[$i];
+			$chave2 = $chaves[$j];
+
+			if ($relatorioPronto[$chave1]['performanceFinal'] > $relatorioPronto[$chave2]['performanceFinal']){
+				$aux = $chave1;
+				$chaves[$i] = $chave2;
+				$chaves[$j] = $aux;
+			}
+		}
+	}
+
+	$htmlTime = '';
+	foreach($chaves as $chave){
+		$relatorioTime = $relatorioPronto[$chave];
+		$corPerformanceGeral = RelatorioController::corDaLinhaPelaPerformance($relatorioTime['performanceFinal']);
+		$htmlTime .= '<tr>';
+		$htmlTime .= '<td class="'.$corPerformanceGeral.'">' . $chave . '</td>';
+		$htmlTime .= '<td class="hidden-xs colunaEspacamento">&nbsp;</td>';
+
+		$contadorDeTurmas = 0;
+		foreach($this->turmas as $turma){
+			$corPerformance = RelatorioController::corDaLinhaPelaPerformance($relatorioTime[$turma->getId()]['performance']);
+			$htmlTime .= '<td class="hidden-xs turma'.$contadorDeTurmas.' '.$corPerformance.'">' . $relatorioTime[$turma->getId()]['total'] . '</td>';
+			$htmlTime .= '<td class="hidden-xs turma'.$contadorDeTurmas.' '.$corPerformance.'">' . $relatorioTime[$turma->getId()]['outros'] . '</td>';
+			$htmlTime .= '<td class="hidden-xs turma'.$contadorDeTurmas.' '.$corPerformance.'">' . $relatorioTime[$turma->getId()]['metaCalCulada'] . '</td>';
+			$htmlTime .= '<td class="hidden-xs turma'.$contadorDeTurmas.' '.$corPerformance.'">' . $relatorioTime[$turma->getId()]['ativos'] . '</td>';
+			$htmlTime .= '<td class="hidden-xs turma'.$contadorDeTurmas.' '.$corPerformance.'">' . RelatorioController::formataNumeroRelatorio($relatorioTime[$turma->getId()]['performance']) . '%</td>';
+			$htmlTime .= '<td class="hidden-xs colunaEspacamento">&nbsp;</td>';
+			$contadorDeTurmas++;
+		}
+
+		$htmlTime .= '<td class="'.$corPerformanceGeral.' turma'.$contadorDeTurmas.'">' . $relatorioTime['total'] . '</td>';
+		$htmlTime .= '<td class="'.$corPerformanceGeral.' turma'.$contadorDeTurmas.'">' . $relatorioTime['outros'] . '</td>';
+		$htmlTime .= '<td class="'.$corPerformanceGeral.' turma'.$contadorDeTurmas.'">' . $relatorioTime['ativos'] . '</td>';
+		$htmlTime .= '<td class="'.$corPerformanceGeral.' turma'.$contadorDeTurmas.'">' . RelatorioController::formataNumeroRelatorio($relatorioTime['performanceFinal']) . '%</td>';
+		$htmlTime .= '</tr>';
+
+	}
+
+	$htmlTime .= '<tr>';
+	$htmlTime .= '<td>TOTAL</td>';
+	$htmlTime .= '<td class="hidden-xs colunaEspacamento">&nbsp;</td>';
+
+	$somaPerformancesFinal = 0;
+	$contadorDeTurmas = 0;
 	foreach($this->turmas as $turma){
-		$total = $relatorio[$turma->getId()]['ATIVO'] + $relatorio[$turma->getId()]['DESISTENTE'] + $relatorio[$turma->getId()]['REPROVADO POR FALTAS'] + $relatorio[$turma->getId()]['ESPECIAL'];
-		$outros = $relatorio[$turma->getId()]['DESISTENTE'] + $relatorio[$turma->getId()]['REPROVADO POR FALTAS'];
 		$meta = 0;
 		switch($turma->getTurmaAulaAtiva()->getAula()->getDisciplina()->getId()){
 		case 5: $meta = 70; break;
@@ -108,118 +210,27 @@ foreach($this->relatorio as $chave => $relatorio){
 		case 7: $meta = 50; break;
 		case 8: $meta = 30; break;
 		}
-		$metaCalculada = number_format($meta / 100 * $total);
-		$ativos = $relatorio[$turma->getId()]['ATIVO'] + $relatorio[$turma->getId()]['ESPECIAL'];
-		$performance = $ativos / $metaCalculada * 100;
-
-		$soma['total'] += $total;
-		$soma['outros'] += $outros;
-		$soma['ativos'] += $ativos;
-		$soma['performances'] += $performance;
-
-		$relatorioTime[$turma->getId()]['total'] = $total;
-		$relatorioTime[$turma->getId()]['outros'] = $outros;
-		$relatorioTime[$turma->getId()]['metaCalCulada'] = $metaCalculada;
-		$relatorioTime[$turma->getId()]['ativos'] = $ativos;
-		$relatorioTime[$turma->getId()]['performance'] = $performance;
-
-		$relatorioFinal[$turma->getId()]['total'] += $total;
-		$relatorioFinal[$turma->getId()]['outros'] += $outros;
-		$relatorioFinal[$turma->getId()]['metaCalCulada'] += $metaCalculada;
-		$relatorioFinal[$turma->getId()]['ativos'] += $ativos;
-	}
-
-	$performanceFinal = $soma['performances'] / count($this->turmas);
-	$relatorioTime['total'] = $soma['total'];
-	$relatorioTime['outros'] = $soma['outros'];
-	$relatorioTime['ativos'] = $soma['ativos'];
-	$relatorioTime['performanceFinal'] = $performanceFinal;
-	$relatorioPronto[$chave] = $relatorioTime;
-
-	$relatorioFinal['total'] += $soma['total'];
-	$relatorioFinal['outros'] += $soma['outros'];
-	$relatorioFinal['ativos'] += $soma['ativos'];
-}
-
-
-$tamanhoArray = count($chaves);
-
-for ($i = 0; $i < $tamanhoArray; $i++) {
-	for ($j = 0; $j < $tamanhoArray; $j++) {
-
-		$chave1 = $chaves[$i];
-		$chave2 = $chaves[$j];
-
-		if ($relatorioPronto[$chave1]['performanceFinal'] > $relatorioPronto[$chave2]['performanceFinal']){
-			$aux = $chave1;
-			$chaves[$i] = $chave2;
-			$chaves[$j] = $aux;
-		}
-	}
-}
-
-$htmlTime = '';
-foreach($chaves as $chave){
-	$relatorioTime = $relatorioPronto[$chave];
-	$corPerformanceGeral = RelatorioController::corDaLinhaPelaPerformance($relatorioTime['performanceFinal']);
-	$htmlTime .= '<tr>';
-	$htmlTime .= '<td class="'.$corPerformanceGeral.'">' . $chave . '</td>';
-	$htmlTime .= '<td class="hidden-xs colunaEspacamento">&nbsp;</td>';
-
-	$contadorDeTurmas = 0;
-	foreach($this->turmas as $turma){
-		$corPerformance = RelatorioController::corDaLinhaPelaPerformance($relatorioTime[$turma->getId()]['performance']);
-		$htmlTime .= '<td class="hidden-xs turma'.$contadorDeTurmas.' '.$corPerformance.'">' . $relatorioTime[$turma->getId()]['total'] . '</td>';
-		$htmlTime .= '<td class="hidden-xs turma'.$contadorDeTurmas.' '.$corPerformance.'">' . $relatorioTime[$turma->getId()]['outros'] . '</td>';
-		$htmlTime .= '<td class="hidden-xs turma'.$contadorDeTurmas.' '.$corPerformance.'">' . $relatorioTime[$turma->getId()]['metaCalCulada'] . '</td>';
-		$htmlTime .= '<td class="hidden-xs turma'.$contadorDeTurmas.' '.$corPerformance.'">' . $relatorioTime[$turma->getId()]['ativos'] . '</td>';
-		$htmlTime .= '<td class="hidden-xs turma'.$contadorDeTurmas.' '.$corPerformance.'">' . RelatorioController::formataNumeroRelatorio($relatorioTime[$turma->getId()]['performance']) . '%</td>';
+		$metaCalculada = number_format($meta / 100 * $relatorioFinal[$turma->getId()]['total']);
+		$performance = $relatorioFinal[$turma->getId()]['ativos'] / $metaCalculada * 100;
+		$htmlTime .= '<td class="hidden-xs turma'.$contadorDeTurmas.'">' . $relatorioFinal[$turma->getId()]['total'] . '</td>';
+		$htmlTime .= '<td class="hidden-xs turma'.$contadorDeTurmas.'">' . $relatorioFinal[$turma->getId()]['outros'] . '</td>';
+		$htmlTime .= '<td class="hidden-xs turma'.$contadorDeTurmas.'">' . $relatorioFinal[$turma->getId()]['metaCalCulada'] . '</td>';
+		$htmlTime .= '<td class="hidden-xs turma'.$contadorDeTurmas.'">' . $relatorioFinal[$turma->getId()]['ativos'] . '</td>';
+		$htmlTime .= '<td class="hidden-xs turma'.$contadorDeTurmas.'">' . RelatorioController::formataNumeroRelatorio($performance) . '%</td>';
 		$htmlTime .= '<td class="hidden-xs colunaEspacamento">&nbsp;</td>';
+
+		$somaPerformancesFinal += $performance;
 		$contadorDeTurmas++;
 	}
 
-	$htmlTime .= '<td class="'.$corPerformanceGeral.' turma'.$contadorDeTurmas.'">' . $relatorioTime['total'] . '</td>';
-	$htmlTime .= '<td class="'.$corPerformanceGeral.' turma'.$contadorDeTurmas.'">' . $relatorioTime['outros'] . '</td>';
-	$htmlTime .= '<td class="'.$corPerformanceGeral.' turma'.$contadorDeTurmas.'">' . $relatorioTime['ativos'] . '</td>';
-	$htmlTime .= '<td class="'.$corPerformanceGeral.' turma'.$contadorDeTurmas.'">' . RelatorioController::formataNumeroRelatorio($relatorioTime['performanceFinal']) . '%</td>';
+	$htmlTime .= '<td class="turma'.$contadorDeTurmas.'">' . $relatorioFinal['total'] . '</td>';
+	$htmlTime .= '<td class="turma'.$contadorDeTurmas.'">' . $relatorioFinal['outros'] . '</td>';
+	$htmlTime .= '<td class="turma'.$contadorDeTurmas.'">' . $relatorioFinal['ativos'] . '</td>';
+	$htmlTime .= '<td class="turma'.$contadorDeTurmas.'">' . RelatorioController::formataNumeroRelatorio($somaPerformancesFinal / count($turmas)) . '%</td>';
 	$htmlTime .= '</tr>';
 
+	echo $htmlTime;
 }
-
-$htmlTime .= '<tr>';
-$htmlTime .= '<td>TOTAL</td>';
-$htmlTime .= '<td class="hidden-xs colunaEspacamento">&nbsp;</td>';
-
-$somaPerformancesFinal = 0;
-$contadorDeTurmas = 0;
-foreach($this->turmas as $turma){
-	$meta = 0;
-	switch($turma->getTurmaAulaAtiva()->getAula()->getDisciplina()->getId()){
-	case 5: $meta = 70; break;
-	case 6: $meta = 70; break;
-	case 7: $meta = 50; break;
-	case 8: $meta = 30; break;
-	}
-	$metaCalculada = number_format($meta / 100 * $relatorioFinal[$turma->getId()]['total']);
-	$performance = $relatorioFinal[$turma->getId()]['ativos'] / $metaCalculada * 100;
-	$htmlTime .= '<td class="hidden-xs turma'.$contadorDeTurmas.'">' . $relatorioFinal[$turma->getId()]['total'] . '</td>';
-	$htmlTime .= '<td class="hidden-xs turma'.$contadorDeTurmas.'">' . $relatorioFinal[$turma->getId()]['outros'] . '</td>';
-	$htmlTime .= '<td class="hidden-xs turma'.$contadorDeTurmas.'">' . $relatorioFinal[$turma->getId()]['metaCalCulada'] . '</td>';
-	$htmlTime .= '<td class="hidden-xs turma'.$contadorDeTurmas.'">' . $relatorioFinal[$turma->getId()]['ativos'] . '</td>';
-	$htmlTime .= '<td class="hidden-xs turma'.$contadorDeTurmas.'">' . RelatorioController::formataNumeroRelatorio($performance) . '%</td>';
-	$htmlTime .= '<td class="hidden-xs colunaEspacamento">&nbsp;</td>';
-
-	$somaPerformancesFinal += $performance;
-	$contadorDeTurmas++;
-}
-
-$htmlTime .= '<td class="turma'.$contadorDeTurmas.'">' . $relatorioFinal['total'] . '</td>';
-$htmlTime .= '<td class="turma'.$contadorDeTurmas.'">' . $relatorioFinal['outros'] . '</td>';
-$htmlTime .= '<td class="turma'.$contadorDeTurmas.'">' . $relatorioFinal['ativos'] . '</td>';
-$htmlTime .= '<td class="turma'.$contadorDeTurmas.'">' . RelatorioController::formataNumeroRelatorio($somaPerformancesFinal / count($turmas)) . '%</td>';
-$htmlTime .= '</tr>';
-
-echo $htmlTime;
 ?>
 					</tbody>
 				</table>
