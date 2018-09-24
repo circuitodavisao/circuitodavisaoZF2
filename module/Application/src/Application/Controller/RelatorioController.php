@@ -445,39 +445,34 @@ class RelatorioController extends CircuitoController {
 
 		$idEntidadeAtual = $sessao->idEntidadeAtual;
 		$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
-		$grupoIgreja = $entidade->getGrupo()->getGrupoIgreja();
+		$relatorioAjustado = array();
+		$turmas = $entidade->getGrupo()->getGrupoIgreja()->getTurma();
 
-		$turmasInstitutoDeVencedores = null;
-		$relatorio = array();
-		if($turmas = $grupoIgreja->getTurma()){
-			foreach($turmas as $turma){
-				if($turma->verificarSeEstaAtivo() && $turma->getCurso()->getId() === Curso::INSTITUTO_DE_VENCEDORES){
-					$turmasInstitutoDeVencedores[] = $turma;
-					if($turmaPessoas = $turma->getTurmaPessoa()){
-						foreach($turmaPessoas as $turmaPessoa){
-							if($turmaPessoa->verificarSeEstaAtivo()){
-								if($grupoPessoa = $turmaPessoa->getPessoa()->getGrupoPessoaAtivo()){
-									if($entidade->GetEntidadeTipo()->getId() === EntidadeTipo::igreja){
-										if($grupoPessoa->getGrupo()->getGrupoEquipe() && $grupoPessoa->getGrupo()->getGrupoEquipe()->getEntidadeAtiva()){
-										$relatorio[$grupoPessoa->getGrupo()->getGrupoEquipe()->getEntidadeAtiva()->getNome()][$turma->getId()][$turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getNome()]++;
-										}
-									}
-									if($entidade->GetEntidadeTipo()->getId() === EntidadeTipo::equipe){
-										if($grupoPessoa->getGrupo()->getGrupoEquipe()->getId() === $entidade->getGrupo()->getid()){
-											$informacao = $grupoPessoa->getGrupo()->getGrupoSubEquipe()->getEntidadeAtiva()->infoEntidade() . ' - ' . $grupoPessoa->getGrupo()->getGrupoSubEquipe()->getNomeLideresAtivos();
-										$relatorio[$informacao][$turma->getId()][$turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getNome()]++;
-										}
-									}
-								}								
-							}
-						}
-					}
+		$numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $entidade->getGrupo());
+		$relatorioInicial = $this->getRepositorio()->getFatoCursoORM()->encontrarFatoCursoPorNumeroIdentificador($numeroIdentificador);
+
+		$turmasComAulaAberta = array();
+		foreach($turmas as $turma){
+			if($turma->getTurmaAulaAtiva()){
+				$turmasComAulaAberta[] = $turma;
+			}
+		}
+
+		$relatorioAjustado = array();
+		foreach($relatorioInicial as $relatorio){
+			foreach($turmasComAulaAberta as $turma){
+				if($relatorio->getTurma_id() === $turma->getId()){
+					$idGrupo = substr($relatorio->getNumero_identificador(), (count($relatorio->getNumero_identificador())-8));
+					$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupo);
+					$situacao = $this->getRepositorio()->getSituacaoORM()->encontrarPorId($relatorio->getSituacao_id());
+					$relatorioAjustado[$grupo->getEntidadeAtiva()->getNome()][$turma->getId()][$situacao->getNome()]++;
 				}
 			}
 		}
+
 		return new ViewModel(array(
-			'relatorio'=>$relatorio,
-			'turmas' => $turmasInstitutoDeVencedores,
+			'relatorio'=> $relatorioAjustado,
+			'turmas' => $turmasComAulaAberta,
 		));
 	}
 
