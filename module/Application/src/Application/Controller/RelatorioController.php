@@ -465,7 +465,7 @@ class RelatorioController extends CircuitoController {
 					$idGrupo = substr($relatorio->getNumero_identificador(), (count($relatorio->getNumero_identificador())-8));
 					$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupo);
 					$situacao = $this->getRepositorio()->getSituacaoORM()->encontrarPorId($relatorio->getSituacao_id());
-					$relatorioAjustado[$grupo->getEntidadeAtiva()->getNome()][$turma->getId()][$situacao->getNome()]++;
+					$relatorioAjustado[$grupo->getGrupoEquipe()->getEntidadeAtiva()->getNome()][$turma->getId()][$situacao->getNome()]++;
 				}
 			}
 		}
