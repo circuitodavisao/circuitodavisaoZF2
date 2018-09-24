@@ -5,6 +5,7 @@ use Application\Controller\Helper\Funcoes;
 use Application\Controller\RelatorioController;
 use Application\Model\Entity\FuncoesEntidade;
 use Application\Model\Entity\EntidadeTipo;
+use Application\Model\Entity\Situacao;
 
 if ($this->mostrarPrincipal) {
 	$fotos = $this->grupo->getFotosLideresAtivos(128);
@@ -43,7 +44,7 @@ Período Atual <?php echo Funcoes::montaPeriodo($this->periodoFinal)[0]; ?>
 
 <div class="row mb10">
 <?php
-	for($indiceNumeroGrandes = 1; $indiceNumeroGrandes <= 4; $indiceNumeroGrandes++){
+	for($indiceNumeroGrandes = 1; $indiceNumeroGrandes <= 5; $indiceNumeroGrandes++){
 		$valor = 0;
 		$label = '';
 		switch($indiceNumeroGrandes){
@@ -63,6 +64,10 @@ Período Atual <?php echo Funcoes::montaPeriodo($this->periodoFinal)[0]; ?>
 			$valor = 'R$ '.number_format($this->relatorioParceiro[0]['somaValor'],2,',','.');
 			$label = 'Parceiro de Deus';
 			break;
+		case 5:
+			$valor = ($this->relatorioCursos['total'][Situacao::ATIVO] + $this->relatorioCursos['total'][Situacao::ESPECIAL]);
+			$label = 'Alunos';
+			break;
 		}
 		echo '<div class="col-lg-3 col-md-3 col-sm-3 col-xs-6">';
 		echo '<div class="panel text-center br-a br-grey">';
@@ -75,6 +80,7 @@ Período Atual <?php echo Funcoes::montaPeriodo($this->periodoFinal)[0]; ?>
 	}
 ?>
 </div>
+
 <!-- fim row numeros grandes -->
 
 <div class="row mb10">
@@ -252,6 +258,75 @@ for ($indice = 1; $indice <= $numeroIndices; $indice++) {
 </div>
 </div>
 <!-- fim celula -->
+
+<!-- cursos -->
+<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 admin-grid">
+<div class="panel panel-collapsed" id="p3">
+<div class="panel-heading ui-sortable-handle">
+Alunos
+<span class="panel-controls">
+<a href="#" class="panel-control-collapse"></a>
+</span>
+</div>
+<div class="panel-body pn pt10 p10" style="display: none;">
+<div class="alert alert-default">
+	Legenda: 
+	<span class="label label-success">A - Ativo</span>
+	<span class="label label-info">E - Especial</span>
+	<span class="label label-warning">D - Desistente</span>
+	<span class="label label-danger">R - Reprovado por falta</span>
+</div>
+<?php
+	if($this->turmas){
+		echo '<div class="row mb10">';
+		foreach($this->turmas as $turma){
+			$relatorio = $this->relatorioCursos[$turma->getId()];
+			if($relatorio[Situacao::ATIVO] == ''){
+				$relatorio[Situacao::ATIVO] = 0;
+			}
+			if($relatorio[Situacao::ESPECIAL] == ''){
+				$relatorio[Situacao::ESPECIAL] = 0;
+			}
+			if($relatorio[Situacao::DESISTENTE] == ''){
+				$relatorio[Situacao::DESISTENTE] = 0;
+			}
+			if($relatorio[Situacao::REPROVADO_POR_FALTA] == ''){
+				$relatorio[Situacao::REPROVADO_POR_FALTA] = 0;
+			}
+			$valor = ($relatorio[Situacao::ATIVO] + $relatorio[Situacao::ESPECIAL]);
+			if($valor == ''){
+				$valor = 0;
+			}
+			$modulo = 'SEM AULA ABERTA';
+			if($turma->getTurmaAulaAtiva()){
+				$modulo = $turma->getTurmaAulaAtiva()->getAula()->getDisciplina()->getNome();
+			}
+			$label = $modulo.' - ' . Funcoes::mesPorExtenso($turma->getMes(), 1) . '/' . $turma->getAno();
+			echo '<div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">';
+			echo '<div class="panel panel-tile text-center br-a br-grey">';
+			echo '<div class="panel-body" style="padding-bottom: 0px;">';
+			echo '<h1 class="fs30 mt5 mbn">'.$valor.'</h1>';
+			echo '<h6>'.$label.'</h6>';
+			echo '</div>';
+			echo '<div class="panel-footer br-t p12">';
+			echo '<span class="fs11">';
+			echo '<span class="label label-success">A - '.$relatorio[Situacao::ATIVO].'</span>';
+			echo ' <span class="label label-info">E - '.$relatorio[Situacao::ESPECIAL].'</span>';
+			echo ' <span class="label label-warning">D - '.$relatorio[Situacao::DESISTENTE].'</span>';
+			echo ' <span class="label label-danger">R - '.$relatorio[Situacao::REPROVADO_POR_FALTA].'</span>';
+			echo '</span>';
+			echo '</div>';
+			echo '</div>';
+			echo '</div>';
+		}
+		echo '</div>';
+	}
+?>
+</div>
+
+</div>
+</div>
+<!-- fim cursos -->
 
 </div>
 <!-- fim row dados -->

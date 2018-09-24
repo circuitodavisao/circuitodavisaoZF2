@@ -39,6 +39,7 @@ use Application\Model\Entity\FatoFinanceiro;
 use Application\Model\Entity\FatoFinanceiroTipo;
 use Application\Model\Entity\FatoRankingCelula;
 use Application\Model\Entity\FatoCelula;
+use Application\Model\Entity\FatoCurso;
 use Application\Model\ORM\RepositorioORM;
 use DateTime;
 use Doctrine\ORM\EntityManager;
@@ -1115,6 +1116,23 @@ class IndexController extends CircuitoController {
 			$grupoPessoaNovo->setPessoa($turmaPessoa->getPessoa());
 			$grupoPessoaNovo->setGrupoPessoaTipo($grupoPessoaAtivo->getGrupoPessoaTipo());
 			$this->getRepositorio()->getGrupoPessoaORM()->persistir($grupoPessoaNovo);
+
+			if($fatosCurso = $this->getRepositorio()->getFatoCursoORM()->encontrarFatoCursoPorTurmaPessoa($turmaPessoa->getId())){
+				foreach($fatosCurso as $fatoCurso){
+					if($fatoCurso->verificarSeEstaAtivo()){
+						$fatoCurso->setDataEHoraDeInativacao();
+						$this->getRepositorio()->getFatoCursoORM()->persistir($fatoCurso, $trocarDataDeCriacao = false);
+					}
+				}
+			}
+			$numeroIdentificador = 
+				$this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupo);
+			$fatoCurso = new FatoCurso();
+			$fatoCurso->setNumero_identificador($numeroIdentificador);
+			$fatoCurso->setTurma_pessoa_id($turmaPessoa->getId());
+			$fatoCurso->setTurma_id($turmaPessoa->getTurma()->getId());
+			$fatoCurso->setSituacao_id($turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getId());
+			$this->getRepositorio()->getFatoCursoORM()->persistir($fatoCurso);
 		}
 	}
 
@@ -2680,6 +2698,25 @@ class IndexController extends CircuitoController {
 								$turmaPessoaSituacao->setTurma_pessoa($turmaPessoa);
 								$turmaPessoaSituacao->setSituacao($this->getRepositorio()->getSituacaoORM()->encontrarPorId(Situacao::REPROVADO_POR_FALTA));
 								$this->getRepositorio()->getTurmaPessoaSituacaoORM()->persistir($turmaPessoaSituacao);
+
+								if($fatosCurso = $this->getRepositorio()->getFatoCursoORM()->encontrarFatoCursoPorTurmaPessoa($turmaPessoa->getId())){
+									foreach($fatosCurso as $fatoCurso){
+										if($fatoCurso->verificarSeEstaAtivo()){
+											$fatoCurso->setDataEHoraDeInativacao();
+											$this->getRepositorio()->getFatoCursoORM()->persistir($fatoCurso, $trocarDataDeCriacao = false);
+										}
+									}
+								}
+								if($grupoPessoaAtivo = $turmaPessoa->getPessoa()->getGrupoPessoaAtivo()){
+									$numeroIdentificador = 
+										$this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupoPessoaAtivo->getGrupo());
+									$fatoCurso = new FatoCurso();
+									$fatoCurso->setNumero_identificador($numeroIdentificador);
+									$fatoCurso->setTurma_pessoa_id($turmaPessoa->getId());
+									$fatoCurso->setTurma_id($turmaPessoa->getTurma()->getId());
+									$fatoCurso->setSituacao_id(Situacao::REPROVADO_POR_FALTA);
+									$this->getRepositorio()->getFatoCursoORM()->persistir($fatoCurso);
+								}
 							}
 						}
 					}
@@ -2928,6 +2965,37 @@ class IndexController extends CircuitoController {
 			}
 		}
 		return $relatorio;
+	}
+
+	public function fatoCursoAction(){
+		$html = '';
+		$this->getRepositorio()->iniciarTransacao();
+		try{
+			if($turmas = $this->getRepositorio()->getTurmaORM()->buscarTodosRegistrosEntidade()){
+				foreach($turmas as $turma){
+					if($turma->verificarSeEstaAtivo() && $turma->getGrupo()->getId() === 1){
+						if($turmaPessoas = $turma->getTurmaPessoa()){
+							foreach($turmaPessoas as $turmaPessoa){
+								$numeroIdentificador = 
+									$this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $turmaPessoa->getPessoa()->getGrupoPessoaAtivo()->getGrupo());
+								$fatoCurso = new FatoCurso();
+								$fatoCurso->setNumero_identificador($numeroIdentificador);
+								$fatoCurso->setTurma_pessoa_id($turmaPessoa->getId());
+								$fatoCurso->setTurma_id($turmaPessoa->getTurma()->getId());
+								$fatoCurso->setSituacao_id($turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getId());
+								$this->getRepositorio()->getFatoCursoORM()->persistir($fatoCurso);
+							}
+						}
+					}
+				}
+			}
+			$this->getRepositorio()->fecharTransacao();
+		}catch(Exception $e){
+			$html = 'Error: '.$e->getMessage();
+			$this->getRepositorio()->desfazerTransacao();
+		}
+		$dados = array('html' => $html);
+		return new ViewModel($dados);
 	}
 
 }

@@ -287,6 +287,19 @@ class Menu extends AbstractHelper {
 					$html .= '</a>';
 					$html .= '</li>';
 				}
+			$html .= '<li>';
+			$html .= '<a href="/relatorioAlunos/1" onClick="mostrarSplash();">';
+			$html .= '<span class="fa fa-graduation-cap"></span>';
+			$html .= 'Alunos que ainda não foram a aula';
+			$html .= '</a>';
+			$html .= '</li>';
+
+			$html .= '<li>';
+			$html .= '<a href="/relatorioAlunos/2" onClick="mostrarSplash();">';
+			$html .= '<span class="fa fa-graduation-cap"></span>';
+			$html .= 'Alunos que estão quase reprovando';
+			$html .= '</a>';
+			$html .= '</li>';
 
 			$html .= '<li>';
 			$html .= '<a href="/relatorioRankingCelula" onClick="mostrarSplash();">';
