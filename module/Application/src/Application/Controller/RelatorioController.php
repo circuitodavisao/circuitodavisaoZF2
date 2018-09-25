@@ -9,6 +9,7 @@ use Application\Model\Entity\Grupo;
 use Application\Model\Entity\GrupoPessoaTipo;
 use Application\Model\Entity\Curso;
 use Application\Model\Entity\EntidadeTipo;
+use Application\Model\Entity\SolicitacaoTipo;
 use Application\Model\Entity\Situacao;
 use Application\Model\Helper\FuncoesEntidade;
 use Application\Model\ORM\RepositorioORM;
@@ -466,6 +467,7 @@ class RelatorioController extends CircuitoController {
 					$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupo);
 					$situacao = $this->getRepositorio()->getSituacaoORM()->encontrarPorId($relatorio->getSituacao_id());
 					$relatorioAjustado[$grupo->getGrupoEquipe()->getEntidadeAtiva()->getNome()][$turma->getId()][$situacao->getNome()]++;
+
 				}
 			}
 		}
@@ -510,7 +512,7 @@ class RelatorioController extends CircuitoController {
 						$idSituacao = $solicitacao->getSolicitacaoSituacaoAtiva()->getSituacao()->getId();
 						if($idSituacao !== Situacao::CONCLUIDO){
 							$temSolicitacaoPendente = true;
-						}						
+						}
 					}
 					if($temSolicitacaoPendente){
 						$dados['temSolicitacaoPendente'] = true;
@@ -629,7 +631,7 @@ class RelatorioController extends CircuitoController {
 		$somaTotal = array();
 		for ($indiceDeArrays = $arrayPeriodoDoMes[0]; $indiceDeArrays <= $arrayPeriodoDoMes[1]; $indiceDeArrays++) {
 			if($tipoRelatorio === self::relatorioParceiroDeDeus){
-				$relatorio[self::dadosPessoais][$indiceDeArrays] 
+				$relatorio[self::dadosPessoais][$indiceDeArrays]
 					= $repositorio->getFatoFinanceiroORM()->fatosPorNumeroIdentificador($numeroIdentificador,$indiceDeArrays, $mes, $ano, $tipoRelatorioPessoal);
 				$soma[self::dadosPessoais][self::parceiroDeDeusValor] += $relatorio[self::dadosPessoais][$indiceDeArrays]['valor'];
 			}else{
@@ -637,7 +639,7 @@ class RelatorioController extends CircuitoController {
 				if($somado){
 					$qualRelatorioParaUsar = $tipoRelatorioSomado;
 				}
-				$relatorio[self::dadosPessoais][$indiceDeArrays] 
+				$relatorio[self::dadosPessoais][$indiceDeArrays]
 					= RelatorioController::montaRelatorio($repositorio, $numeroIdentificador, $indiceDeArrays, $qualRelatorioParaUsar, false, $tipoRelatorio);
 				$soma[self::dadosPessoais][self::membresia] += $relatorio[self::dadosPessoais][$indiceDeArrays]['membresia'];
 				$soma[self::dadosPessoais][self::membresiaPerformance] += $relatorio[self::dadosPessoais][$indiceDeArrays]['membresiaPerformance'];
@@ -674,7 +676,7 @@ class RelatorioController extends CircuitoController {
 				$numeroIdentificadorFilho = $repositorio->getFatoCicloORM()->montarNumeroIdentificador($repositorio, $grupoFilho, $dataInativacao);
 
 				if($tipoRelatorio === self::relatorioParceiroDeDeus){
-					$relatorioDiscipulos[$grupoFilho->getId()][$indiceDeArrays] 
+					$relatorioDiscipulos[$grupoFilho->getId()][$indiceDeArrays]
 						= $repositorio->getFatoFinanceiroORM()->fatosPorNumeroIdentificador($numeroIdentificadorFilho,$indiceDeArrays, $mes, $ano, $tipoRelatorioSomado);
 					$soma[$grupoFilho->getId()][self::parceiroDeDeusValor] += $relatorioDiscipulos[$grupoFilho->getId()][$indiceDeArrays]['valor'];
 
@@ -953,7 +955,7 @@ class RelatorioController extends CircuitoController {
 					case 2294:// swat
 						$valorMeta = 600;
 						break;
-					case 2362://turbo 18 
+					case 2362://turbo 18
 						$valorMeta = 3750;
 						break;
 					case 2447://turbo 17
@@ -1335,7 +1337,7 @@ class RelatorioController extends CircuitoController {
 			($ano == date('Y') && $mes != date('m')) ||
 			$ano != date('Y')
 		){
-			$diferencaDePeriodos++;	
+			$diferencaDePeriodos++;
 		}
 		return $diferencaDePeriodos;
 	}
@@ -1758,6 +1760,7 @@ class RelatorioController extends CircuitoController {
 												break;
 											}
 										}
+
 									}
 								}
 
@@ -1784,6 +1787,7 @@ class RelatorioController extends CircuitoController {
 										if($turmaPessoaAula->verificarSeEstaAtivo()){
 											if ($turmaPessoaAula->getReposicao() == 'N') {
 												$temFalta = false;
+
 											}
 										}
 									}
@@ -1817,5 +1821,100 @@ class RelatorioController extends CircuitoController {
 				'relatorio' => $relatorioAjustado,
 				'tipoRelatorio' => $tipoRelatorio,
 			));
+	}
+
+	public static function pegarCelulasNaoRealizadasNoPeriodo(RepositorioORM $repositorioORM, Grupo $grupo, $periodo) {
+		$relatorio = array();
+		$grupoEventosCelula = $grupo->getGrupoEventoAtivosPorTipo(EventoTipo::tipoCelula);
+
+		foreach ($grupoEventosCelula as $grupoEventoCelula) {
+			$eventoId = $grupoEventoCelula->getEvento()->getId();
+			$resultado = $repositorioORM->getFatoCicloORM()->verificaFrequenciasPorCelulaEPeriodo($periodo, $eventoId);
+			$realizada = false;
+			if($resultado > 0){
+				$realizada = true;
+			}
+			$relatorio[$grupoEventoCelula->getId()]['realizada'] = $realizada;
+		}
+		return $relatorio;
+	}
+
+	public function exclusaoCelulasAction() {
+		$sessao = new Container(Constantes::$NOME_APLICACAO);
+		$idEntidadeAtual = $sessao->idEntidadeAtual;
+		$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+		$grupoIgreja = $entidade->getGrupo()->getGrupoIgreja();
+		$solicitacoes = $grupoIgreja->getSolicitacao();
+		$request = $this->getRequest();
+		if($request->isPost()){
+			$postDados = $request->getPost();
+			$mes = $postDados['mes'];
+			$ano = $postDados['ano'];
+		}else{
+			$mes = date('m');
+			$ano = date('Y');
+		}
+			$arrayPeriodoDoMes = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mes, $ano);
+			$periodoInicial = $arrayPeriodoDoMes[0];
+			$periodoFinal = $arrayPeriodoDoMes[1];
+			$relatorioCelulasExcluidas = array();
+			$totalCiclo = array();
+			$totalGeral = 0;
+			foreach ($solicitacoes as $solicitacao) {
+				$solicitacaoSituacaoAtiva = $solicitacao->getSolicitacaoSituacaoAtiva();
+				$mesDaSolicitacao = $solicitacaoSituacaoAtiva->getData_criacaoMes();
+				$diaDaSolicitacao = $solicitacaoSituacaoAtiva->getData_criacaoDia();
+				$anoDaSolicitacao = $solicitacaoSituacaoAtiva->getData_criacaoAno();
+				$dataAjustadaDaSolicitacao = date('Y-m-d', mktime(0, 0, 0, $mesDaSolicitacao, $diaDaSolicitacao - 1, $anoDaSolicitacao));
+				for ($indiceDeArrays = $periodoInicial; $indiceDeArrays <= $periodoFinal; $indiceDeArrays++) {
+					$arrayPeriodo = Funcoes::montaPeriodo($indiceDeArrays);
+					$dataFimPeriodo = $arrayPeriodo[6].'-'.$arrayPeriodo[5].'-'.$arrayPeriodo[4];
+					$dataInicioPeriodo = $arrayPeriodo[3].'-'.$arrayPeriodo[2].'-'.$arrayPeriodo[1];
+					if($solicitacaoSituacaoAtiva->getSituacao()->getId() === Situacao::CONCLUIDO && $dataAjustadaDaSolicitacao >= $dataInicioPeriodo && $dataAjustadaDaSolicitacao <= $dataFimPeriodo){
+						$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($solicitacao->getObjeto1());
+						$nomeDaEquipe = $grupo->getGrupoEquipe()->getEntidadeAtiva()->getNome();
+						if($solicitacao->getSolicitacaoTipo()->getId() === SolicitacaoTipo::REMOVER_CELULA){
+							$relatorioCelulasExcluidas[$nomeDaEquipe][$indiceDeArrays]++;
+							$relatorioCelulasExcluidas[$nomeDaEquipe]['fotoDaEquipe'] = $grupo->getGrupoEquipe()->getFotosLideresAtivos();
+							$relatorioCelulasExcluidas[$nomeDaEquipe]['total'] ++;
+							$totalCiclo[$indiceDeArrays]++;
+							$totalGeral++;
+
+						}
+						if($solicitacao->getSolicitacaoTipo()->getId() === SolicitacaoTipo::REMOVER_LIDER){
+							if($grupoEventoCelulasInativas = $grupo->getGrupoEventoPorTipoEAtivo(EventoTipo::tipoCelula, $ativo = 2)){
+								foreach ($grupoEventoCelulasInativas as $celulasInativas) {
+									if($celulasInativas->getData_inativacaoStringPadraoBanco() == $dataAjustadaDaSolicitacao){
+										$relatorioCelulasExcluidas[$nomeDaEquipe][$indiceDeArrays]++;
+									  $relatorioCelulasExcluidas[$nomeDaEquipe]['fotoDaEquipe'] = $grupo->getGrupoEquipe()->getFotosLideresAtivos();
+										$relatorioCelulasExcluidas[$nomeDaEquipe]['total'] ++;
+										$totalCiclo[$indiceDeArrays]++;
+										$totalGeral++;
+									}
+								}
+							}
+						}
+					}
+
+				}
+			}
+			uksort($relatorioCelulasExcluidas, function ($ak, $bk) use ($relatorioCelulasExcluidas) {
+			    $a = $relatorioCelulasExcluidas[$ak];
+			    $b = $relatorioCelulasExcluidas[$bk];
+			    if ($a['total'] === $b['total']) return $ak - $bk;
+			    return $a['total'] < $b['total'] ? 1 : -1;
+			});
+
+			$relatorioCelulasExcluidas['TOTAL']['total'] = $totalGeral;
+			for ($indiceDeArrays = $periodoInicial; $indiceDeArrays <= $periodoFinal; $indiceDeArrays++) {
+					$relatorioCelulasExcluidas['TOTAL'][$indiceDeArrays] = $totalCiclo[$indiceDeArrays];
+			}
+			$dados['relatorioCelulasExcluidas'] = $relatorioCelulasExcluidas;
+			$dados['periodoInicial'] = $periodoInicial;
+			$dados['periodoFinal'] = $periodoFinal;			
+
+		$dados['mes'] = $mes;
+		$dados['ano'] = $ano;
+		return new ViewModel($dados);
 	}
 }
