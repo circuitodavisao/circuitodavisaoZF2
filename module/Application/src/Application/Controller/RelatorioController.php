@@ -628,15 +628,15 @@ class RelatorioController extends CircuitoController {
 		$soma = array();
 		$somaTotal = array();
 		for ($indiceDeArrays = $arrayPeriodoDoMes[0]; $indiceDeArrays <= $arrayPeriodoDoMes[1]; $indiceDeArrays++) {
+			$qualRelatorioParaUsar = $tipoRelatorioPessoal;
+			if($somado){
+				$qualRelatorioParaUsar = $tipoRelatorioSomado;
+			}
 			if($tipoRelatorio === self::relatorioParceiroDeDeus){
 				$relatorio[self::dadosPessoais][$indiceDeArrays] 
-					= $repositorio->getFatoFinanceiroORM()->fatosPorNumeroIdentificador($numeroIdentificador,$indiceDeArrays, $mes, $ano, $tipoRelatorioPessoal);
+					= $repositorio->getFatoFinanceiroORM()->fatosPorNumeroIdentificador($numeroIdentificador,$indiceDeArrays, $mes, $ano, $qualRelatorioParaUsar);
 				$soma[self::dadosPessoais][self::parceiroDeDeusValor] += $relatorio[self::dadosPessoais][$indiceDeArrays]['valor'];
 			}else{
-				$qualRelatorioParaUsar = $tipoRelatorioPessoal;
-				if($somado){
-					$qualRelatorioParaUsar = $tipoRelatorioSomado;
-				}
 				$relatorio[self::dadosPessoais][$indiceDeArrays] 
 					= RelatorioController::montaRelatorio($repositorio, $numeroIdentificador, $indiceDeArrays, $qualRelatorioParaUsar, false, $tipoRelatorio);
 				$soma[self::dadosPessoais][self::membresia] += $relatorio[self::dadosPessoais][$indiceDeArrays]['membresia'];
