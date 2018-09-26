@@ -733,6 +733,22 @@ class LoginController extends CircuitoController {
         return $response;
     }
 
+    public function removerFotoAction(){
+      $request = $this->getRequest();
+      if ($request->isPost()) {
+        $this->getRepositorio()->iniciarTransacao();
+        $post_data = $request->getPost();
+        $pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($post_data['idPessoa']);
+        $pessoa->setFoto(null);
+        $this->getRepositorio()->getPessoaORM()->persistir($pessoa, $naoAlterarDataDeCriacao = false);
+        $this->getRepositorio()->fecharTransacao();
+        return $this->redirect()->toRoute('login', array(
+  			Constantes::$ACTION => 'Perfil',
+  			));
+      }
+    }
+
+
     static public function geraSenha($tamanho = 8, $maiusculas = true, $numeros = true, $simbolos = false) {
 // Caracteres de cada tipo
         $lmin = 'abcdefghijklmnopqrstuvwxyz';
