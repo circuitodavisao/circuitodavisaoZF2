@@ -25,6 +25,13 @@ echo $this->templateFormularioRodape();
                 }, 'json');
     }
 
+    function removerFoto(){
+      var formulario = document.getElementById('formulario');
+      formulario.method = 'post';
+      formulario.action = 'removerFoto';
+      formulario.submit();
+    }
+
     function validarPerfil(formulario) {
         var ddd = $('#ddd').val();
         var telefone = $('#telefone').val();
