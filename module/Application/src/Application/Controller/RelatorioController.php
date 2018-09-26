@@ -635,11 +635,11 @@ class RelatorioController extends CircuitoController {
 				$qualRelatorioParaUsar = $tipoRelatorioSomado;
 			}
 			if($tipoRelatorio === self::relatorioParceiroDeDeus){
-				$relatorio[self::dadosPessoais][$indiceDeArrays] 
+				$relatorio[self::dadosPessoais][$indiceDeArrays]
 					= $repositorio->getFatoFinanceiroORM()->fatosPorNumeroIdentificador($numeroIdentificador,$indiceDeArrays, $mes, $ano, $qualRelatorioParaUsar);
 				$soma[self::dadosPessoais][self::parceiroDeDeusValor] += $relatorio[self::dadosPessoais][$indiceDeArrays]['valor'];
 			}else{
-				$relatorio[self::dadosPessoais][$indiceDeArrays] 
+				$relatorio[self::dadosPessoais][$indiceDeArrays]
 					= RelatorioController::montaRelatorio($repositorio, $numeroIdentificador, $indiceDeArrays, $qualRelatorioParaUsar, false, $tipoRelatorio);
 				$soma[self::dadosPessoais][self::membresia] += $relatorio[self::dadosPessoais][$indiceDeArrays]['membresia'];
 				$soma[self::dadosPessoais][self::membresiaPerformance] += $relatorio[self::dadosPessoais][$indiceDeArrays]['membresiaPerformance'];
@@ -1730,7 +1730,7 @@ class RelatorioController extends CircuitoController {
 
 		$relatorioAjustado = array();
 		$turmas = $grupo->getGrupoIgreja()->getTurma();
-		
+
 		foreach($relatorioInicial as $relatorio){
 			if($relatorio->getSituacao_id() === Situacao::ATIVO || $relatorio->getSituacao_id() === Situacao::ESPECIAL){
 				foreach($turmas as $turma){
@@ -1840,6 +1840,7 @@ class RelatorioController extends CircuitoController {
 	}
 
 	public function exclusaoCelulasAction() {
+
 		$sessao = new Container(Constantes::$NOME_APLICACAO);
 		$idEntidadeAtual = $sessao->idEntidadeAtual;
 		$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
@@ -1871,15 +1872,15 @@ class RelatorioController extends CircuitoController {
 					$dataFimPeriodo = $arrayPeriodo[6].'-'.$arrayPeriodo[5].'-'.$arrayPeriodo[4];
 					$dataInicioPeriodo = $arrayPeriodo[3].'-'.$arrayPeriodo[2].'-'.$arrayPeriodo[1];
 					if($solicitacaoSituacaoAtiva->getSituacao()->getId() === Situacao::CONCLUIDO && $dataAjustadaDaSolicitacao >= $dataInicioPeriodo && $dataAjustadaDaSolicitacao <= $dataFimPeriodo){
-						$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($solicitacao->getObjeto1());
-						$nomeDaEquipe = $grupo->getGrupoEquipe()->getEntidadeAtiva()->getNome();
+						if($grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($solicitacao->getObjeto1())){
+							$nomeDaEquipe = $grupo->getGrupoEquipe()->getEntidadeAtiva()->getNome();
+						} 
 						if($solicitacao->getSolicitacaoTipo()->getId() === SolicitacaoTipo::REMOVER_CELULA){
 							$relatorioCelulasExcluidas[$nomeDaEquipe][$indiceDeArrays]++;
 							$relatorioCelulasExcluidas[$nomeDaEquipe]['fotoDaEquipe'] = $grupo->getGrupoEquipe()->getFotosLideresAtivos();
 							$relatorioCelulasExcluidas[$nomeDaEquipe]['total'] ++;
 							$totalCiclo[$indiceDeArrays]++;
 							$totalGeral++;
-
 						}
 						if($solicitacao->getSolicitacaoTipo()->getId() === SolicitacaoTipo::REMOVER_LIDER){
 							if($grupoEventoCelulasInativas = $grupo->getGrupoEventoPorTipoEAtivo(EventoTipo::tipoCelula, $ativo = 2)){
@@ -1911,7 +1912,7 @@ class RelatorioController extends CircuitoController {
 			}
 			$dados['relatorioCelulasExcluidas'] = $relatorioCelulasExcluidas;
 			$dados['periodoInicial'] = $periodoInicial;
-			$dados['periodoFinal'] = $periodoFinal;			
+			$dados['periodoFinal'] = $periodoFinal;
 
 		$dados['mes'] = $mes;
 		$dados['ano'] = $ano;
