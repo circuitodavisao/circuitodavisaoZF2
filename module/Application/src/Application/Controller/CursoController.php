@@ -1526,8 +1526,9 @@ class CursoController extends CircuitoController {
 			$turmaAulaAtiva = $turma->getTurmaAulaAtiva();
 			foreach ($turma->getTurmaPessoa() as $turmaPessoa) {
 				$verificarAluno = false;
-				if ($turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getId() === Situacao::ATIVO ||
-					$turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getId() === Situacao::ESPECIAL)	{
+				if ($turmaPessoa->verificarSeEstaAtivo() && 
+					($turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getId() === Situacao::ATIVO ||
+					$turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getId() === Situacao::ESPECIAL)){
 						if($idEquipe == 0){
 							$verificarAluno = true;
 						}else{
