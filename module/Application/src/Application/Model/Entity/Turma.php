@@ -74,6 +74,18 @@ class Turma extends CircuitoEntity {
         return $this->turmaPessoa;
     }
 
+	function quantidadeDeAlunosAtivos(){
+		$alunos = 0;
+		if($turmaPessoas = $this->getTurmaPessoa()){
+			foreach($turmaPessoas as $turmaPessoa){
+				if($turmaPessoa->verificarSeEstaAtivo()){
+					$alunos++;
+				}
+			}
+		}
+		return $alunos;
+	}
+
     function getData_revisao() {
         return $this->data_revisao;
     }
