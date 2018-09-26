@@ -54,14 +54,18 @@ class Perfil extends AbstractHelper {
         if ($this->getMostrarOpcoes()) {
             $html .= '<div class="subirFoto row mt10">';
             $html .= '<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-center">';
-            $html .= '<div class="btn-group">            ';
-            $html .= '<label class="btn btn-primary btn-sm btn-upload" style="width: 204px;" for="inputImage" title="Upload image file">';
+            $html .= '<label class="btn btn-primary btn-sm btn-upload mr5" style="width: 204px;" for="inputImage" title="Upload image file">';
             $html .= '<input class="sr-only" id="inputImage" name="file" type="file" accept="image/*">';
             $html .= '<span class="docs-tooltip" data-toggle="tooltip" title="Import image with Blob URLs">';
             $html .= 'Subir Foto <span class="fa fa-upload"></span>';
             $html .= '</span>';
             $html .= '</label>';
-            $html .= '</div>';
+            $html .= '<label class="btn btn-primary btn-sm btn-upload ml5" onClick="removerFoto()">';
+            $html .= '<span class="docs-tooltip" data-toggle="tooltip">';
+            $html .= '<span class="fa fa-times"></span>';
+            $html .= '</span>';
+            $html .= '</label>';
+            $html .= '<input id ="idPessoa" name="idPessoa" type="hidden" value="'.$pessoa->getId().'">';
             $html .= '</div>';
             $html .= '</div>';
 
