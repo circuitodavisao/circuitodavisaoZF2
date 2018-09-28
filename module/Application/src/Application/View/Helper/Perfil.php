@@ -60,7 +60,7 @@ class Perfil extends AbstractHelper {
             $html .= 'Subir Foto <span class="fa fa-upload"></span>';
             $html .= '</span>';
             $html .= '</label>';
-            $html .= '<label class="btn btn-primary btn-sm btn-upload ml5" onClick="removerFoto()">';
+            $html .= '<label class="btn btn-danger btn-sm btn-upload ml5" onClick="removerFoto()">';
             $html .= '<span class="docs-tooltip" data-toggle="tooltip">';
             $html .= '<span class="fa fa-times"></span>';
             $html .= '</span>';

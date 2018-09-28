@@ -30,7 +30,7 @@ class ListagemTurmas extends AbstractHelper {
 				$turmasAtivas[] = $turma;
 			}
 		}
-		$html .= $this->view->templateFormularioTopo('Turmas', '', 'style="max-width: 100%; margin-top: 50px"');
+		$html .= $this->view->templateFormularioTopo('Turmas', '', 'style="max-width: 100%; margin-top: 0%;"');
 		$html .= '<div class="panel-body bg-light">';
 		/* Sem pessoas cadastrados */
 		if (count($turmasAtivas) == 0) {
