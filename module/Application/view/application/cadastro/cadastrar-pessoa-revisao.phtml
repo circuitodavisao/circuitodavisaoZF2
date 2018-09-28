@@ -11,9 +11,8 @@ $form = $this->CadastrarPessoaRevisaoForm;
 $form->prepare();
 $form->setAttribute(Constantes::$ACTION, $this->url(Constantes::$ROUTE_CADASTRO, array(Constantes::$PAGINA => Constantes::$PAGINA_SALVAR_PESSOA_REVISAO)));
 ?>
-<div class="mw1000 center-block p10">
+<div class="mw1000 center-block">
     <div class="row ">
-        <div id="content" class="animated fadeIn">
             <div class="row">
                 <!-- Cadastro de Pessoa -->
                 <div class="admin-form " id="register1" role="tabpanel">
@@ -57,7 +56,6 @@ $form->setAttribute(Constantes::$ACTION, $this->url(Constantes::$ROUTE_CADASTRO,
                 </div>
                 <!-- end: .admin-form -->
             </div>
-        </div>
     </div>
 </div>
 <?php
