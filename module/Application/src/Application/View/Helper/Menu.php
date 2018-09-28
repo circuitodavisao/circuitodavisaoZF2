@@ -104,7 +104,7 @@ class Menu extends AbstractHelper {
 				$html .= '<li>';
 				$html .= '<a href="/cadastroCultos" onClick="mostrarSplash();">';
 				$html .= '<span class="fa fa-users"></span>';
-				$html .= 'Cultos(Manutenção)';
+				$html .= 'Cultos';
 				$html .= '</a>';
 				$html .= '</li>';
 			}
