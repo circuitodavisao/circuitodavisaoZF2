@@ -18,7 +18,7 @@ class ListagemDePessoasComEventos extends AbstractHelper {
 	private $arrayPeriodo;
 
     public function __construct() {
-        
+
     }
 
     public function __invoke() {
@@ -184,7 +184,7 @@ class ListagemDePessoasComEventos extends AbstractHelper {
 		/* Col 6 */
 		$html .= '<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6" style="padding-top: 0px">';
 		if($pessoa->getTelefone()){
-			$telefone = '<a id="linkWhatsapp_'.$pessoa->getId().'" class="btn btn-dark btn-xs" href="https://api.whatsapp.com/send?phone=55'.$pessoa->getTelefone().'"><i class="fa fa-whatsapp"></i> Enviar Mensagem</a>';
+			$telefone = '<a id="linkWhatsapp_'.$pessoa->getId().'" class="btn btn-success btn-xs" href="https://api.whatsapp.com/send?phone=55'.$pessoa->getTelefone().'"><i class="fa fa-whatsapp"></i></a>';
 		}else{
         	$telefone = 'SEM TELEFONE';
 		}
@@ -269,20 +269,20 @@ class ListagemDePessoasComEventos extends AbstractHelper {
 			if ($this->view->periodo < 0) {
 				$mostrarParaLancar = true;
 			}
-			$espacamento = 'col-lg-4 col-md-4 col-sm-4 col-xs-4'; 
+			$espacamento = 'col-lg-4 col-md-4 col-sm-4 col-xs-4';
 			$tamanhoBotao = BotaoSimples::larguraMaxima;
 			$tamanhoBotaoInativo = 'btn-block';
 			if($numeroDeEvento === 1){
-				$espacamento = 'col-lg-12 col-md-12 col-sm-12 col-xs-12'; 
+				$espacamento = 'col-lg-12 col-md-12 col-sm-12 col-xs-12';
 			}
 			if($numeroDeEvento === 2){
-				$espacamento = 'col-lg-6 col-md-6 col-sm-6 col-xs-6'; 
+				$espacamento = 'col-lg-6 col-md-6 col-sm-6 col-xs-6';
 			}
 			if($numeroDeEvento === 3){
-				$espacamento = 'col-lg-4 col-md-4 col-sm-4 col-xs-4'; 
+				$espacamento = 'col-lg-4 col-md-4 col-sm-4 col-xs-4';
 			}
 			if($numeroDeEvento === 4){
-				//$espacamento = 'col-lg-3 col-md-3 col-sm-3 col-xs-3'; 
+				//$espacamento = 'col-lg-3 col-md-3 col-sm-3 col-xs-3';
 			}
 			if($numeroDeEvento > 4){
 				//$tamanhoBotao = BotaoSimples::posicaoAoCentro;
