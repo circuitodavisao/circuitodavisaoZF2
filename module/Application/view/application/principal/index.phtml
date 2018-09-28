@@ -270,7 +270,7 @@ Alunos
 </div>
 <div class="panel-body pn pt10 p10" style="display: none;">
 <div class="alert alert-default">
-	Legenda: 
+	Legenda:
 	<span class="label label-success">A - Ativo</span>
 	<span class="label label-info">E - Especial</span>
 	<span class="label label-warning">D - Desistente</span>
@@ -343,7 +343,7 @@ Alunos
 <span class="panel-title">Discípulos</span>
 </div>
 
-<div class="panel-body panel-scroller pn" style="max-height: 300px;">
+<div class="panel-body pn">
 
 <?php
 		$contadorDeDiscipulosPorLinha = 0;
@@ -358,10 +358,10 @@ Alunos
 					}
 				}
 				if($contadorDeDiscipulosPorLinha === 0){
-					echo '<div class="row">';
+					echo '<div class="row p10">';
 				}
-				echo '<div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 p5">';
-				echo '<img src="/img/fotos/'.$pessoa->getFoto().'" class="user-avatar" width="128px" height="128px" '.$this->funcaoOnClick($funcaoOnClick).'/>';
+				echo '<div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 p10 text-center">';
+				echo '<img src="/img/fotos/'.$pessoa->getFoto().'" class="user-avatar" width="128px" height="128px" '.$this->funcaoOnClick($funcaoOnClick).'/ style="margin:auto;">';
 				echo '<div class="caption">';
 				echo '<h5>'.$pessoa->getNomePrimeiro();
 				echo '<br />';
