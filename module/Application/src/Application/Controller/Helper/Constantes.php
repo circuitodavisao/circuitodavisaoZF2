@@ -252,6 +252,7 @@ class Constantes {
     public static $ENTITY_FATO_LIDER = 'Application\Model\Entity\FatoLider';
     public static $ENTITY_FATO_CELULA = 'Application\Model\Entity\FatoCelula';
     public static $ENTITY_FATO_CURSO = 'Application\Model\Entity\FatoCurso';
+    public static $ENTITY_ELEITOR = 'Application\Model\Entity\Eleitor';
     public static $ENTITY_DIMENSAO_TIPO = 'Application\Model\Entity\DimensaoTipo';
     public static $ENTITY_DIMENSAO = 'Application\Model\Entity\Dimensao';
     public static $ENTITY_GRUPO = 'Application\Model\Entity\Grupo';

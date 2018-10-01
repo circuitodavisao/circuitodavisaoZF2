@@ -96,18 +96,6 @@ use Application\Controller\Helper\Constantes;
         echo $this->inlineScript();
         ?>
         <script type="text/javascript">
-            $('.discipulo12')
-                    .css("border-left", "4px solid #4a89dc")
-                    .css("pointer-events", "none");
-
-            $('.discipulo144')
-                    .css("border-left", "4px solid #967adc")
-                    .css("pointer-events", "none");
-
-            $('.discipulo1728')
-                    .css("border-left", "4px solid #FFFFFF")
-                    .css("pointer-events", "none");
-
             jQuery(document).ready(function () {
 
                 "use strict";
@@ -121,7 +109,7 @@ use Application\Controller\Helper\Constantes;
                 });
 
                 // Init FooTable Examples
-                $('.footable').footable({paginate: false});
+                $('.footable').footable();
 
                 $('.admin-panels').adminpanel({
                     grid: '.admin-grid',
