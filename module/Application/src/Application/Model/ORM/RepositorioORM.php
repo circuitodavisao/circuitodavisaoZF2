@@ -60,6 +60,7 @@ class RepositorioORM {
 	private $_fatoFinanceiroTipo;
 	private $_fatoRankingCelula;
 	private $_fatoCursoORM;
+	private $_eleitorORM;
 
     /**
      * Contrutor
@@ -585,6 +586,15 @@ class RepositorioORM {
         }
         return $this->_fatoCursoORM;
     }
+
+    public function getEleitorORM() {
+        if (is_null($this->_eleitorORM)) {
+			$this->_eleitorORM = new CircuitoORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_ELEITOR);
+        }
+        return $this->_eleitorORM;
+    }
+
+
  
     /**
      * Metodo public para obter a instancia EntityManager com acesso ao banco de dados

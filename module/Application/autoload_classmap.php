@@ -26,6 +26,7 @@ return array(
     'Application\Model\Entity\TurmaPessoa'                       => __DIR__ . '/src/Application/Model/Entity/TurmaPessoa.php',
     'Application\Model\Entity\TurmaPessoaAula'                   => __DIR__ . '/src/Application/Model/Entity/TurmaPessoaAula.php',
     'Application\Model\Entity\FatoDiscipulado'                   => __DIR__ . '/src/Application/Model/Entity/FatoDiscipulado.php',
+    'Application\Model\Entity\Eleitor'                           => __DIR__ . '/src/Application/Model/Entity/Eleitor.php',
     'Application\Model\Entity\GrupoPessoaTipo'                   => __DIR__ . '/src/Application/Model/Entity/GrupoPessoaTipo.php',
     'Application\Model\Entity\Dimensao'                          => __DIR__ . '/src/Application/Model/Entity/Dimensao.php',
     'Application\Model\Entity\TurmaPessoaFinanceiro'             => __DIR__ . '/src/Application/Model/Entity/TurmaPessoaFinanceiro.php',

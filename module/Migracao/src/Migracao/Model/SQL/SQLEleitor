@@ -1,0 +1,33 @@
+DROP TABLE eleitor;
+
+CREATE TABLE eleitor
+(
+  id serial NOT NULL, 
+  nome character varying(80), 
+  telefone bigint NOT NULL, 
+  equipe character varying(80), 
+  igreja character varying(80), 
+  data date,
+  situacao integer default 1,
+  data_criacao date NOT NULL DEFAULT ('now'::text)::date, 
+  hora_criacao time without time zone NOT NULL DEFAULT ('now'::text)::time with time zone, 
+  data_inativacao date,
+  hora_inativacao time without time zone,
+  CONSTRAINT pk_eleitor PRIMARY KEY (id)
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE eleitor
+  OWNER TO postgres;
+
+CREATE INDEX index_eleitor_equipe
+  ON eleitor
+  USING btree
+  (equipe COLLATE pg_catalog."default");
+
+CREATE INDEX index_eleitor_igreja
+  ON eleitor
+  USING btree
+  (igreja COLLATE pg_catalog."default");
+
