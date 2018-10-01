@@ -1,0 +1,141 @@
+<?php
+
+use Application\View\Helper\BotaoSimples;
+
+
+
+$html = '';
+if($eleitores = $this->eleitores){
+	$html .= '<div class="center-block">';
+
+	$html .= '<div class="panel">';
+
+	$html .= '<div class="panel-heading" style="padding: 0px"><div class="panel-title">Eleitores</div></div>';
+	$html .= '<div class="panel-body p10">';
+	$html .= '<table class="table table-bordered table-condensed footable " data-page-navigation=".pagination" data-page-size="100">';
+	$html .= '<thead>';
+	$html .= '<tr class="dark">';
+	$html .= '<td>id</td>';
+	$html .= '<td class="hidden-xs">Igreja</td>';
+	$html .= '<td class="hidden-xs">Equipe</td>';
+	$html .= '<td class="hidden-xs">Nome</td>';
+	$html .= '<td class="hidden-xs">Telefone</td>';
+	$html .= '<td>Situacao</td>';
+	$html .= '<td>Opçoes</td>';
+	$html .= '<td>Envio</td>';
+	$html .= '</tr>';
+	$html .= '</thead>';
+	$html .= '<tbody>';
+	foreach($eleitores as $eleitor){
+		$nome = $eleitor->getNome(); // Pegar nome do BD e inserir nessa variável
+		$nome = mb_convert_case($nome, MB_CASE_TITLE, 'UTF-8'); // Função que deixa primeira letra maiúscula e restante minúscula.
+
+		$mensagemTipoVotoFiel = 1;
+		$mensagem[$mensagemTipoVotoFiel][0] = 'Olá '.$nome.'! Um amigo nosso em comum te apresentou nossa luta na Câmara Legislativa. Me chamo Delmasso, sou o criador e presidente da primeira CPI da pedofilia da história de Brasília. Se você acredita que a família é a base de tudo, quero solicitar seu apoio para continuar lutando! Posso contar com seu voto?
+
+			Distrital Delmasso 10456';
+
+		$mensagem[$mensagemTipoVotoFiel][1] = 'Olá '.$nome.', tudo bem? Um amigo nosso em comum te falou sobre nossa luta na Câmara Legislativa. Meu nome é Rodrigo Delmasso e sou o deputado que barrou as cartilhas e livros que erotizavam nossas crianças nas escolas. Se você acredita que a família é base de tudo, quero pedir seu apoio para continuar lutando! Posso contar com seu voto?
+
+			Distrital Delmasso 10456';
+
+		$mensagem[$mensagemTipoVotoFiel][2] = $nome.', Oi! Um amigo nosso em comum te mostrou nossa luta na Câmara Legislativa. Me chamo Delmasso, sou o autor do Estatuto da Família e barrei as cartilhas e livros que erotizavam nossas crianças nas escolas. Se você acredita que a família é base de tudo, anseio pelo seu apoio para que eu possa permanecer lutando! Podemos contar com seu voto?
+
+			Distrital Delmasso 10456';
+
+		$mensagem[$mensagemTipoVotoFiel][3] = 'Alô '.$nome.', como vai? Meu nome é Delmasso e um amigo nosso em comum te apresentou nossa luta na Câmara Legislativa. Sou o autor do Estatuto da Família e barrei as cartilhas e livros que erotizavam nossas crianças nas escolas. Se você acredita que a família é base de tudo, desejo seu apoio para continuar lutando! Queremos contar com seu voto!
+
+			Distrital Delmasso 10456';
+
+		$mensagem[$mensagemTipoVotoFiel][4] = 'Olá '.$nome.', beleza? Meu nome é Rodrigo Delmasso e um amigo nosso em comum falou com você sobre nossa luta na Câmara Legislativa. Sou o o deputado que barrou as cartilhas e livros que erotizavam nossas crianças nas escolas. Se você acredita que a família é base de tudo, quero pedir sua ajuda para que eu continue nessa luta! Queremos contar com seu voto!
+			Distrital Delmasso 10456';
+
+		$mensagem[$mensagemTipoVotoFiel][5] = 'Olá '.$nome.', meu caro! Meu nome é Delmasso e um amigo nosso em comum te apresentou nossa luta na Câmara Legislativa. Sou o criador e presidente da primeira CPI da pedofilia da história de Brasília. Se você acredita que a família é base de tudo, quero pedir sua contribuição para que eu permaneça lutando! Desejamos contar com seu voto!
+
+			Distrital Delmasso 10456';
+
+		$mensagem[$mensagemTipoVotoFiel][6] = 'Olá '.$nome.', tudo bem com você? Meu nome é Delmasso e um amigo nosso em comum te mostrou nossa luta na Câmara Legislativa. Sou o criador e presidente da primeira CPI da pedofilia da história de Brasília. Se você acredita que a família é base de tudo, quero pedir seu auxílio para continuar lutando! Será maravilhoso contar com seu voto!
+
+			Distrital Delmasso 10456';
+
+		$numeroRandom = rand(1,6);
+		$numeroRandom2 = rand(1,6);
+		$mensagemParaUsar = $mensagem[$mensagemTipoVotoFiel][$numeroRandom];
+		$mensagemParaUsar2 = $mensagem[$mensagemTipoVotoFiel][$numeroRandom2];
+
+		$telefoneAjustado = substr($eleitor->getTelefone(),0,2).'9'.substr($eleitor->getTelefone(),2);
+		$botaoEnvioCom9 = '<a target="_blanck" class="btn btn-success btn-xs" href="https://api.whatsapp.com/send?phone=55'.$telefoneAjustado.'&text='.$mensagemParaUsar.'">Com 9</a>';
+		$botaoEnvioSem9 = '<a target="_blanck" class="btn btn-success btn-xs" href="https://api.whatsapp.com/send?phone=55'.$eleitor->getTelefone().'&text='.$mensagemParaUsar2.'">Sem 9</a>';
+
+		$funcaoOnclickEnviado = $this->funcaoOnClick('mudarSituacao('.$eleitor->getId().',2)');
+		$funcaoOnclickInvalido = $this->funcaoOnClick('mudarSituacao('.$eleitor->getId().',3)');
+		$botaoEnviado = $this->botaoSimples('Enviado',$funcaoOnclickEnviado,BotaoSimples::botaoMuitoPequenoSucesso, BotaoSimples::posicaoAEsquerda);
+		$botaoError = $this->botaoSimples('Invalido',$funcaoOnclickInvalido,BotaoSimples::botaoMuitoPequenoPerigoso, BotaoSimples::posicaoAEsquerda);
+		$botoes = $botaoEnviado . ' ' .$botaoError;
+
+		switch($eleitor->getSituacao()){
+		case 1: $label = 'Pendente';$classe = 'warning';  break;
+		case 2: $label = 'Enviado';$classe = 'success';  break;
+		case 3: $label = 'Invalido';$classe = 'danger';  break;
+		}
+		$situacaoAtual = '<span id="situacao'.$eleitor->getId().'" class="label label-'.$classe.'">'.$label.'</span>';
+		$html .= '<tr>';
+		$html .= '<td>'.$eleitor->getId().'</td>';
+		$html .= '<td class="hidden-xs">'.$eleitor->getIgreja().'</td>';
+		$html .= '<td class="hidden-xs">'.$eleitor->getEquipe().'</td>';
+		$html .= '<td class="hidden-xs">'.$eleitor->getNome().'</td>';
+		$html .= '<td class="hidden-xs">'.$eleitor->getTelefone().'</td>';
+		$html .= '<td>'.$situacaoAtual.'</td>';
+		$html .= '<td>'.$botoes.'</td>';
+		$html .= '<td>'.$botaoEnvioSem9.' '.$botaoEnvioCom9.'</td>';
+		$html .= '</tr>';
+	}
+	$html .= '</tbody>';
+
+	$html .= '<tfoot class="footer-menu">';
+	$html .= '<tr>';
+	$html .= '<td colspan="8">';
+	$html .= '<nav class="text-right">';
+	$html .= '<ul class="pagination"></ul>';
+	$html .= '</nav>';
+	$html .= '</td>';
+	$html .= '</tr>';
+	$html .= '</tfoot>';
+	$html .= '</table>';
+	$html .= '</div>';
+
+	$html .= '</div>';
+
+	$html .= '</div>';
+}
+
+echo $html;
+
+?>
+<script type="text/javascript">
+
+function mudarSituacao(idEleitor, tipo){
+	$.post(
+		"/deployEleitorMudarSituacao",
+{
+	idEleitor: idEleitor,
+		tipo: tipo,
+			},
+			function (data) {
+				if (data.response) {
+					let label = 'Enviado'
+						let classeParaAdicionar = 'label-success'
+						let classeParaRemover = 'label-warning label-danger'
+						if(tipo == 3){
+							label = 'Invalido'
+								classeParaAdicionar = 'label-danger'
+								classeParaRemover = 'label-warning label-success'
+					}
+					$('#situacao'+idEleitor).html(label)
+						$('#situacao'+idEleitor).addClass(classeParaAdicionar)
+						$('#situacao'+idEleitor).removeClass(classeParaRemover)
+				   } 
+			}, 'json');
+}
+
+</script>
