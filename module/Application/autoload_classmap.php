@@ -63,6 +63,7 @@ return array(
     'Application\Model\ORM\PessoaORM'                            => __DIR__ . '/src/Application/Model/ORM/PessoaORM.php',
     'Application\Model\ORM\HierarquiaORM'                        => __DIR__ . '/src/Application/Model/ORM/HierarquiaORM.php',
     'Application\Model\ORM\TurmaORM'                             => __DIR__ . '/src/Application/Model/ORM/TurmaORM.php',
+    'Application\Model\ORM\EleitorORM'                           => __DIR__ . '/src/Application/Model/ORM/EleitorORM.php',
     'Application\Model\ORM\RepositorioORM'                       => __DIR__ . '/src/Application/Model/ORM/RepositorioORM.php',
     'Application\Model\ORM\FatoFinanceiroORM'                    => __DIR__ . '/src/Application/Model/ORM/FatoFinancerioORM.php',
     'Application\Model\ORM\TurmaPessoaFrequenciaORM'             => __DIR__ . '/src/Application/Model/ORM/TurmaPessoaFrequenciaORM.php',

@@ -118,8 +118,13 @@ class DeployController extends CircuitoController {
 	}
 
 	public function eleitorAction(){
-		$eleitores = $this->getRepositorio()->getEleitorORM()->buscarTodosRegistrosEntidade('id', 'ASC');
-		$dados = array('eleitores' => $eleitores);
+
+		$bloco = $this->getEvent()->getRouteMatch()->getParam(Constantes::$ID, 0);
+		$eleitores[] = $this->getRepositorio()->getEleitorORM()->encontrarPorId(1125);
+		$eleitores = $this->getRepositorio()->getEleitorORM()->encontrarPorBloco($bloco);
+		$totalDeRegistros = (int) $this->getRepositorio()->getEleitorORM()->totalDeRegistros();
+		$totalDeBlocos = (int) ($totalDeRegistros / 1000);
+		$dados = array('eleitores' => $eleitores, 'totalDeBlocos' => $totalDeBlocos);
 		$view = new ViewModel($dados);
 		return $view;
 	}

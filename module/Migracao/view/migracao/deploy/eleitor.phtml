@@ -12,7 +12,18 @@ if($eleitores = $this->eleitores){
 
 	$html .= '<div class="panel-heading" style="padding: 0px"><div class="panel-title">Eleitores</div></div>';
 	$html .= '<div class="panel-body p10">';
-	$html .= '<table class="table table-bordered table-condensed footable " data-page-navigation=".pagination" data-page-size="100">';
+	
+	$html .= '<div class="panel">';
+	$html .= '<div class="panel-body">';
+	$totalDeBlocos = $this->totalDeBlocos;
+	for($indiceBlocos = $totalDeBlocos; $indiceBlocos >= 0; $indiceBlocos--){
+		$funcaoBloco = $this->funcaoOnClick('location.href="/deployEleitor/'.$indiceBlocos.'"');
+		$html .= $this->botaoSimples($indiceBlocos, $funcaoBloco);
+	}
+	$html .= '</div>';
+	$html .= '</div>';
+
+	$html .= '<table class="table table-bordered table-condensed table-hover" >';
 	$html .= '<thead>';
 	$html .= '<tr class="dark">';
 	$html .= '<td>id</td>';
@@ -58,10 +69,24 @@ if($eleitores = $this->eleitores){
 
 			Distrital Delmasso 10456';
 
+		$votosIncertos = 0;
+		$mensagem[$votosIncertos][1] = 'Olá! No mandato de 2015 a 2018 o deputado Delmasso trabalhou muito na Câmara Legislativa por mais qualidade de vida para a população do DF. Ele é o criador e presidente da primeira CPI da pedofilia da história de Brasília, e também barrou as cartilhas e livros que erotizavam nossas crianças nas escolas. Delmasso é o autor do Estatuto da Família e da Lei que Combate os Maus Tratos de Animais e tantas outras leis e projetos. Se você acredita que a família é base de tudo, queremos pedir seu apoio para continuar nessa luta. Posso contar com o seu voto?';
+
+		$mensagem[$votosIncertos][2] = 'Olá! No mandato de 2015 a 2018 o deputado Delmasso trabalhou muito na Câmara Legislativa por mais qualidade de vida para o DF. Ele é o criador e presidente da CPI da pedofilia da história de Brasília, e também barrou as cartilhas e livros que erotizavam nossas crianças nas escolas. Se você acredita que a família é base de tudo, queremos pedir seu apoio para continuar lutando. Podemos contar com o seu voto?';
+
+		$mensagem[$votosIncertos][3] = 'Olá! No mandato de 2015 a 2018 o deputado Delmasso trabalhou muito na Câmara Legislativa por mais qualidade de vida para a população do DF. Ele é o criador e presidente da primeira CPI da pedofilia da história de Brasília. Delmasso é o autor do Estatuto da Família e da Lei que Combate os Maus Tratos de Animais e tantas outras leis e projetos. Se você acredita que a família é base de tudo, desejamos seu apoio para continuar lutando. Posso contar com o seu voto?';
+
+		$mensagem[$votosIncertos][4] = 'Olá! No mandato de 2015 a 2018 o deputado Delmasso trabalhou muito na Câmara Legislativa por mais qualidade de vida para a população do DF. Ele barrou as cartilhas e livros que erotizavam nossas crianças nas escolas e também é o criador e presidente da primeira CPI da pedofilia da história de Brasília. Delmasso é o autor do Estatuto da Família e da Lei que Combate os Maus Tratos de Animais e tantas outras leis e projetos. Se você acredita que a família é base de tudo, queremos pedir sua ajuda para continuar lutando. Posso contar com o seu voto?';
+
+		$mensagem[$votosIncertos][5] = 'Olá! No mandato de 2015 a 2018 o deputado Delmasso trabalhou muito na Câmara Legislativa por mais qualidade de vida para a população do DF. Delmasso é o autor do Estatuto da Família e da Lei que Combate os Maus Tratos de Animais e tantas outras leis e projetos. Ele é o criador e presidente da primeira CPI da pedofilia da história de Brasília, e também barrou as cartilhas e livros que erotizavam nossas crianças nas escolas. Se você acredita que a família é base de tudo, queremos pedir seu apoio para continuar lutando. Posso contar com o seu voto?';
+
+		$mensagem[$votosIncertos][6] = 'Olá! No mandato de 2015 a 2018 o deputado Delmasso trabalhou muito na Câmara Legislativa por mais qualidade de vida para a população de Brasília e todo o DF. Ele é o criador e presidente da primeira CPI da pedofilia da história de Brasília, e também barrou as cartilhas e livros que erotizavam nossas crianças nas escolas. Delmasso é o autor do Estatuto da Família e da Lei que Combate os Maus Tratos de Animais e tantas outras leis e projetos. Se você acredita que a família é base de tudo, queremos pedir seu apoio para continuar lutando. Posso contar com o seu voto?';
+
+
 		$numeroRandom = rand(1,6);
 		$numeroRandom2 = rand(1,6);
-		$mensagemParaUsar = $mensagem[$mensagemTipoVotoFiel][$numeroRandom];
-		$mensagemParaUsar2 = $mensagem[$mensagemTipoVotoFiel][$numeroRandom2];
+		$mensagemParaUsar = $mensagem[$votosIncertos][$numeroRandom];
+		$mensagemParaUsar2 = $mensagem[$votosIncertos][$numeroRandom2];
 
 		$telefoneAjustado = substr($eleitor->getTelefone(),0,2).'9'.substr($eleitor->getTelefone(),2);
 		$botaoEnvioCom9 = '<a target="_blanck" class="botaoEnvio'.$eleitor->getId().' btn btn-success btn-xs" href="https://api.whatsapp.com/send?phone=55'.$telefoneAjustado.'&text='.$mensagemParaUsar.'">Com 9</a>';
