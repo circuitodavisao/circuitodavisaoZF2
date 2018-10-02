@@ -64,8 +64,8 @@ if($eleitores = $this->eleitores){
 		$mensagemParaUsar2 = $mensagem[$mensagemTipoVotoFiel][$numeroRandom2];
 
 		$telefoneAjustado = substr($eleitor->getTelefone(),0,2).'9'.substr($eleitor->getTelefone(),2);
-		$botaoEnvioCom9 = '<a target="_blanck" class="btn btn-success btn-xs" href="https://wa.me/55'.$telefoneAjustado.'?text='.$mensagemParaUsar.'">Com 9</a>';
-		$botaoEnvioSem9 = '<a target="_blanck" class="btn btn-success btn-xs" href="https://wa.me/55'.$eleitor->getTelefone().'?text='.$mensagemParaUsar2.'">Sem 9</a>';
+		$botaoEnvioCom9 = '<a target="_blanck" class="botaoEnvio btn btn-success btn-xs" href="https://wa.me/55'.$telefoneAjustado.'?text='.$mensagemParaUsar.'">Com 9</a>';
+		$botaoEnvioSem9 = '<a target="_blanck" class="botaoEnvio btn btn-success btn-xs" href="https://wa.me/55'.$eleitor->getTelefone().'?text='.$mensagemParaUsar2.'">Sem 9</a>';
 
 		$funcaoOnclickEnviado = $this->funcaoOnClick('mudarSituacao('.$eleitor->getId().',2)');
 		$funcaoOnclickInvalido = $this->funcaoOnClick('mudarSituacao('.$eleitor->getId().',3)');
@@ -87,7 +87,7 @@ if($eleitores = $this->eleitores){
 		$html .= '<td class="hidden-xs">'.$eleitor->getTelefone().'</td>';
 		$html .= '<td>'.$situacaoAtual.'</td>';
 		$html .= '<td>'.$botoes.'</td>';
-		$html .= '<td>'.$botaoEnvioSem9.' '.$botaoEnvioCom9.'</td>';
+		$html .= '<td>'.$botaoEnvioSem9.'</td>';
 		$html .= '</tr>';
 	}
 	$html .= '</tbody>';
