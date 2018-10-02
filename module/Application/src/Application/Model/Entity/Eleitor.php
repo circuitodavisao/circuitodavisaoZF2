@@ -25,6 +25,9 @@ class Eleitor extends CircuitoEntity {
 	/** @ORM\Column(type="integer") */
 	protected $situacao;
 
+	/** @ORM\Column(type="integer") */
+	protected $lista;
+	
 	public function setNome($nome){
 		$this->nome = $nome;
 	}	
@@ -65,4 +68,11 @@ class Eleitor extends CircuitoEntity {
 		return $this->situacao;
 	}
 
+	public function setLista($lista){
+		$this->lista = $lista;
+	}
+
+	public function getLista(){
+		return $this->lista;
+	}
 }

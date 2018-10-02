@@ -31,3 +31,7 @@ CREATE INDEX index_eleitor_igreja
   USING btree
   (igreja COLLATE pg_catalog."default");
 
+insert into eleitor (nome, telefone, igreja, equipe, data)
+values ( 'leonardo', 6198510703, 'ceilandia', 'blackbelt', '2018-10-02');
+
+alter table eleitor add column lista integer defalt 1;
