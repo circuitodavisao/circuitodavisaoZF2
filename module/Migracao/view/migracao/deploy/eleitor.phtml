@@ -20,7 +20,7 @@ if($eleitores = $this->eleitores){
 	$html .= '<td class="hidden-xs">Equipe</td>';
 	$html .= '<td class="hidden-xs">Nome</td>';
 	$html .= '<td class="hidden-xs">Telefone</td>';
-	$html .= '<td>Situacao</td>';
+	$html .= '<td>Sit.</td>';
 	$html .= '<td>Opçoes</td>';
 	$html .= '<td>Envio</td>';
 	$html .= '</tr>';
@@ -64,19 +64,19 @@ if($eleitores = $this->eleitores){
 		$mensagemParaUsar2 = $mensagem[$mensagemTipoVotoFiel][$numeroRandom2];
 
 		$telefoneAjustado = substr($eleitor->getTelefone(),0,2).'9'.substr($eleitor->getTelefone(),2);
-		$botaoEnvioCom9 = '<a target="_blanck" class="btn btn-success btn-xs" href="https://api.whatsapp.com/send?phone=55'.$telefoneAjustado.'&text='.$mensagemParaUsar.'">Com 9</a>';
-		$botaoEnvioSem9 = '<a target="_blanck" class="btn btn-success btn-xs" href="https://api.whatsapp.com/send?phone=55'.$eleitor->getTelefone().'&text='.$mensagemParaUsar2.'">Sem 9</a>';
+		$botaoEnvioCom9 = '<a target="_blanck" class="btn btn-success btn-xs" href="https://wa.me/55'.$telefoneAjustado.'?text='.$mensagemParaUsar.'">Com 9</a>';
+		$botaoEnvioSem9 = '<a target="_blanck" class="btn btn-success btn-xs" href="https://wa.me/55'.$eleitor->getTelefone().'?text='.$mensagemParaUsar2.'">Sem 9</a>';
 
 		$funcaoOnclickEnviado = $this->funcaoOnClick('mudarSituacao('.$eleitor->getId().',2)');
 		$funcaoOnclickInvalido = $this->funcaoOnClick('mudarSituacao('.$eleitor->getId().',3)');
-		$botaoEnviado = $this->botaoSimples('Enviado',$funcaoOnclickEnviado,BotaoSimples::botaoMuitoPequenoSucesso, BotaoSimples::posicaoAEsquerda);
-		$botaoError = $this->botaoSimples('Invalido',$funcaoOnclickInvalido,BotaoSimples::botaoMuitoPequenoPerigoso, BotaoSimples::posicaoAEsquerda);
+		$botaoEnviado = $this->botaoSimples('<i class="fa fa-check"></i>',$funcaoOnclickEnviado,BotaoSimples::botaoMuitoPequenoSucesso, BotaoSimples::posicaoAEsquerda);
+		$botaoError = $this->botaoSimples('<i class="fa fa-ban"></i>',$funcaoOnclickInvalido,BotaoSimples::botaoMuitoPequenoPerigoso, BotaoSimples::posicaoAEsquerda);
 		$botoes = $botaoEnviado . ' ' .$botaoError;
 
 		switch($eleitor->getSituacao()){
-		case 1: $label = 'Pendente';$classe = 'warning';  break;
-		case 2: $label = 'Enviado';$classe = 'success';  break;
-		case 3: $label = 'Invalido';$classe = 'danger';  break;
+		case 1: $label = '<i class="fa fa-clock-o"></i>';$classe = 'warning';  break;
+		case 2: $label = '<i class="fa fa-check"></i>';$classe = 'success';  break;
+		case 3: $label = '<i class="fa fa-ban"></i>';$classe = 'danger';  break;
 		}
 		$situacaoAtual = '<span id="situacao'.$eleitor->getId().'" class="label label-'.$classe.'">'.$label.'</span>';
 		$html .= '<tr>';
@@ -123,11 +123,11 @@ function mudarSituacao(idEleitor, tipo){
 			},
 			function (data) {
 				if (data.response) {
-					let label = 'Enviado'
+					let label = '<i class="fa fa-check"></i>'
 						let classeParaAdicionar = 'label-success'
 						let classeParaRemover = 'label-warning label-danger'
 						if(tipo == 3){
-							label = 'Invalido'
+							label = '<i class="fa fa-ban"></i>'
 								classeParaAdicionar = 'label-danger'
 								classeParaRemover = 'label-warning label-success'
 					}
