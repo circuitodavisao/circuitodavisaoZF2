@@ -64,8 +64,8 @@ if($eleitores = $this->eleitores){
 		$mensagemParaUsar2 = $mensagem[$mensagemTipoVotoFiel][$numeroRandom2];
 
 		$telefoneAjustado = substr($eleitor->getTelefone(),0,2).'9'.substr($eleitor->getTelefone(),2);
-		$botaoEnvioCom9 = '<a class="botaoEnvio btn btn-success btn-xs" href="https://api.whatsapp.com/send?phone=55'.$telefoneAjustado.'&text='.$mensagemParaUsar.'">Com 9</a>';
-		$botaoEnvioSem9 = '<a class="botaoEnvio btn btn-success btn-xs" href="https://api.whatsapp.com/send?phone=55'.$eleitor->getTelefone().'&text='.$mensagemParaUsar2.'">Sem 9</a>';
+		$botaoEnvioCom9 = '<a target="_blanck" class="botaoEnvio btn btn-success btn-xs" href="https://api.whatsapp.com/send?phone=55'.$telefoneAjustado.'&text='.$mensagemParaUsar.'">Com 9</a>';
+		$botaoEnvioSem9 = '<a target="_blanck" class="botaoEnvio btn btn-success btn-xs" href="https://api.whatsapp.com/send?phone=55'.$eleitor->getTelefone().'&text='.$mensagemParaUsar2.'">Sem 9</a>';
 
 		$funcaoOnclickEnviado = $this->funcaoOnClick('mudarSituacao('.$eleitor->getId().',2)');
 		$funcaoOnclickInvalido = $this->funcaoOnClick('mudarSituacao('.$eleitor->getId().',3)');
