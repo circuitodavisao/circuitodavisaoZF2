@@ -589,7 +589,7 @@ class RepositorioORM {
 
     public function getEleitorORM() {
         if (is_null($this->_eleitorORM)) {
-			$this->_eleitorORM = new CircuitoORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_ELEITOR);
+			$this->_eleitorORM = new EleitorORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_ELEITOR);
         }
         return $this->_eleitorORM;
     }
