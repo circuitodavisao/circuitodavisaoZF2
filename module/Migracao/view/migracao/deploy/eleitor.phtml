@@ -12,9 +12,10 @@ if($eleitores = $this->eleitores){
 
 	$html .= '<div class="panel-heading" style="padding: 0px"><div class="panel-title">Eleitores</div></div>';
 	$html .= '<div class="panel-body p10">';
-	
+
 	$html .= '<div class="panel">';
 	$html .= '<div class="panel-body">';
+	$html .= '<img id="imagemTeste" width=10 height=10 onClick="copiar();" src="https://circuitodavisaonovo.com.br/img/fotos/3_mrjOFO4c.jpg" />';
 	$totalDeBlocos = $this->totalDeBlocos;
 	for($indiceBlocos = $totalDeBlocos; $indiceBlocos >= 0; $indiceBlocos--){
 		$funcaoBloco = $this->funcaoOnClick('location.href="/deployEleitor/'.$indiceBlocos.'"');
