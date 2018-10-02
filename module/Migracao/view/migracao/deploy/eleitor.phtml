@@ -15,7 +15,6 @@ if($eleitores = $this->eleitores){
 
 	$html .= '<div class="panel">';
 	$html .= '<div class="panel-body">';
-	$html .= '<img id="imagemTeste" width=10 height=10 onClick="copiar();" src="https://circuitodavisaonovo.com.br/img/fotos/3_mrjOFO4c.jpg" />';
 	$totalDeBlocos = $this->totalDeBlocos;
 	for($indiceBlocos = $totalDeBlocos; $indiceBlocos >= 0; $indiceBlocos--){
 		$funcaoBloco = $this->funcaoOnClick('location.href="/deployEleitor/'.$indiceBlocos.'"');
@@ -85,18 +84,15 @@ if($eleitores = $this->eleitores){
 
 
 		$numeroRandom = rand(1,6);
-		$numeroRandom2 = rand(1,6);
 		$mensagemParaUsar = $mensagem[$votosIncertos][$numeroRandom];
-		$mensagemParaUsar2 = $mensagem[$votosIncertos][$numeroRandom2];
 
 		$telefoneAjustado = substr($eleitor->getTelefone(),0,2).'9'.substr($eleitor->getTelefone(),2);
-		$botaoEnvioCom9 = '<a target="_blanck" class="botaoEnvio'.$eleitor->getId().' btn btn-success btn-xs" href="https://api.whatsapp.com/send?phone=55'.$telefoneAjustado.'&text='.$mensagemParaUsar.'">Com 9</a>';
-		$botaoEnvioSem9 = '<a target="_blanck" class="botaoEnvio'.$eleitor->getId().' btn btn-success btn-xs" href="https://api.whatsapp.com/send?phone=55'.$eleitor->getTelefone().'&text='.$mensagemParaUsar2.'">Sem 9</a>';
+		$botaoEnvioSem9 = '<a target="_blanck" class="botaoEnvio'.$eleitor->getId().' btn btn-success" href="https://api.whatsapp.com/send?phone=55'.$eleitor->getTelefone().'&text='.$mensagemParaUsar.'"><i class="fa fa-whatsapp"></i></a>';
 
 		$funcaoOnclickEnviado = $this->funcaoOnClick('mudarSituacao('.$eleitor->getId().',2)');
 		$funcaoOnclickInvalido = $this->funcaoOnClick('mudarSituacao('.$eleitor->getId().',3)');
-		$botaoEnviado = $this->botaoSimples('<i class="fa fa-check"></i>',$funcaoOnclickEnviado,BotaoSimples::botaoMuitoPequenoSucesso, BotaoSimples::posicaoAEsquerda);
-		$botaoError = $this->botaoSimples('<i class="fa fa-ban"></i>',$funcaoOnclickInvalido,BotaoSimples::botaoMuitoPequenoPerigoso, BotaoSimples::posicaoAEsquerda);
+		$botaoEnviado = $this->botaoSimples('<i class="fa fa-check"></i>',$funcaoOnclickEnviado,BotaoSimples::botaoSucesso, BotaoSimples::posicaoAEsquerda);
+		$botaoError = $this->botaoSimples('<i class="fa fa-ban"></i>',$funcaoOnclickInvalido,BotaoSimples::botaoPerigoso, BotaoSimples::posicaoAEsquerda);
 		$botoes = $botaoEnviado . ' ' .$botaoError;
 
 		switch($eleitor->getSituacao()){
