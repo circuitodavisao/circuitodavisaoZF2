@@ -120,8 +120,12 @@ class DeployController extends CircuitoController {
 	public function eleitorAction(){
 
 		$bloco = $this->getEvent()->getRouteMatch()->getParam(Constantes::$ID, 0);
-		$eleitores[] = $this->getRepositorio()->getEleitorORM()->encontrarPorId(1125);
-		$eleitores = $this->getRepositorio()->getEleitorORM()->encontrarPorBloco($bloco);
+		if($bloco == 1000){
+			$listaParaTeste = 8;
+			$eleitores = $this->getRepositorio()->getEleitorORM()->encontrarPorLista($listaParaTeste);
+		}else{
+			$eleitores = $this->getRepositorio()->getEleitorORM()->encontrarPorBloco($bloco);
+		}
 		$totalDeRegistros = (int) $this->getRepositorio()->getEleitorORM()->totalDeRegistros();
 		$totalDeBlocos = (int) ($totalDeRegistros / 2000);
 		$dados = array('eleitores' => $eleitores, 'totalDeBlocos' => $totalDeBlocos);
