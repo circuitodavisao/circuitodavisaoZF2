@@ -13,9 +13,9 @@ class EleitorORM extends CircuitoORM {
 			$dql = "SELECT e "
 				. "FROM  " . Constantes::$ENTITY_ELEITOR . " e ORDER BY e.id ASC ";
 
-			$offset = $bloco * 1000;
+			$offset = $bloco * 2000;
 			$entidades = $this->getEntityManager()->createQuery($dql)
-				->setMaxResults(1000)
+				->setMaxResults(2000)
 				->setFirstResult($offset)
 				->getResult();
 		} catch (Exception $exc) {
