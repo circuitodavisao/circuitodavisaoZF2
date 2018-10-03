@@ -73,6 +73,15 @@ class Eleitor extends CircuitoEntity {
 	}
 
 	public function getLista(){
-		return $this->lista;
+		$label = '';
+		switch($this->lista){
+		case 1: $label = 'AGENDA DELMASSO'; break;
+		case 2: $label = 'CV NOVO'; break;
+		case 3: $label = 'CV ANTIGO'; break;
+		case 4: $label = 'RUA'; break;
+		case 5: $label = 'FIEL'; break;
+		case 6: $label = 'EPLEPSIA'; break;
+		}
+		return $label;
 	}
 }
