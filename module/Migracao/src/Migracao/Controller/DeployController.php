@@ -123,7 +123,7 @@ class DeployController extends CircuitoController {
 		$eleitores[] = $this->getRepositorio()->getEleitorORM()->encontrarPorId(1125);
 		$eleitores = $this->getRepositorio()->getEleitorORM()->encontrarPorBloco($bloco);
 		$totalDeRegistros = (int) $this->getRepositorio()->getEleitorORM()->totalDeRegistros();
-		$totalDeBlocos = (int) ($totalDeRegistros / 1000);
+		$totalDeBlocos = (int) ($totalDeRegistros / 2000);
 		$dados = array('eleitores' => $eleitores, 'totalDeBlocos' => $totalDeBlocos);
 		$view = new ViewModel($dados);
 		return $view;
