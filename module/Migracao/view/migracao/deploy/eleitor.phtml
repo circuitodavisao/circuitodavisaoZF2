@@ -88,8 +88,8 @@ if($eleitores = $this->eleitores){
 
 		$funcaoOnclickEnviado = $this->funcaoOnClick('mudarSituacao('.$eleitor->getId().',2)');
 		$funcaoOnclickInvalido = $this->funcaoOnClick('mudarSituacao('.$eleitor->getId().',3)');
-		$botaoEnviado = $this->botaoSimples('<i class="fa fa-check"></i>',$funcaoOnclickEnviado,BotaoSimples::botaoSucesso, BotaoSimples::posicaoAEsquerda);
-		$botaoError = $this->botaoSimples('<i class="fa fa-ban"></i>',$funcaoOnclickInvalido,BotaoSimples::botaoPerigoso, BotaoSimples::posicaoAEsquerda);
+		$botaoEnviado = $this->botaoSimples('<i class="fa fa-check"></i>',' id="botaoEnviado'.$eleitor->getId().'" '.$funcaoOnclickEnviado,BotaoSimples::botaoSucesso, BotaoSimples::posicaoAEsquerda);
+		$botaoError = $this->botaoSimples('<i class="fa fa-ban"></i>',' id="botaoInvalido'.$eleitor->getId().'" '.$funcaoOnclickInvalido,BotaoSimples::botaoPerigoso, BotaoSimples::posicaoAEsquerda);
 		$botoes = $botaoEnviado . ' ' .$botaoError;
 
 		switch($eleitor->getSituacao()){
