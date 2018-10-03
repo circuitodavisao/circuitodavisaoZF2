@@ -65,7 +65,7 @@ if($eleitores = $this->eleitores){
 	$html .= '<table class="table table-bordered table-condensed table-hover" >';
 	$html .= '<thead>';
 	$html .= '<tr class="dark">';
-	$html .= '<td>id</td>';
+	$html .= '<td class="hidden-xs">id</td>';
 	$html .= '<td class="hidden-xs">Igreja</td>';
 	$html .= '<td class="hidden-xs">Equipe</td>';
 	$html .= '<td class="hidden-xs">Nome</td>';
@@ -84,8 +84,7 @@ if($eleitores = $this->eleitores){
 		$numeroRandom = rand(1,6);
 		$mensagemParaUsar = $mensagem[$votosIncertos][$numeroRandom];
 
-		$telefoneAjustado = substr($eleitor->getTelefone(),0,2).'9'.substr($eleitor->getTelefone(),2);
-		$botaoEnvioSem9 = '<a target="_blanck" class="botaoEnvio btn btn-success" href="https://api.whatsapp.com/send?phone=55'.$eleitor->getTelefone().'&text='.$mensagemParaUsar.'"><i class="fa fa-whatsapp"></i></a>';
+		$botaoEnvioSem9 = '<a target="_blanck" class="botaoEnvio btn btn-success" href="https://api.whatsapp.com/send?phone=55'.$eleitor->getTelefone().'&text='.$mensagemParaUsar.'">'.$eleitor->getId().'</a>';
 
 		$funcaoOnclickEnviado = $this->funcaoOnClick('mudarSituacao('.$eleitor->getId().',2)');
 		$funcaoOnclickInvalido = $this->funcaoOnClick('mudarSituacao('.$eleitor->getId().',3)');
@@ -100,7 +99,7 @@ if($eleitores = $this->eleitores){
 		}
 		$situacaoAtual = '<span id="situacao'.$eleitor->getId().'" class="label label-'.$classe.'">'.$label.'</span>';
 		$html .= '<tr>';
-		$html .= '<td>'.$eleitor->getId().'</td>';
+		$html .= '<td class="hidden-xs">'.$eleitor->getId().'</td>';
 		$html .= '<td class="hidden-xs">'.$eleitor->getIgreja().'</td>';
 		$html .= '<td class="hidden-xs">'.$eleitor->getEquipe().'</td>';
 		$html .= '<td class="hidden-xs">'.$eleitor->getNome().'</td>';
