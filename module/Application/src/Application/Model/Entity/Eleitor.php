@@ -81,6 +81,7 @@ class Eleitor extends CircuitoEntity {
 		case 4: $label = 'RUA'; break;
 		case 5: $label = 'FIEL'; break;
 		case 6: $label = 'EPLEPSIA'; break;
+		case 7: $label = 'GUARA'; break;
 		}
 		return $label;
 	}
