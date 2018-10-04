@@ -43,9 +43,6 @@ if($eleitores = $this->eleitores){
 	$html .= '</thead>';
 	$html .= '<tbody>';
 	foreach($eleitores as $eleitor){
-		$nome = $eleitor->getNome(); // Pegar nome do BD e inserir nessa variável
-		$nome = mb_convert_case($nome, MB_CASE_TITLE, 'UTF-8'); // Função que deixa primeira letra maiúscula e restante minúscula.
-
 		$numeroRandom = rand(1,5);
 		$mensagemParaUsar = $mensagem[$numeroRandom];
 

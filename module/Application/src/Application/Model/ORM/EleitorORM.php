@@ -32,7 +32,6 @@ class EleitorORM extends CircuitoORM {
 
 			$entidades = $this->getEntityManager()->createQuery($dql)
 				->setParameter(1, $lista)
-				->setMaxResults(2000)
 				->getResult();
 		} catch (Exception $exc) {
 			echo $exc->getMessage();

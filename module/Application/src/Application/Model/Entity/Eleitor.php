@@ -87,6 +87,8 @@ class Eleitor extends CircuitoEntity {
 		case 10: $label = 'AUDIENCIA'; break;
 		case 11: $label = 'PEDOFILIA'; break;
 		case 12: $label = 'TAXISTA'; break;
+		case 13: $label = 'GABINETE'; break;
+		case 14: $label = 'OUTROS'; break;
 		}
 		return $label;
 	}
