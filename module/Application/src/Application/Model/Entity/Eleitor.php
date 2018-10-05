@@ -76,8 +76,8 @@ class Eleitor extends CircuitoEntity {
 		$label = '';
 		switch($this->lista){
 		case 1: $label = 'AGENDA DELMASSO'; break;
-		case 2: $label = 'CV NOVO'; break;
-		case 3: $label = 'CV ANTIGO'; break;
+		case 2: $label = 'CV'; break;
+		case 3: $label = 'CV'; break;
 		case 4: $label = 'RUA'; break;
 		case 5: $label = 'FIEL'; break;
 		case 6: $label = 'EPLEPSIA'; break;
