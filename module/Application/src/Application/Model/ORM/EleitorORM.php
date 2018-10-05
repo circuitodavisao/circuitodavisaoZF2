@@ -3,6 +3,7 @@
 namespace Application\Model\ORM;
 
 use Application\Controller\Helper\Constantes;
+use Application\Controller\Helper\Funcoes;
 use Application\Model\ORM\CircuitoORM;
 
 class EleitorORM extends CircuitoORM {
@@ -46,19 +47,17 @@ class EleitorORM extends CircuitoORM {
 		return $resultado[0][1];
 	}
 
-	public function dadosSimplificados() {
-		$entidades = null;
+	public function relatorioDeEnvio() {
+		$resultado = null;
 		try {
-			$dql = "SELECT e.id, e.telefone "
-				. "FROM  " . Constantes::$ENTITY_ELEITOR . " e ORDER BY e.id ASC ";
-
-			$entidades = $this->getEntityManager()->createQuery($dql)
-				->setMaxResults(10000)
+			$dql = "SELECT e.lista, e.situacao, SUM(e.situacao) valor "
+				. "FROM  " . Constantes::$ENTITY_ELEITOR . " e GROUP BY e.lista, e.situacao";
+			$resultado = $this->getEntityManager()->createQuery($dql)
 				->getResult();
 		} catch (Exception $exc) {
 			echo $exc->getMessage();
 		}
-		return $entidades;
+		return $resultado;
 	}
 
 
