@@ -13,9 +13,9 @@ class EleitorORM extends CircuitoORM {
 			$dql = "SELECT e "
 				. "FROM  " . Constantes::$ENTITY_ELEITOR . " e ORDER BY e.id ASC ";
 
-			$offset = $bloco * 2000;
+			$offset = $bloco * 500;
 			$entidades = $this->getEntityManager()->createQuery($dql)
-				->setMaxResults(2000)
+				->setMaxResults(500)
 				->setFirstResult($offset)
 				->getResult();
 		} catch (Exception $exc) {
@@ -45,5 +45,22 @@ class EleitorORM extends CircuitoORM {
 			->getResult();
 		return $resultado[0][1];
 	}
+
+	public function dadosSimplificados() {
+		$entidades = null;
+		try {
+			$dql = "SELECT e.id, e.telefone "
+				. "FROM  " . Constantes::$ENTITY_ELEITOR . " e ORDER BY e.id ASC ";
+
+			$entidades = $this->getEntityManager()->createQuery($dql)
+				->setMaxResults(10000)
+				->getResult();
+		} catch (Exception $exc) {
+			echo $exc->getMessage();
+		}
+		return $entidades;
+	}
+
+
 
 }
