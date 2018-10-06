@@ -137,6 +137,7 @@ class DeployController extends CircuitoController {
 		}
 
 		$html .= '<div align="center">';
+		$html .= '<div class="table-responsive">';
 		$html .= '<table class="table table-bordered" style="width: 500px" >';
 		$html .= '<thead>';
 		$html .= '<tr class="dark">';	
@@ -198,6 +199,7 @@ class DeployController extends CircuitoController {
 
 		$html .= '</tbody>';
 		$html .= '</table>';
+		$html .= '</div>';
 		$html .= '</div>';
 
 		$dados = array('eleitores' => $eleitores, 'totalDeBlocos' => $totalDeBlocos, 'html' => $html,);
