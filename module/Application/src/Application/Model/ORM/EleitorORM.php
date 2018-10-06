@@ -29,7 +29,7 @@ class EleitorORM extends CircuitoORM {
 	public function encontrarPorLista($lista) {
 		$entidades = null;
 		try {
-			$dql = "SELECT e "
+			$dql = "SELECT e.id, e.telefone "
 				. "FROM  " . Constantes::$ENTITY_ELEITOR . " e WHERE e.lista = ?1 ORDER BY e.id ASC ";
 
 			$entidades = $this->getEntityManager()->createQuery($dql)
