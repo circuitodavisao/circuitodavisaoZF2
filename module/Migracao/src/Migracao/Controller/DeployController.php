@@ -127,8 +127,14 @@ class DeployController extends CircuitoController {
 			$eleitores = $this->getRepositorio()->getEleitorORM()->encontrarPorBloco($bloco);
 		}
 		$totalDeRegistros = (int) $this->getRepositorio()->getEleitorORM()->totalDeRegistros();
-		$totalDeBlocos = (int) ($totalDeRegistros / 500);
+		$totalDeBlocos = (int) ($totalDeRegistros / 100);
 
+		$dados = array('eleitores' => $eleitores, 'totalDeBlocos' => $totalDeBlocos, 'html' => $html,);
+		$view = new ViewModel($dados);
+		return $view;
+	}
+
+	public function eleitorRelatorioAction(){
 		$html = '';
 		$resultados = $this->getRepositorio()->getEleitorORM()->relatorioDeEnvio();
 		$relatorioAjustado = array();
@@ -202,9 +208,7 @@ class DeployController extends CircuitoController {
 		$html .= '</div>';
 		$html .= '</div>';
 
-		$dados = array('eleitores' => $eleitores, 'totalDeBlocos' => $totalDeBlocos, 'html' => $html,);
-		$view = new ViewModel($dados);
-		return $view;
+
 	}
 
 	public function eleitorMudarSituacaoAction() {
