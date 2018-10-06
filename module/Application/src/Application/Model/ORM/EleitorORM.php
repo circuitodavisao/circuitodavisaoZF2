@@ -54,8 +54,6 @@ class EleitorORM extends CircuitoORM {
 				. "FROM  " . Constantes::$ENTITY_ELEITOR . " e GROUP BY e.lista, e.situacao";
 			$resultado = $this->getEntityManager()->createQuery($dql)
 				->getResult();
-
-			Funcoes::var_dump($resultado);
 		} catch (Exception $exc) {
 			echo $exc->getMessage();
 		}

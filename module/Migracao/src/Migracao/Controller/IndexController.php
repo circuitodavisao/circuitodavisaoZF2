@@ -2605,6 +2605,7 @@ class IndexController extends CircuitoController {
 			foreach($resultados as $resultado){
 				$relatorioAjustado[$resultado['lista']][$resultado['situacao']] = $resultado['valor'];
 			}
+			Funcoes::var_dump($relatorioAjustado);
 
 			$html .= '<div align="center">';
 			$html .= '<table class="table table-bordered" style="width: 500px" >';
