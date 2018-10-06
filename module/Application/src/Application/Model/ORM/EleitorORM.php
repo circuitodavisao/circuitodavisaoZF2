@@ -11,7 +11,7 @@ class EleitorORM extends CircuitoORM {
 	public function encontrarPorBloco($bloco) {
 		$entidades = null;
 		try {
-			$dql = "SELECT e "
+			$dql = "SELECT e.id, e.telefone, e.situacao, e.lista "
 				. "FROM  " . Constantes::$ENTITY_ELEITOR . " e ORDER BY e.id ASC ";
 
 			$offset = $bloco * 500;
