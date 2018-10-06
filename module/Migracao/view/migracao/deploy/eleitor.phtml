@@ -57,8 +57,30 @@ if($eleitores = $this->eleitores){
 		case 3: $label = '<i class="fa fa-ban"></i>';$classe = 'danger';  break;
 		}
 		$situacaoAtual = '<span id="situacao'.$eleitor['id'].'" class="label label-'.$classe.'">'.$label.'</span>';
+
+	$label = '';
+			switch($eleitor['lista']){
+			case 1: $label = 'AGENDA DELMASSO'; break;
+			case 2: $label = 'CV'; break;
+			case 3: $label = 'CV'; break;
+			case 4: $label = 'RUA'; break;
+			case 5: $label = 'FIEL'; break;
+			case 6: $label = 'EPLEPSIA'; break;
+			case 7: $label = 'GUARA'; break;
+			case 8: $label = 'TESTE INTERNO'; break;
+			case 9: $label = '2014'; break;
+			case 10: $label = 'AUDIENCIA'; break;
+			case 11: $label = 'PEDOFILIA'; break;
+			case 12: $label = 'TAXISTA'; break;
+			case 13: $label = 'GABINETE'; break;
+			case 14: $label = 'OUTROS'; break;
+			}
+
+
+
+
 		$html .= '<tr>';
-		$html .= '<td class="hidden-xs">'.$eleitor['lista'].'</td>';
+		$html .= '<td class="hidden-xs">'.$label.'</td>';
 		$html .= '<td>'.$situacaoAtual.'</td>';
 		$html .= '<td>'.$botoes.'</td>';
 		$html .= '<td>'.$botaoEnvioSem9.'</td>';
