@@ -208,7 +208,9 @@ class DeployController extends CircuitoController {
 		$html .= '</div>';
 		$html .= '</div>';
 
-
+		$dados = array('html' => $html,);
+		$view = new ViewModel($dados);
+		return $view;
 	}
 
 	public function eleitorMudarSituacaoAction() {
