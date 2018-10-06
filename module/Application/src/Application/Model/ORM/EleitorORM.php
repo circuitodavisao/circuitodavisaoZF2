@@ -50,7 +50,7 @@ class EleitorORM extends CircuitoORM {
 	public function relatorioDeEnvio() {
 		$resultado = null;
 		try {
-			$dql = "SELECT e.lista, e.situacao, SUM(e.situacao) valor "
+			$dql = "SELECT e.lista, e.situacao, COUNT(e.situacao) valor "
 				. "FROM  " . Constantes::$ENTITY_ELEITOR . " e GROUP BY e.lista, e.situacao";
 			$resultado = $this->getEntityManager()->createQuery($dql)
 				->getResult();
