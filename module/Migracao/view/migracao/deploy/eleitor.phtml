@@ -17,8 +17,6 @@ if($eleitores = $this->eleitores){
 	$html .= '<div class="panel-heading" style="padding: 0px"><div class="panel-title">Eleitores</div></div>';
 	$html .= '<div class="panel-body p10">';
 
-	$html .= $this->html;
-
 	$html .= '<div class="panel">';
 	$html .= '<div class="panel-body">';
 	$totalDeBlocos = $this->totalDeBlocos;
@@ -58,26 +56,23 @@ if($eleitores = $this->eleitores){
 		}
 		$situacaoAtual = '<span id="situacao'.$eleitor['id'].'" class="label label-'.$classe.'">'.$label.'</span>';
 
-	$label = '';
-			switch($eleitor['lista']){
-			case 1: $label = 'AGENDA DELMASSO'; break;
-			case 2: $label = 'CV'; break;
-			case 3: $label = 'CV'; break;
-			case 4: $label = 'RUA'; break;
-			case 5: $label = 'FIEL'; break;
-			case 6: $label = 'EPLEPSIA'; break;
-			case 7: $label = 'GUARA'; break;
-			case 8: $label = 'TESTE INTERNO'; break;
-			case 9: $label = '2014'; break;
-			case 10: $label = 'AUDIENCIA'; break;
-			case 11: $label = 'PEDOFILIA'; break;
-			case 12: $label = 'TAXISTA'; break;
-			case 13: $label = 'GABINETE'; break;
-			case 14: $label = 'OUTROS'; break;
-			}
-
-
-
+		$label = '';
+		switch($eleitor['lista']){
+		case 1: $label = 'AGENDA DELMASSO'; break;
+		case 2: $label = 'CV'; break;
+		case 3: $label = 'CV'; break;
+		case 4: $label = 'RUA'; break;
+		case 5: $label = 'FIEL'; break;
+		case 6: $label = 'EPLEPSIA'; break;
+		case 7: $label = 'GUARA'; break;
+		case 8: $label = 'TESTE INTERNO'; break;
+		case 9: $label = '2014'; break;
+		case 10: $label = 'AUDIENCIA'; break;
+		case 11: $label = 'PEDOFILIA'; break;
+		case 12: $label = 'TAXISTA'; break;
+		case 13: $label = 'GABINETE'; break;
+		case 14: $label = 'OUTROS'; break;
+		}
 
 		$html .= '<tr>';
 		$html .= '<td class="hidden-xs">'.$label.'</td>';
