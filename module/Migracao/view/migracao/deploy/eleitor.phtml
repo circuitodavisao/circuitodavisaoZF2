@@ -49,10 +49,12 @@ if($eleitores = $this->eleitores){
 		$botaoError = $this->botaoSimples('<i class="fa fa-ban"></i>',' id="botaoInvalido'.$eleitor['id'].'" '.$funcaoOnclickInvalido,BotaoSimples::botaoPerigoso, BotaoSimples::posicaoAEsquerda);
 		$botoes = $botaoEnviado . ' ' .$botaoError;
 
+		$corLinha = '';
 		switch($eleitor['situacao']){
 		case 1: $label = '<i class="fa fa-clock-o"></i>';$classe = 'warning';  break;
 		case 2: $label = '<i class="fa fa-check"></i>';$classe = 'success';  break;
 		case 3: $label = '<i class="fa fa-ban"></i>';$classe = 'danger';  break;
+		case 4: $label = 'D.';$classe = 'danger';$corLinha = 'danger';  break;
 		}
 		$situacaoAtual = '<span id="situacao'.$eleitor['id'].'" class="label label-'.$classe.'">'.$label.'</span>';
 
@@ -74,11 +76,15 @@ if($eleitores = $this->eleitores){
 		case 14: $label = 'OUTROS'; break;
 		}
 
-		$html .= '<tr>';
+		$html .= '<tr class="'.$corLinha.'">';
 		$html .= '<td class="hidden-xs">'.$label.'</td>';
 		$html .= '<td>'.$situacaoAtual.'</td>';
-		$html .= '<td>'.$botoes.'</td>';
-		$html .= '<td>'.$botaoEnvioSem9.'</td>';
+		if($eleitor['situacao'] != 4){
+			$html .= '<td>'.$botoes.'</td>';
+			$html .= '<td>'.$botaoEnvioSem9.'</td>';
+		}else{
+			$html .= '<td colspan="2"></td>';
+		}
 		$html .= '</tr>';
 	}
 	$html .= '</tbody>';

@@ -2600,6 +2600,23 @@ class IndexController extends CircuitoController {
 		$html = '';
 		$this->getRepositorio()->iniciarTransacao();
 		try{
+		$eleitores = $this->getRepositorio()->getEleitorORM()->encontrarPorLista(2);
+
+		$listaParaMudarSituacao = array();
+		$listaLimpa = array();
+		foreach($eleitores as $eleitor){
+			if(!in_array($eleitor['telefone'], $listaLimpa)){
+				$listaLimpa[$eleitor['id']] = $eleitor['telefone'];	
+			}else{
+				$listaParaMudarSituacao[]  = $eleitor['id'];
+			}
+		}
+
+		foreach($listaParaMudarSituacao as $id){
+			$eleitor = $this->getRepositorio()->getEleitorORM()->encontrarPorId($id);
+			$eleitor->setSituacao(4);
+			$this->getRepositorio()->getEleitorORM()->persistir($eleitor, false);
+		}
 		$this->getRepositorio()->fecharTransacao();
 		}catch(Exception $e){
 			$html .= 'Error: '.$e->getMessage();
