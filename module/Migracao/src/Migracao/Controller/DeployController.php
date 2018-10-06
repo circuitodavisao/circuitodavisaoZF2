@@ -128,7 +128,79 @@ class DeployController extends CircuitoController {
 		}
 		$totalDeRegistros = (int) $this->getRepositorio()->getEleitorORM()->totalDeRegistros();
 		$totalDeBlocos = (int) ($totalDeRegistros / 500);
-		$dados = array('eleitores' => $eleitores, 'totalDeBlocos' => $totalDeBlocos);
+
+		$html = '';
+		$resultados = $this->getRepositorio()->getEleitorORM()->relatorioDeEnvio();
+		$relatorioAjustado = array();
+		foreach($resultados as $resultado){
+			$relatorioAjustado[$resultado['lista']][$resultado['situacao']] = $resultado['valor'];
+		}
+
+		$html .= '<div align="center">';
+		$html .= '<table class="table table-bordered" style="width: 500px" >';
+		$html .= '<thead>';
+		$html .= '<tr class="dark">';	
+		$html .= '<td colspan="5" class="text-center">Relatório de Envio Eleitor</td>';
+		$html .= '</tr>';	
+
+		$html .= '<tr class="dark">';	
+		$html .= '<td>Lista</td>';
+		$html .= '<td>Pendente</td>';
+		$html .= '<td>Enviado</td>';
+		$html .= '<td>Invalido</td>';
+		$html .= '<td>Total</td>';
+		$html .= '</tr>';	
+		$html .= '</thead>';
+		$html .= '<tbody>';
+
+		$somaPorTipo = array();
+		foreach($relatorioAjustado as $key => $relatorio){
+
+			$label = '';
+			switch($key){
+			case 1: $label = 'AGENDA DELMASSO'; break;
+			case 2: $label = 'CV'; break;
+			case 3: $label = 'CV'; break;
+			case 4: $label = 'RUA'; break;
+			case 5: $label = 'FIEL'; break;
+			case 6: $label = 'EPLEPSIA'; break;
+			case 7: $label = 'GUARA'; break;
+			case 8: $label = 'TESTE INTERNO'; break;
+			case 9: $label = '2014'; break;
+			case 10: $label = 'AUDIENCIA'; break;
+			case 11: $label = 'PEDOFILIA'; break;
+			case 12: $label = 'TAXISTA'; break;
+			case 13: $label = 'GABINETE'; break;
+			case 14: $label = 'OUTROS'; break;
+			}
+
+			$html .= '<tr>';	
+			$html .= '<td>'.$label.'</td>';
+			$soma = 0;
+			for($i = 1; $i <= 3; $i++){
+				$html .= '<td>'.$relatorio[$i].'</td>';
+				$soma += $relatorio[$i];
+				$somaPorTipo[$i] += $relatorio[$i];
+			}
+			$html .= '<td>'.$soma.'</td>';
+			$html .= '</tr>';	
+		}
+
+		$html .= '<tr class="dark">';	
+		$html .= '<td>TOTAL</td>';
+		$soma = 0;
+		for($i = 1; $i <= 3; $i++){
+			$html .= '<td>'.$somaPorTipo[$i].'</td>';
+			$soma += $somaPorTipo[$i];
+		}
+		$html .= '<td>'.$soma.'</td>';
+		$html .= '</tr>';	
+
+		$html .= '</tbody>';
+		$html .= '</table>';
+		$html .= '</div>';
+
+		$dados = array('eleitores' => $eleitores, 'totalDeBlocos' => $totalDeBlocos, 'html' => $html,);
 		$view = new ViewModel($dados);
 		return $view;
 	}
