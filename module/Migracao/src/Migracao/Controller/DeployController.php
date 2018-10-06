@@ -155,6 +155,7 @@ class DeployController extends CircuitoController {
 		$html .= '<td>Pendente</td>';
 		$html .= '<td>Enviado</td>';
 		$html .= '<td>Invalido</td>';
+		$html .= '<td>Duplicado</td>';
 		$html .= '<td>Total</td>';
 		$html .= '</tr>';	
 		$html .= '</thead>';
@@ -184,7 +185,7 @@ class DeployController extends CircuitoController {
 			$html .= '<tr>';	
 			$html .= '<td>'.$label.'</td>';
 			$soma = 0;
-			for($i = 1; $i <= 3; $i++){
+			for($i = 1; $i <= 4; $i++){
 				$html .= '<td>'.$relatorio[$i].'</td>';
 				$soma += $relatorio[$i];
 				$somaPorTipo[$i] += $relatorio[$i];
@@ -196,7 +197,7 @@ class DeployController extends CircuitoController {
 		$html .= '<tr class="dark">';	
 		$html .= '<td>TOTAL</td>';
 		$soma = 0;
-		for($i = 1; $i <= 3; $i++){
+		for($i = 1; $i <= 4; $i++){
 			$html .= '<td>'.$somaPorTipo[$i].'</td>';
 			$soma += $somaPorTipo[$i];
 		}
