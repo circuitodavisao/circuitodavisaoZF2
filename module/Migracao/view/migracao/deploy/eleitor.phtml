@@ -32,11 +32,6 @@ if($eleitores = $this->eleitores){
 	$html .= '<table class="table table-bordered table-condensed table-hover" >';
 	$html .= '<thead>';
 	$html .= '<tr class="dark">';
-	$html .= '<td class="hidden-xs">id</td>';
-	$html .= '<td class="hidden-xs">Igreja</td>';
-	$html .= '<td class="hidden-xs">Equipe</td>';
-	$html .= '<td class="hidden-xs">Nome</td>';
-	$html .= '<td class="hidden-xs">Telefone</td>';
 	$html .= '<td class="hidden-xs">Lista</td>';
 	$html .= '<td>Sit.</td>';
 	$html .= '<td>Opçoes</td>';
@@ -48,27 +43,22 @@ if($eleitores = $this->eleitores){
 		$numeroRandom = rand(1,5);
 		$mensagemParaUsar = $mensagem[$numeroRandom];
 
-		$botaoEnvioSem9 = '<a target="_blanck" class="botaoEnvio btn btn-success" href="https://api.whatsapp.com/send?phone=55'.$eleitor->getTelefone().'&text='.$mensagemParaUsar.'">'.$eleitor->getId().'</a>';
+		$botaoEnvioSem9 = '<a target="_blanck" class="botaoEnvio btn btn-success" href="https://api.whatsapp.com/send?phone=55'.$eleitor['telefone'].'&text='.$mensagemParaUsar.'">'.$eleitor['id'].'</a>';
 
-		$funcaoOnclickEnviado = $this->funcaoOnClick('mudarSituacao('.$eleitor->getId().',2)');
-		$funcaoOnclickInvalido = $this->funcaoOnClick('mudarSituacao('.$eleitor->getId().',3)');
-		$botaoEnviado = $this->botaoSimples('<i class="fa fa-check"></i>',' id="botaoEnviado'.$eleitor->getId().'" '.$funcaoOnclickEnviado,BotaoSimples::botaoSucesso, BotaoSimples::posicaoAEsquerda);
-		$botaoError = $this->botaoSimples('<i class="fa fa-ban"></i>',' id="botaoInvalido'.$eleitor->getId().'" '.$funcaoOnclickInvalido,BotaoSimples::botaoPerigoso, BotaoSimples::posicaoAEsquerda);
+		$funcaoOnclickEnviado = $this->funcaoOnClick('mudarSituacao('.$eleitor['id'].',2)');
+		$funcaoOnclickInvalido = $this->funcaoOnClick('mudarSituacao('.$eleitor['id'].',3)');
+		$botaoEnviado = $this->botaoSimples('<i class="fa fa-check"></i>',' id="botaoEnviado'.$eleitor['id'].'" '.$funcaoOnclickEnviado,BotaoSimples::botaoSucesso, BotaoSimples::posicaoAEsquerda);
+		$botaoError = $this->botaoSimples('<i class="fa fa-ban"></i>',' id="botaoInvalido'.$eleitor['id'].'" '.$funcaoOnclickInvalido,BotaoSimples::botaoPerigoso, BotaoSimples::posicaoAEsquerda);
 		$botoes = $botaoEnviado . ' ' .$botaoError;
 
-		switch($eleitor->getSituacao()){
+		switch($eleitor['situacao']){
 		case 1: $label = '<i class="fa fa-clock-o"></i>';$classe = 'warning';  break;
 		case 2: $label = '<i class="fa fa-check"></i>';$classe = 'success';  break;
 		case 3: $label = '<i class="fa fa-ban"></i>';$classe = 'danger';  break;
 		}
-		$situacaoAtual = '<span id="situacao'.$eleitor->getId().'" class="label label-'.$classe.'">'.$label.'</span>';
+		$situacaoAtual = '<span id="situacao'.$eleitor['id'].'" class="label label-'.$classe.'">'.$label.'</span>';
 		$html .= '<tr>';
-		$html .= '<td class="hidden-xs">'.$eleitor->getId().'</td>';
-		$html .= '<td class="hidden-xs">'.$eleitor->getIgreja().'</td>';
-		$html .= '<td class="hidden-xs">'.$eleitor->getEquipe().'</td>';
-		$html .= '<td class="hidden-xs">'.$eleitor->getNome().'</td>';
-		$html .= '<td class="hidden-xs">'.$eleitor->getTelefone().'</td>';
-		$html .= '<td class="hidden-xs">'.$eleitor->getLista().'</td>';
+		$html .= '<td class="hidden-xs">'.$eleitor['lista'].'</td>';
 		$html .= '<td>'.$situacaoAtual.'</td>';
 		$html .= '<td>'.$botoes.'</td>';
 		$html .= '<td>'.$botaoEnvioSem9.'</td>';
