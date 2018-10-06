@@ -2600,7 +2600,7 @@ class IndexController extends CircuitoController {
 		$html = '';
 		$this->getRepositorio()->iniciarTransacao();
 		try{
-		$eleitores = $this->getRepositorio()->getEleitorORM()->encontrarPorLista(2);
+		$eleitores = $this->getRepositorio()->getEleitorORM()->encontrarPorLista(5);
 
 		$listaParaMudarSituacao = array();
 		$listaLimpa = array();
