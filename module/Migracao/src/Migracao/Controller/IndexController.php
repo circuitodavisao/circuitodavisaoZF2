@@ -2603,7 +2603,7 @@ class IndexController extends CircuitoController {
 			$resultados = $this->getRepositorio()->getEleitorORM()->relatorioDeEnvio();
 			$relatorioAjustado = array();
 			foreach($resultados as $resultado){
-				$relatorioAjustado[$resultado['lista']][$resultado['situacao']] = 0;
+				$relatorioAjustado[$resultado['lista']][$resultado['situacao']] = $resultado['valor'];
 			}
 			Funcoes::var_dump($relatorioAjustado);
 
