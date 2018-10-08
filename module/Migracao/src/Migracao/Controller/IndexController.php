@@ -366,9 +366,7 @@ class IndexController extends CircuitoController {
 		$periodo = -1;
 		$arrayPeriodo = Funcoes::montaPeriodo($periodo);
 		$stringComecoDoPeriodo = $arrayPeriodo[3] . '-' . $arrayPeriodo[2] . '-' . $arrayPeriodo[1];
-		$stringComecoDoPeriodo = '2018-09-01';
 		$stringFimDoPeriodo = $arrayPeriodo[6] . '-' . $arrayPeriodo[5] . '-' . $arrayPeriodo[4];
-		$stringFimDoPeriodo = '2018-09-30';
 		$html .= "<br />stringComecoDoPeriodo$stringComecoDoPeriodo";
 		$html .= "<br />stringFimDoPeriodo$stringFimDoPeriodo";
 		$dateInicialFormatada = DateTime::createFromFormat('Y-m-d', $stringComecoDoPeriodo);
