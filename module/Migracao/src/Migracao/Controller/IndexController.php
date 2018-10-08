@@ -2604,8 +2604,9 @@ class IndexController extends CircuitoController {
 			foreach($grupos as $grupo){
 				$numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(),$grupo);
 				$html .= '<br /><br />Numero: '.$numeroIdentificador;
-				if($fatosLideres = $this->getRepositorio()->getFatoLiderORM()->encontrarFatoLiderPorNumeroIdentificador($numeroIdentificador)){
+				if($fatosLideres = $this->getRepositorio()->getFatoLiderORM()->encontrarVariosFatoLiderPorNumeroIdentificador($numeroIdentificador)){
 					$html .= '<br />Tem fatos liders';
+					$html .= '<br />Quantidade: '.count($fatosLideres);
 					$fatoLiderParaNaoInativar = null;
 					foreach($fatosLideres as $fatoLider){
 						if($fatoLider->verificarSeEstaAtivo() && $fatoLiderParaNaoInativar === null){
