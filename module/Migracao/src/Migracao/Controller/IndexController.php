@@ -2602,9 +2602,10 @@ class IndexController extends CircuitoController {
 		try{
 			$grupos = $this->getRepositorio()->getGrupoORM()->buscarTodosRegistrosEntidade();
 			foreach($grupos as $grupo){
-
 				$numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(),$grupo);
+				$html .= '<br /><br />Numero: '.$numeroIdentificador;
 				if($fatosLideres = $this->getRepositorio()->getFatoLiderORM()->encontrarFatoLiderPorNumeroIdentificador($numeroIdentificador)){
+					$html .= '<br />Tem fatos liders';
 					$fatoLiderParaNaoInativar = null;
 					foreach($fatosLideres as $fatoLider){
 						if($fatoLider->verificarSeEstaAtivo() && $fatoLiderParaNaoInativar === null){
@@ -2616,9 +2617,10 @@ class IndexController extends CircuitoController {
 							}
 						}
 					}
-					if($fatoLiderParaNaoInativar){
+					if($fatoLiderParaNaoInativar !== null){
 						foreach($fatosLideres as $fatoLider){
 							if($fatoLider->getId() !== $fatoLiderParaNaoInativar->getId()){
+								$html .= 'Inativando: '.$fatoLider->getId();
 								$fatoLider->setDataEHoraDeInativacao();
 								$this->getRepositorio()->getFatoLiderORM()->persistir($fatoLider, false);
 							}
