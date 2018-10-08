@@ -2600,24 +2600,34 @@ class IndexController extends CircuitoController {
 		$html = '';
 		$this->getRepositorio()->iniciarTransacao();
 		try{
-		$eleitores = $this->getRepositorio()->getEleitorORM()->encontrarPorLista(5);
+			$grupos = $this->getRepositorio()->getGrupoORM()->buscarTodosRegistrosEntidade();
+			foreach($grupos as $grupo){
 
-		$listaParaMudarSituacao = array();
-		$listaLimpa = array();
-		foreach($eleitores as $eleitor){
-			if(!in_array($eleitor['telefone'], $listaLimpa)){
-				$listaLimpa[$eleitor['id']] = $eleitor['telefone'];	
-			}else{
-				$listaParaMudarSituacao[]  = $eleitor['id'];
-			}
-		}
+				$numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(),$grupo);
+				if($fatosLideres = $this->getRepositorio()->getFatoLiderORM()->encontrarFatoLiderPorNumeroIdentificador($numeroIdentificador)){
+					$fatoLiderParaNaoInativar = null;
+					foreach($fatosLideres as $fatoLider){
+						if($fatoLider->verificarSeEstaAtivo() && $fatoLiderParaNaoInativar === null){
+							$fatoLiderParaNaoInativar = $fatoLider;
+						}
+						if($fatoLider->verificarSeEstaAtivo() && $fatoLiderParaNaoInativar !== null){
+							if($fatoLider->getId() > $fatoLiderParaNaoInativar->getId()){
+								$fatoLiderParaNaoInativar = $fatoLider;
+							}
+						}
+					}
+					if($fatoLiderParaNaoInativar){
+						foreach($fatosLideres as $fatoLider){
+							if($fatoLider->getId() !== $fatoLiderParaNaoInativar->getId()){
+								$fatoLider->setDataEHoraDeInativacao();
+								$this->getRepositorio()->getFatoLiderORM()->persistir($fatoLider, false);
+							}
+						}
+					}
+				}
+			}		 
 
-		foreach($listaParaMudarSituacao as $id){
-			$eleitor = $this->getRepositorio()->getEleitorORM()->encontrarPorId($id);
-			$eleitor->setSituacao(4);
-			$this->getRepositorio()->getEleitorORM()->persistir($eleitor, false);
-		}
-		$this->getRepositorio()->fecharTransacao();
+			$this->getRepositorio()->fecharTransacao();
 		}catch(Exception $e){
 			$html .= 'Error: '.$e->getMessage();
 			$this->getRepositorio()->desfazerTransacao();
