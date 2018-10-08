@@ -2622,8 +2622,7 @@ class IndexController extends CircuitoController {
 						foreach($fatosLideres as $fatoLider){
 							if($fatoLider->getId() !== $fatoLiderParaNaoInativar->getId()){
 								$html .= 'Inativando: '.$fatoLider->getId();
-								$fatoLider->setDataEHoraDeInativacao();
-								$this->getRepositorio()->getFatoLiderORM()->persistir($fatoLider, false);
+								$this->getRepositorio()->getFatoLiderORM()->remover($fatoLider);
 							}
 						}
 					}
