@@ -1,0 +1,58 @@
+DROP TABLE public.fato_financeiro_situacao;
+CREATE TABLE public.fato_financeiro_situacao
+(
+    id serial NOT NULL,
+    fato_financeiro_id integer NOT NULL,
+    situacao_id integer NOT NULL,
+    pessoa_id integer NOT NULL,
+    data_criacao date NOT NULL,
+    hora_criacao time without time zone NOT NULL,
+    data_inativacao date,
+    hora_inativacao time without time zone,
+    CONSTRAINT pk_fato_financeiro_situacao PRIMARY KEY (id),
+    CONSTRAINT fk_fato_financeiro_situacao_fato_financeiro_id FOREIGN KEY (fato_financeiro_id)
+        REFERENCES public.fato_financeiro (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION,
+    CONSTRAINT fk_fato_financeiro_situacao_situacao_id FOREIGN KEY (situacao_id)
+        REFERENCES public.situacao (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION,
+	CONSTRAINT fk_fato_financeiro_situacao_pessoa_id FOREIGN KEY (pessoa_id)
+        REFERENCES public.pessoa (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+)
+WITH (
+    OIDS = FALSE
+);
+
+ALTER TABLE public.fato_financeiro_situacao
+    OWNER to postgres;
+COMMENT ON TABLE public.fato_financeiro_situacao
+    IS 'Associação entre fato financeiro e situação';
+
+COMMENT ON COLUMN public.fato_financeiro_situacao.id
+    IS 'identificação';
+
+COMMENT ON COLUMN public.fato_financeiro_situacao.fato_financeiro_id
+    IS 'Identificação da fato_financeiro';
+
+COMMENT ON COLUMN public.fato_financeiro_situacao.situacao_id
+    IS 'Identificação da situacao';
+
+COMMENT ON COLUMN public.fato_financeiro_situacao.data_criacao
+    IS 'Data de criação';
+
+COMMENT ON COLUMN public.fato_financeiro_situacao.hora_criacao
+    IS 'Hora de criação';
+
+COMMENT ON COLUMN public.fato_financeiro_situacao.data_inativacao
+    IS 'Data de inativação';
+COMMENT ON CONSTRAINT pk_fato_financeiro_situacao ON public.fato_financeiro_situacao
+    IS 'Chave primaria da associação entre fato financeiro e situação';
+
+COMMENT ON CONSTRAINT fk_fato_financeiro_situacao_fato_financeiro_id ON public.fato_financeiro_situacao
+    IS 'Chave estrangeira da identificação da fato financeiro';
+COMMENT ON CONSTRAINT fk_fato_financeiro_situacao_situacao_id ON public.fato_financeiro_situacao
+    IS 'Chave estrangeira da identificação da situação';

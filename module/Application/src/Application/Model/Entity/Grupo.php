@@ -84,6 +84,11 @@ class Grupo extends CircuitoEntity {
      */
     protected $pessoaCursoAcesso;
 
+     /**
+     * @ORM\OneToMany(targetEntity="PessoaFatoFinanceiroAcesso", mappedBy="grupo", fetch="EXTRA_LAZY")
+     */
+    protected $pessoaFatoFinanceiroAcesso;
+ 
     /**
      * @ORM\OneToMany(targetEntity="Solicitacao", mappedBy="grupo", fetch="EXTRA_LAZY")
      */
@@ -100,6 +105,7 @@ class Grupo extends CircuitoEntity {
         $this->grupoPaiFilhoPai = new ArrayCollection();
         $this->turma = new ArrayCollection();
         $this->pessoaCursoAcesso = new ArrayCollection();
+       $this->pessoaFatoFinanceiroAcesso = new ArrayCollection();
 		$this->solicitacao = new ArrayCollection();
 //        $this->fatoDiscipulado = new ArrayCollection();
     }
@@ -1309,6 +1315,14 @@ class Grupo extends CircuitoEntity {
 
     function setTurma($turma) {
         $this->turma = $turma;
+    }
+
+    function getPessoaFatoFinanceiroAcesso() {
+        return $this->pessoaFatoFinanceiroAcesso;
+    }
+
+    function setPessoaFatoFinanceiroAcesso($pessoaFatoFinanceiroAcesso) {
+        $this->pessoaFatoFinanceiroAcesso = $pessoaFatoFinanceiroAcesso;
     }
 
     function getPessoaCursoAcesso() {

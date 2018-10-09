@@ -1,0 +1,31 @@
+
+CREATE TABLE public.pessoa_fato_financeiro_acesso
+(
+    id serial NOT NULL,
+    pessoa_id integer NOT NULL,
+   	fato_financeiro_acesso_id integer NOT NULL,
+    grupo_id integer NOT NULL,
+    data_criacao date NOT NULL,
+    hora_criacao time without time zone NOT NULL,
+    data_inativacao date,
+    hora_inativacao time without time zone,
+    CONSTRAINT pk_pessoa_fato_financeiro_acesso PRIMARY KEY (id),
+    CONSTRAINT fk_pessoa_fato_financeiro_acesso_pessoa_id FOREIGN KEY (pessoa_id)
+        REFERENCES public.pessoa (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION,
+    CONSTRAINT fk_pessoa_fato_financeiro_acesso_fato_financeiro_acesso_id FOREIGN KEY (fato_financeiro_acesso_id)
+        REFERENCES public.fato_financeiro_acesso (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION,
+    CONSTRAINT fk_pessoa_fato_financeiro_acesso_grupo_id FOREIGN KEY (grupo_id)
+        REFERENCES public.grupo (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+)
+WITH (
+    OIDS = FALSE
+);
+
+ALTER TABLE public.pessoa_fato_financeiro_acesso
+    OWNER to postgres;

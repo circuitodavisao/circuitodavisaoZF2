@@ -74,6 +74,8 @@ return array(
     'application/cadastro/cadastrar-pessoa-revisao'       => __DIR__ . '/view/application/cadastro/cadastrar-pessoa-revisao.phtml',
     'application/lancamento/enviar'                       => __DIR__ . '/view/application/lancamento/enviar.phtml',
     'application/lancamento/atendimento-comentario'       => __DIR__ . '/view/application/lancamento/atendimento-comentario.phtml',
+    'application/lancamento/parceiro-de-deus-usuarios'    => __DIR__ . '/view/application/lancamento/parceiro-de-deus-usuarios.phtml',
+    'application/lancamento/parceiro-de-deus-usuario'     => __DIR__ . '/view/application/lancamento/parceiro-de-deus-usuario.phtml',
     'application/lancamento/atendimento'                  => __DIR__ . '/view/application/lancamento/atendimento.phtml',
     'application/lancamento/parceiro-de-deus-extrato'     => __DIR__ . '/view/application/lancamento/parceiro-de-deus-extrato.phtml',
     'application/lancamento/cadastrar-pessoa'             => __DIR__ . '/view/application/lancamento/cadastrar-pessoa.phtml',
