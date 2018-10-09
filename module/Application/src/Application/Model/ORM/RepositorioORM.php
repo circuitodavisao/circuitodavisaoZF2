@@ -60,6 +60,9 @@ class RepositorioORM {
 	private $_fatoFinanceiroTipo;
 	private $_fatoRankingCelula;
 	private $_fatoCursoORM;
+	private $_fatoFinanceiroSituacaoORM;
+	private $_pessoaFatoFinanceiroAcessoORM;
+	private $_fatoFinanceiroAcessoORM;
 	private $_eleitorORM;
 
     /**
@@ -532,16 +535,6 @@ class RepositorioORM {
         }
         return $this->_pessoaCursoAcessoORM;
     }
-    /**
-     * Metodo public para obter a instancia do FatoParceiroDeDeusORM
-     * @return FatoParceiroDeDeusORM
-     */
-    public function getFatoParceiroDeDeusORM() {
-        if (is_null($this->_fatoParceiroDeDeus)) {
-            $this->_fatoParceiroDeDeus = new FatoParceiroDeDeusORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_FATO_PARCEIRO_DE_DEUS);
-        }
-        return $this->_fatoParceiroDeDeus;
-    }
 
     /**
      * Metodo public para obter a instancia do FatoFinanceiro
@@ -563,6 +556,39 @@ class RepositorioORM {
 			$this->_fatoFinanceiroTipo = new CircuitoORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_FATO_FINANCEIRO_TIPO);
         }
         return $this->_fatoFinanceiroTipo;
+    }
+
+     /**
+     * Metodo public para obter a instancia do FatoFinanceiroSituacao
+     * @return CircuitoORM
+     */
+    public function getFatoFinanceiroSituacaoORM() {
+        if (is_null($this->_fatoFinanceiroSituacaoORM)) {
+			$this->_fatoFinanceiroSituacaoORM = new CircuitoORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_FATO_FINANCEIRO_SITUACAO);
+        }
+        return $this->_fatoFinanceiroSituacaoORM;
+    }
+
+	/**
+	 * Metodo public para obter a instancia do PessoaFatoFinanceiroAcessoORM
+     * @return CircuitoORM
+     */
+    public function getPessoaFatoFinanceiroAcessoORM() {
+        if (is_null($this->_pessoaFatoFinanceiroAcessoORM)) {
+			$this->_pessoaFatoFinanceiroAcessoORM = new CircuitoORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_PESSOA_FATO_FINANCEIRO_ACESSO);
+        }
+        return $this->_pessoaFatoFinanceiroAcessoORM;
+    }
+
+	/**
+	 * Metodo public para obter a instancia do FatoFinanceiroAcessoORM
+     * @return CircuitoORM
+     */
+    public function getFatoFinanceiroAcessoORM() {
+        if (is_null($this->_fatoFinanceiroAcessoORM)) {
+			$this->_fatoFinanceiroAcessoORM = new CircuitoORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_FATO_FINANCEIRO_ACESSO);
+        }
+        return $this->_fatoFinanceiroAcessoORM;
     }
 
     /**

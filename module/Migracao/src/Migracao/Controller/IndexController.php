@@ -40,6 +40,7 @@ use Application\Model\Entity\FatoFinanceiroTipo;
 use Application\Model\Entity\FatoRankingCelula;
 use Application\Model\Entity\FatoCelula;
 use Application\Model\Entity\FatoCurso;
+use Application\Model\Entity\FatoFinanceiroSituacao;
 use Application\Model\ORM\RepositorioORM;
 use DateTime;
 use Doctrine\ORM\EntityManager;
@@ -2602,35 +2603,17 @@ class IndexController extends CircuitoController {
 		$html = '';
 		$this->getRepositorio()->iniciarTransacao();
 		try{
-			$grupos = $this->getRepositorio()->getGrupoORM()->buscarTodosRegistrosEntidade();
-			foreach($grupos as $grupo){
-				$numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(),$grupo);
-				$html .= '<br /><br />Numero: '.$numeroIdentificador;
-				if($fatosLideres = $this->getRepositorio()->getFatoLiderORM()->encontrarVariosFatoLiderPorNumeroIdentificador($numeroIdentificador)){
-					$html .= '<br />Tem fatos liders';
-					$html .= '<br />Quantidade: '.count($fatosLideres);
-					$fatoLiderParaNaoInativar = null;
-					foreach($fatosLideres as $fatoLider){
-						if($fatoLider->verificarSeEstaAtivo() && $fatoLiderParaNaoInativar === null){
-							$fatoLiderParaNaoInativar = $fatoLider;
-						}
-						if($fatoLider->verificarSeEstaAtivo() && $fatoLiderParaNaoInativar !== null){
-							if($fatoLider->getId() > $fatoLiderParaNaoInativar->getId()){
-								$fatoLiderParaNaoInativar = $fatoLider;
-							}
-						}
-					}
-					if($fatoLiderParaNaoInativar !== null){
-						foreach($fatosLideres as $fatoLider){
-							if($fatoLider->getId() !== $fatoLiderParaNaoInativar->getId()){
-								$html .= 'Inativando: '.$fatoLider->getId();
-								$this->getRepositorio()->getFatoLiderORM()->remover($fatoLider);
-							}
-						}
-					}
-				}
-			}		 
+			$fatosFinanceiro = $this->getRepositorio()->getFatoFinanceiroORM()->buscarTodosRegistrosEntidade();
+			foreach($fatosFinanceiro as $fatoFinanceiro){
+				$fatoFinanceiro->setSituacao_id($aceito = 3);
+				$this->getRepositorio()->getFatoFinanceiroORM()->persistir($fatoFinanceiro, $trocarDataDeCriacao = false);
 
+				$fatoFinanceiroSituacao = new FatoFinanceiroSituacao();
+				$fatoFinanceiroSituacao->setSituacao($this->getRepositorio()->getSituacaoORM()->encontrarPorId(Situacao::ACEITO_AGENDADO));
+				$fatoFinanceiroSituacao->setPessoa($this->getRepositorio()->getPessoaORM()->encontrarPorId($bispoLucas = 1));
+				$fatoFinanceiroSituacao->setFatoFinanceiro($fatoFinanceiro);
+				$this->getRepositorio()->getFatoFinanceiroSituacaoORM()->persistir($fatoFinanceiroSituacao);
+			}		 
 			$this->getRepositorio()->fecharTransacao();
 		}catch(Exception $e){
 			$html .= 'Error: '.$e->getMessage();

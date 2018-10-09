@@ -181,6 +181,9 @@ class Constantes {
     public static $ENTITY_FATO_PARCEIRO_DE_DEUS = 'Application\Model\Entity\FatoParceiroDeDeus';
     public static $ENTITY_FATO_FINANCEIRO = 'Application\Model\Entity\FatoFinanceiro';
     public static $ENTITY_FATO_FINANCEIRO_TIPO = 'Application\Model\Entity\FatoFinanceiroTipo';
+    public static $ENTITY_FATO_FINANCEIRO_SITUACAO = 'Application\Model\Entity\FatoFinanceiroSituacao';
+    public static $ENTITY_PESSOA_FATO_FINANCEIRO_ACESSO = 'Application\Model\Entity\PessoaFatoFinanceiroAcesso';
+    public static $ENTITY_FATO_FINANCEIRO_ACESSO = 'Application\Model\Entity\FatoFinanceiroAcesso';
     public static $ENTITY_FATO_RANKING_CELULA = 'Application\Model\Entity\FatoRankingCelula';
     public static $ENTITY_PESSOA_EMAIL = 'email';
     public static $ENTITY_PESSOA_DOCUMENTO = 'documento';

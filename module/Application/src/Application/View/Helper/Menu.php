@@ -145,6 +145,13 @@ class Menu extends AbstractHelper {
 					$html .= 'Solicita&ccedil;&otilde;es';
 					$html .= '</a>';
 					$html .= '</li>';
+
+					$html .= '<li>';
+					$html .= '<a href="/lancamentoParceiroDeDeusUsuarios" onClick="mostrarSplash();">';
+					$html .= '<span class="fa fa-user"></span>';
+					$html .= 'Secretário Parceiro de Deus';
+					$html .= '</a>';
+					$html .= '</li>';
 				}
 
 			$html .= '</ul>';

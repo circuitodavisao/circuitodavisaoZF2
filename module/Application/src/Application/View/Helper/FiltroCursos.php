@@ -104,6 +104,23 @@ class FiltroCursos extends AbstractHelper {
 					$html .= '<option value="1" '.$selectedSim.'>Sim (Aumentará o tempo de carregamento)</option>';
 					$html .= '</select>';
 					$html .= '</div>';
+
+					$selectedNao = '';
+					$selectedSim = '';
+					if($this->view->postado['mostrarFinanceiro'] == 0){
+						$selectedNao = 'selected';
+					}
+					if($this->view->postado['mostrarFinanceiro'] == 1){
+						$selectedSim = 'selected';
+					}
+					$html .= '<div class="form-group">';
+					$html .= '<label for="">' . $this->view->translate('Mostrar Financeiro') . '</label>';
+					$html .= '<select class="form-control" name="mostrarFinanceiro" id="mostrarFinanceiro" >';
+					$html .= '<option value="0" '.$selectedNao.'>Não</option>';
+					$html .= '<option value="1" '.$selectedSim.'>Sim</option>';
+					$html .= '</select>';
+					$html .= '</div>';
+
 				}
 			}
 		}
