@@ -35,9 +35,15 @@ class Situacao extends CircuitoEntity {
      */
     protected $solicitacaoSituacao;
 
+    /**
+     * @ORM\OneToMany(targetEntity="FatoFinanceiroSituacao", mappedBy="situacao", fetch="EXTRA_LAZY") 
+     */
+    protected $fatoFinanceiroSituacao;
+ 
     public function __construct() {
         $this->turmaPessoaSituacao = new ArrayCollection();
         $this->solicitacaoSituacao = new ArrayCollection();
+        $this->fatoFinanceiroSituacao = new ArrayCollection();
     }
 
     /** @ORM\Column(type="string") */
@@ -66,5 +72,13 @@ class Situacao extends CircuitoEntity {
     function setTurmaPessoaSituacao($turmaPessoaSituacao) {
         $this->turmaPessoaSituacao = $turmaPessoaSituacao;
     }
+
+	function setFatoFinanceiroSituacao($fatoFinanceiroSituacao){
+		$this->fatoFinanceiroSituacao = $fatoFinanceiroSituacao;
+	}
+
+	function getFatoFinanceiroSituacao(){
+		return $this->fatoFinanceiroSituacao;
+	}
 
 }

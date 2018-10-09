@@ -525,6 +525,7 @@ class RelatorioController extends CircuitoController {
 					foreach($grupoEventoCelula as $grupoEvento)	{
 						if($grupoEvento->verificarSeEstaAtivo()){
 							$dados['celulas'][$contadorDeCelulas]['idGrupoEvento'] = $grupoEvento->getId();
+							$dados['celulas'][$contadorDeCelulas]['diaDaSemana'] = $grupoEvento->getEvento()->getDia();
 
 							$viewHelperManager = $this->getServiceLocator()->get('ViewHelperManager');
 							$tradutor = $viewHelperManager->get('translate');

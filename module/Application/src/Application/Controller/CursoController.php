@@ -846,6 +846,7 @@ class CursoController extends CircuitoController {
 			$postado['idEquipe'] = $post['idEquipe'];
 			$postado['idSituacao'] = $post['idSituacao'];
 			$postado['mostrarAulas'] = $post['mostrarAulas'];
+			$postado['mostrarFinanceiro'] = $post['mostrarFinanceiro'];
 			$postado['idSub'] = $post['idSub'];
 
 			if($postado['idEquipe'] != 0){
@@ -864,6 +865,7 @@ class CursoController extends CircuitoController {
 
 		if(!$pessoa->getPessoaCursoAcessoAtivo()){
 			$postado['mostrarAulas'] = 1;
+			$postado['mostrarFinanceiro'] = 1;
 		}
 
 		$view = new ViewModel(array(

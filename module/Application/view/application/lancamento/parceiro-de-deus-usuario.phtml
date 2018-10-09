@@ -1,0 +1,65 @@
+<?php use Application\Controller\Helper\Constantes; ?>  
+<form action="lancamentoParceiroDeDeusUsuarioFinalizar" method="POST">
+<div class="panel panel-info">
+<div class="panel-heading">Secretário do Parceiro de Deus</div>
+<div class="panel-body bg-light">
+	<select id="idPessoa" name="idPessoa" class="form-control mb10">
+	<option value="0"><?php echo $this->translate(Constantes::$TRADUCAO_SELECIONE); ?></option>
+	<?php 
+if($this->lideres){
+	foreach($this->lideres as $lider){
+		echo '<option value="'.$lider->getId().'">'.$lider->getResponsabilidadesAtivas()[0]->getGrupo()->getEntidadeAtiva()->infoEntidade() . ' - ' . $lider->getNome().'</option>';
+	}
+}
+?>
+	</select>
+</div>
+<!-- end .form-body section -->
+<div class="panel-footer text-right">
+<?php
+    $stringNomeDaFuncaoOnClickCadastro = 'mostrarSplash(); funcaoCircuito("lancamentoParceiroDeDeusUsuarios", 0)';
+    echo $this->botaoLink($this->translate(Constantes::$TRADUCAO_VOLTAR), Constantes::$STRING_HASHTAG, 2, $this->funcaoOnClick($stringNomeDaFuncaoOnClickCadastro));
+    /* Submit */
+    $funcaoVerificarCadastroPessoa = $this->funcaoOnClick('validar(this.form)');
+    echo $this->botaoSimples(Constantes::$TRADUCAO_CADASTRAR, $funcaoVerificarCadastroPessoa);
+    ?>
+</div>  
+</div>
+</form>
+<?php
+/* Layout com javascript para tela de index */
+echo $this->layoutJSCadastrarPessoaRevisao;
+?>
+<script type="text/javascript">
+    function validar(form) {
+
+        var idPessoa = $('#idPessoa').val();
+
+        var temErro = false;
+        var divMensagens = $('#divMensagens');
+        var mensagem = '';
+        var mensagemReal = '';
+
+        if (idPessoa === '0') {
+            temErro = true;
+            if (mensagem == '') {
+                mensagem = 'Líder';
+            } else {
+                mensagem += ', Líder';
+            }
+        }
+        if (temErro) {
+            mensagemReal = 'Preencha o(s) seguinte(s) campo(s): ' + mensagem;
+            divMensagens
+                    .html(mensagemReal)
+                    .removeClass('alert-success')
+                    .removeClass('hidden')
+                    .addClass('alert-danger');
+        } else {
+            mostrarSplash();
+            divMensagens
+                    .addClass('hidden');
+            form.submit();
+        }
+    }
+</script>

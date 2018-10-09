@@ -36,7 +36,7 @@ class FatoFinanceiroORM extends CircuitoORM {
                 . "WHERE "
                 . " ff.numero_identificador #tipoComparacao ?1 "
                 . "AND ff.data_inativacao is null "
-                . "AND ff.data >= ?2 AND ff.data <= ?3 ";
+                . "AND ff.data >= ?2 AND ff.data <= ?3 AND ff.situacao_id = 3 ";
         try {
             if ($tipoComparacao == 1) {
 				$dqlAjustadaTipoComparacao = str_replace('#tipoComparacao', '=', $dqlBase);
@@ -72,5 +72,32 @@ class FatoFinanceiroORM extends CircuitoORM {
             echo $exc->getTraceAsString();
         }
     }
+
+	public function valorPorEventoEPEriodo($idEvento, $periodo) {
+        $resultadoPeriodo = Funcoes::montaPeriodo($periodo);
+        $dataDoPeriodoInicial = $resultadoPeriodo[3] . '-' . $resultadoPeriodo[2] . '-' . $resultadoPeriodo[1];
+        $dataDoPeriodoFinal = $resultadoPeriodo[6] . '-' . $resultadoPeriodo[5] . '-' . $resultadoPeriodo[4];
+		$dql= "SELECT "
+			. "SUM(ff.valor) valor "
+			. "FROM  " . Constantes::$ENTITY_FATO_FINANCEIRO . " ff "
+                . "WHERE "
+                . " ff.evento_id = ?1 "
+                . "AND ff.data_inativacao is null "
+                . "AND ff.data >= ?2 AND ff.data <= ?3 AND ff.situacao_id = 3 ";
+		try {
+			$dataInicialFormatada = DateTime::createFromFormat('Y-m-d', $dataDoPeriodoInicial);
+			$dataFinalFormatada = DateTime::createFromFormat('Y-m-d', $dataDoPeriodoFinal);
+			$result = $this->getEntityManager()->createQuery($dql)
+				->setParameter(1, (int) $idEvento)
+				->setParameter(2, $dataInicialFormatada)
+				->setParameter(3, $dataFinalFormatada)
+				->getResult();
+
+			return $result[0]['valor'];
+		} catch (Exception $exc) {
+            echo $exc->getTraceAsString();
+        }
+    }
+
 
 }

@@ -6,6 +6,7 @@ use Application\Controller\Helper\Funcoes;
 use Application\Model\Entity\EntidadeTipo;
 use Application\Model\Entity\Situacao;
 use Application\Model\Entity\CursoAcesso;
+use Application\Model\Entity\Disciplina;
 use Application\View\Helper\BotaoSimples;
 use Application\View\Helper\FiltroCurso;
 ?>
@@ -63,6 +64,13 @@ if($this->filtrado){
 							}
 							$html .= '<td class="text-center">A' . $aula->getPosicao() . '</td>';
 						}
+					}
+				}
+			}
+			if($this->postado['mostrarFinanceiro'] == 1){
+				foreach ($turma->getCurso()->getDisciplina() as $disciplina) {
+					if ($disciplina->getId() !== Disciplina::POS_REVISAO) {
+						$html .= '<td class="text-center">Fin. '.$disciplina->getNome().'</td>';
 					}
 				}
 			}
@@ -184,6 +192,27 @@ if($this->filtrado){
 												$html .= $this->botaoSimples($iconeBotao, $extra, $corDoBotao, BotaoSimples::posicaoAoCentro);
 												$html .= '</td>';
 											}
+										}
+									}
+								}
+								if($this->postado['mostrarFinanceiro'] == 1){
+									foreach ($turma->getCurso()->getDisciplina() as $disciplina) {
+										if ($disciplina->getId() !== Disciplina::POS_REVISAO) {
+											$icone = 'fa-times';
+											$corDoBotao = BotaoSimples::botaoMuitoPequenoPerigoso;
+											if (count($turmaPessoa->getTurmaPessoaFinanceiro()) > 0) {
+												foreach ($turmaPessoa->getTurmaPessoaFinanceiro() as $turmaPessoaFinanceiro) {
+													if ($turmaPessoaFinanceiro->getDisciplina()->getId() === $disciplina->getId() && $turmaPessoaFinanceiro->verificarSeEstaAtivo()) {
+														$icone = 'fa-check';
+														$corDoBotao = BotaoSimples::botaoMuitoPequenoSucesso;
+													}
+												}
+											}
+											$iconeBotao = '<i class="fa ' . $icone . '"></i>';
+											$extra = 'disabled ';
+											$html .= '<td class="text-center">';
+											$html .= $this->botaoSimples($iconeBotao, $extra, $corDoBotao, BotaoSimples::posicaoAoCentro);
+											$html .= '</td>';
 										}
 									}
 								}
