@@ -1067,65 +1067,37 @@ class LancamentoController extends CircuitoController {
 	}
 
 	public function parceiroDeDeusExtratoAction(){
-
 		$sessao = new Container(Constantes::$NOME_APLICACAO);
-
 		$idEntidadeAtual = $sessao->idEntidadeAtual;
-
 		$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
-
 		$pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($sessao->idPessoa);
-
 		$grupo = $entidade->getGrupo();
-
 		if($pessoaFatoFinanceiroAcessoAtivo = $pessoa->getPessoaFatoFinanceiroAcessoAtivo()){
-
 			if($pessoaFatoFinanceiroAcessoAtivo->getFatoFinanceiroAcesso()->getId() === FatoFinanceiroAcesso::SECRETARIO_PARCEIRO_DE_DEUS){
-
 				$grupo = $grupo->getGrupoEquipe();
-
 			}
-
 		}
 
 		$numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupo);
-
 		$fatos = $this->getRepositorio()->getFatoFinanceiroORM()->encontrarFatosPorNumeroIdentificador($numeroIdentificador);
-
 		$fatosAtivos = array();
-
 		if($fatos){
-
 			foreach($fatos as $fatoFinanceiro){
-
 				if($fatoFinanceiro->verificarSeEstaAtivo()){
-
 					$idGrupo = substr($fatoFinanceiro->getNumero_identificador(), strlen($fatoFinanceiro->getNumero_identificador())-8);
-
 					$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupo);
-
 					$fatoFinanceiro->setGrupo($grupo);
-
 					$fatosAtivos[] = $fatoFinanceiro;
-
 				}
-
 			}
-
 		}
 
 		$pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($sessao->idPessoa);
-
 		return new ViewModel(array(
-
 			'fatos' => $fatosAtivos,
-
 			'entidade' => $entidade,
-
 			'pessoa' => $pessoa,
-
 		));
-
 	}
 
 
