@@ -35,18 +35,14 @@ class DeployController extends CircuitoController {
 
 		$token = $this->getEvent()->getRouteMatch()->getParam(Constantes::$ID, 0);
 		if ($token === 'c76ec8866438d1e6ddc90909b0debbe3') {
-			$stringHashtag = '###';
 			$gitUser = 'lpmagalhaes';
 			$gitPassword = 'leonardo142857';
 
 			$linkGit = 'github.com/circuitodavisao/circuitodavisaoZf2.git master';
-			echo 'deploy automatico';
-			echo $stringHashtag . 'Iniciando o deploy' . $stringHashtag . PHP_EOL;
 			$comando = 'git pull https://' . $gitUser . ':' . $gitPassword . '@' . $linkGit;
 			echo '<pre>';
 			passthru($comando);
 			echo '</pre>';
-			echo $stringHashtag . 'Fim do deploy' . $stringHashtag . PHP_EOL;
 		} else {
 			echo "Sem token";
 		}
