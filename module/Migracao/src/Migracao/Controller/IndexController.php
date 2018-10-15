@@ -2871,7 +2871,7 @@ class IndexController extends CircuitoController {
 			echo $e->getMessage();
 		}
 
-		return new ViewModel(array('html' => $html));
+		return new ViewModel(array('html' => $html, 'relatorios' => $relatorios));
 	}
 
 	function celulaDeEliteAction(){
