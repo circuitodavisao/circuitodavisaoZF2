@@ -1,6 +1,8 @@
 0 0 * * 3 /home/backup/backup.sh
 0 3 * * 1 /usr/bin/wget - O -q 'https://circuitodavisaonovo.com.br/migracaoRelatorio'
 0 0 * * 1 /usr/bin/wget - O -q 'https://circuitodavisaonovo.com.br/migracaoSolicitacoes'
-0 19 * * * /usr/bin/wget - O -q 'https://circuitodavisaonovo.com.br/migracaoRankingCelula/1'
-0 19 * * * /usr/bin/wget - O -q 'https://circuitodavisaonovo.com.br/migracaoRankingCelula/1225'
+0 19 * * * /usr/bin/wget - O -q 'https://circuitodavisaonovo.com.br/migracaoRankingCelula/1_1'
+0 19 * * * /usr/bin/wget - O -q 'https://circuitodavisaonovo.com.br/migracaoRankingCelula/1_2'
+0 19 * * * /usr/bin/wget - O -q 'https://circuitodavisaonovo.com.br/migracaoRankingCelula/1225_1'
+0 19 * * * /usr/bin/wget - O -q 'https://circuitodavisaonovo.com.br/migracaoRankingCelula/1225_2'
 #0 * * * * /usr/bin/wget - O -q 'https://circuitodavisaonovo.com.br/migracaoRanking'
