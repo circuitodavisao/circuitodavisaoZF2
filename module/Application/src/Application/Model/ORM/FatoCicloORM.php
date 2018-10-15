@@ -323,7 +323,8 @@ class FatoCicloORM extends CircuitoORM {
 			->setParameter(3, $dataDoFimFormatada)
 			->getResult();
 
-		$somaResultado = $resultado['soma'];
+		
+		$somaResultado = $resultado[0]['soma'];
 		return $somaResultado;
 	}
 
