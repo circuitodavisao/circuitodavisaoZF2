@@ -2706,14 +2706,29 @@ class IndexController extends CircuitoController {
 		set_time_limit(0);
 		$html = '';
 		$relatorios = array();
-		//		$grupoIgrejas = $this->getRepositorio()->getGrupoORM()->pegarTodasIgrejas();
-		$idGrupoIgreja = $this->params()->fromRoute(Constantes::$ID, 1);
-		$grupoIgrejas[] = ['id' => $idGrupoIgreja];
+		$idGrupoIgrejaEMes = $this->params()->fromRoute(Constantes::$ID, 1);
+		$explodeId = explode('_', $idGrupoIgrejaEMes);
+		$grupoIgrejas[] = ['id' => $explodeId[0]];
 
+		$mesAtual = date('m');
+		$anoAtual = date('Y');
+		if($mesAtual == 1){
+			$mesAnterior = 12;
+			$anoAnterior = $anoAtual - 1;
+		}else{
+			$mesAnterior = $mesAtual - 1;
+			$anoAnterior = $anoAtual;
+		}
+		$mesSelecinado = 0;
+		$anoSelecinado = 0;
+		switch($explodeId[1]){
+		case 1: $mesSelecinado = $mesAtual; $anoSelecinado = $anoAtual; break;
+		case 2: $mesSelecinado = $mesAnterior; $anoSelecinado = $anoAnterior; break;
+		}
 		foreach($grupoIgrejas as $grupoIgreja){
 			$idGrupoIgreja = $grupoIgreja['id'];
 			$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupoIgreja);
-			$relatorioCelulas =	self::pegarMediaPorCelula($this->getRepositorio(), $grupo);
+			$relatorioCelulas =	self::pegarMediaPorCelula($this->getRepositorio(), $grupo, false, $mesSelecinado, $anoSelecinado);
 			foreach($relatorioCelulas as $chave => $valor){
 				$dados = array(
 					'idGrupoIgreja'=>$idGrupoIgreja,
@@ -2731,7 +2746,7 @@ class IndexController extends CircuitoController {
 			if ($grupoPaiFilhoFilhos144) {
 				foreach ($grupoPaiFilhoFilhos144 as $gpFilho144) {
 					$grupoFilho144 = $gpFilho144->getGrupoPaiFilhoFilho();
-					$relatorioCelulas =	self::pegarMediaPorCelula($this->getRepositorio(), $grupoFilho144);
+					$relatorioCelulas =	self::pegarMediaPorCelula($this->getRepositorio(), $grupoFilho144, false, $mesSelecinado, $anoSelecinado);
 					foreach($relatorioCelulas as $chave => $valor){
 						$dados = array(
 							'idGrupoIgreja'=>$idGrupoIgreja,
@@ -2749,7 +2764,7 @@ class IndexController extends CircuitoController {
 					if ($grupoPaiFilhoFilhos1728) {
 						foreach ($grupoPaiFilhoFilhos1728 as $gpFilho1728) {
 							$grupoFilho1728 = $gpFilho1728->getGrupoPaiFilhoFilho();
-							$relatorioCelulas =	self::pegarMediaPorCelula($this->getRepositorio(), $grupoFilho1728);
+							$relatorioCelulas =	self::pegarMediaPorCelula($this->getRepositorio(), $grupoFilho1728, false, $mesSelecinado, $anoSelecinado);
 							foreach($relatorioCelulas as $chave => $valor){
 								$dados = array(
 									'idGrupoIgreja'=>$idGrupoIgreja,
@@ -2766,7 +2781,7 @@ class IndexController extends CircuitoController {
 							if ($grupoPaiFilhoFilhos20736) {
 								foreach ($grupoPaiFilhoFilhos20736 as $gpFilho20736) {
 									$grupoFilho20736 = $gpFilho20736->getGrupoPaiFilhoFilho();
-									$relatorioCelulas =	self::pegarMediaPorCelula($this->getRepositorio(), $grupoFilho20736);
+									$relatorioCelulas =	self::pegarMediaPorCelula($this->getRepositorio(), $grupoFilho20736, false, $mesSelecinado, $anoSelecinado);
 									foreach($relatorioCelulas as $chave => $valor){
 										$dados = array(
 											'idGrupoIgreja'=>$idGrupoIgreja,
@@ -2782,7 +2797,7 @@ class IndexController extends CircuitoController {
 										if ($grupoPaiFilhoFilhos248832) {
 											foreach ($grupoPaiFilhoFilhos248832 as $gpFilho248832) {
 												$grupoFilho248832 = $gpFilho248832->getGrupoPaiFilhoFilho();
-												$relatorioCelulas =	self::pegarMediaPorCelula($this->getRepositorio(), $grupoFilho248832);
+												$relatorioCelulas =	self::pegarMediaPorCelula($this->getRepositorio(), $grupoFilho248832, false, $mesSelecinado, $anoSelecinado);
 												foreach($relatorioCelulas as $chave => $valor){
 													$dados = array(
 														'idGrupoIgreja'=>$idGrupoIgreja,
@@ -2862,16 +2877,35 @@ class IndexController extends CircuitoController {
 		set_time_limit(0);
 		$html = '';
 		$relatorios = array();
-		$idGrupoIgreja = $this->params()->fromRoute(Constantes::$ID, 1);
-		$grupoIgrejas[] = ['id' => $idGrupoIgreja];
+		$idGrupoIgrejaEMes = $this->params()->fromRoute(Constantes::$ID, 1);
+		$explodeId = explode('_', $idGrupoIgrejaEMes);
+		$grupoIgrejas[] = ['id' => $explodeId[0]];
+
+		$mesAtual = date('m');
+		$anoAtual = date('Y');
+		if($mesAtual == 1){
+			$mesAnterior = 12;
+			$anoAnterior = $anoAtual - 1;
+		}else{
+			$mesAnterior = $mesAtual - 1;
+			$anoAnterior = $anoAtual;
+		}
+		$mesSelecinado = 0;
+		$anoSelecinado = 0;
+		switch($explodeId[1]){
+		case 1: $mesSelecinado = $mesAtual; $anoSelecinado = $anoAtual; break;
+		case 2: $mesSelecinado = $mesAnterior; $anoSelecinado = $anoAnterior; break;
+		}
 
 		foreach($grupoIgrejas as $grupoIgreja){
 			$idGrupoIgreja = $grupoIgreja['id'];
 			$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupoIgreja);
 
-			$relatorioCelulas =	self::pegarMediaPorCelula($this->getRepositorio(), $grupo, $celulaDeElite = true);
+			$relatorioCelulas =	self::pegarMediaPorCelula($this->getRepositorio(), $grupo, $celulaDeElite = true, $mesSelecinado, $anoSelecinado);
 			foreach($relatorioCelulas as $chave => $valor){
 				$dados = array(
+					'mes' => $mesSelecinado,
+					'ano' => $anoSelecinado,
 					'idGrupoIgreja'=>$idGrupoIgreja,
 					'idGrupoEquipe'=>0,
 					'idGrupo'=>$grupo->getId(), 
@@ -2880,64 +2914,132 @@ class IndexController extends CircuitoController {
 					'periodos' => $valor['periodos'],
 					'elite' => $valor['elite'],
 				);
-				$relatorios[] = $dados;
+				//$relatorios[] = $dados;
 			}
 			$periodoAfrente = 1;
 			$grupoPaiFilhoFilhos144 = $grupo->getGrupoPaiFilhoFilhosAtivos($periodoAfrente);
 			if ($grupoPaiFilhoFilhos144) {
 				foreach ($grupoPaiFilhoFilhos144 as $gpFilho144) {
 					$grupoFilho144 = $gpFilho144->getGrupoPaiFilhoFilho();
-					$relatorioCelulas =	self::pegarMediaPorCelula($this->getRepositorio(), $grupoFilho144, $celulaDeElite = true);
-					foreach($relatorioCelulas as $chave => $valor){
-						$dados = array(
-							'idGrupoIgreja'=>$idGrupoIgreja,
-							'idGrupoEquipe'=>$grupoFilho144->getId(),
-							'idGrupo'=>$grupo->getId(), 
-							'idGrupoEvento' => $chave, 
-							'valor' => $valor['valor'],
-							'periodos' => $valor['periodos'],
-							'elite' => $valor['elite'],
-						);
-						$relatorios[] = $dados;
+					if($grupoFilho144->getId() === 2){
+						if($relatorioCelulas =	self::pegarMediaPorCelula($this->getRepositorio(), $grupoFilho144, $celulaDeElite = true, $mesSelecinado, $anoSelecinado)){
+							foreach($relatorioCelulas as $chave => $valor){
+								$dados = array(
+									'mes' => $mesSelecinado,
+									'ano' => $anoSelecinado,
+									'idGrupoIgreja'=>$idGrupoIgreja,
+									'idGrupoEquipe'=>$grupoFilho144->getId(),
+									'idGrupo'=>$grupo->getId(), 
+									'idGrupoEvento' => $chave, 
+									'valor' => $valor['valor'],
+									'periodos' => $valor['periodos'],
+									'elite' => $valor['elite'],
+								);
+								$relatorios[] = $dados;
+							}
+						}
 					}
+
+
+					$grupoPaiFilhoFilhos1728 = $grupoFilho144->getGrupoPaiFilhoFilhosAtivos($periodoAfrente);
+					if ($grupoPaiFilhoFilhos1728) {
+						foreach ($grupoPaiFilhoFilhos1728 as $gpFilho1728) {
+							$grupoFilho1728 = $gpFilho1728->getGrupoPaiFilhoFilho();
+							$relatorioCelulas =	self::pegarMediaPorCelula($this->getRepositorio(), $grupoFilho1728, $celulaDeElite = true, $mesSelecinado, $anoSelecinado);
+							foreach($relatorioCelulas as $chave => $valor){
+								$dados = array(
+									'idGrupoIgreja'=>$idGrupoIgreja,
+									'idGrupoEquipe'=>$grupoFilho144->getId(),
+									'idGrupo'=>$grupo->getId(), 
+									'idGrupoEvento' => $chave, 
+									'valor' => $valor['valor'],
+									'periodos' => $valor['periodos'],
+								);
+								$relatorios[] = $dados;
+							}				
+
+							$grupoPaiFilhoFilhos20736 = $grupoFilho1728->getGrupoPaiFilhoFilhosAtivos($periodoAfrente);
+							if ($grupoPaiFilhoFilhos20736) {
+								foreach ($grupoPaiFilhoFilhos20736 as $gpFilho20736) {
+									$grupoFilho20736 = $gpFilho20736->getGrupoPaiFilhoFilho();
+									$relatorioCelulas =	self::pegarMediaPorCelula($this->getRepositorio(), $grupoFilho20736, $celulaDeElite = true, $mesSelecinado, $anoSelecinado);
+									foreach($relatorioCelulas as $chave => $valor){
+										$dados = array(
+											'idGrupoIgreja'=>$idGrupoIgreja,
+											'idGrupoEquipe'=>$grupoFilho144->getId(),
+											'idGrupo'=>$grupo->getId(), 
+											'idGrupoEvento' => $chave, 
+											'valor' => $valor['valor'],
+											'periodos' => $valor['periodos'],
+										);
+										$relatorios[] = $dados;
+
+										$grupoPaiFilhoFilhos248832 = $grupoFilho20736->getGrupoPaiFilhoFilhosAtivos($periodoAfrente);
+										if ($grupoPaiFilhoFilhos248832) {
+											foreach ($grupoPaiFilhoFilhos248832 as $gpFilho248832) {
+												$grupoFilho248832 = $gpFilho248832->getGrupoPaiFilhoFilho();
+												$relatorioCelulas =	self::pegarMediaPorCelula($this->getRepositorio(), $grupoFilho248832, $celulaDeElite = true, $mesSelecinado, $anoSelecinado);
+												foreach($relatorioCelulas as $chave => $valor){
+													$dados = array(
+														'idGrupoIgreja'=>$idGrupoIgreja,
+														'idGrupoEquipe'=>$grupoFilho144->getId(),
+														'idGrupo'=>$grupo->getId(), 
+														'idGrupoEvento' => $chave, 
+														'valor' => $valor['valor'],
+														'periodos' => $valor['periodos'],
+													);
+													$relatorios[] = $dados;
+												}	
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+
+
+
 				}
 			}
 		}
-		Funcoes::var_dump($relatorios);
-		return new ViewModel(array('html' => $html));
+
+		return new ViewModel(array('html' => $html, 'relatorios' => $relatorios));
 	}
 
-	public static function pegarMediaPorCelula(RepositorioORM $repositorioORM, Grupo $grupo, $celulasDeElite = false) {
+	public static function pegarMediaPorCelula(RepositorioORM $repositorioORM, Grupo $grupo, $celulasDeElite = false, $mes, $ano) {
 		$relatorio = array();
-		$grupoEventosCelula = $grupo->getGrupoEventoAtivosPorTipo(EventoTipo::tipoCelula);
-		$arrayPeriodoDoMes = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mes = date('m'), $ano = date('Y'));
-		$diferencaDePeriodos = RelatorioController::diferencaDePeriodos($arrayPeriodoDoMes[0], $arrayPeriodoDoMes[1]);
+		if($grupoEventosCelula = $grupo->getGrupoEventoAtivosPorTipo(EventoTipo::tipoCelula)){
+			$arrayPeriodoDoMes = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mes, $ano);
+			$diferencaDePeriodos = RelatorioController::diferencaDePeriodos($arrayPeriodoDoMes[0], $arrayPeriodoDoMes[1]);
 
-		foreach ($grupoEventosCelula as $grupoEventoCelula) {
-			$soma = 0;
-			$arrayPeriodos = array();
-			$contadorDePeriodos = 1;
-			for ($indiceDeArrays = $arrayPeriodoDoMes[0]; $indiceDeArrays <= $arrayPeriodoDoMes[1]; $indiceDeArrays++) {
-				$eventoId = $grupoEventoCelula->getEvento()->getId();
-				if(!$celulasDeElite){
-					$resultado = $repositorioORM->getFatoCicloORM()->verificaFrequenciasPorCelulaEPeriodo($indiceDeArrays, $eventoId);
-					$arrayPeriodos[$contadorDePeriodos] = $resultado;
-					$soma += $resultado;
-				}else{
-					$resultado = $repositorioORM->getFatoCicloORM()->verificaFrequenciasPorCelulaEPeriodoESeTemVisitante($indiceDeArrays, $eventoId, $repositorioORM);
-					$arrayPeriodos[$contadorDePeriodos]['soma'] = $resultado['soma'];
-					$arrayPeriodos[$contadorDePeriodos]['elite'] = $resultado['elite'];
-					$arrayPeriodos[$contadorDePeriodos]['temVisitante'] = $resultado['temVisitante'];
-					$soma += $resultado['soma'];
+			foreach ($grupoEventosCelula as $grupoEventoCelula) {
+				$soma = 0;
+				$arrayPeriodos = array();
+				$contadorDePeriodos = 1;
+				for ($indiceDeArrays = $arrayPeriodoDoMes[0]; $indiceDeArrays <= $arrayPeriodoDoMes[1]; $indiceDeArrays++) {
+					$eventoId = $grupoEventoCelula->getEvento()->getId();
+					if(!$celulasDeElite){
+						$resultado = $repositorioORM->getFatoCicloORM()->verificaFrequenciasPorCelulaEPeriodo($indiceDeArrays, $eventoId);
+						$arrayPeriodos[$contadorDePeriodos] = $resultado;
+						$soma += $resultado;
+					}else{
+						$resultado = $repositorioORM->getFatoCicloORM()->verificaFrequenciasPorCelulaEPeriodoESeTemVisitante($indiceDeArrays, $eventoId, $repositorioORM);
+						$arrayPeriodos[$contadorDePeriodos]['arregimentacao'] = $resultado['arregimentacao'];
+						$arrayPeriodos[$contadorDePeriodos]['elite'] = $resultado['elite'];
+						$arrayPeriodos[$contadorDePeriodos]['temVisitante'] = $resultado['temVisitante'];
+						$arrayPeriodos[$contadorDePeriodos]['parceiroDeDeus'] = $resultado['parceiroDeDeus'];
+						$soma += $resultado['arregimentacao'];
+					}
+					$contadorDePeriodos++;
 				}
-				$contadorDePeriodos++;
-			}
-			$media = $soma / $diferencaDePeriodos;
-			$relatorio[$grupoEventoCelula->getId()]['valor'] = $media;
-			$relatorio[$grupoEventoCelula->getId()]['periodos'] = $arrayPeriodos;
-			if($celulasDeElite){
-				$ehCelulaDeElite = false;
-				$relatorio[$grupoEventoCelula->getId()]['elite'] = $ehCelulaDeElite;
+				$media = $soma / $diferencaDePeriodos;
+				$relatorio[$grupoEventoCelula->getId()]['valor'] = $media;
+				$relatorio[$grupoEventoCelula->getId()]['periodos'] = $arrayPeriodos;
+				if($celulasDeElite){
+					$ehCelulaDeElite = false;
+					$relatorio[$grupoEventoCelula->getId()]['elite'] = $ehCelulaDeElite;
+				}
 			}
 		}
 		return $relatorio;
