@@ -1148,8 +1148,8 @@ class IndexController extends CircuitoController {
 		/* buscando solicitações */
 		$periodo = -1;
 		$arrayPeriodo = Funcoes::montaPeriodo($periodo);
-		$stringComecoDoPeriodo = '2018-10-01';
-		$stringFimDoPeriodo = '2018-10-07';
+		$stringComecoDoPeriodo = '2018-10-08';
+		$stringFimDoPeriodo = '2018-10-14';
 		$html .= "<br />stringComecoDoPeriodo$stringComecoDoPeriodo";
 		$html .= "<br />stringFimDoPeriodo$stringFimDoPeriodo";
 		$dateInicialFormatada = DateTime::createFromFormat('Y-m-d', $stringComecoDoPeriodo);
@@ -2914,7 +2914,7 @@ class IndexController extends CircuitoController {
 					'periodos' => $valor['periodos'],
 					'elite' => $valor['elite'],
 				);
-				//$relatorios[] = $dados;
+				$relatorios[] = $dados;
 			}
 			$periodoAfrente = 1;
 			$grupoPaiFilhoFilhos144 = $grupo->getGrupoPaiFilhoFilhosAtivos($periodoAfrente);
