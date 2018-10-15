@@ -46,6 +46,10 @@ class DeployController extends CircuitoController {
 		} else {
 			echo "Sem token";
 		}
+
+		$viewModel = new ViewModel();
+		$viewModel->setTerminal(true);
+		return $viewModel;
 	}
 
 	public function verUsuarioAction() {
