@@ -2838,13 +2838,11 @@ class IndexController extends CircuitoController {
 
 		$this->getRepositorio()->iniciarTransacao();
 		try{
-			$mes = date('m');
-			$ano = date('Y');
 			foreach($grupoIgrejas as $grupoIgreja){
 				$idGrupoIgreja = $grupoIgreja['id'];
 				$grupoIgreja = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupoIgreja);
 
-				$fatosRankingCelula = $this->getRepositorio()->getFatoRankingCelulaORM()->encontrarPorIdGrupoIgreja($grupoIgreja->getId(), $mes, $ano);
+				$fatosRankingCelula = $this->getRepositorio()->getFatoRankingCelulaORM()->encontrarPorIdGrupoIgreja($grupoIgreja->getId(), $mesSelecinado, $anoSelecinado);
 				foreach($fatosRankingCelula as $fato){
 					$this->getRepositorio()->getFatoRankingCelulaORM()->remover($fato);
 				}
@@ -2855,8 +2853,8 @@ class IndexController extends CircuitoController {
 				$fatoRankingCelula->setGrupo_equipe_id($relatorio['idGrupoEquipe']);
 				$fatoRankingCelula->setGrupo_evento_id($relatorio['idGrupoEvento']);
 				$fatoRankingCelula->setValor(number_format($relatorio['valor']));
-				$fatoRankingCelula->setMes(date('m'));
-				$fatoRankingCelula->setAno(date('Y'));
+				$fatoRankingCelula->setMes($mesSelecinado);
+				$fatoRankingCelula->setAno($anoSelecinado);
 				$fatoRankingCelula->setP1($relatorio['periodos'][1]);
 				$fatoRankingCelula->setP2($relatorio['periodos'][2]);
 				$fatoRankingCelula->setP3($relatorio['periodos'][3]);
