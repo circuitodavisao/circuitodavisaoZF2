@@ -350,7 +350,7 @@ class FatoCicloORM extends CircuitoORM {
 			->getResult();
 
 		$relatorio = array();
-		$temVisitante = false;
+		$visitantes = 0;
 		$somaResultado = 0;
 		if($resultados){
 
@@ -374,7 +374,7 @@ class FatoCicloORM extends CircuitoORM {
 										&& $dataDeInativacaoEmTempo <= $fimDoPeriodoEmTempo	
 									)
 								){
-									$temVisitante = true;
+									$visitantes++;
 									break;
 								}
 							}
@@ -387,15 +387,15 @@ class FatoCicloORM extends CircuitoORM {
 		$relatorio['elite'] = false;
 		$relatorio['parceiroDeDeus'] = 0;
 
-		if($somaResultado >= 7 && $temVisitante && $valorParceiroDeDeus = $repositorio->getFatoFinanceiroORM()->valorPorEventoEPEriodo($idEvento, $periodo)){
+		if($somaResultado >= 7 && $visitantes > 0 && $valorParceiroDeDeus = $repositorio->getFatoFinanceiroORM()->valorPorEventoEPEriodo($idEvento, $periodo)){
 			$relatorio['parceiroDeDeus'] = $valorParceiroDeDeus;
 		}
 
-		if($somaResultado >= 7 && $temVisitante && $valorParceiroDeDeus >= 10){
+		if($somaResultado >= 7 && $visitantes > 0 && $valorParceiroDeDeus >= 10){
 			$relatorio['elite'] = true;
 		}
 
-		$relatorio['temVisitante'] = $temVisitante;
+		$relatorio['visitantes'] = $visitantes;
 		$relatorio['arregimentacao'] = $somaResultado;
 		return $relatorio;
 	}

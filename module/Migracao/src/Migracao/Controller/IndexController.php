@@ -41,6 +41,7 @@ use Application\Model\Entity\FatoRankingCelula;
 use Application\Model\Entity\FatoCelula;
 use Application\Model\Entity\FatoCurso;
 use Application\Model\Entity\FatoFinanceiroSituacao;
+use Application\Model\Entity\FatoSetenta;
 use Application\Model\ORM\RepositorioORM;
 use DateTime;
 use Doctrine\ORM\EntityManager;
@@ -2909,11 +2910,12 @@ class IndexController extends CircuitoController {
 					'ano' => $anoSelecinado,
 					'idGrupoIgreja'=>$idGrupoIgreja,
 					'idGrupoEquipe'=>0,
-					'idGrupo'=>$grupo->getId(), 
 					'idGrupoEvento' => $chave, 
-					'valor' => $valor['valor'],
+					'mediaArregimentacao' => $valor['mediaArregimentacao'],
+					'mediaParceiroDeDeus' => $valor['mediaParceiroDeDeus'],
+					'mediaVisitantes' => $valor['mediaVisitantes'],
+					'setenta' => $valor['setenta'],
 					'periodos' => $valor['periodos'],
-					'elite' => $valor['elite'],
 				);
 				$relatorios[] = $dados;
 			}
@@ -2942,25 +2944,23 @@ class IndexController extends CircuitoController {
 				foreach ($arrayDeEquipes as $gpFilho144) {
 					$grupoFilho144 = $gpFilho144->getGrupoPaiFilhoFilho();
 					$html .= '<br />Equipe: '.$grupoFilho144->getEntidadeAtiva()->getNome();
-					if($grupoFilho144->getId() === 2){
-						if($relatorioCelulas =	self::pegarMediaPorCelula($this->getRepositorio(), $grupoFilho144, $celulaDeElite = true, $mesSelecinado, $anoSelecinado)){
-							foreach($relatorioCelulas as $chave => $valor){
-								$dados = array(
-									'mes' => $mesSelecinado,
-									'ano' => $anoSelecinado,
-									'idGrupoIgreja'=>$idGrupoIgreja,
-									'idGrupoEquipe'=>$grupoFilho144->getId(),
-									'idGrupo'=>$grupo->getId(), 
-									'idGrupoEvento' => $chave, 
-									'valor' => $valor['valor'],
-									'periodos' => $valor['periodos'],
-									'elite' => $valor['elite'],
-								);
-								$relatorios[] = $dados;
-							}
+					if($relatorioCelulas =	self::pegarMediaPorCelula($this->getRepositorio(), $grupoFilho144, $celulaDeElite = true, $mesSelecinado, $anoSelecinado)){
+						foreach($relatorioCelulas as $chave => $valor){
+							$dados = array(
+								'mes' => $mesSelecinado,
+								'ano' => $anoSelecinado,
+								'idGrupoIgreja'=>$idGrupoIgreja,
+								'idGrupoEquipe'=>$grupoFilho144->getId(),
+								'idGrupoEvento' => $chave, 
+								'mediaArregimentacao' => $valor['mediaArregimentacao'],
+								'mediaParceiroDeDeus' => $valor['mediaParceiroDeDeus'],
+								'mediaVisitantes' => $valor['mediaVisitantes'],
+								'setenta' => $valor['setenta'],
+								'periodos' => $valor['periodos'],
+							);
+							$relatorios[] = $dados;
 						}
 					}
-
 
 					$grupoPaiFilhoFilhos1728 = $grupoFilho144->getGrupoPaiFilhoFilhosAtivos($periodoAfrente);
 					if ($grupoPaiFilhoFilhos1728) {
@@ -2969,11 +2969,15 @@ class IndexController extends CircuitoController {
 							$relatorioCelulas =	self::pegarMediaPorCelula($this->getRepositorio(), $grupoFilho1728, $celulaDeElite = true, $mesSelecinado, $anoSelecinado);
 							foreach($relatorioCelulas as $chave => $valor){
 								$dados = array(
+									'mes' => $mesSelecinado,
+									'ano' => $anoSelecinado,
 									'idGrupoIgreja'=>$idGrupoIgreja,
 									'idGrupoEquipe'=>$grupoFilho144->getId(),
-									'idGrupo'=>$grupo->getId(), 
 									'idGrupoEvento' => $chave, 
-									'valor' => $valor['valor'],
+									'mediaArregimentacao' => $valor['mediaArregimentacao'],
+									'mediaParceiroDeDeus' => $valor['mediaParceiroDeDeus'],
+									'mediaVisitantes' => $valor['mediaVisitantes'],
+									'setenta' => $valor['setenta'],
 									'periodos' => $valor['periodos'],
 								);
 								$relatorios[] = $dados;
@@ -2986,11 +2990,15 @@ class IndexController extends CircuitoController {
 									$relatorioCelulas =	self::pegarMediaPorCelula($this->getRepositorio(), $grupoFilho20736, $celulaDeElite = true, $mesSelecinado, $anoSelecinado);
 									foreach($relatorioCelulas as $chave => $valor){
 										$dados = array(
+											'mes' => $mesSelecinado,
+											'ano' => $anoSelecinado,
 											'idGrupoIgreja'=>$idGrupoIgreja,
 											'idGrupoEquipe'=>$grupoFilho144->getId(),
-											'idGrupo'=>$grupo->getId(), 
 											'idGrupoEvento' => $chave, 
-											'valor' => $valor['valor'],
+											'mediaArregimentacao' => $valor['mediaArregimentacao'],
+											'mediaParceiroDeDeus' => $valor['mediaParceiroDeDeus'],
+											'mediaVisitantes' => $valor['mediaVisitantes'],
+											'setenta' => $valor['setenta'],
 											'periodos' => $valor['periodos'],
 										);
 										$relatorios[] = $dados;
@@ -3002,11 +3010,15 @@ class IndexController extends CircuitoController {
 												$relatorioCelulas =	self::pegarMediaPorCelula($this->getRepositorio(), $grupoFilho248832, $celulaDeElite = true, $mesSelecinado, $anoSelecinado);
 												foreach($relatorioCelulas as $chave => $valor){
 													$dados = array(
+														'mes' => $mesSelecinado,
+														'ano' => $anoSelecinado,
 														'idGrupoIgreja'=>$idGrupoIgreja,
 														'idGrupoEquipe'=>$grupoFilho144->getId(),
-														'idGrupo'=>$grupo->getId(), 
 														'idGrupoEvento' => $chave, 
-														'valor' => $valor['valor'],
+														'mediaArregimentacao' => $valor['mediaArregimentacao'],
+														'mediaParceiroDeDeus' => $valor['mediaParceiroDeDeus'],
+														'mediaVisitantes' => $valor['mediaVisitantes'],
+														'setenta' => $valor['setenta'],
 														'periodos' => $valor['periodos'],
 													);
 													$relatorios[] = $dados;
@@ -3023,6 +3035,60 @@ class IndexController extends CircuitoController {
 
 				}
 			}
+		}
+
+		$this->getRepositorio()->iniciarTransacao();
+		try{
+			foreach($grupoIgrejas as $grupoIgreja){
+				$idGrupoIgreja = $grupoIgreja['id'];
+				$grupoIgreja = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupoIgreja);
+
+				$fatosSetenta = $this->getRepositorio()->getFatoSetentaORM()->encontrarPorIdGrupoIgreja($grupoIgreja->getId(), $mesSelecinado, $anoSelecinado);
+				foreach($fatosSetenta as $fato){
+					$this->getRepositorio()->getFatoSetentaORM()->remover($fato);
+				}
+			}
+			foreach($relatorios as $relatorio){
+				$fatoSetenta = new FatoSetenta();
+				$fatoSetenta->setGrupo_id($relatorio['idGrupoIgreja']);
+				$fatoSetenta->setGrupo_equipe_id($relatorio['idGrupoEquipe']);
+				$fatoSetenta->setGrupo_evento_id($relatorio['idGrupoEvento']);
+				$fatoSetenta->setMes($mesSelecinado);
+				$fatoSetenta->setAno($anoSelecinado);
+				$fatoSetenta->setSetenta($relatorio['setenta'] ? 'S' : 'N');
+				$fatoSetenta->setP1($relatorio['periodos'][1]['arregimentacao']);
+				$fatoSetenta->setP2($relatorio['periodos'][2]['arregimentacao']);
+				$fatoSetenta->setP3($relatorio['periodos'][3]['arregimentacao']);
+				$fatoSetenta->setP4($relatorio['periodos'][4]['arregimentacao']);
+				$fatoSetenta->setP5($relatorio['periodos'][5]['arregimentacao']);
+
+				$fatoSetenta->setV1($relatorio['periodos'][1]['visitantes']);
+				$fatoSetenta->setV2($relatorio['periodos'][2]['visitantes']);
+				$fatoSetenta->setV3($relatorio['periodos'][3]['visitantes']);
+				$fatoSetenta->setV4($relatorio['periodos'][4]['visitantes']);
+				$fatoSetenta->setV5($relatorio['periodos'][5]['visitantes']);
+				$fatoSetenta->setPd1($relatorio['periodos'][1]['parceiroDeDeus']);
+				$fatoSetenta->setPd2($relatorio['periodos'][2]['parceiroDeDeus']);
+				$fatoSetenta->setPd3($relatorio['periodos'][3]['parceiroDeDeus']);
+				$fatoSetenta->setPd4($relatorio['periodos'][4]['parceiroDeDeus']);
+				$fatoSetenta->setPd5($relatorio['periodos'][5]['parceiroDeDeus']);
+				$fatoSetenta->setE1($relatorio['periodos'][1]['elite'] ? 'S' : 'N');
+				$fatoSetenta->setE2($relatorio['periodos'][2]['elite'] ? 'S' : 'N');
+				$fatoSetenta->setE3($relatorio['periodos'][3]['elite'] ? 'S' : 'N');
+				$fatoSetenta->setE4($relatorio['periodos'][4]['elite'] ? 'S' : 'N');
+				$fatoSetenta->setE5($relatorio['periodos'][5]['elite'] ? 'S' : 'N');
+
+				$fatoSetenta->setP6($relatorio['periodos'][6]['arregimentacao']);
+				$fatoSetenta->setV6($relatorio['periodos'][6]['visitantes']);
+				$fatoSetenta->setPd6($relatorio['periodos'][6]['parceiroDeDeus']);
+				$fatoSetenta->setE6($relatorio['periodos'][6]['elite'] ? 'S' : 'N');
+
+				$this->getRepositorio()->getFatoSetentaORM()->persistir($fatoSetenta);
+			}
+			$this->getRepositorio()->fecharTransacao();
+		}catch(Exception $e){
+			$this->getRepositorio()->desfazerTransacao();
+			echo $e->getMessage();
 		}
 
 		list($usec, $sec) = explode(' ', microtime());
@@ -3043,6 +3109,8 @@ class IndexController extends CircuitoController {
 				$soma = 0;
 				$arrayPeriodos = array();
 				$contadorDePeriodos = 1;
+				$somaVisitantes = 0;
+				$somaPaceiroDeDeus = 0;
 				for ($indiceDeArrays = $arrayPeriodoDoMes[0]; $indiceDeArrays <= $arrayPeriodoDoMes[1]; $indiceDeArrays++) {
 					$eventoId = $grupoEventoCelula->getEvento()->getId();
 					if(!$celulasDeElite){
@@ -3052,10 +3120,12 @@ class IndexController extends CircuitoController {
 					}else{
 						$resultado = $repositorioORM->getFatoCicloORM()->verificaFrequenciasPorCelulaEPeriodoESeTemVisitante($indiceDeArrays, $eventoId, $repositorioORM);
 						$arrayPeriodos[$contadorDePeriodos]['arregimentacao'] = $resultado['arregimentacao'];
-						$arrayPeriodos[$contadorDePeriodos]['elite'] = $resultado['elite'];
-						$arrayPeriodos[$contadorDePeriodos]['temVisitante'] = $resultado['temVisitante'];
+						$arrayPeriodos[$contadorDePeriodos]['visitantes'] = $resultado['visitantes'];
 						$arrayPeriodos[$contadorDePeriodos]['parceiroDeDeus'] = $resultado['parceiroDeDeus'];
+						$arrayPeriodos[$contadorDePeriodos]['elite'] = $resultado['elite'];
 						$soma += $resultado['arregimentacao'];
+						$somaVisitantes += $resultado['visitantes'];
+						$somaPaceiroDeDeus += $resultado['parceiroDeDeus'];
 					}
 					$contadorDePeriodos++;
 				}
@@ -3063,8 +3133,16 @@ class IndexController extends CircuitoController {
 				$relatorio[$grupoEventoCelula->getId()]['valor'] = $media;
 				$relatorio[$grupoEventoCelula->getId()]['periodos'] = $arrayPeriodos;
 				if($celulasDeElite){
-					$ehCelulaDeElite = false;
-					$relatorio[$grupoEventoCelula->getId()]['elite'] = $ehCelulaDeElite;
+					$mediaParceiroDeDeus = $somaPaceiroDeDeus / $diferencaDePeriodos;
+					$mediaVisitantes = $somaVisitantes / $diferencaDePeriodos;
+					$relatorio[$grupoEventoCelula->getId()]['mediaArregimentacao'] = $media;
+					$relatorio[$grupoEventoCelula->getId()]['mediaParceiroDeDeus'] = $mediaParceiroDeDeus;
+					$relatorio[$grupoEventoCelula->getId()]['mediaVisitantes'] = $mediaVisitantes;
+					$eh70 = false;
+					if($media >= 7 && $mediaParceiroDeDeus >= 10 && $mediaVisitantes >= 1){
+						$eh70 = true;
+					}
+					$relatorio[$grupoEventoCelula->getId()]['setenta'] = $eh70;
 				}
 			}
 		}
