@@ -64,6 +64,7 @@ class RepositorioORM {
 	private $_pessoaFatoFinanceiroAcessoORM;
 	private $_fatoFinanceiroAcessoORM;
 	private $_eleitorORM;
+	private $_fatoSetentaORM;
 
     /**
      * Contrutor
@@ -620,7 +621,16 @@ class RepositorioORM {
         return $this->_eleitorORM;
     }
 
-
+    /**
+     * Metodo public para obter a instancia do FatoCurso
+     * @return CircuitoORM
+     */
+    public function getFatoSetentaORM() {
+        if (is_null($this->_fatoSetentaORM)) {
+			$this->_fatoSetentaORM = new FatoSetentaORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_FATO_SETENTA);
+        }
+        return $this->_fatoSetentaORM;
+    }
  
     /**
      * Metodo public para obter a instancia EntityManager com acesso ao banco de dados

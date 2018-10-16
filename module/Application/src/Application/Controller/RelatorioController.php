@@ -1919,4 +1919,45 @@ class RelatorioController extends CircuitoController {
 		$dados['ano'] = $ano;
 		return new ViewModel($dados);
 	}
+	
+	public function setentaAction() {
+		$request = $this->getRequest();
+		$dados = array();
+		if($request->isPost()){
+			$sessao = new Container(Constantes::$NOME_APLICACAO);
+
+			$idEntidadeAtual = $sessao->idEntidadeAtual;
+			$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+
+			$postDados = $request->getPost();
+
+			$mes = $postDados['mes'];
+			$ano = $postDados['ano'];
+
+			if($entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
+				$grupoIgreja = $entidade->getGrupo()->getGrupoIgreja();
+				$fatosSetenta = $this->getRepositorio()->getFatoSetentaORM()->encontrarPorIdGrupoIgreja($grupoIgreja->getId(), $mes, $ano);
+			}
+
+			if($entidade->getEntidadeTipo()->getId() === EntidadeTipo::equipe ||
+				$entidade->getEntidadeTipo()->getId() === EntidadeTipo::subEquipe){
+					$grupoEquipe = $entidade->getGrupo()->getGrupoEquipe();
+					$fatosSetenta = $this->getRepositorio()->getFatoSetentaORM()->encontrarPorIdGrupoEquipe($grupoEquipe->getId(), $mes, $ano);
+				}
+			$dados['fatos'] = $fatosSetenta;
+			$dados['repositorio'] = $this->getRepositorio();
+			$dados['filtrado'] = true;
+		}else{
+			$mes = date('m');
+			$ano = date('Y');
+		}
+		$dados['mes'] = $mes;
+		$dados['ano'] = $ano;
+
+		$arrayPeriodoDoMes = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mes, $ano);
+		$dados['periodoInicial'] = $arrayPeriodoDoMes[0];
+		$dados['periodoFinal'] = $arrayPeriodoDoMes[1];
+
+return new ViewModel($dados);	
+	}
 }
