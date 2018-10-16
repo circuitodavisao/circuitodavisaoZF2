@@ -2909,6 +2909,7 @@ class IndexController extends CircuitoController {
 					'mes' => $mesSelecinado,
 					'ano' => $anoSelecinado,
 					'idGrupoIgreja'=>$idGrupoIgreja,
+					'idGrupo'=>$idGrupoIgreja,
 					'idGrupoEquipe'=>0,
 					'idGrupoEvento' => $chave, 
 					'mediaArregimentacao' => $valor['mediaArregimentacao'],
@@ -2950,6 +2951,7 @@ class IndexController extends CircuitoController {
 								'mes' => $mesSelecinado,
 								'ano' => $anoSelecinado,
 								'idGrupoIgreja'=>$idGrupoIgreja,
+								'idGrupo'=>$grupoFilho144->getId(),
 								'idGrupoEquipe'=>$grupoFilho144->getId(),
 								'idGrupoEvento' => $chave, 
 								'mediaArregimentacao' => $valor['mediaArregimentacao'],
@@ -2972,6 +2974,7 @@ class IndexController extends CircuitoController {
 									'mes' => $mesSelecinado,
 									'ano' => $anoSelecinado,
 									'idGrupoIgreja'=>$idGrupoIgreja,
+									'idGrupo'=>$grupoFilho1728->getId(),
 									'idGrupoEquipe'=>$grupoFilho144->getId(),
 									'idGrupoEvento' => $chave, 
 									'mediaArregimentacao' => $valor['mediaArregimentacao'],
@@ -2993,6 +2996,7 @@ class IndexController extends CircuitoController {
 											'mes' => $mesSelecinado,
 											'ano' => $anoSelecinado,
 											'idGrupoIgreja'=>$idGrupoIgreja,
+											'idGrupo'=>$grupoFilho20736->getId(),
 											'idGrupoEquipe'=>$grupoFilho144->getId(),
 											'idGrupoEvento' => $chave, 
 											'mediaArregimentacao' => $valor['mediaArregimentacao'],
@@ -3013,6 +3017,7 @@ class IndexController extends CircuitoController {
 														'mes' => $mesSelecinado,
 														'ano' => $anoSelecinado,
 														'idGrupoIgreja'=>$idGrupoIgreja,
+														'idGrupo'=>$grupoFilho248832->getId(),
 														'idGrupoEquipe'=>$grupoFilho144->getId(),
 														'idGrupoEvento' => $chave, 
 														'mediaArregimentacao' => $valor['mediaArregimentacao'],
@@ -3048,7 +3053,8 @@ class IndexController extends CircuitoController {
 			}
 			foreach($relatorios as $relatorio){
 				$fatoSetenta = new FatoSetenta();
-				$fatoSetenta->setGrupo_id($relatorio['idGrupoIgreja']);
+				$fatoSetenta->setGrupo_id($relatorio['idGrupo']);
+				$fatoSetenta->setGrupo_igreja_id($relatorio['idGrupoIgreja']);
 				$fatoSetenta->setGrupo_equipe_id($relatorio['idGrupoEquipe']);
 				$fatoSetenta->setGrupo_evento_id($relatorio['idGrupoEvento']);
 				$fatoSetenta->setMes($mesSelecinado);

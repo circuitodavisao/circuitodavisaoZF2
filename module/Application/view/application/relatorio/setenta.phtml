@@ -12,33 +12,42 @@ echo '<form action="/relatorioSetenta" method="post">';
 echo $this->cabecalhoDeMeses();
 echo '</form>';
 
-echo '<div class="table-responsive">';
-echo '<table class="text-center table table-condensed table-hover bg-light mt15" style="font-size:8px;">';
-echo '<thead>';
-echo '<tr>';
-echo '<th class="text-center">Quem</th>';
-echo '<th class="text-center">Célula</th>';
-echo '<th class="text-center">Setenta</th>';
-echo '</tr>';
-echo '</thead>';
-
-$classeCor = '';
-echo '<tbody>';
-if($this->fatos && $this->filtrado){
-	foreach($this->fatos as $fato){
-		$grupoEvento = $this->repositorio->getGrupoEventoORM()->encontrarPorId($fato->getGrupo_evento_id());
-		$infoEntidade = $grupoEvento->getGrupo()->getEntidadeAtiva()->infoEntidade();
-		$lideres = $grupoEvento->getGrupo()->getNomeLideresAtivos();
-		$evento = $grupoEvento->getEvento();
-		$celulaDia = $this->translate(Funcoes::diaDaSemanaPorDia($grupoEvento->getEvento()->getDia())).' - ' . substr($grupoEvento->getEvento()->getHora(),0,5);
-
-		echo '<tr>';
-		echo '<td>'.$lideres.'-'.$infoEntidade.'</td>';
-		echo '<td>'.$celulaDia.'</td>';
-		echo '<td>'.$fato->getSetenta().'</td>';
-		echo '</tr>';
+for($indice = 1; $indice <= 2; $indice++){
+	$label = 'SETENTAS';
+	$icone = 'trophy';
+	if($indice === 2){
+		$label = 'ELO FORTE';
+		$icone = 'link';
 	}
+	echo '<div class="panel user-group-widget mt10">';
+	echo '<div class="panel-heading text-center"><span class="panel-icon"><i class="fa fa-'.$icone.'"></i></span><span class="panel-title">'.$label.'</span></div>';
+	echo '<div class="panel-body pn">';
+	foreach($this->lideres as $chave => $valor){
+		$mostrar = false;
+		if($indice === 1 && $valor['setenta'] == 'S'){
+			$mostrar = true;
+		}
+		if($indice === 2 && $valor['setenta'] != 'S'){
+			$mostrar = true;
+		}
+		if($mostrar){
+			$grupo = $this->repositorio->getGrupoORM()->encontrarporId($chave);
+			$foto = $grupo->getFotosLideresAtivos(56);
+			$infoEntidade = $grupo->getEntidadeAtiva()->infoEntidade();
+			$nomeLideres = $grupo->getNomeLideresAtivos();
+			echo '<div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 p10 text-center">';
+			echo $foto;
+			echo '<div class="caption">';
+			echo '<h5>'.$nomeLideres;
+			echo '<br />';
+			echo '<small>'.$infoEntidade. '<small>';
+			echo '</h5>';
+			echo '</div>';
+			echo '</div>';
+		}
+	}
+	echo '</div>';// fim panel body
+	echo '</div>';// fim panel
 }
-echo '</tbody>';
-echo '</table>';
+
 echo '</div>';

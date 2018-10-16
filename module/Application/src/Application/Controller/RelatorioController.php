@@ -1944,7 +1944,17 @@ class RelatorioController extends CircuitoController {
 					$grupoEquipe = $entidade->getGrupo()->getGrupoEquipe();
 					$fatosSetenta = $this->getRepositorio()->getFatoSetentaORM()->encontrarPorIdGrupoEquipe($grupoEquipe->getId(), $mes, $ano);
 				}
-			$dados['fatos'] = $fatosSetenta;
+
+			$arrayLideres = array();
+			foreach($fatosSetenta as $fato){
+				if($fato->getSetenta() == 'S'){
+					$arrayLideres[$fato->getGrupo_id()]['setenta'] = 'S';
+				}
+				$arrayLideres[$fato->getGrupo_id()]['celula'][] = $fato;
+			}
+
+
+			$dados['lideres'] = $arrayLideres;
 			$dados['repositorio'] = $this->getRepositorio();
 			$dados['filtrado'] = true;
 		}else{
@@ -1958,6 +1968,6 @@ class RelatorioController extends CircuitoController {
 		$dados['periodoInicial'] = $arrayPeriodoDoMes[0];
 		$dados['periodoFinal'] = $arrayPeriodoDoMes[1];
 
-return new ViewModel($dados);	
+		return new ViewModel($dados);
 	}
 }
