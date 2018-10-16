@@ -3039,11 +3039,9 @@ class IndexController extends CircuitoController {
 
 		$this->getRepositorio()->iniciarTransacao();
 		try{
-			foreach($grupoIgrejas as $grupoIgreja){
-				$idGrupoIgreja = $grupoIgreja['id'];
-				$grupoIgreja = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupoIgreja);
-
-				$fatosSetenta = $this->getRepositorio()->getFatoSetentaORM()->encontrarPorIdGrupoIgreja($grupoIgreja->getId(), $mesSelecinado, $anoSelecinado);
+			foreach ($arrayDeEquipes as $gpFilho144) {
+				$grupoFilho144 = $gpFilho144->getGrupoPaiFilhoFilho();
+				$fatosSetenta = $this->getRepositorio()->getFatoSetentaORM()->encontrarPorIdGrupoEquipe($grupoFilho144->getId(), $mesSelecinado, $anoSelecinado);
 				foreach($fatosSetenta as $fato){
 					$this->getRepositorio()->getFatoSetentaORM()->remover($fato);
 				}
