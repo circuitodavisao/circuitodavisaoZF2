@@ -2874,6 +2874,8 @@ class IndexController extends CircuitoController {
 
 	function celulaDeEliteAction(){
 		ini_set('memory_limit', '1024M');
+		list($usec, $sec) = explode(' ', microtime());
+		$script_start = (float) $sec + (float) $usec;
 		$html = '';
 		$relatorios = array();
 		$idGrupoIgrejaEMes = $this->params()->fromRoute(Constantes::$ID, 1);
@@ -3003,6 +3005,11 @@ class IndexController extends CircuitoController {
 			}
 		}
 
+		list($usec, $sec) = explode(' ', microtime());
+		$script_end = (float) $sec + (float) $usec;
+		$elapsed_time = round($script_end - $script_start, 5);
+
+		$html .= '<br />Elapsed time: ' . $elapsed_time . ' secs. Memory usage: ' . round(((memory_get_peak_usage(true) / 1024) / 1024), 2) . 'Mb';
 		return new ViewModel(array('html' => $html, 'relatorios' => $relatorios));
 	}
 
