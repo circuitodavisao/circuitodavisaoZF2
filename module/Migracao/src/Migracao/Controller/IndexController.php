@@ -2873,7 +2873,6 @@ class IndexController extends CircuitoController {
 	}
 
 	function celulaDeEliteAction(){
-		set_time_limit(0);
 		ini_set('memory_limit', '1024M');
 		$html = '';
 		$relatorios = array();
