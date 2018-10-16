@@ -19,6 +19,9 @@ class FatoSetenta extends CircuitoEntity {
 	protected $grupo_id;
 
 	/** @ORM\Column(type="integer") */
+	protected $grupo_igreja_id;
+
+	/** @ORM\Column(type="integer") */
 	protected $grupo_equipe_id;
 
 	/** @ORM\Column(type="integer") */
@@ -111,6 +114,14 @@ class FatoSetenta extends CircuitoEntity {
 
 	function setGrupo_id($grupo_id) {
 		$this->grupo_id = $grupo_id;
+	}
+
+	function getGrupo_igreja_id() {
+		return $this->grupo_igreja_id;
+	}
+
+	function setGrupo_igreja_id($grupo_igreja_id) {
+		$this->grupo_igreja_id = $grupo_igreja_id;
 	}
 
 	function getGrupo_evento_id(){
