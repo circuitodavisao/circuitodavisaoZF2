@@ -5,7 +5,8 @@ DROP TABLE fato_setenta;
 CREATE TABLE fato_setenta
 (
   id serial NOT NULL, -- Identificação do fato lider
-  grupo_id integer NOT NULL, -- Identificação do grupo da igreja
+  grupo_id integer NOT NULL, -- Identificação do grupo 
+  grupo_igreja_id integer NOT NULL, -- Identificação do grupo da igreja
   grupo_equipe_id integer NOT NULL, -- Identificação do grupo da equipe
   grupo_evento_id integer NOT NULL, -- Identificação do grupo evento da celula
   setenta enumsn NOT NULL DEFAULT 'N',
