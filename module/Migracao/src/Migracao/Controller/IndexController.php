@@ -2920,8 +2920,28 @@ class IndexController extends CircuitoController {
 			$periodoAfrente = 1;
 			$grupoPaiFilhoFilhos144 = $grupo->getGrupoPaiFilhoFilhosAtivos($periodoAfrente);
 			if ($grupoPaiFilhoFilhos144) {
-				foreach ($grupoPaiFilhoFilhos144 as $gpFilho144) {
+				$arrayDeEquipes = array();
+				/* Dividindo as equipes */
+				if($qualMetade = $explodeId[2]){
+					$totalDeFilhos = count($grupoPaiFilhoFilhos144);
+					$indiceDimensoes = 0;
+					$contadorDeEquipes = 1;
+					foreach($grupoPaiFilhoFilhos144 as $grupoEquipe){
+						if($qualMetade == 1 && $contadorDeEquipes <= ($totalDeFilhos/2)){
+							$arrayDeEquipes[] = $grupoEquipe;
+						}
+						if($qualMetade == 2 && $contadorDeEquipes > ($totalDeFilhos/2)){
+							$arrayDeEquipes[] = $grupoEquipe;
+						}
+						$contadorDeEquipes++;
+					}
+				}else{
+					$arrayDeEquipes = $grupoPaiFilhoFilhos144;
+				}
+				$html .= 'Total de equipes: ' . count($arrayDeEquipes);
+				foreach ($arrayDeEquipes as $gpFilho144) {
 					$grupoFilho144 = $gpFilho144->getGrupoPaiFilhoFilho();
+					$html .= '<br />Equipe: '.$grupoFilho144->getEntidadeAtiva()->getNome();
 					if($grupoFilho144->getId() === 2){
 						if($relatorioCelulas =	self::pegarMediaPorCelula($this->getRepositorio(), $grupoFilho144, $celulaDeElite = true, $mesSelecinado, $anoSelecinado)){
 							foreach($relatorioCelulas as $chave => $valor){
