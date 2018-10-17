@@ -1331,31 +1331,11 @@ class RelatorioController extends CircuitoController {
 	}
 
 	public static function diferencaDePeriodos($periodoInicial, $periodoFinal, $mes = null, $ano = null){
-		$diferencaDePeriodos = 1;
-		if ($periodoInicial < 0) {
-			$periodoInicial *= -1;
+		$contador = 0;
+		for ($indiceDeArrays = $periodoInicial; $indiceDeArrays <= $periodoFinal; $indiceDeArrays++) {
+			$contador++;	
 		}
-		if ($periodoFinal === 0) {
-			$periodoFinal = 1;
-		}
-		if ($periodoFinal === -1) {
-			$periodoFinal = 0;
-		}
-		$diferencaDePeriodos = $periodoInicial + $periodoFinal;
-
-		if($mes === null){
-			$mes = date('m');
-		}
-		if($ano === null){
-			$ano = date('Y');
-		}
-		if(
-			($ano == date('Y') && $mes != date('m')) ||
-			$ano != date('Y')
-		){
-			$diferencaDePeriodos++;
-		}
-		return $diferencaDePeriodos;
+		return $contador;
 	}
 
 	/**
