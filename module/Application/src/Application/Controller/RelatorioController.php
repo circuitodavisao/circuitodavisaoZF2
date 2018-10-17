@@ -2,6 +2,7 @@
 
 namespace Application\Controller;
 
+use Migracao\Controller\IndexController;
 use Application\Controller\Helper\Constantes;
 use Application\Controller\Helper\Funcoes;
 use Application\Model\Entity\EventoTipo;
@@ -630,6 +631,7 @@ class RelatorioController extends CircuitoController {
 		$numeroIdentificador = $repositorio->getFatoCicloORM()->montarNumeroIdentificador($repositorio, $grupo);
 		$soma = array();
 		$somaTotal = array();
+		$contagemDeArray = 1;
 		for ($indiceDeArrays = $arrayPeriodoDoMes[0]; $indiceDeArrays <= $arrayPeriodoDoMes[1]; $indiceDeArrays++) {
 			$qualRelatorioParaUsar = $tipoRelatorioPessoal;
 			if($somado){
@@ -656,7 +658,7 @@ class RelatorioController extends CircuitoController {
 
 				if ($tipoRelatorio === RelatorioController::relatorioCelulasDeElite ||
 					$tipoRelatorio === RelatorioController::relatorioMembresiaECelula) {
-						$dadosCelulasDeElite = RelatorioController::saberQuaisDasMinhasCelulasSaoDeElitePorPeriodo($repositorio, $grupo, $indiceDeArrays);
+						$dadosCelulasDeElite = RelatorioController::saberQuaisDasMinhasCelulasSaoDeElitePorPeriodo($repositorio, $grupo, $indiceDeArrays, $contagemDeArray, $mes, $ano);
 						$meta = $relatorio[self::dadosPessoais][$indiceDeArrays]['celulaQuantidade'];
 						if ($relatorio[self::dadosPessoais][$indiceDeArrays]['celulaQuantidade'] > 2) {
 							$meta = number_format($relatorio[self::dadosPessoais][$indiceDeArrays]['celulaQuantidade'] / 2);
@@ -718,34 +720,34 @@ class RelatorioController extends CircuitoController {
 					if ($tipoRelatorio === RelatorioController::relatorioCelulasDeElite) {
 						$somaCelulasDeElite = 0;
 
-						$relatorioCelula = RelatorioController::saberQuaisDasMinhasCelulasSaoDeElitePorPeriodo($repositorio, $grupoFilho, $indiceDeArrays);
+						$relatorioCelula = RelatorioController::saberQuaisDasMinhasCelulasSaoDeElitePorPeriodo($repositorio, $grupoFilho, $indiceDeArrays, $contagemDeArray, $mes, $ano);
 						$somaCelulasDeElite += $relatorioCelula['elite'];
 						$grupoPaiFilhoFilhos144 = $grupoFilho->getGrupoPaiFilhoFilhosAtivos($indiceDeArrays);
 						if ($grupoPaiFilhoFilhos144) {
 							foreach ($grupoPaiFilhoFilhos144 as $gpFilho144) {
 								$grupoFilho144 = $gpFilho144->getGrupoPaiFilhoFilho();
-								$relatorioCelula = RelatorioController::saberQuaisDasMinhasCelulasSaoDeElitePorPeriodo($repositorio, $grupoFilho144, $indiceDeArrays);
+								$relatorioCelula = RelatorioController::saberQuaisDasMinhasCelulasSaoDeElitePorPeriodo($repositorio, $grupoFilho144, $indiceDeArrays, $contagemDeArray, $mes, $ano);
 								$somaCelulasDeElite += $relatorioCelula['elite'];
 
 								$grupoPaiFilhoFilhos1728 = $grupoFilho144->getGrupoPaiFilhoFilhosAtivos($indiceDeArrays);
 								if ($grupoPaiFilhoFilhos1728) {
 									foreach ($grupoPaiFilhoFilhos1728 as $gpFilho1728) {
 										$grupoFilho1728 = $gpFilho1728->getGrupoPaiFilhoFilho();
-										$relatorioCelula = RelatorioController::saberQuaisDasMinhasCelulasSaoDeElitePorPeriodo($repositorio, $grupoFilho1728, $indiceDeArrays);
+										$relatorioCelula = RelatorioController::saberQuaisDasMinhasCelulasSaoDeElitePorPeriodo($repositorio, $grupoFilho1728, $indiceDeArrays, $contagemDeArray, $mes, $ano);
 										$somaCelulasDeElite += $relatorioCelula['elite'];
 
 										$grupoPaiFilhoFilhos20736 = $grupoFilho1728->getGrupoPaiFilhoFilhosAtivos($indiceDeArrays);
 										if ($grupoPaiFilhoFilhos20736) {
 											foreach ($grupoPaiFilhoFilhos20736 as $gpFilho20736) {
 												$grupoFilho20736 = $gpFilho20736->getGrupoPaiFilhoFilho();
-												$relatorioCelula = RelatorioController::saberQuaisDasMinhasCelulasSaoDeElitePorPeriodo($repositorio, $grupoFilho20736, $indiceDeArrays);
+												$relatorioCelula = RelatorioController::saberQuaisDasMinhasCelulasSaoDeElitePorPeriodo($repositorio, $grupoFilho20736, $indiceDeArrays, $contagemDeArray, $mes, $ano);
 												$somaCelulasDeElite += $relatorioCelula['elite'];
 
 												$grupoPaiFilhoFilhos248832 = $grupoFilho20736->getGrupoPaiFilhoFilhosAtivos($indiceDeArrays);
 												if ($grupoPaiFilhoFilhos248832) {
 													foreach ($grupoPaiFilhoFilhos248832 as $gpFilho248832) {
 														$grupoFilho248832 = $gpFilho248832->getGrupoPaiFilhoFilho();
-														$relatorioCelula = RelatorioController::saberQuaisDasMinhasCelulasSaoDeElitePorPeriodo($repositorio, $grupoFilho248832, $indiceDeArrays);
+														$relatorioCelula = RelatorioController::saberQuaisDasMinhasCelulasSaoDeElitePorPeriodo($repositorio, $grupoFilho248832, $indiceDeArrays, $contagemDeArray, $mes, $ano);
 														$somaCelulasDeElite += $relatorioCelula['elite'];
 													}
 												}
@@ -802,6 +804,7 @@ class RelatorioController extends CircuitoController {
 			foreach ($relatorio[self::dadosPessoais][$indiceDeArrays] as $key => $value) {
 				$somaTotal[$indiceDeArrays][$key] += $value;
 			}
+			$contagemDeArray++;
 		}
 
 		if($tipoRelatorio !== self::relatorioParceiroDeDeus){
@@ -1291,22 +1294,34 @@ class RelatorioController extends CircuitoController {
 		return $relatorio;
 	}
 
-	public static function saberQuaisDasMinhasCelulasSaoDeElitePorPeriodo(RepositorioORM $repositorioORM, Grupo $grupo, $periodo) {
+	public static function saberQuaisDasMinhasCelulasSaoDeElitePorPeriodo(RepositorioORM $repositorioORM, Grupo $grupo, $periodo, $contagemDoPeriodo, $mes, $ano) {
 		$relatorio = array();
 		$grupoEventosCelula = $grupo->getGrupoEventoAtivosPorTipo(EventoTipo::tipoCelula);
 		$contagem = 0;
 		$contagemCelulasDeElite = 0;
+		$fatosSetenta = $repositorioORM->getFatoSetentaORM()->encontrarPorIdGrupo($grupo->getId(), $mes, $ano);
 		foreach ($grupoEventosCelula as $grupoEventoCelula) {
+			$ehElite = 'N';
 			$eventoId = $grupoEventoCelula->getEvento()->getId();
-			$resultado = $repositorioORM->getFatoCicloORM()->verificaFrequenciasPorCelulaEPeriodo($periodo, $eventoId);
+			foreach($fatosSetenta as $fatoSetenta){
+				if($fatoSetenta->getGrupo_evento_id() === $grupoEventoCelula->getId()){
+					switch($contagemDoPeriodo){
+					case 1: $ehElite = $fatoSetenta->getE1(); break;
+					case 2: $ehElite = $fatoSetenta->getE2(); break;
+					case 3: $ehElite = $fatoSetenta->getE3(); break;
+					case 4: $ehElite = $fatoSetenta->getE4(); break;
+					case 5: $ehElite = $fatoSetenta->getE5(); break;
+					case 6: $ehElite = $fatoSetenta->getE6(); break;
+					}	
+				}
+			}
 			$resposta = 0;
-			if ($resultado >= 7) {
+			if ($ehElite == 'S') {
 				$resposta = 1;
 				$contagemCelulasDeElite++;
 			}
 			$relatorio[$contagem]['eventoId'] = $eventoId;
 			$relatorio[$contagem]['resposta'] = $resposta;
-			$relatorio[$contagem]['resultado'] = $resultado;
 			$relatorio[$contagem]['hospedeiro'] = $grupoEventoCelula->getEvento()->getEventoCelula()->getNome_hospedeiroPrimeiroNome();
 			$contagem++;
 		}
