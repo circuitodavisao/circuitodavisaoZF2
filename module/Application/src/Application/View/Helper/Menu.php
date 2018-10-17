@@ -246,7 +246,7 @@ class Menu extends AbstractHelper {
 					break;
 				case 8:
 					$label = 'C&eacute;lulas de Elite';
-					$mostrar = false;
+					$mostrar = true;
 					break;
 				case 9:
 					$label = 'Parceiro de Deus Consolidado';
@@ -326,6 +326,13 @@ class Menu extends AbstractHelper {
 			$html .= '<a href="/relatorioCelulasNaoRealizadas" onClick="mostrarSplash();">';
 			$html .= '<span class="fa fa-users"></span>';
 			$html .= 'Células não realizadas no período';
+			$html .= '</a>';
+			$html .= '</li>';
+
+			$html .= '<li>';
+			$html .= '<a href="/relatorioSetenta" onClick="mostrarSplash();">';
+			$html .= '<span class="fa fa-trophy"></span>';
+			$html .= 'Setenta';
 			$html .= '</a>';
 			$html .= '</li>';
 
