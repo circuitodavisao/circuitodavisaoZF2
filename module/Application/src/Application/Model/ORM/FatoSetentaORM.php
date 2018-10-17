@@ -60,4 +60,26 @@ class FatoSetentaORM extends CircuitoORM {
         }
     }
 
+   public function encontrarPorIdGrupo($idGrupo, $mes, $ano) {
+        $dqlBase = "SELECT "
+                . "frc "
+                . "FROM  " . Constantes::$ENTITY_FATO_SETENTA . " frc "
+                . "WHERE "
+				. "frc.grupo_id = ?1 "
+				. "AND frc.mes = ?2 "
+				. "AND frc.ano = ?3 "
+				. "ORDER BY frc.setenta ASC";
+		try {
+			$result = $this->getEntityManager()->createQuery($dqlBase)
+				->setParameter(1, $idGrupo)
+				->setParameter(2, $mes)
+				->setParameter(3, $ano)
+                    ->getResult();
+            return $result;
+        } catch (Exception $exc) {
+            echo $exc->getMessage();
+        }
+    }
+
+
 }
