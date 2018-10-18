@@ -1,0 +1,40 @@
+<?php
+
+use Application\Controller\Helper\Constantes;
+use Application\View\Helper\BotaoSimples;
+
+$htmlBody = '';
+$formulario = $this->formulario;
+$formulario->prepare();
+$htmlBody .= $this->form()->openTag($formulario);
+$htmlBody .= $this->formHidden($formulario->get(Constantes::$FORM_CSRF));
+$htmlBody .= $this->formHidden($formulario->get(Constantes::$FORM_ID));
+$htmlBody .= '<h1>Revisão de Vidas</h1>';
+$htmlBody .=  $this->divMensagens();
+
+$htmlBody .=  $this->inputFormularioSimples('Dia', $formulario->get(Constantes::$FORM_INPUT_DIA), 4, 2);
+$htmlBody .=  $this->inputFormularioSimples('Mês', $formulario->get(Constantes::$FORM_INPUT_MES), 4, 2);
+$htmlBody .=  $this->inputFormularioSimples('Ano', $formulario->get(Constantes::$FORM_INPUT_ANO), 4, 2);
+$htmlBody .=  $this->inputFormularioSimples('Observação', $formulario->get(Constantes::$FORM_NOME));
+
+$stringNomeDaFuncaoOnClickCadastro = 'validar(this.form)';
+$htmlBody .= $this->botaoSimples('Salvar', $this->funcaoOnClick($stringNomeDaFuncaoOnClickCadastro));
+$funcaoVoltar = $this->funcaoOnClick('location.href="/cadastroRevisao"');
+$htmlBody .=  $this->botaoSimples('Voltar', $funcaoVoltar, BotaoSimples::botaoMenorImportancia);
+
+$htmlBody .= '</div>';
+$htmlBody .= $this->form()->closeTag();
+
+$tamanho = 600;
+$html = '';
+$html .= '<div align="center">';
+$html .= '<div class="panel mw'.$tamanho.'">';
+
+$html .= '<div class="panel-body bg-light text-center">';
+$html .= $htmlBody;
+$html .= '</div>';
+
+$html .= '</div>';
+$html .= '</div>';
+$html .= '</form>';
+echo $html;
