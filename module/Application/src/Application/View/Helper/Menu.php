@@ -107,6 +107,13 @@ class Menu extends AbstractHelper {
 				$html .= 'Cultos';
 				$html .= '</a>';
 				$html .= '</li>';
+
+				$html .= '<li>';
+				$html .= '<a href="/cadastroRevisoes" onClick="mostrarSplash();">';
+				$html .= '<span class="fa fa-calendar"></span>';
+				$html .= 'Revisão de Vidas';
+				$html .= '</a>';
+				$html .= '</li>';
 			}
 
 			$html .= '<li>';

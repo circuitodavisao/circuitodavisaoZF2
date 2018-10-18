@@ -639,7 +639,17 @@ class Grupo extends CircuitoEntity {
             $grupoEventos = $grupoSelecionado->getGrupoEventoAtivosPorTipo(EventoTipo::tipoRevisao);
         }
 
-        return $grupoEventos;
+		/* Verificando dia do revisao para mostrar */
+		$arrayRevisoes = array();
+		foreach($grupoEventos as $grupoEvento){
+				$dataDoRevisao = strtotime($grupoEvento->getEvento()->getData());
+			$dataAtual = strtotime(date('Y-m-d'));	
+
+			if($dataDoRevisao >= $dataAtual){
+				$arrayRevisoes[] = $grupoEvento;
+			}
+		}
+        return $arrayRevisoes;
     }
 
     /**

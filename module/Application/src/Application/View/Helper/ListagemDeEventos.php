@@ -86,9 +86,6 @@ class ListagemDeEventos extends AbstractHelper {
                 $html .= '<th class="text-center">';
                 $html .= $this->view->translate(Constantes::$TRADUCAO_OBSERVACAO);
                 $html .= '</th>';
-                $html .= '<th class="text-center">';
-                $html .= $this->view->translate(Constantes::$TRADUCAO_IGREJAS);
-                $html .= '</th>';
             }
             if ($tipoRevisionistas || $tipoFichasRevisionistas || $tipoAtivosRevisionistas || $tipoLideresRevisao || $tipoListarLideres || $tipoSelecionarRevisaoCracha || $tipoListarRevisionistas) {
                 $html .= '<th class="text-center">';
@@ -179,9 +176,9 @@ class ListagemDeEventos extends AbstractHelper {
                 }
                 if ($tipoRevisao) {
 
-                    $html .= '<td class="text-center">' . Funcoes::mudarPadraoData($evento->getData()->forma, 1) . '</td>';
-                    $stringNomeDaFuncaoOnClick = 'mostrarSplash(); funcaoCircuito("cadastro' . Constantes::$PAGINA_CADASTRO_REVISAO . '", ' . $evento->getId() . ')';
-                    $stringNomeDaFuncaoOnClickExclusao = 'mostrarSplash(); funcaoCircuito("cadastro' . Constantes::$PAGINA_CADASTRO_REVISAO . '", ' . $evento->getId() . ')';
+                    $html .= '<td class="text-center">' . Funcoes::mudarPadraoData($evento->getData(), 1) . '</td>';
+                    $stringNomeDaFuncaoOnClick = 'mostrarSplash(); funcaoCircuito("cadastroRevisao", ' . $evento->getId() . ')';
+                    $stringNomeDaFuncaoOnClickExclusao = 'mostrarSplash(); funcaoCircuito("cadastroRevisaoExcluir", ' . $grupoEvento->getId() . ')';
                     $grupoEventoAtivos = $evento->getGrupoEventoAtivos();
                     $texto = '';
                     foreach ($grupoEventoAtivos as $gea) {
@@ -190,10 +187,11 @@ class ListagemDeEventos extends AbstractHelper {
                         }
                     }
                     $html .= '<td class="text-center"><span class="visible-lg visible-md">' . $evento->getNome() . '</span><span class="visible-sm visible-xs">' . $evento->getNomeAjustado() . '</span></td>';
-                    $html .= '<td class="text-center">' . $this->view->BotaoPopover(count($grupoEventoAtivos) - 1, $texto) . '</td>';
                     $html .= '<td class="text-center">';
                     $html .= $this->view->botaoLink(Constantes::$STRING_ICONE_PENCIL, Constantes::$STRING_HASHTAG, 3, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClick));
-                    $html .= $this->view->botaoLink(Constantes::$STRING_ICONE_TIMES, Constantes::$STRING_HASHTAG, 4, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClickExclusao));
+					if(!(count($evento->getEventoFrequencia()) > 0)){
+						$html .= $this->view->botaoLink(Constantes::$STRING_ICONE_TIMES, Constantes::$STRING_HASHTAG, 9, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClickExclusao));
+					}
                     $html .= '</td>';
                 }
                 if ($tipoRevisionistas) {
@@ -378,8 +376,8 @@ class ListagemDeEventos extends AbstractHelper {
                 $html .= $this->view->botaoLink(Constantes::$STRING_ICONE_PLUS . ' ' . $this->view->translate(Constantes::$TRADUCAO_NOVO_CULTO), Constantes::$STRING_HASHTAG, 0, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClickCadastro));
             }
             if ($tipoRevisao) {
-                $stringNomeDaFuncaoOnClickCadastro = 'mostrarSplash(); funcaoCircuito("cadastro' . Constantes::$PAGINA_CADASTRO_REVISAO . '", 0)';
-                $html .= $this->view->botaoLink(Constantes::$STRING_ICONE_PLUS . ' ' . $this->view->translate(Constantes::$TRADUCAO_NOVO_REVISAO), Constantes::$STRING_HASHTAG, 0, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClickCadastro));
+                $stringNomeDaFuncaoOnClickCadastro = 'mostrarSplash(); funcaoCircuito("cadastroRevisao", 0)';
+                $html .= $this->view->botaoLink(Constantes::$STRING_ICONE_PLUS . ' ' . $this->view->translate('Novo Revisão de Vidas'), Constantes::$STRING_HASHTAG, 0, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClickCadastro));
             }
             if ($tipoListarRevisaoTurma) {
                 $stringNomeDaFuncaoOnClickVoltar = 'mostrarSplash(); funcaoCircuito("' . Constantes::$ROUTE_CURSO . Constantes::$PAGINA_LISTAR_TURMA . '", 0)';

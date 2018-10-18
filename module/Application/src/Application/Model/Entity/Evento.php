@@ -19,6 +19,7 @@ use Zend\InputFilter\InputFilterInterface;
 class Evento extends CircuitoEntity implements InputFilterAwareInterface {
 
     protected $inputFilter;
+	protected $inputFilterRevisao;
     protected $idAntigo;
 
     /**
@@ -317,6 +318,14 @@ class Evento extends CircuitoEntity implements InputFilterAwareInterface {
 
         return $inputFilter;
     }
+
+	public function getInputFilterRevisao() {
+		if(!$this->inputFilterRevisao){
+			$inputFilter = new InputFilter();
+			$this->inputFilterRevisao = $inputFilter;
+		}
+		return $this->inputFilterRevisao;
+	}
 
     /**
      * @param InputFilterInterface $inputFilter
