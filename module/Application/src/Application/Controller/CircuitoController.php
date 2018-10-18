@@ -143,4 +143,15 @@ class CircuitoController extends AbstractActionController {
 			}
 	}
 
+	public function validarSeSouIgreja(){
+		$sessao = new Container(Constantes::$NOME_APLICACAO);
+
+		$idEntidadeAtual = $sessao->idEntidadeAtual;
+		$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+		if($entidade->getEntidadeTipo()->getId() !== EntidadeTipo::igreja){
+				return $this->redirect()->toRoute(Constantes::$ROUTE_PRINCIPAL, array(
+					Constantes::$ACTION => 'semAcesso',
+				));
+			}
+	}
 }

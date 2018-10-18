@@ -14,6 +14,7 @@ use Application\Form\GrupoForm;
 use Application\Form\SelecionarCrachaForm;
 use Application\Form\SolicitacaoForm;
 use Application\Form\SolicitacaoReceberForm;
+use Application\Form\RevisaoForm;
 use Application\Model\Entity\Entidade;
 use Application\Model\Entity\EntidadeTipo;
 use Application\Model\Entity\Evento;
@@ -58,8 +59,11 @@ class CadastroController extends CircuitoController {
 		$extra = '';
 		/* Verificando rota */
 		$pagina = $this->getEvent()->getRouteMatch()->getParam(Constantes::$PAGINA, 1);
-		if ($pagina == Constantes::$PAGINA_EVENTO_CULTO || $pagina == Constantes::$PAGINA_EVENTO_CELULA || $pagina == Constantes::$PAGINA_EVENTO_DISCIPULADO) {
-			if ($pagina == Constantes::$PAGINA_EVENTO_CULTO) {
+		if ($pagina == Constantes::$PAGINA_EVENTO_CULTO 
+			|| $pagina == Constantes::$PAGINA_EVENTO_CELULA 
+			|| $pagina == Constantes::$PAGINA_EVENTO_DISCIPULADO
+			) {
+				if ($pagina == Constantes::$PAGINA_EVENTO_CULTO) {
 				$sessao->pagina = Constantes::$PAGINA_EVENTO_CULTO;
 			}
 			if ($pagina == Constantes::$PAGINA_EVENTO_CELULA) {
@@ -252,6 +256,22 @@ class CadastroController extends CircuitoController {
 				Constantes::$ACTION => Constantes::$PAGINA_GERAR_CRACHA,
 			));
 		}
+		if ($pagina == Constantes::$PAGINA_REVISAO) {
+			return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
+				Constantes::$ACTION => Constantes::$PAGINA_REVISAO,
+			));
+		}
+		if ($pagina == Constantes::$PAGINA_REVISAO_FINALIZAR) {
+			return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
+				Constantes::$ACTION => Constantes::$PAGINA_REVISAO_FINALIZAR,
+			));
+		}
+		if ($pagina == Constantes::$PAGINA_REVISAO_EXCLUIR) {
+			return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
+				Constantes::$ACTION => Constantes::$PAGINA_REVISAO_EXCLUIR,
+			));
+		}
+		
 		/* Fim Páginas Revisão */
 
 		/* Funcoes */
@@ -287,8 +307,8 @@ class CadastroController extends CircuitoController {
 			$tipoEvento = 2;
 			$extra = $grupo->getId();
 		}
-		if ($pagina == Constantes::$PAGINA_REVISAO) {
-			$listagemDeEventos = $grupo->getGrupoEventoAtivosPorTipo($tipoRevisao);
+		if ($pagina == Constantes::$PAGINA_REVISOES) {
+			$listagemDeEventos = $grupo->getGrupoEventoRevisao();
 			$tituloDaPagina = Constantes::$TRADUCAO_LISTAGEM_REVISAO;
 			$tipoEvento = 3;
 			$extra = $grupo->getId();
@@ -420,7 +440,6 @@ class CadastroController extends CircuitoController {
 			$grupo = $entidade->getGrupo();
 			$extra = $grupo->getGrupoPaiFilhoFilhos();
 		}
-
 		$view = new ViewModel(array(
 			Constantes::$FORM => $form,
 			Constantes::$FORM_ENDERECO_HIDDEN => $enderecoHidden,
@@ -2544,4 +2563,113 @@ class CadastroController extends CircuitoController {
 		return $viewModel;
 	}
 
+	public function revisaoAction(){
+		$sessao = new Container(Constantes::$NOME_APLICACAO);
+		self::validarSeSouIgreja();
+		$eventoRevisao = null;
+		if($idRevisao = $sessao->idSessao){
+			$eventoRevisao = $this->getRepositorio()->getEventoORM()->encontrarPorId($idRevisao);
+			unset($sessao->idSessao);
+		}
+		$formulario = new RevisaoForm('formulario', $eventoRevisao);
+
+		$dados = array();
+		$dados['formulario'] = $formulario;
+		$view = new ViewModel($dados);
+
+		/* Javascript especifico */
+		$layoutJS = new ViewModel();
+		$layoutJS->setTemplate('layout/layout-js-cadastro-revisao');
+		$view->addChild($layoutJS, 'layoutJsCadastroRevisao');
+
+		return $view;
+	}
+
+
+	public function revisaoFinalizarAction() {
+		CircuitoController::verificandoSessao(new Container(Constantes::$NOME_APLICACAO), $this);
+		self::validarSeSouIgreja();
+		$request = $this->getRequest();
+		if ($request->isPost()) {
+			try {
+				$this->getRepositorio()->iniciarTransacao();
+				$post_data = $request->getPost();
+
+				/* Entidades */
+				$evento = new Evento();
+				$formulario = new RevisaoForm(Constantes::$FORM, $evento);
+				$formulario->setInputFilter($evento->getInputFilterRevisao());
+				$formulario->setData($post_data);
+
+				/* validação */
+				if ($formulario->isValid()) {
+					$sessao = new Container(Constantes::$NOME_APLICACAO);
+					$criarNovoEvento = true;
+					$validatedData = $formulario->getData();
+					$dataDoRevisao = $validatedData[Constantes::$FORM_INPUT_ANO].'-'.$validatedData[Constantes::$FORM_INPUT_MES].'-'.$validatedData[Constantes::$FORM_INPUT_DIA];
+
+					/* Entidades */
+					$evento = new Evento();
+					$grupoEvento = new GrupoEvento();
+
+					/* ALTERANDO */
+					if (!empty($post_data[Constantes::$FORM_ID])) {
+						$criarNovoEvento = false;
+						$eventoAtual = $this->getRepositorio()->getEventoORM()->encontrarPorId($post_data[Constantes::$FORM_ID]);
+						$eventoAtual->setData($dataDoRevisao);
+						$eventoAtual->setNome($validatedData[Constantes::$FORM_NOME]);
+						$this->getRepositorio()->getEventoORM()->persistir($eventoAtual, $alterarDataDeCriacao = false);
+					}
+					if ($criarNovoEvento) {
+						/* Entidade selecionada */
+						$idEntidadeAtual = $sessao->idEntidadeAtual;
+						$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+
+						$dataParaCadastro = Funcoes::dataAtual();
+						$evento->setData_criacao($dataParaCadastro);
+						$evento->setHora_criacao(Funcoes::horaAtual());
+						$evento->setHora('19:00:00');
+						$evento->setDia($sextaFeira = 6);
+						$evento->setEventoTipo($this->getRepositorio()->getEventoTipoORM()->encontrarPorId(EventoTipo::tipoRevisao));
+						$evento->setData($dataDoRevisao);
+						$evento->setNome($validatedData[Constantes::$FORM_NOME]);
+
+						$grupoEvento->setData_criacao(Funcoes::dataAtual());
+						$grupoEvento->setHora_criacao(Funcoes::horaAtual());
+						$grupoEvento->setGrupo($entidade->getGrupo());
+						$grupoEvento->setEvento($evento);
+
+						/* Persistindo */
+						$this->getRepositorio()->getEventoORM()->persistir($evento);
+						$this->getRepositorio()->getGrupoEventoORM()->persistir($grupoEvento);
+					}
+				} else {
+					error_log(print_r($formulario->getMessages(), TRUE)); 
+				}
+				$this->getRepositorio()->fecharTransacao();
+				return $this->redirect()->toRoute(Constantes::$ROUTE_CADASTRO, array(
+					Constantes::$PAGINA => Constantes::$PAGINA_REVISOES,
+				));
+			} catch (Exception $exc) {
+				$this->getRepositorio()->desfazerTransacao();
+				echo $exc->getMessage();
+				CircuitoController::direcionandoAoLogin($this);
+			}
+		}
+	}
+
+	public function revisaoExcluirAction(){
+		$sessao = new Container(Constantes::$NOME_APLICACAO);
+		self::validarSeSouIgreja();
+
+		$idGrupoEvento = $sessao->idSessao;
+		$grupoEventoRevisao = $this->getRepositorio()->getGrupoEventoORM()->encontrarPorId($idGrupoEvento);
+		$grupoEventoRevisao->setDataEHoraDeInativacao();
+		$this->getRepositorio()->getGrupoEventoORM()->persistir($grupoEventoRevisao, $mudarDataDeCriacao = false);
+
+		unset($sessao->idSessao);
+		return $this->redirect()->toRoute(Constantes::$ROUTE_CADASTRO, array(
+			Constantes::$PAGINA => Constantes::$PAGINA_REVISOES,
+		));
+	}
 }
