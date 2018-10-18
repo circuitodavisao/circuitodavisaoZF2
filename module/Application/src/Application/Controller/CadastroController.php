@@ -2642,6 +2642,14 @@ class CadastroController extends CircuitoController {
 						/* Persistindo */
 						$this->getRepositorio()->getEventoORM()->persistir($evento);
 						$this->getRepositorio()->getGrupoEventoORM()->persistir($grupoEvento);
+
+						$pessoa = new Pessoa();
+						$pessoa->setNome('revisao');
+						$pessoa->setEmail('revisao'.$evento->getId());
+						$pessoa->setSenha($evento->getId());
+						$pessoa->setAtualizar_dados('N');
+						$pessoa->setEvento_id($evento->getId());
+						$this->getRepositorio()->getPessoaORM()->persistir($pessoa);
 					}
 				} else {
 					error_log(print_r($formulario->getMessages(), TRUE)); 

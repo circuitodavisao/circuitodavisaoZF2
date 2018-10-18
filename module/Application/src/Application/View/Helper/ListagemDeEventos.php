@@ -86,6 +86,7 @@ class ListagemDeEventos extends AbstractHelper {
                 $html .= '<th class="text-center">';
                 $html .= $this->view->translate(Constantes::$TRADUCAO_OBSERVACAO);
                 $html .= '</th>';
+                $html .= '<th class="text-center">Usuário</th>';
             }
             if ($tipoRevisionistas || $tipoFichasRevisionistas || $tipoAtivosRevisionistas || $tipoLideresRevisao || $tipoListarLideres || $tipoSelecionarRevisaoCracha || $tipoListarRevisionistas) {
                 $html .= '<th class="text-center">';
@@ -187,12 +188,15 @@ class ListagemDeEventos extends AbstractHelper {
                         }
                     }
                     $html .= '<td class="text-center"><span class="visible-lg visible-md">' . $evento->getNome() . '</span><span class="visible-sm visible-xs">' . $evento->getNomeAjustado() . '</span></td>';
+
+                    $html .= '<td class="text-center">Usuário: revisao'.$evento->getId().' <br />Senha: '.$evento->getId().'</td>';
                     $html .= '<td class="text-center">';
                     $html .= $this->view->botaoLink(Constantes::$STRING_ICONE_PENCIL, Constantes::$STRING_HASHTAG, 3, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClick));
 					if(!(count($evento->getEventoFrequencia()) > 0)){
 						$html .= $this->view->botaoLink(Constantes::$STRING_ICONE_TIMES, Constantes::$STRING_HASHTAG, 9, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClickExclusao));
 					}
                     $html .= '</td>';
+
                 }
                 if ($tipoRevisionistas) {
 
