@@ -10,6 +10,7 @@ namespace Application\Model\Entity;
 
 use Application\Controller\Helper\Funcoes;
 use Application\Model\Helper\FuncoesEntidade;
+use Application\Model\Entity\EntidadeTipo;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -302,9 +303,23 @@ class Grupo extends CircuitoEntity {
                     }
                 }
             }
-        }
-        return $grupoPaiFilhoFilhosAtivos;
-    }
+
+			if(count($grupoPaiFilhoFilhosAtivos) > 0 && $grupoPaiFilhoFilhosAtivos[0]->getGrupoPaiFilhoFilho()->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::subEquipe){
+				$totalDeFilhos = count($grupoPaiFilhoFilhosAtivos);
+				for($i = 0; $i < $totalDeFilhos; $i++){
+					for($j = 0; $j < $totalDeFilhos; $j++){
+						$grupo1 = $grupoPaiFilhoFilhosAtivos[$i];		
+						$grupo2 = $grupoPaiFilhoFilhosAtivos[$j];		
+						if($grupo1->getGrupoPaiFilhoFilho()->getEntidadeAtiva()->getNumero() < $grupo2->getGrupoPaiFilhoFilho()->getEntidadeAtiva()->getNumero()){
+							$grupoPaiFilhoFilhosAtivos[$i] = $grupo2;
+							$grupoPaiFilhoFilhosAtivos[$j] = $grupo1;
+						}
+					}
+				}	
+			}
+		}
+		return $grupoPaiFilhoFilhosAtivos;
+	}
 
     /**
      * Metódo que retorna os filhos no periodo do mês.
@@ -352,6 +367,21 @@ class Grupo extends CircuitoEntity {
                     $grupoPaiFilhoFilhosAtivos[] = $gpf;
                 }
             }
+
+			if(count($grupoPaiFilhoFilhosAtivos) > 0 && $grupoPaiFilhoFilhosAtivos[0]->getGrupoPaiFilhoFilho()->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::subEquipe){
+				$totalDeFilhos = count($grupoPaiFilhoFilhosAtivos);
+				for($i = 0; $i < $totalDeFilhos; $i++){
+					for($j = 0; $j < $totalDeFilhos; $j++){
+						$grupo1 = $grupoPaiFilhoFilhosAtivos[$i];		
+						$grupo2 = $grupoPaiFilhoFilhosAtivos[$j];		
+						if($grupo1->getGrupoPaiFilhoFilho()->getEntidadeAtiva()->getNumero() < $grupo2->getGrupoPaiFilhoFilho()->getEntidadeAtiva()->getNumero()){
+							$grupoPaiFilhoFilhosAtivos[$i] = $grupo2;
+							$grupoPaiFilhoFilhosAtivos[$j] = $grupo1;
+						}
+					}
+				}	
+			}
+	
         }
         return $grupoPaiFilhoFilhosAtivos;
     }

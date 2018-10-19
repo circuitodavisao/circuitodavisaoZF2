@@ -1124,11 +1124,7 @@ class CadastroController extends CircuitoController {
 
 		$grupo = $entidade->getGrupo();
 
-		//        $mostrarCadastro = false;
-		//        if (!empty($arrayGrupoAlunos)) {
 		$mostrarCadastro = true;
-		//        }
-
 		$pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($sessao->idPessoa);
 		$arrayHierarquia = $this->getRepositorio()->getHierarquiaORM()->encontrarTodas($pessoa->getPessoaHierarquiaAtivo()->getHierarquia()->getId());
 
