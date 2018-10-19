@@ -255,11 +255,10 @@ class IndexController extends CircuitoController {
 		$script_start = (float) $sec + (float) $usec;
 		$html = '';
 
-		$html .= 'Teste Deploy Automatico';
 		/* rodar toda segunda */
 		$dateFormatada = DateTime::createFromFormat('Y-m-d', date('Y-m-d'));
 		//        $dateFormatada = DateTime::createFromFormat('Y-m-d', self::DATA_CRIACAO);
-		$html .= ' - Dia para gerar: ' . $dateFormatada->format('d/m/Y');
+		$html .= '<br/><br /><br />Dia para gerar: ' . $dateFormatada->format('d/m/Y');
 
 		$tipoGerarRelatorioDeLider = $this->params()->fromRoute(Constantes::$ID, 0);
 		$somenteAtivos = true;
@@ -3187,4 +3186,20 @@ class IndexController extends CircuitoController {
 		return new ViewModel($dados);
 	}
 
+	public function visitanteParaConsolidacaoAction(){
+		set_time_limit(0);
+		ini_set('memory_limit', '1024M');
+	
+		$html = '';
+		$this->getRepositorio()->iniciarTransacao();
+		try{
+			$this->getRepositorio()->getGrupoPessoaORM()->alterarVisitanteParaConsolidacao($this->getRepositorio());
+			$this->getRepositorio()->fecharTransacao();
+		}catch(Exception $e){
+			$html = 'Error: '.$e->getMessage();
+			$this->getRepositorio()->desfazerTransacao();
+		}
+		$dados = array('html' => $html);
+		return new ViewModel($dados);
+	}
 }
