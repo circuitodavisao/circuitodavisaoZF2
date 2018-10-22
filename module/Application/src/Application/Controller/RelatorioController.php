@@ -1841,6 +1841,7 @@ public function alunosNaSemanaAction(){
 			foreach($turmas as $turma){
 				if($relatorio->getTurma_id() === $turma->getId()){
 					if($turma->getTurmaAulaAtiva()){
+						$relatorioAjustado[$turma->getId()][7]++;
 						$turmaPessoa = $this->getRepositorio()->getTurmaPessoaORM()->encontrarPorId($relatorio->getTurma_pessoa_id());
 							if($turmaPessoaAulas = $turmaPessoa->getTurmaPessoaAula()){
 								$asistiuAAula = false;

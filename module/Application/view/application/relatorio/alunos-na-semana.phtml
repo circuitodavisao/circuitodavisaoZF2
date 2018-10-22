@@ -32,6 +32,7 @@ if($this->turmas){
 			echo '<div class="panel-body pn p10">';
 
 			if($relatorioTurma = $this->relatorio[$turma->getId()]){
+				$soma = 0;
 				echo '<table  class="table table-bordered table-condensed footable" data-filter="#fooFilter">';
 				echo '<thead>';
 				echo '<tr class="dark">';
@@ -57,10 +58,20 @@ if($this->turmas){
 						if($key == $indiceDiaDaSemana){
 							$valor = $relatorio;
 							echo '<td class="text-center">'.$valor.'</td>';
+							$soma+= $valor;
 						}
 					}
 					echo '</tr>';
 				}
+				echo '<tr class="info">';
+				echo '<td>Total que já assitiu</td>';
+				echo '<td class="text-center">'.$soma.'</td>';
+				echo '</tr>';
+				echo '<tr class="danger">';
+				echo '<td>Faltam</td>';
+				$diferenca = $relatorioTurma[7] - $soma;
+				echo '<td class="text-center">'.$diferenca.'</td>';
+				echo '</tr>';
 				echo '</tbody>';
 				echo '</table>';
 			}else{
