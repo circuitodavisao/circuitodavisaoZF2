@@ -387,7 +387,7 @@ class FatoCicloORM extends CircuitoORM {
 		$relatorio['elite'] = false;
 		$relatorio['parceiroDeDeus'] = 0;
 
-		if($somaResultado >= 7 && $visitantes > 0 && $valorParceiroDeDeus = $repositorio->getFatoFinanceiroORM()->valorPorEventoEPEriodo($idEvento, $periodo)){
+		if($valorParceiroDeDeus = $repositorio->getFatoFinanceiroORM()->valorPorEventoEPEriodo($idEvento, $periodo)){
 			$relatorio['parceiroDeDeus'] = $valorParceiroDeDeus;
 		}
 
