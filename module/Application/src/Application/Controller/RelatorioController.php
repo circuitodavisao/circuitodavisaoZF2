@@ -1811,13 +1811,63 @@ class RelatorioController extends CircuitoController {
 		}
 		return new ViewModel(
 			array(
-				'relatorio' => $relatorio,
 				'repositorio' => $this->getRepositorio(),
 				'turmas' => $turmas,
 				'relatorio' => $relatorioAjustado,
 				'tipoRelatorio' => $tipoRelatorio,
 			));
 	}
+
+public function alunosNaSemanaAction(){
+	$sessao = new Container(Constantes::$NOME_APLICACAO);
+
+	$tipoRelatorio = (int) $this->params()->fromRoute('tipoRelatorio');
+
+	$idEntidadeAtual = $sessao->idEntidadeAtual;
+	$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+	$grupo = $entidade->getGrupo();
+	$numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupo);
+	$relatorioInicial = $this->getRepositorio()->getFatoCursoORM()->encontrarFatoCursoPorNumeroIdentificador($numeroIdentificador);
+
+	$relatorioAjustado = array();
+	$turmas = $grupo->getGrupoIgreja()->getTurma();
+
+	foreach($relatorioInicial as $relatorio){
+		if($relatorio->getSituacao_id() === Situacao::ATIVO || $relatorio->getSituacao_id() === Situacao::ESPECIAL){
+			foreach($turmas as $turma){
+				if($relatorio->getTurma_id() === $turma->getId()){
+					if($turma->getTurmaAulaAtiva()){
+						$turmaPessoa = $this->getRepositorio()->getTurmaPessoaORM()->encontrarPorId($relatorio->getTurma_pessoa_id());
+						if($tipoRelatorio == self::relatorioAlunosQueNaoForamAAula){
+							if($turmaPessoaAulas = $turmaPessoa->getTurmaPessoaAula()){
+								$asistiuAAula = false;
+								foreach($turmaPessoaAulas as $turmaPessoaAula){
+									if($turmaPessoaAula->getAula()->getId() === $turma->getTurmaAulaAtiva()->getAula()->getId()){
+										if($turmaPessoaAula->verificarSeEstaAtivo()){
+											$assistiuAAula = true;
+											break;
+										}
+									}
+
+								}
+								if($assistiuAAula){
+									$diaDaSemana = date('N', $turmaPessoaAula->getData_criacaoStringPadraoBanco());
+									$relatorioAjustado[$turma->getId()][$diaDaSemana]++;
+								}
+							}
+						}
+					}
+					break;
+				}
+			}
+		}
+	}
+	return new ViewModel(
+		array(
+			'turmas' => $turmas,
+			'relatorio' => $relatorioAjustado,
+		));
+}
 
 	public static function pegarCelulasNaoRealizadasNoPeriodo(RepositorioORM $repositorioORM, Grupo $grupo, $periodo) {
 		$relatorio = array();
