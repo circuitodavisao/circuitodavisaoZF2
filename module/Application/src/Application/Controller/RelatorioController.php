@@ -467,8 +467,13 @@ class RelatorioController extends CircuitoController {
 					$idGrupo = substr($relatorio->getNumero_identificador(), (count($relatorio->getNumero_identificador())-8));
 					$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupo);
 					$situacao = $this->getRepositorio()->getSituacaoORM()->encontrarPorId($relatorio->getSituacao_id());
-					$relatorioAjustado[$grupo->getGrupoEquipe()->getEntidadeAtiva()->getNome()][$turma->getId()][$situacao->getNome()]++;
-
+					if($entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
+						$relatorioAjustado[$grupo->getGrupoEquipe()->getEntidadeAtiva()->getNome()][$turma->getId()][$situacao->getNome()]++;
+					}
+					if($entidade->getEntidadeTipo()->getId() === EntidadeTipo::equipe 
+						|| $entidade->getEntidadeTipo()->getId() === EntidadeTipo::subequipe){
+						$relatorioAjustado[$grupo->getGrupoSubEquipe()->getEntidadeAtiva()->infoEntidade()][$turma->getId()][$situacao->getNome()]++;
+					}
 				}
 			}
 		}
