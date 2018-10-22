@@ -1716,29 +1716,29 @@ class RelatorioController extends CircuitoController {
 			));
 	}
 
-	const relatorioAlunosQueNaoForamAAula = 1;
-	const relatorioAlunosComFaltas = 2;
-	public function alunosAction(){
-		$sessao = new Container(Constantes::$NOME_APLICACAO);
-
+const relatorioAlunosQueNaoForamAAula = 1;
+const relatorioAlunosComFaltas = 2;
+public function alunosAction(){
+	$sessao = new Container(Constantes::$NOME_APLICACAO);
+		
 		$tipoRelatorio = (int) $this->params()->fromRoute('tipoRelatorio');
-
+		
 		$idEntidadeAtual = $sessao->idEntidadeAtual;
 		$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
 		$grupo = $entidade->getGrupo();
 		$numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupo);
 		$relatorioInicial = $this->getRepositorio()->getFatoCursoORM()->encontrarFatoCursoPorNumeroIdentificador($numeroIdentificador);
-
+		
 		$relatorioAjustado = array();
 		$turmas = $grupo->getGrupoIgreja()->getTurma();
-
+		
 		foreach($relatorioInicial as $relatorio){
 			if($relatorio->getSituacao_id() === Situacao::ATIVO || $relatorio->getSituacao_id() === Situacao::ESPECIAL){
 				foreach($turmas as $turma){
 					if($relatorio->getTurma_id() === $turma->getId()){
 						if($turma->getTurmaAulaAtiva()){
 							$turmaPessoa = $this->getRepositorio()->getTurmaPessoaORM()->encontrarPorId($relatorio->getTurma_pessoa_id());
-
+							
 							$linkWhatsapp = '<i class="btn btn-xs btn-default btn-disabled fa fa-ban"></i>';
 							$telefone = 'SEM TELEFONE';
 							if($turmaPessoa->getPessoa()->getTelefone()){
@@ -1749,34 +1749,33 @@ class RelatorioController extends CircuitoController {
 							if($turmaPessoaAtivo = $turmaPessoa->getPessoa()->getGrupoPessoaAtivo()){
 								$nomeEquipe = CursoController::nomeEquipeTurmaPessoa($turmaPessoa, $grupoPessoaAtivo);
 							}
-
-							if($tipoRelatorio == self::relatorioAlunosQueNaoForamAAula){
+							
+							if($tipoRelatorio === self::relatorioAlunosQueNaoForamAAula){
 								if($turmaPessoaAulas = $turmaPessoa->getTurmaPessoaAula()){
+									$assistiuAAula = false;
+	foreach($turmaPessoaAulas as $turmaPessoaAula){
+		if($turmaPessoaAula->getAula()->getId() === $turma->getTurmaAulaAtiva()->getAula()->getId()){
+			if($turmaPessoaAula->verificarSeEstaAtivo()){
+				$assistiuAAula = true;
+				break;
+			}
+		}
 
-									$naoAssistiuAAula = false;
-									foreach($turmaPessoaAulas as $turmaPessoaAula){
-										if($turmaPessoaAula->getAula()->getId() === $turma->getTurmaAulaAtiva()->getAula()->getId()){
-											if($turmaPessoaAula->verificarSeEstaAtivo()){
-												$naoAssistiuAAula = true;
-												break;
-											}
-										}
-
+	}
+								}
+									
+									if(!$assistiuAAula){
+										$dados = array();
+										$dados['matricula'] = $turmaPessoa->getId();
+										$dados['nome'] = $turmaPessoa->getPessoa()->getNomePrimeiroUltimo();
+										$dados['time'] = $nomeEquipe;
+										$dados['telefone'] = $telefone;
+										$dados['mensagem'] = $linkWhatsapp;
+										$relatorioAjustado[$turma->getId()][] = $dados;
 									}
-								}
-
-								if(!$naoAssistiuAAula){
-									$dados = array();
-									$dados['matricula'] = $turmaPessoa->getId();
-									$dados['nome'] = $turmaPessoa->getPessoa()->getNomePrimeiroUltimo();
-									$dados['time'] = $nomeEquipe;
-									$dados['telefone'] = $telefone;
-									$dados['mensagem'] = $linkWhatsapp;
-									$relatorioAjustado[$turma->getId()][] = $dados;
-								}
-
-														}
-							if($tipoRelatorio == self::relatorioAlunosComFaltas){
+									
+							}
+							if($tipoRelatorio === self::relatorioAlunosComFaltas){
 								$contadorDeFaltas = 0;
 								$aulaAtiva = $turma->getTurmaAulaAtiva()->getAula();
 								foreach ($turma->getTurmaAulaAtiva()->getAula()->getDisciplina()->getAulaOrdenadasPorPosicao() as $aula) {
@@ -1796,7 +1795,7 @@ class RelatorioController extends CircuitoController {
 										$contadorDeFaltas++;
 									}
 								}
-
+								
 								if($contadorDeFaltas > 1 && $contadorDeFaltas <= 3){
 									$dados = array();
 									$dados['matricula'] = $turmaPessoa->getId();
@@ -1815,13 +1814,13 @@ class RelatorioController extends CircuitoController {
 			}
 		}
 		return new ViewModel(
-			array(
-				'repositorio' => $this->getRepositorio(),
-				'turmas' => $turmas,
-				'relatorio' => $relatorioAjustado,
-				'tipoRelatorio' => $tipoRelatorio,
-			));
-	}
+		array(
+		'repositorio' => $this->getRepositorio(),
+		'turmas' => $turmas,
+		'relatorio' => $relatorioAjustado,
+		'tipoRelatorio' => $tipoRelatorio,
+	));
+}
 
 public function alunosNaSemanaAction(){
 	$sessao = new Container(Constantes::$NOME_APLICACAO);
@@ -1843,22 +1842,22 @@ public function alunosNaSemanaAction(){
 					if($turma->getTurmaAulaAtiva()){
 						$relatorioAjustado[$turma->getId()][7]++;
 						$turmaPessoa = $this->getRepositorio()->getTurmaPessoaORM()->encontrarPorId($relatorio->getTurma_pessoa_id());
-							if($turmaPessoaAulas = $turmaPessoa->getTurmaPessoaAula()){
-								$asistiuAAula = false;
-								foreach($turmaPessoaAulas as $turmaPessoaAula){
-									if($turmaPessoaAula->getAula()->getId() === $turma->getTurmaAulaAtiva()->getAula()->getId()){
-										if($turmaPessoaAula->verificarSeEstaAtivo()){
-											$assistiuAAula = true;
-											break;
-										}
+						if($turmaPessoaAulas = $turmaPessoa->getTurmaPessoaAula()){
+							$assistiuAAula = false;
+							foreach($turmaPessoaAulas as $turmaPessoaAula){
+								if($turmaPessoaAula->getAula()->getId() === $turma->getTurmaAulaAtiva()->getAula()->getId()){
+									if($turmaPessoaAula->verificarSeEstaAtivo()){
+										$assistiuAAula = true;
+										break;
 									}
+								}
 
-								}
-								if($assistiuAAula){
-									$diaDaSemana = date('w', strtotime($turmaPessoaAula->getData_criacaoStringPadraoBanco()));
-									$relatorioAjustado[$turma->getId()][$diaDaSemana]++;
-								}
 							}
+							if($assistiuAAula){
+								$diaDaSemana = date('w', strtotime($turmaPessoaAula->getData_criacaoStringPadraoBanco()));
+								$relatorioAjustado[$turma->getId()][$diaDaSemana]++;
+							}
+						}
 					}
 					break;
 				}
