@@ -1831,14 +1831,12 @@ public function alunosNaSemanaAction(){
 
 	$relatorioAjustado = array();
 	$turmas = $grupo->getGrupoIgreja()->getTurma();
-
 	foreach($relatorioInicial as $relatorio){
 		if($relatorio->getSituacao_id() === Situacao::ATIVO || $relatorio->getSituacao_id() === Situacao::ESPECIAL){
 			foreach($turmas as $turma){
 				if($relatorio->getTurma_id() === $turma->getId()){
 					if($turma->getTurmaAulaAtiva()){
 						$turmaPessoa = $this->getRepositorio()->getTurmaPessoaORM()->encontrarPorId($relatorio->getTurma_pessoa_id());
-						if($tipoRelatorio == self::relatorioAlunosQueNaoForamAAula){
 							if($turmaPessoaAulas = $turmaPessoa->getTurmaPessoaAula()){
 								$asistiuAAula = false;
 								foreach($turmaPessoaAulas as $turmaPessoaAula){
@@ -1851,11 +1849,10 @@ public function alunosNaSemanaAction(){
 
 								}
 								if($assistiuAAula){
-									$diaDaSemana = date('N', $turmaPessoaAula->getData_criacaoStringPadraoBanco());
+									$diaDaSemana = date('w', strtotime($turmaPessoaAula->getData_criacaoStringPadraoBanco()));
 									$relatorioAjustado[$turma->getId()][$diaDaSemana]++;
 								}
 							}
-						}
 					}
 					break;
 				}
