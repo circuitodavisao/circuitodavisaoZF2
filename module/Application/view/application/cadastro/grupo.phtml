@@ -48,9 +48,9 @@ $labelBotaoContinuar = $this->translate(Constantes::$TRADUCAO_CONTINUAR);
                 echo $this->botaoLink(
                         Constantes::$TRADUCAO_INSERIR, Constantes::$STRING_HASHTAG, 5, $funcaoInserirDadosComplementares);
                 echo "</div>";
-                echo "<div id='divBotaoAlterarDadosComplementares' class='hidden'>";
+                echo "<div id='divBotaoLimparDadosComplementares' class='hidden'>";
                 echo $this->botaoLink(
-                        Constantes::$TRADUCAO_ALTERAR, Constantes::$STRING_HASHTAG, 6, $this->funcaoOnClick('botaoAlterarDadosComplementares()'));
+                        Constantes::$TRADUCAO_LIMPAR, Constantes::$STRING_HASHTAG, 6, $this->funcaoOnClick('botaoLimparDadosComplementares()'));
                 echo "</div>";
                 ?>
                 <div id="divCheckDadosComplementaresInseridos" class="checkDadosInseridos hidden">
@@ -73,9 +73,6 @@ $labelBotaoContinuar = $this->translate(Constantes::$TRADUCAO_CONTINUAR);
                 <!-- HelperView Dados -->
                 <div id="divDadosSelecionados" class="alert alert-info hidden">
                     <?php
-//                    if ($this->entidadeTipo !== 1 && $this->entidadeTipo !== 2 && $this->entidadeTipo !== 3 && $this->entidadeTipo !== 4) {
-//                        echo $this->SpanDadosValidados('Matricula', 'info-circle');
-//                    }
                     echo $this->SpanDadosValidados('Nome', 'user');
                     echo $this->SpanDadosValidados('DataNascimento', 'birthday-cake');
                     echo $this->SpanDadosValidados('CPF', 'info-circle');
@@ -85,32 +82,6 @@ $labelBotaoContinuar = $this->translate(Constantes::$TRADUCAO_CONTINUAR);
                 <!-- Fim HelperView -->
                 <span id="spanMensagens" class="quebraDeLinhaDeSpan mt10 alert text-center hidden"></span>
             </div>
-
-            <!--             Selecionar Aluno 
-                        <div id="divSelecionarAluno" class="">
-                            <div class="section-divider mt40">
-                                <span><?php // echo $this->translate(Constantes::$TRADUCAO_SELECIONE_O_ALUNO);      ?></span>
-                            </div> 
-                            <div class="panel-menu">
-                                <input id="fooFilter" type="text" class="form-control" placeholder="<?php // echo $this->translate(Constantes::$TRADUCAO_BUSQUE_O_ALUNO);      ?>">
-                            </div>
-                             Tabela de Alunos 
-            <?php // echo $this->tabelaDeAlunos($form); ?>
-                            <div class="mt10">
-            <?php
-//                    echo '<div id="divBotaoDeSelecionarAluno" class="hidden">';
-//                    $labelBotaoContinuar = Constantes::$TRADUCAO_CONTINUAR;
-//                    $extraBotaoContinuar = $this->funcaoOnClick('selecionarAluno()');
-//                    echo $this->botaoLink($labelBotaoContinuar, Constantes::$STRING_HASHTAG, 7, $extraBotaoContinuar);
-//                    echo '</div>';
-//
-//                    /* Botao Voltar Confirmação */
-//                    $labelVoltar = Constantes::$TRADUCAO_VOLTAR;
-//                    echo $this->botaoLink($labelVoltar, Constantes::$STRING_HASHTAG, 8, $this->FuncaoOnClick('botaoVoltarSelecionarAluno()'));
-            ?>
-                            </div>
-                        </div>-->
-
             <!-- Div Dados Pessoais -->
             <div id="divCPFDataNascimento" class="hidden">            
                 <div class="section-divider mt40">
@@ -239,4 +210,3 @@ echo $this->form()->closeTag();
 
 /* Layout com javascript para tela de cadastro de grupo */
 echo $this->layoutJSGrupoValidacao;
-

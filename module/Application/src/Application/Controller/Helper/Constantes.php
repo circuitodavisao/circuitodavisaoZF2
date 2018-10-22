@@ -755,6 +755,7 @@ class Constantes {
     public static $FORM_DISABLED = 'disabled';
     public static $FORM_SUBMIT = 'submit';
     public static $FORM_TIPO = 'tipo';
+    public static $FORM_ID_ENTIDADE_TIPO = 'idEntidadeTipo';
 
     /* Formulario de Celulas */
     public static $STRING_DIV_CONFIRMACAO = 'divConfirmacao';

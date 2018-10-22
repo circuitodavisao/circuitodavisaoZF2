@@ -1138,11 +1138,12 @@ class CadastroController extends CircuitoController {
 				}
 			}
 		}
-		$form = new GrupoForm(Constantes::$FORM, $arrayGrupoAlunos, $arrayHierarquia, $arrayDeNumerosUsados);
-
+		$form = new GrupoForm(Constantes::$FORM, $arrayHierarquia, $arrayDeNumerosUsados);
+		$entidadeTipos = $this->getRepositorio()->getEntidadeTipoORM()->buscarTodosRegistrosEntidade('id', 'asc');
 		$view = new ViewModel(array(
 			Constantes::$FORM => $form,
 			'tipoEntidade' => $entidade->getTipo_id(),
+			'entidadeTipos' => $entidadeTipos,
 			'mostrarCadastro' => $mostrarCadastro,
 			'tituloDaPagina' => 'Cadastro de Time',
 		));
@@ -1184,6 +1185,13 @@ class CadastroController extends CircuitoController {
 				if ($entidadeLogada->getTipo_id() != Entidade::SUBEQUIPE) {
 					$tipoEntidadeAbaixo = $entidadeLogada->getTipo_id() + 1;
 				}
+				/* Entidades acima da igreja */
+				if($entidadeLogada->getTipo_id() === EntidadeTipo::coordenacao
+					|| $entidadeLogada->getTipo_id() === EntidadeTipo::regiao
+					|| $entidadeLogada->getTipo_id() === EntidadeTipo::nacional
+					|| $entidadeLogada->getTipo_id() === EntidadeTipo::presidencial){
+						$tipoEntidadeAbaixo = $post_data['idEntidadeTipo'];
+					}
 				$entidadeNova = new Entidade();
 				$entidadeNova->setEntidadeTipo(
 					$this->getRepositorio()->getEntidadeTipoORM()->encontrarPorId($tipoEntidadeAbaixo)
