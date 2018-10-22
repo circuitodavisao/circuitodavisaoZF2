@@ -1,0 +1,50 @@
+<?php
+
+use Application\Controller\Helper\Constantes;
+use Application\Controller\Helper\Funcoes;
+use Application\Controller\RelatorioController;
+
+$titulo = 'Alunos presente na semana';
+
+Funcoes::var_dump($this->relatorio);
+?>
+<style type="text/css">
+	th, p {
+		text-align: center;
+	}
+	table {
+		font-size: 10px;
+	}
+</style>
+<div class="center-block mw600">
+	<div class="panel">
+	<div class="panel-heading text-center"><?php echo $titulo; ?></div>
+			<div class="panel-body pn p10">
+			<?php 
+			if($this->tipoRelatorio === RelatorioController::relatorioAlunosComFaltas){
+				echo '<div class="alert alert-info alert-xs">Legenda: F. - Faltas</div>';
+			}
+			if($this->turmas){
+				foreach($this->turmas as $turma){
+					if($turma->getTurmaAulaAtiva()){
+						$modulo = $turma->getTurmaAulaAtiva()->getAula()->getDisciplina()->getNome();
+						$aula = $turma->getTurmaAulaAtiva()->getAula()->getPosicao();
+						$label = $modulo.' - ' . Funcoes::mesPorExtenso($turma->getMes()) . '/' . $turma->getAno() . ' - AULA '.$aula;
+						echo '<div class="panel">';
+						echo '<div class="panel-heading text-center">'.$label.'</div>';
+						echo '<div class="panel-body pn p10">';
+	
+						if($relatorioTurma = $this->relatorio[$turma->getId()]){
+						}else{
+							echo '<div class="alert alert-warning">Sem alunos para mostrar</div>';
+						}
+						echo '</div>';
+						echo '</div>';
+					}
+				}
+			}
+			?>
+			</div>
+	</div>
+</div>
+
