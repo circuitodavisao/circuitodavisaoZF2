@@ -3,8 +3,17 @@
  * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com>
  * Descricao: Função para alterar nome da pessoa
  */
+ function alterarPessoa(dados) {
+  funcaoCircuito('lancamentoAlterarPessoa', dados);
+ }
 
-
+ function removerPessoa(dados){
+   var confirmacao = confirm('Tem certeza que deseja remover essa pessoa?');
+   if(confirmacao){
+     mostrarSplash();
+     funcaoCircuito('lancamentoRemoverPessoa', dados);
+   }
+ }
 function alterarNome(idPessoa) {
     let inputNome = $('#nome_' + idPessoa);
     let spanNome = $('#span_nome_' + idPessoa);
@@ -60,7 +69,7 @@ function alterarTelefone(idPessoa) {
 
 function filtrar(){
 	let elementoFiltro = document.getElementById('filtro')
-	let elementos = document.getElementsByClassName('pessoa') 
+	let elementos = document.getElementsByClassName('pessoa')
 
 	for(let elemento of elementos){
 		if(!elemento.getAttribute('name').includes(elementoFiltro.value.toUpperCase())){

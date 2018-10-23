@@ -477,7 +477,7 @@ class Grupo extends CircuitoEntity {
         foreach ($pessoas as $pessoa) {
 			if($pessoa->getTelefone()){
 				$links .= ' <a  class="btn btn-success btn-xs" href="https://api.whatsapp.com/send?phone=55'.$pessoa->getTelefone().'"><i class="fa fa-whatsapp"></i></a>';
-			}	
+			}
         }
         return $links;
     }
@@ -827,57 +827,38 @@ class Grupo extends CircuitoEntity {
         $grupoPessoas = $this->getGrupoPessoa();
         if (!empty($grupoPessoas)) {
             foreach ($grupoPessoas as $grupoPessoa) {
-                $dataDoGrupoPessoaParaComparar = strtotime($grupoPessoa->getData_criacaoStringPadraoBanco());
+                $mostrar = false;
+                $dataDeCriacaoDoGrupoPessoa = strtotime($grupoPessoa->getData_criacaoStringPadraoBanco());
                 $arrayPeriodo = Funcoes::montaPeriodo($periodo);
-                $stringPeriodo = $arrayPeriodo[3] . '-' . $arrayPeriodo[2] . '-' . $arrayPeriodo[1];
-                $dataDoInicioDoPeriodoParaComparar = strtotime($stringPeriodo);
-
-                /* Criando antes do começo do periodo */
-                $validacaoDataCriacao = false;
-                if ($dataDoGrupoPessoaParaComparar <= $dataDoInicioDoPeriodoParaComparar) {
-                    $validacaoDataCriacao = true;
-                }
-
-                /* Criando no periodo */
+                $stringInicioPeriodo = $arrayPeriodo[3] . '-' . $arrayPeriodo[2] . '-' . $arrayPeriodo[1];
                 $stringFimPeriodo = $arrayPeriodo[6] . '-' . $arrayPeriodo[5] . '-' . $arrayPeriodo[4];
-                $dataDoFimParaComparar = strtotime($stringFimPeriodo);
-                if ($dataDoGrupoPessoaParaComparar > $dataDoInicioDoPeriodoParaComparar && $dataDoGrupoPessoaParaComparar <= $dataDoFimParaComparar) {
-                    $validacaoDataCriacao = true;
+                $dataDoInicioDoPeriodoParaComparar = strtotime($stringInicioPeriodo);
+                $dataDoFimDoPeriodoParaComparar = strtotime($stringFimPeriodo);
+
+
+                if($grupoPessoa->verificarSeEstaAtivo() && $dataDeCriacaoDoGrupoPessoa <= $dataDoFimDoPeriodoParaComparar){
+                  $mostrar = true;
                 }
 
-                /* Se esta inativo */
-                $validacaoAtivoEDataInativacao = true;
-                if (!$grupoPessoa->verificarSeEstaAtivo()) {
-                    /* Inativado no periodo */
-                    $dataDoGrupoPessoaInativacaoParaComparar = strtotime($grupoPessoa->getData_inativacaoStringPadraoBanco());
-                    if ($dataDoGrupoPessoaInativacaoParaComparar < $dataDoInicioDoPeriodoParaComparar) {
-                        $validacaoAtivoEDataInativacao = false;
-                    }
-
-                    /* Revisao de vidas */
-                    $semOutraPessoa = false;
-                    foreach ($grupoPessoas as $grupoPessoaParaVerificar) {
-                        if ($grupoPessoaParaVerificar->getPessoa()->getId() === $grupoPessoa->getPessoa()->getId()) {
-                            $semOutraPessoa = true;
-                        }
-                    }
-
-                    if ($semOutraPessoa) {
-                        $validacaoAtivoEDataInativacao = false;
-                    }
+                if(!$grupoPessoa->verificarSeEstaAtivo() && $dataDeCriacaoDoGrupoPessoa <= $dataDoFimDoPeriodoParaComparar){
+                  $dataDeInativacaoDoGrupoPessoa = strtotime($grupoPessoa->getData_inativacaoStringPadraoBanco());
+                  if($dataDeInativacaoDoGrupoPessoa >= $dataDoInicioDoPeriodoParaComparar){
+                    $mostrar = true;
+                  }                  
                 }
 
-                /* Periodo a frente */
-                if (!$validacaoDataCriacao) {
-                    $arrayPeriodoAFrente = Funcoes::montaPeriodo($periodo + 1);
-                    $stringPeriodoAFrente = $arrayPeriodoAFrente[3] . '-' . $arrayPeriodoAFrente[2] . '-' . $arrayPeriodoAFrente[1];
-                    $dataDoInicioDoPeriodoAFrenteParaComparar = strtotime($stringPeriodoAFrente);
-                    if ($dataDoGrupoPessoaParaComparar >= $dataDoInicioDoPeriodoAFrenteParaComparar) {
-                        $validacaoDataCriacao = true;
-                    }
-                }
 
-                if ($validacaoDataCriacao && $validacaoAtivoEDataInativacao) {
+              //  /* Periodo a frente */
+              //  if (!$validacaoDataCriacao) {
+              //      $arrayPeriodoAFrente = Funcoes::montaPeriodo(1);
+              //      $stringPeriodoAFrente = $arrayPeriodoAFrente[3] . '-' . $arrayPeriodoAFrente[2] . '-' . $arrayPeriodoAFrente[1];
+              //      $dataDoInicioDoPeriodoAFrenteParaComparar = strtotime($stringPeriodoAFrente);
+              //      if ($dataDoGrupoPessoaParaComparar >= $dataDoInicioDoPeriodoAFrenteParaComparar) {
+              //          $validacaoDataCriacao = true;
+              //      }
+              //  }
+
+                if ($mostrar == true) {
                     $grupoPessoasNoPeriodo[] = $grupoPessoa;
                 }
             }
@@ -1208,7 +1189,7 @@ class Grupo extends CircuitoEntity {
                 }
             }
             $grupoIgreja = $grupoSelecionado;
-		} 
+		}
 	   	if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::EQUIPE) {
             while ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::EQUIPE) {
 				$contador++;
@@ -1218,7 +1199,7 @@ class Grupo extends CircuitoEntity {
                 }
             }
             $grupoIgreja = $grupoSelecionado;
-		} 
+		}
 	   	if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::IGREJA) {
 			$contador++;
 		}
@@ -1369,7 +1350,7 @@ class Grupo extends CircuitoEntity {
 	}
 
 	function getSolicitacoesAtivas() {
-		$entidades = null; 
+		$entidades = null;
 		foreach ($this->getSolicitacao() as $solicitacao) {
 			if ($solicitacao->verificarSeEstaAtivo()) {
 				$entidades[] = $solicitacao;
