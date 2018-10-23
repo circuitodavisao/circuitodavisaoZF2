@@ -5,989 +5,1049 @@ use Application\Controller\Helper\Constantes;
 $versao = '?v=0.5';
 
 echo $this
-        ->headScript()
-        ->prependFile($this->basePath() . '/js/circuito_da_visao/tempo-restante.js' . $versao)
-;
+	->headScript()
+	->prependFile($this->basePath() . '/js/circuito_da_visao/tempo-restante.js' . $versao)
+	;
 echo $this->inlineScript();
 ?>
 <script type="text/javascript">
-    /**
-     * Nome: layout-js-grupo-validacao.js
-     * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com>
-     * Descricao: Funções para cadastro de um novo grupo
-     */
+/**
+ * Nome: layout-js-grupo-validacao.js
+ * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com>
+ * Descricao: Funções para cadastro de um novo grupo
+ */
 
-    /* Dados */
-    var estadoCivil = 0;
-    var iconeTime = '<i class="fa fa-times" aria-hidden="true"></i>';
-    var iconeCheck = '<i class="fa fa-check" aria-hidden="true"></i>';
-    var hidden = 'hidden';
-    var textDanger = 'text-danger';
-    var textSuccess = 'text-success';
-    var stringNBSP = '&nbsp;';
-    var alertDanger = 'alert-danger';
-    var alertSuccess = 'alert-success';
-    var btnDefault = 'btn-default';
-    var btnPrimary = 'btn-primary';
+/* Dados */
+var estadoCivil = 0;
+var iconeTime = '<i class="fa fa-times" aria-hidden="true"></i>';
+var iconeCheck = '<i class="fa fa-check" aria-hidden="true"></i>';
+var hidden = 'hidden';
+var textDanger = 'text-danger';
+var textSuccess = 'text-success';
+var stringNBSP = '&nbsp;';
+var alertDanger = 'alert-danger';
+var alertSuccess = 'alert-success';
+var btnDefault = 'btn-default';
+var btnPrimary = 'btn-primary';
 
-    var objetoSelecionado = '';
-    function validarEstadoCivil() {
-        var valorSelecionado = $('input[name=inputEstadoCivil]:checked').val();
-        var estadoCivil = parseInt(valorSelecionado);
-        switch (estadoCivil) {
-            case 1:
-                $('#blocoResponsavel1').addClass('hidden');
-                $('#blocoResponsavel2').addClass('hidden');
-                break;
-            case 2:
-                $('#blocoResponsavel0').addClass('hidden');
-                break;
-            default:
-                break;
-        }
-        $('#divEstadoCivil').addClass('hidden');
-        $('#divConfirmacao').removeClass('hidden');
-    }
+var objetoSelecionado = '';
+function validarEstadoCivil() {
+	var valorSelecionado = $('input[name=inputEstadoCivil]:checked').val();
+	var estadoCivil = parseInt(valorSelecionado);
+	switch (estadoCivil) {
+	case 1:
+		$('#blocoResponsavel1').addClass('hidden');
+		$('#blocoResponsavel2').addClass('hidden');
+		break;
+	case 2:
+		$('#blocoResponsavel0').addClass('hidden');
+		break;
+	default:
+		break;
+		}
+		$('#divEstadoCivil').addClass('hidden');
+		$('#divConfirmacao').removeClass('hidden');
+	}
 
-    function abrirTelaDeAlunos(tipo, entidadeTipo) {
-        objetoSelecionado = tipo;
-        $('#botaoInserirResponsavel0').addClass(hidden);
-        $('#botaoInserirResponsavel1').addClass(hidden);
-        $('#botaoInserirResponsavel2').addClass(hidden);
-        $('.alunoM').addClass(hidden);
-        $('.alunoF').addClass(hidden);
-//        switch (tipo) {
-//            case 0:
-//                $('.alunoM').removeClass(hidden);
-//                $('.alunoF').removeClass(hidden);
-//                $('#botaoInserirResponsavel0').removeClass(hidden);
-//                break;
-//            case 1:
-//                $('.alunoM').removeClass(hidden);
-//                $('#botaoInserirResponsavel1').removeClass(hidden);
-//                break;
-//            case 2:
-//                $('.alunoF').removeClass(hidden);
-//                $('#botaoInserirResponsavel2').removeClass(hidden);
-//                break;
-//        }
-        $('#divConfirmacao').addClass(hidden);
-        $('#divSelecionarAluno').removeClass(hidden);
-        $('#divIncluirResponsavel').removeClass(hidden);
-        $('#divPassoAPasso').removeClass(hidden);
-        $('#divDadosSelecionados').addClass(hidden);
-        $('#divBotaoDeSelecionarAluno').addClass(hidden);
-        $('#divSpanResponsavelCPF').addClass(hidden);
-        $('#divSpanResponsavelDataNascimento').addClass(hidden);
-        $('#divSpanResponsavelEmail').addClass(hidden);
-        $('#botaoHierarquiaSelecionada').addClass(hidden);
-        $('#divHierarquia').addClass(hidden);
-        if (entidadeTipo === 1
-                || entidadeTipo === 2
-                || entidadeTipo === 3
-                || entidadeTipo === 4
-                || entidadeTipo === 5
-                || entidadeTipo === 6
-                || entidadeTipo === 7) {
-            $('#divSelecionarAluno').addClass(hidden);
-            $('#divCPFDataNascimento').removeClass(hidden);
-            $('#divDadosSelecionados').removeClass(hidden);
-        }
-        limparPassoAPasso(tipo);
-        var inputCPF = $("#cpf");
-        var inputDia = $("#Dia");
-        var inputMes = $("#Mes");
-        var inputAno = $("#Ano");
-        inputDia.val(0);
-        inputMes.val(0);
-        inputAno.val(0);
-        inputCPF.val('');
-        inputCPF.removeAttr('disabled');
-        inputDia.removeAttr('disabled');
-        inputMes.removeAttr('disabled');
-        inputAno.removeAttr('disabled');
+	function abrirTelaDeAlunos(tipo, entidadeTipo) {
+		objetoSelecionado = tipo;
+		$('#botaoInserirResponsavel0').addClass(hidden);
+		$('#botaoInserirResponsavel1').addClass(hidden);
+		$('#botaoInserirResponsavel2').addClass(hidden);
+		$('.alunoM').addClass(hidden);
+		$('.alunoF').addClass(hidden);
+		//        switch (tipo) {
+		//            case 0:
+		//                $('.alunoM').removeClass(hidden);
+		//                $('.alunoF').removeClass(hidden);
+		//                $('#botaoInserirResponsavel0').removeClass(hidden);
+		//                break;
+		//            case 1:
+		//                $('.alunoM').removeClass(hidden);
+		//                $('#botaoInserirResponsavel1').removeClass(hidden);
+		//                break;
+		//            case 2:
+		//                $('.alunoF').removeClass(hidden);
+		//                $('#botaoInserirResponsavel2').removeClass(hidden);
+		//                break;
+		//        }
+		$('#divConfirmacao').addClass(hidden);
+		$('#divSelecionarAluno').removeClass(hidden);
+		$('#divIncluirResponsavel').removeClass(hidden);
+		$('#divPassoAPasso').removeClass(hidden);
+		$('#divDadosSelecionados').addClass(hidden);
+		$('#divBotaoDeSelecionarAluno').addClass(hidden);
+		$('#divSpanResponsavelCPF').addClass(hidden);
+		$('#divSpanResponsavelDataNascimento').addClass(hidden);
+		$('#divSpanResponsavelEmail').addClass(hidden);
+		$('#botaoHierarquiaSelecionada').addClass(hidden);
+		$('#divHierarquia').addClass(hidden);
+		if (entidadeTipo === 1
+			|| entidadeTipo === 2
+			|| entidadeTipo === 3
+			|| entidadeTipo === 4
+			|| entidadeTipo === 5
+			|| entidadeTipo === 6
+			|| entidadeTipo === 7) {
+				$('#divSelecionarAluno').addClass(hidden);
+				$('#divCPFDataNascimento').removeClass(hidden);
+				$('#divDadosSelecionados').removeClass(hidden);
+		}
+		limparPassoAPasso(tipo);
+		var inputCPF = $("#cpf");
+		var inputDia = $("#Dia");
+		var inputMes = $("#Mes");
+		var inputAno = $("#Ano");
+		inputDia.val(0);
+		inputMes.val(0);
+		inputAno.val(0);
+		inputCPF.val('');
+		inputCPF.removeAttr('disabled');
+		inputDia.removeAttr('disabled');
+		inputMes.removeAttr('disabled');
+		inputAno.removeAttr('disabled');
 
-        var inputDivBotoesBuscaCPF = $("#botaoBuscarCPF");
-        inputDivBotoesBuscaCPF.removeClass(hidden);
-    }
+		var inputDivBotoesBuscaCPF = $("#botaoBuscarCPF");
+		inputDivBotoesBuscaCPF.removeClass(hidden);
+	}
 
-    function selecionarAlunoPeloNome(idAluno) {
-        $('#radio' + idAluno).prop('checked', true);
-        mostrarBotaoDeSelecionarAluno();
-    }
+	function selecionarAlunoPeloNome(idAluno) {
+		$('#radio' + idAluno).prop('checked', true);
+		mostrarBotaoDeSelecionarAluno();
+	}
 
-    function selecionarAluno() {
-        var alunoSelecionado = $('input[name=radioAlunoSelecionado]:checked').val();
-        /* Dados do aluno selecionado */
-        var splitAlunoSelecionado = alunoSelecionado.split("#");
-        var matricula = splitAlunoSelecionado[0];
-        var nome = splitAlunoSelecionado[1];
-        var dataNascimento = splitAlunoSelecionado[2];
-        var tipo = splitAlunoSelecionado[3];
-        /* Coloca dados do aluno selecionado na tela */
-        $('#spanResponsavelMatricula').html(matricula);
-        $('#spanResponsavelNome').html(nome);
-        $('#spanResponsavelDataNascimento').html(dataNascimento);
-        /* Por matricula do aluno no campo */
-        var inputIdAlunoSelecionado;
-        var valorSelecionado = $('input[name=inputEstadoCivil]:checked').val();
-        var estadoCivil = parseInt(valorSelecionado);
-        switch (estadoCivil) {
-            case 1:
-                inputIdAlunoSelecionado = $('#idAlunoSelecionado0');
-                break;
-            case 2:
-                switch (tipo) {
-                    case '1':
-                        inputIdAlunoSelecionado = $('#idAlunoSelecionado1');
-                        break;
-                    case '2':
-                        inputIdAlunoSelecionado = $('#idAlunoSelecionado2');
-                        break;
-                    default:
-                        break;
-                }
-                break;
-            default:
-                break;
-        }
+	function selecionarAluno() {
+		var alunoSelecionado = $('input[name=radioAlunoSelecionado]:checked').val();
+		/* Dados do aluno selecionado */
+		var splitAlunoSelecionado = alunoSelecionado.split("#");
+		var matricula = splitAlunoSelecionado[0];
+		var nome = splitAlunoSelecionado[1];
+		var dataNascimento = splitAlunoSelecionado[2];
+		var tipo = splitAlunoSelecionado[3];
+		/* Coloca dados do aluno selecionado na tela */
+		$('#spanResponsavelMatricula').html(matricula);
+		$('#spanResponsavelNome').html(nome);
+		$('#spanResponsavelDataNascimento').html(dataNascimento);
+		/* Por matricula do aluno no campo */
+		var inputIdAlunoSelecionado;
+		var valorSelecionado = $('input[name=inputEstadoCivil]:checked').val();
+		var estadoCivil = parseInt(valorSelecionado);
+		switch (estadoCivil) {
+		case 1:
+			inputIdAlunoSelecionado = $('#idAlunoSelecionado0');
+			break;
+		case 2:
+			switch (tipo) {
+			case '1':
+				inputIdAlunoSelecionado = $('#idAlunoSelecionado1');
+				break;
+			case '2':
+				inputIdAlunoSelecionado = $('#idAlunoSelecionado2');
+				break;
+			default:
+				break;
+				}
+				break;
+default:
+	break;
+		}
 
-        inputIdAlunoSelecionado.val(matricula);
-        /* Limpar campos */
-        $('#cpf').val('');
-        $('#dataNascimento').val('');
-        /* Abrir div para cpf e data de nascimento */
-        $('#botaoPasso2')
-                .removeClass(btnDefault)
-                .addClass(btnPrimary);
-        $('#divSelecionarAluno').addClass(hidden);
-        $('#divCPFDataNascimento').removeClass(hidden);
-        $('#divDadosSelecionados').removeClass(hidden);
-        $('#nomeAluno').val(nome);
-        $('#botaoBuscarCPF').removeClass(hidden);
+		inputIdAlunoSelecionado.val(matricula);
+		/* Limpar campos */
+		$('#cpf').val('');
+		$('#dataNascimento').val('');
+		/* Abrir div para cpf e data de nascimento */
+		$('#botaoPasso2')
+			.removeClass(btnDefault)
+			.addClass(btnPrimary);
+		$('#divSelecionarAluno').addClass(hidden);
+		$('#divCPFDataNascimento').removeClass(hidden);
+		$('#divDadosSelecionados').removeClass(hidden);
+		$('#nomeAluno').val(nome);
+		$('#botaoBuscarCPF').removeClass(hidden);
 
-        var inputCPF = $("#cpf");
-        var inputDia = $("#Dia");
-        var inputMes = $("#Mes");
-        var inputAno = $("#Ano");
-        inputCPF.removeAttr('disabled');
-        inputDia.removeAttr('disabled');
-        inputMes.removeAttr('disabled');
-        inputAno.removeAttr('disabled');
-    }
+		var inputCPF = $("#cpf");
+		var inputDia = $("#Dia");
+		var inputMes = $("#Mes");
+		var inputAno = $("#Ano");
+		inputCPF.removeAttr('disabled');
+		inputDia.removeAttr('disabled');
+		inputMes.removeAttr('disabled');
+		inputAno.removeAttr('disabled');
+	}
 
-    function isNumber(n) {
-        return !isNaN(parseFloat(n)) && isFinite(n);
-    }
+	function isNumber(n) {
+		return !isNaN(parseFloat(n)) && isFinite(n);
+	}
 
-    function buscarCPF(entidadeTipo) {
-        $('#botaoCPFLiberado').addClass(hidden);
-        var inputCPF = $("#cpf");
-        var inputDia = $("#Dia");
-        var inputMes = $("#Mes");
-        var inputAno = $("#Ano");
+	function buscarCPF(entidadeTipo) {
+		$('#botaoCPFLiberado').addClass(hidden);
+		var inputCPF = $("#cpf");
+		var inputDia = $("#Dia");
+		var inputMes = $("#Mes");
+		var inputAno = $("#Ano");
 
-        var cpf = inputCPF.val();
+		var cpf = inputCPF.val();
 
-        var spanMensagens = $('#spanMensagens');
-        var temErro = false;
+		var spanMensagens = $('#spanMensagens');
+		var temErro = false;
 
-        var stringBarra = '/';
-        var DiaDataNascimento = inputDia.val();
-        var MesDataNascimento = inputMes.val();
-        var AnoDataNascimento = inputAno.val();
-        DiaDataNascimento = parseInt(DiaDataNascimento);
-        MesDataNascimento = parseInt(MesDataNascimento);
-        AnoDataNascimento = parseInt(AnoDataNascimento);
+		var stringBarra = '/';
+		var DiaDataNascimento = inputDia.val();
+		var MesDataNascimento = inputMes.val();
+		var AnoDataNascimento = inputAno.val();
+		DiaDataNascimento = parseInt(DiaDataNascimento);
+		MesDataNascimento = parseInt(MesDataNascimento);
+		AnoDataNascimento = parseInt(AnoDataNascimento);
 
-        spanMensagens.removeClass(alertDanger)
-                .removeClass(alertSuccess)
-                .addClass(hidden);
+		spanMensagens.removeClass(alertDanger)
+			.removeClass(alertSuccess)
+			.addClass(hidden);
 
-        var erros = '';
+		var erros = '';
 
-        if (DiaDataNascimento === 0) {
-            temErro = true;
-            if (erros === '') {
-                erros += 'Dia';
-            } else {
-                erros += ', Dia';
-            }
-        }
-        if (MesDataNascimento === 0) {
-            temErro = true;
-            if (erros === '') {
-                erros += 'Mês';
-            } else {
-                erros += ', Mês';
-            }
-        }
-        if (AnoDataNascimento === 0) {
-            temErro = true;
-            if (erros === '') {
-                erros += 'Ano';
-            } else
-                erros += ', Ano';
-        }
-        if (cpf.length === 0) {
-            temErro = true;
-            if (erros === '') {
-                erros += 'CPF';
-            } else {
-                erros += ', CPF';
-            }
-        }
-        if (temErro) {
-            spanMensagens.text('Preencha: ' + erros);
-        } else {
-            if (DiaDataNascimento < 10) {
-                DiaDataNascimento = '0' + DiaDataNascimento;
-            }
-            if (MesDataNascimento < 10) {
-                MesDataNascimento = '0' + MesDataNascimento;
-            }
-            var dataNascimento = DiaDataNascimento + stringBarra
-                    + MesDataNascimento + stringBarra
-                    + AnoDataNascimento;
-            if (!isNumber(cpf) || cpf.length !== 11) {
-                spanMensagens.text('<?php echo $this->translate(Constantes::$TRADUCAO_CPF_INVALIDO); ?>');
-                temErro = true;
-            }
-            // verificando cpf repetido
-            var inputCPF1 = $("#cpf1");
-            var inputCPF2 = $("#cpf2");
-            if (cpf == inputCPF1.val() || cpf == inputCPF2.val()) {
-                spanMensagens.text('Não use o CPF do seu cônjuge');
-                temErro = true;
-            }
-        }
-        if (!temErro) {
+		if (DiaDataNascimento === 0) {
+			temErro = true;
+			if (erros === '') {
+				erros += 'Dia';
+			} else {
+				erros += ', Dia';
+			}
+		}
+		if (MesDataNascimento === 0) {
+			temErro = true;
+			if (erros === '') {
+				erros += 'Mês';
+			} else {
+				erros += ', Mês';
+			}
+		}
+		if (AnoDataNascimento === 0) {
+			temErro = true;
+			if (erros === '') {
+				erros += 'Ano';
+			} else
+				erros += ', Ano';
+		}
+		if (cpf.length === 0) {
+			temErro = true;
+			if (erros === '') {
+				erros += 'CPF';
+			} else {
+				erros += ', CPF';
+			}
+		}
+		if (temErro) {
+			spanMensagens.text('Preencha: ' + erros);
+		} else {
+			if (DiaDataNascimento < 10) {
+				DiaDataNascimento = '0' + DiaDataNascimento;
+			}
+			if (MesDataNascimento < 10) {
+				MesDataNascimento = '0' + MesDataNascimento;
+			}
+			var dataNascimento = DiaDataNascimento + stringBarra
+				+ MesDataNascimento + stringBarra
+				+ AnoDataNascimento;
+			if (!isNumber(cpf) || cpf.length !== 11) {
+				spanMensagens.text('<?php echo $this->translate(Constantes::$TRADUCAO_CPF_INVALIDO); ?>');
+				temErro = true;
+			}
+			// verificando cpf repetido
+			var inputCPF1 = $("#cpf1");
+			var inputCPF2 = $("#cpf2");
+			if (cpf == inputCPF1.val() || cpf == inputCPF2.val()) {
+				spanMensagens.text('Não use o CPF do seu cônjuge');
+				temErro = true;
+			}
+		}
+		if (!temErro) {
 
-            $.post(
-                    "/cadastroBuscarCPF",
-                    {
-                        cpf: cpf,
-                        dataNascimento: dataNascimento
-                    },
-                    function (data) {
-                        var resposta = parseInt(data.resposta);
-                        if (resposta === 1 || resposta === 4) {
-                            var nomeDoAlunoSelecionado = $('#nomeAluno').val();
-                            var splitNomeDoAluno = nomeDoAlunoSelecionado.split(" ");
-                            var splitNomeEncontradoNaBusca = data.nome.split(" ");
-                            var dadosValidados = true;
-                            /* Nome do aluno */
-//                            if (entidadeTipo !== 1
-//                                    && entidadeTipo !== 2
-//                                    && entidadeTipo !== 3
-//                                    && entidadeTipo !== 4
-//                                    && entidadeTipo !== 6
-//                                    && entidadeTipo !== 7) {
-//                                if (splitNomeDoAluno[0] !== splitNomeEncontradoNaBusca[0]) {
-//                                    dadosValidados = false;
-//                                    spanMensagens
-//                                            .addClass(alertDanger)
-//                                            .text('<?php // echo $this->translate(Constantes::$TRADUCAO_NOME_NAO_CONFERE);                   ?>')
-//                                            .removeClass(hidden);
-//                                }
-//                            }
-//                            if (dataNascimento !== data.dataNascimento) {
-//                                dadosValidados = false;
-//                                spanMensagens
-//                                        .addClass(alertDanger)
-//                                        .text('Os dados não conferem com a Base de Dados')
-//                                        .removeClass(hidden);
-//                            }
-                            if (dadosValidados) {
-                                /* desabilitando campos para edicao*/
-                                inputCPF.attr('disabled', 'disabled');
-                                inputDia.attr('disabled', 'disabled');
-                                inputMes.attr('disabled', 'disabled');
-                                inputAno.attr('disabled', 'disabled');
-                                $('#divDadosSelecionados').removeClass(hidden);
-                                /* Mensagem de sucesso */
-                                spanMensagens
-                                        .text('<?php echo $this->translate(Constantes::$TRADUCAO_DADOS_LIBERADOS); ?>')
-                                        .addClass(alertSuccess)
-                                        .removeClass(hidden);
-                                $('#botaoCPFLiberado').removeClass(hidden);
-                                /* Pondo valores encontrados na tela */
-                                if (data.idPessoa !== 0) {
-                                    $('#spanResponsavelMatricula').html(data.idPessoa);
-                                }
-                                $('#spanResponsavelNome').html(data.nome);
-                                $('#spanResponsavelCPF').html(data.cpf);
-                                $('#divSpanResponsavelCPF').removeClass(hidden);
-                                $('#spanResponsavelDataNascimento').html(data.dataNascimento);
-                                $('#divSpanResponsavelDataNascimento').removeClass(hidden);
-                                $('#botaoBuscarCPF').addClass(hidden);
+			$.post(
+				"/cadastroBuscarCPF",
+		{
+			cpf: cpf,
+				dataNascimento: dataNascimento
+					},
+					function (data) {
+						var resposta = parseInt(data.resposta);
+						if (resposta === 1 || resposta === 4) {
+							var nomeDoAlunoSelecionado = $('#nomeAluno').val();
+							var splitNomeDoAluno = nomeDoAlunoSelecionado.split(" ");
+							var splitNomeEncontradoNaBusca = data.nome.split(" ");
+							var dadosValidados = true;
+							if (dadosValidados) {
+								/* desabilitando campos para edicao*/
+								inputCPF.attr('disabled', 'disabled');
+								inputDia.attr('disabled', 'disabled');
+								inputMes.attr('disabled', 'disabled');
+								inputAno.attr('disabled', 'disabled');
+								$('#divDadosSelecionados').removeClass(hidden);
+								/* Mensagem de sucesso */
+								spanMensagens
+									.text('<?php echo $this->translate(Constantes::$TRADUCAO_DADOS_LIBERADOS); ?>')
+									.addClass(alertSuccess)
+									.removeClass(hidden);
+								$('#botaoCPFLiberado').removeClass(hidden);
+								/* Pondo valores encontrados na tela */
+								if (data.idPessoa !== 0) {
+									$('#spanResponsavelMatricula').html(data.idPessoa);
+								}
+								$('#spanResponsavelNome').html(data.nome);
+								$('#spanResponsavelCPF').html(data.cpf);
+								$('#divSpanResponsavelCPF').removeClass(hidden);
+								$('#spanResponsavelDataNascimento').html(data.dataNascimento);
+								$('#divSpanResponsavelDataNascimento').removeClass(hidden);
+								$('#botaoBuscarCPF').addClass(hidden);
 
-                                if (resposta === 4) {
-                                    var hierarquia = $('#hierarquia');
-                                    hierarquia.val(data.idHierarquia);
-                                    var nomeHierarquia = $('#hierarquia option:selected').text();
-                                    hierarquia.attr('disabled', 'disabled');
-                                    hierarquia.addClass(hidden);
-                                    $('#botaoHierarquiaSelecionada').removeClass(hidden);
-                                    $('#divMensagemHierarquia').text('Hierarquia é: ' + nomeHierarquia);
-                                    $('#divMensagemHierarquia').removeClass(hidden);
+								if (resposta === 4) {
+									var hierarquia = $('#hierarquia');
+									hierarquia.val(data.idHierarquia);
+									var nomeHierarquia = $('#hierarquia option:selected').text();
+									hierarquia.attr('disabled', 'disabled');
+									hierarquia.addClass(hidden);
+									$('#botaoHierarquiaSelecionada').removeClass(hidden);
+									$('#divMensagemHierarquia').text('Hierarquia é: ' + nomeHierarquia);
+									$('#divMensagemHierarquia').removeClass(hidden);
 
-                                    mostrarBotaoDeInserirResponsavel(1);
-                                }
-                            }
-                        }
-                        if (resposta === 2) {
-                            /* Não encontrou no PROCOB */
-                            spanMensagens.text('<?php echo $this->translate(Constantes::$TRADUCAO_DADOS_NAO_CADASTRADOS); ?>');
-                        }
+									mostrarBotaoDeInserirResponsavel(1);
+								}
+							}
+						}
+						if (resposta === 2) {
+							/* Não encontrou no PROCOB */
+							spanMensagens.text('<?php echo $this->translate(Constantes::$TRADUCAO_DADOS_NAO_CADASTRADOS); ?>');
+						}
 
-                        if (resposta === 3) {
-                            /* Já cadastrado */
-                            spanMensagens.text('<?php echo $this->translate(Constantes::$TRADUCAO_CPF_JA_UTILIZADO); ?>');
-                            if (entidadeTipo === 1
-                                    || entidadeTipo === 2
-                                    || entidadeTipo === 3
-                                    || entidadeTipo === 4) {
-                                var mensagemAtual = spanMensagens.text();
-                                spanMensagens.html(mensagemAtual + ', Para vincular uma nova responsabilidade a esse usuário clique no menu: <p><code>Cadastrar -> Nova Responsabilidade</code></p>');
-                            }
-                        }
+						if (resposta === 3) {
+							/* Já cadastrado */
+							spanMensagens.text('<?php echo $this->translate(Constantes::$TRADUCAO_CPF_JA_UTILIZADO); ?>');
+							if (entidadeTipo === 1
+								|| entidadeTipo === 2
+								|| entidadeTipo === 3
+								|| entidadeTipo === 4) {
+									var mensagemAtual = spanMensagens.text();
+									spanMensagens.html(mensagemAtual + ', Para vincular uma nova responsabilidade a esse usuário clique no menu: <p><code>Cadastrar -> Nova Responsabilidade</code></p>');
+							}
+						}
 
-                        if (resposta === 2 || resposta === 3) {
-                            spanMensagens
-                                    .addClass(alertDanger)
-                                    .removeClass(hidden);
-                        }
+						if (resposta === 2 || resposta === 3) {
+							spanMensagens
+								.addClass(alertDanger)
+								.removeClass(hidden);
+						}
 
-                    }
-            , 'json');
-        } else {
-            spanMensagens
-                    .addClass(alertDanger)
-                    .removeClass(hidden);
-        }
-    }
+					}
+			, 'json');
+		} else {
+			spanMensagens
+				.addClass(alertDanger)
+				.removeClass(hidden);
+		}
+	}
 
-    function mostrarDivEmail(entidadeTipo) {
-        $('#divCPFDataNascimento').addClass(hidden);
-        $('#botaoCPFLiberado').addClass(hidden);
-        $('#divEmail').removeClass(hidden);
+	function mostrarDivEmail(entidadeTipo) {
+		$('#divCPFDataNascimento').addClass(hidden);
+		$('#botaoCPFLiberado').addClass(hidden);
+		$('#divEmail').removeClass(hidden);
 
-//        if (entidadeTipo !== 1
-//                && entidadeTipo !== 2
-//                && entidadeTipo !== 3
-//                && entidadeTipo !== 4) {
-//            $('#botaoPasso3')
-//                    .removeClass('btn-default')
-//                    .addClass('btn-primary');
-//        } else {
-        $('#botaoPasso2')
-                .removeClass('btn-default')
-                .addClass('btn-primary');
-//        }
-        escondeMensagem();
-        $('#botaoBuscarEmail').removeClass(hidden);
+		//        if (entidadeTipo !== 1
+		//                && entidadeTipo !== 2
+		//                && entidadeTipo !== 3
+		//                && entidadeTipo !== 4) {
+		//            $('#botaoPasso3')
+		//                    .removeClass('btn-default')
+		//                    .addClass('btn-primary');
+		//        } else {
+		$('#botaoPasso2')
+			.removeClass('btn-default')
+			.addClass('btn-primary');
+		//        }
+		escondeMensagem();
+		$('#botaoBuscarEmail').removeClass(hidden);
 
-        var inputEmail = $('#email');
-        var inputRepetirEmail = $('#repetirEmail');
-        inputEmail.removeAttr('disabled');
-        inputRepetirEmail.removeAttr('disabled');
-    }
+		var inputEmail = $('#email');
+		var inputRepetirEmail = $('#repetirEmail');
+		inputEmail.removeAttr('disabled');
+		inputRepetirEmail.removeAttr('disabled');
+	}
 
-    function buscarEmail() {
-        var temErro = false;
-        var inputEmail = $('#email');
-        var inputRepetirEmail = $('#repetirEmail');
+	function buscarEmail() {
+		var temErro = false;
+		var inputEmail = $('#email');
+		var inputRepetirEmail = $('#repetirEmail');
 
-        var email = inputEmail.val();
-        var repetirEmail = inputRepetirEmail.val();
-        var spanMensagens = $('#spanMensagens');
-        spanMensagens
-                .addClass(hidden)
-                .removeClass(alertDanger)
-                .removeClass(alertSuccess);
-        if (repetirEmail != email) {
-            temErro = true;
-            spanMensagens.html('<?php echo $this->translate(Constantes::$TRADUCAO_EMAILS_NAO_CONFEREM); ?>');
-        }
-        if (email.length === 0) {
-            temErro = true;
-            spanMensagens.html('<?php echo $this->translate(Constantes::$TRADUCAO_PREENCHA_O_EMAIL); ?>');
-        } else {
-            if (!validaEmail(email)) {
-                temErro = true;
-                spanMensagens.html('<?php echo $this->translate(Constantes::$TRADUCAO_EMAIL_INVALIDO); ?>');
-            }
-        }
-        if (repetirEmail.length === 0) {
-            temErro = true;
-            spanMensagens.html('<?php echo $this->translate(Constantes::$TRADUCAO_REPETIR_EMAIL); ?>');
-        }
-        if (email.length === 0 && repetirEmail.length === 0) {
-            temErro = true;
-            spanMensagens.html('<?php echo $this->translate(Constantes::$TRADUCAO_PREENCHA_E_REPETA_O_EMAIL); ?>');
-        }
+		var email = inputEmail.val();
+		var repetirEmail = inputRepetirEmail.val();
+		var spanMensagens = $('#spanMensagens');
+		spanMensagens
+			.addClass(hidden)
+			.removeClass(alertDanger)
+			.removeClass(alertSuccess);
+		if (repetirEmail != email) {
+			temErro = true;
+			spanMensagens.html('<?php echo $this->translate(Constantes::$TRADUCAO_EMAILS_NAO_CONFEREM); ?>');
+		}
+		if (email.length === 0) {
+			temErro = true;
+			spanMensagens.html('<?php echo $this->translate(Constantes::$TRADUCAO_PREENCHA_O_EMAIL); ?>');
+		} else {
+			if (!validaEmail(email)) {
+				temErro = true;
+				spanMensagens.html('<?php echo $this->translate(Constantes::$TRADUCAO_EMAIL_INVALIDO); ?>');
+			}
+		}
+		if (repetirEmail.length === 0) {
+			temErro = true;
+			spanMensagens.html('<?php echo $this->translate(Constantes::$TRADUCAO_REPETIR_EMAIL); ?>');
+		}
+		if (email.length === 0 && repetirEmail.length === 0) {
+			temErro = true;
+			spanMensagens.html('<?php echo $this->translate(Constantes::$TRADUCAO_PREENCHA_E_REPETA_O_EMAIL); ?>');
+		}
 
-        /* Não deixar repetir email */
-        var email1 = $('#email1').val();
-        var email2 = $('#email2').val();
+		/* Não deixar repetir email */
+		var email1 = $('#email1').val();
+		var email2 = $('#email2').val();
 
-        if (email.length !== 0 && (email === email1 || email === email2)) {
-            temErro = true;
-            spanMensagens.html('<?php echo $this->translate(Constantes::$TRADUCAO_EMAIL_USADO_PELO_CONJUGE); ?>');
-        }
-        if (!temErro) {
+		if (email.length !== 0 && (email === email1 || email === email2)) {
+			temErro = true;
+			spanMensagens.html('<?php echo $this->translate(Constantes::$TRADUCAO_EMAIL_USADO_PELO_CONJUGE); ?>');
+		}
+		if (!temErro) {
 
-            $.post(
-                    "/cadastroBuscarEmail",
-                    {email: email},
-                    function (data) {
-// liberado
-                        if (data.resposta == 0) {
-                            inputEmail.attr('disabled', 'disabled');
-                            inputRepetirEmail.attr('disabled', 'disabled');
+			$.post(
+				"/cadastroBuscarEmail",
+		{email: email},
+		function (data) {
+			// liberado
+			if (data.resposta == 0) {
+				inputEmail.attr('disabled', 'disabled');
+				inputRepetirEmail.attr('disabled', 'disabled');
 
-                            spanMensagens
-                                    .html('<?php echo $this->translate(Constantes::$TRADUCAO_EMAIL_LIBERADO); ?>')
-                                    .removeClass(hidden)
-                                    .addClass(alertSuccess);
-                            $('#divSpanResponsavelEmail').removeClass(hidden);
-                            $('#spanResponsavelEmail').html(email);
-                            $('#botaoEmailLiberado').removeClass(hidden);
-                            $('#botaoBuscarEmail').addClass(hidden);
-                        }
+				spanMensagens
+					.html('<?php echo $this->translate(Constantes::$TRADUCAO_EMAIL_LIBERADO); ?>')
+					.removeClass(hidden)
+					.addClass(alertSuccess);
+				$('#divSpanResponsavelEmail').removeClass(hidden);
+				$('#spanResponsavelEmail').html(email);
+				$('#botaoEmailLiberado').removeClass(hidden);
+				$('#botaoBuscarEmail').addClass(hidden);
+						}
 // não liberado
-                        if (data.resposta == 1) {
-                            spanMensagens
-                                    .html('<?php echo $this->translate(Constantes::$TRADUCAO_EMAIL_JA_UTILIZADO); ?>')
-                                    .addClass(alertDanger)
-                                    .removeClass(hidden);
-                        }
+						if (data.resposta == 1) {
+							spanMensagens
+								.html('<?php echo $this->translate(Constantes::$TRADUCAO_EMAIL_JA_UTILIZADO); ?>')
+								.addClass(alertDanger)
+								.removeClass(hidden);
+						}
 
-                    }, 'json');
-        } else {
-            spanMensagens
-                    .removeClass(hidden)
-                    .addClass(alertDanger);
-        }
+					}, 'json');
+		} else {
+			spanMensagens
+				.removeClass(hidden)
+				.addClass(alertDanger);
+		}
 
 
-    }
+	}
 
-    function mostrarDivHierarquia(entidadeTipo) {
-        $('#divEmail').addClass(hidden);
+	function mostrarDivHierarquia(entidadeTipo) {
+		$('#divEmail').addClass(hidden);
 
-        if (entidadeTipo !== 1
-                && entidadeTipo !== 2
-                && entidadeTipo !== 3
-                && entidadeTipo !== 4) {
-            $('#botaoPasso4')
-                    .removeClass('btn-default')
-                    .addClass('btn-primary');
-        } else {
-            $('#botaoPasso3')
-                    .removeClass('btn-default')
-                    .addClass('btn-primary');
-        }
+		if (entidadeTipo !== 1
+			&& entidadeTipo !== 2
+			&& entidadeTipo !== 3
+			&& entidadeTipo !== 4) {
+				$('#botaoPasso4')
+					.removeClass('btn-default')
+					.addClass('btn-primary');
+		} else {
+			$('#botaoPasso3')
+				.removeClass('btn-default')
+				.addClass('btn-primary');
+		}
 
-        $('#divHierarquia').removeClass(hidden);
-        escondeMensagem();
-    }
+		$('#divHierarquia').removeClass(hidden);
+		escondeMensagem();
+	}
 
-    function escondeMensagem() {
-        $('#spanMensagens').addClass(hidden);
-    }
+	function escondeMensagem() {
+		$('#spanMensagens').addClass(hidden);
+	}
 
-    function validaEmail(email) {
-        var er = RegExp(/^[A-Za-z0-9_\-\.]+@[A-Za-z0-9_\-\.]{2,}\.[A-Za-z0-9]{2,}(\.[A-Za-z0-9])?/);
-        if (er.test(email) == false) {
-            return false;
-        }
-        return true;
-    }
+	function validaEmail(email) {
+		var er = RegExp(/^[A-Za-z0-9_\-\.]+@[A-Za-z0-9_\-\.]{2,}\.[A-Za-z0-9]{2,}(\.[A-Za-z0-9])?/);
+		if (er.test(email) == false) {
+			return false;
+		}
+		return true;
+	}
 
-    function mostrarBotaoDeProsseguirDoEstadoCivil() {
-        $('#divBotaoDeProsseguirDoEstadoCivil').removeClass(hidden);
-    }
+	function mostrarBotaoDeProsseguirDoEstadoCivil() {
+		$('#divBotaoDeProsseguirDoEstadoCivil').removeClass(hidden);
+	}
 
-    function mostrarBotaoDeSelecionarAluno() {
-        $('#divBotaoDeSelecionarAluno').removeClass(hidden);
-    }
+	function mostrarBotaoDeSelecionarAluno() {
+		$('#divBotaoDeSelecionarAluno').removeClass(hidden);
+	}
 
-    function mostrarBotaoDeInserirResponsavel(valorDoSelectHierarquia) {
-        valorDoSelectHierarquia = parseInt(valorDoSelectHierarquia);
-        var botaoHierarquiaSelecionada = $('#botaoInserirResponsavel' + objetoSelecionado);
-        if (valorDoSelectHierarquia !== 0) {
-            botaoHierarquiaSelecionada.removeClass(hidden);
-        }
-        if (valorDoSelectHierarquia === 0) {
-            botaoHierarquiaSelecionada.addClass(hidden);
-        }
-    }
+	function mostrarBotaoDeInserirResponsavel(valorDoSelectHierarquia) {
+		valorDoSelectHierarquia = parseInt(valorDoSelectHierarquia);
+		var botaoHierarquiaSelecionada = $('#botaoInserirResponsavel' + objetoSelecionado);
+		if (valorDoSelectHierarquia !== 0) {
+			botaoHierarquiaSelecionada.removeClass(hidden);
+		}
+		if (valorDoSelectHierarquia === 0) {
+			botaoHierarquiaSelecionada.addClass(hidden);
+		}
+	}
 
-    function mostrarBotaoDeInserirDadosComplementares(valorDoSelectNumeracao) {
-        valorDoSelectNumeracao = parseInt(valorDoSelectNumeracao);
-        var divInserirAlterarDadosComplementares = $('#divInserirAlterarDadosComplementares');
-        if (valorDoSelectNumeracao !== 0) {
-            divInserirAlterarDadosComplementares.removeClass(hidden);
-        }
-        if (valorDoSelectNumeracao === 0) {
-            divInserirAlterarDadosComplementares.addClass(hidden);
-        }
-    }
+	function mostrarBotaoDeInserirDadosComplementares(valorDoSelectNumeracao) {
+		valorDoSelectNumeracao = parseInt(valorDoSelectNumeracao);
+		var divInserirAlterarDadosComplementares = $('#divInserirAlterarDadosComplementares');
+		if (valorDoSelectNumeracao !== 0) {
+			divInserirAlterarDadosComplementares.removeClass(hidden);
+		}
+		if (valorDoSelectNumeracao === 0) {
+			divInserirAlterarDadosComplementares.addClass(hidden);
+		}
+	}
 
-    function insereResponsavelNaTelaDeConfimacao(tipoResponsavel, mudarBarraDeProgresso) {
-        var spanMatricula = '';
-        var spanNome = '';
-        var spanNomexs = '';
-        var spanEmail = '';
-        var spanEmailxs = '';
-        var spanHierarquia = '';
-        var spanCPF = '';
-        var iconeResponavelMatricula = '<i class="fa fa-folder" aria-hidden="true"></i>' + stringNBSP;
-        var iconeResponavelNomeInicial = '<i class="fa fa-user" aria-hidden="true"></i>' + stringNBSP + '<strong>';
-        var iconeResponavelNomeFinal = '</strong>';
-        var iconeResponavelCPF = '<i class="fa fa-info-circle" aria-hidden="true"></i>' + stringNBSP;
-        var iconeResponavelEmail = '<i class="fa fa-envelope" aria-hidden="true"></i>' + stringNBSP;
-        var iconeResponavelHierarquia = '<i class="fa fa-sitemap" aria-hidden="true"></i>' + stringNBSP;
-        var inputHiddenEmail;
-        var inputHiddenHierarquia;
-        var valorBarraDeProgresso;
-        var divCheckDadosResponsavelInseridos;
-        var divBotaoInserirResponsavel;
-        var divBotaoLimparResponsavel;
-        var inputHiddenNome;
-        var inputHiddenCPF;
-        var inputHiddenDataNascimento;
-        var blocoResponsavel;
-        switch (tipoResponsavel) {
-            case 0:
-                spanMatricula = $('#spanMatricula0');
-                spanNome = $('#spanNome0');
-                spanNomexs = $('#spanNome0xs');
-                spanEmail = $('#spanEmail0');
-                spanEmailxs = $('#spanEmail0xs');
-                spanHierarquia = $('#spanHierarquia0');
-                spanCPF = $('#spanCPF0');
-                inputHiddenEmail = $('#email0');
-                inputHiddenHierarquia = $('#hierarquia0');
-                $('#spanInsiraOsDadosDoResponsavel').html('<?php echo $this->translate(Constantes::$TRADUCAO_DADOS_DO_RESPONSAVEL); ?>');
-                valorBarraDeProgresso = 50;
-                divCheckDadosResponsavelInseridos = $('#divCheckDadosResponsavelInseridos0');
-                divBotaoInserirResponsavel = $('#divBotaoInserirResponsavel0');
-                divBotaoLimparResponsavel = $('#divBotaoLimparResponsavel0');
-                inputHiddenNome = $('#nome0');
-                inputHiddenCPF = $('#cpf0');
-                inputHiddenDataNascimento = $('#dataNascimento0');
-                blocoResponsavel = $('#blocoResponsavel0');
-                break;
-            case 1:
-                spanMatricula = $('#spanMatricula1');
-                spanNome = $('#spanNome1');
-                spanNomexs = $('#spanNome1xs');
-                spanEmail = $('#spanEmail1');
-                spanEmailxs = $('#spanEmail1xs');
-                spanHierarquia = $('#spanHierarquia1');
-                spanCPF = $('#spanCPF1');
-                inputHiddenEmail = $('#email1');
-                inputHiddenHierarquia = $('#hierarquia1');
-                $('#spanInsiraOsDadosDoResponsavel1').html('<?php echo $this->translate(Constantes::$TRADUCAO_DADOS_DO_HOMEM); ?>');
-                valorBarraDeProgresso = 25;
-                divCheckDadosResponsavelInseridos = $('#divCheckDadosResponsavelInseridos1');
-                divBotaoInserirResponsavel = $('#divBotaoInserirResponsavel1');
-                divBotaoLimparResponsavel = $('#divBotaoLimparResponsavel1');
-                inputHiddenNome = $('#nome1');
-                inputHiddenCPF = $('#cpf1');
-                inputHiddenDataNascimento = $('#dataNascimento1');
-                blocoResponsavel = $('#blocoResponsavel1');
-                break;
-            case 2:
-                spanMatricula = $('#spanMatricula2');
-                spanNome = $('#spanNome2');
-                spanNomexs = $('#spanNome2xs');
-                spanEmail = $('#spanEmail2');
-                spanEmailxs = $('#spanEmail2xs');
-                spanHierarquia = $('#spanHierarquia2');
-                spanCPF = $('#spanCPF2');
-                inputHiddenEmail = $('#email2');
-                inputHiddenHierarquia = $('#hierarquia2');
-                $('#spanInsiraOsDadosDoResponsavel2').html('<?php echo $this->translate(Constantes::$TRADUCAO_DADOS_DA_MULHER); ?>');
-                valorBarraDeProgresso = 25;
-                divCheckDadosResponsavelInseridos = $('#divCheckDadosResponsavelInseridos2');
-                divBotaoInserirResponsavel = $('#divBotaoInserirResponsavel2');
-                divBotaoLimparResponsavel = $('#divBotaoLimparResponsavel2');
-                inputHiddenNome = $('#nome2');
-                inputHiddenCPF = $('#cpf2');
-                inputHiddenDataNascimento = $('#dataNascimento2');
-                blocoResponsavel = $('#blocoResponsavel2');
-                break;
-            default:
-                return false;
-        }
+	function insereResponsavelNaTelaDeConfimacao(tipoResponsavel, mudarBarraDeProgresso) {
+		var spanMatricula = '';
+		var spanNome = '';
+		var spanNomexs = '';
+		var spanEmail = '';
+		var spanEmailxs = '';
+		var spanHierarquia = '';
+		var spanCPF = '';
+		var iconeResponavelMatricula = '<i class="fa fa-folder" aria-hidden="true"></i>' + stringNBSP;
+		var iconeResponavelNomeInicial = '<i class="fa fa-user" aria-hidden="true"></i>' + stringNBSP + '<strong>';
+		var iconeResponavelNomeFinal = '</strong>';
+		var iconeResponavelCPF = '<i class="fa fa-info-circle" aria-hidden="true"></i>' + stringNBSP;
+		var iconeResponavelEmail = '<i class="fa fa-envelope" aria-hidden="true"></i>' + stringNBSP;
+		var iconeResponavelHierarquia = '<i class="fa fa-sitemap" aria-hidden="true"></i>' + stringNBSP;
+		var inputHiddenEmail;
+		var inputHiddenHierarquia;
+		var valorBarraDeProgresso;
+		var divCheckDadosResponsavelInseridos;
+		var divBotaoInserirResponsavel;
+		var divBotaoLimparResponsavel;
+		var inputHiddenNome;
+		var inputHiddenCPF;
+		var inputHiddenDataNascimento;
+		var blocoResponsavel;
+		switch (tipoResponsavel) {
+		case 0:
+			spanMatricula = $('#spanMatricula0');
+			spanNome = $('#spanNome0');
+			spanNomexs = $('#spanNome0xs');
+			spanEmail = $('#spanEmail0');
+			spanEmailxs = $('#spanEmail0xs');
+			spanHierarquia = $('#spanHierarquia0');
+			spanCPF = $('#spanCPF0');
+			inputHiddenEmail = $('#email0');
+			inputHiddenHierarquia = $('#hierarquia0');
+			$('#spanInsiraOsDadosDoResponsavel').html('<?php echo $this->translate(Constantes::$TRADUCAO_DADOS_DO_RESPONSAVEL); ?>');
+			valorBarraDeProgresso = 50;
+			divCheckDadosResponsavelInseridos = $('#divCheckDadosResponsavelInseridos0');
+			divBotaoInserirResponsavel = $('#divBotaoInserirResponsavel0');
+			divBotaoLimparResponsavel = $('#divBotaoLimparResponsavel0');
+			inputHiddenNome = $('#nome0');
+			inputHiddenCPF = $('#cpf0');
+			inputHiddenDataNascimento = $('#dataNascimento0');
+			blocoResponsavel = $('#blocoResponsavel0');
+			break;
+		case 1:
+			spanMatricula = $('#spanMatricula1');
+			spanNome = $('#spanNome1');
+			spanNomexs = $('#spanNome1xs');
+			spanEmail = $('#spanEmail1');
+			spanEmailxs = $('#spanEmail1xs');
+			spanHierarquia = $('#spanHierarquia1');
+			spanCPF = $('#spanCPF1');
+			inputHiddenEmail = $('#email1');
+			inputHiddenHierarquia = $('#hierarquia1');
+			$('#spanInsiraOsDadosDoResponsavel1').html('<?php echo $this->translate(Constantes::$TRADUCAO_DADOS_DO_HOMEM); ?>');
+			valorBarraDeProgresso = 25;
+			divCheckDadosResponsavelInseridos = $('#divCheckDadosResponsavelInseridos1');
+			divBotaoInserirResponsavel = $('#divBotaoInserirResponsavel1');
+			divBotaoLimparResponsavel = $('#divBotaoLimparResponsavel1');
+			inputHiddenNome = $('#nome1');
+			inputHiddenCPF = $('#cpf1');
+			inputHiddenDataNascimento = $('#dataNascimento1');
+			blocoResponsavel = $('#blocoResponsavel1');
+			break;
+		case 2:
+			spanMatricula = $('#spanMatricula2');
+			spanNome = $('#spanNome2');
+			spanNomexs = $('#spanNome2xs');
+			spanEmail = $('#spanEmail2');
+			spanEmailxs = $('#spanEmail2xs');
+			spanHierarquia = $('#spanHierarquia2');
+			spanCPF = $('#spanCPF2');
+			inputHiddenEmail = $('#email2');
+			inputHiddenHierarquia = $('#hierarquia2');
+			$('#spanInsiraOsDadosDoResponsavel2').html('<?php echo $this->translate(Constantes::$TRADUCAO_DADOS_DA_MULHER); ?>');
+			valorBarraDeProgresso = 25;
+			divCheckDadosResponsavelInseridos = $('#divCheckDadosResponsavelInseridos2');
+			divBotaoInserirResponsavel = $('#divBotaoInserirResponsavel2');
+			divBotaoLimparResponsavel = $('#divBotaoLimparResponsavel2');
+			inputHiddenNome = $('#nome2');
+			inputHiddenCPF = $('#cpf2');
+			inputHiddenDataNascimento = $('#dataNascimento2');
+			blocoResponsavel = $('#blocoResponsavel2');
+			break;
+		default:
+			return false;
+		}
 
-        var spanResponsavelMatricula = $('#spanResponsavelMatricula');
-        var spanResponsavelNome = $('#spanResponsavelNome');
-        var spanResponsavelDataNascimento = $('#spanResponsavelDataNascimento');
-        var spanResponsavelCPF = $('#spanResponsavelCPF');
-        var spanResponsavelEmail = $('#spanResponsavelEmail');
-        var hierarquiaSelecioanada = $('#hierarquia option:selected');
-        inputHiddenNome.val(spanResponsavelNome.html());
-        inputHiddenCPF.val(spanResponsavelCPF.html());
-        inputHiddenDataNascimento.val(spanResponsavelDataNascimento.html());
-        spanMatricula.html(iconeResponavelMatricula + spanResponsavelMatricula.html());
-        spanCPF.html(iconeResponavelCPF + spanResponsavelCPF.html());
-        spanNomexs.html(iconeResponavelNomeInicial + ajustaStringTelaPequena(spanResponsavelNome.html()) + iconeResponavelNomeFinal);
-        spanEmailxs.html(iconeResponavelEmail + ajustaStringTelaPequena(spanResponsavelEmail.html()));
-        spanNome.html(iconeResponavelNomeInicial + spanResponsavelNome.html() + iconeResponavelNomeFinal);
-        spanEmail.html(iconeResponavelEmail + spanResponsavelEmail.html());
-        spanHierarquia.html(iconeResponavelHierarquia + hierarquiaSelecioanada.text());
-        divCheckDadosResponsavelInseridos.removeClass(hidden);
-        divBotaoInserirResponsavel.addClass(hidden);
-        divBotaoLimparResponsavel.removeClass(hidden);
-        inputHiddenEmail.val(spanResponsavelEmail.html());
-        inputHiddenHierarquia.val(hierarquiaSelecioanada.val());
-        if (mudarBarraDeProgresso === 0) {
-            atualizarBarraDeProgresso(valorBarraDeProgresso);
-        }
-        $('#divIncluirResponsavel').addClass(hidden);
-        blocoResponsavel.removeClass('btn').removeClass('btn-default').prop('onclick', null).off('click');
-    }
+		var spanResponsavelMatricula = $('#spanResponsavelMatricula');
+		var spanResponsavelNome = $('#spanResponsavelNome');
+		var spanResponsavelDataNascimento = $('#spanResponsavelDataNascimento');
+		var spanResponsavelCPF = $('#spanResponsavelCPF');
+		var spanResponsavelEmail = $('#spanResponsavelEmail');
+		var hierarquiaSelecioanada = $('#hierarquia option:selected');
+		inputHiddenNome.val(spanResponsavelNome.html());
+		inputHiddenCPF.val(spanResponsavelCPF.html());
+		inputHiddenDataNascimento.val(spanResponsavelDataNascimento.html());
+		spanMatricula.html(iconeResponavelMatricula + spanResponsavelMatricula.html());
+		spanCPF.html(iconeResponavelCPF + spanResponsavelCPF.html());
+		spanNomexs.html(iconeResponavelNomeInicial + ajustaStringTelaPequena(spanResponsavelNome.html()) + iconeResponavelNomeFinal);
+		spanEmailxs.html(iconeResponavelEmail + ajustaStringTelaPequena(spanResponsavelEmail.html()));
+		spanNome.html(iconeResponavelNomeInicial + spanResponsavelNome.html() + iconeResponavelNomeFinal);
+		spanEmail.html(iconeResponavelEmail + spanResponsavelEmail.html());
+		spanHierarquia.html(iconeResponavelHierarquia + hierarquiaSelecioanada.text());
+		divCheckDadosResponsavelInseridos.removeClass(hidden);
+		divBotaoInserirResponsavel.addClass(hidden);
+		divBotaoLimparResponsavel.removeClass(hidden);
+		inputHiddenEmail.val(spanResponsavelEmail.html());
+		inputHiddenHierarquia.val(hierarquiaSelecioanada.val());
+		if (mudarBarraDeProgresso === 0) {
+			atualizarBarraDeProgresso(valorBarraDeProgresso);
+		}
+		$('#divIncluirResponsavel').addClass(hidden);
+		blocoResponsavel.removeClass('btn').removeClass('btn-default').prop('onclick', null).off('click');
+	}
 
-    function limparDadosPessoaSelecionada(tipoResponsavel) {
-        var spanMatricula = '';
-        var spanNome = '';
-        var spanNomexs = '';
-        var spanEmail = '';
-        var spanEmailxs = '';
-        var spanHierarquia = '';
-        var spanCPF = '';
-        var divBotaoLimpar = '';
-        var divBotaoInserir = '';
-        var divCheckDadosResponsavelInseridos = '';
-        switch (tipoResponsavel) {
-            case 1:
-                spanMatricula = $('#spanMatricula1');
-                spanNome = $('#spanNome1');
-                spanNomexs = $('#spanNome1xs');
-                spanEmail = $('#spanEmail1');
-                spanEmailxs = $('#spanEmail1xs');
-                spanHierarquia = $('#spanHierarquia1');
-                spanCPF = $('#spanCPF1');
-                divBotaoLimpar = $('#divBotaoLimparResponsavel1');
-                divBotaoInserir = $('#divBotaoInserirResponsavel1');
-                divCheckDadosResponsavelInseridos = $('#divCheckDadosResponsavelInseridos1');
-                break;
-            case 2:
-                spanMatricula = $('#spanMatricula2');
-                spanNome = $('#spanNome2');
-                spanNomexs = $('#spanNome2xs');
-                spanEmail = $('#spanEmail2');
-                spanEmailxs = $('#spanEmail2xs');
-                spanHierarquia = $('#spanHierarquia2');
-                spanCPF = $('#spanCPF2');
-                divBotaoLimpar = $('#divBotaoLimparResponsavel2');
-                divBotaoInserir = $('#divBotaoInserirResponsavel2');
-                divCheckDadosResponsavelInseridos = $('#divCheckDadosResponsavelInseridos2');
-                break;
-            default:
-                spanMatricula = $('#spanMatricula0');
-                spanNome = $('#spanNome0');
-                spanNomexs = $('#spanNome0xs');
-                spanEmail = $('#spanEmail0');
-                spanEmailxs = $('#spanEmail0xs');
-                spanHierarquia = $('#spanHierarquia0');
-                spanCPF = $('#spanCPF0');
-                divBotaoLimpar = $('#divBotaoLimparResponsavel0');
-                divBotaoInserir = $('#divBotaoInserirResponsavel0');
-                divCheckDadosResponsavelInseridos = $('#divCheckDadosResponsavelInseridos0');
-                break;
-        }
-        spanMatricula.html('');
-        spanCPF.html('');
-        spanNomexs.html('');
-        spanEmailxs.html('');
-        spanNome.html('');
-        spanEmail.html('');
-        spanHierarquia.html('');
-        $('#spanInsiraOsDadosDoResponsavel').html('<?php echo $this->translate(Constantes::$TRADUCAO_INSIRA_DADOS_DO_RESPONSAVEL); ?>');
-        $('#spanInsiraOsDadosDoResponsavel1').html('<?php echo $this->translate(Constantes::$TRADUCAO_INSIRA_DADOS_DO_HOMEM); ?>');
-        $('#spanInsiraOsDadosDoResponsavel2').html('<?php echo $this->translate(Constantes::$TRADUCAO_INSIRA_DADOS_DA_MULHER); ?>');
-        divBotaoLimpar.addClass(hidden);
-        divBotaoInserir.removeClass(hidden);
-        divCheckDadosResponsavelInseridos.addClass(hidden);
-        limparPassoAPasso(tipoResponsavel);
-        var valorDeReducaoBarraDeProgresso = 0;
-        if (tipoResponsavel === 0) {
-            valorDeReducaoBarraDeProgresso = -50;
-        }
-        if (tipoResponsavel === 1 || tipoResponsavel === 2) {
-            valorDeReducaoBarraDeProgresso = -25;
-        }
-        atualizarBarraDeProgresso(valorDeReducaoBarraDeProgresso);
-    }
+	function limparDadosPessoaSelecionada(tipoResponsavel) {
+		var spanMatricula = '';
+		var spanNome = '';
+		var spanNomexs = '';
+		var spanEmail = '';
+		var spanEmailxs = '';
+		var spanHierarquia = '';
+		var spanCPF = '';
+		var divBotaoLimpar = '';
+		var divBotaoInserir = '';
+		var divCheckDadosResponsavelInseridos = '';
+		switch (tipoResponsavel) {
+		case 1:
+			spanMatricula = $('#spanMatricula1');
+			spanNome = $('#spanNome1');
+			spanNomexs = $('#spanNome1xs');
+			spanEmail = $('#spanEmail1');
+			spanEmailxs = $('#spanEmail1xs');
+			spanHierarquia = $('#spanHierarquia1');
+			spanCPF = $('#spanCPF1');
+			divBotaoLimpar = $('#divBotaoLimparResponsavel1');
+			divBotaoInserir = $('#divBotaoInserirResponsavel1');
+			divCheckDadosResponsavelInseridos = $('#divCheckDadosResponsavelInseridos1');
+			break;
+		case 2:
+			spanMatricula = $('#spanMatricula2');
+			spanNome = $('#spanNome2');
+			spanNomexs = $('#spanNome2xs');
+			spanEmail = $('#spanEmail2');
+			spanEmailxs = $('#spanEmail2xs');
+			spanHierarquia = $('#spanHierarquia2');
+			spanCPF = $('#spanCPF2');
+			divBotaoLimpar = $('#divBotaoLimparResponsavel2');
+			divBotaoInserir = $('#divBotaoInserirResponsavel2');
+			divCheckDadosResponsavelInseridos = $('#divCheckDadosResponsavelInseridos2');
+			break;
+		default:
+			spanMatricula = $('#spanMatricula0');
+			spanNome = $('#spanNome0');
+			spanNomexs = $('#spanNome0xs');
+			spanEmail = $('#spanEmail0');
+			spanEmailxs = $('#spanEmail0xs');
+			spanHierarquia = $('#spanHierarquia0');
+			spanCPF = $('#spanCPF0');
+			divBotaoLimpar = $('#divBotaoLimparResponsavel0');
+			divBotaoInserir = $('#divBotaoInserirResponsavel0');
+			divCheckDadosResponsavelInseridos = $('#divCheckDadosResponsavelInseridos0');
+			break;
+		}
+		spanMatricula.html('');
+		spanCPF.html('');
+		spanNomexs.html('');
+		spanEmailxs.html('');
+		spanNome.html('');
+		spanEmail.html('');
+		spanHierarquia.html('');
+		$('#spanInsiraOsDadosDoResponsavel').html('<?php echo $this->translate(Constantes::$TRADUCAO_INSIRA_DADOS_DO_RESPONSAVEL); ?>');
+		$('#spanInsiraOsDadosDoResponsavel1').html('<?php echo $this->translate(Constantes::$TRADUCAO_INSIRA_DADOS_DO_HOMEM); ?>');
+		$('#spanInsiraOsDadosDoResponsavel2').html('<?php echo $this->translate(Constantes::$TRADUCAO_INSIRA_DADOS_DA_MULHER); ?>');
+		divBotaoLimpar.addClass(hidden);
+		divBotaoInserir.removeClass(hidden);
+		divCheckDadosResponsavelInseridos.addClass(hidden);
+		limparPassoAPasso(tipoResponsavel);
+		var valorDeReducaoBarraDeProgresso = 0;
+		if (tipoResponsavel === 0) {
+			valorDeReducaoBarraDeProgresso = -50;
+		}
+		if (tipoResponsavel === 1 || tipoResponsavel === 2) {
+			valorDeReducaoBarraDeProgresso = -25;
+		}
+		atualizarBarraDeProgresso(valorDeReducaoBarraDeProgresso);
+	}
 
-    function limparPassoAPasso(tipo) {
-        $('#botaoPasso2').removeClass(btnPrimary).addClass(btnDefault);
-        $('#botaoPasso3').removeClass(btnPrimary).addClass(btnDefault);
-        $('#botaoPasso4').removeClass(btnPrimary).addClass(btnDefault);
-        $('#divHierarquia').addClass(hidden);
-        $('#Dia').val(0);
-        $('#Mes').val(0);
-        $('#Ano').val(0);
-        $('#email').val('');
-        $('#repetirEmail').val('');
-        $('#hierarquia').val(0);
-        $("input:radio[name='radioAlunoSelecionado']").each(function (i) {
-            this.checked = false;
-        });
-        $('#divSpanResponsavelEmail').addClass(hidden);
-        $('#divSpanResponsavelCPF').addClass(hidden);
-        $('#divSpanResponsavelDataNascimento').addClass(hidden);
-        $('#divDadosSelecionados').addClass(hidden);
-        $('#botaoHierarquiaSelecionada').addClass(hidden);
-        $('#botaoEmailLiberado').addClass(hidden);
-        $('#divBotaoDeSelecionarAluno').addClass(hidden);
-        if (tipo === 0) {
-            $('#idAlunoSelecionado0').val('');
-            $('#nome0').val('');
-            $('#email0').val('');
-            $('#cpf0').val('');
-            $('#hierarquia0').val('');
-            $('#dataNascimento0').val('');
-        }
-        if (tipo === 1) {
-            $('#idAlunoSelecionado1').val('');
-            $('#nome1').val('');
-            $('#email1').val('');
-            $('#cpf1').val('');
-            $('#hierarquia1').val('');
-            $('#dataNascimento1').val('');
-        }
-        if (tipo === 2) {
-            $('#idAlunoSelecionado2').val('');
-            $('#nome2').val('');
-            $('#email2').val('');
-            $('#cpf2').val('');
-            $('#hierarquia2').val('');
-            $('#dataNascimento2').val('');
-        }
-        $('#nomeAluno').val('');
-    }
+	function limparPassoAPasso(tipo) {
+		$('#botaoPasso2').removeClass(btnPrimary).addClass(btnDefault);
+		$('#botaoPasso3').removeClass(btnPrimary).addClass(btnDefault);
+		$('#botaoPasso4').removeClass(btnPrimary).addClass(btnDefault);
+		$('#divHierarquia').addClass(hidden);
+		$('#Dia').val(0);
+		$('#Mes').val(0);
+		$('#Ano').val(0);
+		$('#email').val('');
+		$('#repetirEmail').val('');
+		$('#hierarquia').val(0);
+		$("input:radio[name='radioAlunoSelecionado']").each(function (i) {
+			this.checked = false;
+		});
+		$('#divSpanResponsavelEmail').addClass(hidden);
+		$('#divSpanResponsavelCPF').addClass(hidden);
+		$('#divSpanResponsavelDataNascimento').addClass(hidden);
+		$('#divDadosSelecionados').addClass(hidden);
+		$('#botaoHierarquiaSelecionada').addClass(hidden);
+		$('#botaoEmailLiberado').addClass(hidden);
+		$('#divBotaoDeSelecionarAluno').addClass(hidden);
+		if (tipo === 0) {
+			$('#idAlunoSelecionado0').val('');
+			$('#nome0').val('');
+			$('#email0').val('');
+			$('#cpf0').val('');
+			$('#hierarquia0').val('');
+			$('#dataNascimento0').val('');
+		}
+		if (tipo === 1) {
+			$('#idAlunoSelecionado1').val('');
+			$('#nome1').val('');
+			$('#email1').val('');
+			$('#cpf1').val('');
+			$('#hierarquia1').val('');
+			$('#dataNascimento1').val('');
+		}
+		if (tipo === 2) {
+			$('#idAlunoSelecionado2').val('');
+			$('#nome2').val('');
+			$('#email2').val('');
+			$('#cpf2').val('');
+			$('#hierarquia2').val('');
+			$('#dataNascimento2').val('');
+		}
+		$('#nomeAluno').val('');
+	}
 
-    function insereNumeracaoNaTelaDeConfimacao(mudarBarraDeProgresso) {
-        var spanDadosComplementares = $('#spanDadosComplementares');
-        var iconeNumeracao = '<i class="fa fa-info-circle" aria-hidden="true"></i>' + stringNBSP;
-        spanDadosComplementares.html(iconeNumeracao + stringNBSP + '<?php echo $this->translate(Constantes::$TRADUCAO_NUMERACAO); ?>' + stringNBSP + $('#numeracao option:selected').text());
-        insereDadosComplementares(mudarBarraDeProgresso);
-    }
+	function insereNumeracaoNaTelaDeConfimacao(mudarBarraDeProgresso) {
+		var spanDadosComplementares = $('#spanDadosComplementares');
+		var iconeNumeracao = '<i class="fa fa-info-circle" aria-hidden="true"></i>' + stringNBSP;
+		spanDadosComplementares.html(iconeNumeracao + stringNBSP + '<?php echo $this->translate(Constantes::$TRADUCAO_NUMERACAO); ?>' + stringNBSP + $('#numeracao option:selected').text());
+		insereDadosComplementares(mudarBarraDeProgresso);
+	}
 
-    function insereNomeNaTelaDeConfimacao(mudarBarraDeProgresso) {
-        var spanDadosComplementares = $('#spanDadosComplementares');
-        spanDadosComplementares.html('Nome: ' + stringNBSP + $('#nomeEntidade').val().toUpperCase());
-        insereDadosComplementares(mudarBarraDeProgresso);
-    }
+	function insereNomeNaTelaDeConfimacao(mudarBarraDeProgresso) {
+		var spanDadosComplementares = $('#spanDadosComplementares');
+		spanDadosComplementares.html('Nome: ' + stringNBSP + $('#nomeEntidade').val().toUpperCase());
+		insereDadosComplementares(mudarBarraDeProgresso);
+	}
 
-    function insereDadosComplementares(adicaoDaBarraDeProgresso) {
-        $('#spanInsiraOsDadosComplementares').html('<?php echo $this->translate(Constantes::$TRADUCAO_DADOS_COMPLEMENTARES); ?>');
-        $('#divCheckDadosComplementaresInseridos').removeClass(hidden);
-        $('#divBotaoInserirDadosComplementares').addClass(hidden);
-        $('#divBotaoAlterarDadosComplementares').removeClass(hidden);
-        $('#divBlocoDadosComplementares').removeClass('btn').removeClass('btn-default').prop('onclick', null).off('click');
-        if (adicaoDaBarraDeProgresso) {
-            atualizarBarraDeProgresso(adicaoDaBarraDeProgresso);
-        }
-    }
+	function insereDadosComplementares(adicaoDaBarraDeProgresso) {
+		$('#spanInsiraOsDadosComplementares').html('<?php echo $this->translate(Constantes::$TRADUCAO_DADOS_COMPLEMENTARES); ?>');
+		$('#divCheckDadosComplementaresInseridos').removeClass(hidden);
+		$('#divBotaoInserirDadosComplementares').addClass(hidden);
+		$('#divBotaoLimparDadosComplementares').removeClass(hidden);
+		$('#divBlocoDadosComplementares').removeClass('btn').removeClass('btn-default').prop('onclick', null).off('click');
+		if (adicaoDaBarraDeProgresso) {
+			atualizarBarraDeProgresso(adicaoDaBarraDeProgresso);
+		}
+	}
 
-    function pegaValorBarraDeProgresso() {
-        return $('#divProgressBar').attr("aria-valuenow");
-    }
+	function pegaValorBarraDeProgresso() {
+		return $('#divProgressBar').attr("aria-valuenow");
+	}
 
-    function atualizarBarraDeProgresso(valorParaSomar) {
-        valorParaSomar = parseInt(valorParaSomar);
-        var valorAtualDaBarraDeProgresso = pegaValorBarraDeProgresso();
-        var valorAtualizadoDaBarraDeProgresso = parseInt(valorAtualDaBarraDeProgresso) + valorParaSomar;
-        var stringPercentual = '%';
-        $('#divProgressBar')
-                .attr("aria-valuenow", valorAtualizadoDaBarraDeProgresso)
-                .html(valorAtualizadoDaBarraDeProgresso + stringPercentual)
-                .css('width', valorAtualizadoDaBarraDeProgresso + stringPercentual);
-        var divBotaoSubmit = $('#divBotaoSubmit');
-        if (valorAtualizadoDaBarraDeProgresso == 100) {
-            divBotaoSubmit.removeClass(hidden);
-        } else {
-            divBotaoSubmit.addClass(hidden);
-        }
-    }
+	function atualizarBarraDeProgresso(valorParaSomar) {
+		valorParaSomar = parseInt(valorParaSomar);
+		var valorAtualDaBarraDeProgresso = pegaValorBarraDeProgresso();
+		var valorAtualizadoDaBarraDeProgresso = parseInt(valorAtualDaBarraDeProgresso) + valorParaSomar;
+		var stringPercentual = '%';
+		$('#divProgressBar')
+			.attr("aria-valuenow", valorAtualizadoDaBarraDeProgresso)
+			.html(valorAtualizadoDaBarraDeProgresso + stringPercentual)
+			.css('width', valorAtualizadoDaBarraDeProgresso + stringPercentual);
+		var divBotaoSubmit = $('#divBotaoSubmit');
+		if (valorAtualizadoDaBarraDeProgresso == 100) {
+			divBotaoSubmit.removeClass(hidden);
+		} else {
+			divBotaoSubmit.addClass(hidden);
+		}
+	}
 
-    function ajustaStringTelaPequena(string) {
-        var stringAjustada = '';
-        stringAjustada = string.substr(0, 20) + '...';
-        return stringAjustada;
-    }
+	function ajustaStringTelaPequena(string) {
+		var stringAjustada = '';
+		stringAjustada = string.substr(0, 20) + '...';
+		return stringAjustada;
+	}
 
-    function botaoVoltarSelecionarAluno() {
-        $('#divIncluirResponsavel').addClass(hidden);
-        $('#divPassoAPasso').addClass(hidden);
-        $('#divConfirmacao').removeClass(hidden);
-    }
+	function botaoVoltarSelecionarAluno() {
+		$('#divIncluirResponsavel').addClass(hidden);
+		$('#divPassoAPasso').addClass(hidden);
+		$('#divConfirmacao').removeClass(hidden);
+	}
 
-    function botaoVoltarDataNascimentoCPF(entidadeTipo) {
-        var inputCPF = $("#cpf");
-        var inputDia = $("#Dia");
-        var inputMes = $("#Mes");
-        var inputAno = $("#Ano");
+	function botaoVoltarDataNascimentoCPF(entidadeTipo) {
+		var inputCPF = $("#cpf");
+		var inputDia = $("#Dia");
+		var inputMes = $("#Mes");
+		var inputAno = $("#Ano");
 
-        if (entidadeTipo === 1
-                || entidadeTipo === 2
-                || entidadeTipo === 3
-                || entidadeTipo === 4
-                || entidadeTipo === 6
-                || entidadeTipo === 7) {
-            $('#divIncluirResponsavel').addClass(hidden);
-            $('#divPassoAPasso').addClass(hidden);
-            $('#divConfirmacao').removeClass(hidden);
-        } else {
-            $('#divSelecionarAluno').removeClass(hidden);
-        }
-        $('#botaoBuscarCPF').removeClass(hidden);
-        $('#divCPFDataNascimento').addClass(hidden);
-        $('#divDadosSelecionados').addClass(hidden);
-        $('#spanMensagens').addClass(hidden);
-        $('#divSpanResponsavelCPF').addClass(hidden);
-        $('#divSpanResponsavelDataNascimento').addClass(hidden);
-        inputDia.val(0);
-        inputMes.val(0);
-        inputAno.val(0);
-        inputCPF.val('');
-        inputCPF.removeAttr('disabled');
-        inputDia.removeAttr('disabled');
-        inputMes.removeAttr('disabled');
-        inputAno.removeAttr('disabled');
-        $('#botaoCPFLiberado').addClass(hidden);
-        $('#botaoPasso2').removeClass(btnPrimary).addClass(btnDefault);
-    }
+		if (entidadeTipo === 1
+			|| entidadeTipo === 2
+			|| entidadeTipo === 3
+			|| entidadeTipo === 4
+			|| entidadeTipo === 6
+			|| entidadeTipo === 7) {
+				$('#divIncluirResponsavel').addClass(hidden);
+				$('#divPassoAPasso').addClass(hidden);
+				$('#divConfirmacao').removeClass(hidden);
+		} else {
+			$('#divSelecionarAluno').removeClass(hidden);
+		}
+		$('#botaoBuscarCPF').removeClass(hidden);
+		$('#divCPFDataNascimento').addClass(hidden);
+		$('#divDadosSelecionados').addClass(hidden);
+		$('#spanMensagens').addClass(hidden);
+		$('#divSpanResponsavelCPF').addClass(hidden);
+		$('#divSpanResponsavelDataNascimento').addClass(hidden);
+		inputDia.val(0);
+		inputMes.val(0);
+		inputAno.val(0);
+		inputCPF.val('');
+		inputCPF.removeAttr('disabled');
+		inputDia.removeAttr('disabled');
+		inputMes.removeAttr('disabled');
+		inputAno.removeAttr('disabled');
+		$('#botaoCPFLiberado').addClass(hidden);
+		$('#botaoPasso2').removeClass(btnPrimary).addClass(btnDefault);
+	}
 
-    function botaoVoltarEmail(entidadeTipo) {
-        var inputEmail = $('#email');
-        var inputRepetirEmail = $('#repetirEmail');
-        var inputCPF = $("#cpf");
-        var inputDia = $("#Dia");
-        var inputMes = $("#Mes");
-        var inputAno = $("#Ano");
+	function botaoVoltarEmail(entidadeTipo) {
+		var inputEmail = $('#email');
+		var inputRepetirEmail = $('#repetirEmail');
+		var inputCPF = $("#cpf");
+		var inputDia = $("#Dia");
+		var inputMes = $("#Mes");
+		var inputAno = $("#Ano");
 
-        $('#divCPFDataNascimento').removeClass(hidden);
-        $('#divEmail').addClass(hidden);
-        $('#botaoCPFLiberado').addClass(hidden);
-        $('#spanMensagens').addClass(hidden);
-        $('#divSpanResponsavelEmail').addClass(hidden);
-        $('#email').val('');
-        $('#repetirEmail').val('');
-        $('#botaoEmailLiberado').addClass(hidden);
-        $('#divSpanResponsavelCPF').addClass(hidden);
-        $('#divSpanResponsavelDataNascimento').addClass(hidden);
-        if (entidadeTipo === 1
-                || entidadeTipo === 2
-                || entidadeTipo === 3
-                || entidadeTipo === 4) {
-            $('#botaoPasso2').removeClass(btnPrimary).addClass(btnDefault);
-            $('#divDadosSelecionados').addClass(hidden);
-        } else {
-            $('#botaoPasso3').removeClass(btnPrimary).addClass(btnDefault);
-        }
-        inputEmail.removeAttr('disabled');
-        inputRepetirEmail.removeAttr('disabled');
-        inputCPF.removeAttr('disabled');
-        inputDia.removeAttr('disabled');
-        inputMes.removeAttr('disabled');
-        inputAno.removeAttr('disabled');
-        $('#botaoBuscarCPF').removeClass(hidden);
-    }
-    function botaoVoltarHierarquia() {
-        var inputEmail = $('#email');
-        var inputRepetirEmail = $('#repetirEmail');
-        $('#divEmail').removeClass(hidden);
-        $('#divHierarquia').addClass(hidden);
-        $('#botaoEmailLiberado').addClass(hidden);
-        $('#spanMensagens').addClass(hidden);
-        $('#hierarquia').val(0);
-        $('#botaoHierarquiaSelecionada').addClass(hidden);
-        $('#divSpanResponsavelEmail').addClass(hidden);
-        $('#botaoBuscarEmail').removeClass(hidden);
-        $('#botaoPasso4').removeClass(btnPrimary).addClass(btnDefault);
-        inputEmail.removeAttr('disabled');
-        inputRepetirEmail.removeAttr('disabled');
+		$('#divCPFDataNascimento').removeClass(hidden);
+		$('#divEmail').addClass(hidden);
+		$('#botaoCPFLiberado').addClass(hidden);
+		$('#spanMensagens').addClass(hidden);
+		$('#divSpanResponsavelEmail').addClass(hidden);
+		$('#email').val('');
+		$('#repetirEmail').val('');
+		$('#botaoEmailLiberado').addClass(hidden);
+		$('#divSpanResponsavelCPF').addClass(hidden);
+		$('#divSpanResponsavelDataNascimento').addClass(hidden);
+		if (entidadeTipo === 1
+			|| entidadeTipo === 2
+			|| entidadeTipo === 3
+			|| entidadeTipo === 4) {
+				$('#botaoPasso2').removeClass(btnPrimary).addClass(btnDefault);
+				$('#divDadosSelecionados').addClass(hidden);
+		} else {
+			$('#botaoPasso3').removeClass(btnPrimary).addClass(btnDefault);
+		}
+		inputEmail.removeAttr('disabled');
+		inputRepetirEmail.removeAttr('disabled');
+		inputCPF.removeAttr('disabled');
+		inputDia.removeAttr('disabled');
+		inputMes.removeAttr('disabled');
+		inputAno.removeAttr('disabled');
+		$('#botaoBuscarCPF').removeClass(hidden);
+	}
+	function botaoVoltarHierarquia() {
+		var inputEmail = $('#email');
+		var inputRepetirEmail = $('#repetirEmail');
+		$('#divEmail').removeClass(hidden);
+		$('#divHierarquia').addClass(hidden);
+		$('#botaoEmailLiberado').addClass(hidden);
+		$('#spanMensagens').addClass(hidden);
+		$('#hierarquia').val(0);
+		$('#botaoHierarquiaSelecionada').addClass(hidden);
+		$('#divSpanResponsavelEmail').addClass(hidden);
+		$('#botaoBuscarEmail').removeClass(hidden);
+		$('#botaoPasso4').removeClass(btnPrimary).addClass(btnDefault);
+		inputEmail.removeAttr('disabled');
+		inputRepetirEmail.removeAttr('disabled');
 
-    }
+	}
 
-    function botaoSubmeterFormulario(form) {
-        mostrarSplash();
-        form.submit();
-    }
+	function botaoSubmeterFormulario(form) {
+		mostrarSplash();
+		form.submit();
+	}
 
-    function botaoInserirDadosComplementares() {
-        $('#divConfirmacao').addClass(hidden);
-        $('#divDadosComplementares').removeClass(hidden);
-        $('#numeracao').val(0);
-        $('#nomeEntidade').val('');
-    }
+	function botaoInserirDadosComplementares() {
+		$('#divConfirmacao').addClass(hidden);
+		$('#divDadosComplementares').removeClass(hidden);
+		$('#numeracao').val(0);
+		$('#nomeEntidade').val('');
+	}
 
-    function botaoAlterarDadosComplementares() {
-        $('#divBotaoInserirSelectDadosComplementares').addClass(hidden);
-        $('#divBotaoAlterarSelectDadosComplementares').removeClass(hidden);
-        $('#divConfirmacao').addClass(hidden);
-        $('#spanMensagensDadosComplementares').addClass(hidden);
-        $('#divDadosComplementares').removeClass(hidden);
-    }
+	function botaoLimparDadosComplementares() {
+		$('#spanDadosComplementares').html('');
+		$('#divBotaoSelecionarEntidadeTipo').removeClass(hidden);
+		$('#divCheckDadosComplementaresInseridos').addClass(hidden);
+		$('#divPreencherDadosComplementares').addClass(hidden);
+		$('#divPreencherNumeracaoEntidade').addClass(hidden);
+		$('#divPreencherNomeEntidade').addClass(hidden);
+		$('#numeracao').val(0);
+		$('#nomeEntidade').val('');
+		$('#divBotaoInserirSelectDadosComplementares').removeClass(hidden);
+		$('#divBotaoInserirDadosComplementares').removeClass(hidden);
+		$('#divSelecionarEntidadeTipo').removeClass(hidden);
+		$('#idEntidadeTipo').val(0);
+		$('#divBotaoLimparDadosComplementares').addClass(hidden);
+		$('#spanMensagensDadosComplementares').addClass(hidden);
+		atualizarBarraDeProgresso(-50);
+	}
 
-    function botaoAbreDadosComplementares(tipoDeDadoComplementar, adicionarABarraDeProgresso) {
-        var tipoNumeracao = 1;
-        var tipoNome = 2;
-        var temErro = false;
-        var spanMensagens = $('#spanMensagensDadosComplementares');
-        var mensagemDeErro = '';
-        if (tipoDeDadoComplementar === tipoNumeracao) {
-            if ($('#numeracao').val() === 0) {
-                temErro = true;
-                mensagemDeErro = 'Selecione a numeração';
-            }
-        }
-        if (tipoDeDadoComplementar === tipoNome) {
-            var nomeEntidade = $('#nomeEntidade').val();
-            if (nomeEntidade.length < 3) {
-                temErro = true;
-                mensagemDeErro = 'O nome tem que sem maior que 3 caracteres';
-            }
-            if (nomeEntidade.length === 0) {
-                temErro = true;
-                mensagemDeErro = 'Preencha o nome';
-            }
-        }
+	function botaoAbreDadosComplementares(tipoDeDadoComplementar, adicionarABarraDeProgresso) {
+		var tipoNumeracao = 1;
+		var tipoNome = 2;
+		var temErro = false;
+		var spanMensagens = $('#spanMensagensDadosComplementares');
+		var mensagemDeErro = '';
+		if (tipoDeDadoComplementar === tipoNumeracao) {
+			if ($('#numeracao').val() === 0) {
+				temErro = true;
+				mensagemDeErro = 'Selecione a numeração';
+			}
+		}
+		if (tipoDeDadoComplementar === tipoNome) {
+			var nomeEntidade = $('#nomeEntidade').val();
+			if (nomeEntidade.length < 3) {
+				temErro = true;
+				mensagemDeErro = 'O nome tem que sem maior que 3 caracteres';
+			}
+			if (nomeEntidade.length === 0) {
+				temErro = true;
+				mensagemDeErro = 'Preencha o nome';
+			}
+		}
 
-        /* Não tem erro */
-        if (!temErro) {
-            var valorProgresso = 0;
-            if (adicionarABarraDeProgresso) {
-                valorProgresso = 50;
-            }
-            if (tipoDeDadoComplementar === tipoNumeracao) {
-                insereNumeracaoNaTelaDeConfimacao(valorProgresso);
-            }
-            if (tipoDeDadoComplementar === tipoNome) {
-                insereNomeNaTelaDeConfimacao(valorProgresso);
-            }
-            $('#divDadosComplementares').addClass(hidden);
-            $('#divConfirmacao').removeClass(hidden);
-        } else {
-            /* Tem erro */
-            spanMensagens
-                    .html(mensagemDeErro)
-                    .removeClass(hidden)
-                    .addClass(alertDanger);
-        }
-    }
+		/* Não tem erro */
+		if (!temErro) {
+			var valorProgresso = 0;
+			if (adicionarABarraDeProgresso) {
+				valorProgresso = 50;
+			}
+			if (tipoDeDadoComplementar === tipoNumeracao) {
+				insereNumeracaoNaTelaDeConfimacao(valorProgresso);
+			}
+			if (tipoDeDadoComplementar === tipoNome) {
+				insereNomeNaTelaDeConfimacao(valorProgresso);
+			}
+			$('#divDadosComplementares').addClass(hidden);
+			$('#divConfirmacao').removeClass(hidden);
+		} else {
+			/* Tem erro */
+			spanMensagens
+				.html(mensagemDeErro)
+				.removeClass(hidden)
+				.addClass(alertDanger);
+		}
+	}
 
-    function botaoVoltarDadosComplementares() {
-        $('#divConfirmacao').removeClass(hidden);
-        $('#divDadosComplementares').addClass(hidden);
-    }
+	function inserirNomeEntidade() {
+		let temErro = false;
+		let spanMensagens = $('#spanMensagensDadosComplementares');
+		let mensagemDeErro = '';
+			let nomeEntidade = $('#nomeEntidade').val();
+			if (nomeEntidade.length < 3) {
+				temErro = true;
+				mensagemDeErro = 'O nome tem que sem maior que 3 caracteres';
+			}
+			if (nomeEntidade.length === 0) {
+				temErro = true;
+				mensagemDeErro = 'Preencha o nome';
+			}
+
+		/* Não tem erro */
+		if (!temErro) {
+			let valorProgresso = 50;
+				insereNomeNaTelaDeConfimacao(valorProgresso);
+			$('#divDadosComplementares').addClass(hidden);
+			$('#divConfirmacao').removeClass(hidden);
+		} else {
+			/* Tem erro */
+			spanMensagens
+				.html(mensagemDeErro)
+				.removeClass(hidden)
+				.addClass(alertDanger);
+		}
+	}
+
+	function inserirNumeroEntidade() {
+		let temErro = false;
+		let spanMensagens = $('#spanMensagensDadosComplementares');
+		let mensagemDeErro = '';
+			if ($('#numeracao').val() === 0) {
+				temErro = true;
+				mensagemDeErro = 'Selecione a numeração';
+			}
+		/* Não tem erro */
+		if (!temErro) {
+			let valorProgresso = 0;
+				insereNumeracaoNaTelaDeConfimacao(valorProgresso);
+			$('#divDadosComplementares').addClass(hidden);
+			$('#divConfirmacao').removeClass(hidden);
+		} else {
+			/* Tem erro */
+			spanMensagens
+				.html(mensagemDeErro)
+				.removeClass(hidden)
+				.addClass(alertDanger);
+		}
+	}
+
+	function botaoVoltarDadosComplementares() {
+		$('#divConfirmacao').removeClass(hidden);
+		$('#divDadosComplementares').addClass(hidden);
+	}
+
+	function mostrarBotaoSelecionarEntidadeTipo() {
+		let div = $('#divBotaoSelecionarEntidadeTipo');
+		if (parseInt($('#idTipoEntidade').val()) === 0) {
+			div.addClass(hidden);
+		} else {
+			div.removeClass(hidden);
+		}
+	}
+	
+	function selecionarEntidadeTipo(){
+		$('#divSelecionarEntidadeTipo').addClass(hidden);
+		$('#divPreencherDadosComplementares').removeClass(hidden);
+		let idEntidadeTipo = parseInt($('#idEntidadeTipo').val());
+		switch(idEntidadeTipo){
+			case 3: $('#divPreencherNomeEntidade').removeClass(hidden); break;
+			case 4: $('#divPreencherNumeracaoEntidade').removeClass(hidden); break;
+			case 5: $('#divPreencherNomeEntidade').removeClass(hidden); break;
+		}
+	}
 </script>

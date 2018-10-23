@@ -60,6 +60,11 @@ class RepositorioORM {
 	private $_fatoFinanceiroTipo;
 	private $_fatoRankingCelula;
 	private $_fatoCursoORM;
+	private $_fatoFinanceiroSituacaoORM;
+	private $_pessoaFatoFinanceiroAcessoORM;
+	private $_fatoFinanceiroAcessoORM;
+	private $_eleitorORM;
+	private $_fatoSetentaORM;
 
     /**
      * Contrutor
@@ -531,16 +536,6 @@ class RepositorioORM {
         }
         return $this->_pessoaCursoAcessoORM;
     }
-    /**
-     * Metodo public para obter a instancia do FatoParceiroDeDeusORM
-     * @return FatoParceiroDeDeusORM
-     */
-    public function getFatoParceiroDeDeusORM() {
-        if (is_null($this->_fatoParceiroDeDeus)) {
-            $this->_fatoParceiroDeDeus = new FatoParceiroDeDeusORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_FATO_PARCEIRO_DE_DEUS);
-        }
-        return $this->_fatoParceiroDeDeus;
-    }
 
     /**
      * Metodo public para obter a instancia do FatoFinanceiro
@@ -564,6 +559,39 @@ class RepositorioORM {
         return $this->_fatoFinanceiroTipo;
     }
 
+     /**
+     * Metodo public para obter a instancia do FatoFinanceiroSituacao
+     * @return CircuitoORM
+     */
+    public function getFatoFinanceiroSituacaoORM() {
+        if (is_null($this->_fatoFinanceiroSituacaoORM)) {
+			$this->_fatoFinanceiroSituacaoORM = new CircuitoORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_FATO_FINANCEIRO_SITUACAO);
+        }
+        return $this->_fatoFinanceiroSituacaoORM;
+    }
+
+	/**
+	 * Metodo public para obter a instancia do PessoaFatoFinanceiroAcessoORM
+     * @return CircuitoORM
+     */
+    public function getPessoaFatoFinanceiroAcessoORM() {
+        if (is_null($this->_pessoaFatoFinanceiroAcessoORM)) {
+			$this->_pessoaFatoFinanceiroAcessoORM = new CircuitoORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_PESSOA_FATO_FINANCEIRO_ACESSO);
+        }
+        return $this->_pessoaFatoFinanceiroAcessoORM;
+    }
+
+	/**
+	 * Metodo public para obter a instancia do FatoFinanceiroAcessoORM
+     * @return CircuitoORM
+     */
+    public function getFatoFinanceiroAcessoORM() {
+        if (is_null($this->_fatoFinanceiroAcessoORM)) {
+			$this->_fatoFinanceiroAcessoORM = new CircuitoORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_FATO_FINANCEIRO_ACESSO);
+        }
+        return $this->_fatoFinanceiroAcessoORM;
+    }
+
     /**
      * Metodo public para obter a instancia do FatoRankingCelula
      * @return FatoRankingCelulaORM
@@ -584,6 +612,24 @@ class RepositorioORM {
 			$this->_fatoCursoORM = new FatoCursoORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_FATO_CURSO);
         }
         return $this->_fatoCursoORM;
+    }
+
+    public function getEleitorORM() {
+        if (is_null($this->_eleitorORM)) {
+			$this->_eleitorORM = new EleitorORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_ELEITOR);
+        }
+        return $this->_eleitorORM;
+    }
+
+    /**
+     * Metodo public para obter a instancia do FatoCurso
+     * @return CircuitoORM
+     */
+    public function getFatoSetentaORM() {
+        if (is_null($this->_fatoSetentaORM)) {
+			$this->_fatoSetentaORM = new FatoSetentaORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_FATO_SETENTA);
+        }
+        return $this->_fatoSetentaORM;
     }
  
     /**

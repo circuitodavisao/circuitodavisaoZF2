@@ -28,11 +28,31 @@ class FatoFinanceiro extends CircuitoEntity {
 	 */
 	private $fatoFinanceiroTipo;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="Evento", inversedBy="fatoFinanceiro")
+     * @ORM\JoinColumn(name="evento_id", referencedColumnName="id")
+     */
+    private $evento;
+
+    /**
+     * @ORM\OneToMany(targetEntity="FatoFinanceiroSituacao", mappedBy="fatoFinanceiro", fetch="EXTRA_LAZY") 
+     */
+    private $fatoFinanceiroSituacao;
+	
 	/** @ORM\Column(type="string") */
 	protected $numero_identificador;
 
 	/** @ORM\Column(type="integer") */
 	protected $pessoa_id;
+
+	/** @ORM\Column(type="integer") */
+	protected $evento_id;
+
+	/** @ORM\Column(type="integer") */
+	protected $situacao_id;
+	
+	/** @ORM\Column(type="string") */
+	protected $extra;
 
 	/** @ORM\Column(type="integer") */
 	protected $fato_financeiro_tipo_id;
@@ -85,12 +105,36 @@ class FatoFinanceiro extends CircuitoEntity {
 		return $this->pessoa;
 	}
 
+	function setEvento($evento){
+		$this->evento = $evento;
+	}
+
+	function getEvento(){
+		return $this->evento;
+	}
+
 	function setPessoa_id($pessoa_id){
 		$this->pessoa_id = $pessoa_id;
 	}
 
 	function getPessoa_id(){
 		return $this->pessoa_id;
+	}
+
+	function setEvento_id($evento_id){
+		$this->evento_id = $evento_id;
+	}
+
+	function getEvento_id(){
+		return $this->evento_id;
+	}
+
+	function setExtra($extra){
+		$this->extra = $extra;
+	}
+
+	function getExtra(){
+		return $this->extra;
 	}
 
 	function setFato_financeiro_tipo_id($fato_financeiro_tipo_id){
@@ -107,5 +151,34 @@ class FatoFinanceiro extends CircuitoEntity {
 
 	function getFatoFinanceiroTipo(){
 		return $this->fatoFinanceiroTipo;
+	}
+
+	function setFatoFinanceiroSituacao($fatoFinanceiroSituacao){
+		$this->fatoFinanceiroSituacao = $fatoFinanceiroSituacao;
+	}
+
+	function getFatoFinanceiroSituacao(){
+		return $this->fatoFinanceiroSituacao;
+	}
+
+	function getFatoFinanceiroSituacaoAtiva(){
+		$entidade = null;
+		if($fatosFinanceiroSituacao = $this->getFatoFinanceiroSituacao()){
+			foreach($fatosFinanceiroSituacao as $fatoFinanceiroSituacao){
+				if($fatoFinanceiroSituacao->verificarSeEstaAtivo()){
+					$entidade = $fatoFinanceiroSituacao;
+					break;
+				}
+			}
+		}
+		return $entidade;
+	}
+
+	function setSituacao_id($situacao_id){
+		$this->situacao_id = $situacao_id;
+	}
+
+	function getSituacao_id(){
+		return $this->situacao_id;
 	}
 }

@@ -2,6 +2,9 @@
 use Application\Controller\Helper\Funcoes;
 use Application\Controller\Helper\Constantes;
 use Application\View\Helper\BotaoSimples;
+use Application\Model\Entity\EntidadeTipo;
+use Application\Model\Entity\Situacao;
+use Application\Model\Entity\FatoFinanceiroAcesso;
 ?>
 <div class="panel-body bg-light text-center">
 	<h1>Parceiro de Deus Extrato</h1>
@@ -19,32 +22,61 @@ if($this->fatos){
 	$html .= '<th>Pessoa</th>';
 	$html .= '<th>Valor</th>';
 	$html .= '<th>Tipo</th>';
-	$html .= '<td></td>';
 	$html .= '</tr>';
 	$html .= '</thead>';
 	$html .= '<tbody>';
-	$somaTotal = 0;
 	foreach($this->fatos as $fatoFinanceiro){
 		$funcaoExcluir = $this->funcaoOnClick('mostrarSplash(); validarExclusao('.$fatoFinanceiro->getId().')');
+		$funcaoAceitar = $this->funcaoOnClick('mostrarSplash(); validarAceitar('.$fatoFinanceiro->getId().')');
 		$botaoExcluir = $this->botaoSimples('<i class="fa fa-times"></i>', $funcaoExcluir, BotaoSimples::botaoMuitoPequenoPerigoso);
+		$botaoAceitar = $this->botaoSimples('<i class="fa fa-check"></i>', $funcaoAceitar, BotaoSimples::botaoMuitoPequenoImportante);
 
 		$html .= '<tr class="text-left">';
 		$html .= '<td>'.Funcoes::mudarPadraoData($fatoFinanceiro->getData(),1).'</td>';
 		$html .= '<td>'.$fatoFinanceiro->getGrupo()->getEntidadeAtiva()->infoEntidade();
-		$html .= '<td>'.$fatoFinanceiro->getPessoa()->getNome().'</td>';
+		$html .= '<td>'.$fatoFinanceiro->getPessoa()->getNomePrimeiro().'</td>';
 		$html .= '<td>'.number_format($fatoFinanceiro->getValor(),2,',','.').'</td>';
 		$html .= '<td>'.$fatoFinanceiro->getFatoFinanceiroTipo()->getNome().'</td>';
-		$html .= '<td>' . $botaoExcluir . '</td>';
-		$html .= '</tr>';
+		if($fatoFinanceiro->getFatoFinanceiroSituacaoAtiva()){
+			$situacao = $fatoFinanceiro->getFatoFinanceiroSituacaoAtiva()->getSituacao();
+			$corSituacao = '';
+			switch($situacao->getId()){
+			case Situacao::PENDENTE_DE_ACEITACAO:
+				$corSituacao = 'warning'; break;
+			case Situacao::ACEITO_AGENDADO:
+				$corSituacao = 'success'; break;
+			case Situacao::RECUSAO:
+				$corSituacao = 'danger'; break;
+			}
+			$html .= '<td><span class="label label-'.$corSituacao.'">'.$situacao->getNome().'</span></td>';
+			if($situacao->getId() === Situacao::PENDENTE_DE_ACEITACAO 
+				&& (
+					(
+						$this->pessoa->getPessoaFatoFinanceiroAcessoAtivo()
+						&& $this->pessoa->getPessoaFatoFinanceiroAcessoAtivo()->getFatoFinanceiroAcesso()->getId() === FatoFinanceiroAcesso::SECRETARIO_PARCEIRO_DE_DEUS
+					)
+					|| $this->entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja
+					|| $this->entidade->getEntidadeTipo()->getId() === EntidadeTipo::equipe
+				)
+			){	
+				$html .= '<td>' . $botaoAceitar . '</td>';
+			}
 
-		$somaTotal += $fatoFinanceiro->getValor();
-	}
-	$html .= '<tr class="dark text-left">';
-	$html .= '<td colspan="5" class="text-right">Total</td>';
-	$html .= '<td>'.number_format($somaTotal,2,',','.').'</td>';
-	$html .= '<td></td>';
+			if($situacao->getId() === Situacao::PENDENTE_DE_ACEITACAO){	
+				$html .= '<td>' . $botaoExcluir . '</td>';
+			}
+
+			if($situacao->getId() === Situacao::ACEITO_AGENDADO 
+				&& (
+					$this->entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja
+					|| $this->entidade->getEntidadeTipo()->getId() === EntidadeTipo::equipe
+				)
+			){	
+				$html .= '<td>' . $botaoExcluir . '</td>';
+			}
+		}
 	$html .= '</tr>';
-
+	}
 	$html .= '</tbody>';
 	$html .= '</table>';
 	$html .= '</div>';
@@ -65,6 +97,16 @@ function validarExclusao(idFatoParceiroDeDeus){
 	let resposta = confirm('Realmente quer excluir esse lançamento?')
 	if(resposta){
 		funcaoCircuito('lancamentoParceiroDeDeusExcluir', idFatoParceiroDeDeus)
+	}else{
+		esconderSplash();
+	}
+}
+function validarAceitar(idFatoParceiroDeDeus){
+	let resposta = confirm('Realmente quer aceitar esse lançamento?')
+	if(resposta){
+		funcaoCircuito('lancamentoParceiroDeDeusAceitar', idFatoParceiroDeDeus)
+	}else{
+		esconderSplash();
 	}
 }
 </script>
