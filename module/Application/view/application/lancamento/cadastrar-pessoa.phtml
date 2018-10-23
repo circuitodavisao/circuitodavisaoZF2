@@ -32,6 +32,7 @@ echo $this->templateFormularioTopo(Constantes::$TRADUCAO_NOVO_CADASTRO_LABEL);
     echo $this->botaoSimples(Constantes::$TRADUCAO_VOLTAR, $funcaoVoltar, 2);
 
     echo $this->formHidden($form->get(Constantes::$INPUT_CSRF));
+    echo '<input type="hidden" name="periodo" value="'.$this->periodo.'"/>';
     ?>
 </div>
 <?php

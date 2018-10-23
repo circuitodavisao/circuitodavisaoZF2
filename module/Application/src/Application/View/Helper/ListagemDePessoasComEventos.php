@@ -120,9 +120,11 @@ class ListagemDePessoasComEventos extends AbstractHelper {
         $html = '';
         $classLinha = '';
         $corBotao = 'btn-dark';
+        $corRetangulo = 'btn-default';
         $corTextoTagsExtrasXs = ' class="hidden-lg" ';
         $corTextoTagsExtrasLg = ' class="hidden-xs hidden-sm hidden-md" ';
         $classLinha2 = '';
+        $border = '';
         if ($pessoa->getTipo() != 'LP' && !$pessoa->getAtivo()) {
             if ($pessoa->getDataInativacao()) {
                 /* Verificando em qual periodo foi inativado */
@@ -135,60 +137,52 @@ class ListagemDePessoasComEventos extends AbstractHelper {
                     $classLinha = 'class="row-warning warning"';
                     $classLinha2 = 'footable-visible footable-first-column';
                     $corBotao = 'btn-warning disabled';
-                    $base = ' text-warning" data-toggle="tooltip" data-placement="center" title data-original-title="Inativo"';
+                    $base = ' data-toggle="tooltip" data-placement="center" title data-original-title="Inativo"';
                     $corTextoTagsExtrasXs = 'class="hidden-lg' . $base;
-                    $corTextoTagsExtrasLg = 'class="hidden-xs hidden-sm hidden-md' . $base;
+                    $corTextoTagsExtrasLg = 'class="hidden-xs hidden-sm hidden-md"' . $base;
+                    $corRetangulo = 'btn-warning';
                 }
             }
         }
-		$html .= '<div id="panel_'.$pessoa->getId().'" name="'.$pessoa->getNome().'" class="panel pessoa" style="margin-bottom: 5px">';
+		$html .= '<div id="panel_'.$pessoa->getId().'" name="'.$pessoa->getNome().'" class="panel pessoa" style="margin-bottom: 5px;">';
 		$html .= '<div class="panel-body p5">';
 
 		$html .= '<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">';
 		$html .= '<div class="row btn-default p5">';
 
 		$html .= '<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6" style="padding-top: 0px">';
-        $html .= '<span class="label label-dark">'.$pessoa->getTipo() . '</span> ';
+    $html .= '<span class="label label-dark">'.$pessoa->getTipo() . '</span> ';
 
-		$validacaoPossoAlterarNome = ($pessoa->getTipo() != 'LP' && $pessoa->getAtivo() && !$pessoa->verificaSeParticipouDoRevisao() && !$pessoa->verificarSeEhAluno());
-
-
-		if ($validacaoPossoAlterarNome && $this->view->possoAlterar) {
-			$html .= '<a id="menudrop_' . $pessoa->getId() . '" class="tdNome text-left dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">';
-		}
 		$html .= '<span id="span_nome_' . $pessoa->getId() . '" ' . $corTextoTagsExtrasXs . '>';
 		$html .= $pessoa->getNomeListaDeLancamento(5);
 		$html .= '</span>';
 		$html .= '<span id="span_nome_lg_' . $pessoa->getId() . '"' . $corTextoTagsExtrasLg . '>';
 		$html .= $pessoa->getNome();
 		$html .= '</span>';
-		if ($validacaoPossoAlterarNome && $this->view->possoAlterar) {
-			$html .= '</a>';
-			$html .= '<ul class="dropdown-menu sobrepor-elementos modal-edicao-nome">';
-			$html .= '<span class="editable-container editable-inline">';
-			$html .= '<div class="ml10 campo-edicao-nome">';
-			$html .= '<form class="form-inline editableform">';
-			$html .= '<div class="control-group form-group">';
-			$html .= '<div>';
-			$html .= '<div class="input-group">';
-			$html .= '<input type="text" class="form-control" id="nome_' . $pessoa->getId() . '" value="' . $pessoa->getNome() . '" />';
-			$html .= '<span class="input-group-btn">';
-			$html .= '<span onclick="alterarNome(' . $pessoa->getId() . ')" class="btn ladda-button btn-primary" data-style="zoom-in"><span class="ladda-label"><i class="fa fa-check"></i></span></span>';
-			$html .= '</span>';
-			$html .= '</div>';
-			$html .= '</div>';
-			$html .= '</div>';
-			$html .= '</div>';
-		}
 		$html .= '</div>';
 		/* Col 6 */
 		$html .= '<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6" style="padding-top: 0px">';
+
+
 		if($pessoa->getTelefone()){
 			$telefone = '<a id="linkWhatsapp_'.$pessoa->getId().'" class="btn btn-success btn-xs" href="https://api.whatsapp.com/send?phone=55'.$pessoa->getTelefone().'"><i class="fa fa-whatsapp"></i></a>';
 		}else{
         	$telefone = 'SEM TELEFONE';
 		}
 		$html .= $telefone;
+
+    if ($pessoa->getTipo() != 'LP' && !$pessoa->getAtivo()) {
+      $html .= '<span class="label label-rounded label-danger ml5">INATIVO</span>';
+    }
+
+    if($pessoa->getAtivo() && $this->view->periodo == 0){
+        $aluno = $pessoa->verificaSeParticipouDoRevisao() || $pessoa->verificarSeEhAluno() == 1 ? 'true':'false';
+        $dadosAlterar = $pessoa->getId().'_'.$pessoa->getTipo().'_'.$aluno;
+        $dadosRemover = $pessoa->getGrupoPessoaAtivo()->getId();
+        $html .= '<span id="" class="btn btn-dark btn-xs ml5" onclick="alterarPessoa(\''.$dadosAlterar.'\');"><i class="fa fa-pencil"></i></span>';
+        $html .= '<span id="" class="btn btn-danger btn-xs ml5" onclick="removerPessoa(\''.$dadosRemover.'\');"><i class="fa fa-times"></i></span>';
+    }
+
 		$html .= '</div>';
 		/* Col 6 */
 
@@ -203,33 +197,15 @@ class ListagemDePessoasComEventos extends AbstractHelper {
 			$telefone = 'SEM TELEFONE';
 		}
 		if($this->view->possoAlterar){
-			$html .= '<div class="btn-group dropdown">';
-			$html .= '<a id="menudrop_telefone_' . $pessoa->getId() . '" class="text-left dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">';
 			$html .= '<span id="span_telefone_' . $pessoa->getId() . '">';
 			$html .= $telefone;
 			$html .= '</span>';
-			$html .= '</a>';
-			$html .= '<ul class="dropdown-menu sobrepor-elementos modal-edicao-nome">';
-			$html .= '<span class="editable-container editable-inline">';
-			$html .= '<div class="ml10 campo-edicao-nome">';
-			$html .= '<form class="form-inline editableform">';
-			$html .= '<div class="control-group form-group">';
-			$html .= '<div>';
-			$html .= '<div class="input-group">';
-			$html .= '<input type="number" class="form-control" id="telefone_' . $pessoa->getId() . '" value="' . $pessoa->getTelefone() . '" />';
-			$html .= '<span class="input-group-btn">';
-			$html .= '<span onclick="alterarTelefone('.$pessoa->getId().')" class="btn ladda-button btn-primary" data-style="zoom-in"><span class="ladda-label"><i class="fa fa-check"></i></span></span>';
-			$html .= '</span>';
-			$html .= '</div>';
-			$html .= '</div>';
-			$html .= '</div>';
-			$html .= '</div>';
-			$html .= '</div>';
 			/* Fim Menu dropup */
 		}else{
 			$html .= $telefone;
 		}
 		$html .= '</div>';
+
 		/* Col 6 */
 		$html .= '</div>';
 		/* Row */
