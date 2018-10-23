@@ -23,7 +23,7 @@ class CadastrarPessoaForm extends Form {
      * @param String $name
      * @param array $grupoPessoaTipos
      */
-    public function __construct($name = null, $grupoPessoaTipos = null) {
+    public function __construct($name = null, $grupoPessoaTipos = null, $pessoa = null, $aluno = null) {
         parent::__construct($name);
 
         /**
@@ -59,6 +59,7 @@ class CadastrarPessoaForm extends Form {
                         ])
         );
 
+
         /**
          * DDD
          * Elemento do tipo text
@@ -93,6 +94,21 @@ class CadastrarPessoaForm extends Form {
             $arrayGPT[0] = Constantes::$TRADUCAO_SELECIONE;
             foreach ($grupoPessoaTipos as $gpt) {
                 $arrayGPT[$gpt->getId()] = $gpt->getNome();
+                error_log($gpt->getNome());
+            }
+            if($pessoa){
+              if($pessoa->getTipo() === 'CO' || $pessoa->getTipo() === 'ME'){
+                $key = array_search('VISITOR', $arrayGPT);
+                if($key!==false){
+                    unset($arrayGPT[$key]);
+                }
+                if($pessoa->getTipo() === 'ME'){
+                  $key = array_search('CONSOLIDATION', $arrayGPT);
+                  if($key!==false){
+                      unset($arrayGPT[$key]);
+                  }
+                }
+              }
             }
             // elemento do tipo Select
             $select = new Select();
@@ -140,6 +156,19 @@ class CadastrarPessoaForm extends Form {
                 (new Csrf())
                         ->setName(Constantes::$INPUT_CSRF)
         );
+        if($pessoa){
+          $this->get(Constantes::$INPUT_NOME)->setValue($pessoa->getNome());
+          $this->get(Constantes::$ID)->setValue($pessoa->getId());
+          $this->get(Constantes::$INPUT_DDD)->setValue(substr($pessoa->getTelefone(), 0, 2));
+          $this->get(Constantes::$INPUT_TELEFONE)->setValue(substr($pessoa->getTelefone(), 2));
+          if($pessoa->getGrupoPessoaAtivo()){
+            $this->get(Constantes::$INPUT_TIPO)->setValue($pessoa->getGrupoPessoaAtivo()->getGrupoPessoaTipo()->getId());
+          }
+          if($aluno === 'true' || $pessoa->getTipo() === 'LP'){
+            $this->get(Constantes::$INPUT_NOME)->setAttribute(Constantes::$FORM_STRING_DISABLED, Constantes::$FORM_STRING_DISABLED);
+            $this->get(Constantes::$INPUT_TIPO)->setAttribute(Constantes::$FORM_STRING_DISABLED, Constantes::$FORM_STRING_DISABLED);
+          }
+        }
     }
 
 }

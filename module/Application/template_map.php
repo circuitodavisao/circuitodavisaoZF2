@@ -83,6 +83,7 @@ return array(
     'application/lancamento/cadastrar-pessoa'             => __DIR__ . '/view/application/lancamento/cadastrar-pessoa.phtml',
     'application/lancamento/parceiro-de-deus'             => __DIR__ . '/view/application/lancamento/parceiro-de-deus.phtml',
     'application/lancamento/arregimentacao'               => __DIR__ . '/view/application/lancamento/arregimentacao.phtml',
+    'application/lancamento/alterar-pessoa'               => __DIR__ . '/view/application/lancamento/alterar-pessoa.phtml',
     'application/relatorio/setenta'                       => __DIR__ . '/view/application/relatorio/setenta.phtml',
     'application/relatorio/exclusao-celulas'              => __DIR__ . '/view/application/relatorio/exclusao-celulas.phtml',
     'application/relatorio/discipulado'                   => __DIR__ . '/view/application/relatorio/discipulado.phtml',
