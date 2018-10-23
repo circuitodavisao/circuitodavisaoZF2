@@ -31,47 +31,47 @@ class Pessoa extends CircuitoEntity implements InputFilterAwareInterface {
     protected $inputFilterPessoaFrequencia;
 
     /**
-     * @ORM\OneToMany(targetEntity="GrupoResponsavel", mappedBy="pessoa", fetch="EXTRA_LAZY") 
+     * @ORM\OneToMany(targetEntity="GrupoResponsavel", mappedBy="pessoa", fetch="EXTRA_LAZY")
      */
     protected $grupoResponsavel;
 
     /**
-     * @ORM\OneToMany(targetEntity="TurmaPessoa", mappedBy="pessoa", fetch="EXTRA_LAZY") 
+     * @ORM\OneToMany(targetEntity="TurmaPessoa", mappedBy="pessoa", fetch="EXTRA_LAZY")
      */
     protected $turmaPessoa;
 
     /**
-     * @ORM\OneToMany(targetEntity="EventoFrequencia", mappedBy="pessoa", fetch="EXTRA_LAZY") 
+     * @ORM\OneToMany(targetEntity="EventoFrequencia", mappedBy="pessoa", fetch="EXTRA_LAZY")
      */
     protected $eventoFrequencia;
 
     /**
-     * @ORM\OneToMany(targetEntity="GrupoPessoa", mappedBy="pessoa", fetch="EXTRA_LAZY") 
+     * @ORM\OneToMany(targetEntity="GrupoPessoa", mappedBy="pessoa", fetch="EXTRA_LAZY")
      */
     protected $grupoPessoa;
 
     /**
-     * @ORM\OneToMany(targetEntity="PessoaHierarquia", mappedBy="pessoa", fetch="EXTRA_LAZY") 
+     * @ORM\OneToMany(targetEntity="PessoaHierarquia", mappedBy="pessoa", fetch="EXTRA_LAZY")
      */
     protected $pessoaHierarquia;
 
     /**
-     * @ORM\OneToMany(targetEntity="Curso", mappedBy="pessoa", fetch="EXTRA_LAZY") 
+     * @ORM\OneToMany(targetEntity="Curso", mappedBy="pessoa", fetch="EXTRA_LAZY")
      */
     protected $curso;
 
      /**
-     * @ORM\OneToMany(targetEntity="Solicitacao", mappedBy="solicitante", fetch="EXTRA_LAZY") 
+     * @ORM\OneToMany(targetEntity="Solicitacao", mappedBy="solicitante", fetch="EXTRA_LAZY")
      */
     protected $solicitante;
 
     /**
-     * @ORM\OneToMany(targetEntity="Solicitacao", mappedBy="receptor", fetch="EXTRA_LAZY") 
+     * @ORM\OneToMany(targetEntity="Solicitacao", mappedBy="receptor", fetch="EXTRA_LAZY")
      */
     protected $receptor;
 
     /**
-     * @ORM\OneToMany(targetEntity="PessoaCursoAcesso", mappedBy="pessoa", fetch="EXTRA_LAZY") 
+     * @ORM\OneToMany(targetEntity="PessoaCursoAcesso", mappedBy="pessoa", fetch="EXTRA_LAZY")
      */
     protected $pessoaCursoAcesso;
 	
@@ -81,17 +81,17 @@ class Pessoa extends CircuitoEntity implements InputFilterAwareInterface {
     protected $pessoaFatoFinanceiroAcesso;
 
 	/**
-	 * @ORM\OneToMany(targetEntity="TurmaAula", mappedBy="pessoa", fetch="EXTRA_LAZY") 
+	 * @ORM\OneToMany(targetEntity="TurmaAula", mappedBy="pessoa", fetch="EXTRA_LAZY")
 	 */
 	protected $turmaAula;
 
     /**
-     * @ORM\OneToMany(targetEntity="FatoParceiroDeDeus", mappedBy="pessoa", fetch="EXTRA_LAZY") 
+     * @ORM\OneToMany(targetEntity="FatoParceiroDeDeus", mappedBy="pessoa", fetch="EXTRA_LAZY")
      */
     protected $fatoParceiroDeDeus;
 
     /**
-     * @ORM\OneToMany(targetEntity="FatoFinanceiro", mappedBy="pessoa", fetch="EXTRA_LAZY") 
+     * @ORM\OneToMany(targetEntity="FatoFinanceiro", mappedBy="pessoa", fetch="EXTRA_LAZY")
      */
     protected $fatoFinanceiro;
 
@@ -737,13 +737,13 @@ class Pessoa extends CircuitoEntity implements InputFilterAwareInterface {
     }
 
     public function getInputFilter() {
-        
+
     }
 
     public function getInputFilterPessoaFrequencia() {
         if (!$this->inputFilterPessoaFrequencia) {
             $inputFilter = new InputFilter();
-            $inputFilter->add(array(
+            $inputFilter->add(array(  
                 'name' => 'nome',
                 'required' => true,
                 'filter' => array(
@@ -765,6 +765,58 @@ class Pessoa extends CircuitoEntity implements InputFilterAwareInterface {
                     ),
                 ),
             ));
+            $inputFilter->add(array(
+                'name' => 'ddd',
+                'required' => true,
+                'filter' => array(
+                    array('name' => 'StripTags'), // removel xml e html string
+                    array('name' => 'StringTrim'), // removel espaco do inicio e do final da string
+                    array('name' => 'Int'), // transforma string para inteiro
+                ),
+                'validators' => array(
+                    array(
+                        'name' => 'NotEmpty',
+                    ),
+                    array(
+                        'name' => 'StringLength',
+                        'options' => array(
+                            'encoding' => 'UTF-8',
+                            'min' => 2,
+                            'max' => 2,
+                        ),
+                    ),
+                ),
+            ));
+            $inputFilter->add(array(
+                'name' => 'telefone',
+                'required' => true,
+                'filter' => array(
+                    array('name' => 'StripTags'), // removel xml e html string
+                    array('name' => 'StringTrim'), // removel espaco do inicio e do final da string
+                    array('name' => 'Int'), // transforma string para inteiro
+                ),
+                'validators' => array(
+                    array(
+                        'name' => 'NotEmpty',
+                    ),
+                    array(
+                        'name' => 'StringLength',
+                        'options' => array(
+                            'encoding' => 'UTF-8',
+                            'min' => 8, # xx xxxx-xxxx
+                            'max' => 9, # xx xxxx-xxxxx
+                        ),
+                    ),
+                ),
+            ));
+            $this->inputFilterPessoaFrequencia = $inputFilter;
+        }
+        return $this->inputFilterPessoaFrequencia;
+    }
+
+    public function getInputFilterPessoaAlunoFrequencia() {
+        if (!$this->inputFilterPessoaFrequencia) {
+            $inputFilter = new InputFilter();
             $inputFilter->add(array(
                 'name' => 'ddd',
                 'required' => true,

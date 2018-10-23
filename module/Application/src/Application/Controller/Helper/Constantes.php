@@ -146,6 +146,7 @@ class Constantes {
 
     /* Forms */
     public static $FORM_STRING_METHOD = 'method';
+    public static $FORM_STRING_SALVAR = 'salvar';
     public static $FORM_STRING_POST = 'POST';
     public static $FORM_STRING_ID = 'id';
     public static $FORM_STRING_CLASS = 'class';
@@ -377,6 +378,7 @@ class Constantes {
     public static $NBSP = '&nbsp;';
     public static $CLASS_PHONE = 'phone';
     public static $FORM_CADASTRAR_PESSOA = 'CadastrarPessoaForm';
+    public static $FORM_EDITAR_PESSOA = 'EditarPessoaForm';
     public static $FORM_CADASTRAR_PESSOA_REVISAO = 'CadastrarPessoaRevisaoForm';
     public static $FORM_ATIVAR_FICHA = 'AtivarFichaForm';
     public static $FORM_SELECIONAR_LIDER_REVISAO = 'SelecionarLiderRevisaoForm';

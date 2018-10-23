@@ -476,7 +476,11 @@ class LancamentoController extends CircuitoController {
                 $this->getRepositorio()->desfazerTransacao();
                 echo $exc->getTraceAsString();
             }
-        }
+        }  /* Helper Controller */
+
+        $tipos = $this->getRepositorio()->getGrupoPessoaTipoORM()->tipoDePessoaLancamento();
+        /* Formulario */
+        $formCadastrarPessoa = new CadastrarPessoaForm(Constantes::$FORM_CADASTRAR_PESSOA, $tipos);
         return $response;
     }
 
@@ -516,44 +520,87 @@ class LancamentoController extends CircuitoController {
 
                 $pessoa = new Pessoa();
                 $formCadastrarPessoa = new CadastrarPessoaForm(Constantes::$FORM_CADASTRAR_PESSOA);
-                $formCadastrarPessoa->setInputFilter($pessoa->getInputFilterPessoaFrequencia());
+                if($post_data['aluno'] === 'true'){
+                    $formCadastrarPessoa->setInputFilter($pessoa->getInputFilterPessoaAlunoFrequencia());
+                } else {
+                    $formCadastrarPessoa->setInputFilter($pessoa->getInputFilterPessoaFrequencia());
+                }
                 $formCadastrarPessoa->setData($post_data);
 
+
                 /* validação */
+
                 if ($formCadastrarPessoa->isValid()) {
+
                     $validatedData = $formCadastrarPessoa->getData();
 
-                    $pessoa->exchangeArray($formCadastrarPessoa->getData());
+                    if($idPessoa = $validatedData[Constantes::$ID]){
+                      $sessao = new Container(Constantes::$NOME_APLICACAO);
+                      $entidade = CircuitoController::getEntidadeLogada($this->getRepositorio(), $sessao);
+                      $grupo = $entidade->getGrupo();
+                      $possoAlterar = false;
+                      $pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($idPessoa);
+                      $aluno = $pessoa->verificaSeParticipouDoRevisao() || $pessoa->verificarSeEhAluno() == 1 ? 'true':'false';
+
+                      // Validação para os hackers javascript não alterar quem não deve
+                      $grupoPessoas = $grupo->getGrupoPessoasNoPeriodo($post_data[Constantes::$PERIODO]);
+                      foreach ($grupoPessoas as $grupoPessoa) {
+                        if($grupoPessoa->getPessoa()->getId() == $idPessoa){
+                          $possoAlterar = true;
+                          break;
+                        }
+                      }
+                      if(!$possoAlterar){
+                        return  $this->redirect()->toRoute(Constantes::$ROUTE_LOGIN, array(
+                                    Constantes::$ACTION => 'index',
+                        ));
+                      }
+                    }
+
+
+                    if($aluno){
+                      if($aluno === 'false'){
+                          $pessoa->exchangeArray($formCadastrarPessoa->getData());
+                      }
+                    } else {
+                      $pessoa->exchangeArray($formCadastrarPessoa->getData());
+                    }
+
                     $pessoa->setTelefone($validatedData[Constantes::$INPUT_DDD] . $validatedData[Constantes::$INPUT_TELEFONE]);
 
                     /* Helper Controller */
-
+                    $periodo = $post_data[Constantes::$PERIODO];
 
                     /* Grupo selecionado */
                     $grupo = $this->getGrupoSelecionado($this->getRepositorio());
 
                     /* Salvar a pessoa e o grupo pessoa correspondente */
-                    $this->getRepositorio()->getPessoaORM()->persistir($pessoa);
-                    $grupoPessoaTipo = $this->getRepositorio()->getGrupoPessoaTipoORM()->encontrarPorId($post_data[Constantes::$INPUT_TIPO]);
 
-                    $grupoPessoa = new GrupoPessoa();
-                    $grupoPessoa->setPessoa($pessoa);
-                    $grupoPessoa->setGrupo($grupo);
-                    $grupoPessoa->setGrupoPessoaTipo($grupoPessoaTipo);
-                    $nucleoPerfeito = $validatedData[Constantes::$INPUT_NUCLEO_PERFEITO];
-                    if ($nucleoPerfeito != 0) {
-                        $grupoPessoa->setNucleo_perfeito($nucleoPerfeito);
+                    if($validatedData[Constantes::$ID]){
+                        $this->getRepositorio()->getPessoaORM()->persistir($pessoa, $setarDataEHora = false);
+                    } else {
+                        $this->getRepositorio()->getPessoaORM()->persistir($pessoa);
+                        $arrayPeriodo = Funcoes::montaPeriodo($periodo);
+                        $stringComecoDoPeriodo = $arrayPeriodo[3] . '-' . $arrayPeriodo[2] . '-' . $arrayPeriodo[1];                      
+                        $grupoPessoaTipo = $this->getRepositorio()->getGrupoPessoaTipoORM()->encontrarPorId($post_data[Constantes::$INPUT_TIPO]);
+                        $grupoPessoa = new GrupoPessoa();
+                        $grupoPessoa->setPessoa($pessoa);
+                        $grupoPessoa->setGrupo($grupo);
+                        $grupoPessoa->setGrupoPessoaTipo($grupoPessoaTipo);
+                        $grupoPessoa->setDataEHoraDeCriacao($stringComecoDoPeriodo);
+                        $nucleoPerfeito = $validatedData[Constantes::$INPUT_NUCLEO_PERFEITO];
+                        if ($nucleoPerfeito != 0) {
+                            $grupoPessoa->setNucleo_perfeito($nucleoPerfeito);
+                        }
+
+                        $this->getRepositorio()->getGrupoPessoaORM()->persistir($grupoPessoa, $setDataAtual = false);
                     }
-
-                    $this->getRepositorio()->getGrupoPessoaORM()->persistir($grupoPessoa);
 
                     /* Pondo valores na sessao */
                     $sessao = new Container(Constantes::$NOME_APLICACAO);
                     $sessao->mostrarNotificacao = true;
                     $sessao->nomePessoa = $pessoa->getNome();
                     unset($sessao->exclusao);
-
-                    $periodo = $post_data[Constantes::$PERIODO];
 
                     return $this->redirect()->toRoute(Constantes::$ROUTE_LANCAMENTO, array(
                                 Constantes::$ACTION => 'Arregimentacao',
@@ -565,6 +612,37 @@ class LancamentoController extends CircuitoController {
             }
         }
     }
+
+    public function alterarPessoaAction(){
+      $periodo = $this->getEvent()->getRouteMatch()->getParam(Constantes::$ID, 0);
+      $sessao = new Container(Constantes::$NOME_APLICACAO);
+      $dadosConcatenados = $sessao['idSessao'];
+      $dados = explode('_', $dadosConcatenados);
+      unset($sessao->idSessao);
+      $idPessoa = $dados[0];
+      $pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($idPessoa);
+      $pessoa->setTipo($dados[1]);
+      /* Helper Controller */
+
+      $tipos = $this->getRepositorio()->getGrupoPessoaTipoORM()->tipoDePessoaLancamento();
+      /* Formulario */
+      $formCadastrarPessoa = new CadastrarPessoaForm(Constantes::$FORM_CADASTRAR_PESSOA, $tipos, $pessoa, $aluno = $dados[2]);
+      $periodo = $this->getEvent()->getRouteMatch()->getParam(Constantes::$ID, 0);
+
+      $view = new ViewModel(array(
+          Constantes::$FORM_CADASTRAR_PESSOA => $formCadastrarPessoa,
+          Constantes::$PERIODO => $periodo,
+          'dados' => $dados,
+      ));
+
+      /* Javascript especifico */
+      $layoutJS = new ViewModel();
+      $layoutJS->setTemplate(Constantes::$TEMPLATE_JS_CADASTRAR_PESSOA);
+      $view->addChild($layoutJS, Constantes::$STRING_JS_CADASTRAR_PESSOA);
+
+      return $view;
+    }
+
 
     /**
      * Alterar nome de uma pessoa
@@ -627,7 +705,7 @@ class LancamentoController extends CircuitoController {
         return $response;
     }
 
- 
+
 
     /**
      * Remover pessoa da listagem
@@ -648,6 +726,7 @@ class LancamentoController extends CircuitoController {
             $sessao->mostrarNotificacao = true;
             $sessao->nomePessoa = $grupoPessoa->getPessoa()->getNome();
             $sessao->exclusao = true;
+            unset($sessao->idSessao);
 
             return $this->forward()->dispatch(Constantes::$CONTROLLER_LANCAMENTO, array(
                         Constantes::$ACTION => 'Arregimentacao',
@@ -1056,7 +1135,7 @@ class LancamentoController extends CircuitoController {
 
 				$this->getRepositorio()->fecharTransacao();
 				return $this->redirect()->toRoute(Constantes::$ROUTE_LANCAMENTO, array(
-					Constantes::$ACTION => 'ParceiroDeDeusExtrato', 
+					Constantes::$ACTION => 'ParceiroDeDeusExtrato',
 				));
 
 			}catch(Exception $exception){
@@ -1213,9 +1292,7 @@ class LancamentoController extends CircuitoController {
 
 
 			return $this->redirect()->toRoute(Constantes::$ROUTE_LANCAMENTO, array(
-
 				Constantes::$ACTION => 'ParceiroDeDeusExtrato', 
-
 			));
 
 		}catch(Exception $exception){
