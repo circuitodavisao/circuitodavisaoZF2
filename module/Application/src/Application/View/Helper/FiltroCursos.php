@@ -53,7 +53,7 @@ class FiltroCursos extends AbstractHelper {
 		$html .= '</select>';
 		$html .= '</div>';
 
-		if($urlFiltro === 'cursoChamada' || $urlFiltro === 'cursoListagem'){
+		if($urlFiltro === 'cursoChamada' || $urlFiltro === 'cursoListagem' || $urlFiltro === 'cursoSelecionarReposicoes'){
 			$html .= '<div class="form-group">';
 			$html .= '<label for="selecionarSub">' . $this->view->translate('Sub Equipe') . '<img src="img/loader.gif" id="loaderSub" class="hidden" /></label>';
 			$html .= '<select class="form-control" name="idSub" id="selecionarSub" >';
@@ -70,22 +70,24 @@ class FiltroCursos extends AbstractHelper {
 			$html .= '</select>';
 			$html .= '</div>';
 
-			$html .= '<div class="form-group">';
-			$html .= '<label for="selecionaSituacao">' . $this->view->translate('Situa&ccedil;&atilde;o') . '</label>';
-			$html .= '<select class="form-control" name="idSituacao" id="selecionaSituacao" >';
-			$html .= '<option value="0" >ATIVO E ESPECIAL</option>';
-			foreach ($this->view->situacoes as $situacao) {
-				if ($situacao->getId() === Situacao::DESISTENTE ||
-					$situacao->getId() === Situacao::REPROVADO_POR_FALTA) {
-						$selected = '';
-						if($this->view->postado['idSituacao'] == $situacao->getId()){
-							$selected = 'selected';
+			if($urlFiltro === 'cursoChamada' || $urlFiltro === 'cursoListagem'){
+				$html .= '<div class="form-group">';
+				$html .= '<label for="selecionaSituacao">' . $this->view->translate('Situa&ccedil;&atilde;o') . '</label>';
+				$html .= '<select class="form-control" name="idSituacao" id="selecionaSituacao" >';
+				$html .= '<option value="0" >ATIVO E ESPECIAL</option>';
+				foreach ($this->view->situacoes as $situacao) {
+					if ($situacao->getId() === Situacao::DESISTENTE ||
+						$situacao->getId() === Situacao::REPROVADO_POR_FALTA) {
+							$selected = '';
+							if($this->view->postado['idSituacao'] == $situacao->getId()){
+								$selected = 'selected';
+							}
+							$html .= '<option '.$selected.' value="' . $situacao->getId() . '" >' . $situacao->getNome() . '</option>';
 						}
-						$html .= '<option '.$selected.' value="' . $situacao->getId() . '" >' . $situacao->getNome() . '</option>';
-					}
+				}
+				$html .= '</select>';
+				$html .= '</div>';
 			}
-			$html .= '</select>';
-			$html .= '</div>';
 
 			if($urlFiltro === 'cursoChamada'){
 				if($this->view->pessoa->getPessoaCursoAcessoAtivo()){
@@ -148,5 +150,25 @@ class FiltroCursos extends AbstractHelper {
 
 		return $html;
 	}
-
 }
+?>
+<script type="text/javascript">
+
+function selecionarEquipe(){
+	$('#loaderSub').removeClass('hidden')
+	let idEquipe = $('#selecionaEquipe').val()
+	if(idEquipe != 0){
+		$.post(
+			"/cursoBuscarSubs",
+			{ id: idEquipe, },
+			function (data) {
+				$('#loaderSub').addClass('hidden')
+				$('#selecionarSub').html('<option value="0">Todas</option>')
+				data.filhos.map((filho) => $('#selecionarSub').append('<option value="'+filho.id+'">'+filho.informacao+'</option>'))
+			}, 'json');
+	}else{
+		$('#loaderSub').addClass('hidden')
+	}
+}
+
+</script>
