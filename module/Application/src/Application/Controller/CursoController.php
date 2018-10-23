@@ -836,7 +836,6 @@ class CursoController extends CircuitoController {
 		$request = $this->getRequest();
 		$filtrado = false;
 		$postado = array();
-		$subs = null;
 		$filhos = array();
 
 		if($request->isPost()){
@@ -1484,6 +1483,7 @@ class CursoController extends CircuitoController {
 			$post = $request->getPost();
 			$postado['idTurma'] = $post['idTurma'];
 			$postado['idEquipe'] = $post['idEquipe'];
+			$postado['idSub'] = $post['idSub'];
 			$postado['somenteUltimaAula'] = $post['somenteUltimaAula'];
 
 			if($postado['idTurma'] == 0){
@@ -1495,24 +1495,41 @@ class CursoController extends CircuitoController {
 					}
 				}
 			}
+			if($postado['idEquipe'] != 0){
+				$grupoEquipe = $this->getRepositorio()->getGrupoORM()->encontrarPorId($postado['idEquipe']);
+				$grupoPaiFilhoFilhosEquipe = $grupoEquipe->getGrupoPaiFilhoFilhosAtivos(0);
+
+				foreach($grupoPaiFilhoFilhosEquipe as $grupoPaiFilho){
+					$grupoFilho = $grupoPaiFilho->getGrupoPaiFilhoFilho();
+					$dados = array();
+					$dados['id'] = $grupoFilho->getId();
+					$dados['informacao'] = $grupoFilho->getEntidadeAtiva()->infoEntidade() . ' - ' . $grupoFilho->getNomeLideresAtivos();	
+					$filhos[] =  $dados;
+				}
+			}
+
+			$grupoParaVerificar = $postado['idEquipe'];
+			if($postado['idSub'] != 0){
+				$grupoParaVerificar = $postado['idSub'];
+			}
+			$relatorio = CursoController::pegarAlunosComFaltas($grupo->getGrupoIgreja(), $turmasFiltradas, $grupoParaVerificar, $postado['somenteUltimaAula']);
+			$alunosComReposicoes = $relatorio[0];
+			$faltas = $relatorio[1];
 		}else{
 			$turmasFiltradas = $turmas;
 		}
 
 		$grupoPaiFilhoFilhos = $grupo->getGrupoIgreja()->getGrupoPaiFilhoFilhosAtivos(0);
-		$relatorio = CursoController::pegarAlunosComFaltas($grupo->getGrupoIgreja(), $turmasFiltradas, $postado['idEquipe'], $postado['somenteUltimaAula']);
-		$alunosComReposições = $relatorio[0];
-		$faltas = $relatorio[1];
-
 		$view = new ViewModel(array(
 			'turmas' => $turmas,
 			'turmasFiltradas' => $turmasFiltradas,
 			'filtrado' => $filtrado,
 			'postado' => $postado,
 			'filhos' => $grupoPaiFilhoFilhos,
-			'alunosComReposições' => $alunosComReposições,
+			'alunosComReposições' => $alunosComReposicoes,
 			'faltas' => $faltas,
 			'formulario' => $formulario,
+			'subs' => $filhos,
 		));
 
 		return $view;
@@ -1534,7 +1551,9 @@ class CursoController extends CircuitoController {
 						if($idEquipe == 0){
 							$verificarAluno = true;
 						}else{
-							if($turmaPessoa->getPessoa()->getGrupoPessoaAtivo() && $turmaPessoa->getPessoa()->getGrupoPessoaAtivo()->getGrupo()->getGrupoEquipe()->getId() == $idEquipe){
+							if($turmaPessoa->getPessoa()->getGrupoPessoaAtivo() && 
+								($turmaPessoa->getPessoa()->getGrupoPessoaAtivo()->getGrupo()->getGrupoEquipe()->getId() == $idEquipe
+								|| $turmaPessoa->getPessoa()->getGrupoPessoaAtivo()->getGrupo()->getGrupoSubEquipe()->getId() == $idEquipe)){
 								$verificarAluno = true;
 							}
 						}
