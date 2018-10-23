@@ -5,7 +5,7 @@ use Application\Controller\Helper\Funcoes;
 ?>
 <div class="center-block mw600">
 	<div class="panel">
-		<div class="panel-heading text-center">Ranking Célula</div>
+		<div class="panel-heading text-center">Ranking Célula - Atualizado todo dia as 19:00</div>
 		<div class="panel-body pn">
 <?php
 echo '<form action="/relatorioRankingCelula" method="post">';
@@ -36,7 +36,6 @@ if($this->fatos && $this->filtrado){
 		$grupoEvento = $this->repositorio->getGrupoEventoORM()->encontrarPorId($fato->getGrupo_evento_id());
 		$infoEntidade = $grupoEvento->getGrupo()->getEntidadeAtiva()->infoEntidade();
 		$lideres = $grupoEvento->getGrupo()->getNomeLideresAtivos();
-		$evento = $grupoEvento->getEvento();
 		$celulaDia = $this->translate(Funcoes::diaDaSemanaPorDia($grupoEvento->getEvento()->getDia())).' - ' . substr($grupoEvento->getEvento()->getHora(),0,5);
 
 		if($fato->getValor() > 6){

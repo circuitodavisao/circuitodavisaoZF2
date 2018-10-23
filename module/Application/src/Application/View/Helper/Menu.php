@@ -107,6 +107,13 @@ class Menu extends AbstractHelper {
 				$html .= 'Cultos';
 				$html .= '</a>';
 				$html .= '</li>';
+
+				$html .= '<li>';
+				$html .= '<a href="/cadastroRevisoes" onClick="mostrarSplash();">';
+				$html .= '<span class="fa fa-calendar"></span>';
+				$html .= 'Revisão de Vidas';
+				$html .= '</a>';
+				$html .= '</li>';
 			}
 
 			$html .= '<li>';
@@ -143,6 +150,13 @@ class Menu extends AbstractHelper {
 					$html .= '<a href="/cadastroSolicitacoes" onClick="mostrarSplash();">';
 					$html .= '<span class="fa fa-users"></span>';
 					$html .= 'Solicita&ccedil;&otilde;es';
+					$html .= '</a>';
+					$html .= '</li>';
+
+					$html .= '<li>';
+					$html .= '<a href="/lancamentoParceiroDeDeusUsuarios" onClick="mostrarSplash();">';
+					$html .= '<span class="fa fa-user"></span>';
+					$html .= 'Secretário Parceiro de Deus';
 					$html .= '</a>';
 					$html .= '</li>';
 				}
@@ -183,16 +197,13 @@ class Menu extends AbstractHelper {
 				$html .= '</a>';
 				$html .= '</li>';
 			}
-			if ($this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja ||
-				$this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::equipe) {
-					$html .= '<li>';
-					$html .= '<a href="/lancamentoParceiroDeDeusExtrato" onClick="mostrarSplash();">';
-					$html .= '<span class="fa fa-money"></span>';
-					$html .= 'Parceiro de Deus';
-					$html .= '</a>';
-					$html .= '</li>';
-				}
 		}
+		$html .= '<li>';
+		$html .= '<a href="/lancamentoParceiroDeDeusExtrato" onClick="mostrarSplash();">';
+		$html .= '<span class="fa fa-money"></span>';
+		$html .= 'Parceiro de Deus';
+		$html .= '</a>';
+		$html .= '</li>';
 
 		$html .= '</ul>';
 		$html .= '</li>';
@@ -239,7 +250,7 @@ class Menu extends AbstractHelper {
 					break;
 				case 8:
 					$label = 'C&eacute;lulas de Elite';
-					$mostrar = false;
+					$mostrar = true;
 					break;
 				case 9:
 					$label = 'Parceiro de Deus Consolidado';
@@ -309,6 +320,13 @@ class Menu extends AbstractHelper {
 			$html .= '</li>';
 
 			$html .= '<li>';
+			$html .= '<a href="/relatorioAlunosNaSemana" onClick="mostrarSplash();">';
+			$html .= '<span class="fa fa-graduation-cap"></span>';
+			$html .= 'Quantidade de alunos que já tem presença na aula aberta'; 
+			$html .= '</a>';
+			$html .= '</li>';
+
+			$html .= '<li>';
 			$html .= '<a href="/relatorioRankingCelula" onClick="mostrarSplash();">';
 			$html .= '<span class="fa fa-users"></span>';
 			$html .= 'Ranking Célula';
@@ -319,6 +337,13 @@ class Menu extends AbstractHelper {
 			$html .= '<a href="/relatorioCelulasNaoRealizadas" onClick="mostrarSplash();">';
 			$html .= '<span class="fa fa-users"></span>';
 			$html .= 'Células não realizadas no período';
+			$html .= '</a>';
+			$html .= '</li>';
+
+			$html .= '<li>';
+			$html .= '<a href="/relatorioSetenta" onClick="mostrarSplash();">';
+			$html .= '<span class="fa fa-trophy"></span>';
+			$html .= 'Setenta';
 			$html .= '</a>';
 			$html .= '</li>';
 

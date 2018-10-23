@@ -1,0 +1,138 @@
+<?php
+
+use Application\View\Helper\BotaoSimples;
+
+$mensagem[1] = 'Chegou a hora de escolher o futuro da sua família. Conto com o seu voto para continuar esta luta. Vote DELMASSO 10456.';
+$mensagem[2] = 'A hora de escolher o futuro da sua família chegou. Conto com o seu voto para continuar nesta luta. Vote DELMASSO 10456!';
+$mensagem[3] = 'Chegou a hora de escolher o futuro da sua família. Conto com o seu voto para continuar e ficar firme nesta luta. Vote DELMASSO 10456.';
+$mensagem[4] = 'Chegou a hora de escolher o futuro da sua família. Conto com o seu voto para permanecer nesta luta. Vote DELMASSO 10456!';
+$mensagem[5] = 'A hora de escolher o futuro de nossas famílias chegou. Conto com o seu voto para continuar firme nesta luta. Vote DELMASSO 10456!';
+
+$html = '';
+if($eleitores = $this->eleitores){
+	$html .= '<div class="center-block">';
+
+	$html .= '<div class="panel">';
+
+	$html .= '<div class="panel-heading" style="padding: 0px"><div class="panel-title">Eleitores</div></div>';
+	$html .= '<div class="panel-body p10">';
+
+	$html .= '<div class="panel">';
+	$html .= '<div class="panel-body">';
+	$totalDeBlocos = $this->totalDeBlocos;
+	for($indiceBlocos = $totalDeBlocos; $indiceBlocos >= 0; $indiceBlocos--){
+		$funcaoBloco = $this->funcaoOnClick('location.href="/deployEleitor/'.$indiceBlocos.'"');
+		$html .= $this->botaoSimples($indiceBlocos, $funcaoBloco);
+	}
+	$html .= '</div>';
+	$html .= '</div>';
+
+	$html .= '<table class="table table-bordered table-condensed table-hover" >';
+	$html .= '<thead>';
+	$html .= '<tr class="dark">';
+	$html .= '<td class="hidden-xs">Lista</td>';
+	$html .= '<td>Sit.</td>';
+	$html .= '<td>Opçoes</td>';
+	$html .= '<td>Envio</td>';
+	$html .= '</tr>';
+	$html .= '</thead>';
+	$html .= '<tbody>';
+	foreach($eleitores as $eleitor){
+		$numeroRandom = rand(1,5);
+		$mensagemParaUsar = $mensagem[$numeroRandom];
+
+		$botaoEnvioSem9 = '<a target="_blanck" class="botaoEnvio btn btn-success" href="https://api.whatsapp.com/send?phone=55'.$eleitor['telefone'].'&text='.$mensagemParaUsar.'">'.$eleitor['id'].'</a>';
+
+		$funcaoOnclickEnviado = $this->funcaoOnClick('mudarSituacao('.$eleitor['id'].',2)');
+		$funcaoOnclickInvalido = $this->funcaoOnClick('mudarSituacao('.$eleitor['id'].',3)');
+		$botaoEnviado = $this->botaoSimples('<i class="fa fa-check"></i>',' id="botaoEnviado'.$eleitor['id'].'" '.$funcaoOnclickEnviado,BotaoSimples::botaoSucesso, BotaoSimples::posicaoAEsquerda);
+		$botaoError = $this->botaoSimples('<i class="fa fa-ban"></i>',' id="botaoInvalido'.$eleitor['id'].'" '.$funcaoOnclickInvalido,BotaoSimples::botaoPerigoso, BotaoSimples::posicaoAEsquerda);
+		$botoes = $botaoEnviado . ' ' .$botaoError;
+
+		$corLinha = '';
+		switch($eleitor['situacao']){
+		case 1: $label = '<i class="fa fa-clock-o"></i>';$classe = 'warning';  break;
+		case 2: $label = '<i class="fa fa-check"></i>';$classe = 'success';  break;
+		case 3: $label = '<i class="fa fa-ban"></i>';$classe = 'danger';  break;
+		case 4: $label = 'D.';$classe = 'danger';$corLinha = 'danger';  break;
+		}
+		$situacaoAtual = '<span id="situacao'.$eleitor['id'].'" class="label label-'.$classe.'">'.$label.'</span>';
+
+		$label = '';
+		switch($eleitor['lista']){
+		case 1: $label = 'AGENDA DELMASSO'; break;
+		case 2: $label = 'CV'; break;
+		case 3: $label = 'CV'; break;
+		case 4: $label = 'RUA'; break;
+		case 5: $label = 'FIEL'; break;
+		case 6: $label = 'EPLEPSIA'; break;
+		case 7: $label = 'GUARA'; break;
+		case 8: $label = 'TESTE INTERNO'; break;
+		case 9: $label = '2014'; break;
+		case 10: $label = 'AUDIENCIA'; break;
+		case 11: $label = 'PEDOFILIA'; break;
+		case 12: $label = 'TAXISTA'; break;
+		case 13: $label = 'GABINETE'; break;
+		case 14: $label = 'OUTROS'; break;
+		}
+
+		$html .= '<tr class="'.$corLinha.'">';
+		$html .= '<td class="hidden-xs">'.$label.'</td>';
+		$html .= '<td>'.$situacaoAtual.'</td>';
+		if($eleitor['situacao'] != 4){
+			$html .= '<td>'.$botoes.'</td>';
+			$html .= '<td>'.$botaoEnvioSem9.'</td>';
+		}else{
+			$html .= '<td colspan="2"></td>';
+		}
+		$html .= '</tr>';
+	}
+	$html .= '</tbody>';
+
+	$html .= '<tfoot class="footer-menu">';
+	$html .= '<tr>';
+	$html .= '<td colspan="8">';
+	$html .= '<nav class="text-right">';
+	$html .= '<ul class="pagination"></ul>';
+	$html .= '</nav>';
+	$html .= '</td>';
+	$html .= '</tr>';
+	$html .= '</tfoot>';
+	$html .= '</table>';
+	$html .= '</div>';
+
+	$html .= '</div>';
+
+	$html .= '</div>';
+}
+
+echo $html;
+
+?>
+<script type="text/javascript">
+
+function mudarSituacao(idEleitor, tipo){
+	$.post(
+		"/deployEleitorMudarSituacao",
+{
+	idEleitor: idEleitor,
+		tipo: tipo,
+			},
+			function (data) {
+				if (data.response) {
+					let label = '<i class="fa fa-check"></i>'
+						let classeParaAdicionar = 'label-success'
+						let classeParaRemover = 'label-warning label-danger'
+						if(tipo == 3){
+							label = '<i class="fa fa-ban"></i>'
+								classeParaAdicionar = 'label-danger'
+								classeParaRemover = 'label-warning label-success'
+					}
+					$('#situacao'+idEleitor).html(label)
+						$('#situacao'+idEleitor).addClass(classeParaAdicionar)
+						$('#situacao'+idEleitor).removeClass(classeParaRemover)
+				   } 
+			}, 'json');
+}
+
+</script>

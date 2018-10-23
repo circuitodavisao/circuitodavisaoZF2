@@ -1,0 +1,54 @@
+-- Table: fato_setenta
+
+DROP TABLE fato_setenta;
+
+CREATE TABLE fato_setenta
+(
+  id serial NOT NULL, -- Identificação do fato lider
+  grupo_id integer NOT NULL, -- Identificação do grupo 
+  grupo_igreja_id integer NOT NULL, -- Identificação do grupo da igreja
+  grupo_equipe_id integer NOT NULL, -- Identificação do grupo da equipe
+  grupo_evento_id integer NOT NULL, -- Identificação do grupo evento da celula
+  setenta enumsn NOT NULL DEFAULT 'N',
+
+  p1 integer NOT NULL DEFAULT 0,
+  p2 integer NOT NULL DEFAULT 0,
+  p3 integer NOT NULL DEFAULT 0,
+  p4 integer NOT NULL DEFAULT 0,
+  p5 integer NOT NULL DEFAULT 0,
+  p6 integer NOT NULL DEFAULT 0,
+
+  v1 integer NOT NULL DEFAULT 0,
+  v2 integer NOT NULL DEFAULT 0,
+  v3 integer NOT NULL DEFAULT 0,
+  v4 integer NOT NULL DEFAULT 0,
+  v5 integer NOT NULL DEFAULT 0,
+  v6 integer NOT NULL DEFAULT 0,
+
+  pd1 real NOT NULL DEFAULT 0,
+  pd2 real NOT NULL DEFAULT 0,
+  pd3 real NOT NULL DEFAULT 0,
+  pd4 real NOT NULL DEFAULT 0,
+  pd5 real NOT NULL DEFAULT 0,
+  pd6 real NOT NULL DEFAULT 0,
+
+  e1 enumsn NOT NULL DEFAULT 'N',
+  e2 enumsn NOT NULL DEFAULT 'N',
+  e3 enumsn NOT NULL DEFAULT 'N',
+  e4 enumsn NOT NULL DEFAULT 'N',
+  e5 enumsn NOT NULL DEFAULT 'N',
+  e6 enumsn NOT NULL DEFAULT 'N',
+
+  mes integer NOT NULL, -- Mês do ranking
+  ano integer NOT NULL, -- Ano do ranking
+  data_criacao date NOT NULL DEFAULT ('now'::text)::date, -- Data de criação do relatório
+  hora_criacao time without time zone NOT NULL DEFAULT ('now'::text)::time with time zone, -- Hora de criação do relatório
+  data_inativacao date, -- Data de inativação do relatório
+  hora_inativacao time without time zone, -- Hora de inativação do relatório
+  CONSTRAINT pk_fato_setenta PRIMARY KEY (id)
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE fato_setenta
+  OWNER TO postgres;

@@ -74,6 +74,11 @@ class Pessoa extends CircuitoEntity implements InputFilterAwareInterface {
      * @ORM\OneToMany(targetEntity="PessoaCursoAcesso", mappedBy="pessoa", fetch="EXTRA_LAZY")
      */
     protected $pessoaCursoAcesso;
+	
+    /**
+     * @ORM\OneToMany(targetEntity="PessoaFatoFinanceiroAcesso", mappedBy="pessoa", fetch="EXTRA_LAZY") 
+     */
+    protected $pessoaFatoFinanceiroAcesso;
 
 	/**
 	 * @ORM\OneToMany(targetEntity="TurmaAula", mappedBy="pessoa", fetch="EXTRA_LAZY")
@@ -90,6 +95,11 @@ class Pessoa extends CircuitoEntity implements InputFilterAwareInterface {
      */
     protected $fatoFinanceiro;
 
+    /**
+     * @ORM\OneToMany(targetEntity="FatoFinanceiroSituacao", mappedBy="pessoa", fetch="EXTRA_LAZY") 
+     */
+    protected $fatoFinanceiroSituacao;
+
     public function __construct() {
         $this->turmaPessoa = new ArrayCollection();
         $this->grupoResponsavel = new ArrayCollection();
@@ -100,9 +110,11 @@ class Pessoa extends CircuitoEntity implements InputFilterAwareInterface {
         $this->solicitante = new ArrayCollection();
         $this->receptor = new ArrayCollection();
         $this->pessoaCursoAcesso = new ArrayCollection();
+        $this->pessoaFatoFinanceiroAcesso = new ArrayCollection();
         $this->turmaAula = new ArrayCollection();
         $this->fatoParceiroDeDeus = new ArrayCollection();
         $this->fatoFinanceiro = new ArrayCollection();
+        $this->fatoFinanceiroSituacao = new ArrayCollection();
 	    $this->setAtualizar_dados('S');
     }
 
@@ -942,6 +954,10 @@ class Pessoa extends CircuitoEntity implements InputFilterAwareInterface {
         return $this->pessoaCursoAcesso;
     }
 
+    function getPessoaFatoFinanceiroAcesso() {
+        return $this->pessoaFatoFinanceiroAcesso;
+    }
+
     function getPessoaCursoAcessoAtivo() {
         $pessoaCursoAcessoaAtiva = null;
         foreach ($this->getPessoaCursoAcesso() as $pessoaCursoAcesso) {
@@ -957,6 +973,21 @@ class Pessoa extends CircuitoEntity implements InputFilterAwareInterface {
         $this->pessoaCursoAcesso = $pessoaCursoAcesso;
     }
 
+    function setPessoaFatoFinanceiroAcesso($pessoaFatoFinanceiroAcesso) {
+        $this->pessoaFatoFinanceiroAcesso = $pessoaFatoFinanceiroAcesso;
+    }
+
+    function getPessoaFatoFinanceiroAcessoAtivo() {
+        $entidade = null;
+        foreach ($this->getPessoaFatoFinanceiroAcesso() as $pessoaFatoFinanceiroAcesso) {
+            if ($pessoaFatoFinanceiroAcesso->verificarSeEstaAtivo()) {
+                $entidade = $pessoaFatoFinanceiroAcesso;
+                break;
+            }
+        }
+        return $entidade;
+    }
+ 
     function getTurmaAula() {
         return $this->turmaAula;
     }
@@ -979,6 +1010,14 @@ class Pessoa extends CircuitoEntity implements InputFilterAwareInterface {
 
 	function setFatoFinanceiro($fatoFinanceiro){
 		$this->fatoFinanceiro = $fatoFinanceiro;
+	}
+
+	function getFatoFinanceiroSituacao(){
+		return $this->fatoFinanceiroSituacao;
+	}
+
+	function setFatoFinanceiroSituacao($fatoFinanceiroSituacao){
+		$this->fatoFinanceiroSituacao = $fatoFinanceiroSituacao;
 	}
 
 }

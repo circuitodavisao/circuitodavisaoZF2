@@ -27,7 +27,10 @@ if ($this->pagina == Constantes::$PAGINA_EVENTO_DISCIPULADO) {
     $tituloDaPagina = $this->translate(Constantes::$TRADUCAO_CADASTRO_DISCIPULADO);
     $pagina = Constantes::$PAGINA_EVENTO_DISCIPULADO_PERSISTIR;
 }
-
+if ($this->pagina == Constantes::$PAGINA_EVENTO_REVISAO) {
+    $tituloDaPagina = $this->translate(Constantes::$TRADUCAO_CADASTRO_REVISAO);
+    $pagina = Constantes::$PAGINA_EVENTO_REVISAO_PERSISTIR;
+}
 $actionUrl = $this->url(Constantes::$ROUTE_CADASTRO, array(Constantes::$PAGINA => $pagina));
 $form->setAttribute(Constantes::$FORM_ACTION, $actionUrl);
 
