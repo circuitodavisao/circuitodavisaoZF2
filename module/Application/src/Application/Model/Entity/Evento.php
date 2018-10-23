@@ -19,6 +19,7 @@ use Zend\InputFilter\InputFilterInterface;
 class Evento extends CircuitoEntity implements InputFilterAwareInterface {
 
     protected $inputFilter;
+	protected $inputFilterRevisao;
     protected $idAntigo;
 
     /**
@@ -36,9 +37,15 @@ class Evento extends CircuitoEntity implements InputFilterAwareInterface {
      */
     protected $eventoFrequencia;
 
+    /**
+     * @ORM\OneToMany(targetEntity="FatoFinanceiro", mappedBy="evento") 
+     */
+    protected $fatoFinanceiro;
+
     public function __construct() {
         $this->grupoEvento = new ArrayCollection();
         $this->eventoFrequencia = new ArrayCollection();
+        $this->fatoFinanceiro = new ArrayCollection();
     }
 
     /**
@@ -184,6 +191,14 @@ class Evento extends CircuitoEntity implements InputFilterAwareInterface {
         $this->eventoCelula = $eventoCelula;
     }
 
+    function getFatoFinanceiro() {
+        return $this->fatoFinanceiro;
+    }
+
+    function setFatoFinanceiro($fatoFinanceiro) {
+        $this->fatoFinanceiro = $fatoFinanceiro;
+    }
+
     /**
      * Retorna as frequnências do evento
      * @return EventoFrequencia
@@ -303,6 +318,14 @@ class Evento extends CircuitoEntity implements InputFilterAwareInterface {
 
         return $inputFilter;
     }
+
+	public function getInputFilterRevisao() {
+		if(!$this->inputFilterRevisao){
+			$inputFilter = new InputFilter();
+			$this->inputFilterRevisao = $inputFilter;
+		}
+		return $this->inputFilterRevisao;
+	}
 
     /**
      * @param InputFilterInterface $inputFilter

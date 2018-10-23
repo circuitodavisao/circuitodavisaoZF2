@@ -20,6 +20,10 @@ use Application\Model\Entity\FatoParceiroDeDeus;
 use Application\Model\Entity\FatoFinanceiro;
 use Application\Model\Entity\FatoFinanceiroTipo;
 use Application\Model\Entity\EntidadeTipo;
+use Application\Model\Entity\Situacao;
+use Application\Model\Entity\FatoFinanceiroSituacao;
+use Application\Model\Entity\PessoaFatoFinanceiroAcesso;
+use Application\Model\Entity\FatoFinanceiroAcesso;
 use Application\Model\ORM\RepositorioORM;
 use Application\View\Helper\ListagemDePessoasComEventos;
 use DateTime;
@@ -1034,21 +1038,36 @@ class LancamentoController extends CircuitoController {
         return $entidade->getGrupo();
     }
 
+
 	public function parceiroDeDeusAction(){
-		self::validarSeSouIgrejaOuEquipe();
 
 		$sessao = new Container(Constantes::$NOME_APLICACAO);
 		$idEntidadeAtual = $sessao->idEntidadeAtual;
 		$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
 		$grupo = $entidade->getGrupo();
-		$grupoPaiFilhoFilhos = $grupo->getGrupoPaiFilhoFilhosAtivosReal();
+		$pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($sessao->idPessoa);
+		if($pessoaFatoFinanceiroAcessoAtivo = $pessoa->getPessoaFatoFinanceiroAcessoAtivo()){
+			if($pessoaFatoFinanceiroAcessoAtivo->getFatoFinanceiroAcesso()->getId() === FatoFinanceiroAcesso::SECRETARIO_PARCEIRO_DE_DEUS){
+				$grupo = $grupo->getGrupoEquipe();
+			}
+		}
 
+		$grupoPaiFilhoFilhos = $grupo->getGrupoPaiFilhoFilhosAtivosReal();
 		$formulario = new ParceiroDeDeusForm();
+		$fatoFinanceiroTipos = $this->getRepositorio()->getFatoFinanceiroTipoORM()->buscarTodosRegistrosEntidade();
+		$fatoFinanceiroTiposParceiroDeDeus = array();
+		foreach($fatoFinanceiroTipos as $fatoFinanceiroTipo){
+			if($fatoFinanceiroTipo->getId() === FatoFinanceiroTipo::parceiroDeDeusIndividual
+				|| $fatoFinanceiroTipo->getId() === FatoFinanceiroTipo::parceiroDeDeusCelula){
+					$fatoFinanceiroTiposParceiroDeDeus[] = $fatoFinanceiroTipo;
+				}
+		}
 
 		$dados = array();
 		$dados['formulario'] = $formulario;
 		$dados['grupo'] = $grupo;
 		$dados['discipulos'] = $grupoPaiFilhoFilhos;
+		$dados['fatoFinanceiroTiposParceiroDeDeus'] = $fatoFinanceiroTiposParceiroDeDeus;
 
 		$view = new ViewModel($dados);
 
@@ -1058,27 +1077,24 @@ class LancamentoController extends CircuitoController {
 		$view->addChild($layoutJS, 'layoutJsLancamentoParceiroDeDeus');
 
 		return $view;
+
 	}
 
 	public function parceiroDeDeusFinalizarAction(){
-		self::validarSeSouIgrejaOuEquipe();
 
 		$request = $this->getRequest();
 		if($request->isPost()){
 			try{
 				$this->getRepositorio()->iniciarTransacao();
-
 				$dadosPost = $request->getPost();
-				$idGrupoEPessoa = $dadosPost['idPessoa'];
+				$idGrupoEPessoa = $dadosPost['idGrupo'];
 				$explodeId = explode('_', $idGrupoEPessoa);
 				$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($explodeId[0]);
 				$numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupo);
-				$individualFiltrado = number_format(str_replace(',','.',$dadosPost['individual']),2,'.','');
-				$celulaFiltrado = number_format(str_replace(',','.',$dadosPost['celula']),2,'.','');
-				$dataLancamento = $dadosPost['Ano'].'-'.$dadosPost['Mes'].'-'.$dadosPost['Dia'];
 				$pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($explodeId[1]);
-
-				if($individualFiltrado > 0){
+				if($dadosPost['idFatoFinanceiroTipo'] == FatoFinanceiroTipo::parceiroDeDeusIndividual){
+					$individualFiltrado = number_format(str_replace(',','.',$dadosPost['individual']),2,'.','');
+					$dataLancamento = $dadosPost['Ano'].'-'.$dadosPost['Mes'].'-'.$dadosPost['Dia'];
 					$fatoFinanceiroTipo = $this->getRepositorio()->getFatoFinanceiroTipoORM()->encontrarPorId(FatoFinanceiroTipo::parceiroDeDeusIndividual);
 					$fatoFinanceiro = new FatoFinanceiro();
 					$fatoFinanceiro->setNumero_identificador($numeroIdentificador);
@@ -1086,44 +1102,62 @@ class LancamentoController extends CircuitoController {
 					$fatoFinanceiro->setFatoFinanceiroTipo($fatoFinanceiroTipo);
 					$fatoFinanceiro->setValor($individualFiltrado);
 					$fatoFinanceiro->setData($dataLancamento);
+					$fatoFinanceiro->setSituacao_id(Situacao::PENDENTE_DE_ACEITACAO);
 					$this->getRepositorio()->getFatoFinanceiroORM()->persistir($fatoFinanceiro);
+
+					$fatoFinanceiroSituacao = new FatoFinanceiroSituacao();
+					$fatoFinanceiroSituacao->setFatoFinanceiro($fatoFinanceiro);
+					$fatoFinanceiroSituacao->setSituacao($this->getRepositorio()->getSituacaoORM()->encontrarPorId(Situacao::PENDENTE_DE_ACEITACAO));
+					$fatoFinanceiroSituacao->setPessoa($pessoa);
+					$this->getRepositorio()->getFatoFinanceiroSituacaoORM()->persistir($fatoFinanceiroSituacao);
 				}
 
-				if($celulaFiltrado > 0){
+				if($dadosPost['idFatoFinanceiroTipo'] == FatoFinanceiroTipo::parceiroDeDeusCelula){
+					$celulaFiltrado = number_format(str_replace(',','.',$dadosPost['celula']),2,'.','');
+					$evento = $this->getRepositorio()->getGrupoEventoORM()->encontrarPorId($dadosPost['idGrupoEvento'])->getEvento();
 					$fatoFinanceiroTipo = $this->getRepositorio()->getFatoFinanceiroTipoORM()->encontrarPorId(FatoFinanceiroTipo::parceiroDeDeusCelula);
 					$fatoFinanceiro = new FatoFinanceiro();
 					$fatoFinanceiro->setNumero_identificador($numeroIdentificador);
 					$fatoFinanceiro->setPessoa($pessoa);
 					$fatoFinanceiro->setFatoFinanceiroTipo($fatoFinanceiroTipo);
 					$fatoFinanceiro->setValor($celulaFiltrado);
-					$fatoFinanceiro->setData($dataLancamento);
+					$fatoFinanceiro->setData($dadosPost['data']);
+					$fatoFinanceiro->setEvento($evento);
+					$fatoFinanceiro->setSituacao_id(Situacao::PENDENTE_DE_ACEITACAO);
 					$this->getRepositorio()->getFatoFinanceiroORM()->persistir($fatoFinanceiro);
+
+					$fatoFinanceiroSituacao = new FatoFinanceiroSituacao();
+					$fatoFinanceiroSituacao->setFatoFinanceiro($fatoFinanceiro);
+					$fatoFinanceiroSituacao->setSituacao($this->getRepositorio()->getSituacaoORM()->encontrarPorId(Situacao::PENDENTE_DE_ACEITACAO));
+					$fatoFinanceiroSituacao->setPessoa($pessoa);
+					$this->getRepositorio()->getFatoFinanceiroSituacaoORM()->persistir($fatoFinanceiroSituacao);
 				}
 
 				$this->getRepositorio()->fecharTransacao();
 				return $this->redirect()->toRoute(Constantes::$ROUTE_LANCAMENTO, array(
 					Constantes::$ACTION => 'ParceiroDeDeusExtrato',
 				));
+
 			}catch(Exception $exception){
 				echo $exception->getTraceAsString();
 				$this->getRepositorio()->desfazerTransacao();
 			}
-		}else{
-
 		}
 	}
 
 	public function parceiroDeDeusExtratoAction(){
-		self::validarSeSouIgrejaOuEquipe();
-
 		$sessao = new Container(Constantes::$NOME_APLICACAO);
-
 		$idEntidadeAtual = $sessao->idEntidadeAtual;
 		$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
-
+		$pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($sessao->idPessoa);
 		$grupo = $entidade->getGrupo();
-		$numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupo);
+		if($pessoaFatoFinanceiroAcessoAtivo = $pessoa->getPessoaFatoFinanceiroAcessoAtivo()){
+			if($pessoaFatoFinanceiroAcessoAtivo->getFatoFinanceiroAcesso()->getId() === FatoFinanceiroAcesso::SECRETARIO_PARCEIRO_DE_DEUS){
+				$grupo = $grupo->getGrupoEquipe();
+			}
+		}
 
+		$numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupo);
 		$fatos = $this->getRepositorio()->getFatoFinanceiroORM()->encontrarFatosPorNumeroIdentificador($numeroIdentificador);
 		$fatosAtivos = array();
 		if($fatos){
@@ -1136,30 +1170,385 @@ class LancamentoController extends CircuitoController {
 				}
 			}
 		}
-		return new ViewModel(array('fatos' => $fatosAtivos));
+
+		$pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($sessao->idPessoa);
+		return new ViewModel(array(
+			'fatos' => $fatosAtivos,
+			'entidade' => $entidade,
+			'pessoa' => $pessoa,
+		));
 	}
 
+
+
 	public function parceiroDeDeusExcluirAction(){
-		self::validarSeSouIgrejaOuEquipe();
 
 		$sessao = new Container(Constantes::$NOME_APLICACAO);
+
 		try{
+
 			$this->getRepositorio()->iniciarTransacao();
 
+
+
 			$idSessao = $sessao->idSessao;
+
 			$fatoFinanceiro = $this->getRepositorio()->getFatoFinanceiroORM()->encontrarPorId($idSessao);
-			$fatoFinanceiro->setDataEHoraDeInativacao();
+
+			$fatoFinanceiro->setSituacao_id(Situacao::RECUSAO);
+
 			$this->getRepositorio()->getFatoFinanceiroORM()->persistir($fatoFinanceiro, $mudarDataDeCriacao = false);
+
+
+
+				$fatoFinanceiroSituacaoAtivo = $fatoFinanceiro->getFatoFinanceiroSituacaoAtiva();
+
+			$fatoFinanceiroSituacaoAtivo->setDataEHoraDeInativacao();
+
+			$this->getRepositorio()->getFatoFinanceiroSituacaoORM()->persistir($fatoFinanceiroSituacaoAtivo);
+
+
+
+				$pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($sessao->idPessoa);
+
+			$fatoFinanceiroSituacao = new FatoFinanceiroSituacao();
+
+			$fatoFinanceiroSituacao->setFatoFinanceiro($fatoFinanceiro);
+
+			$fatoFinanceiroSituacao->setSituacao($this->getRepositorio()->getSituacaoORM()->encontrarPorId(Situacao::RECUSAO));
+
+			$fatoFinanceiroSituacao->setPessoa($pessoa);
+
+			$this->getRepositorio()->getFatoFinanceiroSituacaoORM()->persistir($fatoFinanceiroSituacao);
+
+
+
+				$this->getRepositorio()->fecharTransacao();
+
+
+
+			return $this->redirect()->toRoute(Constantes::$ROUTE_LANCAMENTO, array(
+
+				Constantes::$ACTION => 'ParceiroDeDeusExtrato', 
+
+			));
+
+		}catch(Exception $exception){
+
+			echo $exception.getMessage();
+
+			$this->getRepositorio()->desfazerTransacao();
+
+		}
+
+
+
+	}
+
+
+
+	public function parceiroDeDeusAceitarAction(){
+
+		$sessao = new Container(Constantes::$NOME_APLICACAO);
+
+		try{
+
+			$this->getRepositorio()->iniciarTransacao();
+
+
+
+			$idSessao = $sessao->idSessao;
+
+			$fatoFinanceiro = $this->getRepositorio()->getFatoFinanceiroORM()->encontrarPorId($idSessao);
+
+			$fatoFinanceiro->setSituacao_id(Situacao::ACEITO_AGENDADO);
+
+			$this->getRepositorio()->getFatoFinanceiroORM()->persistir($fatoFinanceiro, $mudarDataDeCriacao = false);
+
+
+
+				$fatoFinanceiroSituacaoAtivo = $fatoFinanceiro->getFatoFinanceiroSituacaoAtiva();
+
+			$fatoFinanceiroSituacaoAtivo->setDataEHoraDeInativacao();
+
+			$this->getRepositorio()->getFatoFinanceiroSituacaoORM()->persistir($fatoFinanceiroSituacaoAtivo);
+
+
+
+				$pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($sessao->idPessoa);
+
+			$fatoFinanceiroSituacao = new FatoFinanceiroSituacao();
+
+			$fatoFinanceiroSituacao->setFatoFinanceiro($fatoFinanceiro);
+
+			$fatoFinanceiroSituacao->setSituacao($this->getRepositorio()->getSituacaoORM()->encontrarPorId(Situacao::ACEITO_AGENDADO));
+
+			$fatoFinanceiroSituacao->setPessoa($pessoa);
+
+			$this->getRepositorio()->getFatoFinanceiroSituacaoORM()->persistir($fatoFinanceiroSituacao);
+
+				$this->getRepositorio()->fecharTransacao();
+
+
+
+			return $this->redirect()->toRoute(Constantes::$ROUTE_LANCAMENTO, array(
+				Constantes::$ACTION => 'ParceiroDeDeusExtrato', 
+			));
+
+		}catch(Exception $exception){
+
+			echo $exception.getMessage();
+
+			$this->getRepositorio()->desfazerTransacao();
+
+		}
+
+
+
+	}
+
+
+
+	public function parceiroDeDeusUsuariosAction(){
+
+		$sessao = new Container(Constantes::$NOME_APLICACAO);
+
+		$idEntidadeAtual = $sessao->idEntidadeAtual;
+
+		$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+
+		$grupo = $entidade->getGrupo();
+
+		$usuarios = $grupo->getGrupoEquipe()->getPessoaFatoFinanceiroAcesso();
+
+		$view = new ViewModel(array(
+
+			'usuarios' => $usuarios
+
+		));
+
+		return $view;
+
+	}
+
+
+
+	public function parceiroDeDeusUsuarioAction() {
+
+		$sessao = new Container(Constantes::$NOME_APLICACAO);
+
+		$idEntidadeAtual = $sessao->idEntidadeAtual;
+
+		$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+
+		$grupo = $entidade->getGrupo();
+
+		$lideres = $this->todosLideresAPartirDoGrupo($grupo, true);
+
+		return new ViewModel(array(
+
+			'lideres' => $lideres,
+
+		));
+
+	}
+
+
+
+	public function parceiroDeDeusUsuarioFinalizarAction() {
+
+		$sessao = new Container(Constantes::$NOME_APLICACAO);
+
+		$request = $this->getRequest();
+
+		if ($request->isPost()) {
+
+			$this->getRepositorio()->iniciarTransacao();
+
+			try {
+
+				$idEntidadeAtual = $sessao->idEntidadeAtual;
+
+				$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+
+				$post_data = $request->getPost();
+
+				$pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($post_data['idPessoa']);
+
+				$grupo = $entidade->getGrupo();
+
+
+
+				$pessoaFatoFinanceiroAcesso = new PessoaFatoFinanceiroAcesso();
+
+				$pessoaFatoFinanceiroAcesso->setPessoa($pessoa);
+
+				$pessoaFatoFinanceiroAcesso->setGrupo($grupo->getGrupoEquipe());
+
+				$pessoaFatoFinanceiroAcesso->setFatoFinanceiroAcesso($this->getRepositorio()->getFatoFinanceiroAcessoORM()->encontrarPorId(FatoFinanceiroAcesso::SECRETARIO_PARCEIRO_DE_DEUS));
+
+				$pessoaFatoFinanceiroAcesso->setDataEHoraDeCriacao();
+
+				$this->getRepositorio()->getPessoaFatoFinanceiroAcessoORM()->persistir($pessoaFatoFinanceiroAcesso);
+
+
+
+				$this->getRepositorio()->fecharTransacao();
+
+				return $this->redirect()->toRoute(Constantes::$ROUTE_LANCAMENTO, array(
+
+					Constantes::$ACTION => 'ParceiroDeDeusUsuarios',
+
+				));
+
+			} catch (Exception $exc) {
+
+				$this->getRepositorio()->desfazerTransacao();
+
+				echo $exc->getTraceAsString();
+
+			}
+
+		}
+
+	}
+
+
+
+	public function parceiroDeDeusUsuarioInativarAction() {
+
+		$sessao = new Container(Constantes::$NOME_APLICACAO);
+
+		$this->getRepositorio()->iniciarTransacao();
+
+		try {
+
+			$pessoaFatoFinanceiroAcesso = $this->getRepositorio()->getPessoaFatoFinanceiroAcessoORM()->encontrarPorId($sessao->idSessao);
+
+			$pessoaFatoFinanceiroAcesso->setDataEHoraDeInativacao();
+
+			$this->getRepositorio()->getPessoaFatoFinanceiroAcessoORM()->persistir($pessoaFatoFinanceiroAcesso, false);
+
+
 
 			$this->getRepositorio()->fecharTransacao();
 
 			return $this->redirect()->toRoute(Constantes::$ROUTE_LANCAMENTO, array(
-				Constantes::$ACTION => 'ParceiroDeDeusExtrato',
+
+				Constantes::$ACTION => 'ParceiroDeDeusUsuarios',
+
 			));
-		}catch(Exception $exception){
-			echo $exception.getMessage();
+
+		} catch (Exception $exc) {
+
 			$this->getRepositorio()->desfazerTransacao();
+
+			echo $exc->getTraceAsString();
+
 		}
 
 	}
+
+	public function todosLideresAPartirDoGrupo(Grupo $grupo, $separadosPorLider = false) {
+
+		$lideres = array();
+
+		$grupoPaiFilhoFilhos = $grupo->getGrupoPaiFilhoFilhosAtivosReal();
+
+		foreach ($grupoPaiFilhoFilhos as $grupoPaiFilhoFilho12) {
+
+			$grupo12 = $grupoPaiFilhoFilho12->getGrupoPaiFilhoFilho();
+
+			if (!$separadosPorLider) {
+
+				$lideres [] = $grupo12;
+
+			} else {
+
+				foreach ($grupo12->getPessoasAtivas() as $pessoas) {
+
+					$lideres [] = $pessoas;
+
+				}
+
+			}
+
+			if ($grupoPaiFilhoFilhos144 = $grupo12->getGrupoPaiFilhoFilhosAtivosReal()) {
+
+				foreach ($grupoPaiFilhoFilhos144 as $grupoPaiFilhoFilho144) {
+
+					$grupo144 = $grupoPaiFilhoFilho144->getGrupoPaiFilhoFilho();
+
+					if (!$separadosPorLider) {
+
+						$lideres [] = $grupo144;
+
+					} else {
+
+						foreach ($grupo144->getPessoasAtivas() as $pessoas) {
+
+							$lideres [] = $pessoas;
+
+						}
+
+					}
+
+					if ($grupoPaiFilhoFilhos1728 = $grupo144->getGrupoPaiFilhoFilhosAtivosReal()) {
+
+						foreach ($grupoPaiFilhoFilhos1728 as $grupoPaiFilhoFilho1728) {
+
+							$grupo1728 = $grupoPaiFilhoFilho1728->getGrupoPaiFilhoFilho();
+
+							if (!$separadosPorLider) {
+
+								$lideres [] = $grupo1728;
+
+							} else {
+
+								foreach ($grupo1728->getPessoasAtivas() as $pessoas) {
+
+									$lideres [] = $pessoas;
+
+								}
+
+							}
+
+							if ($grupoPaiFilhoFilhos20736 = $grupo1728->getGrupoPaiFilhoFilhosAtivosReal()) {
+
+								foreach ($grupoPaiFilhoFilhos20736 as $grupoPaiFilhoFilho20736) {
+
+									$grupo20736 = $grupoPaiFilhoFilho20736->getGrupoPaiFilhoFilho();
+
+									if (!$separadosPorLider) {
+
+										$lideres [] = $grupo20736;
+
+									} else {
+
+										foreach ($grupo20736->getPessoasAtivas() as $pessoas) {
+
+											$lideres [] = $pessoas;
+
+										}
+
+									}
+
+								}
+
+							}
+
+						}
+
+					}
+
+				}
+
+			}
+
+		}
+
+		return $lideres;
+
+	}
+
 }

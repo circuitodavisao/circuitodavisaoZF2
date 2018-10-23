@@ -4,6 +4,7 @@ namespace Application\Model\ORM;
 
 use Application\Controller\Helper\Constantes;
 use Application\Model\Entity\GrupoPessoa;
+use Application\Model\Entity\GrupoPessoaTipo;
 use Doctrine\Common\Collections\Criteria;
 use Exception;
 
@@ -52,42 +53,33 @@ class GrupoPessoaORM extends CircuitoORM {
      * A cada dia verifica quem foi cadastrado a uma semana e atualiza para consolidação
      * @param RepositorioORM $repositorioORM
      */
-    public function alterarVisitanteParaConsolidacao(RepositorioORM $repositorioORM) {
-        $ultimaSemana = strtotime('-7 days');
-        $dataUltimaSemana = date('Y-m-d', $ultimaSemana);
-        $criteria = Criteria::create()
-                ->andWhere(Criteria::expr()->eq(Constantes::$ENTITY_PESSOA_DATA_CRIACAO, $dataUltimaSemana))
-                ->andWhere(Criteria::expr()->eq(Constantes::$ENTITY_PESSOA_DATA_INATIVACAO, null))
-        ;
-        $grupoPessoas = $this->getEntityManager()
-                ->getRepository($this->getEntity())
-                ->matching($criteria);
-        if (!empty($grupoPessoas)) {
-            foreach ($grupoPessoas as $gp) {
-                /* Recuperar o grupo pessoa ativo para saber o tipo */
-                $grupoPessoaTipo = $gp->getGrupoPessoaTipo();
-                /* Visitante */
-                if ($gp->verificarSeEstaAtivo() && $grupoPessoaTipo->getId() == 1) {
-                    /* Inativando o grupo pessoa de visitante */
-                    $gp->setData_inativacao(date('Y-m-d'));
-                    $gp->setHora_inativacao(date('H:s:i'));
-                    $this->persistirGrupoPessoa($gp);
+	public function alterarVisitanteParaConsolidacao(RepositorioORM $repositorioORM) {
+		$grupoPessoas = $this->getEntityManager()
+			->getRepository($this->getEntity())
+			->findBy(array(
+				Constantes::$ENTITY_PESSOA_DATA_INATIVACAO => null, 
+					'tipo_id' => GrupoPessoaTipo::VISITANTE,
+			));
+		try {
+			if ($grupoPessoas) {
+				foreach ($grupoPessoas as $grupoPessoa) {
+					$grupoPessoa->setDataEHoraDeInativacao();
+					$repositorioORM->getGrupoPessoaORM()->persistir($grupoPessoa, $alterarDataDeCriacao = true);
 
-                    /* Criando um novo grupo pessoa de consolidação */
-                    $grupoPessoaTipoConsolidacao = $repositorioORM->getGrupoPessoaTipoORM()->encontrarPorIdGrupoPessoaTipo(2);
-                    $grupoPessoaConsolidacao = new GrupoPessoa();
-                    $grupoPessoaConsolidacao->setPessoa($gp->getPessoa());
-                    $grupoPessoaConsolidacao->setGrupo($gp->getGrupo());
-                    $grupoPessoaConsolidacao->setGrupoPessoaTipo($grupoPessoaTipoConsolidacao);
-                    $grupoPessoaConsolidacao->setData_criacao(date('Y-m-d'));
-                    $grupoPessoaConsolidacao->setHora_criacao(date('H:s:i'));
-                    $grupoPessoaConsolidacao->setNucleo_perfeito($gp->getNucleo_perfeito());
-                    $this->persistirGrupoPessoa($grupoPessoaConsolidacao);
-                }
-            }
-        } else {
-//            echo " nao encontrou visitantes para transformar<br />";
-        }
-    }
+					$grupoPessoaTipoConsolidacao = $repositorioORM->getGrupoPessoaTipoORM()->encontrarPorId(GrupoPessoaTipo::CONSOLIDACAO);
+					$grupoPessoaConsolidacao = new GrupoPessoa();
+					$grupoPessoaConsolidacao->setPessoa($grupoPessoa->getPessoa());
+					$grupoPessoaConsolidacao->setGrupo($grupoPessoa->getGrupo());
+					$grupoPessoaConsolidacao->setGrupoPessoaTipo($grupoPessoaTipoConsolidacao);
+					$grupoPessoaConsolidacao->setNucleo_perfeito($grupoPessoa->getNucleo_perfeito());
+					$repositorioORM->getGrupoPessoaORM()->persistir($grupoPessoaConsolidacao);
+				}
+			} else {
+				echo " nao encontrou visitantes para transformar<br />";
+			}
 
+		} catch (Exception $ex) {
+			echo $ex->getMessage();
+		}
+	}
 }

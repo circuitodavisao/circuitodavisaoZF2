@@ -1,0 +1,89 @@
+<?php
+
+use Application\Controller\Helper\Constantes;
+use Application\Controller\Helper\Funcoes;
+use Application\Controller\RelatorioController;
+$titulo = 'Alunos presente na semana';
+?>
+<style type="text/css">
+	th, p {
+		text-align: center;
+	}
+	table {
+		font-size: 10px;
+	}
+</style>
+<div class="center-block mw400">
+	<div class="panel">
+	<div class="panel-heading text-center"><?php echo $titulo; ?></div>
+			<div class="panel-body pn p10">
+<?php 
+if($this->tipoRelatorio === RelatorioController::relatorioAlunosComFaltas){
+	echo '<div class="alert alert-info alert-xs">Legenda: F. - Faltas</div>';
+}
+if($this->turmas){
+	foreach($this->turmas as $turma){
+		if($turma->getTurmaAulaAtiva()){
+			$modulo = $turma->getTurmaAulaAtiva()->getAula()->getDisciplina()->getNome();
+			$aula = $turma->getTurmaAulaAtiva()->getAula()->getPosicao();
+			$label = $modulo.' - ' . Funcoes::mesPorExtenso($turma->getMes()) . '/' . $turma->getAno() . ' - AULA '.$aula;
+			echo '<div class="panel">';
+			echo '<div class="panel-heading text-center">'.$label.'</div>';
+			echo '<div class="panel-body pn p10">';
+
+			if($relatorioTurma = $this->relatorio[$turma->getId()]){
+				$soma = 0;
+				echo '<table  class="table table-bordered table-condensed footable" data-filter="#fooFilter">';
+				echo '<thead>';
+				echo '<tr class="dark">';
+				echo '<th>Dia</th>';
+				echo '<th>Quantidade</th>';
+				echo '</tr>';
+				echo '</thead>';
+				echo '<tbody>';
+				for($indiceDiaDaSemana = 0; $indiceDiaDaSemana <= 6; $indiceDiaDaSemana++){
+					$diaDaSemana = '';
+					switch($indiceDiaDaSemana){
+					case 0: $diaDaSemana = 'Domingo';break;
+					case 1: $diaDaSemana = 'Segunda-Feira';break;
+					case 2: $diaDaSemana = 'Terça-Feira';break;
+					case 3: $diaDaSemana = 'Quarta-Feira';break;
+					case 4: $diaDaSemana = 'Quinta-Feira';break;
+					case 5: $diaDaSemana = 'Sexta-Feira';break;
+					case 6: $diaDaSemana = 'Sábado';break;
+					}
+					echo '<tr>';
+					echo '<td>'.$diaDaSemana.'</td>';
+					foreach($relatorioTurma as $key => $relatorio){
+						if($key == $indiceDiaDaSemana){
+							$valor = $relatorio;
+							echo '<td class="text-center">'.$valor.'</td>';
+							$soma+= $valor;
+						}
+					}
+					echo '</tr>';
+				}
+				echo '<tr class="info">';
+				echo '<td>Total que já assitiu</td>';
+				echo '<td class="text-center">'.$soma.'</td>';
+				echo '</tr>';
+				echo '<tr class="danger">';
+				echo '<td>Faltam</td>';
+				$diferenca = $relatorioTurma[7] - $soma;
+				echo '<td class="text-center">'.$diferenca.'</td>';
+				echo '</tr>';
+				echo '</tbody>';
+				echo '</table>';
+			}else{
+				echo '<div class="alert alert-warning">Sem alunos para mostrar</div>';
+			}
+			echo '</div>';
+			echo '</div>';
+		}
+	}
+}
+?>
+			</div>
+	</div>
+</div>
+

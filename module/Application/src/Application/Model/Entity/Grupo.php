@@ -10,6 +10,7 @@ namespace Application\Model\Entity;
 
 use Application\Controller\Helper\Funcoes;
 use Application\Model\Helper\FuncoesEntidade;
+use Application\Model\Entity\EntidadeTipo;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -84,6 +85,11 @@ class Grupo extends CircuitoEntity {
      */
     protected $pessoaCursoAcesso;
 
+     /**
+     * @ORM\OneToMany(targetEntity="PessoaFatoFinanceiroAcesso", mappedBy="grupo", fetch="EXTRA_LAZY")
+     */
+    protected $pessoaFatoFinanceiroAcesso;
+ 
     /**
      * @ORM\OneToMany(targetEntity="Solicitacao", mappedBy="grupo", fetch="EXTRA_LAZY")
      */
@@ -100,6 +106,7 @@ class Grupo extends CircuitoEntity {
         $this->grupoPaiFilhoPai = new ArrayCollection();
         $this->turma = new ArrayCollection();
         $this->pessoaCursoAcesso = new ArrayCollection();
+       $this->pessoaFatoFinanceiroAcesso = new ArrayCollection();
 		$this->solicitacao = new ArrayCollection();
 //        $this->fatoDiscipulado = new ArrayCollection();
     }
@@ -296,9 +303,23 @@ class Grupo extends CircuitoEntity {
                     }
                 }
             }
-        }
-        return $grupoPaiFilhoFilhosAtivos;
-    }
+
+			if(count($grupoPaiFilhoFilhosAtivos) > 0 && $grupoPaiFilhoFilhosAtivos[0]->getGrupoPaiFilhoFilho()->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::subEquipe){
+				$totalDeFilhos = count($grupoPaiFilhoFilhosAtivos);
+				for($i = 0; $i < $totalDeFilhos; $i++){
+					for($j = 0; $j < $totalDeFilhos; $j++){
+						$grupo1 = $grupoPaiFilhoFilhosAtivos[$i];		
+						$grupo2 = $grupoPaiFilhoFilhosAtivos[$j];		
+						if($grupo1->getGrupoPaiFilhoFilho()->getEntidadeAtiva()->getNumero() < $grupo2->getGrupoPaiFilhoFilho()->getEntidadeAtiva()->getNumero()){
+							$grupoPaiFilhoFilhosAtivos[$i] = $grupo2;
+							$grupoPaiFilhoFilhosAtivos[$j] = $grupo1;
+						}
+					}
+				}	
+			}
+		}
+		return $grupoPaiFilhoFilhosAtivos;
+	}
 
     /**
      * Metódo que retorna os filhos no periodo do mês.
@@ -346,6 +367,21 @@ class Grupo extends CircuitoEntity {
                     $grupoPaiFilhoFilhosAtivos[] = $gpf;
                 }
             }
+
+			if(count($grupoPaiFilhoFilhosAtivos) > 0 && $grupoPaiFilhoFilhosAtivos[0]->getGrupoPaiFilhoFilho()->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::subEquipe){
+				$totalDeFilhos = count($grupoPaiFilhoFilhosAtivos);
+				for($i = 0; $i < $totalDeFilhos; $i++){
+					for($j = 0; $j < $totalDeFilhos; $j++){
+						$grupo1 = $grupoPaiFilhoFilhosAtivos[$i];		
+						$grupo2 = $grupoPaiFilhoFilhosAtivos[$j];		
+						if($grupo1->getGrupoPaiFilhoFilho()->getEntidadeAtiva()->getNumero() < $grupo2->getGrupoPaiFilhoFilho()->getEntidadeAtiva()->getNumero()){
+							$grupoPaiFilhoFilhosAtivos[$i] = $grupo2;
+							$grupoPaiFilhoFilhosAtivos[$j] = $grupo1;
+						}
+					}
+				}	
+			}
+	
         }
         return $grupoPaiFilhoFilhosAtivos;
     }
@@ -633,7 +669,17 @@ class Grupo extends CircuitoEntity {
             $grupoEventos = $grupoSelecionado->getGrupoEventoAtivosPorTipo(EventoTipo::tipoRevisao);
         }
 
-        return $grupoEventos;
+		/* Verificando dia do revisao para mostrar */
+		$arrayRevisoes = array();
+		foreach($grupoEventos as $grupoEvento){
+				$dataDoRevisao = strtotime($grupoEvento->getEvento()->getData());
+			$dataAtual = strtotime(date('Y-m-d'));	
+
+			if($dataDoRevisao >= $dataAtual){
+				$arrayRevisoes[] = $grupoEvento;
+			}
+		}
+        return $arrayRevisoes;
     }
 
     /**
@@ -1290,6 +1336,14 @@ class Grupo extends CircuitoEntity {
 
     function setTurma($turma) {
         $this->turma = $turma;
+    }
+
+    function getPessoaFatoFinanceiroAcesso() {
+        return $this->pessoaFatoFinanceiroAcesso;
+    }
+
+    function setPessoaFatoFinanceiroAcesso($pessoaFatoFinanceiroAcesso) {
+        $this->pessoaFatoFinanceiroAcesso = $pessoaFatoFinanceiroAcesso;
     }
 
     function getPessoaCursoAcesso() {

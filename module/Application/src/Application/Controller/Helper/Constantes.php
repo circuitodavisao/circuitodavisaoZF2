@@ -182,6 +182,9 @@ class Constantes {
     public static $ENTITY_FATO_PARCEIRO_DE_DEUS = 'Application\Model\Entity\FatoParceiroDeDeus';
     public static $ENTITY_FATO_FINANCEIRO = 'Application\Model\Entity\FatoFinanceiro';
     public static $ENTITY_FATO_FINANCEIRO_TIPO = 'Application\Model\Entity\FatoFinanceiroTipo';
+    public static $ENTITY_FATO_FINANCEIRO_SITUACAO = 'Application\Model\Entity\FatoFinanceiroSituacao';
+    public static $ENTITY_PESSOA_FATO_FINANCEIRO_ACESSO = 'Application\Model\Entity\PessoaFatoFinanceiroAcesso';
+    public static $ENTITY_FATO_FINANCEIRO_ACESSO = 'Application\Model\Entity\FatoFinanceiroAcesso';
     public static $ENTITY_FATO_RANKING_CELULA = 'Application\Model\Entity\FatoRankingCelula';
     public static $ENTITY_PESSOA_EMAIL = 'email';
     public static $ENTITY_PESSOA_DOCUMENTO = 'documento';
@@ -253,6 +256,8 @@ class Constantes {
     public static $ENTITY_FATO_LIDER = 'Application\Model\Entity\FatoLider';
     public static $ENTITY_FATO_CELULA = 'Application\Model\Entity\FatoCelula';
     public static $ENTITY_FATO_CURSO = 'Application\Model\Entity\FatoCurso';
+    public static $ENTITY_FATO_SETENTA = 'Application\Model\Entity\FatoSetenta';
+    public static $ENTITY_ELEITOR = 'Application\Model\Entity\Eleitor';
     public static $ENTITY_DIMENSAO_TIPO = 'Application\Model\Entity\DimensaoTipo';
     public static $ENTITY_DIMENSAO = 'Application\Model\Entity\Dimensao';
     public static $ENTITY_GRUPO = 'Application\Model\Entity\Grupo';
@@ -475,12 +480,13 @@ class Constantes {
     public static $PAGINA_CELULAS = 'Celulas';
     public static $PAGINA_CULTOS = 'Cultos';
     public static $PAGINA_DISCIPULADOS = 'Discipulados';
-    public static $PAGINA_REVISAO = 'Revisao';
+    public static $PAGINA_REVISOES = 'Revisoes';
     public static $PAGINA_REVISIONISTAS = 'Revisionistas';
     public static $PAGINA_FICHA_REVISIONISTAS = 'FichaRevisionistas';
     public static $PAGINA_ATIVOS_REVISIONISTAS = 'AtivosRevisionistas';
     public static $PAGINA_CELULA = 'Celula';
     public static $PAGINA_EVENTO_CULTO = 'EventoCulto';
+    public static $PAGINA_EVENTO_REVISAO = 'EventoRevisao';
     public static $PAGINA_EVENTO_DISCIPULADO = 'EventoDiscipulado';
     public static $PAGINA_EVENTO_CELULA = 'EventoCelula';
     public static $PAGINA_EVENTO = 'Evento';
@@ -491,6 +497,7 @@ class Constantes {
     public static $PAGINA_GRUPO_EMAIL_ENVIADO = 'GrupoEmailEnviado';
     public static $PAGINA_EVENTO_CELULA_PERSISTIR = 'EventoCelulaPersistir';
     public static $PAGINA_EVENTO_CULTO_PERSISTIR = 'EventoCultoPersistir';
+    public static $PAGINA_EVENTO_REVISAO_PERSISTIR = 'EventoCultoPersistir';
     public static $PAGINA_EVENTO_DISCIPULADO_PERSISTIR = 'EventoDiscipuladoPersistir';
     public static $PAGINA_EVENTO_EXCLUSAO = 'EventoExclusao';
     public static $PAGINA_CELULA_EXCLUSAO_CONFIRMACAO = 'CelulaExclusaoConfirmacao';
@@ -500,7 +507,9 @@ class Constantes {
     public static $PAGINA_BUSCAR_CPF = 'BuscarCPF';
     public static $PAGINA_ENVIAR_SMS = 'EnviarSMS';
     public static $PAGINA_BUSCAR_EMAIL = 'BuscarEmail';
-    public static $PAGINA_CADASTRO_REVISAO = 'CadastrarRevisao';
+    public static $PAGINA_REVISAO = 'Revisao';
+    public static $PAGINA_REVISAO_FINALIZAR = 'RevisaoFinalizar';
+    public static $PAGINA_REVISAO_EXCLUIR = 'RevisaoExcluir';
     public static $PAGINA_SELECIONAR_REVISIONISTA = 'SelecionarRevisionista';
     public static $PAGINA_SELECIONAR_FICHA_REVISIONISTA = 'SelecionarFichasRevisionista';
     public static $PAGINA_LISTA_LIDERES = 'ListaLideres';
@@ -748,6 +757,7 @@ class Constantes {
     public static $FORM_DISABLED = 'disabled';
     public static $FORM_SUBMIT = 'submit';
     public static $FORM_TIPO = 'tipo';
+    public static $FORM_ID_ENTIDADE_TIPO = 'idEntidadeTipo';
 
     /* Formulario de Celulas */
     public static $STRING_DIV_CONFIRMACAO = 'divConfirmacao';
@@ -806,6 +816,7 @@ class Constantes {
     public static $TRADUCAO_NOME_REVISIONISTA = 'Name';
     public static $TRADUCAO_ENTIDADE_REVISIONISTA = 'Entity';
     public static $TRADUCAO_CADASTRO_CELULA = 'Registration Cell';
+    public static $TRADUCAO_CADASTRO_REVISAO = 'Cadastro de Revisão de Vidas';
     public static $TRADUCAO_CADASTRO_CULTO = 'Registration <b class="text-danger">Cult</b>';
     public static $TRADUCAO_CADASTRO_DISCIPULADO = 'Cadastro de <b class="text-danger">Discipulado</b>';
     public static $TRADUCAO_NOVA = 'New';

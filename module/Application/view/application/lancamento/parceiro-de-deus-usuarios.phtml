@@ -1,0 +1,56 @@
+<?php
+
+use Application\Controller\Helper\Constantes;
+use Application\View\Helper\BotaoSimples;
+
+$html = '';
+$html .= $this->templateFormularioTopo('Secretário do Parceiro de Deus', '', 'style="max-width: 100%;"');
+/* Sem pessoas cadastrados */
+
+$html .= '<div class="panel-body bg-light">';
+if (count($this->usuarios)) {
+	$html .= '<div class="table-responsive">';
+    $html .= '<table class="table text-center">';
+    $html .= '<thead>';
+    $html .= '<tr>';
+    $html .= '<th class="text-center">Pessoa</th>';
+    $html .= '<th class="text-center">Ativo</th>';
+    $html .= '<th class="text-center">Opções</th>';
+    $html .= '</tr>';
+    $html .= '</thead>';
+    $html .= '<tbody>';
+    foreach ($this->usuarios as $usuario) {
+        if ($usuario->verificarSeEstaAtivo()) {
+            $labelAtivo = 'success">Ativo';
+            $funcaoInativar = $this->funcaoOnClick(''
+                    . 'var resposta = confirm("Realmente deseja inativar?");'
+                    . 'if(resposta){mostrarSplash(); funcaoCircuito("lancamentoParceiroDeDeusUsuarioInativar", ' . $usuario->getId() . ')}');
+            $botaoInativar = $this->botaoSimples('Inativar', $funcaoInativar, BotaoSimples::botaoPerigoso, BotaoSimples::posicaoAoCentro);
+        } else {
+            $labelAtivo = 'danger">Inativo';
+            $botaoInativar = '';
+        }
+        $html .= '<tr>';
+        $html .= '<td>' . $usuario->getPessoa()->getNomePrimeiroUltimo() . '</td>';
+        $html .= '<td><p class="text-' . $labelAtivo . '</p></td>';
+        $html .= '<td>' . $botaoInativar . '</td>';
+        $html .= '</tr>';
+    }
+    $html .= '</tbody>';
+    $html .= '</table>';
+    $html .= '</div>';
+} else {
+    $html .= '<div class="alert alert-info">';
+    $html .= 'Sem usuários';
+    $html .= '</div>';
+}
+$html .= '</div>';
+/* Fim panel-body */
+$html .= '<div class="panel-footer text-right">';
+$stringNomeDaFuncaoOnClickCadastro = 'mostrarSplash(); funcaoCircuito("lancamentoParceiroDeDeusUsuario", 0)';
+$html .= $this->botaoLink($this->translate(Constantes::$TRADUCAO_CADASTRAR), Constantes::$STRING_HASHTAG, 0, $this->funcaoOnClick($stringNomeDaFuncaoOnClickCadastro));
+$html .= '</div>';
+/* Fim panel-footer */
+
+$html .= $this->templateFormularioRodape();
+echo $html;
