@@ -1,0 +1,54 @@
+<?php
+
+use Application\Controller\Helper\Constantes;
+
+/**
+ * Nome: cadastrar-pessoa.phtml
+ * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com> e Sergio Bezerra da Silva <sergio.silva.unb@gmail.com>
+ * Descricao: Página de cadastro de pessoa para tela de lançamento
+ */
+$form = $this->CadastrarPessoaForm;
+$form->prepare();
+$form->setAttribute(Constantes::$ACTION, $this->url(Constantes::$ROUTE_LANCAMENTO, array(Constantes::$ACTION => Constantes::$PAGINA_SALVAR_PESSOA)));
+echo $this->form()->openTag($form);
+echo $this->templateFormularioTopo(Constantes::$TRADUCAO_NOVO_CADASTRO_LABEL);
+?>
+<div class="panel-body bg-light">
+    <?php
+    echo $this->divMensagens();
+    echo $this->inputFormularioSimples(Constantes::$TRADUCAO_NOME, $form->get(Constantes::$INPUT_NOME));
+    echo $this->inputFormularioSimples(Constantes::$TRADUCAO_DDD, $form->get(Constantes::$INPUT_DDD), 3);
+    echo $this->inputFormularioSimples(Constantes::$TRADUCAO_TELEFONE, $form->get(Constantes::$INPUT_TELEFONE), 9);
+  //  echo $this->inputFormularioSimples(Constantes::$TRADUCAO_TIPO, $form->get(Constantes::$INPUT_TIPO), null, 2);
+    echo '<div id="ocultar_checkbox" class="hidden">';
+    echo $this->inputFormularioSimples(Constantes::$TRADUCAO_NUCLEO_CELULA, $form->get(Constantes::$INPUT_NUCLEO_PERFEITO), null, 3);
+    echo '</div>';
+
+    $funcaoVerificarCadastroPessoa = $this->funcaoOnClick('validarLancamentoCadastrarPessoa(this.form)');
+    echo $this->botaoSimples(Constantes::$FORM_STRING_SALVAR, $funcaoVerificarCadastroPessoa);
+
+    $funcaoVoltar = $this->funcaoOnClick('mostrarSplash(); location.href="/' . Constantes::$ROUTE_LANCAMENTO . 'Arregimentacao/' . $this->periodo . '"');
+    echo $this->botaoSimples(Constantes::$TRADUCAO_VOLTAR, $funcaoVoltar, 2);
+
+    echo $this->formHidden($form->get(Constantes::$INPUT_CSRF));
+    echo $this->formHidden($form->get(Constantes::$ID));
+    echo '<input type="hidden" name="aluno" value="'.$this->dados[2].'"/>';
+    ?>
+</div>
+<?php
+echo $this->templateFormularioRodape();
+echo $this->form()->closeTag();
+
+if($this->dados[2] == 'true'){
+$alertAluno = '<div class="alert alert-primary alert-dismissable">
+  <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+  <i class="fa fa-graduation-cap pr10"></i>
+  <strong>Aluno:</strong> O nome dessa pessoa só pode ser alterada a partir da secretaria do IV.
+</div>';
+echo $alertAluno;
+}
+?>
+
+<script type="text/javascript">
+    document.getElementById('nome').focus();
+</script>
