@@ -33,6 +33,7 @@ class PrincipalController extends CircuitoController {
      */
     public function indexAction() {
         $sessao = new Container(Constantes::$NOME_APLICACAO);
+		self::registrarLog(RegistroAcao::LOGIN, $extra = '');
 		$mostrarPrincipal = true;
 
 		/* dados pessoa logada */
