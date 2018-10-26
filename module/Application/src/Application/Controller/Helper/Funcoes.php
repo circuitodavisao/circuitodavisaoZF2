@@ -746,7 +746,7 @@ class Funcoes {
 		return $metas;
 	}
 
-	function pegarIp() {
+	public static function pegarIp() {
 		$ipaddress = '';
 		if (isset($_SERVER['HTTP_CLIENT_IP']))
 			$ipaddress = $_SERVER['HTTP_CLIENT_IP'];
