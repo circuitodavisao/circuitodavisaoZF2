@@ -1,0 +1,60 @@
+-- Table: registro_acao
+
+DROP TABLE registro_acao;
+
+CREATE TABLE registro_acao
+(
+  id serial NOT NULL, -- Identificação
+  nome character varying(80) NOT NULL, -- Nome tipo da solicitacao
+  data_criacao date NOT NULL DEFAULT ('now'::text)::date, -- Data de criação do tipo da solicitacao
+  hora_criacao time without time zone NOT NULL DEFAULT ('now'::text)::time with time zone, -- Hora de criação do tipo da solicitacao
+  data_inativacao date, -- Data de inativação do tipo da solicitacao
+  hora_inativacao time without time zone, -- Hora de inativação do tipo da solicitacao
+  CONSTRAINT pk_registro_acao PRIMARY KEY (id)
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE registro_acao
+  OWNER TO postgres;
+
+INSERT INTO registro_acao (nome) VALUES
+('LOGIN'),
+('LOGOUT'),
+('VER CÉLULAS'),
+('CADASTROU UMA CÉLULA'),
+('ALTEROU UMA CÉLULA'),
+('VER CULTOS'),
+('CADASTROU UM CULTO'),
+('ALTEROU UM CULTO'),
+('CADASTROU UM REVISIONISTA'),
+('VER SOLICITAÇÕES'),
+('CADASTROU UMA SOLICITAÇÃO'),
+('VER SECRETÁRIOS DO P.D.'),
+('CADASTROU UM SECRETÁRIO DO P.D.'),
+('LANÇAR ARREGIMENTAÇÃO'),
+('ENVIOU RELATÓRIO'),
+('LANÇAR ATENDIMENTO'),
+('VER PARCEIRO DE DEUS'),
+('LANÇOU PARCEIRO DE DEUS'),
+('ACEITOU PARCEIRO DE DEUS'),
+('EXLUIU PARCEIRO DE DEUS'),
+('VER RELATÓRIO MEMBRESIA'),
+('VER RELATÓRIO CÉLULA REALIZADAS'),
+('VER RELATÓRIO CÉLULA QUANTIDADE'),
+('VER RELATÓRIO CÉLULA DE ELITE'),
+('VER RELATÓRIO PARCEIRO DE DEUS'),
+('VER RELATÓRIO ATENDIMENTO'),
+('VER RELATÓRIO APROVEITAMENTO DO I.V.'),
+('VER RELATÓRIO ALUNOS QUE NÃO FORAM A AULA'),
+('VER RELATÓRIO ALUNOS REPROVANDO'),
+('VER RELATÓRIO ALUNOS NA SEMANA'),
+('VER RELATÓRIO RANKING CÉLULA'),
+('VER RELATÓRIO SETENTA'),
+('VER CHAMADA'),
+('VER REPOSIÇÕES'),
+('GEROU REPOSIÇÕES'),
+('VER FICHAS DO REVISÃO DE VIDAS'),
+('VER LISTAGEM DE REVISIONISTAS ATIVOS'),
+('VER LISTAGEM DE LÍDERES ATIVOS'),
+('VER RELATÓRIO CÉLULA NÃO REALIZADAS');

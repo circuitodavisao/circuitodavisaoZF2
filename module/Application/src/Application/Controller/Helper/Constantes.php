@@ -186,6 +186,8 @@ class Constantes {
     public static $ENTITY_PESSOA_FATO_FINANCEIRO_ACESSO = 'Application\Model\Entity\PessoaFatoFinanceiroAcesso';
     public static $ENTITY_FATO_FINANCEIRO_ACESSO = 'Application\Model\Entity\FatoFinanceiroAcesso';
     public static $ENTITY_FATO_RANKING_CELULA = 'Application\Model\Entity\FatoRankingCelula';
+    public static $ENTITY_REGISTRO = 'Application\Model\Entity\Registro';
+    public static $ENTITY_REGISTRO_ACAO = 'Application\Model\Entity\RegistroAcao';
     public static $ENTITY_PESSOA_EMAIL = 'email';
     public static $ENTITY_PESSOA_DOCUMENTO = 'documento';
     public static $ENTITY_PESSOA_DATA_NASCIMENTO = 'data_nascimento';
