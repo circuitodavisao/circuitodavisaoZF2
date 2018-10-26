@@ -347,6 +347,13 @@ class Menu extends AbstractHelper {
 			$html .= '</a>';
 			$html .= '</li>';
 
+			$html .= '<li>';
+			$html .= '<a href="/relatorioRegistro" onClick="mostrarSplash();">';
+			$html .= '<span class="fa fa-calendar"></span>';
+			$html .= 'Registro';
+			$html .= '</a>';
+			$html .= '</li>';
+
 			$html .= '</ul>';
 
 			$html .= '</li>';

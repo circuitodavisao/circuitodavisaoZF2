@@ -33,6 +33,7 @@ use Application\Model\Entity\TurmaPessoaSituacao;
 use Application\Model\Entity\TurmaPessoaVisto;
 use Application\Model\Entity\CursoAcesso;
 use Application\Model\Entity\FatoCurso;
+use Application\Model\Entity\RegistroAcao;
 use Application\Model\ORM\RepositorioORM;
 use Exception;
 use Zend\Json\Json;
@@ -878,6 +879,7 @@ class CursoController extends CircuitoController {
 			'subs' => $filhos,
 			'repositorio' => $this->getRepositorio(),
 		));
+		self::registrarLog(RegistroAcao::VER_CHAMADA, $extra = '');
 		return $view;
 	}
 
@@ -1532,6 +1534,7 @@ class CursoController extends CircuitoController {
 			'subs' => $filhos,
 		));
 
+		self::registrarLog(RegistroAcao::VER_REPOSICOES, $extra = '');
 		return $view;
 	}
 
@@ -1672,6 +1675,7 @@ class CursoController extends CircuitoController {
 			));
 		$viewModel->setTerminal(true);
 
+		self::registrarLog(RegistroAcao::GEROU_REPOSICOES, $extra = '');
 		return $viewModel;
 	}
 

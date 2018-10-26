@@ -1,0 +1,30 @@
+-- Table: registro
+
+DROP TABLE registro;
+
+CREATE TABLE registro
+(
+  id serial NOT NULL, -- Identificação do fato lider
+  ip character varying(15) NOT NULL,
+  grupo_id integer NOT NULL,
+  registro_acao_id integer NOT NULL,
+  extra character varying(100) NOT NULL,
+  data_criacao date NOT NULL DEFAULT ('now'::text)::date, -- Data de criação do relatório
+  hora_criacao time without time zone NOT NULL DEFAULT ('now'::text)::time with time zone, -- Hora de criação do relatório
+  data_inativacao date, -- Data de inativação do relatório
+  hora_inativacao time without time zone, -- Hora de inativação do relatório
+  CONSTRAINT pk_registro PRIMARY KEY (id),
+  CONSTRAINT fk_registro_registro_acao_id FOREIGN KEY (registro_acao_id)
+  REFERENCES public.registro_acao (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION,
+  CONSTRAINT fk_registro_grupo_id FOREIGN KEY (grupo_id)
+  REFERENCES public.grupo (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE registro
+  OWNER TO postgres;
