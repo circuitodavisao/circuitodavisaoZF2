@@ -95,6 +95,11 @@ class Grupo extends CircuitoEntity {
      */
     protected $solicitacao;
 
+    /**
+     * @ORM\OneToMany(targetEntity="Registro", mappedBy="grupo", fetch="EXTRA_LAZY")
+     */
+    protected $registro;
+
     public function __construct() {
         $this->entidade = new ArrayCollection();
         $this->grupoResponsavel = new ArrayCollection();
@@ -106,8 +111,9 @@ class Grupo extends CircuitoEntity {
         $this->grupoPaiFilhoPai = new ArrayCollection();
         $this->turma = new ArrayCollection();
         $this->pessoaCursoAcesso = new ArrayCollection();
-       $this->pessoaFatoFinanceiroAcesso = new ArrayCollection();
+		$this->pessoaFatoFinanceiroAcesso = new ArrayCollection();
 		$this->solicitacao = new ArrayCollection();
+		$this->registro = new ArrayCollection();
 //        $this->fatoDiscipulado = new ArrayCollection();
     }
 
@@ -1411,5 +1417,13 @@ class Grupo extends CircuitoEntity {
 			}
 		}
 		return $entidades;
+	}
+
+	function setRegistro($registro){
+		$this->registro = $registro;
+	}
+
+	function getRegistro(){
+		return $this->registro;
 	}
 }

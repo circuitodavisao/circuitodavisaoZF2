@@ -24,6 +24,7 @@ use Application\Model\Entity\Situacao;
 use Application\Model\Entity\FatoFinanceiroSituacao;
 use Application\Model\Entity\PessoaFatoFinanceiroAcesso;
 use Application\Model\Entity\FatoFinanceiroAcesso;
+use Application\Model\Entity\RegistroAcao;
 use Application\Model\ORM\RepositorioORM;
 use Application\View\Helper\ListagemDePessoasComEventos;
 use DateTime;
@@ -132,6 +133,7 @@ class LancamentoController extends CircuitoController {
             unset($sessao->jaMostreiANotificacao);
         }
 
+		self::registrarLog(RegistroAcao::LANCAR_ARREGIMENTACAO, $extra = '');
         return $view;
     }
 
@@ -280,6 +282,7 @@ class LancamentoController extends CircuitoController {
             $this->getRepositorio()->fecharTransacao();
         }
 
+		self::registrarLog(RegistroAcao::ENVIOU_RELATORIO_, $extra = '');
         return new ViewModel(array('periodo'=>$periodo));
     }
 
@@ -826,6 +829,7 @@ class LancamentoController extends CircuitoController {
         $layoutJS->setTemplate(Constantes::$TEMPLATE_JS_LANCAMENTO_ATENDIMENTO);
         $view->addChild($layoutJS, Constantes::$STRING_JS_LANCAMENTO_ATENDIMENTO);
 
+		self::registrarLog(RegistroAcao::LANCAR_ATENDIMENTO, $extra = '');
         return $view;
     }
 
@@ -1076,6 +1080,7 @@ class LancamentoController extends CircuitoController {
 		$layoutJS->setTemplate('layout/layout-js-lancamento-parceiro-de-deus');
 		$view->addChild($layoutJS, 'layoutJsLancamentoParceiroDeDeus');
 
+		
 		return $view;
 
 	}
@@ -1133,6 +1138,7 @@ class LancamentoController extends CircuitoController {
 					$this->getRepositorio()->getFatoFinanceiroSituacaoORM()->persistir($fatoFinanceiroSituacao);
 				}
 
+				self::registrarLog(RegistroAcao::LANCOU_PARCEIRO_DE_DEUS, $extra = 'Id: '.$fatoFinanceiro->getId());
 				$this->getRepositorio()->fecharTransacao();
 				return $this->redirect()->toRoute(Constantes::$ROUTE_LANCAMENTO, array(
 					Constantes::$ACTION => 'ParceiroDeDeusExtrato',
@@ -1171,7 +1177,7 @@ class LancamentoController extends CircuitoController {
 			}
 		}
 
-		$pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($sessao->idPessoa);
+		self::registrarLog(RegistroAcao::VER_PARCEIRO_DE_DEUS, $extra = '');
 		return new ViewModel(array(
 			'fatos' => $fatosAtivos,
 			'entidade' => $entidade,
@@ -1192,119 +1198,68 @@ class LancamentoController extends CircuitoController {
 
 
 			$idSessao = $sessao->idSessao;
-
 			$fatoFinanceiro = $this->getRepositorio()->getFatoFinanceiroORM()->encontrarPorId($idSessao);
-
 			$fatoFinanceiro->setSituacao_id(Situacao::RECUSAO);
-
 			$this->getRepositorio()->getFatoFinanceiroORM()->persistir($fatoFinanceiro, $mudarDataDeCriacao = false);
 
-
-
-				$fatoFinanceiroSituacaoAtivo = $fatoFinanceiro->getFatoFinanceiroSituacaoAtiva();
-
+			$fatoFinanceiroSituacaoAtivo = $fatoFinanceiro->getFatoFinanceiroSituacaoAtiva();
 			$fatoFinanceiroSituacaoAtivo->setDataEHoraDeInativacao();
-
 			$this->getRepositorio()->getFatoFinanceiroSituacaoORM()->persistir($fatoFinanceiroSituacaoAtivo);
 
-
-
-				$pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($sessao->idPessoa);
-
+			$pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($sessao->idPessoa);
 			$fatoFinanceiroSituacao = new FatoFinanceiroSituacao();
-
 			$fatoFinanceiroSituacao->setFatoFinanceiro($fatoFinanceiro);
-
 			$fatoFinanceiroSituacao->setSituacao($this->getRepositorio()->getSituacaoORM()->encontrarPorId(Situacao::RECUSAO));
-
 			$fatoFinanceiroSituacao->setPessoa($pessoa);
-
 			$this->getRepositorio()->getFatoFinanceiroSituacaoORM()->persistir($fatoFinanceiroSituacao);
 
-
-
-				$this->getRepositorio()->fecharTransacao();
-
-
+			self::registrarLog(RegistroAcao::EXLUIU_PARCEIRO_DE_DEUS, $extra = 'Id: '.$fatoFinanceiro->getId());
+			$this->getRepositorio()->fecharTransacao();
 
 			return $this->redirect()->toRoute(Constantes::$ROUTE_LANCAMENTO, array(
-
 				Constantes::$ACTION => 'ParceiroDeDeusExtrato', 
-
 			));
 
 		}catch(Exception $exception){
-
 			echo $exception.getMessage();
-
 			$this->getRepositorio()->desfazerTransacao();
-
 		}
-
-
 
 	}
 
 
 
 	public function parceiroDeDeusAceitarAction(){
-
 		$sessao = new Container(Constantes::$NOME_APLICACAO);
-
 		try{
-
 			$this->getRepositorio()->iniciarTransacao();
 
-
-
 			$idSessao = $sessao->idSessao;
-
 			$fatoFinanceiro = $this->getRepositorio()->getFatoFinanceiroORM()->encontrarPorId($idSessao);
-
 			$fatoFinanceiro->setSituacao_id(Situacao::ACEITO_AGENDADO);
-
 			$this->getRepositorio()->getFatoFinanceiroORM()->persistir($fatoFinanceiro, $mudarDataDeCriacao = false);
 
-
-
-				$fatoFinanceiroSituacaoAtivo = $fatoFinanceiro->getFatoFinanceiroSituacaoAtiva();
-
+			$fatoFinanceiroSituacaoAtivo = $fatoFinanceiro->getFatoFinanceiroSituacaoAtiva();
 			$fatoFinanceiroSituacaoAtivo->setDataEHoraDeInativacao();
-
 			$this->getRepositorio()->getFatoFinanceiroSituacaoORM()->persistir($fatoFinanceiroSituacaoAtivo);
 
-
-
-				$pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($sessao->idPessoa);
-
+			$pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($sessao->idPessoa);
 			$fatoFinanceiroSituacao = new FatoFinanceiroSituacao();
-
 			$fatoFinanceiroSituacao->setFatoFinanceiro($fatoFinanceiro);
-
 			$fatoFinanceiroSituacao->setSituacao($this->getRepositorio()->getSituacaoORM()->encontrarPorId(Situacao::ACEITO_AGENDADO));
-
 			$fatoFinanceiroSituacao->setPessoa($pessoa);
-
 			$this->getRepositorio()->getFatoFinanceiroSituacaoORM()->persistir($fatoFinanceiroSituacao);
 
-				$this->getRepositorio()->fecharTransacao();
-
-
+			self::registrarLog(RegistroAcao::ACEITOU_PARCEIRO_DE_DEUS, $extra = 'Id: '.$fatoFinanceiro->getId());
+			$this->getRepositorio()->fecharTransacao();
 
 			return $this->redirect()->toRoute(Constantes::$ROUTE_LANCAMENTO, array(
 				Constantes::$ACTION => 'ParceiroDeDeusExtrato', 
 			));
-
 		}catch(Exception $exception){
-
 			echo $exception.getMessage();
-
 			$this->getRepositorio()->desfazerTransacao();
-
 		}
-
-
-
 	}
 
 
@@ -1326,6 +1281,8 @@ class LancamentoController extends CircuitoController {
 			'usuarios' => $usuarios
 
 		));
+
+		self::registrarLog(RegistroAcao::VER_SECRETARIOS_DO_PD, $extra = '');
 
 		return $view;
 
@@ -1391,7 +1348,7 @@ class LancamentoController extends CircuitoController {
 
 				$this->getRepositorio()->getPessoaFatoFinanceiroAcessoORM()->persistir($pessoaFatoFinanceiroAcesso);
 
-
+				self::registrarLog(RegistroAcao::CADASTROU_UM_SECRETARIO_DO_PD, $extra = 'Id: '.$pessoaFatoFinanceiroAcesso->getId());
 
 				$this->getRepositorio()->fecharTransacao();
 

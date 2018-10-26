@@ -10,6 +10,7 @@ use Application\Form\NovaSenhaForm;
 use Application\Form\PerfilForm;
 use Application\Form\RecuperarAcessoForm;
 use Application\Form\RecuperarSenhaForm;
+use Application\Model\Entity\RegistroAcao;
 use DateTime;
 use Doctrine\ORM\EntityManager;
 use Exception;
@@ -580,7 +581,8 @@ class LoginController extends CircuitoController {
                 $sessao = new Container(Constantes::$NOME_APLICACAO);
                 $sessao->idEntidadeAtual = $explodeId[0];
 
-                $response->setContent(Json::encode(
+				self::registrarLog(RegistroAcao::LOGIN, $extra = '');
+				$response->setContent(Json::encode(
                                 array('response' => 'true')));
                 /* Redirecionamento */
             } catch (Exception $exc) {
@@ -624,7 +626,9 @@ class LoginController extends CircuitoController {
     public function sairAction() {
         /* Fechando a sessão */
         $sessao = new Container(Constantes::$NOME_APLICACAO);
-        $sessao->getManager()->destroy();
+
+		self::registrarLog(RegistroAcao::LOGOUT, $extra = '');
+		$sessao->getManager()->destroy();
 
         /* Redirecionamento */
         return $this->redirect()->toRoute(Constantes::$ROUTE_LOGIN);

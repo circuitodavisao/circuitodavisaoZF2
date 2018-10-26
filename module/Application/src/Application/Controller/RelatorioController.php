@@ -11,6 +11,7 @@ use Application\Model\Entity\GrupoPessoaTipo;
 use Application\Model\Entity\Curso;
 use Application\Model\Entity\EntidadeTipo;
 use Application\Model\Entity\SolicitacaoTipo;
+use Application\Model\Entity\RegistroAcao;
 use Application\Model\Entity\Situacao;
 use Application\Model\Helper\FuncoesEntidade;
 use Application\Model\ORM\RepositorioORM;
@@ -84,6 +85,14 @@ class RelatorioController extends CircuitoController {
 		}
 		$arrayPeriodoDoMes = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mes, $ano);
 		$relatorio = RelatorioController::relatorioCompleto($this->getRepositorio(), $grupo, $tipoRelatorio, $mes, $ano);
+
+		switch($tipoRelatorio){
+		case RelatorioController::relatorioMembresia: self::registrarLog(RegistroAcao::VER_RELATORIO_MEMBRESIA, $extra = ''); break;
+		case RelatorioController::relatorioCelulaRealizadas: self::registrarLog(RegistroAcao::VER_RELATORIO_CELULA_REALIZADAS, $extra = ''); break;
+		case RelatorioController::relatorioCelulaQuantidade: self::registrarLog(RegistroAcao::VER_RELATORIO_CELULA_QUANTIDADE, $extra = ''); break;
+		case RelatorioController::relatorioCelulasDeElite: self::registrarLog(RegistroAcao::VER_RELATORIO_CELULA_DE_ELITE, $extra = ''); break;
+		case RelatorioController::relatorioParceiroDeDeus: self::registrarLog(RegistroAcao::VER_RELATORIO_PARCEIRO_DE_DEUS, $extra = ''); break;
+		}
 
 		$dados = array(
 			'mes' => $mes,
@@ -410,6 +419,7 @@ class RelatorioController extends CircuitoController {
 		$layoutJS->setTemplate(Constantes::$TEMPLATE_JS_RELATORIO_ATENDIMENTO);
 		$view->addChild($layoutJS, Constantes::$STRING_JS_RELATORIO_ATENDIMENTO);
 
+		self::registrarLog(RegistroAcao::VER_RELATORIO_ATENDIMENTO, $extra = '');
 		return $view;
 	}
 
@@ -478,6 +488,7 @@ class RelatorioController extends CircuitoController {
 			}
 		}
 
+		self::registrarLog(RegistroAcao::VER_RELATORIO_APROVEITAMENTO_DO_IV, $extra = '');
 		return new ViewModel(array(
 			'relatorio'=> $relatorioAjustado,
 			'turmas' => $turmasComAulaAberta,
@@ -611,8 +622,7 @@ class RelatorioController extends CircuitoController {
 		$diferencaDePeriodos = self::diferencaDePeriodos($arrayPeriodoDoMes[0], $arrayPeriodoDoMes[1], $mes, $ano);
 		if($tudo){
 			for ($indiceDeArrays = $arrayPeriodoDoMes[0]; $indiceDeArrays <= $arrayPeriodoDoMes[1]; $indiceDeArrays++) {
-				$grupoPaiFilhoFilhos = $grupo->getGrupoPaiFilhoFilhosAtivos($indiceDeArrays);
-				if ($grupoPaiFilhoFilhos) {
+				if($grupoPaiFilhoFilhos = $grupo->getGrupoPaiFilhoFilhosAtivos($indiceDeArrays)){
 					foreach ($grupoPaiFilhoFilhos as $grupoPaiFilhoFilho) {
 						$adicionar = true;
 						if (count($todosFilhos) > 0) {
@@ -1691,6 +1701,7 @@ class RelatorioController extends CircuitoController {
 		$dados['periodoInicial'] = $arrayPeriodoDoMes[0];
 		$dados['periodoFinal'] = $arrayPeriodoDoMes[1];
 
+		self::registrarLog(RegistroAcao::VER_RELATORIO_RANKING_CELULA_, $extra = '');
 		return new ViewModel($dados);
 	}
 
@@ -1708,6 +1719,7 @@ class RelatorioController extends CircuitoController {
 
 		$relatorio = $this->getRepositorio()->getFatoCelulaORM()->encontrarPorNumeroIdentificadorEDataCriacao($numeroIdentificador, $dateFormatada);
 
+		self::registrarLog(RegistroAcao::VER_RELATORIO_CELULAS_NAO_REALIZADAS, $extra = '');
 		return new ViewModel(
 			array(
 				'relatorio' => $relatorio,
@@ -1722,6 +1734,10 @@ public function alunosAction(){
 	$sessao = new Container(Constantes::$NOME_APLICACAO);
 		
 		$tipoRelatorio = (int) $this->params()->fromRoute('tipoRelatorio');
+		switch(tipoRelatorio){
+		case self::relatorioAlunosQueNaoForamAAula: self::registrarLog(RegistroAcao::VER_RELATORIO_ALUNOS_QUE_NAO_FORAM_A_AULA, $extra = ''); break;
+		case self::relatorioAlunosComFaltas: self::registrarLog(RegistroAcao::VER_RELATORIO_ALUNOS_REPROVANDO, $extra = ''); break;
+		}
 		
 		$idEntidadeAtual = $sessao->idEntidadeAtual;
 		$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
@@ -1864,6 +1880,8 @@ public function alunosNaSemanaAction(){
 			}
 		}
 	}
+
+	self::registrarLog(RegistroAcao::VER_RELATORIO_ALUNOS_NA_SEMANA, $extra = '');
 	return new ViewModel(
 		array(
 			'turmas' => $turmas,
@@ -2014,6 +2032,26 @@ public function alunosNaSemanaAction(){
 		$arrayPeriodoDoMes = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mes, $ano);
 		$dados['periodoInicial'] = $arrayPeriodoDoMes[0];
 		$dados['periodoFinal'] = $arrayPeriodoDoMes[1];
+
+		self::registrarLog(RegistroAcao::VER_RELATORIO_SETENTA, $extra = '');
+		return new ViewModel($dados);
+	}
+	
+	public function registroAction(){
+		$sessao = new Container(Constantes::$NOME_APLICACAO);
+
+		$idEntidadeAtual = $sessao->idEntidadeAtual;
+		$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+
+		$registros = $entidade->getGrupo()->getRegistro();
+		$registrosOrganizados = array();
+
+		foreach($registros as $registro){
+			$registrosOrganizados[$registro->getData_criacaoStringPadraoBrasil()][] = $registro;
+		}
+
+		$dados = array();
+		$dados['registros'] = $registrosOrganizados;
 
 		return new ViewModel($dados);
 	}

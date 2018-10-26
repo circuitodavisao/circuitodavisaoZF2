@@ -1,0 +1,28 @@
+<?php
+
+use Application\Controller\Helper\Funcoes;
+?>
+<div class="center-block mw600">
+<div class="panel">
+<div class="panel-heading text-center">Registro</div>
+<div class="panel-body pn">
+<?php
+if($registros = $this->registros){
+	echo '<table class="text-center table table-condensed table-hover bg-light mt15">';
+	foreach($registros as $dia => $registroDia){
+		echo '<tr class="dark">';
+		echo '<td colspan="3">'.$dia.'</td>';
+		echo '</tr>';
+		foreach($registroDia as $registro){
+			echo '<tr>';
+			echo '<td>'.$registro->getHora_criacao().'</td>';
+			echo '<td class="text-left">'.$registro->getRegistroAcao()->getNome().'</td>';
+			echo '</tr>';
+		}
+	}
+	echo '</table>';
+}
+?>
+</div>
+</div>
+</div>

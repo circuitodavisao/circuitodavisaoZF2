@@ -65,6 +65,8 @@ class RepositorioORM {
 	private $_fatoFinanceiroAcessoORM;
 	private $_eleitorORM;
 	private $_fatoSetentaORM;
+	private $_registroORM;
+	private $_registroActionORM;
 
     /**
      * Contrutor
@@ -622,7 +624,7 @@ class RepositorioORM {
     }
 
     /**
-     * Metodo public para obter a instancia do FatoCurso
+     * Metodo public para obter a instancia do FatoSetentaORM
      * @return CircuitoORM
      */
     public function getFatoSetentaORM() {
@@ -630,6 +632,28 @@ class RepositorioORM {
 			$this->_fatoSetentaORM = new FatoSetentaORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_FATO_SETENTA);
         }
         return $this->_fatoSetentaORM;
+    }
+ 
+    /**
+     * Metodo public para obter a instancia do CircuitoORM
+     * @return CircuitoORM
+     */
+    public function getRegistroORM() {
+        if (is_null($this->_registroORM)) {
+			$this->_registroORM = new CircuitoORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_REGISTRO);
+        }
+        return $this->_registroORM;
+    }
+
+    /**
+     * Metodo public para obter a instancia do CircuitoORM
+     * @return CircuitoORM
+     */
+    public function getRegistroAcaoORM() {
+        if (is_null($this->_registroAcaoORM)) {
+			$this->_registroAcaoORM = new CircuitoORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_REGISTRO_ACAO);
+        }
+        return $this->_registroAcaoORM;
     }
  
     /**

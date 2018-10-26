@@ -35,6 +35,7 @@ use Application\Model\Entity\SolicitacaoSituacao;
 use Application\Model\Entity\SolicitacaoTipo;
 use Application\Model\Entity\FatoLider;
 use Application\Model\Entity\CursoAcesso;
+use Application\Model\Entity\RegistroAcao;
 use Application\Model\ORM\RepositorioORM;
 use DateTime;
 use Exception;
@@ -297,11 +298,13 @@ class CadastroController extends CircuitoController {
 		$tipoRevisao = EventoTipo::tipoRevisao;
 		$tipoDiscipulado = EventoTipo::tipoDiscipulado;
 		if ($pagina == Constantes::$PAGINA_CELULAS) {
+			self::registrarLog(RegistroAcao::VER_CELULAS, $extra = '');
 			$listagemDeEventos = $grupo->getGrupoEventoAtivosPorTipo($tipoCelula);
 			$tituloDaPagina = Constantes::$TRADUCAO_LISTAGEM_CELULAS . ' <b class="text-danger">' . Constantes::$TRADUCAO_MULTIPLICACAO . '</b>';
 			$tipoEvento = 1;
 		}
 		if ($pagina == Constantes::$PAGINA_CULTOS) {
+			self::registrarLog(RegistroAcao::VER_CULTOS, $extra = '');
 			$listagemDeEventos = $grupo->getGrupoEventoAtivosPorTipo($tipoCulto);
 			$tituloDaPagina = Constantes::$TRADUCAO_LISTAGEM_CULTOS;
 			$tipoEvento = 2;
@@ -320,6 +323,7 @@ class CadastroController extends CircuitoController {
 			$extra = $grupo->getId();
 		}
 		if ($pagina == Constantes::$PAGINA_FICHA_REVISIONISTAS) {
+			self::registrarLog(RegistroAcao::VER_FICHAS_DO_REVISAO_DE_VIDAS, $extra = '');
 			$listagemDeEventos = $grupo->getGrupoEventoRevisao();
 			$tituloDaPagina = Constantes::$TRADUCAO_LISTAGEM_REVISIONISTAS;
 			$tipoEvento = 5;
@@ -357,6 +361,7 @@ class CadastroController extends CircuitoController {
 			$extra = $grupo->getId();
 		}
 		if ($pagina == Constantes::$PAGINA_LISTAGEM_LIDERES) {
+			self::registrarLog(RegistroAcao::VER_LISTAGEM_DE_LIDERES_ATIVOS, $extra = '');
 			$listagemDeEventos = $grupo->getGrupoEventoRevisao();
 			$tituloDaPagina = Constantes::$TRADUCAO_LISTAGEM_LIDERES;
 			$tipoEvento = 11;
@@ -369,6 +374,7 @@ class CadastroController extends CircuitoController {
 			$extra = $grupo->getId();
 		}
 		if ($pagina == Constantes::$PAGINA_LISTAGEM_REVISIONISTAS) {
+			self::registrarLog(RegistroAcao::VER_LISTAGEM_DE_REVISIONISTAS_ATIVOS, $extra = '');
 			$listagemDeEventos = $grupo->getGrupoEventoRevisao();
 			$tituloDaPagina = Constantes::$PAGINA_LISTAGEM_REVISIONISTAS_TITULO;
 			$tipoEvento = 13;
@@ -493,6 +499,7 @@ class CadastroController extends CircuitoController {
 						$criarNovoEvento = false;
 						$eventoAtual = $this->getRepositorio()->getEventoORM()->encontrarPorId($post_data[Constantes::$FORM_ID]);
 
+						self::registrarLog(RegistroAcao::ALTEROU_UM_CULTO, $extra = 'Id: '.$eventoAtual->getId());
 						$grupoEventoAtivos = $eventoAtual->getGrupoEventoAtivos();
 						/* Dia foi alterado */
 						if ($post_data[Constantes::$FORM_DIA_DA_SEMANA] != $eventoAtual->getDia()) {
@@ -612,6 +619,7 @@ class CadastroController extends CircuitoController {
 								$this->getRepositorio()->getGrupoEventoORM()->persistir($grupoEventoEquipe);
 							}
 						}
+						self::registrarLog(RegistroAcao::CADASTROU_UM_CULTO, $extra = 'Id: '.$evento->getId());
 					}
 				} else {
 					$this->direcionaErroDeCadastro($eventoForm->getMessages());
@@ -665,6 +673,7 @@ class CadastroController extends CircuitoController {
 						$criarNovaCelula = false;
 						$eventoCelulaAtual = $this->getRepositorio()->getEventoCelulaORM()->encontrarPorId($post_data[Constantes::$FORM_ID]);
 
+						self::registrarLog(RegistroAcao::ALTEROU_UMA_CELULA, $extra = 'Id: '.$eventoCelulaAtual->getId());
 						/* Dia foi alterado */
 						if ($post_data[Constantes::$FORM_DIA_DA_SEMANA] != $eventoCelulaAtual->getEvento()->getDia()) {
 							/* Persistindo */
@@ -775,6 +784,8 @@ class CadastroController extends CircuitoController {
 							$fatoLider->setNumero_identificador($numeroIdentificador);
 							$fatoLider->setDataEHoraDeCriacao(Funcoes::proximaSegunda());
 							$this->getRepositorio()->getFatoLiderORM()->persistir($fatoLider, $alterarDataDeCriacao);
+
+							self::registrarLog(RegistroAcao::CADASTROU_UMA_CELULA, $extra = 'Id: '.$evento->getId());
 						}
 					}
 					$this->getRepositorio()->fecharTransacao();
@@ -1624,6 +1635,8 @@ class CadastroController extends CircuitoController {
 		$this->getRepositorio()->getEventoFrequenciaORM()->persistir($eventoFrequencia);
 		$sessao->idSessao = $eventoFrequencia->getId();
 
+		self::registrarLog(RegistroAcao::CADASTROU_UM_REVISIONISTA, $extra = 'Id: '.$eventoFrequencia->getId());
+
 		return $this->redirect()->toRoute(Constantes::$ROUTE_CADASTRO, array(
 			Constantes::$PAGINA => Constantes::$PAGINA_FICHA_REVISAO,
 		));
@@ -2060,6 +2073,8 @@ class CadastroController extends CircuitoController {
 			'titulo' => 'Solicitações',
 			'repositorio' => $this->getRepositorio(),
 		));
+
+		self::registrarLog(RegistroAcao::VER_SOLICITACOES, $extra = '');
 		return $view;
 	}
 
@@ -2342,6 +2357,7 @@ class CadastroController extends CircuitoController {
 						$this->getRepositorio()->getSolicitacaoSituacaoORM()->persistir($solicitacaoSituacaoAceito);
 					}
 
+				self::registrarLog(RegistroAcao::CADASTROU_UMA_SOLICITACAO, $extra = 'Id: '.$solicitacao->getId());
 				$this->getRepositorio()->fecharTransacao();
 
 				return $this->redirect()->toRoute(Constantes::$ROUTE_CADASTRO, array(

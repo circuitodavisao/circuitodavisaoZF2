@@ -3,8 +3,10 @@
 namespace Application\Controller;
 
 use Application\Controller\Helper\Constantes;
+use Application\Controller\Helper\Funcoes;
 use Application\Model\ORM\RepositorioORM;
 use Application\Model\Entity\EntidadeTipo;
+use Application\Model\Entity\Registro;
 use Doctrine\ORM\EntityManager;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\Session\Container;
@@ -153,5 +155,19 @@ class CircuitoController extends AbstractActionController {
 					Constantes::$ACTION => 'semAcesso',
 				));
 			}
+	}
+
+	public function registrarLog($acao, $extra){
+		$sessao = new Container(Constantes::$NOME_APLICACAO);
+
+		$idEntidadeAtual = $sessao->idEntidadeAtual;
+		$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+		
+		$registro = new Registro();	
+		$registro->setGrupo($entidade->getGrupo());
+		$registro->setRegistroAcao($this->getRepositorio()->getRegistroAcaoORM()->encontrarPorId($acao));
+		$registro->setExtra($extra);
+		$registro->setIp(Funcoes::pegarIp());
+		$this->getRepositorio()->getRegistroORM()->persistir($registro);
 	}
 }
