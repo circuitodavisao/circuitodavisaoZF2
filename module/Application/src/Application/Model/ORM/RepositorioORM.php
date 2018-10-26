@@ -66,7 +66,7 @@ class RepositorioORM {
 	private $_eleitorORM;
 	private $_fatoSetentaORM;
 	private $_registroORM;
-	private $_registroActionORM;
+	private $_registroAcaoORM;
 
     /**
      * Contrutor
