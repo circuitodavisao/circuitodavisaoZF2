@@ -581,7 +581,6 @@ class LoginController extends CircuitoController {
                 $sessao = new Container(Constantes::$NOME_APLICACAO);
                 $sessao->idEntidadeAtual = $explodeId[0];
 
-				self::registrarLog(RegistroAcao::LOGIN, $extra = '');
 				$response->setContent(Json::encode(
                                 array('response' => 'true')));
                 /* Redirecionamento */
