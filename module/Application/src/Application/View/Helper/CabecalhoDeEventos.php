@@ -26,7 +26,7 @@ class CabecalhoDeEventos extends AbstractHelper {
 	public function renderHtml() {
 		$html = '';
 
-		$grupoEventoNoPeriodo = $this->view->grupo->getGrupoEventoNoPeriodo($this->view->periodo);
+		$grupoEventoNoPeriodo = $this->view->grupoEventos;
 		if (!empty($grupoEventoNoPeriodo)) {
 			$numeroDeEvento = count($grupoEventoNoPeriodo);
 			foreach ($grupoEventoNoPeriodo as $grupoEvento) {
@@ -50,7 +50,7 @@ class CabecalhoDeEventos extends AbstractHelper {
 				$evento = $grupoEvento->getEvento();
 				$eventoFrequencias = $evento->getEventoFrequencia();
 				if ($eventoFrequencias) {
-					$grupoPessoas = $this->view->grupo->getGrupoPessoasNoPeriodo($this->view->periodo);
+					$grupoPessoas = $this->view->grupoPessoas;
 					$pessoasParaComparar = array();
 					foreach ($this->view->grupo->getResponsabilidadesAtivas() as $grupoResponsavel) {
 						$pessoasParaComparar[] = (int) $grupoResponsavel->getPessoa()->getId();

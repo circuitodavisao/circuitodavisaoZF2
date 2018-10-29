@@ -31,7 +31,7 @@ class ListagemDePessoasComEventos extends AbstractHelper {
 		$this->arrayPeriodo = Funcoes::montaPeriodo($this->view->periodo);
 		$pessoas = $this->montaListagemDePessoas();
 
-        $grupoEventoNoPeriodo = $this->view->grupo->getGrupoEventoNoPeriodo($this->view->periodo);
+        $grupoEventoNoPeriodo = $this->view->grupoEventos;
         if (count($grupoEventoNoPeriodo) == 0) {
             $html .= '<div class="alert alert-warning"><i class="fa fa-warning pr10" aria-hidden="true"></i>&nbsp;Sem eventos cadastrados!</div>';
         } else {
@@ -53,7 +53,7 @@ class ListagemDePessoasComEventos extends AbstractHelper {
             $p->setTipo('LP');
             $pessoas[] = $p;
         }
-        $grupoPessoas = $this->view->grupo->getGrupoPessoasNoPeriodo($this->view->periodo, $this->view->repositorioORM);
+        $grupoPessoas = $this->view->grupoPessoas;
         if ($grupoPessoas) {
             foreach ($grupoPessoas as $grupoPessoa) {
                 $pessoa = $grupoPessoa->getPessoa();
@@ -264,7 +264,7 @@ class ListagemDePessoasComEventos extends AbstractHelper {
 				//$tamanhoBotaoInativo = '';
 			}
 
-			$html .= '<div ' . $style . ' class="text-center '.$espacamento.' mb5" style="padding-top: 0px">';
+			$html .= '<div class="text-center '.$espacamento.' mb5" style="padding-top: 0px">';
 			$html .= '<p>';
                 $eventoNome = Funcoes::nomeDoEvento($grupoEvento->getEvento()->getTipo_id());
 			$diaDaSemanaAjustado = Funcoes::diaDaSemanaPorDia($grupoEvento->getEvento()->getDia());
