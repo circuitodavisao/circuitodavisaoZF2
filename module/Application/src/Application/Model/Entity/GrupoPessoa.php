@@ -20,19 +20,19 @@ use Doctrine\ORM\Mapping as ORM;
 class GrupoPessoa extends CircuitoEntity {
 
     /**
-     * @ORM\ManyToOne(targetEntity="Pessoa", inversedBy="grupoPessoa")
+     * @ORM\ManyToOne(targetEntity="Pessoa", inversedBy="grupoPessoa", fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="pessoa_id", referencedColumnName="id")
      */
     private $pessoa;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Grupo", inversedBy="grupoPessoa")
+     * @ORM\ManyToOne(targetEntity="Grupo", inversedBy="grupoPessoa", fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="grupo_id", referencedColumnName="id")
      */
     private $grupo;
 
     /**
-     * @ORM\ManyToOne(targetEntity="GrupoPessoaTipo", inversedBy="grupoPessoa")
+     * @ORM\ManyToOne(targetEntity="GrupoPessoaTipo", inversedBy="grupoPessoa", fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="tipo_id", referencedColumnName="id")
      */
     private $grupoPessoaTipo;

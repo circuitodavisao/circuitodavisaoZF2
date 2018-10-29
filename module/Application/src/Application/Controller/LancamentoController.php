@@ -103,11 +103,7 @@ class LancamentoController extends CircuitoController {
         }
 
 		$grupoEventoNoPeriodo = $grupo->getGrupoEventoNoPeriodo($periodo);
-		$contagemDePessoasCadastradas = count($grupo->getGrupoPessoasNoPeriodo($periodo));
-		$validacaoPessoasCadastradas = 0;
-		if ($contagemDePessoasCadastradas > Constantes::$QUANTIDADE_MAXIMA_PESSOAS_NO_LANÇAMENTO) {
-			$validacaoPessoasCadastradas = 1;
-		}
+		$validacaoPessoasCadastradas = 1;
 
         $view = new ViewModel(
                 array(

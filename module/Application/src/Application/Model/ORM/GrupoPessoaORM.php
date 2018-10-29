@@ -3,10 +3,13 @@
 namespace Application\Model\ORM;
 
 use Application\Controller\Helper\Constantes;
+use Application\Controller\Helper\Funcoes;
+use Migracao\Controller\IndexController;
 use Application\Model\Entity\GrupoPessoa;
 use Application\Model\Entity\GrupoPessoaTipo;
 use Doctrine\Common\Collections\Criteria;
 use Exception;
+use DateTime;
 
 /**
  * Nome: GrupoPessoaORM.php
@@ -54,6 +57,7 @@ class GrupoPessoaORM extends CircuitoORM {
      * @param RepositorioORM $repositorioORM
      */
 	public function alterarVisitanteParaConsolidacao(RepositorioORM $repositorioORM) {
+		$dataParaInativar = IndexController::getDataParaInativacao();
 		$grupoPessoas = $this->getEntityManager()
 			->getRepository($this->getEntity())
 			->findBy(array(
@@ -63,8 +67,8 @@ class GrupoPessoaORM extends CircuitoORM {
 		try {
 			if ($grupoPessoas) {
 				foreach ($grupoPessoas as $grupoPessoa) {
-					$grupoPessoa->setDataEHoraDeInativacao();
-					$repositorioORM->getGrupoPessoaORM()->persistir($grupoPessoa, $alterarDataDeCriacao = true);
+					$grupoPessoa->setDataEHoraDeInativacao($dataParaInativar);
+					$repositorioORM->getGrupoPessoaORM()->persistir($grupoPessoa, $alterarDataDeCriacao = false);
 
 					$grupoPessoaTipoConsolidacao = $repositorioORM->getGrupoPessoaTipoORM()->encontrarPorId(GrupoPessoaTipo::CONSOLIDACAO);
 					$grupoPessoaConsolidacao = new GrupoPessoa();
@@ -82,4 +86,52 @@ class GrupoPessoaORM extends CircuitoORM {
 			echo $ex->getMessage();
 		}
 	}
+
+	public function grupoPessoasAtivosNoPEriodo($idGrupo, $periodo) {
+        $resultadoPeriodo = Funcoes::montaPeriodo($periodo);
+        $dataDoPeriodoFinal = $resultadoPeriodo[6] . '-' . $resultadoPeriodo[5] . '-' . $resultadoPeriodo[4];
+		$dql = "SELECT "
+			. " gp "
+			. "FROM  " . Constantes::$ENTITY_GRUPO_PESSOA . " gp "
+                . "WHERE "
+                . " gp.grupo_id = ?1 "
+                . " AND gp.data_inativacao IS NULL "
+                . " AND gp.data_criacao <= ?2 ";
+		try {
+			$dataFinalFormatada = DateTime::createFromFormat('Y-m-d', $dataDoPeriodoFinal);
+			$result = $this->getEntityManager()->createQuery($dql)
+				->setParameter(1, (int) $idGrupo)
+				->setParameter(2, $dataFinalFormatada)
+				->getResult();
+			return $result;
+		} catch (Exception $exc) {
+            echo $exc->getTraceAsString();
+        }
+    }
+	public function grupoPessoasInativosNoPEriodo($idGrupo, $periodo) {
+        $resultadoPeriodo = Funcoes::montaPeriodo($periodo);
+        $dataDoPeriodoFinal = $resultadoPeriodo[6] . '-' . $resultadoPeriodo[5] . '-' . $resultadoPeriodo[4];
+        $dataDoPeriodoInicial = $resultadoPeriodo[3] . '-' . $resultadoPeriodo[2] . '-' . $resultadoPeriodo[1];
+		$dql = "SELECT "
+			. " gp "
+			. "FROM  " . Constantes::$ENTITY_GRUPO_PESSOA . " gp "
+                . "WHERE "
+                . " gp.grupo_id = ?1 "
+                . " AND gp.data_inativacao IS NOT NULL "
+                . " AND gp.data_criacao <= ?2 "
+                . " AND gp.data_inativacao >= ?3 ";
+		try {
+			$dataFinalFormatada = DateTime::createFromFormat('Y-m-d', $dataDoPeriodoFinal);
+			$dataInicialFormatada = DateTime::createFromFormat('Y-m-d', $dataDoPeriodoInicial);
+			$result = $this->getEntityManager()->createQuery($dql)
+				->setParameter(1, (int) $idGrupo)
+				->setParameter(2, $dataFinalFormatada)
+				->setParameter(3, $dataInicialFormatada)
+				->getResult();
+			return $result;
+		} catch (Exception $exc) {
+            echo $exc->getTraceAsString();
+        }
+    }
+
 }
