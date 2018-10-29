@@ -872,51 +872,22 @@ class Grupo extends CircuitoEntity {
         return $grupoEventosNoPeriodo;
     }
 
-    function getGrupoPessoasNoPeriodo($periodo) {
-
-        $grupoPessoasNoPeriodo = array();
-
-        $grupoPessoas = $this->getGrupoPessoa();
-        if (!empty($grupoPessoas)) {
-            foreach ($grupoPessoas as $grupoPessoa) {
-                $mostrar = false;
-                $dataDeCriacaoDoGrupoPessoa = strtotime($grupoPessoa->getData_criacaoStringPadraoBanco());
-                $arrayPeriodo = Funcoes::montaPeriodo($periodo);
-                $stringInicioPeriodo = $arrayPeriodo[3] . '-' . $arrayPeriodo[2] . '-' . $arrayPeriodo[1];
-                $stringFimPeriodo = $arrayPeriodo[6] . '-' . $arrayPeriodo[5] . '-' . $arrayPeriodo[4];
-                $dataDoInicioDoPeriodoParaComparar = strtotime($stringInicioPeriodo);
-                $dataDoFimDoPeriodoParaComparar = strtotime($stringFimPeriodo);
-
-
-                if($grupoPessoa->verificarSeEstaAtivo() && $dataDeCriacaoDoGrupoPessoa <= $dataDoFimDoPeriodoParaComparar){
-                  $mostrar = true;
-                }
-
-                if(!$grupoPessoa->verificarSeEstaAtivo() && $dataDeCriacaoDoGrupoPessoa <= $dataDoFimDoPeriodoParaComparar){
-                  $dataDeInativacaoDoGrupoPessoa = strtotime($grupoPessoa->getData_inativacaoStringPadraoBanco());
-                  if($dataDeInativacaoDoGrupoPessoa >= $dataDoInicioDoPeriodoParaComparar){
-                    $mostrar = true;
-                  }                  
-                }
-
-
-              //  /* Periodo a frente */
-              //  if (!$validacaoDataCriacao) {
-              //      $arrayPeriodoAFrente = Funcoes::montaPeriodo(1);
-              //      $stringPeriodoAFrente = $arrayPeriodoAFrente[3] . '-' . $arrayPeriodoAFrente[2] . '-' . $arrayPeriodoAFrente[1];
-              //      $dataDoInicioDoPeriodoAFrenteParaComparar = strtotime($stringPeriodoAFrente);
-              //      if ($dataDoGrupoPessoaParaComparar >= $dataDoInicioDoPeriodoAFrenteParaComparar) {
-              //          $validacaoDataCriacao = true;
-              //      }
-              //  }
-
-                if ($mostrar == true) {
-                    $grupoPessoasNoPeriodo[] = $grupoPessoa;
-                }
-            }
-        }
-        return $grupoPessoasNoPeriodo;
-    }
+	function getGrupoPessoasNoPeriodo($periodo, $repositorio = null) {
+		$grupoPessoasNoPeriodo = array();
+		if($repositorio){
+			if($grupopessoasAtivos = $repositorio->getGrupoPessoaORM()->grupoPessoasAtivosNoPeriodo($this->getid(), $periodo)){
+				foreach($grupopessoasAtivos as $grupoPessoaAtivo){
+					$grupoPessoasNoPeriodo[] = $grupoPessoaAtivo;
+				}
+			}
+			if($grupopessoasInativos = $repositorio->getGrupoPessoaORM()->grupoPessoasInativosNoPeriodo($this->getid(), $periodo)){
+				foreach($grupopessoasInativos as $grupoPessoaInativo){
+					$grupoPessoasNoPeriodo[] = $grupoPessoaInativo;
+				}
+			}
+		}
+		return $grupoPessoasNoPeriodo;
+	}
 
     /**
      * Retorna o grupo evento no ciclo selecionado

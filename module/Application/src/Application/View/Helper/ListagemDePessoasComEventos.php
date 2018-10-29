@@ -53,8 +53,7 @@ class ListagemDePessoasComEventos extends AbstractHelper {
             $p->setTipo('LP');
             $pessoas[] = $p;
         }
-
-        $grupoPessoas = $this->view->grupo->getGrupoPessoasNoPeriodo($this->view->periodo);
+        $grupoPessoas = $this->view->grupo->getGrupoPessoasNoPeriodo($this->view->periodo, $this->view->repositorioORM);
         if ($grupoPessoas) {
             foreach ($grupoPessoas as $grupoPessoa) {
                 $pessoa = $grupoPessoa->getPessoa();
@@ -151,7 +150,7 @@ class ListagemDePessoasComEventos extends AbstractHelper {
 		$html .= '<div class="row btn-default p5">';
 
 		$html .= '<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6" style="padding-top: 0px">';
-    $html .= '<span class="label label-dark">'.$pessoa->getTipo() . '</span> ';
+		$html .= '<span class="label label-dark">'.$pessoa->getTipo() . '</span> ';
 
 		$html .= '<span id="span_nome_' . $pessoa->getId() . '" ' . $corTextoTagsExtrasXs . '>';
 		$html .= $pessoa->getNomeListaDeLancamento(5);
