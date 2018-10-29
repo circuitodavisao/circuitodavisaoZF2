@@ -23,7 +23,7 @@ return array(
         ),
         'configuration' => array(
             'orm_default' => array(
-                'metadata_cache' => 'minha_memcache',
+                'metadata_cache' => 'array',
                 'query_cache' => 'minha_memcache',
                 'result_cache' => 'minha_memcache',
                 'hydration_cache' => 'minha_memcache',

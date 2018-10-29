@@ -8,6 +8,8 @@
 
 namespace Application;
 
+use Memcached;
+
 return array(
     # definir e gerenciar controllers
     'controllers' => array(
@@ -118,11 +120,12 @@ return array(
         ),
         'factories' => array(
             'translator' => 'Zend\Mvc\Service\TranslatorServiceFactory',
-			'doctrine.cache.minha_memcache' => function($sm){
-				$cache = new \Doctrine\Common\Cache\MemcacheCache();
-				$memcache = new \Memcache();
-				$memcache->connect('localhost', 11211);
-				$cache->setMemcache($memcache);
+			'doctrine.cache.minha_memcache' => function(){
+				$memcached = new Memcached();
+				$memcached->addServer('localhost', 11211);
+	
+				$cache = new \Doctrine\Common\Cache\MemcachedCache();
+				$cache->setMemcached($memcached);
 				return $cache;
 			}
         ),
