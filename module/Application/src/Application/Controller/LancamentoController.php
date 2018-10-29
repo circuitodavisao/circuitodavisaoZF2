@@ -103,6 +103,7 @@ class LancamentoController extends CircuitoController {
         }
 
 		$grupoEventoNoPeriodo = $grupo->getGrupoEventoNoPeriodo($periodo);
+		$grupoPessoasNoPeriodo = $grupo->getGrupoPessoasNoPeriodo($periodo, $this->getRepositorio());
 		$validacaoPessoasCadastradas = 1;
 
         $view = new ViewModel(
@@ -114,6 +115,8 @@ class LancamentoController extends CircuitoController {
             'mostrarBotaoPeriodoAnterior' => $mostrarBotaoPeriodoAnterior,
             'mostrarBotaoPeriodoAfrente' => $mostrarBotaoPeriodoAfrente,
             'possoAlterar' => $possoAlterar,
+			'grupoEventos' => $grupoEventoNoPeriodo,
+			'grupoPessoas' => $grupoPessoasNoPeriodo, 
                 )
         );
 
