@@ -267,14 +267,12 @@ class ListagemDePessoasComEventos extends AbstractHelper {
 			$corDoBotao = BotaoSimples::botaoPequenoMenosImportante;
 			$icone = 'fa-thumbs-down';
 			$diaRealDoEvento = ListagemDePessoasComEventos::diaRealDoEvento($diaDaSemanaDoEvento, $this->view->periodo);
-			if($eventosFrequenciaSelecionado = $pessoa->getEventoFrequenciaFiltradoPorEventoEDia($grupoEvento->getEvento()->getId(), $diaRealDoEvento)){
-				$valor = $eventosFrequenciaSelecionado->getFrequencia();
-				if ($valor == 'S') {
+			if($resposta = $pessoa->getEventoFrequenciaFiltradoPorEventoEDia($grupoEvento->getEvento()->getId(), $diaRealDoEvento, $this->view->repositorioORM)){
+				if ($resposta) {
 					$corDoBotao = BotaoSimples::botaoPequenoImportante;
 					$icone = 'fa-thumbs-up';
 				}
 			}
-
 			$idEventoFrequencia = $pessoa->getId() . '_' . $grupoEvento->getEvento()->getId();
 			$iconeBotao = '<i id="icone_' . $idEventoFrequencia . '" class="fa ' . $icone . '"></i>';
 			$idDoBotao = 'id="botao_' . $idEventoFrequencia . '"';
