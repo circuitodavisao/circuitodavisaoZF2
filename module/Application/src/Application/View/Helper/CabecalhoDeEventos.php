@@ -42,7 +42,7 @@ class CabecalhoDeEventos extends AbstractHelper {
 				$diaDaSemanaAjustado = Funcoes::diaDaSemanaPorDia($grupoEvento->getEvento()->getDia());
 				$eventoNome = Funcoes::nomeDoEvento($grupoEvento->getEvento()->getTipo_id());
 
-				$html .= $this->view->translate($eventoNome).' ';
+				$html .= $this->view->translate($eventoNome).'<br />';
 				$html .= $this->view->translate($diaDaSemanaAjustado);
 				$html .= $grupoEvento->getEvento()->getHoraFormatoHoraMinuto();
 

@@ -259,7 +259,7 @@ class ListagemDePessoasComEventos extends AbstractHelper {
 		$html .= '<p>';
 		$eventoNome = Funcoes::nomeDoEvento($grupoEvento->getEvento()->getTipo_id());
 		$diaDaSemanaAjustado = Funcoes::diaDaSemanaPorDia($grupoEvento->getEvento()->getDia());
-		$html .= $this->view->translate($eventoNome). ' ';
+		$html .= $this->view->translate($eventoNome). '<br />';
 		$html .= $this->view->translate($diaDaSemanaAjustado);
 		$html .= $grupoEvento->getEvento()->getHoraFormatoHoraMinuto();
 		$html .= '</p>';
