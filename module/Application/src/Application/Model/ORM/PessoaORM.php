@@ -7,6 +7,7 @@ use Application\Controller\Helper\Funcoes;
 use Application\Model\Entity\Pessoa;
 use Doctrine\Common\Collections\Criteria;
 use Exception;
+use DateTime;
 
 /**
  * Nome: PessoaORM.php
@@ -178,5 +179,30 @@ class PessoaORM extends CircuitoORM {
         }
         return $entidade;
     }
+
+	public function verificarFrequenciaPorPessoaEventoEDia($idPessoa, $idEvento, $dia){
+		$resposta = false;
+		$dataFormatada = DateTime::createFromFormat('Y-m-d', $dia);
+		$dataFormatada->setTime(0,0,0);
+		$dqlBase = "SELECT "
+			. "ef.id "
+			. "FROM  " . Constantes::$ENTITY_EVENTO_FREQUENCIA . " ef "
+			. "WHERE "
+			. "ef.frequencia = 'S' AND "
+			. "ef.pessoa_id = ?1 AND "
+			. "ef.evento_id = ?2 AND "
+			. "ef.dia = ?3 ";
+
+		$resultado = $this->getEntityManager()->createQuery($dqlBase)
+			->setParameter(1, (int) $idPessoa)
+			->setParameter(2, (int) $idEvento)
+			->setParameter(3, $dataFormatada)
+			->getResult();
+
+		if($resultado){
+			$resposta = true;
+		}
+		return $resposta;
+	}
 
 }
