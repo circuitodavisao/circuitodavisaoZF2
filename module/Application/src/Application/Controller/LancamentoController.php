@@ -178,16 +178,13 @@ class LancamentoController extends CircuitoController {
 				/* Lideres */
 				if ($grupoResponsabilidades = $grupo->getResponsabilidadesAtivas()) {
 					foreach ($grupoResponsabilidades as $grupoResponsavel) {
-						if ($eventosFrequenciaSelecionado = $grupoResponsavel->getPessoa()->getEventoFrequenciaFiltradoPorEventoEDia($grupoEvento->getEvento()->getId(), $diaRealDoEvento)) {
-							$valor = $eventosFrequenciaSelecionado->getFrequencia();
-							if ($valor == 'S') {
-								$tipoPessoa = LancamentoController::TIPO_PESSOA_LIDER;
-								$relatorio[$tipoCampo][$tipoPessoa] ++;
+						if ($grupoResponsavel->getPessoa()->getEventoFrequenciaFiltradoPorEventoEDia($grupoEvento->getEvento()->getId(), $diaRealDoEvento, $this->getRepositorio())) {
+							$tipoPessoa = LancamentoController::TIPO_PESSOA_LIDER;
+							$relatorio[$tipoCampo][$tipoPessoa] ++;
 
-								if ($grupoEvento->getEvento()->verificaSeECelula()) {
-									$eventoCelulaId = $grupoEvento->getEvento()->getEventoCelula()->getId();
-									$relatorio['celula'][$eventoCelulaId] ++;
-								}
+							if ($grupoEvento->getEvento()->verificaSeECelula()) {
+								$eventoCelulaId = $grupoEvento->getEvento()->getEventoCelula()->getId();
+								$relatorio['celula'][$eventoCelulaId] ++;
 							}
 						}
 					}
@@ -195,16 +192,13 @@ class LancamentoController extends CircuitoController {
 				/* Pessoas Volateis */
 				if ($grupoPessoasNoPeriodo = $grupo->getGrupoPessoasNoPeriodo($periodo, $this->getRepositorio())) {
 					foreach ($grupoPessoasNoPeriodo as $grupoPessoa) {
-						if ($eventosFrequenciaSelecionado = $grupoPessoa->getPessoa()->getEventoFrequenciaFiltradoPorEventoEDia($grupoEvento->getEvento()->getId(), $diaRealDoEvento)) {
-							$valor = $eventosFrequenciaSelecionado->getFrequencia();
-							if ($valor == 'S') {
-								$tipoPessoa = $grupoPessoa->getGrupoPessoaTipo()->getId();
-								$relatorio[$tipoCampo][$tipoPessoa] ++;
+						if ($grupoPessoa->getPessoa()->getEventoFrequenciaFiltradoPorEventoEDia($grupoEvento->getEvento()->getId(), $diaRealDoEvento, $this->getRepositorio())) {
+							$tipoPessoa = $grupoPessoa->getGrupoPessoaTipo()->getId();
+							$relatorio[$tipoCampo][$tipoPessoa] ++;
 
-								if ($grupoEvento->getEvento()->verificaSeECelula()) {
-									$eventoCelulaId = $grupoEvento->getEvento()->getEventoCelula()->getId();
-									$relatorio['celula'][$eventoCelulaId] ++;
-								}
+							if ($grupoEvento->getEvento()->verificaSeECelula()) {
+								$eventoCelulaId = $grupoEvento->getEvento()->getEventoCelula()->getId();
+								$relatorio['celula'][$eventoCelulaId] ++;
 							}
 						}
 					}
