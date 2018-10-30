@@ -1,13 +1,65 @@
 <?php
+
+use Application\Controller\Helper\Constantes;
+
+/**
+ * Nome: index.phtml
+ * @author Leonardo Pereira Magalhães <falecomleonardopereira@gmail.com> e Sergio Bezerra da Silva <sergio.silva.unb@gmail.com>
+ * Descricao: Página de login
+ */
+$formLogin = $this->formLogin;
+$formLogin->prepare();
+$formLogin->setAttribute(Constantes::$ACTION, $this->url(Constantes::$ROUTE_LOGIN, array(Constantes::$ACTION => Constantes::$ACTION_LOGAR)));
+
+$classMensagem = $this->hidden;
+?> 
+<?php
 /* Layout com botton para telas de acesso */
 echo $this->layoutLoginTop;
 ?>
 <!-- Login Panel/Form -->
+<?php echo $this->form()->openTag($formLogin); ?>
 <div class="panel mt30">
-    <div class="panel-body bg-light pl10 pr10 text-center">
-		Em Manutenção
-   </div>
+    <div class="panel-body bg-light pl10 pr10">
+        <!-- Mensagens -->
+        <?php
+        $tipoNaoEncontrouNaBaseDeDados = 1;
+        $tokenInvalido = 4;
+        $tipoMensagemDeSucesso = 1;
+        $tipoMensagemDeErro = 2;
+
+        $tipoDaMensagem = $tipoMensagemDeSucesso;
+        $mostraMensagem = false;
+        if ($this->tipo == $tipoNaoEncontrouNaBaseDeDados) {
+            $tipoDaMensagem = $tipoMensagemDeErro;
+            $mostraMensagem = true;
+        }
+        if ($this->tipo == $tokenInvalido) {
+            $tipoDaMensagem = $tipoMensagemDeErro;
+            $mostraMensagem = true;
+        }
+        /* Div Mensagens */
+        echo $this->divMensagens($this->mensagem, $tipoDaMensagem, $mostraMensagem);
+        /* Username Input */
+        echo $this->inputFormularioSimples(Constantes::$TRADUCAO_USUARIO, $formLogin->get(Constantes::$INPUT_USUARIO));
+        /* Password Input */
+        echo $this->inputFormularioSimples(Constantes::$TRADUCAO_SENHA, $formLogin->get(Constantes::$INPUT_SENHA));
+        ?>
+    </div>
+    <div class="panel-footer">
+        <?php
+        echo $this->formHidden($formLogin->get(Constantes::$INPUT_CSRF));
+        $funcaoVerificarLogin = $this->funcaoOnClick('validarLogin()');
+        echo $this->botaoSimples(Constantes::$TRADUCAO_ENTRAR, $funcaoVerificarLogin . ' id="botaoLogar"');
+        ?>        
+        <label class="switch ib switch-primary-circuito mt10">
+            <strong class="active pl15">
+                <a href="<?php echo $this->url(Constantes::$ROUTE_LOGIN) . Constantes::$URL_ESQUECEU_SENHA; ?>" class="texto-preto-cv" ><?php echo $this->translate(Constantes::$TRADUCAO_PROBLEMA_DE_ACESSO); ?></a>
+            </strong>
+        </label>     
+    </div>
 </div>
+<?php echo $this->form()->closeTag() ?>
 <?php
 /* Layout com botton para telas de acesso */
 echo $this->layoutLoginBotton;
