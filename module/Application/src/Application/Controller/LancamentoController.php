@@ -136,154 +136,154 @@ class LancamentoController extends CircuitoController {
         return $view;
     }
 
-    public function enviarAction() {
-        $sessao = new Container(Constantes::$NOME_APLICACAO);
+	public function enviarAction() {
+		$sessao = new Container(Constantes::$NOME_APLICACAO);
 
-        $entidade = CircuitoController::getEntidadeLogada($this->getRepositorio(), $sessao);
-        $grupo = $entidade->getGrupo();
-        $periodo = $sessao->idSessao;
-        $grupoEventoNoPeriodo = $grupo->getGrupoEventoNoPeriodo($periodo);
+		$entidade = CircuitoController::getEntidadeLogada($this->getRepositorio(), $sessao);
+		$grupo = $entidade->getGrupo();
+		$periodo = $sessao->idSessao;
+		$grupoEventoNoPeriodo = $grupo->getGrupoEventoNoPeriodo($periodo);
 
-        $relatorio = array();
-        foreach ($grupoEventoNoPeriodo as $grupoEvento) {
-            $tipoCampo = 0;
-            if ($grupoEvento->getEvento()->getEventoTipo()->getId() === EventoTipo::tipoCulto) {
-                $diaDeSabado = 7;
-                $diaDeDomingo = 1;
-                switch ($grupoEvento->getEvento()->getDia()) {
-                    case $diaDeSabado:
-                        $tipoCampo = LancamentoController::TIPO_CAMPO_ARENA;
-                        break;
-                    case $diaDeDomingo:
-                        $tipoCampo = LancamentoController::TIPO_CAMPO_DOMINGO;
-                        break;
-                    default:
-                        $tipoCampo = LancamentoController::TIPO_CAMPO_CULTO;
-                        break;
-                };
-            }
-            if ($grupoEvento->getEvento()->getEventoTipo()->getId() === EventoTipo::tipoCelula) {
-                $tipoCampo = LancamentoController::TIPO_CAMPO_CELULA;
-            }
+		$relatorio = array();
+		foreach ($grupoEventoNoPeriodo as $grupoEvento) {
+			$tipoCampo = 0;
+			if ($grupoEvento->getEvento()->getEventoTipo()->getId() === EventoTipo::tipoCulto) {
+				$diaDeSabado = 7;
+				$diaDeDomingo = 1;
+				switch ($grupoEvento->getEvento()->getDia()) {
+				case $diaDeSabado:
+					$tipoCampo = LancamentoController::TIPO_CAMPO_ARENA;
+					break;
+				case $diaDeDomingo:
+					$tipoCampo = LancamentoController::TIPO_CAMPO_DOMINGO;
+					break;
+				default:
+					$tipoCampo = LancamentoController::TIPO_CAMPO_CULTO;
+					break;
+				};
+			}
+			if ($grupoEvento->getEvento()->getEventoTipo()->getId() === EventoTipo::tipoCelula) {
+				$tipoCampo = LancamentoController::TIPO_CAMPO_CELULA;
+			}
 
-            $diaDaSemanaDoEvento = (int) $grupoEvento->getEvento()->getDia();
-            if ($diaDaSemanaDoEvento === 1) {
-                $diaDaSemanaDoEvento = 7; // domingo
-            } else {
-                $diaDaSemanaDoEvento--;
-            }
-            $diaRealDoEvento = ListagemDePessoasComEventos::diaRealDoEvento($diaDaSemanaDoEvento, $periodo);
-            $eventoFrequencia = $grupoEvento->getEvento()->getEventoFrequencia();
-            if ($eventoFrequencia) {
-                /* Lideres */
-                if ($grupoResponsabilidades = $grupo->getResponsabilidadesAtivas()) {
-                    foreach ($grupoResponsabilidades as $grupoResponsavel) {
-                        if ($eventosFrequenciaSelecionado = $grupoResponsavel->getPessoa()->getEventoFrequenciaFiltradoPorEventoEDia($grupoEvento->getEvento()->getId(), $diaRealDoEvento)) {
-                            $valor = $eventosFrequenciaSelecionado->getFrequencia();
-                            if ($valor == 'S') {
-                                $tipoPessoa = LancamentoController::TIPO_PESSOA_LIDER;
-                                $relatorio[$tipoCampo][$tipoPessoa] ++;
+			$diaDaSemanaDoEvento = (int) $grupoEvento->getEvento()->getDia();
+			if ($diaDaSemanaDoEvento === 1) {
+				$diaDaSemanaDoEvento = 7; // domingo
+			} else {
+				$diaDaSemanaDoEvento--;
+			}
+			$diaRealDoEvento = ListagemDePessoasComEventos::diaRealDoEvento($diaDaSemanaDoEvento, $periodo);
+			$eventoFrequencia = $grupoEvento->getEvento()->getEventoFrequencia();
+			if ($eventoFrequencia) {
+				/* Lideres */
+				if ($grupoResponsabilidades = $grupo->getResponsabilidadesAtivas()) {
+					foreach ($grupoResponsabilidades as $grupoResponsavel) {
+						if ($eventosFrequenciaSelecionado = $grupoResponsavel->getPessoa()->getEventoFrequenciaFiltradoPorEventoEDia($grupoEvento->getEvento()->getId(), $diaRealDoEvento)) {
+							$valor = $eventosFrequenciaSelecionado->getFrequencia();
+							if ($valor == 'S') {
+								$tipoPessoa = LancamentoController::TIPO_PESSOA_LIDER;
+								$relatorio[$tipoCampo][$tipoPessoa] ++;
 
-                                if ($grupoEvento->getEvento()->verificaSeECelula()) {
-                                    $eventoCelulaId = $grupoEvento->getEvento()->getEventoCelula()->getId();
-                                    $relatorio['celula'][$eventoCelulaId] ++;
-                                }
-                            }
-                        }
-                    }
-                }
-                /* Pessoas Volateis */
-                if ($grupoPessoasNoPeriodo = $grupo->getGrupoPessoasNoPeriodo($periodo)) {
-                    foreach ($grupoPessoasNoPeriodo as $grupoPessoa) {
-                        if ($eventosFrequenciaSelecionado = $grupoPessoa->getPessoa()->getEventoFrequenciaFiltradoPorEventoEDia($grupoEvento->getEvento()->getId(), $diaRealDoEvento)) {
-                            $valor = $eventosFrequenciaSelecionado->getFrequencia();
-                            if ($valor == 'S') {
-                                $tipoPessoa = $grupoPessoa->getGrupoPessoaTipo()->getId();
-                                $relatorio[$tipoCampo][$tipoPessoa] ++;
+								if ($grupoEvento->getEvento()->verificaSeECelula()) {
+									$eventoCelulaId = $grupoEvento->getEvento()->getEventoCelula()->getId();
+									$relatorio['celula'][$eventoCelulaId] ++;
+								}
+							}
+						}
+					}
+				}
+				/* Pessoas Volateis */
+				if ($grupoPessoasNoPeriodo = $grupo->getGrupoPessoasNoPeriodo($periodo, $this->getRepositorio())) {
+					foreach ($grupoPessoasNoPeriodo as $grupoPessoa) {
+						if ($eventosFrequenciaSelecionado = $grupoPessoa->getPessoa()->getEventoFrequenciaFiltradoPorEventoEDia($grupoEvento->getEvento()->getId(), $diaRealDoEvento)) {
+							$valor = $eventosFrequenciaSelecionado->getFrequencia();
+							if ($valor == 'S') {
+								$tipoPessoa = $grupoPessoa->getGrupoPessoaTipo()->getId();
+								$relatorio[$tipoCampo][$tipoPessoa] ++;
 
-                                if ($grupoEvento->getEvento()->verificaSeECelula()) {
-                                    $eventoCelulaId = $grupoEvento->getEvento()->getEventoCelula()->getId();
-                                    $relatorio['celula'][$eventoCelulaId] ++;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
+								if ($grupoEvento->getEvento()->verificaSeECelula()) {
+									$eventoCelulaId = $grupoEvento->getEvento()->getEventoCelula()->getId();
+									$relatorio['celula'][$eventoCelulaId] ++;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
 
-        if ($entidade->getData_inativacaoStringPadraoBanco()) {
-            $numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador(
-                    $this->getRepositorio(), $grupo, $entidade->getData_inativacaoStringPadraoBanco());
-        } else {
-            $numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio());
-        }
-        $resultadoPeriodo = Funcoes::montaPeriodo($periodo);
-        $dataDoPeriodo = $resultadoPeriodo[3] . '-' . $resultadoPeriodo[2] . '-' . $resultadoPeriodo[1];
-        $dataDoPeriodoFormatada = DateTime::createFromFormat('Y-m-d', $dataDoPeriodo);
-        $fatoCicloSelecionado = $this->getRepositorio()->getFatoCicloORM()->encontrarPorNumeroIdentificadorEDataCriacao(
-                $numeroIdentificador, $dataDoPeriodoFormatada, $this->getRepositorio());
+		if ($entidade->getData_inativacaoStringPadraoBanco()) {
+			$numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador(
+				$this->getRepositorio(), $grupo, $entidade->getData_inativacaoStringPadraoBanco());
+		} else {
+			$numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio());
+		}
+		$resultadoPeriodo = Funcoes::montaPeriodo($periodo);
+		$dataDoPeriodo = $resultadoPeriodo[3] . '-' . $resultadoPeriodo[2] . '-' . $resultadoPeriodo[1];
+		$dataDoPeriodoFormatada = DateTime::createFromFormat('Y-m-d', $dataDoPeriodo);
+		$fatoCicloSelecionado = $this->getRepositorio()->getFatoCicloORM()->encontrarPorNumeroIdentificadorEDataCriacao(
+			$numeroIdentificador, $dataDoPeriodoFormatada, $this->getRepositorio());
 
-        $dimensoes = array();
-        if ($fatoCicloSelecionado->getDimensao()) {
-            foreach ($fatoCicloSelecionado->getDimensao() as $dimensao) {
-                switch ($dimensao->getDimensaoTipo()->getId()) {
-                    case DimensaoTipo::CELULA:
-                        $dimensoes[DimensaoTipo::CELULA] = $dimensao;
-                        break;
-                    case DimensaoTipo::CULTO:
-                        $dimensoes[DimensaoTipo::CULTO] = $dimensao;
-                        break;
-                    case DimensaoTipo::ARENA:
-                        $dimensoes[DimensaoTipo::ARENA] = $dimensao;
-                        break;
-                    case DimensaoTipo::DOMINGO:
-                        $dimensoes[DimensaoTipo::DOMINGO] = $dimensao;
-                        break;
-                }
-            }
-            $this->getRepositorio()->iniciarTransacao();
-            foreach ($dimensoes as $dimensao) {
-                if (!$relatorio[$dimensao->getDimensaoTipo()->getId()][LancamentoController::TIPO_PESSOA_LIDER]) {
-                    $relatorio[$dimensao->getDimensaoTipo()->getId()][LancamentoController::TIPO_PESSOA_LIDER] = 0;
-                }
+		$dimensoes = array();
+		if ($fatoCicloSelecionado->getDimensao()) {
+			foreach ($fatoCicloSelecionado->getDimensao() as $dimensao) {
+				switch ($dimensao->getDimensaoTipo()->getId()) {
+				case DimensaoTipo::CELULA:
+					$dimensoes[DimensaoTipo::CELULA] = $dimensao;
+					break;
+				case DimensaoTipo::CULTO:
+					$dimensoes[DimensaoTipo::CULTO] = $dimensao;
+					break;
+				case DimensaoTipo::ARENA:
+					$dimensoes[DimensaoTipo::ARENA] = $dimensao;
+					break;
+				case DimensaoTipo::DOMINGO:
+					$dimensoes[DimensaoTipo::DOMINGO] = $dimensao;
+					break;
+				}
+			}
+			$this->getRepositorio()->iniciarTransacao();
+			foreach ($dimensoes as $dimensao) {
+				if (!$relatorio[$dimensao->getDimensaoTipo()->getId()][LancamentoController::TIPO_PESSOA_LIDER]) {
+					$relatorio[$dimensao->getDimensaoTipo()->getId()][LancamentoController::TIPO_PESSOA_LIDER] = 0;
+				}
 
-                if (!$relatorio[$dimensao->getDimensaoTipo()->getId()][GrupoPessoaTipo::MEMBRO]) {
-                    $relatorio[$dimensao->getDimensaoTipo()->getId()][GrupoPessoaTipo::MEMBRO] = 0;
-                }
+				if (!$relatorio[$dimensao->getDimensaoTipo()->getId()][GrupoPessoaTipo::MEMBRO]) {
+					$relatorio[$dimensao->getDimensaoTipo()->getId()][GrupoPessoaTipo::MEMBRO] = 0;
+				}
 
-                if (!$relatorio[$dimensao->getDimensaoTipo()->getId()][GrupoPessoaTipo::CONSOLIDACAO]) {
-                    $relatorio[$dimensao->getDimensaoTipo()->getId()][GrupoPessoaTipo::CONSOLIDACAO] = 0;
-                }
+				if (!$relatorio[$dimensao->getDimensaoTipo()->getId()][GrupoPessoaTipo::CONSOLIDACAO]) {
+					$relatorio[$dimensao->getDimensaoTipo()->getId()][GrupoPessoaTipo::CONSOLIDACAO] = 0;
+				}
 
-                if (!$relatorio[$dimensao->getDimensaoTipo()->getId()][GrupoPessoaTipo::VISITANTE]) {
-                    $relatorio[$dimensao->getDimensaoTipo()->getId()][GrupoPessoaTipo::VISITANTE] = 0;
-                }
+				if (!$relatorio[$dimensao->getDimensaoTipo()->getId()][GrupoPessoaTipo::VISITANTE]) {
+					$relatorio[$dimensao->getDimensaoTipo()->getId()][GrupoPessoaTipo::VISITANTE] = 0;
+				}
 
-                $dimensao->setLider($relatorio[$dimensao->getDimensaoTipo()->getId()][LancamentoController::TIPO_PESSOA_LIDER]);
-                $dimensao->setMembro($relatorio[$dimensao->getDimensaoTipo()->getId()][GrupoPessoaTipo::MEMBRO]);
-                $dimensao->setConsolidacao($relatorio[$dimensao->getDimensaoTipo()->getId()][GrupoPessoaTipo::CONSOLIDACAO]);
-                $dimensao->setVisitante($relatorio[$dimensao->getDimensaoTipo()->getId()][GrupoPessoaTipo::VISITANTE]);
-                $this->getRepositorio()->getDimensaoORM()->persistir($dimensao, false);
+				$dimensao->setLider($relatorio[$dimensao->getDimensaoTipo()->getId()][LancamentoController::TIPO_PESSOA_LIDER]);
+				$dimensao->setMembro($relatorio[$dimensao->getDimensaoTipo()->getId()][GrupoPessoaTipo::MEMBRO]);
+				$dimensao->setConsolidacao($relatorio[$dimensao->getDimensaoTipo()->getId()][GrupoPessoaTipo::CONSOLIDACAO]);
+				$dimensao->setVisitante($relatorio[$dimensao->getDimensaoTipo()->getId()][GrupoPessoaTipo::VISITANTE]);
+				$this->getRepositorio()->getDimensaoORM()->persistir($dimensao, false);
 
-                if ($dimensao->getDimensaoTipo()->getId() === DimensaoTipo::CELULA) {
-                    $fatoCelulas = $fatoCicloSelecionado->getFatoCelula();
-                    foreach ($fatoCelulas as $fatoCelula) {
-                        $realizada = 0;
-                        if ($relatorio['celula'][$fatoCelula->getEvento_celula_id()] > 0) {
-                            $realizada = 1;
-                        }
-                        $fatoCelula->setRealizada($realizada);
-                        $this->getRepositorio()->getFatoCelulaORM()->persistir($fatoCelula, false);
-                    }
-                }
-            }
-            $this->getRepositorio()->fecharTransacao();
-        }
+				if ($dimensao->getDimensaoTipo()->getId() === DimensaoTipo::CELULA) {
+					$fatoCelulas = $fatoCicloSelecionado->getFatoCelula();
+					foreach ($fatoCelulas as $fatoCelula) {
+						$realizada = 0;
+						if ($relatorio['celula'][$fatoCelula->getEvento_celula_id()] > 0) {
+							$realizada = 1;
+						}
+						$fatoCelula->setRealizada($realizada);
+						$this->getRepositorio()->getFatoCelulaORM()->persistir($fatoCelula, false);
+					}
+				}
+			}
+			$this->getRepositorio()->fecharTransacao();
+		}
 
 		self::registrarLog(RegistroAcao::ENVIOU_RELATORIO_, $extra = '');
-        return new ViewModel(array('periodo'=>$periodo));
-    }
+		return new ViewModel(array('periodo'=>$periodo));
+	}
 
     /**
      * Muda a frequência de um evento
