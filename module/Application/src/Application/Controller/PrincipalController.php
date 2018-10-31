@@ -37,15 +37,15 @@ class PrincipalController extends CircuitoController {
 		$idEntidadeAtual = $sessao->idEntidadeAtual;
 		$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
 		$grupoPai = $entidade->getGrupo()->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai();
-if(date('m') == 1){
-	$mesAnterior = 12;
-	$anoAnterior = date('Y') - 1;
-}else{
-	$mesAnterior = date('m') - 1;
-	$anoAnterior = date('Y');
-}
+		if(date('m') == 1){
+			$mesAnterior = 12;
+			$anoAnterior = date('Y') - 1;
+		}else{
+			$mesAnterior = date('m') - 1;
+			$anoAnterior = date('Y');
+		}
 		if(!$this->getRepositorio()->getFatoDiscipuladoORM()->encontrarPorGrupoPessoaMesAno($grupoPai->getId(), $sessao->idPessoa, $mesAnterior, $anoAnterior)){
-			return $this->redirect()->toRoute(Constantes::$ROUTE_LANCAMENTO, array(Constantes::$ACTION => 'Discipulado'));
+			//return $this->redirect()->toRoute(Constantes::$ROUTE_LANCAMENTO, array(Constantes::$ACTION => 'Discipulado'));
 		}
 
 		$mostrarPrincipal = true;
