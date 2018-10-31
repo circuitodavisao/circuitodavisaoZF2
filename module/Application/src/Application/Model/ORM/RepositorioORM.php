@@ -55,7 +55,6 @@ class RepositorioORM {
     private $_fatoRankingORM;
     private $_cursoAcessoORM;
     private $_pessoaCursoAcessoORM;
-	private $_fatoParceiroDeDeus;
 	private $_fatoFinanceiro;
 	private $_fatoFinanceiroTipo;
 	private $_fatoRankingCelula;
@@ -67,6 +66,7 @@ class RepositorioORM {
 	private $_fatoSetentaORM;
 	private $_registroORM;
 	private $_registroAcaoORM;
+	private $_fatoDiscipulado;
 
     /**
      * Contrutor
@@ -654,6 +654,17 @@ class RepositorioORM {
 			$this->_registroAcaoORM = new CircuitoORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_REGISTRO_ACAO);
         }
         return $this->_registroAcaoORM;
+    }
+ 
+    /**
+     * Metodo public para obter a instancia do CircuitoORM
+     * @return CircuitoORM
+     */
+    public function getFatoDiscipuladoORM() {
+        if (is_null($this->_FatoDiscipuladoORM)) {
+			$this->_FatoDiscipuladoORM = new FatoDiscipuladoORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_FATO_DISCIPULADO);
+        }
+        return $this->_FatoDiscipuladoORM;
     }
  
     /**

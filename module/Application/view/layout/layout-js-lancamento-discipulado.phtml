@@ -1,0 +1,10 @@
+<?php
+
+$versao = '?v=1.1.4';
+
+echo $this
+        ->headScript()
+       ->prependFile($this->basePath() . '/js/circuito_da_visao/validar-lancamento-discipulado.js' . $versao)
+;
+echo $this->inlineScript();
+

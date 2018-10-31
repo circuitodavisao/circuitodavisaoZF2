@@ -1,16 +1,21 @@
 -- Table: fato_discipulado
 
--- DROP TABLE fato_discipulado;
+DROP TABLE fato_discipulado;
 
 CREATE TABLE fato_discipulado
 (
     id serial NOT NULL,
+	mes integer NOT NULL,
+	ano integer NOT NULL,
     grupo_id integer NOT NULL, 
-    comecou_no_horario enumsn NOT NULL,
-    terminou_no_horario enumsn NOT NULL,
-    teve_lanche enumsn NOT NULL,
-    teve_avisos enumsn NOT NULL,
-    teve_palavra enumsn NOT NULL,
+    grupo_evento_id integer NOT NULL, 
+	pessoa_id integer NOT NULL,
+	lanche integer NOT NULL,
+	avisos integer NOT NULL,
+	administrativo integer NOT NULL,
+	oracao integer NOT NULL,
+	palavra integer NOT NULL,
+	observacao text,
     data_criacao date NOT NULL,
     hora_criacao time without time zone NOT NULL,
     data_inativacao date,
@@ -25,3 +30,6 @@ WITH (
 );
 ALTER TABLE fato_discipulado
   OWNER TO postgres;
+
+CREATE INDEX index_fato_discipulado_mes ON fato_discipulado(mes);
+CREATE INDEX index_fato_discipulado_ano ON fato_discipulado(ano);

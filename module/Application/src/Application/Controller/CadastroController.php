@@ -441,10 +441,6 @@ class CadastroController extends CircuitoController {
 				$eventoNaSessao = $this->getRepositorio()->getEventoORM()->encontrarPorId($sessao->idSessao);
 			}
 			$form = new EventoForm(Constantes::$FORM, $eventoNaSessao);
-			$idEntidadeAtual = $sessao->idEntidadeAtual;
-			$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
-			$grupo = $entidade->getGrupo();
-			$extra = $grupo->getGrupoPaiFilhoFilhos();
 		}
 		$view = new ViewModel(array(
 			Constantes::$FORM => $form,
@@ -867,53 +863,6 @@ class CadastroController extends CircuitoController {
 							$sessao->tipoMensagem = Constantes::$TIPO_MENSAGEM_ALTERAR_CULTO;
 							$sessao->textoMensagem = $eventoAtual->getNome() . ' ' . $eventoAtual->getHoraFormatoHoraMinutoParaListagem();
 						}
-						/* Verificando Grupos abaixo ou equipes */
-						/* Marcação */
-						foreach ($post_data as $key => $value) {
-							$stringParaVerificar = substr($key, 0, strlen($stringCheckEquipe));
-							if (!\strcmp($stringParaVerificar, $stringCheckEquipe)) {
-								$stringValor = substr($key, strlen($stringParaVerificar));
-								/* Verificando marcações */
-								$validacaoMarcado = false;
-								foreach ($grupoEventoAtivos as $gea) {
-									if ($gea->getGrupo()->getId() == $stringValor) {
-										$validacaoMarcado = true;
-									}
-								}
-								/* Equipe esta marcada mas não foi gerada ainda */
-								if (!$validacaoMarcado) {
-									$grupoEquipe = $this->getRepositorio()->getGrupoORM()->encontrarPorId($stringValor);
-									$grupoEventoEquipe = new GrupoEvento();
-									$grupoEventoEquipe->setDataEHoraDeCriacao();
-									$grupoEventoEquipe->setGrupo($grupoEquipe);
-									$grupoEventoEquipe->setEvento($eventoAtual);
-									$this->getRepositorio()->getGrupoEventoORM()->persistir($grupoEventoEquipe);
-								}
-							}
-						}
-						/* Desmarcação */
-						foreach ($grupoEventoAtivos as $grupoEventAtivo) {
-							$idEntidadeAtual = $sessao->idEntidadeAtual;
-							$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
-							$grupo = $entidade->getGrupo();
-							if ($grupoEventAtivo->getGrupo()->getId() != $grupo->getId()) {
-								$validacaoMarcado = false;
-								foreach ($post_data as $key => $value) {
-									$stringParaVerificar = substr($key, 0, strlen($stringCheckEquipe));
-									if (!\strcmp($stringParaVerificar, $stringCheckEquipe)) {
-										$stringValor = substr($key, strlen($stringParaVerificar));
-										if ($grupoEventAtivo->getGrupo()->getId() == $stringValor) {
-											$validacaoMarcado = true;
-										}
-									}
-								}
-								/* Equipe esta marcada mas não foi gerada ainda */
-								if (!$validacaoMarcado) {
-									$grupoEventAtivo->setDataEHoraDeInativacao();
-									$this->getRepositorio()->getGrupoEventoORM()->persistir($grupoEventAtivo, false);
-								}
-							}
-						}
 					}
 					if ($criarNovoEvento) {
 						/* Entidade selecionada */
@@ -943,21 +892,6 @@ class CadastroController extends CircuitoController {
 						$sessao->tipoMensagem = Constantes::$TIPO_MENSAGEM_CADASTRAR_DISCIPULADO;
 						$sessao->textoMensagem = $evento->getNome();
 						$sessao->idSessao = $evento->getId();
-
-						/* Grupos Abaixos ou Equipes */
-						foreach ($post_data as $key => $value) {
-							$stringParaVerificar = substr($key, 0, strlen($stringCheckEquipe));
-							if (!\strcmp($stringParaVerificar, $stringCheckEquipe)) {
-								$stringValor = substr($key, strlen($stringParaVerificar));
-								$grupoEquipe = $this->getRepositorio()->getGrupoORM()->encontrarPorId($stringValor);
-								$grupoEventoEquipe = new GrupoEvento();
-								$grupoEventoEquipe->setData_criacao(Funcoes::dataAtual());
-								$grupoEventoEquipe->setHora_criacao(Funcoes::horaAtual());
-								$grupoEventoEquipe->setGrupo($grupoEquipe);
-								$grupoEventoEquipe->setEvento($evento);
-								$this->getRepositorio()->getGrupoEventoORM()->persistir($grupoEventoEquipe);
-							}
-						}
 					}
 					$this->getRepositorio()->fecharTransacao();
 					return $this->redirect()->toRoute(Constantes::$ROUTE_CADASTRO, array(

@@ -1,0 +1,45 @@
+<?php
+
+use Application\Controller\Helper\Constantes;
+use Application\Controller\Helper\Funcoes;
+use Application\View\Helper\BotaoSimples;
+
+if(date('m') == 1){
+	$mesAnterior = 12;
+	$anoAnteriror = date('Y') - 1;
+}else{
+	$mesAnterior = date('m') - 1;
+	$anoAnteriror = date('Y');
+}
+$mesPorExtenso = Funcoes::mesPorExtenso($mesAnterior, 1);
+$formulario = $this->formulario;
+$formulario->prepare();
+$tamanho = 600;
+$html = '';
+$html .= $this->form()->openTag($formulario);
+$html .= '<div align="center">';
+$html .= '<div class="panel mw'.$tamanho.'">';
+
+$html .= '<div class="panel-body bg-light text-center">';
+$html .= '<h1>Avaliação do discipulado do meu líder em '.$mesPorExtenso.'/'.$anoAnteriror.'</h1>';
+$html .= $this->inputFormularioSimples('Selecione o Discipulado', $formulario->get('idGrupoEvento'), 12, 2);
+$html .= $this->inputFormularioSimples('Avalie o lanche de 0 a 5', $formulario->get('lanche'), 12, 2);
+$html .= $this->inputFormularioSimples('Avalie os avisos de 0 a 5', $formulario->get('avisos'), 12, 2);
+$html .= $this->inputFormularioSimples('Avalie o administrativo de 0 a 5', $formulario->get('administrativo'), 12, 2);
+$html .= $this->inputFormularioSimples('Avalie a oração de 0 a 5', $formulario->get('oracao'), 12, 2);
+$html .= $this->inputFormularioSimples('Avalie a palavra de 0 a 5', $formulario->get('palavra'), 12, 2);
+
+$html .= '<div class="row">';
+$html .= '<label class="field-label text-muted fs18 mb10" for="observacao">Observação Anônima</label>';
+$html .= $this->inputFormularioSimples('', $formulario->get('observacao'), 12, 4);
+$html .= '</div>';
+
+$html .= $this->divMensagens();
+$stringNomeDaFuncaoOnClickCadastro = 'validar(this.form)';
+$html .= $this->botaoSimples('Lançar', $this->funcaoOnClick($stringNomeDaFuncaoOnClickCadastro));
+
+$html .= '</div>';
+$html .= '</div>';
+$html .= '</div>';
+$html .= $this->form()->closeTag();
+echo $html;

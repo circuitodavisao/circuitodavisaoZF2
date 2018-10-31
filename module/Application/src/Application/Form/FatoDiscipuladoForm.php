@@ -4,12 +4,10 @@ namespace Application\Form;
 
 use Application\Controller\Helper\Constantes;
 use Application\Controller\Helper\Funcoes;
-use Application\Model\Entity\Evento;
-use Application\Model\ORM\RepositorioORM;
-use Zend\Form\Element\Date;
 use Zend\Form\Element\Hidden;
-use Zend\Form\Element\MultiCheckbox;
-use Zend\Form\Element\Text;
+use Zend\Form\Element\Select;
+use Zend\Form\Element\Textarea;
+use Zend\Form\Element\Csrf;
 use Zend\Form\Form;
 
 /**
@@ -20,69 +18,66 @@ use Zend\Form\Form;
  */
 class FatoDiscipuladoForm extends Form {
 
-    /**
-     * Contrutor
-     * @param String $name
-     */
-    public function __construct($name = null) {
-        parent::__construct($name);
-        /**
-         * Configuração do formulário
-         */
-        $this->setAttributes(array(
-            Constantes::$FORM_STRING_METHOD => Constantes::$FORM_STRING_POST,
-        ));
+	/**
+	 * Contrutor
+	 * @param String $name
+	 */
+	public function __construct($grupoEventoDiscipulado, $tradutor) {
+		parent::__construct($name = null);
+		/**
+		 * Configuração do formulário
+		 */
+		$this->setAttributes(array(
+			Constantes::$FORM_STRING_METHOD => Constantes::$FORM_STRING_POST,
+			'action' => 'lancamentoDiscipuladoFinalizar',
+		));
 
-        comecou_no_horario;
-        terminou_no_horario;
-        teve_lanche;
-        teve_avisos;
-        teve_palavra;
+		$arraySelect = array();
+		$arraySelect[0] = Constantes::$FORM_SELECT;
+		foreach($grupoEventoDiscipulado as $grupoEvento){
+			$arraySelect[$grupoEvento->getId()] = 'Nome: '. $grupoEvento->getEvento()->getNome(). ' - Dia: '.$tradutor(Funcoes::diaDaSemanaPorDia($grupoEvento->getEvento()->getDia(),1)).' Hora: '.$grupoEvento->getEvento()->getHora();
+		}
+		$inputSelectNota = new Select();
+		$inputSelectNota->setName('idGrupoEvento');
+		$inputSelectNota->setAttributes(array(
+			Constantes::$FORM_CLASS => Constantes::$FORM_CLASS_FORM_CONTROL,
+		));
+		$inputSelectNota->setValueOptions($arraySelect);
+		$this->add($inputSelectNota);
 
-        $classOption = 'block mt15';
-        for ($indiceInputs = 0; $indiceInputs <= 4; $indiceInputs++) {
-            $input = '';
-            switch ($indiceInputs) {
-                case 0:$input = 'inputComecouNoHorario';
-                    break;
-                case 1:$input = 'inputTerminouNoHorario';
-                    break;
-                case 2:$input = 'inputTeveLanche';
-                    break;
-                case 3:$input = 'inputTeveAvisos';
-                    break;
-                case 4:$input = 'inputTevePalavra';
-                    break;
-            }
-            $this->add(
-                    (new Radio())
-                            ->setName($input)
-                            ->setAttributes([
-                                Constantes::$FORM_STRING_ID => $input,
-                            ])
-                            ->setOptions([
-                                Constantes::$FORM_STRING_VALUE_OPTIONS => array(
-                                    1 => array(
-                                        Constantes::$FORM_STRING_VALUE => 'S',
-                                        Constantes::$FORM_STRING_LABEL => ' Sim',
-                                        Constantes::$FORM_STRING_LABEL_ATRIBUTES => array(Constantes::$FORM_STRING_CLASS => $classOption),
-                                    ),
-                                    2 => array(
-                                        Constantes::$FORM_STRING_VALUE => 'N',
-                                        Constantes::$FORM_STRING_LABEL => ' Não',
-                                        Constantes::$FORM_STRING_LABEL_ATRIBUTES => array(Constantes::$FORM_STRING_CLASS => $classOption),
-                                    ),
-                                ),
-                            ])
-            );
-            $element = $this->get($input);
-            $element->setLabelOptions(['disable_html_escape' => true]);
-        }
-
-        $this->add(
-                (new Csrf())
-                        ->setName(Constantes::$INPUT_CSRF)
-        );
-    }
+		for ($indiceInputs = 1; $indiceInputs <= 5; $indiceInputs++) {
+			$input = '';
+			switch ($indiceInputs) {
+			case 1:$input = 'lanche'; break;
+			case 2:$input = 'avisos'; break;
+			case 3:$input = 'administrativo'; break;
+			case 4:$input = 'oracao'; break;
+			case 5:$input = 'palavra'; break;
+			}
+			$arraySelect = array();
+			$arraySelect['selecione'] = Constantes::$FORM_SELECT;
+			for ($indiceNota = 0; $indiceNota <= 5; $indiceNota++) {
+				$arraySelect[$indiceNota] = $indiceNota;
+			}
+			$inputSelectNota = new Select();
+			$inputSelectNota->setName($input);
+			$inputSelectNota->setAttributes(array(
+				Constantes::$FORM_CLASS => Constantes::$FORM_CLASS_FORM_CONTROL,
+			));
+			$inputSelectNota->setValueOptions($arraySelect);
+			$this->add($inputSelectNota);
+		}
+		$this->add(
+			(new Textarea())
+			->setName('observacao')
+			->setAttributes(array(
+				Constantes::$FORM_CLASS => Constantes::$FORM_CLASS_FORM_CONTROL,
+			))
+		);
+		$this->add(
+			(new Csrf())
+			->setName(Constantes::$INPUT_CSRF)
+		);
+	}
 
 }

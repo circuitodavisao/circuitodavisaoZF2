@@ -38,3 +38,4 @@ COMMENT ON COLUMN evento_frequencia.hora_inativacao IS 'Hora da inativação da 
 COMMENT ON COLUMN evento_frequencia.frequencia IS 'Frequência da pessoa no evento';
 COMMENT ON COLUMN evento_frequencia.dia IS 'Dia do real do evento';
 
+create index index_fato_ciclo_data_criacao on fato_ciclo(data_criacao);
