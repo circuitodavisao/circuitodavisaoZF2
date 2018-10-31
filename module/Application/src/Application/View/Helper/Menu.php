@@ -123,12 +123,12 @@ class Menu extends AbstractHelper {
 			$html .= '</a>';
 			$html .= '</li>';
 
-			//            $html .= '<li>';
-			//            $html .= '<a href="/cadastroDiscipulados" onClick="mostrarSplash();">';
-			//            $html .= '<span class="fa fa-users"></span>';
-			//            $html .= 'Discipulados';
-			//            $html .= '</a>';
-			//            $html .= '</li>';
+            $html .= '<li>';
+            $html .= '<a href="/cadastroDiscipulados" onClick="mostrarSplash();">';
+            $html .= '<span class="fa fa-users"></span>';
+            $html .= 'Discipulados';
+            $html .= '</a>';
+            $html .= '</li>';
 
 			$html .= '<li>';
 			$html .= '<a href="/cadastroRevisionistas" onClick="mostrarSplash();">';
