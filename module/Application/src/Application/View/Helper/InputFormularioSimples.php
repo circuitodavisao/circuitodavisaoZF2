@@ -25,6 +25,7 @@ class InputFormularioSimples extends AbstractHelper {
      * TipoInput 1: text
      * TipoInput 2: select
      * TipoInput 3: radio
+     * TipoInput 4: textare
      * @param string $label
      * @param Element $input
      * @param int $tamanhoGrid
@@ -62,6 +63,9 @@ class InputFormularioSimples extends AbstractHelper {
         }
         if ($this->getTipoInput() === 3) {
             $html .= $this->view->formRadio($this->getInput());
+        }
+        if ($this->getTipoInput() === 4) {
+            $html .= $this->view->formTextarea($this->getInput());
         }
         $html .= '</div>';
         return $html;
