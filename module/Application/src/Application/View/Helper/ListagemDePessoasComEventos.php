@@ -165,7 +165,7 @@ class ListagemDePessoasComEventos extends AbstractHelper {
 		if($pessoa->getTelefone()){
 			$telefone = '<a id="linkWhatsapp_'.$pessoa->getId().'" class="btn btn-success btn-xs" href="https://api.whatsapp.com/send?phone=55'.$pessoa->getTelefone().'"><i class="fa fa-whatsapp"></i></a>';
 		}else{
-			$telefone = 'SEM TELEFONE';
+			$telefone = '<span class="label label-warning" data-placement="bottom" data-toggle="popover" data-content="Sem Telefone" style="cursor: pointer;"><i class="fa fa-warning"></i></span>';
 		}
 		$html .= $telefone;
 
@@ -173,7 +173,7 @@ class ListagemDePessoasComEventos extends AbstractHelper {
 			$html .= '<span class="label label-rounded label-danger ml5">INATIVO</span>';
 		}
 
-		if($pessoa->getAtivo() && $this->view->periodo == 0){
+		if($pessoa->getAtivo() && $this->view->periodo == 0 && $this->view->possoAlterar){
 			$aluno = $pessoa->verificaSeParticipouDoRevisao() || $pessoa->verificarSeEhAluno() == 1 ? 'true':'false';
 			$dadosAlterar = $pessoa->getId().'_'.$pessoa->getTipo().'_'.$aluno;
 			$dadosRemover = $pessoa->getGrupoPessoaAtivo()->getId();
@@ -184,27 +184,6 @@ class ListagemDePessoasComEventos extends AbstractHelper {
 		$html .= '</div>';
 		/* Col 6 */
 
-		$html .= '</div>';
-		/* Row */
-
-		$html .= '<div class="row btn-default p5">';
-		$html .= '<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6" style="padding-top: 0px">';
-		if($pessoa->getTelefone()){
-			$telefone = $pessoa->getTelefone();
-		}else{
-			$telefone = 'SEM TELEFONE';
-		}
-		if($this->view->possoAlterar){
-			$html .= '<span id="span_telefone_' . $pessoa->getId() . '">';
-			$html .= $telefone;
-			$html .= '</span>';
-			/* Fim Menu dropup */
-		}else{
-			$html .= $telefone;
-		}
-		$html .= '</div>';
-
-		/* Col 6 */
 		$html .= '</div>';
 		/* Row */
 

@@ -1,6 +1,6 @@
 <?php
 echo $this->doctype();
-$versao = '?v=1.6.1';
+$versao = '?v=1.6.5';
 
 use Application\Controller\Helper\Constantes;
 ?>
@@ -49,7 +49,7 @@ use Application\Controller\Helper\Constantes;
                 ->prependStylesheet($this->basePath() . '/assets/skin/default_skin/css/theme.min.css')
                 ->prependStylesheet('https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700')
         ;
-        ?>       
+        ?>
     </head>
     <body class="external-page external-alt sb-l-c sb-r-c">
         <?php echo $this->modalLoader(); ?>
@@ -61,7 +61,7 @@ use Application\Controller\Helper\Constantes;
                     echo $this->menu();
                 }
             }
-            ?> 
+            ?>
             <section id="content_wrapper">
                 <div id="content">
                     <?php echo $this->content; ?>
