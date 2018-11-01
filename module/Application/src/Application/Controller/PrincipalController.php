@@ -81,11 +81,12 @@ class PrincipalController extends CircuitoController {
 
 		$turmas = $grupo->getGrupoIgreja()->getTurma();
 		$numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupo);
-		$relatorioCursosDesordenados = $this->getRepositorio()->getFatoCursoORM()->encontrarFatoCursoPorNumeroIdentificador($numeroIdentificador);
 		$relatorioCursos = array();
-		foreach($relatorioCursosDesordenados as $fatoCurso){
-			$relatorioCursos[$fatoCurso->getTurma_id()][$fatoCurso->getSituacao_id()]++;
-			$relatorioCursos['total'][$fatoCurso->getSituacao_id()]++;
+		if($relatorioCursosDesordenados = $this->getRepositorio()->getFatoCursoORM()->encontrarFatoCursoPorNumeroIdentificador($numeroIdentificador)){
+			foreach($relatorioCursosDesordenados as $fatoCurso){
+				$relatorioCursos[$fatoCurso->getTurma_id()][$fatoCurso->getSituacao_id()]++;
+				$relatorioCursos['total'][$fatoCurso->getSituacao_id()]++;
+			}
 		}
 		$dados = array(
 			'relatorio' => $relatorio,
@@ -104,7 +105,7 @@ class PrincipalController extends CircuitoController {
 			'relatorioCursos' => $relatorioCursos,
 		);
 
-        $grupoPaiFilhoFilhos = $grupo->getGrupoPaiFilhoFilhosAtivos($periodo);
+        $grupoPaiFilhoFilhos = $grupo->getGrupoPaiFilhoFilhosAtivos();
         if ($grupoPaiFilhoFilhos) {
             $discipulos = array();
             foreach ($grupoPaiFilhoFilhos as $gpFilho) {
@@ -113,29 +114,8 @@ class PrincipalController extends CircuitoController {
             $dados['discipulos'] = $discipulos;
         }
 
-		if($entidade->getGrupo()->getGrupoEventoAtivosPorTipo(EventoTipo::tipoDiscipulado) 
-			&& $fatoDiscipulados = $this->getRepositorio()->getFatoDiscipuladoORM()->entidadePorGrupoMesAno($entidade->getGrupo()->getId(), $mesAnterior, $anoAnterior)){
-			$relatorioDiscipulado = array();
-
-			$totalDeFatos = 0;
-			foreach($fatoDiscipulados as $fatoDiscipulado){
-				$relatorioDiscipulado['lanche'] += $fatoDiscipulado->getLanche();
-				$relatorioDiscipulado['pontualidade'] += $fatoDiscipulado->getPontualidade();
-				$relatorioDiscipulado['assiduidade'] += $fatoDiscipulado->getAssiduidade();
-				$relatorioDiscipulado['administrativo'] += $fatoDiscipulado->getAdministrativo();
-				$relatorioDiscipulado['oracao'] += $fatoDiscipulado->getOracao();
-				$relatorioDiscipulado['palavra'] += $fatoDiscipulado->getPalavra();
-				$totalDeFatos++;
-			}
-			$relatorioDiscipulado['lanche'] /= $totalDeFatos;
-			$relatorioDiscipulado['pontualidade'] /= $totalDeFatos;
-			$relatorioDiscipulado['assiduidade'] /= $totalDeFatos;
-			$relatorioDiscipulado['administrativo'] /= $totalDeFatos;
-			$relatorioDiscipulado['oracao'] /= $totalDeFatos;
-			$relatorioDiscipulado['palavra'] /= $totalDeFatos;
-
-			$media = ($relatorioDiscipulado['lanche']+$relatorioDiscipulado['pontualidade']+$relatorioDiscipulado['assiduidade']+$relatorioDiscipulado['administrativo']+$relatorioDiscipulado['oracao']+$relatorioDiscipulado['palavra'])/6;
-			$dados['discipulado'] = number_format($media);
+		if($relatorioDiscipulado = RelatorioController::relatorioDiscipulado($this->getRepositorio(), $entidade->getGrupo(), $mesAnterior, $anoAnterior)){
+			$dados['discipulado'] = $relatorioDiscipulado['media'];
 		}
 
         $view = new ViewModel($dados);
