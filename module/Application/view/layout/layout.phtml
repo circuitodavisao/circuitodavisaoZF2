@@ -1,6 +1,6 @@
 <?php
 echo $this->doctype();
-$versao = '?v=1.6.1';
+$versao = '?v=1.6.2';
 
 use Application\Controller\Helper\Constantes;
 ?>
@@ -47,9 +47,9 @@ use Application\Controller\Helper\Constantes;
                 ->prependStylesheet($this->basePath() . '/css/estilos-circuito/cv-login/estilos-login.css' . $versao)
                 ->prependStylesheet($this->basePath() . '/assets/admin-forms.min.css')
                 ->prependStylesheet($this->basePath() . '/assets/skin/default_skin/css/theme.min.css')
-                ->prependStylesheet('https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700')
+            //    ->prependStylesheet('https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700')
         ;
-        ?>       
+        ?>
     </head>
     <body class="external-page external-alt sb-l-c sb-r-c">
         <?php echo $this->modalLoader(); ?>
@@ -61,7 +61,7 @@ use Application\Controller\Helper\Constantes;
                     echo $this->menu();
                 }
             }
-            ?> 
+            ?>
             <section id="content_wrapper">
                 <div id="content">
                     <?php echo $this->content; ?>
@@ -78,7 +78,7 @@ use Application\Controller\Helper\Constantes;
                 ->prependFile($this->basePath() . '/js/circuito_da_visao/modal-selecionar-perfil.js' . $versao)
                 ->prependFile($this->basePath() . '/js/circuito_da_visao/funcao-circuito.js' . $versao)
                 ->prependFile($this->basePath() . '/js/circuito_da_visao/funcao-cadastro.js' . $versao)
-                ->prependFile($this->basePath() . '/js/circuito_da_visao/analyticstracking.js')
+              //  ->prependFile($this->basePath() . '/js/circuito_da_visao/analyticstracking.js')
                 ->prependFile($this->basePath() . '/assets/js/main.js')
                 ->prependFile($this->basePath() . '/assets/js/utility/utility.js')
                 ->prependFile('https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js', 'text/javascript', array('conditional' => 'lt IE 9',))
