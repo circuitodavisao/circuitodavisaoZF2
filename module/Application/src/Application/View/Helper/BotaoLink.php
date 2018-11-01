@@ -35,7 +35,7 @@ class BotaoLink extends AbstractHelper {
         $margenRight = 'mr10';
         $float = '';
         $ClassePosicaoBotao = '';
-        if ($this->getTipo() == 2 || $this->getTipo() == 3 || $this->getTipo() == 6 || $this->getTipo() == 8) {// tipo de menor importancia
+        if ($this->getTipo() == 2 || $this->getTipo() == 3 || $this->getTipo() == 6 || $this->getTipo() == 8 || $this->getTipo() == 11) {// tipo de menor importancia
             $classCor = 'default dark';
         }
         if ($this->getTipo() == 9){
@@ -53,6 +53,10 @@ class BotaoLink extends AbstractHelper {
         if ($this->getTipo() == 10){
             $ClassePosicaoBotao = 'pull-right ml10';
             $margenRight = '';
+        }
+        if ($this->getTipo() == 11 || $this->getTipo() == 12){
+            $tamanho = 'btn-sm';
+            $margenRight = 'mr5';
         }
 
         $html .= '<button type="button" ' . $this->getExtra() . ' ' . $float . ' onclick=\'location.href="' . $this->getLink() . '";\' class="btn ladda-button btn-' . $classCor . ' ' . $tamanho . ' ' . $margenRight . ' ' . $ClassePosicaoBotao . '" data-style="zoom-in">'
