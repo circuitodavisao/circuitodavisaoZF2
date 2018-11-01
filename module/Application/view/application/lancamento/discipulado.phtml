@@ -21,13 +21,14 @@ $html .= '<div align="center">';
 $html .= '<div class="panel mw'.$tamanho.'">';
 
 $html .= '<div class="panel-body bg-light text-center">';
-$html .= '<h1>Avaliação do discipulado do meu líder em '.$mesPorExtenso.'/'.$anoAnteriror.'</h1>';
-$html .= $this->inputFormularioSimples('Selecione o Discipulado', $formulario->get('idGrupoEvento'), 12, 2);
-$html .= $this->inputFormularioSimples('Avalie o lanche de 0 a 5', $formulario->get('lanche'), 12, 2);
-$html .= $this->inputFormularioSimples('Avalie os avisos de 0 a 5', $formulario->get('avisos'), 12, 2);
-$html .= $this->inputFormularioSimples('Avalie o administrativo de 0 a 5', $formulario->get('administrativo'), 12, 2);
-$html .= $this->inputFormularioSimples('Avalie a oração de 0 a 5', $formulario->get('oracao'), 12, 2);
-$html .= $this->inputFormularioSimples('Avalie a palavra de 0 a 5', $formulario->get('palavra'), 12, 2);
+$html .= '<h1>Em uma escala de 0 a 5, avalei os momentos do Discipulado do <b>seu Líder</b> em '.$mesPorExtenso.'/'.$anoAnteriror.'</h1>';
+$html .= $this->inputFormularioSimples('Selecione o Discipulado que participa', $formulario->get('idGrupoEvento'), 12, 2);
+$html .= $this->inputFormularioSimples('Assiduidade do <b>Lanche do Discipulado</b>', $formulario->get('lanche'), 12, 2);
+$html .= $this->inputFormularioSimples('Assiduidade do momento de <b>oração</b>', $formulario->get('oracao'), 12, 2);
+$html .= $this->inputFormularioSimples('Assiduidade que abre o <b>Circuito da Visão</b>', $formulario->get('administrativo'), 12, 2);
+$html .= $this->inputFormularioSimples('Assiduidade que utiliza o Livrinho para dar a <b>Palavra</b>', $formulario->get('palavra'), 12, 2);
+$html .= $this->inputFormularioSimples('Compromisso com o horário de <b>início e témino</b>', $formulario->get('pontualidade'), 12, 2);
+$html .= $this->inputFormularioSimples('<b>Assiduidade</b> do Discipulado', $formulario->get('assiduidade'), 12, 2);
 
 $html .= '<div class="row">';
 $html .= '<label class="field-label text-muted fs18 mb10" for="observacao">Observação Anônima</label>';

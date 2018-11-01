@@ -40,9 +40,6 @@ class FatoDiscipulado extends CircuitoEntity {
     protected $lanche;
 
     /** @ORM\Column(type="integer") */
-    protected $avisos;
-
-    /** @ORM\Column(type="integer") */
     protected $administrativo;
 
     /** @ORM\Column(type="integer") */
@@ -50,6 +47,12 @@ class FatoDiscipulado extends CircuitoEntity {
 
     /** @ORM\Column(type="integer") */
     protected $palavra;
+
+    /** @ORM\Column(type="integer") */
+    protected $pontualidade;
+
+    /** @ORM\Column(type="integer") */
+    protected $assiduidade;
 
     /** @ORM\Column(type="string") */
     protected $observacao;
@@ -110,14 +113,6 @@ class FatoDiscipulado extends CircuitoEntity {
 		$this->lanche = $lanche;
 	}
 
-	function getAvisos(){
-		return $this->avisos;
-	}
-
-	function setAvisos($avisos){
-		$this->avisos = $avisos;
-	}
-
 	function getAdministrativo(){
 		return $this->administrativo;
 	}
@@ -140,6 +135,22 @@ class FatoDiscipulado extends CircuitoEntity {
 
 	function setPalavra($palavra){
 		$this->palavra = $palavra;
+	}
+
+	function getPontualidade(){
+		return $this->pontualidade;
+	}
+
+	function setPontualidade($pontualidade){
+		$this->pontualidade = $pontualidade;
+	}
+
+	function getAssiduidade(){
+		return $this->assiduidade;
+	}
+
+	function setAssiduidade($assiduidade){
+		$this->assiduidade = $assiduidade;
 	}
 
 	function getObservacao(){

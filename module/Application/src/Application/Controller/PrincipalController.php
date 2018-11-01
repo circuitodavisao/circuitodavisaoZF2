@@ -36,15 +36,16 @@ class PrincipalController extends CircuitoController {
 
 		$idEntidadeAtual = $sessao->idEntidadeAtual;
 		$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+		if(date('m') == 1){
+			$mesAnterior = 12;
+			$anoAnterior = date('Y') - 1;
+		}else{
+			$mesAnterior = date('m') - 1;
+			$anoAnterior = date('Y');
+		}
+
 		if($entidade->getGrupo()->getGrupoPaiFilhoPaiAtivo() && $grupoPai = $entidade->getGrupo()->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai()){
-			if(date('m') == 1){
-				$mesAnterior = 12;
-				$anoAnterior = date('Y') - 1;
-			}else{
-				$mesAnterior = date('m') - 1;
-				$anoAnterior = date('Y');
-			}
-			if($grupoPai->getGrupoEventoAtivosPorTipo(EventoTipo::tipoRevisao) && !$this->getRepositorio()->getFatoDiscipuladoORM()->encontrarPorGrupoPessoaMesAno($grupoPai->getId(), $sessao->idPessoa, $mesAnterior, $anoAnterior)){
+			if($grupoPai->getGrupoEventoAtivosPorTipo(EventoTipo::tipoDiscipulado) && !$this->getRepositorio()->getFatoDiscipuladoORM()->encontrarPorGrupoPessoaMesAno($grupoPai->getId(), $sessao->idPessoa, $mesAnterior, $anoAnterior)){
 				return $this->redirect()->toRoute(Constantes::$ROUTE_LANCAMENTO, array(Constantes::$ACTION => 'Discipulado'));
 			}
 		}
@@ -112,13 +113,38 @@ class PrincipalController extends CircuitoController {
             $dados['discipulos'] = $discipulos;
         }
 
+		if($entidade->getGrupo()->getGrupoEventoAtivosPorTipo(EventoTipo::tipoDiscipulado) 
+			&& $fatoDiscipulados = $this->getRepositorio()->getFatoDiscipuladoORM()->entidadePorGrupoMesAno($entidade->getGrupo()->getId(), $mesAnterior, $anoAnterior)){
+			$relatorioDiscipulado = array();
+
+			$totalDeFatos = 0;
+			foreach($fatoDiscipulados as $fatoDiscipulado){
+				$relatorioDiscipulado['lanche'] += $fatoDiscipulado->getLanche();
+				$relatorioDiscipulado['pontualidade'] += $fatoDiscipulado->getPontualidade();
+				$relatorioDiscipulado['assiduidade'] += $fatoDiscipulado->getAssiduidade();
+				$relatorioDiscipulado['administrativo'] += $fatoDiscipulado->getAdministrativo();
+				$relatorioDiscipulado['oracao'] += $fatoDiscipulado->getOracao();
+				$relatorioDiscipulado['palavra'] += $fatoDiscipulado->getPalavra();
+				$totalDeFatos++;
+			}
+			$relatorioDiscipulado['lanche'] /= $totalDeFatos;
+			$relatorioDiscipulado['pontualidade'] /= $totalDeFatos;
+			$relatorioDiscipulado['assiduidade'] /= $totalDeFatos;
+			$relatorioDiscipulado['administrativo'] /= $totalDeFatos;
+			$relatorioDiscipulado['oracao'] /= $totalDeFatos;
+			$relatorioDiscipulado['palavra'] /= $totalDeFatos;
+
+			$media = ($relatorioDiscipulado['lanche']+$relatorioDiscipulado['pontualidade']+$relatorioDiscipulado['assiduidade']+$relatorioDiscipulado['administrativo']+$relatorioDiscipulado['oracao']+$relatorioDiscipulado['palavra'])/6;
+			$dados['discipulado'] = number_format($media);
+		}
+
         $view = new ViewModel($dados);
         /* Javascript */
         $layoutJS = new ViewModel();
         $layoutJS->setTemplate('layout/layout-js-principal');
         $view->addChild($layoutJS, 'layoutJSPrincipal');
 
-           return $view;
+        return $view;
     }
 
     public function verAction() {
