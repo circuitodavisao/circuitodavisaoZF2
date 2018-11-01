@@ -1,109 +1,118 @@
 <?php
 
+use Application\Controller\Helper\Constantes;
 use Application\Controller\RelatorioController;
+use Application\Controller\Helper\Funcoes;
 use Application\Model\Entity\EventoTipo;
-use Application\Model\Helper\FuncoesEntidade;
-use Application\View\Helper\BotaoSimples;
 ?>
-<div class="mw1000 center-block">
+<div class="center-block mw600">
+	<div class="panel">
+		<div class="panel-heading text-center">Discipulado</div>
+		<div class="panel-body p5">
+<?php
+echo '<form action="/relatorioDiscipulado" method="post">';
+echo $this->cabecalhoDeMeses();
+echo '</form>';
+if($this->filtrado){
+	if($this->grupoPaiFilhoFlhos){
+		foreach($this->grupoPaiFilhoFlhos as $grupoPaiFilhoFilho){
+			$relatorio = array();
+			$grupoFilho = $grupoPaiFilhoFilho->getGrupoPaiFilhoFilho();
+			echo '<div class="panel">';
+			echo '<div class="panel-body pn">';
 
+			echo '<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 p10 text-center">';
+			echo '<div>';
+			echo $grupoFilho->getEntidadeAtiva()->infoEntidade();
+			echo '</div>';
+			foreach($grupoFilho->getPessoasAtivas() as $pessoa){
+				echo '<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 p10 text-center">';
+				echo '<img src="/img/fotos/'.$pessoa->getFoto().'" class="user-avatar" width="56px" height="56px" style="margin:auto;">';
+				echo '</div>';
+			}
+			echo '</div>';// fim 6 fotos
 
-    <div class="panel">
-        <div class="panel-body center-block">
-            <h1>Relat&oacute;rio Discipulado</h1>
-            <?php
-            $html = '';
+			echo '<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 p10 text-center">';
+			if($grupoEventoDiscipulado = $grupoFilho->getGrupoEventoPorTipoEAtivo(EventoTipo::tipoDiscipulado)){
+				$relatorio = RelatorioController::relatorioDiscipulado($this->repositorio, $grupoFilho, $this->mes, $this->ano, $this->tradutor);
+				$estrelas = '';
+				if($relatorio['media']){
+					for($i = 1; $i <= $relatorio['media']; $i++){
+						$estrelas .= '<i class="fa fa-star"></i>';
+					}
+					for($j = ($relatorio['media']+1); $j <= 5; $j++){
+						$estrelas .= '<i class="fa fa-star-o"></i>';
+					}
+				}else{
+					for($i = 1; $i <= 5; $i++){
+						$estrelas .= '<i class="fa fa-star-o"></i>';
+					}
+				}
+				echo '<div class="alert alert-default" onClick="$(\'#grupo_'.$grupoFilho->getId().'\').toggleClass(\'hidden\');">Pontuação<br />'.$estrelas.'</div>';
+			}else{
+				echo '<span class="label label-warning">Sem discipulado</span>';
+			}
+			echo '</div>';// fim 6 dados
 
-            $mensagemAlertaSemDiscipulos = '<div class="alert alert-warning">'
-                    . '<i class="fa fa-warning pr10" aria-hidden="true"></i>&nbsp;Sem Discipulos cadastrados!'
-                    . '</div>';
+			echo '<div id="grupo_'.$grupoFilho->getId().'" class="hidden" >';
+			if($discipulados = $relatorio['discipulados']){
+				echo '<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 p10 text-center">';
+				echo '<div class="panel">';
+				echo '<div class="panel-heading text-center">Discipulados</div>';
+				echo '<div class="panel-body pn">';
+				foreach($discipulados as $discipulado){
+					echo '<div class="alert alert-default">'.$discipulado['info'].'</div>';
 
-            if (count($this->gruposAbaixo) > 0) {
+					echo '<div class="row">';
+					for ($indiceInputs = 1; $indiceInputs <= 6; $indiceInputs++) {
+						$input = '';
+						$label = '';
+						switch ($indiceInputs) {
+						case 1:$input = 'lanche'; $label = 'Lanche';break;
+						case 2:$input = 'administrativo'; $label = 'Circuito';break;
+						case 3:$input = 'oracao'; $label = 'Oração';break;
+						case 4:$input = 'palavra'; $label = 'Palavra';break;
+						case 5:$input = 'pontualidade'; $label = 'Pontualidade';break;
+						case 6:$input = 'assiduidade'; $label = 'Assiduidade';break;
+						}
+						$estrelas = '';
+						echo '<div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 p10 text-center">';
+						for($i = 1; $i <= $discipulado[$input]; $i++){
+							$estrelas .= '<i class="fa fa-star"></i>';
+						}
+						for($j = ($discipulado[$input]+1); $j <= 5; $j++){
+							$estrelas .= '<i class="fa fa-star-o"></i>';
+						}
+						echo $label.'<br />';
+						echo $estrelas;
+						echo '</div>';
+					}
+					echo '</div>';
+				}
+				echo '</div>';
+				echo '</div>';
+				echo '</div>';
+			}
 
-                foreach ($this->gruposAbaixo as $gpFilho) {
+			if($observacoes = $relatorio['observacoes']){
+				echo '<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 p10 text-center">';
+				echo '<div class="panel">';
+				echo '<div class="panel-heading text-center">Observações</div>';
+				echo '<div class="panel-body pn">';
+				foreach($observacoes as $observacao){
+					echo '<div class="alert alert-default">'.$observacao.'</div>';
+				}
+				echo '</div>';
+				echo '</div>';
+				echo '</div>';
+			}
+			echo '</div>';
 
-                    $html .= '<hr/>';
-                    $grupoFilho = $gpFilho->getGrupoPaiFilhoFilho();
-                    if ($grupoFilho->getResponsabilidadesAtivas()) {
-
-                        $arrayLideres = array();
-                        if ($gruposAbaixo144 = $grupoFilho->getGrupoPaiFilhoFilhosAtivos($periodo = 0)) {
-                            foreach ($gruposAbaixo144 as $gruposPaiFilho144) {
-                                $grupoFilho144 = $gruposPaiFilho144->getGrupoPaiFilhoFilho();
-                                foreach ($grupoFilho144->getResponsabilidadesAtivas() as $grupoResponsavel144) {
-                                    $qualSexo = 0;
-                                    if ($grupoResponsavel144->getPessoa()->getSexo()) {
-                                        $qualSexo = $grupoResponsavel144->getPessoa()->getSexo();
-                                    }
-                                    if (count($grupoFilho144->getGrupoEventoPorTipoEAtivo(EventoTipo::tipoCelula)) > 0) {
-                                        $arrayLideres[$qualSexo] ++;
-                                    }
-                                }
-                            }
-                        }
-
-                        foreach ($grupoFilho->getResponsabilidadesAtivas() as $grupoResponsavel) {
-                            $pessoa = $grupoResponsavel->getPessoa();
-                            $sexo = '';
-                            if (!$pessoa->getSexo()) {
-                                $sexo = ' - <span class="label label-xs label-danger">SEM SEXO</sexo>';
-                            }
-
-                            $html .= '<div class="row mt10">';
-
-                            $html .= '<div class="col-md-2 hidden-xs">';
-                            $html .= FuncoesEntidade::tagImgComFotoDaPessoa($pessoa, 70, '%');
-
-                            $html .= '</div>';
-
-                            $html .= '<div class="col-md-10 col-xs-12">';
-                            if ($arrayLideres[$grupoResponsavel->getPessoa()->getSexo()]) {
-                                $valor = $arrayLideres[$grupoResponsavel->getPessoa()->getSexo()];
-                                $html .= $valor . ' de 12 discipulos';
-                                $valorPercentual = number_format($valor / 12 * 100);
-                                $corBarra = RelatorioController::corDaLinhaPelaPerformance($valorPercentual);
-                                $html .= '<div class="row">';
-
-                                $html .= '<div class="col-xs-10 col-sm-10 col-md-10 col-xs-10">';
-                                $html .= '<div class="progress progress-bar-xl">';
-                                $html .= '<div '
-                                        . 'class="progress-bar progress-bar-' . $corBarra . '" '
-                                        . 'role="progressbar" '
-                                        . 'aria-valuenow="' . $valor . '" '
-                                        . 'aria-valuemin="0" '
-                                        . 'aria-valuemax="12" '
-                                        . 'style="width: ' . $valorPercentual . '%;">' .
-                                        $valor;
-                                $html .= '</div>';
-                                $html .= '</div>';
-                                $html .= '</div>';
-
-                                $html .= '<div class="col-xs-2 col-sm-2 col-md-2 col-xs-2">';
-//                                $html .= $this->botaoSimples('<i class="fa fa-eye"></i>', '#', BotaoSimples::botaoMuitoPequenoImportante);
-                                $html .= '</div>';
-
-                                $html .= '</div>';
-                            }
-
-                            $html .= '<span class="hidden-xs">' . $pessoa->getNome() . '</span>' .
-                                    '<span class="hidden-sm hidden-md hidden-lg">' . $pessoa->getNomePrimeiroUltimo() . '</span>' . $sexo;
-                            $html .= '</div>';
-
-                            $html .= '</div>';
-                        }
-
-                        if (count($arrayLideres[0]) > 0) {
-                            $html .= '<div class="row mt10 text-center">';
-                            $html .= '<span class="label label-info">Discipulos sem sexo: ' . $arrayLideres[0] . '</span>';
-                            $html .= '</div>';
-                        }
-                    }
-                }
-            } else {
-                $html .= $mensagemAlertaSemDiscipulos;
-            }
-            echo $html;
-            ?>
-        </div>
-    </div>
-</div>
+			echo '</div>';
+			echo '</div>';
+		}
+	}
+}
+echo '</div>';
+echo '</div>';
+echo '</div>';

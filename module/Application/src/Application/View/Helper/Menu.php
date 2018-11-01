@@ -288,12 +288,12 @@ class Menu extends AbstractHelper {
 			$html .= '</a>';
 			$html .= '</li>';
 
-//			$html .= '<li>';
-//			$html .= '<a href="/relatorioDiscipulado" onClick="mostrarSplash();">';
-//			$html .= '<span class="fa fa-users"></span>';
-//			$html .= 'Discipulado';
-//			$html .= '</a>';
-//			$html .= '</li>';
+			$html .= '<li>';
+			$html .= '<a href="/relatorioDiscipulado" onClick="mostrarSplash();">';
+			$html .= '<span class="fa fa-users"></span>';
+			$html .= 'Discipulado';
+			$html .= '</a>';
+			$html .= '</li>';
 
 			if ($this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja ||
 				$this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::equipe) {
