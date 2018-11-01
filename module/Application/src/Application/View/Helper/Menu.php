@@ -48,12 +48,28 @@ class Menu extends AbstractHelper {
 		$html .= '</a>';
 
 		$html .= '<ul class="dropdown-menu list-group dropdown-persist w250" role="menu">';
+
+		/* Laço para mostrar as responsabilidades ativas */
+			 if (count($responsabilidades = $this->view->pessoa->getResponsabilidadesAtivas()) > 1) {
+					 foreach ($responsabilidades as $responsabilidade) {
+							 /* Grupo da responsabilidades */
+							 $grupo = $responsabilidade->getGrupo();
+							 /* Entidades do grupo */
+							 $entidades = $grupo->getEntidade();
+							 foreach ($entidades as $entidade) {
+									 if ($entidade->verificarSeEstaAtivo()) {
+											 $html .= $this->view->perfilDropDown($entidade, 1);
+									 }
+							 }
+					 }
+			 }
+
 		$html .= '<li class="dropdown-footer">';
 
-		$html .= '<a href="' . $this->view->url(Constantes::$ROUTE_LOGIN) . 'perfil' . '" class="">';
+		$html .= '<a href="' . $this->view->url(Constantes::$ROUTE_LOGIN) . 'perfil' . '" class="animated animated-short fadeInUp">';
 		$html .= '<span class="fa fa-user pr5"></span>' . $this->view->translate('Perfil') . '</a>';
 
-		$html .= '<a href="' . $this->view->url(Constantes::$ROUTE_LOGIN) . Constantes::$URL_PRE_SAIDA . '" class="">';
+		$html .= '<a href="' . $this->view->url(Constantes::$ROUTE_LOGIN) . Constantes::$URL_PRE_SAIDA . '" class="animated animated-short fadeInUp">';
 		$html .= '<span class="fa fa-power-off pr5"></span>' . $this->view->translate(Constantes::$TRADUCAO_SAIR) . '</a>';
 		$html .= '</li>';
 		$html .= '</ul>';
@@ -322,7 +338,7 @@ class Menu extends AbstractHelper {
 			$html .= '<li>';
 			$html .= '<a href="/relatorioAlunosNaSemana" onClick="mostrarSplash();">';
 			$html .= '<span class="fa fa-graduation-cap"></span>';
-			$html .= 'Quantidade de alunos que já tem presença na aula aberta'; 
+			$html .= 'Quantidade de alunos que já tem presença na aula aberta';
 			$html .= '</a>';
 			$html .= '</li>';
 

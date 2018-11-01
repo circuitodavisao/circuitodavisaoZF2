@@ -6,6 +6,10 @@
  function alterarPessoa(dados) {
   funcaoCircuito('lancamentoAlterarPessoa', dados);
  }
+ 
+ $(document).ready(function(){
+     $('[data-toggle="popover"]').popover();
+ });
 
  function removerPessoa(dados){
    var confirmacao = confirm('Tem certeza que deseja remover essa pessoa?');

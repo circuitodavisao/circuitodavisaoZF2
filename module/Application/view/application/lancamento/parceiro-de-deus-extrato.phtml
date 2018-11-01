@@ -35,7 +35,7 @@ if($this->fatos){
 		$html .= '<td>'.Funcoes::mudarPadraoData($fatoFinanceiro->getData(),1).'</td>';
 		$html .= '<td>'.$fatoFinanceiro->getGrupo()->getEntidadeAtiva()->infoEntidade();
 		$html .= '<td>'.$fatoFinanceiro->getPessoa()->getNomePrimeiro().'</td>';
-		$html .= '<td>'.number_format($fatoFinanceiro->getValor(),2,',','.').'</td>';
+		$html .= '<td>R$ '.number_format($fatoFinanceiro->getValor(),2,',','.').'</td>';
 		$html .= '<td>'.$fatoFinanceiro->getFatoFinanceiroTipo()->getNome().'</td>';
 		if($fatoFinanceiro->getFatoFinanceiroSituacaoAtiva()){
 			$situacao = $fatoFinanceiro->getFatoFinanceiroSituacaoAtiva()->getSituacao();
@@ -49,7 +49,7 @@ if($this->fatos){
 				$corSituacao = 'danger'; break;
 			}
 			$html .= '<td><span class="label label-'.$corSituacao.'">'.$situacao->getNome().'</span></td>';
-			if($situacao->getId() === Situacao::PENDENTE_DE_ACEITACAO 
+			if($situacao->getId() === Situacao::PENDENTE_DE_ACEITACAO
 				&& (
 					(
 						$this->pessoa->getPessoaFatoFinanceiroAcessoAtivo()
@@ -58,20 +58,20 @@ if($this->fatos){
 					|| $this->entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja
 					|| $this->entidade->getEntidadeTipo()->getId() === EntidadeTipo::equipe
 				)
-			){	
+			){
 				$html .= '<td>' . $botaoAceitar . '</td>';
 			}
 
-			if($situacao->getId() === Situacao::PENDENTE_DE_ACEITACAO){	
+			if($situacao->getId() === Situacao::PENDENTE_DE_ACEITACAO){
 				$html .= '<td>' . $botaoExcluir . '</td>';
 			}
 
-			if($situacao->getId() === Situacao::ACEITO_AGENDADO 
+			if($situacao->getId() === Situacao::ACEITO_AGENDADO
 				&& (
 					$this->entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja
 					|| $this->entidade->getEntidadeTipo()->getId() === EntidadeTipo::equipe
 				)
-			){	
+			){
 				$html .= '<td>' . $botaoExcluir . '</td>';
 			}
 		}
