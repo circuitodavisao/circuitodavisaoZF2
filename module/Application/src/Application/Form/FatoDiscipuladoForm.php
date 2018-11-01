@@ -45,14 +45,15 @@ class FatoDiscipuladoForm extends Form {
 		$inputSelectNota->setValueOptions($arraySelect);
 		$this->add($inputSelectNota);
 
-		for ($indiceInputs = 1; $indiceInputs <= 5; $indiceInputs++) {
+		for ($indiceInputs = 1; $indiceInputs <= 6; $indiceInputs++) {
 			$input = '';
 			switch ($indiceInputs) {
 			case 1:$input = 'lanche'; break;
-			case 2:$input = 'avisos'; break;
-			case 3:$input = 'administrativo'; break;
-			case 4:$input = 'oracao'; break;
-			case 5:$input = 'palavra'; break;
+			case 2:$input = 'administrativo'; break;
+			case 3:$input = 'oracao'; break;
+			case 4:$input = 'palavra'; break;
+			case 5:$input = 'pontualidade'; break;
+			case 6:$input = 'assiduidade'; break;
 			}
 			$arraySelect = array();
 			$arraySelect['selecione'] = Constantes::$FORM_SELECT;

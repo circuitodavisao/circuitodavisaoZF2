@@ -18,22 +18,6 @@ function validar(formulario){
 			mensagemDeErro += ', Lanche';
 		}
 	}
-	if(formulario.avisos.value == 'selecione'){
-		temErros = true
-		if(mensagemDeErro == ''){
-			mensagemDeErro = 'Avisos';
-		}else{
-			mensagemDeErro += ', Avisos';
-		}
-	}
-	if(formulario.administrativo.value == 'selecione'){
-		temErros = true
-		if(mensagemDeErro == ''){
-			mensagemDeErro = 'Administrativo';
-		}else{
-			mensagemDeErro += ', Administrativo';
-		}
-	}
 	if(formulario.oracao.value == 'selecione'){
 		temErros = true
 		if(mensagemDeErro == ''){
@@ -45,12 +29,35 @@ function validar(formulario){
 	if(formulario.administrativo.value == 'selecione'){
 		temErros = true
 		if(mensagemDeErro == ''){
+			mensagemDeErro = 'Circuito da visão';
+		}else{
+			mensagemDeErro += ', Circuito da visão';
+		}
+	}
+	if(formulario.administrativo.value == 'selecione'){
+		temErros = true
+		if(mensagemDeErro == ''){
 			mensagemDeErro = 'Palavra';
 		}else{
 			mensagemDeErro += ', Palavra';
 		}
 	}
-
+	if(formulario.pontualidade.value == 'selecione'){
+		temErros = true
+		if(mensagemDeErro == ''){
+			mensagemDeErro = 'Pontualidade';
+		}else{
+			mensagemDeErro += ', Pontualidade';
+		}
+	}
+	if(formulario.assiduidade.value == 'selecione'){
+		temErros = true
+		if(mensagemDeErro == ''){
+			mensagemDeErro = 'Assiduidade';
+		}else{
+			mensagemDeErro += ', Assiduidade';
+		}
+	}
 	if(!temErros){
 		$('#divMEnsagens')
 			.addClass('hidden');
