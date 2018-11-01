@@ -42,8 +42,14 @@ use Application\Controller\Helper\Constantes;
 
                         <p class="text-right mt20 col-md-12">
                         <div class="row">
-                            <?php echo $this->botaoLink(Constantes::$TRADUCAO_ENTRAR_NOVAMENTE, ($this->url(Constantes::$ROUTE_LOGIN) . Constantes::$URL_PRINCIPAL), 2); ?>
-                            <?php echo $this->botaoLink(Constantes::$ENCERRAR_AGORA, ($this->url(Constantes::$ROUTE_LOGIN) . Constantes::$URL_SAIR)); ?>
+                            <div class="hidden-lg">
+                              <?php echo $this->botaoLink(Constantes::$TRADUCAO_ENTRAR_NOVAMENTE, ($this->url(Constantes::$ROUTE_LOGIN) . Constantes::$URL_PRINCIPAL), 11); ?>
+                              <?php echo $this->botaoLink(Constantes::$ENCERRAR_AGORA, ($this->url(Constantes::$ROUTE_LOGIN) . Constantes::$URL_SAIR), 12); ?>
+                            </div>
+                            <div class="hidden-xs hidden-sm hidden-md">
+                              <?php echo $this->botaoLink(Constantes::$TRADUCAO_ENTRAR_NOVAMENTE, ($this->url(Constantes::$ROUTE_LOGIN) . Constantes::$URL_PRINCIPAL), 2); ?>
+                              <?php echo $this->botaoLink(Constantes::$ENCERRAR_AGORA, ($this->url(Constantes::$ROUTE_LOGIN) . Constantes::$URL_SAIR)); ?>
+                            </div>
                         </div>
                         </p>
 

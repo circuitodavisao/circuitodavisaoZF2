@@ -271,10 +271,10 @@ Alunos
 <div class="panel-body pn pt10 p10" style="display: none;">
 <div class="alert alert-default">
 	Legenda:
-	<span class="label label-success">A - Ativo</span>
-	<span class="label label-info">E - Especial</span>
-	<span class="label label-warning">D - Desistente</span>
-	<span class="label label-danger">R - Reprovado por falta</span>
+	<span class="label label-success" data-placement="bottom" data-toggle="popover" data-content="Ativo" style="cursor: pointer;">A</span>
+	<span class="label label-info" data-placement="bottom" data-toggle="popover" data-content="Especial" style="cursor: pointer;">E</span>
+	<span class="label label-warning" data-placement="bottom" data-toggle="popover" data-content="Desistente" style="cursor: pointer;">D</span>
+	<span class="label label-danger" data-placement="bottom" data-toggle="popover" data-content="Reprovado" style="cursor: pointer;">R</span>
 </div>
 <?php
 	if($this->turmas){
@@ -399,3 +399,9 @@ Alunos
 	echo '</div>';
 }
 echo $this->layoutJSPrincipal;
+?>
+<script>
+$(document).ready(function(){
+    $('[data-toggle="popover"]').popover();
+});
+</script>

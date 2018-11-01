@@ -116,7 +116,7 @@ class LancamentoController extends CircuitoController {
             'mostrarBotaoPeriodoAfrente' => $mostrarBotaoPeriodoAfrente,
             'possoAlterar' => $possoAlterar,
 			'grupoEventos' => $grupoEventoNoPeriodo,
-			'grupoPessoas' => $grupoPessoasNoPeriodo, 
+			'grupoPessoas' => $grupoPessoasNoPeriodo,
                 )
         );
 
@@ -539,7 +539,7 @@ class LancamentoController extends CircuitoController {
                       $aluno = $pessoa->verificaSeParticipouDoRevisao() || $pessoa->verificarSeEhAluno() == 1 ? 'true':'false';
 
                       // Validação para os hackers javascript não alterar quem não deve
-                      $grupoPessoas = $grupo->getGrupoPessoasNoPeriodo($post_data[Constantes::$PERIODO]);
+                      $grupoPessoas = $grupo->getGrupoPessoasNoPeriodo($post_data[Constantes::$PERIODO], $this->getRepositorio());
                       foreach ($grupoPessoas as $grupoPessoa) {
                         if($grupoPessoa->getPessoa()->getId() == $idPessoa){
                           $possoAlterar = true;
@@ -577,7 +577,7 @@ class LancamentoController extends CircuitoController {
                     } else {
                         $this->getRepositorio()->getPessoaORM()->persistir($pessoa);
                         $arrayPeriodo = Funcoes::montaPeriodo($periodo);
-                        $stringComecoDoPeriodo = $arrayPeriodo[3] . '-' . $arrayPeriodo[2] . '-' . $arrayPeriodo[1];                      
+                        $stringComecoDoPeriodo = $arrayPeriodo[3] . '-' . $arrayPeriodo[2] . '-' . $arrayPeriodo[1];
                         $grupoPessoaTipo = $this->getRepositorio()->getGrupoPessoaTipoORM()->encontrarPorId($post_data[Constantes::$INPUT_TIPO]);
                         $grupoPessoa = new GrupoPessoa();
                         $grupoPessoa->setPessoa($pessoa);
@@ -1073,7 +1073,7 @@ class LancamentoController extends CircuitoController {
 		$layoutJS->setTemplate('layout/layout-js-lancamento-parceiro-de-deus');
 		$view->addChild($layoutJS, 'layoutJsLancamentoParceiroDeDeus');
 
-		
+
 		return $view;
 
 	}
@@ -1210,7 +1210,7 @@ class LancamentoController extends CircuitoController {
 			$this->getRepositorio()->fecharTransacao();
 
 			return $this->redirect()->toRoute(Constantes::$ROUTE_LANCAMENTO, array(
-				Constantes::$ACTION => 'ParceiroDeDeusExtrato', 
+				Constantes::$ACTION => 'ParceiroDeDeusExtrato',
 			));
 
 		}catch(Exception $exception){
@@ -1247,7 +1247,7 @@ class LancamentoController extends CircuitoController {
 			$this->getRepositorio()->fecharTransacao();
 
 			return $this->redirect()->toRoute(Constantes::$ROUTE_LANCAMENTO, array(
-				Constantes::$ACTION => 'ParceiroDeDeusExtrato', 
+				Constantes::$ACTION => 'ParceiroDeDeusExtrato',
 			));
 		}catch(Exception $exception){
 			echo $exception.getMessage();
