@@ -507,6 +507,9 @@ class Grupo extends CircuitoEntity {
             }
             $contador++;
         }
+		if($this->getEntidadeAtiva() && $this->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
+			$inativa = false;
+		}
         if ($inativa) {
             $nomes = $nomes . ' <span class="hidden-xs">(INATIVO - ' . $dataInativacao . ')</span>';
         }
