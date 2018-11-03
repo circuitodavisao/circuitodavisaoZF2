@@ -1514,6 +1514,20 @@ class LancamentoController extends CircuitoController {
 		$formulario = new FatoDiscipuladoForm($grupoEventoDiscipulados, $tradutor);
 		$dados = array();
 		$dados['formulario'] = $formulario;
+		$dados['lideres'] = null;
+		if($grupoPaiFilhoPai = $entidade->getGrupo()->getGrupoPaiFilhoPaiAtivo()){
+			$grupoPai = $grupoPaiFilhoPai->getGrupoPaiFilhoPai();
+			if($grupoPaiFilhoAvo = $grupoPai->getGrupoPaiFilhoPaiAtivo()){
+				$dados['lideres'] = '';
+				$grupoAvo = $grupoPaiFilhoAvo->getGrupoPaiFilhoPai();
+				$lideresAvos = $grupoAvo->getNomeLideresAtivos();
+				$dados['lideres'] .= $lideresAvos;
+				if($grupoAvo->getEntidadeAtiva()){
+					$dados['lideres'] .= ', líderes de '.$grupoAvo->getEntidadeAtiva()->infoEntidade();
+				}
+
+			}
+		}
 		$view = new ViewModel($dados);
 		$layoutJS = new ViewModel();
 		$layoutJS->setTemplate('layout/layout-js-lancamento-discipulado');
