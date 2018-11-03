@@ -31,7 +31,13 @@ $html .= $this->inputFormularioSimples('Compromisso com o horário de <b>início
 $html .= $this->inputFormularioSimples('<b>Assiduidade</b> do Discipulado', $formulario->get('assiduidade'), 12, 2);
 
 $html .= '<div class="row">';
-$html .= '<label class="field-label text-muted fs18 mb10" for="observacao">Observação Anônima</label>';
+$label = '';
+if(!$this->lideres){
+	$label = 'Mande uma mensagem anônima para o líder do seu líder';
+}else{
+	$label = 'Mande uma mensagem anônima para '.$this->lideres.', sobre o discipulado do seu líder';
+}
+$html .= '<label class="field-label text-muted fs18 mb10" for="observacao">'.$label.'</label>';
 $html .= $this->inputFormularioSimples('', $formulario->get('observacao'), 12, 4);
 $html .= '</div>';
 
