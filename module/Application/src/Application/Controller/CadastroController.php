@@ -441,6 +441,7 @@ class CadastroController extends CircuitoController {
 				$eventoNaSessao = $this->getRepositorio()->getEventoORM()->encontrarPorId($sessao->idSessao);
 			}
 			$form = new EventoForm(Constantes::$FORM, $eventoNaSessao);
+			$extra = 'discipulado';
 		}
 		$view = new ViewModel(array(
 			Constantes::$FORM => $form,
@@ -835,34 +836,16 @@ class CadastroController extends CircuitoController {
 						$criarNovoEvento = false;
 						$eventoAtual = $this->getRepositorio()->getEventoORM()->encontrarPorId($post_data[Constantes::$FORM_ID]);
 
-						$grupoEventoAtivos = $eventoAtual->getGrupoEventoAtivos();
-						/* Dia foi alterado */
-						if ($post_data[Constantes::$FORM_DIA_DA_SEMANA] != $eventoAtual->getDia()) {
-							/* Persistindo */
-							/* Inativando o Evento */
-							$eventoParaInativar = $eventoAtual;
-							$eventoParaInativar->setDataEHoraDeInativacao();
-							$this->getRepositorio()->getEventoORM()->persistir($eventoParaInativar, false);
-							/* Inativando todos Grupo Evento */
-							foreach ($grupoEventoAtivos as $gea) {
-								$gea->setDataEHoraDeInativacao();
-								$this->getRepositorio()->getGrupoEventoORM()->persistir($gea, false);
-							}
-							$criarNovoEvento = true;
-							$mudarDataDeCadastroParaProximoDomingo = true;
-						} else {
-							/* Dia não foi alterado */
-
-							/* Dados exclusivo do Culto */
-							if ($post_data[(Constantes::$FORM_NOME)] != $eventoAtual->getNome()) {
-								$eventoAtual->setNome(strtoupper($post_data[(Constantes::$FORM_NOME)]));
-							}
-							$eventoAtual->setHora($post_data[(Constantes::$FORM_HORA)] . ':' . $post_data[(Constantes::$FORM_MINUTOS)] . ':00');
-							$this->getRepositorio()->getEventoORM()->persistir($eventoAtual, false);
-							/* Sessão */
-							$sessao->tipoMensagem = Constantes::$TIPO_MENSAGEM_ALTERAR_CULTO;
-							$sessao->textoMensagem = $eventoAtual->getNome() . ' ' . $eventoAtual->getHoraFormatoHoraMinutoParaListagem();
+						/* Dados exclusivo do Culto */
+						if ($post_data[(Constantes::$FORM_NOME)] != $eventoAtual->getNome()) {
+							$eventoAtual->setNome(strtoupper($post_data[(Constantes::$FORM_NOME)]));
 						}
+						$eventoAtual->setHora($post_data[(Constantes::$FORM_HORA)] . ':' . $post_data[(Constantes::$FORM_MINUTOS)] . ':00');
+						$eventoAtual->setDia($validatedData[Constantes::$FORM_DIA_DA_SEMANA]);
+						$this->getRepositorio()->getEventoORM()->persistir($eventoAtual, false);
+						/* Sessão */
+						$sessao->tipoMensagem = Constantes::$TIPO_MENSAGEM_ALTERAR_CULTO;
+						$sessao->textoMensagem = $eventoAtual->getNome() . ' ' . $eventoAtual->getHoraFormatoHoraMinutoParaListagem();
 					}
 					if ($criarNovoEvento) {
 						/* Entidade selecionada */
