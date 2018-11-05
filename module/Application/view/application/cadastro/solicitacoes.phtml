@@ -23,11 +23,11 @@ foreach($this->solicitacoesTipo as $solicitacaoTipo){
 		$htmlThead .= '<th class="hidden-xs">Novo Líder</th>';
 		break;
 	case SolicitacaoTipo::REMOVER_LIDER:
-		$colspan = 4;
+		$colspan = 5;
 		$htmlThead .= '<th>Quem</th>';
 		break;
 	case SolicitacaoTipo::REMOVER_CELULA:
-		$colspan = 5;
+		$colspan = 6;
 		$htmlThead .= '<th>Quem</th>';
 		$htmlThead .= '<th>Célula</th>';
 		break;
@@ -44,6 +44,10 @@ foreach($this->solicitacoesTipo as $solicitacaoTipo){
 		break;
 	}
 	$htmlThead .= '<th>Status</th>';
+	if($solicitacaoTipo->getId() === SolicitacaoTipo::REMOVER_LIDER
+		|| $solicitacaoTipo->getId() === SolicitacaoTipo::REMOVER_CELULA){
+			$htmlThead .= '<td></td>';
+		}
 
 	$html .= '<table style="font-size:10px;" class="table table-condensed table-hover bg-light mt15 footable" data-filter="#fooFilter">';
 	$html .= '<thead>';
@@ -61,7 +65,6 @@ foreach($this->solicitacoesTipo as $solicitacaoTipo){
 	$html .= '<tbody>';
 
 	foreach ($this->solicitacoes[$solicitacaoTipo->getId()] as $solicitacao) {
-
 			$html .= '<tr>';
 			$htmlTbody = '';
 			$htmlTbody .= '<td class="hidden-xs">'.$solicitacao->getId().'</td>';
@@ -122,6 +125,17 @@ foreach($this->solicitacoesTipo as $solicitacaoTipo){
 			case Situacao::CONCLUIDO: $corSituacao = 'success'; break;
 			}
 			$htmlTbody .= '<td><span class="label label-'.$corSituacao.'">'.$solicitacao->getSolicitacaoSituacaoAtiva()->getSituacao()->getNome().'</span></td>';
+			if($solicitacaoTipo->getId() === SolicitacaoTipo::REMOVER_LIDER
+				|| $solicitacaoTipo->getId() === SolicitacaoTipo::REMOVER_CELULA){
+					if($solicitacao->getSolicitacaoSituacaoAtiva()->getSituacao()->getId() === Situacao::PENDENTE_DE_ACEITACAO
+						&& $this->entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
+							$funcaoAceintar = $this->funcaoOnClick('if(confirm("Realemnte deseja aceitar essa solicitação?")){mostrarSplash(); funcaoCircuito("cadastroSolicitacaoAceitar", '.$solicitacao->getId().');}');
+							$botaoAceitar = $this->botaoSimples('Aceitar', $funcaoAceintar, BotaoSimples::botaoPequenoImportante);
+							$htmlTbody .= '<td>'.$botaoAceitar.'</td>';
+						}else{
+							$htmlTbody .= '<td></td>';
+						}
+				}
 			$html .= $htmlTbody;
 			$html .= '</tr>';
 	}
