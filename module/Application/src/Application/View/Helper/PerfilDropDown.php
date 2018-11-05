@@ -18,7 +18,7 @@ class PerfilDropDown extends AbstractHelper {
     protected $grupoPai;
 
     public function __construct() {
-        
+
     }
 
     /**
@@ -67,8 +67,8 @@ class PerfilDropDown extends AbstractHelper {
 
         $html .= '<a onclick=\'abrirModal("modal-' . $this->getEntidade()->getId() . '", ' . $this->getEntidade()->getId() . ',"perfilSelecionado");\' href="#modal-image" class="animated animated-short fadeInUp">';
 
-        $html .= '<span class="fa fa-twitter"></span> ' . $this->getEntidade()->getEntidadeTipo()->getNome();
-        $html .= ' - ' . $this->getEntidade()->infoEntidade();
+        $html .= '<span class="fa fa-users"></span> <span style="font-size:10px;">' . $this->getEntidade()->getEntidadeTipo()->getNome() . '</span>';
+        $html .= '<span style="font-size:10px;"> - ' . $this->getEntidade()->infoEntidade() . '</span>';
         $html .= '</a>';
 
         $html .= '</li>';
