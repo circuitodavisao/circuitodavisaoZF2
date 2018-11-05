@@ -151,6 +151,11 @@ class CadastroController extends CircuitoController {
 				Constantes::$ACTION => Constantes::$PAGINA_SOLICITACOES,
 			));
 		}
+		if ($pagina == Constantes::$PAGINA_SOLICITACAO_ACEITAR) {
+			return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
+				Constantes::$ACTION => Constantes::$PAGINA_SOLICITACAO_ACEITAR,
+			));
+		}
 		if ($pagina == Constantes::$PAGINA_SOLICITACAO) {
 			return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
 				Constantes::$ACTION => Constantes::$PAGINA_SOLICITACAO,
@@ -1985,6 +1990,7 @@ class CadastroController extends CircuitoController {
 		$solicitacoesTipo = $this->getRepositorio()->getSolicitacaoTipoORM()->encontrarTodos();
 		$view = new ViewModel(array(
 			'grupo' => $grupo,
+			'entidade' => $entidade,
 			'solicitacoes' => $solicitacoesDivididasPorTipo,
 			'solicitacoesTipo' => $solicitacoesTipo,
 			'titulo' => 'Solicitações',
@@ -1993,6 +1999,26 @@ class CadastroController extends CircuitoController {
 
 		self::registrarLog(RegistroAcao::VER_SOLICITACOES, $extra = '');
 		return $view;
+	}
+
+	public function solicitacaoAceitarAction(){
+		self::validarSeSouIgreja();
+		$sessao = new Container(Constantes::$NOME_APLICACAO);
+		if($idSessao = $sessao->idSessao){
+			$solicitacao = $this->getRepositorio()->getSolicitacaoORM()->encontrarPorId($idSessao);
+			$solicitacaoSituacaoAtual = $solicitacao->getSolicitacaoSituacaoAtiva();
+			$solicitacaoSituacaoAtual->setDataEHoraDeInativacao();
+			$this->getRepositorio()->getSolicitacaoSituacaoORM()->persistir($solicitacaoSituacaoAtual, $mudarDataDeCriacao = false);
+
+			$solicitacaoSituacaoAceito = new SolicitacaoSituacao();
+			$solicitacaoSituacaoAceito->setSolicitacao($solicitacao);
+			$solicitacaoSituacaoAceito->setSituacao($this->getRepositorio()->getSituacaoORM()->encontrarPorId(Situacao::ACEITO_AGENDADO));
+			$this->getRepositorio()->getSolicitacaoSituacaoORM()->persistir($solicitacaoSituacaoAceito);
+
+		}
+		return $this->redirect()->toRoute(Constantes::$ROUTE_CADASTRO, array(
+			Constantes::$PAGINA => Constantes::$PAGINA_SOLICITACOES,
+		));
 	}
 
 	public function solicitacaoAction() {
