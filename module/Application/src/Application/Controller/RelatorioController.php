@@ -1984,28 +1984,36 @@ public function alunosNaSemanaAction(){
 			$mes = $postDados['mes'];
 			$ano = $postDados['ano'];
 
-			if($entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
-				$grupoIgreja = $entidade->getGrupo()->getGrupoIgreja();
-				$fatosSetenta = $this->getRepositorio()->getFatoSetentaORM()->encontrarPorIdGrupoIgreja($grupoIgreja->getId(), $mes, $ano);
+			$processar = true;
+			/* mostrar aparti de novembro de 2018 */
+			if($ano == 2018 && $mes <= 10){
+				$processar = false;
 			}
-
-			if($entidade->getEntidadeTipo()->getId() === EntidadeTipo::equipe ||
-				$entidade->getEntidadeTipo()->getId() === EntidadeTipo::subEquipe){
-					$grupoEquipe = $entidade->getGrupo()->getGrupoEquipe();
-					$fatosSetenta = $this->getRepositorio()->getFatoSetentaORM()->encontrarPorIdGrupoEquipe($grupoEquipe->getId(), $mes, $ano);
+			
+			if($processar){
+				if($entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
+					$grupoIgreja = $entidade->getGrupo()->getGrupoIgreja();
+					$fatosSetenta = $this->getRepositorio()->getFatoSetentaORM()->encontrarPorIdGrupoIgreja($grupoIgreja->getId(), $mes, $ano);
 				}
 
-			$arrayLideres = array();
-			foreach($fatosSetenta as $fato){
-				if($fato->getSetenta() == 'S'){
-					$arrayLideres[$fato->getGrupo_id()]['setenta'] = 'S';
+				if($entidade->getEntidadeTipo()->getId() === EntidadeTipo::equipe ||
+					$entidade->getEntidadeTipo()->getId() === EntidadeTipo::subEquipe){
+						$grupoEquipe = $entidade->getGrupo()->getGrupoEquipe();
+						$fatosSetenta = $this->getRepositorio()->getFatoSetentaORM()->encontrarPorIdGrupoEquipe($grupoEquipe->getId(), $mes, $ano);
+					}
+
+				$arrayLideres = array();
+				foreach($fatosSetenta as $fato){
+					if($fato->getSetenta() == 'S'){
+						$arrayLideres[$fato->getGrupo_id()]['setenta'] = 'S';
+					}
+					$arrayLideres[$fato->getGrupo_id()]['celula'][] = $fato;
 				}
-				$arrayLideres[$fato->getGrupo_id()]['celula'][] = $fato;
+
+
+				$dados['lideres'] = $arrayLideres;
+				$dados['repositorio'] = $this->getRepositorio();
 			}
-
-
-			$dados['lideres'] = $arrayLideres;
-			$dados['repositorio'] = $this->getRepositorio();
 			$dados['filtrado'] = true;
 		}else{
 			$mes = date('m');
