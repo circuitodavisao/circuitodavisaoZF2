@@ -52,3 +52,10 @@ WITH (
 );
 ALTER TABLE fato_setenta
   OWNER TO postgres;
+
+create index index_fato_setenta_grupo_id on fato_setenta(grupo_id);
+create index index_fato_setenta_grupo_igreja_id on fato_setenta(grupo_igreja_id);
+create index index_fato_setenta_grupo_equipe_id on fato_setenta(grupo_equipe_id);
+create index index_fato_setenta_grupo_evento_id on fato_setenta(grupo_evento_id);
+create index index_fato_setenta_mes on fato_setenta(mes);
+create index index_fato_setenta_ano on fato_setenta(ano);

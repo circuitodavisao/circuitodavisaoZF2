@@ -110,7 +110,7 @@ class Menu extends AbstractHelper {
 			$html .= '<ul class="nav sub-nav">';
 
 			$html .= '<li>';
-			$html .= '<a href="/cadastroCelulas" onClick="mostrarSplash();">';
+			$html .= '<a href="#" onClick="mostrarSplash(); funcaoCircuito(\'cadastroCelulas\', null);">';
 			$html .= '<span class="fa fa-users"></span>';
 			$html .= 'Minha Célula';
 			$html .= '</a>';
@@ -118,14 +118,14 @@ class Menu extends AbstractHelper {
 
 			if ($this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja) {
 				$html .= '<li>';
-				$html .= '<a href="/cadastroCultos" onClick="mostrarSplash();">';
+				$html .= '<a href="#" onClick="mostrarSplash(); funcaoCircuito(\'cadastroCultos\', null);">';
 				$html .= '<span class="fa fa-users"></span>';
 				$html .= 'Cultos';
 				$html .= '</a>';
 				$html .= '</li>';
 
 				$html .= '<li>';
-				$html .= '<a href="/cadastroRevisoes" onClick="mostrarSplash();">';
+				$html .= '<a href="#" onClick="mostrarSplash(); funcaoCircuito(\'cadastroRevisoes\', null);">';
 				$html .= '<span class="fa fa-calendar"></span>';
 				$html .= 'Revisão de Vidas';
 				$html .= '</a>';
@@ -133,28 +133,28 @@ class Menu extends AbstractHelper {
 			}
 
 			$html .= '<li>';
-			$html .= '<a href="/cadastroGrupo" onClick="mostrarSplash();">';
+			$html .= '<a href="#" onClick="mostrarSplash(); funcaoCircuito(\'cadastroGrupo\', null);">';
 			$html .= '<span class="fa fa-users"></span>';
 			$html .= 'Time';
 			$html .= '</a>';
 			$html .= '</li>';
 
             $html .= '<li>';
-            $html .= '<a href="/cadastroDiscipulados" onClick="mostrarSplash();">';
+			$html .= '<a href="#" onClick="mostrarSplash(); funcaoCircuito(\'cadastroDiscipulados\', null);">';
             $html .= '<span class="fa fa-users"></span>';
             $html .= 'Discipulados';
             $html .= '</a>';
             $html .= '</li>';
 
 			$html .= '<li>';
-			$html .= '<a href="/cadastroRevisionistas" onClick="mostrarSplash();">';
+			$html .= '<a href="#" onClick="mostrarSplash(); funcaoCircuito(\'cadastroRevisionistas\', null);">';
 			$html .= '<span class="fa fa-users"></span>';
 			$html .= 'Revisionistas';
 			$html .= '</a>';
 			$html .= '</li>';
 
 			$html .= '<li>';
-			$html .= '<a href="/cadastroLideresRevisao" onClick="mostrarSplash();">';
+			$html .= '<a href="#" onClick="mostrarSplash(); funcaoCircuito(\'cadastroLideresRevisao\', null);">';
 			$html .= '<span class="fa fa-user"></span>';
 			$html .= 'Trabalhar no Revis&atilde;o de Vidas';
 			$html .= '</a>';
@@ -163,7 +163,7 @@ class Menu extends AbstractHelper {
 			if ($this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::equipe ||
 				$this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja) {
 					$html .= '<li>';
-					$html .= '<a href="/cadastroSolicitacoes" onClick="mostrarSplash();">';
+					$html .= '<a href="#" onClick="mostrarSplash(); funcaoCircuito(\'cadastroSolicitacoes\', null);">';
 					$html .= '<span class="fa fa-users"></span>';
 					$html .= 'Solicita&ccedil;&otilde;es';
 					$html .= '</a>';
@@ -192,14 +192,14 @@ class Menu extends AbstractHelper {
 		$html .= '</a>';
 		$html .= '<ul class="nav sub-nav">';
 		$html .= '<li>';
-		$html .= '<a href="#" onClick="mostrarSplash(); funcaoCircuito(\'lancamentoArregimentacao\', 0);">';
+		$html .= '<a href="#" onClick="mostrarSplash(); funcaoCircuito(\'lancamentoArregimentacao\', null);">';
 		$html .= '<span class="fa fa-terminal"></span>';
 		$html .= 'Arregimentação';
 		$html .= '</a>';
 		$html .= '</li>';
 		if ($this->view->entidade->verificarSeEstaAtivo()) {
 			$html .= '<li>';
-			$html .= '<a href="/lancamentoAtendimento" onClick="mostrarSplash();">';
+			$html .= '<a href="#" onClick="mostrarSplash(); funcaoCircuito(\'lancamentoAtendimento\', null);">';
 			$html .= '<span class="fa fa-users"></span>';
 			$html .= 'Atendimento';
 			$html .= '</a>';
@@ -207,7 +207,7 @@ class Menu extends AbstractHelper {
 
 			if ($this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja) {
 				$html .= '<li>';
-				$html .= '<a href="/cadastroAtivarFichas" onClick="mostrarSplash();">';
+				$html .= '<a href="#" onClick="mostrarSplash(); funcaoCircuito(\'cadastroAtivarFichas\', null);">';
 				$html .= '<span class="fa fa-users"></span>';
 				$html .= 'Fichas Revisão de Vidas';
 				$html .= '</a>';
@@ -215,7 +215,7 @@ class Menu extends AbstractHelper {
 			}
 		}
 		$html .= '<li>';
-		$html .= '<a href="/lancamentoParceiroDeDeusExtrato" onClick="mostrarSplash();">';
+		$html .= '<a href="#" onClick="mostrarSplash(); funcaoCircuito(\'lancamentoParceiroDeDeusExtrato\', null);">';
 		$html .= '<span class="fa fa-money"></span>';
 		$html .= 'Parceiro de Deus';
 		$html .= '</a>';
@@ -275,7 +275,7 @@ class Menu extends AbstractHelper {
 				}
 				if ($mostrar) {
 					$html .= '<li>';
-					$html .= '<a href="/relatorio/' . $indiceMenuRelatorio . '" onClick="mostrarSplash();">';
+					$html .= '<a href="#" onClick="mostrarSplash(); funcaoCircuito(\'relatorio/' . $indiceMenuRelatorio . '\', null);">';
 					$html .= '<span class="fa fa-table"></span>';
 					$html .= $label;
 					$html .= '</a>';
@@ -284,7 +284,7 @@ class Menu extends AbstractHelper {
 			}
 			if ($this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja) {
 				$html .= '<li>';
-  			$html .= '<a href="/relatorioExclusaoCelulas" onClick="mostrarSplash();">';
+				$html .= '<a href="#" onClick="mostrarSplash(); funcaoCircuito(\'relatorioExclusaoCelulas\', null);">';
 				$html .= '<span class="fa fa-table"></span>';
 				$html .= 'Células Excluídas';
 				$html .= '</a>';
@@ -298,14 +298,14 @@ class Menu extends AbstractHelper {
 //			$html .= '</li>';
 
 			$html .= '<li>';
-			$html .= '<a href="/relatorioAtendimento" onClick="mostrarSplash();">';
+			$html .= '<a href="#" onClick="mostrarSplash(); funcaoCircuito(\'relatorioAtendimento\', null);">';
 			$html .= '<span class="fa fa-users"></span>';
 			$html .= 'Atendimento';
 			$html .= '</a>';
 			$html .= '</li>';
 
 			$html .= '<li>';
-			$html .= '<a href="/relatorioDiscipulado" onClick="mostrarSplash();">';
+			$html .= '<a href="#" onClick="mostrarSplash(); funcaoCircuito(\'relatorioDiscipulado\', null);">';
 			$html .= '<span class="fa fa-users"></span>';
 			$html .= 'Discipulado';
 			$html .= '</a>';
