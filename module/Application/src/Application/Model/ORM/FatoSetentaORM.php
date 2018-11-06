@@ -19,7 +19,7 @@ class FatoSetentaORM extends CircuitoORM {
                 . "frc "
                 . "FROM  " . Constantes::$ENTITY_FATO_SETENTA . " frc "
                 . "WHERE "
-				. "frc.grupo_id = ?1 "
+				. "frc.grupo_igreja_id = ?1 "
 				. "AND frc.mes = ?2 "
 				. "AND frc.ano = ?3 "
 				. "ORDER BY frc.setenta ASC";
