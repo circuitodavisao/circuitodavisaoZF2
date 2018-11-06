@@ -2129,7 +2129,7 @@ public function alunosNaSemanaAction(){
 					+$relatorioGeral['administrativo']
 					+$relatorioGeral['oracao']
 					+$relatorioGeral['palavra'])/6;
-				$relatorio['media'] = number_format($media);	
+				$relatorio['media'] = number_format($media, 1);	
 
 				foreach($relatorio['discipulados'] as $chave => $valor){
 					$grupoEvento = $repositorio->getGrupoEventoORM()->encontrarPorId($chave);
