@@ -75,15 +75,16 @@ Período Atual <?php echo Funcoes::montaPeriodo($this->periodoFinal)[0]; ?>
 		case 6:
 			$valor = '';
 			if($this->discipulado){
-				for($i = 1; $i <= $this->discipulado; $i++){
-					$valor .= '<i class="fa fa-star"></i>';
-				}
-				for($j = ($this->discipulado+1); $j <= 5; $j++){
-					$valor .= '<i class="fa fa-star-o"></i>';
-				}
-			}else{
 				for($i = 1; $i <= 5; $i++){
-					$valor .= '<i class="fa fa-star-o"></i>';
+					if($this->discipulado >= $i){
+						$valor .= '<i class="fa fa-star"></i>';
+					}else{
+						if((float)$this->discipulado >= (float)(($i-1)+0.5)){
+							$valor .= '<i class="fa fa-star-half"></i>';
+						}else{
+							$valor .= '<i class="fa fa-star-o"></i>';
+						}
+					}
 				}
 			}
 			$label = 'Discipulado';

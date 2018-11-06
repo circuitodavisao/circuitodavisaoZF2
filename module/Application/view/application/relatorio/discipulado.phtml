@@ -37,15 +37,12 @@ if($this->filtrado){
 				$relatorio = RelatorioController::relatorioDiscipulado($this->repositorio, $grupoFilho, $this->mes, $this->ano, $this->tradutor);
 				$estrelas = '';
 				if($relatorio['media']){
-					for($i = 1; $i <= $relatorio['media']; $i++){
-						$estrelas .= '<i class="fa fa-star"></i>';
-					}
-					for($j = ($relatorio['media']+1); $j <= 5; $j++){
-						$estrelas .= '<i class="fa fa-star-o"></i>';
-					}
-				}else{
 					for($i = 1; $i <= 5; $i++){
-						$estrelas .= '<i class="fa fa-star-o"></i>';
+						if($relatorio['media'] >= $i){
+							$estrelas .= '<i class="fa fa-star"></i>';
+						}else{
+							$estrelas .= '<i class="fa fa-star-o"></i>';
+						}
 					}
 				}
 				echo '<div class="alert alert-default" onClick="$(\'#grupo_'.$grupoFilho->getId().'\').toggleClass(\'hidden\');">Pontuação<br />'.$estrelas.'</div>';
@@ -77,13 +74,14 @@ if($this->filtrado){
 						}
 						$estrelas = '';
 						echo '<div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 p10 text-center">';
-						for($i = 1; $i <= $discipulado[$input]; $i++){
-							$estrelas .= '<i class="fa fa-star"></i>';
+						for($i = 1; $i <= 5; $i++){
+							if($discipulado[$input] >= $i){
+								$estrelas .= '<i class="fa fa-star"></i>';
+							}else{
+								$estrelas .= '<i class="fa fa-star-o"></i>';
+							}
 						}
-						for($j = ($discipulado[$input]+1); $j <= 5; $j++){
-							$estrelas .= '<i class="fa fa-star-o"></i>';
-						}
-						echo $label.'<br />';
+					echo $label.'<br />';
 						echo $estrelas;
 						echo '</div>';
 					}
