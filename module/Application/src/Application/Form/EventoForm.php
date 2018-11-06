@@ -92,6 +92,7 @@ class EventoForm extends Form {
                             Constantes::$FORM_CLASS => Constantes::$FORM_CLASS_FORM_CONTROL,
                             Constantes::$FORM_ID => Constantes::$FORM_NOME,
                             Constantes::$FORM_PLACEHOLDER => Constantes::$TRADUCAO_NOME,
+							'autocomplete' => 'off'
                         ])
         );
 
