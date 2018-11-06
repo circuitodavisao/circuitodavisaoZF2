@@ -79,11 +79,7 @@ Período Atual <?php echo Funcoes::montaPeriodo($this->periodoFinal)[0]; ?>
 					if($this->discipulado >= $i){
 						$valor .= '<i class="fa fa-star"></i>';
 					}else{
-						if((float)$this->discipulado >= (float)(($i-1)+0.5)){
-							$valor .= '<i class="fa fa-star-half"></i>';
-						}else{
-							$valor .= '<i class="fa fa-star-o"></i>';
-						}
+						$valor .= '<i class="fa fa-star-o"></i>';
 					}
 				}
 			}
