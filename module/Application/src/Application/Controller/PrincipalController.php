@@ -107,6 +107,13 @@ class PrincipalController extends CircuitoController {
 
     public function verAction() {
         $sessao = new Container(Constantes::$NOME_APLICACAO);
+        $idEntidadeAtual = $sessao->idEntidadeAtual;
+    		$entidadeLogada = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+    		$pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($sessao->idPessoa);
+    		$grupo = $entidadeLogada->getGrupo();
+    		$grupoLogado = $grupo;
+    		$pessoaLogada = $pessoa;
+
         $idSessao = $sessao->idSessao;
         unset($sessao->idSessao);
         if ($idSessao) {
@@ -122,12 +129,15 @@ class PrincipalController extends CircuitoController {
             }
 
             $entidade = $grupoSessao->getEntidadeAtiva();
-            $entidadeLogada = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($sessao->idEntidadeAtual);
+
             $listagemDeEventos = $entidade->getGrupo()->getGrupoEventoAtivosPorTipo(EventoTipo::tipoCelula);
 
             $dados = array();
             $dados['idGrupo'] = $idSessao;
             $dados['entidade'] = $entidade;
+            $dados['grupoLogado'] = $grupoLogado;
+            $dados['grupo'] = $grupoSessao;
+            $dados['pessoaLogada'] = $pessoaLogada;
             $dados['idEntidadeTipo'] = $entidadeLogada->getTipo_id();
             $dados['mostrarParaReenviarEmails'] = $mostrarParaReenviarEmails;
             $dados['responsabilidades'] = $grupoSessao->getResponsabilidadesAtivas();
@@ -484,7 +494,7 @@ class PrincipalController extends CircuitoController {
        );
       $tipo = $dadosPost['tipo'];
       $prioridade = $dadosPost['prioridade'];
-      $descricao = $dadosPost['descricao'];      
+      $descricao = $dadosPost['descricao'];
       $anexo = $dadosPost['imagem'];
       $remetente['nome'] = $pessoa->getNomePrimeiroUltimo();
       $remetente['email'] = $pessoa->getEmail();
