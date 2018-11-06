@@ -27,12 +27,8 @@ class Sitemap extends AbstractHelper {
 	public function renderHtml() {
 		$html = '';
 		$id = '';
-		if(substr($this->getCaminho(),0,12) == 'principalVer'){
-			$id = $this->view->grupoLogado->getId();
-		} else {
-			if(substr($this->getCaminho(),0,9) == 'principal'){
-				$id = $this->view->pessoaLogada->getId();
-			}
+		if(substr($this->getCaminho(),0,9) == 'principal'){
+			$id = $this->view->pessoaLogada->getId();		
 		}
 		if(substr($this->getCaminho(),0,9) == 'relatorio'){
 			$id = $this->view->grupoLogado->getId();
