@@ -151,6 +151,11 @@ class CadastroController extends CircuitoController {
 				Constantes::$ACTION => Constantes::$PAGINA_SOLICITACOES,
 			));
 		}
+		if ($pagina == Constantes::$PAGINA_SOLICITACAO_ACEITAR) {
+			return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
+				Constantes::$ACTION => Constantes::$PAGINA_SOLICITACAO_ACEITAR,
+			));
+		}
 		if ($pagina == Constantes::$PAGINA_SOLICITACAO) {
 			return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
 				Constantes::$ACTION => Constantes::$PAGINA_SOLICITACAO,
@@ -441,10 +446,7 @@ class CadastroController extends CircuitoController {
 				$eventoNaSessao = $this->getRepositorio()->getEventoORM()->encontrarPorId($sessao->idSessao);
 			}
 			$form = new EventoForm(Constantes::$FORM, $eventoNaSessao);
-			$idEntidadeAtual = $sessao->idEntidadeAtual;
-			$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
-			$grupo = $entidade->getGrupo();
-			$extra = $grupo->getGrupoPaiFilhoFilhos();
+			$extra = 'discipulado';
 		}
 		$view = new ViewModel(array(
 			Constantes::$FORM => $form,
@@ -839,81 +841,16 @@ class CadastroController extends CircuitoController {
 						$criarNovoEvento = false;
 						$eventoAtual = $this->getRepositorio()->getEventoORM()->encontrarPorId($post_data[Constantes::$FORM_ID]);
 
-						$grupoEventoAtivos = $eventoAtual->getGrupoEventoAtivos();
-						/* Dia foi alterado */
-						if ($post_data[Constantes::$FORM_DIA_DA_SEMANA] != $eventoAtual->getDia()) {
-							/* Persistindo */
-							/* Inativando o Evento */
-							$eventoParaInativar = $eventoAtual;
-							$eventoParaInativar->setDataEHoraDeInativacao();
-							$this->getRepositorio()->getEventoORM()->persistir($eventoParaInativar, false);
-							/* Inativando todos Grupo Evento */
-							foreach ($grupoEventoAtivos as $gea) {
-								$gea->setDataEHoraDeInativacao();
-								$this->getRepositorio()->getGrupoEventoORM()->persistir($gea, false);
-							}
-							$criarNovoEvento = true;
-							$mudarDataDeCadastroParaProximoDomingo = true;
-						} else {
-							/* Dia não foi alterado */
-
-							/* Dados exclusivo do Culto */
-							if ($post_data[(Constantes::$FORM_NOME)] != $eventoAtual->getNome()) {
-								$eventoAtual->setNome(strtoupper($post_data[(Constantes::$FORM_NOME)]));
-							}
-							$eventoAtual->setHora($post_data[(Constantes::$FORM_HORA)] . ':' . $post_data[(Constantes::$FORM_MINUTOS)] . ':00');
-							$this->getRepositorio()->getEventoORM()->persistir($eventoAtual, false);
-							/* Sessão */
-							$sessao->tipoMensagem = Constantes::$TIPO_MENSAGEM_ALTERAR_CULTO;
-							$sessao->textoMensagem = $eventoAtual->getNome() . ' ' . $eventoAtual->getHoraFormatoHoraMinutoParaListagem();
+						/* Dados exclusivo do Culto */
+						if ($post_data[(Constantes::$FORM_NOME)] != $eventoAtual->getNome()) {
+							$eventoAtual->setNome(strtoupper($post_data[(Constantes::$FORM_NOME)]));
 						}
-						/* Verificando Grupos abaixo ou equipes */
-						/* Marcação */
-						foreach ($post_data as $key => $value) {
-							$stringParaVerificar = substr($key, 0, strlen($stringCheckEquipe));
-							if (!\strcmp($stringParaVerificar, $stringCheckEquipe)) {
-								$stringValor = substr($key, strlen($stringParaVerificar));
-								/* Verificando marcações */
-								$validacaoMarcado = false;
-								foreach ($grupoEventoAtivos as $gea) {
-									if ($gea->getGrupo()->getId() == $stringValor) {
-										$validacaoMarcado = true;
-									}
-								}
-								/* Equipe esta marcada mas não foi gerada ainda */
-								if (!$validacaoMarcado) {
-									$grupoEquipe = $this->getRepositorio()->getGrupoORM()->encontrarPorId($stringValor);
-									$grupoEventoEquipe = new GrupoEvento();
-									$grupoEventoEquipe->setDataEHoraDeCriacao();
-									$grupoEventoEquipe->setGrupo($grupoEquipe);
-									$grupoEventoEquipe->setEvento($eventoAtual);
-									$this->getRepositorio()->getGrupoEventoORM()->persistir($grupoEventoEquipe);
-								}
-							}
-						}
-						/* Desmarcação */
-						foreach ($grupoEventoAtivos as $grupoEventAtivo) {
-							$idEntidadeAtual = $sessao->idEntidadeAtual;
-							$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
-							$grupo = $entidade->getGrupo();
-							if ($grupoEventAtivo->getGrupo()->getId() != $grupo->getId()) {
-								$validacaoMarcado = false;
-								foreach ($post_data as $key => $value) {
-									$stringParaVerificar = substr($key, 0, strlen($stringCheckEquipe));
-									if (!\strcmp($stringParaVerificar, $stringCheckEquipe)) {
-										$stringValor = substr($key, strlen($stringParaVerificar));
-										if ($grupoEventAtivo->getGrupo()->getId() == $stringValor) {
-											$validacaoMarcado = true;
-										}
-									}
-								}
-								/* Equipe esta marcada mas não foi gerada ainda */
-								if (!$validacaoMarcado) {
-									$grupoEventAtivo->setDataEHoraDeInativacao();
-									$this->getRepositorio()->getGrupoEventoORM()->persistir($grupoEventAtivo, false);
-								}
-							}
-						}
+						$eventoAtual->setHora($post_data[(Constantes::$FORM_HORA)] . ':' . $post_data[(Constantes::$FORM_MINUTOS)] . ':00');
+						$eventoAtual->setDia($validatedData[Constantes::$FORM_DIA_DA_SEMANA]);
+						$this->getRepositorio()->getEventoORM()->persistir($eventoAtual, false);
+						/* Sessão */
+						$sessao->tipoMensagem = Constantes::$TIPO_MENSAGEM_ALTERAR_CULTO;
+						$sessao->textoMensagem = $eventoAtual->getNome() . ' ' . $eventoAtual->getHoraFormatoHoraMinutoParaListagem();
 					}
 					if ($criarNovoEvento) {
 						/* Entidade selecionada */
@@ -943,21 +880,6 @@ class CadastroController extends CircuitoController {
 						$sessao->tipoMensagem = Constantes::$TIPO_MENSAGEM_CADASTRAR_DISCIPULADO;
 						$sessao->textoMensagem = $evento->getNome();
 						$sessao->idSessao = $evento->getId();
-
-						/* Grupos Abaixos ou Equipes */
-						foreach ($post_data as $key => $value) {
-							$stringParaVerificar = substr($key, 0, strlen($stringCheckEquipe));
-							if (!\strcmp($stringParaVerificar, $stringCheckEquipe)) {
-								$stringValor = substr($key, strlen($stringParaVerificar));
-								$grupoEquipe = $this->getRepositorio()->getGrupoORM()->encontrarPorId($stringValor);
-								$grupoEventoEquipe = new GrupoEvento();
-								$grupoEventoEquipe->setData_criacao(Funcoes::dataAtual());
-								$grupoEventoEquipe->setHora_criacao(Funcoes::horaAtual());
-								$grupoEventoEquipe->setGrupo($grupoEquipe);
-								$grupoEventoEquipe->setEvento($evento);
-								$this->getRepositorio()->getGrupoEventoORM()->persistir($grupoEventoEquipe);
-							}
-						}
 					}
 					$this->getRepositorio()->fecharTransacao();
 					return $this->redirect()->toRoute(Constantes::$ROUTE_CADASTRO, array(
@@ -2068,6 +1990,7 @@ class CadastroController extends CircuitoController {
 		$solicitacoesTipo = $this->getRepositorio()->getSolicitacaoTipoORM()->encontrarTodos();
 		$view = new ViewModel(array(
 			'grupo' => $grupo,
+			'entidade' => $entidade,
 			'solicitacoes' => $solicitacoesDivididasPorTipo,
 			'solicitacoesTipo' => $solicitacoesTipo,
 			'titulo' => 'Solicitações',
@@ -2076,6 +1999,26 @@ class CadastroController extends CircuitoController {
 
 		self::registrarLog(RegistroAcao::VER_SOLICITACOES, $extra = '');
 		return $view;
+	}
+
+	public function solicitacaoAceitarAction(){
+		self::validarSeSouIgreja();
+		$sessao = new Container(Constantes::$NOME_APLICACAO);
+		if($idSessao = $sessao->idSessao){
+			$solicitacao = $this->getRepositorio()->getSolicitacaoORM()->encontrarPorId($idSessao);
+			$solicitacaoSituacaoAtual = $solicitacao->getSolicitacaoSituacaoAtiva();
+			$solicitacaoSituacaoAtual->setDataEHoraDeInativacao();
+			$this->getRepositorio()->getSolicitacaoSituacaoORM()->persistir($solicitacaoSituacaoAtual, $mudarDataDeCriacao = false);
+
+			$solicitacaoSituacaoAceito = new SolicitacaoSituacao();
+			$solicitacaoSituacaoAceito->setSolicitacao($solicitacao);
+			$solicitacaoSituacaoAceito->setSituacao($this->getRepositorio()->getSituacaoORM()->encontrarPorId(Situacao::ACEITO_AGENDADO));
+			$this->getRepositorio()->getSolicitacaoSituacaoORM()->persistir($solicitacaoSituacaoAceito);
+
+		}
+		return $this->redirect()->toRoute(Constantes::$ROUTE_CADASTRO, array(
+			Constantes::$PAGINA => Constantes::$PAGINA_SOLICITACOES,
+		));
 	}
 
 	public function solicitacaoAction() {

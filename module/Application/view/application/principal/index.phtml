@@ -44,7 +44,11 @@ Período Atual <?php echo Funcoes::montaPeriodo($this->periodoFinal)[0]; ?>
 
 <div class="row mb10">
 <?php
-	for($indiceNumeroGrandes = 1; $indiceNumeroGrandes <= 5; $indiceNumeroGrandes++){
+	$totalDeIndices = 5;
+	if($this->discipulado){
+		$totalDeIndices = 6;
+	}
+	for($indiceNumeroGrandes = 1; $indiceNumeroGrandes <= $totalDeIndices; $indiceNumeroGrandes++){
 		$valor = 0;
 		$label = '';
 		switch($indiceNumeroGrandes){
@@ -67,6 +71,22 @@ Período Atual <?php echo Funcoes::montaPeriodo($this->periodoFinal)[0]; ?>
 		case 5:
 			$valor = ($this->relatorioCursos['total'][Situacao::ATIVO] + $this->relatorioCursos['total'][Situacao::ESPECIAL]);
 			$label = 'Alunos';
+			break;
+		case 6:
+			$valor = '';
+			if($this->discipulado){
+				for($i = 1; $i <= $this->discipulado; $i++){
+					$valor .= '<i class="fa fa-star"></i>';
+				}
+				for($j = ($this->discipulado+1); $j <= 5; $j++){
+					$valor .= '<i class="fa fa-star-o"></i>';
+				}
+			}else{
+				for($i = 1; $i <= 5; $i++){
+					$valor .= '<i class="fa fa-star-o"></i>';
+				}
+			}
+			$label = 'Discipulado';
 			break;
 		}
 		echo '<div class="col-lg-3 col-md-3 col-sm-3 col-xs-6">';

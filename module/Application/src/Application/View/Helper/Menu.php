@@ -139,12 +139,12 @@ class Menu extends AbstractHelper {
 			$html .= '</a>';
 			$html .= '</li>';
 
-			//            $html .= '<li>';
-			//            $html .= '<a href="/cadastroDiscipulados" onClick="mostrarSplash();">';
-			//            $html .= '<span class="fa fa-users"></span>';
-			//            $html .= 'Discipulados';
-			//            $html .= '</a>';
-			//            $html .= '</li>';
+            $html .= '<li>';
+            $html .= '<a href="/cadastroDiscipulados" onClick="mostrarSplash();">';
+            $html .= '<span class="fa fa-users"></span>';
+            $html .= 'Discipulados';
+            $html .= '</a>';
+            $html .= '</li>';
 
 			$html .= '<li>';
 			$html .= '<a href="/cadastroRevisionistas" onClick="mostrarSplash();">';
@@ -304,12 +304,12 @@ class Menu extends AbstractHelper {
 			$html .= '</a>';
 			$html .= '</li>';
 
-//			$html .= '<li>';
-//			$html .= '<a href="/relatorioDiscipulado" onClick="mostrarSplash();">';
-//			$html .= '<span class="fa fa-users"></span>';
-//			$html .= 'Discipulado';
-//			$html .= '</a>';
-//			$html .= '</li>';
+			$html .= '<li>';
+			$html .= '<a href="/relatorioDiscipulado" onClick="mostrarSplash();">';
+			$html .= '<span class="fa fa-users"></span>';
+			$html .= 'Discipulado';
+			$html .= '</a>';
+			$html .= '</li>';
 
 			if ($this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja ||
 				$this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::equipe) {
@@ -356,12 +356,12 @@ class Menu extends AbstractHelper {
 			$html .= '</a>';
 			$html .= '</li>';
 
-//			$html .= '<li>';
-//			$html .= '<a href="/relatorioSetenta" onClick="mostrarSplash();">';
-//			$html .= '<span class="fa fa-trophy"></span>';
-//			$html .= 'Setenta';
-//			$html .= '</a>';
-//			$html .= '</li>';
+			$html .= '<li>';
+			$html .= '<a href="/relatorioSetenta" onClick="mostrarSplash();">';
+			$html .= '<span class="fa fa-trophy"></span>';
+			$html .= 'Setenta';
+			$html .= '</a>';
+			$html .= '</li>';
 
 			$html .= '<li>';
 			$html .= '<a href="/relatorioRegistro" onClick="mostrarSplash();">';

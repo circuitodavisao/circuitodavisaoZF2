@@ -423,21 +423,6 @@ class RelatorioController extends CircuitoController {
 		return $view;
 	}
 
-	public function discipuladoAction() {
-		$sessao = new Container(Constantes::$NOME_APLICACAO);
-
-		$idEntidadeAtual = $sessao->idEntidadeAtual;
-		$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
-		$grupo = $entidade->getGrupo();
-		$gruposAbaixo = $grupo->getGrupoPaiFilhoFilhosAtivos($periodo = 0);
-
-		$view = new ViewModel(array(
-			Constantes::$GRUPOS_ABAIXO => $gruposAbaixo,
-		));
-
-		return $view;
-	}
-
 	public function liderAction() {
 		$idUrl = $this->getEvent()->getRouteMatch()->getParam(Constantes::$ID, 0);
 		$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idUrl);
@@ -1999,28 +1984,36 @@ public function alunosNaSemanaAction(){
 			$mes = $postDados['mes'];
 			$ano = $postDados['ano'];
 
-			if($entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
-				$grupoIgreja = $entidade->getGrupo()->getGrupoIgreja();
-				$fatosSetenta = $this->getRepositorio()->getFatoSetentaORM()->encontrarPorIdGrupoIgreja($grupoIgreja->getId(), $mes, $ano);
+			$processar = true;
+			/* mostrar aparti de novembro de 2018 */
+			if($ano == 2018 && $mes <= 10){
+				$processar = false;
 			}
-
-			if($entidade->getEntidadeTipo()->getId() === EntidadeTipo::equipe ||
-				$entidade->getEntidadeTipo()->getId() === EntidadeTipo::subEquipe){
-					$grupoEquipe = $entidade->getGrupo()->getGrupoEquipe();
-					$fatosSetenta = $this->getRepositorio()->getFatoSetentaORM()->encontrarPorIdGrupoEquipe($grupoEquipe->getId(), $mes, $ano);
+			
+			if($processar){
+				if($entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
+					$grupoIgreja = $entidade->getGrupo()->getGrupoIgreja();
+					$fatosSetenta = $this->getRepositorio()->getFatoSetentaORM()->encontrarPorIdGrupoIgreja($grupoIgreja->getId(), $mes, $ano);
 				}
 
-			$arrayLideres = array();
-			foreach($fatosSetenta as $fato){
-				if($fato->getSetenta() == 'S'){
-					$arrayLideres[$fato->getGrupo_id()]['setenta'] = 'S';
+				if($entidade->getEntidadeTipo()->getId() === EntidadeTipo::equipe ||
+					$entidade->getEntidadeTipo()->getId() === EntidadeTipo::subEquipe){
+						$grupoEquipe = $entidade->getGrupo()->getGrupoEquipe();
+						$fatosSetenta = $this->getRepositorio()->getFatoSetentaORM()->encontrarPorIdGrupoEquipe($grupoEquipe->getId(), $mes, $ano);
+					}
+
+				$arrayLideres = array();
+				foreach($fatosSetenta as $fato){
+					if($fato->getSetenta() == 'S'){
+						$arrayLideres[$fato->getGrupo_id()]['setenta'] = 'S';
+					}
+					$arrayLideres[$fato->getGrupo_id()]['celula'][] = $fato;
 				}
-				$arrayLideres[$fato->getGrupo_id()]['celula'][] = $fato;
+
+
+				$dados['lideres'] = $arrayLideres;
+				$dados['repositorio'] = $this->getRepositorio();
 			}
-
-
-			$dados['lideres'] = $arrayLideres;
-			$dados['repositorio'] = $this->getRepositorio();
 			$dados['filtrado'] = true;
 		}else{
 			$mes = date('m');
@@ -2055,4 +2048,105 @@ public function alunosNaSemanaAction(){
 
 		return new ViewModel($dados);
 	}
+
+	public function discipuladoAction(){
+		$request = $this->getRequest();
+		$dados = array();
+		if($request->isPost()){
+			$sessao = new Container(Constantes::$NOME_APLICACAO);
+
+			$idEntidadeAtual = $sessao->idEntidadeAtual;
+			$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+			$grupoPaiFilhoFilhos = $entidade->getGrupo()->getGrupoPaiFilhoFilhosAtivosReal();
+
+			$postDados = $request->getPost();
+
+			$mes = $postDados['mes'];
+			$ano = $postDados['ano'];
+
+			$dados['repositorio'] = $this->getRepositorio();
+			$dados['filtrado'] = true;
+			$dados['grupoPaiFilhoFlhos'] = $grupoPaiFilhoFilhos;
+		}else{
+			if(date('m') == 12){
+				$mes = 1;
+				$ano = date('Y') - 1;
+			}else{
+				$mes = date('m') - 1;
+				$ano = date('Y');
+			}
+		}
+		$dados['mes'] = $mes;
+		$dados['ano'] = $ano;
+		return new ViewModel($dados);
+	}
+
+	static public function relatorioDiscipulado($repositorio, $grupo, $mesAnterior, $anoAnterior, $tradutor){
+		$relatorio = null;
+		if($grupo->getGrupoEventoAtivosPorTipo(EventoTipo::tipoDiscipulado) 
+			&& $fatoDiscipulados = $repositorio->getFatoDiscipuladoORM()->entidadePorGrupoMesAno($grupo->getId(), $mesAnterior, $anoAnterior)){
+				$relatorio = array();
+
+				$relatorioGeral = array();
+				$relatorioGeral['lanche'] = 0;
+				$relatorioGeral['pontualidade'] = 0;
+				$relatorioGeral['assiduidade'] = 0;
+				$relatorioGeral['administrativo'] = 0;
+				$relatorioGeral['oracao'] = 0;
+				$relatorioGeral['palavra'] = 0;
+
+				$totalDeFatos = 0;
+				foreach($fatoDiscipulados as $fatoDiscipulado){
+					if($fatoDiscipulado->getObservacao()){
+						$relatorio['observacoes'][] = $fatoDiscipulado->getObservacao();
+					}
+					$relatorio['discipulados'][$fatoDiscipulado->getGrupo_evento_id()]['lanche'] += $fatoDiscipulado->getLanche();
+					$relatorio['discipulados'][$fatoDiscipulado->getGrupo_evento_id()]['pontualidade'] += $fatoDiscipulado->getPontualidade();
+					$relatorio['discipulados'][$fatoDiscipulado->getGrupo_evento_id()]['assiduidade'] += $fatoDiscipulado->getAssiduidade();
+					$relatorio['discipulados'][$fatoDiscipulado->getGrupo_evento_id()]['administrativo'] += $fatoDiscipulado->getAdministrativo();
+					$relatorio['discipulados'][$fatoDiscipulado->getGrupo_evento_id()]['oracao'] += $fatoDiscipulado->getOracao();
+					$relatorio['discipulados'][$fatoDiscipulado->getGrupo_evento_id()]['palavra'] += $fatoDiscipulado->getPalavra();
+					$relatorio['discipulados'][$fatoDiscipulado->getGrupo_evento_id()]['quantidade']++;
+
+					$relatorioGeral['lanche'] += $fatoDiscipulado->getLanche();
+					$relatorioGeral['pontualidade'] += $fatoDiscipulado->getPontualidade();
+					$relatorioGeral['assiduidade'] += $fatoDiscipulado->getAssiduidade();
+					$relatorioGeral['administrativo'] += $fatoDiscipulado->getAdministrativo();
+					$relatorioGeral['oracao'] += $fatoDiscipulado->getOracao();
+					$relatorioGeral['palavra'] += $fatoDiscipulado->getPalavra();
+					$totalDeFatos++;
+				}
+				$relatorioGeral['lanche'] /= $totalDeFatos;
+				$relatorioGeral['pontualidade'] /= $totalDeFatos;
+				$relatorioGeral['assiduidade'] /= $totalDeFatos;
+				$relatorioGeral['administrativo'] /= $totalDeFatos;
+				$relatorioGeral['oracao'] /= $totalDeFatos;
+				$relatorioGeral['palavra'] /= $totalDeFatos;
+
+				$media = ($relatorioGeral['lanche']
+					+$relatorioGeral['pontualidade']
+					+$relatorioGeral['assiduidade']
+					+$relatorioGeral['administrativo']
+					+$relatorioGeral['oracao']
+					+$relatorioGeral['palavra'])/6;
+				$relatorio['media'] = number_format($media);	
+
+				foreach($relatorio['discipulados'] as $chave => $valor){
+					$grupoEvento = $repositorio->getGrupoEventoORM()->encontrarPorId($chave);
+					$info = $grupoEvento->getEvento()->getNome();
+					$relatorio['discipulados'][$chave]['info'] = $info;
+					$totalDeFatos = $relatorio['discipulados'][$chave]['quantidade'];
+					$relatorio['discipulados'][$chave]['lanche'] /= $totalDeFatos;
+					$relatorio['discipulados'][$chave]['pontualidade'] /= $totalDeFatos;
+					$relatorio['discipulados'][$chave]['assiduidade'] /= $totalDeFatos;
+					$relatorio['discipulados'][$chave]['administrativo'] /= $totalDeFatos;
+					$relatorio['discipulados'][$chave]['oracao'] /= $totalDeFatos;
+					$relatorio['discipulados'][$chave]['palavra'] /= $totalDeFatos;
+				}
+			}
+
+		return $relatorio;
+	}
+
+
 }

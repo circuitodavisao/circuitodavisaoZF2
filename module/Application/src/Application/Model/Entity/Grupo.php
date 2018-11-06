@@ -28,7 +28,7 @@ class Grupo extends CircuitoEntity {
     /**
      * @ORM\OneToMany(targetEntity="FatoDiscipulado", mappedBy="grupo", fetch="EXTRA_LAZY")
      */
-//    private $fatoDiscipulado;
+    private $fatoDiscipulado;
 
     /**
      * @ORM\OneToOne(targetEntity="GrupoCv", mappedBy="grupo", fetch="EXTRA_LAZY")
@@ -114,7 +114,7 @@ class Grupo extends CircuitoEntity {
 		$this->pessoaFatoFinanceiroAcesso = new ArrayCollection();
 		$this->solicitacao = new ArrayCollection();
 		$this->registro = new ArrayCollection();
-//        $this->fatoDiscipulado = new ArrayCollection();
+        $this->fatoDiscipulado = new ArrayCollection();
     }
 
     /**
@@ -507,6 +507,9 @@ class Grupo extends CircuitoEntity {
             }
             $contador++;
         }
+		if($this->getEntidadeAtiva() && $this->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
+			$inativa = false;
+		}
         if ($inativa) {
             $nomes = $nomes . ' <span class="hidden-xs">(INATIVO - ' . $dataInativacao . ')</span>';
         }
