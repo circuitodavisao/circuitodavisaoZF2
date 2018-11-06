@@ -11,6 +11,9 @@ $html = '';
 $html .= '<div class="panel">';
 $html .= '<div class="panel-heading text-center">Solicitações</div>';
 $html .= '<div class="panel-body bg-light">';
+$html .= '<form action="/cadastroSolicitacoes" method="post">';
+$html .= $this->cabecalhoDeMeses();
+$html .= '</form>';
 foreach($this->solicitacoesTipo as $solicitacaoTipo){
 	$colspan = 0;
 	$htmlThead = '';
