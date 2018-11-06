@@ -21,67 +21,144 @@ class FatoDiscipulado extends CircuitoEntity {
      */
     private $grupo;
 
-    /** @ORM\Column(type="string") */
-    protected $comecou_no_horario;
+	/** @ORM\Column(type="integer") */
+	protected $grupo_id;
+
+	/** @ORM\Column(type="integer") */
+	protected $grupo_evento_id;
+
+	/** @ORM\Column(type="integer") */
+	protected $pessoa_id;
+
+	/** @ORM\Column(type="integer") */
+	protected $mes;
+
+    /** @ORM\Column(type="integer") */
+    protected $ano;
+
+    /** @ORM\Column(type="integer") */
+    protected $lanche;
+
+    /** @ORM\Column(type="integer") */
+    protected $administrativo;
+
+    /** @ORM\Column(type="integer") */
+    protected $oracao;
+
+    /** @ORM\Column(type="integer") */
+    protected $palavra;
+
+    /** @ORM\Column(type="integer") */
+    protected $pontualidade;
+
+    /** @ORM\Column(type="integer") */
+    protected $assiduidade;
 
     /** @ORM\Column(type="string") */
-    protected $terminou_no_horario;
-
-    /** @ORM\Column(type="string") */
-    protected $teve_lanche;
-
-    /** @ORM\Column(type="string") */
-    protected $teve_avisos;
-
-    /** @ORM\Column(type="string") */
-    protected $teve_palavra;
-
+    protected $observacao;
+ 
     function getGrupo() {
         return $this->grupo;
-    }
-
-    function getComecou_no_horario() {
-        return $this->comecou_no_horario;
-    }
-
-    function getTerminou_no_horario() {
-        return $this->terminou_no_horario;
-    }
-
-    function getTeve_lanche() {
-        return $this->teve_lanche;
-    }
-
-    function getTeve_avisos() {
-        return $this->teve_avisos;
-    }
-
-    function getTeve_palavra() {
-        return $this->teve_palavra;
     }
 
     function setGrupo($grupo) {
         $this->grupo = $grupo;
     }
 
-    function setComecou_no_horario($comecou_no_horario) {
-        $this->comecou_no_horario = $comecou_no_horario;
-    }
+	function getGrupo_id(){
+		return $this->grupo_id;
+	}
 
-    function setTerminou_no_horario($terminou_no_horario) {
-        $this->terminou_no_horario = $terminou_no_horario;
-    }
+	function setGrupo_id($grupo_id){
+		$this->grupo_id = $grupo_id;
+	}
 
-    function setTeve_lanche($teve_lanche) {
-        $this->teve_lanche = $teve_lanche;
-    }
+	function getGrupo_evento_id(){
+		return $this->grupo_evento_id;
+	}
 
-    function setTeve_avisos($teve_avisos) {
-        $this->teve_avisos = $teve_avisos;
-    }
+	function setGrupo_evento_id($grupo_evento_id){
+		$this->grupo_evento_id = $grupo_evento_id;
+	}
 
-    function setTeve_palavra($teve_palavra) {
-        $this->teve_palavra = $teve_palavra;
-    }
+	function getPessoa_id(){
+		return $this->pessoa_id;
+	}
+
+	function setPessoa_id($pessoa_id){
+		$this->pessoa_id = $pessoa_id;
+	}
+
+	function getMes(){
+		return $this->mes;
+	}
+
+	function setMes($mes){
+		$this->mes = $mes;
+	}
+
+	function getAno(){
+		return $this->ano;
+	}
+
+	function setAno($ano){
+		$this->ano = $ano;
+	}
+
+	function getLanche(){
+		return $this->lanche;
+	}
+
+	function setLanche($lanche){
+		$this->lanche = $lanche;
+	}
+
+	function getAdministrativo(){
+		return $this->administrativo;
+	}
+
+	function setAdministrativo($administrativo){
+		$this->administrativo = $administrativo;
+	}
+
+	function getOracao(){
+		return $this->oracao;
+	}
+
+	function setOracao($oracao){
+		$this->oracao = $oracao;
+	}
+
+	function getPalavra(){
+		return $this->palavra;
+	}
+
+	function setPalavra($palavra){
+		$this->palavra = $palavra;
+	}
+
+	function getPontualidade(){
+		return $this->pontualidade;
+	}
+
+	function setPontualidade($pontualidade){
+		$this->pontualidade = $pontualidade;
+	}
+
+	function getAssiduidade(){
+		return $this->assiduidade;
+	}
+
+	function setAssiduidade($assiduidade){
+		$this->assiduidade = $assiduidade;
+	}
+
+	function getObservacao(){
+		return $this->observacao;
+	}
+
+	function setObservacao($observacao){
+		$this->observacao = $observacao;
+	}
 
 }

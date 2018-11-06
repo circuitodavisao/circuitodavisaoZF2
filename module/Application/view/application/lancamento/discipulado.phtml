@@ -1,0 +1,52 @@
+<?php
+
+use Application\Controller\Helper\Constantes;
+use Application\Controller\Helper\Funcoes;
+use Application\View\Helper\BotaoSimples;
+
+if(date('m') == 1){
+	$mesAnterior = 12;
+	$anoAnteriror = date('Y') - 1;
+}else{
+	$mesAnterior = date('m') - 1;
+	$anoAnteriror = date('Y');
+}
+$mesPorExtenso = Funcoes::mesPorExtenso($mesAnterior, 1);
+$formulario = $this->formulario;
+$formulario->prepare();
+$tamanho = 600;
+$html = '';
+$html .= $this->form()->openTag($formulario);
+$html .= '<div align="center">';
+$html .= '<div class="panel mw'.$tamanho.'">';
+
+$html .= '<div class="panel-body bg-light text-center">';
+$html .= '<h1>Em uma escala de 0 a 5, avalei os momentos do Discipulado do <b>seu Líder</b> em '.$mesPorExtenso.'/'.$anoAnteriror.'</h1>';
+$html .= $this->inputFormularioSimples('Selecione o Discipulado que participa', $formulario->get('idGrupoEvento'), 12, 2);
+$html .= $this->inputFormularioSimples('Assiduidade do <b>Lanche do Discipulado</b>', $formulario->get('lanche'), 12, 2);
+$html .= $this->inputFormularioSimples('Assiduidade do momento de <b>oração</b>', $formulario->get('oracao'), 12, 2);
+$html .= $this->inputFormularioSimples('Assiduidade que abre o <b>Circuito da Visão</b>', $formulario->get('administrativo'), 12, 2);
+$html .= $this->inputFormularioSimples('Assiduidade que utiliza o Livrinho para dar a <b>Palavra</b>', $formulario->get('palavra'), 12, 2);
+$html .= $this->inputFormularioSimples('Compromisso com o horário de <b>início e témino</b>', $formulario->get('pontualidade'), 12, 2);
+$html .= $this->inputFormularioSimples('<b>Assiduidade</b> do Discipulado', $formulario->get('assiduidade'), 12, 2);
+
+$html .= '<div class="row">';
+$label = '';
+if(!$this->lideres){
+	$label = 'Mande uma mensagem anônima para o líder do seu líder';
+}else{
+	$label = 'Mande uma mensagem anônima para '.$this->lideres.', sobre o discipulado do seu líder';
+}
+$html .= '<label class="field-label text-muted fs18 mb10" for="observacao">'.$label.'</label>';
+$html .= $this->inputFormularioSimples('', $formulario->get('observacao'), 12, 4);
+$html .= '</div>';
+
+$html .= $this->divMensagens();
+$stringNomeDaFuncaoOnClickCadastro = 'validar(this.form)';
+$html .= $this->botaoSimples('Lançar', $this->funcaoOnClick($stringNomeDaFuncaoOnClickCadastro));
+
+$html .= '</div>';
+$html .= '</div>';
+$html .= '</div>';
+$html .= $this->form()->closeTag();
+echo $html;

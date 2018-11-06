@@ -27,6 +27,10 @@ class InputDiaDaSemanaHoraMinuto extends AbstractHelper {
     public function renderHtml() {
         $validacaoNaoCelula = (!$this->getForm() instanceof CelulaForm);
         $validacaoSemId = $this->getForm()->get(Constantes::$FORM_ID)->getValue();
+		$ehDiscipulado = false;
+		if($this->view->extra == 'discipulado'){
+			$ehDiscipulado = true;
+		}
         $html = '';
         $html .= '<div class="row">';
         $html .= '<div class="col-sm-12 col-xs-12">';
@@ -36,7 +40,7 @@ class InputDiaDaSemanaHoraMinuto extends AbstractHelper {
         $html .= '</label>';
         $html .= '<label class="field prepend-icon">';
         $elemento = $this->getForm()->get(Constantes::$FORM_DIA_DA_SEMANA);
-        if ($validacaoNaoCelula && $validacaoSemId) {
+        if ($validacaoNaoCelula && $validacaoSemId && !$ehDiscipulado) {
             $html .= $this->view->translate($elemento->getValueOptions()[$elemento->getValue()]);
             $elemento->setAttribute(Constantes::$FORM_CLASS, Constantes::$FORM_CLASS_GUI_INPUT . ' ' . Constantes::$FORM_HIDDEN);
         }

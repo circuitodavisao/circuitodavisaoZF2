@@ -111,9 +111,6 @@ class ListagemDeEventos extends AbstractHelper {
                 $html .= '<th class="text-center visible-lg visible-md visible-sm">';
                 $html .= $this->view->translate(Constantes::$TRADUCAO_NOME);
                 $html .= '</th>';
-                $html .= '<th class="text-center">';
-                $html .= $this->view->translate(Constantes::$TRADUCAO_EQUIPES);
-                $html .= '</th>';
             }
             $html .= '<th class="text-center"></th>';
             $html .= '</tr>';
@@ -328,7 +325,6 @@ class ListagemDeEventos extends AbstractHelper {
                     $html .= '<td class="text-center">' . $this->view->translate($diaDaSemanaAjustado) . '/' . $evento->getHoraFormatoHoraMinutoParaListagem() . '</td>';
                     $stringNomeDaFuncaoOnClick = 'mostrarSplash(); funcaoCircuito("cadastro' . Constantes::$PAGINA_EVENTO_DISCIPULADO . '", ' . $evento->getId() . ')';
                     $stringNomeDaFuncaoOnClickExclusao = 'mostrarSplash(); funcaoCircuito("cadastro' . Constantes::$PAGINA_EVENTO_EXCLUSAO . '", ' . $evento->getId() . ')';
-                    $grupoEventoAtivos = $evento->getGrupoEventoAtivos();
                     $texto = '';
                     foreach ($grupoEventoAtivos as $gea) {
                         if ($this->view->extra != $gea->getGrupo()->getId()) {
@@ -336,7 +332,6 @@ class ListagemDeEventos extends AbstractHelper {
                         }
                     }
                     $html .= '<td class="text-center visible-lg visible-md visible-sm">' . $evento->getNome() . '</span></td>';
-                    $html .= '<td class="text-center">' . $this->view->BotaoPopover(count($grupoEventoAtivos) - 1, $texto) . '</td>';
                     $html .= '<td class="text-center">';
                     $html .= $this->view->botaoLink(Constantes::$STRING_ICONE_PENCIL, Constantes::$STRING_HASHTAG, 3, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClick));
                     $html .= $this->view->botaoLink(Constantes::$STRING_ICONE_TIMES, Constantes::$STRING_HASHTAG, 4, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClickExclusao));

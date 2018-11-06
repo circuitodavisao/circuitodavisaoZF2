@@ -188,6 +188,7 @@ class Constantes {
     public static $ENTITY_FATO_RANKING_CELULA = 'Application\Model\Entity\FatoRankingCelula';
     public static $ENTITY_REGISTRO = 'Application\Model\Entity\Registro';
     public static $ENTITY_REGISTRO_ACAO = 'Application\Model\Entity\RegistroAcao';
+    public static $ENTITY_FATO_DISCIPULADO = 'Application\Model\Entity\FatoDiscipulado';
     public static $ENTITY_PESSOA_EMAIL = 'email';
     public static $ENTITY_PESSOA_DOCUMENTO = 'documento';
     public static $ENTITY_PESSOA_DATA_NASCIMENTO = 'data_nascimento';
@@ -520,6 +521,7 @@ class Constantes {
     public static $PAGINA_INSERIR_REVISAO = 'InserirRevisao';
     public static $PAGINA_SALVAR_REVISAO = 'SalvarRevisao';
     public static $PAGINA_SOLICITACOES = 'Solicitacoes';
+    public static $PAGINA_SOLICITACAO_ACEITAR = 'SolicitacaoAceitar';
     public static $PAGINA_SOLICITACAO = 'Solicitacao';
     public static $PAGINA_SOLICITACAO_FINALIZAR = 'SolicitacaoFinalizar';
     public static $PAGINA_SOLICITACAO_RECEBER = 'SolicitacaoReceber';

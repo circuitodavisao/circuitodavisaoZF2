@@ -401,12 +401,14 @@ class Module {
                 $e->getRequest()->getUriString() == $stringHttps . 'www.' . $stringUrl . '/selecionarPerfil' ||
                 $e->getRequest()->getUriString() == $stringHttps . 'www.' . $stringUrl . '/preSaida' ||
                 $e->getRequest()->getUriString() == $stringHttps . 'www.' . $stringUrl . '/cadastroFichaRevisao' ||
+                $e->getRequest()->getUriString() == $stringHttps . 'www.' . $stringUrl . '/lancamentoDiscipulado' ||
                 $e->getRequest()->getUriString() == $stringHttps . $stringUrl ||
                 $e->getRequest()->getUriString() == $stringHttps . $stringUrl . '/' ||
                 $e->getRequest()->getUriString() == $stringHttps . $stringUrl . '/logar' ||
                 $e->getRequest()->getUriString() == $stringHttps . $stringUrl . '/selecionarPerfil' ||
                 $e->getRequest()->getUriString() == $stringHttps . $stringUrl . '/preSaida' ||
                 $e->getRequest()->getUriString() == $stringHttps . $stringUrl . '/cadastroFichaRevisao' ||
+                $e->getRequest()->getUriString() == $stringHttps . $stringUrl . '/lancamentoDiscipulado' ||
                 $sessao->naoMostrarMenu === 1
         ) {
             $viewModel->mostrarMenu = 0;
