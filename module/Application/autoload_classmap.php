@@ -71,6 +71,7 @@ return array(
     'Application\Model\ORM\TurmaORM'                             => __DIR__ . '/src/Application/Model/ORM/TurmaORM.php',
     'Application\Model\ORM\EleitorORM'                           => __DIR__ . '/src/Application/Model/ORM/EleitorORM.php',
     'Application\Model\ORM\RepositorioORM'                       => __DIR__ . '/src/Application/Model/ORM/RepositorioORM.php',
+    'Application\Model\ORM\FatoDiscipuladoORM'                   => __DIR__ . '/src/Application/Model/ORM/FatoDiscipuladoORM.php',
     'Application\Model\ORM\FatoFinanceiroORM'                    => __DIR__ . '/src/Application/Model/ORM/FatoFinancerioORM.php',
     'Application\Model\ORM\TurmaPessoaFrequenciaORM'             => __DIR__ . '/src/Application/Model/ORM/TurmaPessoaFrequenciaORM.php',
     'Application\Model\ORM\SolicitacaoTipoORM'                   => __DIR__ . '/src/Application/Model/ORM/SolicitacaoTipoORM.php',

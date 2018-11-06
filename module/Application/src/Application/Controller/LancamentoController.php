@@ -7,6 +7,7 @@ use Application\Controller\Helper\Funcoes;
 use Application\Form\AtendimentoComentarioForm;
 use Application\Form\CadastrarPessoaForm;
 use Application\Form\ParceiroDeDeusForm;
+use Application\Form\FatoDiscipuladoForm;
 use Application\Model\Entity\DimensaoTipo;
 use Application\Model\Entity\EventoFrequencia;
 use Application\Model\Entity\EventoTipo;
@@ -25,6 +26,7 @@ use Application\Model\Entity\FatoFinanceiroSituacao;
 use Application\Model\Entity\PessoaFatoFinanceiroAcesso;
 use Application\Model\Entity\FatoFinanceiroAcesso;
 use Application\Model\Entity\RegistroAcao;
+use Application\Model\Entity\FatoDiscipulado;
 use Application\Model\ORM\RepositorioORM;
 use Application\View\Helper\ListagemDePessoasComEventos;
 use DateTime;
@@ -1500,5 +1502,80 @@ class LancamentoController extends CircuitoController {
 		return $lideres;
 
 	}
+	
+	public function discipuladoAction(){
+		$sessao = new Container(Constantes::$NOME_APLICACAO);
+		$idEntidadeAtual = $sessao->idEntidadeAtual;
+		$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+		$grupoEventoDiscipulados = $entidade->getGrupo()->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai()->getGrupoEventoPorTipoEAtivo(EventoTipo::tipoDiscipulado);
 
+		$viewHelperManager = $this->getServiceLocator()->get('ViewHelperManager');
+		$tradutor = $viewHelperManager->get('translate');
+		$formulario = new FatoDiscipuladoForm($grupoEventoDiscipulados, $tradutor);
+		$dados = array();
+		$dados['formulario'] = $formulario;
+		$dados['lideres'] = null;
+		if($grupoPaiFilhoPai = $entidade->getGrupo()->getGrupoPaiFilhoPaiAtivo()){
+			$grupoPai = $grupoPaiFilhoPai->getGrupoPaiFilhoPai();
+			if($grupoPaiFilhoAvo = $grupoPai->getGrupoPaiFilhoPaiAtivo()){
+				$dados['lideres'] = '';
+				$grupoAvo = $grupoPaiFilhoAvo->getGrupoPaiFilhoPai();
+				$lideresAvos = $grupoAvo->getNomeLideresAtivos();
+				$dados['lideres'] .= $lideresAvos;
+				if($grupoAvo->getEntidadeAtiva()){
+					$dados['lideres'] .= ', líderes de '.$grupoAvo->getEntidadeAtiva()->infoEntidade();
+				}
+
+			}
+		}
+		$view = new ViewModel($dados);
+		$layoutJS = new ViewModel();
+		$layoutJS->setTemplate('layout/layout-js-lancamento-discipulado');
+		$view->addChild($layoutJS, 'layoutJsLancamentoDiscipulado');
+		return $view;
+	}
+
+	public function discipuladoFinalizarAction(){
+		$sessao = new Container(Constantes::$NOME_APLICACAO);
+		$request = $this->getRequest();
+		if($request->isPost()){
+			try{
+				$this->getRepositorio()->iniciarTransacao();
+
+				$idEntidadeAtual = $sessao->idEntidadeAtual;
+				$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+				$grupoPai = $entidade->getGrupo()->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai();
+
+				$dadosPost = $request->getPost();
+				if(date('m') == 1){
+					$mesAnterior = 12;
+					$anoAnterior = date('Y') - 1;
+				}else{
+					$mesAnterior = date('m') - 1;
+					$anoAnterior = date('Y');
+				}
+				$fatoDiscipulado = new FatoDiscipulado();
+				$fatoDiscipulado->setMes($mesAnterior);
+				$fatoDiscipulado->setAno($anoAnterior);
+				$fatoDiscipulado->setGrupo($grupoPai);
+				$fatoDiscipulado->setGrupo_evento_id($dadosPost['idGrupoEvento']);
+				$fatoDiscipulado->setPessoa_id($sessao->idPessoa);
+				$fatoDiscipulado->setLanche($dadosPost['lanche']);
+				$fatoDiscipulado->setAdministrativo($dadosPost['administrativo']);
+				$fatoDiscipulado->setOracao($dadosPost['oracao']);
+				$fatoDiscipulado->setPalavra($dadosPost['palavra']);
+				$fatoDiscipulado->setPontualidade($dadosPost['pontualidade']);
+				$fatoDiscipulado->setAssiduidade($dadosPost['assiduidade']);
+				$fatoDiscipulado->setObservacao($dadosPost['observacao']);
+				$this->getRepositorio()->getFatoDiscipuladoORM()->persistir($fatoDiscipulado);
+
+				$this->getRepositorio()->fecharTransacao();
+				return $this->redirect()->toRoute(Constantes::$ROUTE_PRINCIPAL);
+
+			}catch(Exception $exception){
+				echo $exception->getTraceAsString();
+				$this->getRepositorio()->desfazerTransacao();
+			}
+		}
+	}
 }
