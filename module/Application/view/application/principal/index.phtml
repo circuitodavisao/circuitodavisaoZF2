@@ -9,8 +9,9 @@ use Application\Model\Entity\Situacao;
 
 if ($this->mostrarPrincipal) {
 	$fotos = $this->grupo->getFotosLideresAtivos(128);
-
+  echo '<div class="alert alert-default">';
 	echo $this->sitemap('principal');
+	echo '</div>';
 ?>
 <div class="panel mt10">
 <div class="panel-body ">
