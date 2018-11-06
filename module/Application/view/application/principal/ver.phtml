@@ -5,6 +5,8 @@ use Application\Form\PerfilForm;
 use Application\Model\Entity\EntidadeTipo;
 use Application\View\Helper\BotaoSimples;
 
+
+echo $this->sitemap('principal');
 echo '<div class="panel panel-primary mw1000 center-block">';
 echo '<div class="panel-heading">';
 echo 'Perfil - Criação: ' . $this->entidade->getGrupo()->getData_criacaoStringPadraoBrasil() . ' - Matrícula: ' . $this->entidade->getGrupo()->getId();
