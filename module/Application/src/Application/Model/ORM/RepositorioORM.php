@@ -640,7 +640,7 @@ class RepositorioORM {
      */
     public function getRegistroORM() {
         if (is_null($this->_registroORM)) {
-			$this->_registroORM = new CircuitoORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_REGISTRO);
+			$this->_registroORM = new RegistroORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_REGISTRO);
         }
         return $this->_registroORM;
     }
@@ -661,10 +661,10 @@ class RepositorioORM {
      * @return CircuitoORM
      */
     public function getFatoDiscipuladoORM() {
-        if (is_null($this->_FatoDiscipuladoORM)) {
-			$this->_FatoDiscipuladoORM = new FatoDiscipuladoORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_FATO_DISCIPULADO);
+        if (is_null($this->_fatoDiscipuladoORM)) {
+			$this->_fatoDiscipuladoORM = new FatoDiscipuladoORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_FATO_DISCIPULADO);
         }
-        return $this->_FatoDiscipuladoORM;
+        return $this->_fatoDiscipuladoORM;
     }
  
     /**
