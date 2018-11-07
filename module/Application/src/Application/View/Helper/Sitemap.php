@@ -28,7 +28,7 @@ class Sitemap extends AbstractHelper {
 		$html = '';
 		$id = '';
 		if(substr($this->getCaminho(),0,9) == 'principal'){
-			$id = $this->view->pessoaLogada->getId();
+			$id = $this->view->pessoaLogada->getId();		
 		}
 		if(substr($this->getCaminho(),0,9) == 'relatorio'){
 			$id = $this->view->grupoLogado->getId();
