@@ -1016,16 +1016,18 @@ class RelatorioController extends CircuitoController {
 			}
 			$relatorio[$contadorFilhos]['grupo'] = $grupoFilhoOrdenado->getId();
 
-			$contadorFilhos++;
 			$somaTotal['mediaMembresia'] += $relatorio[$contadorFilhos]['mediaMembresia'];
 			$somaTotal['mediaCelula'] += $relatorio[$contadorFilhos]['mediaCelula'];
 			$somaTotal['mediaCelulaRealizadas'] += $relatorio[$contadorFilhos]['mediaCelulaRealizadas'];
+			$contadorFilhos++;
 		}
 
 		/* TOTAL */
 		for ($indiceDeArrays = $arrayPeriodoDoMes[0]; $indiceDeArrays <= $arrayPeriodoDoMes[1]; $indiceDeArrays++) {
 			foreach ($somaTotal[$indiceDeArrays] as $key => $value) {
-				$relatorio[$contadorFilhos][$indiceDeArrays][$key] += $value;
+				if($value){
+					$relatorio[$contadorFilhos][$indiceDeArrays][$key] += $value;
+				}
 			}
 		}
 		$somaFinal = array();
