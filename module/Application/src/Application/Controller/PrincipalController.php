@@ -115,7 +115,7 @@ class PrincipalController extends CircuitoController {
         }
 
 		if($relatorioDiscipulado = RelatorioController::relatorioDiscipulado($this->getRepositorio(), $entidade->getGrupo(), $mesAnterior, $anoAnterior)){
-			$dados['discipulado'] = $relatorioDiscipulado['media'];
+			$dados['discipulado'] = $relatorioDiscipulado;
 		}
 
 		/* Ultimo acesso */
