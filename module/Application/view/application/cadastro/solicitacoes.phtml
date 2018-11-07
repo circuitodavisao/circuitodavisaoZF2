@@ -11,6 +11,11 @@ $html = '';
 $html .= '<div class="panel">';
 $html .= '<div class="panel-heading text-center">Solicitações</div>';
 $html .= '<div class="panel-body bg-light">';
+
+//$html .= '<form action="/cadastroSolicitacoes" method="post">';
+//$html .= $this->cabecalhoDeMeses();
+//$html .= '</form>';
+
 foreach($this->solicitacoesTipo as $solicitacaoTipo){
 	$colspan = 0;
 	$htmlThead = '';
@@ -23,11 +28,11 @@ foreach($this->solicitacoesTipo as $solicitacaoTipo){
 		$htmlThead .= '<th class="hidden-xs">Novo Líder</th>';
 		break;
 	case SolicitacaoTipo::REMOVER_LIDER:
-		$colspan = 5;
+		$colspan = 4;
 		$htmlThead .= '<th>Quem</th>';
 		break;
 	case SolicitacaoTipo::REMOVER_CELULA:
-		$colspan = 6;
+		$colspan = 5;
 		$htmlThead .= '<th>Quem</th>';
 		$htmlThead .= '<th>Célula</th>';
 		break;
@@ -42,19 +47,24 @@ foreach($this->solicitacoesTipo as $solicitacaoTipo){
 		$htmlThead .= '<th>Homem</th>';
 		$htmlThead .= '<th>Mulher</th>';
 		break;
+	case SolicitacaoTipo::TRANSFERIR_ALUNO:
+		$colspan = 5;
+		$htmlThead .= '<th>Quem</th>';
+		$htmlThead .= '<th>Novo Líder</th>';
+		break;
 	}
 	$htmlThead .= '<th>Status</th>';
-	if($solicitacaoTipo->getId() === SolicitacaoTipo::REMOVER_LIDER
-		|| $solicitacaoTipo->getId() === SolicitacaoTipo::REMOVER_CELULA){
-			$htmlThead .= '<td></td>';
-		}
+
+	$html .= '<div class="panel-heading bg-primary mt20">';
+  $html .= '<span class="panel-title">';
+  $html .= '<span class="fa fa-table"></span>'.$solicitacaoTipo->getNome().'</span>';
+  $html .= '</div>';
+
+	$html .= '<div class="panel-body pn">';
+  $html .= '<div class="bs-component">';
 
 	$html .= '<table style="font-size:10px;" class="table table-condensed table-hover bg-light mt15 footable" data-filter="#fooFilter">';
 	$html .= '<thead>';
-
-	$html .= '<tr>';
-	$html .= '<th colspan="'.$colspan.'">'.$solicitacaoTipo->getNome().'</th>';
-	$html .= '</tr>';
 
 	$html .= '<tr>';
 	$html .= $htmlThead;
@@ -65,6 +75,7 @@ foreach($this->solicitacoesTipo as $solicitacaoTipo){
 	$html .= '<tbody>';
 
 	foreach ($this->solicitacoes[$solicitacaoTipo->getId()] as $solicitacao) {
+
 			$html .= '<tr>';
 			$htmlTbody = '';
 			$htmlTbody .= '<td class="hidden-xs">'.$solicitacao->getId().'</td>';
@@ -125,22 +136,14 @@ foreach($this->solicitacoesTipo as $solicitacaoTipo){
 			case Situacao::CONCLUIDO: $corSituacao = 'success'; break;
 			}
 			$htmlTbody .= '<td><span class="label label-'.$corSituacao.'">'.$solicitacao->getSolicitacaoSituacaoAtiva()->getSituacao()->getNome().'</span></td>';
-			if($solicitacaoTipo->getId() === SolicitacaoTipo::REMOVER_LIDER
-				|| $solicitacaoTipo->getId() === SolicitacaoTipo::REMOVER_CELULA){
-					if($solicitacao->getSolicitacaoSituacaoAtiva()->getSituacao()->getId() === Situacao::PENDENTE_DE_ACEITACAO
-						&& $this->entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
-							$funcaoAceintar = $this->funcaoOnClick('if(confirm("Realemnte deseja aceitar essa solicitação?")){mostrarSplash(); funcaoCircuito("cadastroSolicitacaoAceitar", '.$solicitacao->getId().');}');
-							$botaoAceitar = $this->botaoSimples('Aceitar', $funcaoAceintar, BotaoSimples::botaoPequenoImportante);
-							$htmlTbody .= '<td>'.$botaoAceitar.'</td>';
-						}else{
-							$htmlTbody .= '<td></td>';
-						}
-				}
 			$html .= $htmlTbody;
 			$html .= '</tr>';
 	}
 	$html .= '</tbody>';
 	$html .= '</table>';
+
+	$html .= '</div>';
+	$html .= '</div>';
 }
 $html .= '</div>';
 
