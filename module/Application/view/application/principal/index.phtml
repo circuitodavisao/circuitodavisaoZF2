@@ -51,7 +51,27 @@ Período Atual <?php echo Funcoes::montaPeriodo($this->periodoFinal)[0]; ?>
 <?php
 	$totalDeIndices = 5;
 	if($this->discipulado){
-		$totalDeIndices = 6;
+		$totalDeIndices = 8;
+
+		$contador = array();
+		$contador['M'] = 0;
+		$contador['F'] = 0;
+		foreach($discipulos as $discipulo){
+			$grupoFilho = $discipulo->getGrupoPaiFilhoFilho();
+			foreach($grupoFilho->getPessoasAtivas() as $pessoa){
+				if ($pessoa->getSexo() === 'M') {
+					$contador['M']++;
+				}
+				if ($pessoa->getSexo() === 'F') {
+					$contador['F']++;
+				}
+				$contador[0]++;
+			}
+		}
+		$diferenca = $contador[0] - ($contador['M']+$contador['F']);
+		if($diferenca > 0){
+			$totalDeIndices = 9;
+		}
 	}
 	for($indiceNumeroGrandes = 1; $indiceNumeroGrandes <= $totalDeIndices; $indiceNumeroGrandes++){
 		$valor = 0;
@@ -89,6 +109,48 @@ Período Atual <?php echo Funcoes::montaPeriodo($this->periodoFinal)[0]; ?>
 				}
 			}
 			$label = 'Discipulado';
+			break;
+		case 7:
+			if($contador['M'] < 6){
+				$escala = 'Anêmico';
+			}	
+			if($contador['M'] >= 6 && $contador['M'] < 12){
+				$escala = 'Fraca';
+			}	
+			if($contador['M'] == 12){
+				$escala = 'Boa';
+			}
+			if($contador['M'] >= 13 && $contador['M'] < 21){
+				$escala = 'Preditiva';
+			}	
+			if($contador['M'] >= 21){
+				$escala = 'Forte';
+			}	
+			$valor = $contador['M'] . ' - ' . $escala;
+			$label = 'Formação Homens';
+			break;
+		case 8:
+			if($contador['F'] < 6){
+				$escala = 'Anêmico';
+			}	
+			if($contador['F'] >= 6 && $contador['F'] < 12){
+				$escala = 'Fraca';
+			}	
+			if($contador['F'] == 12){
+				$escala = 'Boa';
+			}
+			if($contador['F'] >= 13 && $contador['F'] < 21){
+				$escala = 'Preditiva';
+			}	
+			if($contador['F'] >= 21){
+				$escala = 'Forte';
+			}	
+			$valor = $contador['F'] . ' - ' . $escala;
+			$label = 'Formação Mulheres';
+			break;
+		case 9:
+			$valor = $diferenca;
+			$label = 'Discipulos sem Sexo';
 			break;
 		}
 		echo '<div class="col-lg-3 col-md-3 col-sm-3 col-xs-6">';
