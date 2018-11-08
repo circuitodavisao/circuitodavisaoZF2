@@ -36,13 +36,11 @@ if($this->filtrado){
 			if($grupoEventoDiscipulado = $grupoFilho->getGrupoEventoPorTipoEAtivo(EventoTipo::tipoDiscipulado)){
 				$relatorio = RelatorioController::relatorioDiscipulado($this->repositorio, $grupoFilho, $this->mes, $this->ano, $this->tradutor);
 				$estrelas = '';
-				if($relatorio['media']){
-					for($i = 1; $i <= 5; $i++){
-						if($relatorio['media'] >= $i){
-							$estrelas .= '<i class="fa fa-star"></i>';
-						}else{
-							$estrelas .= '<i class="fa fa-star-o"></i>';
-						}
+				for($i = 1; $i <= 5; $i++){
+					if($relatorio['media'] >= $i){
+						$estrelas .= '<i class="fa fa-star"></i>';
+					}else{
+						$estrelas .= '<i class="fa fa-star-o"></i>';
 					}
 				}
 				echo '<div class="alert alert-default" onClick="$(\'#grupo_'.$grupoFilho->getId().'\').toggleClass(\'hidden\');">Pontuação<br />'.$estrelas.'</div>';
@@ -52,6 +50,83 @@ if($this->filtrado){
 			echo '</div>';// fim 6 dados
 
 			echo '<div id="grupo_'.$grupoFilho->getId().'" class="hidden" >';
+
+			echo '<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 p10 text-center">';
+		$discipulos = $grupoFilho->getGrupoPaiFilhoFilhosAtivos();
+		$contador = array();
+		$contador['M'] = 0;
+		$contador['F'] = 0;
+		foreach($discipulos as $discipulo){
+			$grupoFilho = $discipulo->getGrupoPaiFilhoFilho();
+			foreach($grupoFilho->getPessoasAtivas() as $pessoa){
+				if ($pessoa->getSexo() === 'M') {
+					$contador['M']++;
+				}
+				if ($pessoa->getSexo() === 'F') {
+					$contador['F']++;
+				}
+				$contador[0]++;
+			}
+		}
+		$diferenca = $contador[0] - ($contador['M']+$contador['F']);
+		for($indiceNumeroGrandes = 1; $indiceNumeroGrandes <= 3; $indiceNumeroGrandes++){
+		$valor = 0;
+		$label = '';
+		switch($indiceNumeroGrandes){
+	case 1:
+			if($contador['M'] < 6){
+				$escala = 'Anêmico';
+			}	
+			if($contador['M'] >= 6 && $contador['M'] < 12){
+				$escala = 'Fraca';
+			}	
+			if($contador['M'] == 12){
+				$escala = 'Boa';
+			}
+			if($contador['M'] >= 13 && $contador['M'] < 21){
+				$escala = 'Preditiva';
+			}	
+			if($contador['M'] >= 21){
+				$escala = 'Forte';
+			}	
+			$valor = $contador['M'] . ' - ' . $escala;
+			$label = 'Formação Homens';
+			break;
+		case 2:
+			if($contador['F'] < 6){
+				$escala = 'Anêmico';
+			}	
+			if($contador['F'] >= 6 && $contador['F'] < 12){
+				$escala = 'Fraca';
+			}	
+			if($contador['F'] == 12){
+				$escala = 'Boa';
+			}
+			if($contador['F'] >= 13 && $contador['F'] < 21){
+				$escala = 'Preditiva';
+			}	
+			if($contador['F'] >= 21){
+				$escala = 'Forte';
+			}	
+			$valor = $contador['F'] . ' - ' . $escala;
+			$label = 'Formação Mulheres';
+			break;
+		case 3:
+			$valor = $diferenca;
+			$label = 'Discipulos sem Sexo';
+			break;
+		}
+		echo '<div class="col-lg-4 col-md-4 col-sm-4 col-xs-4" style="padding-top: 0px;">';
+		echo '<div class="panel text-center br-a br-grey">';
+		echo '<div class="panel-body">';
+		echo '<h1 class="fs16 mt5 mbn">'.$valor.'</h1>';
+		echo '<h6 class="text-info">'.$label.'</h6>';
+		echo '</div>';
+		echo '</div>';
+		echo '</div>';
+	}
+		echo '</div>';
+
 			if($discipulados = $relatorio['discipulados']){
 				echo '<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 p10 text-center">';
 				echo '<div class="panel">';
