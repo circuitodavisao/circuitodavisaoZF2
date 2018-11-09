@@ -6,6 +6,7 @@ use Application\Controller\RelatorioController;
 use Application\Model\Entity\FuncoesEntidade;
 use Application\Model\Entity\EntidadeTipo;
 use Application\Model\Entity\Situacao;
+use Application\Model\Entity\Hierarquia;
 
 if ($this->mostrarPrincipal) {
 	$fotos = $this->grupo->getFotosLideresAtivos(128);
@@ -50,29 +51,33 @@ Período Atual <?php echo Funcoes::montaPeriodo($this->periodoFinal)[0]; ?>
 <div class="row mb10">
 <?php
 	$totalDeIndices = 5;
-	if($this->discipulado){
-		$totalDeIndices = 8;
+	if($this->pessoa->getPessoaHierarquiaAtivo() 
+		&& $this->pessoa->getPessoaHierarquiaAtivo()->getHierarquia()->getId() !== Hierarquia::LIDER_EM_TREINAMENTO
+		&& $this->pessoa->getPessoaHierarquiaAtivo()->getHierarquia()->getId() !== Hierarquia::LIDER_DE_CELULA){
+			if($this->discipulado){
+				$totalDeIndices = 8;
 
-		$contador = array();
-		$contador['M'] = 0;
-		$contador['F'] = 0;
-		foreach($discipulos as $discipulo){
-			$grupoFilho = $discipulo->getGrupoPaiFilhoFilho();
-			foreach($grupoFilho->getPessoasAtivas() as $pessoa){
-				if ($pessoa->getSexo() === 'M') {
-					$contador['M']++;
+				$contador = array();
+				$contador['M'] = 0;
+				$contador['F'] = 0;
+				foreach($discipulos as $discipulo){
+					$grupoFilho = $discipulo->getGrupoPaiFilhoFilho();
+					foreach($grupoFilho->getPessoasAtivas() as $pessoa){
+						if ($pessoa->getSexo() === 'M') {
+							$contador['M']++;
+						}
+						if ($pessoa->getSexo() === 'F') {
+							$contador['F']++;
+						}
+						$contador[0]++;
+					}
 				}
-				if ($pessoa->getSexo() === 'F') {
-					$contador['F']++;
+				$diferenca = $contador[0] - ($contador['M']+$contador['F']);
+				if($diferenca > 0){
+					$totalDeIndices = 9;
 				}
-				$contador[0]++;
 			}
 		}
-		$diferenca = $contador[0] - ($contador['M']+$contador['F']);
-		if($diferenca > 0){
-			$totalDeIndices = 9;
-		}
-	}
 	for($indiceNumeroGrandes = 1; $indiceNumeroGrandes <= $totalDeIndices; $indiceNumeroGrandes++){
 		$valor = 0;
 		$label = '';
