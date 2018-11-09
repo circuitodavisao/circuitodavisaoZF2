@@ -55,7 +55,7 @@ Período Atual <?php echo Funcoes::montaPeriodo($this->periodoFinal)[0]; ?>
 		&& $this->pessoa->getPessoaHierarquiaAtivo()->getHierarquia()->getId() !== Hierarquia::LIDER_EM_TREINAMENTO
 		&& $this->pessoa->getPessoaHierarquiaAtivo()->getHierarquia()->getId() !== Hierarquia::LIDER_DE_CELULA){
 			if($this->discipulado){
-				$totalDeIndices = 8;
+				$totalDeIndices = 9;
 
 				$contador = array();
 				$contador['M'] = 0;
@@ -74,7 +74,7 @@ Período Atual <?php echo Funcoes::montaPeriodo($this->periodoFinal)[0]; ?>
 				}
 				$diferenca = $contador[0] - ($contador['M']+$contador['F']);
 				if($diferenca > 0){
-					$totalDeIndices = 9;
+					$totalDeIndices = 10;
 				}
 			}
 		}
@@ -100,9 +100,13 @@ Período Atual <?php echo Funcoes::montaPeriodo($this->periodoFinal)[0]; ?>
 			break;
 		case 5:
 			$valor = ($this->relatorioCursos['total'][Situacao::ATIVO] + $this->relatorioCursos['total'][Situacao::ESPECIAL]);
-			$label = 'Alunos';
+			$label = 'Aluno(s)';
 			break;
 		case 6:
+			$valor = count($this->discipulado['discipulados']);
+			$label = 'Discipulado(s)';
+			break;
+		case 7:
 			$valor = '';
 			if($this->discipulado['media']){
 				for($i = 1; $i <= 5; $i++){
@@ -115,7 +119,7 @@ Período Atual <?php echo Funcoes::montaPeriodo($this->periodoFinal)[0]; ?>
 			}
 			$label = 'Discipulado';
 			break;
-		case 7:
+		case 8:
 			if($contador['M'] < 6){
 				$escala = 'Anêmico';
 			}	
@@ -134,7 +138,7 @@ Período Atual <?php echo Funcoes::montaPeriodo($this->periodoFinal)[0]; ?>
 			$valor = $contador['M'] . ' - ' . $escala;
 			$label = 'Time de Homens';
 			break;
-		case 8:
+		case 9:
 			if($contador['F'] < 6){
 				$escala = 'Anêmico';
 			}	
@@ -153,7 +157,7 @@ Período Atual <?php echo Funcoes::montaPeriodo($this->periodoFinal)[0]; ?>
 			$valor = $contador['F'] . ' - ' . $escala;
 			$label = 'Time de Mulheres';
 			break;
-		case 9:
+		case 10:
 			$valor = $diferenca;
 			$label = 'Discipulos sem Sexo';
 			break;
