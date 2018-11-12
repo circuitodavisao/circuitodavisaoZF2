@@ -27,6 +27,32 @@ class FatoFinanceiroORM extends CircuitoORM {
 		return $fatos;
 	}
 
+	public function encontrarFatosPorNumeroIdentificadorPorMesEAno($numeroIdentificador, $mes, $ano) {
+		$fatos = null;
+		try {
+			$dql = "SELECT ff "
+				. "FROM  " . Constantes::$ENTITY_FATO_FINANCEIRO . " ff "
+				. "WHERE "
+				. "ff.numero_identificador LIKE ?1 "
+				. "AND ff.data >= ?2 AND ff.data <= ?3 order by ff.data asc";
+
+			$numeroAjustado = $numeroIdentificador . '%';
+			$dataInicial = $ano . '-' . $mes . '-01';
+			$dataInicialFormatada = DateTime::createFromFormat('Y-m-d', $dataInicial);
+			$ultimo_dia = date("t", mktime(0,0,0,$mes,'01',$ano));
+			$dataFinal = $ano . '-' . $mes . '-' . $ultimo_dia;
+			$dataFinalFormatada = DateTime::createFromFormat('Y-m-d', $dataFinal);
+			$fatos = $this->getEntityManager()->createQuery($dql)
+				->setParameter(1, $numeroAjustado)
+				->setParameter(2, $dataInicialFormatada)
+				->setParameter(3, $dataFinalFormatada)
+				->getResult();
+		} catch (Exception $exc) {
+			echo $exc->getMessage();
+		}
+		return $fatos;
+	}
+
 	public function fatosPorNumeroIdentificador($numeroIdentificador, $periodo, $mes, $ano, $tipoComparacao) {
 		$resultadoPeriodo = Funcoes::montaPeriodo($periodo);
 
