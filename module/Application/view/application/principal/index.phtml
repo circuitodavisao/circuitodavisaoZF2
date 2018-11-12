@@ -6,6 +6,7 @@ use Application\Controller\RelatorioController;
 use Application\Model\Entity\FuncoesEntidade;
 use Application\Model\Entity\EntidadeTipo;
 use Application\Model\Entity\Situacao;
+use Application\Model\Entity\Hierarquia;
 
 if ($this->mostrarPrincipal) {
 	$fotos = $this->grupo->getFotosLideresAtivos(128);
@@ -40,15 +41,43 @@ if ($this->mostrarPrincipal) {
 <!-- fim panel meus dados -->
 
 <div class="alert alert-default text-center">
+Último acesso: <?php echo $this->ultimoAcesso; ?>
+</div>
+
+<div class="alert alert-default text-center">
 Período Atual <?php echo Funcoes::montaPeriodo($this->periodoFinal)[0]; ?>
 </div>
 
 <div class="row mb10">
 <?php
 	$totalDeIndices = 5;
-	if($this->discipulado){
-		$totalDeIndices = 6;
-	}
+	if($this->pessoa->getPessoaHierarquiaAtivo() 
+		&& $this->pessoa->getPessoaHierarquiaAtivo()->getHierarquia()->getId() !== Hierarquia::LIDER_EM_TREINAMENTO
+		&& $this->pessoa->getPessoaHierarquiaAtivo()->getHierarquia()->getId() !== Hierarquia::LIDER_DE_CELULA){
+			if($this->discipulado){
+				$totalDeIndices = 9;
+
+				$contador = array();
+				$contador['M'] = 0;
+				$contador['F'] = 0;
+				foreach($discipulos as $discipulo){
+					$grupoFilho = $discipulo->getGrupoPaiFilhoFilho();
+					foreach($grupoFilho->getPessoasAtivas() as $pessoa){
+						if ($pessoa->getSexo() === 'M') {
+							$contador['M']++;
+						}
+						if ($pessoa->getSexo() === 'F') {
+							$contador['F']++;
+						}
+						$contador[0]++;
+					}
+				}
+				$diferenca = $contador[0] - ($contador['M']+$contador['F']);
+				if($diferenca > 0){
+					$totalDeIndices = 10;
+				}
+			}
+		}
 	for($indiceNumeroGrandes = 1; $indiceNumeroGrandes <= $totalDeIndices; $indiceNumeroGrandes++){
 		$valor = 0;
 		$label = '';
@@ -71,23 +100,66 @@ Período Atual <?php echo Funcoes::montaPeriodo($this->periodoFinal)[0]; ?>
 			break;
 		case 5:
 			$valor = ($this->relatorioCursos['total'][Situacao::ATIVO] + $this->relatorioCursos['total'][Situacao::ESPECIAL]);
-			$label = 'Alunos';
+			$label = 'Aluno(s)';
 			break;
 		case 6:
+			$valor = count($this->discipulado['discipulados']);
+			$label = 'Discipulado(s)';
+			break;
+		case 7:
 			$valor = '';
-			if($this->discipulado){
-				for($i = 1; $i <= $this->discipulado; $i++){
-					$valor .= '<i class="fa fa-star"></i>';
-				}
-				for($j = ($this->discipulado+1); $j <= 5; $j++){
-					$valor .= '<i class="fa fa-star-o"></i>';
-				}
-			}else{
+			if($this->discipulado['media']){
 				for($i = 1; $i <= 5; $i++){
-					$valor .= '<i class="fa fa-star-o"></i>';
+					if($this->discipulado['media'] >= $i){
+						$valor .= '<i class="fa fa-star"></i>';
+					}else{
+						$valor .= '<i class="fa fa-star-o"></i>';
+					}
 				}
 			}
 			$label = 'Discipulado';
+			break;
+		case 8:
+			if($contador['M'] < 6){
+				$escala = 'Anêmico';
+			}	
+			if($contador['M'] >= 6 && $contador['M'] < 12){
+				$escala = 'Fraca';
+			}	
+			if($contador['M'] == 12){
+				$escala = 'Boa';
+			}
+			if($contador['M'] >= 13 && $contador['M'] < 21){
+				$escala = 'Preditiva';
+			}	
+			if($contador['M'] >= 21){
+				$escala = 'Forte';
+			}	
+			$valor = $contador['M'] . ' - ' . $escala;
+			$label = 'Time de Homens';
+			break;
+		case 9:
+			if($contador['F'] < 6){
+				$escala = 'Anêmico';
+			}	
+			if($contador['F'] >= 6 && $contador['F'] < 12){
+				$escala = 'Fraca';
+			}	
+			if($contador['F'] == 12){
+				$escala = 'Boa';
+			}
+			if($contador['F'] >= 13 && $contador['F'] < 21){
+				$escala = 'Preditiva';
+			}	
+			if($contador['F'] >= 21){
+				$escala = 'Forte';
+			}	
+			$valor = $contador['F'] . ' - ' . $escala;
+			$label = 'Time de Mulheres';
+			break;
+		case 10:
+			$valor = $diferenca;
+			$label = 'Discipulos sem Sexo';
 			break;
 		}
 		echo '<div class="col-lg-3 col-md-3 col-sm-3 col-xs-6">';
@@ -348,6 +420,63 @@ Alunos
 </div>
 </div>
 <!-- fim cursos -->
+
+<?php
+	if($this->discipulado){
+?>
+<!-- dados discipulado -->
+<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 admin-grid">
+<div class="panel panel-collapsed" id="p2">
+<div class="panel-heading ui-sortable-handle">
+Discipulado
+<span class="panel-controls">
+<a href="#" class="panel-control-collapse"></a>
+</span>
+</div>
+<div class="panel-body pn pt10" style="display: none;">
+<?php 
+		echo '<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 p10 text-center">';
+		echo '<div class="panel">';
+		echo '<div class="panel-body pn">';
+		foreach($this->discipulado['discipulados'] as $discipulado){
+			echo '<div class="alert alert-default">'.$discipulado['info'].'</div>';
+
+			echo '<div class="row">';
+			for ($indiceInputs = 1; $indiceInputs <= 6; $indiceInputs++) {
+				$input = '';
+				$label = '';
+				switch ($indiceInputs) {
+				case 1:$input = 'lanche'; $label = 'Lanche';break;
+				case 2:$input = 'administrativo'; $label = 'Circuito';break;
+				case 3:$input = 'oracao'; $label = 'Oração';break;
+				case 4:$input = 'palavra'; $label = 'Palavra';break;
+				case 5:$input = 'pontualidade'; $label = 'Pontualidade';break;
+				case 6:$input = 'assiduidade'; $label = 'Assiduidade';break;
+				}
+				$estrelas = '';
+				echo '<div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 p10 text-center">';
+				for($i = 1; $i <= 5; $i++){
+					if($discipulado[$input] >= $i){
+						$estrelas .= '<i class="fa fa-star"></i>';
+					}else{
+						$estrelas .= '<i class="fa fa-star-o"></i>';
+					}
+				}
+				echo $label.'<br />';
+				echo $estrelas;
+				echo '</div>';
+			}
+			echo '</div>';
+		}
+		echo '</div>';
+		echo '</div>';
+		echo '</div>';
+?>
+</div>
+</div>
+</div>
+<!-- fim dados discipulado -->
+<?php } ?>
 
 </div>
 <!-- fim row dados -->
