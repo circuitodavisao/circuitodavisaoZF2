@@ -8,13 +8,14 @@ use Application\Controller\Helper\Funcoes;
 use Application\View\Helper\BotaoSimples;
 
 $html = '';
-$html .= '<div class="panel">';
-$html .= '<div class="panel-heading text-center">Solicitações</div>';
+$html .= $this->templateFormularioTopo('Solicitaçoes');
 $html .= '<div class="panel-body bg-light">';
-
-//$html .= '<form action="/cadastroSolicitacoes" method="post">';
-//$html .= $this->cabecalhoDeMeses();
-//$html .= '</form>';
+$html .= '<form action="/cadastroSolicitacoes" method="post">';
+$html .= $this->cabecalhoDeMeses();
+$html .= '</form>';
+$html .= '</div>';
+$html .= '</div>';
+$html .= '</div>';
 
 foreach($this->solicitacoesTipo as $solicitacaoTipo){
 	$colspan = 0;
@@ -79,57 +80,66 @@ foreach($this->solicitacoesTipo as $solicitacaoTipo){
 
 	$html .= '<tbody>';
 
-	foreach ($this->solicitacoes[$solicitacaoTipo->getId()] as $solicitacao) {
+	if(count($this->solicitacoes[$solicitacaoTipo->getId()]) > 0){
+		foreach ($this->solicitacoes[$solicitacaoTipo->getId()] as $solicitacao) {
+				$html .= '<tr>';
+				$htmlTbody = '';
+				$htmlTbody .= '<td class="hidden-xs">'.$solicitacao->getId().'</td>';
+				$htmlTbody .= '<td class="hidden-xs">'.$solicitacao->getData_criacaoStringPadraoBrasil().'</td>';
 
-			$html .= '<tr>';
-			$htmlTbody = '';
-			$htmlTbody .= '<td class="hidden-xs">'.$solicitacao->getId().'</td>';
-			$htmlTbody .= '<td class="hidden-xs">'.$solicitacao->getData_criacaoStringPadraoBrasil().'</td>';
-
-			if($solicitacaoTipo->getId() !== SolicitacaoTipo::UNIR_CASAL
-			&& $solicitacaoTipo->getId() !== SolicitacaoTipo::TRANSFERIR_ALUNO){
-				$objeto = $solicitacao->getObjeto1();
-				$grupo = $this->repositorio->getGrupoORM()->encontrarPorId($objeto);
-				$htmlTbody .= '<td>'.$grupo->getNomeLideresAtivos().'</td>';
-
-				switch($solicitacaoTipo->getId()){
-				case SolicitacaoTipo::TRANSFERIR_LIDER_NA_PROPRIA_EQUIPE:
-					$objeto2 = $solicitacao->getObjeto2();
-					$grupo2 = $this->repositorio->getGrupoORM()->encontrarPorId($objeto2);
-
-					$htmlTbody .= '<td class="hidden-xs">'.$grupo2->getNomeLideresAtivos().'</td>';
-					break;
-				case SolicitacaoTipo::REMOVER_CELULA:
-					$objeto = $solicitacao->getObjeto2();
-					$grupoEvento = $this->repositorio->getGrupoEventoORM()->encontrarPorId($objeto);
-					$htmlCelula = $this->translate(Funcoes::diaDaSemanaPorDia($grupoEvento->getEvento()->getDia())).' - ' . substr($grupoEvento->getEvento()->getHora(),0,5);
-					$htmlTbody .= '<td>'.$htmlCelula.'</td>';
-					break;
-				case SolicitacaoTipo::TRANSFERIR_LIDER_PARA_OUTRA_EQUIPE:
-					$objeto2 = $solicitacao->getObjeto2();
-					$grupo2 = $this->repositorio->getGrupoORM()->encontrarPorId($objeto2);
-
-					$htmlTbody .= '<td class="hidden-xs">'.$grupo2->getNomeLideresAtivos().'</td>';
-					break;
-				}
-			}else{
-				if($solicitacaoTipo->getId() === SolicitacaoTipo::UNIR_CASAL){
+				if($solicitacaoTipo->getId() !== SolicitacaoTipo::UNIR_CASAL
+				&& $solicitacaoTipo->getId() !== SolicitacaoTipo::TRANSFERIR_ALUNO){
 					$objeto = $solicitacao->getObjeto1();
 					$grupo = $this->repositorio->getGrupoORM()->encontrarPorId($objeto);
-					$objeto2 = $solicitacao->getObjeto2();
-					$grupo2 = $this->repositorio->getGrupoORM()->encontrarPorId($objeto2);
-
 					$htmlTbody .= '<td>'.$grupo->getNomeLideresAtivos().'</td>';
-					$htmlTbody .= '<td>'.$grupo2->getNomeLideresAtivos().'</td>';
-				}
-				if($solicitacaoTipo->getId() === SolicitacaoTipo::TRANSFERIR_ALUNO){
-					$objeto = $solicitacao->getObjeto1();
-					$turmaPessoa = $this->repositorio->getTurmaPessoaORM()->encontrarPorId($objeto);
-					$objeto2 = $solicitacao->getObjeto2();
-					$grupo2 = $this->repositorio->getGrupoORM()->encontrarPorId($objeto2);
 
-					$htmlTbody .= '<td>'.$turmaPessoa->getPEssoa()->getNome().'</td>';
-					$htmlTbody .= '<td>'.$grupo2->getNomeLideresAtivos().'</td>';
+					switch($solicitacaoTipo->getId()){
+					case SolicitacaoTipo::TRANSFERIR_LIDER_NA_PROPRIA_EQUIPE:
+						$objeto2 = $solicitacao->getObjeto2();
+						$grupo2 = $this->repositorio->getGrupoORM()->encontrarPorId($objeto2);
+
+						$htmlTbody .= '<td class="hidden-xs">'.$grupo2->getNomeLideresAtivos().'</td>';
+						break;
+					case SolicitacaoTipo::REMOVER_CELULA:
+						$objeto = $solicitacao->getObjeto2();
+						$grupoEvento = $this->repositorio->getGrupoEventoORM()->encontrarPorId($objeto);
+						$htmlCelula = $this->translate(Funcoes::diaDaSemanaPorDia($grupoEvento->getEvento()->getDia())).' - ' . substr($grupoEvento->getEvento()->getHora(),0,5);
+						$htmlTbody .= '<td>'.$htmlCelula.'</td>';
+						break;
+					case SolicitacaoTipo::TRANSFERIR_LIDER_PARA_OUTRA_EQUIPE:
+						$objeto2 = $solicitacao->getObjeto2();
+						$grupo2 = $this->repositorio->getGrupoORM()->encontrarPorId($objeto2);
+
+						$htmlTbody .= '<td class="hidden-xs">'.$grupo2->getNomeLideresAtivos().'</td>';
+						break;
+					}
+				}else{
+					if($solicitacaoTipo->getId() === SolicitacaoTipo::UNIR_CASAL){
+						$objeto = $solicitacao->getObjeto1();
+						$grupo = $this->repositorio->getGrupoORM()->encontrarPorId($objeto);
+						$objeto2 = $solicitacao->getObjeto2();
+						$grupo2 = $this->repositorio->getGrupoORM()->encontrarPorId($objeto2);
+
+						$htmlTbody .= '<td>'.$grupo->getNomeLideresAtivos().'</td>';
+						$htmlTbody .= '<td>'.$grupo2->getNomeLideresAtivos().'</td>';
+					}
+					if($solicitacaoTipo->getId() === SolicitacaoTipo::TRANSFERIR_ALUNO){
+						$objeto = $solicitacao->getObjeto1();
+						$turmaPessoa = $this->repositorio->getTurmaPessoaORM()->encontrarPorId($objeto);
+						$objeto2 = $solicitacao->getObjeto2();
+						$grupo2 = $this->repositorio->getGrupoORM()->encontrarPorId($objeto2);
+
+						$htmlTbody .= '<td>'.$turmaPessoa->getPEssoa()->getNome().'</td>';
+						$htmlTbody .= '<td>'.$grupo2->getNomeLideresAtivos().'</td>';
+					}
+				}
+
+				$corSituacao = 'default';
+				switch($solicitacao->getSolicitacaoSituacaoAtiva()->getSituacao()->getId()){
+				case Situacao::ACEITO_AGENDADO: $corSituacao = 'info'; break;
+				case Situacao::PENDENTE_DE_ACEITACAO: $corSituacao = 'warning'; break;
+				case Situacao::RECUSAO: $corSituacao = 'danger'; break;
+				case Situacao::CONCLUIDO: $corSituacao = 'success'; break;
 				}
 			}
 
@@ -154,6 +164,8 @@ foreach($this->solicitacoesTipo as $solicitacaoTipo){
 				}
 			$html .= $htmlTbody;
 			$html .= '</tr>';
+	} else {
+		$html .= '<td class="text-center" colspan="'.$colspan.'"><b>SEM SOLICITAÇÕES</b></td>';
 	}
 	$html .= '</tbody>';
 	$html .= '</table>';
@@ -161,7 +173,7 @@ foreach($this->solicitacoesTipo as $solicitacaoTipo){
 	$html .= '</div>';
 	$html .= '</div>';
 }
-$html .= '</div>';
+
 
 $html .= '<div class="panel-footer text-right">';
 $stringNomeDaFuncaoOnClickCadastro = 'mostrarSplash(); funcaoCircuito("cadastroSolicitacao", 0)';
