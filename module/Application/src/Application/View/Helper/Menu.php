@@ -88,7 +88,7 @@ class Menu extends AbstractHelper {
 
 		$html .= '<li class="sidebar-label pt20">Principal</li>';
 		$html .= '<li>';
-		$html .= '<a href="/principal" onClick="mostrarSplash();">';
+		$html .= '<a href="#" onClick="mostrarSplash(); funcaoCircuito(\'principal\', null);">';
 		$html .= '<span class="fa fa-home"></span>';
 		$html .= '<span class="sidebar-title">Principal</span>';
 		$html .= '</a>';

@@ -115,8 +115,15 @@ class PrincipalController extends CircuitoController {
         }
 
 		if($relatorioDiscipulado = RelatorioController::relatorioDiscipulado($this->getRepositorio(), $entidade->getGrupo(), $mesAnterior, $anoAnterior)){
-			$dados['discipulado'] = $relatorioDiscipulado['media'];
+			$dados['discipulado'] = $relatorioDiscipulado;
 		}
+
+		/* Ultimo acesso */
+		$registro = $this->getRepositorio()->getRegistroORM()->encontrarUltimoRegistroDeLogin();
+		$date = date_create($registro->getData_criacaoStringPadraoBanco() . ' ' . $registro->getHora_criacao());
+		date_sub($date, date_interval_create_from_date_string('3 hours'));
+		$dataFormatada = date_format($date, 'd/m/Y H:i:s');
+		$dados['ultimoAcesso'] = $dataFormatada;
 
         $view = new ViewModel($dados);
         /* Javascript */

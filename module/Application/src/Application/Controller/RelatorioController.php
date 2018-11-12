@@ -466,7 +466,7 @@ class RelatorioController extends CircuitoController {
 						$relatorioAjustado[$grupo->getGrupoEquipe()->getEntidadeAtiva()->getNome()][$turma->getId()][$situacao->getNome()]++;
 					}
 					if($entidade->getEntidadeTipo()->getId() === EntidadeTipo::equipe 
-						|| $entidade->getEntidadeTipo()->getId() === EntidadeTipo::subequipe){
+						|| $entidade->getEntidadeTipo()->getId() === EntidadeTipo::subEquipe){
 						$relatorioAjustado[$grupo->getGrupoSubEquipe()->getEntidadeAtiva()->infoEntidade()][$turma->getId()][$situacao->getNome()]++;
 					}
 				}
@@ -1016,16 +1016,18 @@ class RelatorioController extends CircuitoController {
 			}
 			$relatorio[$contadorFilhos]['grupo'] = $grupoFilhoOrdenado->getId();
 
-			$contadorFilhos++;
 			$somaTotal['mediaMembresia'] += $relatorio[$contadorFilhos]['mediaMembresia'];
 			$somaTotal['mediaCelula'] += $relatorio[$contadorFilhos]['mediaCelula'];
 			$somaTotal['mediaCelulaRealizadas'] += $relatorio[$contadorFilhos]['mediaCelulaRealizadas'];
+			$contadorFilhos++;
 		}
 
 		/* TOTAL */
 		for ($indiceDeArrays = $arrayPeriodoDoMes[0]; $indiceDeArrays <= $arrayPeriodoDoMes[1]; $indiceDeArrays++) {
 			foreach ($somaTotal[$indiceDeArrays] as $key => $value) {
-				$relatorio[$contadorFilhos][$indiceDeArrays][$key] += $value;
+				if($value){
+					$relatorio[$contadorFilhos][$indiceDeArrays][$key] += $value;
+				}
 			}
 		}
 		$somaFinal = array();
@@ -2129,19 +2131,19 @@ public function alunosNaSemanaAction(){
 					+$relatorioGeral['administrativo']
 					+$relatorioGeral['oracao']
 					+$relatorioGeral['palavra'])/6;
-				$relatorio['media'] = number_format($media);	
+				$relatorio['media'] = number_format($media);
 
 				foreach($relatorio['discipulados'] as $chave => $valor){
 					$grupoEvento = $repositorio->getGrupoEventoORM()->encontrarPorId($chave);
 					$info = $grupoEvento->getEvento()->getNome();
 					$relatorio['discipulados'][$chave]['info'] = $info;
 					$totalDeFatos = $relatorio['discipulados'][$chave]['quantidade'];
-					$relatorio['discipulados'][$chave]['lanche'] /= $totalDeFatos;
-					$relatorio['discipulados'][$chave]['pontualidade'] /= $totalDeFatos;
-					$relatorio['discipulados'][$chave]['assiduidade'] /= $totalDeFatos;
-					$relatorio['discipulados'][$chave]['administrativo'] /= $totalDeFatos;
-					$relatorio['discipulados'][$chave]['oracao'] /= $totalDeFatos;
-					$relatorio['discipulados'][$chave]['palavra'] /= $totalDeFatos;
+					$relatorio['discipulados'][$chave]['lanche'] = number_format($relatorio['discipulados'][$chave]['lanche'] / $totalDeFatos);
+					$relatorio['discipulados'][$chave]['pontualidade'] = number_format($relatorio['discipulados'][$chave]['pontualidade'] / $totalDeFatos);
+					$relatorio['discipulados'][$chave]['assiduidade'] = number_format($relatorio['discipulados'][$chave]['assiduidade'] / $totalDeFatos);
+					$relatorio['discipulados'][$chave]['administrativo'] = number_format($relatorio['discipulados'][$chave]['administrativo'] / $totalDeFatos);
+					$relatorio['discipulados'][$chave]['oracao'] = number_format($relatorio['discipulados'][$chave]['oracao'] / $totalDeFatos);
+					$relatorio['discipulados'][$chave]['palavra'] = number_format($relatorio['discipulados'][$chave]['palavra'] / $totalDeFatos);
 				}
 			}
 
