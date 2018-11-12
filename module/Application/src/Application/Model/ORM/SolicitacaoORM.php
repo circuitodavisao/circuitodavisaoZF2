@@ -20,14 +20,20 @@ class SolicitacaoORM extends CircuitoORM {
      * @return Solicitacao[]
      * @throws Exception
      */
-    public function encontrarTodosPorDataDeCriacao($dataDeCriacaoInicial, $dataDeCriacaoFinal) {
+    public function encontrarTodosPorDataDeCriacao($dataDeCriacaoInicial, $dataDeCriacaoFinal, $grupo_id = null) {
         $dql = "SELECT "
                 . " s.id, s.objeto1, s.objeto2, s.numero, s.nome "
                 . "FROM  " . Constantes::$ENTITY_SOLICITACAO . " s "
                 . "WHERE "
-                . "s.data_criacao >= ?1 AND s.data_criacao <= ?2";
+                . "s.data_criacao >= ?1 AND s.data_criacao <= ?2 #grupo_id";
         try {
-            $result = $this->getEntityManager()->createQuery($dql)
+            if ($grupo_id) {
+      				$dqlAjustada = str_replace('#grupo_id', 'AND s.grupo_id = '.(int)$grupo_id, $dql);
+      			} else {
+      				$dqlAjustada = str_replace('#grupo_id', ' ', $dql);
+      			}
+            error_log($dqlAjustada);
+            $result = $this->getEntityManager()->createQuery($dqlAjustada)
                     ->setParameter(1, $dataDeCriacaoInicial)
                     ->setParameter(2, $dataDeCriacaoFinal)
                     ->getResult();
@@ -36,7 +42,7 @@ class SolicitacaoORM extends CircuitoORM {
             echo $exc->getMessage();
         }
     }
-    
+
      public function encontrarPorObjeto($objecto) {
         $dql = "SELECT "
                 . " s.id "
