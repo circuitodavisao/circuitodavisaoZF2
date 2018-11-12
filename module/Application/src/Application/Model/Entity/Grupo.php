@@ -585,28 +585,12 @@ class Grupo extends CircuitoEntity {
         if ($grupoSelecionado->getEntidadeAtiva()) {
             if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::SUBEQUIPE) {
                 $grupoEventosCelulasTodas = $grupoSelecionado->getGrupoEventoPorTipoEAtivo(EventoTipo::tipoCelula);
-                $contadorDeAlteracoes = array();
                 if ($grupoEventosCelulasTodas) {
                     foreach ($grupoEventosCelulasTodas as $grupoEvento) {
-                        if ($contadorDeAlteracoes[$grupoEvento->getData_criacaoStringPadraoBanco()]) {
-                            if ($grupoEvento->getId() > $contadorDeAlteracoes[$grupoEvento->getData_criacaoStringPadraoBanco()]->getId()) {
-                                $contadorDeAlteracoes[$grupoEvento->getData_criacaoStringPadraoBanco() . '-' . $grupoEvento->getHora_criacao()] = $grupoEvento;
-                            }
-                        } else {
-                            $contadorDeAlteracoes[$grupoEvento->getData_criacaoStringPadraoBanco()] = $grupoEvento;
-                        }
-                    }
-                    foreach ($contadorDeAlteracoes as $grupoEventoCelula) {
-                        $grupoEventosCelulas[] = $grupoEventoCelula;
+                       $grupoEventosCelulas[] = $grupoEvento;
                     }
                 }
-                while ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::SUBEQUIPE) {
-                    $grupoSelecionado = $grupoSelecionado->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai();
-                    if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::EQUIPE) {
-                        break;
-                    }
-                }
-                $grupoEventos = $grupoSelecionado->getGrupoEventoPorTipoEAtivo(EventoTipo::tipoCulto);
+               $grupoEventos = $grupoSelecionado->getGrupoEquipe()->getGrupoEventoPorTipoEAtivo(EventoTipo::tipoCulto);
             } else {
                 /* Lider de equipe ou igreja */
                 $grupoEventos = array();
@@ -854,7 +838,7 @@ class Grupo extends CircuitoEntity {
                         $diaDaSemanaQueFoiExcluido = 7;
                     }
                     if ($diaQueOcorreOEvento > $diaDaSemanaQueFoiExcluido) {
-                        //$excluidoDepoisQueOEventoOcorreu = false;
+                        $excluidoDepoisQueOEventoOcorreu = false;
                     }
                     if ($dataDoGrupoEventoParaComparar >= $dataDoInicioDoPeriodoParaComparar &&
                             $dataDoGrupoEventoParaComparar <= $dataDoFimDoPeriodoParaComparar &&
