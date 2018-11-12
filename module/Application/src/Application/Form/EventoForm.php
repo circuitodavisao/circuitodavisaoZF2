@@ -27,7 +27,8 @@ class EventoForm extends Form {
 
         $this->setAttributes(array(
             Constantes::$FORM_METHOD => Constantes::$FORM_POST,
-        ));
+			'autocomplete' => 'off',
+		));
 
         /* Id */
         $this->add(
