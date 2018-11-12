@@ -149,7 +149,12 @@ class ListagemDePessoasComEventos extends AbstractHelper {
 		$html .= '<div class="row btn-default p5">';
 
 		$html .= '<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6" style="padding-top: 0px">';
+
 		$html .= '<span class="label label-dark">'.$pessoa->getTipo() . '</span> ';
+		$aluno = $pessoa->verificaSeParticipouDoRevisao() || $pessoa->verificarSeEhAluno() == 1 ? 'true':'false';
+		if($aluno == 'true' && $pessoa->getTipo() != 'LP'){
+				$html .= '<span class="label label-dark"><i class="fa fa-graduation-cap"></i></span> ';
+		}
 
 		$html .= '<span id="span_nome_' . $pessoa->getId() . '" ' . $corTextoTagsExtrasXs . '>';
 		$html .= $pessoa->getNomeListaDeLancamento(5);
@@ -174,7 +179,6 @@ class ListagemDePessoasComEventos extends AbstractHelper {
 		}
 
 		if($pessoa->getAtivo() && $this->view->periodo == 0 && $this->view->possoAlterar){
-			$aluno = $pessoa->verificaSeParticipouDoRevisao() || $pessoa->verificarSeEhAluno() == 1 ? 'true':'false';
 			$dadosAlterar = $pessoa->getId().'_'.$pessoa->getTipo().'_'.$aluno;
 			$dadosRemover = $pessoa->getGrupoPessoaAtivo()->getId();
 			$html .= '<span id="" class="btn btn-dark btn-xs ml5" onclick="alterarPessoa(\''.$dadosAlterar.'\');"><i class="fa fa-pencil"></i></span>';
