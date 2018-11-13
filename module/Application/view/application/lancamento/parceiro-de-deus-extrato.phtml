@@ -5,13 +5,18 @@ use Application\View\Helper\BotaoSimples;
 use Application\Model\Entity\EntidadeTipo;
 use Application\Model\Entity\Situacao;
 use Application\Model\Entity\FatoFinanceiroAcesso;
-?>
-<div class="panel-body bg-light text-center">
-	<h1>Parceiro de Deus Extrato</h1>
-<?php
+
 $html = '';
+$html .= $this->templateFormularioTopo('Parceiro de Deus Extrato');
+$html .= '<div class="panel-body bg-light">';
+$html .= '<form action="/lancamentoParceiroDeDeusExtrato" method="post">';
+$html .= $this->cabecalhoDeMeses();
+$html .= '</form>';
+$html .= '</div>';
 if($this->fatos){
+	$html .= '<div class="panel-body" style="padding-top:0px;">';
 	$html .= '<input id="fooFilter" type="text" class="form-control" placeholder="Filtro">';
+	$html .= '</div>';
 
 	$html .= '<div class="table-responsive">';
 	$html .= '<table class="table table-condensed table-hover bg-light mt15 footable" data-filter="#fooFilter">';
@@ -22,6 +27,7 @@ if($this->fatos){
 	$html .= '<th>Pessoa</th>';
 	$html .= '<th>Valor</th>';
 	$html .= '<th>Tipo</th>';
+	$html .= '<th>Status</th>';
 	$html .= '</tr>';
 	$html .= '</thead>';
 	$html .= '<tbody>';
@@ -81,8 +87,12 @@ if($this->fatos){
 	$html .= '</table>';
 	$html .= '</div>';
 
-}else{
+}
+
+if($this->semLancamentos){
+	$html .= '<div class="panel-body" style="padding-top:0px;">';
 	$html .= '<div class="alert alert-warning text-center">Sem lançamentos</div>';
+	$html .= '</div>';
 }
 
 $html .= '<div class="panel-footer text-right">';
