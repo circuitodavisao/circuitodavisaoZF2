@@ -42,6 +42,7 @@ use Application\Model\Entity\FatoCelula;
 use Application\Model\Entity\FatoCurso;
 use Application\Model\Entity\FatoFinanceiroSituacao;
 use Application\Model\Entity\FatoSetenta;
+use Application\Model\Entity\FatoCelulaDiscipulado;
 use Application\Model\ORM\RepositorioORM;
 use DateTime;
 use Doctrine\ORM\EntityManager;
@@ -503,23 +504,16 @@ class IndexController extends CircuitoController {
 			if ($grupos) {
 				$html .= "<br /><br /><br />Tem Grupos ativos!!!";
 				foreach ($grupos as $grupo) {
-					$numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupo);
-					if ($fatoLideres = $this->getRepositorio()->getFatoLiderORM()->encontrarVariosFatoLiderPorNumeroIdentificador($numeroIdentificador)) {
-						if ((count($grupo->getResponsabilidadesAtivas()) === 1 && count($fatoLideres) === 2) ||
-							(count($grupo->getResponsabilidadesAtivas()) === 2 && count($fatoLideres) === 2)) {
-								if ($grupo->getEntidadeAtiva()) {
-									$html .= "<br /><br /><br />Entidade " . $grupo->getEntidadeAtiva()->infoEntidade();
-								}
-								$html .= "<br />FatoLider Duplicados";
-								foreach ($fatoLideres as $fatoLider) {
-									if ($fatoLider->getData_criacaoStringPadraoBrasil() == '28/05/2018') {
-										$html .= "<br />Id: " . $fatoLider->getId();
-										$html .= "<br />Data Criação: " . $fatoLider->getData_criacaoStringPadraoBrasil();
-										$html .= "<br />Apagando";
-										$this->getRepositorio()->getFatoLiderORM()->remover($fatoLider);
-									}
-								}
-							}
+					$html .= "<br /> Grupo: {$grupo->getId()}";
+					if($grupoEventosDiscipulados = $grupo->getGrupoEventoAtivosPorTipo(EventoTipo::tipoDiscipulado)){
+						$numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupo);
+						foreach($grupoEventosDiscipulados as $grupoEventoDiscipulado){
+							$fatoCelulaDiscipulado = new FatoCelulaDiscipulado();	
+							$fatoCelulaDiscipulado->setNumero_identificador($numeroIdentificador);
+							$fatoCelulaDiscipulado->setGrupo_evento_id($grupoEventoDiscipulado->getId());
+							$this->getRepositorio()->getFatoCelulaDiscipuladoORM()->persistir($fatoCelulaDiscipulado);
+							$html .= "<br /> fato celula discipulado";
+						}
 					}
 				}
 				$this->getRepositorio()->fecharTransacao();
@@ -2600,25 +2594,48 @@ class IndexController extends CircuitoController {
 	}
 
 	function ajustarAction(){
-		$html = '';
-		$this->getRepositorio()->iniciarTransacao();
-		try{
-			$fatosFinanceiro = $this->getRepositorio()->getFatoFinanceiroORM()->buscarTodosRegistrosEntidade();
-			foreach($fatosFinanceiro as $fatoFinanceiro){
-				$fatoFinanceiro->setSituacao_id($aceito = 3);
-				$this->getRepositorio()->getFatoFinanceiroORM()->persistir($fatoFinanceiro, $trocarDataDeCriacao = false);
+		set_time_limit(0);
+		ini_set('memory_limit', '-1');
+		ini_set('max_execution_time', '60');
 
-				$fatoFinanceiroSituacao = new FatoFinanceiroSituacao();
-				$fatoFinanceiroSituacao->setSituacao($this->getRepositorio()->getSituacaoORM()->encontrarPorId(Situacao::ACEITO_AGENDADO));
-				$fatoFinanceiroSituacao->setPessoa($this->getRepositorio()->getPessoaORM()->encontrarPorId($bispoLucas = 1));
-				$fatoFinanceiroSituacao->setFatoFinanceiro($fatoFinanceiro);
-				$this->getRepositorio()->getFatoFinanceiroSituacaoORM()->persistir($fatoFinanceiroSituacao);
-			}		 
-			$this->getRepositorio()->fecharTransacao();
-		}catch(Exception $e){
-			$html .= 'Error: '.$e->getMessage();
+		list($usec, $sec) = explode(' ', microtime());
+		$script_start = (float) $sec + (float) $usec;
+		$html = '';
+
+		$somenteAtivos = true;
+		$grupos = $this->getRepositorio()->getGrupoORM()->encontrarTodos($somenteAtivos);
+		$this->getRepositorio()->iniciarTransacao();
+		$html .= "<br />###### iniciarTransacao ";
+		try {
+			if ($grupos) {
+				$html .= "<br /><br /><br />Tem Grupos ativos!!!";
+				foreach ($grupos as $grupo) {
+					$html .= "<br /> Grupo: {$grupo->getId()}";
+					if($grupoEventosDiscipulados = $grupo->getGrupoEventoAtivosPorTipo(EventoTipo::tipoDiscipulado)){
+						$numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupo);
+						foreach($grupoEventosDiscipulados as $grupoEventoDiscipulado){
+							$fatoCelulaDiscipulado = new FatoCelulaDiscipulado();	
+							$fatoCelulaDiscipulado->setNumero_identificador($numeroIdentificador);
+							$fatoCelulaDiscipulado->setGrupo_evento_id($grupoEventoDiscipulado->getId());
+							$this->getRepositorio()->getFatoCelulaDiscipuladoORM()->persistir($fatoCelulaDiscipulado);
+							$html .= "<br /> fato celula discipulado";
+						}
+					}
+				}
+				$this->getRepositorio()->fecharTransacao();
+				$html .= "<br />###### fecharTransacao ";
+			}
+		} catch (Exception $exc) {
+			$html .= "<br />%%%%%%%%%%%%%%%%%%%%%% desfazerTransacao ";
 			$this->getRepositorio()->desfazerTransacao();
+			echo $exc->getTraceAsString();
 		}
+
+		list($usec, $sec) = explode(' ', microtime());
+		$script_end = (float) $sec + (float) $usec;
+		$elapsed_time = round($script_end - $script_start, 5);
+
+		$html .= '<br /><br />Elapsed time: ' . $elapsed_time . ' secs. Memory usage: ' . round(((memory_get_peak_usage(true) / 1024) / 1024), 2) . 'Mb';
 		return new ViewModel(array('html' => $html));
 	}
 

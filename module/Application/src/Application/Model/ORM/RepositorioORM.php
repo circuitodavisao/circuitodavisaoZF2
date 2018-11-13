@@ -67,6 +67,7 @@ class RepositorioORM {
 	private $_registroORM;
 	private $_registroAcaoORM;
 	private $_fatoDiscipulado;
+	private $_fatoCelulaDiscipuladoORM;
 
     /**
      * Contrutor
@@ -658,13 +659,24 @@ class RepositorioORM {
  
     /**
      * Metodo public para obter a instancia do CircuitoORM
-     * @return CircuitoORM
+     * @return FatoDiscipuladoORM
      */
     public function getFatoDiscipuladoORM() {
         if (is_null($this->_fatoDiscipuladoORM)) {
 			$this->_fatoDiscipuladoORM = new FatoDiscipuladoORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_FATO_DISCIPULADO);
         }
         return $this->_fatoDiscipuladoORM;
+    }
+	
+    /**
+     * Metodo public para obter a instancia do CircuitoORM
+     * @return FatoCelulaDiscipuladoORM
+     */
+    public function getFatoCelulaDiscipuladoORM() {
+        if (is_null($this->_fatoCelulaDiscipuladoORM)) {
+			$this->_fatoCelulaDiscipuladoORM = new FatoCelulaDiscipuladoORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_FATO_CELULA_DISCIPULADO);
+        }
+        return $this->_fatoCelulaDiscipuladoORM;
     }
  
     /**
