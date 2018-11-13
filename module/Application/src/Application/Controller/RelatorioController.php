@@ -382,29 +382,7 @@ class RelatorioController extends CircuitoController {
 
 		$mesSelecionado = Funcoes::mesPorAbaSelecionada($abaSelecionada);
 		$anoSelecionado = Funcoes::anoPorAbaSelecionada($abaSelecionada);
-
-		$arrayPeriodoDoMes = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mesSelecionado, $anoSelecionado);
-		$todosFilhos = array();
-		for ($indiceDeArrays = $arrayPeriodoDoMes[0]; $indiceDeArrays <= $arrayPeriodoDoMes[1]; $indiceDeArrays++) {
-			$grupoPaiFilhoFilhos = $grupo->getGrupoPaiFilhoFilhosAtivos($indiceDeArrays);
-			if ($grupoPaiFilhoFilhos) {
-				foreach ($grupoPaiFilhoFilhos as $grupoPaiFilhoFilho) {
-					$adicionar = true;
-					if (count($todosFilhos) > 0) {
-						foreach ($todosFilhos as $filho) {
-							if ($filho->getId() === $grupoPaiFilhoFilho->getId()) {
-								$adicionar = false;
-								break;
-							}
-						}
-					}
-					if ($adicionar) {
-						$todosFilhos[] = $grupoPaiFilhoFilho;
-					}
-				}
-			}
-		}
-		//        $discipulos = RelatorioController::ordenacaoDiscipulosAtendimento($gruposAbaixo, $mesSelecionado, $anoSelecionado);
+		$todosFilhos = $grupo->getGrupoPaiFilhoFilhosPorMesEAno($mesSelecionado, $anoSelecionado);
 
 		$view = new ViewModel(array(
 			Constantes::$GRUPOS_ABAIXO => $todosFilhos,
