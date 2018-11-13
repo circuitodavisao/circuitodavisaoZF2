@@ -876,6 +876,13 @@ class CadastroController extends CircuitoController {
 						/* Persistindo */
 						$this->getRepositorio()->getEventoORM()->persistir($evento);
 						$this->getRepositorio()->getGrupoEventoORM()->persistir($grupoEvento);
+
+						$numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $entidade->getGrupo());
+						$fatoCelulaDiscipulado = new FatoCelulaDiscipulado();	
+						$fatoCelulaDiscipulado->setNumero_identificador($numeroIdentificador);
+						$fatoCelulaDiscipulado->setGrupo_evento_id($grupoEvento->getId());
+						$this->getRepositorio()->getFatoCelulaDiscipuladoORM()->persistir($fatoCelulaDiscipulado);
+
 						/* Sessão */
 						$sessao->tipoMensagem = Constantes::$TIPO_MENSAGEM_CADASTRAR_DISCIPULADO;
 						$sessao->textoMensagem = $evento->getNome();
@@ -998,6 +1005,11 @@ class CadastroController extends CircuitoController {
 				foreach ($grupoEventoAtivos as $grupoEventoAtivo) {
 					$grupoEventoAtivo->setDataEHoraDeInativacao();
 					$this->getRepositorio()->getGrupoEventoORM()->persistir($grupoEventoAtivo, false);
+					if ($eventoNaSessao->getEventoTipo()->getId() === EventoTipo::tipoDiscipulado) {
+						$fatoCelulaDiscipulado = $this->getRepositorio()->getFatoCelulaDiscipuladoORM()->encontrarPorGrupoEventoId($grupoEventoAtivo->getId());
+						$fatoCelulaDiscipulado->setDataEHoraDeInativacao();
+						$this->getRepositorio()->getFatoCelulaDiscipuladoORM()->persistir($fatoCelulaDiscipulado);
+					}
 				}
 
 				$sessao->tipoMensagem = Constantes::$TIPO_MENSAGEM_EXCLUIR_CULTO;

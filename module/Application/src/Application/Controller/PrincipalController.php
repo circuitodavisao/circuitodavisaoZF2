@@ -125,6 +125,10 @@ class PrincipalController extends CircuitoController {
 		$dataFormatada = date_format($date, 'd/m/Y H:i:s');
 		$dados['ultimoAcesso'] = $dataFormatada;
 
+		/* total de discipulados */
+		$totalDeDiscipulados = $this->getRepositorio()->getFatoCelulaDiscipuladoORM()->totalAtivosPorNumeroIdentificador($numeroIdentificador);
+		$dados['totalDeDiscipulados'] = $totalDeDiscipulados;
+
         $view = new ViewModel($dados);
         /* Javascript */
         $layoutJS = new ViewModel();

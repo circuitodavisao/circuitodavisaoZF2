@@ -50,7 +50,7 @@ Período Atual <?php echo Funcoes::montaPeriodo($this->periodoFinal)[0]; ?>
 
 <div class="row mb10">
 <?php
-	$totalDeIndices = 5;
+	$totalDeIndices = 6;
 	if($this->pessoa->getPessoaHierarquiaAtivo() 
 		&& $this->pessoa->getPessoaHierarquiaAtivo()->getHierarquia()->getId() !== Hierarquia::LIDER_EM_TREINAMENTO
 		&& $this->pessoa->getPessoaHierarquiaAtivo()->getHierarquia()->getId() !== Hierarquia::LIDER_DE_CELULA){
@@ -103,7 +103,7 @@ Período Atual <?php echo Funcoes::montaPeriodo($this->periodoFinal)[0]; ?>
 			$label = 'Aluno(s)';
 			break;
 		case 6:
-			$valor = count($this->discipulado['discipulados']);
+			$valor = $this->totalDeDiscipulados;
 			$label = 'Discipulado(s)';
 			break;
 		case 7:
