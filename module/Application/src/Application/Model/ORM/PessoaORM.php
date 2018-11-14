@@ -15,6 +15,21 @@ use DateTime;
  * Descricao: Classe com acesso doctrine a entity pessoa
  */
 class PessoaORM extends CircuitoORM {
+	
+    public function getLideresPorSexo($sexo) {
+        try {
+            $dql = "SELECT p.nome, p.telefone "
+                    . "FROM  " . Constantes::$ENTITY_PESSOA . " p "
+                    . "WHERE "
+                    . "p.sexo = ?1 AND p.documento IS NOT NULL ";
+            $resultado = $this->getEntityManager()->createQuery($dql)
+                    ->setParameter(1, $sexo)
+                    ->getResult();
+            return $resultado;
+        } catch (Exception $exc) {
+            echo $exc->getMessage();
+        }
+    }
 
     /**
      * Localizar pessoa por email
