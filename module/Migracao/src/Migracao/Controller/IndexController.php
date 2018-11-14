@@ -2590,7 +2590,18 @@ class IndexController extends CircuitoController {
 	}
 
 	function infoAction(){
-		return new ViewModel();
+		$html = '';
+		$html .= '<table class="table" style="width: 400px">';
+		if($pessoas = $this->getRepositorio()->getPessoaORM()->getLideresPorSexo('F')){
+			foreach($pessoas as $pessoa){
+				$html .= '<tr>';
+				$html .= '<td>'.$pessoa['nome'].'</td>';
+				$html .= '<td>'.$pessoa['telefone'].'</td>';
+				$html .= '</tr>';
+			}
+		}
+		$html .= '</table>';
+		return new ViewModel(array('html' => $html));
 	}
 
 	function ajustarAction(){
