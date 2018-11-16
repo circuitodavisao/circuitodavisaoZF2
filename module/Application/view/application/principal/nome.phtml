@@ -1,0 +1,24 @@
+<?php
+
+use Application\Controller\Helper\Constantes;
+
+ $formulario = $this->formulario;
+ $formulario->prepare();
+ $formulario->setAttribute(Constantes::$ACTION, $this->url('principal', array(Constantes::$ACTION => 'nomeSalvar')));
+ echo $this->form()->openTag($formulario);
+ echo $this->templateFormularioTopo('Alterar Nome');
+?>
+<div class="panel-body bg-light">
+    <?php
+    echo $this->divMensagens();
+    echo $this->inputFormularioSimples(Constantes::$TRADUCAO_NOME, $formulario->get(Constantes::$INPUT_NOME));
+
+     echo $this->formHidden($formulario->get(Constantes::$INPUT_CSRF));
+     echo $this->formHidden($formulario->get(Constantes::$FORM_ID));
+     $funcaoAlterar = $this->funcaoOnClick('validarPrincipalAlterarNomeEquipe(this.form)');     
+     echo $this->botaoSimples(Constantes::$TRADUCAO_ALTERAR, $funcaoAlterar);
+    ?>
+</div>
+<?php
+ echo $this->templateFormularioRodape();
+ echo $this->form()->closeTag();

@@ -51,6 +51,7 @@ return array(
     'application/principal/novo-email-para-enviar'        => __DIR__ . '/view/application/principal/novo-email-para-enviar.phtml',
     'application/principal/suporte-finalizado'            => __DIR__ . '/view/application/principal/suporte-finalizado.phtml',
     'application/principal/numeracao'                     => __DIR__ . '/view/application/principal/numeracao.phtml',
+    'application/principal/nome'                          => __DIR__ . '/view/application/principal/nome.phtml',
     'application/cadastro/selecionar-fichas-revisionista' => __DIR__ . '/view/application/cadastro/selecionar-fichas-revisionista.phtml',
     'application/cadastro/ativar-ficha-revisao'           => __DIR__ . '/view/application/cadastro/ativar-ficha-revisao.phtml',
     'application/cadastro/ficha-revisao'                  => __DIR__ . '/view/application/cadastro/ficha-revisao.phtml',
