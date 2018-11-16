@@ -65,6 +65,7 @@ class InputExtras extends AbstractHelper {
                 $html .= '<div class="row">';
                 $html .= '<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">';
                 $html .= '<div class="section">';
+				$html .= '<label class="field-label">Nome</label>';
                 $html .= $this->view->inputFormulario(Constantes::$TRADUCAO_NOME, $this->getForm(), Constantes::$FORM_NOME, Constantes::$FORM_ICONE_NOME_HOSPEDEIRO);
                 $html .= '</div>';
                 $html .= '</div>';
