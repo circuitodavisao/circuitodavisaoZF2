@@ -261,7 +261,6 @@ class IndexController extends CircuitoController {
 		//        $dateFormatada = DateTime::createFromFormat('Y-m-d', self::DATA_CRIACAO);
 		$html .= '<br/><br /><br />Dia para gerar: ' . $dateFormatada->format('d/m/Y');
 
-		$tipoGerarRelatorioDeLider = $this->params()->fromRoute(Constantes::$ID, 0);
 		$somenteAtivos = true;
 		$grupos = $this->getRepositorio()->getGrupoORM()->encontrarTodos($somenteAtivos);
 		$this->getRepositorio()->iniciarTransacao();
@@ -272,9 +271,6 @@ class IndexController extends CircuitoController {
 				foreach ($grupos as $grupo) {
 					if($grupo->verificarSeEstaAtivo()){
 						$gerar = true;
-						//                    if ($grupo->getData_criacaoStringPadraoBanco() != self::DATA_CRIACAO) {
-						//                        $gerar = false;
-						//                    }
 						if ($gerar) {
 							$html .= "<br /><br /><br />Grupo: " . $grupo->getId();
 							if ($grupo->getEntidadeAtiva()) {
@@ -315,25 +311,12 @@ class IndexController extends CircuitoController {
 
 										if ($grupoEvento->getEvento()->verificaSeECelula() && ($grupoEvento->verificarSeEstaAtivo() || $validacaoInativadaNessePeriodo)) {
 											$html .= "<br />EventoCelula: " . $grupoEvento->getEvento()->getEventoCelula()->getId();
-											if ($tipoGerarRelatorioDeLider != 1) {
-												$this->getRepositorio()->getFatoCelulaORM()->criarFatoCelula($fatoCiclo, $grupoEvento->getEvento()->getEventoCelula()->getId());
-											}
+											$this->getRepositorio()->getFatoCelulaORM()->criarFatoCelula($fatoCiclo, $grupoEvento->getEvento()->getEventoCelula()->getId());
 											$html .= "<br />Fato Celula Gerado";
 											$temCelula = true;
 										}
 									}
 								}
-
-								//                        if ($grupo->getId() !== 1 && $grupo->getGrupoEquipe()->getId() !== 2 &&
-								//                                $grupo->getGrupoEquipe()->getId() !== 24 &&
-								//                                $grupo->getGrupoEquipe()->getId() !== 3749) {
-								//                            $quantidadeLideres = 0;
-								//                            if ($temCelula) {
-								//                                $quantidadeLideres = count($grupo->getResponsabilidadesAtivas());
-								//                            }
-								//                            $html .= "<br />quantidadeLideres" . $quantidadeLideres;
-								//                            $this->getRepositorio()->getFatoLiderORM()->criarFatoLider($numeroIdentificador, $quantidadeLideres, self::DATA_CRIACAO);
-								//                        }
 							}
 						}
 					}
