@@ -637,12 +637,13 @@ class IndexController extends CircuitoController {
 				$this->getRepositorio()->getGrupoPessoaORM()->persistir($grupoPessoaNovo);
 			}
 		}
-		$numeroIdentificadorNovo = $numeroIdentificadorLider . str_pad($grupoNovo->getId(), 8, 0, STR_PAD_LEFT);
-		$fatoLiderNovo = new FatoLider();
-		$fatoLiderNovo->setLideres($totalDeLideres);
-		$fatoLiderNovo->setNumero_identificador($numeroIdentificadorNovo);
-		$this->getRepositorio()->getFatoLiderORM()->persistir($fatoLiderNovo);
-
+		if($temAlgumaCelula){
+			$numeroIdentificadorNovo = $numeroIdentificadorLider . str_pad($grupoNovo->getId(), 8, 0, STR_PAD_LEFT);
+			$fatoLiderNovo = new FatoLider();
+			$fatoLiderNovo->setLideres($totalDeLideres);
+			$fatoLiderNovo->setNumero_identificador($numeroIdentificadorNovo);
+			$this->getRepositorio()->getFatoLiderORM()->persistir($fatoLiderNovo);
+		}
 		self::inativarEntidadeDoLider($grupoQueSeraSemeado);
 
 		$resultado = array();
