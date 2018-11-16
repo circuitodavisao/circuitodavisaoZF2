@@ -6,7 +6,7 @@ function validarPrincipalAlterarNomeEquipe(form) {
     let divMensagens = $('#divMensagens');
     let mensagem = '';
 
-    if (nome.length === 0) {
+    if (nome.trim().length === 0) {
         temErro = true;
         if (mensagem !== '') {
             mensagem += ', ';
