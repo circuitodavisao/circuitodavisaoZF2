@@ -1989,7 +1989,7 @@ class CadastroController extends CircuitoController {
 			$periodoInicial = $arrayPeriodoDoMes[0];
 			$periodoFinal = $arrayPeriodoDoMes[1];
 
-			if($mes == date('m') && $ano = $date('Y')){
+			if($mes == date('m') && $ano = date('Y')){
 				$periodoFinal = 0;
 			}
 
