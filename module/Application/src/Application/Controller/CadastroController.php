@@ -1989,6 +1989,10 @@ class CadastroController extends CircuitoController {
 			$periodoInicial = $arrayPeriodoDoMes[0];
 			$periodoFinal = $arrayPeriodoDoMes[1];
 
+			if($mes == date('m') && $ano = $date('Y'){
+				$periodoFinal = 0;
+			}
+
 			$arrayPeriodoInicial = Funcoes::montaPeriodo($periodoInicial);
 			$arrayPeriodoFinal = Funcoes::montaPeriodo($periodoFinal);
 			$dataInicio = $arrayPeriodoInicial[3].'-'.$arrayPeriodoInicial[2].'-'.$arrayPeriodoInicial[1];
