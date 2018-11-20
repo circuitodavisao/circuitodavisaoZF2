@@ -36,6 +36,7 @@ use Application\Model\Entity\SolicitacaoTipo;
 use Application\Model\Entity\FatoLider;
 use Application\Model\Entity\CursoAcesso;
 use Application\Model\Entity\RegistroAcao;
+use Application\Model\Entity\FatoCelulaDiscipulado;
 use Application\Model\ORM\RepositorioORM;
 use DateTime;
 use Exception;
