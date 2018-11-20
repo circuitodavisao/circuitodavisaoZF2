@@ -2066,7 +2066,6 @@ public function alunosNaSemanaAction(){
 				$relatorio = array();
 
 				$relatorioGeral = array();
-				$relatorioGeral['lanche'] = 0;
 				$relatorioGeral['pontualidade'] = 0;
 				$relatorioGeral['assiduidade'] = 0;
 				$relatorioGeral['administrativo'] = 0;
@@ -2078,7 +2077,6 @@ public function alunosNaSemanaAction(){
 					if($fatoDiscipulado->getObservacao()){
 						$relatorio['observacoes'][] = $fatoDiscipulado->getObservacao();
 					}
-					$relatorio['discipulados'][$fatoDiscipulado->getGrupo_evento_id()]['lanche'] += $fatoDiscipulado->getLanche();
 					$relatorio['discipulados'][$fatoDiscipulado->getGrupo_evento_id()]['pontualidade'] += $fatoDiscipulado->getPontualidade();
 					$relatorio['discipulados'][$fatoDiscipulado->getGrupo_evento_id()]['assiduidade'] += $fatoDiscipulado->getAssiduidade();
 					$relatorio['discipulados'][$fatoDiscipulado->getGrupo_evento_id()]['administrativo'] += $fatoDiscipulado->getAdministrativo();
@@ -2086,7 +2084,6 @@ public function alunosNaSemanaAction(){
 					$relatorio['discipulados'][$fatoDiscipulado->getGrupo_evento_id()]['palavra'] += $fatoDiscipulado->getPalavra();
 					$relatorio['discipulados'][$fatoDiscipulado->getGrupo_evento_id()]['quantidade']++;
 
-					$relatorioGeral['lanche'] += $fatoDiscipulado->getLanche();
 					$relatorioGeral['pontualidade'] += $fatoDiscipulado->getPontualidade();
 					$relatorioGeral['assiduidade'] += $fatoDiscipulado->getAssiduidade();
 					$relatorioGeral['administrativo'] += $fatoDiscipulado->getAdministrativo();
@@ -2094,19 +2091,17 @@ public function alunosNaSemanaAction(){
 					$relatorioGeral['palavra'] += $fatoDiscipulado->getPalavra();
 					$totalDeFatos++;
 				}
-				$relatorioGeral['lanche'] /= $totalDeFatos;
 				$relatorioGeral['pontualidade'] /= $totalDeFatos;
 				$relatorioGeral['assiduidade'] /= $totalDeFatos;
 				$relatorioGeral['administrativo'] /= $totalDeFatos;
 				$relatorioGeral['oracao'] /= $totalDeFatos;
 				$relatorioGeral['palavra'] /= $totalDeFatos;
 
-				$media = ($relatorioGeral['lanche']
-					+$relatorioGeral['pontualidade']
+				$media = ($relatorioGeral['pontualidade']
 					+$relatorioGeral['assiduidade']
 					+$relatorioGeral['administrativo']
 					+$relatorioGeral['oracao']
-					+$relatorioGeral['palavra'])/6;
+					+$relatorioGeral['palavra'])/5;
 				$relatorio['media'] = number_format($media);
 
 				foreach($relatorio['discipulados'] as $chave => $valor){
@@ -2114,7 +2109,6 @@ public function alunosNaSemanaAction(){
 					$info = $grupoEvento->getEvento()->getNome();
 					$relatorio['discipulados'][$chave]['info'] = $info;
 					$totalDeFatos = $relatorio['discipulados'][$chave]['quantidade'];
-					$relatorio['discipulados'][$chave]['lanche'] = number_format($relatorio['discipulados'][$chave]['lanche'] / $totalDeFatos);
 					$relatorio['discipulados'][$chave]['pontualidade'] = number_format($relatorio['discipulados'][$chave]['pontualidade'] / $totalDeFatos);
 					$relatorio['discipulados'][$chave]['assiduidade'] = number_format($relatorio['discipulados'][$chave]['assiduidade'] / $totalDeFatos);
 					$relatorio['discipulados'][$chave]['administrativo'] = number_format($relatorio['discipulados'][$chave]['administrativo'] / $totalDeFatos);
