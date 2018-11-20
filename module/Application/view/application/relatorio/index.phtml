@@ -168,7 +168,7 @@ $somaMeta = 0;
                                     $classePeriodoAtual = 'bg-info';
                                 }
                                 if ($this->tipoRelatorio == 1) {
-                                    echo '<th class="hidden-xs ' . $classePeriodoAtual . '">LID</th>';
+                                    echo '<th class="hidden-xs ' . $classePeriodoAtual . '">CÉL</th>';
                                     echo '<th class="' . $classeBase . $classePeriodoAtual . '">MET</th>';
                                     echo '<th class="' . $classeBase . $classePeriodoAtual . '">CUL</th>';
                                     echo '<th class="' . $classeBase . $classePeriodoAtual . '">ARE</th>';
@@ -190,7 +190,7 @@ $somaMeta = 0;
                                     echo '<th class="' . $classeBase . $classePeriodoAtual . '">%</th>';
                                 }
                                 if ($this->tipoRelatorio == 3) {
-                                    echo '<th class="' . $classeBase . $classePeriodoAtual . '">LID</th>';
+                                    echo '<th class="' . $classeBase . $classePeriodoAtual . '">CÉL</th>';
                                     echo '<th class="' . $classeBase . $classePeriodoAtual . '">MET</th>';
                                     echo '<th class="' . $classeBase . $classePeriodoAtual . '">QTD</th>';
                                     echo '<th class="' . $classeBase . $classePeriodoAtual . '">%</th>';
@@ -198,7 +198,7 @@ $somaMeta = 0;
                                 if ($this->tipoRelatorio == 4 ||
                                         $this->tipoRelatorio == 5 ||
                                         $this->tipoRelatorio == 6) {
-                                    echo '<th class="' . $classeBase . $classePeriodoAtual . '">LID</th>';
+                                    echo '<th class="' . $classeBase . $classePeriodoAtual . '">CÉL</th>';
                                 }
                                 if ($this->tipoRelatorio == 7) {
                                     echo '<th class="' . $classeBase . $classePeriodoAtual . '">ARENA</th>';
@@ -296,7 +296,7 @@ $somaMeta = 0;
 								}
 								if ($this->tipoRelatorio == 1) {
 									if($contagemRanking === 0 || $relatorio['lideres'] == 'TOTAL' || $relatorio[$indiceDeArrays]['mostrar']){
-										echo '<td class="hidden-xs">' . $relatorio[$indiceDeArrays]['quantidadeLideres'] . '</td>';
+										echo '<td class="hidden-xs">' . $relatorio[$indiceDeArrays]['celulaQuantidade'] . '</td>';
 										echo '<td class="' . $classeBase . '">' . $relatorio[$indiceDeArrays]['membresiaMeta'] . '</td>';
 										echo '<td class="' . $classeBase . '">' . $relatorio[$indiceDeArrays]['membresiaCulto'] . '</td>';
 										echo '<td class="' . $classeBase . '">' . $relatorio[$indiceDeArrays]['membresiaArena'] . '</td>';
@@ -333,7 +333,7 @@ $somaMeta = 0;
 								}
 								if ($this->tipoRelatorio == 3) {
 									if($contagemRanking === 0 || $relatorio['lideres'] == 'TOTAL' || $relatorio[$indiceDeArrays]['mostrar']){
-										echo '<td class="' . $classeBase . '"">' . $relatorio[$indiceDeArrays]['quantidadeLideres'] . '</td>';
+										echo '<td class="' . $classeBase . '"">' . $relatorio[$indiceDeArrays]['celulaQuantidade'] . '</td>';
 										echo '<td class="' . $classeBase . '">' . $relatorio[$indiceDeArrays]['membresiaMeta'] . '</td>';
 										echo '<td class="' . $classeBase . '">' . $relatorio[$indiceDeArrays]['celula'] . '</td>';
 										echo '<td class="' . $classeBase . '">' . RelatorioController::formataNumeroRelatorio($relatorio[$indiceDeArrays]['celulaPerformance']) . '%</td>';
@@ -359,7 +359,7 @@ $somaMeta = 0;
 											break;
 										}
 										if($contagemRanking === 0 || $relatorio['lideres'] == 'TOTAL' || $relatorio[$indiceDeArrays]['mostrar']){
-											echo '<td class="' . $classeBase . '">' . $relatorio[$indiceDeArrays]['quantidadeLideres'] . '</td>';
+											echo '<td class="' . $classeBase . '">' . $relatorio[$indiceDeArrays]['celulaQuantidade'] . '</td>';
 											echo '<td class="' . $classeBase . '">' . RelatorioController::formataNumeroRelatorio($quantidade) . '</td>';
 										}else{
 											for($i = 1;$i <= 2;$i++){
