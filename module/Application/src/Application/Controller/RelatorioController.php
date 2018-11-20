@@ -40,7 +40,6 @@ class RelatorioController extends CircuitoController {
 	 * Contrutor sobrecarregado com os serviços de ORM
 	 */
 	public function __construct(EntityManager $doctrineORMEntityManager = null) {
-
 		if (!is_null($doctrineORMEntityManager)) {
 			parent::__construct($doctrineORMEntityManager);
 		}
@@ -1211,6 +1210,9 @@ class RelatorioController extends CircuitoController {
 
 	public static function montaRelatorio($repositorioORM, $numeroIdentificador, $periodoInicial, $tipoRelatorio, $inativo = false, $qualRelatorio = 1) {
 		unset($relatorio);
+		$relatorioCelula = $repositorioORM->getFatoCicloORM()->montarRelatorioCelulaPorNumeroIdentificador($numeroIdentificador, $periodoInicial, $tipoRelatorio);
+		$quantidadeCelulas = $relatorioCelula[0]['quantidade'];
+		$relatorio['celulaQuantidade'] = $quantidadeCelulas;
 		$fatoLider = $repositorioORM->getFatoLiderORM()->encontrarPorNumeroIdentificador($numeroIdentificador, $tipoRelatorio, $periodoInicial, $inativo);
 		$quantidadeLideres = $fatoLider[0]['lideres'];
 		$relatorio['quantidadeLideres'] = $quantidadeLideres;
@@ -1223,7 +1225,7 @@ class RelatorioController extends CircuitoController {
 				}
 			}
 		}
-		$relatorio['membresiaMeta'] = Constantes::$META_LIDER * $quantidadeLideres;
+		$relatorio['membresiaMeta'] = Constantes::$META_LIDER * $quantidadeCelulas;
 		/* Membresia */
 		if ($qualRelatorio === RelatorioController::relatorioMembresia || $qualRelatorio === RelatorioController::relatorioMembresiaECelula) {
 			$relatorio['membresiaCulto'] = $soma[RelatorioController::dimensaoTipoCulto];
@@ -1246,9 +1248,6 @@ class RelatorioController extends CircuitoController {
 			$qualRelatorio === RelatorioController::relatorioCelulaQuantidade ||
 			$qualRelatorio === RelatorioController::relatorioMembresiaECelula ||
 			$qualRelatorio === RelatorioController::relatorioCelulasDeElite) {
-				$relatorioCelula = $repositorioORM->getFatoCicloORM()->montarRelatorioCelulaPorNumeroIdentificador($numeroIdentificador, $periodoInicial, $tipoRelatorio);
-
-				$quantidadeCelulas = $relatorioCelula[0]['quantidade'];
 				$quantidadeCelulasRealizadas = 0;
 				if ($relatorioCelula[0]['realizadas']) {
 					$quantidadeCelulasRealizadas = $relatorioCelula[0]['realizadas'];
@@ -1266,7 +1265,6 @@ class RelatorioController extends CircuitoController {
 				$relatorio['celulaPerformance'] = $performanceCelula;
 				$relatorio['celulaPerformanceClass'] = RelatorioController::corDaLinhaPelaPerformance($relatorio['celulaPerformance']);
 				$relatorio['celulaPerformanceFrase'] = RelatorioController::corDaLinhaPelaPerformance($relatorio['celulaPerformance'], 2);
-				$relatorio['celulaQuantidade'] = $quantidadeCelulas;
 				$relatorio['celulaRealizadas'] = $quantidadeCelulasRealizadas;
 				$relatorio['celulaRealizadasPerformance'] = $performanceCelulasRealizadas;
 				$relatorio['celulaRealizadasPerformanceClass'] = RelatorioController::corDaLinhaPelaPerformance($relatorio['celulaRealizadasPerformance']);
