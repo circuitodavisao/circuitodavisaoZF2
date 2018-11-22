@@ -622,9 +622,30 @@ class IndexController extends CircuitoController {
 		if($grupoEventoCelulas = $grupoQueSeraSemeado->getGrupoEventoPorTipoEAtivo(EventoTipo::tipoCelula)){
 			$temAlgumaCelula = true;
 			foreach($grupoEventoCelulas as $grupoEventoCelula){
+				/* criar novo evento, evento_celula e grupo_evento */
+				$eventoAtual = $grupoEventoCelula->getEvento();
+				$eventoNovo = new Evento();
+				$eventoNovo->setHora($eventoAtual->getHora());
+				$eventoNovo->setDia($eventoAtual->getDia());
+				$eventoNovo->setEventoTipo($eventoAtual->getEventoTipo());
+				$this->getRepositorio()->getEventoORM()->persistir($eventoNovo);
+
+				$eventoCelulaAtual = $eventoAtual->getEventoCelula();
+				$eventoCelulaNovo = new EventoCelula();
+				$eventoCelulaNovo->setNome_hospedeiro($eventoCelulaAtual->getNome_hospedeiro());
+				$eventoCelulaNovo->setTelefone_hospedeiro($eventoCelulaAtual->getTelefone_hospedeiro());
+				$eventoCelulaNovo->setUf($eventoCelulaAtual->getUf());
+				$eventoCelulaNovo->setCidade($eventoCelulaAtual->getCidade());
+				$eventoCelulaNovo->setLogradouro($eventoCelulaAtual->getLogradouro());
+				$eventoCelulaNovo->setBairro($eventoCelulaAtual->getBairro());
+				$eventoCelulaNovo->setComplemento($eventoCelulaAtual->getComplemento());
+				$eventoCelulaNovo->setCep($eventoCelulaAtual->getCep());
+				$eventoCelulaNovo->setEvento($eventoNovo);
+				$this->getRepositorio()->getEventoCelulaORM()->persistir($eventoCelulaNovo,false);
+
 				$grupoEventoNovo = new GrupoEvento();
 				$grupoEventoNovo->setGrupo($grupoNovo);
-				$grupoEventoNovo->setEvento($grupoEventoCelula->getEvento());
+				$grupoEventoNovo->setEvento($eventoNovo);
 				$this->getRepositorio()->getGrupoEventoORM()->persistir($grupoEventoNovo);
 			}
 		}
@@ -1025,6 +1046,10 @@ class IndexController extends CircuitoController {
 			foreach($grupoEventoCelulas as $grupoEvento){
 				$grupoEvento->setDataEHoraDeInativacao($dataParaInativar);
 				$this->getRepositorio()->getGrupoEventoORM()->persistir($grupoEvento, false);
+
+				$evento = $grupoEvento->getEvento();
+				$evento->setDataEHoraDeInativacao($dataParaInativar);
+				$this->getRepositorio()->getEventoORM()->persistir($evento, false);
 			}	
 		}
 
