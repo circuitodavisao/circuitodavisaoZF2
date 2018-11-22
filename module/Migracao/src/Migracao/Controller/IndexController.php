@@ -283,38 +283,17 @@ class IndexController extends CircuitoController {
 								$html .= "<br />fatoCiclo " . $fatoCiclo->getId();
 								$periodo = 0;
 								$apenasCelulas = true;
-								$grupoEventoNoPeriodo = $grupo->getGrupoEventoNoPeriodo($periodo, $apenasCelulas);
-								$quantidadeDeEventosNoCiclo = count($grupoEventoNoPeriodo);
-								$temCelula = false;
+
+								$grupoEventosCelula = $grupo->getGrupoEventoAtivosPorTipo(EventoTipo::tipoCelula);
+								$quantidadeDeEventosNoCiclo = count($grupoEventosCelula);
 								$html .= "<br />quantidadeDeEventosNoCiclo $quantidadeDeEventosNoCiclo";
-								if ($grupoEventoNoPeriodo > 0) {
-									foreach ($grupoEventoNoPeriodo as $grupoEvento) {
-										$html .= "<br /><br />verificaSeECelula: " . $grupoEvento->getEvento()->verificaSeECelula();
+								if ($grupoEventosCelula > 0) {
+									foreach ($grupoEventosCelula as $grupoEvento) {
 										$html .= "<br />GrupoEvento->id: " . $grupoEvento->getId();
 										$html .= "<br />Evento->id: " . $grupoEvento->getEvento()->getId();
-										$validacaoInativadaNessePeriodo = false;
-										if (!$grupoEvento->verificarSeEstaAtivo()) {
-											$html .= "<br />Celula Inativada";
-											$arrayPeriodo = Funcoes::montaPeriodo($periodo);
-											$stringComecoDoPeriodo = $arrayPeriodo[3] . '-' . $arrayPeriodo[2] . '-' . $arrayPeriodo[1];
-											$dataDoInicioDoPeriodoParaComparar = strtotime($stringComecoDoPeriodo);
-											$dataDeInativacaoParaComparar = strtotime($grupoEvento->getData_inativacaoStringPadraoBanco());
-
-											$html .= '<br />stringComecoDoPeriodo: ' . $stringComecoDoPeriodo;
-											$html .= '<br />dataDeInativacaoParaComparar: ' . $grupoEvento->getData_inativacaoStringPadraoBanco();
-											$html .= "<br />dataDeInativacaoParaComparar $dataDeInativacaoParaComparar >= dataDoInicioDoPeriodoParaComparar$dataDoInicioDoPeriodoParaComparar";
-											if ($dataDeInativacaoParaComparar >= $dataDoInicioDoPeriodoParaComparar) {
-												$validacaoInativadaNessePeriodo = true;
-												$html .= "<br />validacaoInativadaNessePeriodo: " . $validacaoInativadaNessePeriodo;
-											}
-										}
-
-										if ($grupoEvento->getEvento()->verificaSeECelula() && ($grupoEvento->verificarSeEstaAtivo() || $validacaoInativadaNessePeriodo)) {
-											$html .= "<br />EventoCelula: " . $grupoEvento->getEvento()->getEventoCelula()->getId();
-											$this->getRepositorio()->getFatoCelulaORM()->criarFatoCelula($fatoCiclo, $grupoEvento->getEvento()->getEventoCelula()->getId());
-											$html .= "<br />Fato Celula Gerado";
-											$temCelula = true;
-										}
+										$html .= "<br />EventoCelula: " . $grupoEvento->getEvento()->getEventoCelula()->getId();
+										$this->getRepositorio()->getFatoCelulaORM()->criarFatoCelula($fatoCiclo, $grupoEvento->getEvento()->getEventoCelula()->getId());
+										$html .= "<br />Fato Celula Gerado";
 									}
 								}
 							}
