@@ -766,6 +766,7 @@ class CadastroController extends CircuitoController {
 						$eventoCelula->setCidade($post_data[(Constantes::$FORM_HIDDEN . Constantes::$FORM_CIDADE)]);
 						$eventoCelula->setLogradouro($post_data[(Constantes::$FORM_HIDDEN . Constantes::$FORM_LOGRADOURO)]);
 						$eventoCelula->setBairro($post_data[(Constantes::$FORM_HIDDEN . Constantes::$FORM_BAIRRO)]);
+						$eventoCelula->setBairro('');
 						$eventoCelula->setComplemento(strtoupper($post_data[Constantes::$FORM_COMPLEMENTO]));
 						$eventoCelula->setCep($post_data[Constantes::$FORM_CEP_LOGRADOURO]);
 						$eventoCelula->setEvento($evento);
