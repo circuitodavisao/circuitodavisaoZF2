@@ -43,7 +43,7 @@ use Application\View\Helper\BotaoSimples;
      $funcaoDireita = $this->funcaoOnClick('$(".periodo' . ($indiceDeArrays + 1) . '").removeClass("hidden-xs");$(".periodo' . $indiceDeArrays . '").addClass("hidden-xs");');
      $botaoEsquerda = $this->botaoSimples('<i class="fa fa-angle-double-left"></i>', $funcaoEsquerda, BotaoSimples::botaoPequenoImportante, BotaoSimples::posicaoAEsquerda);
      $botaoDireita = $this->botaoSimples('<i class="fa fa-angle-double-right"></i>', $funcaoDireita, BotaoSimples::botaoPequenoImportante, BotaoSimples::posicaoADireita);
-     echo '<div class="hidden-lg hidden-md hidden-sm center-block text-center ' . $classeBase . '" style="padding: 9px 12px;"> ';
+     echo '<div class="p5 hidden-lg hidden-md hidden-sm center-block text-center ' . $classeBase . '" style="margin-bottom: 17px;"> ';
      if ($mostrarBotaoEsquerdo) {
        echo '<span class="hidden-lg hidden-md hidden-sm">' . $botaoEsquerda . '</span>';
      }
