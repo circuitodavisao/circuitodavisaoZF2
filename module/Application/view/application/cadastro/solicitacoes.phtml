@@ -14,8 +14,11 @@ $html .= '<form action="/cadastroSolicitacoes" method="post">';
 $html .= $this->cabecalhoDeMeses();
 $html .= '</form>';
 $html .= '</div>';
+$html .= '<div class="panel-footer text-right">';
+$stringNomeDaFuncaoOnClickCadastro = 'mostrarSplash(); funcaoCircuito("cadastroSolicitacao", 0)';
+$html .= $this->botaoLink($this->translate(Constantes::$TRADUCAO_CADASTRAR), Constantes::$STRING_HASHTAG, 0, $this->funcaoOnClick($stringNomeDaFuncaoOnClickCadastro));
 $html .= '</div>';
-$html .= '</div>';
+$html .= $this->templateFormularioRodape();
 
 foreach($this->solicitacoesTipo as $solicitacaoTipo){
 	$colspan = 0;
@@ -164,9 +167,5 @@ foreach($this->solicitacoesTipo as $solicitacaoTipo){
 }
 
 
-$html .= '<div class="panel-footer text-right">';
-$stringNomeDaFuncaoOnClickCadastro = 'mostrarSplash(); funcaoCircuito("cadastroSolicitacao", 0)';
-$html .= $this->botaoLink($this->translate(Constantes::$TRADUCAO_CADASTRAR), Constantes::$STRING_HASHTAG, 0, $this->funcaoOnClick($stringNomeDaFuncaoOnClickCadastro));
-$html .= '</div>';
-$html .= '</div>';
+
 echo $html;

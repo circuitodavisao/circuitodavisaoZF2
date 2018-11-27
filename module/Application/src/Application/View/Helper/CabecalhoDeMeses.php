@@ -22,7 +22,7 @@ class CabecalhoDeMeses extends AbstractHelper {
 
     public function renderHtml() {
         $html = '';
-        $html .= '<div class="row p10">';
+        $html .= '<div class="row p5">';
         $html .= '<div class="col-lg-1 col-md-1 col-sm-1 col-xs-12 pb10 pt10">';
         $html .= 'Mês';
         $html .= '</div>';
@@ -52,7 +52,7 @@ class CabecalhoDeMeses extends AbstractHelper {
         }
         $html .= '</select>';
         $html .= '</div>';
-        $html .= '<div class="col-lg-2 col-md-2 col-sm-2 col-xs-12" style="padding-top:0px;">';
+        $html .= '<div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">';
         $html .= $this->view->botaoSimples('Filtrar', $this->view->funcaoOnClick('this.form.submit()'), BotaoSimples::botaoImportante, BotaoSimples::larguraMaxima);
         $html .= '</div>';
         $html .= '</div>';
