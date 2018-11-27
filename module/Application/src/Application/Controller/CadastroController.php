@@ -36,6 +36,7 @@ use Application\Model\Entity\SolicitacaoTipo;
 use Application\Model\Entity\FatoLider;
 use Application\Model\Entity\CursoAcesso;
 use Application\Model\Entity\RegistroAcao;
+use Application\Model\Entity\FatoCelulaDiscipulado;
 use Application\Model\ORM\RepositorioORM;
 use DateTime;
 use Exception;
@@ -765,6 +766,7 @@ class CadastroController extends CircuitoController {
 						$eventoCelula->setCidade($post_data[(Constantes::$FORM_HIDDEN . Constantes::$FORM_CIDADE)]);
 						$eventoCelula->setLogradouro($post_data[(Constantes::$FORM_HIDDEN . Constantes::$FORM_LOGRADOURO)]);
 						$eventoCelula->setBairro($post_data[(Constantes::$FORM_HIDDEN . Constantes::$FORM_BAIRRO)]);
+						$eventoCelula->setBairro('');
 						$eventoCelula->setComplemento(strtoupper($post_data[Constantes::$FORM_COMPLEMENTO]));
 						$eventoCelula->setCep($post_data[Constantes::$FORM_CEP_LOGRADOURO]);
 						$eventoCelula->setEvento($evento);

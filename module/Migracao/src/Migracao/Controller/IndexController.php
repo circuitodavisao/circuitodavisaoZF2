@@ -283,38 +283,17 @@ class IndexController extends CircuitoController {
 								$html .= "<br />fatoCiclo " . $fatoCiclo->getId();
 								$periodo = 0;
 								$apenasCelulas = true;
-								$grupoEventoNoPeriodo = $grupo->getGrupoEventoNoPeriodo($periodo, $apenasCelulas);
-								$quantidadeDeEventosNoCiclo = count($grupoEventoNoPeriodo);
-								$temCelula = false;
+
+								$grupoEventosCelula = $grupo->getGrupoEventoAtivosPorTipo(EventoTipo::tipoCelula);
+								$quantidadeDeEventosNoCiclo = count($grupoEventosCelula);
 								$html .= "<br />quantidadeDeEventosNoCiclo $quantidadeDeEventosNoCiclo";
-								if ($grupoEventoNoPeriodo > 0) {
-									foreach ($grupoEventoNoPeriodo as $grupoEvento) {
-										$html .= "<br /><br />verificaSeECelula: " . $grupoEvento->getEvento()->verificaSeECelula();
+								if ($grupoEventosCelula > 0) {
+									foreach ($grupoEventosCelula as $grupoEvento) {
 										$html .= "<br />GrupoEvento->id: " . $grupoEvento->getId();
 										$html .= "<br />Evento->id: " . $grupoEvento->getEvento()->getId();
-										$validacaoInativadaNessePeriodo = false;
-										if (!$grupoEvento->verificarSeEstaAtivo()) {
-											$html .= "<br />Celula Inativada";
-											$arrayPeriodo = Funcoes::montaPeriodo($periodo);
-											$stringComecoDoPeriodo = $arrayPeriodo[3] . '-' . $arrayPeriodo[2] . '-' . $arrayPeriodo[1];
-											$dataDoInicioDoPeriodoParaComparar = strtotime($stringComecoDoPeriodo);
-											$dataDeInativacaoParaComparar = strtotime($grupoEvento->getData_inativacaoStringPadraoBanco());
-
-											$html .= '<br />stringComecoDoPeriodo: ' . $stringComecoDoPeriodo;
-											$html .= '<br />dataDeInativacaoParaComparar: ' . $grupoEvento->getData_inativacaoStringPadraoBanco();
-											$html .= "<br />dataDeInativacaoParaComparar $dataDeInativacaoParaComparar >= dataDoInicioDoPeriodoParaComparar$dataDoInicioDoPeriodoParaComparar";
-											if ($dataDeInativacaoParaComparar >= $dataDoInicioDoPeriodoParaComparar) {
-												$validacaoInativadaNessePeriodo = true;
-												$html .= "<br />validacaoInativadaNessePeriodo: " . $validacaoInativadaNessePeriodo;
-											}
-										}
-
-										if ($grupoEvento->getEvento()->verificaSeECelula() && ($grupoEvento->verificarSeEstaAtivo() || $validacaoInativadaNessePeriodo)) {
-											$html .= "<br />EventoCelula: " . $grupoEvento->getEvento()->getEventoCelula()->getId();
-											$this->getRepositorio()->getFatoCelulaORM()->criarFatoCelula($fatoCiclo, $grupoEvento->getEvento()->getEventoCelula()->getId());
-											$html .= "<br />Fato Celula Gerado";
-											$temCelula = true;
-										}
+										$html .= "<br />EventoCelula: " . $grupoEvento->getEvento()->getEventoCelula()->getId();
+										$this->getRepositorio()->getFatoCelulaORM()->criarFatoCelula($fatoCiclo, $grupoEvento->getEvento()->getEventoCelula()->getId());
+										$html .= "<br />Fato Celula Gerado";
 									}
 								}
 							}
@@ -622,9 +601,30 @@ class IndexController extends CircuitoController {
 		if($grupoEventoCelulas = $grupoQueSeraSemeado->getGrupoEventoPorTipoEAtivo(EventoTipo::tipoCelula)){
 			$temAlgumaCelula = true;
 			foreach($grupoEventoCelulas as $grupoEventoCelula){
+				/* criar novo evento, evento_celula e grupo_evento */
+				$eventoAtual = $grupoEventoCelula->getEvento();
+				$eventoNovo = new Evento();
+				$eventoNovo->setHora($eventoAtual->getHora());
+				$eventoNovo->setDia($eventoAtual->getDia());
+				$eventoNovo->setEventoTipo($eventoAtual->getEventoTipo());
+				$this->getRepositorio()->getEventoORM()->persistir($eventoNovo);
+
+				$eventoCelulaAtual = $eventoAtual->getEventoCelula();
+				$eventoCelulaNovo = new EventoCelula();
+				$eventoCelulaNovo->setNome_hospedeiro($eventoCelulaAtual->getNome_hospedeiro());
+				$eventoCelulaNovo->setTelefone_hospedeiro($eventoCelulaAtual->getTelefone_hospedeiro());
+				$eventoCelulaNovo->setUf($eventoCelulaAtual->getUf());
+				$eventoCelulaNovo->setCidade($eventoCelulaAtual->getCidade());
+				$eventoCelulaNovo->setLogradouro($eventoCelulaAtual->getLogradouro());
+				$eventoCelulaNovo->setBairro($eventoCelulaAtual->getBairro());
+				$eventoCelulaNovo->setComplemento($eventoCelulaAtual->getComplemento());
+				$eventoCelulaNovo->setCep($eventoCelulaAtual->getCep());
+				$eventoCelulaNovo->setEvento($eventoNovo);
+				$this->getRepositorio()->getEventoCelulaORM()->persistir($eventoCelulaNovo,false);
+
 				$grupoEventoNovo = new GrupoEvento();
 				$grupoEventoNovo->setGrupo($grupoNovo);
-				$grupoEventoNovo->setEvento($grupoEventoCelula->getEvento());
+				$grupoEventoNovo->setEvento($eventoNovo);
 				$this->getRepositorio()->getGrupoEventoORM()->persistir($grupoEventoNovo);
 			}
 		}
@@ -1025,6 +1025,10 @@ class IndexController extends CircuitoController {
 			foreach($grupoEventoCelulas as $grupoEvento){
 				$grupoEvento->setDataEHoraDeInativacao($dataParaInativar);
 				$this->getRepositorio()->getGrupoEventoORM()->persistir($grupoEvento, false);
+
+				$evento = $grupoEvento->getEvento();
+				$evento->setDataEHoraDeInativacao($dataParaInativar);
+				$this->getRepositorio()->getEventoORM()->persistir($evento, false);
 			}	
 		}
 
