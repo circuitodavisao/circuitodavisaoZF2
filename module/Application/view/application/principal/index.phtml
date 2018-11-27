@@ -159,7 +159,7 @@ Período Atual <?php echo Funcoes::montaPeriodo($this->periodoFinal)[0]; ?>
 			break;
 		case 10:
 			$valor = $diferenca;
-			$label = 'Discipulos sem Sexo';
+			$label = 'Sexo não informado';
 			break;
 		}
 		echo '<div class="col-lg-3 col-md-3 col-sm-3 col-xs-6">';
@@ -442,11 +442,10 @@ Discipulado
 			echo '<div class="alert alert-default">'.$discipulado['info'].'</div>';
 
 			echo '<div class="row">';
-			for ($indiceInputs = 1; $indiceInputs <= 6; $indiceInputs++) {
+			for ($indiceInputs = 2; $indiceInputs <= 6; $indiceInputs++) {
 				$input = '';
 				$label = '';
 				switch ($indiceInputs) {
-				case 1:$input = 'lanche'; $label = 'Lanche';break;
 				case 2:$input = 'administrativo'; $label = 'Circuito';break;
 				case 3:$input = 'oracao'; $label = 'Oração';break;
 				case 4:$input = 'palavra'; $label = 'Palavra';break;

@@ -10,14 +10,6 @@ function validar(formulario){
 			mensagemDeErro += ', Discipulado';
 		}
 	}
-	if(formulario.lanche.value == 'selecione'){
-		temErros = true
-		if(mensagemDeErro == ''){
-			mensagemDeErro = 'Lanche';
-		}else{
-			mensagemDeErro += ', Lanche';
-		}
-	}
 	if(formulario.oracao.value == 'selecione'){
 		temErros = true
 		if(mensagemDeErro == ''){
