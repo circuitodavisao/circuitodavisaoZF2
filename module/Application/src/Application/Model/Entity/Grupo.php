@@ -653,8 +653,8 @@ class Grupo extends CircuitoEntity {
 		/* Verificando dia do revisao para mostrar */
 		$arrayRevisoes = array();
 		foreach($grupoEventos as $grupoEvento){
-			$dataDoRevisao = strtotime($grupoEvento->getEvento()->getData());
-			$dataAtual = strtotime(date('Y-m-d'). ' +2 week');	
+			$dataDoRevisao = strtotime($grupoEvento->getEvento()->getData() . ' +2 week');
+			$dataAtual = strtotime(date('Y-m-d'));	
 
 			if($dataDoRevisao >= $dataAtual){
 				$arrayRevisoes[] = $grupoEvento;
