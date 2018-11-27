@@ -2,18 +2,16 @@
 
 use Application\Controller\Helper\Constantes;
 use Application\Controller\Helper\Funcoes;
-?>
-<div class="center-block mw600">
-	<div class="panel">
-		<div class="panel-heading text-center">Ranking Célula - Atualizado todo dia as 19:00</div>
-		<div class="panel-body pn">
-<?php
+
+$label = 'Ranking Célula - Atualizado todo dia as 19:00';
+echo $this->templateFormularioTopo($label);
+echo '<div class="panel-body bg-light" style="padding: 15px 5px 5px 5px;">';
 echo '<form action="/relatorioRankingCelula" method="post">';
 echo $this->cabecalhoDeMeses();
 echo '</form>';
 
-echo '<div class="table-responsive">';
-echo '<table class="text-center table table-condensed table-hover bg-light mt15" style="font-size:8px;">';
+echo '<div class="table-responsive p5">';
+echo '<table class="text-center table table-condensed table-hover bg-light" style="font-size:8px;">';
 echo '<thead>';
 echo '<tr>';
 echo '<th></th>';
@@ -38,15 +36,17 @@ if($this->fatos && $this->filtrado){
 		$lideres = $grupoEvento->getGrupo()->getNomeLideresAtivos();
 		$celulaDia = $this->translate(Funcoes::diaDaSemanaPorDia($grupoEvento->getEvento()->getDia())).' - ' . substr($grupoEvento->getEvento()->getHora(),0,5);
 
+		$classeCor = 'dark';
 		if($fato->getValor() > 6){
 			$classeCor = 'success';
-		} elseif ($fato->getValor() >= 4 && $fato->getValor() <= 6) {
-			$classeCor = 'warning';
-		} elseif($fato->getValor() >= 1 && $fato->getValor() <= 3) {
-			$classeCor = 'danger';
-		} else {
-			$classeCor = 'dark';
 		}
+		if ($fato->getValor() >= 4 && $fato->getValor() <= 6) {
+			$classeCor = 'warning';
+		}
+		if($fato->getValor() >= 1 && $fato->getValor() <= 3) {
+			$classeCor = 'danger';
+		}
+		
 		echo '<tr class="'.$classeCor.'">';
 		echo '<td>'.$contagemRanking.'</td>';
 		echo '<td>'.$lideres.'-'.$infoEntidade.'</td>';
@@ -75,3 +75,4 @@ if($this->fatos && $this->filtrado){
 echo '</tbody>';
 echo '</table>';
 echo '</div>';
+echo $this->templateFormularioRodape();
