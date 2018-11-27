@@ -33,408 +33,408 @@ $somaMeta = 0;
         font-weight: bold;
     }
 </style>
-<div class="center-block">
-    <div class="panel">
-        <div class="panel-heading text-center">
-            <?php
-            if ($this->tipoRelatorio == 1) {
-                $label = 'Membresia';
-            }
-            if ($this->tipoRelatorio == 2) {
-                $label = 'Células Realizadas';
-            }
-            if ($this->tipoRelatorio == 3) {
-                $label = 'Células Quantitativo';
-            }
-            if ($this->tipoRelatorio == 4) {
-                $label = 'Culto da Semana';
-            }
-            if ($this->tipoRelatorio == 5) {
-                $label = 'Arena';
-            }
-            if ($this->tipoRelatorio == 6) {
-                $label = 'Domingo';
-            }
-            if ($this->tipoRelatorio == 7) {
-                $label = 'C&eacute;lula/Arena';
-            }
-            if ($this->tipoRelatorio == 8) {
-                $label = 'C&eacute;lula de Elite - Atualizado todo dia as 18:00';
-            }
-            if ($this->tipoRelatorio == 9) {
-                $label = 'Parceiro de Deus Consolidado';
-            }
-            echo $label;
-            ?>
-        </div>
-        <div class="panel-body pn">
-            <?php
-        	$url = $this->tipoRelatorio . '/' . $this->mes . '/' . $this->ano;
+<?php
+  if ($this->tipoRelatorio == 1) {
+      $label = 'Membresia';
+  }
+  if ($this->tipoRelatorio == 2) {
+      $label = 'Células Realizadas';
+  }
+  if ($this->tipoRelatorio == 3) {
+      $label = 'Células Quantitativo';
+  }
+  if ($this->tipoRelatorio == 4) {
+      $label = 'Culto da Semana';
+  }
+  if ($this->tipoRelatorio == 5) {
+      $label = 'Arena';
+  }
+  if ($this->tipoRelatorio == 6) {
+      $label = 'Domingo';
+  }
+  if ($this->tipoRelatorio == 7) {
+      $label = 'C&eacute;lula/Arena';
+  }
+  if ($this->tipoRelatorio == 8) {
+      $label = 'C&eacute;lula de Elite - Atualizado todo dia as 18:00';
+  }
+  if ($this->tipoRelatorio == 9) {
+      $label = 'Parceiro de Deus Consolidado';
+  }
 
-			echo '<div class="alert alert-default">';
-			echo $this->sitemap('relatorio/'.$url);
-			echo '</div>';
+  echo $this->templateFormularioTopo($label);
+?>
+    <div class="panel-body bg-light" style="padding: 15px 5px 5px 5px;">
+        <?php
+    	$url = $this->tipoRelatorio . '/' . $this->mes . '/' . $this->ano;
+      echo '<div class="p5">';
+    	echo '<div class="alert alert-default mn">';
+    	echo $this->sitemap('relatorio/'.$url);
+    	echo '</div>';
+      echo '</div>';
 
-			echo '<form action="/relatorio/' . $url . '" method="post">';
-			echo $this->cabecalhoDeMeses();
-			echo '</form>';
+    	echo '<form action="/relatorio/' . $url . '" method="post">';
+    	echo $this->cabecalhoDeMeses();
+    	echo '</form>';
 
-            for ($indiceDeArrays = $this->periodoInicial; $indiceDeArrays <= $this->periodoFinal; $indiceDeArrays++) {
-                $classeBase = 'periodo' . $indiceDeArrays . ' ';
-                if ($indiceDeArrays != -1) {
-                    $classeBase .= 'hidden-xs';
-                }
-                $mostrarBotaoEsquerdo = true;
-                if ($indiceDeArrays == $this->periodoInicial) {
-                    $mostrarBotaoEsquerdo = false;
-                }
-                $mostrarBotaoDireito = true;
-                if ($indiceDeArrays == $this->periodoFinal) {
-                    $mostrarBotaoDireito = false;
-                }
-                $funcaoEsquerda = $this->funcaoOnClick('$(".periodo' . ($indiceDeArrays - 1) . '").removeClass("hidden-xs");$(".periodo' . $indiceDeArrays . '").addClass("hidden-xs");');
-                $funcaoDireita = $this->funcaoOnClick('$(".periodo' . ($indiceDeArrays + 1) . '").removeClass("hidden-xs");$(".periodo' . $indiceDeArrays . '").addClass("hidden-xs");');
-                $botaoEsquerda = $this->botaoSimples('<i class="fa fa-angle-double-left"></i>', $funcaoEsquerda, BotaoSimples::botaoPequenoImportante, BotaoSimples::posicaoAEsquerda);
-                $botaoDireita = $this->botaoSimples('<i class="fa fa-angle-double-right"></i>', $funcaoDireita, BotaoSimples::botaoPequenoImportante, BotaoSimples::posicaoADireita);
-                echo '<div class="hidden-lg hidden-md hidden-sm center-block text-center ' . $classeBase . '" style="padding: 9px 12px;"> ';
-                if ($mostrarBotaoEsquerdo) {
-                    echo '<span class="hidden-lg hidden-md hidden-sm">' . $botaoEsquerda . '</span>';
-                }
-                echo Funcoes::montaPeriodo($indiceDeArrays)[0];
-                if ($mostrarBotaoDireito) {
-                    echo '<span class="hidden-lg hidden-md hidden-sm">' . $botaoDireita . '</span>';
-                }
-                echo '</div>';
-            }
-            ?>
-			<div class="p10">
-			<div class="alert alert-info"><i class="fa fa-retweet"></i><span style="font-size: 10px; font-weight: bold;"> - Cadastrado / Transferido / Unido / Removido</span></div>
-			</div>
-            <div class="p10">
-                <table class="text-center table table-condensed table-hover bg-light mt15" style="font-size:8px;">
-                    <thead>
-                        <tr class="dark hidden-xs">
-                            <?php
-                            echo '<th>Periodos</th>';
-                            for ($indiceDeArrays = $this->periodoInicial; $indiceDeArrays <= $this->periodoFinal; $indiceDeArrays++) {
-                                $classePeriodoAtual = '';
-                                if ($indiceDeArrays == -1) {
-                                    $classePeriodoAtual = 'bg-info';
-                                }
-                                if ($this->tipoRelatorio == 1) {
-                                    $colspan = 7;
-                                }
-                                if ($this->tipoRelatorio == 2) {
-                                    $colspan = 4;
-                                }
-                                if ($this->tipoRelatorio == 7) {
-                                    $colspan = 3;
-                                }
-                                if ($this->tipoRelatorio == 3 ||
-                                        $this->tipoRelatorio == 8) {
-                                    $colspan = 4;
-                                }
-                                if ($this->tipoRelatorio == 4 ||
-                                        $this->tipoRelatorio == 5 ||
-                                        $this->tipoRelatorio == 6) {
-                                    $colspan = 2;
-                                }
+      for ($indiceDeArrays = $this->periodoInicial; $indiceDeArrays <= $this->periodoFinal; $indiceDeArrays++) {
+          $classeBase = 'periodo' . $indiceDeArrays . ' ';
+          if ($indiceDeArrays != -1) {
+              $classeBase .= 'hidden-xs';
+          }
+          $mostrarBotaoEsquerdo = true;
+          if ($indiceDeArrays == $this->periodoInicial) {
+              $mostrarBotaoEsquerdo = false;
+          }
+          $mostrarBotaoDireito = true;
+          if ($indiceDeArrays == $this->periodoFinal) {
+              $mostrarBotaoDireito = false;
+          }
+          $funcaoEsquerda = $this->funcaoOnClick('$(".periodo' . ($indiceDeArrays - 1) . '").removeClass("hidden-xs");$(".periodo' . $indiceDeArrays . '").addClass("hidden-xs");');
+          $funcaoDireita = $this->funcaoOnClick('$(".periodo' . ($indiceDeArrays + 1) . '").removeClass("hidden-xs");$(".periodo' . $indiceDeArrays . '").addClass("hidden-xs");');
+          $botaoEsquerda = $this->botaoSimples('<i class="fa fa-angle-double-left"></i>', $funcaoEsquerda, BotaoSimples::botaoPequenoImportante, BotaoSimples::posicaoAEsquerda);
+          $botaoDireita = $this->botaoSimples('<i class="fa fa-angle-double-right"></i>', $funcaoDireita, BotaoSimples::botaoPequenoImportante, BotaoSimples::posicaoADireita);
+          echo '<div class="p5 hidden-lg hidden-md hidden-sm center-block text-center ' . $classeBase . '" style="margin-bottom: 17px;"> ';
+          if ($mostrarBotaoEsquerdo) {
+              echo '<span class="hidden-lg hidden-md hidden-sm">' . $botaoEsquerda . '</span>';
+          }
+          echo Funcoes::montaPeriodo($indiceDeArrays)[0];
+          if ($mostrarBotaoDireito) {
+              echo '<span class="hidden-lg hidden-md hidden-sm">' . $botaoDireita . '</span>';
+          }
+          echo '</div>';
+      }
+      ?>
 
-                                echo '<th colspan="' . $colspan . '" class="' . $classePeriodoAtual . '">';
-                                echo Funcoes::montaPeriodo($indiceDeArrays)[0];
-                                echo '</th>';
-                            }
-							if($this->tipoRelatorio == 9 && ($this->entidade->getGrupo()->getId() === 1 || $this->entidade->getGrupo()->getId() === 1225)){
-	                            echo '<th colspan="2"></th>';
-							}
-                            if ($this->tipoRelatorio == 1 ||
-                                    $this->tipoRelatorio == 3) {
-                                echo '<th></th>';
-                            }
-                            echo '<th></th>';
-                            ?>
-                        </tr>
-                        <tr class="dark">
-                            <?php
-                            echo '<th>TIMES</th>';
-
-                            for ($indiceDeArrays = $this->periodoInicial; $indiceDeArrays <= $this->periodoFinal; $indiceDeArrays++) {
-                                $classeBase = 'periodo' . $indiceDeArrays . ' ';
-                                if ($indiceDeArrays != -1) {
-                                    $classeBase .= 'hidden-xs';
-                                }
-                                $classePeriodoAtual = '';
-                                if ($indiceDeArrays == -1) {
-                                    $classePeriodoAtual = 'bg-info';
-                                }
-                                if ($this->tipoRelatorio == 1) {
-                                    echo '<th class="hidden-xs ' . $classePeriodoAtual . '">CÉL</th>';
-                                    echo '<th class="' . $classeBase . $classePeriodoAtual . '">MET</th>';
-                                    echo '<th class="' . $classeBase . $classePeriodoAtual . '">CUL</th>';
-                                    echo '<th class="' . $classeBase . $classePeriodoAtual . '">ARE</th>';
-                                    echo '<th class="' . $classeBase . $classePeriodoAtual . '">DOM</th>';
-                                    echo '<th class="' . $classeBase . $classePeriodoAtual . '">MEM</th>';
-                                    echo '<th class="' . $classeBase . $classePeriodoAtual . '">%</th>';
-                                }
-                                if ($this->tipoRelatorio == 7) {
-                                    echo '<th class="' . $classeBase . $classePeriodoAtual . '">META</th>';
-                                }
-                                if ($this->tipoRelatorio == 2 ||
-                                        $this->tipoRelatorio == 7 ||
-                                        $this->tipoRelatorio == 8) {
-                                    echo '<th class="' . $classeBase . $classePeriodoAtual . '">CÉLULAS</th>';
-                                }
-                                if ($this->tipoRelatorio == 2) {
-                                    echo '<th class="' . $classeBase . $classePeriodoAtual . '">REALIZADAS</th>';
-                                    echo '<th class="' . $classeBase . $classePeriodoAtual . '">NÃO</th>';
-                                    echo '<th class="' . $classeBase . $classePeriodoAtual . '">%</th>';
-                                }
-                                if ($this->tipoRelatorio == 3) {
-                                    echo '<th class="' . $classeBase . $classePeriodoAtual . '">CÉL</th>';
-                                    echo '<th class="' . $classeBase . $classePeriodoAtual . '">MET</th>';
-                                    echo '<th class="' . $classeBase . $classePeriodoAtual . '">QTD</th>';
-                                    echo '<th class="' . $classeBase . $classePeriodoAtual . '">%</th>';
-                                }
-                                if ($this->tipoRelatorio == 4 ||
-                                        $this->tipoRelatorio == 5 ||
-                                        $this->tipoRelatorio == 6) {
-                                    echo '<th class="' . $classeBase . $classePeriodoAtual . '">CÉL</th>';
-                                }
-                                if ($this->tipoRelatorio == 7) {
-                                    echo '<th class="' . $classeBase . $classePeriodoAtual . '">ARENA</th>';
-                                }
-                                if ($this->tipoRelatorio == 8) {
-                                    echo '<th class="' . $classeBase . $classePeriodoAtual . '">MET</th>';
-                                    echo '<th class="' . $classeBase . $classePeriodoAtual . '">ELITE</th>';
-                                    echo '<th class="' . $classeBase . $classePeriodoAtual . '">%</th>';
-                                }
-                                if ($this->tipoRelatorio == 4 ||
-                                        $this->tipoRelatorio == 5 ||
-                                        $this->tipoRelatorio == 6) {
-                                    echo '<th class="' . $classeBase . $classePeriodoAtual . '">QTD</th>';
-										}
-								if ($this->tipoRelatorio == 9) {
-								echo '<th class="' . $classeBase . $classePeriodoAtual . '">Semanal</th>';
-								}
-
-							}
-							if($this->tipoRelatorio == 9 && ($this->entidade->getGrupo()->getId() === 1 || $this->entidade->getGrupo()->getId() === 1225)){
-								echo '<th class="' . $classeBase . '">Meta</th>';
-							}
-                            if ($this->tipoRelatorio == 1 ||
-                                    $this->tipoRelatorio == 3) {
-                                echo '<th>MÉDIA</th>';
-                            }
-                            if ($this->tipoRelatorio == 1 ||
-                                    $this->tipoRelatorio == 2 ||
-                                    $this->tipoRelatorio == 3 ||
-                                    $this->tipoRelatorio == 8 ||
-                                    $this->tipoRelatorio == 9) {
-                                echo '<th>FINAL</th>';
-                            }
-							if($this->tipoRelatorio == 9 && ($this->entidade->getGrupo()->getId() === 1 || $this->entidade->getGrupo()->getId() === 1225)){
-								echo '<th class="' . $classeBase . '">%</th>';
-							}
-                            ?>
-                        </tr>
-                    </thead>
-                    <tbody>
+	<div class="p5">
+	<div class="alert alert-info mn"><i class="fa fa-retweet"></i><span style="font-size: 10px; font-weight: bold;"> - Cadastrado / Transferido / Unido / Removido</span></div>
+	</div>
+        <div class="p5">
+            <table class="text-center table table-condensed table-hover bg-light" style="font-size:8px;">
+                <thead>
+                    <tr class="dark hidden-xs">
                         <?php
-                        $contagemRanking = 0;
-                        $totalDeRelatorios = count($this->relatorio);
-						foreach ($this->relatorio as $relatorio) {
-							$corLinha = '';
-							if ($relatorio['lideres'] == 'TOTAL') {
-								$corLinha = 'dark';
-							}
-							if ($contagemRanking !== 0 && $contagemRanking !== ($totalDeRelatorios - 1)) {
-								if ($this->tipoRelatorio == 1) {
-									$corLinha = $relatorio['mediaMembresiaPerformanceClass'];
-								}
-								if ($this->tipoRelatorio == 2) {
-									$corLinha = $relatorio['mediaCelulaRealizadasPerformanceClass'];
-								}
-								if ($this->tipoRelatorio == 3) {
-									$corLinha = $relatorio['mediaCelulaPerformanceClass'];
-								}
-								if ($this->tipoRelatorio == 8) {
-									$corLinha = $relatorio['mediaCelulaDeElitePerformanceClass'];
-								}
-								if ($this->tipoRelatorio == 9) {
-									$corLinha = $relatorio['parceiroDeDeusPerformanceClass'];
-								}
-							}
-							echo '<tr class="' . $corLinha . '">';
-							if ($this->tipoRelatorio != 7) {
-								$label = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
-								$padding = '6';
-								if ($contagemRanking !== 0 && $contagemRanking !== ($totalDeRelatorios - 1)) {
-									$label = str_pad($contagemRanking, 2, 0, STR_PAD_LEFT) . '-';
-									$padding = '5';
-								}
-							}
-							echo '<td class="text-left" style="font-size:8px;padding-left:' . $padding . 'px;">' . $label . '<span class="hidden-xs">' . $relatorio['lideresFotos'] . '</span>';
-							echo $relatorio['lideresEntidade'];
+                        echo '<th>Periodos</th>';
+                        for ($indiceDeArrays = $this->periodoInicial; $indiceDeArrays <= $this->periodoFinal; $indiceDeArrays++) {
+                            $classePeriodoAtual = '';
+                            if ($indiceDeArrays == -1) {
+                                $classePeriodoAtual = 'bg-info';
+                            }
+                            if ($this->tipoRelatorio == 1) {
+                                $colspan = 7;
+                            }
+                            if ($this->tipoRelatorio == 2) {
+                                $colspan = 4;
+                            }
+                            if ($this->tipoRelatorio == 7) {
+                                $colspan = 3;
+                            }
+                            if ($this->tipoRelatorio == 3 ||
+                                    $this->tipoRelatorio == 8) {
+                                $colspan = 4;
+                            }
+                            if ($this->tipoRelatorio == 4 ||
+                                    $this->tipoRelatorio == 5 ||
+                                    $this->tipoRelatorio == 6) {
+                                $colspan = 2;
+                            }
 
-							if($contagemRanking !== 0 && $relatorio['lideres'] != 'TOTAL'){
-								$funcaoOnClickPessoal = 'mostrarSplash(); funcaoCircuito("relatorio/'.$url.'",'.$relatorio['grupo'].')';
-								$linkDeQuemEstaLogado = '<a href="#" '.$this->funcaoOnclick($funcaoOnClickPessoal).'>'.$relatorio['lideres'].'</a>';
-								echo ' '.$linkDeQuemEstaLogado;
-							}
-							if($relatorio['lideres'] == 'TOTAL'){
-								echo $relatorio['lideres'];
-							}
-							if ($this->entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja) {
-								echo'</span>';
-							}
-							echo '</td>';
+                            echo '<th colspan="' . $colspan . '" class="' . $classePeriodoAtual . '">';
+                            echo Funcoes::montaPeriodo($indiceDeArrays)[0];
+                            echo '</th>';
+                        }
+					if($this->tipoRelatorio == 9 && ($this->entidade->getGrupo()->getId() === 1 || $this->entidade->getGrupo()->getId() === 1225)){
+                          echo '<th colspan="2"></th>';
+					}
+                        if ($this->tipoRelatorio == 1 ||
+                                $this->tipoRelatorio == 3) {
+                            echo '<th></th>';
+                        }
+                        echo '<th></th>';
+                        ?>
+                    </tr>
+                    <tr class="dark">
+                        <?php
+                        echo '<th>TIMES</th>';
 
-							for ($indiceDeArrays = $this->periodoInicial; $indiceDeArrays <= $this->periodoFinal; $indiceDeArrays++) {
-								$classeBase = 'periodo' . $indiceDeArrays . ' ';
-								if ($indiceDeArrays != -1) {
-									$classeBase .= 'hidden-xs';
+                        for ($indiceDeArrays = $this->periodoInicial; $indiceDeArrays <= $this->periodoFinal; $indiceDeArrays++) {
+                            $classeBase = 'periodo' . $indiceDeArrays . ' ';
+                            if ($indiceDeArrays != -1) {
+                                $classeBase .= 'hidden-xs';
+                            }
+                            $classePeriodoAtual = '';
+                            if ($indiceDeArrays == -1) {
+                                $classePeriodoAtual = 'bg-info';
+                            }
+                            if ($this->tipoRelatorio == 1) {
+                                echo '<th class="hidden-xs ' . $classePeriodoAtual . '">CÉL</th>';
+                                echo '<th class="' . $classeBase . $classePeriodoAtual . '">MET</th>';
+                                echo '<th class="' . $classeBase . $classePeriodoAtual . '">CUL</th>';
+                                echo '<th class="' . $classeBase . $classePeriodoAtual . '">ARE</th>';
+                                echo '<th class="' . $classeBase . $classePeriodoAtual . '">DOM</th>';
+                                echo '<th class="' . $classeBase . $classePeriodoAtual . '">MEM</th>';
+                                echo '<th class="' . $classeBase . $classePeriodoAtual . '">%</th>';
+                            }
+                            if ($this->tipoRelatorio == 7) {
+                                echo '<th class="' . $classeBase . $classePeriodoAtual . '">META</th>';
+                            }
+                            if ($this->tipoRelatorio == 2 ||
+                                    $this->tipoRelatorio == 7 ||
+                                    $this->tipoRelatorio == 8) {
+                                echo '<th class="' . $classeBase . $classePeriodoAtual . '">CÉLULAS</th>';
+                            }
+                            if ($this->tipoRelatorio == 2) {
+                                echo '<th class="' . $classeBase . $classePeriodoAtual . '">REALIZADAS</th>';
+                                echo '<th class="' . $classeBase . $classePeriodoAtual . '">NÃO</th>';
+                                echo '<th class="' . $classeBase . $classePeriodoAtual . '">%</th>';
+                            }
+                            if ($this->tipoRelatorio == 3) {
+                                echo '<th class="' . $classeBase . $classePeriodoAtual . '">CÉL</th>';
+                                echo '<th class="' . $classeBase . $classePeriodoAtual . '">MET</th>';
+                                echo '<th class="' . $classeBase . $classePeriodoAtual . '">QTD</th>';
+                                echo '<th class="' . $classeBase . $classePeriodoAtual . '">%</th>';
+                            }
+                            if ($this->tipoRelatorio == 4 ||
+                                    $this->tipoRelatorio == 5 ||
+                                    $this->tipoRelatorio == 6) {
+                                echo '<th class="' . $classeBase . $classePeriodoAtual . '">CÉL</th>';
+                            }
+                            if ($this->tipoRelatorio == 7) {
+                                echo '<th class="' . $classeBase . $classePeriodoAtual . '">ARENA</th>';
+                            }
+                            if ($this->tipoRelatorio == 8) {
+                                echo '<th class="' . $classeBase . $classePeriodoAtual . '">MET</th>';
+                                echo '<th class="' . $classeBase . $classePeriodoAtual . '">ELITE</th>';
+                                echo '<th class="' . $classeBase . $classePeriodoAtual . '">%</th>';
+                            }
+                            if ($this->tipoRelatorio == 4 ||
+                                    $this->tipoRelatorio == 5 ||
+                                    $this->tipoRelatorio == 6) {
+                                echo '<th class="' . $classeBase . $classePeriodoAtual . '">QTD</th>';
 								}
-								if ($this->tipoRelatorio == 1) {
-									if($contagemRanking === 0 || $relatorio['lideres'] == 'TOTAL' || $relatorio[$indiceDeArrays]['mostrar']){
-										echo '<td class="hidden-xs">' . $relatorio[$indiceDeArrays]['celulaQuantidade'] . '</td>';
-										echo '<td class="' . $classeBase . '">' . $relatorio[$indiceDeArrays]['membresiaMeta'] . '</td>';
-										echo '<td class="' . $classeBase . '">' . $relatorio[$indiceDeArrays]['membresiaCulto'] . '</td>';
-										echo '<td class="' . $classeBase . '">' . $relatorio[$indiceDeArrays]['membresiaArena'] . '</td>';
-										echo '<td class="' . $classeBase . '">' . $relatorio[$indiceDeArrays]['membresiaDomingo'] . '</td>';
-										echo '<td class="' . $classeBase . '">' . RelatorioController::formataNumeroRelatorio($relatorio[$indiceDeArrays]['membresia']) . '</td>';
-										echo '<td class="' . $classeBase . '">' . RelatorioController::formataNumeroRelatorio($relatorio[$indiceDeArrays]['membresiaPerformance']) . '%</td>';
-									}else{
-										echo '<td class="hidden-xs"><i class="fa fa-retweet"></i></td>';
-										for($i = 1;$i <= 6;$i++){
-											echo '<td class="' . $classeBase . '"><i class="fa fa-retweet"></i></td>';
-										}
-									}
+						if ($this->tipoRelatorio == 9) {
+						echo '<th class="' . $classeBase . $classePeriodoAtual . '">Semanal</th>';
+						}
+
+					}
+					if($this->tipoRelatorio == 9 && ($this->entidade->getGrupo()->getId() === 1 || $this->entidade->getGrupo()->getId() === 1225)){
+						echo '<th class="' . $classeBase . '">Meta</th>';
+					}
+                        if ($this->tipoRelatorio == 1 ||
+                                $this->tipoRelatorio == 3) {
+                            echo '<th>MÉDIA</th>';
+                        }
+                        if ($this->tipoRelatorio == 1 ||
+                                $this->tipoRelatorio == 2 ||
+                                $this->tipoRelatorio == 3 ||
+                                $this->tipoRelatorio == 8 ||
+                                $this->tipoRelatorio == 9) {
+                            echo '<th>FINAL</th>';
+                        }
+					if($this->tipoRelatorio == 9 && ($this->entidade->getGrupo()->getId() === 1 || $this->entidade->getGrupo()->getId() === 1225)){
+						echo '<th class="' . $classeBase . '">%</th>';
+					}
+                        ?>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                    $contagemRanking = 0;
+                    $totalDeRelatorios = count($this->relatorio);
+				foreach ($this->relatorio as $relatorio) {
+					$corLinha = '';
+					if ($relatorio['lideres'] == 'TOTAL') {
+						$corLinha = 'dark';
+					}
+					if ($contagemRanking !== 0 && $contagemRanking !== ($totalDeRelatorios - 1)) {
+						if ($this->tipoRelatorio == 1) {
+							$corLinha = $relatorio['mediaMembresiaPerformanceClass'];
+						}
+						if ($this->tipoRelatorio == 2) {
+							$corLinha = $relatorio['mediaCelulaRealizadasPerformanceClass'];
+						}
+						if ($this->tipoRelatorio == 3) {
+							$corLinha = $relatorio['mediaCelulaPerformanceClass'];
+						}
+						if ($this->tipoRelatorio == 8) {
+							$corLinha = $relatorio['mediaCelulaDeElitePerformanceClass'];
+						}
+						if ($this->tipoRelatorio == 9) {
+							$corLinha = $relatorio['parceiroDeDeusPerformanceClass'];
+						}
+					}
+					echo '<tr class="' . $corLinha . '">';
+					if ($this->tipoRelatorio != 7) {
+						$label = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+						$padding = '6';
+						if ($contagemRanking !== 0 && $contagemRanking !== ($totalDeRelatorios - 1)) {
+							$label = str_pad($contagemRanking, 2, 0, STR_PAD_LEFT) . '-';
+							$padding = '5';
+						}
+					}
+					echo '<td class="text-left" style="font-size:8px;padding-left:' . $padding . 'px;">' . $label . '<span class="hidden-xs">' . $relatorio['lideresFotos'] . '</span>';
+					echo $relatorio['lideresEntidade'];
+
+					if($contagemRanking !== 0 && $relatorio['lideres'] != 'TOTAL'){
+						$funcaoOnClickPessoal = 'mostrarSplash(); funcaoCircuito("relatorio/'.$url.'",'.$relatorio['grupo'].')';
+						$linkDeQuemEstaLogado = '<a href="#" '.$this->funcaoOnclick($funcaoOnClickPessoal).'>'.$relatorio['lideres'].'</a>';
+						echo ' '.$linkDeQuemEstaLogado;
+					}
+					if($relatorio['lideres'] == 'TOTAL'){
+						echo $relatorio['lideres'];
+					}
+					if ($this->entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja) {
+						echo'</span>';
+					}
+					echo '</td>';
+
+					for ($indiceDeArrays = $this->periodoInicial; $indiceDeArrays <= $this->periodoFinal; $indiceDeArrays++) {
+						$classeBase = 'periodo' . $indiceDeArrays . ' ';
+						if ($indiceDeArrays != -1) {
+							$classeBase .= 'hidden-xs';
+						}
+						if ($this->tipoRelatorio == 1) {
+							if($contagemRanking === 0 || $relatorio['lideres'] == 'TOTAL' || $relatorio[$indiceDeArrays]['mostrar']){
+								echo '<td class="hidden-xs">' . $relatorio[$indiceDeArrays]['celulaQuantidade'] . '</td>';
+								echo '<td class="' . $classeBase . '">' . $relatorio[$indiceDeArrays]['membresiaMeta'] . '</td>';
+								echo '<td class="' . $classeBase . '">' . $relatorio[$indiceDeArrays]['membresiaCulto'] . '</td>';
+								echo '<td class="' . $classeBase . '">' . $relatorio[$indiceDeArrays]['membresiaArena'] . '</td>';
+								echo '<td class="' . $classeBase . '">' . $relatorio[$indiceDeArrays]['membresiaDomingo'] . '</td>';
+								echo '<td class="' . $classeBase . '">' . RelatorioController::formataNumeroRelatorio($relatorio[$indiceDeArrays]['membresia']) . '</td>';
+								echo '<td class="' . $classeBase . '">' . RelatorioController::formataNumeroRelatorio($relatorio[$indiceDeArrays]['membresiaPerformance']) . '%</td>';
+							}else{
+								echo '<td class="hidden-xs"><i class="fa fa-retweet"></i></td>';
+								for($i = 1;$i <= 6;$i++){
+									echo '<td class="' . $classeBase . '"><i class="fa fa-retweet"></i></td>';
 								}
-								if ($this->tipoRelatorio == 2) {
-									if($contagemRanking === 0 || $relatorio['lideres'] == 'TOTAL' || $relatorio[$indiceDeArrays]['mostrar']){
-										echo '<td class="' . $classeBase . '">' . $relatorio[$indiceDeArrays]['celulaQuantidade'] . '</td>';
-									}else{
+							}
+						}
+						if ($this->tipoRelatorio == 2) {
+							if($contagemRanking === 0 || $relatorio['lideres'] == 'TOTAL' || $relatorio[$indiceDeArrays]['mostrar']){
+								echo '<td class="' . $classeBase . '">' . $relatorio[$indiceDeArrays]['celulaQuantidade'] . '</td>';
+							}else{
+								echo '<td class="' . $classeBase . '"><i class="fa fa-retweet"></i></td>';
+							}
+						}
+						if ($this->tipoRelatorio == 2) {
+							$performance = RelatorioController::formataNumeroRelatorio($relatorio[$indiceDeArrays]['celulaRealizadasPerformance']);
+							$diferenca = ($relatorio[$indiceDeArrays]['celulaQuantidade'] - $relatorio[$indiceDeArrays]['celulaRealizadas']);
+							$botaoCelulasNaoRealizadas = $this->botaoSimples($diferenca, $funcaoAbrirModal, BotaoSimples::botaoMuitoPequenoImportante, BotaoSimples::posicaoAoCentro);
+							if($contagemRanking === 0 || $relatorio['lideres'] == 'TOTAL' || $relatorio[$indiceDeArrays]['mostrar']){
+								echo '<td class="' . $classeBase . '">' . $relatorio[$indiceDeArrays]['celulaRealizadas'] . '</td>';
+								echo '<td class="' . $classeBase . '">' . $diferenca  . '</td>';
+								echo '<td class="' . $classeBase . '">' . $performance . '%</td>';
+							}else{
+								for($i = 1;$i <= 3;$i++){
+									echo '<td class="' . $classeBase . '"><i class="fa fa-retweet"></i></td>';
+								}
+							}
+						}
+						if ($this->tipoRelatorio == 3) {
+							if($contagemRanking === 0 || $relatorio['lideres'] == 'TOTAL' || $relatorio[$indiceDeArrays]['mostrar']){
+								echo '<td class="' . $classeBase . '"">' . $relatorio[$indiceDeArrays]['celulaQuantidade'] . '</td>';
+								echo '<td class="' . $classeBase . '">' . $relatorio[$indiceDeArrays]['membresiaMeta'] . '</td>';
+								echo '<td class="' . $classeBase . '">' . $relatorio[$indiceDeArrays]['celula'] . '</td>';
+								echo '<td class="' . $classeBase . '">' . RelatorioController::formataNumeroRelatorio($relatorio[$indiceDeArrays]['celulaPerformance']) . '%</td>';
+							}else{
+								for($i = 1;$i <= 4;$i++){
+									echo '<td class="' . $classeBase . '"><i class="fa fa-retweet"></i></td>';
+								}
+							}
+						}
+						if ($this->tipoRelatorio == 4 ||
+							$this->tipoRelatorio == 5 ||
+							$this->tipoRelatorio == 6) {
+								$quantidade = 0;
+								switch ($this->tipoRelatorio) {
+								case 4:
+									$quantidade = $relatorio[$indiceDeArrays]['membresiaCulto'];
+									break;
+								case 5:
+									$quantidade = $relatorio[$indiceDeArrays]['membresiaArena'];
+									break;
+								case 6:
+									$quantidade = $relatorio[$indiceDeArrays]['membresiaDomingo'];
+									break;
+								}
+								if($contagemRanking === 0 || $relatorio['lideres'] == 'TOTAL' || $relatorio[$indiceDeArrays]['mostrar']){
+									echo '<td class="' . $classeBase . '">' . $relatorio[$indiceDeArrays]['celulaQuantidade'] . '</td>';
+									echo '<td class="' . $classeBase . '">' . RelatorioController::formataNumeroRelatorio($quantidade) . '</td>';
+								}else{
+									for($i = 1;$i <= 2;$i++){
 										echo '<td class="' . $classeBase . '"><i class="fa fa-retweet"></i></td>';
 									}
 								}
-								if ($this->tipoRelatorio == 2) {
-									$performance = RelatorioController::formataNumeroRelatorio($relatorio[$indiceDeArrays]['celulaRealizadasPerformance']);
-									$diferenca = ($relatorio[$indiceDeArrays]['celulaQuantidade'] - $relatorio[$indiceDeArrays]['celulaRealizadas']);
-									$botaoCelulasNaoRealizadas = $this->botaoSimples($diferenca, $funcaoAbrirModal, BotaoSimples::botaoMuitoPequenoImportante, BotaoSimples::posicaoAoCentro);
-									if($contagemRanking === 0 || $relatorio['lideres'] == 'TOTAL' || $relatorio[$indiceDeArrays]['mostrar']){
-										echo '<td class="' . $classeBase . '">' . $relatorio[$indiceDeArrays]['celulaRealizadas'] . '</td>';
-										echo '<td class="' . $classeBase . '">' . $diferenca  . '</td>';
-										echo '<td class="' . $classeBase . '">' . $performance . '%</td>';
-									}else{
-										for($i = 1;$i <= 3;$i++){
-											echo '<td class="' . $classeBase . '"><i class="fa fa-retweet"></i></td>';
-										}
-									}
-								}
-								if ($this->tipoRelatorio == 3) {
-									if($contagemRanking === 0 || $relatorio['lideres'] == 'TOTAL' || $relatorio[$indiceDeArrays]['mostrar']){
-										echo '<td class="' . $classeBase . '"">' . $relatorio[$indiceDeArrays]['celulaQuantidade'] . '</td>';
-										echo '<td class="' . $classeBase . '">' . $relatorio[$indiceDeArrays]['membresiaMeta'] . '</td>';
-										echo '<td class="' . $classeBase . '">' . $relatorio[$indiceDeArrays]['celula'] . '</td>';
-										echo '<td class="' . $classeBase . '">' . RelatorioController::formataNumeroRelatorio($relatorio[$indiceDeArrays]['celulaPerformance']) . '%</td>';
-									}else{
-										for($i = 1;$i <= 4;$i++){
-											echo '<td class="' . $classeBase . '"><i class="fa fa-retweet"></i></td>';
-										}
-									}
-								}
-								if ($this->tipoRelatorio == 4 ||
-									$this->tipoRelatorio == 5 ||
-									$this->tipoRelatorio == 6) {
-										$quantidade = 0;
-										switch ($this->tipoRelatorio) {
-										case 4:
-											$quantidade = $relatorio[$indiceDeArrays]['membresiaCulto'];
-											break;
-										case 5:
-											$quantidade = $relatorio[$indiceDeArrays]['membresiaArena'];
-											break;
-										case 6:
-											$quantidade = $relatorio[$indiceDeArrays]['membresiaDomingo'];
-											break;
-										}
-										if($contagemRanking === 0 || $relatorio['lideres'] == 'TOTAL' || $relatorio[$indiceDeArrays]['mostrar']){
-											echo '<td class="' . $classeBase . '">' . $relatorio[$indiceDeArrays]['celulaQuantidade'] . '</td>';
-											echo '<td class="' . $classeBase . '">' . RelatorioController::formataNumeroRelatorio($quantidade) . '</td>';
-										}else{
-											for($i = 1;$i <= 2;$i++){
-												echo '<td class="' . $classeBase . '"><i class="fa fa-retweet"></i></td>';
-											}
-										}
-									}
-								if ($this->tipoRelatorio == 7) {
-									if($contagemRanking === 0 || $relatorio['lideres'] == 'TOTAL' || $relatorio[$indiceDeArrays]['mostrar']){
-										echo '<td class="' . $classeBase . '">' . $relatorio[$indiceDeArrays]['membresiaMeta'] . '</td>';
-										echo '<td class="' . $classeBase . '">' . $relatorio[$indiceDeArrays]['celula'] . '</td>';
-										echo '<td class="' . $classeBase . '">' . RelatorioController::formataNumeroRelatorio($relatorio[$indiceDeArrays]['membresiaArena']) . '</td>';
-									}else{
-										for($i = 1;$i <= 3;$i++){
-											echo '<td class="' . $classeBase . '"><i class="fa fa-retweet"></i></td>';
-										}
-									}
-								}
-								if ($this->tipoRelatorio == 8) {
-									if($contagemRanking === 0 || $relatorio['lideres'] == 'TOTAL' || $relatorio[$indiceDeArrays]['mostrar']){
-										echo '<td class="' . $classeBase . '">' . $relatorio[$indiceDeArrays]['celulaQuantidade'] . '</td>';
-										echo '<td class="' . $classeBase . '">' . $relatorio[$indiceDeArrays]['celulaDeEliteMeta'] . '</td>';
-										echo '<td class="' . $classeBase . '">' . $relatorio[$indiceDeArrays]['celulaDeElite'] . '</td>';
-										echo '<td class="' . $classeBase . '">' . RelatorioController::formataNumeroRelatorio($relatorio[$indiceDeArrays]['celulaDeElitePerformance']) . '%</td>';
-									}else{
-										for($i = 1;$i <= 4;$i++){
-											echo '<td class="' . $classeBase . '"><i class="fa fa-retweet"></i></td>';
-										}
-									}
-								}
-								if ($this->tipoRelatorio == 9) {
-									echo '<td class="' . $classeBase . '">' . RelatorioController::formataNumeroRelatorio($relatorio[$indiceDeArrays]['valor']) . '</td>';
+							}
+						if ($this->tipoRelatorio == 7) {
+							if($contagemRanking === 0 || $relatorio['lideres'] == 'TOTAL' || $relatorio[$indiceDeArrays]['mostrar']){
+								echo '<td class="' . $classeBase . '">' . $relatorio[$indiceDeArrays]['membresiaMeta'] . '</td>';
+								echo '<td class="' . $classeBase . '">' . $relatorio[$indiceDeArrays]['celula'] . '</td>';
+								echo '<td class="' . $classeBase . '">' . RelatorioController::formataNumeroRelatorio($relatorio[$indiceDeArrays]['membresiaArena']) . '</td>';
+							}else{
+								for($i = 1;$i <= 3;$i++){
+									echo '<td class="' . $classeBase . '"><i class="fa fa-retweet"></i></td>';
 								}
 							}
-							if ($this->tipoRelatorio == 1){
-								echo '<th>'. RelatorioController::formataNumeroRelatorio($relatorio['mediaMembresia']) . '</th>';
-							}
-							if($this->tipoRelatorio == 3) {
-								echo '<th>'. RelatorioController::formataNumeroRelatorio($relatorio['mediaCelula']) . '</th>';
-							}
-							if ($this->tipoRelatorio == 1 ||
-								$this->tipoRelatorio == 2 ||
-								$this->tipoRelatorio == 3 ||
-								$this->tipoRelatorio == 8) {
-
-									if ($this->tipoRelatorio == 1) {
-										$perfomanceMedio = $relatorio['mediaMembresiaPerformance'];
-									}
-									if ($this->tipoRelatorio == 2) {
-										$perfomanceMedio = $relatorio['mediaCelulaRealizadasPerformance'];
-									}
-									if ($this->tipoRelatorio == 3) {
-										$perfomanceMedio = $relatorio['mediaCelulaPerformance'];
-									}
-									if ($this->tipoRelatorio == 8) {
-										$perfomanceMedio = $relatorio['mediaCelulaDeElitePerformance'];
-									}
-									echo '<td style="padding-right:5px;">' . RelatorioController::formataNumeroRelatorio($perfomanceMedio) . '%</td>';
-								}
-							if ($this->tipoRelatorio == 9) {
-								if($this->entidade->getGrupo()->getId() === 1 || $this->entidade->getGrupo()->getId() === 1225){
-									echo '<td class="' . $classeBase . '">'. RelatorioController::formataNumeroRelatorio($relatorio['parceiroDeDeusMeta']). '</td>';
-								}
-								echo '<td style="padding-right:5px;">' . RelatorioController::formataNumeroRelatorio($relatorio['somaValor']) . '</td>';
-								if($this->tipoRelatorio == 9 && ($this->entidade->getGrupo()->getId() === 1 || $this->entidade->getGrupo()->getId() === 1225)){
-									echo '<td class="' . $classeBase . '">' . RelatorioController::formataNumeroRelatorio($relatorio['parceiroDeDeusPerformance']) . '%<td>';
-								}
-							}
-							echo '</tr>';
-							$contagemRanking++;
 						}
-                        ?>
-                    </tbody>
-                </table>
-            </div>
+						if ($this->tipoRelatorio == 8) {
+							if($contagemRanking === 0 || $relatorio['lideres'] == 'TOTAL' || $relatorio[$indiceDeArrays]['mostrar']){
+								echo '<td class="' . $classeBase . '">' . $relatorio[$indiceDeArrays]['celulaQuantidade'] . '</td>';
+								echo '<td class="' . $classeBase . '">' . $relatorio[$indiceDeArrays]['celulaDeEliteMeta'] . '</td>';
+								echo '<td class="' . $classeBase . '">' . $relatorio[$indiceDeArrays]['celulaDeElite'] . '</td>';
+								echo '<td class="' . $classeBase . '">' . RelatorioController::formataNumeroRelatorio($relatorio[$indiceDeArrays]['celulaDeElitePerformance']) . '%</td>';
+							}else{
+								for($i = 1;$i <= 4;$i++){
+									echo '<td class="' . $classeBase . '"><i class="fa fa-retweet"></i></td>';
+								}
+							}
+						}
+						if ($this->tipoRelatorio == 9) {
+							echo '<td class="' . $classeBase . '">' . RelatorioController::formataNumeroRelatorio($relatorio[$indiceDeArrays]['valor']) . '</td>';
+						}
+					}
+					if ($this->tipoRelatorio == 1){
+						echo '<th>'. RelatorioController::formataNumeroRelatorio($relatorio['mediaMembresia']) . '</th>';
+					}
+					if($this->tipoRelatorio == 3) {
+						echo '<th>'. RelatorioController::formataNumeroRelatorio($relatorio['mediaCelula']) . '</th>';
+					}
+					if ($this->tipoRelatorio == 1 ||
+						$this->tipoRelatorio == 2 ||
+						$this->tipoRelatorio == 3 ||
+						$this->tipoRelatorio == 8) {
+
+							if ($this->tipoRelatorio == 1) {
+								$perfomanceMedio = $relatorio['mediaMembresiaPerformance'];
+							}
+							if ($this->tipoRelatorio == 2) {
+								$perfomanceMedio = $relatorio['mediaCelulaRealizadasPerformance'];
+							}
+							if ($this->tipoRelatorio == 3) {
+								$perfomanceMedio = $relatorio['mediaCelulaPerformance'];
+							}
+							if ($this->tipoRelatorio == 8) {
+								$perfomanceMedio = $relatorio['mediaCelulaDeElitePerformance'];
+							}
+							echo '<td style="padding-right:5px;">' . RelatorioController::formataNumeroRelatorio($perfomanceMedio) . '%</td>';
+						}
+					if ($this->tipoRelatorio == 9) {
+						if($this->entidade->getGrupo()->getId() === 1 || $this->entidade->getGrupo()->getId() === 1225){
+							echo '<td class="' . $classeBase . '">'. RelatorioController::formataNumeroRelatorio($relatorio['parceiroDeDeusMeta']). '</td>';
+						}
+						echo '<td style="padding-right:5px;">' . RelatorioController::formataNumeroRelatorio($relatorio['somaValor']) . '</td>';
+						if($this->tipoRelatorio == 9 && ($this->entidade->getGrupo()->getId() === 1 || $this->entidade->getGrupo()->getId() === 1225)){
+							echo '<td class="' . $classeBase . '">' . RelatorioController::formataNumeroRelatorio($relatorio['parceiroDeDeusPerformance']) . '%<td>';
+						}
+					}
+					echo '</tr>';
+					$contagemRanking++;
+				}
+                    ?>
+                </tbody>
+            </table>
         </div>
     </div>
-</div>
+    <?php
+      echo $this->templateFormularioRodape();
+    ?>
