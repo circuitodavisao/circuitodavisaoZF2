@@ -5,7 +5,6 @@ echo $this->templateFormularioRodape();
 ?>
 <script type="text/javascript">
     function salvarFoto(result) {
-        mostrarSplash();
         $('.alterarFoto').addClass('hidden');
         var id = $('#id').val();
         var canvas = result.toDataURL("image/jpeg");
@@ -17,8 +16,8 @@ echo $this->templateFormularioRodape();
                 },
                 function (data) {
                     if (data.response) {
-                        alert('Foto Salva');
-                        location.reload();
+						mostrarSplash();
+						location.reload();
                     } else {
                         alert('Foto não salva');
                     }

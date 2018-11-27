@@ -36,6 +36,7 @@ use Application\Model\Entity\SolicitacaoTipo;
 use Application\Model\Entity\FatoLider;
 use Application\Model\Entity\CursoAcesso;
 use Application\Model\Entity\RegistroAcao;
+use Application\Model\Entity\FatoCelulaDiscipulado;
 use Application\Model\ORM\RepositorioORM;
 use DateTime;
 use Exception;
@@ -765,6 +766,7 @@ class CadastroController extends CircuitoController {
 						$eventoCelula->setCidade($post_data[(Constantes::$FORM_HIDDEN . Constantes::$FORM_CIDADE)]);
 						$eventoCelula->setLogradouro($post_data[(Constantes::$FORM_HIDDEN . Constantes::$FORM_LOGRADOURO)]);
 						$eventoCelula->setBairro($post_data[(Constantes::$FORM_HIDDEN . Constantes::$FORM_BAIRRO)]);
+						$eventoCelula->setBairro('');
 						$eventoCelula->setComplemento(strtoupper($post_data[Constantes::$FORM_COMPLEMENTO]));
 						$eventoCelula->setCep($post_data[Constantes::$FORM_CEP_LOGRADOURO]);
 						$eventoCelula->setEvento($evento);
@@ -876,6 +878,13 @@ class CadastroController extends CircuitoController {
 						/* Persistindo */
 						$this->getRepositorio()->getEventoORM()->persistir($evento);
 						$this->getRepositorio()->getGrupoEventoORM()->persistir($grupoEvento);
+
+						$numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $entidade->getGrupo());
+						$fatoCelulaDiscipulado = new FatoCelulaDiscipulado();	
+						$fatoCelulaDiscipulado->setNumero_identificador($numeroIdentificador);
+						$fatoCelulaDiscipulado->setGrupo_evento_id($grupoEvento->getId());
+						$this->getRepositorio()->getFatoCelulaDiscipuladoORM()->persistir($fatoCelulaDiscipulado);
+
 						/* Sessão */
 						$sessao->tipoMensagem = Constantes::$TIPO_MENSAGEM_CADASTRAR_DISCIPULADO;
 						$sessao->textoMensagem = $evento->getNome();
@@ -998,6 +1007,11 @@ class CadastroController extends CircuitoController {
 				foreach ($grupoEventoAtivos as $grupoEventoAtivo) {
 					$grupoEventoAtivo->setDataEHoraDeInativacao();
 					$this->getRepositorio()->getGrupoEventoORM()->persistir($grupoEventoAtivo, false);
+					if ($eventoNaSessao->getEventoTipo()->getId() === EventoTipo::tipoDiscipulado) {
+						$fatoCelulaDiscipulado = $this->getRepositorio()->getFatoCelulaDiscipuladoORM()->encontrarPorGrupoEventoId($grupoEventoAtivo->getId());
+						$fatoCelulaDiscipulado->setDataEHoraDeInativacao();
+						$this->getRepositorio()->getFatoCelulaDiscipuladoORM()->persistir($fatoCelulaDiscipulado);
+					}
 				}
 
 				$sessao->tipoMensagem = Constantes::$TIPO_MENSAGEM_EXCLUIR_CULTO;
@@ -1976,6 +1990,10 @@ class CadastroController extends CircuitoController {
 			$arrayPeriodoDoMes = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mes, $ano);
 			$periodoInicial = $arrayPeriodoDoMes[0];
 			$periodoFinal = $arrayPeriodoDoMes[1];
+
+			if($mes == date('m') && $ano = date('Y')){
+				$periodoFinal = 0;
+			}
 
 			$arrayPeriodoInicial = Funcoes::montaPeriodo($periodoInicial);
 			$arrayPeriodoFinal = Funcoes::montaPeriodo($periodoFinal);
