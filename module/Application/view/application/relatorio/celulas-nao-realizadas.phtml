@@ -12,13 +12,15 @@ use Application\Controller\Helper\Funcoes;
 		font-size: 10px;
 	}
 </style>
-<div class="center-block mw600">
-	<div class="panel">
-	<div class="panel-heading text-center">Células não realizadas - <?php echo count($this->relatorio); ?></div>
-		<div class="panel-body pn p10">
-			<p>Período <?php echo Funcoes::montaPeriodo($this->periodo)[0]; ?></p>	
+	<?php
+	$label = 'Células não realizadas - Total: '.count($this->relatorio);
+	echo $this->templateFormularioTopo($label);
+	?>
+	  <div class="panel-body bg-light" style="padding: 15px 5px 5px 5px;">
+			<p class="mn p5">Período <?php echo Funcoes::montaPeriodo($this->periodo)[0]; ?></p>
 <?php
-echo '<table class="text-center table table-bordered table-condensed table-hover bg-light mt15" >';
+echo '<div class="p5">';
+echo '<table class="text-center table table-bordered table-condensed table-hover bg-light" >';
 echo '<thead>';
 echo '<tr class="dark">';
 echo '<th>Time</th>';
@@ -28,7 +30,7 @@ echo '<th class="hidden-xs">Célula</th>';
 echo '</tr>';
 echo '</thead>';
 echo '<tbody>';
-if($this->relatorio){
+if($this->relatorio){Setenta - Atualizado todo dia as 18:00
 	foreach($this->relatorio as $relatorio){
 		$eventoCelula = $this->repositorio->getEventoCelulaORM()->encontrarPorId($relatorio['evento_celula_id']);
 		$grupo = $this->repositorio->getGrupoORM()->encontrarPorId(substr($relatorio['numero_identificador'], (count($relatorio['numero_identificador'])-8)));
@@ -48,3 +50,6 @@ if($this->relatorio){
 }
 echo '</tbody>';
 echo '</table>';
+echo '</div>';
+echo '</div>';
+echo $this->templateFormularioRodape();
