@@ -16,127 +16,125 @@ use Application\View\Helper\BotaoSimples;
    font-weight: bold;
  }
  </style>
- <div class="center-block">
-   <div class="panel">
-     <div class="panel-heading text-center">
-       <?php
-       $label = 'Exclusão de Células';
-       echo $label;
-       ?>
-     </div>
-     <div class="panel-body pn">
-       <?php
-       echo '<form action="/relatorioExclusaoCelulas" method="post">';
-       echo $this->cabecalhoDeMeses();
-       echo '</form>';
-       for ($indiceDeArrays = $this->periodoInicial; $indiceDeArrays <= $this->periodoFinal; $indiceDeArrays++) {
-         $classeBase = 'periodo' . $indiceDeArrays . ' ';
-         if ($indiceDeArrays != -1) {
-           $classeBase .= 'hidden-xs';
-         }
-         $mostrarBotaoEsquerdo = true;
-         if ($indiceDeArrays == $this->periodoInicial) {
-           $mostrarBotaoEsquerdo = false;
-         }
-         $mostrarBotaoDireito = true;
-         if ($indiceDeArrays == $this->periodoFinal) {
-           $mostrarBotaoDireito = false;
-         }
-         $funcaoEsquerda = $this->funcaoOnClick('$(".periodo' . ($indiceDeArrays - 1) . '").removeClass("hidden-xs");$(".periodo' . $indiceDeArrays . '").addClass("hidden-xs");');
-         $funcaoDireita = $this->funcaoOnClick('$(".periodo' . ($indiceDeArrays + 1) . '").removeClass("hidden-xs");$(".periodo' . $indiceDeArrays . '").addClass("hidden-xs");');
-         $botaoEsquerda = $this->botaoSimples('<i class="fa fa-angle-double-left"></i>', $funcaoEsquerda, BotaoSimples::botaoPequenoImportante, BotaoSimples::posicaoAEsquerda);
-         $botaoDireita = $this->botaoSimples('<i class="fa fa-angle-double-right"></i>', $funcaoDireita, BotaoSimples::botaoPequenoImportante, BotaoSimples::posicaoADireita);
-         echo '<div class="hidden-lg hidden-md hidden-sm center-block text-center ' . $classeBase . '" style="padding: 9px 12px;"> ';
-         if ($mostrarBotaoEsquerdo) {
-           echo '<span class="hidden-lg hidden-md hidden-sm">' . $botaoEsquerda . '</span>';
-         }
-         echo Funcoes::montaPeriodo($indiceDeArrays)[0];
-         if ($mostrarBotaoDireito) {
-           echo '<span class="hidden-lg hidden-md hidden-sm">' . $botaoDireita . '</span>';
-         }
-         echo '</div>';
-       }
-       ?>
-       <div class="p10">
-         <table class="text-center table table-condensed table-hover bg-light mt15" style="font-size:8px;">
-           <thead>
-             <tr class="dark hidden-xs">
-               <?php
-               echo '<th>Periodos</th>';
-               for ($indiceDeArrays = $this->periodoInicial; $indiceDeArrays <= $this->periodoFinal; $indiceDeArrays++) {
-                 $classePeriodoAtual = '';
-                 if ($indiceDeArrays == -1) {
-                   $classePeriodoAtual = 'bg-info';
-                 }
-                 $colspan = 1;
-                 echo '<th colspan="' . $colspan . '" class="' . $classePeriodoAtual . '">';
-                 echo Funcoes::montaPeriodo($indiceDeArrays)[0];
-                 echo '</th>';
-               }
-               echo '<th></th>';
-               ?>
-             </tr>
-             <tr class="dark">
-               <?php
-               echo '<th>TIMES</th>';
+<?php
+  $label = 'Exclusão de Células';
+  echo $this->templateFormularioTopo($label);
+?>
+
+ <div class="panel-body bg-light" style="padding: 15px 5px 5px 5px;">
+   <?php
+   echo '<form action="/relatorioExclusaoCelulas" method="post">';
+   echo $this->cabecalhoDeMeses();
+   echo '</form>';
+   for ($indiceDeArrays = $this->periodoInicial; $indiceDeArrays <= $this->periodoFinal; $indiceDeArrays++) {
+     $classeBase = 'periodo' . $indiceDeArrays . ' ';
+     if ($indiceDeArrays != -1) {
+       $classeBase .= 'hidden-xs';
+     }
+     $mostrarBotaoEsquerdo = true;
+     if ($indiceDeArrays == $this->periodoInicial) {
+       $mostrarBotaoEsquerdo = false;
+     }
+     $mostrarBotaoDireito = true;
+     if ($indiceDeArrays == $this->periodoFinal) {
+       $mostrarBotaoDireito = false;
+     }
+     $funcaoEsquerda = $this->funcaoOnClick('$(".periodo' . ($indiceDeArrays - 1) . '").removeClass("hidden-xs");$(".periodo' . $indiceDeArrays . '").addClass("hidden-xs");');
+     $funcaoDireita = $this->funcaoOnClick('$(".periodo' . ($indiceDeArrays + 1) . '").removeClass("hidden-xs");$(".periodo' . $indiceDeArrays . '").addClass("hidden-xs");');
+     $botaoEsquerda = $this->botaoSimples('<i class="fa fa-angle-double-left"></i>', $funcaoEsquerda, BotaoSimples::botaoPequenoImportante, BotaoSimples::posicaoAEsquerda);
+     $botaoDireita = $this->botaoSimples('<i class="fa fa-angle-double-right"></i>', $funcaoDireita, BotaoSimples::botaoPequenoImportante, BotaoSimples::posicaoADireita);
+     echo '<div class="hidden-lg hidden-md hidden-sm center-block text-center ' . $classeBase . '" style="padding: 9px 12px;"> ';
+     if ($mostrarBotaoEsquerdo) {
+       echo '<span class="hidden-lg hidden-md hidden-sm">' . $botaoEsquerda . '</span>';
+     }
+     echo Funcoes::montaPeriodo($indiceDeArrays)[0];
+     if ($mostrarBotaoDireito) {
+       echo '<span class="hidden-lg hidden-md hidden-sm">' . $botaoDireita . '</span>';
+     }
+     echo '</div>';
+   }
+   ?>
+   <div class="p5">
+     <table class="text-center table table-condensed table-hover bg-light" style="font-size:8px;">
+       <thead>
+         <tr class="dark hidden-xs">
+           <?php
+           echo '<th>Periodos</th>';
+           for ($indiceDeArrays = $this->periodoInicial; $indiceDeArrays <= $this->periodoFinal; $indiceDeArrays++) {
+             $classePeriodoAtual = '';
+             if ($indiceDeArrays == -1) {
+               $classePeriodoAtual = 'bg-info';
+             }
+             $colspan = 1;
+             echo '<th colspan="' . $colspan . '" class="' . $classePeriodoAtual . '">';
+             echo Funcoes::montaPeriodo($indiceDeArrays)[0];
+             echo '</th>';
+           }
+           echo '<th></th>';
+           ?>
+         </tr>
+         <tr class="dark">
+           <?php
+           echo '<th>TIMES</th>';
+           for ($indiceDeArrays = $this->periodoInicial; $indiceDeArrays <= $this->periodoFinal; $indiceDeArrays++) {
+             $classeBase = 'periodo' . $indiceDeArrays . ' ';
+             if ($indiceDeArrays != -1) {
+               $classeBase .= 'hidden-xs';
+             }
+             $classePeriodoAtual = '';
+             if ($indiceDeArrays == -1) {
+               $classePeriodoAtual = 'bg-info';
+             }
+             echo '<th class="' . $classeBase . $classePeriodoAtual . '">CÉLULAS EXCLUÍDAS</th>';
+           }
+           echo '<th>FINAL</th>';
+           ?>
+         </tr>
+       </thead>
+       <tbody>
+         <?php
+           $dadosCelulasExcluidas = $this->relatorioCelulasExcluidas;
+           $contador = 0;
+           $corLinha = '';
+           foreach ($dadosCelulasExcluidas as $equipes => $valorEquipes) {
+             $labelTD = '';
+             $contador++;
+             $totalDeCelulas = 0;
+             if ($equipes == 'TOTAL') {
+               $labelTD = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+               $padding = '6';
+               $corLinha = 'dark';
+             }
+             if ($equipes != 'TOTAL') {
+               $padding = '5';
+               $labelTD .= $contador;
+               $labelTD .= '-';
+             }
+             echo '<tr class="'.$corLinha.'">';
+               echo '<td class="text-left" style="font-size:8px;padding-left:6 px;">' . $labelTD . '<span class="hidden-xs">' . $valorEquipes['fotoDaEquipe'] . '</span>';
+               echo $equipes;
+               echo '</td>';
                for ($indiceDeArrays = $this->periodoInicial; $indiceDeArrays <= $this->periodoFinal; $indiceDeArrays++) {
                  $classeBase = 'periodo' . $indiceDeArrays . ' ';
                  if ($indiceDeArrays != -1) {
                    $classeBase .= 'hidden-xs';
                  }
-                 $classePeriodoAtual = '';
-                 if ($indiceDeArrays == -1) {
-                   $classePeriodoAtual = 'bg-info';
+                 echo '<td class="' . $classeBase . '">';
+                 if($valorEquipes[$indiceDeArrays] == ''){
+                   echo '0';
+                 } else {
+                   echo $valorEquipes[$indiceDeArrays];
                  }
-                 echo '<th class="' . $classeBase . $classePeriodoAtual . '">CÉLULAS EXCLUÍDAS</th>';
+                 echo '</td>';
                }
-               echo '<th>FINAL</th>';
-               ?>
-             </tr>
-           </thead>
-           <tbody>
-             <?php
-               $dadosCelulasExcluidas = $this->relatorioCelulasExcluidas;
-               $contador = 0;
-               $corLinha = '';
-               foreach ($dadosCelulasExcluidas as $equipes => $valorEquipes) {
-                 $labelTD = '';
-                 $contador++;
-                 $totalDeCelulas = 0;
-                 if ($equipes == 'TOTAL') {
-                   $labelTD = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
-                   $padding = '6';
-                   $corLinha = 'dark';
-                 }
-                 if ($equipes != 'TOTAL') {
-                   $padding = '5';
-                   $labelTD .= $contador;
-                   $labelTD .= '-';
-                 }
-                 echo '<tr class="'.$corLinha.'">';
-                   echo '<td class="text-left" style="font-size:8px;padding-left:6 px;">' . $labelTD . '<span class="hidden-xs">' . $valorEquipes['fotoDaEquipe'] . '</span>';
-                   echo $equipes;
-                   echo '</td>';
-                   for ($indiceDeArrays = $this->periodoInicial; $indiceDeArrays <= $this->periodoFinal; $indiceDeArrays++) {
-                     $classeBase = 'periodo' . $indiceDeArrays . ' ';
-                     if ($indiceDeArrays != -1) {
-                       $classeBase .= 'hidden-xs';
-                     }
-                     echo '<td class="' . $classeBase . '">';
-                     if($valorEquipes[$indiceDeArrays] == ''){
-                       echo '0';
-                     } else {
-                       echo $valorEquipes[$indiceDeArrays];
-                     }
-                     echo '</td>';
-                   }
-                   echo '<td>'.$valorEquipes['total'].'</td>';
-                 echo '</tr>';
-               }
-             ?>
-           </tbody>
-         </table>
-       </div>
-     </div>
+               echo '<td>'.$valorEquipes['total'].'</td>';
+             echo '</tr>';
+           }
+         ?>
+       </tbody>
+     </table>
    </div>
  </div>
+ <?php
+   echo $this->templateFormularioRodape();
+ ?>

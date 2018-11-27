@@ -1,6 +1,10 @@
 <?php
 
 namespace Application\Model\Entity;
+use Exception;
+use Zend\InputFilter\InputFilter;
+use Zend\InputFilter\InputFilterAwareInterface;
+use Zend\InputFilter\InputFilterInterface;
 
 /**
  * Nome: Entidade.php
@@ -19,10 +23,10 @@ namespace Application\Model\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity 
+ * @ORM\Entity
  * @ORM\Table(name="entidade")
  */
-class Entidade extends CircuitoEntity {
+class Entidade extends CircuitoEntity implements InputFilterAwareInterface {
 
     const SUBEQUIPE = 7;
     const EQUIPE = 6;
@@ -31,6 +35,9 @@ class Entidade extends CircuitoEntity {
     const REGIONAL = 3;
     const NACIONAL = 2;
     const PRESIDENTE = 1;
+
+    protected $inputFilter;
+    protected $inputFilterAlterarNome;
 
     /**
      * @ORM\ManyToOne(targetEntity="EntidadeTipo", inversedBy="entidade")
@@ -115,6 +122,36 @@ class Entidade extends CircuitoEntity {
         return $resposta;
     }
 
+    public function getInputFilterAlterarNome() {
+        if (!$this->inputFilterAlterarNome) {
+            $inputFilter = new InputFilter();
+            $inputFilter->add(array(
+                'name' => 'nome',
+                'required' => true,
+                'filter' => array(
+                    array('name' => 'StripTags'), // removel xml e html string
+                    array('name' => 'StringTrim'), // removel espaco do inicio e do final da string
+                    array('name' => 'StringToUpper'), // transforma em maiusculo
+                ),
+                'validators' => array(
+                    array(
+                        'name' => 'NotEmpty',
+                    ),
+                    array(
+                        'name' => 'StringLength',
+                        'options' => array(
+                            'encoding' => 'UTF-8',
+                            'min' => 3,
+                            'max' => 15,
+                        ),
+                    ),
+                ),
+            ));
+            $this->inputFilterPessoaFrequencia = $inputFilter;
+        }
+        return $this->inputFilterPessoaFrequencia;
+    }
+
     /**
      * Retorna a entidade tipo da entidade
      * @return EntidadeTipo
@@ -169,6 +206,14 @@ class Entidade extends CircuitoEntity {
 
     function setGrupo_id($grupo_id) {
         $this->grupo_id = $grupo_id;
+    }
+
+    public function getInputFilter() {
+
+    }
+
+    public function setInputFilter(InputFilterInterface $inputFilter) {
+        throw new Exception("Nao utilizado");
     }
 
 }
