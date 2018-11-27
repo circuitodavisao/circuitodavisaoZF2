@@ -81,29 +81,7 @@ class AtendimentoGruposAbaixo extends AbstractHelper {
                     $html .= $this->montarLinhaDeAtendimento($grupoFilho);
 
                     if ($this->getTipo() === AtendimentoGruposAbaixo::tipoRelatorio) {
-
-                        $arrayPeriodoDoMes = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($this->getMes(), $this->getAno());
-                        $todosFilhos = array();
-                        for ($indiceDeArrays = $arrayPeriodoDoMes[0]; $indiceDeArrays <= $arrayPeriodoDoMes[1]; $indiceDeArrays++) {
-                            $grupoPaiFilhoFilhos = $grupoFilho->getGrupoPaiFilhoFilhosAtivos($indiceDeArrays);
-                            if ($grupoPaiFilhoFilhos) {
-                                foreach ($grupoPaiFilhoFilhos as $grupoPaiFilhoFilho) {
-                                    $adicionar = true;
-                                    if (count($todosFilhos) > 0) {
-                                        foreach ($todosFilhos as $filho) {
-                                            if ($filho->getId() === $grupoPaiFilhoFilho->getId()) {
-                                                $adicionar = false;
-                                                break;
-                                            }
-                                        }
-                                    }
-                                    if ($adicionar) {
-                                        $todosFilhos[] = $grupoPaiFilhoFilho;
-                                    }
-                                }
-                            }
-                        }
-
+                        $todosFilhos = $grupoFilho->getGrupoPaiFilhoFilhosPorMesEAno($this->getMes(), $this->getAno());
                         if (count($todosFilhos)) {
                             $html .= '<div id="grupos144' . $grupoFilho->getId() . '" class="hidden bg-default">';
                             foreach ($todosFilhos as $gpFilho144) {
@@ -151,7 +129,7 @@ class AtendimentoGruposAbaixo extends AbstractHelper {
             $html .= '</div>';
         }
         if ($this->getTipo() === AtendimentoGruposAbaixo::tipoRelatorio && !$discipuloAbaixo) {
-            $html .= $this->view->cabecalhoDeAtendimentos($grupo->getGrupoPaiFilhoFilhos());
+            $html .= $this->view->cabecalhoDeAtendimentos($grupo->getGrupoPaiFilhoFilhosPorMesEAno($this->getMes(), $this->getAno()));
         }
 
         $html .= $grupo->getNomeLideresAtivos();

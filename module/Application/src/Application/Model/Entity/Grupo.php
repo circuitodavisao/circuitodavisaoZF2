@@ -256,15 +256,13 @@ class Grupo extends CircuitoEntity {
             $grupoFilho = $gpFilho->getGrupoPaiFilhoFilho();
             if ($grupoFilho->getResponsabilidadesAtivas()) {
                 foreach ($grupoFilho->getGrupoAtendimento() as $grupoAtendimento) {
-                    if ($grupoAtendimento->verificaSeTemNesseMesEAno(
-                                    $mes, $ano)) {
+                    if ($grupoAtendimento->verificaSeTemNesseMesEAno($mes, $ano)) {
                         $totalGruposAtendido++;
                     }
                 }
                 if ($totalGruposAtendido >= 1) {
                     $totalGruposAtendidos++;
                 }
-
                 $totalGruposFilhosAtivos++;
             }
         }
@@ -327,39 +325,29 @@ class Grupo extends CircuitoEntity {
 		return $grupoPaiFilhoFilhosAtivos;
 	}
 
-    /**
-     * Metódo que retorna os filhos no periodo do mês.
-     * @method getGrupoPaiFilhoFilhosPorMes
-     * @param  int $mes
-     * @return Grupo grupos no período do mês inputado.
-     */
-    function getGrupoPaiFilhoFilhosPorMes($mes) {
-        $grupoPaiFilhoFilhosAtivos = null;
-        /* Responsabilidades */
-        $grupoPaiFilhoFilhos = $this->getGrupoPaiFilhoFilhos();
-        if ($grupoPaiFilhoFilhos) {
-            /* Verificar responsabilidades ativas */
-            foreach ($grupoPaiFilhoFilhos as $gpf) {
-                $arrayPeriodo = Funcoes::montaPeriodo($periodo);
-                if ($gpf->verificarSeEstaAtivo()) {
-                    $stringFimDoPeriodo = date('Y') . '-' . $mes . '-' . cal_days_in_month(CAL_GREGORIAN, $mes, date('Y'));
-                    $dataDoFimDoPeriodoParaComparar = strtotime($stringFimDoPeriodo);
-                    $dataDoGrupoPaiFilhoCriacaoParaComparar = strtotime($gpf->getData_criacaoStringPadraoBanco());
-                    if ($dataDoGrupoPaiFilhoCriacaoParaComparar <= $dataDoFimDoPeriodoParaComparar) {
-                        $grupoPaiFilhoFilhosAtivos[] = $gpf;
-                    }
-                } else {
-                    /* Inativo */
-                    $stringFimDoPeriodo = date('Y') . '-' . $mes . '-' . cal_days_in_month(CAL_GREGORIAN, $mes, date('Y'));
-                    $dataDoFimDoPeriodoParaComparar = strtotime($stringFimDoPeriodo);
-                    $dataDoGrupoGrupoPaiFilhoInativadoParaComparar = strtotime($gpf->getData_inativacaoStringPadraoBanco());
-                    if ($dataDoGrupoGrupoPaiFilhoInativadoParaComparar <= $dataDoFimDoPeriodoParaComparar) {
-                        $grupoPaiFilhoFilhosAtivos[] = $gpf;
-                    }
-                }
-            }
-        }
-        return $grupoPaiFilhoFilhosAtivos;
+    function getGrupoPaiFilhoFilhosPorMesEAno($mes, $ano) {
+		$arrayPeriodoDoMes = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mes, $ano);
+		$todosFilhos = array();
+		for ($indiceDeArrays = $arrayPeriodoDoMes[0]; $indiceDeArrays <= $arrayPeriodoDoMes[1]; $indiceDeArrays++) {
+			$grupoPaiFilhoFilhos = $this->getGrupoPaiFilhoFilhosAtivos($indiceDeArrays);
+			if ($grupoPaiFilhoFilhos) {
+				foreach ($grupoPaiFilhoFilhos as $grupoPaiFilhoFilho) {
+					$adicionar = true;
+					if (count($todosFilhos) > 0) {
+						foreach ($todosFilhos as $filho) {
+							if ($filho->getId() === $grupoPaiFilhoFilho->getId()) {
+								$adicionar = false;
+								break;
+							}
+						}
+					}
+					if ($adicionar) {
+						$todosFilhos[] = $grupoPaiFilhoFilho;
+					}
+				}
+			}
+		}
+		return $todosFilhos;
     }
 
     function getGrupoPaiFilhoFilhosAtivosReal() {
@@ -585,28 +573,12 @@ class Grupo extends CircuitoEntity {
         if ($grupoSelecionado->getEntidadeAtiva()) {
             if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::SUBEQUIPE) {
                 $grupoEventosCelulasTodas = $grupoSelecionado->getGrupoEventoPorTipoEAtivo(EventoTipo::tipoCelula);
-                $contadorDeAlteracoes = array();
                 if ($grupoEventosCelulasTodas) {
                     foreach ($grupoEventosCelulasTodas as $grupoEvento) {
-                        if ($contadorDeAlteracoes[$grupoEvento->getData_criacaoStringPadraoBanco()]) {
-                            if ($grupoEvento->getId() > $contadorDeAlteracoes[$grupoEvento->getData_criacaoStringPadraoBanco()]->getId()) {
-                                $contadorDeAlteracoes[$grupoEvento->getData_criacaoStringPadraoBanco() . '-' . $grupoEvento->getHora_criacao()] = $grupoEvento;
-                            }
-                        } else {
-                            $contadorDeAlteracoes[$grupoEvento->getData_criacaoStringPadraoBanco()] = $grupoEvento;
-                        }
-                    }
-                    foreach ($contadorDeAlteracoes as $grupoEventoCelula) {
-                        $grupoEventosCelulas[] = $grupoEventoCelula;
+                       $grupoEventosCelulas[] = $grupoEvento;
                     }
                 }
-                while ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::SUBEQUIPE) {
-                    $grupoSelecionado = $grupoSelecionado->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai();
-                    if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::EQUIPE) {
-                        break;
-                    }
-                }
-                $grupoEventos = $grupoSelecionado->getGrupoEventoPorTipoEAtivo(EventoTipo::tipoCulto);
+               $grupoEventos = $grupoSelecionado->getGrupoEquipe()->getGrupoEventoPorTipoEAtivo(EventoTipo::tipoCulto);
             } else {
                 /* Lider de equipe ou igreja */
                 $grupoEventos = array();

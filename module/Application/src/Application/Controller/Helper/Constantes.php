@@ -11,7 +11,7 @@ class Constantes {
 
     public static $IP = '158.69.124.139';
     public static $HOST = 'circuitodavisaonovo.com.br';
-    public static $META_LIDER = 6;
+    public static $META_LIDER = 7;
     public static $VALOR_MULTA = 3;
     public static $ID_TIPO_REVISAO = 3;
     const QUANTIDADES_DE_EVENTOS_NA_TELA = 4;
@@ -189,6 +189,7 @@ class Constantes {
     public static $ENTITY_REGISTRO = 'Application\Model\Entity\Registro';
     public static $ENTITY_REGISTRO_ACAO = 'Application\Model\Entity\RegistroAcao';
     public static $ENTITY_FATO_DISCIPULADO = 'Application\Model\Entity\FatoDiscipulado';
+    public static $ENTITY_FATO_CELULA_DISCIPULADO = 'Application\Model\Entity\FatoCelulaDiscipulado';
     public static $ENTITY_PESSOA_EMAIL = 'email';
     public static $ENTITY_PESSOA_DOCUMENTO = 'documento';
     public static $ENTITY_PESSOA_DATA_NASCIMENTO = 'data_nascimento';
