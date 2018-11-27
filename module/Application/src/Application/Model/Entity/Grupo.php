@@ -826,7 +826,7 @@ class Grupo extends CircuitoEntity {
                         $diaDaSemanaQueFoiExcluido = 7;
                     }
                     if ($diaQueOcorreOEvento > $diaDaSemanaQueFoiExcluido) {
-                        $excluidoDepoisQueOEventoOcorreu = false;
+                        //$excluidoDepoisQueOEventoOcorreu = false;
                     }
                     if ($dataDoGrupoEventoParaComparar >= $dataDoInicioDoPeriodoParaComparar &&
                             $dataDoGrupoEventoParaComparar <= $dataDoFimDoPeriodoParaComparar &&

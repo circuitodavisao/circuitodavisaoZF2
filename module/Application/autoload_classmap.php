@@ -99,6 +99,7 @@ return array(
     'Application\Form\CursoForm'                                 => __DIR__ . '/src/Application/Form/CursoForm.php',
     'Application\Form\RecuperarAcessoForm'                       => __DIR__ . '/src/Application/Form/RecuperarAcessoForm.php',
     'Application\Form\NumeracaoForm'                             => __DIR__ . '/src/Application/Form/NumeracaoForm.php',
+    'Application\Form\NomeForm'                                  => __DIR__ . '/src/Application/Form/NomeForm.php',
     'Application\Form\ParceiroDeDeusForm'                        => __DIR__ . '/src/Application/Form/ParceiroDeDeusForm.php',
     'Application\Form\Endereco'                                  => __DIR__ . '/src/Application/Form/Endereco.php',
     'Application\Form\GrupoForm'                                 => __DIR__ . '/src/Application/Form/GrupoForm.php',

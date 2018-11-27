@@ -31,8 +31,7 @@ class SolicitacaoORM extends CircuitoORM {
       				$dqlAjustada = str_replace('#grupo_id', 'AND s.grupo_id = '.(int)$grupo_id, $dql);
       			} else {
       				$dqlAjustada = str_replace('#grupo_id', ' ', $dql);
-      			}
-            error_log($dqlAjustada);
+      			}            
             $result = $this->getEntityManager()->createQuery($dqlAjustada)
                     ->setParameter(1, $dataDeCriacaoInicial)
                     ->setParameter(2, $dataDeCriacaoFinal)

@@ -13,11 +13,12 @@ echo $this->templateFormularioTopo('Alterar Numeração');
         <p><?php echo $this->grupo->getEntidadeAtiva()->infoEntidade(); ?></p>
     </div>
     <?php
+    echo $this->divMensagens();
     echo $this->inputFormularioSimples(Constantes::$TRADUCAO_NUMERACAO, $formulario->get(Constantes::$FORM_NUMERACAO), 12, 2);
 
     echo $this->formHidden($formulario->get(Constantes::$INPUT_CSRF));
     echo $this->formHidden($formulario->get(Constantes::$FORM_ID));
-    $funcao = $this->funcaoOnClick('this.form.submit();');
+    $funcao = $this->funcaoOnClick('validarPrincipalAlterarNumeracao(this.form);');
     echo $this->botaoSimples(Constantes::$TRADUCAO_ALTERAR, $funcao);
     ?>
 </div>

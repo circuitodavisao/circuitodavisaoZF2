@@ -7,6 +7,7 @@ use Application\Controller\Helper\Funcoes;
 use Application\Form\HierarquiaForm;
 use Application\Form\NovoEmailForm;
 use Application\Form\NumeracaoForm;
+use Application\Form\NomeForm;
 use Application\Form\RecuperarSenhaForm;
 use Application\Model\Entity\Entidade;
 use Application\Model\Entity\EntidadeTipo;
@@ -428,6 +429,74 @@ class PrincipalController extends CircuitoController {
         }
     }
 
+    public function nomeAction() {
+        $sessao = new Container(Constantes::$NOME_APLICACAO);
+        $idSessao = $sessao->idSessao;
+        if ($idSessao) {
+            $grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idSessao);
+            $formulario = new NomeForm(Constantes::$FORM, $grupo);
+            $view = new ViewModel(
+                    array(
+                'formulario' => $formulario,
+                'grupo' => $grupo,
+            ));
+            unset($sessao->idSessao);
+
+            /* Javascript especifico */
+            $layoutJS = new ViewModel();
+            $layoutJS->setTemplate('layout/layout-js-principal-alterar-nome-equipe');
+            $view->addChild($layoutJS, 'layoutJSAlterarNome');
+            return $view;
+        } else {
+            return $this->redirect()->toRoute('principal');
+        }
+    }
+
+    public function nomeSalvarAction() {
+        $sessao = new Container(Constantes::$NOME_APLICACAO);
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            try {
+                $this->getRepositorio()->iniciarTransacao();
+                $post_data = $request->getPost();
+                $idGrupo = $post_data[Constantes::$FORM_ID];
+                $grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupo);
+                $entidadeNova = new Entidade();
+                $formNome = new NomeForm(Constantes::$FORM, $grupo);
+                $formNome->setInputFilter($entidadeNova->getInputFilterAlterarNome());
+                $formNome->setData($post_data);
+
+                /* validação */
+
+                if ($formNome->isValid()) {
+                  $validatedData = $formNome->getData();
+                  $nome = trim($validatedData[Constantes::$INPUT_NOME]);                  
+                  $entidade = $grupo->getEntidadeAtiva();
+                  $entidade->setDataEHoraDeInativacao();
+                  $setarDataEHora = false;
+                  $this->getRepositorio()->getEntidadeORM()->persistir($entidade, $setarDataEHora);
+                  $entidadeNova->setGrupo($grupo);
+                  $entidadeNova->setNome($nome);
+                  $entidadeNova->setEntidadeTipo($this->getRepositorio()->getEntidadeTipoORM()->encontrarPorId(EntidadeTipo::equipe));
+                  $this->getRepositorio()->getEntidadeORM()->persistir($entidadeNova);
+
+                  $this->getRepositorio()->fecharTransacao();
+                  $sessao->idSessao = $idGrupo;
+                  return $this->redirect()->toRoute(Constantes::$ROUTE_PRINCIPAL, array(
+                              Constantes::$ACTION => 'ver',
+                  ));
+                } else {
+                  return $this->redirect()->toRoute(Constantes::$ROUTE_LOGIN, array(
+                              Constantes::$ACTION => 'index',
+                  ));
+                }
+            } catch (Exception $exc) {
+                $this->getRepositorio()->desfazerTransacao();
+                echo $exc->getMessage();
+            }
+        }
+    }
+
     public function numeracaoAction() {
         $sessao = new Container(Constantes::$NOME_APLICACAO);
         $idSessao = $sessao->idSessao;
@@ -443,9 +512,9 @@ class PrincipalController extends CircuitoController {
             unset($sessao->idSessao);
 
             /* Javascript especifico */
-            $layoutJSIndex = new ViewModel();
-            $layoutJSIndex->setTemplate(Constantes::$TEMPLATE_JS_RECUPERAR_SENHA);
-            $view->addChild($layoutJSIndex, Constantes::$STRING_JS_RECUPERAR_SENHA);
+            $layoutJS = new ViewModel();
+            $layoutJS->setTemplate('layout/layout-js-principal-alterar-numeracao');
+            $view->addChild($layoutJS, 'layoutJSAlterarNumeracao');
             return $view;
         } else {
             return $this->redirect()->toRoute('principal');

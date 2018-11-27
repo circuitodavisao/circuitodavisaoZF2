@@ -7,11 +7,11 @@ $formulario->prepare();
 $formulario->setAttribute(Constantes::$ACTION, $this->url(Constantes::$ROUTE_LANCAMENTO, array(Constantes::$ACTION => 'parceiroDeDeusFinalizar')));
 
 $htmlBody = '';
-$htmlBody .= '<h1>Parceiro de Deus</h1>';
+//$htmlBody .= '<h1>Parceiro de Deus</h1>';
 $htmlBody .=  $this->divMensagens();
 
 $htmlBody .= '<div id="divSelecionarFatoFinanceiroTipo" class="form-group col-lg-12 col-md-12 col-sm-12 col-xs-12">';
-$htmlBody .= '<label for="selecionaTipo">' . $this->translate('Selecione o Tipo') . '</label>';
+$htmlBody .= '<label class="field-label text-muted fs18 mb10" for="selecionaTipo">' . $this->translate('Selecione o Tipo') . '</label>';
 $htmlBody .= '<select class="form-control" name="idFatoFinanceiroTipo" id="idFatoFinanceiroTipo" onchange="mostrarBotaoSelecionarFatoFinanceiroTipo()">';
 $htmlBody .= '<option value="0" >' . $this->translate(Constantes::$TRADUCAO_SELECIONE) . '</option>';
 foreach ($this->fatoFinanceiroTiposParceiroDeDeus as $fatoFinanceiroTipo) {
@@ -28,7 +28,7 @@ $htmlBody .= '</div>';
 $htmlBody .= '<div id="divLancamento" class="hidden">';
 
 $htmlBody .= '<div class="form-group col-lg-12 col-md-12 col-sm-12 col-xs-12">';
-$htmlBody .= '<label for="selecionaEquipe">' . $this->translate('Selecione o Time') . '</label>';
+$htmlBody .= '<label class="field-label text-muted fs18 mb10" for="selecionaEquipe">' . $this->translate('Selecione o Time') . '</label>';
 $htmlBody .= '<select class="form-control" name="idEquipe" id="idEquipe" onChange="selecionarEquipe()">';
 $htmlBody .= '<option value="0" >' . $this->translate(Constantes::$TRADUCAO_SELECIONE) . '</option>';
 $informacao = $this->grupo->getEntidadeAtiva()->infoEntidade() . ' - ' . $this->grupo->getNomeLideresAtivos();
@@ -40,7 +40,7 @@ foreach ($this->discipulos as $grupoPaiFilhoFilho) {
 $htmlBody .= '</select>';
 $htmlBody .= '</div>';
 $htmlBody .= '<div class="form-group col-lg-12 col-md-12 col-sm-12 col-xs-12">';
-$htmlBody .= '<label for="selecionarSub">' . $this->translate('Qual Líder') . '<img src="img/loader.gif" id="loaderSub" class="hidden" /></label>';
+$htmlBody .= '<label class="field-label text-muted fs18 mb10" for="selecionarSub">' . $this->translate('Qual Líder') . '<img src="img/loader.gif" id="loaderSub" class="hidden" /></label>';
 $htmlBody .= '<select class="form-control" name="idGrupo" id="idGrupo" onChange="selecionarLider()">';
 $htmlBody .= '<option value="0" >' . $this->translate(Constantes::$TRADUCAO_SELECIONE) . '</option>';
 $htmlBody .= '</select>';
@@ -57,14 +57,14 @@ $htmlBody .= '</div>';
 
 $htmlBody .= '<div id="divTipoCelula" class="hidden">';
 $htmlBody .= '<div class="form-group col-lg-12 col-md-12 col-sm-12 col-xs-12">';
-$htmlBody .= '<label for="selecionarCelula">' . $this->translate('Qual Célula') . '<img src="img/loader.gif" id="loaderCelula" class="hidden" /></label>';
+$htmlBody .= '<label class="field-label text-muted fs18 mb10" for="selecionarCelula">' . $this->translate('Qual Célula') . '<img src="img/loader.gif" id="loaderCelula" class="hidden" /></label>';
 $htmlBody .= '<select class="form-control" name="idGrupoEvento" id="idGrupoEvento" onChange="selecionarCelula()" >';
 $htmlBody .= '<option value="0" >' . $this->translate(Constantes::$TRADUCAO_SELECIONE) . '</option>';
 $htmlBody .= '</select>';
 $htmlBody .= '</div>';
 $htmlBody .=  $this->inputFormularioSimples('Valor Célula', $formulario->get('celula'), 12);
 $htmlBody .= '<div class="form-group col-lg-12 col-md-12 col-sm-12 col-xs-12">';
-$htmlBody .= '<label for="selecionarDia">' . $this->translate('Qual Data') . '<img src="img/loader.gif" id="loaderData" class="hidden" /></label>';
+$htmlBody .= '<label class="field-label text-muted fs18 mb10" for="selecionarDia">' . $this->translate('Qual Data') . '<img src="img/loader.gif" id="loaderData" class="hidden" /></label>';
 $htmlBody .= '<select class="form-control" name="data" id="data" >';
 $htmlBody .= '<option value="0" >' . $this->translate(Constantes::$TRADUCAO_SELECIONE) . '</option>';
 $htmlBody .= '</select>';
@@ -83,15 +83,17 @@ $htmlBody .= '</div>';
 
 $tamanho = 600;
 $html = '';
+$html .= $this->templateFormularioTopo('Parceiro de Deus');
 $html .= $this->form()->openTag($formulario);
-$html .= '<div align="center">';
-$html .= '<div class="panel mw'.$tamanho.'">';
+//$html .= '<div align="center">';
+//$html .= '<div class="panel mw'.$tamanho.'">';
 
 $html .= '<div class="panel-body bg-light text-center">';
 $html .= $htmlBody;
 $html .= '</div>';
 
-$html .= '</div>';
-$html .= '</div>';
+//$html .= '</div>';
+//$html .= '</div>';
 $html .= $this->form()->closeTag();
+$html .= $this->templateFormularioRodape();
 echo $html;

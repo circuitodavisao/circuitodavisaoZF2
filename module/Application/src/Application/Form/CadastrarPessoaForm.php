@@ -93,8 +93,7 @@ class CadastrarPessoaForm extends Form {
              */
             $arrayGPT[0] = Constantes::$TRADUCAO_SELECIONE;
             foreach ($grupoPessoaTipos as $gpt) {
-                $arrayGPT[$gpt->getId()] = $gpt->getNome();
-                error_log($gpt->getNome());
+                $arrayGPT[$gpt->getId()] = $gpt->getNome();                
             }
             if($pessoa){
               if($pessoa->getTipo() === 'CO' || $pessoa->getTipo() === 'ME'){
