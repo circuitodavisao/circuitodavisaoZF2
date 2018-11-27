@@ -113,7 +113,7 @@ if($this->filtrado){
 			break;
 		case 3:
 			$valor = $diferenca;
-			$label = 'Discipulos sem Sexo';
+			$label = 'Sexo não informado';
 			break;
 		}
 		echo '<div class="col-lg-4 col-md-4 col-sm-4 col-xs-4" style="padding-top: 0px;">';
@@ -136,11 +136,10 @@ if($this->filtrado){
 					echo '<div class="alert alert-default">'.$discipulado['info'].'</div>';
 
 					echo '<div class="row">';
-					for ($indiceInputs = 1; $indiceInputs <= 6; $indiceInputs++) {
+					for ($indiceInputs = 2; $indiceInputs <= 6; $indiceInputs++) {
 						$input = '';
 						$label = '';
 						switch ($indiceInputs) {
-						case 1:$input = 'lanche'; $label = 'Lanche';break;
 						case 2:$input = 'administrativo'; $label = 'Circuito';break;
 						case 3:$input = 'oracao'; $label = 'Oração';break;
 						case 4:$input = 'palavra'; $label = 'Palavra';break;
