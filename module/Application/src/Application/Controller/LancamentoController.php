@@ -1573,7 +1573,7 @@ class LancamentoController extends CircuitoController {
 				$fatoDiscipulado->setGrupo($grupoPai);
 				$fatoDiscipulado->setGrupo_evento_id($dadosPost['idGrupoEvento']);
 				$fatoDiscipulado->setPessoa_id($sessao->idPessoa);
-				$fatoDiscipulado->setLanche($dadosPost['lanche']);
+				$fatoDiscipulado->setLanche(0);
 				$fatoDiscipulado->setAdministrativo($dadosPost['administrativo']);
 				$fatoDiscipulado->setOracao($dadosPost['oracao']);
 				$fatoDiscipulado->setPalavra($dadosPost['palavra']);
