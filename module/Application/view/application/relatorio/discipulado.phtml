@@ -4,12 +4,9 @@ use Application\Controller\Helper\Constantes;
 use Application\Controller\RelatorioController;
 use Application\Controller\Helper\Funcoes;
 use Application\Model\Entity\EventoTipo;
-?>
-<div class="center-block mw600">
-	<div class="panel">
-		<div class="panel-heading text-center">Discipulado</div>
-		<div class="panel-body p5">
-<?php
+
+echo $this->templateFormularioTopo('Discipulado');
+echo '<div class="panel-body bg-light" style="padding: 15px 5px 5px 5px;">';
 echo '<form action="/relatorioDiscipulado" method="post">';
 echo $this->cabecalhoDeMeses();
 echo '</form>';
@@ -18,7 +15,7 @@ if($this->filtrado){
 		foreach($this->grupoPaiFilhoFlhos as $grupoPaiFilhoFilho){
 			$relatorio = array();
 			$grupoFilho = $grupoPaiFilhoFilho->getGrupoPaiFilhoFilho();
-			echo '<div class="panel">';
+			echo '<div class="panel mt5 mb10">';
 			echo '<div class="panel-body pn">';
 
 			echo '<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 p10 text-center">';
@@ -43,7 +40,7 @@ if($this->filtrado){
 						$estrelas .= '<i class="fa fa-star-o"></i>';
 					}
 				}
-				echo '<div class="alert alert-default" onClick="$(\'#grupo_'.$grupoFilho->getId().'\').toggleClass(\'hidden\');">Pontuação<br />'.$estrelas.'</div>';
+				echo '<div class="alert alert-default" style="margin:10px;" onClick="$(\'#grupo_'.$grupoFilho->getId().'\').toggleClass(\'hidden\');">Pontuação<br />'.$estrelas.'</div>';
 			}else{
 				echo '<span class="label label-warning">Sem discipulado</span>';
 			}
@@ -76,38 +73,38 @@ if($this->filtrado){
 		case 1:
 			if($contador['M'] < 6){
 				$escala = 'Anêmico';
-			}	
+			}
 			if($contador['M'] >= 6 && $contador['M'] < 12){
 				$escala = 'Fraca';
-			}	
+			}
 			if($contador['M'] == 12){
 				$escala = 'Boa';
 			}
 			if($contador['M'] >= 13 && $contador['M'] < 21){
 				$escala = 'Preditiva';
-			}	
+			}
 			if($contador['M'] >= 21){
 				$escala = 'Forte';
-			}	
+			}
 			$valor = $contador['M'] . ' - ' . $escala;
 			$label = 'Time de Homens';
 			break;
 		case 2:
 			if($contador['F'] < 6){
 				$escala = 'Anêmico';
-			}	
+			}
 			if($contador['F'] >= 6 && $contador['F'] < 12){
 				$escala = 'Fraca';
-			}	
+			}
 			if($contador['F'] == 12){
 				$escala = 'Boa';
 			}
 			if($contador['F'] >= 13 && $contador['F'] < 21){
 				$escala = 'Preditiva';
-			}	
+			}
 			if($contador['F'] >= 21){
 				$escala = 'Forte';
-			}	
+			}
 			$valor = $contador['F'] . ' - ' . $escala;
 			$label = 'Time de Mulheres';
 			break;
@@ -187,5 +184,4 @@ if($this->filtrado){
 	}
 }
 echo '</div>';
-echo '</div>';
-echo '</div>';
+echo $this->templateFormularioRodape();

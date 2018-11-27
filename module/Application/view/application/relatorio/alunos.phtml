@@ -8,6 +8,7 @@ $titulo = 'Alunos que ainda não foram a aula';
 if($this->tipoRelatorio === RelatorioController::relatorioAlunosComFaltas){
 	$titulo = 'Alunos que estão quase reprovando';
 }
+echo $this->templateFormularioTopo($titulo);
 ?>
 <style type="text/css">
 	th, p {
@@ -17,11 +18,10 @@ if($this->tipoRelatorio === RelatorioController::relatorioAlunosComFaltas){
 		font-size: 10px;
 	}
 </style>
-<div class="center-block mw600">
-	<div class="panel">
-	<div class="panel-heading text-center"><?php echo $titulo; ?></div>
-			<div class="panel-body pn p10">
-			<?php 
+<div class="center-block">
+	<div class="panel-body bg-light" style="padding: 15px 5px 5px 5px;">
+
+			<?php
 			if($this->tipoRelatorio === RelatorioController::relatorioAlunosComFaltas){
 				echo '<div class="alert alert-info alert-xs">Legenda: F. - Faltas</div>';
 			}
@@ -32,9 +32,9 @@ if($this->tipoRelatorio === RelatorioController::relatorioAlunosComFaltas){
 						$aula = $turma->getTurmaAulaAtiva()->getAula()->getPosicao();
 						$label = $modulo.' - ' . Funcoes::mesPorExtenso($turma->getMes()) . '/' . $turma->getAno() . ' - AULA '.$aula;
 						echo '<div class="panel">';
-						echo '<div class="panel-heading text-center">'.$label.'</div>';
-						echo '<div class="panel-body pn p10">';
-	
+						echo '<div class="panel-heading text-center" style="padding:0px;">'.$label.'</div>';
+						echo '<div class="panel-body pn">';
+
 						if($relatorioTurma = $this->relatorio[$turma->getId()]){
 							echo '<table  class="table table-bordered table-condensed footable" data-filter="#fooFilter">';
 							echo '<thead>';
@@ -73,7 +73,8 @@ if($this->tipoRelatorio === RelatorioController::relatorioAlunosComFaltas){
 				}
 			}
 			?>
-			</div>
+
 	</div>
 </div>
-
+<?php
+echo $this->templateFormularioRodape();
