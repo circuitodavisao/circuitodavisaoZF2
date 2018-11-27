@@ -4,6 +4,9 @@ use Application\Controller\Helper\Constantes;
 use Application\Controller\Helper\Funcoes;
 use Application\Controller\RelatorioController;
 $titulo = 'Alunos presente na semana';
+
+echo $this->templateFormularioTopo($titulo, '', 'style="max-width:400px; margin:auto;"');
+echo $this->templateFormularioRodape();
 ?>
 <style type="text/css">
 	th, p {
@@ -13,11 +16,7 @@ $titulo = 'Alunos presente na semana';
 		font-size: 10px;
 	}
 </style>
-<div class="center-block mw400">
-	<div class="panel">
-	<div class="panel-heading text-center"><?php echo $titulo; ?></div>
-			<div class="panel-body pn p10">
-<?php 
+<?php
 if($this->tipoRelatorio === RelatorioController::relatorioAlunosComFaltas){
 	echo '<div class="alert alert-info alert-xs">Legenda: F. - Faltas</div>';
 }
@@ -27,15 +26,16 @@ if($this->turmas){
 			$modulo = $turma->getTurmaAulaAtiva()->getAula()->getDisciplina()->getNome();
 			$aula = $turma->getTurmaAulaAtiva()->getAula()->getPosicao();
 			$label = $modulo.' - ' . Funcoes::mesPorExtenso($turma->getMes()) . '/' . $turma->getAno() . ' - AULA '.$aula;
-			echo '<div class="panel">';
-			echo '<div class="panel-heading text-center">'.$label.'</div>';
-			echo '<div class="panel-body pn p10">';
+			echo '<div class="panel-heading bg-primary pn text-center mt20 mw400" style="margin:auto;">';
+			echo '<span class="panel-title" >'.$label.'</span>';
+			echo '</div>';
+			echo '<div class="panel-body pn mw400" style="margin:auto;">';
 
 			if($relatorioTurma = $this->relatorio[$turma->getId()]){
 				$soma = 0;
-				echo '<table  class="table table-bordered table-condensed footable" data-filter="#fooFilter">';
+				echo '<table  class="table table-bordered table-hover bg-light mt15 footable" data-filter="#fooFilter">';
 				echo '<thead>';
-				echo '<tr class="dark">';
+				echo '<tr>';
 				echo '<th>Dia</th>';
 				echo '<th>Quantidade</th>';
 				echo '</tr>';
@@ -78,12 +78,6 @@ if($this->turmas){
 				echo '<div class="alert alert-warning">Sem alunos para mostrar</div>';
 			}
 			echo '</div>';
-			echo '</div>';
 		}
 	}
 }
-?>
-			</div>
-	</div>
-</div>
-

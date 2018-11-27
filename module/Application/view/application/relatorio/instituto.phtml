@@ -3,6 +3,7 @@ use Application\Controller\Helper\Funcoes;
 use Application\View\Helper\BotaoSimples;
 use Application\Controller\RelatorioController;
 
+echo $this->templateFormularioTopo('Aproveitamento Instituto');
 ?>
 <style type="text/css">
 	th {
@@ -13,10 +14,7 @@ use Application\Controller\RelatorioController;
 		background-color: #fff;
 	}
 </style>
-<div class="center-block">
-	<div class="panel">
-		<div class="panel-heading text-center">Aproveitamento Instituto</div>
-		<div class="panel-body pn">
+		<div class="panel-body bg-light" style="padding: 15px 5px 5px 5px;">
 <?php
 
 $contadorDeTurmas = 0;
@@ -35,7 +33,7 @@ foreach($this->turmas as $turma){
 	$funcaoDireita = $this->funcaoOnClick('$(".turma' . ($contadorDeTurmas + 1) . '").removeClass("hidden-xs");$(".turma' . $contadorDeTurmas . '").addClass("hidden-xs");');
 	$botaoEsquerda = $this->botaoSimples('<i class="fa fa-angle-double-left"></i>', $funcaoEsquerda, BotaoSimples::botaoPequenoImportante, BotaoSimples::posicaoAEsquerda);
 	$botaoDireita = $this->botaoSimples('<i class="fa fa-angle-double-right"></i>', $funcaoDireita, BotaoSimples::botaoPequenoImportante, BotaoSimples::posicaoADireita);
-	echo '<div class="hidden-lg hidden-md hidden-sm center-block text-center ' . $classeBase . '" style="padding: 9px 12px;"> ';
+	echo '<div class="hidden-lg p5 hidden-md hidden-sm center-block text-center ' . $classeBase . '" style="margin-bottom: 17px;"> ';
 	if ($mostrarBotaoEsquerdo) {
 		echo '<span class="hidden-lg hidden-md hidden-sm">' . $botaoEsquerda . '</span>';
 	}
@@ -43,7 +41,7 @@ foreach($this->turmas as $turma){
 	if($turma->getTurmaAulaAtiva()){
 		$modulo = $turma->getTurmaAulaAtiva()->getAula()->getDisciplina()->getNome();
 	}
-	echo $modulo . ' - ' . Funcoes::mesPorExtenso($turma->getMes(), 1).'/'.$turma->getAno();
+	echo $modulo . ' - ' . Funcoes::mesPorExtenso($turma->getMes(), 2).'/'.$turma->getAno();
 	if ($mostrarBotaoDireito) {
 		echo '<span class="hidden-lg hidden-md hidden-sm">' . $botaoDireita . '</span>';
 	}
@@ -53,13 +51,13 @@ foreach($this->turmas as $turma){
 
 $funcaoEsquerda = $this->funcaoOnClick('$(".turma' . ($contadorDeTurmas - 1) . '").removeClass("hidden-xs");$(".turma' . $contadorDeTurmas . '").addClass("hidden-xs");');
 $botaoEsquerda = $this->botaoSimples('<i class="fa fa-angle-double-left"></i>', $funcaoEsquerda, BotaoSimples::botaoPequenoImportante, BotaoSimples::posicaoAEsquerda);
-echo '<div class="hidden-lg hidden-md hidden-sm center-block text-center turma'. $contadorDeTurmas . '" style="padding: 9px 12px;"> ';
+echo '<div class="hidden-lg p5 hidden-md hidden-sm center-block text-center turma'. $contadorDeTurmas . '" style="margin-bottom: 17px;"> ';
 echo '<span class="hidden-lg hidden-md hidden-sm">' . $botaoEsquerda . '</span>';
 echo 'FINAL';
 echo '</div>';
 ?>
-			<div class="p10">
-				<table class="text-center table table-condensed table-hover bg-light mt15" style="font-size:8px;">
+			<div class="p5">
+				<table class="text-center table table-condensed table-hover bg-light" style="font-size:8px;">
 					<thead>
 						<tr class="dark">
 							<th>Times</th>
@@ -235,6 +233,6 @@ if($this->relatorio){
 					</tbody>
 				</table>
 		</div>
-		</div>
 	</div>
-</div>
+<?php
+echo $this->templateFormularioRodape();
