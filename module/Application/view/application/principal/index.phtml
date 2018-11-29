@@ -162,14 +162,23 @@ Período Atual <?php echo Funcoes::montaPeriodo($this->periodoFinal)[0]; ?>
 			$label = 'Sexo não informado';
 			break;
 		}
-		echo '<div class="col-lg-3 col-md-3 col-sm-3 col-xs-6">';
-		echo '<div class="panel text-center br-a br-grey">';
-		echo '<div class="panel-body">';
-		echo '<h1 class="fs16 mt5 mbn">'.$valor.'</h1>';
-		echo '<h6 class="text-info">'.$label.'</h6>';
-		echo '</div>';
-		echo '</div>';
-		echo '</div>';
+
+		$mostrar = true;
+		if($this->entidade->getEntidadeTipo()->getId() === EntidadeTipo::regiao
+			&& $indiceNumeroGrandes === 5){
+				$mostrar = false;
+			}
+
+		if($mostrar){
+			echo '<div class="col-lg-3 col-md-3 col-sm-3 col-xs-6">';
+			echo '<div class="panel text-center br-a br-grey">';
+			echo '<div class="panel-body">';
+			echo '<h1 class="fs16 mt5 mbn">'.$valor.'</h1>';
+			echo '<h6 class="text-info">'.$label.'</h6>';
+			echo '</div>';
+			echo '</div>';
+			echo '</div>';
+		}
 	}
 ?>
 </div>
