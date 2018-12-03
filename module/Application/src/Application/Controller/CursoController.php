@@ -865,7 +865,7 @@ class CursoController extends CircuitoController {
 
 		if(!$pessoa->getPessoaCursoAcessoAtivo()){
 			$postado['mostrarAulas'] = 1;
-			$postado['mostrarFinanceiro'] = 1;
+			$postado['mostrarFinanceiro'] = 0;
 		}
 
 		$view = new ViewModel(array(
@@ -2187,6 +2187,47 @@ class CursoController extends CircuitoController {
 
 		$view = new ViewModel($dados);
 		$view->setTerminal(true);
+		return $view;
+	}
+
+	public function financeiroPorDataAction(){
+		$request = $this->getRequest();
+		$dados = array();
+		if($request->isPost()){
+			$sessao = new Container(Constantes::$NOME_APLICACAO);
+
+			$idEntidadeAtual = $sessao->idEntidadeAtual;
+			$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+
+			$postDados = $request->getPost();
+
+			$dia1 = $postDados['dia1'];
+			$mes1 = $postDados['mes1'];
+			$ano1 = $postDados['ano1'];
+
+			$dia2 = $postDados['dia2'];
+			$mes2 = $postDados['mes2'];
+			$ano2 = $postDados['ano2'];
+
+			$dados['filtrado'] = true;
+		}else{
+			$dia1 = date('d');
+			$mes1 = date('m');
+			$ano1 = date('Y');
+
+			$dia2 = date('d');
+			$mes2 = date('m');
+			$ano2 = date('Y');
+		}
+
+		$dados['dia'][1] = $dia1;
+		$dados['mes'][1] = $mes1;
+		$dados['ano'][1] = $ano1;
+		$dados['dia'][2] = $dia2;
+		$dados['mes'][2] = $mes2;
+		$dados['ano'][2] = $ano2;
+
+		$view = new ViewModel($dados);
 		return $view;
 	}
 }
