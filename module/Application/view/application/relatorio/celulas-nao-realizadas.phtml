@@ -30,7 +30,7 @@ echo '<th class="hidden-xs">Célula</th>';
 echo '</tr>';
 echo '</thead>';
 echo '<tbody>';
-if($this->relatorio){Setenta - Atualizado todo dia as 18:00
+if($this->relatorio){
 	foreach($this->relatorio as $relatorio){
 		$eventoCelula = $this->repositorio->getEventoCelulaORM()->encontrarPorId($relatorio['evento_celula_id']);
 		$grupo = $this->repositorio->getGrupoORM()->encontrarPorId(substr($relatorio['numero_identificador'], (count($relatorio['numero_identificador'])-8)));
