@@ -625,72 +625,72 @@ class Grupo extends CircuitoEntity {
      * Retorna o grupo evento Revisao
      * @return GrupoEvento
      */
-    function getGrupoEventoRevisao() {
-        $grupoSelecionado = $this;
-        $grupoEventos = null;
-        if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::SUBEQUIPE) {
-            while ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::SUBEQUIPE ||
-            $grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::EQUIPE) {
+	function getGrupoEventoRevisao() {
+		$grupoSelecionado = $this;
+		$grupoEventos = null;
+		if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::SUBEQUIPE) {
+			while ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::SUBEQUIPE ||
+				$grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::EQUIPE) {
 
-                $grupoSelecionado = $grupoSelecionado->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai();
-                if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::IGREJA) {
-                    break;
-                }
-            }
-            $grupoEventos = $grupoSelecionado->getGrupoEventoAtivosPorTipo(EventoTipo::tipoRevisao);
-        } else if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::EQUIPE) {
-            while ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::EQUIPE) {
-                $grupoSelecionado = $grupoSelecionado->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai();
-                if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::IGREJA) {
-                    break;
-                }
-            }
-            $grupoEventos = $grupoSelecionado->getGrupoEventoAtivosPorTipo(EventoTipo::tipoRevisao);
-        } else {
-            $grupoEventos = $grupoSelecionado->getGrupoEventoAtivosPorTipo(EventoTipo::tipoRevisao);
-        }
+					$grupoSelecionado = $grupoSelecionado->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai();
+					if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::IGREJA) {
+						break;
+					}
+				}
+			$grupoEventos = $grupoSelecionado->getGrupoEventoAtivosPorTipo(EventoTipo::tipoRevisao);
+		} else if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::EQUIPE) {
+			while ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::EQUIPE) {
+				$grupoSelecionado = $grupoSelecionado->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai();
+				if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::IGREJA) {
+					break;
+				}
+			}
+			$grupoEventos = $grupoSelecionado->getGrupoEventoAtivosPorTipo(EventoTipo::tipoRevisao);
+		} else {
+			$grupoEventos = $grupoSelecionado->getGrupoEventoAtivosPorTipo(EventoTipo::tipoRevisao);
+		}
 
 		/* Verificando dia do revisao para mostrar */
 		$arrayRevisoes = array();
 		foreach($grupoEventos as $grupoEvento){
-				$dataDoRevisao = strtotime($grupoEvento->getEvento()->getData());
+			$dataDoRevisao = strtotime($grupoEvento->getEvento()->getData() . ' +2 week');
 			$dataAtual = strtotime(date('Y-m-d'));	
 
 			if($dataDoRevisao >= $dataAtual){
 				$arrayRevisoes[] = $grupoEvento;
 			}
 		}
-        return $arrayRevisoes;
-    }
+		return $arrayRevisoes;
+	}
 
-    /**
-     * Retorna o grupo evento
-     * @return GrupoEvento
-     */
-    function getGrupoEventoAtivos() {
-        $grupoEventos = null;
-        foreach ($this->getGrupoEvento() as $ge) {
-            if ($ge->verificarSeEstaAtivo()) {
-                $grupoEventos[] = $ge;
-            }
-        }
-        return $grupoEventos;
-    }
+	/**
+	 * Retorna o grupo evento
+	 * @return GrupoEvento
+	 */
+	function getGrupoEventoAtivos() {
+		$grupoEventos = null;
+		foreach ($this->getGrupoEvento() as $ge) {
+			if ($ge->verificarSeEstaAtivo()) {
+				$grupoEventos[] = $ge;
+			}
+		}
+		return $grupoEventos;
+	}
 
-    /**
-     * Retorna o grupo evento
-     * @return GrupoEvento
-     */
-    function getGrupoEventoAtivosPorTipo($tipo = 0) {
-        $grupoEventos = null;
-        foreach ($this->getGrupoEvento() as $grupoEvento) {
-            if ($grupoEvento->verificarSeEstaAtivo()) {
-                if ($tipo === 0) {
-                    $grupoEventos[] = $grupoEvento;
-                }
-                if ($tipo === EventoTipo::tipoCulto && $grupoEvento->getEvento()->verificaSeECulto()) {
-                    $grupoEventos[] = $grupoEvento;
-                }
+	/**
+	 * Retorna o grupo evento
+	 * @return GrupoEvento
+	 */
+	function getGrupoEventoAtivosPorTipo($tipo = 0) {
+		$grupoEventos = null;
+		foreach ($this->getGrupoEvento() as $grupoEvento) {
+			if ($grupoEvento->verificarSeEstaAtivo()) {
+				if ($tipo === 0) {
+					$grupoEventos[] = $grupoEvento;
+				}
+				if ($tipo === EventoTipo::tipoCulto && $grupoEvento->getEvento()->verificaSeECulto()) {
+					$grupoEventos[] = $grupoEvento;
+				}
                 if ($tipo === EventoTipo::tipoCelula && $grupoEvento->getEvento()->verificaSeECelula()) {
                     $grupoEventos[] = $grupoEvento;
                 }
@@ -1021,19 +1021,6 @@ class Grupo extends CircuitoEntity {
         }
         return $grupoEventos;
     }
-
-//    function getGrupoEventoRevisao() {
-//        $eventos = null;
-//        if (!empty($this->getGrupoEvento())) {
-//            foreach ($this->getGrupoEvento() as $ge) {
-//                if ($ge->verificarSeEstaAtivo() && $ge->getEvento()->verificaSeERevisao()) {
-//                    $eventos[] = $ge;
-//                }
-//            }
-//        }
-//        $this->setEventos($eventos);
-//        return $this->getEventos();
-//    }
 
     function setGrupoEvento($grupoEvento) {
         $this->grupoEvento = $grupoEvento;

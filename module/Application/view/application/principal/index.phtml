@@ -162,14 +162,23 @@ Período Atual <?php echo Funcoes::montaPeriodo($this->periodoFinal)[0]; ?>
 			$label = 'Sexo não informado';
 			break;
 		}
-		echo '<div class="col-lg-3 col-md-3 col-sm-3 col-xs-6">';
-		echo '<div class="panel text-center br-a br-grey">';
-		echo '<div class="panel-body">';
-		echo '<h1 class="fs16 mt5 mbn">'.$valor.'</h1>';
-		echo '<h6 class="text-info">'.$label.'</h6>';
-		echo '</div>';
-		echo '</div>';
-		echo '</div>';
+
+		$mostrar = true;
+		if($this->entidade->getEntidadeTipo()->getId() === EntidadeTipo::regiao
+			&& $indiceNumeroGrandes === 5){
+				$mostrar = false;
+			}
+
+		if($mostrar){
+			echo '<div class="col-lg-3 col-md-3 col-sm-3 col-xs-6">';
+			echo '<div class="panel text-center br-a br-grey">';
+			echo '<div class="panel-body">';
+			echo '<h1 class="fs16 mt5 mbn">'.$valor.'</h1>';
+			echo '<h6 class="text-info">'.$label.'</h6>';
+			echo '</div>';
+			echo '</div>';
+			echo '</div>';
+		}
 	}
 ?>
 </div>
@@ -352,6 +361,9 @@ for ($indice = 1; $indice <= $numeroIndices; $indice++) {
 </div>
 <!-- fim celula -->
 
+<?php 
+	if($this->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::regiao){ 
+?>
 <!-- cursos -->
 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 admin-grid">
 <div class="panel panel-collapsed" id="p3">
@@ -370,56 +382,57 @@ Alunos
 	<span class="label label-danger" data-placement="bottom" data-toggle="popover" data-content="Reprovado" style="cursor: pointer;">R</span>
 </div>
 <?php
-	if($this->turmas){
-		echo '<div class="row mb10">';
-		foreach($this->turmas as $turma){
-			$relatorio = $this->relatorioCursos[$turma->getId()];
-			if($relatorio[Situacao::ATIVO] == ''){
-				$relatorio[Situacao::ATIVO] = 0;
+		if($this->turmas){
+			echo '<div class="row mb10">';
+			foreach($this->turmas as $turma){
+				$relatorio = $this->relatorioCursos[$turma->getId()];
+				if($relatorio[Situacao::ATIVO] == ''){
+					$relatorio[Situacao::ATIVO] = 0;
+				}
+				if($relatorio[Situacao::ESPECIAL] == ''){
+					$relatorio[Situacao::ESPECIAL] = 0;
+				}
+				if($relatorio[Situacao::DESISTENTE] == ''){
+					$relatorio[Situacao::DESISTENTE] = 0;
+				}
+				if($relatorio[Situacao::REPROVADO_POR_FALTA] == ''){
+					$relatorio[Situacao::REPROVADO_POR_FALTA] = 0;
+				}
+				$valor = ($relatorio[Situacao::ATIVO] + $relatorio[Situacao::ESPECIAL]);
+				if($valor == ''){
+					$valor = 0;
+				}
+				$modulo = 'SEM AULA ABERTA';
+				if($turma->getTurmaAulaAtiva()){
+					$modulo = $turma->getTurmaAulaAtiva()->getAula()->getDisciplina()->getNome();
+				}
+				$label = $modulo.' - ' . Funcoes::mesPorExtenso($turma->getMes(), 1) . '/' . $turma->getAno();
+				echo '<div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">';
+				echo '<div class="panel panel-tile text-center br-a br-grey">';
+				echo '<div class="panel-body" style="padding-bottom: 0px;">';
+				echo '<h1 class="fs30 mt5 mbn">'.$valor.'</h1>';
+				echo '<h6>'.$label.'</h6>';
+				echo '</div>';
+				echo '<div class="panel-footer br-t p12">';
+				echo '<span class="fs11">';
+				echo '<span class="label label-success">A - '.$relatorio[Situacao::ATIVO].'</span>';
+				echo ' <span class="label label-info">E - '.$relatorio[Situacao::ESPECIAL].'</span>';
+				echo ' <span class="label label-warning">D - '.$relatorio[Situacao::DESISTENTE].'</span>';
+				echo ' <span class="label label-danger">R - '.$relatorio[Situacao::REPROVADO_POR_FALTA].'</span>';
+				echo '</span>';
+				echo '</div>';
+				echo '</div>';
+				echo '</div>';
 			}
-			if($relatorio[Situacao::ESPECIAL] == ''){
-				$relatorio[Situacao::ESPECIAL] = 0;
-			}
-			if($relatorio[Situacao::DESISTENTE] == ''){
-				$relatorio[Situacao::DESISTENTE] = 0;
-			}
-			if($relatorio[Situacao::REPROVADO_POR_FALTA] == ''){
-				$relatorio[Situacao::REPROVADO_POR_FALTA] = 0;
-			}
-			$valor = ($relatorio[Situacao::ATIVO] + $relatorio[Situacao::ESPECIAL]);
-			if($valor == ''){
-				$valor = 0;
-			}
-			$modulo = 'SEM AULA ABERTA';
-			if($turma->getTurmaAulaAtiva()){
-				$modulo = $turma->getTurmaAulaAtiva()->getAula()->getDisciplina()->getNome();
-			}
-			$label = $modulo.' - ' . Funcoes::mesPorExtenso($turma->getMes(), 1) . '/' . $turma->getAno();
-			echo '<div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">';
-			echo '<div class="panel panel-tile text-center br-a br-grey">';
-			echo '<div class="panel-body" style="padding-bottom: 0px;">';
-			echo '<h1 class="fs30 mt5 mbn">'.$valor.'</h1>';
-			echo '<h6>'.$label.'</h6>';
-			echo '</div>';
-			echo '<div class="panel-footer br-t p12">';
-			echo '<span class="fs11">';
-			echo '<span class="label label-success">A - '.$relatorio[Situacao::ATIVO].'</span>';
-			echo ' <span class="label label-info">E - '.$relatorio[Situacao::ESPECIAL].'</span>';
-			echo ' <span class="label label-warning">D - '.$relatorio[Situacao::DESISTENTE].'</span>';
-			echo ' <span class="label label-danger">R - '.$relatorio[Situacao::REPROVADO_POR_FALTA].'</span>';
-			echo '</span>';
-			echo '</div>';
-			echo '</div>';
 			echo '</div>';
 		}
-		echo '</div>';
-	}
 ?>
 </div>
 
 </div>
 </div>
 <!-- fim cursos -->
+<?php } ?>
 
 <?php
 	if($this->discipulado){
