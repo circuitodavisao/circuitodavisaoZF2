@@ -5,6 +5,7 @@ namespace Application\Model\ORM;
 use Application\Controller\Helper\Constantes;
 use Application\Model\Entity\FatoCelula;
 use Application\Model\Entity\FatoCiclo;
+use DateTime;
 use Exception;
 
 /**
@@ -90,4 +91,12 @@ class FatoCelulaORM extends CircuitoORM {
 		}
 	}
 
+  public function fatoCelulaExcluirRelatorioSegunda() {
+    $dateFormatada = DateTime::createFromFormat('Y-m-d', date('Y-m-d'));
+    $dataEmString = $dateFormatada->format('Y-m-d');
+    $dqlExcluirFatoCelula = "DELETE FROM ".Constantes::$ENTITY_FATO_CELULA." fcel WHERE fcel.data_criacao = ?1";
+    $result = $this->getEntityManager()->createQuery($dqlExcluirFatoCelula)
+    ->setParameter(1, $dataEmString)
+    ->getResult();
+	}
 }
