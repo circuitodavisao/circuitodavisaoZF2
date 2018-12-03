@@ -73,6 +73,7 @@ return array(
     'Application\Model\ORM\HierarquiaORM'                        => __DIR__ . '/src/Application/Model/ORM/HierarquiaORM.php',
     'Application\Model\ORM\TurmaORM'                             => __DIR__ . '/src/Application/Model/ORM/TurmaORM.php',
     'Application\Model\ORM\EleitorORM'                           => __DIR__ . '/src/Application/Model/ORM/EleitorORM.php',
+    'Application\Model\ORM\DimensaoORM'                          => __DIR__ . '/src/Application/Model/ORM/DimensaoORM.php',
     'Application\Model\ORM\RepositorioORM'                       => __DIR__ . '/src/Application/Model/ORM/RepositorioORM.php',
     'Application\Model\ORM\FatoDiscipuladoORM'                   => __DIR__ . '/src/Application/Model/ORM/FatoDiscipuladoORM.php',
     'Application\Model\ORM\FatoFinanceiroORM'                    => __DIR__ . '/src/Application/Model/ORM/FatoFinancerioORM.php',

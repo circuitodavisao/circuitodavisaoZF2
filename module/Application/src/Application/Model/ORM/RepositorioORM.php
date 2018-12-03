@@ -287,7 +287,7 @@ class RepositorioORM {
         return $this->_turmaPessoaFrequenciaORM;
     }
 
-    /**
+    /**fatoCicloExcluirRelatorioSegunda
      * Metodo public para obter a instancia do TurmaPessoaAulaORM
      * @return TurmaPessoaAulaORM
      */
@@ -388,11 +388,11 @@ class RepositorioORM {
 
     /**
      * Metodo public para obter a instancia do DimensaoTipoORM
-     * @return CircuitoORM
+     * @return DimensaoORM
      */
     public function getDimensaoORM() {
         if (is_null($this->_dimensaoORM)) {
-            $this->_dimensaoORM = new CircuitoORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_DIMENSAO);
+            $this->_dimensaoORM = new DimensaoORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_DIMENSAO);
         }
         return $this->_dimensaoORM;
     }
@@ -634,7 +634,7 @@ class RepositorioORM {
         }
         return $this->_fatoSetentaORM;
     }
- 
+
     /**
      * Metodo public para obter a instancia do CircuitoORM
      * @return CircuitoORM
@@ -656,7 +656,7 @@ class RepositorioORM {
         }
         return $this->_registroAcaoORM;
     }
- 
+
     /**
      * Metodo public para obter a instancia do CircuitoORM
      * @return FatoDiscipuladoORM
@@ -667,7 +667,7 @@ class RepositorioORM {
         }
         return $this->_fatoDiscipuladoORM;
     }
-	
+
     /**
      * Metodo public para obter a instancia do CircuitoORM
      * @return FatoCelulaDiscipuladoORM
@@ -678,7 +678,7 @@ class RepositorioORM {
         }
         return $this->_fatoCelulaDiscipuladoORM;
     }
- 
+
     /**
      * Metodo public para obter a instancia EntityManager com acesso ao banco de dados
      * @return EntityManager
