@@ -491,7 +491,7 @@ class RepositorioORM {
      */
     public function getSolicitacaoSituacaoORM() {
         if (is_null($this->_solicitacaoSituacaoORM)) {
-            $this->_solicitacaoSituacaoORM = new SolicitacaoTipoORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_SOLICITACAO_SITUACAO);
+            $this->_solicitacaoSituacaoORM = new SolicitacaoSituacaoORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_SOLICITACAO_SITUACAO);
         }
         return $this->_solicitacaoSituacaoORM;
     }
