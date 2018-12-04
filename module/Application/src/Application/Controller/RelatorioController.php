@@ -442,7 +442,7 @@ class RelatorioController extends CircuitoController {
 					if($entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
 						$relatorioAjustado[$grupo->getGrupoEquipe()->getEntidadeAtiva()->getNome()][$turma->getId()][$situacao->getNome()]++;
 					}
-					if($entidade->getEntidadeTipo()->getId() === EntidadeTipo::equipe 
+					if($entidade->getEntidadeTipo()->getId() === EntidadeTipo::equipe
 						|| $entidade->getEntidadeTipo()->getId() === EntidadeTipo::subEquipe){
 						$relatorioAjustado[$grupo->getGrupoSubEquipe()->getEntidadeAtiva()->infoEntidade()][$turma->getId()][$situacao->getNome()]++;
 					}
@@ -580,6 +580,10 @@ class RelatorioController extends CircuitoController {
 		if($periodo > 0){
 			$arrayPeriodoDoMes[0] = $periodo;
 			$arrayPeriodoDoMes[1] = $periodo;
+		}
+		if($periodo === 'atual'){
+			$arrayPeriodoDoMes[0] = 0;
+			$arrayPeriodoDoMes[1] = 0;
 		}
 		$diferencaDePeriodos = self::diferencaDePeriodos($arrayPeriodoDoMes[0], $arrayPeriodoDoMes[1], $mes, $ano);
 		if($tudo){
@@ -1290,7 +1294,7 @@ class RelatorioController extends CircuitoController {
 					case 4: $ehElite = $fatoSetenta->getE4(); break;
 					case 5: $ehElite = $fatoSetenta->getE5(); break;
 					case 6: $ehElite = $fatoSetenta->getE6(); break;
-					}	
+					}
 				}
 			}
 			$resposta = 0;
@@ -1311,7 +1315,7 @@ class RelatorioController extends CircuitoController {
 	public static function diferencaDePeriodos($periodoInicial, $periodoFinal, $mes = null, $ano = null){
 		$contador = 0;
 		for ($indiceDeArrays = $periodoInicial; $indiceDeArrays <= $periodoFinal; $indiceDeArrays++) {
-			$contador++;	
+			$contador++;
 		}
 		return $contador;
 	}
@@ -1903,7 +1907,7 @@ public function alunosNaSemanaAction(){
 					if($solicitacaoSituacaoAtiva->getSituacao()->getId() === Situacao::CONCLUIDO && $dataAjustadaDaSolicitacao >= $dataInicioPeriodo && $dataAjustadaDaSolicitacao <= $dataFimPeriodo){
 						if($grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($solicitacao->getObjeto1())){
 							$nomeDaEquipe = $grupo->getGrupoEquipe()->getEntidadeAtiva()->getNome();
-						} 
+						}
 						if($solicitacao->getSolicitacaoTipo()->getId() === SolicitacaoTipo::REMOVER_CELULA){
 							$relatorioCelulasExcluidas[$nomeDaEquipe][$indiceDeArrays]++;
 							$relatorioCelulasExcluidas[$nomeDaEquipe]['fotoDaEquipe'] = $grupo->getGrupoEquipe()->getFotosLideresAtivos();
@@ -1947,7 +1951,7 @@ public function alunosNaSemanaAction(){
 		$dados['ano'] = $ano;
 		return new ViewModel($dados);
 	}
-	
+
 	public function setentaAction() {
 		$request = $this->getRequest();
 		$dados = array();
@@ -1967,7 +1971,7 @@ public function alunosNaSemanaAction(){
 			if($ano == 2018 && $mes <= 10){
 				$processar = false;
 			}
-			
+
 			if($processar){
 				if($entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
 					$grupoIgreja = $entidade->getGrupo()->getGrupoIgreja();
@@ -2007,7 +2011,7 @@ public function alunosNaSemanaAction(){
 		self::registrarLog(RegistroAcao::VER_RELATORIO_SETENTA, $extra = '');
 		return new ViewModel($dados);
 	}
-	
+
 	public function registroAction(){
 		$sessao = new Container(Constantes::$NOME_APLICACAO);
 
@@ -2061,7 +2065,7 @@ public function alunosNaSemanaAction(){
 
 	static public function relatorioDiscipulado($repositorio, $grupo, $mesAnterior, $anoAnterior, $tradutor){
 		$relatorio = null;
-		if($grupo->getGrupoEventoAtivosPorTipo(EventoTipo::tipoDiscipulado) 
+		if($grupo->getGrupoEventoAtivosPorTipo(EventoTipo::tipoDiscipulado)
 			&& $fatoDiscipulados = $repositorio->getFatoDiscipuladoORM()->entidadePorGrupoMesAno($grupo->getId(), $mesAnterior, $anoAnterior)){
 				$relatorio = array();
 
