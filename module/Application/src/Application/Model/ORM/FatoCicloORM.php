@@ -323,7 +323,7 @@ class FatoCicloORM extends CircuitoORM {
 			->setParameter(3, $dataDoFimFormatada)
 			->getResult();
 
-		
+
 		$somaResultado = $resultado[0]['soma'];
 		return $somaResultado;
 	}
@@ -368,10 +368,10 @@ class FatoCicloORM extends CircuitoORM {
 								if(
 									($grupoPessoa->verificarSeEstaAtivo() && $grupoPessoa->getGrupoPessoaTipo()->getId() === GrupoPessoaTipo::VISITANTE)
 									|| (
-										!$grupoPessoa->verificarSeEstaAtivo() 
+										!$grupoPessoa->verificarSeEstaAtivo()
 										&& $grupoPessoa->getGrupoPessoaTipo()->getId() === GrupoPessoaTipo::VISITANTE
 										&& $dataDeInativacaoEmTempo >= $inicioDoPeriodoEmTempo
-										&& $dataDeInativacaoEmTempo <= $fimDoPeriodoEmTempo	
+										&& $dataDeInativacaoEmTempo <= $fimDoPeriodoEmTempo
 									)
 								){
 									$visitantes++;
@@ -398,6 +398,15 @@ class FatoCicloORM extends CircuitoORM {
 		$relatorio['visitantes'] = $visitantes;
 		$relatorio['arregimentacao'] = $somaResultado;
 		return $relatorio;
+	}
+
+	public function fatoCicloExcluirRelatorioSegunda() {
+    $dateFormatada = DateTime::createFromFormat('Y-m-d', date('Y-m-d'));
+    $dataEmString = $dateFormatada->format('Y-m-d');
+    $dqlExcluirFatoCiclo = "DELETE from ".Constantes::$ENTITY_FATO_CICLO." fcic where fcic.data_criacao = ?1";
+    $result = $this->getEntityManager()->createQuery($dqlExcluirFatoCiclo)
+    ->setParameter(1, $dataEmString)
+    ->getResult();
 	}
 
 }
