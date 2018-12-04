@@ -2068,8 +2068,6 @@ class CadastroController extends CircuitoController {
 		$grupo = $entidade->getGrupo();
 		$grupoIgreja = $grupo->getGrupoIgreja();
 		$grupoPaiFilhoFilhos = $grupo->getGrupoPaiFilhoFilhosAtivosReal();
-		/* Verificando se ja tem alguma solicitacao para a pessoa nao deixa ele se solicitado denovo */
-		$solicitacoes = $grupoIgreja->getSolicitacoesNaoRealizadas();
 
 		$solicitacaoTipos = $this->getRepositorio()->getSolicitacaoTipoORM()->encontrarTodos();
 		$formSolicitacao = new SolicitacaoForm('formSolicitacao');
@@ -2178,30 +2176,13 @@ class CadastroController extends CircuitoController {
 				}
 			}
 		}
-		/* alunos */
-		$turmas = $grupoIgreja->getTurma();
-		$todosAlunos = false;
-		if($entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja ||
-			($pessoa->getPessoaCursoAcessoAtivo() && $pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::COORDENADOR)){
-				$todosAlunos = true;
-			}
+
+		$numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupo);
+		$relatorioInicial = $this->getRepositorio()->getFatoCursoORM()->encontrarFatoCursoPorNumeroIdentificador($numeroIdentificador);
 		$alunos = array();
-		foreach($turmas as $turma){
-			foreach($turma->getTurmaPessoa() as $turmaPessoa){
-				if($turmaPessoa->verificarSeEstaAtivo() &&
-					($turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getId() === Situacao::ATIVO ||
-					$turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getId() === Situacao::ESPECIAL)
-				){
-					if($todosAlunos){
-						$alunos[] = $turmaPessoa;
-					}else{
-						if ($grupoPessoaAtivo = $turmaPessoa->getPessoa()->getGrupoPessoaAtivo()) {
-							if($grupoPessoaAtivo->getGrupo()->getGrupoEquipe()->getId() === $entidade->getGrupo()->getId()){
-								$alunos[] = $turmaPessoa;
-							}
-						}
-					}
-				}
+		foreach($relatorioInicial as $relatorio){
+			if($relatorio->getSituacao_id() === Situacao::ATIVO || $relatorio->getSituacao_id() === Situacao::ESPECIAL){
+				$alunos[] = $this->getRepositorio()->getTurmaPessoaORM()->encontrarPorId($relatorio->getTurma_pessoa_id());
 			}
 		}
 
