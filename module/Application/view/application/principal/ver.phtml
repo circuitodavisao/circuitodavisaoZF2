@@ -15,85 +15,92 @@ echo '</div>';
 echo '<div class="panel-body">';
 $tamangoMdELg = 12;
 if (count($this->responsabilidades) == 2) {
-    $tamangoMdELg = 6;
+	$tamangoMdELg = 6;
 }
 foreach ($this->responsabilidades as $responsavel) {
-    $pessoa = $responsavel->getPessoa();
-    $formulario = new PerfilForm('formulario', $pessoa);
-    echo '<div class="admin-form col-xs-12 col-sm-12 col-md-' . $tamangoMdELg . ' col-lg-' . $tamangoMdELg . '">';
-    echo $this->perfil($pessoa, $formulario, $naoMostrarOpcoes = false);
-    echo '</div>';
+	$pessoa = $responsavel->getPessoa();
+	$formulario = new PerfilForm('formulario', $pessoa);
+	echo '<div class="admin-form col-xs-12 col-sm-12 col-md-' . $tamangoMdELg . ' col-lg-' . $tamangoMdELg . '">';
+	echo $this->perfil($pessoa, $formulario, $naoMostrarOpcoes = false);
+	echo '</div>';
 }
 echo '</div>';
 echo '</div>';
 
 if ($this->mostrarParaReenviarEmails) {
-echo '<div class="panel panel-danger mw1000 center-block">';
-echo '<div class="panel-heading">';
-echo 'Reenviar Email de acesso';
-echo '</div>';
-echo '<div class="panel-body">';
-    foreach ($this->responsabilidades as $grupoResponsavel) {
-        $pessoa = $grupoResponsavel->getPessoa();
-        if ($pessoa->getToken()) {
-            $nome = $pessoa->getNomePrimeiro();
-            $extraBotaoEmail = $this->funcaoOnClick('funcaoCircuito("principalNovoEmailParaEnviar", ' . $pessoa->getId() . ')');
-            $labelBotao = 'Reenviar para: ' . $nome;
-            echo $this->botaoSimples(
-                    $labelBotao, $extraBotaoEmail, BotaoSimples::botaoMenorImportancia, BotaoSimples::posicaoAEsquerda);
-        }
-    }
-echo '</div>';
-echo '</div>';
+	echo '<div class="panel panel-danger mw1000 center-block">';
+	echo '<div class="panel-heading">';
+	echo 'Reenviar Email de acesso';
+	echo '</div>';
+	echo '<div class="panel-body">';
+	foreach ($this->responsabilidades as $grupoResponsavel) {
+		$pessoa = $grupoResponsavel->getPessoa();
+		if ($pessoa->getToken()) {
+			$nome = $pessoa->getNomePrimeiro();
+			$extraBotaoEmail = $this->funcaoOnClick('funcaoCircuito("principalNovoEmailParaEnviar", ' . $pessoa->getId() . ')');
+			$labelBotao = 'Reenviar para: ' . $nome;
+			echo $this->botaoSimples(
+				$labelBotao, $extraBotaoEmail, BotaoSimples::botaoMenorImportancia, BotaoSimples::posicaoAEsquerda);
+		}
+	}
+	echo '</div>';
+	echo '</div>';
 }
 
 echo '<div class="panel panel-primary mw1000 center-block">';
 echo '<div class="panel-heading">';
-echo 'C&eacute;lula(s)';
+if(count($this->eventos) === 0) {
+	$extraBotaoArrumarFatoLider = $this->funcaoOnClick('mostrarSplash(); funcaoCircuito("principalArrumarFatoLider", ' . $this->idGrupo . ')');
+	$botaoArrumarFatoLider = $this->botaoSimples('C&eacute;lula(s)', $extraBotaoArrumarFatoLider, BotaoSimples::botaoImportante, BotaoSimples::larguraMaxima);
+	echo $botaoArrumarFatoLider;
+}else{
+	echo 'C&eacute;lula(s)';
+}
 echo '</div>';
 echo '<div class="panel-body">';
 echo $this->listagemDeEventos('', $this->eventos);
+
 echo '</div>';
 echo '</div>';
 
 if ($this->entidade->getEntidadeTipo()->getId() === EntidadeTipo::subEquipe) {
-echo '<div class="panel panel-primary mw1000 center-block">';
-echo '<div class="panel-heading">';
-echo 'Time';
-echo '</div>';
+	echo '<div class="panel panel-primary mw1000 center-block">';
+	echo '<div class="panel-heading">';
+	echo 'Time';
+	echo '</div>';
 
-echo '<div class="panel-body center-block">';
-$extraAlterarNumeracao = $this->funcaoOnClick('mostrarSplash(); funcaoCircuito("principalNumeracao", ' . $this->idGrupo . ')');
-$botaoAlterarNumeracao = $this->botaoSimples('Alterar Numeração', $extraAlterarNumeracao, BotaoSimples::botaoImportante, BotaoSimples::larguraMaxima);
+	echo '<div class="panel-body center-block">';
+	$extraAlterarNumeracao = $this->funcaoOnClick('mostrarSplash(); funcaoCircuito("principalNumeracao", ' . $this->idGrupo . ')');
+	$botaoAlterarNumeracao = $this->botaoSimples('Alterar Numeração', $extraAlterarNumeracao, BotaoSimples::botaoImportante, BotaoSimples::larguraMaxima);
 
-echo '<div class="col-lg-6 col-md-6 col-sm-6">';
-echo '<div class="btn btn-default btn-block" disabled>'.$this->entidade->infoEntidade().'</div>';
-echo '</div>';
-echo '<div class="col-lg-6 col-md-6 col-sm-6">';
-echo $botaoAlterarNumeracao;
-echo '</div>';
+	echo '<div class="col-lg-6 col-md-6 col-sm-6">';
+	echo '<div class="btn btn-default btn-block" disabled>'.$this->entidade->infoEntidade().'</div>';
+	echo '</div>';
+	echo '<div class="col-lg-6 col-md-6 col-sm-6">';
+	echo $botaoAlterarNumeracao;
+	echo '</div>';
 
-echo '</div>';
-echo '</div>';
+	echo '</div>';
+	echo '</div>';
 }
 
 if ($this->entidade->getEntidadeTipo()->getId() === EntidadeTipo::equipe) {
-echo '<div class="panel panel-primary mw1000 center-block">';
-echo '<div class="panel-heading">';
-echo 'Time';
-echo '</div>';
+	echo '<div class="panel panel-primary mw1000 center-block">';
+	echo '<div class="panel-heading">';
+	echo 'Time';
+	echo '</div>';
 
-echo '<div class="panel-body center-block">';
-$extraAlterarNumeracao = $this->funcaoOnClick('mostrarSplash(); funcaoCircuito("principalNome", ' . $this->idGrupo . ')');
-$botaoAlterarNumeracao = $this->botaoSimples('Alterar Nome', $extraAlterarNumeracao, BotaoSimples::botaoImportante, BotaoSimples::larguraMaxima);
+	echo '<div class="panel-body center-block">';
+	$extraAlterarNumeracao = $this->funcaoOnClick('mostrarSplash(); funcaoCircuito("principalNome", ' . $this->idGrupo . ')');
+	$botaoAlterarNumeracao = $this->botaoSimples('Alterar Nome', $extraAlterarNumeracao, BotaoSimples::botaoImportante, BotaoSimples::larguraMaxima);
 
-echo '<div class="col-lg-6 col-md-6 col-sm-6">';
-echo '<div class="btn btn-default btn-block" disabled>'.$this->entidade->infoEntidade().'</div>';
-echo '</div>';
-echo '<div class="col-lg-6 col-md-6 col-sm-6">';
-echo $botaoAlterarNumeracao;
-echo '</div>';
+	echo '<div class="col-lg-6 col-md-6 col-sm-6">';
+	echo '<div class="btn btn-default btn-block" disabled>'.$this->entidade->infoEntidade().'</div>';
+	echo '</div>';
+	echo '<div class="col-lg-6 col-md-6 col-sm-6">';
+	echo $botaoAlterarNumeracao;
+	echo '</div>';
 
-echo '</div>';
-echo '</div>';
+	echo '</div>';
+	echo '</div>';
 }
