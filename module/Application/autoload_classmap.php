@@ -64,6 +64,7 @@ return array(
     'Application\Model\ORM\GrupoPessoaORM'                       => __DIR__ . '/src/Application/Model/ORM/GrupoPessoaORM.php',
     'Application\Model\ORM\FatoCicloORM'                         => __DIR__ . '/src/Application/Model/ORM/FatoCicloORM.php',
     'Application\Model\ORM\DisciplinaORM'                        => __DIR__ . '/src/Application/Model/ORM/DisciplinaORM.php',
+    'Application\Model\ORM\SolicitacaoSituacaoORM'               => __DIR__ . '/src/Application/Model/ORM/SolicitacaoSituacaoORM.php',
     'Application\Model\ORM\GrupoCvORM'                           => __DIR__ . '/src/Application/Model/ORM/GrupoCvORM.php',
     'Application\Model\ORM\TurmaPessoaORM'                       => __DIR__ . '/src/Application/Model/ORM/TurmaPessoaORM.php',
     'Application\Model\ORM\SolicitacaoORM'                       => __DIR__ . '/src/Application/Model/ORM/SolicitacaoORM.php',
