@@ -346,31 +346,24 @@ class IndexController extends CircuitoController {
 		$html = '';
 
 		/* buscando solicitações */
-		$periodo = -1;
-		$arrayPeriodo = Funcoes::montaPeriodo($periodo);
-		$stringComecoDoPeriodo = $arrayPeriodo[3] . '-' . $arrayPeriodo[2] . '-' . $arrayPeriodo[1];
-		$stringFimDoPeriodo = $arrayPeriodo[6] . '-' . $arrayPeriodo[5] . '-' . $arrayPeriodo[4];
-		$html .= "<br />stringComecoDoPeriodo$stringComecoDoPeriodo";
-		$html .= "<br />stringFimDoPeriodo$stringFimDoPeriodo";
-		$dateInicialFormatada = DateTime::createFromFormat('Y-m-d', $stringComecoDoPeriodo);
-		$dateFinalFormatada = DateTime::createFromFormat('Y-m-d', $stringFimDoPeriodo);
-		$solicitacoesPorData = $this->getRepositorio()->getSolicitacaoORM()->encontrarTodosPorDataDeCriacao($dateInicialFormatada, $dateFinalFormatada);
+		$html .= "<br />Buscando Todas Solicitações Aceitas/Agendadas";
+		$solicitacaoSituacaoAceitasAgendasAtivas = $this->getRepositorio()->getSolicitacaoSituacaoORM()->encontrarSolicitacoesAceitasAgendadasAtivas();
 
-		if ($solicitacoesPorData) {
+		if ($solicitacaoSituacaoAceitasAgendasAtivas) {
 
 			/* Ordenando solicitações */
 			$solicitacoesPorHierarquia = array();
-			foreach ($solicitacoesPorData as $arraySolicitacao) {
-				$solicitacao = $this->getRepositorio()->getSolicitacaoORM()->encontrarPorId($arraySolicitacao['id']);
+			foreach ($solicitacaoSituacaoAceitasAgendasAtivas as $solicitacaoSituacao) {
+				$solicitacao = $solicitacaoSituacao->getSolicitacao();
 				if($solicitacao->getSolicitacaoSituacaoAtiva()->getSituacao()->getId() === Situacao::ACEITO_AGENDADO){
 					$idGrupoParaVerificar = 0;
 					if($solicitacao->getSolicitacaoTipo()->getId() !== SolicitacaoTipo::TRANSFERIR_ALUNO){
-						$idGrupoParaVerificar = $arraySolicitacao['objeto1'];
+						$idGrupoParaVerificar = $solicitacao->getObjeto1();
 					}else{
-						$idGrupoParaVerificar = $arraySolicitacao['objeto2'];
+						$idGrupoParaVerificar = $solicitacao->getObjeto2();
 					}
 					$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupoParaVerificar);
-					$solicitacoesPorHierarquia[$grupo->contadorDeOndeEstouNaHierarquia()][] = $arraySolicitacao;
+					$solicitacoesPorHierarquia[$grupo->contadorDeOndeEstouNaHierarquia()][] = $solicitacao;
 				}
 			}
 
@@ -381,7 +374,7 @@ class IndexController extends CircuitoController {
 					if($solicitacoesPorHierarquia[$indiceHierarquia]){
 						$html .= '<br />TEM SOLICITACOES';
 						foreach($solicitacoesPorHierarquia[$indiceHierarquia] as $arraySolicitacao){
-							$solicitacao = $this->getRepositorio()->getSolicitacaoORM()->encontrarPorId($arraySolicitacao['id']);
+							$solicitacao = $this->getRepositorio()->getSolicitacaoORM()->encontrarPorId($arraySolicitacao->getId());
 							$idSituacao = $solicitacao->getSolicitacaoSituacaoAtiva()->getSituacao()->getId();
 							if ($idSituacao == Situacao::ACEITO_AGENDADO) {
 								$idSolicitacaoTipo = $solicitacao->getSolicitacaoTipo()->getId();
