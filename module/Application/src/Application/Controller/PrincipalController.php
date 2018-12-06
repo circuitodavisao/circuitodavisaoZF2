@@ -595,31 +595,31 @@ class PrincipalController extends CircuitoController {
       return new ViewModel();
     }
 
-    public function suporteFinalizarAction() {
-      $sessao = new Container(Constantes::$NOME_APLICACAO);
-      $pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($sessao->idPessoa);
-      $request = $this->getRequest();
-      $dadosPost = array_merge_recursive(
-           $request->getPost()->toArray(),
-           $request->getFiles()->toArray()
-       );
-      $tipo = $dadosPost['tipo'];
-      $prioridade = $dadosPost['prioridade'];
-      $descricao = $dadosPost['descricao'];
-      $anexo = $dadosPost['imagem'];
-      $remetente['nome'] = $pessoa->getNomePrimeiroUltimo();
-      $remetente['email'] = $pessoa->getEmail();
-      $Subject = $dadosPost['assunto'].' :: '.$remetente['nome'].' ID('.$sessao->idPessoa.')';
-  		$ToEmail = 'support@circuitodavisao.zendesk.com';
-      $Content = 'Tipo: '.$tipo.'
-                  Prioridade: '.$prioridade.'
-                  Login: '.$remetente['email'].'
-                  Descricao: '.$descricao;
-  		Funcoes::enviarEmail($ToEmail, $Subject, $Content, $remetente, $anexo);
-      return $this->redirect()->toRoute('principal', array(
+	public function suporteFinalizarAction() {
+		$sessao = new Container(Constantes::$NOME_APLICACAO);
+		$pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($sessao->idPessoa);
+		$request = $this->getRequest();
+		$dadosPost = array_merge_recursive(
+			$request->getPost()->toArray(),
+			$request->getFiles()->toArray()
+		);
+		$tipo = $dadosPost['tipo'];
+		$prioridade = $dadosPost['prioridade'];
+		$descricao = $dadosPost['descricao'];
+		$anexo = $dadosPost['imagem'];
+		$remetente['nome'] = $pessoa->getNomePrimeiroUltimo();
+		$remetente['email'] = $pessoa->getEmail();
+		$Subject = $dadosPost['assunto'].' :: '.$remetente['nome'].' ID('.$sessao->idPessoa.')';
+		$ToEmail = 'support@circuitodavisao.zendesk.com';
+		$Content = 'Tipo: '.$tipo.'
+			Prioridade: '.$prioridade.'
+			Login: '.$remetente['email'].'
+			Descricao: '.$descricao;
+		Funcoes::enviarEmail($ToEmail, $Subject, $Content, $remetente, $anexo);
+		return $this->redirect()->toRoute('principal', array(
 			Constantes::$ACTION => 'suporteFinalizado',
-			));
-  	}
+		));
+	}
 
     public function suporteFinalizadoAction() {
       return new ViewModel();
@@ -629,4 +629,18 @@ class PrincipalController extends CircuitoController {
 		return new ViewModel();
 	}
 
+	public function arrumarFatoLiderAction(){
+		$sessao = new Container(Constantes::$NOME_APLICACAO);
+		$idSessao = $sessao->idSessao;
+		if ($idSessao) {
+			$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idSessao);
+			unset($sessao->idSessao);
+			$numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupo);
+			if ($fatoLider = $this->getRepositorio()->getFatoLiderORM()->encontrarFatoLiderPorNumeroIdentificador($numeroIdentificador)) {
+				$fatoLider->setLideres(0);
+				$this->getRepositorio()->getFatoLiderORM()->persistir($fatoLider, $alterarDataDeCriacao = false);
+			}
+			return $this->redirect()->toRoute('principal');
+		}
+	}
 }
