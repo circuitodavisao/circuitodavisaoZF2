@@ -357,10 +357,9 @@ class Menu extends AbstractHelper {
 			$html .= '</li>';
 
 			$html .= '<li>';
-//			$html .= '<a href="/relatorioSetenta" onClick="mostrarSplash();">';
-			$html .= '<a href="#">';
+			$html .= '<a href="/relatorioSetenta" onClick="mostrarSplash();">';
 			$html .= '<span class="fa fa-trophy"></span>';
-			$html .= 'Setenta (Em Manutenção)';
+			$html .= 'Setenta';
 			$html .= '</a>';
 			$html .= '</li>';
 
