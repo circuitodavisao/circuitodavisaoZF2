@@ -2050,8 +2050,8 @@ public function alunosNaSemanaAction(){
 			$dados['filtrado'] = true;
 			$dados['grupoPaiFilhoFlhos'] = $grupoPaiFilhoFilhos;
 		}else{
-			if(date('m') == 12){
-				$mes = 1;
+			if(date('m') == 1){
+				$mes = 12;
 				$ano = date('Y') - 1;
 			}else{
 				$mes = date('m') - 1;
