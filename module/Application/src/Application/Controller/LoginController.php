@@ -543,7 +543,7 @@ class LoginController extends CircuitoController {
         /* Adicionando layout extras */
         $this->colocaTopEBottonModuloLogin($view);
 
-//        return $view;
+        return $view;
     }
 
     /**
