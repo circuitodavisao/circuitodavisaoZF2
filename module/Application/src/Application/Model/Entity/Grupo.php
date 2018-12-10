@@ -847,7 +847,7 @@ class Grupo extends CircuitoEntity {
         return $grupoEventosNoPeriodo;
     }
 
-	function getGrupoPessoasNoPeriodo($periodo, $repositorio = null) {
+	function getGrupoPessoasNoPeriodo($periodo = 0, $repositorio = null) {
 		$grupoPessoasNoPeriodo = array();
 		if($repositorio){
 			if($grupopessoasAtivos = $repositorio->getGrupoPessoaORM()->grupoPessoasAtivosNoPeriodo($this->getid(), $periodo)){
