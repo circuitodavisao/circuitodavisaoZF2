@@ -632,7 +632,7 @@ class IndexController extends CircuitoController {
 				$this->getRepositorio()->getGrupoEventoORM()->persistir($grupoEventoNovo);
 			}
 		}
-		if($linhaDeLancamento = $grupoQueSeraSemeado->getGrupoPessoasNoPeriodo()){
+		if($linhaDeLancamento = $grupoQueSeraSemeado->getGrupoPessoasNoPeriodo($periodo = 0)){
 			foreach($linhaDeLancamento as $grupoPessoa){
 				$grupoPessoaNovo = new GrupoPessoa();
 				$grupoPessoaNovo->setGrupo($grupoNovo);
