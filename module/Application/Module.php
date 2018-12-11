@@ -365,55 +365,60 @@ class Module {
         Container::setDefaultManager($sessionManager);
     }
 
-    public function onBootstrap(MvcEvent $e) {
-        $this->initSession(array(
-            'remember_me_seconds' => 1,
-            'use_cookies' => true,
-            'cookie_httponly' => true,
-            'save_path' => '/tmp',
-        ));
+	public function onBootstrap(MvcEvent $e) {
+		$this->initSession(array(
+			'remember_me_seconds' => 1,
+			'use_cookies' => true,
+			'cookie_httponly' => true,
+			'save_path' => '/tmp',
+		));
 
-        $eventManager = $e->getApplication()->getEventManager();
-        $moduleRouteListener = new ModuleRouteListener();
-        $moduleRouteListener->attach($eventManager);
-        //attach event here
-        $eventManager->attach('route', array($this, 'checkUserAuth'), 2);
+		$eventManager = $e->getApplication()->getEventManager();
+		$moduleRouteListener = new ModuleRouteListener();
+		$moduleRouteListener->attach($eventManager);
+		//attach event here
+		$eventManager->attach('route', array($this, 'checkUserAuth'), 2);
 
-        $viewModel = $e->getApplication()->getMvcEvent()->getViewModel();
-        $sessao = new Container(Constantes::$NOME_APLICACAO);
-        if (!empty($sessao->idEntidadeAtual)) {
-            $serviceManager = $e->getApplication()->getServiceManager();
-            $repositorioORM = new RepositorioORM($serviceManager->get('Doctrine\ORM\EntityManager'));
-            $pessoa = $repositorioORM->getPessoaORM()->encontrarPorId($sessao->idPessoa);
-            $viewModel->pessoa = $pessoa;
-            $entidade = $repositorioORM->getEntidadeORM()->encontrarPorId($sessao->idEntidadeAtual);
-            $viewModel->entidade = $entidade;
+		$viewModel = $e->getApplication()->getMvcEvent()->getViewModel();
+		$sessao = new Container(Constantes::$NOME_APLICACAO);
+		if (!empty($sessao->idPessoa) || !empty($sessao->idEntidadeAtual)) {
+
+			$serviceManager = $e->getApplication()->getServiceManager();
+			$repositorioORM = new RepositorioORM($serviceManager->get('Doctrine\ORM\EntityManager'));
+			if (!empty($sessao->idPessoa)) {
+				$pessoa = $repositorioORM->getPessoaORM()->encontrarPorId($sessao->idPessoa);
+				$viewModel->pessoa = $pessoa;
+			}
+
+			if (!empty($sessao->idEntidadeAtual)) {
+				$entidade = $repositorioORM->getEntidadeORM()->encontrarPorId($sessao->idEntidadeAtual);
+				$viewModel->entidade = $entidade;
+			}
 		}
-
-        $stringHttps = 'https://';
-        $stringUrl = 'circuitodavisaonovo.com.br';
-        if (empty($sessao->idEntidadeAtual) ||
-                empty($sessao->idPessoa) ||
-                $pessoa->getAtualizar_dados() === 'S' ||
-                $e->getRequest()->getUriString() == $stringHttps . 'www.' . $stringUrl ||
-                $e->getRequest()->getUriString() == $stringHttps . 'www.' . $stringUrl . '/' ||
-                $e->getRequest()->getUriString() == $stringHttps . 'www.' . $stringUrl . '/logar' ||
-                $e->getRequest()->getUriString() == $stringHttps . 'www.' . $stringUrl . '/selecionarPerfil' ||
-                $e->getRequest()->getUriString() == $stringHttps . 'www.' . $stringUrl . '/preSaida' ||
-                $e->getRequest()->getUriString() == $stringHttps . 'www.' . $stringUrl . '/cadastroFichaRevisao' ||
-                $e->getRequest()->getUriString() == $stringHttps . 'www.' . $stringUrl . '/lancamentoDiscipulado' ||
-                $e->getRequest()->getUriString() == $stringHttps . $stringUrl ||
-                $e->getRequest()->getUriString() == $stringHttps . $stringUrl . '/' ||
-                $e->getRequest()->getUriString() == $stringHttps . $stringUrl . '/logar' ||
-                $e->getRequest()->getUriString() == $stringHttps . $stringUrl . '/selecionarPerfil' ||
-                $e->getRequest()->getUriString() == $stringHttps . $stringUrl . '/preSaida' ||
-                $e->getRequest()->getUriString() == $stringHttps . $stringUrl . '/cadastroFichaRevisao' ||
-                $e->getRequest()->getUriString() == $stringHttps . $stringUrl . '/lancamentoDiscipulado' ||
-                $sessao->naoMostrarMenu === 1
-        ) {
-            $viewModel->mostrarMenu = 0;
-        }
-    }
+		$stringHttps = 'https://';
+		$stringUrl = 'circuitodavisaonovo.com.br';
+		if (empty($sessao->idEntidadeAtual) ||
+			empty($sessao->idPessoa) ||
+			$pessoa->getAtualizar_dados() === 'S' ||
+			$e->getRequest()->getUriString() == $stringHttps . 'www.' . $stringUrl ||
+			$e->getRequest()->getUriString() == $stringHttps . 'www.' . $stringUrl . '/' ||
+			$e->getRequest()->getUriString() == $stringHttps . 'www.' . $stringUrl . '/logar' ||
+			$e->getRequest()->getUriString() == $stringHttps . 'www.' . $stringUrl . '/selecionarPerfil' ||
+			$e->getRequest()->getUriString() == $stringHttps . 'www.' . $stringUrl . '/preSaida' ||
+			$e->getRequest()->getUriString() == $stringHttps . 'www.' . $stringUrl . '/cadastroFichaRevisao' ||
+			$e->getRequest()->getUriString() == $stringHttps . 'www.' . $stringUrl . '/lancamentoDiscipulado' ||
+			$e->getRequest()->getUriString() == $stringHttps . $stringUrl ||
+			$e->getRequest()->getUriString() == $stringHttps . $stringUrl . '/' ||
+			$e->getRequest()->getUriString() == $stringHttps . $stringUrl . '/logar' ||
+			$e->getRequest()->getUriString() == $stringHttps . $stringUrl . '/selecionarPerfil' ||
+			$e->getRequest()->getUriString() == $stringHttps . $stringUrl . '/preSaida' ||
+			$e->getRequest()->getUriString() == $stringHttps . $stringUrl . '/cadastroFichaRevisao' ||
+			$e->getRequest()->getUriString() == $stringHttps . $stringUrl . '/lancamentoDiscipulado' ||
+			$sessao->naoMostrarMenu === 1
+		) {
+			$viewModel->mostrarMenu = 0;
+		}
+	}
 
     public function checkUserAuth(MvcEvent $e) {
         $router = $e->getRouter();
