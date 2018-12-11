@@ -104,3 +104,14 @@ if ($this->entidade->getEntidadeTipo()->getId() === EntidadeTipo::equipe) {
 	echo '</div>';
 	echo '</div>';
 }
+
+echo '<div class="panel panel-primary mw1000 center-block">';
+echo '<div class="panel-heading">';
+echo 'Ajustes';
+echo '</div>';
+echo '<div class="panel-body">';
+$extraBotaoArrumarLinhaDeLancamento = $this->funcaoOnClick('mostrarSplash(); funcaoCircuito("principalArrumarLinhaDeLancamento", ' . $pessoa->getId() . ')');
+$botaoArrumarLinhaDeLancamento = $this->botaoSimples('Arrumar linha de lançamento', $extraBotaoArrumarLinhaDeLancamento, BotaoSimples::botaoImportante, BotaoSimples::larguraMaxima);
+echo $botaoArrumarLinhaDeLancamento;
+echo '</div>';
+echo '</div>';

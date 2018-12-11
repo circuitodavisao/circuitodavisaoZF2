@@ -15,6 +15,7 @@ use Application\Model\Entity\EventoTipo;
 use Application\Model\Entity\PessoaHierarquia;
 use Application\Model\Entity\Situacao;
 use Application\Model\Entity\Curso;
+use Application\Model\Entity\GrupoPessoa;
 use Application\Controller\RelatorioController;
 use Exception;
 use Zend\Json\Json;
@@ -28,10 +29,10 @@ use Zend\View\Model\ViewModel;
  */
 class PrincipalController extends CircuitoController {
 
-    /**
-     * Função padrão, traz a tela principal
-     * GET /principal
-     */
+	/**
+	 * Função padrão, traz a tela principal
+	 * GET /principal
+	 */
 	public function indexAction() {
 		$sessao = new Container(Constantes::$NOME_APLICACAO);
 
@@ -142,7 +143,7 @@ class PrincipalController extends CircuitoController {
 		$dataFormatada = date_format($date, 'd/m/Y H:i:s');
 		$dados['ultimoAcesso'] = $dataFormatada;
 
-				$view = new ViewModel($dados);
+		$view = new ViewModel($dados);
 		/* Javascript */
 		$layoutJS = new ViewModel();
 		$layoutJS->setTemplate('layout/layout-js-principal');
@@ -151,452 +152,452 @@ class PrincipalController extends CircuitoController {
 		return $view;
 	}
 
-    public function verAction() {
-        $sessao = new Container(Constantes::$NOME_APLICACAO);
-        $idEntidadeAtual = $sessao->idEntidadeAtual;
-    		$entidadeLogada = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
-    		$pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($sessao->idPessoa);
-    		$grupo = $entidadeLogada->getGrupo();
-    		$grupoLogado = $grupo;
-    		$pessoaLogada = $pessoa;
+	public function verAction() {
+		$sessao = new Container(Constantes::$NOME_APLICACAO);
+		$idEntidadeAtual = $sessao->idEntidadeAtual;
+		$entidadeLogada = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+		$pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($sessao->idPessoa);
+		$grupo = $entidadeLogada->getGrupo();
+		$grupoLogado = $grupo;
+		$pessoaLogada = $pessoa;
 
-        $idSessao = $sessao->idSessao;
-        unset($sessao->idSessao);
-        if ($idSessao) {
+		$idSessao = $sessao->idSessao;
+		unset($sessao->idSessao);
+		if ($idSessao) {
 
-            $grupoSessao = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idSessao);
+			$grupoSessao = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idSessao);
 
-            $mostrarParaReenviarEmails = false;
-            foreach ($grupoSessao->getResponsabilidadesAtivas() as $grupoResponsavel) {
-                $pessoaSelecionada = $grupoResponsavel->getPessoa();
-                if ($pessoaSelecionada->getToken()) {
-                    $mostrarParaReenviarEmails = true;
-                }
-            }
+			$mostrarParaReenviarEmails = false;
+			foreach ($grupoSessao->getResponsabilidadesAtivas() as $grupoResponsavel) {
+				$pessoaSelecionada = $grupoResponsavel->getPessoa();
+				if ($pessoaSelecionada->getToken()) {
+					$mostrarParaReenviarEmails = true;
+				}
+			}
 
-            $entidade = $grupoSessao->getEntidadeAtiva();
+			$entidade = $grupoSessao->getEntidadeAtiva();
 
-            $listagemDeEventos = $entidade->getGrupo()->getGrupoEventoAtivosPorTipo(EventoTipo::tipoCelula);
+			$listagemDeEventos = $entidade->getGrupo()->getGrupoEventoAtivosPorTipo(EventoTipo::tipoCelula);
 
-            $dados = array();
-            $dados['idGrupo'] = $idSessao;
-            $dados['entidade'] = $entidade;
-            $dados['grupoLogado'] = $grupoLogado;
-            $dados['grupo'] = $grupoSessao;
-            $dados['pessoaLogada'] = $pessoaLogada;
-            $dados['idEntidadeTipo'] = $entidadeLogada->getTipo_id();
-            $dados['mostrarParaReenviarEmails'] = $mostrarParaReenviarEmails;
-            $dados['responsabilidades'] = $grupoSessao->getResponsabilidadesAtivas();
-            $dados[Constantes::$LISTAGEM_EVENTOS] = $listagemDeEventos;
-            $dados[Constantes::$TIPO_EVENTO] = EventoTipo::tipoCelula;
+			$dados = array();
+			$dados['idGrupo'] = $idSessao;
+			$dados['entidade'] = $entidade;
+			$dados['grupoLogado'] = $grupoLogado;
+			$dados['grupo'] = $grupoSessao;
+			$dados['pessoaLogada'] = $pessoaLogada;
+			$dados['idEntidadeTipo'] = $entidadeLogada->getTipo_id();
+			$dados['mostrarParaReenviarEmails'] = $mostrarParaReenviarEmails;
+			$dados['responsabilidades'] = $grupoSessao->getResponsabilidadesAtivas();
+			$dados[Constantes::$LISTAGEM_EVENTOS] = $listagemDeEventos;
+			$dados[Constantes::$TIPO_EVENTO] = EventoTipo::tipoCelula;
 
-            return new ViewModel($dados);
-        } else {
-            return $this->redirect()->toRoute('principal');
-        }
-    }
+			return new ViewModel($dados);
+		} else {
+			return $this->redirect()->toRoute('principal');
+		}
+	}
 
-    public function grupoExclusaoAction() {
-        $sessao = new Container(Constantes::$NOME_APLICACAO);
-        try {
-            $this->getRepositorio()->iniciarTransacao();
-            $idSessao = $sessao->idSessao;
-            unset($sessao->idSessao);
-            if ($idSessao) {
+	public function grupoExclusaoAction() {
+		$sessao = new Container(Constantes::$NOME_APLICACAO);
+		try {
+			$this->getRepositorio()->iniciarTransacao();
+			$idSessao = $sessao->idSessao;
+			unset($sessao->idSessao);
+			if ($idSessao) {
 
-                $grupoSessao = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idSessao);
+				$grupoSessao = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idSessao);
 
-                $dados = array();
-                $dados['idGrupo'] = $idSessao;
-                $dados['entidade'] = $grupoSessao->getEntidadeAtiva();
-                $dados[Constantes::$EXTRA] = null;
+				$dados = array();
+				$dados['idGrupo'] = $idSessao;
+				$dados['entidade'] = $grupoSessao->getEntidadeAtiva();
+				$dados[Constantes::$EXTRA] = null;
 
-                $view = new ViewModel($dados);
-                /* Javascript */
-                $layoutJS = new ViewModel();
-                $layoutJS->setTemplate('layout/layout-js-exclusao');
-                $view->addChild($layoutJS, 'layoutJSExclusao');
+				$view = new ViewModel($dados);
+				/* Javascript */
+				$layoutJS = new ViewModel();
+				$layoutJS->setTemplate('layout/layout-js-exclusao');
+				$view->addChild($layoutJS, 'layoutJSExclusao');
 
-                return $view;
-            } else {
-                return $this->redirect()->toRoute('principal');
-            }
-            $this->getRepositorio()->fecharTransacao();
-        } catch (Exception $exc) {
-            $this->getRepositorio()->desfazerTransacao();
-            echo $exc->getTraceAsString();
-            $this->direcionaErroDeCadastro($exc->getMessage());
-            CircuitoController::direcionandoAoLogin($this);
-        }
-    }
+				return $view;
+			} else {
+				return $this->redirect()->toRoute('principal');
+			}
+			$this->getRepositorio()->fecharTransacao();
+		} catch (Exception $exc) {
+			$this->getRepositorio()->desfazerTransacao();
+			echo $exc->getTraceAsString();
+			$this->direcionaErroDeCadastro($exc->getMessage());
+			CircuitoController::direcionandoAoLogin($this);
+		}
+	}
 
-    public function novoEmailParaEnviarAction() {
-        $sessao = new Container(Constantes::$NOME_APLICACAO);
-        $idSessao = $sessao->idSessao;
-        if ($idSessao) {
-            $form = new NovoEmailForm(Constantes::$FORM, $idSessao);
+	public function novoEmailParaEnviarAction() {
+		$sessao = new Container(Constantes::$NOME_APLICACAO);
+		$idSessao = $sessao->idSessao;
+		if ($idSessao) {
+			$form = new NovoEmailForm(Constantes::$FORM, $idSessao);
 
-            $pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($idSessao);
+			$pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($idSessao);
 
-            $view = new ViewModel(
-                    array(
-                Constantes::$FORM => $form,
-                'nome' => $pessoa->getNome(),
-            ));
-            $layoutJS = new ViewModel();
-            $layoutJS->setTemplate('layout/layout-js-enviar-email');
-            $view->addChild($layoutJS, 'layoutJSEnviarEmail');
-            unset($sessao->idSessao);
-            return $view;
-        } else {
-            return $this->redirect()->toRoute('principal');
-        }
-    }
+			$view = new ViewModel(
+				array(
+					Constantes::$FORM => $form,
+					'nome' => $pessoa->getNome(),
+				));
+			$layoutJS = new ViewModel();
+			$layoutJS->setTemplate('layout/layout-js-enviar-email');
+			$view->addChild($layoutJS, 'layoutJSEnviarEmail');
+			unset($sessao->idSessao);
+			return $view;
+		} else {
+			return $this->redirect()->toRoute('principal');
+		}
+	}
 
-    public function enviarEmailAction() {
-        $sessao = new Container(Constantes::$NOME_APLICACAO);
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            try {
-                $this->getRepositorio()->iniciarTransacao();
-                $post_data = $request->getPost();
-                $idPessoa = $post_data[Constantes::$INPUT_ID_PESSOA];
-                $pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($idPessoa);
-                $pessoa->setEmail($post_data[Constantes::$INPUT_EMAIL]);
-                $setarDataEHora = false;
-                $this->getRepositorio()->getPessoaORM()->persistir($pessoa, $setarDataEHora);
-                if ($pessoa->getToken()) {
-                    CadastroController::enviarEmailParaCompletarOsDados($this->getRepositorio(), $sessao->idPessoa, $pessoa->getToken(), $pessoa);
-                }
-                $sessao->mostrarNotificacao = true;
-                $sessao->emailEnviado = true;
-                $this->getRepositorio()->fecharTransacao();
-                return $this->redirect()->toRoute('principal');
-            } catch (Exception $exc) {
-                $this->getRepositorio()->desfazerTransacao();
-                echo $exc->getMessage();
-            }
-        }
-    }
+	public function enviarEmailAction() {
+		$sessao = new Container(Constantes::$NOME_APLICACAO);
+		$request = $this->getRequest();
+		if ($request->isPost()) {
+			try {
+				$this->getRepositorio()->iniciarTransacao();
+				$post_data = $request->getPost();
+				$idPessoa = $post_data[Constantes::$INPUT_ID_PESSOA];
+				$pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($idPessoa);
+				$pessoa->setEmail($post_data[Constantes::$INPUT_EMAIL]);
+				$setarDataEHora = false;
+				$this->getRepositorio()->getPessoaORM()->persistir($pessoa, $setarDataEHora);
+				if ($pessoa->getToken()) {
+					CadastroController::enviarEmailParaCompletarOsDados($this->getRepositorio(), $sessao->idPessoa, $pessoa->getToken(), $pessoa);
+				}
+				$sessao->mostrarNotificacao = true;
+				$sessao->emailEnviado = true;
+				$this->getRepositorio()->fecharTransacao();
+				return $this->redirect()->toRoute('principal');
+			} catch (Exception $exc) {
+				$this->getRepositorio()->desfazerTransacao();
+				echo $exc->getMessage();
+			}
+		}
+	}
 
-    public function emailAction() {
-        $sessao = new Container(Constantes::$NOME_APLICACAO);
-        $idSessao = $sessao->idSessao;
-        if ($idSessao) {
-            $form = new NovoEmailForm(Constantes::$FORM, $idSessao);
-            $pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($idSessao);
-            $view = new ViewModel(
-                    array(
-                Constantes::$FORM => $form,
-                'pessoa' => $pessoa,
-            ));
-            $layoutJS = new ViewModel();
-            $layoutJS->setTemplate('layout/layout-js-enviar-email');
-            $view->addChild($layoutJS, 'layoutJSEnviarEmail');
-            unset($sessao->idSessao);
-            return $view;
-        } else {
-            return $this->redirect()->toRoute('principal');
-        }
-    }
+	public function emailAction() {
+		$sessao = new Container(Constantes::$NOME_APLICACAO);
+		$idSessao = $sessao->idSessao;
+		if ($idSessao) {
+			$form = new NovoEmailForm(Constantes::$FORM, $idSessao);
+			$pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($idSessao);
+			$view = new ViewModel(
+				array(
+					Constantes::$FORM => $form,
+					'pessoa' => $pessoa,
+				));
+			$layoutJS = new ViewModel();
+			$layoutJS->setTemplate('layout/layout-js-enviar-email');
+			$view->addChild($layoutJS, 'layoutJSEnviarEmail');
+			unset($sessao->idSessao);
+			return $view;
+		} else {
+			return $this->redirect()->toRoute('principal');
+		}
+	}
 
-    public function emailSalvarAction() {
-        $sessao = new Container(Constantes::$NOME_APLICACAO);
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            try {
-                $this->getRepositorio()->iniciarTransacao();
-                $post_data = $request->getPost();
-                $email = $post_data[Constantes::$INPUT_EMAIL];
-                $setarDataEHora = false;
+	public function emailSalvarAction() {
+		$sessao = new Container(Constantes::$NOME_APLICACAO);
+		$request = $this->getRequest();
+		if ($request->isPost()) {
+			try {
+				$this->getRepositorio()->iniciarTransacao();
+				$post_data = $request->getPost();
+				$email = $post_data[Constantes::$INPUT_EMAIL];
+				$setarDataEHora = false;
 
-                /* caso algum inativo esteja usando o email remover dele */
-                if ($pessoaPesquisada = $this->getRepositorio()->getPessoaORM()->encontrarPorEmail($email)) {
-                    $pessoaPesquisada->setEmail('');
-                    $this->getRepositorio()->getPessoaORM()->persistir($pessoaPesquisada, $setarDataEHora);
-                }
+				/* caso algum inativo esteja usando o email remover dele */
+				if ($pessoaPesquisada = $this->getRepositorio()->getPessoaORM()->encontrarPorEmail($email)) {
+					$pessoaPesquisada->setEmail('');
+					$this->getRepositorio()->getPessoaORM()->persistir($pessoaPesquisada, $setarDataEHora);
+				}
 
-                $idPessoa = $post_data[Constantes::$INPUT_ID_PESSOA];
-                $pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($idPessoa);
-                $pessoa->setEmail($email);
-                $this->getRepositorio()->getPessoaORM()->persistir($pessoa, $setarDataEHora);
-                $sessao->mostrarNotificacao = true;
-                $sessao->emailAlterado = true;
-                $this->getRepositorio()->fecharTransacao();
+				$idPessoa = $post_data[Constantes::$INPUT_ID_PESSOA];
+				$pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($idPessoa);
+				$pessoa->setEmail($email);
+				$this->getRepositorio()->getPessoaORM()->persistir($pessoa, $setarDataEHora);
+				$sessao->mostrarNotificacao = true;
+				$sessao->emailAlterado = true;
+				$this->getRepositorio()->fecharTransacao();
 
-                $sessao->idSessao = $pessoa->getResponsabilidadesAtivas()[0]->getGrupo()->getId();
-                return $this->redirect()->toRoute(Constantes::$ROUTE_PRINCIPAL, array(
-                            Constantes::$ACTION => 'ver',
-                ));
-            } catch (Exception $exc) {
-                $this->getRepositorio()->desfazerTransacao();
-                echo $exc->getMessage();
-            }
-        }
-    }
+				$sessao->idSessao = $pessoa->getResponsabilidadesAtivas()[0]->getGrupo()->getId();
+				return $this->redirect()->toRoute(Constantes::$ROUTE_PRINCIPAL, array(
+					Constantes::$ACTION => 'ver',
+				));
+			} catch (Exception $exc) {
+				$this->getRepositorio()->desfazerTransacao();
+				echo $exc->getMessage();
+			}
+		}
+	}
 
-    public function hierarquiaAction() {
-        $sessao = new Container(Constantes::$NOME_APLICACAO);
-        $idSessao = $sessao->idSessao;
-        if ($idSessao) {
-            $pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($idSessao);
-            $pessoaLogada = $this->getRepositorio()->getPessoaORM()->encontrarPorId($sessao->idPessoa);
-            $hierarquias = $this->getRepositorio()->getHierarquiaORM()->encontrarTodas($pessoaLogada->getPessoaHierarquiaAtivo()->getHierarquia()->getId());
-            $formulario = new HierarquiaForm(Constantes::$FORM, $pessoa, $hierarquias);
-            $view = new ViewModel(
-                    array(
-                'formulario' => $formulario,
-                'pessoa' => $pessoa,
-            ));
-            unset($sessao->idSessao);
-            return $view;
-        } else {
-            return $this->redirect()->toRoute('principal');
-        }
-    }
+	public function hierarquiaAction() {
+		$sessao = new Container(Constantes::$NOME_APLICACAO);
+		$idSessao = $sessao->idSessao;
+		if ($idSessao) {
+			$pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($idSessao);
+			$pessoaLogada = $this->getRepositorio()->getPessoaORM()->encontrarPorId($sessao->idPessoa);
+			$hierarquias = $this->getRepositorio()->getHierarquiaORM()->encontrarTodas($pessoaLogada->getPessoaHierarquiaAtivo()->getHierarquia()->getId());
+			$formulario = new HierarquiaForm(Constantes::$FORM, $pessoa, $hierarquias);
+			$view = new ViewModel(
+				array(
+					'formulario' => $formulario,
+					'pessoa' => $pessoa,
+				));
+			unset($sessao->idSessao);
+			return $view;
+		} else {
+			return $this->redirect()->toRoute('principal');
+		}
+	}
 
-    public function hierarquiaSalvarAction() {
-        $sessao = new Container(Constantes::$NOME_APLICACAO);
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            try {
-                $this->getRepositorio()->iniciarTransacao();
-                $post_data = $request->getPost();
-                $idPessoa = $post_data[Constantes::$INPUT_ID_PESSOA];
-                $pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($idPessoa);
-                if ($pessoa->getPessoaHierarquiaAtivo()->getHierarquia()->getId() != $post_data[Constantes::$FORM_HIERARQUIA]) {
-                    $setarDataEHora = false;
-                    $pessoaHierarquiaAtivo = $pessoa->getPessoaHierarquiaAtivo();
-                    $pessoaHierarquiaAtivo->setDataEHoraDeInativacao();
-                    $this->getRepositorio()->getPessoaHierarquiaORM()->persistir($pessoaHierarquiaAtivo, $setarDataEHora);
+	public function hierarquiaSalvarAction() {
+		$sessao = new Container(Constantes::$NOME_APLICACAO);
+		$request = $this->getRequest();
+		if ($request->isPost()) {
+			try {
+				$this->getRepositorio()->iniciarTransacao();
+				$post_data = $request->getPost();
+				$idPessoa = $post_data[Constantes::$INPUT_ID_PESSOA];
+				$pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($idPessoa);
+				if ($pessoa->getPessoaHierarquiaAtivo()->getHierarquia()->getId() != $post_data[Constantes::$FORM_HIERARQUIA]) {
+					$setarDataEHora = false;
+					$pessoaHierarquiaAtivo = $pessoa->getPessoaHierarquiaAtivo();
+					$pessoaHierarquiaAtivo->setDataEHoraDeInativacao();
+					$this->getRepositorio()->getPessoaHierarquiaORM()->persistir($pessoaHierarquiaAtivo, $setarDataEHora);
 
-                    $pessoaHierarquia = new PessoaHierarquia();
-                    $pessoaHierarquia->setPessoa($pessoa);
-                    $novaHierarquia = $this->getRepositorio()->getHierarquiaORM()->encontrarPorId($post_data[Constantes::$FORM_HIERARQUIA]);
-                    $pessoaHierarquia->setHierarquia($novaHierarquia);
-                    $this->getRepositorio()->getPessoaHierarquiaORM()->persistir($pessoaHierarquia);
+					$pessoaHierarquia = new PessoaHierarquia();
+					$pessoaHierarquia->setPessoa($pessoa);
+					$novaHierarquia = $this->getRepositorio()->getHierarquiaORM()->encontrarPorId($post_data[Constantes::$FORM_HIERARQUIA]);
+					$pessoaHierarquia->setHierarquia($novaHierarquia);
+					$this->getRepositorio()->getPessoaHierarquiaORM()->persistir($pessoaHierarquia);
 
-                    $sessao->mostrarNotificacao = true;
-                    $sessao->hierarquiaAlterada = true;
-                }
-                $this->getRepositorio()->fecharTransacao();
-                return $this->redirect()->toRoute('principal');
-            } catch (Exception $exc) {
-                $this->getRepositorio()->desfazerTransacao();
-                echo $exc->getMessage();
-            }
-        }
-    }
+					$sessao->mostrarNotificacao = true;
+					$sessao->hierarquiaAlterada = true;
+				}
+				$this->getRepositorio()->fecharTransacao();
+				return $this->redirect()->toRoute('principal');
+			} catch (Exception $exc) {
+				$this->getRepositorio()->desfazerTransacao();
+				echo $exc->getMessage();
+			}
+		}
+	}
 
-    public function senhaAction() {
-        $sessao = new Container(Constantes::$NOME_APLICACAO);
-        $idSessao = $sessao->idSessao;
-        if ($idSessao) {
-            $pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($idSessao);
-            $formulario = new RecuperarSenhaForm(Constantes::$FORM, $pessoa->getId());
-            $view = new ViewModel(
-                    array(
-                'formulario' => $formulario,
-                'pessoa' => $pessoa,
-            ));
-            unset($sessao->idSessao);
+	public function senhaAction() {
+		$sessao = new Container(Constantes::$NOME_APLICACAO);
+		$idSessao = $sessao->idSessao;
+		if ($idSessao) {
+			$pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($idSessao);
+			$formulario = new RecuperarSenhaForm(Constantes::$FORM, $pessoa->getId());
+			$view = new ViewModel(
+				array(
+					'formulario' => $formulario,
+					'pessoa' => $pessoa,
+				));
+			unset($sessao->idSessao);
 
-            /* Javascript especifico */
-            $layoutJSIndex = new ViewModel();
-            $layoutJSIndex->setTemplate(Constantes::$TEMPLATE_JS_RECUPERAR_SENHA);
-            $view->addChild($layoutJSIndex, Constantes::$STRING_JS_RECUPERAR_SENHA);
-            return $view;
-        } else {
-            return $this->redirect()->toRoute('principal');
-        }
-    }
+			/* Javascript especifico */
+			$layoutJSIndex = new ViewModel();
+			$layoutJSIndex->setTemplate(Constantes::$TEMPLATE_JS_RECUPERAR_SENHA);
+			$view->addChild($layoutJSIndex, Constantes::$STRING_JS_RECUPERAR_SENHA);
+			return $view;
+		} else {
+			return $this->redirect()->toRoute('principal');
+		}
+	}
 
-    public function senhaSalvarAction() {
-        $sessao = new Container(Constantes::$NOME_APLICACAO);
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            try {
-                $this->getRepositorio()->iniciarTransacao();
-                $post_data = $request->getPost();
-                $idPessoa = $post_data[Constantes::$INPUT_ID_PESSOA];
-                $pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($idPessoa);
-                $pessoa->setSenha($post_data[Constantes::$INPUT_SENHA]);
-                $setarDataEHora = false;
-                $this->getRepositorio()->getPessoaORM()->persistir($pessoa, $setarDataEHora);
+	public function senhaSalvarAction() {
+		$sessao = new Container(Constantes::$NOME_APLICACAO);
+		$request = $this->getRequest();
+		if ($request->isPost()) {
+			try {
+				$this->getRepositorio()->iniciarTransacao();
+				$post_data = $request->getPost();
+				$idPessoa = $post_data[Constantes::$INPUT_ID_PESSOA];
+				$pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($idPessoa);
+				$pessoa->setSenha($post_data[Constantes::$INPUT_SENHA]);
+				$setarDataEHora = false;
+				$this->getRepositorio()->getPessoaORM()->persistir($pessoa, $setarDataEHora);
 
-                $Subject = 'Dados de Acesso ao CV';
-                $ToEmail = $pessoa->getEmail();
-                $Content = '<pre>Olá</pre><pre>Seu usuário é: ' . $pessoa->getEmail() . '</pre><pre>Sua Senha é: ' . $post_data[Constantes::$INPUT_SENHA] . '</pre>';
-                Funcoes::enviarEmail($ToEmail, $Subject, $Content);
+				$Subject = 'Dados de Acesso ao CV';
+				$ToEmail = $pessoa->getEmail();
+				$Content = '<pre>Olá</pre><pre>Seu usuário é: ' . $pessoa->getEmail() . '</pre><pre>Sua Senha é: ' . $post_data[Constantes::$INPUT_SENHA] . '</pre>';
+				Funcoes::enviarEmail($ToEmail, $Subject, $Content);
 
-                $sessao->mostrarNotificacao = true;
-                $sessao->senhaAlterada = true;
+				$sessao->mostrarNotificacao = true;
+				$sessao->senhaAlterada = true;
 
-                $this->getRepositorio()->fecharTransacao();
-                return $this->redirect()->toRoute('principal');
-            } catch (Exception $exc) {
-                $this->getRepositorio()->desfazerTransacao();
-                echo $exc->getMessage();
-            }
-        }
-    }
+				$this->getRepositorio()->fecharTransacao();
+				return $this->redirect()->toRoute('principal');
+			} catch (Exception $exc) {
+				$this->getRepositorio()->desfazerTransacao();
+				echo $exc->getMessage();
+			}
+		}
+	}
 
-    public function nomeAction() {
-        $sessao = new Container(Constantes::$NOME_APLICACAO);
-        $idSessao = $sessao->idSessao;
-        if ($idSessao) {
-            $grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idSessao);
-            $formulario = new NomeForm(Constantes::$FORM, $grupo);
-            $view = new ViewModel(
-                    array(
-                'formulario' => $formulario,
-                'grupo' => $grupo,
-            ));
-            unset($sessao->idSessao);
+	public function nomeAction() {
+		$sessao = new Container(Constantes::$NOME_APLICACAO);
+		$idSessao = $sessao->idSessao;
+		if ($idSessao) {
+			$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idSessao);
+			$formulario = new NomeForm(Constantes::$FORM, $grupo);
+			$view = new ViewModel(
+				array(
+					'formulario' => $formulario,
+					'grupo' => $grupo,
+				));
+			unset($sessao->idSessao);
 
-            /* Javascript especifico */
-            $layoutJS = new ViewModel();
-            $layoutJS->setTemplate('layout/layout-js-principal-alterar-nome-equipe');
-            $view->addChild($layoutJS, 'layoutJSAlterarNome');
-            return $view;
-        } else {
-            return $this->redirect()->toRoute('principal');
-        }
-    }
+			/* Javascript especifico */
+			$layoutJS = new ViewModel();
+			$layoutJS->setTemplate('layout/layout-js-principal-alterar-nome-equipe');
+			$view->addChild($layoutJS, 'layoutJSAlterarNome');
+			return $view;
+		} else {
+			return $this->redirect()->toRoute('principal');
+		}
+	}
 
-    public function nomeSalvarAction() {
-        $sessao = new Container(Constantes::$NOME_APLICACAO);
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            try {
-                $this->getRepositorio()->iniciarTransacao();
-                $post_data = $request->getPost();
-                $idGrupo = $post_data[Constantes::$FORM_ID];
-                $grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupo);
-                $entidadeNova = new Entidade();
-                $formNome = new NomeForm(Constantes::$FORM, $grupo);
-                $formNome->setInputFilter($entidadeNova->getInputFilterAlterarNome());
-                $formNome->setData($post_data);
+	public function nomeSalvarAction() {
+		$sessao = new Container(Constantes::$NOME_APLICACAO);
+		$request = $this->getRequest();
+		if ($request->isPost()) {
+			try {
+				$this->getRepositorio()->iniciarTransacao();
+				$post_data = $request->getPost();
+				$idGrupo = $post_data[Constantes::$FORM_ID];
+				$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupo);
+				$entidadeNova = new Entidade();
+				$formNome = new NomeForm(Constantes::$FORM, $grupo);
+				$formNome->setInputFilter($entidadeNova->getInputFilterAlterarNome());
+				$formNome->setData($post_data);
 
-                /* validação */
+				/* validação */
 
-                if ($formNome->isValid()) {
-                  $validatedData = $formNome->getData();
-                  $nome = trim($validatedData[Constantes::$INPUT_NOME]);
-                  $entidade = $grupo->getEntidadeAtiva();
-                  $entidade->setDataEHoraDeInativacao();
-                  $setarDataEHora = false;
-                  $this->getRepositorio()->getEntidadeORM()->persistir($entidade, $setarDataEHora);
-                  $entidadeNova->setGrupo($grupo);
-                  $entidadeNova->setNome($nome);
-                  $entidadeNova->setEntidadeTipo($this->getRepositorio()->getEntidadeTipoORM()->encontrarPorId(EntidadeTipo::equipe));
-                  $this->getRepositorio()->getEntidadeORM()->persistir($entidadeNova);
+				if ($formNome->isValid()) {
+					$validatedData = $formNome->getData();
+					$nome = trim($validatedData[Constantes::$INPUT_NOME]);
+					$entidade = $grupo->getEntidadeAtiva();
+					$entidade->setDataEHoraDeInativacao();
+					$setarDataEHora = false;
+					$this->getRepositorio()->getEntidadeORM()->persistir($entidade, $setarDataEHora);
+					$entidadeNova->setGrupo($grupo);
+					$entidadeNova->setNome($nome);
+					$entidadeNova->setEntidadeTipo($this->getRepositorio()->getEntidadeTipoORM()->encontrarPorId(EntidadeTipo::equipe));
+					$this->getRepositorio()->getEntidadeORM()->persistir($entidadeNova);
 
-                  $this->getRepositorio()->fecharTransacao();
-                  $sessao->idSessao = $idGrupo;
-                  return $this->redirect()->toRoute(Constantes::$ROUTE_PRINCIPAL, array(
-                              Constantes::$ACTION => 'ver',
-                  ));
-                } else {
-                  return $this->redirect()->toRoute(Constantes::$ROUTE_LOGIN, array(
-                              Constantes::$ACTION => 'index',
-                  ));
-                }
-            } catch (Exception $exc) {
-                $this->getRepositorio()->desfazerTransacao();
-                echo $exc->getMessage();
-            }
-        }
-    }
+					$this->getRepositorio()->fecharTransacao();
+					$sessao->idSessao = $idGrupo;
+					return $this->redirect()->toRoute(Constantes::$ROUTE_PRINCIPAL, array(
+						Constantes::$ACTION => 'ver',
+					));
+				} else {
+					return $this->redirect()->toRoute(Constantes::$ROUTE_LOGIN, array(
+						Constantes::$ACTION => 'index',
+					));
+				}
+			} catch (Exception $exc) {
+				$this->getRepositorio()->desfazerTransacao();
+				echo $exc->getMessage();
+			}
+		}
+	}
 
-    public function numeracaoAction() {
-        $sessao = new Container(Constantes::$NOME_APLICACAO);
-        $idSessao = $sessao->idSessao;
-        if ($idSessao) {
-            $grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idSessao);
-            $grupoPai = $grupo->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai();
-            $formulario = new NumeracaoForm(Constantes::$FORM, $grupoPai, $grupo);
-            $view = new ViewModel(
-                    array(
-                'formulario' => $formulario,
-                'grupo' => $grupo,
-            ));
-            unset($sessao->idSessao);
+	public function numeracaoAction() {
+		$sessao = new Container(Constantes::$NOME_APLICACAO);
+		$idSessao = $sessao->idSessao;
+		if ($idSessao) {
+			$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idSessao);
+			$grupoPai = $grupo->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai();
+			$formulario = new NumeracaoForm(Constantes::$FORM, $grupoPai, $grupo);
+			$view = new ViewModel(
+				array(
+					'formulario' => $formulario,
+					'grupo' => $grupo,
+				));
+			unset($sessao->idSessao);
 
-            /* Javascript especifico */
-            $layoutJS = new ViewModel();
-            $layoutJS->setTemplate('layout/layout-js-principal-alterar-numeracao');
-            $view->addChild($layoutJS, 'layoutJSAlterarNumeracao');
-            return $view;
-        } else {
-            return $this->redirect()->toRoute('principal');
-        }
-    }
+			/* Javascript especifico */
+			$layoutJS = new ViewModel();
+			$layoutJS->setTemplate('layout/layout-js-principal-alterar-numeracao');
+			$view->addChild($layoutJS, 'layoutJSAlterarNumeracao');
+			return $view;
+		} else {
+			return $this->redirect()->toRoute('principal');
+		}
+	}
 
-    public function numeracaoSalvarAction() {
-        $sessao = new Container(Constantes::$NOME_APLICACAO);
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            try {
-                $this->getRepositorio()->iniciarTransacao();
-                $post_data = $request->getPost();
-                $idGrupo = $post_data[Constantes::$FORM_ID];
-                $grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupo);
-                $numeracao = $post_data[Constantes::$FORM_NUMERACAO];
+	public function numeracaoSalvarAction() {
+		$sessao = new Container(Constantes::$NOME_APLICACAO);
+		$request = $this->getRequest();
+		if ($request->isPost()) {
+			try {
+				$this->getRepositorio()->iniciarTransacao();
+				$post_data = $request->getPost();
+				$idGrupo = $post_data[Constantes::$FORM_ID];
+				$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupo);
+				$numeracao = $post_data[Constantes::$FORM_NUMERACAO];
 
-                $entidade = $grupo->getEntidadeAtiva();
-                if ($numeracao != $entidade->getNumero()) {
-                    $entidade->setDataEHoraDeInativacao();
-                    $setarDataEHora = false;
-                    $this->getRepositorio()->getEntidadeORM()->persistir($entidade, $setarDataEHora);
-                    $entidadeNova = new Entidade();
-                    $entidadeNova->setGrupo($grupo);
-                    $entidadeNova->setNumero($numeracao);
-                    $entidadeNova->setEntidadeTipo($this->getRepositorio()->getEntidadeTipoORM()->encontrarPorId(EntidadeTipo::subEquipe));
-                    $this->getRepositorio()->getEntidadeORM()->persistir($entidadeNova);
-                }
-                $this->getRepositorio()->fecharTransacao();
-                $sessao->idSessao = $idGrupo;
-                return $this->redirect()->toRoute(Constantes::$ROUTE_PRINCIPAL, array(
-                            Constantes::$ACTION => 'ver',
-                ));
-            } catch (Exception $exc) {
-                $this->getRepositorio()->desfazerTransacao();
-                echo $exc->getMessage();
-            }
-        }
-    }
+				$entidade = $grupo->getEntidadeAtiva();
+				if ($numeracao != $entidade->getNumero()) {
+					$entidade->setDataEHoraDeInativacao();
+					$setarDataEHora = false;
+					$this->getRepositorio()->getEntidadeORM()->persistir($entidade, $setarDataEHora);
+					$entidadeNova = new Entidade();
+					$entidadeNova->setGrupo($grupo);
+					$entidadeNova->setNumero($numeracao);
+					$entidadeNova->setEntidadeTipo($this->getRepositorio()->getEntidadeTipoORM()->encontrarPorId(EntidadeTipo::subEquipe));
+					$this->getRepositorio()->getEntidadeORM()->persistir($entidadeNova);
+				}
+				$this->getRepositorio()->fecharTransacao();
+				$sessao->idSessao = $idGrupo;
+				return $this->redirect()->toRoute(Constantes::$ROUTE_PRINCIPAL, array(
+					Constantes::$ACTION => 'ver',
+				));
+			} catch (Exception $exc) {
+				$this->getRepositorio()->desfazerTransacao();
+				echo $exc->getMessage();
+			}
+		}
+	}
 
-    /**
-     * Controle de funçoes da tela de cadastro
-     * @return Json
-     */
-    public function funcoesAction() {
-        $sessao = new Container(Constantes::$NOME_APLICACAO);
-        $request = $this->getRequest();
-        $response = $this->getResponse();
-        if ($request->isPost()) {
-            try {
-                $post_data = $request->getPost();
-                $funcao = $post_data[Constantes::$FUNCAO];
-                $id = $post_data[Constantes::$ID];
-                $sessao->idSessao = $id;
-                $response->setContent(Json::encode(
-                                array(
-                                    'response' => 'true',
-                                    'tipoDeRetorno' => 1,
-                                    'url' => '/' . $funcao,
-                )));
-            } catch (Exception $exc) {
-                echo $exc->getMessage();
-            }
-        }
-        return $response;
-    }
+	/**
+	 * Controle de funçoes da tela de cadastro
+	 * @return Json
+	 */
+	public function funcoesAction() {
+		$sessao = new Container(Constantes::$NOME_APLICACAO);
+		$request = $this->getRequest();
+		$response = $this->getResponse();
+		if ($request->isPost()) {
+			try {
+				$post_data = $request->getPost();
+				$funcao = $post_data[Constantes::$FUNCAO];
+				$id = $post_data[Constantes::$ID];
+				$sessao->idSessao = $id;
+				$response->setContent(Json::encode(
+					array(
+						'response' => 'true',
+						'tipoDeRetorno' => 1,
+						'url' => '/' . $funcao,
+					)));
+			} catch (Exception $exc) {
+				echo $exc->getMessage();
+			}
+		}
+		return $response;
+	}
 
-    public function suporteAction() {
-      return new ViewModel();
-    }
+	public function suporteAction() {
+		return new ViewModel();
+	}
 
 	public function suporteFinalizarAction() {
 		$sessao = new Container(Constantes::$NOME_APLICACAO);
@@ -624,9 +625,9 @@ class PrincipalController extends CircuitoController {
 		));
 	}
 
-    public function suporteFinalizadoAction() {
-      return new ViewModel();
-    }
+	public function suporteFinalizadoAction() {
+		return new ViewModel();
+	}
 
 	public function semAcessoAction(){
 		return new ViewModel();
@@ -642,6 +643,47 @@ class PrincipalController extends CircuitoController {
 			if ($fatoLider = $this->getRepositorio()->getFatoLiderORM()->encontrarFatoLiderPorNumeroIdentificador($numeroIdentificador)) {
 				$fatoLider->setLideres(0);
 				$this->getRepositorio()->getFatoLiderORM()->persistir($fatoLider, $alterarDataDeCriacao = false);
+			}
+			return $this->redirect()->toRoute('principal');
+		}
+	}
+
+	public function arrumarLinhaDeLancamentoAction(){
+		$sessao = new Container(Constantes::$NOME_APLICACAO);
+		$idSessao = $sessao->idSessao;
+		$html = '';
+		if ($idSessao) {
+			$pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($idSessao);
+			unset($sessao->idSessao);
+			if($grupoResponsaveis = $pessoa->getGrupoResponsavel()){
+				$grupoResponsanvelAtivo = null;
+				$grupoResponsanvelInativoParaPegarGrupoPessoa = null;
+				foreach($grupoResponsaveis as $grupoResponsavel){
+					if($grupoResponsavel->verificarSeEstaAtivo()){
+						$grupoResponsanvelAtivo = $grupoResponsavel;
+					}
+					if(!$grupoResponsavel->verificarSeEstaAtivo()){
+						if($grupoResponsanvelInativoParaPegarGrupoPessoa === null){
+							$grupoResponsanvelInativoParaPegarGrupoPessoa = $grupoResponsavel;
+						}else{
+							if($grupoResponsanvel->getId() > $grupoResponsanvelInativoParaPegarGrupoPessoa->getId()){
+								$grupoResponsanvelInativoParaPegarGrupoPessoa = $grupoResponsavel;
+							}
+						}
+					}
+				}
+				if(count($grupoResponsanvelAtivo->getGrupo()->getGrupoPessoasNoPeriodo($periodo = 0, $this->getRepositorio())) < 5){
+					if($linhaDeLancamento = $grupoResponsanvelInativoParaPegarGrupoPessoa->getGrupo()->getGrupoPessoasNoPeriodo($periodo = 0, $this->getRepositorio())){
+						foreach($linhaDeLancamento as $grupoPessoa){
+							$grupoPessoaNovo = new GrupoPessoa();
+							$grupoPessoaNovo->setGrupo($grupoResponsanvelAtivo->getGrupo());
+							$grupoPessoaNovo->setPessoa($grupoPessoa->getPessoa());
+							$grupoPessoaNovo->setGrupoPessoaTipo($grupoPessoa->getGrupoPessoaTipo());
+							$grupoPessoaNovo->setDataEHoraDeCriacao($grupoResponsanvelAtivo->getGrupo()->getData_criacaoStringPadraoBanco());
+							$this->getRepositorio()->getGrupoPessoaORM()->persistir($grupoPessoaNovo);
+						}
+					}
+				}
 			}
 			return $this->redirect()->toRoute('principal');
 		}
