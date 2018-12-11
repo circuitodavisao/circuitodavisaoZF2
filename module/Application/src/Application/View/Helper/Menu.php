@@ -37,13 +37,49 @@ class Menu extends AbstractHelper {
 		$html .= '<div class="navbar-branding">';
 		$html .= '<a class="navbar-brand" href="#" style="padding-top: 22px;">';
 		$html .= '<img src="' . Constantes::$IMAGEM_LOGO_PEQUENA . '" title="' .
-			$this->view->translate(Constantes::$TRADUCAO_NOME_APLICACAO) . '" class="img-responsive" style="max-width:100%;">';
+		$this->view->translate(Constantes::$TRADUCAO_NOME_APLICACAO) . '" class="img-responsive" style="max-width:100%;">';
 		$html .= '</a>';
 		$html .= '<span id="toggle_sidemenu_l" class="ad ad-lines"></span>';
 		$html .= '</div>';
 		$html .= '<ul class="nav navbar-nav navbar-right">';
 		$html .= '<li class="dropdown menu-merge">';
+		$html .= '<div class="navbar-btn btn-group">';
+		$html .= '<button data-toggle="dropdown" class="btn btn-sm dropdown-toggle">';
+		$html .= '<span class="fa fa-bell-o fs14 va-m"></span>';
+		$html .= '<span class="badge badge-danger"></span>';
+		$html .= '</button>';
+		$html .= '<div class="dropdown-menu dropdown-persist w350 animated animated-shorter fadeIn" role="menu">';
+		$html .= '<div class="panel mbn">';
+		$html .= '<div class="panel-menu">';
+		$html .= '<span class="panel-icon"><i class="fa fa-exclamation-circle"></i></span>';
+		$html .= '<span class="panel-title fw600"> Notificações</span>';
+		$html .= '</div>';
+		$html .= '<div class="panel-body panel-scroller scroller-navbar scroller-overlay scroller-pn pn" style="height: auto;">';
+		$html .= '<ol class="timeline-list">';
+		$html .= '<li class="timeline-item">';
+		$html .= '<div class="timeline-icon bg-dark light">';
+		$html .= '<span>1</span>';
+		$html .= '</div>';
+		$html .= '<div class="timeline-desc">';
+		$html .= '<b>Em breve: </b> Notas de atualizações do sistema aqui.';
+		$html .= '</div>';
+		$html .= '</li>';
+		$html .= '</ol>';
+		$html .= '</div>';
+		$html .= '</div>';
+		$html .= '</div>';
+	  $html .= '</div>';
+		$html .= '</li>';
+
+
+		$html .= '<li class="menu-divider hidden-xs">';
+		$html .=	'<i class="fa fa-circle"></i>';
+		$html .=  '</li>';
+
+		$html .= '<li class="dropdown menu-merge">';
 		$html .= '<a href="#" class="dropdown-toggle fw600 p15" data-toggle="dropdown">';
+		$html .= '<img src="/img/fotos/'.$this->view->pessoa->getFoto().'" alt="avatar" class="mw30 br64">';
+		$html .= '<span class="hidden-xs pl15">' .$this->view->pessoa->getNomePrimeiroPrimeiraSiglaUltimo(). '</span>';
 		$html .= '<span class="caret caret-tp"></span>';
 		$html .= '</a>';
 
