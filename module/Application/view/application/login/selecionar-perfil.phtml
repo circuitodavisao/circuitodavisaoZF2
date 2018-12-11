@@ -25,7 +25,6 @@ use Application\Controller\Helper\Constantes;
 
         <!-- Begin: Content -->
         <section id="content" class="table-layout animated fadeIn">
-
             <!-- begin: .tray-left -->
             <!-- end: .tray-left -->
             <div class="tray tray-center">
@@ -51,7 +50,7 @@ use Application\Controller\Helper\Constantes;
 									$mostrar = false;
 									$ativo = true;
 									$entidadeSelecionada = $grupo->getEntidadeAtiva();
-									if (!$gpfPai->verificarSeEstaAtivo()) {
+									if (!$gpfPai->verificarSeEstaAtivo() && $gpfPai->getData_inativacaoStringPadraoBanco()) {
 										$ativo = false;
 										if($entidadeSelecionada = $grupo->getEntidadeInativaPorDataInativacao($gpfPai->getData_inativacaoStringPadraoBanco())){
 											$mostrar = true;	
