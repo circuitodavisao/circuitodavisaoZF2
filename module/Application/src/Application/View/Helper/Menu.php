@@ -33,7 +33,7 @@ class Menu extends AbstractHelper {
 		$html = '';
 
 		// Start: Header
-		$html .= '<header class="navbar navbar-fixed-top navbar-shadow" style="overflow: hidden;">';
+		$html .= '<header class="navbar navbar-fixed-top navbar-shadow">';
 		$html .= '<div class="navbar-branding">';
 		$html .= '<a class="navbar-brand" href="#" style="padding-top: 22px;">';
 		$html .= '<img src="' . Constantes::$IMAGEM_LOGO_PEQUENA . '" title="' .
@@ -41,49 +41,49 @@ class Menu extends AbstractHelper {
 		$html .= '</a>';
 		$html .= '<span id="toggle_sidemenu_l" class="ad ad-lines"></span>';
 		$html .= '</div>';
-		$html .= '<ul class="nav navbar-nav navbar-right">';
-		$html .= '<li class="dropdown menu-merge">';
-		$html .= '<div class="navbar-btn btn-group">';
-		$html .= '<button data-toggle="dropdown" class="btn btn-sm dropdown-toggle">';
-		$html .= '<span class="fa fa-bell-o fs14 va-m"></span>';
-		$html .= '<span class="badge badge-danger"></span>';
-		$html .= '</button>';
-		$html .= '<div class="dropdown-menu dropdown-persist w350 animated animated-shorter fadeIn" role="menu">';
-		$html .= '<div class="panel mbn">';
-		$html .= '<div class="panel-menu">';
-		$html .= '<span class="panel-icon"><i class="fa fa-exclamation-circle"></i></span>';
-		$html .= '<span class="panel-title fw600"> Notificações</span>';
-		$html .= '</div>';
-		$html .= '<div class="panel-body panel-scroller scroller-navbar scroller-overlay scroller-pn pn" style="height: auto;">';
-		$html .= '<ol class="timeline-list">';
-		$html .= '<li class="timeline-item">';
-		$html .= '<div class="timeline-icon bg-dark light">';
-		$html .= '<span>1</span>';
-		$html .= '</div>';
-		$html .= '<div class="timeline-desc">';
-		$html .= '<b>Em breve: </b> Notas de atualizações do sistema aqui.';
-		$html .= '</div>';
-		$html .= '</li>';
-		$html .= '</ol>';
-		$html .= '</div>';
-		$html .= '</div>';
-		$html .= '</div>';
-	  $html .= '</div>';
-		$html .= '</li>';
+
+		$htmlEspecifoUL .= '<li class="dropdown menu-merge">';
+		$htmlEspecifoUL .= '<div class="navbar-btn btn-group">';
+		$htmlEspecifoUL .= '<button data-toggle="dropdown" class="btn btn-sm dropdown-toggle">';
+		$htmlEspecifoUL .= '<span class="fa fa-bell-o fs14 va-m"></span>';
+		$htmlEspecifoUL .= '<span class="badge badge-danger"></span>';
+		$htmlEspecifoUL .= '</button>';
+		$htmlEspecifoUL .= '<div class="dropdown-menu dropdown-persist w350 animated animated-shorter fadeIn" role="menu">';
+		$htmlEspecifoUL .= '<div class="panel mbn">';
+		$htmlEspecifoUL .= '<div class="panel-menu">';
+		$htmlEspecifoUL .= '<span class="panel-icon"><i class="fa fa-exclamation-circle"></i></span>';
+		$htmlEspecifoUL .= '<span class="panel-title fw600"> Notificações</span>';
+		$htmlEspecifoUL .= '</div>';
+		$htmlEspecifoUL .= '<div class="panel-body panel-scroller scroller-navbar scroller-overlay scroller-pn pn" style="height: auto;">';
+		$htmlEspecifoUL .= '<ol class="timeline-list">';
+		$htmlEspecifoUL .= '<li class="timeline-item">';
+		$htmlEspecifoUL .= '<div class="timeline-icon bg-dark light">';
+		$htmlEspecifoUL .= '<span>1</span>';
+		$htmlEspecifoUL .= '</div>';
+		$htmlEspecifoUL .= '<div class="timeline-desc">';
+		$htmlEspecifoUL .= '<b>Em breve: </b> Notas de atualizações do sistema aqui.';
+		$htmlEspecifoUL .= '</div>';
+		$htmlEspecifoUL .= '</li>';
+		$htmlEspecifoUL .= '</ol>';
+		$htmlEspecifoUL .= '</div>';
+		$htmlEspecifoUL .= '</div>';
+		$htmlEspecifoUL .= '</div>';
+	  $htmlEspecifoUL .= '</div>';
+		$htmlEspecifoUL .= '</li>';
 
 
-		$html .= '<li class="menu-divider hidden-xs">';
-		$html .=	'<i class="fa fa-circle"></i>';
-		$html .=  '</li>';
+		$htmlEspecifoUL .= '<li class="menu-divider hidden-xs">';
+		$htmlEspecifoUL .=	'<i class="fa fa-circle"></i>';
+		$htmlEspecifoUL .=  '</li>';
 
-		$html .= '<li class="dropdown menu-merge">';
-		$html .= '<a href="#" class="dropdown-toggle fw600 p15" data-toggle="dropdown">';
-		$html .= '<img src="/img/fotos/'.$this->view->pessoa->getFoto().'" alt="avatar" class="mw30 br64">';
-		$html .= '<span class="hidden-xs pl15">' .$this->view->pessoa->getNomePrimeiroPrimeiraSiglaUltimo(). '</span>';
-		$html .= '<span class="caret caret-tp"></span>';
-		$html .= '</a>';
+		$htmlEspecifoUL .= '<li class="dropdown menu-merge">';
+		$htmlEspecifoUL .= '<a href="#" class="dropdown-toggle fw600 p15" data-toggle="dropdown">';
+		$htmlEspecifoUL .= '<img src="/img/fotos/'.$this->view->pessoa->getFoto().'" alt="avatar" class="mw30 br64">';
+		$htmlEspecifoUL .= '<span class="hidden-xs pl15">' .$this->view->pessoa->getNomePrimeiroPrimeiraSiglaUltimo(). '</span>';
+		$htmlEspecifoUL .= '<span class="caret caret-tp"></span>';
+		$htmlEspecifoUL .= '</a>';
 
-		$html .= '<ul class="dropdown-menu list-group dropdown-persist w250" role="menu">';
+		$htmlEspecifoUL .= '<ul class="dropdown-menu list-group dropdown-persist w250" role="menu">';
 
 		/* Laço para mostrar as responsabilidades ativas */
 			 if (count($responsabilidades = $this->view->pessoa->getResponsabilidadesAtivas()) > 1) {
@@ -94,22 +94,28 @@ class Menu extends AbstractHelper {
 							 $entidades = $grupo->getEntidade();
 							 foreach ($entidades as $entidade) {
 									 if ($entidade->verificarSeEstaAtivo()) {
-											 $html .= $this->view->perfilDropDown($entidade, 1);
+											 $htmlEspecifoUL .= $this->view->perfilDropDown($entidade, 1);
 									 }
 							 }
 					 }
 			 }
 
-		$html .= '<li class="dropdown-footer">';
+		$htmlEspecifoUL .= '<li class="dropdown-footer">';
 
-		$html .= '<a href="' . $this->view->url(Constantes::$ROUTE_LOGIN) . 'perfil' . '" class="animated animated-short fadeInUp">';
-		$html .= '<span class="fa fa-user pr5"></span>' . $this->view->translate('Perfil') . '</a>';
+		$htmlEspecifoUL .= '<a href="' . $this->view->url(Constantes::$ROUTE_LOGIN) . 'perfil' . '" class="animated animated-short fadeInUp">';
+		$htmlEspecifoUL .= '<span class="fa fa-user pr5"></span>' . $this->view->translate('Perfil') . '</a>';
 
-		$html .= '<a href="' . $this->view->url(Constantes::$ROUTE_LOGIN) . Constantes::$URL_PRE_SAIDA . '" class="animated animated-short fadeInUp">';
-		$html .= '<span class="fa fa-power-off pr5"></span>' . $this->view->translate(Constantes::$TRADUCAO_SAIR) . '</a>';
-		$html .= '</li>';
+		$htmlEspecifoUL .= '<a href="' . $this->view->url(Constantes::$ROUTE_LOGIN) . Constantes::$URL_PRE_SAIDA . '" class="animated animated-short fadeInUp">';
+		$htmlEspecifoUL .= '<span class="fa fa-power-off pr5"></span>' . $this->view->translate(Constantes::$TRADUCAO_SAIR) . '</a>';
+		$htmlEspecifoUL .= '</li>';
+		$htmlEspecifoUL .= '</ul>';
+		$htmlEspecifoUL .= '</li>';
+
+		$html .= '<ul class="nav navbar-nav navbar-right hidden-sm hidden-xs">';
+		$html .= $htmlEspecifoUL;
 		$html .= '</ul>';
-		$html .= '</li>';
+		$html .= '<ul class="nav navbar-nav navbar-right hidden-md hidden-lg" style="position: relative; float: right; right: 100%;">';
+		$html .= $htmlEspecifoUL;
 		$html .= '</ul>';
 		$html .= '</header>';
 		// End: Header
