@@ -33,7 +33,7 @@ class Menu extends AbstractHelper {
 		$html = '';
 
 		// Start: Header
-		$html .= '<header class="navbar navbar-fixed-top navbar-shadow">';
+		$html .= '<header class="navbar navbar-fixed-top navbar-shadow" style="overflow: hidden;">';
 		$html .= '<div class="navbar-branding">';
 		$html .= '<a class="navbar-brand" href="#" style="padding-top: 22px;">';
 		$html .= '<img src="' . Constantes::$IMAGEM_LOGO_PEQUENA . '" title="' .
