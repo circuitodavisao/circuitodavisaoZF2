@@ -433,12 +433,14 @@ class Menu extends AbstractHelper {
 			$arrayOQueMostrarDosCursos['lancarPresenca'] = false;
 			$arrayOQueMostrarDosCursos['consultarMatricula'] = false;
 			$arrayOQueMostrarDosCursos['listagem'] = false;
+			$arrayOQueMostrarDosCursos['financeiroPorData'] = false;
 			if ($this->view->pessoa->getPessoaCursoAcessoAtivo()) {
 				if ($this->view->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::COORDENADOR) {
 					$arrayOQueMostrarDosCursos['turmas'] = true;
 					$arrayOQueMostrarDosCursos['usuarios'] = true;
 					$arrayOQueMostrarDosCursos['gerarFaltas'] = true;
 					$arrayOQueMostrarDosCursos['listagem'] = true;
+					$arrayOQueMostrarDosCursos['financeiroPorData'] = false;
 				}
 				if ($this->view->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::COORDENADOR ||
 					$this->view->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::SUPERVISOR ||
