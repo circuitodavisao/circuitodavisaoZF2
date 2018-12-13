@@ -1,0 +1,107 @@
+<?php
+
+use Application\Controller\Helper\Funcoes;
+use Application\View\Helper\BotaoSimples;
+
+$html .= $this->templateFormularioTopo('Financeiro por Data');
+$html .= '<div class="panel-body bg-light" style="padding: 15px 5px 5px 5px;">';
+$html .= '<form action="/cursoFinanceiroPorData" method="post">';
+
+for($indiceData = 1; $indiceData <= 2; $indiceData++){
+	$html .= '<div class="row p5">';
+	$html .= '<div class="col-lg-1 col-md-1 col-sm-1 col-xs-12 pb10 pt10">';
+	$html .= 'Dia';
+	$html .= '</div>';
+	$html .= '<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">';
+	$html .= '<select name="dia'.$indiceData.'" id="dia'.$indiceData.'" class="form-control">';
+	for ($indice = 1; $indice <= 31; $indice++) {
+		$selected = '';
+		if ($this->dia[$indiceData] == $indice) {
+			$selected = 'selected';
+		}
+
+		$html .= '<option value="' . $indice . '" ' . $selected . '>' . $indice . '</option>';
+	}
+	$html .= '</select>';
+	$html .= '</div>';
+
+	$html .= '<div class="col-lg-1 col-md-1 col-sm-1 col-xs-12 pb10 pt10">';
+	$html .= 'Mês';
+	$html .= '</div>';
+	$html .= '<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">';
+	$html .= '<select name="mes'.$indiceData.'" id="mes'.$indiceData.'" class="form-control">';
+	for ($indice = 1; $indice <= 12; $indice++) {
+		$selected = '';
+		if ($this->mes[$indiceData] == $indice) {
+			$selected = 'selected';
+		}
+
+		$html .= '<option value="' . $indice . '" ' . $selected . '>' . Funcoes::mesPorExtenso($indice, 1) . '</option>';
+	}
+	$html .= '</select>';
+	$html .= '</div>';
+	$html .= '<div class="col-lg-1 col-md-1 col-sm-1 col-xs-12 pb10 pt10"">';
+	$html .= 'Ano';
+	$html .= '</div>';
+	$html .= '<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">';
+	$html .= '<select name="ano'.$indiceData.'" id="ano'.$indiceData.'" class="form-control">';
+	for ($indice = date('Y'); $indice >= 2017; $indice--) {
+		$selected = '';
+		if ($this->ano[$indiceData] == $indice) {
+			$selected = 'selected';
+		}
+		$html .= '<option value="' . $indice . '" ' . $selected . '>' . $indice . '</option>';
+	}
+	$html .= '</select>';
+	$html .= '</div>';
+	$html .= '</div>';
+}
+
+$html .= '<div class="col-lg-offset-10 col-md-offset-10 col-sm-offset-10 col-lg-2 col-md-2 col-sm-2 col-xs-12">';
+$html .= $this->botaoSimples('Filtrar', $this->funcaoOnClick('this.form.submit()'), BotaoSimples::botaoImportante, BotaoSimples::larguraMaxima);
+$html .= '</div>';
+
+$html .= '</form>';
+
+$html .= '</div>';
+$html .= $this->templateFormularioRodape();
+
+if($this->filtrado){
+	if($this->turmaPessoaFinanceiros){
+		$turmaPessoaFinanceirosAjustado = array();
+		foreach($this->turmaPessoaFinanceiros as $turmaPessoaFinanceiro){
+			$turmaPessoa = $turmaPessoaFinanceiro->getTurma_pessoa();
+			if(!$turmaPessoaFinanceirosAjustado[$turmaPessoa->getId()]){
+				$turmaPessoaFinanceirosAjustado[$turmaPessoa->getId()] = $turmaPessoaFinanceiro;
+			}
+		}
+		$html .= '<div class="table-responsive">';
+		$html .= '<table  class="table table-bordered table-condensed footable" data-filter="#fooFilter">';
+
+		$html .= '<thead>';
+		$html .= '<tr>';
+		$html .= '<th>Matrícula</th>';
+		$html .= '<th>Aluno</th>';
+		$html .= '<th>Turma</th>';
+		$html .= '</tr>';
+		$html .= '</thead>';
+
+		$html .= '<tbody>';
+		foreach($turmaPessoaFinanceirosAjustado as $turmaPessoaFinanceiro){
+			$turmaPessoa = $turmaPessoaFinanceiro->getTurma_pessoa();
+			$turma = $turmaPessoa->getTurma();
+			$pessoa = $turmaPessoa->getPessoa();
+			$html .= '<tr>';
+			$html .= '<td>' . $turmaPessoa->getId() . '</td>';
+			$html .= '<td>' . $pessoa->getNome() . '</td>';
+			$html .= '<td>' . $turma->getCurso()->getNome() . ' - ' . Funcoes::mesPorExtenso($turma->getMes()) . '/' . $turma->getAno() . '</td>';
+			$html .= '</tr>';
+		}
+		$html .= '</tbody>';
+		$html .= '</table>';
+	}else{
+		$html .= '<div class="mt50 alert alert-warning">Sem Pagamentos nas data informadas</div>';
+	}
+}
+
+echo $html;
