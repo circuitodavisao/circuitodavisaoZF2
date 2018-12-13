@@ -311,11 +311,11 @@ class RepositorioORM {
 
     /**
      * Metodo public para obter a instancia do TurmaPessoaFinanceiroORM
-     * @return CircuitoORM
+     * @return TurmaPessoaFinanceiroORM
      */
     public function getTurmaPessoaFinanceiroORM() {
         if (is_null($this->_turmaPessoaFinanceiroORM)) {
-            $this->_turmaPessoaFinanceiroORM = new CircuitoORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_TURMA_PESSOA_FINANCEIRO);
+            $this->_turmaPessoaFinanceiroORM = new TurmaPessoaFinanceiroORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_TURMA_PESSOA_FINANCEIRO);
         }
         return $this->_turmaPessoaFinanceiroORM;
     }

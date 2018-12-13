@@ -2210,6 +2210,11 @@ class CursoController extends CircuitoController {
 			$ano2 = $postDados['ano2'];
 
 			$dados['filtrado'] = true;
+
+			$dataInicial = $ano1 . '-' . $mes1 . '-' . $dia1;
+			$dataFinal = $ano2 . '-' . $mes2 . '-' . $dia2;
+			$turmaPessoaFinanceiros = $this->getRepositorio()->getTurmaPessoaFinanceiroORM()->encontrarPorDatas($dataInicial, $dataFinal);
+			$dados['turmaPessoaFinanceiros'] = $turmaPessoaFinanceiros;
 		}else{
 			$dia1 = date('d');
 			$mes1 = date('m');
