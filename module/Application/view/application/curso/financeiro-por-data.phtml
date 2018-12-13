@@ -2,12 +2,20 @@
 
 use Application\Controller\Helper\Funcoes;
 use Application\View\Helper\BotaoSimples;
-
-$html .= $this->templateFormularioTopo('Financeiro por Data');
+$html .= '';
+$html .= $this->templateFormularioTopo('Financeiro por Data', '', 'style="max-width:100%; margin-top:0%;"');
 $html .= '<div class="panel-body bg-light" style="padding: 15px 5px 5px 5px;">';
 $html .= '<form action="/cursoFinanceiroPorData" method="post">';
 
 for($indiceData = 1; $indiceData <= 2; $indiceData++){
+	switch ($indiceData) {
+		case 1:
+			$html .= '<label class="field-label mbn text-muted text-center fs18 p5">Data Inicial</label>';
+			break;
+		case 2:
+			$html .= '<label class="field-label mbn text-muted text-center fs18 p5">Data Final</label>';
+			break;
+	}
 	$html .= '<div class="row p5">';
 	$html .= '<div class="col-lg-1 col-md-1 col-sm-1 col-xs-12 pb10 pt10">';
 	$html .= 'Dia';
@@ -57,7 +65,7 @@ for($indiceData = 1; $indiceData <= 2; $indiceData++){
 	$html .= '</div>';
 }
 
-$html .= '<div class="col-lg-offset-10 col-md-offset-10 col-sm-offset-10 col-lg-2 col-md-2 col-sm-2 col-xs-12">';
+$html .= '<div class="col-lg-offset-10 col-md-offset-10 col-sm-offset-10 col-lg-2 col-md-2 col-sm-2 col-xs-12 p5">';
 $html .= $this->botaoSimples('Filtrar', $this->funcaoOnClick('this.form.submit()'), BotaoSimples::botaoImportante, BotaoSimples::larguraMaxima);
 $html .= '</div>';
 
@@ -79,7 +87,7 @@ if($this->filtrado){
 		$html .= '<table  class="table table-bordered table-condensed footable" data-filter="#fooFilter">';
 
 		$html .= '<thead>';
-		$html .= '<tr>';
+		$html .= '<tr class="dark">';
 		$html .= '<th>Matrícula</th>';
 		$html .= '<th>Aluno</th>';
 		$html .= '<th>Turma</th>';
@@ -100,7 +108,7 @@ if($this->filtrado){
 		$html .= '</tbody>';
 		$html .= '</table>';
 	}else{
-		$html .= '<div class="mt50 alert alert-warning">Sem Pagamentos nas data informadas</div>';
+		$html .= '<div class="alert alert-warning">Sem Pagamentos nas data informadas</div>';
 	}
 }
 
