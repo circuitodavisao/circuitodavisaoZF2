@@ -446,7 +446,7 @@ class Menu extends AbstractHelper {
 					$arrayOQueMostrarDosCursos['usuarios'] = true;
 					$arrayOQueMostrarDosCursos['gerarFaltas'] = true;
 					$arrayOQueMostrarDosCursos['listagem'] = true;
-					$arrayOQueMostrarDosCursos['financeiroPorData'] = false;
+					$arrayOQueMostrarDosCursos['financeiroPorData'] = true;
 				}
 				if ($this->view->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::COORDENADOR ||
 					$this->view->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::SUPERVISOR ||
@@ -548,6 +548,14 @@ class Menu extends AbstractHelper {
 				$html .= '<a href="/cursoLancarReposicao" onClick="mostrarSplash();">';
 				$html .= '<span class="fa fa-pencil"></span>';
 				$html .= 'Lançar Reposição';
+				$html .= '</a>';
+				$html .= '</li>';
+			}
+			if ($arrayOQueMostrarDosCursos['financeiroPorData']) {
+				$html .= '<li>';
+				$html .= '<a href="/cursoFinanceiroPorData" onClick="mostrarSplash();">';
+				$html .= '<span class="fa fa-money"></span>';
+				$html .= 'Financeiro por datas';
 				$html .= '</a>';
 				$html .= '</li>';
 			}
