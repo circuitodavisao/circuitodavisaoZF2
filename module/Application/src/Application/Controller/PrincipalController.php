@@ -484,12 +484,14 @@ class PrincipalController extends CircuitoController {
 				if ($formNome->isValid()) {
 					$validatedData = $formNome->getData();
 					$nome = trim($validatedData[Constantes::$INPUT_NOME]);
+					$sigla = trim($validatedData[Constantes::$INPUT_SIGLA]);
 					$entidade = $grupo->getEntidadeAtiva();
 					$entidade->setDataEHoraDeInativacao();
 					$setarDataEHora = false;
 					$this->getRepositorio()->getEntidadeORM()->persistir($entidade, $setarDataEHora);
 					$entidadeNova->setGrupo($grupo);
 					$entidadeNova->setNome($nome);
+					$entidadeNova->setSigla($sigla);
 					$entidadeNova->setEntidadeTipo($this->getRepositorio()->getEntidadeTipoORM()->encontrarPorId(EntidadeTipo::equipe));
 					$this->getRepositorio()->getEntidadeORM()->persistir($entidadeNova);
 

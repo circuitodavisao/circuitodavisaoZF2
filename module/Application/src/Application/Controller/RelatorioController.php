@@ -822,6 +822,7 @@ class RelatorioController extends CircuitoController {
 		$relatorio[self::dadosPessoais]['lideres'] = 'MEU';
 		$relatorio[self::dadosPessoais]['lideresFotos'] = $grupo->getFotosLideresAtivos();
 		$relatorio[self::dadosPessoais]['lideresEntidade'] = $grupo->getEntidadeAtiva()->infoEntidade();
+		$relatorio[self::dadosPessoais]['lideresSigla'] = $grupo->getEntidadeAtiva()->getSigla();
 		$relatorio[self::dadosPessoais]['grupo'] = $grupo->getId();
 
 		foreach ($todosFilhos as $filho) {
@@ -994,6 +995,8 @@ class RelatorioController extends CircuitoController {
 			if($grupoFilhoOrdenado->getEntidadeAtiva()){
 				$relatorio[$contadorFilhos]['lideresFotos'] = $grupoFilhoOrdenado->getFotosLideresAtivos();
 				$relatorio[$contadorFilhos]['lideresEntidade'] = $grupoFilhoOrdenado->getEntidadeAtiva()->infoEntidade($somenteNumeros = true);
+				$relatorio[$contadorFilhos]['lideresSigla'] = $grupoFilhoOrdenado->getEntidadeAtiva()->getSigla();
+				$relatorio[$contadorFilhos]['lideresEntidadeTipo'] = $grupoFilhoOrdenado->getEntidadeAtiva()->getEntidadeTipo()->getId();
 			}
 			$relatorio[$contadorFilhos]['grupo'] = $grupoFilhoOrdenado->getId();
 

@@ -450,6 +450,7 @@ class Constantes {
     public static $TRADUCAO_SUBTITULO_CABECALHO_ATENDIMENTO = 'disciples were attended to.';
     /* Fomulário */
     public static $INPUT_NOME = 'nome';
+    public static $INPUT_SIGLA = 'sigla';
     public static $INPUT_CODIGO = 'codigo';
     public static $INPUT_PRIMEIRO_NOME = 'primeiro-nome';
     public static $INPUT_ULTIMO_NOME = 'ultimo-nome';
@@ -598,6 +599,7 @@ class Constantes {
     public static $TRADUCAO_SELECIONE_O_ALUNO = 'Select the Student that will be used for the registration';
     public static $TRADUCAO_MATRICULA = 'Registration';
     public static $TRADUCAO_NOME = 'Nome';
+    public static $TRADUCAO_SIGLA = 'Sigla';
     public static $TRADUCAO_POSICAO = 'Position';
     public static $TRADUCAO_NOME_CURSO = 'Choose the name of the course';
     public static $TRADUCAO_NOME_CURSO_PLACEHOLDER = 'Name of the course';
