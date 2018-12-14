@@ -32,7 +32,7 @@ class NomeForm extends Form {
         ));
 
         /**
-         * Nova Senha
+         * Novo nome pra Equipe
          * Elemento do tipo text
          */
         $this->add(
@@ -44,7 +44,21 @@ class NomeForm extends Form {
                             Constantes::$FORM_STRING_PLACEHOLDER => Constantes::$TRADUCAO_NOME,
                         ])
         );
-    
+
+        /**
+         * Nova sigla pra Equipe
+         * Elemento do tipo text
+         */
+        $this->add(
+                (new Text())
+                        ->setName(Constantes::$INPUT_SIGLA)
+                        ->setAttributes([
+                            Constantes::$FORM_STRING_CLASS => Constantes::$CLASS_FORM_CONTROL,
+                            Constantes::$FORM_STRING_ID => Constantes::$INPUT_SIGLA,
+                            Constantes::$FORM_STRING_PLACEHOLDER => Constantes::$TRADUCAO_SIGLA,
+                        ])
+        );
+
         /**
          * Elemento CSRF
          */
@@ -74,6 +88,10 @@ class NomeForm extends Form {
 
         if($grupo){
           $this->get(Constantes::$INPUT_NOME)->setValue($grupo->getEntidadeAtiva()->infoEntidade());
+          $sigla = $grupo->getEntidadeAtiva()->getSigla();
+          if($sigla){
+            $this->get(Constantes::$INPUT_SIGLA)->setValue($sigla);
+          }
           $this->add(
                   (new Hidden())
                           ->setName(Constantes::$FORM_ID)

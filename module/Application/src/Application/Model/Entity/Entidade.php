@@ -54,6 +54,9 @@ class Entidade extends CircuitoEntity implements InputFilterAwareInterface {
     /** @ORM\Column(type="string") */
     protected $nome;
 
+    /** @ORM\Column(type="string") */
+    protected $sigla;
+
     /** @ORM\Column(type="integer") */
     protected $numero;
 
@@ -147,6 +150,28 @@ class Entidade extends CircuitoEntity implements InputFilterAwareInterface {
                     ),
                 ),
             ));
+            $inputFilter->add(array(
+                'name' => 'sigla',
+                'required' => true,
+                'filter' => array(
+                    array('name' => 'StripTags'), // removel xml e html string
+                    array('name' => 'StringTrim'), // removel espaco do inicio e do final da string
+                    array('name' => 'StringToUpper'), // transforma em maiusculo
+                ),
+                'validators' => array(
+                    array(
+                        'name' => 'NotEmpty',
+                    ),
+                    array(
+                        'name' => 'StringLength',
+                        'options' => array(
+                            'encoding' => 'UTF-8',
+                            'min' => 3,
+                            'max' => 3,
+                        ),
+                    ),
+                ),
+            ));
             $this->inputFilterPessoaFrequencia = $inputFilter;
         }
         return $this->inputFilterPessoaFrequencia;
@@ -172,6 +197,10 @@ class Entidade extends CircuitoEntity implements InputFilterAwareInterface {
         return $this->nome;
     }
 
+    function getSigla() {
+        return $this->sigla;
+    }
+
     function getNumero() {
         return $this->numero;
     }
@@ -194,6 +223,10 @@ class Entidade extends CircuitoEntity implements InputFilterAwareInterface {
 
     function setNome($nome) {
         $this->nome = strtoupper($nome);
+    }
+
+    function setSigla($sigla) {
+        $this->sigla = strtoupper($sigla);
     }
 
     function setNumero($numero) {

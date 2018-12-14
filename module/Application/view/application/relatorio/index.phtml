@@ -273,7 +273,17 @@ $somaMeta = 0;
 						}
 					}
 					echo '<td class="text-left" style="font-size:8px;padding-left:' . $padding . 'px;">' . $label . '<span class="hidden-xs">' . $relatorio['lideresFotos'] . '</span>';
-					echo $relatorio['lideresEntidade'];
+          $hiddenCelular = '';
+          if($relatorio['lideresEntidadeTipo'] === EntidadeTipo::equipe){
+            $hiddenCelular = 'hidden-xs hidden-sm';
+            if($relatorio['lideresSigla']){
+                echo '<span class="hidden-lg hidden-md"> ' . $relatorio['lideresSigla'] . '</span>';
+            } else {
+                echo '<span class="label label-dark hidden-lg hidden-md" data-placement="bottom" data-toggle="popover" data-content="Solicite Sua Sigla" style="cursor: pointer;">SSS</span>';
+            }
+          }
+
+          echo '<span class="'.$hiddenCelular.'"> ' . $relatorio['lideresEntidade'] . '</span>';
 
 					if($contagemRanking !== 0 && $relatorio['lideres'] != 'TOTAL'){
 						$funcaoOnClickPessoal = 'mostrarSplash(); funcaoCircuito("relatorio/'.$url.'",'.$relatorio['grupo'].')';
