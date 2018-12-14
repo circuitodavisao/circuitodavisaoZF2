@@ -10,15 +10,15 @@ use Application\Controller\Helper\Constantes;
 ?>
 <div class="panel-body bg-light">
     <?php
-    echo $this->divMensagens();
-    echo $this->inputFormularioSimples(Constantes::$TRADUCAO_NOME, $formulario->get(Constantes::$INPUT_NOME));
-
-     echo $this->formHidden($formulario->get(Constantes::$INPUT_CSRF));
-     echo $this->formHidden($formulario->get(Constantes::$FORM_ID));
-     $funcaoAlterar = $this->funcaoOnClick('validarPrincipalAlterarNomeEquipe(this.form)');
-     echo '<div class="form-group mbn col-lg-12 col-xs-12">';
-     echo $this->botaoSimples(Constantes::$TRADUCAO_ALTERAR, $funcaoAlterar);
-     echo '</div>';
+      echo $this->divMensagens();
+      echo $this->inputFormularioSimples(Constantes::$TRADUCAO_NOME, $formulario->get(Constantes::$INPUT_NOME));
+      echo $this->inputFormularioSimples(Constantes::$TRADUCAO_SIGLA, $formulario->get(Constantes::$INPUT_SIGLA));
+      echo $this->formHidden($formulario->get(Constantes::$INPUT_CSRF));
+      echo $this->formHidden($formulario->get(Constantes::$FORM_ID));
+      $funcaoAlterar = $this->funcaoOnClick('validarPrincipalAlterarNomeEquipe(this.form)');
+      echo '<div class="form-group mbn col-lg-12 col-xs-12">';
+      echo $this->botaoSimples(Constantes::$TRADUCAO_ALTERAR, $funcaoAlterar);
+      echo '</div>';
     ?>
 </div>
 <?php

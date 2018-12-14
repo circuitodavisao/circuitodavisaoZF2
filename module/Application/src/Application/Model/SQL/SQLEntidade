@@ -60,3 +60,4 @@ CREATE INDEX fki_entidade_tipo_id
   USING btree
   (tipo_id);
 
+ALTER TABLE entidade ADD COLUMN sigla character(3);
