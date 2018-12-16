@@ -103,8 +103,10 @@ class IndexController extends CircuitoController {
 			$this->abreConexao();
 			$this->getRepositorio()->iniciarTransacao();
 
-			$queryIgrejas = mysqli_query($this->getConexao(), 'SELECT * FROM ursula_igreja_ursula WHERE idCoordenacao = 3');
+			$idCoordenacao = 3;
+			$queryIgrejas = mysqli_query($this->getConexao(), 'SELECT * FROM ursula_igreja_ursula WHERE idCoordenacao = ' . $idCoordenacao);
 			while ($row = mysqli_fetch_array($queryIgrejas)) {
+				$html .= '<br />Igreja: ' . $row['nome'];
 				$idPerfilIgreja = 18;
 				$numeroIdentificadorIgreja = "$codigoRegiao$codigoCoordenacao$codigoIgreja";
 				$informacaoEntidade = $row[$stringNome];
@@ -219,6 +221,8 @@ class IndexController extends CircuitoController {
 						}
 					}
 				}
+				//$this->alunos($row['id'], $html);
+				//$this->alunosHistorico($row['id'], $html);
 			}
 			$this->getRepositorio()->fecharTransacao();
 		} catch (Exception $exc) {
@@ -1354,197 +1358,187 @@ class IndexController extends CircuitoController {
 		return new ViewModel();
 	}
 
-	public function alunosAction() {
+	public function alunos($idIgreja, $html) {
 		set_time_limit(0);
 		ini_set('memory_limit', '-1');
 		ini_set('max_execution_time', '60');
 
 		list($usec, $sec) = explode(' ', microtime());
 		$script_start = (float) $sec + (float) $usec;
-		$html = '';
 
-		try {
-			$this->abreConexao();
-			$this->getRepositorio()->iniciarTransacao();
+		$this->abreConexao();
 
-			$idIgreja = 1; //ceilandia
-			$idIgreja = 2;
-			$queryTurma = mysqli_query($this->getConexao(), 'SELECT * FROM ursula_turma_ursula WHERE idIgreja = ' . $idIgreja . ' AND fechada = "N";');
-			while ($rowTurma = mysqli_fetch_array($queryTurma)) {
-				/* Turma */
-				$curso = $this->getRepositorio()->getCursoORM()->encontrarPorId(Curso::INSTITUTO_DE_VENCEDORES);
-				$grupoIgreja = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupoIgrejaCeilandia = 1225);
-				$turma = new Turma();
-				$turma->setGrupo($grupoIgreja);
-				$turma->setCurso($curso);
-				$turma->setMes($rowTurma['mes']);
-				$turma->setAno($rowTurma['ano']);
-				$turma->setObservacao('MIGRACAO');
-				$this->getRepositorio()->getTurmaORM()->persistir($turma);
-				$html .= '<br /><br />TURMA - ' . $turma->getMes() . '/' . $turma->getAno();
+		$queryTurma = mysqli_query($this->getConexao(), 'SELECT * FROM ursula_turma_ursula WHERE idIgreja = ' . $idIgreja . ' AND fechada = "N";');
+		while ($rowTurma = mysqli_fetch_array($queryTurma)) {
+			/* Turma */
+			$curso = $this->getRepositorio()->getCursoORM()->encontrarPorId(Curso::INSTITUTO_DE_VENCEDORES);
+			$grupoIgreja = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupoIgrejaCeilandia = 1225);
+			$turma = new Turma();
+			$turma->setGrupo($grupoIgreja);
+			$turma->setCurso($curso);
+			$turma->setMes($rowTurma['mes']);
+			$turma->setAno($rowTurma['ano']);
+			$turma->setObservacao('MIGRACAO');
+			$this->getRepositorio()->getTurmaORM()->persistir($turma);
+			$html .= '<br /><br />TURMA - ' . $turma->getMes() . '/' . $turma->getAno();
 
-				$queryAulaDia = mysqli_query($this->getConexao(), 'SELECT * FROM ursula_aula_dia_ursula WHERE idTurma = ' . $rowTurma['id']);
-				$aulasAberta = array();
-				while ($rowAulaDia = mysqli_fetch_array($queryAulaDia)) {
-					if ($rowAulaDia['status'] != $aulaPendente = 1) {
-						$turmaAula = new TurmaAula();
-						$turmaAula->setTurma($turma);
-						switch ($rowAulaDia['modulo']) {
-						case 0:
-							$idAula = $rowAulaDia['aula'] + 4;
-							break;
-						case 1:
-							$idAula = $rowAulaDia['aula'] + 8;
-							break;
-						case 2:
-							$idAula = $rowAulaDia['aula'] + 20;
-							break;
-						case 3:
-							$idAula = $rowAulaDia['aula'] + 32;
-							break;
-						}
-						$aula = $this->getRepositorio()->getAulaORM()->encontrarPorId($idAula);
-						$turmaAula->setAula($aula);
-						if ($rowAulaDia['status'] == $aulaFechada = 3) {
-							$turmaAula->setDataEHoraDeInativacao();
-						}
-						$pessoaLeonardo = $this->getRepositorio()->getPessoaORM()->encontrarPorId($idPessoaLeonardo = 541);
-						$turmaAula->setPessoa($pessoaLeonardo);
-						$this->getRepositorio()->getTurmaAulaORM()->persistir($turmaAula);
-						$html .= '<br />TURMA_AULA - ' . $turmaAula->getAula()->getNome() . ' - Ativa ' . $turmaAula->verificarSeEstaAtivo();
-						if ($rowAulaDia['status'] == $aulaAberta = 2) {
-							$aulasAberta[] = $turmaAula;
-						}
+			$queryAulaDia = mysqli_query($this->getConexao(), 'SELECT * FROM ursula_aula_dia_ursula WHERE idTurma = ' . $rowTurma['id']);
+			$aulasAberta = array();
+			while ($rowAulaDia = mysqli_fetch_array($queryAulaDia)) {
+				if ($rowAulaDia['status'] != $aulaPendente = 1) {
+					$turmaAula = new TurmaAula();
+					$turmaAula->setTurma($turma);
+					switch ($rowAulaDia['modulo']) {
+					case 0:
+						$idAula = $rowAulaDia['aula'] + 4;
+						break;
+					case 1:
+						$idAula = $rowAulaDia['aula'] + 8;
+						break;
+					case 2:
+						$idAula = $rowAulaDia['aula'] + 20;
+						break;
+					case 3:
+						$idAula = $rowAulaDia['aula'] + 32;
+						break;
+					}
+					$aula = $this->getRepositorio()->getAulaORM()->encontrarPorId($idAula);
+					$turmaAula->setAula($aula);
+					if ($rowAulaDia['status'] == $aulaFechada = 3) {
+						$turmaAula->setDataEHoraDeInativacao();
+					}
+					$pessoaLeonardo = $this->getRepositorio()->getPessoaORM()->encontrarPorId($idPessoaLeonardo = 541);
+					$turmaAula->setPessoa($pessoaLeonardo);
+					$this->getRepositorio()->getTurmaAulaORM()->persistir($turmaAula);
+					$html .= '<br />TURMA_AULA - ' . $turmaAula->getAula()->getNome() . ' - Ativa ' . $turmaAula->verificarSeEstaAtivo();
+					if ($rowAulaDia['status'] == $aulaAberta = 2) {
+						$aulasAberta[] = $turmaAula;
 					}
 				}
+			}
 
-				if (count($aulasAberta) > 1) {
-					for ($indiceAulasAbertas = 0; $indiceAulasAbertas < (count($aulasAberta) - 1); $indiceAulasAbertas++) {
-						$turmaAulaParaInativar = $aulasAberta[$indiceAulasAbertas];
-						$turmaAulaParaInativar->setDataEHoraDeInativacao();
-						$this->getRepositorio()->getTurmaAulaORM()->persistir($turmaAulaParaInativar);
-						$html .= '<br />TURMA_AULA FECHADA DEPOIS - ' . $turmaAulaParaInativar->getAula()->getNome() . ' - Ativa ' . $turmaAulaParaInativar->verificarSeEstaAtivo();
-					}
+			if (count($aulasAberta) > 1) {
+				for ($indiceAulasAbertas = 0; $indiceAulasAbertas < (count($aulasAberta) - 1); $indiceAulasAbertas++) {
+					$turmaAulaParaInativar = $aulasAberta[$indiceAulasAbertas];
+					$turmaAulaParaInativar->setDataEHoraDeInativacao();
+					$this->getRepositorio()->getTurmaAulaORM()->persistir($turmaAulaParaInativar);
+					$html .= '<br />TURMA_AULA FECHADA DEPOIS - ' . $turmaAulaParaInativar->getAula()->getNome() . ' - Ativa ' . $turmaAulaParaInativar->verificarSeEstaAtivo();
 				}
+			}
 
-				$queryTurmaAluno = mysqli_query(
-					$this->getConexao(), 'SELECT * FROM ursula_turma_aluno_ursula WHERE idTurma = ' . $rowTurma['id'] . ' AND status = "A" AND (idSituacao = 1 || idSituacao = 2 || idSituacao = 5 || idSituacao = 4) ;');
-				while ($rowTurmaAluno = mysqli_fetch_array($queryTurmaAluno)) {
-					$queryPessoa = mysqli_query($this->getConexao(), 'SELECT * FROM ursula_pessoa_ursula WHERE id = ' . $rowTurmaAluno['idAluno']);
-					while ($rowPessoa = mysqli_fetch_array($queryPessoa)) {
-						$lider1 = $rowPessoa['idLider'];
-						$grupoCV = null;
-						if ($grupoCV = $this->getRepositorio()->getGrupoCvORM()->encontrarLider1($lider1)) {
+			$queryTurmaAluno = mysqli_query(
+				$this->getConexao(), 'SELECT * FROM ursula_turma_aluno_ursula WHERE idTurma = ' . $rowTurma['id'] . ' AND status = "A" AND (idSituacao = 1 || idSituacao = 2 || idSituacao = 5 || idSituacao = 4) ;');
+			while ($rowTurmaAluno = mysqli_fetch_array($queryTurmaAluno)) {
+				$queryPessoa = mysqli_query($this->getConexao(), 'SELECT * FROM ursula_pessoa_ursula WHERE id = ' . $rowTurmaAluno['idAluno']);
+				while ($rowPessoa = mysqli_fetch_array($queryPessoa)) {
+					$lider1 = $rowPessoa['idLider'];
+					$grupoCV = null;
+					if ($grupoCV = $this->getRepositorio()->getGrupoCvORM()->encontrarLider1($lider1)) {
 
-						} else {
-							if ($idLider2 = $rowPessoa['idLider2']) {
-								if ($grupoCV = $this->getRepositorio()->getGrupoCvORM()->encontrarLider1($idLider2)) {
+					} else {
+						if ($idLider2 = $rowPessoa['idLider2']) {
+							if ($grupoCV = $this->getRepositorio()->getGrupoCvORM()->encontrarLider1($idLider2)) {
 
-								}
 							}
 						}
-						if ($grupoCV) {
-							if ($rowPessoa['id'] != 11082475) {
-								$grupo = $grupoCV->getGrupo();
+					}
+					if ($grupoCV) {
+						if ($rowPessoa['id'] != 11082475) {
+							$grupo = $grupoCV->getGrupo();
 
-								$telefone = $rowPessoa['dddCelular'] ? $rowPessoa['dddCelular'] : '61' . $rowPessoa['telefoneCelular'];
-								if (!is_numeric($telefone)) {
-									$telefone = '99999999999';
-								}
-								if (strlen($telefone) > 11) {
-									$telefone = substr($telefone, 0, 11);
-								}
+							$telefone = $rowPessoa['dddCelular'] ? $rowPessoa['dddCelular'] : '61' . $rowPessoa['telefoneCelular'];
+							if (!is_numeric($telefone)) {
+								$telefone = '99999999999';
+							}
+							if (strlen($telefone) > 11) {
+								$telefone = substr($telefone, 0, 11);
+							}
 
-								/* Pessoa */
-								$pessoaVolatil = new Pessoa();
-								$pessoaVolatil->setNome($rowPessoa['nome']);
-								$pessoaVolatil->setTelefone($telefone);
-								$pessoaVolatil->setTipo($rowPessoa['idClassificacao']);
-								$this->getRepositorio()->getPessoaORM()->persistir($pessoaVolatil);
-								$html .= '<br /><br />PESSOA - ' . $pessoaVolatil->getNome();
+							/* Pessoa */
+							$pessoaVolatil = new Pessoa();
+							$pessoaVolatil->setNome($rowPessoa['nome']);
+							$pessoaVolatil->setTelefone($telefone);
+							$pessoaVolatil->setTipo($rowPessoa['idClassificacao']);
+							$this->getRepositorio()->getPessoaORM()->persistir($pessoaVolatil);
+							$html .= '<br /><br />PESSOA - ' . $pessoaVolatil->getNome();
 
-								/* grupo pessoa */
-								$grupoPessoaTipo = $this->getRepositorio()->getGrupoPessoaTipoORM()->encontrarPorId($tipoMembro = 1);
-								$grupoPessoa = new GrupoPessoa();
-								$grupoPessoa->setGrupo($grupo);
-								$grupoPessoa->setPessoa($pessoaVolatil);
-								$grupoPessoa->setGrupoPessoaTipo($grupoPessoaTipo);
-								$this->getRepositorio()->getGrupoPessoaORM()->persistir($grupoPessoa);
-								$html .= '<br />GRUPO PESSOA - ' . $grupoPessoa->getGrupo()->getEntidadeAtiva()->infoEntidade();
+							/* grupo pessoa */
+							$grupoPessoaTipo = $this->getRepositorio()->getGrupoPessoaTipoORM()->encontrarPorId($tipoMembro = 1);
+							$grupoPessoa = new GrupoPessoa();
+							$grupoPessoa->setGrupo($grupo);
+							$grupoPessoa->setPessoa($pessoaVolatil);
+							$grupoPessoa->setGrupoPessoaTipo($grupoPessoaTipo);
+							$this->getRepositorio()->getGrupoPessoaORM()->persistir($grupoPessoa);
+							$html .= '<br />GRUPO PESSOA - ' . $grupoPessoa->getGrupo()->getEntidadeAtiva()->infoEntidade();
 
-								/* turma_pessoa */
-								$turmaPessoa = new TurmaPessoa();
-								$turmaPessoa->setPessoa($pessoaVolatil);
-								$turmaPessoa->setTurma($turma);
-								$turmaPessoa->setAntigo_id($rowTurmaAluno['idAluno']);
-								$this->getRepositorio()->getTurmaPessoaORM()->persistir($turmaPessoa);
-								$html .= '<br />TURMA PESSOA ' . $turmaPessoa->getId();
+							/* turma_pessoa */
+							$turmaPessoa = new TurmaPessoa();
+							$turmaPessoa->setPessoa($pessoaVolatil);
+							$turmaPessoa->setTurma($turma);
+							$turmaPessoa->setAntigo_id($rowTurmaAluno['idAluno']);
+							$this->getRepositorio()->getTurmaPessoaORM()->persistir($turmaPessoa);
+							$html .= '<br />TURMA PESSOA ' . $turmaPessoa->getId();
 
-								/* turma pessoa situacao */
-								$ativo = 1;
-								$especial = 6;
-								$desistente = 7;
-								$reprovado = 8;
-								$idSituacao = $ativo;
-								if ($rowTurmaAluno['idSituacao'] == 4) {
-									$idSituacao = $especial;
-								}
-								if ($rowTurmaAluno['idSituacao'] == 2) {
-									$idSituacao = $desistente;
-								}
-								if ($rowTurmaAluno['idSituacao'] == 5) {
-									$idSituacao = $reprovado;
-								}
-								$situacao = $this->getRepositorio()->getSituacaoORM()->encontrarPorId($idSituacao);
-								$turmaPessoaSituacao = new TurmaPessoaSituacao();
-								$turmaPessoaSituacao->setTurma_pessoa($turmaPessoa);
-								$turmaPessoaSituacao->setSituacao($situacao);
-								$this->getRepositorio()->getTurmaPessoaSituacaoORM()->persistir($turmaPessoaSituacao);
-								$html .= '<br />TURMA PESSOA SITUACAO ' . $turmaPessoaSituacao->getSituacao()->getNome();
+							/* turma pessoa situacao */
+							$ativo = 1;
+							$especial = 6;
+							$desistente = 7;
+							$reprovado = 8;
+							$idSituacao = $ativo;
+							if ($rowTurmaAluno['idSituacao'] == 4) {
+								$idSituacao = $especial;
+							}
+							if ($rowTurmaAluno['idSituacao'] == 2) {
+								$idSituacao = $desistente;
+							}
+							if ($rowTurmaAluno['idSituacao'] == 5) {
+								$idSituacao = $reprovado;
+							}
+							$situacao = $this->getRepositorio()->getSituacaoORM()->encontrarPorId($idSituacao);
+							$turmaPessoaSituacao = new TurmaPessoaSituacao();
+							$turmaPessoaSituacao->setTurma_pessoa($turmaPessoa);
+							$turmaPessoaSituacao->setSituacao($situacao);
+							$this->getRepositorio()->getTurmaPessoaSituacaoORM()->persistir($turmaPessoaSituacao);
+							$html .= '<br />TURMA PESSOA SITUACAO ' . $turmaPessoaSituacao->getSituacao()->getNome();
 
-								/* turma pessoa aula */
-								$queryFrequencias = mysqli_query($this->getConexao(), 'SELECT * FROM ursula_aula_presenca_ursula WHERE idAluno = ' . $rowTurmaAluno['idAluno']);
-								while ($rowFrequencias = mysqli_fetch_array($queryFrequencias)) {
-									if ($rowFrequencias['presenca'] == 1 || $rowFrequencias['presenca'] == 3) {
-										$turmaPessoaAula = new TurmaPessoaAula();
-										$turmaPessoaAula->setTurma_pessoa($turmaPessoa);
-										$queryAulaDiaFrequencia = mysqli_query($this->getConexao(), 'SELECT * FROM ursula_aula_dia_ursula WHERE id = ' . $rowFrequencias['idAulaDia']);
-										while ($rowAulaDiaFrequencia = mysqli_fetch_array($queryAulaDiaFrequencia)) {
-											switch ($rowAulaDiaFrequencia['modulo']) {
-											case 0:
-												$idAula = $rowAulaDiaFrequencia['aula'] + 4;
-												break;
-											case 1:
-												$idAula = $rowAulaDiaFrequencia['aula'] + 8;
-												break;
-											case 2:
-												$idAula = $rowAulaDiaFrequencia['aula'] + 20;
-												break;
-											case 3:
-												$idAula = $rowAulaDiaFrequencia['aula'] + 32;
-												break;
-											}
+							/* turma pessoa aula */
+							$queryFrequencias = mysqli_query($this->getConexao(), 'SELECT * FROM ursula_aula_presenca_ursula WHERE idAluno = ' . $rowTurmaAluno['idAluno']);
+							while ($rowFrequencias = mysqli_fetch_array($queryFrequencias)) {
+								if ($rowFrequencias['presenca'] == 1 || $rowFrequencias['presenca'] == 3) {
+									$turmaPessoaAula = new TurmaPessoaAula();
+									$turmaPessoaAula->setTurma_pessoa($turmaPessoa);
+									$queryAulaDiaFrequencia = mysqli_query($this->getConexao(), 'SELECT * FROM ursula_aula_dia_ursula WHERE id = ' . $rowFrequencias['idAulaDia']);
+									while ($rowAulaDiaFrequencia = mysqli_fetch_array($queryAulaDiaFrequencia)) {
+										switch ($rowAulaDiaFrequencia['modulo']) {
+										case 0:
+											$idAula = $rowAulaDiaFrequencia['aula'] + 4;
+											break;
+										case 1:
+											$idAula = $rowAulaDiaFrequencia['aula'] + 8;
+											break;
+										case 2:
+											$idAula = $rowAulaDiaFrequencia['aula'] + 20;
+											break;
+										case 3:
+											$idAula = $rowAulaDiaFrequencia['aula'] + 32;
+											break;
 										}
-										$aula = $this->getRepositorio()->getAulaORM()->encontrarPorId($idAula);
-										$turmaPessoaAula->setAula($aula);
-										if ($rowFrequencias['presenca'] == 3) {
-											$turmaPessoaAula->setReposicao('S');
-										} else {
-											$turmaPessoaAula->setReposicao('N');
-										}
-										$this->getRepositorio()->getTurmaPessoaAulaORM()->persistir($turmaPessoaAula);
-										$html .= '<br />TURMA PESSOA AULA ' . $turmaPessoaAula->getAula()->getNome() . ' Reposicao? ' . $turmaPessoaAula->getReposicao();
 									}
+									$aula = $this->getRepositorio()->getAulaORM()->encontrarPorId($idAula);
+									$turmaPessoaAula->setAula($aula);
+									if ($rowFrequencias['presenca'] == 3) {
+										$turmaPessoaAula->setReposicao('S');
+									} else {
+										$turmaPessoaAula->setReposicao('N');
+									}
+									$this->getRepositorio()->getTurmaPessoaAulaORM()->persistir($turmaPessoaAula);
+									$html .= '<br />TURMA PESSOA AULA ' . $turmaPessoaAula->getAula()->getNome() . ' Reposicao? ' . $turmaPessoaAula->getReposicao();
 								}
 							}
 						}
 					}
 				}
 			}
-			$this->getRepositorio()->fecharTransacao();
-		} catch (Exception $exc) {
-			$this->getRepositorio()->desfazerTransacao();
-			Funcoes::var_dump($exc->getMessage());
 		}
 
 		list($usec, $sec) = explode(' ', microtime());
@@ -1552,135 +1546,125 @@ class IndexController extends CircuitoController {
 		$elapsed_time = round($script_end - $script_start, 5);
 
 		$html .= '<br /><br />Elapsed time: ' . $elapsed_time . ' secs. Memory usage: ' . round(((memory_get_peak_usage(true) / 1024) / 1024), 2) . 'Mb';
-		return new ViewModel(array('html' => $html));
+		return $html;
 	}
 
-	public function alunosHistoricoAction(){
+	public function alunosHistorico($idIgreja, $html){
 		set_time_limit(0);
 		ini_set('memory_limit', '-1');
 		ini_set('max_execution_time', '60');
 
 		list($usec, $sec) = explode(' ', microtime());
 		$script_start = (float) $sec + (float) $usec;
-		$html = '';
 
-		try {
-			$this->abreConexao();
-			$this->getRepositorio()->iniciarTransacao();
+		$this->abreConexao();
 
-			$idIgreja = 1; //ceilandia
-			//	    $idIgreja = 2;
-			$queryTurma = mysqli_query($this->getConexao(), 'SELECT * FROM ursula_turma_ursula WHERE idIgreja = ' . $idIgreja . ' AND fechada = "N";');
-			while ($rowTurma = mysqli_fetch_array($queryTurma)) {
-				/* Turma */
-				$curso = $this->getRepositorio()->getCursoORM()->encontrarPorId(Curso::INSTITUTO_DE_VENCEDORES);
-				$grupoIgreja = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupoIgrejaCeilandia = 1);
+		$queryTurma = mysqli_query($this->getConexao(), 'SELECT * FROM ursula_turma_ursula WHERE idIgreja = ' . $idIgreja . ' AND fechada = "N";');
+		while ($rowTurma = mysqli_fetch_array($queryTurma)) {
+			/* Turma */
+			$curso = $this->getRepositorio()->getCursoORM()->encontrarPorId(Curso::INSTITUTO_DE_VENCEDORES);
+			$grupoIgreja = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupoIgrejaCeilandia = 1);
 
-				$queryTurmaAluno = mysqli_query(
-					$this->getConexao(), 'SELECT * FROM ursula_turma_aluno_ursula WHERE idTurma = ' . $rowTurma['id'] . ' AND status = "A" AND (idSituacao = 1 || idSituacao = 2 || idSituacao = 5 || idSituacao = 4) ;');
-				while ($rowTurmaAluno = mysqli_fetch_array($queryTurmaAluno)) {
-					$queryPessoa = mysqli_query($this->getConexao(), 'SELECT * FROM ursula_pessoa_ursula WHERE id = ' . $rowTurmaAluno['idAluno']);
+			$queryTurmaAluno = mysqli_query(
+				$this->getConexao(), 'SELECT * FROM ursula_turma_aluno_ursula WHERE idTurma = ' . $rowTurma['id'] . ' AND status = "A" AND (idSituacao = 1 || idSituacao = 2 || idSituacao = 5 || idSituacao = 4) ;');
+			while ($rowTurmaAluno = mysqli_fetch_array($queryTurmaAluno)) {
+				$queryPessoa = mysqli_query($this->getConexao(), 'SELECT * FROM ursula_pessoa_ursula WHERE id = ' . $rowTurmaAluno['idAluno']);
 
-					while ($rowPessoa = mysqli_fetch_array($queryPessoa)) {
-						$lider1 = $rowPessoa['idLider'];
-						$grupoCV = null;
-						if ($grupoCV = $this->getRepositorio()->getGrupoCvORM()->encontrarLider1($lider1)) {
+				while ($rowPessoa = mysqli_fetch_array($queryPessoa)) {
+					$lider1 = $rowPessoa['idLider'];
+					$grupoCV = null;
+					if ($grupoCV = $this->getRepositorio()->getGrupoCvORM()->encontrarLider1($lider1)) {
 
-						} else {
-							if ($idLider2 = $rowPessoa['idLider2']) {
-								if ($grupoCV = $this->getRepositorio()->getGrupoCvORM()->encontrarLider1($idLider2)) {
-
-								}
-							}
-						}
-						if ($grupoCV) {
-							if ($rowPessoa['id'] != 11082475) {
-								$turmaPessoa = $this->getRepositorio()->getTurmaPessoaORM()->encontrarporidAntigo($rowTurmaAluno['idAluno']);
-								$html .= '<br /><br />TURMA PESSOA: '.$turmaPessoa->getId();
-
-								/* turma pessoa pedagogico */
-								$queryFrequencias = mysqli_query($this->getConexao(), 'SELECT * FROM ursula_aula_visto_ursula WHERE idAluno = ' . $rowTurmaAluno['idAluno']);
-								while ($rowFrequencias = mysqli_fetch_array($queryFrequencias)) {
-									if ($rowFrequencias['visto'] == 'S') {
-										$turmaPessoaVisto = new TurmaPessoaVisto();
-										$turmaPessoaVisto->setTurma_pessoa($turmaPessoa);
-										$queryAulaDiaFrequencia = mysqli_query($this->getConexao(), 'SELECT * FROM ursula_aula_dia_ursula WHERE id = ' . $rowFrequencias['idAulaDia']);
-										while ($rowAulaDiaFrequencia = mysqli_fetch_array($queryAulaDiaFrequencia)) {
-											switch ($rowAulaDiaFrequencia['modulo']) {
-											case 0:
-												$idAula = $rowAulaDiaFrequencia['aula'] + 4;
-												break;
-											case 1:
-												$idAula = $rowAulaDiaFrequencia['aula'] + 8;
-												break;
-											case 2:
-												$idAula = $rowAulaDiaFrequencia['aula'] + 20;
-												break;
-											case 3:
-												$idAula = $rowAulaDiaFrequencia['aula'] + 32;
-												break;
-											}
-										}
-										$aula = $this->getRepositorio()->getAulaORM()->encontrarPorId($idAula);
-										$turmaPessoaVisto->setAula($aula);
-										$this->getRepositorio()->getTurmaPessoaVistoORM()->persistir($turmaPessoaVisto);
-										$html .= '<br />TURMA PESSOA VISTO ' . $turmaPessoaVisto->getAula()->getNome();
-									}
-								}
-
-								/* turma pessoa avaliacao */
-								$queryPedagogico = mysqli_query($this->getConexao(), 'SELECT * FROM ursula_aluno_avaliacao_pedagogica_ursula WHERE idAluno = ' . $rowTurmaAluno['idAluno']);
-								while ($rowPedagogico = mysqli_fetch_array($queryPedagogico)) {
-
-									for($indicePedagogico = 1; $indicePedagogico <= 3; $indicePedagogico++){
-										if($rowPedagogico['livro1M'.$indicePedagogico] || $rowPedagogico['livro2M'.$indicePedagogico] || $rowPedagogico['complementarM'.$indicePedagogico]){
-											$turmaPessoaAvaliacao = new TurmaPessoaAvaliacao();
-											$turmaPessoaAvaliacao->setTurma_pessoa($turmaPessoa);
-
-											$disciplina = $this->getRepositorio()->getDisciplinaORM()->encontrarPorId($indicePedagogico+5);
-											$turmaPessoaAvaliacao->setDisciplina($disciplina);
-											if($livro1 = $rowPedagogico['livro1M'.$indicePedagogico]){
-												$turmaPessoaAvaliacao->setAvaliacao1($livro1);
-											}
-											if($livro2 = $rowPedagogico['livro2M'.$indicePedagogico]){
-												$turmaPessoaAvaliacao->setAvaliacao2($livro2);
-											}
-											if($extra = $rowPedagogico['complementarM'.$indicePedagogico]){
-												$turmaPessoaAvaliacao->setExtra($extra);
-											}
-
-											$this->getRepositorio()->getTurmaPessoaAvaliacaoORM()->persistir($turmaPessoaAvaliacao);
-											$html .= '<br /> TURMA PESSOA AVALIACAO '.$turmaPessoaAvaliacao->getExtra();
-										}
-									}
-								}
-
-
-								$queryFinanceiro = mysqli_query($this->getConexao(), 'SELECT * FROM ursula_financeiro_aluno_ursula WHERE idAluno = ' . $rowTurmaAluno['idAluno']);
-								while ($rowFinanceiro = mysqli_fetch_array($queryFinanceiro)) {
-
-									for($indiceFinanceiro = 1; $indiceFinanceiro <= 3; $indiceFinanceiro++){
-										if($rowFinanceiro['matricula'.$indiceFinanceiro]){
-											$turmaPessoaFinanceiro = new TurmaPessoaFinanceiro();
-											$turmaPessoaFinanceiro->setTurma_pessoa($turmaPessoa);
-
-											$disciplina = $this->getRepositorio()->getDisciplinaORM()->encontrarPorId($indiceFinanceiro+5);
-											$turmaPessoaFinanceiro->setDisciplina($disciplina);
-											$this->getRepositorio()->getTurmaPessoaFinanceiroORM()->persistir($turmaPessoaFinanceiro);
-											$html .= '<br /> TURMA PESSOA FINANCEIRO '.$turmaPessoaFinanceiro->getId();
-										}
-									}
-								}
+					} else {
+						if ($idLider2 = $rowPessoa['idLider2']) {
+							if ($grupoCV = $this->getRepositorio()->getGrupoCvORM()->encontrarLider1($idLider2)) {
 
 							}
 						}
 					}
+					if ($grupoCV) {
+						if ($rowPessoa['id'] != 11082475) {
+							$turmaPessoa = $this->getRepositorio()->getTurmaPessoaORM()->encontrarporidAntigo($rowTurmaAluno['idAluno']);
+							$html .= '<br /><br />TURMA PESSOA: '.$turmaPessoa->getId();
+
+							/* turma pessoa pedagogico */
+							$queryFrequencias = mysqli_query($this->getConexao(), 'SELECT * FROM ursula_aula_visto_ursula WHERE idAluno = ' . $rowTurmaAluno['idAluno']);
+							while ($rowFrequencias = mysqli_fetch_array($queryFrequencias)) {
+								if ($rowFrequencias['visto'] == 'S') {
+									$turmaPessoaVisto = new TurmaPessoaVisto();
+									$turmaPessoaVisto->setTurma_pessoa($turmaPessoa);
+									$queryAulaDiaFrequencia = mysqli_query($this->getConexao(), 'SELECT * FROM ursula_aula_dia_ursula WHERE id = ' . $rowFrequencias['idAulaDia']);
+									while ($rowAulaDiaFrequencia = mysqli_fetch_array($queryAulaDiaFrequencia)) {
+										switch ($rowAulaDiaFrequencia['modulo']) {
+										case 0:
+											$idAula = $rowAulaDiaFrequencia['aula'] + 4;
+											break;
+										case 1:
+											$idAula = $rowAulaDiaFrequencia['aula'] + 8;
+											break;
+										case 2:
+											$idAula = $rowAulaDiaFrequencia['aula'] + 20;
+											break;
+										case 3:
+											$idAula = $rowAulaDiaFrequencia['aula'] + 32;
+											break;
+										}
+									}
+									$aula = $this->getRepositorio()->getAulaORM()->encontrarPorId($idAula);
+									$turmaPessoaVisto->setAula($aula);
+									$this->getRepositorio()->getTurmaPessoaVistoORM()->persistir($turmaPessoaVisto);
+									$html .= '<br />TURMA PESSOA VISTO ' . $turmaPessoaVisto->getAula()->getNome();
+								}
+							}
+
+							/* turma pessoa avaliacao */
+							$queryPedagogico = mysqli_query($this->getConexao(), 'SELECT * FROM ursula_aluno_avaliacao_pedagogica_ursula WHERE idAluno = ' . $rowTurmaAluno['idAluno']);
+							while ($rowPedagogico = mysqli_fetch_array($queryPedagogico)) {
+
+								for($indicePedagogico = 1; $indicePedagogico <= 3; $indicePedagogico++){
+									if($rowPedagogico['livro1M'.$indicePedagogico] || $rowPedagogico['livro2M'.$indicePedagogico] || $rowPedagogico['complementarM'.$indicePedagogico]){
+										$turmaPessoaAvaliacao = new TurmaPessoaAvaliacao();
+										$turmaPessoaAvaliacao->setTurma_pessoa($turmaPessoa);
+
+										$disciplina = $this->getRepositorio()->getDisciplinaORM()->encontrarPorId($indicePedagogico+5);
+										$turmaPessoaAvaliacao->setDisciplina($disciplina);
+										if($livro1 = $rowPedagogico['livro1M'.$indicePedagogico]){
+											$turmaPessoaAvaliacao->setAvaliacao1($livro1);
+										}
+										if($livro2 = $rowPedagogico['livro2M'.$indicePedagogico]){
+											$turmaPessoaAvaliacao->setAvaliacao2($livro2);
+										}
+										if($extra = $rowPedagogico['complementarM'.$indicePedagogico]){
+											$turmaPessoaAvaliacao->setExtra($extra);
+										}
+
+										$this->getRepositorio()->getTurmaPessoaAvaliacaoORM()->persistir($turmaPessoaAvaliacao);
+										$html .= '<br /> TURMA PESSOA AVALIACAO '.$turmaPessoaAvaliacao->getExtra();
+									}
+								}
+							}
+
+
+							$queryFinanceiro = mysqli_query($this->getConexao(), 'SELECT * FROM ursula_financeiro_aluno_ursula WHERE idAluno = ' . $rowTurmaAluno['idAluno']);
+							while ($rowFinanceiro = mysqli_fetch_array($queryFinanceiro)) {
+
+								for($indiceFinanceiro = 1; $indiceFinanceiro <= 3; $indiceFinanceiro++){
+									if($rowFinanceiro['matricula'.$indiceFinanceiro]){
+										$turmaPessoaFinanceiro = new TurmaPessoaFinanceiro();
+										$turmaPessoaFinanceiro->setTurma_pessoa($turmaPessoa);
+
+										$disciplina = $this->getRepositorio()->getDisciplinaORM()->encontrarPorId($indiceFinanceiro+5);
+										$turmaPessoaFinanceiro->setDisciplina($disciplina);
+										$this->getRepositorio()->getTurmaPessoaFinanceiroORM()->persistir($turmaPessoaFinanceiro);
+										$html .= '<br /> TURMA PESSOA FINANCEIRO '.$turmaPessoaFinanceiro->getId();
+									}
+								}
+							}
+
+						}
+					}
 				}
 			}
-			$this->getRepositorio()->fecharTransacao();
-		} catch (Exception $exc) {
-			$this->getRepositorio()->desfazerTransacao();
-			echo $exc->getMessage();
 		}
 
 		list($usec, $sec) = explode(' ', microtime());
@@ -1688,8 +1672,8 @@ class IndexController extends CircuitoController {
 		$elapsed_time = round($script_end - $script_start, 5);
 
 		$html .= '<br /><br />Elapsed time: ' . $elapsed_time . ' secs. Memory usage: ' . round(((memory_get_peak_usage(true) / 1024) / 1024), 2) . 'Mb';
-		return new ViewModel(array('html' => $html));
 
+		return $html;
 	}
 
 	public function abreConexao() {
