@@ -1358,7 +1358,7 @@ class IndexController extends CircuitoController {
 		return new ViewModel();
 	}
 
-	public function alunos($idIgreja, $html) {
+	public function alunos($idIgreja, $idGrupoIgreja, $html) {
 		set_time_limit(0);
 		ini_set('memory_limit', '-1');
 		ini_set('max_execution_time', '60');
@@ -1372,7 +1372,7 @@ class IndexController extends CircuitoController {
 		while ($rowTurma = mysqli_fetch_array($queryTurma)) {
 			/* Turma */
 			$curso = $this->getRepositorio()->getCursoORM()->encontrarPorId(Curso::INSTITUTO_DE_VENCEDORES);
-			$grupoIgreja = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupoIgrejaCeilandia = 1225);
+			$grupoIgreja = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupoIgreja);
 			$turma = new Turma();
 			$turma->setGrupo($grupoIgreja);
 			$turma->setCurso($curso);
@@ -1549,7 +1549,7 @@ class IndexController extends CircuitoController {
 		return $html;
 	}
 
-	public function alunosHistorico($idIgreja, $html){
+	public function alunosHistorico($idIgreja, $idGrupoIgreja,  $html){
 		set_time_limit(0);
 		ini_set('memory_limit', '-1');
 		ini_set('max_execution_time', '60');
@@ -1563,7 +1563,7 @@ class IndexController extends CircuitoController {
 		while ($rowTurma = mysqli_fetch_array($queryTurma)) {
 			/* Turma */
 			$curso = $this->getRepositorio()->getCursoORM()->encontrarPorId(Curso::INSTITUTO_DE_VENCEDORES);
-			$grupoIgreja = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupoIgrejaCeilandia = 1);
+			$grupoIgreja = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupoIgreja);
 
 			$queryTurmaAluno = mysqli_query(
 				$this->getConexao(), 'SELECT * FROM ursula_turma_aluno_ursula WHERE idTurma = ' . $rowTurma['id'] . ' AND status = "A" AND (idSituacao = 1 || idSituacao = 2 || idSituacao = 5 || idSituacao = 4) ;');
@@ -2590,24 +2590,26 @@ class IndexController extends CircuitoController {
 		$html = '';
 
 		$somenteAtivos = true;
-		$grupos = $this->getRepositorio()->getGrupoORM()->encontrarTodos($somenteAtivos);
+		$grupos = $this->getRepositorio()->getGrupoORM()->pegarTodasIgrejas();
 		$this->getRepositorio()->iniciarTransacao();
 		$html .= "<br />###### iniciarTransacao ";
 		try {
 			if ($grupos) {
+				$this->abreConexao();
 				$html .= "<br /><br /><br />Tem Grupos ativos!!!";
 				foreach ($grupos as $grupo) {
 					$html .= "<br /> Grupo: {$grupo->getId()}";
-					if($grupoEventosDiscipulados = $grupo->getGrupoEventoAtivosPorTipo(EventoTipo::tipoDiscipulado)){
-						$numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupo);
-						foreach($grupoEventosDiscipulados as $grupoEventoDiscipulado){
-							$fatoCelulaDiscipulado = new FatoCelulaDiscipulado();
-							$fatoCelulaDiscipulado->setNumero_identificador($numeroIdentificador);
-							$fatoCelulaDiscipulado->setGrupo_evento_id($grupoEventoDiscipulado->getId());
-							$this->getRepositorio()->getFatoCelulaDiscipuladoORM()->persistir($fatoCelulaDiscipulado);
-							$html .= "<br /> fato celula discipulado";
-						}
+					$html .= "<br /> Entidade: {$grupo->getEntidadeAtiva()->getNome()}";
+
+					$sql = "SELECT * FROM ursula_igreja_ursula WHERE nome = '{$grupo->getEntidadeAtiva()->getNome()}'";
+					$html .= 'sql: '.$sql;
+					$queryIgrejas = mysqli_query($this->getConexao(), $sql);
+					while ($row = mysqli_fetch_array($queryIgrejas)) {
+						$html .= '<br />Entrei';
+						$this->alunos($row['id'], $grupo->getId(), $html);
+						$this->alunosHistorico($row['id'], $grupo->getId(), $html);
 					}
+					$html .= 'Passei';
 				}
 				$this->getRepositorio()->fecharTransacao();
 				$html .= "<br />###### fecharTransacao ";
