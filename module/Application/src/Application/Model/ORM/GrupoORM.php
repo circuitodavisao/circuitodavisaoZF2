@@ -38,13 +38,14 @@ class GrupoORM extends CircuitoORM {
     }
 
 	public function pegarTodasIgrejas(){
-        $dqlBase = "SELECT g.id "
+        $dqlBase = "SELECT g "
                 . "FROM  " . Constantes::$ENTITY_GRUPO . " g "
                 . "JOIN g.entidade e "
                 . "WHERE "
                 . "e.tipo_id = 5 "
                 . "AND g.data_inativacao is null "
-                . "AND e.data_inativacao is null ";
+                . "AND e.data_inativacao is null "
+                . "AND g.id != 1 AND g.id != 1225 ";
          try {
             $result = $this->getEntityManager()->createQuery($dqlBase)
                     ->getResult();
