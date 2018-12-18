@@ -170,7 +170,6 @@ class Grupo extends CircuitoEntity {
                 break;
             }
         }
-module/Application/src/Application/Model/Entity/Grupo.php
         return $entidadeInativa;
     }
 
