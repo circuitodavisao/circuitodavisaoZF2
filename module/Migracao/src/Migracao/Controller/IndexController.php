@@ -1366,9 +1366,9 @@ class IndexController extends CircuitoController {
 		list($usec, $sec) = explode(' ', microtime());
 		$script_start = (float) $sec + (float) $usec;
 
-		$this->abreConexao();
-
-		$queryTurma = mysqli_query($this->getConexao(), 'SELECT * FROM ursula_turma_ursula WHERE idIgreja = ' . $idIgreja . ' AND fechada = "N";');
+		$sql = 'SELECT * FROM ursula_turma_ursula WHERE idIgreja = ' . $idIgreja . ' AND fechada = "N";';
+		$html .= '<br /><br /> Sql Turma: ' . $sql;
+		$queryTurma = mysqli_query($this->getConexao(), $sql);
 		while ($rowTurma = mysqli_fetch_array($queryTurma)) {
 			/* Turma */
 			$curso = $this->getRepositorio()->getCursoORM()->encontrarPorId(Curso::INSTITUTO_DE_VENCEDORES);
@@ -2602,14 +2602,11 @@ class IndexController extends CircuitoController {
 					$html .= "<br /> Entidade: {$grupo->getEntidadeAtiva()->getNome()}";
 
 					$sql = "SELECT * FROM ursula_igreja_ursula WHERE nome = '{$grupo->getEntidadeAtiva()->getNome()}'";
-					$html .= 'sql: '.$sql;
 					$queryIgrejas = mysqli_query($this->getConexao(), $sql);
 					while ($row = mysqli_fetch_array($queryIgrejas)) {
-						$html .= '<br />Entrei';
-						$this->alunos($row['id'], $grupo->getId(), $html);
-						$this->alunosHistorico($row['id'], $grupo->getId(), $html);
+						//$html = $this->alunos($row['id'], $grupo->getId(), $html);
+						$html = $this->alunosHistorico($row['id'], $grupo->getId(), $html);
 					}
-					$html .= 'Passei';
 				}
 				$this->getRepositorio()->fecharTransacao();
 				$html .= "<br />###### fecharTransacao ";
