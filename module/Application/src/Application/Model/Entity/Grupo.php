@@ -89,7 +89,7 @@ class Grupo extends CircuitoEntity {
      * @ORM\OneToMany(targetEntity="PessoaFatoFinanceiroAcesso", mappedBy="grupo", fetch="EXTRA_LAZY")
      */
     protected $pessoaFatoFinanceiroAcesso;
- 
+
     /**
      * @ORM\OneToMany(targetEntity="Solicitacao", mappedBy="grupo", fetch="EXTRA_LAZY")
      */
@@ -170,7 +170,6 @@ class Grupo extends CircuitoEntity {
                 break;
             }
         }
-
         return $entidadeInativa;
     }
 
@@ -312,14 +311,14 @@ class Grupo extends CircuitoEntity {
 				$totalDeFilhos = count($grupoPaiFilhoFilhosAtivos);
 				for($i = 0; $i < $totalDeFilhos; $i++){
 					for($j = 0; $j < $totalDeFilhos; $j++){
-						$grupo1 = $grupoPaiFilhoFilhosAtivos[$i];		
-						$grupo2 = $grupoPaiFilhoFilhosAtivos[$j];		
+						$grupo1 = $grupoPaiFilhoFilhosAtivos[$i];
+						$grupo2 = $grupoPaiFilhoFilhosAtivos[$j];
 						if($grupo1->getGrupoPaiFilhoFilho()->getEntidadeAtiva()->getNumero() < $grupo2->getGrupoPaiFilhoFilho()->getEntidadeAtiva()->getNumero()){
 							$grupoPaiFilhoFilhosAtivos[$i] = $grupo2;
 							$grupoPaiFilhoFilhosAtivos[$j] = $grupo1;
 						}
 					}
-				}	
+				}
 			}
 		}
 		return $grupoPaiFilhoFilhosAtivos;
@@ -366,16 +365,16 @@ class Grupo extends CircuitoEntity {
 				$totalDeFilhos = count($grupoPaiFilhoFilhosAtivos);
 				for($i = 0; $i < $totalDeFilhos; $i++){
 					for($j = 0; $j < $totalDeFilhos; $j++){
-						$grupo1 = $grupoPaiFilhoFilhosAtivos[$i];		
-						$grupo2 = $grupoPaiFilhoFilhosAtivos[$j];		
+						$grupo1 = $grupoPaiFilhoFilhosAtivos[$i];
+						$grupo2 = $grupoPaiFilhoFilhosAtivos[$j];
 						if($grupo1->getGrupoPaiFilhoFilho()->getEntidadeAtiva()->getNumero() < $grupo2->getGrupoPaiFilhoFilho()->getEntidadeAtiva()->getNumero()){
 							$grupoPaiFilhoFilhosAtivos[$i] = $grupo2;
 							$grupoPaiFilhoFilhosAtivos[$j] = $grupo1;
 						}
 					}
-				}	
+				}
 			}
-	
+
         }
         return $grupoPaiFilhoFilhosAtivos;
     }
@@ -571,19 +570,19 @@ class Grupo extends CircuitoEntity {
         $grupoEventos = null;
         $grupoEventosCelulas = null;
         if ($grupoSelecionado->getEntidadeAtiva()) {
+          $grupoEventosCelulasTodas = $grupoSelecionado->getGrupoEventoPorTipoEAtivo(EventoTipo::tipoCelula);
+          if ($grupoEventosCelulasTodas) {
+              foreach ($grupoEventosCelulasTodas as $grupoEvento) {
+                 $grupoEventosCelulas[] = $grupoEvento;
+              }
+          }
             if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::SUBEQUIPE) {
-                $grupoEventosCelulasTodas = $grupoSelecionado->getGrupoEventoPorTipoEAtivo(EventoTipo::tipoCelula);
-                if ($grupoEventosCelulasTodas) {
-                    foreach ($grupoEventosCelulasTodas as $grupoEvento) {
-                       $grupoEventosCelulas[] = $grupoEvento;
-                    }
-                }
                $grupoEventos = $grupoSelecionado->getGrupoEquipe()->getGrupoEventoPorTipoEAtivo(EventoTipo::tipoCulto);
             } else {
                 /* Lider de equipe ou igreja */
                 $grupoEventos = array();
-                $todosGruposEventos = $grupoSelecionado->getGrupoEventoAtivos();
-                foreach ($todosGruposEventos as $grupoEvento) {
+                $grupoEventosCultosTodos = $grupoSelecionado->getGrupoEventoPorTipoEAtivo(EventoTipo::tipoCulto);
+                foreach ($grupoEventosCultosTodos as $grupoEvento) {
                     if ($grupoEvento->getEvento()->getEventoTipo()->getId() !== EventoTipo::tipoRevisao &&
                             $grupoEvento->getEvento()->getEventoTipo()->getId() !== EventoTipo::tipoDiscipulado) {
                         $grupoEventos[] = $grupoEvento;
@@ -654,7 +653,7 @@ class Grupo extends CircuitoEntity {
 		$arrayRevisoes = array();
 		foreach($grupoEventos as $grupoEvento){
 			$dataDoRevisao = strtotime($grupoEvento->getEvento()->getData() . ' +2 week');
-			$dataAtual = strtotime(date('Y-m-d'));	
+			$dataAtual = strtotime(date('Y-m-d'));
 
 			if($dataDoRevisao >= $dataAtual){
 				$arrayRevisoes[] = $grupoEvento;
