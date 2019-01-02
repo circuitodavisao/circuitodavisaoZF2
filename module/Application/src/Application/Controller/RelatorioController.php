@@ -2066,7 +2066,7 @@ public function alunosNaSemanaAction(){
 		return new ViewModel($dados);
 	}
 
-	static public function relatorioDiscipulado($repositorio, $grupo, $mesAnterior, $anoAnterior, $tradutor){
+	static public function relatorioDiscipulado($repositorio, $grupo, $mesAnterior, $anoAnterior){
 		$relatorio = null;
 		if($grupo->getGrupoEventoAtivosPorTipo(EventoTipo::tipoDiscipulado)
 			&& $fatoDiscipulados = $repositorio->getFatoDiscipuladoORM()->entidadePorGrupoMesAno($grupo->getId(), $mesAnterior, $anoAnterior)){
