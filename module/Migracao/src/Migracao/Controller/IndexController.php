@@ -3160,9 +3160,10 @@ class IndexController extends CircuitoController {
 		$this->getRepositorio()->iniciarTransacao();
 		try{
 			if($turmas = $this->getRepositorio()->getTurmaORM()->buscarTodosRegistrosEntidade()){
-				$idGrupoIgreja = $this->params()->fromRoute(Constantes::$ID, 1);
+				//$idGrupoIgreja = $this->params()->fromRoute(Constantes::$ID, 1);
 				foreach($turmas as $turma){
-					if($turma->verificarSeEstaAtivo() && $turma->getGrupo()->getId() != 1 && $turma->getGrupo()->getId() != 1225){
+					$html .= '<br />Turmas: '.$turma->getId();
+					if($turma->verificarSeEstaAtivo() && $turma->getGrupo()->getId() !== 1 && $turma->getGrupo()->getId() !== 1225){
 						if($turmaPessoas = $turma->getTurmaPessoa()){
 							foreach($turmaPessoas as $turmaPessoa){
 								if($turmaPessoa->verificarSeEstaAtivo()){
@@ -3173,6 +3174,7 @@ class IndexController extends CircuitoController {
 									$fatoCurso->setTurma_pessoa_id($turmaPessoa->getId());
 									$fatoCurso->setTurma_id($turmaPessoa->getTurma()->getId());
 									$fatoCurso->setSituacao_id($turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getId());
+									$html .= '<br />FatoCurso: ' . $fatoCurso->getTurma_pessoa_id();
 									$this->getRepositorio()->getFatoCursoORM()->persistir($fatoCurso);
 								}
 							}
