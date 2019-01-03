@@ -1973,14 +1973,7 @@ public function alunosNaSemanaAction(){
 			$mes = date('m');
 			$ano = date('Y');
 		}
-			// $arrayPeriodoDoMes = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mes, $ano);
-			// $periodoInicial = $arrayPeriodoDoMes[0];
-			// $periodoFinal = $arrayPeriodoDoMes[1];
-
-			//$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId(//passarID);
-		//	$nomeDaEquipe = $grupo->getGrupoEquipe()->getEntidadeAtiva()->getNome();
-
-
+		
 		$dados['mes'] = $mes;
 		$dados['ano'] = $ano;
 		$dados['teste'] = $teste;
