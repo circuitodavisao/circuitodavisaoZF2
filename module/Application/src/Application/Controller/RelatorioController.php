@@ -1891,6 +1891,11 @@ public function alunosNaSemanaAction(){
 		}
 		$teste = Array();
 		foreach ($todosFilhos as $filho) {
+			$somaCelulas = 0;
+			$somaAlunos = 0;
+			$somaMetaDeAlunos = 0;
+			$somaMetaDeEnvioRevisao = 0;
+			$somaTOTAL = 0;
 			$grupo = $filho->getGrupoPaiFilhoFilho();
 			$birimbal = Array();
 			if($grupo->getEntidadeAtiva()->getNome()){
@@ -1918,16 +1923,31 @@ public function alunosNaSemanaAction(){
 							}
 						}
 					}
-					$meta = $birimbal['celulas'] + ($birimbal['alunos'] / 100 * 10) + ($birimbal['celulas'] / 100 * 10);
-					$birimbal['meta'] = $meta;
+					$meta['metaDeAlunos'] = number_format($birimbal['alunos'] / 100 * 10);
+					$meta['metaDeEnvioRevisao'] = number_format($birimbal['celulas'] / 100 * 10);
+
 					if(!$birimbal['alunos']){
 						$birimbal['alunos'] = 0;
 					}
 					if(!$birimbal['celulas']){
 						$birimbal['celulas'] = 0;
 					}
+					$meta['total'] = $birimbal['celulas'] + $meta['metaDeAlunos'] + $meta['metaDeEnvioRevisao'];
+					$birimbal['meta'] = $meta;
 					$teste[] = $birimbal;
+					$somaAlunos += $birimbal['alunos'];
+					$somaCelulas += $birimbal['celulas'];
+					$somaMetaDeAlunos += $meta['metaDeAlunos'];
+					$somaMetaDeEnvioRevisao += $meta['metaDeEnvioRevisao'];
+					$somaTOTAL += $meta['total'];
 				}
+				$birimbal['nome'] = 'TOTAL';
+				$birimbal['celulas'] = $somaCelulas;
+				$birimbal['alunos'] = $somaAlunos;
+				$birimbal['meta']['metaDeAlunos'] = $somaMetaDeAlunos;
+				$birimbal['meta']['metaDeEnvioRevisao'] = $somaMetaDeEnvioRevisao;
+				$birimbal['meta']['total'] = $somaTOTAL;
+				$teste[] = $birimbal;
 			}
 
 			if($grupo->getEntidadeAtiva()->getEntidadeTipo()->getId() === 4 || $grupo->getEntidadeAtiva()->getEntidadeTipo()->getId() === 3){
@@ -1951,16 +1971,31 @@ public function alunosNaSemanaAction(){
 							}
 						}
 					}
-					$meta = $birimbal['celulas'] + ($birimbal['alunos'] / 100 * 10) + ($birimbal['celulas'] / 100 * 10);
-					$birimbal['meta'] = $meta;
+					$meta['metaDeAlunos'] = number_format($birimbal['alunos'] / 100 * 10);
+					$meta['metaDeEnvioRevisao'] = number_format($birimbal['celulas'] / 100 * 10);
+
 					if(!$birimbal['alunos']){
 						$birimbal['alunos'] = 0;
 					}
 					if(!$birimbal['celulas']){
 						$birimbal['celulas'] = 0;
 					}
+					$meta['total'] = $birimbal['celulas'] + $meta['metaDeAlunos'] + $meta['metaDeEnvioRevisao'];
+					$birimbal['meta'] = $meta;
 					$teste[] = $birimbal;
+					$somaAlunos += $birimbal['alunos'];
+					$somaCelulas += $birimbal['celulas'];
+					$somaMetaDeAlunos += $meta['metaDeAlunos'];
+					$somaMetaDeEnvioRevisao += $meta['metaDeEnvioRevisao'];
+					$somaTOTAL += $meta['total'];
 				}
+				$birimbal['nome'] = 'TOTAL';
+				$birimbal['celulas'] = $somaCelulas;
+				$birimbal['alunos'] = $somaAlunos;
+				$birimbal['meta']['metaDeAlunos'] = $somaMetaDeAlunos;
+				$birimbal['meta']['metaDeEnvioRevisao'] = $somaMetaDeEnvioRevisao;
+				$birimbal['meta']['total'] = $somaTOTAL;
+				$teste[] = $birimbal;
 			}
 		}
 
@@ -1973,7 +2008,7 @@ public function alunosNaSemanaAction(){
 			$mes = date('m');
 			$ano = date('Y');
 		}
-		
+
 		$dados['mes'] = $mes;
 		$dados['ano'] = $ano;
 		$dados['teste'] = $teste;

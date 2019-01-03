@@ -56,42 +56,6 @@ use Application\View\Helper\BotaoSimples;
    ?>
    <div class="p5">
      <table class="text-center table table-condensed table-hover bg-light" style="font-size:8px;">
-       <thead>
-         <tr class="dark hidden-xs">
-           <?php
-           echo '<th>Periodos</th>';
-           for ($indiceDeArrays = $this->periodoInicial; $indiceDeArrays <= $this->periodoFinal; $indiceDeArrays++) {
-             $classePeriodoAtual = '';
-             if ($indiceDeArrays == -1) {
-               $classePeriodoAtual = 'bg-info';
-             }
-             $colspan = 1;
-             echo '<th colspan="4" class="' . $classePeriodoAtual . '">';
-             echo Funcoes::montaPeriodo($indiceDeArrays)[0];
-             echo '</th>';
-           }
-           echo '<th></th>';
-           ?>
-         </tr>
-         <tr class="dark">
-           <?php
-           echo '<th>TIMES</th>';
-           for ($indiceDeArrays = $this->periodoInicial; $indiceDeArrays <= $this->periodoFinal; $indiceDeArrays++) {
-             $classeBase = 'periodo' . $indiceDeArrays . ' ';
-             if ($indiceDeArrays != -1) {
-               $classeBase .= 'hidden-xs';
-             }
-             $classePeriodoAtual = '';
-             if ($indiceDeArrays == -1) {
-               $classePeriodoAtual = 'bg-info';
-             }
-             echo '<th>CÉLULAS</th>';
-           }
-           echo '<th>ALUNOS</th>';
-           echo '<th>META</th>';
-           ?>
-         </tr>
-       </thead>
        <tbody>
          <?php
            $dadosCelulasExcluidas = $this->relatorioCelulasExcluidas;
@@ -100,9 +64,19 @@ use Application\View\Helper\BotaoSimples;
            $corLinha = '';
            foreach ($dadosTeste as $teste) {
              if($teste['tipo'] == 'titulo'){
-               echo '<tr class="primary">';
-                 echo '<td colspan="4" class="text-left text-center" style="font-size:16px;padding-left:6 px;">' . $teste['nome'] . '</span>';
-                 echo '</td>';
+              echo '<tr class="primary">';
+              echo '<td colspan="8" class="text-left text-center" style="font-size:16px;padding-left:6 px;">' . $teste['nome'] . '</span>';
+              echo '</td>';
+              echo '</tr>';
+              echo '<tr class="dark">';
+              echo '<th>TIMES</th>';
+              echo '<th>CÉLULAS</th>';
+              echo '<th>+</th>';
+              echo '<th>10% DO TOTAL DE ALUNOS DE 2018</th>';
+              echo '<th>+</th>';
+              echo '<th>10% DA META DO REVISÃO DE VIDAS</th>';
+              echo '<th>=</th>';
+              echo '<th>META 2019</th>';
               echo '</tr>';
             } else {
               $labelTD = '';
@@ -118,6 +92,12 @@ use Application\View\Helper\BotaoSimples;
                 $labelTD .= $contador;
                 $labelTD .= '-';
               }
+              $corLinha = '';
+              if ($teste['nome'] == 'TOTAL') {
+                $labelTD = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+                $padding = '6';
+                $corLinha = 'dark';
+              }
               echo '<tr class="'.$corLinha.'">';
                 echo '<td class="text-left" style="font-size:8px;padding-left:6px;">' . $teste['nome'] . '</span>';
                 echo $equipes;
@@ -127,12 +107,13 @@ use Application\View\Helper\BotaoSimples;
                   if ($indiceDeArrays != -1) {
                     $classeBase .= 'hidden-xs';
                   }
-                  echo '<td>';
+                  echo '<td colspan="2">';
                   echo $teste['celulas'];
                   echo '</td>';
                 }
-                echo '<td>'. $teste['alunos'] .'</td>';
-                echo '<td>'. $teste['meta'] .'</td>';
+                echo '<td colspan="2">'. $teste['meta']['metaDeAlunos'] .'</td>';
+                echo '<td colspan="2">'. $teste['meta']['metaDeEnvioRevisao'] .'</td>';
+                echo '<td>'. $teste['meta']['total'] .'</td>';
               echo '</tr>';
             }
            }
