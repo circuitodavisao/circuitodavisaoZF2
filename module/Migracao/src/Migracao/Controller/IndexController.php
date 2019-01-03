@@ -3156,38 +3156,23 @@ class IndexController extends CircuitoController {
 	}
 
 	public function fatoCursoAction(){
+		set_time_limit(0);
+		ini_set('memory_limit', '-1');
+		ini_set('max_execution_time', '60');
+
 		$html = '';
 		$this->getRepositorio()->iniciarTransacao();
 		try{
 			if($turmas = $this->getRepositorio()->getTurmaORM()->buscarTodosRegistrosEntidade()){
-				$qualMetade = $this->params()->fromRoute(Constantes::$ID, 1);
-				if($qualMetade == 1){
-					$inicio = 1;
-					$fim = count($turmas)/2;
-				}	
-				if($qualMetade == 2){
-					$inicio = count($turmas)/2;
-					$fim = count($turmas);
-				}	
-
-				$contador = 1;
 				foreach($turmas as $turma){
-					if($contador == $fim){
-						break;
-					}
-
-					if($contador >= $inicio){
-						$html .= '<br />Turmas: '.$turma->getId();
-						if($turma->verificarSeEstaAtivo() && $turma->getGrupo()->getId() !== 1 && $turma->getGrupo()->getId() !== 1225){
-							if($turmaPessoas = $turma->getTurmaPessoa()){
-								foreach($turmaPessoas as $turmaPessoa){
-									if($turmaPessoa->verificarSeEstaAtivo()){
-
-										if($turmaPessoa->getPessoa()->getGrupoPessoa() && $turmaPessoa->getPessoa()->getGrupoPessoaAtivo()){
-
-											if($numeroIdentificador =
-													$this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $turmaPessoa->getPessoa()->getGrupoPessoaAtivo()->getGrupo())){
-
+					$html .= '<br />Turmas: '.$turma->getId();
+					if($turma->verificarSeEstaAtivo() && $turma->getGrupo()->getId() !== 1 && $turma->getGrupo()->getId() !== 1225){
+						if($turmaPessoas = $turma->getTurmaPessoa()){
+							foreach($turmaPessoas as $turmaPessoa){
+								if($turmaPessoa->verificarSeEstaAtivo()){
+									if($turmaPessoa->getPessoa()->getGrupoPessoa() && $turmaPessoa->getPessoa()->getGrupoPessoaAtivo()){
+										if($numeroIdentificador =
+											$this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $turmaPessoa->getPessoa()->getGrupoPessoaAtivo()->getGrupo())){
 												$fatoCurso = new FatoCurso();
 												$fatoCurso->setNumero_identificador($numeroIdentificador);
 												$fatoCurso->setTurma_pessoa_id($turmaPessoa->getId());
@@ -3196,16 +3181,14 @@ class IndexController extends CircuitoController {
 												$this->getRepositorio()->getFatoCursoORM()->persistir($fatoCurso);
 
 											}
-										}
 									}
 								}
 							}
 						}
 					}
-					$contador++;
 				}
 			}
-			//$this->getRepositorio()->fecharTransacao();
+			$this->getRepositorio()->fecharTransacao();
 		}catch(Exception $e){
 			$html = 'Error: '.$e->getMessage();
 			$this->getRepositorio()->desfazerTransacao();
