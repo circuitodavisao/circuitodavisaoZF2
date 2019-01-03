@@ -332,6 +332,7 @@ class Menu extends AbstractHelper {
 				$html .= '</a>';
 				$html .= '</li>';
 			}
+
 //			$html .= '<li>';
 //			$html .= '<a href="/relatorioPessoasFrequentes" onClick="mostrarSplash();">';
 //			$html .= '<span class="fa fa-users"></span>';
@@ -411,6 +412,15 @@ class Menu extends AbstractHelper {
 			$html .= 'Registro';
 			$html .= '</a>';
 			$html .= '</li>';
+
+			if ($this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::regiao) {
+				$html .= '<li>';
+				$html .= '<a href="#" onClick="mostrarSplash(); funcaoCircuito(\'relatorioGeradorMetas\', null);">';
+				$html .= '<span class="fa fa-table"></span>';
+				$html .= 'Gerador de Metas';
+				$html .= '</a>';
+				$html .= '</li>';
+			}
 
 			$html .= '</ul>';
 
