@@ -93,6 +93,7 @@ return array(
     'application/lancamento/arregimentacao'               => __DIR__ . '/view/application/lancamento/arregimentacao.phtml',
     'application/relatorio/setenta'                       => __DIR__ . '/view/application/relatorio/setenta.phtml',
     'application/relatorio/exclusao-celulas'              => __DIR__ . '/view/application/relatorio/exclusao-celulas.phtml',
+    'application/relatorio/gerador-metas'                 => __DIR__ . '/view/application/relatorio/gerador-metas.phtml',
     'application/relatorio/discipulado'                   => __DIR__ . '/view/application/relatorio/discipulado.phtml',
     'application/relatorio/atendimento'                   => __DIR__ . '/view/application/relatorio/atendimento.phtml',
     'application/relatorio/registro'                      => __DIR__ . '/view/application/relatorio/registro.phtml',
