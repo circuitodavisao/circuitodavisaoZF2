@@ -1875,6 +1875,118 @@ public function alunosNaSemanaAction(){
 		return $relatorio;
 	}
 
+	public function geradorMetasAction() {
+
+		$sessao = new Container(Constantes::$NOME_APLICACAO);
+		$idEntidadeAtual = $sessao->idEntidadeAtual;
+		$periodo = -1; //Temporariamente Fixo só pra agilizar
+		$comparacao = 2; // Temporariamente Fixo também, comparação = like
+		$todosFilhos = Array();
+		$repositorio = $this->getRepositorio();
+		$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+		$grupoPaiFilhoFilhos = $entidade->getGrupo()->getGrupoPaiFilhoFilhosAtivos($periodo);
+
+		foreach ($grupoPaiFilhoFilhos as $grupoPaiFilhoFilho) {
+			$todosFilhos[] = $grupoPaiFilhoFilho;
+		}
+		$teste = Array();
+		foreach ($todosFilhos as $filho) {
+			$grupo = $filho->getGrupoPaiFilhoFilho();
+			$birimbal = Array();
+			if($grupo->getEntidadeAtiva()->getNome()){
+					$birimbal['nome'] = $grupo->getEntidadeAtiva()->getNome();
+			}	else {
+				$birimbal['nome'] = 'COORDENAÇÃO '.$grupo->getEntidadeAtiva()->getNumero();
+			}
+			$birimbal['tipo'] = 'titulo';
+			$teste[] = $birimbal;
+			if($grupo->getId() == 1225 || $grupo->getId() == 1){
+				$grupoPaiFilhoFilhosEquipe = $grupo->getGrupoPaiFilhoFilhosAtivos($periodo);
+				foreach ($grupoPaiFilhoFilhosEquipe as $grupoPaiFilhoFilhoEquipes) {
+					$grupo = $grupoPaiFilhoFilhoEquipes->getGrupoPaiFilhoFilho();
+					$numeroIdentificador = $repositorio->getFatoCicloORM()->montarNumeroIdentificador($repositorio, $grupo);
+					$relatorioCelula = $repositorio->getFatoCicloORM()->montarRelatorioCelulaPorNumeroIdentificador($numeroIdentificador, $periodo, $comparacao);
+					$birimbal = Array();
+					if($grupo->getEntidadeAtiva()->getNome()){
+							$birimbal['nome'] = $grupo->getEntidadeAtiva()->getNome();
+					}
+					$birimbal['celulas'] = $relatorioCelula[0]['quantidade'];
+					if($relatorioCursosDesordenados = $this->getRepositorio()->getFatoCursoORM()->encontrarFatoCursoPorNumeroIdentificador($numeroIdentificador)){
+						foreach($relatorioCursosDesordenados as $fatoCurso){
+							if($fatoCurso->getSituacao_id() == 1 || $fatoCurso->getSituacao_id() == 6){
+								$birimbal['alunos']++;
+							}
+						}
+					}
+					$meta = $birimbal['celulas'] + ($birimbal['alunos'] / 100 * 10) + ($birimbal['celulas'] / 100 * 10);
+					$birimbal['meta'] = $meta;
+					if(!$birimbal['alunos']){
+						$birimbal['alunos'] = 0;
+					}
+					if(!$birimbal['celulas']){
+						$birimbal['celulas'] = 0;
+					}
+					$teste[] = $birimbal;
+				}
+			}
+
+			if($grupo->getEntidadeAtiva()->getEntidadeTipo()->getId() === 4 || $grupo->getEntidadeAtiva()->getEntidadeTipo()->getId() === 3){
+				$grupoPaiFilhoFilhosEquipe = $grupo->getGrupoPaiFilhoFilhosAtivos($periodo);
+				foreach ($grupoPaiFilhoFilhosEquipe as $grupoPaiFilhoFilhoEquipes) {
+					$grupo = $grupoPaiFilhoFilhoEquipes->getGrupoPaiFilhoFilho();
+					$numeroIdentificador = $repositorio->getFatoCicloORM()->montarNumeroIdentificador($repositorio, $grupo);
+					$relatorioCelula = $repositorio->getFatoCicloORM()->montarRelatorioCelulaPorNumeroIdentificador($numeroIdentificador, $periodo, $comparacao);
+					error_log(print_r($relatorioCelula, true));
+					$birimbal = Array();
+					if($grupo->getEntidadeAtiva()->getNome()){
+							$birimbal['nome'] = $grupo->getEntidadeAtiva()->getNome();
+					}
+					$birimbal['celulas'] = $relatorioCelula[0]['quantidade'];
+					$turmas = $grupo->getGrupoIgreja()->getTurma();
+					$relatorioCursos = array();
+					if($relatorioCursosDesordenados = $this->getRepositorio()->getFatoCursoORM()->encontrarFatoCursoPorNumeroIdentificador($numeroIdentificador)){
+						foreach($relatorioCursosDesordenados as $fatoCurso){
+							if($fatoCurso->getSituacao_id() == 1 || $fatoCurso->getSituacao_id() == 6){
+								$birimbal['alunos']++;
+							}
+						}
+					}
+					$meta = $birimbal['celulas'] + ($birimbal['alunos'] / 100 * 10) + ($birimbal['celulas'] / 100 * 10);
+					$birimbal['meta'] = $meta;
+					if(!$birimbal['alunos']){
+						$birimbal['alunos'] = 0;
+					}
+					if(!$birimbal['celulas']){
+						$birimbal['celulas'] = 0;
+					}
+					$teste[] = $birimbal;
+				}
+			}
+		}
+
+		$request = $this->getRequest();
+		if($request->isPost()){
+			$postDados = $request->getPost();
+			$mes = $postDados['mes'];
+			$ano = $postDados['ano'];
+		}else{
+			$mes = date('m');
+			$ano = date('Y');
+		}
+			// $arrayPeriodoDoMes = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mes, $ano);
+			// $periodoInicial = $arrayPeriodoDoMes[0];
+			// $periodoFinal = $arrayPeriodoDoMes[1];
+
+			//$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId(//passarID);
+		//	$nomeDaEquipe = $grupo->getGrupoEquipe()->getEntidadeAtiva()->getNome();
+
+
+		$dados['mes'] = $mes;
+		$dados['ano'] = $ano;
+		$dados['teste'] = $teste;
+		return new ViewModel($dados);
+	}
+
 	public function exclusaoCelulasAction() {
 
 		$sessao = new Container(Constantes::$NOME_APLICACAO);
