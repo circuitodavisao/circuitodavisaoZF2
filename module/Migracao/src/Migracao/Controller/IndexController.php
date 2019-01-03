@@ -3162,7 +3162,7 @@ class IndexController extends CircuitoController {
 			if($turmas = $this->getRepositorio()->getTurmaORM()->buscarTodosRegistrosEntidade()){
 				$idGrupoIgreja = $this->params()->fromRoute(Constantes::$ID, 1);
 				foreach($turmas as $turma){
-					if($turma->verificarSeEstaAtivo() && $turma->getGrupo()->getId() == $idGrupoIgreja){
+					if($turma->verificarSeEstaAtivo() && $turma->getGrupo()->getId() != 1 && $turma->getGrupo()->getId() != 1225){
 						if($turmaPessoas = $turma->getTurmaPessoa()){
 							foreach($turmaPessoas as $turmaPessoa){
 								if($turmaPessoa->verificarSeEstaAtivo()){
