@@ -65,11 +65,12 @@ use Application\View\Helper\BotaoSimples;
            foreach ($dadosTeste as $teste) {
              if($teste['tipo'] == 'titulo'){
               echo '<tr class="primary">';
-              echo '<td colspan="8" class="text-left text-center" style="font-size:16px;padding-left:6 px;">' . $teste['nome'] . '</span>';
+              echo '<td colspan="9" class="text-left text-center" style="font-size:16px;padding-left:6 px;">' . $teste['nome'] . '</span>';
               echo '</td>';
               echo '</tr>';
               echo '<tr class="dark">';
               echo '<th>TIMES</th>';
+              echo '<th>ALUNOS</th>';
               echo '<th>CÉLULAS</th>';
               echo '<th>+</th>';
               echo '<th>10% DO TOTAL DE ALUNOS DE 2018</th>';
@@ -107,6 +108,9 @@ use Application\View\Helper\BotaoSimples;
                   if ($indiceDeArrays != -1) {
                     $classeBase .= 'hidden-xs';
                   }
+                  echo '<td colspan="1">';
+                  echo $teste['alunos'];
+                  echo '</td>';
                   echo '<td colspan="2">';
                   echo $teste['celulas'];
                   echo '</td>';
