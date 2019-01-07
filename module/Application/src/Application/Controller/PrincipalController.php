@@ -442,6 +442,11 @@ class PrincipalController extends CircuitoController {
 		}
 	}
 
+	public function notasDeAtualizacoesAction() {
+			$view = new ViewModel();
+			return $view;
+	}
+
 	public function nomeAction() {
 		$sessao = new Container(Constantes::$NOME_APLICACAO);
 		$idSessao = $sessao->idSessao;
