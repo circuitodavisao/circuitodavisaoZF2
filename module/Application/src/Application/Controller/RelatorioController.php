@@ -890,6 +890,11 @@ class RelatorioController extends CircuitoController {
 		$relatorio[self::dadosPessoais]['lideresSigla'] = $grupo->getEntidadeAtiva()->getSigla();
 		$relatorio[self::dadosPessoais]['grupo'] = $grupo->getId();
 
+		if($grupo->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::regiao 
+			|| $grupo->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao ){
+				$relatorio[self::dadosPessoais]['mostrar'] = 'nao'; 
+			}
+
 		foreach ($todosFilhos as $filho) {
 			$grupoFilho = $filho->getGrupoPaiFilhoFilho();
 			if($tipoRelatorio !== self::relatorioParceiroDeDeus){
