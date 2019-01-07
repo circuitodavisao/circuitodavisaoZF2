@@ -50,6 +50,7 @@ return array(
     'application/principal/senha'                         => __DIR__ . '/view/application/principal/senha.phtml',
     'application/principal/hierarquia'                    => __DIR__ . '/view/application/principal/hierarquia.phtml',
     'application/principal/suporte'                       => __DIR__ . '/view/application/principal/suporte.phtml',
+    'application/principal/notas-de-atualizacoes'         => __DIR__ . '/view/application/principal/notas-de-atualizacoes.phtml',
     'application/principal/index'                         => __DIR__ . '/view/application/principal/index.phtml',
     'application/principal/chamada'                       => __DIR__ . '/view/application/principal/chamada.phtml',
     'application/principal/novo-email-para-enviar'        => __DIR__ . '/view/application/principal/novo-email-para-enviar.phtml',
