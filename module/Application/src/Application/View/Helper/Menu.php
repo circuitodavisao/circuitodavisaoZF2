@@ -46,7 +46,7 @@ class Menu extends AbstractHelper {
 		$htmlEspecifoUL .= '<div class="navbar-btn btn-group">';
 		$htmlEspecifoUL .= '<button data-toggle="dropdown" class="btn btn-sm dropdown-toggle">';
 		$htmlEspecifoUL .= '<span class="fa fa-bell-o fs14 va-m"></span>';
-		$htmlEspecifoUL .= '<span class="badge badge-danger"></span>';
+		$htmlEspecifoUL .= '<span class="badge badge-danger">1</span>';
 		$htmlEspecifoUL .= '</button>';
 		$htmlEspecifoUL .= '<div class="dropdown-menu dropdown-persist w350 animated animated-shorter fadeIn" role="menu">';
 		$htmlEspecifoUL .= '<div class="panel mbn">';
@@ -61,7 +61,7 @@ class Menu extends AbstractHelper {
 		$htmlEspecifoUL .= '<span>1</span>';
 		$htmlEspecifoUL .= '</div>';
 		$htmlEspecifoUL .= '<div class="timeline-desc">';
-		$htmlEspecifoUL .= '<b>Em breve: </b> Notas de atualizações do sistema aqui.';
+		$htmlEspecifoUL .= '<a href="principalNotasDeAtualizacoes"><b>Nova nota de atualização!</b> Clique aqui e confira!</a>';
 		$htmlEspecifoUL .= '</div>';
 		$htmlEspecifoUL .= '</li>';
 		$htmlEspecifoUL .= '</ol>';
