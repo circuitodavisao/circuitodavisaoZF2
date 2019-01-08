@@ -8,6 +8,14 @@ use Application\Model\Entity\EntidadeTipo;
 use Application\Model\Entity\Situacao;
 use Application\Model\Entity\Hierarquia;
 
+$stringEntidade = $this->entidade->getNome();
+if($this->entidade->getEntidadeTipo()->getId() === EntidadeTipo::subEquipe){
+	$stringEntidade = $this->entidade->infoEntidade($somenteNumeros = true);
+}
+if($this->entidade->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao){
+	$stringEntidade = $this->entidade->getNumero();
+}
+
 if ($this->mostrarPrincipal) {
 	$fotos = $this->grupo->getFotosLideresAtivos(128);
 	echo '<div class="alert alert-default">';
@@ -23,7 +31,7 @@ if ($this->mostrarPrincipal) {
 </div>
 <div class="media-body va-m">
 <h4><?php echo $this->pessoa->getNomePrimeiroUltimo(); ?></h4>
-<small><?php echo $this->entidade->getEntidadeTipo()->getNome() . ' - ' . $this->entidade->infoEntidade(); ?></small>
+<small><?php echo $this->entidade->getEntidadeTipo()->getNome() . ' - ' . $stringEntidade; ?></small>
 <p class="mt10"><?php
 	if($this->pessoaLogada->getId() === $this->pessoa->getId()){
 		$funcaoOnClickPerfil = 'location.href="/perfil"';
