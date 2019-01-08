@@ -56,7 +56,6 @@ class PrincipalController extends CircuitoController {
 		}
 		/* fim formulario */
 
-
 		/* dados pessoa logada */
 		$idEntidadeAtual = $sessao->idEntidadeAtual;
 		$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
@@ -72,9 +71,10 @@ class PrincipalController extends CircuitoController {
 
 		/* verificando se estou veno um discipulo abaixo  e pegando os dados dele */
 		if($sessao->idSessao > 0){
-			$pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($sessao->idSessao);
-			$grupo = $pessoa->getResponsabilidadesAtivas()[0]->getGrupo();
-			$entidade = $grupo->getEntidadeAtiva();
+			$explodeIdSessao = explode('_', $sessao->idSessao);
+			$pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($explodeIdSessao[0]);
+			$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($explodeIdSessao[1]);
+			$grupo = $entidade->getGrupo();
 			unset($sessao->idSessao);
 		}
 
