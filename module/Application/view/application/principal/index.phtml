@@ -23,7 +23,7 @@ if ($this->mostrarPrincipal) {
 </div>
 <div class="media-body va-m">
 <h4><?php echo $this->pessoa->getNomePrimeiroUltimo(); ?></h4>
-<small><?php echo $this->entidade->infoEntidade(); ?></small>
+<small><?php echo $this->entidade->getEntidadeTipo()->getNome() . ' - ' . $this->entidade->infoEntidade(); ?></small>
 <p class="mt10"><?php
 	if($this->pessoaLogada->getId() === $this->pessoa->getId()){
 		$funcaoOnClickPerfil = 'location.href="/perfil"';
@@ -511,8 +511,10 @@ Discipulado
 		$contadorDeDiscipulosPorLinha = 0;
 		foreach($discipulos as $discipulo){
 			$grupoFilho = $discipulo->getGrupoPaiFilhoFilho();
+			$entidade = $grupoFilho->getEntidadeAtiva();
 			foreach($grupoFilho->getPessoasAtivas() as $pessoa){
-				$funcaoOnClick = 'mostrarSplash(); funcaoCircuito("principal", '.$pessoa->getId().')';
+				$idSessao = $pessoa->getId() . '_' . $entidade->getId();
+				$funcaoOnClick = 'mostrarSplash(); funcaoCircuito("principal", "'.$idSessao.'")';
 				$nomeHierarquia = $pessoa->getPessoaHierarquiaAtivo()->getHierarquia()->getNome();
 				if ($pessoa->getSexo() === 'F') {
 					if ($nomeFeminino = $pessoa->getPessoaHierarquiaAtivo()->getHierarquia()->getNome_feminino()) {

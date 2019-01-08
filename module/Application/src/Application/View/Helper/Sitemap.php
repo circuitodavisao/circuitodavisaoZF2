@@ -33,14 +33,15 @@ class Sitemap extends AbstractHelper {
 		if(substr($this->getCaminho(),0,9) == 'relatorio'){
 			$id = $this->view->grupoLogado->getId();
 		}
-		$funcaoOnClickPessoal = 'mostrarSplash(); funcaoCircuito("'.$this->getCaminho().'", '.$id.')';
-		$linkDeQuemEstaLogado = '<a href="#" '.$this->view->funcaoOnclick($funcaoOnClickPessoal).'><i class="fa fa-home"></i> '.$this->view->pessoaLogada->getNomePrimeiro().'</a>';
+		$funcaoOnClickPessoal = 'mostrarSplash(); funcaoCircuito("'.$this->getCaminho().'", null)';
+		$linkDeQuemEstaLogado = '<a href="#" '.$this->view->funcaoOnclick($funcaoOnClickPessoal).'><i class="fa fa-home"></i> '. $this->view->grupoLogado->getEntidadeAtiva()->getEntidadeTipo()->getNome() . ' - ' . $this->view->pessoaLogada->getNomePrimeiro().'</a>';
 		$html .= $linkDeQuemEstaLogado;
 
 		$grupoSelecionado = $this->view->grupo;
 		$stringOrdem = '';
 
 		while($grupoSelecionado->getId() !== $this->view->grupoLogado->getId()){
+			$entidade = $grupoSelecionado->getEntidadeAtiva();
 			$stringGrupo = '';
 			if($pessoas = $grupoSelecionado->getPessoasAtivas()){
 				$cotadorDePessoas = count($pessoas);
@@ -54,11 +55,13 @@ class Sitemap extends AbstractHelper {
 					}
 					if(substr($this->getCaminho(),0,9) == 'principal'){
 						$id = $pessoa->getId();
+						$idSessao = $pessoa->getId() . '_' . $entidade->getId();
 					}
 					if(substr($this->getCaminho(),0,9) == 'relatorio'){
 						$id = $grupoSelecionado->getId();
+						$idSessao = $id;
 					}
-					$funcaoOnClickPessoal = 'mostrarSplash(); funcaoCircuito("'.$this->getCaminho().'", '.$id.')';
+					$funcaoOnClickPessoal = 'mostrarSplash(); funcaoCircuito("'.$this->getCaminho().'", "'.$idSessao.'")';
 					$linkDeQuemEstaLogado = '<a href="#" '.$this->view->funcaoOnclick($funcaoOnClickPessoal).'>'.$pessoa->getNomePrimeiro().'</a>';
 					$stringGrupo .= $linkDeQuemEstaLogado;
 
@@ -69,7 +72,24 @@ class Sitemap extends AbstractHelper {
 			if($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::subEquipe){
 				$somenteNumerosDaEntidade = true;
 			}
-			$stringGrupo .= ' - '.$grupoSelecionado->getEntidadeAtiva()->infoEntidade($somenteNumerosDaEntidade);
+			$entidade = $grupoSelecionado->getEntidadeAtiva();
+			$stringGrupo .= ' - ';
+			if($entidade->getEntidadeTipo()->getId() === EntidadeTipo::regiao){
+				$stringGrupo .= ' REGIÃO ' . $entidade->getNome();
+			}
+			if($entidade->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao){
+				$stringGrupo .= ' COORD. ' . $entidade->getNumero();
+			}
+			if($entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
+				$stringGrupo .= ' IGREJA ' . $entidade->getNome();
+			}
+			if($entidade->getEntidadeTipo()->getId() === EntidadeTipo::equipe){
+				$stringGrupo .= ' EQUIPE ' . $entidade->getNome();
+			}
+				if($entidade->getEntidadeTipo()->getId() === EntidadeTipo::subEquipe){
+				$stringGrupo .= ' SUB ' . $entidade->infoEntidade($somenteNumeros = true);
+			}
+	
 			$stringOrdem = $stringGrupo . $stringOrdem;
 			if($grupoSelecionado->getGrupoPaiFilhoPaiAtivo()){
 				$grupoSelecionado = $grupoSelecionado->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai();
