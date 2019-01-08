@@ -61,7 +61,7 @@ class Menu extends AbstractHelper {
 		$htmlEspecifoUL .= '<span>1</span>';
 		$htmlEspecifoUL .= '</div>';
 		$htmlEspecifoUL .= '<div class="timeline-desc">';
-		$htmlEspecifoUL .= '<a href="principalNotasDeAtualizacoes"><b>Nova nota de atualização!</b> Clique aqui e confira!</a>';
+		$htmlEspecifoUL .= '<a href="/principalNotasDeAtualizacoes"><b>Nova nota de atualização!</b> Clique aqui e confira!</a>';
 		$htmlEspecifoUL .= '</div>';
 		$htmlEspecifoUL .= '</li>';
 		$htmlEspecifoUL .= '</ol>';
