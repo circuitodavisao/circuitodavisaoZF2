@@ -713,7 +713,7 @@ class RelatorioController extends CircuitoController {
 							foreach ($todosDiscipulosRegiaoOuCoordenacao as $filho1) {
 								$grupoFilho1 = $filho1->getGrupoPaiFilhoFilho();
 
-								if($grupoFilho1->getEntidadeAtiva()->getEntidadeTipo() === EntidadeTipo::igreja){
+								if($grupoFilho1->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
 									$dataInativacao = null;
 									if ($filho1->getData_inativacao()) {
 										$dataInativacao = $filho1->getData_inativacaoStringPadraoBanco();
@@ -727,6 +727,52 @@ class RelatorioController extends CircuitoController {
 									$relatorioDiscipulos1 = RelatorioController::montaRelatorio($repositorio, $numeroIdentificadorFilho1, $indiceDeArrays, $tipoRelatorioSomado, $estaInativo, $tipoRelatorio);
 									foreach($relatorioDiscipulos1 as $key => $val){
 										$relatorioSomado1[$key] += $val;
+									}
+
+								}
+								if($grupoFilho1->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao){
+
+									$todosDiscipulosRegiaoOuCoordenacao1 = array();
+									for ($indiceDeArrays2 = $arrayPeriodoDoMes[0]; $indiceDeArrays2 <= $arrayPeriodoDoMes[1]; $indiceDeArrays2++) {
+										if($grupoPaiFilhoFilhos2 = $grupoFilho1->getGrupoPaiFilhoFilhosAtivos($indiceDeArrays2)){
+											foreach ($grupoPaiFilhoFilhos2 as $grupoPaiFilhoFilho2) {
+												$adicionar = true;
+												if (count($todosDiscipulosRegiaoOuCoordenacao1) > 0) {
+													foreach ($todosDiscipulosRegiaoOuCoordenacao1 as $filho2) {
+														if ($filho2->getId() === $grupoPaiFilhoFilho2->getId()) {
+															$adicionar = false;
+															break;
+														}
+													}
+												}
+												if ($adicionar) {
+													$todosDiscipulosRegiaoOuCoordenacao1[] = $grupoPaiFilhoFilho2;
+												}
+											}
+										}
+									}
+
+									foreach ($todosDiscipulosRegiaoOuCoordenacao1 as $filho2) {
+										$grupoFilho2 = $filho2->getGrupoPaiFilhoFilho();
+
+										if($grupoFilho2->getEntidadeAtiva()->getEntidadeTipo() === EntidadeTipo::igreja){
+											$dataInativacao = null;
+											if ($filho2->getData_inativacao()) {
+												$dataInativacao = $filho2->getData_inativacaoStringPadraoBanco();
+											}
+											$numeroIdentificadorFilho2 = $repositorio->getFatoCicloORM()->montarNumeroIdentificador($repositorio, $grupoFilho2, $dataInativacao);
+											$estaInativo = false;
+											if(!$filho2->verificarSeEstaAtivo()){
+												$estaInativo = true;
+											}
+
+											$relatorioDiscipulos2 = RelatorioController::montaRelatorio($repositorio, $numeroIdentificadorFilho2, $indiceDeArrays, $tipoRelatorioSomado, $estaInativo, $tipoRelatorio);
+											foreach($relatorioDiscipulos2 as $key => $val){
+												$relatorioSomado1[$key] += $val;
+											}
+
+										}
+
 									}
 
 								}
