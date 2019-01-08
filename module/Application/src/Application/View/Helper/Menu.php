@@ -111,10 +111,10 @@ class Menu extends AbstractHelper {
 		$htmlEspecifoUL .= '</ul>';
 		$htmlEspecifoUL .= '</li>';
 
-		$html .= '<ul class="nav navbar-nav navbar-right hidden-sm hidden-xs">';
+		$html .= '<ul class="nav navbar-nav navbar-right  hidden-xs">';
 		$html .= $htmlEspecifoUL;
 		$html .= '</ul>';
-		$html .= '<ul class="nav navbar-nav navbar-right hidden-md hidden-lg" style="position: relative; float: right; right: 100%;">';
+		$html .= '<ul class="nav navbar-nav navbar-right hidden-sm hidden-md hidden-lg" style="position: relative; float: right; right: 100%;">';
 		$html .= $htmlEspecifoUL;
 		$html .= '</ul>';
 		$html .= '</header>';
@@ -141,8 +141,8 @@ class Menu extends AbstractHelper {
 		$html .= '<li class="sidebar-label pt20">Menu</li>';
 
 		/* Menu Cadastro */
-		if ($this->view->entidade->verificarSeEstaAtivo() 
-&& $this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::regiao 
+		if ($this->view->entidade->verificarSeEstaAtivo()
+&& $this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::regiao
 && $this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::coordenacao) {
 
 			$html .= '<li>';
@@ -228,7 +228,7 @@ class Menu extends AbstractHelper {
 			/* Fim Menu Cadastro */
 		}
 
-		if ($this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::regiao 
+		if ($this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::regiao
 		&& $this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::coordenacao) {
 
 		/* Menu Lançamento */
@@ -320,7 +320,7 @@ class Menu extends AbstractHelper {
 				case 9:
 					$label = 'Parceiro de Deus Consolidado';
 					$mostrar = true;
-		if ($this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::regiao 
+		if ($this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::regiao
 		|| $this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao) {
 						$mostrar = false;
 					}
@@ -336,7 +336,7 @@ class Menu extends AbstractHelper {
 				}
 			}
 			if ($this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja
-		&& $this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::regiao 
+		&& $this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::regiao
 		&& $this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::coordenacao) {
 				$html .= '<li>';
 				$html .= '<a href="#" onClick="mostrarSplash(); funcaoCircuito(\'relatorioExclusaoCelulas\', null);">';
@@ -346,9 +346,9 @@ class Menu extends AbstractHelper {
 				$html .= '</li>';
 			}
 
-			if($this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::regiao 
+			if($this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::regiao
 				&& $this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::coordenacao) {
-	
+
 //			$html .= '<li>';
 //			$html .= '<a href="/relatorioPessoasFrequentes" onClick="mostrarSplash();">';
 //			$html .= '<span class="fa fa-users"></span>';
@@ -443,9 +443,9 @@ class Menu extends AbstractHelper {
 
 			$html .= '</li>';
 
-			if($this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::regiao 
+			if($this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::regiao
 				&& $this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::coordenacao) {
-	
+
 			$html .= '<li>';
 			$html .= '<a class="accordion-toggle" href="#">';
 			$html .= '<span class="fa fa-users"></span>';
