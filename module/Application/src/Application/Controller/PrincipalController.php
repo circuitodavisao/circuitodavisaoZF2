@@ -81,29 +81,53 @@ class PrincipalController extends CircuitoController {
 		$mes = date('m');
 		$ano = date('Y');
 
-		if($entidade->getEntidadeTipo()->getId() !== EntidadeTipo::regiao &&
-			$entidade->getEntidadeTipo()->getId() !== EntidadeTipo::coordenacao){
-
-				$relatorio = RelatorioController::relatorioCompleto($this->getRepositorio(), $grupo, RelatorioController::relatorioMembresiaECelula, $mes, $ano, $tudo = false, $somado = true, 'atual');
-				$relatorioParceiro = RelatorioController::relatorioCompleto($this->getRepositorio(), $grupo, RelatorioController::relatorioParceiroDeDeus, $mes, $ano, $tudo = false, $somado = true);
-
-				$arrayPeriodoDoMes = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mes, $ano);
-
-				/* alunos da igreja */
-				$turmas = $grupo->getGrupoIgreja()->getTurma();
-				$numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupo);
-				$relatorioCursos = array();
-				if($relatorioCursosDesordenados = $this->getRepositorio()->getFatoCursoORM()->encontrarFatoCursoPorNumeroIdentificador($numeroIdentificador)){
-					foreach($relatorioCursosDesordenados as $fatoCurso){
-						$relatorioCursos[$fatoCurso->getTurma_id()][$fatoCurso->getSituacao_id()]++;
-						$relatorioCursos['total'][$fatoCurso->getSituacao_id()]++;
-					}
-				}
-
-				/* total de discipulados */
-				$totalDeDiscipulados = $this->getRepositorio()->getFatoCelulaDiscipuladoORM()->totalAtivosPorNumeroIdentificador($numeroIdentificador);
-
+		if($entidade->getEntidadeTipo()->getId() !== EntidadeTipo::regiao){
+			$tudo = false;
+			$indiceFinalDoRelatorio = 0;
+			if($entidade->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao){
+				$tudo = true;
 			}
+			$relatorio = RelatorioController::relatorioCompleto($this->getRepositorio(), $grupo, RelatorioController::relatorioMembresiaECelula, $mes, $ano, $tudo, $somado = true, 'atual');
+			$relatorioParceiro = RelatorioController::relatorioCompleto($this->getRepositorio(), $grupo, RelatorioController::relatorioParceiroDeDeus, $mes, $ano, $tudo, $somado = true);
+
+			$arrayPeriodoDoMes = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mes, $ano);
+
+			$relatorioCursos = array();
+			$totalDeDiscipulados = 0;
+			if($entidade->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao
+				|| $entidade->getEntidadeTipo()->getId() === EntidadeTipo::regiao){
+
+					if($entidade->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao){
+						$indiceFinalDoRelatorio = count($relatorio) - 1;
+
+						if($grupoPaiFilhoFilhos = $grupo->getGrupoPaiFilhoFilhosAtivos($periodoAtual)){
+							foreach ($grupoPaiFilhoFilhos as $filho) {
+								$grupoFilho = $filho->getGrupoPaiFilhoFilho();
+								if($grupoFilho->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
+									$relatorioCurso = self::montarRelatorioAlunos($this->getRepositorio(), $grupoFilho); 
+									foreach($relatorioCurso as $key => $val){
+										if($key == 'total'){
+											foreach($val as $key1 => $val1){
+												$relatorioCursos['total'][$key1] += $val1;
+											}
+										}
+									}	
+								}
+								$numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupoFilho);
+								$totalDeDiscipulados += $this->getRepositorio()->getFatoCelulaDiscipuladoORM()->totalAtivosPorNumeroIdentificador($numeroIdentificador);
+							}
+						}
+					}
+
+				}else{
+					$relatorioCursos = self::montarRelatorioAlunos($this->getRepositorio(), $grupo); 
+
+					/* total de discipulados */
+					$numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupo);
+					$totalDeDiscipulados = $this->getRepositorio()->getFatoCelulaDiscipuladoORM()->totalAtivosPorNumeroIdentificador($numeroIdentificador);
+				}
+		}
+
 
 		$dados = array(
 			'relatorio' => $relatorio,
@@ -121,6 +145,7 @@ class PrincipalController extends CircuitoController {
 			'turmas' => $turmas,
 			'relatorioCursos' => $relatorioCursos,
 			'totalDeDiscipulados' => $totalDeDiscipulados,
+			'indiceFinalDoRelatorio' => $indiceFinalDoRelatorio,
 		);
 
 		$grupoPaiFilhoFilhos = $grupo->getGrupoPaiFilhoFilhosAtivos($periodo = 0);
@@ -150,6 +175,19 @@ class PrincipalController extends CircuitoController {
 		$view->addChild($layoutJS, 'layoutJSPrincipal');
 
 		return $view;
+	}
+
+	public static function montarRelatorioAlunos($repositorio, $grupo){
+		$relatorio = array();
+		/* alunos da igreja */
+		$numeroIdentificador = $repositorio->getFatoCicloORM()->montarNumeroIdentificador($repositorio, $grupo);
+		if($relatorioCursosDesordenados = $repositorio->getFatoCursoORM()->encontrarFatoCursoPorNumeroIdentificador($numeroIdentificador)){
+			foreach($relatorioCursosDesordenados as $fatoCurso){
+				$relatorio[$fatoCurso->getTurma_id()][$fatoCurso->getSituacao_id()]++;
+				$relatorio['total'][$fatoCurso->getSituacao_id()]++;
+			}
+		}
+		return $relatorio;
 	}
 
 	public function verAction() {
