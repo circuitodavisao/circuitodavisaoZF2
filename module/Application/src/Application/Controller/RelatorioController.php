@@ -620,7 +620,7 @@ class RelatorioController extends CircuitoController {
 			}
 
 			if($grupo->getEntidadeAtiva()->getEntidadeTipo()->getId() !== EntidadeTipo::regiao 
-				&& $grupo->getEntidadeAtiva()->getEntidadeTipo()->getId() !== EntidadeTipo::coordenacao ){
+				&& $grupo->getEntidadeAtiva()->getEntidadeTipo()->getId() !== EntidadeTipo::coordenacao){
 
 					if($tipoRelatorio === self::relatorioParceiroDeDeus){
 						$relatorio[self::dadosPessoais][$indiceDeArrays]

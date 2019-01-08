@@ -10,7 +10,7 @@ use Application\Model\Entity\Hierarquia;
 
 if ($this->mostrarPrincipal) {
 	$fotos = $this->grupo->getFotosLideresAtivos(128);
-  echo '<div class="alert alert-default">';
+	echo '<div class="alert alert-default">';
 	echo $this->sitemap('principal');
 	echo '</div>';
 ?>
@@ -29,8 +29,8 @@ if ($this->mostrarPrincipal) {
 		$funcaoOnClickPerfil = 'location.href="/perfil"';
 		echo $this->botaoSimples('<i class="fa fa-user"></i> Perfil', $this->funcaoOnClick($funcaoOnClickPerfil), BotaoSimples::botaoMuitoPequenoImportante, BotaoSimples::posicaoAEsquerda);
 	} else {
-	$funcaoOnClick = 'funcaoCircuito("principalVer", '.$grupo->getId().')';
-	echo $this->botaoSimples('<i class="fa fa-cog"></i>', $this->funcaoOnClick($funcaoOnClick), BotaoSimples::botaoMuitoPequenoImportante, BotaoSimples::posicaoAEsquerda); }	?>
+		$funcaoOnClick = 'funcaoCircuito("principalVer", '.$grupo->getId().')';
+		echo $this->botaoSimples('<i class="fa fa-cog"></i>', $this->funcaoOnClick($funcaoOnClick), BotaoSimples::botaoMuitoPequenoImportante, BotaoSimples::posicaoAEsquerda); }	?>
 </p>
 </div>
 </div>
@@ -50,141 +50,145 @@ Período Atual <?php echo Funcoes::montaPeriodo($this->periodoFinal)[0]; ?>
 
 <div class="row mb10">
 <?php
-	$totalDeIndices = 6;
-	if($this->pessoa->getPessoaHierarquiaAtivo() 
-		&& $this->pessoa->getPessoaHierarquiaAtivo()->getHierarquia()->getId() !== Hierarquia::LIDER_EM_TREINAMENTO
-		&& $this->pessoa->getPessoaHierarquiaAtivo()->getHierarquia()->getId() !== Hierarquia::LIDER_DE_CELULA){
-			if($this->discipulado){
-				$totalDeIndices = 9;
+			$totalDeIndices = 6;
+		if($this->pessoa->getPessoaHierarquiaAtivo() 
+			&& $this->pessoa->getPessoaHierarquiaAtivo()->getHierarquia()->getId() !== Hierarquia::LIDER_EM_TREINAMENTO
+			&& $this->pessoa->getPessoaHierarquiaAtivo()->getHierarquia()->getId() !== Hierarquia::LIDER_DE_CELULA){
+				if($this->discipulado){
+					$totalDeIndices = 9;
 
-				$contador = array();
-				$contador['M'] = 0;
-				$contador['F'] = 0;
-				foreach($discipulos as $discipulo){
-					$grupoFilho = $discipulo->getGrupoPaiFilhoFilho();
-					foreach($grupoFilho->getPessoasAtivas() as $pessoa){
-						if ($pessoa->getSexo() === 'M') {
-							$contador['M']++;
+					$contador = array();
+					$contador['M'] = 0;
+					$contador['F'] = 0;
+					foreach($discipulos as $discipulo){
+						$grupoFilho = $discipulo->getGrupoPaiFilhoFilho();
+						foreach($grupoFilho->getPessoasAtivas() as $pessoa){
+							if ($pessoa->getSexo() === 'M') {
+								$contador['M']++;
+							}
+							if ($pessoa->getSexo() === 'F') {
+								$contador['F']++;
+							}
+							$contador[0]++;
 						}
-						if ($pessoa->getSexo() === 'F') {
-							$contador['F']++;
-						}
-						$contador[0]++;
 					}
-				}
-				$diferenca = $contador[0] - ($contador['M']+$contador['F']);
-				if($diferenca > 0){
-					$totalDeIndices = 10;
-				}
-			}
-		}
-	for($indiceNumeroGrandes = 1; $indiceNumeroGrandes <= $totalDeIndices; $indiceNumeroGrandes++){
-		$valor = 0;
-		$label = '';
-		switch($indiceNumeroGrandes){
-		case 1:
-			$valor = $this->relatorio[0][$this->periodoFinal]['celulaQuantidade'];
-			$label = 'Célula(s)';
-			break;
-		case 2:
-			$valor = $this->relatorio[0][$this->periodoFinal]['quantidadeLideres'];
-			$label = 'Líder(es)';
-			break;
-		case 3:
-			$valor = number_format($this->relatorio[0][$this->periodoFinal]['membresia']);
-			$label = 'Membresia';
-			break;
-		case 4:
-			$valor = 'R$ '.number_format($this->relatorioParceiro[0]['somaValor'],2,',','.');
-			$label = 'Parceiro de Deus';
-			break;
-		case 5:
-			$valor = ($this->relatorioCursos['total'][Situacao::ATIVO] + $this->relatorioCursos['total'][Situacao::ESPECIAL]);
-			$label = 'Aluno(s)';
-			break;
-		case 6:
-			$valor = $this->totalDeDiscipulados;
-			$label = 'Discipulado(s)';
-			break;
-		case 7:
-			$valor = '';
-			if($this->discipulado['media']){
-				for($i = 1; $i <= 5; $i++){
-					if($this->discipulado['media'] >= $i){
-						$valor .= '<i class="fa fa-star"></i>';
-					}else{
-						$valor .= '<i class="fa fa-star-o"></i>';
+					$diferenca = $contador[0] - ($contador['M']+$contador['F']);
+					if($diferenca > 0){
+						$totalDeIndices = 10;
 					}
 				}
 			}
-			$label = 'Discipulado';
-			break;
-		case 8:
-			if($contador['M'] < 6){
-				$escala = 'Anêmico';
-			}	
-			if($contador['M'] >= 6 && $contador['M'] < 12){
-				$escala = 'Fraca';
-			}	
-			if($contador['M'] == 12){
-				$escala = 'Boa';
+		for($indiceNumeroGrandes = 1; $indiceNumeroGrandes <= $totalDeIndices; $indiceNumeroGrandes++){
+			$valor = 0;
+			$label = '';
+			switch($indiceNumeroGrandes){
+			case 1:
+				$valor = $this->relatorio[$this->indiceFinalDoRelatorio][$this->periodoFinal]['celulaQuantidade'];
+				$label = 'Célula(s)';
+				break;
+			case 2:
+				$valor = $this->relatorio[$this->indiceFinalDoRelatorio][$this->periodoFinal]['quantidadeLideres'];
+				$label = 'Líder(es)';
+				break;
+			case 3:
+				$valor = number_format($this->relatorio[$this->indiceFinalDoRelatorio][$this->periodoFinal]['membresia']);
+				$label = 'Membresia';
+				break;
+			case 4:
+				$valor = 'R$ '.number_format($this->relatorioParceiro[$this->indiceFinalDoRelatorio]['somaValor'],2,',','.');
+				$label = 'Parceiro de Deus';
+				break;
+			case 5:
+				$valor = ($this->relatorioCursos['total'][Situacao::ATIVO] + $this->relatorioCursos['total'][Situacao::ESPECIAL]);
+				$label = 'Aluno(s)';
+				break;
+			case 6:
+				$valor = $this->totalDeDiscipulados;
+				$label = 'Discipulado(s)';
+				break;
+			case 7:
+				$valor = '';
+				if($this->discipulado['media']){
+					for($i = 1; $i <= 5; $i++){
+						if($this->discipulado['media'] >= $i){
+							$valor .= '<i class="fa fa-star"></i>';
+						}else{
+							$valor .= '<i class="fa fa-star-o"></i>';
+						}
+					}
+				}
+				$label = 'Discipulado';
+				break;
+			case 8:
+				if($contador['M'] < 6){
+					$escala = 'Anêmico';
+				}	
+				if($contador['M'] >= 6 && $contador['M'] < 12){
+					$escala = 'Fraca';
+				}	
+				if($contador['M'] == 12){
+					$escala = 'Boa';
+				}
+				if($contador['M'] >= 13 && $contador['M'] < 21){
+					$escala = 'Preditiva';
+				}	
+				if($contador['M'] >= 21){
+					$escala = 'Forte';
+				}	
+				$valor = $contador['M'] . ' - ' . $escala;
+				$label = 'Time de Homens';
+				break;
+			case 9:
+				if($contador['F'] < 6){
+					$escala = 'Anêmico';
+				}	
+				if($contador['F'] >= 6 && $contador['F'] < 12){
+					$escala = 'Fraca';
+				}	
+				if($contador['F'] == 12){
+					$escala = 'Boa';
+				}
+				if($contador['F'] >= 13 && $contador['F'] < 21){
+					$escala = 'Preditiva';
+				}	
+				if($contador['F'] >= 21){
+					$escala = 'Forte';
+				}	
+				$valor = $contador['F'] . ' - ' . $escala;
+				$label = 'Time de Mulheres';
+				break;
+			case 10:
+				$valor = $diferenca;
+				$label = 'Sexo não informado';
+				break;
 			}
-			if($contador['M'] >= 13 && $contador['M'] < 21){
-				$escala = 'Preditiva';
-			}	
-			if($contador['M'] >= 21){
-				$escala = 'Forte';
-			}	
-			$valor = $contador['M'] . ' - ' . $escala;
-			$label = 'Time de Homens';
-			break;
-		case 9:
-			if($contador['F'] < 6){
-				$escala = 'Anêmico';
-			}	
-			if($contador['F'] >= 6 && $contador['F'] < 12){
-				$escala = 'Fraca';
-			}	
-			if($contador['F'] == 12){
-				$escala = 'Boa';
-			}
-			if($contador['F'] >= 13 && $contador['F'] < 21){
-				$escala = 'Preditiva';
-			}	
-			if($contador['F'] >= 21){
-				$escala = 'Forte';
-			}	
-			$valor = $contador['F'] . ' - ' . $escala;
-			$label = 'Time de Mulheres';
-			break;
-		case 10:
-			$valor = $diferenca;
-			$label = 'Sexo não informado';
-			break;
-		}
 
-		$mostrar = true;
-		if($this->entidade->getEntidadeTipo()->getId() === EntidadeTipo::regiao
-			&& $indiceNumeroGrandes === 5){
-				$mostrar = false;
-			}
+			$mostrar = true;
+			if($this->entidade->getEntidadeTipo()->getId() === EntidadeTipo::regiao
+				&& $indiceNumeroGrandes === 5){
+					$mostrar = false;
+				}
 
-		if($mostrar){
-			echo '<div class="col-lg-3 col-md-3 col-sm-3 col-xs-6">';
-			echo '<div class="panel text-center br-a br-grey">';
-			echo '<div class="panel-body">';
-			echo '<h1 class="fs16 mt5 mbn">'.$valor.'</h1>';
-			echo '<h6 class="text-info">'.$label.'</h6>';
-			echo '</div>';
-			echo '</div>';
-			echo '</div>';
+			if($mostrar){
+				echo '<div class="col-lg-3 col-md-3 col-sm-3 col-xs-6">';
+				echo '<div class="panel text-center br-a br-grey">';
+				echo '<div class="panel-body">';
+				echo '<h1 class="fs16 mt5 mbn">'.$valor.'</h1>';
+				echo '<h6 class="text-info">'.$label.'</h6>';
+				echo '</div>';
+				echo '</div>';
+				echo '</div>';
+			}
 		}
-	}
 ?>
 </div>
 
 <!-- fim row numeros grandes -->
 
+<?php
+		if($this->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::regiao
+			&& $this->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::coordenacao){
+?>
 <div class="row mb10">
 
 <!-- dados membresia -->
@@ -201,40 +205,40 @@ Membresia
 <div class="col-xs-12 col-md-12 col-lg-12 p20">
 <p class="relatorioPessoal well text-<?php echo $this->relatorio[0]['mediaMembresiaPerformanceClass']; ?> text-center"><?php echo $this->relatorio[0]['mediaMembresiaPerformanceFrase']; ?></p>
 <?php
-echo $this->barraDeProgressoBonita(
-	'Membresia', $this->relatorio[0]['mediaMembresiaPerformanceClass'], $this->relatorio[0]['mediaMembresiaPerformance'], 'm0', true, $this->relatorio[0][-1]['membresiaMeta'], $this->relatorio[0]['mediaMembresia'], '');
+				echo $this->barraDeProgressoBonita(
+					'Membresia', $this->relatorio[0]['mediaMembresiaPerformanceClass'], $this->relatorio[0]['mediaMembresiaPerformance'], 'm0', true, $this->relatorio[0][-1]['membresiaMeta'], $this->relatorio[0]['mediaMembresia'], '');
 ?>
 </div>
 
 <?php
-$class = 'class = "col-lg-3 col-md-3 col-sm-6 col-xs-12"';
-$numeroIndices = 4;
-for ($indice = 1; $indice <= $numeroIndices; $indice++) {
-	switch ($indice) {
-	case 1:
-		$label = 'PESSOAS CHEIAS DE F&Eacute;';
-		$valor = $this->relatorio[0]['mediaMembresiaCulto'];
-		break;
-	case 2:
-		$label = 'PESSOAS APAIXONADAS';
-		$valor = $this->relatorio[0]['mediaMembresiaArena'];
-		break;
-	case 3:
-		$label = 'PESSOAS ALIAN&Ccedil;ADAS';
-		$valor = $this->relatorio[0]['mediaMembresiaDomingo'];
-		break;
-	case 4: $label = 'MEMBROS ASS&Iacute;DUOS';
-		$valor = $this->relatorio[0]['mediaMembresia'];
-		break;
-	}
-	$valor = RelatorioController::formataNumeroRelatorio($valor);
+				$class = 'class = "col-lg-3 col-md-3 col-sm-6 col-xs-12"';
+				$numeroIndices = 4;
+				for ($indice = 1; $indice <= $numeroIndices; $indice++) {
+					switch ($indice) {
+					case 1:
+						$label = 'PESSOAS CHEIAS DE F&Eacute;';
+						$valor = $this->relatorio[0]['mediaMembresiaCulto'];
+						break;
+					case 2:
+						$label = 'PESSOAS APAIXONADAS';
+						$valor = $this->relatorio[0]['mediaMembresiaArena'];
+						break;
+					case 3:
+						$label = 'PESSOAS ALIAN&Ccedil;ADAS';
+						$valor = $this->relatorio[0]['mediaMembresiaDomingo'];
+						break;
+					case 4: $label = 'MEMBROS ASS&Iacute;DUOS';
+						$valor = $this->relatorio[0]['mediaMembresia'];
+						break;
+					}
+					$valor = RelatorioController::formataNumeroRelatorio($valor);
 ?>
 								<div <?php echo $class; ?>>
 									<div class="panel panel-tile text-center br-a br-grey">
 										<div class="panel-body" style="padding-bottom: 0px;">
 											<h1 class="fs30 mt5 mbn">
 <?php
-	echo '<span class = "relatorioPessoal">' . $valor . '</span>';
+					echo '<span class = "relatorioPessoal">' . $valor . '</span>';
 ?>
 											</h1>
 											<h6><?php echo $label; ?></h6>
@@ -242,28 +246,28 @@ for ($indice = 1; $indice <= $numeroIndices; $indice++) {
 										<div class="panel-footer br-t p12">
 											<span class="fs11">
 <?php
-	for ($indicePeriodosDoMesAtual = $this->periodoInicial; $indicePeriodosDoMesAtual <= $this->periodoFinal; $indicePeriodosDoMesAtual++) {
-		if ($indicePeriodosDoMesAtual != $this->periodoInicial) {
-			echo ' | ';
-		}
-		switch ($indice) {
-		case 1:
-			$valor = $this->relatorio[0][$indicePeriodosDoMesAtual]['membresiaCulto'];
-			break;
-		case 2:
-			$valor = $this->relatorio[0][$indicePeriodosDoMesAtual]['membresiaArena'];
-			break;
-		case 3:
-			$valor = $this->relatorio[0][$indicePeriodosDoMesAtual]['membresiaDomingo'];
-			break;
-		case 4:
-			$valor = $this->relatorio[0][$indicePeriodosDoMesAtual]['membresia'];
-			$valor = RelatorioController::formataNumeroRelatorio($valor);
-			break;
-		}
+					for ($indicePeriodosDoMesAtual = $this->periodoInicial; $indicePeriodosDoMesAtual <= $this->periodoFinal; $indicePeriodosDoMesAtual++) {
+						if ($indicePeriodosDoMesAtual != $this->periodoInicial) {
+							echo ' | ';
+						}
+						switch ($indice) {
+						case 1:
+							$valor = $this->relatorio[0][$indicePeriodosDoMesAtual]['membresiaCulto'];
+							break;
+						case 2:
+							$valor = $this->relatorio[0][$indicePeriodosDoMesAtual]['membresiaArena'];
+							break;
+						case 3:
+							$valor = $this->relatorio[0][$indicePeriodosDoMesAtual]['membresiaDomingo'];
+							break;
+						case 4:
+							$valor = $this->relatorio[0][$indicePeriodosDoMesAtual]['membresia'];
+							$valor = RelatorioController::formataNumeroRelatorio($valor);
+							break;
+						}
 
-		echo '<span class="relatorioPessoal" style="font-size: 10px;">' . $valor . '</span>';
-	}
+						echo '<span class="relatorioPessoal" style="font-size: 10px;">' . $valor . '</span>';
+					}
 ?>
 											</span>
 										</div>
@@ -289,40 +293,40 @@ Célula
 <div class="col-xs-12 col-md-12 col-lg-12 p20">
 <p class="relatorioPessoal well text-<?php echo $this->relatorio[0]['mediaCelulaPerformanceClass']; ?> text-center"><?php echo $this->relatorio[0]['mediaCelulaPerformanceFrase']; ?></p>
 <?php
-echo $this->barraDeProgressoBonita(
-	'Célula', $this->relatorio[0]['mediaCelulaPerformanceClass'], $this->relatorio[0]['mediaCelulaPerformance'], 'm0', true, $this->relatorio[0][-1]['membresiaMeta'], $this->relatorio[0]['mediaCelula'], '');
+					echo $this->barraDeProgressoBonita(
+						'Célula', $this->relatorio[0]['mediaCelulaPerformanceClass'], $this->relatorio[0]['mediaCelulaPerformance'], 'm0', true, $this->relatorio[0][-1]['membresiaMeta'], $this->relatorio[0]['mediaCelula'], '');
 ?>
 </div>
 
 
 <?php
-$class = 'class = "col-lg-4 col-md-4 col-sm-4 col-xs-12"';
-$numeroIndices = 3;
-for ($indice = 1; $indice <= $numeroIndices; $indice++) {
-	switch ($indice) {
-	case 1:
-		$label = 'TOTAL DE CÉLULAS DE MULTIPLIÇÃO';
-		$valor = $this->relatorio[0]['mediaCelulaQuantidade'];
-		$valor = RelatorioController::formataNumeroRelatorio($valor);
-		break;
-	case 2:
-		$label = 'PESSOAS FREQUENTE';
-		$valor = $this->relatorio[0]['mediaCelula'];
-		$valor = RelatorioController::formataNumeroRelatorio($valor);
-		break;
-	case 3:
-		$label = 'CÉLULAS REALIZADAS';
-		$valor = $this->relatorio[0]['mediaCelulaRealizadasPerformance'];
-		$valor = RelatorioController::formataNumeroRelatorio($valor) . '%';
-		break;
-	}
+					$class = 'class = "col-lg-4 col-md-4 col-sm-4 col-xs-12"';
+					$numeroIndices = 3;
+					for ($indice = 1; $indice <= $numeroIndices; $indice++) {
+						switch ($indice) {
+						case 1:
+							$label = 'TOTAL DE CÉLULAS DE MULTIPLIÇÃO';
+							$valor = $this->relatorio[0]['mediaCelulaQuantidade'];
+							$valor = RelatorioController::formataNumeroRelatorio($valor);
+							break;
+						case 2:
+							$label = 'PESSOAS FREQUENTE';
+							$valor = $this->relatorio[0]['mediaCelula'];
+							$valor = RelatorioController::formataNumeroRelatorio($valor);
+							break;
+						case 3:
+							$label = 'CÉLULAS REALIZADAS';
+							$valor = $this->relatorio[0]['mediaCelulaRealizadasPerformance'];
+							$valor = RelatorioController::formataNumeroRelatorio($valor) . '%';
+							break;
+						}
 ?>
 								<div <?php echo $class; ?>>
 									<div class="panel panel-tile text-center br-a br-grey">
 										<div class="panel-body" style="padding-bottom: 0px;">
 											<h1 class="fs30 mt5 mbn">
 <?php
-	echo '<span class = "relatorioPessoal">' . $valor . '</span>';
+						echo '<span class = "relatorioPessoal">' . $valor . '</span>';
 ?>
 											</h1>
 											<h6><?php echo $label; ?></h6>
@@ -330,25 +334,25 @@ for ($indice = 1; $indice <= $numeroIndices; $indice++) {
 										<div class="panel-footer br-t p12">
 											<span class="fs11">
 <?php
-	for ($indicePeriodosDoMesAtual = $this->periodoInicial; $indicePeriodosDoMesAtual <= $this->periodoFinal; $indicePeriodosDoMesAtual++) {
-		if ($indicePeriodosDoMesAtual != $this->periodoInicial) {
-			echo ' | ';
-		}
-		switch ($indice) {
-		case 1:
-			$valor = $this->relatorio[0][$indicePeriodosDoMesAtual]['celulaQuantidade'];
-			break;
-		case 2:
-			$valor = $this->relatorio[0][$indicePeriodosDoMesAtual]['celula'];
-			break;
-		case 3:
-			$valor = $this->relatorio[0][$indicePeriodosDoMesAtual]['celulaRealizadasPerformance'];
-			$valor = RelatorioController::formataNumeroRelatorio($valor) . '%';
-			break;
-		}
-		$botaoModalPessoal = $valor;
-		echo '<span class = "relatorioPessoal" style = "font-size: 10px;">' . $botaoModalPessoal . '</span>';
-	}
+						for ($indicePeriodosDoMesAtual = $this->periodoInicial; $indicePeriodosDoMesAtual <= $this->periodoFinal; $indicePeriodosDoMesAtual++) {
+							if ($indicePeriodosDoMesAtual != $this->periodoInicial) {
+								echo ' | ';
+							}
+							switch ($indice) {
+							case 1:
+								$valor = $this->relatorio[0][$indicePeriodosDoMesAtual]['celulaQuantidade'];
+								break;
+							case 2:
+								$valor = $this->relatorio[0][$indicePeriodosDoMesAtual]['celula'];
+								break;
+							case 3:
+								$valor = $this->relatorio[0][$indicePeriodosDoMesAtual]['celulaRealizadasPerformance'];
+								$valor = RelatorioController::formataNumeroRelatorio($valor) . '%';
+								break;
+							}
+							$botaoModalPessoal = $valor;
+							echo '<span class = "relatorioPessoal" style = "font-size: 10px;">' . $botaoModalPessoal . '</span>';
+						}
 ?>
 </span>
 										</div>
@@ -362,7 +366,7 @@ for ($indice = 1; $indice <= $numeroIndices; $indice++) {
 <!-- fim celula -->
 
 <?php 
-	if($this->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::regiao){ 
+						if($this->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::regiao){ 
 ?>
 <!-- cursos -->
 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 admin-grid">
@@ -382,60 +386,63 @@ Alunos
 	<span class="label label-danger" data-placement="bottom" data-toggle="popover" data-content="Reprovado" style="cursor: pointer;">R</span>
 </div>
 <?php
-		if($this->turmas){
-			echo '<div class="row mb10">';
-			foreach($this->turmas as $turma){
-				$relatorio = $this->relatorioCursos[$turma->getId()];
-				if($relatorio[Situacao::ATIVO] == ''){
-					$relatorio[Situacao::ATIVO] = 0;
-				}
-				if($relatorio[Situacao::ESPECIAL] == ''){
-					$relatorio[Situacao::ESPECIAL] = 0;
-				}
-				if($relatorio[Situacao::DESISTENTE] == ''){
-					$relatorio[Situacao::DESISTENTE] = 0;
-				}
-				if($relatorio[Situacao::REPROVADO_POR_FALTA] == ''){
-					$relatorio[Situacao::REPROVADO_POR_FALTA] = 0;
-				}
-				$valor = ($relatorio[Situacao::ATIVO] + $relatorio[Situacao::ESPECIAL]);
-				if($valor == ''){
-					$valor = 0;
-				}
-				$modulo = 'SEM AULA ABERTA';
-				if($turma->getTurmaAulaAtiva()){
-					$modulo = $turma->getTurmaAulaAtiva()->getAula()->getDisciplina()->getNome();
-				}
-				$label = $modulo.' - ' . Funcoes::mesPorExtenso($turma->getMes(), 1) . '/' . $turma->getAno();
-				echo '<div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">';
-				echo '<div class="panel panel-tile text-center br-a br-grey">';
-				echo '<div class="panel-body" style="padding-bottom: 0px;">';
-				echo '<h1 class="fs30 mt5 mbn">'.$valor.'</h1>';
-				echo '<h6>'.$label.'</h6>';
-				echo '</div>';
-				echo '<div class="panel-footer br-t p12">';
-				echo '<span class="fs11">';
-				echo '<span class="label label-success">A - '.$relatorio[Situacao::ATIVO].'</span>';
-				echo ' <span class="label label-info">E - '.$relatorio[Situacao::ESPECIAL].'</span>';
-				echo ' <span class="label label-warning">D - '.$relatorio[Situacao::DESISTENTE].'</span>';
-				echo ' <span class="label label-danger">R - '.$relatorio[Situacao::REPROVADO_POR_FALTA].'</span>';
-				echo '</span>';
-				echo '</div>';
-				echo '</div>';
-				echo '</div>';
-			}
-			echo '</div>';
-		}
+							if($this->turmas){
+								echo '<div class="row mb10">';
+								foreach($this->turmas as $turma){
+									$relatorio = $this->relatorioCursos[$turma->getId()];
+									if($relatorio[Situacao::ATIVO] == ''){
+										$relatorio[Situacao::ATIVO] = 0;
+									}
+									if($relatorio[Situacao::ESPECIAL] == ''){
+										$relatorio[Situacao::ESPECIAL] = 0;
+									}
+									if($relatorio[Situacao::DESISTENTE] == ''){
+										$relatorio[Situacao::DESISTENTE] = 0;
+									}
+									if($relatorio[Situacao::REPROVADO_POR_FALTA] == ''){
+										$relatorio[Situacao::REPROVADO_POR_FALTA] = 0;
+									}
+									$valor = ($relatorio[Situacao::ATIVO] + $relatorio[Situacao::ESPECIAL]);
+									if($valor == ''){
+										$valor = 0;
+									}
+									$modulo = 'SEM AULA ABERTA';
+									if($turma->getTurmaAulaAtiva()){
+										$modulo = $turma->getTurmaAulaAtiva()->getAula()->getDisciplina()->getNome();
+									}
+									$label = $modulo.' - ' . Funcoes::mesPorExtenso($turma->getMes(), 1) . '/' . $turma->getAno();
+									echo '<div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">';
+									echo '<div class="panel panel-tile text-center br-a br-grey">';
+									echo '<div class="panel-body" style="padding-bottom: 0px;">';
+									echo '<h1 class="fs30 mt5 mbn">'.$valor.'</h1>';
+									echo '<h6>'.$label.'</h6>';
+									echo '</div>';
+									echo '<div class="panel-footer br-t p12">';
+									echo '<span class="fs11">';
+									echo '<span class="label label-success">A - '.$relatorio[Situacao::ATIVO].'</span>';
+									echo ' <span class="label label-info">E - '.$relatorio[Situacao::ESPECIAL].'</span>';
+									echo ' <span class="label label-warning">D - '.$relatorio[Situacao::DESISTENTE].'</span>';
+									echo ' <span class="label label-danger">R - '.$relatorio[Situacao::REPROVADO_POR_FALTA].'</span>';
+									echo '</span>';
+									echo '</div>';
+									echo '</div>';
+									echo '</div>';
+								}
+								echo '</div>';
+							}
 ?>
 </div>
 
 </div>
 </div>
 <!-- fim cursos -->
-<?php } ?>
+<?php 
+						}
+			} 
+?>
 
 <?php
-	if($this->discipulado){
+		if($this->discipulado){
 ?>
 <!-- dados discipulado -->
 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 admin-grid">
@@ -448,41 +455,41 @@ Discipulado
 </div>
 <div class="panel-body pn pt10" style="display: none;">
 <?php 
-		echo '<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 p10 text-center">';
-		echo '<div class="panel">';
-		echo '<div class="panel-body pn">';
-		foreach($this->discipulado['discipulados'] as $discipulado){
-			echo '<div class="alert alert-default">'.$discipulado['info'].'</div>';
+			echo '<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 p10 text-center">';
+			echo '<div class="panel">';
+			echo '<div class="panel-body pn">';
+			foreach($this->discipulado['discipulados'] as $discipulado){
+				echo '<div class="alert alert-default">'.$discipulado['info'].'</div>';
 
-			echo '<div class="row">';
-			for ($indiceInputs = 2; $indiceInputs <= 6; $indiceInputs++) {
-				$input = '';
-				$label = '';
-				switch ($indiceInputs) {
-				case 2:$input = 'administrativo'; $label = 'Circuito';break;
-				case 3:$input = 'oracao'; $label = 'Oração';break;
-				case 4:$input = 'palavra'; $label = 'Palavra';break;
-				case 5:$input = 'pontualidade'; $label = 'Pontualidade';break;
-				case 6:$input = 'assiduidade'; $label = 'Assiduidade';break;
-				}
-				$estrelas = '';
-				echo '<div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 p10 text-center">';
-				for($i = 1; $i <= 5; $i++){
-					if($discipulado[$input] >= $i){
-						$estrelas .= '<i class="fa fa-star"></i>';
-					}else{
-						$estrelas .= '<i class="fa fa-star-o"></i>';
+				echo '<div class="row">';
+				for ($indiceInputs = 2; $indiceInputs <= 6; $indiceInputs++) {
+					$input = '';
+					$label = '';
+					switch ($indiceInputs) {
+					case 2:$input = 'administrativo'; $label = 'Circuito';break;
+					case 3:$input = 'oracao'; $label = 'Oração';break;
+					case 4:$input = 'palavra'; $label = 'Palavra';break;
+					case 5:$input = 'pontualidade'; $label = 'Pontualidade';break;
+					case 6:$input = 'assiduidade'; $label = 'Assiduidade';break;
 					}
+					$estrelas = '';
+					echo '<div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 p10 text-center">';
+					for($i = 1; $i <= 5; $i++){
+						if($discipulado[$input] >= $i){
+							$estrelas .= '<i class="fa fa-star"></i>';
+						}else{
+							$estrelas .= '<i class="fa fa-star-o"></i>';
+						}
+					}
+					echo $label.'<br />';
+					echo $estrelas;
+					echo '</div>';
 				}
-				echo $label.'<br />';
-				echo $estrelas;
 				echo '</div>';
 			}
 			echo '</div>';
-		}
-		echo '</div>';
-		echo '</div>';
-		echo '</div>';
+			echo '</div>';
+			echo '</div>';
 ?>
 </div>
 </div>
@@ -494,7 +501,7 @@ Discipulado
 <!-- fim row dados -->
 
 <?php
-	if(count($this->discipulos) > 0){
+			if(count($this->discipulos) > 0){
 ?>
 <div class="panel user-group-widget">
 
@@ -508,40 +515,40 @@ Discipulado
 <div class="panel-body pn">
 
 <?php
-		$contadorDeDiscipulosPorLinha = 0;
-		foreach($discipulos as $discipulo){
-			$grupoFilho = $discipulo->getGrupoPaiFilhoFilho();
-			$entidade = $grupoFilho->getEntidadeAtiva();
-			foreach($grupoFilho->getPessoasAtivas() as $pessoa){
-				$idSessao = $pessoa->getId() . '_' . $entidade->getId();
-				$funcaoOnClick = 'mostrarSplash(); funcaoCircuito("principal", "'.$idSessao.'")';
-				$nomeHierarquia = $pessoa->getPessoaHierarquiaAtivo()->getHierarquia()->getNome();
-				if ($pessoa->getSexo() === 'F') {
-					if ($nomeFeminino = $pessoa->getPessoaHierarquiaAtivo()->getHierarquia()->getNome_feminino()) {
-						$nomeHierarquia = $nomeFeminino;
+				$contadorDeDiscipulosPorLinha = 0;
+				foreach($discipulos as $discipulo){
+					$grupoFilho = $discipulo->getGrupoPaiFilhoFilho();
+					$entidade = $grupoFilho->getEntidadeAtiva();
+					foreach($grupoFilho->getPessoasAtivas() as $pessoa){
+						$idSessao = $pessoa->getId() . '_' . $entidade->getId();
+						$funcaoOnClick = 'mostrarSplash(); funcaoCircuito("principal", "'.$idSessao.'")';
+						$nomeHierarquia = $pessoa->getPessoaHierarquiaAtivo()->getHierarquia()->getNome();
+						if ($pessoa->getSexo() === 'F') {
+							if ($nomeFeminino = $pessoa->getPessoaHierarquiaAtivo()->getHierarquia()->getNome_feminino()) {
+								$nomeHierarquia = $nomeFeminino;
+							}
+						}
+						if($contadorDeDiscipulosPorLinha === 0){
+							echo '<div class="row p10">';
+						}
+						echo '<div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 p10 text-center">';
+						echo '<img src="/img/fotos/'.$pessoa->getFoto().'" class="user-avatar" width="128px" height="128px" '. $this->funcaoOnClick($funcaoOnClick) .'/ style="margin:auto;">';
+						echo '<div class="caption">';
+						echo '<h5>'.$pessoa->getNomePrimeiro();
+						echo '<br />';
+						echo '<small>'.$nomeHierarquia. '<small>';
+						echo '<br /><small>'.$grupoFilho->getEntidadeAtiva()->infoEntidade(). '<small>';
+						echo '</h5>';
+						echo '</div>';
+						echo '</div>';
+
+						$contadorDeDiscipulosPorLinha++;
+						if($contadorDeDiscipulosPorLinha === 3){
+							echo '</div>';
+							$contadorDeDiscipulosPorLinha = 0;
+						}
 					}
 				}
-				if($contadorDeDiscipulosPorLinha === 0){
-					echo '<div class="row p10">';
-				}
-				echo '<div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 p10 text-center">';
-				echo '<img src="/img/fotos/'.$pessoa->getFoto().'" class="user-avatar" width="128px" height="128px" '. $this->funcaoOnClick($funcaoOnClick) .'/ style="margin:auto;">';
-				echo '<div class="caption">';
-				echo '<h5>'.$pessoa->getNomePrimeiro();
-				echo '<br />';
-				echo '<small>'.$nomeHierarquia. '<small>';
-				echo '<br /><small>'.$grupoFilho->getEntidadeAtiva()->infoEntidade(). '<small>';
-				echo '</h5>';
-				echo '</div>';
-				echo '</div>';
-
-				$contadorDeDiscipulosPorLinha++;
-				if($contadorDeDiscipulosPorLinha === 3){
-					echo '</div>';
-					$contadorDeDiscipulosPorLinha = 0;
-				}
-			}
-		}
 ?>
 
 </div>
@@ -551,7 +558,7 @@ Discipulado
 </div>
 <!-- fim panel discipulos -->
 <?php
-	}
+			}
 } else {
 	echo '<div class="panel-body bg-light text-center">';
 	if($this->grupo->getId() !== 1 && $this->grupo->getId() !== 1225){
@@ -566,6 +573,6 @@ echo $this->layoutJSPrincipal;
 ?>
 <script>
 $(document).ready(function(){
-    $('[data-toggle="popover"]').popover();
+	$('[data-toggle="popover"]').popover();
 });
 </script>
