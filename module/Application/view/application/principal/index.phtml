@@ -118,7 +118,7 @@ Período Atual <?php echo Funcoes::montaPeriodo($this->periodoFinal)[0]; ?>
 					$valor = $this->totalDeDiscipulados;
 					$label = 'Discipulado(s)';
 				}else{
-					$valor = $this->relatorio['regiao'];
+					$valor = $this->relatorio[$this->indiceFinalDoRelatorio]['regiao'];
 					$label = 'Regiões';
 				}
 				break;
@@ -136,7 +136,7 @@ Período Atual <?php echo Funcoes::montaPeriodo($this->periodoFinal)[0]; ?>
 					}
 					$label = 'Discipulado';
 				}else{
-					$valor = $this->relatorio['coordenacao'];
+					$valor = $this->relatorio[$this->indiceFinalDoRelatorio]['coordenacao'];
 					$label = 'Coordenações';
 				}
 				break;
@@ -160,7 +160,7 @@ Período Atual <?php echo Funcoes::montaPeriodo($this->periodoFinal)[0]; ?>
 					$valor = $contador['M'] . ' - ' . $escala;
 					$label = 'Time de Homens';
 				}else{
-					$valor = $this->relatorio['igreja'];
+					$valor = $this->relatorio[$this->indiceFinalDoRelatorio]['igreja'];
 					$label = 'Igrejas';
 				}
 				break;
