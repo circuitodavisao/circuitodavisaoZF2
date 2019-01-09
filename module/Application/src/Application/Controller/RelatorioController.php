@@ -656,6 +656,7 @@ class RelatorioController extends CircuitoController {
 					}
 				}
 
+			$contadorRegioesCoordenacoesEIgrejas = array();
 			foreach ($todosFilhos as $filho) {
 				$grupoFilho = $filho->getGrupoPaiFilhoFilho();
 
@@ -680,6 +681,14 @@ class RelatorioController extends CircuitoController {
 							}
 
 						}else{
+
+							if($grupoFilho->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::regiao ){
+								$contadorRegioesCoordenacoesEIgrejas['regiao']++;
+							}
+
+							if($grupoFilho->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao ){
+								$contadorRegioesCoordenacoesEIgrejas['coordenacao']++;
+							}
 
 							$todosDiscipulosRegiaoOuCoordenacao = array();
 							for ($indiceDeArrays1 = $arrayPeriodoDoMes[0]; $indiceDeArrays1 <= $arrayPeriodoDoMes[1]; $indiceDeArrays1++) {
@@ -706,6 +715,7 @@ class RelatorioController extends CircuitoController {
 								$grupoFilho1 = $filho1->getGrupoPaiFilhoFilho();
 
 								if($grupoFilho1->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
+									$contadorRegioesCoordenacoesEIgrejas['igreja']++;
 
 									$numeroIdentificadorFilho1 = $repositorio->getFatoCicloORM()->montarNumeroIdentificador($repositorio, $grupoFilho1, $dataInativacao);
 
@@ -735,6 +745,7 @@ class RelatorioController extends CircuitoController {
 
 								}
 								if($grupoFilho1->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao){
+									$contadorRegioesCoordenacoesEIgrejas['coordenacao']++;
 
 									$todosDiscipulosRegiaoOuCoordenacao1 = array();
 									for ($indiceDeArrays2 = $arrayPeriodoDoMes[0]; $indiceDeArrays2 <= $arrayPeriodoDoMes[1]; $indiceDeArrays2++) {
@@ -760,6 +771,8 @@ class RelatorioController extends CircuitoController {
 										$grupoFilho2 = $filho2->getGrupoPaiFilhoFilho();
 
 										if($grupoFilho2->getEntidadeAtiva()->getEntidadeTipo() === EntidadeTipo::igreja){
+
+											$contadorRegioesCoordenacoesEIgrejas['igreja']++;
 
 											$numeroIdentificadorFilho2 = $repositorio->getFatoCicloORM()->montarNumeroIdentificador($repositorio, $grupoFilho2, $dataInativacao);
 
@@ -797,6 +810,10 @@ class RelatorioController extends CircuitoController {
 							}else{
 								$relatorioDiscipulos[$grupoFilho->getId()][$indiceDeArrays] = $relatorioSomado1;
 							}
+
+							$relatorio['regiao'] = $contadorRegioesCoordenacoesEIgrejas['regiao'];
+							$relatorio['coordenacao'] = $contadorRegioesCoordenacoesEIgrejas['coordenacao'];
+							$relatorio['igreja'] = $contadorRegioesCoordenacoesEIgrejas['igreja'];
 						}
 
 					if ($tipoRelatorio === RelatorioController::relatorioMembresia ||
