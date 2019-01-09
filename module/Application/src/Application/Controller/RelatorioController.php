@@ -811,9 +811,6 @@ class RelatorioController extends CircuitoController {
 								$relatorioDiscipulos[$grupoFilho->getId()][$indiceDeArrays] = $relatorioSomado1;
 							}
 
-							$relatorio['regiao'] = $contadorRegioesCoordenacoesEIgrejas['regiao'];
-							$relatorio['coordenacao'] = $contadorRegioesCoordenacoesEIgrejas['coordenacao'];
-							$relatorio['igreja'] = $contadorRegioesCoordenacoesEIgrejas['igreja'];
 						}
 
 					if ($tipoRelatorio === RelatorioController::relatorioMembresia ||
@@ -1229,6 +1226,9 @@ class RelatorioController extends CircuitoController {
 			$relatorio[$contadorFilhos]['parceiroDeDeusPerformance'] = $relatorio[$contadorFilhos]['somaValor'] / $relatorio[$contadorFilhos]['parceiroDeDeusMeta'] * 100;
 		}
 		$relatorio[$contadorFilhos]['lideres'] = 'TOTAL';
+		$relatorio[$contadorFilhos]['regiao'] = $contadorRegioesCoordenacoesEIgrejas['regiao'];
+		$relatorio[$contadorFilhos]['coordenacao'] = $contadorRegioesCoordenacoesEIgrejas['coordenacao'];
+		$relatorio[$contadorFilhos]['igreja'] = $contadorRegioesCoordenacoesEIgrejas['igreja'];
 
 		return $relatorio;
 	}
