@@ -34,6 +34,9 @@ class PrincipalController extends CircuitoController {
 	 * GET /principal
 	 */
 	public function indexAction() {
+		set_time_limit(0);
+		ini_set('memory_limit', '1024M');
+
 		$sessao = new Container(Constantes::$NOME_APLICACAO);
 
 		$idEntidadeAtual = $sessao->idEntidadeAtual;
@@ -88,7 +91,10 @@ class PrincipalController extends CircuitoController {
 				$tudo = true;
 			}
 		$relatorio = RelatorioController::relatorioCompleto($this->getRepositorio(), $grupo, RelatorioController::relatorioMembresiaECelula, $mes, $ano, $tudo, $somado = true, 'atual');
-		$relatorioParceiro = RelatorioController::relatorioCompleto($this->getRepositorio(), $grupo, RelatorioController::relatorioParceiroDeDeus, $mes, $ano, $tudo, $somado = true);
+
+		if($entidade->getEntidadeTipo()->getId() !== EntidadeTipo::regiao){
+			$relatorioParceiro = RelatorioController::relatorioCompleto($this->getRepositorio(), $grupo, RelatorioController::relatorioParceiroDeDeus, $mes, $ano, $tudo, $somado = true);
+		}
 
 		$arrayPeriodoDoMes = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mes, $ano);
 
