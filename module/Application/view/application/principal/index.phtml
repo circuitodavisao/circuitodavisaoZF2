@@ -173,7 +173,7 @@ Período Atual <?php echo Funcoes::montaPeriodo($this->periodoFinal)[0]; ?>
 
 			$mostrar = true;
 			if($this->entidade->getEntidadeTipo()->getId() === EntidadeTipo::regiao
-				&& $indiceNumeroGrandes === 5){
+				&& ($indiceNumeroGrandes === 4 || $indiceNumeroGrandes === 5)){
 					$mostrar = false;
 				}
 
