@@ -475,14 +475,25 @@ class IndexController extends CircuitoController {
 				$html .= "<br /><br /><br />Tem Grupos ativos!!!";
 				foreach ($grupos as $grupo) {
 					$html .= "<br /> Grupo: {$grupo->getId()}";
-					if($grupoEventosDiscipulados = $grupo->getGrupoEventoAtivosPorTipo(EventoTipo::tipoDiscipulado)){
+					if($grupoEventosCelulas = $grupo->getGrupoEventoAtivosPorTipo(EventoTipo::tipoCelula)){
+
+						$html .= "<br />###### TemCelula ";
 						$numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupo);
-						foreach($grupoEventosDiscipulados as $grupoEventoDiscipulado){
-							$fatoCelulaDiscipulado = new FatoCelulaDiscipulado();
-							$fatoCelulaDiscipulado->setNumero_identificador($numeroIdentificador);
-							$fatoCelulaDiscipulado->setGrupo_evento_id($grupoEventoDiscipulado->getId());
-							$this->getRepositorio()->getFatoCelulaDiscipuladoORM()->persistir($fatoCelulaDiscipulado);
-							$html .= "<br /> fato celula discipulado";
+
+						if(!$this->getRepositorio()->getFatoLiderORM()->encontrarFatoLiderPorNumeroIdentificador($numeroIdentificador)){
+
+							$html .= '<br /><span class="label label-danger">### SEM FATO LIDER ###</span>';
+
+							$totalDeLideres = count($grupo->getResponsabilidadesAtivas());
+
+							$html .= '<br /><span class="label label-danger">Data Criacao</span>'. $grupoEventosCelulas[0]->getData_criacaoStringPadraoBanco();
+
+							$fatoLiderNovo = new FatoLider();
+							$fatoLiderNovo->setLideres($totalDeLideres);
+							$fatoLiderNovo->setNumero_identificador($numeroIdentificador);
+							$fatoLiderNovo->setDataEHoraDeCriacao($grupoEventosCelulas[0]->getData_criacaoStringPadraoBanco());
+							$this->getRepositorio()->getFatoLiderORM()->persistir($fatoLiderNovo, $alterarDataDeCriacao = false);
+
 						}
 					}
 				}
