@@ -86,6 +86,9 @@ Período Atual <?php echo Funcoes::montaPeriodo($this->periodoFinal)[0]; ?>
 					}
 				}
 			}
+		if($this->entidade->getEntidadeTipo()->getId() === EntidadeTipo::regiao){
+			$totalDeIndices = 8;
+		}
 		for($indiceNumeroGrandes = 1; $indiceNumeroGrandes <= $totalDeIndices; $indiceNumeroGrandes++){
 			$valor = 0;
 			$label = '';
@@ -111,40 +114,55 @@ Período Atual <?php echo Funcoes::montaPeriodo($this->periodoFinal)[0]; ?>
 				$label = 'Aluno(s)';
 				break;
 			case 6:
-				$valor = $this->totalDeDiscipulados;
-				$label = 'Discipulado(s)';
+				if($this->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::regiao){
+					$valor = $this->totalDeDiscipulados;
+					$label = 'Discipulado(s)';
+				}else{
+					$valor = $this->relatorio['regiao'];
+					$label = 'Regiões';
+				}
 				break;
 			case 7:
-				$valor = '';
-				if($this->discipulado['media']){
-					for($i = 1; $i <= 5; $i++){
-						if($this->discipulado['media'] >= $i){
-							$valor .= '<i class="fa fa-star"></i>';
-						}else{
-							$valor .= '<i class="fa fa-star-o"></i>';
+				if($this->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::regiao){
+					$valor = '';
+					if($this->discipulado['media']){
+						for($i = 1; $i <= 5; $i++){
+							if($this->discipulado['media'] >= $i){
+								$valor .= '<i class="fa fa-star"></i>';
+							}else{
+								$valor .= '<i class="fa fa-star-o"></i>';
+							}
 						}
 					}
+					$label = 'Discipulado';
+				}else{
+					$valor = $this->relatorio['coordenacao'];
+					$label = 'Coordenações';
 				}
-				$label = 'Discipulado';
 				break;
 			case 8:
-				if($contador['M'] < 6){
-					$escala = 'Anêmico';
-				}	
-				if($contador['M'] >= 6 && $contador['M'] < 12){
-					$escala = 'Fraca';
-				}	
-				if($contador['M'] == 12){
-					$escala = 'Boa';
+				if($this->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::regiao){
+					if($contador['M'] < 6){
+						$escala = 'Anêmico';
+					}	
+					if($contador['M'] >= 6 && $contador['M'] < 12){
+						$escala = 'Fraca';
+					}	
+					if($contador['M'] == 12){
+						$escala = 'Boa';
+					}
+					if($contador['M'] >= 13 && $contador['M'] < 21){
+						$escala = 'Preditiva';
+					}	
+					if($contador['M'] >= 21){
+						$escala = 'Forte';
+					}	
+					$valor = $contador['M'] . ' - ' . $escala;
+					$label = 'Time de Homens';
+				}else{
+					$valor = $this->relatorio['igreja'];
+					$label = 'Igrejas';
 				}
-				if($contador['M'] >= 13 && $contador['M'] < 21){
-					$escala = 'Preditiva';
-				}	
-				if($contador['M'] >= 21){
-					$escala = 'Forte';
-				}	
-				$valor = $contador['M'] . ' - ' . $escala;
-				$label = 'Time de Homens';
 				break;
 			case 9:
 				if($contador['F'] < 6){
