@@ -221,6 +221,15 @@ function mostrarBotaoSelecionarMulher() {
 	}
 }
 
+function mostrarBotaoSelecionarCasal() {
+	let divBotaoSelecionarCasal = $('#divBotaoSelecionarCasal');
+	if (parseInt($('#idCasal').val()) === 0) {
+		$('#divBotaoSelecionarCasal').addClass(hidden);
+	} else {
+		$('#divBotaoSelecionarCasal').removeClass(hidden);
+	}
+}
+
 function mostrarBotaoSelecionarAluno() {
 	let divBotaoSelecionarAluno = $('#divBotaoSelecionarAluno');
 	if (parseInt($('#idAluno').val()) === 0) {
@@ -255,6 +264,11 @@ function selecionarMulher() {
 	selecionarObjeto(idMulher.val(), $('#idMulher>option:selected').text())
 }
 
+function selecionarCasal() {
+	let idCasal = $('#idCasal')
+	selecionarObjeto(idCasal.val(), $('#idCasal>option:selected').text())
+}
+
 function selecionarAluno() {
 	let idAluno = $('#idAluno')
 	selecionarObjeto(idAluno.val(), $('#idAluno>option:selected').text())
@@ -287,13 +301,12 @@ function selecionarObjeto(id, informacao) {
 	}
 	if (parseInt($('#solicitacaoTipo').val()) === SEPARAR) {
 		$(stringDivSelecionarCasal).addClass(hidden);
+		$(stringDivSelecionarQuemSaira).addClass(hidden);
+		$('#blocoObjeto3').removeClass(hidden)
 	}
 	if (parseInt($('#solicitacaoTipo').val()) === UNIR_CASAL) {
 		$(stringDivSelecionarHomem).addClass(hidden);
 		$(stringDivSelecionarMulher).addClass(hidden);
-	}
-	if (parseInt($('#solicitacaoTipo').val()) === SEPARAR) {
-		$(stringDivSelecionarQuemSaira).addClass(hidden);
 	}
 	objeto = $(stringSpanObjeto + objetoSelecionado);
 	spanNomeLideres = $(stringSpanNomeLideres + objetoSelecionado);
@@ -310,7 +323,11 @@ function selecionarObjeto(id, informacao) {
 	spanSelecioneOObjeto.addClass(hidden);
 	botaoSelecionar.addClass(hidden);
 
-	if (objetoSelecionado === 3 && (parseInt($('#solicitacaoTipo').val()) === REMOVER_LIDER || parseInt($('#solicitacaoTipo').val()) === REMOVER_CELULA)){
+	if (objetoSelecionado === 3 
+		&& 
+		(parseInt($('#solicitacaoTipo').val()) === REMOVER_LIDER 
+			|| parseInt($('#solicitacaoTipo').val()) === REMOVER_CELULA)
+	){
 		objeto.html(informacao);
 		spanLoader.addClass(hidden);
 		if(parseInt($('#solicitacaoTipo').val()) === REMOVER_LIDER){
@@ -668,6 +685,8 @@ function limparObjeto(qualObjeto) {
 		$('#idEquipe').val(0)
 		$('#idHomem').val(0)
 		$('#idMulher').val(0)
+		$('#idCasal').val(0)
+		$('#quemVaiSair').val(0)
 		$('#idAluno').val(0)
 		$('#divBotaoSelecionarHomem').addClass(hidden)
 		$('#divBotaoSelecionarMulher').addClass(hidden)
@@ -682,6 +701,7 @@ function limparObjeto(qualObjeto) {
 		}
 		if (parseInt($('#solicitacaoTipo').val()) === TRANSFERIR_LIDER_PARA_OUTRA_EQUIPE || 
 			parseInt($('#solicitacaoTipo').val()) === REMOVER_LIDER || 
+			parseInt($('#solicitacaoTipo').val()) === SEPARAR || 
 			parseInt($('#solicitacaoTipo').val()) === REMOVER_CELULA) {
 			valorParaRemover = -50;
 		}

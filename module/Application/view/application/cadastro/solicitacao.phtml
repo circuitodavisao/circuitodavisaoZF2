@@ -170,6 +170,37 @@ if (count($this->grupoPaiFilhoMulheres) === 0) {
 	</div>
 	<?php } ?>
 	</div>
+
+
+	<!--divSelecionarCasal-->
+	<div id="divSelecionarCasal" class="hidden">
+<?php
+if (count($this->grupoPaiFilhoCasais) === 0) {
+	echo 'Sem casais para a solicitação';
+} else {
+?>
+	<h3>Selecione o casal</h3>
+	<select id="idCasal" class="form-control" onChange="mostrarBotaoSelecionarCasal();">
+		<option value="0">SELECIONE</option>
+<?php
+	foreach ($this->grupoPaiFilhoCasais as $grupoPaiFilhoCasal) {
+		$grupo = $grupoPaiFilhoCasal['grupo']->getGrupoPaiFilhoFilho();
+		echo '<option class="casais '.$grupoPaiFilhoCasal['hierarquia'].'" value="' . $grupo->getId() . '" >' . $grupo->getEntidadeAtiva()->infoEntidade(). ' - ' . $grupo->getNomeLideresAtivos().'</option>';
+}
+?>
+	</select>
+	<div id="divBotaoSelecionarCasal" class="hidden mt10">
+	<?php
+		echo $this->botaoSimples(Constantes::$TRADUCAO_SELECIONAR, $this->funcaoOnClick('selecionarCasal()'));
+	?>
+	</div>
+	<?php } ?>
+	</div>
+
+
+
+
+
 	<!--divSelecionarAluno-->
 	<div id="divSelecionarAluno" class="hidden">
 <?php
