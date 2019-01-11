@@ -394,14 +394,14 @@ class IndexController extends CircuitoController {
 									$grupoMulher = $this->getRepositorio()->getGrupoORM()->encontrarPorId($solicitacao->getObjeto2());
 									$html .= $this->unirCasal($grupoHomem, $grupoMulher);
 								}
-								//								if ($idSolicitacaoTipo == SolicitacaoTipo::SEPARAR) {
-								//									$html .= "<br />SEPARANDO";
-								//									$pessoaParaInativar = $this->getRepositorio()->getPessoaORM()->encontrarPorId($solicitacao->getObjeto2());
-								//									foreach ($pessoaParaInativar->getResponsabilidadesAtivas() as $grupoResponsavel) {
-								//										$grupoResponsavel->setDataEHoraDeInativacao(date('Y-m-d', mktime(0, 0, 0, date("m"), date("d") - 1, date("Y"))));
-								//										$this->getRepositorio()->getGrupoResponsavelORM()->persistir($grupoResponsavel, false);
-								//									}
-								//								}
+								if ($idSolicitacaoTipo == SolicitacaoTipo::SEPARAR) {
+									$html .= "<br />SEPARANDO";
+									$pessoaParaInativar = $this->getRepositorio()->getPessoaORM()->encontrarPorId($solicitacao->getObjeto2());
+									foreach ($pessoaParaInativar->getResponsabilidadesAtivas() as $grupoResponsavel) {
+										$grupoResponsavel->setDataEHoraDeInativacao(date('Y-m-d', mktime(0, 0, 0, date("m"), date("d") - 1, date("Y"))));
+										$this->getRepositorio()->getGrupoResponsavelORM()->persistir($grupoResponsavel, false);
+									}
+								}
 								//								if ($idSolicitacaoTipo == SolicitacaoTipo::TROCAR_RESPONSABILIDADES) {
 								//									$html .= "<br />TROCANDO RESPONSABILIDADES";
 								//									$grupo1 = $this->getRepositorio()->getGrupoORM()->encontrarPorId($solicitacao->getObjeto1());
