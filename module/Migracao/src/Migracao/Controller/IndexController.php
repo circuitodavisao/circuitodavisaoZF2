@@ -576,6 +576,7 @@ class IndexController extends CircuitoController {
 	}
 
 	public function criarNo($grupoQueSeraSemeado, $grupoQueRecebera, $numeroIdentificadorLider, $extra = null){
+
 		/* novo grupo */
 		$grupoNovo = new Grupo();
 		$this->getRepositorio()->getGrupoORM()->persistir($grupoNovo);
@@ -647,7 +648,8 @@ class IndexController extends CircuitoController {
 				$this->getRepositorio()->getGrupoEventoORM()->persistir($grupoEventoNovo);
 			}
 		}
-		if($linhaDeLancamento = $grupoQueSeraSemeado->getGrupoPessoasNoPeriodo($periodo = 0)){
+
+		if($linhaDeLancamento = $grupoQueSeraSemeado->getGrupoPessoasNoPeriodo($periodo = 0, $this->getRepositorio())){
 			foreach($linhaDeLancamento as $grupoPessoa){
 				$grupoPessoaNovo = new GrupoPessoa();
 				$grupoPessoaNovo->setGrupo($grupoNovo);
@@ -656,6 +658,7 @@ class IndexController extends CircuitoController {
 				$this->getRepositorio()->getGrupoPessoaORM()->persistir($grupoPessoaNovo);
 			}
 		}
+
 		if($temAlgumaCelula){
 			$numeroIdentificadorNovo = $numeroIdentificadorLider . str_pad($grupoNovo->getId(), 8, 0, STR_PAD_LEFT);
 			$fatoLiderNovo = new FatoLider();
