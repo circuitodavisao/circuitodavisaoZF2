@@ -34,6 +34,9 @@ class PrincipalController extends CircuitoController {
 	 * GET /principal
 	 */
 	public function indexAction() {
+		set_time_limit(0);
+		ini_set('memory_limit', '1024M');
+
 		$sessao = new Container(Constantes::$NOME_APLICACAO);
 
 		$idEntidadeAtual = $sessao->idEntidadeAtual;
@@ -56,7 +59,6 @@ class PrincipalController extends CircuitoController {
 		}
 		/* fim formulario */
 
-
 		/* dados pessoa logada */
 		$idEntidadeAtual = $sessao->idEntidadeAtual;
 		$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
@@ -72,37 +74,84 @@ class PrincipalController extends CircuitoController {
 
 		/* verificando se estou veno um discipulo abaixo  e pegando os dados dele */
 		if($sessao->idSessao > 0){
-			$pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($sessao->idSessao);
-			$grupo = $pessoa->getResponsabilidadesAtivas()[0]->getGrupo();
-			$entidade = $grupo->getEntidadeAtiva();
+			$explodeIdSessao = explode('_', $sessao->idSessao);
+			$pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($explodeIdSessao[0]);
+			$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($explodeIdSessao[1]);
+			$grupo = $entidade->getGrupo();
 			unset($sessao->idSessao);
 		}
 
 		$mes = date('m');
 		$ano = date('Y');
 
-		if($entidade->getEntidadeTipo()->getId() !== EntidadeTipo::regiao &&
-			$entidade->getEntidadeTipo()->getId() !== EntidadeTipo::coordenacao){
+		$tudo = false;
+		$indiceFinalDoRelatorio = 0;
+		if($entidade->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao
+			|| $entidade->getEntidadeTipo()->getId() === EntidadeTipo::regiao){
+				$tudo = true;
+			}
+		$relatorio = RelatorioController::relatorioCompleto($this->getRepositorio(), $grupo, RelatorioController::relatorioMembresiaECelula, $mes, $ano, $tudo, $somado = true, 'atual');
 
-				$relatorio = RelatorioController::relatorioCompleto($this->getRepositorio(), $grupo, RelatorioController::relatorioMembresiaECelula, $mes, $ano, $tudo = false, $somado = true, 'atual');
-				$relatorioParceiro = RelatorioController::relatorioCompleto($this->getRepositorio(), $grupo, RelatorioController::relatorioParceiroDeDeus, $mes, $ano, $tudo = false, $somado = true);
+		if($entidade->getEntidadeTipo()->getId() !== EntidadeTipo::regiao){
+			$relatorioParceiro = RelatorioController::relatorioCompleto($this->getRepositorio(), $grupo, RelatorioController::relatorioParceiroDeDeus, $mes, $ano, $tudo, $somado = true);
+		}
 
-				$arrayPeriodoDoMes = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mes, $ano);
+		$arrayPeriodoDoMes = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mes, $ano);
 
-				/* alunos da igreja */
-				$turmas = $grupo->getGrupoIgreja()->getTurma();
-				$numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupo);
-				$relatorioCursos = array();
-				if($relatorioCursosDesordenados = $this->getRepositorio()->getFatoCursoORM()->encontrarFatoCursoPorNumeroIdentificador($numeroIdentificador)){
-					foreach($relatorioCursosDesordenados as $fatoCurso){
-						$relatorioCursos[$fatoCurso->getTurma_id()][$fatoCurso->getSituacao_id()]++;
-						$relatorioCursos['total'][$fatoCurso->getSituacao_id()]++;
+		$relatorioCursos = array();
+		$totalDeDiscipulados = 0;
+		if($entidade->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao
+			|| $entidade->getEntidadeTipo()->getId() === EntidadeTipo::regiao){
+
+				$indiceFinalDoRelatorio = count($relatorio) - 1;
+
+				if($grupoPaiFilhoFilhos = $grupo->getGrupoPaiFilhoFilhosAtivos($periodoAtual)){
+					foreach ($grupoPaiFilhoFilhos as $filho) {
+						$grupoFilho = $filho->getGrupoPaiFilhoFilho();
+						if($grupoFilho->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
+							$relatorioCurso = self::montarRelatorioAlunos($this->getRepositorio(), $grupoFilho); 
+							foreach($relatorioCurso as $key => $val){
+								if($key == 'total'){
+									foreach($val as $key1 => $val1){
+										$relatorioCursos['total'][$key1] += $val1;
+									}
+								}
+							}	
+							$numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupoFilho);
+							$totalDeDiscipulados += $this->getRepositorio()->getFatoCelulaDiscipuladoORM()->totalAtivosPorNumeroIdentificador($numeroIdentificador);
+						}
+
+						if($grupoFilho->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao){
+
+							if($grupoPaiFilhoFilhos2 = $grupoFilho->getGrupoPaiFilhoFilhosAtivos($periodoAtual)){
+								foreach ($grupoPaiFilhoFilhos2 as $filho2) {
+									$grupoFilho2 = $filho2->getGrupoPaiFilhoFilho();
+
+									if($grupoFilho2->getEntidadeAtiva()->getEntidadeTipo() === EntidadeTipo::igreja){
+
+										$relatorioCurso = self::montarRelatorioAlunos($this->getRepositorio(), $grupoFilho2);
+										foreach($relatorioCurso as $key => $val){
+											if($key == 'total'){
+												foreach($val as $key1 => $val1){
+													$relatorioCursos['total'][$key1] += $val1;
+												}
+											}
+										}	
+										$numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupoFilho2);
+										$totalDeDiscipulados += $this->getRepositorio()->getFatoCelulaDiscipuladoORM()->totalAtivosPorNumeroIdentificador($numeroIdentificador);
+									}
+								}
+							}
+						}
 					}
 				}
 
-				/* total de discipulados */
-				$totalDeDiscipulados = $this->getRepositorio()->getFatoCelulaDiscipuladoORM()->totalAtivosPorNumeroIdentificador($numeroIdentificador);
+			}else{
+				$relatorioCursos = self::montarRelatorioAlunos($this->getRepositorio(), $grupo); 
 
+				/* total de discipulados */
+				$numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupo);
+				$totalDeDiscipulados = $this->getRepositorio()->getFatoCelulaDiscipuladoORM()->totalAtivosPorNumeroIdentificador($numeroIdentificador);
 			}
 
 		$dados = array(
@@ -121,6 +170,7 @@ class PrincipalController extends CircuitoController {
 			'turmas' => $turmas,
 			'relatorioCursos' => $relatorioCursos,
 			'totalDeDiscipulados' => $totalDeDiscipulados,
+			'indiceFinalDoRelatorio' => $indiceFinalDoRelatorio,
 		);
 
 		$grupoPaiFilhoFilhos = $grupo->getGrupoPaiFilhoFilhosAtivos($periodo = 0);
@@ -150,6 +200,19 @@ class PrincipalController extends CircuitoController {
 		$view->addChild($layoutJS, 'layoutJSPrincipal');
 
 		return $view;
+	}
+
+	public static function montarRelatorioAlunos($repositorio, $grupo){
+		$relatorio = array();
+		/* alunos da igreja */
+		$numeroIdentificador = $repositorio->getFatoCicloORM()->montarNumeroIdentificador($repositorio, $grupo);
+		if($relatorioCursosDesordenados = $repositorio->getFatoCursoORM()->encontrarFatoCursoPorNumeroIdentificador($numeroIdentificador)){
+			foreach($relatorioCursosDesordenados as $fatoCurso){
+				$relatorio[$fatoCurso->getTurma_id()][$fatoCurso->getSituacao_id()]++;
+				$relatorio['total'][$fatoCurso->getSituacao_id()]++;
+			}
+		}
+		return $relatorio;
 	}
 
 	public function verAction() {

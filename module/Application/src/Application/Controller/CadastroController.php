@@ -2160,7 +2160,10 @@ class CadastroController extends CircuitoController {
 						$arrayMulheres[] = $dados;
 					}
 				} else {
-					$arrayCasais[] = $grupoPaiFilhoFilho12;
+					$dados = array();
+					$dados['grupo'] = $grupoPaiFilhoFilho12;
+					$dados['hierarquia'] = $grupo->getId();
+					$arrayCasais[] = $dados;
 				}
 			}
 			if ($grupoPaiFilhoFilhos144 = $grupo12->getGrupoPaiFilhoFilhosAtivosReal()) {
@@ -2181,7 +2184,10 @@ class CadastroController extends CircuitoController {
 								$arrayMulheres[] = $dados;
 							}
 						} else {
-							$arrayCasais[] = $grupoPaiFilhoFilho144;
+							$dados = array();
+							$dados['grupo'] = $grupoPaiFilhoFilho144;
+							$dados['hierarquia'] = $grupo->getId();
+							$arrayCasais[] = $dados;
 						}
 					}
 					if ($grupoPaiFilhoFilhos1728 = $grupo144->getGrupoPaiFilhoFilhosAtivosReal()) {
@@ -2202,7 +2208,10 @@ class CadastroController extends CircuitoController {
 										$arrayMulheres[] = $dados;
 									}
 								} else {
-									$arrayCasais[] = $grupoPaiFilhoFilho1728;
+									$dados = array();
+									$dados['grupo'] = $grupoPaiFilhoFilho1728;
+									$dados['hierarquia'] = $grupo->getId();
+									$arrayCasais[] = $dados;
 								}
 							}
 
@@ -2224,7 +2233,10 @@ class CadastroController extends CircuitoController {
 												$arrayMulheres[] = $dados;
 											}
 										} else {
-											$arrayCasais[] = $grupoPaiFilhoFilho20736;
+											$dados = array();
+											$dados['grupo'] = $grupoPaiFilhoFilho20736;
+											$dados['hierarquia'] = $grupo->getId();
+											$arrayCasais[] = $dados;
 										}
 									}
 								}

@@ -394,14 +394,14 @@ class IndexController extends CircuitoController {
 									$grupoMulher = $this->getRepositorio()->getGrupoORM()->encontrarPorId($solicitacao->getObjeto2());
 									$html .= $this->unirCasal($grupoHomem, $grupoMulher);
 								}
-								//								if ($idSolicitacaoTipo == SolicitacaoTipo::SEPARAR) {
-								//									$html .= "<br />SEPARANDO";
-								//									$pessoaParaInativar = $this->getRepositorio()->getPessoaORM()->encontrarPorId($solicitacao->getObjeto2());
-								//									foreach ($pessoaParaInativar->getResponsabilidadesAtivas() as $grupoResponsavel) {
-								//										$grupoResponsavel->setDataEHoraDeInativacao(date('Y-m-d', mktime(0, 0, 0, date("m"), date("d") - 1, date("Y"))));
-								//										$this->getRepositorio()->getGrupoResponsavelORM()->persistir($grupoResponsavel, false);
-								//									}
-								//								}
+								if ($idSolicitacaoTipo == SolicitacaoTipo::SEPARAR) {
+									$html .= "<br />SEPARANDO";
+									$pessoaParaInativar = $this->getRepositorio()->getPessoaORM()->encontrarPorId($solicitacao->getObjeto2());
+									foreach ($pessoaParaInativar->getResponsabilidadesAtivas() as $grupoResponsavel) {
+										$grupoResponsavel->setDataEHoraDeInativacao(date('Y-m-d', mktime(0, 0, 0, date("m"), date("d") - 1, date("Y"))));
+										$this->getRepositorio()->getGrupoResponsavelORM()->persistir($grupoResponsavel, false);
+									}
+								}
 								//								if ($idSolicitacaoTipo == SolicitacaoTipo::TROCAR_RESPONSABILIDADES) {
 								//									$html .= "<br />TROCANDO RESPONSABILIDADES";
 								//									$grupo1 = $this->getRepositorio()->getGrupoORM()->encontrarPorId($solicitacao->getObjeto1());
@@ -475,14 +475,25 @@ class IndexController extends CircuitoController {
 				$html .= "<br /><br /><br />Tem Grupos ativos!!!";
 				foreach ($grupos as $grupo) {
 					$html .= "<br /> Grupo: {$grupo->getId()}";
-					if($grupoEventosDiscipulados = $grupo->getGrupoEventoAtivosPorTipo(EventoTipo::tipoDiscipulado)){
+					if($grupoEventosCelulas = $grupo->getGrupoEventoAtivosPorTipo(EventoTipo::tipoCelula)){
+
+						$html .= "<br />###### TemCelula ";
 						$numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupo);
-						foreach($grupoEventosDiscipulados as $grupoEventoDiscipulado){
-							$fatoCelulaDiscipulado = new FatoCelulaDiscipulado();
-							$fatoCelulaDiscipulado->setNumero_identificador($numeroIdentificador);
-							$fatoCelulaDiscipulado->setGrupo_evento_id($grupoEventoDiscipulado->getId());
-							$this->getRepositorio()->getFatoCelulaDiscipuladoORM()->persistir($fatoCelulaDiscipulado);
-							$html .= "<br /> fato celula discipulado";
+
+						if(!$this->getRepositorio()->getFatoLiderORM()->encontrarFatoLiderPorNumeroIdentificador($numeroIdentificador)){
+
+							$html .= '<br /><span class="label label-danger">### SEM FATO LIDER ###</span>';
+
+							$totalDeLideres = count($grupo->getResponsabilidadesAtivas());
+
+							$html .= '<br /><span class="label label-danger">Data Criacao</span>'. $grupoEventosCelulas[0]->getData_criacaoStringPadraoBanco();
+
+							$fatoLiderNovo = new FatoLider();
+							$fatoLiderNovo->setLideres($totalDeLideres);
+							$fatoLiderNovo->setNumero_identificador($numeroIdentificador);
+							$fatoLiderNovo->setDataEHoraDeCriacao($grupoEventosCelulas[0]->getData_criacaoStringPadraoBanco());
+							$this->getRepositorio()->getFatoLiderORM()->persistir($fatoLiderNovo, $alterarDataDeCriacao = false);
+
 						}
 					}
 				}
@@ -565,6 +576,7 @@ class IndexController extends CircuitoController {
 	}
 
 	public function criarNo($grupoQueSeraSemeado, $grupoQueRecebera, $numeroIdentificadorLider, $extra = null){
+
 		/* novo grupo */
 		$grupoNovo = new Grupo();
 		$this->getRepositorio()->getGrupoORM()->persistir($grupoNovo);
@@ -636,7 +648,8 @@ class IndexController extends CircuitoController {
 				$this->getRepositorio()->getGrupoEventoORM()->persistir($grupoEventoNovo);
 			}
 		}
-		if($linhaDeLancamento = $grupoQueSeraSemeado->getGrupoPessoasNoPeriodo($periodo = 0)){
+
+		if($linhaDeLancamento = $grupoQueSeraSemeado->getGrupoPessoasNoPeriodo($periodo = 0, $this->getRepositorio())){
 			foreach($linhaDeLancamento as $grupoPessoa){
 				$grupoPessoaNovo = new GrupoPessoa();
 				$grupoPessoaNovo->setGrupo($grupoNovo);
@@ -645,6 +658,7 @@ class IndexController extends CircuitoController {
 				$this->getRepositorio()->getGrupoPessoaORM()->persistir($grupoPessoaNovo);
 			}
 		}
+
 		if($temAlgumaCelula){
 			$numeroIdentificadorNovo = $numeroIdentificadorLider . str_pad($grupoNovo->getId(), 8, 0, STR_PAD_LEFT);
 			$fatoLiderNovo = new FatoLider();
