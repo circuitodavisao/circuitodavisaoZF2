@@ -626,7 +626,11 @@ class Grupo extends CircuitoEntity {
      */
 	function getGrupoEventoRevisao() {
 		$grupoSelecionado = $this;
-		$grupoEventos = null;
+    $arrayDeGruposEventos = Array();
+    if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::IGREJA) {
+      $grupoEventos = $grupoSelecionado->getGrupoEventoAtivosPorTipo(EventoTipo::tipoRevisao);
+      $arrayDeGruposEventos[] = $grupoEventos;
+    }
 		if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::SUBEQUIPE) {
 			while ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::SUBEQUIPE ||
 				$grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::EQUIPE) {
@@ -637,7 +641,9 @@ class Grupo extends CircuitoEntity {
 					}
 				}
 			$grupoEventos = $grupoSelecionado->getGrupoEventoAtivosPorTipo(EventoTipo::tipoRevisao);
-		} else if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::EQUIPE) {
+      $arrayDeGruposEventos[] = $grupoEventos;
+		}
+    if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::EQUIPE) {
 			while ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::EQUIPE) {
 				$grupoSelecionado = $grupoSelecionado->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai();
 				if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::IGREJA) {
@@ -645,20 +651,60 @@ class Grupo extends CircuitoEntity {
 				}
 			}
 			$grupoEventos = $grupoSelecionado->getGrupoEventoAtivosPorTipo(EventoTipo::tipoRevisao);
-		} else {
-			$grupoEventos = $grupoSelecionado->getGrupoEventoAtivosPorTipo(EventoTipo::tipoRevisao);
+      $arrayDeGruposEventos[] = $grupoEventos;
 		}
+
+    if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::REGIONAL ||
+        $grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::COORDENACAO) {
+        if($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::COORDENACAO) {
+          $grupoSelecionado = $grupoSelecionado->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai();
+        }
+        $grupoSelecionadoGrupoPaiFilhoFilhos = $grupoSelecionado->getGrupoPaiFilhoFilhosAtivos(0);
+        if($grupoSelecionadoGrupoPaiFilhoFilhos){
+          foreach($grupoSelecionadoGrupoPaiFilhoFilhos as $GrupoPaiFilhos){
+            $filho = $GrupoPaiFilhos->getGrupoPaiFilhoFilho();
+            if($filho->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::IGREJA){
+              $grupoEventos = $filho->getGrupoEventoAtivosPorTipo(EventoTipo::tipoRevisao);
+              $arrayDeGruposEventos[] = $grupoEventos;
+            }
+            $temRegiao = false;
+            $temCoordenacao = false;
+            if($filho->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::REGIONAL ||
+                $filho->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::COORDENACAO){
+                $GrupoPaifilhoDosFilhos = $filho->getGrupoPaiFilhoFilhosAtivos(0);
+              do{
+                foreach($GrupoPaifilhoDosFilhos as $GrupoPaiFilhoInterior){
+                  $filhoInterior = $GrupoPaiFilhoInterior->getGrupoPaiFilhoFilho();
+                  if($filhoInterior->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::IGREJA){
+                    $grupoEventos = $filhoInterior->getGrupoEventoAtivosPorTipo(EventoTipo::tipoRevisao);
+                    $arrayDeGruposEventos[] = $grupoEventos;
+                  }
+                  if($filhoInterior->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::COORDENACAO){
+                    $temCoordenacao = true;
+                  }
+                  if($filhoInterior->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::REGIONAL){
+                    $temRegiao = true;
+                  }
+                }
+                $GrupoPaifilhoDosFilhos = $filhoInterior->getGrupoPaiFilhoFilhosAtivos(0);
+              } while ($temRegiao === true || $temCoordenacao === true);
+            }
+          }
+        }
+    }
 
 		/* Verificando dia do revisao para mostrar */
 		$arrayRevisoes = array();
-		foreach($grupoEventos as $grupoEvento){
-			$dataDoRevisao = strtotime($grupoEvento->getEvento()->getData() . ' +2 week');
-			$dataAtual = strtotime(date('Y-m-d'));
+    foreach($arrayDeGruposEventos as $grupoEventos){
+  		foreach($grupoEventos as $grupoEvento){
+  			$dataDoRevisao = strtotime($grupoEvento->getEvento()->getData() . ' +2 week');
+  			$dataAtual = strtotime(date('Y-m-d'));
 
-			if($dataDoRevisao >= $dataAtual){
-				$arrayRevisoes[] = $grupoEvento;
-			}
-		}
+  			if($dataDoRevisao >= $dataAtual){
+  				$arrayRevisoes[] = $grupoEvento;
+  			}
+  		}
+    }
 		return $arrayRevisoes;
 	}
 

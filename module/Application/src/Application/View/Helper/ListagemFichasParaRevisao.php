@@ -15,7 +15,7 @@ use Zend\View\Helper\AbstractHelper;
 class ListagemFichasParaRevisao extends AbstractHelper {
 
     public function __construct() {
-        
+
     }
 
     public function __invoke() {
@@ -25,28 +25,33 @@ class ListagemFichasParaRevisao extends AbstractHelper {
     public function renderHtml() {
         $html = '';
         $pessoas = array();
-        $frequencias = $this->view->evento->getEventoFrequencia();
-        if (count($frequencias) > 0) {
-            foreach ($frequencias as $frequencia) {
-                $revisionista = $frequencia->getPessoa();
-                if ($grupoPessoa = $revisionista->getGrupoPessoaAtivo()) {
-                    $grupoEquipe = $grupoPessoa->getGrupo()->getGrupoEquipe();
-                    $pessoa = new Pessoa();
-                    $pessoa->setId($frequencia->getId());
-                    $pessoa->setNome($revisionista->getNome());
-                    if ($grupoEquipe->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::igreja) {
-                        $pessoa->setEntidade('IGREJA');
-                    } else {
-                        $pessoa->setEntidade($grupoPessoa->getGrupo()->getEntidadeAtiva()->infoEntidade());
-                    }
-                    if ($frequencia->getFrequencia() == 'S') {
-                        $pessoa->setNoRevisao(true);
-                    }
-                    $pessoas[] = $pessoa;
-                }
-            }
+        $arrayDeEventos = Array();
+        if($this->view->multiplos){
+          $arrayDeEventos = $this->view->arrayDeEventosRevisoes;
+        } else {
+          $arrayDeEventos[] = $this->view->evento;
         }
-
+        foreach ($arrayDeEventos as $evento) {
+          $frequencias = $evento->getEventoFrequencia();
+          if (count($frequencias) > 0) {
+              foreach ($frequencias as $frequencia) {
+                  $revisionista = $frequencia->getPessoa();
+                  if ($grupoPessoa = $revisionista->getGrupoPessoaAtivo()) {
+                      $grupoEquipe = $grupoPessoa->getGrupo()->getGrupoEquipe();
+                      $pessoa = new Pessoa();
+                      $pessoa->setGrupoPessoa($grupoPessoa);
+                      $pessoa->setId($frequencia->getId());
+                      $pessoa->setNome($revisionista->getNome());
+                      $pessoa->setSexo($revisionista->getSexo());
+                      $pessoa->setEntidade($grupoPessoa->getGrupo()->getEntidadeAtiva());
+                      if ($frequencia->getFrequencia() == 'S') {
+                          $pessoa->setNoRevisao(true);
+                      }
+                      $pessoas[] = $pessoa;
+                  }
+              }
+          }
+        }
         /* Sem pessoas cadastrados */
         if (count($pessoas) == 0) {
             $html .= '<div class="alert alert-warning"><i class="fa fa-warning pr10" aria-hidden="true"></i>&nbsp;Sem Pessoas Cadastradas!</div>';
@@ -65,6 +70,7 @@ class ListagemFichasParaRevisao extends AbstractHelper {
             $html .= $this->view->translate(Constantes::$TRADUCAO_NOME_REVISIONISTA);
             $html .= '</th>';
 
+            $html .= '<th class="text-center">Sexo</th>';
             $html .= '<th class="text-center">Equipe</th>';
             $html .= '<th class="text-center">Ativo no Revisão</th>';
             $html .= '<td></td>';
@@ -72,11 +78,21 @@ class ListagemFichasParaRevisao extends AbstractHelper {
             $html .= '</thead>';
             $html .= '<tbody>';
             foreach ($pessoas as $pessoa) {
+              if($this->view->multiplos){
+                $nomeEntidadeAcima = $pessoa->getGrupoPessoa()->getGrupo()->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai()->getEntidadeAtiva()->getNome();
+                if(!$nomeEntidadeAcima){
+                  $nomeEntidadeAcima = ' - COORDENAÇÃO '. $pessoa->getGrupoPessoa()->getGrupo()->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai()->getEntidadeAtiva()->getNumero();
+                }
+              }
+                $sexo = $pessoa->getSexo();
+                if(!$sexo) {
+                  $sexo = 'Não Informado';
+                }
                 $html .= '<tr>';
                 $html .= '<td class="text-center">' . $pessoa->getId() . '</td>';
-
                 $html .= '<td class="text-center"><span class="visible-lg visible-md">' . $pessoa->getNome() . '</span><span class="visible-sm visible-xs">' . $pessoa->getNomePrimeiroUltimo() . '</span></td>';
-                $html .= '<td class="text-center">' . $pessoa->getEntidade() . '</td>';
+                $html .= '<td class="text-center">' . $sexo . '</td>';
+                $html .= '<td class="text-center">' . $pessoa->getEntidade()->infoEntidade() . $nomeEntidadeAcima . '</td>';
                 $html .= '<td class="text-center">';
                 if ($pessoa->getNoRevisao()) {
                     $html .= '<span class="label label-success">ATIVO NO REVIS&Atilde;O</span>';

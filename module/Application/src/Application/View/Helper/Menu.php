@@ -590,13 +590,15 @@ class Menu extends AbstractHelper {
 				$html .= '</a>';
 				$html .= '</li>';
 			}
+
 			$html .= '</ul>';
 			$html .= '</li>';
+
+		} // fim restrição de coordenadores
 
 			$html .= '<li>';
 			$html .= '<a class="accordion-toggle" href="#">';
 			$html .= '<span class="fa fa-print"></span>';
-
 
 			$html .= '<span class="sidebar-title">Imprimir</span>';
 			$html .= '<span class="caret"></span>';
@@ -624,7 +626,8 @@ class Menu extends AbstractHelper {
 			$html .= '</a>';
 			$html .= '</li>';
 
-			if ($this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja) {
+			if ($this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja || $this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao ||
+					$this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::regiao) {
 				$html .= '<li>';
 				$html .= '<a href="/cadastroSelecionarRevisaoCracha" onClick="mostrarSplash();">';
 				$html .= '<span class="fa fa-terminal"></span>';
@@ -635,7 +638,7 @@ class Menu extends AbstractHelper {
 
 			$html .= '</ul>';
 			$html .= '</li>';
-			}
+
 		}
 		if ($this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja || $this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::equipe) {
 			$html .= '<li class="sidebar-label pt20">Suporte</li>';

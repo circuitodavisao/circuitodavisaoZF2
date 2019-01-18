@@ -5,31 +5,38 @@ use Application\Controller\Helper\Constantes;
 $html = '';
 $homens = array();
 $mulheres = array();
-$frequencias = $this->evento->getEventoFrequencia();
-
-if (count($frequencias) > 0) {
-    foreach ($frequencias as $frequencia) {
-        if ($frequencia->getFrequencia() == 'S') {
-            $pessoa = $frequencia->getPessoa();
-            if ($pessoa->getGrupoPessoaAtivo()) {
-                $jaExiste = false;
-                foreach ($pessoas as $pessoaParaVerificar) {
-                    if ($pessoaParaVerificar->getId() === $pessoa->getId()) {
-                        $jaExiste = true;
-                    }
-                }
-                if (!$jaExiste) {
-                    if ($pessoa->getSexo() == 'M') {
-                        $homens[] = $pessoa;
-                    } else {
-                        $mulheres[] = $pessoa;
-                    }
-                }
-            }
-        }
-    }
+$arrayDeEventos = Array();
+if($this->multiplos){
+  $arrayDeEventos = $this->arrayDeEventosRevisoes;
+} else {
+  $arrayDeEventos[] = $this->evento;
 }
 
+foreach ($arrayDeEventos as $evento) {
+  $frequencias = $evento->getEventoFrequencia();
+  if (count($frequencias) > 0) {
+      foreach ($frequencias as $frequencia) {
+          if ($frequencia->getFrequencia() == 'S') {
+              $pessoa = $frequencia->getPessoa();
+              if ($pessoa->getGrupoPessoaAtivo()) {
+                  $jaExiste = false;
+                  foreach ($pessoas as $pessoaParaVerificar) {
+                      if ($pessoaParaVerificar->getId() === $pessoa->getId()) {
+                          $jaExiste = true;
+                      }
+                  }
+                  if (!$jaExiste) {
+                      if ($pessoa->getSexo() == 'M') {
+                          $homens[] = $pessoa;
+                      } else {
+                          $mulheres[] = $pessoa;
+                      }
+                  }
+              }
+          }
+      }
+  }
+}
 $html .= $this->templateFormularioTopo('Listagem de Revisionistas para o Revisão de Vidas');
 $html .= '<div class="panel-body bg-light">';
 $html .= '<h3>Homens: '.count($homens).' - Mulheres: '.count($mulheres).'</h3>';
@@ -45,16 +52,29 @@ if (count($homens) > 0) {
     $html .= '<th>';
     $html .= $this->translate(Constantes::$TRADUCAO_NOME);
     $html .= '</th>';
+    $html .= '<th>Sexo</th>';
     $html .= '<th>Time</th>';
     $html .= '<th>Idade</th>';
     $html .= '</tr>';
     $html .= '</thead>';
     $html .= '<tbody>';
     foreach ($homens as $homem) {
+      $nomeAcima = '';
+      if($this->multiplos){
+        $nomeEntidadeAcima = $homem->getGrupoPessoaAtivo()->getGrupo()->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai()->getEntidadeAtiva()->getNome();
+        if(!$nomeEntidadeAcima){
+          $nomeEntidadeAcima = ' - COORDENAÇÃO '. $homem->getGrupoPessoaAtivo()->getGrupo()->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai()->getEntidadeAtiva()->getNumero();
+        }
+      }
+      $sexo = $homem->getSexo();
+      if(!$sexo) {
+        $sexo = 'Não Informado';
+      }
         $html .= '<tr>';
         $html .= '<td>' . $homem->getId() . '</td>';
         $html .= '<td><span class="visible-lg visible-md">' . $homem->getNome() . '</span><span class="visible-sm visible-xs">' . $homem->getNomePrimeiroUltimo() . '</span></td>';
-        $html .= '<td>' . $homem->getGrupoPessoaAtivo()->getGrupo()->getEntidadeAtiva()->infoEntidade() . '</td>';
+        $html .= '<td>' . $homem->getSexo() . '</td>';
+        $html .= '<td>' . $homem->getGrupoPessoaAtivo()->getGrupo()->getEntidadeAtiva()->infoEntidade() . $nomeEntidadeAcima . '</td>';
         $html .= '<td>' . $homem->getIdade() . '</td>';
         $html .= '</tr>';
     }
@@ -64,7 +84,7 @@ if (count($homens) > 0) {
     $html .= '<div class="alert alert-warning"><i class="fa fa-warning pr10" aria-hidden="true"></i>&nbsp;Sem Homens Cadastrados!</div>';
 }
 
-if (count($homens) > 0) {
+if (count($mulheres) > 0) {
     $html .= '<h2>Revisionistas Mulheres</h2>';
     $html .= '<input id="fooFilterMulher" type="text" class="form-control" placeholder="Filtro">';
     $html .= '<table class="table table-condensed table-hover bg-light mt15 footable" data-filter="#fooFilterMulher">';
@@ -76,16 +96,29 @@ if (count($homens) > 0) {
     $html .= '<th>';
     $html .= $this->translate(Constantes::$TRADUCAO_NOME);
     $html .= '</th>';
+    $html .= '<th>Sexo</th>';
     $html .= '<th>Time</th>';
     $html .= '<th>Idade</th>';
     $html .= '</tr>';
     $html .= '</thead>';
     $html .= '<tbody>';
     foreach ($mulheres as $mulher) {
+      $nomeAcima = '';
+      if($this->multiplos){
+        $nomeEntidadeAcima = $mulher->getGrupoPessoaAtivo()->getGrupo()->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai()->getEntidadeAtiva()->getNome();
+        if(!$nomeEntidadeAcima){
+          $nomeEntidadeAcima = ' - COORDENAÇÃO '. $mulher->getGrupoPessoaAtivo()->getGrupo()->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai()->getEntidadeAtiva()->getNumero();
+        }
+      }
+      $sexo = $homem->getSexo();
+      if(!$sexo) {
+        $sexo = 'Não Informado';
+      }
         $html .= '<tr>';
         $html .= '<td>' . $mulher->getId() . '</td>';
         $html .= '<td><span class="visible-lg visible-md">' . $mulher->getNome() . '</span><span class="visible-sm visible-xs">' . $mulher->getNomePrimeiroUltimo() . '</span></td>';
-        $html .= '<td>' . $mulher->getGrupoPessoaAtivo()->getGrupo()->getEntidadeAtiva()->infoEntidade() . '</td>';
+        $html .= '<td>' . $mulher->getSexo() . '</td>';
+        $html .= '<td>' . $mulher->getGrupoPessoaAtivo()->getGrupo()->getEntidadeAtiva()->infoEntidade() . $nomeEntidadeAcima . '</td>';
         $html .= '<td>' . $mulher->getIdade() . '</td>';
         $html .= '</tr>';
     }

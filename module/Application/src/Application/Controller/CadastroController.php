@@ -391,6 +391,7 @@ class CadastroController extends CircuitoController {
 			Constantes::$TITULO_DA_PAGINA => $tituloDaPagina,
 			Constantes::$TIPO_EVENTO => $tipoEvento,
 			Constantes::$EXTRA => $extra,
+			Constantes::$ENTIDADE => $entidade,
 			'mostrarOpcoes' => true,
 		));
 
@@ -880,7 +881,7 @@ class CadastroController extends CircuitoController {
 						$this->getRepositorio()->getGrupoEventoORM()->persistir($grupoEvento);
 
 						$numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $entidade->getGrupo());
-						$fatoCelulaDiscipulado = new FatoCelulaDiscipulado();	
+						$fatoCelulaDiscipulado = new FatoCelulaDiscipulado();
 						$fatoCelulaDiscipulado->setNumero_identificador($numeroIdentificador);
 						$fatoCelulaDiscipulado->setGrupo_evento_id($grupoEvento->getId());
 						$this->getRepositorio()->getFatoCelulaDiscipuladoORM()->persistir($fatoCelulaDiscipulado);
@@ -1625,10 +1626,29 @@ class CadastroController extends CircuitoController {
 		$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
 		$sessao->idRevisao = $idRevisao;
 		$eventoRevisao = $this->getRepositorio()->getEventoORM()->encontrarPorId($idRevisao);
+
+		if($entidade->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao || $entidade->getEntidadeTipo()->getId() === EntidadeTipo::regiao){
+			$multiplos = true;
+			$request = $this->getRequest();
+			if ($request->isPost()) {
+				$arrayDeRevisoes = Array();
+				foreach ($_POST as $key => $value) {
+					if (substr($key, 0, 7) == 'revisao') {
+						$eventoRevisao = $this->getRepositorio()->getEventoORM()->encontrarPorId($value);
+						$arrayDeEventosRevisoes[] = $eventoRevisao;
+					}
+				}
+			}
+		} else {
+			$multiplos = false;
+		}
+
 		$view = new ViewModel(array(
 			'repositorioORM' => $this->getRepositorio(),
 			'evento' => $eventoRevisao,
 			'entidade' => $entidade,
+			'multiplos' => $multiplos,
+			'arrayDeEventosRevisoes' => $arrayDeEventosRevisoes,
 		));
 
 		/* Javascript */
@@ -1651,10 +1671,29 @@ class CadastroController extends CircuitoController {
 		$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
 		$sessao->idRevisao = $idRevisao;
 		$eventoRevisao = $this->getRepositorio()->getEventoORM()->encontrarPorId($idRevisao);
+
+		if($entidade->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao || $entidade->getEntidadeTipo()->getId() === EntidadeTipo::regiao){
+			$multiplos = true;
+			$request = $this->getRequest();
+			if ($request->isPost()) {
+				$arrayDeRevisoes = Array();
+				foreach ($_POST as $key => $value) {
+					if (substr($key, 0, 7) == 'revisao') {
+						$eventoRevisao = $this->getRepositorio()->getEventoORM()->encontrarPorId($value);
+						$arrayDeEventosRevisoes[] = $eventoRevisao;
+					}
+				}
+			}
+		} else {
+			$multiplos = false;
+		}
+
 		$view = new ViewModel(array(
 			'repositorioORM' => $this->getRepositorio(),
 			'evento' => $eventoRevisao,
 			'entidade' => $entidade,
+			'multiplos' => $multiplos,
+			'arrayDeEventosRevisoes' => $arrayDeEventosRevisoes,
 		));
 
 		/* Javascript */
@@ -1677,10 +1716,29 @@ class CadastroController extends CircuitoController {
 		$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
 		$sessao->idRevisao = $idRevisao;
 		$eventoRevisao = $this->getRepositorio()->getEventoORM()->encontrarPorId($idRevisao);
+
+		if($entidade->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao || $entidade->getEntidadeTipo()->getId() === EntidadeTipo::regiao){
+			$multiplos = true;
+			$request = $this->getRequest();
+			if ($request->isPost()) {
+				$arrayDeRevisoes = Array();
+				foreach ($_POST as $key => $value) {
+					if (substr($key, 0, 7) == 'revisao') {
+						$eventoRevisao = $this->getRepositorio()->getEventoORM()->encontrarPorId($value);
+						$arrayDeEventosRevisoes[] = $eventoRevisao;
+					}
+				}
+			}
+		} else {
+			$multiplos = false;
+		}
+
 		$view = new ViewModel(array(
 			'repositorioORM' => $this->getRepositorio(),
 			'evento' => $eventoRevisao,
 			'entidade' => $entidade,
+			'multiplos' => $multiplos,
+			'arrayDeEventosRevisoes' => $arrayDeEventosRevisoes,
 		));
 
 		/* Javascript */
@@ -2000,7 +2058,7 @@ class CadastroController extends CircuitoController {
 			$dataInicio = $arrayPeriodoInicial[3].'-'.$arrayPeriodoInicial[2].'-'.$arrayPeriodoInicial[1];
 			$dataFim = $arrayPeriodoFinal[6].'-'.$arrayPeriodoFinal[5].'-'.$arrayPeriodoFinal[4];
 
-			$solicitacoes = $this->getRepositorio()->getSolicitacaoORM()->encontrarTodosPorDataDeCriacao($dataInicio, $dataFim, $idIgreja);			
+			$solicitacoes = $this->getRepositorio()->getSolicitacaoORM()->encontrarTodosPorDataDeCriacao($dataInicio, $dataFim, $idIgreja);
 			$solicitacoesDivididasPorTipo = array();
 			foreach($solicitacoes as $solicitacaoPorData){
 				$solicitacao = $this->getRepositorio()->getSolicitacaoORM()->encontrarPorId($solicitacaoPorData['id']);
@@ -2480,35 +2538,57 @@ class CadastroController extends CircuitoController {
 
 	public function selecionarRevisionistaCrachaAction() {
 		$sessao = new Container(Constantes::$NOME_APLICACAO);
+		$idEntidadeAtual = $sessao->idEntidadeAtual;
+		$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+		$arrayDeRevisoes = Array();
 		$idRevisao = $sessao->idSessao;
 		$eventoRevisao = $this->getRepositorio()->getEventoORM()->encontrarPorId($idRevisao);
+		$arrayDeRevisoes[] = $eventoRevisao;
 
 		$relatorio = array();
 		$quantidadeHomensRevisionistas = 0;
 		$quantidadeMulheresRevisionistas = 0;
 		$quantidadeHomensLideres = 0;
 		$quantidadeMulheresLideres = 0;
-		if ($eventoFrequencias = $eventoRevisao->getEventoFrequencia()) {
-			foreach ($eventoFrequencias as $eventoFrequencia) {
-				/* Revisionistas */
-				if ($eventoFrequencia->getPessoa()->getGrupoPessoaAtivo()) {
-					if ($eventoFrequencia->getFrequencia() == 'S') {
-						$relatorio['revisionistas'][] = $eventoFrequencia;
-						if($eventoFrequencia->getPessoa()->getSexo() == 'M'){
-							$quantidadeHomensRevisionistas++;
-						}else{
-							$quantidadeMulheresRevisionistas++;
-						}
+
+		if($entidade->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao || $entidade->getEntidadeTipo()->getId() === EntidadeTipo::regiao){
+			$multiplos = true;
+			$request = $this->getRequest();
+			if ($request->isPost()) {
+				foreach ($_POST as $key => $value) {
+					if (substr($key, 0, 7) == 'revisao') {
+						$eventoRevisao = $this->getRepositorio()->getEventoORM()->encontrarPorId($value);
+						$arrayDeEventosRevisoes[] = $eventoRevisao;
 					}
-				} else {
-					if ($eventoFrequencia->getPessoa()->getResponsabilidadesAtivas()) {
-						/* Lideres */
+				}
+			}
+		} else {
+			$multiplos = false;
+		}
+
+		foreach ($arrayDeEventosRevisoes as $evento) {
+			if ($eventoFrequencias = $evento->getEventoFrequencia()) {
+				foreach ($eventoFrequencias as $eventoFrequencia) {
+					/* Revisionistas */
+					if ($eventoFrequencia->getPessoa()->getGrupoPessoaAtivo()) {
 						if ($eventoFrequencia->getFrequencia() == 'S') {
-							$relatorio['lideres'][] = $eventoFrequencia;
+							$relatorio['revisionistas'][] = $eventoFrequencia;
 							if($eventoFrequencia->getPessoa()->getSexo() == 'M'){
-								$quantidadeHomensLideres++;
+								$quantidadeHomensRevisionistas++;
 							}else{
-								$quantidadeMulheresLideres++;
+								$quantidadeMulheresRevisionistas++;
+							}
+						}
+					} else {
+						if ($eventoFrequencia->getPessoa()->getResponsabilidadesAtivas()) {
+							/* Lideres */
+							if ($eventoFrequencia->getFrequencia() == 'S') {
+								$relatorio['lideres'][] = $eventoFrequencia;
+								if($eventoFrequencia->getPessoa()->getSexo() == 'M'){
+									$quantidadeHomensLideres++;
+								}else{
+									$quantidadeMulheresLideres++;
+								}
 							}
 						}
 					}
@@ -2524,6 +2604,7 @@ class CadastroController extends CircuitoController {
 			'quantidadeMulheresRevisionistas' => $quantidadeMulheresRevisionistas,
 			'quantidadeHomensLideres' => $quantidadeHomensLideres,
 			'quantidadeMulheresLideres' => $quantidadeMulheresLideres,
+			'multiplos' => $multiplos,
 		));
 	}
 

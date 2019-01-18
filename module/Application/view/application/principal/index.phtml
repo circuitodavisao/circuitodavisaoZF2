@@ -51,7 +51,7 @@ Período Atual <?php echo Funcoes::montaPeriodo($this->periodoFinal)[0]; ?>
 <div class="row mb10">
 <?php
 	$totalDeIndices = 6;
-	if($this->pessoa->getPessoaHierarquiaAtivo() 
+	if($this->pessoa->getPessoaHierarquiaAtivo()
 		&& $this->pessoa->getPessoaHierarquiaAtivo()->getHierarquia()->getId() !== Hierarquia::LIDER_EM_TREINAMENTO
 		&& $this->pessoa->getPessoaHierarquiaAtivo()->getHierarquia()->getId() !== Hierarquia::LIDER_DE_CELULA){
 			if($this->discipulado){
@@ -122,38 +122,38 @@ Período Atual <?php echo Funcoes::montaPeriodo($this->periodoFinal)[0]; ?>
 		case 8:
 			if($contador['M'] < 6){
 				$escala = 'Anêmico';
-			}	
+			}
 			if($contador['M'] >= 6 && $contador['M'] < 12){
 				$escala = 'Fraca';
-			}	
+			}
 			if($contador['M'] == 12){
 				$escala = 'Boa';
 			}
 			if($contador['M'] >= 13 && $contador['M'] < 21){
 				$escala = 'Preditiva';
-			}	
+			}
 			if($contador['M'] >= 21){
 				$escala = 'Forte';
-			}	
+			}
 			$valor = $contador['M'] . ' - ' . $escala;
 			$label = 'Time de Homens';
 			break;
 		case 9:
 			if($contador['F'] < 6){
 				$escala = 'Anêmico';
-			}	
+			}
 			if($contador['F'] >= 6 && $contador['F'] < 12){
 				$escala = 'Fraca';
-			}	
+			}
 			if($contador['F'] == 12){
 				$escala = 'Boa';
 			}
 			if($contador['F'] >= 13 && $contador['F'] < 21){
 				$escala = 'Preditiva';
-			}	
+			}
 			if($contador['F'] >= 21){
 				$escala = 'Forte';
-			}	
+			}
 			$valor = $contador['F'] . ' - ' . $escala;
 			$label = 'Time de Mulheres';
 			break;
@@ -361,8 +361,8 @@ for ($indice = 1; $indice <= $numeroIndices; $indice++) {
 </div>
 <!-- fim celula -->
 
-<?php 
-	if($this->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::regiao){ 
+<?php
+	if($this->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::regiao){
 ?>
 <!-- cursos -->
 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 admin-grid">
@@ -447,7 +447,7 @@ Discipulado
 </span>
 </div>
 <div class="panel-body pn pt10" style="display: none;">
-<?php 
+<?php
 		echo '<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 p10 text-center">';
 		echo '<div class="panel">';
 		echo '<div class="panel-body pn">';
@@ -512,7 +512,7 @@ Discipulado
 		foreach($discipulos as $discipulo){
 			$grupoFilho = $discipulo->getGrupoPaiFilhoFilho();
 			foreach($grupoFilho->getPessoasAtivas() as $pessoa){
-				$funcaoOnClick = 'mostrarSplash(); funcaoCircuito("principal", '.$pessoa->getId().')';
+				$funcaoOnClick = 'mostrarSplash(); funcaoCircuito("principal", '.$pessoa->getId().')';				
 				$nomeHierarquia = $pessoa->getPessoaHierarquiaAtivo()->getHierarquia()->getNome();
 				if ($pessoa->getSexo() === 'F') {
 					if ($nomeFeminino = $pessoa->getPessoaHierarquiaAtivo()->getHierarquia()->getNome_feminino()) {
