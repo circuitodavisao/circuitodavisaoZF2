@@ -4,27 +4,34 @@ use Application\Controller\Helper\Constantes;
 
 $html = '';
 $pessoas = array();
-$frequencias = $this->evento->getEventoFrequencia();
-
-if (count($frequencias) > 0) {
-    foreach ($frequencias as $frequencia) {
-        if ($frequencia->getFrequencia() == 'S') {
-            $pessoa = $frequencia->getPessoa();
-            if ($grupoRespossabilidades = $pessoa->getResponsabilidadesAtivas()) {
-                $jaExiste = false;
-                foreach ($pessoas as $pessoaParaVerificar) {
-                    if ($pessoaParaVerificar->getId() === $pessoa->getId()) {
-                        $jaExiste = true;
-                    }
-                }
-                if (!$jaExiste) {
-                    $pessoas[] = $pessoa;
-                }
-            }
-        }
-    }
+$arrayDeEventos = Array();
+if($this->multiplos){
+  $arrayDeEventos = $this->arrayDeEventosRevisoes;
+} else {
+  $arrayDeEventos[] = $this->evento;
 }
 
+foreach ($arrayDeEventos as $evento) {
+  $frequencias = $evento->getEventoFrequencia();
+  if (count($frequencias) > 0) {
+      foreach ($frequencias as $frequencia) {
+          if ($frequencia->getFrequencia() == 'S') {
+              $pessoa = $frequencia->getPessoa();
+              if ($grupoRespossabilidades = $pessoa->getResponsabilidadesAtivas()) {
+                  $jaExiste = false;
+                  foreach ($pessoas as $pessoaParaVerificar) {
+                      if ($pessoaParaVerificar->getId() === $pessoa->getId()) {
+                          $jaExiste = true;
+                      }
+                  }
+                  if (!$jaExiste) {
+                      $pessoas[] = $pessoa;
+                  }
+              }
+          }
+      }
+  }
+}
 /* Sem pessoas cadastrados */
 if (count($pessoas) == 0) {
     $html .= '<div class="alert alert-warning"><i class="fa fa-warning pr10" aria-hidden="true"></i>&nbsp;Sem Líderes Cadastrados!</div>';
@@ -57,15 +64,31 @@ if (count($pessoas) == 0) {
     $html .= '<th>';
     $html .= $this->translate(Constantes::$TRADUCAO_NOME);
     $html .= '</th>';
+    $html .= '<th>Sexo</th>';
     $html .= '<th>Time</th>';
     $html .= '</tr>';
     $html .= '</thead>';
     $html .= '<tbody>';
     foreach ($pessoas as $pessoa) {
+      $nomeEntidadeAcima = '';
+      if($this->multiplos){
+        $nomeEntidadeAcima = $pessoa->getResponsabilidadesAtivas()[0]->getGrupo()->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai()->getEntidadeAtiva()->getNome();
+        if($nomeEntidadeAcima){
+          $nomeEntidadeAcimaArrumado = ' - ' . $nomeEntidadeAcima;
+        }
+        if(!$nomeEntidadeAcima){
+          $nomeEntidadeAcimaArrumado = ' - COORDENAÇÃO '. $pessoa->getResponsabilidadesAtivas()[0]->getGrupo()->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai()->getEntidadeAtiva()->getNumero();
+        }
+      }
+      $sexo = $pessoa->getSexo();
+      if(!$sexo) {
+        $sexo = 'Não Informado';
+      }
         $html .= '<tr>';
         $html .= '<td>' . $pessoa->getId() . '</td>';
         $html .= '<td><span class="visible-lg visible-md">' . $pessoa->getNome() . '</span><span class="visible-sm visible-xs">' . $pessoa->getNomePrimeiroUltimo() . '</span></td>';
-        $html .= '<td>' . $pessoa->getResponsabilidadesAtivas()[0]->getGrupo()->getEntidadeAtiva()->infoEntidade() . '</td>';
+        $html .= '<td>' . $sexo . '</td>';
+        $html .= '<td>' . $pessoa->getResponsabilidadesAtivas()[0]->getGrupo()->getEntidadeAtiva()->infoEntidade() . $nomeEntidadeAcimaArrumado .  '</td>';
         $html .= '</tr>';
     }
     $html .= '</tbody>';
