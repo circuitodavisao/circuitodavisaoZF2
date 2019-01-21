@@ -3,6 +3,7 @@
 use Application\Controller\Helper\Constantes;
 use Application\View\Helper\BotaoSimples;
 
+echo $this->templateFormularioTopo('Selecione para imprimir os crachás');
 $form = $this->formulario;
 $form->prepare();
 $form->setAttribute(Constantes::$ACTION, $this->url(Constantes::$ROUTE_CADASTRO, array(Constantes::$PAGINA => Constantes::$PAGINA_GERAR_CRACHA)));
@@ -14,73 +15,90 @@ echo $this->form()->openTag($form);
         text-align: center;
     }
 </style>
-<div class="mw1000 center-block p5">
-    <div class="row ">
-        <div id="content" class="animated fadeIn">
-            <blockquote class="blockquote-primary">
-                <p>Selecione para imprimir os crachás</p>
-            </blockquote>
-            <div class="panel panel-primary heading-border">
-                <div class="panel-body bg-light p5">
-                    <?php
-                    $htmlBotaoGerar .= '<div class="text-center m20">';
-                    $funcao = $this->funcaoOnClick('this.form.submit()');
-                    $htmlBotaoGerar .= $this->botaoSimples('Gerar Crachá', $funcao, '', BotaoSimples::posicaoAoCentro);
-                    $htmlBotaoGerar .= '</div>';
-                    echo $htmlBotaoGerar;
-					echo '<h2>Revisionistas - Homens: '.$this->quantidadeHomensRevisionistas.' - Mulheres: '.$this->quantidadeMulheresRevisionistas.'</h2>';
-					echo '<h2>Líderes - Homens: '.$this->quantidadeHomensLideres.' - Mulheres: '.$this->quantidadeMulheresLideres.'</h2>';
+    <div class="panel-body bg-light p5">
+        <?php
+        $htmlBotaoGerar .= '<div class="text-center m20">';
+        $funcao = $this->funcaoOnClick('this.form.submit()');
+        $htmlBotaoGerar .= $this->botaoSimples('Gerar Crachá', $funcao, '', BotaoSimples::posicaoAoCentro);
+        $htmlBotaoGerar .= '</div>';
+        echo $htmlBotaoGerar;
+        echo '<h2>Revisionistas - Homens: '.$this->quantidadeHomensRevisionistas.' - Mulheres: '.$this->quantidadeMulheresRevisionistas.'</h2>';
 
-                    if ($relatorioRevisionistas = $this->relatorio['revisionistas']) {
-                        echo '<table class="text-center table table-condensed table-hover bg-light mt15">';
-                        echo '<thead>';
-                        echo '<tr class="dark">';
-                        echo '<th>Inscrição</th>';
-                        echo '<th>Revisionista</th>';
-                        echo '<th>Time</th>';
-                        echo '<th><input type="checkbox" onclick="marcarTodos(this);"/></th>';
-                        echo '</tr>';
-                        echo '</thead>';
-                        echo '<tbody>';
-                        foreach ($relatorioRevisionistas as $relatorio) {
-                            echo '<tr>';
-                            echo '<td>' . $relatorio->getId() . '</td>';
-                            echo '<td>' . $relatorio->getPessoa()->getNome() . '</td>';
-                            echo '<td>' . $relatorio->getPessoa()->getGrupoPessoaAtivo()->getGrupo()->getEntidadeAtiva()->infoEntidade() . '</td>';
-                            echo '<td><input type="checkbox" id="revisionista' . $relatorio->getId() . '" name="revisionista' . $relatorio->getId() . '" value="' . $relatorio->getId() . '"/></td>';
-                            echo '</tr>';
-                        }
-                        echo '</tbody>';
-                        echo '</table>';
-                    }
-                    if ($relatorioLideres = $this->relatorio['lideres']) {
-                        echo '<table class="text-center table table-condensed table-hover bg-light mt15">';
-                        echo '<thead>';
-                        echo '<tr class="dark">';
-                        echo '<th>Inscrição</th>';
-                        echo '<th>Líder</th>';
-                        echo '<th>Time</th>';
-                        echo '<th><input type="checkbox" onclick="marcarTodos(this);"/></th>';
-                        echo '</tr>';
-                        echo '</thead>';
-                        echo '<tbody>';
-                        foreach ($relatorioLideres as $relatorio) {
-                            echo '<tr>';
-                            echo '<td>' . $relatorio->getId() . '</td>';
-                            echo '<td>' . $relatorio->getPessoa()->getNome() . '</td>';
-                            echo '<td>' . $relatorio->getPessoa()->getResponsabilidadesAtivas()[0]->getGrupo()->getEntidadeAtiva()->infoEntidade() . '</td>';
-                            echo '<td><input type="checkbox" id="lider' . $relatorio->getId() . '" name="lider' . $relatorio->getId() . '" value="' . $relatorio->getId() . '"/></td>';
-                            echo '</tr>';
-                        }
-                        echo '</tbody>';
-                        echo '</table>';
-                    }
-                    echo $htmlBotaoGerar;
-                    ?>
-                </div>
-            </div>
-        </div>
+        if ($relatorioRevisionistas = $this->relatorio['revisionistas']) {
+            echo '<input id="fooFilterRevisionistas" type="text" class="form-control" placeholder="Filtro">';
+            echo '<table class="table table-condensed table-hover bg-light mt15 footable" data-filter="#fooFilterRevisionistas">';
+            echo '<thead>';
+            echo '<tr class="text-center">';
+            echo '<th>Inscrição</th>';
+            echo '<th>Revisionista</th>';
+            echo '<th>Sexo</th>';
+            echo '<th>Time</th>';
+            echo '<th><input type="checkbox" onclick="marcarTodos(this);"/></th>';
+            echo '</tr>';
+            echo '</thead>';
+            echo '<tbody>';
+            foreach ($relatorioRevisionistas as $relatorio) {
+              $nomeEntidadeAcima = '';
+              if($this->multiplos){
+                $nomeEntidadeAcima = $relatorio->getPessoa()->getGrupoPessoaAtivo()->getGrupo()->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai()->getEntidadeAtiva()->getNome();
+                if(!$nomeEntidadeAcima){
+                  $nomeEntidadeAcima = ' - COORDENAÇÃO '. $relatorio->getPessoa()->getGrupoPessoaAtivo()->getGrupo()->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai()->getEntidadeAtiva()->getNumero();
+                }
+              }
+                $sexo = $relatorio->getPessoa()->getSexo();
+                if(!$sexo) {
+                  $sexo = 'Não Informado';
+                }
+                echo '<tr class="text-center">';
+                echo '<td>' . $relatorio->getId() . '</td>';
+                echo '<td>' . $relatorio->getPessoa()->getNome() . '</td>';
+                echo '<td>' . $sexo . '</td>';
+                echo '<td>' . $relatorio->getPessoa()->getGrupoPessoaAtivo()->getGrupo()->getEntidadeAtiva()->infoEntidade() . $nomeEntidadeAcima . '</td>';
+                echo '<td><input type="checkbox" id="revisionista' . $relatorio->getId() . '" name="revisionista' . $relatorio->getId() . '" value="' . $relatorio->getId() . '"/></td>';
+                echo '</tr>';
+            }
+            echo '</tbody>';
+            echo '</table>';
+        }
+        if ($relatorioLideres = $this->relatorio['lideres']) {
+            echo '<h2>Líderes - Homens: '.$this->quantidadeHomensLideres.' - Mulheres: '.$this->quantidadeMulheresLideres.'</h2>';
+            echo '<input id="fooFilterLideres" type="text" class="form-control" placeholder="Filtro">';
+            echo '<table class="table table-condensed table-hover bg-light mt15 footable" data-filter="#fooFilterLideres">';
+            echo '<thead>';
+            echo '<tr class="text-center">';
+            echo '<th>Inscrição</th>';
+            echo '<th>Líder</th>';
+            echo '<th>Sexo</th>';
+            echo '<th>Time</th>';
+            echo '<th><input type="checkbox" onclick="marcarTodos(this);"/></th>';
+            echo '</tr>';
+            echo '</thead>';
+            echo '<tbody>';
+            foreach ($relatorioLideres as $relatorio) {
+              $nomeEntidadeAcima = '';
+              if($this->multiplos){
+                $nomeEntidadeAcima = $relatorio->getPessoa()->getResponsabilidadesAtivas()[0]->getGrupo()->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai()->getEntidadeAtiva()->getNome();
+                if(!$nomeEntidadeAcima){
+                  $nomeEntidadeAcima = ' - COORDENAÇÃO '. $relatorio->getPessoa()->getResponsabilidadesAtivas()[0]->getGrupo()->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai()->getEntidadeAtiva()->getNumero();
+                }
+              }
+                $sexo = $relatorio->getPessoa()->getSexo();
+                $sexo ? $sexo : 'Não Informado';
+                echo '<tr class="text-center">';
+                echo '<td>' . $relatorio->getId() . '</td>';
+                echo '<td>' . $relatorio->getPessoa()->getNome() . '</td>';
+                echo '<td>' . $sexo . '</td>';
+                echo '<td>' . $relatorio->getPessoa()->getResponsabilidadesAtivas()[0]->getGrupo()->getEntidadeAtiva()->infoEntidade() . $nomeEntidadeAcima . '</td>';
+                echo '<td><input type="checkbox" id="lider' . $relatorio->getId() . '" name="lider' . $relatorio->getId() . '" value="' . $relatorio->getId() . '"/></td>';
+                echo '</tr>';
+            }
+            echo '</tbody>';
+            echo '</table>';
+        }
+        echo $htmlBotaoGerar;
+        ?>
     </div>
-</div>
+
 <?php
 echo $this->form()->closeTag();
+echo $this->templateFormularioRodape();
