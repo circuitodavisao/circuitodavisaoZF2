@@ -435,7 +435,7 @@ class ListagemDeEventos extends AbstractHelper {
               if($this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao ||
                   $this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::regiao){
                   $stringNomeDaFuncaoOnClickFichas = 'mostrarSplash(); this.form.submit()';
-                  $html .= $this->view->botaoSimples('Imprimir Fichas', $this->view->funcaoOnClick($stringNomeDaFuncaoOnClickFichas), BotaoSimples::botaoImportante, BotaoSimples::posicaoAoCentro);
+                  $html .= $this->view->botaoSimples('Listar', $this->view->funcaoOnClick($stringNomeDaFuncaoOnClickFichas), BotaoSimples::botaoImportante, BotaoSimples::posicaoAoCentro);
               }
             }
 
