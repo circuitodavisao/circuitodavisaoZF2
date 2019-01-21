@@ -31,7 +31,8 @@ class Menu extends AbstractHelper {
 	public function renderHtml() {
 		$sessao = new Container(Constantes::$NOME_APLICACAO);
 		$html = '';
-
+		$htmlEspecifoUL = '';
+		
 		// Start: Header
 		$html .= '<header class="navbar navbar-fixed-top navbar-shadow">';
 		$html .= '<div class="navbar-branding">';
