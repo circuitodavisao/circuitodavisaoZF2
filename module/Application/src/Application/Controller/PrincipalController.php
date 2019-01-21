@@ -110,6 +110,7 @@ class PrincipalController extends CircuitoController {
 						$grupoFilho = $filho->getGrupoPaiFilhoFilho();
 						if($grupoFilho->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
 							$relatorioCurso = self::montarRelatorioAlunos($this->getRepositorio(), $grupoFilho); 
+							$relatorioCurso = RelatorioController::relatorioAlunosETurmas($this->getRepositorio(), $grupoFilho->getEntidadeAtiva())[0];
 							foreach($relatorioCurso as $key => $val){
 								if($key == 'total'){
 									foreach($val as $key1 => $val1){
@@ -129,7 +130,7 @@ class PrincipalController extends CircuitoController {
 
 									if($grupoFilho2->getEntidadeAtiva()->getEntidadeTipo() === EntidadeTipo::igreja){
 
-										$relatorioCurso = self::montarRelatorioAlunos($this->getRepositorio(), $grupoFilho2);
+										$relatorioCurso = RelatorioController::relatorioAlunosETurmas($this->getRepositorio(), $grupoFilho2->getEntidadeAtiva())[0];
 										foreach($relatorioCurso as $key => $val){
 											if($key == 'total'){
 												foreach($val as $key1 => $val1){
@@ -147,7 +148,7 @@ class PrincipalController extends CircuitoController {
 				}
 
 			}else{
-				$relatorioCursos = self::montarRelatorioAlunos($this->getRepositorio(), $grupo); 
+				$relatorioCursos = RelatorioController::relatorioAlunosETurmas($this->getRepositorio(), $entidade)[0];
 
 				/* total de discipulados */
 				$numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupo);
