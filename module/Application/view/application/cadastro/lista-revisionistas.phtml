@@ -62,8 +62,11 @@ if (count($homens) > 0) {
       $nomeAcima = '';
       if($this->multiplos){
         $nomeEntidadeAcima = $homem->getGrupoPessoaAtivo()->getGrupo()->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai()->getEntidadeAtiva()->getNome();
+        if($nomeEntidadeAcima){
+          $nomeEntidadeAcimaArrumado = ' - ' . $nomeEntidadeAcima;
+        }
         if(!$nomeEntidadeAcima){
-          $nomeEntidadeAcima = ' - COORDENAÇÃO '. $homem->getGrupoPessoaAtivo()->getGrupo()->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai()->getEntidadeAtiva()->getNumero();
+          $nomeEntidadeAcimaArrumado = ' - COORDENAÇÃO '. $homem->getGrupoPessoaAtivo()->getGrupo()->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai()->getEntidadeAtiva()->getNumero();
         }
       }
       $sexo = $homem->getSexo();
@@ -74,7 +77,7 @@ if (count($homens) > 0) {
         $html .= '<td>' . $homem->getId() . '</td>';
         $html .= '<td><span class="visible-lg visible-md">' . $homem->getNome() . '</span><span class="visible-sm visible-xs">' . $homem->getNomePrimeiroUltimo() . '</span></td>';
         $html .= '<td>' . $homem->getSexo() . '</td>';
-        $html .= '<td>' . $homem->getGrupoPessoaAtivo()->getGrupo()->getEntidadeAtiva()->infoEntidade() . $nomeEntidadeAcima . '</td>';
+        $html .= '<td>' . $homem->getGrupoPessoaAtivo()->getGrupo()->getEntidadeAtiva()->infoEntidade() . $nomeEntidadeAcimaArrumado . '</td>';
         $html .= '<td>' . $homem->getIdade() . '</td>';
         $html .= '</tr>';
     }
