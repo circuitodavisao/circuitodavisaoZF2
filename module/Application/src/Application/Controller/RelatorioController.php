@@ -419,12 +419,24 @@ class RelatorioController extends CircuitoController {
 
 		$idEntidadeAtual = $sessao->idEntidadeAtual;
 		$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+
+		$resultado = self::relatorioAlunosETurmas($this->getRepositorio(), $entidade);
+		$relatorioAjustado = $resultado[0];
+		$turmasComAulaAberta = $resultado[1];
+
+		self::registrarLog(RegistroAcao::VER_RELATORIO_APROVEITAMENTO_DO_IV, $extra = '');
+		return new ViewModel(array(
+			'relatorio'=> $relatorioAjustado,
+			'turmas' => $turmasComAulaAberta,
+		));
+	}
+
+	static public function relatorioAlunosETurmas($repositorio, $entidade){
 		$relatorioAjustado = array();
+		$numeroIdentificador = $repositorio->getFatoCicloORM()->montarNumeroIdentificador($repositorio, $entidade->getGrupo());
+		$relatorioInicial = $repositorio->getFatoCursoORM()->encontrarFatoCursoPorNumeroIdentificador($numeroIdentificador);
+
 		$turmas = $entidade->getGrupo()->getGrupoIgreja()->getTurma();
-
-		$numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $entidade->getGrupo());
-		$relatorioInicial = $this->getRepositorio()->getFatoCursoORM()->encontrarFatoCursoPorNumeroIdentificador($numeroIdentificador);
-
 		$turmasComAulaAberta = array();
 		foreach($turmas as $turma){
 			if($turma->getTurmaAulaAtiva()){
@@ -437,8 +449,8 @@ class RelatorioController extends CircuitoController {
 			foreach($turmasComAulaAberta as $turma){
 				if($relatorio->getTurma_id() === $turma->getId()){
 					$idGrupo = substr($relatorio->getNumero_identificador(), (count($relatorio->getNumero_identificador())-8));
-					$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupo);
-					$situacao = $this->getRepositorio()->getSituacaoORM()->encontrarPorId($relatorio->getSituacao_id());
+					$grupo = $repositorio->getGrupoORM()->encontrarPorId($idGrupo);
+					$situacao = $repositorio->getSituacaoORM()->encontrarPorId($relatorio->getSituacao_id());
 					if($entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
 						$relatorioAjustado[$grupo->getGrupoEquipe()->getEntidadeAtiva()->getNome()][$turma->getId()][$situacao->getNome()]++;
 					}
@@ -446,15 +458,17 @@ class RelatorioController extends CircuitoController {
 						|| $entidade->getEntidadeTipo()->getId() === EntidadeTipo::subEquipe){
 						$relatorioAjustado[$grupo->getGrupoSubEquipe()->getEntidadeAtiva()->infoEntidade()][$turma->getId()][$situacao->getNome()]++;
 					}
+					$relatorioAjustado[$turma->getId()][$situacao->getId()]++;
+					$relatorioAjustado['total'][$situacao->getId()]++;
 				}
 			}
 		}
 
-		self::registrarLog(RegistroAcao::VER_RELATORIO_APROVEITAMENTO_DO_IV, $extra = '');
-		return new ViewModel(array(
-			'relatorio'=> $relatorioAjustado,
-			'turmas' => $turmasComAulaAberta,
-		));
+		$resultado = array();
+		$resultado[0] = $relatorioAjustado;
+		$resultado[1] = $turmasComAulaAberta;
+
+		return $resultado;
 	}
 
 	public function buscarDadosGrupoAction() {
