@@ -80,8 +80,11 @@ class ListagemFichasParaRevisao extends AbstractHelper {
             foreach ($pessoas as $pessoa) {
               if($this->view->multiplos){
                 $nomeEntidadeAcima = $pessoa->getGrupoPessoa()->getGrupo()->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai()->getEntidadeAtiva()->getNome();
+                if($nomeEntidadeAcima){
+                  $nomeEntidadeAcimaArrumado = ' - ' . $nomeEntidadeAcima;
+                }
                 if(!$nomeEntidadeAcima){
-                  $nomeEntidadeAcima = ' - COORDENAÇÃO '. $pessoa->getGrupoPessoa()->getGrupo()->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai()->getEntidadeAtiva()->getNumero();
+                  $nomeEntidadeAcimaArrumado = ' - COORDENAÇÃO '. $pessoa->getGrupoPessoa()->getGrupo()->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai()->getEntidadeAtiva()->getNumero();
                 }
               }
                 $sexo = $pessoa->getSexo();
@@ -92,7 +95,7 @@ class ListagemFichasParaRevisao extends AbstractHelper {
                 $html .= '<td class="text-center">' . $pessoa->getId() . '</td>';
                 $html .= '<td class="text-center"><span class="visible-lg visible-md">' . $pessoa->getNome() . '</span><span class="visible-sm visible-xs">' . $pessoa->getNomePrimeiroUltimo() . '</span></td>';
                 $html .= '<td class="text-center">' . $sexo . '</td>';
-                $html .= '<td class="text-center">' . $pessoa->getEntidade()->infoEntidade() . $nomeEntidadeAcima . '</td>';
+                $html .= '<td class="text-center">' . $pessoa->getEntidade()->infoEntidade() . $nomeEntidadeAcimaArrumado . '</td>';
                 $html .= '<td class="text-center">';
                 if ($pessoa->getNoRevisao()) {
                     $html .= '<span class="label label-success">ATIVO NO REVIS&Atilde;O</span>';
