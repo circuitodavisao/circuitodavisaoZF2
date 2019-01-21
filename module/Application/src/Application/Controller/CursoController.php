@@ -1624,7 +1624,23 @@ class CursoController extends CircuitoController {
 		}
 		if($grupoPessoaAtivo){
 			if($grupoPessoaAtivo->getGrupo()->getEntidadeAtiva()){
-				$nomeEquipe = $grupoPessoaAtivo->getGrupo()->getEntidadeAtiva()->infoEntidade();
+				$ultimaEntidade = null;
+				foreach($grupoPessoaAtivo->getGrupo()->getEntidade() as $entidade){
+					if($ultimaEntidade === null){
+						$ultimaEntidade = $entidade;
+					}else{
+						if($entidade->getId > $ultimaEntidade->getId()){
+							$ultimaEntidade = $entidade;
+						}
+					}
+				}
+				$nomeEquipe = $entidade->getNome();
+				if($nomeEquipe == ''){
+					$nomeEquipe = $entidade->infoEntidade();
+					if($nomeEquipe == ''){
+						$nomeEquipe = $entidade->getGrupo()->getGrupoEquipe()->getEntidadeAtiva()->getNome();
+					}
+				}
 			}
 		}
 		return $nomeEquipe;
