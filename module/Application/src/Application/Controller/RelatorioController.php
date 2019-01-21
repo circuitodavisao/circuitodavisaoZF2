@@ -2375,8 +2375,8 @@ public function alunosNaSemanaAction(){
 
 	static public function relatorioDiscipulado($repositorio, $grupo, $mesAnterior, $anoAnterior){
 		$relatorio = null;
-		if($grupo->getGrupoEventoAtivosPorTipo(EventoTipo::tipoDiscipulado)
-			&& $fatoDiscipulados = $repositorio->getFatoDiscipuladoORM()->entidadePorGrupoMesAno($grupo->getId(), $mesAnterior, $anoAnterior)){
+		if($grupo->getGrupoEventoAtivosPorTipo(EventoTipo::tipoDiscipulado)){
+			if($fatoDiscipulados = $repositorio->getFatoDiscipuladoORM()->entidadePorGrupoMesAno($grupo->getId(), $mesAnterior, $anoAnterior)){
 				$relatorio = array();
 
 				$relatorioGeral = array();
@@ -2419,17 +2419,19 @@ public function alunosNaSemanaAction(){
 				$relatorio['media'] = number_format($media);
 
 				foreach($relatorio['discipulados'] as $chave => $valor){
-					$grupoEvento = $repositorio->getGrupoEventoORM()->encontrarPorId($chave);
-					$info = $grupoEvento->getEvento()->getNome();
-					$relatorio['discipulados'][$chave]['info'] = $info;
-					$totalDeFatos = $relatorio['discipulados'][$chave]['quantidade'];
-					$relatorio['discipulados'][$chave]['pontualidade'] = number_format($relatorio['discipulados'][$chave]['pontualidade'] / $totalDeFatos);
-					$relatorio['discipulados'][$chave]['assiduidade'] = number_format($relatorio['discipulados'][$chave]['assiduidade'] / $totalDeFatos);
-					$relatorio['discipulados'][$chave]['administrativo'] = number_format($relatorio['discipulados'][$chave]['administrativo'] / $totalDeFatos);
-					$relatorio['discipulados'][$chave]['oracao'] = number_format($relatorio['discipulados'][$chave]['oracao'] / $totalDeFatos);
-					$relatorio['discipulados'][$chave]['palavra'] = number_format($relatorio['discipulados'][$chave]['palavra'] / $totalDeFatos);
+					if($grupoEvento = $repositorio->getGrupoEventoORM()->encontrarPorId($chave)){
+						$info = $grupoEvento->getEvento()->getNome();
+						$relatorio['discipulados'][$chave]['info'] = $info;
+						$totalDeFatos = $relatorio['discipulados'][$chave]['quantidade'];
+						$relatorio['discipulados'][$chave]['pontualidade'] = number_format($relatorio['discipulados'][$chave]['pontualidade'] / $totalDeFatos);
+						$relatorio['discipulados'][$chave]['assiduidade'] = number_format($relatorio['discipulados'][$chave]['assiduidade'] / $totalDeFatos);
+						$relatorio['discipulados'][$chave]['administrativo'] = number_format($relatorio['discipulados'][$chave]['administrativo'] / $totalDeFatos);
+						$relatorio['discipulados'][$chave]['oracao'] = number_format($relatorio['discipulados'][$chave]['oracao'] / $totalDeFatos);
+						$relatorio['discipulados'][$chave]['palavra'] = number_format($relatorio['discipulados'][$chave]['palavra'] / $totalDeFatos);
+					}
 				}
 			}
+		}
 
 		return $relatorio;
 	}
