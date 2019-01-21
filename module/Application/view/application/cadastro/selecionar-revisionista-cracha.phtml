@@ -78,8 +78,11 @@ echo $this->form()->openTag($form);
               $nomeEntidadeAcima = '';
               if($this->multiplos){
                 $nomeEntidadeAcima = $relatorio->getPessoa()->getResponsabilidadesAtivas()[0]->getGrupo()->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai()->getEntidadeAtiva()->getNome();
+                if($nomeEntidadeAcima){
+                  $nomeEntidadeAcimaArrumado = ' - ' . $nomeEntidadeAcima;
+                }
                 if(!$nomeEntidadeAcima){
-                  $nomeEntidadeAcima = ' - COORDENAÇÃO '. $relatorio->getPessoa()->getResponsabilidadesAtivas()[0]->getGrupo()->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai()->getEntidadeAtiva()->getNumero();
+                  $nomeEntidadeAcimaArrumado = ' - COORDENAÇÃO '. $relatorio->getPessoa()->getResponsabilidadesAtivas()[0]->getGrupo()->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai()->getEntidadeAtiva()->getNumero();
                 }
               }
                 $sexo = $relatorio->getPessoa()->getSexo();
@@ -88,7 +91,7 @@ echo $this->form()->openTag($form);
                 echo '<td>' . $relatorio->getId() . '</td>';
                 echo '<td>' . $relatorio->getPessoa()->getNome() . '</td>';
                 echo '<td>' . $sexo . '</td>';
-                echo '<td>' . $relatorio->getPessoa()->getResponsabilidadesAtivas()[0]->getGrupo()->getEntidadeAtiva()->infoEntidade() . $nomeEntidadeAcima . '</td>';
+                echo '<td>' . $relatorio->getPessoa()->getResponsabilidadesAtivas()[0]->getGrupo()->getEntidadeAtiva()->infoEntidade() . $nomeEntidadeAcimaArrumado . '</td>';
                 echo '<td><input type="checkbox" id="lider' . $relatorio->getId() . '" name="lider' . $relatorio->getId() . '" value="' . $relatorio->getId() . '"/></td>';
                 echo '</tr>';
             }
