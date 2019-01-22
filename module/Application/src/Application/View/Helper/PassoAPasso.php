@@ -21,7 +21,7 @@ class PassoAPasso extends AbstractHelper {
     private $form;
 
     public function __construct() {
-        
+
     }
 
     public function __invoke($form) {
@@ -111,6 +111,21 @@ class PassoAPasso extends AbstractHelper {
             }
             /* Evento culto */
             if ($this->getForm() instanceof EventoForm) {
+              if ($this->view->pagina == Constantes::$PAGINA_EVENTO_DISCIPULADO) {
+                switch ($indiceDePonto) {
+                    case 1:
+                        $nomePonto = 'Dia e Hora';
+                        break;
+                    case 2:
+                        $nomePonto = 'Nome';
+                        break;
+                    case 3:
+                        $nomePonto = 'Confirmação';
+                        break;
+                    default:
+                        break;
+                }
+              } else {
                 switch ($indiceDePonto) {
                     case 1:
                         $nomePonto = 'Dia e Hora';
@@ -124,6 +139,7 @@ class PassoAPasso extends AbstractHelper {
                     default:
                         break;
                 }
+              }
             }
             /* Evento celula */
             if ($this->getForm() instanceof CelulaForm) {

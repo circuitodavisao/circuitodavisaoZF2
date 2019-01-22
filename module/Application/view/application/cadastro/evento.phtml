@@ -66,6 +66,7 @@ echo $this->templateFormularioTopo($tituloDaPagina);
 
         echo '<div id="divExtras" class="hidden">';
         echo $this->inputExtras($form, $this->extra);
+
         $funcaoContinuar = '';
         if ($form instanceof EventoForm) {
             $funcaoContinuar = $this->funcaoOnClick('validarNome()');
@@ -104,16 +105,19 @@ echo $this->templateFormularioTopo($tituloDaPagina);
                 <?php
             } else {
                 if ($form instanceof EventoForm) {
-                    ?>
-                    <address>
-                        <div><strong>Nome</strong></div>
-                        <div><span id="spanNome"></span></div>
-                    </address>
-                    <address>
-                        <div><strong>Equipe(s)</strong></div>
-                        <div><span id="spanEquipes"></span></div>
-                    </address>
-                    <?php
+                    $htmlAddress = '';
+                    $htmlAddress .= '<address>';
+                    $htmlAddress .= '<div><strong>Nome</strong></div>';
+                    $htmlAddress .= '<div><span id="spanNome"></span></div>';
+                    $htmlAddress .= '</address>';
+
+                    if ($this->pagina != Constantes::$PAGINA_EVENTO_DISCIPULADO) {
+                      $htmlAddress .= '<address>';
+                      $htmlAddress .= '<div><strong>Equipe(s)</strong></div>';
+                      $htmlAddress .= '<div><span id="spanEquipes"></span></div>';
+                      $htmlAddress .= '</address>';
+                    }
+                    echo $htmlAddress;
                 }
             }
 
