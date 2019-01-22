@@ -5,6 +5,7 @@ namespace Application\View\Helper;
 use Application\Controller\Helper\Constantes;
 use Application\Controller\Helper\Funcoes;
 use Zend\View\Helper\AbstractHelper;
+use Application\Model\Entity\Situacao;
 
 /**
  * Nome: ListagemTurmas.php
@@ -55,6 +56,7 @@ class ListagemTurmas extends AbstractHelper {
 				$stringNomeDaFuncaoOnClickIncluirAlunos = 'mostrarSplash(); funcaoCircuito("' . Constantes::$ROUTE_CADASTRO . Constantes::$PAGINA_LISTAGEM_REVISAO_TURMA . '",' . $turma->getId() . ')';
 				$stringNomeDaFuncaoOnClickAbrirAula = 'mostrarSplash(); funcaoCircuito("' . Constantes::$ROUTE_CURSO . 'AbrirAula' . '",' . $turma->getId() . ')';
 				$stringNomeDaFuncaoOnClickFecharTurma = 'let resposta = confirm("confirma exclusao?"); if(resposta){ mostrarSplash(); funcaoCircuito("' . Constantes::$ROUTE_CURSO . 'FecharTurma' . '",' . $turma->getId() . ')}';
+				$totalAlunos = ($this->view->relatorio[$turma->getId()][Situacao::ATIVO] + $this->view->relatorio[$turma->getId()][Situacao::ESPECIAL]);
 
 				$html .= '<tr>';
 				$html .= '<td class="text-center">';
@@ -66,7 +68,7 @@ class ListagemTurmas extends AbstractHelper {
 				$html .= '<span class="hidden-sm hidden-md hidden-lg">' . str_pad($turma->getMes(), 2, 0, STR_PAD_LEFT) . '</span>';
 				$html .= '/' . $turma->getAno() . '</td>';
 				$html .= '<td class="text-center hidden-xs">' . $turma->getObservacao() . '</td>';
-				$html .= '<td class="text-center hidden-xs">' . $turma->quantidadeDeAlunosAtivos() . '</td>';
+				$html .= '<td class="text-center hidden-xs">' . $totalAlunos . '</td>';
 				$html .= '<td class="text-center hidden-xs">';
 				$nomeAulaAberta = '<span class="label label-';
 				if ($turma->getTurmaAulaAtiva()) {

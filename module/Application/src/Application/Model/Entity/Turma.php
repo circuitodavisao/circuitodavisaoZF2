@@ -10,6 +10,7 @@ namespace Application\Model\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Application\Model\Entity\Situacao;
 
 /**
  * @ORM\Entity
@@ -17,110 +18,98 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Turma extends CircuitoEntity {
 
-    /**
-     * @ORM\OneToMany(targetEntity="TurmaPessoa", mappedBy="turma", fetch="EXTRA_LAZY")
-     */
-    protected $turmaPessoa;
+	/**
+	 * @ORM\OneToMany(targetEntity="TurmaPessoa", mappedBy="turma", fetch="EXTRA_LAZY")
+	 */
+	protected $turmaPessoa;
 
-    /**
-     * @ORM\OneToMany(targetEntity="TurmaAula", mappedBy="turma", fetch="EXTRA_LAZY")
-     */
-    protected $turmaAula;
+	/**
+	 * @ORM\OneToMany(targetEntity="TurmaAula", mappedBy="turma", fetch="EXTRA_LAZY")
+	 */
+	protected $turmaAula;
 
-    /** @ORM\Column(type="integer") */
-    protected $mes;
+	/** @ORM\Column(type="integer") */
+	protected $mes;
 
-    /** @ORM\Column(type="integer") */
-    protected $ano;
+	/** @ORM\Column(type="integer") */
+	protected $ano;
 
-    /** @ORM\Column(type="string") */
-    protected $observacao;
+	/** @ORM\Column(type="string") */
+	protected $observacao;
 
-    /** @ORM\Column(type="integer") */
-    protected $grupo_id;
+	/** @ORM\Column(type="integer") */
+	protected $grupo_id;
 
-    /** @ORM\Column(type="integer") */
-    protected $curso_id;
+	/** @ORM\Column(type="integer") */
+	protected $curso_id;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Curso", inversedBy="turma")
-     * @ORM\JoinColumn(name="curso_id", referencedColumnName="id")
-     */
-    private $curso;
+	/**
+	 * @ORM\ManyToOne(targetEntity="Curso", inversedBy="turma")
+	 * @ORM\JoinColumn(name="curso_id", referencedColumnName="id")
+	 */
+	private $curso;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Grupo", inversedBy="turma")
-     * @ORM\JoinColumn(name="grupo_id", referencedColumnName="id")
-     */
-    private $grupo;
+	/**
+	 * @ORM\ManyToOne(targetEntity="Grupo", inversedBy="turma")
+	 * @ORM\JoinColumn(name="grupo_id", referencedColumnName="id")
+	 */
+	private $grupo;
 
-    public function getTurmaAulaAtiva() {
-        $entidadeAtiva = null;
-        foreach ($this->getTurmaAula() as $entidade) {
-            if ($entidade->verificarSeEstaAtivo()) {
-                $entidadeAtiva = $entidade;
-                break;
-            }
-        }
-        return $entidadeAtiva;
-    }
-
-    public function __construct() {
-        $this->turmaPessoa = new ArrayCollection();
-        $this->turmaAula = new ArrayCollection();
-    }
-
-    function getTurmaPessoa() {
-        return $this->turmaPessoa;
-    }
-
-	function quantidadeDeAlunosAtivos(){
-		$alunos = 0;
-		if($turmaPessoas = $this->getTurmaPessoa()){
-			foreach($turmaPessoas as $turmaPessoa){
-				if($turmaPessoa->verificarSeEstaAtivo()){
-					$alunos++;
-				}
+	public function getTurmaAulaAtiva() {
+		$entidadeAtiva = null;
+		foreach ($this->getTurmaAula() as $entidade) {
+			if ($entidade->verificarSeEstaAtivo()) {
+				$entidadeAtiva = $entidade;
+				break;
 			}
 		}
-		return $alunos;
+		return $entidadeAtiva;
 	}
 
-    function getData_revisao() {
-        return $this->data_revisao;
-    }
+	public function __construct() {
+		$this->turmaPessoa = new ArrayCollection();
+		$this->turmaAula = new ArrayCollection();
+	}
 
-    function setTurmaPessoa($turmaPessoa) {
-        $this->turmaPessoa = $turmaPessoa;
-    }
+	function getTurmaPessoa() {
+		return $this->turmaPessoa;
+	}
 
-    function setData_revisao($data_revisao) {
-        $this->data_revisao = $data_revisao;
-    }
+	function getData_revisao() {
+		return $this->data_revisao;
+	}
 
-    function getMes() {
-        return $this->mes;
-    }
+	function setTurmaPessoa($turmaPessoa) {
+		$this->turmaPessoa = $turmaPessoa;
+	}
 
-    function getAno() {
-        return $this->ano;
-    }
+	function setData_revisao($data_revisao) {
+		$this->data_revisao = $data_revisao;
+	}
 
-    function getObservacao() {
-        return $this->observacao;
-    }
+	function getMes() {
+		return $this->mes;
+	}
 
-    function setMes($mes) {
-        $this->mes = $mes;
-    }
+	function getAno() {
+		return $this->ano;
+	}
 
-    function setAno($ano) {
-        $this->ano = $ano;
-    }
+	function getObservacao() {
+		return $this->observacao;
+	}
 
-    function setObservacao($observacao) {
-        $this->observacao = $observacao;
-    }
+	function setMes($mes) {
+		$this->mes = $mes;
+	}
+
+	function setAno($ano) {
+		$this->ano = $ano;
+	}
+
+	function setObservacao($observacao) {
+		$this->observacao = $observacao;
+	}
 
 	function setCurso($curso){
 		$this->curso = $curso;
@@ -128,36 +117,36 @@ class Turma extends CircuitoEntity {
 	function getCurso(){
 		return $this->curso;
 	}
-    function getGrupo() {
-        return $this->grupo;
-    }
+	function getGrupo() {
+		return $this->grupo;
+	}
 
-    function setGrupo($grupo) {
-        $this->grupo = $grupo;
-    }
+	function setGrupo($grupo) {
+		$this->grupo = $grupo;
+	}
 
-    function getGrupo_id() {
-        return $this->grupo_id;
-    }
+	function getGrupo_id() {
+		return $this->grupo_id;
+	}
 
-    function getCurso_id() {
-        return $this->curso_id;
-    }
+	function getCurso_id() {
+		return $this->curso_id;
+	}
 
-    function setGrupo_id($grupo_id) {
-        $this->grupo_id = $grupo_id;
-    }
+	function setGrupo_id($grupo_id) {
+		$this->grupo_id = $grupo_id;
+	}
 
-    function setCurso_id($curso_id) {
-        $this->curso_id = $curso_id;
-    }
+	function setCurso_id($curso_id) {
+		$this->curso_id = $curso_id;
+	}
 
-    function getTurmaAula() {
-        return $this->turmaAula;
-    }
+	function getTurmaAula() {
+		return $this->turmaAula;
+	}
 
-    function setTurmaAula($turmaAula) {
-        $this->turmaAula = $turmaAula;
-    }
+	function setTurmaAula($turmaAula) {
+		$this->turmaAula = $turmaAula;
+	}
 
 }

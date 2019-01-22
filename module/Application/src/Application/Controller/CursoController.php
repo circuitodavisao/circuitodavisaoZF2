@@ -523,10 +523,11 @@ class CursoController extends CircuitoController {
 		$sessao = new Container(Constantes::$NOME_APLICACAO);
 		$idEntidadeAtual = $sessao->idEntidadeAtual;
 		$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
-		$grupo = $entidade->getGrupo();
-		$turmas = $grupo->getGrupoIgreja()->getTurma();
+		$entidadeDaIgreja = $entidade->getGrupo()->getGrupoIgreja()->getEntidadeAtiva();
+		$relatorioCursos = RelatorioController::relatorioAlunosETurmas($this->getRepositorio(), $entidadeDaIgreja);
 		$view = new ViewModel(array(
-			'turmas' => $turmas,
+			'turmas' => $relatorioCursos[1],
+			'relatorio' => $relatorioCursos[0],
 		));
 
 		return $view;
@@ -829,7 +830,6 @@ class CursoController extends CircuitoController {
 		$sessao = new Container(Constantes::$NOME_APLICACAO);
 		$entidade = CircuitoController::getEntidadeLogada($this->getRepositorio(), $sessao);
 		$grupo = $entidade->getGrupo();
-		$turmas = $grupo->getGrupoIgreja()->getTurma();
 		$grupoPaiFilhoFilhos = $grupo->getGrupoIgreja()->getGrupoPaiFilhoFilhosAtivos(0);
 		$situacoes = $this->getRepositorio()->getSituacaoORM()->buscarTodosRegistrosEntidade();
 		$pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($sessao->idPessoa);
@@ -839,6 +839,7 @@ class CursoController extends CircuitoController {
 		$postado = array();
 		$filhos = array();
 
+		$entidadeParaUsar = $entidade;
 		if($request->isPost()){
 			$filtrado = true;
 			$post = $request->getPost();
@@ -860,8 +861,14 @@ class CursoController extends CircuitoController {
 					$dados['informacao'] = $grupoFilho->getEntidadeAtiva()->infoEntidade() . ' - ' . $grupoFilho->getNomeLideresAtivos();	
 					$filhos[] =  $dados;
 				}
+				$entidadeParaUsar = $this->getRepositorio()->getGrupoORM()->encontrarPorId($postado['idEquipe'])->getEntidadeAtiva();
+			}
+			if($postado['idSub'] != 0){
+				$entidadeParaUsar = $this->getRepositorio()->getGrupoORM()->encontrarPorId($postado['idSub'])->getEntidadeAtiva();
 			}
 		}
+		$resultado = RelatorioController::relatorioAlunosETurmas($this->getRepositorio(), $entidadeParaUsar);
+		$turmas = $resultado[1];
 
 		if(!$pessoa->getPessoaCursoAcessoAtivo()){
 			$postado['mostrarAulas'] = 1;
@@ -878,6 +885,7 @@ class CursoController extends CircuitoController {
 			'situacoes' => $situacoes,
 			'subs' => $filhos,
 			'repositorio' => $this->getRepositorio(),
+			'relatorio' => $resultado[2],
 		));
 		self::registrarLog(RegistroAcao::VER_CHAMADA, $extra = '');
 		return $view;
