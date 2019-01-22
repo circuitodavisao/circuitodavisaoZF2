@@ -850,6 +850,9 @@ class CursoController extends CircuitoController {
 			$postado['mostrarFinanceiro'] = $post['mostrarFinanceiro'];
 			$postado['idSub'] = $post['idSub'];
 
+			if($postado['idEquipe'] == 0){
+				$entidadeParaUsar = $grupo->getGrupoIgreja()->getEntidadeAtiva();		
+			}
 			if($postado['idEquipe'] != 0){
 				$grupoEquipe = $this->getRepositorio()->getGrupoORM()->encontrarPorId($postado['idEquipe']);
 				$grupoPaiFilhoFilhosEquipe = $grupoEquipe->getGrupoPaiFilhoFilhosAtivos(0);
