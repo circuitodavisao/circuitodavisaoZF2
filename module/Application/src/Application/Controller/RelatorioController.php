@@ -467,6 +467,7 @@ class RelatorioController extends CircuitoController {
 		$resultado = array();
 		$resultado[0] = $relatorioAjustado;
 		$resultado[1] = $turmasComAulaAberta;
+		$resultado[2] = $relatorioInicial;
 
 		return $resultado;
 	}

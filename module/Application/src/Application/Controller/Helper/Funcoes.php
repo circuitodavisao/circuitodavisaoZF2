@@ -82,6 +82,7 @@ class Funcoes {
 			$mail->isSMTP();
 			$mail->Charset = 'utf8_decode()';
 			$mail->Host = '200.147.36.31';
+			//$mail->Host = 'smtp.circuitodavisao.com.br';
 			$mail->SMTPAuth = true;
 			$mail->Username = 'leonardo@circuitodavisao.com.br';
 			$mail->Password = 'Leonardo142857';
@@ -94,7 +95,13 @@ class Funcoes {
 			$mail->Subject = utf8_decode($titulo);
 			$mail->Body = utf8_decode($mensagem);
 			//      $mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
-			$mail->send();
+			error_log('antes de enviar');
+			if(!$mail->Send()){
+				$mensagemRetorno = 'Erro ao enviar formulário: '. print($mail->ErrorInfo);
+			}else{
+				$mensagemRetorno = 'Formulário enviado com sucesso!';
+			} 
+			error_log($mensagemRetorno);
 		} catch (Exception $exc) {
 			echo $mail->ErrorInfo;
 			echo $exc->getMessage();
