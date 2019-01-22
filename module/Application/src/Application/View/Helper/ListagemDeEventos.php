@@ -131,15 +131,7 @@ class ListagemDeEventos extends AbstractHelper {
                 $html .= '<th class="text-center">';
                 $html .= $this->view->translate(Constantes::$TRADUCAO_OBSERVACAO);
                 $html .= '</th>';
-            }
-            if ($tipoListarDiscipulados) {
-                $html .= '<th class="text-center">';
-                $html .= $this->view->translate(Constantes::$TRADUCAO_DIA_DA_SEMANA_SIMPLIFICADO) . ' / ' . $this->view->translate(Constantes::$TRADUCAO_HORA);
-                $html .= '</th>';
-                $html .= '<th class="text-center visible-lg visible-md visible-sm">';
-                $html .= $this->view->translate(Constantes::$TRADUCAO_NOME);
-                $html .= '</th>';
-            }
+            }            
             if ($tipoListarDiscipulados) {
                 $html .= '<th class="text-center">';
                 $html .= $this->view->translate(Constantes::$TRADUCAO_DIA_DA_SEMANA_SIMPLIFICADO) . ' / ' . $this->view->translate(Constantes::$TRADUCAO_HORA);

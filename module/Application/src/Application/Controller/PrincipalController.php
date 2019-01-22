@@ -72,13 +72,16 @@ class PrincipalController extends CircuitoController {
 			$mostrarPrincipal = false;
 		}
 
-		/* verificando se estou veno um discipulo abaixo  e pegando os dados dele */
+		/* verificando se estou vendo um discipulo abaixo  e pegando os dados dele */
 		if($sessao->idSessao > 0){
 			$explodeIdSessao = explode('_', $sessao->idSessao);
-			$pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($explodeIdSessao[0]);
-			$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($explodeIdSessao[1]);
-			$grupo = $entidade->getGrupo();
-			unset($sessao->idSessao);
+			$vendoDiscipuloAbaixo = $explodeIdSessao[2];
+			if($vendoDiscipuloAbaixo) {
+				$pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($explodeIdSessao[0]);
+				$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($explodeIdSessao[1]);
+				$grupo = $entidade->getGrupo();
+				unset($sessao->idSessao);
+			}
 		}
 
 		$mes = date('m');
@@ -109,7 +112,7 @@ class PrincipalController extends CircuitoController {
 					foreach ($grupoPaiFilhoFilhos as $filho) {
 						$grupoFilho = $filho->getGrupoPaiFilhoFilho();
 						if($grupoFilho->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
-							$relatorioCurso = self::montarRelatorioAlunos($this->getRepositorio(), $grupoFilho); 
+							$relatorioCurso = self::montarRelatorioAlunos($this->getRepositorio(), $grupoFilho);
 							$relatorioCurso = RelatorioController::relatorioAlunosETurmas($this->getRepositorio(), $grupoFilho->getEntidadeAtiva())[0];
 							foreach($relatorioCurso as $key => $val){
 								if($key == 'total'){
@@ -117,7 +120,7 @@ class PrincipalController extends CircuitoController {
 										$relatorioCursos['total'][$key1] += $val1;
 									}
 								}
-							}	
+							}
 							$numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupoFilho);
 							$totalDeDiscipulados += $this->getRepositorio()->getFatoCelulaDiscipuladoORM()->totalAtivosPorNumeroIdentificador($numeroIdentificador);
 						}
@@ -137,7 +140,7 @@ class PrincipalController extends CircuitoController {
 													$relatorioCursos['total'][$key1] += $val1;
 												}
 											}
-										}	
+										}
 										$numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupoFilho2);
 										$totalDeDiscipulados += $this->getRepositorio()->getFatoCelulaDiscipuladoORM()->totalAtivosPorNumeroIdentificador($numeroIdentificador);
 									}
