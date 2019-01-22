@@ -62,13 +62,17 @@ class PerfilDropDown extends AbstractHelper {
      * @return string
      */
     private function htmlLi() {
+        $infoEntidade = $this->getEntidade()->getNome();
+        if(!$infoEntidade){
+          $infoEntidade = $this->getEntidade()->getNumero();
+        }
         $html = '';
         $html .= '<li class="list-group-item">';
 
         $html .= '<a onclick=\'abrirModal("modal-' . $this->getEntidade()->getId() . '", ' . $this->getEntidade()->getId() . ',"perfilSelecionado");\' href="#modal-image" class="animated animated-short fadeInUp">';
 
         $html .= '<span class="fa fa-users"></span> <span style="font-size:10px;">' . $this->getEntidade()->getEntidadeTipo()->getNome() . '</span>';
-        $html .= '<span style="font-size:10px;"> - ' . $this->getEntidade()->infoEntidade() . '</span>';
+        $html .= '<span style="font-size:10px;"> - ' . $infoEntidade . '</span>';
         $html .= '</a>';
 
         $html .= '</li>';
