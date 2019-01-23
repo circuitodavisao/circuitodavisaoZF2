@@ -827,61 +827,6 @@ class CursoController extends CircuitoController {
 	}
 
 	public function turmasEncerradasAction() {
-		$sessao = new Container(Constantes::$NOME_APLICACAO);
-		$entidade = CircuitoController::getEntidadeLogada($this->getRepositorio(), $sessao);
-		$grupo = $entidade->getGrupo();
-		$turmas = $grupo->getGrupoIgreja()->getTurmasInativas();
-		$grupoPaiFilhoFilhos = $grupo->getGrupoIgreja()->getGrupoPaiFilhoFilhosAtivos(0);
-		$situacoes = $this->getRepositorio()->getSituacaoORM()->buscarTodosRegistrosEntidade();
-		$pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($sessao->idPessoa);
-
-		$request = $this->getRequest();
-		$filtrado = false;
-		$postado = array();
-		$filhos = array();
-
-		if($request->isPost()){
-			$filtrado = true;
-			$post = $request->getPost();
-			$postado['idTurma'] = $post['idTurma'];
-			$postado['idEquipe'] = $post['idEquipe'];
-			$postado['idSituacao'] = $post['idSituacao'];
-			$postado['mostrarAulas'] = $post['mostrarAulas'];
-			$postado['mostrarFinanceiro'] = $post['mostrarFinanceiro'];
-			$postado['idSub'] = $post['idSub'];
-
-			if($postado['idEquipe'] != 0){
-				$grupoEquipe = $this->getRepositorio()->getGrupoORM()->encontrarPorId($postado['idEquipe']);
-				$grupoPaiFilhoFilhosEquipe = $grupoEquipe->getGrupoPaiFilhoFilhosAtivos(0);
-
-				foreach($grupoPaiFilhoFilhosEquipe as $grupoPaiFilho){
-					$grupoFilho = $grupoPaiFilho->getGrupoPaiFilhoFilho();
-					$dados = array();
-					$dados['id'] = $grupoFilho->getId();
-					$dados['informacao'] = $grupoFilho->getEntidadeAtiva()->infoEntidade() . ' - ' . $grupoFilho->getNomeLideresAtivos();
-					$filhos[] =  $dados;
-				}
-			}
-		}
-
-		if(!$pessoa->getPessoaCursoAcessoAtivo()){
-			$postado['mostrarAulas'] = 1;
-			$postado['mostrarFinanceiro'] = 0;
-		}
-
-		$view = new ViewModel(array(
-			'filtrado' => $filtrado,
-			'postado' => $postado,
-			'pessoa' => $pessoa,
-			'entidade' => $entidade,
-			'turmas' => $turmas,
-			'filhos' => $grupoPaiFilhoFilhos,
-			'situacoes' => $situacoes,
-			'subs' => $filhos,
-			'repositorio' => $this->getRepositorio(),
-		));
-		self::registrarLog(RegistroAcao::VER_CHAMADA, $extra = '');
-		return $view;
 	}
 
 	public function chamadaAction() {
@@ -909,7 +854,7 @@ class CursoController extends CircuitoController {
 			$postado['idSub'] = $post['idSub'];
 
 			if($postado['idEquipe'] == 0){
-				$entidadeParaUsar = $grupo->getGrupoIgreja()->getEntidadeAtiva();		
+				$entidadeParaUsar = $grupo->getGrupoIgreja()->getEntidadeAtiva();
 			}
 			if($postado['idEquipe'] != 0){
 				$grupoEquipe = $this->getRepositorio()->getGrupoORM()->encontrarPorId($postado['idEquipe']);
