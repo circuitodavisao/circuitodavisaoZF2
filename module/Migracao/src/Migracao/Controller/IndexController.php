@@ -2640,8 +2640,11 @@ class IndexController extends CircuitoController {
 	}
 
 	function reprovarAlunosAction(){
-		$html = '';
+		set_time_limit(0);
+		ini_set('memory_limit', '-1');
+		ini_set('max_execution_time', '60');
 
+		$html = '';
 		$turmas = $this->getRepositorio()->getTurmaORM()->buscarTodosRegistrosEntidade();
 		$turmasDoIV = array();
 		foreach($turmas as $turma){
@@ -2654,62 +2657,67 @@ class IndexController extends CircuitoController {
 			if($turmaAulaAtiva = $turma->getTurmaAulaAtiva()){
 				if($turmaPessoas = $turma->getTurmaPessoa()){
 					foreach($turmaPessoas as $turmaPessoa){
-						if($turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getId() === Situacao::ATIVO){
-							$contagemDeFaltas = 0;
-							foreach($turmaAulaAtiva->getAula()->getDisciplina()->getAulaOrdenadasPorPosicao() as $aula){
-								if($aula->getPosicao() < $turmaAulaAtiva->getAula()->getPosicao()){
-									$encontrei = false;
-									if($turmaPessoaAulas = $turmaPessoa->getTurmaPessoaAula()){
-										foreach($turmaPessoaAulas as $turmaPessoaAula){
-											if($turmaPessoaAula->getAula()->getId() === $aula->getId()){
-												$encontrei = true;
-												break;
+						$html .= '<br />'.$turmaPessoa->GetPessoa()->getNome();
+						if($fatoCurso = $this->getRepositorio()->getFatoCursoORM()->encontrarFatoCursoPorTurmaPessoa($turmaPessoa->getId())){
+							if($fatoCurso[0]->getSituacao_id() === Situacao::ATIVO){
+								$contagemDeFaltas = 0;
+								foreach($turmaAulaAtiva->getAula()->getDisciplina()->getAulaOrdenadasPorPosicao() as $aula){
+									if($aula->getPosicao() < $turmaAulaAtiva->getAula()->getPosicao()){
+										$encontrei = false;
+										if($turmaPessoaAulas = $turmaPessoa->getTurmaPessoaAula()){
+											foreach($turmaPessoaAulas as $turmaPessoaAula){
+												if($turmaPessoaAula->getAula()->getId() === $aula->getId()){
+													$encontrei = true;
+													break;
+												}
 											}
-										}
 
-									}
-									if(!$encontrei){
-										$contagemDeFaltas++;
-									}else{
-										if(!$turmaPessoaAula->verificarSeEstaAtivo()){
+										}
+										if(!$encontrei){
 											$contagemDeFaltas++;
 										}else{
-											if($turmaPessoaAula->getReposicao() == 'S'){
+											if(!$turmaPessoaAula->verificarSeEstaAtivo()){
 												$contagemDeFaltas++;
+											}else{
+												if($turmaPessoaAula->getReposicao() == 'S'){
+													$contagemDeFaltas++;
+												}
 											}
 										}
 									}
 								}
-							}
-							if($contagemDeFaltas >= 4){
-								$html .= '<br /><span class="label label-danger">Reprovar</span>';
-								$turmaPessoaSituacaoAtiva = $turmaPessoa->getTurmaPessoaSituacaoAtiva();
-								$turmaPessoaSituacaoAtiva->setDataEHoraDeInativacao();
-								$this->getRepositorio()->getTurmaPessoaSituacaoORM()->persistir($turmaPessoaSituacaoAtiva, $mudatDataDeCriacao = false);
+								if($contagemDeFaltas >= 4){
+									$html .= '<br /><span class="label label-danger">Reprovar</span>';
+									$turmaPessoaSituacaoAtiva = $turmaPessoa->getTurmaPessoaSituacaoAtiva();
+									$turmaPessoaSituacaoAtiva->setDataEHoraDeInativacao();
+									$this->getRepositorio()->getTurmaPessoaSituacaoORM()->persistir($turmaPessoaSituacaoAtiva, $mudatDataDeCriacao = false);
 
-								$turmaPessoaSituacao = new TurmaPessoaSituacao();
-								$turmaPessoaSituacao->setTurma_pessoa($turmaPessoa);
-								$turmaPessoaSituacao->setSituacao($this->getRepositorio()->getSituacaoORM()->encontrarPorId(Situacao::REPROVADO_POR_FALTA));
-								$this->getRepositorio()->getTurmaPessoaSituacaoORM()->persistir($turmaPessoaSituacao);
+									$turmaPessoaSituacao = new TurmaPessoaSituacao();
+									$turmaPessoaSituacao->setTurma_pessoa($turmaPessoa);
+									$turmaPessoaSituacao->setSituacao($this->getRepositorio()->getSituacaoORM()->encontrarPorId(Situacao::REPROVADO_POR_FALTA));
+									$this->getRepositorio()->getTurmaPessoaSituacaoORM()->persistir($turmaPessoaSituacao);
 
-								if($fatosCurso = $this->getRepositorio()->getFatoCursoORM()->encontrarFatoCursoPorTurmaPessoa($turmaPessoa->getId())){
-									foreach($fatosCurso as $fatoCurso){
-										if($fatoCurso->verificarSeEstaAtivo()){
-											$fatoCurso->setDataEHoraDeInativacao();
-											$this->getRepositorio()->getFatoCursoORM()->persistir($fatoCurso, $trocarDataDeCriacao = false);
+									if($fatosCurso = $this->getRepositorio()->getFatoCursoORM()->encontrarFatoCursoPorTurmaPessoa($turmaPessoa->getId())){
+										foreach($fatosCurso as $fatoCurso){
+											if($fatoCurso->verificarSeEstaAtivo()){
+												$fatoCurso->setDataEHoraDeInativacao();
+												$this->getRepositorio()->getFatoCursoORM()->persistir($fatoCurso, $trocarDataDeCriacao = false);
+											}
 										}
 									}
+									if($grupoPessoaAtivo = $turmaPessoa->getPessoa()->getGrupoPessoaAtivo()){
+										$numeroIdentificador =
+											$this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupoPessoaAtivo->getGrupo());
+										$fatoCurso = new FatoCurso();
+										$fatoCurso->setNumero_identificador($numeroIdentificador);
+										$fatoCurso->setTurma_pessoa_id($turmaPessoa->getId());
+										$fatoCurso->setTurma_id($turmaPessoa->getTurma()->getId());
+										$fatoCurso->setSituacao_id(Situacao::REPROVADO_POR_FALTA);
+										$this->getRepositorio()->getFatoCursoORM()->persistir($fatoCurso);
+									}
 								}
-								if($grupoPessoaAtivo = $turmaPessoa->getPessoa()->getGrupoPessoaAtivo()){
-									$numeroIdentificador =
-										$this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupoPessoaAtivo->getGrupo());
-									$fatoCurso = new FatoCurso();
-									$fatoCurso->setNumero_identificador($numeroIdentificador);
-									$fatoCurso->setTurma_pessoa_id($turmaPessoa->getId());
-									$fatoCurso->setTurma_id($turmaPessoa->getTurma()->getId());
-									$fatoCurso->setSituacao_id(Situacao::REPROVADO_POR_FALTA);
-									$this->getRepositorio()->getFatoCursoORM()->persistir($fatoCurso);
-								}
+
+								$html .= '<br />'.$contagemDeFaltas;
 							}
 						}
 					}
