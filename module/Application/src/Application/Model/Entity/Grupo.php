@@ -1318,6 +1318,17 @@ class Grupo extends CircuitoEntity {
         return $turmasAtivas;
     }
 
+    function getTurmasInativas() {
+		$turmas = $this->turma;
+		$turmasAtivas = array();
+		foreach($turmas as $turma){
+			if(!$turma->verificarSeEstaAtivo() && $turma->getCurso()->getId() === Curso::INSTITUTO_DE_VENCEDORES){
+				$turmasAtivas[] = $turma;
+			}
+		}
+        return $turmasAtivas;
+    }
+
     function setTurma($turma) {
         $this->turma = $turma;
     }

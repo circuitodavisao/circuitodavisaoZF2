@@ -174,10 +174,6 @@ class ListagemDePessoasComEventos extends AbstractHelper {
 		}
 		$html .= $telefone;
 
-		if ($pessoa->getTipo() != 'LP' && !$pessoa->getAtivo()) {
-			$html .= '<span class="label label-rounded label-danger ml5">INATIVO</span>';
-		}
-
 		if($pessoa->getAtivo() && $this->view->periodo == 0 && $this->view->possoAlterar){
 			$dadosAlterar = $pessoa->getId().'_'.$pessoa->getTipo().'_'.$aluno;
 			$dadosRemover = $pessoa->getGrupoPessoaAtivo()->getId();
@@ -190,6 +186,20 @@ class ListagemDePessoasComEventos extends AbstractHelper {
 
 		$html .= '</div>';
 		/* Row */
+
+		if ($pessoa->getTipo() != 'LP' && !$pessoa->getAtivo()) {
+			$corDaLabel = 'label-danger';
+			$statusDoInativado = 'INATIVO';
+			if($pessoa->getGrupoPessoaAtivo()){
+				$corDaLabel = 'label-primary';
+				$statusDoInativado = 'TORNOU SE ';
+				$statusDoInativado .= $this->view->translate($pessoa->getGrupoPessoaAtivo()->getGrupoPessoaTipo()->getNome());
+
+			}
+			$html .= '<div class="row btn-default p5 text-center">';
+			$html .= '<span class="label label-rounded '. $corDaLabel .' ">'. $statusDoInativado .'</span>';
+			$html .= '</div>';
+		}
 
 		$html .= '</div>';
 		$html .= '<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">';

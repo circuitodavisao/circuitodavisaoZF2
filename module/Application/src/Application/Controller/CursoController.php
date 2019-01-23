@@ -689,7 +689,7 @@ class CursoController extends CircuitoController {
 								if($comecoDaString == 'aluno'){
 									if ($frequencia->getPessoa()->getId() == $value) {
 										$adicionar = true;
-									}	
+									}
 								}
 
 							}
@@ -711,7 +711,7 @@ class CursoController extends CircuitoController {
 						$turmaPessoaSituacao->setTurma_pessoa($turmaPessoa);
 						$this->getRepositorio()->getTurmaPessoaSituacaoORM()->persistir($turmaPessoaSituacao);
 
-						$numeroIdentificador = 
+						$numeroIdentificador =
 							$this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $pessoa->getGrupoPessoaAtivo()->getGrupo());
 						$fatoCurso = new FatoCurso();
 						$fatoCurso->setNumero_identificador($numeroIdentificador);
@@ -826,6 +826,9 @@ class CursoController extends CircuitoController {
 		}
 	}
 
+	public function turmasEncerradasAction() {
+	}
+
 	public function chamadaAction() {
 		$sessao = new Container(Constantes::$NOME_APLICACAO);
 		$entidade = CircuitoController::getEntidadeLogada($this->getRepositorio(), $sessao);
@@ -851,7 +854,7 @@ class CursoController extends CircuitoController {
 			$postado['idSub'] = $post['idSub'];
 
 			if($postado['idEquipe'] == 0){
-				$entidadeParaUsar = $grupo->getGrupoIgreja()->getEntidadeAtiva();		
+				$entidadeParaUsar = $grupo->getGrupoIgreja()->getEntidadeAtiva();
 			}
 			if($postado['idEquipe'] != 0){
 				$grupoEquipe = $this->getRepositorio()->getGrupoORM()->encontrarPorId($postado['idEquipe']);
@@ -861,7 +864,7 @@ class CursoController extends CircuitoController {
 					$grupoFilho = $grupoPaiFilho->getGrupoPaiFilhoFilho();
 					$dados = array();
 					$dados['id'] = $grupoFilho->getId();
-					$dados['informacao'] = $grupoFilho->getEntidadeAtiva()->infoEntidade() . ' - ' . $grupoFilho->getNomeLideresAtivos();	
+					$dados['informacao'] = $grupoFilho->getEntidadeAtiva()->infoEntidade() . ' - ' . $grupoFilho->getNomeLideresAtivos();
 					$filhos[] =  $dados;
 				}
 				$entidadeParaUsar = $this->getRepositorio()->getGrupoORM()->encontrarPorId($postado['idEquipe'])->getEntidadeAtiva();
@@ -926,7 +929,7 @@ class CursoController extends CircuitoController {
 					$grupoFilho = $grupoPaiFilho->getGrupoPaiFilhoFilho();
 					$dados = array();
 					$dados['id'] = $grupoFilho->getId();
-					$dados['informacao'] = $grupoFilho->getEntidadeAtiva()->infoEntidade() . ' - ' . $grupoFilho->getNomeLideresAtivos();	
+					$dados['informacao'] = $grupoFilho->getEntidadeAtiva()->infoEntidade() . ' - ' . $grupoFilho->getNomeLideresAtivos();
 					$filhos[] =  $dados;
 				}
 			}
@@ -958,7 +961,7 @@ class CursoController extends CircuitoController {
 				$grupoFilho = $grupoPaiFilho->getGrupoPaiFilhoFilho();
 				$dados = array();
 				$dados['id'] = $grupoFilho->getId();
-				$dados['informacao'] = $grupoFilho->getEntidadeAtiva()->infoEntidade() . ' - ' . $grupoFilho->getNomeLideresAtivos();	
+				$dados['informacao'] = $grupoFilho->getEntidadeAtiva()->infoEntidade() . ' - ' . $grupoFilho->getNomeLideresAtivos();
 				$filhos[] =  $dados;
 			}
 
@@ -985,7 +988,7 @@ class CursoController extends CircuitoController {
 				foreach($grupoResponsabilidades as $grupoResponsabilidade){
 					$dados = array();
 					$dados['id'] = $grupoResponsabilidade->getGrupo()->getId() . '_' .$grupoResponsabilidade->getPessoa()->getId();
-					$dados['informacao'] = $grupoEquipe->getEntidadeAtiva()->infoEntidade() . ' - ' . $grupoResponsabilidade->getPessoa()->getNome(); 	
+					$dados['informacao'] = $grupoEquipe->getEntidadeAtiva()->infoEntidade() . ' - ' . $grupoResponsabilidade->getPessoa()->getNome();
 					$filhos[] =  $dados;
 				}
 			}
@@ -996,7 +999,7 @@ class CursoController extends CircuitoController {
 					foreach($grupoResponsabilidades as $grupoResponsabilidade){
 						$dados = array();
 						$dados['id'] = $grupoResponsabilidade->getGrupo()->getId() . '_' .$grupoResponsabilidade->getPessoa()->getId();
-						$dados['informacao'] = $grupoFilho->getEntidadeAtiva()->infoEntidade() . ' - ' . $grupoResponsabilidade->getPessoa()->getNome(); 	
+						$dados['informacao'] = $grupoFilho->getEntidadeAtiva()->infoEntidade() . ' - ' . $grupoResponsabilidade->getPessoa()->getNome();
 						$filhos[] =  $dados;
 					}
 				}
@@ -1008,7 +1011,7 @@ class CursoController extends CircuitoController {
 							foreach($grupoResponsabilidades as $grupoResponsabilidade){
 								$dados = array();
 								$dados['id'] = $grupoResponsabilidade->getGrupo()->getId() . '_' .$grupoResponsabilidade->getPessoa()->getId();
-								$dados['informacao'] = $grupoFilho2->getEntidadeAtiva()->infoEntidade() . ' - ' . $grupoResponsabilidade->getPessoa()->getNome(); 	
+								$dados['informacao'] = $grupoFilho2->getEntidadeAtiva()->infoEntidade() . ' - ' . $grupoResponsabilidade->getPessoa()->getNome();
 								$filhos[] =  $dados;
 							}
 						}
@@ -1022,7 +1025,7 @@ class CursoController extends CircuitoController {
 									foreach($grupoResponsabilidades as $grupoResponsabilidade){
 										$dados = array();
 										$dados['id'] = $grupoResponsabilidade->getGrupo()->getId() . '_' .$grupoResponsabilidade->getPessoa()->getId();
-										$dados['informacao'] = $grupoFilho3->getEntidadeAtiva()->infoEntidade() . ' - ' . $grupoResponsabilidade->getPessoa()->getNome(); 	
+										$dados['informacao'] = $grupoFilho3->getEntidadeAtiva()->infoEntidade() . ' - ' . $grupoResponsabilidade->getPessoa()->getNome();
 										$filhos[] =  $dados;
 									}
 								}
@@ -1036,7 +1039,7 @@ class CursoController extends CircuitoController {
 											foreach($grupoResponsabilidades as $grupoResponsabilidade){
 												$dados = array();
 												$dados['id'] = $grupoResponsabilidade->getGrupo()->getId() . '_' .$grupoResponsabilidade->getPessoa()->getId();
-												$dados['informacao'] = $grupoFilho4->getEntidadeAtiva()->infoEntidade() . ' - ' . $grupoResponsabilidade->getPessoa()->getNome(); 	
+												$dados['informacao'] = $grupoFilho4->getEntidadeAtiva()->infoEntidade() . ' - ' . $grupoResponsabilidade->getPessoa()->getNome();
 												$filhos[] =  $dados;
 											}
 										}
@@ -1047,7 +1050,7 @@ class CursoController extends CircuitoController {
 													foreach($grupoResponsabilidades as $grupoResponsabilidade){
 														$dados = array();
 														$dados['id'] = $grupoResponsabilidade->getGrupo()->getId() . '_' .$grupoResponsabilidade->getPessoa()->getId();
-														$dados['informacao'] = $grupoFilho5->getEntidadeAtiva()->infoEntidade() . ' - ' . $grupoResponsabilidade->getPessoa()->getNome(); 	
+														$dados['informacao'] = $grupoFilho5->getEntidadeAtiva()->infoEntidade() . ' - ' . $grupoResponsabilidade->getPessoa()->getNome();
 														$filhos[] =  $dados;
 													}
 												}
@@ -1165,7 +1168,7 @@ class CursoController extends CircuitoController {
 					$temAulaAtiva = true;
 					$nomeAula = $turmaAulaAtiva->getAula()->getDisciplina()->getNome().' Aula: '.$turmaAulaAtiva->getAula()->getPosicao();
 				}
-				$idParaRetornar = $turmaPessoa->getId();	
+				$idParaRetornar = $turmaPessoa->getId();
 			} else {
 				$resposta = false;
 			}
@@ -1239,7 +1242,7 @@ class CursoController extends CircuitoController {
 					$resposta = true;
 					$this->getRepositorio()->fecharTransacao();
 				}
-			}			
+			}
 		} catch (Exception $exc) {
 			$this->getRepositorio()->desfazerTransacao();
 			echo $exc->getTraceAsString();
@@ -1274,7 +1277,7 @@ class CursoController extends CircuitoController {
 					$resposta = true;
 					$this->getRepositorio()->fecharTransacao();
 				}
-			}			
+			}
 		} catch (Exception $exc) {
 			$this->getRepositorio()->desfazerTransacao();
 			echo $exc->getTraceAsString();
@@ -1330,7 +1333,7 @@ class CursoController extends CircuitoController {
 				$turmaPessoaSituacao->setSituacao($situacao);
 				$this->getRepositorio()->getTurmaPessoaSituacaoORM()->persistir($turmaPessoaSituacao);
 
-				$numeroIdentificador = 
+				$numeroIdentificador =
 					$this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupo);
 				$fatoCurso = new FatoCurso();
 				$fatoCurso->setNumero_identificador($numeroIdentificador);
@@ -1516,7 +1519,7 @@ class CursoController extends CircuitoController {
 					$grupoFilho = $grupoPaiFilho->getGrupoPaiFilhoFilho();
 					$dados = array();
 					$dados['id'] = $grupoFilho->getId();
-					$dados['informacao'] = $grupoFilho->getEntidadeAtiva()->infoEntidade() . ' - ' . $grupoFilho->getNomeLideresAtivos();	
+					$dados['informacao'] = $grupoFilho->getEntidadeAtiva()->infoEntidade() . ' - ' . $grupoFilho->getNomeLideresAtivos();
 					$filhos[] =  $dados;
 				}
 			}
@@ -1559,19 +1562,19 @@ class CursoController extends CircuitoController {
 			$turmaAulaAtiva = $turma->getTurmaAulaAtiva();
 			foreach ($turma->getTurmaPessoa() as $turmaPessoa) {
 				$verificarAluno = false;
-				if ($turmaPessoa->verificarSeEstaAtivo() && 
+				if ($turmaPessoa->verificarSeEstaAtivo() &&
 					($turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getId() === Situacao::ATIVO ||
 					$turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getId() === Situacao::ESPECIAL)){
 						if($idEquipe == 0){
 							$verificarAluno = true;
 						}else{
-							if($turmaPessoa->getPessoa()->getGrupoPessoaAtivo() && 
+							if($turmaPessoa->getPessoa()->getGrupoPessoaAtivo() &&
 								($turmaPessoa->getPessoa()->getGrupoPessoaAtivo()->getGrupo()->getGrupoEquipe()->getId() == $idEquipe
 								|| $turmaPessoa->getPessoa()->getGrupoPessoaAtivo()->getGrupo()->getGrupoSubEquipe()->getId() == $idEquipe)){
 								$verificarAluno = true;
 							}
 						}
-					}	
+					}
 
 				if ($verificarAluno) {
 					$mostrar = false;
@@ -1590,7 +1593,7 @@ class CursoController extends CircuitoController {
 										$parar = true;
 										break;
 									}
-	
+
 									$naoEncontreiPresencaNaAula = true;
 									foreach ($turmaPessoaAulas as $turmaPessoaAula) {
 										if ($turmaPessoaAula->getAula()->getId() === $aula->getId()) {
@@ -1663,7 +1666,7 @@ class CursoController extends CircuitoController {
 		if ($grupoSelecionado = $turmaPessoa->getPessoa()->getGrupoPessoaAtivo()) {
 			if ($grupoSelecionado->getGrupo()->getEntidadeAtiva()->getEntidadeTipo()->getId() !== EntidadeTipo::igreja &&
 				$grupoSelecionado->getGrupo()->getEntidadeAtiva()->getEntidadeTipo()->getId() !== EntidadeTipo::equipe) {
-					$grupoSelecionado = $grupoSelecionado->getGrupo();	
+					$grupoSelecionado = $grupoSelecionado->getGrupo();
 					while($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() !== EntidadeTipo::equipe){
 
 						if($grupoSelecionado->getId() == $idGrupo){
@@ -1673,7 +1676,7 @@ class CursoController extends CircuitoController {
 						$grupoSelecionado = $grupoSelecionado->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai();
 					}
 
-				} 
+				}
 		}
 		return $participaDaSub;
 	}
