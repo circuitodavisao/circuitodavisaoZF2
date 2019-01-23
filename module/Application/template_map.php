@@ -126,6 +126,7 @@ return array(
     'application/curso/gerar-faltas'                      => __DIR__ . '/view/application/curso/gerar-faltas.phtml',
     'application/curso/curso-form-edit'                   => __DIR__ . '/view/application/curso/curso-form-edit.phtml',
     'application/curso/listar-turma'                      => __DIR__ . '/view/application/curso/listar-turma.phtml',
+    'application/curso/turmas-encerradas'                 => __DIR__ . '/view/application/curso/turmas-encerradas.phtml',
     'application/curso/turma-form'                        => __DIR__ . '/view/application/curso/turma-form.phtml',
     'application/curso/curso-form'                        => __DIR__ . '/view/application/curso/curso-form.phtml',
     'application/curso/aula-listar'                       => __DIR__ . '/view/application/curso/aula-listar.phtml',
