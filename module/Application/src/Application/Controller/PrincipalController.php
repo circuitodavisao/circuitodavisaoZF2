@@ -693,7 +693,11 @@ class PrincipalController extends CircuitoController {
 			Prioridade: '.$prioridade.'
 			Login: '.$remetente['email'].'
 			Descricao: '.$descricao;
-		Funcoes::enviarEmail($ToEmail, $Subject, $Content, $remetente, $anexo);
+		try{
+			Funcoes::enviarEmail($ToEmail, $Subject, $Content, $remetente, $anexo);
+		}catch(Exception $exc){
+			error_log($exc);
+		}
 		return $this->redirect()->toRoute('principal', array(
 			Constantes::$ACTION => 'suporteFinalizado',
 		));
