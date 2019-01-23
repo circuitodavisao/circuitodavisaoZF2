@@ -103,52 +103,57 @@ if($this->relatorio){
 	$relatorioPronto = array();
 	$chaves = array();
 	foreach($this->relatorio as $chave => $relatorio){
-		$chaves[] = $chave;
-		$soma = array();
-		$relatorioTime = array();
-		foreach($this->turmas as $turma){
-			$total = $relatorio[$turma->getId()]['ATIVO'] + $relatorio[$turma->getId()]['DESISTENTE'] + $relatorio[$turma->getId()]['REPROVADO POR FALTAS'] + $relatorio[$turma->getId()]['ESPECIAL'];
-			$outros = $relatorio[$turma->getId()]['DESISTENTE'] + $relatorio[$turma->getId()]['REPROVADO POR FALTAS'];
-			$meta = 0;
-			switch($turma->getTurmaAulaAtiva()->getAula()->getDisciplina()->getId()){
-			case 5: $meta = 70; break;
-			case 6: $meta = 70; break;
-			case 7: $meta = 50; break;
-			case 8: $meta = 30; break;
-			}
-			$metaCalculada = number_format($meta / 100 * $total);
-			$ativos = $relatorio[$turma->getId()]['ATIVO'] + $relatorio[$turma->getId()]['ESPECIAL'];
-			$performance = $ativos / $metaCalculada * 100;
-
-			$soma['total'] += $total;
-			$soma['outros'] += $outros;
-			$soma['ativos'] += $ativos;
-			$soma['performances'] += $performance;
-
-			$relatorioTime[$turma->getId()]['total'] = $total;
-			$relatorioTime[$turma->getId()]['outros'] = $outros;
-			$relatorioTime[$turma->getId()]['metaCalCulada'] = $metaCalculada;
-			$relatorioTime[$turma->getId()]['ativos'] = $ativos;
-			$relatorioTime[$turma->getId()]['performance'] = $performance;
-
-			$relatorioFinal[$turma->getId()]['total'] += $total;
-			$relatorioFinal[$turma->getId()]['outros'] += $outros;
-			$relatorioFinal[$turma->getId()]['metaCalCulada'] += $metaCalculada;
-			$relatorioFinal[$turma->getId()]['ativos'] += $ativos;
+		$adicionar = false;
+		if($chave !== 'total' && !is_numeric($chave)){
+			$adicionar = true;
 		}
+		if($adicionar){
+			$chaves[] = $chave;
+			$soma = array();
+			$relatorioTime = array();
+			foreach($this->turmas as $turma){
+				$total = $relatorio[$turma->getId()]['ATIVO'] + $relatorio[$turma->getId()]['DESISTENTE'] + $relatorio[$turma->getId()]['REPROVADO POR FALTAS'] + $relatorio[$turma->getId()]['ESPECIAL'];
+				$outros = $relatorio[$turma->getId()]['DESISTENTE'] + $relatorio[$turma->getId()]['REPROVADO POR FALTAS'];
+				$meta = 0;
+				switch($turma->getTurmaAulaAtiva()->getAula()->getDisciplina()->getId()){
+				case 5: $meta = 70; break;
+				case 6: $meta = 70; break;
+				case 7: $meta = 50; break;
+				case 8: $meta = 30; break;
+				}
+				$metaCalculada = number_format($meta / 100 * $total);
+				$ativos = $relatorio[$turma->getId()]['ATIVO'] + $relatorio[$turma->getId()]['ESPECIAL'];
+				$performance = $ativos / $metaCalculada * 100;
 
-		$performanceFinal = $soma['performances'] / count($this->turmas);
-		$relatorioTime['total'] = $soma['total'];
-		$relatorioTime['outros'] = $soma['outros'];
-		$relatorioTime['ativos'] = $soma['ativos'];
-		$relatorioTime['performanceFinal'] = $performanceFinal;
-		$relatorioPronto[$chave] = $relatorioTime;
+				$soma['total'] += $total;
+				$soma['outros'] += $outros;
+				$soma['ativos'] += $ativos;
+				$soma['performances'] += $performance;
 
-		$relatorioFinal['total'] += $soma['total'];
-		$relatorioFinal['outros'] += $soma['outros'];
-		$relatorioFinal['ativos'] += $soma['ativos'];
+				$relatorioTime[$turma->getId()]['total'] = $total;
+				$relatorioTime[$turma->getId()]['outros'] = $outros;
+				$relatorioTime[$turma->getId()]['metaCalCulada'] = $metaCalculada;
+				$relatorioTime[$turma->getId()]['ativos'] = $ativos;
+				$relatorioTime[$turma->getId()]['performance'] = $performance;
+
+				$relatorioFinal[$turma->getId()]['total'] += $total;
+				$relatorioFinal[$turma->getId()]['outros'] += $outros;
+				$relatorioFinal[$turma->getId()]['metaCalCulada'] += $metaCalculada;
+				$relatorioFinal[$turma->getId()]['ativos'] += $ativos;
+			}
+
+			$performanceFinal = $soma['performances'] / count($this->turmas);
+			$relatorioTime['total'] = $soma['total'];
+			$relatorioTime['outros'] = $soma['outros'];
+			$relatorioTime['ativos'] = $soma['ativos'];
+			$relatorioTime['performanceFinal'] = $performanceFinal;
+			$relatorioPronto[$chave] = $relatorioTime;
+
+			$relatorioFinal['total'] += $soma['total'];
+			$relatorioFinal['outros'] += $soma['outros'];
+			$relatorioFinal['ativos'] += $soma['ativos'];
+		}
 	}
-
 
 	$tamanhoArray = count($chaves);
 
