@@ -371,71 +371,75 @@ class IndexController extends CircuitoController {
 						$html .= '<br />TEM SOLICITACOES';
 						foreach($solicitacoesPorHierarquia[$indiceHierarquia] as $arraySolicitacao){
 							$solicitacao = $this->getRepositorio()->getSolicitacaoORM()->encontrarPorId($arraySolicitacao->getId());
-							$idSituacao = $solicitacao->getSolicitacaoSituacaoAtiva()->getSituacao()->getId();
-							if ($idSituacao == Situacao::ACEITO_AGENDADO) {
-								$idSolicitacaoTipo = $solicitacao->getSolicitacaoTipo()->getId();
-								if ($idSolicitacaoTipo === SolicitacaoTipo::TRANSFERIR_LIDER_NA_PROPRIA_EQUIPE ||
-									$idSolicitacaoTipo === SolicitacaoTipo::TRANSFERIR_LIDER_PARA_OUTRA_EQUIPE) {
-										$html .= "<br />SolicitacaoTipo::TRANSFERIR_LIDER_NA_PROPRIA_EQUIPE";
-										$grupoQueSeraSemeado = $this->getRepositorio()->getGrupoORM()->encontrarPorId($solicitacao->getObjeto1());
-										$grupoQueRecebera = $this->getRepositorio()->getGrupoORM()->encontrarPorId($solicitacao->getObjeto2());
-										$extra = '';
-										if ($solicitacao->getNumero()) {
-											$extra = (int) $solicitacao->getNumero();
-										}
-										if ($solicitacao->getNome()) {
-											$extra = (string) $solicitacao->getNome();
-										}
-										$html .= $this->transferirLider($grupoQueSeraSemeado, $grupoQueRecebera, $extra);
-									}
-								if ($idSolicitacaoTipo == SolicitacaoTipo::UNIR_CASAL) {
-									$html .= "<br />UNINDO CASAL ";
-									$grupoHomem = $this->getRepositorio()->getGrupoORM()->encontrarPorId($solicitacao->getObjeto1());
-									$grupoMulher = $this->getRepositorio()->getGrupoORM()->encontrarPorId($solicitacao->getObjeto2());
-									$html .= $this->unirCasal($grupoHomem, $grupoMulher);
-								}
-								if ($idSolicitacaoTipo == SolicitacaoTipo::SEPARAR) {
-									$html .= "<br />SEPARANDO";
-									$pessoaParaInativar = $this->getRepositorio()->getPessoaORM()->encontrarPorId($solicitacao->getObjeto2());
-									foreach ($pessoaParaInativar->getResponsabilidadesAtivas() as $grupoResponsavel) {
-										$grupoResponsavel->setDataEHoraDeInativacao(date('Y-m-d', mktime(0, 0, 0, date("m"), date("d") - 1, date("Y"))));
-										$this->getRepositorio()->getGrupoResponsavelORM()->persistir($grupoResponsavel, false);
-									}
-								}
-								//								if ($idSolicitacaoTipo == SolicitacaoTipo::TROCAR_RESPONSABILIDADES) {
-								//									$html .= "<br />TROCANDO RESPONSABILIDADES";
-								//									$grupo1 = $this->getRepositorio()->getGrupoORM()->encontrarPorId($solicitacao->getObjeto1());
-								//									$grupo2 = $this->getRepositorio()->getGrupoORM()->encontrarPorId($solicitacao->getObjeto2());
-								//									$html .= $this->trocarResponsabilidades($grupo1, $grupo2);
-								//								}
-								if ($idSolicitacaoTipo == SolicitacaoTipo::REMOVER_LIDER) {
-									/* remover todos lideres abaixo */
-									$html .= "<br />REMOVENDO LIDER";
-									$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($solicitacao->getObjeto1());
-									$html .= $this->removerLider($grupo);
-								}
-								if ($idSolicitacaoTipo == SolicitacaoTipo::REMOVER_CELULA) {
-									$html .= "<br />REMOVENDO CELULA";
-									$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($solicitacao->getObjeto1());
-									$grupoEvento = $this->getRepositorio()->getGrupoEventoORM()->encontrarPorId($solicitacao->getObjeto2());
-									$html .= $this->removerCelula($grupo, $grupoEvento);
-								}
-								if ($idSolicitacaoTipo == SolicitacaoTipo::TRANSFERIR_ALUNO) {
-									$html .= "<br />TRANSFERIR ALUNO";
-									$turmaPessoa = $this->getRepositorio()->getTurmaPessoaORM()->encontrarPorId($solicitacao->getObjeto1());
-									$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($solicitacao->getObjeto2());
-									$html .= $this->transferirAluno($turmaPessoa, $grupo);
-								}
-								$solicitacaoSituacaoAtiva = $solicitacao->getSolicitacaoSituacaoAtiva();
-								/* inativar solicitacao situacao ativa */
-								$solicitacaoSituacaoAtiva->setDataEHoraDeInativacao();
-								$this->getRepositorio()->getSolicitacaoSituacaoORM()->persistir($solicitacaoSituacaoAtiva, false);
+							if($solicitacao->verificarSeEstaAtivo()){
 
-								/* Nova solicitacao situacao */
-								$solicitacaoSituacao = new SolicitacaoSituacao();
-								$solicitacaoSituacao->setSolicitacao($solicitacao);
-								$solicitacaoSituacao->setSituacao($this->getRepositorio()->getSituacaoORM()->encontrarPorId(Situacao::CONCLUIDO));
-								$this->getRepositorio()->getSolicitacaoSituacaoORM()->persistir($solicitacaoSituacao);
+								$idSituacao = $solicitacao->getSolicitacaoSituacaoAtiva()->getSituacao()->getId();
+								if ($idSituacao == Situacao::ACEITO_AGENDADO) {
+									$idSolicitacaoTipo = $solicitacao->getSolicitacaoTipo()->getId();
+									if ($idSolicitacaoTipo === SolicitacaoTipo::TRANSFERIR_LIDER_NA_PROPRIA_EQUIPE ||
+										$idSolicitacaoTipo === SolicitacaoTipo::TRANSFERIR_LIDER_PARA_OUTRA_EQUIPE) {
+											$html .= "<br />TRANSFERIR_LIDER_NA_PROPRIA_EQUIPE";
+											$grupoQueSeraSemeado = $this->getRepositorio()->getGrupoORM()->encontrarPorId($solicitacao->getObjeto1());
+											$grupoQueRecebera = $this->getRepositorio()->getGrupoORM()->encontrarPorId($solicitacao->getObjeto2());
+											$extra = '';
+											if ($solicitacao->getNumero()) {
+												$extra = (int) $solicitacao->getNumero();
+											}
+											if ($solicitacao->getNome()) {
+												$extra = (string) $solicitacao->getNome();
+											}
+											error_log('Solicitacao: '.$solicitacao->getId());
+											$html .= $this->transferirLider($grupoQueSeraSemeado, $grupoQueRecebera, $extra);
+										}
+									if ($idSolicitacaoTipo == SolicitacaoTipo::UNIR_CASAL) {
+										$html .= "<br />UNINDO CASAL ";
+										$grupoHomem = $this->getRepositorio()->getGrupoORM()->encontrarPorId($solicitacao->getObjeto1());
+										$grupoMulher = $this->getRepositorio()->getGrupoORM()->encontrarPorId($solicitacao->getObjeto2());
+										$html .= $this->unirCasal($grupoHomem, $grupoMulher);
+									}
+									if ($idSolicitacaoTipo == SolicitacaoTipo::SEPARAR) {
+										$html .= "<br />SEPARANDO";
+										$pessoaParaInativar = $this->getRepositorio()->getPessoaORM()->encontrarPorId($solicitacao->getObjeto2());
+										foreach ($pessoaParaInativar->getResponsabilidadesAtivas() as $grupoResponsavel) {
+											$grupoResponsavel->setDataEHoraDeInativacao(date('Y-m-d', mktime(0, 0, 0, date("m"), date("d") - 1, date("Y"))));
+											$this->getRepositorio()->getGrupoResponsavelORM()->persistir($grupoResponsavel, false);
+										}
+									}
+									//								if ($idSolicitacaoTipo == SolicitacaoTipo::TROCAR_RESPONSABILIDADES) {
+									//									$html .= "<br />TROCANDO RESPONSABILIDADES";
+									//									$grupo1 = $this->getRepositorio()->getGrupoORM()->encontrarPorId($solicitacao->getObjeto1());
+									//									$grupo2 = $this->getRepositorio()->getGrupoORM()->encontrarPorId($solicitacao->getObjeto2());
+									//									$html .= $this->trocarResponsabilidades($grupo1, $grupo2);
+									//								}
+									if ($idSolicitacaoTipo == SolicitacaoTipo::REMOVER_LIDER) {
+										/* remover todos lideres abaixo */
+										$html .= "<br />REMOVENDO LIDER";
+										$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($solicitacao->getObjeto1());
+										$html .= $this->removerLider($grupo);
+									}
+									if ($idSolicitacaoTipo == SolicitacaoTipo::REMOVER_CELULA) {
+										$html .= "<br />REMOVENDO CELULA";
+										$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($solicitacao->getObjeto1());
+										$grupoEvento = $this->getRepositorio()->getGrupoEventoORM()->encontrarPorId($solicitacao->getObjeto2());
+										$html .= $this->removerCelula($grupo, $grupoEvento);
+									}
+									if ($idSolicitacaoTipo == SolicitacaoTipo::TRANSFERIR_ALUNO) {
+										$html .= "<br />TRANSFERIR ALUNO";
+										$turmaPessoa = $this->getRepositorio()->getTurmaPessoaORM()->encontrarPorId($solicitacao->getObjeto1());
+										$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($solicitacao->getObjeto2());
+										$html .= $this->transferirAluno($turmaPessoa, $grupo);
+									}
+									$solicitacaoSituacaoAtiva = $solicitacao->getSolicitacaoSituacaoAtiva();
+									/* inativar solicitacao situacao ativa */
+									$solicitacaoSituacaoAtiva->setDataEHoraDeInativacao();
+									$this->getRepositorio()->getSolicitacaoSituacaoORM()->persistir($solicitacaoSituacaoAtiva, false);
+
+									/* Nova solicitacao situacao */
+									$solicitacaoSituacao = new SolicitacaoSituacao();
+									$solicitacaoSituacao->setSolicitacao($solicitacao);
+									$solicitacaoSituacao->setSituacao($this->getRepositorio()->getSituacaoORM()->encontrarPorId(Situacao::CONCLUIDO));
+									$this->getRepositorio()->getSolicitacaoSituacaoORM()->persistir($solicitacaoSituacao);
+								}
 							}
 						}
 					}else{
@@ -659,8 +663,8 @@ class IndexController extends CircuitoController {
 			}
 		}
 
+		$numeroIdentificadorNovo = $numeroIdentificadorLider . str_pad($grupoNovo->getId(), 8, 0, STR_PAD_LEFT);
 		if($temAlgumaCelula){
-			$numeroIdentificadorNovo = $numeroIdentificadorLider . str_pad($grupoNovo->getId(), 8, 0, STR_PAD_LEFT);
 			$fatoLiderNovo = new FatoLider();
 			$fatoLiderNovo->setLideres($totalDeLideres);
 			$fatoLiderNovo->setNumero_identificador($numeroIdentificadorNovo);
@@ -950,7 +954,7 @@ class IndexController extends CircuitoController {
 		return $html;
 	}
 
-	public function removerLider($grupo, $data) {
+	public function removerLider($grupo, $data = null) {
 		if($data){
 			$dataParaInativar = $data;
 		}else{
