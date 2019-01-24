@@ -313,9 +313,11 @@ class Grupo extends CircuitoEntity {
 					for($j = 0; $j < $totalDeFilhos; $j++){
 						$grupo1 = $grupoPaiFilhoFilhosAtivos[$i];
 						$grupo2 = $grupoPaiFilhoFilhosAtivos[$j];
-						if($grupo1->getGrupoPaiFilhoFilho()->getEntidadeAtiva()->getNumero() < $grupo2->getGrupoPaiFilhoFilho()->getEntidadeAtiva()->getNumero()){
-							$grupoPaiFilhoFilhosAtivos[$i] = $grupo2;
-							$grupoPaiFilhoFilhosAtivos[$j] = $grupo1;
+						if($grupo1->getGrupoPaiFilhoFilho()->getEntidadeAtiva() && $grupo2->getGrupoPaiFilhoFilho()->getEntidadeAtiva()){
+							if($grupo1->getGrupoPaiFilhoFilho()->getEntidadeAtiva()->getNumero() < $grupo2->getGrupoPaiFilhoFilho()->getEntidadeAtiva()->getNumero()){
+								$grupoPaiFilhoFilhosAtivos[$i] = $grupo2;
+								$grupoPaiFilhoFilhosAtivos[$j] = $grupo1;
+							}
 						}
 					}
 				}
