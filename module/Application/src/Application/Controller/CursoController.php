@@ -1826,14 +1826,16 @@ class CursoController extends CircuitoController {
 		if($possoAcessarIsso){
 			$idTurmaPessoa = $this->getEvent()->getRouteMatch()->getParam(Constantes::$ID, 0);
 			$turmaPessoa = $this->getRepositorio()->getTurmaPessoaORM()->encontrarPorId($idTurmaPessoa);
-
+			$fatoCurso = $this->getRepositorio()->getFatoCursoORM()->encontrarFatoCursoPorTurmaPessoa($idTurmaPessoa)[0];
+			$situacao = $this->getRepositorio()->getSituacaoORM()->encontrarPorId($fatoCurso->getSituacao_id());
 			$situacoes = $this->getRepositorio()->getSituacaoORM()->buscarTodosRegistrosEntidade();
-
 			$view = new ViewModel(array(
 				'turmaPessoa' => $turmaPessoa,
 				'situacoes' => $situacoes,
 				'pessoa' => $pessoa,
 				'entidade' => $entidade,
+				'fatoCurso' => $fatoCurso,
+				'situacao' => $situacao,
 			));
 			return $view;
 		}else{
