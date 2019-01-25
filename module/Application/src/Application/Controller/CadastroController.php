@@ -2302,6 +2302,13 @@ class CadastroController extends CircuitoController {
 					));
 				}
 			}
+			if($post_data['objeto1'] == $post_data['objeto2']){
+				if($temSolicitacoesPendentes){
+					return $this->redirect()->toRoute(Constantes::$ROUTE_PRINCIPAL, array(
+						Constantes::$ACTION => 'semAcesso',
+					));
+				}
+			}
 			try {
 				$this->getRepositorio()->iniciarTransacao();
 

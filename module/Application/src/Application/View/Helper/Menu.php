@@ -371,16 +371,13 @@ class Menu extends AbstractHelper {
 			$html .= '</a>';
 			$html .= '</li>';
 
-			if ($this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja ||
-				$this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::equipe) {
+			$html .= '<li>';
+			$html .= '<a href="/relatorioInstituto" onClick="mostrarSplash();">';
+			$html .= '<span class="fa fa-users"></span>';
+			$html .= 'Aproveitamento Instituto de Vencedores';
+			$html .= '</a>';
+			$html .= '</li>';
 
-					$html .= '<li>';
-					$html .= '<a href="/relatorioInstituto" onClick="mostrarSplash();">';
-					$html .= '<span class="fa fa-users"></span>';
-					$html .= 'Aproveitamento Instituto de Vencedores';
-					$html .= '</a>';
-					$html .= '</li>';
-				}
 			$html .= '<li>';
 			$html .= '<a href="/relatorioAlunos/1" onClick="mostrarSplash();">';
 			$html .= '<span class="fa fa-graduation-cap"></span>';
