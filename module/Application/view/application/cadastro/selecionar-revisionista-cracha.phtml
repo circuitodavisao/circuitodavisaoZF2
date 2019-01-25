@@ -32,6 +32,7 @@ echo $this->form()->openTag($form);
             echo '<th>Inscrição</th>';
             echo '<th>Revisionista</th>';
             echo '<th>Sexo</th>';
+            echo '<th>Igreja</th>';
             echo '<th>Time</th>';
             echo '<th><input type="checkbox" onclick="marcarTodos(this);"/></th>';
             echo '</tr>';
@@ -40,20 +41,25 @@ echo $this->form()->openTag($form);
             foreach ($relatorioRevisionistas as $relatorio) {
               $nomeEntidadeAcima = '';
               if($this->multiplos){
-                $nomeEntidadeAcima = $relatorio->getPessoa()->getGrupoPessoaAtivo()->getGrupo()->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai()->getEntidadeAtiva()->getNome();
-                if(!$nomeEntidadeAcima){
-                  $nomeEntidadeAcima = ' - COORDENAÇÃO '. $relatorio->getPessoa()->getGrupoPessoaAtivo()->getGrupo()->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai()->getEntidadeAtiva()->getNumero();
-                }
+                  $nomeEntidadeAcima = $relatorio->getPessoa()->getGrupoPessoaAtivo()->getGrupo()->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai()->getEntidadeAtiva()->getNome();
+                  if($nomeEntidadeAcima){
+                    $nomeEntidadeAcimaArrumado = ' - ' . $nomeEntidadeAcima;
+                  }
+                  if(!$nomeEntidadeAcima){
+                    $nomeEntidadeAcimaArrumado = ' - COORDENAÇÃO '. $relatorio->getPessoa()->getGrupoPessoaAtivo()->getGrupo()->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai()->getEntidadeAtiva()->getNumero();
+                  }
               }
                 $sexo = $relatorio->getPessoa()->getSexo();
                 if(!$sexo) {
                   $sexo = 'Não Informado';
                 }
+                $grupoPessoa = $relatorio->getPessoa()->getGrupoPessoaAtivo()->getGrupo();
                 echo '<tr class="text-center">';
                 echo '<td>' . $relatorio->getId() . '</td>';
                 echo '<td>' . $relatorio->getPessoa()->getNome() . '</td>';
                 echo '<td>' . $sexo . '</td>';
-                echo '<td>' . $relatorio->getPessoa()->getGrupoPessoaAtivo()->getGrupo()->getEntidadeAtiva()->infoEntidade() . $nomeEntidadeAcima . '</td>';
+                echo '<td>' . $grupoPessoa->getGrupoIgreja()->getEntidadeAtiva()->getNome() . '</td>';
+                echo '<td>' . $grupoPessoa->getEntidadeAtiva()->infoEntidade() . $nomeEntidadeAcimaArrumado . '</td>';
                 echo '<td><input type="checkbox" id="revisionista' . $relatorio->getId() . '" name="revisionista' . $relatorio->getId() . '" value="' . $relatorio->getId() . '"/></td>';
                 echo '</tr>';
             }
@@ -69,6 +75,7 @@ echo $this->form()->openTag($form);
             echo '<th>Inscrição</th>';
             echo '<th>Líder</th>';
             echo '<th>Sexo</th>';
+            echo '<th>Igreja</th>';
             echo '<th>Time</th>';
             echo '<th><input type="checkbox" onclick="marcarTodos(this);"/></th>';
             echo '</tr>';
@@ -86,12 +93,16 @@ echo $this->form()->openTag($form);
                 }
               }
                 $sexo = $relatorio->getPessoa()->getSexo();
-                $sexo ? $sexo : 'Não Informado';
+                if(!$sexo) {
+                  $sexo = 'Não Informado';
+                }
+                $grupoPessoa = $relatorio->getPessoa()->getResponsabilidadesAtivas()[0]->getGrupo();
                 echo '<tr class="text-center">';
                 echo '<td>' . $relatorio->getId() . '</td>';
                 echo '<td>' . $relatorio->getPessoa()->getNome() . '</td>';
                 echo '<td>' . $sexo . '</td>';
-                echo '<td>' . $relatorio->getPessoa()->getResponsabilidadesAtivas()[0]->getGrupo()->getEntidadeAtiva()->infoEntidade() . $nomeEntidadeAcimaArrumado . '</td>';
+                echo '<td>' . $grupoPessoa->getGrupoIgreja()->getEntidadeAtiva()->getNome() . '</td>';
+                echo '<td>' . $grupoPessoa->getEntidadeAtiva()->infoEntidade() . $nomeEntidadeAcimaArrumado . '</td>';
                 echo '<td><input type="checkbox" id="lider' . $relatorio->getId() . '" name="lider' . $relatorio->getId() . '" value="' . $relatorio->getId() . '"/></td>';
                 echo '</tr>';
             }
