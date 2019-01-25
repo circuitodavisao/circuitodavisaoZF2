@@ -71,7 +71,8 @@ class ListagemFichasParaRevisao extends AbstractHelper {
             $html .= '</th>';
 
             $html .= '<th class="text-center">Sexo</th>';
-            $html .= '<th class="text-center">Equipe</th>';
+            $html .= '<th class="text-center">Igreja</th>';
+            $html .= '<th class="text-center">Time</th>';
             $html .= '<th class="text-center">Ativo no Revisão</th>';
             $html .= '<td></td>';
             $html .= '</tr>';
@@ -95,6 +96,7 @@ class ListagemFichasParaRevisao extends AbstractHelper {
                 $html .= '<td class="text-center">' . $pessoa->getId() . '</td>';
                 $html .= '<td class="text-center"><span class="visible-lg visible-md">' . $pessoa->getNome() . '</span><span class="visible-sm visible-xs">' . $pessoa->getNomePrimeiroUltimo() . '</span></td>';
                 $html .= '<td class="text-center">' . $sexo . '</td>';
+                $html .= '<td class="text-center">' . $pessoa->getGrupoPessoa()->getGrupo()->getGrupoIgreja()->getEntidadeAtiva()->getNome() . '</td>';
                 $html .= '<td class="text-center">' . $pessoa->getEntidade()->infoEntidade() . $nomeEntidadeAcimaArrumado . '</td>';
                 $html .= '<td class="text-center">';
                 if ($pessoa->getNoRevisao()) {
