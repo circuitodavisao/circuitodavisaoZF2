@@ -53,13 +53,14 @@ if (count($homens) > 0) {
     $html .= $this->translate(Constantes::$TRADUCAO_NOME);
     $html .= '</th>';
     $html .= '<th>Sexo</th>';
+    $html .= '<th>Igreja</th>';
     $html .= '<th>Time</th>';
     $html .= '<th>Idade</th>';
     $html .= '</tr>';
     $html .= '</thead>';
     $html .= '<tbody>';
     foreach ($homens as $homem) {
-      $nomeAcima = '';
+      $nomeEntidadeAcima = '';
       if($this->multiplos){
         $nomeEntidadeAcima = $homem->getGrupoPessoaAtivo()->getGrupo()->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai()->getEntidadeAtiva()->getNome();
         if($nomeEntidadeAcima){
@@ -77,6 +78,7 @@ if (count($homens) > 0) {
         $html .= '<td>' . $homem->getId() . '</td>';
         $html .= '<td><span class="visible-lg visible-md">' . $homem->getNome() . '</span><span class="visible-sm visible-xs">' . $homem->getNomePrimeiroUltimo() . '</span></td>';
         $html .= '<td>' . $homem->getSexo() . '</td>';
+        $html .= '<td>' . $homem->getGrupoPessoaAtivo()->getGrupo()->getGrupoIgreja()->getEntidadeAtiva()->getNome() . '</td>';
         $html .= '<td>' . $homem->getGrupoPessoaAtivo()->getGrupo()->getEntidadeAtiva()->infoEntidade() . $nomeEntidadeAcimaArrumado . '</td>';
         $html .= '<td>' . $homem->getIdade() . '</td>';
         $html .= '</tr>';
@@ -100,13 +102,14 @@ if (count($mulheres) > 0) {
     $html .= $this->translate(Constantes::$TRADUCAO_NOME);
     $html .= '</th>';
     $html .= '<th>Sexo</th>';
+    $html .= '<th>Igreja</th>';
     $html .= '<th>Time</th>';
     $html .= '<th>Idade</th>';
     $html .= '</tr>';
     $html .= '</thead>';
     $html .= '<tbody>';
     foreach ($mulheres as $mulher) {
-      $nomeAcima = '';
+      $nomeEntidadeAcima = '';
       if($this->multiplos){
         $nomeEntidadeAcima = $mulher->getGrupoPessoaAtivo()->getGrupo()->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai()->getEntidadeAtiva()->getNome();
         if($nomeEntidadeAcima){
@@ -124,6 +127,7 @@ if (count($mulheres) > 0) {
         $html .= '<td>' . $mulher->getId() . '</td>';
         $html .= '<td><span class="visible-lg visible-md">' . $mulher->getNome() . '</span><span class="visible-sm visible-xs">' . $mulher->getNomePrimeiroUltimo() . '</span></td>';
         $html .= '<td>' . $mulher->getSexo() . '</td>';
+        $html .= '<td>' . $mulher->getGrupoPessoaAtivo()->getGrupo()->getGrupoIgreja()->getEntidadeAtiva()->getNome() . '</td>';
         $html .= '<td>' . $mulher->getGrupoPessoaAtivo()->getGrupo()->getEntidadeAtiva()->infoEntidade() . $nomeEntidadeAcimaArrumado . '</td>';
         $html .= '<td>' . $mulher->getIdade() . '</td>';
         $html .= '</tr>';

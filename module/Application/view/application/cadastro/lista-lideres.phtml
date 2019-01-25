@@ -65,6 +65,7 @@ if (count($pessoas) == 0) {
     $html .= $this->translate(Constantes::$TRADUCAO_NOME);
     $html .= '</th>';
     $html .= '<th>Sexo</th>';
+    $html .= '<th>Igreja</th>';
     $html .= '<th>Time</th>';
     $html .= '</tr>';
     $html .= '</thead>';
@@ -88,6 +89,7 @@ if (count($pessoas) == 0) {
         $html .= '<td>' . $pessoa->getId() . '</td>';
         $html .= '<td><span class="visible-lg visible-md">' . $pessoa->getNome() . '</span><span class="visible-sm visible-xs">' . $pessoa->getNomePrimeiroUltimo() . '</span></td>';
         $html .= '<td>' . $sexo . '</td>';
+        $html .= '<td>' . $pessoa->getResponsabilidadesAtivas()[0]->getGrupo()->getGrupoIgreja()->getEntidadeAtiva()->getNome() . '</td>';
         $html .= '<td>' . $pessoa->getResponsabilidadesAtivas()[0]->getGrupo()->getEntidadeAtiva()->infoEntidade() . $nomeEntidadeAcimaArrumado .  '</td>';
         $html .= '</tr>';
     }
