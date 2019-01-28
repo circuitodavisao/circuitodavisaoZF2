@@ -933,7 +933,6 @@ class CursoController extends CircuitoController {
 		$sessao = new Container(Constantes::$NOME_APLICACAO);
 		$entidade = CircuitoController::getEntidadeLogada($this->getRepositorio(), $sessao);
 		$grupo = $entidade->getGrupo();
-		$turmas = $grupo->getGrupoIgreja()->getTurma();
 		$grupoPaiFilhoFilhos = $grupo->getGrupoIgreja()->getGrupoPaiFilhoFilhosAtivos(0);
 		$situacoes = $this->getRepositorio()->getSituacaoORM()->buscarTodosRegistrosEntidade();
 		$pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($sessao->idPessoa);
@@ -941,9 +940,9 @@ class CursoController extends CircuitoController {
 		$request = $this->getRequest();
 		$filtrado = false;
 		$postado = array();
-		$subs = null;
 		$filhos = array();
 
+		$entidadeParaUsar = $entidade;
 		if($request->isPost()){
 			$filtrado = true;
 			$post = $request->getPost();
@@ -951,8 +950,12 @@ class CursoController extends CircuitoController {
 			$postado['idEquipe'] = $post['idEquipe'];
 			$postado['idSituacao'] = $post['idSituacao'];
 			$postado['mostrarAulas'] = $post['mostrarAulas'];
+			$postado['mostrarFinanceiro'] = $post['mostrarFinanceiro'];
 			$postado['idSub'] = $post['idSub'];
 
+			if($postado['idEquipe'] == 0){
+				$entidadeParaUsar = $grupo->getGrupoIgreja()->getEntidadeAtiva();
+			}
 			if($postado['idEquipe'] != 0){
 				$grupoEquipe = $this->getRepositorio()->getGrupoORM()->encontrarPorId($postado['idEquipe']);
 				$grupoPaiFilhoFilhosEquipe = $grupoEquipe->getGrupoPaiFilhoFilhosAtivos(0);
@@ -964,7 +967,18 @@ class CursoController extends CircuitoController {
 					$dados['informacao'] = $grupoFilho->getEntidadeAtiva()->infoEntidade() . ' - ' . $grupoFilho->getNomeLideresAtivos();
 					$filhos[] =  $dados;
 				}
+				$entidadeParaUsar = $this->getRepositorio()->getGrupoORM()->encontrarPorId($postado['idEquipe'])->getEntidadeAtiva();
 			}
+			if($postado['idSub'] != 0){
+				$entidadeParaUsar = $this->getRepositorio()->getGrupoORM()->encontrarPorId($postado['idSub'])->getEntidadeAtiva();
+			}
+		}
+		$resultado = RelatorioController::relatorioAlunosETurmas($this->getRepositorio(), $entidadeParaUsar);
+		$turmas = $resultado[1];
+
+		if(!$pessoa->getPessoaCursoAcessoAtivo()){
+			$postado['mostrarAulas'] = 1;
+			$postado['mostrarFinanceiro'] = 0;
 		}
 
 		$view = new ViewModel(array(
@@ -977,6 +991,7 @@ class CursoController extends CircuitoController {
 			'situacoes' => $situacoes,
 			'subs' => $filhos,
 			'repositorio' => $this->getRepositorio(),
+			'relatorio' => $resultado[2],
 		));
 		return $view;
 	}
@@ -1858,14 +1873,16 @@ class CursoController extends CircuitoController {
 		if($possoAcessarIsso){
 			$idTurmaPessoa = $this->getEvent()->getRouteMatch()->getParam(Constantes::$ID, 0);
 			$turmaPessoa = $this->getRepositorio()->getTurmaPessoaORM()->encontrarPorId($idTurmaPessoa);
-
+			$fatoCurso = $this->getRepositorio()->getFatoCursoORM()->encontrarFatoCursoPorTurmaPessoa($idTurmaPessoa)[0];
+			$situacao = $this->getRepositorio()->getSituacaoORM()->encontrarPorId($fatoCurso->getSituacao_id());
 			$situacoes = $this->getRepositorio()->getSituacaoORM()->buscarTodosRegistrosEntidade();
-
 			$view = new ViewModel(array(
 				'turmaPessoa' => $turmaPessoa,
 				'situacoes' => $situacoes,
 				'pessoa' => $pessoa,
 				'entidade' => $entidade,
+				'fatoCurso' => $fatoCurso,
+				'situacao' => $situacao,
 			));
 			return $view;
 		}else{
@@ -1899,6 +1916,24 @@ class CursoController extends CircuitoController {
 					$turmaPessoaSituacaoNova->setTurma_pessoa($turmaPessoa);
 					$turmaPessoaSituacaoNova->setSituacao($this->getRepositorio()->getSituacaoORM()->encontrarPorId($idSituacao));
 					$this->getRepositorio()->getTurmaPessoaSituacaoORM()->persistir($turmaPessoaSituacaoNova);
+
+					if($fatosCurso = $this->getRepositorio()->getFatoCursoORM()->encontrarFatoCursoPorTurmaPessoa($turmaPessoa->getId())){
+						foreach($fatosCurso as $fatoCurso){
+							if($fatoCurso->verificarSeEstaAtivo()){
+								$fatoCurso->setDataEHoraDeInativacao();
+								$this->getRepositorio()->getFatoCursoORM()->persistir($fatoCurso, $trocarDataDeCriacao = false);
+							}
+						}
+					}
+
+					$numeroIdentificador =
+						$this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $turmaPessoa->getPessoa()->getGrupoPessoaAtivo()->getGrupo());
+					$fatoCurso = new FatoCurso();
+					$fatoCurso->setNumero_identificador($numeroIdentificador);
+					$fatoCurso->setTurma_pessoa_id($turmaPessoa->getId());
+					$fatoCurso->setTurma_id($turmaPessoa->getTurma()->getId());
+					$fatoCurso->setSituacao_id($idSituacao);
+					$this->getRepositorio()->getFatoCursoORM()->persistir($fatoCurso);
 				}
 
 				$this->getRepositorio()->fecharTransacao();
