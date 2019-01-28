@@ -456,6 +456,12 @@ class Grupo extends CircuitoEntity {
                 $p = $gr->getPessoa();
                 $pessoas[] = $p;
             }
+
+			if(count($pessoas) === 2 && $pessoas[0]->getSexo() === 'F'){
+				$auxiliar = $pessoas[0];
+				$pessoas[0] = $pessoas[1];
+				$pessoas[1] = $auxiliar;
+			}
         }
         return $pessoas;
     }
