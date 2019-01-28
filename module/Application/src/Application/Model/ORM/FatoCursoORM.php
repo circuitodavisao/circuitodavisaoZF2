@@ -34,12 +34,14 @@ class FatoCursoORM extends CircuitoORM {
 	public function encontrarFatoCursoPorTurmaPessoa($idTurmaPessoa) {
 		$resposta = null;
 		try {
-			$entidade = $this->getEntityManager()
-				->getRepository($this->getEntity())
-				->findBy(array('turma_pessoa_id' => $idTurmaPessoa));
-			if ($entidade) {
-				$resposta = $entidade;
-			}
+			$dql = "SELECT fc "
+				. "FROM  " . Constantes::$ENTITY_FATO_CURSO . " fc "
+				. "WHERE "
+				. " fc.turma_pessoa_id = ?1 "
+				. "AND fc.data_inativacao is null ";
+				$resposta = $this->getEntityManager()->createQuery($dql)
+				->setParameter(1, $idTurmaPessoa)
+				->getResult();
 			return $resposta;
 		} catch (Exception $exc) {
 			echo $exc->getTraceAsString();
