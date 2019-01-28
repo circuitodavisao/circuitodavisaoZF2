@@ -500,7 +500,9 @@ class Menu extends AbstractHelper {
 					$arrayOQueMostrarDosCursos['gerarReposicoes'] = true;
 					$arrayOQueMostrarDosCursos['gerarFaltas'] = true;
 					$arrayOQueMostrarDosCursos['lancarPresenca'] = true;
+					$arrayOQueMostrarDosCursos['consultarMatricula'] = true;
 					$arrayOQueMostrarDosCursos['listagem'] = true;
+					$arrayOQueMostrarDosCursos['financeiroPorData'] = true;
 				}
 			}
 			if ($arrayOQueMostrarDosCursos['listagem']) {
