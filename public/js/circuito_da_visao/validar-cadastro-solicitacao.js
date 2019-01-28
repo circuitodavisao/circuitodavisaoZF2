@@ -387,12 +387,12 @@ function selecionarObjeto(id, informacao) {
 									objeto.html('Líder que terá a célula removida');
 									console.log('Quantas celulas: ', data.celulas)
 									if(data.celulas['1']){
-										if(data.celulas['1']){
-											$('#idGrupoEvento').append('<option value="'+data.celulas['1']['idGrupoEvento']+'">'+data.celulas['1']['nomeHospedeiro']+'</option>')
-										}
-										if(data.celulas['2']){
-											$('#idGrupoEvento').append('<option value="'+data.celulas['2']['idGrupoEvento']+'">'+data.celulas['2']['nomeHospedeiro']+'</option>')
-										}
+										for(let indice = 1 ; indice <= 6 ; indice++){
+											let indiceString = indice + '';
+											if(data.celulas[indiceString]){
+												$('#idGrupoEvento').append('<option value="'+data.celulas[indiceString]['idGrupoEvento']+'">'+data.celulas[indiceString]['nomeHospedeiro']+'</option>')
+											}
+										}										
 										$('#blocoObjeto3').removeClass(hidden)
 									}
 								}
