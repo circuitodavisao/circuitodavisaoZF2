@@ -1874,6 +1874,12 @@ class CursoController extends CircuitoController {
 			$idTurmaPessoa = $this->getEvent()->getRouteMatch()->getParam(Constantes::$ID, 0);
 			$turmaPessoa = $this->getRepositorio()->getTurmaPessoaORM()->encontrarPorId($idTurmaPessoa);
 			$fatoCurso = $this->getRepositorio()->getFatoCursoORM()->encontrarFatoCursoPorTurmaPessoa($idTurmaPessoa)[0];
+			$idGrupo = substr($fatoCurso->getNumero_identificador(), (count($fatoCurso->getNumero_identificador())-8));
+			$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupo);
+			$nomeEquipe = $grupo->getEntidadeAtiva()->infoEntidade();
+			if($nomeEquipe == ''){
+				$nomeEquipe = $grupo->getGrupoEquipe()->getEntidadeAtiva()->getNome();
+			}
 			$situacao = $this->getRepositorio()->getSituacaoORM()->encontrarPorId($fatoCurso->getSituacao_id());
 			$situacoes = $this->getRepositorio()->getSituacaoORM()->buscarTodosRegistrosEntidade();
 			$view = new ViewModel(array(
@@ -1883,6 +1889,7 @@ class CursoController extends CircuitoController {
 				'entidade' => $entidade,
 				'fatoCurso' => $fatoCurso,
 				'situacao' => $situacao,
+				'nomeEquipe' => $nomeEquipe,
 			));
 			return $view;
 		}else{
