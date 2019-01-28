@@ -827,6 +827,38 @@ class CursoController extends CircuitoController {
 	}
 
 	public function turmasEncerradasAction() {
+		set_time_limit(0);
+		ini_set('memory_limit', '-1');
+		ini_set('max_execution_time', '60');
+		$sessao = new Container(Constantes::$NOME_APLICACAO);
+		$entidade = CircuitoController::getEntidadeLogada($this->getRepositorio(), $sessao);
+		$situacoes = $this->getRepositorio()->getSituacaoORM()->buscarTodosRegistrosEntidade();
+		$verificarTurmasAtivas = false;
+
+		$resultado = RelatorioController::relatorioAlunosETurmas($this->getRepositorio(), $entidade, $verificarTurmasAtivas);
+		$turmas = $resultado[1];
+
+		$request = $this->getRequest();
+		$filtrado = false;
+		$postado = array();
+
+		$entidadeParaUsar = $entidade;
+		if($request->isPost()){
+			$filtrado = true;
+			$post = $request->getPost();
+			$postado['idTurma'] = $post['idTurma'];
+		}
+
+		$view = new ViewModel(array(
+			'filtrado' => $filtrado,
+			'postado' => $postado,
+			'entidade' => $entidade,
+			'turmas' => $turmas,
+			'situacoes' => $situacoes,
+			'repositorio' => $this->getRepositorio(),
+			'relatorio' => $resultado[2],
+		));
+		return $view;
 	}
 
 	public function chamadaAction() {
