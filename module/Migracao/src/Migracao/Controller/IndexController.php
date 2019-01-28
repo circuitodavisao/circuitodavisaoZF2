@@ -2618,7 +2618,7 @@ class IndexController extends CircuitoController {
 	function ajustarAction(){
 		set_time_limit(0);
 		ini_set('memory_limit', '-1');
-		ini_set('max_execution_time', '60');
+		ini_set('max_execution_time', '120');
 
 		list($usec, $sec) = explode(' ', microtime());
 		$script_start = (float) $sec + (float) $usec;
@@ -2647,6 +2647,9 @@ class IndexController extends CircuitoController {
 						$fatoCurso->setTurma_pessoa_id($turmaPessoa->getId());
 						$fatoCurso->setTurma_id($turmaPessoa->getTurma()->getId());
 						$fatoCurso->setSituacao_id($turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getId());
+						if(!$turmaPessoa->verificarSeEstaAtivo()){
+							$fatoCurso->setDataEHoraDeInativacao();
+						}
 						$this->getRepositorio()->getFatoCursoORM()->persistir($fatoCurso);
 					}
 				}
