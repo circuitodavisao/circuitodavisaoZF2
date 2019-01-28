@@ -653,6 +653,7 @@ class IndexController extends CircuitoController {
 			}
 		}
 
+		$numeroIdentificadorNovo = $numeroIdentificadorLider . str_pad($grupoNovo->getId(), 8, 0, STR_PAD_LEFT);
 		if($linhaDeLancamento = $grupoQueSeraSemeado->getGrupoPessoasNoPeriodo($periodo = 0, $this->getRepositorio())){
 			foreach($linhaDeLancamento as $grupoPessoa){
 				$grupoPessoaNovo = new GrupoPessoa();
@@ -660,10 +661,26 @@ class IndexController extends CircuitoController {
 				$grupoPessoaNovo->setPessoa($grupoPessoa->getPessoa());
 				$grupoPessoaNovo->setGrupoPessoaTipo($grupoPessoa->getGrupoPessoaTipo());
 				$this->getRepositorio()->getGrupoPessoaORM()->persistir($grupoPessoaNovo);
+
+				/* Se eh aluno */
+				if($turmaPessoa = $this->getRepositorio()->getTurmaPessoaORM()->encontrarPorIdPessoa($grupoPessoa->getPessoa()->getId())){
+					if($fatosCurso = $this->getRepositorio()->getFatoCursoORM()->encontrarFatoCursoPorTurmaPessoa($turmaPessoa->getId())){
+						foreach($fatosCurso as $fatoCurso){
+							if($fatoCurso->verificarSeEstaAtivo()){
+								$fatoCurso->setDataEHoraDeInativacao();
+								$this->getRepositorio()->getFatoCursoORM()->persistir($fatoCurso, $trocarDataDeCriacao = false);
+							}
+						}
+					}
+					$fatoCurso = new FatoCurso();
+					$fatoCurso->setNumero_identificador($numeroIdentificadorNovo);
+					$fatoCurso->setTurma_pessoa_id($turmaPessoa->getId());
+					$fatoCurso->setTurma_id($turmaPessoa->getTurma()->getId());
+					$fatoCurso->setSituacao_id($turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getId());
+					$this->getRepositorio()->getFatoCursoORM()->persistir($fatoCurso);
+				}
 			}
 		}
-
-		$numeroIdentificadorNovo = $numeroIdentificadorLider . str_pad($grupoNovo->getId(), 8, 0, STR_PAD_LEFT);
 		if($temAlgumaCelula){
 			$fatoLiderNovo = new FatoLider();
 			$fatoLiderNovo->setLideres($totalDeLideres);
@@ -2601,29 +2618,39 @@ class IndexController extends CircuitoController {
 	function ajustarAction(){
 		set_time_limit(0);
 		ini_set('memory_limit', '-1');
-		ini_set('max_execution_time', '60');
+		ini_set('max_execution_time', '120');
 
 		list($usec, $sec) = explode(' ', microtime());
 		$script_start = (float) $sec + (float) $usec;
 		$html = '';
 
-		$somenteAtivos = true;
-		$grupos = $this->getRepositorio()->getGrupoORM()->pegarTodasIgrejas();
+		$turmaPessoas = $this->getRepositorio()->getTurmaPessoaORM()->buscarTodosRegistrosEntidade();
 		$this->getRepositorio()->iniciarTransacao();
 		$html .= "<br />###### iniciarTransacao ";
 		try {
-			if ($grupos) {
-				$this->abreConexao();
-				$html .= "<br /><br /><br />Tem Grupos ativos!!!";
-				foreach ($grupos as $grupo) {
-					$html .= "<br /> Grupo: {$grupo->getId()}";
-					$html .= "<br /> Entidade: {$grupo->getEntidadeAtiva()->getNome()}";
+			if ($turmaPessoas) {
+				foreach($turmaPessoas as $turmaPessoa){
+					if($grupo = $turmaPessoa->getPessoa()->getGrupoPessoaAtivo()->getGrupo()){
+						if($fatosCurso = $this->getRepositorio()->getFatoCursoORM()->encontrarFatoCursoPorTurmaPessoa($turmaPessoa->getId())){
+							foreach($fatosCurso as $fatoCurso){
+								if($fatoCurso->verificarSeEstaAtivo()){
+									$fatoCurso->setDataEHoraDeInativacao();
+									$this->getRepositorio()->getFatoCursoORM()->persistir($fatoCurso, $trocarDataDeCriacao = false);
+								}
+							}
+						}
 
-					$sql = "SELECT * FROM ursula_igreja_ursula WHERE nome = '{$grupo->getEntidadeAtiva()->getNome()}'";
-					$queryIgrejas = mysqli_query($this->getConexao(), $sql);
-					while ($row = mysqli_fetch_array($queryIgrejas)) {
-						//$html = $this->alunos($row['id'], $grupo->getId(), $html);
-						$html = $this->alunosHistorico($row['id'], $grupo->getId(), $html);
+						$numeroIdentificador =
+							$this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupo);
+						$fatoCurso = new FatoCurso();
+						$fatoCurso->setNumero_identificador($numeroIdentificador);
+						$fatoCurso->setTurma_pessoa_id($turmaPessoa->getId());
+						$fatoCurso->setTurma_id($turmaPessoa->getTurma()->getId());
+						$fatoCurso->setSituacao_id($turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getId());
+						if(!$turmaPessoa->verificarSeEstaAtivo()){
+							$fatoCurso->setDataEHoraDeInativacao();
+						}
+						$this->getRepositorio()->getFatoCursoORM()->persistir($fatoCurso);
 					}
 				}
 				$this->getRepositorio()->fecharTransacao();

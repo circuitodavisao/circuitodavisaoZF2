@@ -24,6 +24,17 @@ class TurmaPessoaORM extends CircuitoORM {
         }
     }
 
+    public function encontrarPorIdPessoa($idPessoa) {
+        try {
+            $pessoa = $this->getEntityManager()
+                    ->getRepository($this->getEntity())
+                    ->findOneBy(array('pessoa_id' => $idPessoa));
+            return $pessoa;
+        } catch (Exception $exc) {
+            echo $exc->getTraceAsString();
+        }
+    }
+
     public function encontrarPorTurma($idTurma) {
         try {
             $dql = "SELECT tp "
