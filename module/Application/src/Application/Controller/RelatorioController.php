@@ -431,15 +431,25 @@ class RelatorioController extends CircuitoController {
 		));
 	}
 
-	static public function relatorioAlunosETurmas($repositorio, $entidade){
+	static public function relatorioAlunosETurmas($repositorio, $entidade, $turmasAtivas = true){
 		$relatorioAjustado = array();
 		$numeroIdentificador = $repositorio->getFatoCicloORM()->montarNumeroIdentificador($repositorio, $entidade->getGrupo());
 		$relatorioInicial = $repositorio->getFatoCursoORM()->encontrarFatoCursoPorNumeroIdentificador($numeroIdentificador);
-
-		$turmas = $entidade->getGrupo()->getGrupoIgreja()->getTurma();
 		$turmasComAulaAberta = array();
+		if($turmasAtivas){
+				$turmas = $entidade->getGrupo()->getGrupoIgreja()->getTurma();
+		}
+
+		if(!$turmasAtivas){
+				$turmas = $entidade->getGrupo()->getGrupoIgreja()->getTurmasInativas();
+		}
+
 		foreach($turmas as $turma){
-			if($turma->getTurmaAulaAtiva()){
+			if($turmasAtivas && $turma->getTurmaAulaAtiva()){
+				$turmasComAulaAberta[] = $turma;
+			}
+
+			if(!$turmasAtivas && !$turma->verificarSeEstaAtivo()){
 				$turmasComAulaAberta[] = $turma;
 			}
 		}
@@ -634,7 +644,7 @@ class RelatorioController extends CircuitoController {
 				$qualRelatorioParaUsar = $tipoRelatorioSomado;
 			}
 
-			if($grupo->getEntidadeAtiva()->getEntidadeTipo()->getId() !== EntidadeTipo::regiao 
+			if($grupo->getEntidadeAtiva()->getEntidadeTipo()->getId() !== EntidadeTipo::regiao
 				&& $grupo->getEntidadeAtiva()->getEntidadeTipo()->getId() !== EntidadeTipo::coordenacao){
 
 					if($tipoRelatorio === self::relatorioParceiroDeDeus){
@@ -676,7 +686,7 @@ class RelatorioController extends CircuitoController {
 				$grupoFilho = $filho->getGrupoPaiFilhoFilho();
 
 
-					if($grupoFilho->getEntidadeAtiva()->getEntidadeTipo()->getId() !== EntidadeTipo::regiao 
+					if($grupoFilho->getEntidadeAtiva()->getEntidadeTipo()->getId() !== EntidadeTipo::regiao
 						&& $grupoFilho->getEntidadeAtiva()->getEntidadeTipo()->getId() !== EntidadeTipo::coordenacao ){
 
 							$dataInativacao = null;
@@ -982,9 +992,9 @@ class RelatorioController extends CircuitoController {
 		$relatorio[self::dadosPessoais]['lideresSigla'] = $grupo->getEntidadeAtiva()->getSigla();
 		$relatorio[self::dadosPessoais]['grupo'] = $grupo->getId();
 
-		if($grupo->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::regiao 
+		if($grupo->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::regiao
 			|| $grupo->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao ){
-				$relatorio[self::dadosPessoais]['mostrar'] = 'nao'; 
+				$relatorio[self::dadosPessoais]['mostrar'] = 'nao';
 			}
 
 		foreach ($todosFilhos as $filho) {
