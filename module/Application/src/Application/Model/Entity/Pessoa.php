@@ -651,24 +651,13 @@ class Pessoa extends CircuitoEntity implements InputFilterAwareInterface {
      * @return GrupoPessoa
      */
     function getGrupoPessoaAtivo() {
-        $grupoPessoaAtiva = null;
-		$ultimoGrupoPessoa = null;
+        $grupoPessoaAtiva = null;		
         foreach ($this->getGrupoPessoa() as $grupoPessoa) {
             if ($grupoPessoa->verificarSeEstaAtivo()) {
                 $grupoPessoaAtiva = $grupoPessoa;
                 break;
-            }
-			if($ultimoGrupoPessoa === null){
-				$ultimoGrupoPessoa = $grupoPessoa;
-			}else{
-				if($grupoPessoa->getId() > $ultimoGrupoPessoa->getId()){
-					$ultimoGrupoPessoa = $grupoPessoa;
-				}
-			}
-        }
-		if($grupoPessoaAtiva === null){
-			$grupoPessoaAtiva = $ultimoGrupoPessoa;
-		}
+            }			
+        }		
         return $grupoPessoaAtiva;
     }
 
