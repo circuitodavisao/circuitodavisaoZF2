@@ -2251,9 +2251,7 @@ class CadastroController extends CircuitoController {
 		$relatorioInicial = $this->getRepositorio()->getFatoCursoORM()->encontrarFatoCursoPorNumeroIdentificador($numeroIdentificador);
 		$alunos = array();
 		foreach($relatorioInicial as $relatorio){
-			if($relatorio->getSituacao_id() === Situacao::ATIVO || $relatorio->getSituacao_id() === Situacao::ESPECIAL){
-				$alunos[] = $this->getRepositorio()->getTurmaPessoaORM()->encontrarPorId($relatorio->getTurma_pessoa_id());
-			}
+			$alunos[] = $this->getRepositorio()->getTurmaPessoaORM()->encontrarPorId($relatorio->getTurma_pessoa_id());
 		}
 
 		$view = new ViewModel(array(
