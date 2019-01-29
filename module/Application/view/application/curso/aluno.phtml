@@ -116,7 +116,7 @@ if ($this->turmaPessoa->verificarSeEstaAtivo()) {
 	$html .= '<tr><td>Matricula</td><td>' . $this->turmaPessoa->getId(). '</td></tr>';
 	$html .= '<tr><td>Nome</td><td>' . $this->turmaPessoa->getPessoa()->getNome() . '</td></tr>';
 }
-$html .= '<tr><td>Equipe</td><td>' . CursoController::nomeEquipeTurmaPessoa($this->turmaPessoa) . '</td></tr>';
+$html .= '<tr><td>Equipe</td><td>' . $this->nomeEquipe . '</td></tr>';
 if ($this->turmaPessoa->verificarSeEstaAtivo()) {
 	$html .= '<tr><td>Curso</td><td>' . $this->turmaPessoa->getTurma()->getCurso()->getNome() . ' - ' . Funcoes::mesPorExtenso($this->turmaPessoa->getTurma()->getMes()) . '/' . $this->turmaPessoa->getTurma()->getAno() . '</td></tr>';
 
