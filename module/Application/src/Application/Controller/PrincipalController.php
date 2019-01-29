@@ -696,9 +696,6 @@ class PrincipalController extends CircuitoController {
 		try{
 			error_log('######## enviar email #########');
 			Funcoes::enviarEmail($ToEmail, $Subject, $Content, $remetente, $anexo);
-
-			error_log('######## enviar suporte #########');
-			Funcoes::enviarSuporte($Subject, $Content);
 		}catch(Exception $exc){
 			error_log($exc->getMessage());
 		}

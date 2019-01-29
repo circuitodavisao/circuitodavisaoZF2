@@ -5,7 +5,7 @@ namespace Application\Controller\Helper;
 use Application\Model\Entity\EventoTipo;
 use Application\Model\Entity\Hierarquia;
 use Exception;
-use PHPMailer;
+use PHPMailer\PHPMailer\PHPMailer;
 
 /**
  * Nome: Funcoes.php
@@ -81,7 +81,7 @@ class Funcoes {
 			$mail->isHTML(true);
 			$mail->Subject = utf8_decode($titulo);
 			$mail->Body = utf8_decode($mensagem);
-			//      $mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
+			$mail->SMTPDebug = 2;
 			error_log('antes de enviar');
 			if(!$mail->Send()){
 				$mensagemRetorno = 'Erro ao enviar formulário: '. $mail->ErrorInfo;
@@ -97,11 +97,12 @@ class Funcoes {
 
 	public static function enviarSuporte($subject, $message){
 		$to = 'support@circuitodavisao.zendesk.com';
+		$email = 'falecomleonardopereira@gmail.com';
 
 		$headers = "MIME-Version: 1.0" . "\r\n";
-		//$headers .= "Content-type: text/html; charset=iso-8859-1" . "\r\n";
-		$headers .= "From: $to" . "\r\n" .
-			"Reply-To: $to" . "\r\n" .
+		$headers .= "Content-type: text/html; charset=iso-8859-1" . "\r\n";
+		$headers .= "From: $email" . "\r\n" .
+			"Reply-To: $email" . "\r\n" .
 			"X-Mailer: PHP/" . phpversion();
 
 		error_log('antes enviar suporte');
