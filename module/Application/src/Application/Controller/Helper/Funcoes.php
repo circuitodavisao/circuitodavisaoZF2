@@ -71,11 +71,11 @@ class Funcoes {
 			$mail->Charset = 'utf8_decode()';
 			$mail->Host = 'smtp.gmail.com';
 			$mail->SMTPAuth = true;
-			$mail->Username = 'suporte@circuitodavisao.com.br';
-			$mail->Password = 'TF3rW<3=@';
+			$mail->Username = 'suporte@circuitodavisaonovo.com.br';
+			$mail->Password = '>%M5n=5y@';
 			$mail->SMTPSecure = 'tls';
 			$mail->Port = 587;
-			$mail->From = 'suporte@circuitodavisao.com.br';
+			$mail->From = 'suporte@circuitodavisaonovo.com.br';
 			$mail->FromName = utf8_decode('Circuito da Visão');
 			$mail->addAddress($email);
 			$mail->isHTML(true);
@@ -84,7 +84,7 @@ class Funcoes {
 			//      $mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
 			error_log('antes de enviar');
 			if(!$mail->Send()){
-				$mensagemRetorno = 'Erro ao enviar formulário: '. print($mail->ErrorInfo);
+				$mensagemRetorno = 'Erro ao enviar formulário: '. $mail->ErrorInfo;
 			}else{
 				$mensagemRetorno = 'Formulário enviado com sucesso!';
 			} 
@@ -92,6 +92,37 @@ class Funcoes {
 		} catch (Exception $exc) {
 			echo $mail->ErrorInfo;
 			echo $exc->getMessage();
+		}
+	}
+
+	public static function enviarSuporte($subject, $message){
+		$to = 'support@circuitodavisao.zendesk.com';
+
+		$headers = "MIME-Version: 1.0" . "\r\n";
+		//$headers .= "Content-type: text/html; charset=iso-8859-1" . "\r\n";
+		$headers .= "From: $to" . "\r\n" .
+			"Reply-To: $to" . "\r\n" .
+			"X-Mailer: PHP/" . phpversion();
+
+		error_log('antes enviar suporte');
+		if (mail($to, $subject, $message, $headers)) {
+			error_log('foi');
+		} else {
+			error_log('nao foi');
+		}
+
+		$to      = 'falecomleonardopereira@gmail.com';
+		$subject = 'the subject';
+		$message = 'hello';
+		$headers = 'From: webmaster@example.com' . "\r\n" .
+			    'Reply-To: webmaster@example.com' . "\r\n" .
+				    'X-Mailer: PHP/' . phpversion();
+
+		error_log('antes enviar suporte 2');
+		if (mail($to, $subject, $message, $headers)) {
+			error_log('foi 2');
+		} else {
+			error_log('nao foi 2');
 		}
 	}
 
