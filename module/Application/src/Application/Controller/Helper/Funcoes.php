@@ -5,7 +5,7 @@ namespace Application\Controller\Helper;
 use Application\Model\Entity\EventoTipo;
 use Application\Model\Entity\Hierarquia;
 use Exception;
-use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer;
 
 /**
  * Nome: Funcoes.php
@@ -81,7 +81,6 @@ class Funcoes {
 			$mail->isHTML(true);
 			$mail->Subject = utf8_decode($titulo);
 			$mail->Body = utf8_decode($mensagem);
-			$mail->SMTPDebug = 2;
 			error_log('antes de enviar');
 			if(!$mail->Send()){
 				$mensagemRetorno = 'Erro ao enviar formulário: '. $mail->ErrorInfo;
