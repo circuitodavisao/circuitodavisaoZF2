@@ -93,7 +93,7 @@ class PrincipalController extends CircuitoController {
 			|| $entidade->getEntidadeTipo()->getId() === EntidadeTipo::regiao){
 				$tudo = true;
 			}
-		$relatorio = RelatorioController::relatorioCompleto($this->getRepositorio(), $grupo, RelatorioController::relatorioMembresiaECelula, $mes, $ano, $tudo, $somado = true, 'atual');
+		$relatorio = RelatorioController::relatorioCompleto($this->getRepositorio(), $grupo, RelatorioController::relatorioMembresiaECelula, $mes, $ano, $tudo, $somado = true);
 
 		if($entidade->getEntidadeTipo()->getId() !== EntidadeTipo::regiao){
 			$relatorioParceiro = RelatorioController::relatorioCompleto($this->getRepositorio(), $grupo, RelatorioController::relatorioParceiroDeDeus, $mes, $ano, $tudo, $somado = true);
