@@ -161,8 +161,8 @@ class PrincipalController extends CircuitoController {
 		$dados = array(
 			'relatorio' => $relatorio,
 			'relatorioParceiro' => $relatorioParceiro,
-			'periodoInicial' => $periodoAtual,
-			'periodoFinal' => $periodoAtual,
+			'periodoInicial' => $arrayPeriodoDoMes[0],
+			'periodoFinal' => $arrayPeriodoDoMes[1],
 			'mostrarPrincipal' => $mostrarPrincipal,
 			'grupo' => $grupo,
 			'grupoLogado' => $grupoLogado,
