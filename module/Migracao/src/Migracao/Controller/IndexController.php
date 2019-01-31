@@ -705,8 +705,8 @@ class IndexController extends CircuitoController {
 		$grupoEventoCelulasMulher = $grupo2->getGrupoEventoPorTipoEAtivo(EventoTipo::tipoCelula);
 		$discipulosHomem = $grupo1->getGrupoPaiFilhoFilhosAtivos(1);
 		$discipulosMulher = $grupo2->getGrupoPaiFilhoFilhosAtivos(1);
-		$linhaDeLancamentoHomem = $grupo1->getGrupoPessoasNoPeriodo($periodoAnterior);
-		$linhaDeLancamentoMulher = $grupo2->getGrupoPessoasNoPeriodo($periodoAnterior);
+		$linhaDeLancamentoHomem = $grupo1->getGrupoPessoasNoPeriodo($periodoAnterior, $this->getRepositorio());
+		$linhaDeLancamentoMulher = $grupo2->getGrupoPessoasNoPeriodo($periodoAnterior, $this->getRepositorio());
 
 		$grupoPaiFilhoPai = $grupo1->getGrupoPaiFilhoPaiAtivo();
 		$grupoPai = $grupoPaiFilhoPai->getGrupoPaiFilhoPai();
