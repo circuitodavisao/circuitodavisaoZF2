@@ -66,7 +66,7 @@ class PrincipalController extends CircuitoController {
 		$grupo = $entidade->getGrupo();
 		$grupoLogado = $grupo;
 		$pessoaLogada = $pessoa;
-		$periodoAtual = 0;
+		$periodoAtual = -1;
 
 		if (!$entidade->verificarSeEstaAtivo()) {
 			$mostrarPrincipal = false;
