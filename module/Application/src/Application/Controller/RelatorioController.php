@@ -466,7 +466,12 @@ class RelatorioController extends CircuitoController {
 					}
 					if($entidade->getEntidadeTipo()->getId() === EntidadeTipo::equipe
 						|| $entidade->getEntidadeTipo()->getId() === EntidadeTipo::subEquipe){
-						$relatorioAjustado[$grupo->getGrupoSubEquipe()->getEntidadeAtiva()->infoEntidade()][$turma->getId()][$situacao->getNome()]++;
+						if(count($grupo->getResponsabilidadesAtivas()) > 0){
+							$relatorioAjustado[$grupo->getEntidadeAtiva()->infoEntidade()][$turma->getId()][$situacao->getNome()]++;	
+						}
+						if(count($grupo->getResponsabilidadesAtivas()) == 0){
+							$relatorioAjustado[$grupo->getGrupoSubEquipe()->getEntidadeAtiva()->infoEntidade()][$turma->getId()][$situacao->getNome()]++;
+						}											
 					}
 					$relatorioAjustado[$turma->getId()][$situacao->getId()]++;
 					$relatorioAjustado['total'][$situacao->getId()]++;

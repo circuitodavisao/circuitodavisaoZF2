@@ -66,7 +66,7 @@ class PrincipalController extends CircuitoController {
 		$grupo = $entidade->getGrupo();
 		$grupoLogado = $grupo;
 		$pessoaLogada = $pessoa;
-		$periodoAtual = 0;
+		$periodoAtual = -1;
 
 		if (!$entidade->verificarSeEstaAtivo()) {
 			$mostrarPrincipal = false;
@@ -93,7 +93,7 @@ class PrincipalController extends CircuitoController {
 			|| $entidade->getEntidadeTipo()->getId() === EntidadeTipo::regiao){
 				$tudo = true;
 			}
-		$relatorio = RelatorioController::relatorioCompleto($this->getRepositorio(), $grupo, RelatorioController::relatorioMembresiaECelula, $mes, $ano, $tudo, $somado = true, 'atual');
+		$relatorio = RelatorioController::relatorioCompleto($this->getRepositorio(), $grupo, RelatorioController::relatorioMembresiaECelula, $mes, $ano, $tudo, $somado = true);
 
 		if($entidade->getEntidadeTipo()->getId() !== EntidadeTipo::regiao){
 			$relatorioParceiro = RelatorioController::relatorioCompleto($this->getRepositorio(), $grupo, RelatorioController::relatorioParceiroDeDeus, $mes, $ano, $tudo, $somado = true);
@@ -161,8 +161,8 @@ class PrincipalController extends CircuitoController {
 		$dados = array(
 			'relatorio' => $relatorio,
 			'relatorioParceiro' => $relatorioParceiro,
-			'periodoInicial' => $periodoAtual,
-			'periodoFinal' => $periodoAtual,
+			'periodoInicial' => $arrayPeriodoDoMes[0],
+			'periodoFinal' => $arrayPeriodoDoMes[1],
 			'mostrarPrincipal' => $mostrarPrincipal,
 			'grupo' => $grupo,
 			'grupoLogado' => $grupoLogado,
