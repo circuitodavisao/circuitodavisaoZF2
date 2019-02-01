@@ -152,7 +152,7 @@ class PrincipalController extends CircuitoController {
 
 			}else{
 				$relatorioCursos = RelatorioController::relatorioAlunosETurmas($this->getRepositorio(), $entidade)[0];
-
+				$turmas = RelatorioController::relatorioAlunosETurmas($this->getRepositorio(), $entidade)[1];
 				/* total de discipulados */
 				$numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupo);
 				$totalDeDiscipulados = $this->getRepositorio()->getFatoCelulaDiscipuladoORM()->totalAtivosPorNumeroIdentificador($numeroIdentificador);
@@ -161,8 +161,8 @@ class PrincipalController extends CircuitoController {
 		$dados = array(
 			'relatorio' => $relatorio,
 			'relatorioParceiro' => $relatorioParceiro,
-			'periodoInicial' => $periodoAtual,
-			'periodoFinal' => $periodoAtual,
+			'periodoInicial' => $arrayPeriodoDoMes[0],
+			'periodoFinal' => $arrayPeriodoDoMes[1],
 			'mostrarPrincipal' => $mostrarPrincipal,
 			'grupo' => $grupo,
 			'grupoLogado' => $grupoLogado,

@@ -43,40 +43,7 @@ class Menu extends AbstractHelper {
 		$html .= '<span id="toggle_sidemenu_l" class="ad ad-lines"></span>';
 		$html .= '</div>';
 
-		$htmlEspecifoUL .= '<li class="dropdown menu-merge">';
-		$htmlEspecifoUL .= '<div class="navbar-btn btn-group">';
-		$htmlEspecifoUL .= '<button data-toggle="dropdown" class="btn btn-sm dropdown-toggle">';
-		$htmlEspecifoUL .= '<span class="fa fa-bell-o fs14 va-m"></span>';
-		$htmlEspecifoUL .= '<span class="badge badge-danger">1</span>';
-		$htmlEspecifoUL .= '</button>';
-		$htmlEspecifoUL .= '<div class="dropdown-menu dropdown-persist w350 animated animated-shorter fadeIn" role="menu">';
-		$htmlEspecifoUL .= '<div class="panel mbn">';
-		$htmlEspecifoUL .= '<div class="panel-menu">';
-		$htmlEspecifoUL .= '<span class="panel-icon"><i class="fa fa-exclamation-circle"></i></span>';
-		$htmlEspecifoUL .= '<span class="panel-title fw600"> Notificações</span>';
-		$htmlEspecifoUL .= '</div>';
-		$htmlEspecifoUL .= '<div class="panel-body panel-scroller scroller-navbar scroller-overlay scroller-pn pn" style="height: auto;">';
-		$htmlEspecifoUL .= '<ol class="timeline-list">';
-		$htmlEspecifoUL .= '<li class="timeline-item">';
-		$htmlEspecifoUL .= '<div class="timeline-icon bg-dark light">';
-		$htmlEspecifoUL .= '<span>1</span>';
-		$htmlEspecifoUL .= '</div>';
-		$htmlEspecifoUL .= '<div class="timeline-desc">';
-		$htmlEspecifoUL .= '<a href="/principalNotasDeAtualizacoes"><b>Nova nota de atualização!</b> Clique aqui e confira!</a>';
-		$htmlEspecifoUL .= '</div>';
-		$htmlEspecifoUL .= '</li>';
-		$htmlEspecifoUL .= '</ol>';
-		$htmlEspecifoUL .= '</div>';
-		$htmlEspecifoUL .= '</div>';
-		$htmlEspecifoUL .= '</div>';
-	  $htmlEspecifoUL .= '</div>';
-		$htmlEspecifoUL .= '</li>';
-
-
-		$htmlEspecifoUL .= '<li class="menu-divider hidden-xs">';
-		$htmlEspecifoUL .=	'<i class="fa fa-circle"></i>';
-		$htmlEspecifoUL .=  '</li>';
-
+		
 		$htmlEspecifoUL .= '<li class="dropdown menu-merge">';
 		$htmlEspecifoUL .= '<a href="#" class="dropdown-toggle fw600 p15" data-toggle="dropdown">';
 		$htmlEspecifoUL .= '<img src="/img/fotos/'.$this->view->pessoa->getFoto().'" alt="avatar" class="mw30 br64">';
