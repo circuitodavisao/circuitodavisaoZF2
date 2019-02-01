@@ -1231,7 +1231,6 @@ class RelatorioController extends CircuitoController {
 			}
 		}
 
-
 		if($tipoRelatorio !== self::relatorioParceiroDeDeus){
 			$relatorio[$contadorFilhos]['mediaMembresiaCulto'] = $somaFinal['membresiaCulto'] / $diferencaDePeriodos;
 			$relatorio[$contadorFilhos]['mediaMembresiaArena'] = $somaFinal['membresiaArena'] / $diferencaDePeriodos;

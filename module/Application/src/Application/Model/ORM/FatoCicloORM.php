@@ -157,9 +157,9 @@ class FatoCicloORM extends CircuitoORM {
 			$dataDoPeriodo = $resultadoPeriodo[3] . '-' . $resultadoPeriodo[2] . '-' . $resultadoPeriodo[1];
 			$dataDoPeriodoFormatada = DateTime::createFromFormat('Y-m-d', $dataDoPeriodo);
 			if($estrategica === null){
-				$estrategica = 'S';
-			}else{
 				$estrategica = 'N';
+			}else{
+				$estrategica = 'S';
 			}
 			$result = $this->getEntityManager()->createQuery($dqlAjustadaTipoComparacao)
 				->setParameter(1, $numeroIdentificador)
