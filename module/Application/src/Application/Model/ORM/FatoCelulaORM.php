@@ -20,12 +20,15 @@ class FatoCelulaORM extends CircuitoORM {
      * @param FatoCiclo $fatoCiclo
      * @param integer $eventoCelulaId
      */
-    public function criarFatoCelula($fatoCiclo, $eventoCelulaId) {
+    public function criarFatoCelula($fatoCiclo, $eventoCelulaId, $estrategica === null) {
         $fatoCelula = new FatoCelula();
         try {
             $fatoCelula->setFatoCiclo($fatoCiclo);
             $fatoCelula->setRealizada(0);
             $fatoCelula->setEvento_celula_id($eventoCelulaId);
+			if($estrategica){
+				$fatoCelula->setEstrategica('S');
+			}
             $this->persistir($fatoCelula);
         } catch (Exception $exc) {
             echo $exc->getMessage();

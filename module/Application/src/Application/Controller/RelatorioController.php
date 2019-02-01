@@ -840,15 +840,15 @@ class RelatorioController extends CircuitoController {
 
 					if ($tipoRelatorio === RelatorioController::relatorioMembresia ||
 						$tipoRelatorio === RelatorioController::relatorioMembresiaECelula) {
-							if ($relatorioDiscipulos[$grupoFilho->getId()][$indiceDeArrays]['membresiaMeta'] > 0 && $relatorioDiscipulos[$grupoFilho->getId()][$indiceDeArrays]['membresiaMeta'] > 0) {
-								$relatorioDiscipulos[$grupoFilho->getId()][$indiceDeArrays]['membresiaPerformance'] = $relatorioDiscipulos[$grupoFilho->getId()][$indiceDeArrays]['membresia'] / $relatorioDiscipulos[$grupoFilho->getId()][$indiceDeArrays]['membresiaMeta'] * 100;
+							if ($relatorioDiscipulos[$grupoFilho->getId()][$indiceDeArrays]['membresiaMetaSomada'] > 0 ) {
+								$relatorioDiscipulos[$grupoFilho->getId()][$indiceDeArrays]['membresiaPerformance'] = $relatorioDiscipulos[$grupoFilho->getId()][$indiceDeArrays]['membresia'] / $relatorioDiscipulos[$grupoFilho->getId()][$indiceDeArrays]['membresiaMetaSomada'] * 100;
 							}
 						}
 					if ($tipoRelatorio === RelatorioController::relatorioCelulaQuantidade ||
 						$tipoRelatorio === RelatorioController::relatorioMembresiaECelula) {
 							$performanceCelula = 0;
-							if ($relatorioDiscipulos[$grupoFilho->getId()][$indiceDeArrays]['membresiaMeta'] > 0) {
-								$performanceCelula = $relatorioDiscipulos[$grupoFilho->getId()][$indiceDeArrays]['celula'] / $relatorioDiscipulos[$grupoFilho->getId()][$indiceDeArrays]['membresiaMeta'] * 100;
+							if ($relatorioDiscipulos[$grupoFilho->getId()][$indiceDeArrays]['membresiaMetaSomada'] > 0) {
+								$performanceCelula = $relatorioDiscipulos[$grupoFilho->getId()][$indiceDeArrays]['celula'] / $relatorioDiscipulos[$grupoFilho->getId()][$indiceDeArrays]['membresiaMetaSomada'] * 100;
 								$relatorioDiscipulos[$grupoFilho->getId()][$indiceDeArrays]['celulaPerformance'] = $performanceCelula;
 							}
 						}
@@ -1193,7 +1193,7 @@ class RelatorioController extends CircuitoController {
 		for ($indiceDeArrays = $arrayPeriodoDoMes[0]; $indiceDeArrays <= $arrayPeriodoDoMes[1]; $indiceDeArrays++) {
 			if ($tipoRelatorio === RelatorioController::relatorioMembresia ||
 				$tipoRelatorio === RelatorioController::relatorioMembresiaECelula) {
-					$relatorio[$contadorFilhos][$indiceDeArrays]['membresiaPerformance'] = $relatorio[$contadorFilhos][$indiceDeArrays]['membresia'] / $relatorio[$contadorFilhos][$indiceDeArrays]['membresiaMeta'] * 100;
+					$relatorio[$contadorFilhos][$indiceDeArrays]['membresiaPerformance'] = $relatorio[$contadorFilhos][$indiceDeArrays]['membresia'] / $relatorio[$contadorFilhos][$indiceDeArrays]['membresiaMetaSomada'] * 100;
 					$somaFinal['membresiaCulto'] += $relatorio[$contadorFilhos][$indiceDeArrays]['membresiaCulto'];
 					$somaFinal['membresiaArena'] += $relatorio[$contadorFilhos][$indiceDeArrays]['membresiaArena'];
 					$somaFinal['membresiaDomingo'] += $relatorio[$contadorFilhos][$indiceDeArrays]['membresiaDomingo'];
@@ -1397,7 +1397,12 @@ class RelatorioController extends CircuitoController {
 		unset($relatorio);
 		$relatorioCelula = $repositorioORM->getFatoCicloORM()->montarRelatorioCelulaPorNumeroIdentificador($numeroIdentificador, $periodoInicial, $tipoRelatorio);
 		$quantidadeCelulas = $relatorioCelula[0]['quantidade'];
+
+		$relatorioCelulaEstrategicas = $repositorioORM->getFatoCicloORM()->montarRelatorioCelulaPorNumeroIdentificador($numeroIdentificador, $periodoInicial, $tipoRelatorio, $estrategica = true);
+		$quantidadeCelulasEstrategicas = $relatorioCelulaEstrategicas[0]['quantidade'];
+
 		$relatorio['celulaQuantidade'] = $quantidadeCelulas;
+		$relatorio['celulaQuantidadeEstrategica'] = $quantidadeCelulasEstrategicas;
 		$fatoLider = $repositorioORM->getFatoLiderORM()->encontrarPorNumeroIdentificador($numeroIdentificador, $tipoRelatorio, $periodoInicial, $inativo);
 		$quantidadeLideres = $fatoLider[0]['lideres'];
 		$relatorio['quantidadeLideres'] = $quantidadeLideres;
@@ -1411,6 +1416,8 @@ class RelatorioController extends CircuitoController {
 			}
 		}
 		$relatorio['membresiaMeta'] = Constantes::$META_LIDER * $quantidadeCelulas;
+		$relatorio['membresiaMetaEstrategica'] = (Constantes::$META_LIDER/2) * $quantidadeCelulasEstrategicas;
+		$relatorio['membresiaMetaSomada'] = $relatorio['membresiaMeta'] + $relatorio['membresiaMetaEstrategica'];
 		/* Membresia */
 		if ($qualRelatorio === RelatorioController::relatorioMembresia || $qualRelatorio === RelatorioController::relatorioMembresiaECelula) {
 			$relatorio['membresiaCulto'] = $soma[RelatorioController::dimensaoTipoCulto];
@@ -1418,8 +1425,8 @@ class RelatorioController extends CircuitoController {
 			$relatorio['membresiaDomingo'] = $soma[RelatorioController::dimensaoTipoDomingo];
 			$relatorio['membresia'] = RelatorioController::calculaMembresia(
 				$soma[RelatorioController::dimensaoTipoCulto], $soma[RelatorioController::dimensaoTipoArena], $soma[RelatorioController::dimensaoTipoDomingo]);
-			if ($relatorio['membresiaMeta'] > 0 && $relatorio['membresia'] > 0) {
-				$relatorio['membresiaPerformance'] = $relatorio['membresia'] / $relatorio['membresiaMeta'] * 100;
+			if ($relatorio['membresiaMetaSomada'] > 0 && $relatorio['membresia'] > 0) {
+				$relatorio['membresiaPerformance'] = $relatorio['membresia'] / $relatorio['membresiaMetaSomada'] * 100;
 				$relatorio['membresiaPerformanceClass'] = RelatorioController::corDaLinhaPelaPerformance($relatorio['membresiaPerformance']);
 				$relatorio['membresiaPerformanceFrase'] = RelatorioController::corDaLinhaPelaPerformance($relatorio['membresiaPerformance'], 2);
 			}
@@ -1443,8 +1450,8 @@ class RelatorioController extends CircuitoController {
 					$performanceCelulasRealizadas = $quantidadeCelulasRealizadas / $quantidadeCelulas * 100;
 				}
 				$performanceCelula = 0;
-				if ($relatorio['membresiaMeta'] > 0) {
-					$performanceCelula = $soma[RelatorioController::dimensaoTipoCelula] / $relatorio['membresiaMeta'] * 100;
+				if ($relatorio['membresiaMetaSomada'] > 0) {
+					$performanceCelula = $soma[RelatorioController::dimensaoTipoCelula] / $relatorio['membresiaMetaSomada'] * 100;
 				}
 				$relatorio['celula'] = $soma[RelatorioController::dimensaoTipoCelula];
 				$relatorio['celulaPerformance'] = $performanceCelula;
