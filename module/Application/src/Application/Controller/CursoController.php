@@ -701,25 +701,26 @@ class CursoController extends CircuitoController {
 					}
 					$turma = $this->getRepositorio()->getTurmaORM()->encontrarPorId($sessao->idTurma);
 					foreach ($pessoas as $pessoa) {
-						$turmaPessoa = new TurmaPessoa();
-						$turmaPessoa->setPessoa($pessoa);
-						$turmaPessoa->setTurma($turma);
-						$this->getRepositorio()->getTurmaPessoaORM()->persistir($turmaPessoa);
+						if(!$pessoa->getTurmaPessoaAtivo()){
+							$turmaPessoa = new TurmaPessoa();
+							$turmaPessoa->setPessoa($pessoa);
+							$turmaPessoa->setTurma($turma);
+							$this->getRepositorio()->getTurmaPessoaORM()->persistir($turmaPessoa);
 
-						$situacao = $this->getRepositorio()->getSituacaoORM()->encontrarPorId(Situacao::ATIVO);
-						$turmaPessoaSituacao = new TurmaPessoaSituacao();
-						$turmaPessoaSituacao->setSituacao($situacao);
-						$turmaPessoaSituacao->setTurma_pessoa($turmaPessoa);
-						$this->getRepositorio()->getTurmaPessoaSituacaoORM()->persistir($turmaPessoaSituacao);
+							$situacao = $this->getRepositorio()->getSituacaoORM()->encontrarPorId(Situacao::ATIVO);
+							$turmaPessoaSituacao = new TurmaPessoaSituacao();
+							$turmaPessoaSituacao->setSituacao($situacao);
+							$turmaPessoaSituacao->setTurma_pessoa($turmaPessoa);
+							$this->getRepositorio()->getTurmaPessoaSituacaoORM()->persistir($turmaPessoaSituacao);
 
-						$numeroIdentificador =
-							$this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $pessoa->getGrupoPessoaAtivo()->getGrupo());
-						$fatoCurso = new FatoCurso();
-						$fatoCurso->setNumero_identificador($numeroIdentificador);
-						$fatoCurso->setTurma_pessoa_id($turmaPessoa->getId());
-						$fatoCurso->setTurma_id($turma->getId());
-						$fatoCurso->setSituacao_id(Situacao::ATIVO);
-						$this->getRepositorio()->getFatoCursoORM()->persistir($fatoCurso);
+							$numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $pessoa->getGrupoPessoaAtivo()->getGrupo());
+							$fatoCurso = new FatoCurso();
+							$fatoCurso->setNumero_identificador($numeroIdentificador);
+							$fatoCurso->setTurma_pessoa_id($turmaPessoa->getId());
+							$fatoCurso->setTurma_id($turma->getId());
+							$fatoCurso->setSituacao_id(Situacao::ATIVO);
+							$this->getRepositorio()->getFatoCursoORM()->persistir($fatoCurso);
+						}						
 					}
 
 					$this->getRepositorio()->fecharTransacao();
