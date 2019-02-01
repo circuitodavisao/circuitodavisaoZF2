@@ -656,11 +656,14 @@ class IndexController extends CircuitoController {
 		$numeroIdentificadorNovo = $numeroIdentificadorLider . str_pad($grupoNovo->getId(), 8, 0, STR_PAD_LEFT);
 		if($linhaDeLancamento = $grupoQueSeraSemeado->getGrupoPessoasNoPeriodo($periodo = 0, $this->getRepositorio())){
 			foreach($linhaDeLancamento as $grupoPessoa){
-				$grupoPessoaNovo = new GrupoPessoa();
-				$grupoPessoaNovo->setGrupo($grupoNovo);
-				$grupoPessoaNovo->setPessoa($grupoPessoa->getPessoa());
-				$grupoPessoaNovo->setGrupoPessoaTipo($grupoPessoa->getGrupoPessoaTipo());
-				$this->getRepositorio()->getGrupoPessoaORM()->persistir($grupoPessoaNovo);
+
+				if($grupoPessoa->verificarSeEstaAtivo()){
+					$grupoPessoaNovo = new GrupoPessoa();
+					$grupoPessoaNovo->setGrupo($grupoNovo);
+					$grupoPessoaNovo->setPessoa($grupoPessoa->getPessoa());
+					$grupoPessoaNovo->setGrupoPessoaTipo($grupoPessoa->getGrupoPessoaTipo());
+					$this->getRepositorio()->getGrupoPessoaORM()->persistir($grupoPessoaNovo);
+				}
 
 				/* Se eh aluno */
 				if($turmaPessoa = $this->getRepositorio()->getTurmaPessoaORM()->encontrarPorIdPessoa($grupoPessoa->getPessoa()->getId())){
@@ -905,23 +908,27 @@ class IndexController extends CircuitoController {
 		/* linha lancamento homem */
 		if($linhaDeLancamentoHomem){
 			foreach($linhaDeLancamentoHomem as $grupoPessoa){
-				$grupoPessoa->setDataEHoraDeInativacao($dataParaInativar);
-				$grupoPessoaHomem = new GrupoPessoa();
-				$grupoPessoaHomem->setGrupo($grupoNovo);
-				$grupoPessoaHomem->setPessoa($grupoPessoa->getPessoa());
-				$grupoPessoaHomem->setGrupoPessoaTipo($grupoPessoa->getGrupoPessoaTipo());
-				$this->getRepositorio()->getGrupoPessoaORM()->persistir($grupoPessoaHomem);
+				if($grupoPessoa->verificarSeEstaAtivo()){
+					$grupoPessoa->setDataEHoraDeInativacao($dataParaInativar);
+					$grupoPessoaHomem = new GrupoPessoa();
+					$grupoPessoaHomem->setGrupo($grupoNovo);
+					$grupoPessoaHomem->setPessoa($grupoPessoa->getPessoa());
+					$grupoPessoaHomem->setGrupoPessoaTipo($grupoPessoa->getGrupoPessoaTipo());
+					$this->getRepositorio()->getGrupoPessoaORM()->persistir($grupoPessoaHomem);
+				}				
 			}
 		}
 		/* linha lancamento mulher */
 		if($linhaDeLancamentoMulher){
 			foreach($linhaDeLancamentoMulher as $grupoPessoa){
-				$grupoPessoa->setDataEHoraDeInativacao($dataParaInativar);
-				$grupoPessoaMulher = new GrupoPessoa();
-				$grupoPessoaMulher->setGrupo($grupoNovo);
-				$grupoPessoaMulher->setPessoa($grupoPessoa->getPessoa());
-				$grupoPessoaMulher->setGrupoPessoaTipo($grupoPessoa->getGrupoPessoaTipo());
-				$this->getRepositorio()->getGrupoPessoaORM()->persistir($grupoPessoaMulher);
+				if($grupoPessoa->verificarSeEstaAtivo()){
+					$grupoPessoa->setDataEHoraDeInativacao($dataParaInativar);
+					$grupoPessoaMulher = new GrupoPessoa();
+					$grupoPessoaMulher->setGrupo($grupoNovo);
+					$grupoPessoaMulher->setPessoa($grupoPessoa->getPessoa());
+					$grupoPessoaMulher->setGrupoPessoaTipo($grupoPessoa->getGrupoPessoaTipo());
+					$this->getRepositorio()->getGrupoPessoaORM()->persistir($grupoPessoaMulher);
+				}
 			}
 		}
 
