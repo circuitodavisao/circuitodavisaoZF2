@@ -311,6 +311,18 @@ class IndexController extends CircuitoController {
 										$html .= "<br />Fato Celula Gerado";
 									}
 								}
+								$grupoEventosCelulaEstrategica = $grupo->getGrupoEventoAtivosPorTipo(EventoTipo::tipoCelulaEstrategica);
+								$quantidadeDeEventosNoCicloEstrategica = count($grupoEventosCelulaEstrategica);
+								$html .= "<br />quantidadeDeEventosNoCicloEstrategica $quantidadeDeEventosNoCicloEstrategica";
+								if ($grupoEventosCelulaEstrategica > 0) {
+									foreach ($grupoEventosCelulaEstrategica as $grupoEvento) {
+										$html .= "<br />GrupoEvento->id: " . $grupoEvento->getId();
+										$html .= "<br />Evento->id: " . $grupoEvento->getEvento()->getId();
+										$html .= "<br />EventoCelula: " . $grupoEvento->getEvento()->getEventoCelula()->getId();
+										$this->getRepositorio()->getFatoCelulaORM()->criarFatoCelula($fatoCiclo, $grupoEvento->getEvento()->getEventoCelula()->getId(), $estrategica = true);
+										$html .= "<br />Fato Celula Gerado";
+									}
+								}
 							}
 						}
 					}

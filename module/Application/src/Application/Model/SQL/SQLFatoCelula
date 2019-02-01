@@ -33,3 +33,4 @@ COMMENT ON COLUMN fato_celula.realizada IS 'Realizada 1 ou 0';
 COMMENT ON COLUMN fato_celula.fato_ciclo_id IS 'Identificação do fato ciclo';
 COMMENT ON COLUMN fato_celula.evento_celula_id IS 'Identificação do evento célula';
 
+ALTER TABLE fato_celula ADD COLUMN estrategica enumsn DEFAULT 'N';

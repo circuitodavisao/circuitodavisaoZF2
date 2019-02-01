@@ -757,7 +757,11 @@ class CadastroController extends CircuitoController {
 
 						$evento->setHora($validatedData[Constantes::$FORM_HORA] . ':' . $validatedData[Constantes::$FORM_MINUTOS]);
 						$evento->setDia($validatedData[Constantes::$FORM_DIA_DA_SEMANA]);
-						$evento->setEventoTipo($this->getRepositorio()->getEventoTipoORM()->encontrarPorId(EventoTipo::tipoCelula));
+						$tipoDeCelula = EventoTipo::tipoCelulaEstrategica;
+						if ($post_data[Constantes::$FORM_DIA_DA_SEMANA] != $eventoCelulaAtual->getEvento()->getDia()) {
+							$tipoDeCelula = $eventoParaInativar->getTipo()->getId();
+						}
+						$evento->setEventoTipo($this->getRepositorio()->getEventoTipoORM()->encontrarPorId($tipoDeCelula));
 						$this->getRepositorio()->getEventoORM()->persistir($evento, $alterarDataDeCriacao);
 
 						/* Evento celula */

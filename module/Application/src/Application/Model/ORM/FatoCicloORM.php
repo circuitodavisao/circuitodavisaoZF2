@@ -134,7 +134,7 @@ class FatoCicloORM extends CircuitoORM {
 	 * @param int $tipoComparacao
 	 * @return array
 	 */
-	public function montarRelatorioCelulaPorNumeroIdentificador($numeroIdentificador, $periodo, $tipoComparacao) {
+	public function montarRelatorioCelulaPorNumeroIdentificador($numeroIdentificador, $periodo, $tipoComparacao, $estrategica = null) {
 		$dqlBase = "SELECT "
 			. "COUNT(c.id) quantidade, "
 			. "SUM(c.realizada) realizadas "
@@ -143,7 +143,8 @@ class FatoCicloORM extends CircuitoORM {
 			. "WHERE "
 			. "fc.numero_identificador #tipoComparacao ?1 "
 			. "AND fc.data_inativacao is null "
-			. "AND fc.data_criacao = ?2 ";
+			. "AND fc.data_criacao = ?2 "
+			. "AND c.estrategica = ?3 ";
 		try {
 			if ($tipoComparacao == 1) {
 				$dqlAjustadaTipoComparacao = str_replace('#tipoComparacao', '=', $dqlBase);
@@ -155,15 +156,20 @@ class FatoCicloORM extends CircuitoORM {
 			$resultadoPeriodo = Funcoes::montaPeriodo($periodo);
 			$dataDoPeriodo = $resultadoPeriodo[3] . '-' . $resultadoPeriodo[2] . '-' . $resultadoPeriodo[1];
 			$dataDoPeriodoFormatada = DateTime::createFromFormat('Y-m-d', $dataDoPeriodo);
+			if($estrategica === null){
+				$estrategica = 'S';
+			}else{
+				$estrategica = 'N';
+			}
 			$result = $this->getEntityManager()->createQuery($dqlAjustadaTipoComparacao)
 				->setParameter(1, $numeroIdentificador)
 				->setParameter(2, $dataDoPeriodoFormatada)
+				->setParameter(3, $estrategica)
 				->getResult();
-
 
 			return $result;
 		} catch (Exception $exc) {
-			echo $exc->getTraceAsString();
+			echo $exc->getMessage();
 		}
 	}
 

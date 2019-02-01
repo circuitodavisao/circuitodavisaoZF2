@@ -30,6 +30,9 @@ class FatoCelula extends CircuitoEntity {
     /** @ORM\Column(type="integer") */
     protected $evento_celula_id;
 
+	/** @ORM\Column(type="String") */
+	protected $estrategica;
+
     function getFato_ciclo_id() {
         return $this->fato_ciclo_id;
     }
@@ -65,5 +68,13 @@ class FatoCelula extends CircuitoEntity {
     function setEvento_celula_id($evento_celula_id) {
         $this->evento_celula_id = $evento_celula_id;
     }
+
+	function getEstrategica(){
+		return $this->estrategica;
+	}
+
+	function setEstrategica($estrategica){
+		$this->estrategica = $estrategica;
+	}
 
 }
