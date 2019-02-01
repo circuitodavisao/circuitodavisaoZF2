@@ -947,6 +947,17 @@ class Pessoa extends CircuitoEntity implements InputFilterAwareInterface {
         return $this->pessoaFatoFinanceiroAcesso;
     }
 
+    function getTurmaPessoaAtivo() {
+        $turmaPessoa = null;
+        foreach ($this->getTurmaPessoa() as $turmaPessoaParaVerificar) {
+            if ($turmaPessoaParaVerificar->verificarSeEstaAtivo()) {
+                $turmaPessoa = $turmaPessoaParaVerificar;
+                break;
+            }
+        }
+        return $turmaPessoa;
+    }
+
     function getPessoaCursoAcessoAtivo() {
         $pessoaCursoAcessoaAtiva = null;
         foreach ($this->getPessoaCursoAcesso() as $pessoaCursoAcesso) {
