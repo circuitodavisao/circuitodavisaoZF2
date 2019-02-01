@@ -42,7 +42,7 @@ class ListagemTurmas extends AbstractHelper {
 			$html .= '<tr>';
 			$html .= '<th class="text-center">Curso</th>';
 			$html .= '<th class="text-center">M&ecirc;s/Ano</th>';
-			$html .= '<th class="text-center hidden-xs">Observação</th>';
+			$html .= '<th class="text-center hidden-xs">Observação</th>';			
 			$html .= '<th class="text-center hidden-xs">Alunos</th>';
 			$html .= '<th class="text-center hidden-xs">Aula Aberta</th>';
 			$html .= '<th class="text-center"></th>';
@@ -68,7 +68,11 @@ class ListagemTurmas extends AbstractHelper {
 				$html .= '<span class="hidden-sm hidden-md hidden-lg">' . str_pad($turma->getMes(), 2, 0, STR_PAD_LEFT) . '</span>';
 				$html .= '/' . $turma->getAno() . '</td>';
 				$html .= '<td class="text-center hidden-xs">' . $turma->getObservacao() . '</td>';
-				$html .= '<td class="text-center hidden-xs">' . $totalAlunos . '</td>';
+				if(!$turma->getTurmaAulaAtiva()){
+					$html .= '<td class="text-center hidden-xs">SEM AULA ABERTA</td>';
+				} else {
+					$html .= '<td class="text-center hidden-xs">' . $totalAlunos . '</td>';
+				}				
 				$html .= '<td class="text-center hidden-xs">';
 				$nomeAulaAberta = '<span class="label label-';
 				if ($turma->getTurmaAulaAtiva()) {
