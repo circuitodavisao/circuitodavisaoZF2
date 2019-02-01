@@ -1204,7 +1204,7 @@ class RelatorioController extends CircuitoController {
 				}
 			if ($tipoRelatorio === RelatorioController::relatorioCelulaQuantidade ||
 				$tipoRelatorio === RelatorioController::relatorioMembresiaECelula) {
-					$relatorio[$contadorFilhos][$indiceDeArrays]['celulaPerformance'] = $relatorio[$contadorFilhos][$indiceDeArrays]['celula'] / $relatorio[$contadorFilhos][$indiceDeArrays]['membresiaMeta'] * 100;
+					$relatorio[$contadorFilhos][$indiceDeArrays]['celulaPerformance'] = $relatorio[$contadorFilhos][$indiceDeArrays]['celula'] / $relatorio[$contadorFilhos][$indiceDeArrays]['membresiaMetaSomada'] * 100;
 					$somaFinal['celula'] += $relatorio[$contadorFilhos][$indiceDeArrays]['celula'];
 					$somaFinal['celulaPerformance'] += $relatorio[$contadorFilhos][$indiceDeArrays]['celulaPerformance'];
 					$relatorio[$contadorFilhos][$indiceDeArrays]['celulaPerformanceClass'] = RelatorioController::corDaLinhaPelaPerformance($relatorio[$contadorFilhos][$indiceDeArrays]['celulaPerformance'], 1);
