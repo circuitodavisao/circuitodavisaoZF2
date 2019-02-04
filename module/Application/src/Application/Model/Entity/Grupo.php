@@ -307,7 +307,9 @@ class Grupo extends CircuitoEntity {
                 }
             }
 
-			if(count($grupoPaiFilhoFilhosAtivos) > 0 && $grupoPaiFilhoFilhosAtivos[0]->getGrupoPaiFilhoFilho()->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::subEquipe){
+			if(count($grupoPaiFilhoFilhosAtivos) > 0 
+				&& $grupoPaiFilhoFilhosAtivos[0]->getGrupoPaiFilhoFilho()->getEntidadeAtiva()
+				&& $grupoPaiFilhoFilhosAtivos[0]->getGrupoPaiFilhoFilho()->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::subEquipe){
 				$totalDeFilhos = count($grupoPaiFilhoFilhosAtivos);
 				for($i = 0; $i < $totalDeFilhos; $i++){
 					for($j = 0; $j < $totalDeFilhos; $j++){
@@ -591,10 +593,11 @@ class Grupo extends CircuitoEntity {
                 $grupoEventos = array();
                 $grupoEventosCultosTodos = $grupoSelecionado->getGrupoEventoPorTipoEAtivo(EventoTipo::tipoCulto);
                 foreach ($grupoEventosCultosTodos as $grupoEvento) {
-                    if ($grupoEvento->getEvento()->getEventoTipo()->getId() !== EventoTipo::tipoRevisao &&
-                            $grupoEvento->getEvento()->getEventoTipo()->getId() !== EventoTipo::tipoDiscipulado) {
-                        $grupoEventos[] = $grupoEvento;
-                    }
+					if ($grupoEvento->getEvento()->getEventoTipo()
+						&& $grupoEvento->getEvento()->getEventoTipo()->getId() !== EventoTipo::tipoRevisao
+						&& $grupoEvento->getEvento()->getEventoTipo()->getId() !== EventoTipo::tipoDiscipulado) {
+							$grupoEventos[] = $grupoEvento;
+						}
                 }
             }
         }
