@@ -137,11 +137,13 @@ foreach($this->solicitacoesTipo as $solicitacaoTipo){
 			}
 
 		$corSituacao = 'default';
-		switch($solicitacao->getSolicitacaoSituacaoAtiva()->getSituacao()->getId()){
-		case Situacao::ACEITO_AGENDADO: $corSituacao = 'info'; break;
-		case Situacao::PENDENTE_DE_ACEITACAO: $corSituacao = 'warning'; break;
-		case Situacao::RECUSAO: $corSituacao = 'danger'; break;
-		case Situacao::CONCLUIDO: $corSituacao = 'success'; break;
+		if($solicitacao->getSolicitacaoSituacaoAtiva()){
+			switch($solicitacao->getSolicitacaoSituacaoAtiva()->getSituacao()->getId()){
+			case Situacao::ACEITO_AGENDADO: $corSituacao = 'info'; break;
+			case Situacao::PENDENTE_DE_ACEITACAO: $corSituacao = 'warning'; break;
+			case Situacao::RECUSAO: $corSituacao = 'danger'; break;
+			case Situacao::CONCLUIDO: $corSituacao = 'success'; break;
+			}
 		}
 		$htmlTbody .= '<td><span class="label label-'.$corSituacao.'">'.$solicitacao->getSolicitacaoSituacaoAtiva()->getSituacao()->getNome().'</span></td>';
 		if($solicitacaoTipo->getId() === SolicitacaoTipo::REMOVER_LIDER
