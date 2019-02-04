@@ -223,6 +223,14 @@ class Evento extends CircuitoEntity implements InputFilterAwareInterface {
         return $resposta;
     }
 
+    function verificaSeECelulaEstrategica() {
+        $resposta = false;
+        if ($this->getEventoTipo()->getId() === EventoTipo::tipoCelulaEstrategica) {
+            $resposta = true;
+        }
+        return $resposta;
+    }
+
     /**
      * Verifica se o evento é do tipo culto
      * @return boolean

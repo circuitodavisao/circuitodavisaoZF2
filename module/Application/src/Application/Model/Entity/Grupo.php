@@ -572,61 +572,69 @@ class Grupo extends CircuitoEntity {
      * Retorna o grupo evento ordenados por dia da semana
      * @return GrupoEvento
      */
-    function getGrupoEventoOrdenadosPorDiaDaSemana() {
-        $grupoSelecionado = $this;
-        $grupoEventosCelulasTodas = null;
-        $grupoEventos = null;
-        $grupoEventosCelulas = null;
-        if ($grupoSelecionado->getEntidadeAtiva()) {
-          $grupoEventosCelulasTodas = $grupoSelecionado->getGrupoEventoPorTipoEAtivo(EventoTipo::tipoCelula);
-          if ($grupoEventosCelulasTodas) {
-              foreach ($grupoEventosCelulasTodas as $grupoEvento) {
-                 $grupoEventosCelulas[] = $grupoEvento;
-              }
-          }
-            if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::SUBEQUIPE) {
-               $grupoEventos = $grupoSelecionado->getGrupoEquipe()->getGrupoEventoPorTipoEAtivo(EventoTipo::tipoCulto);
-            } else {
-                /* Lider de equipe ou igreja */
-                $grupoEventos = array();
-                $grupoEventosCultosTodos = $grupoSelecionado->getGrupoEventoPorTipoEAtivo(EventoTipo::tipoCulto);
-                foreach ($grupoEventosCultosTodos as $grupoEvento) {
-                    if ($grupoEvento->getEvento()->getEventoTipo()->getId() !== EventoTipo::tipoRevisao &&
-                            $grupoEvento->getEvento()->getEventoTipo()->getId() !== EventoTipo::tipoDiscipulado) {
-                        $grupoEventos[] = $grupoEvento;
-                    }
-                }
-            }
-        }
+	function getGrupoEventoOrdenadosPorDiaDaSemana() {
+		$grupoSelecionado = $this;
+		$grupoEventosCelulasTodas = null;
+		$grupoEventos = null;
+		$grupoEventosCelulas = null;
+		if ($grupoSelecionado->getEntidadeAtiva()) {
+			$grupoEventosCelulasTodas = $grupoSelecionado->getGrupoEventoPorTipoEAtivo(EventoTipo::tipoCelula);
+			$grupoEventosCelulasTodasEstrategicas = $grupoSelecionado->getGrupoEventoPorTipoEAtivo(EventoTipo::tipoCelulaEstrategica);
 
-        if ($grupoEventosCelulas) {
-            foreach ($grupoEventosCelulas as $eventoCelula) {
-                $grupoEventos[] = $eventoCelula;
-            }
-        }
-        for ($i = 0; $i < count($grupoEventos); $i++) {
-            for ($j = 0; $j < count($grupoEventos); $j++) {
-                $evento1 = $grupoEventos[$i];
-                $evento2 = $grupoEventos[$j];
-                $trocar = 0;
+			if ($grupoEventosCelulasTodas) {
+				foreach ($grupoEventosCelulasTodas as $grupoEvento) {
+					$grupoEventosCelulas[] = $grupoEvento;
+				}
+			}
+			if ($grupoEventosCelulasTodasEstrategicas) {
+				foreach ($grupoEventosCelulasTodasEstrategicas as $grupoEvento) {
+					$grupoEventosCelulas[] = $grupoEvento;
+				}
+			}
 
-                if ($evento1->getEvento()->getDiaAjustado() <= $evento2->getEvento()->getDiaAjustado()) {
-                    if ($evento1->getEvento()->getDiaAjustado() == $evento2->getEvento()->getDiaAjustado()) {
-                        if ($evento1->getEvento()->getHora() < $evento2->getEvento()->getHora()) {
-                            $trocar = 1;
-                        }
-                    } else {
-                        $trocar = 1;
-                    }
-                    if ($trocar === 1) {
-                        $grupoEventos[$i] = $evento2;
-                        $grupoEventos[$j] = $evento1;
-                    }
-                }
-            }
-        }
-        return $grupoEventos;
-    }
+			if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::SUBEQUIPE) {
+				$grupoEventos = $grupoSelecionado->getGrupoEquipe()->getGrupoEventoPorTipoEAtivo(EventoTipo::tipoCulto);
+			} else {
+				/* Lider de equipe ou igreja */
+				$grupoEventos = array();
+				$grupoEventosCultosTodos = $grupoSelecionado->getGrupoEventoPorTipoEAtivo(EventoTipo::tipoCulto);
+				foreach ($grupoEventosCultosTodos as $grupoEvento) {
+					if ($grupoEvento->getEvento()->getEventoTipo()->getId() !== EventoTipo::tipoRevisao &&
+						$grupoEvento->getEvento()->getEventoTipo()->getId() !== EventoTipo::tipoDiscipulado) {
+							$grupoEventos[] = $grupoEvento;
+						}
+				}
+			}
+		}
+
+		if ($grupoEventosCelulas) {
+			foreach ($grupoEventosCelulas as $eventoCelula) {
+				$grupoEventos[] = $eventoCelula;
+			}
+		}
+		for ($i = 0; $i < count($grupoEventos); $i++) {
+			for ($j = 0; $j < count($grupoEventos); $j++) {
+				$evento1 = $grupoEventos[$i];
+				$evento2 = $grupoEventos[$j];
+				$trocar = 0;
+
+				if ($evento1->getEvento()->getDiaAjustado() <= $evento2->getEvento()->getDiaAjustado()) {
+					if ($evento1->getEvento()->getDiaAjustado() == $evento2->getEvento()->getDiaAjustado()) {
+						if ($evento1->getEvento()->getHora() < $evento2->getEvento()->getHora()) {
+							$trocar = 1;
+						}
+					} else {
+						$trocar = 1;
+					}
+					if ($trocar === 1) {
+						$grupoEventos[$i] = $evento2;
+						$grupoEventos[$j] = $evento1;
+					}
+				}
+			}
+		}
+		return $grupoEventos;
+	}
 
     /**
      * Retorna o grupo evento Revisao
@@ -747,6 +755,9 @@ class Grupo extends CircuitoEntity {
                 if ($tipo === EventoTipo::tipoCelula && $grupoEvento->getEvento()->verificaSeECelula()) {
                     $grupoEventos[] = $grupoEvento;
                 }
+				if ($tipo === EventoTipo::tipoCelulaEstrategica && $grupoEvento->getEvento()->verificaSeECelulaEstrategica()) {
+					$grupoEventos[] = $grupoEvento;
+                }
                 if ($tipo === EventoTipo::tipoRevisao && $grupoEvento->getEvento()->verificaSeERevisao()) {
                     $grupoEventos[] = $grupoEvento;
                 }
@@ -860,7 +871,7 @@ class Grupo extends CircuitoEntity {
                     }
                 }
 
-                /* Evento inativao no meio do periodo */
+                /* Evento inativado no meio do periodo */
                 if (!$grupoEvento->verificarSeEstaAtivo()) {
                     $stringFimDoPeriodo = $arrayPeriodo[6] . '-' . $arrayPeriodo[5] . '-' . $arrayPeriodo[4];
                     $dataDoFimDoPeriodoParaComparar = strtotime($stringFimDoPeriodo);
