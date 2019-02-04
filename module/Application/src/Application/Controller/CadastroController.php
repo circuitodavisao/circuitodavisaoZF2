@@ -2707,7 +2707,8 @@ class CadastroController extends CircuitoController {
 						$criarNovoEvento = false;
 						$eventoAtual = $this->getRepositorio()->getEventoORM()->encontrarPorId($post_data[Constantes::$FORM_ID]);
 						$eventoAtual->setData($dataDoRevisao);
-						$eventoAtual->setNome($validatedData[Constantes::$FORM_NOME]);
+						$observacao = trim($validatedData[Constantes::$FORM_NOME]);
+						$eventoAtual->setNome($observacao);
 						$this->getRepositorio()->getEventoORM()->persistir($eventoAtual, $alterarDataDeCriacao = false);
 					}
 					if ($criarNovoEvento) {
@@ -2722,7 +2723,8 @@ class CadastroController extends CircuitoController {
 						$evento->setDia($sextaFeira = 6);
 						$evento->setEventoTipo($this->getRepositorio()->getEventoTipoORM()->encontrarPorId(EventoTipo::tipoRevisao));
 						$evento->setData($dataDoRevisao);
-						$evento->setNome($validatedData[Constantes::$FORM_NOME]);
+						$observacao = trim($validatedData[Constantes::$FORM_NOME]);
+						$evento->setNome($observacao);
 
 						$grupoEvento->setData_criacao(Funcoes::dataAtual());
 						$grupoEvento->setHora_criacao(Funcoes::horaAtual());
@@ -2742,7 +2744,7 @@ class CadastroController extends CircuitoController {
 						$this->getRepositorio()->getPessoaORM()->persistir($pessoa);
 					}
 				} else {
-					error_log(print_r($formulario->getMessages(), TRUE));
+					error_log(print_r($formulario->getMessages(), TRUE));					
 				}
 				$this->getRepositorio()->fecharTransacao();
 				return $this->redirect()->toRoute(Constantes::$ROUTE_CADASTRO, array(
