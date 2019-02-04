@@ -43,7 +43,6 @@ foreach($this->solicitacoesTipo as $solicitacaoTipo){
 	case SolicitacaoTipo::TRANSFERIR_LIDER_PARA_OUTRA_EQUIPE:
 		$colspan = 6;
 		$htmlThead .= '<th>Quem</th>';
-		$htmlThead .= '<th>Novo Time</th>';
 		$htmlThead .= '<th class="hidden-xs">Novo Líder</th>';
 		break;
 	case SolicitacaoTipo::UNIR_CASAL:
@@ -137,15 +136,16 @@ foreach($this->solicitacoesTipo as $solicitacaoTipo){
 			}
 
 		$corSituacao = 'default';
+		$nomeSituacao = '';
 		if($solicitacao->getSolicitacaoSituacaoAtiva()){
 			switch($solicitacao->getSolicitacaoSituacaoAtiva()->getSituacao()->getId()){
-			case Situacao::ACEITO_AGENDADO: $corSituacao = 'info'; break;
-			case Situacao::PENDENTE_DE_ACEITACAO: $corSituacao = 'warning'; break;
-			case Situacao::RECUSAO: $corSituacao = 'danger'; break;
-			case Situacao::CONCLUIDO: $corSituacao = 'success'; break;
+			case Situacao::ACEITO_AGENDADO: $corSituacao = 'info'; $nomeSituacao = 'ACEITO'; break;
+			case Situacao::PENDENTE_DE_ACEITACAO: $corSituacao = 'warning';$nomeSituacao = 'PENDENTE'; break;
+			case Situacao::RECUSAO: $corSituacao = 'danger';$nomeSituacao = 'RECUSADO'; break;
+			case Situacao::CONCLUIDO: $corSituacao = 'success';$nomeSituacao = 'CONCLUIDO'; break;
 			}
 		}
-		$htmlTbody .= '<td><span class="label label-'.$corSituacao.'">'.$solicitacao->getSolicitacaoSituacaoAtiva()->getSituacao()->getNome().'</span></td>';
+		$htmlTbody .= '<td><span class="label label-'.$corSituacao.'">'.$nomeSituacao.'</span></td>';
 		if($solicitacaoTipo->getId() === SolicitacaoTipo::REMOVER_LIDER
 			|| $solicitacaoTipo->getId() === SolicitacaoTipo::REMOVER_CELULA){
 				if($solicitacao->getSolicitacaoSituacaoAtiva()->getSituacao()->getId() === Situacao::PENDENTE_DE_ACEITACAO
