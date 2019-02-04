@@ -2128,7 +2128,17 @@ class CadastroController extends CircuitoController {
 		$grupoIgreja = $grupo->getGrupoIgreja();
 		$grupoPaiFilhoFilhos = $grupo->getGrupoPaiFilhoFilhosAtivosReal();
 
-		$solicitacaoTipos = $this->getRepositorio()->getSolicitacaoTipoORM()->encontrarTodos();
+		$solicitacaoTiposSemAjuste = $this->getRepositorio()->getSolicitacaoTipoORM()->encontrarTodos();
+		$solicitacaoTiposAjustado = array();
+		if($entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
+			foreach($solicitacaoTiposSemAjuste as $solicitacaoTipo){
+				if($solicitacaoTipo->getId() !== SolicitacaoTipo::TRANSFERIR_LIDER_PARA_OUTRA_EQUIPE){
+					$solicitacaoTiposAjustado[] = $solicitacaoTipo;
+				}	
+			}	
+		}else{
+			$solicitacaoTiposAjustado = $solicitacaoTiposSemAjuste;
+		}
 		$formSolicitacao = new SolicitacaoForm('formSolicitacao');
 
 		$grupoPaiFilhoEquipes = $grupoIgreja->getGrupoPaiFilhoFilhosAtivosReal();
@@ -2259,7 +2269,7 @@ class CadastroController extends CircuitoController {
 			'grupo' => $grupo,
 			'discipulos' => $grupoPaiFilhoFilhos,
 			'discipulosIgreja' => $discipulosIgreja,
-			'solicitacaoTipos' => $solicitacaoTipos,
+			'solicitacaoTipos' => $solicitacaoTiposAjustado,
 			Constantes::$FORM => $formSolicitacao,
 			'titulo' => 'Solicitação',
 			'grupoPaiFilhoEquipes' => $grupoPaiFilhoEquipes,
