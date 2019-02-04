@@ -148,7 +148,8 @@ foreach($this->solicitacoesTipo as $solicitacaoTipo){
 		$htmlTbody .= '<td><span class="label label-'.$corSituacao.'">'.$nomeSituacao.'</span></td>';
 		if($solicitacaoTipo->getId() === SolicitacaoTipo::REMOVER_LIDER
 			|| $solicitacaoTipo->getId() === SolicitacaoTipo::REMOVER_CELULA){
-				if($solicitacao->getSolicitacaoSituacaoAtiva()->getSituacao()->getId() === Situacao::PENDENTE_DE_ACEITACAO
+				if($solicitacao->getSolicitacaoSituacaoAtiva()
+					&& $solicitacao->getSolicitacaoSituacaoAtiva()->getSituacao()->getId() === Situacao::PENDENTE_DE_ACEITACAO
 					&& $this->entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
 						$funcaoAceintar = $this->funcaoOnClick('if(confirm("Realemnte deseja aceitar essa solicitação?")){mostrarSplash(); funcaoCircuito("cadastroSolicitacaoAceitar", '.$solicitacao->getId().');}');
 						$botaoAceitar = $this->botaoSimples('Aceitar', $funcaoAceintar, BotaoSimples::botaoPequenoImportante);
