@@ -300,12 +300,18 @@ class CadastroController extends CircuitoController {
 		$extra = '';
 		$tipoEvento = 0;
 		$tipoCelula = EventoTipo::tipoCelula;
+		$tipoCelulaEstrategica = EventoTipo::tipoCelulaEstrategica;
 		$tipoCulto = EventoTipo::tipoCulto;
 		$tipoRevisao = EventoTipo::tipoRevisao;
 		$tipoDiscipulado = EventoTipo::tipoDiscipulado;
 		if ($pagina == Constantes::$PAGINA_CELULAS) {
 			self::registrarLog(RegistroAcao::VER_CELULAS, $extra = '');
 			$listagemDeEventos = $grupo->getGrupoEventoAtivosPorTipo($tipoCelula);
+			if($listagemDeEventosEstrategica = $grupo->getGrupoEventoAtivosPorTipo($tipoCelulaEstrategica)){
+				foreach($listagemDeEventosEstrategica as $grupoEvento){
+					$listagemDeEventos[] = $grupoEvento;
+				}
+			}
 			$tituloDaPagina = Constantes::$TRADUCAO_LISTAGEM_CELULAS . ' <b class="text-danger">' . Constantes::$TRADUCAO_MULTIPLICACAO . '</b>';
 			$tipoEvento = 1;
 		}
@@ -672,6 +678,7 @@ class CadastroController extends CircuitoController {
 					$grupoEvento = new GrupoEvento();
 
 					/* ALTERANDO */
+					$eventoParaInativar = null;
 					if (!empty($post_data[Constantes::$FORM_ID])) {
 						$naoEhAlteracao = false;
 						$criarNovaCelula = false;
@@ -758,7 +765,7 @@ class CadastroController extends CircuitoController {
 						$evento->setHora($validatedData[Constantes::$FORM_HORA] . ':' . $validatedData[Constantes::$FORM_MINUTOS]);
 						$evento->setDia($validatedData[Constantes::$FORM_DIA_DA_SEMANA]);
 						$tipoDeCelula = EventoTipo::tipoCelulaEstrategica;
-						if ($post_data[Constantes::$FORM_DIA_DA_SEMANA] != $eventoCelulaAtual->getEvento()->getDia()) {
+						if ($eventoParaInativar && $post_data[Constantes::$FORM_DIA_DA_SEMANA] != $eventoCelulaAtual->getEvento()->getDia()) {
 							$tipoDeCelula = $eventoParaInativar->getTipo()->getId();
 						}
 						$evento->setEventoTipo($this->getRepositorio()->getEventoTipoORM()->encontrarPorId($tipoDeCelula));

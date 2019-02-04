@@ -525,8 +525,9 @@ class CursoController extends CircuitoController {
 		$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
 		$entidadeDaIgreja = $entidade->getGrupo()->getGrupoIgreja()->getEntidadeAtiva();
 		$relatorioCursos = RelatorioController::relatorioAlunosETurmas($this->getRepositorio(), $entidadeDaIgreja);
+		$turmas = $entidadeDaIgreja->getGrupo()->getTurma();
 		$view = new ViewModel(array(
-			'turmas' => $relatorioCursos[1],
+			'turmas' => $turmas,
 			'relatorio' => $relatorioCursos[0],
 		));
 
