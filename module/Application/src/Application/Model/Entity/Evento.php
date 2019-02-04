@@ -321,7 +321,26 @@ class Evento extends CircuitoEntity implements InputFilterAwareInterface {
 
 	public function getInputFilterRevisao() {
 		if(!$this->inputFilterRevisao){
-			$inputFilter = new InputFilter();
+            $inputFilter = new InputFilter();
+            $inputFilter->add(array(
+                Constantes::$VALIDACAO_NAME => Constantes::$FORM_NOME,
+                Constantes::$VALIDACAO_REQUIRED => true,  
+                'filter' => array(
+                    array('name' => 'StripTags'), // removel xml e html string
+                    array('name' => 'StringTrim'), // removel espaco do inicio e do final da string
+                    array('name' => 'StringToUpper'), // transforma em maiusculo
+                ),              
+                Constantes::$VALIDACAO_VALIDATORS => array(
+                    array(                        
+                        'name' => 'StringLength',
+                        'options' => array(
+                            'encoding' => 'UTF-8',
+                            'min' => 0,
+                            'max' => 200,
+                        ),                        
+                    ),
+                ),
+            ));
 			$this->inputFilterRevisao = $inputFilter;
 		}
 		return $this->inputFilterRevisao;
