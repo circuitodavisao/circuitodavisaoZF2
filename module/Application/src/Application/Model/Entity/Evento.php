@@ -322,25 +322,25 @@ class Evento extends CircuitoEntity implements InputFilterAwareInterface {
 	public function getInputFilterRevisao() {
 		if(!$this->inputFilterRevisao){
             $inputFilter = new InputFilter();
-            $inputFilter->add(array(
-                Constantes::$VALIDACAO_NAME => Constantes::$FORM_NOME,
-                Constantes::$VALIDACAO_REQUIRED => true,  
+            $inputFilter->add(array(  
+                'name' => 'nome',
+                'required' => false,
                 'filter' => array(
                     array('name' => 'StripTags'), // removel xml e html string
                     array('name' => 'StringTrim'), // removel espaco do inicio e do final da string
                     array('name' => 'StringToUpper'), // transforma em maiusculo
-                ),              
-                Constantes::$VALIDACAO_VALIDATORS => array(
-                    array(                        
+                ),
+                'validators' => array(                    
+                    array(
                         'name' => 'StringLength',
-                        'options' => array(
-                            'encoding' => 'UTF-8',
+                        'options' => array(                            
                             'min' => 0,
-                            'max' => 200,
-                        ),                        
+                            'max' => 30,
+                        ),
                     ),
                 ),
             ));
+            
 			$this->inputFilterRevisao = $inputFilter;
 		}
 		return $this->inputFilterRevisao;
@@ -366,7 +366,7 @@ class Evento extends CircuitoEntity implements InputFilterAwareInterface {
         return $nomeAjustado;
     }
 
-    function setNome($nome) {
+    function setNome($nome) {        
         $this->nome = $nome;
     }
 
