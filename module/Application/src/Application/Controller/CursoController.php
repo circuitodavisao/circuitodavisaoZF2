@@ -910,7 +910,8 @@ class CursoController extends CircuitoController {
 		$resultado = RelatorioController::relatorioAlunosETurmas($this->getRepositorio(), $entidadeParaUsar);
 		$turmas = $resultado[1];
 
-		if(!$pessoa->getPessoaCursoAcessoAtivo()){
+		if(!$pessoa->getPessoaCursoAcessoAtivo() 
+			&& $entidade->getEntidadeTipo()->getId() !== EntidadeTipo::igreja){
 			$postado['mostrarAulas'] = 1;
 			$postado['mostrarFinanceiro'] = 0;
 		}
