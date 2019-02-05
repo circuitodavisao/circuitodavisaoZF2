@@ -321,16 +321,32 @@ class PrincipalController extends CircuitoController {
 		}
 	}
 
-	public function enviarEmailAction() {
+	public function enviarEmailAction() {		
 		$sessao = new Container(Constantes::$NOME_APLICACAO);
+		$explodeIdSessao = explode('_', $sessao->idSessao);
+		$processar = false;
+		$enviandoParaOMesmoEmail = $explodeIdSessao[1];		
 		$request = $this->getRequest();
-		if ($request->isPost()) {
+		if($enviandoParaOMesmoEmail || $request->isPost()){
+			$processar = true;
+		}
+		if ($processar) {
 			try {
 				$this->getRepositorio()->iniciarTransacao();
 				$post_data = $request->getPost();
-				$idPessoa = $post_data[Constantes::$INPUT_ID_PESSOA];
+				if($enviandoParaOMesmoEmail){
+					$idPessoa = $explodeIdSessao[0];		
+				}
+				if(!$enviandoParaOMesmoEmail){
+					$idPessoa = $post_data[Constantes::$INPUT_ID_PESSOA];
+				}
+				
 				$pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($idPessoa);
-				$pessoa->setEmail($post_data[Constantes::$INPUT_EMAIL]);
+
+				if(!$enviandoParaOMesmoEmail){
+					$pessoa->setEmail($post_data[Constantes::$INPUT_EMAIL]);
+				}
+				
 				$setarDataEHora = false;
 				$this->getRepositorio()->getPessoaORM()->persistir($pessoa, $setarDataEHora);
 				if ($pessoa->getToken()) {
