@@ -2946,7 +2946,6 @@ class IndexController extends CircuitoController {
 		$relatorios = array();
 		$idGrupoIgrejaEMes = $this->params()->fromRoute(Constantes::$ID, 1);
 		$explodeId = explode('_', $idGrupoIgrejaEMes);
-		$grupoIgrejas[] = ['id' => $explodeId[0]];
 
 		$mesAtual = date('m');
 		$anoAtual = date('Y');
@@ -2964,10 +2963,27 @@ class IndexController extends CircuitoController {
 		case 2: $mesSelecinado = $mesAnterior; $anoSelecinado = $anoAnterior; break;
 		}
 
-		foreach($grupoIgrejas as $grupoIgreja){
-			$idGrupoIgreja = $grupoIgreja['id'];
-			$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupoIgreja);
+		if($explodeId[0] == 0){
+			$gruposIgreja = $this->getRepositorio()->getGrupoORM()->pegarTodasIgrejas();
+			foreach($gruposIgreja as $grupoIgreja){
+				if($grupoIgreja->getId() !== 1
+					&& $grupoIgreja->getId() !== 1225){
+						$grupoIgrejas[] = $grupoIgreja;
+					}
+			}
+		}else{
+			$grupoIgrejas[] = ['id' => $explodeId[0]];
+		}
 
+		foreach($grupoIgrejas as $grupoIgreja){
+			if($explodeId[0] == 0){
+				$grupo = $grupoIgreja;
+				$idGrupoIgreja = $grupo->getId();
+			}else{
+				$idGrupoIgreja = $grupoIgreja['id'];
+				$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupoIgreja);
+			}
+			$html .= '<br /><br />Igreja: ' . $grupo->getId();
 			$relatorioCelulas =	self::pegarMediaPorCelula($this->getRepositorio(), $grupo, $celulaDeElite = true, $mesSelecinado, $anoSelecinado);
 			foreach($relatorioCelulas as $chave => $valor){
 				$dados = array(
@@ -3006,7 +3022,7 @@ class IndexController extends CircuitoController {
 				}else{
 					$arrayDeEquipes = $grupoPaiFilhoFilhos144;
 				}
-				$html .= 'Total de equipes: ' . count($arrayDeEquipes);
+				$html .= '<br />Total de equipes: ' . count($arrayDeEquipes);
 				foreach ($arrayDeEquipes as $gpFilho144) {
 					$grupoFilho144 = $gpFilho144->getGrupoPaiFilhoFilho();
 					$html .= '<br />Equipe: '.$grupoFilho144->getEntidadeAtiva()->getNome();
