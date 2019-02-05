@@ -25,12 +25,12 @@ function validar(formulario){
 			mensagemDeErro += ', Ano';
 		}
 	}
-	if(formulario.nome.value.length > 200){		
+	if(formulario.nome.value.length > 30){		
 		temErros = true
 		if(mensagemDeErro == ''){
-			mensagemDeErro = 'Observação pode ter no máximo 200 caracteres';
+			mensagemDeErro = 'Observação pode ter no máximo 30 caracteres';
 		}else{
-			mensagemDeErro += ', Observação pode ter no máximo 200 caracteres';
+			mensagemDeErro += ', Observação pode ter no máximo 30 caracteres';
 		}
 	}
 
