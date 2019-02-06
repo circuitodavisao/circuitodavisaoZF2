@@ -1936,7 +1936,7 @@ public function alunosAction(){
 							if(!$assistiuAAula){
 								$dados = array();
 								$dados['matricula'] = $turmaPessoa->getId();
-								$dados['nome'] = $turmaPessoa->getPessoa()->getNomePrimeiroUltimo();
+								$dados['nome'] = $turmaPessoa->getPessoa()->getNome();
 								$dados['time'] = $nomeEquipe;
 								$dados['telefone'] = $telefone;
 								$dados['mensagem'] = $linkWhatsapp;
@@ -1968,7 +1968,7 @@ public function alunosAction(){
 							if($contadorDeFaltas > 1 && $contadorDeFaltas <= 3){
 								$dados = array();
 								$dados['matricula'] = $turmaPessoa->getId();
-								$dados['nome'] = $turmaPessoa->getPessoa()->getNomePrimeiroUltimo();
+								$dados['nome'] = $turmaPessoa->getPessoa()->getNome();
 								$dados['time'] = $nomeEquipe;
 								$dados['telefone'] = $telefone;
 								$dados['mensagem'] = $linkWhatsapp;
