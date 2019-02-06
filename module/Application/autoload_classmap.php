@@ -91,6 +91,7 @@ return array(
     'Application\Model\ORM\FatoLiderORM'                         => __DIR__ . '/src/Application/Model/ORM/FatoLiderORM.php',
     'Application\Model\ORM\EventoFrequenciaORM'                  => __DIR__ . '/src/Application/Model/ORM/EventoFrequenciaORM.php',
     'Application\Model\ORM\FatoCursoORM'                         => __DIR__ . '/src/Application/Model/ORM/FatoCursoORM.php',
+    'Application\Model\ORM\FatoParceiroDeDeusORM'                => __DIR__ . '/src/Application/Model/ORM/FatoParceiroDeDeusORM.php',
     'Application\Model\ORM\TurmaAulaORM'                         => __DIR__ . '/src/Application/Model/ORM/TurmaAulaORM.php',
     'Application\Form\SolicitacaoReceberForm'                    => __DIR__ . '/src/Application/Form/SolicitacaoReceberForm.php',
     'Application\Form\TurmaForm'                                 => __DIR__ . '/src/Application/Form/TurmaForm.php',

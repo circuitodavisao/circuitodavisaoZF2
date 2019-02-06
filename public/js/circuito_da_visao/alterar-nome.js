@@ -6,6 +6,10 @@
  function alterarPessoa(dados) {
   funcaoCircuito('lancamentoAlterarPessoa', dados);
  }
+
+ function ajustarPessoa(dados) {
+  funcaoCircuito('lancamentoAjustarPessoa', dados);
+ }
  
  $(document).ready(function(){
      $('[data-toggle="popover"]').popover();
