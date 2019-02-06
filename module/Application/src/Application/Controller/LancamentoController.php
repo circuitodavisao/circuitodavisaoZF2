@@ -705,10 +705,6 @@ class LancamentoController extends CircuitoController {
 
 
 
-    /**
-     * Remover pessoa da listagem
-     * @return Json
-     */
     public function removerPessoaAction() {
         try {
             $sessao = new Container(Constantes::$NOME_APLICACAO);
@@ -731,6 +727,43 @@ class LancamentoController extends CircuitoController {
             ));
         } catch (Exception $exc) {
             CircuitoController::direcionaErroDeCadastro($exc->getMessage());
+        }
+    }
+
+    public function ajustarPessoaAction() {
+        try {
+            $sessao = new Container(Constantes::$NOME_APLICACAO);
+            $pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($sessao->idSessao);
+			$sessao->idSessao = null;
+
+			$grupoPessoaMaisRecente = null;
+			$grupoPessoas = $pessoa->getGrupoPessoa();
+			foreach($grupoPessoas as $grupoPessoa){
+				if($grupoPessoa->verificarSeEstaAtivo()){
+					if($grupoPessoaMaisRecente === null){
+						$grupoPessoaMaisRecente = $grupoPessoa;
+					}else{
+						if($grupoPessoa->getId() > $grupoPessoaMaisRecente->getId()){
+							$grupoPessoaMaisRecente = $grupoPessoa;
+						}
+					}
+				}
+			}
+
+			if($grupoPessoaMaisRecente){
+				foreach($grupoPessoas as $grupoPessoa){
+					if($grupoPessoa->verificarSeEstaAtivo()){
+						if($grupoPessoa->getId() !== $grupoPessoaMaisRecente->getId()){
+							$grupoPessoa->setDataEHoraDeInativacao($grupoPessoa->getData_criacaoStringPadraoBanco());
+							$this->getRepositorio()->getGrupoPessoaORM()->persistir($grupoPessoa, $mudarDataDeCriacao = false);
+						}	
+					}
+				}
+			}
+
+            return $this->redirect()->toRoute(Constantes::$ROUTE_LANCAMENTO, array(Constantes::$ACTION => 'Arregimentacao',));
+        } catch (Exception $exc) {
+			error_log($exc->getMessage());
         }
     }
 
