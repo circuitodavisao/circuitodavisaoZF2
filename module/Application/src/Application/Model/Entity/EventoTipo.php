@@ -20,6 +20,7 @@ class EventoTipo extends CircuitoEntity {
     const tipoCulto = 2;
     const tipoRevisao = 3;
     const tipoDiscipulado = 4;
+    const tipoCelulaEstrategica = 5;
 
     /**
      * @ORM\OneToMany(targetEntity="Evento", mappedBy="eventoTipo") 
