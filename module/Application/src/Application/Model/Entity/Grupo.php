@@ -307,7 +307,9 @@ class Grupo extends CircuitoEntity {
                 }
             }
 
-			if(count($grupoPaiFilhoFilhosAtivos) > 0 && $grupoPaiFilhoFilhosAtivos[0]->getGrupoPaiFilhoFilho()->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::subEquipe){
+			if(count($grupoPaiFilhoFilhosAtivos) > 0 
+				&& $grupoPaiFilhoFilhosAtivos[0]->getGrupoPaiFilhoFilho()->getEntidadeAtiva()
+				&& $grupoPaiFilhoFilhosAtivos[0]->getGrupoPaiFilhoFilho()->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::subEquipe){
 				$totalDeFilhos = count($grupoPaiFilhoFilhosAtivos);
 				for($i = 0; $i < $totalDeFilhos; $i++){
 					for($j = 0; $j < $totalDeFilhos; $j++){

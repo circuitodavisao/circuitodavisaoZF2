@@ -115,13 +115,12 @@ class ListagemDePessoasComEventos extends AbstractHelper {
 	}
 
 	private function montaLinhaDaPessoa($pessoa, $grupoEventoNoPeriodo) {
-		$html = '';
-		$classLinha = '';
+		$html = '';		
+		$inativado = false;
 		$corBotao = 'btn-dark';
 		$corRetangulo = 'btn-default';
 		$corTextoTagsExtrasXs = ' class="hidden-lg" ';
-		$corTextoTagsExtrasLg = ' class="hidden-xs hidden-sm hidden-md" ';
-		$classLinha2 = '';
+		$corTextoTagsExtrasLg = ' class="hidden-xs hidden-sm hidden-md" ';		
 		$border = '';
 		if ($pessoa->getTipo() != 'LP' && !$pessoa->getAtivo()) {
 			if ($pessoa->getDataInativacao()) {
@@ -132,8 +131,7 @@ class ListagemDePessoasComEventos extends AbstractHelper {
 				$dataDoFimDoPeriodoParaComparar = strtotime($stringPeriodoFim);
 				$dataDeInativacaoDaPessoaParaComparar = strtotime($pessoa->getDataInativacao());
 				if ($dataDeInativacaoDaPessoaParaComparar >= $dataDoInicioDoPeriodoParaComparar && $dataDeInativacaoDaPessoaParaComparar <= $dataDoFimDoPeriodoParaComparar) {
-					$classLinha = 'class="row-warning warning"';
-					$classLinha2 = 'footable-visible footable-first-column';
+					$inativado = true;
 					$corBotao = 'btn-warning disabled';
 					$base = ' data-toggle="tooltip" data-placement="center" title data-original-title="Inativo"';
 					$corTextoTagsExtrasXs = 'class="hidden-lg' . $base;
@@ -187,15 +185,9 @@ class ListagemDePessoasComEventos extends AbstractHelper {
 		$html .= '</div>';
 		/* Row */
 
-		if ($pessoa->getTipo() != 'LP' && !$pessoa->getAtivo()) {
+		if ($pessoa->getTipo() != 'LP' && !$pessoa->getAtivo() && !$pessoa->getGrupoPessoaAtivo() && $inativado) {
 			$corDaLabel = 'label-danger';
-			$statusDoInativado = 'INATIVO';
-			if($pessoa->getGrupoPessoaAtivo()){
-				$corDaLabel = 'label-primary';
-				$statusDoInativado = 'TORNOU SE ';
-				$statusDoInativado .= $this->view->translate($pessoa->getGrupoPessoaAtivo()->getGrupoPessoaTipo()->getNome());
-
-			}
+			$statusDoInativado = 'FOI INATIVADO NESTE PERIODO';			
 			$html .= '<div class="row btn-default p5 text-center">';
 			$html .= '<span class="label label-rounded '. $corDaLabel .' ">'. $statusDoInativado .'</span>';
 			$html .= '</div>';
