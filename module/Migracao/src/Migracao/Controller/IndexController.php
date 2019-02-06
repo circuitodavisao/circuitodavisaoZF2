@@ -390,7 +390,7 @@ class IndexController extends CircuitoController {
 									$idSolicitacaoTipo = $solicitacao->getSolicitacaoTipo()->getId();
 									if ($idSolicitacaoTipo === SolicitacaoTipo::TRANSFERIR_LIDER_NA_PROPRIA_EQUIPE ||
 										$idSolicitacaoTipo === SolicitacaoTipo::TRANSFERIR_LIDER_PARA_OUTRA_EQUIPE) {
-											$html .= "<br />TRANSFERIR_LIDER_NA_PROPRIA_EQUIPE";
+											$html .= "<br /> {$solicitacao->getId()} - TRANSFERIR_LIDER_NA_PROPRIA_EQUIPE";
 											$grupoQueSeraSemeado = $this->getRepositorio()->getGrupoORM()->encontrarPorId($solicitacao->getObjeto1());
 											$grupoQueRecebera = $this->getRepositorio()->getGrupoORM()->encontrarPorId($solicitacao->getObjeto2());
 											$extra = '';
@@ -400,17 +400,18 @@ class IndexController extends CircuitoController {
 											if ($solicitacao->getNome()) {
 												$extra = (string) $solicitacao->getNome();
 											}
+
 											error_log('Solicitacao: '.$solicitacao->getId());
 											$html .= $this->transferirLider($grupoQueSeraSemeado, $grupoQueRecebera, $extra);
 										}
 									if ($idSolicitacaoTipo == SolicitacaoTipo::UNIR_CASAL) {
-										$html .= "<br />UNINDO CASAL ";
+										$html .= "<br /> {$solicitacao->getId()} - UNINDO CASAL ";
 										$grupoHomem = $this->getRepositorio()->getGrupoORM()->encontrarPorId($solicitacao->getObjeto1());
 										$grupoMulher = $this->getRepositorio()->getGrupoORM()->encontrarPorId($solicitacao->getObjeto2());
 										$html .= $this->unirCasal($grupoHomem, $grupoMulher);
 									}
 									if ($idSolicitacaoTipo == SolicitacaoTipo::SEPARAR) {
-										$html .= "<br />SEPARANDO";
+										$html .= "<br /> {$solicitacao->getId()} - SEPARANDO";
 										$pessoaParaInativar = $this->getRepositorio()->getPessoaORM()->encontrarPorId($solicitacao->getObjeto2());
 										foreach ($pessoaParaInativar->getResponsabilidadesAtivas() as $grupoResponsavel) {
 											$grupoResponsavel->setDataEHoraDeInativacao(date('Y-m-d', mktime(0, 0, 0, date("m"), date("d") - 1, date("Y"))));
@@ -425,18 +426,18 @@ class IndexController extends CircuitoController {
 									//								}
 									if ($idSolicitacaoTipo == SolicitacaoTipo::REMOVER_LIDER) {
 										/* remover todos lideres abaixo */
-										$html .= "<br />REMOVENDO LIDER";
+										$html .= "<br /> {$solicitacao->getId()} - REMOVENDO LIDER";
 										$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($solicitacao->getObjeto1());
 										$html .= $this->removerLider($grupo);
 									}
 									if ($idSolicitacaoTipo == SolicitacaoTipo::REMOVER_CELULA) {
-										$html .= "<br />REMOVENDO CELULA";
+										$html .= "<br /> {$solicitacao->getId()} - REMOVENDO CELULA";
 										$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($solicitacao->getObjeto1());
 										$grupoEvento = $this->getRepositorio()->getGrupoEventoORM()->encontrarPorId($solicitacao->getObjeto2());
 										$html .= $this->removerCelula($grupo, $grupoEvento);
 									}
 									if ($idSolicitacaoTipo == SolicitacaoTipo::TRANSFERIR_ALUNO) {
-										$html .= "<br />TRANSFERIR ALUNO";
+										$html .= "<br /> {$solicitacao->getId()} - TRANSFERIR ALUNO";
 										$turmaPessoa = $this->getRepositorio()->getTurmaPessoaORM()->encontrarPorId($solicitacao->getObjeto1());
 										$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($solicitacao->getObjeto2());
 										$html .= $this->transferirAluno($turmaPessoa, $grupo);
@@ -606,11 +607,13 @@ class IndexController extends CircuitoController {
 				$entidade->setNome($extra);
 			}
 		}else{
-			if($grupoQueSeraSemeado->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::subEquipe){
-				$entidade->setNumero($grupoQueSeraSemeado->getEntidadeAtiva()->getNumero());
-			}
-			if($grupoQueSeraSemeado->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::equipe){
-				$entidade->setNome($grupoQueSeraSemeado->getEntidadeAtiva()->getNome());
+			if($grupoQueSeraSemeado->getEntidadeAtiva()){
+				if($grupoQueSeraSemeado->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::subEquipe){
+					$entidade->setNumero($grupoQueSeraSemeado->getEntidadeAtiva()->getNumero());
+				}
+				if($grupoQueSeraSemeado->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::equipe){
+					$entidade->setNome($grupoQueSeraSemeado->getEntidadeAtiva()->getNome());
+				}
 			}
 		}
 		$entidade->setEntidadeTipo($grupoQueSeraSemeado->getEntidadeAtiva()->getEntidadeTipo());
@@ -668,11 +671,14 @@ class IndexController extends CircuitoController {
 		$numeroIdentificadorNovo = $numeroIdentificadorLider . str_pad($grupoNovo->getId(), 8, 0, STR_PAD_LEFT);
 		if($linhaDeLancamento = $grupoQueSeraSemeado->getGrupoPessoasNoPeriodo($periodo = 0, $this->getRepositorio())){
 			foreach($linhaDeLancamento as $grupoPessoa){
-				$grupoPessoaNovo = new GrupoPessoa();
-				$grupoPessoaNovo->setGrupo($grupoNovo);
-				$grupoPessoaNovo->setPessoa($grupoPessoa->getPessoa());
-				$grupoPessoaNovo->setGrupoPessoaTipo($grupoPessoa->getGrupoPessoaTipo());
-				$this->getRepositorio()->getGrupoPessoaORM()->persistir($grupoPessoaNovo);
+
+				if($grupoPessoa->verificarSeEstaAtivo()){
+					$grupoPessoaNovo = new GrupoPessoa();
+					$grupoPessoaNovo->setGrupo($grupoNovo);
+					$grupoPessoaNovo->setPessoa($grupoPessoa->getPessoa());
+					$grupoPessoaNovo->setGrupoPessoaTipo($grupoPessoa->getGrupoPessoaTipo());
+					$this->getRepositorio()->getGrupoPessoaORM()->persistir($grupoPessoaNovo);
+				}
 
 				/* Se eh aluno */
 				if($turmaPessoa = $this->getRepositorio()->getTurmaPessoaORM()->encontrarPorIdPessoa($grupoPessoa->getPessoa()->getId())){
@@ -917,23 +923,27 @@ class IndexController extends CircuitoController {
 		/* linha lancamento homem */
 		if($linhaDeLancamentoHomem){
 			foreach($linhaDeLancamentoHomem as $grupoPessoa){
-				$grupoPessoa->setDataEHoraDeInativacao($dataParaInativar);
-				$grupoPessoaHomem = new GrupoPessoa();
-				$grupoPessoaHomem->setGrupo($grupoNovo);
-				$grupoPessoaHomem->setPessoa($grupoPessoa->getPessoa());
-				$grupoPessoaHomem->setGrupoPessoaTipo($grupoPessoa->getGrupoPessoaTipo());
-				$this->getRepositorio()->getGrupoPessoaORM()->persistir($grupoPessoaHomem);
+				if($grupoPessoa->verificarSeEstaAtivo()){
+					$grupoPessoa->setDataEHoraDeInativacao($dataParaInativar);
+					$grupoPessoaHomem = new GrupoPessoa();
+					$grupoPessoaHomem->setGrupo($grupoNovo);
+					$grupoPessoaHomem->setPessoa($grupoPessoa->getPessoa());
+					$grupoPessoaHomem->setGrupoPessoaTipo($grupoPessoa->getGrupoPessoaTipo());
+					$this->getRepositorio()->getGrupoPessoaORM()->persistir($grupoPessoaHomem);
+				}				
 			}
 		}
 		/* linha lancamento mulher */
 		if($linhaDeLancamentoMulher){
 			foreach($linhaDeLancamentoMulher as $grupoPessoa){
-				$grupoPessoa->setDataEHoraDeInativacao($dataParaInativar);
-				$grupoPessoaMulher = new GrupoPessoa();
-				$grupoPessoaMulher->setGrupo($grupoNovo);
-				$grupoPessoaMulher->setPessoa($grupoPessoa->getPessoa());
-				$grupoPessoaMulher->setGrupoPessoaTipo($grupoPessoa->getGrupoPessoaTipo());
-				$this->getRepositorio()->getGrupoPessoaORM()->persistir($grupoPessoaMulher);
+				if($grupoPessoa->verificarSeEstaAtivo()){
+					$grupoPessoa->setDataEHoraDeInativacao($dataParaInativar);
+					$grupoPessoaMulher = new GrupoPessoa();
+					$grupoPessoaMulher->setGrupo($grupoNovo);
+					$grupoPessoaMulher->setPessoa($grupoPessoa->getPessoa());
+					$grupoPessoaMulher->setGrupoPessoaTipo($grupoPessoa->getGrupoPessoaTipo());
+					$this->getRepositorio()->getGrupoPessoaORM()->persistir($grupoPessoaMulher);
+				}
 			}
 		}
 
@@ -2948,7 +2958,6 @@ class IndexController extends CircuitoController {
 		$relatorios = array();
 		$idGrupoIgrejaEMes = $this->params()->fromRoute(Constantes::$ID, 1);
 		$explodeId = explode('_', $idGrupoIgrejaEMes);
-		$grupoIgrejas[] = ['id' => $explodeId[0]];
 
 		$mesAtual = date('m');
 		$anoAtual = date('Y');
@@ -2966,10 +2975,27 @@ class IndexController extends CircuitoController {
 		case 2: $mesSelecinado = $mesAnterior; $anoSelecinado = $anoAnterior; break;
 		}
 
-		foreach($grupoIgrejas as $grupoIgreja){
-			$idGrupoIgreja = $grupoIgreja['id'];
-			$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupoIgreja);
+		if($explodeId[0] == 0){
+			$gruposIgreja = $this->getRepositorio()->getGrupoORM()->pegarTodasIgrejas();
+			foreach($gruposIgreja as $grupoIgreja){
+				if($grupoIgreja->getId() !== 1
+					&& $grupoIgreja->getId() !== 1225){
+						$grupoIgrejas[] = $grupoIgreja;
+					}
+			}
+		}else{
+			$grupoIgrejas[] = ['id' => $explodeId[0]];
+		}
 
+		foreach($grupoIgrejas as $grupoIgreja){
+			if($explodeId[0] == 0){
+				$grupo = $grupoIgreja;
+				$idGrupoIgreja = $grupo->getId();
+			}else{
+				$idGrupoIgreja = $grupoIgreja['id'];
+				$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupoIgreja);
+			}
+			$html .= '<br /><br />Igreja: ' . $grupo->getId();
 			$relatorioCelulas =	self::pegarMediaPorCelula($this->getRepositorio(), $grupo, $celulaDeElite = true, $mesSelecinado, $anoSelecinado);
 			foreach($relatorioCelulas as $chave => $valor){
 				$dados = array(
@@ -3008,7 +3034,7 @@ class IndexController extends CircuitoController {
 				}else{
 					$arrayDeEquipes = $grupoPaiFilhoFilhos144;
 				}
-				$html .= 'Total de equipes: ' . count($arrayDeEquipes);
+				$html .= '<br />Total de equipes: ' . count($arrayDeEquipes);
 				foreach ($arrayDeEquipes as $gpFilho144) {
 					$grupoFilho144 = $gpFilho144->getGrupoPaiFilhoFilho();
 					$html .= '<br />Equipe: '.$grupoFilho144->getEntidadeAtiva()->getNome();

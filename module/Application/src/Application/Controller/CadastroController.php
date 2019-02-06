@@ -1879,7 +1879,7 @@ class CadastroController extends CircuitoController {
 
 		/* Inativando o grupo pessoa antigo */
 		$grupoPessoaRevisionistaAntigo = $pessoaRevisionista->getGrupoPessoaAtivo();
-		$grupoPessoaRevisionistaAntigo->setDataEHoraDeInativacao();
+		$grupoPessoaRevisionistaAntigo->setDataEHoraDeInativacao(Funcoes::proximoDomingo());
 		$this->getRepositorio()->getGrupoPessoaORM()->persistir($grupoPessoaRevisionistaAntigo, false);
 
 		/* Busca GrupoPessoaTipo */
@@ -1890,6 +1890,7 @@ class CadastroController extends CircuitoController {
 		$grupoPessoa->setPessoa($pessoaRevisionista);
 		$grupoPessoa->setGrupo($grupoPessoaRevisionistaAntigo->getGrupo());
 		$grupoPessoa->setGrupoPessoaTipo($grupoPessoaTipo);
+		$grupoPessoa->setDataEHoraDeCriacao(Funcoes::proximaSegunda());
 		$this->getRepositorio()->getGrupoPessoaORM()->persistir($grupoPessoa);
 
 		return $grupoPessoa;
@@ -2128,6 +2129,7 @@ class CadastroController extends CircuitoController {
 	}
 
 	public function solicitacaoAction() {
+		ini_set('memory_limit', '1024M');
 		self::validarSeSouIgrejaOuEquipe();
 
 		$sessao = new Container(Constantes::$NOME_APLICACAO);
@@ -2138,7 +2140,17 @@ class CadastroController extends CircuitoController {
 		$grupoIgreja = $grupo->getGrupoIgreja();
 		$grupoPaiFilhoFilhos = $grupo->getGrupoPaiFilhoFilhosAtivosReal();
 
-		$solicitacaoTipos = $this->getRepositorio()->getSolicitacaoTipoORM()->encontrarTodos();
+		$solicitacaoTiposSemAjuste = $this->getRepositorio()->getSolicitacaoTipoORM()->encontrarTodos();
+		$solicitacaoTiposAjustado = array();
+		if($entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
+			foreach($solicitacaoTiposSemAjuste as $solicitacaoTipo){
+				if($solicitacaoTipo->getId() !== SolicitacaoTipo::TRANSFERIR_LIDER_PARA_OUTRA_EQUIPE){
+					$solicitacaoTiposAjustado[] = $solicitacaoTipo;
+				}	
+			}	
+		}else{
+			$solicitacaoTiposAjustado = $solicitacaoTiposSemAjuste;
+		}
 		$formSolicitacao = new SolicitacaoForm('formSolicitacao');
 
 		$grupoPaiFilhoEquipes = $grupoIgreja->getGrupoPaiFilhoFilhosAtivosReal();
@@ -2269,7 +2281,7 @@ class CadastroController extends CircuitoController {
 			'grupo' => $grupo,
 			'discipulos' => $grupoPaiFilhoFilhos,
 			'discipulosIgreja' => $discipulosIgreja,
-			'solicitacaoTipos' => $solicitacaoTipos,
+			'solicitacaoTipos' => $solicitacaoTiposAjustado,
 			Constantes::$FORM => $formSolicitacao,
 			'titulo' => 'Solicitação',
 			'grupoPaiFilhoEquipes' => $grupoPaiFilhoEquipes,
@@ -2707,7 +2719,8 @@ class CadastroController extends CircuitoController {
 						$criarNovoEvento = false;
 						$eventoAtual = $this->getRepositorio()->getEventoORM()->encontrarPorId($post_data[Constantes::$FORM_ID]);
 						$eventoAtual->setData($dataDoRevisao);
-						$eventoAtual->setNome($validatedData[Constantes::$FORM_NOME]);
+						$observacao = trim($validatedData[Constantes::$FORM_NOME]);
+						$eventoAtual->setNome($observacao);
 						$this->getRepositorio()->getEventoORM()->persistir($eventoAtual, $alterarDataDeCriacao = false);
 					}
 					if ($criarNovoEvento) {
@@ -2722,7 +2735,8 @@ class CadastroController extends CircuitoController {
 						$evento->setDia($sextaFeira = 6);
 						$evento->setEventoTipo($this->getRepositorio()->getEventoTipoORM()->encontrarPorId(EventoTipo::tipoRevisao));
 						$evento->setData($dataDoRevisao);
-						$evento->setNome($validatedData[Constantes::$FORM_NOME]);
+						$observacao = trim($validatedData[Constantes::$FORM_NOME]);
+						$evento->setNome($observacao);
 
 						$grupoEvento->setData_criacao(Funcoes::dataAtual());
 						$grupoEvento->setHora_criacao(Funcoes::horaAtual());
@@ -2742,7 +2756,7 @@ class CadastroController extends CircuitoController {
 						$this->getRepositorio()->getPessoaORM()->persistir($pessoa);
 					}
 				} else {
-					error_log(print_r($formulario->getMessages(), TRUE));
+					error_log(print_r($formulario->getMessages(), TRUE));					
 				}
 				$this->getRepositorio()->fecharTransacao();
 				return $this->redirect()->toRoute(Constantes::$ROUTE_CADASTRO, array(

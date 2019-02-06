@@ -43,40 +43,7 @@ class Menu extends AbstractHelper {
 		$html .= '<span id="toggle_sidemenu_l" class="ad ad-lines"></span>';
 		$html .= '</div>';
 
-		$htmlEspecifoUL .= '<li class="dropdown menu-merge">';
-		$htmlEspecifoUL .= '<div class="navbar-btn btn-group">';
-		$htmlEspecifoUL .= '<button data-toggle="dropdown" class="btn btn-sm dropdown-toggle">';
-		$htmlEspecifoUL .= '<span class="fa fa-bell-o fs14 va-m"></span>';
-		$htmlEspecifoUL .= '<span class="badge badge-danger">1</span>';
-		$htmlEspecifoUL .= '</button>';
-		$htmlEspecifoUL .= '<div class="dropdown-menu dropdown-persist w350 animated animated-shorter fadeIn" role="menu">';
-		$htmlEspecifoUL .= '<div class="panel mbn">';
-		$htmlEspecifoUL .= '<div class="panel-menu">';
-		$htmlEspecifoUL .= '<span class="panel-icon"><i class="fa fa-exclamation-circle"></i></span>';
-		$htmlEspecifoUL .= '<span class="panel-title fw600"> Notificações</span>';
-		$htmlEspecifoUL .= '</div>';
-		$htmlEspecifoUL .= '<div class="panel-body panel-scroller scroller-navbar scroller-overlay scroller-pn pn" style="height: auto;">';
-		$htmlEspecifoUL .= '<ol class="timeline-list">';
-		$htmlEspecifoUL .= '<li class="timeline-item">';
-		$htmlEspecifoUL .= '<div class="timeline-icon bg-dark light">';
-		$htmlEspecifoUL .= '<span>1</span>';
-		$htmlEspecifoUL .= '</div>';
-		$htmlEspecifoUL .= '<div class="timeline-desc">';
-		$htmlEspecifoUL .= '<a href="/principalNotasDeAtualizacoes"><b>Nova nota de atualização!</b> Clique aqui e confira!</a>';
-		$htmlEspecifoUL .= '</div>';
-		$htmlEspecifoUL .= '</li>';
-		$htmlEspecifoUL .= '</ol>';
-		$htmlEspecifoUL .= '</div>';
-		$htmlEspecifoUL .= '</div>';
-		$htmlEspecifoUL .= '</div>';
-	  $htmlEspecifoUL .= '</div>';
-		$htmlEspecifoUL .= '</li>';
-
-
-		$htmlEspecifoUL .= '<li class="menu-divider hidden-xs">';
-		$htmlEspecifoUL .=	'<i class="fa fa-circle"></i>';
-		$htmlEspecifoUL .=  '</li>';
-
+		
 		$htmlEspecifoUL .= '<li class="dropdown menu-merge">';
 		$htmlEspecifoUL .= '<a href="#" class="dropdown-toggle fw600 p15" data-toggle="dropdown">';
 		$htmlEspecifoUL .= '<img src="/img/fotos/'.$this->view->pessoa->getFoto().'" alt="avatar" class="mw30 br64">';
@@ -469,8 +436,10 @@ class Menu extends AbstractHelper {
 			$arrayOQueMostrarDosCursos['consultarMatricula'] = false;
 			$arrayOQueMostrarDosCursos['listagem'] = false;
 			$arrayOQueMostrarDosCursos['financeiroPorData'] = false;
+			$arrayOQueMostrarDosCursos['turmasEncerradas'] = false;
 			if ($this->view->pessoa->getPessoaCursoAcessoAtivo()) {
 				if ($this->view->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::COORDENADOR) {
+					$arrayOQueMostrarDosCursos['turmasEncerradas'] = true;
 					$arrayOQueMostrarDosCursos['turmas'] = true;
 					$arrayOQueMostrarDosCursos['usuarios'] = true;
 					$arrayOQueMostrarDosCursos['gerarFaltas'] = true;
@@ -493,6 +462,7 @@ class Menu extends AbstractHelper {
 					}
 			} else {
 				if ($this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja) {
+					$arrayOQueMostrarDosCursos['turmasEncerradas'] = true;
 					$arrayOQueMostrarDosCursos['reentrada'] = true;
 					$arrayOQueMostrarDosCursos['turmas'] = true;
 					$arrayOQueMostrarDosCursos['usuarios'] = true;
@@ -534,6 +504,14 @@ class Menu extends AbstractHelper {
 				$html .= '<a href="/cursoListarTurma" onClick="mostrarSplash();">';
 				$html .= '<span class="fa fa-list"></span>';
 				$html .= 'Turmas';
+				$html .= '</a>';
+				$html .= '</li>';
+			}
+			if ($arrayOQueMostrarDosCursos['turmasEncerradas']) {
+				$html .= '<li>';
+				$html .= '<a href="/cursoTurmasEncerradas" onClick="mostrarSplash();">';
+				$html .= '<span class="fa fa-list"></span>';
+				$html .= 'Turmas Encerradas';
 				$html .= '</a>';
 				$html .= '</li>';
 			}

@@ -32,17 +32,31 @@ if ($this->mostrarParaReenviarEmails) {
 	echo '<div class="panel-heading">';
 	echo 'Reenviar Email de acesso';
 	echo '</div>';
-	echo '<div class="panel-body">';
-	foreach ($this->responsabilidades as $grupoResponsavel) {
+	echo '<div class="panel-body">';	
+	
+	foreach ($this->responsabilidades as $grupoResponsavel) {			
 		$pessoa = $grupoResponsavel->getPessoa();
-		if ($pessoa->getToken()) {
-			$nome = $pessoa->getNomePrimeiro();
-			$extraBotaoEmail = $this->funcaoOnClick('funcaoCircuito("principalNovoEmailParaEnviar", ' . $pessoa->getId() . ')');
-			$labelBotao = 'Reenviar para: ' . $nome;
-			echo $this->botaoSimples(
-				$labelBotao, $extraBotaoEmail, BotaoSimples::botaoMenorImportancia, BotaoSimples::posicaoAEsquerda);
+		$nome = $pessoa->getNomePrimeiro();
+		$email = $pessoa->getEmail();
+		if ($pessoa->getToken()) {			
+			$extraBotaoEmailOutro = $this->funcaoOnClick('funcaoCircuito("principalNovoEmailParaEnviar", ' . $pessoa->getId() . ')');
+			$labelBotaoOutro = 'ENVIAR PARA OUTRO EMAIL: ' . $nome;
+			echo '<div class="row text-center">';
+			echo '<div class="p5 col-lg-6 col-sm-12 col-xs-12">';
+			echo $this->botaoSimples($labelBotaoOutro, $extraBotaoEmailOutro, BotaoSimples::botaoMenorImportancia, BotaoSimples::posicaoAoCentro);
+			echo '</div>';
+			$enviandoParaOMesmoEmail = true;
+			$dadosEnviarEmail = $pessoa->getId() . '_' . $enviandoParaOMesmoEmail;
+			$funcaoOnClick = 'mostrarSplash(); funcaoCircuito("principalenviarEmail", "'.$dadosEnviarEmail.'")';
+			$extraBotaoEmailMesmo = $this->funcaoOnClick($funcaoOnClick);
+			$labelBotaoMesmo = 'ENVIAR PARA O EMAIL: ' . $email;
+			echo '<div class="p5 col-lg-6 col-sm-12 col-xs-12">';
+			echo $this->botaoSimples($labelBotaoMesmo, $extraBotaoEmailMesmo, BotaoSimples::botaoMenorImportancia, BotaoSimples::posicaoAoCentro);
+			echo '</div>';
+			echo '</div>';
 		}
 	}
+	
 	echo '</div>';
 	echo '</div>';
 }

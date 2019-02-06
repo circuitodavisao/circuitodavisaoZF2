@@ -91,8 +91,9 @@ class FiltroCursos extends AbstractHelper {
 				}
 
 				if($urlFiltro === 'cursoChamada'){
-					if($this->view->pessoa->getPessoaCursoAcessoAtivo()){
-						$selectedNao = '';
+					if($this->view->pessoa->getPessoaCursoAcessoAtivo()
+						|| $this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
+							$selectedNao = '';
 						$selectedSim = '';
 						if($this->view->postado['mostrarAulas'] == 0){
 							$selectedNao = 'selected';
