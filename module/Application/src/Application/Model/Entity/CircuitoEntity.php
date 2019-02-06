@@ -45,7 +45,7 @@ class CircuitoEntity {
     }
 
     /**
-     * Seta data e hora de criação
+     * Seta data e hora de inativacao
      */
     function setDataEHoraDeInativacao($date = null) {
         if ($date) {
@@ -55,6 +55,15 @@ class CircuitoEntity {
         }
         $this->setData_inativacao($timeNow);
         $this->setHora_inativacao($timeNow->format('H:s:i'));
+    }
+
+    /**
+     * Seta data e hora de inativacao como null
+     */
+
+    function setDataEHoraDeInativacaoIgualANull() {        
+        $this->setData_inativacao(null);
+        $this->setHora_inativacao(null);
     }
 
     /**
