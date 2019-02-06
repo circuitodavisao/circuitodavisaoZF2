@@ -1,0 +1,70 @@
+<?php
+
+namespace Application\View\Helper;
+
+use Application\Controller\Helper\Constantes;
+use Application\Controller\Helper\Funcoes;
+use Zend\View\Helper\AbstractHelper;
+use Application\Model\Entity\Situacao;
+
+$turmasInativas = $this->turmas;
+$html .= $this->templateFormularioTopo('Turmas', '', 'style="max-width: 100%; margin-top: 0%;"');
+$html .= '<div class="panel-body bg-light">';
+/* Sem pessoas cadastrados */
+if (count($turmasInativas) == 0) {
+    $html .= '<div class="alert alert-warning"><i class="fa fa-warning pr10" aria-hidden="true"></i>&nbsp;Sem Turmas</div>';
+} else {
+    $html .= '<table class="table table-condensed">';
+    $html .= '<thead>';
+    $html .= '<tr>';
+    $html .= '<th class="text-center">Curso</th>';
+    $html .= '<th class="text-center">M&ecirc;s/Ano</th>';
+    $html .= '<th class="text-center hidden-xs">Observação</th>';			
+    $html .= '<th class="text-center hidden-xs">Alunos</th>';
+    $html .= '<th class="text-center hidden-xs">Aula Aberta</th>';
+    $html .= '<th class="text-center"></th>';
+    $html .= '</tr>';
+    $html .= '</thead>';
+    $html .= '<tbody>';
+
+    foreach ($turmasInativas as $turma) {        
+        $stringNomeDaFuncaoOnClickReabrirTurma = 'let resposta = confirm("Confirma reabrir?"); if(resposta){ mostrarSplash(); funcaoCircuito("' . Constantes::$ROUTE_CURSO . 'ReabrirTurma' . '",' . $turma->getId() . ')}';
+        $totalAlunos = ($this->relatorio[$turma->getId()][Situacao::ATIVO] + $this->relatorio[$turma->getId()][Situacao::ESPECIAL]);
+
+        $html .= '<tr>';
+        $html .= '<td class="text-center">';
+        $html .= '<span class="hidden-xs">' . $turma->getCurso()->getNome() . '</span>';
+        $html .= '<span class="hidden-sm hidden-md hidden-lg">' . $turma->getCurso()->getNomeSigla() . '<span>';
+        $html .= '</td>';
+        $html .= '<td class="text-center">';
+        $html .= '<span class="hidden-xs">' . Funcoes::mesPorExtenso($turma->getMes(), 1) . '</span>';
+        $html .= '<span class="hidden-sm hidden-md hidden-lg">' . str_pad($turma->getMes(), 2, 0, STR_PAD_LEFT) . '</span>';
+        $html .= '/' . $turma->getAno() . '</td>';
+        $html .= '<td class="text-center hidden-xs">' . $turma->getObservacao() . '</td>';
+        if(!$turma->getTurmaAulaAtiva()){
+            $html .= '<td class="text-center hidden-xs">SEM AULA ABERTA</td>';
+        } else {
+            $html .= '<td class="text-center hidden-xs">' . $totalAlunos . '</td>';
+        }				
+        $html .= '<td class="text-center hidden-xs">';
+        $nomeAulaAberta = '<span class="label label-';
+        if ($turma->getTurmaAulaAtiva()) {
+            $nomeAulaAberta .= 'success">'.$turma->getTurmaAulaAtiva()->getAula()->getDisciplina()->getNome() . ' - AULA ' . $turma->getTurmaAulaAtiva()->getAula()->getPosicao();				} else {
+            $nomeAulaAberta .= 'danger">SEM AULA ABERTA';
+        }
+        $html .= $nomeAulaAberta.'</span>';
+        $html .= '</td>';
+        $html .= '<td class="text-center">';
+        
+        $html .= $this->botaoSimples('<i class="fa fa-check" ></i>', $this->funcaoOnClick($stringNomeDaFuncaoOnClickReabrirTurma), BotaoSimples::botaoMuitoPequenoSucesso);
+        $html .= '</td>';
+        $html .= '</tr>';
+    }
+    $html .= '</tbody>';
+    $html .= '</table>';
+}
+$html .= '</div>';
+/* Fim panel-body */
+
+$html .= $this->templateFormularioRodape();
+echo $html;
