@@ -2118,6 +2118,7 @@ class CadastroController extends CircuitoController {
 	}
 
 	public function solicitacaoAction() {
+		ini_set('memory_limit', '1024M');
 		self::validarSeSouIgrejaOuEquipe();
 
 		$sessao = new Container(Constantes::$NOME_APLICACAO);
