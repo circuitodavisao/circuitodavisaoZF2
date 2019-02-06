@@ -436,8 +436,10 @@ class Menu extends AbstractHelper {
 			$arrayOQueMostrarDosCursos['consultarMatricula'] = false;
 			$arrayOQueMostrarDosCursos['listagem'] = false;
 			$arrayOQueMostrarDosCursos['financeiroPorData'] = false;
+			$arrayOQueMostrarDosCursos['turmasEncerradas'] = false;
 			if ($this->view->pessoa->getPessoaCursoAcessoAtivo()) {
 				if ($this->view->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::COORDENADOR) {
+					$arrayOQueMostrarDosCursos['turmasEncerradas'] = true;
 					$arrayOQueMostrarDosCursos['turmas'] = true;
 					$arrayOQueMostrarDosCursos['usuarios'] = true;
 					$arrayOQueMostrarDosCursos['gerarFaltas'] = true;
@@ -460,6 +462,7 @@ class Menu extends AbstractHelper {
 					}
 			} else {
 				if ($this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja) {
+					$arrayOQueMostrarDosCursos['turmasEncerradas'] = true;
 					$arrayOQueMostrarDosCursos['reentrada'] = true;
 					$arrayOQueMostrarDosCursos['turmas'] = true;
 					$arrayOQueMostrarDosCursos['usuarios'] = true;
@@ -501,6 +504,14 @@ class Menu extends AbstractHelper {
 				$html .= '<a href="/cursoListarTurma" onClick="mostrarSplash();">';
 				$html .= '<span class="fa fa-list"></span>';
 				$html .= 'Turmas';
+				$html .= '</a>';
+				$html .= '</li>';
+			}
+			if ($arrayOQueMostrarDosCursos['turmasEncerradas']) {
+				$html .= '<li>';
+				$html .= '<a href="/cursoTurmasEncerradas" onClick="mostrarSplash();">';
+				$html .= '<span class="fa fa-list"></span>';
+				$html .= 'Turmas Encerradas';
 				$html .= '</a>';
 				$html .= '</li>';
 			}
