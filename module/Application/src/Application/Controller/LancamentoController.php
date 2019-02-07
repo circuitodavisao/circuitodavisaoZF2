@@ -1198,6 +1198,9 @@ class LancamentoController extends CircuitoController {
 				if($pessoaFatoFinanceiroAcessoAtivo->getFatoFinanceiroAcesso()->getId() === FatoFinanceiroAcesso::SECRETARIO_PARCEIRO_DE_DEUS){
 					$grupo = $grupo->getGrupoEquipe();
 				}
+				if($pessoaFatoFinanceiroAcessoAtivo->getFatoFinanceiroAcesso()->getId() === FatoFinanceiroAcesso::SECRETARIO_PARCEIRO_DE_DEUS_IGREJA){
+					$grupo = $grupo->getGrupoIgreja();
+				}
 			}
 
 			$numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupo);
