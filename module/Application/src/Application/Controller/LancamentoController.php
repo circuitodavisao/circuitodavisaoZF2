@@ -1082,6 +1082,9 @@ class LancamentoController extends CircuitoController {
 			if($pessoaFatoFinanceiroAcessoAtivo->getFatoFinanceiroAcesso()->getId() === FatoFinanceiroAcesso::SECRETARIO_PARCEIRO_DE_DEUS){
 				$grupo = $grupo->getGrupoEquipe();
 			}
+			if($pessoaFatoFinanceiroAcessoAtivo->getFatoFinanceiroAcesso()->getId() === FatoFinanceiroAcesso::SECRETARIO_PARCEIRO_DE_DEUS_IGREJA){
+				$grupo = $grupo->getGrupoIgreja();
+			}
 		}
 
 		$grupoPaiFilhoFilhos = $grupo->getGrupoPaiFilhoFilhosAtivosReal();
@@ -1180,50 +1183,50 @@ class LancamentoController extends CircuitoController {
 	}
 
 	public function parceiroDeDeusExtratoAction(){
-    $request = $this->getRequest();
+		$request = $this->getRequest();
 		$dados = array();
 		if($request->isPost()){
-      $postDados = $request->getPost();
+			$postDados = $request->getPost();
 			$mes = $postDados['mes'];
 			$ano = $postDados['ano'];
-  		$sessao = new Container(Constantes::$NOME_APLICACAO);
-  		$idEntidadeAtual = $sessao->idEntidadeAtual;
-  		$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
-  		$pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($sessao->idPessoa);
-  		$grupo = $entidade->getGrupo();
-  		if($pessoaFatoFinanceiroAcessoAtivo = $pessoa->getPessoaFatoFinanceiroAcessoAtivo()){
-  			if($pessoaFatoFinanceiroAcessoAtivo->getFatoFinanceiroAcesso()->getId() === FatoFinanceiroAcesso::SECRETARIO_PARCEIRO_DE_DEUS){
-  				$grupo = $grupo->getGrupoEquipe();
-  			}
-  		}
+			$sessao = new Container(Constantes::$NOME_APLICACAO);
+			$idEntidadeAtual = $sessao->idEntidadeAtual;
+			$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+			$pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($sessao->idPessoa);
+			$grupo = $entidade->getGrupo();
+			if($pessoaFatoFinanceiroAcessoAtivo = $pessoa->getPessoaFatoFinanceiroAcessoAtivo()){
+				if($pessoaFatoFinanceiroAcessoAtivo->getFatoFinanceiroAcesso()->getId() === FatoFinanceiroAcesso::SECRETARIO_PARCEIRO_DE_DEUS){
+					$grupo = $grupo->getGrupoEquipe();
+				}
+			}
 
-  		$numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupo);
-  		$fatos = $this->getRepositorio()->getFatoFinanceiroORM()->encontrarFatosPorNumeroIdentificadorPorMesEAno($numeroIdentificador, $mes, $ano);
-  		$fatosAtivos = array();
-  		if($fatos){
-  			foreach($fatos as $fatoFinanceiro){
-  				if($fatoFinanceiro->verificarSeEstaAtivo()){
-  					$idGrupo = substr($fatoFinanceiro->getNumero_identificador(), strlen($fatoFinanceiro->getNumero_identificador())-8);
-  					$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupo);
-  					$fatoFinanceiro->setGrupo($grupo);
-  					$fatosAtivos[] = $fatoFinanceiro;
-  				}
-  			}
-  		}
-      if(count($fatosAtivos) == 0){
-          $dados['semLancamentos'] = true;
-      }
-      $dados['fatos'] = $fatosAtivos;
-      $dados['pessoa'] = $pessoa;
-      $dados['entidade'] = $entidade;
-    } else {
+			$numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupo);
+			$fatos = $this->getRepositorio()->getFatoFinanceiroORM()->encontrarFatosPorNumeroIdentificadorPorMesEAno($numeroIdentificador, $mes, $ano);
+			$fatosAtivos = array();
+			if($fatos){
+				foreach($fatos as $fatoFinanceiro){
+					if($fatoFinanceiro->verificarSeEstaAtivo()){
+						$idGrupo = substr($fatoFinanceiro->getNumero_identificador(), strlen($fatoFinanceiro->getNumero_identificador())-8);
+						$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupo);
+						$fatoFinanceiro->setGrupo($grupo);
+						$fatosAtivos[] = $fatoFinanceiro;
+					}
+				}
+			}
+			if(count($fatosAtivos) == 0){
+				$dados['semLancamentos'] = true;
+			}
+			$dados['fatos'] = $fatosAtivos;
+			$dados['pessoa'] = $pessoa;
+			$dados['entidade'] = $entidade;
+		} else {
 			$mes = date('m');
 			$ano = date('Y');
 		}
-    $dados['mes'] = $mes;
+		$dados['mes'] = $mes;
 		$dados['ano'] = $ano;
 		self::registrarLog(RegistroAcao::VER_PARCEIRO_DE_DEUS, $extra = '');
-    return new ViewModel($dados);
+		return new ViewModel($dados);
 	}
 
 
@@ -1306,247 +1309,138 @@ class LancamentoController extends CircuitoController {
 
 
 	public function parceiroDeDeusUsuariosAction(){
-
 		$sessao = new Container(Constantes::$NOME_APLICACAO);
-
 		$idEntidadeAtual = $sessao->idEntidadeAtual;
-
 		$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
-
 		$grupo = $entidade->getGrupo();
-
 		$usuarios = $grupo->getGrupoEquipe()->getPessoaFatoFinanceiroAcesso();
-
 		$view = new ViewModel(array(
-
 			'usuarios' => $usuarios
-
 		));
-
 		self::registrarLog(RegistroAcao::VER_SECRETARIOS_DO_PD, $extra = '');
-
 		return $view;
-
 	}
 
 
 
 	public function parceiroDeDeusUsuarioAction() {
-
 		$sessao = new Container(Constantes::$NOME_APLICACAO);
-
 		$idEntidadeAtual = $sessao->idEntidadeAtual;
-
 		$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
-
 		$grupo = $entidade->getGrupo();
-
 		$lideres = $this->todosLideresAPartirDoGrupo($grupo, true);
-
 		return new ViewModel(array(
-
 			'lideres' => $lideres,
-
 		));
-
 	}
 
 
 
 	public function parceiroDeDeusUsuarioFinalizarAction() {
-
 		$sessao = new Container(Constantes::$NOME_APLICACAO);
-
 		$request = $this->getRequest();
-
 		if ($request->isPost()) {
-
 			$this->getRepositorio()->iniciarTransacao();
-
 			try {
-
 				$idEntidadeAtual = $sessao->idEntidadeAtual;
-
 				$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
-
 				$post_data = $request->getPost();
-
 				$pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($post_data['idPessoa']);
-
 				$grupo = $entidade->getGrupo();
 
-
-
+				$qualPerfilUsar = FatoFinanceiroAcesso::SECRETARIO_PARCEIRO_DE_DEUS;
+				if($entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
+					$qualPerfilUsar = FatoFinanceiroAcesso::SECRETARIO_PARCEIRO_DE_DEUS_IGREJA;
+				}
+				$fatoFinanceiroAcesso = $this->getRepositorio()->getFatoFinanceiroAcessoORM()->encontrarPorId($qualPerfilUsar);
 				$pessoaFatoFinanceiroAcesso = new PessoaFatoFinanceiroAcesso();
-
 				$pessoaFatoFinanceiroAcesso->setPessoa($pessoa);
-
 				$pessoaFatoFinanceiroAcesso->setGrupo($grupo->getGrupoEquipe());
-
-				$pessoaFatoFinanceiroAcesso->setFatoFinanceiroAcesso($this->getRepositorio()->getFatoFinanceiroAcessoORM()->encontrarPorId(FatoFinanceiroAcesso::SECRETARIO_PARCEIRO_DE_DEUS));
-
+				$pessoaFatoFinanceiroAcesso->setFatoFinanceiroAcesso($fatoFinanceiroAcesso);
 				$pessoaFatoFinanceiroAcesso->setDataEHoraDeCriacao();
-
 				$this->getRepositorio()->getPessoaFatoFinanceiroAcessoORM()->persistir($pessoaFatoFinanceiroAcesso);
-
 				self::registrarLog(RegistroAcao::CADASTROU_UM_SECRETARIO_DO_PD, $extra = 'Id: '.$pessoaFatoFinanceiroAcesso->getId());
-
 				$this->getRepositorio()->fecharTransacao();
-
 				return $this->redirect()->toRoute(Constantes::$ROUTE_LANCAMENTO, array(
-
 					Constantes::$ACTION => 'ParceiroDeDeusUsuarios',
-
 				));
-
 			} catch (Exception $exc) {
-
 				$this->getRepositorio()->desfazerTransacao();
-
 				echo $exc->getTraceAsString();
-
 			}
-
 		}
-
 	}
 
-
-
 	public function parceiroDeDeusUsuarioInativarAction() {
-
 		$sessao = new Container(Constantes::$NOME_APLICACAO);
-
 		$this->getRepositorio()->iniciarTransacao();
-
 		try {
-
 			$pessoaFatoFinanceiroAcesso = $this->getRepositorio()->getPessoaFatoFinanceiroAcessoORM()->encontrarPorId($sessao->idSessao);
-
 			$pessoaFatoFinanceiroAcesso->setDataEHoraDeInativacao();
-
 			$this->getRepositorio()->getPessoaFatoFinanceiroAcessoORM()->persistir($pessoaFatoFinanceiroAcesso, false);
-
-
-
 			$this->getRepositorio()->fecharTransacao();
-
 			return $this->redirect()->toRoute(Constantes::$ROUTE_LANCAMENTO, array(
-
 				Constantes::$ACTION => 'ParceiroDeDeusUsuarios',
-
 			));
-
 		} catch (Exception $exc) {
-
 			$this->getRepositorio()->desfazerTransacao();
-
 			echo $exc->getTraceAsString();
-
 		}
-
 	}
 
 	public function todosLideresAPartirDoGrupo(Grupo $grupo, $separadosPorLider = false) {
-
 		$lideres = array();
-
 		$grupoPaiFilhoFilhos = $grupo->getGrupoPaiFilhoFilhosAtivosReal();
-
 		foreach ($grupoPaiFilhoFilhos as $grupoPaiFilhoFilho12) {
-
 			$grupo12 = $grupoPaiFilhoFilho12->getGrupoPaiFilhoFilho();
-
 			if (!$separadosPorLider) {
-
 				$lideres [] = $grupo12;
-
 			} else {
-
 				foreach ($grupo12->getPessoasAtivas() as $pessoas) {
-
 					$lideres [] = $pessoas;
-
 				}
-
 			}
 
 			if ($grupoPaiFilhoFilhos144 = $grupo12->getGrupoPaiFilhoFilhosAtivosReal()) {
-
 				foreach ($grupoPaiFilhoFilhos144 as $grupoPaiFilhoFilho144) {
-
 					$grupo144 = $grupoPaiFilhoFilho144->getGrupoPaiFilhoFilho();
-
 					if (!$separadosPorLider) {
-
 						$lideres [] = $grupo144;
-
 					} else {
-
 						foreach ($grupo144->getPessoasAtivas() as $pessoas) {
-
 							$lideres [] = $pessoas;
-
 						}
-
 					}
 
 					if ($grupoPaiFilhoFilhos1728 = $grupo144->getGrupoPaiFilhoFilhosAtivosReal()) {
-
 						foreach ($grupoPaiFilhoFilhos1728 as $grupoPaiFilhoFilho1728) {
-
 							$grupo1728 = $grupoPaiFilhoFilho1728->getGrupoPaiFilhoFilho();
-
 							if (!$separadosPorLider) {
-
 								$lideres [] = $grupo1728;
-
 							} else {
-
 								foreach ($grupo1728->getPessoasAtivas() as $pessoas) {
-
 									$lideres [] = $pessoas;
-
 								}
-
 							}
 
 							if ($grupoPaiFilhoFilhos20736 = $grupo1728->getGrupoPaiFilhoFilhosAtivosReal()) {
-
 								foreach ($grupoPaiFilhoFilhos20736 as $grupoPaiFilhoFilho20736) {
-
 									$grupo20736 = $grupoPaiFilhoFilho20736->getGrupoPaiFilhoFilho();
-
 									if (!$separadosPorLider) {
-
 										$lideres [] = $grupo20736;
-
 									} else {
-
 										foreach ($grupo20736->getPessoasAtivas() as $pessoas) {
-
 											$lideres [] = $pessoas;
-
 										}
-
 									}
-
 								}
-
 							}
-
 						}
-
 					}
-
 				}
-
 			}
-
 		}
-
 		return $lideres;
-
 	}
 
 	public function discipuladoAction(){

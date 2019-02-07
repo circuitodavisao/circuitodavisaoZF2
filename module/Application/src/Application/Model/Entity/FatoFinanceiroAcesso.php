@@ -16,6 +16,7 @@ use Doctrine\ORM\Mapping as ORM;
 class FatoFinanceiroAcesso extends CircuitoEntity {
 
     const SECRETARIO_PARCEIRO_DE_DEUS = 1;
+    const SECRETARIO_PARCEIRO_DE_DEUS_IGREJA = 2;
 
     /**
      * @ORM\OneToMany(targetEntity="PessoaFatoFinanceiroAcesso", mappedBy="fatoFinanceiroAcesso") 

@@ -175,11 +175,13 @@ class ListagemDePessoasComEventos extends AbstractHelper {
 		if($pessoa->getAtivo() && $this->view->periodo == 0 && $this->view->possoAlterar){
 			$dadosAlterar = $pessoa->getId().'_'.$pessoa->getTipo().'_'.$aluno;
 			$dadosRemover = $pessoa->getGrupoPessoaAtivo()->getId();
-			$dadosAjustar = $pessoa->getId();
 			$html .= '<span id="" class="btn btn-dark btn-xs ml5" onclick="alterarPessoa(\''.$dadosAlterar.'\');"><i class="fa fa-pencil"></i></span>';
 			$html .= '<span id="" class="btn btn-danger btn-xs ml5" onclick="removerPessoa(\''.$dadosRemover.'\');"><i class="fa fa-times"></i></span>';
 		}
-		$html .= '<span id="" class="btn btn-default btn-xs ml5" onclick="mostrarSplash(); ajustarPessoa(\''.$dadosAjustar.'\');"><i class="fa fa-wrench"></i></span>';
+		if($pessoa->getTipo() != 'LP' && $this->view->periodo == 0){
+			$dadosAjustar = $pessoa->getId();
+			$html .= '<span id="" class="btn btn-default btn-xs ml5" onclick="mostrarSplash(); ajustarPessoa(\''.$dadosAjustar.'\');"><i class="fa fa-wrench"></i></span>';
+		}
 
 		$html .= '</div>';
 		/* Col 6 */
