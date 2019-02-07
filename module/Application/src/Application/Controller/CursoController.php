@@ -855,7 +855,7 @@ class CursoController extends CircuitoController {
 		$relatorioCursos = RelatorioController::relatorioAlunosETurmas($this->getRepositorio(), $entidadeDaIgreja, $turmasAtivas);	
 		$turmas = $entidadeDaIgreja->getGrupo()->getTurmasInativas();			
 		$view = new ViewModel(array(
-			'turmas' => $relatorioCursos[1],
+			'turmas' => $turmas,
 			'relatorio' => $relatorioCursos[0],
 		));
 
@@ -1177,12 +1177,17 @@ class CursoController extends CircuitoController {
 			$filtrado = true;
 			$post = $request->getPost();
 			$postado['idTurma'] = $post['idTurma'];
-			$postado['idEquipe'] = $post['idEquipe'];
-			$turmas[] = $this->getRepositorio()->getTurmaORM()->encontrarPorId($postado['idTurma']);
+			$postado['idEquipe'] = $post['idEquipe'];		
+			if($postado['idTurma'] == 0){
+				$turmas = $entidade->getGrupo()->getGrupoIgreja()->getTurma();
+			}	
+			if($postado['idTurma'] != 0){
+				$turmas[] = $this->getRepositorio()->getTurmaORM()->encontrarPorId($postado['idTurma']);
+			}						
 		}else{
 			$turmas = $entidade->getGrupo()->getGrupoIgreja()->getTurma();
 		}
-
+				  		
 		$view = new ViewModel(array(
 			'turmas' => $turmas,
 			'filtrado' => $filtrado,
