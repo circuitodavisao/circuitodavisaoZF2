@@ -733,8 +733,19 @@ class LancamentoController extends CircuitoController {
     public function ajustarPessoaAction() {
         try {
             $sessao = new Container(Constantes::$NOME_APLICACAO);
-            $pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($sessao->idSessao);
+            $idPessoa = $sessao->idSessao;            
 			$sessao->idSessao = null;
+            self::ajustarPessoa($idPessoa, $this->getRepositorio());
+
+            return $this->redirect()->toRoute(Constantes::$ROUTE_LANCAMENTO, array(Constantes::$ACTION => 'Arregimentacao',));
+        } catch (Exception $exc) {
+			error_log($exc->getMessage());
+        }
+    }
+
+    public static function ajustarPessoa($idPessoa, $repositorio) {
+        try {            
+            $pessoa = $repositorio->getPessoaORM()->encontrarPorId($idPessoa);			
 
 			$grupoPessoaMaisRecente = null;
 			$grupoPessoas = $pessoa->getGrupoPessoa();
@@ -755,13 +766,12 @@ class LancamentoController extends CircuitoController {
 					if($grupoPessoa->verificarSeEstaAtivo()){
 						if($grupoPessoa->getId() !== $grupoPessoaMaisRecente->getId()){
 							$grupoPessoa->setDataEHoraDeInativacao($grupoPessoa->getData_criacaoStringPadraoBanco());
-							$this->getRepositorio()->getGrupoPessoaORM()->persistir($grupoPessoa, $mudarDataDeCriacao = false);
+							$repositorio->getGrupoPessoaORM()->persistir($grupoPessoa, $mudarDataDeCriacao = false);
 						}	
 					}
 				}
 			}
-
-            return $this->redirect()->toRoute(Constantes::$ROUTE_LANCAMENTO, array(Constantes::$ACTION => 'Arregimentacao',));
+          
         } catch (Exception $exc) {
 			error_log($exc->getMessage());
         }
