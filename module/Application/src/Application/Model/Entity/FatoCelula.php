@@ -30,7 +30,7 @@ class FatoCelula extends CircuitoEntity {
     /** @ORM\Column(type="integer") */
     protected $evento_celula_id;
 
-	/** @ORM\Column(type="String") */
+	/** @ORM\Column(type="string") */
 	protected $estrategica;
 
     function getFato_ciclo_id() {
