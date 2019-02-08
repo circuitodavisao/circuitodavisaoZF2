@@ -2580,16 +2580,14 @@ class CadastroController extends CircuitoController {
 		$sessao = new Container(Constantes::$NOME_APLICACAO);
 		$idEntidadeAtual = $sessao->idEntidadeAtual;
 		$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
-		$arrayDeRevisoes = Array();
-		$idRevisao = $sessao->idSessao;
-		$eventoRevisao = $this->getRepositorio()->getEventoORM()->encontrarPorId($idRevisao);
-		$arrayDeRevisoes[] = $eventoRevisao;
+		$arrayDeEventosRevisoes = Array();	
 
 		$relatorio = array();
 		$quantidadeHomensRevisionistas = 0;
 		$quantidadeMulheresRevisionistas = 0;
 		$quantidadeHomensLideres = 0;
 		$quantidadeMulheresLideres = 0;
+		$multiplos = false;
 
 		if($entidade->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao || $entidade->getEntidadeTipo()->getId() === EntidadeTipo::regiao){
 			$multiplos = true;
@@ -2602,11 +2600,14 @@ class CadastroController extends CircuitoController {
 					}
 				}
 			}
-		} else {
-			$multiplos = false;
+		} 
+		if(!$multiplos){
+			$idRevisao = $sessao->idSessao;		
+			$eventoRevisao = $this->getRepositorio()->getEventoORM()->encontrarPorId($idRevisao);
+			$arrayDeEventosRevisoes[] = $eventoRevisao;
 		}
-
-		foreach ($arrayDeEventosRevisoes as $evento) {
+		 
+		foreach ($arrayDeEventosRevisoes as $evento) {			
 			if ($eventoFrequencias = $evento->getEventoFrequencia()) {
 				foreach ($eventoFrequencias as $eventoFrequencia) {
 					/* Revisionistas */
