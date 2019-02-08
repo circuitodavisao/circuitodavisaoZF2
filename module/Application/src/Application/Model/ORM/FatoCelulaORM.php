@@ -20,7 +20,7 @@ class FatoCelulaORM extends CircuitoORM {
      * @param FatoCiclo $fatoCiclo
      * @param integer $eventoCelulaId
      */
-    public function criarFatoCelula($fatoCiclo, $eventoCelulaId, $estrategica === null) {
+    public function criarFatoCelula($fatoCiclo, $eventoCelulaId, $estrategica = null) {
         $fatoCelula = new FatoCelula();
         try {
             $fatoCelula->setFatoCiclo($fatoCiclo);
