@@ -602,6 +602,7 @@ class RelatorioController extends CircuitoController {
 	const celulaDeElitePerformance = 11;
 	const dadosPessoais = 0;
 	const parceiroDeDeusValor = 12;
+	const celulaQuantidadeEstrategica = 13;
 
 	public static function relatorioCompleto($repositorio, $grupo, $tipoRelatorio, $mes, $ano, $tudo = true, $somado = false, $periodo = 0) {
 		$relatorio = array();
@@ -666,6 +667,7 @@ class RelatorioController extends CircuitoController {
 						$soma[self::dadosPessoais][self::celulaRealizadas] += $relatorio[self::dadosPessoais][$indiceDeArrays]['celulaRealizadas'];
 						$soma[self::dadosPessoais][self::celulaRealizadasPerformance] += $relatorio[self::dadosPessoais][$indiceDeArrays]['celulaRealizadasPerformance'];
 						$soma[self::dadosPessoais][self::celulaQuantidade] += $relatorio[self::dadosPessoais][$indiceDeArrays]['celulaQuantidade'];
+						$soma[self::dadosPessoais][self::celulaQuantidadeEstrategica] += $relatorio[self::dadosPessoais][$indiceDeArrays]['celulaQuantidadeEstrategica'];
 
 						$soma[self::dadosPessoais][self::membresiaCulto] += $relatorio[self::dadosPessoais][$indiceDeArrays]['membresiaCulto'];
 						$soma[self::dadosPessoais][self::membresiaArena] += $relatorio[self::dadosPessoais][$indiceDeArrays]['membresiaArena'];
@@ -678,9 +680,18 @@ class RelatorioController extends CircuitoController {
 								if ($relatorio[self::dadosPessoais][$indiceDeArrays]['celulaQuantidade'] > 2) {
 									$meta = number_format($relatorio[self::dadosPessoais][$indiceDeArrays]['celulaQuantidade'] / 2);
 								}
+								$metaEstrategicas = $relatorio[self::dadosPessoais][$indiceDeArrays]['celulaQuantidadeEstrategica'];
+								if ($relatorio[self::dadosPessoais][$indiceDeArrays]['celulaQuantidadeEstrategica'] > 2) {
+									$metaEstrategicas = number_format($relatorio[self::dadosPessoais][$indiceDeArrays]['celulaQuantidadeEstrategica'] / 2);
+								}
 								$relatorio[self::dadosPessoais][$indiceDeArrays]['celulaDeEliteMeta'] = $meta;
+								$relatorio[self::dadosPessoais][$indiceDeArrays]['celulaDeEliteMetaEstrategica'] = $metaEstrategicas;
 								$relatorio[self::dadosPessoais][$indiceDeArrays]['celulaDeElite'] = $dadosCelulasDeElite['elite'];
-								$relatorio[self::dadosPessoais][$indiceDeArrays]['celulaDeElitePerformance'] = $relatorio[self::dadosPessoais][$indiceDeArrays]['celulaDeElite'] / $relatorio[self::dadosPessoais][$indiceDeArrays]['celulaDeEliteMeta'] * 100;
+								$relatorio[self::dadosPessoais][$indiceDeArrays]['celulaDeElitePerformance'] 
+									= $relatorio[self::dadosPessoais][$indiceDeArrays]['celulaDeElite'] / 
+									($relatorio[self::dadosPessoais][$indiceDeArrays]['celulaDeEliteMeta'] 
+									+ $relatorio[self::dadosPessoais][$indiceDeArrays]['celulaDeEliteMetaEstrategica'])
+									* 100;
 								$soma[self::dadosPessoais][self::celulaDeElitePerformance] += $relatorio[self::dadosPessoais][$indiceDeArrays]['celulaDeElitePerformance'];
 							}
 					}
@@ -1471,6 +1482,11 @@ class RelatorioController extends CircuitoController {
 	public static function saberQuaisDasMinhasCelulasSaoDeElitePorPeriodo(RepositorioORM $repositorioORM, Grupo $grupo, $periodo, $contagemDoPeriodo, $mes, $ano) {
 		$relatorio = array();
 		$grupoEventosCelula = $grupo->getGrupoEventoAtivosPorTipo(EventoTipo::tipoCelula);
+		if($grupoEventosCelulaEstrategica = $grupo->getGrupoEventoAtivosPorTipo(EventoTipo::tipoCelulaEstrategica)){
+			foreach($grupoEventosCelulaEstrategica as $grupoEvento){
+				$grupoEventosCelula[] = $grupoEvento;
+			}
+		}
 		$contagem = 0;
 		$contagemCelulasDeElite = 0;
 		$fatosSetenta = $repositorioORM->getFatoSetentaORM()->encontrarPorIdGrupo($grupo->getId(), $mes, $ano);
