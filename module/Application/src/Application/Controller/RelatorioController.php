@@ -687,7 +687,11 @@ class RelatorioController extends CircuitoController {
 								$relatorio[self::dadosPessoais][$indiceDeArrays]['celulaDeEliteMeta'] = $meta;
 								$relatorio[self::dadosPessoais][$indiceDeArrays]['celulaDeEliteMetaEstrategica'] = $metaEstrategicas;
 								$relatorio[self::dadosPessoais][$indiceDeArrays]['celulaDeElite'] = $dadosCelulasDeElite['elite'];
-								$relatorio[self::dadosPessoais][$indiceDeArrays]['celulaDeElitePerformance'] = $relatorio[self::dadosPessoais][$indiceDeArrays]['celulaDeElite'] / $relatorio[self::dadosPessoais][$indiceDeArrays]['celulaDeEliteMeta'] * 100;
+								$relatorio[self::dadosPessoais][$indiceDeArrays]['celulaDeElitePerformance'] 
+									= $relatorio[self::dadosPessoais][$indiceDeArrays]['celulaDeElite'] / 
+									($relatorio[self::dadosPessoais][$indiceDeArrays]['celulaDeEliteMeta'] 
+									+ $relatorio[self::dadosPessoais][$indiceDeArrays]['celulaDeEliteMetaEstrategica'])
+									* 100;
 								$soma[self::dadosPessoais][self::celulaDeElitePerformance] += $relatorio[self::dadosPessoais][$indiceDeArrays]['celulaDeElitePerformance'];
 							}
 					}
