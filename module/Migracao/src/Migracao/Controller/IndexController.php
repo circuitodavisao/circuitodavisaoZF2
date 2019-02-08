@@ -673,6 +673,8 @@ class IndexController extends CircuitoController {
 			foreach($linhaDeLancamento as $grupoPessoa){
 
 				if($grupoPessoa->verificarSeEstaAtivo()){
+					$grupoPessoa->setDataEHoraDeInativacao($dataParaInativar);
+					$this->getRepositorio()->getGrupoPessoaORM()->persistir($grupoPessoa, $mudarDataDeAlteracao = false);
 					$grupoPessoaNovo = new GrupoPessoa();
 					$grupoPessoaNovo->setGrupo($grupoNovo);
 					$grupoPessoaNovo->setPessoa($grupoPessoa->getPessoa());
@@ -925,6 +927,7 @@ class IndexController extends CircuitoController {
 			foreach($linhaDeLancamentoHomem as $grupoPessoa){
 				if($grupoPessoa->verificarSeEstaAtivo()){
 					$grupoPessoa->setDataEHoraDeInativacao($dataParaInativar);
+					$this->getRepositorio()->getGrupoPessoaORM()->persistir($grupoPessoa, $mudarDataDeAlteracao = false);
 					$grupoPessoaHomem = new GrupoPessoa();
 					$grupoPessoaHomem->setGrupo($grupoNovo);
 					$grupoPessoaHomem->setPessoa($grupoPessoa->getPessoa());
@@ -938,6 +941,7 @@ class IndexController extends CircuitoController {
 			foreach($linhaDeLancamentoMulher as $grupoPessoa){
 				if($grupoPessoa->verificarSeEstaAtivo()){
 					$grupoPessoa->setDataEHoraDeInativacao($dataParaInativar);
+					$this->getRepositorio()->getGrupoPessoaORM()->persistir($grupoPessoa, $mudarDataDeAlteracao = false);
 					$grupoPessoaMulher = new GrupoPessoa();
 					$grupoPessoaMulher->setGrupo($grupoNovo);
 					$grupoPessoaMulher->setPessoa($grupoPessoa->getPessoa());
