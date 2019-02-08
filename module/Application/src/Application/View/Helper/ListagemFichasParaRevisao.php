@@ -5,6 +5,7 @@ namespace Application\View\Helper;
 use Application\Controller\Helper\Constantes;
 use Application\Model\Entity\EntidadeTipo;
 use Application\Model\Entity\Pessoa;
+use Application\Controller\LancamentoController;
 use Zend\View\Helper\AbstractHelper;
 
 /**
@@ -38,6 +39,7 @@ class ListagemFichasParaRevisao extends AbstractHelper {
                   $revisionista = $frequencia->getPessoa();
                   if ($grupoPessoa = $revisionista->getGrupoPessoaAtivo()) {
                       $grupoEquipe = $grupoPessoa->getGrupo()->getGrupoEquipe();
+                      LancamentoController::ajustarPessoa($frequencia->getPessoa()->getId(), $this->view->repositorioORM);
                       $pessoa = new Pessoa();
                       $pessoa->setGrupoPessoa($grupoPessoa);
                       $pessoa->setId($frequencia->getId());
@@ -78,7 +80,7 @@ class ListagemFichasParaRevisao extends AbstractHelper {
             $html .= '</tr>';
             $html .= '</thead>';
             $html .= '<tbody>';
-            foreach ($pessoas as $pessoa) {
+            foreach ($pessoas as $pessoa) {                
               if($this->view->multiplos){
                 $nomeEntidadeAcima = $pessoa->getGrupoPessoa()->getGrupo()->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai()->getEntidadeAtiva()->getNome();
                 if($nomeEntidadeAcima){
