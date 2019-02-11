@@ -41,6 +41,9 @@ class CabecalhoDeEventos extends AbstractHelper {
 				$html .= '<div class="'.$espacamento.' mb5 text-center" style="padding-top: 0px">';
 				$diaDaSemanaAjustado = Funcoes::diaDaSemanaPorDia($grupoEvento->getEvento()->getDia());
 				$eventoNome = Funcoes::nomeDoEvento($grupoEvento->getEvento()->getTipo_id());
+				if($grupoEvento->getEvento()->getEventoTipo()->getId() === EventoTipo::tipoCelulaEstrategica){
+					$eventoNome = 'Cél. Estra.';
+				}
 
 				$html .= $this->view->translate($eventoNome).'<br />';
 				$html .= $this->view->translate($diaDaSemanaAjustado);
