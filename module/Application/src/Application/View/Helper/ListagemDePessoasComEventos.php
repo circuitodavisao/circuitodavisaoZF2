@@ -122,7 +122,7 @@ class ListagemDePessoasComEventos extends AbstractHelper {
 		$corRetangulo = 'btn-default';
 		$corTextoTagsExtrasXs = ' class="hidden-lg" ';
 		$corTextoTagsExtrasLg = ' class="hidden-xs hidden-sm hidden-md" ';		
-		$border = '';
+		$border = '';		
 		if ($pessoa->getTipo() != 'LP' && !$pessoa->getAtivo()) {
 			if ($pessoa->getDataInativacao()) {
 				/* Verificando em qual periodo foi inativado */
@@ -185,8 +185,8 @@ class ListagemDePessoasComEventos extends AbstractHelper {
 			$html .= '<span id="" class="btn btn-danger btn-xs ml5" onclick="removerPessoa(\''.$dadosRemover.'\');"><i class="fa fa-times"></i></span>';
 		}
 		if($pessoa->getTipo() != 'LP' && $this->view->periodo == 0){
-			$dadosAjustar = $pessoa->getId();
-			$html .= '<span id="" class="btn btn-default btn-xs ml5" onclick="mostrarSplash(); ajustarPessoa(\''.$dadosAjustar.'\');"><i class="fa fa-wrench"></i></span>';
+			//$dadosAjustar = $pessoa->getId();
+			//$html .= '<span id="" class="btn btn-default btn-xs ml5" onclick="mostrarSplash(); ajustarPessoa(\''.$dadosAjustar.'\');"><i class="fa fa-wrench"></i></span>';			
 		}
 
 		$html .= '</div>';
