@@ -168,10 +168,10 @@ for ($indiceDeArrays = $this->periodoInicial; $indiceDeArrays <= $this->periodoF
 	}
 	if ($this->tipoRelatorio == 1) {
 		echo '<th class="hidden-xs ' . $classePeriodoAtual . '">CÉL</th>';
-		echo '<th class="' . $classeBase . $classePeriodoAtual . '">CÉL EST</th>';
-		echo '<th class="' . $classeBase . $classePeriodoAtual . '">MET CÉL</th>';
-		echo '<th class="' . $classeBase . $classePeriodoAtual . '">MET EST</th>';
-		echo '<th class="' . $classeBase . $classePeriodoAtual . '">MET TOTAL</th>';
+		echo '<th class="hidden-xs ' . $classePeriodoAtual . '">CÉL EST</th>';
+		echo '<th class="hidden-xs ' . $classePeriodoAtual . '">MET CÉL</th>';
+		echo '<th class="hidden-xs ' . $classePeriodoAtual . '">MET EST</th>';
+		echo '<th class="' . $classeBase . $classePeriodoAtual . '">MET</th>';
 		echo '<th class="' . $classeBase . $classePeriodoAtual . '">CUL</th>';
 		echo '<th class="' . $classeBase . $classePeriodoAtual . '">ARE</th>';
 		echo '<th class="' . $classeBase . $classePeriodoAtual . '">DOM</th>';
@@ -194,9 +194,9 @@ for ($indiceDeArrays = $this->periodoInicial; $indiceDeArrays <= $this->periodoF
 	if ($this->tipoRelatorio == 3) {
 		echo '<th class="' . $classeBase . $classePeriodoAtual . '">CÉL</th>';
 		echo '<th class="' . $classeBase . $classePeriodoAtual . '">CÉL EST.</th>';
-		echo '<th class="' . $classeBase . $classePeriodoAtual . '">MET CÉL</th>';
-		echo '<th class="' . $classeBase . $classePeriodoAtual . '">MET EST</th>';
-		echo '<th class="' . $classeBase . $classePeriodoAtual . '">MET TOTAL</th>';
+		echo '<th class="hidden-xs ' . $classePeriodoAtual . '">MET CÉL</th>';
+		echo '<th class="hidden-xs ' . $classePeriodoAtual . '">MET EST</th>';
+		echo '<th class="' . $classeBase . $classePeriodoAtual . '">MET</th>';
 		echo '<th class="' . $classeBase . $classePeriodoAtual . '">QTD</th>';
 		echo '<th class="' . $classeBase . $classePeriodoAtual . '">%</th>';
 	}
@@ -322,9 +322,9 @@ foreach ($this->relatorio as $relatorio) {
 			if ($this->tipoRelatorio == 1) {
 				if($contagemRanking === 0 || $relatorio['lideres'] == 'TOTAL' || $relatorio[$indiceDeArrays]['mostrar']){
 					echo '<td class="hidden-xs">' . $relatorio[$indiceDeArrays]['celulaQuantidade'] . '</td>';
-					echo '<td class="' . $classeBase . '">' . $relatorio[$indiceDeArrays]['celulaQuantidadeEstrategica'] . '</td>';
-					echo '<td class="' . $classeBase . '">' . $relatorio[$indiceDeArrays]['membresiaMeta'] . '</td>';
-					echo '<td class="' . $classeBase . '">' . $relatorio[$indiceDeArrays]['membresiaMetaEstrategica'] . '</td>';
+					echo '<td class="hidden-xs">' . $relatorio[$indiceDeArrays]['celulaQuantidadeEstrategica'] . '</td>';
+					echo '<td class="hidden-xs">' . $relatorio[$indiceDeArrays]['membresiaMeta'] . '</td>';
+					echo '<td class="hidden-xs">' . $relatorio[$indiceDeArrays]['membresiaMetaEstrategica'] . '</td>';
 					echo '<td class="' . $classeBase . '">' . $relatorio[$indiceDeArrays]['membresiaMetaSomada'] . '</td>';
 					echo '<td class="' . $classeBase . '">' . $relatorio[$indiceDeArrays]['membresiaCulto'] . '</td>';
 					echo '<td class="' . $classeBase . '">' . $relatorio[$indiceDeArrays]['membresiaArena'] . '</td>';
@@ -363,8 +363,8 @@ foreach ($this->relatorio as $relatorio) {
 				if($contagemRanking === 0 || $relatorio['lideres'] == 'TOTAL' || $relatorio[$indiceDeArrays]['mostrar']){
 					echo '<td class="' . $classeBase . '">' . $relatorio[$indiceDeArrays]['celulaQuantidade'] . '</td>';
 					echo '<td class="' . $classeBase . '">' . $relatorio[$indiceDeArrays]['celulaQuantidadeEstrategica'] . '</td>';
-					echo '<td class="' . $classeBase . '">' . $relatorio[$indiceDeArrays]['membresiaMeta'] . '</td>';
-					echo '<td class="' . $classeBase . '">' . $relatorio[$indiceDeArrays]['membresiaMetaEstrategica'] . '</td>';
+					echo '<td class="hidden-xs ' . $classeBase . '">' . $relatorio[$indiceDeArrays]['membresiaMeta'] . '</td>';
+					echo '<td class="hidden-xs ' . $classeBase . '">' . $relatorio[$indiceDeArrays]['membresiaMetaEstrategica'] . '</td>';
 					echo '<td class="' . $classeBase . '">' . $relatorio[$indiceDeArrays]['membresiaMetaSomada'] . '</td>';
 					echo '<td class="' . $classeBase . '">' . $relatorio[$indiceDeArrays]['celula'] . '</td>';
 					echo '<td class="' . $classeBase . '">' . RelatorioController::formataNumeroRelatorio($relatorio[$indiceDeArrays]['celulaPerformance']) . '%</td>';
