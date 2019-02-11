@@ -163,7 +163,7 @@ class CadastrarPessoaForm extends Form {
           if($pessoa->getGrupoPessoaAtivo()){
             $this->get(Constantes::$INPUT_TIPO)->setValue($pessoa->getGrupoPessoaAtivo()->getGrupoPessoaTipo()->getId());
           }
-          if($aluno === 'true' || $pessoa->getTipo() === 'LP'){
+          if($aluno || $pessoa->getTipo() === 'LP'){
             $this->get(Constantes::$INPUT_NOME)->setAttribute(Constantes::$FORM_STRING_DISABLED, Constantes::$FORM_STRING_DISABLED);
             $this->get(Constantes::$INPUT_TIPO)->setAttribute(Constantes::$FORM_STRING_DISABLED, Constantes::$FORM_STRING_DISABLED);
           }
