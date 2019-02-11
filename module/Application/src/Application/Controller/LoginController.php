@@ -560,6 +560,9 @@ class LoginController extends CircuitoController {
             /* Responsabilidades */
             $responsabilidadesAtivas = $pessoa->getResponsabilidadesAtivas($todas = true);
             if ($responsabilidadesAtivas) {
+                uksort($responsabilidadesAtivas, function ($a, $b) use ($responsabilidadesAtivas) {
+                    return ($responsabilidadesAtivas[$a]->getId() > $responsabilidadesAtivas[$b]->getId()) ? -1 : 1;
+                });
                 $view = new ViewModel(array(Constantes::$RESPONSABILIDADES => $responsabilidadesAtivas));
                 return $view;
             }
