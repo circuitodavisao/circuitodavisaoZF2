@@ -105,7 +105,13 @@ class LancamentoController extends CircuitoController {
         }
 
 		$grupoEventoNoPeriodo = $grupo->getGrupoEventoNoPeriodo($periodo);
-		$grupoPessoasNoPeriodo = $grupo->getGrupoPessoasNoPeriodo($periodo, $this->getRepositorio());
+        $grupoPessoasNoPeriodo = $grupo->getGrupoPessoasNoPeriodo($periodo, $this->getRepositorio());
+        if($periodo == 0){
+            foreach ($grupoPessoasNoPeriodo as $grupoPessoa ) {
+                self::ajustarPessoa($grupoPessoa->getPessoa()->getId(), $this->getRepositorio());
+            }
+            $grupoPessoasNoPeriodo = $grupo->getGrupoPessoasNoPeriodo($periodo, $this->getRepositorio());
+        }
 		$validacaoPessoasCadastradas = 1;
 
         $view = new ViewModel(
