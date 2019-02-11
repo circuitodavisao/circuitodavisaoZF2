@@ -4,6 +4,7 @@ namespace Application\View\Helper;
 
 use Application\Controller\Helper\Constantes;
 use Application\Controller\Helper\Funcoes;
+use Application\Model\Entity\EventoTipo;
 use DateTime;
 use Zend\View\Helper\AbstractHelper;
 
@@ -247,6 +248,9 @@ class ListagemDePessoasComEventos extends AbstractHelper {
 		$html .= '<div class="text-center '.$espacamento.' mb5" style="padding-top: 0px">';
 		$html .= '<p>';
 		$eventoNome = Funcoes::nomeDoEvento($grupoEvento->getEvento()->getTipo_id());
+		if($grupoEvento->getEvento()->getEventoTipo()->getId() === EventoTipo::tipoCelulaEstrategica){
+			$eventoNome = 'Cél. Estra.';
+		}
 		$diaDaSemanaAjustado = Funcoes::diaDaSemanaPorDia($grupoEvento->getEvento()->getDia());
 		$html .= $this->view->translate($eventoNome). '<br />';
 		$html .= $this->view->translate($diaDaSemanaAjustado);
