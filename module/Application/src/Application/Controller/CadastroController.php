@@ -1880,7 +1880,7 @@ class CadastroController extends CircuitoController {
 		/* Inativando o grupo pessoa antigo */
 		$grupoPessoaRevisionistaAntigo = $pessoaRevisionista->getGrupoPessoaAtivo();
 		$grupoPessoaRevisionistaAntigo->setDataEHoraDeInativacao(Funcoes::proximoDomingo());
-		$this->getRepositorio()->getGrupoPessoaORM()->persistir($grupoPessoaRevisionistaAntigo, false);
+		$this->getRepositorio()->getGrupoPessoaORM()->persistir($grupoPessoaRevisionistaAntigo, $mudarDataDeCricao = false);
 
 		/* Busca GrupoPessoaTipo */
 		$grupoPessoaTipo = $this->getRepositorio()->getGrupoPessoaTipoORM()->encontrarPorId($idTipo);
@@ -1891,7 +1891,7 @@ class CadastroController extends CircuitoController {
 		$grupoPessoa->setGrupo($grupoPessoaRevisionistaAntigo->getGrupo());
 		$grupoPessoa->setGrupoPessoaTipo($grupoPessoaTipo);
 		$grupoPessoa->setDataEHoraDeCriacao(Funcoes::proximaSegunda());
-		$this->getRepositorio()->getGrupoPessoaORM()->persistir($grupoPessoa);
+		$this->getRepositorio()->getGrupoPessoaORM()->persistir($grupoPessoa, $mudarDataDeCricao = false);
 
 		return $grupoPessoa;
 	}
