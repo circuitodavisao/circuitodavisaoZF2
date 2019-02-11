@@ -571,6 +571,9 @@ class Funcoes {
 		case EventoTipo::tipoCelula:
 			$resposta = 'Cell';
 			break;
+		case EventoTipo::tipoCelulaEstrategica:
+			$resposta = 'Cell';
+			break;
 		default:
 			break;
 		}
