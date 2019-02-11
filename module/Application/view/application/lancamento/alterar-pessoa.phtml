@@ -39,11 +39,12 @@ echo $this->templateFormularioTopo(Constantes::$TRADUCAO_NOVO_CADASTRO_LABEL);
 echo $this->templateFormularioRodape();
 echo $this->form()->closeTag();
 
-if($this->dados[2] == 'true'){
+if($this->dados[2]){
 $alertAluno = '<div class="alert alert-primary alert-dismissable">
   <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+  <i class="fa fa-file-text"></i>
   <i class="fa fa-graduation-cap pr10"></i>
-  <strong>Aluno:</strong> O nome dessa pessoa só pode ser alterada a partir da secretaria do IV.
+  <strong>Aluno ou Revisionista:</strong> Caso seja um aluno, o nome dessa pessoa só pode ser alterado a partir da secretaria do IV.
 </div>';
 echo $alertAluno;
 }
