@@ -790,6 +790,9 @@ class Grupo extends CircuitoEntity {
             if ($tipo === EventoTipo::tipoCelula && $grupoEvento->getEvento()->verificaSeECelula()) {
                 $condicaoTipo = true;
             }
+            if ($tipo === EventoTipo::tipoCelulaEstrategica && $grupoEvento->getEvento()->verificaSeECelulaEstrategica()) {
+                $condicaoTipo = true;
+            }
             if ($tipo === EventoTipo::tipoRevisao && $grupoEvento->getEvento()->verificaSeERevisao()) {
                 $condicaoTipo = true;
             }
@@ -835,24 +838,25 @@ class Grupo extends CircuitoEntity {
 
     function getGrupoEventoNoPeriodo($periodo, $apenasCelulas = false) {
         $grupoEventosNoPeriodo = array();
-        $grupoEventoOrdenadosPorDiaDaSemana = $this->getGrupoEventoOrdenadosPorDiaDaSemana();
-        $grupoEventos = $grupoEventoOrdenadosPorDiaDaSemana;
+        $grupoEventos = $this->getGrupoEventoOrdenadosPorDiaDaSemana();
         if ($apenasCelulas) {
             unset($grupoEventos);
             if (!empty($grupoEventoOrdenadosPorDiaDaSemana)) {
-                foreach ($grupoEventoOrdenadosPorDiaDaSemana as $grupoEventoTodos) {
-                    if ($grupoEventoTodos->getEvento()->verificaSeECelula()) {
-                        $grupoEventos[] = $grupoEventoTodos;
-                    }
-                }
+				foreach ($grupoEventoOrdenadosPorDiaDaSemana as $grupoEventoTodos) {
+					if ($grupoEventoTodos->getEvento()->verificaSeECelula()
+						|| $grupoEventoTodos->getEvento()->verificaSeECelulaEstrategica()) {
+						$grupoEventos[] = $grupoEventoTodos;
+						}
+				}
             }
         }
 
         if (!empty($grupoEventos)) {
-            foreach ($grupoEventos as $grupoEvento) {
-                $arrayPeriodo = Funcoes::montaPeriodo($periodo);
-                $stringComecoDoPeriodo = $arrayPeriodo[3] . '-' . $arrayPeriodo[2] . '-' . $arrayPeriodo[1];
-                $dataDoInicioDoPeriodoParaComparar = strtotime($stringComecoDoPeriodo);
+			$arrayPeriodo = Funcoes::montaPeriodo($periodo);
+			$stringComecoDoPeriodo = $arrayPeriodo[3] . '-' . $arrayPeriodo[2] . '-' . $arrayPeriodo[1];
+			$dataDoInicioDoPeriodoParaComparar = strtotime($stringComecoDoPeriodo);
+
+			foreach ($grupoEventos as $grupoEvento) {
                 $dataDoGrupoEventoParaComparar = strtotime($grupoEvento->getData_criacaoStringPadraoBanco());
 
                 $validacaoDataDeCriacaoAntesDoInicioDoPeriodo = false;
