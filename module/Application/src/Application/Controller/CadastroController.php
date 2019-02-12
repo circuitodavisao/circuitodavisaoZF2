@@ -2052,56 +2052,57 @@ class CadastroController extends CircuitoController {
 			$postDados = $request->getPost();
 			$mes = $postDados['mes'];
 			$ano = $postDados['ano'];
-			$sessao = new Container(Constantes::$NOME_APLICACAO);
-			$idEntidadeAtual = $sessao->idEntidadeAtual;
-			$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
-			$idIgreja = $entidade->getGrupo()->getGrupoIgreja()->getId();
-
-			$arrayPeriodoDoMes = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mes, $ano);
-			$periodoInicial = $arrayPeriodoDoMes[0];
-			$periodoFinal = $arrayPeriodoDoMes[1];
-
-			if($mes == date('m') && $ano = date('Y')){
-				$periodoFinal = 0;
-			}
-
-			$arrayPeriodoInicial = Funcoes::montaPeriodo($periodoInicial);
-			$arrayPeriodoFinal = Funcoes::montaPeriodo($periodoFinal);
-			$dataInicio = $arrayPeriodoInicial[3].'-'.$arrayPeriodoInicial[2].'-'.$arrayPeriodoInicial[1];
-			$dataFim = $arrayPeriodoFinal[6].'-'.$arrayPeriodoFinal[5].'-'.$arrayPeriodoFinal[4];
-
-			$solicitacoes = $this->getRepositorio()->getSolicitacaoORM()->encontrarTodosPorDataDeCriacao($dataInicio, $dataFim, $idIgreja);
-			$solicitacoesDivididasPorTipo = array();
-			foreach($solicitacoes as $solicitacaoPorData){
-				$solicitacao = $this->getRepositorio()->getSolicitacaoORM()->encontrarPorId($solicitacaoPorData['id']);
-				$adicionar = true;
-				if($solicitacao->getSolicitacaoTipo()->getId() !== SolicitacaoTipo::TRANSFERIR_ALUNO){
-					if($entidade->getEntidadeTipo()->getId() === EntidadeTipo::equipe){
-						$objeto = $solicitacao->getObjeto1();
-						$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($objeto);
-						if($grupo->getGrupoEquipe()){
-							if($entidade->getGrupo()->getId() !== $grupo->getGrupoEquipe()->getId()){
-								$adicionar = false;
-							}
-						}
-					}
-
-				}
-				if($adicionar){
-					$solicitacoesDivididasPorTipo[$solicitacao->getSolicitacaoTipo()->getId()][] = $solicitacao;
-				}
-			}
-			$solicitacoesTipo = $this->getRepositorio()->getSolicitacaoTipoORM()->encontrarTodos();
-			$dados['grupo'] = $grupo;
-			$dados['entidade'] = $entidade;
-			$dados['solicitacoes'] = $solicitacoesDivididasPorTipo;
-			$dados['solicitacoesTipo'] = $solicitacoesTipo;
-			$dados['titulo'] = 'Solicitações';
-			$dados['repositorio'] = $this->getRepositorio();
 		} else{
 			$mes = date('m');
 			$ano = date('Y');
 		}
+		$sessao = new Container(Constantes::$NOME_APLICACAO);
+		$idEntidadeAtual = $sessao->idEntidadeAtual;
+		$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+		$idIgreja = $entidade->getGrupo()->getGrupoIgreja()->getId();
+
+		$arrayPeriodoDoMes = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mes, $ano);
+		$periodoInicial = $arrayPeriodoDoMes[0];
+		$periodoFinal = $arrayPeriodoDoMes[1];
+
+		if($mes == date('m') && $ano = date('Y')){
+			$periodoFinal = 0;
+		}
+
+		$arrayPeriodoInicial = Funcoes::montaPeriodo($periodoInicial);
+		$arrayPeriodoFinal = Funcoes::montaPeriodo($periodoFinal);
+		$dataInicio = $arrayPeriodoInicial[3].'-'.$arrayPeriodoInicial[2].'-'.$arrayPeriodoInicial[1];
+		$dataFim = $arrayPeriodoFinal[6].'-'.$arrayPeriodoFinal[5].'-'.$arrayPeriodoFinal[4];
+
+		$solicitacoes = $this->getRepositorio()->getSolicitacaoORM()->encontrarTodosPorDataDeCriacao($dataInicio, $dataFim, $idIgreja);
+		$solicitacoesDivididasPorTipo = array();
+		foreach($solicitacoes as $solicitacaoPorData){
+			$solicitacao = $this->getRepositorio()->getSolicitacaoORM()->encontrarPorId($solicitacaoPorData['id']);
+			$adicionar = true;
+			if($solicitacao->getSolicitacaoTipo()->getId() !== SolicitacaoTipo::TRANSFERIR_ALUNO){
+				if($entidade->getEntidadeTipo()->getId() === EntidadeTipo::equipe){
+					$objeto = $solicitacao->getObjeto1();
+					$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($objeto);
+					if($grupo->getGrupoEquipe()){
+						if($entidade->getGrupo()->getId() !== $grupo->getGrupoEquipe()->getId()){
+							$adicionar = false;
+						}
+					}
+				}
+
+			}
+			if($adicionar){
+				$solicitacoesDivididasPorTipo[$solicitacao->getSolicitacaoTipo()->getId()][] = $solicitacao;
+			}
+		}
+		$solicitacoesTipo = $this->getRepositorio()->getSolicitacaoTipoORM()->encontrarTodos();
+		$dados['grupo'] = $grupo;
+		$dados['entidade'] = $entidade;
+		$dados['solicitacoes'] = $solicitacoesDivididasPorTipo;
+		$dados['solicitacoesTipo'] = $solicitacoesTipo;
+		$dados['titulo'] = 'Solicitações';
+		$dados['repositorio'] = $this->getRepositorio();
+		
 		$dados['mes'] = $mes;
 		$dados['ano'] = $ano;
 		self::registrarLog(RegistroAcao::VER_SOLICITACOES, $extra = '');
