@@ -108,12 +108,11 @@ class LancamentoController extends CircuitoController {
         $grupoPessoasNoPeriodo = $grupo->getGrupoPessoasNoPeriodo($periodo, $this->getRepositorio());
         if($periodo == 0){
             foreach ($grupoPessoasNoPeriodo as $grupoPessoa ) {
-                self::ajustarPessoa($grupoPessoa->getPessoa()->getId(), $this->getRepositorio());
+                self::ajustarPessoa($grupoPessoa->getPessoa()->getId(), $this->getRepositorio());                
             }
             $grupoPessoasNoPeriodo = $grupo->getGrupoPessoasNoPeriodo($periodo, $this->getRepositorio());
         }
 		$validacaoPessoasCadastradas = 1;
-
         $view = new ViewModel(
                 array(
             Constantes::$REPOSITORIO_ORM => $this->getRepositorio(),
@@ -1202,47 +1201,48 @@ class LancamentoController extends CircuitoController {
 	public function parceiroDeDeusExtratoAction(){
 		$request = $this->getRequest();
 		$dados = array();
-		if($request->isPost()){
+		if($request->isPost()){            
 			$postDados = $request->getPost();
 			$mes = $postDados['mes'];
-			$ano = $postDados['ano'];
-			$sessao = new Container(Constantes::$NOME_APLICACAO);
-			$idEntidadeAtual = $sessao->idEntidadeAtual;
-			$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
-			$pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($sessao->idPessoa);
-			$grupo = $entidade->getGrupo();
-			if($pessoaFatoFinanceiroAcessoAtivo = $pessoa->getPessoaFatoFinanceiroAcessoAtivo()){
-				if($pessoaFatoFinanceiroAcessoAtivo->getFatoFinanceiroAcesso()->getId() === FatoFinanceiroAcesso::SECRETARIO_PARCEIRO_DE_DEUS){
-					$grupo = $grupo->getGrupoEquipe();
-				}
-				if($pessoaFatoFinanceiroAcessoAtivo->getFatoFinanceiroAcesso()->getId() === FatoFinanceiroAcesso::SECRETARIO_PARCEIRO_DE_DEUS_IGREJA){
-					$grupo = $grupo->getGrupoIgreja();
-				}
-			}
-
-			$numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupo);
-			$fatos = $this->getRepositorio()->getFatoFinanceiroORM()->encontrarFatosPorNumeroIdentificadorPorMesEAno($numeroIdentificador, $mes, $ano);
-			$fatosAtivos = array();
-			if($fatos){
-				foreach($fatos as $fatoFinanceiro){
-					if($fatoFinanceiro->verificarSeEstaAtivo()){
-						$idGrupo = substr($fatoFinanceiro->getNumero_identificador(), strlen($fatoFinanceiro->getNumero_identificador())-8);
-						$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupo);
-						$fatoFinanceiro->setGrupo($grupo);
-						$fatosAtivos[] = $fatoFinanceiro;
-					}
-				}
-			}
-			if(count($fatosAtivos) == 0){
-				$dados['semLancamentos'] = true;
-			}
-			$dados['fatos'] = $fatosAtivos;
-			$dados['pessoa'] = $pessoa;
-			$dados['entidade'] = $entidade;
-		} else {
+            $ano = $postDados['ano'];
+        } else {
 			$mes = date('m');
 			$ano = date('Y');
-		}
+        }
+        $sessao = new Container(Constantes::$NOME_APLICACAO);
+        $idEntidadeAtual = $sessao->idEntidadeAtual;
+        $entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+        $pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($sessao->idPessoa);
+        $grupo = $entidade->getGrupo();
+        if($pessoaFatoFinanceiroAcessoAtivo = $pessoa->getPessoaFatoFinanceiroAcessoAtivo()){
+            if($pessoaFatoFinanceiroAcessoAtivo->getFatoFinanceiroAcesso()->getId() === FatoFinanceiroAcesso::SECRETARIO_PARCEIRO_DE_DEUS){
+                $grupo = $grupo->getGrupoEquipe();
+            }
+            if($pessoaFatoFinanceiroAcessoAtivo->getFatoFinanceiroAcesso()->getId() === FatoFinanceiroAcesso::SECRETARIO_PARCEIRO_DE_DEUS_IGREJA){
+                $grupo = $grupo->getGrupoIgreja();
+            }
+        }
+
+        $numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupo);
+        $fatos = $this->getRepositorio()->getFatoFinanceiroORM()->encontrarFatosPorNumeroIdentificadorPorMesEAno($numeroIdentificador, $mes, $ano);
+        $fatosAtivos = array();
+        if($fatos){
+            foreach($fatos as $fatoFinanceiro){
+                if($fatoFinanceiro->verificarSeEstaAtivo()){
+                    $idGrupo = substr($fatoFinanceiro->getNumero_identificador(), strlen($fatoFinanceiro->getNumero_identificador())-8);
+                    $grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupo);
+                    $fatoFinanceiro->setGrupo($grupo);
+                    $fatosAtivos[] = $fatoFinanceiro;
+                }
+            }
+        }
+        if(count($fatosAtivos) == 0){
+            $dados['semLancamentos'] = true;
+        }
+        $dados['fatos'] = $fatosAtivos;
+        $dados['pessoa'] = $pessoa;
+        $dados['entidade'] = $entidade;
+		
 		$dados['mes'] = $mes;
 		$dados['ano'] = $ano;
 		self::registrarLog(RegistroAcao::VER_PARCEIRO_DE_DEUS, $extra = '');
