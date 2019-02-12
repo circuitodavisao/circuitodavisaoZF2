@@ -25,6 +25,7 @@ class ListagemFichasAtivasRevisao extends AbstractHelper {
             $html .= '<tr class="dark">';
             $html .= '<th>Inscrição</th>';
             $html .= '<th>Revisionista</th>';
+            $html .= '<th>Idade</th>';
             $html .= '<th>Time</th>';
             $html .= '<th>Remover</th>';
             $html .= '</tr>';
@@ -32,6 +33,7 @@ class ListagemFichasAtivasRevisao extends AbstractHelper {
                 $html .= '<tr>';
                 $html .= '<td>' . $lista->getId() . '</td>';
                 $html .= '<td>' . $lista->getPessoa()->getNome() . '</td>';
+                $html .= '<td>' . $lista->getPessoa()->getIdade() . '</td>';
                 $html .= '<td>' . $lista->getPessoa()->getGrupoPessoaAtivo()->getGrupo()->getEntidadeAtiva()->infoEntidade() . '</td>';
                 $html .= '<td>';
                 $funcaoOnClick = $this->view->funcaoOnClick('mostrarSplash(); funcaoCadastro("' . Constantes::$PAGINA_REMOVER_REVISIONISTA_ATIVO . '", ' . $lista->getId() . ')');
