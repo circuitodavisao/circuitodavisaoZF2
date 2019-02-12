@@ -376,43 +376,44 @@ class LancamentoController extends CircuitoController {
                             $tipoCampo = LancamentoController::TIPO_CAMPO_CULTO;
                             break;
                     };
-                }
-                if ($evento->getEventoTipo()->getId() === EventoTipo::tipoCelula) {
-                    $tipoCampo = LancamentoController::TIPO_CAMPO_CELULA;
-                    $dimensaoSelecionada = $dimensoes[DimensaoTipo::CELULA];
+				}
+				if ($evento->getEventoTipo()->getId() === EventoTipo::tipoCelula
+					|| $evento->getEventoTipo()->getId() === EventoTipo::tipoCelulaEstrategica) {
+						$tipoCampo = LancamentoController::TIPO_CAMPO_CELULA;
+						$dimensaoSelecionada = $dimensoes[DimensaoTipo::CELULA];
 
-                    /* Atualiza o relatorio de celulas */
-                    $criteria = Criteria::create()
-                            ->andWhere(Criteria::expr()->eq("dia", $dateFormatada));
+						/* Atualiza o relatorio de celulas */
+						$criteria = Criteria::create()
+							->andWhere(Criteria::expr()->eq("dia", $dateFormatada));
 
-                    $frequencias = $evento->getEventoFrequencia()->matching($criteria);
-                    $somaFrequencias = 0;
-                    foreach ($frequencias as $frequenca) {
-                        if ($frequenca->getFrequencia() === 'S') {
-                            $somaFrequencias++;
-                        }
-                    }
+						$frequencias = $evento->getEventoFrequencia()->matching($criteria);
+						$somaFrequencias = 0;
+						foreach ($frequencias as $frequenca) {
+							if ($frequenca->getFrequencia() === 'S') {
+								$somaFrequencias++;
+							}
+						}
 
-                    /* Atualizando relatorio individual da celula no periodo */
-                    if ($somaFrequencias === 0) {
-                        $realizada = 0;
-                    } else {
-                        $realizada = 1;
-                    }
+						/* Atualizando relatorio individual da celula no periodo */
+						if ($somaFrequencias === 0) {
+							$realizada = 0;
+						} else {
+							$realizada = 1;
+						}
 
-                    $eventoCelulaId = $evento->getEventoCelula()->getId();
-                    $fatoCelulas = $fatoCicloSelecionado->getFatoCelula();
-                    $fatoCelulaSelecionado = null;
-                    foreach ($fatoCelulas as $fatoCelula) {
-                        if ($fatoCelula->getEvento_celula_id() == $eventoCelulaId) {
-                            $fatoCelulaSelecionado = $fatoCelula;
-                        }
-                    }
-                    $realizadaAntesDeMudar = $fatoCelulaSelecionado->getRealizada();
-                    $fatoCelulaSelecionado->setRealizada($realizada);
-                    $setarDataEHora = false;
-                    $this->getRepositorio()->getFatoCelulaORM()->persistir($fatoCelulaSelecionado, $setarDataEHora);
-                }
+						$eventoCelulaId = $evento->getEventoCelula()->getId();
+						$fatoCelulas = $fatoCicloSelecionado->getFatoCelula();
+						$fatoCelulaSelecionado = null;
+						foreach ($fatoCelulas as $fatoCelula) {
+							if ($fatoCelula->getEvento_celula_id() == $eventoCelulaId) {
+								$fatoCelulaSelecionado = $fatoCelula;
+							}
+						}
+						$realizadaAntesDeMudar = $fatoCelulaSelecionado->getRealizada();
+						$fatoCelulaSelecionado->setRealizada($realizada);
+						$setarDataEHora = false;
+						$this->getRepositorio()->getFatoCelulaORM()->persistir($fatoCelulaSelecionado, $setarDataEHora);
+					}
                 $tipoPessoa = 0;
                 if ($pessoa->getGrupoPessoaAtivo()) {
                     /* Pessoa volateis */
