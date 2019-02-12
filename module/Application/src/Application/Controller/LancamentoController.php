@@ -109,6 +109,12 @@ class LancamentoController extends CircuitoController {
         if($periodo == 0){
             foreach ($grupoPessoasNoPeriodo as $grupoPessoa ) {
                 self::ajustarPessoa($grupoPessoa->getPessoa()->getId(), $this->getRepositorio());
+                $pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($grupoPessoa->getPessoa()->getId());
+                if($pessoa->verificaSeParticipouDoRevisao() && $pessoa->verificarSeEhAluno() && $grupoPessoa->getGrupoPessoaTipo()->getId() != GrupoPessoaTipo::MEMBRO){                    
+                    $grupoPessoaTipo = $this->getRepositorio()->getGrupoPessoaTipoORM()->encontrarPorId(GrupoPessoaTipo::MEMBRO);
+                    $grupoPessoa->setGrupoPessoaTipo($grupoPessoaTipo);                    
+                    $this->getRepositorio()->getGrupoPessoaORM()->persistir($grupoPessoa, $setDataAtual = false);                    
+                }
             }
             $grupoPessoasNoPeriodo = $grupo->getGrupoPessoasNoPeriodo($periodo, $this->getRepositorio());
         }
