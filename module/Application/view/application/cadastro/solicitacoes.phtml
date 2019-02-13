@@ -55,6 +55,10 @@ foreach($this->solicitacoesTipo as $solicitacaoTipo){
 		$htmlThead .= '<th>Quem</th>';
 		$htmlThead .= '<th>Novo Líder</th>';
 		break;
+	case SolicitacaoTipo::SUBIR_LIDER:
+		$colspan = 4;
+		$htmlThead .= '<th>Quem</th>';
+		break;
 	}
 	$htmlThead .= '<th>Status</th>';
 
