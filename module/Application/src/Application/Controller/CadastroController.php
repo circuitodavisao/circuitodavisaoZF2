@@ -2423,8 +2423,10 @@ class CadastroController extends CircuitoController {
 				if ($post_data['nome']) {
 					$solicitacao->setNome($post_data['nome']);
 				}
-				if ($post_data['nomeEquipe']) {
-					$solicitacao->setNome($post_data['nomeEquipe']);
+				if ($solicitacaoTipo->getId() === SolicitacaoTipo::SUBIR_LIDER) {
+					if ($post_data['nomeEquipe']) {
+						$solicitacao->setNome($post_data['nomeEquipe']);
+					}
 				}
 				$this->getRepositorio()->getSolicitacaoORM()->persistir($solicitacao);
 
