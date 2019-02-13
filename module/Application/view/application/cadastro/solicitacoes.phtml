@@ -151,9 +151,14 @@ foreach($this->solicitacoesTipo as $solicitacaoTipo){
 				if($solicitacao->getSolicitacaoSituacaoAtiva()
 					&& $solicitacao->getSolicitacaoSituacaoAtiva()->getSituacao()->getId() === Situacao::PENDENTE_DE_ACEITACAO
 					&& $this->entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
-						$funcaoAceintar = $this->funcaoOnClick('if(confirm("Realemnte deseja aceitar essa solicitação?")){mostrarSplash(); funcaoCircuito("cadastroSolicitacaoAceitar", '.$solicitacao->getId().');}');
-						$botaoAceitar = $this->botaoSimples('Aceitar', $funcaoAceintar, BotaoSimples::botaoPequenoImportante);
-						$htmlTbody .= '<td>'.$botaoAceitar.'</td>';
+						$funcaoAceitar = $this->funcaoOnClick('if(confirm("Realmente deseja aceitar essa solicitação?")){mostrarSplash(); funcaoCircuito("cadastroSolicitacaoAceitar", '.$solicitacao->getId().');}');
+						$botaoAceitar = $this->botaoSimples('Aceitar', $funcaoAceitar, BotaoSimples::botaoPequenoImportante);
+						$funcaoRecusar = $this->funcaoOnClick('if(confirm("Realmente deseja recusar essa solicitação?")){mostrarSplash(); funcaoCircuito("cadastroSolicitacaoRecusar", '.$solicitacao->getId().');}');
+						$botaoRecusar = $this->botaoSimples('Recusar', $funcaoRecusar, BotaoSimples::botaoPequenoPerigoso);
+						$htmlTbody .= '<td>';						
+						$htmlTbody .= $botaoRecusar;
+						$htmlTbody .= $botaoAceitar;
+						$htmlTbody .= '</td>';
 					}else{
 						$htmlTbody .= '<td></td>';
 					}

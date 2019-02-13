@@ -196,9 +196,7 @@ class Menu extends AbstractHelper {
 			/* Fim Menu Cadastro */
 		}
 
-		if ($this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::regiao
-		&& $this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::coordenacao) {
-
+		
 		/* Menu Lançamento */
 		$html .= '<li>';
 		$html .= '<a class="accordion-toggle" href="#">';
@@ -207,12 +205,19 @@ class Menu extends AbstractHelper {
 		$html .= '<span class="caret"></span>';
 		$html .= '</a>';
 		$html .= '<ul class="nav sub-nav">';
-		$html .= '<li>';
-		$html .= '<a href="#" onClick="mostrarSplash(); funcaoCircuito(\'lancamentoArregimentacao\', null);">';
-		$html .= '<span class="fa fa-terminal"></span>';
-		$html .= 'Arregimentação';
-		$html .= '</a>';
-		$html .= '</li>';
+
+		if ($this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::regiao
+		&& $this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::coordenacao) {
+
+			$html .= '<li>';
+			$html .= '<a href="#" onClick="mostrarSplash(); funcaoCircuito(\'lancamentoArregimentacao\', null);">';
+			$html .= '<span class="fa fa-terminal"></span>';
+			$html .= 'Arregimentação';
+			$html .= '</a>';
+			$html .= '</li>';
+
+		}
+
 		if ($this->view->entidade->verificarSeEstaAtivo()) {
 			$html .= '<li>';
 			$html .= '<a href="#" onClick="mostrarSplash(); funcaoCircuito(\'lancamentoAtendimento\', null);">';
@@ -230,17 +235,23 @@ class Menu extends AbstractHelper {
 				$html .= '</li>';
 			}
 		}
-		$html .= '<li>';
-		$html .= '<a href="#" onClick="mostrarSplash(); funcaoCircuito(\'lancamentoParceiroDeDeusExtrato\', null);">';
-		$html .= '<span class="fa fa-money"></span>';
-		$html .= 'Parceiro de Deus';
-		$html .= '</a>';
-		$html .= '</li>';
+
+		if ($this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::regiao
+		&& $this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::coordenacao) {
+
+			$html .= '<li>';
+			$html .= '<a href="#" onClick="mostrarSplash(); funcaoCircuito(\'lancamentoParceiroDeDeusExtrato\', null);">';
+			$html .= '<span class="fa fa-money"></span>';
+			$html .= 'Parceiro de Deus';
+			$html .= '</a>';
+			$html .= '</li>';
+
+		}
 
 		$html .= '</ul>';
 		$html .= '</li>';
 
-		}
+		
 
 		if ($this->view->entidade->verificarSeEstaAtivo()) {
 			$html .= '<li>';
@@ -312,10 +323,7 @@ class Menu extends AbstractHelper {
 				$html .= 'Células Excluídas';
 				$html .= '</a>';
 				$html .= '</li>';
-			}
-
-			if($this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::regiao
-				&& $this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::coordenacao) {
+			}		
 
 //			$html .= '<li>';
 //			$html .= '<a href="/relatorioPessoasFrequentes" onClick="mostrarSplash();">';
@@ -330,6 +338,9 @@ class Menu extends AbstractHelper {
 			$html .= 'Atendimento';
 			$html .= '</a>';
 			$html .= '</li>';
+
+			if($this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::regiao
+				&& $this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::coordenacao) {
 
 			$html .= '<li>';
 			$html .= '<a href="#" onClick="mostrarSplash(); funcaoCircuito(\'relatorioDiscipulado\', null);">';
