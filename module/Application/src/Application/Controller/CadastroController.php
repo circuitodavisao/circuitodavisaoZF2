@@ -157,6 +157,11 @@ class CadastroController extends CircuitoController {
 				Constantes::$ACTION => Constantes::$PAGINA_SOLICITACAO_ACEITAR,
 			));
 		}
+		if ($pagina == Constantes::$PAGINA_SOLICITACAO_RECUSAR) {
+			return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
+				Constantes::$ACTION => Constantes::$PAGINA_SOLICITACAO_RECUSAR,
+			));
+		}
 		if ($pagina == Constantes::$PAGINA_SOLICITACAO) {
 			return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
 				Constantes::$ACTION => Constantes::$PAGINA_SOLICITACAO,
@@ -2128,6 +2133,26 @@ class CadastroController extends CircuitoController {
 			Constantes::$PAGINA => Constantes::$PAGINA_SOLICITACOES,
 		));
 	}
+
+	public function solicitacaoRecusarAction(){
+		self::validarSeSouIgreja();
+		$sessao = new Container(Constantes::$NOME_APLICACAO);
+		if($idSessao = $sessao->idSessao){
+			$solicitacao = $this->getRepositorio()->getSolicitacaoORM()->encontrarPorId($idSessao);
+			$solicitacaoSituacaoAtual = $solicitacao->getSolicitacaoSituacaoAtiva();
+			$solicitacaoSituacaoAtual->setDataEHoraDeInativacao();
+			$this->getRepositorio()->getSolicitacaoSituacaoORM()->persistir($solicitacaoSituacaoAtual, $mudarDataDeCriacao = false);
+
+			$solicitacaoSituacaoRecusada = new SolicitacaoSituacao();
+			$solicitacaoSituacaoRecusada->setSolicitacao($solicitacao);
+			$solicitacaoSituacaoRecusada->setSituacao($this->getRepositorio()->getSituacaoORM()->encontrarPorId(Situacao::RECUSAO));
+			$this->getRepositorio()->getSolicitacaoSituacaoORM()->persistir($solicitacaoSituacaoRecusada);
+
+		}
+		return $this->redirect()->toRoute(Constantes::$ROUTE_CADASTRO, array(
+			Constantes::$PAGINA => Constantes::$PAGINA_SOLICITACOES,
+		));
+	}	
 
 	public function solicitacaoAction() {
 		ini_set('memory_limit', '1024M');
