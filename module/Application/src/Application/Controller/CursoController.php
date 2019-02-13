@@ -1162,6 +1162,9 @@ class CursoController extends CircuitoController {
 
 
 	public function selecionarParaCarterinhaAction() {
+		set_time_limit(0);
+		ini_set('memory_limit', '-1');
+		ini_set('max_execution_time', '60');
 		$sessao = new Container(Constantes::$NOME_APLICACAO);
 		$entidade = CircuitoController::getEntidadeLogada($this->getRepositorio(), $sessao);
 		$grupo = $entidade->getGrupo();
