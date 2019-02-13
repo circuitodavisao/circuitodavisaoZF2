@@ -5,6 +5,7 @@ namespace Application\View\Helper;
 use Application\Controller\Helper\Constantes;
 use Application\Controller\Helper\Funcoes;
 use Application\Model\Entity\Grupo;
+use Application\Model\Entity\Entidade;
 use Application\Model\Helper\FuncoesEntidade;
 use Zend\View\Helper\AbstractHelper;
 
@@ -133,6 +134,16 @@ class AtendimentoGruposAbaixo extends AbstractHelper {
         }
 
         $html .= $grupo->getNomeLideresAtivos();
+        $entidadeTipoId = $grupo->getEntidadeAtiva()->getEntidadeTipo()->getId();
+        if($entidadeTipoId === Entidade::REGIONAL){
+            $html .= ' - REGIÃO: ' . $grupo->getEntidadeAtiva()->getNome();
+        }
+        if($entidadeTipoId === Entidade::COORDENACAO){
+            $html .= ' - COORDENAÇÃO: ' . $grupo->getEntidadeAtiva()->getNumero();
+        }
+        if($entidadeTipoId === Entidade::IGREJA){
+            $html .= ' - IGREJA: ' . $grupo->getEntidadeAtiva()->getNome();
+        }
 
         $html .= '</div>';
         /* Fim Coluna 1 */
