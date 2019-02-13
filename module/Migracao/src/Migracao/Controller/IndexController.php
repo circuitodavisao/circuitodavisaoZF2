@@ -3239,13 +3239,13 @@ class IndexController extends CircuitoController {
 				$relatorio[$grupoEventoCelula->getId()]['valor'] = $media;
 				$relatorio[$grupoEventoCelula->getId()]['periodos'] = $arrayPeriodos;
 				if($celulasDeElite){
-					$mediaParceiroDeDeus = $somaPaceiroDeDeus / $diferencaDePeriodos;
+					//$mediaParceiroDeDeus = $somaPaceiroDeDeus / $diferencaDePeriodos;
 					//$mediaVisitantes = $somaVisitantes / $diferencaDePeriodos;
 					$relatorio[$grupoEventoCelula->getId()]['mediaArregimentacao'] = $media;
 					$relatorio[$grupoEventoCelula->getId()]['mediaParceiroDeDeus'] = $mediaParceiroDeDeus;
 					$relatorio[$grupoEventoCelula->getId()]['mediaVisitantes'] = $mediaVisitantes;
 					$eh70 = false;
-					if($media >= 7 && $mediaParceiroDeDeus >= 10 && $somaVisitantes >= 2){
+					if($media >= 7 && $somaPaceiroDeDeus >= 40 && $somaVisitantes >= 2){
 						$eh70 = true;
 					}
 					$relatorio[$grupoEventoCelula->getId()]['setenta'] = $eh70;
