@@ -3221,6 +3221,10 @@ class IndexController extends CircuitoController {
 						$soma += $resultado;
 					}else{
 						$resultado = $repositorioORM->getFatoCicloORM()->verificaFrequenciasPorCelulaEPeriodoESeTemVisitante($indiceDeArrays, $eventoId, $repositorioORM);
+						if($grupoEventoCelula->getEvento()->getEvento_id() && $resultado['arregimentacao'] == 0){
+							$resultado = 
+								$repositorioORM->getFatoCicloORM()->verificaFrequenciasPorCelulaEPeriodoESeTemVisitante($indiceDeArrays, $grupoEventoCelula->getEvento()->getEvento_id(), $repositorioORM);
+						}
 						$arrayPeriodos[$contadorDePeriodos]['arregimentacao'] = $resultado['arregimentacao'];
 						$arrayPeriodos[$contadorDePeriodos]['visitantes'] = $resultado['visitantes'];
 						$arrayPeriodos[$contadorDePeriodos]['parceiroDeDeus'] = $resultado['parceiroDeDeus'];
