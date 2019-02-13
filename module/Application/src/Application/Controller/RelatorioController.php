@@ -510,6 +510,9 @@ class RelatorioController extends CircuitoController {
 				$dados['fotos'] = $fotos;
 				$dados['celulaQuantidade'] = $relatorio['celulaQuantidade'];
 				$dados['quantidadeLideres'] = $relatorio['quantidadeLideres'];
+				if($dados['quantidadeLideres'] === null){
+					$dados['quantidadeLideres'] = 0;
+				}
 				$dados['resposta'] = $resposta;
 
 				if($grupoPaiFilhoFilhos = $grupo->getGrupoPaiFilhoFilhosAtivos($indiceDeArrays = 1)){
