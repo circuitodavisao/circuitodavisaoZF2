@@ -39,3 +39,4 @@ COMMENT ON COLUMN evento.tipo_id IS 'Identificação do tipo do evento';
 COMMENT ON COLUMN evento.nome IS 'Nome do evento';
 COMMENT ON COLUMN evento.data IS 'Data do evento';
 
+ALTER TABLE evento ADD COLUMN evento_id integer;

@@ -772,6 +772,7 @@ class CadastroController extends CircuitoController {
 						$tipoDeCelula = EventoTipo::tipoCelulaEstrategica;
 						if ($eventoParaInativar && $post_data[Constantes::$FORM_DIA_DA_SEMANA] != $eventoCelulaAtual->getEvento()->getDia()) {
 							$tipoDeCelula = $eventoParaInativar->getEventoTipo()->getId();
+							$evento->setEvento_id($eventoParaInativar->getId());
 						}
 						$evento->setEventoTipo($this->getRepositorio()->getEventoTipoORM()->encontrarPorId($tipoDeCelula));
 						$this->getRepositorio()->getEventoORM()->persistir($evento, $alterarDataDeCriacao);
