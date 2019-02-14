@@ -2344,9 +2344,10 @@ class CadastroController extends CircuitoController {
 			if($solicitacoesParaVerificar = $this->getRepositorio()->getSolicitacaoORM()->encontrarSolicitacoesPorObjeto1($post_data['objeto1'])){
 				$temSolicitacoesPendentes = false;
 				foreach($solicitacoesParaVerificar as $solicitacaoParaVerificar){
-					if($solicitacaoParaVerificar->getSolicitacaoSituacaoAtiva()->getSituacao()->getId() !== Situacao::CONCLUIDO){
-						$temSolicitacoesPendentes = true;
-					}
+					if($solicitacaoParaVerificar->getSolicitacaoSituacaoAtiva()->getSituacao()->getId() !== Situacao::CONCLUIDO
+						&& $solicitacaoParaVerificar->getSolicitacaoSituacaoAtiva()->getSituacao()->getId() !== Situacao::RECUSAO){
+							$temSolicitacoesPendentes = true;
+						}
 				}
 				if($temSolicitacoesPendentes){
 					return $this->redirect()->toRoute(Constantes::$ROUTE_PRINCIPAL, array(
