@@ -691,6 +691,9 @@ class PrincipalController extends CircuitoController {
 
 	public function suporteFinalizarAction() {
 		$sessao = new Container(Constantes::$NOME_APLICACAO);
+		$idEntidadeAtual = $sessao->idEntidadeAtual;
+		$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+		$entidadeDaIgreja = $entidade->getGrupo()->getGrupoIgreja()->getEntidadeAtiva();
 		$pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($sessao->idPessoa);
 		$request = $this->getRequest();
 		$dadosPost = array_merge_recursive(
@@ -703,7 +706,13 @@ class PrincipalController extends CircuitoController {
 		$anexo = $dadosPost['imagem'];
 		$remetente['nome'] = $pessoa->getNomePrimeiroUltimo();
 		$remetente['email'] = $pessoa->getEmail();
-		$Subject = $dadosPost['assunto'].' :: '.$remetente['nome'].' ID('.$sessao->idPessoa.')';
+		$assunto = $dadosPost['assunto'] . ' :: ';
+		if($pessoa->getGrupoResponsavel()[0]->getGrupo()->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::EQUIPE){
+			$assunto .= 'EQUIPE: ' . $pessoa->getGrupoResponsavel()[0]->getGrupo()->getEntidadeAtiva()->getNome() . ', ';
+		}
+		$assunto .= 'IGREJA: ' .  $entidadeDaIgreja->getNome();
+		$assunto .= ', RESPONSAVEL: ' . $entidadeDaIgreja->getGrupo()->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai()->getEntidadeAtiva()->infoEntidade();
+		$Subject = $assunto;		
 		$ToEmail = 'support@circuitodavisao.zendesk.com';
 		$Content = 'Tipo: '.$tipo.'
 			Prioridade: '.$prioridade.'
