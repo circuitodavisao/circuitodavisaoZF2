@@ -389,7 +389,8 @@ class IndexController extends CircuitoController {
 								if ($idSituacao == Situacao::ACEITO_AGENDADO) {
 									$idSolicitacaoTipo = $solicitacao->getSolicitacaoTipo()->getId();
 									if ($idSolicitacaoTipo === SolicitacaoTipo::TRANSFERIR_LIDER_NA_PROPRIA_EQUIPE ||
-										$idSolicitacaoTipo === SolicitacaoTipo::TRANSFERIR_LIDER_PARA_OUTRA_EQUIPE) {
+										$idSolicitacaoTipo === SolicitacaoTipo::TRANSFERIR_LIDER_PARA_OUTRA_EQUIPE ||
+										$idSolicitacaoTipo === SolicitacaoTipo::SUBIR_LIDER) {
 											$html .= "<br /> {$solicitacao->getId()} - TRANSFERIR_LIDER_NA_PROPRIA_EQUIPE";
 											$grupoQueSeraSemeado = $this->getRepositorio()->getGrupoORM()->encontrarPorId($solicitacao->getObjeto1());
 											$grupoQueRecebera = $this->getRepositorio()->getGrupoORM()->encontrarPorId($solicitacao->getObjeto2());
@@ -3220,6 +3221,10 @@ class IndexController extends CircuitoController {
 						$soma += $resultado;
 					}else{
 						$resultado = $repositorioORM->getFatoCicloORM()->verificaFrequenciasPorCelulaEPeriodoESeTemVisitante($indiceDeArrays, $eventoId, $repositorioORM);
+						if($grupoEventoCelula->getEvento()->getEvento_id() && $resultado['arregimentacao'] == 0){
+							$resultado = 
+								$repositorioORM->getFatoCicloORM()->verificaFrequenciasPorCelulaEPeriodoESeTemVisitante($indiceDeArrays, $grupoEventoCelula->getEvento()->getEvento_id(), $repositorioORM);
+						}
 						$arrayPeriodos[$contadorDePeriodos]['arregimentacao'] = $resultado['arregimentacao'];
 						$arrayPeriodos[$contadorDePeriodos]['visitantes'] = $resultado['visitantes'];
 						$arrayPeriodos[$contadorDePeriodos]['parceiroDeDeus'] = $resultado['parceiroDeDeus'];
@@ -3234,13 +3239,13 @@ class IndexController extends CircuitoController {
 				$relatorio[$grupoEventoCelula->getId()]['valor'] = $media;
 				$relatorio[$grupoEventoCelula->getId()]['periodos'] = $arrayPeriodos;
 				if($celulasDeElite){
-					$mediaParceiroDeDeus = $somaPaceiroDeDeus / $diferencaDePeriodos;
+					//$mediaParceiroDeDeus = $somaPaceiroDeDeus / $diferencaDePeriodos;
 					//$mediaVisitantes = $somaVisitantes / $diferencaDePeriodos;
 					$relatorio[$grupoEventoCelula->getId()]['mediaArregimentacao'] = $media;
 					$relatorio[$grupoEventoCelula->getId()]['mediaParceiroDeDeus'] = $mediaParceiroDeDeus;
 					$relatorio[$grupoEventoCelula->getId()]['mediaVisitantes'] = $mediaVisitantes;
 					$eh70 = false;
-					if($media >= 7 && $mediaParceiroDeDeus >= 10 && $somaVisitantes >= 2){
+					if($media >= 7 && $somaPaceiroDeDeus >= 40 && $somaVisitantes >= 2){
 						$eh70 = true;
 					}
 					$relatorio[$grupoEventoCelula->getId()]['setenta'] = $eh70;

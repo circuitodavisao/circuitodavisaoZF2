@@ -304,6 +304,18 @@ echo $this->botaoSimples('Selecionar', $this->funcaoOnClick('selecionarCelula()'
 echo '</div>';
 ?>
 	</div>
+
+	<!--divNomeEquipe-->
+	<div id="divNomeEquipe" class="hidden">
+	<div class="section-divider mt20">
+	<span>Nome da Equipe</span>
+	</div>
+	<input type='text' id='nomeEquipe' name='nomeEquipe' class='form-control'/>
+	<button type="button" onClick='selecionarNomeEquipe()' style="float: right;" class="mt10 btn ladda-button btn-primary mr5" data-style="zoom-in">
+	<span class="ladda-label">Selecionar</span>
+	</button>
+	</div>
+
 	<!--divBotaoContinuar-->
 	<div id="divBotaoContinuar" class="hidden">
 <?php

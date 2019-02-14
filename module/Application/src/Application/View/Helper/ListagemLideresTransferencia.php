@@ -45,7 +45,7 @@ class ListagemLideresTransferencia extends AbstractHelper {
 			$nomeLideres = $grupo->getNomeLideresAtivos();
 			$informacao = $entidade->infoEntidade() . ' - ' . $nomeLideres;
 			$dispulos144 = $grupo->getGrupoPaiFilhoFilhosAtivos(1);
-			$html .= '<option class="lider grupo' . $grupo->getId() . '" value="' . $grupo->getId() . '">' . $informacao . '</option>';
+			$html .= '<option class="lider grupoEquipe grupo' . $grupo->getId() . '" value="' . $grupo->getId() . '">' . $informacao . '</option>';
 			if ($dispulos144) {
 				foreach ($dispulos144 as $gpFilho144) {
 					$grupoFilho144 = $gpFilho144->getGrupoPaiFilhoFilho();

@@ -69,6 +69,9 @@ class Evento extends CircuitoEntity implements InputFilterAwareInterface {
     /** @ORM\Column(type="integer") */
     protected $tipo_id;
 
+    /** @ORM\Column(type="integer") */
+    protected $evento_id;
+
     /**
      * Retorna o tipo de evento
      * @return EventoTipo
@@ -397,5 +400,13 @@ class Evento extends CircuitoEntity implements InputFilterAwareInterface {
     function setData($data) {
         $this->data = $data;
     }
+
+	function getEvento_id(){
+		return $this->evento_id;
+	}
+
+	function setEvento_id($evento_id){
+		$this->evento_id = $evento_id;
+	}
 
 }
