@@ -772,6 +772,7 @@ class CadastroController extends CircuitoController {
 						$tipoDeCelula = EventoTipo::tipoCelulaEstrategica;
 						if ($eventoParaInativar && $post_data[Constantes::$FORM_DIA_DA_SEMANA] != $eventoCelulaAtual->getEvento()->getDia()) {
 							$tipoDeCelula = $eventoParaInativar->getEventoTipo()->getId();
+							$evento->setEvento_id($eventoParaInativar->getId());
 						}
 						$evento->setEventoTipo($this->getRepositorio()->getEventoTipoORM()->encontrarPorId($tipoDeCelula));
 						$this->getRepositorio()->getEventoORM()->persistir($evento, $alterarDataDeCriacao);
@@ -2175,7 +2176,11 @@ class CadastroController extends CircuitoController {
 				}	
 			}	
 		}else{
-			$solicitacaoTiposAjustado = $solicitacaoTiposSemAjuste;
+			foreach($solicitacaoTiposSemAjuste as $solicitacaoTipo){
+				if($solicitacaoTipo->getId() !== SolicitacaoTipo::SUBIR_LIDER){
+					$solicitacaoTiposAjustado[] = $solicitacaoTipo;
+				}	
+			}	
 		}
 		$formSolicitacao = new SolicitacaoForm('formSolicitacao');
 
@@ -2389,6 +2394,9 @@ class CadastroController extends CircuitoController {
 					if($solicitacaoTipo->getId() === SolicitacaoTipo::REMOVER_CELULA){
 						$objeto2 = $post_data['idGrupoEvento'];
 					}
+					if($solicitacaoTipo->getId() === SolicitacaoTipo::SUBIR_LIDER){
+						$objeto2 = $grupoIgreja->getId();
+					}
 					$solicitacao->setObjeto2($objeto2);
 				}
 				if ($solicitacaoTipo->getId() === SolicitacaoTipo::SEPARAR) {
@@ -2415,6 +2423,11 @@ class CadastroController extends CircuitoController {
 				}
 				if ($post_data['nome']) {
 					$solicitacao->setNome($post_data['nome']);
+				}
+				if ($solicitacaoTipo->getId() === SolicitacaoTipo::SUBIR_LIDER) {
+					if ($post_data['nomeEquipe']) {
+						$solicitacao->setNome($post_data['nomeEquipe']);
+					}
 				}
 				$this->getRepositorio()->getSolicitacaoORM()->persistir($solicitacao);
 
