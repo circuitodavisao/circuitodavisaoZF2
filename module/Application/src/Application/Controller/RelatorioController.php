@@ -522,9 +522,10 @@ class RelatorioController extends CircuitoController {
 					$temSolicitacaoPendente = false;
 					foreach($solicitacoesDoObjeto as $solicitacao){
 						$idSituacao = $solicitacao->getSolicitacaoSituacaoAtiva()->getSituacao()->getId();
-						if($idSituacao !== Situacao::CONCLUIDO){
-							$temSolicitacaoPendente = true;
-						}
+						if($idSituacao !== Situacao::CONCLUIDO
+							&& $idSituacao !== Situacao::RECUSAO){
+								$temSolicitacaoPendente = true;
+							}
 					}
 					if($temSolicitacaoPendente){
 						$dados['temSolicitacaoPendente'] = true;
@@ -533,6 +534,11 @@ class RelatorioController extends CircuitoController {
 
 				/* se tem celula adiciona os dados */
 				if($grupoEventoCelula = $grupo->getGrupoEventoPorTipoEAtivo(EventoTipo::tipoCelula)){
+					if($grupoEventoCelulaEstrategica = $grupo->getGrupoEventoPorTipoEAtivo(EventoTipo::tipoCelulaEstrategica)){
+						foreach($grupoEventoCelulaEstrategica as $grupoEventoEstrategica){
+							$grupoEventoCelula[] = $grupoEventoEstrategica;
+						}
+					}
 					$contadorDeCelulas = 1;
 					foreach($grupoEventoCelula as $grupoEvento)	{
 						if($grupoEvento->verificarSeEstaAtivo()){
