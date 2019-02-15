@@ -872,27 +872,20 @@ class CursoController extends CircuitoController {
 		$verificarTurmasAtivas = false;
 
 		$resultado = RelatorioController::relatorioAlunosETurmas($this->getRepositorio(), $entidade, $verificarTurmasAtivas);
-		$turmas = $resultado[1];
+		$relatorio = $resultado[2];
+		uksort($relatorio, function ($a, $b) use ($relatorio) {
+			return ($relatorio[$a]->getSituacao_id() < $relatorio[$b]->getSituacao_id()) ? -1 : 1;
+		});
+		$turma = $this->getRepositorio()->getTurmaORM()->encontrarPorId($sessao->idSessao);
 
-		$request = $this->getRequest();
-		$filtrado = false;
-		$postado = array();
+		$request = $this->getRequest();		
 
-		$entidadeParaUsar = $entidade;
-		if($request->isPost()){
-			$filtrado = true;
-			$post = $request->getPost();
-			$postado['idTurma'] = $post['idTurma'];
-		}
-
-		$view = new ViewModel(array(
-			'filtrado' => $filtrado,
-			'postado' => $postado,
+		$view = new ViewModel(array(			
 			'entidade' => $entidade,
-			'turmas' => $turmas,
+			'turma' => $turma,
 			'situacoes' => $situacoes,
 			'repositorio' => $this->getRepositorio(),
-			'relatorio' => $resultado[2],
+			'relatorio' => $relatorio,
 		));
 		return $view;
 	}
