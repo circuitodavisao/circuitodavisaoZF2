@@ -46,6 +46,7 @@ for($i = 0 ; $i < 3 ; $i++){
     $html .= '<td class="text-center">Ped.</td>';
     $html .= '<td class="text-center">Fin.</td>';
 }
+$html .= '<td class="text-center">Aprovação</td>';
 $html .= '</tr>';
 $html .= '</thead>';
 
@@ -153,9 +154,10 @@ foreach ($this->relatorio as $fatoCurso) {
                         }
                     }
                 }
-                $html .= '<td class="text-center"><span class="label '. $corDaLabelFinanceiro .'  "><i class="fa ' . $iconeFinanceiro . '"></i></span></td>';
+                $html .= '<td class="text-center"><span class="label '. $corDaLabelFinanceiro .'  "><i class="fa ' . $iconeFinanceiro . '"></i></span></td>';                
             }
         }
+        $html .= '<td class="text-center"><span class="label label-default">CATIAU</span></td>';
     }
 }
     
