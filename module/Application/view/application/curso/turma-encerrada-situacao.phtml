@@ -1,0 +1,169 @@
+<?php
+
+use Application\Controller\CursoController;
+use Application\Controller\Helper\Constantes;
+use Application\Controller\Helper\Funcoes;
+use Application\Model\Entity\EntidadeTipo;
+use Application\Model\Entity\Situacao;
+use Application\Model\Entity\CursoAcesso;
+use Application\Model\Entity\Disciplina;
+use Application\View\Helper\BotaoSimples;
+?>
+<style type="text/css">
+	table{
+		font-size: 12px;
+	}
+</style>
+<?php
+
+$html = '';
+$html .= '<blockquote class="blockquote-primary"><small>' . $this->translate('Chamada') . '</small></blockquote>';
+$html .= '<div class="panel heading-border panel-primary">';
+$html .= '<div class="panel-body bg-light">';
+
+
+$html .= '<input id="fooFilter" type="text" class="form-control mt20" placeholder="Filtro">';
+$html .= '<div class="table-responsive">';
+$html .= '<table  class="table table-bordered table-condensed footable" data-filter="#fooFilter">';
+
+$html .= '<thead>';
+$html .= '<tr>';
+$html .= '<th colspan="4" class="text-center hidden-xs">' . $turma->getCurso()->getNome() . ' - ' . Funcoes::mesPorExtenso($turma->getMes()) . '/' . $turma->getAno() . '</th>';
+$html .= '<th colspan="2" class="text-center hidden-sm hidden-md hidden-lg">' . $turma->getCurso()->getNomeSigla() . ' - ' . Funcoes::mesPorExtenso($turma->getMes()) . '/' . $turma->getAno() . '</th>';
+foreach ($turma->getCurso()->getDisciplina() as $disciplina) {
+    if ($disciplina->getId() !== Disciplina::POS_REVISAO) {
+        $html .= '<th colspan="3" class="text-center">' . $disciplina->getNome() . '</th>';  
+    }  
+}
+$html .= '</tr>';
+$html .= '<tr>';
+$html .= '<th class="text-center">Situa&ccedil;&atilde;o</th>';
+$html .= '<th class="text-center">Matrícula</th>';
+$html .= '<th class="text-center">Aluno</th>';
+$html .= '<th class="text-center">Equipe</th>';
+for($i = 0 ; $i < 3 ; $i++){
+    $html .= '<td class="text-center">Pre.</td>';
+    $html .= '<td class="text-center">Ped.</td>';
+    $html .= '<td class="text-center">Fin.</td>';
+}
+$html .= '</tr>';
+$html .= '</thead>';
+
+$html .= '<tbody>';
+    
+foreach ($this->relatorio as $fatoCurso) {        
+    $relatorio = $fatoCurso;
+    if($fatoCurso->getTurma_id() === $turma->getId()){
+        $idGrupo = substr($relatorio->getNumero_identificador(), (count($relatorio->getNumero_identificador())-8));
+        $grupo = $repositorio->getGrupoORM()->encontrarPorId($idGrupo);
+        $nomeEquipe = $grupo->getEntidadeAtiva()->infoEntidade();
+        if($nomeEquipe == ''){
+            $nomeEquipe = $grupo->getGrupoEquipe()->getEntidadeAtiva()->getNome();
+        }
+        switch ($relatorio->getSituacao_id()) {
+            case Situacao::ESPECIAL:
+                $corSituacao = 'primary';
+                break;
+            case Situacao::DESISTENTE:
+                $corSituacao = 'warning';
+                break;
+            case Situacao::REPROVADO_POR_FALTA:
+                $corSituacao = 'danger';
+                break;
+            default:
+                $corSituacao = 'success';
+        }
+        $turmaPessoa = $this->repositorio->getTurmaPessoaORM()->encontrarPorId($relatorio->getTurma_pessoa_id());
+        $situacao = $this->repositorio->getSituacaoORM()->encontrarPorId($relatorio->getSituacao_id());
+        $stringSituacao = '<span class="label label-' . $corSituacao . '">' . $situacao->getNome() . '</span>';
+        $html .= '<tr class="'.$corSituacao.'">';
+        $html .= '<td class="text-center">' . $stringSituacao . '</td>';
+        $html .= '<td class="text-center"><span class="label label-default">'.$turmaPessoa->getId().'</span></td>';
+        $html .= '<td>'. $turmaPessoa->getPessoa()->getNome() . '</td>';
+        $html .= '<td class="text-center">' . $nomeEquipe . '</td>';
+        
+        foreach ($this->turma->getCurso()->getDisciplina() as $disciplina) {                
+            if ($disciplina->getId() !== Disciplina::POS_REVISAO) {
+                $iconePresencas = 'fa-times';
+                $corDaLabelPresencas = 'label-danger';
+                $presencas = 0;
+                foreach ($disciplina->getAulaOrdenadasPorPosicao() as $aula) {                                
+                    if (count($turmaPessoa->getTurmaPessoaAula()) > 0) {
+                        foreach ($turmaPessoa->getTurmaPessoaAula() as $turmaPessoaAula) {
+                            if ($turmaPessoaAula->getAula()->getId() === $aula->getId() && $turmaPessoaAula->verificarSeEstaAtivo()) {
+                                if ($turmaPessoaAula->getReposicao() != 'S') {
+                                    $presencas++;
+                                }                            
+                            }
+                        }
+                    }
+                }
+                if($presencas > 8){
+                    $iconePresencas = 'fa-check';
+                    $corDaLabelPresencas = 'label-success';
+                } 
+
+                $html .= '<td class="text-center"><span class="label '. $corDaLabelPresencas .'  "><i class="fa ' . $iconePresencas . '"></i></span></td>';
+                        
+                $iconePedagogico = 'fa-times';
+                $corDaLabelPedagogico = 'label-danger';
+                $pontosPedagogicos = 0;
+
+                if (count($turmaPessoa->getTurmaPessoaAvaliacao()) > 0) {
+                    foreach ($turmaPessoa->getTurmaPessoaAvaliacao() as $turmaPessoaAvaliacao) {
+                        if ($turmaPessoaAvaliacao->getDisciplina()->getId() === $disciplina->getId()) {                               
+                            if ($turmaPessoaAvaliacao->getAvaliacao1() === 'S') {
+                                $pontosPedagogicos += 2;
+                            }
+                            
+                            if ($turmaPessoaAvaliacao->getAvaliacao2() === 'S') {
+                                $pontosPedagogicos += 2;
+                            }
+                            
+                            if ($turmaPessoaAvaliacao->getExtra() === 'S') {
+                                $pontosPedagogicos += 1;
+                            }                                                                    
+                        }
+                    }
+                }
+
+                foreach ($disciplina->getAulaOrdenadasPorPosicao() as $aula) {                    
+                    if (count($turmaPessoa->getTurmaPessoaVisto()) > 0) {
+                        foreach ($turmaPessoa->getTurmaPessoaVisto() as $turmaPessoaVisto) {
+                            if ($turmaPessoaVisto->getAula()->getId() === $aula->getId() && $turmaPessoaVisto->verificarSeEstaAtivo()) {
+                                $pontosPedagogicos += 0.5;
+                            }
+                        }
+                    }                            
+                }
+                if($pontosPedagogicos >= 7){
+                    $iconePedagogico = 'fa-check';
+                    $corDaLabelPedagogico = 'label-success';
+                }
+                
+                $html .= '<td class="text-center"><span class="label '. $corDaLabelPedagogico .'  "><i class="fa ' . $iconePedagogico . '"></i></span></td>';
+
+                $iconeFinanceiro = 'fa-times';
+                $corDaLabelFinanceiro = 'label-danger';
+                if (count($turmaPessoa->getTurmaPessoaFinanceiro()) > 0) {
+                    foreach ($turmaPessoa->getTurmaPessoaFinanceiro() as $turmaPessoaFinanceiro) {
+                        if ($turmaPessoaFinanceiro->getDisciplina()->getId() === $disciplina->getId() && $turmaPessoaFinanceiro->verificarSeEstaAtivo()) {
+                            $iconeFinanceiro = 'fa-check';
+                            $corDaLabelFinanceiro = 'label-success';
+                        }
+                    }
+                }
+                $html .= '<td class="text-center"><span class="label '. $corDaLabelFinanceiro .'  "><i class="fa ' . $iconeFinanceiro . '"></i></span></td>';
+            }
+        }
+    }
+}
+    
+$html .= '</tbody>';   
+$html .= '</table>';
+$html .= '</div>';
+
+$html .= '</div>';
+$html .= '</div>';
+
+echo $html;
