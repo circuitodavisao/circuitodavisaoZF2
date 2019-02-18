@@ -862,31 +862,61 @@ class CursoController extends CircuitoController {
 		return $view;
 	}
 
-	public function turmaEncerradaSituacaoAction() {
-		set_time_limit(0);
-		ini_set('memory_limit', '-1');
-		ini_set('max_execution_time', '60');
+	public function formaturaAction() {		
 		$sessao = new Container(Constantes::$NOME_APLICACAO);
 		$entidade = CircuitoController::getEntidadeLogada($this->getRepositorio(), $sessao);
+		$grupo = $entidade->getGrupo();
+		$grupoPaiFilhoFilhos = $grupo->getGrupoIgreja()->getGrupoPaiFilhoFilhosAtivos(0);
 		$situacoes = $this->getRepositorio()->getSituacaoORM()->buscarTodosRegistrosEntidade();
-		$verificarTurmasAtivas = false;
+		$pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($sessao->idPessoa);
 
-		$resultado = RelatorioController::relatorioAlunosETurmas($this->getRepositorio(), $entidade, $verificarTurmasAtivas);
+		$request = $this->getRequest();
+		$filtrado = false;
+		$postado = array();
+		$filhos = array();
+
+		$entidadeParaUsar = $entidade;
+		if($request->isPost()){
+			$filtrado = true;
+			$post = $request->getPost();
+			$postado['idTurma'] = $post['idTurma'];
+			$postado['idEquipe'] = $post['idEquipe'];
+			if($postado['idEquipe'] == 0){
+				$entidadeParaUsar = $grupo->getGrupoIgreja()->getEntidadeAtiva();
+			}
+			if($postado['idEquipe'] != 0){
+				$grupoEquipe = $this->getRepositorio()->getGrupoORM()->encontrarPorId($postado['idEquipe']);
+				$grupoPaiFilhoFilhosEquipe = $grupoEquipe->getGrupoPaiFilhoFilhosAtivos(0);
+
+				foreach($grupoPaiFilhoFilhosEquipe as $grupoPaiFilho){
+					$grupoFilho = $grupoPaiFilho->getGrupoPaiFilhoFilho();
+					$dados = array();
+					$dados['id'] = $grupoFilho->getId();
+					$dados['informacao'] = $grupoFilho->getEntidadeAtiva()->infoEntidade() . ' - ' . $grupoFilho->getNomeLideresAtivos();
+					$filhos[] =  $dados;
+				}
+				$entidadeParaUsar = $this->getRepositorio()->getGrupoORM()->encontrarPorId($postado['idEquipe'])->getEntidadeAtiva();
+			}			
+		}
+		
+		$resultado = RelatorioController::relatorioAlunosETurmas($this->getRepositorio(), $entidadeParaUsar, $turmasAtivas = false);
 		$relatorio = $resultado[2];
 		uksort($relatorio, function ($a, $b) use ($relatorio) {
-			return ($relatorio[$a]->getSituacao_id() < $relatorio[$b]->getSituacao_id()) ? -1 : 1;
-		});
-		$turma = $this->getRepositorio()->getTurmaORM()->encontrarPorId($sessao->idSessao);
+            return ($relatorio[$a]->getSituacao_id() < $relatorio[$b]->getSituacao_id()) ? -1 : 1;
+        });
+		$turmas = $resultado[1];		
 
-		$request = $this->getRequest();		
-
-		$view = new ViewModel(array(			
+		$view = new ViewModel(array(
+			'filtrado' => $filtrado,
+			'postado' => $postado,		
+			'filhos' => $grupoPaiFilhoFilhos,	
 			'entidade' => $entidade,
-			'turma' => $turma,
-			'situacoes' => $situacoes,
+			'turmas' => $turmas,			
+			'subs' => $filhos,		
 			'repositorio' => $this->getRepositorio(),
-			'relatorio' => $relatorio,
+			'relatorio' => $relatorio
 		));
+		self::registrarLog(RegistroAcao::VER_CHAMADA, $extra = '');
 		return $view;
 	}
 
