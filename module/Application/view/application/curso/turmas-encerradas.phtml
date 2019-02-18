@@ -8,7 +8,7 @@ use Zend\View\Helper\AbstractHelper;
 use Application\Model\Entity\Situacao;
 
 $turmasInativas = $this->turmas;
-$html .= $this->templateFormularioTopo('Turmas', '', 'style="max-width: 100%; margin-top: 0%;"');
+$html .= $this->templateFormularioTopo('Turmas <b class="text-danger">Encerradas</b>', '', 'style="max-width: 100%; margin-top: 0%;"');
 $html .= '<div class="panel-body bg-light">';
 /* Sem pessoas cadastrados */
 if (count($turmasInativas) == 0) {
@@ -55,10 +55,8 @@ if (count($turmasInativas) == 0) {
         $html .= '</td>';
         $html .= '<td class="text-center">';        
         
-        $stringNomeDaFuncaoOnClickReabrirTurma = 'let resposta = confirm("Confirma reabrir?"); if(resposta){ mostrarSplash(); funcaoCircuito("' . Constantes::$ROUTE_CURSO . 'ReabrirTurma' . '",' . $turma->getId() . ')}';
-        $stringNomeDaFuncaoOnClickVerSituacao = 'funcaoCircuito("' . Constantes::$ROUTE_CURSO . 'TurmaEncerradaSituacao' . '",' . $turma->getId() . ')';
-        $html .= $this->botaoSimples('<i class="fa fa-check" ></i>', $this->funcaoOnClick($stringNomeDaFuncaoOnClickReabrirTurma), BotaoSimples::botaoMuitoPequenoSucesso);
-        $html .= $this->botaoSimples('<i class="fa fa-info" ></i>', 'style="width:27px"' . $this->funcaoOnClick($stringNomeDaFuncaoOnClickVerSituacao), BotaoSimples::botaoMuitoPequenoImportante);
+        $stringNomeDaFuncaoOnClickReabrirTurma = 'let resposta = confirm("Confirma reabrir?"); if(resposta){ mostrarSplash(); funcaoCircuito("' . Constantes::$ROUTE_CURSO . 'ReabrirTurma' . '",' . $turma->getId() . ')}';        
+        $html .= $this->botaoSimples('<i class="fa fa-check" ></i>', $this->funcaoOnClick($stringNomeDaFuncaoOnClickReabrirTurma), BotaoSimples::botaoMuitoPequenoSucesso);        
         $html .= '</td>';
         $html .= '</tr>';
     }
