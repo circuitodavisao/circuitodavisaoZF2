@@ -397,15 +397,32 @@ class ListagemDeEventos extends AbstractHelper {
             $html .= '<div class="panel-footer text-right">';
             /* Botões */
             if ($tipoCelula) {
-                if (count($this->getGrupoEventos()) < 2) {
-                    $stringNomeDaFuncaoOnClickCadastro = 'mostrarSplash(); funcaoCircuito("cadastro' . Constantes::$PAGINA_EVENTO_CELULA . '", 0)';
-                    $html .= $this->view->botaoLink(Constantes::$STRING_ICONE_PLUS . ' ' . $this->view->translate(Constantes::$TRADUCAO_NOVA_CELULA), Constantes::$STRING_HASHTAG, 0, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClickCadastro));
-                } else {
-                    $html .= '<div class="alert alert-micro alert-warning">';
-                    $html .= '<i class="fa fa-warning pr10" aria-hidden="true"></i>';
-                    $html .= $this->view->translate(Constantes::$TRADUCAO_NUMERO_MAXIMO_CELULAS);
-                    $html .= '</div>';
-                }
+				$validarMostrarCadastro = true;
+				/* validar hora do dia */
+				$diaDaSemana = date('w');
+				/* segunda */
+				if($diaDaSemana == 1){
+					$horaDoDia = date('G');
+					if($horaDoDia >= 0 && $horaDoDia <= 6){
+						$validarMostrarCadastro = false;
+					}
+				}
+
+				if($validarMostrarCadastro){
+					if (count($this->getGrupoEventos()) < 2) {
+						$stringNomeDaFuncaoOnClickCadastro = 'mostrarSplash(); funcaoCircuito("cadastro' . Constantes::$PAGINA_EVENTO_CELULA . '", 0)';
+						$html .= $this->view->botaoLink(Constantes::$STRING_ICONE_PLUS . ' ' . $this->view->translate(Constantes::$TRADUCAO_NOVA_CELULA), Constantes::$STRING_HASHTAG, 0, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClickCadastro));
+					} else {
+						$html .= '<div class="alert alert-micro alert-warning">';
+						$html .= '<i class="fa fa-warning pr10" aria-hidden="true"></i>';
+						$html .= $this->view->translate(Constantes::$TRADUCAO_NUMERO_MAXIMO_CELULAS);
+						$html .= '</div>';
+					}
+				}else{
+					$html .= '<div class="alert alert-micro alert-warning">';
+					$html .= 'Cadastro de célula em manutenção';
+					$html .= '</div>';
+				}
             }
             if ($tipoCulto) {
                 $stringNomeDaFuncaoOnClickCadastro = 'mostrarSplash(); funcaoCircuito("cadastro' . Constantes::$PAGINA_EVENTO_CULTO . '", 0)';
