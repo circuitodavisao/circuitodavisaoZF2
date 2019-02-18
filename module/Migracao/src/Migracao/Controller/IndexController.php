@@ -1245,7 +1245,7 @@ class IndexController extends CircuitoController {
 	public function rankingAction() {
 		set_time_limit(0);
 		ini_set('memory_limit', '-1');
-		ini_set('max_execution_time', '60');
+		ini_set('max_execution_time', '180');
 
 		list($usec, $sec) = explode(' ', microtime());
 		$script_start = (float) $sec + (float) $usec;
@@ -1297,18 +1297,12 @@ class IndexController extends CircuitoController {
 
 				$this->getRepositorio()->getFatoRankingORM()->apagarTodos();
 				foreach ($rakings as $fatoRanking) {
-					if ($fatoRanking->getGrupo()->getEntidadeAtiva()) {
-						$html .= '<br /><br />Entidade ' . $fatoRanking->getGrupo()->getEntidadeAtiva()->infoEntidade();
-					}
-					$html .= '<br />Ranking Membresia: ' . $fatoRanking->getRanking_membresia();
-					$html .= '<br />Ranking Celula: ' . $fatoRanking->getRanking_celula();
 					$this->getRepositorio()->getFatoRankingORM()->persistir($fatoRanking);
 				}
 
 				$this->getRepositorio()->fecharTransacao();
 			}
 		} catch (Exception $exc) {
-
 			$this->getRepositorio()->desfazerTransacao();
 			echo $exc->getTraceAsString();
 		}
@@ -1320,8 +1314,6 @@ class IndexController extends CircuitoController {
 		$html .= '<br /><br />Elapsed time: ' . $elapsed_time . ' secs. Memory usage: ' . round(((memory_get_peak_usage(true) / 1024) / 1024), 2) . 'Mb';
 		return new ViewModel(array('html' => $html));
 	}
-
-
 
 	public function atualizarAntigoAction() {
 		$html = '';
@@ -2792,7 +2784,6 @@ class IndexController extends CircuitoController {
 		$relatorios = array();
 		$idGrupoIgrejaEMes = $this->params()->fromRoute(Constantes::$ID, 1);
 		$explodeId = explode('_', $idGrupoIgrejaEMes);
-		$grupoIgrejas[] = ['id' => $explodeId[0]];
 
 		$mesAtual = date('m');
 		$anoAtual = date('Y');
@@ -2809,9 +2800,27 @@ class IndexController extends CircuitoController {
 		case 1: $mesSelecinado = $mesAtual; $anoSelecinado = $anoAtual; break;
 		case 2: $mesSelecinado = $mesAnterior; $anoSelecinado = $anoAnterior; break;
 		}
+
+		if($explodeId[0] == 0){
+			$gruposIgreja = $this->getRepositorio()->getGrupoORM()->pegarTodasIgrejas();
+			foreach($gruposIgreja as $grupoIgreja){
+				if($grupoIgreja->getId() !== 1
+					&& $grupoIgreja->getId() !== 1225){
+						$grupoIgrejas[] = $grupoIgreja;
+					}
+			}
+		}else{
+			$grupoIgrejas[] = ['id' => $explodeId[0]];
+		}
+
 		foreach($grupoIgrejas as $grupoIgreja){
-			$idGrupoIgreja = $grupoIgreja['id'];
-			$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupoIgreja);
+			if($explodeId[0] == 0){
+				$grupo = $grupoIgreja;
+				$idGrupoIgreja = $grupo->getId();
+			}else{
+				$idGrupoIgreja = $grupoIgreja['id'];
+				$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupoIgreja);
+			}
 			$relatorioCelulas =	self::pegarMediaPorCelula($this->getRepositorio(), $grupo, false, $mesSelecinado, $anoSelecinado);
 			foreach($relatorioCelulas as $chave => $valor){
 				$dados = array(
@@ -2922,7 +2931,11 @@ class IndexController extends CircuitoController {
 		$this->getRepositorio()->iniciarTransacao();
 		try{
 			foreach($grupoIgrejas as $grupoIgreja){
-				$idGrupoIgreja = $grupoIgreja['id'];
+				if($explodeId[0] == 0){
+					$idGrupoIgreja = $grupo->getId();
+				}else{
+					$idGrupoIgreja = $grupoIgreja['id'];
+				}
 				$grupoIgreja = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupoIgreja);
 
 				$fatosRankingCelula = $this->getRepositorio()->getFatoRankingCelulaORM()->encontrarPorIdGrupoIgreja($grupoIgreja->getId(), $mesSelecinado, $anoSelecinado);
@@ -2992,6 +3005,8 @@ class IndexController extends CircuitoController {
 			$grupoIgrejas[] = ['id' => $explodeId[0]];
 		}
 
+		$gruposParaRemover = array();
+
 		foreach($grupoIgrejas as $grupoIgreja){
 			if($explodeId[0] == 0){
 				$grupo = $grupoIgreja;
@@ -3018,6 +3033,7 @@ class IndexController extends CircuitoController {
 				);
 				$relatorios[] = $dados;
 			}
+			$gruposParaRemover[] = $grupo->getId();
 			$periodoAfrente = 1;
 			$grupoPaiFilhoFilhos144 = $grupo->getGrupoPaiFilhoFilhosAtivos($periodoAfrente);
 			if ($grupoPaiFilhoFilhos144) {
@@ -3061,6 +3077,7 @@ class IndexController extends CircuitoController {
 							$relatorios[] = $dados;
 						}
 					}
+					$gruposParaRemover[] = $grupoFilho144->getId();
 
 					$grupoPaiFilhoFilhos1728 = $grupoFilho144->getGrupoPaiFilhoFilhosAtivos($periodoAfrente);
 					if ($grupoPaiFilhoFilhos1728) {
@@ -3084,6 +3101,8 @@ class IndexController extends CircuitoController {
 								$relatorios[] = $dados;
 							}
 
+							$gruposParaRemover[] = $grupoFilho1728->getId();
+
 							$grupoPaiFilhoFilhos20736 = $grupoFilho1728->getGrupoPaiFilhoFilhosAtivos($periodoAfrente);
 							if ($grupoPaiFilhoFilhos20736) {
 								foreach ($grupoPaiFilhoFilhos20736 as $gpFilho20736) {
@@ -3104,6 +3123,7 @@ class IndexController extends CircuitoController {
 											'periodos' => $valor['periodos'],
 										);
 										$relatorios[] = $dados;
+										$gruposParaRemover[] = $grupoFilho20736->getId();
 
 										$grupoPaiFilhoFilhos248832 = $grupoFilho20736->getGrupoPaiFilhoFilhosAtivos($periodoAfrente);
 										if ($grupoPaiFilhoFilhos248832) {
@@ -3125,6 +3145,82 @@ class IndexController extends CircuitoController {
 														'periodos' => $valor['periodos'],
 													);
 													$relatorios[] = $dados;
+													$gruposParaRemover[] = $grupoFilho248832->getId();
+
+													$grupoPaiFilhoFilhos7 = $grupoFilho248832->getGrupoPaiFilhoFilhosAtivos($periodoAfrente);
+													if ($grupoPaiFilhoFilhos7) {
+														foreach ($grupoPaiFilhoFilhos7 as $gpFilho7) {
+															$grupoFilho7  = $gpFilho7->getGrupoPaiFilhoFilho();
+															$relatorioCelulas =	self::pegarMediaPorCelula($this->getRepositorio(), $grupoFilho7, $celulaDeElite = true, $mesSelecinado, $anoSelecinado);
+															foreach($relatorioCelulas as $chave => $valor){
+																$dados = array(
+																	'mes' => $mesSelecinado,
+																	'ano' => $anoSelecinado,
+																	'idGrupoIgreja'=>$idGrupoIgreja,
+																	'idGrupo'=>$grupoFilho7->getId(),
+																	'idGrupoEquipe'=>$grupoFilho144->getId(),
+																	'idGrupoEvento' => $chave,
+																	'mediaArregimentacao' => $valor['mediaArregimentacao'],
+																	'mediaParceiroDeDeus' => $valor['mediaParceiroDeDeus'],
+																	'mediaVisitantes' => $valor['mediaVisitantes'],
+																	'setenta' => $valor['setenta'],
+																	'periodos' => $valor['periodos'],
+																);
+																$relatorios[] = $dados;
+																$gruposParaRemover[] = $grupoFilho7->getId();
+
+																$grupoPaiFilhoFilhos8 = $grupoFilho7->getGrupoPaiFilhoFilhosAtivos($periodoAfrente);
+																if ($grupoPaiFilhoFilhos8) {
+																	foreach ($grupoPaiFilhoFilhos8 as $gpFilho8) {
+																		$grupoFilho8 = $gpFilho8->getGrupoPaiFilhoFilho();
+																		$relatorioCelulas =	self::pegarMediaPorCelula($this->getRepositorio(), $grupoFilho8, $celulaDeElite = true, $mesSelecinado, $anoSelecinado);
+																		foreach($relatorioCelulas as $chave => $valor){
+																			$dados = array(
+																				'mes' => $mesSelecinado,
+																				'ano' => $anoSelecinado,
+																				'idGrupoIgreja'=>$idGrupoIgreja,
+																				'idGrupo'=>$grupoFilho8->getId(),
+																				'idGrupoEquipe'=>$grupoFilho144->getId(),
+																				'idGrupoEvento' => $chave,
+																				'mediaArregimentacao' => $valor['mediaArregimentacao'],
+																				'mediaParceiroDeDeus' => $valor['mediaParceiroDeDeus'],
+																				'mediaVisitantes' => $valor['mediaVisitantes'],
+																				'setenta' => $valor['setenta'],
+																				'periodos' => $valor['periodos'],
+																			);
+																			$relatorios[] = $dados;
+																			$gruposParaRemover[] = $grupoFilho8->getId();
+
+																			$grupoPaiFilhoFilhos9 = $grupoFilho8->getGrupoPaiFilhoFilhosAtivos($periodoAfrente);
+																			if ($grupoPaiFilhoFilhos9) {
+																				foreach ($grupoPaiFilhoFilhos9 as $gpFilho9) {
+																					$grupoFilho9 = $gpFilho9->getGrupoPaiFilhoFilho();
+																					$relatorioCelulas =	self::pegarMediaPorCelula($this->getRepositorio(), $grupoFilho9, $celulaDeElite = true, $mesSelecinado, $anoSelecinado);
+																					foreach($relatorioCelulas as $chave => $valor){
+																						$dados = array(
+																							'mes' => $mesSelecinado,
+																							'ano' => $anoSelecinado,
+																							'idGrupoIgreja'=>$idGrupoIgreja,
+																							'idGrupo'=>$grupoFilho9->getId(),
+																							'idGrupoEquipe'=>$grupoFilho144->getId(),
+																							'idGrupoEvento' => $chave,
+																							'mediaArregimentacao' => $valor['mediaArregimentacao'],
+																							'mediaParceiroDeDeus' => $valor['mediaParceiroDeDeus'],
+																							'mediaVisitantes' => $valor['mediaVisitantes'],
+																							'setenta' => $valor['setenta'],
+																							'periodos' => $valor['periodos'],
+																						);
+																						$relatorios[] = $dados;
+																						$gruposParaRemover[] = $grupoFilho9->getId();
+																					}
+																				}
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
 												}
 											}
 										}
@@ -3142,9 +3238,8 @@ class IndexController extends CircuitoController {
 
 		$this->getRepositorio()->iniciarTransacao();
 		try{
-			foreach ($arrayDeEquipes as $gpFilho144) {
-				$grupoFilho144 = $gpFilho144->getGrupoPaiFilhoFilho();
-				$fatosSetenta = $this->getRepositorio()->getFatoSetentaORM()->encontrarPorIdGrupoEquipe($grupoFilho144->getId(), $mesSelecinado, $anoSelecinado);
+			foreach ($gruposParaRemover as $grupoParaRemover) {
+				$fatosSetenta = $this->getRepositorio()->getFatoSetentaORM()->encontrarPorIdGrupoEquipe($grupoParaRemover, $mesSelecinado, $anoSelecinado);
 				foreach($fatosSetenta as $fato){
 					$this->getRepositorio()->getFatoSetentaORM()->remover($fato);
 				}
