@@ -546,8 +546,8 @@ Discipulado
 					$grupoFilho = $discipulo->getGrupoPaiFilhoFilho();
 					$entidade = $grupoFilho->getEntidadeAtiva();
 					foreach($grupoFilho->getPessoasAtivas() as $pessoa){
-						$vendoDiscipuloAbaixo = true;
-						$idSessao = $pessoa->getId() . '_' . $entidade->getId() . '_' . $vendoDiscipuloAbaixo;
+						$vendoDiscipulosAbaixo = 'vendoDiscipulosAbaixoPaginaPrincipal';
+						$idSessao = $pessoa->getId() . '_' . $entidade->getId() . '_' . $vendoDiscipulosAbaixo;
 						$funcaoOnClick = 'mostrarSplash(); funcaoCircuito("principal", "'.$idSessao.'")';
 						$nomeHierarquia = $pessoa->getPessoaHierarquiaAtivo()->getHierarquia()->getNome();
 						if ($pessoa->getSexo() === 'F') {

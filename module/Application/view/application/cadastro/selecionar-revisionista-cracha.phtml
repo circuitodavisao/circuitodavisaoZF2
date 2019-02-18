@@ -2,6 +2,7 @@
 
 use Application\Controller\Helper\Constantes;
 use Application\View\Helper\BotaoSimples;
+use Application\Model\Entity\Entidade;
 
 echo $this->templateFormularioTopo('Selecione para imprimir os crachás');
 $form = $this->formulario;
@@ -39,16 +40,24 @@ echo $this->form()->openTag($form);
             echo '</thead>';
             echo '<tbody>';
             foreach ($relatorioRevisionistas as $relatorio) {
-              $nomeEntidadeAcima = '';
-              if($this->multiplos){
-                  $nomeEntidadeAcima = $relatorio->getPessoa()->getGrupoPessoaAtivo()->getGrupo()->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai()->getEntidadeAtiva()->getNome();
-                  if($nomeEntidadeAcima){
-                    $nomeEntidadeAcimaArrumado = ' - ' . $nomeEntidadeAcima;
-                  }
-                  if(!$nomeEntidadeAcima){
-                    $nomeEntidadeAcimaArrumado = ' - COORDENAÇÃO '. $relatorio->getPessoa()->getGrupoPessoaAtivo()->getGrupo()->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai()->getEntidadeAtiva()->getNumero();
-                  }
+              if($this->multiplos){ 
+                $entidadeAcima = $relatorio->getPessoa()->getGrupoPessoaAtivo()->getGrupo()->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai()->getEntidadeAtiva();
+                if($entidadeAcima->getEntidadeTipo()->getId() === Entidade::EQUIPE || 
+                    $entidadeAcima->getEntidadeTipo()->getId() === Entidade::IGREJA                         
+                ){
+                    $nomeEntidadeAcimaArrumado = ' - ' . $entidadeAcima->getNome();                    
+                }
+                if($entidadeAcima->getEntidadeTipo()->getId() === Entidade::SUBEQUIPE){                                  
+                    $nomeEntidadeAcimaArrumado = ' - ' . $entidadeAcima->infoEntidade();                    
+                }
+                if($entidadeAcima->getEntidadeTipo()->getId() === Entidade::COORDENACAO){                                  
+                    $nomeEntidadeAcimaArrumado = ' - COORDENAÇÃO: ' . $entidadeAcima->getNumero();                    
+                }  
+                if($entidadeAcima->getEntidadeTipo()->getId() === Entidade::REGIONAL){                                  
+                    $nomeEntidadeAcimaArrumado = ' - REGIÃO: ' . $entidadeAcima->getNome();                    
+                }               
               }
+              
                 $sexo = $relatorio->getPessoa()->getSexo();
                 if(!$sexo) {
                   $sexo = 'Não Informado';
@@ -82,16 +91,23 @@ echo $this->form()->openTag($form);
             echo '</thead>';
             echo '<tbody>';
             foreach ($relatorioLideres as $relatorio) {
-              $nomeEntidadeAcima = '';
-              if($this->multiplos){
-                $nomeEntidadeAcima = $relatorio->getPessoa()->getResponsabilidadesAtivas()[0]->getGrupo()->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai()->getEntidadeAtiva()->getNome();
-                if($nomeEntidadeAcima){
-                  $nomeEntidadeAcimaArrumado = ' - ' . $nomeEntidadeAcima;
+              if($this->multiplos){ 
+                $entidadeAcima = $relatorio->getPessoa()->getResponsabilidadesAtivas()[0]->getGrupo()->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai()->getEntidadeAtiva();
+                if($entidadeAcima->getEntidadeTipo()->getId() === Entidade::EQUIPE || 
+                    $entidadeAcima->getEntidadeTipo()->getId() === Entidade::IGREJA                         
+                ){
+                    $nomeEntidadeAcimaArrumado = ' - ' . $entidadeAcima->getNome();                    
                 }
-                if(!$nomeEntidadeAcima){
-                  $nomeEntidadeAcimaArrumado = ' - COORDENAÇÃO '. $relatorio->getPessoa()->getResponsabilidadesAtivas()[0]->getGrupo()->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai()->getEntidadeAtiva()->getNumero();
+                if($entidadeAcima->getEntidadeTipo()->getId() === Entidade::SUBEQUIPE){                                  
+                    $nomeEntidadeAcimaArrumado = ' - ' . $entidadeAcima->infoEntidade();                    
                 }
-              }
+                if($entidadeAcima->getEntidadeTipo()->getId() === Entidade::COORDENACAO){                                  
+                    $nomeEntidadeAcimaArrumado = ' - COORDENAÇÃO: ' . $entidadeAcima->getNumero();                    
+                }  
+                if($entidadeAcima->getEntidadeTipo()->getId() === Entidade::REGIONAL){                                  
+                    $nomeEntidadeAcimaArrumado = ' - REGIÃO: ' . $entidadeAcima->getNome();                    
+                }               
+              }              
                 $sexo = $relatorio->getPessoa()->getSexo();
                 if(!$sexo) {
                   $sexo = 'Não Informado';

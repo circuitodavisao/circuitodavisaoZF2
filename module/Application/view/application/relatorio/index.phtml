@@ -124,13 +124,12 @@ for ($indiceDeArrays = $this->periodoInicial; $indiceDeArrays <= $this->periodoF
 		$colspan = 10;
 	}
 	if ($this->tipoRelatorio == 2) {
-		$colspan = 7;
+		$colspan = 4;
 	}
 	if ($this->tipoRelatorio == 7) {
 		$colspan = 3;
 	}
-	if ($this->tipoRelatorio == 3 ||
-		$this->tipoRelatorio == 8) {
+	if ($this->tipoRelatorio == 3){		
 			$colspan = 7;
 		}
 	if ($this->tipoRelatorio == 4 ||
@@ -138,6 +137,9 @@ for ($indiceDeArrays = $this->periodoInicial; $indiceDeArrays <= $this->periodoF
 		$this->tipoRelatorio == 6) {
 			$colspan = 2;
 		}
+	if($this->tipoRelatorio == 8) {
+		$colspan = 4;
+	}
 
 	echo '<th colspan="' . $colspan . '" class="' . $classePeriodoAtual . '">';
 	echo Funcoes::montaPeriodo($indiceDeArrays)[0];
@@ -333,7 +335,7 @@ foreach ($this->relatorio as $relatorio) {
 					echo '<td class="' . $classeBase . '">' . RelatorioController::formataNumeroRelatorio($relatorio[$indiceDeArrays]['membresiaPerformance']) . '%</td>';
 				}else{
 					echo '<td class="hidden-xs"><i class="fa fa-retweet"></i></td>';
-					for($i = 1;$i <= 6;$i++){
+					for($i = 1;$i <= 9;$i++){
 						echo '<td class="' . $classeBase . '"><i class="fa fa-retweet"></i></td>';
 					}
 				}
@@ -369,7 +371,7 @@ foreach ($this->relatorio as $relatorio) {
 					echo '<td class="' . $classeBase . '">' . $relatorio[$indiceDeArrays]['celula'] . '</td>';
 					echo '<td class="' . $classeBase . '">' . RelatorioController::formataNumeroRelatorio($relatorio[$indiceDeArrays]['celulaPerformance']) . '%</td>';
 				}else{
-					for($i = 1;$i <= 4;$i++){
+					for($i = 1;$i <= 7;$i++){
 						echo '<td class="' . $classeBase . '"><i class="fa fa-retweet"></i></td>';
 					}
 				}

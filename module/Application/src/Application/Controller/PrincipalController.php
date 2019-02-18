@@ -76,7 +76,7 @@ class PrincipalController extends CircuitoController {
 		if($sessao->idSessao > 0){
 			$explodeIdSessao = explode('_', $sessao->idSessao);
 			$vendoDiscipuloAbaixo = $explodeIdSessao[2];
-			if($vendoDiscipuloAbaixo) {
+			if($vendoDiscipuloAbaixo == 'vendoDiscipulosAbaixoPaginaPrincipal') {
 				$pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($explodeIdSessao[0]);
 				$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($explodeIdSessao[1]);
 				$grupo = $entidade->getGrupo();
