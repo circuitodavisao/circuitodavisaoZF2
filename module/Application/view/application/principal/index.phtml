@@ -94,7 +94,8 @@ Período Atual <?php echo Funcoes::montaPeriodo($this->periodoFinal)[0]; ?>
 			$label = '';
 			switch($indiceNumeroGrandes){
 			case 1:
-				$valor = $this->relatorio[$this->indiceFinalDoRelatorio][$this->periodoFinal]['celulaQuantidade'];
+				$valor = $this->relatorio[$this->indiceFinalDoRelatorio][$this->periodoFinal]['celulaQuantidade']
+					+ $this->relatorio[$this->indiceFinalDoRelatorio][$this->periodoFinal]['celulaQuantidadeEstrategica'];
 				$label = 'Célula(s)';
 				break;
 			case 2:

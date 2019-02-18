@@ -124,7 +124,7 @@ for ($indiceDeArrays = $this->periodoInicial; $indiceDeArrays <= $this->periodoF
 		$colspan = 10;
 	}
 	if ($this->tipoRelatorio == 2) {
-		$colspan = 7;
+		$colspan = 4;
 	}
 	if ($this->tipoRelatorio == 7) {
 		$colspan = 3;
@@ -340,7 +340,7 @@ foreach ($this->relatorio as $relatorio) {
 			}
 			if ($this->tipoRelatorio == 2) {
 				if($contagemRanking === 0 || $relatorio['lideres'] == 'TOTAL' || $relatorio[$indiceDeArrays]['mostrar']){
-					echo '<td class="' . $classeBase . '">' . $relatorio[$indiceDeArrays]['celulaQuantidade'] . '</td>';
+					echo '<td class="' . $classeBase . '">' . ($relatorio[$indiceDeArrays]['celulaQuantidade'] + $relatorio[$indiceDeArrays]['celulaQuantidadeEstrategica']) . '</td>';
 				}else{
 					echo '<td class="' . $classeBase . '"><i class="fa fa-retweet"></i></td>';
 				}

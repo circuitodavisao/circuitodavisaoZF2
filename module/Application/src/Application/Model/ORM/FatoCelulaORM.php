@@ -89,7 +89,6 @@ class FatoCelulaORM extends CircuitoORM {
 				->setParameter(2, $dia)
 				->getResult();
 
-
 			return $result;
 		} catch (Exception $exc) {
 			echo $exc->getMessage();
