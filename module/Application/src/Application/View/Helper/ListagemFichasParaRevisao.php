@@ -3,7 +3,7 @@
 namespace Application\View\Helper;
 
 use Application\Controller\Helper\Constantes;
-use Application\Model\Entity\EntidadeTipo;
+use Application\Model\Entity\Entidade;
 use Application\Model\Entity\Pessoa;
 use Application\Controller\LancamentoController;
 use Zend\View\Helper\AbstractHelper;
@@ -83,15 +83,23 @@ class ListagemFichasParaRevisao extends AbstractHelper {
             $html .= '</thead>';
             $html .= '<tbody>';
             foreach ($pessoas as $pessoa) {                
-              if($this->view->multiplos){
-                $nomeEntidadeAcima = $pessoa->getGrupoPessoa()->getGrupo()->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai()->getEntidadeAtiva()->getNome();
-                if($nomeEntidadeAcima){
-                  $nomeEntidadeAcimaArrumado = ' - ' . $nomeEntidadeAcima;
+                if($this->view->multiplos){ 
+                    $entidadeAcima = $pessoa->getGrupoPessoa()->getGrupo()->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai()->getEntidadeAtiva();
+                    if($entidadeAcima->getEntidadeTipo()->getId() === Entidade::EQUIPE || 
+                        $entidadeAcima->getEntidadeTipo()->getId() === Entidade::IGREJA                         
+                    ){
+                        $nomeEntidadeAcimaArrumado = ' - ' . $entidadeAcima->getNome();                    
+                    }
+                    if($entidadeAcima->getEntidadeTipo()->getId() === Entidade::SUBEQUIPE){                                  
+                        $nomeEntidadeAcimaArrumado = ' - ' . $entidadeAcima->infoEntidade();                    
+                    }
+                    if($entidadeAcima->getEntidadeTipo()->getId() === Entidade::COORDENACAO){                                  
+                        $nomeEntidadeAcimaArrumado = ' - COORDENAÇÃO: ' . $entidadeAcima->getNumero();                    
+                    }  
+                    if($entidadeAcima->getEntidadeTipo()->getId() === Entidade::REGIONAL){                                  
+                        $nomeEntidadeAcimaArrumado = ' - REGIÃO: ' . $entidadeAcima->getNome();                    
+                    }               
                 }
-                if(!$nomeEntidadeAcima){
-                  $nomeEntidadeAcimaArrumado = ' - COORDENAÇÃO '. $pessoa->getGrupoPessoa()->getGrupo()->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai()->getEntidadeAtiva()->getNumero();
-                }
-              }
                 $sexo = $pessoa->getSexo();
                 if(!$sexo) {
                   $sexo = 'Não Informado';

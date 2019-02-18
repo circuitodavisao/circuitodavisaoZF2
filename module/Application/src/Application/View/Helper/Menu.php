@@ -448,6 +448,7 @@ class Menu extends AbstractHelper {
 			$arrayOQueMostrarDosCursos['listagem'] = false;
 			$arrayOQueMostrarDosCursos['financeiroPorData'] = false;
 			$arrayOQueMostrarDosCursos['turmasEncerradas'] = false;
+			$arrayOQueMostrarDosCursos['formatura'] = false;
 			if ($this->view->pessoa->getPessoaCursoAcessoAtivo()) {
 				if ($this->view->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::COORDENADOR) {
 					$arrayOQueMostrarDosCursos['turmasEncerradas'] = true;
@@ -464,6 +465,7 @@ class Menu extends AbstractHelper {
 						$arrayOQueMostrarDosCursos['gerarCarterinhas'] = true;
 						$arrayOQueMostrarDosCursos['gerarReposicoes'] = true;
 						$arrayOQueMostrarDosCursos['consultarMatricula'] = true;
+						$arrayOQueMostrarDosCursos['formatura'] = true;
 					}
 				if ($this->view->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::COORDENADOR ||
 					$this->view->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::SUPERVISOR ||
@@ -473,6 +475,7 @@ class Menu extends AbstractHelper {
 					}
 			} else {
 				if ($this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja) {
+					$arrayOQueMostrarDosCursos['formatura'] = true;
 					$arrayOQueMostrarDosCursos['turmasEncerradas'] = true;
 					$arrayOQueMostrarDosCursos['reentrada'] = true;
 					$arrayOQueMostrarDosCursos['turmas'] = true;
@@ -523,6 +526,14 @@ class Menu extends AbstractHelper {
 				$html .= '<a href="/cursoTurmasEncerradas" onClick="mostrarSplash();">';
 				$html .= '<span class="fa fa-list"></span>';
 				$html .= 'Turmas Encerradas';
+				$html .= '</a>';
+				$html .= '</li>';
+			}
+			if ($arrayOQueMostrarDosCursos['formatura']) {
+				$html .= '<li>';
+				$html .= '<a href="/cursoFormatura" onClick="mostrarSplash();">';
+				$html .= '<span class="fa fa-graduation-cap"></span>';
+				$html .= 'Formatura';
 				$html .= '</a>';
 				$html .= '</li>';
 			}
