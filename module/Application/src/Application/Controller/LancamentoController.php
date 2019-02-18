@@ -169,8 +169,9 @@ class LancamentoController extends CircuitoController {
 					break;
 				};
 			}
-			if ($grupoEvento->getEvento()->getEventoTipo()->getId() === EventoTipo::tipoCelula) {
-				$tipoCampo = LancamentoController::TIPO_CAMPO_CELULA;
+			if ($grupoEvento->getEvento()->getEventoTipo()->getId() === EventoTipo::tipoCelula
+				|| $grupoEvento->getEvento()->getEventoTipo()->getId() === EventoTipo::tipoCelulaEstrategica) {
+					$tipoCampo = LancamentoController::TIPO_CAMPO_CELULA;
 			}
 
 			$diaDaSemanaDoEvento = (int) $grupoEvento->getEvento()->getDia();
