@@ -2784,7 +2784,6 @@ class IndexController extends CircuitoController {
 		$relatorios = array();
 		$idGrupoIgrejaEMes = $this->params()->fromRoute(Constantes::$ID, 1);
 		$explodeId = explode('_', $idGrupoIgrejaEMes);
-		$grupoIgrejas[] = ['id' => $explodeId[0]];
 
 		$mesAtual = date('m');
 		$anoAtual = date('Y');
@@ -2801,9 +2800,27 @@ class IndexController extends CircuitoController {
 		case 1: $mesSelecinado = $mesAtual; $anoSelecinado = $anoAtual; break;
 		case 2: $mesSelecinado = $mesAnterior; $anoSelecinado = $anoAnterior; break;
 		}
+
+		if($explodeId[0] == 0){
+			$gruposIgreja = $this->getRepositorio()->getGrupoORM()->pegarTodasIgrejas();
+			foreach($gruposIgreja as $grupoIgreja){
+				if($grupoIgreja->getId() !== 1
+					&& $grupoIgreja->getId() !== 1225){
+						$grupoIgrejas[] = $grupoIgreja;
+					}
+			}
+		}else{
+			$grupoIgrejas[] = ['id' => $explodeId[0]];
+		}
+
 		foreach($grupoIgrejas as $grupoIgreja){
-			$idGrupoIgreja = $grupoIgreja['id'];
-			$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupoIgreja);
+			if($explodeId[0] == 0){
+				$grupo = $grupoIgreja;
+				$idGrupoIgreja = $grupo->getId();
+			}else{
+				$idGrupoIgreja = $grupoIgreja['id'];
+				$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupoIgreja);
+			}
 			$relatorioCelulas =	self::pegarMediaPorCelula($this->getRepositorio(), $grupo, false, $mesSelecinado, $anoSelecinado);
 			foreach($relatorioCelulas as $chave => $valor){
 				$dados = array(
@@ -2914,7 +2931,11 @@ class IndexController extends CircuitoController {
 		$this->getRepositorio()->iniciarTransacao();
 		try{
 			foreach($grupoIgrejas as $grupoIgreja){
-				$idGrupoIgreja = $grupoIgreja['id'];
+				if($explodeId[0] == 0){
+					$idGrupoIgreja = $grupo->getId();
+				}else{
+					$idGrupoIgreja = $grupoIgreja['id'];
+				}
 				$grupoIgreja = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupoIgreja);
 
 				$fatosRankingCelula = $this->getRepositorio()->getFatoRankingCelulaORM()->encontrarPorIdGrupoIgreja($grupoIgreja->getId(), $mesSelecinado, $anoSelecinado);
