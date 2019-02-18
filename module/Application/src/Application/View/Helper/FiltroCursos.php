@@ -23,7 +23,7 @@ class FiltroCursos extends AbstractHelper {
 		$html .= '<div class="form-group">';
 		$html .= '<label for="selecionaTurma">' . $this->view->translate('Selecione a Turma') . '</label>';
 		$html .= '<select class="form-control" name="idTurma" id="selecionaTurma" >';
-		if($urlFiltro != 'formatura'){
+		if($urlFiltro != 'cursoFormatura'){
 			$html .= '<option value="0" >' . $this->view->translate('Todas') . '</option>';
 		}		
 		foreach ($this->view->turmas as $turma) {
