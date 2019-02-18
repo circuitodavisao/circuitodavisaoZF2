@@ -245,3 +245,28 @@ function lancarReposicao() {
 	}
 }
 
+
+function mudarStatusAprovado() {
+	let validacaoGeralDoAluno = document.getElementById("validacaoGeralDoAluno");	
+	 let validacaoDoFinanceiro = document.getElementById("validacaoDoFinanceiro");		 	 
+	if(validacaoGeralDoAluno.value == 1){		
+		let alertSituacao = $('#alertSituacao');	
+		let h3Situacao = $('#h3Situacao');
+		alertSituacao.removeClass('alert-danger')
+		alertSituacao.addClass('alert-success');
+		h3Situacao.html('Aluno Aprovado');
+	}
+	
+	if(validacaoDoFinanceiro.value == 1){			
+		let alertFinanceiroSituacao = $('#alertFinanceiroSituacao');	
+		let h3financeiroSituacao = $('#h3financeiroSituacao');
+		alertFinanceiroSituacao.removeClass('alert-danger')
+		alertFinanceiroSituacao.addClass('alert-success');
+		h3financeiroSituacao.html('Financeiro Adimplente');
+	}
+	
+}
+
+
+mudarStatusAprovado();
+	
