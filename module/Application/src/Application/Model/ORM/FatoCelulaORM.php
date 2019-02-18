@@ -26,9 +26,11 @@ class FatoCelulaORM extends CircuitoORM {
             $fatoCelula->setFatoCiclo($fatoCiclo);
             $fatoCelula->setRealizada(0);
             $fatoCelula->setEvento_celula_id($eventoCelulaId);
+			$seEhEstrategica = 'N';
 			if($estrategica){
-				$fatoCelula->setEstrategica('S');
+				$seEhEstrategica = 'S';
 			}
+			$fatoCelula->setEstrategica($seEhEstrategica);
             $this->persistir($fatoCelula);
         } catch (Exception $exc) {
             echo $exc->getMessage();
