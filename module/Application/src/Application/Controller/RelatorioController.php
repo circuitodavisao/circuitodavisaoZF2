@@ -2346,9 +2346,21 @@ public function alunosNaSemanaAction(){
 					if($fato->getSetenta() == 'S'){
 						$arrayLideres[$fato->getGrupo_id()]['setenta'] = 'S';
 					}
-					$arrayLideres[$fato->getGrupo_id()]['celula'][] = $fato;
-				}
 
+					if($arrayLideres[$fato->getGrupo_id()]['celula']){
+						$validacaoSeJaTem = false;
+						foreach($arrayLideres[$fato->getGrupo_id()]['celula'] as $fatoVerificar){
+							if($fato->getGrupo_evento_id() === $fatoVerificar->getGrupo_evento_id()){
+								$validacaoSeJaTem = true;
+							}
+						}
+						if(!$validacaoSeJaTem){
+							$arrayLideres[$fato->getGrupo_id()]['celula'][] = $fato;
+						}
+					}else{
+						$arrayLideres[$fato->getGrupo_id()]['celula'][] = $fato;
+					}
+				}
 
 				$dados['lideres'] = $arrayLideres;
 				$dados['repositorio'] = $this->getRepositorio();
