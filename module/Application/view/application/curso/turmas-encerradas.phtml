@@ -8,7 +8,7 @@ use Zend\View\Helper\AbstractHelper;
 use Application\Model\Entity\Situacao;
 
 $turmasInativas = $this->turmas;
-$html .= $this->templateFormularioTopo('Turmas', '', 'style="max-width: 100%; margin-top: 0%;"');
+$html .= $this->templateFormularioTopo('Turmas <b class="text-danger">Encerradas</b>', '', 'style="max-width: 100%; margin-top: 0%;"');
 $html .= '<div class="panel-body bg-light">';
 /* Sem pessoas cadastrados */
 if (count($turmasInativas) == 0) {
@@ -27,8 +27,7 @@ if (count($turmasInativas) == 0) {
     $html .= '</thead>';
     $html .= '<tbody>';
 
-    foreach ($turmasInativas as $turma) {        
-        $stringNomeDaFuncaoOnClickReabrirTurma = 'let resposta = confirm("Confirma reabrir?"); if(resposta){ mostrarSplash(); funcaoCircuito("' . Constantes::$ROUTE_CURSO . 'ReabrirTurma' . '",' . $turma->getId() . ')}';
+    foreach ($turmasInativas as $turma) {                
         $totalAlunos = ($this->relatorio[$turma->getId()][Situacao::ATIVO] + $this->relatorio[$turma->getId()][Situacao::ESPECIAL]);
 
         $html .= '<tr>';
@@ -54,9 +53,10 @@ if (count($turmasInativas) == 0) {
         }
         $html .= $nomeAulaAberta.'</span>';
         $html .= '</td>';
-        $html .= '<td class="text-center">';
+        $html .= '<td class="text-center">';        
         
-        $html .= $this->botaoSimples('<i class="fa fa-check" ></i>', $this->funcaoOnClick($stringNomeDaFuncaoOnClickReabrirTurma), BotaoSimples::botaoMuitoPequenoSucesso);
+        $stringNomeDaFuncaoOnClickReabrirTurma = 'let resposta = confirm("Confirma reabrir?"); if(resposta){ mostrarSplash(); funcaoCircuito("' . Constantes::$ROUTE_CURSO . 'ReabrirTurma' . '",' . $turma->getId() . ')}';        
+        $html .= $this->botaoSimples('<i class="fa fa-check" ></i>', $this->funcaoOnClick($stringNomeDaFuncaoOnClickReabrirTurma), BotaoSimples::botaoMuitoPequenoSucesso);        
         $html .= '</td>';
         $html .= '</tr>';
     }

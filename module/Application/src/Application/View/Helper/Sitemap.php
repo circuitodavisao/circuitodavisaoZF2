@@ -54,8 +54,9 @@ class Sitemap extends AbstractHelper {
 						$stringGrupo .= ' & ';
 					}
 					if(substr($this->getCaminho(),0,9) == 'principal'){
+						$vendoDiscipulosAbaixo = 'vendoDiscipulosAbaixoPaginaPrincipal';
 						$id = $pessoa->getId();
-						$idSessao = $pessoa->getId() . '_' . $entidade->getId();
+						$idSessao = $pessoa->getId() . '_' . $entidade->getId() . '_' . $vendoDiscipulosAbaixo;
 					}
 					if(substr($this->getCaminho(),0,9) == 'relatorio'){
 						$id = $grupoSelecionado->getId();
