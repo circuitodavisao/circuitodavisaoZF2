@@ -1,6 +1,7 @@
 <?php
 
 use Application\Controller\Helper\Constantes;
+use Application\Model\Entity\Entidade;
 
 $html = '';
 $homens = array();
@@ -61,15 +62,23 @@ if (count($homens) > 0) {
     $html .= '<tbody>';
     foreach ($homens as $homem) {
       $nomeEntidadeAcima = '';
-      if($this->multiplos){
-        $nomeEntidadeAcima = $homem->getGrupoPessoaAtivo()->getGrupo()->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai()->getEntidadeAtiva()->getNome();
-        if($nomeEntidadeAcima){
-          $nomeEntidadeAcimaArrumado = ' - ' . $nomeEntidadeAcima;
+      if($this->multiplos){ 
+        $entidadeAcima = $homem->getGrupoPessoaAtivo()->getGrupo()->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai()->getEntidadeAtiva();
+        if($entidadeAcima->getEntidadeTipo()->getId() === Entidade::EQUIPE || 
+            $entidadeAcima->getEntidadeTipo()->getId() === Entidade::IGREJA                         
+        ){
+            $nomeEntidadeAcimaArrumado = ' - ' . $entidadeAcima->getNome();                    
         }
-        if(!$nomeEntidadeAcima){
-          $nomeEntidadeAcimaArrumado = ' - COORDENAÇÃO '. $homem->getGrupoPessoaAtivo()->getGrupo()->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai()->getEntidadeAtiva()->getNumero();
+        if($entidadeAcima->getEntidadeTipo()->getId() === Entidade::SUBEQUIPE){                                  
+            $nomeEntidadeAcimaArrumado = ' - ' . $entidadeAcima->infoEntidade();                    
         }
-      }
+        if($entidadeAcima->getEntidadeTipo()->getId() === Entidade::COORDENACAO){                                  
+            $nomeEntidadeAcimaArrumado = ' - COORDENAÇÃO: ' . $entidadeAcima->getNumero();                    
+        }  
+        if($entidadeAcima->getEntidadeTipo()->getId() === Entidade::REGIONAL){                                  
+            $nomeEntidadeAcimaArrumado = ' - REGIÃO: ' . $entidadeAcima->getNome();                    
+        }               
+    }
       $sexo = $homem->getSexo();
       if(!$sexo) {
         $sexo = 'Não Informado';
@@ -109,20 +118,28 @@ if (count($mulheres) > 0) {
     $html .= '</thead>';
     $html .= '<tbody>';
     foreach ($mulheres as $mulher) {
-      $nomeEntidadeAcima = '';
-      if($this->multiplos){
-        $nomeEntidadeAcima = $mulher->getGrupoPessoaAtivo()->getGrupo()->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai()->getEntidadeAtiva()->getNome();
-        if($nomeEntidadeAcima){
-          $nomeEntidadeAcimaArrumado = ' - ' . $nomeEntidadeAcima;
+        if($this->multiplos){ 
+            $entidadeAcima = $mulher->getGrupoPessoaAtivo()->getGrupo()->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai()->getEntidadeAtiva();
+            if($entidadeAcima->getEntidadeTipo()->getId() === Entidade::EQUIPE || 
+                $entidadeAcima->getEntidadeTipo()->getId() === Entidade::IGREJA                         
+            ){
+                $nomeEntidadeAcimaArrumado = ' - ' . $entidadeAcima->getNome();                    
+            }
+            if($entidadeAcima->getEntidadeTipo()->getId() === Entidade::SUBEQUIPE){                                  
+                $nomeEntidadeAcimaArrumado = ' - ' . $entidadeAcima->infoEntidade();                    
+            }
+            if($entidadeAcima->getEntidadeTipo()->getId() === Entidade::COORDENACAO){                                  
+                $nomeEntidadeAcimaArrumado = ' - COORDENAÇÃO: ' . $entidadeAcima->getNumero();                    
+            }  
+            if($entidadeAcima->getEntidadeTipo()->getId() === Entidade::REGIONAL){                                  
+                $nomeEntidadeAcimaArrumado = ' - REGIÃO: ' . $entidadeAcima->getNome();                    
+            }               
+        }   
+      
+        $sexo = $mulher->getSexo();
+        if(!$sexo) {
+            $sexo = 'Não Informado';
         }
-        if(!$nomeEntidadeAcima){
-          $nomeEntidadeAcimaArrumado = ' - COORDENAÇÃO '. $mulher->getGrupoPessoaAtivo()->getGrupo()->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai()->getEntidadeAtiva()->getNumero();
-      }
-    }
-      $sexo = $homem->getSexo();
-      if(!$sexo) {
-        $sexo = 'Não Informado';
-      }
         $html .= '<tr>';
         $html .= '<td>' . $mulher->getId() . '</td>';
         $html .= '<td><span class="visible-lg visible-md">' . $mulher->getNome() . '</span><span class="visible-sm visible-xs">' . $mulher->getNomePrimeiroUltimo() . '</span></td>';
