@@ -3005,6 +3005,8 @@ class IndexController extends CircuitoController {
 			$grupoIgrejas[] = ['id' => $explodeId[0]];
 		}
 
+		$gruposParaRemover = array();
+
 		foreach($grupoIgrejas as $grupoIgreja){
 			if($explodeId[0] == 0){
 				$grupo = $grupoIgreja;
@@ -3031,6 +3033,7 @@ class IndexController extends CircuitoController {
 				);
 				$relatorios[] = $dados;
 			}
+			$gruposParaRemover[] = $grupo->getId();
 			$periodoAfrente = 1;
 			$grupoPaiFilhoFilhos144 = $grupo->getGrupoPaiFilhoFilhosAtivos($periodoAfrente);
 			if ($grupoPaiFilhoFilhos144) {
@@ -3074,6 +3077,7 @@ class IndexController extends CircuitoController {
 							$relatorios[] = $dados;
 						}
 					}
+					$gruposParaRemover[] = $grupoFilho144->getId();
 
 					$grupoPaiFilhoFilhos1728 = $grupoFilho144->getGrupoPaiFilhoFilhosAtivos($periodoAfrente);
 					if ($grupoPaiFilhoFilhos1728) {
@@ -3097,6 +3101,8 @@ class IndexController extends CircuitoController {
 								$relatorios[] = $dados;
 							}
 
+							$gruposParaRemover[] = $grupoFilho1728->getId();
+
 							$grupoPaiFilhoFilhos20736 = $grupoFilho1728->getGrupoPaiFilhoFilhosAtivos($periodoAfrente);
 							if ($grupoPaiFilhoFilhos20736) {
 								foreach ($grupoPaiFilhoFilhos20736 as $gpFilho20736) {
@@ -3117,6 +3123,7 @@ class IndexController extends CircuitoController {
 											'periodos' => $valor['periodos'],
 										);
 										$relatorios[] = $dados;
+										$gruposParaRemover[] = $grupoFilho20736->getId();
 
 										$grupoPaiFilhoFilhos248832 = $grupoFilho20736->getGrupoPaiFilhoFilhosAtivos($periodoAfrente);
 										if ($grupoPaiFilhoFilhos248832) {
@@ -3138,6 +3145,7 @@ class IndexController extends CircuitoController {
 														'periodos' => $valor['periodos'],
 													);
 													$relatorios[] = $dados;
+													$gruposParaRemover[] = $grupoFilho248832->getId();
 
 													$grupoPaiFilhoFilhos7 = $grupoFilho248832->getGrupoPaiFilhoFilhosAtivos($periodoAfrente);
 													if ($grupoPaiFilhoFilhos7) {
@@ -3159,6 +3167,7 @@ class IndexController extends CircuitoController {
 																	'periodos' => $valor['periodos'],
 																);
 																$relatorios[] = $dados;
+																$gruposParaRemover[] = $grupoFilho7->getId();
 
 																$grupoPaiFilhoFilhos8 = $grupoFilho7->getGrupoPaiFilhoFilhosAtivos($periodoAfrente);
 																if ($grupoPaiFilhoFilhos8) {
@@ -3180,6 +3189,7 @@ class IndexController extends CircuitoController {
 																				'periodos' => $valor['periodos'],
 																			);
 																			$relatorios[] = $dados;
+																			$gruposParaRemover[] = $grupoFilho8->getId();
 
 																			$grupoPaiFilhoFilhos9 = $grupoFilho8->getGrupoPaiFilhoFilhosAtivos($periodoAfrente);
 																			if ($grupoPaiFilhoFilhos9) {
@@ -3201,6 +3211,7 @@ class IndexController extends CircuitoController {
 																							'periodos' => $valor['periodos'],
 																						);
 																						$relatorios[] = $dados;
+																						$gruposParaRemover[] = $grupoFilho9->getId();
 																					}
 																				}
 																			}
@@ -3227,9 +3238,8 @@ class IndexController extends CircuitoController {
 
 		$this->getRepositorio()->iniciarTransacao();
 		try{
-			foreach ($arrayDeEquipes as $gpFilho144) {
-				$grupoFilho144 = $gpFilho144->getGrupoPaiFilhoFilho();
-				$fatosSetenta = $this->getRepositorio()->getFatoSetentaORM()->encontrarPorIdGrupoEquipe($grupoFilho144->getId(), $mesSelecinado, $anoSelecinado);
+			foreach ($gruposParaRemover as $grupoParaRemover) {
+				$fatosSetenta = $this->getRepositorio()->getFatoSetentaORM()->encontrarPorIdGrupoEquipe($grupoParaRemover, $mesSelecinado, $anoSelecinado);
 				foreach($fatosSetenta as $fato){
 					$this->getRepositorio()->getFatoSetentaORM()->remover($fato);
 				}
