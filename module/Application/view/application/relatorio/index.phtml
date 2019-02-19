@@ -349,7 +349,7 @@ foreach ($this->relatorio as $relatorio) {
 			}
 			if ($this->tipoRelatorio == 2) {
 				$performance = RelatorioController::formataNumeroRelatorio($relatorio[$indiceDeArrays]['celulaRealizadasPerformance']);
-				$diferenca = ($relatorio[$indiceDeArrays]['celulaQuantidade'] - $relatorio[$indiceDeArrays]['celulaRealizadas']);
+				$diferenca = (($relatorio[$indiceDeArrays]['celulaQuantidade'] + $relatorio[$indiceDeArrays]['celulaQuantidadeEstrategica']) - $relatorio[$indiceDeArrays]['celulaRealizadas']);
 				$botaoCelulasNaoRealizadas = $this->botaoSimples($diferenca, $funcaoAbrirModal, BotaoSimples::botaoMuitoPequenoImportante, BotaoSimples::posicaoAoCentro);
 				if($contagemRanking === 0 || $relatorio['lideres'] == 'TOTAL' || $relatorio[$indiceDeArrays]['mostrar']){
 					echo '<td class="' . $classeBase . '">' . $relatorio[$indiceDeArrays]['celulaRealizadas'] . '</td>';
