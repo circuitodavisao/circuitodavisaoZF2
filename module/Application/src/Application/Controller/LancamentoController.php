@@ -169,8 +169,9 @@ class LancamentoController extends CircuitoController {
 					break;
 				};
 			}
-			if ($grupoEvento->getEvento()->getEventoTipo()->getId() === EventoTipo::tipoCelula) {
-				$tipoCampo = LancamentoController::TIPO_CAMPO_CELULA;
+			if ($grupoEvento->getEvento()->getEventoTipo()->getId() === EventoTipo::tipoCelula
+				|| $grupoEvento->getEvento()->getEventoTipo()->getId() === EventoTipo::tipoCelulaEstrategica) {
+					$tipoCampo = LancamentoController::TIPO_CAMPO_CELULA;
 			}
 
 			$diaDaSemanaDoEvento = (int) $grupoEvento->getEvento()->getDia();
@@ -189,7 +190,7 @@ class LancamentoController extends CircuitoController {
 							$tipoPessoa = LancamentoController::TIPO_PESSOA_LIDER;
 							$relatorio[$tipoCampo][$tipoPessoa] ++;
 
-							if ($grupoEvento->getEvento()->verificaSeECelula()) {
+							if ($grupoEvento->getEvento()->verificaSeECelula() || $grupoEvento->getEvento()->verificaSeECelulaEstrategica()) {
 								$eventoCelulaId = $grupoEvento->getEvento()->getEventoCelula()->getId();
 								$relatorio['celula'][$eventoCelulaId] ++;
 							}
@@ -203,7 +204,7 @@ class LancamentoController extends CircuitoController {
 							$tipoPessoa = $grupoPessoa->getGrupoPessoaTipo()->getId();
 							$relatorio[$tipoCampo][$tipoPessoa] ++;
 
-							if ($grupoEvento->getEvento()->verificaSeECelula()) {
+							if ($grupoEvento->getEvento()->verificaSeECelula() || $grupoEvento->getEvento()->verificaSeECelulaEstrategica()) {
 								$eventoCelulaId = $grupoEvento->getEvento()->getEventoCelula()->getId();
 								$relatorio['celula'][$eventoCelulaId] ++;
 							}
