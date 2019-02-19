@@ -711,13 +711,22 @@ class PrincipalController extends CircuitoController {
 			$assunto .= 'EQUIPE: ' . $pessoa->getGrupoResponsavel()[0]->getGrupo()->getEntidadeAtiva()->getNome() . ', ';
 		}
 		$assunto .= 'IGREJA: ' .  $entidadeDaIgreja->getNome();
-		$assunto .= ', RESPONSAVEL: ' . $entidadeDaIgreja->getGrupo()->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai()->getEntidadeAtiva()->infoEntidade();
+		$entidadeAcimaDaIgreja =  $entidadeDaIgreja->getGrupo()->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai()->getEntidadeAtiva();
+		if($entidadeAcimaDaIgreja->getEntidadeTipo()->getId() === Entidade::COORDENACAO){                                  
+			$nomeEntidadeAcimaArrumado = ' COORDENAÇÃO: ' . $entidadeAcimaDaIgreja->getNumero() . ' RESPONSÁVEIS: ' .$entidadeAcimaDaIgreja->getGrupo()->getNomeLideresAtivos();                    
+		}  
+		if($entidadeAcimaDaIgreja->getEntidadeTipo()->getId() === Entidade::REGIONAL){                                  
+			$nomeEntidadeAcimaArrumado = ' REGIÃO: ' . $entidadeAcimaDaIgreja->getNome();                    
+		} 
+		$assunto .= ', NÍVEL ACIMA: ' . $nomeEntidadeAcimaArrumado;
 		$Subject = $assunto;		
 		$ToEmail = 'support@circuitodavisao.zendesk.com';
 		$Content = 'Tipo: '.$tipo.'
 			Prioridade: '.$prioridade.'
 			Login: '.$remetente['email'].'
-			Descricao: '.$descricao;
+			Descricao: '.$descricao.'
+			IdPessoa: '.$pessoa->getId().'
+			IdGrupo (Responsabilidade [0]): '.$pessoa->getGrupoResponsavel()[0]->getGrupo()->getId();
 		try{
 			error_log('######## enviar email #########');
 			Funcoes::enviarEmail($ToEmail, $Subject, $Content, $remetente, $anexo);
