@@ -991,7 +991,7 @@ class RelatorioController extends CircuitoController {
 			$relatorio[self::dadosPessoais]['mediaCelulaPerformanceFrase'] = RelatorioController::corDaLinhaPelaPerformance($relatorio[self::dadosPessoais]['mediaCelulaPerformance'], 2);
 			$relatorio[self::dadosPessoais]['mediaCelulaRealizadas'] = $soma[self::dadosPessoais][self::celulaRealizadas] / $diferencaDePeriodos;
 			$relatorio[self::dadosPessoais]['mediaCelulaRealizadasPerformance'] = $soma[self::dadosPessoais][self::celulaRealizadasPerformance] / $diferencaDePeriodos;
-			$relatorio[self::dadosPessoais]['mediaCelulaQuantidade'] = $soma[self::dadosPessoais][self::celulaQuantidade] / $diferencaDePeriodos;
+			$relatorio[self::dadosPessoais]['mediaCelulaQuantidade'] = ($soma[self::dadosPessoais][self::celulaQuantidade] + $soma[self::dadosPessoais]['celulaQuantidadeEstrategica']) / $diferencaDePeriodos;
 			$relatorio[self::dadosPessoais]['mediaMembresiaCulto'] = $soma[self::dadosPessoais][self::membresiaCulto] / $diferencaDePeriodos;
 			$relatorio[self::dadosPessoais]['mediaMembresiaArena'] = $soma[self::dadosPessoais][self::membresiaArena] / $diferencaDePeriodos;
 			$relatorio[self::dadosPessoais]['mediaMembresiaDomingo'] = $soma[self::dadosPessoais][self::membresiaDomingo] / $diferencaDePeriodos;
@@ -1239,6 +1239,7 @@ class RelatorioController extends CircuitoController {
 				$tipoRelatorio === RelatorioController::relatorioMembresiaECelula) {
 					$relatorio[$contadorFilhos][$indiceDeArrays]['celulaRealizadasPerformance'] = $relatorio[$contadorFilhos][$indiceDeArrays]['celulaRealizadas'] / $relatorio[$contadorFilhos][$indiceDeArrays]['celulaQuantidade'] * 100;
 					$somaFinal['celulaQuantidade'] += $relatorio[$contadorFilhos][$indiceDeArrays]['celulaQuantidade'];
+					$somaFinal['celulaQuantidadeEstrategica'] += $relatorio[$contadorFilhos][$indiceDeArrays]['celulaQuantidadeEstrategica'];
 					$somaFinal['celulaRealizadas'] += $relatorio[$contadorFilhos][$indiceDeArrays]['celulaRealizadas'];
 					$somaFinal['celulaRealizadasPerformance'] += $relatorio[$contadorFilhos][$indiceDeArrays]['celulaRealizadasPerformance'];
 				}
@@ -1264,7 +1265,7 @@ class RelatorioController extends CircuitoController {
 			$relatorio[$contadorFilhos]['mediaCelulaPerformanceClass'] = RelatorioController::corDaLinhaPelaPerformance($relatorio[$contadorFilhos]['mediaCelulaPerformance'], 1);
 			$relatorio[$contadorFilhos]['mediaCelulaPerformanceFrase'] = RelatorioController::corDaLinhaPelaPerformance($relatorio[$contadorFilhos]['mediaCelulaPerformance'], 2);
 			$relatorio[$contadorFilhos]['mediaCelulaRealizadas'] = $somaFinal['celulaRealizadas'] / $diferencaDePeriodos;
-			$relatorio[$contadorFilhos]['mediaCelulaQuantidade'] = $somaFinal['celulaQuantidade'] / $diferencaDePeriodos;
+			$relatorio[$contadorFilhos]['mediaCelulaQuantidade'] = ($somaFinal['celulaQuantidade'] + $somaFinal['celulaQuantidadeEstrategica']) / $diferencaDePeriodos;
 			$relatorio[$contadorFilhos]['mediaCelulaRealizadasPerformance'] = $somaFinal['celulaRealizadasPerformance'] / $diferencaDePeriodos;
 			if ($tipoRelatorio === RelatorioController::relatorioCelulasDeElite) {
 				$relatorio[$contadorFilhos]['mediaCelulaDeElitePerformance'] = $somaFinal['celulaDeElitePerformance'] / $diferencaDePeriodos;
