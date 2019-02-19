@@ -551,7 +551,7 @@ function selecionarObjeto(id, informacao) {
 									$('#spanObjeto3').addClass(hidden)
 
 									if ($('#solicitacaoTipoId').val() == REMOVER_CELULA) {
-										if(data.celula['1']){
+										if(data.celulas['1']){
 											$('#blocoObjeto3').removeClass(hidden)
 											$('#spanObjeto3').addClass(hidden)
 											$('#spanSelecioneObjeto3').removeClass(hidden)
