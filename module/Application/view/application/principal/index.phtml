@@ -367,7 +367,7 @@ Célula
 							}
 							switch ($indice) {
 							case 1:
-								$valor = $this->relatorio[0][$indicePeriodosDoMesAtual]['celulaQuantidade'];
+								$valor = ($this->relatorio[0][$indicePeriodosDoMesAtual]['celulaQuantidade'] + $this->relatorio[0][$indicePeriodosDoMesAtual]['celulaQuantidadeEstrategica']);
 								break;
 							case 2:
 								$valor = $this->relatorio[0][$indicePeriodosDoMesAtual]['celula'];
