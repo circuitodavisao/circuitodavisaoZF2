@@ -1465,8 +1465,9 @@ class RelatorioController extends CircuitoController {
 			$qualRelatorio === RelatorioController::relatorioMembresiaECelula ||
 			$qualRelatorio === RelatorioController::relatorioCelulasDeElite) {
 				$quantidadeCelulasRealizadas = 0;
-				if ($relatorioCelula[0]['realizadas']) {
-					$quantidadeCelulasRealizadas = $relatorioCelula[0]['realizadas'];
+				if ($relatorioCelula[0]['realizadas'] || $relatorioCelulaEstrategicas[0]['realizadas']) {
+					$quantidadeCelulasRealizadas += $relatorioCelula[0]['realizadas'];
+					$quantidadeCelulasRealizadas += $relatorioCelulaEstrategicas[0]['realizadas'];
 				}
 
 				$performanceCelulasRealizadas = 0;
