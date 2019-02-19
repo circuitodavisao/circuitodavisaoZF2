@@ -226,26 +226,28 @@ if ($this->turmaPessoa->verificarSeEstaAtivo()) {
 
 
 	if ($ehTurmaDoInstitutoDeVencedores) {
+		$html .= '<div class="row">';
+		$html .= '<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">';
+
 		/* Pedagogico */
 		$html .= '<div class="panel panel-default mt10">';
-		$html .= '<div class="panel-heading" style="padding: 0px 8px;">Vistos</div>';
+		$html .= '<div class="panel-heading" style="padding: 0px 8px;">Avaliações</div>';
 		$html .= '<div class="panel-body">';
 		$html .= '<div class="table-responsive">';
 		$html .= '<table class="table table-condensed">';
 		$html .= '<thead>';
 
 		$html .= '<tr>';
-		$html .= '<th colspan="13">Legenda'
-			. ' - <span class="label label-xs label-danger"><i class="fa fa-times"></i> Sem Visto</span>'
-			. ' - <span class="label label-xs label-success"><i class="fa fa-check"></i> Vistado</span></th>';
+		$html .= '<th colspan="4">Legenda'
+			. ' - <span class="label label-xs label-danger"><i class="fa fa-times"></i> Não Entregado</span>'
+			. ' - <span class="label label-xs label-success"><i class="fa fa-check"></i> Entregado</span></th>';
 		$html .= '</tr>';
 
 		$html .= '<tr>';
 		$html .= '<th>Diciplinas</th>';
-		$html .= '<th>A. 1</th>';
-		$html .= '<th>A. 2</th>';
-		$html .= '<th>Ex.</th>';
-		$html .= '<th colspan="12">Aulas</th>';
+		$html .= '<th class="text-center">A. 1</th>';
+		$html .= '<th class="text-center">A. 2</th>';
+		$html .= '<th class="text-center">Ex.</th>';		
 		$html .= '</tr>';
 		$html .= '</thead>';
 		$html .= '<tbody>';
@@ -292,7 +294,7 @@ if ($this->turmaPessoa->verificarSeEstaAtivo()) {
 						$icone = 'fa-check';
 						$corDoBotao = BotaoSimples::botaoMuitoPequenoSucesso;
 					}
-
+				
 					$iconeBotao = '<i class="fa ' . $icone . '"></i>';
 					$idBotao = 'botao_' . $this->turmaPessoa->getId() . '_' . $disciplina->getId() . '_4_' . $indiceAvaliacao;
 					$extra = ' id="' . $idBotao . '" ' . $this->funcaoOnClick('mudarPresencaOuVistoOuFinanceiro(' . $this->turmaPessoa->getId() . ', ' . $disciplina->getId() . ', 4,' . $indiceAvaliacao . ')');
@@ -302,6 +304,44 @@ if ($this->turmaPessoa->verificarSeEstaAtivo()) {
 					$html .= '</td>';
 				}
 
+				$html .= '</tr>';
+			}
+		}
+
+		$html .= '</tbody>';
+		$html .= '</table>';
+		$html .= '</div>';
+		$html .= '</div>';
+		$html .= '</div>';	
+
+		$html .= '</div>';	
+
+		$html .= '<div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">';
+
+		/* Pedagogico */
+		$html .= '<div class="panel panel-default mt10">';
+		$html .= '<div class="panel-heading" style="padding: 0px 8px;">Vistos</div>';
+		$html .= '<div class="panel-body">';
+		$html .= '<div class="table-responsive">';
+		$html .= '<table class="table table-condensed">';
+		$html .= '<thead>';
+
+		$html .= '<tr>';
+		$html .= '<th colspan="12">Legenda'
+			. ' - <span class="label label-xs label-danger"><i class="fa fa-times"></i> Sem Visto</span>'
+			. ' - <span class="label label-xs label-success"><i class="fa fa-check"></i> Vistado</span></th>';
+		$html .= '</tr>';
+
+		$html .= '<tr>';
+		$html .= '<th>Diciplinas</th>';		
+		$html .= '<th colspan="12">Aulas</th>';
+		$html .= '</tr>';
+		$html .= '</thead>';
+		$html .= '<tbody>';
+		foreach ($this->turmaPessoa->getTurma()->getCurso()->getDisciplina() as $disciplina) {
+			if ($disciplina->getId() !== Disciplina::POS_REVISAO) {		
+				$html .= '<tr>';
+				$html .= '<td>' . $disciplina->getNome() . '</td>';	
 				foreach ($disciplina->getAulaOrdenadasPorPosicao() as $aula) {
 					$extra = '';
 					$icone = 'fa-times';
@@ -333,6 +373,9 @@ if ($this->turmaPessoa->verificarSeEstaAtivo()) {
 		$html .= '</div>';
 		$html .= '</div>';
 		$html .= '</div>';		
+
+		$html .= '</div>';	
+		$html .= '</div>'; // Fim da row
 
 		$iconeBotao = '<i class="fa fa-times"></i>';
 		$corBotao = BotaoSimples::botaoMuitoPequenoPerigoso;
