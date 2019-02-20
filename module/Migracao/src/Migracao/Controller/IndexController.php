@@ -669,6 +669,37 @@ class IndexController extends CircuitoController {
 			}
 		}
 
+		if($grupoEventoCelulasEstrategicas = $grupoQueSeraSemeado->getGrupoEventoPorTipoEAtivo(EventoTipo::tipoCelulaEstrategica, $ativo = 1)){
+			$temAlgumaCelula = true;
+			foreach($grupoEventoCelulasEstrategicas as $grupoEventoCelula){
+				/* criar novo evento, evento_celula e grupo_evento */
+				$eventoAtual = $grupoEventoCelula->getEvento();
+				$eventoNovo = new Evento();
+				$eventoNovo->setHora($eventoAtual->getHora());
+				$eventoNovo->setDia($eventoAtual->getDia());
+				$eventoNovo->setEventoTipo($eventoAtual->getEventoTipo());
+				$this->getRepositorio()->getEventoORM()->persistir($eventoNovo);
+
+				$eventoCelulaAtual = $eventoAtual->getEventoCelula();
+				$eventoCelulaNovo = new EventoCelula();
+				$eventoCelulaNovo->setNome_hospedeiro($eventoCelulaAtual->getNome_hospedeiro());
+				$eventoCelulaNovo->setTelefone_hospedeiro($eventoCelulaAtual->getTelefone_hospedeiro());
+				$eventoCelulaNovo->setUf($eventoCelulaAtual->getUf());
+				$eventoCelulaNovo->setCidade($eventoCelulaAtual->getCidade());
+				$eventoCelulaNovo->setLogradouro($eventoCelulaAtual->getLogradouro());
+				$eventoCelulaNovo->setBairro($eventoCelulaAtual->getBairro());
+				$eventoCelulaNovo->setComplemento($eventoCelulaAtual->getComplemento());
+				$eventoCelulaNovo->setCep($eventoCelulaAtual->getCep());
+				$eventoCelulaNovo->setEvento($eventoNovo);
+				$this->getRepositorio()->getEventoCelulaORM()->persistir($eventoCelulaNovo,false);
+
+				$grupoEventoNovo = new GrupoEvento();
+				$grupoEventoNovo->setGrupo($grupoNovo);
+				$grupoEventoNovo->setEvento($eventoNovo);
+				$this->getRepositorio()->getGrupoEventoORM()->persistir($grupoEventoNovo);
+			}
+		}
+
 		$numeroIdentificadorNovo = $numeroIdentificadorLider . str_pad($grupoNovo->getId(), 8, 0, STR_PAD_LEFT);
 		if($linhaDeLancamento = $grupoQueSeraSemeado->getGrupoPessoasNoPeriodo($periodo = 0, $this->getRepositorio())){
 			foreach($linhaDeLancamento as $grupoPessoa){
