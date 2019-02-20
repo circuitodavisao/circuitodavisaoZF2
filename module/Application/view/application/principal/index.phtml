@@ -194,6 +194,12 @@ if ($this->mostrarPrincipal) {
 			}
 
 			$mostrar = true;
+
+			/* sem membresia */
+			if($indiceNumeroGrandes === 3){
+				$mostrar = false;
+			}
+
 			if($this->entidade->getEntidadeTipo()->getId() === EntidadeTipo::regiao
 				&& ($indiceNumeroGrandes === 4 || $indiceNumeroGrandes === 5)){
 					$mostrar = false;
