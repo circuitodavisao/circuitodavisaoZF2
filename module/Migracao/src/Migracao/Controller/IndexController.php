@@ -3302,6 +3302,12 @@ class IndexController extends CircuitoController {
 			$arrayPeriodoDoMes = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mes, $ano);
 			$diferencaDePeriodos = RelatorioController::diferencaDePeriodos($arrayPeriodoDoMes[0], $arrayPeriodoDoMes[1]);
 
+			if($grupoEventosCelulaEstrategica = $grupo->getGrupoEventoAtivosPorTipo(EventoTipo::tipoCelulaEstrategica)){
+				foreach($grupoEventosCelulaEstrategica as $grupoEvento){
+					$grupoEventosCelula[] = $grupoEvento;
+				}
+			}
+
 			foreach ($grupoEventosCelula as $grupoEventoCelula) {
 				$soma = 0;
 				$arrayPeriodos = array();
@@ -3312,6 +3318,10 @@ class IndexController extends CircuitoController {
 					$eventoId = $grupoEventoCelula->getEvento()->getId();
 					if(!$celulasDeElite){
 						$resultado = $repositorioORM->getFatoCicloORM()->verificaFrequenciasPorCelulaEPeriodo($indiceDeArrays, $eventoId);
+						if($grupoEventoCelula->getEvento()->getEvento_id() && $resultado == 0){
+							$resultado = 
+								$repositorioORM->getFatoCicloORM()->verificaFrequenciasPorCelulaEPeriodo($indiceDeArrays, $grupoEventoCelula->getEvento()->getEvento_id());
+						}
 						$arrayPeriodos[$contadorDePeriodos] = $resultado;
 						$soma += $resultado;
 					}else{
