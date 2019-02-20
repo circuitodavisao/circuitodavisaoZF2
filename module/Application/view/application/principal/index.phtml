@@ -47,13 +47,16 @@ if ($this->mostrarPrincipal) {
 </div>
 
 <!-- fim panel meus dados -->
+<?php if($this->vendoPessoaLogada){ ?>
+<div class="alert alert-default text-center">
+<form action="/principal" method="post">
+<?php echo $this->cabecalhoDeMeses(); ?>
+</form>
+</div>
+<?php } ?>
 
 <div class="alert alert-default text-center">
 Último acesso: <?php echo $this->ultimoAcesso; ?>
-</div>
-
-<div class="alert alert-default text-center">
-Período Atual <?php echo Funcoes::montaPeriodo($this->periodoFinal)[0]; ?>
 </div>
 
 <div class="row mb10">
