@@ -209,7 +209,7 @@ class PrincipalController extends CircuitoController {
 			'anoFinal' => $anoFinal,
 		);
 
-		$grupoPaiFilhoFilhos = $grupo->getGrupoPaiFilhoFilhosAtivos($periodo = 0);
+		$grupoPaiFilhoFilhos = $grupo->getGrupoPaiFilhoFilhosAtivos($periodo = 1);
 		if ($grupoPaiFilhoFilhos) {
 			$discipulos = array();
 			foreach ($grupoPaiFilhoFilhos as $gpFilho) {
