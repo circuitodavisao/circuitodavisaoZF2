@@ -601,6 +601,8 @@ class IndexController extends CircuitoController {
 		/* entidade nova */
 		$entidade = new Entidade();
 		$entidade->setGrupo($grupoNovo);
+
+		// fluxo default
 		if($extra){
 			if(is_numeric($extra)){
 				$entidade->setNumero($extra);
@@ -610,14 +612,66 @@ class IndexController extends CircuitoController {
 		}else{
 			if($grupoQueSeraSemeado->getEntidadeAtiva()){
 				if($grupoQueSeraSemeado->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::subEquipe){
-					$entidade->setNumero($grupoQueSeraSemeado->getEntidadeAtiva()->getNumero());
+					$numero = $grupoQueSeraSemeado->getEntidadeAtiva()->getNumero();
+					if($numero){
+						$entidade->setNumero($numero);
+					}
+					if(!$numero){
+						$entidade->setNumero(1);
+					}
 				}
 				if($grupoQueSeraSemeado->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::equipe){
-					$entidade->setNome($grupoQueSeraSemeado->getEntidadeAtiva()->getNome());
+					$nome = $grupoQueSeraSemeado->getEntidadeAtiva()->getNome();
+					if($nome){
+						$entidade->setNome($nome);
+					}
+					if(!$nome){
+						$entidade->setNome('NECESSARIO ALTERAR');
+					}
 				}
 			}
 		}
+
 		$entidade->setEntidadeTipo($grupoQueSeraSemeado->getEntidadeAtiva()->getEntidadeTipo());
+
+		// fluxo que só ocorrerá caso o grupo que recebe tenha entidade ativa, nesse caso sobrescreverá o fluxo default
+		if($grupoQueRecebera->getEntidadeAtiva()){
+			if($grupoQueRecebera->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::equipe ||
+			$grupoQueRecebera->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::subEquipe ){
+				$entidadeTipoSub = $this->getRepositorio()->getEntidadeTipoORM()->encontrarPorId(EntidadeTipo::subEquipe);
+				$entidade->setEntidadeTipo($entidadeTipoSub);			
+				if($extra){
+					$entidade->setNumero($extra);
+				}
+				if(!$extra){
+					$numero = $grupoQueSeraSemeado->getEntidadeAtiva()->getNumero();
+					if($numero){
+						$entidade->setNumero($numero);
+					}
+					if(!$numero){
+						$entidade->setNumero(1);
+					}					
+				}				
+			}
+
+			if($grupoQueRecebera->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::igreja){			
+				$entidadeTipoEquipe = $this->getRepositorio()->getEntidadeTipoORM()->encontrarPorId(EntidadeTipo::equipe);
+				$entidade->setEntidadeTipo($entidadeTipoEquipe);						
+				if($extra){
+					$entidade->setNome($extra);
+				}
+				if(!$extra){
+					$nome = $grupoQueSeraSemeado->getEntidadeAtiva()->getNome();
+					if($nome){
+						$entidade->setNome($nome);
+					}
+					if(!$nome){
+						$entidade->setNome('NECESSARIO ALTERAR');
+					}
+				}				
+			}		
+		}
+		
 		$this->getRepositorio()->getEntidadeORM()->persistir($entidade);
 		/* grupo pai filho novo */
 		$grupoPaiFilhoNovo = new GrupoPaiFilho();
@@ -714,23 +768,8 @@ class IndexController extends CircuitoController {
 					$this->getRepositorio()->getGrupoPessoaORM()->persistir($grupoPessoaNovo);
 				}
 
-				/* Se eh aluno */
-				if($turmaPessoa = $this->getRepositorio()->getTurmaPessoaORM()->encontrarPorIdPessoa($grupoPessoa->getPessoa()->getId())){
-					if($fatosCurso = $this->getRepositorio()->getFatoCursoORM()->encontrarFatoCursoPorTurmaPessoa($turmaPessoa->getId())){
-						foreach($fatosCurso as $fatoCurso){
-							if($fatoCurso->verificarSeEstaAtivo()){
-								$fatoCurso->setDataEHoraDeInativacao();
-								$this->getRepositorio()->getFatoCursoORM()->persistir($fatoCurso, $trocarDataDeCriacao = false);
-							}
-						}
-					}
-					$fatoCurso = new FatoCurso();
-					$fatoCurso->setNumero_identificador($numeroIdentificadorNovo);
-					$fatoCurso->setTurma_pessoa_id($turmaPessoa->getId());
-					$fatoCurso->setTurma_id($turmaPessoa->getTurma()->getId());
-					$fatoCurso->setSituacao_id($turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getId());
-					$this->getRepositorio()->getFatoCursoORM()->persistir($fatoCurso);
-				}
+				/* Se é aluno */
+				$this->montarFatoCursoDoAluno($grupoPessoa, $numeroIdentificadorNovo);
 			}
 		}
 		if($temAlgumaCelula){
@@ -965,7 +1004,10 @@ class IndexController extends CircuitoController {
 					$grupoPessoaHomem->setPessoa($grupoPessoa->getPessoa());
 					$grupoPessoaHomem->setGrupoPessoaTipo($grupoPessoa->getGrupoPessoaTipo());
 					$this->getRepositorio()->getGrupoPessoaORM()->persistir($grupoPessoaHomem);
-				}				
+				}
+				
+				/* Se é aluno */
+				$this->montarFatoCursoDoAluno($grupoPessoa, $numeroIdentificadorOriginal);
 			}
 		}
 		/* linha lancamento mulher */
@@ -980,6 +1022,9 @@ class IndexController extends CircuitoController {
 					$grupoPessoaMulher->setGrupoPessoaTipo($grupoPessoa->getGrupoPessoaTipo());
 					$this->getRepositorio()->getGrupoPessoaORM()->persistir($grupoPessoaMulher);
 				}
+
+				/* Se é aluno */
+				$this->montarFatoCursoDoAluno($grupoPessoa, $numeroIdentificadorOriginal);
 			}
 		}
 
@@ -3449,4 +3494,24 @@ class IndexController extends CircuitoController {
 		$dados = array('html' => $html);
 		return new ViewModel($dados);
 	}
+
+	public function montarFatoCursoDoAluno($grupoPessoa, $numeroIdentidficador){
+		if($turmaPessoa = $this->getRepositorio()->getTurmaPessoaORM()->encontrarPorIdPessoa($grupoPessoa->getPessoa()->getId())){
+			if($fatosCurso = $this->getRepositorio()->getFatoCursoORM()->encontrarFatoCursoPorTurmaPessoa($turmaPessoa->getId())){
+				foreach($fatosCurso as $fatoCurso){
+					if($fatoCurso->verificarSeEstaAtivo()){
+						$fatoCurso->setDataEHoraDeInativacao();
+						$this->getRepositorio()->getFatoCursoORM()->persistir($fatoCurso, $trocarDataDeCriacao = false);
+					}
+				}
+			}
+			$fatoCurso = new FatoCurso();
+			$fatoCurso->setNumero_identificador($numeroIdentidficador);
+			$fatoCurso->setTurma_pessoa_id($turmaPessoa->getId());
+			$fatoCurso->setTurma_id($turmaPessoa->getTurma()->getId());
+			$fatoCurso->setSituacao_id($turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getId());
+			$this->getRepositorio()->getFatoCursoORM()->persistir($fatoCurso);
+		}
+	}
+
 }
