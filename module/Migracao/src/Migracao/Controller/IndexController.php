@@ -714,23 +714,8 @@ class IndexController extends CircuitoController {
 					$this->getRepositorio()->getGrupoPessoaORM()->persistir($grupoPessoaNovo);
 				}
 
-				/* Se eh aluno */
-				if($turmaPessoa = $this->getRepositorio()->getTurmaPessoaORM()->encontrarPorIdPessoa($grupoPessoa->getPessoa()->getId())){
-					if($fatosCurso = $this->getRepositorio()->getFatoCursoORM()->encontrarFatoCursoPorTurmaPessoa($turmaPessoa->getId())){
-						foreach($fatosCurso as $fatoCurso){
-							if($fatoCurso->verificarSeEstaAtivo()){
-								$fatoCurso->setDataEHoraDeInativacao();
-								$this->getRepositorio()->getFatoCursoORM()->persistir($fatoCurso, $trocarDataDeCriacao = false);
-							}
-						}
-					}
-					$fatoCurso = new FatoCurso();
-					$fatoCurso->setNumero_identificador($numeroIdentificadorNovo);
-					$fatoCurso->setTurma_pessoa_id($turmaPessoa->getId());
-					$fatoCurso->setTurma_id($turmaPessoa->getTurma()->getId());
-					$fatoCurso->setSituacao_id($turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getId());
-					$this->getRepositorio()->getFatoCursoORM()->persistir($fatoCurso);
-				}
+				/* Se é aluno */
+				$this->montarFatoCursoDoAluno($grupoPessoa, $numeroIdentificadorNovo);
 			}
 		}
 		if($temAlgumaCelula){
@@ -965,7 +950,10 @@ class IndexController extends CircuitoController {
 					$grupoPessoaHomem->setPessoa($grupoPessoa->getPessoa());
 					$grupoPessoaHomem->setGrupoPessoaTipo($grupoPessoa->getGrupoPessoaTipo());
 					$this->getRepositorio()->getGrupoPessoaORM()->persistir($grupoPessoaHomem);
-				}				
+				}
+				
+				/* Se é aluno */
+				$this->montarFatoCursoDoAluno($grupoPessoa, $numeroIdentificadorOriginal);
 			}
 		}
 		/* linha lancamento mulher */
@@ -980,6 +968,9 @@ class IndexController extends CircuitoController {
 					$grupoPessoaMulher->setGrupoPessoaTipo($grupoPessoa->getGrupoPessoaTipo());
 					$this->getRepositorio()->getGrupoPessoaORM()->persistir($grupoPessoaMulher);
 				}
+
+				/* Se é aluno */
+				$this->montarFatoCursoDoAluno($grupoPessoa, $numeroIdentificadorOriginal);
 			}
 		}
 
@@ -3449,4 +3440,24 @@ class IndexController extends CircuitoController {
 		$dados = array('html' => $html);
 		return new ViewModel($dados);
 	}
+
+	public function montarFatoCursoDoAluno($grupoPessoa, $numeroIdentidficador){
+		if($turmaPessoa = $this->getRepositorio()->getTurmaPessoaORM()->encontrarPorIdPessoa($grupoPessoa->getPessoa()->getId())){
+			if($fatosCurso = $this->getRepositorio()->getFatoCursoORM()->encontrarFatoCursoPorTurmaPessoa($turmaPessoa->getId())){
+				foreach($fatosCurso as $fatoCurso){
+					if($fatoCurso->verificarSeEstaAtivo()){
+						$fatoCurso->setDataEHoraDeInativacao();
+						$this->getRepositorio()->getFatoCursoORM()->persistir($fatoCurso, $trocarDataDeCriacao = false);
+					}
+				}
+			}
+			$fatoCurso = new FatoCurso();
+			$fatoCurso->setNumero_identificador($numeroIdentidficador);
+			$fatoCurso->setTurma_pessoa_id($turmaPessoa->getId());
+			$fatoCurso->setTurma_id($turmaPessoa->getTurma()->getId());
+			$fatoCurso->setSituacao_id($turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getId());
+			$this->getRepositorio()->getFatoCursoORM()->persistir($fatoCurso);
+		}
+	}
+
 }

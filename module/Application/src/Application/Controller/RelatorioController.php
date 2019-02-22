@@ -531,16 +531,24 @@ class RelatorioController extends CircuitoController {
 						$dados['temSolicitacaoPendente'] = true;
 					}
 				}
-
+				
 				/* se tem celula adiciona os dados */
-				if($grupoEventoCelula = $grupo->getGrupoEventoPorTipoEAtivo(EventoTipo::tipoCelula)){
-					if($grupoEventoCelulaEstrategica = $grupo->getGrupoEventoPorTipoEAtivo(EventoTipo::tipoCelulaEstrategica)){
-						foreach($grupoEventoCelulaEstrategica as $grupoEventoEstrategica){
-							$grupoEventoCelula[] = $grupoEventoEstrategica;
-						}
+				$grupoEventoCelulas = Array();
+				if($grupoEventoCelulaEstrategica = $grupo->getGrupoEventoPorTipoEAtivo(EventoTipo::tipoCelulaEstrategica)){						
+					foreach($grupoEventoCelulaEstrategica as $grupoEventoEstrategica){
+						$grupoEventoCelulas[] = $grupoEventoEstrategica;
+					}				
+				}
+
+				if($grupoEventoCelulasNormais = $grupo->getGrupoEventoPorTipoEAtivo(EventoTipo::tipoCelula)){
+					foreach($grupoEventoCelulasNormais as $grupoEventoCelulaNormal){
+						$grupoEventoCelulas[] = $grupoEventoCelulaNormal;
 					}
+				}
+
+				if(count($grupoEventoCelulas) > 0){										
 					$contadorDeCelulas = 1;
-					foreach($grupoEventoCelula as $grupoEvento)	{
+					foreach($grupoEventoCelulas as $grupoEvento)	{
 						if($grupoEvento->verificarSeEstaAtivo()){
 							$dados['celulas'][$contadorDeCelulas]['idGrupoEvento'] = $grupoEvento->getId();
 							$dados['celulas'][$contadorDeCelulas]['diaDaSemana'] = $grupoEvento->getEvento()->getDia();
