@@ -633,6 +633,9 @@ class RelatorioController extends CircuitoController {
 			$arrayPeriodoDoMes[0] = 0;
 			$arrayPeriodoDoMes[1] = 0;
 		}
+		if($mes == date('m') && $ano == date('Y')){
+			$arrayPeriodoDoMes[1] = 0;
+		}
 		$diferencaDePeriodos = self::diferencaDePeriodos($arrayPeriodoDoMes[0], $arrayPeriodoDoMes[1], $mes, $ano);
 		if($tudo){
 			for ($indiceDeArrays = $arrayPeriodoDoMes[0]; $indiceDeArrays <= $arrayPeriodoDoMes[1]; $indiceDeArrays++) {

@@ -21,6 +21,18 @@ class CabecalhoDeMeses extends AbstractHelper {
     }
 
     public function renderHtml() {
+		$mesInicial = 1;
+		$mesFinal = 12;
+		$anoInicial = 2017;
+		$anoFinal = date('Y');
+
+		if($this->view->mesInicial){
+			$mesInicial = $this->view->mesInicial;
+			$mesFinal = $this->view->mesFinal;
+			$anoInicial = $this->view->anoInicial;
+			$anoFinal = $this->view->anoFinal;
+		}
+
         $html = '';
         $html .= '<div class="row p5">';
         $html .= '<div class="col-lg-1 col-md-1 col-sm-1 col-xs-12 pb10 pt10">';
@@ -28,7 +40,7 @@ class CabecalhoDeMeses extends AbstractHelper {
         $html .= '</div>';
         $html .= '<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">';
         $html .= '<select name="mes" id="mes" class="form-control">';
-        for ($indice = 1; $indice <= 12; $indice++) {
+        for ($indice = $mesInicial; $indice <= $mesFinal; $indice++) {
             $selected = '';
             if ($this->view->mes == $indice) {
                 $selected = 'selected';
@@ -43,7 +55,7 @@ class CabecalhoDeMeses extends AbstractHelper {
         $html .= '</div>';
         $html .= '<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">';
         $html .= '<select name="ano" id="ano" class="form-control">';
-        for ($indice = date('Y'); $indice >= 2017; $indice--) {
+        for ($indice = $anoFinal; $indice >= $anoInicial; $indice--) {
             $selected = '';
             if ($this->view->ano == $indice) {
                 $selected = 'selected';

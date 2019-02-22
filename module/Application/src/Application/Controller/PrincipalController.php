@@ -67,6 +67,16 @@ class PrincipalController extends CircuitoController {
 		$grupoLogado = $grupo;
 		$pessoaLogada = $pessoa;
 		$periodoAtual = -1;
+		$vendoPessoaLogada = true;
+		$mesFinal = date('m');
+		$anoFinal = date('Y');
+		if($mesFinal == 1){
+			$mesInicial = 12;
+			$anoInicial = $anoFinal - 1;
+		}else{
+			$mesInicial = $mesFinal - 1;
+			$anoInicial = $anoFinal;
+		}
 
 		if (!$entidade->verificarSeEstaAtivo()) {
 			$mostrarPrincipal = false;
@@ -81,11 +91,23 @@ class PrincipalController extends CircuitoController {
 				$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($explodeIdSessao[1]);
 				$grupo = $entidade->getGrupo();
 				unset($sessao->idSessao);
+
+				$vendoPessoaLogada = false;
 			}
 		}
 
-		$mes = date('m');
-		$ano = date('Y');
+		$request = $this->getRequest();
+		if ($request->isPost()) {
+			$post_data = $request->getPost();
+			$mes = $post_data['mes'];
+			$ano = $post_data['ano'];
+		}
+		if (empty($mes)) {
+			$mes = date('m');
+		}
+		if (empty($ano)) {
+			$ano = date('Y');
+		}
 
 		$tudo = false;
 		$indiceFinalDoRelatorio = 0;
@@ -100,6 +122,9 @@ class PrincipalController extends CircuitoController {
 		}
 
 		$arrayPeriodoDoMes = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mes, $ano);
+		if($mes == date('m') && $ano == date('Y')){
+			$arrayPeriodoDoMes[1] = 0;
+		}
 
 		$relatorioCursos = array();
 		$totalDeDiscipulados = 0;
@@ -175,9 +200,16 @@ class PrincipalController extends CircuitoController {
 			'relatorioCursos' => $relatorioCursos,
 			'totalDeDiscipulados' => $totalDeDiscipulados,
 			'indiceFinalDoRelatorio' => $indiceFinalDoRelatorio,
+			'vendoPessoaLogada' => $vendoPessoaLogada,
+			'mes' => $mes,
+			'ano' => $ano,
+			'mesInicial' => $mesInicial,
+			'anoInicial' => $anoInicial,
+			'mesFinal' => $mesFinal,
+			'anoFinal' => $anoFinal,
 		);
 
-		$grupoPaiFilhoFilhos = $grupo->getGrupoPaiFilhoFilhosAtivos($periodo = 0);
+		$grupoPaiFilhoFilhos = $grupo->getGrupoPaiFilhoFilhosAtivos($periodo = 1);
 		if ($grupoPaiFilhoFilhos) {
 			$discipulos = array();
 			foreach ($grupoPaiFilhoFilhos as $gpFilho) {

@@ -2835,6 +2835,7 @@ class IndexController extends CircuitoController {
 			$grupoIgrejas[] = ['id' => $explodeId[0]];
 		}
 
+		$gruposParaRemover = array();
 		foreach($grupoIgrejas as $grupoIgreja){
 			if($explodeId[0] == 0){
 				$grupo = $grupoIgreja;
@@ -2854,6 +2855,7 @@ class IndexController extends CircuitoController {
 					'periodos' => $valor['periodos'],
 				);
 				$relatorios[] = $dados;
+				$gruposParaRemover[] = $grupo;
 			}
 
 			$periodoAfrente = 1;
@@ -2873,6 +2875,7 @@ class IndexController extends CircuitoController {
 						);
 
 						$relatorios[] = $dados;
+						$gruposParaRemover[] = $grupoFilho144;
 					}
 
 					$grupoPaiFilhoFilhos1728 = $grupoFilho144->getGrupoPaiFilhoFilhosAtivos($periodoAfrente);
@@ -2890,6 +2893,7 @@ class IndexController extends CircuitoController {
 									'periodos' => $valor['periodos'],
 								);
 								$relatorios[] = $dados;
+								$gruposParaRemover[] = $grupoFilho1728;
 							}
 
 							$grupoPaiFilhoFilhos20736 = $grupoFilho1728->getGrupoPaiFilhoFilhosAtivos($periodoAfrente);
@@ -2907,6 +2911,7 @@ class IndexController extends CircuitoController {
 											'periodos' => $valor['periodos'],
 										);
 										$relatorios[] = $dados;
+										$gruposParaRemover[] = $grupoFilho20736;
 
 										$grupoPaiFilhoFilhos248832 = $grupoFilho20736->getGrupoPaiFilhoFilhosAtivos($periodoAfrente);
 										if ($grupoPaiFilhoFilhos248832) {
@@ -2923,6 +2928,7 @@ class IndexController extends CircuitoController {
 														'periodos' => $valor['periodos'],
 													);
 													$relatorios[] = $dados;
+													$gruposParaRemover[] = $grupoFilho248832;
 												}
 											}
 										}
@@ -2952,19 +2958,13 @@ class IndexController extends CircuitoController {
 
 		$this->getRepositorio()->iniciarTransacao();
 		try{
-			foreach($grupoIgrejas as $grupoIgreja){
-				if($explodeId[0] == 0){
-					$idGrupoIgreja = $grupo->getId();
-				}else{
-					$idGrupoIgreja = $grupoIgreja['id'];
-				}
-				$grupoIgreja = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupoIgreja);
-
-				$fatosRankingCelula = $this->getRepositorio()->getFatoRankingCelulaORM()->encontrarPorIdGrupoIgreja($grupoIgreja->getId(), $mesSelecinado, $anoSelecinado);
+			foreach ($gruposParaRemover as $grupoParaRemover) {
+				$fatosRankingCelula = $this->getRepositorio()->getFatoRankingCelulaORM()->encontrarPorIdGrupoIgreja($grupoParaRemover->getId(), $mesSelecinado, $anoSelecinado);
 				foreach($fatosRankingCelula as $fato){
 					$this->getRepositorio()->getFatoRankingCelulaORM()->remover($fato);
 				}
 			}
+
 			foreach($relatorios as $relatorio){
 				$fatoRankingCelula = new FatoRankingCelula();
 				$fatoRankingCelula->setGrupo_id($relatorio['idGrupoIgreja']);
