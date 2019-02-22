@@ -1758,7 +1758,7 @@ class CursoController extends CircuitoController {
 					if($ultimaEntidade === null){
 						$ultimaEntidade = $entidade;
 					}else{
-						if($entidade->getId > $ultimaEntidade->getId()){
+						if($entidade->getId() > $ultimaEntidade->getId()){
 							$ultimaEntidade = $entidade;
 						}
 					}
