@@ -276,7 +276,15 @@ class PrincipalController extends CircuitoController {
 
 			$entidade = $grupoSessao->getEntidadeAtiva();
 
-			$listagemDeEventos = $entidade->getGrupo()->getGrupoEventoAtivosPorTipo(EventoTipo::tipoCelula);
+			$listagemDeEventos = Array();			
+			$listagemDeEventosCelulasNormais = $entidade->getGrupo()->getGrupoEventoAtivosPorTipo(EventoTipo::tipoCelula);
+			foreach ($listagemDeEventosCelulasNormais as $celulasNormais) {
+				$listagemDeEventos[] = $celulasNormais;
+			}
+			$listagemDeEventosCelulasEstrategicas = $entidade->getGrupo()->getGrupoEventoAtivosPorTipo(EventoTipo::tipoCelulaEstrategica);
+			foreach ($listagemDeEventosCelulasEstrategicas as $celulasEstrategicas) {
+				$listagemDeEventos[] = $celulasEstrategicas;
+			}
 
 			$dados = array();
 			$dados['idGrupo'] = $idSessao;
