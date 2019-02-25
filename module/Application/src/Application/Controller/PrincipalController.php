@@ -115,10 +115,10 @@ class PrincipalController extends CircuitoController {
 			|| $entidade->getEntidadeTipo()->getId() === EntidadeTipo::regiao){
 				$tudo = true;
 			}
-		$relatorio = RelatorioController::relatorioCompleto($this->getRepositorio(), $grupo, RelatorioController::relatorioMembresiaECelula, $mes, $ano, $tudo, $somado = true);
+		$relatorio = RelatorioController::relatorioCompleto($this->getRepositorio(), $grupo, RelatorioController::relatorioMembresiaECelula, $mes, $ano, $tudo, $somado = true, 'atual');
 
 		if($entidade->getEntidadeTipo()->getId() !== EntidadeTipo::regiao){
-			$relatorioParceiro = RelatorioController::relatorioCompleto($this->getRepositorio(), $grupo, RelatorioController::relatorioParceiroDeDeus, $mes, $ano, $tudo, $somado = true);
+			$relatorioParceiro = RelatorioController::relatorioCompleto($this->getRepositorio(), $grupo, RelatorioController::relatorioParceiroDeDeus, $mes, $ano, $tudo, $somado = true, 'atual') ;
 		}
 
 		$arrayPeriodoDoMes = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mes, $ano);
