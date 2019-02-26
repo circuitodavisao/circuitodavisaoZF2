@@ -674,8 +674,7 @@ class CadastroController extends CircuitoController {
 				/* validação */
 				if ($celulaForm->isValid()) {
 					$sessao = new Container(Constantes::$NOME_APLICACAO);
-					$criarNovaCelula = true;
-					$naoEhAlteracao = true;
+					$criarNovaCelula = true;					
 					$validatedData = $celulaForm->getData();
 
 					/* Entidades */
@@ -684,8 +683,7 @@ class CadastroController extends CircuitoController {
 
 					/* ALTERANDO */
 					$eventoParaInativar = null;
-					if (!empty($post_data[Constantes::$FORM_ID])) {
-						$naoEhAlteracao = false;
+					if (!empty($post_data[Constantes::$FORM_ID])) {						
 						$criarNovaCelula = false;
 						$eventoCelulaAtual = $this->getRepositorio()->getEventoCelulaORM()->encontrarPorId($post_data[Constantes::$FORM_ID]);
 
@@ -794,21 +792,25 @@ class CadastroController extends CircuitoController {
 						$grupoEvento->setEvento($evento);
 						$this->getRepositorio()->getGrupoEventoORM()->persistir($grupoEvento, $alterarDataDeCriacao);
 
-						if ($naoEhAlteracao) {
-							$numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio());
-							if ($fatoLider = $this->getRepositorio()->getFatoLiderORM()->encontrarFatoLiderPorNumeroIdentificador($numeroIdentificador)) {
-								$fatoLider->setDataEHoraDeInativacao(Funcoes::proximoDomingo());
-								$this->getRepositorio()->getFatoLiderORM()->persistir($fatoLider, $alterarDataDeCriacao);
-							}
-							$quantidadeLideres = count($entidade->getGrupo()->getResponsabilidadesAtivas());
-							$fatoLider = new FatoLider();
-							$fatoLider->setLideres($quantidadeLideres);
-							$fatoLider->setNumero_identificador($numeroIdentificador);
-							$fatoLider->setDataEHoraDeCriacao(Funcoes::proximaSegunda());
-							$this->getRepositorio()->getFatoLiderORM()->persistir($fatoLider, $alterarDataDeCriacao);
-
-							self::registrarLog(RegistroAcao::CADASTROU_UMA_CELULA, $extra = 'Id: '.$evento->getId());
+						
+						$numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio());
+						if ($fatosLider = $this->getRepositorio()->getFatoLiderORM()->encontrarMultiplosFatosLiderPorNumeroIdentificador($numeroIdentificador)) {
+							foreach($fatosLider as $fatoLider){ 
+								if($fatoLider->verificarSeEstaAtivo()){
+									$fatoLider->setDataEHoraDeInativacao(Funcoes::proximoDomingo());
+									$this->getRepositorio()->getFatoLiderORM()->persistir($fatoLider, $alterarDataDeCriacao);
+								}								
+							}							
 						}
+						$quantidadeLideres = count($entidade->getGrupo()->getResponsabilidadesAtivas());
+						$fatoLider = new FatoLider();
+						$fatoLider->setLideres($quantidadeLideres);
+						$fatoLider->setNumero_identificador($numeroIdentificador);
+						$fatoLider->setDataEHoraDeCriacao(Funcoes::proximaSegunda());
+						$this->getRepositorio()->getFatoLiderORM()->persistir($fatoLider, $alterarDataDeCriacao);
+
+						self::registrarLog(RegistroAcao::CADASTROU_UMA_CELULA, $extra = 'Id: '.$evento->getId());
+						
 					}
 					$this->getRepositorio()->fecharTransacao();
 
