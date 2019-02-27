@@ -5,6 +5,7 @@ namespace Application\View\Helper;
 use Application\Controller\Helper\Constantes;
 use Application\Controller\Helper\Funcoes;
 use Application\Model\Entity\EntidadeTipo;
+use Application\Model\Entity\EventoTipo;
 use Zend\View\Helper\AbstractHelper;
 
 /**
@@ -83,6 +84,9 @@ class ListagemDeEventos extends AbstractHelper {
                 $html .= '</th>';
                 $html .= '<th class="text-center visible-lg visible-md visible-sm">';
                 $html .= $this->view->translate(Constantes::$TRADUCAO_LOGRADOURO);
+                $html .= '</th>';
+                $html .= '<th class="text-center visible-lg visible-md visible-sm">';
+                $html .= 'Tipo';
                 $html .= '</th>';
             }
             if ($tipoCulto) {
@@ -173,6 +177,14 @@ class ListagemDeEventos extends AbstractHelper {
                     $html .= '<td class="text-center">' . $celula->getNome_hospedeiroPrimeiroNome() . '</td>';
                     $html .= '<td class="text-center visible-lg visible-md visible-sm">' . $celula->getTelefone_hospedeiroFormatado() . '</td>';
                     $html .= '<td class="text-center visible-lg visible-md visible-sm">' . $celula->getLogradouro() . '&nbsp;' . $celula->getComplemento() . '</td>';
+                    $eventoTipo = $evento->getEventoTipo()->getId();
+                    if($eventoTipo == EventoTipo::tipoCelula){
+                        $nomeTipo = 'CÉLULA';
+                    }
+                    if($eventoTipo == EventoTipo::tipoCelulaEstrategica){
+                        $nomeTipo = 'CÉLULA BETA';
+                    }
+                    $html .= '<td class="text-center visible-lg visible-md visible-sm">' . $nomeTipo . '</td>';
                     $html .= '<td class="text-center">';
                     if ($this->view->mostrarOpcoes) {
                         if (!$validarCadastroDepoisDoComecoDoPeriodo) {

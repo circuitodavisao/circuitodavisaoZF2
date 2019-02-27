@@ -115,10 +115,10 @@ class PrincipalController extends CircuitoController {
 			|| $entidade->getEntidadeTipo()->getId() === EntidadeTipo::regiao){
 				$tudo = true;
 			}
-		$relatorio = RelatorioController::relatorioCompleto($this->getRepositorio(), $grupo, RelatorioController::relatorioMembresiaECelula, $mes, $ano, $tudo, $somado = true);
+		$relatorio = RelatorioController::relatorioCompleto($this->getRepositorio(), $grupo, RelatorioController::relatorioMembresiaECelula, $mes, $ano, $tudo, $somado = true, 'atual');
 
 		if($entidade->getEntidadeTipo()->getId() !== EntidadeTipo::regiao){
-			$relatorioParceiro = RelatorioController::relatorioCompleto($this->getRepositorio(), $grupo, RelatorioController::relatorioParceiroDeDeus, $mes, $ano, $tudo, $somado = true);
+			$relatorioParceiro = RelatorioController::relatorioCompleto($this->getRepositorio(), $grupo, RelatorioController::relatorioParceiroDeDeus, $mes, $ano, $tudo, $somado = true, 'atual') ;
 		}
 
 		$arrayPeriodoDoMes = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mes, $ano);
@@ -276,7 +276,15 @@ class PrincipalController extends CircuitoController {
 
 			$entidade = $grupoSessao->getEntidadeAtiva();
 
-			$listagemDeEventos = $entidade->getGrupo()->getGrupoEventoAtivosPorTipo(EventoTipo::tipoCelula);
+			$listagemDeEventos = Array();			
+			$listagemDeEventosCelulasNormais = $entidade->getGrupo()->getGrupoEventoAtivosPorTipo(EventoTipo::tipoCelula);
+			foreach ($listagemDeEventosCelulasNormais as $celulasNormais) {
+				$listagemDeEventos[] = $celulasNormais;
+			}
+			$listagemDeEventosCelulasEstrategicas = $entidade->getGrupo()->getGrupoEventoAtivosPorTipo(EventoTipo::tipoCelulaEstrategica);
+			foreach ($listagemDeEventosCelulasEstrategicas as $celulasEstrategicas) {
+				$listagemDeEventos[] = $celulasEstrategicas;
+			}
 
 			$dados = array();
 			$dados['idGrupo'] = $idSessao;

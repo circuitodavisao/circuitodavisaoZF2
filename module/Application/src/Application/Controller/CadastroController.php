@@ -2433,6 +2433,9 @@ class CadastroController extends CircuitoController {
 				if ($post_data['numero']) {
 					$solicitacao->setNumero($post_data['numero']);
 				}
+				if ($post_data['numeracao']) {
+					$solicitacao->setNumero($post_data['numeracao']);
+				}
 				if ($post_data['nome']) {
 					$solicitacao->setNome($post_data['nome']);
 				}
