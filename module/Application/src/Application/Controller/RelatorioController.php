@@ -888,7 +888,7 @@ class RelatorioController extends CircuitoController {
 						$tipoRelatorio === RelatorioController::relatorioMembresiaECelula) {
 							$performanceCelula = 0;
 							if ($relatorioDiscipulos[$grupoFilho->getId()][$indiceDeArrays]['celulaQuantidade'] > 0) {
-								$performanceCelula = $relatorioDiscipulos[$grupoFilho->getId()][$indiceDeArrays]['celulaRealizadas'] / $relatorioDiscipulos[$grupoFilho->getId()][$indiceDeArrays]['celulaQuantidade'] * 100;
+								$performanceCelula = $relatorioDiscipulos[$grupoFilho->getId()][$indiceDeArrays]['celulaRealizadas'] / ($relatorioDiscipulos[$grupoFilho->getId()][$indiceDeArrays]['celulaQuantidade'] + $relatorioDiscipulos[$grupoFilho->getId()][$indiceDeArrays]['celulaQuantidadeEstrategica']) * 100;
 								$relatorioDiscipulos[$grupoFilho->getId()][$indiceDeArrays]['celulaRealizadasPerformance'] = $performanceCelula;
 							}
 						}
@@ -1431,7 +1431,7 @@ class RelatorioController extends CircuitoController {
 		$quantidadeCelulas = $relatorioCelula[0]['quantidade'];
 
 		$relatorioCelulaEstrategicas = $repositorioORM->getFatoCicloORM()->montarRelatorioCelulaPorNumeroIdentificador($numeroIdentificador, $periodoInicial, $tipoRelatorio, $estrategica = true);
-		$quantidadeCelulasEstrategicas = $relatorioCelulaEstrategicas[0]['quantidade'];
+		$quantidadeCelulasEstrategicas = $relatorioCelulaEstrategicas[0]['quantidade'];		
 
 		$relatorio['celulaQuantidade'] = $quantidadeCelulas;
 		$relatorio['celulaQuantidadeEstrategica'] = $quantidadeCelulasEstrategicas;
@@ -1479,8 +1479,8 @@ class RelatorioController extends CircuitoController {
 				}
 
 				$performanceCelulasRealizadas = 0;
-				if ($quantidadeCelulas) {
-					$performanceCelulasRealizadas = $quantidadeCelulasRealizadas / $quantidadeCelulas * 100;
+				if ($quantidadeCelulas ||$quantidadeCelulasEstrategicas) {
+					$performanceCelulasRealizadas = $quantidadeCelulasRealizadas / ($quantidadeCelulas + $quantidadeCelulasEstrategicas) * 100;
 				}
 				$performanceCelula = 0;
 				if ($relatorio['membresiaMetaSomada'] > 0) {
