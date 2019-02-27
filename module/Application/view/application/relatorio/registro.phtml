@@ -17,6 +17,7 @@ if($registros = $this->registros){
 			echo '<tr>';
 			echo '<td>'.$registro->getHora_criacao().'</td>';
 			echo '<td class="text-left">'.$registro->getRegistroAcao()->getNome().'</td>';
+			echo '<td class="text-left">'.$registro->getExtra().'</td>';
 			echo '</tr>';
 		}
 	}
