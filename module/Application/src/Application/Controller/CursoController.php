@@ -508,6 +508,7 @@ class CursoController extends CircuitoController {
 				$turma->setObservacao($observacao);
 				$this->getRepositorio()->getTurmaORM()->persistir($turma);
 
+				self::registrarLog(RegistroAcao::CADASTROU_UMA_TURMA, $extra = 'Id: ' . $turma->getId());
 				$this->getRepositorio()->fecharTransacao();
 				return $this->redirect()->toRoute(Constantes::$ROUTE_CURSO, array(
 					Constantes::$ACTION => Constantes::$PAGINA_LISTAR_TURMA,
@@ -531,6 +532,7 @@ class CursoController extends CircuitoController {
 			'relatorio' => $relatorioCursos[0],
 		));
 
+		self::registrarLog(RegistroAcao::VER_TURMAS, $extra = '');
 		return $view;
 	}
 
@@ -542,6 +544,7 @@ class CursoController extends CircuitoController {
 		try{
 			$turma->setDataEHoraDeInativacaoIgualANull();
 			$this->getRepositorio()->getTurmaORM()->persistir($turma, $mudarDataDeCriacao = false);
+			self::registrarLog(RegistroAcao::REABRIU_UMA_TURMA, $extra = 'Id: '.$turma->getId());
 			$this->getRepositorio()->fecharTransacao();
 
 			return $this->redirect()->toRoute(Constantes::$ROUTE_CURSO, array(
@@ -561,6 +564,8 @@ class CursoController extends CircuitoController {
 		try{
 			$turma->setDataEHoraDeInativacao();
 			$this->getRepositorio()->getTurmaORM()->persistir($turma, $mudarDataDeCriacao = false);
+
+			self::registrarLog(RegistroAcao::REMOVEU_UMA_TURMA, $extra = 'Id: '.$turma->getId());
 			$this->getRepositorio()->fecharTransacao();
 
 			return $this->redirect()->toRoute(Constantes::$ROUTE_CURSO, array(
@@ -742,6 +747,7 @@ class CursoController extends CircuitoController {
 						}						
 					}
 
+					self::registrarLog(RegistroAcao::ADICIONOU_ALUNOS_A_TURMA, $extra = 'Id: ' . $turma->getId());
 					$this->getRepositorio()->fecharTransacao();
 
 					return $this->redirect()->toRoute(Constantes::$ROUTE_CURSO, array(
@@ -835,6 +841,7 @@ class CursoController extends CircuitoController {
 					$this->getRepositorio()->getTurmaAulaORM()->persistir($turmaAula);
 				}
 
+				self::registrarLog(RegistroAcao::ABRIU_UMA_AULA, $extra = 'Id: ' . $turma->getId());
 				$this->getRepositorio()->fecharTransacao();
 
 				return $this->redirect()->toRoute(Constantes::$ROUTE_CURSO, array(
@@ -1355,6 +1362,8 @@ class CursoController extends CircuitoController {
 					$turmaPessoaAula->setHora_inativacao(null);
 					$this->getRepositorio()->getTurmaPessoaAulaORM()->persistir($turmaPessoaAula);
 					$resposta = true;
+
+					self::registrarLog(RegistroAcao::LANCOU_UMA_PRESENCA, $extra = 'Id: ' . $turmaPessoa->getId());
 					$this->getRepositorio()->fecharTransacao();
 				}
 			}
@@ -1390,6 +1399,8 @@ class CursoController extends CircuitoController {
 					$turmaPessoaAula->setReposicao('S');
 					$this->getRepositorio()->getTurmaPessoaAulaORM()->persistir($turmaPessoaAula);
 					$resposta = true;
+
+					self::registrarLog(RegistroAcao::LANCOU_UMA_REPOSICAO, $extra = 'Id: ' . $turmaPessoa->getId());
 					$this->getRepositorio()->fecharTransacao();
 				}
 			}
@@ -1457,6 +1468,7 @@ class CursoController extends CircuitoController {
 				$fatoCurso->setSituacao_id(Situacao::ATIVO);
 				$this->getRepositorio()->getFatoCursoORM()->persistir($fatoCurso);
 
+				self::registrarLog(RegistroAcao::REENTRADA_DE_ALUNO, $extra = 'Id: ' . $turmaPessoa->getId());
 				$this->getRepositorio()->fecharTransacao();
 				return $this->redirect()->toRoute(Constantes::$ROUTE_CURSO, array(
 					Constantes::$ACTION => 'ReentradaFinalizado',
@@ -1517,6 +1529,7 @@ class CursoController extends CircuitoController {
 				$pessoaCursoAcesso->setCursoAcesso($cursoAcesso);
 				$this->getRepositorio()->getPessoaCursoAcessoORM()->persistir($pessoaCursoAcesso);
 
+				self::registrarLog(RegistroAcao::CADASTROU_UM_USUARIO_NO_INSTITUTO, $extra = 'Id: ' . $pessoa->getId());
 				$this->getRepositorio()->fecharTransacao();
 				return $this->redirect()->toRoute(Constantes::$ROUTE_CURSO, array(
 					Constantes::$ACTION => 'Usuarios',
@@ -1536,6 +1549,7 @@ class CursoController extends CircuitoController {
 			$pessoaCursoAcesso->setDataEHoraDeInativacao();
 			$this->getRepositorio()->getPessoaCursoAcessoORM()->persistir($pessoaCursoAcesso, false);
 
+			self::registrarLog(RegistroAcao::INATIVOU_UM_USUARIO_NO_INSTITUTO, $extra = 'Id: ' . $pessoaCursoAcesso->getId());
 			$this->getRepositorio()->fecharTransacao();
 			return $this->redirect()->toRoute(Constantes::$ROUTE_CURSO, array(
 				Constantes::$ACTION => 'Usuarios',
@@ -1959,6 +1973,8 @@ class CursoController extends CircuitoController {
 				'situacao' => $situacao,
 				'nomeEquipe' => $nomeEquipe,
 			));
+
+			self::registrarLog(RegistroAcao::CONSULTAR_MATRICULA, $extra = 'Id: ' . $turmaPessoa->getId());
 			return $view;
 		}else{
 			return $this->redirect()->toRoute(Constantes::$ROUTE_CURSO, array(
@@ -2011,6 +2027,21 @@ class CursoController extends CircuitoController {
 					$this->getRepositorio()->getFatoCursoORM()->persistir($fatoCurso);
 				}
 
+				$qualRegistroAcao = '';
+				if($idSituacao === Situacao::ATIVO){
+					$qualRegistroAcao = RegistroAcao::MUDOU_SITUACAO_DO_ALUNO_PARA_ATIVO;
+				}
+				if($idSituacao === Situacao::ESPECIAL){
+					$qualRegistroAcao = RegistroAcao::MUDOU_SITUACAO_DO_ALUNO_PARA_ESPECIAL;
+				}
+				if($idSituacao === Situacao::DESISTENTE){
+					$qualRegistroAcao = RegistroAcao::MUDOU_SITUACAO_DO_ALUNO_PARA_DESISTENTE;
+				}
+				if($idSituacao === Situacao::REPROVADO_POR_FALTA){
+					$qualRegistroAcao = RegistroAcao::MUDOU_SITUACAO_DO_ALUNO_PARA_REPROVADO_POR_FALTAS;
+				}
+
+				self::registrarLog($qualRegistroAcao, $extra = 'Id: ' . $turmaPessoa->getId() .' Situacao: '.$idSituacao);
 				$this->getRepositorio()->fecharTransacao();
 				$resposta = true;
 			} catch (Exception $exc) {
@@ -2048,6 +2079,7 @@ class CursoController extends CircuitoController {
 					}
 				}
 
+				self::registrarLog(RegistroAcao::REMOVEU_UM_ALUNO_DA_TURMA, $extra = 'Id: ' . $turmaPessoa->getId());
 				$this->getRepositorio()->fecharTransacao();
 				$resposta = true;
 			} catch (Exception $exc) {
@@ -2139,19 +2171,25 @@ class CursoController extends CircuitoController {
 					}
 				}
 
+				$qualRegistroAcao = '';
 				if ($tipoDeLancamento === $tipoDeLancamentoPresenca) {
 					$this->getRepositorio()->getTurmaPessoaAulaORM()->persistir($turmaPessoaElemento);
+					$qualRegistroAcao = RegistroAcao::ALTEROU_UMA_FREQUENCIA_DE_UM_ALUNO;
 				}
 				if ($tipoDeLancamento === $tipoDeLancamentoVisto) {
 					$this->getRepositorio()->getTurmaPessoaVistoORM()->persistir($turmaPessoaElemento);
+					$qualRegistroAcao = RegistroAcao::ALTEROU_UM_VISTO_DE_UM_ALUNO;
 				}
 				if ($tipoDeLancamento === $tipoDeLancamentoFinanceiro) {
 					$this->getRepositorio()->getTurmaPessoaFinanceiroORM()->persistir($turmaPessoaElemento);
+					$qualRegistroAcao = RegistroAcao::ALTEROU_UM_FINANCEIRO_DE_UM_ALUNO;
 				}
 				if ($tipoDeLancamento === $tipoDeLancamentoAvaliacao) {
 					$this->getRepositorio()->getTurmaPessoaAvaliacaoORM()->persistir($turmaPessoaElemento);
+					$qualRegistroAcao = RegistroAcao::ALTEROU_UMA_AVALIACAO_DE_UM_ALUNO;
 				}
 
+				self::registrarLog($qualRegistroAcao, $extra = 'Id: ' . $turmaPessoa->getId());
 				$this->getRepositorio()->fecharTransacao();
 				$response->setContent(Json::encode(array('response' => 'true')));
 			} catch (Exception $exc) {
