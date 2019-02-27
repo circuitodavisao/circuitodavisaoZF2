@@ -414,10 +414,23 @@ class IndexController extends CircuitoController {
 									if ($idSolicitacaoTipo == SolicitacaoTipo::SEPARAR) {
 										$html .= "<br /> {$solicitacao->getId()} - SEPARANDO";
 										$pessoaParaInativar = $this->getRepositorio()->getPessoaORM()->encontrarPorId($solicitacao->getObjeto2());
+										$grupoResponsavelParaUsar = null;
 										foreach ($pessoaParaInativar->getResponsabilidadesAtivas() as $grupoResponsavel) {
 											$grupoResponsavel->setDataEHoraDeInativacao(date('Y-m-d', mktime(0, 0, 0, date("m"), date("d") - 1, date("Y"))));
 											$this->getRepositorio()->getGrupoResponsavelORM()->persistir($grupoResponsavel, false);
+											$grupoResponsavelParaUsar = $grupoResponsavel;
 										}
+										$numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupoResponsavelParaUsar->getGrupo());
+										if ($fatoLider = $this->getRepositorio()->getFatoLiderORM()->encontrarFatoLiderPorNumeroIdentificador($numeroIdentificador)) {
+											$dataParaInativar = self::getDataParaInativacao();
+											$fatoLider->setDataEHoraDeInativacao($dataParaInativar);
+											$this->getRepositorio()->getFatoLiderORM()->persistir($fatoLider, $alterarDataDeCriacao = false);
+										}
+										$quantidadeLideres = 1;
+										$fatoLider = new FatoLider();
+										$fatoLider->setLideres($quantidadeLideres);
+										$fatoLider->setNumero_identificador($numeroIdentificador);										
+										$this->getRepositorio()->getFatoLiderORM()->persistir($fatoLider);
 									}
 									//								if ($idSolicitacaoTipo == SolicitacaoTipo::TROCAR_RESPONSABILIDADES) {
 									//									$html .= "<br />TROCANDO RESPONSABILIDADES";
@@ -792,8 +805,18 @@ class IndexController extends CircuitoController {
 		$dataParaInativar = self::getDataParaInativacao();
 		$pessoaHomem = $grupo1->getPessoasAtivas()[0];
 		$pessoaMulher = $grupo2->getPessoasAtivas()[0];
-		$grupoEventoCelulasHomem = $grupo1->getGrupoEventoPorTipoEAtivo(EventoTipo::tipoCelula);
-		$grupoEventoCelulasMulher = $grupo2->getGrupoEventoPorTipoEAtivo(EventoTipo::tipoCelula);
+		$grupoEventoCelulasHomem = $grupo1->getGrupoEventoAtivosPorTipo(EventoTipo::tipoCelula);
+		if($grupoEventoCelulasEstrategicasHomem = $grupo1->getGrupoEventoAtivosPorTipo(EventoTipo::tipoCelulaEstrategica)){
+			foreach($grupoEventoCelulasEstrategicasHomem as $eventoCelulasEstrategicasHomem){
+				$grupoEventoCelulasHomem[] = $eventoCelulasEstrategicasHomem;
+			}
+		}
+		$grupoEventoCelulasMulher = $grupo2->getGrupoEventoAtivosPorTipo(EventoTipo::tipoCelula);
+		if($grupoEventoCelulasEstrategicasMulher = $grupo2->getGrupoEventoAtivosPorTipo(EventoTipo::tipoCelulaEstrategica)){
+			foreach($grupoEventoCelulasEstrategicasMulher as $eventoCelulasEstrategicasMulher){
+				$grupoEventoCelulasMulher[] = $eventoCelulasEstrategicasMulher;
+			}
+		}
 		$discipulosHomem = $grupo1->getGrupoPaiFilhoFilhosAtivos(1);
 		$discipulosMulher = $grupo2->getGrupoPaiFilhoFilhosAtivos(1);
 		$linhaDeLancamentoHomem = $grupo1->getGrupoPessoasNoPeriodo($periodoAnterior, $this->getRepositorio());
