@@ -2402,6 +2402,8 @@ public function alunosNaSemanaAction(){
 		$dados = array();
 		$dados['registros'] = $registrosOrganizados;
 
+		self::registrarLog(RegistroAcao::VER_RELATORIO_DE_REGISTRO, $extra = '');
+
 		return new ViewModel($dados);
 	}
 
