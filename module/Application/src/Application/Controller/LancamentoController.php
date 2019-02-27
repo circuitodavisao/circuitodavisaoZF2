@@ -283,7 +283,7 @@ class LancamentoController extends CircuitoController {
 			$this->getRepositorio()->fecharTransacao();
 		}
 
-		self::registrarLog(RegistroAcao::ENVIOU_RELATORIO_, $extra = '');
+		self::registrarLog(RegistroAcao::ENVIOU_RELATORIO, $extra = '');
 		return new ViewModel(array('periodo'=>$periodo));
 	}
 

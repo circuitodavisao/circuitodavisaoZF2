@@ -58,3 +58,34 @@ INSERT INTO registro_acao (nome) VALUES
 ('VER LISTAGEM DE REVISIONISTAS ATIVOS'),
 ('VER LISTAGEM DE LÍDERES ATIVOS'),
 ('VER RELATÓRIO CÉLULA NÃO REALIZADAS');
+
+insert into registro_acao (id, nome) values (40, 'ACEITAR SOLICITAÇÃO');
+insert into registro_acao (id, nome) values (41, 'RECUSAR SOLICITAÇÃO');
+insert into registro_acao (id, nome) values (42, 'CADASTROU UM LÍDER');
+insert into registro_acao (id, nome) values (43, 'CADASTROU UM REVISÃO DE VIDAS');
+insert into registro_acao (id, nome) values (44, 'CADASTROU UM DISCIPULADO');
+insert into registro_acao (id, nome) values (45, 'CADASTROU UM LÍDER AO REVISÃO DE VIDAS');
+insert into registro_acao (id, nome) values (46, 'VER RELATÓRIO DE REGISTRO');
+insert into registro_acao (id, nome) values (47, 'REENTRADA DE ALUNO');
+insert into registro_acao (id, nome) values (48, 'CONSULTAR MATRÍCULA');
+insert into registro_acao (id, nome) values (49, 'VER TURMAS');
+insert into registro_acao (id, nome) values (50, 'CADASTROU UMA TURMA');
+insert into registro_acao (id, nome) values (51, 'ADICIONOU ALUNOS A TURMA');
+insert into registro_acao (id, nome) values (52, 'REMOVEU UMA TURMA');
+insert into registro_acao (id, nome) values (53, 'ABRIU UMA AULA');
+insert into registro_acao (id, nome) values (54, 'REABRIU UMA TURMA');
+insert into registro_acao (id, nome) values (55, 'CADASTROU UM USUÁRIO NO INSTITUTO');
+insert into registro_acao (id, nome) values (56, 'INATIVOU UM USUÁRIO NO INSTITUTO');
+insert into registro_acao (id, nome) values (57, 'LANÇOU UMA PRESENÇA');
+insert into registro_acao (id, nome) values (58, 'LANÇOU UMA REPOSIÇÃO');
+insert into registro_acao (id, nome) values (59, 'ALTEROU UMA FREQUÊNCIA DE UM ALUNO');
+insert into registro_acao (id, nome) values (60, 'ALTEROU UM VISTO DE UM ALUNO');
+insert into registro_acao (id, nome) values (61, 'ALTEROU UMA AVALIAÇÃO DE UM ALUNO');
+insert into registro_acao (id, nome) values (62, 'ALTEROOU UM FINANCEIRO DE UM ALUNO');
+insert into registro_acao (id, nome) values (63, 'MUDOU SITUAÇÃO DO ALUNO PARA ATIVO');
+insert into registro_acao (id, nome) values (64, 'MUDOU SITUAÇÃO DO ALUNO PARA ESPECIAL');
+insert into registro_acao (id, nome) values (65, 'MUDOU SITUAÇÃO DO ALUNO PARA REPROVADO POR FALTAS');
+insert into registro_acao (id, nome) values (66, 'MUDOU SITUAÇÃO DO ALUNO PARA DESISTENTE');
+insert into registro_acao (id, nome) values (67, 'REMOVEU UM ALUNO DA TURMA');
+insert into registro_acao (id, nome) values (68, 'LANÇOU UMA FICHA NO REVISÃO DE VIDAS');
+insert into registro_acao (id, nome) values (69, 'REMOVEU UMA FICHA DO REVISÃO DE VIDAS');
