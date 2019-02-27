@@ -908,6 +908,8 @@ class CadastroController extends CircuitoController {
 						$sessao->textoMensagem = $evento->getNome();
 						$sessao->idSessao = $evento->getId();
 					}
+
+					self::registrarLog(RegistroAcao::CADASTROU_UM_DISCIPULADO, $extra = 'Id: '.$evento->getId());
 					$this->getRepositorio()->fecharTransacao();
 					return $this->redirect()->toRoute(Constantes::$ROUTE_CADASTRO, array(
 						Constantes::$PAGINA => Constantes::$PAGINA_DISCIPULADOS,
@@ -1237,6 +1239,8 @@ class CadastroController extends CircuitoController {
 					/* Enviar Email */
 					$this->enviarEmailParaCompletarOsDados($this->getRepositorio(), $sessao->idPessoa, $tokenDeAgora, $pessoaSelecionada);
 				}
+
+				self::registrarLog(RegistroAcao::CADASTROU_UM_LIDER, $extra = 'Id: '.$grupoNovo->getId());
 			} catch (Exception $exc) {
 				$this->getRepositorio()->desfazerTransacao();
 				echo $exc->getTraceAsString();
@@ -1931,6 +1935,8 @@ class CadastroController extends CircuitoController {
 						$this->getRepositorio()->getEventoFrequenciaORM()->persistir($eventoFrequencia, false);
 					}
 				}
+
+				self::registrarLog(RegistroAcao::LANCOU_UMA_FICHA_NO_REVISAO_DE_VIDAS, $extra = 'Id: ' . $eventoFrequencia->getId());
 				$this->getRepositorio()->fecharTransacao();
 				return $this->redirect()->toRoute(Constantes::$ROUTE_CADASTRO, array(
 					Constantes::$PAGINA => Constantes::$PAGINA_ATIVAR_FICHA_REVISAO,
@@ -2004,6 +2010,8 @@ class CadastroController extends CircuitoController {
 			$eventoFrequencia->setFrequencia('N');
 			$this->getRepositorio()->getEventoFrequenciaORM()->persistir($eventoFrequencia);
 			$sessao->idSessao = $eventoFrequencia->getId();
+
+			self::registrarLog(RegistroAcao::CADASTROU_UM_LIDER_AO_REVISAO_DE_VIDAS, $extra = 'Id: '.$idPessoa);
 			$this->getRepositorio()->fecharTransacao();
 			return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
 				Constantes::$ACTION => 'LiderRevisao',
@@ -2037,6 +2045,7 @@ class CadastroController extends CircuitoController {
 				$sessao->textoMensagem = $eventoFrequencia->getPessoa()->getNome();
 				$sessao->idSessao = $eventoFrequencia->getEvento()->getId();
 
+				self::registrarLog(RegistroAcao::REMOVEU_UMA_FICHA_DO_REVISAO_DE_VIDAS, $extra = 'Id: ' . $eventoFrequencia->getId());
 				$this->getRepositorio()->fecharTransacao();
 			} else {
 				$this->getRepositorio()->desfazerTransacao();
@@ -2129,6 +2138,7 @@ class CadastroController extends CircuitoController {
 			$solicitacaoSituacaoAceito->setSituacao($this->getRepositorio()->getSituacaoORM()->encontrarPorId(Situacao::ACEITO_AGENDADO));
 			$this->getRepositorio()->getSolicitacaoSituacaoORM()->persistir($solicitacaoSituacaoAceito);
 
+			self::registrarLog(RegistroAcao::ACEITAR_SOLICITACAO, $extra = 'Id: ' + $idSessao);
 		}
 		return $this->redirect()->toRoute(Constantes::$ROUTE_CADASTRO, array(
 			Constantes::$PAGINA => Constantes::$PAGINA_SOLICITACOES,
@@ -2149,6 +2159,7 @@ class CadastroController extends CircuitoController {
 			$solicitacaoSituacaoRecusada->setSituacao($this->getRepositorio()->getSituacaoORM()->encontrarPorId(Situacao::RECUSAO));
 			$this->getRepositorio()->getSolicitacaoSituacaoORM()->persistir($solicitacaoSituacaoRecusada);
 
+			self::registrarLog(RegistroAcao::RECUSAR_SOLICITACAO, $extra = 'Id: ' + $idSessao);
 		}
 		return $this->redirect()->toRoute(Constantes::$ROUTE_CADASTRO, array(
 			Constantes::$PAGINA => Constantes::$PAGINA_SOLICITACOES,
@@ -2799,6 +2810,8 @@ class CadastroController extends CircuitoController {
 				} else {
 					error_log(print_r($formulario->getMessages(), TRUE));					
 				}
+ 
+				self::registrarLog(RegistroAcao::CADASTROU_UM_REVISAO_DE_VIDAS, $extra = 'Id: '.$evento->getId());
 				$this->getRepositorio()->fecharTransacao();
 				return $this->redirect()->toRoute(Constantes::$ROUTE_CADASTRO, array(
 					Constantes::$PAGINA => Constantes::$PAGINA_REVISOES,
