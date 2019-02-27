@@ -68,6 +68,21 @@ class FatoLiderORM extends CircuitoORM {
 		}
 	}
 
+	public function encontrarMultiplosFatosLiderPorNumeroIdentificador($numeroIdentificador) {
+		$resposta = null;
+		try {
+			$entidade = $this->getEntityManager()
+				->getRepository($this->getEntity())
+				->findBy(array(Constantes::$ENTITY_FATO_CICLO_NUMERO_IDENTIFICADOR => $numeroIdentificador));
+			if ($entidade) {
+				$resposta = $entidade;
+			}
+			return $resposta;
+		} catch (Exception $exc) {
+			echo $exc->getTraceAsString();
+		}
+	}
+
 	public function encontrarFatoLiderPorNumeroGrupo($numeroIdentificador) {
 		$dql = "SELECT fl "
 			. "FROM  " . Constantes::$ENTITY_FATO_LIDER . " fl "

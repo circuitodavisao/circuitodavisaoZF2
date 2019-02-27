@@ -337,9 +337,8 @@ class Menu extends AbstractHelper {
 			$html .= '<span class="fa fa-users"></span>';
 			$html .= 'Atendimento';
 			$html .= '</a>';
-			$html .= '</li>';
-
-			if($this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::regiao) {
+			$html .= '</li>';			
+			if($this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::regiao){
 
 			$html .= '<li>';
 			$html .= '<a href="#" onClick="mostrarSplash(); funcaoCircuito(\'relatorioDiscipulado\', null);">';
@@ -347,6 +346,11 @@ class Menu extends AbstractHelper {
 			$html .= 'Discipulado';
 			$html .= '</a>';
 			$html .= '</li>';
+
+		}
+
+			if($this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::regiao 
+			&& $this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::coordenacao) {
 
 			$html .= '<li>';
 			$html .= '<a href="/relatorioInstituto" onClick="mostrarSplash();">';
