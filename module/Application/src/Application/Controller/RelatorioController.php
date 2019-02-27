@@ -531,16 +531,24 @@ class RelatorioController extends CircuitoController {
 						$dados['temSolicitacaoPendente'] = true;
 					}
 				}
-
+				
 				/* se tem celula adiciona os dados */
-				if($grupoEventoCelula = $grupo->getGrupoEventoPorTipoEAtivo(EventoTipo::tipoCelula)){
-					if($grupoEventoCelulaEstrategica = $grupo->getGrupoEventoPorTipoEAtivo(EventoTipo::tipoCelulaEstrategica)){
-						foreach($grupoEventoCelulaEstrategica as $grupoEventoEstrategica){
-							$grupoEventoCelula[] = $grupoEventoEstrategica;
-						}
+				$grupoEventoCelulas = Array();
+				if($grupoEventoCelulaEstrategica = $grupo->getGrupoEventoPorTipoEAtivo(EventoTipo::tipoCelulaEstrategica)){						
+					foreach($grupoEventoCelulaEstrategica as $grupoEventoEstrategica){
+						$grupoEventoCelulas[] = $grupoEventoEstrategica;
+					}				
+				}
+
+				if($grupoEventoCelulasNormais = $grupo->getGrupoEventoPorTipoEAtivo(EventoTipo::tipoCelula)){
+					foreach($grupoEventoCelulasNormais as $grupoEventoCelulaNormal){
+						$grupoEventoCelulas[] = $grupoEventoCelulaNormal;
 					}
+				}
+
+				if(count($grupoEventoCelulas) > 0){										
 					$contadorDeCelulas = 1;
-					foreach($grupoEventoCelula as $grupoEvento)	{
+					foreach($grupoEventoCelulas as $grupoEvento)	{
 						if($grupoEvento->verificarSeEstaAtivo()){
 							$dados['celulas'][$contadorDeCelulas]['idGrupoEvento'] = $grupoEvento->getId();
 							$dados['celulas'][$contadorDeCelulas]['diaDaSemana'] = $grupoEvento->getEvento()->getDia();
@@ -620,15 +628,11 @@ class RelatorioController extends CircuitoController {
 		if($periodo > 0){
 			$arrayPeriodoDoMes[0] = $periodo;
 			$arrayPeriodoDoMes[1] = $periodo;
-		}
-		if($periodo === 'atual'){
-			$arrayPeriodoDoMes[0] = 0;
+		}		
+		if($mes == date('m') && $ano == date('Y') && $periodo === 'atual'){
 			$arrayPeriodoDoMes[1] = 0;
 		}
-		if($mes == date('m') && $ano == date('Y')){
-			$arrayPeriodoDoMes[1] = 0;
-		}
-		$diferencaDePeriodos = self::diferencaDePeriodos($arrayPeriodoDoMes[0], $arrayPeriodoDoMes[1], $mes, $ano);
+		$diferencaDePeriodos = self::diferencaDePeriodos($arrayPeriodoDoMes[0], $arrayPeriodoDoMes[1], $mes, $ano);		
 		if($tudo){
 			for ($indiceDeArrays = $arrayPeriodoDoMes[0]; $indiceDeArrays <= $arrayPeriodoDoMes[1]; $indiceDeArrays++) {
 				if($grupoPaiFilhoFilhos = $grupo->getGrupoPaiFilhoFilhosAtivos($indiceDeArrays)){
@@ -983,7 +987,7 @@ class RelatorioController extends CircuitoController {
 			$contagemDeArray++;
 		}
 
-		if($tipoRelatorio !== self::relatorioParceiroDeDeus){
+		if($tipoRelatorio !== self::relatorioParceiroDeDeus){			
 			$relatorio[self::dadosPessoais]['mediaMembresia'] = $soma[self::dadosPessoais][self::membresia] / $diferencaDePeriodos;
 			$relatorio[self::dadosPessoais]['mediaMembresiaPerformance'] = $soma[self::dadosPessoais][self::membresiaPerformance] / $diferencaDePeriodos;
 			$relatorio[self::dadosPessoais]['mediaMembresiaPerformanceClass'] = RelatorioController::corDaLinhaPelaPerformance($relatorio[self::dadosPessoais]['mediaMembresiaPerformance'], 1);
@@ -2174,8 +2178,7 @@ public function alunosNaSemanaAction(){
 				foreach ($grupoPaiFilhoFilhosEquipe as $grupoPaiFilhoFilhoEquipes) {
 					$grupo = $grupoPaiFilhoFilhoEquipes->getGrupoPaiFilhoFilho();
 					$numeroIdentificador = $repositorio->getFatoCicloORM()->montarNumeroIdentificador($repositorio, $grupo);
-					$relatorioCelula = $repositorio->getFatoCicloORM()->montarRelatorioCelulaPorNumeroIdentificador($numeroIdentificador, $periodo, $comparacao);
-					error_log(print_r($relatorioCelula, true));
+					$relatorioCelula = $repositorio->getFatoCicloORM()->montarRelatorioCelulaPorNumeroIdentificador($numeroIdentificador, $periodo, $comparacao);					
 					$birimbal = Array();
 					if($grupo->getEntidadeAtiva()->getNome()){
 							$birimbal['nome'] = $grupo->getEntidadeAtiva()->getNome();

@@ -339,8 +339,7 @@ class Menu extends AbstractHelper {
 			$html .= '</a>';
 			$html .= '</li>';
 
-			if($this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::regiao
-				&& $this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::coordenacao) {
+			if($this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::regiao) {
 
 			$html .= '<li>';
 			$html .= '<a href="#" onClick="mostrarSplash(); funcaoCircuito(\'relatorioDiscipulado\', null);">';
