@@ -408,14 +408,16 @@ function selecionarObjeto(id, informacao) {
 								if ($('#solicitacaoTipoId').val() == REMOVER_CELULA) {
 									objeto.html('Líder que terá a célula removida');
 									console.log('Quantas celulas: ', data.celulas)
-									if(data.celulas['1']){
-										for(let indice = 1 ; indice <= 6 ; indice++){
-											let indiceString = indice + '';
-											if(data.celulas[indiceString]){
-												$('#idGrupoEvento').append('<option value="'+data.celulas[indiceString]['idGrupoEvento']+'">'+data.celulas[indiceString]['nomeHospedeiro']+'</option>')
-											}
-										}										
-										$('#blocoObjeto3').removeClass(hidden)
+									if(data.celulas){
+										if(data.celulas['1']){
+											for(let indice = 1 ; indice <= 6 ; indice++){
+												let indiceString = indice + '';
+												if(data.celulas[indiceString]){
+													$('#idGrupoEvento').append('<option value="'+data.celulas[indiceString]['idGrupoEvento']+'">'+data.celulas[indiceString]['nomeHospedeiro']+'</option>')
+												}
+											}										
+											$('#blocoObjeto3').removeClass(hidden)
+										}
 									}
 								}
 							}
@@ -551,11 +553,13 @@ function selecionarObjeto(id, informacao) {
 									$('#spanObjeto3').addClass(hidden)
 
 									if ($('#solicitacaoTipoId').val() == REMOVER_CELULA) {
-										if(data.celulas['1']){
-											$('#blocoObjeto3').removeClass(hidden)
-											$('#spanObjeto3').addClass(hidden)
-											$('#spanSelecioneObjeto3').removeClass(hidden)
-											$('#spanObjeto3').addClass(hidden)
+										if(data.celulas){
+											if(data.celulas['1']){
+												$('#blocoObjeto3').removeClass(hidden)
+												$('#spanObjeto3').addClass(hidden)
+												$('#spanSelecioneObjeto3').removeClass(hidden)
+												$('#spanObjeto3').addClass(hidden)
+											}
 										}else{
 											$(stringSpanSelecioneObjeto + 3).addClass(hidden)
 											$(stringSpanObjeto + 3).html('<div class="alert alert-danger">Time não possui células</div>')
@@ -616,7 +620,7 @@ function selecionarNumeracao() {
 function selecionarQuemSaira() {
 	let valor = $('#quemVaiSair').val();
 	if (parseInt(valor) === 0) {
-		alert('Selecion quem do casal vai sair');
+		alert('Selecione quem do casal vai sair');
 	} else {
 		selecionarObjeto(valor, valor);
 	}
