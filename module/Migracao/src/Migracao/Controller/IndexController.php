@@ -2920,7 +2920,8 @@ class IndexController extends CircuitoController {
 			}else{
 				$idGrupoIgreja = $grupoIgreja['id'];
 				$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupoIgreja);
-			}
+			}			
+			$gruposParaRemover[] = $grupo;
 			$relatorioCelulas =	self::pegarMediaPorCelula($this->getRepositorio(), $grupo, false, $mesSelecinado, $anoSelecinado);
 			foreach($relatorioCelulas as $chave => $valor){
 				$dados = array(
@@ -2931,8 +2932,7 @@ class IndexController extends CircuitoController {
 					'valor' => $valor['valor'],
 					'periodos' => $valor['periodos'],
 				);
-				$relatorios[] = $dados;
-				$gruposParaRemover[] = $grupo;
+				$relatorios[] = $dados;				
 			}
 
 			$periodoAfrente = 1;
@@ -2951,8 +2951,7 @@ class IndexController extends CircuitoController {
 							'periodos' => $valor['periodos'],
 						);
 
-						$relatorios[] = $dados;
-						$gruposParaRemover[] = $grupoFilho144;
+						$relatorios[] = $dados;						
 					}
 
 					$grupoPaiFilhoFilhos1728 = $grupoFilho144->getGrupoPaiFilhoFilhosAtivos($periodoAfrente);
@@ -2969,8 +2968,7 @@ class IndexController extends CircuitoController {
 									'valor' => $valor['valor'],
 									'periodos' => $valor['periodos'],
 								);
-								$relatorios[] = $dados;
-								$gruposParaRemover[] = $grupoFilho1728;
+								$relatorios[] = $dados;								
 							}
 
 							$grupoPaiFilhoFilhos20736 = $grupoFilho1728->getGrupoPaiFilhoFilhosAtivos($periodoAfrente);
@@ -2987,8 +2985,7 @@ class IndexController extends CircuitoController {
 											'valor' => $valor['valor'],
 											'periodos' => $valor['periodos'],
 										);
-										$relatorios[] = $dados;
-										$gruposParaRemover[] = $grupoFilho20736;
+										$relatorios[] = $dados;										
 
 										$grupoPaiFilhoFilhos248832 = $grupoFilho20736->getGrupoPaiFilhoFilhosAtivos($periodoAfrente);
 										if ($grupoPaiFilhoFilhos248832) {
@@ -3004,8 +3001,7 @@ class IndexController extends CircuitoController {
 														'valor' => $valor['valor'],
 														'periodos' => $valor['periodos'],
 													);
-													$relatorios[] = $dados;
-													$gruposParaRemover[] = $grupoFilho248832;
+													$relatorios[] = $dados;													
 												}
 											}
 										}
@@ -3034,9 +3030,9 @@ class IndexController extends CircuitoController {
 		}
 
 		$this->getRepositorio()->iniciarTransacao();
-		try{
-			foreach ($gruposParaRemover as $grupoParaRemover) {
-				$fatosRankingCelula = $this->getRepositorio()->getFatoRankingCelulaORM()->encontrarPorIdGrupoIgreja($grupoParaRemover->getId(), $mesSelecinado, $anoSelecinado);
+		try{			 	
+			foreach ($gruposParaRemover as $grupoParaRemover) {				
+				$fatosRankingCelula = $this->getRepositorio()->getFatoRankingCelulaORM()->encontrarPorIdGrupoIgreja($grupoParaRemover->getId(), $mesSelecinado, $anoSelecinado);															
 				foreach($fatosRankingCelula as $fato){
 					$this->getRepositorio()->getFatoRankingCelulaORM()->remover($fato);
 				}
