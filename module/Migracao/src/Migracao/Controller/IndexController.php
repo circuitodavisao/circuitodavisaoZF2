@@ -420,13 +420,20 @@ class IndexController extends CircuitoController {
 											$this->getRepositorio()->getGrupoResponsavelORM()->persistir($grupoResponsavel, false);
 											$grupoResponsavelParaUsar = $grupoResponsavel;
 										}
-										$numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupoResponsavelParaUsar->getGrupo());
+										$grupoParaUsar = $grupoResponsavelParaUsar->getGrupo();
+										$numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupoParaUsar);
 										if ($fatoLider = $this->getRepositorio()->getFatoLiderORM()->encontrarFatoLiderPorNumeroIdentificador($numeroIdentificador)) {
 											$dataParaInativar = self::getDataParaInativacao();
 											$fatoLider->setDataEHoraDeInativacao($dataParaInativar);
 											$this->getRepositorio()->getFatoLiderORM()->persistir($fatoLider, $alterarDataDeCriacao = false);
 										}
-										$quantidadeLideres = 1;
+										$quantidadeLideres = 0;
+										$grupoEventoCelulas = $grupoParaUsar->getGrupoEventoAtivosPorTipo(EventoTipo::tipoCelula);
+										$grupoEventoCelulasEstrategicas = $grupoParaUsar->getGrupoEventoAtivosPorTipo(EventoTipo::tipoCelulaEstrategica);
+										if($grupoEventoCelulasEstrategicas || $grupoEventoCelulas){
+											$quantidadeLideres = 1;
+										}
+										
 										$fatoLider = new FatoLider();
 										$fatoLider->setLideres($quantidadeLideres);
 										$fatoLider->setNumero_identificador($numeroIdentificador);										
