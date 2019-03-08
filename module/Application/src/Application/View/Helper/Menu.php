@@ -109,18 +109,20 @@ class Menu extends AbstractHelper {
 		$html .= '<li class="sidebar-label pt20">Menu</li>';
 
 		/* Menu Cadastro */
-		if ($this->view->entidade->verificarSeEstaAtivo()
-&& $this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::regiao
-&& $this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::coordenacao) {
+		
 
 			$html .= '<li>';
 			$html .= '<a class="accordion-toggle" href="#">';
 			$html .= '<span class="fa fa-terminal"></span>';
 			$html .= '<span class="sidebar-title">Cadastro</span>';
 			$html .= '<span class="caret"></span>';
-			$html .= '</a>';
+			$html .= '</a>';			
 
 			$html .= '<ul class="nav sub-nav">';
+
+			if ($this->view->entidade->verificarSeEstaAtivo()
+			&& $this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::regiao
+			&& $this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::coordenacao) {
 
 			$html .= '<li>';
 			$html .= '<a href="#" onClick="mostrarSplash(); funcaoCircuito(\'cadastroCelulas\', null);">';
@@ -151,13 +153,19 @@ class Menu extends AbstractHelper {
 			$html .= 'Time';
 			$html .= '</a>';
 			$html .= '</li>';
+		
+		}
 
             $html .= '<li>';
 			$html .= '<a href="#" onClick="mostrarSplash(); funcaoCircuito(\'cadastroDiscipulados\', null);">';
             $html .= '<span class="fa fa-users"></span>';
             $html .= 'Discipulados';
             $html .= '</a>';
-            $html .= '</li>';
+			$html .= '</li>';
+			
+			if ($this->view->entidade->verificarSeEstaAtivo()
+			&& $this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::regiao
+			&& $this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::coordenacao) {
 
 			$html .= '<li>';
 			$html .= '<a href="#" onClick="mostrarSplash(); funcaoCircuito(\'cadastroRevisionistas\', null);">';
@@ -189,12 +197,12 @@ class Menu extends AbstractHelper {
 					$html .= '</a>';
 					$html .= '</li>';
 				}
-
+		}
 			$html .= '</ul>';
 
 			$html .= '</li>';
 			/* Fim Menu Cadastro */
-		}
+		
 
 		
 		/* Menu Lançamento */
@@ -337,17 +345,14 @@ class Menu extends AbstractHelper {
 			$html .= '<span class="fa fa-users"></span>';
 			$html .= 'Atendimento';
 			$html .= '</a>';
-			$html .= '</li>';			
-			if($this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::regiao){
+			$html .= '</li>';						
 
 			$html .= '<li>';
 			$html .= '<a href="#" onClick="mostrarSplash(); funcaoCircuito(\'relatorioDiscipulado\', null);">';
 			$html .= '<span class="fa fa-users"></span>';
 			$html .= 'Discipulado';
 			$html .= '</a>';
-			$html .= '</li>';
-
-		}
+			$html .= '</li>';		
 
 			if($this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::regiao 
 			&& $this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::coordenacao) {

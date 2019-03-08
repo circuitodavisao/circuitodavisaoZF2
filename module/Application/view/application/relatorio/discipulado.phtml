@@ -4,6 +4,7 @@ use Application\Controller\Helper\Constantes;
 use Application\Controller\RelatorioController;
 use Application\Controller\Helper\Funcoes;
 use Application\Model\Entity\EventoTipo;
+use Application\Model\Entity\EntidadeTipo;
 
 echo $this->templateFormularioTopo('Discipulado');
 echo '<div class="panel-body bg-light" style="padding: 15px 5px 5px 5px;">';
@@ -20,7 +21,13 @@ if($this->filtrado){
 
 			echo '<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 p10 text-center">';
 			echo '<div>';
-			echo $grupoFilho->getEntidadeAtiva()->infoEntidade();
+			$entidadeDoFilho = $grupoFilho->getEntidadeAtiva();			
+			if($entidadeDoFilho->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao){
+				echo 'COORDENAÇÃO ' . $entidadeDoFilho->getNumero();
+			}
+			if($entidadeDoFilho->getEntidadeTipo()->getId() !== EntidadeTipo::coordenacao){
+				echo $entidadeDoFilho->infoEntidade();
+			} 			
 			echo '</div>';
 			foreach($grupoFilho->getPessoasAtivas() as $pessoa){
 				echo '<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 p10 text-center">';
