@@ -815,7 +815,7 @@ class LancamentoController extends CircuitoController {
      * Abri tela para relatorio de atendimento
      * @return ViewModel
      */
-    public function atendimentoAction() {
+    public function atendimentoAction() {        
         $sessao = new Container(Constantes::$NOME_APLICACAO);
 
         $idEntidadeAtual = $sessao->idEntidadeAtual;
@@ -834,7 +834,10 @@ class LancamentoController extends CircuitoController {
 
         $arrayPeriodoDoMes = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mesSelecionado, $anoSelecionado);
         $todosFilhos = array();
-        for ($indiceDeArrays = $arrayPeriodoDoMes[0]; $indiceDeArrays <= $arrayPeriodoDoMes[1]; $indiceDeArrays++) {
+        if($arrayPeriodoDoMes[0] == 0){
+            $arrayPeriodoDoMes[1] = 0;
+        }                
+        for ($indiceDeArrays = $arrayPeriodoDoMes[0]; $indiceDeArrays <= $arrayPeriodoDoMes[1]; $indiceDeArrays++) {            
             $grupoPaiFilhoFilhos = $grupo->getGrupoPaiFilhoFilhosAtivos($indiceDeArrays);
             if ($grupoPaiFilhoFilhos) {
                 foreach ($grupoPaiFilhoFilhos as $grupoPaiFilhoFilho) {
