@@ -15,7 +15,7 @@ use Zend\Form\Form;
  */
 class AtendimentoComentarioForm extends Form {
 
-    public function __construct($name = null, $grupo = null, $abaSelecionada = null) {
+    public function __construct($name = null, $grupo = null, $mes = null, $ano = null) {
         parent::__construct($name);
 
         $this->setAttributes(array(
@@ -34,11 +34,20 @@ class AtendimentoComentarioForm extends Form {
 
         $this->add(
                 (new Hidden())
-                        ->setName('abaSelecionada')
+                        ->setName('mes')
                         ->setAttributes([
-                            Constantes::$FORM_STRING_ID => 'abaSelecionada',
-                            'value' => $abaSelecionada,
+                            Constantes::$FORM_STRING_ID => 'mes',
+                            'value' => $mes,
                         ])
+        );
+
+        $this->add(
+            (new Hidden())
+                    ->setName('ano')
+                    ->setAttributes([
+                        Constantes::$FORM_STRING_ID => 'ano',
+                        'value' => $ano,
+                    ])
         );
 
         $this->add(
