@@ -2062,10 +2062,10 @@ class CadastroController extends CircuitoController {
 	}
 
 	public function solicitacoesAction() {
-		self::validarSeSouIgrejaOuEquipe();
+		self::validarSeSouIgrejaOuEquipeOuRegiao();
 		$request = $this->getRequest();
 		$dados = array();
-			if($request->isPost()){
+		if($request->isPost()){
 			$postDados = $request->getPost();
 			$mes = $postDados['mes'];
 			$ano = $postDados['ano'];
@@ -2076,7 +2076,6 @@ class CadastroController extends CircuitoController {
 		$sessao = new Container(Constantes::$NOME_APLICACAO);
 		$idEntidadeAtual = $sessao->idEntidadeAtual;
 		$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
-		$idIgreja = $entidade->getGrupo()->getGrupoIgreja()->getId();
 
 		$arrayPeriodoDoMes = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mes, $ano);
 		$periodoInicial = $arrayPeriodoDoMes[0];
@@ -2091,8 +2090,22 @@ class CadastroController extends CircuitoController {
 		$dataInicio = $arrayPeriodoInicial[3].'-'.$arrayPeriodoInicial[2].'-'.$arrayPeriodoInicial[1];
 		$dataFim = $arrayPeriodoFinal[6].'-'.$arrayPeriodoFinal[5].'-'.$arrayPeriodoFinal[4];
 
-		$solicitacoes = $this->getRepositorio()->getSolicitacaoORM()->encontrarTodosPorDataDeCriacao($dataInicio, $dataFim, $idIgreja);
 		$solicitacoesDivididasPorTipo = array();
+
+		if($entidade->getEntidadeTipo()->getId() !== EntidadeTipo::regiao){
+			$idIgreja = $entidade->getGrupo()->getGrupoIgreja()->getId();
+			$solicitacoes = $this->getRepositorio()->getSolicitacaoORM()->encontrarTodosPorDataDeCriacao($dataInicio, $dataFim, $idIgreja);
+
+			$solicitacoesTipo = $this->getRepositorio()->getSolicitacaoTipoORM()->encontrarTodos();
+		}
+		if($entidade->getEntidadeTipo()->getId() === EntidadeTipo::regiao){
+			$idRegiao = $entidade->getGrupo()->getId();
+			$solicitacoes = $this->getRepositorio()->getSolicitacaoORM()->encontrarTodosPorDataDeCriacao($dataInicio, $dataFim, $idRegiao);
+
+			$solicitacaoTipo = $this->getRepositorio()->getSolicitacaoTipoORM()->encontrarPorId(SolicitacaoTipo::REMOVER_IGREJA);
+			$solicitacoesTipo[] = $solicitacaoTipo;
+		}
+
 		foreach($solicitacoes as $solicitacaoPorData){
 			$solicitacao = $this->getRepositorio()->getSolicitacaoORM()->encontrarPorId($solicitacaoPorData['id']);
 			$adicionar = true;
@@ -2106,20 +2119,20 @@ class CadastroController extends CircuitoController {
 						}
 					}
 				}
-
 			}
 			if($adicionar){
 				$solicitacoesDivididasPorTipo[$solicitacao->getSolicitacaoTipo()->getId()][] = $solicitacao;
 			}
 		}
-		$solicitacoesTipo = $this->getRepositorio()->getSolicitacaoTipoORM()->encontrarTodos();
+
+
 		$dados['grupo'] = $grupo;
 		$dados['entidade'] = $entidade;
 		$dados['solicitacoes'] = $solicitacoesDivididasPorTipo;
 		$dados['solicitacoesTipo'] = $solicitacoesTipo;
 		$dados['titulo'] = 'Solicitações';
 		$dados['repositorio'] = $this->getRepositorio();
-		
+
 		$dados['mes'] = $mes;
 		$dados['ano'] = $ano;
 		self::registrarLog(RegistroAcao::VER_SOLICITACOES, $extra = '');
@@ -2170,7 +2183,7 @@ class CadastroController extends CircuitoController {
 
 	public function solicitacaoAction() {
 		ini_set('memory_limit', '1024M');
-		self::validarSeSouIgrejaOuEquipe();
+		self::validarSeSouIgrejaOuEquipeOuRegiao();
 
 		$sessao = new Container(Constantes::$NOME_APLICACAO);
 
@@ -2182,128 +2195,173 @@ class CadastroController extends CircuitoController {
 
 		$solicitacaoTiposSemAjuste = $this->getRepositorio()->getSolicitacaoTipoORM()->encontrarTodos();
 		$solicitacaoTiposAjustado = array();
-		if($entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
-			foreach($solicitacaoTiposSemAjuste as $solicitacaoTipo){
-				if($solicitacaoTipo->getId() !== SolicitacaoTipo::TRANSFERIR_LIDER_PARA_OUTRA_EQUIPE){
-					$solicitacaoTiposAjustado[] = $solicitacaoTipo;
-				}	
-			}	
-		}else{
-			foreach($solicitacaoTiposSemAjuste as $solicitacaoTipo){
-				if($solicitacaoTipo->getId() !== SolicitacaoTipo::SUBIR_LIDER){
-					$solicitacaoTiposAjustado[] = $solicitacaoTipo;
-				}	
-			}	
-		}
-		$formSolicitacao = new SolicitacaoForm('formSolicitacao');
 
-		$grupoPaiFilhoEquipes = $grupoIgreja->getGrupoPaiFilhoFilhosAtivosReal();
-		$discipulosIgreja = $grupoPaiFilhoEquipes;
-		$chaveParaRemover = null;
-		foreach ($grupoPaiFilhoEquipes as $key => $grupoPaiFilhoFilho) {
-			if ($grupoPaiFilhoFilho->getGrupoPaiFilhoFilho()->getId() == $grupo->getId()) {
-				$chaveParaRemover = $key;
-			}
-		}
-		unset($grupoPaiFilhoEquipes[$chaveParaRemover]);
+		if($entidade->getEntidadeTipo()->getId() === EntidadeTipo::regiao){
+			$solicitacaoTipo = $this->getRepositorio()->getSolicitacaoTipoORM()->encontrarPorId(SolicitacaoTipo::REMOVER_IGREJA);
+			$solicitacaoTiposAjustado[] = $solicitacaoTipo;
 
-		$arrayHomens = array();
-		$arrayMulheres = array();
-		$arrayCasais = array();
-		foreach ($grupoPaiFilhoFilhos as $grupoPaiFilhoFilho12) {
-			$grupo12 = $grupoPaiFilhoFilho12->getGrupoPaiFilhoFilho();
-			if ($grupo12->verificarSeEstaAtivo()) {
-				if (!$grupo12->verificaSeECasal()) {
-					if ($grupo12->getGrupoResponsavelAtivo()->getPessoa()->getSexo() == 'M') {
-						$dados = array();
-						$dados['grupo'] = $grupoPaiFilhoFilho12;
-						$dados['hierarquia'] = $grupo->getId();
-						$arrayHomens[] = $dados;
-					}
-					if ($grupo12->getGrupoResponsavelAtivo()->getPessoa()->getSexo() == 'F') {
-						$dados = array();
-						$dados['grupo'] = $grupoPaiFilhoFilho12;
-						$dados['hierarquia'] = $grupo->getId();
-						$arrayMulheres[] = $dados;
-					}
-				} else {
-					$dados = array();
-					$dados['grupo'] = $grupoPaiFilhoFilho12;
-					$dados['hierarquia'] = $grupo->getId();
-					$arrayCasais[] = $dados;
-				}
-			}
-			if ($grupoPaiFilhoFilhos144 = $grupo12->getGrupoPaiFilhoFilhosAtivosReal()) {
-				foreach ($grupoPaiFilhoFilhos144 as $grupoPaiFilhoFilho144) {
-					$grupo144 = $grupoPaiFilhoFilho144->getGrupoPaiFilhoFilho();
-					if ($grupo144->verificarSeEstaAtivo()) {
-						if (!$grupo144->verificaSeECasal()) {
-							if ($grupo144->getGrupoResponsavelAtivo()->getPessoa()->getSexo() == 'M') {
-								$dados = array();
-								$dados['grupo'] = $grupoPaiFilhoFilho144;
-								$dados['hierarquia'] = $grupo12->getId();
-								$arrayHomens[] = $dados;
-							}
-							if ($grupo144->getGrupoResponsavelAtivo()->getPessoa()->getSexo() == 'F') {
-								$dados = array();
-								$dados['grupo'] = $grupoPaiFilhoFilho144;
-								$dados['hierarquia'] = $grupo12->getId();
-								$arrayMulheres[] = $dados;
-							}
-						} else {
-							$dados = array();
-							$dados['grupo'] = $grupoPaiFilhoFilho144;
-							$dados['hierarquia'] = $grupo->getId();
-							$arrayCasais[] = $dados;
+			$igrejas = array();
+			foreach ($grupoPaiFilhoFilhos as $grupoPaiFilhoFilho12) {
+				$grupo12 = $grupoPaiFilhoFilho12->getGrupoPaiFilhoFilho();
+
+				if($grupo12->getEntidadeAtiva() && $grupo12->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
+					$igrejas[] = $grupo12;
+				}	
+
+				if($grupo12->getEntidadeAtiva() 
+					&& ($grupo12->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::regiao
+					|| $grupo12->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao)){
+						$grupoPaiFilhoFilhos144 = $grupo12->getGrupoPaiFilhoFilhosAtivosReal();
+						foreach ($grupoPaiFilhoFilhos144 as $grupoPaiFilhoFilho144) {
+							$grupo144 = $grupoPaiFilhoFilho144->getGrupoPaiFilhoFilho();
+
+							if($grupo144->getEntidadeAtiva() && $grupo144->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
+								$igrejas[] = $grupo144;
+							}	
+
+							if($grupo144->getEntidadeAtiva() 
+								&& ($grupo144->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::regiao
+								|| $grupo144->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao)){
+									$grupoPaiFilhoFilhos1728 = $grupo144->getGrupoPaiFilhoFilhosAtivosReal();
+									foreach ($grupoPaiFilhoFilhos1728 as $grupoPaiFilhoFilho1728) {
+										$grupo1728 = $grupoPaiFilhoFilho1728->getGrupoPaiFilhoFilho();
+
+										if($grupo1728->getEntidadeAtiva() && $grupo1728->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
+											$igrejas[] = $grupo1728;
+										}
+									}
+								}
+
 						}
 					}
-					if ($grupoPaiFilhoFilhos1728 = $grupo144->getGrupoPaiFilhoFilhosAtivosReal()) {
-						foreach ($grupoPaiFilhoFilhos1728 as $grupoPaiFilhoFilho1728) {
-							$grupo1728 = $grupoPaiFilhoFilho1728->getGrupoPaiFilhoFilho();
-							if ($grupo1728->verificarSeEstaAtivo()) {
-								if (!$grupo1728->verificaSeECasal()) {
-									if ($grupo1728->getGrupoResponsavelAtivo()->getPessoa()->getSexo() == 'M') {
-										$dados = array();
-										$dados['grupo'] = $grupoPaiFilhoFilho1728;
-										$dados['hierarquia'] = $grupo144->getId();
-										$arrayHomens[] = $dados;
-									}
-									if ($grupo1728->getGrupoResponsavelAtivo()->getPessoa()->getSexo() == 'F') {
-										$dados = array();
-										$dados['grupo'] = $grupoPaiFilhoFilho1728;
-										$dados['hierarquia'] = $grupo144->getId();
-										$arrayMulheres[] = $dados;
-									}
-								} else {
-									$dados = array();
-									$dados['grupo'] = $grupoPaiFilhoFilho1728;
-									$dados['hierarquia'] = $grupo->getId();
-									$arrayCasais[] = $dados;
-								}
-							}
+			}
+		}
 
-							if ($grupoPaiFilhoFilhos20736 = $grupo1728->getGrupoPaiFilhoFilhosAtivosReal()) {
-								foreach ($grupoPaiFilhoFilhos20736 as $grupoPaiFilhoFilho20736) {
-									$grupo20736 = $grupoPaiFilhoFilho20736->getGrupoPaiFilhoFilho();
-									if ($grupo20736->verificarSeEstaAtivo()) {
-										if (!$grupo20736->verificaSeECasal()) {
-											if ($grupo20736->getGrupoResponsavelAtivo()->getPessoa()->getSexo() == 'M') {
-												$dados = array();
-												$dados['grupo'] = $grupoPaiFilhoFilho20736;
-												$dados['hierarquia'] = $grupo1728->getId();
-												$arrayHomens[] = $dados;
-											}
-											if ($grupo20736->getGrupoResponsavelAtivo()->getPessoa()->getSexo() == 'F') {
-												$dados = array();
-												$dados['grupo'] = $grupoPaiFilhoFilho20736;
-												$dados['hierarquia'] = $grupo1728->getId();
-												$arrayMulheres[] = $dados;
-											}
-										} else {
+		if($entidade->getEntidadeTipo()->getId() !== EntidadeTipo::regiao){
+			if($entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
+				foreach($solicitacaoTiposSemAjuste as $solicitacaoTipo){
+					if($solicitacaoTipo->getId() !== SolicitacaoTipo::TRANSFERIR_LIDER_PARA_OUTRA_EQUIPE
+						&& $solicitacaoTipo->getId() !== SolicitacaoTipo::REMOVER_IGREJA){
+							$solicitacaoTiposAjustado[] = $solicitacaoTipo;
+						}	
+				}	
+			}else{
+				foreach($solicitacaoTiposSemAjuste as $solicitacaoTipo){
+					if($solicitacaoTipo->getId() !== SolicitacaoTipo::SUBIR_LIDER
+						&& $solicitacaoTipo->getId() !== SolicitacaoTipo::REMOVER_IGREJA){
+							$solicitacaoTiposAjustado[] = $solicitacaoTipo;
+						}	
+				}	
+			}
+
+			$grupoPaiFilhoEquipes = $grupoIgreja->getGrupoPaiFilhoFilhosAtivosReal();
+			$discipulosIgreja = $grupoPaiFilhoEquipes;
+			$chaveParaRemover = null;
+			foreach ($grupoPaiFilhoEquipes as $key => $grupoPaiFilhoFilho) {
+				if ($grupoPaiFilhoFilho->getGrupoPaiFilhoFilho()->getId() == $grupo->getId()) {
+					$chaveParaRemover = $key;
+				}
+			}
+			unset($grupoPaiFilhoEquipes[$chaveParaRemover]);
+
+			$arrayHomens = array();
+			$arrayMulheres = array();
+			$arrayCasais = array();
+			foreach ($grupoPaiFilhoFilhos as $grupoPaiFilhoFilho12) {
+				$grupo12 = $grupoPaiFilhoFilho12->getGrupoPaiFilhoFilho();
+				if ($grupo12->verificarSeEstaAtivo()) {
+					if (!$grupo12->verificaSeECasal()) {
+						if ($grupo12->getGrupoResponsavelAtivo()->getPessoa()->getSexo() == 'M') {
+							$dados = array();
+							$dados['grupo'] = $grupoPaiFilhoFilho12;
+							$dados['hierarquia'] = $grupo->getId();
+							$arrayHomens[] = $dados;
+						}
+						if ($grupo12->getGrupoResponsavelAtivo()->getPessoa()->getSexo() == 'F') {
+							$dados = array();
+							$dados['grupo'] = $grupoPaiFilhoFilho12;
+							$dados['hierarquia'] = $grupo->getId();
+							$arrayMulheres[] = $dados;
+						}
+					} else {
+						$dados = array();
+						$dados['grupo'] = $grupoPaiFilhoFilho12;
+						$dados['hierarquia'] = $grupo->getId();
+						$arrayCasais[] = $dados;
+					}
+				}
+				if ($grupoPaiFilhoFilhos144 = $grupo12->getGrupoPaiFilhoFilhosAtivosReal()) {
+					foreach ($grupoPaiFilhoFilhos144 as $grupoPaiFilhoFilho144) {
+						$grupo144 = $grupoPaiFilhoFilho144->getGrupoPaiFilhoFilho();
+						if ($grupo144->verificarSeEstaAtivo()) {
+							if (!$grupo144->verificaSeECasal()) {
+								if ($grupo144->getGrupoResponsavelAtivo()->getPessoa()->getSexo() == 'M') {
+									$dados = array();
+									$dados['grupo'] = $grupoPaiFilhoFilho144;
+									$dados['hierarquia'] = $grupo12->getId();
+									$arrayHomens[] = $dados;
+								}
+								if ($grupo144->getGrupoResponsavelAtivo()->getPessoa()->getSexo() == 'F') {
+									$dados = array();
+									$dados['grupo'] = $grupoPaiFilhoFilho144;
+									$dados['hierarquia'] = $grupo12->getId();
+									$arrayMulheres[] = $dados;
+								}
+							} else {
+								$dados = array();
+								$dados['grupo'] = $grupoPaiFilhoFilho144;
+								$dados['hierarquia'] = $grupo->getId();
+								$arrayCasais[] = $dados;
+							}
+						}
+						if ($grupoPaiFilhoFilhos1728 = $grupo144->getGrupoPaiFilhoFilhosAtivosReal()) {
+							foreach ($grupoPaiFilhoFilhos1728 as $grupoPaiFilhoFilho1728) {
+								$grupo1728 = $grupoPaiFilhoFilho1728->getGrupoPaiFilhoFilho();
+								if ($grupo1728->verificarSeEstaAtivo()) {
+									if (!$grupo1728->verificaSeECasal()) {
+										if ($grupo1728->getGrupoResponsavelAtivo()->getPessoa()->getSexo() == 'M') {
 											$dados = array();
-											$dados['grupo'] = $grupoPaiFilhoFilho20736;
-											$dados['hierarquia'] = $grupo->getId();
-											$arrayCasais[] = $dados;
+											$dados['grupo'] = $grupoPaiFilhoFilho1728;
+											$dados['hierarquia'] = $grupo144->getId();
+											$arrayHomens[] = $dados;
+										}
+										if ($grupo1728->getGrupoResponsavelAtivo()->getPessoa()->getSexo() == 'F') {
+											$dados = array();
+											$dados['grupo'] = $grupoPaiFilhoFilho1728;
+											$dados['hierarquia'] = $grupo144->getId();
+											$arrayMulheres[] = $dados;
+										}
+									} else {
+										$dados = array();
+										$dados['grupo'] = $grupoPaiFilhoFilho1728;
+										$dados['hierarquia'] = $grupo->getId();
+										$arrayCasais[] = $dados;
+									}
+								}
+
+								if ($grupoPaiFilhoFilhos20736 = $grupo1728->getGrupoPaiFilhoFilhosAtivosReal()) {
+									foreach ($grupoPaiFilhoFilhos20736 as $grupoPaiFilhoFilho20736) {
+										$grupo20736 = $grupoPaiFilhoFilho20736->getGrupoPaiFilhoFilho();
+										if ($grupo20736->verificarSeEstaAtivo()) {
+											if (!$grupo20736->verificaSeECasal()) {
+												if ($grupo20736->getGrupoResponsavelAtivo()->getPessoa()->getSexo() == 'M') {
+													$dados = array();
+													$dados['grupo'] = $grupoPaiFilhoFilho20736;
+													$dados['hierarquia'] = $grupo1728->getId();
+													$arrayHomens[] = $dados;
+												}
+												if ($grupo20736->getGrupoResponsavelAtivo()->getPessoa()->getSexo() == 'F') {
+													$dados = array();
+													$dados['grupo'] = $grupoPaiFilhoFilho20736;
+													$dados['hierarquia'] = $grupo1728->getId();
+													$arrayMulheres[] = $dados;
+												}
+											} else {
+												$dados = array();
+												$dados['grupo'] = $grupoPaiFilhoFilho20736;
+												$dados['hierarquia'] = $grupo->getId();
+												$arrayCasais[] = $dados;
+											}
 										}
 									}
 								}
@@ -2312,16 +2370,18 @@ class CadastroController extends CircuitoController {
 					}
 				}
 			}
-		}
 
-		$numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupo);
-		$relatorioInicial = $this->getRepositorio()->getFatoCursoORM()->encontrarFatoCursoPorNumeroIdentificador($numeroIdentificador);
-		$alunos = array();
-		foreach($relatorioInicial as $relatorio){
-			$alunos[] = $this->getRepositorio()->getTurmaPessoaORM()->encontrarPorId($relatorio->getTurma_pessoa_id());
+			$numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupo);
+			$relatorioInicial = $this->getRepositorio()->getFatoCursoORM()->encontrarFatoCursoPorNumeroIdentificador($numeroIdentificador);
+			$alunos = array();
+			foreach($relatorioInicial as $relatorio){
+				$alunos[] = $this->getRepositorio()->getTurmaPessoaORM()->encontrarPorId($relatorio->getTurma_pessoa_id());
+			}
 		}
+		$formSolicitacao = new SolicitacaoForm('formSolicitacao');
 
 		$view = new ViewModel(array(
+			'entidade' => $entidade,
 			'grupo' => $grupo,
 			'discipulos' => $grupoPaiFilhoFilhos,
 			'discipulosIgreja' => $discipulosIgreja,
@@ -2333,6 +2393,7 @@ class CadastroController extends CircuitoController {
 			'grupoPaiFilhoMulheres' => $arrayMulheres,
 			'grupoPaiFilhoCasais' => $arrayCasais,
 			'alunos' => $alunos,
+			'igrejas' => $igrejas,
 		));
 
 		/* Javascript */
@@ -2381,7 +2442,14 @@ class CadastroController extends CircuitoController {
 				$sessao = new Container(Constantes::$NOME_APLICACAO);
 				$idPessoaAtual = $sessao->idPessoa;
 				$pessoaLogada = $this->getRepositorio()->getPessoaORM()->encontrarPorId($idPessoaAtual);
-				$grupoIgreja = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($sessao->idEntidadeAtual)->getGrupo()->getGrupoIgreja();
+
+				$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($sessao->idEntidadeAtual);
+				if($entidade->getEntidadeTipo()->getId() !== EntidadeTipo::regiao){
+					$grupoIgreja = $entidade->getGrupo()->getGrupoIgreja();
+				}
+				if($entidade->getEntidadeTipo()->getId() === EntidadeTipo::regiao){
+					$grupoIgreja = $entidade->getGrupo();
+				}
 				$solicitacaoTipo = $this->getRepositorio()->getSolicitacaoTipoORM()->encontrarPorId($post_data['solicitacaoTipoId']);
 
 				/* Criando */
@@ -2432,6 +2500,11 @@ class CadastroController extends CircuitoController {
 					$solicitacao->setObjeto2($objeto2);
 				}
 
+				if ($solicitacaoTipo->getId() === SolicitacaoTipo::REMOVER_IGREJA) {
+					$objeto2 = 0;
+					$solicitacao->setObjeto2($objeto2);
+				}
+
 				if ($post_data['numero']) {
 					$solicitacao->setNumero($post_data['numero']);
 				}
@@ -2461,6 +2534,7 @@ class CadastroController extends CircuitoController {
 					$solicitacaoTipo->getId() === SolicitacaoTipo::UNIR_CASAL ||
 					$solicitacaoTipo->getId() === SolicitacaoTipo::SEPARAR ||
 					$solicitacaoTipo->getId() === SolicitacaoTipo::TRANSFERIR_ALUNO ||
+					$solicitacaoTipo->getId() === SolicitacaoTipo::REMOVER_IGREJA ||
 					$solicitacaoTipo->getId() === SolicitacaoTipo::TROCAR_RESPONSABILIDADES)) {
 
 						$solicitacaoSituacao->setDataEHoraDeInativacao();
