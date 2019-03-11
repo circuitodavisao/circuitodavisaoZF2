@@ -108,11 +108,11 @@ class AtendimentoGruposAbaixo extends AbstractHelper {
     public function montarBarraDeProgressoAtendimento($grupo, $discipuloAbaixo = false) {
         $html = '';
 
-        $tamanhoColuna1 = 'col-md-8 col-sm-8 col-xs-6';
-        $tamanhoColuna2 = 'col-md-4 col-sm-4 col-xs-6';
+        $tamanhoColuna1 = 'col-md-10 col-sm-9 col-xs-6';
+        $tamanhoColuna2 = 'col-md-2 col-sm-3 col-xs-6';
         if ($this->getTipo() === AtendimentoGruposAbaixo::tipoRelatorio && !$discipuloAbaixo) {
-            $tamanhoColuna1 = 'col-md-10 col-sm-10 col-xs-10';
-            $tamanhoColuna2 = 'col-md-2 col-sm-2 col-xs-2" style="padding-left: 0px; padding-top: 20px; vertical-align: middle;';
+            $tamanhoColuna1 = 'col-md-11 col-sm-10 col-xs-10';
+            $tamanhoColuna2 = 'col-md-1 col-sm-2 col-xs-2" style="padding-left: 0px; padding-top: 20px; vertical-align: middle;';
         }
         if ($discipuloAbaixo) {
             $tamanhoColuna1 = 'col-md-10 col-sm-10 col-xs-10';
@@ -159,7 +159,7 @@ class AtendimentoGruposAbaixo extends AbstractHelper {
                 $html .= $this->botaoAtendimento($grupo->getId(), 2, $numeroAtendimentos);
                 $html .= Constantes::$NBSP;
 
-                $idAuxiliar = $grupo->getId() . 99 . $this->view->abaSelecionada;
+                $idAuxiliar = $grupo->getId() . 99 . $this->view->mes . 99 . $this->view->ano;
                 $funcao = $this->view->funcaoOnClick('mostrarSplash(); funcaoCircuito("lancamentoAtendimentoComentario","' . $idAuxiliar . '")');
                 $html .= $this->view->botaoSimples('<i class="fa fa-comments"></i>', $funcao, BotaoSimples::botaoMuitoPequenoMenosImportante);
             }
@@ -293,7 +293,7 @@ class AtendimentoGruposAbaixo extends AbstractHelper {
 
         if ($tipoBotao === AtendimentoGruposAbaixo::tipoLancar || $tipoBotao === AtendimentoGruposAbaixo::tipoRemover) {
             $idButton = 'id="botao' . $tipoBotao . '_' . $idGrupo . '"';
-            $funcaoOnClick = $this->view->funcaoOnClick('mudarAtendimento(' . $idGrupo . ', ' . $tipoBotao . ', ' . $this->view->abaSelecionada . ')');
+            $funcaoOnClick = $this->view->funcaoOnClick('mudarAtendimento(' . $idGrupo . ', ' . $tipoBotao . ', ' . $this->view->mes . ', ' . $this->view->ano . ')');
         }
         if ($tipoBotao === AtendimentoGruposAbaixo::tipoRelatorioVer) {
             $idButton = 'id="botaoVer' . $idGrupo . '"';

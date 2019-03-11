@@ -369,18 +369,16 @@ class RelatorioController extends CircuitoController {
 			$validacaoNesseMes = 1;
 		}
 
-		/* Aba selecionada e ciclo */
-		$parametro = $this->params()->fromRoute('tipoRelatorio');
-		$periodo = 0;
-		if (empty($parametro)) {
-			$abaSelecionada = 1;
-		} else {
-			$periodo = -1;
-			$abaSelecionada = $parametro;
+		$request = $this->getRequest();		
+		if($request->isPost()){
+			$postDados = $request->getPost();
+			$mesSelecionado = $postDados['mes'];
+			$anoSelecionado = $postDados['ano'];
+		} else{
+			$mesSelecionado = date('m');
+			$anoSelecionado = date('Y');
 		}
-
-		$mesSelecionado = Funcoes::mesPorAbaSelecionada($abaSelecionada);
-		$anoSelecionado = Funcoes::anoPorAbaSelecionada($abaSelecionada);
+		
 		$todosFilhos = $grupo->getGrupoPaiFilhoFilhosPorMesEAno($mesSelecionado, $anoSelecionado);
 
 		$view = new ViewModel(array(

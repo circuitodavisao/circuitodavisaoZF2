@@ -822,15 +822,15 @@ class LancamentoController extends CircuitoController {
         $entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
         $grupo = $entidade->getGrupo();
 
-        $parametro = $this->params()->fromRoute(Constantes::$ID);
-        if (empty($parametro)) {
-            $abaSelecionada = 1;
-        } else {
-            $abaSelecionada = $parametro;
-        }
-
-        $mesSelecionado = Funcoes::mesPorAbaSelecionada($abaSelecionada);
-        $anoSelecionado = Funcoes::anoPorAbaSelecionada($abaSelecionada);
+        $request = $this->getRequest();		
+		if($request->isPost()){
+			$postDados = $request->getPost();
+			$mesSelecionado = $postDados['mes'];
+			$anoSelecionado = $postDados['ano'];
+		} else{
+			$mesSelecionado = date('m');
+			$anoSelecionado = date('Y');
+		}
 
         $arrayPeriodoDoMes = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mesSelecionado, $anoSelecionado);
         $todosFilhos = array();
@@ -868,8 +868,7 @@ class LancamentoController extends CircuitoController {
             Constantes::$GRUPOS_ABAIXO => $todosFilhos,
             Constantes::$MES => $mesSelecionado,
             Constantes::$ANO => $anoSelecionado,
-            Constantes::$VALIDACAO_NESSE_MES => $validacaoNesseMes,
-            Constantes::$ABA_SELECIONADA => $abaSelecionada,
+            Constantes::$VALIDACAO_NESSE_MES => $validacaoNesseMes,            
         ));
 
         /* Javascript especifico */
@@ -898,9 +897,8 @@ class LancamentoController extends CircuitoController {
                 $post_data = $request->getPost();
                 $tipo = (int) $post_data['tipo'];
                 $idGrupo = $post_data['idGrupo'];
-                $abaSelecionada = $post_data['abaSelecionada'];
-                $mesSelecionado = Funcoes::mesPorAbaSelecionada($abaSelecionada);
-                $anoSelecionado = Funcoes::anoPorAbaSelecionada($abaSelecionada);
+                $mesSelecionado = $post_data['mes'];
+			    $anoSelecionado = $post_data['ano'];
 
                 $grupoAtendimentosFiltrados = array();
                 $grupoLancado = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupo);
@@ -970,7 +968,7 @@ class LancamentoController extends CircuitoController {
         $sessao = new Container(Constantes::$NOME_APLICACAO);
         $explodeIdSessao = explode(99, $sessao->idSessao);
         $grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($explodeIdSessao[0]);
-        $formulario = new AtendimentoComentarioForm('formulario', $grupo, $explodeIdSessao[1]);
+        $formulario = new AtendimentoComentarioForm('formulario', $grupo, $explodeIdSessao[1], $explodeIdSessao[2]);
         $dados = array();
         $dados['grupo'] = $grupo;
         $dados['formulario'] = $formulario;
@@ -988,15 +986,10 @@ class LancamentoController extends CircuitoController {
                 $grupoAtendimentoComentario = new GrupoAtendimentoComentario();
                 $grupoAtendimentoComentario->setGrupo($grupo);
                 $grupoAtendimentoComentario->setComentario($post_data['comentario']);
-                if ($post_data['abaSelecionada'] == 2) {
-                    if (date('m') == 1) {
-                        $mesAnterior = 12;
-                        $anoAnteriror = (date('Y') - 1);
-                    } else {
-                        $mesAnterior = (date('m') - 1);
-                        $anoAnteriror = date('Y');
-                    }
-                    $grupoAtendimentoComentario->setDataEHoraDeCriacao("$anoAnteriror-$mesAnterior-01");
+                if ($post_data['mes'] && $post_data['ano']) {
+                    $mes = $post_data['mes'];
+                    $ano = $post_data['ano'];
+                    $grupoAtendimentoComentario->setDataEHoraDeCriacao("$ano-$mes-01");
                 } else {
                     $grupoAtendimentoComentario->setDataEHoraDeCriacao();
                 }
@@ -1005,8 +998,7 @@ class LancamentoController extends CircuitoController {
                 $this->getRepositorio()->fecharTransacao();
 
                 return $this->redirect()->toRoute(Constantes::$ROUTE_LANCAMENTO, array(
-                            Constantes::$ACTION => 'Atendimento',
-                            Constantes::$ID => $post_data['abaSelecionada'],
+                            Constantes::$ACTION => 'Atendimento',                            
                 ));
             } catch (Exception $exc) {
                 $this->getRepositorio()->desfazerTransacao();
