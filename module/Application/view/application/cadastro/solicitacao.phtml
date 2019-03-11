@@ -2,6 +2,7 @@
 
 use Application\Controller\Helper\Constantes;
 use Application\Controller\CursoController;
+use Application\Model\Entity\EntidadeTipo;
 use Application\View\Helper\BotaoSimples;
 
 $labelVoltar = $this->translate(Constantes::$TRADUCAO_VOLTAR);
@@ -94,6 +95,8 @@ for ($indiceDeObejtos = 1; $indiceDeObejtos <= 3; $indiceDeObejtos++) {
 }
 ?>
 	</div>
+
+<?php if($this->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::regiao){ ?>
 	<!--divSelecionarLider-->
 	<div id="divSelecionarLider" class="hidden">
 	<select id="idLider" class="form-control" onChange="mostrarBotaoSelecionarLider();">
@@ -171,7 +174,6 @@ if (count($this->grupoPaiFilhoMulheres) === 0) {
 	<?php } ?>
 	</div>
 
-
 	<!--divSelecionarCasal-->
 	<div id="divSelecionarCasal" class="hidden">
 <?php
@@ -196,10 +198,6 @@ if (count($this->grupoPaiFilhoCasais) === 0) {
 	</div>
 	<?php } ?>
 	</div>
-
-
-
-
 
 	<!--divSelecionarAluno-->
 	<div id="divSelecionarAluno" class="hidden">
@@ -226,7 +224,6 @@ if (count($this->alunos) === 0) {
 	</div>
 	<?php } ?>
 	</div>
-
 
 	<!--divSelecionarLideresIgreja-->
 	<div id="divSelecionarLiderIgreja" class="hidden">
@@ -315,6 +312,35 @@ echo '</div>';
 	<span class="ladda-label">Selecionar</span>
 	</button>
 	</div>
+
+<?php } ?>
+
+<?php if($this->entidade->getEntidadeTipo()->getId() === EntidadeTipo::regiao){ ?>
+	<div id="divSelecionarIgreja" class="hidden">
+<?php
+if (count($this->igrejas) === 0) {
+	echo 'Sem igrejas para transferir';
+} else {
+?>
+	<select id="idIgreja" class="form-control" onChange="mostrarBotaoSelecionarIgreja();">
+		<option value="0">SELECIONE</option>
+<?php
+	foreach ($this->igrejas as $igreja) {
+		$nomeIgreja = $igreja->getEntidadeAtiva()->getNome();
+		echo '<option  value="' . $igreja->getId() . '" >' . $igreja->getId() . ' - ' . $nomeIgreja . '</option>';
+}
+?>
+	</select>
+	<div id="divBotaoSelecionarIgreja" class="hidden mt10">
+	<?php
+		echo $this->botaoSimples(Constantes::$TRADUCAO_SELECIONAR, $this->funcaoOnClick('selecionarIgreja()'));
+	?>
+	</div>
+	<?php } ?>
+	</div>
+
+<?php } ?>
+
 
 	<!--divBotaoContinuar-->
 	<div id="divBotaoContinuar" class="hidden">
