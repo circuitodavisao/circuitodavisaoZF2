@@ -424,7 +424,7 @@ foreach ($this->relatorio as $relatorio) {
 				}
 			}
 			if ($this->tipoRelatorio == 9) {
-				echo '<td class="' . $classeBase . '">' . RelatorioController::formataNumeroRelatorio($relatorio[$indiceDeArrays]['valor']) . '</td>';
+				echo '<td class="' . $classeBase . '">' . number_format($relatorio[$indiceDeArrays]['valor'], 2, ',', '.') . '</td>';
 			}
 		}
 		if ($this->tipoRelatorio == 1){
@@ -454,9 +454,9 @@ foreach ($this->relatorio as $relatorio) {
 			}
 		if ($this->tipoRelatorio == 9) {
 			if($this->entidade->getGrupo()->getId() === 1 || $this->entidade->getGrupo()->getId() === 1225){
-				echo '<td class="' . $classeBase . '">'. RelatorioController::formataNumeroRelatorio($relatorio['parceiroDeDeusMeta']). '</td>';
+				echo '<td class="' . $classeBase . '">'. number_format($relatorio['parceiroDeDeusMeta']). '</td>';
 			}
-			echo '<td style="padding-right:5px;">' . RelatorioController::formataNumeroRelatorio($relatorio['somaValor']) . '</td>';
+			echo '<td style="padding-right:5px;">' . number_format($relatorio['somaValor'], 2, ',', '.') . '</td>';
 			if($this->tipoRelatorio == 9 && ($this->entidade->getGrupo()->getId() === 1 || $this->entidade->getGrupo()->getId() === 1225)){
 				echo '<td class="' . $classeBase . '">' . RelatorioController::formataNumeroRelatorio($relatorio['parceiroDeDeusPerformance']) . '%<td>';
 			}
