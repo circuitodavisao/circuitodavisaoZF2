@@ -70,7 +70,7 @@ use Application\Controller\Helper\Constantes;
 						}else{
 							$grupo = $responsabilidade->getGrupo();
 							$entidadeSelecionada = $grupo->getEntidadeAtiva();
-							echo $this->perfilIcone($entidadeSelecionada, count($this->responsabilidades));
+							echo $this->perfilIcone($entidadeSelecionada, count($this->responsabilidades), $ativo = false);
 						}
                     }
                     ?>

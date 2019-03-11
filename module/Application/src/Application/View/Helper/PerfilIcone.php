@@ -8,7 +8,8 @@ namespace Application\View\Helper;
  * Descricao: Classe helper view para montar os icones do selecionar perfil
  */
 use Application\Controller\Helper\Constantes;
-use Application\Entity\Entidade;
+use Application\Model\Entity\Entidade;
+use Application\Model\Entity\EntidadeTipo;
 use Zend\View\Helper\AbstractHelper;
 
 class PerfilIcone extends AbstractHelper {
@@ -40,6 +41,9 @@ class PerfilIcone extends AbstractHelper {
         $tipoEntidade = $this->getEntidade()->getTipo_id();
         $nomeEntidade = $this->getEntidade()->getEntidadeTipo()->getNome();
         $infoEntidade = $this->getEntidade()->infoEntidade();
+		if($this->getEntidade()->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
+			$infoEntidade .= ' ' . $this->getEntidade()->getNome();
+		}
 
         $estaAtivo = true;
         if (!$this->getEntidade()->verificarSeEstaAtivo()) {
@@ -117,14 +121,12 @@ class PerfilIcone extends AbstractHelper {
             case 2:
                 $class = 'bg-alert light';
                 break;
-
             case 3:
-                $class = 'bg-danger light';
+                $class = 'bg-system light';
                 break;
             case 4:
                 $class = 'bg-warning light';
                 break;
-
             case 5:
                 $class = 'bg-success light';
                 break;
@@ -153,7 +155,7 @@ class PerfilIcone extends AbstractHelper {
                 $classFooter = 'bg-alert br-n';
                 break;
             case 3:
-                $classFooter = 'bg-danger br-n';
+                $classFooter = 'bg-system br-n';
                 break;
             case 4:
                 $classFooter = 'bg-warning br-n';
