@@ -445,12 +445,13 @@ class IndexController extends CircuitoController {
 									//									$grupo2 = $this->getRepositorio()->getGrupoORM()->encontrarPorId($solicitacao->getObjeto2());
 									//									$html .= $this->trocarResponsabilidades($grupo1, $grupo2);
 									//								}
-									if ($idSolicitacaoTipo == SolicitacaoTipo::REMOVER_LIDER) {
-										/* remover todos lideres abaixo */
-										$html .= "<br /> {$solicitacao->getId()} - REMOVENDO LIDER";
-										$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($solicitacao->getObjeto1());
-										$html .= $this->removerLider($grupo);
-									}
+									if ($idSolicitacaoTipo == SolicitacaoTipo::REMOVER_LIDER
+										||	$idSolicitacaoTipo == SolicitacaoTipo::REMOVER_IGREJA) {
+											/* remover todos lideres abaixo */
+											$html .= "<br /> {$solicitacao->getId()} - REMOVENDO LIDER - REMOVER IGREJA";
+											$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($solicitacao->getObjeto1());
+											$html .= $this->removerLider($grupo);
+										}
 									if ($idSolicitacaoTipo == SolicitacaoTipo::REMOVER_CELULA) {
 										$html .= "<br /> {$solicitacao->getId()} - REMOVENDO CELULA";
 										$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($solicitacao->getObjeto1());

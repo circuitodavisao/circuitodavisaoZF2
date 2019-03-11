@@ -96,7 +96,12 @@ foreach($this->solicitacoesTipo as $solicitacaoTipo){
 			&& $solicitacaoTipo->getId() !== SolicitacaoTipo::TRANSFERIR_ALUNO){
 				$objeto = $solicitacao->getObjeto1();
 				$grupo = $this->repositorio->getGrupoORM()->encontrarPorId($objeto);
-				$htmlTbody .= '<td>'.$grupo->getNomeLideresAtivos().'</td>';
+				$dadosObjeto1 = '';
+				if($solicitacaoTipo->getId() === SolicitacaoTipo::REMOVER_IGREJA){
+					$dadosObjeto1 = $grupo->getEntidadeAtiva()->getNome() . ' - ';
+				}
+				$dadosObjeto1 .= $grupo->getNomeLideresAtivos();
+				$htmlTbody .= '<td>'.$dadosObjeto1.'</td>';
 
 				switch($solicitacaoTipo->getId()){
 				case SolicitacaoTipo::TRANSFERIR_LIDER_NA_PROPRIA_EQUIPE:
