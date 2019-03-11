@@ -42,7 +42,7 @@ class CabecalhoDeEventos extends AbstractHelper {
 				$diaDaSemanaAjustado = Funcoes::diaDaSemanaPorDia($grupoEvento->getEvento()->getDia());
 				$eventoNome = Funcoes::nomeDoEvento($grupoEvento->getEvento()->getTipo_id());
 				if($grupoEvento->getEvento()->getEventoTipo()->getId() === EventoTipo::tipoCelulaEstrategica){
-					$eventoNome = 'Cél. Estra.';
+					$eventoNome = 'Cél. Beta';
 				}
 
 				$html .= $this->view->translate($eventoNome).'<br />';
