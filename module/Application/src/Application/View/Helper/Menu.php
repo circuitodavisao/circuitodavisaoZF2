@@ -111,6 +111,7 @@ class Menu extends AbstractHelper {
 		/* Menu Cadastro */
 		
 
+if ($this->view->entidade->verificarSeEstaAtivo()){
 			$html .= '<li>';
 			$html .= '<a class="accordion-toggle" href="#">';
 			$html .= '<span class="fa fa-terminal"></span>';
@@ -120,8 +121,8 @@ class Menu extends AbstractHelper {
 
 			$html .= '<ul class="nav sub-nav">';
 
-			if ($this->view->entidade->verificarSeEstaAtivo()
-			&& $this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::regiao
+
+			if($this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::regiao
 			&& $this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::coordenacao) {
 
 			$html .= '<li>';
@@ -153,14 +154,14 @@ class Menu extends AbstractHelper {
 			$html .= 'Time';
 			$html .= '</a>';
 			$html .= '</li>';
-		
+
 		}
 
-            $html .= '<li>';
+			$html .= '<li>';
 			$html .= '<a href="#" onClick="mostrarSplash(); funcaoCircuito(\'cadastroDiscipulados\', null);">';
-            $html .= '<span class="fa fa-users"></span>';
-            $html .= 'Discipulados';
-            $html .= '</a>';
+			$html .= '<span class="fa fa-users"></span>';
+			$html .= 'Discipulados';
+			$html .= '</a>';
 			$html .= '</li>';
 			
 			if ($this->view->entidade->verificarSeEstaAtivo()
@@ -203,7 +204,7 @@ class Menu extends AbstractHelper {
 			$html .= '</li>';
 			/* Fim Menu Cadastro */
 		
-
+}
 		
 		/* Menu Lançamento */
 		$html .= '<li>';
