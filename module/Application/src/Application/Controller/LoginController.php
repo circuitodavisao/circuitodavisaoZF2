@@ -95,7 +95,7 @@ class LoginController extends CircuitoController {
         return $view;
     }
 
-    public function acessoSeisAction() {
+    public function acessoTrezeAction() {
         /* Destroi a sessao ao acessar a index */
         $sessao = new Container(Constantes::$NOME_APLICACAO);
         $sessao->getManager()->destroy();
