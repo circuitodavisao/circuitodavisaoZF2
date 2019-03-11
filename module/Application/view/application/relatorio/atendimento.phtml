@@ -7,12 +7,16 @@ use Application\Controller\Helper\Constantes;
  * @author Lucas Filipe de Carvalho Cunha <lucascarvalho.esw@gmail.com>
  * Descricao: Página para mostrar eficiência em atendimentos e a quantidade que cada disicpulo foi atendido.
  */
+
+$html = '';
+$html .= $this->templateFormularioTopo('Relatorio de <b class="text-danger">Atendimento</b>');
+$html .= '<div class="panel-body bg-light">';
+$html .= '<form action="/relatorioAtendimento" method="post">';
+$html .= $this->cabecalhoDeMeses();
+$html .= '</form>';
+$html .=  $this->atendimentoGruposAbaixo(2);
+$html .= '</div>';
+$html .= $this->templateFormularioRodape();
+echo $html;   
+        
 ?>
-<div class="mw1000 center-block">
-    <div class="panel">
-        <?php echo $this->abasPanel(Constantes::$ROUTE_RELATORIO, 'Atendimento'); ?>
-        <div class="panel-body center-block">
-            <?php echo $this->atendimentoGruposAbaixo(2); ?>
-        </div>
-    </div>
-</div>
