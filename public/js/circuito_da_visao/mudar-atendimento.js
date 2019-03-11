@@ -4,7 +4,7 @@
  * Descricao: Função para lançar frequência de evento
  */
 
-function mudarAtendimento(idGrupo, tipo, abaSelecionada) {
+function mudarAtendimento(idGrupo, tipo, mes, ano) {
     var botaoLancar = $('#botao1_' + idGrupo);
     var botaoRemover = $('#botao2_' + idGrupo);
     var progressBar = $('#progressBarAtendimento' + idGrupo);
@@ -34,7 +34,8 @@ function mudarAtendimento(idGrupo, tipo, abaSelecionada) {
             {
                 idGrupo: idGrupo,
                 tipo: tipo,
-                abaSelecionada: abaSelecionada
+                mes: mes,
+                ano: ano
             },
             function (data) {
                 if (data.response) {
