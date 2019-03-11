@@ -89,3 +89,11 @@ insert into registro_acao (id, nome) values (66, 'MUDOU SITUAÇÃO DO ALUNO PARA
 insert into registro_acao (id, nome) values (67, 'REMOVEU UM ALUNO DA TURMA');
 insert into registro_acao (id, nome) values (68, 'LANÇOU UMA FICHA NO REVISÃO DE VIDAS');
 insert into registro_acao (id, nome) values (69, 'REMOVEU UMA FICHA DO REVISÃO DE VIDAS');
+insert into registro_acao (id, nome) values (70, 'CADASTROU VISITANTE');
+insert into registro_acao (id, nome) values (71, 'CADASTROU CONSOLIDAÇÃO');
+insert into registro_acao (id, nome) values (72, 'CADASTROU MEMBRO');
+insert into registro_acao (id, nome) values (73, 'LANÇOU VISITANTE');
+insert into registro_acao (id, nome) values (74, 'LANÇOU CONSOLIDAÇÃO');
+insert into registro_acao (id, nome) values (75, 'LANÇOU MEMBRO');
+insert into registro_acao (id, nome) values (76, 'LANÇOU CULTO');
+insert into registro_acao (id, nome) values (77, 'LANÇOU CÉLULA');

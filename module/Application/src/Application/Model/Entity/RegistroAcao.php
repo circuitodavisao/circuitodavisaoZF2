@@ -84,6 +84,14 @@ class RegistroAcao extends CircuitoEntity {
 	const REMOVEU_UM_ALUNO_DA_TURMA = 67;
 	const LANCOU_UMA_FICHA_NO_REVISAO_DE_VIDAS = 68;
 	const REMOVEU_UMA_FICHA_DO_REVISAO_DE_VIDAS = 69;
+	const CADASTROU_VISITANTE = 70;
+	const CADASTROU_CONSOLIDACAO = 71;
+	const CADASTROU_MEMBRO = 72;
+	const LANCOU_VISITANTE = 73;
+	const LANCOU_CONSOLIDACAO = 74;
+	const LANCOU_MEMBRO = 75;
+	const LANCOU_CULTO = 76;
+	const LANCOU_CELULA = 77;
 
     /**
      * @ORM\OneToMany(targetEntity="Registro", mappedBy="registroAcao") 

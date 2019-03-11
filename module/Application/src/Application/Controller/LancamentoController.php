@@ -377,6 +377,8 @@ class LancamentoController extends CircuitoController {
                             $tipoCampo = LancamentoController::TIPO_CAMPO_CULTO;
                             break;
                     };
+
+					self::registrarLog(RegistroAcao::LANCOU_CULTO, $extra = 'Id: '.$pessoa->getId().' Nome: '.$pessoa->getNome());
 				}
 				if ($evento->getEventoTipo()->getId() === EventoTipo::tipoCelula
 					|| $evento->getEventoTipo()->getId() === EventoTipo::tipoCelulaEstrategica) {
@@ -414,6 +416,8 @@ class LancamentoController extends CircuitoController {
 						$fatoCelulaSelecionado->setRealizada($realizada);
 						$setarDataEHora = false;
 						$this->getRepositorio()->getFatoCelulaORM()->persistir($fatoCelulaSelecionado, $setarDataEHora);
+
+						self::registrarLog(RegistroAcao::LANCOU_CELULA, $extra = 'Id: '.$pessoa->getId().' Nome: '.$pessoa->getNome());
 					}
                 $tipoPessoa = 0;
                 if ($pessoa->getGrupoPessoaAtivo()) {
@@ -427,7 +431,9 @@ class LancamentoController extends CircuitoController {
                             }
                             $dimensaoSelecionada->setVisitante($valorDoCampo + $valorParaSomar);
                             $tipoPessoa = GrupoPessoaTipo::VISITANTE;
-                            break;
+
+							self::registrarLog(RegistroAcao::LANCOU_VISITANTE, $extra = 'Id: '.$pessoa->getId().' Nome: '.$pessoa->getNome());
+							break;
                         case GrupoPessoaTipo::CONSOLIDACAO:
                             $valorDoCampo = $dimensaoSelecionada->getConsolidacao();
                             if ($valorDoCampo === 0 && $valorParaSomar === -1) {
@@ -435,6 +441,8 @@ class LancamentoController extends CircuitoController {
                             }
                             $dimensaoSelecionada->setConsolidacao($valorDoCampo + $valorParaSomar);
                             $tipoPessoa = GrupoPessoaTipo::CONSOLIDACAO;
+
+							self::registrarLog(RegistroAcao::LANCOU_CONSOLIDACAO, $extra = 'Id: '.$pessoa->getId().' Nome: '.$pessoa->getNome());
                             break;
                         case GrupoPessoaTipo::MEMBRO:
                             $valorDoCampo = $dimensaoSelecionada->getMembro();
@@ -443,6 +451,8 @@ class LancamentoController extends CircuitoController {
                             }
                             $dimensaoSelecionada->setMembro($valorDoCampo + $valorParaSomar);
                             $tipoPessoa = GrupoPessoaTipo::MEMBRO;
+
+							self::registrarLog(RegistroAcao::LANCOU_MEMBRO, $extra = 'Id: '.$pessoa->getId().' Nome: '.$pessoa->getNome());
                             break;
                     }
                 } else {
@@ -597,6 +607,15 @@ class LancamentoController extends CircuitoController {
                         if ($nucleoPerfeito != 0) {
                             $grupoPessoa->setNucleo_perfeito($nucleoPerfeito);
                         }
+
+						$tipoRegistro = RegistroAcao::CADASTROU_VISITANTE;
+						if($grupoPessoaTipo->getId() === GrupoPessoaTipo::CONSOLIDACAO){
+							$tipoRegistro = RegistroAcao::CADASTROU_CONSOLIDACAO;
+						}
+						if($grupoPessoaTipo->getId() === GrupoPessoaTipo::MEMBRO){
+							$tipoRegistro = RegistroAcao::CADASTROU_MEMBRO;
+						}
+						self::registrarLog($tipoRegistro, $extra = 'Id: '.$pessoa->getId().' Nome: '.$pessoa->getNome());
 
                         $this->getRepositorio()->getGrupoPessoaORM()->persistir($grupoPessoa, $setDataAtual = false);
                     }
