@@ -2240,15 +2240,17 @@ class CadastroController extends CircuitoController {
 		if($entidade->getEntidadeTipo()->getId() !== EntidadeTipo::regiao){
 			if($entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
 				foreach($solicitacaoTiposSemAjuste as $solicitacaoTipo){
-					if($solicitacaoTipo->getId() !== SolicitacaoTipo::TRANSFERIR_LIDER_PARA_OUTRA_EQUIPE){
-						$solicitacaoTiposAjustado[] = $solicitacaoTipo;
-					}	
+					if($solicitacaoTipo->getId() !== SolicitacaoTipo::TRANSFERIR_LIDER_PARA_OUTRA_EQUIPE
+						&& $solicitacaoTipo->getId() !== SolicitacaoTipo::REMOVER_IGREJA){
+							$solicitacaoTiposAjustado[] = $solicitacaoTipo;
+						}	
 				}	
 			}else{
 				foreach($solicitacaoTiposSemAjuste as $solicitacaoTipo){
-					if($solicitacaoTipo->getId() !== SolicitacaoTipo::SUBIR_LIDER){
-						$solicitacaoTiposAjustado[] = $solicitacaoTipo;
-					}	
+					if($solicitacaoTipo->getId() !== SolicitacaoTipo::SUBIR_LIDER
+						&& $solicitacaoTipo->getId() !== SolicitacaoTipo::REMOVER_IGREJA){
+							$solicitacaoTiposAjustado[] = $solicitacaoTipo;
+						}	
 				}	
 			}
 
