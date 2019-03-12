@@ -649,7 +649,7 @@ if ($this->view->entidade->verificarSeEstaAtivo()){
 			$html .= '</li>';
 
 		}
-		if ($this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja || $this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::equipe) {
+		if ($this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::subEquipe) {
 			$html .= '<li class="sidebar-label pt20">Suporte</li>';
 			$html .= '<li>';
 			$html .= '<a href="/principalSuporte" onClick="mostrarSplash();">';
