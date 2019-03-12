@@ -103,6 +103,9 @@ if ($this->mostrarPrincipal) {
 				break;
 			case 2:
 				$valor = $this->relatorio[$this->indiceFinalDoRelatorio][$this->periodoFinal]['quantidadeLideres'];
+				if(!$valor){
+					$valor = 0;
+				}
 				$label = 'Líder(es)';
 				break;
 			case 3:
