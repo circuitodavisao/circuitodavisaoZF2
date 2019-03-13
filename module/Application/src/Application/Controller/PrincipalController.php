@@ -733,7 +733,13 @@ class PrincipalController extends CircuitoController {
 		$sessao = new Container(Constantes::$NOME_APLICACAO);
 		$idEntidadeAtual = $sessao->idEntidadeAtual;
 		$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
-		$entidadeDaIgreja = $entidade->getGrupo()->getGrupoIgreja()->getEntidadeAtiva();
+		if($entidade->getEntidadeTipo()->getId() !== Entidade::COORDENACAO && $entidade->getEntidadeTipo()->getId() !== Entidade::REGIONAL){
+			$entidadeDaIgreja = $entidade->getGrupo()->getGrupoIgreja()->getEntidadeAtiva();
+			$entidadeAcima =  $entidadeDaIgreja->getGrupo()->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai()->getEntidadeAtiva();
+		}
+		if($entidade->getEntidadeTipo()->getId() === Entidade::COORDENACAO && $entidade->getEntidadeTipo()->getId() === Entidade::REGIONAL){
+			$entidadeAcima =  $entidade->getGrupo()->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai()->getEntidadeAtiva();			
+		}		
 		$pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($sessao->idPessoa);
 		$request = $this->getRequest();
 		$dadosPost = array_merge_recursive(
@@ -750,14 +756,18 @@ class PrincipalController extends CircuitoController {
 		if($pessoa->getGrupoResponsavel()[0]->getGrupo()->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::EQUIPE){
 			$assunto .= 'EQUIPE: ' . $pessoa->getGrupoResponsavel()[0]->getGrupo()->getEntidadeAtiva()->getNome() . ', ';
 		}
-		$assunto .= 'IGREJA: ' .  $entidadeDaIgreja->getNome();
-		$entidadeAcimaDaIgreja =  $entidadeDaIgreja->getGrupo()->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai()->getEntidadeAtiva();
-		if($entidadeAcimaDaIgreja->getEntidadeTipo()->getId() === Entidade::COORDENACAO){                                  
-			$nomeEntidadeAcimaArrumado = ' COORDENAÇÃO: ' . $entidadeAcimaDaIgreja->getNumero() . ' RESPONSÁVEIS: ' .$entidadeAcimaDaIgreja->getGrupo()->getNomeLideresAtivos();                    
-		}  
-		if($entidadeAcimaDaIgreja->getEntidadeTipo()->getId() === Entidade::REGIONAL){                                  
-			$nomeEntidadeAcimaArrumado = ' REGIÃO: ' . $entidadeAcimaDaIgreja->getNome();                    
-		} 
+		if($entidadeDaIgreja){
+			$assunto .= 'IGREJA: ' .  $entidadeDaIgreja->getNome();
+		}	
+		if($entidadeAcima){
+			if($entidadeAcima->getEntidadeTipo()->getId() === Entidade::COORDENACAO){                                  
+				$nomeEntidadeAcimaArrumado = ' COORDENAÇÃO: ' . $entidadeAcima->getNumero() . ' RESPONSÁVEIS: ' .$entidadeAcima->getGrupo()->getNomeLideresAtivos();                    
+			}  
+			if($entidadeAcima->getEntidadeTipo()->getId() === Entidade::REGIONAL){                                  
+				$nomeEntidadeAcimaArrumado = ' REGIÃO: ' . $entidadeAcima->getNome();                    
+			}
+		}			
+		 
 		$assunto .= ', NÍVEL ACIMA: ' . $nomeEntidadeAcimaArrumado;
 		$Subject = $assunto;		
 		$ToEmail = 'support@circuitodavisao.zendesk.com';
