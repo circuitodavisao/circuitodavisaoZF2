@@ -1030,9 +1030,11 @@ class CadastroController extends CircuitoController {
 					$grupoEventoAtivo->setDataEHoraDeInativacao();
 					$this->getRepositorio()->getGrupoEventoORM()->persistir($grupoEventoAtivo, false);
 					if ($eventoNaSessao->getEventoTipo()->getId() === EventoTipo::tipoDiscipulado) {
-						$fatoCelulaDiscipulado = $this->getRepositorio()->getFatoCelulaDiscipuladoORM()->encontrarPorGrupoEventoId($grupoEventoAtivo->getId());
-						$fatoCelulaDiscipulado->setDataEHoraDeInativacao();
-						$this->getRepositorio()->getFatoCelulaDiscipuladoORM()->persistir($fatoCelulaDiscipulado);
+						$fatoCelulaDiscipulado = $this->getRepositorio()->getFatoCelulaDiscipuladoORM()->encontrarPorGrupoEvento($grupoEventoAtivo->getId());
+						if($fatoCelulaDiscipulado){
+							$fatoCelulaDiscipulado->setDataEHoraDeInativacao();
+							$this->getRepositorio()->getFatoCelulaDiscipuladoORM()->persistir($fatoCelulaDiscipulado);
+						}												
 					}
 				}
 
