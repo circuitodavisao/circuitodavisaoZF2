@@ -72,7 +72,7 @@ class Funcoes {
 			$mail->Host = 'smtp.gmail.com';
 			$mail->SMTPAuth = true;
 			$mail->Username = 'suporte@circuitodavisaonovo.com.br';
-			$mail->Password = '>%M5n=5y@';
+			$mail->Password = 'qwaszx147258';
 			$mail->SMTPSecure = 'tls';
 			$mail->Port = 587;
 			$mail->From = 'suporte@circuitodavisaonovo.com.br';
