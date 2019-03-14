@@ -3,7 +3,7 @@ use Application\Controller\Helper\Funcoes;
 use Application\View\Helper\BotaoSimples;
 use Application\Controller\RelatorioController;
 
-echo $this->templateFormularioTopo('Aproveitamento Instituto de Vencedores');
+echo $this->templateFormularioTopo('Aproveitamento Instituto de Vencedores - <b class="text-danger">Por Turmas</b>');
 ?>
 <style type="text/css">
 	th {
@@ -229,7 +229,7 @@ if($this->relatorio){
 	$htmlTime .= '<td class="turma'.$contadorDeTurmas.'">' . $relatorioFinal['total'] . '</td>';
 	$htmlTime .= '<td class="turma'.$contadorDeTurmas.'">' . $relatorioFinal['outros'] . '</td>';
 	$htmlTime .= '<td class="turma'.$contadorDeTurmas.'">' . $relatorioFinal['ativos'] . '</td>';
-	$htmlTime .= '<td class="turma'.$contadorDeTurmas.'">' . RelatorioController::formataNumeroRelatorio($somaPerformancesFinal / count($turmas)) . '%</td>';
+	$htmlTime .= '<td class="turma'.$contadorDeTurmas.'">' . RelatorioController::formataNumeroRelatorio($somaPerformancesFinal / count($this->turmas)) . '%</td>';
 	$htmlTime .= '</tr>';
 
 	echo $htmlTime;

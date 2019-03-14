@@ -1,0 +1,237 @@
+<?php
+use Application\Controller\Helper\Funcoes;
+use Application\View\Helper\BotaoSimples;
+use Application\Controller\RelatorioController;
+
+//Funcoes::var_dump($this->relatorio);
+echo $this->templateFormularioTopo('Aproveitamento Instituto de Vencedores - <b class="text-danger">Por Módulos</b>');
+?>
+<style type="text/css">
+	th {
+		text-align: center;
+	}
+	.colunaEspacamento {
+		width: 5px;
+		background-color: #fff;
+	}
+</style>
+		<div class="panel-body bg-light" style="padding: 15px 5px 5px 5px;">
+<?php
+
+$contadorDeDisciplinas = 0;
+foreach($this->disciplinas as $disciplina){    
+	$classeBase = 'disciplina' . $contadorDeDisciplinas . ' ';
+	$classeBase .= 'hidden-xs';
+	$mostrarBotaoEsquerdo = true;
+	if ($contadorDeDisciplinas === 0) {
+		$mostrarBotaoEsquerdo = false;
+	}
+	$mostrarBotaoDireito = true;
+	if ($contadorDeDisciplinas === count($this->disciplinas)) {
+		$mostrarBotaoDireito = false;
+	}
+	$funcaoEsquerda = $this->funcaoOnClick('$(".disciplina' . ($contadorDeDisciplinas - 1) . '").removeClass("hidden-xs");$(".disciplina' . $contadorDeDisciplinas . '").addClass("hidden-xs");');
+	$funcaoDireita = $this->funcaoOnClick('$(".disciplina' . ($contadorDeDisciplinas + 1) . '").removeClass("hidden-xs");$(".disciplina' . $contadorDeDisciplinas . '").addClass("hidden-xs");');
+	$botaoEsquerda = $this->botaoSimples('<i class="fa fa-angle-double-left"></i>', $funcaoEsquerda, BotaoSimples::botaoPequenoImportante, BotaoSimples::posicaoAEsquerda);
+	$botaoDireita = $this->botaoSimples('<i class="fa fa-angle-double-right"></i>', $funcaoDireita, BotaoSimples::botaoPequenoImportante, BotaoSimples::posicaoADireita);
+	echo '<div class="hidden-lg p5 hidden-md hidden-sm center-block text-center ' . $classeBase . '" style="margin-bottom: 17px;"> ';
+	if ($mostrarBotaoEsquerdo) {
+		echo '<span class="hidden-lg hidden-md hidden-sm">' . $botaoEsquerda . '</span>';
+	}
+	
+	echo $disciplina->getNome();
+	if ($mostrarBotaoDireito) {
+		echo '<span class="hidden-lg hidden-md hidden-sm">' . $botaoDireita . '</span>';
+	}
+	echo '</div>';
+	$contadorDeDisciplinas++;
+}
+
+$funcaoEsquerda = $this->funcaoOnClick('$(".disciplina' . ($contadorDeDisciplinas - 1) . '").removeClass("hidden-xs");$(".disciplina' . $contadorDeDisciplinas . '").addClass("hidden-xs");');
+$botaoEsquerda = $this->botaoSimples('<i class="fa fa-angle-double-left"></i>', $funcaoEsquerda, BotaoSimples::botaoPequenoImportante, BotaoSimples::posicaoAEsquerda);
+echo '<div class="hidden-lg p5 hidden-md hidden-sm center-block text-center disciplina'. $contadorDeDisciplinas . '" style="margin-bottom: 17px;"> ';
+echo '<span class="hidden-lg hidden-md hidden-sm">' . $botaoEsquerda . '</span>';
+echo 'FINAL';
+echo '</div>';
+?>
+			<div class="p5">
+				<table class="text-center table table-condensed table-hover bg-light" style="font-size:8px;">
+					<thead>
+						<tr class="dark">
+							<th>Times</th>
+<?php
+echo '<th class="hidden-xs colunaEspacamento">&nbsp;</th>';
+$contadorDeDisciplinas = 0;
+foreach($this->disciplinas as $disciplina){	
+	echo '<th class="hidden-xs disciplina'.$contadorDeDisciplinas.'" colspan="5">' . $disciplina->getNome() . '</th>';
+	echo '<th class="hidden-xs colunaEspacamento">&nbsp;</th>';
+	$contadorDeDisciplinas++;
+}
+echo '<th colspan="4" class="disciplina'.$contadorDeDisciplinas.'">TOTAL</th>';
+?>
+						</tr>
+						<tr>
+							<th></th>
+<?php
+echo '<th class="hidden-xs colunaEspacamento">&nbsp;</th>';
+$contadorDeDisciplinas = 0;
+foreach($this->disciplinas as $disciplina){
+	echo '<th class="hidden-xs disciplina'.$contadorDeDisciplinas.'">TOTAL</th>';
+	echo '<th class="hidden-xs disciplina'.$contadorDeDisciplinas.'">OUTROS</th>';
+	echo '<th class="hidden-xs disciplina'.$contadorDeDisciplinas.'">META</th>';
+	echo '<th class="hidden-xs disciplina'.$contadorDeDisciplinas.'">ATIVOS</th>';
+	echo '<th class="hidden-xs disciplina'.$contadorDeDisciplinas.'">%</th>';
+	echo '<th class="hidden-xs colunaEspacamento">&nbsp;</th>';
+	$contadorDeDisciplinas++;
+}
+echo '<th class="disciplina'.$contadorDeDisciplinas.'">TOTAL</th>';
+echo '<th class="disciplina'.$contadorDeDisciplinas.'">OUTROS</th>';
+echo '<th class="disciplina'.$contadorDeDisciplinas.'">ATIVOS</th>';
+echo '<th class="disciplina'.$contadorDeDisciplinas.'">%</th>';
+?>
+						</tr>
+					</thead>
+					<tbody>
+<?php
+if($this->relatorio){
+	$relatorioPronto = array();
+	$chaves = array();
+	foreach($this->relatorio as $chave => $relatorio){
+		$adicionar = false;
+		if($chave !== 'total' && !is_numeric($chave)){
+			$adicionar = true;
+		}
+		if($adicionar){
+			$chaves[] = $chave;
+			$soma = array();
+			$relatorioTime = array();
+			foreach($this->disciplinas as $disciplina){
+				$total = $relatorio[$disciplina->getPosicao()]['ATIVO'] + $relatorio[$disciplina->getPosicao()]['DESISTENTE'] + $relatorio[$disciplina->getPosicao()]['REPROVADO POR FALTAS'] + $relatorio[$disciplina->getPosicao()]['ESPECIAL'];
+				$outros = $relatorio[$disciplina->getPosicao()]['DESISTENTE'] + $relatorio[$disciplina->getPosicao()]['REPROVADO POR FALTAS'];
+				$meta = 0;
+				switch($disciplina->getId()){
+				case 5: $meta = 70; break;
+				case 6: $meta = 70; break;
+				case 7: $meta = 50; break;
+				case 8: $meta = 30; break;
+				}
+				$metaCalculada = number_format(($meta / 100 * $total), 1);
+				$ativos = $relatorio[$disciplina->getPosicao()]['ATIVO'] + $relatorio[$disciplina->getPosicao()]['ESPECIAL'];
+				$performance = $ativos / $metaCalculada * 100;
+
+				$soma['total'] += $total;
+				$soma['outros'] += $outros;
+				$soma['ativos'] += $ativos;
+				$soma['performances'] += $performance;
+
+				$relatorioTime[$disciplina->getPosicao()]['total'] = $total;
+				$relatorioTime[$disciplina->getPosicao()]['outros'] = $outros;
+				$relatorioTime[$disciplina->getPosicao()]['metaCalCulada'] = $metaCalculada;
+				$relatorioTime[$disciplina->getPosicao()]['ativos'] = $ativos;
+				$relatorioTime[$disciplina->getPosicao()]['performance'] = $performance;
+
+				$relatorioFinal[$disciplina->getPosicao()]['total'] += $total;
+				$relatorioFinal[$disciplina->getPosicao()]['outros'] += $outros;
+				$relatorioFinal[$disciplina->getPosicao()]['metaCalCulada'] += $metaCalculada;
+				$relatorioFinal[$disciplina->getPosicao()]['ativos'] += $ativos;
+			}
+
+			$performanceFinal = $soma['performances'] / count($this->disciplinas);
+			$relatorioTime['total'] = $soma['total'];
+			$relatorioTime['outros'] = $soma['outros'];
+			$relatorioTime['ativos'] = $soma['ativos'];
+			$relatorioTime['performanceFinal'] = $performanceFinal;
+			$relatorioPronto[$chave] = $relatorioTime;
+
+			$relatorioFinal['total'] += $soma['total'];
+			$relatorioFinal['outros'] += $soma['outros'];
+			$relatorioFinal['ativos'] += $soma['ativos'];
+		}
+	}
+
+	$tamanhoArray = count($chaves);
+
+	for ($i = 0; $i < $tamanhoArray; $i++) {
+		for ($j = 0; $j < $tamanhoArray; $j++) {
+
+			$chave1 = $chaves[$i];
+			$chave2 = $chaves[$j];
+
+			if ($relatorioPronto[$chave1]['performanceFinal'] > $relatorioPronto[$chave2]['performanceFinal']){
+				$aux = $chave1;
+				$chaves[$i] = $chave2;
+				$chaves[$j] = $aux;
+			}
+		}
+	}
+
+	$htmlTime = '';
+	foreach($chaves as $chave){
+		$relatorioTime = $relatorioPronto[$chave];
+		$corPerformanceGeral = RelatorioController::corDaLinhaPelaPerformance($relatorioTime['performanceFinal']);
+		$htmlTime .= '<tr>';
+		$htmlTime .= '<td class="'.$corPerformanceGeral.'">' . $chave . '</td>';
+		$htmlTime .= '<td class="hidden-xs colunaEspacamento">&nbsp;</td>';
+
+		$contadorDeDisciplinas = 0;
+		foreach($this->disciplinas as $disciplina){
+			$corPerformance = RelatorioController::corDaLinhaPelaPerformance($relatorioTime[$disciplina->getPosicao()]['performance']);
+			$htmlTime .= '<td class="hidden-xs disciplina'.$contadorDeDisciplinas.' '.$corPerformance.'">' . $relatorioTime[$disciplina->getPosicao()]['total'] . '</td>';
+			$htmlTime .= '<td class="hidden-xs disciplina'.$contadorDeDisciplinas.' '.$corPerformance.'">' . $relatorioTime[$disciplina->getPosicao()]['outros'] . '</td>';
+			$htmlTime .= '<td class="hidden-xs disciplina'.$contadorDeDisciplinas.' '.$corPerformance.'">' . $relatorioTime[$disciplina->getPosicao()]['metaCalCulada'] . '</td>';
+			$htmlTime .= '<td class="hidden-xs disciplina'.$contadorDeDisciplinas.' '.$corPerformance.'">' . $relatorioTime[$disciplina->getPosicao()]['ativos'] . '</td>';
+			$htmlTime .= '<td class="hidden-xs disciplina'.$contadorDeDisciplinas.' '.$corPerformance.'">' . RelatorioController::formataNumeroRelatorio($relatorioTime[$disciplina->getPosicao()]['performance']) . '%</td>';
+			$htmlTime .= '<td class="hidden-xs colunaEspacamento">&nbsp;</td>';
+			$contadorDeDisciplinas++;
+		}
+
+		$htmlTime .= '<td class="'.$corPerformanceGeral.' disciplina'.$contadorDeDisciplinas.'">' . $relatorioTime['total'] . '</td>';
+		$htmlTime .= '<td class="'.$corPerformanceGeral.' disciplina'.$contadorDeDisciplinas.'">' . $relatorioTime['outros'] . '</td>';
+		$htmlTime .= '<td class="'.$corPerformanceGeral.' disciplina'.$contadorDeDisciplinas.'">' . $relatorioTime['ativos'] . '</td>';
+		$htmlTime .= '<td class="'.$corPerformanceGeral.' disciplina'.$contadorDeDisciplinas.'">' . RelatorioController::formataNumeroRelatorio($relatorioTime['performanceFinal']) . '%</td>';
+		$htmlTime .= '</tr>';
+
+	}
+
+	$htmlTime .= '<tr>';
+	$htmlTime .= '<td>TOTAL</td>';
+	$htmlTime .= '<td class="hidden-xs colunaEspacamento">&nbsp;</td>';
+
+	$somaPerformancesFinal = 0;
+	$contadorDeDisciplinas = 0;
+	foreach($this->disciplinas as $disciplina){
+		$meta = 0;
+		switch($disciplina->getId()){
+		case 5: $meta = 70; break;
+		case 6: $meta = 70; break;
+		case 7: $meta = 50; break;
+		case 8: $meta = 30; break;
+		}
+		$metaCalculada = number_format(($meta / 100 * $relatorioFinal[$disciplina->getPosicao()]['total']), 1);
+		$performance = $relatorioFinal[$disciplina->getPosicao()]['ativos'] / $metaCalculada * 100;
+		$htmlTime .= '<td class="hidden-xs disciplina'.$contadorDeDisciplinas.'">' . $relatorioFinal[$disciplina->getPosicao()]['total'] . '</td>';
+		$htmlTime .= '<td class="hidden-xs disciplina'.$contadorDeDisciplinas.'">' . $relatorioFinal[$disciplina->getPosicao()]['outros'] . '</td>';
+		$htmlTime .= '<td class="hidden-xs disciplina'.$contadorDeDisciplinas.'">' . $relatorioFinal[$disciplina->getPosicao()]['metaCalCulada'] . '</td>';
+		$htmlTime .= '<td class="hidden-xs disciplina'.$contadorDeDisciplinas.'">' . $relatorioFinal[$disciplina->getPosicao()]['ativos'] . '</td>';
+		$htmlTime .= '<td class="hidden-xs disciplina'.$contadorDeDisciplinas.'">' . RelatorioController::formataNumeroRelatorio($performance) . '%</td>';
+		$htmlTime .= '<td class="hidden-xs colunaEspacamento">&nbsp;</td>';
+
+		$somaPerformancesFinal += $performance;
+		$contadorDeDisciplinas++;
+	}
+
+	$htmlTime .= '<td class="disciplina'.$contadorDeDisciplinas.'">' . $relatorioFinal['total'] . '</td>';
+	$htmlTime .= '<td class="disciplina'.$contadorDeDisciplinas.'">' . $relatorioFinal['outros'] . '</td>';
+	$htmlTime .= '<td class="disciplina'.$contadorDeDisciplinas.'">' . $relatorioFinal['ativos'] . '</td>';
+	$htmlTime .= '<td class="disciplina'.$contadorDeDisciplinas.'">' . RelatorioController::formataNumeroRelatorio($somaPerformancesFinal / count($this->disciplinas)) . '%</td>';
+	$htmlTime .= '</tr>';
+
+	echo $htmlTime;
+}
+?>
+					</tbody>
+				</table>
+		</div>
+	</div>
+<?php
+echo $this->templateFormularioRodape();
