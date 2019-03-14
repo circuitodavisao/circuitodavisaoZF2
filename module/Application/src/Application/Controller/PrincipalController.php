@@ -732,14 +732,28 @@ class PrincipalController extends CircuitoController {
 	public function suporteFinalizarAction() {
 		$sessao = new Container(Constantes::$NOME_APLICACAO);
 		$idEntidadeAtual = $sessao->idEntidadeAtual;
+		$entidadeDaIgreja = null;
+		$minhaEntidade = null;
 		$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
-		if($entidade->getEntidadeTipo()->getId() !== Entidade::COORDENACAO && $entidade->getEntidadeTipo()->getId() !== Entidade::REGIONAL){
+		if($entidade->getEntidadeTipo()->getId() !== Entidade::COORDENACAO && $entidade->getEntidadeTipo()->getId() !== Entidade::REGIONAL){			
 			$entidadeDaIgreja = $entidade->getGrupo()->getGrupoIgreja()->getEntidadeAtiva();
 			$entidadeAcima =  $entidadeDaIgreja->getGrupo()->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai()->getEntidadeAtiva();
 		}
-		if($entidade->getEntidadeTipo()->getId() === Entidade::COORDENACAO && $entidade->getEntidadeTipo()->getId() === Entidade::REGIONAL){
+		if($entidade->getEntidadeTipo()->getId() === Entidade::COORDENACAO){
+			$minhaEntidade = 'COORDENAÇÃO ' . $entidade->getNumero() . ', ';
 			$entidadeAcima =  $entidade->getGrupo()->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai()->getEntidadeAtiva();			
 		}		
+		if($entidade->getEntidadeTipo()->getId() === Entidade::REGIONAL){
+			$minhaEntidade = 'REGIÃO ' . $entidade->getNome() . ', ';
+			if($entidade->getGrupo()->getGrupoPaiFilhoPaiAtivo()){
+				$entidadeAcima =  $entidade->getGrupo()->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai()->getEntidadeAtiva();	
+			}			
+		}
+
+		if($entidade->getEntidadeTipo()->getId() === Entidade::EQUIPE){
+			$minhaEntidade = 'EQUIPE: ' . $pessoa->getGrupoResponsavel()[0]->getGrupo()->getEntidadeAtiva()->getNome() . ', ';
+		}
+
 		$pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($sessao->idPessoa);
 		$request = $this->getRequest();
 		$dadosPost = array_merge_recursive(
@@ -752,12 +766,14 @@ class PrincipalController extends CircuitoController {
 		$anexo = $dadosPost['imagem'];
 		$remetente['nome'] = $pessoa->getNomePrimeiroUltimo();
 		$remetente['email'] = $pessoa->getEmail();
-		$assunto = $dadosPost['assunto'] . ' :: ';
-		if($pessoa->getGrupoResponsavel()[0]->getGrupo()->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::EQUIPE){
-			$assunto .= 'EQUIPE: ' . $pessoa->getGrupoResponsavel()[0]->getGrupo()->getEntidadeAtiva()->getNome() . ', ';
+		$assunto = $dadosPost['assunto'] . ' :: ';		
+		
+		if($minhaEntidade){
+			$assunto .= $minhaEntidade;
 		}
+		
 		if($entidadeDaIgreja){
-			$assunto .= 'IGREJA: ' .  $entidadeDaIgreja->getNome();
+			$assunto .= 'IGREJA: ' .  $entidadeDaIgreja->getNome() . ', ';
 		}	
 		if($entidadeAcima){
 			if($entidadeAcima->getEntidadeTipo()->getId() === Entidade::COORDENACAO){                                  
@@ -768,7 +784,10 @@ class PrincipalController extends CircuitoController {
 			}
 		}			
 		 
-		$assunto .= ', NÍVEL ACIMA: ' . $nomeEntidadeAcimaArrumado;
+		if($nomeEntidadeAcimaArrumado){
+			$assunto .= ' NÍVEL ACIMA: ' . $nomeEntidadeAcimaArrumado;
+		}
+
 		$Subject = $assunto;		
 		$ToEmail = 'support@circuitodavisao.zendesk.com';
 		$Content = 'Tipo: '.$tipo.'
