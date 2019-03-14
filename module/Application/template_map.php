@@ -102,6 +102,7 @@ return array(
     'application/relatorio/alunos'                        => __DIR__ . '/view/application/relatorio/alunos.phtml',
     'application/relatorio/lideres'                       => __DIR__ . '/view/application/relatorio/lideres.phtml',
     'application/relatorio/ranking-celula'                => __DIR__ . '/view/application/relatorio/ranking-celula.phtml',
+    'application/relatorio/aproveitamento-do-iv'          => __DIR__ . '/view/application/relatorio/aproveitamento-do-iv.phtml',
     'application/relatorio/celulas-nao-realizadas'        => __DIR__ . '/view/application/relatorio/celulas-nao-realizadas.phtml',
     'application/relatorio/alunos-na-semana'              => __DIR__ . '/view/application/relatorio/alunos-na-semana.phtml',
     'application/relatorio/instituto'                     => __DIR__ . '/view/application/relatorio/instituto.phtml',
