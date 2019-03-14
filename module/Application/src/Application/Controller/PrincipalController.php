@@ -751,7 +751,7 @@ class PrincipalController extends CircuitoController {
 		}
 
 		if($entidade->getEntidadeTipo()->getId() === Entidade::EQUIPE){
-			$minhaEntidade = 'EQUIPE: ' . $pessoa->getGrupoResponsavel()[0]->getGrupo()->getEntidadeAtiva()->getNome() . ', ';
+			$minhaEntidade = 'EQUIPE: ' . $entidade->getNome() . ', ';
 		}
 
 		$pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($sessao->idPessoa);
