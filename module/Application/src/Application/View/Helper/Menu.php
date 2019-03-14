@@ -361,9 +361,25 @@ if ($this->view->entidade->verificarSeEstaAtivo()){
 			$html .= '<li>';
 			$html .= '<a href="/relatorioInstituto" onClick="mostrarSplash();">';
 			$html .= '<span class="fa fa-users"></span>';
-			$html .= 'Aproveitamento Instituto de Vencedores';
+			$html .= 'Aproveitamento Instituto de Vencedores - Por Turmas';
+			$html .= '</a>';
+			$html .= '</li>';	
+			
+			}
+
+			if($this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::regiao) {
+
+			$html .= '<li>';
+			$html .= '<a href="/relatorioAproveitamentoDoIv" onClick="mostrarSplash();">';
+			$html .= '<span class="fa fa-users"></span>';
+			$html .= 'Aproveitamento Instituto de Vencedores - Por Módulos';
 			$html .= '</a>';
 			$html .= '</li>';
+			
+			}
+
+			if($this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::regiao 
+			&& $this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::coordenacao) {
 
 			$html .= '<li>';
 			$html .= '<a href="/relatorioAlunos/1" onClick="mostrarSplash();">';
@@ -413,16 +429,7 @@ if ($this->view->entidade->verificarSeEstaAtivo()){
 			$html .= '<span class="fa fa-calendar"></span>';
 			$html .= 'Registro';
 			$html .= '</a>';
-			$html .= '</li>';
-
-			if ($this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::regiao) {
-				$html .= '<li>';
-				$html .= '<a href="#" onClick="mostrarSplash(); funcaoCircuito(\'relatorioGeradorMetas\', null);">';
-				$html .= '<span class="fa fa-table"></span>';
-				$html .= 'Gerador de Metas';
-				$html .= '</a>';
-				$html .= '</li>';
-			}
+			$html .= '</li>';			
 
 			$html .= '</ul>';
 

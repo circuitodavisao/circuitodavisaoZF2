@@ -412,6 +412,139 @@ class RelatorioController extends CircuitoController {
 		return $response;
 	}
 
+	public function aproveitamentoDoIvAction(){
+		$sessao = new Container(Constantes::$NOME_APLICACAO);
+		$idEntidadeAtual = $sessao->idEntidadeAtual;
+		$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+		$repositorio = $this->getRepositorio();
+		$arrayComTodosRelatorios = Array();	
+		$arrayComTodasAsTurmas = Array();
+		$relatorioAjustado = Array();
+		if($entidade->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao ||			
+			$entidade->getEntidadeTipo()->getId() === EntidadeTipo::regiao){
+			$grupoSelecionado = $entidade->getGrupo();       
+			$grupoSelecionadoGrupoPaiFilhoFilhos = $grupoSelecionado->getGrupoPaiFilhoFilhosAtivos(0);
+			if($grupoSelecionadoGrupoPaiFilhoFilhos){
+				foreach($grupoSelecionadoGrupoPaiFilhoFilhos as $GrupoPaiFilhos){					
+					$filho = $GrupoPaiFilhos->getGrupoPaiFilhoFilho();								
+					if($filho->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::igreja){				   					
+						$resultado = self::relatorioAlunosETurmas($this->getRepositorio(), $filho->getEntidadeAtiva());									      					  										
+						$turmasComAulaAberta = $resultado[1];
+						$relatoriosInicial = $resultado[2];		
+						foreach($turmasComAulaAberta as $turmas){					
+							$arrayComTodasAsTurmas[] = $turmas;
+						}
+						foreach($relatoriosInicial as $relatorios){					
+							$arrayComTodosRelatorios[] = $relatorios;
+						}
+					}
+					$temCoordenacao = false;
+					if($filho->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao){
+						$GrupoPaifilhoDosFilhos = $filho->getGrupoPaiFilhoFilhosAtivos(0);
+						do{
+							foreach($GrupoPaifilhoDosFilhos as $GrupoPaiFilhoInterior){
+								$filhoInterior = $GrupoPaiFilhoInterior->getGrupoPaiFilhoFilho();
+								if($filhoInterior->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
+									$resultado = self::relatorioAlunosETurmas($this->getRepositorio(), $filhoInterior->getEntidadeAtiva());
+									$turmasComAulaAberta = $resultado[1];
+									$relatoriosInicial = $resultado[2];		
+									foreach($turmasComAulaAberta as $turmas){					
+										$arrayComTodasAsTurmas[] = $turmas;
+									}
+									foreach($relatoriosInicial as $relatorios){					
+										$arrayComTodosRelatorios[] = $relatorios;
+									}
+								}
+								if($filhoInterior->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao){
+									$temCoordenacao = true;
+								}                           
+							}
+							$GrupoPaifilhoDosFilhos = $filhoInterior->getGrupoPaiFilhoFilhosAtivos(0);
+						} while ($temCoordenacao);
+					}	
+				}
+			}		
+			
+			foreach($arrayComTodosRelatorios as $relatorioInicial){
+				foreach($arrayComTodasAsTurmas as $turmaComAulaAberta){
+					if($relatorioInicial->getTurma_id() === $turmaComAulaAberta->getId()){
+						$idGrupo = substr($relatorioInicial->getNumero_identificador(), (count($relatorioInicial->getNumero_identificador())-8));
+						$idGrupoIgreja = substr($relatorioInicial->getNumero_identificador(), 0, 8);
+						$grupo = $repositorio->getGrupoORM()->encontrarPorId($idGrupo);								
+						$grupoIgreja = $repositorio->getGrupoORM()->encontrarPorId($idGrupoIgreja);
+						$grupoDoDiscipuloAbaixoDeQuemEstaLogado = $this->pegarGrupoDoDiscipuloAbaixoDeQuemEstaLogado($grupo);
+						$situacao = $repositorio->getSituacaoORM()->encontrarPorId($relatorioInicial->getSituacao_id());
+						$disciplinaPosicao = $turmaComAulaAberta->getTurmaAulaAtiva()->getAula()->getDisciplina()->getPosicao();
+						if($grupoDoDiscipuloAbaixoDeQuemEstaLogado->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::igreja ||
+							$grupoDoDiscipuloAbaixoDeQuemEstaLogado->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::regiao){						
+							$relatorioAjustado[$grupoIgreja->getEntidadeAtiva()->getNome()][$disciplinaPosicao][$situacao->getNome()]++;
+						}
+						if($grupoDoDiscipuloAbaixoDeQuemEstaLogado->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao){			 	
+							$relatorioAjustado['COORDENAÇÃO ' . $grupoDoDiscipuloAbaixoDeQuemEstaLogado->getEntidadeAtiva()->getNumero()][$disciplinaPosicao][$situacao->getNome()]++;
+						}					
+						
+						$relatorioAjustado[$disciplinaPosicao][$situacao->getId()]++;
+						$relatorioAjustado['total'][$situacao->getId()]++;
+					}				  
+				}					
+			}
+			$disciplinas = $arrayComTodasAsTurmas[0]->getCurso()->getDisciplina();
+		}
+		if($entidade->getEntidadeTipo()->getId() === EntidadeTipo::equipe ||			
+			$entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja ||
+			$entidade->getEntidadeTipo()->getId() === EntidadeTipo::subEquipe){
+			$resultado = self::relatorioAlunosETurmas($this->getRepositorio(), $entidade);
+			$arrayComTodasAsTurmas = $resultado[1];
+			$arrayComTodosRelatorios = $resultado[2];			
+
+			foreach($arrayComTodosRelatorios as $relatorioInicial){
+				foreach($arrayComTodasAsTurmas as $turmaComAulaAberta){
+					if($relatorioInicial->getTurma_id() === $turmaComAulaAberta->getId()){
+						$idGrupo = substr($relatorioInicial->getNumero_identificador(), (count($relatorioInicial->getNumero_identificador())-8));
+						$grupo = $repositorio->getGrupoORM()->encontrarPorId($idGrupo);					
+						 $grupoDoDiscipuloAbaixoDeQuemEstaLogado = $this->pegarGrupoDoDiscipuloAbaixoDeQuemEstaLogado($grupo);
+						 $situacao = $repositorio->getSituacaoORM()->encontrarPorId($relatorioInicial->getSituacao_id());
+						 $disciplinaPosicao = $turmaComAulaAberta->getTurmaAulaAtiva()->getAula()->getDisciplina()->getPosicao();
+					 	if($grupoDoDiscipuloAbaixoDeQuemEstaLogado->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::equipe){						
+					 		$relatorioAjustado[$grupoDoDiscipuloAbaixoDeQuemEstaLogado->getEntidadeAtiva()->getNome()][$disciplinaPosicao][$situacao->getNome()]++;
+					 	}
+						if($grupoDoDiscipuloAbaixoDeQuemEstaLogado->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::subEquipe){			 	
+					 		$relatorioAjustado[$grupoDoDiscipuloAbaixoDeQuemEstaLogado->getEntidadeAtiva()->infoEntidade()][$disciplinaPosicao][$situacao->getNome()]++;
+					 	}					
+						
+					 	$relatorioAjustado[$disciplinaPosicao][$situacao->getId()]++;
+					 	$relatorioAjustado['total'][$situacao->getId()]++;
+					 }				  
+				}					
+			}
+
+			 $disciplinas = $arrayComTodasAsTurmas[0]->getCurso()->getDisciplina();
+		}
+		
+		
+		self::registrarLog(RegistroAcao::VER_RELATORIO_APROVEITAMENTO_DO_IV, $extra = '');
+		return new ViewModel(array(
+			'relatorio' => $relatorioAjustado,
+			'disciplinas' => $disciplinas,			
+		));
+	}
+	
+	public function pegarGrupoDoDiscipuloAbaixoDeQuemEstaLogado($grupoASerVerificado){
+		$sessao = new Container(Constantes::$NOME_APLICACAO);
+		$idEntidadeAtual = $sessao->idEntidadeAtual;
+		$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+		$grupoLogado = $entidade->getGrupo();
+		$grupoDoDiscipuloAbaixoDeQuemEstaLogado = $grupoASerVerificado;
+		while ($grupoASerVerificado->getId() !== $grupoLogado->getId()) {				
+				$grupoDoDiscipuloAbaixoDeQuemEstaLogado = $grupoASerVerificado;
+				$grupoASerVerificado = $grupoASerVerificado->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai();				
+                if ($grupoASerVerificado->getId() === $grupoLogado->getId()) {
+                    break;
+                }
+			}
+		return $grupoDoDiscipuloAbaixoDeQuemEstaLogado;
+	}
+
 	public function institutoAction(){
 		$sessao = new Container(Constantes::$NOME_APLICACAO);
 
@@ -429,12 +562,13 @@ class RelatorioController extends CircuitoController {
 		));
 	}
 
-	static public function relatorioAlunosETurmas($repositorio, $entidade, $turmasAtivas = true){
+	static public function relatorioAlunosETurmas($repositorio, $entidade, $turmasAtivas = true){		
 		$relatorioAjustado = array();
 		$numeroIdentificador = $repositorio->getFatoCicloORM()->montarNumeroIdentificador($repositorio, $entidade->getGrupo());
+		
 		$relatorioInicial = $repositorio->getFatoCursoORM()->encontrarFatoCursoPorNumeroIdentificador($numeroIdentificador);
 		$turmasComAulaAberta = array();
-		if($turmasAtivas){
+		if($turmasAtivas){				
 				$turmas = $entidade->getGrupo()->getGrupoIgreja()->getTurma();
 		}
 
@@ -451,7 +585,7 @@ class RelatorioController extends CircuitoController {
 				$turmasComAulaAberta[] = $turma;
 			}
 		}
-
+		
 		$relatorioAjustado = array();
 		foreach($relatorioInicial as $relatorio){
 			foreach($turmasComAulaAberta as $turma){
@@ -481,12 +615,14 @@ class RelatorioController extends CircuitoController {
 			}
 		}
 
+		
 		$resultado = array();
 		$resultado[0] = $relatorioAjustado;
 		$resultado[1] = $turmasComAulaAberta;
 		$resultado[2] = $relatorioInicial;
-
+		       
 		return $resultado;
+		
 	}
 
 	public function buscarDadosGrupoAction() {
