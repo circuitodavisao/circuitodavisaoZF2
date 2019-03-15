@@ -122,6 +122,9 @@ class Perfil extends AbstractHelper {
         $html .= $this->view->inputFormularioSimples(Constantes::$TRADUCAO_DDD, $formulario->get(Constantes::$INPUT_DDD), 3);
         $html .= $this->view->inputFormularioSimples(Constantes::$TRADUCAO_TELEFONE, $formulario->get(Constantes::$INPUT_TELEFONE), 9);
         $html .= $this->view->inputFormularioSimples(Constantes::$TRADUCAO_SEXO, $formulario->get(Constantes::$INPUT_SEXO), 12, 2);
+        $html .= $this->view->inputFormularioSimples(Constantes::$TRADUCAO_DATA_NASCIMENTO, $formulario->get(Constantes::$FORM_INPUT_DIA), 4, 2);
+        $html .= $this->view->inputFormularioSimples('&nbsp;', $formulario->get(Constantes::$FORM_INPUT_MES), 4, 2);
+        $html .= $this->view->inputFormularioSimples('&nbsp;', $formulario->get(Constantes::$FORM_INPUT_ANO), 4, 2);
 
         if ($this->getMostrarOpcoes()) {
             $funcaoVerificarPerfil = $this->view->funcaoOnClick('validarPerfil(this.form)');

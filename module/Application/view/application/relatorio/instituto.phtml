@@ -121,7 +121,7 @@ if($this->relatorio){
 				case 7: $meta = 50; break;
 				case 8: $meta = 30; break;
 				}
-				$metaCalculada = number_format($meta / 100 * $total);
+				$metaCalculada = number_format(($meta / 100 * $total), 1);
 				$ativos = $relatorio[$turma->getId()]['ATIVO'] + $relatorio[$turma->getId()]['ESPECIAL'];
 				$performance = $ativos / $metaCalculada * 100;
 
@@ -213,7 +213,7 @@ if($this->relatorio){
 		case 7: $meta = 50; break;
 		case 8: $meta = 30; break;
 		}
-		$metaCalculada = number_format($meta / 100 * $relatorioFinal[$turma->getId()]['total']);
+		$metaCalculada = number_format(($meta / 100 * $relatorioFinal[$turma->getId()]['total']), 1);
 		$performance = $relatorioFinal[$turma->getId()]['ativos'] / $metaCalculada * 100;
 		$htmlTime .= '<td class="hidden-xs turma'.$contadorDeTurmas.'">' . $relatorioFinal[$turma->getId()]['total'] . '</td>';
 		$htmlTime .= '<td class="hidden-xs turma'.$contadorDeTurmas.'">' . $relatorioFinal[$turma->getId()]['outros'] . '</td>';

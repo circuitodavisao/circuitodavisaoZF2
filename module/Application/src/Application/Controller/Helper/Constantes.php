@@ -455,6 +455,7 @@ class Constantes {
     public static $INPUT_PRIMEIRO_NOME = 'primeiro-nome';
     public static $INPUT_ULTIMO_NOME = 'ultimo-nome';
     public static $INPUT_DATA_ATENDIMENTO = 'dataAtendimento';
+    public static $INPUT_DATA_DE_NASCIMENTO = 'dataDeNascimento';
     public static $INPUT_QUEM_ATENDEU = 'quem';
     public static $INPUT_ID_GRUPO_ATENDIDO = 'idGrupo';
     public static $INPUT_DDD = 'ddd';
