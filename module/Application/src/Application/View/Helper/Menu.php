@@ -36,9 +36,9 @@ class Menu extends AbstractHelper {
 		// Start: Header
 		$html .= '<header class="navbar navbar-fixed-top navbar-shadow">';
 		$html .= '<div class="navbar-branding">';
-		$html .= '<a class="navbar-brand" href="#" style="padding-top: 22px;">';
+		$html .= '<a class="navbar-brand" href="#" style="padding-top: 12px;">';
 		$html .= '<img src="' . Constantes::$IMAGEM_LOGO_PEQUENA . '" title="' .
-		$this->view->translate(Constantes::$TRADUCAO_NOME_APLICACAO) . '" class="img-responsive" style="max-width:100%;">';
+		$this->view->translate(Constantes::$TRADUCAO_NOME_APLICACAO) . '" class="img-responsive" style="max-width:90%;">';
 		$html .= '</a>';
 		$html .= '<span id="toggle_sidemenu_l" class="ad ad-lines"></span>';
 		$html .= '</div>';

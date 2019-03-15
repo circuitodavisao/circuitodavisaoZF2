@@ -23,7 +23,7 @@ class LinkLogo extends AbstractHelper {
     public function renderHtml() {
         $html = '';
         $html .= ' <a href="' . Constantes::$INDEX . '" title="' . $this->view->translate(Constantes::$TRADUCAO_NOME_APLICACAO) . '">';
-        $html .= ' <img src="' . Constantes::$IMAGEM_LOGO . '" ';
+        $html .= ' <img src="' . Constantes::$IMAGEM_LOGO . '?v=1" ';
         $html .= ' title="' . $this->view->translate(Constantes::$TRADUCAO_NOME_APLICACAO) . '" ';
         $html .= ' class="center-block img-responsive" style="max-width: 275px;"> ';
         $html .= ' </a> ';
