@@ -696,6 +696,8 @@ class LoginController extends CircuitoController {
                 $pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($post_data['id']);
                 $pessoa->setTelefone($post_data['ddd'] . $post_data['telefone']);
                 $pessoa->setSexo($post_data[Constantes::$INPUT_SEXO]);
+                $pessoa->setData_nascimento($post_data[Constantes::$FORM_INPUT_ANO] . "-" . $post_data[Constantes::$FORM_INPUT_MES] . "-" .
+			    $post_data[Constantes::$FORM_INPUT_DIA]);
                 $this->getRepositorio()->getPessoaORM()->persistir($pessoa, $mudarDataDeCadastro = false);
                 $this->getRepositorio()->fecharTransacao();
 

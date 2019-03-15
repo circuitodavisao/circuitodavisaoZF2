@@ -1,6 +1,6 @@
 <?php
 echo $this->doctype();
-$versao = '?v=1.6.6';
+$versao = '?v=1.6.7';
 
 use Application\Controller\Helper\Constantes;
 ?>
@@ -29,7 +29,7 @@ use Application\Controller\Helper\Constantes;
         <!-- Styles -->
         <?php
         echo $this
-                ->headLink(array('rel' => 'shortcut icon', 'type' => 'image/vnd.microsoft.icon', 'href' => $this->basePath() . '/img/favicon.png'))
+                ->headLink(array('rel' => 'shortcut icon', 'type' => 'image/vnd.microsoft.icon', 'href' => $this->basePath() . '/img/favicon.ico' . $versao))
                 ->headLink(array('rel' => 'apple-touch-icon', 'href' => $this->basePath() . '/img/icons/touch-icon-ipad.png'))
                 ->headLink(array('rel' => 'apple-touch-icon', 'sizes' => '76x76', 'href' => $this->basePath() . '/img/icons/touch-icon-ipad.png'))
                 ->headLink(array('rel' => 'apple-touch-icon', 'sizes' => '120x120', 'href' => $this->basePath() . '/img/icons/touch-icon-iphone-retina.png'))
