@@ -116,6 +116,59 @@ class PerfilForm extends Form {
                         ])
         );
 
+        list($ano, $mes, $dia) = explode('-', $pessoa->getData_nascimento());
+
+        /* Dia da data de nascimento */
+        $arrayDiaDataNascimento = array();
+        $arrayDiaDataNascimento[0] = Constantes::$TRADUCAO_DIA;
+        for ($indiceDiaDoMes = 1; $indiceDiaDoMes <= 31; $indiceDiaDoMes++) {
+            $numeroAjustado = str_pad($indiceDiaDoMes, 2, 0, STR_PAD_LEFT);
+            $arrayDiaDataNascimento[$indiceDiaDoMes] = $numeroAjustado;
+        }
+        $inputSelectDiaDataNascimento = new Select();
+        $inputSelectDiaDataNascimento->setName(Constantes::$FORM_INPUT_DIA);
+        $inputSelectDiaDataNascimento->setAttributes(array(
+            Constantes::$FORM_CLASS => Constantes::$FORM_CLASS_FORM_CONTROL,
+            Constantes::$FORM_ID => Constantes::$FORM_INPUT_DIA,
+            Constantes::$FORM_STRING_VALUE => $dia,
+        ));
+        $inputSelectDiaDataNascimento->setValueOptions($arrayDiaDataNascimento);
+        $this->add($inputSelectDiaDataNascimento);
+
+        /* Mês da data de nascimento */
+        $arrayMesDataNascimento = array();
+        $arrayMesDataNascimento[0] = Constantes::$TRADUCAO_MES;
+        for ($indiceMesNoAno = 1; $indiceMesNoAno <= 12; $indiceMesNoAno++) {
+            $numeroAjustado = str_pad($indiceMesNoAno, 2, 0, STR_PAD_LEFT);
+            $arrayMesDataNascimento[$indiceMesNoAno] = $numeroAjustado;
+        }
+        $inputSelectMesDataNascimento = new Select();
+        $inputSelectMesDataNascimento->setName(Constantes::$FORM_INPUT_MES);
+        $inputSelectMesDataNascimento->setAttributes(array(
+            Constantes::$FORM_CLASS => Constantes::$FORM_CLASS_FORM_CONTROL,
+            Constantes::$FORM_ID => Constantes::$FORM_INPUT_MES,
+            Constantes::$FORM_STRING_VALUE => $mes,
+        ));
+        $inputSelectMesDataNascimento->setValueOptions($arrayMesDataNascimento);
+        $this->add($inputSelectMesDataNascimento);
+
+        /* Ano da data de nascimento */
+        $arrayAnoDataNascimento = array();
+        $arrayAnoDataNascimento[0] = Constantes::$TRADUCAO_ANO;
+        $anoAtual = date('Y');
+        for ($indiceAno = $anoAtual; $indiceAno >= ($anoAtual - 100); $indiceAno--) {
+            $arrayAnoDataNascimento[$indiceAno] = $indiceAno;
+        }
+        $inputSelectAnoDataNascimento = new Select();
+        $inputSelectAnoDataNascimento->setName(Constantes::$FORM_INPUT_ANO);
+        $inputSelectAnoDataNascimento->setAttributes(array(
+            Constantes::$FORM_CLASS => Constantes::$FORM_CLASS_FORM_CONTROL,
+            Constantes::$FORM_ID => Constantes::$FORM_INPUT_ANO,
+            Constantes::$FORM_STRING_VALUE => $ano,
+        ));
+        $inputSelectAnoDataNascimento->setValueOptions($arrayAnoDataNascimento);
+        $this->add($inputSelectAnoDataNascimento);
+
         $arraySexo = array();
         $arraySexo[0] = Constantes::$TRADUCAO_SELECIONE;
         $arraySexo['M'] = Constantes::$TRADUCAO_MASCULINO;
