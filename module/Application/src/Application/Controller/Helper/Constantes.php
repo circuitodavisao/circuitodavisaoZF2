@@ -40,7 +40,7 @@ class Constantes {
     public static $INPUT_CSRF = 'csrf';
     public static $INPUT_ENTRAR = 'entrar';
     public static $MENSAGEM_ERRO_CSRF = 'Poss&iacute;vel ataque CSRF';
-    public static $IMAGEM_LOGO = '/img/logos/logo_circuito.png';
+    public static $IMAGEM_LOGO = '/img/logos/new_logo_circuito.png';
     public static $LOADER_GIF = '/img/loader.gif';
     public static $LOADER_GIF_GRANDE = '/img/loader-grande.gif';
     public static $CLASS_HIDDEN = 'hidden';
@@ -124,7 +124,7 @@ class Constantes {
     public static $PERFIS_DE_ACESSO = 'perfiDeAcesso';
     public static $RESPONSABILIDADES = 'responsabilidades';
     public static $PESSOA = 'pessoa';
-    public static $IMAGEM_LOGO_PEQUENA = '/img/logos/new_logo-circuito.png';
+    public static $IMAGEM_LOGO_PEQUENA = '/img/logos/new_logo_circuito.png';
     public static $TRADUCAO_QUAL_PERFIL = 'What is the profile you want to use?';
     public static $TRADUCAO_SELECIONE_PERFIL = 'Select one profile from the list.';
 
