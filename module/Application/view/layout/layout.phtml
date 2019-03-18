@@ -1,6 +1,6 @@
 <?php
 echo $this->doctype();
-$versao = '?v=1.6.8';
+$versao = '?v=1.6.10';
 
 use Application\Controller\Helper\Constantes;
 ?>
@@ -29,12 +29,7 @@ use Application\Controller\Helper\Constantes;
         <!-- Styles -->
         <?php
         echo $this
-                ->headLink(array('rel' => 'shortcut icon', 'type' => 'image/vnd.microsoft.icon', 'href' => $this->basePath() . '/img/favicon.png' . $versao))
-                ->headLink(array('rel' => 'apple-touch-icon', 'href' => $this->basePath() . '/img/icons/touch-icon-ipad.png'))
-                ->headLink(array('rel' => 'apple-touch-icon', 'sizes' => '76x76', 'href' => $this->basePath() . '/img/icons/touch-icon-ipad.png'))
-                ->headLink(array('rel' => 'apple-touch-icon', 'sizes' => '120x120', 'href' => $this->basePath() . '/img/icons/touch-icon-iphone-retina.png'))
-                ->headLink(array('rel' => 'apple-touch-icon', 'sizes' => '152x152', 'href' => $this->basePath() . '/img/icons/touch-icon-ipad-retina.png'))
-                ->headLink(array('rel' => 'apple-touch-icon', 'sizes' => '256x256', 'href' => $this->basePath() . '/img/icons/touch-icon-iphone.png'))
+                ->headLink(array('rel' => 'shortcut icon', 'type' => 'image/vnd.microsoft.icon', 'href' => $this->basePath() . '/img/favicon.ico' . $versao))
                 ->prependStylesheet($this->basePath() . '/css/estilos-circuito/splash.css' . $versao)
                 ->prependStylesheet($this->basePath() . '/vendor/plugins/footable/css/footable.core.min.css')
                 ->prependStylesheet($this->basePath() . '/vendor/plugins/ladda/ladda.min.css')
