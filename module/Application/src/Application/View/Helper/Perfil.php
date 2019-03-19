@@ -42,6 +42,26 @@ class Perfil extends AbstractHelper {
         $html .= $this->view->form()->openTag($formulario);
         $html .= '<div class="panel-body bg-light p5 mt10">';
 
+        $stringDoAvisoChato = '';      
+        if(!$pessoa->getSexo()){
+            $stringDoAvisoChato .= ' Preencha seu Sexo';
+        }
+        if(!$pessoa->getData_nascimento()){
+            if($stringDoAvisoChato != ''){
+                $stringDoAvisoChato .= ', ';
+            }
+            $stringDoAvisoChato .= ' Preencha sua Data de Nascimento';
+        }
+        if($stringDoAvisoChato != ''){
+            $stringDoAvisoChato .= ' e clique em Salvar';
+        }
+        
+        if(!$pessoa->getData_nascimento() || !$pessoa->getSexo()){
+            $html .= '<div id="divSexoDataDeNascimento" class="alert alert-danger p15" role="alert">';
+            $html .= $stringDoAvisoChato;
+            $html .= '</div>';
+        }
+
         $html .= '<div class="row">';
         $html .= '<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-center">';
         $html .= FuncoesEntidade::tagImgComFotoDaPessoa($pessoa, 256);
@@ -116,7 +136,8 @@ class Perfil extends AbstractHelper {
             $elementoTelefone->setAttribute('disabled', true);
             $elementoSexo->setAttribute('disabled', true);
         }
-        $html .= '<br />';
+        $html .= '<br />';         
+        
         $html .= $this->view->divMensagens();
         $html .= $this->view->inputFormularioSimples(Constantes::$TRADUCAO_NOME, $formulario->get(Constantes::$INPUT_NOME), 12);
         $html .= $this->view->inputFormularioSimples(Constantes::$TRADUCAO_DDD, $formulario->get(Constantes::$INPUT_DDD), 3);

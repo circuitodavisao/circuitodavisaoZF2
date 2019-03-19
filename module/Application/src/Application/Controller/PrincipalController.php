@@ -39,8 +39,13 @@ class PrincipalController extends CircuitoController {
 
 		$sessao = new Container(Constantes::$NOME_APLICACAO);
 
+		/* dados pessoa logada */
 		$idEntidadeAtual = $sessao->idEntidadeAtual;
 		$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+		$pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($sessao->idPessoa);
+		$grupo = $entidade->getGrupo();
+		$grupoLogado = $grupo;
+		$pessoaLogada = $pessoa;
 
 		$mostrarPrincipal = true;
 
@@ -57,15 +62,11 @@ class PrincipalController extends CircuitoController {
 				return $this->redirect()->toRoute(Constantes::$ROUTE_LANCAMENTO, array(Constantes::$ACTION => 'Discipulado'));
 			}
 		}
+		if(!$pessoa->getData_nascimento() || !$pessoa->getSexo()){			
+			return $this->redirect()->toRoute(Constantes::$ROUTE_LOGIN, array(Constantes::$ACTION => 'perfil'));			
+		}
 		/* fim formulario */
-
-		/* dados pessoa logada */
-		$idEntidadeAtual = $sessao->idEntidadeAtual;
-		$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
-		$pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($sessao->idPessoa);
-		$grupo = $entidade->getGrupo();
-		$grupoLogado = $grupo;
-		$pessoaLogada = $pessoa;
+		
 		$periodoAtual = -1;
 		$vendoPessoaLogada = true;
 		$mesFinal = date('m');
