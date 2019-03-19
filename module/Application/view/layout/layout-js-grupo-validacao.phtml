@@ -2,7 +2,7 @@
 
 use Application\Controller\Helper\Constantes;
 
-$versao = '?v=0.5';
+$versao = '?v=0.7';
 
 echo $this
 	->headScript()
@@ -321,14 +321,17 @@ default:
 
 						if (resposta === 3) {
 							/* Já cadastrado */
-							spanMensagens.text('<?php echo $this->translate(Constantes::$TRADUCAO_CPF_JA_UTILIZADO); ?>');
-							if (entidadeTipo === 1
-								|| entidadeTipo === 2
-								|| entidadeTipo === 3
-								|| entidadeTipo === 4) {
-									var mensagemAtual = spanMensagens.text();
-									spanMensagens.html(mensagemAtual + ', Para vincular uma nova responsabilidade a esse usuário clique no menu: <p><code>Cadastrar -> Nova Responsabilidade</code></p>');
+							var StringCadastrado = '';
+							StringCadastrado += '<?php echo $this->translate(Constantes::$TRADUCAO_CPF_JA_UTILIZADO); ?>';
+							if(data.ondeEsta){
+								StringCadastrado += ', cadastrado em: ' + data.ondeEsta;
 							}
+							
+							if(data.responsavel.nome){
+								StringCadastrado += ', nome do responsável: ' + data.responsavel.nome;
+							}								
+														
+							spanMensagens.text(StringCadastrado);																																			
 						}
 
 						if (resposta === 2 || resposta === 3) {
