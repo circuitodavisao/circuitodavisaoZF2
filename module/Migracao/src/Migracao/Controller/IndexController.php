@@ -414,6 +414,8 @@ class IndexController extends CircuitoController {
 									if ($idSolicitacaoTipo == SolicitacaoTipo::SEPARAR) {
 										$html .= "<br /> {$solicitacao->getId()} - SEPARANDO";
 										$pessoaParaInativar = $this->getRepositorio()->getPessoaORM()->encontrarPorId($solicitacao->getObjeto2());
+										$pessoaParaInativar->setEmail(null);
+										$this->getRepositorio()->getPessoaORM()->persistir($pessoaParaInativar, false);
 										$grupoResponsavelParaUsar = null;
 										foreach ($pessoaParaInativar->getResponsabilidadesAtivas() as $grupoResponsavel) {
 											$grupoResponsavel->setDataEHoraDeInativacao(date('Y-m-d', mktime(0, 0, 0, date("m"), date("d") - 1, date("Y"))));
@@ -1105,7 +1107,8 @@ class IndexController extends CircuitoController {
 		return $html;
 	}
 
-	public function removerLider($grupo, $data = null) {
+	public function removerLider($grupo, $data = null) {	
+		$this->removerEmailDasPessoasDoGrupo($grupo);	
 		if($data){
 			$dataParaInativar = $data;
 		}else{
@@ -1116,42 +1119,52 @@ class IndexController extends CircuitoController {
 		if($grupoPaiFilhoFilhos = $grupo->getGrupoPaiFilhoFilhosAtivos(1)){
 			foreach($grupoPaiFilhoFilhos as $grupoPaiFilho){
 				$grupo1 = $grupoPaiFilho->getGrupoPaiFilhoFilho();
+				$this->removerEmailDasPessoasDoGrupo($grupo1);
 				self::inativarEntidadeDoLider($grupo1, $dataParaInativar);
 				if($grupoPaiFilhoFilhos1 = $grupo1->getGrupoPaiFilhoFilhosAtivos(1)){
 					foreach($grupoPaiFilhoFilhos1 as $grupoPaiFilho1){
 						$grupo2 = $grupoPaiFilho1->getGrupoPaiFilhoFilho();
+						$this->removerEmailDasPessoasDoGrupo($grupo2);
 						self::inativarEntidadeDoLider($grupo2, $dataParaInativar);
 						if($grupoPaiFilhoFilhos2 = $grupo2->getGrupoPaiFilhoFilhosAtivos(1)){
 							foreach($grupoPaiFilhoFilhos2 as $grupoPaiFilho2){
 								$grupo3 = $grupoPaiFilho2->getGrupoPaiFilhoFilho();
+								$this->removerEmailDasPessoasDoGrupo($grupo3);
 								self::inativarEntidadeDoLider($grupo3, $dataParaInativar);
 								if($grupoPaiFilhoFilhos3 = $grupo3->getGrupoPaiFilhoFilhosAtivos(1)){
 									foreach($grupoPaiFilhoFilhos3 as $grupoPaiFilho3){
 										$grupo4 = $grupoPaiFilho3->getGrupoPaiFilhoFilho();
+										$this->removerEmailDasPessoasDoGrupo($grupo4);
 										self::inativarEntidadeDoLider($grupo4, $dataParaInativar);
 										if($grupoPaiFilhoFilhos4 = $grupo4->getGrupoPaiFilhoFilhosAtivos(1)){
 											foreach($grupoPaiFilhoFilhos4 as $grupoPaiFilho4){
 												$grupo5 = $grupoPaiFilho4->getGrupoPaiFilhoFilho();
+												$this->removerEmailDasPessoasDoGrupo($grupo5);
 												self::inativarEntidadeDoLider($grupo5, $dataParaInativar);
 												if($grupoPaiFilhoFilhos5 = $grupo5->getGrupoPaiFilhoFilhosAtivos(1)){
 													foreach($grupoPaiFilhoFilhos5 as $grupoPaiFilho5){
 														$grupo6 = $grupoPaiFilho5->getGrupoPaiFilhoFilho();
+														$this->removerEmailDasPessoasDoGrupo($grupo6);
 														self::inativarEntidadeDoLider($grupo6, $dataParaInativar);
 														if($grupoPaiFilhoFilhos6 = $grupo6->getGrupoPaiFilhoFilhosAtivos(1)){
 															foreach($grupoPaiFilhoFilhos6 as $grupoPaiFilho6){
 																$grupo7 = $grupoPaiFilho6->getGrupoPaiFilhoFilho();
+																$this->removerEmailDasPessoasDoGrupo($grupo7);
 																self::inativarEntidadeDoLider($grupo7, $dataParaInativar);
 																if($grupoPaiFilhoFilhos7 = $grupo7->getGrupoPaiFilhoFilhosAtivos(1)){
 																	foreach($grupoPaiFilhoFilhos7 as $grupoPaiFilho7){
 																		$grupo8 = $grupoPaiFilho7->getGrupoPaiFilhoFilho();
+																		$this->removerEmailDasPessoasDoGrupo($grupo8);
 																		self::inativarEntidadeDoLider($grupo8, $dataParaInativar);
 																		if($grupoPaiFilhoFilhos8 = $grupo8->getGrupoPaiFilhoFilhosAtivos(1)){
 																			foreach($grupoPaiFilhoFilhos8 as $grupoPaiFilho8){
 																				$grupo9 = $grupoPaiFilho8->getGrupoPaiFilhoFilho();
+																				$this->removerEmailDasPessoasDoGrupo($grupo9);
 																				self::inativarEntidadeDoLider($grupo9, $dataParaInativar);
 																				if($grupoPaiFilhoFilhos9 = $grupo9->getGrupoPaiFilhoFilhosAtivos(1)){
 																					foreach($grupoPaiFilhoFilhos9 as $grupoPaiFilho9){
 																						$grupo10 = $grupoPaiFilho9->getGrupoPaiFilhoFilho();
+																						$this->removerEmailDasPessoasDoGrupo($grupo10);
 																						self::inativarEntidadeDoLider($grupo10, $dataParaInativar);
 																					}
 																				}
@@ -1175,7 +1188,7 @@ class IndexController extends CircuitoController {
 		}
 	}
 
-	function inativarEntidadeDoLider($grupo, $data = null){
+	function inativarEntidadeDoLider($grupo, $data = null){		
 		if($data){
 			$dataParaInativar = $data;
 		}else{
@@ -3538,6 +3551,14 @@ class IndexController extends CircuitoController {
 			$fatoCurso->setTurma_id($turmaPessoa->getTurma()->getId());
 			$fatoCurso->setSituacao_id($turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getId());
 			$this->getRepositorio()->getFatoCursoORM()->persistir($fatoCurso);
+		}
+	}
+
+	public function removerEmailDasPessoasDoGrupo($grupo){
+		$pessoasDoGrupo = $grupo->getPessoasAtivas();
+		foreach ($pessoasDoGrupo as $pessoa) {
+			$pessoa->setEmail(null);
+			$this->getRepositorio()->getPessoaORM()->persistir($pessoa, false);
 		}
 	}
 

@@ -1401,8 +1401,55 @@ class CadastroController extends CircuitoController {
 							$resposta = $respostaTemCadastroInativo;
 							$idPessoa = $pessoaEncotrada->getId();
 							$dados['idHierarquia'] = $pessoaEncotrada->getPessoaHierarquiaAtivo()->getHierarquia()->getId();
-						} else {
-							$resposta = $respostaTemCadastroAtivo;
+						}
+						if ($responsabilidadesAtivas > 0) {							
+							$entidadeDaPessoaEncontrada = $pessoaEncotrada->getResponsabilidadesAtivas()[0]->getGrupo()->getEntidadeAtiva();
+							if($entidadeDaPessoaEncontrada->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao || $entidadeDaPessoaEncontrada->getEntidadeTipo()->getId() === EntidadeTipo::regiao){
+								$resposta = $respostaSucesso;
+							}
+							if($entidadeDaPessoaEncontrada->getEntidadeTipo()->getId() !== EntidadeTipo::coordenacao && $entidadeDaPessoaEncontrada->getEntidadeTipo()->getId() !== EntidadeTipo::regiao){
+								$stringOndeEstaCadastrado = '';
+								$entidadeDaIgreja = $entidadeDaPessoaEncontrada->getGrupo()->getGrupoIgreja()->getEntidadeAtiva();
+								$entidadeAcimaDaIgreja =  $entidadeDaIgreja->getGrupo()->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai()->getEntidadeAtiva();
+								if($entidadeDaPessoaEncontrada->getEntidadeTipo()->getId() === EntidadeTipo::subEquipe){									
+									$responsavel = $entidadeDaPessoaEncontrada->getGrupo()->getGrupoEquipe()->getGrupoResponsavelAtivo()->getPessoa();									
+									$nomeDoResponsavel =  $responsavel->getNomePrimeiroUltimo();
+									$minhaEntidade = $entidadeDaPessoaEncontrada->infoEntidade() . ', ';
+								}
+
+								if($entidadeDaPessoaEncontrada->getEntidadeTipo()->getId() === EntidadeTipo::equipe){	
+									$responsavel = $entidadeDaPessoaEncontrada->getGrupo()->getGrupoIgreja()->getGrupoResponsavelAtivo()->getPessoa();																	
+									$nomeDoResponsavel =  $responsavel->getNomePrimeiroUltimo();			
+									$minhaEntidade = $entidadeDaPessoaEncontrada->infoEntidade() . ', ';
+								}	
+
+								if($minhaEntidade){
+									$stringOndeEstaCadastrado .= $minhaEntidade;
+								}
+								
+								if($entidadeDaIgreja || $entidadeDaPessoaEncontrada->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
+									$stringOndeEstaCadastrado .= 'IGREJA: ' .  $entidadeDaIgreja->getNome() . ', ';
+								}	
+								if($entidadeAcimaDaIgreja){
+									if($entidadeAcimaDaIgreja->getEntidadeTipo()->getId() === Entidade::COORDENACAO){                                  
+										$nomeEntidadeAcimaArrumado = ' COORDENAÇÃO: ' . $entidadeAcimaDaIgreja->getNumero() . ' RESPONSÁVEIS: ' .$entidadeAcimaDaIgreja->getGrupo()->getNomeLideresAtivos();                    
+									}  
+									if($entidadeAcimaDaIgreja->getEntidadeTipo()->getId() === Entidade::REGIONAL){                                  
+										$nomeEntidadeAcimaArrumado = ' REGIÃO: ' . $entidadeAcimaDaIgreja->getNome();                    
+									}
+								}			
+									
+								if($nomeEntidadeAcimaArrumado){
+									$stringOndeEstaCadastrado .= ' NÍVEL ACIMA: ' . $nomeEntidadeAcimaArrumado;
+								}
+								
+								$resposta = $respostaTemCadastroAtivo;								
+								if($nomeDoResponsavel){
+									$dados['responsavel']['nome'] = $nomeDoResponsavel;
+								}										
+								
+								$dados['ondeEsta'] = $stringOndeEstaCadastrado;
+							}							
 						}
 					}
 				}
