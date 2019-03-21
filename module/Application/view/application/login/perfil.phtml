@@ -35,10 +35,24 @@ echo $this->templateFormularioRodape();
         var ddd = $('#ddd').val();
         var telefone = $('#telefone').val();
         var email = $('#email').val();
+        var sexo = $('#sexo').val();
+        var dia = $('#Dia').val();
+        var mes = $('#Mes').val();
+        var ano = $('#Ano').val();
 
         var temErro = false;
         var divMensagens = $('#divMensagens');
         var mensagem = '';
+
+        if (dia == 0 || mes == 0 || ano == 0) {
+            temErro = true;
+            mensagem = 'Preencha todos os campos da data de nascimento';
+        }
+
+        if (sexo == 0) {
+            temErro = true;
+            mensagem = 'Preencha seu sexo';
+        }
 
         if (telefone.length !== 8 && telefone.length !== 9) {
             temErro = true;
@@ -62,6 +76,6 @@ echo $this->templateFormularioRodape();
             mostrarSplash();
             formulario.submit();
         }
-    }
+    }            
 
 </script>

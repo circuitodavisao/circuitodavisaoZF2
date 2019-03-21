@@ -147,6 +147,7 @@ foreach($this->solicitacoesTipo as $solicitacaoTipo){
 
 		$corSituacao = 'default';
 		$nomeSituacao = '';
+		$dataDoAceiteDaSolicitacao = '';
 		if($solicitacao->getSolicitacaoSituacaoAtiva()){
 			switch($solicitacao->getSolicitacaoSituacaoAtiva()->getSituacao()->getId()){
 			case Situacao::ACEITO_AGENDADO: $corSituacao = 'info'; $nomeSituacao = 'ACEITO';

@@ -701,9 +701,8 @@ class LoginController extends CircuitoController {
                 $this->getRepositorio()->getPessoaORM()->persistir($pessoa, $mudarDataDeCadastro = false);
                 $this->getRepositorio()->fecharTransacao();
 
-                return $this->forward()->dispatch(Constantes::$CONTROLLER_LOGIN, array(
-                            Constantes::$ACTION => 'perfil'
-                ));
+                //return $this->forward()->dispatch(Constantes::$CONTROLLER_LOGIN, array(Constantes::$ACTION => 'perfil'));
+                return $this->redirect()->toRoute(Constantes::$ROUTE_PRINCIPAL, array(Constantes::$ACTION => 'index'));			
             } catch (Exception $exc) {
                 $this->getRepositorio()->desfazerTransacao();
                 echo $exc->getMessage();
