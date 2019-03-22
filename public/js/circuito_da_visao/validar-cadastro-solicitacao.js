@@ -22,6 +22,7 @@ const stringDivSolicitacaoTipo = '#divSolicitacaoTipo';
 const stringDivObjetos = '#divObjetos';
 const stringDivSelecionarLider = '#divSelecionarLider';
 const stringDivSelecionarIgreja = '#divSelecionarIgreja';
+const stringDivSelecionarParaOndeTransferir = '#divSelecionarParaOndeTransferir';
 const stringDivSelecionarLiderIgreja = '#divSelecionarLiderIgreja';
 const stringDivSelecionarNumeracao = '#divSelecionarNumeracao';
 const stringDivSelecionarEquipe = '#divSelecionarEquipe';
@@ -61,6 +62,7 @@ const REMOVER_CELULA = 7;
 const TRANSFERIR_ALUNO = 8;
 const SUBIR_LIDER = 9;
 const REMOVER_IGREJA = 10;
+const TRANSFERIR_IGREJA = 11;
 
 function selecionarTipo() {
 	$(stringDivSolicitacaoTipo).addClass(hidden);
@@ -79,6 +81,7 @@ function selecionarTipo() {
 		parseInt($('#solicitacaoTipo').val()) === TRANSFERIR_ALUNO ||
 		parseInt($('#solicitacaoTipo').val()) === SUBIR_LIDER ||
 		parseInt($('#solicitacaoTipo').val()) === REMOVER_IGREJA ||
+		parseInt($('#solicitacaoTipo').val()) === TRANSFERIR_IGREJA ||
 		parseInt($('#solicitacaoTipo').val()) === REMOVER_CELULA) {
 
 		$('#blocoObjeto3').addClass(hidden);
@@ -128,6 +131,10 @@ function selecionarTipo() {
 			$('#blocoObjeto2').addClass(hidden);
 			$('#blocoObjeto3').addClass(hidden);
 		}
+		if (parseInt($('#solicitacaoTipo').val()) === TRANSFERIR_IGREJA) {
+			$('#spanSelecioneObjeto1').html('Selecione a igreja');
+			$('#blocoObjeto2').addClass(hidden);
+		}
 	}
 }
 
@@ -172,6 +179,12 @@ function abrirSelecionarObjeto(qualObjeto, idLider) {
 		}
 		if (qualObjeto == 1 && $('#solicitacaoTipoId').val() == REMOVER_IGREJA) {
 			$(stringDivSelecionarIgreja).removeClass(hidden);
+		}
+		if (qualObjeto == 1 && $('#solicitacaoTipoId').val() == TRANSFERIR_IGREJA) {
+			$(stringDivSelecionarIgreja).removeClass(hidden);
+		}
+		if (qualObjeto == 2 && $('#solicitacaoTipoId').val() == TRANSFERIR_IGREJA) {
+			$(stringDivSelecionarParaOndeTransferir).removeClass(hidden);
 		}
 	} else {
 		if ($('#solicitacaoTipoId').val() == SEPARAR) {
@@ -271,6 +284,15 @@ function mostrarBotaoSelecionarIgreja() {
 	}
 }
 
+function mostrarBotaoSelecionarParaOndeTransferir() {
+	let divBotaoSelecionarAluno = $('#divBotaoSelecionarParaOndeTransferir');
+	if (parseInt($('#idParaOndeTransferir').val()) === 0) {
+		$('#divBotaoSelecionarParaOndeTransferir').addClass(hidden);
+	} else {
+		$('#divBotaoSelecionarParaOndeTransferir').removeClass(hidden);
+	}
+}
+
 function selecionarLider() {
 	let idLider = $('#idLider')
 	selecionarObjeto(idLider.val(), $('#idLider>option:selected').text())
@@ -309,6 +331,10 @@ function selecionarAluno() {
 function selecionarIgreja() {
 	let idIgreja = $('#idIgreja')
 	selecionarObjeto(idIgreja.val(), $('#idIgreja>option:selected').text())
+}
+function selecionarParaOndeTransferir() {
+	let idParaOndeTransferir = $('#idParaOndeTransferir')
+	selecionarObjeto(idParaOndeTransferir.val(), $('#idParaOndeTransferir>option:selected').text())
 }
 
 function selecionarMotivo(){
@@ -434,6 +460,11 @@ function selecionarObjeto(id, informacao) {
 									objeto.html('Igreja que será removida');
 									$('#divSelecionarIgreja').addClass(hidden)
 								}
+								if ($('#solicitacaoTipoId').val() == TRANSFERIR_IGREJA) {
+									objeto.html('Igreja que será transferida');
+									$('#divSelecionarIgreja').addClass(hidden)
+									$('#blocoObjeto2').removeClass(hidden)
+								}
 								if ($('#solicitacaoTipoId').val() == REMOVER_CELULA) {
 									objeto.html('Líder que terá a célula removida');
 									console.log('Quantas celulas: ', data.celulas)
@@ -458,6 +489,10 @@ function selecionarObjeto(id, informacao) {
 								if($('#idSolicitacaoTipo').val() > 0){
 									$('#blocoObjeto3').removeClass(hidden)
 								}
+								if ($('#solicitacaoTipoId').val() == TRANSFERIR_IGREJA) {
+									$('#divSelecionarParaOndeTransferir').addClass(hidden)
+								}
+
 							}
 							spanNomeLideres.html('Nome dos Líderes: ' + data.nomeLideres);
 							spanCelulaQuantidade.html('Quantidade de Células: ' + data.celulaQuantidade);
@@ -482,6 +517,7 @@ function selecionarObjeto(id, informacao) {
 							parseInt($('#solicitacaoTipo').val()) === TROCAR_RESPONSABILIDADES ||
 							parseInt($('#solicitacaoTipo').val()) === REMOVER_CELULA ||
 							parseInt($('#solicitacaoTipo').val()) === SUBIR_LIDER ||
+							parseInt($('#solicitacaoTipo').val()) === TRANSFERIR_IGREJA ||
 							parseInt($('#solicitacaoTipo').val()) === REMOVER_LIDER) {
 							valorParaAdicionar = 50;
 						}

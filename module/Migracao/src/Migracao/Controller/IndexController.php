@@ -466,6 +466,21 @@ class IndexController extends CircuitoController {
 										$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($solicitacao->getObjeto2());
 										$html .= $this->transferirAluno($turmaPessoa, $grupo);
 									}
+									if ($idSolicitacaoTipo == SolicitacaoTipo::TRANSFERIR_IGREJA) {
+										$html .= "<br /> {$solicitacao->getId()} - TRANSFERIR IGREJA";
+
+										$dataParaInativar = self::getDataParaInativacao();
+										$grupo1 = $this->getRepositorio()->getGrupoORM()->encontrarPorId($solicitacao->getObjeto1());
+										$grupoPaiFilhoAtingo = $grupo1->getGrupoPaiFilhoPaiAtivo();
+										$grupoPaiFilhoAtingo->setDataEHoraDeInativacao($dataParaInativar);
+										$this->getRepositorio()->getGrupoPaiFilhoORM()->persistir($grupoPaiFilhoAtingo, $alterarDataDeCriacao = false);
+
+										$grupo2 = $this->getRepositorio()->getGrupoORM()->encontrarPorId($solicitacao->getObjeto2());
+										$grupoPaiFilhoNovo = new GrupoPaiFilho();
+										$grupoPaiFilhoNovo->setGrupoPaiFilhoPai($grupo2);
+										$grupoPaiFilhoNovo->setGrupoPaiFilhoFilho($grupo1);
+										$this->getRepositorio()->getGrupoPaiFilhoORM()->persistir($grupoPaiFilhoNovo);
+									}
 									$solicitacaoSituacaoAtiva = $solicitacao->getSolicitacaoSituacaoAtiva();
 									/* inativar solicitacao situacao ativa */
 									$solicitacaoSituacaoAtiva->setDataEHoraDeInativacao();
