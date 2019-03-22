@@ -26,6 +26,7 @@ class SolicitacaoTipo extends CircuitoEntity {
 	const TRANSFERIR_ALUNO = 8;
 	const SUBIR_LIDER = 9;
 	const REMOVER_IGREJA = 10;
+	const TRANSFERIR_IGREJA = 11;
 
     /**
      * @ORM\OneToMany(targetEntity="Solicitacao", mappedBy="solicitacaoTipo") 

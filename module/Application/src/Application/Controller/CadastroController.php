@@ -2153,6 +2153,8 @@ class CadastroController extends CircuitoController {
 
 			$solicitacaoTipo = $this->getRepositorio()->getSolicitacaoTipoORM()->encontrarPorId(SolicitacaoTipo::REMOVER_IGREJA);
 			$solicitacoesTipo[] = $solicitacaoTipo;
+			$solicitacaoTipo = $this->getRepositorio()->getSolicitacaoTipoORM()->encontrarPorId(SolicitacaoTipo::TRANSFERIR_IGREJA);
+			$solicitacoesTipo[] = $solicitacaoTipo;
 		}
 
 		foreach($solicitacoes as $solicitacaoPorData){
@@ -2248,18 +2250,21 @@ class CadastroController extends CircuitoController {
 		if($entidade->getEntidadeTipo()->getId() === EntidadeTipo::regiao){
 			$solicitacaoTipo = $this->getRepositorio()->getSolicitacaoTipoORM()->encontrarPorId(SolicitacaoTipo::REMOVER_IGREJA);
 			$solicitacaoTiposAjustado[] = $solicitacaoTipo;
+			$solicitacaoTipo = $this->getRepositorio()->getSolicitacaoTipoORM()->encontrarPorId(SolicitacaoTipo::TRANSFERIR_IGREJA);
+			$solicitacaoTiposAjustado[] = $solicitacaoTipo;
 
 			$igrejas = array();
+			$paraOndeTransferir = array();
 			foreach ($grupoPaiFilhoFilhos as $grupoPaiFilhoFilho12) {
 				$grupo12 = $grupoPaiFilhoFilho12->getGrupoPaiFilhoFilho();
 
 				if($grupo12->getEntidadeAtiva() && $grupo12->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
 					$igrejas[] = $grupo12;
 				}	
-
 				if($grupo12->getEntidadeAtiva() 
 					&& ($grupo12->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::regiao
 					|| $grupo12->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao)){
+						$paraOndeTransferir[] = $grupo12;
 						$grupoPaiFilhoFilhos144 = $grupo12->getGrupoPaiFilhoFilhosAtivosReal();
 						foreach ($grupoPaiFilhoFilhos144 as $grupoPaiFilhoFilho144) {
 							$grupo144 = $grupoPaiFilhoFilho144->getGrupoPaiFilhoFilho();
@@ -2271,6 +2276,7 @@ class CadastroController extends CircuitoController {
 							if($grupo144->getEntidadeAtiva() 
 								&& ($grupo144->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::regiao
 								|| $grupo144->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao)){
+									$paraOndeTransferir[] = $grupo144;
 									$grupoPaiFilhoFilhos1728 = $grupo144->getGrupoPaiFilhoFilhosAtivosReal();
 									foreach ($grupoPaiFilhoFilhos1728 as $grupoPaiFilhoFilho1728) {
 										$grupo1728 = $grupoPaiFilhoFilho1728->getGrupoPaiFilhoFilho();
@@ -2290,7 +2296,8 @@ class CadastroController extends CircuitoController {
 			if($entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
 				foreach($solicitacaoTiposSemAjuste as $solicitacaoTipo){
 					if($solicitacaoTipo->getId() !== SolicitacaoTipo::TRANSFERIR_LIDER_PARA_OUTRA_EQUIPE
-						&& $solicitacaoTipo->getId() !== SolicitacaoTipo::REMOVER_IGREJA){
+						&& $solicitacaoTipo->getId() !== SolicitacaoTipo::REMOVER_IGREJA
+						&& $solicitacaoTipo->getId() !== SolicitacaoTipo::TRANSFERIR_IGREJA){
 							$solicitacaoTiposAjustado[] = $solicitacaoTipo;
 						}	
 				}	
@@ -2443,6 +2450,7 @@ class CadastroController extends CircuitoController {
 			'grupoPaiFilhoCasais' => $arrayCasais,
 			'alunos' => $alunos,
 			'igrejas' => $igrejas,
+			'paraOndeTransferir' => $paraOndeTransferir,
 		));
 
 		/* Javascript */
@@ -2584,6 +2592,7 @@ class CadastroController extends CircuitoController {
 					$solicitacaoTipo->getId() === SolicitacaoTipo::SEPARAR ||
 					$solicitacaoTipo->getId() === SolicitacaoTipo::TRANSFERIR_ALUNO ||
 					$solicitacaoTipo->getId() === SolicitacaoTipo::REMOVER_IGREJA ||
+					$solicitacaoTipo->getId() === SolicitacaoTipo::TRANSFERIR_IGREJA ||
 					$solicitacaoTipo->getId() === SolicitacaoTipo::TROCAR_RESPONSABILIDADES)) {
 
 						$solicitacaoSituacao->setDataEHoraDeInativacao();
