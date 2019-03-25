@@ -2643,5 +2643,26 @@ public function alunosNaSemanaAction(){
 		return $relatorio;
 	}
 
+	public function geradorDeMetaAction() {
+		$request = $this->getRequest();
+		if ($request->isPost()) {
+			$post_data = $request->getPost();
+			list($mes, $ano) = $post_data;
 
+			error_log('ERROR ' . $post_data);
+		}
+		if (empty($mes)) {
+			$mes = date('m');
+		}
+		if (empty($ano)) {
+			$ano = date('Y');
+		}
+		$arrayPeriodoDoMes = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mes, $ano);
+	
+		$dados = array();
+		$dados['mes'] = $mes;
+		$dados['ano'] = $ano;
+		$view = new ViewModel($dados);
+		return $view;
+	}
 }
