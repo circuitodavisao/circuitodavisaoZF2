@@ -25,14 +25,14 @@ $html .= '<div class="panel-body bg-light" style="padding: 15px 5px 5px 5px;">';
 
 $html .= '<form id="formulario" method="POST" action="/relatorioGeradorDeMeta" >';
 
-$html .= '<div class="row p5">';
-$html .= '<div class="col-xs-12 col-sm-1 col-md-1 col-lg-1">';
-$html .= 'Nome';
-$html .= '</div>';
-$html .= '<div class="col-xs-12 col-sm-11 col-md-11 col-lg-11">';
-$html .= '<input type="text" name="nome" class="form-control" />';
-$html .= '</div>';
-$html .= '</div>';
+//$html .= '<div class="row p5">';
+//$html .= '<div class="col-xs-12 col-sm-1 col-md-1 col-lg-1">';
+//$html .= 'Nome';
+//$html .= '</div>';
+//$html .= '<div class="col-xs-12 col-sm-11 col-md-11 col-lg-11">';
+//$html .= '<input type="text" name="nome" class="form-control" />';
+//$html .= '</div>';
+//$html .= '</div>';
 
 // div mes ano
 $html .= '<div class="row p5">';
@@ -79,14 +79,22 @@ $html .= '<div class="row p5">';
 $html .= '<div class="col-xs-12 col-sm-1 col-md-1 col-lg-1">';
 $html .= 'Líderes';
 $html .= '</div>';
-$html .= '<div class="col-xs-12 col-sm-5 col-md-5 col-lg-5">';
-$html .= '<input type="number" name="lideres" class="form-control" />';
+$html .= '<div class="col-xs-12 col-sm-1 col-md-11 col-lg-3">';
+$html .= '<input value="'.$this->lideres.'" maxlength="3" type="number" name="lideres" class="form-control" placeholder="0%" />';
 $html .= '</div>';
+
 $html .= '<div class="col-xs-12 col-sm-1 col-md-1 col-lg-1">';
 $html .= 'Células';
 $html .= '</div>';
-$html .= '<div class="col-xs-12 col-sm-5 col-md-5 col-lg-5">';
-$html .= '<input type="number" name="celulas" class="form-control" />';
+$html .= '<div class="col-xs-12 col-sm-1 col-md-1 col-lg-3">';
+$html .= '<input value="'.$this->celulas.'" maxlength="3" type="number" name="celulas" class="form-control" placeholder="0%"  />';
+$html .= '</div>';
+
+$html .= '<div class="col-xs-12 col-sm-1 col-md-1 col-lg-1">';
+$html .= 'Células Beta';
+$html .= '</div>';
+$html .= '<div class="col-xs-12 col-sm-1 col-md-1 col-lg-3">';
+$html .= '<input value="'.$this->celulasBeta.'" maxlength="3" type="number" name="celulasBeta" class="form-control" placeholder="0%"  />';
 $html .= '</div>';
 $html .= '</div>';
 // fim div percentual liderres e celulas
@@ -101,26 +109,22 @@ $html .= '<div class="row p5">';
 $html .= '<div class="col-xs-12 col-sm-1 col-md-1 col-lg-1">';
 $html .= '1° M';
 $html .= '</div>';
-$html .= '<div class="col-xs-12 col-sm-11 col-md-11 col-lg-11">';
-$html .= '<input type="number" name="alunos1m" class="form-control" />';
-$html .= '</div>';
+$html .= '<div class="col-xs-12 col-sm-1 col-md-1 col-lg-3">';
+$html .= '<input value="'.$this->alunos1m.'" maxlength="3" type="number" name="alunos1m" class="form-control" placeholder="0%"  />';
 $html .= '</div>';
 
-$html .= '<div class="row p5">';
 $html .= '<div class="col-xs-12 col-sm-1 col-md-1 col-lg-1">';
 $html .= '2° M';
 $html .= '</div>';
-$html .= '<div class="col-xs-12 col-sm-11 col-md-11 col-lg-11">';
-$html .= '<input type="number" name="alunos2m" class="form-control" />';
-$html .= '</div>';
+$html .= '<div class="col-xs-12 col-sm-1 col-md-1 col-lg-3">';
+$html .= '<input value="'.$this->alunos2m.'" maxlength="3" type="number" name="alunos2m" class="form-control" placeholder="0%"  />';
 $html .= '</div>';
 
-$html .= '<div class="row p5">';
 $html .= '<div class="col-xs-12 col-sm-1 col-md-1 col-lg-1">';
 $html .= '3° M';
 $html .= '</div>';
-$html .= '<div class="col-xs-12 col-sm-11 col-md-11 col-lg-11">';
-$html .= '<input type="number" name="alunos3m" class="form-control" />';
+$html .= '<div class="col-xs-12 col-sm-1 col-md-1 col-lg-3">';
+$html .= '<input value="'.$this->alunos3m.'" maxlength="3" type="number" name="alunos3m" class="form-control" placeholder="0%"  />';
 $html .= '</div>';
 $html .= '</div>';
 
@@ -132,12 +136,103 @@ $html .= '</div>';
 
 $html .= '<div class="row p10">';
 $html .= '<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 pb10 pt10">';
-$html .= '<button type="button" class="btn btn-primary form-control" onClick="ajudadorDeSubmissao()" >Gerar</button>';
+$html .= '<button type="button" class="btn btn-primary form-control" onClick="ajudadorDeSubmissao()" >Mostrar</button>';
 $html .= '</div>';
 $html .= '</div>';
 
 $html .= '</form>';
+if($this->postado){
+	$html .= '<table class="table table-condesend table-bordered">';
+	$html .= '<tbody>';
+	if($this->filhos){
+		foreach($this->filhos as $filho){
+			$corLinha = 'primary';
+			$colSpan = 8;
+			if($filho['informacao'] === 'TOTAL'){
+				$corLinha = 'dark';
+				$colSpan = 0;
+				$html .= '<tr class="dark">'; 
+				$html .= '<td></td>';
+				$html .= '<td>LÍDERES / META</td>';
+				$html .= '<td>CÉLULAS / META</td>';
+				$html .= '<td>CÉLULAS BETAS / META</td>';
+				$html .= '<td>ALUNOS 1°M / META</td>';
+				$html .= '<td>ALUNOS 2°M / META</td>';
+				$html .= '<td>ALUNOS 3°M / META</td>';
+				$html .= '<td>TOTAL</td>';
+				$html .= '</tr>';
+			}
+			$html .= '<tr class="'.$corLinha.'">'; 
+			$html .= '<td colspan="'.$colSpan.'">'.$filho['informacao'].'</td>';
+			if($filho['informacao'] === 'TOTAL'){
+				$total = 
+					$filho['lideresMeta']
+					+ $filho['celulasMeta']
+					+ $filho['celulasBetaMeta']
+					+ $filho['alunos1Meta']
+					+ $filho['alunos2Meta']
+					+ $filho['alunos3Meta']
+					;
+				$html .= '<td>'.$filho['lideres'].' / '.$filho['lideresMeta'].'</td>';
+				$html .= '<td>'.$filho['celulas'].' / '.$filho['celulasMeta'].'</td>';
+				$html .= '<td>'.$filho['celulasBeta'].' / '.$filho['celulasBetaMeta'].'</td>';
+				$html .= '<td>'.$filho['alunos1'].' / '.$filho['alunos1Meta'].'</td>';
+				$html .= '<td>'.$filho['alunos2'].' / '.$filho['alunos2Meta'].'</td>';
+				$html .= '<td>'.$filho['alunos3'].' / '.$filho['alunos3Meta'].'</td>';
+				$html .= '<td>'.$total.'</td>';
+			}
+			$html .= '</tr>';
 
+			if($filho['informacao'] !== 'TOTAL'){
+				$html .= '<tr class="primary">'; 
+				$html .= '<td>TIMES</td>';
+				$html .= '<td>LÍDERES / META</td>';
+				$html .= '<td>CÉLULAS / META</td>';
+				$html .= '<td>CÉLULAS BETAS / META</td>';
+				$html .= '<td>ALUNOS 1°M / META</td>';
+				$html .= '<td>ALUNOS 2°M / META</td>';
+				$html .= '<td>ALUNOS 3°M / META</td>';
+				$html .= '<td>TOTAL</td>';
+				$html .= '</tr>';
+			}
+			if($filho['filhos']){
+				foreach($filho['filhos'] as $filho144){
+					$corLinha144 = '';
+					if($filho144['informacao'] === 'TOTAL PARCIAL'){
+						$corLinha144 = 'info';
+					}
+					$total = 
+						$filho144['lideresMeta']
+						+ $filho144['celulasMeta']
+						+ $filho144['celulasBetaMeta']
+						+ $filho144['alunos1Meta']
+						+ $filho144['alunos2Meta']
+						+ $filho144['alunos3Meta']
+						;
+
+					$html .= '<tr class="'.$corLinha144.'">'; 
+					$html .= '<td>---- '.$filho144['informacao'].'</td>';
+					$html .= '<td>'.$filho144['lideres'].' / '.$filho144['lideresMeta'].'</td>';
+					$html .= '<td>'.$filho144['celulas'].' / '.$filho144['celulasMeta'].'</td>';
+					$html .= '<td>'.$filho144['celulasBeta'].' / '.$filho144['celulasBetaMeta'].'</td>';
+					$html .= '<td>'.$filho144['alunos1'].' / '.$filho144['alunos1Meta'].'</td>';
+					$html .= '<td>'.$filho144['alunos2'].' / '.$filho144['alunos2Meta'].'</td>';
+					$html .= '<td>'.$filho144['alunos3'].' / '.$filho144['alunos3Meta'].'</td>';
+					$html .= '<td>'.$total.'</td>';
+					$html .= '</tr>';
+
+					if($filho144['informacao'] === 'TOTAL PARCIAL'){
+						$html .= '<tr style="height: 10px;">'; 
+						$html .= '<td>&nbsp;</td>';
+						$html .= '</tr>';
+					}
+				}
+			}
+		}
+	}
+	$html .= '</tbody>';
+	$html .= '</table>';
+}
 $html .= $this->templateFormularioRodape();
 
 echo $html;
@@ -151,10 +246,10 @@ function ajudadorDeSubmissao(){
 	const divMensagemDeErro = document.getElementById('divMensagemDeErro')
 	const spanCamposComErro = document.getElementById('spanCamposComErro')
 
-	if(formulario.nome.value === ''){
-		mostrarMensagemDeErro = true
-		camposComErro.push('Nome')
-	}
+//	if(formulario.nome.value === ''){
+//		mostrarMensagemDeErro = true
+//		camposComErro.push('Nome')
+//	}
 	if(parseInt(formulario.mes.value) === 0){
 		mostrarMensagemDeErro = true
 		camposComErro.push('Mês')
@@ -167,11 +262,15 @@ function ajudadorDeSubmissao(){
 		mostrarMensagemDeErro = true
 		camposComErro.push('Líderes')
 	}
-		if(formulario.celulas.value === ''){
+	if(formulario.celulas.value === ''){
 		mostrarMensagemDeErro = true
 		camposComErro.push('Células')
 	}
-		if(formulario.alunos1m.value === ''){
+	if(formulario.celulasBeta.value === ''){
+		mostrarMensagemDeErro = true
+		camposComErro.push('Células Beta')
+	}
+	if(formulario.alunos1m.value === ''){
 		mostrarMensagemDeErro = true
 		camposComErro.push('Alunos 1° módulo')
 	}

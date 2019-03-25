@@ -2644,12 +2644,204 @@ public function alunosNaSemanaAction(){
 	}
 
 	public function geradorDeMetaAction() {
+		$dados = array();
 		$request = $this->getRequest();
 		if ($request->isPost()) {
 			$post_data = $request->getPost();
-			list($mes, $ano) = $post_data;
+			$nome = $post_data['nome'];
+			$mes = $post_data['mes'];
+			$ano = $post_data['ano'];
+			$lideres = $post_data['lideres'];
+			$celulas = $post_data['celulas'];
+			$celulasBeta = $post_data['celulasBeta'];
+			$alunos1m = $post_data['alunos1m'];
+			$alunos2m = $post_data['alunos2m'];
+			$alunos3m = $post_data['alunos3m'];
 
-			error_log('ERROR ' . $post_data);
+			$dados['nome'] = $nome;
+			$dados['lideres'] = $lideres;
+			$dados['celulas'] = $celulas;
+			$dados['celulasBeta'] = $celulasBeta;
+			$dados['alunos1m'] = $alunos1m;
+			$dados['alunos2m'] = $alunos2m;
+			$dados['alunos3m'] = $alunos3m;
+			$dados['postado'] = true;
+
+			$sessao = new Container(Constantes::$NOME_APLICACAO);
+			$idEntidadeAtual = $sessao->idEntidadeAtual;
+			$arrayPeriodoDoMes = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mes, $ano);
+			$periodo = $arrayPeriodoDoMes[1]; 
+			$comparacao = 2; // Temporariamente Fixo também, comparação = like
+			$todosFilhos = Array();
+			$repositorio = $this->getRepositorio();
+			$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+			$listaDeFilhos12 = array();
+			$somaTotalLideres = 0;
+			$somaTotalLideresMeta = 0;
+			$somaTotalCelulas = 0;
+			$somaTotalCelulasMeta = 0;
+			$somaTotalCelulasBeta = 0;
+			$somaTotalCelulasBetaMeta = 0;
+			$somaTotalAlunos1 = 0;
+			$somaTotalAlunos1Meta = 0;
+			$somaTotalAlunos2 = 0;
+			$somaTotalAlunos2Meta = 0;
+			$somaTotalAlunos3 = 0;
+			$somaTotalAlunos3Meta = 0;
+			if($grupoPaiFilhoFilhos = $entidade->getGrupo()->getGrupoPaiFilhoFilhosAtivos($periodo)){
+				foreach ($grupoPaiFilhoFilhos as $filho) {
+					$grupoFilho = $filho->getGrupoPaiFilhoFilho();
+					$dadosFilho = array();
+
+					$dadosFilho['informacao'] = '';
+					if($grupoFilho->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::regiao){
+						$dadosFilho['informacao'] = 'REGIÃO ' . $grupoFilho->getEntidadeAtiva()->getNome();
+					}
+					if($grupoFilho->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao){
+						$dadosFilho['informacao'] = 'COORDENAÇÃO ' . $grupoFilho->getEntidadeAtiva()->getNumero();
+					}
+					if($grupoFilho->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
+						$dadosFilho['informacao'] = 'IGREJA ' . $grupoFilho->getEntidadeAtiva()->getNome();
+					}
+
+					$listaDeFilhos144 = array();
+					$somaParcialLideres = 0;
+					$somaParcialLideresMeta = 0;
+					$somaParcialCelulas = 0;
+					$somaParcialCelulasMeta = 0;
+					$somaParcialCelulasBeta = 0;
+					$somaParcialCelulasBetaMeta = 0;
+					$somaParcialAlunos1 = 0;
+					$somaParcialAlunos1Meta = 0;
+					$somaParcialAlunos2 = 0;
+					$somaParcialAlunos2Meta = 0;
+					$somaParcialAlunos3 = 0;
+					$somaParcialAlunos3Meta = 0;
+					if($grupoPaiFilhoFilhos144 = $grupoFilho->getGrupoPaiFilhoFilhosAtivos($periodo)){
+						foreach ($grupoPaiFilhoFilhos144 as $filho144) {
+							$grupoFilho144 = $filho144->getGrupoPaiFilhoFilho();
+							$dadosFilho144 = array();
+							$dadosFilho144['informacao'] = '';
+							if($grupoFilho144->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::regiao){
+								$dadosFilho144['informacao'] = 'REGIÃO ' . $grupoFilho144->getEntidadeAtiva()->getNome();
+							}
+							if($grupoFilho144->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao){
+								$dadosFilho144['informacao'] = 'COORDENAÇÃO ' . $grupoFilho144->getEntidadeAtiva()->getNumero();
+							}
+							if($grupoFilho144->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
+								$dadosFilho144['informacao'] = 'IGREJA ' . $grupoFilho144->getEntidadeAtiva()->getNome();
+							}
+							if($grupoFilho144->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::equipe){
+								$dadosFilho144['informacao'] = 'EQUIPE ' . $grupoFilho144->getEntidadeAtiva()->getNome();
+							}
+
+							$numeroIdentificador = $repositorio->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupoFilho144);
+							$tipoRelatorio = RelatorioController::relatorioCelulaQuantidade;
+							$relatorio = RelatorioController::montaRelatorio($this->getRepositorio(), $numeroIdentificador, $periodo, $somado = 2, false, $tipoRelatorio);
+							$somaIgrejaAlunos1 = 0;
+							$somaIgrejaAlunos2 = 0;
+							$somaIgrejaAlunos3 = 0;
+							if($relatorioCursos = $this->getRepositorio()->getFatoCursoORM()->encontrarFatoCursoPorNumeroIdentificador($numeroIdentificador)){
+								foreach($relatorioCursos as $fatoCurso){
+									if($fatoCurso->getSituacao_id() === Situacao::ATIVO || $fatoCurso->getSituacao_id() === Situacao::ESPECIAL){
+										$turma = $this->getRepositorio()->getTurmaORM()->encontrarPorId($fatoCurso->getTurma_id());
+										if($turma->getTurmaAulaAtiva()){
+											if($turma->getTurmaAulaAtiva()->getAula()->getDisciplina()->getPosicao() === 1){
+												$somaIgrejaAlunos1++;
+											}
+											if($turma->getTurmaAulaAtiva()->getAula()->getDisciplina()->getPosicao() === 2){
+												$somaIgrejaAlunos2++;
+											}
+											if($turma->getTurmaAulaAtiva()->getAula()->getDisciplina()->getPosicao() === 3){
+												$somaIgrejaAlunos3++;
+											}
+										}
+									}
+								}
+							}
+
+							$dadosFilho144['lideres'] = $relatorio['quantidadeLideres'];
+							$dadosFilho144['lideresMeta'] = $lideres > 0 ? $lideres / 100 * $relatorio['quantidadeLideres'] : $relatorio['quantidadeLideres'];
+
+							$dadosFilho144['celulas'] = $relatorio['celulaQuantidade'];
+							$dadosFilho144['celulasMeta'] = $celulas > 0 ? $celulas / 100 * $relatorio['celulaQuantidade'] : $relatorio['celulaQuantidade'];
+
+							$dadosFilho144['celulasBeta'] = $relatorio['celulaQuantidadeEstrategica'];
+							$dadosFilho144['celulasBetaMeta'] = $celulasBeta > 0 ? $celulasBeta / 100 * $relatorio['celulaQuantidadeEstrategica'] : $relatorio['celulaQuantidadeEstrategica'];
+
+							$dadosFilho144['alunos1'] = $somaIgrejaAlunos1;
+							$dadosFilho144['alunos1Meta'] = $alunos1m > 0 ? $alunos1m / 100 * $somaIgrejaAlunos1 : $somaIgrejaAlunos1;
+
+							$dadosFilho144['alunos2'] = $somaIgrejaAlunos2;
+							$dadosFilho144['alunos2Meta'] = $alunos1m > 0 ? $alunos2m / 100 * $somaIgrejaAlunos2 : $somaIgrejaAlunos2;
+
+							$dadosFilho144['alunos3'] = $somaIgrejaAlunos3;
+							$dadosFilho144['alunos3Meta'] = $alunos3m > 0 ? $alunos3m / 100 * $somaIgrejaAlunos3 : $somaIgrejaAlunos3;
+	
+							$somaParcialLideres += $dadosFilho144['lideres'];
+							$somaParcialLideresMeta += $dadosFilho144['lideresMeta'];
+							$somaParcialCelulas += $dadosFilho144['celulas'];
+							$somaParcialCelulasMeta += $dadosFilho144['celulasMeta'];
+							$somaParcialCelulasBeta += $dadosFilho144['celulasBeta'];
+							$somaParcialCelulasBetaMeta += $dadosFilho144['celulasBetaMeta'];
+							$somaParcialAlunos1 += $dadosFilho144['alunos1'];
+							$somaParcialAlunos1Meta += $dadosFilho144['alunos1Meta'];
+							$somaParcialAlunos2 += $dadosFilho144['alunos2'];
+							$somaParcialAlunos2Meta += $dadosFilho144['alunos2Meta'];
+							$somaParcialAlunos3 += $dadosFilho144['alunos3'];
+							$somaParcialAlunos3Meta += $dadosFilho144['alunos3Meta'];
+
+							$somaTotalLideres += $dadosFilho144['lideres'];
+							$somaTotalLideresMeta += $dadosFilho144['lideresMeta'];
+							$somaTotalCelulas += $dadosFilho144['celulas'];
+							$somaTotalCelulasMeta += $dadosFilho144['celulasMeta'];
+							$somaTotalCelulasBeta += $dadosFilho144['celulasBeta'];
+							$somaTotalCelulasBetaMeta += $dadosFilho144['celulasBetaMeta'];
+							$somaTotalAlunos1 += $dadosFilho144['alunos1'];
+							$somaTotalAlunos1Meta += $dadosFilho144['alunos1Meta'];
+							$somaTotalAlunos2 += $dadosFilho144['alunos2'];
+							$somaTotalAlunos2Meta += $dadosFilho144['alunos2Meta'];
+							$somaTotalAlunos3 += $dadosFilho144['alunos3'];
+							$somaTotalAlunos3Meta += $dadosFilho144['alunos3Meta'];
+
+							$listaDeFilhos144[] = $dadosFilho144;
+						}
+					}
+					$total12 = array();
+					$total12['informacao'] = 'TOTAL PARCIAL';
+					$total12['lideres'] = $somaParcialLideres;	
+					$total12['lideresMeta'] = $somaParcialLideresMeta;
+					$total12['celulas'] = $somaParcialCelulas;	
+					$total12['celulasMeta'] = $somaParcialCelulasMeta;	
+					$total12['celulasBeta'] = $somaParcialCelulasBeta;	
+					$total12['celulasBetaMeta'] = $somaParcialCelulasBetaMeta;	
+					$total12['alunos1'] = $somaParcialAlunos1;	
+					$total12['alunos1Meta'] = $somaParcialAlunos1Meta;	
+					$total12['alunos2'] = $somaParcialAlunos2;	
+					$total12['alunos2Meta'] = $somaParcialAlunos2Meta;	
+					$total12['alunos3'] = $somaParcialAlunos3;	
+					$total12['alunos3Meta'] = $somaParcialAlunos3Meta;	
+					$listaDeFilhos144[] = $total12;
+					$dadosFilho['filhos'] = $listaDeFilhos144;
+					$listaDeFilhos12[] = $dadosFilho;
+				}
+			}
+			$totalGeral = array();
+			$totalGeral['informacao'] = 'TOTAL';
+			$totalGeral['lideres'] = $somaTotalLideres;	
+			$totalGeral['lideresMeta'] = $somaTotalLideresMeta;	
+			$totalGeral['celulas'] = $somaTotalCelulas;	
+			$totalGeral['celulasMeta'] = $somaTotalCelulasMeta;	
+			$totalGeral['celulasBeta'] = $somaTotalCelulasBeta;	
+			$totalGeral['celulasBetaMeta'] = $somaTotalCelulasBetaMeta;
+			$totalGeral['alunos1'] = $somaTotalAlunos1;	
+			$totalGeral['alunos1Meta'] = $somaTotalAlunos1Meta;	
+			$totalGeral['alunos2'] = $somaTotalAlunos2;	
+			$totalGeral['alunos2Meta'] = $somaTotalAlunos2Meta;	
+			$totalGeral['alunos3'] = $somaTotalAlunos3;	
+			$totalGeral['alunos3Meta'] = $somaTotalAlunos3Meta;	
+			$listaDeFilhos12[] = $totalGeral;
+			$dados['filhos'] = $listaDeFilhos12;
 		}
 		if (empty($mes)) {
 			$mes = date('m');
@@ -2657,9 +2849,7 @@ public function alunosNaSemanaAction(){
 		if (empty($ano)) {
 			$ano = date('Y');
 		}
-		$arrayPeriodoDoMes = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mes, $ano);
-	
-		$dados = array();
+
 		$dados['mes'] = $mes;
 		$dados['ano'] = $ano;
 		$view = new ViewModel($dados);
