@@ -1,0 +1,29 @@
+<?php
+
+use Application\Controller\Helper\Funcoes;
+//Funcoes::var_dump($this->registros);
+?>
+<div class="center-block mw600">
+<div class="panel">
+<div class="panel-heading text-center">Registro</div>
+<div class="panel-body pn">
+<?php
+if($registros = $this->registros){
+	echo '<table class="text-center table table-condensed table-hover bg-light mt15">';
+	foreach($registros as $igrejas => $equipes){
+		echo '<tr class="dark">';
+		echo '<td colspan="3">'.$igrejas.'</td>';
+		echo '</tr>';
+		foreach($equipes as $equipe => $valor){
+			echo '<tr>';
+			echo '<td>'.$equipe.'</td>';			
+			echo '<td>'.$valor.'</td>';
+			echo '</tr>';
+		}
+	}
+	echo '</table>';
+}
+?>
+</div>
+</div>
+</div>
