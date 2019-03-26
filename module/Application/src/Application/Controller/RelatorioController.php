@@ -2772,22 +2772,22 @@ public function alunosNaSemanaAction(){
 							}
 
 							$dadosFilho144['lideres'] = $relatorio['quantidadeLideres'];
-							$dadosFilho144['lideresMeta'] = $lideres > 0 ? $lideres / 100 * $relatorio['quantidadeLideres'] : $relatorio['quantidadeLideres'];
+							$dadosFilho144['lideresMeta'] = $lideres > 0 ? $lideres / 100 * $relatorio['quantidadeLideres'] : 0;
 
 							$dadosFilho144['celulas'] = $relatorio['celulaQuantidade'];
-							$dadosFilho144['celulasMeta'] = $celulas > 0 ? $celulas / 100 * $relatorio['celulaQuantidade'] : $relatorio['celulaQuantidade'];
+							$dadosFilho144['celulasMeta'] = $celulas > 0 ? $celulas / 100 * $relatorio['celulaQuantidade'] : 0;
 
 							$dadosFilho144['celulasBeta'] = $relatorio['celulaQuantidadeEstrategica'];
-							$dadosFilho144['celulasBetaMeta'] = $celulasBeta > 0 ? $celulasBeta / 100 * $relatorio['celulaQuantidadeEstrategica'] : $relatorio['celulaQuantidadeEstrategica'];
+							$dadosFilho144['celulasBetaMeta'] = $celulasBeta > 0 ? $celulasBeta / 100 * $relatorio['celulaQuantidadeEstrategica'] : 0;
 
 							$dadosFilho144['alunos1'] = $somaIgrejaAlunos1;
-							$dadosFilho144['alunos1Meta'] = $alunos1m > 0 ? $alunos1m / 100 * $somaIgrejaAlunos1 : $somaIgrejaAlunos1;
+							$dadosFilho144['alunos1Meta'] = $alunos1m > 0 ? $alunos1m / 100 * $somaIgrejaAlunos1 : 0;
 
 							$dadosFilho144['alunos2'] = $somaIgrejaAlunos2;
-							$dadosFilho144['alunos2Meta'] = $alunos1m > 0 ? $alunos2m / 100 * $somaIgrejaAlunos2 : $somaIgrejaAlunos2;
+							$dadosFilho144['alunos2Meta'] = $alunos1m > 0 ? $alunos2m / 100 * $somaIgrejaAlunos2 : 0;
 
 							$dadosFilho144['alunos3'] = $somaIgrejaAlunos3;
-							$dadosFilho144['alunos3Meta'] = $alunos3m > 0 ? $alunos3m / 100 * $somaIgrejaAlunos3 : $somaIgrejaAlunos3;
+							$dadosFilho144['alunos3Meta'] = $alunos3m > 0 ? $alunos3m / 100 * $somaIgrejaAlunos3 : 0;
 	
 							$somaParcialLideres += $dadosFilho144['lideres'];
 							$somaParcialLideresMeta += $dadosFilho144['lideresMeta'];
