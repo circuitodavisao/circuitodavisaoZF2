@@ -59,6 +59,11 @@ foreach($this->solicitacoesTipo as $solicitacaoTipo){
 		$colspan = 4;
 		$htmlThead .= '<th>Quem</th>';
 		break;
+	case SolicitacaoTipo::TRANSFERIR_IGREJA:
+		$colspan = 6;
+		$htmlThead .= '<th>Quem</th>';
+		$htmlThead .= '<th class="hidden-xs">Novo Líder</th>';
+		break;
 	}
 	$htmlThead .= '<th>Status</th>';
 	$htmlThead .= '<th class="hidden-xs">Aceito Em</th>';
@@ -98,9 +103,11 @@ foreach($this->solicitacoesTipo as $solicitacaoTipo){
 				$objeto = $solicitacao->getObjeto1();
 				$grupo = $this->repositorio->getGrupoORM()->encontrarPorId($objeto);
 				$dadosObjeto1 = '';
-				if($solicitacaoTipo->getId() === SolicitacaoTipo::REMOVER_IGREJA){
-					$dadosObjeto1 = $grupo->getEntidadeAtiva()->getNome() . ' - ';
+				if($solicitacaoTipo->getId() === SolicitacaoTipo::REMOVER_IGREJA
+					|| $solicitacaoTipo->getId() === SolicitacaoTipo::TRANSFERIR_IGREJA){
+						$dadosObjeto1 = $grupo->getEntidadeAtiva()->getNome() . ' - ';
 				}
+
 				$dadosObjeto1 .= $grupo->getNomeLideresAtivos();
 				$htmlTbody .= '<td>'.$dadosObjeto1.'</td>';
 
@@ -122,6 +129,18 @@ foreach($this->solicitacoesTipo as $solicitacaoTipo){
 					$grupo2 = $this->repositorio->getGrupoORM()->encontrarPorId($objeto2);
 
 					$htmlTbody .= '<td class="hidden-xs">'.$grupo2->getNomeLideresAtivos().'</td>';
+					break;
+				case SolicitacaoTipo::TRANSFERIR_IGREJA:
+					$objeto2 = $solicitacao->getObjeto2();
+					$grupo2 = $this->repositorio->getGrupoORM()->encontrarPorId($objeto2);
+					$informacao = '';
+					if($grupo2->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::regiao){
+						$informacao = 'REGIÃO ' . $grupo2->getEntidadeAtiva()->getNome();
+					}
+					if($grupo2->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao){
+						$informacao = 'COORDENAÇÃO ' . $grupo2->getEntidadeAtiva()->getNumero();
+					}
+					$htmlTbody .= '<td class="hidden-xs">'.$informacao.'</td>';
 					break;
 				}
 			}else{
