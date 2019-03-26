@@ -2561,6 +2561,32 @@ public function alunosNaSemanaAction(){
 		return new ViewModel($dados);
 	}
 
+	public function registroVerificarAction(){
+		$sessao = new Container(Constantes::$NOME_APLICACAO);
+
+		$idEntidadeAtual = $sessao->idEntidadeAtual;
+		$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+
+		
+		$registros = $this->getRepositorio()->getRegistroORM()->verificarRegistroDeCelulaPorData();
+		$registrosOrganizados = array();
+
+		$informacao = Array();		
+		foreach($registros as $registro){				
+			$nomeIgreja = $registro->getGrupo()->getGrupoIgreja()->getEntidadeAtiva()->infoEntidade();
+			$nomeEquipe = $registro->getGrupo()->getGrupoEquipe()->getEntidadeAtiva()->infoEntidade();		
+			$informacao[$nomeIgreja][$nomeEquipe]++;
+			$informacao[$nomeIgreja]['TOTAL']++;			
+		}
+
+		$dados = array();
+		$dados['registros'] = $informacao;
+
+		self::registrarLog(RegistroAcao::VER_RELATORIO_DE_REGISTRO, $extra = '');
+
+		return new ViewModel($dados);
+	}
+
 	public function discipuladoAction(){
 		$request = $this->getRequest();
 		$dados = array();

@@ -45,7 +45,7 @@ class Registro extends CircuitoEntity {
     }
 
 	function getGrupo() {
-        return $this->registroAcao;
+        return $this->grupo;
     }
 
     function getRegistro_acao_id() {
