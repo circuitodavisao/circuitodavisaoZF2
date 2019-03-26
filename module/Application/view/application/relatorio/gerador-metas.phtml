@@ -59,13 +59,13 @@ use Application\View\Helper\BotaoSimples;
        <tbody>
          <?php
            $dadosCelulasExcluidas = $this->relatorioCelulasExcluidas;
-           $dadosTeste = $this->teste;
+           $dadosRelatorios = $this->arrayComRelatorios;
            $contador = 0;
            $corLinha = '';
-           foreach ($dadosTeste as $teste) {
-             if($teste['tipo'] == 'titulo'){
+           foreach ($dadosRelatorios as $relatorio) {
+             if($relatorio['tipo'] == 'titulo'){
               echo '<tr class="primary">';
-              echo '<td colspan="9" class="text-left text-center" style="font-size:16px;padding-left:6 px;">' . $teste['nome'] . '</span>';
+              echo '<td colspan="9" class="text-left text-center" style="font-size:16px;padding-left:6 px;">' . $relatorio['nome'] . '</span>';
               echo '</td>';
               echo '</tr>';
               echo '<tr class="dark">';
@@ -94,13 +94,13 @@ use Application\View\Helper\BotaoSimples;
                 $labelTD .= '-';
               }
               $corLinha = '';
-              if ($teste['nome'] == 'TOTAL') {
+              if ($relatorio['nome'] == 'TOTAL') {
                 $labelTD = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
                 $padding = '6';
                 $corLinha = 'dark';
               }
               echo '<tr class="'.$corLinha.'">';
-                echo '<td class="text-left" style="font-size:8px;padding-left:6px;">' . $teste['nome'] . '</span>';
+                echo '<td class="text-left" style="font-size:8px;padding-left:6px;">' . $relatorio['nome'] . '</span>';
                 echo $equipes;
                 echo '</td>';
                 for ($indiceDeArrays = $this->periodoInicial; $indiceDeArrays <= $this->periodoFinal; $indiceDeArrays++) {
@@ -109,15 +109,15 @@ use Application\View\Helper\BotaoSimples;
                     $classeBase .= 'hidden-xs';
                   }
                   echo '<td colspan="1">';
-                  echo $teste['alunos'];
+                  echo $relatorio['alunos'];
                   echo '</td>';
                   echo '<td colspan="2">';
-                  echo $teste['celulas'];
+                  echo $relatorio['celulas'];
                   echo '</td>';
                 }
-                echo '<td colspan="2">'. $teste['meta']['metaDeAlunos'] .'</td>';
-                echo '<td colspan="2">'. $teste['meta']['metaDeEnvioRevisao'] .'</td>';
-                echo '<td>'. $teste['meta']['total'] .'</td>';
+                echo '<td colspan="2">'. $relatorio['meta']['metaDeAlunos'] .'</td>';
+                echo '<td colspan="2">'. $relatorio['meta']['metaDeEnvioRevisao'] .'</td>';
+                echo '<td>'. $relatorio['meta']['total'] .'</td>';
               echo '</tr>';
             }
            }

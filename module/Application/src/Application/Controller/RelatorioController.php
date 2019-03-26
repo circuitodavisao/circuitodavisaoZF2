@@ -2240,17 +2240,24 @@ public function alunosNaSemanaAction(){
 
 		$sessao = new Container(Constantes::$NOME_APLICACAO);
 		$idEntidadeAtual = $sessao->idEntidadeAtual;
-		$periodo = -1; //Temporariamente Fixo só pra agilizar
+		$mes = 12; //Temporariamente Fixo só pra agilizar
+		$ano = 2018; //Temporariamente Fixo só pra agilizar
 		$comparacao = 2; // Temporariamente Fixo também, comparação = like
+		$arrayPeriodoDoMes = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mes, $ano);
+		$periodoInicial = $arrayPeriodoDoMes[0];
+		$periodoFinal = $arrayPeriodoDoMes[1];
+		
 		$todosFilhos = Array();
 		$repositorio = $this->getRepositorio();
 		$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
-		$grupoPaiFilhoFilhos = $entidade->getGrupo()->getGrupoPaiFilhoFilhosAtivos($periodo);
+		$grupoPaiFilhoFilhos = $entidade->getGrupo()->getGrupoPaiFilhoFilhosAtivos($periodoFinal);
+		$situacaoAtiva = 1;
+		$situacaoEspecial = 6;
 
 		foreach ($grupoPaiFilhoFilhos as $grupoPaiFilhoFilho) {
 			$todosFilhos[] = $grupoPaiFilhoFilho;
 		}
-		$teste = Array();
+		$arrayComRelatorios = Array();
 		foreach ($todosFilhos as $filho) {
 			$somaCelulas = 0;
 			$somaAlunos = 0;
@@ -2258,104 +2265,110 @@ public function alunosNaSemanaAction(){
 			$somaMetaDeEnvioRevisao = 0;
 			$somaTOTAL = 0;
 			$grupo = $filho->getGrupoPaiFilhoFilho();
-			$birimbal = Array();
+			$relatorio = Array();
 			if($grupo->getEntidadeAtiva()->getNome()){
-					$birimbal['nome'] = $grupo->getEntidadeAtiva()->getNome();
+					$relatorio['nome'] = $grupo->getEntidadeAtiva()->getNome();
 			}	else {
-				$birimbal['nome'] = 'COORDENAÇÃO '.$grupo->getEntidadeAtiva()->getNumero();
+				$relatorio['nome'] = 'COORDENAÇÃO '.$grupo->getEntidadeAtiva()->getNumero();
 			}
-			$birimbal['tipo'] = 'titulo';
-			$teste[] = $birimbal;
+			$relatorio['tipo'] = 'titulo';
+			$arrayComRelatorios[] = $relatorio;
 			if($grupo->getId() == 1225 || $grupo->getId() == 1){
-				$grupoPaiFilhoFilhosEquipe = $grupo->getGrupoPaiFilhoFilhosAtivos($periodo);
+				$grupoPaiFilhoFilhosEquipe = $grupo->getGrupoPaiFilhoFilhosAtivos($periodoFinal);
 				foreach ($grupoPaiFilhoFilhosEquipe as $grupoPaiFilhoFilhoEquipes) {
 					$grupo = $grupoPaiFilhoFilhoEquipes->getGrupoPaiFilhoFilho();
 					$numeroIdentificador = $repositorio->getFatoCicloORM()->montarNumeroIdentificador($repositorio, $grupo);
-					$relatorioCelula = $repositorio->getFatoCicloORM()->montarRelatorioCelulaPorNumeroIdentificador($numeroIdentificador, $periodo, $comparacao);
-					$birimbal = Array();
+					$relatorioCelula = $repositorio->getFatoCicloORM()->montarRelatorioCelulaPorNumeroIdentificador($numeroIdentificador, $periodoFinal, $comparacao);
+					$relatorio = Array();
 					if($grupo->getEntidadeAtiva()->getNome()){
-							$birimbal['nome'] = $grupo->getEntidadeAtiva()->getNome();
+							$relatorio['nome'] = $grupo->getEntidadeAtiva()->getNome();
 					}
-					$birimbal['celulas'] = $relatorioCelula[0]['quantidade'];
+					$relatorio['celulas'] = $relatorioCelula[0]['quantidade'];
 					if($relatorioCursosDesordenados = $this->getRepositorio()->getFatoCursoORM()->encontrarFatoCursoPorNumeroIdentificador($numeroIdentificador)){
 						foreach($relatorioCursosDesordenados as $fatoCurso){
-							if($fatoCurso->getSituacao_id() == 1 || $fatoCurso->getSituacao_id() == 6){
-								$birimbal['alunos']++;
-							}
+							$turmaDoFatoCurso = $this->getRepositorio()->getTurmaORM()->encontrarPorId($fatoCurso->getTurma_id());							
+							if($turmaDoFatoCurso->getAno() <= 2018){
+								if($fatoCurso->getSituacao_id() == $situacaoAtiva || $fatoCurso->getSituacao_id() == $situacaoEspecial){
+									$relatorio['alunos']++;
+								}
+							}							
 						}
 					}
-					$meta['metaDeAlunos'] = number_format($birimbal['alunos'] / 100 * 10);
-					$meta['metaDeEnvioRevisao'] = number_format($birimbal['celulas'] / 100 * 10);
+					$meta['metaDeAlunos'] = number_format($relatorio['alunos'] / 100 * 10);
+					$meta['metaDeEnvioRevisao'] = number_format($relatorio['celulas'] / 100 * 10);
 
-					if(!$birimbal['alunos']){
-						$birimbal['alunos'] = 0;
+					if(!$relatorio['alunos']){
+						$relatorio['alunos'] = 0;
 					}
-					if(!$birimbal['celulas']){
-						$birimbal['celulas'] = 0;
+					if(!$relatorio['celulas']){
+						$relatorio['celulas'] = 0;
 					}
-					$meta['total'] = $birimbal['celulas'] + $meta['metaDeAlunos'] + $meta['metaDeEnvioRevisao'];
-					$birimbal['meta'] = $meta;
-					$teste[] = $birimbal;
-					$somaAlunos += $birimbal['alunos'];
-					$somaCelulas += $birimbal['celulas'];
+					$meta['total'] = $relatorio['celulas'] + $meta['metaDeAlunos'] + $meta['metaDeEnvioRevisao'];
+					$relatorio['meta'] = $meta;
+					$arrayComRelatorios[] = $relatorio;
+					$somaAlunos += $relatorio['alunos'];
+					$somaCelulas += $relatorio['celulas'];
 					$somaMetaDeAlunos += $meta['metaDeAlunos'];
 					$somaMetaDeEnvioRevisao += $meta['metaDeEnvioRevisao'];
 					$somaTOTAL += $meta['total'];
 				}
-				$birimbal['nome'] = 'TOTAL';
-				$birimbal['celulas'] = $somaCelulas;
-				$birimbal['alunos'] = $somaAlunos;
-				$birimbal['meta']['metaDeAlunos'] = $somaMetaDeAlunos;
-				$birimbal['meta']['metaDeEnvioRevisao'] = $somaMetaDeEnvioRevisao;
-				$birimbal['meta']['total'] = $somaTOTAL;
-				$teste[] = $birimbal;
+				$relatorio['nome'] = 'TOTAL';
+				$relatorio['celulas'] = $somaCelulas;
+				$relatorio['alunos'] = $somaAlunos;
+				$relatorio['meta']['metaDeAlunos'] = $somaMetaDeAlunos;
+				$relatorio['meta']['metaDeEnvioRevisao'] = $somaMetaDeEnvioRevisao;
+				$relatorio['meta']['total'] = $somaTOTAL;
+				$arrayComRelatorios[] = $relatorio;
 			}
 
 			if($grupo->getEntidadeAtiva()->getEntidadeTipo()->getId() === 4 || $grupo->getEntidadeAtiva()->getEntidadeTipo()->getId() === 3){
-				$grupoPaiFilhoFilhosEquipe = $grupo->getGrupoPaiFilhoFilhosAtivos($periodo);
+				$grupoPaiFilhoFilhosEquipe = $grupo->getGrupoPaiFilhoFilhosAtivos($periodoFinal);
 				foreach ($grupoPaiFilhoFilhosEquipe as $grupoPaiFilhoFilhoEquipes) {
 					$grupo = $grupoPaiFilhoFilhoEquipes->getGrupoPaiFilhoFilho();
 					$numeroIdentificador = $repositorio->getFatoCicloORM()->montarNumeroIdentificador($repositorio, $grupo);
-					$relatorioCelula = $repositorio->getFatoCicloORM()->montarRelatorioCelulaPorNumeroIdentificador($numeroIdentificador, $periodo, $comparacao);					
-					$birimbal = Array();
+					$relatorioCelula = $repositorio->getFatoCicloORM()->montarRelatorioCelulaPorNumeroIdentificador($numeroIdentificador, $periodoFinal, $comparacao);					
+					$relatorio = Array();
 					if($grupo->getEntidadeAtiva()->getNome()){
-							$birimbal['nome'] = $grupo->getEntidadeAtiva()->getNome();
+							$relatorio['nome'] = $grupo->getEntidadeAtiva()->getNome();
 					}
-					$birimbal['celulas'] = $relatorioCelula[0]['quantidade'];
+					$relatorio['celulas'] = $relatorioCelula[0]['quantidade'];
 					$turmas = $grupo->getGrupoIgreja()->getTurma();
 					$relatorioCursos = array();
 					if($relatorioCursosDesordenados = $this->getRepositorio()->getFatoCursoORM()->encontrarFatoCursoPorNumeroIdentificador($numeroIdentificador)){
 						foreach($relatorioCursosDesordenados as $fatoCurso){
-							if($fatoCurso->getSituacao_id() == 1 || $fatoCurso->getSituacao_id() == 6){
-								$birimbal['alunos']++;
+							$turmaDoFatoCurso = $this->getRepositorio()->getTurmaORM()->encontrarPorId($fatoCurso->getTurma_id());							
+							if($turmaDoFatoCurso->getAno() <= 2018){
+								if($fatoCurso->getSituacao_id() == $situacaoAtiva || $fatoCurso->getSituacao_id() == $situacaoEspecial){
+									$relatorio['alunos']++;
+								}
 							}
 						}
 					}
-					$meta['metaDeAlunos'] = number_format($birimbal['alunos'] / 100 * 10);
-					$meta['metaDeEnvioRevisao'] = number_format($birimbal['celulas'] / 100 * 10);
+					$meta['metaDeAlunos'] = number_format($relatorio['alunos'] / 100 * 10);
+					$meta['metaDeEnvioRevisao'] = number_format($relatorio['celulas'] / 100 * 10);
 
-					if(!$birimbal['alunos']){
-						$birimbal['alunos'] = 0;
+					if(!$relatorio['alunos']){
+						$relatorio['alunos'] = 0;
 					}
-					if(!$birimbal['celulas']){
-						$birimbal['celulas'] = 0;
+					if(!$relatorio['celulas']){
+						$relatorio['celulas'] = 0;
 					}
-					$meta['total'] = $birimbal['celulas'] + $meta['metaDeAlunos'] + $meta['metaDeEnvioRevisao'];
-					$birimbal['meta'] = $meta;
-					$teste[] = $birimbal;
-					$somaAlunos += $birimbal['alunos'];
-					$somaCelulas += $birimbal['celulas'];
+					$meta['total'] = $relatorio['celulas'] + $meta['metaDeAlunos'] + $meta['metaDeEnvioRevisao'];
+					$relatorio['meta'] = $meta;
+					$arrayComRelatorios[] = $relatorio;
+					$somaAlunos += $relatorio['alunos'];
+					$somaCelulas += $relatorio['celulas'];
 					$somaMetaDeAlunos += $meta['metaDeAlunos'];
 					$somaMetaDeEnvioRevisao += $meta['metaDeEnvioRevisao'];
 					$somaTOTAL += $meta['total'];
 				}
-				$birimbal['nome'] = 'TOTAL';
-				$birimbal['celulas'] = $somaCelulas;
-				$birimbal['alunos'] = $somaAlunos;
-				$birimbal['meta']['metaDeAlunos'] = $somaMetaDeAlunos;
-				$birimbal['meta']['metaDeEnvioRevisao'] = $somaMetaDeEnvioRevisao;
-				$birimbal['meta']['total'] = $somaTOTAL;
-				$teste[] = $birimbal;
+				$relatorio['nome'] = 'TOTAL';
+				$relatorio['celulas'] = $somaCelulas;
+				$relatorio['alunos'] = $somaAlunos;
+				$relatorio['meta']['metaDeAlunos'] = $somaMetaDeAlunos;
+				$relatorio['meta']['metaDeEnvioRevisao'] = $somaMetaDeEnvioRevisao;
+				$relatorio['meta']['total'] = $somaTOTAL;
+				$arrayComRelatorios[] = $relatorio;
 			}
 		}
 
@@ -2371,7 +2384,7 @@ public function alunosNaSemanaAction(){
 
 		$dados['mes'] = $mes;
 		$dados['ano'] = $ano;
-		$dados['teste'] = $teste;
+		$dados['arrayComRelatorios'] = $arrayComRelatorios;
 		return new ViewModel($dados);
 	}
 
@@ -2542,6 +2555,32 @@ public function alunosNaSemanaAction(){
 
 		$dados = array();
 		$dados['registros'] = $registrosOrganizados;
+
+		self::registrarLog(RegistroAcao::VER_RELATORIO_DE_REGISTRO, $extra = '');
+
+		return new ViewModel($dados);
+	}
+
+	public function registroVerificarAction(){
+		$sessao = new Container(Constantes::$NOME_APLICACAO);
+
+		$idEntidadeAtual = $sessao->idEntidadeAtual;
+		$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+
+		
+		$registros = $this->getRepositorio()->getRegistroORM()->verificarRegistroDeCelulaPorData();
+		$registrosOrganizados = array();
+
+		$informacao = Array();		
+		foreach($registros as $registro){				
+			$nomeIgreja = $registro->getGrupo()->getGrupoIgreja()->getEntidadeAtiva()->infoEntidade();
+			$nomeEquipe = $registro->getGrupo()->getGrupoEquipe()->getEntidadeAtiva()->infoEntidade();		
+			$informacao[$nomeIgreja][$nomeEquipe]++;
+			$informacao[$nomeIgreja]['TOTAL']++;			
+		}
+
+		$dados = array();
+		$dados['registros'] = $informacao;
 
 		self::registrarLog(RegistroAcao::VER_RELATORIO_DE_REGISTRO, $extra = '');
 
