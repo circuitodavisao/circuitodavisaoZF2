@@ -2240,12 +2240,19 @@ public function alunosNaSemanaAction(){
 
 		$sessao = new Container(Constantes::$NOME_APLICACAO);
 		$idEntidadeAtual = $sessao->idEntidadeAtual;
-		$periodo = -1; //Temporariamente Fixo só pra agilizar
+		$mes = 12; //Temporariamente Fixo só pra agilizar
+		$ano = 2018; //Temporariamente Fixo só pra agilizar
 		$comparacao = 2; // Temporariamente Fixo também, comparação = like
+		$arrayPeriodoDoMes = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mes, $ano);
+		$periodoInicial = $arrayPeriodoDoMes[0];
+		$periodoFinal = $arrayPeriodoDoMes[1];
+		
 		$todosFilhos = Array();
 		$repositorio = $this->getRepositorio();
 		$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
-		$grupoPaiFilhoFilhos = $entidade->getGrupo()->getGrupoPaiFilhoFilhosAtivos($periodo);
+		$grupoPaiFilhoFilhos = $entidade->getGrupo()->getGrupoPaiFilhoFilhosAtivos($periodoFinal);
+		$situacaoAtiva = 1;
+		$situacaoEspecial = 6;
 
 		foreach ($grupoPaiFilhoFilhos as $grupoPaiFilhoFilho) {
 			$todosFilhos[] = $grupoPaiFilhoFilho;
@@ -2267,11 +2274,11 @@ public function alunosNaSemanaAction(){
 			$relatorio['tipo'] = 'titulo';
 			$arrayComRelatorios[] = $relatorio;
 			if($grupo->getId() == 1225 || $grupo->getId() == 1){
-				$grupoPaiFilhoFilhosEquipe = $grupo->getGrupoPaiFilhoFilhosAtivos($periodo);
+				$grupoPaiFilhoFilhosEquipe = $grupo->getGrupoPaiFilhoFilhosAtivos($periodoFinal);
 				foreach ($grupoPaiFilhoFilhosEquipe as $grupoPaiFilhoFilhoEquipes) {
 					$grupo = $grupoPaiFilhoFilhoEquipes->getGrupoPaiFilhoFilho();
 					$numeroIdentificador = $repositorio->getFatoCicloORM()->montarNumeroIdentificador($repositorio, $grupo);
-					$relatorioCelula = $repositorio->getFatoCicloORM()->montarRelatorioCelulaPorNumeroIdentificador($numeroIdentificador, $periodo, $comparacao);
+					$relatorioCelula = $repositorio->getFatoCicloORM()->montarRelatorioCelulaPorNumeroIdentificador($numeroIdentificador, $periodoFinal, $comparacao);
 					$relatorio = Array();
 					if($grupo->getEntidadeAtiva()->getNome()){
 							$relatorio['nome'] = $grupo->getEntidadeAtiva()->getNome();
@@ -2279,9 +2286,12 @@ public function alunosNaSemanaAction(){
 					$relatorio['celulas'] = $relatorioCelula[0]['quantidade'];
 					if($relatorioCursosDesordenados = $this->getRepositorio()->getFatoCursoORM()->encontrarFatoCursoPorNumeroIdentificador($numeroIdentificador)){
 						foreach($relatorioCursosDesordenados as $fatoCurso){
-							if($fatoCurso->getSituacao_id() == 1 || $fatoCurso->getSituacao_id() == 6){
-								$relatorio['alunos']++;
-							}
+							$turmaDoFatoCurso = $this->getRepositorio()->getTurmaORM()->encontrarPorId($fatoCurso->getTurma_id());							
+							if($turmaDoFatoCurso->getAno() <= 2018){
+								if($fatoCurso->getSituacao_id() == $situacaoAtiva || $fatoCurso->getSituacao_id() == $situacaoEspecial){
+									$relatorio['alunos']++;
+								}
+							}							
 						}
 					}
 					$meta['metaDeAlunos'] = number_format($relatorio['alunos'] / 100 * 10);
@@ -2312,11 +2322,11 @@ public function alunosNaSemanaAction(){
 			}
 
 			if($grupo->getEntidadeAtiva()->getEntidadeTipo()->getId() === 4 || $grupo->getEntidadeAtiva()->getEntidadeTipo()->getId() === 3){
-				$grupoPaiFilhoFilhosEquipe = $grupo->getGrupoPaiFilhoFilhosAtivos($periodo);
+				$grupoPaiFilhoFilhosEquipe = $grupo->getGrupoPaiFilhoFilhosAtivos($periodoFinal);
 				foreach ($grupoPaiFilhoFilhosEquipe as $grupoPaiFilhoFilhoEquipes) {
 					$grupo = $grupoPaiFilhoFilhoEquipes->getGrupoPaiFilhoFilho();
 					$numeroIdentificador = $repositorio->getFatoCicloORM()->montarNumeroIdentificador($repositorio, $grupo);
-					$relatorioCelula = $repositorio->getFatoCicloORM()->montarRelatorioCelulaPorNumeroIdentificador($numeroIdentificador, $periodo, $comparacao);					
+					$relatorioCelula = $repositorio->getFatoCicloORM()->montarRelatorioCelulaPorNumeroIdentificador($numeroIdentificador, $periodoFinal, $comparacao);					
 					$relatorio = Array();
 					if($grupo->getEntidadeAtiva()->getNome()){
 							$relatorio['nome'] = $grupo->getEntidadeAtiva()->getNome();
@@ -2326,8 +2336,11 @@ public function alunosNaSemanaAction(){
 					$relatorioCursos = array();
 					if($relatorioCursosDesordenados = $this->getRepositorio()->getFatoCursoORM()->encontrarFatoCursoPorNumeroIdentificador($numeroIdentificador)){
 						foreach($relatorioCursosDesordenados as $fatoCurso){
-							if($fatoCurso->getSituacao_id() == 1 || $fatoCurso->getSituacao_id() == 6){
-								$relatorio['alunos']++;
+							$turmaDoFatoCurso = $this->getRepositorio()->getTurmaORM()->encontrarPorId($fatoCurso->getTurma_id());							
+							if($turmaDoFatoCurso->getAno() <= 2018){
+								if($fatoCurso->getSituacao_id() == $situacaoAtiva || $fatoCurso->getSituacao_id() == $situacaoEspecial){
+									$relatorio['alunos']++;
+								}
 							}
 						}
 					}
