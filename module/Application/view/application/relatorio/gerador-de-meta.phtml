@@ -1,0 +1,305 @@
+ <style type="text/css">
+ th {
+   text-align: center;
+ }
+ .table-condensed>tbody>tr>td, .table-condensed>tbody>tr>th, .table-condensed>tfoot>tr>td, .table-condensed>tfoot>tr>th, .table-condensed>thead>tr>td, .table-condensed>thead>tr>th {
+   padding: 0px;
+ }
+ .table-condensed>tbody>tr:hover{
+   font-weight: bold;
+ }
+ </style>
+<?php
+
+use Application\Controller\Helper\Funcoes;
+
+$mesInicial = 1;
+$mesFinal = 12;
+$anoInicial = 2017;
+$anoFinal = date('Y');
+
+$html = '';
+$label = 'Gerador de Metas';
+$html .= $this->templateFormularioTopo($label);
+$html .= '<div class="panel-body bg-light" style="padding: 15px 5px 5px 5px;">';
+
+$html .= '<form id="formulario" method="POST" action="/relatorioGeradorDeMeta" >';
+
+//$html .= '<div class="row p5">';
+//$html .= '<div class="col-xs-12 col-sm-1 col-md-1 col-lg-1">';
+//$html .= 'Nome';
+//$html .= '</div>';
+//$html .= '<div class="col-xs-12 col-sm-11 col-md-11 col-lg-11">';
+//$html .= '<input type="text" name="nome" class="form-control" />';
+//$html .= '</div>';
+//$html .= '</div>';
+
+// div mes ano
+$html .= '<div class="row p5">';
+$html .= '<div class="col-lg-1 col-md-1 col-sm-1 col-xs-12 pb10 pt10">';
+$html .= 'Mês';
+$html .= '</div>';
+$html .= '<div class="col-lg-5 col-md-5 col-sm-5 col-xs-12">';
+$html .= '<select name="mes" id="mes" class="form-control">';
+for ($indice = $mesInicial; $indice <= $mesFinal; $indice++) {
+	$selected = '';
+	if ($this->mes == $indice) {
+		$selected = 'selected';
+	}
+
+	$html .= '<option value="' . $indice . '" ' . $selected . '>' . Funcoes::mesPorExtenso($indice, 1) . '</option>';
+}
+$html .= '</select>';
+$html .= '</div>';
+$html .= '<div class="col-lg-1 col-md-1 col-sm-1 col-xs-12 pb10 pt10"">';
+$html .= 'Ano';
+$html .= '</div>';
+$html .= '<div class="col-lg-5 col-md-5 col-sm-5 col-xs-12">';
+$html .= '<select name="ano" id="ano" class="form-control">';
+for ($indice = $anoFinal; $indice >= $anoInicial; $indice--) {
+	$selected = '';
+	if ($this->ano == $indice) {
+		$selected = 'selected';
+	}
+	$html .= '<option value="' . $indice . '" ' . $selected . '>' . $indice . '</option>';
+}
+$html .= '</select>';
+$html .= '</div>';
+$html .= '</div>';
+// fim div mes ano
+
+$html .= '<div class="row p15 text-center">';
+$html .= '<div class="alert alert-default">';
+$html .= 'Percentuais líderes e células';
+$html .= '</div>';
+$html .= '</div>';
+
+// div percentual liderres e celulas
+$html .= '<div class="row p5">';
+$html .= '<div class="col-xs-12 col-sm-1 col-md-1 col-lg-1">';
+$html .= 'Líderes';
+$html .= '</div>';
+$html .= '<div class="col-xs-12 col-sm-1 col-md-11 col-lg-3">';
+$html .= '<input value="'.$this->lideres.'" maxlength="3" type="number" name="lideres" class="form-control" placeholder="0%" />';
+$html .= '</div>';
+
+$html .= '<div class="col-xs-12 col-sm-1 col-md-1 col-lg-1">';
+$html .= 'Células';
+$html .= '</div>';
+$html .= '<div class="col-xs-12 col-sm-1 col-md-1 col-lg-3">';
+$html .= '<input value="'.$this->celulas.'" maxlength="3" type="number" name="celulas" class="form-control" placeholder="0%"  />';
+$html .= '</div>';
+
+$html .= '<div class="col-xs-12 col-sm-1 col-md-1 col-lg-1">';
+$html .= 'Células Beta';
+$html .= '</div>';
+$html .= '<div class="col-xs-12 col-sm-1 col-md-1 col-lg-3">';
+$html .= '<input value="'.$this->celulasBeta.'" maxlength="3" type="number" name="celulasBeta" class="form-control" placeholder="0%"  />';
+$html .= '</div>';
+$html .= '</div>';
+// fim div percentual liderres e celulas
+
+$html .= '<div class="row p15 text-center">';
+$html .= '<div class="alert alert-default">';
+$html .= 'Percentuais dos Alunos';
+$html .= '</div>';
+$html .= '</div>';
+
+$html .= '<div class="row p5">';
+$html .= '<div class="col-xs-12 col-sm-1 col-md-1 col-lg-1">';
+$html .= '1° M';
+$html .= '</div>';
+$html .= '<div class="col-xs-12 col-sm-1 col-md-1 col-lg-3">';
+$html .= '<input value="'.$this->alunos1m.'" maxlength="3" type="number" name="alunos1m" class="form-control" placeholder="0%"  />';
+$html .= '</div>';
+
+$html .= '<div class="col-xs-12 col-sm-1 col-md-1 col-lg-1">';
+$html .= '2° M';
+$html .= '</div>';
+$html .= '<div class="col-xs-12 col-sm-1 col-md-1 col-lg-3">';
+$html .= '<input value="'.$this->alunos2m.'" maxlength="3" type="number" name="alunos2m" class="form-control" placeholder="0%"  />';
+$html .= '</div>';
+
+$html .= '<div class="col-xs-12 col-sm-1 col-md-1 col-lg-1">';
+$html .= '3° M';
+$html .= '</div>';
+$html .= '<div class="col-xs-12 col-sm-1 col-md-1 col-lg-3">';
+$html .= '<input value="'.$this->alunos3m.'" maxlength="3" type="number" name="alunos3m" class="form-control" placeholder="0%"  />';
+$html .= '</div>';
+$html .= '</div>';
+
+$html .= '<div id="divMensagemDeErro" class="row p15 hidden">';
+$html .= '<div class="alert alert-danger">';
+$html .= 'Campo(s) com erro(s): <span id="spanCamposComErro"></span>';
+$html .= '</div>';
+$html .= '</div>';
+
+$html .= '<div class="row p10">';
+$html .= '<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 pb10 pt10">';
+$html .= '<button type="button" class="btn btn-primary form-control" onClick="ajudadorDeSubmissao()" >Mostrar</button>';
+$html .= '</div>';
+$html .= '</div>';
+
+$html .= '</form>';
+if($this->postado){
+	$html .= '<table class="table table-condesend table-bordered">';
+	$html .= '<tbody>';
+	if($this->filhos){
+		foreach($this->filhos as $filho){
+			$corLinha = 'primary';
+			$colSpan = 8;
+			if($filho['informacao'] === 'TOTAL'){
+				$corLinha = 'dark';
+				$colSpan = 0;
+				$html .= '<tr class="dark">'; 
+				$html .= '<td></td>';
+				$html .= '<td>LÍDERES / META</td>';
+				$html .= '<td>CÉLULAS / META</td>';
+				$html .= '<td>CÉLULAS BETAS / META</td>';
+				$html .= '<td>ALUNOS 1°M / META</td>';
+				$html .= '<td>ALUNOS 2°M / META</td>';
+				$html .= '<td>ALUNOS 3°M / META</td>';
+				$html .= '<td>TOTAL</td>';
+				$html .= '</tr>';
+			}
+			$html .= '<tr class="'.$corLinha.'">'; 
+			$html .= '<td colspan="'.$colSpan.'">'.$filho['informacao'].'</td>';
+			if($filho['informacao'] === 'TOTAL'){
+				$total = 
+					$filho['lideresMeta']
+					+ $filho['celulasMeta']
+					+ $filho['celulasBetaMeta']
+					+ $filho['alunos1Meta']
+					+ $filho['alunos2Meta']
+					+ $filho['alunos3Meta']
+					;
+				$html .= '<td>'.$filho['lideres'].' / '.$filho['lideresMeta'].'</td>';
+				$html .= '<td>'.$filho['celulas'].' / '.$filho['celulasMeta'].'</td>';
+				$html .= '<td>'.$filho['celulasBeta'].' / '.$filho['celulasBetaMeta'].'</td>';
+				$html .= '<td>'.$filho['alunos1'].' / '.$filho['alunos1Meta'].'</td>';
+				$html .= '<td>'.$filho['alunos2'].' / '.$filho['alunos2Meta'].'</td>';
+				$html .= '<td>'.$filho['alunos3'].' / '.$filho['alunos3Meta'].'</td>';
+				$html .= '<td>'.$total.'</td>';
+			}
+			$html .= '</tr>';
+
+			if($filho['informacao'] !== 'TOTAL'){
+				$html .= '<tr class="primary">'; 
+				$html .= '<td>TIMES</td>';
+				$html .= '<td>LÍDERES / META</td>';
+				$html .= '<td>CÉLULAS / META</td>';
+				$html .= '<td>CÉLULAS BETAS / META</td>';
+				$html .= '<td>ALUNOS 1°M / META</td>';
+				$html .= '<td>ALUNOS 2°M / META</td>';
+				$html .= '<td>ALUNOS 3°M / META</td>';
+				$html .= '<td>TOTAL</td>';
+				$html .= '</tr>';
+			}
+			if($filho['filhos']){
+				foreach($filho['filhos'] as $filho144){
+					$corLinha144 = '';
+					if($filho144['informacao'] === 'TOTAL PARCIAL'){
+						$corLinha144 = 'info';
+					}
+					$total = 
+						$filho144['lideresMeta']
+						+ $filho144['celulasMeta']
+						+ $filho144['celulasBetaMeta']
+						+ $filho144['alunos1Meta']
+						+ $filho144['alunos2Meta']
+						+ $filho144['alunos3Meta']
+						;
+
+					$html .= '<tr class="'.$corLinha144.'">'; 
+					$html .= '<td>---- '.$filho144['informacao'].'</td>';
+					$html .= '<td>'.$filho144['lideres'].' / '.$filho144['lideresMeta'].'</td>';
+					$html .= '<td>'.$filho144['celulas'].' / '.$filho144['celulasMeta'].'</td>';
+					$html .= '<td>'.$filho144['celulasBeta'].' / '.$filho144['celulasBetaMeta'].'</td>';
+					$html .= '<td>'.$filho144['alunos1'].' / '.$filho144['alunos1Meta'].'</td>';
+					$html .= '<td>'.$filho144['alunos2'].' / '.$filho144['alunos2Meta'].'</td>';
+					$html .= '<td>'.$filho144['alunos3'].' / '.$filho144['alunos3Meta'].'</td>';
+					$html .= '<td>'.$total.'</td>';
+					$html .= '</tr>';
+
+					if($filho144['informacao'] === 'TOTAL PARCIAL'){
+						$html .= '<tr style="height: 10px;">'; 
+						$html .= '<td>&nbsp;</td>';
+						$html .= '</tr>';
+					}
+				}
+			}
+		}
+	}
+	$html .= '</tbody>';
+	$html .= '</table>';
+}
+$html .= $this->templateFormularioRodape();
+
+echo $html;
+?>
+<script type='text/javascript'>
+function ajudadorDeSubmissao(){
+	const hidden = 'hidden'
+	const formulario = document.getElementById('formulario')
+	let mostrarMensagemDeErro = false
+	let camposComErro = []
+	const divMensagemDeErro = document.getElementById('divMensagemDeErro')
+	const spanCamposComErro = document.getElementById('spanCamposComErro')
+
+//	if(formulario.nome.value === ''){
+//		mostrarMensagemDeErro = true
+//		camposComErro.push('Nome')
+//	}
+	if(parseInt(formulario.mes.value) === 0){
+		mostrarMensagemDeErro = true
+		camposComErro.push('Mês')
+	}
+	if(parseInt(formulario.ano.value) === 0){
+		mostrarMensagemDeErro = true
+		camposComErro.push('Ano')
+	}
+	if(formulario.lideres.value === ''){
+		mostrarMensagemDeErro = true
+		camposComErro.push('Líderes')
+	}
+	if(formulario.celulas.value === ''){
+		mostrarMensagemDeErro = true
+		camposComErro.push('Células')
+	}
+	if(formulario.celulasBeta.value === ''){
+		mostrarMensagemDeErro = true
+		camposComErro.push('Células Beta')
+	}
+	if(formulario.alunos1m.value === ''){
+		mostrarMensagemDeErro = true
+		camposComErro.push('Alunos 1° módulo')
+	}
+		if(formulario.alunos2m.value === ''){
+		mostrarMensagemDeErro = true
+		camposComErro.push('Alunos 2° módulo')
+	}
+		if(formulario.alunos3m.value === ''){
+		mostrarMensagemDeErro = true
+		camposComErro.push('Alunos 3° módulo')
+	}
+
+	if(mostrarMensagemDeErro){
+		divMensagemDeErro.classList.remove(hidden)
+		
+		let texto = ''
+		camposComErro.forEach(campo => {
+			if(texto === ''){
+				texto += campo
+			}else{
+				texto += `, ${campo}`
+			}
+		})
+		spanCamposComErro.innerHTML = texto
+	}else{
+		divMensagemDeErro.classList.add(hidden)
+		mostrarSplash()
+		formulario.submit()
+	}
+
+}
+</script>

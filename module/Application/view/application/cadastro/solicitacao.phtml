@@ -339,6 +339,36 @@ if (count($this->igrejas) === 0) {
 	<?php } ?>
 	</div>
 
+	<div id="divSelecionarParaOndeTransferir" class="hidden">
+<?php
+if (count($this->igrejas) === 0) {
+	echo 'Sem ipara onde transferir a igreja';
+} else {
+?>
+	<select id="idParaOndeTransferir" class="form-control" onChange="mostrarBotaoSelecionarParaOndeTransferir();">
+		<option value="0">SELECIONE</option>
+<?php
+	foreach ($this->paraOndeTransferir as $coisa) {
+		$informacao = '';
+		if($coisa->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::regiao){
+			$informacao = 'REGIÃO ' . $coisa->getEntidadeAtiva()->getNome();
+		}
+		if($coisa->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao){
+			$informacao = 'COORDENAÇÃO ' . $coisa->getEntidadeAtiva()->getNumero();
+		}
+		
+		echo '<option  value="' . $coisa->getId() . '" >' . $coisa->getId() . ' - ' . $informacao . '</option>';
+}
+?>
+	</select>
+	<div id="divBotaoSelecionarParaOndeTransferir" class="hidden mt10">
+	<?php
+		echo $this->botaoSimples(Constantes::$TRADUCAO_SELECIONAR, $this->funcaoOnClick('selecionarParaOndeTransferir()'));
+	?>
+	</div>
+	<?php } ?>
+	</div>
+
 <?php } ?>
 
 
