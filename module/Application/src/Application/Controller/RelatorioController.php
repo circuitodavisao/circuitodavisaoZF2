@@ -2745,15 +2745,26 @@ public function alunosNaSemanaAction(){
 								foreach($relatorioCursos as $fatoCurso){
 									if($fatoCurso->getSituacao_id() === Situacao::ATIVO || $fatoCurso->getSituacao_id() === Situacao::ESPECIAL){
 										$turma = $this->getRepositorio()->getTurmaORM()->encontrarPorId($fatoCurso->getTurma_id());
-										if($turma->getTurmaAulaAtiva()){
-											if($turma->getTurmaAulaAtiva()->getAula()->getDisciplina()->getPosicao() === 1){
-												$somaIgrejaAlunos1++;
+										$adicionar = false;
+										if(intVal($turma->getAno()) < intVal($ano)){
+											$adicionar = true;
+										}
+										if(intVal($turma->getAno()) === intVal($ano)){
+											if(intVal($turma->getMes()) <= intVal($mes)){
+												$adicionar = true;
 											}
-											if($turma->getTurmaAulaAtiva()->getAula()->getDisciplina()->getPosicao() === 2){
-												$somaIgrejaAlunos2++;
-											}
-											if($turma->getTurmaAulaAtiva()->getAula()->getDisciplina()->getPosicao() === 3){
-												$somaIgrejaAlunos3++;
+										}
+										if($adicionar){
+											if($turma->getTurmaAulaAtiva()){
+												if($turma->getTurmaAulaAtiva()->getAula()->getDisciplina()->getPosicao() === 1){
+													$somaIgrejaAlunos1++;
+												}
+												if($turma->getTurmaAulaAtiva()->getAula()->getDisciplina()->getPosicao() === 2){
+													$somaIgrejaAlunos2++;
+												}
+												if($turma->getTurmaAulaAtiva()->getAula()->getDisciplina()->getPosicao() === 3){
+													$somaIgrejaAlunos3++;
+												}
 											}
 										}
 									}
