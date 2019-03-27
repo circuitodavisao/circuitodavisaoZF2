@@ -15,10 +15,8 @@ use Doctrine\Common\Collections\Criteria;
 			<?php
 				if($this->possoAlterar){
 					echo '<div class="mb5">';
-					if ($this->periodo == $periodoAnterior || $this->periodo == $periodoAtual) {
-						$extra = $this->funcaoOnClick('mostrarSplash(); funcaoCircuito("lancamentoEnviar", ' . $this->periodo . ')');
-						echo '&nbsp;&nbsp;'.$this->botaoSimples('Enviar Relatório', $extra, BotaoSimples::botaoSucesso, BotaoSimples::larguraMaxima);
-					}
+					$extra = $this->funcaoOnClick('mostrarSplash(); funcaoCircuito("lancamentoEnviar", ' . $this->periodo . ')');
+					echo '&nbsp;&nbsp;'.$this->botaoSimples('Enviar Relatório', $extra, BotaoSimples::botaoSucesso, BotaoSimples::larguraMaxima);
 					echo '</div>';
 				}	
 				echo $this->cabecalhoDePeriodos();
