@@ -14,6 +14,28 @@ use Exception;
  */
 class FatoSetentaORM extends CircuitoORM {
 
+   public function encontrarPorMesEAno($mes, $ano) {
+        $dqlBase = "SELECT "
+                . "frc "
+                . "FROM  " . Constantes::$ENTITY_FATO_SETENTA . " frc "
+                . "WHERE "
+				. "frc.mes = ?1 "
+				. "AND frc.ano = ?2 "
+				. "ORDER BY frc.setenta ASC";
+
+		try {
+			$result = $this->getEntityManager()->createQuery($dqlBase)
+				->setParameter(1, $mes)
+				->setParameter(2, $ano)
+                    ->getResult();
+
+            return $result;
+        } catch (Exception $exc) {
+            echo $exc->getMessage();
+        }
+    }
+
+
    public function encontrarPorIdGrupoIgreja($idGrupoIgreja, $mes, $ano) {
         $dqlBase = "SELECT "
                 . "frc "

@@ -2905,4 +2905,58 @@ public function alunosNaSemanaAction(){
 		$view = new ViewModel($dados);
 		return $view;
 	}
+
+	public function rankingSetentaAction() {
+		$dados = array();
+		$request = $this->getRequest();
+		if ($request->isPost()) {
+			$post_data = $request->getPost();
+			$mes = $post_data['mes'];
+			$ano = $post_data['ano'];
+
+			$fatosSetenta = $this->getRepositorio()->getFatoSetentaORM()->encontrarPorMesEAno($mes, $ano);
+
+			$arrayLideres = array();
+			foreach($fatosSetenta as $fato){
+				if($fato->getSetenta() == 'S'){
+					$dadosLider = array();
+					$dadosLider['id'] = $fato->getGrupo_id();
+					$dadosLider['celula'] = $fato->getGrupo_id();
+					$soma = $fato->getP1() + $fato->getP2() + $fato->getP3() + $fato->getP4() + $fato->getP5() + $fato->getP6();
+					$dadosLider['soma'] = $soma;
+					$arrayLideres[] = $dadosLider;
+				}
+			}
+
+			$tamanhoArray = count($arrayLideres);
+			for ($i = 0; $i < $tamanhoArray; $i++) {
+				for ($j = 0; $j < $tamanhoArray; $j++) {
+
+					$fato1 = $arrayLideres[$i];
+					$fato2 = $arrayLideres[$j];
+
+					if ($fato1['soma'] > $fato2['soma']){
+						$aux = $fato1;
+						$arrayLideres[$i] = $fato2;
+						$arrayLideres[$j] = $aux;
+					}
+				}
+			}
+
+			$dados['lideres'] = $arrayLideres;
+			$dados['repositorio'] = $this->getRepositorio();
+			$dados['postado'] = true;
+		}
+
+		if (empty($mes)) {
+			$mes = date('m');
+		}
+		if (empty($ano)) {
+			$ano = date('Y');
+		}
+		$dados['mes'] = $mes;
+		$dados['ano'] = $ano;
+		$view = new ViewModel($dados);
+		return $view;
+	}
 }
