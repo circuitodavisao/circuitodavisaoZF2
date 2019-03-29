@@ -15,6 +15,7 @@ echo '<table class="text-center table table-condensed table-hover bg-light" styl
 echo '<thead>';
 echo '<tr>';
 echo '<th></th>';
+echo '<th class="text-center">Igreja</th>';
 echo '<th class="text-center">Quem</th>';
 echo '<th class="text-center">Célula</th>';
 $contadorDePeriodos = 1;
@@ -31,45 +32,58 @@ echo '<tbody>';
 if($this->fatos && $this->filtrado){
 	$contagemRanking = 1;
 	foreach($this->fatos as $fato){
+		$mostrar = false;
 		$grupoEvento = $this->repositorio->getGrupoEventoORM()->encontrarPorId($fato->getGrupo_evento_id());
 		$infoEntidade = $grupoEvento->getGrupo()->getEntidadeAtiva()->infoEntidade();
 		$lideres = $grupoEvento->getGrupo()->getNomeLideresAtivos();
 		$celulaDia = $this->translate(Funcoes::diaDaSemanaPorDia($grupoEvento->getEvento()->getDia())).' - ' . substr($grupoEvento->getEvento()->getHora(),0,5);
+		$grupoIgreja = $grupoEvento->getGrupo()->getGrupoIgreja();
+		$nomeIgreja = $grupoIgreja->getEntidadeAtiva()->getNome();
+		if($grupoIgreja->getId() !== 1 
+			&& $grupoIgreja->getId() !== 1225
+			&& $grupoIgreja->getId() !== 5434
+			&& $grupoIgreja->getId() !== 4066 
+		){
+			$mostrar = true;
+		}
 
-		$classeCor = 'dark';
-		if($fato->getValor() > 6){
-			$classeCor = 'success';
-		}
-		if ($fato->getValor() >= 4 && $fato->getValor() <= 6) {
-			$classeCor = 'warning';
-		}
-		if($fato->getValor() >= 1 && $fato->getValor() <= 3) {
-			$classeCor = 'danger';
-		}
-		
-		echo '<tr class="'.$classeCor.'">';
-		echo '<td>'.$contagemRanking.'</td>';
-		echo '<td>'.$lideres.'-'.$infoEntidade.'</td>';
-		echo '<td>'.$celulaDia.'</td>';
-		$contadorDePeriodos = 1;
-		for ($indiceDeArrays = $this->periodoInicial; $indiceDeArrays <= $this->periodoFinal; $indiceDeArrays++) {
-			$valor = 0;
-			switch($contadorDePeriodos){
-			case 1: $valor = $fato->getP1(); break;
-			case 2: $valor = $fato->getP2(); break;
-			case 3: $valor = $fato->getP3(); break;
-			case 4: $valor = $fato->getP4(); break;
-			case 5: $valor = $fato->getP5(); break;
-			case 6: $valor = $fato->getP6(); break;
+		if($mostrar){
+			$classeCor = 'dark';
+			if($fato->getValor() > 6){
+				$classeCor = 'success';
 			}
-			echo '<td>';
-			echo $valor;
-			echo '</td>';
-			$contadorDePeriodos++;
+			if ($fato->getValor() >= 4 && $fato->getValor() <= 6) {
+				$classeCor = 'warning';
+			}
+			if($fato->getValor() >= 1 && $fato->getValor() <= 3) {
+				$classeCor = 'danger';
+			}
+
+			echo '<tr class="'.$classeCor.'">';
+			echo '<td>'.$contagemRanking.'</td>';
+			echo '<td>'.$nomeIgreja.'</td>';
+			echo '<td>'.$lideres.'-'.$infoEntidade.'</td>';
+			echo '<td>'.$celulaDia.'</td>';
+			$contadorDePeriodos = 1;
+			for ($indiceDeArrays = $this->periodoInicial; $indiceDeArrays <= $this->periodoFinal; $indiceDeArrays++) {
+				$valor = 0;
+				switch($contadorDePeriodos){
+				case 1: $valor = $fato->getP1(); break;
+				case 2: $valor = $fato->getP2(); break;
+				case 3: $valor = $fato->getP3(); break;
+				case 4: $valor = $fato->getP4(); break;
+				case 5: $valor = $fato->getP5(); break;
+				case 6: $valor = $fato->getP6(); break;
+				}
+				echo '<td>';
+				echo $valor;
+				echo '</td>';
+				$contadorDePeriodos++;
+			}
+			echo '<td>'.$fato->getValor().'</td>';
+			echo '</tr>';
+			$contagemRanking++;
 		}
-		echo '<td>'.$fato->getValor().'</td>';
-		echo '</tr>';
-		$contagemRanking++;
 	}
 }
 echo '</tbody>';

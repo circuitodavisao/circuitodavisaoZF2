@@ -1995,6 +1995,10 @@ class RelatorioController extends CircuitoController {
 	}
 
 	public function rankingCelulaAction(){
+		set_time_limit(0);
+		ini_set('memory_limit', '-1');
+		ini_set('max_execution_time', '60');
+
 		$request = $this->getRequest();
 		$dados = array();
 		if($request->isPost()){
@@ -2007,6 +2011,10 @@ class RelatorioController extends CircuitoController {
 
 			$mes = $postDados['mes'];
 			$ano = $postDados['ano'];
+			
+			if($entidade->getEntidadeTipo()->getId() === EntidadeTipo::regiao){
+				$fatosRankingCelula = $this->getRepositorio()->getFatoRankingCelulaORM()->encontrarPorMesEAno($mes, $ano);
+			}
 
 			if($entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
 				$grupoIgreja = $entidade->getGrupo()->getGrupoIgreja();
@@ -2018,6 +2026,22 @@ class RelatorioController extends CircuitoController {
 					$grupoEquipe = $entidade->getGrupo()->getGrupoEquipe();
 					$fatosRankingCelula = $this->getRepositorio()->getFatoRankingCelulaORM()->encontrarPorIdGrupoEquipe($grupoEquipe->getId(), $mes, $ano);
 				}
+
+			$tamanhoArray = count($fatosRankingCelula);
+			for ($i = 0; $i < $tamanhoArray; $i++) {
+				for ($j = 0; $j < $tamanhoArray; $j++) {
+
+					$fato1 = $fatosRankingCelula[$i];
+					$fato2 = $fatosRankingCelula[$j];
+
+					if ($fato1->getValor() > $fato2->getValor()){
+						$aux = $fato1;
+						$fatosRankingCelula[$i] = $fato2;
+						$fatosRankingCelula[$j] = $aux;
+					}
+				}
+			}
+
 			$dados['fatos'] = $fatosRankingCelula;
 			$dados['repositorio'] = $this->getRepositorio();
 			$dados['filtrado'] = true;
