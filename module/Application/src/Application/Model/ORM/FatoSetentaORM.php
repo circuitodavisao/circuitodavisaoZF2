@@ -35,7 +35,6 @@ class FatoSetentaORM extends CircuitoORM {
         }
     }
 
-
    public function encontrarPorIdGrupoIgreja($idGrupoIgreja, $mes, $ano) {
         $dqlBase = "SELECT "
                 . "frc "

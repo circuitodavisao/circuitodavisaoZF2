@@ -15,50 +15,70 @@ use Exception;
  */
 class FatoRankingCelulaORM extends CircuitoORM {
 
-   public function encontrarPorIdGrupoIgreja($idGrupoIgreja, $mes, $ano) {
-        $dqlBase = "SELECT "
-                . "frc "
-                . "FROM  " . Constantes::$ENTITY_FATO_RANKING_CELULA . " frc "
-                . "WHERE "
-				. "frc.grupo_id = ?1 "
-				. "AND frc.mes = ?2 "
-				. "AND frc.ano = ?3 "
-				. "ORDER BY frc.id ASC";
+	public function encontrarPorMesEAno($mes, $ano) {
+		$dqlBase = "SELECT "
+			. "frc "
+			. "FROM  " . Constantes::$ENTITY_FATO_RANKING_CELULA . " frc "
+			. "WHERE "
+			. "frc.mes = ?1 "
+			. "AND frc.ano = ?2 "
+			. "ORDER BY frc.id ASC";
+		try {
+			$result = $this->getEntityManager()->createQuery($dqlBase)
+				->setParameter(1, $mes)
+				->setParameter(2, $ano)
+				->getResult();
+
+			return $result;
+		} catch (Exception $exc) {
+			echo $exc->getMessage();
+		}
+	}
+
+	public function encontrarPorIdGrupoIgreja($idGrupoIgreja, $mes, $ano) {
+		$dqlBase = "SELECT "
+			. "frc "
+			. "FROM  " . Constantes::$ENTITY_FATO_RANKING_CELULA . " frc "
+			. "WHERE "
+			. "frc.grupo_id = ?1 "
+			. "AND frc.mes = ?2 "
+			. "AND frc.ano = ?3 "
+			. "ORDER BY frc.id ASC";
 
 		try {
 			$result = $this->getEntityManager()->createQuery($dqlBase)
 				->setParameter(1, $idGrupoIgreja)
 				->setParameter(2, $mes)
 				->setParameter(3, $ano)
-                    ->getResult();
+				->getResult();
 
-            return $result;
-        } catch (Exception $exc) {
-            echo $exc->getMessage();
-        }
-    }
+			return $result;
+		} catch (Exception $exc) {
+			echo $exc->getMessage();
+		}
+	}
 
-   public function encontrarPorIdGrupoEquipe($idGrupoEquipe, $mes, $ano) {
-        $dqlBase = "SELECT "
-                . "frc "
-                . "FROM  " . Constantes::$ENTITY_FATO_RANKING_CELULA . " frc "
-                . "WHERE "
-				. "frc.grupo_equipe_id = ?1 "
-				. "AND frc.mes = ?2 "
-				. "AND frc.ano = ?3 "
-				. "ORDER BY frc.id ASC";
+	public function encontrarPorIdGrupoEquipe($idGrupoEquipe, $mes, $ano) {
+		$dqlBase = "SELECT "
+			. "frc "
+			. "FROM  " . Constantes::$ENTITY_FATO_RANKING_CELULA . " frc "
+			. "WHERE "
+			. "frc.grupo_equipe_id = ?1 "
+			. "AND frc.mes = ?2 "
+			. "AND frc.ano = ?3 "
+			. "ORDER BY frc.id ASC";
 
 		try {
 			$result = $this->getEntityManager()->createQuery($dqlBase)
 				->setParameter(1, $idGrupoEquipe)
 				->setParameter(2, $mes)
 				->setParameter(3, $ano)
-                    ->getResult();
+				->getResult();
 
-            return $result;
-        } catch (Exception $exc) {
-            echo $exc->getMessage();
-        }
-    }
+			return $result;
+		} catch (Exception $exc) {
+			echo $exc->getMessage();
+		}
+	}
 
 }
