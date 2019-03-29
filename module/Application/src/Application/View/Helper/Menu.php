@@ -378,6 +378,25 @@ if ($this->view->entidade->verificarSeEstaAtivo()){
 			
 			}
 
+			if($this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::coordenacao){
+			$html .= '<li>';
+			$html .= '<a href="/relatorioRankingCelula" onClick="mostrarSplash();">';
+			$html .= '<span class="fa fa-users"></span>';
+			$html .= 'Ranking Célula';
+			$html .= '</a>';
+			$html .= '</li>';
+			}
+
+
+			if($this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::coordenacao){
+			$html .= '<li>';
+			$html .= '<a href="/relatorioRankingSetenta" onClick="mostrarSplash();">';
+			$html .= '<span class="fa fa-users"></span>';
+			$html .= 'Ranking Setenta';
+			$html .= '</a>';
+			$html .= '</li>';
+			}
+
 			if($this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::regiao 
 			&& $this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::coordenacao) {
 
@@ -399,13 +418,6 @@ if ($this->view->entidade->verificarSeEstaAtivo()){
 			$html .= '<a href="/relatorioAlunosNaSemana" onClick="mostrarSplash();">';
 			$html .= '<span class="fa fa-graduation-cap"></span>';
 			$html .= 'Quantidade de alunos que já tem presença na aula aberta';
-			$html .= '</a>';
-			$html .= '</li>';
-
-			$html .= '<li>';
-			$html .= '<a href="/relatorioRankingCelula" onClick="mostrarSplash();">';
-			$html .= '<span class="fa fa-users"></span>';
-			$html .= 'Ranking Célula';
 			$html .= '</a>';
 			$html .= '</li>';
 
