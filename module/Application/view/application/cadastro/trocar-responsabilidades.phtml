@@ -1,0 +1,276 @@
+<span id="spanCarregando">Carregando ...</span>
+
+<div id="divSelectTimes" class="hidden">
+<div class="row p10">
+<p>Passo Um</p>
+<p>Times para selecionar</p>
+<select id="selectTimes">
+</select>
+</div>
+<div class="row p10">
+<button onClick="adicionarTime()">ADICIONAR</button>
+</div>
+</div>
+
+<div id="divListaDeTimesSelecionados" class="hidden">
+<p>Times Selecionados</p>
+<ul id="listaDeTimesSelecionados">
+	<li>Nenhum time selecionado</li>
+</ul>
+<button id="botaoSegundoPasso" onClick="mostrarSegundoPasso()" class="hidden">PROXIMO PASSO</button>
+</div>
+
+<div id="divSegundoPasso" class="hidden">
+
+<div class="row p10">
+<p>Segundo Passo</p>
+<div id="divSelectTimesSelecionados">
+<p>Selecione o time e as responsabilidades para ele</p>
+<select id="selectTimesSelecionados"></select>
+<div class="row p10">
+<button onClick="voltarPassoUm()">VOLTAR</button>
+<button onClick="mostrarResponsabilidadesParaSelecionar()">SELECIONAR</button>
+</div>
+</div>
+<!-- fim divSelectTimesSelecionado -->
+
+<div id="divResponsabilidadesDisponiveis" class="hidden">	
+<div class="row p10">
+<p>Responsabilidades Disponiveis</p>
+<p>Time: <span id="spanTimeSelecionadoParaIncluirResponsabilidades"></span></p>
+<select id="selectResponsabilidadesDisponiveis"></select>
+<button onClick="selecionarResponsabilidadeParaOGrupo()">SELECIONAR</button>
+</div>
+<div class="row p10">
+<button onClick="mostrarSelectTimesSelecionados()">VOLTAR</button>
+</div>
+</div>
+
+<div class="row p10">
+<p>Como ficará</p>
+<ul id="listaDeTimesEResponsabilidades">
+	<li>Nenhuma Responsabilidade Atribuida</li>
+</ul>
+</div>
+
+</div>
+<div id="divBotaoFinalizar" class="row p10 hidden">
+	<button onClick="finalizar()">FINALIZAR</button>
+</div>
+<script>
+	let listaDeTimesSelecionados = []
+	let times = []
+	let responsabilidadesParaSelecionar = []
+	let listaDeTimesEResponsabilidades = []
+
+	function buscarTimesAte1728(){
+		const url = '/principalBuscarTimes'
+		fetch(
+			url,
+			{
+				method: 'POST',	
+				body: JSON.stringify({
+					"token": "<?php echo $this->grupo->getId(); ?>",
+				}),
+			},
+		)
+		.then(resultado => {
+			if(!resultado.ok){
+				alert('erro ao buscar dados')
+			}
+			return resultado.json()
+		})
+		.then(json => {
+			times = json.resultado.times
+			document.getElementById('spanCarregando').classList.add('hidden')
+			document.getElementById('divListaDeTimesSelecionados').classList.remove('hidden')
+			document.getElementById('divSelectTimes').classList.remove('hidden')
+			escreverListaDeTimes()
+		})
+	}
+	buscarTimesAte1728()
+
+	function adicionarTime(){
+		const id = document.getElementById("selectTimes").value;
+		if(parseInt(id) !== 0){
+			const timeSelecionado = times.find(time => parseInt(time.id) === parseInt(id))
+			times = times.filter(time => parseInt(time.id) !== parseInt(id))
+			escreverListaDeTimes()
+			listaDeTimesSelecionados.push(timeSelecionado)
+
+			const responsabilidade= {}
+			responsabilidade.id = timeSelecionado.id
+			responsabilidade.entidade = timeSelecionado.entidade
+			responsabilidade.informacao = timeSelecionado.informacao
+			responsabilidadesParaSelecionar.push(responsabilidade)
+
+			document.getElementById('selectTimes').value = 0
+			escreverListaDeTimesSelecionados()
+
+			if(listaDeTimesSelecionados.length >= 2){
+				mostrarBotaoSegundoPasso()
+			}
+		}
+	}
+
+	function removerTime(id){
+		listaDeTimesSelecionados = listaDeTimesSelecionados.filter(item => parseInt(item.id) !== parseInt(id))
+		responsabilidadesParaSelecionar = responsabilidadesParaSelecionar.filter(item => parseInt(item.id) !== parseInt(id))
+		escreverListaDeTimesSelecionados()
+	}
+
+	function escreverListaDeTimes(){
+		let html = ''
+		html += '<option value="0">SELECIONE</option>'
+		times.forEach(item => {
+			html += `<option value="${item.id}">${item.entidade}: ${item.informacao} - ${item.lideres}</option>`
+		})
+		document.getElementById('selectTimes').innerHTML = html
+	}
+
+	function escreverListaDeTimesSelecionados(){
+		let html = ''
+		listaDeTimesSelecionados.forEach(item => {
+			html += `<li>${item.entidade}: ${item.informacao} - ${item.lideres} <button onClick="removerTime(${item.id})">REMOVER</button></li>`
+		})
+		document.getElementById('listaDeTimesSelecionados').innerHTML = html
+	}
+
+	function esconderListaDeTimesSelecionados(){
+		document.getElementById('divListaDeTimesSelecionados').classList.add('hidden')
+	}
+
+	function mostrarBotaoSegundoPasso(){
+		document.getElementById('botaoSegundoPasso').classList.remove('hidden')
+	}
+
+	function mostrarSegundoPasso(){
+		document.getElementById('divSelectTimes').classList.add('hidden')
+		document.getElementById('divListaDeTimesSelecionados').classList.add('hidden')
+		document.getElementById('divSegundoPasso').classList.remove('hidden')
+		let html = ''
+		html += '<option value="0">SELECIONE</option>'
+		listaDeTimesSelecionados.forEach(item => {
+			html += `<option value="${item.id}">${item.lideres}</option>`
+		})
+		document.getElementById('selectTimesSelecionados').innerHTML = html
+	}
+
+	function voltarPassoUm(){
+		document.getElementById('divSelectTimes').classList.remove('hidden')
+		document.getElementById('divListaDeTimesSelecionados').classList.remove('hidden')
+		document.getElementById('divSegundoPasso').classList.add('hidden')
+	}
+
+	function mostrarResponsabilidadesParaSelecionar(){
+		const idTime = document.getElementById("selectTimesSelecionados").value;
+		if(parseInt(idTime) !== 0){
+			const select = document.getElementById('selectTimesSelecionados')
+			document.getElementById('spanTimeSelecionadoParaIncluirResponsabilidades').innerHTML = select.options[select.selectedIndex].text
+			document.getElementById('divSelectTimesSelecionados').classList.add('hidden')
+			document.getElementById('divResponsabilidadesDisponiveis').classList.remove('hidden')
+			escreverListaDeResponsabilidadesDisponiveis()
+		}
+	}
+
+	function escreverListaDeResponsabilidadesDisponiveis(){
+		let html = ''
+		html += '<option value="0">SELECIONE</option>'
+		//html += '<option value="remover">REMOVER</option>'
+		responsabilidadesParaSelecionar.forEach((item, indice) => {
+			html += `<option value="${item.id}">${item.entidade}: ${item.informacao}</option>`
+		})
+		document.getElementById('selectResponsabilidadesDisponiveis').innerHTML = html
+	}
+
+	function selecionarResponsabilidadeParaOGrupo(){
+		const idTime = document.getElementById("selectTimesSelecionados").value;
+		const idResponsabilidade = document.getElementById("selectResponsabilidadesDisponiveis").value;
+		if(parseInt(idResponsabilidade) !== 0){
+			let responsabilidade = null
+			if(idResponsabilidade !== 'remover'){
+				responsabilidade = responsabilidadesParaSelecionar.find(responsabilidade => parseInt(responsabilidade.id) === parseInt(idResponsabilidade))
+				responsabilidadesParaSelecionar = responsabilidadesParaSelecionar.filter(responsabilidade => parseInt(responsabilidade.id) !== parseInt(idResponsabilidade))
+				escreverListaDeResponsabilidadesDisponiveis()
+			}else{
+				responsabilidade = {id: 'remover',}
+			}
+	
+			let grupoResponsabilidades = listaDeTimesEResponsabilidades.find(item => parseInt(item.idTime) === parseInt(idTime))
+			if(grupoResponsabilidades){
+				grupoResponsabilidades.responsabilidades.push(responsabilidade)
+				listaDeTimesEResponsabilidades = listaDeTimesEResponsabilidades.map(item => {
+					if(parseInt(item.idTime) === parseInt(idTime)){
+						return grupoResponsabilidades
+					}else{
+						return item
+					}
+				})
+			}else{
+				const item = {
+					idTime,
+					responsabilidades: [responsabilidade],
+				}
+				listaDeTimesEResponsabilidades.push(item)
+			}
+
+			/* validar se todas as responsabilidades foram redirecionadas */
+			if(responsabilidadesParaSelecionar.length === 0){
+				if(listaDeTimesEResponsabilidades.length !== listaDeTimesSelecionados.length){
+					let listaDeNaoInclusos = []
+					listaDeTimesSelecionados.forEach(item => {
+						let jaEstaAtribuida = false
+						listaDeTimesEResponsabilidades.forEach(itemParaTestar => {
+							if(parseInt(itemParaTestar.idTime) === parseInt(item.id)){
+								jaEstaAtribuida = true
+							}
+							if(!jaEstaAtribuida){
+								listaDeNaoInclusos.push(item.id)
+							}
+						})
+					})
+					listaDeNaoInclusos.forEach(item => {
+						const itemParaRemover = {
+							idTime: item,
+							responsabilidades: [{id: 'removido'}],
+						}
+						listaDeTimesEResponsabilidades.push(itemParaRemover)
+					})
+				}
+				document.getElementById('divBotaoFinalizar').classList.remove('hidden')
+			}
+			escreverListaDeTimesEResponsabilidades()
+		}
+	}
+
+	function escreverListaDeTimesEResponsabilidades(){
+		let html = ''
+		listaDeTimesEResponsabilidades.forEach(item => {
+			const time = listaDeTimesSelecionados.find(time => parseInt(time.id) === parseInt(item.idTime))
+			html += `<li>${time.lideres}:`
+			html += `<ul>`
+			item.responsabilidades.forEach(responsabilidade => {
+				if(responsabilidade.entidade){
+					html += `<li>${responsabilidade.entidade} - ${responsabilidade.informacao}</li>`
+				}else{
+					html += `<li>Remover</li>`
+				}
+			})
+			html += `</ul>`
+			html += `</li>`
+		})
+		document.getElementById('listaDeTimesEResponsabilidades').innerHTML = html
+	}
+
+	function mostrarSelectTimesSelecionados(){
+		document.getElementById('selectTimesSelecionados').value = 0
+		document.getElementById('selectResponsabilidadesDisponiveis').value = 0
+		document.getElementById('divSelectTimesSelecionados').classList.remove('hidden')
+		document.getElementById('divResponsabilidadesDisponiveis').classList.add('hidden')
+	}
+
+	function finalizar(){
+		alert('Foi truta')
+	}
+
+</script>
