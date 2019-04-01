@@ -50,6 +50,9 @@ class RelatorioController extends CircuitoController {
 	 * GET /relatorio[/tipoRelatorio][/mes/ano]
 	 */
 	public function indexAction() {
+		set_time_limit(0);
+		ini_set('memory_limit', '-1');
+		ini_set('max_execution_time', '180');
 		$sessao = new Container(Constantes::$NOME_APLICACAO);
 
 		$idEntidadeAtual = $sessao->idEntidadeAtual;
@@ -2116,9 +2119,11 @@ public function alunosAction(){
 							$linkWhatsapp = '<a  class="btn btn-success btn-xs" href="https://api.whatsapp.com/send?phone=55'.$turmaPessoa->getPessoa()->getTelefone().'"><i class="fa fa-whatsapp"></i></a>';
 							$telefone = $turmaPessoa->getPessoa()->getTelefone();
 						}
-						$nomeEquipe = '';
-						if($turmaPessoaAtivo = $turmaPessoa->getPessoa()->getGrupoPessoaAtivo()){
-							$nomeEquipe = CursoController::nomeEquipeTurmaPessoa($turmaPessoa, $grupoPessoaAtivo);
+						$idGrupo = substr($relatorio->getNumero_identificador(), (count($relatorio->getNumero_identificador())-8));
+						$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupo);
+						$nomeEquipe = $grupo->getEntidadeAtiva()->infoEntidade();
+						if($nomeEquipe == ''){
+							$nomeEquipe = $grupo->getGrupoEquipe()->getEntidadeAtiva()->getNome();
 						}
 
 						if($tipoRelatorio === self::relatorioAlunosQueNaoForamAAula){
