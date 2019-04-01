@@ -159,7 +159,7 @@ class AtendimentoGruposAbaixo extends AbstractHelper {
                 $html .= $this->botaoAtendimento($grupo->getId(), 2, $numeroAtendimentos);
                 $html .= Constantes::$NBSP;
 
-                $idAuxiliar = $grupo->getId() . 99 . $this->view->mes . 99 . $this->view->ano;
+                $idAuxiliar = $grupo->getId() . '_' . $this->view->mes . '_' . $this->view->ano;
                 $funcao = $this->view->funcaoOnClick('mostrarSplash(); funcaoCircuito("lancamentoAtendimentoComentario","' . $idAuxiliar . '")');
                 $html .= $this->view->botaoSimples('<i class="fa fa-comments"></i>', $funcao, BotaoSimples::botaoMuitoPequenoMenosImportante);
             }
