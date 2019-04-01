@@ -1095,7 +1095,7 @@ class LancamentoController extends CircuitoController {
 
     public function atendimentoComentarioAction() {
         $sessao = new Container(Constantes::$NOME_APLICACAO);
-        $explodeIdSessao = explode(99, $sessao->idSessao);
+        $explodeIdSessao = explode('_', $sessao->idSessao);
         $grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($explodeIdSessao[0]);
         $formulario = new AtendimentoComentarioForm('formulario', $grupo, $explodeIdSessao[1], $explodeIdSessao[2]);
         $dados = array();
