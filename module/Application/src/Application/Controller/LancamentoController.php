@@ -962,10 +962,10 @@ class LancamentoController extends CircuitoController {
 		}
 
         $arrayPeriodoDoMes = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mesSelecionado, $anoSelecionado);
-        $todosFilhos = array();
-        if($arrayPeriodoDoMes[0] == 0){
-            $arrayPeriodoDoMes[1] = 0;
-        }                
+        $todosFilhos = array();  
+        if($mesSelecionado == date('m') && $anoSelecionado == date('Y')){
+            $arrayPeriodoDoMes[1] = 1;
+        }                     
         for ($indiceDeArrays = $arrayPeriodoDoMes[0]; $indiceDeArrays <= $arrayPeriodoDoMes[1]; $indiceDeArrays++) {            
             $grupoPaiFilhoFilhos = $grupo->getGrupoPaiFilhoFilhosAtivos($indiceDeArrays);
             if ($grupoPaiFilhoFilhos) {
