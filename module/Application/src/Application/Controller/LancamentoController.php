@@ -645,7 +645,7 @@ class LancamentoController extends CircuitoController {
 
                 $pessoa = new Pessoa();
                 $formCadastrarPessoa = new CadastrarPessoaForm(Constantes::$FORM_CADASTRAR_PESSOA);
-                if($post_data['aluno'] === 'true'){
+                if($post_data['aluno']){                    
                     $formCadastrarPessoa->setInputFilter($pessoa->getInputFilterPessoaAlunoFrequencia());
                 } else {
                     $formCadastrarPessoa->setInputFilter($pessoa->getInputFilterPessoaFrequencia());
@@ -750,10 +750,10 @@ class LancamentoController extends CircuitoController {
     public function alterarPessoaAction(){
       $periodo = $this->getEvent()->getRouteMatch()->getParam(Constantes::$ID, 0);
       $sessao = new Container(Constantes::$NOME_APLICACAO);
-      $dadosConcatenados = $sessao['idSessao'];
+      $dadosConcatenados = $sessao->idSessao;
       $dados = explode('_', $dadosConcatenados);
       unset($sessao->idSessao);
-      $idPessoa = $dados[0];
+      $idPessoa = $dados[0];      
       $pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($idPessoa);
       $pessoa->setTipo($dados[1]);
       /* Helper Controller */
