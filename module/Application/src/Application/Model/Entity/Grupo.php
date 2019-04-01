@@ -1235,6 +1235,7 @@ class Grupo extends CircuitoEntity {
         $grupoIgreja = null;
 		$contador = 0;
         if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::SUBEQUIPE) {
+
             while ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::SUBEQUIPE ||
             $grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::EQUIPE) {
 				$contador++;
@@ -1246,6 +1247,7 @@ class Grupo extends CircuitoEntity {
             $grupoIgreja = $grupoSelecionado;
 		}
 	   	if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::EQUIPE) {
+
             while ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::EQUIPE) {
 				$contador++;
                 $grupoSelecionado = $grupoSelecionado->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai();
