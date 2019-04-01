@@ -2048,6 +2048,7 @@ class RelatorioController extends CircuitoController {
 			$dados['fatos'] = $fatosRankingCelula;
 			$dados['repositorio'] = $this->getRepositorio();
 			$dados['filtrado'] = true;
+			$dados['entidade'] = $entidade;
 		}else{
 			$mes = date('m');
 			$ano = date('Y');
