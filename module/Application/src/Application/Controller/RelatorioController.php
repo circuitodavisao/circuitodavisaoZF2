@@ -2941,7 +2941,7 @@ public function alunosNaSemanaAction(){
 									$somaParcialMulheres += $dadosFilho144['mulheres'];
 									$somaParcialMulheresMeta += $dadosFilho144['mulheresMeta'];
 									$somaParcialCasais += $dadosFilho144['casais'];
-									$somaParcialCasaisMeta += $dadosFilho144['casais'];
+									$somaParcialCasaisMeta += $dadosFilho144['casaisMeta'];
 								}
 
 								$somaTotalLideres += $dadosFilho144['lideres'];
@@ -2966,7 +2966,7 @@ public function alunosNaSemanaAction(){
 									$somaTotalMulheres += $dadosFilho144['mulheres'];
 									$somaTotalMulheresMeta += $dadosFilho144['mulheresMeta'];
 									$somaTotalCasais += $dadosFilho144['casais'];
-									$somaTotalCasaisMeta += $dadosFilho144['casais'];
+									$somaTotalCasaisMeta += $dadosFilho144['casaisMeta'];
 								}
 
 								$listaDeFilhos144[] = $dadosFilho144;
