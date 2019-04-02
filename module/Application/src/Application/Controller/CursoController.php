@@ -1675,6 +1675,7 @@ class CursoController extends CircuitoController {
 			'faltas' => $faltas,
 			'formulario' => $formulario,
 			'subs' => $filhos,
+			'repositorio' => $this->getRepositorio(),
 		));
 
 		self::registrarLog(RegistroAcao::VER_REPOSICOES, $extra = '');
@@ -1818,11 +1819,13 @@ class CursoController extends CircuitoController {
 				if (substr($key, 0, 4) == 'aula') {
 					$explodeValor = explode('_', $value);
 					$aula = $this->getRepositorio()->getAulaORM()->encontrarPorId($explodeValor[0]);
-					$turmaPessoa = $this->getRepositorio()->getTurmaPessoaORM()->encontrarPorId($explodeValor[1]);
+					$turmaPessoa = $this->getRepositorio()->getTurmaPessoaORM()->encontrarPorId($explodeValor[1]);						
+					$fatoCurso = $this->getRepositorio()->getFatoCursoORM()->encontrarFatoCursoPorTurmaPessoa($explodeValor[1])[0];
+					$idGrupo = substr($fatoCurso->getNumero_identificador(), (count($fatoCurso->getNumero_identificador())-8));					
 					$reposicao['idAula'] = $aula->getId();
 					$reposicao['idTurmaPessoa'] = $turmaPessoa->getId();
 					$reposicao['idPessoa'] = $turmaPessoa->getPessoa()->getId();
-					$reposicao['idGrupoEquipe'] = $turmaPessoa->getPessoa()->getGrupoPessoaAtivo()->getGrupo()->getId();
+					$reposicao['idGrupoEquipe'] = $idGrupo;
 					$reposicoes[] = $reposicao;
 				}
 			}
