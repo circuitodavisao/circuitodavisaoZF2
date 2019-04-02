@@ -2716,12 +2716,17 @@ public function alunosNaSemanaAction(){
 		set_time_limit(0);
 		ini_set('memory_limit', '-1');
 		ini_set('max_execution_time', '180');
-	
+
+		$sessao = new Container(Constantes::$NOME_APLICACAO);
+		$idEntidadeAtual = $sessao->idEntidadeAtual;
+		$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+
 		$dados = array();
 		$request = $this->getRequest();
 		if ($request->isPost()) {
 			$post_data = $request->getPost();
 			$nome = $post_data['nome'];
+			$quem = $post_data['quem'];
 			$mes = $post_data['mes'];
 			$ano = $post_data['ano'];
 			$lideres = $post_data['lideres'];
@@ -2735,6 +2740,7 @@ public function alunosNaSemanaAction(){
 			$casais = $post_data['casais'];
 
 			$dados['nome'] = $nome;
+			$dados['quem'] = $quem;
 			$dados['lideres'] = $lideres;
 			$dados['celulas'] = $celulas;
 			$dados['celulasBeta'] = $celulasBeta;
@@ -2746,14 +2752,11 @@ public function alunosNaSemanaAction(){
 			$dados['casais'] = $casais;
 			$dados['postado'] = true;
 
-			$sessao = new Container(Constantes::$NOME_APLICACAO);
-			$idEntidadeAtual = $sessao->idEntidadeAtual;
 			$arrayPeriodoDoMes = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mes, $ano);
 			$periodo = $arrayPeriodoDoMes[1]; 
 			$comparacao = 2; // Temporariamente Fixo também, comparação = like
 			$todosFilhos = Array();
 			$repositorio = $this->getRepositorio();
-			$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
 			$listaDeFilhos12 = array();
 			$somaTotalLideres = 0;
 			$somaTotalLideresMeta = 0;
@@ -2778,208 +2781,225 @@ public function alunosNaSemanaAction(){
 					$grupoFilho = $filho->getGrupoPaiFilhoFilho();
 					$dadosFilho = array();
 
+					$processar = false;
+
 					$dadosFilho['informacao'] = '';
 					if($grupoFilho->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::regiao){
 						$dadosFilho['informacao'] = 'REGIÃO ' . $grupoFilho->getEntidadeAtiva()->getNome();
+						if(intVal($quem) === $grupoFilho->getId()){
+							$processar = true;
+						}
 					}
 					if($grupoFilho->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao){
 						$dadosFilho['informacao'] = 'COORDENAÇÃO ' . $grupoFilho->getEntidadeAtiva()->getNumero();
+						if($quem == '99999999999999999999'){
+							$processar = true;
+						}
 					}
 					if($grupoFilho->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
 						$dadosFilho['informacao'] = 'IGREJA ' . $grupoFilho->getEntidadeAtiva()->getNome();
+						if(intVal($quem) === $grupoFilho->getId()){
+							$processar = true;
+						}
+					}
+					if(intVal($quem) === 0){
+						$processar = true;
 					}
 
-					$listaDeFilhos144 = array();
-					$somaParcialLideres = 0;
-					$somaParcialLideresMeta = 0;
-					$somaParcialCelulas = 0;
-					$somaParcialCelulasMeta = 0;
-					$somaParcialCelulasBeta = 0;
-					$somaParcialCelulasBetaMeta = 0;
-					$somaParcialAlunos1 = 0;
-					$somaParcialAlunos1Meta = 0;
-					$somaParcialAlunos2 = 0;
-					$somaParcialAlunos2Meta = 0;
-					$somaParcialAlunos3 = 0;
-					$somaParcialAlunos3Meta = 0;
-					$somaParcialHomens = 0;
-					$somaParcialHomensMeta = 0;
-					$somaParcialMulheres = 0;
-					$somaParcialMulheresMeta = 0;
-					$somaParcialCasais = 0;
-					$somaParcialCasaisMeta = 0;
-					if($grupoPaiFilhoFilhos144 = $grupoFilho->getGrupoPaiFilhoFilhosAtivos($periodo)){
-						foreach ($grupoPaiFilhoFilhos144 as $filho144) {
-							$grupoFilho144 = $filho144->getGrupoPaiFilhoFilho();
-							$dadosFilho144 = array();
-							$dadosFilho144['informacao'] = '';
-							if($grupoFilho144->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::regiao){
-								$dadosFilho144['informacao'] = 'REGIÃO ' . $grupoFilho144->getEntidadeAtiva()->getNome();
-							}
-							if($grupoFilho144->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao){
-								$dadosFilho144['informacao'] = 'COORDENAÇÃO ' . $grupoFilho144->getEntidadeAtiva()->getNumero();
-							}
-							if($grupoFilho144->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
-								$dadosFilho144['informacao'] = 'IGREJA ' . $grupoFilho144->getEntidadeAtiva()->getNome();
-							}
-							if($grupoFilho144->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::equipe){
-								$dadosFilho144['informacao'] = 'EQUIPE ' . $grupoFilho144->getEntidadeAtiva()->getNome();
-							}
+					if($processar){
 
-							$numeroIdentificador = $repositorio->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupoFilho144);
-							$tipoRelatorio = RelatorioController::relatorioCelulaQuantidade;
-							$relatorio = RelatorioController::montaRelatorio($this->getRepositorio(), $numeroIdentificador, $periodo, $somado = 2, false, $tipoRelatorio);
-							if($alunos1m > 0 || $alunos2m > 0 || $alunos3m > 0){
-								$somaIgrejaAlunos1 = 0;
-								$somaIgrejaAlunos2 = 0;
-								$somaIgrejaAlunos3 = 0;
-								if($relatorioCursos = $this->getRepositorio()->getFatoCursoORM()->encontrarFatoCursoPorNumeroIdentificador($numeroIdentificador)){
-									foreach($relatorioCursos as $fatoCurso){
-										if($fatoCurso->getSituacao_id() === Situacao::ATIVO || $fatoCurso->getSituacao_id() === Situacao::ESPECIAL){
-											$turma = $this->getRepositorio()->getTurmaORM()->encontrarPorId($fatoCurso->getTurma_id());
-											$adicionar = false;
-											if(intVal($turma->getAno()) < intVal($ano)){
-												$adicionar = true;
-											}
-											if(intVal($turma->getAno()) === intVal($ano)){
-												if(intVal($turma->getMes()) <= intVal($mes)){
+						$listaDeFilhos144 = array();
+						$somaParcialLideres = 0;
+						$somaParcialLideresMeta = 0;
+						$somaParcialCelulas = 0;
+						$somaParcialCelulasMeta = 0;
+						$somaParcialCelulasBeta = 0;
+						$somaParcialCelulasBetaMeta = 0;
+						$somaParcialAlunos1 = 0;
+						$somaParcialAlunos1Meta = 0;
+						$somaParcialAlunos2 = 0;
+						$somaParcialAlunos2Meta = 0;
+						$somaParcialAlunos3 = 0;
+						$somaParcialAlunos3Meta = 0;
+						$somaParcialHomens = 0;
+						$somaParcialHomensMeta = 0;
+						$somaParcialMulheres = 0;
+						$somaParcialMulheresMeta = 0;
+						$somaParcialCasais = 0;
+						$somaParcialCasaisMeta = 0;
+						if($grupoPaiFilhoFilhos144 = $grupoFilho->getGrupoPaiFilhoFilhosAtivos($periodo)){
+							foreach ($grupoPaiFilhoFilhos144 as $filho144) {
+								$grupoFilho144 = $filho144->getGrupoPaiFilhoFilho();
+								$dadosFilho144 = array();
+								$dadosFilho144['informacao'] = '';
+								if($grupoFilho144->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::regiao){
+									$dadosFilho144['informacao'] = 'REGIÃO ' . $grupoFilho144->getEntidadeAtiva()->getNome();
+								}
+								if($grupoFilho144->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao){
+									$dadosFilho144['informacao'] = 'COORDENAÇÃO ' . $grupoFilho144->getEntidadeAtiva()->getNumero();
+								}
+								if($grupoFilho144->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
+									$dadosFilho144['informacao'] = 'IGREJA ' . $grupoFilho144->getEntidadeAtiva()->getNome();
+								}
+								if($grupoFilho144->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::equipe){
+									$dadosFilho144['informacao'] = 'EQUIPE ' . $grupoFilho144->getEntidadeAtiva()->getNome();
+								}
+
+								$numeroIdentificador = $repositorio->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupoFilho144);
+								$tipoRelatorio = RelatorioController::relatorioCelulaQuantidade;
+								$relatorio = RelatorioController::montaRelatorio($this->getRepositorio(), $numeroIdentificador, $periodo, $somado = 2, false, $tipoRelatorio);
+								if($alunos1m > 0 || $alunos2m > 0 || $alunos3m > 0){
+									$somaIgrejaAlunos1 = 0;
+									$somaIgrejaAlunos2 = 0;
+									$somaIgrejaAlunos3 = 0;
+									if($relatorioCursos = $this->getRepositorio()->getFatoCursoORM()->encontrarFatoCursoPorNumeroIdentificador($numeroIdentificador)){
+										foreach($relatorioCursos as $fatoCurso){
+											if($fatoCurso->getSituacao_id() === Situacao::ATIVO || $fatoCurso->getSituacao_id() === Situacao::ESPECIAL){
+												$turma = $this->getRepositorio()->getTurmaORM()->encontrarPorId($fatoCurso->getTurma_id());
+												$adicionar = false;
+												if(intVal($turma->getAno()) < intVal($ano)){
 													$adicionar = true;
 												}
-											}
-											if($adicionar){
-												if($turma->getTurmaAulaAtiva()){
-													if($turma->getTurmaAulaAtiva()->getAula()->getDisciplina()->getPosicao() === 1){
-														$somaIgrejaAlunos1++;
+												if(intVal($turma->getAno()) === intVal($ano)){
+													if(intVal($turma->getMes()) <= intVal($mes)){
+														$adicionar = true;
 													}
-													if($turma->getTurmaAulaAtiva()->getAula()->getDisciplina()->getPosicao() === 2){
-														$somaIgrejaAlunos2++;
-													}
-													if($turma->getTurmaAulaAtiva()->getAula()->getDisciplina()->getPosicao() === 3){
-														$somaIgrejaAlunos3++;
+												}
+												if($adicionar){
+													if($turma->getTurmaAulaAtiva()){
+														if($turma->getTurmaAulaAtiva()->getAula()->getDisciplina()->getPosicao() === 1){
+															$somaIgrejaAlunos1++;
+														}
+														if($turma->getTurmaAulaAtiva()->getAula()->getDisciplina()->getPosicao() === 2){
+															$somaIgrejaAlunos2++;
+														}
+														if($turma->getTurmaAulaAtiva()->getAula()->getDisciplina()->getPosicao() === 3){
+															$somaIgrejaAlunos3++;
+														}
 													}
 												}
 											}
 										}
 									}
 								}
+
+								if($homens > 0 || $mulheres > 0 || $casais > 0){
+									$quantidadeDeSexos = self::pegarQuantidadeDePessoasPorSexoPorGrupo($grupoFilho144);
+								}
+
+								$dadosFilho144['lideres'] = $relatorio['quantidadeLideres'];
+								$dadosFilho144['lideresMeta'] = $lideres > 0 ? $lideres / 100 * $relatorio['quantidadeLideres'] : 0;
+
+								$dadosFilho144['celulas'] = $relatorio['celulaQuantidade'];
+								$dadosFilho144['celulasMeta'] = $celulas > 0 ? $celulas / 100 * $relatorio['celulaQuantidade'] : 0;
+
+								$dadosFilho144['celulasBeta'] = $relatorio['celulaQuantidadeEstrategica'];
+								$dadosFilho144['celulasBetaMeta'] = $celulasBeta > 0 ? $celulasBeta / 100 * $relatorio['celulaQuantidadeEstrategica'] : 0;
+
+								if($alunos1m > 0 || $alunos2m > 0 || $alunos3m > 0){
+									$dadosFilho144['alunos1'] = $somaIgrejaAlunos1;
+									$dadosFilho144['alunos1Meta'] = $alunos1m > 0 ? $alunos1m / 100 * $somaIgrejaAlunos1 : 0;
+
+									$dadosFilho144['alunos2'] = $somaIgrejaAlunos2;
+									$dadosFilho144['alunos2Meta'] = $alunos2m > 0 ? $alunos2m / 100 * $somaIgrejaAlunos2 : 0;
+
+									$dadosFilho144['alunos3'] = $somaIgrejaAlunos3;
+									$dadosFilho144['alunos3Meta'] = $alunos3m > 0 ? $alunos3m / 100 * $somaIgrejaAlunos3 : 0;
+								}
+								if($homens > 0 || $mulheres > 0 || $casais > 0){
+									$dadosFilho144['homens'] = $quantidadeDeSexos['homens'];
+									$dadosFilho144['homensMeta'] = $homens > 0 ? $homens / 100 * $quantidadeDeSexos['homens'] : 0;
+
+									$dadosFilho144['mulheres'] = $quantidadeDeSexos['mulheres'];
+									$dadosFilho144['mulheresMeta'] = $mulheres > 0 ? $mulheres / 100 * $quantidadeDeSexos['mulheres'] : 0;
+
+									$dadosFilho144['casais'] = $quantidadeDeSexos['casais'];
+									$dadosFilho144['casaisMeta'] = $casais > 0 ? $casais / 100 * $quantidadeDeSexos['casais'] : 0;
+								}
+								$somaParcialLideres += $dadosFilho144['lideres'];
+								$somaParcialLideresMeta += $dadosFilho144['lideresMeta'];
+								$somaParcialCelulas += $dadosFilho144['celulas'];
+								$somaParcialCelulasMeta += $dadosFilho144['celulasMeta'];
+								$somaParcialCelulasBeta += $dadosFilho144['celulasBeta'];
+								$somaParcialCelulasBetaMeta += $dadosFilho144['celulasBetaMeta'];
+
+								if($alunos1m > 0 || $alunos2m > 0 || $alunos3m > 0){
+									$somaParcialAlunos1 += $dadosFilho144['alunos1'];
+									$somaParcialAlunos1Meta += $dadosFilho144['alunos1Meta'];
+									$somaParcialAlunos2 += $dadosFilho144['alunos2'];
+									$somaParcialAlunos2Meta += $dadosFilho144['alunos2Meta'];
+									$somaParcialAlunos3 += $dadosFilho144['alunos3'];
+									$somaParcialAlunos3Meta += $dadosFilho144['alunos3Meta'];
+								}
+
+								if($homens > 0 || $mulheres > 0 || $casais > 0){
+									$somaParcialHomens += $dadosFilho144['homens'];
+									$somaParcialHomensMeta += $dadosFilho144['homensMeta'];
+									$somaParcialMulheres += $dadosFilho144['mulheres'];
+									$somaParcialMulheresMeta += $dadosFilho144['mulheresMeta'];
+									$somaParcialCasais += $dadosFilho144['casais'];
+									$somaParcialCasaisMeta += $dadosFilho144['casais'];
+								}
+
+								$somaTotalLideres += $dadosFilho144['lideres'];
+								$somaTotalLideresMeta += $dadosFilho144['lideresMeta'];
+								$somaTotalCelulas += $dadosFilho144['celulas'];
+								$somaTotalCelulasMeta += $dadosFilho144['celulasMeta'];
+								$somaTotalCelulasBeta += $dadosFilho144['celulasBeta'];
+								$somaTotalCelulasBetaMeta += $dadosFilho144['celulasBetaMeta'];
+
+								if($alunos1m > 0 || $alunos2m > 0 || $alunos3m > 0){
+									$somaTotalAlunos1 += $dadosFilho144['alunos1'];
+									$somaTotalAlunos1Meta += $dadosFilho144['alunos1Meta'];
+									$somaTotalAlunos2 += $dadosFilho144['alunos2'];
+									$somaTotalAlunos2Meta += $dadosFilho144['alunos2Meta'];
+									$somaTotalAlunos3 += $dadosFilho144['alunos3'];
+									$somaTotalAlunos3Meta += $dadosFilho144['alunos3Meta'];
+								}
+
+								if($homens > 0 || $mulheres > 0 || $casais > 0){
+									$somaTotalHomens += $dadosFilho144['homens'];
+									$somaTotalHomensMeta += $dadosFilho144['homensMeta'];
+									$somaTotalMulheres += $dadosFilho144['mulheres'];
+									$somaTotalMulheresMeta += $dadosFilho144['mulheresMeta'];
+									$somaTotalCasais += $dadosFilho144['casais'];
+									$somaTotalCasaisMeta += $dadosFilho144['casais'];
+								}
+
+								$listaDeFilhos144[] = $dadosFilho144;
 							}
-
-							if($homens > 0 || $mulheres > 0 || $casais > 0){
-								$quantidadeDeSexos = self::pegarQuantidadeDePessoasPorSexoPorGrupo($grupoFilho144);
-							}
-
-							$dadosFilho144['lideres'] = $relatorio['quantidadeLideres'];
-							$dadosFilho144['lideresMeta'] = $lideres > 0 ? $lideres / 100 * $relatorio['quantidadeLideres'] : 0;
-
-							$dadosFilho144['celulas'] = $relatorio['celulaQuantidade'];
-							$dadosFilho144['celulasMeta'] = $celulas > 0 ? $celulas / 100 * $relatorio['celulaQuantidade'] : 0;
-
-							$dadosFilho144['celulasBeta'] = $relatorio['celulaQuantidadeEstrategica'];
-							$dadosFilho144['celulasBetaMeta'] = $celulasBeta > 0 ? $celulasBeta / 100 * $relatorio['celulaQuantidadeEstrategica'] : 0;
-
-							if($alunos1m > 0 || $alunos2m > 0 || $alunos3m > 0){
-								$dadosFilho144['alunos1'] = $somaIgrejaAlunos1;
-								$dadosFilho144['alunos1Meta'] = $alunos1m > 0 ? $alunos1m / 100 * $somaIgrejaAlunos1 : 0;
-
-								$dadosFilho144['alunos2'] = $somaIgrejaAlunos2;
-								$dadosFilho144['alunos2Meta'] = $alunos2m > 0 ? $alunos2m / 100 * $somaIgrejaAlunos2 : 0;
-
-								$dadosFilho144['alunos3'] = $somaIgrejaAlunos3;
-								$dadosFilho144['alunos3Meta'] = $alunos3m > 0 ? $alunos3m / 100 * $somaIgrejaAlunos3 : 0;
-							}
-							if($homens > 0 || $mulheres > 0 || $casais > 0){
-								$dadosFilho144['homens'] = $quantidadeDeSexos['homens'];
-								$dadosFilho144['homensMeta'] = $homens > 0 ? $homens / 100 * $quantidadeDeSexos['homens'] : 0;
-
-								$dadosFilho144['mulheres'] = $quantidadeDeSexos['mulheres'];
-								$dadosFilho144['mulheresMeta'] = $mulheres > 0 ? $mulheres / 100 * $quantidadeDeSexos['mulheres'] : 0;
-
-								$dadosFilho144['casais'] = $quantidadeDeSexos['casais'];
-								$dadosFilho144['casaisMeta'] = $casais > 0 ? $casais / 100 * $quantidadeDeSexos['casais'] : 0;
-							}
-							$somaParcialLideres += $dadosFilho144['lideres'];
-							$somaParcialLideresMeta += $dadosFilho144['lideresMeta'];
-							$somaParcialCelulas += $dadosFilho144['celulas'];
-							$somaParcialCelulasMeta += $dadosFilho144['celulasMeta'];
-							$somaParcialCelulasBeta += $dadosFilho144['celulasBeta'];
-							$somaParcialCelulasBetaMeta += $dadosFilho144['celulasBetaMeta'];
-
-							if($alunos1m > 0 || $alunos2m > 0 || $alunos3m > 0){
-								$somaParcialAlunos1 += $dadosFilho144['alunos1'];
-								$somaParcialAlunos1Meta += $dadosFilho144['alunos1Meta'];
-								$somaParcialAlunos2 += $dadosFilho144['alunos2'];
-								$somaParcialAlunos2Meta += $dadosFilho144['alunos2Meta'];
-								$somaParcialAlunos3 += $dadosFilho144['alunos3'];
-								$somaParcialAlunos3Meta += $dadosFilho144['alunos3Meta'];
-							}
-
-							if($homens > 0 || $mulheres > 0 || $casais > 0){
-								$somaParcialHomens += $dadosFilho144['homens'];
-								$somaParcialHomensMeta += $dadosFilho144['homensMeta'];
-								$somaParcialMulheres += $dadosFilho144['mulheres'];
-								$somaParcialMulheresMeta += $dadosFilho144['mulheresMeta'];
-								$somaParcialCasais += $dadosFilho144['casais'];
-								$somaParcialCasaisMeta += $dadosFilho144['casais'];
-							}
-
-							$somaTotalLideres += $dadosFilho144['lideres'];
-							$somaTotalLideresMeta += $dadosFilho144['lideresMeta'];
-							$somaTotalCelulas += $dadosFilho144['celulas'];
-							$somaTotalCelulasMeta += $dadosFilho144['celulasMeta'];
-							$somaTotalCelulasBeta += $dadosFilho144['celulasBeta'];
-							$somaTotalCelulasBetaMeta += $dadosFilho144['celulasBetaMeta'];
-
-							if($alunos1m > 0 || $alunos2m > 0 || $alunos3m > 0){
-								$somaTotalAlunos1 += $dadosFilho144['alunos1'];
-								$somaTotalAlunos1Meta += $dadosFilho144['alunos1Meta'];
-								$somaTotalAlunos2 += $dadosFilho144['alunos2'];
-								$somaTotalAlunos2Meta += $dadosFilho144['alunos2Meta'];
-								$somaTotalAlunos3 += $dadosFilho144['alunos3'];
-								$somaTotalAlunos3Meta += $dadosFilho144['alunos3Meta'];
-							}
-
-							if($homens > 0 || $mulheres > 0 || $casais > 0){
-								$somaTotalHomens += $dadosFilho144['homens'];
-								$somaTotalHomensMeta += $dadosFilho144['homensMeta'];
-								$somaTotalMulheres += $dadosFilho144['mulheres'];
-								$somaTotalMulheresMeta += $dadosFilho144['mulheresMeta'];
-								$somaTotalCasais += $dadosFilho144['casais'];
-								$somaTotalCasaisMeta += $dadosFilho144['casais'];
-							}
-
-							$listaDeFilhos144[] = $dadosFilho144;
 						}
-					}
-					$total12 = array();
-					$total12['informacao'] = 'TOTAL PARCIAL';
-					$total12['lideres'] = $somaParcialLideres;	
-					$total12['lideresMeta'] = $somaParcialLideresMeta;
-					$total12['celulas'] = $somaParcialCelulas;	
-					$total12['celulasMeta'] = $somaParcialCelulasMeta;	
-					$total12['celulasBeta'] = $somaParcialCelulasBeta;	
-					$total12['celulasBetaMeta'] = $somaParcialCelulasBetaMeta;	
+						$total12 = array();
+						$total12['informacao'] = 'TOTAL PARCIAL';
+						$total12['lideres'] = $somaParcialLideres;	
+						$total12['lideresMeta'] = $somaParcialLideresMeta;
+						$total12['celulas'] = $somaParcialCelulas;	
+						$total12['celulasMeta'] = $somaParcialCelulasMeta;	
+						$total12['celulasBeta'] = $somaParcialCelulasBeta;	
+						$total12['celulasBetaMeta'] = $somaParcialCelulasBetaMeta;	
 
-					if($alunos1m > 0 || $alunos2m > 0 || $alunos3m > 0){
-						$total12['alunos1'] = $somaParcialAlunos1;	
-						$total12['alunos1Meta'] = $somaParcialAlunos1Meta;	
-						$total12['alunos2'] = $somaParcialAlunos2;	
-						$total12['alunos2Meta'] = $somaParcialAlunos2Meta;	
-						$total12['alunos3'] = $somaParcialAlunos3;	
-						$total12['alunos3Meta'] = $somaParcialAlunos3Meta;	
-					}
+						if($alunos1m > 0 || $alunos2m > 0 || $alunos3m > 0){
+							$total12['alunos1'] = $somaParcialAlunos1;	
+							$total12['alunos1Meta'] = $somaParcialAlunos1Meta;	
+							$total12['alunos2'] = $somaParcialAlunos2;	
+							$total12['alunos2Meta'] = $somaParcialAlunos2Meta;	
+							$total12['alunos3'] = $somaParcialAlunos3;	
+							$total12['alunos3Meta'] = $somaParcialAlunos3Meta;	
+						}
 
-					if($homens > 0 || $mulheres > 0 || $casais > 0){
-						$total12['homens'] = $somaParcialHomens;	
-						$total12['homensMeta'] = $somaParcialHomensMeta;	
-						$total12['mulheres'] = $somaParcialMulheres;	
-						$total12['mulheresMeta'] = $somaParcialMulheresMeta;	
-						$total12['casais'] = $somaParcialCasais;	
-						$total12['casaisMeta'] = $somaParcialCasaisMeta;	
-					}
+						if($homens > 0 || $mulheres > 0 || $casais > 0){
+							$total12['homens'] = $somaParcialHomens;	
+							$total12['homensMeta'] = $somaParcialHomensMeta;	
+							$total12['mulheres'] = $somaParcialMulheres;	
+							$total12['mulheresMeta'] = $somaParcialMulheresMeta;	
+							$total12['casais'] = $somaParcialCasais;	
+							$total12['casaisMeta'] = $somaParcialCasaisMeta;	
+						}
 
-					$listaDeFilhos144[] = $total12;
-					$dadosFilho['filhos'] = $listaDeFilhos144;
-					$listaDeFilhos12[] = $dadosFilho;
+						$listaDeFilhos144[] = $total12;
+						$dadosFilho['filhos'] = $listaDeFilhos144;
+						$listaDeFilhos12[] = $dadosFilho;
+					}
 				}
 			}
 			$totalGeral = array();
@@ -3019,11 +3039,44 @@ public function alunosNaSemanaAction(){
 		if (empty($ano)) {
 			$ano = date('Y');
 		}
+		if (empty($quem)) {
+			$quem = 0;
+		}
 
 		$dados['mes'] = $mes;
 		$dados['ano'] = $ano;
-
-
+		$dados['quem'] = $quem;
+		$quems = array();
+		$validarSeTemAlgumaCordenacao = false;
+		if($grupoPaiFilhoFilhos = $entidade->getGrupo()->getGrupoPaiFilhoFilhosAtivos(1)){
+			foreach($grupoPaiFilhoFilhos as $grupoPaiFilho){
+				$grupo144 = $grupoPaiFilho->getGrupoPaiFilhoFilho();
+				if($grupo144->getEntidadeAtiva()){
+					if($grupo144->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
+						$dadosIgreja = array();
+						$dadosIgreja['id'] = $grupo144->getId();
+						$dadosIgreja['info'] = 'IGREJA ' . $grupo144->getEntidadeAtiva()->getNome();
+						$quems[] = $dadosIgreja;
+					}
+					if($grupo144->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::regiao){
+						$dadosRegiao = array();
+						$dadosRegiao['id'] = $grupo144->getId();
+						$dadosRegiao['info'] = 'REGIÃO ' . $grupo144->getEntidadeAtiva()->getNome();
+						$quems[] = $dadosRegiao;
+					}
+					if($grupo144->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao){
+						$validarSeTemAlgumaCordenacao = true;
+					}
+				}
+			}
+		}
+		if($validarSeTemAlgumaCordenacao){
+			$dadosCoordenacao = array();
+			$dadosCoordenacao['id'] = '99999999999999999999';
+			$dadosCoordenacao['info'] = 'REGIONAL';
+			$quems[] = $dadosCoordenacao;
+		}
+		$dados['quems'] = $quems;
 		$view = new ViewModel($dados);
 		return $view;
 	}
