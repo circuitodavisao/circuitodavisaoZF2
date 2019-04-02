@@ -401,24 +401,16 @@ class IndexController extends CircuitoController {
 											if ($solicitacao->getNome()) {
 												$extra = (string) $solicitacao->getNome();
 											}
-
-//											if(
-//												$solicitacao->getId() !== 2359
-//											){
-												if ($idSolicitacaoTipo === SolicitacaoTipo::TRANSFERIR_LIDER_NA_PROPRIA_EQUIPE){
-													$html .= "<br /> {$solicitacao->getId()} - TRANSFERIR_LIDER_NA_PROPRIA_EQUIPE";
-													//error_log('Solicitacao TRANSFERIR_LIDER_NA_PROPRIA_EQUIPE: '.$solicitacao->getId());
-												}
-												if ($idSolicitacaoTipo === SolicitacaoTipo::TRANSFERIR_LIDER_PARA_OUTRA_EQUIPE){
-													$html .= "<br /> {$solicitacao->getId()} - TRANSFERIR_LIDER_PARA_OUTRA_EQUIPE";
-													//error_log('Solicitacao TRANSFERIR_LIDER_PARA_OUTRA_EQUIPE: '.$solicitacao->getId());
-												}
-												if ($idSolicitacaoTipo === SolicitacaoTipo::SUBIR_LIDER){
-													$html .= "<br /> {$solicitacao->getId()} - SUBIR_LIDER";
-													//error_log('Solicitacao: SUBIR_LIDER: '.$solicitacao->getId());
-												}
-												$html .= $this->transferirLider($grupoQueSeraSemeado, $grupoQueRecebera, $extra);
-//											}
+											if ($idSolicitacaoTipo === SolicitacaoTipo::TRANSFERIR_LIDER_NA_PROPRIA_EQUIPE){
+												$html .= "<br /> {$solicitacao->getId()} - TRANSFERIR_LIDER_NA_PROPRIA_EQUIPE";
+											}
+											if ($idSolicitacaoTipo === SolicitacaoTipo::TRANSFERIR_LIDER_PARA_OUTRA_EQUIPE){
+												$html .= "<br /> {$solicitacao->getId()} - TRANSFERIR_LIDER_PARA_OUTRA_EQUIPE";
+											}
+											if ($idSolicitacaoTipo === SolicitacaoTipo::SUBIR_LIDER){
+												$html .= "<br /> {$solicitacao->getId()} - SUBIR_LIDER";
+											}
+											$html .= $this->transferirLider($grupoQueSeraSemeado, $grupoQueRecebera, $extra);
 										}
 									if ($idSolicitacaoTipo == SolicitacaoTipo::UNIR_CASAL) {
 										$html .= "<br /> {$solicitacao->getId()} - UNINDO CASAL ";
