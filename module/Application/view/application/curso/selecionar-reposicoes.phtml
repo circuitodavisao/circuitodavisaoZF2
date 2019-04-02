@@ -45,8 +45,14 @@ if($this->filtrado){
 			if (count($this->alunosComReposições[$turma->getId()]) > 0) {
 				foreach ($this->alunosComReposições[$turma->getId()] as $turmaPessoa) {
 					$mostrar = true;
-					if ($mostrar) {
-						$nomeEquipe = CursoController::nomeEquipeTurmaPessoa($turmaPessoa);
+					if ($mostrar) {						
+						$fatoCurso = $this->repositorio->getFatoCursoORM()->encontrarFatoCursoPorTurmaPessoa($turmaPessoa->getId())[0];
+						$idGrupo = substr($fatoCurso->getNumero_identificador(), (count($fatoCurso->getNumero_identificador())-8));
+						$grupo = $this->repositorio->getGrupoORM()->encontrarPorId($idGrupo);
+						$nomeEquipe = $grupo->getEntidadeAtiva()->infoEntidade();
+						if($nomeEquipe == ''){
+							$nomeEquipe = $grupo->getGrupoEquipe()->getEntidadeAtiva()->getNome();
+						}
 						$html .= '<tr>';
 						$html .= '<td>' . $turmaPessoa->getId() . '</td>';
 						$html .= '<td>' . $turmaPessoa->getPessoa()->getNome() . '</td>';
