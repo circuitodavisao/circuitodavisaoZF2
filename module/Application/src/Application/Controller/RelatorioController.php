@@ -2871,9 +2871,12 @@ public function alunosNaSemanaAction(){
 															$somaIgrejaAlunos1++;
 														}
 														if($turma->getTurmaAulaAtiva()->getAula()->getDisciplina()->getPosicao() === 2){
-															$somaIgrejaAlunos2++;
+															$somaIgrejaAlunos1++;
 														}
 														if($turma->getTurmaAulaAtiva()->getAula()->getDisciplina()->getPosicao() === 3){
+															$somaIgrejaAlunos2++;
+														}
+														if($turma->getTurmaAulaAtiva()->getAula()->getDisciplina()->getPosicao() === 4){
 															$somaIgrejaAlunos3++;
 														}
 													}
