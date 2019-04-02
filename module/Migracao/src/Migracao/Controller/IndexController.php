@@ -660,7 +660,7 @@ class IndexController extends CircuitoController {
 
 		$criar = true;
 		/* não criar caso o discipulo seja transferido no mesmo periodo */
-		if($grupoQueRecebera->getEntidadeAtiva()){
+		if(!$grupoQueSeraSemeado->getEntidadeAtiva()){
 			$criar = false;
 		}
 		if($criar){
