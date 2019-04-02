@@ -34,6 +34,27 @@ $html .= '<form id="formulario" method="POST" action="/relatorioGeradorDeMeta" >
 //$html .= '</div>';
 //$html .= '</div>';
 
+$html .= '<div class="row p5">';
+$html .= '<div class="col-lg-1 col-md-3 col-sm-3 col-xs-12 pb10 pt10">';
+$html .= 'Quem';
+$html .= '</div>';
+$html .= '<div class="col-lg-11 col-md-9 col-sm-9 col-xs-12">';
+$html .= '<select name="quem" id="quem" class="form-control">';
+$html .= '<option value="0" selected>TODOS</option>';
+if($this->quems){
+	foreach($this->quems as $quem){
+		$selected = '';
+		if ($this->quem == $quem['id']) {
+			$selected = 'selected';
+		}
+		$html .= '<option value="' . $quem['id'] . '" ' . $selected . '>' . $quem['info'] . '</option>';
+	}
+}
+$html .= '</select>';
+$html .= '</div>';
+$html .= '</div>';
+
+
 // div mes ano
 $html .= '<div class="row p5">';
 $html .= '<div class="col-lg-1 col-md-3 col-sm-3 col-xs-12 pb10 pt10">';
