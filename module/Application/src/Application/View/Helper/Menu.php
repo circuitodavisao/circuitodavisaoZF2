@@ -443,6 +443,15 @@ if ($this->view->entidade->verificarSeEstaAtivo()){
 			$html .= '</a>';
 			$html .= '</li>';			
 
+			if($this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::regiao){
+			$html .= '<li>';
+			$html .= '<a href="/relatorioGeradorDeMeta" onClick="mostrarSplash();">';
+			$html .= '<span class="fa fa-calendar"></span>';
+			$html .= 'Gerador de Meta';
+			$html .= '</a>';
+			$html .= '</li>';			
+			}
+
 			$html .= '</ul>';
 
 			$html .= '</li>';

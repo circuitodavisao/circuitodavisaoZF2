@@ -26,7 +26,7 @@ $html .= '<div class="panel-body bg-light" style="padding: 15px 5px 5px 5px;">';
 $html .= '<form id="formulario" method="POST" action="/relatorioGeradorDeMeta" >';
 
 //$html .= '<div class="row p5">';
-//$html .= '<div class="col-xs-12 col-sm-1 col-md-1 col-lg-1">';
+//$html .= '<div class="col-xs-12 col-sm-3 col-md-3 col-lg-1">';
 //$html .= 'Nome';
 //$html .= '</div>';
 //$html .= '<div class="col-xs-12 col-sm-11 col-md-11 col-lg-11">';
@@ -34,9 +34,30 @@ $html .= '<form id="formulario" method="POST" action="/relatorioGeradorDeMeta" >
 //$html .= '</div>';
 //$html .= '</div>';
 
+$html .= '<div class="row p5">';
+$html .= '<div class="col-lg-1 col-md-3 col-sm-3 col-xs-12 pb10 pt10">';
+$html .= 'Quem';
+$html .= '</div>';
+$html .= '<div class="col-lg-11 col-md-9 col-sm-9 col-xs-12">';
+$html .= '<select name="quem" id="quem" class="form-control">';
+$html .= '<option value="0" selected>TODOS</option>';
+if($this->quems){
+	foreach($this->quems as $quem){
+		$selected = '';
+		if ($this->quem == $quem['id']) {
+			$selected = 'selected';
+		}
+		$html .= '<option value="' . $quem['id'] . '" ' . $selected . '>' . $quem['info'] . '</option>';
+	}
+}
+$html .= '</select>';
+$html .= '</div>';
+$html .= '</div>';
+
+
 // div mes ano
 $html .= '<div class="row p5">';
-$html .= '<div class="col-lg-1 col-md-1 col-sm-1 col-xs-12 pb10 pt10">';
+$html .= '<div class="col-lg-1 col-md-3 col-sm-3 col-xs-12 pb10 pt10">';
 $html .= 'Mês';
 $html .= '</div>';
 $html .= '<div class="col-lg-5 col-md-5 col-sm-5 col-xs-12">';
@@ -51,7 +72,7 @@ for ($indice = $mesInicial; $indice <= $mesFinal; $indice++) {
 }
 $html .= '</select>';
 $html .= '</div>';
-$html .= '<div class="col-lg-1 col-md-1 col-sm-1 col-xs-12 pb10 pt10"">';
+$html .= '<div class="col-lg-1 col-md-3 col-sm-3 col-xs-12 pb10 pt10"">';
 $html .= 'Ano';
 $html .= '</div>';
 $html .= '<div class="col-lg-5 col-md-5 col-sm-5 col-xs-12">';
@@ -76,24 +97,24 @@ $html .= '</div>';
 
 // div percentual liderres e celulas
 $html .= '<div class="row p5">';
-$html .= '<div class="col-xs-12 col-sm-1 col-md-1 col-lg-1">';
+$html .= '<div class="col-xs-12 col-sm-3 col-md-3 col-lg-1">';
 $html .= 'Líderes';
 $html .= '</div>';
-$html .= '<div class="col-xs-12 col-sm-1 col-md-11 col-lg-3">';
+$html .= '<div class="col-xs-12 col-sm-3 col-md-11 col-lg-3">';
 $html .= '<input value="'.$this->lideres.'" maxlength="3" type="number" name="lideres" class="form-control" placeholder="0%" />';
 $html .= '</div>';
 
-$html .= '<div class="col-xs-12 col-sm-1 col-md-1 col-lg-1">';
+$html .= '<div class="col-xs-12 col-sm-3 col-md-3 col-lg-1">';
 $html .= 'Células';
 $html .= '</div>';
-$html .= '<div class="col-xs-12 col-sm-1 col-md-1 col-lg-3">';
+$html .= '<div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">';
 $html .= '<input value="'.$this->celulas.'" maxlength="3" type="number" name="celulas" class="form-control" placeholder="0%"  />';
 $html .= '</div>';
 
-$html .= '<div class="col-xs-12 col-sm-1 col-md-1 col-lg-1">';
+$html .= '<div class="col-xs-12 col-sm-3 col-md-3 col-lg-1">';
 $html .= 'Células Beta';
 $html .= '</div>';
-$html .= '<div class="col-xs-12 col-sm-1 col-md-1 col-lg-3">';
+$html .= '<div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">';
 $html .= '<input value="'.$this->celulasBeta.'" maxlength="3" type="number" name="celulasBeta" class="form-control" placeholder="0%"  />';
 $html .= '</div>';
 $html .= '</div>';
@@ -106,25 +127,54 @@ $html .= '</div>';
 $html .= '</div>';
 
 $html .= '<div class="row p5">';
-$html .= '<div class="col-xs-12 col-sm-1 col-md-1 col-lg-1">';
+$html .= '<div class="col-xs-12 col-sm-3 col-md-3 col-lg-1">';
 $html .= '1° M';
 $html .= '</div>';
-$html .= '<div class="col-xs-12 col-sm-1 col-md-1 col-lg-3">';
+$html .= '<div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">';
 $html .= '<input value="'.$this->alunos1m.'" maxlength="3" type="number" name="alunos1m" class="form-control" placeholder="0%"  />';
 $html .= '</div>';
 
-$html .= '<div class="col-xs-12 col-sm-1 col-md-1 col-lg-1">';
+$html .= '<div class="col-xs-12 col-sm-3 col-md-3 col-lg-1">';
 $html .= '2° M';
 $html .= '</div>';
-$html .= '<div class="col-xs-12 col-sm-1 col-md-1 col-lg-3">';
+$html .= '<div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">';
 $html .= '<input value="'.$this->alunos2m.'" maxlength="3" type="number" name="alunos2m" class="form-control" placeholder="0%"  />';
 $html .= '</div>';
 
-$html .= '<div class="col-xs-12 col-sm-1 col-md-1 col-lg-1">';
+$html .= '<div class="col-xs-12 col-sm-3 col-md-3 col-lg-1">';
 $html .= '3° M';
 $html .= '</div>';
-$html .= '<div class="col-xs-12 col-sm-1 col-md-1 col-lg-3">';
+$html .= '<div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">';
 $html .= '<input value="'.$this->alunos3m.'" maxlength="3" type="number" name="alunos3m" class="form-control" placeholder="0%"  />';
+$html .= '</div>';
+$html .= '</div>';
+
+$html .= '<div class="row p15 text-center">';
+$html .= '<div class="alert alert-default">';
+$html .= 'Percentuais dos Gêneros';
+$html .= '</div>';
+$html .= '</div>';
+
+$html .= '<div class="row p5">';
+$html .= '<div class="col-xs-12 col-sm-3 col-md-3 col-lg-1">';
+$html .= 'Homens';
+$html .= '</div>';
+$html .= '<div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">';
+$html .= '<input value="'.$this->homens.'" maxlength="3" type="number" name="homens" class="form-control" placeholder="0%"  />';
+$html .= '</div>';
+
+$html .= '<div class="col-xs-12 col-sm-3 col-md-3 col-lg-1">';
+$html .= 'Mulheres';
+$html .= '</div>';
+$html .= '<div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">';
+$html .= '<input value="'.$this->mulheres.'" maxlength="3" type="number" name="mulheres" class="form-control" placeholder="0%"  />';
+$html .= '</div>';
+
+$html .= '<div class="col-xs-12 col-sm-3 col-md-3 col-lg-1">';
+$html .= 'Casais';
+$html .= '</div>';
+$html .= '<div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">';
+$html .= '<input value="'.$this->casais.'" maxlength="3" type="number" name="casais" class="form-control" placeholder="0%"  />';
 $html .= '</div>';
 $html .= '</div>';
 
@@ -147,7 +197,7 @@ if($this->postado){
 	if($this->filhos){
 		foreach($this->filhos as $filho){
 			$corLinha = 'primary';
-			$colSpan = 8;
+			$colSpan = 11;
 			if($filho['informacao'] === 'TOTAL'){
 				$corLinha = 'dark';
 				$colSpan = 0;
@@ -156,9 +206,16 @@ if($this->postado){
 				$html .= '<td>LÍDERES / META</td>';
 				$html .= '<td>CÉLULAS / META</td>';
 				$html .= '<td>CÉLULAS BETAS / META</td>';
-				$html .= '<td>ALUNOS 1°M / META</td>';
-				$html .= '<td>ALUNOS 2°M / META</td>';
-				$html .= '<td>ALUNOS 3°M / META</td>';
+				if($this->alunos1m > 0 || $this->alunos2m > 0 || $this->alunos3m){
+					$html .= '<td>ALUNOS 1°M / META</td>';
+					$html .= '<td>ALUNOS 2°M / META</td>';
+					$html .= '<td>ALUNOS 3°M / META</td>';
+				}
+				if($this->homens > 0 || $this->mulheres > 0 || $this->casais){
+					$html .= '<td>HOMENS</td>';
+					$html .= '<td>MULHERES</td>';
+					$html .= '<td>CASAIS</td>';
+				}
 				$html .= '<td>TOTAL</td>';
 				$html .= '</tr>';
 			}
@@ -172,13 +229,23 @@ if($this->postado){
 					+ $filho['alunos1Meta']
 					+ $filho['alunos2Meta']
 					+ $filho['alunos3Meta']
+					+ $filho['homensMeta']
+					+ $filho['mulheresMeta']
+					+ $filho['casaisMeta']
 					;
 				$html .= '<td>'.$filho['lideres'].' / '.$filho['lideresMeta'].'</td>';
 				$html .= '<td>'.$filho['celulas'].' / '.$filho['celulasMeta'].'</td>';
 				$html .= '<td>'.$filho['celulasBeta'].' / '.$filho['celulasBetaMeta'].'</td>';
-				$html .= '<td>'.$filho['alunos1'].' / '.$filho['alunos1Meta'].'</td>';
-				$html .= '<td>'.$filho['alunos2'].' / '.$filho['alunos2Meta'].'</td>';
-				$html .= '<td>'.$filho['alunos3'].' / '.$filho['alunos3Meta'].'</td>';
+				if($this->alunos1m > 0 || $this->alunos2m > 0 || $this->alunos3m){
+					$html .= '<td>'.$filho['alunos1'].' / '.$filho['alunos1Meta'].'</td>';
+					$html .= '<td>'.$filho['alunos2'].' / '.$filho['alunos2Meta'].'</td>';
+					$html .= '<td>'.$filho['alunos3'].' / '.$filho['alunos3Meta'].'</td>';
+				}
+				if($this->homens > 0 || $this->mulheres > 0 || $this->casais){
+					$html .= '<td>'.$filho['homens'].' / '.$filho['homensMeta'].'</td>';
+					$html .= '<td>'.$filho['mulheres'].' / '.$filho['mulheresMeta'].'</td>';
+					$html .= '<td>'.$filho['casais'].' / '.$filho['casaisMeta'].'</td>';
+				}
 				$html .= '<td>'.$total.'</td>';
 			}
 			$html .= '</tr>';
@@ -189,9 +256,16 @@ if($this->postado){
 				$html .= '<td>LÍDERES / META</td>';
 				$html .= '<td>CÉLULAS / META</td>';
 				$html .= '<td>CÉLULAS BETAS / META</td>';
-				$html .= '<td>ALUNOS 1°M / META</td>';
-				$html .= '<td>ALUNOS 2°M / META</td>';
-				$html .= '<td>ALUNOS 3°M / META</td>';
+				if($this->alunos1m > 0 || $this->alunos2m > 0 || $this->alunos3m){
+					$html .= '<td>ALUNOS 1°M / META</td>';
+					$html .= '<td>ALUNOS 2°M / META</td>';
+					$html .= '<td>ALUNOS 3°M / META</td>';
+				}
+				if($this->homens > 0 || $this->mulheres > 0 || $this->casais){
+					$html .= '<td>HOMENS</td>';
+					$html .= '<td>MULHERES</td>';
+					$html .= '<td>CASAIS</td>';
+				}
 				$html .= '<td>TOTAL</td>';
 				$html .= '</tr>';
 			}
@@ -208,6 +282,9 @@ if($this->postado){
 						+ $filho144['alunos1Meta']
 						+ $filho144['alunos2Meta']
 						+ $filho144['alunos3Meta']
+						+ $filho144['homensMeta']
+						+ $filho144['mulheresMeta']
+						+ $filho144['casaisMeta']
 						;
 
 					$html .= '<tr class="'.$corLinha144.'">'; 
@@ -215,9 +292,16 @@ if($this->postado){
 					$html .= '<td>'.$filho144['lideres'].' / '.$filho144['lideresMeta'].'</td>';
 					$html .= '<td>'.$filho144['celulas'].' / '.$filho144['celulasMeta'].'</td>';
 					$html .= '<td>'.$filho144['celulasBeta'].' / '.$filho144['celulasBetaMeta'].'</td>';
-					$html .= '<td>'.$filho144['alunos1'].' / '.$filho144['alunos1Meta'].'</td>';
-					$html .= '<td>'.$filho144['alunos2'].' / '.$filho144['alunos2Meta'].'</td>';
-					$html .= '<td>'.$filho144['alunos3'].' / '.$filho144['alunos3Meta'].'</td>';
+					if($this->alunos1m > 0 || $this->alunos2m > 0 || $this->alunos3m){
+						$html .= '<td>'.$filho144['alunos1'].' / '.$filho144['alunos1Meta'].'</td>';
+						$html .= '<td>'.$filho144['alunos2'].' / '.$filho144['alunos2Meta'].'</td>';
+						$html .= '<td>'.$filho144['alunos3'].' / '.$filho144['alunos3Meta'].'</td>';
+					}
+					if($this->homens > 0 || $this->mulheres > 0 || $this->casais){
+						$html .= '<td>'.$filho144['homens'].' / '.$filho144['homensMeta'].'</td>';
+						$html .= '<td>'.$filho144['mulheres'].' / '.$filho144['mulheresMeta'].'</td>';
+						$html .= '<td>'.$filho144['casais'].' / '.$filho144['casaisMeta'].'</td>';
+					}
 					$html .= '<td>'.$total.'</td>';
 					$html .= '</tr>';
 
@@ -274,13 +358,25 @@ function ajudadorDeSubmissao(){
 		mostrarMensagemDeErro = true
 		camposComErro.push('Alunos 1° módulo')
 	}
-		if(formulario.alunos2m.value === ''){
+	if(formulario.alunos2m.value === ''){
 		mostrarMensagemDeErro = true
 		camposComErro.push('Alunos 2° módulo')
 	}
-		if(formulario.alunos3m.value === ''){
+	if(formulario.alunos3m.value === ''){
 		mostrarMensagemDeErro = true
 		camposComErro.push('Alunos 3° módulo')
+	}
+	if(formulario.homens.value === ''){
+		mostrarMensagemDeErro = true
+		camposComErro.push('Homens')
+	}
+	if(formulario.mulheres.value === ''){
+		mostrarMensagemDeErro = true
+		camposComErro.push('Mulheres')
+	}
+	if(formulario.casais.value === ''){
+		mostrarMensagemDeErro = true
+		camposComErro.push('Casais')
 	}
 
 	if(mostrarMensagemDeErro){

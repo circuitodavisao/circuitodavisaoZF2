@@ -57,7 +57,7 @@ class RepositorioORM {
     private $_pessoaCursoAcessoORM;
 	private $_fatoFinanceiro;
 	private $_fatoFinanceiroTipo;
-	private $_fatoRankingCelula;
+	private $_fatoRankingCelulaORM;
 	private $_fatoCursoORM;
 	private $_fatoFinanceiroSituacaoORM;
 	private $_pessoaFatoFinanceiroAcessoORM;
