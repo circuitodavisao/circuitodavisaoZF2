@@ -628,6 +628,34 @@ class RelatorioController extends CircuitoController {
 
 	}
 
+	static public function totalDeAlunos($repositorio, $grupo){		
+		$alunos = 0;
+		$numeroIdentificador = $repositorio->getFatoCicloORM()->montarNumeroIdentificador($repositorio, $grupo);
+
+		$relatorioInicial = $repositorio->getFatoCursoORM()->encontrarFatoCursoPorNumeroIdentificador($numeroIdentificador);
+		$turmasComAulaAberta = array();
+		$turmas = $grupo->getGrupoIgreja()->getTurma();
+
+		foreach($turmas as $turma){
+			if($turma->getTurmaAulaAtiva()){
+				$turmasComAulaAberta[] = $turma;
+			}
+		}
+
+		foreach($relatorioInicial as $relatorio){
+			foreach($turmasComAulaAberta as $turma){
+				if($relatorio->getTurma_id() === $turma->getId()){
+					if($relatorio->getSituacao_id() === Situacao::ATIVO
+						|| $relatorio->getSituacao_id () === Situacao::ESPECIAL){
+							$alunos++;
+						}
+				}
+			}
+		}
+
+		return $alunos;
+	}
+
 	public function buscarDadosGrupoAction() {
 		$request = $this->getRequest();
 		$response = $this->getResponse();
@@ -3295,6 +3323,228 @@ public function alunosNaSemanaAction(){
 		$dados['homens'] = $quantidadeDeHomens;
 		$dados['mulheres'] = $quantidadeDeMulheres;
 		$dados['casais'] = $quantidadeDeCasais;
+		return $dados;
+	}
+
+	static function buscarDadosPrincipais($repositorio, $grupo, $mes, $ano){
+		$celulas = 0;
+		$lideres = 0;
+		$discipulados = 0;
+		$alunos = 0;
+		$regioes = 0;
+		$coordenacoes = 0;
+		$igrejas = 0;
+		$parceiro = 0;
+		$mostrarRegioes = false;
+		$mostrarCoordenacoes = false;
+		$mostrarIgrejas = false;
+		$discipulado = null;
+		$discipuladoHomens = 0;
+		$discipuladoMulheres = 0;
+		$mostrarDiscipulado = false;
+
+		if(intVal($mes) === 1){
+			$mesAnterior = 12;
+			$anoAnterior = $ano - 1;
+		}else{
+			$mesAnterior = $mes - 1;
+			$anoAnterior = $ano;
+		}
+
+		if($grupo->getEntidadeAtiva()){
+			$arrayPeriodoDoMes = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mes, $ano);
+			if($mes == date('m') && $ano == date('Y')){
+				$arrayPeriodoDoMes[1] = 0;
+			}
+			$periodoParaUsar = $arrayPeriodoDoMes[1];
+			$tipoSomado = 2;
+
+			$tipoRelatorio = $tipoSomado;
+			$numeroIdentificador = $repositorio->getFatoCicloORM()->montarNumeroIdentificador($repositorio, $grupo);
+
+			/* Líderes */
+			$fatoLider = 
+				$repositorio->getFatoLiderORM()->encontrarPorNumeroIdentificador($numeroIdentificador, $tipoRelatorio, $periodoParaUsar, $inativo = false);
+			$lideres = $fatoLider[0]['lideres'];
+
+			/* Células */
+			$relatorioCelula = 
+				$repositorio->getFatoCicloORM()->montarRelatorioCelulaPorNumeroIdentificador($numeroIdentificador, $periodoParaUsar, $tipoRelatorio);
+			$quantidadeCelulas = $relatorioCelula[0]['quantidade'];
+			$relatorioCelulaEstrategicas = 
+				$repositorio->getFatoCicloORM()->montarRelatorioCelulaPorNumeroIdentificador($numeroIdentificador, $periodoParaUsar, $tipoRelatorio, $estrategica = true);
+			$quantidadeCelulasEstrategicas = $relatorioCelulaEstrategicas[0]['quantidade'];		
+			$celulas = $quantidadeCelulas + $quantidadeCelulasEstrategicas;
+
+			if($grupo->getEntidadeAtiva()->getEntidadeTipo()->getId() !== EntidadeTipo::regiao
+				&& $grupo->getEntidadeAtiva()->getEntidadeTipo()->getId() !== EntidadeTipo::coordenacao){
+
+					/* Discipulados */
+					$discipulados = $repositorio->getFatoCelulaDiscipuladoORM()->totalAtivosPorNumeroIdentificador($numeroIdentificador);
+
+					/* Alunos */
+					$alunos = RelatorioController::totalDeAlunos($repositorio, $grupo);
+
+					/* Parceiro de Deus */
+					$parceiro = $repositorio->getFatoFinanceiroORM()->fatosPorNumeroIdentificador($numeroIdentificador,$periodoParaUsar, $mes, $ano, $tipoSomado)['valor'];
+
+					/* Discipulado */
+					if($relatorioDiscipulado = RelatorioController::relatorioDiscipulado($repositorio, $grupo, $mesAnterior, $anoAnterior)){
+						$discipulado = $relatorioDiscipulado['media'];
+						$mostrarDiscipulado = true;
+
+						if($grupoPaiFilhoFilhos12 = $grupo->getGrupoPaiFilhoFilhosAtivos($periodoParaUsar)){
+							foreach($grupoPaiFilhoFilhos12 as $grupoFilho12){
+								$filho12 = $grupoFilho12->getGrupoPaiFilhoFilho();								
+								foreach($filho12->getPessoasAtivas() as $pessoa){
+									if ($pessoa->getSexo() === 'M') {
+										$discipuladoHomens++;
+									}
+									if ($pessoa->getSexo() === 'F') {
+										$discipuladoMulheres++;
+									}
+								}
+							}
+						}
+					}
+				}
+
+			/* Contado Regiões, Coordenações e Igrejas */
+			if($grupo->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::regiao
+				|| $grupo->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao){
+
+					$mostrarCoordenacoes = true;
+					$mostrarIgrejas = true;
+
+					if($grupo->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::regiao){
+						$mostrarRegioes = true;
+					}
+
+					$grupoPaiFilhoFilhos12 = $grupo->getGrupoPaiFilhoFilhosAtivos($periodoParaUsar);
+					foreach($grupoPaiFilhoFilhos12 as $grupoFilho12){
+						$filho12 = $grupoFilho12->getGrupoPaiFilhoFilho();								
+						if($filho12->getEntidadeAtiva()){
+							$buscarAbaixo144 = false;
+							if($filho12->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::regiao){
+								$regioes++;
+								$buscarAbaixo144 = true;
+							}
+							if($filho12->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao){
+								$coordenacoes++;
+								$buscarAbaixo144 = true;
+							}
+							if($filho12->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
+								$igrejas++;
+								/* Somando discipulados */
+								$numeroIdentificador12 = $repositorio->getFatoCicloORM()->montarNumeroIdentificador($repositorio, $filho12);
+								$discipulados += $repositorio->getFatoCelulaDiscipuladoORM()->totalAtivosPorNumeroIdentificador($numeroIdentificador12);
+								/* Somando alunos */
+								$alunos += RelatorioController::totalDeAlunos($repositorio, $filho12);
+								/* Somado parceiro de Deus */
+								$parceiro += $repositorio->getFatoFinanceiroORM()->fatosPorNumeroIdentificador($numeroIdentificador12,$periodoParaUsar, $mes, $ano, $tipoSomado)['valor'];
+							}
+							if($buscarAbaixo144){
+								$grupoPaiFilhoFilhos144 = $filho12->getGrupoPaiFilhoFilhosAtivos($periodoParaUsar);
+								foreach($grupoPaiFilhoFilhos144 as $grupoFilho144){
+									$filho144 = $grupoFilho144->getGrupoPaiFilhoFilho();								
+
+									if($filho144->getEntidadeAtiva()){
+										$buscarAbaixo1728 = false;
+										if($filho144->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::regiao){
+											$regioes++;
+											$buscarAbaixo1728 = true;
+										}
+										if($filho144->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao){
+											$coordenacoes++;
+											$buscarAbaixo1728 = true;
+										}
+										if($filho144->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
+											$igrejas++;
+											/* Somando discipulados */
+											$numeroIdentificador144 = $repositorio->getFatoCicloORM()->montarNumeroIdentificador($repositorio, $filho144);
+											$discipulados += $repositorio->getFatoCelulaDiscipuladoORM()->totalAtivosPorNumeroIdentificador($numeroIdentificador144);
+											/* Somando alunos */
+											$alunos += RelatorioController::totalDeAlunos($repositorio, $filho144);
+											/* Somado parceiro de Deus */
+											$parceiro += $repositorio->getFatoFinanceiroORM()->fatosPorNumeroIdentificador($numeroIdentificador144,$periodoParaUsar, $mes, $ano, $tipoSomado)['valor'];
+										}
+										if($buscarAbaixo1728){
+											$grupoPaiFilhoFilhos1728 = $filho144->getGrupoPaiFilhoFilhosAtivos($periodoParaUsar);
+											foreach($grupoPaiFilhoFilhos1728 as $grupoFilho1728){
+												$filho1728 = $grupoFilho1728->getGrupoPaiFilhoFilho();								
+
+												if($filho1728->getEntidadeAtiva()){
+													$buscarAbaixo20736 = false;
+													if($filho1728->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::regiao){
+														$regioes++;
+														$buscarAbaixo20736 = true;
+													}
+													if($filho1728->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao){
+														$coordenacoes++;
+														$buscarAbaixo20736 = true;
+													}
+													if($filho1728->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
+														$igrejas++;
+														/* Somando discipulados */
+														$numeroIdentificador1728 = $repositorio->getFatoCicloORM()->montarNumeroIdentificador($repositorio, $filho1728);
+														$discipulados += $repositorio->getFatoCelulaDiscipuladoORM()->totalAtivosPorNumeroIdentificador($numeroIdentificador1728);
+														/* Somando alunos */
+														$alunos += RelatorioController::totalDeAlunos($repositorio, $filho1728);
+														/* Somado parceiro de Deus */
+														$parceiro += $repositorio->getFatoFinanceiroORM()->fatosPorNumeroIdentificador($numeroIdentificador1728,$periodoParaUsar, $mes, $ano, $tipoSomado)['valor'];
+													}
+													if($buscarAbaixo20736){
+														$grupoPaiFilhoFilhos20736 = $filho1728->getGrupoPaiFilhoFilhosAtivos($periodoParaUsar);
+														foreach($grupoPaiFilhoFilhos20736 as $grupoFilho20736){
+															$filho20736 = $grupoFilho20736->getGrupoPaiFilhoFilho();								
+
+															if($filho20736->getEntidadeAtiva()){
+																if($filho20736->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::regiao){
+																	$regioes++;
+																}
+																if($filho20736->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao){
+																	$coordenacoes++;
+																}
+																if($filho20736->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
+																	$igrejas++;
+																	/* Somando discipulados */
+																	$numeroIdentificador20736 = $repositorio->getFatoCicloORM()->montarNumeroIdentificador($repositorio, $filho20736);
+																	$discipulados += $repositorio->getFatoCelulaDiscipuladoORM()->totalAtivosPorNumeroIdentificador($numeroIdentificador20736);
+																	/* Somando alunos */
+																	$alunos += RelatorioController::totalDeAlunos($repositorio, $filho20736);
+																	/* Somado parceiro de Deus */
+																	$parceiro += $repositorio->getFatoFinanceiroORM()->fatosPorNumeroIdentificador($numeroIdentificador20736,$periodoParaUsar, $mes, $ano, $tipoSomado)['valor'];
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+		}
+
+		$dados = array();
+		$dados['celulas'] = $celulas;
+		$dados['lideres'] = $lideres;
+		$dados['discipulados'] = $discipulados;
+		$dados['alunos'] = $alunos;
+		$dados['regioes'] = $regioes;
+		$dados['coordenacoes'] = $coordenacoes;
+		$dados['igrejas'] = $igrejas;
+		$dados['parceiro'] = $parceiro;
+		$dados['mostrarRegioes'] = $mostrarRegioes;
+		$dados['mostrarCoordenacoes'] = $mostrarCoordenacoes;
+		$dados['mostrarIgrejas'] = $mostrarIgrejas;
+		$dados['discipulado'] = $discipulado;
+		$dados['discipuladoHomens'] = $discipuladoHomens;
+		$dados['discipuladoMulheres'] = $discipuladoMulheres;
+		$dados['mostrarDiscipulado'] = $mostrarDiscipulado;
 		return $dados;
 	}
 }

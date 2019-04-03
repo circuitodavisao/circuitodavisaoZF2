@@ -6,6 +6,8 @@ use Application\Controller\Helper\Constantes;
 use Application\Model\Entity\Solicitacao;
 use Application\Model\ORM\CircuitoORM;
 use Exception;
+use DateTime;
+use Application\Controller\Helper\Funcoes;
 
 /**
  * Nome: SolicitacaoORM.php
@@ -28,4 +30,25 @@ class SolicitacaoSituacaoORM extends CircuitoORM {
           echo $exc->getTraceAsString();
       }
   }
+
+  public function encontrarSolicitacoesConcluidas() {
+      $resposta = null;
+	  $dataFormatada = DateTime::createFromFormat('Y-m-d', '2019-04-01');
+	  try {
+          $solicitacaoSituacao = $this->getEntityManager()
+                  ->getRepository($this->getEntity())
+				  ->findBy(array(
+					  'situacao_id' => 5, 
+					  'data_criacao' => $dataFormatada,
+					  'data_inativacao' => null,
+				  ));
+          if ($solicitacaoSituacao) {
+              $resposta = $solicitacaoSituacao;
+          }
+          return $resposta;
+      } catch (Exception $exc) {
+          echo $exc->getTraceAsString();
+      }
+  }
+
 }

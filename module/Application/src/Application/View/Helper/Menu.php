@@ -148,14 +148,14 @@ if ($this->view->entidade->verificarSeEstaAtivo()){
 				$html .= '</li>';
 			}
 
+		}
+
 			$html .= '<li>';
 			$html .= '<a href="#" onClick="mostrarSplash(); funcaoCircuito(\'cadastroGrupo\', null);">';
 			$html .= '<span class="fa fa-users"></span>';
 			$html .= 'Time';
 			$html .= '</a>';
 			$html .= '</li>';
-
-		}
 
 			$html .= '<li>';
 			$html .= '<a href="#" onClick="mostrarSplash(); funcaoCircuito(\'cadastroDiscipulados\', null);">';
