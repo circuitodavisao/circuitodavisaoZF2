@@ -2427,8 +2427,15 @@ class CursoController extends CircuitoController {
 
 			$dataInicial = $ano1 . '-' . $mes1 . '-' . $dia1;
 			$dataFinal = $ano2 . '-' . $mes2 . '-' . $dia2;
+
 			$turmaPessoaFinanceiros = $this->getRepositorio()->getTurmaPessoaFinanceiroORM()->encontrarPorDatas($dataInicial, $dataFinal);
-			$dados['turmaPessoaFinanceiros'] = $turmaPessoaFinanceiros;
+			$turmaPessoaFinanceirosFiltrados = Array();
+			foreach ($turmaPessoaFinanceiros as $turmaPessoaFinanceiro) {
+				if($turmaPessoaFinanceiro->getTurma_pessoa()->getTurma()->getGrupo_id() == $entidade->getGrupo()->getGrupoIgreja()->getId()){					
+					$turmaPessoaFinanceirosFiltrados[] = $turmaPessoaFinanceiro;
+				}
+			}
+			$dados['turmaPessoaFinanceiros'] = $turmaPessoaFinanceirosFiltrados;
 		}else{
 			$dia1 = date('d');
 			$mes1 = date('m');
