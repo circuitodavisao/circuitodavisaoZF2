@@ -2649,6 +2649,12 @@ public function alunosNaSemanaAction(){
 		return new ViewModel($dados);
 	}
 
+	public function consultarOrdenacaoAction(){
+		$request = $this->getRequest();
+		$dados = array();		
+		return new ViewModel($dados);
+	}
+
 	static public function relatorioDiscipulado($repositorio, $grupo, $mesAnterior, $anoAnterior){
 		$relatorio = null;
 		if($grupo->getGrupoEventoAtivosPorTipo(EventoTipo::tipoDiscipulado)){
@@ -2866,7 +2872,7 @@ public function alunosNaSemanaAction(){
 													}
 												}
 												if($adicionar){
-													if($turma->getTurmaAulaAtiva()){
+													if($turma->getTurmaAulaAtiva() && $turma->verificarSeEstaAtivo()){
 														if($turma->getTurmaAulaAtiva()->getAula()->getDisciplina()->getPosicao() === 1){
 															$somaIgrejaAlunos1++;
 														}
@@ -3034,6 +3040,13 @@ public function alunosNaSemanaAction(){
 
 			$listaDeFilhos12[] = $totalGeral;
 
+			uksort($listaDeFilhos12, function ($ak, $bk) use ($listaDeFilhos12) {
+				$a = $listaDeFilhos12[$ak];
+				$b = $listaDeFilhos12[$bk];
+				if ($a['informacao'] === $b['informacao']) return $ak - $bk;
+				return $a['informacao'] > $b['informacao'] ? 1 : -1;
+			});
+			
 			$dados['filhos'] = $listaDeFilhos12;
 		}
 		if (empty($mes)) {
