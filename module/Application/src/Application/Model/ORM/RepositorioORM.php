@@ -66,7 +66,7 @@ class RepositorioORM {
 	private $_fatoSetentaORM;
 	private $_registroORM;
 	private $_registroAcaoORM;
-	private $_fatoDiscipulado;
+	private $_fatoDiscipuladoORM;
 	private $_fatoCelulaDiscipuladoORM;
 
     /**

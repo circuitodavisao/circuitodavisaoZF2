@@ -148,6 +148,142 @@ echo '</div>';
 ?>
 
 <?php
+if($this->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::regiao
+	&& $this->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::coordenacao){
+?>
+<!-- dados membresia -->
+<div class="row mb10">
+<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 admin-grid">
+<div class="panel panel-collapsed" id="p1">
+<div class="panel-heading ui-sortable-handle">
+Membresia
+<span class="panel-controls">
+<a href="#" class="panel-control-collapse" onClick="buscarDadosPrincipaisMembresia()"></a>
+</span>
+</div>
+<div class="panel-body pn pt10" style="display: none;">
+
+<div class="col-xs-12 col-md-12 col-lg-12 p20">
+</div>
+
+<?php
+$class = 'class = "col-lg-3 col-md-3 col-sm-6 col-xs-12"';
+$numeroIndices = 4;
+for ($indice = 1; $indice <= $numeroIndices; $indice++) {
+	$idValor = '';
+	$idLista = '';
+	switch ($indice) {
+	case 1:
+		$label = 'PESSOAS CHEIAS DE F&Eacute;';
+		$idValor = 'valorMediaCultos';
+		$idLista = 'listaCultos';
+		break;
+	case 2:
+		$label = 'PESSOAS APAIXONADAS';
+		$idValor = 'valorMediaArena';
+		$idLista = 'listaArena';
+		break;
+	case 3:
+		$label = 'PESSOAS ALIAN&Ccedil;ADAS';
+		$idValor = 'valorMediaDomingo';
+		$idLista = 'listaDomingo';
+		break;
+	case 4: 
+		$label = 'MEMBROS ASS&Iacute;DUOS';
+		$idValor = 'valorMediaMembresia';
+		$idLista = 'listaMembresia';
+		break;
+	}
+?>
+								<div <?php echo $class; ?>>
+									<div class="panel panel-tile text-center br-a br-grey">
+										<div class="panel-body" style="padding-bottom: 0px;">
+											<h1 class="fs30 mt5 mbn">
+<?php
+	echo '<span id="'.$idValor.'" class="relatorioPessoal"><img src="img/loader.gif" /></span>';
+?>
+											</h1>
+											<h6><?php echo $label; ?></h6>
+										</div>
+										<div class="panel-footer br-t p12">
+											<span class="fs11">
+											<span id="<?php echo $idLista; ?>" class="relatorioPessoal" style="font-size: 10px;"><img src="img/loader.gif" /></span>
+											</span>
+										</div>
+									</div>
+								</div>
+<?php } ?>
+</div>
+</div>
+</div>
+</div>
+<!-- fim membresia -->
+
+<!-- dados celula -->
+<div class="row mb10">
+<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 admin-grid">
+<div class="panel panel-collapsed" id="p1">
+<div class="panel-heading ui-sortable-handle">
+Célula
+<span class="panel-controls">
+<a href="#" class="panel-control-collapse" onClick="buscarDadosPrincipaisCelula()"></a>
+</span>
+</div>
+<div class="panel-body pn pt10" style="display: none;">
+
+<div class="col-xs-12 col-md-12 col-lg-12 p20">
+</div>
+
+<?php
+$class = 'class = "col-lg-3 col-md-3 col-sm-6 col-xs-12"';
+$numeroIndices = 3;
+for ($indice = 1; $indice <= $numeroIndices; $indice++) {
+	$idValor = '';
+	$idLista = '';
+	switch ($indice) {
+	case 1:
+		$label = 'TOTAL DE CÉLULAS DE MULTIPLICAÇÃO';
+		$idValor = 'mediaCelulaQuantidade';
+		$idLista = 'listaCelulaQuantidade';
+		break;
+	case 2:
+		$label = 'PESSOAS FREQUENTES';
+		$idValor = 'mediaPessoasFrequentes';
+		$idLista = 'listaPessoasFrequentes';
+		break;
+	case 3:
+		$label = 'CÉLULAS REALIZADAS';
+		$idValor = 'mediaCelulaRealizadas';
+		$idLista = 'listaCelulaRealizadas';
+		break;
+	}
+?>
+								<div <?php echo $class; ?>>
+									<div class="panel panel-tile text-center br-a br-grey">
+										<div class="panel-body" style="padding-bottom: 0px;">
+											<h1 class="fs30 mt5 mbn">
+<?php
+	echo '<span id="'.$idValor.'" class="relatorioPessoal"><img src="img/loader.gif" /></span>';
+?>
+											</h1>
+											<h6><?php echo $label; ?></h6>
+										</div>
+										<div class="panel-footer br-t p12">
+											<span class="fs11">
+											<span id="<?php echo $idLista; ?>" class="relatorioPessoal" style="font-size: 10px;"><img src="img/loader.gif" /></span>
+											</span>
+										</div>
+									</div>
+								</div>
+<?php } ?>
+</div>
+</div>
+</div>
+</div>
+<!-- fim celula -->
+<?php } ?>
+
+<?php
 if(count($this->discipulos) > 0){
 ?>
 <div class="panel user-group-widget">
@@ -203,6 +339,7 @@ if(count($this->discipulos) > 0){
 </div>
 
 </div>
+
 <!-- fim panel discipulos -->
 <?php
 }
@@ -233,7 +370,6 @@ if(count($this->discipulos) > 0){
 			return resultado.json()
 		})
 		.then(json => {
-			console.log(json)
 			document.getElementById('idValorLideres').innerHTML = json.resultado.lideres
 			document.getElementById('idValorCelulas').innerHTML = json.resultado.celulas
 			document.getElementById('idValorDiscipulados').innerHTML = json.resultado.discipulados
@@ -271,6 +407,135 @@ if(count($this->discipulos) > 0){
 				document.getElementById('idValorDiscipuladoHomens').innerHTML = json.resultado.discipuladoHomens
 				document.getElementById('idValorDiscipuladoMulheres').innerHTML = json.resultado.discipuladoMulheres
 			}
+		})
+	}
+
+	function buscarDadosPrincipaisMembresia(){
+		const url = '/principalBuscarDadosPrincipaisMembresia'
+		fetch(
+			url,
+			{
+				method: 'POST',	
+				body: JSON.stringify({
+					"token": "<?php echo $this->grupo->getId(); ?>",
+					"mes": "<?php echo $this->mes; ?>",
+					"ano": "<?php echo $this->ano; ?>",
+				}),
+			},
+		)
+		.then(resultado => {
+			if(!resultado.ok){
+				alert('erro ao buscar dados principais membresia')
+			}
+			return resultado.json()
+		})
+		.then(json => {
+			document.getElementById('valorMediaCultos').innerHTML = json.resultado.mediaCultos.toFixed(2)
+			document.getElementById('valorMediaArena').innerHTML = json.resultado.mediaArena.toFixed(2)
+			document.getElementById('valorMediaDomingo').innerHTML = json.resultado.mediaDomingo.toFixed(2)
+			document.getElementById('valorMediaMembresia').innerHTML = json.resultado.mediaMembresia.toFixed(2)
+			let valor = ''
+			json.resultado.listaCultos.forEach(item => {
+				if(item){
+				if(valor === ''){
+					valor += item
+				}else{
+					valor += '|' + item
+				}
+				}
+			})
+			document.getElementById('listaCultos').innerHTML = valor
+			valor = ''
+			json.resultado.listaArena.forEach(item => {
+				if(item){
+				if(valor === ''){
+					valor += item
+				}else{
+					valor += '|' + item
+				}
+				}
+			})
+			document.getElementById('listaArena').innerHTML = valor
+			valor = ''
+			json.resultado.listaDomingo.forEach(item => {
+				if(item){
+				if(valor === ''){
+					valor += item
+				}else{
+					valor += '|' + item
+				}
+				}
+			})
+			document.getElementById('listaDomingo').innerHTML = valor
+			valor = ''
+			json.resultado.listaMembresia.forEach(item => {
+				if(item){
+				if(valor === ''){
+					valor += item.toFixed(2)
+				}else{
+					valor += '|' + item.toFixed(2)
+				}
+				}
+			})
+			document.getElementById('listaMembresia').innerHTML = valor
+		})
+	}
+	function buscarDadosPrincipaisCelula(){
+		const url = '/principalBuscarDadosPrincipaisCelula'
+		fetch(
+			url,
+			{
+				method: 'POST',	
+				body: JSON.stringify({
+					"token": "<?php echo $this->grupo->getId(); ?>",
+					"mes": "<?php echo $this->mes; ?>",
+					"ano": "<?php echo $this->ano; ?>",
+				}),
+			},
+		)
+		.then(resultado => {
+			if(!resultado.ok){
+				alert('erro ao buscar dados principais celula')
+			}
+			return resultado.json()
+		})
+		.then(json => {
+			document.getElementById('mediaCelulaQuantidade').innerHTML = json.resultado.mediaCelulaQuantidade.toFixed(2)
+			document.getElementById('mediaPessoasFrequentes').innerHTML = json.resultado.mediaPessoasFrequentes.toFixed(2)
+			document.getElementById('mediaCelulaRealizadas').innerHTML = json.resultado.mediaCelulaRealizadas.toFixed(2)
+			let valor = ''
+				json.resultado.listaCelulaQuantidade.forEach(item => {
+					if(item){
+					if(valor === ''){
+						valor += item
+					}else{
+						valor += '|' + item
+					}
+					}
+				})
+			document.getElementById('listaCelulaQuantidade').innerHTML = valor
+			valor = ''
+				json.resultado.listaPessoasFrequentes.forEach(item => {
+					if(item){
+					if(valor === ''){
+						valor += item
+					}else{
+						valor += '|' + item
+					}
+					}
+				})
+			document.getElementById('listaPessoasFrequentes').innerHTML = valor
+			valor = ''
+				json.resultado.listaCelulaRealizadas.forEach(item => {
+					if(item){
+					if(valor === ''){
+						valor += item.toFixed(2)
+					}else{
+						valor += '|' + item.toFixed(2)
+					}
+					}
+				})
+			document.getElementById('listaCelulaRealizadas').innerHTML = valor
 		})
 	}
 	buscarDadosPrincipais()
