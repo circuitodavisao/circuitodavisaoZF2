@@ -3547,4 +3547,90 @@ public function alunosNaSemanaAction(){
 		$dados['mostrarDiscipulado'] = $mostrarDiscipulado;
 		return $dados;
 	}
+
+	static function buscarDadosPrincipaisMembresia($repositorio, $grupo, $mes, $ano){
+		$mediaCultos = 0;
+		$mediaArena = 0;
+		$mediaDomingo = 0;
+		$mediaMembresia = 0;
+		$listaCultos = array();
+		$listaArena = array();
+		$listaDomingo = array();
+		$listaMembresia = array();
+
+		$arrayPeriodoDoMes = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mes, $ano);
+		if($mes == date('m') && $ano == date('Y')){
+			$arrayPeriodoDoMes[1] = 0;
+		}
+		$periodoParaUsar = $arrayPeriodoDoMes[1];
+		$tipoSomado = 2;
+
+		$tipoRelatorio = $tipoSomado;
+
+		$relatorio = RelatorioController::relatorioCompleto($repositorio, $grupo, RelatorioController::relatorioMembresia, $mes, $ano, $tudo = false, $tipoSomado, 'atual');
+		$indiceParaVer = 1;
+
+		$mediaCultos = $relatorio[$indiceParaVer]['mediaMembresiaCulto'];
+		$mediaArena = $relatorio[$indiceParaVer]['mediaMembresiaArena'];
+		$mediaDomingo = $relatorio[$indiceParaVer]['mediaMembresiaDomingo'];
+		$mediaMembresia = $relatorio[$indiceParaVer]['mediaMembresia'];
+
+		for($indiceDeArrays = $arrayPeriodoDoMes[0]; $indiceDeArrays <= $arrayPeriodoDoMes[1]; $indiceDeArrays++){
+			$listaCultos[] = $relatorio[$indiceParaVer][$indiceDeArrays]['membresiaCulto'];
+			$listaArena[] = $relatorio[$indiceParaVer][$indiceDeArrays]['membresiaArena'];
+			$listaDomingo[] = $relatorio[$indiceParaVer][$indiceDeArrays]['membresiaDomingo'];
+			$listaMembresia[] = $relatorio[$indiceParaVer][$indiceDeArrays]['membresia'];
+		}
+
+		$dados = array();
+		$dados['mediaCultos'] = $mediaCultos;
+		$dados['mediaArena'] = $mediaArena;
+		$dados['mediaDomingo'] = $mediaDomingo;
+		$dados['mediaMembresia'] = $mediaMembresia;
+		$dados['listaCultos'] = $listaCultos;
+		$dados['listaArena'] = $listaArena;
+		$dados['listaDomingo'] = $listaDomingo;
+		$dados['listaMembresia'] = $listaMembresia;
+		return $dados;
+	}
+
+	static function buscarDadosPrincipaisCelula($repositorio, $grupo, $mes, $ano){
+		$mediaCelulaQuantidade = 0;
+		$mediaPessoasFrequentes = 0;
+		$mediaCelulaRealizadas = 0;
+		$listaCelulaQuantidade = array();
+		$listaPessoasFrequentes = array();
+		$listaCelulaRealizadas = array();
+
+		$arrayPeriodoDoMes = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mes, $ano);
+		if($mes == date('m') && $ano == date('Y')){
+			$arrayPeriodoDoMes[1] = 0;
+		}
+		$periodoParaUsar = $arrayPeriodoDoMes[1];
+		$tipoSomado = 2;
+
+		$tipoRelatorio = $tipoSomado;
+
+		$relatorio = RelatorioController::relatorioCompleto($repositorio, $grupo, RelatorioController::relatorioMembresiaECelula, $mes, $ano, $tudo = false, $tipoSomado, 'atual');
+		$indiceParaVer = 1;
+
+		$mediaCelulaQuantidade = $relatorio[$indiceParaVer]['mediaCelulaQuantidade'];
+		$mediaPessoasFrequentes = $relatorio[$indiceParaVer]['mediaCelula'];
+		$mediaCelulaRealizadas = $relatorio[$indiceParaVer]['mediaCelulaRealizadasPerformance'];
+
+		for($indiceDeArrays = $arrayPeriodoDoMes[0]; $indiceDeArrays <= $arrayPeriodoDoMes[1]; $indiceDeArrays++){
+			$listaCelulaQuantidade[] = $relatorio[$indiceParaVer][$indiceDeArrays]['celulaQuantidade'] + $relatorio[$indiceParaVer][$indiceDeArrays]['celulaQuantidadeEstrategica'];
+			$listaPessoasFrequentes[] = $relatorio[$indiceParaVer][$indiceDeArrays]['celula'];
+			$listaCelulaRealizadas[] = $relatorio[$indiceParaVer][$indiceDeArrays]['celulaRealizadasPerformance'];
+		}
+
+		$dados = array();
+		$dados['mediaCelulaQuantidade'] = $mediaCelulaQuantidade;
+		$dados['mediaPessoasFrequentes'] = $mediaPessoasFrequentes;
+		$dados['mediaCelulaRealizadas'] = $mediaCelulaRealizadas;
+		$dados['listaCelulaQuantidade'] = $listaCelulaQuantidade;
+		$dados['listaPessoasFrequentes'] = $listaPessoasFrequentes;
+		$dados['listaCelulaRealizadas'] = $listaCelulaRealizadas;
+		return $dados;
+	}
 }
