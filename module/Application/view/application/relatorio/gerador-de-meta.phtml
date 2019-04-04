@@ -246,7 +246,7 @@ if($this->postado){
 					$html .= '<td>'.$filho['mulheres'].' / '.number_format($filho['mulheresMeta']).'</td>';
 					$html .= '<td>'.$filho['casais'].' / '.number_format($filho['casaisMeta']).'</td>';
 				}
-				$html .= '<td>'.$total.'</td>';
+				$html .= '<td>'.number_format($total).'</td>';
 			}
 			$html .= '</tr>';
 
@@ -302,7 +302,7 @@ if($this->postado){
 						$html .= '<td>'.$filho144['mulheres'].' / '.number_format($filho144['mulheresMeta']).'</td>';
 						$html .= '<td>'.$filho144['casais'].' / '.number_format($filho144['casaisMeta']).'</td>';
 					}
-					$html .= '<td>'.$total.'</td>';
+					$html .= '<td>'.number_format($total).'</td>';
 					$html .= '</tr>';
 
 					if($filho144['informacao'] === 'TOTAL PARCIAL'){
