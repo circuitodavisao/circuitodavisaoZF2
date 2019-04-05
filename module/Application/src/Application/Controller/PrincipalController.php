@@ -34,9 +34,6 @@ class PrincipalController extends CircuitoController {
 	 * GET /principal
 	 */
 	public function indexAction() {
-		set_time_limit(0);
-		ini_set('memory_limit', '1024M');
-
 		$sessao = new Container(Constantes::$NOME_APLICACAO);
 
 		/* dados pessoa logada */
@@ -67,7 +64,6 @@ class PrincipalController extends CircuitoController {
 		}
 		/* fim formulario */
 		
-		$periodoAtual = -1;
 		$vendoPessoaLogada = true;
 		$mesFinal = date('m');
 		$anoFinal = date('Y');
@@ -83,7 +79,7 @@ class PrincipalController extends CircuitoController {
 			$mostrarPrincipal = false;
 		}
 
-		/* verificando se estou vendo um discipulo abaixo  e pegando os dados dele */
+		/* verificando se estou vendo um discipulo abaixo e pegando os dados dele */
 		if($sessao->idSessao > 0){
 			$explodeIdSessao = explode('_', $sessao->idSessao);
 			$vendoDiscipuloAbaixo = $explodeIdSessao[2];
@@ -110,101 +106,16 @@ class PrincipalController extends CircuitoController {
 			$ano = date('Y');
 		}
 
-		$tudo = false;
-		$indiceFinalDoRelatorio = 0;
-		if($entidade->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao
-			|| $entidade->getEntidadeTipo()->getId() === EntidadeTipo::regiao){
-				//$tudo = true;
-			}
-		$relatorio = RelatorioController::relatorioCompleto($this->getRepositorio(), $grupo, RelatorioController::relatorioMembresiaECelula, $mes, $ano, $tudo, $somado = true, 'atual');
-
-		if($entidade->getEntidadeTipo()->getId() !== EntidadeTipo::regiao){
-			$relatorioParceiro = RelatorioController::relatorioCompleto($this->getRepositorio(), $grupo, RelatorioController::relatorioParceiroDeDeus, $mes, $ano, $tudo, $somado = true, 'atual') ;
-		}
-
-		$arrayPeriodoDoMes = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mes, $ano);
-		if($mes == date('m') && $ano == date('Y')){
-			$arrayPeriodoDoMes[1] = 0;
-		}
-
-		$relatorioCursos = array();
-		$totalDeDiscipulados = 0;
-
-		if($entidade->getEntidadeTipo()->getId() === EntidadeTipo::regiao){
-
-		}
-
-		if($entidade->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao){
-			$indiceFinalDoRelatorio = count($relatorio) - 1;
-			if($grupoPaiFilhoFilhos = $grupo->getGrupoPaiFilhoFilhosAtivos($periodoAtual)){
-				foreach ($grupoPaiFilhoFilhos as $filho) {
-					$grupoFilho = $filho->getGrupoPaiFilhoFilho();
-					if($grupoFilho->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
-						$relatorioCurso = self::montarRelatorioAlunos($this->getRepositorio(), $grupoFilho);
-						$relatorioCurso = RelatorioController::relatorioAlunosETurmas($this->getRepositorio(), $grupoFilho->getEntidadeAtiva())[0];
-						foreach($relatorioCurso as $key => $val){
-							if($key == 'total'){
-								foreach($val as $key1 => $val1){
-									$relatorioCursos['total'][$key1] += $val1;
-								}
-							}
-						}
-						$numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupoFilho);
-						$totalDeDiscipulados += $this->getRepositorio()->getFatoCelulaDiscipuladoORM()->totalAtivosPorNumeroIdentificador($numeroIdentificador);
-					}
-
-					if($grupoFilho->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao){
-
-						if($grupoPaiFilhoFilhos2 = $grupoFilho->getGrupoPaiFilhoFilhosAtivos($periodoAtual)){
-							foreach ($grupoPaiFilhoFilhos2 as $filho2) {
-								$grupoFilho2 = $filho2->getGrupoPaiFilhoFilho();
-
-								if($grupoFilho2->getEntidadeAtiva()->getEntidadeTipo() === EntidadeTipo::igreja){
-
-									$relatorioCurso = RelatorioController::relatorioAlunosETurmas($this->getRepositorio(), $grupoFilho2->getEntidadeAtiva())[0];
-									foreach($relatorioCurso as $key => $val){
-										if($key == 'total'){
-											foreach($val as $key1 => $val1){
-												$relatorioCursos['total'][$key1] += $val1;
-											}
-										}
-									}
-									$numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupoFilho2);
-									$totalDeDiscipulados += $this->getRepositorio()->getFatoCelulaDiscipuladoORM()->totalAtivosPorNumeroIdentificador($numeroIdentificador);
-								}
-							}
-						}
-					}
-				}
-			}
-
-		}else{
-			if($entidade->getEntidadeTipo()->getId() !== EntidadeTipo::regiao){
-				$relatorioCursos = RelatorioController::relatorioAlunosETurmas($this->getRepositorio(), $entidade)[0];
-				$turmas = RelatorioController::relatorioAlunosETurmas($this->getRepositorio(), $entidade)[1];
-				/* total de discipulados */
-				$numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupo);
-				$totalDeDiscipulados = $this->getRepositorio()->getFatoCelulaDiscipuladoORM()->totalAtivosPorNumeroIdentificador($numeroIdentificador);
-			}
-		}
+		$dadosPrincipal = RelatorioController::buscarDadosPrincipais($this->getRepositorio(), $grupo, $mes, $ano);
 
 		$dados = array(
-			'relatorio' => $relatorio,
-			'relatorioParceiro' => $relatorioParceiro,
-			'periodoInicial' => $arrayPeriodoDoMes[0],
-			'periodoFinal' => $arrayPeriodoDoMes[1],
+			'dadosPrrincipal' => $dadosPrincipal,
 			'mostrarPrincipal' => $mostrarPrincipal,
 			'grupo' => $grupo,
 			'grupoLogado' => $grupoLogado,
 			'pessoaLogada' => $pessoaLogada,
 			'entidade' => $entidade,
-			'repositorio' => $this->getRepositorio(),
 			'pessoa' => $pessoa,
-			'relatorioCelulasNaoRealizadas' => $relatorioCelulasNaoRealizadas,
-			'turmas' => $turmas,
-			'relatorioCursos' => $relatorioCursos,
-			'totalDeDiscipulados' => $totalDeDiscipulados,
-			'indiceFinalDoRelatorio' => $indiceFinalDoRelatorio,
 			'vendoPessoaLogada' => $vendoPessoaLogada,
 			'mes' => $mes,
 			'ano' => $ano,
@@ -226,13 +137,6 @@ class PrincipalController extends CircuitoController {
 		if($relatorioDiscipulado = RelatorioController::relatorioDiscipulado($this->getRepositorio(), $entidade->getGrupo(), $mesAnterior, $anoAnterior)){
 			$dados['discipulado'] = $relatorioDiscipulado;
 		}
-
-		/* Ultimo acesso */
-		$registro = $this->getRepositorio()->getRegistroORM()->encontrarUltimoRegistroDeLogin();
-		$date = date_create($registro->getData_criacaoStringPadraoBanco() . ' ' . $registro->getHora_criacao());
-		date_sub($date, date_interval_create_from_date_string('3 hours'));
-		$dataFormatada = date_format($date, 'd/m/Y H:i:s');
-		$dados['ultimoAcesso'] = $dataFormatada;
 
 		$view = new ViewModel($dados);
 		/* Javascript */
@@ -875,4 +779,82 @@ class PrincipalController extends CircuitoController {
 			return $this->redirect()->toRoute('principal');
 		}
 	}
+
+	public function buscarDadosPrincipaisAction(){
+		$request = $this->getRequest();
+		$response = $this->getResponse();
+		$dados = array();
+		if ($request->isPost()) {
+			try {
+				$body = $request->getContent();
+				$json = Json::decode($body);
+				$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($json->token);
+				$resultado = RelatorioController::buscarDadosPrincipais($this->getRepositorio(), $grupo, $json->mes, $json->ano);
+				$dados['resultado'] = $resultado;
+			} catch (Exception $exc) {
+				$dados['message'] = $exc->getMessage();
+			}
+		}
+		$response->setContent(Json::encode($dados));
+		return $response;
+	}
+
+	public function buscarDadosPrincipaisMembresiaAction(){
+		$request = $this->getRequest();
+		$response = $this->getResponse();
+		$dados = array();
+		if ($request->isPost()) {
+			try {
+				$body = $request->getContent();
+				$json = Json::decode($body);
+				$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($json->token);
+				$resultado = RelatorioController::buscarDadosPrincipaisMembresia($this->getRepositorio(), $grupo, $json->mes, $json->ano);
+				$dados['resultado'] = $resultado;
+			} catch (Exception $exc) {
+				$dados['message'] = $exc->getMessage();
+			}
+		}
+		$response->setContent(Json::encode($dados));
+		return $response;
+	}
+
+	public function buscarDadosPrincipaisCelulaAction(){
+		$request = $this->getRequest();
+		$response = $this->getResponse();
+		$dados = array();
+		if ($request->isPost()) {
+			try {
+				$body = $request->getContent();
+				$json = Json::decode($body);
+				$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($json->token);
+				$resultado = RelatorioController::buscarDadosPrincipaisCelula($this->getRepositorio(), $grupo, $json->mes, $json->ano);
+				$dados['resultado'] = $resultado;
+			} catch (Exception $exc) {
+				$dados['message'] = $exc->getMessage();
+			}
+		}
+		$response->setContent(Json::encode($dados));
+		return $response;
+	}
+
+	public function buscarDadosPrincipaisInstitutoAction(){
+		$request = $this->getRequest();
+		$response = $this->getResponse();
+		$dados = array();
+		if ($request->isPost()) {
+			try {
+				$body = $request->getContent();
+				$json = Json::decode($body);
+				$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($json->token);
+				$resultado = RelatorioController::buscarDadosPrincipaisInstituto($this->getRepositorio(), $grupo, $json->mes, $json->ano);
+				$dados['resultado'] = $resultado;
+			} catch (Exception $exc) {
+				$dados['message'] = $exc->getMessage();
+			}
+		}
+		$response->setContent(Json::encode($dados));
+		return $response;
+	}
+
+
 }

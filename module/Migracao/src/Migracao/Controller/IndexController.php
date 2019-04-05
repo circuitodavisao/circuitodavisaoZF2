@@ -356,6 +356,7 @@ class IndexController extends CircuitoController {
 		/* buscando solicitações */
 		$html .= "<br />Buscando Todas Solicitações Aceitas/Agendadas";
 		$solicitacaoSituacaoAceitasAgendasAtivas = $this->getRepositorio()->getSolicitacaoSituacaoORM()->encontrarSolicitacoesAceitasAgendadasAtivas();
+		//$solicitacaoSituacaoAceitasAgendasAtivas = $this->getRepositorio()->getSolicitacaoSituacaoORM()->encontrarSolicitacoesConcluidas();
 
 		if ($solicitacaoSituacaoAceitasAgendasAtivas) {
 
@@ -371,8 +372,14 @@ class IndexController extends CircuitoController {
 						$idGrupoParaVerificar = $solicitacao->getObjeto2();
 					}
 					$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupoParaVerificar);
-					$solicitacoesPorHierarquia[$grupo->contadorDeOndeEstouNaHierarquia()][] = $solicitacao;
 				}
+//				if(
+//					$solicitacao->getSolicitacaoTipo()->getId() === SolicitacaoTipo::TRANSFERIR_LIDER_NA_PROPRIA_EQUIPE
+//					|| $solicitacao->getSolicitacaoTipo()->getId() === SolicitacaoTipo::TRANSFERIR_LIDER_PARA_OUTRA_EQUIPE
+//					|| $solicitacao->getSolicitacaoTipo()->getId() === SolicitacaoTipo::SUBIR_LIDER){
+//
+//						$solicitacoesPorHierarquia[$grupo->contadorDeOndeEstouNaHierarquia()][] = $solicitacao;
+//					}
 			}
 
 			$this->getRepositorio()->iniciarTransacao();
