@@ -3567,8 +3567,8 @@ public function alunosNaSemanaAction(){
 
 		$tipoRelatorio = $tipoSomado;
 
-		$relatorio = RelatorioController::relatorioCompleto($repositorio, $grupo, RelatorioController::relatorioMembresia, $mes, $ano, $tudo = false, $tipoSomado, 'atual');
-		$indiceParaVer = 1;
+		$relatorio = RelatorioController::relatorioCompleto($repositorio, $grupo, RelatorioController::relatorioMembresia, $mes, $ano, $tudo = true, $tipoSomado, 'atual');
+		$indiceParaVer = count($repositorio) - 1;
 
 		$mediaCultos = $relatorio[$indiceParaVer]['mediaMembresiaCulto'];
 		$mediaArena = $relatorio[$indiceParaVer]['mediaMembresiaArena'];
@@ -3611,8 +3611,8 @@ public function alunosNaSemanaAction(){
 
 		$tipoRelatorio = $tipoSomado;
 
-		$relatorio = RelatorioController::relatorioCompleto($repositorio, $grupo, RelatorioController::relatorioMembresiaECelula, $mes, $ano, $tudo = false, $tipoSomado, 'atual');
-		$indiceParaVer = 1;
+		$relatorio = RelatorioController::relatorioCompleto($repositorio, $grupo, RelatorioController::relatorioMembresiaECelula, $mes, $ano, $tudo = true, $tipoSomado, 'atual');
+		$indiceParaVer = count($repositorio) - 1;
 
 		$mediaCelulaQuantidade = $relatorio[$indiceParaVer]['mediaCelulaQuantidade'];
 		$mediaPessoasFrequentes = $relatorio[$indiceParaVer]['mediaCelula'];
@@ -3631,6 +3631,70 @@ public function alunosNaSemanaAction(){
 		$dados['listaCelulaQuantidade'] = $listaCelulaQuantidade;
 		$dados['listaPessoasFrequentes'] = $listaPessoasFrequentes;
 		$dados['listaCelulaRealizadas'] = $listaCelulaRealizadas;
+		return $dados;
+	}
+
+	static function buscarDadosPrincipaisInstituto($repositorio, $grupo, $mes, $ano){
+		$arrayPeriodoDoMes = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mes, $ano);
+		if($mes == date('m') && $ano == date('Y')){
+			$arrayPeriodoDoMes[1] = 0;
+		}
+		$periodoParaUsar = $arrayPeriodoDoMes[1];
+
+		$relatorioCursos = RelatorioController::relatorioAlunosETurmas($repositorio, $grupo->getEntidadeAtiva())[0];
+		$turmas = $grupo->getGrupoIgreja()->getTurma();
+		$turmasAbertas = array();
+		foreach($turmas as $turma){
+			if($turma->getTurmaAulaAtiva()){
+				$modulo = $turma->getTurmaAulaAtiva()->getAula()->getDisciplina()->getNome();
+				$label = $modulo.' - ' . Funcoes::mesPorExtenso($turma->getMes(), 1) . '/' . $turma->getAno();
+				$turmaDados = array();
+				$turmaDados['id'] = $turma->getId();
+				$turmaDados['informacao'] = $label;
+
+				$relatorio = $relatorioCursos[$turma->getId()];
+				if($relatorio[Situacao::ATIVO] == ''){
+					$relatorio[Situacao::ATIVO] = 0;
+				}
+				if($relatorio[Situacao::ESPECIAL] == ''){
+					$relatorio[Situacao::ESPECIAL] = 0;
+				}
+				if($relatorio[Situacao::DESISTENTE] == ''){
+					$relatorio[Situacao::DESISTENTE] = 0;
+				}
+				if($relatorio[Situacao::REPROVADO_POR_FALTA] == ''){
+					$relatorio[Situacao::REPROVADO_POR_FALTA] = 0;
+				}
+				$valor = ($relatorio[Situacao::ATIVO] + $relatorio[Situacao::ESPECIAL]);
+				if($valor == ''){
+					$valor = 0;
+				}
+				$turmaDados['total'] = $valor;
+
+				$situacao = array();
+				$situacao['cor'] = 'success';
+				$situacao['valor'] = 'A-'.$valor;
+				$turmaDados['situacoes'][] = $situacao;
+
+				$situacao = array();
+				$situacao['cor'] = 'info';
+				$situacao['valor'] = 'E-'.$relatorio[Situacao::ESPECIAL];
+				$turmaDados['situacoes'][] = $situacao;
+
+				$situacao = array();
+				$situacao['cor'] = 'warning';
+				$situacao['valor'] = 'D-'.$relatorio[Situacao::DESISTENTE];
+				$turmaDados['situacoes'][] = $situacao;
+
+				$situacao = array();
+				$situacao['cor'] = 'danger';
+				$situacao['valor'] = 'R-'.$relatorio[Situacao::REPROVADO_POR_FALTA];
+				$turmaDados['situacoes'][] = $situacao;
+
+				$turmasAbertas[] = $turmaDados;
+			}
+		}
+		$dados['turmas'] = $turmasAbertas;
 		return $dados;
 	}
 }

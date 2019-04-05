@@ -281,6 +281,41 @@ for ($indice = 1; $indice <= $numeroIndices; $indice++) {
 </div>
 </div>
 <!-- fim celula -->
+
+<!-- dados celula -->
+<div class="row mb10">
+<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 admin-grid">
+<div class="panel panel-collapsed" id="p1">
+<div class="panel-heading ui-sortable-handle">
+Alunos
+<span class="panel-controls">
+<a href="#" class="panel-control-collapse" onClick="buscarDadosPrincipaisInstituto()"></a>
+</span>
+</div>
+<div class="panel-body pn pt10" style="display: none;">
+
+<div class="alert alert-default">
+	Legenda:
+	<span class="label label-success" data-placement="bottom" data-toggle="popover" data-content="Ativo" style="cursor: pointer;">A</span>
+	<span class="label label-info" data-placement="bottom" data-toggle="popover" data-content="Especial" style="cursor: pointer;">E</span>
+	<span class="label label-warning" data-placement="bottom" data-toggle="popover" data-content="Desistente" style="cursor: pointer;">D</span>
+	<span class="label label-danger" data-placement="bottom" data-toggle="popover" data-content="Reprovado" style="cursor: pointer;">R</span>
+</div>
+
+<div class="col-xs-12 col-md-12 col-lg-12 p20">
+</div>
+
+<div id="divAlunos">
+	<img src="img/loader.gif" />
+</div>
+
+</div>
+</div>
+</div>
+</div>
+<!-- fim celula -->
+
+
 <?php } ?>
 
 <?php
@@ -536,6 +571,50 @@ if(count($this->discipulos) > 0){
 					}
 				})
 			document.getElementById('listaCelulaRealizadas').innerHTML = valor
+		})
+	}
+	function buscarDadosPrincipaisInstituto(){
+		const url = '/principalBuscarDadosPrincipaisInstituto'
+		fetch(
+			url,
+			{
+				method: 'POST',	
+				body: JSON.stringify({
+					"token": "<?php echo $this->grupo->getId(); ?>",
+					"mes": "<?php echo $this->mes; ?>",
+					"ano": "<?php echo $this->ano; ?>",
+				}),
+			},
+		)
+		.then(resultado => {
+			if(!resultado.ok){
+				alert('erro ao buscar dados principais instituto')
+			}
+			return resultado.json()
+		})
+		.then(json => {
+			console.log(json)
+			let html = ''
+				html += '<div class="row mb10">'	
+				json.resultado.turmas.forEach(turma => {
+				html += '<div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">';
+					html +=  '<div class="panel panel-tile text-center br-a br-grey">';
+					html += '<div class="panel-body" style="padding-bottom: 0px;">';
+					html += '<h1 class="fs30 mt5 mbn">'+turma.total+'</h1>';
+					html += '<h6>'+turma.informacao+'</h6>';
+					html += '</div>';
+					html += '<div class="panel-footer br-t p12">';
+					html += '<span class="fs11">';
+					turma.situacoes.forEach(situacao => {
+						html += '<span class="label label-'+situacao.cor+'">A - '+situacao.valor+'</span>';
+					})
+					html += '</span>';
+					html += '</div>';
+					html += '</div>';
+					html += '</div>';
+				})
+				html += '</div>'	
+			document.getElementById('divAlunos').innerHTML = html
 		})
 	}
 	buscarDadosPrincipais()
