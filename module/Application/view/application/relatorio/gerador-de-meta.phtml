@@ -233,20 +233,20 @@ if($this->postado){
 					+ $filho['mulheresMeta']
 					+ $filho['casaisMeta']
 					;
-				$html .= '<td>'.$filho['lideres'].' / '.$filho['lideresMeta'].'</td>';
-				$html .= '<td>'.$filho['celulas'].' / '.$filho['celulasMeta'].'</td>';
-				$html .= '<td>'.$filho['celulasBeta'].' / '.$filho['celulasBetaMeta'].'</td>';
+				$html .= '<td>'.$filho['lideres'].' / '.number_format($filho['lideresMeta']).'</td>';
+				$html .= '<td>'.$filho['celulas'].' / '.number_format($filho['celulasMeta']).'</td>';
+				$html .= '<td>'.$filho['celulasBeta'].' / '.number_format($filho['celulasBetaMeta']).'</td>';
 				if($this->alunos1m > 0 || $this->alunos2m > 0 || $this->alunos3m){
-					$html .= '<td>'.$filho['alunos1'].' / '.$filho['alunos1Meta'].'</td>';
-					$html .= '<td>'.$filho['alunos2'].' / '.$filho['alunos2Meta'].'</td>';
-					$html .= '<td>'.$filho['alunos3'].' / '.$filho['alunos3Meta'].'</td>';
+					$html .= '<td>'.$filho['alunos1'].' / '.number_format($filho['alunos1Meta']).'</td>';
+					$html .= '<td>'.$filho['alunos2'].' / '.number_format($filho['alunos2Meta']).'</td>';
+					$html .= '<td>'.$filho['alunos3'].' / '.number_format($filho['alunos3Meta']).'</td>';
 				}
 				if($this->homens > 0 || $this->mulheres > 0 || $this->casais){
-					$html .= '<td>'.$filho['homens'].' / '.$filho['homensMeta'].'</td>';
-					$html .= '<td>'.$filho['mulheres'].' / '.$filho['mulheresMeta'].'</td>';
-					$html .= '<td>'.$filho['casais'].' / '.$filho['casaisMeta'].'</td>';
+					$html .= '<td>'.$filho['homens'].' / '.number_format($filho['homensMeta']).'</td>';
+					$html .= '<td>'.$filho['mulheres'].' / '.number_format($filho['mulheresMeta']).'</td>';
+					$html .= '<td>'.$filho['casais'].' / '.number_format($filho['casaisMeta']).'</td>';
 				}
-				$html .= '<td>'.$total.'</td>';
+				$html .= '<td>'.number_format($total).'</td>';
 			}
 			$html .= '</tr>';
 
@@ -289,20 +289,20 @@ if($this->postado){
 
 					$html .= '<tr class="'.$corLinha144.'">'; 
 					$html .= '<td>---- '.$filho144['informacao'].'</td>';
-					$html .= '<td>'.$filho144['lideres'].' / '.$filho144['lideresMeta'].'</td>';
-					$html .= '<td>'.$filho144['celulas'].' / '.$filho144['celulasMeta'].'</td>';
-					$html .= '<td>'.$filho144['celulasBeta'].' / '.$filho144['celulasBetaMeta'].'</td>';
+					$html .= '<td>'.$filho144['lideres'].' / '.number_format($filho144['lideresMeta']).'</td>';
+					$html .= '<td>'.$filho144['celulas'].' / '.number_format($filho144['celulasMeta']).'</td>';
+					$html .= '<td>'.$filho144['celulasBeta'].' / '.number_format($filho144['celulasBetaMeta']).'</td>';
 					if($this->alunos1m > 0 || $this->alunos2m > 0 || $this->alunos3m){
-						$html .= '<td>'.$filho144['alunos1'].' / '.$filho144['alunos1Meta'].'</td>';
-						$html .= '<td>'.$filho144['alunos2'].' / '.$filho144['alunos2Meta'].'</td>';
-						$html .= '<td>'.$filho144['alunos3'].' / '.$filho144['alunos3Meta'].'</td>';
+						$html .= '<td>'.$filho144['alunos1'].' / '.number_format($filho144['alunos1Meta']).'</td>';
+						$html .= '<td>'.$filho144['alunos2'].' / '.number_format($filho144['alunos2Meta']).'</td>';
+						$html .= '<td>'.$filho144['alunos3'].' / '.number_format($filho144['alunos3Meta']).'</td>';
 					}
 					if($this->homens > 0 || $this->mulheres > 0 || $this->casais){
-						$html .= '<td>'.$filho144['homens'].' / '.$filho144['homensMeta'].'</td>';
-						$html .= '<td>'.$filho144['mulheres'].' / '.$filho144['mulheresMeta'].'</td>';
-						$html .= '<td>'.$filho144['casais'].' / '.$filho144['casaisMeta'].'</td>';
+						$html .= '<td>'.$filho144['homens'].' / '.number_format($filho144['homensMeta']).'</td>';
+						$html .= '<td>'.$filho144['mulheres'].' / '.number_format($filho144['mulheresMeta']).'</td>';
+						$html .= '<td>'.$filho144['casais'].' / '.number_format($filho144['casaisMeta']).'</td>';
 					}
-					$html .= '<td>'.$total.'</td>';
+					$html .= '<td>'.number_format($total).'</td>';
 					$html .= '</tr>';
 
 					if($filho144['informacao'] === 'TOTAL PARCIAL'){

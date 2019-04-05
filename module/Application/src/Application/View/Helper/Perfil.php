@@ -131,10 +131,16 @@ class Perfil extends AbstractHelper {
             $elementoDDD = $formulario->get(Constantes::$INPUT_DDD);
             $elementoTelefone = $formulario->get(Constantes::$INPUT_TELEFONE);
             $elementoSexo = $formulario->get(Constantes::$INPUT_SEXO);
+            $elementoDia = $formulario->get(Constantes::$FORM_INPUT_DIA);
+            $elementoMes = $formulario->get(Constantes::$FORM_INPUT_MES);
+            $elementoAno = $formulario->get(Constantes::$FORM_INPUT_ANO);
 
             $elementoDDD->setAttribute('disabled', true);
             $elementoTelefone->setAttribute('disabled', true);
             $elementoSexo->setAttribute('disabled', true);
+            $elementoDia->setAttribute('disabled', true);
+            $elementoMes->setAttribute('disabled', true);
+            $elementoAno->setAttribute('disabled', true);
         }
         $html .= '<br />';         
         
