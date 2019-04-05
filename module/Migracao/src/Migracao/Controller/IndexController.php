@@ -3484,15 +3484,15 @@ class IndexController extends CircuitoController {
 
 	public static function pegarMediaPorCelula(RepositorioORM $repositorioORM, Grupo $grupo, $celulasDeElite = false, $mes, $ano) {
 		$relatorio = array();
-		if($grupoEventosCelula = $grupo->getGrupoEventoAtivosPorTipo(EventoTipo::tipoCelula)){
-			$arrayPeriodoDoMes = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mes, $ano);
-			$diferencaDePeriodos = RelatorioController::diferencaDePeriodos($arrayPeriodoDoMes[0], $arrayPeriodoDoMes[1]);
-
-			if($grupoEventosCelulaEstrategica = $grupo->getGrupoEventoAtivosPorTipo(EventoTipo::tipoCelulaEstrategica)){
-				foreach($grupoEventosCelulaEstrategica as $grupoEvento){
-					$grupoEventosCelula[] = $grupoEvento;
-				}
+		$grupoEventosCelula = $grupo->getGrupoEventoAtivosPorTipo(EventoTipo::tipoCelula);
+		if($grupoEventosCelulaEstrategica = $grupo->getGrupoEventoAtivosPorTipo(EventoTipo::tipoCelulaEstrategica)){
+			foreach($grupoEventosCelulaEstrategica as $grupoEvento){
+				$grupoEventosCelula[] = $grupoEvento;
 			}
+		}
+		if($grupoEventosCelula){
+			$arrayPeriodoDoMes = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mes, $ano);
+			$diferencaDePeriodos = RelatorioController::diferencaDePeriodos($arrayPeriodoDoMes[0], $arrayPeriodoDoMes[1]);		
 
 			foreach ($grupoEventosCelula as $grupoEventoCelula) {
 				$soma = 0;
