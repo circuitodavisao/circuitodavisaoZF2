@@ -3351,10 +3351,6 @@ public function alunosNaSemanaAction(){
 		$mostrarRegioes = false;
 		$mostrarCoordenacoes = false;
 		$mostrarIgrejas = false;
-		$discipulado = null;
-		$discipuladoHomens = 0;
-		$discipuladoMulheres = 0;
-		$mostrarDiscipulado = false;
 
 		if(intVal($mes) === 1){
 			$mesAnterior = 12;
@@ -3399,26 +3395,6 @@ public function alunosNaSemanaAction(){
 
 					/* Parceiro de Deus */
 					$parceiro = $repositorio->getFatoFinanceiroORM()->fatosPorNumeroIdentificador($numeroIdentificador,$periodoParaUsar, $mes, $ano, $tipoSomado)['valor'];
-
-					/* Discipulado */
-					if($relatorioDiscipulado = RelatorioController::relatorioDiscipulado($repositorio, $grupo, $mesAnterior, $anoAnterior)){
-						$discipulado = $relatorioDiscipulado['media'];
-						$mostrarDiscipulado = true;
-
-						if($grupoPaiFilhoFilhos12 = $grupo->getGrupoPaiFilhoFilhosAtivos($periodoParaUsar)){
-							foreach($grupoPaiFilhoFilhos12 as $grupoFilho12){
-								$filho12 = $grupoFilho12->getGrupoPaiFilhoFilho();								
-								foreach($filho12->getPessoasAtivas() as $pessoa){
-									if ($pessoa->getSexo() === 'M') {
-										$discipuladoHomens++;
-									}
-									if ($pessoa->getSexo() === 'F') {
-										$discipuladoMulheres++;
-									}
-								}
-							}
-						}
-					}
 				}
 
 			/* Contado Regiões, Coordenações e Igrejas */
@@ -3601,6 +3577,59 @@ public function alunosNaSemanaAction(){
 		$dados['mostrarRegioes'] = $mostrarRegioes;
 		$dados['mostrarCoordenacoes'] = $mostrarCoordenacoes;
 		$dados['mostrarIgrejas'] = $mostrarIgrejas;
+		return $dados;
+	}
+
+	static function buscarDadosPrincipaisDiscipulado($repositorio, $grupo, $mes, $ano){
+		$discipulado = null;
+		$discipuladoHomens = 0;
+		$discipuladoMulheres = 0;
+		$mostrarDiscipulado = false;
+
+		if(intVal($mes) === 1){
+			$mesAnterior = 12;
+			$anoAnterior = $ano - 1;
+		}else{
+			$mesAnterior = $mes - 1;
+			$anoAnterior = $ano;
+		}
+
+		if($grupo->getEntidadeAtiva()){
+			$arrayPeriodoDoMes = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mes, $ano);
+			if($mes == date('m') && $ano == date('Y')){
+				$arrayPeriodoDoMes[1] = 0;
+			}
+			$periodoParaUsar = $arrayPeriodoDoMes[1];
+			$tipoSomado = 2;
+
+			$tipoRelatorio = $tipoSomado;
+			$numeroIdentificador = $repositorio->getFatoCicloORM()->montarNumeroIdentificador($repositorio, $grupo);
+
+			if($grupo->getEntidadeAtiva()->getEntidadeTipo()->getId() !== EntidadeTipo::regiao
+				&& $grupo->getEntidadeAtiva()->getEntidadeTipo()->getId() !== EntidadeTipo::coordenacao){
+							/* Discipulado */
+					if($relatorioDiscipulado = RelatorioController::relatorioDiscipulado($repositorio, $grupo, $mesAnterior, $anoAnterior)){
+						$discipulado = $relatorioDiscipulado['media'];
+						$mostrarDiscipulado = true;
+
+						if($grupoPaiFilhoFilhos12 = $grupo->getGrupoPaiFilhoFilhosAtivos($periodoParaUsar)){
+							foreach($grupoPaiFilhoFilhos12 as $grupoFilho12){
+								$filho12 = $grupoFilho12->getGrupoPaiFilhoFilho();								
+								foreach($filho12->getPessoasAtivas() as $pessoa){
+									if ($pessoa->getSexo() === 'M') {
+										$discipuladoHomens++;
+									}
+									if ($pessoa->getSexo() === 'F') {
+										$discipuladoMulheres++;
+									}
+								}
+							}
+						}
+					}
+				}
+		}
+
+		$dados = array();
 		$dados['discipulado'] = $discipulado;
 		$dados['discipuladoHomens'] = $discipuladoHomens;
 		$dados['discipuladoMulheres'] = $discipuladoMulheres;
