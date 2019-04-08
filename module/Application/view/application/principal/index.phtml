@@ -68,8 +68,64 @@ if ($this->mostrarPrincipal) {
 <?php
 echo '<div class="row mb10">';
 
-$totalDeIndices = 11;
+?>
+<?php
+$totalDeIndices = 3;
+for($indiceNumeroGrandes = 1; $indiceNumeroGrandes <= $totalDeIndices; $indiceNumeroGrandes++){
+	$idValor = '';
+	$label = '';
+	$idDiv = '';
+	$hidden = '';
 
+	switch($indiceNumeroGrandes){
+	case 1: 
+		$idValor = 'idValorDiscipulado';
+		$label = 'Meu Discipulado';
+		$idDiv = 'divDiscipulado';
+		$hidden = 'hidden';
+		break;
+	case 2: 
+		$idValor = 'idValorDiscipuladoHomens';
+		$label = 'Time de Homens';
+		$idDiv = 'divDiscipuladoHomens';
+		$hidden = 'hidden';
+		break;
+	case 3: 
+		$idValor = 'idValorDiscipuladoMulheres';
+		$label = 'Time de Mulheres';
+		$idDiv = 'divDiscipuladoMulheres';
+		$hidden = 'hidden';
+		break;
+	}
+	echo '<div id="'.$idDiv.'" class="col-lg-4 col-md-4 col-sm-4 col-xs-6 '.$hidden.'">';
+	echo '<div class="panel text-center br-a br-grey">';
+	echo '<div class="panel-body">';
+	echo '<h1 id="'.$idValor.'" class="fs16 mt5 mbn"><img src="/img/loader.gif" /></h1>';
+	echo '<h6 class="text-info">'.$label.'</h6>';
+	echo '</div>';
+	echo '</div>';
+	echo '</div>';
+}
+
+echo '</div>';
+?>
+
+<!-- dados dashboard -->
+<div class="row mb10">
+<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 admin-grid">
+<div class="panel panel-collapsed" id="p1">
+<div class="panel-heading ui-sortable-handle">
+Dados
+<span class="panel-controls">
+<a href="#" class="panel-control-collapse" onClick="buscarDadosPrincipais()"></a>
+</span>
+</div>
+<div class="panel-body pn pt10" style="display: none;">
+
+<div class="col-xs-12 col-md-12 col-lg-12 p20">
+</div>
+<?php
+$totalDeIndices = 8;
 for($indiceNumeroGrandes = 1; $indiceNumeroGrandes <= $totalDeIndices; $indiceNumeroGrandes++){
 	$idValor = '';
 	$label = '';
@@ -144,6 +200,7 @@ for($indiceNumeroGrandes = 1; $indiceNumeroGrandes <= $totalDeIndices; $indiceNu
 	echo '</div>';
 }
 
+echo '</div>';
 echo '</div>';
 ?>
 
@@ -383,7 +440,6 @@ if(count($this->discipulos) > 0){
 <?php
 }
 ?>
-
 <script>
 	function buscarDadosPrincipais(){
 		const url = '/principalBuscarDadosPrincipais'
@@ -426,6 +482,29 @@ if(count($this->discipulos) > 0){
 				document.getElementById('divIgrejas').classList.remove('hidden')
 				document.getElementById('idValorIgrejas').innerHTML = json.resultado.igrejas
 			}
+		})
+	}
+
+	function buscarDadosPrincipaisDiscipulado(){
+		const url = '/principalBuscarDadosPrincipaisDiscipulado'
+		fetch(
+			url,
+			{
+				method: 'POST',	
+				body: JSON.stringify({
+					"token": "<?php echo $this->grupo->getId(); ?>",
+					"mes": "<?php echo $this->mes; ?>",
+					"ano": "<?php echo $this->ano; ?>",
+				}),
+			},
+		)
+		.then(resultado => {
+			if(!resultado.ok){
+				alert('erro ao buscar dados discipulado')
+			}
+			return resultado.json()
+		})
+		.then(json => {
 			if(json.resultado.mostrarDiscipulado){
 				document.getElementById('divDiscipulado').classList.remove('hidden')
 				document.getElementById('divDiscipuladoHomens').classList.remove('hidden')
@@ -617,5 +696,5 @@ if(count($this->discipulos) > 0){
 			document.getElementById('divAlunos').innerHTML = html
 		})
 	}
-	buscarDadosPrincipais()
+	buscarDadosPrincipaisDiscipulado()
 </script>

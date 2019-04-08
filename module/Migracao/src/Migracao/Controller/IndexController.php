@@ -356,7 +356,6 @@ class IndexController extends CircuitoController {
 		/* buscando solicitações */
 		$html .= "<br />Buscando Todas Solicitações Aceitas/Agendadas";
 		$solicitacaoSituacaoAceitasAgendasAtivas = $this->getRepositorio()->getSolicitacaoSituacaoORM()->encontrarSolicitacoesAceitasAgendadasAtivas();
-		//$solicitacaoSituacaoAceitasAgendasAtivas = $this->getRepositorio()->getSolicitacaoSituacaoORM()->encontrarSolicitacoesConcluidas();
 
 		if ($solicitacaoSituacaoAceitasAgendasAtivas) {
 
@@ -372,14 +371,8 @@ class IndexController extends CircuitoController {
 						$idGrupoParaVerificar = $solicitacao->getObjeto2();
 					}
 					$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupoParaVerificar);
+					$solicitacoesPorHierarquia[$grupo->contadorDeOndeEstouNaHierarquia()][] = $solicitacao;
 				}
-//				if(
-//					$solicitacao->getSolicitacaoTipo()->getId() === SolicitacaoTipo::TRANSFERIR_LIDER_NA_PROPRIA_EQUIPE
-//					|| $solicitacao->getSolicitacaoTipo()->getId() === SolicitacaoTipo::TRANSFERIR_LIDER_PARA_OUTRA_EQUIPE
-//					|| $solicitacao->getSolicitacaoTipo()->getId() === SolicitacaoTipo::SUBIR_LIDER){
-//
-//						$solicitacoesPorHierarquia[$grupo->contadorDeOndeEstouNaHierarquia()][] = $solicitacao;
-//					}
 			}
 
 			$this->getRepositorio()->iniciarTransacao();
@@ -3491,15 +3484,15 @@ class IndexController extends CircuitoController {
 
 	public static function pegarMediaPorCelula(RepositorioORM $repositorioORM, Grupo $grupo, $celulasDeElite = false, $mes, $ano) {
 		$relatorio = array();
-		if($grupoEventosCelula = $grupo->getGrupoEventoAtivosPorTipo(EventoTipo::tipoCelula)){
-			$arrayPeriodoDoMes = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mes, $ano);
-			$diferencaDePeriodos = RelatorioController::diferencaDePeriodos($arrayPeriodoDoMes[0], $arrayPeriodoDoMes[1]);
-
-			if($grupoEventosCelulaEstrategica = $grupo->getGrupoEventoAtivosPorTipo(EventoTipo::tipoCelulaEstrategica)){
-				foreach($grupoEventosCelulaEstrategica as $grupoEvento){
-					$grupoEventosCelula[] = $grupoEvento;
-				}
+		$grupoEventosCelula = $grupo->getGrupoEventoAtivosPorTipo(EventoTipo::tipoCelula);
+		if($grupoEventosCelulaEstrategica = $grupo->getGrupoEventoAtivosPorTipo(EventoTipo::tipoCelulaEstrategica)){
+			foreach($grupoEventosCelulaEstrategica as $grupoEvento){
+				$grupoEventosCelula[] = $grupoEvento;
 			}
+		}
+		if($grupoEventosCelula){
+			$arrayPeriodoDoMes = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mes, $ano);
+			$diferencaDePeriodos = RelatorioController::diferencaDePeriodos($arrayPeriodoDoMes[0], $arrayPeriodoDoMes[1]);		
 
 			foreach ($grupoEventosCelula as $grupoEventoCelula) {
 				$soma = 0;
