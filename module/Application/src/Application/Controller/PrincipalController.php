@@ -106,10 +106,7 @@ class PrincipalController extends CircuitoController {
 			$ano = date('Y');
 		}
 
-		$dadosPrincipal = RelatorioController::buscarDadosPrincipais($this->getRepositorio(), $grupo, $mes, $ano);
-
 		$dados = array(
-			'dadosPrrincipal' => $dadosPrincipal,
 			'mostrarPrincipal' => $mostrarPrincipal,
 			'grupo' => $grupo,
 			'grupoLogado' => $grupoLogado,
@@ -790,6 +787,25 @@ class PrincipalController extends CircuitoController {
 				$json = Json::decode($body);
 				$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($json->token);
 				$resultado = RelatorioController::buscarDadosPrincipais($this->getRepositorio(), $grupo, $json->mes, $json->ano);
+				$dados['resultado'] = $resultado;
+			} catch (Exception $exc) {
+				$dados['message'] = $exc->getMessage();
+			}
+		}
+		$response->setContent(Json::encode($dados));
+		return $response;
+	}
+
+	public function buscarDadosPrincipaisDiscipuladoAction(){
+		$request = $this->getRequest();
+		$response = $this->getResponse();
+		$dados = array();
+		if ($request->isPost()) {
+			try {
+				$body = $request->getContent();
+				$json = Json::decode($body);
+				$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($json->token);
+				$resultado = RelatorioController::buscarDadosPrincipaisDiscipulado($this->getRepositorio(), $grupo, $json->mes, $json->ano);
 				$dados['resultado'] = $resultado;
 			} catch (Exception $exc) {
 				$dados['message'] = $exc->getMessage();
